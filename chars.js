@@ -1,4 +1,7 @@
 /* ===== Personatges de Mates amb Numi (SVG amb volum) ===== */
+let LANG = 'ca';
+const L = (ca, es) => LANG === 'es' ? es : ca;
+const tx = v => Array.isArray(v) ? L(v[0], v[1]) : typeof v === 'string' && v.includes('|') ? L(...v.split('|')) : v;
 const INK = '#2B1A38';
 
 /* Degradats compartits: s'injecten un cop al document */
@@ -40,7 +43,7 @@ const star = (cx, cy, r, fill) => {
 
 const CH = {
   numi: {
-    name: 'Numi', price: 0, desc: 'Un robot que ho compta tot. És el guia del camí.', hello: 'Som-hi! Pas a pas, arribarem molt lluny.',
+    name: 'Numi', price: 0, desc: ['Un robot que ho compta tot. És el guia del camí.', 'Un robot que lo cuenta todo. Es el guía del camino.'], hello: ['Som-hi! Pas a pas, arribarem molt lluny.', '¡Vamos! Paso a paso, llegaremos muy lejos.'],
     a: { hx: 60, hy: 21, ey: 45, eg: 11, ny: 77, hw: 39 },
     draw: m => `${ground(28)}
       <line x1="60" y1="22" x2="60" y2="9" stroke="#4A2060" stroke-width="3.5" stroke-linecap="round"/>
@@ -58,7 +61,7 @@ const CH = {
       ${blush(40, 80, 55, '#FF7AA8', .55)}${eyes(49, 71, 45, m, '#5FF0D0')}${mouth(60, 56, m, '#5FF0D0')}`
   },
   guida: {
-    name: 'Guida', price: 60, desc: 'Una guineu molt espavilada. La reina de la lògica.', hello: 'Amb una mica de lògica, tot té solució!',
+    name: 'Guida', price: 60, desc: ['Una guineu molt espavilada. La reina de la lògica.', 'Una zorra muy espabilada. La reina de la lógica.'], hello: ['Amb una mica de lògica, tot té solució!', '¡Con un poco de lógica, todo tiene solución!'],
     a: { hx: 60, hy: 27, ey: 50, eg: 14, ny: 84, hw: 36 },
     draw: m => `${ground(30)}
       <path d="M82 104 Q118 98 107 64 Q101 86 79 88Z" fill="url(#gFoxTail)"/><path d="M107 64 Q112 77 104 86 Q99 76 107 64Z" fill="#FFF3E6"/>
@@ -72,7 +75,7 @@ const CH = {
       ${blush(38, 82, 64)}${mouth(60, 69, m)}`
   },
   vuit: {
-    name: 'Vuit', price: 100, desc: 'Un pop amb vuit braços per multiplicar més de pressa.', hello: 'Vuit braços, vuit vegades més ràpid!',
+    name: 'Vuit', price: 100, desc: ['Un pop amb vuit braços per multiplicar més de pressa.', 'Un pulpo con ocho brazos para multiplicar más rápido.'], hello: ['Vuit braços, vuit vegades més ràpid!', '¡Ocho brazos, ocho veces más rápido!'],
     a: { hx: 60, hy: 17, ey: 52, eg: 13, ny: 84, hw: 38 },
     draw: m => {
       let t = '';
@@ -87,7 +90,7 @@ const CH = {
     }
   },
   tuga: {
-    name: 'Tuga', price: 150, desc: 'Una tortuga pacient que ho mesura tot.', hello: "Pas a pas s'arriba lluny.",
+    name: 'Tuga', price: 150, desc: ['Una tortuga pacient que ho mesura tot.', 'Una tortuga paciente que lo mide todo.'], hello: ["Pas a pas s'arriba lluny.", 'Paso a paso se llega lejos.'],
     a: { hx: 60, hy: 16, ey: 40, eg: 10, ny: 66, hw: 27 },
     draw: m => `${ground(44)}
       <ellipse cx="30" cy="105" rx="11" ry="7" fill="url(#gTurtle)"/><ellipse cx="90" cy="105" rx="11" ry="7" fill="url(#gTurtle)"/>
@@ -100,7 +103,7 @@ const CH = {
       ${eyes(50, 70, 40, m)}${blush(42, 78, 50)}${mouth(60, 51, m)}`
   },
   flama: {
-    name: 'Flama', price: 250, desc: "Un drac petit que s'encén amb les ratxes.", hello: 'Encenem aquesta ratxa!',
+    name: 'Flama', price: 250, desc: ["Un drac petit que s'encén amb les ratxes.", 'Un dragón pequeño que se enciende con las rachas.'], hello: ['Encenem aquesta ratxa!', '¡Encendamos esta racha!'],
     a: { hx: 60, hy: 24, ey: 48, eg: 14, ny: 82, hw: 34 },
     draw: m => `${ground(30)}
       <path d="M31 72 Q4 54 9 28 Q22 43 36 50Z" fill="url(#gWing)"/><path d="M89 72 Q116 54 111 28 Q98 43 84 50Z" fill="url(#gWing)"/>
@@ -116,7 +119,7 @@ const CH = {
       ${eyes(46, 74, 48, m)}${mouth(60, 69, m)}`
   },
   estel: {
-    name: 'Estel', price: null, unlock: 'Ratxa de 30 dies', desc: 'Una estrella que només apareix a qui practica cada dia.', hello: 'Has brillat 30 dies seguits! Ara brillem juntes.',
+    name: 'Estel', price: null, unlock: ['Ratxa de 30 dies', 'Racha de 30 días'], desc: ['Una estrella que només apareix a qui practica cada dia.', 'Una estrella que solo aparece a quien practica cada día.'], hello: ['Has brillat 30 dies seguits! Ara brillem juntes.', '¡Has brillado 30 días seguidos! Ahora brillamos juntas.'],
     a: { hx: 60, hy: 16, ey: 56, eg: 12, ny: 80, hw: 30 },
     draw: m => {
       let d = ''; for (let i = 0; i < 10; i++) { const a = -Math.PI / 2 + i * Math.PI / 5, r = i % 2 ? 24 : 50; d += (i ? 'L' : 'M') + (60 + r * Math.cos(a)).toFixed(1) + ' ' + (62 + r * Math.sin(a)).toFixed(1); }
@@ -130,21 +133,21 @@ const CH = {
 };
 
 const ACC = {
-  llacet: { slot: 'neck', name: 'Llacet', price: 30,
+  llacet: { slot: 'neck', name: ['Llacet', 'Pajarita'], price: 30,
     draw: a => `<path d="M${a.hx} ${a.ny} L${a.hx - 15} ${a.ny - 8} L${a.hx - 15} ${a.ny + 8}Z" fill="#FF5A5F"/><path d="M${a.hx} ${a.ny} L${a.hx + 15} ${a.ny - 8} L${a.hx + 15} ${a.ny + 8}Z" fill="#FF5A5F"/><path d="M${a.hx - 13} ${a.ny - 5} L${a.hx - 5} ${a.ny - 1}" stroke="#fff" stroke-width="1.5" opacity=".5"/><circle cx="${a.hx}" cy="${a.ny}" r="4.5" fill="#D63C42"/>` },
-  gorra: { slot: 'head', name: 'Gorra', price: 40,
+  gorra: { slot: 'head', name: ['Gorra', 'Gorra'], price: 40,
     draw: a => `<path d="M${a.hx - 27} ${a.hy + 9} Q${a.hx - 26} ${a.hy - 20} ${a.hx} ${a.hy - 21} Q${a.hx + 26} ${a.hy - 20} ${a.hx + 27} ${a.hy + 9}Z" fill="url(#gBlue)"/><path d="M${a.hx + 6} ${a.hy + 9} Q${a.hx + 40} ${a.hy + 3} ${a.hx + 44} ${a.hy + 11} L${a.hx + 6} ${a.hy + 13}Z" fill="#1E7FB0"/><circle cx="${a.hx}" cy="${a.hy - 20}" r="3.5" fill="#1E7FB0"/><path d="M${a.hx - 16} ${a.hy - 8} Q${a.hx - 8} ${a.hy - 16} ${a.hx + 2} ${a.hy - 16}" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity=".45" fill="none"/>` },
-  ulleres: { slot: 'eyes', name: 'Ulleres', price: 50,
+  ulleres: { slot: 'eyes', name: ['Ulleres', 'Gafas'], price: 50,
     draw: a => { const r = Math.max(8, a.eg * .75); return `<circle cx="${a.hx - a.eg}" cy="${a.ey}" r="${r}" fill="rgba(180,230,255,.28)" stroke="${INK}" stroke-width="3"/><circle cx="${a.hx + a.eg}" cy="${a.ey}" r="${r}" fill="rgba(180,230,255,.28)" stroke="${INK}" stroke-width="3"/><path d="M${a.hx - a.eg + r} ${a.ey - 1} Q${a.hx} ${a.ey - 6} ${a.hx + a.eg - r} ${a.ey - 1}" stroke="${INK}" stroke-width="3" fill="none"/><path d="M${a.hx - a.eg - 4} ${a.ey - 4} l4 -3" stroke="#fff" stroke-width="2" opacity=".8"/>`; } },
-  barret: { slot: 'head', name: 'Barret de mag', price: 120,
+  barret: { slot: 'head', name: ['Barret de mag', 'Sombrero de mago'], price: 120,
     draw: a => `<path d="M${a.hx - 20} ${a.hy + 4} L${a.hx + 8} ${a.hy - 40} L${a.hx + 22} ${a.hy + 4}Z" fill="#3A2A8C"/><path d="M${a.hx - 12} ${a.hy + 2} L${a.hx + 4} ${a.hy - 30}" stroke="#5A48B8" stroke-width="4" stroke-linecap="round"/><ellipse cx="${a.hx}" cy="${a.hy + 5}" rx="31" ry="7" fill="#2A1D6B"/>${star(a.hx + 2, a.hy - 12, 6, '#FFC93C')}${star(a.hx + 9, a.hy - 27, 3.5, '#FFC93C')}` },
-  corona: { slot: 'head', name: 'Corona', price: 200,
+  corona: { slot: 'head', name: ['Corona', 'Corona'], price: 200,
     draw: a => `<path d="M${a.hx - 22} ${a.hy + 7} L${a.hx - 25} ${a.hy - 15} L${a.hx - 11} ${a.hy - 4} L${a.hx} ${a.hy - 20} L${a.hx + 11} ${a.hy - 4} L${a.hx + 25} ${a.hy - 15} L${a.hx + 22} ${a.hy + 7}Z" fill="url(#gGold)" stroke="#E0A300" stroke-width="2.5" stroke-linejoin="round"/><circle cx="${a.hx}" cy="${a.hy - 2}" r="3.5" fill="#FF5A5F"/><circle cx="${a.hx - 13}" cy="${a.hy + 1}" r="2.6" fill="#36A9E1"/><circle cx="${a.hx + 13}" cy="${a.hy + 1}" r="2.6" fill="#3CC46A"/>` },
-  medalla: { slot: 'neck', name: 'Medalla de foc', price: null, unlock: 'Ratxa de 7 dies',
+  medalla: { slot: 'neck', name: ['Medalla de foc', 'Medalla de fuego'], price: null, unlock: ['Ratxa de 7 dies', 'Racha de 7 días'],
     draw: a => `<path d="M${a.hx - 11} ${a.ny - 9} L${a.hx - 3} ${a.ny + 6} M${a.hx + 11} ${a.ny - 9} L${a.hx + 3} ${a.ny + 6}" stroke="#FF5A5F" stroke-width="5" stroke-linecap="round"/><circle cx="${a.hx}" cy="${a.ny + 11}" r="9" fill="url(#gGold)" stroke="#E0A300" stroke-width="2"/><path d="M${a.hx} ${a.ny + 5} q5 5 0 11 q-5 -4 0 -11z" fill="url(#gFlame)"/>` },
-  auriculars: { slot: 'head', name: 'Auriculars', price: null, unlock: 'Ratxa de 14 dies',
+  auriculars: { slot: 'head', name: ['Auriculars', 'Auriculares'], price: null, unlock: ['Ratxa de 14 dies', 'Racha de 14 días'],
     draw: a => `<path d="M${a.hx - a.hw} ${a.ey} Q${a.hx - a.hw} ${a.hy - 14} ${a.hx} ${a.hy - 14} Q${a.hx + a.hw} ${a.hy - 14} ${a.hx + a.hw} ${a.ey}" stroke="#2B1A38" stroke-width="6" fill="none" stroke-linecap="round"/><rect x="${a.hx - a.hw - 8}" y="${a.ey - 12}" width="14" height="24" rx="7" fill="url(#gRed)"/><rect x="${a.hx + a.hw - 6}" y="${a.ey - 12}" width="14" height="24" rx="7" fill="url(#gRed)"/>` },
-  coronafoc: { slot: 'head', name: 'Corona de foc', price: null, unlock: 'Ratxa de 60 dies',
+  coronafoc: { slot: 'head', name: ['Corona de foc', 'Corona de fuego'], price: null, unlock: ['Ratxa de 60 dies', 'Racha de 60 días'],
     draw: a => `<path d="M${a.hx - 22} ${a.hy + 7} L${a.hx - 25} ${a.hy - 15} L${a.hx - 11} ${a.hy - 4} L${a.hx} ${a.hy - 22} L${a.hx + 11} ${a.hy - 4} L${a.hx + 25} ${a.hy - 15} L${a.hx + 22} ${a.hy + 7}Z" fill="url(#gFlame)" stroke="#E0431A" stroke-width="2.5" stroke-linejoin="round"/><path d="M${a.hx} ${a.hy - 8} q6 6 0 13 q-6 -6 0 -13z" fill="#FFF3B0"/>` }
 };
 

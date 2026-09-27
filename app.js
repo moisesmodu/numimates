@@ -1,40 +1,51 @@
-/* ===== Mates amb Numi — lògica de l'app ===== */
+/* ===== Mates amb Numi — lògica de l'app (CA/ES) ===== */
 const $ = (s, el = document) => el.querySelector(s);
 const $$ = (s, el = document) => [...el.querySelectorAll(s)];
 const app = $('#app');
 document.body.insertAdjacentHTML('afterbegin', DEFS);
-const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 const today = () => { const d = new Date(); return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`; };
 const dayDiff = (a, b) => Math.round((new Date(b + 'T12:00:00') - new Date(a + 'T12:00:00')) / 864e5);
 const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const TEST_DAYS = 14;
 
 /* ---------- Estat local ---------- */
 const SKEY = 'mates-numi-v1';
 let DB; try { DB = JSON.parse(localStorage.getItem(SKEY)); } catch (e) { }
 if (!DB || !DB.profiles) DB = { profiles: {}, current: null };
+if (!DB.lang) DB.lang = /^es/i.test(navigator.language || '') ? 'es' : 'ca';
 function freshProgress() {
-  return { companion: 'numi', owned: ['numi'], accOwned: [], acc: {}, xp: 0, gems: 20, streak: 0, best: 0, lastDay: null, days: [], freeze: 0, srw: [],
-    daily: { d: today(), xp: 0 }, prog: {}, skip: {}, badges: [], stats: { answers: 0, correct: 0, perfect: 0, lessons: 0, trains: 0, combo: 0, bestCombo: 0, sprintBest: 0, sk: {} } };
+  return { companion: 'numi', owned: ['numi'], accOwned: [], acc: {}, xp: 0, gems: 20, streak: 0, best: 0, lastDay: null, days: [], freeze: 0, srw: [], tests: [],
+    daily: { d: today(), xp: 0 }, prog: {}, skip: {}, badges: [], stats: { answers: 0, correct: 0, perfect: 0, lessons: 0, trains: 0, combo: 0, bestCombo: 0, sprintBest: 0, bests: {}, games: 0, sk: {} } };
 }
 function migrate(p) {
   const f = freshProgress();
   for (const k in f) if (p[k] === undefined) p[k] = f[k];
+  if (!p.stats.bests) p.stats.bests = { sprint: p.stats.sprintBest || 0 };
+  if (p.stats.games === undefined) p.stats.games = 0;
   if (p.course === undefined) { p.course = 3; p.baseCourse = 3; }
   if (p.baseCourse === undefined) p.baseCourse = p.course;
+  if (!p.lang) p.lang = DB.lang;
   for (let i = 1; i <= 8; i++) if (p.prog['u' + i]) { p.prog['c4-' + i] = p.prog['u' + i]; delete p.prog['u' + i]; }
-  if (!p.code && !p.pendingReg) p.pendingReg = true;
+  if (!p.code && !p.pendingReg && !p.holdReg) p.pendingReg = true;
   return p;
 }
 Object.values(DB.profiles).forEach(migrate);
 let P = DB.current && DB.profiles[DB.current] || null;
+function setLang(l, rerender = true) {
+  LANG = l; document.documentElement.lang = l; DB.lang = l;
+  if (P && P.id !== 'tmp') { P.lang = l; save(); } else saveLocal();
+  if (rerender) { const v = VIEW; if (v === 'onboard') onb(ONB.step || 0); else go(v || 'home'); }
+}
+LANG = P ? P.lang : DB.lang; document.documentElement.lang = LANG;
 function saveLocal() { try { localStorage.setItem(SKEY, JSON.stringify(DB)); } catch (e) { } }
-function save() { saveLocal(); if (P) { P.dirty = true; clearTimeout(save.t); save.t = setTimeout(syncNow, 1500); } }
+function save() { saveLocal(); if (P && P.id !== 'tmp') { P.dirty = true; clearTimeout(save.t); save.t = setTimeout(syncNow, 1500); } }
 
 /* ---------- Núvol ---------- */
 const api = (path, data) => fetch('/api/' + path, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(data) }).then(r => r.json().then(j => ({ status: r.status, ...j })));
 let SYNCING = false;
 async function syncNow() {
-  if (!P || SYNCING || !navigator.onLine) return;
+  if (!P || P.id === 'tmp' || P.holdReg || SYNCING || !navigator.onLine) return;
   SYNCING = true;
   try {
     if (!P.code) {
@@ -42,7 +53,7 @@ async function syncNow() {
       if (r.code) { P.code = r.code; P.pendingReg = false; P.dirty = false; saveLocal(); }
     } else if (P.dirty) {
       const r = await api('sync', { code: P.code, state: P });
-      if (r.ok === false && r.state && r.state.xp > P.xp) { adopt(r.state); }
+      if (r.ok === false && r.state && r.state.xp > P.xp) adopt(r.state);
       else if (r.ok) P.dirty = false;
       saveLocal();
     }
@@ -52,10 +63,10 @@ async function syncNow() {
 }
 async function pull() {
   if (!P || !P.code || !navigator.onLine) return;
-  try { const r = await api('login', { code: P.code }); if (r.state && r.state.xp > P.xp) { adopt(r.state); if (VIEW === 'home') renderHome(); } } catch (e) { }
+  try { const r = await api('login', { code: P.code }); if (r.state && r.state.xp > P.xp) { adopt(r.state); if (VIEW === 'home') renderHome(); } if (r.username && !P.username) { P.username = r.username; saveLocal(); } } catch (e) { }
 }
-function adopt(st) { const id = P.id; Object.assign(P, migrate(st), { id, dirty: false }); DB.profiles[id] = P; saveLocal(); }
-const cloudTxt = () => !P.code ? '⏳ Encara no s\'ha pogut desar al núvol (es tornarà a provar sol).' : P.dirty ? '⏳ Desant els últims canvis…' : '☁️ Progrés desat al núvol.';
+function adopt(st) { const id = P.id; Object.assign(P, migrate(st), { id, dirty: false }); DB.profiles[id] = P; LANG = P.lang; saveLocal(); }
+const cloudTxt = () => !P.code ? L("⏳ Encara no s'ha pogut desar al núvol (es tornarà a provar sol).", '⏳ Aún no se ha podido guardar en la nube (se volverá a intentar solo).') : P.dirty ? L('⏳ Desant els últims canvis…', '⏳ Guardando los últimos cambios…') : L('☁️ Progrés desat al núvol.', '☁️ Progreso guardado en la nube.');
 addEventListener('online', syncNow);
 setInterval(() => { if (P && (P.dirty || !P.code)) syncNow(); }, 30000);
 addEventListener('visibilitychange', () => { if (document.hidden) syncNow(); });
@@ -78,14 +89,8 @@ function touchStreak() {
   return true;
 }
 const prog = (ui, c = CUR()) => (P.prog[c.units[ui].id] ||= { stars: [0, 0, 0, 0, 0, 0] });
-function unitOpen(ui, ci = P.course) {
-  const c = COURSES[ci];
-  return ui === 0 || P.unlockAll || ci < P.baseCourse || ui <= (P.skip[c.id] || 0) || prog(ui - 1, c).stars[5] > 0;
-}
-function lessonOpen(ui, li) {
-  if (!unitOpen(ui)) return false;
-  return li === 0 || P.unlockAll || P.course < P.baseCourse || ui < (P.skip[CUR().id] || 0) || prog(ui).stars[li - 1] > 0;
-}
+function unitOpen(ui, ci = P.course) { const c = COURSES[ci]; return ui === 0 || P.unlockAll || ci < P.baseCourse || ui <= (P.skip[c.id] || 0) || prog(ui - 1, c).stars[5] > 0; }
+function lessonOpen(ui, li) { if (!unitOpen(ui)) return false; return li === 0 || P.unlockAll || P.course < P.baseCourse || ui < (P.skip[CUR().id] || 0) || prog(ui).stars[li - 1] > 0; }
 const unitsDone = p => COURSES.reduce((n, c) => n + c.units.filter(u => (p.prog[u.id]?.stars[5] || 0) > 0).length, 0);
 function currentNode() {
   const us = UNITS_(), from = Math.min(P.skip[CUR().id] || 0, us.length - 1);
@@ -97,30 +102,35 @@ function record(sk, ok) {
   const a = s.sk[sk] ||= [0, 0]; a[1]++; if (ok) a[0]++;
   if (ok) { s.combo++; s.bestCombo = Math.max(s.bestCombo, s.combo); } else s.combo = 0;
 }
+function testInfo() {
+  const last = P.tests.length ? P.tests[P.tests.length - 1].date : (P.survey?.date || null);
+  const left = last ? TEST_DAYS - dayDiff(last, today()) : 0;
+  return { due: left <= 0, left: Math.max(0, left) };
+}
 
 /* ---------- Premis de ratxa ---------- */
 const SRW = [
-  { d: 3, gems: 30, icon: '🎁', txt: '30 cristalls' },
-  { d: 7, gems: 50, acc: 'medalla', icon: '🏅', txt: 'Medalla de foc + 50 cristalls' },
-  { d: 14, gems: 100, acc: 'auriculars', icon: '🎧', txt: 'Auriculars + 100 cristalls' },
-  { d: 30, gems: 150, char: 'estel', icon: '⭐', txt: 'Nova companya: Estel + 150 cristalls' },
-  { d: 60, gems: 250, acc: 'coronafoc', icon: '👑', txt: 'Corona de foc + 250 cristalls' },
-  { d: 100, gems: 500, icon: '🏆', txt: 'Títol de Llegenda + 500 cristalls' }
+  { d: 3, gems: 30, icon: '🎁', txt: ['30 cristalls', '30 cristales'] },
+  { d: 7, gems: 50, acc: 'medalla', icon: '🏅', txt: ['Medalla de foc + 50 cristalls', 'Medalla de fuego + 50 cristales'] },
+  { d: 14, gems: 100, acc: 'auriculars', icon: '🎧', txt: ['Auriculars + 100 cristalls', 'Auriculares + 100 cristales'] },
+  { d: 30, gems: 150, char: 'estel', icon: '⭐', txt: ['Nova companya: Estel + 150 cristalls', 'Nueva compañera: Estel + 150 cristales'] },
+  { d: 60, gems: 250, acc: 'coronafoc', icon: '👑', txt: ['Corona de foc + 250 cristalls', 'Corona de fuego + 250 cristales'] },
+  { d: 100, gems: 500, icon: '🏆', txt: ['Títol de Llegenda + 500 cristalls', 'Título de Leyenda + 500 cristales'] }
 ];
 function grantStreak() {
   const got = SRW.filter(r => P.streak >= r.d && !P.srw.includes(r.d));
   got.forEach(r => { P.srw.push(r.d); P.gems += r.gems; if (r.acc && !P.accOwned.includes(r.acc)) P.accOwned.push(r.acc); if (r.char && !P.owned.includes(r.char)) P.owned.push(r.char); });
   return got;
 }
+const dies = n => n === 1 ? L('dia', 'día') : L('dies', 'días');
 function streakCard() {
   const s = streakNow(), next = SRW.find(r => !P.srw.includes(r.d));
   const dots = SRW.map(r => `<div class="srw ${P.srw.includes(r.d) ? 'got' : ''} ${next && next.d === r.d ? 'next' : ''}"><div class="sri">${r.icon}</div><span>${r.d} d</span></div>`).join('');
-  const prev = next ? (SRW[SRW.indexOf(next) - 1]?.d || 0) : 100, pc = next ? Math.min(100, Math.max(0, (s - prev) / (next.d - prev) * 100)) : 100;
-  return `<div class="scard"><div class="shead"><span class="sico">${ICON.flame}</span><div><b>${s ? `Ratxa de ${s} ${s === 1 ? 'dia' : 'dies'}` : 'Encén la teva ratxa!'}</b><small>${next ? `Et falten <b>${Math.max(0, next.d - s)} ${next.d - s === 1 ? 'dia' : 'dies'}</b> per aconseguir: ${next.txt}` : 'Has aconseguit tots els premis. Ets una llegenda!'}</small></div></div>
+  return `<div class="scard"><div class="shead"><span class="sico">${ICON.flame}</span><div><b>${s ? L(`Ratxa de ${s} ${dies(s)}`, `Racha de ${s} ${dies(s)}`) : L('Encén la teva ratxa!', '¡Enciende tu racha!')}</b><small>${next ? L(`Et falten <b>${Math.max(0, next.d - s)} ${dies(next.d - s)}</b> per aconseguir: ${tx(next.txt)}`, `Te faltan <b>${Math.max(0, next.d - s)} ${dies(next.d - s)}</b> para conseguir: ${tx(next.txt)}`) : L('Has aconseguit tots els premis. Ets una llegenda!', '¡Has conseguido todos los premios! Eres una leyenda.')}</small></div></div>
     <div class="strack"><div class="sline"><div style="width:${(SRW.filter(r => P.srw.includes(r.d)).length) / (SRW.length - 1) * 100}%"></div></div>${dots}</div></div>`;
 }
 
-/* ---------- So i confeti ---------- */
+/* ---------- So, confeti i animacions ---------- */
 let AC;
 function tone(f, d, t = 0, type = 'sine', v = .14) {
   if (!P || !P.sound) return;
@@ -134,7 +144,8 @@ function tone(f, d, t = 0, type = 'sine', v = .14) {
 }
 const SFX = {
   ok() { tone(660, .12); tone(990, .2, .09); }, ko() { tone(200, .28, 0, 'triangle', .12); }, tap() { tone(520, .05, 0, 'sine', .05); },
-  win() { [523, 659, 784, 1047].forEach((f, i) => tone(f, .25, i * .11)); }, coin() { tone(988, .08); tone(1319, .18, .07); }
+  win() { [523, 659, 784, 1047].forEach((f, i) => tone(f, .25, i * .11)); }, coin() { tone(988, .08); tone(1319, .18, .07); },
+  tick() { tone(880, .04, 0, 'square', .03); }, boing() { tone(300, .1); tone(600, .15, .06); }
 };
 function confetti(n = 140) {
   if (REDUCED) return;
@@ -143,6 +154,40 @@ function confetti(n = 140) {
   const ps = [...Array(n)].map(() => ({ x: W / 2 + (Math.random() - .5) * W * .4, y: H * .38, vx: (Math.random() - .5) * 20 * dpr, vy: (-Math.random() * 17 - 5) * dpr, r: (4 + Math.random() * 5) * dpr, c: pick(cols), a: Math.random() * 6, va: (Math.random() - .5) * .3 }));
   let f = 0;
   (function loop() { ctx.clearRect(0, 0, W, H); ps.forEach(p => { p.vy += .5 * dpr; p.x += p.vx; p.y += p.vy; p.vx *= .99; p.a += p.va; ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.a); ctx.fillStyle = p.c; ctx.fillRect(-p.r, -p.r / 2, p.r * 2, p.r); ctx.restore(); }); if (++f < 160) requestAnimationFrame(loop); else c.remove(); })();
+}
+function sparkle(el, n = 14) {
+  if (REDUCED || !el) return;
+  const r = el.getBoundingClientRect(), cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+  for (let i = 0; i < n; i++) {
+    const s = document.createElement('i'), a = Math.PI * 2 * i / n + Math.random() * .4, d = 50 + Math.random() * 50;
+    s.className = 'spark'; s.textContent = pick(['✦', '★', '•', '✧']);
+    s.style.cssText = `left:${cx}px;top:${cy}px;--dx:${Math.cos(a) * d}px;--dy:${Math.sin(a) * d}px;color:${pick(['#FFC93C', '#3CC46A', '#36A9E1', '#FF7AA8', '#8A4FB0'])}`;
+    document.body.appendChild(s); setTimeout(() => s.remove(), 750);
+  }
+}
+function floatTxt(el, txt, cls = '') {
+  if (!el) return;
+  const r = el.getBoundingClientRect(), s = document.createElement('div');
+  s.className = 'floattxt ' + cls; s.innerHTML = txt; s.style.left = (r.left + r.width / 2) + 'px'; s.style.top = r.top + 'px';
+  document.body.appendChild(s); setTimeout(() => s.remove(), 1300);
+}
+function comboBanner(n) {
+  if (![3, 5, 10, 15, 20, 30].includes(n)) return;
+  const d = document.createElement('div'); d.className = 'combobanner';
+  d.innerHTML = `<i class="ci">${ICON.flame}</i> ${L(`Ratxa de ${n}!`, `¡Racha de ${n}!`)} <small>${n >= 10 ? L('Imparable!', '¡Imparable!') : L('Molt bé!', '¡Muy bien!')}</small>`;
+  document.body.appendChild(d); setTimeout(() => d.remove(), 1500); SFX.boing();
+}
+const SAY = () => L(['Som-hi!', 'Tu pots!', 'Quina il·lusió!', 'Hola!', 'Una lliçó més?', 'Ets un crac!', 'Hehe, pessigolles!', 'Anem a aprendre!'], ['¡Vamos!', '¡Tú puedes!', '¡Qué ilusión!', '¡Hola!', '¿Una lección más?', '¡Eres un crack!', '¡Jeje, cosquillas!', '¡Vamos a aprender!']);
+document.addEventListener('click', e => {
+  const w = e.target.closest('.tapme'); if (!w) return;
+  const c = w.querySelector('.char'); if (!c) return;
+  c.classList.remove('jump'); void c.getBoundingClientRect(); c.classList.add('jump'); SFX.boing();
+  floatTxt(w, pick(SAY()), 'say');
+});
+function revealNodes() {
+  if (REDUCED || !('IntersectionObserver' in window)) { $$('.nwrap').forEach(n => n.classList.add('in')); return; }
+  const io = new IntersectionObserver(es => es.forEach(en => { if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); } }), { threshold: .2 });
+  $$('.nwrap').forEach(n => io.observe(n));
 }
 
 /* ---------- Modals ---------- */
@@ -158,32 +203,45 @@ function ask(txt, yes, no, onYes) {
   $('#askYes').onclick = () => { closeModal(); onYes(); };
 }
 function toast(t) { const d = document.createElement('div'); d.className = 'toast'; d.innerHTML = t; document.body.appendChild(d); setTimeout(() => d.classList.add('out'), 2300); setTimeout(() => d.remove(), 2700); }
+const langPill = () => `<div class="langpill"><button class="${LANG === 'ca' ? 'on' : ''}" onclick="setLang('ca')">CAT</button><button class="${LANG === 'es' ? 'on' : ''}" onclick="setLang('es')">ES</button></div>`;
 
 /* ---------- Navegació ---------- */
-let LS = null, SP = null, FLOW = [], VIEW = '';
+let LS = null, SP = null, AG = null, FLOW = [], VIEW = '', GAIN = null;
 function go(v) {
-  LS = null; stopSprint(); closeModal();
+  LS = null; stopSprint(); stopAgility(); closeModal();
   if (!P && v !== 'profiles') v = Object.keys(DB.profiles).length ? 'profiles' : 'onboard';
   VIEW = v;
   ({ home: renderHome, train: renderTrain, shop: renderShop, badges: renderBadges, profile: renderProfile, profiles: renderProfiles, onboard: () => onb(0) }[v] || renderHome)();
   if (v !== 'home') window.scrollTo(0, 0);
 }
-const NAV = [['home', '🗺️', 'Camí'], ['train', '🎯', 'Entrena'], ['shop', '🛍️', 'Botiga'], ['badges', '🏅', 'Medalles'], ['profile', '👤', 'Perfil']];
-const nav = t => `<nav class="nav">${NAV.map(([v, i, l]) => `<button class="${v === t ? 'on' : ''}" onclick="go('${v}')"><span class="ni">${i}</span><span>${l}</span></button>`).join('')}</nav>`;
+const NAV = () => [['home', '🗺️', L('Camí', 'Camino')], ['train', '🎯', L('Entrena', 'Entrena')], ['shop', '🛍️', L('Botiga', 'Tienda')], ['badges', '🏅', L('Medalles', 'Medallas')], ['profile', '👤', L('Perfil', 'Perfil')]];
+const nav = t => `<nav class="nav">${NAV().map(([v, i, l]) => `<button class="${v === t ? 'on' : ''}" onclick="go('${v}')"><span class="ni">${i}</span><span>${l}</span></button>`).join('')}</nav>`;
 const shell = (inner, tab) => `<div class="page">${topbar()}${inner}</div>${nav(tab)}`;
 function topbar() {
   const s = streakNow();
-  return `<header class="topbar"><button class="avatar" onclick="go('profiles')" title="Canvia d'alumne">${charSVG(P.companion, 'idle', P.acc)}</button>
-  <div class="chips"><span class="chip ${s ? 'fire' : 'off'}" title="Ratxa de dies"><i class="ci">${ICON.flame}</i>${s}</span><span class="chip gem" title="Cristalls"><i class="ci">${ICON.gem}</i>${P.gems}</span><span class="chip lvl" title="Nivell"><i class="ci">${ICON.bolt}</i>${lvlOf(P.xp)}</span></div></header>`;
+  return `<header class="topbar"><button class="avatar" onclick="go('profiles')" title="${L("Canvia d'alumne", 'Cambiar de alumno')}">${charSVG(P.companion, 'idle', P.acc)}</button>
+  <div class="chips"><span class="chip ${s ? 'fire' : 'off'}" id="chipFire"><i class="ci">${ICON.flame}</i>${s}</span><span class="chip gem" id="chipGem"><i class="ci">${ICON.gem}</i>${P.gems}</span><span class="chip lvl" id="chipLvl"><i class="ci">${ICON.bolt}</i>${lvlOf(P.xp)}</span></div></header>`;
 }
 const starsHTML = (n, cls = '') => `<span class="stars ${cls}">${[1, 2, 3].map(i => `<i class="${i <= n ? 'on' : ''}">★</i>`).join('')}</span>`;
+function showGain() {
+  if (!GAIN) return;
+  const g = GAIN; GAIN = null;
+  setTimeout(() => {
+    if (g.gems) { const c = $('#chipGem'); if (c) { floatTxt(c, `+${g.gems} 💎`, 'gain'); c.classList.add('bump'); } }
+    if (g.xp) { const c = $('#chipLvl'); if (c) { floatTxt(c, `+${g.xp} XP`, 'gain xp'); c.classList.add('bump'); } }
+  }, 250);
+}
 
 /* ---------- Camí ---------- */
 function goalCard() {
   dailyRoll();
   const x = P.daily.xp, g = P.goal, pc = Math.min(100, Math.round(x / g * 100));
-  const msg = x >= g ? "Objectiu d'avui complert! Ets un crac." : x === 0 ? `Hola, ${esc(P.name)}! Fem una lliçó?` : `Et falten ${g - x} XP per a l'objectiu d'avui.`;
-  return `<div class="goal"><div class="gchar">${charSVG(P.companion, x >= g ? 'happy' : 'idle', P.acc)}</div><div class="gbody"><div class="gmsg">${msg}</div><div class="gbar"><div style="width:${pc}%"></div></div><div class="gnum">${x} / ${g} XP avui</div></div></div>`;
+  const msg = x >= g ? L("Objectiu d'avui complert! Ets un crac.", '¡Objetivo de hoy cumplido! Eres un crack.') : x === 0 ? L(`Hola, ${esc(P.name)}! Fem una lliçó?`, `¡Hola, ${esc(P.name)}! ¿Hacemos una lección?`) : L(`Et falten ${g - x} XP per a l'objectiu d'avui.`, `Te faltan ${g - x} XP para el objetivo de hoy.`);
+  return `<div class="goal"><div class="gchar tapme">${charSVG(P.companion, x >= g ? 'happy' : 'idle', P.acc)}</div><div class="gbody"><div class="gmsg">${msg}</div><div class="gbar"><div style="width:${pc}%"></div></div><div class="gnum">${x} / ${g} ${L('XP avui', 'XP hoy')}</div></div></div>`;
+}
+function testCard() {
+  const t = testInfo(); if (!t.due) return '';
+  return `<button class="testcard" onclick="startEvolution()"><span class="tci">🧪</span><span><b>${L("Toca la prova d'evolució!", '¡Toca la prueba de evolución!')}</b><small>${L('12 preguntes per veure quant has millorat. +20 💎', '12 preguntas para ver cuánto has mejorado. +20 💎')}</small></span><span class="go">›</span></button>`;
 }
 const OFF = [0, -54, -80, -54, 0, 54];
 const DECO = ['+', '×', '÷', '=', '½', '%', '7', '3', '△', '○', '□', '9'];
@@ -193,54 +251,51 @@ function unitHTML(u, ui) {
     const isR = li === 5, done = st[li] > 0, can = lessonOpen(ui, li), isCur = cur && cur[0] === ui && cur[1] === li;
     const cls = !can ? 'locked' : isCur ? 'cur' : done ? (st[li] === 3 ? 'gold' : 'done') : 'open';
     const icon = !can ? ICON.lock : isR ? (done ? ICON.trophy : ICON.gift) : done ? (st[li] === 3 ? ICON.crown : ICON.check) : ICON.star;
-    return `<div class="nwrap" style="transform:translateX(${OFF[li]}px)">
-      ${isCur ? `<div class="tip">${isR ? 'REPTE!' : 'COMENÇA'}</div>` : ''}
-      <button class="node ${cls} ${isR ? 'rep' : ''}" onclick="openLesson(${ui},${li})" aria-label="${isR ? 'Repte final' : 'Lliçó ' + (li + 1)}"><i class="nico">${icon}</i></button>
+    return `<div class="nwrap" style="--x:${OFF[li]}px;transition-delay:${li * 50}ms">
+      ${isCur ? `<div class="tip">${isR ? L('REPTE!', '¡RETO!') : L('COMENÇA', 'EMPIEZA')}</div>` : ''}
+      <button class="node ${cls} ${isR ? 'rep' : ''}" onclick="openLesson(${ui},${li})" aria-label="${isR ? L('Repte final', 'Reto final') : L('Lliçó ', 'Lección ') + (li + 1)}"><i class="nico">${icon}</i></button>
       ${done && !isR ? starsHTML(st[li], 'mini') : ''}</div>`;
   }).join('');
   const deco = [0, 1, 2, 3].map(k => `<span class="deco" style="${k % 2 ? 'left' : 'right'}:${6 + (k * 7 + ui * 5) % 20}%;top:${14 + k * 22}%;animation-delay:${k * .7}s">${DECO[(ui * 3 + k) % DECO.length]}</span>`).join('');
   return `<section class="unit ${open ? '' : 'closed'}" style="--uc:${u.color}">
-    <div class="ubanner"><div class="utext"><div class="ukick">UNITAT ${ui + 1}</div><h2>${u.title}</h2><p>${open ? u.desc : '🔒 Supera el repte de la unitat anterior per obrir-la.'}</p></div><div class="uguide">${charSVG(u.guide, 'idle')}</div></div>
-    <div class="path">${deco}${nodes}<div class="pguide ${ui % 2 ? 'l' : ''}">${charSVG(u.guide, open ? 'happy' : 'idle')}</div></div></section>`;
+    <div class="ubanner"><div class="utext"><div class="ukick">${L('UNITAT', 'UNIDAD')} ${ui + 1}</div><h2>${tx(u.title)}</h2><p>${open ? tx(u.desc) : L('🔒 Supera el repte de la unitat anterior per obrir-la.', '🔒 Supera el reto de la unidad anterior para abrirla.')}</p></div><div class="uguide tapme">${charSVG(u.guide, 'idle')}</div></div>
+    <div class="path">${deco}${nodes}<div class="pguide tapme ${ui % 2 ? 'l' : ''}">${charSVG(u.guide, open ? 'happy' : 'idle')}</div></div></section>`;
 }
 function renderHome() {
   VIEW = 'home';
   const c = CUR();
-  app.innerHTML = shell(`<button class="course" onclick="pickCourse()"><span class="cem">${c.emoji}</span><span><small>Estàs fent</small><b>${c.long}</b></span><span class="cch">Canvia ▾</span></button>
-    ${goalCard()}${streakCard()}${UNITS_().map(unitHTML).join('')}
-    <div class="theend">${P.course < 5 ? `Quan acabis ${c.long}, t'espera <b>${COURSES[P.course + 1].long}</b>! 🚀` : 'Has arribat al final de primària! 🎓'}</div>`, 'home');
+  app.innerHTML = shell(`<button class="course" onclick="pickCourse()"><span class="cem">${c.emoji}</span><span><small>${L('Estàs fent', 'Estás haciendo')}</small><b>${tx(c.long)}</b></span><span class="cch">${L('Canvia', 'Cambia')} ▾</span></button>
+    ${testCard()}${goalCard()}${streakCard()}${UNITS_().map(unitHTML).join('')}
+    <div class="theend">${P.course < 5 ? L(`Quan acabis ${tx(c.long)}, t'espera <b>${tx(COURSES[P.course + 1].long)}</b>! 🚀`, `Cuando acabes ${tx(c.long)}, ¡te espera <b>${tx(COURSES[P.course + 1].long)}</b>! 🚀`) : L('Has arribat al final de primària! 🎓', '¡Has llegado al final de primaria! 🎓')}</div>`, 'home');
+  revealNodes(); showGain();
   const n = $('.node.cur'); if (n) setTimeout(() => n.scrollIntoView({ block: 'center', behavior: 'smooth' }), 60);
 }
 function pickCourse() {
-  modal(`<div class="sheet"><h3>Tria el curs</h3><p>Pots repassar cursos anteriors quan vulguis.</p><div class="cgrid">${COURSES.map((c, i) => {
+  modal(`<div class="sheet"><h3>${L('Tria el curs', 'Elige el curso')}</h3><p>${L('Pots repassar cursos anteriors quan vulguis.', 'Puedes repasar cursos anteriores cuando quieras.')}</p><div class="cgrid">${COURSES.map((c, i) => {
     const done = c.units.filter(u => (P.prog[u.id]?.stars[5] || 0) > 0).length;
-    return `<button class="cbtn ${i === P.course ? 'on' : ''}" onclick="setCourse(${i})"><span class="cem">${c.emoji}</span><b>${c.name}</b><small>${done}/${c.units.length} unitats</small></button>`;
+    return `<button class="cbtn ${i === P.course ? 'on' : ''}" onclick="setCourse(${i})"><span class="cem">${c.emoji}</span><b>${tx(c.name)}</b><small>${done}/${c.units.length} ${L('unitats', 'unidades')}</small></button>`;
   }).join('')}</div></div>`);
 }
 function setCourse(i) { P.course = i; save(); closeModal(); renderHome(); window.scrollTo(0, 0); }
 function openLesson(ui, li) {
-  if (!lessonOpen(ui, li)) { toast(li === 0 ? '🔒 Primer supera el repte de la unitat anterior.' : '🔒 Primer fes la lliçó anterior.'); SFX.ko(); return; }
+  if (!lessonOpen(ui, li)) { toast(li === 0 ? L('🔒 Primer supera el repte de la unitat anterior.', '🔒 Primero supera el reto de la unidad anterior.') : L('🔒 Primer fes la lliçó anterior.', '🔒 Primero haz la lección anterior.')); SFX.ko(); return; }
   const u = UNITS_()[ui], isR = li === 5, st = prog(ui).stars[li];
-  modal(`<div class="sheet" style="--uc:${u.color}"><div class="sk">${CUR().name.toUpperCase()} · UNITAT ${ui + 1} · ${isR ? 'REPTE FINAL' : 'LLIÇÓ ' + (li + 1) + ' DE 5'}</div>
-    <h3>${isR ? 'Repte: ' + u.title.toLowerCase() : u.lessons[li].t}</h3>
-    <p>${isR ? '10 exercicis barrejats de tota la unitat. Si el superes, obres un cofre ple de cristalls i la unitat següent!' : "8 exercicis. Si te n'equivoques algun, el tornaràs a practicar al final."}</p>
+  modal(`<div class="sheet" style="--uc:${u.color}"><div class="sk">${tx(CUR().name).toUpperCase()} · ${L('UNITAT', 'UNIDAD')} ${ui + 1} · ${isR ? L('REPTE FINAL', 'RETO FINAL') : L('LLIÇÓ ', 'LECCIÓN ') + (li + 1) + L(' DE 5', ' DE 5')}</div>
+    <h3>${isR ? L('Repte: ', 'Reto: ') + tx(u.title).toLowerCase() : tx(u.lessons[li].t)}</h3>
+    <p>${isR ? L('10 exercicis barrejats de tota la unitat. Si el superes, obres un cofre ple de cristalls i la unitat següent!', '10 ejercicios mezclados de toda la unidad. Si lo superas, ¡abres un cofre lleno de cristales y la unidad siguiente!') : L("8 exercicis. Si te n'equivoques algun, el tornaràs a practicar al final.", '8 ejercicios. Si fallas alguno, lo volverás a practicar al final.')}</p>
     ${st ? `<div class="sstars">${starsHTML(st)}</div>` : ''}
-    <button class="btn big" style="--c:${u.color}" onclick="closeModal();startLesson(${ui},${li})">${st ? 'REPETEIX' : 'COMENÇA'}</button></div>`);
+    <button class="btn big" style="--c:${u.color}" onclick="closeModal();startLesson(${ui},${li})">${st ? L('REPETEIX', 'REPITE') : L('COMENÇA', 'EMPIEZA')}</button></div>`);
 }
 
 /* ---------- Motor de lliçons ---------- */
-function genEx(sk, L, seen) {
+function genEx(sk, lv, seen) {
   const [name, arg] = sk.split(':'); let e;
-  for (let t = 0; t < 10; t++) {
-    e = EX[name](L, arg); e.sk = sk; e.L = L;
-    const key = e.q + (e.vis || '') + (e.items || '');
-    if (!seen.has(key)) { seen.add(key); break; }
-  }
+  for (let t = 0; t < 10; t++) { e = EX[name](lv, arg); e.sk = sk; e.L = lv; const key = e.q + (e.vis || '') + (e.items || ''); if (!seen.has(key)) { seen.add(key); break; } }
   return e;
 }
 function startLesson(ui, li) {
   const u = UNITS_()[ui]; let plan = [];
-  if (li === 5) { const sks = [...new Set(u.lessons.flatMap(l => l.sk))]; for (let i = 0; i < 10; i++) plan.push([sks[i % sks.length], Math.max(...u.lessons.map(l => l.L)) - (i < 4 ? 1 : 0) || 1]); }
+  if (li === 5) { const sks = [...new Set(u.lessons.flatMap(l => l.sk))], top = Math.max(...u.lessons.map(l => l.L)); for (let i = 0; i < 10; i++) plan.push([sks[i % sks.length], Math.max(1, top - (i < 4 ? 1 : 0))]); }
   else { const l = u.lessons[li]; for (let i = 0; i < 8; i++) plan.push([l.sk[i % l.sk.length], l.L]); }
   startRun({ mode: li === 5 ? 'repte' : 'lesson', ui, li, plan: shuffle(plan), color: u.color });
 }
@@ -255,7 +310,7 @@ function trainPool(ui) {
 }
 function startTrain(ui) {
   const pool = trainPool(ui);
-  if (!pool.length) { toast('Primer fes alguna lliçó del camí!'); return; }
+  if (!pool.length) { toast(L('Primer fes alguna lliçó del camí!', '¡Primero haz alguna lección del camino!')); return; }
   const w = pool.map(([s]) => { const [c, t] = P.stats.sk[s] || [0, 0]; return 1 + 4 * (1 - (c + 1) / (t + 2)); });
   const sum = w.reduce((a, b) => a + b, 0), plan = [];
   for (let i = 0; i < 8; i++) { let r = Math.random() * sum, j = 0; while (j < w.length - 1 && r > w[j]) { r -= w[j]; j++; } plan.push(pool[j]); }
@@ -264,53 +319,45 @@ function startTrain(ui) {
 function startRun(o) {
   closeModal();
   const seen = new Set();
-  LS = { ...o, seen, queue: o.plan.map(([s, L]) => genEx(s, L, seen)), total: o.plan.length, done: 0, miss: 0, combo: 0, t0: Date.now(), res: [] };
+  LS = { ...o, seen, queue: o.plan.map(([s, lv]) => genEx(s, lv, seen)), total: o.plan.length, done: 0, miss: 0, combo: 0, t0: Date.now(), res: [] };
   nextEx();
 }
 function nextEx() {
-  if (LS.done >= LS.total) return LS.mode === 'place' ? finishPlacement() : finishRun();
+  if (LS.done >= LS.total) return LS.mode === 'place' ? finishPlacement() : LS.mode === 'evo' ? finishEvolution() : finishRun();
   LS.cur = LS.queue.shift(); LS.sel = null; LS.input = ''; LS.order = []; LS.state = 'ask';
   renderLesson();
 }
 function renderLesson() {
-  const e = LS.cur, place = LS.mode === 'place';
+  const e = LS.cur, quiet = LS.mode === 'place' || LS.mode === 'evo';
+  const tag = LS.mode === 'place' ? L('🧭 Prova de nivell · si no ho saps, no passa res!', '🧭 Prueba de nivel · si no lo sabes, ¡no pasa nada!') : LS.mode === 'evo' ? L("🧪 Prova d'evolució · fes-ho tan bé com puguis!", '🧪 Prueba de evolución · ¡hazlo lo mejor que puedas!') : '';
   app.innerHTML = `<div class="lesson" style="--uc:${LS.color || '#602B7A'}">
-    <div class="l-top"><button class="xbtn" onclick="quitRun()" aria-label="Surt">✕</button>
+    <div class="l-top"><button class="xbtn" onclick="quitRun()" aria-label="${L('Surt', 'Salir')}">✕</button>
       <div class="pbar"><div class="pfill" style="width:${LS.done / LS.total * 100}%"></div></div>
-      ${place ? `<div class="pcount">${LS.done + 1}/${LS.total}</div>` : `<div class="combo ${LS.combo >= 2 ? 'on' : ''}" id="combo"><i class="ci">${ICON.flame}</i><b>${LS.combo}</b></div>`}</div>
-    <div class="l-body">
-      ${e.retry ? '<div class="retry">🔁 Una altra oportunitat</div>' : ''}${place ? '<div class="retry place">🧭 Prova de nivell · si no ho saps, no passa res!</div>' : ''}
-      <div class="l-q ${e.long ? 'long' : ''}"><div class="buddy" id="buddy">${charSVG(P.companion, 'think', P.acc)}</div><div class="bubble">${e.q}</div></div>
+      ${quiet ? `<div class="pcount">${LS.done + 1}/${LS.total}</div>` : `<div class="combo ${LS.combo >= 2 ? 'on' : ''}" id="combo"><i class="ci">${ICON.flame}</i><b>${LS.combo}</b></div>`}</div>
+    <div class="l-body" id="lbody">
+      ${e.retry ? `<div class="retry">🔁 ${L('Una altra oportunitat', 'Otra oportunidad')}</div>` : ''}${tag ? `<div class="retry place">${tag}</div>` : ''}
+      <div class="l-q ${e.long ? 'long' : ''}"><div class="buddy tapme" id="buddy">${charSVG(P.companion, 'think', P.acc)}</div><div class="bubble">${e.q}</div></div>
       ${e.vis ? `<div class="l-vis">${e.vis}</div>` : ''}
       <div class="l-ans">${ansHTML(e)}</div>
     </div>
-    <div class="l-foot" id="foot"><div class="fwrap"><div class="fb" id="fb"></div>${place ? `<button class="btn ghost skip" onclick="skipPlace()">NO HO SÉ</button>` : ''}<button class="btn check" id="chk" onclick="check()" disabled>COMPROVA</button></div></div>
+    <div class="l-foot" id="foot"><div class="fwrap"><div class="fb" id="fb"></div>${quiet ? `<button class="btn ghost skip" onclick="skipPlace()">${L('NO HO SÉ', 'NO LO SÉ')}</button>` : ''}<button class="btn check" id="chk" onclick="check()" disabled>${L('COMPROVA', 'COMPRUEBA')}</button></div></div>
   </div>`;
 }
 function padHTML(fn, extra) {
-  const last = extra ? `<button class="pk-x" onclick="${fn}('${extra}')">${extra}</button>` : `<button class="pk-ok" onclick="${fn}('ok')" aria-label="Comprova">✓</button>`;
-  return `<div class="pad">${[1, 2, 3, 4, 5, 6, 7, 8, 9].map(n => `<button onclick="${fn}('${n}')">${n}</button>`).join('')}<button class="pk-del" onclick="${fn}('del')" aria-label="Esborra">⌫</button><button onclick="${fn}('0')">0</button>${last}</div>`;
+  const last = extra ? `<button class="pk-x" onclick="${fn}('${extra}')">${extra}</button>` : `<button class="pk-ok" onclick="${fn}('ok')" aria-label="OK">✓</button>`;
+  return `<div class="pad">${[1, 2, 3, 4, 5, 6, 7, 8, 9].map(n => `<button onclick="${fn}('${n}')">${n}</button>`).join('')}<button class="pk-del" onclick="${fn}('del')" aria-label="⌫">⌫</button><button onclick="${fn}('0')">0</button>${last}</div>`;
 }
 const showOf = e => e.show || fmt;
 function ansHTML(e) {
   if (e.type === 'choice') {
     const long = e.list || e.opts.some(o => String(o).replace(/<[^>]+>/g, '').length > 10);
-    return `<div class="opts ${e.big && !long ? 'big' : ''} ${long ? 'list' : ''}">${e.opts.map((o, i) => `<button class="opt" onclick="pickOpt(${i})"><span class="k">${i + 1}</span><span class="ov">${o}</span></button>`).join('')}</div>`;
+    return `<div class="opts ${e.big && !long ? 'big' : ''} ${long ? 'list' : ''}">${e.opts.map((o, i) => `<button class="opt" style="animation-delay:${80 + i * 60}ms" onclick="pickOpt(${i})"><span class="k">${i + 1}</span><span class="ov">${o}</span></button>`).join('')}</div>`;
   }
   if (e.type === 'input') return `<div class="inbox" id="inbox"><span id="inval" class="ph">?</span>${e.unit ? `<span class="iu">${e.unit}</span>` : ''}</div>${padHTML('key', e.dec ? ',' : e.neg ? '−' : null)}`;
-  return `<div class="oslots" id="oslots"><span class="ohint">Toca els números en ordre</span></div><div class="obank" id="obank">${e.items.map((v, i) => `<button class="chipn" data-i="${i}" onclick="ordTap(${i})">${showOf(e)(v)}</button>`).join('')}</div>`;
+  return `<div class="oslots" id="oslots"><span class="ohint">${L('Toca els números en ordre', 'Toca los números en orden')}</span></div><div class="obank" id="obank">${e.items.map((v, i) => `<button class="chipn" data-i="${i}" onclick="ordTap(${i})">${showOf(e)(v)}</button>`).join('')}</div>`;
 }
-function pickOpt(i) {
-  if (!LS || LS.state !== 'ask') return;
-  LS.sel = i; SFX.tap();
-  $$('.opt').forEach((b, j) => b.classList.toggle('sel', j === i));
-  $('#chk').disabled = false;
-}
-function inputShow(s) {
-  if (!s) return '?';
-  const neg = s.startsWith('−'), body = neg ? s.slice(1) : s, [i, f] = body.split(',');
-  return (neg ? '−' : '') + (i ? fmt(+i) : (f !== undefined ? '0' : '')) + (f !== undefined ? ',' + f : '');
-}
+function pickOpt(i) { if (!LS || LS.state !== 'ask') return; LS.sel = i; SFX.tap(); $$('.opt').forEach((b, j) => b.classList.toggle('sel', j === i)); $('#chk').disabled = false; }
+function inputShow(s) { if (!s) return '?'; const neg = s.startsWith('−'), body = neg ? s.slice(1) : s, [i, f] = body.split(','); return (neg ? '−' : '') + (i ? fmt(+i) : (f !== undefined ? '0' : '')) + (f !== undefined ? ',' + f : ''); }
 const inputVal = s => parseFloat(s.replace('−', '-').replace(',', '.'));
 function key(k) {
   if (!LS) return;
@@ -322,19 +369,19 @@ function key(k) {
   else if (k === '−') s = s.startsWith('−') ? s.slice(1) : '−' + s;
   else if (s.replace(/[−,]/g, '').length < 10) { if (s === '0') s = ''; if (s === '−0') s = '−'; s += k; }
   LS.input = s; SFX.tap();
-  const el = $('#inval'); el.textContent = inputShow(s); el.classList.toggle('ph', !s);
+  const el = $('#inval'); el.textContent = inputShow(s); el.classList.toggle('ph', !s); el.classList.remove('typed'); void el.offsetWidth; el.classList.add('typed');
   $('#chk').disabled = !/\d/.test(s);
 }
 function ordTap(i) { if (!LS || LS.state !== 'ask' || LS.order.includes(i)) return; LS.order.push(i); SFX.tap(); renderOrder(); }
 function ordRemove(p) { if (!LS || LS.state !== 'ask') return; LS.order.splice(p, 1); renderOrder(); }
 function renderOrder() {
   const e = LS.cur;
-  $('#oslots').innerHTML = LS.order.length ? LS.order.map((i, p) => `<button class="chipn" onclick="ordRemove(${p})">${showOf(e)(e.items[i])}</button>`).join('') : '<span class="ohint">Toca els números en ordre</span>';
+  $('#oslots').innerHTML = LS.order.length ? LS.order.map((i, p) => `<button class="chipn pop-in" onclick="ordRemove(${p})">${showOf(e)(e.items[i])}</button>`).join('') : `<span class="ohint">${L('Toca els números en ordre', 'Toca los números en orden')}</span>`;
   $$('#obank .chipn').forEach(b => b.classList.toggle('used', LS.order.includes(+b.dataset.i)));
   $('#chk').disabled = LS.order.length < e.items.length;
 }
-const PRAISE = ['Molt bé!', 'Genial!', 'Correcte!', 'Fantàstic!', 'Ben fet!', 'Increïble!', 'Així es fa!', 'Perfecte!'];
-const OOPS = ['Gairebé!', 'Ui, per poc!', 'No passa res!', 'Quasi quasi!'];
+const PRAISE = () => L(['Molt bé!', 'Genial!', 'Correcte!', 'Fantàstic!', 'Ben fet!', 'Increïble!', 'Així es fa!', 'Perfecte!'], ['¡Muy bien!', '¡Genial!', '¡Correcto!', '¡Fantástico!', '¡Bien hecho!', '¡Increíble!', '¡Así se hace!', '¡Perfecto!']);
+const OOPS = () => L(['Gairebé!', 'Ui, per poc!', 'No passa res!', 'Quasi quasi!'], ['¡Casi!', '¡Uy, por poco!', '¡No pasa nada!', '¡Casi casi!']);
 function ansText(e) {
   if (e.type === 'choice') return e.opts[e.ans];
   if (e.type === 'input') return (e.dec ? fmtD(e.ans) : fmt(e.ans)) + (e.unit ? ' ' + e.unit : '');
@@ -346,65 +393,70 @@ function isRight(e) {
   return LS.order.map(i => e.items[i]).join() === e.ans.join();
 }
 function ready(e) { return e.type === 'choice' ? LS.sel != null : e.type === 'input' ? /\d/.test(LS.input) : LS.order.length === e.items.length; }
-function skipPlace() { if (!LS || LS.mode !== 'place') return; LS.res.push(false); LS.done++; SFX.tap(); nextEx(); }
+function skipPlace() { if (!LS) return; LS.res.push(false); LS.done++; SFX.tap(); nextEx(); }
 function check() {
   if (!LS) return;
   if (LS.state === 'fb') return nextEx();
   const e = LS.cur; if (!ready(e)) return;
   const ok = isRight(e);
-  if (LS.mode === 'place') { LS.res.push(ok); LS.done++; SFX.tap(); return nextEx(); }
+  if (LS.mode === 'place' || LS.mode === 'evo') { LS.res.push(ok); if (LS.mode === 'evo') record(e.sk, ok); LS.done++; SFX.tap(); return nextEx(); }
   LS.state = 'fb';
   record(e.sk, ok);
-  if (e.type === 'choice') $$('.opt').forEach((b, i) => { b.disabled = true; if (i === e.ans) b.classList.add('right'); else if (i === LS.sel) b.classList.add('wrong'); });
-  if (e.type === 'input') $('#inbox').classList.add(ok ? 'right' : 'wrong');
-  if (e.type === 'order') $('#oslots').classList.add(ok ? 'right' : 'wrong');
+  let target = null;
+  if (e.type === 'choice') $$('.opt').forEach((b, i) => { b.disabled = true; if (i === e.ans) { b.classList.add('right'); target = b; } else if (i === LS.sel) b.classList.add('wrong'); });
+  if (e.type === 'input') { $('#inbox').classList.add(ok ? 'right' : 'wrong'); target = $('#inbox'); }
+  if (e.type === 'order') { $('#oslots').classList.add(ok ? 'right' : 'wrong'); target = $('#oslots'); }
   $$('.pad button').forEach(b => { if (!b.classList.contains('pk-ok')) b.disabled = true; });
   const foot = $('#foot'), fb = $('#fb'), chk = $('#chk');
   foot.classList.add(ok ? 'ok' : 'ko');
   if (ok) {
-    LS.done++; LS.combo++; SFX.ok();
-    $('.pfill').style.width = (LS.done / LS.total * 100) + '%';
-    fb.innerHTML = `<div class="fbh">✔ ${LS.combo >= 3 ? `Ratxa de ${LS.combo}! 🔥` : pick(PRAISE)}</div>${e.long || e.retry ? `<div class="exp">${e.ex || ''}</div>` : ''}`;
+    LS.done++; LS.combo++; SFX.ok(); sparkle(target); comboBanner(LS.combo);
+    const pf = $('.pfill'); pf.style.width = (LS.done / LS.total * 100) + '%'; pf.classList.remove('shine'); void pf.offsetWidth; pf.classList.add('shine');
+    fb.innerHTML = `<div class="fbh">✔ ${LS.combo >= 3 ? L(`Ratxa de ${LS.combo}! 🔥`, `¡Racha de ${LS.combo}! 🔥`) : pick(PRAISE())}</div>${e.long || e.retry ? `<div class="exp">${e.ex || ''}</div>` : ''}`;
   } else {
-    LS.miss++; LS.combo = 0; SFX.ko();
+    LS.miss++; LS.combo = 0; SFX.ko(); $('#lbody').classList.add('shake');
     const n = genEx(e.sk, e.L, LS.seen); n.retry = true; LS.queue.push(n);
-    fb.innerHTML = `<div class="fbh">✖ ${pick(OOPS)}</div><div class="ans">Resposta correcta: <b>${ansText(e)}</b></div>${e.ex ? `<div class="exp">💡 ${e.ex}</div>` : ''}`;
+    fb.innerHTML = `<div class="fbh">✖ ${pick(OOPS())}</div><div class="ans">${L('Resposta correcta', 'Respuesta correcta')}: <b>${ansText(e)}</b></div>${e.ex ? `<div class="exp">💡 ${e.ex}</div>` : ''}`;
   }
   $('#buddy').innerHTML = charSVG(P.companion, ok ? 'happy' : 'sad', P.acc);
   const cb = $('#combo'); cb.innerHTML = `<i class="ci">${ICON.flame}</i><b>${LS.combo}</b>`; cb.classList.toggle('on', LS.combo >= 2); if (ok && LS.combo >= 2) { cb.classList.remove('pop'); void cb.offsetWidth; cb.classList.add('pop'); }
-  chk.textContent = 'CONTINUA'; chk.disabled = false; chk.className = 'btn check ' + (ok ? 'okb' : 'kob');
+  chk.textContent = L('CONTINUA', 'CONTINÚA'); chk.disabled = false; chk.className = 'btn check ' + (ok ? 'okb' : 'kob');
   foot.scrollIntoView({ block: 'nearest' });
   saveLocal();
 }
 function quitRun() {
-  if (LS && LS.mode === 'place') return ask('Vols saltar-te la prova de nivell? Començaràs pel principi del curs.', 'SALTA', 'CONTINUA', () => { LS.res = []; finishPlacement(true); });
-  ask("Segur que vols sortir? Perdràs el progrés d'aquesta lliçó.", 'SURT', 'CONTINUA AQUÍ', () => go('home'));
+  if (LS && LS.mode === 'place') return ask(L('Vols saltar-te la prova de nivell? Començaràs pel principi del curs.', '¿Quieres saltarte la prueba de nivel? Empezarás por el principio del curso.'), L('SALTA', 'SALTAR'), L('CONTINUA', 'CONTINÚA'), () => { LS.res = []; finishPlacement(true); });
+  ask(L("Segur que vols sortir? Perdràs el progrés d'aquesta activitat.", '¿Seguro que quieres salir? Perderás el progreso de esta actividad.'), L('SURT', 'SALIR'), L('CONTINUA AQUÍ', 'SEGUIR AQUÍ'), () => go('home'));
 }
 
 /* ---------- Final i recompenses ---------- */
 const BADGES = [
-  ['first', '🚀', 'Primer pas', 'Completa la teva primera lliçó', p => p.stats.lessons >= 1],
-  ['perfect', '💯', 'Perfecte!', 'Fes una lliçó sense cap error', p => p.stats.perfect >= 1],
-  ['perfect10', '🎯', 'Punteria fina', 'Fes 10 lliçons perfectes', p => p.stats.perfect >= 10],
-  ['combo10', '⚡', 'Imparable', 'Encerta 10 respostes seguides', p => p.stats.bestCombo >= 10],
-  ['combo30', '🌪️', 'Huracà', 'Encerta 30 respostes seguides', p => p.stats.bestCombo >= 30],
-  ['streak3', '🔥', 'Foc encès', 'Practica 3 dies seguits', p => p.best >= 3],
-  ['streak7', '☄️', 'Setmana de foc', 'Practica 7 dies seguits', p => p.best >= 7],
-  ['streak30', '🌋', 'Volcà', 'Practica 30 dies seguits', p => p.best >= 30],
-  ['streak100', '🏆', 'Llegenda', 'Practica 100 dies seguits', p => p.best >= 100],
-  ['xp100', '⭐', '100 XP', "Aconsegueix 100 punts d'experiència", p => p.xp >= 100],
-  ['xp500', '🌟', '500 XP', "Aconsegueix 500 punts d'experiència", p => p.xp >= 500],
-  ['xp2000', '💫', '2.000 XP', "Aconsegueix 2.000 punts d'experiència", p => p.xp >= 2000],
-  ['unit1', '🗺️', 'Primera unitat', "Supera el repte d'una unitat", p => unitsDone(p) >= 1],
-  ['unit5', '🧭', 'Exploració', 'Supera 5 unitats', p => unitsDone(p) >= 5],
-  ['course', '🎓', 'Curs complet', 'Supera totes les unitats d\'un curs', p => COURSES.some(c => c.units.every(u => (p.prog[u.id]?.stars[5] || 0) > 0))],
-  ['friends3', '🤝', 'Bona colla', 'Aconsegueix 3 companys', p => p.owned.length >= 3],
-  ['friends6', '🎉', 'Tota la colla', 'Aconsegueix els 6 companys', p => p.owned.length >= 6],
-  ['style', '🎩', 'Amb estil', 'Aconsegueix un accessori', p => p.accOwned.length >= 1],
-  ['train5', '🏋️', 'Entrenament', 'Fes 5 entrenaments', p => p.stats.trains >= 5],
-  ['sprint15', '⏱️', 'Llampec', 'Fes 15 encerts en una contrarellotge', p => p.stats.sprintBest >= 15],
-  ['sprint30', '🏎️', 'Supersònic', 'Fes 30 encerts en una contrarellotge', p => p.stats.sprintBest >= 30],
-  ['ans500', '🧮', 'Calculadora humana', 'Respon 500 preguntes', p => p.stats.answers >= 500]
+  ['first', '🚀', 'Primer pas|Primer paso', 'Completa la teva primera lliçó|Completa tu primera lección', p => p.stats.lessons >= 1],
+  ['perfect', '💯', 'Perfecte!|¡Perfecto!', 'Fes una lliçó sense cap error|Haz una lección sin ningún error', p => p.stats.perfect >= 1],
+  ['perfect10', '🎯', 'Punteria fina|Puntería fina', 'Fes 10 lliçons perfectes|Haz 10 lecciones perfectas', p => p.stats.perfect >= 10],
+  ['combo10', '⚡', 'Imparable|Imparable', 'Encerta 10 respostes seguides|Acierta 10 respuestas seguidas', p => p.stats.bestCombo >= 10],
+  ['combo30', '🌪️', 'Huracà|Huracán', 'Encerta 30 respostes seguides|Acierta 30 respuestas seguidas', p => p.stats.bestCombo >= 30],
+  ['streak3', '🔥', 'Foc encès|Fuego encendido', 'Practica 3 dies seguits|Practica 3 días seguidos', p => p.best >= 3],
+  ['streak7', '☄️', 'Setmana de foc|Semana de fuego', 'Practica 7 dies seguits|Practica 7 días seguidos', p => p.best >= 7],
+  ['streak30', '🌋', 'Volcà|Volcán', 'Practica 30 dies seguits|Practica 30 días seguidos', p => p.best >= 30],
+  ['streak100', '🏆', 'Llegenda|Leyenda', 'Practica 100 dies seguits|Practica 100 días seguidos', p => p.best >= 100],
+  ['xp100', '⭐', '100 XP', "Aconsegueix 100 punts d'experiència|Consigue 100 puntos de experiencia", p => p.xp >= 100],
+  ['xp500', '🌟', '500 XP', "Aconsegueix 500 punts d'experiència|Consigue 500 puntos de experiencia", p => p.xp >= 500],
+  ['xp2000', '💫', '2.000 XP', "Aconsegueix 2.000 punts d'experiència|Consigue 2.000 puntos de experiencia", p => p.xp >= 2000],
+  ['unit1', '🗺️', 'Primera unitat|Primera unidad', "Supera el repte d'una unitat|Supera el reto de una unidad", p => unitsDone(p) >= 1],
+  ['unit5', '🧭', 'Exploració|Exploración', 'Supera 5 unitats|Supera 5 unidades', p => unitsDone(p) >= 5],
+  ['course', '🎓', 'Curs complet|Curso completo', "Supera totes les unitats d'un curs|Supera todas las unidades de un curso", p => COURSES.some(c => c.units.every(u => (p.prog[u.id]?.stars[5] || 0) > 0))],
+  ['evo1', '🧪', 'Científic/a|Científico/a', "Fes una prova d'evolució|Haz una prueba de evolución", p => p.tests.filter(t => t.kind === 'evo').length >= 1],
+  ['evoUp', '📈', 'Cap amunt!|¡Hacia arriba!', "Millora la nota en una prova d'evolució|Mejora la nota en una prueba de evolución", p => p.tests.some((t, i) => i && t.kind === 'evo' && t.pct > p.tests[i - 1].pct)],
+  ['friends3', '🤝', 'Bona colla|Buena pandilla', 'Aconsegueix 3 companys|Consigue 3 compañeros', p => p.owned.length >= 3],
+  ['friends6', '🎉', 'Tota la colla|Toda la pandilla', 'Aconsegueix els 6 companys|Consigue los 6 compañeros', p => p.owned.length >= 6],
+  ['style', '🎩', 'Amb estil|Con estilo', 'Aconsegueix un accessori|Consigue un accesorio', p => p.accOwned.length >= 1],
+  ['train5', '🏋️', 'Entrenament|Entrenamiento', 'Fes 5 entrenaments|Haz 5 entrenamientos', p => p.stats.trains >= 5],
+  ['agile5', '🧠', 'Ment àgil|Mente ágil', "Juga 5 partides d'agilitat mental|Juega 5 partidas de agilidad mental", p => p.stats.games >= 5],
+  ['sprint15', '⏱️', 'Llampec|Relámpago', 'Fes 15 encerts en una contrarellotge|Haz 15 aciertos en una contrarreloj', p => (p.stats.bests.sprint || 0) >= 15],
+  ['sprint30', '🏎️', 'Supersònic|Supersónico', 'Fes 30 encerts en una contrarellotge|Haz 30 aciertos en una contrarreloj', p => (p.stats.bests.sprint || 0) >= 30],
+  ['chain5', '🔗', 'Cadena perfecta|Cadena perfecta', 'Encerta les 5 cadenes de càlcul|Acierta las 5 cadenas de cálculo', p => (p.stats.bests.chain || 0) >= 5],
+  ['ans500', '🧮', 'Calculadora humana|Calculadora humana', 'Respon 500 preguntes|Responde 500 preguntas', p => p.stats.answers >= 500]
 ];
 function checkBadges() { const nw = BADGES.filter(b => !P.badges.includes(b[0]) && b[4](P)); nw.forEach(b => { P.badges.push(b[0]); P.gems += 10; }); return nw; }
 function finishRun() {
@@ -426,8 +478,10 @@ function reward(R) {
   R.streakUp = touchStreak(); R.srw = R.streakUp ? grantStreak() : [];
   R.lvUp = lvlOf(P.xp) > lv0 ? lvlOf(P.xp) : 0; if (R.lvUp) P.gems += 10;
   R.newB = checkBadges();
+  GAIN = { gems: R.gems + R.chest, xp: R.xp };
   save(); syncNow();
-  FLOW = [() => scrResult(R)];
+  FLOW = [() => (R.mode === 'evo' ? scrEvolution(R) : scrResult(R))];
+  FLOW.back = R.mode === 'game' ? 'train' : 'home';
   if (R.streakUp) FLOW.push(scrStreak);
   if (R.srw.length) FLOW.push(() => scrStreakReward(R.srw));
   if (R.chest) FLOW.push(() => scrChest(R));
@@ -435,39 +489,38 @@ function reward(R) {
   if (R.newB.length) FLOW.push(() => scrBadges(R.newB));
   flowNext();
 }
-function flowNext() { closeModal(); const f = FLOW.shift(); if (f) f(); else go('home'); }
-function countUp() {
-  $$('[data-count]').forEach(el => { const to = +el.dataset.count, suf = el.dataset.suf || '', t0 = performance.now(); (function step(t) { const k = Math.min(1, (t - t0) / 800); el.textContent = Math.round(to * (1 - (1 - k) ** 3)) + suf; if (k < 1) requestAnimationFrame(step); })(t0); });
-}
+function flowNext() { closeModal(); const f = FLOW.shift(); if (f) f(); else go(FLOW.back || 'home'); }
+function countUp() { $$('[data-count]').forEach(el => { const to = +el.dataset.count, suf = el.dataset.suf || '', t0 = performance.now(); (function step(t) { const k = Math.min(1, (t - t0) / 800); el.textContent = Math.round(to * (1 - (1 - k) ** 3)) + suf; if (k < 1) requestAnimationFrame(step); })(t0); }); }
 function scrResult(R) {
-  const title = R.mode === 'sprint' ? 'Temps!' : R.perfect ? 'Lliçó perfecta!' : R.mode === 'train' ? 'Entrenament fet!' : 'Lliçó completada!';
-  const sub = R.mode === 'sprint' ? (R.record ? '🏆 Nou rècord personal!' : `El teu rècord: ${P.stats.sprintBest}`) : R.perfect ? 'Ni un sol error. Ets imparable!' : 'Cada error és una oportunitat per aprendre.';
-  const third = R.mode === 'sprint' ? `<div class="rs acc"><span>ENCERTS</span><b data-count="${R.score}">0</b></div>` : `<div class="rs acc"><span>PRECISIÓ</span><b data-count="${R.acc}" data-suf="%">0</b></div>`;
-  app.innerHTML = `<div class="scr"><div class="burst"></div><div class="rchar">${charSVG(P.companion, 'happy', P.acc)}</div>
+  const game = R.mode === 'game';
+  const title = game ? tx(R.title) : R.perfect ? L('Lliçó perfecta!', '¡Lección perfecta!') : R.mode === 'train' ? L('Entrenament fet!', '¡Entrenamiento hecho!') : L('Lliçó completada!', '¡Lección completada!');
+  const sub = game ? (R.record ? L('🏆 Nou rècord personal!', '🏆 ¡Nuevo récord personal!') : L(`El teu rècord: ${R.best}`, `Tu récord: ${R.best}`)) : R.perfect ? L('Ni un sol error. Ets imparable!', 'Ni un solo error. ¡Eres imparable!') : L('Cada error és una oportunitat per aprendre.', 'Cada error es una oportunidad para aprender.');
+  const third = game ? `<div class="rs acc"><span>${L('PUNTS', 'PUNTOS')}</span><b data-count="${R.score}">0</b></div>` : `<div class="rs acc"><span>${L('PRECISIÓ', 'PRECISIÓN')}</span><b data-count="${R.acc}" data-suf="%">0</b></div>`;
+  app.innerHTML = `<div class="scr"><div class="burst"></div><div class="rchar tapme">${charSVG(P.companion, 'happy', P.acc)}</div>
     <h1>${title}</h1><p class="sub">${sub}</p>
     ${R.stars ? `<div class="bigstars">${[1, 2, 3].map(i => `<i class="${i <= R.stars ? 'on' : ''}" style="animation-delay:${.25 + i * .22}s">★</i>`).join('')}</div>` : ''}
-    <div class="rstats"><div class="rs xp"><span>XP</span><b data-count="${R.xp}">0</b></div><div class="rs gem"><span>CRISTALLS</span><b data-count="${R.gems}">0</b></div>${third}</div>
-    <button class="btn big" onclick="flowNext()">CONTINUA</button></div>`;
+    <div class="rstats"><div class="rs xp"><span>XP</span><b data-count="${R.xp}">0</b></div><div class="rs gem"><span>${L('CRISTALLS', 'CRISTALES')}</span><b data-count="${R.gems}">0</b></div>${third}</div>
+    <button class="btn big" onclick="flowNext()">${L('CONTINUA', 'CONTINÚA')}</button></div>`;
   countUp(); SFX.win(); if (R.perfect || R.record) confetti();
 }
 function scrStreak() {
-  const DOW = ['dl', 'dt', 'dc', 'dj', 'dv', 'ds', 'dg'], now = new Date(), wd = (now.getDay() + 6) % 7, days = [];
-  for (let i = 0; i < 7; i++) { const d = new Date(now); d.setDate(now.getDate() - wd + i); const k = `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`; days.push(`<div class="wd ${P.days.includes(k) ? 'on' : ''} ${i === wd ? 'today' : ''}"><span>${DOW[i]}</span><i>${P.days.includes(k) ? '🔥' : ''}</i></div>`); }
+  const DOW = L(['dl', 'dt', 'dc', 'dj', 'dv', 'ds', 'dg'], ['lu', 'ma', 'mi', 'ju', 'vi', 'sá', 'do']), now = new Date(), wd = (now.getDay() + 6) % 7, days = [];
+  for (let i = 0; i < 7; i++) { const d = new Date(now); d.setDate(now.getDate() - wd + i); const k = `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`; days.push(`<div class="wd ${P.days.includes(k) ? 'on' : ''} ${i === wd ? 'today' : ''}" style="animation-delay:${i * 70}ms"><span>${DOW[i]}</span><i>${P.days.includes(k) ? '🔥' : ''}</i></div>`); }
   const next = SRW.find(r => !P.srw.includes(r.d));
   app.innerHTML = `<div class="scr"><div class="flame">${ICON.flame}</div><div class="snum" data-count="${P.streak}">0</div>
-    <h1>${P.streak === 1 ? 'Has encès la ratxa!' : `${P.streak} dies seguits!`}</h1>
-    <p class="sub">${next ? `Premi dels ${next.d} dies: ${next.icon} ${next.txt}` : 'Practicar una mica cada dia és el gran secret.'}</p>
-    <div class="week">${days.join('')}</div><button class="btn big orange" onclick="flowNext()">CONTINUA</button></div>`;
+    <h1>${P.streak === 1 ? L('Has encès la ratxa!', '¡Has encendido la racha!') : L(`${P.streak} dies seguits!`, `¡${P.streak} días seguidos!`)}</h1>
+    <p class="sub">${next ? L(`Premi dels ${next.d} dies: ${next.icon} ${tx(next.txt)}`, `Premio de los ${next.d} días: ${next.icon} ${tx(next.txt)}`) : L('Practicar una mica cada dia és el gran secret.', 'Practicar un poco cada día es el gran secreto.')}</p>
+    <div class="week">${days.join('')}</div><button class="btn big orange" onclick="flowNext()">${L('CONTINUA', 'CONTINÚA')}</button></div>`;
   countUp(); SFX.coin();
 }
 function scrStreakReward(list) {
   const r = list[list.length - 1];
   const pic = r.char ? charSVG(r.char, 'happy') : r.acc ? charSVG(P.companion, 'happy', { ...P.acc, [ACC[r.acc].slot]: r.acc }) : `<div class="bigicon">${r.icon}</div>`;
-  app.innerHTML = `<div class="scr"><div class="burst gold"></div><div class="ribbon">PREMI DE RATXA · ${r.d} DIES</div><div class="rchar big">${pic}</div>
-    <h1>${r.char ? `${CH[r.char].name} s'uneix a la colla!` : 'Has guanyat un premi!'}</h1><p class="sub">${list.map(x => `${x.icon} ${x.txt}`).join('<br>')}</p>
-    ${r.acc ? `<button class="btn big gold" onclick="P.acc['${ACC[r.acc].slot}']='${r.acc}';save();flowNext()">POSA-T'HO!</button>` : ''}
-    ${r.char ? `<button class="btn big gold" onclick="P.companion='${r.char}';save();flowNext()">VULL ANAR AMB ${CH[r.char].name.toUpperCase()}!</button>` : ''}
-    <button class="btn big ${r.acc || r.char ? 'ghost' : ''}" onclick="flowNext()">CONTINUA</button></div>`;
+  app.innerHTML = `<div class="scr"><div class="burst gold"></div><div class="ribbon">${L('PREMI DE RATXA', 'PREMIO DE RACHA')} · ${r.d} ${L('DIES', 'DÍAS')}</div><div class="rchar big tapme">${pic}</div>
+    <h1>${r.char ? L(`${CH[r.char].name} s'uneix a la colla!`, `¡${CH[r.char].name} se une a la pandilla!`) : L('Has guanyat un premi!', '¡Has ganado un premio!')}</h1><p class="sub">${list.map(x => `${x.icon} ${tx(x.txt)}`).join('<br>')}</p>
+    ${r.acc ? `<button class="btn big gold" onclick="P.acc['${ACC[r.acc].slot}']='${r.acc}';save();flowNext()">${L("POSA-T'HO!", '¡PÓNTELO!')}</button>` : ''}
+    ${r.char ? `<button class="btn big gold" onclick="P.companion='${r.char}';save();flowNext()">${L('VULL ANAR AMB ', 'QUIERO IR CON ')}${CH[r.char].name.toUpperCase()}!</button>` : ''}
+    <button class="btn big ${r.acc || r.char ? 'ghost' : ''}" onclick="flowNext()">${L('CONTINUA', 'CONTINÚA')}</button></div>`;
   SFX.win(); confetti(200);
 }
 const chestSVG = () => `<svg viewBox="0 0 160 140" class="chestsvg"><ellipse cx="80" cy="130" rx="60" ry="7" fill="#000" opacity=".12"/>
@@ -477,34 +530,79 @@ const chestSVG = () => `<svg viewBox="0 0 160 140" class="chestsvg"><ellipse cx=
   <rect x="69" y="58" width="22" height="26" rx="5" fill="url(#gGold)" stroke="#E0A300" stroke-width="3"/><circle cx="80" cy="69" r="3.5" fill="#8A5A00"/></svg>`;
 function scrChest(R) {
   const nx = UNITS_()[R.ui + 1];
-  app.innerHTML = `<div class="scr"><h1>Repte superat!</h1><p class="sub">Toca el cofre per obrir-lo</p>
-    <button class="chest wiggle" id="chest" onclick="openChest()" aria-label="Obre el cofre"><div class="chestglow"></div>${chestSVG()}</button>
+  app.innerHTML = `<div class="scr"><h1>${L('Repte superat!', '¡Reto superado!')}</h1><p class="sub">${L('Toca el cofre per obrir-lo', 'Toca el cofre para abrirlo')}</p>
+    <button class="chest wiggle" id="chest" onclick="openChest()" aria-label="${L('Obre el cofre', 'Abrir el cofre')}"><div class="chestglow"></div>${chestSVG()}</button>
     <div id="chestOut" class="chestout" hidden><div class="loot">+${R.chest} <i class="ci big">${ICON.gem}</i></div>
-    <p>${nx ? `Nova unitat desbloquejada: <b>${nx.title}</b>` : `Has completat ${CUR().long}! Ets increïble!`}</p>
-    <button class="btn big" onclick="flowNext()">CONTINUA</button></div></div>`;
+    <p>${nx ? L(`Nova unitat desbloquejada: <b>${tx(nx.title)}</b>`, `Nueva unidad desbloqueada: <b>${tx(nx.title)}</b>`) : L(`Has completat ${tx(CUR().long)}! Ets increïble!`, `¡Has completado ${tx(CUR().long)}! ¡Eres increíble!`)}</p>
+    <button class="btn big" onclick="flowNext()">${L('CONTINUA', 'CONTINÚA')}</button></div></div>`;
 }
 function openChest() { const c = $('#chest'); if (c.classList.contains('open')) return; c.classList.remove('wiggle'); c.classList.add('open'); SFX.win(); confetti(180); setTimeout(() => { $('#chestOut').hidden = false; }, 450); }
 function scrLevel(l) {
-  app.innerHTML = `<div class="scr"><div class="burst"></div><div class="lvbadge">${l}</div><h1>Has pujat al nivell ${l}!</h1><p class="sub">+10 cristalls de regal. Continua així!</p><div class="rchar">${charSVG(P.companion, 'happy', P.acc)}</div><button class="btn big" onclick="flowNext()">CONTINUA</button></div>`;
+  app.innerHTML = `<div class="scr"><div class="burst"></div><div class="lvbadge">${l}</div><h1>${L(`Has pujat al nivell ${l}!`, `¡Has subido al nivel ${l}!`)}</h1><p class="sub">${L('+10 cristalls de regal. Continua així!', '+10 cristales de regalo. ¡Sigue así!')}</p><div class="rchar tapme">${charSVG(P.companion, 'happy', P.acc)}</div><button class="btn big" onclick="flowNext()">${L('CONTINUA', 'CONTINÚA')}</button></div>`;
   SFX.win(); confetti(90);
 }
 function scrBadges(list) {
-  app.innerHTML = `<div class="scr"><h1>${list.length > 1 ? 'Noves medalles!' : 'Nova medalla!'}</h1><p class="sub">Cada medalla et dona +10 cristalls</p>
-    <div class="newb">${list.map(b => `<div class="badge on pop"><div class="bi">${b[1]}</div><b>${b[2]}</b><span>${b[3]}</span></div>`).join('')}</div>
-    <button class="btn big" onclick="flowNext()">CONTINUA</button></div>`;
+  app.innerHTML = `<div class="scr"><h1>${list.length > 1 ? L('Noves medalles!', '¡Nuevas medallas!') : L('Nova medalla!', '¡Nueva medalla!')}</h1><p class="sub">${L('Cada medalla et dona +10 cristalls', 'Cada medalla te da +10 cristales')}</p>
+    <div class="newb">${list.map((b, i) => `<div class="badge on pop" style="animation-delay:${i * 150}ms"><div class="bi">${b[1]}</div><b>${tx(b[2])}</b><span>${tx(b[3])}</span></div>`).join('')}</div>
+    <button class="btn big" onclick="flowNext()">${L('CONTINUA', 'CONTINÚA')}</button></div>`;
   SFX.coin();
 }
 
-/* ---------- Entrena i contrarellotge ---------- */
-function renderTrain() {
-  const units = UNITS_().map((u, i) => ({ u, i })).filter(({ i }) => unitOpen(i) && trainPool(i).length);
-  app.innerHTML = shell(`<h1 class="ph1">Entrena</h1><p class="lead">Practica el que ja has après de ${CUR().long} per no oblidar-ho.</p>
-    <button class="tcard" onclick="startTrain()"><span class="ti">🧠</span><span><b>Entrenament intel·ligent</b><small>8 exercicis del que et costa més. Ideal per repassar.</small></span></button>
-    <button class="tcard sp" onclick="startSprint()"><span class="ti">⏱️</span><span><b>Contrarellotge</b><small>60 segons de càlcul mental. El teu rècord: ${P.stats.sprintBest} encerts.</small></span></button>
-    <h2 class="h2">Repassa una unitat</h2>
-    ${units.length ? units.map(({ u, i }) => `<button class="ucard" style="--uc:${u.color}" onclick="startTrain(${i})"><span class="uic">${charSVG(u.guide, 'idle')}</span><span><b>${u.title}</b><small>Unitat ${i + 1}</small></span><span class="go">›</span></button>`).join('') : '<p class="empty">Quan acabis la primera lliçó del camí, aquí podràs repassar-la.</p>'}`, 'train');
+/* ---------- Prova d'evolució ---------- */
+function startEvolution() {
+  const us = UNITS_(); let top = 0;
+  us.forEach((u, i) => { if (unitOpen(i)) top = i; });
+  const units = us.slice(0, Math.min(us.length, top + 2)), meta = [];
+  for (let i = 0; i < 12; i++) { const ui = i % units.length, u = units[ui], l = u.lessons[i < 6 ? 2 : 4]; meta.push({ sk: pick(l.sk), L: l.L, ui }); }
+  startRun({ mode: 'evo', plan: meta.map(m => [m.sk, m.L]), meta, color: '#22B5A0' });
 }
-function sprintQ() {
+function finishEvolution() {
+  const res = LS.res, meta = LS.meta, ok = res.filter(Boolean).length, pct = Math.round(100 * ok / res.length);
+  const byUnit = {}; meta.forEach((m, i) => { const k = m.ui; byUnit[k] ||= [0, 0]; byUnit[k][1]++; if (res[i]) byUnit[k][0]++; });
+  const prev = [...P.tests].reverse().find(t => t.course === P.course);
+  P.tests.push({ date: today(), course: P.course, pct, ok, n: res.length, kind: 'evo', byUnit });
+  LS = null;
+  reward({ mode: 'evo', xp: 20, gems: 20, chest: 0, pct, prev: prev ? prev.pct : null, byUnit });
+}
+function evoChart(tests) {
+  const t = tests.slice(-8); if (!t.length) return '';
+  const W = 320, H = 150, x0 = 40, y0 = 120, w = (W - x0 - 16) / Math.max(1, t.length - 1);
+  const pts = t.map((d, i) => [x0 + (t.length === 1 ? (W - x0) / 2 - 8 : i * w), y0 - d.pct / 100 * 100]);
+  let s = `<svg viewBox="0 0 ${W} ${H}" class="evochart">`;
+  [0, 50, 100].forEach(v => { const y = y0 - v; s += `<line x1="${x0}" y1="${y}" x2="${W - 8}" y2="${y}" stroke="#ECE4F3" stroke-width="1.5"/><text x="${x0 - 6}" y="${y + 4}" text-anchor="end" font-size="10" font-weight="800" fill="#8A7B99" font-family="Nunito">${v}%</text>`; });
+  if (pts.length > 1) s += `<polyline points="${pts.map(p => p.join(',')).join(' ')}" fill="none" stroke="#22B5A0" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" class="drawline"/>`;
+  pts.forEach((p, i) => { s += `<circle cx="${p[0]}" cy="${p[1]}" r="6" fill="#fff" stroke="#22B5A0" stroke-width="3" class="dot" style="animation-delay:${i * 120}ms"/><text x="${p[0]}" y="${p[1] - 11}" text-anchor="middle" font-size="11" font-weight="900" fill="#12806F" font-family="Nunito">${t[i].pct}%</text><text x="${p[0]}" y="${H - 8}" text-anchor="middle" font-size="9.5" font-weight="800" fill="#8A7B99" font-family="Nunito">${t[i].date.slice(8, 10)}/${t[i].date.slice(5, 7)}</text>`; });
+  return s + '</svg>';
+}
+function scrEvolution(R) {
+  const diff = R.prev == null ? null : R.pct - R.prev;
+  const msg = diff == null ? L('Ja tenim el teu primer punt a la gràfica!', '¡Ya tenemos tu primer punto en la gráfica!') : diff > 0 ? L(`Has millorat <b>+${diff}%</b> des de l'última prova!`, `¡Has mejorado <b>+${diff}%</b> desde la última prueba!`) : diff === 0 ? L('Et mantens igual. A continuar practicant!', 'Te mantienes igual. ¡A seguir practicando!') : L('Aquesta vegada ha costat més. Cap problema: repassa i la propera anirà millor!', 'Esta vez ha costado más. ¡No pasa nada: repasa y la próxima irá mejor!');
+  const us = UNITS_();
+  app.innerHTML = `<div class="scr"><div class="burst"></div><div class="rchar tapme">${charSVG(P.companion, diff == null || diff >= 0 ? 'happy' : 'think', P.acc)}</div>
+    <h1>${L("Prova d'evolució", 'Prueba de evolución')}: ${R.pct}%</h1><p class="sub">${msg}</p>
+    <div class="evobox">${evoChart(P.tests.filter(t => t.course === P.course))}</div>
+    <div class="plres">${Object.entries(R.byUnit).map(([ui, [c, t]]) => `<div class="${c === t ? 'ok' : ''}"><span>${c === t ? '✔' : c ? '½' : '·'}</span>${tx(us[ui].title)} <small class="mut">${c}/${t}</small></div>`).join('')}</div>
+    <button class="btn big" onclick="flowNext()">${L('CONTINUA', 'CONTINÚA')}</button></div>`;
+  countUp(); SFX.win(); if (diff > 0) confetti(160);
+}
+
+/* ---------- Entrena i agilitat mental ---------- */
+const GAMES = () => [
+  ['sprint', '⏱️', L('Contrarellotge', 'Contrarreloj'), L('60 segons: encerta tants càlculs com puguis.', '60 segundos: acierta tantos cálculos como puedas.')],
+  ['flash', '⚡', L('Llampec', 'Relámpago'), L('15 preguntes amb 6 segons cadascuna. Com més ràpid, més punts!', '15 preguntas con 6 segundos cada una. ¡Cuanto más rápido, más puntos!')],
+  ['chain', '🔗', L('Càlcul en cadena', 'Cálculo en cadena'), L('Els números apareixen d\'un en un: calcula de memòria fins al final.', 'Los números aparecen de uno en uno: calcula de memoria hasta el final.')]
+];
+function renderTrain() {
+  const units = UNITS_().map((u, i) => ({ u, i })).filter(({ i }) => unitOpen(i) && trainPool(i).length), B = P.stats.bests;
+  app.innerHTML = shell(`<h1 class="ph1">${L('Entrena', 'Entrena')}</h1><p class="lead">${L(`Practica el que ja has après de ${tx(CUR().long)} i posa a prova la teva agilitat mental.`, `Practica lo que ya has aprendido de ${tx(CUR().long)} y pon a prueba tu agilidad mental.`)}</p>
+    <button class="tcard" onclick="startTrain()"><span class="ti">🧠</span><span><b>${L('Entrenament intel·ligent', 'Entrenamiento inteligente')}</b><small>${L('8 exercicis del que et costa més. Ideal per repassar.', '8 ejercicios de lo que más te cuesta. Ideal para repasar.')}</small></span></button>
+    ${testInfo().due ? `<button class="tcard evo" onclick="startEvolution()"><span class="ti">🧪</span><span><b>${L("Prova d'evolució", 'Prueba de evolución')}</b><small>${L('Ja la pots fer! Mira quant has millorat.', '¡Ya puedes hacerla! Mira cuánto has mejorado.')}</small></span></button>` : ''}
+    <h2 class="h2">⚡ ${L('Agilitat mental', 'Agilidad mental')}</h2>
+    <div class="ggrid">${GAMES().map(([id, ic, t, d]) => `<button class="gcard" onclick="startGame('${id}')"><span class="gi">${ic}</span><b>${t}</b><small>${d}</small><span class="grec">🏆 ${B[id] || 0}</span></button>`).join('')}</div>
+    <h2 class="h2">${L('Repassa una unitat', 'Repasa una unidad')}</h2>
+    ${units.length ? units.map(({ u, i }) => `<button class="ucard" style="--uc:${u.color}" onclick="startTrain(${i})"><span class="uic">${charSVG(u.guide, 'idle')}</span><span><b>${tx(u.title)}</b><small>${L('Unitat', 'Unidad')} ${i + 1}</small></span><span class="go">›</span></button>`).join('') : `<p class="empty">${L('Quan acabis la primera lliçó del camí, aquí podràs repassar-la.', 'Cuando acabes la primera lección del camino, aquí podrás repasarla.')}</p>`}`, 'train');
+}
+function quickQ() {
   const n = CUR().n, kinds = n === 1 ? ['add', 'sub'] : n === 2 ? ['add', 'sub', 'mul'] : ['add', 'sub', 'mul', 'div'];
   let a, b;
   switch (pick(kinds)) {
@@ -514,174 +612,306 @@ function sprintQ() {
     default: b = ri(2, n >= 5 ? 12 : 10); a = ri(2, 10); return { q: `${a * b} ÷ ${b}`, ans: a };
   }
 }
+function startGame(id) { if (id === 'sprint') return startSprint(); startAgility(id); }
+function gameShell(id, extraTop, body) {
+  app.innerHTML = `<div class="lesson game"><div class="l-top"><button class="xbtn" onclick="go('train')" aria-label="${L('Surt', 'Salir')}">✕</button>${extraTop}</div><div class="l-body">${body}</div></div>`;
+}
 function startSprint() {
-  SP = { t0: Date.now(), dur: 60000, score: 0, miss: 0, input: '', busy: false };
-  app.innerHTML = `<div class="lesson sprint"><div class="l-top"><button class="xbtn" onclick="go('train')" aria-label="Surt">✕</button>
-    <div class="pbar time"><div class="pfill" id="tbar" style="width:100%"></div></div><div class="combo on">✅<b id="sc">0</b></div></div>
-    <div class="l-body"><div class="sq" id="sq"></div><div class="inbox" id="inbox"><span id="inval" class="ph">?</span></div>${padHTML('skey')}</div></div>`;
+  SP = { t0: Date.now(), dur: 60000, score: 0, input: '', busy: false };
+  gameShell('sprint', `<div class="pbar time"><div class="pfill" id="tbar" style="width:100%"></div></div><div class="combo on">✅<b id="sc">0</b></div>`, `<div class="sq" id="sq"></div><div class="inbox" id="inbox"><span id="inval" class="ph">?</span></div>${padHTML('skey')}`);
   nextSprint();
   SP.timer = setInterval(() => { const left = Math.max(0, 1 - (Date.now() - SP.t0) / SP.dur); $('#tbar').style.width = left * 100 + '%'; $('#tbar').classList.toggle('low', left < .2); if (left <= 0) endSprint(); }, 100);
 }
-function nextSprint() { SP.cur = sprintQ(); SP.input = ''; SP.busy = false; $('#sq').textContent = SP.cur.q + ' = ?'; updSprint(); $('#inbox').className = 'inbox'; }
+function nextSprint() { SP.cur = quickQ(); SP.input = ''; SP.busy = false; const q = $('#sq'); q.textContent = SP.cur.q + ' = ?'; q.classList.remove('pop-in'); void q.offsetWidth; q.classList.add('pop-in'); updSprint(); $('#inbox').className = 'inbox'; }
 function updSprint() { const el = $('#inval'); el.textContent = SP.input || '?'; el.classList.toggle('ph', !SP.input); }
 function skey(k) {
   if (!SP || SP.busy) return;
   const ansS = String(SP.cur.ans);
   if (k === 'del') { SP.input = SP.input.slice(0, -1); return updSprint(); }
   if (k !== 'ok') { SP.input += k; updSprint(); }
-  if (SP.input === ansS) { SP.score++; record('sprint', true); SFX.ok(); $('#sc').textContent = SP.score; $('#inbox').classList.add('right'); SP.busy = true; setTimeout(() => SP && nextSprint(), 220); }
-  else if (k === 'ok' ? SP.input.length > 0 : SP.input.length >= ansS.length) { SP.miss++; record('sprint', false); SFX.ko(); $('#inbox').classList.add('wrong'); $('#inval').textContent = ansS; SP.busy = true; setTimeout(() => SP && nextSprint(), 900); }
+  if (SP.input === ansS) { SP.score++; record('sprint', true); SFX.ok(); $('#sc').textContent = SP.score; $('#inbox').classList.add('right'); sparkle($('#inbox'), 8); SP.busy = true; setTimeout(() => SP && nextSprint(), 220); }
+  else if (k === 'ok' ? SP.input.length > 0 : SP.input.length >= ansS.length) { record('sprint', false); SFX.ko(); $('#inbox').classList.add('wrong'); $('#inval').textContent = ansS; SP.busy = true; setTimeout(() => SP && nextSprint(), 900); }
 }
 function stopSprint() { if (SP && SP.timer) clearInterval(SP.timer); SP = null; }
-function endSprint() {
-  const score = SP.score; stopSprint();
-  const rec = score > P.stats.sprintBest; if (rec) P.stats.sprintBest = score;
-  reward({ mode: 'sprint', score, record: rec, xp: Math.max(2, score), gems: Math.floor(score / 3), chest: 0, perfect: false });
+function endSprint() { const score = SP.score; stopSprint(); endGame('sprint', score, L('Temps!|¡Tiempo!', 'Temps!|¡Tiempo!')); }
+function endGame(id, score, title) {
+  const B = P.stats.bests, rec = score > (B[id] || 0); if (rec) B[id] = score;
+  if (id === 'sprint') P.stats.sprintBest = B.sprint;
+  P.stats.games++;
+  reward({ mode: 'game', title, score, record: rec, best: B[id], xp: Math.max(2, Math.round(score * (id === 'chain' ? 4 : id === 'flash' ? .5 : 1))), gems: Math.floor(score * (id === 'chain' ? 2 : id === 'flash' ? .15 : .34)), chest: 0, perfect: false });
+}
+/* Llampec i càlcul en cadena */
+function startAgility(id) {
+  AG = { id, round: 0, score: 0, input: '', busy: false };
+  if (id === 'flash') {
+    AG.total = 15;
+    gameShell(id, `<div class="pbar"><div class="pfill" id="gbar" style="width:0%"></div></div><div class="combo on">⚡<b id="sc">0</b></div>`,
+      `<div class="ring"><svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="52" class="rbg"/><circle cx="60" cy="60" r="52" class="rfg" id="rfg"/></svg><div class="sq" id="sq"></div></div><div class="inbox" id="inbox"><span id="inval" class="ph">?</span></div>${padHTML('akey')}`);
+    return nextFlash();
+  }
+  AG.total = 5;
+  gameShell(id, `<div class="pbar"><div class="pfill" id="gbar" style="width:0%"></div></div><div class="combo on">🔗<b id="sc">0</b></div>`, `<div id="chainBox"></div>`);
+  nextChain();
+}
+function stopAgility() { if (AG) { clearInterval(AG.timer); clearTimeout(AG.to); } AG = null; }
+function nextFlash() {
+  if (!AG) return;
+  if (AG.round >= AG.total) { const s = AG.score; stopAgility(); return endGame('flash', s, 'Llampec!|¡Relámpago!'); }
+  AG.cur = quickQ(); AG.input = ''; AG.busy = false; AG.t0 = Date.now(); AG.round++;
+  $('#gbar').style.width = (AG.round - 1) / AG.total * 100 + '%';
+  const q = $('#sq'); q.textContent = AG.cur.q; q.classList.remove('pop-in'); void q.offsetWidth; q.classList.add('pop-in');
+  $('#inbox').className = 'inbox'; updAg();
+  clearInterval(AG.timer);
+  AG.timer = setInterval(() => {
+    const left = Math.max(0, 1 - (Date.now() - AG.t0) / 6000), c = $('#rfg'); if (!c) return;
+    c.style.strokeDashoffset = 327 * (1 - left); c.classList.toggle('low', left < .34);
+    if (left <= 0) { clearInterval(AG.timer); flashMiss(); }
+  }, 50);
+}
+function updAg() { const el = $('#inval'); if (el) { el.textContent = AG.input || '?'; el.classList.toggle('ph', !AG.input); } }
+function flashMiss() { AG.busy = true; SFX.ko(); $('#inbox').classList.add('wrong'); $('#inval').textContent = AG.cur.ans; AG.to = setTimeout(nextFlash, 900); }
+function akey(k) {
+  if (!AG || AG.busy) return;
+  if (AG.id === 'chain') return chainKey(k);
+  const ansS = String(AG.cur.ans);
+  if (k === 'del') { AG.input = AG.input.slice(0, -1); return updAg(); }
+  if (k !== 'ok') { AG.input += k; updAg(); }
+  if (AG.input === ansS) {
+    clearInterval(AG.timer); AG.busy = true;
+    const pts = Math.max(1, Math.ceil((6000 - (Date.now() - AG.t0)) / 1000)) * 2;
+    AG.score += pts; record('flash', true); SFX.ok(); $('#sc').textContent = AG.score; $('#inbox').classList.add('right'); sparkle($('#inbox'), 10); floatTxt($('#inbox'), '+' + pts, 'gain');
+    AG.to = setTimeout(nextFlash, 450);
+  } else if (k === 'ok' ? AG.input.length > 0 : AG.input.length >= ansS.length) { clearInterval(AG.timer); record('flash', false); flashMiss(); }
+}
+function chainGen() {
+  const n = CUR().n, steps = n <= 2 ? 3 : n <= 4 ? 4 : 5; let v = ri(n <= 2 ? 1 : 2, n <= 2 ? 9 : 12); const seq = [String(v)];
+  for (let i = 0; i < steps; i++) {
+    const opts = ['+', '−']; if (n >= 3 && v <= 20) opts.push('×'); if (n >= 3 && v % 2 === 0 && v > 2) opts.push('÷');
+    const op = pick(opts);
+    if (op === '+') { const a = ri(1, n <= 2 ? 9 : 15); v += a; seq.push('+ ' + a); }
+    else if (op === '−') { if (v <= 1) { const a = ri(1, 9); v += a; seq.push('+ ' + a); continue; } const a = ri(1, Math.min(v - 1, n <= 2 ? 9 : 15)); v -= a; seq.push('− ' + a); }
+    else if (op === '×') { const a = pick([2, 3]); v *= a; seq.push('× ' + a); }
+    else { v /= 2; seq.push('÷ 2'); }
+  }
+  return { seq, ans: v };
+}
+function nextChain() {
+  if (!AG) return;
+  if (AG.round >= AG.total) { const s = AG.score; stopAgility(); return endGame('chain', s, 'Cadena completa!|¡Cadena completa!'); }
+  AG.round++; AG.cur = chainGen(); AG.input = ''; AG.busy = true;
+  $('#gbar').style.width = (AG.round - 1) / AG.total * 100 + '%';
+  const box = $('#chainBox'), speed = CUR().n <= 2 ? 1700 : CUR().n <= 4 ? 1450 : 1250;
+  box.innerHTML = `<div class="chainhead">${L('Cadena', 'Cadena')} ${AG.round}/${AG.total} · ${L('calcula de memòria!', '¡calcula de memoria!')}</div><div class="chainstage"><div class="chainnum" id="cnum"></div></div><div class="chaindots">${AG.cur.seq.map(() => '<i></i>').join('')}</div>`;
+  let i = 0;
+  const show = () => {
+    if (!AG) return;
+    if (i < AG.cur.seq.length) {
+      const el = $('#cnum'); el.textContent = AG.cur.seq[i]; el.classList.remove('flip'); void el.offsetWidth; el.classList.add('flip');
+      $$('.chaindots i')[i].classList.add('on'); SFX.tick(); i++; AG.to = setTimeout(show, speed);
+    } else {
+      box.innerHTML = `<div class="chainhead">${L('Quin és el resultat final?', '¿Cuál es el resultado final?')}</div><div class="inbox" id="inbox"><span id="inval" class="ph">?</span></div>${padHTML('akey')}`;
+      AG.busy = false;
+    }
+  };
+  AG.to = setTimeout(show, 600);
+}
+function chainKey(k) {
+  if (k === 'del') { AG.input = AG.input.slice(0, -1); return updAg(); }
+  if (k !== 'ok') { if (AG.input.length < 5) AG.input += k; return updAg(); }
+  if (!AG.input) return;
+  AG.busy = true; const ok = +AG.input === AG.cur.ans;
+  record('chain', ok);
+  if (ok) { AG.score++; $('#sc').textContent = AG.score; SFX.ok(); $('#inbox').classList.add('right'); sparkle($('#inbox'), 14); }
+  else { SFX.ko(); $('#inbox').classList.add('wrong'); }
+  $('#chainBox').insertAdjacentHTML('beforeend', `<div class="chainrecap">${AG.cur.seq.join(' ')} = <b>${AG.cur.ans}</b></div>`);
+  AG.to = setTimeout(nextChain, ok ? 1200 : 2600);
 }
 
 /* ---------- Botiga ---------- */
 function renderShop() {
   const comp = Object.keys(CH).map(id => {
     const c = CH[id], own = P.owned.includes(id), sel = P.companion === id;
-    const btn = sel ? `<button class="btn sm ghost" disabled>AMB TU</button>` : own ? `<button class="btn sm" onclick="choose('${id}')">TRIA</button>` : c.price == null ? `<button class="btn sm fire" disabled>🔥 ${c.unlock}</button>` : `<button class="btn sm gold" ${P.gems < c.price ? 'disabled' : ''} onclick="buyChar('${id}')"><i class="ci">${ICON.gem}</i>${c.price}</button>`;
-    return `<div class="item ${sel ? 'sel' : ''} ${own ? '' : 'nown'} ${c.price == null ? 'excl' : ''}"><div class="ipic">${charSVG(id, sel ? 'happy' : 'idle', own ? P.acc : null)}</div><div class="iname">${c.name}</div><div class="idesc">${c.desc}</div>${btn}</div>`;
+    const btn = sel ? `<button class="btn sm ghost" disabled>${L('AMB TU', 'CONTIGO')}</button>` : own ? `<button class="btn sm" onclick="choose('${id}')">${L('TRIA', 'ELEGIR')}</button>` : c.price == null ? `<button class="btn sm fire" disabled>🔥 ${tx(c.unlock)}</button>` : `<button class="btn sm gold" ${P.gems < c.price ? 'disabled' : ''} onclick="buyChar('${id}')"><i class="ci">${ICON.gem}</i>${c.price}</button>`;
+    return `<div class="item ${sel ? 'sel' : ''} ${own ? '' : 'nown'} ${c.price == null ? 'excl' : ''}"><div class="ipic tapme">${charSVG(id, sel ? 'happy' : 'idle', own ? P.acc : null)}</div><div class="iname">${c.name}</div><div class="idesc">${tx(c.desc)}</div>${btn}</div>`;
   }).join('');
   const acc = Object.keys(ACC).map(id => {
     const a = ACC[id], own = P.accOwned.includes(id), on = P.acc[a.slot] === id;
-    const btn = own ? `<button class="btn sm ${on ? 'ghost' : ''}" onclick="toggleAcc('${id}')">${on ? 'TREU' : 'POSA'}</button>` : a.price == null ? `<button class="btn sm fire" disabled>🔥 ${a.unlock}</button>` : `<button class="btn sm gold" ${P.gems < a.price ? 'disabled' : ''} onclick="buyAcc('${id}')"><i class="ci">${ICON.gem}</i>${a.price}</button>`;
-    return `<div class="item ${on ? 'sel' : ''} ${a.price == null ? 'excl' : ''}"><div class="ipic">${charSVG(P.companion, 'idle', { [a.slot]: id })}</div><div class="iname">${a.name}</div>${btn}</div>`;
+    const btn = own ? `<button class="btn sm ${on ? 'ghost' : ''}" onclick="toggleAcc('${id}')">${on ? L('TREU', 'QUITAR') : L('POSA', 'PONER')}</button>` : a.price == null ? `<button class="btn sm fire" disabled>🔥 ${tx(a.unlock)}</button>` : `<button class="btn sm gold" ${P.gems < a.price ? 'disabled' : ''} onclick="buyAcc('${id}')"><i class="ci">${ICON.gem}</i>${a.price}</button>`;
+    return `<div class="item ${on ? 'sel' : ''} ${a.price == null ? 'excl' : ''}"><div class="ipic">${charSVG(P.companion, 'idle', { [a.slot]: id })}</div><div class="iname">${tx(a.name)}</div>${btn}</div>`;
   }).join('');
-  app.innerHTML = shell(`<h1 class="ph1">Botiga</h1><p class="lead">Guanya cristalls fent lliçons i canvia'ls per companys i accessoris. Els marcats amb 🔥 només es guanyen amb les ratxes!</p>
-    <h2 class="h2">Companys</h2><div class="grid">${comp}</div>
-    <h2 class="h2">Accessoris <small>per al teu company</small></h2><div class="grid">${acc}</div>
-    <h2 class="h2">Ajudes</h2><div class="item wide"><div class="ipic big-emoji">🧊</div><div><div class="iname">Protector de ratxa</div><div class="idesc">Si un dia no pots practicar, la ratxa no s'apaga. En tens ${P.freeze} de 2.</div></div>
+  app.innerHTML = shell(`<h1 class="ph1">${L('Botiga', 'Tienda')}</h1><p class="lead">${L("Guanya cristalls fent lliçons i canvia'ls per companys i accessoris. Els marcats amb 🔥 només es guanyen amb les ratxes!", 'Gana cristales haciendo lecciones y cámbialos por compañeros y accesorios. ¡Los marcados con 🔥 solo se ganan con las rachas!')}</p>
+    <h2 class="h2">${L('Companys', 'Compañeros')}</h2><div class="grid">${comp}</div>
+    <h2 class="h2">${L('Accessoris', 'Accesorios')} <small>${L('per al teu company', 'para tu compañero')}</small></h2><div class="grid">${acc}</div>
+    <h2 class="h2">${L('Ajudes', 'Ayudas')}</h2><div class="item wide"><div class="ipic big-emoji">🧊</div><div><div class="iname">${L('Protector de ratxa', 'Protector de racha')}</div><div class="idesc">${L(`Si un dia no pots practicar, la ratxa no s'apaga. En tens ${P.freeze} de 2.`, `Si un día no puedes practicar, la racha no se apaga. Tienes ${P.freeze} de 2.`)}</div></div>
     <button class="btn sm gold" ${P.gems < 50 || P.freeze >= 2 ? 'disabled' : ''} onclick="buyFreeze()"><i class="ci">${ICON.gem}</i>50</button></div>`, 'shop');
 }
 function buyChar(id) {
   const c = CH[id]; if (c.price == null || P.gems < c.price || P.owned.includes(id)) return;
   P.gems -= c.price; P.owned.push(id); P.companion = id;
   const nb = checkBadges(); save(); SFX.coin(); confetti(100); renderShop();
-  modal(`<div class="sheet card cent"><div class="mchar">${charSVG(id, 'happy', P.acc)}</div><h3>${c.name} s'uneix a la colla!</h3><p>«${c.hello}»</p><button class="btn big" onclick="closeModal()">GENIAL!</button></div>`, true);
-  nb.forEach(b => toast(`${b[1]} Nova medalla: <b>${b[2]}</b> (+10 💎)`));
+  modal(`<div class="sheet card cent"><div class="mchar tapme">${charSVG(id, 'happy', P.acc)}</div><h3>${L(`${c.name} s'uneix a la colla!`, `¡${c.name} se une a la pandilla!`)}</h3><p>«${tx(c.hello)}»</p><button class="btn big" onclick="closeModal()">${L('GENIAL!', '¡GENIAL!')}</button></div>`, true);
+  nb.forEach(b => toast(`${b[1]} ${L('Nova medalla', 'Nueva medalla')}: <b>${tx(b[2])}</b> (+10 💎)`));
 }
 function choose(id) { P.companion = id; save(); SFX.tap(); renderShop(); }
 function buyAcc(id) {
   const a = ACC[id]; if (a.price == null || P.gems < a.price || P.accOwned.includes(id)) return;
   P.gems -= a.price; P.accOwned.push(id); P.acc[a.slot] = id;
   const nb = checkBadges(); save(); SFX.coin(); confetti(60); renderShop();
-  toast(`${a.name} per al teu company! ✨`); nb.forEach(b => setTimeout(() => toast(`${b[1]} Nova medalla: <b>${b[2]}</b> (+10 💎)`), 900));
+  toast(`${tx(a.name)} ✨`); nb.forEach(b => setTimeout(() => toast(`${b[1]} ${L('Nova medalla', 'Nueva medalla')}: <b>${tx(b[2])}</b> (+10 💎)`), 900));
 }
 function toggleAcc(id) { const s = ACC[id].slot; if (P.acc[s] === id) delete P.acc[s]; else P.acc[s] = id; save(); SFX.tap(); renderShop(); }
-function buyFreeze() { if (P.gems < 50 || P.freeze >= 2) return; P.gems -= 50; P.freeze++; save(); SFX.coin(); renderShop(); toast('🧊 Protector de ratxa preparat!'); }
+function buyFreeze() { if (P.gems < 50 || P.freeze >= 2) return; P.gems -= 50; P.freeze++; save(); SFX.coin(); renderShop(); toast(L('🧊 Protector de ratxa preparat!', '🧊 ¡Protector de racha listo!')); }
 
 /* ---------- Medalles ---------- */
 function renderBadges() {
   const got = BADGES.filter(b => P.badges.includes(b[0])).length;
-  app.innerHTML = shell(`<h1 class="ph1">Medalles</h1><p class="lead">N'has aconseguit <b>${got}</b> de ${BADGES.length}. Cada una val +10 cristalls.</p>
-    <h2 class="h2">Premis de ratxa</h2><div class="bgrid">${SRW.map(r => { const on = P.srw.includes(r.d); return `<div class="badge ${on ? 'on fire' : ''}"><div class="bi">${on ? r.icon : '🔒'}</div><b>${r.d} dies seguits</b><span>${r.txt}</span></div>`; }).join('')}</div>
-    <h2 class="h2">Medalles</h2><div class="bgrid">${BADGES.map(b => { const on = P.badges.includes(b[0]); return `<div class="badge ${on ? 'on' : ''}"><div class="bi">${on ? b[1] : '🔒'}</div><b>${b[2]}</b><span>${b[3]}</span></div>`; }).join('')}</div>`, 'badges');
+  app.innerHTML = shell(`<h1 class="ph1">${L('Medalles', 'Medallas')}</h1><p class="lead">${L(`N'has aconseguit <b>${got}</b> de ${BADGES.length}. Cada una val +10 cristalls.`, `Has conseguido <b>${got}</b> de ${BADGES.length}. Cada una vale +10 cristales.`)}</p>
+    <h2 class="h2">${L('Premis de ratxa', 'Premios de racha')}</h2><div class="bgrid">${SRW.map(r => { const on = P.srw.includes(r.d); return `<div class="badge ${on ? 'on fire' : ''}"><div class="bi">${on ? r.icon : '🔒'}</div><b>${r.d} ${L('dies seguits', 'días seguidos')}</b><span>${tx(r.txt)}</span></div>`; }).join('')}</div>
+    <h2 class="h2">${L('Medalles', 'Medallas')}</h2><div class="bgrid">${BADGES.map(b => { const on = P.badges.includes(b[0]); return `<div class="badge ${on ? 'on' : ''}"><div class="bi">${on ? b[1] : '🔒'}</div><b>${tx(b[2])}</b><span>${tx(b[3])}</span></div>`; }).join('')}</div>`, 'badges');
 }
 
 /* ---------- Perfil ---------- */
-const FEEL = { love: '😍 M\'encanten', good: '🙂 Em van bé', meh: '😐 Normal', hard: '😟 Em costen' };
-const LIKE = { calc: '🧮 Calcular', logic: '🧩 Enigmes i lògica', geo: '📐 Formes i mesures', prob: '🕵️ Problemes' };
+const FEEL = { love: ["😍 M'encanten", '😍 Me encantan'], good: ['🙂 Em van bé', '🙂 Me van bien'], meh: ['😐 Normal', '😐 Normal'], hard: ['😟 Em costen', '😟 Me cuestan'] };
+const LIKE = { calc: ['🧮 Calcular', '🧮 Calcular'], logic: ['🧩 Enigmes i lògica', '🧩 Enigmas y lógica'], geo: ['📐 Formes i mesures', '📐 Formas y medidas'], prob: ['🕵️ Problemes', '🕵️ Problemas'] };
 function renderProfile() {
-  const l = lvlOf(P.xp), a = xpFor(l), b = xpFor(l + 1), s = P.stats, acc = s.answers ? Math.round(100 * s.correct / s.answers) : 0;
+  const l = lvlOf(P.xp), a = xpFor(l), b = xpFor(l + 1), s = P.stats, acc = s.answers ? Math.round(100 * s.correct / s.answers) : 0, ti = testInfo();
   const rows = UNITS_().map((u, i) => {
     const sks = new Set(u.lessons.flatMap(x => x.sk)); let c = 0, t = 0;
     sks.forEach(k => { const v = s.sk[k]; if (v) { c += v[0]; t += v[1]; } });
     const done = prog(i).stars.filter(x => x).length, pc = t ? Math.round(100 * c / t) : 0;
-    return `<div class="urow" style="--uc:${u.color}"><div class="un"><b>${i + 1}. ${u.title}</b><small>${done}/6 fetes · ${t ? pc + "% d'encerts" : 'encara no'}</small></div><div class="ubar"><div style="width:${done / 6 * 100}%"></div></div></div>`;
+    return `<div class="urow" style="--uc:${u.color}"><div class="un"><b>${i + 1}. ${tx(u.title)}</b><small>${done}/6 · ${t ? pc + L("% d'encerts", '% de aciertos') : L('encara no', 'aún no')}</small></div><div class="ubar"><div style="width:${done / 6 * 100}%"></div></div></div>`;
   }).join('');
+  const myB = BADGES.filter(x => P.badges.includes(x[0])), mySR = SRW.filter(r => P.srw.includes(r.d)), evo = P.tests.filter(t => t.course === P.course);
   const sv = P.survey;
-  app.innerHTML = shell(`<div class="phead"><div class="pchar">${charSVG(P.companion, 'happy', P.acc)}</div><div><h1>${esc(P.name)}</h1><div class="plv">Nivell ${l} · ${P.xp} XP</div><div class="lbar"><div style="width:${Math.min(100, (P.xp - a) / (b - a) * 100)}%"></div></div><small class="mut">${b - P.xp} XP per al nivell ${l + 1}</small></div></div>
-    <div class="codecard"><div><small>El teu codi secret</small><b>${P.code || '…'}</b><span id="cloud">${cloudTxt()}</span></div><div class="ctip">✏️ Apunta'l! Amb aquest codi pots entrar des de qualsevol ordinador o tauleta.</div></div>
+  app.innerHTML = shell(`<div class="phead"><div class="pchar tapme">${charSVG(P.companion, 'happy', P.acc)}</div><div><h1>${esc(P.name)}</h1><div class="plv">${L('Nivell', 'Nivel')} ${l} · ${P.xp} XP</div><div class="lbar"><div style="width:${Math.min(100, (P.xp - a) / (b - a) * 100)}%"></div></div><small class="mut">${L(`${b - P.xp} XP per al nivell ${l + 1}`, `${b - P.xp} XP para el nivel ${l + 1}`)}</small></div></div>
+    <h2 class="h2">🏆 ${L('Els meus assoliments', 'Mis logros')}</h2>
     <div class="sgrid">
-      <div class="st"><b>🔥 ${streakNow()}</b><span>ratxa actual</span></div><div class="st"><b>🏆 ${P.best}</b><span>millor ratxa</span></div>
-      <div class="st"><b>📚 ${s.lessons}</b><span>lliçons</span></div><div class="st"><b>🎯 ${acc}%</b><span>d'encerts</span></div>
-      <div class="st"><b>💯 ${s.perfect}</b><span>perfectes</span></div><div class="st"><b>⚡ ${s.bestCombo}</b><span>millor ratxa d'encerts</span></div></div>
-    <h2 class="h2">Progrés a ${CUR().long}</h2><div class="urows">${rows}</div>
-    ${sv ? `<h2 class="h2">Prova d'inici</h2><div class="survey"><div><span>Curs</span><b>${sv.curs}</b></div><div><span>Les mates…</span><b>${FEEL[sv.feel] || '—'}</b></div><div><span>Li agrada</span><b>${LIKE[sv.like] || '—'}</b></div><div><span>Resultat</span><b>${sv.result}</b></div></div>` : ''}
-    <h2 class="h2">Ajustos</h2>
-    <div class="set"><span>Objectiu diari</span><div class="seg">${[10, 20, 30, 50].map(g => `<button class="${P.goal === g ? 'on' : ''}" onclick="P.goal=${g};save();renderProfile()">${g} XP</button>`).join('')}</div></div>
-    <div class="set"><span>Sons</span><button class="tog ${P.sound ? 'on' : ''}" onclick="P.sound=!P.sound;save();renderProfile()" aria-label="Sons"><i></i></button></div>
-    <div class="set"><span>Mode mestre<small>Obre totes les unitats per treballar a classe.</small></span><button class="tog ${P.unlockAll ? 'on' : ''}" onclick="P.unlockAll=!P.unlockAll;save();renderProfile()" aria-label="Mode mestre"><i></i></button></div>
-    <div class="row2 pbtns"><button class="btn ghost" onclick="go('profiles')">CANVIA D'ALUMNE</button><button class="btn ghost redt" onclick="resetP()">ESBORRA EL PROGRÉS</button></div>
-    <p class="foot">Mates amb Numi · Algorithmics Lleida<br><a href="/profe.html">Zona del professorat</a></p>`, 'profile');
+      <div class="st"><b>🔥 ${streakNow()}</b><span>${L('ratxa actual', 'racha actual')}</span></div><div class="st"><b>🏆 ${P.best}</b><span>${L('millor ratxa', 'mejor racha')}</span></div>
+      <div class="st"><b>📚 ${s.lessons}</b><span>${L('lliçons', 'lecciones')}</span></div><div class="st"><b>🎯 ${acc}%</b><span>${L("d'encerts", 'de aciertos')}</span></div>
+      <div class="st"><b>💯 ${s.perfect}</b><span>${L('perfectes', 'perfectas')}</span></div><div class="st"><b>⚡ ${s.bestCombo}</b><span>${L("millor ratxa d'encerts", 'mejor racha de aciertos')}</span></div>
+      <div class="st"><b>🏅 ${myB.length}/${BADGES.length}</b><span>${L('medalles', 'medallas')}</span></div><div class="st"><b>🗺️ ${unitsDone(P)}</b><span>${L('unitats superades', 'unidades superadas')}</span></div></div>
+    ${myB.length || mySR.length ? `<div class="mylogros">${[...mySR.map(r => `<span class="lg fire" title="${tx(r.txt)}">${r.icon}</span>`), ...myB.map(x => `<span class="lg" title="${tx(x[2])}">${x[1]}</span>`)].join('')}<button class="lgmore" onclick="go('badges')">${L('Veure-les totes', 'Verlas todas')} ›</button></div>` : `<p class="empty">${L('Encara no tens medalles. Fes la primera lliçó i guanya la primera!', 'Aún no tienes medallas. ¡Haz la primera lección y gana la primera!')}</p>`}
+    <div class="gbests">${GAMES().map(([id, ic, t]) => `<div><span>${ic}</span><b>${s.bests[id] || 0}</b><small>${t}</small></div>`).join('')}</div>
+    <h2 class="h2">📈 ${L('La meva evolució', 'Mi evolución')}</h2>
+    <div class="evobox">${evo.length ? evoChart(evo) : `<p class="empty">${L("Fes la teva primera prova d'evolució per veure la gràfica.", 'Haz tu primera prueba de evolución para ver la gráfica.')}</p>`}
+      ${ti.due ? `<button class="btn big" onclick="startEvolution()">🧪 ${L("FES LA PROVA D'EVOLUCIÓ", 'HAZ LA PRUEBA DE EVOLUCIÓN')}</button>` : `<p class="mut c">${L(`Propera prova d'evolució d'aquí a <b>${ti.left} ${dies(ti.left)}</b>.`, `Próxima prueba de evolución dentro de <b>${ti.left} ${dies(ti.left)}</b>.`)}</p>`}</div>
+    <h2 class="h2">${L('Progrés a ', 'Progreso en ')}${tx(CUR().long)}</h2><div class="urows">${rows}</div>
+    <h2 class="h2">🔑 ${L('El meu compte', 'Mi cuenta')}</h2>
+    <div class="codecard"><div>${P.username ? `<small>${L('Usuari', 'Usuario')}</small><b>${esc(P.username)}</b>` : `<small>${L('El teu codi secret', 'Tu código secreto')}</small><b>${P.code || '…'}</b>`}<span id="cloud">${cloudTxt()}</span></div>
+      <div class="ctip">${P.username ? L(`Entra des de qualsevol dispositiu amb el teu usuari i contrasenya. Codi de reserva: <b>${P.code || '…'}</b>`, `Entra desde cualquier dispositivo con tu usuario y contraseña. Código de reserva: <b>${P.code || '…'}</b>`) : L("✏️ Apunta'l! O crea un usuari i contrasenya, que és més fàcil de recordar.", '✏️ ¡Apúntalo! O crea un usuario y contraseña, que es más fácil de recordar.')}</div>
+      <button class="btn sm gold" onclick="accountModal()">${P.username ? L('CANVIA LA CONTRASENYA', 'CAMBIAR LA CONTRASEÑA') : L('CREA USUARI I CONTRASENYA', 'CREAR USUARIO Y CONTRASEÑA')}</button></div>
+    ${sv ? `<h2 class="h2">${L("Prova d'inici", 'Prueba inicial')}</h2><div class="survey"><div><span>${L('Curs', 'Curso')}</span><b>${esc(sv.curs)}</b></div><div><span>${L('Les mates…', 'Las mates…')}</span><b>${FEEL[sv.feel] ? tx(FEEL[sv.feel]) : '—'}</b></div><div><span>${L("M'agrada", 'Me gusta')}</span><b>${LIKE[sv.like] ? tx(LIKE[sv.like]) : '—'}</b></div><div><span>${L('Resultat', 'Resultado')}</span><b>${esc(sv.result)}</b></div></div>` : ''}
+    <h2 class="h2">${L('Ajustos', 'Ajustes')}</h2>
+    <div class="set"><span>${L('Idioma', 'Idioma')}</span><div class="seg"><button class="${LANG === 'ca' ? 'on' : ''}" onclick="setLang('ca')">Català</button><button class="${LANG === 'es' ? 'on' : ''}" onclick="setLang('es')">Castellano</button></div></div>
+    <div class="set"><span>${L('Objectiu diari', 'Objetivo diario')}</span><div class="seg">${[10, 20, 30, 50].map(g => `<button class="${P.goal === g ? 'on' : ''}" onclick="P.goal=${g};save();renderProfile()">${g} XP</button>`).join('')}</div></div>
+    <div class="set"><span>${L('Sons', 'Sonidos')}</span><button class="tog ${P.sound ? 'on' : ''}" onclick="P.sound=!P.sound;save();renderProfile()" aria-label="${L('Sons', 'Sonidos')}"><i></i></button></div>
+    <div class="set"><span>${L('Mode mestre', 'Modo maestro')}<small>${L('Obre totes les unitats per treballar a classe.', 'Abre todas las unidades para trabajar en clase.')}</small></span><button class="tog ${P.unlockAll ? 'on' : ''}" onclick="P.unlockAll=!P.unlockAll;save();renderProfile()" aria-label="${L('Mode mestre', 'Modo maestro')}"><i></i></button></div>
+    <div class="row2 pbtns"><button class="btn ghost" onclick="go('profiles')">${L("CANVIA D'ALUMNE", 'CAMBIAR DE ALUMNO')}</button><button class="btn ghost redt" onclick="resetP()">${L('ESBORRA EL PROGRÉS', 'BORRAR EL PROGRESO')}</button></div>
+    <p class="foot">Mates amb Numi · Algorithmics Lleida</p>`, 'profile');
 }
 function resetP() {
-  ask(`Segur que vols esborrar tot el progrés de <b>${esc(P.name)}</b>? No es pot desfer.`, 'ESBORRA', 'CANCEL·LA', async () => {
-    const keep = { id: P.id, code: P.code, name: P.name, course: P.course, baseCourse: P.baseCourse, survey: P.survey, goal: P.goal, sound: P.sound, unlockAll: false };
+  ask(L(`Segur que vols esborrar tot el progrés de <b>${esc(P.name)}</b>? No es pot desfer.`, `¿Seguro que quieres borrar todo el progreso de <b>${esc(P.name)}</b>? No se puede deshacer.`), L('ESBORRA', 'BORRAR'), L('CANCEL·LA', 'CANCELAR'), async () => {
+    const keep = { id: P.id, code: P.code, username: P.username, name: P.name, lang: P.lang, course: P.course, baseCourse: P.baseCourse, survey: P.survey, goal: P.goal, sound: P.sound, unlockAll: false };
     for (const k in P) delete P[k]; Object.assign(P, freshProgress(), keep);
     saveLocal();
     if (P.code) { try { await api('sync', { code: P.code, state: P, reset: true }); } catch (e) { } }
     go('home');
   });
 }
+function slugName(n) { return (n.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]/g, '') || 'alumne').slice(0, 14) + ri(10, 99); }
+const ERR = e => ({ 'usuari-ocupat': L('Aquest usuari ja existeix. Prova\'n un altre!', 'Ese usuario ya existe. ¡Prueba otro!'), 'usuari-format': L('L\'usuari ha de tenir de 3 a 20 lletres o números (sense espais).', 'El usuario debe tener de 3 a 20 letras o números (sin espacios).'), 'contrasenya-format': L('La contrasenya ha de tenir almenys 4 caràcters.', 'La contraseña debe tener al menos 4 caracteres.'), 'credencials': L('Usuari o contrasenya incorrectes.', 'Usuario o contraseña incorrectos.') })[e] || L('No hi ha connexió. Torna-ho a provar.', 'No hay conexión. Vuelve a intentarlo.');
+const passField = (id, ph) => `<div class="passf"><input id="${id}" class="nm" type="password" maxlength="60" placeholder="${ph}" autocomplete="new-password"><button type="button" class="eye" onclick="const i=document.getElementById('${id}');i.type=i.type==='password'?'text':'password'" aria-label="👁">👁</button></div>`;
+function accountModal() {
+  if (!P.code) return toast(L('Primer cal connexió a internet.', 'Primero hace falta conexión a internet.'));
+  const has = !!P.username;
+  modal(`<div class="sheet card cent"><h3>${has ? L('Canvia la contrasenya', 'Cambia la contraseña') : L('Crea el teu usuari', 'Crea tu usuario')}</h3>
+    <input id="au" class="nm" maxlength="20" placeholder="${L('Usuari', 'Usuario')}" autocomplete="username" autocapitalize="none" value="${esc(P.username || slugName(P.name))}" ${has ? 'readonly' : ''}>
+    ${passField('ap', has ? L('Contrasenya nova', 'Contraseña nueva') : L('Contrasenya', 'Contraseña'))}<div id="aerr" class="err"></div>
+    <div class="row2"><button class="btn ghost" onclick="closeModal()">${L('TORNA', 'VOLVER')}</button><button class="btn" onclick="saveAccount()">${L('DESA', 'GUARDAR')}</button></div></div>`, true);
+}
+async function saveAccount() {
+  const u = $('#au').value.trim().toLowerCase(), p = $('#ap').value;
+  if (!/^[a-z0-9._-]{3,20}$/.test(u)) return $('#aerr').textContent = ERR('usuari-format');
+  if (p.length < 4) return $('#aerr').textContent = ERR('contrasenya-format');
+  $('#aerr').textContent = '…';
+  try {
+    const r = await api('account', { code: P.code, username: u, password: p });
+    if (r.ok) { P.username = u; saveLocal(); closeModal(); toast(L('✅ Compte desat!', '✅ ¡Cuenta guardada!')); renderProfile(); }
+    else $('#aerr').textContent = ERR(r.error);
+  } catch (e) { $('#aerr').textContent = ERR(); }
+}
 
-/* ---------- Alumnes ---------- */
+/* ---------- Alumnes i entrada ---------- */
 function renderProfiles() {
   VIEW = 'profiles';
   const ps = Object.values(DB.profiles);
-  app.innerHTML = `<div class="page solo"><h1 class="ph1 c">Qui aprèn avui?</h1>
-    <div class="plist">${ps.map(p => `<div class="pcard"><button class="pmain" onclick="switchP('${p.id}')"><span class="pav">${charSVG(p.companion, 'idle', p.acc)}</span><span><b>${esc(p.name)}</b><small>${COURSES[p.course]?.name || ''} · Nivell ${lvlOf(p.xp)} · 🔥 ${p.streak}</small></span></button><button class="pdel" onclick="delP('${p.id}')" aria-label="Treu d'aquest dispositiu">✕</button></div>`).join('')}</div>
-    <button class="btn big" onclick="onb(0)">+ SOC NOU/NOVA</button>
-    <button class="btn big ghost mt" onclick="loginCode()">🔑 JA TINC UN CODI</button></div>`;
+  app.innerHTML = `<div class="page solo">${langPill()}<h1 class="ph1 c">${L('Qui aprèn avui?', '¿Quién aprende hoy?')}</h1>
+    <div class="plist">${ps.map((p, i) => `<div class="pcard" style="animation-delay:${i * 70}ms"><button class="pmain" onclick="switchP('${p.id}')"><span class="pav">${charSVG(p.companion, 'idle', p.acc)}</span><span><b>${esc(p.name)}</b><small>${COURSES[p.course] ? tx(COURSES[p.course].name) : ''} · ${L('Nivell', 'Nivel')} ${lvlOf(p.xp)} · 🔥 ${p.streak}</small></span></button><button class="pdel" onclick="delP('${p.id}')" aria-label="✕">✕</button></div>`).join('')}</div>
+    <button class="btn big" onclick="onb(0)">+ ${L('SOC NOU/NOVA', 'SOY NUEVO/A')}</button>
+    <button class="btn big ghost mt" onclick="loginModal()">🔑 ${L('JA TINC COMPTE', 'YA TENGO CUENTA')}</button></div>`;
 }
-function switchP(id) { P = DB.profiles[id]; DB.current = id; saveLocal(); pull(); go('home'); }
+function switchP(id) { P = DB.profiles[id]; DB.current = id; LANG = P.lang || DB.lang; saveLocal(); pull(); go('home'); }
 function delP(id) {
-  ask(`Vols treure <b>${esc(DB.profiles[id].name)}</b> d'aquest dispositiu? ${DB.profiles[id].code ? `El progrés continua desat amb el codi <b>${DB.profiles[id].code}</b>.` : ''}`, 'TREU', 'CANCEL·LA', () => {
+  const p = DB.profiles[id];
+  ask(L(`Vols treure <b>${esc(p.name)}</b> d'aquest dispositiu? El progrés continua desat al núvol.`, `¿Quieres quitar a <b>${esc(p.name)}</b> de este dispositivo? El progreso sigue guardado en la nube.`), L('TREU', 'QUITAR'), L('CANCEL·LA', 'CANCELAR'), () => {
     delete DB.profiles[id]; if (DB.current === id) { DB.current = null; P = null; } saveLocal();
     Object.keys(DB.profiles).length ? renderProfiles() : onb(0);
   });
 }
-function loginCode() {
-  modal(`<div class="sheet card cent"><h3>Entra amb el teu codi</h3><p>És el codi secret que et va donar en Numi (per exemple, GUINEU-4827).</p>
-    <input id="cd" class="nm" maxlength="20" placeholder="CODI-0000" autocomplete="off" autocapitalize="characters"><div id="cderr" class="err"></div>
-    <div class="row2"><button class="btn ghost" onclick="closeModal()">TORNA</button><button class="btn" onclick="doLogin()">ENTRA</button></div></div>`, true);
-  const i = $('#cd'); i.focus(); i.addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+function loginModal(withCode) {
+  modal(`<div class="sheet card cent"><h3>${L('Entra al teu compte', 'Entra en tu cuenta')}</h3>
+    ${withCode ? `<p>${L("Escriu el codi secret (per exemple, GUINEU-4827).", 'Escribe el código secreto (por ejemplo, GUINEU-4827).')}</p><input id="cd" class="nm" maxlength="20" placeholder="CODI-0000" autocomplete="off" autocapitalize="characters">`
+      : `<input id="lu" class="nm" maxlength="20" placeholder="${L('Usuari', 'Usuario')}" autocomplete="username" autocapitalize="none">${passField('lp', L('Contrasenya', 'Contraseña')).replace('new-password', 'current-password')}`}
+    <div id="lerr" class="err"></div>
+    <div class="row2"><button class="btn ghost" onclick="closeModal()">${L('TORNA', 'VOLVER')}</button><button class="btn" onclick="doLogin(${withCode ? 1 : 0})">${L('ENTRA', 'ENTRAR')}</button></div>
+    <button class="link" onclick="loginModal(${withCode ? 0 : 1})">${withCode ? L('Entra amb usuari i contrasenya', 'Entrar con usuario y contraseña') : L('Tinc un codi secret', 'Tengo un código secreto')}</button></div>`, true);
+  const i = $(withCode ? '#cd' : '#lu'); i.focus();
+  $$('.modal-bg input').forEach(x => x.addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(withCode ? 1 : 0); }));
 }
-async function doLogin() {
-  const code = $('#cd').value.trim().toUpperCase(); if (!code) return;
-  const ex = Object.values(DB.profiles).find(p => p.code === code); if (ex) { closeModal(); return switchP(ex.id); }
-  $('#cderr').textContent = 'Buscant…';
+async function doLogin(withCode) {
+  const data = withCode ? { code: $('#cd').value.trim().toUpperCase() } : { username: $('#lu').value.trim().toLowerCase(), password: $('#lp').value };
+  if (withCode ? !data.code : !data.username || !data.password) return;
+  $('#lerr').textContent = '…';
   try {
-    const r = await api('login', { code });
-    if (!r.state) { $('#cderr').textContent = 'No trobem aquest codi. Revisa les lletres i els números.'; return; }
+    const r = await api('login', data);
+    if (!r.state) { $('#lerr').textContent = withCode ? L('No trobem aquest codi. Revisa les lletres i els números.', 'No encontramos ese código. Revisa las letras y los números.') : ERR('credencials'); return; }
+    const code = r.code || data.code, ex = Object.values(DB.profiles).find(p => p.code === code);
+    if (ex) { closeModal(); return switchP(ex.id); }
     const id = 'p' + Date.now().toString(36);
-    P = migrate({ ...r.state, id, code, name: r.name }); P.dirty = false; DB.profiles[id] = P; DB.current = id; saveLocal();
-    closeModal(); go('home'); toast(`Hola de nou, ${esc(P.name)}! 👋`);
-  } catch (e) { $('#cderr').textContent = 'No hi ha connexió. Torna-ho a provar.'; }
+    P = migrate({ ...r.state, id, code, name: r.name, username: r.state.username || r.username || (withCode ? null : data.username) }); P.dirty = false; P.holdReg = false;
+    DB.profiles[id] = P; DB.current = id; LANG = P.lang; saveLocal();
+    closeModal(); go('home'); toast(L(`Hola de nou, ${esc(P.name)}! 👋`, `¡Hola de nuevo, ${esc(P.name)}! 👋`));
+  } catch (e) { $('#lerr').textContent = ERR(); }
 }
 
-/* ---------- Registre i prova de nivell ---------- */
+/* ---------- Registre, enquesta i prova de nivell ---------- */
 let ONB = {};
 function onbShell(step, inner, back = true) {
-  app.innerHTML = `<div class="page solo onb"><div class="osteps">${[0, 1, 2, 3].map(i => `<i class="${i <= step ? 'on' : ''}"></i>`).join('')}</div>${inner}
-    ${back && (step > 0 || Object.keys(DB.profiles).length) ? `<button class="link" onclick="${step > 0 ? `onb(${step - 1})` : 'renderProfiles()'}">Tornar</button>` : ''}</div>`;
+  ONB.step = step;
+  app.innerHTML = `<div class="page solo onb"><div class="onbtop"><div class="osteps">${[0, 1, 2, 3, 4].map(i => `<i class="${i <= step ? 'on' : ''}"></i>`).join('')}</div>${langPill()}</div>${inner}
+    ${back && (step > 0 || Object.keys(DB.profiles).length) ? `<button class="link" onclick="${step > 0 ? `onb(${step - 1})` : 'renderProfiles()'}">${L('Tornar', 'Volver')}</button>` : ''}</div>`;
 }
 function onb(step) {
   VIEW = 'onboard';
   if (step === 0) {
-    onbShell(0, `<div class="onb-char">${charSVG('numi', 'happy')}</div>
-      <div class="bubble big">Hola! Soc en <b>Numi</b>. T'acompanyaré pas a pas perquè les mates et surtin rodones. <b>Com et dius?</b></div>
-      <input id="nm" class="nm" maxlength="16" placeholder="El teu nom" autocomplete="off" enterkeyhint="go" value="${esc(ONB.name || '')}">
-      <button class="btn big" onclick="onbName()">SEGÜENT</button>`);
-    const i = $('#nm'); i.focus(); i.addEventListener('keydown', e => { if (e.key === 'Enter') onbName(); });
+    onbShell(0, `<div class="onb-char tapme">${charSVG('numi', 'happy')}</div>
+      <div class="bubble big">${L("Hola! Soc en <b>Numi</b>. T'acompanyaré pas a pas perquè les mates et surtin rodones. <b>Com et dius?</b>", '¡Hola! Soy <b>Numi</b>. Te acompañaré paso a paso para que las mates te salgan redondas. <b>¿Cómo te llamas?</b>')}</div>
+      <input id="nm" class="nm" maxlength="16" placeholder="${L('El teu nom', 'Tu nombre')}" autocomplete="off" enterkeyhint="go" value="${esc(ONB.name || '')}">
+      <button class="btn big" onclick="onbName()">${L('SEGÜENT', 'SIGUIENTE')}</button>
+      <button class="link" onclick="loginModal()">🔑 ${L('Ja tinc compte', 'Ya tengo cuenta')}</button>`);
+    const i = $('#nm'); i.addEventListener('keydown', e => { if (e.key === 'Enter') onbName(); });
   }
-  if (step === 1) onbShell(1, `<div class="onb-char sm">${charSVG('numi', 'idle')}</div><div class="bubble big">Encantat, <b>${esc(ONB.name)}</b>! <b>Quin curs fas?</b></div>
-    <div class="cgrid">${COURSES.map((c, i) => `<button class="cbtn ${ONB.course === i ? 'on' : ''}" onclick="ONB.course=${i};onb(2)"><span class="cem">${c.emoji}</span><b>${c.name}</b><small>primària</small></button>`).join('')}</div>`);
-  if (step === 2) onbShell(2, `<div class="onb-char sm">${charSVG('guida', 'idle')}</div><div class="bubble big">Soc la <b>Guida</b>. Explica'm una mica: <b>com et sents amb les mates?</b></div>
-    <div class="ogrid">${Object.entries(FEEL).map(([k, v]) => `<button class="obtn ${ONB.feel === k ? 'on' : ''}" onclick="ONB.feel='${k}';onb(3)"><span>${v.split(' ')[0]}</span>${v.slice(v.indexOf(' ') + 1)}</button>`).join('')}</div>`);
-  if (step === 3) onbShell(3, `<div class="onb-char sm">${charSVG('vuit', 'idle')}</div><div class="bubble big">I ara, <b>què t'agrada més?</b></div>
-    <div class="ogrid">${Object.entries(LIKE).map(([k, v]) => `<button class="obtn ${ONB.like === k ? 'on' : ''}" onclick="ONB.like='${k}';onbTest()"><span>${v.split(' ')[0]}</span>${v.slice(v.indexOf(' ') + 1)}</button>`).join('')}</div>`);
+  if (step === 1) onbShell(1, `<div class="onb-char sm tapme">${charSVG('numi', 'idle')}</div><div class="bubble big">${L(`Encantat, <b>${esc(ONB.name)}</b>! <b>Quin curs fas?</b>`, `¡Encantado, <b>${esc(ONB.name)}</b>! <b>¿Qué curso haces?</b>`)}</div>
+    <div class="cgrid">${COURSES.map((c, i) => `<button class="cbtn ${ONB.course === i ? 'on' : ''}" style="animation-delay:${i * 50}ms" onclick="ONB.course=${i};onb(2)"><span class="cem">${c.emoji}</span><b>${tx(c.name)}</b><small>${L('primària', 'primaria')}</small></button>`).join('')}</div>`);
+  if (step === 2) onbShell(2, `<div class="onb-char sm tapme">${charSVG('guida', 'idle')}</div><div class="bubble big">${L("Soc la <b>Guida</b>. Explica'm una mica: <b>com et sents amb les mates?</b>", 'Soy <b>Guida</b>. Cuéntame un poco: <b>¿cómo te sientes con las mates?</b>')}</div>
+    <div class="ogrid">${Object.entries(FEEL).map(([k, v], i) => { const t = tx(v); return `<button class="obtn ${ONB.feel === k ? 'on' : ''}" style="animation-delay:${i * 60}ms" onclick="ONB.feel='${k}';onb(3)"><span>${t.split(' ')[0]}</span>${t.slice(t.indexOf(' ') + 1)}</button>`; }).join('')}</div>`);
+  if (step === 3) onbShell(3, `<div class="onb-char sm tapme">${charSVG('vuit', 'idle')}</div><div class="bubble big">${L("I ara, <b>què t'agrada més?</b>", 'Y ahora, <b>¿qué te gusta más?</b>')}</div>
+    <div class="ogrid">${Object.entries(LIKE).map(([k, v], i) => { const t = tx(v); return `<button class="obtn ${ONB.like === k ? 'on' : ''}" style="animation-delay:${i * 60}ms" onclick="ONB.like='${k}';onb(4)"><span>${t.split(' ')[0]}</span>${t.slice(t.indexOf(' ') + 1)}</button>`; }).join('')}</div>`);
+  if (step === 4) onbShell(4, `<div class="onb-char tapme">${charSVG('numi', 'happy')}</div>
+    <div class="bubble big">${L("Perfecte! Ara et faré <b>unes preguntes</b> per saber per on hem de començar. <b>No és cap examen:</b> si no en saps alguna, toca «No ho sé» i ja està.", '¡Perfecto! Ahora te haré <b>unas preguntas</b> para saber por dónde empezar. <b>No es un examen:</b> si no sabes alguna, toca «No lo sé» y ya está.')}</div>
+    <button class="btn big" onclick="startPlacement()">${L('COMENCEM!', '¡EMPECEMOS!')}</button><button class="link" onclick="LS={res:[]};finishPlacement(true)">${L('Salta la prova i comença pel principi', 'Salta la prueba y empieza por el principio')}</button>`);
 }
 function onbName() { const n = $('#nm').value.trim(); if (!n) { $('#nm').classList.add('shake'); setTimeout(() => $('#nm').classList.remove('shake'), 500); return; } ONB.name = n; onb(1); }
-function onbTest() {
-  app.innerHTML = `<div class="page solo onb"><div class="onb-char">${charSVG('numi', 'happy')}</div>
-    <div class="bubble big">Perfecte! Ara et faré <b>unes preguntes</b> per saber per on hem de començar. <b>No és cap examen:</b> si no en saps alguna, toca «No ho sé» i ja està.</div>
-    <button class="btn big" onclick="startPlacement()">COMENCEM!</button><button class="link" onclick="LS={res:[]};finishPlacement(true)">Salta la prova i comença pel principi</button></div>`;
-}
 function startPlacement() {
   const ci = ONB.course, c = COURSES[ci], meta = [];
   if (ci > 0) { const pc = COURSES[ci - 1]; [1, 2].forEach(k => { const l = pc.units[k].lessons[2]; meta.push({ sk: l.sk[0], L: l.L, tag: 'prev' }); }); }
@@ -695,29 +925,59 @@ function finishPlacement(skipped) {
   const cur = res.slice(prevN); let lead = 0; while (lead < cur.length && cur[lead]) lead++;
   const curOk = cur.filter(Boolean).length;
   let course = ci, skip = Math.min(lead, c.units.length - 2), msg;
-  if (skipped) { skip = 0; msg = `Comencem ${c.long} des del principi.`; }
-  else if (ci > 0 && prevOk === 0 && curOk <= 1) { course = ci - 1; skip = 0; msg = `Farem un petit repàs de <b>${COURSES[ci - 1].long}</b> per agafar força. Quan vulguis, pots canviar de curs!`; }
-  else if (skip > 0) msg = `Ho fas molt bé! Obrim ${c.long} fins a la <b>unitat ${skip + 1}</b>: ${c.units[skip].title}.`;
-  else msg = `Començarem ${c.long} per la unitat 1: ${c.units[0].title}. Pas a pas!`;
-  const result = skipped ? 'Sense prova' : `${prevN ? `Curs anterior ${prevOk}/${prevN} · ` : ''}${c.name}: ${curOk}/${cur.length}`;
+  if (skipped) { skip = 0; msg = L(`Comencem ${tx(c.long)} des del principi.`, `Empezamos ${tx(c.long)} desde el principio.`); }
+  else if (ci > 0 && prevOk === 0 && curOk <= 1) { course = ci - 1; skip = 0; msg = L(`Farem un petit repàs de <b>${tx(COURSES[ci - 1].long)}</b> per agafar força. Quan vulguis, pots canviar de curs!`, `Haremos un pequeño repaso de <b>${tx(COURSES[ci - 1].long)}</b> para coger fuerza. ¡Cuando quieras, puedes cambiar de curso!`); }
+  else if (skip > 0) msg = L(`Ho fas molt bé! Obrim ${tx(c.long)} fins a la <b>unitat ${skip + 1}</b>: ${tx(c.units[skip].title)}.`, `¡Lo haces muy bien! Abrimos ${tx(c.long)} hasta la <b>unidad ${skip + 1}</b>: ${tx(c.units[skip].title)}.`);
+  else msg = L(`Començarem ${tx(c.long)} per la unitat 1: ${tx(c.units[0].title)}. Pas a pas!`, `Empezaremos ${tx(c.long)} por la unidad 1: ${tx(c.units[0].title)}. ¡Paso a paso!`);
+  const result = skipped ? L('Sense prova', 'Sin prueba') : `${prevN ? L(`Curs anterior ${prevOk}/${prevN} · `, `Curso anterior ${prevOk}/${prevN} · `) : ''}${tx(c.name)}: ${curOk}/${cur.length}`;
   LS = null;
   const id = 'p' + Date.now().toString(36);
-  P = { id, name: ONB.name, goal: 20, sound: true, unlockAll: false, ...freshProgress(), course, baseCourse: course, pendingReg: true,
-    survey: { curs: c.long, feel: ONB.feel, like: ONB.like, result, start: `${COURSES[course].name} · unitat ${(course === ci ? skip : 0) + 1}`, date: today() } };
+  P = { id, name: ONB.name, goal: 20, sound: true, unlockAll: false, lang: LANG, ...freshProgress(), course, baseCourse: course, holdReg: true,
+    survey: { curs: tx(c.long), feel: ONB.feel, like: ONB.like, result, start: `${tx(COURSES[course].name)} · ${L('unitat', 'unidad')} ${(course === ci ? skip : 0) + 1}`, date: today() } };
+  if (!skipped && cur.length) P.tests.push({ date: today(), course: ci, pct: Math.round(100 * curOk / cur.length), ok: curOk, n: cur.length, kind: 'inicial' });
   P.skip[COURSES[course].id] = course === ci ? skip : 0;
   DB.profiles[id] = P; DB.current = id; saveLocal();
-  const areas = skipped ? '' : `<div class="plres">${meta.filter(m => m.tag === 'cur').map((m, i) => `<div class="${cur[i] ? 'ok' : ''}"><span>${cur[i] ? '✔' : '·'}</span>${c.units[m.ui].title}</div>`).join('')}</div>`;
-  app.innerHTML = `<div class="scr"><div class="burst"></div><div class="rchar">${charSVG('numi', 'happy')}</div><h1>Ja tenim el teu punt de partida!</h1>
-    <p class="sub">${msg}</p>${areas}<div id="codeBox" class="codecard big"><div><small>El teu codi secret</small><b>Creant…</b></div></div>
-    <button class="btn big" onclick="ONB={};go('home')">ANEM-HI!</button></div>`;
+  const areas = skipped ? '' : `<div class="plres">${meta.filter(m => m.tag === 'cur').map((m, i) => `<div class="${cur[i] ? 'ok' : ''}" style="animation-delay:${i * 90}ms"><span>${cur[i] ? '✔' : '·'}</span>${tx(c.units[m.ui].title)}</div>`).join('')}</div>`;
+  app.innerHTML = `<div class="scr"><div class="burst"></div><div class="rchar tapme">${charSVG('numi', 'happy')}</div><h1>${L('Ja tenim el teu punt de partida!', '¡Ya tenemos tu punto de partida!')}</h1>
+    <p class="sub">${msg}</p>${areas}<button class="btn big" onclick="onbAccount()">${L('SEGÜENT', 'SIGUIENTE')}</button></div>`;
   SFX.win(); confetti(120);
-  syncNow().then(() => { const b = $('#codeBox'); if (b) b.innerHTML = P.code ? `<div><small>El teu codi secret</small><b>${P.code}</b></div><div class="ctip">✏️ Apunta'l! Amb aquest codi pots continuar des de qualsevol ordinador o tauleta.</div>` : `<div><small>El teu codi secret</small><b>—</b></div><div class="ctip">No hi ha connexió. El codi apareixerà al teu perfil quan tornis a tenir internet.</div>`; });
+}
+function onbAccount() {
+  ONB.step = 5;
+  app.innerHTML = `<div class="page solo onb"><div class="onb-char sm tapme">${charSVG('numi', 'happy')}</div>
+    <div class="bubble big">${L('Últim pas! <b>Crea el teu usuari i contrasenya</b> per guardar el progrés i entrar des de qualsevol ordinador o tauleta.', '¡Último paso! <b>Crea tu usuario y contraseña</b> para guardar tu progreso y entrar desde cualquier ordenador o tablet.')}</div>
+    <label class="lbl">${L('Usuari', 'Usuario')}</label><input id="au" class="nm" maxlength="20" autocomplete="username" autocapitalize="none" value="${esc(slugName(P.name))}">
+    <label class="lbl">${L('Contrasenya (mínim 4)', 'Contraseña (mínimo 4)')}</label>${passField('ap', '••••')}
+    <div id="aerr" class="err"></div>
+    <button class="btn big" id="regBtn" onclick="doRegister()">${L('CREA EL COMPTE', 'CREAR LA CUENTA')}</button>
+    <button class="link" onclick="doRegister(true)">${L('Ara no (et donarem un codi secret)', 'Ahora no (te daremos un código secreto)')}</button></div>`;
+}
+async function doRegister(noUser) {
+  const u = noUser ? null : $('#au').value.trim().toLowerCase(), p = noUser ? null : $('#ap').value;
+  if (!noUser) {
+    if (!/^[a-z0-9._-]{3,20}$/.test(u)) return $('#aerr').textContent = ERR('usuari-format');
+    if (p.length < 4) return $('#aerr').textContent = ERR('contrasenya-format');
+  }
+  $('#aerr').textContent = '…';
+  let r;
+  try { r = await api('register', { name: P.name, survey: P.survey, state: { ...P, holdReg: false }, username: u, password: p }); } catch (e) { r = { error: 'net' }; }
+  if (r.error === 'usuari-ocupat' || r.error === 'usuari-format' || r.error === 'contrasenya-format') return $('#aerr').textContent = ERR(r.error);
+  P.holdReg = false;
+  if (r.code) { P.code = r.code; P.username = r.username || null; P.pendingReg = false; P.dirty = false; } else P.pendingReg = true;
+  saveLocal();
+  app.innerHTML = `<div class="scr"><div class="burst gold"></div><div class="rchar big tapme">${charSVG('numi', 'happy')}</div><h1>${L('Tot a punt!', '¡Todo listo!')}</h1>
+    ${P.username ? `<div class="codecard big"><div><small>${L('El teu usuari', 'Tu usuario')}</small><b>${esc(P.username)}</b></div><div class="ctip">${L(`Guarda bé la contrasenya. Codi de reserva: <b>${P.code}</b>`, `Guarda bien la contraseña. Código de reserva: <b>${P.code}</b>`)}</div></div>`
+      : P.code ? `<div class="codecard big"><div><small>${L('El teu codi secret', 'Tu código secreto')}</small><b>${P.code}</b></div><div class="ctip">${L("✏️ Apunta'l! Amb aquest codi pots continuar des de qualsevol dispositiu.", '✏️ ¡Apúntalo! Con este código puedes continuar desde cualquier dispositivo.')}</div></div>`
+      : `<p class="sub">${L("No hi ha connexió. Es desarà sol quan tornis a tenir internet.", 'No hay conexión. Se guardará solo cuando vuelvas a tener internet.')}</p>`}
+    <button class="btn big" onclick="ONB={};go('home')">${L('ANEM-HI!', '¡VAMOS!')}</button></div>`;
+  SFX.win(); confetti(150);
 }
 
 /* ---------- Teclat ---------- */
 document.addEventListener('keydown', e => {
   if (e.target.tagName === 'INPUT') return;
   if (SP) { if (/^\d$/.test(e.key)) skey(e.key); else if (e.key === 'Backspace') skey('del'); else if (e.key === 'Enter') skey('ok'); return; }
+  if (AG) { if (/^\d$/.test(e.key)) akey(e.key); else if (e.key === 'Backspace') akey('del'); else if (e.key === 'Enter') akey('ok'); return; }
   if (!LS || !LS.cur || $('.modal-bg')) return;
   if (e.key === 'Enter') { e.preventDefault(); return check(); }
   if (LS.state !== 'ask') return;

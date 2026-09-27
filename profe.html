@@ -1,33 +1,37 @@
 <!doctype html>
-<html lang="ca">
+<html lang="es">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Panell del professorat · Mates amb Numi</title>
+<title>Administración · Mates amb Numi</title>
 <meta name="robots" content="noindex">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#FBF8FF;--ink:#2B1A38;--mut:#8A7B99;--line:#ECE4F3;--pri:#602B7A;--ok:#2A9C50;--fire:#E8590C}
+:root{--bg:#FBF8FF;--ink:#2B1A38;--mut:#8A7B99;--line:#ECE4F3;--pri:#602B7A;--ok:#2A9C50;--fire:#E8590C;--ko:#D63C42}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Nunito,system-ui,sans-serif;font-weight:700}
-.wrap{max-width:1100px;margin:0 auto;padding:24px 16px 60px}
+.wrap{max-width:1200px;margin:0 auto;padding:24px 16px 60px}
 h1{color:var(--pri);font-weight:900;margin:0 0 4px}.lead{color:var(--mut);margin:0 0 20px}
 .login{max-width:360px;margin:12vh auto;background:#fff;border:2px solid var(--line);border-radius:22px;padding:26px;text-align:center}
 input,select{font:inherit;border:2px solid #D7C6E6;border-radius:12px;padding:11px 14px;width:100%;color:var(--ink);background:#fff}
 button{font:inherit;font-weight:900;border:0;border-radius:12px;padding:11px 16px;background:var(--pri);color:#fff;cursor:pointer;box-shadow:0 4px 0 #46195C}
 button.ghost{background:#fff;color:var(--pri);border:2px solid var(--line);box-shadow:0 3px 0 var(--line)}
-.err{color:#D63C42;min-height:20px;margin:8px 0}
+button.mini{padding:5px 9px;font-size:12px;border-radius:9px;box-shadow:0 2px 0 var(--line)}
+button.mini.red{color:var(--ko)}
+.err{color:var(--ko);min-height:20px;margin:8px 0}
 .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:18px}
 .kpi{background:#fff;border:2px solid var(--line);border-radius:16px;padding:14px}.kpi b{display:block;font-size:26px}.kpi span{color:var(--mut);font-size:13px}
 .bar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:12px}.bar select,.bar input{width:auto}
 .tw{overflow-x:auto;background:#fff;border:2px solid var(--line);border-radius:18px}
 table{border-collapse:collapse;width:100%;font-size:14px}th,td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--line);white-space:nowrap}
 th{font-size:12px;letter-spacing:.06em;color:var(--mut);text-transform:uppercase;background:#FAF6FD;position:sticky;top:0;cursor:pointer}
-tr:last-child td{border-bottom:0}.code{font-family:ui-monospace,monospace;color:var(--pri)}
+tr:last-child td{border-bottom:0}.code{font-family:ui-monospace,monospace;color:var(--pri);font-size:13px}
 .fire{color:var(--fire);font-weight:900}.mut{color:var(--mut)}.rw{letter-spacing:2px}
 .pill{display:inline-block;border-radius:8px;padding:2px 8px;font-size:12px;background:#F1E8FA;color:var(--pri)}
+.up{color:var(--ok)}.down{color:var(--ko)}
 .cold{opacity:.55}
 .note{color:var(--mut);font-size:13.5px;line-height:1.5;margin-top:16px}
+.spark{display:inline-flex;gap:2px;align-items:flex-end;height:22px;vertical-align:middle}.spark i{width:6px;background:#22B5A0;border-radius:2px}
 </style>
 </head>
 <body>
@@ -36,46 +40,65 @@ tr:last-child td{border-bottom:0}.code{font-family:ui-monospace,monospace;color:
 const $ = s => document.querySelector(s), root = $('#root');
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 const SRW = [[3, '🎁'], [7, '🏅'], [14, '🎧'], [30, '⭐'], [60, '👑'], [100, '🏆']];
-const FEEL = { love: '😍', good: '🙂', meh: '😐', hard: '😟' };
+const FEEL = { love: '😍', good: '🙂', meh: '😐', hard: '😟' }, CUR = ['1º', '2º', '3º', '4º', '5º', '6º'];
 let ROWS = [], SORT = ['streak', -1];
-const todayStr = () => { const d = new Date(); return d.toISOString().slice(0, 10); };
-const ago = d => { if (!d) return '—'; const n = Math.round((new Date(todayStr()) - new Date(d)) / 864e5); return n <= 0 ? 'avui' : n === 1 ? 'ahir' : `fa ${n} dies`; };
-const alive = r => { if (!r.last_day) return false; const n = Math.round((new Date(todayStr()) - new Date(r.last_day)) / 864e5); return n <= 1; };
+const todayStr = () => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; };
+const days = d => Math.round((new Date(todayStr() + 'T12:00') - new Date(d + 'T12:00')) / 864e5);
+const ago = d => { if (!d) return '—'; const n = days(d); return n <= 0 ? 'hoy' : n === 1 ? 'ayer' : `hace ${n} días`; };
+const alive = r => r.last_day && days(r.last_day) <= 1;
+const pass = () => sessionStorage.getItem('pp');
 function login(err) {
-  root.innerHTML = `<div class="login"><h1>Panell del professorat</h1><p class="lead">Mates amb Numi</p><input id="pw" type="password" placeholder="Contrasenya" autocomplete="current-password"><div class="err">${err || ''}</div><button onclick="go()">ENTRA</button></div>`;
+  root.innerHTML = `<div class="login"><h1>Administración</h1><p class="lead">Mates amb Numi</p><input id="pw" type="password" placeholder="Contraseña" autocomplete="current-password"><div class="err">${err || ''}</div><button onclick="go()">ENTRAR</button></div>`;
   $('#pw').focus(); $('#pw').addEventListener('keydown', e => { if (e.key === 'Enter') go(); });
 }
-async function go(pass) {
-  pass = pass || $('#pw').value;
-  const r = await fetch('/api/profe', { headers: { 'x-profe': pass } });
-  if (r.status !== 200) { sessionStorage.removeItem('pp'); return login('Contrasenya incorrecta.'); }
-  sessionStorage.setItem('pp', pass);
-  ROWS = (await r.json()).rows; render();
+async function go(p) {
+  p = p || $('#pw').value;
+  const r = await fetch('/api/profe', { headers: { 'x-profe': p } });
+  if (r.status !== 200) { sessionStorage.removeItem('pp'); return login('Contraseña incorrecta.'); }
+  sessionStorage.setItem('pp', p);
+  ROWS = (await r.json()).rows.map(r => ({ ...r, evo: (r.tests || []).filter(t => t.kind === 'evo'), streakNow: alive(r) ? r.streak : 0 }));
+  render();
+}
+async function act(action, code, extra = {}) {
+  const r = await fetch('/api/profe', { method: 'POST', headers: { 'x-profe': pass(), 'content-type': 'application/json' }, body: JSON.stringify({ action, code, ...extra }) });
+  return r.json();
+}
+async function setPass(code, name) {
+  const p = prompt(`Nueva contraseña para ${name} (mínimo 4 caracteres):`); if (!p) return;
+  const r = await act('setpass', code, { password: p });
+  alert(r.ok ? `Contraseña cambiada. Díselo a ${name}.` : r.error === 'contrasenya-format' ? 'Mínimo 4 caracteres.' : 'Este alumno aún no tiene usuario (entra con código).');
+}
+async function off(code, name) { if (!confirm(`¿Dar de baja a ${name}? Dejará de aparecer y no podrá entrar.`)) return; await act('off', code); go(pass()); }
+function evoCell(r) {
+  const t = r.tests || []; if (!t.length) return '<span class="mut">—</span>';
+  const last = t[t.length - 1], prev = t[t.length - 2], d = prev ? last.pct - prev.pct : null;
+  return `<span class="spark">${t.slice(-6).map(x => `<i style="height:${Math.max(3, x.pct / 100 * 22)}px"></i>`).join('')}</span> <b>${last.pct}%</b> ${d == null ? '' : `<span class="${d >= 0 ? 'up' : 'down'}">${d >= 0 ? '▲' : '▼'}${Math.abs(d)}</span>`}`;
 }
 function render() {
   const f = $('#fc')?.value || '', q = ($('#q')?.value || '').toLowerCase();
-  let rows = ROWS.filter(r => (!f || String(r.course) === f) && (!q || r.name.toLowerCase().includes(q) || r.code.toLowerCase().includes(q)));
+  let rows = ROWS.filter(r => (!f || String(r.course) === f) && (!q || (r.name + r.code + (r.username || '')).toLowerCase().includes(q)));
   const [k, dir] = SORT; rows.sort((a, b) => (a[k] > b[k] ? 1 : a[k] < b[k] ? -1 : 0) * dir);
-  const act = ROWS.filter(alive).length, prem = ROWS.reduce((n, r) => n + (r.srw || []).length, 0);
+  const act_ = ROWS.filter(alive).length, prem = ROWS.reduce((n, r) => n + (r.srw || []).length, 0), ev = ROWS.filter(r => r.evo.length).length;
   const th = (key, label) => `<th onclick="SORT=['${key}',SORT[0]==='${key}'?-SORT[1]:-1];render()">${label}${SORT[0] === key ? (SORT[1] < 0 ? ' ↓' : ' ↑') : ''}</th>`;
-  root.innerHTML = `<h1>Panell del professorat</h1><p class="lead">Rànquing de ratxes i progrés de cada alumne. Els premis de ratxa són els que l'alumne ha guanyat dins l'app: pots premiar-los també a l'acadèmia.</p>
-  <div class="kpis"><div class="kpi"><b>${ROWS.length}</b><span>alumnes registrats</span></div><div class="kpi"><b class="fire">${act}</b><span>amb la ratxa encesa</span></div><div class="kpi"><b>${Math.max(0, ...ROWS.map(r => r.best))}</b><span>millor ratxa (dies)</span></div><div class="kpi"><b>${prem}</b><span>premis de ratxa guanyats</span></div></div>
-  <div class="bar"><select id="fc" onchange="render()"><option value="">Tots els cursos</option>${['1r', '2n', '3r', '4t', '5è', '6è'].map((n, i) => `<option value="${i}" ${f === String(i) ? 'selected' : ''}>${n} de primària</option>`).join('')}</select>
-  <input id="q" placeholder="Cerca nom o codi" value="${esc(q)}" oninput="render()"><button class="ghost" onclick="csv()">Descarrega CSV</button><button class="ghost" onclick="go(sessionStorage.getItem('pp'))">Actualitza</button></div>
-  <div class="tw"><table><thead><tr>${th('name', 'Alumne')}${th('code', 'Codi')}${th('course', 'Curs')}${th('streak', 'Ratxa')}${th('best', 'Millor')}<th>Premis de ratxa</th>${th('xp', 'XP')}${th('lessons', 'Lliçons')}<th>Encerts</th>${th('last_day', 'Últim dia')}<th>Prova d'inici</th></tr></thead><tbody>
-  ${rows.map(r => `<tr class="${alive(r) ? '' : 'cold'}"><td><b>${esc(r.name)}</b></td><td class="code">${esc(r.code)}</td><td>${['', '1r', '2n', '3r', '4t', '5è', '6è'][r.course + 1] || '—'}</td>
-    <td class="fire">🔥 ${alive(r) ? r.streak : 0}</td><td>${r.best}</td><td class="rw">${SRW.map(([d, i]) => (r.srw || []).includes(d) ? i : '').join('') || '<span class="mut">—</span>'}</td>
-    <td>${r.xp}</td><td>${r.lessons}</td><td>${r.answers ? Math.round(100 * r.correct / r.answers) + '%' : '—'}</td><td>${ago(r.last_day)}</td>
-    <td>${r.survey ? `<span class="pill">${esc(r.survey.result || '')}</span> ${FEEL[r.survey.feel] || ''}` : '<span class="mut">—</span>'}</td></tr>`).join('') || '<tr><td colspan="11" class="mut">Encara no hi ha alumnes.</td></tr>'}
+  root.innerHTML = `<h1>Administración · Mates amb Numi</h1><p class="lead">Ranking de rachas y progreso de cada alumno. Los premios de racha son los que el alumno ha ganado en la app: puedes premiarlos también en la academia.</p>
+  <div class="kpis"><div class="kpi"><b>${ROWS.length}</b><span>alumnos registrados</span></div><div class="kpi"><b class="fire">${act_}</b><span>con la racha encendida</span></div><div class="kpi"><b>${Math.max(0, ...ROWS.map(r => r.best))}</b><span>mejor racha (días)</span></div><div class="kpi"><b>${prem}</b><span>premios de racha ganados</span></div><div class="kpi"><b>${ev}</b><span>han hecho prueba de evolución</span></div></div>
+  <div class="bar"><select id="fc" onchange="render()"><option value="">Todos los cursos</option>${CUR.map((n, i) => `<option value="${i}" ${f === String(i) ? 'selected' : ''}>${n} de primaria</option>`).join('')}</select>
+  <input id="q" placeholder="Buscar nombre, usuario o código" value="${esc(q)}" oninput="render()"><button class="ghost" onclick="csv()">Descargar CSV</button><button class="ghost" onclick="go(pass())">Actualizar</button></div>
+  <div class="tw"><table><thead><tr>${th('name', 'Alumno')}${th('username', 'Usuario')}${th('code', 'Código')}${th('course', 'Curso')}${th('streakNow', 'Racha')}${th('best', 'Mejor')}<th>Premios racha</th>${th('xp', 'XP')}${th('lessons', 'Lecciones')}<th>Aciertos</th><th>Evolución</th>${th('last_day', 'Último día')}<th>Prueba inicial</th><th>Idioma</th><th></th></tr></thead><tbody>
+  ${rows.map(r => `<tr class="${alive(r) ? '' : 'cold'}"><td><b>${esc(r.name)}</b></td><td>${r.username ? esc(r.username) : '<span class="mut">—</span>'}</td><td class="code">${esc(r.code)}</td><td>${CUR[r.course] || '—'}</td>
+    <td class="fire">🔥 ${r.streakNow}</td><td>${r.best}</td><td class="rw">${SRW.map(([d, i]) => (r.srw || []).includes(d) ? i : '').join('') || '<span class="mut">—</span>'}</td>
+    <td>${r.xp}</td><td>${r.lessons}</td><td>${r.answers ? Math.round(100 * r.correct / r.answers) + '%' : '—'}</td><td>${evoCell(r)}</td><td>${ago(r.last_day)}</td>
+    <td>${r.survey ? `<span class="pill">${esc(r.survey.result || '')}</span> ${FEEL[r.survey.feel] || ''}` : '<span class="mut">—</span>'}</td><td>${r.lang === 'es' ? 'ES' : 'CAT'}</td>
+    <td>${r.username ? `<button class="mini ghost" onclick="setPass('${r.code}','${esc(r.name)}')">Contraseña</button> ` : ''}<button class="mini ghost red" onclick="off('${r.code}','${esc(r.name)}')">Baja</button></td></tr>`).join('') || '<tr><td colspan="15" class="mut">Aún no hay alumnos.</td></tr>'}
   </tbody></table></div>
-  <p class="note">Premis de ratxa: 🎁 3 dies · 🏅 7 dies · 🎧 14 dies · ⭐ 30 dies · 👑 60 dies · 🏆 100 dies. Les files en gris són alumnes que han perdut la ratxa (fa més d'un dia que no practiquen).</p>`;
+  <p class="note">Premios de racha: 🎁 3 días · 🏅 7 días · 🎧 14 días · ⭐ 30 días · 👑 60 días · 🏆 100 días. Las filas en gris son alumnos que han perdido la racha (hace más de un día que no practican). La columna «Evolución» muestra las últimas pruebas (cada 14 días) y cuánto ha subido o bajado respecto a la anterior.</p>`;
 }
 function csv() {
-  const head = ['Nom', 'Codi', 'Curs', 'Ratxa', 'Millor ratxa', 'Premis de ratxa', 'XP', 'Lliçons', '% encerts', 'Últim dia'];
-  const lines = ROWS.map(r => [r.name, r.code, ['1r', '2n', '3r', '4t', '5è', '6è'][r.course] || '', alive(r) ? r.streak : 0, r.best, (r.srw || []).join(' '), r.xp, r.lessons, r.answers ? Math.round(100 * r.correct / r.answers) : '', r.last_day || ''].map(v => `"${String(v).replace(/"/g, '""')}"`).join(';'));
-  const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob(['﻿' + [head.join(';'), ...lines].join('\n')], { type: 'text/csv' })); a.download = 'mates-numi-alumnes.csv'; a.click();
+  const head = ['Nombre', 'Usuario', 'Código', 'Curso', 'Racha', 'Mejor racha', 'Premios de racha', 'XP', 'Lecciones', '% aciertos', 'Última prueba evolución', 'Último día', 'Idioma'];
+  const lines = ROWS.map(r => { const t = r.tests || []; return [r.name, r.username || '', r.code, CUR[r.course] || '', r.streakNow, r.best, (r.srw || []).join(' '), r.xp, r.lessons, r.answers ? Math.round(100 * r.correct / r.answers) : '', t.length ? t[t.length - 1].pct + '%' : '', r.last_day || '', r.lang === 'es' ? 'ES' : 'CAT'].map(v => `"${String(v).replace(/"/g, '""')}"`).join(';'); });
+  const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob(['﻿' + [head.join(';'), ...lines].join('\n')], { type: 'text/csv' })); a.download = 'mates-numi-alumnos.csv'; a.click();
 }
-sessionStorage.getItem('pp') ? go(sessionStorage.getItem('pp')) : login();
+pass() ? go(pass()) : login();
 </script>
 </body>
 </html>
