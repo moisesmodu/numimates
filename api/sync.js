@@ -9,6 +9,7 @@ export default async function handler(req, res) {
   // Regla de conflicte: l'XP només creix. Si arriba un estat amb menys XP, retornem el del servidor.
   if (!b.reset && (state.xp | 0) < cur[0].xp) return ok(res, { ok: false, state: cur[0].state });
   state.code = code;
+  state.unlockAll = !!(cur[0].state && cur[0].state.unlockAll);
   const s = summary(state);
   await sql`UPDATE mates.alumnes SET state = ${JSON.stringify(state)}, name = ${String(state.name || '').slice(0, 30) || 'Alumne'}, course = ${s.course},
     xp = ${s.xp}, streak = ${s.streak}, best = ${s.best}, last_day = ${s.last_day}, lessons = ${s.lessons}, answers = ${s.answers}, correct = ${s.correct}, updated_at = now()

@@ -15,7 +15,7 @@ export default async function handler(req, res) {
   }
   for (let i = 0; i < 8; i++) {
     const code = WORDS[Math.floor(Math.random() * WORDS.length)] + '-' + String(Math.floor(1000 + Math.random() * 9000));
-    state.code = code; if (user) state.username = user;
+    state.code = code; if (user) state.username = user; state.unlockAll = false;
     const s = summary(state);
     const r = await sql`INSERT INTO mates.alumnes (code, name, course, survey, state, xp, streak, best, last_day, lessons, answers, correct, username, pass_hash)
       VALUES (${code}, ${name}, ${s.course}, ${JSON.stringify(b.survey || null)}, ${JSON.stringify(state)}, ${s.xp}, ${s.streak}, ${s.best}, ${s.last_day}, ${s.lessons}, ${s.answers}, ${s.correct}, ${user}, ${hash})

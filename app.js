@@ -21,6 +21,7 @@ function freshProgress() {
 function migrate(p) {
   const f = freshProgress();
   for (const k in f) if (p[k] === undefined) p[k] = f[k];
+  if (!p.cxp) p.cxp = {};
   if (!p.stats.bests) p.stats.bests = { sprint: p.stats.sprintBest || 0 };
   if (p.stats.games === undefined) p.stats.games = 0;
   if (p.course === undefined) { p.course = 3; p.baseCourse = 3; }
@@ -63,7 +64,8 @@ async function syncNow() {
 }
 async function pull() {
   if (!P || !P.code || !navigator.onLine) return;
-  try { const r = await api('login', { code: P.code }); if (r.state && r.state.xp > P.xp) { adopt(r.state); if (VIEW === 'home') renderHome(); } if (r.username && !P.username) { P.username = r.username; saveLocal(); } } catch (e) { }
+  try { const r = await api('login', { code: P.code }); if (r.state && r.state.xp > P.xp) { adopt(r.state); if (VIEW === 'home') renderHome(); }
+    if (r.state && !!r.state.unlockAll !== !!P.unlockAll) { P.unlockAll = !!r.state.unlockAll; saveLocal(); if (VIEW === 'home') renderHome(); } if (r.username && !P.username) { P.username = r.username; saveLocal(); } } catch (e) { }
 }
 function adopt(st) { const id = P.id; Object.assign(P, migrate(st), { id, dirty: false }); DB.profiles[id] = P; LANG = P.lang; saveLocal(); }
 const cloudTxt = () => !P.code ? L("⏳ Encara no s'ha pogut desar al núvol (es tornarà a provar sol).", '⏳ Aún no se ha podido guardar en la nube (se volverá a intentar solo).') : P.dirty ? L('⏳ Desant els últims canvis…', '⏳ Guardando los últimos cambios…') : L('☁️ Progrés desat al núvol.', '☁️ Progreso guardado en la nube.');
@@ -75,9 +77,15 @@ addEventListener('visibilitychange', () => { if (document.hidden) syncNow(); });
 const CUR = () => COURSES[P.course];
 const UNITS_ = () => CUR().units;
 const lvlOf = xp => Math.floor(Math.sqrt(xp / 20)) + 1;
+const clvOf = id => charLvl((P.cxp || {})[id]);
+const meC = (mood = 'idle', cls = '') => charSVG(P.companion, mood, P.acc, cls, clvOf(P.companion));
+function clvBar(id) {
+  const xp = (P.cxp || {})[id] || 0, lv = charLvl(xp), a = CLV[lv - 1], b = CLV[lv];
+  return `<div class="clv"><span>${L('Nivell', 'Nivel')} ${lv}${lv >= 5 ? ' · MAX' : ''}</span>${b ? `<div class="clvbar"><div style="width:${Math.min(100, (xp - a) / (b - a) * 100)}%"></div></div>` : ''}</div>`;
+}
 const xpFor = l => 20 * (l - 1) ** 2;
 function dailyRoll() { if (P.daily.d !== today()) P.daily = { d: today(), xp: 0 }; }
-function addXP(x) { dailyRoll(); P.xp += x; P.daily.xp += x; }
+function addXP(x) { dailyRoll(); P.xp += x; P.daily.xp += x; P.cxp = P.cxp || {}; P.cxp[P.companion] = (P.cxp[P.companion] || 0) + x; }
 function streakNow() { if (!P.lastDay) return 0; const d = dayDiff(P.lastDay, today()); return d <= 1 || (d === 2 && P.freeze > 0) ? P.streak : 0; }
 function touchStreak() {
   const t = today();
@@ -88,13 +96,20 @@ function touchStreak() {
   P.lastDay = t; P.best = Math.max(P.best, P.streak);
   return true;
 }
-const prog = (ui, c = CUR()) => (P.prog[c.units[ui].id] ||= { stars: [0, 0, 0, 0, 0, 0] });
-function unitOpen(ui, ci = P.course) { const c = COURSES[ci]; return ui === 0 || P.unlockAll || ci < P.baseCourse || ui <= (P.skip[c.id] || 0) || prog(ui - 1, c).stars[5] > 0; }
+const REP = u => u.lessons.length;
+function prog(ui, c = CUR()) {
+  const u = c.units[ui], n = REP(u) + 1; let p = P.prog[u.id];
+  if (!p) p = P.prog[u.id] = { stars: Array(n).fill(0) };
+  if (p.stars.length < n) { const old = p.stars, rep = old[old.length - 1]; p.stars = [...old.slice(0, old.length - 1), ...Array(n - old.length).fill(0), rep]; }
+  return p;
+}
+const udone = (p, u) => { const st = p.prog[u.id]?.stars; return !!(st && st[st.length - 1] > 0); };
+function unitOpen(ui, ci = P.course) { const c = COURSES[ci]; return ui === 0 || P.unlockAll || ci < P.baseCourse || ui <= (P.skip[c.id] || 0) || prog(ui - 1, c).stars[REP(c.units[ui - 1])] > 0; }
 function lessonOpen(ui, li) { if (!unitOpen(ui)) return false; return li === 0 || P.unlockAll || P.course < P.baseCourse || ui < (P.skip[CUR().id] || 0) || prog(ui).stars[li - 1] > 0; }
-const unitsDone = p => COURSES.reduce((n, c) => n + c.units.filter(u => (p.prog[u.id]?.stars[5] || 0) > 0).length, 0);
+const unitsDone = p => COURSES.reduce((n, c) => n + c.units.filter(u => udone(p, u)).length, 0);
 function currentNode() {
   const us = UNITS_(), from = Math.min(P.skip[CUR().id] || 0, us.length - 1);
-  for (const start of [from, 0]) for (let ui = start; ui < us.length; ui++) for (let li = 0; li < 6; li++) if (lessonOpen(ui, li) && !prog(ui).stars[li]) return [ui, li];
+  for (const start of [from, 0]) for (let ui = start; ui < us.length; ui++) for (let li = 0; li <= REP(us[ui]); li++) if (lessonOpen(ui, li) && !prog(ui).stars[li]) return [ui, li];
   return null;
 }
 function record(sk, ok) {
@@ -219,7 +234,7 @@ const nav = t => `<nav class="nav">${NAV().map(([v, i, l]) => `<button class="${
 const shell = (inner, tab) => `<div class="page">${topbar()}${inner}</div>${nav(tab)}`;
 function topbar() {
   const s = streakNow();
-  return `<header class="topbar"><button class="avatar" onclick="go('profiles')" title="${L("Canvia d'alumne", 'Cambiar de alumno')}">${charSVG(P.companion, 'idle', P.acc)}</button>
+  return `<header class="topbar"><button class="avatar" onclick="go('profiles')" title="${L("Canvia d'alumne", 'Cambiar de alumno')}">${meC('idle')}</button>
   <div class="chips"><span class="chip ${s ? 'fire' : 'off'}" id="chipFire"><i class="ci">${ICON.flame}</i>${s}</span><span class="chip gem" id="chipGem"><i class="ci">${ICON.gem}</i>${P.gems}</span><span class="chip lvl" id="chipLvl"><i class="ci">${ICON.bolt}</i>${lvlOf(P.xp)}</span></div></header>`;
 }
 const starsHTML = (n, cls = '') => `<span class="stars ${cls}">${[1, 2, 3].map(i => `<i class="${i <= n ? 'on' : ''}">★</i>`).join('')}</span>`;
@@ -237,24 +252,24 @@ function goalCard() {
   dailyRoll();
   const x = P.daily.xp, g = P.goal, pc = Math.min(100, Math.round(x / g * 100));
   const msg = x >= g ? L("Objectiu d'avui complert! Ets un crac.", '¡Objetivo de hoy cumplido! Eres un crack.') : x === 0 ? L(`Hola, ${esc(P.name)}! Fem una lliçó?`, `¡Hola, ${esc(P.name)}! ¿Hacemos una lección?`) : L(`Et falten ${g - x} XP per a l'objectiu d'avui.`, `Te faltan ${g - x} XP para el objetivo de hoy.`);
-  return `<div class="goal"><div class="gchar tapme">${charSVG(P.companion, x >= g ? 'happy' : 'idle', P.acc)}</div><div class="gbody"><div class="gmsg">${msg}</div><div class="gbar"><div style="width:${pc}%"></div></div><div class="gnum">${x} / ${g} ${L('XP avui', 'XP hoy')}</div></div></div>`;
+  return `<div class="goal"><div class="gchar tapme">${meC(x >= g ? 'happy' : 'idle')}</div><div class="gbody"><div class="gmsg">${msg}</div><div class="gbar"><div style="width:${pc}%"></div></div><div class="gnum">${x} / ${g} ${L('XP avui', 'XP hoy')}</div></div></div>`;
 }
 function testCard() {
   const t = testInfo(); if (!t.due) return '';
   return `<button class="testcard" onclick="startEvolution()"><span class="tci">🧪</span><span><b>${L("Toca la prova d'evolució!", '¡Toca la prueba de evolución!')}</b><small>${L('12 preguntes per veure quant has millorat. +20 💎', '12 preguntas para ver cuánto has mejorado. +20 💎')}</small></span><span class="go">›</span></button>`;
 }
-const OFF = [0, -54, -80, -54, 0, 54];
+const OFF = [0, -54, -80, -54, 0, 54, 80, 54, 0, -54, -80, -54];
 const DECO = ['+', '×', '÷', '=', '½', '%', '7', '3', '△', '○', '□', '9'];
 function unitHTML(u, ui) {
   const open = unitOpen(ui), st = prog(ui).stars, cur = currentNode();
-  const nodes = [0, 1, 2, 3, 4, 5].map(li => {
-    const isR = li === 5, done = st[li] > 0, can = lessonOpen(ui, li), isCur = cur && cur[0] === ui && cur[1] === li;
+  const R_ = REP(u), nodes = [...Array(R_ + 1).keys()].map(li => {
+    const isR = li === R_, done = st[li] > 0, can = lessonOpen(ui, li), isCur = cur && cur[0] === ui && cur[1] === li;
     const cls = !can ? 'locked' : isCur ? 'cur' : done ? (st[li] === 3 ? 'gold' : 'done') : 'open';
     const icon = !can ? ICON.lock : isR ? (done ? ICON.trophy : ICON.gift) : done ? (st[li] === 3 ? ICON.crown : ICON.check) : ICON.star;
     return `<div class="nwrap" style="--x:${OFF[li]}px;transition-delay:${li * 50}ms">
       ${isCur ? `<div class="tip">${isR ? L('REPTE!', '¡RETO!') : L('COMENÇA', 'EMPIEZA')}</div>` : ''}
       <button class="node ${cls} ${isR ? 'rep' : ''}" onclick="openLesson(${ui},${li})" aria-label="${isR ? L('Repte final', 'Reto final') : L('Lliçó ', 'Lección ') + (li + 1)}"><i class="nico">${icon}</i></button>
-      ${done && !isR ? starsHTML(st[li], 'mini') : ''}</div>`;
+      ${done && !isR ? starsHTML(st[li], 'mini') : ''}</div>${li === 4 && R_ > 5 ? `<div class="pdiv"><span>${L('NIVELL 2', 'NIVEL 2')}</span></div>` : ''}`;
   }).join('');
   const deco = [0, 1, 2, 3].map(k => `<span class="deco" style="${k % 2 ? 'left' : 'right'}:${6 + (k * 7 + ui * 5) % 20}%;top:${14 + k * 22}%;animation-delay:${k * .7}s">${DECO[(ui * 3 + k) % DECO.length]}</span>`).join('');
   return `<section class="unit ${open ? '' : 'closed'}" style="--uc:${u.color}">
@@ -265,22 +280,22 @@ function renderHome() {
   VIEW = 'home';
   const c = CUR();
   app.innerHTML = shell(`<button class="course" onclick="pickCourse()"><span class="cem">${c.emoji}</span><span><small>${L('Estàs fent', 'Estás haciendo')}</small><b>${tx(c.long)}</b></span><span class="cch">${L('Canvia', 'Cambia')} ▾</span></button>
-    ${testCard()}${goalCard()}${streakCard()}${UNITS_().map(unitHTML).join('')}
+    ${testCard()}${recoBox()}${goalCard()}${streakCard()}${UNITS_().map(unitHTML).join('')}
     <div class="theend">${P.course < 5 ? L(`Quan acabis ${tx(c.long)}, t'espera <b>${tx(COURSES[P.course + 1].long)}</b>! 🚀`, `Cuando acabes ${tx(c.long)}, ¡te espera <b>${tx(COURSES[P.course + 1].long)}</b>! 🚀`) : L('Has arribat al final de primària! 🎓', '¡Has llegado al final de primaria! 🎓')}</div>`, 'home');
   revealNodes(); showGain();
   const n = $('.node.cur'); if (n) setTimeout(() => n.scrollIntoView({ block: 'center', behavior: 'smooth' }), 60);
 }
 function pickCourse() {
   modal(`<div class="sheet"><h3>${L('Tria el curs', 'Elige el curso')}</h3><p>${L('Pots repassar cursos anteriors quan vulguis.', 'Puedes repasar cursos anteriores cuando quieras.')}</p><div class="cgrid">${COURSES.map((c, i) => {
-    const done = c.units.filter(u => (P.prog[u.id]?.stars[5] || 0) > 0).length;
+    const done = c.units.filter(u => udone(P, u)).length;
     return `<button class="cbtn ${i === P.course ? 'on' : ''}" onclick="setCourse(${i})"><span class="cem">${c.emoji}</span><b>${tx(c.name)}</b><small>${done}/${c.units.length} ${L('unitats', 'unidades')}</small></button>`;
   }).join('')}</div></div>`);
 }
 function setCourse(i) { P.course = i; save(); closeModal(); renderHome(); window.scrollTo(0, 0); }
 function openLesson(ui, li) {
   if (!lessonOpen(ui, li)) { toast(li === 0 ? L('🔒 Primer supera el repte de la unitat anterior.', '🔒 Primero supera el reto de la unidad anterior.') : L('🔒 Primer fes la lliçó anterior.', '🔒 Primero haz la lección anterior.')); SFX.ko(); return; }
-  const u = UNITS_()[ui], isR = li === 5, st = prog(ui).stars[li];
-  modal(`<div class="sheet" style="--uc:${u.color}"><div class="sk">${tx(CUR().name).toUpperCase()} · ${L('UNITAT', 'UNIDAD')} ${ui + 1} · ${isR ? L('REPTE FINAL', 'RETO FINAL') : L('LLIÇÓ ', 'LECCIÓN ') + (li + 1) + L(' DE 5', ' DE 5')}</div>
+  const u = UNITS_()[ui], isR = li === REP(u), st = prog(ui).stars[li];
+  modal(`<div class="sheet" style="--uc:${u.color}"><div class="sk">${tx(CUR().name).toUpperCase()} · ${L('UNITAT', 'UNIDAD')} ${ui + 1} · ${isR ? L('REPTE FINAL', 'RETO FINAL') : L('LLIÇÓ ', 'LECCIÓN ') + (li + 1) + ' / ' + REP(u)}</div>
     <h3>${isR ? L('Repte: ', 'Reto: ') + tx(u.title).toLowerCase() : tx(u.lessons[li].t)}</h3>
     <p>${isR ? L('10 exercicis barrejats de tota la unitat. Si el superes, obres un cofre ple de cristalls i la unitat següent!', '10 ejercicios mezclados de toda la unidad. Si lo superas, ¡abres un cofre lleno de cristales y la unidad siguiente!') : L("8 exercicis. Si te n'equivoques algun, el tornaràs a practicar al final.", '8 ejercicios. Si fallas alguno, lo volverás a practicar al final.')}</p>
     ${st ? `<div class="sstars">${starsHTML(st)}</div>` : ''}
@@ -295,9 +310,9 @@ function genEx(sk, lv, seen) {
 }
 function startLesson(ui, li) {
   const u = UNITS_()[ui]; let plan = [];
-  if (li === 5) { const sks = [...new Set(u.lessons.flatMap(l => l.sk))], top = Math.max(...u.lessons.map(l => l.L)); for (let i = 0; i < 10; i++) plan.push([sks[i % sks.length], Math.max(1, top - (i < 4 ? 1 : 0))]); }
+  if (li === REP(u)) { const sks = [...new Set(u.lessons.flatMap(l => l.sk))], top = Math.max(...u.lessons.map(l => l.L)); for (let i = 0; i < 10; i++) plan.push([sks[i % sks.length], Math.max(1, top - (i < 4 ? 1 : 0))]); }
   else { const l = u.lessons[li]; for (let i = 0; i < 8; i++) plan.push([l.sk[i % l.sk.length], l.L]); }
-  startRun({ mode: li === 5 ? 'repte' : 'lesson', ui, li, plan: shuffle(plan), color: u.color });
+  startRun({ mode: li === REP(u) ? 'repte' : 'lesson', ui, li, plan: shuffle(plan), color: u.color });
 }
 function trainPool(ui) {
   const pool = [];
@@ -336,7 +351,7 @@ function renderLesson() {
       ${quiet ? `<div class="pcount">${LS.done + 1}/${LS.total}</div>` : `<div class="combo ${LS.combo >= 2 ? 'on' : ''}" id="combo"><i class="ci">${ICON.flame}</i><b>${LS.combo}</b></div>`}</div>
     <div class="l-body" id="lbody">
       ${e.retry ? `<div class="retry">🔁 ${L('Una altra oportunitat', 'Otra oportunidad')}</div>` : ''}${tag ? `<div class="retry place">${tag}</div>` : ''}
-      <div class="l-q ${e.long ? 'long' : ''}"><div class="buddy tapme" id="buddy">${charSVG(P.companion, 'think', P.acc)}</div><div class="bubble">${e.q}</div></div>
+      <div class="l-q ${e.long ? 'long' : ''}"><div class="buddy tapme" id="buddy">${meC('think')}</div><div class="bubble">${e.q}</div></div>
       ${e.vis ? `<div class="l-vis">${e.vis}</div>` : ''}
       <div class="l-ans">${ansHTML(e)}</div>
     </div>
@@ -418,7 +433,7 @@ function check() {
     const n = genEx(e.sk, e.L, LS.seen); n.retry = true; LS.queue.push(n);
     fb.innerHTML = `<div class="fbh">✖ ${pick(OOPS())}</div><div class="ans">${L('Resposta correcta', 'Respuesta correcta')}: <b>${ansText(e)}</b></div>${e.ex ? `<div class="exp">💡 ${e.ex}</div>` : ''}`;
   }
-  $('#buddy').innerHTML = charSVG(P.companion, ok ? 'happy' : 'sad', P.acc);
+  $('#buddy').innerHTML = meC(ok ? 'happy' : 'sad');
   const cb = $('#combo'); cb.innerHTML = `<i class="ci">${ICON.flame}</i><b>${LS.combo}</b>`; cb.classList.toggle('on', LS.combo >= 2); if (ok && LS.combo >= 2) { cb.classList.remove('pop'); void cb.offsetWidth; cb.classList.add('pop'); }
   chk.textContent = L('CONTINUA', 'CONTINÚA'); chk.disabled = false; chk.className = 'btn check ' + (ok ? 'okb' : 'kob');
   foot.scrollIntoView({ block: 'nearest' });
@@ -445,7 +460,7 @@ const BADGES = [
   ['xp2000', '💫', '2.000 XP', "Aconsegueix 2.000 punts d'experiència|Consigue 2.000 puntos de experiencia", p => p.xp >= 2000],
   ['unit1', '🗺️', 'Primera unitat|Primera unidad', "Supera el repte d'una unitat|Supera el reto de una unidad", p => unitsDone(p) >= 1],
   ['unit5', '🧭', 'Exploració|Exploración', 'Supera 5 unitats|Supera 5 unidades', p => unitsDone(p) >= 5],
-  ['course', '🎓', 'Curs complet|Curso completo', "Supera totes les unitats d'un curs|Supera todas las unidades de un curso", p => COURSES.some(c => c.units.every(u => (p.prog[u.id]?.stars[5] || 0) > 0))],
+  ['course', '🎓', 'Curs complet|Curso completo', "Supera totes les unitats d'un curs|Supera todas las unidades de un curso", p => COURSES.some(c => c.units.every(u => udone(p, u)))],
   ['evo1', '🧪', 'Científic/a|Científico/a', "Fes una prova d'evolució|Haz una prueba de evolución", p => p.tests.filter(t => t.kind === 'evo').length >= 1],
   ['evoUp', '📈', 'Cap amunt!|¡Hacia arriba!', "Millora la nota en una prova d'evolució|Mejora la nota en una prueba de evolución", p => p.tests.some((t, i) => i && t.kind === 'evo' && t.pct > p.tests[i - 1].pct)],
   ['friends3', '🤝', 'Bona colla|Buena pandilla', 'Aconsegueix 3 companys|Consigue 3 compañeros', p => p.owned.length >= 3],
@@ -461,7 +476,8 @@ const BADGES = [
 function checkBadges() { const nw = BADGES.filter(b => !P.badges.includes(b[0]) && b[4](P)); nw.forEach(b => { P.badges.push(b[0]); P.gems += 10; }); return nw; }
 function finishRun() {
   const R = { mode: LS.mode, ui: LS.ui, li: LS.li, acc: Math.round(100 * LS.total / (LS.total + LS.miss)), perfect: LS.miss === 0, stars: 0, chest: 0 };
-  if (R.mode === 'train') { R.xp = 8 + (R.perfect ? 4 : 0); R.gems = 3 + (R.perfect ? 2 : 0); P.stats.trains++; }
+  if (R.mode === 'reco') { R.xp = 12 + (R.perfect ? 4 : 0); R.gems = 6; P.stats.trains++; if (R.acc >= 75) { P.reco = null; R.recoDone = true; } }
+  else if (R.mode === 'train') { R.xp = 8 + (R.perfect ? 4 : 0); R.gems = 3 + (R.perfect ? 2 : 0); P.stats.trains++; }
   else {
     R.xp = 10 + (R.perfect ? 5 : 0) + (R.mode === 'repte' ? 10 : 0); R.gems = 5 + (R.perfect ? 5 : 0);
     R.stars = R.perfect ? 3 : LS.miss <= 2 ? 2 : 1;
@@ -473,8 +489,10 @@ function finishRun() {
   LS = null; reward(R);
 }
 function reward(R) {
-  const lv0 = lvlOf(P.xp);
-  addXP(R.xp); P.gems += R.gems + R.chest;
+  const lv0 = lvlOf(P.xp), cid = P.companion, cl0 = clvOf(cid);
+  addXP(R.xp);
+  R.clv = clvOf(cid) > cl0 ? [cid, clvOf(cid)] : null;
+  R.knight = unitsDone(P) >= 3 && !P.owned.includes('cavaller') ? (P.owned.push('cavaller'), true) : false; P.gems += R.gems + R.chest;
   R.streakUp = touchStreak(); R.srw = R.streakUp ? grantStreak() : [];
   R.lvUp = lvlOf(P.xp) > lv0 ? lvlOf(P.xp) : 0; if (R.lvUp) P.gems += 10;
   R.newB = checkBadges();
@@ -486,6 +504,8 @@ function reward(R) {
   if (R.srw.length) FLOW.push(() => scrStreakReward(R.srw));
   if (R.chest) FLOW.push(() => scrChest(R));
   if (R.lvUp) FLOW.push(() => scrLevel(R.lvUp));
+  if (R.clv) FLOW.push(() => scrCharLevel(...R.clv));
+  if (R.knight) FLOW.push(scrKnight);
   if (R.newB.length) FLOW.push(() => scrBadges(R.newB));
   flowNext();
 }
@@ -493,10 +513,10 @@ function flowNext() { closeModal(); const f = FLOW.shift(); if (f) f(); else go(
 function countUp() { $$('[data-count]').forEach(el => { const to = +el.dataset.count, suf = el.dataset.suf || '', t0 = performance.now(); (function step(t) { const k = Math.min(1, (t - t0) / 800); el.textContent = Math.round(to * (1 - (1 - k) ** 3)) + suf; if (k < 1) requestAnimationFrame(step); })(t0); }); }
 function scrResult(R) {
   const game = R.mode === 'game';
-  const title = game ? tx(R.title) : R.perfect ? L('Lliçó perfecta!', '¡Lección perfecta!') : R.mode === 'train' ? L('Entrenament fet!', '¡Entrenamiento hecho!') : L('Lliçó completada!', '¡Lección completada!');
+  const title = game ? tx(R.title) : R.recoDone ? L('Missió del Cavaller complerta!', '¡Misión del Caballero cumplida!') : R.perfect ? L('Lliçó perfecta!', '¡Lección perfecta!') : R.mode === 'reco' ? L('Bona feina! Torna-ho a provar per completar la missió.', '¡Buen trabajo! Vuelve a intentarlo para completar la misión.') : R.mode === 'train' ? L('Entrenament fet!', '¡Entrenamiento hecho!') : L('Lliçó completada!', '¡Lección completada!');
   const sub = game ? (R.record ? L('🏆 Nou rècord personal!', '🏆 ¡Nuevo récord personal!') : L(`El teu rècord: ${R.best}`, `Tu récord: ${R.best}`)) : R.perfect ? L('Ni un sol error. Ets imparable!', 'Ni un solo error. ¡Eres imparable!') : L('Cada error és una oportunitat per aprendre.', 'Cada error es una oportunidad para aprender.');
   const third = game ? `<div class="rs acc"><span>${L('PUNTS', 'PUNTOS')}</span><b data-count="${R.score}">0</b></div>` : `<div class="rs acc"><span>${L('PRECISIÓ', 'PRECISIÓN')}</span><b data-count="${R.acc}" data-suf="%">0</b></div>`;
-  app.innerHTML = `<div class="scr"><div class="burst"></div><div class="rchar tapme">${charSVG(P.companion, 'happy', P.acc)}</div>
+  app.innerHTML = `<div class="scr"><div class="burst"></div><div class="cheer"><div class="saybubble">${cheerMsg(R)}</div><div class="rchar dance tapme">${meC('happy')}</div></div>
     <h1>${title}</h1><p class="sub">${sub}</p>
     ${R.stars ? `<div class="bigstars">${[1, 2, 3].map(i => `<i class="${i <= R.stars ? 'on' : ''}" style="animation-delay:${.25 + i * .22}s">★</i>`).join('')}</div>` : ''}
     <div class="rstats"><div class="rs xp"><span>XP</span><b data-count="${R.xp}">0</b></div><div class="rs gem"><span>${L('CRISTALLS', 'CRISTALES')}</span><b data-count="${R.gems}">0</b></div>${third}</div>
@@ -515,11 +535,11 @@ function scrStreak() {
 }
 function scrStreakReward(list) {
   const r = list[list.length - 1];
-  const pic = r.char ? charSVG(r.char, 'happy') : r.acc ? charSVG(P.companion, 'happy', { ...P.acc, [ACC[r.acc].slot]: r.acc }) : `<div class="bigicon">${r.icon}</div>`;
+  const pic = r.char ? charSVG(r.char, 'happy') : r.acc ? charSVG(P.companion, 'happy', { ...P.acc, [ACC[r.acc].slot]: r.acc }, '', clvOf(P.companion)) : `<div class="bigicon">${r.icon}</div>`;
   app.innerHTML = `<div class="scr"><div class="burst gold"></div><div class="ribbon">${L('PREMI DE RATXA', 'PREMIO DE RACHA')} · ${r.d} ${L('DIES', 'DÍAS')}</div><div class="rchar big tapme">${pic}</div>
-    <h1>${r.char ? L(`${CH[r.char].name} s'uneix a la colla!`, `¡${CH[r.char].name} se une a la pandilla!`) : L('Has guanyat un premi!', '¡Has ganado un premio!')}</h1><p class="sub">${list.map(x => `${x.icon} ${tx(x.txt)}`).join('<br>')}</p>
+    <h1>${r.char ? L(`${tx(CH[r.char].name)} s'uneix a la colla!`, `¡${tx(CH[r.char].name)} se une a la pandilla!`) : L('Has guanyat un premi!', '¡Has ganado un premio!')}</h1><p class="sub">${list.map(x => `${x.icon} ${tx(x.txt)}`).join('<br>')}</p>
     ${r.acc ? `<button class="btn big gold" onclick="P.acc['${ACC[r.acc].slot}']='${r.acc}';save();flowNext()">${L("POSA-T'HO!", '¡PÓNTELO!')}</button>` : ''}
-    ${r.char ? `<button class="btn big gold" onclick="P.companion='${r.char}';save();flowNext()">${L('VULL ANAR AMB ', 'QUIERO IR CON ')}${CH[r.char].name.toUpperCase()}!</button>` : ''}
+    ${r.char ? `<button class="btn big gold" onclick="P.companion='${r.char}';save();flowNext()">${L('VULL ANAR AMB ', 'QUIERO IR CON ')}${tx(CH[r.char].name).toUpperCase()}!</button>` : ''}
     <button class="btn big ${r.acc || r.char ? 'ghost' : ''}" onclick="flowNext()">${L('CONTINUA', 'CONTINÚA')}</button></div>`;
   SFX.win(); confetti(200);
 }
@@ -538,7 +558,7 @@ function scrChest(R) {
 }
 function openChest() { const c = $('#chest'); if (c.classList.contains('open')) return; c.classList.remove('wiggle'); c.classList.add('open'); SFX.win(); confetti(180); setTimeout(() => { $('#chestOut').hidden = false; }, 450); }
 function scrLevel(l) {
-  app.innerHTML = `<div class="scr"><div class="burst"></div><div class="lvbadge">${l}</div><h1>${L(`Has pujat al nivell ${l}!`, `¡Has subido al nivel ${l}!`)}</h1><p class="sub">${L('+10 cristalls de regal. Continua així!', '+10 cristales de regalo. ¡Sigue así!')}</p><div class="rchar tapme">${charSVG(P.companion, 'happy', P.acc)}</div><button class="btn big" onclick="flowNext()">${L('CONTINUA', 'CONTINÚA')}</button></div>`;
+  app.innerHTML = `<div class="scr"><div class="burst"></div><div class="lvbadge">${l}</div><h1>${L(`Has pujat al nivell ${l}!`, `¡Has subido al nivel ${l}!`)}</h1><p class="sub">${L('+10 cristalls de regal. Continua així!', '+10 cristales de regalo. ¡Sigue así!')}</p><div class="rchar tapme">${meC('happy')}</div><button class="btn big" onclick="flowNext()">${L('CONTINUA', 'CONTINÚA')}</button></div>`;
   SFX.win(); confetti(90);
 }
 function scrBadges(list) {
@@ -546,6 +566,57 @@ function scrBadges(list) {
     <div class="newb">${list.map((b, i) => `<div class="badge on pop" style="animation-delay:${i * 150}ms"><div class="bi">${b[1]}</div><b>${tx(b[2])}</b><span>${tx(b[3])}</span></div>`).join('')}</div>
     <button class="btn big" onclick="flowNext()">${L('CONTINUA', 'CONTINÚA')}</button></div>`;
   SFX.coin();
+}
+
+function cheerMsg(R) {
+  const n = esc(P.name), nm = tx(CH[P.companion].name);
+  const good = L([`Ho has fet genial, ${n}! Estic molt orgullós de tu.`, `${n}, cada dia ets més bo/na amb les mates!`, `Increïble! El teu cervell està fent múscul, ${n}.`, `Així m'agrada! Pas a pas arribarem molt lluny.`, `${n}, has estat un crac! Anem a per la següent?`, `Quina passada! Aquesta lliçó ja és teva.`],
+    [`¡Lo has hecho genial, ${n}! Estoy muy orgulloso de ti.`, `¡${n}, cada día eres mejor en mates!`, `¡Increíble! Tu cerebro se está poniendo fuerte, ${n}.`, `¡Así me gusta! Paso a paso llegaremos muy lejos.`, `¡${n}, has sido un crack! ¿Vamos a por la siguiente?`, `¡Qué pasada! Esta lección ya es tuya.`]);
+  const perfect = L([`PERFECTE, ${n}! Ni un sol error! 🌟`, `Uau, ${n}! Lliçó perfecta! Ets imparable!`], [`¡PERFECTO, ${n}! ¡Ni un solo error! 🌟`, `¡Guau, ${n}! ¡Lección perfecta! ¡Eres imparable!`]);
+  const hard = L([`Els errors també ensenyen, ${n}. Ho has intentat i això és el més important!`, `No passa res per equivocar-se, ${n}. La propera sortirà millor!`], [`Los errores también enseñan, ${n}. ¡Lo has intentado y eso es lo más importante!`, `No pasa nada por equivocarse, ${n}. ¡La próxima saldrá mejor!`]);
+  const game = L([`Quina velocitat, ${n}! El teu cervell va a tota màquina!`, `Bona partida, ${n}! Cada vegada ets més ràpid/a.`], [`¡Qué velocidad, ${n}! ¡Tu cerebro va a toda máquina!`, `¡Buena partida, ${n}! Cada vez eres más rápido/a.`]);
+  const list = R.mode === 'game' ? game : R.perfect ? perfect : (R.acc != null && R.acc < 60) ? hard : good;
+  return `<b>${nm}:</b> ${pick(list)}`;
+}
+
+/* ---------- Recomanacions del Cavaller ---------- */
+function weakSkills() {
+  const sks = new Set(UNITS_().flatMap(u => u.lessons.flatMap(l => l.sk)));
+  return Object.entries(P.stats.sk).filter(([k, [c, t]]) => sks.has(k) && t >= 4 && c / t < .6).sort((a, b) => a[1][0] / a[1][1] - b[1][0] / b[1][1]).map(([sk]) => ({ sk }));
+}
+function makeReco(wrong, source) {
+  const us = UNITS_(), items = [], seen = new Set();
+  [...wrong, ...weakSkills()].forEach(({ sk }) => {
+    if (seen.has(sk) || items.length >= 3) return;
+    for (let ui = 0; ui < us.length; ui++) { const li = us[ui].lessons.findIndex(l => l.sk.includes(sk)); if (li >= 0) { seen.add(sk); items.push({ ui, li, sk, L: us[ui].lessons[li].L }); break; } }
+  });
+  P.reco = items.length ? { date: today(), source, course: P.course, items } : null;
+}
+function recoBox(inResult) {
+  const r = P.reco; if (!r || r.course !== P.course || !r.items.length) return '';
+  const us = UNITS_();
+  return `<div class="reco ${inResult ? 'inres' : ''}"><div class="rhead"><div class="rknight tapme">${charSVG('cavaller', 'happy', null, '', 1)}</div><div><b>${L('El Cavaller et recomana', 'El Caballero te recomienda')}</b><small>${r.source === 'evo' ? L('Segons la teva prova d\'evolució:', 'Según tu prueba de evolución:') : r.source === 'place' ? L('Segons la prova de nivell:', 'Según la prueba de nivel:') : L('Per millorar:', 'Para mejorar:')}</small></div></div>
+    <ul>${r.items.map(it => `<li><span class="rdot" style="background:${us[it.ui].color}"></span>${tx(us[it.ui].lessons[it.li].t)} <small>· ${tx(us[it.ui].title)}</small></li>`).join('')}</ul>
+    <button class="btn gold" onclick="FLOW=[];startReco()">⚔️ ${L('ACCEPTA LA MISSIÓ', 'ACEPTA LA MISIÓN')}</button></div>`;
+}
+function startReco() {
+  const r = P.reco; if (!r) return;
+  const plan = []; for (let i = 0; i < 8; i++) { const it = r.items[i % r.items.length]; plan.push([it.sk, it.L]); }
+  startRun({ mode: 'reco', ui: null, li: null, plan: shuffle(plan), color: '#2F8FA6' });
+}
+function scrCharLevel(id, lv) {
+  app.innerHTML = `<div class="scr"><div class="burst gold"></div><div class="ribbon">${L('EL TEU COMPANY PUJA DE NIVELL', 'TU COMPAÑERO SUBE DE NIVEL')}</div><div class="rchar big tapme levelup">${charSVG(id, 'happy', P.acc, '', lv)}</div>
+    <h1>${L(`${tx(CH[id].name)} ara és de nivell ${lv}!`, `¡${tx(CH[id].name)} ahora es de nivel ${lv}!`)}</h1>
+    <p class="sub">${lv >= 5 ? L('Nivell màxim: és llegendari! ✨', 'Nivel máximo: ¡es legendario! ✨') : lv >= 3 ? L('Ara brilla amb una aura màgica. Com més practiqueu junts, més creix!', 'Ahora brilla con un aura mágica. ¡Cuanto más practicáis juntos, más crece!') : L('Com més practiqueu junts, més creix!', '¡Cuanto más practicáis juntos, más crece!')}</p>
+    <button class="btn big" onclick="flowNext()">${L('CONTINUA', 'CONTINÚA')}</button></div>`;
+  SFX.win(); confetti(160);
+}
+function scrKnight() {
+  app.innerHTML = `<div class="scr"><div class="burst gold"></div><div class="ribbon">${L('NOU COMPANY', 'NUEVO COMPAÑERO')}</div><div class="rchar big tapme">${charSVG('cavaller', 'happy')}</div>
+    <h1>${L("El Cavaller del Codi s'uneix a la colla!", '¡El Caballero del Código se une a la pandilla!')}</h1><p class="sub">«${tx(CH.cavaller.hello)}»</p>
+    <button class="btn big gold" onclick="P.companion='cavaller';save();flowNext()">${L('VULL ANAR AMB EL CAVALLER!', '¡QUIERO IR CON EL CABALLERO!')}</button>
+    <button class="btn big ghost" onclick="flowNext()">${L('CONTINUA', 'CONTINÚA')}</button></div>`;
+  SFX.win(); confetti(200);
 }
 
 /* ---------- Prova d'evolució ---------- */
@@ -560,6 +631,7 @@ function finishEvolution() {
   const res = LS.res, meta = LS.meta, ok = res.filter(Boolean).length, pct = Math.round(100 * ok / res.length);
   const byUnit = {}; meta.forEach((m, i) => { const k = m.ui; byUnit[k] ||= [0, 0]; byUnit[k][1]++; if (res[i]) byUnit[k][0]++; });
   const prev = [...P.tests].reverse().find(t => t.course === P.course);
+  makeReco(meta.filter((m, i) => !res[i]), 'evo');
   P.tests.push({ date: today(), course: P.course, pct, ok, n: res.length, kind: 'evo', byUnit });
   LS = null;
   reward({ mode: 'evo', xp: 20, gems: 20, chest: 0, pct, prev: prev ? prev.pct : null, byUnit });
@@ -578,10 +650,11 @@ function scrEvolution(R) {
   const diff = R.prev == null ? null : R.pct - R.prev;
   const msg = diff == null ? L('Ja tenim el teu primer punt a la gràfica!', '¡Ya tenemos tu primer punto en la gráfica!') : diff > 0 ? L(`Has millorat <b>+${diff}%</b> des de l'última prova!`, `¡Has mejorado <b>+${diff}%</b> desde la última prueba!`) : diff === 0 ? L('Et mantens igual. A continuar practicant!', 'Te mantienes igual. ¡A seguir practicando!') : L('Aquesta vegada ha costat més. Cap problema: repassa i la propera anirà millor!', 'Esta vez ha costado más. ¡No pasa nada: repasa y la próxima irá mejor!');
   const us = UNITS_();
-  app.innerHTML = `<div class="scr"><div class="burst"></div><div class="rchar tapme">${charSVG(P.companion, diff == null || diff >= 0 ? 'happy' : 'think', P.acc)}</div>
+  app.innerHTML = `<div class="scr"><div class="burst"></div><div class="rchar tapme">${meC(diff == null || diff >= 0 ? 'happy' : 'think')}</div>
     <h1>${L("Prova d'evolució", 'Prueba de evolución')}: ${R.pct}%</h1><p class="sub">${msg}</p>
     <div class="evobox">${evoChart(P.tests.filter(t => t.course === P.course))}</div>
     <div class="plres">${Object.entries(R.byUnit).map(([ui, [c, t]]) => `<div class="${c === t ? 'ok' : ''}"><span>${c === t ? '✔' : c ? '½' : '·'}</span>${tx(us[ui].title)} <small class="mut">${c}/${t}</small></div>`).join('')}</div>
+    ${recoBox(true)}
     <button class="btn big" onclick="flowNext()">${L('CONTINUA', 'CONTINÚA')}</button></div>`;
   countUp(); SFX.win(); if (diff > 0) confetti(160);
 }
@@ -732,12 +805,12 @@ function renderShop() {
   const comp = Object.keys(CH).map(id => {
     const c = CH[id], own = P.owned.includes(id), sel = P.companion === id;
     const btn = sel ? `<button class="btn sm ghost" disabled>${L('AMB TU', 'CONTIGO')}</button>` : own ? `<button class="btn sm" onclick="choose('${id}')">${L('TRIA', 'ELEGIR')}</button>` : c.price == null ? `<button class="btn sm fire" disabled>🔥 ${tx(c.unlock)}</button>` : `<button class="btn sm gold" ${P.gems < c.price ? 'disabled' : ''} onclick="buyChar('${id}')"><i class="ci">${ICON.gem}</i>${c.price}</button>`;
-    return `<div class="item ${sel ? 'sel' : ''} ${own ? '' : 'nown'} ${c.price == null ? 'excl' : ''}"><div class="ipic tapme">${charSVG(id, sel ? 'happy' : 'idle', own ? P.acc : null)}</div><div class="iname">${c.name}</div><div class="idesc">${tx(c.desc)}</div>${btn}</div>`;
+    return `<div class="item ${sel ? 'sel' : ''} ${own ? '' : 'nown'} ${c.price == null ? 'excl' : ''}"><div class="ipic tapme">${charSVG(id, sel ? 'happy' : 'idle', own ? P.acc : null, '', own ? clvOf(id) : 1)}</div><div class="iname">${tx(c.name)}</div>${own ? clvBar(id) : ''}<div class="idesc">${tx(c.desc)}</div>${btn}</div>`;
   }).join('');
   const acc = Object.keys(ACC).map(id => {
     const a = ACC[id], own = P.accOwned.includes(id), on = P.acc[a.slot] === id;
     const btn = own ? `<button class="btn sm ${on ? 'ghost' : ''}" onclick="toggleAcc('${id}')">${on ? L('TREU', 'QUITAR') : L('POSA', 'PONER')}</button>` : a.price == null ? `<button class="btn sm fire" disabled>🔥 ${tx(a.unlock)}</button>` : `<button class="btn sm gold" ${P.gems < a.price ? 'disabled' : ''} onclick="buyAcc('${id}')"><i class="ci">${ICON.gem}</i>${a.price}</button>`;
-    return `<div class="item ${on ? 'sel' : ''} ${a.price == null ? 'excl' : ''}"><div class="ipic">${charSVG(P.companion, 'idle', { [a.slot]: id })}</div><div class="iname">${tx(a.name)}</div>${btn}</div>`;
+    return `<div class="item ${on ? 'sel' : ''} ${a.price == null ? 'excl' : ''}"><div class="ipic">${charSVG(P.companion, 'idle', { [a.slot]: id }, '', clvOf(P.companion))}</div><div class="iname">${tx(a.name)}</div>${btn}</div>`;
   }).join('');
   app.innerHTML = shell(`<h1 class="ph1">${L('Botiga', 'Tienda')}</h1><p class="lead">${L("Guanya cristalls fent lliçons i canvia'ls per companys i accessoris. Els marcats amb 🔥 només es guanyen amb les ratxes!", 'Gana cristales haciendo lecciones y cámbialos por compañeros y accesorios. ¡Los marcados con 🔥 solo se ganan con las rachas!')}</p>
     <h2 class="h2">${L('Companys', 'Compañeros')}</h2><div class="grid">${comp}</div>
@@ -749,7 +822,7 @@ function buyChar(id) {
   const c = CH[id]; if (c.price == null || P.gems < c.price || P.owned.includes(id)) return;
   P.gems -= c.price; P.owned.push(id); P.companion = id;
   const nb = checkBadges(); save(); SFX.coin(); confetti(100); renderShop();
-  modal(`<div class="sheet card cent"><div class="mchar tapme">${charSVG(id, 'happy', P.acc)}</div><h3>${L(`${c.name} s'uneix a la colla!`, `¡${c.name} se une a la pandilla!`)}</h3><p>«${tx(c.hello)}»</p><button class="btn big" onclick="closeModal()">${L('GENIAL!', '¡GENIAL!')}</button></div>`, true);
+  modal(`<div class="sheet card cent"><div class="mchar tapme">${charSVG(id, 'happy', P.acc)}</div><h3>${L(`${tx(c.name)} s'uneix a la colla!`, `¡${tx(c.name)} se une a la pandilla!`)}</h3><p>«${tx(c.hello)}»</p><button class="btn big" onclick="closeModal()">${L('GENIAL!', '¡GENIAL!')}</button></div>`, true);
   nb.forEach(b => toast(`${b[1]} ${L('Nova medalla', 'Nueva medalla')}: <b>${tx(b[2])}</b> (+10 💎)`));
 }
 function choose(id) { P.companion = id; save(); SFX.tap(); renderShop(); }
@@ -778,12 +851,12 @@ function renderProfile() {
   const rows = UNITS_().map((u, i) => {
     const sks = new Set(u.lessons.flatMap(x => x.sk)); let c = 0, t = 0;
     sks.forEach(k => { const v = s.sk[k]; if (v) { c += v[0]; t += v[1]; } });
-    const done = prog(i).stars.filter(x => x).length, pc = t ? Math.round(100 * c / t) : 0;
-    return `<div class="urow" style="--uc:${u.color}"><div class="un"><b>${i + 1}. ${tx(u.title)}</b><small>${done}/6 · ${t ? pc + L("% d'encerts", '% de aciertos') : L('encara no', 'aún no')}</small></div><div class="ubar"><div style="width:${done / 6 * 100}%"></div></div></div>`;
+    const done = prog(i).stars.filter(x => x).length, tot = REP(u) + 1, pc = t ? Math.round(100 * c / t) : 0;
+    return `<div class="urow" style="--uc:${u.color}"><div class="un"><b>${i + 1}. ${tx(u.title)}</b><small>${done}/${tot} · ${t ? pc + L("% d'encerts", '% de aciertos') : L('encara no', 'aún no')}</small></div><div class="ubar"><div style="width:${done / tot * 100}%"></div></div></div>`;
   }).join('');
   const myB = BADGES.filter(x => P.badges.includes(x[0])), mySR = SRW.filter(r => P.srw.includes(r.d)), evo = P.tests.filter(t => t.course === P.course);
   const sv = P.survey;
-  app.innerHTML = shell(`<div class="phead"><div class="pchar tapme">${charSVG(P.companion, 'happy', P.acc)}</div><div><h1>${esc(P.name)}</h1><div class="plv">${L('Nivell', 'Nivel')} ${l} · ${P.xp} XP</div><div class="lbar"><div style="width:${Math.min(100, (P.xp - a) / (b - a) * 100)}%"></div></div><small class="mut">${L(`${b - P.xp} XP per al nivell ${l + 1}`, `${b - P.xp} XP para el nivel ${l + 1}`)}</small></div></div>
+  app.innerHTML = shell(`<div class="phead"><div class="pchar tapme">${meC('happy')}</div><div><h1>${esc(P.name)}</h1><div class="plv">${L('Nivell', 'Nivel')} ${l} · ${P.xp} XP</div><div class="lbar"><div style="width:${Math.min(100, (P.xp - a) / (b - a) * 100)}%"></div></div><small class="mut">${L(`${b - P.xp} XP per al nivell ${l + 1}`, `${b - P.xp} XP para el nivel ${l + 1}`)}</small></div></div>
     <h2 class="h2">🏆 ${L('Els meus assoliments', 'Mis logros')}</h2>
     <div class="sgrid">
       <div class="st"><b>🔥 ${streakNow()}</b><span>${L('ratxa actual', 'racha actual')}</span></div><div class="st"><b>🏆 ${P.best}</b><span>${L('millor ratxa', 'mejor racha')}</span></div>
@@ -805,7 +878,6 @@ function renderProfile() {
     <div class="set"><span>${L('Idioma', 'Idioma')}</span><div class="seg"><button class="${LANG === 'ca' ? 'on' : ''}" onclick="setLang('ca')">Català</button><button class="${LANG === 'es' ? 'on' : ''}" onclick="setLang('es')">Castellano</button></div></div>
     <div class="set"><span>${L('Objectiu diari', 'Objetivo diario')}</span><div class="seg">${[10, 20, 30, 50].map(g => `<button class="${P.goal === g ? 'on' : ''}" onclick="P.goal=${g};save();renderProfile()">${g} XP</button>`).join('')}</div></div>
     <div class="set"><span>${L('Sons', 'Sonidos')}</span><button class="tog ${P.sound ? 'on' : ''}" onclick="P.sound=!P.sound;save();renderProfile()" aria-label="${L('Sons', 'Sonidos')}"><i></i></button></div>
-    <div class="set"><span>${L('Mode mestre', 'Modo maestro')}<small>${L('Obre totes les unitats per treballar a classe.', 'Abre todas las unidades para trabajar en clase.')}</small></span><button class="tog ${P.unlockAll ? 'on' : ''}" onclick="P.unlockAll=!P.unlockAll;save();renderProfile()" aria-label="${L('Mode mestre', 'Modo maestro')}"><i></i></button></div>
     <div class="row2 pbtns"><button class="btn ghost" onclick="go('profiles')">${L("CANVIA D'ALUMNE", 'CAMBIAR DE ALUMNO')}</button><button class="btn ghost redt" onclick="resetP()">${L('ESBORRA EL PROGRÉS', 'BORRAR EL PROGRESO')}</button></div>
     <p class="foot">Mates amb Numi · Algorithmics Lleida</p>`, 'profile');
 }
@@ -846,7 +918,7 @@ function renderProfiles() {
   VIEW = 'profiles';
   const ps = Object.values(DB.profiles);
   app.innerHTML = `<div class="page solo">${langPill()}<h1 class="ph1 c">${L('Qui aprèn avui?', '¿Quién aprende hoy?')}</h1>
-    <div class="plist">${ps.map((p, i) => `<div class="pcard" style="animation-delay:${i * 70}ms"><button class="pmain" onclick="switchP('${p.id}')"><span class="pav">${charSVG(p.companion, 'idle', p.acc)}</span><span><b>${esc(p.name)}</b><small>${COURSES[p.course] ? tx(COURSES[p.course].name) : ''} · ${L('Nivell', 'Nivel')} ${lvlOf(p.xp)} · 🔥 ${p.streak}</small></span></button><button class="pdel" onclick="delP('${p.id}')" aria-label="✕">✕</button></div>`).join('')}</div>
+    <div class="plist">${ps.map((p, i) => `<div class="pcard" style="animation-delay:${i * 70}ms"><button class="pmain" onclick="switchP('${p.id}')"><span class="pav">${charSVG(p.companion, 'idle', p.acc, '', charLvl((p.cxp || {})[p.companion]))}</span><span><b>${esc(p.name)}</b><small>${COURSES[p.course] ? tx(COURSES[p.course].name) : ''} · ${L('Nivell', 'Nivel')} ${lvlOf(p.xp)} · 🔥 ${p.streak}</small></span></button><button class="pdel" onclick="delP('${p.id}')" aria-label="✕">✕</button></div>`).join('')}</div>
     <button class="btn big" onclick="onb(0)">+ ${L('SOC NOU/NOVA', 'SOY NUEVO/A')}</button>
     <button class="btn big ghost mt" onclick="loginModal()">🔑 ${L('JA TINC COMPTE', 'YA TENGO CUENTA')}</button></div>`;
 }
@@ -934,6 +1006,7 @@ function finishPlacement(skipped) {
   const id = 'p' + Date.now().toString(36);
   P = { id, name: ONB.name, goal: 20, sound: true, unlockAll: false, lang: LANG, ...freshProgress(), course, baseCourse: course, holdReg: true,
     survey: { curs: tx(c.long), feel: ONB.feel, like: ONB.like, result, start: `${tx(COURSES[course].name)} · ${L('unitat', 'unidad')} ${(course === ci ? skip : 0) + 1}`, date: today() } };
+  if (!skipped) makeReco(meta.filter(m => m.tag === 'cur').filter((m, i) => !cur[i]), 'place');
   if (!skipped && cur.length) P.tests.push({ date: today(), course: ci, pct: Math.round(100 * curOk / cur.length), ok: curOk, n: cur.length, kind: 'inicial' });
   P.skip[COURSES[course].id] = course === ci ? skip : 0;
   DB.profiles[id] = P; DB.current = id; saveLocal();

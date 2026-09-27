@@ -68,6 +68,7 @@ async function setPass(code, name) {
   const r = await act('setpass', code, { password: p });
   alert(r.ok ? `Contraseña cambiada. Díselo a ${name}.` : r.error === 'contrasenya-format' ? 'Mínimo 4 caracteres.' : 'Este alumno aún no tiene usuario (entra con código).');
 }
+async function unlock(code, v) { await act('unlock', code, { value: v }); go(pass()); }
 async function off(code, name) { if (!confirm(`¿Dar de baja a ${name}? Dejará de aparecer y no podrá entrar.`)) return; await act('off', code); go(pass()); }
 function evoCell(r) {
   const t = r.tests || []; if (!t.length) return '<span class="mut">—</span>';
@@ -89,9 +90,9 @@ function render() {
     <td class="fire">🔥 ${r.streakNow}</td><td>${r.best}</td><td class="rw">${SRW.map(([d, i]) => (r.srw || []).includes(d) ? i : '').join('') || '<span class="mut">—</span>'}</td>
     <td>${r.xp}</td><td>${r.lessons}</td><td>${r.answers ? Math.round(100 * r.correct / r.answers) + '%' : '—'}</td><td>${evoCell(r)}</td><td>${ago(r.last_day)}</td>
     <td>${r.survey ? `<span class="pill">${esc(r.survey.result || '')}</span> ${FEEL[r.survey.feel] || ''}` : '<span class="mut">—</span>'}</td><td>${r.lang === 'es' ? 'ES' : 'CAT'}</td>
-    <td>${r.username ? `<button class="mini ghost" onclick="setPass('${r.code}','${esc(r.name)}')">Contraseña</button> ` : ''}<button class="mini ghost red" onclick="off('${r.code}','${esc(r.name)}')">Baja</button></td></tr>`).join('') || '<tr><td colspan="15" class="mut">Aún no hay alumnos.</td></tr>'}
+    <td>${r.username ? `<button class="mini ghost" onclick="setPass('${r.code}','${esc(r.name)}')">Contraseña</button> ` : ''}<button class="mini ghost" title="Abre todas las unidades a este alumno (modo maestro)" onclick="unlock('${r.code}',${!r.unlock_all})">${r.unlock_all ? '🔓 Todo abierto' : '🔒 Normal'}</button> <button class="mini ghost red" onclick="off('${r.code}','${esc(r.name)}')">Baja</button></td></tr>`).join('') || '<tr><td colspan="15" class="mut">Aún no hay alumnos.</td></tr>'}
   </tbody></table></div>
-  <p class="note">Premios de racha: 🎁 3 días · 🏅 7 días · 🎧 14 días · ⭐ 30 días · 👑 60 días · 🏆 100 días. Las filas en gris son alumnos que han perdido la racha (hace más de un día que no practican). La columna «Evolución» muestra las últimas pruebas (cada 14 días) y cuánto ha subido o bajado respecto a la anterior.</p>`;
+  <p class="note">Premios de racha: 🎁 3 días · 🏅 7 días · 🎧 14 días · ⭐ 30 días · 👑 60 días · 🏆 100 días. El botón 🔒/🔓 activa el «modo maestro» (todas las unidades abiertas) solo para ese alumno: el alumno ya no puede activarlo él mismo. Las filas en gris son alumnos que han perdido la racha (hace más de un día que no practican). La columna «Evolución» muestra las últimas pruebas (cada 14 días) y cuánto ha subido o bajado respecto a la anterior.</p>`;
 }
 function csv() {
   const head = ['Nombre', 'Usuario', 'Código', 'Curso', 'Racha', 'Mejor racha', 'Premios de racha', 'XP', 'Lecciones', '% aciertos', 'Última prueba evolución', 'Último día', 'Idioma'];

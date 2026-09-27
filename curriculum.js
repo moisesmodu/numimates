@@ -146,4 +146,13 @@ const COURSES = [
       ['Proporcions|Proporciones', ['prop'], 5], ['Mestres de primària|Maestros de primaria', ['p.dec', 'p.big', 'pct', 'prop'], 5]])
   ] }
 ];
-COURSES.forEach(c => c.units.forEach((u, i) => { u.id = `${c.id}-${i + 1}`; u.color = UCOL[i % UCOL.length]; }));
+/* Nivell 2 de cada unitat: 5 lliçons més, més difícils, que barregen cada tema amb el següent. */
+COURSES.forEach(c => c.units.forEach((u, i) => {
+  u.id = `${c.id}-${i + 1}`; u.color = UCOL[i % UCOL.length];
+  if (/^Lògica/.test(u.title)) u.guide = 'cavaller';
+  const base = u.lessons.slice(0, 5);
+  base.forEach((l, k) => {
+    const nx = base[Math.min(k + 1, 4)], [ca, es] = l.t.split('|');
+    u.lessons.push({ t: `${ca} · nivell 2|${es || ca} · nivel 2`, sk: [...new Set([...l.sk, ...nx.sk])], L: Math.min(5, l.L + 1), lv2: true });
+  });
+}));

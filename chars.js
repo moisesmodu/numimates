@@ -14,7 +14,7 @@ ${RG('gShell', '#6FD69A', '#23884C')}${RG('gTurtle', '#D2F5CC', '#86CC80')}${RG(
 ${RG('gStarB', '#FFF3B0', '#FFB915')}${RG('gGold', '#FFE680', '#E8A400')}${RG('gGlow', 'rgba(255,220,90,.9)', 'rgba(255,220,90,0)')}
 ${LG('gBlue', '#6CC6F5', '#1E86BE')}${LG('gGreen', '#6EDB94', '#27A55A')}${LG('gOrange', '#FFC07A', '#F07F22')}${LG('gYellow', '#FFE070', '#F5B400', 0, 1)}
 ${LG('gRuler', '#FFF6D2', '#FFE49A')}${LG('gRed', '#FF7A7E', '#E0343B', 1, 0)}${LG('gTeal', '#7FE3D2', '#27B59E')}
-${LG('gFlame', '#FFD23F', '#FF5A1F')}${LG('gGem', '#8FE3FF', '#1C8FE0')}${LG('gCape', '#FF6B6B', '#C92A3A')}
+${LG('gFlame', '#FFD23F', '#FF5A1F')}${RG('gArmor', '#F1F4F7', '#8E99A6')}${LG('gArmorD', '#C9D1D9', '#6E7A87')}${LG('gCapeT', '#2F8FA6', '#155A6E')}${LG('gPlume', '#FF7A8A', '#D9304A')}${RG('gAura1', 'rgba(95,240,208,.55)', 'rgba(95,240,208,0)')}${RG('gAura2', 'rgba(255,201,60,.65)', 'rgba(255,201,60,0)')}${RG('gAura3', 'rgba(255,122,168,.6)', 'rgba(138,79,176,0)')}${LG('gGem', '#8FE3FF', '#1C8FE0')}${LG('gCape', '#FF6B6B', '#C92A3A')}
 </defs></svg>`;
 
 function eyes(x1, x2, y, mood, col = INK) {
@@ -129,6 +129,28 @@ const CH = {
       ${shine('M44 44 q6 -16 16 -30 q-4 18 -10 32 z', .45)}
       ${eyes(48, 72, 56, m)}${blush(40, 80, 66, '#FF8A5C', .5)}${mouth(60, 67, m)}`;
     }
+  },
+  cavaller: {
+    name: ['Cavaller del Codi', 'Caballero del Código'], price: null, unlock: ['Supera 3 unitats', 'Supera 3 unidades'],
+    desc: ['El cavaller de la lògica. Diu que tot problema es venç pas a pas.', 'El caballero de la lógica. Dice que todo problema se vence paso a paso.'],
+    hello: ['Per la lògica i el codi: endavant!', '¡Por la lógica y el código: adelante!'],
+    a: { hx: 60, hy: 22, ey: 50, eg: 10, ny: 80, hw: 28 },
+    draw: m => `${ground(28)}
+      <path d="M44 72 Q20 84 14 112 Q34 104 50 108 Q56 92 58 76Z" fill="url(#gCapeT)"/><path d="M40 80 Q26 92 22 106" stroke="rgba(255,255,255,.18)" stroke-width="3" fill="none"/>
+      <rect x="45" y="96" width="12" height="16" rx="5" fill="url(#gArmorD)"/><rect x="63" y="96" width="12" height="16" rx="5" fill="url(#gArmorD)"/>
+      <ellipse cx="50" cy="112" rx="9" ry="4.5" fill="#6E7A87"/><ellipse cx="70" cy="112" rx="9" ry="4.5" fill="#6E7A87"/>
+      <rect x="40" y="72" width="40" height="30" rx="12" fill="url(#gArmor)"/>
+      <rect x="40" y="90" width="40" height="6" fill="#7A4A2A"/><rect x="57" y="89" width="7" height="8" rx="1.5" fill="url(#gGold)"/>
+      <path d="M50 78 L60 84 L70 78" stroke="#9AA5B1" stroke-width="2" fill="none"/>
+      <circle cx="37" cy="84" r="8" fill="url(#gArmorD)"/><circle cx="83" cy="84" r="8" fill="url(#gArmorD)"/>
+      <path d="M58 20 Q56 4 76 2 Q88 2 94 10 Q82 6 74 12 Q68 18 66 24Z" fill="url(#gPlume)"/>
+      <path d="M31 50 Q31 20 60 20 Q89 20 89 50 L89 60 Q89 74 60 74 Q31 74 31 60Z" fill="url(#gArmor)"/>
+      ${shine('M38 38 q6 -14 22 -15 q-15 6 -18 18 z', .55)}
+      <rect x="36" y="42" width="48" height="16" rx="8" fill="#1C2430"/>
+      <path d="M60 22 L60 42" stroke="#AEB8C3" stroke-width="3"/>
+      <circle cx="42" cy="66" r="1.8" fill="#8E99A6"/><circle cx="78" cy="66" r="1.8" fill="#8E99A6"/>
+      ${eyes(50, 70, 50, m, '#7FE8FF')}
+      <path d="M52 66 q8 ${m === 'sad' ? -3 : 4} 16 0" stroke="#6E7A87" stroke-width="2.5" fill="none" stroke-linecap="round"/>`
   }
 };
 
@@ -151,11 +173,25 @@ const ACC = {
     draw: a => `<path d="M${a.hx - 22} ${a.hy + 7} L${a.hx - 25} ${a.hy - 15} L${a.hx - 11} ${a.hy - 4} L${a.hx} ${a.hy - 22} L${a.hx + 11} ${a.hy - 4} L${a.hx + 25} ${a.hy - 15} L${a.hx + 22} ${a.hy + 7}Z" fill="url(#gFlame)" stroke="#E0431A" stroke-width="2.5" stroke-linejoin="round"/><path d="M${a.hx} ${a.hy - 8} q6 6 0 13 q-6 -6 0 -13z" fill="#FFF3B0"/>` }
 };
 
-function charSVG(id, mood = 'idle', acc, cls = '') {
+/* Nivells dels personatges: l'XP guanyada amb cada company el fa créixer */
+const CLV = [0, 60, 180, 400, 800];
+const charLvl = xp => CLV.filter(t => (xp || 0) >= t).length;
+function lvlDeco(lv, front) {
+  if (lv < 2) return '';
+  if (!front) {
+    const g = lv >= 5 ? 'gAura3' : lv >= 4 ? 'gAura2' : 'gAura1';
+    return lv >= 3 ? `<circle class="aura" cx="60" cy="64" r="${46 + lv * 2}" fill="url(#${g})"/>` : '';
+  }
+  let s = '';
+  if (lv >= 2) s += `<g class="lvstar">${star(98, 104, 9, lv >= 5 ? '#FF7AA8' : lv >= 4 ? '#FFC93C' : '#5FF0D0')}<text x="98" y="107.5" text-anchor="middle" font-size="9" font-weight="900" fill="#2B1A38" font-family="Nunito,sans-serif">${lv}</text></g>`;
+  if (lv >= 4) s += `<g class="twinkle">${star(16, 40, 4, '#FFD23F')}${star(104, 28, 3.5, '#FFD23F')}${star(12, 84, 3, '#FFE680')}</g>`;
+  return s;
+}
+function charSVG(id, mood = 'idle', acc, cls = '', lv = 1) {
   const c = CH[id] || CH.numi;
-  let s = `<svg class="char m-${mood} ${cls}" viewBox="0 0 120 120" aria-hidden="true"><g class="cb">${c.draw(mood)}`;
+  let s = `<svg class="char m-${mood} ${cls}" viewBox="0 0 120 120" aria-hidden="true">${lvlDeco(lv, false)}<g class="cb">${c.draw(mood)}`;
   if (acc) ['neck', 'eyes', 'head'].forEach(sl => { const k = acc[sl]; if (k && ACC[k]) s += ACC[k].draw(c.a); });
-  return s + '</g></svg>';
+  return s + `</g>${lvlDeco(lv, true)}</svg>`;
 }
 
 /* Icones (camí, xips) */
