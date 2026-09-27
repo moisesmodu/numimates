@@ -228,7 +228,7 @@ function go(v) {
   LS = null; stopSprint(); stopAgility(); closeModal();
   if (!P && v !== 'profiles') v = Object.keys(DB.profiles).length ? 'profiles' : 'onboard';
   VIEW = v;
-  ({ home: renderHome, train: renderTrain, league: () => renderLeague(), album: () => renderAlbum(), shop: renderShop, badges: () => renderAlbum('medals'), profile: renderProfile, profiles: renderProfiles, battles: renderBattles, season: renderSeason, onboard: () => onb(0) }[v] || renderHome)();
+  ({ home: renderHome, train: renderTrain, league: () => renderLeague(), album: () => renderAlbum(), shop: renderShop, badges: () => renderAlbum('medals'), profile: renderProfile, profiles: renderProfiles, battles: () => renderBattles(), season: () => renderSeason(), onboard: () => onb(0) }[v] || renderHome)();
   if (v !== 'home') window.scrollTo(0, 0);
 }
 const NAV = () => [['home', '🗺️', L('Camí', 'Camino')], ['train', '🎯', L('Entrena', 'Entrena')], ['album', '🎴', L('Àlbum', 'Álbum')], ['shop', '🛍️', L('Botiga', 'Tienda')], ['profile', '👤', L('Perfil', 'Perfil')]];
