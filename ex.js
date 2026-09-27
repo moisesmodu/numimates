@@ -43,15 +43,15 @@ function barSVG(n, d, col) {
 }
 function clockSVG(h, m) {
   const ha = ((h % 12) + m / 60) * 30 * Math.PI / 180, ma = m * 6 * Math.PI / 180, f = x => x.toFixed(1);
-  let s = '<svg viewBox="0 0 200 200" class="clock"><circle cx="100" cy="100" r="92" fill="#fff" stroke="#2C4A9A" stroke-width="8"/>';
+  let s = '<svg viewBox="0 0 200 200" class="clock"><circle cx="100" cy="100" r="92" fill="#fff" stroke="#602B7A" stroke-width="8"/>';
   for (let i = 0; i < 60; i++) {
     const a = i * 6 * Math.PI / 180, r1 = i % 5 ? 81 : 75;
     s += `<line x1="${f(100 + 85 * Math.sin(a))}" y1="${f(100 - 85 * Math.cos(a))}" x2="${f(100 + r1 * Math.sin(a))}" y2="${f(100 - r1 * Math.cos(a))}" stroke="${INK}" stroke-width="${i % 5 ? 1.5 : 3.2}"/>`;
   }
-  for (let i = 1; i <= 12; i++) { const a = i * 30 * Math.PI / 180; s += `<text x="${f(100 + 61 * Math.sin(a))}" y="${f(100 - 61 * Math.cos(a) + 7)}" text-anchor="middle" font-size="20" font-weight="800" fill="${INK}" font-family="Lexend,sans-serif">${i}</text>`; }
+  for (let i = 1; i <= 12; i++) { const a = i * 30 * Math.PI / 180; s += `<text x="${f(100 + 61 * Math.sin(a))}" y="${f(100 - 61 * Math.cos(a) + 7)}" text-anchor="middle" font-size="20" font-weight="800" fill="${INK}" font-family="Nunito,sans-serif">${i}</text>`; }
   s += `<g class="hand-h"><line x1="100" y1="100" x2="${f(100 + 42 * Math.sin(ha))}" y2="${f(100 - 42 * Math.cos(ha))}" stroke="${INK}" stroke-width="9" stroke-linecap="round"/></g>`;
   s += `<g class="hand-m"><line x1="100" y1="100" x2="${f(100 + 70 * Math.sin(ma))}" y2="${f(100 - 70 * Math.cos(ma))}" stroke="#FF5A5F" stroke-width="5" stroke-linecap="round"/></g>`;
-  return s + '<circle cx="100" cy="100" r="7" fill="#2C4A9A"/></svg>';
+  return s + '<circle cx="100" cy="100" r="7" fill="#602B7A"/></svg>';
 }
 function shapeSVG(id, sides, col) {
   let body;
@@ -68,8 +68,8 @@ function shapeSVG(id, sides, col) {
 function rectSVG(w, h, lw, lh) {
   const sc = Math.min(160 / w, 90 / h), W = w * sc, H = h * sc, x = (230 - W) / 2 - 15, y = (130 - H) / 2;
   return `<svg viewBox="0 0 230 140" class="vsvg wide"><rect x="${x}" y="${y}" width="${W}" height="${H}" fill="#E8F5FE" stroke="#36A9E1" stroke-width="4" class="draw"/>
-  <text x="${x + W / 2}" y="${y + H + 22}" text-anchor="middle" font-size="17" font-weight="800" fill="${INK}" font-family="Lexend,sans-serif">${lw}</text>
-  <text x="${x + W + 8}" y="${y + H / 2 + 6}" font-size="17" font-weight="800" fill="${INK}" font-family="Lexend,sans-serif">${lh}</text></svg>`;
+  <text x="${x + W / 2}" y="${y + H + 22}" text-anchor="middle" font-size="17" font-weight="800" fill="${INK}" font-family="Nunito,sans-serif">${lw}</text>
+  <text x="${x + W + 8}" y="${y + H / 2 + 6}" font-size="17" font-weight="800" fill="${INK}" font-family="Nunito,sans-serif">${lh}</text></svg>`;
 }
 const moneyVis = cs => `<div class="money">${cs.map((c, i) => c >= 500 ? `<div class="bill b${c / 100}" style="animation-delay:${i * 70}ms">${c / 100} €</div>` : `<div class="coin c${c}" style="animation-delay:${i * 70}ms">${c >= 100 ? c / 100 + ' €' : c + ' c'}</div>`).join('')}</div>`;
 
@@ -216,7 +216,7 @@ const PROB = {
   ],
   two: [
     () => { const a = ri(2, 5), b = pick([6, 8, 10, 12]), c = ri(2, a * b - 2), N = nomP(); return [L(`${N.C} compra ${a} paquets de ${b} galetes i se'n menja ${c}. Quantes galetes li queden?`, `${N.C} compra ${a} paquetes de ${b} galletas y se come ${c}. ¿Cuántas galletas le quedan?`), a * b - c, L(`Primer: ${a} × ${b} = ${a * b} galetes. Després: ${a * b} − ${c} = ${a * b - c}.`, `Primero: ${a} × ${b} = ${a * b} galletas. Después: ${a * b} − ${c} = ${a * b - c}.`)]; },
-    () => { const a = ri(3, 8), b = ri(2, 5), N = nomP(); return [L(`Una entrada al museu costa ${a} €. ${N.C} hi va amb ${b} amics. Quant paguen en total?`, `Una entrada al museo cuesta ${a} €. ${N.C} va con ${b} amigos. ¿Cuánto pagan en total?`), a * (b + 1), L(`Compte! Són ${b} amics més ${N.c}: ${b + 1} persones. ${b + 1} × ${a} = ${a * (b + 1)} €.`, `Cuidado! Son ${b} amigos más ${N.c}: ${b + 1} personas. ${b + 1} × ${a} = ${a * (b + 1)} €.`), '€']; },
+    () => { const a = ri(3, 8), b = ri(2, 5), N = nomP(); return [L(`Una entrada al museu costa ${a} €. ${N.C} hi va amb ${b} amics. Quant paguen en total?`, `Una entrada al museo cuesta ${a} €. ${N.C} va con ${b} amigos. ¿Cuánto pagan en total?`), a * (b + 1), L(`Compte! Són ${b} amics més ${N.c}: ${b + 1} persones. ${b + 1} × ${a} = ${a * (b + 1)} €.`, `¡Cuidado! Son ${b} amigos más ${N.c}: ${b + 1} personas. ${b + 1} × ${a} = ${a * (b + 1)} €.`), '€']; },
     () => { const b = ri(2, 5), c = ri(2, 6), a = b * c + ri(1, 15), N = nomP(); return [L(`${N.C} té ${a} €. Compra ${b} llibretes de ${c} € cadascuna. Quants diners li queden?`, `${N.C} tiene ${a} €. Compra ${b} libretas de ${c} € cada una. ¿Cuánto dinero le queda?`), a - b * c, L(`Les llibretes costen ${b} × ${c} = ${b * c} €. Li queden ${a} − ${b * c} = ${a - b * c} €.`, `Las libretas cuestan ${b} × ${c} = ${b * c} €. Le quedan ${a} − ${b * c} = ${a - b * c} €.`), '€']; },
     () => { const c = ri(150, 200), a = ri(40, 70), b = ri(30, 60), N = nomP(); return [L(`Per pujar a la Seu Vella, ${N.c} puja ${a} graons, descansa i en puja ${b} més. Si n'hi ha ${c} en total, quants graons li falten?`, `Para subir a la Seu Vella, ${N.c} sube ${a} escalones, descansa y sube ${b} más. Si hay ${c} en total, ¿cuántos escalones le faltan?`), c - a - b, L(`Ja n'ha pujat ${a} + ${b} = ${a + b}. Li falten ${c} − ${a + b} = ${c - a - b} graons.`, `Ya ha subido ${a} + ${b} = ${a + b}. Le faltan ${c} − ${a + b} = ${c - a - b} escalones.`)]; },
     () => { const a = ri(8, 12), b = ri(3, 9), N = nomP(); return [L(`${N.C} té ${a} anys i el seu cosí en té ${b} més. Quants anys sumen entre tots dos?`, `${N.C} tiene ${a} años y su primo tiene ${b} más. ¿Cuántos años suman entre los dos?`), 2 * a + b, L(`El cosí té ${a} + ${b} = ${a + b} anys. Junts: ${a} + ${a + b} = ${2 * a + b} anys.`, `El primo tiene ${a} + ${b} = ${a + b} años. Juntos: ${a} + ${a + b} = ${2 * a + b} años.`)]; }
@@ -262,7 +262,7 @@ const EX = {
     if (after && base % 10 === 9) base--;
     if (base < 1) base = 1;
     const n = after ? base * 10 ** z + (10 ** z - 1) : base * 10 ** z, ans = after ? n + 1 : n - 1;
-    return inp(L(`Quin número va just <b>${after ? 'després' : 'abans'}</b> de ${fmt(n)}?`, `¿Qué número va justo <b>${after ? 'después' : 'antes'}</b> de ${fmt(n)}?`), ans, { vis: eqv(after ? `${fmt(n)} + 1 = ${BOX}` : `${fmt(n)} − 1 = ${BOX}`), ex: L(`${fmt(n)} ${after ? '+' : '−'} 1 = ${fmt(ans)}. Compte amb els ${after ? '9' : '0'} del final: canvien diverses xifres alhora.`, `${fmt(n)} ${after ? '+' : '−'} 1 = ${fmt(ans)}. Cuidado con los ${after ? '9' : '0'} del final: cambian varias cifras a la vez.`) });
+    return inp(L(`Quin número va just <b>${after ? 'després' : 'abans'}</b> de ${fmt(n)}?`, `¿Qué número va justo <b>${after ? 'después' : 'antes'}</b> de ${fmt(n)}?`), ans, { vis: eqv(after ? `${fmt(n)} + 1 = ${BOX}` : `${fmt(n)} − 1 = ${BOX}`), ex: L(`${fmt(n)} ${after ? '+' : '−'} 1 = ${fmt(ans)}. Compte amb els ${after ? '9' : '0'} del final: canvien diverses xifres alhora!`, `${fmt(n)} ${after ? '+' : '−'} 1 = ${fmt(ans)}. ¡Cuidado con los ${after ? '9' : '0'} del final: cambian varias cifras a la vez!`) });
   },
   'n.compare': (L_, A) => {
     const k = +A || (L_ <= 3 ? digOf(L_) : 5), a = rndN(k); let b;
@@ -444,7 +444,7 @@ const EX = {
       const used = [];
       for (const c of order) { const nc = cands.filter(c[1]); if (nc.length < cands.length) { used.push(c); cands = nc; } if (cands.length === 1) break; }
       if (cands.length === 1 && used.length >= 2 && used.length <= (L_ >= 5 ? 4 : 3))
-        return inp(L('Endevina quin número soc.', 'Adivina qué número soy.'), t, { vis: `<div class="riddle"><div>🔎 ${L(`Soc un número entre <b>${lo}</b> i <b>${hi}</b>.`, `Soy un número entre <b>${lo}</b> y <b>${hi}</b>.`)}</div>${used.map((c, i) => `<div style="animation-delay:${(i + 1) * 150}ms">${c[0]}</div>`).join('')}</div>`, ex: L(`Només el ${t} compleix totes les pistes.`, `Solo el ${t} cumple todas las pistas.`) });
+        return inp(L('Endevina quin número soc!', '¡Adivina qué número soy!'), t, { vis: `<div class="riddle"><div>🔎 ${L(`Soc un número entre <b>${lo}</b> i <b>${hi}</b>.`, `Soy un número entre <b>${lo}</b> y <b>${hi}</b>.`)}</div>${used.map((c, i) => `<div style="animation-delay:${(i + 1) * 150}ms">${c[0]}</div>`).join('')}</div>`, ex: L(`Només el ${t} compleix totes les pistes.`, `Solo el ${t} cumple todas las pistas.`) });
     }
     return EX['l.series'](L_);
   },
@@ -475,7 +475,7 @@ const EX = {
   'f.cmp': L_ => {
     if (L_ <= 4 || Math.random() < .5) {
       const d = pick([3, 4, 5, 6, 8, 10]), a = ri(1, d - 1), b = ri(1, d - 1), sym = a < b ? '<' : a > b ? '>' : '=';
-      return mc(L('Quin signe hi va?', '¿Qué signo va?'), sym, [], { fixed: ['<', '=', '>'], vis: `<div class="cmp">${frac(a, d)}${BOX}${frac(b, d)}</div>`, big: true, ex: a === b ? L('Són iguals.', 'Son iguales.') : L(`Les parts són de la mateixa mida (totes són ${den(d, 1)}). ${Math.max(a, b)} trossos són més que ${Math.min(a, b)}.`, `Las partes son del mismo tamaño (todas son ${den(d, 1)}). ${Math.max(a, b)} trozos son más que ${Math.min(a, b)}.`) });
+      return mc(L('Quin signe hi va?', '¿Qué signo va?'), sym, [], { fixed: ['<', '=', '>'], vis: `<div class="cmp">${frac(a, d)}${BOX}${frac(b, d)}</div>`, big: true, ex: a === b ? L('Són iguals!', '¡Son iguales!') : L(`Les parts són de la mateixa mida (totes són ${den(d, 1)}). ${Math.max(a, b)} trossos són més que ${Math.min(a, b)}.`, `Las partes son del mismo tamaño (todas son ${den(d, 1)}). ${Math.max(a, b)} trozos son más que ${Math.min(a, b)}.`) });
     }
     const [x, y] = shuffle([2, 3, 4, 5, 6, 8, 10]).slice(0, 2), mn = Math.min(x, y), mx = Math.max(x, y), col = pick(COLS);
     return mc(L('Quina fracció és <b>més gran</b>?', '¿Qué fracción es <b>mayor</b>?'), frac(1, mn), [frac(1, mx)], { vis: `<div class="pies">${pieSVG(1, x, col)}${pieSVG(1, y, col)}</div>`, big: true, ex: L(`Com més parts fem, més petita és cada part. Per això 1/${mn} és més gran que 1/${mx}.`, `Cuantas más partes hacemos, más pequeña es cada parte. Por eso 1/${mn} es mayor que 1/${mx}.`) });

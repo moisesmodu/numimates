@@ -1,5 +1,5 @@
 /* ===== Exercicis de 1r-3r i 5è-6è (bilingüe CA/ES) ===== */
-const F = 'font-family="Lexend,sans-serif" font-weight="800"';
+const F = 'font-family="Nunito,sans-serif" font-weight="800"';
 const gcd = (a, b) => b ? gcd(b, a % b) : a;
 const lcm = (a, b) => a / gcd(a, b) * b;
 const fmtD = x => { const neg = x < 0; let [i, f] = String(+Math.abs(x).toFixed(3)).split('.'); return (neg ? '−' : '') + fmt(+i) + (f ? ',' + f : ''); };
@@ -27,7 +27,7 @@ function blocksSVG(n) {
 function rulerSVG(a, b, max) {
   const px = 22, W = max * px + 40, x0 = 20 + a * px, x1 = 20 + b * px;
   let s = `<svg viewBox="0 0 ${W} 118" class="ruler" style="width:${Math.min(W * 1.2, 400)}px">`;
-  s += `<line x1="${x0}" y1="42" x2="${x0}" y2="54" stroke="#A9A290" stroke-width="2" stroke-dasharray="3 3"/><line x1="${x1}" y1="42" x2="${x1}" y2="54" stroke="#A9A290" stroke-width="2" stroke-dasharray="3 3"/>`;
+  s += `<line x1="${x0}" y1="42" x2="${x0}" y2="54" stroke="#B9A6CB" stroke-width="2" stroke-dasharray="3 3"/><line x1="${x1}" y1="42" x2="${x1}" y2="54" stroke="#B9A6CB" stroke-width="2" stroke-dasharray="3 3"/>`;
   s += `<g class="pencil"><rect x="${x0}" y="16" width="${x1 - x0 - 18}" height="22" rx="3" fill="url(#gYellow)"/><rect x="${x0}" y="16" width="${x1 - x0 - 18}" height="6" rx="3" fill="rgba(255,255,255,.35)"/>`;
   s += `<polygon points="${x1 - 18},16 ${x1},27 ${x1 - 18},38" fill="#F6D7A7"/><polygon points="${x1 - 6},23.5 ${x1},27 ${x1 - 6},30.5" fill="${INK}"/><rect x="${x0}" y="16" width="12" height="22" rx="3" fill="#FF7AA8"/><rect x="${x0 + 12}" y="16" width="5" height="22" fill="#D9D9D9"/></g>`;
   s += `<rect x="6" y="54" width="${W - 12}" height="56" rx="8" fill="url(#gRuler)" stroke="#D9A93A" stroke-width="2"/>`;
@@ -38,15 +38,15 @@ function thermoSVG(t) {
   const y = v => 16 + (30 - v) * 4;
   let s = `<svg viewBox="0 0 130 210" class="thermo">`;
   for (let v = -10; v <= 30; v++) { const big = v % 5 === 0; s += `<line x1="62" y1="${y(v)}" x2="${big ? 76 : 70}" y2="${y(v)}" stroke="${v === 0 ? '#1C84C6' : INK}" stroke-width="${big ? 2 : 1}"/>`; if (big) s += `<text x="80" y="${y(v) + 4}" font-size="12" ${F} fill="${v === 0 ? '#1C84C6' : INK}">${v < 0 ? '−' + (-v) : v}</text>`; }
-  s += `<rect x="38" y="8" width="22" height="${y(-10) - 8 + 14}" rx="11" fill="#fff" stroke="#D8CFBC" stroke-width="3"/>`;
+  s += `<rect x="38" y="8" width="22" height="${y(-10) - 8 + 14}" rx="11" fill="#fff" stroke="#CFC3DB" stroke-width="3"/>`;
   s += `<rect class="merc" x="44" y="${y(t)}" width="10" height="${y(-10) - y(t) + 20}" rx="5" fill="url(#gRed)"/>`;
-  s += `<circle cx="49" cy="${y(-10) + 30}" r="17" fill="url(#gRed)" stroke="#D8CFBC" stroke-width="3"/><circle cx="44" cy="${y(-10) + 25}" r="5" fill="rgba(255,255,255,.5)"/>`;
+  s += `<circle cx="49" cy="${y(-10) + 30}" r="17" fill="url(#gRed)" stroke="#CFC3DB" stroke-width="3"/><circle cx="44" cy="${y(-10) + 25}" r="5" fill="rgba(255,255,255,.5)"/>`;
   return s + '</svg>';
 }
 function barsSVG(labels, vals, title) {
   const max = Math.max(...vals), top = Math.ceil((max + 1) / 2) * 2, W = 320, H = 210, x0 = 34, y0 = 170, bw = 44, gap = (W - x0 - 10 - labels.length * bw) / labels.length;
   let s = `<svg viewBox="0 0 ${W} ${H}" class="bars"><text x="${W / 2}" y="16" text-anchor="middle" font-size="13" ${F} fill="${INK}">${title}</text>`;
-  for (let v = 0; v <= top; v++) { const yy = y0 - v / top * 140; s += `<line x1="${x0}" y1="${yy}" x2="${W - 6}" y2="${yy}" stroke="${v % 2 ? '#EDE7DA' : '#E6DFD0'}" stroke-width="1.5"/><text x="${x0 - 6}" y="${yy + 4}" text-anchor="end" font-size="${v % 2 ? 9 : 11}" ${F} fill="#7D8296">${v}</text>`; }
+  for (let v = 0; v <= top; v++) { const yy = y0 - v / top * 140; s += `<line x1="${x0}" y1="${yy}" x2="${W - 6}" y2="${yy}" stroke="${v % 2 ? '#F4EEF8' : '#E6DCEF'}" stroke-width="1.5"/><text x="${x0 - 6}" y="${yy + 4}" text-anchor="end" font-size="${v % 2 ? 9 : 11}" ${F} fill="#8A7B99">${v}</text>`; }
   labels.forEach((l, i) => {
     const x = x0 + gap / 2 + i * (bw + gap), hh = vals[i] / top * 140;
     s += `<g class="bar" style="animation-delay:${i * 90}ms;transform-origin:${x}px ${y0}px"><rect x="${x}" y="${y0 - hh}" width="${bw}" height="${hh}" rx="6" fill="${COLS[i % COLS.length]}"/><rect x="${x + 5}" y="${y0 - hh + 4}" width="8" height="${Math.max(0, hh - 10)}" rx="4" fill="rgba(255,255,255,.3)"/></g>`;
@@ -61,7 +61,7 @@ function angleSVG(deg) {
   if (deg === 90) s += `<path d="M${vx + 26} ${vy} V${vy - 26} H${vx}" fill="rgba(255,154,60,.25)" stroke="#FF9A3C" stroke-width="3"/>`;
   else s += `<path d="M${vx} ${vy} L${vx + ar} ${vy} A${ar} ${ar} 0 0 0 ${vx + ar * Math.cos(a)} ${vy - ar * Math.sin(a)} Z" fill="rgba(255,154,60,.25)" stroke="#FF9A3C" stroke-width="3"/>`;
   s += `<line x1="${vx}" y1="${vy}" x2="${Math.min(250, vx + r1)}" y2="${vy}" stroke="${INK}" stroke-width="5" stroke-linecap="round"/>`;
-  s += `<g class="ray" style="transform-origin:${vx}px ${vy}px"><line x1="${vx}" y1="${vy}" x2="${ex}" y2="${ey}" stroke="#2C4A9A" stroke-width="5" stroke-linecap="round"/></g><circle cx="${vx}" cy="${vy}" r="6" fill="${INK}"/>`;
+  s += `<g class="ray" style="transform-origin:${vx}px ${vy}px"><line x1="${vx}" y1="${vy}" x2="${ex}" y2="${ey}" stroke="#602B7A" stroke-width="5" stroke-linecap="round"/></g><circle cx="${vx}" cy="${vy}" r="6" fill="${INK}"/>`;
   return s + '</svg>';
 }
 function gridSVG(w, h) {
@@ -69,7 +69,7 @@ function gridSVG(w, h) {
   let s = `<svg viewBox="0 0 ${W + 60} ${H + 8}" class="vsvg wide"><rect x="4" y="4" width="${W - 8}" height="${H - 8}" fill="url(#gTeal)" rx="3"/>`;
   for (let i = 0; i <= w; i++) s += `<line x1="${4 + i * c}" y1="4" x2="${4 + i * c}" y2="${H - 4}" stroke="#fff" stroke-width="2"/>`;
   for (let j = 0; j <= h; j++) s += `<line x1="4" y1="${4 + j * c}" x2="${W - 4}" y2="${4 + j * c}" stroke="#fff" stroke-width="2"/>`;
-  return s + `<rect x="${W + 14}" y="${H / 2 - 12}" width="24" height="24" fill="url(#gTeal)" stroke="#fff" stroke-width="2"/><text x="${W + 26}" y="${H / 2 + 30}" text-anchor="middle" font-size="11" ${F} fill="#7D8296">= 1</text></svg>`;
+  return s + `<rect x="${W + 14}" y="${H / 2 - 12}" width="24" height="24" fill="url(#gTeal)" stroke="#fff" stroke-width="2"/><text x="${W + 26}" y="${H / 2 + 30}" text-anchor="middle" font-size="11" ${F} fill="#8A7B99">= 1</text></svg>`;
 }
 function triSVG(b, h) {
   const sc = Math.min(180 / b, 110 / h), W = b * sc, H = h * sc, x = 30, y = 20, px = x + W * .35;
@@ -115,7 +115,7 @@ Object.assign(EX, {
     const max = +A || 20, x = ri(0, max); let y;
     if (Math.random() < .15) y = x; else if (max >= 100 && Math.random() < .5) { y = Math.min(max, x - x % 10 + ri(0, 9)); } else y = ri(0, max);
     const sym = x < y ? '<' : x > y ? '>' : '=';
-    return mc(L('Quin signe hi va?', '¿Qué signo va?'), sym, [], { fixed: ['<', '=', '>'], big: true, vis: `<div class="cmp"><span>${fmt(x)}</span>${BOX}<span>${fmt(y)}</span></div>`, ex: x === y ? L('Són iguals.', 'Son iguales.') : L(`${fmt(Math.max(x, y))} és més gran que ${fmt(Math.min(x, y))}. La boca del cocodril sempre s'obre cap al més gran. 🐊`, `${fmt(Math.max(x, y))} es mayor que ${fmt(Math.min(x, y))}. La boca del cocodrilo siempre se abre hacia el mayor. 🐊`) });
+    return mc(L('Quin signe hi va?', '¿Qué signo va?'), sym, [], { fixed: ['<', '=', '>'], big: true, vis: `<div class="cmp"><span>${fmt(x)}</span>${BOX}<span>${fmt(y)}</span></div>`, ex: x === y ? L('Són iguals!', '¡Son iguales!') : L(`${fmt(Math.max(x, y))} és més gran que ${fmt(Math.min(x, y))}. La boca del cocodril sempre s'obre cap al més gran! 🐊`, `${fmt(Math.max(x, y))} es mayor que ${fmt(Math.min(x, y))}. ¡La boca del cocodrilo siempre se abre hacia el mayor! 🐊`) });
   },
   'g.blocks': (L_, A) => {
     const max = +A || 100, n = ri(max <= 20 ? 10 : max <= 100 ? 11 : 101, max - 1), h = Math.floor(n / 100), t = Math.floor(n % 100 / 10), u = n % 10;
@@ -188,7 +188,7 @@ Object.assign(EX, {
   },
   'g.ruler': (L_, A) => {
     const max = +A || 10;
-    if (L_ >= 3) { const s = ri(1, 4), e = ri(s + 2, max); return inp(L('Quant fa el llapis? Compte: no comença al zero.', '¿Cuánto mide el lápiz? Cuidado: no empieza en el cero.'), e - s, { unit: 'cm', vis: rulerSVG(s, e, max), ex: L(`Va del ${s} al ${e}: ${e} − ${s} = ${e - s} cm.`, `Va del ${s} al ${e}: ${e} − ${s} = ${e - s} cm.`) }); }
+    if (L_ >= 3) { const s = ri(1, 4), e = ri(s + 2, max); return inp(L('Quant fa el llapis? Compte: no comença al zero!', '¿Cuánto mide el lápiz? Cuidado: ¡no empieza en el cero!'), e - s, { unit: 'cm', vis: rulerSVG(s, e, max), ex: L(`Va del ${s} al ${e}: ${e} − ${s} = ${e - s} cm.`, `Va del ${s} al ${e}: ${e} − ${s} = ${e - s} cm.`) }); }
     const e = ri(2, max);
     return inp(L('Quant fa el llapis?', '¿Cuánto mide el lápiz?'), e, { unit: 'cm', vis: rulerSVG(0, e, max), ex: L(`Comença al 0 i acaba al ${e}: fa ${e} cm.`, `Empieza en el 0 y acaba en el ${e}: mide ${e} cm.`) });
   },
@@ -292,7 +292,7 @@ Object.assign(EX, {
     const d = ri(4, 12), add = L_ <= 2 || Math.random() < .5; let a = ri(1, d - 2), b = ri(1, d - 1 - a);
     if (!add && a < b) [a, b] = [b, a]; if (!add && a === b) a++;
     const r = add ? a + b : a - b;
-    return mc(HOW(), frac(r, d), [frac(r, 2 * d), frac(r + 1, d), frac(add ? a * b : a + b, d)].filter(x => x !== frac(r, d)), { vis: eqv(`${frac(a, d)} ${add ? '+' : '−'} ${frac(b, d)}`), big: true, ex: L(`Amb el mateix denominador, ${add ? 'sumem' : 'restem'} els numeradors: ${a} ${add ? '+' : '−'} ${b} = ${r}. El denominador (${d}) no canvia.`, `Con el mismo denominador, ${add ? 'sumamos' : 'restamos'} los numeradores: ${a} ${add ? '+' : '−'} ${b} = ${r}. El denominador (${d}) no cambia.`) });
+    return mc(HOW(), frac(r, d), [frac(r, 2 * d), frac(r + 1, d), frac(add ? a * b : a + b, d)].filter(x => x !== frac(r, d)), { vis: eqv(`${frac(a, d)} ${add ? '+' : '−'} ${frac(b, d)}`), big: true, ex: L(`Amb el mateix denominador, ${add ? 'sumem' : 'restem'} els numeradors: ${a} ${add ? '+' : '−'} ${b} = ${r}. El denominador (${d}) no canvia!`, `Con el mismo denominador, ${add ? 'sumamos' : 'restamos'} los numeradores: ${a} ${add ? '+' : '−'} ${b} = ${r}. ¡El denominador (${d}) no cambia!`) });
   },
   'fr.addD': L_ => {
     const pairs = L_ <= 3 ? [[2, 4], [2, 6], [3, 6], [4, 8], [3, 9], [5, 10], [2, 8]] : [[2, 3], [3, 4], [2, 5], [4, 6], [3, 5], [4, 10]];
@@ -319,7 +319,7 @@ Object.assign(EX, {
     if (L_ <= 2) { const w = ri(2, 8), h = ri(2, 5); return inp(L('Quants quadrets ocupa? Aquesta és la seva <b>àrea</b>.', '¿Cuántos cuadraditos ocupa? Esta es su <b>área</b>.'), w * h, { unit: L('quadrets', 'cuadraditos'), vis: gridSVG(w, h), ex: L(`Hi ha ${h} files de ${w} quadrets: ${w} × ${h} = ${w * h}.`, `Hay ${h} filas de ${w} cuadraditos: ${w} × ${h} = ${w * h}.`) }); }
     if (L_ <= 4 || Math.random() < .4) { const w = ri(3, 15), h = Math.random() < .2 ? w : ri(2, 10), sq = w === h; return inp(L(`Quina és l'<b>àrea</b> d'aquest ${sq ? 'quadrat' : 'rectangle'}?`, `¿Cuál es el <b>área</b> de este ${sq ? 'cuadrado' : 'rectángulo'}?`), w * h, { unit: 'cm²', vis: rectSVG(w, h, `${w} cm`, `${h} cm`), ex: L(`Àrea = base × altura = ${w} × ${h} = ${w * h} cm².`, `Área = base × altura = ${w} × ${h} = ${w * h} cm².`) }); }
     const b = ri(3, 14); let h = ri(2, 10); if (b * h % 2) h++;
-    return inp(L("Quina és l'<b>àrea</b> d'aquest triangle?", '¿Cuál es el <b>área</b> de este triángulo?'), b * h / 2, { unit: 'cm²', vis: triSVG(b, h), ex: L(`Àrea del triangle = base × altura ÷ 2 = ${b} × ${h} ÷ 2 = ${b * h / 2} cm². És la meitat d'un rectangle.`, `Área del triángulo = base × altura ÷ 2 = ${b} × ${h} ÷ 2 = ${b * h / 2} cm². Es la mitad de un rectángulo.`) });
+    return inp(L("Quina és l'<b>àrea</b> d'aquest triangle?", '¿Cuál es el <b>área</b> de este triángulo?'), b * h / 2, { unit: 'cm²', vis: triSVG(b, h), ex: L(`Àrea del triangle = base × altura ÷ 2 = ${b} × ${h} ÷ 2 = ${b * h / 2} cm². És la meitat d'un rectangle!`, `Área del triángulo = base × altura ÷ 2 = ${b} × ${h} ÷ 2 = ${b * h / 2} cm². ¡Es la mitad de un rectángulo!`) });
   },
   'vol': L_ => {
     if (L_ <= 2) { const a = ri(2, 4), b = ri(1, 3), c = ri(1, 2); return inp(L('Quants cubs hi ha en total? (també els que no es veuen)', '¿Cuántos cubos hay en total? (también los que no se ven)'), a * b * c, { vis: cubesSVG(a, b, c), ex: L(`Cada pis té ${a} × ${b} = ${a * b} cubs, i hi ha ${c} ${c === 1 ? 'pis' : 'pisos'}: ${a * b} × ${c} = ${a * b * c}.`, `Cada piso tiene ${a} × ${b} = ${a * b} cubos, y hay ${c} ${c === 1 ? 'piso' : 'pisos'}: ${a * b} × ${c} = ${a * b * c}.`) }); }
@@ -331,7 +331,7 @@ Object.assign(EX, {
   'int': L_ => {
     if (L_ <= 1) { const t = ri(-10, 25); return ninp(L('Quina temperatura marca el termòmetre?', '¿Qué temperatura marca el termómetro?'), t, { unit: '°C', vis: thermoSVG(t), ex: t < 0 ? L(`El líquid és per sota del 0: fa ${fmt(t)} °C (sota zero).`, `El líquido está por debajo del 0: hace ${fmt(t)} °C (bajo cero).`) : L(`Marca ${t} °C.`, `Marca ${t} °C.`) }); }
     if (L_ === 2) {
-      if (Math.random() < .5) { const x = ri(-12, 12); let y = ri(-12, 12); if (Math.random() < .1) y = x; const sym = x < y ? '<' : x > y ? '>' : '='; return mc(L('Quin signe hi va?', '¿Qué signo va?'), sym, [], { fixed: ['<', '=', '>'], big: true, vis: `<div class="cmp"><span>${fmt(x)}</span>${BOX}<span>${fmt(y)}</span></div>`, ex: L('A la recta numèrica, més a la dreta vol dir més gran.', 'En la recta numérica, más a la derecha quiere decir mayor.') + (x < 0 && y < 0 ? L(' Amb negatius, com més lluny del 0, més petit.', ' Con negativos, cuanto más lejos del 0, más pequeño.') : '') }); }
+      if (Math.random() < .5) { const x = ri(-12, 12); let y = ri(-12, 12); if (Math.random() < .1) y = x; const sym = x < y ? '<' : x > y ? '>' : '='; return mc(L('Quin signe hi va?', '¿Qué signo va?'), sym, [], { fixed: ['<', '=', '>'], big: true, vis: `<div class="cmp"><span>${fmt(x)}</span>${BOX}<span>${fmt(y)}</span></div>`, ex: L('A la recta numèrica, més a la dreta vol dir més gran.', 'En la recta numérica, más a la derecha quiere decir mayor.') + (x < 0 && y < 0 ? L(' Amb negatius, com més lluny del 0, més petit!', ' ¡Con negativos, cuanto más lejos del 0, más pequeño!') : '') }); }
       const set = new Set(); while (set.size < 4) set.add(ri(-15, 15)); const vals = [...set], ans = vals.slice().sort((a, b) => a - b);
       return { type: 'order', q: L('Ordena de <b>més petit a més gran</b>:', 'Ordena de <b>menor a mayor</b>:'), items: shuffle(vals), show: fmt, ans, ex: ans.map(fmt).join(' < ') };
     }
