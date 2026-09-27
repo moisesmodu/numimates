@@ -27,59 +27,67 @@ function remix(e) {
   return e;
 }
 
-/* ---------- 2. Àlbum de cromos ---------- */
-const RAR = { c: ['Comú', 'Común', '#9AA5B1', 70], r: ['Rar', 'Raro', '#36A9E1', 22], e: ['Èpic', 'Épico', '#8A4FB0', 7], l: ['Llegendari', 'Legendario', '#F0A500', 1] };
+/* ---------- 2. Àlbum de cartes de mitologia ---------- */
+const RAR = { c: ['Comuna', 'Común', '#C98A5B', 58], r: ['Rara', 'Rara', '#36A9E1', 27], e: ['Èpica', 'Épica', '#8A4FB0', 12], l: ['Llegendària', 'Legendaria', '#F0A500', 3] };
+// [id, raresa, 'nom ca|es', 'nom romà ca|es', 'curiositat ca|es']
 const STK = [
-  ['zero', '0️⃣', 'c', 'Zero|Cero', "El zero el van inventar a l'Índia fa uns 1.500 anys.|El cero lo inventaron en la India hace unos 1.500 años."],
-  ['set', '7️⃣', 'c', 'Set|Siete', "Hi ha 7 dies a la setmana i 7 colors a l'arc de Sant Martí.|Hay 7 días en la semana y 7 colores en el arcoíris."],
-  ['deu', '🔟', 'c', 'Deu|Diez', 'Comptem de 10 en 10 perquè tenim 10 dits a les mans.|Contamos de 10 en 10 porque tenemos 10 dedos en las manos.'],
-  ['tri', '🔺', 'c', 'Triangle|Triángulo', 'El triangle és la figura més forta: per això surt a molts ponts.|El triángulo es la figura más fuerte: por eso aparece en muchos puentes.'],
-  ['quad', '🟪', 'c', 'Quadrat|Cuadrado', 'Un quadrat té 4 costats iguals i 4 angles rectes.|Un cuadrado tiene 4 lados iguales y 4 ángulos rectos.'],
-  ['cerc', '⚪', 'c', 'Cercle|Círculo', 'Un cercle no té cap vèrtex… ni cap costat recte!|Un círculo no tiene ningún vértice… ¡ni ningún lado recto!'],
-  ['dau', '🎲', 'c', 'Dau|Dado', "Les cares oposades d'un dau sempre sumen 7.|Las caras opuestas de un dado siempre suman 7."],
-  ['rell', '🕐', 'c', 'Rellotge|Reloj', 'El rellotge compta de 60 en 60: 60 segons fan un minut i 60 minuts, una hora.|El reloj cuenta de 60 en 60: 60 segundos son un minuto y 60 minutos, una hora.'],
-  ['regle', '📏', 'c', 'Regle|Regla', 'Un metre són 100 centímetres.|Un metro son 100 centímetros.'],
-  ['mon', '🪙', 'c', 'Moneda|Moneda', "Hi ha 8 monedes d'euro diferents: d'1 cèntim fins a 2 euros.|Hay 8 monedas de euro diferentes: de 1 céntimo hasta 2 euros."],
-  ['pizza', '🍕', 'c', 'Pizza|Pizza', 'Si talles una pizza en 8 trossos iguals, cada tros és 1/8.|Si cortas una pizza en 8 trozos iguales, cada trozo es 1/8.'],
-  ['ous', '🥚', 'c', 'Dotzena|Docena', 'Una dotzena són 12. Mitja dotzena, 6.|Una docena son 12. Media docena, 6.'],
-  ['mari', '🐞', 'c', 'Marieta|Mariquita', 'La marieta més famosa té 7 punts a la closca.|La mariquita más famosa tiene 7 puntos en el caparazón.'],
-  ['abac', '🧮', 'c', 'Àbac|Ábaco', "L'àbac és una de les calculadores més antigues del món.|El ábaco es una de las calculadoras más antiguas del mundo."],
-  ['cal', '🗓️', 'c', 'Calendari|Calendario', 'Un any té 365 dies i, cada 4 anys, 366.|Un año tiene 365 días y, cada 4 años, 366.'],
-  ['pilota', '⚽', 'c', 'Pilota|Pelota', 'La pilota de futbol clàssica té 12 pentàgons i 20 hexàgons.|La pelota de fútbol clásica tiene 12 pentágonos y 20 hexágonos.'],
-  ['xoco', '🍫', 'c', 'Xocolata|Chocolate', 'Una rajola de xocolata és una multiplicació: files × columnes!|Una tableta de chocolate es una multiplicación: ¡filas × columnas!'],
-  ['piano', '🎹', 'c', 'Piano|Piano', 'Un piano té 88 tecles.|Un piano tiene 88 teclas.'],
-  ['peu', '🦶', 'c', 'Peu|Pie', 'Cada peu té 26 ossos.|Cada pie tiene 26 huesos.'],
-  ['sindria', '🍉', 'c', 'Síndria|Sandía', 'Una síndria és gairebé tota aigua: més del 90%!|Una sandía es casi toda agua: ¡más del 90%!'],
-  ['abella', '🐝', 'r', 'Abella|Abeja', "Les abelles fan les cel·les en forma d'hexàgon: és la forma que aprofita més l'espai.|Las abejas hacen las celdas en forma de hexágono: es la forma que mejor aprovecha el espacio."],
-  ['cargol', '🐌', 'r', 'Cargol|Caracol', "La closca del cargol és una espiral. I a Lleida en fem l'Aplec!|La concha del caracol es una espiral. ¡Y en Lleida hacemos el Aplec!"],
-  ['pop', '🐙', 'r', 'Pop|Pulpo', 'Un pop té 8 braços i 3 cors.|Un pulpo tiene 8 brazos y 3 corazones.'],
-  ['aranya', '🕷️', 'r', 'Aranya|Araña', 'Les aranyes tenen 8 potes; els insectes, només 6.|Las arañas tienen 8 patas; los insectos, solo 6.'],
-  ['gira', '🌻', 'r', 'Gira-sol|Girasol', 'Les llavors del gira-sol dibuixen espirals perfectes.|Las semillas del girasol dibujan espirales perfectas.'],
-  ['neu', '❄️', 'r', 'Floc de neu|Copo de nieve', 'Els flocs de neu tenen 6 puntes.|Los copos de nieve tienen 6 puntas.'],
-  ['tortuga', '🐢', 'r', 'Tortuga|Tortuga', 'Algunes tortugues viuen més de 100 anys.|Algunas tortugas viven más de 100 años.'],
-  ['girafa', '🦒', 'r', 'Girafa|Jirafa', 'El coll de la girafa té 7 vèrtebres, les mateixes que el nostre!|El cuello de la jirafa tiene 7 vértebras, ¡las mismas que el nuestro!'],
-  ['terra', '🌍', 'r', 'La Terra|La Tierra', 'La Terra fa una volta al Sol cada 365 dies i un quart.|La Tierra da una vuelta al Sol cada 365 días y un cuarto.'],
-  ['papa', '🦋', 'r', 'Papallona|Mariposa', 'Les papallones són simètriques: les dues ales són iguals.|Las mariposas son simétricas: las dos alas son iguales.'],
-  ['cub', '🧊', 'r', 'Cub|Cubo', 'Un cub té 6 cares, 8 vèrtexs i 12 arestes.|Un cubo tiene 6 caras, 8 vértices y 12 aristas.'],
-  ['ping', '🐧', 'r', 'Pingüí|Pingüino', "El pingüí emperador pot fer més d'1 metre d'alçada.|El pingüino emperador puede medir más de 1 metro de alto."],
-  ['pi', '🥧', 'e', 'El número π|El número π', 'π val 3,14159… i els seus decimals no s\'acaben mai!|π vale 3,14159… ¡y sus decimales no se acaban nunca!'],
-  ['inf', '♾️', 'e', 'Infinit|Infinito', 'Sempre pots sumar 1 a qualsevol número: els números no s\'acaben mai.|Siempre puedes sumar 1 a cualquier número: los números no se acaban nunca.'],
-  ['seu', '🏰', 'e', 'Seu Vella|Seu Vella', 'El campanar de la Seu Vella de Lleida fa uns 60 metres.|El campanario de la Seu Vella de Lleida mide unos 60 metros.'],
-  ['estrelles', '🔭', 'e', 'Cel estrellat|Cielo estrellado', 'En una nit fosca, a simple vista es veuen unes 2.500 estrelles.|En una noche oscura, a simple vista se ven unas 2.500 estrellas.'],
-  ['adn', '🧬', 'e', 'ADN|ADN', 'El teu ADN té forma de doble espiral.|Tu ADN tiene forma de doble espiral.'],
-  ['roma', '💯', 'e', 'Números romans|Números romanos', 'Els romans escrivien el 100 amb la lletra C.|Los romanos escribían el 100 con la letra C.'],
-  ['cavaller', '⚔️', 'l', 'Cavaller del Codi|Caballero del Código', 'Els programadors fan servir la lògica i les mates cada dia.|Los programadores usan la lógica y las mates cada día.'],
-  ['numid', '🤖', 'l', 'Numi daurat|Numi dorado', "En Numi ha comptat fins a un milió… i encara no s'ha cansat!|Numi ha contado hasta un millón… ¡y todavía no se ha cansado!"],
-  ['fugac', '🌠', 'l', 'Estel fugaç|Estrella fugaz', "Els estels fugaços són trossets de pols de l'espai que cremen.|Las estrellas fugaces son trocitos de polvo del espacio que se queman."],
-  ['mestre', '🎓', 'l', 'Mestre de les mates|Maestro de las mates', 'Només els més constants aconsegueixen aquest cromo!|¡Solo los más constantes consiguen este cromo!']
+  ['zeus', 'l', 'Zeus|Zeus', 'Júpiter per als romans|Júpiter para los romanos', "Rei dels 12 déus de l'Olimp. El planeta més gran del sistema solar porta el seu nom romà.|Rey de los 12 dioses del Olimpo. El planeta más grande del sistema solar lleva su nombre romano."],
+  ['hera', 'l', 'Hera|Hera', 'Juno per als romans|Juno para los romanos', 'Reina de l\'Olimp. El mes de juny es diu així per Juno: és el mes 6 de l\'any.|Reina del Olimpo. El mes de junio se llama así por Juno: es el mes 6 del año.'],
+  ['hades', 'l', 'Hades|Hades', 'Plutó per als romans|Plutón para los romanos', 'Déu de l\'inframon. Plutó triga 248 anys a fer una volta al Sol!|Dios del inframundo. ¡Plutón tarda 248 años en dar una vuelta al Sol!'],
+  ['cronos', 'l', 'Cronos|Cronos', 'Saturn per als romans|Saturno para los romanos', 'El tità del temps. Per això un cronòmetre es diu així: mesura el temps.|El titán del tiempo. Por eso un cronómetro se llama así: mide el tiempo.'],
+  ['athena', 'e', 'Atena|Atenea', 'Minerva per als romans|Minerva para los romanos', 'Deessa de la saviesa. La seva òliba pot girar el cap 270°: tres quarts de volta.|Diosa de la sabiduría. Su búho puede girar la cabeza 270°: tres cuartos de vuelta.'],
+  ['poseidon', 'e', 'Posidó|Poseidón', 'Neptú per als romans|Neptuno para los romanos', 'El seu trident té 3 puntes. Neptú és el planeta 8, el més llunyà del Sol.|Su tridente tiene 3 puntas. Neptuno es el planeta 8, el más lejano del Sol.'],
+  ['hermes', 'e', 'Hermes|Hermes', 'Mercuri per als romans|Mercurio para los romanos', 'El missatger més ràpid. Mercuri fa la volta al Sol en només 88 dies.|El mensajero más rápido. Mercurio da la vuelta al Sol en solo 88 días.'],
+  ['apollo', 'e', 'Apol·lo|Apolo', 'Apol·lo per als romans|Apolo para los romanos', 'Déu de la música. Les notes musicals es basen en fraccions: 1/2, 1/4, 1/8…|Dios de la música. Las notas musicales se basan en fracciones: 1/2, 1/4, 1/8…'],
+  ['artemis', 'e', 'Àrtemis|Artemisa', 'Diana per als romans|Diana para los romanos', 'Deessa de la caça i de la Lluna. La Lluna fa una volta a la Terra cada 27 dies i escaig.|Diosa de la caza y de la Luna. La Luna da una vuelta a la Tierra cada 27 días y pico.'],
+  ['ares', 'e', 'Ares|Ares', 'Mart per als romans|Marte para los romanos', 'Déu de la guerra. Un any a Mart dura 687 dies terrestres.|Dios de la guerra. Un año en Marte dura 687 días terrestres.'],
+  ['aphrodite', 'e', 'Afrodita|Afrodita', 'Venus per als romans|Venus para los romanos', 'Deessa de la bellesa. A Venus, un dia dura més que un any!|Diosa de la belleza. ¡En Venus, un día dura más que un año!'],
+  ['hephaestus', 'e', 'Hefest|Hefesto', 'Vulcà per als romans|Vulcano para los romanos', 'El ferrer dels déus. Els volcans porten el nom de Vulcà.|El herrero de los dioses. Los volcanes llevan el nombre de Vulcano.'],
+  ['demeter', 'e', 'Demèter|Deméter', 'Ceres per als romans|Ceres para los romanos', 'Deessa de les collites. Les 4 estacions són 4 quarts de l\'any: 3 mesos cadascuna.|Diosa de las cosechas. Las 4 estaciones son 4 cuartos del año: 3 meses cada una.'],
+  ['dionysus', 'e', 'Dionís|Dioniso', 'Bacus per als romans|Baco para los romanos', 'Déu de la festa i del teatre. Els teatres grecs eren semicercles perfectes.|Dios de la fiesta y del teatro. Los teatros griegos eran semicírculos perfectos.'],
+  ['cerberus', 'e', 'Cèrber|Cerbero', 'Cerber per als romans|Cerbero para los romanos', "3 caps × 2 ulls = 6 ulls vigilant la porta de l'inframon.|3 cabezas × 2 ojos = 6 ojos vigilando la puerta del inframundo."],
+  ['pegasus', 'r', 'Pègas|Pegaso', 'Pegàs per als romans|Pegaso para los romanos', 'Té una constel·lació al cel amb un gran quadrat de 4 estrelles.|Tiene una constelación en el cielo con un gran cuadrado de 4 estrellas.'],
+  ['medusa', 'r', 'Medusa|Medusa', 'Medusa per als romans|Medusa para los romanos', 'Si la mires, et converteix en pedra. Perseu la va vèncer amb un mirall: simetria!|Si la miras, te convierte en piedra. Perseo la venció con un espejo: ¡simetría!'],
+  ['minotaur', 'r', 'Minotaure|Minotauro', 'Minotaure per als romans|Minotauro para los romanos', 'Vivia en un laberint. Truc per sortir de molts laberints: toca sempre la paret amb la mà dreta.|Vivía en un laberinto. Truco para salir de muchos laberintos: toca siempre la pared con la mano derecha.'],
+  ['hydra', 'r', 'Hidra|Hidra', 'Hidra per als romans|Hidra para los romanos', 'Per cada cap tallat en sortien 2: 1, 2, 4, 8, 16… creix el doble cada vegada!|Por cada cabeza cortada salían 2: 1, 2, 4, 8, 16… ¡crece el doble cada vez!'],
+  ['cyclops', 'r', 'Cíclop|Cíclope', 'Cíclop per als romans|Cíclope para los romanos', 'Un sol ull al mig del front. Van forjar els llamps de Zeus.|Un solo ojo en medio de la frente. Forjaron los rayos de Zeus.'],
+  ['sphinx', 'r', 'Esfinx|Esfinge', 'Esfinx per als romans|Esfinge para los romanos', 'Qui camina amb 4 potes, després amb 2 i després amb 3? La persona: gateja, camina i fa servir bastó.|¿Quién anda con 4 patas, luego con 2 y luego con 3? La persona: gatea, camina y usa bastón.'],
+  ['centaur', 'r', 'Centaure|Centauro', 'Centaure per als romans|Centauro para los romanos', 'Mig humà, mig cavall: 2 braços + 4 potes = 6 extremitats.|Medio humano, medio caballo: 2 brazos + 4 patas = 6 extremidades.'],
+  ['phoenix', 'r', 'Fènix|Fénix', 'Fènix per als romans|Fénix para los romanos', 'Renaix de les cendres cada 500 anys. Quantes vegades en 2.000 anys? 4!|Renace de sus cenizas cada 500 años. ¿Cuántas veces en 2.000 años? ¡4!'],
+  ['argos', 'r', 'Argos|Argos', 'Argus per als romans|Argos para los romanos', 'El gegant dels 100 ulls. Mai no els tancava tots alhora.|El gigante de los 100 ojos. Nunca los cerraba todos a la vez.'],
+  ['chimera', 'r', 'Quimera|Quimera', 'Quimera per als romans|Quimera para los romanos', 'Lleó, cabra i serp en un sol animal: 3 animals en 1.|León, cabra y serpiente en un solo animal: 3 animales en 1.'],
+  ['griffin', 'r', 'Griu|Grifo', 'Griu per als romans|Grifo para los romanos', "Mig àguila, mig lleó. Guardava tresors d'or.|Medio águila, medio león. Guardaba tesoros de oro."],
+  ['sirens', 'r', 'Sirenes|Sirenas', 'Sirenes per als romans|Sirenas para los romanos', 'Cantaven tan bé que els mariners perdien el rumb. Ulisses es va tapar les orelles amb cera.|Cantaban tan bien que los marineros perdían el rumbo. Ulises se tapó los oídos con cera.'],
+  ['heracles', 'c', 'Hèracles|Heracles', 'Hèrcules per als romans|Hércules para los romanos', 'Va fer 12 treballs: una dotzena de reptes impossibles!|Hizo 12 trabajos: ¡una docena de retos imposibles!'],
+  ['achilles', 'c', 'Aquil·les|Aquiles', 'Aquil·les per als romans|Aquiles para los romanos', 'El guerrer invencible… menys al taló. Per això parlem del «taló d\'Aquil·les».|El guerrero invencible… menos en el talón. Por eso hablamos del «talón de Aquiles».'],
+  ['odysseus', 'c', 'Ulisses|Ulises', 'Ulisses per als romans|Ulises para los romanos', 'Va trigar 10 anys a tornar a casa després de 10 anys de guerra: 20 anys fora!|Tardó 10 años en volver a casa después de 10 años de guerra: ¡20 años fuera!'],
+  ['perseus', 'c', 'Perseu|Perseo', 'Perseu per als romans|Perseo para los romanos', 'Cada agost, del cel cauen les Perseides: fins a 100 estels fugaços per hora.|Cada agosto caen del cielo las Perseidas: hasta 100 estrellas fugaces por hora.'],
+  ['theseus', 'c', 'Teseu|Teseo', 'Teseu per als romans|Teseo para los romanos', "Va sortir del laberint seguint un fil. Els matemàtics encara estudien els laberints!|Salió del laberinto siguiendo un hilo. ¡Los matemáticos todavía estudian los laberintos!"],
+  ['icarus', 'c', 'Ícar|Ícaro', 'Ícar per als romans|Ícaro para los romanos', "Va volar massa a prop del Sol i se li va fondre la cera. El Sol és a 150 milions de km!|Voló demasiado cerca del Sol y se le derritió la cera. ¡El Sol está a 150 millones de km!"],
+  ['pandora', 'c', 'Pandora|Pandora', 'Pandora per als romans|Pandora para los romanos', "Va obrir la gerra i en van sortir tots els mals. Al fons només hi va quedar l'esperança.|Abrió la vasija y salieron todos los males. En el fondo solo quedó la esperanza."],
+  ['prometheus', 'c', 'Prometeu|Prometeo', 'Prometeu per als romans|Prometeo para los romanos', 'Va regalar el foc als humans. Una espelma crema a uns 1.000 °C.|Regaló el fuego a los humanos. Una vela arde a unos 1.000 °C.'],
+  ['orpheus', 'c', 'Orfeu|Orfeo', 'Orfeu per als romans|Orfeo para los romanos', 'La seva lira tenia 7 cordes. Pitàgores va descobrir que la música és pura proporció.|Su lira tenía 7 cuerdas. Pitágoras descubrió que la música es pura proporción.'],
+  ['jason', 'c', 'Jàson|Jasón', 'Jàson per als romans|Jasón para los romanos', 'Va buscar el velló d\'or amb 50 herois: els argonautes.|Buscó el vellocino de oro con 50 héroes: los argonautas.'],
+  ['atalanta', 'c', 'Atalanta|Atalanta', 'Atalanta per als romans|Atalanta para los romanos', 'La corredora més ràpida. Només la van guanyar amb 3 pomes d\'or.|La corredora más rápida. Solo le ganaron con 3 manzanas de oro.'],
+  ['romulus', 'c', 'Ròmul i Rem|Rómulo y Remo', 'Fundadors de Roma|Fundadores de Roma', 'Roma es va fundar l\'any 753 aC. Els romans escrivien el 753 com DCCLIII.|Roma se fundó en el año 753 a. C. Los romanos escribían el 753 como DCCLIII.'],
+  ['midas', 'c', 'Rei Mides|Rey Midas', 'Mides per als romans|Midas para los romanos', "Tot el que tocava es tornava d'or. L'or pesa tant que un cub de 10 cm fa gairebé 20 kg!|Todo lo que tocaba se volvía de oro. ¡El oro pesa tanto que un cubo de 10 cm pesa casi 20 kg!"]
 ];
+const CARDNUM = id => String(STK.findIndex(s => s[0] === id) + 1).padStart(2, '0');
+// Els cromos antics (emojis) passen a cartes de mitologia: ningú no perd res
+function albumFix() {
+  const A = P.album = P.album || {};
+  for (const k of Object.keys(A)) if (!STK.some(s => s[0] === k)) {
+    for (let i = 0; i < A[k]; i++) { const s = drawSticker(); A[s[0]] = (A[s[0]] || 0) + 1; }
+    delete A[k];
+  }
+}
 function drawSticker() {
   let r = Math.random() * 100, t = 'c';
   for (const k of ['l', 'e', 'r', 'c']) { if (r < RAR[k][3]) { t = k; break; } r -= RAR[k][3]; }
-  return pick(STK.filter(s => s[2] === t));
+  return pick(STK.filter(s => s[1] === t));
 }
 function openPack(n = 1) {
-  P.album = P.album || {};
+  albumFix();
   const got = [];
   for (let i = 0; i < n; i++) {
     const s = drawSticker(), dup = !!P.album[s[0]];
@@ -89,11 +97,12 @@ function openPack(n = 1) {
   }
   return got;
 }
-const stickerHTML = (s, cls = '') => `<div class="stk r-${s[2]} ${cls}"><div class="stke">${s[1]}</div><b>${tx(s[3])}</b><span class="stkr">${tx(RAR[s[2]])}</span></div>`;
+// full = amb la curiositat (sobre i fitxa); sense = versió petita de l'àlbum
+const stickerHTML = (s, cls = '', full = false) => `<div class="mcardx r-${s[1]} ${cls}"><div class="min"><img src="img/myth/${s[0]}.jpg" alt="" loading="lazy"><span class="mnum">Nº ${CARDNUM(s[0])}</span><span class="mgem"></span><div class="mplate"><div class="mname">${tx(s[2])}</div>${full ? `<div class="mrom">${tx(s[3])}</div><div class="mmeander"></div><div class="mfact">${tx(s[4])}</div>` : ''}</div></div><span class="mrar">${tx(RAR[s[1]])}</span></div>`;
 function scrPack(got) {
-  app.innerHTML = `<div class="scr"><div class="burst gold"></div><h1>${got.length > 1 ? L('Sobre de cromos!', '¡Sobre de cromos!') : L('Nou cromo!', '¡Nuevo cromo!')}</h1><p class="sub">${L('Toca el sobre per obrir-lo', 'Toca el sobre para abrirlo')}</p>
-    <button class="pack wiggle" id="pack" onclick="revealPack()"><span>🎴</span><small>MATES</small></button>
-    <div id="packOut" class="packout" hidden>${got.map((g, i) => `<div class="stkwrap" style="animation-delay:${i * 250}ms">${stickerHTML(g.s)}<p class="fact">💡 ${tx(g.s[4])}</p>${g.dup ? `<p class="dup">${L('Repetit: +3 💎', 'Repetido: +3 💎')}</p>` : `<p class="newst">${L('NOU!', '¡NUEVO!')}</p>`}</div>`).join('')}
+  app.innerHTML = `<div class="scr"><div class="burst gold"></div><h1>${got.length > 1 ? L('Sobre de cartes!', '¡Sobre de cartas!') : L('Nova carta!', '¡Nueva carta!')}</h1><p class="sub">${L('Toca el sobre per obrir-lo', 'Toca el sobre para abrirlo')}</p>
+    <button class="pack wiggle" id="pack" onclick="revealPack()"><span>🏛️</span><small>OLIMP</small></button>
+    <div id="packOut" class="packout" hidden>${got.map((g, i) => `<div class="stkwrap" style="animation-delay:${i * 250}ms">${stickerHTML(g.s, '', true)}${g.dup ? `<p class="dup">${L('Repetida: +3 💎', 'Repetida: +3 💎')}</p>` : `<p class="newst">${L('NOVA!', '¡NUEVA!')}</p>`}</div>`).join('')}
     <button class="btn big" onclick="flowNext()">${L('CONTINUA', 'CONTINÚA')}</button></div></div>`;
   SCR_PACK = got;
 }
@@ -102,25 +111,26 @@ function revealPack() {
   const p = $('#pack'); if (!p || p.classList.contains('open')) return;
   p.classList.add('shake'); SFX.tap();
   setTimeout(() => { p.classList.remove('shake'); p.classList.add('open'); SFX.win(); }, 500);
-  const best = Math.max(...SCR_PACK.map(g => 'cre l'.indexOf(g.s[2])));
+  const best = Math.max(...SCR_PACK.map(g => 'crel'.indexOf(g.s[1])));
   confetti(best >= 2 ? 220 : 90);
   setTimeout(() => { p.style.display = 'none'; $('#packOut').hidden = false; }, 950);
 }
 function renderAlbum(tab) {
   VIEW = 'album';
-  const A = P.album || {}, have = STK.filter(s => A[s[0]]).length;
+  albumFix();
+  const A = P.album, have = STK.filter(s => A[s[0]]).length;
   const t = tab || 'cromos';
-  const tabs = `<div class="tabs"><button class="${t === 'cromos' ? 'on' : ''}" onclick="renderAlbum('cromos')">🎴 ${L('Cromos', 'Cromos')}</button><button class="${t === 'medals' ? 'on' : ''}" onclick="renderAlbum('medals')">🏅 ${L('Medalles', 'Medallas')}</button></div>`;
+  const tabs = `<div class="tabs"><button class="${t === 'cromos' ? 'on' : ''}" onclick="renderAlbum('cromos')">🏛️ ${L('Cartes', 'Cartas')}</button><button class="${t === 'medals' ? 'on' : ''}" onclick="renderAlbum('medals')">🏅 ${L('Medalles', 'Medallas')}</button></div>`;
   if (t === 'medals') { renderBadges(tabs); return; }
-  app.innerHTML = shell(`<h1 class="ph1">${L('La meva col·lecció', 'Mi colección')}</h1>${tabs}
-    <p class="lead">${L(`Tens <b>${have}</b> de ${STK.length} cromos. Cada lliçó que acabes t'obre un sobre!`, `Tienes <b>${have}</b> de ${STK.length} cromos. ¡Cada lección que acabes te abre un sobre!`)}</p>
+  app.innerHTML = shell(`<h1 class="ph1">${L('Déus i herois', 'Dioses y héroes')}</h1>${tabs}
+    <p class="lead">${L(`Tens <b>${have}</b> de ${STK.length} cartes de la mitologia grega i romana. Cada lliçó que acabes t'obre un sobre!`, `Tienes <b>${have}</b> de ${STK.length} cartas de la mitología griega y romana. ¡Cada lección que acabes te abre un sobre!`)}</p>
     <div class="abar"><div style="width:${have / STK.length * 100}%"></div></div>
-    ${['l', 'e', 'r', 'c'].map(k => `<h2 class="h2"><span class="rdotb" style="background:${RAR[k][2]}"></span>${tx(RAR[k])} <small>${STK.filter(s => s[2] === k && A[s[0]]).length}/${STK.filter(s => s[2] === k).length}</small></h2>
-      <div class="agrid">${STK.filter(s => s[2] === k).map(s => A[s[0]] ? `<button class="stkbtn" onclick="stickerModal('${s[0]}')">${stickerHTML(s)}${A[s[0]] > 1 ? `<i class="cnt">×${A[s[0]]}</i>` : ''}</button>` : `<div class="stk empty r-${k}"><div class="stke">❔</div><b>???</b></div>`).join('')}</div>`).join('')}`, 'album');
+    ${['l', 'e', 'r', 'c'].map(k => `<h2 class="h2"><span class="rdotb" style="background:${RAR[k][2]}"></span>${tx(RAR[k])} <small>${STK.filter(s => s[1] === k && A[s[0]]).length}/${STK.filter(s => s[1] === k).length}</small></h2>
+      <div class="agrid">${STK.filter(s => s[1] === k).map(s => A[s[0]] ? `<button class="stkbtn" onclick="stickerModal('${s[0]}')">${stickerHTML(s)}${A[s[0]] > 1 ? `<i class="cnt">×${A[s[0]]}</i>` : ''}</button>` : `<div class="mcardx empty r-${k}"><div class="min"><span class="mnum">Nº ${CARDNUM(s[0])}</span><div class="mq">?</div></div></div>`).join('')}</div>`).join('')}`, 'album');
 }
 function stickerModal(id) {
   const s = STK.find(x => x[0] === id);
-  modal(`<div class="sheet card cent">${stickerHTML(s, 'bigstk')}<p class="fact">💡 ${tx(s[4])}</p><button class="btn big" onclick="closeModal()">${L('GENIAL!', '¡GENIAL!')}</button></div>`, true);
+  modal(`<div class="sheet card cent mythsheet">${stickerHTML(s, 'bigcard', true)}<button class="btn big" onclick="closeModal()">${L('GENIAL!', '¡GENIAL!')}</button></div>`, true);
 }
 
 /* ---------- 3. Missions diàries ---------- */

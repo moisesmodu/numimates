@@ -732,3 +732,36 @@ body{background:radial-gradient(1200px 500px at 50% -120px,#F1E6FA 0%,rgba(241,2
 .cgrid.ages .cbtn b{font-size:24px}
 .cbtn.locked{background:#F1ECF5;border-color:#E6DEEE;opacity:.75}
 .cbtn.locked b{color:var(--mut)}
+
+/* Cartes de mitologia */
+.mcardx{--c1:#E8A073;--c2:#8A4520;--glow:rgba(232,160,115,.45);position:relative;width:100%;aspect-ratio:5/7;border-radius:12px;padding:5px;background:linear-gradient(145deg,var(--c1),var(--c2) 55%,var(--c1));box-shadow:0 0 0 1.5px rgba(255,255,255,.3) inset,0 6px 16px rgba(40,10,60,.3),0 0 16px var(--glow);color:#fff;text-align:center}
+.mcardx.r-r{--c1:#8FD8FF;--c2:#1E5F9A;--glow:rgba(95,184,230,.45)}
+.mcardx.r-e{--c1:#D7A8FF;--c2:#4E1F7A;--glow:rgba(176,122,214,.55)}
+.mcardx.r-l{--c1:#FFF0A8;--c2:#C98A00;--glow:rgba(255,215,90,.75)}
+.min{position:relative;height:100%;border-radius:8px;overflow:hidden;border:1.5px solid rgba(0,0,0,.35);background:#2A1638}
+.min img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.mnum{position:absolute;top:5px;left:5px;font-family:Cinzel,serif;font-weight:900;font-size:9px;background:rgba(20,10,30,.6);padding:2px 5px;border-radius:5px;letter-spacing:.06em}
+.mgem{position:absolute;top:6px;right:6px;width:12px;height:12px;transform:rotate(45deg);border-radius:3px;background:linear-gradient(135deg,#fff,var(--c1) 40%,var(--c2));box-shadow:0 0 8px var(--glow)}
+.mplate{position:absolute;left:0;right:0;bottom:0;padding:22px 6px 7px;background:linear-gradient(transparent,rgba(12,6,20,.88) 40%)}
+.mname{font-family:Cinzel,serif;font-weight:900;font-size:12.5px;line-height:1.1;letter-spacing:.02em;background:linear-gradient(var(--c1),#fff 50%,var(--c1));-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 1px 3px rgba(0,0,0,.7))}
+.mrom{font-size:10px;opacity:.8;letter-spacing:.1em;text-transform:uppercase;margin-top:2px}
+.mmeander{height:7px;margin:6px 12px;background:linear-gradient(90deg,transparent,var(--c1),transparent);-webkit-mask:repeating-linear-gradient(90deg,#000 0 5px,transparent 5px 8px);mask:repeating-linear-gradient(90deg,#000 0 5px,transparent 5px 8px)}
+.mfact{font-size:12px;line-height:1.35;font-weight:700;opacity:.95}
+.mrar{position:absolute;bottom:-9px;left:50%;transform:translateX(-50%);font-size:8.5px;font-weight:900;letter-spacing:.12em;padding:3px 9px;border-radius:9px;background:linear-gradient(var(--c1),var(--c2));color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.4);box-shadow:0 2px 6px rgba(0,0,0,.35);white-space:nowrap;text-transform:uppercase}
+.mcardx.r-e::after,.mcardx.r-l::after{content:"";position:absolute;inset:0;border-radius:12px;background:linear-gradient(115deg,transparent 30%,rgba(255,255,255,.45) 45%,transparent 60%);background-size:250% 100%;animation:holo 3s linear infinite;mix-blend-mode:overlay;pointer-events:none}
+.mcardx.empty{background:#E6DDEE;box-shadow:none}.mcardx.empty .min{background:repeating-linear-gradient(45deg,#D9CCE6 0 8px,#E2D7EC 8px 16px);border:1.5px dashed #B9A6CC}
+.mcardx.empty .mnum{background:rgba(90,60,120,.35)}.mq{position:absolute;inset:0;display:grid;place-items:center;font-family:Cinzel,serif;font-weight:900;font-size:34px;color:#fff;opacity:.8}
+.agrid{grid-template-columns:repeat(auto-fill,minmax(84px,1fr));gap:16px 8px;padding-bottom:6px}
+/* Versió gran: sobre i fitxa */
+.stkwrap{width:min(260px,80vw)}
+.stkwrap .mcardx,.bigcard{width:min(260px,78vw);margin:0 auto 14px;border-radius:16px;padding:8px;animation:flipReveal .8s cubic-bezier(.2,1.2,.4,1) both;animation-delay:inherit}
+.bigcard{animation:none}
+.stkwrap .mcardx .min,.bigcard .min{border-radius:10px;border-width:2px}
+.stkwrap .mnum,.bigcard .mnum{font-size:11px;top:8px;left:8px;padding:3px 7px}
+.stkwrap .mgem,.bigcard .mgem{width:20px;height:20px;top:9px;right:9px}
+.stkwrap .mplate,.bigcard .mplate{padding:40px 12px 16px}
+.stkwrap .mname,.bigcard .mname{font-size:23px}
+.stkwrap .mrar,.bigcard .mrar{font-size:10px;padding:4px 12px;bottom:-11px}
+.mythsheet{background:radial-gradient(circle at 50% 0,#3A1F52,#1A0F26)!important;border:none!important;padding-top:22px!important}
+.pack{background:linear-gradient(145deg,#3A1F52,#8A4FB0 55%,#FFC93C)}
+.cnt{z-index:3}
