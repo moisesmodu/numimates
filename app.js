@@ -85,7 +85,7 @@ function clvBar(id) {
 }
 const xpFor = l => 20 * (l - 1) ** 2;
 function dailyRoll() { if (P.daily.d !== today()) P.daily = { d: today(), xp: 0 }; }
-function addXP(x) { dailyRoll(); P.xp += x; P.daily.xp += x; P.cxp = P.cxp || {}; P.cxp[P.companion] = (P.cxp[P.companion] || 0) + x; }
+function addXP(x) { dailyRoll(); P.xp += x; P.daily.xp += x; weekXP(x); misEvent('xp', x); P.cxp = P.cxp || {}; P.cxp[P.companion] = (P.cxp[P.companion] || 0) + x; }
 function streakNow() { if (!P.lastDay) return 0; const d = dayDiff(P.lastDay, today()); return d <= 1 || (d === 2 && P.freeze > 0) ? P.streak : 0; }
 function touchStreak() {
   const t = today();
@@ -226,10 +226,10 @@ function go(v) {
   LS = null; stopSprint(); stopAgility(); closeModal();
   if (!P && v !== 'profiles') v = Object.keys(DB.profiles).length ? 'profiles' : 'onboard';
   VIEW = v;
-  ({ home: renderHome, train: renderTrain, shop: renderShop, badges: renderBadges, profile: renderProfile, profiles: renderProfiles, onboard: () => onb(0) }[v] || renderHome)();
+  ({ home: renderHome, train: renderTrain, league: () => renderLeague(), album: () => renderAlbum(), shop: renderShop, badges: () => renderAlbum('medals'), profile: renderProfile, profiles: renderProfiles, onboard: () => onb(0) }[v] || renderHome)();
   if (v !== 'home') window.scrollTo(0, 0);
 }
-const NAV = () => [['home', '🗺️', L('Camí', 'Camino')], ['train', '🎯', L('Entrena', 'Entrena')], ['shop', '🛍️', L('Botiga', 'Tienda')], ['badges', '🏅', L('Medalles', 'Medallas')], ['profile', '👤', L('Perfil', 'Perfil')]];
+const NAV = () => [['home', '🗺️', L('Camí', 'Camino')], ['train', '🎯', L('Entrena', 'Entrena')], ['league', '🏆', L('Lliga', 'Liga')], ['album', '🎴', L('Àlbum', 'Álbum')], ['shop', '🛍️', L('Botiga', 'Tienda')], ['profile', '👤', L('Perfil', 'Perfil')]];
 const nav = t => `<nav class="nav">${NAV().map(([v, i, l]) => `<button class="${v === t ? 'on' : ''}" onclick="go('${v}')"><span class="ni">${i}</span><span>${l}</span></button>`).join('')}</nav>`;
 const shell = (inner, tab) => `<div class="page">${topbar()}${inner}</div>${nav(tab)}`;
 function topbar() {
@@ -280,7 +280,7 @@ function renderHome() {
   VIEW = 'home';
   const c = CUR();
   app.innerHTML = shell(`<button class="course" onclick="pickCourse()"><span class="cem">${c.emoji}</span><span><small>${L('Estàs fent', 'Estás haciendo')}</small><b>${tx(c.long)}</b></span><span class="cch">${L('Canvia', 'Cambia')} ▾</span></button>
-    ${testCard()}${recoBox()}${goalCard()}${streakCard()}${UNITS_().map(unitHTML).join('')}
+    ${testCard()}${recoBox()}${goalCard()}${missionsCard()}${streakCard()}${UNITS_().map(unitHTML).join('')}
     <div class="theend">${P.course < 5 ? L(`Quan acabis ${tx(c.long)}, t'espera <b>${tx(COURSES[P.course + 1].long)}</b>! 🚀`, `Cuando acabes ${tx(c.long)}, ¡te espera <b>${tx(COURSES[P.course + 1].long)}</b>! 🚀`) : L('Has arribat al final de primària! 🎓', '¡Has llegado al final de primaria! 🎓')}</div>`, 'home');
   revealNodes(); showGain();
   const n = $('.node.cur'); if (n) setTimeout(() => n.scrollIntoView({ block: 'center', behavior: 'smooth' }), 60);
@@ -303,16 +303,19 @@ function openLesson(ui, li) {
 }
 
 /* ---------- Motor de lliçons ---------- */
-function genEx(sk, lv, seen) {
+function genEx(sk, lv, seen, mix) {
   const [name, arg] = sk.split(':'); let e;
-  for (let t = 0; t < 10; t++) { e = EX[name](lv, arg); e.sk = sk; e.L = lv; const key = e.q + (e.vis || '') + (e.items || ''); if (!seen.has(key)) { seen.add(key); break; } }
+  for (let t = 0; t < 10; t++) { e = EX[name](lv, arg); if (mix) e = remix(e); e.sk = sk; e.L = lv; const key = e.q + (e.vis || '') + (e.items || ''); if (!seen.has(key)) { seen.add(key); break; } }
   return e;
 }
 function startLesson(ui, li) {
   const u = UNITS_()[ui]; let plan = [];
   if (li === REP(u)) { const sks = [...new Set(u.lessons.flatMap(l => l.sk))], top = Math.max(...u.lessons.map(l => l.L)); for (let i = 0; i < 10; i++) plan.push([sks[i % sks.length], Math.max(1, top - (i < 4 ? 1 : 0))]); }
   else { const l = u.lessons[li]; for (let i = 0; i < 8; i++) plan.push([l.sk[i % l.sk.length], l.L]); }
-  startRun({ mode: li === REP(u) ? 'repte' : 'lesson', ui, li, plan: shuffle(plan), color: u.color });
+  plan = shuffle(plan);
+  const review = {}, old = trainPool().filter(([s]) => !u.lessons.some(l => l.sk.includes(s)));
+  if (li !== REP(u) && old.length) { const k = ri(1, plan.length - 2); plan[k] = pick(old); review[k] = true; }
+  startRun({ mode: li === REP(u) ? 'repte' : 'lesson', ui, li, plan, review, color: u.color });
 }
 function trainPool(ui) {
   const pool = [];
@@ -334,7 +337,9 @@ function startTrain(ui) {
 function startRun(o) {
   closeModal();
   const seen = new Set();
-  LS = { ...o, seen, queue: o.plan.map(([s, lv]) => genEx(s, lv, seen)), total: o.plan.length, done: 0, miss: 0, combo: 0, t0: Date.now(), res: [] };
+  const mix = !['place', 'evo'].includes(o.mode);
+  LS = { ...o, seen, mix, queue: o.plan.map(([s, lv], i) => { const e = genEx(s, lv, seen, mix); if (o.review && o.review[i]) e.review = true; return e; }), total: o.plan.length, done: 0, miss: 0, combo: 0, maxCombo: 0, gold: 0, t0: Date.now(), res: [] };
+  if (mix && o.plan.length >= 6) { const g = ri(2, o.plan.length - 1); LS.queue[g].gold = true; }
   nextEx();
 }
 function nextEx() {
@@ -345,12 +350,12 @@ function nextEx() {
 function renderLesson() {
   const e = LS.cur, quiet = LS.mode === 'place' || LS.mode === 'evo';
   const tag = LS.mode === 'place' ? L('🧭 Prova de nivell · si no ho saps, no passa res!', '🧭 Prueba de nivel · si no lo sabes, ¡no pasa nada!') : LS.mode === 'evo' ? L("🧪 Prova d'evolució · fes-ho tan bé com puguis!", '🧪 Prueba de evolución · ¡hazlo lo mejor que puedas!') : '';
-  app.innerHTML = `<div class="lesson" style="--uc:${LS.color || '#602B7A'}">
+  app.innerHTML = `<div class="lesson ${e.gold ? 'isgold' : ''}" style="--uc:${LS.color || '#602B7A'}">
     <div class="l-top"><button class="xbtn" onclick="quitRun()" aria-label="${L('Surt', 'Salir')}">✕</button>
       <div class="pbar"><div class="pfill" style="width:${LS.done / LS.total * 100}%"></div></div>
       ${quiet ? `<div class="pcount">${LS.done + 1}/${LS.total}</div>` : `<div class="combo ${LS.combo >= 2 ? 'on' : ''}" id="combo"><i class="ci">${ICON.flame}</i><b>${LS.combo}</b></div>`}</div>
     <div class="l-body" id="lbody">
-      ${e.retry ? `<div class="retry">🔁 ${L('Una altra oportunitat', 'Otra oportunidad')}</div>` : ''}${tag ? `<div class="retry place">${tag}</div>` : ''}
+      ${e.retry ? `<div class="retry">🔁 ${L('Una altra oportunitat', 'Otra oportunidad')}</div>` : ''}${e.gold ? `<div class="retry goldq">⭐ ${L('Pregunta daurada: XP doble!', '¡Pregunta dorada: XP doble!')}</div>` : ''}${e.review ? `<div class="retry rev">🧠 ${L('Repàs sorpresa', 'Repaso sorpresa')}</div>` : ''}${tag ? `<div class="retry place">${tag}</div>` : ''}
       <div class="l-q ${e.long ? 'long' : ''}"><div class="buddy tapme" id="buddy">${meC('think')}</div><div class="bubble">${e.q}</div></div>
       ${e.vis ? `<div class="l-vis">${e.vis}</div>` : ''}
       <div class="l-ans">${ansHTML(e)}</div>
@@ -364,6 +369,8 @@ function padHTML(fn, extra) {
 }
 const showOf = e => e.show || fmt;
 function ansHTML(e) {
+  if (e.type === 'choice' && e.balloon) return `<div class="balloons">${e.opts.map((o, i) => `<button class="bln b${i}" style="--d:${i * .35}s;--c:${['#FF6FA3', '#36A9E1', '#3CC46A', '#FF9A3C'][i]}" onclick="pickOpt(${i})"><span>${o}</span></button>`).join('')}</div>`;
+  if (e.type === 'choice' && e.tf) return `<div class="opts tfopts">${e.opts.map((o, i) => `<button class="opt tf${i}" onclick="pickOpt(${i})"><span class="ov">${o}</span></button>`).join('')}</div>`;
   if (e.type === 'choice') {
     const long = e.list || e.opts.some(o => String(o).replace(/<[^>]+>/g, '').length > 10);
     return `<div class="opts ${e.big && !long ? 'big' : ''} ${long ? 'list' : ''}">${e.opts.map((o, i) => `<button class="opt" style="animation-delay:${80 + i * 60}ms" onclick="pickOpt(${i})"><span class="k">${i + 1}</span><span class="ov">${o}</span></button>`).join('')}</div>`;
@@ -371,7 +378,7 @@ function ansHTML(e) {
   if (e.type === 'input') return `<div class="inbox" id="inbox"><span id="inval" class="ph">?</span>${e.unit ? `<span class="iu">${e.unit}</span>` : ''}</div>${padHTML('key', e.dec ? ',' : e.neg ? '−' : null)}`;
   return `<div class="oslots" id="oslots"><span class="ohint">${L('Toca els números en ordre', 'Toca los números en orden')}</span></div><div class="obank" id="obank">${e.items.map((v, i) => `<button class="chipn" data-i="${i}" onclick="ordTap(${i})">${showOf(e)(v)}</button>`).join('')}</div>`;
 }
-function pickOpt(i) { if (!LS || LS.state !== 'ask') return; LS.sel = i; SFX.tap(); $$('.opt').forEach((b, j) => b.classList.toggle('sel', j === i)); $('#chk').disabled = false; }
+function pickOpt(i) { if (!LS || LS.state !== 'ask') return; LS.sel = i; SFX.tap(); $$('.opt,.bln').forEach((b, j) => b.classList.toggle('sel', j === i)); $('#chk').disabled = false; if (LS.cur.balloon || LS.cur.tf) check(); }
 function inputShow(s) { if (!s) return '?'; const neg = s.startsWith('−'), body = neg ? s.slice(1) : s, [i, f] = body.split(','); return (neg ? '−' : '') + (i ? fmt(+i) : (f !== undefined ? '0' : '')) + (f !== undefined ? ',' + f : ''); }
 const inputVal = s => parseFloat(s.replace('−', '-').replace(',', '.'));
 function key(k) {
@@ -418,19 +425,21 @@ function check() {
   LS.state = 'fb';
   record(e.sk, ok);
   let target = null;
-  if (e.type === 'choice') $$('.opt').forEach((b, i) => { b.disabled = true; if (i === e.ans) { b.classList.add('right'); target = b; } else if (i === LS.sel) b.classList.add('wrong'); });
+  if (e.type === 'choice') $$('.opt,.bln').forEach((b, i) => { b.disabled = true; if (i === e.ans) { b.classList.add('right'); target = b; } else if (i === LS.sel) b.classList.add(e.balloon ? 'popped' : 'wrong'); });
   if (e.type === 'input') { $('#inbox').classList.add(ok ? 'right' : 'wrong'); target = $('#inbox'); }
   if (e.type === 'order') { $('#oslots').classList.add(ok ? 'right' : 'wrong'); target = $('#oslots'); }
   $$('.pad button').forEach(b => { if (!b.classList.contains('pk-ok')) b.disabled = true; });
   const foot = $('#foot'), fb = $('#fb'), chk = $('#chk');
   foot.classList.add(ok ? 'ok' : 'ko');
   if (ok) {
-    LS.done++; LS.combo++; SFX.ok(); sparkle(target); comboBanner(LS.combo);
+    LS.done++; LS.combo++; LS.maxCombo = Math.max(LS.maxCombo, LS.combo); SFX.ok(); sparkle(target); comboBanner(LS.combo);
+    misEvent('answer'); misEvent('combo', LS.combo);
+    if (e.gold) { LS.gold++; misEvent('gold'); floatTxt(target, '⭐ +5 XP', 'gain xp'); }
     const pf = $('.pfill'); pf.style.width = (LS.done / LS.total * 100) + '%'; pf.classList.remove('shine'); void pf.offsetWidth; pf.classList.add('shine');
     fb.innerHTML = `<div class="fbh">✔ ${LS.combo >= 3 ? L(`Ratxa de ${LS.combo}! 🔥`, `¡Racha de ${LS.combo}! 🔥`) : pick(PRAISE())}</div>${e.long || e.retry ? `<div class="exp">${e.ex || ''}</div>` : ''}`;
   } else {
     LS.miss++; LS.combo = 0; SFX.ko(); $('#lbody').classList.add('shake');
-    const n = genEx(e.sk, e.L, LS.seen); n.retry = true; LS.queue.push(n);
+    const n = genEx(e.sk, e.L, LS.seen, LS.mix); n.retry = true; LS.queue.push(n);
     fb.innerHTML = `<div class="fbh">✖ ${pick(OOPS())}</div><div class="ans">${L('Resposta correcta', 'Respuesta correcta')}: <b>${ansText(e)}</b></div>${e.ex ? `<div class="exp">💡 ${e.ex}</div>` : ''}`;
   }
   $('#buddy').innerHTML = meC(ok ? 'happy' : 'sad');
@@ -486,6 +495,10 @@ function finishRun() {
     if (R.mode === 'repte' && first) R.chest = ri(30, 50);
     P.stats.lessons++; if (R.perfect) P.stats.perfect++;
   }
+  R.bonus = Math.floor(LS.maxCombo / 3) * 2 + LS.gold * 5; R.xp += R.bonus;
+  if (R.mode === 'lesson' || R.mode === 'repte' || R.mode === 'reco') { misEvent('lesson'); R.pack = openPack(R.mode === 'repte' ? 2 : 1); }
+  if (R.perfect && R.mode !== 'train') misEvent('perfect');
+  if (R.mode === 'train' || R.mode === 'reco') misEvent('train');
   LS = null; reward(R);
 }
 function reward(R) {
@@ -504,6 +517,7 @@ function reward(R) {
   if (R.srw.length) FLOW.push(() => scrStreakReward(R.srw));
   if (R.chest) FLOW.push(() => scrChest(R));
   if (R.lvUp) FLOW.push(() => scrLevel(R.lvUp));
+  if (R.pack) FLOW.push(() => scrPack(R.pack));
   if (R.clv) FLOW.push(() => scrCharLevel(...R.clv));
   if (R.knight) FLOW.push(scrKnight);
   if (R.newB.length) FLOW.push(() => scrBadges(R.newB));
@@ -519,6 +533,7 @@ function scrResult(R) {
   app.innerHTML = `<div class="scr"><div class="burst"></div><div class="cheer"><div class="saybubble">${cheerMsg(R)}</div><div class="rchar dance tapme">${meC('happy')}</div></div>
     <h1>${title}</h1><p class="sub">${sub}</p>
     ${R.stars ? `<div class="bigstars">${[1, 2, 3].map(i => `<i class="${i <= R.stars ? 'on' : ''}" style="animation-delay:${.25 + i * .22}s">★</i>`).join('')}</div>` : ''}
+    ${R.bonus ? `<div class="bonus">🔥 ${L('Bonus de ratxa i preguntes daurades', 'Bonus de racha y preguntas doradas')}: <b>+${R.bonus} XP</b></div>` : ''}
     <div class="rstats"><div class="rs xp"><span>XP</span><b data-count="${R.xp}">0</b></div><div class="rs gem"><span>${L('CRISTALLS', 'CRISTALES')}</span><b data-count="${R.gems}">0</b></div>${third}</div>
     <button class="btn big" onclick="flowNext()">${L('CONTINUA', 'CONTINÚA')}</button></div>`;
   countUp(); SFX.win(); if (R.perfect || R.record) confetti();
@@ -710,7 +725,7 @@ function endSprint() { const score = SP.score; stopSprint(); endGame('sprint', s
 function endGame(id, score, title) {
   const B = P.stats.bests, rec = score > (B[id] || 0); if (rec) B[id] = score;
   if (id === 'sprint') P.stats.sprintBest = B.sprint;
-  P.stats.games++;
+  P.stats.games++; misEvent('game');
   reward({ mode: 'game', title, score, record: rec, best: B[id], xp: Math.max(2, Math.round(score * (id === 'chain' ? 4 : id === 'flash' ? .5 : 1))), gems: Math.floor(score * (id === 'chain' ? 2 : id === 'flash' ? .15 : .34)), chest: 0, perfect: false });
 }
 /* Llampec i càlcul en cadena */
@@ -836,11 +851,11 @@ function toggleAcc(id) { const s = ACC[id].slot; if (P.acc[s] === id) delete P.a
 function buyFreeze() { if (P.gems < 50 || P.freeze >= 2) return; P.gems -= 50; P.freeze++; save(); SFX.coin(); renderShop(); toast(L('🧊 Protector de ratxa preparat!', '🧊 ¡Protector de racha listo!')); }
 
 /* ---------- Medalles ---------- */
-function renderBadges() {
+function renderBadges(tabs = '') {
   const got = BADGES.filter(b => P.badges.includes(b[0])).length;
-  app.innerHTML = shell(`<h1 class="ph1">${L('Medalles', 'Medallas')}</h1><p class="lead">${L(`N'has aconseguit <b>${got}</b> de ${BADGES.length}. Cada una val +10 cristalls.`, `Has conseguido <b>${got}</b> de ${BADGES.length}. Cada una vale +10 cristales.`)}</p>
+  app.innerHTML = shell(`<h1 class="ph1">${L('La meva col·lecció', 'Mi colección')}</h1>${tabs}<p class="lead">${L(`N'has aconseguit <b>${got}</b> de ${BADGES.length}. Cada una val +10 cristalls.`, `Has conseguido <b>${got}</b> de ${BADGES.length}. Cada una vale +10 cristales.`)}</p>
     <h2 class="h2">${L('Premis de ratxa', 'Premios de racha')}</h2><div class="bgrid">${SRW.map(r => { const on = P.srw.includes(r.d); return `<div class="badge ${on ? 'on fire' : ''}"><div class="bi">${on ? r.icon : '🔒'}</div><b>${r.d} ${L('dies seguits', 'días seguidos')}</b><span>${tx(r.txt)}</span></div>`; }).join('')}</div>
-    <h2 class="h2">${L('Medalles', 'Medallas')}</h2><div class="bgrid">${BADGES.map(b => { const on = P.badges.includes(b[0]); return `<div class="badge ${on ? 'on' : ''}"><div class="bi">${on ? b[1] : '🔒'}</div><b>${tx(b[2])}</b><span>${tx(b[3])}</span></div>`; }).join('')}</div>`, 'badges');
+    <h2 class="h2">${L('Medalles', 'Medallas')}</h2><div class="bgrid">${BADGES.map(b => { const on = P.badges.includes(b[0]); return `<div class="badge ${on ? 'on' : ''}"><div class="bi">${on ? b[1] : '🔒'}</div><b>${tx(b[2])}</b><span>${tx(b[3])}</span></div>`; }).join('')}</div>`, 'album');
 }
 
 /* ---------- Perfil ---------- */

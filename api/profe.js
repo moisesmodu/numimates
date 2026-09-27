@@ -16,6 +16,6 @@ export default async function handler(req, res) {
     return ok(res, { error: 'acció' }, 400);
   }
   const rows = await sql`SELECT code, username, name, course, survey, xp, streak, best, last_day, lessons, answers, correct, created_at, updated_at,
-    state->'srw' AS srw, state->'tests' AS tests, state->'lang' AS lang, state->'stats'->'bests' AS bests, state->'unlockAll' AS unlock_all FROM mates.alumnes WHERE active ORDER BY streak DESC, xp DESC`;
+    state->'srw' AS srw, state->'tests' AS tests, state->'lang' AS lang, state->'stats'->'bests' AS bests, state->'unlockAll' AS unlock_all, state->'week' AS week FROM mates.alumnes WHERE active ORDER BY streak DESC, xp DESC`;
   return ok(res, { rows });
 }
