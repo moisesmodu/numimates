@@ -274,7 +274,7 @@ const COURSES = [
       ['Combinacions|Combinaciones', ['prob2'], 5], ['Tot plegat|Todo junto', ['stat2', 'prob2'], 5]])
   ] }
 ];
-/* Nivell 2 de cada unitat: 5 lliçons més, més difícils, que barregen cada tema amb el següent. */
+/* Nivells 2 i 3 de cada unitat: 5 + 5 lliçons més, cada cop més difícils i més barrejades. */
 const GRADE = ['1r primària|1º primaria', '2n primària|2º primaria', '3r primària|3º primaria', '4t primària|4º primaria', '5è primària|5º primaria', '6è primària|6º primaria', '1r ESO|1º ESO', '2n ESO|2º ESO', '3r ESO|3º ESO', '4t ESO|4º ESO'];
 COURSES.forEach((c, ci) => { c.grade = GRADE[ci]; c.age = ci + 6; });
 COURSES.forEach(c => c.units.forEach((u, i) => {
@@ -284,5 +284,10 @@ COURSES.forEach(c => c.units.forEach((u, i) => {
   base.forEach((l, k) => {
     const nx = base[Math.min(k + 1, 4)], [ca, es] = l.t.split('|');
     u.lessons.push({ t: `${ca} · nivell 2|${es || ca} · nivel 2`, sk: [...new Set([...l.sk, ...nx.sk])], L: Math.min(5, l.L + 1), lv2: true });
+  });
+  // Nivell 3: el màxim de dificultat, barrejant cada tema amb dos més de la unitat
+  base.forEach((l, k) => {
+    const a = base[(k + 2) % 5], b = base[(k + 3) % 5], [ca, es] = l.t.split('|');
+    u.lessons.push({ t: `${ca} · nivell 3|${es || ca} · nivel 3`, sk: [...new Set([...l.sk, ...a.sk, ...b.sk])], L: Math.min(5, l.L + 2), lv3: true });
   });
 }));
