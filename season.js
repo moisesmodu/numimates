@@ -59,7 +59,11 @@ function scrCrown(u) {
 const SP_TIER = 40, SP_TIERS = 25;
 // Cartes exclusives de cada temporada: només es guanyen al passi d'aquell mes
 const SEASONS = {
-  '2026-10': { name: "La nit de l'Olimp|La noche del Olimpo", icon: '🌙', color: '#3B2A6B', cards: { 8: 'nyx', 16: 'selene', 25: 'hecate' } }
+  '2026-10': { name: "La nit de l'Olimp|La noche del Olimpo", icon: '🌙', color: '#3B2A6B', cards: { 8: 'nyx', 16: 'selene', 25: 'hecate' } },
+  '2026-11': { name: 'El bosc de tardor|El bosque de otoño', icon: '🍂', color: '#8A4A1F', cards: { 8: 'dryad', 16: 'pan', 25: 'persephone' } },
+  '2026-12': { name: "El solstici d'hivern|El solsticio de invierno", icon: '❄️', color: '#1F4E79', cards: { 8: 'hestia', 16: 'boreas', 25: 'helios' } },
+  '2027-01': { name: "Janus i l'any nou|Jano y el año nuevo", icon: '🗝️', color: '#7A5A12', cards: { 8: 'eos', 16: 'horae', 25: 'janus' } },
+  '2027-02': { name: 'Les Muses|Las Musas', icon: '🎭', color: '#6B1F5E', cards: { 8: 'terpsichore', 16: 'calliope', 25: 'urania' } }
 };
 const SEASON_ONLY = Object.values(SEASONS).flatMap(s => Object.values(s.cards));
 function seasonId(d = new Date()) {

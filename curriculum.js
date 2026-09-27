@@ -274,20 +274,33 @@ const COURSES = [
       ['Combinacions|Combinaciones', ['prob2'], 5], ['Tot plegat|Todo junto', ['stat2', 'prob2'], 5]])
   ] }
 ];
-/* Nivells 2 i 3 de cada unitat: 5 + 5 lliçons més, cada cop més difícils i més barrejades. */
+const vt = (v, t) => { const s = t > 1 ? ` · ${t}` : ''; return `${tx0(VIS[v])}${s}|${tx1(VIS[v])}${s}`; };
+const tx0 = s => s.split('|')[0], tx1 = s => s.split('|')[1] || s.split('|')[0];
+/* Cada unitat: 3 nivells de 10 lliçons (5 del tema + 5 amb activitats visuals, barreges i enigmes) i la prova final. */
 const GRADE = ['1r primària|1º primaria', '2n primària|2º primaria', '3r primària|3º primaria', '4t primària|4º primaria', '5è primària|5º primaria', '6è primària|6º primaria', '1r ESO|1º ESO', '2n ESO|2º ESO', '3r ESO|3º ESO', '4t ESO|4º ESO'];
 COURSES.forEach((c, ci) => { c.grade = GRADE[ci]; c.age = ci + 6; });
-COURSES.forEach(c => c.units.forEach((u, i) => {
+COURSES.forEach((c, ci) => c.units.forEach((u, i) => {
   u.id = `${c.id}-${i + 1}`; u.color = UCOL[i % UCOL.length];
   if (/^Lògica/.test(u.title)) u.guide = 'cavaller';
-  const base = u.lessons.slice(0, 5);
-  base.forEach((l, k) => {
-    const nx = base[Math.min(k + 1, 4)], [ca, es] = l.t.split('|');
-    u.lessons.push({ t: `${ca} · nivell 2|${es || ca} · nivel 2`, sk: [...new Set([...l.sk, ...nx.sk])], L: Math.min(5, l.L + 1), lv2: true });
+  const base = u.lessons.slice(0, 5), pool = VIS_POOL(ci), band = ci + 1, out = [];
+  const V = k => pool[(i * 2 + k) % pool.length], vs = k => `${V(k)}:${band}`;
+  const push = (tier, t, sk, L, extra = {}) => out.push({ t, sk: [...new Set(sk)], L: Math.max(1, Math.min(5, L)), tier, ...extra });
+  const title = (l, suf) => { const [ca, es] = l.t.split('|'); return `${ca}${suf[0]}|${es || ca}${suf[1]}`; };
+  const avg = Math.round(base.reduce((a, l) => a + l.L, 0) / base.length);
+  // Cada nivell de la unitat té 10 lliçons: 5 del tema i 5 més (2 d'activitats visuals, 2 de barreja i 1 d'enigmes)
+  [1, 2, 3].forEach(t => {
+    const up = t - 1, suf = t === 1 ? ['', ''] : [` · nivell ${t}`, ` · nivel ${t}`];
+    base.forEach((l, k) => {
+      if (t === 1) return push(1, l.t, l.sk, l.L, { core: true });
+      const a = base[(k + t - 1) % 5], b = base[(k + t) % 5];
+      push(t, title(l, suf), t === 2 ? [...l.sk, ...a.sk] : [...l.sk, ...a.sk, ...b.sk], l.L + up, { core: true });
+    });
+    const o = (t - 1) * 3, [va, vb, vc] = [vs(o), vs(o + 1), vs(o + 2)];
+    push(t, vt(V(o), t), [va, va, vb], avg + up, { vis: true });
+    push(t, `Barreja: ${tx0(base[0].t)} i més${t > 1 ? ` · ${t}` : ''}|Mezcla: ${tx1(base[0].t)} y más${t > 1 ? ` · ${t}` : ''}`, [...base[0].sk, ...base[1].sk, va], avg + up);
+    push(t, vt(V(o + 1), t), [vb, vb, vc], avg + up, { vis: true });
+    push(t, `Barreja: ${tx0(base[3].t)} i més${t > 1 ? ` · ${t}` : ''}|Mezcla: ${tx1(base[3].t)} y más${t > 1 ? ` · ${t}` : ''}`, [...base[2].sk, ...base[3].sk, ...base[4].sk], avg + up);
+    push(t, `Enigmes visuals${t > 1 ? ` · ${t}` : ''}|Enigmas visuales${t > 1 ? ` · ${t}` : ''}`, [vc, va, base[4].sk[0]], avg + up + 1, { vis: true });
   });
-  // Nivell 3: el màxim de dificultat, barrejant cada tema amb dos més de la unitat
-  base.forEach((l, k) => {
-    const a = base[(k + 2) % 5], b = base[(k + 3) % 5], [ca, es] = l.t.split('|');
-    u.lessons.push({ t: `${ca} · nivell 3|${es || ca} · nivel 3`, sk: [...new Set([...l.sk, ...a.sk, ...b.sk])], L: Math.min(5, l.L + 2), lv3: true });
-  });
+  u.lessons = out;
 }));

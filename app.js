@@ -29,6 +29,13 @@ function migrate(p) {
   if (p.maxCourse === undefined) p.maxCourse = Math.max(p.course, p.baseCourse);
   if (!p.lang) p.lang = DB.lang;
   for (let i = 1; i <= 8; i++) if (p.prog['u' + i]) { p.prog['c4-' + i] = p.prog['u' + i]; delete p.prog['u' + i]; }
+  if (!p.m3) {
+    Object.values(p.prog).forEach(x => { const s = x.stars, n = s.length; if (n >= 31 || n < 6) return; const ns = Array(31).fill(0);
+      for (let i = 0; i < 5; i++) { ns[i] = s[i] || 0; if (n >= 11) ns[10 + i] = s[5 + i] || 0; if (n >= 16) ns[20 + i] = s[10 + i] || 0; }
+      ns[30] = s[n - 1] || 0; x.stars = ns; });
+    const rv = {}; Object.entries(p.rev || {}).forEach(([k, v]) => { const q = k.split('|'), li = +q[2]; q[2] = li < 5 ? li : li < 10 ? li + 5 : li + 10; rv[q.join('|')] = v; }); p.rev = rv;
+    p.m3 = 1;
+  }
   if (!p.m2) { Object.values(p.prog).forEach(x => { x.stars = x.stars.map(s => s === 1 ? 2 : s); }); p.m2 = 1; }
   if (!p.code && !p.pendingReg && !p.holdReg) p.pendingReg = true;
   return p;
@@ -107,7 +114,7 @@ function prog(ui, c = CUR()) {
 }
 const udone = (p, u) => { const st = p.prog[u.id]?.stars; return !!(st && st[st.length - 1] >= PASS); };
 function unitOpen(ui, ci = P.course) { const c = COURSES[ci]; return ui === 0 || P.unlockAll || ci < P.baseCourse || ui <= (P.skip[c.id] || 0) || prog(ui - 1, c).stars[REP(c.units[ui - 1])] >= PASS; }
-function lessonOpen(ui, li) { if (!unitOpen(ui)) return false; return li === 0 || P.unlockAll || P.course < P.baseCourse || ui < (P.skip[CUR().id] || 0) || prog(ui).stars[li - 1] >= PASS; }
+function lessonOpen(ui, li) { if (!unitOpen(ui)) return false; return li === 0 || P.unlockAll || P.course < P.baseCourse || ui < (P.skip[CUR().id] || 0) || prog(ui).stars[li - 1] >= PASS || prog(ui).stars.slice(li).some(s => s > 0); }
 const unitsDone = p => COURSES.reduce((n, c) => n + c.units.filter(u => udone(p, u)).length, 0);
 function currentNode() {
   const us = UNITS_(), from = Math.min(P.skip[CUR().id] || 0, us.length - 1);
@@ -268,10 +275,10 @@ function unitHTML(u, ui) {
     const isR = li === R_, done = st[li] > 0, can = lessonOpen(ui, li), isCur = cur && cur[0] === ui && cur[1] === li;
     const cls = (!can ? 'locked' : isCur ? 'cur' : done ? (st[li] === 3 ? 'gold' : 'done') : 'open') + (done && !isR && isDue(ui, li) ? ' rust' : '');
     const icon = !can ? ICON.lock : isR ? (done ? ICON.trophy : ICON.gift) : done ? (st[li] === 3 ? ICON.crown : ICON.check) : ICON.star;
-    return `<div class="nwrap" style="--x:${OFF[li]}px;transition-delay:${li * 50}ms">
-      ${isCur ? `<div class="tip">${isR ? L('REPTE!', '¡RETO!') : L('COMENÇA', 'EMPIEZA')}</div>` : ''}
+    return `<div class="nwrap" style="--x:${OFF[li % OFF.length]}px;transition-delay:${Math.min(li, 12) * 50}ms">
+      ${isCur ? `<div class="tip">${isR ? L('LA PORTA!', '¡LA PUERTA!') : L('COMENÇA', 'EMPIEZA')}</div>` : ''}
       <button class="node ${cls} ${isR ? 'rep' : ''}" onclick="openLesson(${ui},${li})" aria-label="${isR ? L('Repte final', 'Reto final') : L('Lliçó ', 'Lección ') + (li + 1)}"><i class="nico">${icon}</i></button>
-      ${done && !isR ? starsHTML(st[li], 'mini') : ''}</div>${li === 4 && R_ > 5 ? `<div class="pdiv"><span>${L('NIVELL 2', 'NIVEL 2')}</span></div>` : ''}${li === 9 && R_ > 10 ? `<div class="pdiv"><span>${L('NIVELL 3', 'NIVEL 3')}</span></div>` : ''}`;
+      ${done && !isR ? starsHTML(st[li], 'mini') : ''}</div>${!isR && u.lessons[li + 1] && u.lessons[li + 1].tier !== u.lessons[li].tier ? `<div class="pdiv"><span>${L('NIVELL', 'NIVEL')} ${u.lessons[li + 1].tier}</span></div>` : ''}${li === R_ - 1 ? `<div class="pdiv gatediv"><span>🏰 ${L('LA PORTA DEL CAVALLER', 'LA PUERTA DEL CABALLERO')}</span></div>` : ''}`;
   }).join('');
   const deco = [0, 1, 2, 3].map(k => `<span class="deco" style="${k % 2 ? 'left' : 'right'}:${6 + (k * 7 + ui * 5) % 20}%;top:${14 + k * 22}%;animation-delay:${k * .7}s">${DECO[(ui * 3 + k) % DECO.length]}</span>`).join('');
   return `<section class="unit ${open ? '' : 'closed'}" style="--uc:${u.color}">
@@ -298,9 +305,9 @@ function setCourse(i) { if (!courseOpen(i)) { SFX.ko(); toast(L(`🔒 Primer aca
 function openLesson(ui, li) {
   if (!lessonOpen(ui, li)) { toast(li === 0 ? L('🔒 Primer supera el repte de la unitat anterior.', '🔒 Primero supera el reto de la unidad anterior.') : (prog(ui).stars[li - 1] ? L('🔒 Necessites 2 estrelles a la lliçó anterior (màxim 2 errors).', '🔒 Necesitas 2 estrellas en la lección anterior (máximo 2 errores).') : L('🔒 Primer fes la lliçó anterior.', '🔒 Primero haz la lección anterior.'))); SFX.ko(); return; }
   const u = UNITS_()[ui], isR = li === REP(u), st = prog(ui).stars[li];
-  modal(`<div class="sheet" style="--uc:${u.color}"><div class="sk">${tx(CUR().name).toUpperCase()} · ${L('UNITAT', 'UNIDAD')} ${ui + 1} · ${isR ? L('REPTE FINAL', 'RETO FINAL') : L('LLIÇÓ ', 'LECCIÓN ') + (li + 1) + ' / ' + REP(u)}</div>
-    <h3>${isR ? L('Repte: ', 'Reto: ') + tx(u.title).toLowerCase() : tx(u.lessons[li].t)}</h3>
-    <p>${isR ? L('10 exercicis barrejats de tota la unitat. Si el superes, obres un cofre ple de cristalls i la unitat següent!', '10 ejercicios mezclados de toda la unidad. Si lo superas, ¡abres un cofre lleno de cristales y la unidad siguiente!') : L("8 exercicis. Si te n'equivoques algun, el tornaràs a practicar al final.", '8 ejercicios. Si fallas alguno, lo volverás a practicar al final.')}</p>
+  modal(`<div class="sheet" style="--uc:${u.color}"><div class="sk">${tx(CUR().name).toUpperCase()} · ${L('UNITAT', 'UNIDAD')} ${ui + 1} · ${isR ? L('PROVA FINAL', 'PRUEBA FINAL') : L('NIVELL ', 'NIVEL ') + (u.lessons[li].tier || 1) + ' · ' + L('LLIÇÓ ', 'LECCIÓN ') + (li % 10 + 1) + ' / 10'}</div>
+    <h3>${isR ? L('🏰 La porta del Cavaller', '🏰 La puerta del Caballero') : tx(u.lessons[li].t)}</h3>
+    <p>${isR ? L("El Cavaller del Codi vigila la porta de la unitat següent. Et farà 12 enigmes de tot el que has practicat: encerta'n 9 i s'obrirà. Aquí no hi ha segones oportunitats… però la pots tornar a provar sempre que vulguis!", 'El Caballero del Código vigila la puerta de la unidad siguiente. Te hará 12 enigmas de todo lo que has practicado: acierta 9 y se abrirá. Aquí no hay segundas oportunidades… ¡pero puedes volver a intentarlo siempre que quieras!') : L("8 exercicis. Si te n'equivoques algun, el tornaràs a practicar al final.", '8 ejercicios. Si fallas alguno, lo volverás a practicar al final.')}</p>
     ${st ? `<div class="sstars">${starsHTML(st)}</div>` : ''}
     <button class="btn big" style="--c:${u.color}" onclick="closeModal();startLesson(${ui},${li})">${st ? L('REPETEIX', 'REPITE') : L('COMENÇA', 'EMPIEZA')}</button></div>`);
 }
@@ -308,12 +315,19 @@ function openLesson(ui, li) {
 /* ---------- Motor de lliçons ---------- */
 function genEx(sk, lv, seen, mix) {
   const [name, arg] = sk.split(':'); let e;
-  for (let t = 0; t < 10; t++) { e = EX[name](lv, arg); if (mix) e = remix(e); e.sk = sk; e.L = lv; const key = e.q + (e.vis || '') + (e.items || ''); if (!seen.has(key)) { seen.add(key); break; } }
+  for (let t = 0; t < 10; t++) { e = EX[name](lv, arg); if (mix) e = remix(e); e.sk = sk; e.L = lv; const key = e.q + (e.vis || '') + (e.items || '') + (e.fixed || '') + (e.need || ''); if (!seen.has(key)) { seen.add(key); break; } }
   return e;
 }
 function startLesson(ui, li) {
   const u = UNITS_()[ui]; let plan = [];
-  if (li === REP(u)) { const sks = [...new Set(u.lessons.flatMap(l => l.sk))], top = Math.max(...u.lessons.map(l => l.L)); for (let i = 0; i < 10; i++) plan.push([sks[i % sks.length], Math.max(1, top - (i < 4 ? 1 : 0))]); }
+  if (li === REP(u)) {
+    // La porta del Cavaller: examen camuflat amb 8 preguntes del tema i 4 d'activitats visuals, sense segones oportunitats
+    const lv = sk => (u.lessons.find(l => l.tier === 2 && l.sk.includes(sk)) || u.lessons.find(l => l.sk.includes(sk))).L;
+    const core = shuffle([...new Set(u.lessons.filter(l => !l.vis).flatMap(l => l.sk).filter(s => !/^v\./.test(s)))]), vis = shuffle([...new Set(u.lessons.flatMap(l => l.sk).filter(s => /^v\./.test(s)))]);
+    for (let i = 0; i < 8; i++) plan.push([core[i % core.length], lv(core[i % core.length])]);
+    for (let i = 0; i < 4; i++) { const s = vis.length ? vis[i % vis.length] : core[(8 + i) % core.length]; plan.push([s, lv(s)]); }
+    return startRun({ mode: 'repte', exam: true, ui, li, plan: shuffle(plan), review: {}, color: u.color });
+  }
   else { const l = u.lessons[li]; for (let i = 0; i < 8; i++) plan.push([l.sk[i % l.sk.length], l.L]); }
   plan = shuffle(plan);
   const review = {}, old = trainPool().filter(([s]) => !u.lessons.some(l => l.sk.includes(s)));
@@ -342,12 +356,13 @@ function startRun(o) {
   const seen = new Set();
   const mix = !['place', 'evo'].includes(o.mode);
   LS = { ...o, seen, mix, queue: o.plan.map(([s, lv], i) => { const e = genEx(s, lv, seen, mix); if (o.review && o.review[i]) e.review = true; return e; }), total: o.plan.length, done: 0, miss: 0, combo: 0, maxCombo: 0, gold: 0, t0: Date.now(), res: [] };
-  if (mix && o.plan.length >= 6) { const g = ri(2, o.plan.length - 1); LS.queue[g].gold = true; }
+  if (mix && !o.exam && o.plan.length >= 6) { const g = ri(2, o.plan.length - 1); LS.queue[g].gold = true; }
+  LS.eres = [];
   nextEx();
 }
 function nextEx() {
   if (LS.done >= LS.total) return LS.mode === 'place' ? finishPlacement() : LS.mode === 'evo' ? finishEvolution() : LS.mode === 'battle' ? finishBattle() : finishRun();
-  LS.cur = LS.queue.shift(); LS.sel = null; LS.input = ''; LS.order = []; LS.state = 'ask';
+  LS.cur = LS.queue.shift(); LS.sel = null; LS.input = ''; LS.order = []; LS.gsel = new Set(); LS.state = 'ask';
   renderLesson();
 }
 function renderLesson() {
@@ -357,7 +372,7 @@ function renderLesson() {
     <div class="l-top"><button class="xbtn" onclick="quitRun()" aria-label="${L('Surt', 'Salir')}">✕</button>
       <div class="pbar"><div class="pfill" style="width:${LS.done / LS.total * 100}%"></div></div>
       ${LS.mode === 'battle' ? `<div class="pcount">${LS.done + 1}/${LS.total}</div>` : quiet ? `<div class="pcount">${LS.done + 1}/${LS.total}</div>` : `<div class="combo ${LS.combo >= 2 ? 'on' : ''}" id="combo"><i class="ci">${ICON.flame}</i><b>${LS.combo}</b></div>`}</div>
-    ${LS.mode === 'battle' ? '<div class="bstrip" id="bstrip"></div>' : ''}
+    ${LS.mode === 'battle' ? '<div class="bstrip" id="bstrip"></div>' : ''}${LS.exam ? `<div class="gate"><span class="gt">🏰 ${L('La porta del Cavaller', 'La puerta del Caballero')}</span>${[...Array(LS.total).keys()].map(i => `<i class="${i < LS.eres.length ? (LS.eres[i] ? 'k' : 'x') : ''}">${i < LS.eres.length ? (LS.eres[i] ? '🔑' : '·') : '🔒'}</i>`).join('')}</div>` : ''}
     <div class="l-body" id="lbody">
       ${e.retry ? `<div class="retry">🔁 ${L('Una altra oportunitat', 'Otra oportunidad')}</div>` : ''}${e.gold ? `<div class="retry goldq">⭐ ${L('Pregunta daurada: XP doble!', '¡Pregunta dorada: XP doble!')}</div>` : ''}${e.review ? `<div class="retry rev">🧠 ${L('Repàs sorpresa', 'Repaso sorpresa')}</div>` : ''}${tag ? `<div class="retry place">${tag}</div>` : ''}
       <div class="l-q ${e.long ? 'long' : ''}"><div class="buddy tapme" id="buddy">${meC('think')}</div><div class="bubble">${e.q}</div></div>
@@ -374,11 +389,12 @@ function padHTML(fn, extra) {
 }
 const showOf = e => e.show || fmt;
 function ansHTML(e) {
+  if (e.type === 'grid') return tapGridHTML(e);
   if (e.type === 'choice' && e.balloon) return `<div class="balloons">${e.opts.map((o, i) => `<button class="bln b${i}" style="--d:${i * .35}s;--c:${['#FF6FA3', '#36A9E1', '#3CC46A', '#FF9A3C'][i]}" onclick="pickOpt(${i})"><span>${o}</span></button>`).join('')}</div>`;
   if (e.type === 'choice' && e.tf) return `<div class="opts tfopts">${e.opts.map((o, i) => `<button class="opt tf${i}" onclick="pickOpt(${i})"><span class="ov">${o}</span></button>`).join('')}</div>`;
   if (e.type === 'choice') {
-    const long = e.list || e.opts.some(o => String(o).replace(/<[^>]+>/g, '').length > 10);
-    return `<div class="opts ${e.big && !long ? 'big' : ''} ${long ? 'list' : ''}">${e.opts.map((o, i) => `<button class="opt" style="animation-delay:${80 + i * 60}ms" onclick="pickOpt(${i})"><span class="k">${i + 1}</span><span class="ov">${o}</span></button>`).join('')}</div>`;
+    const long = !e.pics && (e.list || e.opts.some(o => String(o).replace(/<[^>]+>/g, '').length > 10));
+    return `<div class="opts ${e.pics ? 'pics' : ''} ${e.big && !long ? 'big' : ''} ${long ? 'list' : ''}">${e.opts.map((o, i) => `<button class="opt" style="animation-delay:${80 + i * 60}ms" onclick="pickOpt(${i})"><span class="k">${i + 1}</span><span class="ov">${o}</span></button>`).join('')}</div>`;
   }
   if (e.type === 'input') return `<div class="inbox" id="inbox"><span id="inval" class="ph">?</span>${e.unit ? `<span class="iu">${e.unit}</span>` : ''}</div>${padHTML('key', e.dec ? ',' : e.neg ? '−' : null)}`;
   return `<div class="oslots" id="oslots"><span class="ohint">${L('Toca els números en ordre', 'Toca los números en orden')}</span></div><div class="obank" id="obank">${e.items.map((v, i) => `<button class="chipn" data-i="${i}" onclick="ordTap(${i})">${showOf(e)(v)}</button>`).join('')}</div>`;
@@ -410,16 +426,18 @@ function renderOrder() {
 const PRAISE = () => L(['Molt bé!', 'Genial!', 'Correcte!', 'Fantàstic!', 'Ben fet!', 'Increïble!', 'Així es fa!', 'Perfecte!'], ['¡Muy bien!', '¡Genial!', '¡Correcto!', '¡Fantástico!', '¡Bien hecho!', '¡Increíble!', '¡Así se hace!', '¡Perfecto!']);
 const OOPS = () => L(['Gairebé!', 'Ui, per poc!', 'No passa res!', 'Quasi quasi!'], ['¡Casi!', '¡Uy, por poco!', '¡No pasa nada!', '¡Casi casi!']);
 function ansText(e) {
+  if (e.type === 'grid') return e.need ? L(`${e.need} caselles pintades`, `${e.need} casillas pintadas`) : gridSolSVG(e);
   if (e.type === 'choice') return e.opts[e.ans];
   if (e.type === 'input') return (e.dec ? fmtD(e.ans) : fmt(e.ans)) + (e.unit ? ' ' + e.unit : '');
   const s = showOf(e); return e.ans.map(s).join(e.ans[0] > e.ans[1] ? ' > ' : ' < ');
 }
 function isRight(e) {
+  if (e.type === 'grid') return gridRight(e);
   if (e.type === 'choice') return LS.sel === e.ans;
   if (e.type === 'input') return Math.abs(inputVal(LS.input) - e.ans) < 1e-6;
   return LS.order.map(i => e.items[i]).join() === e.ans.join();
 }
-function ready(e) { return e.type === 'choice' ? LS.sel != null : e.type === 'input' ? /\d/.test(LS.input) : LS.order.length === e.items.length; }
+function ready(e) { return e.type === 'grid' ? LS.gsel && LS.gsel.size > 0 : e.type === 'choice' ? LS.sel != null : e.type === 'input' ? /\d/.test(LS.input) : LS.order.length === e.items.length; }
 function skipPlace() { if (!LS) return; LS.res.push(false); LS.done++; SFX.tap(); nextEx(); }
 function check() {
   if (!LS) return;
@@ -433,6 +451,8 @@ function check() {
   if (e.type === 'choice') $$('.opt,.bln').forEach((b, i) => { b.disabled = true; if (i === e.ans) { b.classList.add('right'); target = b; } else if (i === LS.sel) b.classList.add(e.balloon ? 'popped' : 'wrong'); });
   if (e.type === 'input') { $('#inbox').classList.add(ok ? 'right' : 'wrong'); target = $('#inbox'); }
   if (e.type === 'order') { $('#oslots').classList.add(ok ? 'right' : 'wrong'); target = $('#oslots'); }
+  if (e.type === 'grid') { $('#tgrid').classList.add(ok ? 'right' : 'wrong'); target = $('#tgrid'); }
+  if (LS.exam) LS.eres.push(ok);
   $$('.pad button').forEach(b => { if (!b.classList.contains('pk-ok')) b.disabled = true; });
   const foot = $('#foot'), fb = $('#fb'), chk = $('#chk');
   foot.classList.add(ok ? 'ok' : 'ko');
@@ -444,7 +464,7 @@ function check() {
     fb.innerHTML = `<div class="fbh">✔ ${LS.combo >= 3 ? L(`Ratxa de ${LS.combo}! 🔥`, `¡Racha de ${LS.combo}! 🔥`) : pick(PRAISE())}</div>${e.long || e.retry ? `<div class="exp">${e.ex || ''}</div>` : ''}`;
   } else {
     LS.miss++; LS.combo = 0; SFX.ko(); $('#lbody').classList.add('shake');
-    if (LS.mode === 'battle') LS.done++;
+    if (LS.mode === 'battle' || LS.exam) LS.done++;
     else { const n = genEx(e.sk, e.L, LS.seen, LS.mix); n.retry = true; LS.queue.push(n); }
     fb.innerHTML = `<div class="fbh">✖ ${pick(OOPS())}</div><div class="ans">${L('Resposta correcta', 'Respuesta correcta')}: <b>${ansText(e)}</b></div>${e.ex ? `<div class="exp">💡 ${e.ex}</div>` : ''}`;
   }
@@ -492,7 +512,7 @@ const BADGES = [
 ];
 function checkBadges() { const nw = BADGES.filter(b => !P.badges.includes(b[0]) && b[4](P)); nw.forEach(b => { P.badges.push(b[0]); P.gems += 10; }); return nw; }
 function finishRun() {
-  const R = { mode: LS.mode, ui: LS.ui, li: LS.li, acc: Math.round(100 * LS.total / (LS.total + LS.miss)), perfect: LS.miss === 0, stars: 0, chest: 0 };
+  const R = { mode: LS.mode, ui: LS.ui, li: LS.li, acc: LS.exam ? 0 : Math.round(100 * LS.total / (LS.total + LS.miss)), perfect: LS.miss === 0, stars: 0, chest: 0 };
   if (R.mode === 'reco') { R.xp = 12 + (R.perfect ? 4 : 0); R.gems = 6; P.stats.trains++; if (R.acc >= 75) { P.reco = null; R.recoDone = true; } }
   else if (R.mode === 'train') { R.xp = 8 + (R.perfect ? 4 : 0); R.gems = 3 + (R.perfect ? 2 : 0); P.stats.trains++; }
   else if (R.mode === 'review') { R.pass = LS.miss <= 2; R.xp = 12 + (R.perfect ? 4 : 0); R.gems = R.pass ? 6 : 2; P.stats.trains++; reviewDone(LS.revKeys, R.pass);
@@ -500,10 +520,16 @@ function finishRun() {
   else {
     R.xp = 10 + (R.perfect ? 5 : 0) + (R.mode === 'repte' ? 10 : 0); R.gems = 5 + (R.perfect ? 5 : 0);
     R.stars = R.perfect ? 3 : LS.miss <= 2 ? 2 : 1;
-    const pr = prog(R.ui), first = !pr.stars[R.li];
+    if (LS.exam) {
+      const okN = LS.total - LS.miss; R.exam = true; R.acc = Math.round(100 * okN / LS.total); R.stars = okN >= 11 ? 3 : okN >= 9 ? 2 : 1;
+      const uid = UNITS_()[R.ui].id; P.exams = P.exams || {}; const ex = P.exams[uid] || { tries: 0, best: 0 };
+      ex.tries++; ex.last = R.acc; ex.best = Math.max(ex.best, R.acc); ex.d = today(); P.exams[uid] = ex;
+      R.sub = R.stars >= PASS ? L(`Has encertat ${okN} de ${LS.total}. La porta s'ha obert: la unitat següent t'espera!`, `Has acertado ${okN} de ${LS.total}. La puerta se ha abierto: ¡la unidad siguiente te espera!`) : L(`Has encertat ${okN} de ${LS.total}. Per obrir la porta en calen 9: repassa una mica i torna-ho a provar!`, `Has acertado ${okN} de ${LS.total}. Para abrir la puerta hacen falta 9: ¡repasa un poco y vuelve a intentarlo!`);
+    }
+    const pr = prog(R.ui), first = (pr.stars[R.li] || 0) < PASS && R.stars >= PASS;
     pr.stars[R.li] = Math.max(pr.stars[R.li], R.stars);
     revMark(UNITS_()[R.ui], R.li, R.stars >= PASS);
-    if (R.stars < PASS && pr.stars[R.li] < PASS) R.sub = L(`Per obrir ${R.mode === 'repte' ? 'la unitat següent' : 'la lliçó següent'} necessites 2 estrelles: com a molt 2 errors. Tu pots!`, `Para abrir ${R.mode === 'repte' ? 'la unidad siguiente' : 'la lección siguiente'} necesitas 2 estrellas: como mucho 2 errores. ¡Tú puedes!`);
+    if (!R.exam && R.stars < PASS && pr.stars[R.li] < PASS) R.sub = L(`Per obrir ${R.mode === 'repte' ? 'la unitat següent' : 'la lliçó següent'} necessites 2 estrelles: com a molt 2 errors. Tu pots!`, `Para abrir ${R.mode === 'repte' ? 'la unidad siguiente' : 'la lección siguiente'} necesitas 2 estrellas: como mucho 2 errores. ¡Tú puedes!`);
     const cu = crownCheck(R.ui); if (cu) { R.crown = cu; R.gems += 50; }
     if (R.mode === 'repte' && first) R.chest = ri(30, 50);
     P.stats.lessons++; if (R.perfect) P.stats.perfect++;
@@ -543,7 +569,7 @@ function flowNext() { closeModal(); const f = FLOW.shift(); if (f) f(); else go(
 function countUp() { $$('[data-count]').forEach(el => { const to = +el.dataset.count, suf = el.dataset.suf || '', t0 = performance.now(); (function step(t) { const k = Math.min(1, (t - t0) / 800); el.textContent = Math.round(to * (1 - (1 - k) ** 3)) + suf; if (k < 1) requestAnimationFrame(step); })(t0); }); }
 function scrResult(R) {
   const game = R.mode === 'game' || R.mode === 'battle';
-  const title = game ? tx(R.title) : R.recoDone ? L('Missió del Cavaller complerta!', '¡Misión del Caballero cumplida!') : R.perfect ? L('Lliçó perfecta!', '¡Lección perfecta!') : R.mode === 'reco' ? L('Bona feina! Torna-ho a provar per completar la missió.', '¡Buen trabajo! Vuelve a intentarlo para completar la misión.') : R.mode === 'train' ? L('Entrenament fet!', '¡Entrenamiento hecho!') : R.mode === 'review' ? L('Repàs fet!', '¡Repaso hecho!') : R.stars && R.stars < PASS ? L('Gairebé!', '¡Casi!') : L('Lliçó completada!', '¡Lección completada!');
+  const title = game ? tx(R.title) : R.recoDone ? L('Missió del Cavaller complerta!', '¡Misión del Caballero cumplida!') : R.perfect ? L('Lliçó perfecta!', '¡Lección perfecta!') : R.mode === 'reco' ? L('Bona feina! Torna-ho a provar per completar la missió.', '¡Buen trabajo! Vuelve a intentarlo para completar la misión.') : R.mode === 'train' ? L('Entrenament fet!', '¡Entrenamiento hecho!') : R.mode === 'review' ? L('Repàs fet!', '¡Repaso hecho!') : R.exam ? (R.stars >= PASS ? L('Porta oberta!', '¡Puerta abierta!') : L('La porta encara resisteix…', 'La puerta aún resiste…')) : R.stars && R.stars < PASS ? L('Gairebé!', '¡Casi!') : L('Lliçó completada!', '¡Lección completada!');
   const sub = R.sub || (game ? (R.record ? L('🏆 Nou rècord personal!', '🏆 ¡Nuevo récord personal!') : L(`El teu rècord: ${R.best}`, `Tu récord: ${R.best}`)) : R.perfect ? L('Ni un sol error. Ets imparable!', 'Ni un solo error. ¡Eres imparable!') : L('Cada error és una oportunitat per aprendre.', 'Cada error es una oportunidad para aprender.'));
   const third = game ? `<div class="rs acc"><span>${L('PUNTS', 'PUNTOS')}</span><b data-count="${R.score}">0</b></div>` : `<div class="rs acc"><span>${L('PRECISIÓ', 'PRECISIÓN')}</span><b data-count="${R.acc}" data-suf="%">0</b></div>`;
   app.innerHTML = `<div class="scr"><div class="burst"></div><div class="cheer"><div class="saybubble">${cheerMsg(R)}</div><div class="rchar dance tapme">${meC('happy')}</div></div>

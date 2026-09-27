@@ -75,7 +75,23 @@ const STK = [
   // Temporada d'octubre 2026 (passi de temporada)
   ['nyx', 'e', 'Nix|Nix', 'Nox per als romans|Nox para los romanos', "Deessa de la nit. En una nit fosca es poden veure unes 2.500 estrelles a ull nu.|Diosa de la noche. En una noche oscura se pueden ver unas 2.500 estrellas a simple vista."],
   ['selene', 'e', 'Selene|Selene', 'Luna per als romans|Luna para los romanos', "Deessa de la Lluna. La Lluna tarda uns 29 dies i mig a passar per totes les fases.|Diosa de la Luna. La Luna tarda unos 29 días y medio en pasar por todas sus fases."],
-  ['hecate', 'l', 'Hècate|Hécate', 'Trivia per als romans|Trivia para los romanos', "Deessa de la màgia i de les cruïlles de 3 camins. Amb 3 camins i 2 cruïlles seguides, hi ha 3 × 3 = 9 rutes!|Diosa de la magia y de los cruces de 3 caminos. Con 3 caminos y 2 cruces seguidos, ¡hay 3 × 3 = 9 rutas!"]
+  ['hecate', 'l', 'Hècate|Hécate', 'Trivia per als romans|Trivia para los romanos', "Deessa de la màgia i de les cruïlles de 3 camins. Amb 3 camins i 2 cruïlles seguides, hi ha 3 × 3 = 9 rutes!|Diosa de la magia y de los cruces de 3 caminos. Con 3 caminos y 2 cruces seguidos, ¡hay 3 × 3 = 9 rutas!"],
+  // Novembre 2026: El bosc de tardor
+  ['dryad', 'e', 'Dríade|Dríade', 'Nimfa dels arbres|Ninfa de los árboles', "Les nimfes dels arbres. Si comptes els anells d'un tronc, saps quants anys té: 1 anell = 1 any.|Las ninfas de los árboles. Si cuentas los anillos de un tronco, sabes cuántos años tiene: 1 anillo = 1 año."],
+  ['pan', 'e', 'Pan|Pan', 'Faune per als romans|Fauno para los romanos', "Déu dels boscos. La seva flauta té canyes de llargades diferents: com més curta és la canya, més aguda sona.|Dios de los bosques. Su flauta tiene cañas de longitudes diferentes: cuanto más corta es la caña, más aguda suena."],
+  ['persephone', 'l', 'Persèfone|Perséfone', 'Prosèrpina per als romans|Proserpina para los romanos', "Passava 6 mesos sota terra i 6 mesos a la Terra: la meitat de l'any a cada lloc. Així explicaven els grecs les estacions.|Pasaba 6 meses bajo tierra y 6 meses en la Tierra: la mitad del año en cada sitio. Así explicaban los griegos las estaciones."],
+  // Desembre 2026: El solstici d'hivern
+  ['hestia', 'e', 'Hèstia|Hestia', 'Vesta per als romans|Vesta para los romanos', "Deessa de la llar. El seu foc era en una llar rodona: un cercle té infinits eixos de simetria.|Diosa del hogar. Su fuego estaba en un hogar redondo: un círculo tiene infinitos ejes de simetría."],
+  ['boreas', 'e', 'Bòreas|Bóreas', 'Aquiló per als romans|Aquilón para los romanos', "El vent del nord i de l'hivern. Tots els flocs de neu tenen 6 puntes: són hexàgons perfectes.|El viento del norte y del invierno. Todos los copos de nieve tienen 6 puntas: son hexágonos perfectos."],
+  ['helios', 'l', 'Hèlios|Helios', 'Sol per als romans|Sol para los romanos', "Déu del Sol. El 21 de desembre, el solstici d'hivern, és el dia més curt de l'any: a Lleida, unes 9 hores de llum.|Dios del Sol. El 21 de diciembre, el solsticio de invierno, es el día más corto del año: en Lleida, unas 9 horas de luz."],
+  // Gener 2027: Janus i l'any nou
+  ['eos', 'e', 'Eos|Eos', 'Aurora per als romans|Aurora para los romanos', "Deessa de l'alba. Cada dia té 24 hores, que són 1.440 minuts o 86.400 segons!|Diosa del alba. Cada día tiene 24 horas, que son 1.440 minutos u 86.400 segundos."],
+  ['horae', 'e', 'Les Hores|Las Horas', 'Deesses de les estacions|Diosas de las estaciones', "Les deesses de les hores i les estacions. Els grecs ja dividien el dia en 12 hores, com el rellotge!|Las diosas de las horas y las estaciones. Los griegos ya dividían el día en 12 horas, ¡como el reloj!"],
+  ['janus', 'l', 'Janus|Jano', 'Déu romà dels començaments|Dios romano de los comienzos', "El gener porta el seu nom (Ianuarius). Té dues cares: una mira l'any que acaba i l'altra el que comença.|Enero lleva su nombre (Ianuarius). Tiene dos caras: una mira el año que acaba y la otra el que empieza."],
+  // Febrer 2027: Les Muses
+  ['terpsichore', 'e', 'Terpsícore|Terpsícore', 'Musa de la dansa|Musa de la danza', "Musa de la dansa. Una volta sencera són 360°; mitja volta, 180°; un quart de volta, 90°.|Musa de la danza. Una vuelta entera son 360°; media vuelta, 180°; un cuarto de vuelta, 90°."],
+  ['calliope', 'e', 'Cal·líope|Calíope', 'Musa de la poesia|Musa de la poesía', "Musa de la poesia èpica. L'Odissea té uns 12.000 versos: llegint-ne 10 per minut, trigaries 20 hores!|Musa de la poesía épica. La Odisea tiene unos 12.000 versos: leyendo 10 por minuto, ¡tardarías 20 horas!"],
+  ['urania', 'l', 'Urània|Urania', "Musa de l'astronomia|Musa de la astronomía", "Musa de l'astronomia. La llum del Sol triga uns 8 minuts a arribar a la Terra.|Musa de la astronomía. La luz del Sol tarda unos 8 minutos en llegar a la Tierra."]
 ];
 const BATTLE_ONLY = ['nike']; // només es guanyen a les batalles
 const CARDNUM = id => String(STK.findIndex(s => s[0] === id) + 1).padStart(2, '0');

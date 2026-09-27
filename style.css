@@ -822,3 +822,26 @@ body{background:radial-gradient(1200px 500px at 50% -120px,#F1E6FA 0%,rgba(241,2
 .node.rust{filter:saturate(.35) sepia(.35)}.node.rust::after{content:"🔧";position:absolute;right:-6px;top:-6px;font-size:16px;filter:none}
 .bigcrown{font-size:96px;animation:cardIn .8s cubic-bezier(.2,1.4,.4,1) both}
 .bcost{margin-left:auto;font-weight:900;font-size:13px;background:#FFF3C4;color:#9A6A00;border-radius:10px;padding:4px 9px;white-space:nowrap}
+
+/* Activitats visuals */
+.vpic{max-width:100%;height:auto;display:block;margin:0 auto}
+.l-vis .vpic.iso{max-height:210px}.l-vis .bal{display:inline-block;margin:0 4px}
+.opts.pics{grid-template-columns:1fr 1fr}.opts.pics .opt{min-height:112px;padding:10px 10px 10px 30px;display:grid;place-items:center}
+.opts.pics .opt .ov{display:grid;place-items:center;width:100%}.opts.pics .opt svg{max-width:100%;max-height:104px;width:auto}
+.vseq{display:flex;gap:6px;justify-content:center;align-items:center;flex-wrap:wrap}.vseq .vq{width:46px;height:46px;border-radius:8px;border:2px dashed #B9A6CC;display:grid;place-items:center;font-weight:900;font-size:22px;color:#8A4FB0}
+.bigemo{font-size:56px;text-align:center}
+.tgrid{display:grid;grid-template-columns:repeat(var(--gc),1fr);gap:4px;width:min(100%,calc(var(--gc) * 50px));margin:0 auto;position:relative;padding:6px;border-radius:14px;background:#fff;border:2px solid #E6DCF2}
+.tgrid .tg{aspect-ratio:1;border-radius:7px;border:2px solid #D9CCE6;background:#FBF8FF;padding:0;transition:transform .1s,background .15s}
+.tgrid .tg.on{background:#3CC46A;border-color:#239B4E;transform:scale(.94)}.tgrid .tg.fx{background:#8A4FB0;border-color:#5E2F80}.tgrid .tg.ro:not(.fx){background:#F1ECF5;border-style:dashed;opacity:.6}
+.tgrid.ax-v::after{content:"";position:absolute;top:2px;bottom:2px;left:50%;width:3px;margin-left:-1.5px;background:#D63C42;border-radius:2px;pointer-events:none}
+.tgrid.ax-h::after{content:"";position:absolute;left:2px;right:2px;top:50%;height:3px;margin-top:-1.5px;background:#D63C42;border-radius:2px;pointer-events:none}
+.tgrid.right{border-color:#3CC46A;box-shadow:0 0 0 4px rgba(60,196,106,.25)}.tgrid.wrong{border-color:#D63C42;box-shadow:0 0 0 4px rgba(214,60,66,.2)}
+.gcount{text-align:center;font-size:14px;color:var(--mut);margin-top:6px;min-height:18px}
+.ans .vpic.sol{display:inline-block;vertical-align:middle;margin:4px}
+/* Porta del Cavaller */
+.gate{display:flex;align-items:center;gap:3px;justify-content:center;flex-wrap:wrap;max-width:640px;margin:-2px auto 6px;padding:0 12px}
+.gate .gt{width:100%;text-align:center;font-size:12px;font-weight:900;color:var(--mut);letter-spacing:.06em}
+.gate i{font-style:normal;width:22px;height:22px;border-radius:7px;background:#F1ECF5;display:grid;place-items:center;font-size:12px}
+.gate i.k{background:#FFF3C4}.gate i.x{background:#FBE3E4;color:#D63C42;font-weight:900}
+.pdiv.gatediv span{background:#FFF3C4;color:#9A6A00;border-color:#F0C24B}
+.bals{display:grid;gap:4px;width:100%;justify-items:center}.bals .vpic.bal{width:100%!important;max-width:320px}
