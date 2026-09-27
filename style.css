@@ -40,7 +40,7 @@ p{text-wrap:pretty}
 .ii{display:inline-grid;width:1.1em;height:1.1em;vertical-align:-.18em;flex:none}
 
 /* ---------- Botons ---------- */
-.btn{--c:var(--pri);--cd:color-mix(in srgb,var(--c) 70%,#1D2433);display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--c);color:#fff;border-radius:var(--r-m);padding:14px 20px;font-family:var(--fb);font-weight:600;font-size:16px;box-shadow:0 3px 0 var(--cd);transition:transform .15s var(--ease),box-shadow .15s var(--ease),background-color .2s}
+.btn{--c:var(--pri);--cd:var(--pri-d);display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--c);color:#fff;border-radius:var(--r-m);padding:14px 20px;font-family:var(--fb);font-weight:600;font-size:16px;box-shadow:0 3px 0 var(--cd);transition:transform .15s var(--ease),box-shadow .15s var(--ease),background-color .2s}
 .btn:hover:not(:disabled){background:color-mix(in srgb,var(--c) 90%,#000)}
 .btn:active:not(:disabled){transform:translateY(2px);box-shadow:0 1px 0 var(--cd)}
 .btn:disabled{background:var(--sunk);color:#A39C8A;box-shadow:none}
@@ -447,7 +447,7 @@ p{text-wrap:pretty}
 .reco .btn{width:100%}
 
 /* ---------- Pàgines ---------- */
-.ph1{font-size:30px;margin:8px 0 6px;color:var(--ink)}.ph1.c{text-align:center;margin:30px 0 22px}
+.ph1{font-size:30px;margin:8px 0 6px;color:var(--ink)}.ph1.c{text-align:center;margin-bottom:22px}
 .lead{color:var(--ink2);margin:0 0 18px;line-height:1.5;font-size:15.5px}
 .lead.sm{font-size:13.5px;margin-top:-6px;color:var(--mut)}
 .h2{display:flex;align-items:center;gap:8px;font-size:19px;font-weight:700;margin:28px 0 12px}
