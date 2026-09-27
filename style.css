@@ -720,3 +720,15 @@ body{background:radial-gradient(1200px 500px at 50% -120px,#F1E6FA 0%,rgba(241,2
 .seq.row span{font-size:40px}
 .cg{width:min(250px,70vw)}.cgc{font-size:20px;border-radius:7px}
 .opts:not(.big):not(.list) .opt{padding-left:34px;padding-right:12px}
+
+/* Sobre: la carta queda amagada fins que s'obre */
+.packout[hidden]{display:none!important}
+.stkwrap{perspective:800px}
+.stkwrap .stk{animation:flipReveal .8s cubic-bezier(.2,1.2,.4,1) both;animation-delay:inherit;backface-visibility:hidden}
+@keyframes flipReveal{0%{transform:rotateY(180deg) scale(.6);opacity:0;filter:brightness(2)}60%{opacity:1}100%{transform:none;filter:none}}
+.pack.shake{animation:packShake .5s ease-in-out}
+@keyframes packShake{20%{transform:rotate(-8deg)}40%{transform:rotate(8deg)}60%{transform:rotate(-5deg)}80%{transform:rotate(4deg)}}
+.cgrid.ages{grid-template-columns:repeat(4,1fr)}
+.cgrid.ages .cbtn b{font-size:24px}
+.cbtn.locked{background:#F1ECF5;border-color:#E6DEEE;opacity:.75}
+.cbtn.locked b{color:var(--mut)}

@@ -147,9 +147,10 @@ const SENT = {
 function skillSent(sk) {
   const n = sk.split(':')[0];
   if (/^(me\.clock|me\.units|me\.money|me\.perim|g\.clock|g\.coins|g\.ruler|geo\.area)$/.test(n)) return 'mes';
-  if (/^(me\.shape|g\.shape|geo\.angle|vol|e\.)/.test(n)) return 'esp';
-  if (/^(l\.|g\.seq|pc\.|g\.repeat)/.test(n)) return 'alg';
-  if (/^(stat|at\.)/.test(n)) return 'est';
+  if (/^(me\.shape|g\.shape|geo\.angle|vol|e\.|geo\.pyth|geo\.thales|trig)/.test(n)) return 'esp';
+  if (/^(geo\.circle|geo\.vol2)$/.test(n)) return 'mes';
+  if (/^(l\.|g\.seq|pc\.|g\.repeat|alg\.|fn\.|seq\.)/.test(n)) return 'alg';
+  if (/^(stat|at\.|prob2)/.test(n)) return 'est';
   return 'num';
 }
 const unitSents = u => [...new Set(u.lessons.flatMap(l => l.sk.map(skillSent)))];

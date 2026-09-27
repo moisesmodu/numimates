@@ -4,7 +4,7 @@ const UCOL = ['#36A9E1', '#3CC46A', '#FF9A3C', '#FF6FA3', '#8A4FB0', '#22B5A0', 
 const U = (title, desc, guide, lessons) => ({ title, desc, guide, lessons: lessons.map(([t, sk, L_]) => ({ t, sk, L: L_ })) });
 
 const COURSES = [
-  { id: 'c1', n: 1, name: '1r|1º', long: '1r de primària|1º de primaria', emoji: '🐣', units: [
+  { id: 'c1', n: 1, name: '1|1', long: 'Nivell 1|Nivel 1', emoji: '🐣', units: [
     U('Números fins al 20|Números hasta el 20', 'Comptar, ordenar i comparar.|Contar, ordenar y comparar.', 'numi', [
       ['Comptem fins a 10|Contamos hasta 10', ['g.count:10'], 1], ['Comptem fins a 20|Contamos hasta 20', ['g.count:20', 'g.next:20'], 2], ['Abans i després|Antes y después', ['g.next:20', 'g.cmp:20'], 2],
       ['Desenes i unitats|Decenas y unidades', ['g.blocks:20', 'g.cmp:20'], 2], ['Més gran o més petit|Mayor o menor', ['g.cmp:20', 'g.next:20', 'g.count:20'], 3]]),
@@ -30,7 +30,7 @@ const COURSES = [
       ['Problemes de sumar|Problemas de sumar', ['g.prob:add'], 1], ['Problemes de restar|Problemas de restar', ['g.prob:less'], 1], ['Sumar o restar?|¿Sumar o restar?', ['g.prob:add', 'g.prob:less'], 2],
       ['Problemes fins al 20|Problemas hasta el 20', ['g.prob:add', 'g.prob:less'], 3], ['Petits detectius|Pequeños detectives', ['g.prob:add', 'g.prob:less', 'g.prob:cmp'], 3]])
   ] },
-  { id: 'c2', n: 2, name: '2n|2º', long: '2n de primària|2º de primaria', emoji: '🐥', units: [
+  { id: 'c2', n: 2, name: '2|2', long: 'Nivell 2|Nivel 2', emoji: '🐥', units: [
     U('Números fins al 1.000|Números hasta el 1.000', 'Centenes, desenes i unitats.|Centenas, decenas y unidades.', 'numi', [
       ['Les centenes|Las centenas', ['g.blocks:1000'], 1], ['Llegir i escriure|Leer y escribir', ['g.words:1000', 'g.blocks:1000'], 2], ['Valor de posició|Valor de posición', ['n.place:3', 'n.decomp:3'], 1],
       ['Comparar|Comparar', ['g.cmp:1000', 'g.next:1000'], 3], ['Ordenar|Ordenar', ['n.order:3', 'g.cmp:1000'], 3]]),
@@ -53,7 +53,7 @@ const COURSES = [
       ['Problemes de sumar|Problemas de sumar', ['p.add'], 1], ['Problemes de restar|Problemas de restar', ['g.prob:sub', 'p.add'], 3], ['Problemes de multiplicar|Problemas de multiplicar', ['g.prob:mul'], 1],
       ['Quin càlcul faig?|¿Qué cálculo hago?', ['p.add', 'g.prob:mul', 'g.prob:sub'], 3], ['Grans detectius|Grandes detectives', ['p.add', 'g.prob:mul', 'g.prob:sub'], 4]])
   ] },
-  { id: 'c3', n: 3, name: '3r|3º', long: '3r de primària|3º de primaria', emoji: '🦊', units: [
+  { id: 'c3', n: 3, name: '3|3', long: 'Nivell 3|Nivel 3', emoji: '🦊', units: [
     U('Números fins al 9.999|Números hasta el 9.999', 'Unitats de miler i valor de posició.|Unidades de millar y valor de posición.', 'numi', [
       ['Unitats de miler|Unidades de millar', ['n.place:4', 'n.decomp:4'], 2], ['Llegir i escriure|Leer y escribir', ['n.words:4'], 2], ['Comparar i ordenar|Comparar y ordenar', ['n.compare:4', 'n.order:4'], 3],
       ['Arrodonir|Redondear', ['n.round:4'], 4], ['Tot plegat|Todo junto', ['n.place:4', 'n.compare:4', 'n.words:4'], 3]]),
@@ -82,7 +82,7 @@ const COURSES = [
       ['Sèries|Series', ['l.series'], 3], ['Balances|Balanzas', ['l.balance'], 3], ['Problemes|Problemas', ['p.add', 'p.mul'], 2],
       ['Problemes de dividir|Problemas de dividir', ['p.div'], 3], ['Detectius|Detectives', ['p.add', 'p.mul', 'p.div', 'l.balance'], 3]])
   ] },
-  { id: 'c4', n: 4, name: '4t|4º', long: '4t de primària|4º de primaria', emoji: '🐙', units: [
+  { id: 'c4', n: 4, name: '4|4', long: 'Nivell 4|Nivel 4', emoji: '🐙', units: [
     U('Els grans números|Los números grandes', 'Llegeix, escriu i compara fins al 99.999.|Lee, escribe y compara hasta el 99.999.', 'numi', [
       ['Unitats, desenes i centenes|Unidades, decenas y centenas', ['n.place', 'n.decomp'], 1], ['Fins al 9.999|Hasta el 9.999', ['n.place', 'n.words', 'n.decomp'], 2], ['Fins al 99.999|Hasta el 99.999', ['n.place', 'n.words', 'n.next'], 3],
       ['Comparar i ordenar|Comparar y ordenar', ['n.compare', 'n.order'], 4], ['Arrodonir|Redondear', ['n.round', 'n.compare'], 5]]),
@@ -114,7 +114,7 @@ const COURSES = [
       ['Sumar i restar|Sumar y restar', ['p.add'], 1], ['Multiplicar|Multiplicar', ['p.mul', 'p.add'], 2], ['Dividir|Dividir', ['p.div', 'p.mul'], 3],
       ['Dos passos|Dos pasos', ['p.two'], 4], ['Grans reptes|Grandes retos', ['p.two', 'p.big'], 5]])
   ] },
-  { id: 'c5', n: 5, name: '5è|5º', long: '5è de primària|5º de primaria', emoji: '🐢', units: [
+  { id: 'c5', n: 5, name: '5|5', long: 'Nivell 5|Nivel 5', emoji: '🐢', units: [
     U('Els grans números|Los números grandes', 'Fins al milió i més enllà.|Hasta el millón y más allá.', 'numi', [
       ['Fins al milió|Hasta el millón', ['n.place:6', 'n.words:6'], 3], ['Llegir milions|Leer millones', ['n.words:7', 'n.place:7'], 3], ['Comparar i ordenar|Comparar y ordenar', ['n.compare:6', 'n.order:6'], 4],
       ['Arrodonir|Redondear', ['n.round:6'], 5], ['Tot plegat|Todo junto', ['n.place:7', 'n.compare:6', 'n.round:6'], 5]]),
@@ -143,7 +143,7 @@ const COURSES = [
       ['Problemes amb decimals|Problemas con decimales', ['p.dec'], 2], ['Dos passos|Dos pasos', ['p.two'], 4], ['Grans reptes|Grandes retos', ['p.big'], 5],
       ['Diners|Dinero', ['p.dec'], 4], ['Mestres dels problemes|Maestros de los problemas', ['p.two', 'p.big', 'p.dec'], 5]])
   ] },
-  { id: 'c6', n: 6, name: '6è|6º', long: '6è de primària|6º de primaria', emoji: '🐉', units: [
+  { id: 'c6', n: 6, name: '6|6', long: 'Nivell 6|Nivel 6', emoji: '🐉', units: [
     U('Nombres enters|Números enteros', 'Negatius, temperatures i la recta.|Negativos, temperaturas y la recta.', 'numi', [
       ['Temperatures|Temperaturas', ['int'], 1], ['Comparar enters|Comparar enteros', ['int'], 2], ['Puja i baixa|Sube y baja', ['int'], 3],
       ['Sumar i restar enters|Sumar y restar enteros', ['int'], 4], ['Tot plegat|Todo junto', ['int'], 5]]),
@@ -171,9 +171,112 @@ const COURSES = [
     U('Grans problemes|Grandes problemas', 'El repte final de primària!|¡El reto final de primaria!', 'flama', [
       ['Problemes amb decimals|Problemas con decimales', ['p.dec'], 5], ['Dos passos|Dos pasos', ['p.two'], 5], ['Grans reptes|Grandes retos', ['p.big'], 5],
       ['Proporcions|Proporciones', ['prop'], 5], ['Mestres de primària|Maestros de primaria', ['p.dec', 'p.big', 'pct', 'prop'], 5]])
+  ] },
+  { id: 'c7', n: 7, name: '7|7', long: 'Nivell 7|Nivel 7', emoji: '🦉', units: [
+    U('Nombres enters|Números enteros', 'Operacions amb signes i parèntesis.|Operaciones con signos y paréntesis.', 'numi', [
+      ['Multiplicar amb signes|Multiplicar con signos', ['int.ops'], 1], ['Dividir amb signes|Dividir con signos', ['int.ops'], 2], ['Operacions combinades|Operaciones combinadas', ['int.ops'], 3],
+      ['Parèntesis|Paréntesis', ['int.ops'], 4], ['Potències de negatius|Potencias de negativos', ['int.ops'], 5]]),
+    U('Divisibilitat|Divisibilidad', 'Múltiples, divisors, m.c.m. i m.c.d.|Múltiplos, divisores, m.c.m. y m.c.d.', 'guida', [
+      ['Múltiples i divisors|Múltiplos y divisores', ['mult.mul', 'mult.div'], 3], ['Nombres primers|Números primos', ['mult.prime'], 4], ['Criteris de divisibilitat|Criterios de divisibilidad', ['mult.crit'], 4],
+      ['M.c.m. i m.c.d.|M.c.m. y m.c.d.', ['mult.mcm'], 1], ['Problemes de m.c.m.|Problemas de m.c.m.', ['mult.mcm'], 3]]),
+    U('Fraccions|Fracciones', 'Sumar, multiplicar i dividir fraccions.|Sumar, multiplicar y dividir fracciones.', 'tuga', [
+      ['Simplificar|Simplificar', ['fr.simp'], 4], ['Sumar i restar|Sumar y restar', ['fr.addD'], 4], ['Multiplicar fraccions|Multiplicar fracciones', ['fr.ops'], 1],
+      ['Dividir fraccions|Dividir fracciones', ['fr.ops'], 2], ['Operacions combinades|Operaciones combinadas', ['fr.ops'], 4]]),
+    U('Potències i arrels|Potencias y raíces', 'Propietats de les potències i arrels.|Propiedades de las potencias y raíces.', 'vuit', [
+      ['Quadrats i cubs|Cuadrados y cubos', ['pow'], 2], ['Producte de potències|Producto de potencias', ['pow.rules'], 1], ['Quocient de potències|Cociente de potencias', ['pow.rules'], 2],
+      ['Arrels quadrades|Raíces cuadradas', ['root'], 1], ['Entre quins enters?|¿Entre qué enteros?', ['root'], 3]]),
+    U('Iniciació a l\'àlgebra|Iniciación al álgebra', 'Expressions i primeres equacions.|Expresiones y primeras ecuaciones.', 'cavaller', [
+      ['Valor numèric|Valor numérico', ['alg.expr'], 1], ['Termes semblants|Términos semejantes', ['alg.expr'], 3], ['Equacions fàcils|Ecuaciones fáciles', ['alg.eq1'], 1],
+      ['Equacions amb producte|Ecuaciones con producto', ['alg.eq1'], 2], ['Equacions en dos passos|Ecuaciones en dos pasos', ['alg.eq1'], 3]]),
+    U('Percentatges i proporcions|Porcentajes y proporciones', 'Augments, descomptes i repartiments.|Aumentos, descuentos y repartos.', 'flama', [
+      ['Percentatges|Porcentajes', ['pct'], 4], ['Augments|Aumentos', ['pct2'], 1], ['Descomptes|Descuentos', ['pct2'], 2],
+      ['Proporcionalitat directa|Proporcionalidad directa', ['prop'], 5], ['Repartiments proporcionals|Repartos proporcionales', ['prop2'], 4]]),
+    U('Geometria|Geometría', 'Angles, àrees i el cercle.|Ángulos, áreas y el círculo.', 'tuga', [
+      ['Angles del triangle|Ángulos del triángulo', ['geo.angle'], 5], ['Àrees de polígons|Áreas de polígonos', ['geo.area'], 5], ['Longitud de la circumferència|Longitud de la circunferencia', ['geo.circle'], 1],
+      ['Àrea del cercle|Área del círculo', ['geo.circle'], 2], ['Coordenades|Coordenadas', ['e.coord'], 5]]),
+    U('Estadística i probabilitat|Estadística y probabilidad', 'Mitjana, mediana, moda i probabilitat.|Media, mediana, moda y probabilidad.', 'guida', [
+      ['La mitjana|La media', ['stat2'], 1], ['La mediana|La mediana', ['stat2'], 2], ['La moda|La moda', ['stat2'], 3],
+      ['Probabilitat|Probabilidad', ['at.prob'], 5], ['Dues monedes|Dos monedas', ['prob2'], 1]])
+  ] },
+  { id: 'c8', n: 8, name: '8|8', long: 'Nivell 8|Nivel 8', emoji: '🦅', units: [
+    U('Enters i fraccions|Enteros y fracciones', 'Operacions combinades.|Operaciones combinadas.', 'numi', [
+      ['Parèntesis i signes|Paréntesis y signos', ['int.ops'], 4], ['Potències de negatius|Potencias de negativos', ['int.ops'], 5], ['Fraccions combinades|Fracciones combinadas', ['fr.ops'], 4],
+      ['Potències de fraccions|Potencias de fracciones', ['fr.ops'], 5], ['Tot plegat|Todo junto', ['int.ops', 'fr.ops'], 4]]),
+    U('Potències i notació científica|Potencias y notación científica', 'Exponents negatius i números molt grans.|Exponentes negativos y números muy grandes.', 'vuit', [
+      ['Potència d\'una potència|Potencia de una potencia', ['pow.rules'], 3], ['Exponent 0 i negatiu|Exponente 0 y negativo', ['pow.rules'], 4], ['Notació científica|Notación científica', ['pow.sci'], 1],
+      ['De científica a número|De científica a número', ['pow.sci'], 2], ['Arrels|Raíces', ['root'], 2]]),
+    U('Proporcionalitat|Proporcionalidad', 'Directa, inversa i percentatges.|Directa, inversa y porcentajes.', 'flama', [
+      ['Proporcionalitat inversa|Proporcionalidad inversa', ['prop2'], 1], ['Directa o inversa?|¿Directa o inversa?', ['prop2'], 3], ['Percentatge invers|Porcentaje inverso', ['pct2'], 3],
+      ['Augments i descomptes|Aumentos y descuentos', ['pct2'], 2], ['Repartiments|Repartos', ['prop2'], 4]]),
+    U('Àlgebra|Álgebra', 'Expressions, parèntesis i equacions.|Expresiones, paréntesis y ecuaciones.', 'cavaller', [
+      ['Treure parèntesis|Quitar paréntesis', ['alg.expr'], 4], ['Valor numèric|Valor numérico', ['alg.expr'], 2], ['Equacions amb parèntesis|Ecuaciones con paréntesis', ['alg.eq1'], 4],
+      ['x als dos costats|x a los dos lados', ['alg.eq1'], 5], ['Polinomis|Polinomios', ['alg.poly'], 1]]),
+    U('Sistemes d\'equacions|Sistemas de ecuaciones', 'Dues equacions, dues incògnites.|Dos ecuaciones, dos incógnitas.', 'cavaller', [
+      ['Suma i diferència|Suma y diferencia', ['alg.sys'], 1], ['Sistemes senzills|Sistemas sencillos', ['alg.sys'], 2], ['Per reducció|Por reducción', ['alg.sys'], 3],
+      ['La solució|La solución', ['alg.sys'], 4], ['Tot plegat|Todo junto', ['alg.sys', 'alg.eq1'], 4]]),
+    U('Funcions|Funciones', 'Rectes, pendents i taules.|Rectas, pendientes y tablas.', 'guida', [
+      ['Valor d\'una funció|Valor de una función', ['fn.lin'], 1], ['El pendent|La pendiente', ['fn.lin'], 2], ['Taules de valors|Tablas de valores', ['fn.lin'], 3],
+      ['Punts d\'una recta|Puntos de una recta', ['fn.lin'], 4], ['Coordenades|Coordenadas', ['e.coord'], 5]]),
+    U('Geometria|Geometría', 'Pitàgores, Tales i volums.|Pitágoras, Tales y volúmenes.', 'tuga', [
+      ['Teorema de Pitàgores|Teorema de Pitágoras', ['geo.pyth'], 1], ['Catets|Catetos', ['geo.pyth'], 3], ['Triangles semblants|Triángulos semejantes', ['geo.thales'], 1],
+      ['Volum del prisma|Volumen del prisma', ['geo.vol2'], 1], ['Volum del cilindre|Volumen del cilindro', ['geo.vol2'], 2]]),
+    U('Estadística i probabilitat|Estadística y probabilidad', 'Mesures centrals i dos daus.|Medidas centrales y dos dados.', 'flama', [
+      ['Mitjana i mediana|Media y mediana', ['stat2'], 2], ['Mediana parella|Mediana par', ['stat2'], 4], ['El valor que falta|El valor que falta', ['stat2'], 5],
+      ['Dues monedes|Dos monedas', ['prob2'], 1], ['Dos daus|Dos dados', ['prob2'], 2]])
+  ] },
+  { id: 'c9', n: 9, name: '9|9', long: 'Nivell 9|Nivel 9', emoji: '🐺', units: [
+    U('Nombres reals|Números reales', 'Notació científica i arrels.|Notación científica y raíces.', 'numi', [
+      ['Números petits|Números pequeños', ['pow.sci'], 3], ['Operar en notació científica|Operar en notación científica', ['pow.sci'], 4], ['Aproximar arrels|Aproximar raíces', ['root'], 3],
+      ['Simplificar arrels|Simplificar raíces', ['root'], 4], ['Tot plegat|Todo junto', ['pow.sci', 'root', 'pow.rules'], 4]]),
+    U('Polinomis|Polinomios', 'Operacions i identitats notables.|Operaciones e identidades notables.', 'cavaller', [
+      ['Sumar polinomis|Sumar polinomios', ['alg.poly'], 2], ['Valor d\'un polinomi|Valor de un polinomio', ['alg.poly'], 3], ['Multiplicar|Multiplicar', ['alg.poly'], 4],
+      ['Identitats notables|Identidades notables', ['alg.poly'], 5], ['Producte de binomis|Producto de binomios', ['alg.expr'], 5]]),
+    U('Equacions de segon grau|Ecuaciones de segundo grado', 'x², factors i solucions.|x², factores y soluciones.', 'cavaller', [
+      ['x² = k|x² = k', ['alg.eq2'], 1], ['Producte igual a zero|Producto igual a cero', ['alg.eq2'], 2], ['Suma i producte|Suma y producto', ['alg.eq2'], 3],
+      ['Equacions de primer grau|Ecuaciones de primer grado', ['alg.eq1'], 5], ['Tot plegat|Todo junto', ['alg.eq2', 'alg.eq1'], 3]]),
+    U('Sistemes|Sistemas', 'Sistemes i problemes.|Sistemas y problemas.', 'guida', [
+      ['Sistemes|Sistemas', ['alg.sys'], 3], ['La solució|La solución', ['alg.sys'], 5], ['Inequacions|Inecuaciones', ['alg.ineq'], 1],
+      ['Inequacions amb producte|Inecuaciones con producto', ['alg.ineq'], 2], ['Quin valor compleix?|¿Qué valor cumple?', ['alg.ineq'], 3]]),
+    U('Successions|Sucesiones', 'Progressions aritmètiques i geomètriques.|Progresiones aritméticas y geométricas.', 'vuit', [
+      ['El terme següent|El término siguiente', ['seq.arith'], 1], ['La diferència|La diferencia', ['seq.arith'], 2], ['El terme n|El término n', ['seq.arith'], 3],
+      ['Terme general|Término general', ['seq.arith'], 4], ['Progressions geomètriques|Progresiones geométricas', ['seq.arith'], 5]]),
+    U('Funcions|Funciones', 'Rectes i paràboles.|Rectas y parábolas.', 'guida', [
+      ['Punts d\'una recta|Puntos de una recta', ['fn.lin'], 4], ['Equació de la recta|Ecuación de la recta', ['fn.lin'], 5], ['Paràboles|Parábolas', ['fn.quad'], 1],
+      ['Tall amb l\'eix y|Corte con el eje y', ['fn.quad'], 2], ['El vèrtex|El vértice', ['fn.quad'], 3]]),
+    U('Geometria|Geometría', 'Pitàgores, Tales i cossos.|Pitágoras, Tales y cuerpos.', 'tuga', [
+      ['És rectangle?|¿Es rectángulo?', ['geo.pyth'], 4], ['Problemes de Pitàgores|Problemas de Pitágoras', ['geo.pyth'], 5], ['Tales i les ombres|Tales y las sombras', ['geo.thales'], 3],
+      ['Volum del con|Volumen del cono', ['geo.vol2'], 3], ['Volum de l\'esfera|Volumen de la esfera', ['geo.vol2'], 4]]),
+    U('Probabilitat|Probabilidad', 'Successos contraris i sense reemplaçament.|Sucesos contrarios y sin reemplazo.', 'flama', [
+      ['Dos daus|Dos dados', ['prob2'], 2], ['Succés contrari|Suceso contrario', ['prob2'], 3], ['Sense tornar-les|Sin devolverlas', ['prob2'], 4],
+      ['Combinacions|Combinaciones', ['prob2'], 5], ['Estadística|Estadística', ['stat2'], 4]])
+  ] },
+  { id: 'c10', n: 10, name: '10|10', long: 'Nivell 10|Nivel 10', emoji: '🦁', units: [
+    U('Equacions i inequacions|Ecuaciones e inecuaciones', 'Segon grau, discriminant i desigualtats.|Segundo grado, discriminante y desigualdades.', 'cavaller', [
+      ['Suma i producte|Suma y producto', ['alg.eq2'], 4], ['Quantes solucions?|¿Cuántas soluciones?', ['alg.eq2'], 5], ['Inequacions|Inecuaciones', ['alg.ineq'], 4],
+      ['Canvi de signe|Cambio de signo', ['alg.ineq'], 5], ['Sistemes|Sistemas', ['alg.sys'], 5]]),
+    U('Funcions|Funciones', 'Rectes, paràboles i les seves gràfiques.|Rectas, parábolas y sus gráficas.', 'guida', [
+      ['Equació de la recta|Ecuación de la recta', ['fn.lin'], 5], ['Valors d\'una paràbola|Valores de una parábola', ['fn.quad'], 1], ['Vèrtex|Vértice', ['fn.quad'], 3],
+      ['Tall amb l\'eix y|Corte con el eje y', ['fn.quad'], 2], ['Tot plegat|Todo junto', ['fn.lin', 'fn.quad'], 4]]),
+    U('Matemàtica financera|Matemática financiera', 'Percentatges encadenats i interès.|Porcentajes encadenados e interés.', 'flama', [
+      ['Percentatge invers|Porcentaje inverso', ['pct2'], 3], ['Augments i baixades|Subidas y bajadas', ['pct2'], 4], ['Interès simple|Interés simple', ['pct2'], 5],
+      ['Repartiments|Repartos', ['prop2'], 4], ['Tot plegat|Todo junto', ['pct2', 'prop2'], 5]]),
+    U('Trigonometria|Trigonometría', 'Sinus, cosinus i tangent.|Seno, coseno y tangente.', 'tuga', [
+      ['El sinus|El seno', ['trig'], 1], ['El cosinus|El coseno', ['trig'], 2], ['La tangent|La tangente', ['trig'], 3],
+      ['Angles especials|Ángulos especiales', ['trig'], 4], ['Problemes|Problemas', ['trig'], 5]]),
+    U('Geometria i mesura|Geometría y medida', 'Pitàgores, volums i àrees.|Pitágoras, volúmenes y áreas.', 'tuga', [
+      ['Pitàgores|Pitágoras', ['geo.pyth'], 5], ['Àrea total|Área total', ['geo.vol2'], 5], ['Esfera|Esfera', ['geo.vol2'], 4],
+      ['Semicercles|Semicírculos', ['geo.circle'], 5], ['Tales|Tales', ['geo.thales'], 3]]),
+    U('Àlgebra avançada|Álgebra avanzada', 'Polinomis, successions i expressions.|Polinomios, sucesiones y expresiones.', 'cavaller', [
+      ['Identitats notables|Identidades notables', ['alg.poly'], 5], ['Terme general|Término general', ['seq.arith'], 4], ['Progressions geomètriques|Progresiones geométricas', ['seq.arith'], 5],
+      ['Potències|Potencias', ['pow.rules'], 5], ['Notació científica|Notación científica', ['pow.sci'], 4]]),
+    U('Estadística i probabilitat|Estadística y probabilidad', 'Dades, combinacions i probabilitat.|Datos, combinaciones y probabilidad.', 'guida', [
+      ['Mitjana i mediana|Media y mediana', ['stat2'], 4], ['El valor que falta|El valor que falta', ['stat2'], 5], ['Sense reemplaçament|Sin reemplazo', ['prob2'], 4],
+      ['Combinacions|Combinaciones', ['prob2'], 5], ['Tot plegat|Todo junto', ['stat2', 'prob2'], 5]])
   ] }
 ];
 /* Nivell 2 de cada unitat: 5 lliçons més, més difícils, que barregen cada tema amb el següent. */
+const GRADE = ['1r primària|1º primaria', '2n primària|2º primaria', '3r primària|3º primaria', '4t primària|4º primaria', '5è primària|5º primaria', '6è primària|6º primaria', '1r ESO|1º ESO', '2n ESO|2º ESO', '3r ESO|3º ESO', '4t ESO|4º ESO'];
+COURSES.forEach((c, ci) => { c.grade = GRADE[ci]; c.age = ci + 6; });
 COURSES.forEach(c => c.units.forEach((u, i) => {
   u.id = `${c.id}-${i + 1}`; u.color = UCOL[i % UCOL.length];
   if (/^Lògica/.test(u.title)) u.guide = 'cavaller';

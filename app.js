@@ -26,6 +26,7 @@ function migrate(p) {
   if (p.stats.games === undefined) p.stats.games = 0;
   if (p.course === undefined) { p.course = 3; p.baseCourse = 3; }
   if (p.baseCourse === undefined) p.baseCourse = p.course;
+  if (p.maxCourse === undefined) p.maxCourse = Math.max(p.course, p.baseCourse);
   if (!p.lang) p.lang = DB.lang;
   for (let i = 1; i <= 8; i++) if (p.prog['u' + i]) { p.prog['c4-' + i] = p.prog['u' + i]; delete p.prog['u' + i]; }
   if (!p.code && !p.pendingReg && !p.holdReg) p.pendingReg = true;
@@ -281,17 +282,18 @@ function renderHome() {
   const c = CUR();
   app.innerHTML = shell(`<button class="course" onclick="pickCourse()"><span class="cem">${c.emoji}</span><span><small>${L('Estàs fent', 'Estás haciendo')}</small><b>${tx(c.long)}</b></span><span class="cch">${L('Canvia', 'Cambia')} ▾</span></button>
     ${testCard()}${recoBox()}${schoolCard()}${goalCard()}${missionsCard()}${streakCard()}${UNITS_().map(unitHTML).join('')}
-    <div class="theend">${P.course < 5 ? L(`Quan acabis ${tx(c.long)}, t'espera <b>${tx(COURSES[P.course + 1].long)}</b>! 🚀`, `Cuando acabes ${tx(c.long)}, ¡te espera <b>${tx(COURSES[P.course + 1].long)}</b>! 🚀`) : L('Has arribat al final de primària! 🎓', '¡Has llegado al final de primaria! 🎓')}</div>`, 'home');
+    <div class="theend">${P.course < COURSES.length - 1 ? L(`Quan acabis ${tx(c.long)}, t'espera <b>${tx(COURSES[P.course + 1].long)}</b>! 🚀`, `Cuando acabes ${tx(c.long)}, ¡te espera <b>${tx(COURSES[P.course + 1].long)}</b>! 🚀`) : L('Has arribat a l\'últim nivell! 🎓', '¡Has llegado al último nivel! 🎓')}</div>`, 'home');
   revealNodes(); showGain();
   const n = $('.node.cur'); if (n) setTimeout(() => n.scrollIntoView({ block: 'center', behavior: 'smooth' }), 60);
 }
+const courseOpen = ci => P.unlockAll || ci <= P.maxCourse;
 function pickCourse() {
-  modal(`<div class="sheet"><h3>${L('Tria el curs', 'Elige el curso')}</h3><p>${L('Pots repassar cursos anteriors quan vulguis.', 'Puedes repasar cursos anteriores cuando quieras.')}</p><div class="cgrid">${COURSES.map((c, i) => {
-    const done = c.units.filter(u => udone(P, u)).length;
-    return `<button class="cbtn ${i === P.course ? 'on' : ''}" onclick="setCourse(${i})"><span class="cem">${c.emoji}</span><b>${tx(c.name)}</b><small>${done}/${c.units.length} ${L('unitats', 'unidades')}</small></button>`;
+  modal(`<div class="sheet"><h3>${L('Tria el nivell', 'Elige el nivel')}</h3><p>${L('Pots repassar els nivells de sota quan vulguis. Els de sobre s\'obren quan acabes el nivell anterior.', 'Puedes repasar los niveles de abajo cuando quieras. Los de arriba se abren cuando acabas el nivel anterior.')}</p><div class="cgrid">${COURSES.map((c, i) => {
+    const done = c.units.filter(u => udone(P, u)).length, open = courseOpen(i);
+    return `<button class="cbtn ${i === P.course ? 'on' : ''} ${open ? '' : 'locked'}" onclick="setCourse(${i})"><span class="cem">${open ? c.emoji : '🔒'}</span><b>${L('Nivell', 'Nivel')} ${c.n}</b><small>${open ? `${done}/${c.units.length} ${L('unitats', 'unidades')}` : L('Tancat', 'Cerrado')}</small></button>`;
   }).join('')}</div></div>`);
 }
-function setCourse(i) { P.course = i; save(); closeModal(); renderHome(); window.scrollTo(0, 0); }
+function setCourse(i) { if (!courseOpen(i)) { SFX.ko(); toast(L(`🔒 Primer acaba el nivell ${i}.`, `🔒 Primero acaba el nivel ${i}.`)); return; } P.course = i; save(); closeModal(); renderHome(); window.scrollTo(0, 0); }
 function openLesson(ui, li) {
   if (!lessonOpen(ui, li)) { toast(li === 0 ? L('🔒 Primer supera el repte de la unitat anterior.', '🔒 Primero supera el reto de la unidad anterior.') : L('🔒 Primer fes la lliçó anterior.', '🔒 Primero haz la lección anterior.')); SFX.ko(); return; }
   const u = UNITS_()[ui], isR = li === REP(u), st = prog(ui).stars[li];
@@ -520,6 +522,8 @@ function reward(R) {
   if (R.pack) FLOW.push(() => scrPack(R.pack));
   if (R.clv) FLOW.push(() => scrCharLevel(...R.clv));
   if (R.knight) FLOW.push(scrKnight);
+  const mc_ = COURSES[P.maxCourse];
+  if (mc_ && P.maxCourse < COURSES.length - 1 && mc_.units.every(u => udone(P, u))) { P.maxCourse++; save(); const nl = P.maxCourse; FLOW.push(() => scrNewLevel(nl)); }
   if (R.newB.length) FLOW.push(() => scrBadges(R.newB));
   flowNext();
 }
@@ -626,6 +630,13 @@ function scrCharLevel(id, lv) {
     <button class="btn big" onclick="flowNext()">${L('CONTINUA', 'CONTINÚA')}</button></div>`;
   SFX.win(); confetti(160);
 }
+function scrNewLevel(ci) {
+  const c = COURSES[ci];
+  app.innerHTML = `<div class="scr"><div class="burst gold"></div><div class="ribbon">${L('NIVELL SUPERAT', 'NIVEL SUPERADO')}</div><div class="lvbadge">${c.n}</div>
+    <h1>${L(`Has obert el nivell ${c.n}!`, `¡Has abierto el nivel ${c.n}!`)}</h1><p class="sub">${L('Has acabat totes les unitats del nivell anterior. Enhorabona!', 'Has acabado todas las unidades del nivel anterior. ¡Enhorabuena!')}</p>
+    <button class="btn big gold" onclick="P.course=${ci};save();flowNext()">${L(`ANAR AL NIVELL ${c.n}`, `IR AL NIVEL ${c.n}`)}</button><button class="btn big ghost" onclick="flowNext()">${L('CONTINUA', 'CONTINÚA')}</button></div>`;
+  SFX.win(); confetti(220);
+}
 function scrKnight() {
   app.innerHTML = `<div class="scr"><div class="burst gold"></div><div class="ribbon">${L('NOU COMPANY', 'NUEVO COMPAÑERO')}</div><div class="rchar big tapme">${charSVG('cavaller', 'happy')}</div>
     <h1>${L("El Cavaller del Codi s'uneix a la colla!", '¡El Caballero del Código se une a la pandilla!')}</h1><p class="sub">«${tx(CH.cavaller.hello)}»</p>
@@ -658,7 +669,7 @@ function curriculumBox() {
     const pc = t ? Math.round(100 * c / t) : 0, lvl = !t ? L('Encara no', 'Aún no') : pc >= 85 ? L('Ho domines', 'Lo dominas') : pc >= 65 ? L('Vas bé', 'Vas bien') : L('A reforçar', 'A reforzar');
     return `<div class="crow"><div class="cn"><span>${SENT[k][2]}</span><b>${tx(SENT[k])}</b><small class="${!t ? '' : pc >= 85 ? 'up' : pc >= 65 ? '' : 'down'}">${lvl}${t ? ' · ' + pc + '%' : ''}</small></div><div class="cbar"><div style="width:${pc}%;background:${pc >= 85 ? 'var(--ok)' : pc >= 65 ? '#FFC93C' : t ? 'var(--ko)' : '#E6DEEE'}"></div></div></div>`;
   }).join('');
-  return `<h2 class="h2">🏫 ${L("Currículum de l'escola", 'Currículo del cole')}</h2><p class="lead sm">${L('Els continguts segueixen el currículum oficial de matemàtiques de primària de Catalunya (Decret 175/2022).', 'Los contenidos siguen el currículo oficial de matemáticas de primaria de Cataluña (Decreto 175/2022).')}</p><div class="cbox">${rows}</div>`;
+  return `<h2 class="h2">🏫 ${L("Currículum de l'escola", 'Currículo del cole')}</h2><p class="lead sm">${L('Els continguts segueixen el currículum oficial de matemàtiques de Catalunya per a primària i ESO (Decret 175/2022).', 'Los contenidos siguen el currículo oficial de matemáticas de Cataluña para primaria y ESO (Decreto 175/2022).')}</p><div class="cbox">${rows}</div>`;
 }
 
 /* ---------- Prova d'evolució ---------- */
@@ -1017,8 +1028,8 @@ function onb(step) {
       <button class="link" onclick="loginModal()">🔑 ${L('Ja tinc compte', 'Ya tengo cuenta')}</button>`);
     const i = $('#nm'); i.addEventListener('keydown', e => { if (e.key === 'Enter') onbName(); });
   }
-  if (step === 1) onbShell(1, `<div class="onb-char sm tapme">${charSVG('numi', 'idle')}</div><div class="bubble big">${L(`Encantat, <b>${esc(ONB.name)}</b>! <b>Quin curs fas?</b>`, `¡Encantado, <b>${esc(ONB.name)}</b>! <b>¿Qué curso haces?</b>`)}</div>
-    <div class="cgrid">${COURSES.map((c, i) => `<button class="cbtn ${ONB.course === i ? 'on' : ''}" style="animation-delay:${i * 50}ms" onclick="ONB.course=${i};onb(2)"><span class="cem">${c.emoji}</span><b>${tx(c.name)}</b><small>${L('primària', 'primaria')}</small></button>`).join('')}</div>`);
+  if (step === 1) onbShell(1, `<div class="onb-char sm tapme">${charSVG('numi', 'idle')}</div><div class="bubble big">${L(`Encantat, <b>${esc(ONB.name)}</b>! <b>Quants anys tens?</b>`, `¡Encantado, <b>${esc(ONB.name)}</b>! <b>¿Cuántos años tienes?</b>`)}</div>
+    <div class="cgrid ages">${[6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16].map((a, i) => `<button class="cbtn ${ONB.age === a ? 'on' : ''}" style="animation-delay:${i * 40}ms" onclick="ONB.age=${a};ONB.course=${Math.min(9, Math.max(0, a - 6))};onb(2)"><b>${a}${a === 16 ? '+' : ''}</b><small>${L('anys', 'años')}</small></button>`).join('')}</div>`);
   if (step === 2) onbShell(2, `<div class="onb-char sm tapme">${charSVG('guida', 'idle')}</div><div class="bubble big">${L("Soc la <b>Guida</b>. Explica'm una mica: <b>com et sents amb les mates?</b>", 'Soy <b>Guida</b>. Cuéntame un poco: <b>¿cómo te sientes con las mates?</b>')}</div>
     <div class="ogrid">${Object.entries(FEEL).map(([k, v], i) => { const t = tx(v); return `<button class="obtn ${ONB.feel === k ? 'on' : ''}" style="animation-delay:${i * 60}ms" onclick="ONB.feel='${k}';onb(3)"><span>${t.split(' ')[0]}</span>${t.slice(t.indexOf(' ') + 1)}</button>`; }).join('')}</div>`);
   if (step === 3) onbShell(3, `<div class="onb-char sm tapme">${charSVG('vuit', 'idle')}</div><div class="bubble big">${L("I ara, <b>què t'agrada més?</b>", 'Y ahora, <b>¿qué te gusta más?</b>')}</div>
@@ -1042,14 +1053,14 @@ function finishPlacement(skipped) {
   const curOk = cur.filter(Boolean).length;
   let course = ci, skip = Math.min(lead, c.units.length - 2), msg;
   if (skipped) { skip = 0; msg = L(`Comencem ${tx(c.long)} des del principi.`, `Empezamos ${tx(c.long)} desde el principio.`); }
-  else if (ci > 0 && prevOk === 0 && curOk <= 1) { course = ci - 1; skip = 0; msg = L(`Farem un petit repàs de <b>${tx(COURSES[ci - 1].long)}</b> per agafar força. Quan vulguis, pots canviar de curs!`, `Haremos un pequeño repaso de <b>${tx(COURSES[ci - 1].long)}</b> para coger fuerza. ¡Cuando quieras, puedes cambiar de curso!`); }
+  else if (ci > 0 && prevOk === 0 && curOk <= 1) { course = ci - 1; skip = 0; msg = L(`Farem un petit repàs de <b>${tx(COURSES[ci - 1].long)}</b> per agafar força. Els nivells de sota sempre els tindràs oberts per repassar.`, `Haremos un pequeño repaso de <b>${tx(COURSES[ci - 1].long)}</b> para coger fuerza. Los niveles de abajo siempre los tendrás abiertos para repasar.`); }
   else if (skip > 0) msg = L(`Ho fas molt bé! Obrim ${tx(c.long)} fins a la <b>unitat ${skip + 1}</b>: ${tx(c.units[skip].title)}.`, `¡Lo haces muy bien! Abrimos ${tx(c.long)} hasta la <b>unidad ${skip + 1}</b>: ${tx(c.units[skip].title)}.`);
   else msg = L(`Començarem ${tx(c.long)} per la unitat 1: ${tx(c.units[0].title)}. Pas a pas!`, `Empezaremos ${tx(c.long)} por la unidad 1: ${tx(c.units[0].title)}. ¡Paso a paso!`);
-  const result = skipped ? L('Sense prova', 'Sin prueba') : `${prevN ? L(`Curs anterior ${prevOk}/${prevN} · `, `Curso anterior ${prevOk}/${prevN} · `) : ''}${tx(c.name)}: ${curOk}/${cur.length}`;
+  const result = skipped ? L('Sense prova', 'Sin prueba') : `${prevN ? L(`Nivell anterior ${prevOk}/${prevN} · `, `Nivel anterior ${prevOk}/${prevN} · `) : ''}${tx(c.long)}: ${curOk}/${cur.length}`;
   LS = null;
   const id = 'p' + Date.now().toString(36);
-  P = { id, name: ONB.name, goal: 20, sound: true, unlockAll: false, lang: LANG, ...freshProgress(), course, baseCourse: course, holdReg: true,
-    survey: { curs: tx(c.long), feel: ONB.feel, like: ONB.like, result, start: `${tx(COURSES[course].name)} · ${L('unitat', 'unidad')} ${(course === ci ? skip : 0) + 1}`, date: today() } };
+  P = { id, name: ONB.name, goal: 20, sound: true, unlockAll: false, lang: LANG, ...freshProgress(), course, baseCourse: course, maxCourse: course, holdReg: true,
+    survey: { curs: tx(c.long), age: ONB.age, feel: ONB.feel, like: ONB.like, result, start: `${tx(COURSES[course].long)} · ${L('unitat', 'unidad')} ${(course === ci ? skip : 0) + 1}`, date: today() } };
   if (!skipped) makeReco(meta.filter(m => m.tag === 'cur').filter((m, i) => !cur[i]), 'place');
   if (!skipped && cur.length) P.tests.push({ date: today(), course: ci, pct: Math.round(100 * curOk / cur.length), ok: curOk, n: cur.length, kind: 'inicial' });
   P.skip[COURSES[course].id] = course === ci ? skip : 0;

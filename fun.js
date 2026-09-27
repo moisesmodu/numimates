@@ -100,10 +100,11 @@ function scrPack(got) {
 let SCR_PACK = null;
 function revealPack() {
   const p = $('#pack'); if (!p || p.classList.contains('open')) return;
-  p.classList.add('open'); SFX.win();
+  p.classList.add('shake'); SFX.tap();
+  setTimeout(() => { p.classList.remove('shake'); p.classList.add('open'); SFX.win(); }, 500);
   const best = Math.max(...SCR_PACK.map(g => 'cre l'.indexOf(g.s[2])));
   confetti(best >= 2 ? 220 : 90);
-  setTimeout(() => { p.style.display = 'none'; $('#packOut').hidden = false; }, 450);
+  setTimeout(() => { p.style.display = 'none'; $('#packOut').hidden = false; }, 950);
 }
 function renderAlbum(tab) {
   VIEW = 'album';
