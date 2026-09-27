@@ -229,7 +229,7 @@ function go(v) {
   ({ home: renderHome, train: renderTrain, league: () => renderLeague(), album: () => renderAlbum(), shop: renderShop, badges: () => renderAlbum('medals'), profile: renderProfile, profiles: renderProfiles, onboard: () => onb(0) }[v] || renderHome)();
   if (v !== 'home') window.scrollTo(0, 0);
 }
-const NAV = () => [['home', '🗺️', L('Camí', 'Camino')], ['train', '🎯', L('Entrena', 'Entrena')], ['league', '🏆', L('Lliga', 'Liga')], ['album', '🎴', L('Àlbum', 'Álbum')], ['shop', '🛍️', L('Botiga', 'Tienda')], ['profile', '👤', L('Perfil', 'Perfil')]];
+const NAV = () => [['home', '🗺️', L('Camí', 'Camino')], ['train', '🎯', L('Entrena', 'Entrena')], ['album', '🎴', L('Àlbum', 'Álbum')], ['shop', '🛍️', L('Botiga', 'Tienda')], ['profile', '👤', L('Perfil', 'Perfil')]];
 const nav = t => `<nav class="nav">${NAV().map(([v, i, l]) => `<button class="${v === t ? 'on' : ''}" onclick="go('${v}')"><span class="ni">${i}</span><span>${l}</span></button>`).join('')}</nav>`;
 const shell = (inner, tab) => `<div class="page">${topbar()}${inner}</div>${nav(tab)}`;
 function topbar() {
