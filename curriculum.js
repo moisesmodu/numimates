@@ -1,6 +1,6 @@
 /* ===== Temari de primària (1r a 6è) · textos «català|castellano» =====
    Cada lliçó: [títol, [habilitats], nivell]. Una habilitat pot portar paràmetre: 'g.add:20'. */
-const UCOL = ['#36A9E1', '#3CC46A', '#FF9A3C', '#FF6FA3', '#8A4FB0', '#22B5A0', '#E08E00', '#FF5A5F'];
+const UCOL = ['#3A7BD5', '#2F9461', '#E0772F', '#D9577A', '#6A55C4', '#1F8F87', '#C38A12', '#CF4436'];
 const U = (title, desc, guide, lessons) => ({ title, desc, guide, lessons: lessons.map(([t, sk, L_]) => ({ t, sk, L: L_ })) });
 
 const COURSES = [
