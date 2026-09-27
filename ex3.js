@@ -32,7 +32,7 @@ function solidSVG(k) {
     con: '<polygon points="75,20 45,100 105,100" fill="#FF9A3C"/><ellipse cx="75" cy="100" rx="30" ry="10" fill="#F07F22"/>',
     piramide: '<polygon points="75,20 40,95 80,108" fill="#FFC93C"/><polygon points="75,20 80,108 112,90" fill="#E8A400"/>',
     prisma: '<polygon points="60,45 100,30 125,80 85,95" fill="#E24F86"/><polygon points="35,95 60,45 85,95" fill="#FF9EC0"/>' }[k];
-  return `<svg viewBox="0 0 150 125" class="vsvg wide solid"><defs><radialGradient id="gSph" cx=".35" cy=".3"><stop offset="0" stop-color="#E7C8FF"/><stop offset="1" stop-color="#8A4FB0"/></radialGradient></defs><g stroke="#2B1A38" stroke-width="2.5" stroke-linejoin="round">${g}</g></svg>`;
+  return `<svg viewBox="0 0 150 125" class="vsvg wide solid"><defs><radialGradient id="gSph" cx=".35" cy=".3"><stop offset="0" stop-color="#E7C8FF"/><stop offset="1" stop-color="#8A4FB0"/></radialGradient></defs><g stroke="#1D2433" stroke-width="2.5" stroke-linejoin="round">${g}</g></svg>`;
 }
 const BALL = { r: '🔴', b: '🔵', g: '🟢', y: '🟡' };
 const BN = { r: ['vermella', 'roja'], b: ['blava', 'azul'], g: ['verda', 'verde'], y: ['groga', 'amarilla'] };
@@ -44,7 +44,7 @@ Object.assign(EX, {
     const set = shuffle(['🍎', '🐱', '⚽', '🌸', '🚗', '🎈', '🐶', '⭐']).slice(0, L_ <= 1 ? 4 : 5);
     if (L_ <= 2 || Math.random() < .5) {
       const i = ri(1, set.length - 2), right = Math.random() < .5, ans = set[right ? i + 1 : i - 1];
-      return mc(L(`Què hi ha just a la <b>${right ? 'dreta' : 'esquerra'}</b> de ${set[i]}?`, `¿Qué hay justo a la <b>${right ? 'derecha' : 'izquierda'}</b> de ${set[i]}?`), ans, set.filter(x => x !== ans && x !== set[i]), { big: true, vis: `<div class="seq em row">${set.map(x => `<span>${x}</span>`).join('')}</div>`, ex: L(`A la ${right ? 'dreta' : 'esquerra'} de ${set[i]} hi ha ${ans}. Recorda: la mà dreta és la que fas servir per escriure (si ets dretà/ana)!`, `A la ${right ? 'derecha' : 'izquierda'} de ${set[i]} está ${ans}.`) });
+      return mc(L(`Què hi ha just a la <b>${right ? 'dreta' : 'esquerra'}</b> de ${set[i]}?`, `¿Qué hay justo a la <b>${right ? 'derecha' : 'izquierda'}</b> de ${set[i]}?`), ans, set.filter(x => x !== ans && x !== set[i]), { big: true, vis: `<div class="seq em row">${set.map(x => `<span>${x}</span>`).join('')}</div>`, ex: L(`A la ${right ? 'dreta' : 'esquerra'} de ${set[i]} hi ha ${ans}. Recorda: la mà dreta és la que fas servir per escriure (si ets dretà/ana).`, `A la ${right ? 'derecha' : 'izquierda'} de ${set[i]} está ${ans}.`) });
     }
     const cells = {}, pos = shuffle([...Array(9).keys()]).slice(0, 5); pos.forEach((p, i) => cells[Math.floor(p / 3) + ',' + p % 3] = set[i]);
     const cands = pos.filter(p => Math.floor(p / 3) > 0 && cells[(Math.floor(p / 3) - 1) + ',' + p % 3]);
@@ -92,7 +92,7 @@ Object.assign(EX, {
     const marks = shuffle(['🍎', '⭐', '🎈', '🍪']), endK = w.end[0] + ',' + w.end[1], others = [];
     for (const [dr, dc] of shuffle([[0, 1], [1, 0], [0, -1], [-1, 0], [1, 1], [-1, -1], [1, -1], [-1, 1]])) { const r = w.end[0] + dr, c = w.end[1] + dc, k = r + ',' + c; if (r >= 0 && r < n && c >= 0 && c < n && !cells[k] && k !== endK && others.length < 3) others.push(k); }
     cells[endK] = marks[0]; others.forEach((k, i) => cells[k] = marks[i + 1]);
-    return mc(L("El robot segueix aquestes ordres. On arriba?", 'El robot sigue estas órdenes. ¿Dónde llega?'), marks[0], marks.slice(1, others.length + 1), { big: true, vis: `<div class="stack">${gridHTML(n, cells)}${cmdHTML(w.cmds)}</div>`, ex: L(`Fes-ho pas a pas amb el dit: ${w.cmds.map(c => ARW[c]).join(' ')} → arriba a ${marks[0]}. Així pensen els programadors!`, `Hazlo paso a paso con el dedo: ${w.cmds.map(c => ARW[c]).join(' ')} → llega a ${marks[0]}. ¡Así piensan los programadores!`) });
+    return mc(L("El robot segueix aquestes ordres. On arriba?", 'El robot sigue estas órdenes. ¿Dónde llega?'), marks[0], marks.slice(1, others.length + 1), { big: true, vis: `<div class="stack">${gridHTML(n, cells)}${cmdHTML(w.cmds)}</div>`, ex: L(`Fes-ho pas a pas amb el dit: ${w.cmds.map(c => ARW[c]).join(' ')} → arriba a ${marks[0]}. Així pensen els programadors.`, `Hazlo paso a paso con el dedo: ${w.cmds.map(c => ARW[c]).join(' ')} → llega a ${marks[0]}. Así piensan los programadores.`) });
   },
   'pc.loop': L_ => {
     const s = ri(1, 9), k = ri(2, L_ <= 2 ? 4 : 5);
@@ -108,7 +108,7 @@ Object.assign(EX, {
       const cols = shuffle(['r', 'b', 'g', 'y']), inBag = cols.slice(0, ri(1, 2)), bag = []; inBag.forEach(c => { for (let i = 0; i < ri(2, 4); i++) bag.push(c); });
       const t = Math.random() < .35 && inBag.length === 1 ? inBag[0] : Math.random() < .5 ? pick(inBag) : cols[3];
       const cnt = bag.filter(x => x === t).length, ans = cnt === bag.length ? L('Segur', 'Seguro') : cnt === 0 ? L('Impossible', 'Imposible') : L('Possible', 'Posible');
-      return mc(L(`Treus una bola de la bossa sense mirar. Que surti una bola <b>${BN[t][0]}</b> ${BALL[t]} és…`, `Sacas una bola de la bolsa sin mirar. Que salga una bola <b>${BN[t][1]}</b> ${BALL[t]} es…`), ans, [], { fixed: [L('Segur', 'Seguro'), L('Possible', 'Posible'), L('Impossible', 'Imposible')], vis: `<div class="bag">${shuffle(bag).map(c => `<span>${BALL[c]}</span>`).join('')}</div>`, ex: cnt === bag.length ? L('Totes les boles són d\'aquest color: és segur!', 'Todas las bolas son de ese color: ¡es seguro!') : cnt === 0 ? L('No hi ha cap bola d\'aquest color: és impossible!', 'No hay ninguna bola de ese color: ¡es imposible!') : L(`Hi ha ${cnt} boles d'aquest color entre ${bag.length}: pot sortir, però no és segur.`, `Hay ${cnt} bolas de ese color entre ${bag.length}: puede salir, pero no es seguro.`) });
+      return mc(L(`Treus una bola de la bossa sense mirar. Que surti una bola <b>${BN[t][0]}</b> ${BALL[t]} és…`, `Sacas una bola de la bolsa sin mirar. Que salga una bola <b>${BN[t][1]}</b> ${BALL[t]} es…`), ans, [], { fixed: [L('Segur', 'Seguro'), L('Possible', 'Posible'), L('Impossible', 'Imposible')], vis: `<div class="bag">${shuffle(bag).map(c => `<span>${BALL[c]}</span>`).join('')}</div>`, ex: cnt === bag.length ? L('Totes les boles són d\'aquest color: és segur.', 'Todas las bolas son de ese color: es seguro.') : cnt === 0 ? L('No hi ha cap bola d\'aquest color: és impossible.', 'No hay ninguna bola de ese color: es imposible.') : L(`Hi ha ${cnt} boles d'aquest color entre ${bag.length}: pot sortir, però no és segur.`, `Hay ${cnt} bolas de ese color entre ${bag.length}: puede salir, pero no es seguro.`) });
     }
     if (L_ === 3) {
       const [a, b, c] = shuffle(['r', 'b', 'g']), na = ri(4, 6), nb = ri(1, 3), nc = ri(1, 3), bag = [...Array(na).fill(a), ...Array(nb).fill(b), ...Array(nc).fill(c)];
@@ -136,7 +136,7 @@ Object.assign(EX, {
 });
 function loopEx(s, k, ops, r) {
   const code = `<div class="code"><div class="blk ev">🚩 ${L('quan comenci', 'al empezar')}</div><div class="blk">n = ${s}</div><div class="blk loop">${L('repeteix', 'repite')} ${k} ${L('vegades', 'veces')}${ops.map(o => `<div class="blk in">${o}</div>`).join('')}</div><div class="blk">${L('digues', 'di')} n</div></div>`;
-  return inp(L('Què dirà el programa al final?', '¿Qué dirá el programa al final?'), r, { vis: code, ex: L(`Comencem amb n = ${s} i repetim ${k} vegades (${ops.join(', ')}). Al final, n = ${r}. Els bucles estalvien feina als programadors!`, `Empezamos con n = ${s} y repetimos ${k} veces (${ops.join(', ')}). Al final, n = ${r}. ¡Los bucles ahorran trabajo a los programadores!`) });
+  return inp(L('Què dirà el programa al final?', '¿Qué dirá el programa al final?'), r, { vis: code, ex: L(`Comencem amb n = ${s} i repetim ${k} vegades (${ops.join(', ')}). Al final, n = ${r}. Els bucles estalvien feina als programadors.`, `Empezamos con n = ${s} y repetimos ${k} veces (${ops.join(', ')}). Al final, n = ${r}. Los bucles ahorran trabajo a los programadores.`) });
 }
 
 /* ===== Mapa del currículum: a quin «sentit» pertany cada habilitat ===== */
