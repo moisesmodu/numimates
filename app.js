@@ -273,14 +273,14 @@ function unitHTML(u, ui) {
   }).join('');
   const deco = [0, 1, 2, 3].map(k => `<span class="deco" style="${k % 2 ? 'left' : 'right'}:${6 + (k * 7 + ui * 5) % 20}%;top:${14 + k * 22}%;animation-delay:${k * .7}s">${DECO[(ui * 3 + k) % DECO.length]}</span>`).join('');
   return `<section class="unit ${open ? '' : 'closed'}" style="--uc:${u.color}">
-    <div class="ubanner"><div class="utext"><div class="ukick">${L('UNITAT', 'UNIDAD')} ${ui + 1}</div><h2>${tx(u.title)}</h2><p>${open ? tx(u.desc) : L('🔒 Supera el repte de la unitat anterior per obrir-la.', '🔒 Supera el reto de la unidad anterior para abrirla.')}</p></div><div class="uguide tapme">${charSVG(u.guide, 'idle')}</div></div>
+    <div class="ubanner"><div class="utext"><div class="ukick">${L('UNITAT', 'UNIDAD')} ${ui + 1}</div><h2>${tx(u.title)}</h2><div class="usents">${unitSents(u).map(k => `<span title="${tx(SENT[k])}">${SENT[k][2]} ${tx(SENT[k]).replace(/^Sentit |^Sentido /, '').replace(/ i pensament computacional| y pensamiento computacional/, '')}</span>`).join('')}</div><p>${open ? tx(u.desc) : L('🔒 Supera el repte de la unitat anterior per obrir-la.', '🔒 Supera el reto de la unidad anterior para abrirla.')}</p></div><div class="uguide tapme">${charSVG(u.guide, 'idle')}</div></div>
     <div class="path">${deco}${nodes}<div class="pguide tapme ${ui % 2 ? 'l' : ''}">${charSVG(u.guide, open ? 'happy' : 'idle')}</div></div></section>`;
 }
 function renderHome() {
   VIEW = 'home';
   const c = CUR();
   app.innerHTML = shell(`<button class="course" onclick="pickCourse()"><span class="cem">${c.emoji}</span><span><small>${L('Estàs fent', 'Estás haciendo')}</small><b>${tx(c.long)}</b></span><span class="cch">${L('Canvia', 'Cambia')} ▾</span></button>
-    ${testCard()}${recoBox()}${goalCard()}${missionsCard()}${streakCard()}${UNITS_().map(unitHTML).join('')}
+    ${testCard()}${recoBox()}${schoolCard()}${goalCard()}${missionsCard()}${streakCard()}${UNITS_().map(unitHTML).join('')}
     <div class="theend">${P.course < 5 ? L(`Quan acabis ${tx(c.long)}, t'espera <b>${tx(COURSES[P.course + 1].long)}</b>! 🚀`, `Cuando acabes ${tx(c.long)}, ¡te espera <b>${tx(COURSES[P.course + 1].long)}</b>! 🚀`) : L('Has arribat al final de primària! 🎓', '¡Has llegado al final de primaria! 🎓')}</div>`, 'home');
   revealNodes(); showGain();
   const n = $('.node.cur'); if (n) setTimeout(() => n.scrollIntoView({ block: 'center', behavior: 'smooth' }), 60);
@@ -634,6 +634,33 @@ function scrKnight() {
   SFX.win(); confetti(200);
 }
 
+/* ---------- Tema de l'escola i currículum ---------- */
+function schoolCard() {
+  const sc = P.school; if (!sc || sc.course !== P.course) return '';
+  const u = UNITS_()[sc.ui]; if (!u) return '';
+  return `<button class="testcard school" onclick="startSchool()"><span class="tci">📚</span><span><b>${L("A l'escola fas:", 'En el cole das:')} ${tx(u.title)}</b><small>${L('Practica-ho: 10 preguntes del tema. +XP i cromo!', 'Practícalo: 10 preguntas del tema. ¡+XP y cromo!')}</small></span><span class="go">›</span></button>`;
+}
+function pickSchool() {
+  modal(`<div class="sheet"><h3>${L("Què fas ara a l'escola?", '¿Qué estás dando en el cole?')}</h3><p>${L(`Tria el tema de ${tx(CUR().long)} que feu a classe. Te'l posarem a la pantalla principal per practicar-lo.`, `Elige el tema de ${tx(CUR().long)} que dais en clase. Te lo pondremos en la pantalla principal para practicarlo.`)}</p>
+    <div class="slist">${UNITS_().map((u, i) => `<button class="sitem ${P.school && P.school.course === P.course && P.school.ui === i ? 'on' : ''}" style="--uc:${u.color}" onclick="setSchool(${i})"><span class="sdot"></span><span><b>${tx(u.title)}</b><small>${unitSents(u).map(k => SENT[k][2] + ' ' + tx(SENT[k])).join(' · ')}</small></span></button>`).join('')}</div></div>`);
+}
+function setSchool(i) { P.school = { course: P.course, ui: i, date: today() }; save(); closeModal(); startSchool(); }
+function startSchool() {
+  const sc = P.school, u = UNITS_()[sc.ui], opts = u.lessons.map(l => l.sk.map(s => [s, l.L])).flat(), plan = [];
+  for (let i = 0; i < 10; i++) plan.push(pick(opts));
+  startRun({ mode: 'train', ui: sc.ui, li: null, plan, color: u.color });
+}
+function curriculumBox() {
+  const s = P.stats, rows = Object.keys(SENT).map(k => {
+    const sks = new Set(); UNITS_().forEach(u => u.lessons.forEach(l => l.sk.forEach(x => { if (skillSent(x) === k) sks.add(x); })));
+    if (!sks.size) return '';
+    let c = 0, t = 0; sks.forEach(x => { const v = s.sk[x]; if (v) { c += v[0]; t += v[1]; } });
+    const pc = t ? Math.round(100 * c / t) : 0, lvl = !t ? L('Encara no', 'Aún no') : pc >= 85 ? L('Ho domines', 'Lo dominas') : pc >= 65 ? L('Vas bé', 'Vas bien') : L('A reforçar', 'A reforzar');
+    return `<div class="crow"><div class="cn"><span>${SENT[k][2]}</span><b>${tx(SENT[k])}</b><small class="${!t ? '' : pc >= 85 ? 'up' : pc >= 65 ? '' : 'down'}">${lvl}${t ? ' · ' + pc + '%' : ''}</small></div><div class="cbar"><div style="width:${pc}%;background:${pc >= 85 ? 'var(--ok)' : pc >= 65 ? '#FFC93C' : t ? 'var(--ko)' : '#E6DEEE'}"></div></div></div>`;
+  }).join('');
+  return `<h2 class="h2">🏫 ${L("Currículum de l'escola", 'Currículo del cole')}</h2><p class="lead sm">${L('Els continguts segueixen el currículum oficial de matemàtiques de primària de Catalunya (Decret 175/2022).', 'Los contenidos siguen el currículo oficial de matemáticas de primaria de Cataluña (Decreto 175/2022).')}</p><div class="cbox">${rows}</div>`;
+}
+
 /* ---------- Prova d'evolució ---------- */
 function startEvolution() {
   const us = UNITS_(); let top = 0;
@@ -685,6 +712,7 @@ function renderTrain() {
   app.innerHTML = shell(`<h1 class="ph1">${L('Entrena', 'Entrena')}</h1><p class="lead">${L(`Practica el que ja has après de ${tx(CUR().long)} i posa a prova la teva agilitat mental.`, `Practica lo que ya has aprendido de ${tx(CUR().long)} y pon a prueba tu agilidad mental.`)}</p>
     <button class="tcard" onclick="startTrain()"><span class="ti">🧠</span><span><b>${L('Entrenament intel·ligent', 'Entrenamiento inteligente')}</b><small>${L('8 exercicis del que et costa més. Ideal per repassar.', '8 ejercicios de lo que más te cuesta. Ideal para repasar.')}</small></span></button>
     ${testInfo().due ? `<button class="tcard evo" onclick="startEvolution()"><span class="ti">🧪</span><span><b>${L("Prova d'evolució", 'Prueba de evolución')}</b><small>${L('Ja la pots fer! Mira quant has millorat.', '¡Ya puedes hacerla! Mira cuánto has mejorado.')}</small></span></button>` : ''}
+    <button class="tcard school" onclick="pickSchool()"><span class="ti">📚</span><span><b>${L("Què fas ara a l'escola?", '¿Qué estás dando en el cole?')}</b><small>${L("Tria el tema que fas a classe i practica'l: així t'anirà millor a l'escola!", 'Elige el tema que das en clase y practícalo: ¡así te irá mejor en el cole!')}</small></span></button>
     <h2 class="h2">⚡ ${L('Agilitat mental', 'Agilidad mental')}</h2>
     <div class="ggrid">${GAMES().map(([id, ic, t, d]) => `<button class="gcard" onclick="startGame('${id}')"><span class="gi">${ic}</span><b>${t}</b><small>${d}</small><span class="grec">🏆 ${B[id] || 0}</span></button>`).join('')}</div>
     <h2 class="h2">${L('Repassa una unitat', 'Repasa una unidad')}</h2>
@@ -883,6 +911,7 @@ function renderProfile() {
     <h2 class="h2">📈 ${L('La meva evolució', 'Mi evolución')}</h2>
     <div class="evobox">${evo.length ? evoChart(evo) : `<p class="empty">${L("Fes la teva primera prova d'evolució per veure la gràfica.", 'Haz tu primera prueba de evolución para ver la gráfica.')}</p>`}
       ${ti.due ? `<button class="btn big" onclick="startEvolution()">🧪 ${L("FES LA PROVA D'EVOLUCIÓ", 'HAZ LA PRUEBA DE EVOLUCIÓN')}</button>` : `<p class="mut c">${L(`Propera prova d'evolució d'aquí a <b>${ti.left} ${dies(ti.left)}</b>.`, `Próxima prueba de evolución dentro de <b>${ti.left} ${dies(ti.left)}</b>.`)}</p>`}</div>
+    ${curriculumBox()}
     <h2 class="h2">${L('Progrés a ', 'Progreso en ')}${tx(CUR().long)}</h2><div class="urows">${rows}</div>
     <h2 class="h2">🔑 ${L('El meu compte', 'Mi cuenta')}</h2>
     <div class="codecard"><div>${P.username ? `<small>${L('Usuari', 'Usuario')}</small><b>${esc(P.username)}</b>` : `<small>${L('El teu codi secret', 'Tu código secreto')}</small><b>${P.code || '…'}</b>`}<span id="cloud">${cloudTxt()}</span></div>

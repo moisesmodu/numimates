@@ -23,6 +23,9 @@ const COURSES = [
     U('Mesures i diners|Medidas y dinero', 'Hores, centímetres i euros.|Horas, centímetros y euros.', 'tuga', [
       ['Les hores en punt|Las horas en punto', ['g.clock:o'], 1], ['Comptem euros|Contamos euros', ['g.coins:10'], 1], ['Mesurem amb el regle|Medimos con la regla', ['g.ruler:10'], 1],
       ['Més euros|Más euros', ['g.coins:20'], 2], ['Hores i mesures|Horas y medidas', ['g.clock:o', 'g.ruler:15', 'g.coins:20'], 2]]),
+    U('Orientació, codi i atzar|Orientación, código y azar', "Dreta i esquerra, programar el robot i la sort.|Derecha e izquierda, programar el robot y la suerte.", 'cavaller', [
+      ['Dreta i esquerra|Derecha e izquierda', ['e.dir'], 1], ['Camins amb fletxes|Caminos con flechas', ['pc.robot'], 1], ['Segur o impossible?|¿Seguro o imposible?', ['at.prob'], 1],
+      ['Comptem amb ratlletes|Contamos con rayitas', ['at.tally'], 1], ['Programa el robot|Programa el robot', ['pc.robot', 'e.dir'], 2]]),
     U('Problemes|Problemas', 'Llegeix i pensa: sumo o resto?|Lee y piensa: ¿sumo o resto?', 'flama', [
       ['Problemes de sumar|Problemas de sumar', ['g.prob:add'], 1], ['Problemes de restar|Problemas de restar', ['g.prob:less'], 1], ['Sumar o restar?|¿Sumar o restar?', ['g.prob:add', 'g.prob:less'], 2],
       ['Problemes fins al 20|Problemas hasta el 20', ['g.prob:add', 'g.prob:less'], 3], ['Petits detectius|Pequeños detectives', ['g.prob:add', 'g.prob:less', 'g.prob:cmp'], 3]])
@@ -43,6 +46,9 @@ const COURSES = [
     U('Mesures i formes|Medidas y formas', 'Rellotge, regle, euros i figures.|Reloj, regla, euros y figuras.', 'tuga', [
       ['Hores i mitges|Horas y medias', ['g.clock:h'], 1], ['El regle|La regla', ['g.ruler:15'], 3], ['Metres i centímetres|Metros y centímetros', ['me.units'], 2],
       ['Euros|Euros', ['g.coins:50'], 2], ['Les figures|Las figuras', ['g.shape:all'], 3]]),
+    U('Espai, codi i dades|Espacio, código y datos', 'Orientar-se, programar, cossos i recomptes.|Orientarse, programar, cuerpos y recuentos.', 'cavaller', [
+      ['Caselles i fletxes|Casillas y flechas', ['pc.robot'], 2], ['Simetries|Simetrías', ['e.sym'], 1], ['Cossos geomètrics|Cuerpos geométricos', ['e.solid'], 1],
+      ['Segur, possible o impossible|Seguro, posible o imposible', ['at.prob'], 2], ['Taules de recompte|Tablas de recuento', ['at.tally', 'stat'], 1]]),
     U('Problemes|Problemas', 'Llegeix, pensa i resol.|Lee, piensa y resuelve.', 'flama', [
       ['Problemes de sumar|Problemas de sumar', ['p.add'], 1], ['Problemes de restar|Problemas de restar', ['g.prob:sub', 'p.add'], 3], ['Problemes de multiplicar|Problemas de multiplicar', ['g.prob:mul'], 1],
       ['Quin càlcul faig?|¿Qué cálculo hago?', ['p.add', 'g.prob:mul', 'g.prob:sub'], 3], ['Grans detectius|Grandes detectives', ['p.add', 'g.prob:mul', 'g.prob:sub'], 4]])
@@ -66,6 +72,12 @@ const COURSES = [
     U('Mesures|Medidas', 'Hores, pes, capacitat i diners.|Horas, peso, capacidad y dinero.', 'tuga', [
       ["Quarts d'hora|Cuartos de hora", ['me.clock'], 2], ['Rellotge de 5 en 5|Reloj de 5 en 5', ['me.clock'], 3], ['Pes i capacitat|Peso y capacidad', ['me.units'], 4],
       ['Diners|Dinero', ['me.money'], 4], ['Perímetres|Perímetros', ['me.perim', 'me.shape'], 3]]),
+    U('Espai i pensament computacional|Espacio y pensamiento computacional', 'Coordenades, simetria, cossos i bucles.|Coordenadas, simetría, cuerpos y bucles.', 'cavaller', [
+      ['Coordenades|Coordenadas', ['e.coord'], 1], ['Simetria|Simetría', ['e.sym'], 2], ['Cossos geomètrics|Cuerpos geométricos', ['e.solid'], 2],
+      ['Programa el robot|Programa el robot', ['pc.robot'], 3], ['Bucles|Bucles', ['pc.loop'], 1]]),
+    U('Dades i atzar|Datos y azar', 'Gràfics, recomptes i probabilitat.|Gráficos, recuentos y probabilidad.', 'tuga', [
+      ['Gràfics de barres|Gráficos de barras', ['stat'], 1], ['Recomptes|Recuentos', ['at.tally'], 2], ['Més probable|Más probable', ['at.prob'], 3],
+      ['La moda|La moda', ['stat'], 2], ['Tot plegat|Todo junto', ['stat', 'at.prob'], 3]]),
     U('Lògica i problemes|Lógica y problemas', 'Pensa com un detectiu.|Piensa como un detective.', 'flama', [
       ['Sèries|Series', ['l.series'], 3], ['Balances|Balanzas', ['l.balance'], 3], ['Problemes|Problemas', ['p.add', 'p.mul'], 2],
       ['Problemes de dividir|Problemas de dividir', ['p.div'], 3], ['Detectius|Detectives', ['p.add', 'p.mul', 'p.div', 'l.balance'], 3]])
@@ -92,6 +104,12 @@ const COURSES = [
     U('Mesures i formes|Medidas y formas', 'Rellotges, metres, diners i figures.|Relojes, metros, dinero y figuras.', 'tuga', [
       ['Quina hora és?|¿Qué hora es?', ['me.clock'], 1], ['Metres i centímetres|Metros y centímetros', ['me.units', 'me.clock'], 2], ['Formes i perímetres|Formas y perímetros', ['me.shape', 'me.perim'], 3],
       ['Diners i mesures|Dinero y medidas', ['me.money', 'me.units'], 4], ['Quarts i durades|Cuartos y duraciones', ['me.clock', 'me.perim', 'me.money'], 5]]),
+    U('Espai i pensament computacional|Espacio y pensamiento computacional', 'Coordenades, simetria, cossos i algorismes.|Coordenadas, simetría, cuerpos y algoritmos.', 'cavaller', [
+      ['Coordenades|Coordenadas', ['e.coord'], 2], ['Simetria|Simetría', ['e.sym'], 3], ['Cares, vèrtexs i arestes|Caras, vértices y aristas', ['e.solid'], 4],
+      ['Algorismes amb el robot|Algoritmos con el robot', ['pc.robot'], 4], ['Bucles|Bucles', ['pc.loop'], 2]]),
+    U('Dades i atzar|Datos y azar', 'Gràfics, moda, mitjana i probabilitat.|Gráficos, moda, media y probabilidad.', 'tuga', [
+      ['Gràfics|Gráficos', ['stat'], 1], ['Moda i rang|Moda y rango', ['stat'], 2], ['Probabilitat|Probabilidad', ['at.prob'], 3],
+      ['La mitjana|La media', ['stat'], 3], ['Tot plegat|Todo junto', ['stat', 'at.prob'], 4]]),
     U('Problemes|Problemas', 'Llegeix, pensa i resol com un detectiu.|Lee, piensa y resuelve como un detective.', 'flama', [
       ['Sumar i restar|Sumar y restar', ['p.add'], 1], ['Multiplicar|Multiplicar', ['p.mul', 'p.add'], 2], ['Dividir|Dividir', ['p.div', 'p.mul'], 3],
       ['Dos passos|Dos pasos', ['p.two'], 4], ['Grans reptes|Grandes retos', ['p.two', 'p.big'], 5]])
@@ -115,6 +133,12 @@ const COURSES = [
     U('Geometria|Geometría', 'Angles, àrees i perímetres.|Ángulos, áreas y perímetros.', 'tuga', [
       ["Tipus d'angles|Tipos de ángulos", ['geo.angle'], 1], ['Graus|Grados', ['geo.angle'], 3], ['Àrea del rectangle|Área del rectángulo', ['geo.area'], 2],
       ['Àrea del triangle|Área del triángulo', ['geo.area'], 5], ['Perímetres i àrees|Perímetros y áreas', ['geo.area', 'me.perim'], 4]]),
+    U('Espai i pensament computacional|Espacio y pensamiento computacional', 'Coordenades, cossos, simetria i algorismes.|Coordenadas, cuerpos, simetría y algoritmos.', 'cavaller', [
+      ['Coordenades|Coordenadas', ['e.coord'], 3], ['Cossos geomètrics|Cuerpos geométricos', ['e.solid'], 4], ['Eixos de simetria|Ejes de simetría', ['e.sym'], 3],
+      ['Algorismes|Algoritmos', ['pc.robot'], 5], ['Bucles i variables|Bucles y variables', ['pc.loop'], 4]]),
+    U('Estadística i probabilitat|Estadística y probabilidad', 'Gràfics, mitjana i probabilitat.|Gráficos, media y probabilidad.', 'tuga', [
+      ['Gràfics|Gráficos', ['stat'], 2], ['La mitjana|La media', ['stat'], 3], ['Probabilitat|Probabilidad', ['at.prob'], 4],
+      ['Probabilitat amb daus|Probabilidad con dados', ['at.prob'], 5], ['Tot plegat|Todo junto', ['stat', 'at.prob'], 5]]),
     U('Problemes|Problemas', 'Diners, decimals i dos passos.|Dinero, decimales y dos pasos.', 'flama', [
       ['Problemes amb decimals|Problemas con decimales', ['p.dec'], 2], ['Dos passos|Dos pasos', ['p.two'], 4], ['Grans reptes|Grandes retos', ['p.big'], 5],
       ['Diners|Dinero', ['p.dec'], 4], ['Mestres dels problemes|Maestros de los problemas', ['p.two', 'p.big', 'p.dec'], 5]])
@@ -141,6 +165,9 @@ const COURSES = [
     U('Geometria i volum|Geometría y volumen', 'Angles, àrees i cubs.|Ángulos, áreas y cubos.', 'tuga', [
       ['Angles del triangle|Ángulos del triángulo', ['geo.angle'], 5], ['Àrees|Áreas', ['geo.area'], 5], ['Comptar cubs|Contar cubos', ['vol'], 1],
       ['Volum del prisma|Volumen del prisma', ['vol'], 4], ['Mestres de la geometria|Maestros de la geometría', ['vol', 'geo.area', 'geo.angle'], 5]]),
+    U('Espai i pensament computacional|Espacio y pensamiento computacional', 'Coordenades, cossos, algorismes i probabilitat.|Coordenadas, cuerpos, algoritmos y probabilidad.', 'cavaller', [
+      ['Coordenades|Coordenadas', ['e.coord'], 4], ['Cossos geomètrics|Cuerpos geométricos', ['e.solid'], 5], ['Algorismes|Algoritmos', ['pc.robot'], 5],
+      ['Bucles i variables|Bucles y variables', ['pc.loop'], 5], ['Probabilitat|Probabilidad', ['at.prob'], 5]]),
     U('Grans problemes|Grandes problemas', 'El repte final de primària!|¡El reto final de primaria!', 'flama', [
       ['Problemes amb decimals|Problemas con decimales', ['p.dec'], 5], ['Dos passos|Dos pasos', ['p.two'], 5], ['Grans reptes|Grandes retos', ['p.big'], 5],
       ['Proporcions|Proporciones', ['prop'], 5], ['Mestres de primària|Maestros de primaria', ['p.dec', 'p.big', 'pct', 'prop'], 5]])

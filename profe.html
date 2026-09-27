@@ -31,6 +31,7 @@ tr:last-child td{border-bottom:0}.code{font-family:ui-monospace,monospace;color:
 .up{color:var(--ok)}.down{color:var(--ko)}
 .cold{opacity:.55}
 .note{color:var(--mut);font-size:13.5px;line-height:1.5;margin-top:16px}
+.ov{position:fixed;inset:0;background:rgba(43,26,56,.45);display:flex;align-items:center;justify-content:center;padding:16px;z-index:9}.ovc{background:#fff;border-radius:20px;padding:22px;max-width:620px;width:100%;max-height:90vh;overflow:auto}.rrow{display:grid;grid-template-columns:1fr 160px 110px;gap:10px;align-items:center;margin:8px 0;font-size:14px}.rbar{height:12px;background:#EEE;border-radius:6px;overflow:hidden}.rbar div{height:100%}
 .spark{display:inline-flex;gap:2px;align-items:flex-end;height:22px;vertical-align:middle}.spark i{width:6px;background:#22B5A0;border-radius:2px}
 </style>
 </head>
@@ -70,6 +71,21 @@ async function setPass(code, name) {
   alert(r.ok ? `Contraseña cambiada. Díselo a ${name}.` : r.error === 'contrasenya-format' ? 'Mínimo 4 caracteres.' : 'Este alumno aún no tiene usuario (entra con código).');
 }
 async function unlock(code, v) { await act('unlock', code, { value: v }); go(pass()); }
+const SENT = { num: ['🔢', 'Sentido numérico'], mes: ['📏', 'Sentido de la medida'], esp: ['📐', 'Sentido espacial'], alg: ['🧩', 'Sentido algebraico y pensamiento computacional'], est: ['🎲', 'Sentido estocástico'] };
+function skillSent(sk) { const n = sk.split(':')[0]; if (/^(me\.clock|me\.units|me\.money|me\.perim|g\.clock|g\.coins|g\.ruler|geo\.area)$/.test(n)) return 'mes'; if (/^(me\.shape|g\.shape|geo\.angle|vol|e\.)/.test(n)) return 'esp'; if (/^(l\.|g\.seq|pc\.|g\.repeat)/.test(n)) return 'alg'; if (/^(stat|at\.)/.test(n)) return 'est'; return 'num'; }
+function report(code) {
+  const r = ROWS.find(x => x.code === code); if (!r) return;
+  const agg = {}; Object.entries(r.sk || {}).forEach(([k, [c, t]]) => { if (k === 'sprint' || k === 'flash' || k === 'chain') return; const s = skillSent(k); agg[s] ||= [0, 0]; agg[s][0] += c; agg[s][1] += t; });
+  const t = r.tests || [];
+  const d = document.createElement('div'); d.className = 'ov'; d.onclick = e => { if (e.target === d) d.remove(); };
+  d.innerHTML = `<div class="ovc"><h2>${esc(r.name)} · ${CUR[r.course] || ''}</h2><p class="mut">Informe por bloques del currículo (Decreto 175/2022). Útil para tutorías con las familias.</p>
+    ${Object.keys(SENT).map(k => { const [c, tt] = agg[k] || [0, 0], pc = tt ? Math.round(100 * c / tt) : null; return `<div class="rrow"><span>${SENT[k][0]} ${SENT[k][1]}</span><div class="rbar"><div style="width:${pc || 0}%;background:${pc == null ? '#ddd' : pc >= 85 ? '#2A9C50' : pc >= 65 ? '#E8A400' : '#D63C42'}"></div></div><b>${pc == null ? '—' : pc + '% (' + tt + ' resp.)'}</b></div>`; }).join('')}
+    <h3>Pruebas</h3><p>${t.length ? t.map(x => `${x.date.slice(8, 10)}/${x.date.slice(5, 7)}: <b>${x.pct}%</b> ${x.kind === 'inicial' ? '(inicial)' : ''}`).join(' · ') : 'Aún no ha hecho pruebas.'}</p>
+    ${r.school ? `<p>📚 Tema que dice estar dando en el cole: unidad ${r.school.ui + 1} de ${CUR[r.school.course] || ''}.</p>` : ''}
+    ${r.reco ? `<p>⚔️ Tiene una misión recomendada pendiente (${r.reco.items.length} lecciones).</p>` : ''}
+    <button onclick="this.closest('.ov').remove()">Cerrar</button></div>`;
+  document.body.appendChild(d);
+}
 async function off(code, name) { if (!confirm(`¿Dar de baja a ${name}? Dejará de aparecer y no podrá entrar.`)) return; await act('off', code); go(pass()); }
 function evoCell(r) {
   const t = r.tests || []; if (!t.length) return '<span class="mut">—</span>';
@@ -91,7 +107,7 @@ function render() {
     <td class="fire">🔥 ${r.streakNow}</td><td>${r.best}</td><td class="rw">${SRW.map(([d, i]) => (r.srw || []).includes(d) ? i : '').join('') || '<span class="mut">—</span>'}</td>
     <td>${r.xp}</td><td><b>${r.wxp}</b></td><td>${r.lessons}</td><td>${r.answers ? Math.round(100 * r.correct / r.answers) + '%' : '—'}</td><td>${evoCell(r)}</td><td>${ago(r.last_day)}</td>
     <td>${r.survey ? `<span class="pill">${esc(r.survey.result || '')}</span> ${FEEL[r.survey.feel] || ''}` : '<span class="mut">—</span>'}</td><td>${r.lang === 'es' ? 'ES' : 'CAT'}</td>
-    <td>${r.username ? `<button class="mini ghost" onclick="setPass('${r.code}','${esc(r.name)}')">Contraseña</button> ` : ''}<button class="mini ghost" title="Abre todas las unidades a este alumno (modo maestro)" onclick="unlock('${r.code}',${!r.unlock_all})">${r.unlock_all ? '🔓 Todo abierto' : '🔒 Normal'}</button> <button class="mini ghost red" onclick="off('${r.code}','${esc(r.name)}')">Baja</button></td></tr>`).join('') || '<tr><td colspan="15" class="mut">Aún no hay alumnos.</td></tr>'}
+    <td>${r.username ? `<button class="mini ghost" onclick="setPass('${r.code}','${esc(r.name)}')">Contraseña</button> ` : ''}<button class="mini ghost" onclick="report('${r.code}')">Informe</button> <button class="mini ghost" title="Abre todas las unidades a este alumno (modo maestro)" onclick="unlock('${r.code}',${!r.unlock_all})">${r.unlock_all ? '🔓 Todo abierto' : '🔒 Normal'}</button> <button class="mini ghost red" onclick="off('${r.code}','${esc(r.name)}')">Baja</button></td></tr>`).join('') || '<tr><td colspan="15" class="mut">Aún no hay alumnos.</td></tr>'}
   </tbody></table></div>
   <p class="note">Premios de racha: 🎁 3 días · 🏅 7 días · 🎧 14 días · ⭐ 30 días · 👑 60 días · 🏆 100 días. El botón 🔒/🔓 activa el «modo maestro» (todas las unidades abiertas) solo para ese alumno: el alumno ya no puede activarlo él mismo. «XP semana» es la liga semanal que ven los alumnos (se reinicia cada lunes): ordena por esa columna para premiar a los 3 primeros. Las filas en gris son alumnos que han perdido la racha (hace más de un día que no practican). La columna «Evolución» muestra las últimas pruebas (cada 14 días) y cuánto ha subido o bajado respecto a la anterior.</p>`;
 }
