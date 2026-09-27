@@ -22,7 +22,7 @@ const BOX = '<span class="box">?</span>';
 const bigNum = s => `<div class="bignum">${s}</div>`;
 const eqv = s => `<div class="eq">${s}</div>`;
 const frac = (n, d) => `<span class="frac"><span>${n}</span><span>${d}</span></span>`;
-const colOp = (a, b, op) => `<div class="colop"><div>${fmt(a)}</div><div><span class="cop">${op}</span>${fmt(b)}</div><div class="ln"></div><div class="cq">?</div></div>`;
+const colOp = (a, b, op) => `<div class="colop"><div>${typeof a === 'string' ? a : fmt(a)}</div><div><span class="cop">${op}</span>${typeof b === 'string' ? b : fmt(b)}</div><div class="ln"></div><div class="cq">?</div></div>`;
 const emGrid = (em, n, cols) => `<div class="emgrid" style="grid-template-columns:repeat(${cols},auto)">${Array(n).fill(`<span>${em}</span>`).join('')}</div>`;
 const COLS = ['#FF9A3C', '#36A9E1', '#3CC46A', '#FF6FA3', '#8A4FB0', '#22B5A0'];
 
@@ -95,6 +95,7 @@ function ca999(n, un) {
 }
 function numToCa(n) {
   if (n === 0) return 'zero';
+  if (n >= 1e6) { const m = Math.floor(n / 1e6), r = n % 1e6; return (m === 1 ? 'un milió' : ca999(m, true) + ' milions') + (r ? ' ' + numToCa(r) : ''); }
   const th = Math.floor(n / 1000), r = n % 1000;
   let s = th === 1 ? 'mil' : th > 1 ? ca999(th, true) + ' mil' : '';
   if (r) s += (s ? ' ' : '') + ca999(r, false);
@@ -102,8 +103,8 @@ function numToCa(n) {
 }
 
 /* --- Ajudants --- */
-const PL = ['unitats', 'desenes', 'centenes', 'unitats de miler', 'desenes de miler'];
-const PLS = ['U', 'D', 'C', 'UM', 'DM'];
+const PL = ['unitats', 'desenes', 'centenes', 'unitats de miler', 'desenes de miler', 'centenes de miler', 'unitats de milió'];
+const PLS = ['U', 'D', 'C', 'UM', 'DM', 'CM', 'UMi'];
 const digOf = L => L <= 1 ? 3 : L === 2 ? 4 : 5;
 function rndN(k, distinct) {
   if (distinct) { const d = shuffle([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]); if (d[0] === 0) [d[0], d[1]] = [d[1], d[0]]; return +d.slice(0, k).join(''); }
@@ -208,8 +209,8 @@ const probEx = k => () => { const [q, a, ex, u] = pick(PROB[k])(); return inp(q,
 /* ===== Habilitats ===== */
 const EX = {
   /* ---- Unitat 1: Els grans números ---- */
-  'n.place': L => {
-    const k = digOf(L), n = rndN(k, true), s = String(n), pos = ri(0, k - 1), d = +s[k - 1 - pos];
+  'n.place': (L, A) => {
+    const k = +A || digOf(L), n = rndN(k, true), s = String(n), pos = ri(0, k - 1), d = +s[k - 1 - pos];
     const legend = PLS.slice(0, k).reverse().join(' · ');
     if (d === 0 || Math.random() < .5) {
       const others = shuffle(s.split('').map(Number).filter(x => x !== d));
@@ -219,8 +220,8 @@ const EX = {
     for (let p = 0; p <= k; p++) if (p !== pos) dis.push(fmt(d * 10 ** p));
     return mc(`Quant val la xifra <b>${d}</b> en aquest número?`, fmt(v), shuffle(dis), { vis: bigNum(fmt(n)), ex: `La xifra ${d} és a les ${PL[pos]}, així que val ${fmt(v)}. (${legend})` });
   },
-  'n.decomp': L => {
-    const k = digOf(L); let n = rndN(k);
+  'n.decomp': (L, A) => {
+    const k = +A || digOf(L); let n = rndN(k);
     if (L >= 3 && Math.random() < .5) { const s = String(n).split(''); s[ri(1, k - 1)] = '0'; n = +s.join(''); }
     const s = String(n), parts = [], partsL = [];
     for (let i = 0; i < k; i++) { const d = +s[i], p = k - 1 - i; if (d) { parts.push(fmt(d * 10 ** p)); partsL.push(`${d} ${PLS[p]}`); } }
@@ -228,8 +229,8 @@ const EX = {
     const leg = useL ? `<div class="legend">${PLS.slice(0, k).map((x, i) => `${x} = ${PL[i]}`).reverse().join(' · ')}</div>` : '';
     return inp('Quin número és?', n, { vis: `<div class="stack">${eqv(txt)}${leg}</div>`, ex: `${txt} = ${fmt(n)}` });
   },
-  'n.words': L => {
-    const k = digOf(L), n = rndN(k);
+  'n.words': (L, A) => {
+    const k = +A || digOf(L), n = rndN(k);
     if (L >= 3 && Math.random() < .4)
       return mc('Com es llegeix aquest número?', numToCa(n), variants(n).map(numToCa), { vis: bigNum(fmt(n)), list: true, ex: `${fmt(n)} es llegeix «${numToCa(n)}».` });
     return inp('Escriu amb xifres:', n, { vis: `<div class="words">${numToCa(n)}</div>`, ex: `«${numToCa(n)}» = ${fmt(n)}` });
@@ -242,8 +243,8 @@ const EX = {
     const n = after ? base * 10 ** z + (10 ** z - 1) : base * 10 ** z, ans = after ? n + 1 : n - 1;
     return inp(`Quin número va just <b>${after ? 'després' : 'abans'}</b> de ${fmt(n)}?`, ans, { vis: eqv(after ? `${fmt(n)} + 1 = ${BOX}` : `${fmt(n)} − 1 = ${BOX}`), ex: `${fmt(n)} ${after ? '+' : '−'} 1 = ${fmt(ans)}. Compte amb els ${after ? '9' : '0'} del final: canvien diverses xifres alhora!` });
   },
-  'n.compare': L => {
-    const k = L <= 3 ? digOf(L) : 5, a = rndN(k); let b;
+  'n.compare': (L, A) => {
+    const k = +A || (L <= 3 ? digOf(L) : 5), a = rndN(k); let b;
     const r = Math.random();
     if (r < .12) b = a;
     else if (L >= 4 && r < .25) b = rndN(k - 1);
@@ -258,17 +259,17 @@ const EX = {
     }
     return mc('Quin signe hi va?', sym, [], { fixed: ['<', '=', '>'], vis: `<div class="cmp"><span>${fmt(a)}</span>${BOX}<span>${fmt(b)}</span></div>`, big: true, ex });
   },
-  'n.order': L => {
-    const k = L <= 3 ? 4 : 5, desc = L >= 5 && Math.random() < .5, first = ri(1, 9), set = new Set();
+  'n.order': (L, A) => {
+    const k = +A || (L <= 3 ? 4 : 5), desc = L >= 5 && Math.random() < .5, first = ri(1, 9), set = new Set();
     while (set.size < 4) set.add(+(String(first) + String(ri(0, 10 ** (k - 1) - 1)).padStart(k - 1, '0')));
     const vals = [...set], ans = vals.slice().sort((x, y) => desc ? y - x : x - y);
     return { type: 'order', q: `Toca els números de <b>${desc ? 'més gran a més petit' : 'més petit a més gran'}</b>:`, items: shuffle(vals), ans, ex: ans.map(fmt).join(desc ? ' > ' : ' < ') };
   },
-  'n.round': L => {
-    const k = L <= 4 ? 4 : 5, to = pick(L <= 4 ? [10, 100] : [10, 100, 1000]); let n = rndN(k);
+  'n.round': (L, A) => {
+    const k = +A || (L <= 4 ? 4 : 5), to = pick(k >= 6 ? [100, 1000, 10000] : L <= 4 ? [10, 100] : [10, 100, 1000]); let n = rndN(k);
     if (n % to === 0) n += ri(1, to - 1);
     const down = Math.floor(n / to) * to, up = down + to, r = Math.round(n / to) * to, other = r === down ? up : down;
-    const nm = { 10: 'desena', 100: 'centena', 1000: 'unitat de miler' }[to], half = n - down === to / 2;
+    const nm = { 10: 'desena', 100: 'centena', 1000: 'unitat de miler', 10000: 'desena de miler' }[to], half = n - down === to / 2;
     const far = r === up ? up + to : Math.max(0, down - to);
     return mc(`Arrodoneix a la <b>${nm}</b> més propera:`, fmt(r), [fmt(other), fmt(far), fmt(Math.round(n / (to * 10)) * to * 10), fmt(n - n % Math.max(1, to / 10))], {
       vis: bigNum(fmt(n)),
@@ -467,23 +468,7 @@ const EX = {
   },
 
   /* ---- Unitat 7: Mesures i formes ---- */
-  'me.clock': L => {
-    const mode = L <= 1 ? 'o' : L === 2 ? 'q' : L === 3 ? pick(['q', 'five']) : L === 4 ? pick(['five', 'name']) : pick(['name', 'dur', 'dur']);
-    if (mode === 'dur') {
-      const h = ri(9, 19), m = pick([0, 15, 30, 45]), d = pick([15, 20, 30, 40, 45, 60, 90]), tot = h * 60 + m + d, eh = Math.floor(tot / 60), em = tot % 60;
-      return mc(`L'activitat comença a les <b>${dig(h, m)}</b> i dura <b>${durTxt(d)}</b>. A quina hora acaba?`, dig(eh, em), [dig(eh + 1, em), dig(h, (m + d) % 60), dig(eh, (em + 15) % 60), dig(eh - 1 < h ? eh + 1 : eh - 1, em)], { ex: `${dig(h, m)} + ${durTxt(d)} = ${dig(eh, em)}.` });
-    }
-    const h = ri(1, 12), m = mode === 'o' ? 0 : mode === 'q' ? pick([0, 15, 30, 45]) : mode === 'five' ? ri(0, 11) * 5 : pick([15, 30, 45]);
-    const nx = h % 12 + 1, pv = h === 1 ? 12 : h - 1;
-    if (mode === 'name') {
-      const ex = `«${quartName(h, m)}» vol dir que ja ha passat ${QN[m / 15]} d'hora cap a ${lesH(nx)}: són les ${dig(h, m)}.`;
-      if (Math.random() < .5) return mc('Quina hora marca el rellotge?', quartName(h, m), [quartName(nx, m), quartName(h, m === 45 ? 15 : m + 15), quartName(pv, m)], { vis: clockSVG(h, m), list: true, ex });
-      return mc(`Quina hora és «<b>${quartName(h, m)}</b>»?`, dig(h, m), [dig(nx, m), dig(h, (m + 30) % 60), dig(pv, m)], { ex });
-    }
-    const dis = [dig(nx, m), dig(h, (m + 30) % 60), dig(pv, m)];
-    if (m) dis.unshift(dig(m / 5, (h % 12) * 5));
-    return mc('Quina hora marca el rellotge?', dig(h, m), dis, { vis: clockSVG(h, m), ex: `L'agulla petita marca les hores (${m ? 'ha passat el ' + h : 'és al ' + h}) i la gran, vermella, els minuts (${m}): són les ${dig(h, m)}.` });
-  },
+  'me.clock': L => clockEx(L <= 1 ? 'o' : L === 2 ? 'q' : L === 3 ? pick(['q', 'five']) : L === 4 ? pick(['five', 'name']) : pick(['name', 'dur', 'dur'])),
   'me.units': L => {
     const K = [['kg', 'g', 1000, 'quilos', 'grams', 'quilo'], ['km', 'm', 1000, 'quilòmetres', 'metres', 'quilòmetre'], ['l', 'ml', 1000, 'litres', 'mil·lilitres', 'litre'], ['m', 'cm', 100, 'metres', 'centímetres', 'metre']];
     if (L <= 3) {
@@ -501,13 +486,7 @@ const EX = {
     const arr = [...vals], lbl = arr.map(show), mx = Math.max(...arr);
     return mc('Què pesa <b>més</b>?', lbl[arr.indexOf(mx)], lbl.filter((_, i) => arr[i] !== mx), { ex: `Passa-ho tot a grams (1 kg = 1.000 g): ${arr.map(v => fmt(v) + ' g').join(', ')}. El més gran és ${fmt(mx)} g.` });
   },
-  'me.shape': L => {
-    const [nm, s] = pick(SHP), col = pick(COLS), v = Math.random();
-    const desc = s ? `té ${s} costats i ${s} vèrtexs` : 'és rodó i no té costats rectes ni vèrtexs';
-    if (v < .45 || s === 0) return mc('Com es diu aquesta figura?', nm, shuffle(SHP.map(x => x[0]).filter(x => x !== nm && !(nm === 'quadrat' && x === 'rectangle'))), { vis: shapeSVG(nm, s, col), ex: `És un ${nm}: ${desc}.` });
-    if (v < .75) return inp(`Quants <b>costats</b> té un <b>${nm}</b>?`, s, { vis: shapeSVG(nm, s, col), ex: `Un ${nm} ${desc}.` });
-    return inp('Quants <b>vèrtexs</b> (punxes) té aquesta figura?', s, { vis: shapeSVG(nm, s, col), ex: `És un ${nm}: ${desc}.` });
-  },
+  'me.shape': () => shapeEx(SHP),
   'me.perim': L => {
     if (L >= 5 && Math.random() < .4) { const s = ri(3, 12); return inp(`Un quadrat fa <b>${4 * s} cm</b> de perímetre. Quant fa cada costat?`, s, { unit: 'cm', vis: rectSVG(1, 1, '?', '?'), ex: `Un quadrat té 4 costats iguals: ${4 * s} ÷ 4 = ${s} cm.` }); }
     let w = ri(3, 12), h = ri(2, 9); if (w === h) w++;
@@ -532,54 +511,27 @@ const EX = {
   'p.add': probEx('add'), 'p.mul': probEx('mul'), 'p.div': probEx('div'), 'p.two': probEx('two'), 'p.big': probEx('big')
 };
 
-/* ===== El camí ===== */
-const UNITS = [
-  { id: 'u1', title: 'Els grans números', desc: 'Llegeix, escriu i compara números fins al 99.999.', color: '#36A9E1', guide: 'numi', lessons: [
-    { t: 'Unitats, desenes i centenes', sk: ['n.place', 'n.decomp'], L: 1 },
-    { t: 'Fins al 9.999', sk: ['n.place', 'n.words', 'n.decomp'], L: 2 },
-    { t: 'Fins al 99.999', sk: ['n.place', 'n.words', 'n.next'], L: 3 },
-    { t: 'Comparar i ordenar', sk: ['n.compare', 'n.order'], L: 4 },
-    { t: 'Arrodonir', sk: ['n.round', 'n.compare'], L: 5 }] },
-  { id: 'u2', title: 'Sumes i restes', desc: 'Càlcul mental, portar-ne i el número amagat.', color: '#3CC46A', guide: 'numi', lessons: [
-    { t: 'Sumes de cap', sk: ['a.add'], L: 1 },
-    { t: 'Restes de cap', sk: ['a.sub', 'a.add'], L: 2 },
-    { t: 'Portant-ne', sk: ['a.add', 'a.sub'], L: 3 },
-    { t: 'El número amagat', sk: ['a.missing', 'a.estimate'], L: 4 },
-    { t: 'Números grans', sk: ['a.add', 'a.sub', 'a.missing'], L: 5 }] },
-  { id: 'u3', title: 'Multiplicar', desc: 'Les taules, per 10 i per 100 i multiplicacions grans.', color: '#FF9A3C', guide: 'vuit', lessons: [
-    { t: 'Taules del 2, 5 i 10', sk: ['m.table', 'm.array'], L: 1 },
-    { t: 'Taules del 3, 4 i 6', sk: ['m.table', 'm.array'], L: 2 },
-    { t: 'Taules del 7, 8 i 9', sk: ['m.table', 'm.missing'], L: 3 },
-    { t: 'Per 10 i per 100', sk: ['m.by10', 'm.missing'], L: 4 },
-    { t: 'Multiplicacions grans', sk: ['m.big', 'm.table'], L: 5 }] },
-  { id: 'u4', title: 'Dividir', desc: 'Repartir a parts iguals i saber què sobra.', color: '#FF6FA3', guide: 'vuit', lessons: [
-    { t: 'Repartir a parts iguals', sk: ['d.share'], L: 1 },
-    { t: 'Divisió i multiplicació', sk: ['d.table', 'd.rel'], L: 2 },
-    { t: 'Divisions de les taules', sk: ['d.table', 'd.rel'], L: 3 },
-    { t: 'Què sobra?', sk: ['d.rem'], L: 4 },
-    { t: 'Dividir números grans', sk: ['d.big', 'd.table'], L: 5 }] },
-  { id: 'u5', title: 'Lògica', desc: 'Sèries, balances i endevinalles de números.', color: '#8A4FB0', guide: 'guida', lessons: [
-    { t: 'Sèries i patrons', sk: ['l.series', 'l.pattern'], L: 1 },
-    { t: 'Parells i senars', sk: ['l.odd', 'l.series'], L: 2 },
-    { t: 'Balances misterioses', sk: ['l.balance', 'l.series'], L: 3 },
-    { t: 'Endevinalles', sk: ['l.riddle', 'l.balance'], L: 4 },
-    { t: 'Detectius de números', sk: ['l.series', 'l.riddle', 'l.balance'], L: 5 }] },
-  { id: 'u6', title: 'Fraccions', desc: 'Meitats, terços, quarts… i molt més!', color: '#22B5A0', guide: 'tuga', lessons: [
-    { t: 'Meitats i quarts', sk: ['f.pie'], L: 1 },
-    { t: 'Llegir fraccions', sk: ['f.read', 'f.pie'], L: 2 },
-    { t: "La fracció d'un número", sk: ['f.of'], L: 3 },
-    { t: 'Comparar fraccions', sk: ['f.cmp', 'f.of'], L: 4 },
-    { t: 'Mestres de les fraccions', sk: ['f.pie', 'f.read', 'f.of', 'f.cmp'], L: 5 }] },
-  { id: 'u7', title: 'Mesures i formes', desc: 'Rellotges, metres, diners i figures.', color: '#E08E00', guide: 'tuga', lessons: [
-    { t: 'Quina hora és?', sk: ['me.clock'], L: 1 },
-    { t: 'Metres i centímetres', sk: ['me.units', 'me.clock'], L: 2 },
-    { t: 'Formes i perímetres', sk: ['me.shape', 'me.perim'], L: 3 },
-    { t: 'Diners i mesures', sk: ['me.money', 'me.units'], L: 4 },
-    { t: 'Quarts i durades', sk: ['me.clock', 'me.perim', 'me.money'], L: 5 }] },
-  { id: 'u8', title: 'Problemes', desc: 'Llegeix, pensa i resol com un detectiu.', color: '#FF5A5F', guide: 'flama', lessons: [
-    { t: 'Sumar i restar', sk: ['p.add'], L: 1 },
-    { t: 'Multiplicar', sk: ['p.mul', 'p.add'], L: 2 },
-    { t: 'Dividir', sk: ['p.div', 'p.mul'], L: 3 },
-    { t: 'Dos passos', sk: ['p.two'], L: 4 },
-    { t: 'Grans reptes', sk: ['p.two', 'p.big'], L: 5 }] }
-];
+function clockEx(mode) {
+  if (mode === 'dur') {
+    const h = ri(9, 19), m = pick([0, 15, 30, 45]), d = pick([15, 20, 30, 40, 45, 60, 90]), tot = h * 60 + m + d, eh = Math.floor(tot / 60), em = tot % 60;
+    return mc(`L'activitat comença a les <b>${dig(h, m)}</b> i dura <b>${durTxt(d)}</b>. A quina hora acaba?`, dig(eh, em), [dig(eh + 1, em), dig(h, (m + d) % 60), dig(eh, (em + 15) % 60), dig(eh - 1 < h ? eh + 1 : eh - 1, em)], { ex: `${dig(h, m)} + ${durTxt(d)} = ${dig(eh, em)}.` });
+  }
+  const h = ri(1, 12), m = mode === 'o' ? 0 : mode === 'h' ? pick([0, 30]) : mode === 'q' ? pick([0, 15, 30, 45]) : mode === 'five' ? ri(0, 11) * 5 : pick([15, 30, 45]);
+  const nx = h % 12 + 1, pv = h === 1 ? 12 : h - 1;
+  if (mode === 'name') {
+    const ex = `«${quartName(h, m)}» vol dir que ja ha passat ${QN[m / 15]} d'hora cap a ${lesH(nx)}: són les ${dig(h, m)}.`;
+    if (Math.random() < .5) return mc('Quina hora marca el rellotge?', quartName(h, m), [quartName(nx, m), quartName(h, m === 45 ? 15 : m + 15), quartName(pv, m)], { vis: clockSVG(h, m), list: true, ex });
+    return mc(`Quina hora és «<b>${quartName(h, m)}</b>»?`, dig(h, m), [dig(nx, m), dig(h, (m + 30) % 60), dig(pv, m)], { ex });
+  }
+  const dis = [dig(nx, m), dig(h, (m + 30) % 60), dig(pv, m)];
+  if (m) dis.unshift(dig(m / 5, (h % 12) * 5));
+  return mc('Quina hora marca el rellotge?', dig(h, m), dis, { vis: clockSVG(h, m), ex: `L'agulla petita marca les hores (${m ? 'ha passat el ' + h : 'és al ' + h}) i la gran, vermella, els minuts (${m}): són les ${dig(h, m)}.` });
+}
+
+function shapeEx(list) {
+  const [nm, s] = pick(list), col = pick(COLS), v = Math.random();
+  const desc = s ? `té ${s} costats i ${s} vèrtexs` : 'és rodó i no té costats rectes ni vèrtexs';
+  if (v < .45 || s === 0) return mc('Com es diu aquesta figura?', nm, shuffle(list.map(x => x[0]).filter(x => x !== nm && !(nm === 'quadrat' && x === 'rectangle'))), { vis: shapeSVG(nm, s, col), ex: `És un ${nm}: ${desc}.` });
+  if (v < .75) return inp(`Quants <b>costats</b> té un <b>${nm}</b>?`, s, { vis: shapeSVG(nm, s, col), ex: `Un ${nm} ${desc}.` });
+  return inp('Quants <b>vèrtexs</b> (punxes) té aquesta figura?', s, { vis: shapeSVG(nm, s, col), ex: `És un ${nm}: ${desc}.` });
+}
