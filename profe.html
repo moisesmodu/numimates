@@ -32,6 +32,7 @@ tr:last-child td{border-bottom:0}.code{font-family:ui-monospace,monospace;color:
 .cold{opacity:.55}
 .note{color:var(--mut);font-size:13.5px;line-height:1.5;margin-top:16px}
 .ov{position:fixed;inset:0;background:rgba(43,26,56,.45);display:flex;align-items:center;justify-content:center;padding:16px;z-index:9}.ovc{background:#fff;border-radius:20px;padding:22px;max-width:620px;width:100%;max-height:90vh;overflow:auto}.rrow{display:grid;grid-template-columns:1fr 160px 110px;gap:10px;align-items:center;margin:8px 0;font-size:14px}.rbar{height:12px;background:#EEE;border-radius:6px;overflow:hidden}.rbar div{height:100%}
+.h2{color:var(--pri);font-weight:900;margin:30px 0 10px}.rwgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(320px,100%),1fr));gap:12px}.rwbox{background:#fff;border:2px solid var(--line);border-radius:16px;padding:12px 14px}.rwbox h3{margin:0 0 6px}.rwbox table{font-size:13.5px}.rwbox td{white-space:normal;padding:6px 4px;vertical-align:top}.rwbox td:first-child{color:var(--mut);width:48%}
 .spark{display:inline-flex;gap:2px;align-items:flex-end;height:22px;vertical-align:middle}.spark i{width:6px;background:#22B5A0;border-radius:2px}
 </style>
 </head>
@@ -42,7 +43,7 @@ const $ = s => document.querySelector(s), root = $('#root');
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 const SRW = [[3, '🎁'], [7, '🏅'], [14, '🎧'], [30, '⭐'], [60, '👑'], [100, '🏆']];
 const FEEL = { love: '😍', good: '🙂', meh: '😐', hard: '😟' }, CUR = ['Nivel 1 (1º prim.)', 'Nivel 2 (2º prim.)', 'Nivel 3 (3º prim.)', 'Nivel 4 (4º prim.)', 'Nivel 5 (5º prim.)', 'Nivel 6 (6º prim.)', 'Nivel 7 (1º ESO)', 'Nivel 8 (2º ESO)', 'Nivel 9 (3º ESO)', 'Nivel 10 (4º ESO)'];
-let ROWS = [], SORT = ['streak', -1];
+let BATS = [], ROWS = [], SORT = ['streak', -1];
 const todayStr = () => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; };
 const days = d => Math.round((new Date(todayStr() + 'T12:00') - new Date(d + 'T12:00')) / 864e5);
 const ago = d => { if (!d) return '—'; const n = days(d); return n <= 0 ? 'hoy' : n === 1 ? 'ayer' : `hace ${n} días`; };
@@ -58,7 +59,8 @@ async function go(p) {
   const r = await fetch('/api/profe', { headers: { 'x-profe': p } });
   if (r.status !== 200) { sessionStorage.removeItem('pp'); return login('Contraseña incorrecta.'); }
   sessionStorage.setItem('pp', p);
-  ROWS = (await r.json()).rows.map(r => ({ ...r, evo: (r.tests || []).filter(t => t.kind === 'evo'), streakNow: alive(r) ? r.streak : 0, wxp: r.week && r.week.id === weekId() ? r.week.xp : 0 }));
+  const J = await r.json(); BATS = J.battles || [];
+  ROWS = J.map(r => ({ ...r, cards: Object.keys(r.album || {}).length, bwins: r.bwins || 0, evo: (r.tests || []).filter(t => t.kind === 'evo'), streakNow: alive(r) ? r.streak : 0, wxp: r.week && r.week.id === weekId() ? r.week.xp : 0 }));
   render();
 }
 async function act(action, code, extra = {}) {
@@ -102,14 +104,35 @@ function render() {
   <div class="kpis"><div class="kpi"><b>${ROWS.length}</b><span>alumnos registrados</span></div><div class="kpi"><b class="fire">${act_}</b><span>con la racha encendida</span></div><div class="kpi"><b>${Math.max(0, ...ROWS.map(r => r.best))}</b><span>mejor racha (días)</span></div><div class="kpi"><b>${prem}</b><span>premios de racha ganados</span></div><div class="kpi"><b>${ev}</b><span>han hecho prueba de evolución</span></div></div>
   <div class="bar"><select id="fc" onchange="render()"><option value="">Todos los cursos</option>${CUR.map((n, i) => `<option value="${i}" ${f === String(i) ? 'selected' : ''}>${n}</option>`).join('')}</select>
   <input id="q" placeholder="Buscar nombre, usuario o código" value="${esc(q)}" oninput="render()"><button class="ghost" onclick="csv()">Descargar CSV</button><button class="ghost" onclick="go(pass())">Actualizar</button></div>
-  <div class="tw"><table><thead><tr>${th('name', 'Alumno')}${th('username', 'Usuario')}${th('code', 'Código')}${th('course', 'Curso')}${th('streakNow', 'Racha')}${th('best', 'Mejor')}<th>Premios racha</th>${th('xp', 'XP')}${th('lessons', 'Lecciones')}<th>Aciertos</th><th>Evolución</th>${th('last_day', 'Último día')}<th>Prueba inicial</th><th>Idioma</th><th></th></tr></thead><tbody>
+  <div class="tw"><table><thead><tr>${th('name', 'Alumno')}${th('username', 'Usuario')}${th('code', 'Código')}${th('course', 'Curso')}${th('streakNow', 'Racha')}${th('best', 'Mejor')}<th>Premios racha</th>${th('xp', 'XP')}${th('lessons', 'Lecciones')}${th('cards', 'Cartas')}${th('bwins', 'Victorias')}<th>Aciertos</th><th>Evolución</th>${th('last_day', 'Último día')}<th>Prueba inicial</th><th>Idioma</th><th></th></tr></thead><tbody>
   ${rows.map(r => `<tr class="${alive(r) ? '' : 'cold'}"><td><b>${esc(r.name)}</b></td><td>${r.username ? esc(r.username) : '<span class="mut">—</span>'}</td><td class="code">${esc(r.code)}</td><td>${CUR[r.course] || '—'}${r.survey && r.survey.age ? `<br><small class="mut">${r.survey.age} años</small>` : ''}</td>
     <td class="fire">🔥 ${r.streakNow}</td><td>${r.best}</td><td class="rw">${SRW.map(([d, i]) => (r.srw || []).includes(d) ? i : '').join('') || '<span class="mut">—</span>'}</td>
-    <td>${r.xp}</td><td>${r.lessons}</td><td>${r.answers ? Math.round(100 * r.correct / r.answers) + '%' : '—'}</td><td>${evoCell(r)}</td><td>${ago(r.last_day)}</td>
+    <td>${r.xp}</td><td>${r.lessons}</td><td>${r.cards}/41</td><td>${r.bwins ? '⚔️ ' + r.bwins : '<span class="mut">—</span>'}</td><td>${r.answers ? Math.round(100 * r.correct / r.answers) + '%' : '—'}</td><td>${evoCell(r)}</td><td>${ago(r.last_day)}</td>
     <td>${r.survey ? `<span class="pill">${esc(r.survey.result || '')}</span> ${FEEL[r.survey.feel] || ''}` : '<span class="mut">—</span>'}</td><td>${r.lang === 'es' ? 'ES' : 'CAT'}</td>
     <td>${r.username ? `<button class="mini ghost" onclick="setPass('${r.code}','${esc(r.name)}')">Contraseña</button> ` : ''}<button class="mini ghost" onclick="report('${r.code}')">Informe</button> <button class="mini ghost" title="Abre todas las unidades a este alumno (modo maestro)" onclick="unlock('${r.code}',${!r.unlock_all})">${r.unlock_all ? '🔓 Todo abierto' : '🔒 Normal'}</button> <button class="mini ghost red" onclick="off('${r.code}','${esc(r.name)}')">Baja</button></td></tr>`).join('') || '<tr><td colspan="15" class="mut">Aún no hay alumnos.</td></tr>'}
   </tbody></table></div>
   <p class="note">Premios de racha: 🎁 3 días · 🏅 7 días · 🎧 14 días · ⭐ 30 días · 👑 60 días · 🏆 100 días. El botón 🔒/🔓 activa el «modo maestro» (todas las unidades abiertas) solo para ese alumno: el alumno ya no puede activarlo él mismo. Las filas en gris son alumnos que han perdido la racha (hace más de un día que no practican). La columna «Evolución» muestra las últimas pruebas (cada 14 días) y cuánto ha subido o bajado respecto a la anterior.</p>`;
+  root.insertAdjacentHTML('beforeend', battlesHTML() + rewardsHTML());
+}
+const secs = ms => (ms / 1000).toFixed(1).replace('.', ',') + ' s';
+function battlesHTML() {
+  if (!BATS.length) return `<h2 class="h2">Batallas</h2><p class="mut">Aún no se ha jugado ninguna batalla.</p>`;
+  const when = d => new Date(d).toLocaleString('es-ES', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
+  return `<h2 class="h2">Batallas (últimos 30 días)</h2><div class="tw"><table><thead><tr><th>Código</th><th>Tipo</th><th>Nivel</th><th>Creada</th><th>Clasificación (aciertos · tiempo)</th></tr></thead><tbody>
+  ${BATS.map(b => `<tr><td class="code">${esc(b.code)}</td><td>${b.kind === 'duel' ? '⚔️ Duelo' : '🏟️ Grupo'}</td><td>${CUR[b.course] || ''}</td><td>${when(b.created_at)}</td>
+    <td style="white-space:normal">${b.players.map((p, i) => `${p.finished ? ['🥇', '🥈', '🥉'][i] || (i + 1) + 'º' : '⏳'} <b>${esc(p.name)}</b> ${p.correct}/10 · ${secs(p.ms)}${p.card ? ` <span class="pill">apuesta: ${esc(p.card)}</span>` : ''}`).join(' &nbsp; ')}</td></tr>`).join('')}
+  </tbody></table></div>`;
+}
+function rewardsHTML() {
+  const T = (title, rows) => `<div class="rwbox"><h3>${title}</h3><table>${rows.map(r => `<tr><td>${r[0]}</td><td>${r[1]}</td></tr>`).join('')}</table></div>`;
+  return `<h2 class="h2">Guía de recompensas</h2><p class="mut">Todo lo que el alumno puede ganar dentro de la app. 💎 = cristales (se gastan en la tienda) · XP = experiencia (sube de nivel y hace crecer al compañero).</p><div class="rwgrid">
+  ${T('📘 Lecciones', [['Lección terminada', '10 XP + 5 💎 + 1 sobre (1 carta)'], ['Lección perfecta (sin fallos)', '+5 XP y +5 💎 extra · 3 estrellas'], ['Reto final de unidad', '20 XP + 2 cartas; la 1ª vez, cofre de 30–50 💎'], ['Pregunta dorada ⭐ acertada', '+5 XP'], ['Combo (cada 3 aciertos seguidos)', '+2 XP'], ['Entrenamiento', '8 XP + 3 💎 (+2 si es perfecto)'], ['Misión del Caballero (recomendación)', '12 XP + 6 💎 + 1 carta'], ['Subir de nivel de XP', '+10 💎'], ['Medalla nueva (26 posibles)', '+10 💎 cada una']])}
+  ${T('🔥 Rachas', [['3 días', '30 💎'], ['7 días', 'Medalla de fuego + 50 💎'], ['14 días', 'Auriculares + 100 💎'], ['30 días', 'Compañera Estel + 150 💎'], ['60 días', 'Corona de fuego + 250 💎'], ['100 días', 'Título de Leyenda + 500 💎'], ['Protector de racha', 'Se compra por 50 💎 (máx. 2)']])}
+  ${T('🎯 Misiones diarias', [['3 misiones al día', '10–20 💎 cada una'], ['Las 3 hechas → cofre diario', '20–50 💎 + sobre de 3 cartas'], ['Agilidad mental (contrarreloj, relámpago, cadena)', 'XP y 💎 según los puntos']])}
+  ${T('🏛️ Cartas de mitología (41)', [['Probabilidad en cada sobre', 'Común 58% · Rara 27% · Épica 12% · Legendaria 3%'], ['Carta repetida', '+3 💎'], ['Nike (nº 41)', 'Solo se gana ganando batallas; cada victoria suma una copia'], ['Colección', '4 legendarias · 11 épicas · 12 raras · 13 comunes + Nike']])}
+  ${T('⚔️ Batallas', [['Duelo: gana', '30 💎 + copia de la carta que apostó el rival + Nike'], ['Duelo: pierde', '10 💎 (no pierde ninguna carta)'], ['Grupo: 1º', '50 💎 + sobre de 3 cartas + Nike'], ['Grupo: 2º / 3º', '30 💎 + 1 carta / 20 💎'], ['Grupo: resto', '10 💎'], ['Todos', '15 XP por jugar (+10 el ganador)'], ['Límite', 'Premios en 5 batallas al día (evita trampas)'], ['Desempate', 'Mismos aciertos → gana el más rápido']])}
+  ${T('🤝 Compañeros y tienda', [['Guida · Vuit · Tuga · Flama', '60 · 100 · 150 · 250 💎'], ['Estel', 'Racha de 30 días'], ['Caballero del Código', 'Superar 3 unidades'], ['Accesorios', '30–200 💎 (los de fuego, solo con rachas)'], ['Nivel del compañero', 'Sube con la XP: 60 / 180 / 400 / 800']])}
+  </div>`;
 }
 function csv() {
   const head = ['Nombre', 'Usuario', 'Código', 'Curso', 'Racha', 'Mejor racha', 'Premios de racha', 'XP', 'Lecciones', '% aciertos', 'Última prueba evolución', 'Último día', 'Idioma'];

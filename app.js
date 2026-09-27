@@ -227,7 +227,7 @@ function go(v) {
   LS = null; stopSprint(); stopAgility(); closeModal();
   if (!P && v !== 'profiles') v = Object.keys(DB.profiles).length ? 'profiles' : 'onboard';
   VIEW = v;
-  ({ home: renderHome, train: renderTrain, league: () => renderLeague(), album: () => renderAlbum(), shop: renderShop, badges: () => renderAlbum('medals'), profile: renderProfile, profiles: renderProfiles, onboard: () => onb(0) }[v] || renderHome)();
+  ({ home: renderHome, train: renderTrain, league: () => renderLeague(), album: () => renderAlbum(), shop: renderShop, badges: () => renderAlbum('medals'), profile: renderProfile, profiles: renderProfiles, battles: renderBattles, onboard: () => onb(0) }[v] || renderHome)();
   if (v !== 'home') window.scrollTo(0, 0);
 }
 const NAV = () => [['home', '🗺️', L('Camí', 'Camino')], ['train', '🎯', L('Entrena', 'Entrena')], ['album', '🎴', L('Àlbum', 'Álbum')], ['shop', '🛍️', L('Botiga', 'Tienda')], ['profile', '👤', L('Perfil', 'Perfil')]];
@@ -345,7 +345,7 @@ function startRun(o) {
   nextEx();
 }
 function nextEx() {
-  if (LS.done >= LS.total) return LS.mode === 'place' ? finishPlacement() : LS.mode === 'evo' ? finishEvolution() : finishRun();
+  if (LS.done >= LS.total) return LS.mode === 'place' ? finishPlacement() : LS.mode === 'evo' ? finishEvolution() : LS.mode === 'battle' ? finishBattle() : finishRun();
   LS.cur = LS.queue.shift(); LS.sel = null; LS.input = ''; LS.order = []; LS.state = 'ask';
   renderLesson();
 }
@@ -355,7 +355,8 @@ function renderLesson() {
   app.innerHTML = `<div class="lesson ${e.gold ? 'isgold' : ''}" style="--uc:${LS.color || '#602B7A'}">
     <div class="l-top"><button class="xbtn" onclick="quitRun()" aria-label="${L('Surt', 'Salir')}">✕</button>
       <div class="pbar"><div class="pfill" style="width:${LS.done / LS.total * 100}%"></div></div>
-      ${quiet ? `<div class="pcount">${LS.done + 1}/${LS.total}</div>` : `<div class="combo ${LS.combo >= 2 ? 'on' : ''}" id="combo"><i class="ci">${ICON.flame}</i><b>${LS.combo}</b></div>`}</div>
+      ${LS.mode === 'battle' ? `<div class="pcount">${LS.done + 1}/${LS.total}</div>` : quiet ? `<div class="pcount">${LS.done + 1}/${LS.total}</div>` : `<div class="combo ${LS.combo >= 2 ? 'on' : ''}" id="combo"><i class="ci">${ICON.flame}</i><b>${LS.combo}</b></div>`}</div>
+    ${LS.mode === 'battle' ? '<div class="bstrip" id="bstrip"></div>' : ''}
     <div class="l-body" id="lbody">
       ${e.retry ? `<div class="retry">🔁 ${L('Una altra oportunitat', 'Otra oportunidad')}</div>` : ''}${e.gold ? `<div class="retry goldq">⭐ ${L('Pregunta daurada: XP doble!', '¡Pregunta dorada: XP doble!')}</div>` : ''}${e.review ? `<div class="retry rev">🧠 ${L('Repàs sorpresa', 'Repaso sorpresa')}</div>` : ''}${tag ? `<div class="retry place">${tag}</div>` : ''}
       <div class="l-q ${e.long ? 'long' : ''}"><div class="buddy tapme" id="buddy">${meC('think')}</div><div class="bubble">${e.q}</div></div>
@@ -364,6 +365,7 @@ function renderLesson() {
     </div>
     <div class="l-foot" id="foot"><div class="fwrap"><div class="fb" id="fb"></div>${quiet ? `<button class="btn ghost skip" onclick="skipPlace()">${L('NO HO SÉ', 'NO LO SÉ')}</button>` : ''}<button class="btn check" id="chk" onclick="check()" disabled>${L('COMPROVA', 'COMPRUEBA')}</button></div></div>
   </div>`;
+  if (LS.mode === 'battle') { LS.q0 = Date.now(); battleStrip(); }
 }
 function padHTML(fn, extra) {
   const last = extra ? `<button class="pk-x" onclick="${fn}('${extra}')">${extra}</button>` : `<button class="pk-ok" onclick="${fn}('ok')" aria-label="OK">✓</button>`;
@@ -441,16 +443,19 @@ function check() {
     fb.innerHTML = `<div class="fbh">✔ ${LS.combo >= 3 ? L(`Ratxa de ${LS.combo}! 🔥`, `¡Racha de ${LS.combo}! 🔥`) : pick(PRAISE())}</div>${e.long || e.retry ? `<div class="exp">${e.ex || ''}</div>` : ''}`;
   } else {
     LS.miss++; LS.combo = 0; SFX.ko(); $('#lbody').classList.add('shake');
-    const n = genEx(e.sk, e.L, LS.seen, LS.mix); n.retry = true; LS.queue.push(n);
+    if (LS.mode === 'battle') LS.done++;
+    else { const n = genEx(e.sk, e.L, LS.seen, LS.mix); n.retry = true; LS.queue.push(n); }
     fb.innerHTML = `<div class="fbh">✖ ${pick(OOPS())}</div><div class="ans">${L('Resposta correcta', 'Respuesta correcta')}: <b>${ansText(e)}</b></div>${e.ex ? `<div class="exp">💡 ${e.ex}</div>` : ''}`;
   }
+  if (LS.mode === 'battle') battleAnswer(ok);
   $('#buddy').innerHTML = meC(ok ? 'happy' : 'sad');
-  const cb = $('#combo'); cb.innerHTML = `<i class="ci">${ICON.flame}</i><b>${LS.combo}</b>`; cb.classList.toggle('on', LS.combo >= 2); if (ok && LS.combo >= 2) { cb.classList.remove('pop'); void cb.offsetWidth; cb.classList.add('pop'); }
+  const cb = $('#combo'); if (cb) { cb.innerHTML = `<i class="ci">${ICON.flame}</i><b>${LS.combo}</b>`; cb.classList.toggle('on', LS.combo >= 2); } if (cb && ok && LS.combo >= 2) { cb.classList.remove('pop'); void cb.offsetWidth; cb.classList.add('pop'); }
   chk.textContent = L('CONTINUA', 'CONTINÚA'); chk.disabled = false; chk.className = 'btn check ' + (ok ? 'okb' : 'kob');
   foot.scrollIntoView({ block: 'nearest' });
   saveLocal();
 }
 function quitRun() {
+  if (LS && LS.mode === 'battle') return quitBattle();
   if (LS && LS.mode === 'place') return ask(L('Vols saltar-te la prova de nivell? Començaràs pel principi del curs.', '¿Quieres saltarte la prueba de nivel? Empezarás por el principio del curso.'), L('SALTA', 'SALTAR'), L('CONTINUA', 'CONTINÚA'), () => { LS.res = []; finishPlacement(true); });
   ask(L("Segur que vols sortir? Perdràs el progrés d'aquesta activitat.", '¿Seguro que quieres salir? Perderás el progreso de esta actividad.'), L('SURT', 'SALIR'), L('CONTINUA AQUÍ', 'SEGUIR AQUÍ'), () => go('home'));
 }
@@ -514,7 +519,7 @@ function reward(R) {
   GAIN = { gems: R.gems + R.chest, xp: R.xp };
   save(); syncNow();
   FLOW = [() => (R.mode === 'evo' ? scrEvolution(R) : scrResult(R))];
-  FLOW.back = R.mode === 'game' ? 'train' : 'home';
+  FLOW.back = R.mode === 'game' ? 'train' : R.mode === 'battle' ? 'battles' : 'home';
   if (R.streakUp) FLOW.push(scrStreak);
   if (R.srw.length) FLOW.push(() => scrStreakReward(R.srw));
   if (R.chest) FLOW.push(() => scrChest(R));
@@ -530,9 +535,9 @@ function reward(R) {
 function flowNext() { closeModal(); const f = FLOW.shift(); if (f) f(); else go(FLOW.back || 'home'); }
 function countUp() { $$('[data-count]').forEach(el => { const to = +el.dataset.count, suf = el.dataset.suf || '', t0 = performance.now(); (function step(t) { const k = Math.min(1, (t - t0) / 800); el.textContent = Math.round(to * (1 - (1 - k) ** 3)) + suf; if (k < 1) requestAnimationFrame(step); })(t0); }); }
 function scrResult(R) {
-  const game = R.mode === 'game';
+  const game = R.mode === 'game' || R.mode === 'battle';
   const title = game ? tx(R.title) : R.recoDone ? L('Missió del Cavaller complerta!', '¡Misión del Caballero cumplida!') : R.perfect ? L('Lliçó perfecta!', '¡Lección perfecta!') : R.mode === 'reco' ? L('Bona feina! Torna-ho a provar per completar la missió.', '¡Buen trabajo! Vuelve a intentarlo para completar la misión.') : R.mode === 'train' ? L('Entrenament fet!', '¡Entrenamiento hecho!') : L('Lliçó completada!', '¡Lección completada!');
-  const sub = game ? (R.record ? L('🏆 Nou rècord personal!', '🏆 ¡Nuevo récord personal!') : L(`El teu rècord: ${R.best}`, `Tu récord: ${R.best}`)) : R.perfect ? L('Ni un sol error. Ets imparable!', 'Ni un solo error. ¡Eres imparable!') : L('Cada error és una oportunitat per aprendre.', 'Cada error es una oportunidad para aprender.');
+  const sub = R.sub || (game ? (R.record ? L('🏆 Nou rècord personal!', '🏆 ¡Nuevo récord personal!') : L(`El teu rècord: ${R.best}`, `Tu récord: ${R.best}`)) : R.perfect ? L('Ni un sol error. Ets imparable!', 'Ni un solo error. ¡Eres imparable!') : L('Cada error és una oportunitat per aprendre.', 'Cada error es una oportunidad para aprender.'));
   const third = game ? `<div class="rs acc"><span>${L('PUNTS', 'PUNTOS')}</span><b data-count="${R.score}">0</b></div>` : `<div class="rs acc"><span>${L('PRECISIÓ', 'PRECISIÓN')}</span><b data-count="${R.acc}" data-suf="%">0</b></div>`;
   app.innerHTML = `<div class="scr"><div class="burst"></div><div class="cheer"><div class="saybubble">${cheerMsg(R)}</div><div class="rchar dance tapme">${meC('happy')}</div></div>
     <h1>${title}</h1><p class="sub">${sub}</p>
@@ -721,6 +726,7 @@ const GAMES = () => [
 function renderTrain() {
   const units = UNITS_().map((u, i) => ({ u, i })).filter(({ i }) => unitOpen(i) && trainPool(i).length), B = P.stats.bests;
   app.innerHTML = shell(`<h1 class="ph1">${L('Entrena', 'Entrena')}</h1><p class="lead">${L(`Practica el que ja has après de ${tx(CUR().long)} i posa a prova la teva agilitat mental.`, `Practica lo que ya has aprendido de ${tx(CUR().long)} y pon a prueba tu agilidad mental.`)}</p>
+    <button class="tcard battle" onclick="go('battles')"><span class="ti">⚔️</span><span><b>${L('Batalles de mates', 'Batallas de mates')}</b><small>${L('Duels 1 contra 1 i partides de fins a 10. Mateixes preguntes per a tothom!', 'Duelos 1 contra 1 y partidas de hasta 10. ¡Mismas preguntas para todos!')}</small></span></button>
     <button class="tcard" onclick="startTrain()"><span class="ti">🧠</span><span><b>${L('Entrenament intel·ligent', 'Entrenamiento inteligente')}</b><small>${L('8 exercicis del que et costa més. Ideal per repassar.', '8 ejercicios de lo que más te cuesta. Ideal para repasar.')}</small></span></button>
     ${testInfo().due ? `<button class="tcard evo" onclick="startEvolution()"><span class="ti">🧪</span><span><b>${L("Prova d'evolució", 'Prueba de evolución')}</b><small>${L('Ja la pots fer! Mira quant has millorat.', '¡Ya puedes hacerla! Mira cuánto has mejorado.')}</small></span></button>` : ''}
     <button class="tcard school" onclick="pickSchool()"><span class="ti">📚</span><span><b>${L("Què fas ara a l'escola?", '¿Qué estás dando en el cole?')}</b><small>${L("Tria el tema que fas a classe i practica'l: així t'anirà millor a l'escola!", 'Elige el tema que das en clase y practícalo: ¡así te irá mejor en el cole!')}</small></span></button>

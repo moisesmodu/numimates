@@ -70,8 +70,10 @@ const STK = [
   ['jason', 'c', 'Jàson|Jasón', 'Jàson per als romans|Jasón para los romanos', 'Va buscar el velló d\'or amb 50 herois: els argonautes.|Buscó el vellocino de oro con 50 héroes: los argonautas.'],
   ['atalanta', 'c', 'Atalanta|Atalanta', 'Atalanta per als romans|Atalanta para los romanos', 'La corredora més ràpida. Només la van guanyar amb 3 pomes d\'or.|La corredora más rápida. Solo le ganaron con 3 manzanas de oro.'],
   ['romulus', 'c', 'Ròmul i Rem|Rómulo y Remo', 'Fundadors de Roma|Fundadores de Roma', 'Roma es va fundar l\'any 753 aC. Els romans escrivien el 753 com DCCLIII.|Roma se fundó en el año 753 a. C. Los romanos escribían el 753 como DCCLIII.'],
-  ['midas', 'c', 'Rei Mides|Rey Midas', 'Mides per als romans|Midas para los romanos', "Tot el que tocava es tornava d'or. L'or pesa tant que un cub de 10 cm fa gairebé 20 kg!|Todo lo que tocaba se volvía de oro. ¡El oro pesa tanto que un cubo de 10 cm pesa casi 20 kg!"]
+  ['midas', 'c', 'Rei Mides|Rey Midas', 'Mides per als romans|Midas para los romanos', "Tot el que tocava es tornava d'or. L'or pesa tant que un cub de 10 cm fa gairebé 20 kg!|Todo lo que tocaba se volvía de oro. ¡El oro pesa tanto que un cubo de 10 cm pesa casi 20 kg!"],
+  ['nike', 'l', 'Nike|Nike', 'Victòria per als romans|Victoria para los romanos', "Deessa de la victòria. Aquesta carta només es guanya guanyant batalles de mates: cada còpia és una victòria!|Diosa de la victoria. Esta carta solo se gana ganando batallas de mates: ¡cada copia es una victoria!"]
 ];
+const BATTLE_ONLY = ['nike']; // només es guanyen a les batalles
 const CARDNUM = id => String(STK.findIndex(s => s[0] === id) + 1).padStart(2, '0');
 // Els cromos antics (emojis) passen a cartes de mitologia: ningú no perd res
 function albumFix() {
@@ -84,7 +86,7 @@ function albumFix() {
 function drawSticker() {
   let r = Math.random() * 100, t = 'c';
   for (const k of ['l', 'e', 'r', 'c']) { if (r < RAR[k][3]) { t = k; break; } r -= RAR[k][3]; }
-  return pick(STK.filter(s => s[1] === t));
+  return pick(STK.filter(s => s[1] === t && !BATTLE_ONLY.includes(s[0])));
 }
 function openPack(n = 1) {
   albumFix();
@@ -126,7 +128,7 @@ function renderAlbum(tab) {
     <p class="lead">${L(`Tens <b>${have}</b> de ${STK.length} cartes de la mitologia grega i romana. Cada lliçó que acabes t'obre un sobre!`, `Tienes <b>${have}</b> de ${STK.length} cartas de la mitología griega y romana. ¡Cada lección que acabes te abre un sobre!`)}</p>
     <div class="abar"><div style="width:${have / STK.length * 100}%"></div></div>
     ${['l', 'e', 'r', 'c'].map(k => `<h2 class="h2"><span class="rdotb" style="background:${RAR[k][2]}"></span>${tx(RAR[k])} <small>${STK.filter(s => s[1] === k && A[s[0]]).length}/${STK.filter(s => s[1] === k).length}</small></h2>
-      <div class="agrid">${STK.filter(s => s[1] === k).map(s => A[s[0]] ? `<button class="stkbtn" onclick="stickerModal('${s[0]}')">${stickerHTML(s)}${A[s[0]] > 1 ? `<i class="cnt">×${A[s[0]]}</i>` : ''}</button>` : `<div class="mcardx empty r-${k}"><div class="min"><span class="mnum">Nº ${CARDNUM(s[0])}</span><div class="mq">?</div></div></div>`).join('')}</div>`).join('')}`, 'album');
+      <div class="agrid">${STK.filter(s => s[1] === k).map(s => A[s[0]] ? `<button class="stkbtn" onclick="stickerModal('${s[0]}')">${stickerHTML(s)}${A[s[0]] > 1 ? `<i class="cnt">×${A[s[0]]}</i>` : ''}</button>` : `<div class="mcardx empty r-${k}"><div class="min"><span class="mnum">Nº ${CARDNUM(s[0])}</span><div class="mq">${BATTLE_ONLY.includes(s[0]) ? '⚔️' : '?'}</div>${BATTLE_ONLY.includes(s[0]) ? `<div class="mhint">${L('Guanya una batalla', 'Gana una batalla')}</div>` : ''}</div></div>`).join('')}</div>`).join('')}`, 'album');
 }
 function stickerModal(id) {
   const s = STK.find(x => x[0] === id);
