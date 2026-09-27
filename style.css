@@ -801,3 +801,24 @@ body{background:radial-gradient(1200px 500px at 50% -120px,#F1E6FA 0%,rgba(241,2
 .ppos{font-size:22px;text-align:center;font-weight:900}.pc{width:38px;height:38px}.pc svg{width:100%;height:100%}
 .psc{font-weight:900;color:var(--pri)}.pt{font-size:12px;color:var(--mut);font-weight:800}
 .pickgrid{max-height:46vh;overflow:auto;padding:4px 2px 14px}
+
+/* Passi de temporada, repàs i corones */
+.seasoncard{display:flex;align-items:center;gap:12px;width:100%;text-align:left;border-radius:20px;padding:14px 16px;margin:0 0 14px;color:#fff;background:radial-gradient(circle at 85% 0,color-mix(in srgb,var(--sc) 55%,#fff) 0,var(--sc) 55%,color-mix(in srgb,var(--sc) 70%,#000));box-shadow:0 5px 0 color-mix(in srgb,var(--sc) 60%,#000)}
+.seasoncard .sci{font-size:34px}.seasoncard .scx{flex:1;display:flex;flex-direction:column;gap:3px;min-width:0}
+.seasoncard small{font-size:10.5px;font-weight:900;letter-spacing:.1em;opacity:.8}.seasoncard b{font-size:18px}.seasoncard em{font-style:normal;font-size:12.5px;font-weight:800;opacity:.9}
+.seasoncard .go{color:#fff}
+.scbar{display:block;height:10px;border-radius:6px;background:rgba(255,255,255,.22);overflow:hidden}.scbar i{display:block;height:100%;background:linear-gradient(90deg,#FFE27A,#FFC93C);border-radius:6px}
+.seasonhead{text-align:center;color:#fff;border-radius:24px;padding:22px 18px 18px;margin:6px 0 16px;background:radial-gradient(circle at 50% 0,color-mix(in srgb,var(--sc) 50%,#fff),var(--sc) 60%,color-mix(in srgb,var(--sc) 70%,#000))}
+.seasonhead .shi{font-size:46px}.seasonhead small{font-weight:900;letter-spacing:.14em;font-size:11px;opacity:.8}.seasonhead h1{margin:2px 0 8px;font-size:26px}.seasonhead p{margin:0 0 12px;font-size:14px;opacity:.92;line-height:1.4}
+.shlv{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;background:rgba(0,0,0,.18);border-radius:14px;padding:8px 12px}.shlv small{font-size:12px;font-weight:800}
+.sccards{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}.sccard{text-align:center}.sccard small{display:block;margin-top:14px;font-weight:900;color:var(--mut);font-size:12px}
+.tiers{display:grid;gap:8px;margin:14px 0 10px}
+.tier{display:grid;grid-template-columns:38px 1fr auto;align-items:center;gap:10px;background:#fff;border:2px solid #E6DCF2;border-radius:14px;padding:8px 12px;opacity:.75}
+.tier .tn{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;background:#EEE8F3;font-weight:900;color:var(--mut)}
+.tier.can{opacity:1;border-color:#F0C24B;background:#FFF9E3}.tier.can .tn{background:#FFC93C;color:#fff}
+.tier.got{opacity:1}.tier.got .tn{background:var(--pri);color:#fff}.tier .tok{color:var(--ok-d);font-weight:900;font-size:18px}
+.tier.big{border-width:3px}.tier .tr{font-weight:800}.tier .tl{font-size:12px;color:var(--mut);font-weight:800}
+.testcard.rev{background:linear-gradient(135deg,#2FA396,#1F6F67);box-shadow:0 5px 0 #17544E}
+.node.rust{filter:saturate(.35) sepia(.35)}.node.rust::after{content:"🔧";position:absolute;right:-6px;top:-6px;font-size:16px;filter:none}
+.bigcrown{font-size:96px;animation:cardIn .8s cubic-bezier(.2,1.4,.4,1) both}
+.bcost{margin-left:auto;font-weight:900;font-size:13px;background:#FFF3C4;color:#9A6A00;border-radius:10px;padding:4px 9px;white-space:nowrap}

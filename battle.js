@@ -2,7 +2,7 @@
    Duel 1 contra 1 (cadascú juga quan pot, 48 h) i partida de grup (fins a 10, tots alhora).
    Tothom rep les mateixes 10 preguntes: surten de la llavor de la batalla.
    Guanya qui n'encerta més; si hi ha empat, qui ha trigat menys (només compta el temps de pensar). */
-const BQ = 10, BCAP = 5;
+const BQ = 10, BCAP = 5, DUEL_COST = 10;
 let BT = null;
 function seeded(seed) { let a = seed >>> 0; return () => { a = (a + 0x6D2B79F5) >>> 0; let t = a; t = Math.imul(t ^ t >>> 15, t | 1); t ^= t + Math.imul(t ^ t >>> 7, t | 61); return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
 function withSeed(seed, fn) { const r = Math.random; Math.random = seeded(seed); try { return fn(); } finally { Math.random = r; } }
@@ -30,7 +30,7 @@ function bLoop(key, fn, every = 2000) {
 
 function battleRewardsHTML() {
   return `<div class="brules">
-    <div><b>⚔️ ${L('Duel', 'Duelo')}</b> ${L("Qui guanya s'emporta 30 💎 i una còpia de la carta que ha posat el rival. Qui perd rep 10 💎 i <u>no perd cap carta</u>.", 'Quien gana se lleva 30 💎 y una copia de la carta que ha puesto el rival. Quien pierde recibe 10 💎 y <u>no pierde ninguna carta</u>.')}</div>
+    <div><b>⚔️ ${L('Duel', 'Duelo')}</b> ${L(`Entrar costa ${DUEL_COST} 💎. Qui guanya s'emporta 30 💎 i una còpia de la carta que ha posat el rival. Qui perd <u>no perd cap carta</u>. Si ningú accepta el duel, et tornem els ${DUEL_COST} 💎.`, `Entrar cuesta ${DUEL_COST} 💎. Quien gana se lleva 30 💎 y una copia de la carta que ha puesto el rival. Quien pierde <u>no pierde ninguna carta</u>. Si nadie acepta el duelo, te devolvemos los ${DUEL_COST} 💎.`)}</div>
     <div><b>🏟️ ${L('Partida de grup', 'Partida de grupo')}</b> ${L('1r: 50 💎 + sobre de 3 cartes · 2n: 30 💎 + 1 carta · 3r: 20 💎 · la resta: 10 💎.', '1º: 50 💎 + sobre de 3 cartas · 2º: 30 💎 + 1 carta · 3º: 20 💎 · el resto: 10 💎.')}</div>
     <div><b>🏆 ${L('Carta de Nike', 'Carta de Nike')}</b> ${L("La deessa de la victòria només es guanya guanyant batalles. Cada victòria en suma una còpia.", 'La diosa de la victoria solo se gana ganando batallas. Cada victoria suma una copia.')}</div>
     <div class="bfine">${L(`Tothom rep 15 XP per jugar. Premis de batalla: fins a ${BCAP} al dia.`, `Todos reciben 15 XP por jugar. Premios de batalla: hasta ${BCAP} al día.`)}</div></div>`;
@@ -40,7 +40,7 @@ function renderBattles() {
   if (!P.code) { toast(L('Per jugar batalles cal connexió a internet.', 'Para jugar batallas hace falta conexión a internet.')); return go('train'); }
   app.innerHTML = shell(`<div data-bk="hub"><h1 class="ph1">${L('Batalles de mates', 'Batallas de mates')}</h1>
     <p class="lead">${L("Tothom té les mateixes 10 preguntes. Guanya qui n'encerta més i, si hi ha empat, <b>el més ràpid</b>.", 'Todos tienen las mismas 10 preguntas. Gana quien acierta más y, si hay empate, <b>el más rápido</b>.')}</p>
-    <button class="tcard duel" onclick="newBattle('duel')"><span class="ti">⚔️</span><span><b>${L('Duel 1 contra 1', 'Duelo 1 contra 1')}</b><small>${L('Reta un amic amb un codi i aposteu una carta. Cadascú juga quan pot.', 'Reta a un amigo con un código y apostad una carta. Cada uno juega cuando puede.')}</small></span></button>
+    <button class="tcard duel" onclick="newBattle('duel')"><span class="ti">⚔️</span><span><b>${L('Duel 1 contra 1', 'Duelo 1 contra 1')}</b><small>${L('Reta un amic amb un codi i aposteu una carta. Cadascú juga quan pot.', 'Reta a un amigo con un código y apostad una carta. Cada uno juega cuando puede.')}</small></span><span class="bcost">${DUEL_COST} 💎</span></button>
     <button class="tcard party" onclick="newBattle('party')"><span class="ti">🏟️</span><span><b>${L('Partida de grup', 'Partida de grupo')}</b><small>${L('Fins a 10 jugadors. Tothom comença alhora!', 'Hasta 10 jugadores. ¡Todos empiezan a la vez!')}</small></span></button>
     <div class="joinbox"><input id="bcin" class="nm" placeholder="${L('Tens un codi? ZEUS-1234', '¿Tienes un código? ZEUS-1234')}" maxlength="12" autocapitalize="characters" onkeydown="if(event.key==='Enter')joinBattle(this.value)"><button class="btn" onclick="joinBattle($('#bcin').value)">${L('ENTRA', 'ENTRA')}</button></div>
     <h2 class="h2">${L('Premis', 'Premios')}</h2>${battleRewardsHTML()}
@@ -50,7 +50,7 @@ function renderBattles() {
 async function loadMine() {
   let r; try { r = await bApi('mine'); } catch (e) { return; }
   const el = $('#bmine'); if (!el) return;
-  const list = (r.list || []).filter(Boolean);
+  const list = (r.list || []).filter(Boolean); list.forEach(duelRefund);
   el.innerHTML = list.length ? list.map(st => {
     const me = st.players.find(p => p.me), others = st.players.filter(p => !p.me).map(p => esc(p.name)).join(', ') || L('esperant rival…', 'esperando rival…');
     const tag = st.over ? (me.pos === 1 ? `<span class="btag win">🏆 ${L('Guanyada', 'Ganada')}</span>` : `<span class="btag">${ordN(me.pos)}</span>`) : st.expired ? `<span class="btag">${L('Caducada', 'Caducada')}</span>` : me.finished ? `<span class="btag wait">⏳ ${L('Esperant', 'Esperando')}</span>` : `<span class="btag go">▶ ${L('Per jugar', 'Por jugar')}</span>`;
@@ -61,6 +61,7 @@ async function loadMine() {
 
 /* Crear i entrar */
 function newBattle(kind) {
+  if (kind === 'duel' && P.gems < DUEL_COST) return noGems();
   const top = Math.max(P.maxCourse || 0, P.course);
   modal(`<div class="sheet"><h3>${kind === 'duel' ? L('Nou duel', 'Nuevo duelo') : L('Nova partida de grup', 'Nueva partida de grupo')}</h3>
     <p>${L('De quin nivell seran les preguntes?', '¿De qué nivel serán las preguntas?')}</p>
@@ -88,8 +89,16 @@ async function joinBattle(raw) {
   let st; try { st = await bApi('join', { bcode }); } catch (e) { return toast(BERR()); }
   if (st.error) { SFX.ko(); return toast(BERR(st.error)); }
   const me = st.players.find(p => p.me);
+  if (st.kind === 'duel' && !me.done && !me.finished && !(P.bpaid || {})[st.code] && P.gems < DUEL_COST) return noGems();
   if (st.kind === 'duel' && !me.card && !me.done && !me.finished && Object.keys(P.album || {}).length && !st.over) return pickCard(async c => { if (c) { try { st = await bApi('join', { bcode, card: c }); } catch (e) { } } scrLobby(st); });
   scrLobby(st);
+}
+function noGems() { SFX.ko(); toast(L(`Un duel costa ${DUEL_COST} 💎. Fes una lliçó i en guanyaràs!`, `Un duelo cuesta ${DUEL_COST} 💎. ¡Haz una lección y ganarás!`)); }
+// Si un duel caduca sense rival, es tornen els cristalls
+function duelRefund(st) {
+  P.bpaid = P.bpaid || {};
+  if (st.kind !== 'duel' || !st.expired || st.players.length > 1 || P.bpaid[st.code] !== 1) return;
+  P.bpaid[st.code] = 2; P.gems += DUEL_COST; save(); toast(L(`Ningú ha acceptat el duel ${st.code}: et tornem ${DUEL_COST} 💎`, `Nadie ha aceptado el duelo ${st.code}: te devolvemos ${DUEL_COST} 💎`));
 }
 async function openBattle(bcode) { let st; try { st = await bApi('state', { bcode }); } catch (e) { return toast(BERR()); } if (st.error) return toast(BERR(st.error)); scrLobby(st); }
 function shareBattle(code, kind) {
@@ -113,11 +122,11 @@ function scrLobby(st) {
   const duel = st.kind === 'duel', others = st.players.filter(p => !p.me);
   const key = 'lob' + st.code;
   let action;
-  if (duel) action = `<button class="btn big" onclick="startBattle()">${L('JUGA ARA', 'JUGAR AHORA')}</button><p class="sub small">${others.length ? L('Tens 48 hores per jugar.', 'Tienes 48 horas para jugar.') : L("No cal esperar: juga ara i el teu rival tindrà les mateixes preguntes quan entri.", 'No hace falta esperar: juega ahora y tu rival tendrá las mismas preguntas cuando entre.')}</p>`;
+  if (duel) action = `<button class="btn big" onclick="startBattle()">${(P.bpaid || {})[st.code] ? L('JUGA ARA', 'JUGAR AHORA') : L(`JUGA (${DUEL_COST} 💎)`, `JUGAR (${DUEL_COST} 💎)`)}</button><p class="sub small">${others.length ? L('Tens 48 hores per jugar.', 'Tienes 48 horas para jugar.') : L("No cal esperar: juga ara i el teu rival tindrà les mateixes preguntes quan entri.", 'No hace falta esperar: juega ahora y tu rival tendrá las mismas preguntas cuando entre.')}</p>`;
   else if (st.status === 'live') action = `<p class="sub">${L('Comencem!', '¡Empezamos!')}</p>`;
   else action = st.host ? `<button class="btn big" id="bstart" onclick="startParty()" ${st.players.length < 2 ? 'disabled' : ''}>${L('COMENÇA LA PARTIDA', 'EMPEZAR LA PARTIDA')}</button><p class="sub small">${L(`${st.players.length} de ${st.max} jugadors. Quan hi siguin tots, comença!`, `${st.players.length} de ${st.max} jugadores. ¡Cuando estén todos, empieza!`)}</p>` : `<p class="sub">⏳ ${L("Esperant que l'amfitrió comenci…", 'Esperando a que el anfitrión empiece…')}</p>`;
   app.innerHTML = `<div class="scr blobby" data-bk="${key}"><button class="xbtn bx" onclick="go('battles')" aria-label="${L('Surt', 'Salir')}">✕</button>
-    <div class="bkind">${duel ? '⚔️ ' + L('DUEL', 'DUELO') : '🏟️ ' + L('PARTIDA DE GRUP', 'PARTIDA DE GRUPO')} · ${tx(COURSES[st.course].long).toUpperCase()}</div>
+    <div class="bkind">${duel ? '⚔️ ' + L('DUEL', 'DUELO') + ` · ${DUEL_COST} 💎` : '🏟️ ' + L('PARTIDA DE GRUP', 'PARTIDA DE GRUPO')} · ${tx(COURSES[st.course].long).toUpperCase()}</div>
     <div class="bcode"><small>${L('Codi de la batalla', 'Código de la batalla')}</small><b>${st.code}</b></div>
     <button class="btn sm gold" onclick="shareBattle('${st.code}','${st.kind}')">📨 ${L('ENVIA EL CODI', 'ENVIAR EL CÓDIGO')}</button>
     <div class="bplayers ${duel ? 'vs' : ''}" id="bpls">${duel ? `${playerChip(me, st)}<div class="vsx">VS</div>${others[0] ? playerChip(others[0], st) : `<div class="bpl ghost"><div class="bpc q">?</div><b>${L('Rival', 'Rival')}</b><small>${L('encara no ha entrat', 'aún no ha entrado')}</small></div>`}` : st.players.map(p => playerChip(p, st)).join('')}</div>
@@ -151,6 +160,7 @@ function partyCountdown(st) {
 /* Jugar */
 function startBattle() {
   const st = BT.st; closeModal();
+  if (st.kind === 'duel') { P.bpaid = P.bpaid || {}; if (!P.bpaid[st.code]) { if (P.gems < DUEL_COST) return noGems(); P.gems -= DUEL_COST; P.bpaid[st.code] = 1; save(); toast(`−${DUEL_COST} 💎`); } }
   LS = { mode: 'battle', bcode: st.code, kind: st.kind, color: st.kind === 'duel' ? '#C0392B' : '#1F7A8C', seen: new Set(), mix: true, queue: battlePlan(st), total: BQ, done: 0, miss: 0, combo: 0, maxCombo: 0, gold: 0, t0: Date.now(), res: [], bOk: 0, bMs: 0, q0: 0 };
   nextEx();
   const run = async () => { if (!LS || LS.bcode !== st.code) return; try { const n = await bApi('state', { bcode: st.code }); if (!n.error) { BT.st = n; battleStrip(); } } catch (e) { } setTimeout(run, 3000); };
@@ -218,7 +228,7 @@ function claimBattle() {
     albumFix();
     const add = s => { const dup = !!P.album[s[0]]; P.album[s[0]] = (P.album[s[0]] || 0) + 1; R.pack.push({ s, dup }); };
     if (st.kind === 'duel') {
-      R.gems = win ? 30 : 10;
+      R.gems = win ? 30 : 0;
       if (win) { const rv = st.players.find(p => !p.me), c = rv && rv.card && cardById(rv.card); if (c) add(c); else R.pack.push(...openPack(1)); }
     } else {
       R.gems = [50, 30, 20][me.pos - 1] || 10;

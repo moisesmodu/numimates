@@ -29,6 +29,7 @@ function migrate(p) {
   if (p.maxCourse === undefined) p.maxCourse = Math.max(p.course, p.baseCourse);
   if (!p.lang) p.lang = DB.lang;
   for (let i = 1; i <= 8; i++) if (p.prog['u' + i]) { p.prog['c4-' + i] = p.prog['u' + i]; delete p.prog['u' + i]; }
+  if (!p.m2) { Object.values(p.prog).forEach(x => { x.stars = x.stars.map(s => s === 1 ? 2 : s); }); p.m2 = 1; }
   if (!p.code && !p.pendingReg && !p.holdReg) p.pendingReg = true;
   return p;
 }
@@ -86,7 +87,7 @@ function clvBar(id) {
 }
 const xpFor = l => 20 * (l - 1) ** 2;
 function dailyRoll() { if (P.daily.d !== today()) P.daily = { d: today(), xp: 0 }; }
-function addXP(x) { dailyRoll(); P.xp += x; P.daily.xp += x; weekXP(x); misEvent('xp', x); P.cxp = P.cxp || {}; P.cxp[P.companion] = (P.cxp[P.companion] || 0) + x; }
+function addXP(x) { dailyRoll(); P.xp += x; P.daily.xp += x; weekXP(x); seasonXP(x); misEvent('xp', x); P.cxp = P.cxp || {}; P.cxp[P.companion] = (P.cxp[P.companion] || 0) + x; }
 function streakNow() { if (!P.lastDay) return 0; const d = dayDiff(P.lastDay, today()); return d <= 1 || (d === 2 && P.freeze > 0) ? P.streak : 0; }
 function touchStreak() {
   const t = today();
@@ -104,13 +105,13 @@ function prog(ui, c = CUR()) {
   if (p.stars.length < n) { const old = p.stars, rep = old[old.length - 1]; p.stars = [...old.slice(0, old.length - 1), ...Array(n - old.length).fill(0), rep]; }
   return p;
 }
-const udone = (p, u) => { const st = p.prog[u.id]?.stars; return !!(st && st[st.length - 1] > 0); };
-function unitOpen(ui, ci = P.course) { const c = COURSES[ci]; return ui === 0 || P.unlockAll || ci < P.baseCourse || ui <= (P.skip[c.id] || 0) || prog(ui - 1, c).stars[REP(c.units[ui - 1])] > 0; }
-function lessonOpen(ui, li) { if (!unitOpen(ui)) return false; return li === 0 || P.unlockAll || P.course < P.baseCourse || ui < (P.skip[CUR().id] || 0) || prog(ui).stars[li - 1] > 0; }
+const udone = (p, u) => { const st = p.prog[u.id]?.stars; return !!(st && st[st.length - 1] >= PASS); };
+function unitOpen(ui, ci = P.course) { const c = COURSES[ci]; return ui === 0 || P.unlockAll || ci < P.baseCourse || ui <= (P.skip[c.id] || 0) || prog(ui - 1, c).stars[REP(c.units[ui - 1])] >= PASS; }
+function lessonOpen(ui, li) { if (!unitOpen(ui)) return false; return li === 0 || P.unlockAll || P.course < P.baseCourse || ui < (P.skip[CUR().id] || 0) || prog(ui).stars[li - 1] >= PASS; }
 const unitsDone = p => COURSES.reduce((n, c) => n + c.units.filter(u => udone(p, u)).length, 0);
 function currentNode() {
   const us = UNITS_(), from = Math.min(P.skip[CUR().id] || 0, us.length - 1);
-  for (const start of [from, 0]) for (let ui = start; ui < us.length; ui++) for (let li = 0; li <= REP(us[ui]); li++) if (lessonOpen(ui, li) && !prog(ui).stars[li]) return [ui, li];
+  for (const start of [from, 0]) for (let ui = start; ui < us.length; ui++) for (let li = 0; li <= REP(us[ui]); li++) if (lessonOpen(ui, li) && (prog(ui).stars[li] || 0) < PASS) return [ui, li];
   return null;
 }
 function record(sk, ok) {
@@ -227,7 +228,7 @@ function go(v) {
   LS = null; stopSprint(); stopAgility(); closeModal();
   if (!P && v !== 'profiles') v = Object.keys(DB.profiles).length ? 'profiles' : 'onboard';
   VIEW = v;
-  ({ home: renderHome, train: renderTrain, league: () => renderLeague(), album: () => renderAlbum(), shop: renderShop, badges: () => renderAlbum('medals'), profile: renderProfile, profiles: renderProfiles, battles: renderBattles, onboard: () => onb(0) }[v] || renderHome)();
+  ({ home: renderHome, train: renderTrain, league: () => renderLeague(), album: () => renderAlbum(), shop: renderShop, badges: () => renderAlbum('medals'), profile: renderProfile, profiles: renderProfiles, battles: renderBattles, season: renderSeason, onboard: () => onb(0) }[v] || renderHome)();
   if (v !== 'home') window.scrollTo(0, 0);
 }
 const NAV = () => [['home', '🗺️', L('Camí', 'Camino')], ['train', '🎯', L('Entrena', 'Entrena')], ['album', '🎴', L('Àlbum', 'Álbum')], ['shop', '🛍️', L('Botiga', 'Tienda')], ['profile', '👤', L('Perfil', 'Perfil')]];
@@ -265,23 +266,23 @@ function unitHTML(u, ui) {
   const open = unitOpen(ui), st = prog(ui).stars, cur = currentNode();
   const R_ = REP(u), nodes = [...Array(R_ + 1).keys()].map(li => {
     const isR = li === R_, done = st[li] > 0, can = lessonOpen(ui, li), isCur = cur && cur[0] === ui && cur[1] === li;
-    const cls = !can ? 'locked' : isCur ? 'cur' : done ? (st[li] === 3 ? 'gold' : 'done') : 'open';
+    const cls = (!can ? 'locked' : isCur ? 'cur' : done ? (st[li] === 3 ? 'gold' : 'done') : 'open') + (done && !isR && isDue(ui, li) ? ' rust' : '');
     const icon = !can ? ICON.lock : isR ? (done ? ICON.trophy : ICON.gift) : done ? (st[li] === 3 ? ICON.crown : ICON.check) : ICON.star;
     return `<div class="nwrap" style="--x:${OFF[li]}px;transition-delay:${li * 50}ms">
       ${isCur ? `<div class="tip">${isR ? L('REPTE!', '¡RETO!') : L('COMENÇA', 'EMPIEZA')}</div>` : ''}
       <button class="node ${cls} ${isR ? 'rep' : ''}" onclick="openLesson(${ui},${li})" aria-label="${isR ? L('Repte final', 'Reto final') : L('Lliçó ', 'Lección ') + (li + 1)}"><i class="nico">${icon}</i></button>
-      ${done && !isR ? starsHTML(st[li], 'mini') : ''}</div>${li === 4 && R_ > 5 ? `<div class="pdiv"><span>${L('NIVELL 2', 'NIVEL 2')}</span></div>` : ''}`;
+      ${done && !isR ? starsHTML(st[li], 'mini') : ''}</div>${li === 4 && R_ > 5 ? `<div class="pdiv"><span>${L('NIVELL 2', 'NIVEL 2')}</span></div>` : ''}${li === 9 && R_ > 10 ? `<div class="pdiv"><span>${L('NIVELL 3', 'NIVEL 3')}</span></div>` : ''}`;
   }).join('');
   const deco = [0, 1, 2, 3].map(k => `<span class="deco" style="${k % 2 ? 'left' : 'right'}:${6 + (k * 7 + ui * 5) % 20}%;top:${14 + k * 22}%;animation-delay:${k * .7}s">${DECO[(ui * 3 + k) % DECO.length]}</span>`).join('');
   return `<section class="unit ${open ? '' : 'closed'}" style="--uc:${u.color}">
-    <div class="ubanner"><div class="utext"><div class="ukick">${L('UNITAT', 'UNIDAD')} ${ui + 1}</div><h2>${tx(u.title)}</h2><div class="usents">${unitSents(u).map(k => `<span title="${tx(SENT[k])}">${SENT[k][2]} ${tx(SENT[k]).replace(/^Sentit |^Sentido /, '').replace(/ i pensament computacional| y pensamiento computacional/, '')}</span>`).join('')}</div><p>${open ? tx(u.desc) : L('🔒 Supera el repte de la unitat anterior per obrir-la.', '🔒 Supera el reto de la unidad anterior para abrirla.')}</p></div><div class="uguide tapme">${charSVG(u.guide, 'idle')}</div></div>
+    <div class="ubanner"><div class="utext"><div class="ukick">${L('UNITAT', 'UNIDAD')} ${ui + 1}${(P.crowns || []).includes(u.id) ? ` · 👑 ${L('DOMINADA', 'DOMINADA')}` : ''}</div><h2>${tx(u.title)}</h2><div class="usents">${unitSents(u).map(k => `<span title="${tx(SENT[k])}">${SENT[k][2]} ${tx(SENT[k]).replace(/^Sentit |^Sentido /, '').replace(/ i pensament computacional| y pensamiento computacional/, '')}</span>`).join('')}</div><p>${open ? tx(u.desc) : L('🔒 Supera el repte de la unitat anterior per obrir-la.', '🔒 Supera el reto de la unidad anterior para abrirla.')}</p></div><div class="uguide tapme">${charSVG(u.guide, 'idle')}</div></div>
     <div class="path">${deco}${nodes}<div class="pguide tapme ${ui % 2 ? 'l' : ''}">${charSVG(u.guide, open ? 'happy' : 'idle')}</div></div></section>`;
 }
 function renderHome() {
   VIEW = 'home';
   const c = CUR();
   app.innerHTML = shell(`<button class="course" onclick="pickCourse()"><span class="cem">${c.emoji}</span><span><small>${L('Estàs fent', 'Estás haciendo')}</small><b>${tx(c.long)}</b></span><span class="cch">${L('Canvia', 'Cambia')} ▾</span></button>
-    ${testCard()}${recoBox()}${schoolCard()}${goalCard()}${missionsCard()}${streakCard()}${UNITS_().map(unitHTML).join('')}
+    ${seasonCard()}${testCard()}${reviewCard()}${recoBox()}${schoolCard()}${goalCard()}${missionsCard()}${streakCard()}${UNITS_().map(unitHTML).join('')}
     <div class="theend">${P.course < COURSES.length - 1 ? L(`Quan acabis ${tx(c.long)}, t'espera <b>${tx(COURSES[P.course + 1].long)}</b>! 🚀`, `Cuando acabes ${tx(c.long)}, ¡te espera <b>${tx(COURSES[P.course + 1].long)}</b>! 🚀`) : L('Has arribat a l\'últim nivell! 🎓', '¡Has llegado al último nivel! 🎓')}</div>`, 'home');
   revealNodes(); showGain();
   const n = $('.node.cur'); if (n) setTimeout(() => n.scrollIntoView({ block: 'center', behavior: 'smooth' }), 60);
@@ -295,7 +296,7 @@ function pickCourse() {
 }
 function setCourse(i) { if (!courseOpen(i)) { SFX.ko(); toast(L(`🔒 Primer acaba el nivell ${i}.`, `🔒 Primero acaba el nivel ${i}.`)); return; } P.course = i; save(); closeModal(); renderHome(); window.scrollTo(0, 0); }
 function openLesson(ui, li) {
-  if (!lessonOpen(ui, li)) { toast(li === 0 ? L('🔒 Primer supera el repte de la unitat anterior.', '🔒 Primero supera el reto de la unidad anterior.') : L('🔒 Primer fes la lliçó anterior.', '🔒 Primero haz la lección anterior.')); SFX.ko(); return; }
+  if (!lessonOpen(ui, li)) { toast(li === 0 ? L('🔒 Primer supera el repte de la unitat anterior.', '🔒 Primero supera el reto de la unidad anterior.') : (prog(ui).stars[li - 1] ? L('🔒 Necessites 2 estrelles a la lliçó anterior (màxim 2 errors).', '🔒 Necesitas 2 estrellas en la lección anterior (máximo 2 errores).') : L('🔒 Primer fes la lliçó anterior.', '🔒 Primero haz la lección anterior.'))); SFX.ko(); return; }
   const u = UNITS_()[ui], isR = li === REP(u), st = prog(ui).stars[li];
   modal(`<div class="sheet" style="--uc:${u.color}"><div class="sk">${tx(CUR().name).toUpperCase()} · ${L('UNITAT', 'UNIDAD')} ${ui + 1} · ${isR ? L('REPTE FINAL', 'RETO FINAL') : L('LLIÇÓ ', 'LECCIÓN ') + (li + 1) + ' / ' + REP(u)}</div>
     <h3>${isR ? L('Repte: ', 'Reto: ') + tx(u.title).toLowerCase() : tx(u.lessons[li].t)}</h3>
@@ -494,18 +495,23 @@ function finishRun() {
   const R = { mode: LS.mode, ui: LS.ui, li: LS.li, acc: Math.round(100 * LS.total / (LS.total + LS.miss)), perfect: LS.miss === 0, stars: 0, chest: 0 };
   if (R.mode === 'reco') { R.xp = 12 + (R.perfect ? 4 : 0); R.gems = 6; P.stats.trains++; if (R.acc >= 75) { P.reco = null; R.recoDone = true; } }
   else if (R.mode === 'train') { R.xp = 8 + (R.perfect ? 4 : 0); R.gems = 3 + (R.perfect ? 2 : 0); P.stats.trains++; }
+  else if (R.mode === 'review') { R.pass = LS.miss <= 2; R.xp = 12 + (R.perfect ? 4 : 0); R.gems = R.pass ? 6 : 2; P.stats.trains++; reviewDone(LS.revKeys, R.pass);
+    R.sub = R.pass ? L('Lliçons repassades i a punt. Tornaran a sortir d\'aquí uns dies.', 'Lecciones repasadas y a punto. Volverán a salir dentro de unos días.') : L('Encara costen una mica: tornaran a sortir aviat per reforçar-les.', 'Aún cuestan un poco: volverán a salir pronto para reforzarlas.'); }
   else {
     R.xp = 10 + (R.perfect ? 5 : 0) + (R.mode === 'repte' ? 10 : 0); R.gems = 5 + (R.perfect ? 5 : 0);
     R.stars = R.perfect ? 3 : LS.miss <= 2 ? 2 : 1;
     const pr = prog(R.ui), first = !pr.stars[R.li];
     pr.stars[R.li] = Math.max(pr.stars[R.li], R.stars);
+    revMark(UNITS_()[R.ui], R.li, R.stars >= PASS);
+    if (R.stars < PASS && pr.stars[R.li] < PASS) R.sub = L(`Per obrir ${R.mode === 'repte' ? 'la unitat següent' : 'la lliçó següent'} necessites 2 estrelles: com a molt 2 errors. Tu pots!`, `Para abrir ${R.mode === 'repte' ? 'la unidad siguiente' : 'la lección siguiente'} necesitas 2 estrellas: como mucho 2 errores. ¡Tú puedes!`);
+    const cu = crownCheck(R.ui); if (cu) { R.crown = cu; R.gems += 50; }
     if (R.mode === 'repte' && first) R.chest = ri(30, 50);
     P.stats.lessons++; if (R.perfect) P.stats.perfect++;
   }
   R.bonus = Math.floor(LS.maxCombo / 3) * 2 + LS.gold * 5; R.xp += R.bonus;
-  if (R.mode === 'lesson' || R.mode === 'repte' || R.mode === 'reco') { misEvent('lesson'); R.pack = openPack(R.mode === 'repte' ? 2 : 1); }
+  if (R.mode === 'lesson' || R.mode === 'repte' || R.mode === 'reco' || (R.mode === 'review' && R.pass)) { misEvent('lesson'); R.pack = openPack(R.mode === 'repte' ? 2 : 1); }
   if (R.perfect && R.mode !== 'train') misEvent('perfect');
-  if (R.mode === 'train' || R.mode === 'reco') misEvent('train');
+  if (R.mode === 'train' || R.mode === 'reco' || R.mode === 'review') misEvent('train');
   LS = null; reward(R);
 }
 function reward(R) {
@@ -527,6 +533,7 @@ function reward(R) {
   if (R.pack) FLOW.push(() => scrPack(R.pack));
   if (R.clv) FLOW.push(() => scrCharLevel(...R.clv));
   if (R.knight) FLOW.push(scrKnight);
+  if (R.crown) FLOW.push(() => scrCrown(R.crown));
   const mc_ = COURSES[P.maxCourse];
   if (mc_ && P.maxCourse < COURSES.length - 1 && mc_.units.every(u => udone(P, u))) { P.maxCourse++; save(); const nl = P.maxCourse; FLOW.push(() => scrNewLevel(nl)); }
   if (R.newB.length) FLOW.push(() => scrBadges(R.newB));
@@ -536,7 +543,7 @@ function flowNext() { closeModal(); const f = FLOW.shift(); if (f) f(); else go(
 function countUp() { $$('[data-count]').forEach(el => { const to = +el.dataset.count, suf = el.dataset.suf || '', t0 = performance.now(); (function step(t) { const k = Math.min(1, (t - t0) / 800); el.textContent = Math.round(to * (1 - (1 - k) ** 3)) + suf; if (k < 1) requestAnimationFrame(step); })(t0); }); }
 function scrResult(R) {
   const game = R.mode === 'game' || R.mode === 'battle';
-  const title = game ? tx(R.title) : R.recoDone ? L('Missió del Cavaller complerta!', '¡Misión del Caballero cumplida!') : R.perfect ? L('Lliçó perfecta!', '¡Lección perfecta!') : R.mode === 'reco' ? L('Bona feina! Torna-ho a provar per completar la missió.', '¡Buen trabajo! Vuelve a intentarlo para completar la misión.') : R.mode === 'train' ? L('Entrenament fet!', '¡Entrenamiento hecho!') : L('Lliçó completada!', '¡Lección completada!');
+  const title = game ? tx(R.title) : R.recoDone ? L('Missió del Cavaller complerta!', '¡Misión del Caballero cumplida!') : R.perfect ? L('Lliçó perfecta!', '¡Lección perfecta!') : R.mode === 'reco' ? L('Bona feina! Torna-ho a provar per completar la missió.', '¡Buen trabajo! Vuelve a intentarlo para completar la misión.') : R.mode === 'train' ? L('Entrenament fet!', '¡Entrenamiento hecho!') : R.mode === 'review' ? L('Repàs fet!', '¡Repaso hecho!') : R.stars && R.stars < PASS ? L('Gairebé!', '¡Casi!') : L('Lliçó completada!', '¡Lección completada!');
   const sub = R.sub || (game ? (R.record ? L('🏆 Nou rècord personal!', '🏆 ¡Nuevo récord personal!') : L(`El teu rècord: ${R.best}`, `Tu récord: ${R.best}`)) : R.perfect ? L('Ni un sol error. Ets imparable!', 'Ni un solo error. ¡Eres imparable!') : L('Cada error és una oportunitat per aprendre.', 'Cada error es una oportunidad para aprender.'));
   const third = game ? `<div class="rs acc"><span>${L('PUNTS', 'PUNTOS')}</span><b data-count="${R.score}">0</b></div>` : `<div class="rs acc"><span>${L('PRECISIÓ', 'PRECISIÓN')}</span><b data-count="${R.acc}" data-suf="%">0</b></div>`;
   app.innerHTML = `<div class="scr"><div class="burst"></div><div class="cheer"><div class="saybubble">${cheerMsg(R)}</div><div class="rchar dance tapme">${meC('happy')}</div></div>
@@ -599,7 +606,8 @@ function cheerMsg(R) {
   const perfect = L([`PERFECTE, ${n}! Ni un sol error! 🌟`, `Uau, ${n}! Lliçó perfecta! Ets imparable!`], [`¡PERFECTO, ${n}! ¡Ni un solo error! 🌟`, `¡Guau, ${n}! ¡Lección perfecta! ¡Eres imparable!`]);
   const hard = L([`Els errors també ensenyen, ${n}. Ho has intentat i això és el més important!`, `No passa res per equivocar-se, ${n}. La propera sortirà millor!`], [`Los errores también enseñan, ${n}. ¡Lo has intentado y eso es lo más importante!`, `No pasa nada por equivocarse, ${n}. ¡La próxima saldrá mejor!`]);
   const game = L([`Quina velocitat, ${n}! El teu cervell va a tota màquina!`, `Bona partida, ${n}! Cada vegada ets més ràpid/a.`], [`¡Qué velocidad, ${n}! ¡Tu cerebro va a toda máquina!`, `¡Buena partida, ${n}! Cada vez eres más rápido/a.`]);
-  const list = R.mode === 'game' ? game : R.perfect ? perfect : (R.acc != null && R.acc < 60) ? hard : good;
+  const almost = L([`Gairebé ho tens, ${n}! Torna-ho a provar amb calma i obrirem la següent.`, `Molt a prop, ${n}! Amb 2 errors o menys, passem a la següent.`], [`¡Casi lo tienes, ${n}! Vuelve a intentarlo con calma y abriremos la siguiente.`, `¡Muy cerca, ${n}! Con 2 errores o menos, pasamos a la siguiente.`]);
+  const list = R.mode === 'game' || R.mode === 'battle' ? game : R.perfect ? perfect : (R.stars && R.stars < PASS) ? almost : (R.acc != null && R.acc < 60) ? hard : good;
   return `<b>${nm}:</b> ${pick(list)}`;
 }
 
