@@ -56,7 +56,8 @@ function setLang(l, rerender = true) {
 }
 LANG = P ? P.lang : DB.lang; document.documentElement.lang = LANG;
 function saveLocal() { try { localStorage.setItem(SKEY, JSON.stringify(DB)); } catch (e) { } }
-function save() { saveLocal(); if (P && P.id !== 'tmp') { P.dirty = true; clearTimeout(save.t); save.t = setTimeout(syncNow, 1500); } }
+// save.n compta els desaments: si n'hi ha durant una pujada, el perfil continua pendent de sincronitzar
+function save() { save.n = (save.n || 0) + 1; saveLocal(); if (P && P.id !== 'tmp') { P.dirty = true; clearTimeout(save.t); save.t = setTimeout(syncNow, 1500); } }
 
 /* ---------- Núvol ---------- */
 const api = (path, data) => fetch('/api/' + path, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(data) }).then(r => r.json().then(j => ({ status: r.status, ...j })));
@@ -68,10 +69,12 @@ async function syncNow() {
     if (!P.code) {
       const r = await api('register', { name: P.name, survey: P.survey || null, state: P });
       if (r.code) { P.code = r.code; P.pendingReg = false; P.dirty = false; saveLocal(); }
-    } else if (P.dirty) {
-      const r = await api('sync', { code: P.code, state: P });
+    } else if (P.dirty && !P.gone) {
+      const n0 = save.n, r = await api('sync', { code: P.code, state: P });
+      // el perfil ja no existeix al núvol (donat de baixa o esborrat): deixem de provar-ho
+      if (r.status === 410 || r.status === 404) { P.gone = true; saveLocal(); SYNCING = false; return; }
       if (r.ok === false && r.state && r.state.xp > P.xp) adopt(r.state);
-      else if (r.ok) P.dirty = false;
+      else if (r.ok && save.n === n0) P.dirty = false;
       saveLocal();
     }
   } catch (e) { }
@@ -80,13 +83,14 @@ async function syncNow() {
 }
 async function pull() {
   if (!P || !P.code || !navigator.onLine) return;
-  try { const r = await api('login', { code: P.code }); if (r.state && r.state.xp > P.xp) { adopt(r.state); if (VIEW === 'home') renderHome(); }
+  if (P.gone) return;
+  try { const r = await api('login', { code: P.code }); if (r.status === 410) { P.gone = true; saveLocal(); return; } if (r.state && r.state.xp > P.xp) { adopt(r.state); if (VIEW === 'home') renderHome(); }
     if (r.state && !!r.state.unlockAll !== !!P.unlockAll) { P.unlockAll = !!r.state.unlockAll; saveLocal(); if (VIEW === 'home') renderHome(); } if (r.username && !P.username) { P.username = r.username; saveLocal(); } } catch (e) { }
 }
 function adopt(st) { const id = P.id; Object.assign(P, migrate(st), { id, dirty: false }); DB.profiles[id] = P; LANG = P.lang; saveLocal(); }
-const cloudTxt = () => !P.code ? L("⏳ Encara no s'ha pogut desar al núvol (es tornarà a provar sol).", '⏳ Aún no se ha podido guardar en la nube (se volverá a intentar solo).') : P.dirty ? L('⏳ Desant els últims canvis…', '⏳ Guardando los últimos cambios…') : L('☁️ Progrés desat al núvol.', '☁️ Progreso guardado en la nube.');
+const cloudTxt = () => P.gone ? L("Aquest perfil ja no està actiu al núvol. Parla amb el teu docent.", 'Este perfil ya no está activo en la nube. Habla con tu docente.') : !P.code ? L("⏳ Encara no s'ha pogut desar al núvol (es tornarà a provar sol).", '⏳ Aún no se ha podido guardar en la nube (se volverá a intentar solo).') : P.dirty ? L('⏳ Desant els últims canvis…', '⏳ Guardando los últimos cambios…') : L('☁️ Progrés desat al núvol.', '☁️ Progreso guardado en la nube.');
 addEventListener('online', syncNow);
-setInterval(() => { if (P && (P.dirty || !P.code)) syncNow(); }, 30000);
+setInterval(() => { if (P && !P.gone && (P.dirty || !P.code)) syncNow(); }, 30000);
 addEventListener('visibilitychange', () => { if (document.hidden) syncNow(); });
 
 /* ---------- Cursos i progrés ---------- */

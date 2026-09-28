@@ -5,8 +5,10 @@ export default async function handler(req, res) {
   if (!code || !state || typeof state !== 'object' || Array.isArray(state)) return ok(res, { error: 'dades' }, 400);
   if (JSON.stringify(state).length > 300000) return ok(res, { error: 'massa gran' }, 413);
   if (await blocked(req, 'codi', 40)) return tooMany(res);
-  const cur = await sql`SELECT xp, state FROM mates.alumnes WHERE code = ${code} AND active`;
+  const cur = await sql`SELECT xp, state, active FROM mates.alumnes WHERE code = ${code}`;
   if (!cur.length) { await fail(req, 'codi'); return ok(res, { error: 'no trobat' }, 404); }
+  // un alumne donat de baja no compta com a intent fallit (la seva app encara pot estar oberta a l'aula)
+  if (!cur[0].active) return ok(res, { error: 'baixa' }, 410);
   cleanState(state);
   // Regla de conflicte: l'XP només creix. Si arriba un estat amb menys XP, retornem el del servidor.
   if (!b.reset && (state.xp | 0) < cur[0].xp) return ok(res, { ok: false, state: cur[0].state });
