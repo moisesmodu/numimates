@@ -96,14 +96,16 @@ function enrich(r) {
   Object.entries(r.sk || {}).forEach(([k, v]) => { if (['sprint', 'flash', 'chain'].includes(k) || !Array.isArray(v)) return; const s = sent[skillSent(k)]; s.c += v[0] || 0; s.t += v[1] || 0; });
   Object.values(sent).forEach(s => s.pct = s.t ? Math.round(100 * s.c / s.t) : null);
   const tests = (r.tests || []).slice().sort((a, b) => String(a.date).localeCompare(String(b.date)));
-  const lt = tests[tests.length - 1], pt = tests[tests.length - 2], evoD = lt && pt ? lt.pct - pt.pct : null;
+  // l'evolució només es compara amb la prova anterior del mateix nivell
+  const lt = tests[tests.length - 1], pt = lt ? tests.slice(0, -1).reverse().find(t => t.course === lt.course) : null, evoD = lt && pt ? lt.pct - pt.pct : null;
   const exams = Object.entries(r.exams || {}).map(([uid, x]) => ({ uid, ...x })).sort((a, b) => String(b.d || '').localeCompare(String(a.d || '')));
   const acc = r.answers ? Math.round(100 * r.correct / r.answers) : null;
   const reasons = [], add = (sev, txt) => reasons.push({ sev, txt });
   const idle = daysAgo(r.last_day);
-  if (!r.lessons && daysAgo(r.created_at) > 3) add('crit', L("No ha entrat mai", 'No ha entrado nunca'));
+  if (!r.lessons && !r.days.length && daysAgo(r.created_at) > 3) add('crit', L("No ha entrat mai", 'No ha entrado nunca'));
   else if (idle != null && idle > 14) add('crit', L(`Sense activitat fa ${idle} dies`, `Sin actividad hace ${idle} días`));
-  const stuck = exams.find(x => (x.tries || 0) >= 2 && (x.best || 0) < 75);
+  // porta encallada: 2 intents o més sense aprovar, i l'últim fa menys de 30 dies
+  const stuck = exams.find(x => (x.tries || 0) >= 2 && (x.best || 0) < 75 && x.d && daysAgo(x.d) <= 30);
   if (stuck) add('crit', L(`No supera la porta (U${stuck.uid.split('-')[1]}, ${stuck.tries} intents)`, `No supera la puerta (U${stuck.uid.split('-')[1]}, ${stuck.tries} intentos)`));
   if (idle != null && idle >= 8 && idle <= 14) add('warn', L(`Sense activitat fa ${idle} dies`, `Sin actividad hace ${idle} días`));
   if (r.answers >= 40 && acc < 60) add('warn', L(`Precisió baixa (${acc} %)`, `Precisión baja (${acc} %)`));
