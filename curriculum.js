@@ -178,7 +178,7 @@ const COURSES = [
       ['Parèntesis|Paréntesis', ['int.ops'], 4], ['Potències de negatius|Potencias de negativos', ['int.ops'], 5]]),
     U('Divisibilitat|Divisibilidad', 'Múltiples, divisors, m.c.m. i m.c.d.|Múltiplos, divisores, m.c.m. y m.c.d.', 'guida', [
       ['Múltiples i divisors|Múltiplos y divisores', ['mult.mul', 'mult.div'], 3], ['Nombres primers|Números primos', ['mult.prime'], 4], ['Criteris de divisibilitat|Criterios de divisibilidad', ['mult.crit'], 4],
-      ['M.c.m. i m.c.d.|M.c.m. y m.c.d.', ['mult.mcm'], 1], ['Problemes de m.c.m.|Problemas de m.c.m.', ['mult.mcm'], 3]]),
+      ['M.c.m. i m.c.d.|M.c.m. y m.c.d.', ['mult.mcm'], 1], ['Problemes de m.c.m. i m.c.d.|Problemas de m.c.m. y m.c.d.', ['mult.prob'], 3]]),
     U('Fraccions|Fracciones', 'Sumar, multiplicar i dividir fraccions.|Sumar, multiplicar y dividir fracciones.', 'tuga', [
       ['Simplificar|Simplificar', ['fr.simp'], 4], ['Sumar i restar|Sumar y restar', ['fr.addD'], 4], ['Multiplicar fraccions|Multiplicar fracciones', ['fr.ops'], 1],
       ['Dividir fraccions|Dividir fracciones', ['fr.ops'], 2], ['Operacions combinades|Operaciones combinadas', ['fr.ops'], 4]]),
@@ -196,7 +196,11 @@ const COURSES = [
       ['Àrea del cercle|Área del círculo', ['geo.circle'], 2], ['Coordenades|Coordenadas', ['e.coord'], 5]]),
     U('Estadística i probabilitat|Estadística y probabilidad', 'Mitjana, mediana, moda i probabilitat.|Media, mediana, moda y probabilidad.', 'guida', [
       ['La mitjana|La media', ['stat2'], 1], ['La mediana|La mediana', ['stat2'], 2], ['La moda|La moda', ['stat2'], 3],
-      ['Probabilitat|Probabilidad', ['at.prob'], 5], ['Dues monedes|Dos monedas', ['prob2'], 1]])
+      ['Probabilitat|Probabilidad', ['at.prob'], 5], ['Dues monedes|Dos monedas', ['prob2'], 1]]),
+    // Unitats noves (Decret 175/2022): s'afegeixen sempre al final perquè el progrés es desa per posició
+    U('De l\'enunciat a l\'equació|Del enunciado a la ecuación', 'Plantejar i resoldre problemes amb equacions.|Plantear y resolver problemas con ecuaciones.', 'cavaller', [
+      ['Del text a l\'àlgebra|Del texto al álgebra', ['alg.word:tr'], 1], ['Problemes d\'edats|Problemas de edades', ['alg.word:age'], 2], ['Preus i monedes|Precios y monedas', ['alg.word:price', 'alg.word:coin'], 2],
+      ['Perímetres i angles|Perímetros y ángulos', ['alg.word:perim'], 3], ['Planteja i resol|Plantea y resuelve', ['alg.word'], 3]])
   ] },
   { id: 'c8', n: 8, name: '8|8', long: 'Nivell 8|Nivel 8', emoji: '🦅', units: [
     U('Enters i fraccions|Enteros y fracciones', 'Operacions combinades.|Operaciones combinadas.', 'numi', [
@@ -222,7 +226,11 @@ const COURSES = [
       ['Volum del prisma|Volumen del prisma', ['geo.vol2'], 1], ['Volum del cilindre|Volumen del cilindro', ['geo.vol2'], 2]]),
     U('Estadística i probabilitat|Estadística y probabilidad', 'Mesures centrals i dos daus.|Medidas centrales y dos dados.', 'flama', [
       ['Mitjana i mediana|Media y mediana', ['stat2'], 2], ['Mediana parella|Mediana par', ['stat2'], 4], ['El valor que falta|El valor que falta', ['stat2'], 5],
-      ['Dues monedes|Dos monedas', ['prob2'], 1], ['Dos daus|Dos dados', ['prob2'], 2]])
+      ['Dues monedes|Dos monedas', ['prob2'], 1], ['Dos daus|Dos dados', ['prob2'], 2]]),
+    // Unitats noves (Decret 175/2022): sempre al final
+    U('Problemes amb equacions|Problemas con ecuaciones', 'Edats, preus, monedes i sistemes.|Edades, precios, monedas y sistemas.', 'cavaller', [
+      ['Planteja l\'equació|Plantea la ecuación', ['alg.word:tr', 'alg.word:age'], 2], ['Edats i nombres|Edades y números', ['alg.word:age', 'alg.word:tr'], 4], ['Preus, monedes i perímetres|Precios, monedas y perímetros', ['alg.word:price', 'alg.word:coin', 'alg.word:perim'], 4],
+      ['Problemes amb sistemes|Problemas con sistemas', ['alg.word:sys'], 1], ['Resol el sistema|Resuelve el sistema', ['alg.word:sys'], 3]])
   ] },
   { id: 'c9', n: 9, name: '9|9', long: 'Nivell 9|Nivel 9', emoji: '🐺', units: [
     U('Nombres reals|Números reales', 'Notació científica i arrels.|Notación científica y raíces.', 'numi', [
@@ -248,7 +256,11 @@ const COURSES = [
       ['Volum del con|Volumen del cono', ['geo.vol2'], 3], ['Volum de l\'esfera|Volumen de la esfera', ['geo.vol2'], 4]]),
     U('Probabilitat|Probabilidad', 'Successos contraris i sense reemplaçament.|Sucesos contrarios y sin reemplazo.', 'flama', [
       ['Dos daus|Dos dados', ['prob2'], 2], ['Succés contrari|Suceso contrario', ['prob2'], 3], ['Sense tornar-les|Sin devolverlas', ['prob2'], 4],
-      ['Combinacions|Combinaciones', ['prob2'], 5], ['Estadística|Estadística', ['stat2'], 4]])
+      ['Combinacions|Combinaciones', ['prob2'], 5], ['Estadística|Estadística', ['stat2'], 4]]),
+    // Unitats noves (Decret 175/2022): sempre al final
+    U('Problemes: sistemes i segon grau|Problemas: sistemas y segundo grado', 'Plantejar sistemes i equacions de segon grau.|Plantear sistemas y ecuaciones de segundo grado.', 'cavaller', [
+      ['Planteja el sistema|Plantea el sistema', ['alg.word:sys'], 2], ['Problemes amb sistemes|Problemas con sistemas', ['alg.word:sys'], 4], ['Planteja el segon grau|Plantea el segundo grado', ['alg.word:quad'], 1],
+      ['Àrees i nombres|Áreas y números', ['alg.word:quad'], 3], ['Tot plegat|Todo junto', ['alg.word:sys', 'alg.word:quad', 'alg.word'], 4]])
   ] },
   { id: 'c10', n: 10, name: '10|10', long: 'Nivell 10|Nivel 10', emoji: '🦁', units: [
     U('Equacions i inequacions|Ecuaciones e inecuaciones', 'Segon grau, discriminant i desigualtats.|Segundo grado, discriminante y desigualdades.', 'cavaller', [
