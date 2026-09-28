@@ -75,12 +75,12 @@
     if (L_ <= 1 || L_ === 3) {
       const d = pick(L_ <= 1 ? [2, 3, 4, 5, 6, 8, 10] : [2, 3, 4, 5, 6]), u = L_ <= 1 ? 1 : 2, k = u === 1 ? ri(1, d - 1) : ri(d + 1, 2 * d - 1);
       const dis = dis3([[d - k, d], [k + 1, d], [k - 1, d], [k, d + 1], [d, k], [k - d, d], [k, 2 * d], [k + 2, d]].filter(([p]) => p > 0), k / d, 3, ([p, q]) => p / q);
-      return mc(L('Quina fracció marca la fletxa?', '¿Qué fracción marca la flecha?'), frac(k, d), dis.map(([p, q]) => frac(p, q)), { big: true, vis: lineSVG(d * u, mkU(d, u), { ar: k }), ex: L(`De 0 a 1 hi ha ${d} parts iguals: cada marca és 1/${d}. La fletxa és a ${k} marques del 0: ${k}/${d}.`, `De 0 a 1 hay ${d} partes iguales: cada marca es 1/${d}. La flecha está a ${k} marcas del 0: ${k}/${d}.`) + (k > d ? L(' És més gran que 1!', ' ¡Es mayor que 1!') : '') });
+      return mc(L('Quina fracció marca la fletxa?', '¿Qué fracción marca la flecha?'), frac(k, d), dis.map(([p, q]) => frac(p, q)), { big: true, vis: lineSVG(d * u, mkU(d, u), { ar: k }), ex: L(`De 0 a 1 hi ha ${d} parts iguals: cada marca és 1/${d}. La fletxa és a ${k} ${k === 1 ? 'marca' : 'marques'} del 0: ${k}/${d}.`, `De 0 a 1 hay ${d} partes iguales: cada marca es 1/${d}. La flecha está a ${k} ${k === 1 ? 'marca' : 'marcas'} del 0: ${k}/${d}.`) + (k > d ? L(' És més gran que 1!', ' ¡Es mayor que 1!') : '') });
     }
     let d, u, t, fq, why;
-    if (L_ === 2) { d = pick([3, 4, 5, 6, 8, 10]); u = d <= 4 ? 2 : 1; do t = ri(1, u * d - 1); while (t === d); fq = [`<b>${frac(t, d)}</b>`, `<b>${frac(t, d)}</b>`]; why = L(`Cada marca és 1/${d}: compta ${t} marques des del 0.`, `Cada marca es 1/${d}: cuenta ${t} marcas desde el 0.`); }
-    else if (L_ === 4) { d = pick([4, 6, 8, 10]); u = d <= 4 ? 2 : 1; t = pick([...Array(u * d).keys()].filter(i => i && i !== d && gcd(i, d) > 1)); const g = gcd(t, d); fq = [`<b>${frac(t / g, d / g)}</b>`, `<b>${frac(t / g, d / g)}</b>`]; why = L(`Cada marca és 1/${d}, i ${t / g}/${d / g} = ${t}/${d} (fraccions equivalents): compta ${t} marques des del 0.`, `Cada marca es 1/${d}, y ${t / g}/${d / g} = ${t}/${d} (fracciones equivalentes): cuenta ${t} marcas desde el 0.`); }
-    else { d = pick([4, 5, 10]); u = 2; do t = ri(1, 2 * d - 1); while (t % d === 0); fq = [`${elN(t / d)}<b>${fmtD(t / d)}</b>`, `el <b>${fmtD(t / d)}</b>`]; why = L(`De 0 a 1 hi ha ${d} parts: cada marca és ${fmtD(1 / d)}. ${fmtD(t / d)} = ${t}/${d}: compta ${t} marques des del 0.`, `De 0 a 1 hay ${d} partes: cada marca es ${fmtD(1 / d)}. ${fmtD(t / d)} = ${t}/${d}: cuenta ${t} marcas desde el 0.`); }
+    if (L_ === 2) { d = pick([3, 4, 5, 6, 8, 10]); u = d <= 4 ? 2 : 1; do t = ri(1, u * d - 1); while (t === d); fq = [`<b>${frac(t, d)}</b>`, `<b>${frac(t, d)}</b>`]; why = L(`Cada marca és 1/${d}: compta ${t} ${t === 1 ? 'marca' : 'marques'} des del 0.`, `Cada marca es 1/${d}: cuenta ${t} ${t === 1 ? 'marca' : 'marcas'} desde el 0.`); }
+    else if (L_ === 4) { d = pick([4, 6, 8, 10]); u = d <= 4 ? 2 : 1; t = pick([...Array(u * d).keys()].filter(i => i && i !== d && gcd(i, d) > 1)); const g = gcd(t, d); fq = [`<b>${frac(t / g, d / g)}</b>`, `<b>${frac(t / g, d / g)}</b>`]; why = L(`Cada marca és 1/${d}, i ${t / g}/${d / g} = ${t}/${d} (fraccions equivalents): compta ${t} ${t === 1 ? 'marca' : 'marques'} des del 0.`, `Cada marca es 1/${d}, y ${t / g}/${d / g} = ${t}/${d} (fracciones equivalentes): cuenta ${t} ${t === 1 ? 'marca' : 'marcas'} desde el 0.`); }
+    else { d = pick([4, 5, 10]); u = 2; do t = ri(1, 2 * d - 1); while (t % d === 0); fq = [`${elN(t / d)}<b>${fmtD(t / d)}</b>`, `el <b>${fmtD(t / d)}</b>`]; why = L(`De 0 a 1 hi ha ${d} parts: cada marca és ${fmtD(1 / d)}. ${fmtD(t / d)} = ${t}/${d}: compta ${t} ${t === 1 ? 'marca' : 'marques'} des del 0.`, `De 0 a 1 hay ${d} partes: cada marca es ${fmtD(1 / d)}. ${fmtD(t / d)} = ${t}/${d}: cuenta ${t} ${t === 1 ? 'marca' : 'marcas'} desde el 0.`); }
     const mk = mkU(d, u), free = [...Array(u * d).keys()].filter(i => mk[i] === undefined), ts = [t, ...shuffle(free.filter(i => i !== t)).slice(0, 3)];
     return lineLet(u * d, mk, ts, t, fq, why);
   }
@@ -121,14 +121,14 @@
     for (let d = 1; d <= nd; d++) { const p = w0 + d - 1, c = p % 7, x = 8 + cw * c + cw / 2, y = 64 + Math.floor(p / 7) * ch + 19; if (hi.includes(d)) s += `<circle cx="${x}" cy="${y - 5}" r="13" fill="#FFE7A8"/>`; s += `<text class="cd" x="${x}" y="${y}" text-anchor="middle" font-size="15" ${F} fill="${c >= 5 ? '#FF5A5F' : INK}">${d}</text>`; }
     return s + '</svg>';
   }
-  const dayMc = (q, i, o = {}) => mc(q, dia(i), shuffle([dia(i - 1), dia(i + 1), dia(i + 2), dia(i - 2), dia(i + 3)]), o);
+  const dayMc = (q, i, o = {}) => mc(q, dia(i), shuffle([dia(i - 1), dia(i + 1), dia(i + 2), dia(i - 2), dia(i + 3)]), { list: true, ...o });
   const CTX = [['Una classe', 'Una clase'], ['Un partit', 'Un partido'], ['Una pel·lícula', 'Una película'], ['El pati', 'El recreo'], ['Un concert', 'Un concierto'], ['Una excursió', 'Una excursión']];
   const hm = t => `${Math.floor(t / 60)}:${pad(t % 60)}`;
 
   /* ---------- 3. Sistema mètric decimal, temps i dades digitals ---------- */
   const LAD = { len: ['km', 'hm', 'dam', 'm', 'dm', 'cm', 'mm'], cap: ['kl', 'hl', 'dal', 'l', 'dl', 'cl', 'ml'] };
   const conv = (from, to, ans, why) => (Number.isInteger(ans) ? inp : dinp)(L('Completa:', 'Completa:'), ans, { vis: eqv(`${from} = ${BOX} ${to}`), unit: to, ex: why });
-  const convWhy = (u1, u2, k, mul, a, b) => L(`1 ${mul ? u1 : u2} = ${fmt(k)} ${mul ? u2 : u1}. ${mul ? 'Multipliquem' : 'Dividim'} per ${fmt(k)}: ${a} ${mul ? '×' : '÷'} ${fmt(k)} = ${b}.`, `1 ${mul ? u1 : u2} = ${fmt(k)} ${mul ? u2 : u1}. ${mul ? 'Multiplicamos' : 'Dividimos'} por ${fmt(k)}: ${a} ${mul ? '×' : '÷'} ${fmt(k)} = ${b}.`);
+  const convWhy = (u1, u2, k, mul, a, b) => L(`1 ${u1} = ${fmt(k)} ${u2}. ${mul ? 'Multipliquem' : 'Dividim'} per ${fmt(k)}: ${a} ${mul ? '×' : '÷'} ${fmt(k)} = ${b}.`, `1 ${u1} = ${fmt(k)} ${u2}. ${mul ? 'Multiplicamos' : 'Dividimos'} por ${fmt(k)}: ${a} ${mul ? '×' : '÷'} ${fmt(k)} = ${b}.`);
   // objectes per estimar: [ca, es, quantitat, unitat]; totes les altres unitats donen una mesura impossible
   const EST = {
     len: [['una porta', 'una puerta', '2', 'm'], ['un llapis nou', 'un lápiz nuevo', '15', 'cm'], ["l'amplada d'una ungla", 'el ancho de una uña', '1', 'cm'], ["el gruix d'una moneda", 'el grosor de una moneda', '2', 'mm'], ['el camí de Lleida a Barcelona', 'el camino de Lleida a Barcelona', '160', 'km'], ['una pista de bàsquet', 'una pista de baloncesto', '28', 'm'], ['una girafa', 'una jirafa', '5', 'm']],
@@ -188,10 +188,10 @@
   // polígon amb marques: o.right = vèrtexs amb angle recte, o.ticks = ratlletes de costats iguals, o.sides/o.angles = rètols, o.line = eix
   function figSVG(Q, o = {}) {
     const W = o.W || 260, H = o.H || 170, n = Q.length, C = [Q.reduce((a, p) => a + p[0], 0) / n, Q.reduce((a, p) => a + p[1], 0) / n];
-    let s = `<svg viewBox="0 0 ${W} ${H}" class="vsvg wide"><polygon points="${Q.map(p => p.map(f1).join(',')).join(' ')}" fill="${o.fill || '#E8F5FE'}" stroke="${o.stroke || '#36A9E1'}" stroke-width="3.5" stroke-linejoin="round"/>`;
+    let s = `<svg viewBox="0 0 ${W} ${H}" class="vsvg wide"${W < 260 ? ' style="height:104px"' : ''}><polygon points="${Q.map(p => p.map(f1).join(',')).join(' ')}" fill="${o.fill || '#E8F5FE'}" stroke="${o.stroke || '#36A9E1'}" stroke-width="3.5" stroke-linejoin="round"/>`;
     (o.right || []).forEach(i => { const V = Q[i], a = uv(V, Q[(i + n - 1) % n]), b = uv(V, Q[(i + 1) % n]), k = 11; s += `<path d="M${f1(V[0] + a[0] * k)} ${f1(V[1] + a[1] * k)}L${f1(V[0] + (a[0] + b[0]) * k)} ${f1(V[1] + (a[1] + b[1]) * k)}L${f1(V[0] + b[0] * k)} ${f1(V[1] + b[1] * k)}" fill="none" stroke="${INK}" stroke-width="2"/>`; });
     (o.ticks || []).forEach((t, i) => { const A = Q[i], B = Q[(i + 1) % n], d = uv(A, B), m = [(A[0] + B[0]) / 2, (A[1] + B[1]) / 2]; for (let j = 0; j < t; j++) { const w = (j - (t - 1) / 2) * 5; s += `<line x1="${f1(m[0] + d[0] * w + d[1] * 7)}" y1="${f1(m[1] + d[1] * w - d[0] * 7)}" x2="${f1(m[0] + d[0] * w - d[1] * 7)}" y2="${f1(m[1] + d[1] * w + d[0] * 7)}" stroke="${INK}" stroke-width="2.2"/>`; } });
-    (o.sides || []).forEach((t, i) => { if (t == null) return; const A = Q[i], B = Q[(i + 1) % n], m = [(A[0] + B[0]) / 2, (A[1] + B[1]) / 2], d = uv(C, m); s += `<text x="${f1(m[0] + d[0] * 17)}" y="${f1(m[1] + d[1] * 17 + 5)}" text-anchor="middle" font-size="14" ${F} fill="${INK}">${t}</text>`; });
+    (o.sides || []).forEach((t, i) => { if (t == null) return; const A = Q[i], B = Q[(i + 1) % n], m = [(A[0] + B[0]) / 2, (A[1] + B[1]) / 2], e = uv(A, B); let d = [-e[1], e[0]]; if ((m[0] - C[0]) * d[0] + (m[1] - C[1]) * d[1] < 0) d = [-d[0], -d[1]]; const r = 12 + 18 * Math.abs(d[0]); s += `<text x="${f1(m[0] + d[0] * r)}" y="${f1(m[1] + d[1] * r + 5)}" text-anchor="middle" font-size="14" ${F} fill="${INK}">${t}</text>`; });
     (o.angles || []).forEach((t, i) => { if (t == null) return; const V = Q[i], a = uv(V, Q[(i + n - 1) % n]), b = uv(V, Q[(i + 1) % n]), bi = uv([0, 0], [a[0] + b[0], a[1] + b[1]]), g = Math.acos(Math.max(-1, Math.min(1, a[0] * b[0] + a[1] * b[1]))), r = Math.min(46, 13 / Math.sin(g / 2)) + 8; s += `<text x="${f1(V[0] + bi[0] * r)}" y="${f1(V[1] + bi[1] * r + 5)}" text-anchor="middle" font-size="13" ${F} fill="#C4661A">${t}</text>`; });
     if (o.line) s += `<line class="ax" x1="${f1(o.line[0][0])}" y1="${f1(o.line[0][1])}" x2="${f1(o.line[1][0])}" y2="${f1(o.line[1][1])}" stroke="#FF5A5F" stroke-width="3" stroke-dasharray="8 6" stroke-linecap="round"/>`;
     return s + '</svg>';
@@ -217,7 +217,7 @@
   const comboName = (a, s) => `${tx(TA[a])} ${LANG === 'es' ? (s === 'is' ? 'e' : 'y') : 'i'} ${tx(TS[s])}`;
   const QUAD = { quadrat: ['quadrat', 'cuadrado'], rectangle: ['rectangle', 'rectángulo'], rombe: ['rombe', 'rombo'], romboide: ['romboide', 'romboide'], trapezi: ['trapezi', 'trapecio'], trapezoide: ['trapezoide', 'trapezoide'] };
   const QPAR = { quadrat: 2, rectangle: 2, rombe: 2, romboide: 2, trapezi: 1, trapezoide: 0 };
-  const QDESC = { quadrat: ['4 costats iguals i 4 angles rectes', '4 lados iguales y 4 ángulos rectos'], rectangle: ['4 angles rectes i els costats iguals dos a dos', '4 ángulos rectos y los lados iguales dos a dos'], rombe: ['4 costats iguals però cap angle recte', '4 lados iguales pero ningún ángulo recto'], romboide: ['els costats iguals i paral·lels dos a dos, però cap angle recte', 'los lados iguales y paralelos dos a dos, pero ningún ángulo recto'], trapezi: ['només dos costats paral·lels', 'solo dos lados paralelos'], trapezoide: ['cap costat paral·lel a un altre', 'ningún lado paralelo a otro'] };
+  const QDESC = { quadrat: ['té 4 costats iguals i 4 angles rectes', 'tiene 4 lados iguales y 4 ángulos rectos'], rectangle: ['té 4 angles rectes i els costats iguals dos a dos', 'tiene 4 ángulos rectos y los lados iguales dos a dos'], rombe: ['té 4 costats iguals, però no té cap angle recte', 'tiene 4 lados iguales, pero no tiene ningún ángulo recto'], romboide: ['té els costats iguals i paral·lels dos a dos, però no té cap angle recte', 'tiene los lados iguales y paralelos dos a dos, pero no tiene ningún ángulo recto'], trapezi: ['només té dos costats paral·lels', 'solo tiene dos lados paralelos'], trapezoide: ['no té cap parell de costats paral·lels', 'no tiene ningún par de lados paralelos'] };
   const QPROP = { quadrat: ['Quin quadrilàter té els <b>4 costats iguals</b> i els <b>4 angles rectes</b>?', '¿Qué cuadrilátero tiene los <b>4 lados iguales</b> y los <b>4 ángulos rectos</b>?'], rectangle: ['Quin quadrilàter té <b>4 angles rectes</b> però <b>no</b> té tots els costats iguals?', '¿Qué cuadrilátero tiene <b>4 ángulos rectos</b> pero <b>no</b> tiene todos los lados iguales?'], rombe: ['Quin quadrilàter té els <b>4 costats iguals</b> però <b>cap angle recte</b>?', '¿Qué cuadrilátero tiene los <b>4 lados iguales</b> pero <b>ningún ángulo recto</b>?'], romboide: ['Quin quadrilàter té els costats <b>paral·lels dos a dos</b>, però no té tots els costats iguals ni cap angle recte?', '¿Qué cuadrilátero tiene los lados <b>paralelos dos a dos</b>, pero no tiene todos los lados iguales ni ningún ángulo recto?'], trapezi: ['Quin quadrilàter té <b>només dos</b> costats paral·lels?', '¿Qué cuadrilátero tiene <b>solo dos</b> lados paralelos?'], trapezoide: ['Quin quadrilàter <b>no té cap</b> parell de costats paral·lels?', '¿Qué cuadrilátero <b>no tiene ningún</b> par de lados paralelos?'] };
   const cross = (a, b, c) => (b[0] - a[0]) * (c[1] - b[1]) - (b[1] - a[1]) * (c[0] - b[0]);
   const dirG = (a, b) => (Math.atan2(b[1] - a[1], b[0] - a[0]) * 180 / Math.PI + 360) % 180;
@@ -245,7 +245,7 @@
     const W = o.W || 260, H = o.H || 170, c = [W / 2 + ri(-12, 12), H / 2 + ri(-8, 8)], d1 = [Math.cos(rad(th)), Math.sin(rad(th))];
     const ph = kind === 'par' ? 0 : kind === 'perp' ? 90 : pick([ri(30, 60), ri(120, 150)]), d2 = [Math.cos(rad(th + ph)), Math.sin(rad(th + ph))], nr = [-d1[1], d1[0]], off = ri(20, 28) * H / 170;
     const p1 = kind === 'par' ? [c[0] + nr[0] * off, c[1] + nr[1] * off] : c, p2 = kind === 'par' ? [c[0] - nr[0] * off, c[1] - nr[1] * off] : c;
-    let s = `<svg viewBox="0 0 ${W} ${H}" class="vsvg wide">` + [[clipL(p1, d1, W, H), '#36A9E1'], [clipL(p2, d2, W, H), '#FF6FA3']].map(([[A, B], col]) => `<line class="ln" x1="${f1(A[0])}" y1="${f1(A[1])}" x2="${f1(B[0])}" y2="${f1(B[1])}" stroke="${col}" stroke-width="5" stroke-linecap="round"/>`).join('');
+    let s = `<svg viewBox="0 0 ${W} ${H}" class="vsvg wide"${W < 260 ? ' style="height:104px"' : ''}>` + [[clipL(p1, d1, W, H), '#36A9E1'], [clipL(p2, d2, W, H), '#FF6FA3']].map(([[A, B], col]) => `<line class="ln" x1="${f1(A[0])}" y1="${f1(A[1])}" x2="${f1(B[0])}" y2="${f1(B[1])}" stroke="${col}" stroke-width="5" stroke-linecap="round"/>`).join('');
     if (kind === 'perp' && o.mark) { const k = 12; s += `<path d="M${f1(c[0] + d1[0] * k)} ${f1(c[1] + d1[1] * k)}L${f1(c[0] + (d1[0] + d2[0]) * k)} ${f1(c[1] + (d1[1] + d2[1]) * k)}L${f1(c[0] + d2[0] * k)} ${f1(c[1] + d2[1] * k)}" fill="none" stroke="${INK}" stroke-width="2"/>`; }
     return s + '</svg>';
   }
@@ -302,12 +302,14 @@
   const FC = [['vermelles', 'rojas', '🔴', '🟥'], ['blaves', 'azules', '🔵', '🟦'], ['verdes', 'verdes', '🟢', '🟩'], ['grogues', 'amarillas', '🟡', '🟨']], FSH = [['rodones', 'redondas'], ['quadrades', 'cuadradas']];
   const numbered = cmds => `<div class="cmds">${cmds.map((c, i) => `<span style="display:grid;justify-items:center;gap:3px"><span class="cmd" style="animation-delay:${i * 90}ms">${ARW[c]}</span><small style="font-weight:800;color:#8A7B99">${i + 1}</small></span>`).join('')}</div>`;
   const posOf = (st, cmds) => { const p = [st.slice()]; cmds.forEach(c => { const [r, q] = p[p.length - 1]; p.push([r + MOV[c][0], q + MOV[c][1]]); }); return p; };
+  // graella amb el camí pintat (no fem servir la classe «trail»: l'app ja la fa servir per al camí entre unitats)
+  const pathGrid = (st, w) => gridHTML(5, { [st.join(',')]: '🤖', [w.end.join(',')]: '🏁' }, false, w.seen).replace(/class="cgc trail" style="/g, 'class="cgc" style="background:#BFE3F7;');
   const botRow = (em, cmds) => `<div style="display:flex;align-items:center;gap:8px;justify-content:center"><span style="font-size:26px">${em}</span>${cmdHTML(cmds)}</div>`;
 
   /* ---------- 8. Coordenades cartesianes (primer quadrant) ---------- */
   const CX = x => 40 + x * 30, CY = y => 215 - y * 30, co = ([x, y]) => `(${x}, ${y})`;
   function cartSVG(pts, seg) {
-    let s = '<svg viewBox="0 0 300 250" class="vsvg wide" style="width:min(300px,86vw)">';
+    let s = '<svg viewBox="0 0 318 250" class="vsvg wide" style="width:min(318px,88vw)">';
     for (let i = 0; i <= 8; i++) s += `<line x1="${CX(i)}" y1="${CY(0)}" x2="${CX(i)}" y2="${CY(6)}" stroke="#E6DCEF" stroke-width="1.5"/>`;
     for (let j = 0; j <= 6; j++) s += `<line x1="${CX(0)}" y1="${CY(j)}" x2="${CX(8)}" y2="${CY(j)}" stroke="#E6DCEF" stroke-width="1.5"/>`;
     s += `<path d="M${CX(0)} ${CY(0)}H${CX(8) + 16}M${CX(8) + 9} ${CY(0) - 6}l7 6-7 6M${CX(0)} ${CY(0)}V${CY(6) - 16}M${CX(0) - 6} ${CY(6) - 9}l6 -7 6 7" fill="none" stroke="${INK}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>`;
@@ -349,7 +351,7 @@
         return mc(L('Quins dies són el <b>cap de setmana</b>?', '¿Qué días son el <b>fin de semana</b>?'), dia(5) + y + dia(6), [dia(4) + y + dia(5), dia(6) + y + dia(0), dia(3) + y + dia(4)], { ex: L(`El cap de setmana és ${dia(5)} i ${dia(6)}.`, `El fin de semana es sábado y domingo.`) });
       }
       if (kind === 'year') {
-        const m = ri(0, 11), exO = L(`L'ordre dels mesos és: ${MES.map(tx).join(', ')}.`, `El orden de los meses es: ${MES.map(tx).join(', ')}.`), mD = (i, o = {}) => mc(o.q, mes(i), shuffle([mes(i - 1), mes(i + 1), mes(i + 2), mes(i - 2), mes(i + 4)]), { ex: exO + (o.ex || ''), vis: o.vis });
+        const m = ri(0, 11), exO = L(`L'ordre dels mesos és: ${MES.map(tx).join(', ')}.`, `El orden de los meses es: ${MES.map(tx).join(', ')}.`), mD = (i, o = {}) => mc(o.q, mes(i), shuffle([mes(i - 1), mes(i + 1), mes(i + 2), mes(i - 2), mes(i + 4)]), { list: true, ex: exO + (o.ex || ''), vis: o.vis });
         if (L_ <= 1) return mD(m + 1, { q: L(`Quin mes va <b>després</b> de <b>${mes(m)}</b>?`, `¿Qué mes va <b>después</b> de <b>${mes(m)}</b>?`) });
         if (L_ === 2) { const k = ri(1, 2); return mD(m + k, { q: L('Quin mes falta?', '¿Qué mes falta?'), vis: `<div class="seq">${[0, 1, 2, 3].map(j => j === k ? BOX : `<span style="font-size:18px">${mes(m + j)}</span>`).join('')}</div>` }); }
         if (L_ === 3) {
@@ -361,7 +363,7 @@
         if (L_ === 4) { const k = ri(2, 5); return mD(m + k, { q: L(`Som ${alMes(m)}<b>${mes(m)}</b>. Quin mes serà d'aquí a <b>${k} mesos</b>?`, `Estamos en <b>${mes(m)}</b>. ¿Qué mes será dentro de <b>${k} meses</b>?`), ex: L(` Compta ${k} mesos endavant: ${[...Array(k)].map((_, j) => mes(m + j + 1)).join(', ')}.`, ` Cuenta ${k} meses hacia delante: ${[...Array(k)].map((_, j) => mes(m + j + 1)).join(', ')}.`) }); }
         const EV = [['En quin mes és <b>Nadal</b>?', '¿En qué mes es <b>Navidad</b>?', 11, 'Nadal és el 25 de desembre.|La Navidad es el 25 de diciembre.'], ['En quin mes és <b>Sant Jordi</b>, el dia dels llibres i les roses?', '¿En qué mes es <b>Sant Jordi</b>, el día de los libros y las rosas?', 3, "Sant Jordi és el 23 d'abril.|Sant Jordi es el 23 de abril."], ['En quin mes és la <b>revetlla de Sant Joan</b>?', '¿En qué mes es la <b>verbena de San Juan</b>?', 5, 'La revetlla és la nit del 23 de juny.|La verbena es la noche del 23 de junio.'], ["En quin mes comença el <b>curs</b> a l'escola?", '¿En qué mes empieza el <b>curso</b> en la escuela?', 8, 'A Catalunya el curs comença al setembre.|En Cataluña el curso empieza en septiembre.'], ["En quin mes comença l'<b>estiu</b>?", '¿En qué mes empieza el <b>verano</b>?', 5, "L'estiu comença cap al 21 de juny.|El verano empieza hacia el 21 de junio."], ['En quin mes comença la <b>primavera</b>?', '¿En qué mes empieza la <b>primavera</b>?', 2, 'La primavera comença cap al 20 de març.|La primavera empieza hacia el 20 de marzo.'], ['En quin mes comença la <b>tardor</b>?', '¿En qué mes empieza el <b>otoño</b>?', 8, 'La tardor comença cap al 22 de setembre.|El otoño empieza hacia el 22 de septiembre.'], ["En quin mes comença l'<b>hivern</b>?", '¿En qué mes empieza el <b>invierno</b>?', 11, "L'hivern comença cap al 21 de desembre.|El invierno empieza hacia el 21 de diciembre."]];
         const [ca, es, k, w] = pick(EV);
-        return mc(L(ca, es), mes(k), shuffle([mes(k - 1), mes(k + 1), mes(k + 3), mes(k + 6)]), { ex: tx(w) });
+        return mc(L(ca, es), mes(k), shuffle([mes(k - 1), mes(k + 1), mes(k + 3), mes(k + 6)]), { list: true, ex: tx(w) });
       }
       if (kind === 'month') {
         const m = pick([0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]), w0 = ri(0, 6), nd = DM[m], wOf = d => m7(w0 + d - 1);
@@ -388,12 +390,12 @@
       const w = ri(0, 6);
       if (L_ === 4) {
         const dA = ri(1, DM[m] - 10), k = ri(3, Math.min(24, DM[m] - dA)), dB = dA + k, q = Math.floor(k / 7), r = k % 7;
-        return dayMc(L(`Si ${elN(dA)}${dataS(dA, m)} és <b>${dia(w)}</b>, quin dia de la setmana és ${elN(dB)}<b>${dataS(dB, m)}</b>?`, `Si el ${dataS(dA, m)} es <b>${dia(w)}</b>, ¿qué día de la semana es el <b>${dataS(dB, m)}</b>?`), w + k, { ex: r ? L(`Passen ${k} dies: ${q ? `${q} ${setm(q)} (que tornen a ser ${dia(w)}) i ` : ''}${r} ${dd(r)} més. ${dia(w)} + ${r} → ${dia(w + k)}.`, `Pasan ${k} días: ${q ? `${q} ${setm(q)} (que vuelven a ser ${dia(w)}) y ` : ''}${r} ${dd(r)} más. ${dia(w)} + ${r} → ${dia(w + k)}.`) : L(`Passen ${k} dies, que són ${q} ${setm(q)} justes: torna a ser ${dia(w)}.`, `Pasan ${k} días, que son ${q} ${setm(q)} justas: vuelve a ser ${dia(w)}.`) });
+        return dayMc(L(`Si ${elN(dA)}${dataS(dA, m)} és <b>${dia(w)}</b>, quin dia de la setmana és ${elN(dB)}<b>${dataS(dB, m)}</b>?`, `Si el ${dataS(dA, m)} es <b>${dia(w)}</b>, ¿qué día de la semana es el <b>${dataS(dB, m)}</b>?`), w + k, { ex: r ? L(`Passen ${k} dies: ${q ? `${q} ${setm(q)} (que tornen a ser ${dia(w)}) i ` : ''}${r} ${dd(r)} més. ${cap(dia(w))} + ${r} → ${dia(w + k)}.`, `Pasan ${k} días: ${q ? `${q} ${setm(q)} (que vuelven a ser ${dia(w)}) y ` : ''}${r} ${dd(r)} más. ${cap(dia(w))} + ${r} → ${dia(w + k)}.`) : L(`Passen ${k} dies, que són ${q} ${setm(q)} justes: torna a ser ${dia(w)}.`, `Pasan ${k} días, que son ${q} ${setm(q)} justas: vuelve a ser ${dia(w)}.`) });
       }
-      if (Math.random() < .5) { const r = DM[m] % 7; return dayMc(L(`Si l'1 ${deMes(m)}${mes(m)} és <b>${dia(w)}</b>, quin dia de la setmana és l'<b>1 ${deMes(m + 1)}${mes(m + 1)}</b>?`, `Si el 1 de ${mes(m)} es <b>${dia(w)}</b>, ¿qué día de la semana es el <b>1 de ${mes(m + 1)}</b>?`), w + DM[m], { ex: L(`${cap(mes(m))} té ${DM[m]} dies = 4 setmanes i ${r} ${dd(r)}. ${dia(w)} + ${r} → ${dia(w + DM[m])}.`, `${cap(mes(m))} tiene ${DM[m]} días = 4 semanas y ${r} ${dd(r)}. ${dia(w)} + ${r} → ${dia(w + DM[m])}.`) }); }
+      if (Math.random() < .5) { const r = DM[m] % 7; return dayMc(L(`Si l'1 ${deMes(m)}${mes(m)} és <b>${dia(w)}</b>, quin dia de la setmana és l'<b>1 ${deMes(m + 1)}${mes(m + 1)}</b>?`, `Si el 1 de ${mes(m)} es <b>${dia(w)}</b>, ¿qué día de la semana es el <b>1 de ${mes(m + 1)}</b>?`), w + DM[m], { ex: L(`${cap(mes(m))} té ${DM[m]} dies = 4 setmanes i ${r} ${dd(r)}. ${cap(dia(w))} + ${r} → ${dia(w + DM[m])}.`, `${cap(mes(m))} tiene ${DM[m]} días = 4 semanas y ${r} ${dd(r)}. ${cap(dia(w))} + ${r} → ${dia(w + DM[m])}.`) }); }
       const q = ri(2, 9), r = ri(1, 6), N = 7 * q + r, wd = (a, b) => `${a} ${setm(a)} ${L('i', 'y')} ${b} ${dd(b)}`;
       const cand = [[q, r < 6 ? r + 1 : r - 1], [q + 1, r], [q - 1, r], [Math.floor(N / 10), N % 10]].filter(([a, b]) => a >= 1 && b >= 1 && b <= 6 && !(a === q && b === r));
-      return mc(L(`Quantes setmanes i dies són <b>${N} dies</b>?`, `¿Cuántas semanas y días son <b>${N} días</b>?`), wd(q, r), cand.map(([a, b]) => wd(a, b)), { ex: L(`${N} ÷ 7 = ${q} i en sobren ${r}: ${wd(q, r)}.`, `${N} ÷ 7 = ${q} y sobran ${r}: ${wd(q, r)}.`) });
+      return mc(L(`Quantes setmanes i dies són <b>${N} dies</b>?`, `¿Cuántas semanas y días son <b>${N} días</b>?`), wd(q, r), cand.map(([a, b]) => wd(a, b)), { list: true, ex: L(`Cada setmana són 7 dies: ${N} = ${q} × 7 + ${r}. Són ${wd(q, r)}.`, `Cada semana son 7 días: ${N} = ${q} × 7 + ${r}. Son ${wd(q, r)}.`) });
     },
     /* Les 24 hores i les durades */
     'me.time': L_ => {
@@ -466,10 +468,10 @@
         }
         if (L_ === 3) { const v = ri(2, 5), t = ri(0, 2); if (t === 0) return conv(`${v * 60} min`, 'h', v, convWhy('h', 'min', 60, false, v * 60, v)); if (t === 1) return conv(`${v * 60} s`, 'min', v, convWhy('min', 's', 60, false, v * 60, v)); return conv(`${v} ${L('dies', 'días')}`, 'h', v * 24, L(`Un dia té 24 hores: ${v} × 24 = ${v * 24} h.`, `Un día tiene 24 horas: ${v} × 24 = ${v * 24} h.`)); }
         const hmS = t => `${Math.floor(t / 60)} h ${t % 60} min`;
-        if (L_ === 4) { const a = ri(1, 3), b = ri(1, 11) * 5, T = a * 60 + b, tr = Math.floor(T / 100) * 60 + T % 100; return mc(L(`Quantes hores i minuts són <b>${T} minuts</b>?`, `¿Cuántas horas y minutos son <b>${T} minutos</b>?`), hmS(T), [tr !== T && T % 100 < 60 ? hmS(tr) : hmS(T + 60), hmS(T + 20), hmS(T - 20), hmS(T - 60 > 0 ? T - 60 : T + 120)], { ex: L(`Cada hora són 60 minuts, no 100! ${T} = ${a} × 60 + ${b}: ${hmS(T)}.`, `¡Cada hora son 60 minutos, no 100! ${T} = ${a} × 60 + ${b}: ${hmS(T)}.`) }); }
+        if (L_ === 4) { const a = ri(1, 3), b = ri(1, 11) * 5, T = a * 60 + b, tr = Math.floor(T / 100) * 60 + T % 100; return mc(L(`Quantes hores i minuts són <b>${T} minuts</b>?`, `¿Cuántas horas y minutos son <b>${T} minutos</b>?`), hmS(T), [tr !== T && T % 100 < 60 ? hmS(tr) : hmS(T + 60), hmS(T + 20), hmS(T - 20), hmS(T - 60 > 0 ? T - 60 : T + 120)], { list: true, ex: L(`Cada hora són 60 minuts, no 100! ${T} = ${a} × 60 + ${b}: ${hmS(T)}.`, `¡Cada hora son 60 minutos, no 100! ${T} = ${a} × 60 + ${b}: ${hmS(T)}.`) }); }
         if (Math.random() < .5) { const a = ri(1, 2), b = ri(0, 11) * 5, T = a * 3600 + b * 60; return conv(b ? `${a} h ${b} min` : `${a} h`, 's', T, L(`1 h = 60 min = 3.600 s. ${a} h = ${fmt(a * 3600)} s${b ? `, i ${b} min = ${b * 60} s: ${fmt(a * 3600)} + ${b * 60} = ${fmt(T)} s` : ''}.`, `1 h = 60 min = 3.600 s. ${a} h = ${fmt(a * 3600)} s${b ? `, y ${b} min = ${b * 60} s: ${fmt(a * 3600)} + ${b * 60} = ${fmt(T)} s` : ''}.`)); }
         const s1 = ri(60, 239), s2 = ri(30, 179), T = s1 + s2, ms = t => `${Math.floor(t / 60)} min ${t % 60} s`;
-        return mc(L(`Un vídeo dura <b>${ms(s1)}</b> i un altre, <b>${ms(s2)}</b>. Quant duren junts?`, `Un vídeo dura <b>${ms(s1)}</b> y otro, <b>${ms(s2)}</b>. ¿Cuánto duran juntos?`), ms(T), [ms(T + 60), ms(T - 60), ms(T + 10), `${Math.floor(s1 / 60) + Math.floor(s2 / 60)} min ${s1 % 60 + s2 % 60} s`].filter(x => !/ [6-9]\d s|\d{3} s/.test(x)), { ex: L(`Suma els minuts i els segons per separat. Si passes de 60 segons, fan 1 minut més: ${ms(T)}.`, `Suma los minutos y los segundos por separado. Si pasas de 60 segundos, hacen 1 minuto más: ${ms(T)}.`) });
+        return mc(L(`Un vídeo dura <b>${ms(s1)}</b> i un altre, <b>${ms(s2)}</b>. Quant duren junts?`, `Un vídeo dura <b>${ms(s1)}</b> y otro, <b>${ms(s2)}</b>. ¿Cuánto duran juntos?`), ms(T), [ms(T + 60), ms(T - 60), ms(T + 10), `${Math.floor(s1 / 60) + Math.floor(s2 / 60)} min ${s1 % 60 + s2 % 60} s`].filter(x => !/ [6-9]\d s|\d{3} s/.test(x)), { list: true, ex: L(`Suma els minuts i els segons per separat. Si passes de 60 segons, fan 1 minut més: ${ms(T)}.`, `Suma los minutos y los segundos por separado. Si pasas de 60 segundos, hacen 1 minuto más: ${ms(T)}.`) });
       }
       // kind === 'info': KB, MB i GB (cada unitat és unes 1.000 vegades l'anterior; exactament, 1.024)
       const U = ['bytes', 'KB', 'MB', 'GB', 'TB'];
@@ -493,17 +495,17 @@
       const rot = P => { const g = L_ <= 2 ? 0 : ri(-30, 30); return rotP(Math.random() < .5 ? P.map(([x, y]) => [-x, y]) : P, g); };
       if (by === 's') {
         const t = pick(['eq', 'is', 'es', 'is', 'es']), S = triSides(t), [c, a, b] = S, ex = L(`Aquest triangle ${tx(TSW[t])}: és ${tx(TS[t])}.`, `Este triángulo ${tx(TSW[t])}: es ${tx(TS[t])}.`), fixed = ['eq', 'is', 'es'].map(k => tx(TS[k]));
-        if (L_ >= 3 && Math.random() < .3) return mc(L(`Un triangle té els costats de <b>${a} cm, ${b} cm i ${c} cm</b>. Com és segons els costats?`, `Un triángulo tiene los lados de <b>${a} cm, ${b} cm y ${c} cm</b>. ¿Cómo es según los lados?`), tx(TS[t]), [], { fixed, ex });
+        if (L_ >= 3 && Math.random() < .3) return mc(L(`Un triangle té els costats de <b>${a} cm, ${b} cm i ${c} cm</b>. Com és segons els costats?`, `Un triángulo tiene los lados de <b>${a} cm, ${b} cm y ${c} cm</b>. ¿Cómo es según los lados?`), tx(TS[t]), [], { fixed, list: true, ex });
         const x = (b * b - a * a + c * c) / (2 * c);
-        return mc(L('Com és aquest triangle segons els seus <b>costats</b>?', '¿Cómo es este triángulo según sus <b>lados</b>?'), tx(TS[t]), [], { fixed, vis: figSVG(fitP(rot([[0, 0], [c, 0], [x, Math.sqrt(b * b - x * x)]])).Q, { sides: [c, a, b].map(v => v + ' cm') }), ex });
+        return mc(L('Com és aquest triangle segons els seus <b>costats</b>?', '¿Cómo es este triángulo según sus <b>lados</b>?'), tx(TS[t]), [], { fixed, list: true, vis: figSVG(fitP(rot([[0, 0], [c, 0], [x, Math.sqrt(b * b - x * x)]]), 260, 170, 30).Q, { sides: [c, a, b].map(v => v + ' cm') }), ex });
       }
       if (by === 'a') {
         const t = pick(['ac', 're', 'ob']), An = triAngles(t), fixed = ['ac', 're', 'ob'].map(k => tx(TA[k])), ex = L(`Aquest triangle ${tx(TAW[t])}: és ${tx(TA[t])}.`, `Este triángulo ${tx(TAW[t])}: es ${tx(TA[t])}.`);
         if (L_ >= 3 && Math.random() < .3) {
-          if (L_ >= 5) { const [x, y] = An; return mc(L(`Un triangle té dos angles de <b>${x}°</b> i <b>${y}°</b>. Com és segons els angles?`, `Un triángulo tiene dos ángulos de <b>${x}°</b> y <b>${y}°</b>. ¿Cómo es según los ángulos?`), tx(TA[t]), [], { fixed, ex: L(`El tercer angle fa 180° − ${x}° − ${y}° = ${180 - x - y}°. `, `El tercer ángulo mide 180° − ${x}° − ${y}° = ${180 - x - y}°. `) + ex }); }
-          return mc(L(`Els angles d'un triangle fan <b>${An[0]}°, ${An[1]}° i ${An[2]}°</b>. Com és?`, `Los ángulos de un triángulo miden <b>${An[0]}°, ${An[1]}° y ${An[2]}°</b>. ¿Cómo es?`), tx(TA[t]), [], { fixed, ex });
+          if (L_ >= 5) { const [x, y] = An; return mc(L(`Un triangle té dos angles de <b>${x}°</b> i <b>${y}°</b>. Com és segons els angles?`, `Un triángulo tiene dos ángulos de <b>${x}°</b> y <b>${y}°</b>. ¿Cómo es según los ángulos?`), tx(TA[t]), [], { fixed, list: true, ex: L(`El tercer angle fa 180° − ${x}° − ${y}° = ${180 - x - y}°. `, `El tercer ángulo mide 180° − ${x}° − ${y}° = ${180 - x - y}°. `) + ex }); }
+          return mc(L(`Els angles d'un triangle fan <b>${An[0]}°, ${An[1]}° i ${An[2]}°</b>. Com és?`, `Los ángulos de un triángulo miden <b>${An[0]}°, ${An[1]}° y ${An[2]}°</b>. ¿Cómo es?`), tx(TA[t]), [], { fixed, list: true, ex });
         }
-        return mc(L('Com és aquest triangle segons els seus <b>angles</b>?', '¿Cómo es este triángulo según sus <b>ángulos</b>?'), tx(TA[t]), [], { fixed, vis: figSVG(fitP(rot(triPts(An[0], An[1]))).Q, { angles: An.map(g => g + '°'), right: An.map((g, i) => g === 90 ? i : -1).filter(i => i >= 0) }), ex });
+        return mc(L('Com és aquest triangle segons els seus <b>angles</b>?', '¿Cómo es este triángulo según sus <b>ángulos</b>?'), tx(TA[t]), [], { fixed, list: true, vis: figSVG(fitP(rot(triPts(An[0], An[1]))).Q, { angles: An.map(g => g + '°'), right: An.map((g, i) => g === 90 ? i : -1).filter(i => i >= 0) }), ex });
       }
       const [ta, ts, a0] = pick(COMBO), An = shuffle(a0), ticks = [An[2], An[0], An[1]].map((g, i, arr) => arr.filter(h => h === g).length > 1 ? 1 : 0);
       const others = shuffle(COMBO.filter(c => c[0] !== ta || c[1] !== ts).map(c => comboName(c[0], c[1]))).filter((x, i, a) => a.indexOf(x) === i);
@@ -512,13 +514,13 @@
     /* Quadrilàters: quadrat, rectangle, rombe, romboide, trapezi i trapezoide */
     'geo.quad': L_ => {
       const K = Object.keys(QUAD), t = L_ <= 1 ? 'name' : pick(L_ === 2 ? ['name', 'name', 'par'] : L_ === 3 ? ['name', 'par', 'prop'] : ['name', 'par', 'prop', 'pics']);
-      const nm = k => tx(QUAD[k]), desc = k => L(`El ${nm(k)} té ${tx(QDESC[k])}.`, `El ${nm(k)} tiene ${tx(QDESC[k])}.`);
+      const nm = k => tx(QUAD[k]), desc = k => L(`El ${nm(k)} ${tx(QDESC[k])}.`, `El ${nm(k)} ${tx(QDESC[k])}.`);
       if (t === 'pics') { const odd = pick(['trapezi', 'trapezoide']), par = shuffle(['quadrat', 'rectangle', 'rombe', 'romboide']).slice(0, 3); return mc(L("Quin d'aquests quadrilàters <b>no</b> és un paral·lelogram?", '¿Cuál de estos cuadriláteros <b>no</b> es un paralelogramo?'), quadSVG(odd, L_, 200, 130), par.map(k => quadSVG(k, L_, 200, 130)), { pics: true, ex: L(`Un paral·lelogram té els costats paral·lels dos a dos. ${desc(odd)}`, `Un paralelogramo tiene los lados paralelos dos a dos. ${desc(odd)}`) }); }
       const k = pick(K);
-      if (t === 'prop') return mc(tx(QPROP[k]), nm(k), K.filter(x => x !== k).map(nm), { ex: desc(k) });
+      if (t === 'prop') return mc(tx(QPROP[k]), nm(k), K.filter(x => x !== k).map(nm), { list: true, ex: desc(k) });
       const vis = quadSVG(k, L_);
       if (t === 'par') { const n = QPAR[k]; return inp(L('Quants parells de costats <b>paral·lels</b> té aquest quadrilàter?', '¿Cuántos pares de lados <b>paralelos</b> tiene este cuadrilátero?'), n, { vis, ex: L(`És un ${nm(k)}: ${tx(QDESC[k])}. ${n ? `Té ${n} ${n === 1 ? 'parell' : 'parells'} de costats paral·lels.` : 'No en té cap.'}`, `Es un ${nm(k)}: ${tx(QDESC[k])}. ${n ? `Tiene ${n} ${n === 1 ? 'par' : 'pares'} de lados paralelos.` : 'No tiene ninguno.'}`) }); }
-      return mc(L('Com es diu aquest quadrilàter?', '¿Cómo se llama este cuadrilátero?'), nm(k), shuffle(K.filter(x => x !== k && !(k === 'quadrat' && (x === 'rectangle' || x === 'rombe')))).map(nm), { vis, ex: L(`És un ${nm(k)}: té ${tx(QDESC[k])}.`, `Es un ${nm(k)}: tiene ${tx(QDESC[k])}.`) });
+      return mc(L('Com es diu aquest quadrilàter?', '¿Cómo se llama este cuadrilátero?'), nm(k), shuffle(K.filter(x => x !== k && !(k === 'quadrat' && (x === 'rectangle' || x === 'rombe')))).map(nm), { list: true, vis, ex: L(`És un ${nm(k)}: ${tx(QDESC[k])}.`, `Es un ${nm(k)}: ${tx(QDESC[k])}.`) });
     },
     /* Rectes paral·leles, perpendiculars i oblíqües */
     'geo.lines': L_ => {
@@ -535,7 +537,7 @@
       if (L_ <= 1) {
         const n = ri(3, 10), vis = figSVG(fitP(regP(n)).Q, { fill: '#FFF1DE', stroke: '#FF9A3C' });
         if (Math.random() < .3) return inp(L(`Quants costats té un <b>${tx(PN[n])}</b>?`, `¿Cuántos lados tiene un <b>${tx(PN[n])}</b>?`), n, { ex: L(`Un ${tx(PN[n])} té ${n} costats i ${n} vèrtexs.`, `Un ${tx(PN[n])} tiene ${n} lados y ${n} vértices.`) });
-        return mc(L('Com es diu aquest polígon?', '¿Cómo se llama este polígono?'), tx(PN[n]), shuffle(Object.keys(PN).filter(x => +x !== n)).map(x => tx(PN[x])), { vis, ex: L(`Té ${n} costats: és un ${tx(PN[n])}.`, `Tiene ${n} lados: es un ${tx(PN[n])}.`) });
+        return mc(L('Com es diu aquest polígon?', '¿Cómo se llama este polígono?'), tx(PN[n]), shuffle(Object.keys(PN).filter(x => +x !== n)).map(x => tx(PN[x])), { list: true, vis, ex: L(`Té ${n} costats: és un ${tx(PN[n])}.`, `Tiene ${n} lados: es un ${tx(PN[n])}.`) });
       }
       if (L_ === 2) {
         const t = pick(['reg', 'reg', 'rect', 'rombe', 'irr']); let vis, ex;
@@ -557,7 +559,7 @@
       if (L_ <= 2 && r < .3) { const k = ri(3, 97); return L_ <= 1 ? inp(L('Quin <b>percentatge</b> de la quadrícula està pintat?', '¿Qué <b>porcentaje</b> de la cuadrícula está pintado?'), k, { unit: '%', vis: gridSVG100(k), ex: L(`Hi ha 100 quadrets i n'hi ha ${k} de pintats: el ${k} %.`, `Hay 100 cuadraditos y hay ${k} pintados: el ${k} %.`) }) : dinp(L('Quina part de la quadrícula està pintada? Escriu-ho com a <b>nombre decimal</b>.', '¿Qué parte de la cuadrícula está pintada? Escríbelo como <b>número decimal</b>.'), k / 100, { vis: gridSVG100(k), ex: L(`${k} de 100 quadrets: ${k}/100 = ${fmtD(k / 100)}.`, `${k} de 100 cuadraditos: ${k}/100 = ${fmtD(k / 100)}.`) }); }
       if (L_ >= 3 && r < .25) {
         const kk = ri(2, 5), eqs = [frac(p, q), fmtD(v), pctS(v * 100), frac(p * kk, q * kk)], tg = ri(0, 2), shown = eqs[tg];
-        const bad = pick([[pctS(p), p / 100], [frac(p + 1, q + 1), (p + 1) / (q + 1)], [fmtD(p + q / 10), p + q / 10], ...(q < 10 ? [[fmtD(q / 10), q / 10], [fmtD(p / 10 + q / 100), p / 10 + q / 100]] : [])].filter(c => !eq(c[1], v)))[0];
+        const bad = pick([[pctS(p), p / 100], [frac(p + 1, q + 1), (p + 1) / (q + 1)], ...(dec3(v * 10) ? [[fmtD(v * 10), v * 10]] : []), ...(q < 10 ? [[fmtD(q / 10), q / 10], [fmtD(p / 10 + q / 100), p / 10 + q / 100], [fmtD(p + q / 10), p + q / 10]] : [])].filter(c => !eq(c[1], v)))[0];
         return mc(L(`Quin d'aquests <b>NO</b> és igual a ${shown}?`, `¿Cuál de estos <b>NO</b> es igual a ${shown}?`), bad, eqs.filter((_, i) => i !== tg), { big: true, ex: L(`${frac(p, q)} = ${fmtD(v)} = ${pctS(v * 100)} = ${frac(p * kk, q * kk)}. En canvi, ${bad} és un altre nombre.`, `${frac(p, q)} = ${fmtD(v)} = ${pctS(v * 100)} = ${frac(p * kk, q * kk)}. En cambio, ${bad} es otro número.`) });
       }
       const pairs = L_ <= 1 ? [['f', 'p'], ['f', 'd']] : L_ === 2 ? [['f', 'p'], ['d', 'p'], ['p', 'd'], ['f', 'd']] : [['f', 'p'], ['d', 'p'], ['p', 'd'], ['f', 'd'], ['p', 'f'], ['d', 'f']];
@@ -579,7 +581,7 @@
         return mc(L('Quin signe hi va?', '¿Qué signo va?'), sym, [], { fixed: ['<', '=', '>'], big: true, vis: `<div class="cmp"><span>${fdpS(p1, q1, k1)}</span>${BOX}<span>${fdpS(p2, q2, k2)}</span></div>`, ex: L(`Passa-ho tot a decimal: ${fmtD(v1)} ${sym} ${fmtD(v2)}.`, `Pásalo todo a decimal: ${fmtD(v1)} ${sym} ${fmtD(v2)}.`) });
       }
       const n = L_ <= 2 ? 3 : 4, labs = shuffle(set).slice(0, n).map(([p, q]) => [p / q, fdpS(p, q, pick(K3))]), srt = labs.slice().sort((x, y) => x[0] - y[0]);
-      const why = L(`Passa-ho tot a decimal: ${srt.map(x => `${x[1]} = ${fmtD(x[0])}`).join(' · ')}.`, `Pásalo todo a decimal: ${srt.map(x => `${x[1]} = ${fmtD(x[0])}`).join(' · ')}.`);
+      const dl = x => x[1] === fmtD(x[0]) ? x[1] : `${x[1]} = ${fmtD(x[0])}`, why = L(`Passa-ho tot a decimal: ${srt.map(dl).join(' · ')}.`, `Pásalo todo a decimal: ${srt.map(dl).join(' · ')}.`);
       if (L_ <= 2 || Math.random() < .4) { const big = L_ <= 1 || Math.random() < .5, t = big ? srt[n - 1] : srt[0]; return mc(big ? L('Quin nombre és el <b>més gran</b>?', '¿Qué número es el <b>mayor</b>?') : L('Quin nombre és el <b>més petit</b>?', '¿Qué número es el <b>menor</b>?'), t[1], labs.filter(x => x !== t).map(x => x[1]), { big: true, ex: why }); }
       return { type: 'order', q: L('Ordena de <b>més petit a més gran</b>:', 'Ordena de <b>menor a mayor</b>:'), items: shuffle(labs.map(x => x[0])), show: v => (labs.find(x => eq(x[0], v)) || [0, fmtD(v)])[1], ans: srt.map(x => x[0]), ex: why };
     },
@@ -702,7 +704,7 @@
         const st = [ri(0, 4), ri(0, 4)], w = walk(5, st, len); if (!w) continue;
         const j = ri(0, len - 1), wrong = pick(Object.keys(MOV).filter(k => k !== w.cmds[j])), bad = w.cmds.slice(); bad[j] = wrong;
         const idx = [j, ...shuffle([...Array(len).keys()].filter(i => i !== j)).slice(0, 3)].sort((x, y) => x - y), lab = i => L('Ordre ', 'Orden ') + (i + 1);
-        return mc(L('El robot havia de seguir el camí blau fins a 🏁, però <b>una ordre està malament</b>. Quina?', 'El robot tenía que seguir el camino azul hasta 🏁, pero <b>una orden está mal</b>. ¿Cuál?'), lab(j), [], { fixed: idx.map(lab), vis: `<div class="stack">${gridHTML(5, { [st.join(',')]: '🤖', [w.end.join(',')]: '🏁' }, false, w.seen)}${numbered(bad)}</div>`, ex: L(`Segueix el camí amb el dit: l'ordre ${j + 1} hauria de ser ${ARW[w.cmds[j]]} i no ${ARW[wrong]}. Trobar i arreglar errors és part de programar!`, `Sigue el camino con el dedo: la orden ${j + 1} tendría que ser ${ARW[w.cmds[j]]} y no ${ARW[wrong]}. ¡Encontrar y arreglar errores es parte de programar!`) });
+        return mc(L('El robot havia de seguir el camí blau fins a 🏁, però <b>una ordre està malament</b>. Quina?', 'El robot tenía que seguir el camino azul hasta 🏁, pero <b>una orden está mal</b>. ¿Cuál?'), lab(j), [], { fixed: idx.map(lab), vis: `<div class="stack">${pathGrid(st, w)}${numbered(bad)}</div>`, ex: L(`Segueix el camí amb el dit: l'ordre ${j + 1} hauria de ser ${ARW[w.cmds[j]]} i no ${ARW[wrong]}. Trobar i arreglar errors és part de programar!`, `Sigue el camino con el dedo: la orden ${j + 1} tendría que ser ${ARW[w.cmds[j]]} y no ${ARW[wrong]}. ¡Encontrar y arreglar errores es parte de programar!`) });
       }
     },
 
