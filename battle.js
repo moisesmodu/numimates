@@ -60,7 +60,7 @@ async function loadMine() {
 }
 
 /* Crear i entrar */
-function newBattle(kind) {
+function newBattle(kind) { if (classOff('batalles')) return toast(L('El teu docent ha desactivat les batalles per a la classe.', 'Tu docente ha desactivado las batallas para la clase.'));
   if (kind === 'duel' && P.gems < DUEL_COST) return noGems();
   const top = Math.max(P.maxCourse || 0, P.course);
   modal(`<div class="sheet"><h3>${kind === 'duel' ? L('Nou duel', 'Nuevo duelo') : L('Nova partida de grup', 'Nueva partida de grupo')}</h3>
@@ -74,7 +74,7 @@ async function createBattle(kind, course) {
   if (st.error) return toast(BERR(st.error));
   SFX.win(); scrLobby(st);
 }
-async function joinBattle(raw) {
+async function joinBattle(raw) { if (classOff('batalles')) return toast(L('El teu docent ha desactivat les batalles per a la classe.', 'Tu docente ha desactivado las batallas para la clase.'));
   const bcode = String(raw || '').toUpperCase().replace(/\s+/g, '').replace(/^([A-Z]+)(\d{4})$/, '$1-$2');
   if (!/^[A-Z]{2,8}-\d{4}$/.test(bcode)) return toast(L('El codi és com ZEUS-1234.', 'El código es como ZEUS-1234.'));
   let st; try { st = await bApi('join', { bcode }); } catch (e) { return toast(BERR()); }
@@ -90,7 +90,7 @@ function duelRefund(st) {
   if (st.kind !== 'duel' || !st.expired || st.players.length > 1 || P.bpaid[st.code] !== 1) return;
   P.bpaid[st.code] = 2; P.gems += DUEL_COST; save(); toast(L(`Ningú ha acceptat el duel ${st.code}: et tornem ${DUEL_COST} 💎`, `Nadie ha aceptado el duelo ${st.code}: te devolvemos ${DUEL_COST} 💎`));
 }
-async function openBattle(bcode) { let st; try { st = await bApi('state', { bcode }); } catch (e) { return toast(BERR()); } if (st.error) return toast(BERR(st.error)); scrLobby(st); }
+async function openBattle(bcode) { if (classOff('batalles')) return toast(L('El teu docent ha desactivat les batalles per a la classe.', 'Tu docente ha desactivado las batallas para la clase.')); let st; try { st = await bApi('state', { bcode }); } catch (e) { return toast(BERR()); } if (st.error) return toast(BERR(st.error)); scrLobby(st); }
 function shareBattle(code, kind) {
   const url = location.origin + '/?b=' + code;
   const t = kind === 'duel' ? L(`T'hi atreveixes? Et repto a un duel de mates a Numi Mates! Codi: ${code}`, '¿Te atreves? ¡Te reto a un duelo de mates en Numi Mates! Código: ' + code) : L(`Partida de mates a Numi Mates! Entra amb el codi ${code}`, `¡Partida de mates en Numi Mates! Entra con el código ${code}`);

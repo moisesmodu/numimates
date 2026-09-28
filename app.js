@@ -236,6 +236,7 @@ let LS = null, SP = null, AG = null, FLOW = [], VIEW = '', GAIN = null;
 function go(v) {
   LS = null; stopSprint(); stopAgility(); closeModal();
   if (!P && v !== 'profiles') v = Object.keys(DB.profiles).length ? 'profiles' : 'onboard';
+  if ((v === 'battles' && classOff('batalles'))) { toast(L("El teu docent ha desactivat les batalles per a la classe.", 'Tu docente ha desactivado las batallas para la clase.')); v = 'train'; }
   VIEW = v;
   ({ home: renderHome, train: renderTrain, league: () => renderLeague(), album: () => renderAlbum(), shop: renderShop, badges: () => renderAlbum('medals'), profile: renderProfile, profiles: renderProfiles, battles: () => renderBattles(), season: () => renderSeason(), onboard: () => onb(0) }[v] || renderHome)();
   if (v !== 'home') window.scrollTo(0, 0);
@@ -436,7 +437,7 @@ function renderLesson() {
       ${e.vis ? `<div class="l-vis">${e.vis}</div>` : ''}
       <div class="l-ans">${ansHTML(e)}</div>
     </div>
-    <div class="l-foot" id="foot"><div class="fwrap"><div class="fb" id="fb"></div>${quiet ? `<button class="btn ghost skip" onclick="skipPlace()">${L('NO HO SÉ', 'NO LO SÉ')}</button>` : ''}<button class="btn check" id="chk" onclick="check()" disabled>${L('COMPROVA', 'COMPRUEBA')}</button></div></div>
+    <div class="l-foot" id="foot"><div class="fwrap"><div class="fb" id="fb"></div>${quiet ? `<button class="btn ghost skip" onclick="skipPlace()">${L('NO HO SÉ', 'NO LO SÉ')}</button>` : LS.mode === 'battle' || LS.exam ? '' : `<button class="btn ghost skip hintb" id="hintb" onclick="showHint()">💡 ${L('COM ES FA?', '¿CÓMO SE HACE?')}</button>`}<button class="btn check" id="chk" onclick="check()" disabled>${L('COMPROVA', 'COMPRUEBA')}</button></div></div>
   </div>`;
   if (LS.mode === 'battle') { LS.q0 = Date.now(); battleStrip(); }
 }
@@ -496,6 +497,19 @@ function isRight(e) {
 }
 function ready(e) { return e.type === 'grid' ? LS.gsel && LS.gsel.size > 0 : e.type === 'choice' ? LS.sel != null : e.type === 'input' ? /\d/.test(LS.input) : LS.order.length === e.items.length; }
 function skipPlace() { if (!LS) return; LS.res.push(false); LS.done++; SFX.tap(); nextEx(); }
+// Ajuda pas a pas: un exemple resolt del mateix tipus (amb altres números), sense donar la resposta de la pregunta.
+// No resta punts, però la pregunta no suma a la ratxa i la lliçó ja no pot ser perfecta (com a molt, 2 estrelles).
+function showHint() {
+  if (!LS || LS.state !== 'ask') return; const e = LS.cur;
+  let x = null; for (let i = 0; i < 8 && (!x || x.q === e.q); i++) { try { x = genEx(e.sk, e.L, new Set(), false); } catch (err) { x = null; break; } }
+  if (!x || x.q === e.q) return toast(L('Per a aquesta pregunta no hi ha exemple. Mira bé el dibuix i prova-ho!', 'Para esta pregunta no hay ejemplo. ¡Mira bien el dibujo e inténtalo!'));
+  if (!e.helped) { e.helped = true; LS.helps = (LS.helps || 0) + 1; }
+  modal(`<div class="sheet hintsheet"><small class="lk">💡 ${L('MIRA COM ES FA AMB UN ALTRE EXEMPLE', 'MIRA CÓMO SE HACE CON OTRO EJEMPLO')}</small>
+    <div class="lq">${x.q}</div>${x.vis ? `<div class="l-vis lvis">${x.vis}</div>` : ''}
+    <div class="lans"><span>${L('Resposta', 'Respuesta')}:</span> <b>${ansText(x)}</b></div>${x.ex ? `<div class="lex">${x.ex}</div>` : ''}
+    <p class="hnote">${L("Ara prova-ho tu amb la teva pregunta. Amb ajuda no perds punts, però aquesta no compta per a la ratxa.", 'Ahora pruébalo tú con tu pregunta. Con ayuda no pierdes puntos, pero esta no cuenta para la racha.')}</p>
+    <button class="btn big" onclick="closeModal()">${L('HO PROVO!', '¡LO INTENTO!')}</button></div>`);
+}
 function check() {
   if (!LS) return;
   if (LS.state === 'fb') return nextEx();
@@ -511,12 +525,13 @@ function check() {
   if (e.type === 'grid') { $('#tgrid').classList.add(ok ? 'right' : 'wrong'); target = $('#tgrid'); }
   if (LS.exam) { LS.eres.push(ok); if (!ok) LS.emiss.push(e.sk); }
   $$('.pad button').forEach(b => { if (!b.classList.contains('pk-ok')) b.disabled = true; });
+  const hb = $('#hintb'); if (hb) hb.remove();
   const foot = $('#foot'), fb = $('#fb'), chk = $('#chk');
   foot.classList.add(ok ? 'ok' : 'ko');
   if (ok) {
-    LS.done++; LS.combo++; LS.maxCombo = Math.max(LS.maxCombo, LS.combo); SFX.ok(); sparkle(target); comboBanner(LS.combo);
+    LS.done++; if (!e.helped) LS.combo++; LS.maxCombo = Math.max(LS.maxCombo, LS.combo); SFX.ok(); sparkle(target); if (!e.helped) comboBanner(LS.combo);
     misEvent('answer'); misEvent('combo', LS.combo);
-    if (e.gold) { LS.gold++; misEvent('gold'); floatTxt(target, '⭐ +5 XP', 'gain xp'); }
+    if (e.gold && !e.helped) { LS.gold++; misEvent('gold'); floatTxt(target, '⭐ +5 XP', 'gain xp'); }
     const pf = $('.pfill'); pf.style.width = (LS.done / LS.total * 100) + '%'; pf.classList.remove('shine'); void pf.offsetWidth; pf.classList.add('shine');
     fb.innerHTML = `<div class="fbh">✔ ${LS.combo >= 3 ? L(`Ratxa de ${LS.combo}! 🔥`, `¡Racha de ${LS.combo}! 🔥`) : pick(PRAISE())}</div>${e.long || e.retry ? `<div class="exp">${e.ex || ''}</div>` : ''}`;
   } else {
@@ -569,7 +584,7 @@ const BADGES = [
 ];
 function checkBadges() { const nw = BADGES.filter(b => !P.badges.includes(b[0]) && b[4](P)); nw.forEach(b => { P.badges.push(b[0]); P.gems += 10; }); return nw; }
 function finishRun() {
-  const R = { mode: LS.mode, ui: LS.ui, li: LS.li, acc: LS.exam ? 0 : Math.round(100 * LS.total / (LS.total + LS.miss)), perfect: LS.miss === 0, stars: 0, chest: 0 };
+  const R = { mode: LS.mode, ui: LS.ui, li: LS.li, acc: LS.exam ? 0 : Math.round(100 * LS.total / (LS.total + LS.miss)), perfect: LS.miss === 0 && !LS.helps, stars: 0, chest: 0 };
   if (R.mode === 'reco') { R.xp = 12 + (R.perfect ? 4 : 0); R.gems = 6; P.stats.trains++; if (R.acc >= 75) { P.reco = null; R.recoDone = true; } }
   else if (R.mode === 'train') { R.xp = 8 + (R.perfect ? 4 : 0); R.gems = 3 + (R.perfect ? 2 : 0); P.stats.trains++; }
   else if (R.mode === 'prep') { R.xp = 10 + (R.perfect ? 4 : 0); R.gems = 8; P.stats.trains++; R.sub = L('Ben repassat! Ara ja pots tornar a la porta del Cavaller.', '¡Bien repasado! Ahora ya puedes volver a la puerta del Caballero.'); }
@@ -577,7 +592,7 @@ function finishRun() {
     R.sub = R.pass ? L('Lliçons repassades i a punt. Tornaran a sortir d\'aquí uns dies.', 'Lecciones repasadas y a punto. Volverán a salir dentro de unos días.') : L('Encara costen una mica: tornaran a sortir aviat per reforçar-les.', 'Aún cuestan un poco: volverán a salir pronto para reforzarlas.'); }
   else {
     R.xp = 10 + (R.perfect ? 5 : 0) + (R.mode === 'repte' ? 10 : 0); R.gems = 5 + (R.perfect ? 5 : 0);
-    R.stars = R.perfect ? 3 : LS.miss <= 2 ? 2 : 1;
+    R.stars = R.perfect ? 3 : LS.miss + Math.ceil((LS.helps || 0) / 2) <= 2 ? 2 : 1;
     if (LS.exam) {
       const okN = LS.total - LS.miss; R.exam = true; R.acc = Math.round(100 * okN / LS.total); R.stars = okN >= 11 ? 3 : okN >= 9 ? 2 : 1;
       const uid = UNITS_()[R.ui].id; P.exams = P.exams || {}; const ex = P.exams[uid] || { tries: 0, best: 0 };
@@ -750,6 +765,8 @@ function scrKnight() {
 
 /* ---------- Tema de l'escola i currículum ---------- */
 function schoolCard() {
+  const tt = teacherTema();
+  if (tt) return `<button class="testcard school" onclick="startSchool(true)"><span class="tci">📚</span><span><b>${L('Tema de classe:', 'Tema de clase:')} ${tx(tt.u.title)}</b><small>${L("L'ha triat el teu docent. 10 preguntes: 7 del tema i 3 de repàs.", 'Lo ha elegido tu docente. 10 preguntas: 7 del tema y 3 de repaso.')}</small></span><span class="go">›</span></button>`;
   const sc = P.school; if (!sc || sc.course !== P.course) return '';
   const u = UNITS_()[sc.ui]; if (!u) return '';
   return `<button class="testcard school" onclick="startSchool()"><span class="tci">📚</span><span><b>${L("A l'escola fas:", 'En el cole das:')} ${tx(u.title)}</b><small>${L('Practica-ho: 10 preguntes del tema. +XP i cromo!', 'Practícalo: 10 preguntas del tema. ¡+XP y cromo!')}</small></span><span class="go">›</span></button>`;
@@ -759,10 +776,17 @@ function pickSchool() {
     <div class="slist">${UNITS_().map((u, i) => `<button class="sitem ${P.school && P.school.course === P.course && P.school.ui === i ? 'on' : ''}" style="--uc:${u.color}" onclick="setSchool(${i})"><span class="sdot"></span><span><b>${tx(u.title)}</b><small>${unitSents(u).map(k => SENT[k][2] + ' ' + tx(SENT[k])).join(' · ')}</small></span></button>`).join('')}</div></div>`);
 }
 function setSchool(i) { P.school = { course: P.course, ui: i, date: today() }; save(); closeModal(); startSchool(); }
-function startSchool() {
-  const sc = P.school, u = UNITS_()[sc.ui], opts = u.lessons.map(l => l.sk.map(s => [s, l.L])).flat(), plan = [];
-  for (let i = 0; i < 10; i++) plan.push(pick(opts));
-  startRun({ mode: 'train', ui: sc.ui, li: null, plan, color: u.color });
+// Pràctica del tema de classe: 7 preguntes del tema i 3 de repàs del que ja ha fet (sobretot del que li costa)
+function startSchool(fromTeacher) {
+  const tt = fromTeacher ? teacherTema() : null, sc = P.school, u = tt ? tt.u : UNITS_()[sc.ui];
+  const own = new Set(u.lessons.flatMap(l => l.sk)), opts = u.lessons.map(l => l.sk.map(s => [s, l.L])).flat();
+  // repàs: el que ja ha obert del seu curs i, si el tema és d'un altre curs, les unitats anteriors d'aquell curs que ja ha practicat
+  const prev = tt && tt.ci !== P.course ? COURSES[tt.ci].units.slice(0, tt.ui).flatMap(x => x.lessons.flatMap(l => l.sk.filter(k => P.stats.sk[k]).map(k => [k, l.L]))) : [];
+  const rev = [...trainPool(null), ...prev].filter(([s]) => !own.has(s)), nRev = rev.length ? 3 : 0, plan = [];
+  for (let i = 0; i < 10 - nRev; i++) plan.push(pick(opts));
+  const w = rev.map(([s]) => { const [c, t] = P.stats.sk[s] || [0, 0]; return 1 + 4 * (1 - (c + 1) / (t + 2)); }), sum = w.reduce((a, b) => a + b, 0);
+  for (let i = 0; i < nRev; i++) { let r = Math.random() * sum, j = 0; while (j < w.length - 1 && r > w[j]) { r -= w[j]; j++; } plan.splice(ri(1, plan.length), 0, rev[j]); }
+  startRun({ mode: 'train', ui: tt ? (tt.ci === P.course ? tt.ui : null) : sc.ui, li: null, plan, color: u.color });
 }
 function curriculumBox() {
   const s = P.stats, rows = Object.keys(SENT).map(k => {
@@ -824,7 +848,7 @@ const GAMES = () => [
 function renderTrain() {
   const units = UNITS_().map((u, i) => ({ u, i })).filter(({ i }) => unitOpen(i) && trainPool(i).length), B = P.stats.bests;
   app.innerHTML = shell(`<h1 class="ph1">${L('Entrena', 'Entrena')}</h1><p class="lead">${L(`Practica el que ja has après de ${tx(CUR().long)} i posa a prova la teva agilitat mental.`, `Practica lo que ya has aprendido de ${tx(CUR().long)} y pon a prueba tu agilidad mental.`)}</p>
-    <button class="tcard battle" onclick="go('battles')"><span class="ti">⚔️</span><span><b>${L('Batalles de mates', 'Batallas de mates')}</b><small>${L('Duels 1 contra 1 i partides de fins a 10. Mateixes preguntes per a tothom!', 'Duelos 1 contra 1 y partidas de hasta 10. ¡Mismas preguntas para todos!')}</small></span></button>
+    ${classOff('batalles') ? '' : `<button class="tcard battle" onclick="go('battles')"><span class="ti">⚔️</span><span><b>${L('Batalles de mates', 'Batallas de mates')}</b><small>${L('Duels 1 contra 1 i partides de fins a 10. Mateixes preguntes per a tothom!', 'Duelos 1 contra 1 y partidas de hasta 10. ¡Mismas preguntas para todos!')}</small></span></button>`}
     <button class="tcard" onclick="startTrain()"><span class="ti">🧠</span><span><b>${L('Entrenament intel·ligent', 'Entrenamiento inteligente')}</b><small>${L('8 exercicis del que et costa més. Ideal per repassar.', '8 ejercicios de lo que más te cuesta. Ideal para repasar.')}</small></span></button>
     ${testInfo().due ? `<button class="tcard evo" onclick="startEvolution()"><span class="ti">🧪</span><span><b>${L("Prova d'evolució", 'Prueba de evolución')}</b><small>${L('Ja la pots fer! Mira quant has millorat.', '¡Ya puedes hacerla! Mira cuánto has mejorado.')}</small></span></button>` : ''}
     <button class="tcard school" onclick="pickSchool()"><span class="ti">📚</span><span><b>${L("Què fas ara a l'escola?", '¿Qué estás dando en el cole?')}</b><small>${L("Tria el tema que fas a classe i practica'l: així t'anirà millor a l'escola!", 'Elige el tema que das en clase y practícalo: ¡así te irá mejor en el cole!')}</small></span></button>
@@ -1090,7 +1114,18 @@ function classeLeave() {
   });
 }
 // si el docent tanca el grup o treu l'alumne, l'app se n'assabenta en obrir el perfil
-async function classeRefresh() { if (!P || !P.code || !navigator.onLine) return; try { const r = await api('classe', { code: P.code, action: 'info' }); if (r.grup) P.classe = r.grup; else delete P.classe; save(); } catch (e) { } }
+async function classeRefresh() {
+  if (!P || !P.code || !navigator.onLine) return; const was = JSON.stringify(P.classe || null);
+  try { const r = await api('classe', { code: P.code, action: 'info' }); if (r.grup) P.classe = r.grup; else delete P.classe; if (JSON.stringify(P.classe || null) !== was) { saveLocal(); if (VIEW === 'home') renderHome(); } } catch (e) { }
+}
+// «Mode escola»: el docent pot apagar les batalles o els intercanvis per al seu grup
+const classOff = k => !!(P && P.classe && P.classe.opts && P.classe.opts[k] === false);
+// Tema que el docent ha marcat per al grup (té prioritat sobre el que tria l'alumne)
+function teacherTema() {
+  const t = P && P.classe && P.classe.tema; if (!t) return null;
+  for (let ci = 0; ci < COURSES.length; ci++) { const ui = COURSES[ci].units.findIndex(u => u.id === t); if (ui >= 0) return { ci, ui, u: COURSES[ci].units[ui] }; }
+  return null;
+}
 function resetP() {
   ask(L(`Segur que vols esborrar tot el progrés de <b>${esc(P.name)}</b>? No es pot desfer.`, `¿Seguro que quieres borrar todo el progreso de <b>${esc(P.name)}</b>? No se puede deshacer.`), L('ESBORRA', 'BORRAR'), L('CANCEL·LA', 'CANCELAR'), async () => {
     const keep = { id: P.id, code: P.code, username: P.username, name: P.name, lang: P.lang, course: P.course, baseCourse: P.baseCourse, survey: P.survey, goal: P.goal, sound: P.sound, unlockAll: false };
@@ -1133,7 +1168,7 @@ function renderProfiles() {
     <button class="btn big" onclick="onb(0)">+ ${L('SOC NOU/NOVA', 'SOY NUEVO/A')}</button>
     <button class="btn big ghost mt" onclick="loginModal()">🔑 ${L('JA TINC COMPTE', 'YA TENGO CUENTA')}</button></div>`;
 }
-function switchP(id) { P = DB.profiles[id]; DB.current = id; LANG = P.lang || DB.lang; saveLocal(); pull(); go('home'); }
+function switchP(id) { P = DB.profiles[id]; DB.current = id; LANG = P.lang || DB.lang; saveLocal(); pull(); classeRefresh(); go('home'); }
 function delP(id) {
   const p = DB.profiles[id];
   ask(L(`Vols treure <b>${esc(p.name)}</b> d'aquest dispositiu? El progrés continua desat al núvol.`, `¿Quieres quitar a <b>${esc(p.name)}</b> de este dispositivo? El progreso sigue guardado en la nube.`), L('TREU', 'QUITAR'), L('CANCEL·LA', 'CANCELAR'), () => {
@@ -1271,5 +1306,5 @@ document.addEventListener('keydown', e => {
   else if (t === 'order') { if (e.key === 'Backspace' && LS.order.length) ordRemove(LS.order.length - 1); else { const n = +e.key; if (n >= 1 && n <= LS.cur.items.length) ordTap(n - 1); } }
 });
 
-if (P) { pull(); syncNow(); }
+if (P) { pull(); syncNow(); classeRefresh(); }
 go(P ? 'home' : 'onboard');

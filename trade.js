@@ -41,7 +41,7 @@ function tradeRow(t) {
     <div class="tpair">${miniCard(t.a_card)}<span class="tarrow">⇄</span>${t.b_card ? miniCard(t.b_card) : `<div class="tcard-mini q">?</div>`}</div>
     <small class="mut">${t.role === 'a' ? L('Tu ofereixes', 'Tú ofreces') : esc(t.a_name) + ' ' + L('ofereix', 'ofrece')}${other ? ' · ' + L('amb', 'con') + ' ' + esc(other) : ''}</small>${act}</div>`;
 }
-function newTrade() {
+function newTrade() { if (classOff('intercanvis')) return toast(L('El teu docent ha desactivat els intercanvis per a la classe.', 'Tu docente ha desactivado los intercambios para la clase.'));
   if (tradeLimit()) return toast(L(`Avui ja has fet ${TRADE_DAY} intercanvis. Demà més!`, `Hoy ya has hecho ${TRADE_DAY} intercambios. ¡Mañana más!`));
   const d = dupes();
   modal(`<div class="sheet"><h3>${L('Quina carta repetida ofereixes?', '¿Qué carta repetida ofreces?')}</h3><p>${L("Es guarda fins que algú et fa una oferta i tu l'acceptes. Si no, et torna.", 'Se guarda hasta que alguien te hace una oferta y tú la aceptas. Si no, te vuelve.')}</p>
@@ -59,7 +59,7 @@ function shareTrade(code) {
   const t = L(`Vols canviar cromos a Numi Mates? Codi: ${code}`, `¿Quieres cambiar cartas en Numi Mates? Código: ${code}`), url = location.origin + '/?t=' + code;
   if (navigator.share) navigator.share({ text: t, url }).catch(() => { }); else { try { navigator.clipboard.writeText(t + ' ' + url); toast(L('Codi copiat!', '¡Código copiado!')); } catch (e) { } }
 }
-async function openTrade(raw) {
+async function openTrade(raw) { if (classOff('intercanvis')) return toast(L('El teu docent ha desactivat els intercanvis per a la classe.', 'Tu docente ha desactivado los intercambios para la clase.'));
   const code = String(raw || '').toUpperCase().replace(/\s+/g, '').replace(/^([A-Z]+)(\d{4})$/, '$1-$2');
   if (!/^[A-Z]{3,8}-\d{4}$/.test(code)) return toast(L('El codi és com CANVI-1234.', 'El código es como CANVI-1234.'));
   let t; try { t = await tApi('view', { tcode: code }); } catch (e) { return toast(TERR()); }

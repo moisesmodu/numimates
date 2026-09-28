@@ -405,6 +405,7 @@ body{background:radial-gradient(1200px 500px at 50% -120px,#F1E6FA 0%,rgba(241,2
 .pcount{font-weight:900;color:var(--mut);min-width:46px;text-align:right}
 .retry.place{background:#F1E8FA;color:var(--pri)}
 .btn.skip{flex:0 0 auto;min-width:0}
+.hintsheet .lq{font-size:19px;line-height:1.35;margin:10px 0 12px}.hintsheet .lans{margin:12px 0 6px}.hintsheet .lex{margin-bottom:10px}.hintsheet .hnote{font-size:14px;color:var(--mut,#7A6F86);margin:12px 0 14px;font-weight:600}.hintsheet .lk{letter-spacing:.06em}
 .pad .pk-x{background:#F1E8FA;color:var(--pri);font-size:30px}
 .combo .ci{width:20px;height:20px}.combo:not(.on) .ci{filter:grayscale(1);opacity:.5}
 .plus{display:flex;align-items:center;gap:12px;flex-wrap:wrap;justify-content:center;background:#FFF8EC;border-radius:18px;padding:10px 16px}
