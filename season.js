@@ -1,6 +1,6 @@
-/* ---------- Domini, repàs espaiat i passi de temporada ----------
+/* ---------- Domini, repàs espaiat i ruta de temporada ----------
    Idees preses d'altres apps: IXL i Khan Academy (no n'hi ha prou de fer-ho, cal fer-ho bé),
-   Duolingo (les lliçons s'«oxiden» i cal repassar-les) i el passi de temporada dels jocs, però
+   Duolingo (les lliçons s'«oxiden» i cal repassar-les) i el ruta de temporada dels jocs, però
    gratuït i sense compres: aquí tot es guanya practicant. */
 const PASS = 2;                        // estrelles mínimes per obrir la lliçó següent (màx. 2 errors)
 const REV_DAYS = [2, 5, 12, 30, 60];   // caixes de Leitner: dies fins al pròxim repàs
@@ -50,14 +50,14 @@ function crownCheck(ui) {
 function scrCrown(u) {
   app.innerHTML = `<div class="scr"><div class="burst gold"></div><div class="bigcrown">👑</div><h1>${L('Unitat dominada!', '¡Unidad dominada!')}</h1>
     <p class="sub">${L(`Totes les lliçons de «${tx(u.title)}» amb 3 estrelles. Això és dominar-ho de veritat!`, `Todas las lecciones de «${tx(u.title)}» con 3 estrellas. ¡Esto es dominarlo de verdad!`)}</p>
-    <div class="rstats"><div class="rs gem"><span>${L('CRISTALLS', 'CRISTALES')}</span><b>+50</b></div></div>
+    <div class="rstats"><div class="rs gem"><span>${L('DIAMANTS', 'DIAMANTES')}</span><b>+50</b></div></div>
     <button class="btn big" onclick="flowNext()">${L('CONTINUA', 'CONTINÚA')}</button></div>`;
   SFX.win(); confetti(220);
 }
 
-/* ---------- Passi de temporada (cada mes, gratuït) ---------- */
+/* ---------- Ruta de temporada (cada mes, gratuït) ---------- */
 const SP_TIER = 40, SP_TIERS = 25;
-// Cartes exclusives de cada temporada: només es guanyen al passi d'aquell mes
+// Cartes exclusives de cada temporada: només es guanyen a la ruta d'aquell mes
 const SEASONS = {
   '2026-10': { name: "La nit de l'Olimp|La noche del Olimpo", icon: '🌙', color: '#3B2A6B', cards: { 8: 'nyx', 16: 'selene', 25: 'hecate' } },
   '2026-11': { name: 'El bosc de tardor|El bosque de otoño', icon: '🍂', color: '#8A4A1F', cards: { 8: 'dryad', 16: 'pan', 25: 'persephone' } },
@@ -99,7 +99,7 @@ function rewardLabel(r) {
 }
 function seasonCard() {
   const { cfg, left } = seasonInfo(), s = seasonState(), t = seasonTier(s), pend = [...Array(t).keys()].map(i => i + 1).filter(i => !s.got.includes(i)).length;
-  return `<button class="seasoncard" style="--sc:${cfg.color}" onclick="go('season')"><span class="sci">${cfg.icon}</span><span class="scx"><small>${L('PASSI DE TEMPORADA', 'PASE DE TEMPORADA')} · ${L(`queden ${left} dies`, `quedan ${left} días`)}</small><b>${tx(cfg.name)}</b>
+  return `<button class="seasoncard" style="--sc:${cfg.color}" onclick="go('season')"><span class="sci">${cfg.icon}</span><span class="scx"><small>${L('RUTA DE TEMPORADA', 'RUTA DE TEMPORADA')} · ${L(`queden ${left} dies`, `quedan ${left} días`)}</small><b>${tx(cfg.name)}</b>
     <span class="scbar"><i style="width:${t / SP_TIERS * 100}%"></i></span><em>${L('Nivell', 'Nivel')} ${t}/${SP_TIERS}${pend ? ` · 🎁 ${pend} ${L('per recollir', 'por recoger')}` : ''}</em></span><span class="go">›</span></button>`;
 }
 function renderSeason() {
@@ -110,7 +110,7 @@ function renderSeason() {
     const r = tierReward(i, cfg), got = s.got.includes(i), can = i <= t && !got;
     return `<div class="tier ${got ? 'got' : can ? 'can' : ''} ${r.card ? 'big' : ''}"><span class="tn">${i}</span><span class="tr">${rewardLabel(r)}</span>${got ? '<span class="tok">✓</span>' : can ? `<button class="btn sm gold" onclick="claimTier(${i})">${L('RECULL', 'RECOGE')}</button>` : `<span class="tl">${i * SP_TIER} XP</span>`}</div>`;
   }).join('');
-  app.innerHTML = shell(`<div class="seasonhead" style="--sc:${cfg.color}"><div class="shi">${cfg.icon}</div><small>${L('PASSI DE TEMPORADA', 'PASE DE TEMPORADA')}</small><h1>${tx(cfg.name)}</h1>
+  app.innerHTML = shell(`<div class="seasonhead" style="--sc:${cfg.color}"><div class="shi">${cfg.icon}</div><small>${L('RUTA DE TEMPORADA', 'RUTA DE TEMPORADA')}</small><h1>${tx(cfg.name)}</h1>
     <p>${L(`Queden <b>${left} dies</b>. Tota l'XP que guanyis aquest mes et fa pujar de nivell. L'1 del mes que ve comença una temporada nova.`, `Quedan <b>${left} días</b>. Toda la XP que ganes este mes te hace subir de nivel. El día 1 del mes que viene empieza una temporada nueva.`)}</p>
     <div class="shlv"><b>${L('Nivell', 'Nivel')} ${t}</b><span class="scbar"><i style="width:${t >= SP_TIERS ? 100 : into / SP_TIER * 100}%"></i></span><small>${t >= SP_TIERS ? L('Temporada completada! 🏆', '¡Temporada completada! 🏆') : `${into}/${SP_TIER} XP`}</small></div></div>
     ${cards ? `<h2 class="h2">${L('Cartes exclusives d\'aquesta temporada', 'Cartas exclusivas de esta temporada')}</h2><div class="sccards">${cards}</div>` : ''}

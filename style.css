@@ -845,3 +845,30 @@ body{background:radial-gradient(1200px 500px at 50% -120px,#F1E6FA 0%,rgba(241,2
 .gate i.k{background:#FFF3C4}.gate i.x{background:#FBE3E4;color:#D63C42;font-weight:900}
 .pdiv.gatediv span{background:#FFF3C4;color:#9A6A00;border-color:#F0C24B}
 .bals{display:grid;gap:4px;width:100%;justify-items:center}.bals .vpic.bal{width:100%!important;max-width:320px}
+.pdiv.bonusdiv span{background:#E9F7FF;color:#1F6FA3;border-color:#8FD0F2}
+.nwrap.bonus .node:not(.locked){box-shadow:0 7px 0 var(--ucd),0 0 0 4px #FFE27A}
+/* Intercanvis */
+.tcard.trade{border-color:#9FD3DC}.tcard.trade:disabled{opacity:.6}
+.trow{background:#fff;border:2px solid #E6DCF2;border-radius:16px;padding:10px 12px;margin-bottom:10px;display:grid;gap:6px}
+.thead{display:flex;justify-content:space-between;gap:8px;font-size:14px}.thead span{color:var(--mut);font-weight:800;font-size:13px}
+.tpair{display:flex;align-items:center;justify-content:center;gap:12px}.tcard-mini{width:78px}.tcard-mini .mrar{display:none}
+.tcard-mini.q{aspect-ratio:5/7;border-radius:10px;border:2px dashed #C9B3E0;display:grid;place-items:center;font-size:30px;font-weight:900;color:#B9A6CC}
+.tarrow{font-size:26px;color:var(--pri);font-weight:900}.tbig{width:200px;margin:4px auto 16px}
+.nikepic{width:64px}.nikepic .mrar{display:none}
+/* Camí de la porta del Cavaller */
+.trail{position:relative;margin:4px auto 18px;max-width:420px;text-align:center;padding:34px 12px 0}
+.trail .tsteps{position:absolute;left:50%;top:0;height:30px;border-left:5px dotted #D9CCE6;transform:translateX(-50%)}
+.trail span{display:inline-block;font-weight:900;font-size:13.5px;color:var(--mut);background:#F1ECF5;border:2px dashed #D9CCE6;border-radius:14px;padding:8px 14px}
+.trail.open .tsteps{border-left-color:var(--uc,#3CC46A)}
+.trail.open span{color:#1E7A3C;background:#E6F7EC;border:2px solid #8FD9A8}
+.trail.fresh .tsteps{animation:trailGrow 1.2s ease-out both}.trail.fresh span{animation:cardIn .8s .9s cubic-bezier(.2,1.4,.4,1) both}
+@keyframes trailGrow{from{height:0}to{height:30px}}
+.gatescr .door{position:relative;width:200px;height:220px;margin:6px auto 0;border-radius:100px 100px 10px 10px;overflow:hidden;background:linear-gradient(#FFF6D6,#FFE27A);border:6px solid #6B4F85;box-shadow:0 10px 0 #4A3460}
+.door .dpath{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;padding-bottom:18px;gap:2px;color:#6B4F85;background:linear-gradient(transparent 40%,rgba(60,196,106,.35)),repeating-linear-gradient(0deg,transparent 0 16px,rgba(107,79,133,.08) 16px 18px)}
+.door .dpath b{font-size:13px;letter-spacing:.1em}.door .dpath span{font-weight:900;font-size:15px;padding:0 10px}
+.door .dl,.door .dr{position:absolute;top:0;bottom:0;width:50%;background:repeating-linear-gradient(90deg,#8B5A2B 0 22px,#7A4E25 22px 24px);border:3px solid #5C3A1A}
+.door .dl{left:0;transform-origin:left;animation:doorL 1.4s .5s ease-in-out forwards}.door .dr{right:0;transform-origin:right;animation:doorR 1.4s .5s ease-in-out forwards}
+@keyframes doorL{to{transform:perspective(500px) rotateY(-100deg)}}@keyframes doorR{to{transform:perspective(500px) rotateY(100deg)}}
+.gatescr .knightc{width:100px;margin:-6px auto 0;position:relative}
+.unfold{display:block;margin:10px auto 0;font-weight:900;font-size:14px;color:var(--pri);background:#fff;border:2px solid #D9CCE6;border-radius:14px;padding:10px 16px}
+.unit:has(.trail.open) .unfold{color:#1E7A3C;background:#E6F7EC;border-color:#8FD9A8}

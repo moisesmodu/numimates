@@ -106,6 +106,9 @@ function touchStreak() {
   return true;
 }
 const REP = u => u.lessons.length;
+// Ordre del camí: nivells 1-2 → porta del Cavaller → nivell 3 (bonus)
+const ORD = u => { const a = [], b = []; u.lessons.forEach((l, i) => ((l.tier || 1) >= 3 ? b : a).push(i)); return [...a, REP(u), ...b]; };
+const isBonus = (u, li) => li < REP(u) && (u.lessons[li].tier || 1) >= 3;
 function prog(ui, c = CUR()) {
   const u = c.units[ui], n = REP(u) + 1; let p = P.prog[u.id];
   if (!p) p = P.prog[u.id] = { stars: Array(n).fill(0) };
@@ -114,11 +117,15 @@ function prog(ui, c = CUR()) {
 }
 const udone = (p, u) => { const st = p.prog[u.id]?.stars; return !!(st && st[st.length - 1] >= PASS); };
 function unitOpen(ui, ci = P.course) { const c = COURSES[ci]; return ui === 0 || P.unlockAll || ci < P.baseCourse || ui <= (P.skip[c.id] || 0) || prog(ui - 1, c).stars[REP(c.units[ui - 1])] >= PASS; }
-function lessonOpen(ui, li) { if (!unitOpen(ui)) return false; return li === 0 || P.unlockAll || P.course < P.baseCourse || ui < (P.skip[CUR().id] || 0) || prog(ui).stars[li - 1] >= PASS || prog(ui).stars.slice(li).some(s => s > 0); }
+function lessonOpen(ui, li) {
+  if (!unitOpen(ui)) return false;
+  const u = UNITS_()[ui], o = ORD(u), p = o.indexOf(li), st = prog(ui).stars;
+  return p === 0 || P.unlockAll || P.course < P.baseCourse || ui < (P.skip[CUR().id] || 0) || st[o[p - 1]] >= PASS || o.slice(p + 1).some(i => st[i] > 0);
+}
 const unitsDone = p => COURSES.reduce((n, c) => n + c.units.filter(u => udone(p, u)).length, 0);
 function currentNode() {
   const us = UNITS_(), from = Math.min(P.skip[CUR().id] || 0, us.length - 1);
-  for (const start of [from, 0]) for (let ui = start; ui < us.length; ui++) for (let li = 0; li <= REP(us[ui]); li++) if (lessonOpen(ui, li) && (prog(ui).stars[li] || 0) < PASS) return [ui, li];
+  for (const start of [from, 0]) for (let ui = start; ui < us.length; ui++) for (const li of ORD(us[ui]).filter(i => !isBonus(us[ui], i))) if (lessonOpen(ui, li) && (prog(ui).stars[li] || 0) < PASS) return [ui, li];
   return null;
 }
 function record(sk, ok) {
@@ -134,12 +141,12 @@ function testInfo() {
 
 /* ---------- Premis de ratxa ---------- */
 const SRW = [
-  { d: 3, gems: 30, icon: '🎁', txt: ['30 cristalls', '30 cristales'] },
-  { d: 7, gems: 50, acc: 'medalla', icon: '🏅', txt: ['Medalla de foc + 50 cristalls', 'Medalla de fuego + 50 cristales'] },
-  { d: 14, gems: 100, acc: 'auriculars', icon: '🎧', txt: ['Auriculars + 100 cristalls', 'Auriculares + 100 cristales'] },
-  { d: 30, gems: 150, char: 'estel', icon: '⭐', txt: ['Nova companya: Estel + 150 cristalls', 'Nueva compañera: Estel + 150 cristales'] },
-  { d: 60, gems: 250, acc: 'coronafoc', icon: '👑', txt: ['Corona de foc + 250 cristalls', 'Corona de fuego + 250 cristales'] },
-  { d: 100, gems: 500, icon: '🏆', txt: ['Títol de Llegenda + 500 cristalls', 'Título de Leyenda + 500 cristales'] }
+  { d: 3, gems: 30, icon: '🎁', txt: ['30 diamants', '30 diamantes'] },
+  { d: 7, gems: 50, acc: 'medalla', icon: '🏅', txt: ['Medalla de foc + 50 diamants', 'Medalla de fuego + 50 diamantes'] },
+  { d: 14, gems: 100, acc: 'auriculars', icon: '🎧', txt: ['Auriculars + 100 diamants', 'Auriculares + 100 diamantes'] },
+  { d: 30, gems: 150, char: 'estel', icon: '⭐', txt: ['Nova companya: Estel + 150 diamants', 'Nueva compañera: Estel + 150 diamantes'] },
+  { d: 60, gems: 250, acc: 'coronafoc', icon: '👑', txt: ['Corona de foc + 250 diamants', 'Corona de fuego + 250 diamantes'] },
+  { d: 100, gems: 500, icon: '🏆', txt: ['Títol de Llegenda + 500 diamants', 'Título de Leyenda + 500 diamantes'] }
 ];
 function grantStreak() {
   const got = SRW.filter(r => P.streak >= r.d && !P.srw.includes(r.d));
@@ -271,19 +278,38 @@ const OFF = [0, -54, -80, -54, 0, 54, 80, 54, 0, -54, -80, -54];
 const DECO = ['+', '×', '÷', '=', '½', '%', '7', '3', '△', '○', '□', '9'];
 function unitHTML(u, ui) {
   const open = unitOpen(ui), st = prog(ui).stars, cur = currentNode();
-  const R_ = REP(u), nodes = [...Array(R_ + 1).keys()].map(li => {
+  // Les unitats ja superades es pleguen (si no és l'actual) perquè el mapa no sigui infinit
+  const doneN = st.slice(0, REP(u)).filter(s => s >= PASS).length, passed = st[REP(u)] >= PASS, folded = open && !UNFOLD.has(u.id) && !(cur ? cur[0] === ui : ui === 0) && JUST_OPEN !== u.id;
+  const R_ = REP(u), nodes = ORD(u).map((li, pos) => {
     const isR = li === R_, done = st[li] > 0, can = lessonOpen(ui, li), isCur = cur && cur[0] === ui && cur[1] === li;
     const cls = (!can ? 'locked' : isCur ? 'cur' : done ? (st[li] === 3 ? 'gold' : 'done') : 'open') + (done && !isR && isDue(ui, li) ? ' rust' : '');
     const icon = !can ? ICON.lock : isR ? (done ? ICON.trophy : ICON.gift) : done ? (st[li] === 3 ? ICON.crown : ICON.check) : ICON.star;
-    return `<div class="nwrap" style="--x:${OFF[li % OFF.length]}px;transition-delay:${Math.min(li, 12) * 50}ms">
+    return `${li === R_ ? `<div class="pdiv gatediv"><span>🏰 ${L('LA PORTA DEL CAVALLER', 'LA PUERTA DEL CABALLERO')}</span></div>` : ''}${isBonus(u, li) && u.lessons.findIndex(l => (l.tier || 1) >= 3) === li ? `<div class="pdiv bonusdiv"><span>⭐ ${L('BONUS · NIVELL 3', 'BONUS · NIVEL 3')}</span></div>` : ''}<div class="nwrap ${isBonus(u, li) ? 'bonus' : ''}" style="--x:${OFF[pos % OFF.length]}px;transition-delay:${Math.min(pos, 12) * 50}ms">
       ${isCur ? `<div class="tip">${isR ? L('LA PORTA!', '¡LA PUERTA!') : L('COMENÇA', 'EMPIEZA')}</div>` : ''}
       <button class="node ${cls} ${isR ? 'rep' : ''}" onclick="openLesson(${ui},${li})" aria-label="${isR ? L('Repte final', 'Reto final') : L('Lliçó ', 'Lección ') + (li + 1)}"><i class="nico">${icon}</i></button>
-      ${done && !isR ? starsHTML(st[li], 'mini') : ''}</div>${!isR && u.lessons[li + 1] && u.lessons[li + 1].tier !== u.lessons[li].tier ? `<div class="pdiv"><span>${L('NIVELL', 'NIVEL')} ${u.lessons[li + 1].tier}</span></div>` : ''}${li === R_ - 1 ? `<div class="pdiv gatediv"><span>🏰 ${L('LA PORTA DEL CAVALLER', 'LA PUERTA DEL CABALLERO')}</span></div>` : ''}`;
+      ${done && !isR ? starsHTML(st[li], 'mini') : ''}</div>${!isR && u.lessons[li + 1] && (u.lessons[li + 1].tier || 1) === 2 && (u.lessons[li].tier || 1) === 1 ? `<div class="pdiv"><span>${L('NIVELL 2', 'NIVEL 2')}</span></div>` : ''}`;
   }).join('');
   const deco = [0, 1, 2, 3].map(k => `<span class="deco" style="${k % 2 ? 'left' : 'right'}:${6 + (k * 7 + ui * 5) % 20}%;top:${14 + k * 22}%;animation-delay:${k * .7}s">${DECO[(ui * 3 + k) % DECO.length]}</span>`).join('');
   return `<section class="unit ${open ? '' : 'closed'}" style="--uc:${u.color}">
     <div class="ubanner"><div class="utext"><div class="ukick">${L('UNITAT', 'UNIDAD')} ${ui + 1}${(P.crowns || []).includes(u.id) ? ` · 👑 ${L('DOMINADA', 'DOMINADA')}` : ''}</div><h2>${tx(u.title)}</h2><div class="usents">${unitSents(u).map(k => `<span title="${tx(SENT[k])}">${SENT[k][2]} ${tx(SENT[k]).replace(/^Sentit |^Sentido /, '').replace(/ i pensament computacional| y pensamiento computacional/, '')}</span>`).join('')}</div><p>${open ? tx(u.desc) : L('🔒 Supera el repte de la unitat anterior per obrir-la.', '🔒 Supera el reto de la unidad anterior para abrirla.')}</p></div><div class="uguide tapme">${charSVG(u.guide, 'idle')}</div></div>
-    <div class="path">${deco}${nodes}<div class="pguide tapme ${ui % 2 ? 'l' : ''}">${charSVG(u.guide, open ? 'happy' : 'idle')}</div></div></section>`;
+    ${!open ? '' : folded ? `<button class="unfold" onclick="UNFOLD.add('${u.id}');renderHome()">${(passed ? L(`✅ Porta superada · ${doneN}/${REP(u)} lliçons · Mostra-les`, `✅ Puerta superada · ${doneN}/${REP(u)} lecciones · Mostrarlas`) : L(`${doneN}/${REP(u)} lliçons fetes · Mostra-les ▾`, `${doneN}/${REP(u)} lecciones hechas · Mostrarlas ▾`))}</button>` : `<div class="path">${deco}${nodes}<div class="pguide tapme ${ui % 2 ? 'l' : ''}">${charSVG(u.guide, open ? 'happy' : 'idle')}</div></div>`}${open ? trailHTML(ui) : ''}</section>`;
+}
+// Camí que surt de la porta del Cavaller cap a la unitat següent (o el nivell següent)
+function trailHTML(ui) {
+  const us = UNITS_(), u = us[ui], passed = (prog(ui).stars[REP(u)] || 0) >= PASS, nx = us[ui + 1];
+  const to = nx ? L(`la unitat ${ui + 2}: ${tx(nx.title)}`, `la unidad ${ui + 2}: ${tx(nx.title)}`) : L('el nivell següent', 'el nivel siguiente');
+  return `<div class="trail ${passed ? 'open' : ''} ${JUST_OPEN === u.id ? 'fresh' : ''}"><i class="tsteps"></i><span>${passed ? `🏰 ${L('Camí obert cap a', 'Camino abierto hacia')} ${to}` : `🔒 ${L('La porta del Cavaller obre el camí cap a', 'La puerta del Caballero abre el camino hacia')} ${to}`}</span></div>`;
+}
+let JUST_OPEN = null; const UNFOLD = new Set();
+function scrGate(ui) {
+  const us = UNITS_(), u = us[ui], nx = us[ui + 1];
+  app.innerHTML = `<div class="scr gatescr"><div class="burst gold"></div>
+    <div class="door"><div class="dpath">${nx ? `<b>${L('UNITAT', 'UNIDAD')} ${ui + 2}</b><span>${tx(nx.title)}</span>` : `<b>${L('NIVELL NOU', 'NIVEL NUEVO')}</b>`}</div><div class="dl"></div><div class="dr"></div></div>
+    <div class="rchar tapme knightc">${charSVG('cavaller', 'happy')}</div>
+    <h1>${L('La porta s\'obre!', '¡La puerta se abre!')}</h1>
+    <p class="sub">${nx ? L(`El Cavaller et deixa passar: s'ha obert el camí cap a <b>${tx(nx.title)}</b>. I el nivell 3 de «${tx(u.title)}» ja és teu per guanyar estrelles de bonus!`, `El Caballero te deja pasar: se ha abierto el camino hacia <b>${tx(nx.title)}</b>. ¡Y el nivel 3 de «${tx(u.title)}» ya es tuyo para ganar estrellas de bonus!`) : L("Has superat l'última porta d'aquest nivell!", '¡Has superado la última puerta de este nivel!')}</p>
+    <button class="btn big" onclick="JUST_OPEN='${u.id}';flowNext()">${L('ANEM-HI!', '¡VAMOS!')}</button></div>`;
+  SFX.win(); setTimeout(() => confetti(160), 900);
 }
 function renderHome() {
   VIEW = 'home';
@@ -292,6 +318,7 @@ function renderHome() {
     ${seasonCard()}${testCard()}${reviewCard()}${recoBox()}${schoolCard()}${goalCard()}${missionsCard()}${streakCard()}${UNITS_().map(unitHTML).join('')}
     <div class="theend">${P.course < COURSES.length - 1 ? L(`Quan acabis ${tx(c.long)}, t'espera <b>${tx(COURSES[P.course + 1].long)}</b>! 🚀`, `Cuando acabes ${tx(c.long)}, ¡te espera <b>${tx(COURSES[P.course + 1].long)}</b>! 🚀`) : L('Has arribat a l\'últim nivell! 🎓', '¡Has llegado al último nivel! 🎓')}</div>`, 'home');
   revealNodes(); showGain();
+  if (JUST_OPEN) { const t = $('.trail.fresh'); if (t) setTimeout(() => t.scrollIntoView({ block: 'center', behavior: 'smooth' }), 80); JUST_OPEN = null; return; }
   const n = $('.node.cur'); if (n) setTimeout(() => n.scrollIntoView({ block: 'center', behavior: 'smooth' }), 60);
 }
 const courseOpen = ci => P.unlockAll || ci <= P.maxCourse;
@@ -303,11 +330,11 @@ function pickCourse() {
 }
 function setCourse(i) { if (!courseOpen(i)) { SFX.ko(); toast(L(`🔒 Primer acaba el nivell ${i}.`, `🔒 Primero acaba el nivel ${i}.`)); return; } P.course = i; save(); closeModal(); renderHome(); window.scrollTo(0, 0); }
 function openLesson(ui, li) {
-  if (!lessonOpen(ui, li)) { toast(li === 0 ? L('🔒 Primer supera el repte de la unitat anterior.', '🔒 Primero supera el reto de la unidad anterior.') : (prog(ui).stars[li - 1] ? L('🔒 Necessites 2 estrelles a la lliçó anterior (màxim 2 errors).', '🔒 Necesitas 2 estrellas en la lección anterior (máximo 2 errores).') : L('🔒 Primer fes la lliçó anterior.', '🔒 Primero haz la lección anterior.'))); SFX.ko(); return; }
+  if (!lessonOpen(ui, li)) { toast(li === 0 ? L('🔒 Primer supera el repte de la unitat anterior.', '🔒 Primero supera el reto de la unidad anterior.') : (isBonus(UNITS_()[ui], li) ? L("⭐ El nivell 3 és de bonus: s'obre quan superes la porta del Cavaller.", '⭐ El nivel 3 es de bonus: se abre cuando superas la puerta del Caballero.') : li === REP(UNITS_()[ui]) ? L('🔒 La porta s\'obre quan acabes el nivell 2 (2 estrelles a cada lliçó).', '🔒 La puerta se abre cuando acabas el nivel 2 (2 estrellas en cada lección).') : prog(ui).stars[ORD(UNITS_()[ui])[ORD(UNITS_()[ui]).indexOf(li) - 1]] ? L('🔒 Necessites 2 estrelles a la lliçó anterior (màxim 2 errors).', '🔒 Necesitas 2 estrellas en la lección anterior (máximo 2 errores).') : L('🔒 Primer fes la lliçó anterior.', '🔒 Primero haz la lección anterior.'))); SFX.ko(); return; }
   const u = UNITS_()[ui], isR = li === REP(u), st = prog(ui).stars[li];
-  modal(`<div class="sheet" style="--uc:${u.color}"><div class="sk">${tx(CUR().name).toUpperCase()} · ${L('UNITAT', 'UNIDAD')} ${ui + 1} · ${isR ? L('PROVA FINAL', 'PRUEBA FINAL') : L('NIVELL ', 'NIVEL ') + (u.lessons[li].tier || 1) + ' · ' + L('LLIÇÓ ', 'LECCIÓN ') + (li % 10 + 1) + ' / 10'}</div>
+  modal(`<div class="sheet" style="--uc:${u.color}"><div class="sk">${tx(CUR().name).toUpperCase()} · ${L('UNITAT', 'UNIDAD')} ${ui + 1} · ${isR ? L('PROVA FINAL', 'PRUEBA FINAL') : (isBonus(u, li) ? '⭐ BONUS · ' : '') + L('NIVELL ', 'NIVEL ') + (u.lessons[li].tier || 1) + ' · ' + L('LLIÇÓ ', 'LECCIÓN ') + (li % 10 + 1) + ' / 10'}</div>
     <h3>${isR ? L('🏰 La porta del Cavaller', '🏰 La puerta del Caballero') : tx(u.lessons[li].t)}</h3>
-    <p>${isR ? L("El Cavaller del Codi vigila la porta de la unitat següent. Et farà 12 enigmes de tot el que has practicat: encerta'n 9 i s'obrirà. Aquí no hi ha segones oportunitats… però la pots tornar a provar sempre que vulguis!", 'El Caballero del Código vigila la puerta de la unidad siguiente. Te hará 12 enigmas de todo lo que has practicado: acierta 9 y se abrirá. Aquí no hay segundas oportunidades… ¡pero puedes volver a intentarlo siempre que quieras!') : L("8 exercicis. Si te n'equivoques algun, el tornaràs a practicar al final.", '8 ejercicios. Si fallas alguno, lo volverás a practicar al final.')}</p>
+    <p>${isR ? L("El Cavaller del Codi vigila la porta de la unitat següent. Et farà 12 enigmes dels nivells 1 i 2: treu més d'un 7 i s'obrirà. Aquí no hi ha segones oportunitats… però la pots tornar a provar sempre que vulguis!", 'El Caballero del Código vigila la puerta de la unidad siguiente. Te hará 12 enigmas de los niveles 1 y 2: saca más de un 7 y se abrirá. Aquí no hay segundas oportunidades… ¡pero puedes volver a intentarlo siempre que quieras!') : L("8 exercicis. Si te n'equivoques algun, el tornaràs a practicar al final.", '8 ejercicios. Si fallas alguno, lo volverás a practicar al final.')}</p>
     ${st ? `<div class="sstars">${starsHTML(st)}</div>` : ''}
     <button class="btn big" style="--c:${u.color}" onclick="closeModal();startLesson(${ui},${li})">${st ? L('REPETEIX', 'REPITE') : L('COMENÇA', 'EMPIEZA')}</button></div>`);
 }
@@ -322,8 +349,8 @@ function startLesson(ui, li) {
   const u = UNITS_()[ui]; let plan = [];
   if (li === REP(u)) {
     // La porta del Cavaller: examen camuflat amb 8 preguntes del tema i 4 d'activitats visuals, sense segones oportunitats
-    const lv = sk => (u.lessons.find(l => l.tier === 2 && l.sk.includes(sk)) || u.lessons.find(l => l.sk.includes(sk))).L;
-    const core = shuffle([...new Set(u.lessons.filter(l => !l.vis).flatMap(l => l.sk).filter(s => !/^v\./.test(s)))]), vis = shuffle([...new Set(u.lessons.flatMap(l => l.sk).filter(s => /^v\./.test(s)))]);
+    const ls = u.lessons.filter(l => (l.tier || 1) <= 2), lv = sk => (ls.find(l => l.tier === 2 && l.sk.includes(sk)) || ls.find(l => l.sk.includes(sk))).L;
+    const core = shuffle([...new Set(ls.filter(l => !l.vis).flatMap(l => l.sk).filter(s => !/^v\./.test(s)))]), vis = shuffle([...new Set(ls.flatMap(l => l.sk).filter(s => /^v\./.test(s)))]);
     for (let i = 0; i < 8; i++) plan.push([core[i % core.length], lv(core[i % core.length])]);
     for (let i = 0; i < 4; i++) { const s = vis.length ? vis[i % vis.length] : core[(8 + i) % core.length]; plan.push([s, lv(s)]); }
     return startRun({ mode: 'repte', exam: true, ui, li, plan: shuffle(plan), review: {}, color: u.color });
@@ -524,7 +551,8 @@ function finishRun() {
       const okN = LS.total - LS.miss; R.exam = true; R.acc = Math.round(100 * okN / LS.total); R.stars = okN >= 11 ? 3 : okN >= 9 ? 2 : 1;
       const uid = UNITS_()[R.ui].id; P.exams = P.exams || {}; const ex = P.exams[uid] || { tries: 0, best: 0 };
       ex.tries++; ex.last = R.acc; ex.best = Math.max(ex.best, R.acc); ex.d = today(); P.exams[uid] = ex;
-      R.sub = R.stars >= PASS ? L(`Has encertat ${okN} de ${LS.total}. La porta s'ha obert: la unitat següent t'espera!`, `Has acertado ${okN} de ${LS.total}. La puerta se ha abierto: ¡la unidad siguiente te espera!`) : L(`Has encertat ${okN} de ${LS.total}. Per obrir la porta en calen 9: repassa una mica i torna-ho a provar!`, `Has acertado ${okN} de ${LS.total}. Para abrir la puerta hacen falta 9: ¡repasa un poco y vuelve a intentarlo!`);
+      const nota = String(Math.round(okN / LS.total * 100) / 10).replace('.', ','); R.nota = nota;
+      R.sub = R.stars >= PASS ? L(`Nota: <b>${nota}</b> (${okN} de ${LS.total}). La porta s'ha obert: la unitat següent t'espera, i també el nivell 3 de bonus!`, `Nota: <b>${nota}</b> (${okN} de ${LS.total}). La puerta se ha abierto: ¡te espera la unidad siguiente y también el nivel 3 de bonus!`) : L(`Nota: <b>${nota}</b> (${okN} de ${LS.total}). Per obrir la porta cal més d'un 7: repassa una mica i torna-ho a provar!`, `Nota: <b>${nota}</b> (${okN} de ${LS.total}). Para abrir la puerta hace falta más de un 7: ¡repasa un poco y vuelve a intentarlo!`);
     }
     const pr = prog(R.ui), first = (pr.stars[R.li] || 0) < PASS && R.stars >= PASS;
     pr.stars[R.li] = Math.max(pr.stars[R.li], R.stars);
@@ -532,6 +560,7 @@ function finishRun() {
     if (!R.exam && R.stars < PASS && pr.stars[R.li] < PASS) R.sub = L(`Per obrir ${R.mode === 'repte' ? 'la unitat següent' : 'la lliçó següent'} necessites 2 estrelles: com a molt 2 errors. Tu pots!`, `Para abrir ${R.mode === 'repte' ? 'la unidad siguiente' : 'la lección siguiente'} necesitas 2 estrellas: como mucho 2 errores. ¡Tú puedes!`);
     const cu = crownCheck(R.ui); if (cu) { R.crown = cu; R.gems += 50; }
     if (R.mode === 'repte' && first) R.chest = ri(30, 50);
+    if (R.exam && first) R.gate = R.ui;
     P.stats.lessons++; if (R.perfect) P.stats.perfect++;
   }
   R.bonus = Math.floor(LS.maxCombo / 3) * 2 + LS.gold * 5; R.xp += R.bonus;
@@ -559,6 +588,7 @@ function reward(R) {
   if (R.pack) FLOW.push(() => scrPack(R.pack));
   if (R.clv) FLOW.push(() => scrCharLevel(...R.clv));
   if (R.knight) FLOW.push(scrKnight);
+  if (R.gate != null) FLOW.push(() => scrGate(R.gate));
   if (R.crown) FLOW.push(() => scrCrown(R.crown));
   const mc_ = COURSES[P.maxCourse];
   if (mc_ && P.maxCourse < COURSES.length - 1 && mc_.units.every(u => udone(P, u))) { P.maxCourse++; save(); const nl = P.maxCourse; FLOW.push(() => scrNewLevel(nl)); }
@@ -569,14 +599,14 @@ function flowNext() { closeModal(); const f = FLOW.shift(); if (f) f(); else go(
 function countUp() { $$('[data-count]').forEach(el => { const to = +el.dataset.count, suf = el.dataset.suf || '', t0 = performance.now(); (function step(t) { const k = Math.min(1, (t - t0) / 800); el.textContent = Math.round(to * (1 - (1 - k) ** 3)) + suf; if (k < 1) requestAnimationFrame(step); })(t0); }); }
 function scrResult(R) {
   const game = R.mode === 'game' || R.mode === 'battle';
-  const title = game ? tx(R.title) : R.recoDone ? L('Missió del Cavaller complerta!', '¡Misión del Caballero cumplida!') : R.perfect ? L('Lliçó perfecta!', '¡Lección perfecta!') : R.mode === 'reco' ? L('Bona feina! Torna-ho a provar per completar la missió.', '¡Buen trabajo! Vuelve a intentarlo para completar la misión.') : R.mode === 'train' ? L('Entrenament fet!', '¡Entrenamiento hecho!') : R.mode === 'review' ? L('Repàs fet!', '¡Repaso hecho!') : R.exam ? (R.stars >= PASS ? L('Porta oberta!', '¡Puerta abierta!') : L('La porta encara resisteix…', 'La puerta aún resiste…')) : R.stars && R.stars < PASS ? L('Gairebé!', '¡Casi!') : L('Lliçó completada!', '¡Lección completada!');
+  const title = game ? tx(R.title) : R.exam ? (R.stars >= PASS ? L('Porta oberta!', '¡Puerta abierta!') : L('La porta encara resisteix…', 'La puerta aún resiste…')) : R.recoDone ? L('Missió del Cavaller complerta!', '¡Misión del Caballero cumplida!') : R.perfect ? L('Lliçó perfecta!', '¡Lección perfecta!') : R.mode === 'reco' ? L('Bona feina! Torna-ho a provar per completar la missió.', '¡Buen trabajo! Vuelve a intentarlo para completar la misión.') : R.mode === 'train' ? L('Entrenament fet!', '¡Entrenamiento hecho!') : R.mode === 'review' ? L('Repàs fet!', '¡Repaso hecho!') : R.exam ? (R.stars >= PASS ? L('Porta oberta!', '¡Puerta abierta!') : L('La porta encara resisteix…', 'La puerta aún resiste…')) : R.stars && R.stars < PASS ? L('Gairebé!', '¡Casi!') : L('Lliçó completada!', '¡Lección completada!');
   const sub = R.sub || (game ? (R.record ? L('🏆 Nou rècord personal!', '🏆 ¡Nuevo récord personal!') : L(`El teu rècord: ${R.best}`, `Tu récord: ${R.best}`)) : R.perfect ? L('Ni un sol error. Ets imparable!', 'Ni un solo error. ¡Eres imparable!') : L('Cada error és una oportunitat per aprendre.', 'Cada error es una oportunidad para aprender.'));
   const third = game ? `<div class="rs acc"><span>${L('PUNTS', 'PUNTOS')}</span><b data-count="${R.score}">0</b></div>` : `<div class="rs acc"><span>${L('PRECISIÓ', 'PRECISIÓN')}</span><b data-count="${R.acc}" data-suf="%">0</b></div>`;
   app.innerHTML = `<div class="scr"><div class="burst"></div><div class="cheer"><div class="saybubble">${cheerMsg(R)}</div><div class="rchar dance tapme">${meC('happy')}</div></div>
     <h1>${title}</h1><p class="sub">${sub}</p>
     ${R.stars ? `<div class="bigstars">${[1, 2, 3].map(i => `<i class="${i <= R.stars ? 'on' : ''}" style="animation-delay:${.25 + i * .22}s">★</i>`).join('')}</div>` : ''}
     ${R.bonus ? `<div class="bonus">🔥 ${L('Bonus de ratxa i preguntes daurades', 'Bonus de racha y preguntas doradas')}: <b>+${R.bonus} XP</b></div>` : ''}
-    <div class="rstats"><div class="rs xp"><span>XP</span><b data-count="${R.xp}">0</b></div><div class="rs gem"><span>${L('CRISTALLS', 'CRISTALES')}</span><b data-count="${R.gems}">0</b></div>${third}</div>
+    <div class="rstats"><div class="rs xp"><span>XP</span><b data-count="${R.xp}">0</b></div><div class="rs gem"><span>${L('DIAMANTS', 'DIAMANTES')}</span><b data-count="${R.gems}">0</b></div>${third}</div>
     <button class="btn big" onclick="flowNext()">${L('CONTINUA', 'CONTINÚA')}</button></div>`;
   countUp(); SFX.win(); if (R.perfect || R.record) confetti();
 }
@@ -615,11 +645,11 @@ function scrChest(R) {
 }
 function openChest() { const c = $('#chest'); if (c.classList.contains('open')) return; c.classList.remove('wiggle'); c.classList.add('open'); SFX.win(); confetti(180); setTimeout(() => { $('#chestOut').hidden = false; }, 450); }
 function scrLevel(l) {
-  app.innerHTML = `<div class="scr"><div class="burst"></div><div class="lvbadge">${l}</div><h1>${L(`Has pujat al nivell ${l}!`, `¡Has subido al nivel ${l}!`)}</h1><p class="sub">${L('+10 cristalls de regal. Continua així!', '+10 cristales de regalo. ¡Sigue así!')}</p><div class="rchar tapme">${meC('happy')}</div><button class="btn big" onclick="flowNext()">${L('CONTINUA', 'CONTINÚA')}</button></div>`;
+  app.innerHTML = `<div class="scr"><div class="burst"></div><div class="lvbadge">${l}</div><h1>${L(`Has pujat al nivell ${l}!`, `¡Has subido al nivel ${l}!`)}</h1><p class="sub">${L('+10 diamants de regal. Continua així!', '+10 diamantes de regalo. ¡Sigue así!')}</p><div class="rchar tapme">${meC('happy')}</div><button class="btn big" onclick="flowNext()">${L('CONTINUA', 'CONTINÚA')}</button></div>`;
   SFX.win(); confetti(90);
 }
 function scrBadges(list) {
-  app.innerHTML = `<div class="scr"><h1>${list.length > 1 ? L('Noves medalles!', '¡Nuevas medallas!') : L('Nova medalla!', '¡Nueva medalla!')}</h1><p class="sub">${L('Cada medalla et dona +10 cristalls', 'Cada medalla te da +10 cristales')}</p>
+  app.innerHTML = `<div class="scr"><h1>${list.length > 1 ? L('Noves medalles!', '¡Nuevas medallas!') : L('Nova medalla!', '¡Nueva medalla!')}</h1><p class="sub">${L('Cada medalla et dona +10 diamants', 'Cada medalla te da +10 diamantes')}</p>
     <div class="newb">${list.map((b, i) => `<div class="badge on pop" style="animation-delay:${i * 150}ms"><div class="bi">${b[1]}</div><b>${tx(b[2])}</b><span>${tx(b[3])}</span></div>`).join('')}</div>
     <button class="btn big" onclick="flowNext()">${L('CONTINUA', 'CONTINÚA')}</button></div>`;
   SFX.coin();
@@ -906,9 +936,11 @@ function renderShop() {
     const btn = own ? `<button class="btn sm ${on ? 'ghost' : ''}" onclick="toggleAcc('${id}')">${on ? L('TREU', 'QUITAR') : L('POSA', 'PONER')}</button>` : a.price == null ? `<button class="btn sm fire" disabled>🔥 ${tx(a.unlock)}</button>` : `<button class="btn sm gold" ${P.gems < a.price ? 'disabled' : ''} onclick="buyAcc('${id}')"><i class="ci">${ICON.gem}</i>${a.price}</button>`;
     return `<div class="item ${on ? 'sel' : ''} ${a.price == null ? 'excl' : ''}"><div class="ipic">${charSVG(P.companion, 'idle', { [a.slot]: id }, '', clvOf(P.companion))}</div><div class="iname">${tx(a.name)}</div>${btn}</div>`;
   }).join('');
-  app.innerHTML = shell(`<h1 class="ph1">${L('Botiga', 'Tienda')}</h1><p class="lead">${L("Guanya cristalls fent lliçons i canvia'ls per companys i accessoris. Els marcats amb 🔥 només es guanyen amb les ratxes!", 'Gana cristales haciendo lecciones y cámbialos por compañeros y accesorios. ¡Los marcados con 🔥 solo se ganan con las rachas!')}</p>
+  app.innerHTML = shell(`<h1 class="ph1">${L('Botiga', 'Tienda')}</h1><p class="lead">${L("Guanya diamants fent lliçons i canvia'ls per companys i accessoris. Els marcats amb 🔥 només es guanyen amb les ratxes!", 'Gana diamantes haciendo lecciones y cámbialos por compañeros y accesorios. ¡Los marcados con 🔥 solo se ganan con las rachas!')}</p>
     <h2 class="h2">${L('Companys', 'Compañeros')}</h2><div class="grid">${comp}</div>
     <h2 class="h2">${L('Accessoris', 'Accesorios')} <small>${L('per al teu company', 'para tu compañero')}</small></h2><div class="grid">${acc}</div>
+    <h2 class="h2">${L('Carta especial', 'Carta especial')}</h2><div class="item wide"><div class="ipic nikepic">${stickerHTML(cardById('nike'))}</div><div><div class="iname">${L('Nike, la deessa de la victòria', 'Nike, la diosa de la victoria')}</div><div class="idesc">${L(`La carta dels campions de les batalles. ${P.album && P.album.nike ? `En tens ${P.album.nike}.` : 'Encara no la tens!'}`, `La carta de los campeones de las batallas. ${P.album && P.album.nike ? `Tienes ${P.album.nike}.` : '¡Todavía no la tienes!'}`)}</div></div>
+    <button class="btn sm gold" ${P.gems < NIKE_PRICE ? 'disabled' : ''} onclick="buyNike()"><i class="ci">${ICON.gem}</i>${NIKE_PRICE}</button></div>
     <h2 class="h2">${L('Ajudes', 'Ayudas')}</h2><div class="item wide"><div class="ipic big-emoji">🧊</div><div><div class="iname">${L('Protector de ratxa', 'Protector de racha')}</div><div class="idesc">${L(`Si un dia no pots practicar, la ratxa no s'apaga. En tens ${P.freeze} de 2.`, `Si un día no puedes practicar, la racha no se apaga. Tienes ${P.freeze} de 2.`)}</div></div>
     <button class="btn sm gold" ${P.gems < 50 || P.freeze >= 2 ? 'disabled' : ''} onclick="buyFreeze()"><i class="ci">${ICON.gem}</i>50</button></div>`, 'shop');
 }
@@ -927,12 +959,14 @@ function buyAcc(id) {
   toast(`${tx(a.name)} ✨`); nb.forEach(b => setTimeout(() => toast(`${b[1]} ${L('Nova medalla', 'Nueva medalla')}: <b>${tx(b[2])}</b> (+10 💎)`), 900));
 }
 function toggleAcc(id) { const s = ACC[id].slot; if (P.acc[s] === id) delete P.acc[s]; else P.acc[s] = id; save(); SFX.tap(); renderShop(); }
+const NIKE_PRICE = 250;
+function buyNike() { if (P.gems < NIKE_PRICE) return; P.gems -= NIKE_PRICE; albumFix(); const dup = !!P.album.nike; P.album.nike = (P.album.nike || 0) + 1; save(); SFX.coin(); FLOW = [() => scrPack([{ s: cardById('nike'), dup }])]; FLOW.back = 'shop'; flowNext(); }
 function buyFreeze() { if (P.gems < 50 || P.freeze >= 2) return; P.gems -= 50; P.freeze++; save(); SFX.coin(); renderShop(); toast(L('🧊 Protector de ratxa preparat!', '🧊 ¡Protector de racha listo!')); }
 
 /* ---------- Medalles ---------- */
 function renderBadges(tabs = '') {
   const got = BADGES.filter(b => P.badges.includes(b[0])).length;
-  app.innerHTML = shell(`<h1 class="ph1">${L('La meva col·lecció', 'Mi colección')}</h1>${tabs}<p class="lead">${L(`N'has aconseguit <b>${got}</b> de ${BADGES.length}. Cada una val +10 cristalls.`, `Has conseguido <b>${got}</b> de ${BADGES.length}. Cada una vale +10 cristales.`)}</p>
+  app.innerHTML = shell(`<h1 class="ph1">${L('La meva col·lecció', 'Mi colección')}</h1>${tabs}<p class="lead">${L(`N'has aconseguit <b>${got}</b> de ${BADGES.length}. Cada una val +10 diamants.`, `Has conseguido <b>${got}</b> de ${BADGES.length}. Cada una vale +10 diamantes.`)}</p>
     <h2 class="h2">${L('Premis de ratxa', 'Premios de racha')}</h2><div class="bgrid">${SRW.map(r => { const on = P.srw.includes(r.d); return `<div class="badge ${on ? 'on fire' : ''}"><div class="bi">${on ? r.icon : '🔒'}</div><b>${r.d} ${L('dies seguits', 'días seguidos')}</b><span>${tx(r.txt)}</span></div>`; }).join('')}</div>
     <h2 class="h2">${L('Medalles', 'Medallas')}</h2><div class="bgrid">${BADGES.map(b => { const on = P.badges.includes(b[0]); return `<div class="badge ${on ? 'on' : ''}"><div class="bi">${on ? b[1] : '🔒'}</div><b>${tx(b[2])}</b><span>${tx(b[3])}</span></div>`; }).join('')}</div>`, 'album');
 }

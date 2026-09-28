@@ -71,8 +71,8 @@ const STK = [
   ['atalanta', 'c', 'Atalanta|Atalanta', 'Atalanta per als romans|Atalanta para los romanos', 'La corredora més ràpida. Només la van guanyar amb 3 pomes d\'or.|La corredora más rápida. Solo le ganaron con 3 manzanas de oro.'],
   ['romulus', 'c', 'Ròmul i Rem|Rómulo y Remo', 'Fundadors de Roma|Fundadores de Roma', 'Roma es va fundar l\'any 753 aC. Els romans escrivien el 753 com DCCLIII.|Roma se fundó en el año 753 a. C. Los romanos escribían el 753 como DCCLIII.'],
   ['midas', 'c', 'Rei Mides|Rey Midas', 'Mides per als romans|Midas para los romanos', "Tot el que tocava es tornava d'or. L'or pesa tant que un cub de 10 cm fa gairebé 20 kg!|Todo lo que tocaba se volvía de oro. ¡El oro pesa tanto que un cubo de 10 cm pesa casi 20 kg!"],
-  ['nike', 'l', 'Nike|Nike', 'Victòria per als romans|Victoria para los romanos', "Deessa de la victòria. Aquesta carta només es guanya guanyant batalles de mates: cada còpia és una victòria!|Diosa de la victoria. Esta carta solo se gana ganando batallas de mates: ¡cada copia es una victoria!"],
-  // Temporada d'octubre 2026 (passi de temporada)
+  ['nike', 'l', 'Nike|Nike', 'Victòria per als romans|Victoria para los romanos', "Deessa de la victòria. És la carta dels campions: només es pot aconseguir a la botiga, amb els diamants que guanyes a les batalles.|Diosa de la victoria. Es la carta de los campeones: solo se consigue en la tienda, con los diamantes que ganas en las batallas."],
+  // Temporada d'octubre 2026 (ruta de temporada)
   ['nyx', 'e', 'Nix|Nix', 'Nox per als romans|Nox para los romanos', "Deessa de la nit. En una nit fosca es poden veure unes 2.500 estrelles a ull nu.|Diosa de la noche. En una noche oscura se pueden ver unas 2.500 estrellas a simple vista."],
   ['selene', 'e', 'Selene|Selene', 'Luna per als romans|Luna para los romanos', "Deessa de la Lluna. La Lluna tarda uns 29 dies i mig a passar per totes les fases.|Diosa de la Luna. La Luna tarda unos 29 días y medio en pasar por todas sus fases."],
   ['hecate', 'l', 'Hècate|Hécate', 'Trivia per als romans|Trivia para los romanos', "Deessa de la màgia i de les cruïlles de 3 camins. Amb 3 camins i 2 cruïlles seguides, hi ha 3 × 3 = 9 rutes!|Diosa de la magia y de los cruces de 3 caminos. Con 3 caminos y 2 cruces seguidos, ¡hay 3 × 3 = 9 rutas!"],
@@ -142,13 +142,14 @@ function renderAlbum(tab) {
   albumFix();
   const A = P.album, have = STK.filter(s => A[s[0]]).length;
   const t = tab || 'cromos';
-  const tabs = `<div class="tabs"><button class="${t === 'cromos' ? 'on' : ''}" onclick="renderAlbum('cromos')">🏛️ ${L('Cartes', 'Cartas')}</button><button class="${t === 'medals' ? 'on' : ''}" onclick="renderAlbum('medals')">🏅 ${L('Medalles', 'Medallas')}</button></div>`;
+  const tabs = `<div class="tabs"><button class="${t === 'cromos' ? 'on' : ''}" onclick="renderAlbum('cromos')">🏛️ ${L('Cartes', 'Cartas')}</button><button class="${t === 'trade' ? 'on' : ''}" onclick="renderAlbum('trade')">🔄 ${L('Canvis', 'Cambios')}</button><button class="${t === 'medals' ? 'on' : ''}" onclick="renderAlbum('medals')">🏅 ${L('Medalles', 'Medallas')}</button></div>`;
   if (t === 'medals') { renderBadges(tabs); return; }
+  if (t === 'trade') { renderTrades(tabs); return; }
   app.innerHTML = shell(`<h1 class="ph1">${L('Déus i herois', 'Dioses y héroes')}</h1>${tabs}
     <p class="lead">${L(`Tens <b>${have}</b> de ${STK.length} cartes de la mitologia grega i romana. Cada lliçó que acabes t'obre un sobre!`, `Tienes <b>${have}</b> de ${STK.length} cartas de la mitología griega y romana. ¡Cada lección que acabes te abre un sobre!`)}</p>
     <div class="abar"><div style="width:${have / STK.length * 100}%"></div></div>
     ${['l', 'e', 'r', 'c'].map(k => `<h2 class="h2"><span class="rdotb" style="background:${RAR[k][2]}"></span>${tx(RAR[k])} <small>${STK.filter(s => s[1] === k && A[s[0]]).length}/${STK.filter(s => s[1] === k).length}</small></h2>
-      <div class="agrid">${STK.filter(s => s[1] === k).map(s => A[s[0]] ? `<button class="stkbtn" onclick="stickerModal('${s[0]}')">${stickerHTML(s)}${A[s[0]] > 1 ? `<i class="cnt">×${A[s[0]]}</i>` : ''}</button>` : `<div class="mcardx empty r-${k}"><div class="min"><span class="mnum">Nº ${CARDNUM(s[0])}</span><div class="mq">${BATTLE_ONLY.includes(s[0]) ? '⚔️' : SEASON_ONLY.includes(s[0]) ? '🌙' : '?'}</div>${BATTLE_ONLY.includes(s[0]) ? `<div class="mhint">${L('Guanya una batalla', 'Gana una batalla')}</div>` : SEASON_ONLY.includes(s[0]) ? `<div class="mhint">${L('Passi de temporada', 'Pase de temporada')}</div>` : ''}</div></div>`).join('')}</div>`).join('')}`, 'album');
+      <div class="agrid">${STK.filter(s => s[1] === k).map(s => A[s[0]] ? `<button class="stkbtn" onclick="stickerModal('${s[0]}')">${stickerHTML(s)}${A[s[0]] > 1 ? `<i class="cnt">×${A[s[0]]}</i>` : ''}</button>` : `<div class="mcardx empty r-${k}"><div class="min"><span class="mnum">Nº ${CARDNUM(s[0])}</span><div class="mq">${BATTLE_ONLY.includes(s[0]) ? '🛍️' : SEASON_ONLY.includes(s[0]) ? '🌙' : '?'}</div>${BATTLE_ONLY.includes(s[0]) ? `<div class="mhint">${L('A la botiga', 'En la tienda')}</div>` : SEASON_ONLY.includes(s[0]) ? `<div class="mhint">${L('Ruta de temporada', 'Ruta de temporada')}</div>` : ''}</div></div>`).join('')}</div>`).join('')}`, 'album');
 }
 function stickerModal(id) {
   const s = STK.find(x => x[0] === id);
