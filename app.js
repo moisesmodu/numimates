@@ -232,6 +232,7 @@ function go(v) {
   VIEW = v;
   ({ home: renderHome, train: renderTrain, league: () => renderLeague(), album: () => renderAlbum(), shop: renderShop, badges: () => renderAlbum('medals'), profile: renderProfile, profiles: renderProfiles, battles: () => renderBattles(), season: () => renderSeason(), onboard: () => onb(0) }[v] || renderHome)();
   if (v !== 'home') window.scrollTo(0, 0);
+  else setTimeout(classeLink, 500);
 }
 const NAV = () => [['home', '🗺️', L('Camí', 'Camino')], ['train', '🎯', L('Entrena', 'Entrena')], ['album', '🎴', L('Àlbum', 'Álbum')], ['shop', '🛍️', L('Botiga', 'Tienda')], ['profile', '👤', L('Perfil', 'Perfil')]];
 const nav = t => `<nav class="nav">${NAV().map(([v, i, l]) => `<button class="${v === t ? 'on' : ''}" onclick="go('${v}')"><span class="ni">${i}</span><span>${l}</span></button>`).join('')}</nav>`;
@@ -1065,6 +1066,15 @@ async function classeJoin() {
     if (!r.grup) { $('#aerr').textContent = L('Aquest codi no existeix. Revisa-ho amb el teu docent.', 'Ese código no existe. Revísalo con tu docente.'); return; }
     P.classe = r.grup; save(); closeModal(); SFX.win(); toast(L(`Ja ets a ${r.grup.nom}!`, `¡Ya estás en ${r.grup.nom}!`)); renderProfile();
   } catch (e) { $('#aerr').textContent = ERR(); }
+}
+// enllaç o QR del docent (?classe=AULA-XXXX): obre el formulari amb el codi ja escrit quan l'alumne ja té compte
+(() => { try { const q = new URLSearchParams(location.search).get('classe'); if (q && /^AULA-[A-Z0-9]{4}$/i.test(q)) sessionStorage.setItem('numi-classe', q.toUpperCase()); if (q) history.replaceState(null, '', location.pathname); } catch (e) { } })();
+function classeLink() {
+  let c = null; try { c = sessionStorage.getItem('numi-classe'); } catch (e) { }
+  if (!c || !P || !P.code || VIEW !== 'home' || $('.modal-bg')) return;
+  try { sessionStorage.removeItem('numi-classe'); } catch (e) { }
+  if (P.classe) return toast(L(`Ja ets a la classe ${P.classe.nom}.`, `Ya estás en la clase ${P.classe.nom}.`));
+  classeModal(); setTimeout(() => { const i = $('#aula'); if (i) i.value = c; }, 60);
 }
 function classeLeave() {
   ask(L('Segur que vols sortir de la classe? El teu docent ja no veurà el teu progrés.', '¿Seguro que quieres salir de la clase? Tu docente ya no verá tu progreso.'), L('SURT', 'SALIR'), L('CANCEL·LA', 'CANCELAR'), async () => {
