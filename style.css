@@ -945,7 +945,7 @@ img.ic{display:inline-block;width:1.2em;height:1.2em;object-fit:contain;vertical
 }
 @media (min-width:1100px){
   .nav{width:232px;align-items:stretch;padding:22px 16px;gap:4px}
-  .nav::before{content:"Numi";display:block;height:52px;margin:0 6px 18px;padding-left:54px;background:url(img/chars/numi-happy.webp) left center/46px no-repeat;font:900 30px/52px Nunito,sans-serif;letter-spacing:-.02em;color:var(--pri)}
+  .nav::before{content:"";display:block;height:58px;margin:0 6px 16px;background:url(img/brand/logo-horitzontal.svg) left center/contain no-repeat}
   .nav button{width:auto;flex-direction:row;justify-content:flex-start;gap:14px;padding:10px 14px;font-size:15px;letter-spacing:.02em}
   .nav .ni{font-size:28px}
   #app:has(> .nav){padding-left:232px}
@@ -996,3 +996,7 @@ img.ic{display:inline-block;width:1.2em;height:1.2em;object-fit:contain;vertical
 .lfb{margin:8px 0 0;padding:10px 12px;border-radius:12px;line-height:1.45;font-size:15px}
 .lfb.ok{background:var(--ok-bg);color:#1E5E35}.lfb.ko{background:#FFF1F1;color:#8A2E33}
 .ldots i{cursor:pointer}
+
+/* Logo Numi Mates */
+.onb-logo{display:block;width:min(220px,60vw);height:auto;margin:0 auto 6px}
+.footlogo{height:34px;width:auto;opacity:.85;vertical-align:middle}

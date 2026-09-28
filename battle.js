@@ -93,7 +93,7 @@ function duelRefund(st) {
 async function openBattle(bcode) { let st; try { st = await bApi('state', { bcode }); } catch (e) { return toast(BERR()); } if (st.error) return toast(BERR(st.error)); scrLobby(st); }
 function shareBattle(code, kind) {
   const url = location.origin + '/?b=' + code;
-  const t = kind === 'duel' ? L(`T'a atreveixes? Et repto a un duel de mates a Mates amb Numi! Codi: ${code}`, '¿Te atreves? ¡Te reto a un duelo de mates en Mates amb Numi! Código: ' + code) : L(`Partida de mates a Mates amb Numi! Entra amb el codi ${code}`, `¡Partida de mates en Mates amb Numi! Entra con el código ${code}`);
+  const t = kind === 'duel' ? L(`T'hi atreveixes? Et repto a un duel de mates a Numi Mates! Codi: ${code}`, '¿Te atreves? ¡Te reto a un duelo de mates en Numi Mates! Código: ' + code) : L(`Partida de mates a Numi Mates! Entra amb el codi ${code}`, `¡Partida de mates en Numi Mates! Entra con el código ${code}`);
   if (navigator.share) navigator.share({ text: t, url }).catch(() => { });
   else window.open('https://wa.me/?text=' + encodeURIComponent(t + ' ' + url), '_blank', 'noopener');
 }

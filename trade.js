@@ -56,7 +56,7 @@ async function createTrade(card) {
   SFX.coin(); shareTrade(t.code); renderAlbum('trade');
 }
 function shareTrade(code) {
-  const t = L(`Vols canviar cromos a Mates amb Numi? Codi: ${code}`, `¿Quieres cambiar cartas en Mates amb Numi? Código: ${code}`), url = location.origin + '/?t=' + code;
+  const t = L(`Vols canviar cromos a Numi Mates? Codi: ${code}`, `¿Quieres cambiar cartas en Numi Mates? Código: ${code}`), url = location.origin + '/?t=' + code;
   if (navigator.share) navigator.share({ text: t, url }).catch(() => { }); else { try { navigator.clipboard.writeText(t + ' ' + url); toast(L('Codi copiat!', '¡Código copiado!')); } catch (e) { } }
 }
 async function openTrade(raw) {

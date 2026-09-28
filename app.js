@@ -1049,7 +1049,7 @@ function renderProfile() {
     <div class="set"><span>${L('Objectiu diari', 'Objetivo diario')}</span><div class="seg">${[10, 20, 30, 50].map(g => `<button class="${P.goal === g ? 'on' : ''}" onclick="P.goal=${g};save();renderProfile()">${g} XP</button>`).join('')}</div></div>
     <div class="set"><span>${L('Sons', 'Sonidos')}</span><button class="tog ${P.sound ? 'on' : ''}" onclick="P.sound=!P.sound;save();renderProfile()" aria-label="${L('Sons', 'Sonidos')}"><i></i></button></div>
     <div class="row2 pbtns"><button class="btn ghost" onclick="go('profiles')">${L("CANVIA D'ALUMNE", 'CAMBIAR DE ALUMNO')}</button><button class="btn ghost redt" onclick="resetP()">${L('ESBORRA EL PROGRÉS', 'BORRAR EL PROGRESO')}</button></div>
-    <p class="foot">Mates amb Numi · Algorithmics Lleida</p>`, 'profile');
+    <p class="foot"><img src="img/brand/logo-horitzontal.svg" alt="Numi Mates" class="footlogo"></p>`, 'profile');
 }
 function resetP() {
   ask(L(`Segur que vols esborrar tot el progrés de <b>${esc(P.name)}</b>? No es pot desfer.`, `¿Seguro que quieres borrar todo el progreso de <b>${esc(P.name)}</b>? No se puede deshacer.`), L('ESBORRA', 'BORRAR'), L('CANCEL·LA', 'CANCELAR'), async () => {
@@ -1136,7 +1136,7 @@ function onbShell(step, inner, back = true) {
 function onb(step) {
   VIEW = 'onboard';
   if (step === 0) {
-    onbShell(0, `<div class="onb-char tapme">${charSVG('numi', 'happy')}</div>
+    onbShell(0, `<img class="onb-logo" src="img/brand/logo-horitzontal.svg" alt="Numi Mates"><div class="onb-char tapme">${charSVG('numi', 'happy')}</div>
       <div class="bubble big">${L("Hola! Soc en <b>Numi</b>. T'acompanyaré pas a pas perquè les mates et surtin rodones. <b>Com et dius?</b>", '¡Hola! Soy <b>Numi</b>. Te acompañaré paso a paso para que las mates te salgan redondas. <b>¿Cómo te llamas?</b>')}</div>
       <input id="nm" class="nm" maxlength="16" placeholder="${L('El teu nom', 'Tu nombre')}" autocomplete="off" enterkeyhint="go" value="${esc(ONB.name || '')}">
       <button class="btn big" onclick="onbName()">${L('SEGÜENT', 'SIGUIENTE')}</button>

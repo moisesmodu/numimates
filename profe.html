@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Administración · Mates amb Numi</title>
+<title>Administración · Numi Mates</title>
 <meta name="robots" content="noindex">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
@@ -52,7 +52,7 @@ const alive = r => r.last_day && days(r.last_day) <= 1;
 function weekId(d = new Date()) { const t = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate())), day = t.getUTCDay() || 7; t.setUTCDate(t.getUTCDate() + 4 - day); const y = t.getUTCFullYear(), w = Math.ceil(((t - Date.UTC(y, 0, 1)) / 864e5 + 1) / 7); return `${y}-W${String(w).padStart(2, '0')}`; }
 const pass = () => sessionStorage.getItem('pp');
 function login(err) {
-  root.innerHTML = `<div class="login"><h1>Administración</h1><p class="lead">Mates amb Numi</p><input id="pw" type="password" placeholder="Contraseña" autocomplete="current-password"><div class="err">${err || ''}</div><button onclick="go()">ENTRAR</button></div>`;
+  root.innerHTML = `<div class="login"><h1>Administración</h1><p class="lead">Numi Mates</p><input id="pw" type="password" placeholder="Contraseña" autocomplete="current-password"><div class="err">${err || ''}</div><button onclick="go()">ENTRAR</button></div>`;
   $('#pw').focus(); $('#pw').addEventListener('keydown', e => { if (e.key === 'Enter') go(); });
 }
 async function go(p) {
@@ -102,7 +102,7 @@ function render() {
   const [k, dir] = SORT; rows.sort((a, b) => (a[k] > b[k] ? 1 : a[k] < b[k] ? -1 : 0) * dir);
   const act_ = ROWS.filter(alive).length, prem = ROWS.reduce((n, r) => n + (r.srw || []).length, 0), ev = ROWS.filter(r => r.evo.length).length;
   const th = (key, label) => `<th onclick="SORT=['${key}',SORT[0]==='${key}'?-SORT[1]:-1];render()">${label}${SORT[0] === key ? (SORT[1] < 0 ? ' ↓' : ' ↑') : ''}</th>`;
-  root.innerHTML = `<h1>Administración · Mates amb Numi</h1><p class="lead">Ranking de rachas y progreso de cada alumno. Los premios de racha son los que el alumno ha ganado en la app: puedes premiarlos también en la academia.</p>
+  root.innerHTML = `<h1>Administración · Numi Mates</h1><p class="lead">Ranking de rachas y progreso de cada alumno. Los premios de racha son los que el alumno ha ganado en la app: puedes premiarlos también en la academia.</p>
   <div class="kpis"><div class="kpi"><b>${ROWS.length}</b><span>alumnos registrados</span></div><div class="kpi"><b class="fire">${act_}</b><span>con la racha encendida</span></div><div class="kpi"><b>${Math.max(0, ...ROWS.map(r => r.best))}</b><span>mejor racha (días)</span></div><div class="kpi"><b>${prem}</b><span>premios de racha ganados</span></div><div class="kpi"><b>${ev}</b><span>han hecho prueba de evolución</span></div></div>
   <div class="bar"><select id="fc" onchange="render()"><option value="">Todos los cursos</option>${CUR.map((n, i) => `<option value="${i}" ${f === String(i) ? 'selected' : ''}>${n}</option>`).join('')}</select>
   <input id="q" placeholder="Buscar nombre, usuario o código" value="${esc(q)}" oninput="render()"><button class="ghost" onclick="csv()">Descargar CSV</button><button class="ghost" onclick="go(pass())">Actualizar</button></div>
