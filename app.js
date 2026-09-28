@@ -976,7 +976,7 @@ function renderShop() {
   }).join('');
   app.innerHTML = shell(`<h1 class="ph1">${L('Botiga', 'Tienda')}</h1><p class="lead">${L("Guanya diamants fent lliçons i canvia'ls per companys i accessoris. Els marcats amb 🔥 només es guanyen amb les ratxes!", 'Gana diamantes haciendo lecciones y cámbialos por compañeros y accesorios. ¡Los marcados con 🔥 solo se ganan con las rachas!')}</p>
     <h2 class="h2">${L('Companys', 'Compañeros')}</h2><div class="grid">${comp}</div>
-    <h2 class="h2">${L('Accessoris', 'Accesorios')} <small>${L('per al teu company', 'para tu compañero')}</small></h2><div class="grid">${acc}</div>
+    <h2 class="h2">${L('Accessoris', 'Accesorios')} <small>${L('per al teu company · un a la vegada', 'para tu compañero · uno a la vez')}</small></h2><div class="grid">${acc}</div>
     <h2 class="h2">${L('Carta especial', 'Carta especial')}</h2><div class="item wide"><div class="ipic nikepic">${stickerHTML(cardById('nike'))}</div><div><div class="iname">${L('Nike, la deessa de la victòria', 'Nike, la diosa de la victoria')}</div><div class="idesc">${L(`La carta dels campions de les batalles. ${P.album && P.album.nike ? `En tens ${P.album.nike}.` : 'Encara no la tens!'}`, `La carta de los campeones de las batallas. ${P.album && P.album.nike ? `Tienes ${P.album.nike}.` : '¡Todavía no la tienes!'}`)}</div></div>
     <button class="btn sm gold" ${P.gems < NIKE_PRICE ? 'disabled' : ''} onclick="buyNike()"><i class="ci">${ICON.gem}</i>${NIKE_PRICE}</button></div>
     <h2 class="h2">${L('Ajudes', 'Ayudas')}</h2><div class="item wide"><div class="ipic big-emoji">🧊</div><div><div class="iname">${L('Protector de ratxa', 'Protector de racha')}</div><div class="idesc">${L(`Si un dia no pots practicar, la ratxa no s'apaga. En tens ${P.freeze} de 2.`, `Si un día no puedes practicar, la racha no se apaga. Tienes ${P.freeze} de 2.`)}</div></div>
@@ -992,11 +992,12 @@ function buyChar(id) {
 function choose(id) { P.companion = id; save(); SFX.tap(); renderShop(); }
 function buyAcc(id) {
   const a = ACC[id]; if (a.price == null || P.gems < a.price || P.accOwned.includes(id)) return;
-  P.gems -= a.price; P.accOwned.push(id); P.acc[a.slot] = id;
+  P.gems -= a.price; P.accOwned.push(id); P.acc = { [a.slot]: id };
   const nb = checkBadges(); save(); SFX.coin(); confetti(60); renderShop();
   toast(`${tx(a.name)} ✨`); nb.forEach(b => setTimeout(() => toast(`${b[1]} ${L('Nova medalla', 'Nueva medalla')}: <b>${tx(b[2])}</b> (+10 💎)`), 900));
 }
-function toggleAcc(id) { const s = ACC[id].slot; if (P.acc[s] === id) delete P.acc[s]; else P.acc[s] = id; save(); SFX.tap(); renderShop(); }
+function toggleAcc(id) { const s = ACC[id].slot; if (P.acc[s] === id) delete P.acc[s]; else P.acc = { [s]: id }; // un accessori a la vegada
+  save(); SFX.tap(); renderShop(); }
 const NIKE_PRICE = 250;
 function buyNike() { if (P.gems < NIKE_PRICE) return; P.gems -= NIKE_PRICE; albumFix(); const dup = !!P.album.nike; P.album.nike = (P.album.nike || 0) + 1; save(); SFX.coin(); FLOW = [() => scrPack([{ s: cardById('nike'), dup }])]; FLOW.back = 'shop'; flowNext(); }
 function buyFreeze() { if (P.gems < 50 || P.freeze >= 2) return; P.gems -= 50; P.freeze++; save(); SFX.coin(); renderShop(); toast(L('🧊 Protector de ratxa preparat!', '🧊 ¡Protector de racha listo!')); }
