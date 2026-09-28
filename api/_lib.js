@@ -18,3 +18,45 @@ export function checkPass(p, h) {
   return a.length === b.length && timingSafeEqual(a, b);
 }
 export const slow = () => new Promise(r => setTimeout(r, 700));
+
+// --- Límit d'intents fallits (codis d'alumne, contrasenyes, codis de classe) ---
+// Es compta per IP i, si n'hi ha, també per compte. Una escola surt a internet amb una sola IP,
+// per això els límits per IP són generosos i els de compte, més estrictes.
+export const ipOf = req => String(req.headers['x-real-ip'] || String(req.headers['x-forwarded-for'] || '').split(',')[0] || 'local').trim().slice(0, 64);
+export async function blocked(req, b, max, mins = 15, acct = null, maxAcct = Math.ceil(max / 2)) {
+  const r = await sql`SELECT count(*) FILTER (WHERE k = ${'ip:' + ipOf(req)})::int AS ip, count(*) FILTER (WHERE k = ${'ac:' + acct})::int AS ac
+    FROM mates.fails WHERE b = ${b} AND t > now() - make_interval(mins => ${mins}) AND k IN (${'ip:' + ipOf(req)}, ${'ac:' + acct})`;
+  return r[0].ip >= max || (acct != null && r[0].ac >= maxAcct);
+}
+export async function note(req, b) { await sql`INSERT INTO mates.fails (k, b) VALUES (${'ip:' + ipOf(req)}, ${b})`; }
+export async function fail(req, b, acct = null) {
+  await note(req, b);
+  if (acct != null) await sql`INSERT INTO mates.fails (k, b) VALUES (${'ac:' + acct}, ${b})`;
+  if (Math.random() < 0.03) await sql`DELETE FROM mates.fails WHERE t < now() - interval '1 day'`;
+  await slow();
+}
+export const tooMany = res => ok(res, { error: 'massa' }, 429);
+
+// --- Estat de l'alumne: el guardem tal com arriba, però els camps que es pinten al panell o a l'app
+// han de tenir el tipus correcte (números com a números, dates com a dates). Tot el que no ho compleixi es descarta.
+const num = v => (typeof v === 'number' && Number.isFinite(v)) ? v : (typeof v === 'string' && v !== '' && Number.isFinite(+v)) ? +v : undefined;
+const isObj = v => v && typeof v === 'object' && !Array.isArray(v);
+const day = v => (typeof v === 'string' && /^\d{4}-\d{2}-\d{2}/.test(v)) ? v.slice(0, 10) : undefined;
+export function cleanState(s) {
+  for (const k of ['xp', 'gems', 'streak', 'best', 'freeze', 'goal', 'course', 'baseCourse', 'maxCourse']) if (k in s) { const n = num(s[k]); if (n === undefined) delete s[k]; else s[k] = n; }
+  if ('lastDay' in s && s.lastDay !== null && !day(s.lastDay)) delete s.lastDay;
+  if (typeof s.name === 'string') s.name = s.name.slice(0, 30);
+  if ('days' in s) s.days = Array.isArray(s.days) ? s.days.map(day).filter(Boolean).slice(-400) : [];
+  if ('tests' in s) s.tests = Array.isArray(s.tests) ? s.tests.filter(isObj).filter(t => num(t.pct) !== undefined).slice(-60)
+    .map(t => ({ ...t, date: day(t.date) || null, pct: Math.round(num(t.pct)), ok: num(t.ok), n: num(t.n), course: num(t.course), kind: t.kind === 'evo' ? 'evo' : 'inicial' })) : [];
+  if ('exams' in s) s.exams = isObj(s.exams) ? Object.fromEntries(Object.entries(s.exams).filter(([k, x]) => /^c\d{1,2}-\d{1,2}$/.test(k) && isObj(x))
+    .map(([k, x]) => [k, { ...x, best: num(x.best) ?? 0, last: num(x.last) ?? 0, tries: num(x.tries) ?? 0, d: day(x.d) || null }])) : {};
+  if (isObj(s.stats)) {
+    for (const k of ['answers', 'correct', 'perfect', 'lessons', 'trains', 'combo', 'bestCombo', 'sprintBest', 'games', 'bwins']) if (k in s.stats) s.stats[k] = num(s.stats[k]) ?? 0;
+    if ('sk' in s.stats) s.stats.sk = isObj(s.stats.sk) ? Object.fromEntries(Object.entries(s.stats.sk).filter(([, v]) => Array.isArray(v)).map(([k, v]) => [k.slice(0, 40), [num(v[0]) ?? 0, num(v[1]) ?? 0]])) : {};
+  }
+  if (isObj(s.week)) { s.week.xp = num(s.week.xp) ?? 0; if (typeof s.week.id !== 'string' || !/^\d{4}-W\d{2}$/.test(s.week.id)) delete s.week.id; }
+  if (isObj(s.school) && 'ui' in s.school) s.school.ui = num(s.school.ui) ?? 0;
+  if (isObj(s.daily)) s.daily.xp = num(s.daily.xp) ?? 0;
+  return s;
+}

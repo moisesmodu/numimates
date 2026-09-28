@@ -1,16 +1,21 @@
-import { sql, body, ok, validPass, hashPass, checkPass, slow } from './_lib.js';
-import { makeToken, who } from './_auth.js';
+import { sql, body, ok, validPass, hashPass, checkPass, blocked, fail, tooMany } from './_lib.js';
+import { makeToken, adminToken, adminPass, who } from './_auth.js';
 // Entrada dels docents al panell (correu + contrasenya) i canvi de la pròpia contrasenya.
 export default async function handler(req, res) {
   if (req.method !== 'POST') return ok(res, { error: 'method' }, 405);
   const b = body(req);
   if (b.action === 'login') {
     // es pot entrar amb el correu o amb el nom d'usuari
-    const id = String(b.email || b.usuari || '').trim().toLowerCase();
+    const id = String(b.email || b.usuari || '').trim().toLowerCase().slice(0, 160);
+    if (await blocked(req, 'docent', 20, 15, id)) return tooMany(res);
     const d = id && (await sql`SELECT id, nom, pass_hash, actiu FROM mates.docents WHERE email = ${id} OR usuari = ${id}`)[0];
-    if (!d || !d.actiu || !checkPass(String(b.password || ''), d.pass_hash)) { await slow(); return ok(res, { error: 'credencials' }, 401); }
+    if (!d || !d.actiu || !checkPass(String(b.password || ''), d.pass_hash)) { await fail(req, 'docent', id); return ok(res, { error: 'credencials' }, 401); }
     await sql`UPDATE mates.docents SET last_login = now() WHERE id = ${d.id}`;
     return ok(res, { token: makeToken(d), nom: d.nom });
+  }
+  if (b.action === 'admin') {
+    if (!(await adminPass(req, String(b.password || '')))) { await new Promise(r => setTimeout(r, 700)); return ok(res, { error: 'credencials' }, 401); }
+    return ok(res, { token: adminToken() });
   }
   if (b.action === 'setpass') {
     const me = await who(req); if (!me || !me.docent) return ok(res, { error: 'sessio' }, 401);

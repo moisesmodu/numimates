@@ -21,6 +21,11 @@ function freshProgress() {
 function migrate(p) {
   const f = freshProgress();
   for (const k in f) if (p[k] === undefined) p[k] = f[k];
+  // l'estat pot venir del núvol: els números han de ser números (i no text que es pintaria com a HTML)
+  for (const k of ['xp', 'gems', 'streak', 'best', 'freeze']) if (typeof p[k] !== 'number' || !Number.isFinite(p[k])) p[k] = Number.isFinite(+p[k]) ? +p[k] : f[k];
+  for (const k of ['goal', 'course', 'baseCourse', 'maxCourse']) if (p[k] !== undefined && (typeof p[k] !== 'number' || !Number.isFinite(p[k]))) p[k] = Number.isFinite(+p[k]) && p[k] !== '' ? +p[k] : undefined;
+  if (typeof p.name === 'string') p.name = p.name.slice(0, 30);
+  if (!p.stats || typeof p.stats !== 'object') p.stats = f.stats;
   if (!p.cxp) p.cxp = {};
   if (!p.stats.bests) p.stats.bests = { sprint: p.stats.sprintBest || 0 };
   if (p.stats.games === undefined) p.stats.games = 0;
@@ -28,6 +33,8 @@ function migrate(p) {
   if (p.baseCourse === undefined) p.baseCourse = p.course;
   if (p.maxCourse === undefined) p.maxCourse = Math.max(p.course, p.baseCourse);
   if (!p.lang) p.lang = DB.lang;
+  if (!(p.goal > 0)) p.goal = 20;
+  if (p.sound === undefined) p.sound = true;
   for (let i = 1; i <= 8; i++) if (p.prog['u' + i]) { p.prog['c4-' + i] = p.prog['u' + i]; delete p.prog['u' + i]; }
   if (!p.m3) {
     Object.values(p.prog).forEach(x => { const s = x.stars, n = s.length; if (n >= 31 || n < 6) return; const ns = Array(31).fill(0);
@@ -1063,8 +1070,8 @@ async function classeJoin() {
   $('#aerr').textContent = '…';
   try {
     const r = await api('classe', { code: P.code, classe: v });
-    if (!r.grup) { $('#aerr').textContent = L('Aquest codi no existeix. Revisa-ho amb el teu docent.', 'Ese código no existe. Revísalo con tu docente.'); return; }
-    P.classe = r.grup; save(); closeModal(); SFX.win(); toast(L(`Ja ets a ${r.grup.nom}!`, `¡Ya estás en ${r.grup.nom}!`)); renderProfile();
+    if (!r.grup) { $('#aerr').textContent = r.status === 429 ? ERR('massa') : L('Aquest codi no existeix. Revisa-ho amb el teu docent.', 'Ese código no existe. Revísalo con tu docente.'); return; }
+    P.classe = r.grup; save(); closeModal(); SFX.win(); toast(L(`Ja ets a ${esc(r.grup.nom)}!`, `¡Ya estás en ${esc(r.grup.nom)}!`)); renderProfile();
   } catch (e) { $('#aerr').textContent = ERR(); }
 }
 // enllaç o QR del docent (?classe=AULA-XXXX): obre el formulari amb el codi ja escrit quan l'alumne ja té compte
@@ -1073,7 +1080,7 @@ function classeLink() {
   let c = null; try { c = sessionStorage.getItem('numi-classe'); } catch (e) { }
   if (!c || !P || !P.code || VIEW !== 'home' || $('.modal-bg')) return;
   try { sessionStorage.removeItem('numi-classe'); } catch (e) { }
-  if (P.classe) return toast(L(`Ja ets a la classe ${P.classe.nom}.`, `Ya estás en la clase ${P.classe.nom}.`));
+  if (P.classe) return toast(L(`Ja ets a la classe ${esc(P.classe.nom)}.`, `Ya estás en la clase ${esc(P.classe.nom)}.`));
   classeModal(); setTimeout(() => { const i = $('#aula'); if (i) i.value = c; }, 60);
 }
 function classeLeave() {
@@ -1094,14 +1101,15 @@ function resetP() {
   });
 }
 function slugName(n) { return (n.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]/g, '') || 'alumne').slice(0, 14) + ri(10, 99); }
-const ERR = e => ({ 'usuari-ocupat': L('Aquest usuari ja existeix. Prova\'n un altre!', 'Ese usuario ya existe. ¡Prueba otro!'), 'usuari-format': L('L\'usuari ha de tenir de 3 a 20 lletres o números (sense espais).', 'El usuario debe tener de 3 a 20 letras o números (sin espacios).'), 'contrasenya-format': L('La contrasenya ha de tenir almenys 4 caràcters.', 'La contraseña debe tener al menos 4 caracteres.'), 'credencials': L('Usuari o contrasenya incorrectes.', 'Usuario o contraseña incorrectos.') })[e] || L('No hi ha connexió. Torna-ho a provar.', 'No hay conexión. Vuelve a intentarlo.');
+const ERR = e => ({ 'usuari-ocupat': L('Aquest usuari ja existeix. Prova\'n un altre!', 'Ese usuario ya existe. ¡Prueba otro!'), 'usuari-format': L('L\'usuari ha de tenir de 3 a 20 lletres o números (sense espais).', 'El usuario debe tener de 3 a 20 letras o números (sin espacios).'), 'contrasenya-format': L('La contrasenya ha de tenir almenys 4 caràcters.', 'La contraseña debe tener al menos 4 caracteres.'), 'credencials': L('Usuari o contrasenya incorrectes.', 'Usuario o contraseña incorrectos.'), 'massa': L('Massa intents seguits. Espera uns minuts i torna-ho a provar.', 'Demasiados intentos seguidos. Espera unos minutos y vuelve a intentarlo.'), 'contrasenya-actual': L('La contrasenya actual no és correcta.', 'La contraseña actual no es correcta.') })[e] || L('No hi ha connexió. Torna-ho a provar.', 'No hay conexión. Vuelve a intentarlo.');
 const passField = (id, ph) => `<div class="passf"><input id="${id}" class="nm" type="password" maxlength="60" placeholder="${ph}" autocomplete="new-password"><button type="button" class="eye" onclick="const i=document.getElementById('${id}');i.type=i.type==='password'?'text':'password'" aria-label="👁">👁</button></div>`;
 function accountModal() {
   if (!P.code) return toast(L('Primer cal connexió a internet.', 'Primero hace falta conexión a internet.'));
   const has = !!P.username;
   modal(`<div class="sheet card cent"><h3>${has ? L('Canvia la contrasenya', 'Cambia la contraseña') : L('Crea el teu usuari', 'Crea tu usuario')}</h3>
     <input id="au" class="nm" maxlength="20" placeholder="${L('Usuari', 'Usuario')}" autocomplete="username" autocapitalize="none" value="${esc(P.username || slugName(P.name))}" ${has ? 'readonly' : ''}>
-    ${passField('ap', has ? L('Contrasenya nova', 'Contraseña nueva') : L('Contrasenya', 'Contraseña'))}<div id="aerr" class="err"></div>
+    ${has ? passField('ao', L('Contrasenya actual', 'Contraseña actual')) : ''}${passField('ap', has ? L('Contrasenya nova', 'Contraseña nueva') : L('Contrasenya', 'Contraseña'))}<div id="aerr" class="err"></div>
+    ${has ? `<p class="mut" style="font-size:13px;margin:0">${L("Si no la recordes, el teu docent te la pot canviar.", 'Si no la recuerdas, tu docente te la puede cambiar.')}</p>` : ''}
     <div class="row2"><button class="btn ghost" onclick="closeModal()">${L('TORNA', 'VOLVER')}</button><button class="btn" onclick="saveAccount()">${L('DESA', 'GUARDAR')}</button></div></div>`, true);
 }
 async function saveAccount() {
@@ -1110,7 +1118,7 @@ async function saveAccount() {
   if (p.length < 4) return $('#aerr').textContent = ERR('contrasenya-format');
   $('#aerr').textContent = '…';
   try {
-    const r = await api('account', { code: P.code, username: u, password: p });
+    const r = await api('account', { code: P.code, username: u, password: p, old: $('#ao') ? $('#ao').value : undefined });
     if (r.ok) { P.username = u; saveLocal(); closeModal(); toast(L('✅ Compte desat!', '✅ ¡Cuenta guardada!')); renderProfile(); }
     else $('#aerr').textContent = ERR(r.error);
   } catch (e) { $('#aerr').textContent = ERR(); }
@@ -1149,7 +1157,7 @@ async function doLogin(withCode) {
   $('#lerr').textContent = '…';
   try {
     const r = await api('login', data);
-    if (!r.state) { $('#lerr').textContent = withCode ? L('No trobem aquest codi. Revisa les lletres i els números.', 'No encontramos ese código. Revisa las letras y los números.') : ERR('credencials'); return; }
+    if (!r.state) { $('#lerr').textContent = r.status === 429 ? ERR('massa') : withCode ? L('No trobem aquest codi. Revisa les lletres i els números.', 'No encontramos ese código. Revisa las letras y los números.') : ERR('credencials'); return; }
     const code = r.code || data.code, ex = Object.values(DB.profiles).find(p => p.code === code);
     if (ex) { closeModal(); return switchP(ex.id); }
     const id = 'p' + Date.now().toString(36);

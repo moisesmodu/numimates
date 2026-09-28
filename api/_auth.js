@@ -1,22 +1,33 @@
 import { createHmac, timingSafeEqual } from 'crypto';
-import { sql } from './_lib.js';
+import { sql, blocked, fail } from './_lib.js';
 // Qui fa la petició al panell:
-//  · administrador (el Moisés): capçalera x-profe = PROFE_PASS → ho veu i ho gestiona tot
+//  · administrador (el Moisés): entra amb PROFE_PASS i rep un testimoni signat d'administrador (8 h) → ho veu i ho gestiona tot.
+//    La contrasenya no es guarda al navegador. (La capçalera x-profe = PROFE_PASS continua servint per a scripts.)
+//    També pot ser un docent amb rol «admin» (entra amb usuari i contrasenya com els altres).
 //  · docent: capçalera x-docent = testimoni signat (12 h) → només els seus grups (o tot el centre si és admin de centre)
 const same = (a, b) => { const x = Buffer.from(String(a)), y = Buffer.from(String(b)); return x.length === y.length && timingSafeEqual(x, y); };
 const b64 = s => Buffer.from(s).toString('base64url');
 const sign = s => createHmac('sha256', process.env.SESSION_SECRET || '').update(s).digest('base64url');
 export function makeToken(d) { const p = b64(JSON.stringify({ id: d.id, exp: Date.now() + 12 * 3600e3 })); return p + '.' + sign(p); }
+export function adminToken() { const p = b64(JSON.stringify({ adm: 1, exp: Date.now() + 8 * 3600e3 })); return p + '.' + sign(p); }
+// comprova la contrasenya d'administrador amb límit d'intents
+export async function adminPass(req, p) {
+  if (!p || !process.env.PROFE_PASS) return false;
+  if (await blocked(req, 'admin', 6, 30, 'admin', 40)) return false;
+  if (same(p, process.env.PROFE_PASS)) return true;
+  await fail(req, 'admin', 'admin'); return false;
+}
 function readToken(t) {
   const [p, s] = String(t || '').split('.'); if (!p || !s || !process.env.SESSION_SECRET || !same(s, sign(p))) return null;
   try { const d = JSON.parse(Buffer.from(p, 'base64url').toString()); return d.exp > Date.now() ? d : null; } catch { return null; }
 }
 export async function who(req) {
   const pp = req.headers['x-profe'];
-  if (pp && process.env.PROFE_PASS && same(pp, process.env.PROFE_PASS)) return { admin: true };
+  if (pp) return (await adminPass(req, pp)) ? { admin: true } : null;
   const d = readToken(req.headers['x-docent']); if (!d) return null;
+  if (d.adm === 1) return { admin: true };
   const r = (await sql`SELECT d.id, d.nom, d.email, d.rol, d.centre_id, c.nom AS centre FROM mates.docents d LEFT JOIN mates.centres c ON c.id = d.centre_id WHERE d.id = ${d.id} AND d.actiu`)[0];
-  return r ? { docent: r } : null;
+  return !r ? null : r.rol === 'admin' ? { admin: true, docent: r } : { docent: r };
 }
 // grups que pot veure un docent: els seus, o tots els del centre si és admin de centre
 export async function groupsOf(me) {

@@ -69,7 +69,8 @@ export default async function handler(req, res) {
       const usuari = (String(b.usuari || '').trim().toLowerCase() || email.split('@')[0]).replace(/[^a-z0-9._-]/g, '').slice(0, 30) || null;
       if (!nom || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || !centre) return ok(res, { error: 'dades' }, 400);
       try {
-        if (b.id) { await sql`UPDATE mates.docents SET nom = ${nom}, email = ${email}, usuari = ${usuari}, rol = ${rol}, centre_id = ${centre}, actiu = ${b.actiu !== false} WHERE id = ${+b.id}`; return ok(res, { ok: true }); }
+        // el rol «admin» no es pot posar ni treure des del panell (i un administrador no es pot desactivar)
+        if (b.id) { await sql`UPDATE mates.docents SET nom = ${nom}, email = ${email}, usuari = ${usuari}, rol = CASE WHEN rol = 'admin' THEN 'admin' ELSE ${rol} END, centre_id = ${centre}, actiu = (rol = 'admin' OR ${b.actiu !== false}) WHERE id = ${+b.id}`; return ok(res, { ok: true }); }
         const p = tmpPass();
         const r = await sql`INSERT INTO mates.docents (nom, email, usuari, rol, centre_id, pass_hash) VALUES (${nom}, ${email}, ${usuari}, ${rol}, ${centre}, ${hashPass(p)}) ON CONFLICT (email) DO NOTHING RETURNING id, usuari`;
         return r.length ? ok(res, { ok: true, password: p, usuari: r[0].usuari }) : ok(res, { error: 'ja existeix' }, 409);
@@ -101,5 +102,5 @@ export default async function handler(req, res) {
   try { contacts = await sql`SELECT nom, centre, mail, cursos, lang, created_at FROM mates.contactes ORDER BY created_at DESC LIMIT 100`; } catch (e) { /* la taula es crea amb la primera petició del web */ }
   const centres = await sql`SELECT c.*, (SELECT count(*)::int FROM mates.alumnes a JOIN mates.grups g ON g.id = a.grup_id WHERE g.centre_id = c.id AND a.active) AS alumnes FROM mates.centres c ORDER BY c.nom`;
   const docents = await sql`SELECT id, nom, email, usuari, rol, centre_id, actiu, last_login FROM mates.docents ORDER BY nom`;
-  return ok(res, { admin: true, rows, battles, trades, contacts, centres, docents, grups: groups });
+  return ok(res, { admin: true, me: me.docent || null, rows, battles, trades, contacts, centres, docents, grups: groups });
 }

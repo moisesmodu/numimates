@@ -1,4 +1,4 @@
-import { sql, body, ok } from './_lib.js';
+import { sql, body, ok, blocked, note, tooMany } from './_lib.js';
 // Peticions de demostració del web numimates.com (formulari «Demana una demostració»).
 // Es guarden a mates.contactes i es veuen al panell /profe.html.
 const ORIGINS = ['https://numimates.com', 'https://www.numimates.com', 'http://localhost:5180'];
@@ -13,7 +13,9 @@ export default async function handler(req, res) {
   if (req.method !== 'POST') return ok(res, { error: 'method' }, 405);
   const b = body(req);
   const f = { nom: clip(b.nom, 120), centre: clip(b.centre, 160), mail: clip(b.mail, 160).toLowerCase(), cursos: clip(b.cursos, 200), lang: b.lang === 'es' ? 'es' : 'ca' };
-  if (!f.nom || !f.centre || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(f.mail)) return ok(res, { error: 'dades' }, 400);
+  if (!f.nom || !f.centre || !/^[a-z0-9._%+-]{1,64}@[a-z0-9.-]{1,120}\.[a-z]{2,24}$/.test(f.mail)) return ok(res, { error: 'dades' }, 400);
+  if (await blocked(req, 'contacte', 5, 60)) return tooMany(res);
+  await note(req, 'contacte');
   if (!ready) {
     await sql`CREATE TABLE IF NOT EXISTS mates.contactes (id serial PRIMARY KEY, nom text, centre text, mail text, cursos text, lang text, created_at timestamptz DEFAULT now())`;
     ready = true;

@@ -1,4 +1,4 @@
-import { sql, body, cleanCode, ok } from './_lib.js';
+import { sql, body, cleanCode, ok, blocked, fail, tooMany } from './_lib.js';
 import { randomInt } from 'crypto';
 // Batalles de mates. Tothom rep les mateixes preguntes (surten de la llavor `seed`).
 // Guanya qui n'encerta més; si hi ha empat, qui ha trigat menys. Els codis secrets dels alumnes
@@ -31,8 +31,9 @@ export default async function handler(req, res) {
   if (req.method !== 'POST') return ok(res, { error: 'method' }, 405);
   const b = body(req), sid = cleanCode(b.code), act = b.action;
   if (!sid) return ok(res, { error: 'codi' }, 400);
+  if (await blocked(req, 'codi', 40)) return tooMany(res);
   const me = (await sql`SELECT name FROM mates.alumnes WHERE code = ${sid} AND active`)[0];
-  if (!me) return ok(res, { error: 'alumne' }, 404);
+  if (!me) { await fail(req, 'codi'); return ok(res, { error: 'alumne' }, 404); }
   const name = first(b.name || me.name), comp = String(b.companion || 'numi').slice(0, 12);
 
   if (act === 'create') {

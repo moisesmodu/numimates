@@ -3,6 +3,8 @@
    El docent veu els seus grups; el coordinador, tot el centre; l'administrador, tot i la gestió. */
 const $ = (s, el = document) => el.querySelector(s), $$ = (s, el = document) => [...el.querySelectorAll(s)];
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+// valor dins d'un onclick="…": literal JS (JSON) i després escapat per a l'atribut
+const js = v => esc(JSON.stringify(v));
 const store = { get: (k, d) => { try { return localStorage.getItem(k) ?? d; } catch (e) { return d; } }, set: (k, v) => { try { localStorage.setItem(k, v); } catch (e) { } } };
 let LANG = store.get('numi-profe-lang', 'ca');
 const L = (ca, es) => LANG === 'es' ? es : ca;
@@ -11,14 +13,15 @@ const ico = (n, c = '') => `<svg class="i ${c}" aria-hidden="true"><use href="#i
 const root = $('#root');
 
 /* ---------- sessió ---------- */
-const pass = () => sessionStorage.getItem('pp'), dtok = () => sessionStorage.getItem('dt');
-const AUTH = () => pass() ? { 'x-profe': pass() } : dtok() ? { 'x-docent': dtok() } : null;
+// la sessió és sempre un testimoni signat (també la de l'administrador): la contrasenya no es guarda enlloc
+const dtok = () => sessionStorage.getItem('dt'), wasAdmin = () => sessionStorage.getItem('adm') === '1';
+const AUTH = () => dtok() ? { 'x-docent': dtok() } : null;
 let D = null, ROWS = [], ADMIN = false, ME = null, GRUPS = [], G = store.get('numi-profe-g', '');
 async function load() {
   const h = AUTH(); if (!h) return login();
   const r = await fetch('/api/profe', { headers: h }).catch(() => null);
   if (!r) return banner(L("No s'ha pogut carregar. Comprova la connexió.", 'No se ha podido cargar. Comprueba la conexión.'));
-  if (r.status !== 200) { const adm = !!pass(); sessionStorage.clear(); return login(adm ? L('Contrasenya incorrecta.', 'Contraseña incorrecta.') : L('La sessió ha caducat. Torna a entrar.', 'La sesión ha caducado. Vuelve a entrar.'), adm); }
+  if (r.status !== 200) { const adm = wasAdmin(); sessionStorage.clear(); return login(L('La sessió ha caducat. Torna a entrar.', 'La sesión ha caducado. Vuelve a entrar.'), adm); }
   D = await r.json(); ADMIN = !!D.admin; ME = D.me || null; GRUPS = D.grups || [];
   if (G && !GRUPS.some(g => String(g.id) === G)) G = '';
   ROWS = (D.rows || []).map(enrich);
@@ -47,8 +50,33 @@ const CURS_S = ['1r|1.º', '2n|2.º', '3r|3.º', '4t|4.º', '5è|5.º', '6è|6.�
 const unitName = (uid, withCourse) => { const t = (typeof UNIT_T !== 'undefined' ? UNIT_T : {})[uid], [c, n] = uid.replace(/^c/, '').split('-'); const pre = withCourse && CURS_S[c - 1] ? tx(CURS_S[c - 1]) + ' · ' : ''; return t ? `${pre}U${n} · ${tx(t)}` : uid; };
 const mixed = R => new Set(R.flatMap(r => r.exams.map(x => x.uid.split('-')[0]))).size > 1;
 const to12 = p => Math.round((p || 0) * 12 / 100);
+// Tot el que ve de l'estat de l'alumne (JSON escrit per l'app) es normalitza aquí: números com a números,
+// dates com a dates i unitats amb el format c4-3. Així cap valor estrany pot acabar pintat com a HTML.
+const nn = v => (v === '' || v == null || !Number.isFinite(+v)) ? null : +v, n0 = v => nn(v) ?? 0;
+const isO = v => v && typeof v === 'object' && !Array.isArray(v), arr = v => Array.isArray(v) ? v : [];
+const dstr = v => (typeof v === 'string' && /^\d{4}-\d{2}-\d{2}/.test(v)) ? v.slice(0, 10) : null;
+function norm(r) {
+  const o = { ...r };
+  ['course', 'xp', 'streak', 'best', 'lessons', 'answers', 'correct', 'grup_id'].forEach(k => o[k] = nn(r[k]));
+  ['xp', 'streak', 'best', 'lessons', 'answers', 'correct'].forEach(k => o[k] ??= 0);
+  o.code = String(r.code || '').replace(/[^A-Z0-9-]/g, '');
+  o.days = arr(r.days).map(dstr).filter(Boolean);
+  o.sk = isO(r.sk) ? Object.fromEntries(Object.entries(r.sk).filter(([, v]) => Array.isArray(v)).map(([k, v]) => [k, [n0(v[0]), n0(v[1])]])) : {};
+  o.tests = arr(r.tests).filter(t => isO(t) && nn(t.pct) != null).map(t => ({ date: dstr(t.date) || '', pct: Math.round(+t.pct), ok: n0(t.ok), n: n0(t.n), course: nn(t.course), kind: t.kind === 'evo' ? 'evo' : 'inicial' }));
+  o.exams = isO(r.exams) ? Object.fromEntries(Object.entries(r.exams).filter(([k, x]) => /^c\d{1,2}-\d{1,2}$/.test(k) && isO(x)).map(([k, x]) => [k, { best: n0(x.best), last: n0(x.last), tries: n0(x.tries), d: dstr(x.d) || '' }])) : {};
+  o.school = isO(r.school) && nn(r.school.ui) != null ? { ui: +r.school.ui, course: nn(r.school.course) } : null;
+  o.week = isO(r.week) ? { xp: n0(r.week.xp) } : null;
+  o.album = isO(r.album) ? r.album : {};
+  o.crowns = arr(r.crowns);
+  o.bwins = n0(r.bwins);
+  o.reco = isO(r.reco) ? { items: arr(r.reco.items) } : null;
+  o.survey = isO(r.survey) ? { result: typeof r.survey.result === 'string' ? r.survey.result.slice(0, 60) : null, feel: typeof r.survey.feel === 'string' ? r.survey.feel : null } : {};
+  o.unlock_all = r.unlock_all === true;
+  return o;
+}
 function enrich(r) {
-  const days = new Set(r.days || []);
+  r = norm(r);
+  const days = new Set(r.days);
   const d14 = Array.from({ length: 14 }, (_, i) => days.has(dayN(13 - i)));
   const act = n => { let c = 0; for (let i = 0; i < n; i++) if (days.has(dayN(i))) c++; return c; };
   const sent = {}; Object.keys(SENT).forEach(k => sent[k] = { c: 0, t: 0 });
@@ -95,10 +123,18 @@ function login(err = '', admin = location.hash === '#admin') {
   ($('#lu') || $('#lp')).focus();
   $('#lf').onsubmit = async e => {
     e.preventDefault(); const b = $('#lb'); b.disabled = true; b.textContent = '…'; sessionStorage.clear();
-    if (admin) { sessionStorage.setItem('pp', $('#lp').value); if (location.hash === '#admin') history.replaceState(null, '', '#/resum'); return load(); }
-    const r = await fetch('/api/docent', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ action: 'login', email: $('#lu').value, password: $('#lp').value }) }).then(x => x.json()).catch(() => ({}));
-    if (!r.token) { b.disabled = false; b.textContent = L('Entra', 'Entra'); $('#le').textContent = L('Correu, usuari o contrasenya incorrectes.', 'Correo, usuario o contraseña incorrectos.'); return; }
-    sessionStorage.setItem('dt', r.token); load();
+    const data = admin ? { action: 'admin', password: $('#lp').value } : { action: 'login', email: $('#lu').value, password: $('#lp').value };
+    const x = await fetch('/api/docent', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(data) }).catch(() => null);
+    const r = x ? await x.json().catch(() => ({})) : {};
+    if (!r.token) {
+      b.disabled = false; b.textContent = L('Entra', 'Entra');
+      $('#le').textContent = !x ? L("No hi ha connexió. Torna-ho a provar.", 'No hay conexión. Vuelve a intentarlo.')
+        : x.status === 429 ? L('Massa intents seguits. Espera uns minuts i torna-ho a provar.', 'Demasiados intentos seguidos. Espera unos minutos y vuelve a intentarlo.')
+        : admin ? L('Contrasenya incorrecta.', 'Contraseña incorrecta.') : L('Correu, usuari o contrasenya incorrectes.', 'Correo, usuario o contraseña incorrectos.');
+      return;
+    }
+    sessionStorage.setItem('dt', r.token); if (admin) { sessionStorage.setItem('adm', '1'); if (location.hash === '#admin') history.replaceState(null, '', '#/resum'); }
+    load();
   };
 }
 function logout() { sessionStorage.clear(); location.hash = ''; login(); }
@@ -109,14 +145,14 @@ const NAV = () => [['resum', 'layout-dashboard', L('Resum', 'Resumen')], ['alumn
 const ADMIN_NAV = () => { const seen = +store.get('numi-profe-sol', 0), nou = (D.contacts || []).filter(c => new Date(c.created_at).getTime() > seen).length; return [['centres', 'building-2', L('Centres', 'Centros')], ['docents', 'graduation-cap', L('Docents', 'Docentes')], ['totsgrups', 'layout-grid', L('Tots els grups', 'Todos los grupos')], ['sollicituds', 'inbox', L('Sol·licituds', 'Solicitudes'), nou, true], ['activitat', 'activity', L('Activitat', 'Actividad')]]; };
 function shell(view, title, body, { acts = '', fluid = false, switcher = true } = {}) {
   const na = ([k, ic, t, n, isNew]) => `<a href="#/${k}" class="${view === k ? 'on' : ''}" title="${esc(t)}">${ico(ic, 'i20')}<span>${esc(t)}</span>${n ? `<i class="badge ${isNew ? 'new' : ''}">${n}</i>` : ''}</a>`;
-  const who = ADMIN ? { nom: L('Administració', 'Administración'), rol: 'Numi Mates' } : { nom: ME.nom, rol: ME.rol === 'admin_centre' ? L('Coordinació de centre', 'Coordinación de centro') : L('Docent', 'Docente') };
+  const who = ADMIN ? { nom: ME?.nom || L('Administració', 'Administración'), rol: 'Numi Mates' } : { nom: ME.nom, rol: ME.rol === 'admin_centre' ? L('Coordinació de centre', 'Coordinación de centro') : L('Docent', 'Docente') };
   root.innerHTML = `<div class="app" id="app"><aside class="side">
       <div class="brand"><img src="img/brand/logo-horitzontal.svg" alt="Numi Mates"><span>${esc(ADMIN ? L('Tots els centres', 'Todos los centros') : ME.centre || '')}</span></div>
       <nav class="nav">${NAV().map(na).join('')}<hr>${na(['guia', 'circle-help', L("Com funciona l'app", 'Cómo funciona la app')])}
         ${ADMIN ? `<div class="lbl">${L('Administració', 'Administración')}</div>${ADMIN_NAV().map(na).join('')}` : ''}</nav>
       <div class="me"><div class="who"><b>${esc(who.nom)}</b><small>${esc(who.rol)}</small></div>
         <div class="row"><span class="seg"><button class="${LANG === 'ca' ? 'on' : ''}" onclick="setLang('ca')">CA</button><button class="${LANG === 'es' ? 'on' : ''}" onclick="setLang('es')">ES</button></span>
-        ${ADMIN ? '' : `<a class="ib" href="#/compte" title="${L('Compte', 'Cuenta')}">${ico('user-cog')}</a>`}<button class="ib" title="${L('Tanca la sessió', 'Cerrar sesión')}" onclick="logout()">${ico('log-out')}</button></div></div>
+        ${ADMIN && !ME ? '' : `<a class="ib" href="#/compte" title="${L('Compte', 'Cuenta')}">${ico('user-cog')}</a>`}<button class="ib" title="${L('Tanca la sessió', 'Cerrar sesión')}" onclick="logout()">${ico('log-out')}</button></div></div>
     </aside><main class="main"><header class="top"><button class="ib menu-btn" onclick="$('#app').classList.toggle('open')" aria-label="Menu">${ico('menu')}</button>
       ${switcher ? switcherHTML() + '<span class="sep"></span>' : ''}<h1>${esc(title)}</h1><div class="acts">${acts}</div></header>
       <div class="content ${fluid ? 'fluid' : ''}">${body}</div></main></div>`;
@@ -229,13 +265,13 @@ function drawTable() {
       <td class="r num" style="color:var(--${b === 'none' ? 'text-3' : b})">${r.answers >= 20 ? r.acc + ' %' : '—'}</td>
       <td class="r num hide-sm">${r.lt ? `${r.lt.pct} %${r.evoD != null ? ` <span class="${r.evoD >= 0 ? 'up' : 'down'}">${ico(r.evoD >= 0 ? 'trending-up' : 'trending-down')}${r.evoD >= 0 ? '+' : ''}${r.evoD}</span>` : ''}` : '<span class="t3">—</span>'}</td>
       <td class="hide-sm">${x ? `<span class="gate">U${x.uid.split('-')[1]} · ${to12(x.best)}/12 ${x.best >= 75 ? ico('check', 'ok') : ico('x', 'ko')}</span>` : '<span class="t3">—</span>'}</td>
-      <td class="r"><button class="ib sm rowmenu" aria-label="${L('Accions', 'Acciones')}" onclick="rowMenu(event,'${esc(r.code)}')">${ico('ellipsis')}</button></td></tr>`; }).join('') || `<tr><td colspan="9">${emptyState('search', L('Cap resultat', 'Ningún resultado'), L('Prova amb un altre filtre o una altra cerca.', 'Prueba con otro filtro u otra búsqueda.'))}</td></tr>`}
+      <td class="r"><button class="ib sm rowmenu" aria-label="${L('Accions', 'Acciones')}" onclick="rowMenu(event,${js(r.code)})">${ico('ellipsis')}</button></td></tr>`; }).join('') || `<tr><td colspan="9">${emptyState('search', L('Cap resultat', 'Ningún resultado'), L('Prova amb un altre filtre o una altra cerca.', 'Prueba con otro filtro u otra búsqueda.'))}</td></tr>`}
     </tbody></table></div>`;
   const cur = decodeURIComponent((location.hash.match(/^#\/alumnes\/([^?]+)/) || [])[1] || ''); if (cur) $$('tbody tr').forEach(t => t.classList.toggle('sel', t.dataset.c === cur));
 }
 function rowKey(e, tr) { if (e.key === 'Enter') location.hash = '#/alumnes/' + encodeURIComponent(tr.dataset.c); if (e.key === 'ArrowDown') tr.nextElementSibling?.focus(); if (e.key === 'ArrowUp') tr.previousElementSibling?.focus(); }
 function rowMenu(e, code) {
-  e.stopPropagation(); closePops(); const r = ROWS.find(x => x.code === code), c = JSON.stringify(code).replace(/"/g, '&quot;');
+  e.stopPropagation(); closePops(); const r = ROWS.find(x => x.code === code), c = js(code);
   e.currentTarget.parentElement.style.position = 'relative';
   e.currentTarget.insertAdjacentHTML('afterend', `<div class="pop right" style="top:40px">
     <a href="#/alumnes/${encodeURIComponent(code)}">${ico('users')}${L('Obre la fitxa', 'Abrir la ficha')}</a>
@@ -254,7 +290,7 @@ function openDrawer(code, keep) {
   document.body.insertAdjacentHTML('beforeend', `<div class="scrim" onclick="closeDrawer()"></div><aside class="drawer" role="dialog" aria-label="${esc(r.name)}">
     <div class="dr-h">${avatar(r, 'lg')}<div><h2>${esc(r.name)}</h2><small>${[r.grup_id ? gName(r.grup_id) : '', curs(r.course), r.lang === 'es' ? 'Castellano' : 'Català'].filter(Boolean).map(esc).join(' · ')}</small></div>
       <div class="acts"><button class="ib" ${prev ? `onclick="location.hash='#/alumnes/${encodeURIComponent(prev.code)}'"` : 'disabled'} aria-label="${L('Anterior', 'Anterior')}">${ico('chevron-left')}</button><button class="ib" ${next ? `onclick="location.hash='#/alumnes/${encodeURIComponent(next.code)}'"` : 'disabled'} aria-label="${L('Següent', 'Siguiente')}">${ico('chevron-right')}</button>
-      <button class="btn sm" onclick="printReport('${esc(r.code)}')">${ico('printer')}${L('Imprimeix', 'Imprimir')}</button><button class="ib" onclick="closeDrawer()" aria-label="${L('Tanca', 'Cerrar')}">${ico('x')}</button></div></div>
+      <button class="btn sm" onclick="printReport(${js(r.code)})">${ico('printer')}${L('Imprimeix', 'Imprimir')}</button><button class="ib" onclick="closeDrawer()" aria-label="${L('Tanca', 'Cerrar')}">${ico('x')}</button></div></div>
     <div class="dr-b">${reportHTML(r, false)}</div></aside>`);
   $$('tbody tr').forEach(t => t.classList.toggle('sel', t.dataset.c === code));
 }
@@ -278,13 +314,13 @@ function reportHTML(r, print) {
     return `<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="${L("Proves d'evolució", 'Pruebas de evolución')}"><g stroke="#E4E0EA">${GL.map(v => `<line x1="${P}" x2="${W - P}" y1="${ys(v)}" y2="${ys(v)}"/>`).join('')}</g><g font-size="10" fill="#857C90">${GL.map(v => `<text x="2" y="${ys(v) + 3}">${v}</text>`).join('')}</g>
       <polyline fill="none" stroke="#602B7A" stroke-width="2" points="${tests.map((t, i) => `${xs(i)},${ys(t.pct)}`).join(' ')}"/>${tests.map((t, i) => `<circle cx="${xs(i)}" cy="${ys(t.pct)}" r="4" fill="${t.kind === 'inicial' ? '#fff' : '#602B7A'}" stroke="#602B7A" stroke-width="2"/>`).join('')}</svg>`; })() : '';
   const sec = (t, body, cls = '') => `<section class="dsec ${cls}"><h3>${t}</h3>${body}</section>`;
-  const access = print ? '' : sec(L('Accés', 'Acceso'), `<dl class="dl"><dt>${L("Codi de l'alumne", 'Código del alumno')}</dt><dd><span class="mono">${esc(r.code)}</span> <button class="ib sm" onclick="copyTxt('${esc(r.code)}')" aria-label="${L('Copia', 'Copiar')}">${ico('copy')}</button></dd>
+  const access = print ? '' : sec(L('Accés', 'Acceso'), `<dl class="dl"><dt>${L("Codi de l'alumne", 'Código del alumno')}</dt><dd><span class="mono">${esc(r.code)}</span> <button class="ib sm" onclick="copyTxt(${js(r.code)})" aria-label="${L('Copia', 'Copiar')}">${ico('copy')}</button></dd>
       <dt>${L('Usuari', 'Usuario')}</dt><dd>${r.username ? '@' + esc(r.username) : L('Entra amb codi', 'Entra con código')}</dd></dl>
-      ${r.username ? `<div style="margin-top:12px"><button class="btn sm" onclick="pwForm('${esc(r.code)}')">${ico('key-round')}${L('Canvia la contrasenya', 'Cambiar la contraseña')}</button><div id="pwf"></div></div>` : ''}
-      <label class="switch" style="margin-top:16px"><input type="checkbox" ${r.unlock_all ? 'checked' : ''} onchange="doUnlock('${esc(r.code)}',this.checked)"><span><b style="font-weight:600">${L('Mode mestre: obre totes les unitats', 'Modo maestro: abre todas las unidades')}</b><br><small class="t3">${L("L'alumne podrà fer qualsevol unitat sense passar la porta.", 'El alumno podrá hacer cualquier unidad sin pasar la puerta.')}</small></span></label>
-      ${ADMIN ? `<div class="inline-form"><label class="field"><span>${L('Pla', 'Plan')}</span><select onchange="doPla('${esc(r.code)}',this.value)">${[['free', 'Gratuït|Gratuito'], ['premium', 'Premium|Premium'], ['escola', 'Escola|Escuela']].map(([k, t]) => `<option value="${k}" ${r.pla === k ? 'selected' : ''}>${tx(t)}</option>`).join('')}</select></label>
-        <label class="field"><span>${L('Grup', 'Grupo')}</span><select onchange="doAssign('${esc(r.code)}',this.value)"><option value="">${L('Sense grup', 'Sin grupo')}</option>${GRUPS.map(g => `<option value="${g.id}" ${g.id === r.grup_id ? 'selected' : ''}>${esc(g.nom)} · ${esc(g.centre)}</option>`).join('')}</select></label>
-        <button class="btn danger sm" style="justify-self:start" onclick="doBaixa('${esc(r.code)}')">${ico('trash-2')}${L('Dona de baixa', 'Dar de baja')}</button></div>` : r.grup_id ? `<button class="btn sm" style="margin-top:12px" onclick="doTreure('${esc(r.code)}')">${ico('user-minus')}${L('Treu del grup', 'Quitar del grupo')}</button>` : ''}`);
+      ${r.username ? `<div style="margin-top:12px"><button class="btn sm" onclick="pwForm(${js(r.code)})">${ico('key-round')}${L('Canvia la contrasenya', 'Cambiar la contraseña')}</button><div id="pwf"></div></div>` : ''}
+      <label class="switch" style="margin-top:16px"><input type="checkbox" ${r.unlock_all ? 'checked' : ''} onchange="doUnlock(${js(r.code)},this.checked)"><span><b style="font-weight:600">${L('Mode mestre: obre totes les unitats', 'Modo maestro: abre todas las unidades')}</b><br><small class="t3">${L("L'alumne podrà fer qualsevol unitat sense passar la porta.", 'El alumno podrá hacer cualquier unidad sin pasar la puerta.')}</small></span></label>
+      ${ADMIN ? `<div class="inline-form"><label class="field"><span>${L('Pla', 'Plan')}</span><select onchange="doPla(${js(r.code)},this.value)">${[['free', 'Gratuït|Gratuito'], ['premium', 'Premium|Premium'], ['escola', 'Escola|Escuela']].map(([k, t]) => `<option value="${k}" ${r.pla === k ? 'selected' : ''}>${tx(t)}</option>`).join('')}</select></label>
+        <label class="field"><span>${L('Grup', 'Grupo')}</span><select onchange="doAssign(${js(r.code)},this.value)"><option value="">${L('Sense grup', 'Sin grupo')}</option>${GRUPS.map(g => `<option value="${g.id}" ${g.id === r.grup_id ? 'selected' : ''}>${esc(g.nom)} · ${esc(g.centre)}</option>`).join('')}</select></label>
+        <button class="btn danger sm" style="justify-self:start" onclick="doBaixa(${js(r.code)})">${ico('trash-2')}${L('Dona de baixa', 'Dar de baja')}</button></div>` : r.grup_id ? `<button class="btn sm" style="margin-top:12px" onclick="doTreure(${js(r.code)})">${ico('user-minus')}${L('Treu del grup', 'Quitar del grupo')}</button>` : ''}`);
   return `
     ${sec(L('Resum', 'Resumen'), `<div class="stats4"><div><span>${L('Dies actius (30 d)', 'Días activos (30 d)')}</span><b class="num">${r.act30}</b></div><div><span>${L('Lliçons fetes', 'Lecciones hechas')}</span><b class="num">${r.lessons}</b></div><div><span>${L('Precisió', 'Precisión')}</span><b class="num">${r.acc == null ? '—' : r.acc + ' %'}</b></div><div><span>${L('Ratxa · millor', 'Racha · mejor')}</span><b class="num">${r.idle != null && r.idle <= 1 ? r.streak : 0} · ${r.best} ${L('dies', 'días')}</b></div></div>`)}
     ${sec(L('Sentits del currículum', 'Sentidos del currículo'), Object.keys(SENT).map(k => { const x = s[k], b = band(x.pct, x.t); return `<div class="snt"><span>${tx(SENT[k][0])}</span><div class="bar"><i style="width:${x.pct || 0}%;background:var(--${b === 'none' ? 'none' : b}-fill)"></i></div><span class="p num">${x.pct == null ? '—' : x.pct + ' %'}</span><small class="t3 num">(${x.t} ${L('resp.', 'resp.')})</small><span class="chip ${b}">${tx(BAND[b])}</span></div>`; }).join(''))}
@@ -309,7 +345,7 @@ function printReport(code) {
 }
 function pwForm(code) {
   const f = $('#pwf'); if (!f) return;
-  f.innerHTML = `<div class="inline-form"><label class="field"><span>${L('Contrasenya nova', 'Contraseña nueva')}</span><input id="np1" type="password" autocomplete="new-password"><small>${L('Mínim 4 caràcters.', 'Mínimo 4 caracteres.')}</small></label><label class="field"><span>${L('Repeteix-la', 'Repítela')}</span><input id="np2" type="password" autocomplete="new-password"></label><div class="err-msg" id="npe"></div><div style="display:flex;gap:8px"><button class="btn primary sm" onclick="doPw('${esc(code)}')">${L('Desa', 'Guardar')}</button><button class="btn sm" onclick="$('#pwf').innerHTML=''">${L('Cancel·la', 'Cancelar')}</button></div></div>`;
+  f.innerHTML = `<div class="inline-form"><label class="field"><span>${L('Contrasenya nova', 'Contraseña nueva')}</span><input id="np1" type="password" autocomplete="new-password"><small>${L('Mínim 4 caràcters.', 'Mínimo 4 caracteres.')}</small></label><label class="field"><span>${L('Repeteix-la', 'Repítela')}</span><input id="np2" type="password" autocomplete="new-password"></label><div class="err-msg" id="npe"></div><div style="display:flex;gap:8px"><button class="btn primary sm" onclick="doPw(${js(code)})">${L('Desa', 'Guardar')}</button><button class="btn sm" onclick="$('#pwf').innerHTML=''">${L('Cancel·la', 'Cancelar')}</button></div></div>`;
   $('#np1').focus();
 }
 async function doPw(code) {
@@ -331,8 +367,8 @@ function grupCard(g) {
   const n = ROWS.filter(r => r.grup_id === g.id).length;
   return `<div class="card gc"><div class="r1"><b>${esc(g.nom)}</b><button class="ib" onclick="grupMenu(event,${g.id})" aria-label="${L('Accions', 'Acciones')}">${ico('ellipsis')}</button></div>
     <div class="meta">${[curs(g.curs), `${n} ${L('alumnes', 'alumnos')}`, g.docent ? L('Docent', 'Docente') + ': ' + g.docent : '', ADMIN ? g.centre : ''].filter(Boolean).map(esc).join(' · ')}</div>
-    <div class="codebox"><code>${esc(g.codi)}</code><button class="ib" title="${L('Copia el codi', 'Copiar el código')}" onclick="copyTxt('${esc(g.codi)}',L('Codi copiat','Código copiado'))">${ico('copy')}</button><button class="ib" title="${L('Mostra el codi a la pissarra', 'Mostrar el código en la pizarra')}" onclick="projectar(${g.id})">${ico('qr-code')}</button></div>
-    <button class="btn full" onclick="copyInstr('${esc(g.codi)}')">${ico('copy')}${L('Copia les instruccions', 'Copiar las instrucciones')}</button>
+    <div class="codebox"><code>${esc(g.codi)}</code><button class="ib" title="${L('Copia el codi', 'Copiar el código')}" onclick="copyTxt(${js(g.codi)},L('Codi copiat','Código copiado'))">${ico('copy')}</button><button class="ib" title="${L('Mostra el codi a la pissarra', 'Mostrar el código en la pizarra')}" onclick="projectar(${g.id})">${ico('qr-code')}</button></div>
+    <button class="btn full" onclick="copyInstr(${js(g.codi)})">${ico('copy')}${L('Copia les instruccions', 'Copiar las instrucciones')}</button>
     <div class="foot">${L("Els alumnes l'escriuen a Perfil → Tinc un codi de classe", 'Los alumnos lo escriben en Perfil → Tinc un codi de classe')}</div></div>`;
 }
 function vGrups() {
@@ -429,10 +465,10 @@ function vGuia() {
 
 /* ---------- Compte ---------- */
 function vCompte() {
-  if (ADMIN) return vResum();
+  if (!ME) return vResum();
   shell('compte', L('Compte', 'Cuenta'), `
     <div class="card pad" style="max-width:720px"><div class="sec-h"><h2>${L('Perfil', 'Perfil')}</h2></div>
-      ${[[L('Nom', 'Nombre'), ME.nom], [L('Correu', 'Correo'), ME.email], [L('Centre', 'Centro'), ME.centre], [L('Rol', 'Rol'), ME.rol === 'admin_centre' ? L('Coordinació de centre', 'Coordinación de centro') : L('Docent', 'Docente')]].map(([a, b]) => `<div class="rowcard"><span>${a}</span><b style="font-weight:600">${esc(b || '—')}</b></div>`).join('')}</div>
+      ${[[L('Nom', 'Nombre'), ME.nom], [L('Correu', 'Correo'), ME.email], [L('Centre', 'Centro'), ME.centre], [L('Rol', 'Rol'), ME.rol === 'admin' ? L('Administració', 'Administración') : ME.rol === 'admin_centre' ? L('Coordinació de centre', 'Coordinación de centro') : L('Docent', 'Docente')]].map(([a, b]) => `<div class="rowcard"><span>${a}</span><b style="font-weight:600">${esc(b || '—')}</b></div>`).join('')}</div>
     <div class="card pad" style="max-width:720px"><div class="sec-h"><h2>${L('Contrasenya', 'Contraseña')}</h2></div>
       <div style="display:grid;gap:12px;max-width:360px"><label class="field"><span>${L('Contrasenya nova', 'Contraseña nueva')}</span><input id="cp1" type="password" autocomplete="new-password"><small>${L('Mínim 8 caràcters.', 'Mínimo 8 caracteres.')}</small></label><label class="field"><span>${L('Repeteix-la', 'Repítela')}</span><input id="cp2" type="password" autocomplete="new-password"></label><div class="err-msg" id="cpe"></div><button class="btn primary" style="justify-self:start" onclick="myPass()">${L('Desa la contrasenya', 'Guardar la contraseña')}</button></div></div>
     <div class="card pad" style="max-width:720px"><div class="sec-h"><h2>${L('Sessió', 'Sesión')}</h2></div><p class="t2" style="margin:0 0 12px">${L('La sessió caduca al cap de 12 hores.', 'La sesión caduca a las 12 horas.')}</p><button class="btn" onclick="logout()">${ico('log-out')}${L('Tanca la sessió', 'Cerrar sesión')}</button></div>`, { switcher: false });
@@ -500,7 +536,7 @@ async function docentSave(id) {
 function creds(title, email, usuari, pw) {
   const txt = `${L('Panell docent', 'Panel docente')}: https://app.numimates.com/profe.html\n${L('Correu', 'Correo')}: ${email}${usuari ? `\n${L('Usuari', 'Usuario')}: ${usuari}` : ''}\n${L('Contrasenya provisional', 'Contraseña provisional')}: ${pw}`;
   modal(`<h3>${title}</h3><p>${L("Comparteix aquestes dades i demana-li que canviï la contrasenya en entrar. La contrasenya no es tornarà a mostrar.", 'Comparte estos datos y pídele que cambie la contraseña al entrar. La contraseña no se volverá a mostrar.')}</p><div class="creds">${esc(txt)}</div>
-    <div class="acts"><button class="btn" onclick="copyTxt(${JSON.stringify(txt).replace(/"/g, '&quot;')},L('Copiat','Copiado'))">${ico('copy')}${L("Copia-ho tot", 'Copiarlo todo')}</button><button class="btn primary" onclick="closeModal()">${L('Fet', 'Hecho')}</button></div>`, 'w480');
+    <div class="acts"><button class="btn" onclick="copyTxt(${js(txt)},L('Copiat','Copiado'))">${ico('copy')}${L("Copia-ho tot", 'Copiarlo todo')}</button><button class="btn primary" onclick="closeModal()">${L('Fet', 'Hecho')}</button></div>`, 'w480');
 }
 async function docPass(id) { closePops(); const d = D.docents.find(x => x.id === id); if (!await confirmBox(L(`Generar una contrasenya nova per a ${d.nom}?`, `¿Generar una contraseña nueva para ${d.nom}?`), L("L'actual deixarà de funcionar.", 'La actual dejará de funcionar.'), L('Genera-la', 'Generarla'), false)) return; const j = await act('docent_pass', { id }); if (j.ok) creds(L('Contrasenya nova', 'Contraseña nueva'), d.email, d.usuari, j.password); }
 async function docActiu(id, v) { closePops(); const d = D.docents.find(x => x.id === id); await act('docent_save', { id, nom: d.nom, email: d.email, usuari: d.usuari, centre_id: d.centre_id, rol: d.rol, actiu: v }); toast(v ? L('Docent activat.', 'Docente activado.') : L('Docent desactivat.', 'Docente desactivado.')); reload(); }
@@ -516,7 +552,7 @@ function vSol() {
     ${C.map((c, i) => `<tr><td>${new Date(c.created_at).getTime() > seen ? '<i class="dot gold" title="Nova"></i> ' : ''}${fdate(c.created_at)}</td><td><b style="font-weight:600">${esc(c.nom)}</b></td><td>${esc(c.centre)}</td><td>${esc(c.mail)}</td><td style="white-space:normal">${esc(c.cursos || '—')}</td><td>${c.lang === 'es' ? 'ES' : 'CA'}</td><td class="r" style="position:relative"><button class="ib sm" onclick="solMenu(event,${i})">${ico('ellipsis')}</button></td></tr>`).join('')}</tbody></table></div>`
     : `<div class="card">${emptyState('inbox', L('Cap sol·licitud', 'Ninguna solicitud'), L('Encara no ha arribat cap sol·licitud des de numimates.com.', 'Aún no ha llegado ninguna solicitud desde numimates.com.'))}</div>`, { switcher: false });
 }
-function solMenu(e, i) { e.stopPropagation(); closePops(); const c = D.contacts[i], subj = encodeURIComponent(`Numi Mates · ${LANG === 'es' ? 'Demostración para' : 'Demostració per a'} ${c.centre}`); e.currentTarget.insertAdjacentHTML('afterend', `<div class="pop right" style="top:40px"><a href="mailto:${esc(c.mail)}?subject=${subj}">${ico('mail')}${L('Respon per correu', 'Responder por correo')}</a><button onclick="closePops();centreModal(0,{nom:${JSON.stringify(c.centre).replace(/"/g, '&quot;')},pla:'pilot'})">${ico('building-2')}${L('Crea el centre', 'Crear el centro')}</button><button onclick="copyTxt('${esc(c.mail)}',L('Correu copiat','Correo copiado'))">${ico('copy')}${L('Copia el correu', 'Copiar el correo')}</button></div>`); }
+function solMenu(e, i) { e.stopPropagation(); closePops(); const c = D.contacts[i], subj = encodeURIComponent(`Numi Mates · ${LANG === 'es' ? 'Demostración para' : 'Demostració per a'} ${c.centre}`); e.currentTarget.insertAdjacentHTML('afterend', `<div class="pop right" style="top:40px"><a href="mailto:${esc(c.mail)}?subject=${subj}">${ico('mail')}${L('Respon per correu', 'Responder por correo')}</a><button onclick="closePops();centreModal(0,{nom:${js(c.centre)},pla:'pilot'})">${ico('building-2')}${L('Crea el centre', 'Crear el centro')}</button><button onclick="copyTxt(${js(c.mail)},L('Correu copiat','Correo copiado'))">${ico('copy')}${L('Copia el correu', 'Copiar el correo')}</button></div>`); }
 function vActivitat(tab = 'batalles') {
   const B = D.battles || [], T = D.trades || [], ST = { open: 'Esperant oferta|Esperando oferta', offered: 'Oferta pendent|Oferta pendiente', done: 'Fet|Hecho', reject: 'Rebutjat|Rechazado', cancel: 'Cancel·lat|Cancelado', expired: 'Caducat|Caducado' };
   const secs = ms => (ms / 1000).toFixed(1).replace('.', ',') + ' s';
