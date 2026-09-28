@@ -65,11 +65,15 @@ export default async function handler(req, res) {
     }
     if (b.action === 'docent_save') {
       const nom = String(b.nom || '').trim().slice(0, 80), email = String(b.email || '').trim().toLowerCase(), rol = b.rol === 'admin_centre' ? 'admin_centre' : 'docent', centre = int(b.centre_id);
+      // nom d'usuari: el que posi l'admin o, si no, la part del correu abans de l'arrova
+      const usuari = (String(b.usuari || '').trim().toLowerCase() || email.split('@')[0]).replace(/[^a-z0-9._-]/g, '').slice(0, 30) || null;
       if (!nom || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || !centre) return ok(res, { error: 'dades' }, 400);
-      if (b.id) { await sql`UPDATE mates.docents SET nom = ${nom}, email = ${email}, rol = ${rol}, centre_id = ${centre}, actiu = ${b.actiu !== false} WHERE id = ${+b.id}`; return ok(res, { ok: true }); }
-      const p = tmpPass();
-      const r = await sql`INSERT INTO mates.docents (nom, email, rol, centre_id, pass_hash) VALUES (${nom}, ${email}, ${rol}, ${centre}, ${hashPass(p)}) ON CONFLICT (email) DO NOTHING RETURNING id`;
-      return r.length ? ok(res, { ok: true, password: p }) : ok(res, { error: 'ja existeix' }, 409);
+      try {
+        if (b.id) { await sql`UPDATE mates.docents SET nom = ${nom}, email = ${email}, usuari = ${usuari}, rol = ${rol}, centre_id = ${centre}, actiu = ${b.actiu !== false} WHERE id = ${+b.id}`; return ok(res, { ok: true }); }
+        const p = tmpPass();
+        const r = await sql`INSERT INTO mates.docents (nom, email, usuari, rol, centre_id, pass_hash) VALUES (${nom}, ${email}, ${usuari}, ${rol}, ${centre}, ${hashPass(p)}) ON CONFLICT (email) DO NOTHING RETURNING id, usuari`;
+        return r.length ? ok(res, { ok: true, password: p, usuari: r[0].usuari }) : ok(res, { error: 'ja existeix' }, 409);
+      } catch (e) { return ok(res, { error: 'usuari ocupat' }, 409); }
     }
     if (b.action === 'docent_pass') { const p = tmpPass(); await sql`UPDATE mates.docents SET pass_hash = ${hashPass(p)} WHERE id = ${+b.id}`; return ok(res, { ok: true, password: p }); }
     if (b.action === 'pla') {
@@ -96,6 +100,6 @@ export default async function handler(req, res) {
   let contacts = [];
   try { contacts = await sql`SELECT nom, centre, mail, cursos, lang, created_at FROM mates.contactes ORDER BY created_at DESC LIMIT 100`; } catch (e) { /* la taula es crea amb la primera petició del web */ }
   const centres = await sql`SELECT c.*, (SELECT count(*)::int FROM mates.alumnes a JOIN mates.grups g ON g.id = a.grup_id WHERE g.centre_id = c.id AND a.active) AS alumnes FROM mates.centres c ORDER BY c.nom`;
-  const docents = await sql`SELECT id, nom, email, rol, centre_id, actiu, last_login FROM mates.docents ORDER BY nom`;
+  const docents = await sql`SELECT id, nom, email, usuari, rol, centre_id, actiu, last_login FROM mates.docents ORDER BY nom`;
   return ok(res, { admin: true, rows, battles, trades, contacts, centres, docents, grups: groups });
 }

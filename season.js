@@ -63,7 +63,11 @@ const SEASONS = {
   '2026-11': { name: 'El bosc de tardor|El bosque de otoño', icon: '🍂', color: '#8A4A1F', cards: { 8: 'dryad', 16: 'pan', 25: 'persephone' } },
   '2026-12': { name: "El solstici d'hivern|El solsticio de invierno", icon: '❄️', color: '#1F4E79', cards: { 8: 'hestia', 16: 'boreas', 25: 'helios' } },
   '2027-01': { name: "Janus i l'any nou|Jano y el año nuevo", icon: '🗝️', color: '#7A5A12', cards: { 8: 'eos', 16: 'horae', 25: 'janus' } },
-  '2027-02': { name: 'Les Muses|Las Musas', icon: '🎭', color: '#6B1F5E', cards: { 8: 'terpsichore', 16: 'calliope', 25: 'urania' } }
+  '2027-02': { name: 'Les Muses|Las Musas', icon: '🎭', color: '#6B1F5E', cards: { 8: 'terpsichore', 16: 'calliope', 25: 'urania' } },
+  '2027-03': { name: "El despertar de la primavera|El despertar de la primavera", icon: "🌸", color: "#2F6B2F", cards: { 8: "zephyrus", 16: "flora", 25: "pomona" } },
+  '2027-04': { name: "Els Jocs d'Olímpia|Los Juegos de Olimpia", icon: "🏅", color: "#9A3412", cards: { 8: "pelops", 16: "hippodamia", 25: "milo" } },
+  '2027-05': { name: "El laberint de Creta|El laberinto de Creta", icon: "🧶", color: "#7A1F3D", cards: { 8: "ariadne", 16: "daedalus", 25: "minos" } },
+  '2027-06': { name: "Els argonautes|Los argonautas", icon: "⛵", color: "#0E5A5A", cards: { 8: "medea", 16: "dioscuri", 25: "goldenfleece" } }
 };
 const SEASON_ONLY = Object.values(SEASONS).flatMap(s => Object.values(s.cards));
 function seasonId(d = new Date()) {

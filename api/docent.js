@@ -5,8 +5,9 @@ export default async function handler(req, res) {
   if (req.method !== 'POST') return ok(res, { error: 'method' }, 405);
   const b = body(req);
   if (b.action === 'login') {
-    const email = String(b.email || '').trim().toLowerCase();
-    const d = (await sql`SELECT id, nom, pass_hash, actiu FROM mates.docents WHERE email = ${email}`)[0];
+    // es pot entrar amb el correu o amb el nom d'usuari
+    const id = String(b.email || b.usuari || '').trim().toLowerCase();
+    const d = id && (await sql`SELECT id, nom, pass_hash, actiu FROM mates.docents WHERE email = ${id} OR usuari = ${id}`)[0];
     if (!d || !d.actiu || !checkPass(String(b.password || ''), d.pass_hash)) { await slow(); return ok(res, { error: 'credencials' }, 401); }
     await sql`UPDATE mates.docents SET last_login = now() WHERE id = ${d.id}`;
     return ok(res, { token: makeToken(d), nom: d.nom });
