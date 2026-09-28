@@ -3,7 +3,7 @@
    El color només vol dir estat (bé / atenció / cal reforçar). */
 :root{
   --bg:#F7F6F9;--surface:#FFFFFF;--surface-2:#F2F0F5;--surface-3:#E9E6EE;--border:#E4E0EA;--border-strong:#CFC9D8;
-  --text:#1E1724;--text-2:#574E62;--text-3:#857C90;
+  --text:#1E1724;--text-2:#574E62;--text-3:#6F6679;
   --accent:#602B7A;--accent-hover:#4E2264;--accent-soft:#F2EBF6;--accent-line:#D9C7E4;--gold:#FFC93C;
   --good:#1F7A4D;--good-bg:#E7F4EC;--good-fill:#2E9E64;
   --warn:#8A5A00;--warn-bg:#FFF3D6;--warn-fill:#E0A100;
@@ -89,7 +89,7 @@ input:focus,select:focus,textarea:focus{border-color:var(--accent)}
 .top h1{font-size:20px;line-height:28px;font-weight:700;margin:0}
 .top .sep{width:1px;height:20px;background:var(--border-strong)}
 .top .acts{margin-left:auto;display:flex;gap:8px;align-items:center}
-.menu-btn{display:none}
+.menu-btn{display:none}.tabbar,.side-scrim,.only-sm{display:none}
 .content{padding:24px;width:100%;max-width:1200px;margin:0 auto;display:grid;gap:32px}
 .content.fluid{max-width:none}
 .content>*,.grid12>*{min-width:0}
@@ -258,7 +258,30 @@ details.more[open] summary .i{transform:rotate(90deg)}
   td{height:48px}.ib{width:40px;height:40px}
 }
 @media (max-width:767px){
-  .app{grid-template-columns:1fr}.side{display:none}.app.open .side{display:flex}.menu-btn{display:inline-grid}
+  .app{grid-template-columns:1fr}.side{display:none}.app.open .side{display:flex}
+  .app.open .side .brand img{width:auto;height:22px;object-fit:contain}.app.open .side .me .row{flex-direction:row}.app.open .side{width:min(280px,84vw)}
+  .app.open .side-scrim{display:block;position:fixed;inset:0;background:rgba(30,23,36,.36);z-index:45}
+  /* barra de pestanyes inferior, com una app */
+  .tabbar{display:grid;grid-template-columns:repeat(5,1fr);position:fixed;left:0;right:0;bottom:0;z-index:40;background:var(--surface);border-top:1px solid var(--border);padding-bottom:env(safe-area-inset-bottom)}
+  .tabbar a,.tabbar button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;height:58px;border:0;background:none;color:var(--text-3);font-size:11px;font-weight:600;text-decoration:none;cursor:pointer;-webkit-tap-highlight-color:transparent}
+  .tabbar .on{color:var(--accent)}.tabbar .on .i{stroke-width:2.2}
+  .content{padding-bottom:calc(84px + env(safe-area-inset-bottom))}
+  .only-sm{display:inline-block}
+  .tabs{overflow-x:auto;scrollbar-width:none}.tabs a{white-space:nowrap;flex:none}
+  /* alumnes: cada fila és una targeta */
+  .tw.al{max-height:none;overflow:visible;background:transparent;border:0;border-radius:0}
+  .tw.al table,.tw.al tbody{display:block}.tw.al thead{display:none}
+  .tw.al tbody tr{display:grid;grid-template-columns:1fr 1fr 1.3fr 40px;grid-template-areas:"n n n m" "l a g g";background:var(--surface);border:1px solid var(--border);border-radius:10px;margin-bottom:8px;padding:12px 8px 12px 12px}
+  .tw.al tbody tr:has(td[colspan]){display:block;padding:0}
+  .tw.al td{display:block;height:auto;padding:0;border:0;background:transparent;white-space:normal;text-align:left}
+  .tw.al td.c-name{grid-area:n;position:static;padding-left:0}.tw.al td.c-menu{grid-area:m;text-align:right}
+  .tw.al td.c-last{grid-area:l}.tw.al td.c-acc{grid-area:a}.tw.al td.c-gate{grid-area:g;display:block}
+  .tw.al td:not(.c-name,.c-last,.c-acc,.c-gate,.c-menu,[colspan]){display:none}
+  .toolbar .seg{flex:1 1 100%}.toolbar select{flex:1 1 0;min-width:0}.toolbar .r{margin-left:0}.toolbar .r .btn{font-size:0;gap:0;width:40px;padding:0;justify-content:center}
+  .tw.al td[data-l]{margin-top:10px;font-size:13px;line-height:18px}
+  .tw.al td[data-l]::before{content:attr(data-l);display:block;font-size:11px;line-height:14px;color:var(--text-3);font-weight:500;margin-bottom:2px}
+  .tw.al td .rowmenu{opacity:1}.tw.al tbody tr.sel{border-color:var(--accent);box-shadow:var(--focus)}
+  .tw.al.compact tbody tr{padding:8px 8px 8px 12px}
   .content{padding:16px}.top{padding:0 16px}.snt{grid-template-columns:100px 1fr 40px}.snt .chip,.snt small{display:none}
   .stats4{grid-template-columns:1fr 1fr}.stats4>div:nth-child(3){border-left:0}.stats4>div:nth-child(n+3){border-top:1px solid var(--border)}
   .proj{grid-template-columns:1fr;padding:24px}.proj code{font-size:48px}

@@ -42,7 +42,19 @@ const fdate = d => { if (!d) return '—'; const x = new Date(String(d).slice(0,
 const CURS = ['1r primària|1.º primaria', '2n primària|2.º primaria', '3r primària|3.º primaria', '4t primària|4.º primaria', '5è primària|5.º primaria', '6è primària|6.º primaria', '1r ESO|1.º ESO', '2n ESO|2.º ESO', '3r ESO|3.º ESO', '4t ESO|4.º ESO'];
 const curs = i => i == null ? '—' : tx(CURS[i] || '');
 const SENT = { num: ['Numèric|Numérico', 'Sentit numèric|Sentido numérico'], mes: ['Mesura|Medida', 'Sentit de la mesura|Sentido de la medida'], esp: ['Espacial|Espacial', 'Sentit espacial|Sentido espacial'], alg: ['Algebraic|Algebraico', 'Sentit algebraic i pensament computacional|Sentido algebraico y pensamiento computacional'], est: ['Estocàstic|Estocástico', 'Sentit estocàstic|Sentido estocástico'] };
-function skillSent(sk) { const n = sk.split(':')[0]; if (/^(me\.clock|me\.units|me\.money|me\.perim|g\.clock|g\.coins|g\.ruler|geo\.area)$/.test(n)) return 'mes'; if (/^(me\.shape|g\.shape|geo\.angle|vol|e\.)/.test(n)) return 'esp'; if (/^(l\.|g\.seq|pc\.|g\.repeat)/.test(n)) return 'alg'; if (/^(stat|at\.)/.test(n)) return 'est'; return 'num'; }
+// mateix mapa habilitat → sentit que l'app (ex3.js, skillSent): si canvia allà, cal canviar-lo aquí
+function skillSent(sk) {
+  const n = sk.split(':')[0];
+  if (/^v\.(balance|pattern|maze)$/.test(n)) return 'alg';
+  if (n === 'v.frac') return 'num';
+  if (/^v\./.test(n)) return 'esp';
+  if (/^(me\.clock|me\.units|me\.money|me\.perim|g\.clock|g\.coins|g\.ruler|geo\.area)$/.test(n)) return 'mes';
+  if (/^(me\.shape|g\.shape|geo\.angle|vol|e\.|geo\.pyth|geo\.thales|trig)/.test(n)) return 'esp';
+  if (/^(geo\.circle|geo\.vol2)$/.test(n)) return 'mes';
+  if (/^(l\.|g\.seq|pc\.|g\.repeat|alg\.|fn\.|seq\.)/.test(n)) return 'alg';
+  if (/^(stat|at\.|prob2)/.test(n)) return 'est';
+  return 'num';
+}
 const band = (pct, n) => n == null || n < 20 || pct == null ? 'none' : pct >= 80 ? 'good' : pct >= 60 ? 'warn' : 'crit';
 const BAND = { good: 'Domina|Domina', warn: 'En procés|En proceso', crit: 'Cal reforçar|Hay que reforzar', none: 'Poques dades|Pocos datos' };
 const CURS_S = ['1r|1.º', '2n|2.º', '3r|3.º', '4t|4.º', '5è|5.º', '6è|6.º', '1r ESO|1.º ESO', '2n ESO|2.º ESO', '3r ESO|3.º ESO', '4t ESO|4.º ESO'];
@@ -137,7 +149,7 @@ function login(err = '', admin = location.hash === '#admin') {
     load();
   };
 }
-function logout() { sessionStorage.clear(); location.hash = ''; login(); }
+function logout() { sessionStorage.clear(); D = null; ROWS = []; GRUPS = []; ME = null; ADMIN = false; closeDrawer(true); $$('.modal-s,.proj').forEach(x => x.remove()); clearInterval(PROJ_T); history.replaceState(null, '', location.pathname); login(); }
 function setLang(l, onLogin) { LANG = l; store.set('numi-profe-lang', l); document.documentElement.lang = l; if (onLogin && !D) return login(); ROWS = (D?.rows || []).map(enrich); route(); }
 
 /* ---------- carcassa ---------- */
@@ -155,7 +167,9 @@ function shell(view, title, body, { acts = '', fluid = false, switcher = true } 
         ${ADMIN && !ME ? '' : `<a class="ib" href="#/compte" title="${L('Compte', 'Cuenta')}">${ico('user-cog')}</a>`}<button class="ib" title="${L('Tanca la sessió', 'Cerrar sesión')}" onclick="logout()">${ico('log-out')}</button></div></div>
     </aside><main class="main"><header class="top"><button class="ib menu-btn" onclick="$('#app').classList.toggle('open')" aria-label="Menu">${ico('menu')}</button>
       ${switcher ? switcherHTML() + '<span class="sep"></span>' : ''}<h1>${esc(title)}</h1><div class="acts">${acts}</div></header>
-      <div class="content ${fluid ? 'fluid' : ''}">${body}</div></main></div>`;
+      <div class="content ${fluid ? 'fluid' : ''}">${body}</div></main>
+    <div class="side-scrim" onclick="$('#app').classList.remove('open')"></div>
+    <nav class="tabbar" aria-label="${L('Navegació', 'Navegación')}">${NAV().map(([k, ic, t]) => `<a href="#/${k}" class="${view === k ? 'on' : ''}">${ico(ic, 'i20')}<span>${esc(t)}</span></a>`).join('')}<button class="${!NAV().some(n => n[0] === view) ? 'on' : ''}" onclick="$('#app').classList.add('open')">${ico('menu', 'i20')}<span>${L('Més', 'Más')}</span></button></nav></div>`;
   document.title = `${title} · Numi Mates`;
 }
 function switcherHTML() {
@@ -180,7 +194,7 @@ function route() {
   const V = { resum: vResum, alumnes: vAlumnes, grups: vGrups, informes: vInformes, guia: vGuia, compte: vCompte };
   if (ADMIN) Object.assign(V, { centres: vCentres, docents: vDocents, totsgrups: vTotsGrups, sollicituds: vSol, activitat: vActivitat });
   (V[v] || vResum)(arg);
-  if (v === 'alumnes' && arg) openDrawer(decodeURIComponent(arg), true);
+  if (v === 'alumnes' && arg) openDrawer(decodeURIComponent(arg), true); else if ($('.drawer')) closeDrawer(true);
 }
 addEventListener('hashchange', () => { if (D) route(); });
 document.addEventListener('keydown', e => {
@@ -239,8 +253,9 @@ function vAlumnes() {
     <div class="toolbar"><div class="search">${ico('search')}<input id="q" placeholder="${L('Cerca per nom, usuari o codi', 'Busca por nombre, usuario o código')}" value="${esc(AF.q)}" oninput="AF.q=this.value;clearTimeout(window._qt);window._qt=setTimeout(drawTable,120)"><span class="kbd">/</span></div>
       <span class="seg">${[['all', L('Tots', 'Todos')], ['att', L('Necessiten atenció', 'Necesitan atención')], ['idle', L('Sense activitat', 'Sin actividad')], ['new', L('Sense començar', 'Sin empezar')]].map(([k, t]) => `<button class="${AF.f === k ? 'on' : ''}" onclick="AF.f='${k}';vAlumnes()">${t}<b>${counts[k]}</b></button>`).join('')}</span>
       <select style="width:auto" onchange="AF.lv=this.value;drawTable()"><option value="">${L('Tots els nivells', 'Todos los niveles')}</option>${lvls.map(l => `<option value="${l}" ${String(l) === AF.lv ? 'selected' : ''}>${curs(l)}</option>`).join('')}</select>
+      <select class="only-sm" style="width:auto" aria-label="${L('Ordena', 'Ordena')}" onchange="const [k,d]=this.value.split(',');AF.sort=[k,+d];drawTable()">${[['sev,-1', L('Primer, qui necessita atenció', 'Primero, quien necesita atención')], ['name,1', L('Per nom', 'Por nombre')], ['last,-1', L('Activitat més recent', 'Actividad más reciente')], ['last,1', L('Més dies sense entrar', 'Más días sin entrar')], ['acc,-1', L('Precisió més alta', 'Precisión más alta')], ['acc,1', L('Precisió més baixa', 'Precisión más baja')], ['les,-1', L('Més lliçons', 'Más lecciones')]].map(([v, t]) => `<option value="${v}" ${AF.sort.join(',') === v ? 'selected' : ''}>${t}</option>`).join('')}</select>
       <span class="count" id="cnt"></span>
-      <span class="r"><button class="ib ${AF.compact ? 'on' : ''}" title="${L('Compacte', 'Compacto')}" onclick="AF.compact=!AF.compact;store.set('numi-profe-compact',AF.compact?'1':'');drawTable()">${ico('rows-3')}</button><button class="btn" onclick="csvResum()">${ico('download')}${L('Exporta CSV', 'Exporta CSV')}</button></span></div>
+      <span class="r"><button class="ib hide-sm ${AF.compact ? 'on' : ''}" title="${L('Compacte', 'Compacto')}" onclick="AF.compact=!AF.compact;store.set('numi-profe-compact',AF.compact?'1':'');drawTable()">${ico('rows-3')}</button><button class="btn" onclick="csvResum()">${ico('download')}${L('Exporta CSV', 'Exporta CSV')}</button></span></div>
     <div id="tbl"></div>`, { fluid: true });
   drawTable();
 }
@@ -252,20 +267,20 @@ function filtered() {
 }
 function drawTable() {
   const R = filtered(), q = AF.q.trim();
-  $('#cnt').textContent = `${R.length} ${L('alumnes', 'alumnos')}`;
+  $('#cnt').textContent = `${R.length} ${R.length === 1 ? L('alumne', 'alumno') : L('alumnes', 'alumnos')}`;
   const th = (k, t, cls = '') => `<th class="s ${cls} ${AF.sort[0] === k ? 'on' : ''}" onclick="AF.sort=['${k}',AF.sort[0]==='${k}'?-AF.sort[1]:-1];drawTable()" aria-sort="${AF.sort[0] === k ? (AF.sort[1] < 0 ? 'descending' : 'ascending') : 'none'}">${t} ${ico(AF.sort[0] === k && AF.sort[1] > 0 ? 'chevron-down' : 'chevron-down')}</th>`;
   const sevDot = r => `<i class="dot ${r.sev === 2 ? 'crit' : r.sev ? 'warn' : ''}" style="${r.sev ? '' : 'visibility:hidden'}"></i>`;
   $('#tbl').innerHTML = !scope().length ? `<div class="card">${emptyState('users', L('Encara no hi ha alumnes', 'Aún no hay alumnos'), L('Comparteix el codi del grup perquè els alumnes hi entrin.', 'Comparte el código del grupo para que los alumnos entren.'), `<a class="btn" href="#/grups">${L('Ves als grups', 'Ir a los grupos')}</a>`)}</div>`
-    : `<div class="tw ${AF.compact ? 'compact' : ''}"><table><thead><tr>${th('name', L('Alumne', 'Alumno'), 'stick')}${th('course', L('Nivell', 'Nivel'), 'hide-sm')}${th('last', L('Última activitat', 'Última actividad'), 'r')}${th('act', L('Dies actius (14 d)', 'Días activos (14 d)'), 'hide-md')}${th('les', L('Lliçons', 'Lecciones'), 'r hide-lg')}${th('acc', L('Precisió', 'Precisión'), 'r')}${th('evo', L('Evolució', 'Evolución'), 'r hide-sm')}${th('gate', L('Porta del Cavaller', 'Puerta del Caballero'), 'hide-sm')}<th></th></tr></thead><tbody>
+    : `<div class="tw al ${AF.compact ? 'compact' : ''}"><table><thead><tr>${th('name', L('Alumne', 'Alumno'), 'stick')}${th('course', L('Nivell', 'Nivel'), 'hide-sm')}${th('last', L('Última activitat', 'Última actividad'), 'r')}${th('act', L('Dies actius (14 d)', 'Días activos (14 d)'), 'hide-md')}${th('les', L('Lliçons', 'Lecciones'), 'r hide-lg')}${th('acc', L('Precisió', 'Precisión'), 'r')}${th('evo', L('Evolució', 'Evolución'), 'r hide-sm')}${th('gate', L('Porta del Cavaller', 'Puerta del Caballero'), 'hide-sm')}<th></th></tr></thead><tbody>
     ${R.map(r => { const x = r.exams[0], b = band(r.acc, r.answers); return `<tr tabindex="0" data-c="${esc(r.code)}" onclick="if(!event.target.closest('.rowmenu'))location.hash='#/alumnes/${encodeURIComponent(r.code)}'" onkeydown="rowKey(event,this)">
-      <td class="stick"><div class="nm">${sevDot(r)}${avatar(r)}<div><b>${esc(r.name)}</b><small>${r.username ? '@' + esc(r.username) : L('entra amb codi', 'entra con código')}${!G && r.grup_id ? ' · ' + esc(gName(r.grup_id)) : ''}${q && r.code.toLowerCase().includes(q.toLowerCase()) ? ' · ' + esc(r.code) : ''}</small></div></div></td>
-      <td class="hide-sm">${curs(r.course)}</td><td class="r ${r.idle > 7 || r.idle == null ? 't3' : ''}">${ago(r.last_day)}</td>
-      <td class="hide-md"><span class="d14">${r.d14.map(o => `<i class="${o ? 'on' : ''}"></i>`).join('')}</span><span class="num">${r.act14}</span></td>
+      <td class="stick c-name"><div class="nm">${sevDot(r)}${avatar(r)}<div><b>${esc(r.name)}</b><small>${r.username ? '@' + esc(r.username) : L('entra amb codi', 'entra con código')}${!G && r.grup_id ? ' · ' + esc(gName(r.grup_id)) : ''}${q && r.code.toLowerCase().includes(q.toLowerCase()) ? ' · ' + esc(r.code) : ''}</small></div></div></td>
+      <td class="hide-sm">${curs(r.course)}</td><td class="r c-last ${r.idle > 7 || r.idle == null ? 't3' : ''}" data-l="${L('Última activitat', 'Última actividad')}">${ago(r.last_day)}</td>
+      <td class="hide-md c-act" data-l="${L('Dies actius (14 d)', 'Días activos (14 d)')}"><span class="d14">${r.d14.map(o => `<i class="${o ? 'on' : ''}"></i>`).join('')}</span><span class="num">${r.act14}</span></td>
       <td class="r num hide-lg">${r.lessons}</td>
-      <td class="r num" style="color:var(--${b === 'none' ? 'text-3' : b})">${r.answers >= 20 ? r.acc + ' %' : '—'}</td>
+      <td class="r num c-acc" data-l="${L('Precisió', 'Precisión')}" style="color:var(--${b === 'none' ? 'text-3' : b})">${r.answers >= 20 ? r.acc + ' %' : '—'}</td>
       <td class="r num hide-sm">${r.lt ? `${r.lt.pct} %${r.evoD != null ? ` <span class="${r.evoD >= 0 ? 'up' : 'down'}">${ico(r.evoD >= 0 ? 'trending-up' : 'trending-down')}${r.evoD >= 0 ? '+' : ''}${r.evoD}</span>` : ''}` : '<span class="t3">—</span>'}</td>
-      <td class="hide-sm">${x ? `<span class="gate">U${x.uid.split('-')[1]} · ${to12(x.best)}/12 ${x.best >= 75 ? ico('check', 'ok') : ico('x', 'ko')}</span>` : '<span class="t3">—</span>'}</td>
-      <td class="r"><button class="ib sm rowmenu" aria-label="${L('Accions', 'Acciones')}" onclick="rowMenu(event,${js(r.code)})">${ico('ellipsis')}</button></td></tr>`; }).join('') || `<tr><td colspan="9">${emptyState('search', L('Cap resultat', 'Ningún resultado'), L('Prova amb un altre filtre o una altra cerca.', 'Prueba con otro filtro u otra búsqueda.'))}</td></tr>`}
+      <td class="hide-sm c-gate" data-l="${L('Porta', 'Puerta')}">${x ? `<span class="gate">U${x.uid.split('-')[1]} · ${to12(x.best)}/12 ${x.best >= 75 ? ico('check', 'ok') : ico('x', 'ko')}</span>` : '<span class="t3">—</span>'}</td>
+      <td class="r c-menu"><button class="ib sm rowmenu" aria-label="${L('Accions', 'Acciones')}" onclick="rowMenu(event,${js(r.code)})">${ico('ellipsis')}</button></td></tr>`; }).join('') || `<tr><td colspan="9">${emptyState('search', L('Cap resultat', 'Ningún resultado'), L('Prova amb un altre filtre o una altra cerca.', 'Prueba con otro filtro u otra búsqueda.'))}</td></tr>`}
     </tbody></table></div>`;
   const cur = decodeURIComponent((location.hash.match(/^#\/alumnes\/([^?]+)/) || [])[1] || ''); if (cur) $$('tbody tr').forEach(t => t.classList.toggle('sel', t.dataset.c === cur));
 }
@@ -366,7 +381,7 @@ async function reload() { const keep = location.hash; await load(); if (location
 function grupCard(g) {
   const n = ROWS.filter(r => r.grup_id === g.id).length;
   return `<div class="card gc"><div class="r1"><b>${esc(g.nom)}</b><button class="ib" onclick="grupMenu(event,${g.id})" aria-label="${L('Accions', 'Acciones')}">${ico('ellipsis')}</button></div>
-    <div class="meta">${[curs(g.curs), `${n} ${L('alumnes', 'alumnos')}`, g.docent ? L('Docent', 'Docente') + ': ' + g.docent : '', ADMIN ? g.centre : ''].filter(Boolean).map(esc).join(' · ')}</div>
+    <div class="meta">${[curs(g.curs), `${n} ${n === 1 ? L('alumne', 'alumno') : L('alumnes', 'alumnos')}`, g.docent ? L('Docent', 'Docente') + ': ' + g.docent : '', ADMIN ? g.centre : ''].filter(Boolean).map(esc).join(' · ')}</div>
     <div class="codebox"><code>${esc(g.codi)}</code><button class="ib" title="${L('Copia el codi', 'Copiar el código')}" onclick="copyTxt(${js(g.codi)},L('Codi copiat','Código copiado'))">${ico('copy')}</button><button class="ib" title="${L('Mostra el codi a la pissarra', 'Mostrar el código en la pizarra')}" onclick="projectar(${g.id})">${ico('qr-code')}</button></div>
     <button class="btn full" onclick="copyInstr(${js(g.codi)})">${ico('copy')}${L('Copia les instruccions', 'Copiar las instrucciones')}</button>
     <div class="foot">${L("Els alumnes l'escriuen a Perfil → Tinc un codi de classe", 'Los alumnos lo escriben en Perfil → Tinc un codi de classe')}</div></div>`;
@@ -394,7 +409,7 @@ function grupModal(id) {
 async function grupSave(id) {
   if (ADMIN && !id && !(D.centres || []).length) return $('#g_err').textContent = L('Primer crea un centre.', 'Primero crea un centro.');
   const j = await act('grup_save', { id: id || undefined, nom: $('#g_nom').value, curs: $('#g_curs').value, centre_id: $('#g_centre')?.value, docent_id: $('#g_doc')?.value });
-  if (!j.ok) return $('#g_err').textContent = L('Posa un nom al grup.', 'Pon un nombre al grupo.');
+  if (!j.ok) return $('#g_err').textContent = j.error === 'nom' ? L('Posa un nom al grup.', 'Pon un nombre al grupo.') : j.error === 'centre' ? L('Tria el centre del grup.', 'Elige el centro del grupo.') : j.error === 'permís' ? L("No tens permís per editar aquest grup.", 'No tienes permiso para editar este grupo.') : L("No s'ha pogut desar. Torna-ho a provar.", 'No se ha podido guardar. Vuelve a intentarlo.');
   closeModal(); toast(id ? L('Grup desat.', 'Grupo guardado.') : L(`Grup creat. Codi: ${j.grup.codi}`, `Grupo creado. Código: ${j.grup.codi}`)); reload();
 }
 async function grupCodi(id) { closePops(); if (!await confirmBox(L('Generar un codi nou?', '¿Generar un código nuevo?'), L("L'actual deixarà de funcionar. Els alumnes que ja són dins no en sortiran.", 'El actual dejará de funcionar. Los alumnos que ya están dentro no saldrán.'), L("Genera'n un de nou", 'Generar uno nuevo'), false)) return; const j = await act('grup_codi', { id }); toast(L(`Codi nou: ${j.codi}`, `Código nuevo: ${j.codi}`)); reload(); }
