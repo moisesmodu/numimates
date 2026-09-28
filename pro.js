@@ -20,7 +20,16 @@ if (PRO) {
   renderHome = function () { _rh(); proMap(); };
 }
 function proMap() {
-  $$('.unit').forEach((sec, ui) => { const p = sec.querySelector('.path'); if (p) p.insertAdjacentHTML('afterbegin', `<div class="pbg" style="background-image:url(img/bg/${MAP_BG[(ui + P.course * 3) % MAP_BG.length]}.jpg)"></div>`); });
+  // Terreny que es mou amb el camí: el paisatge de la unitat es repeteix cap avall, alternant-lo com un mirall
+  // (esquerra-dreta, mai cap per avall) i fonent cada tros amb l'anterior perquè no es vegin les juntes
+  $$('.unit').forEach((sec, ui) => {
+    const path = sec.querySelector('.path'); if (!path) return;
+    const img = `img/bg/${MAP_BG[(ui + P.course * 3) % MAP_BG.length]}.jpg`, W = path.clientWidth, H = path.scrollHeight;
+    const th = Math.round(W * 16 / 9 * .68), step = Math.round(th * .84), n = Math.max(1, Math.ceil((H - th) / step) + 1);
+    let tiles = '';
+    for (let i = 0; i < n; i++) tiles += `<i class="tile ${i % 2 ? 'fl' : ''} ${i ? 'fade' : ''}" style="top:${i * step}px;height:${th}px;background-image:url(${img})"></i>`;
+    path.insertAdjacentHTML('afterbegin', `<div class="terrain">${tiles}</div>`);
+  });
   $$('.unit .path').forEach(path => {
     const nodes = [...path.querySelectorAll('.nwrap')];
     if (nodes.length < 2) return;

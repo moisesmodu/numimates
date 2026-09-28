@@ -884,8 +884,11 @@ body.pro{background:linear-gradient(180deg,#F3ECFA 0,#EEF4FB 420px,#F4F0FA 100%)
 body.pro .topbar{background:linear-gradient(#F3ECFA 78%,rgba(243,236,250,0))}
 @keyframes chHop{0%,100%{transform:translateY(0)}50%{transform:translateY(-5%)}}
 body.pro .unit .path{margin-top:10px;border-radius:26px;background:#DDEBC8;box-shadow:inset 0 0 0 1px rgba(255,255,255,.6),0 10px 30px rgba(60,30,90,.10);overflow:clip}
-/* el paisatge es queda quiet darrere mentre baixes pel camí (funciona també a l'iPhone) */
-body.pro .pbg{position:sticky;top:0;align-self:stretch;height:100vh;margin-top:-58px;margin-bottom:calc(-100vh - 16px);background:center/cover no-repeat;pointer-events:none;z-index:0}
+/* terreny que es desplaça amb el camí */
+body.pro .terrain{position:absolute;inset:0;overflow:hidden;z-index:0;pointer-events:none}
+body.pro .terrain .tile{position:absolute;left:0;right:0;background:center 62%/100% auto no-repeat}
+body.pro .terrain .tile.fl{transform:scaleX(-1)}
+body.pro .terrain .tile.fade{-webkit-mask-image:linear-gradient(transparent,#000 22%);mask-image:linear-gradient(transparent,#000 22%)}
 body.pro .unit.closed .path{filter:grayscale(.7) brightness(1.05)}
 body.pro .road{position:absolute;left:0;top:0;pointer-events:none;z-index:1}
 body.pro .road .rb{fill:none;stroke:#E9D9B6;stroke-width:34;stroke-linecap:round;opacity:.9}
