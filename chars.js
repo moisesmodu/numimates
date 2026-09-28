@@ -183,7 +183,7 @@ function lvlDeco(lv, front) {
     return lv >= 3 ? `<circle class="aura" cx="60" cy="64" r="${46 + lv * 2}" fill="url(#${g})"/>` : '';
   }
   let s = '';
-  if (lv >= 2) s += `<g class="lvstar">${star(98, 104, 9, lv >= 5 ? '#FF7AA8' : lv >= 4 ? '#FFC93C' : '#5FF0D0')}<text x="98" y="107.5" text-anchor="middle" font-size="9" font-weight="900" fill="#2B1A38" font-family="Nunito,sans-serif">${lv}</text></g>`;
+  if (lv >= 2) s += `<g class="lvstar">${star(98, 104, 9, lv >= 5 ? '#FF7AA8' : lv >= 4 ? '#FFC93C' : '#5FF0D0')}<text x="98" y="107.5" text-anchor="middle" font-size="9" font-weight="900" fill="#2B1A38" font-family="Lexend,sans-serif">${lv}</text></g>`;
   if (lv >= 4) s += `<g class="twinkle">${star(16, 40, 4, '#FFD23F')}${star(104, 28, 3.5, '#FFD23F')}${star(12, 84, 3, '#FFE680')}</g>`;
   return s;
 }

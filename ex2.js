@@ -1,5 +1,5 @@
 /* ===== Exercicis de 1r-3r i 5è-6è (bilingüe CA/ES) ===== */
-const F = 'font-family="Nunito,sans-serif" font-weight="800"';
+const F = 'font-family="Lexend,sans-serif" font-weight="800"';
 const gcd = (a, b) => b ? gcd(b, a % b) : a;
 const lcm = (a, b) => a / gcd(a, b) * b;
 const fmtD = x => { const neg = x < 0; let [i, f] = String(+Math.abs(x).toFixed(3)).split('.'); return (neg ? '−' : '') + fmt(+i) + (f ? ',' + f : ''); };

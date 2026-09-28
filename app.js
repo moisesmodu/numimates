@@ -797,9 +797,9 @@ function evoChart(tests) {
   const W = 320, H = 150, x0 = 40, y0 = 120, w = (W - x0 - 16) / Math.max(1, t.length - 1);
   const pts = t.map((d, i) => [x0 + (t.length === 1 ? (W - x0) / 2 - 8 : i * w), y0 - d.pct / 100 * 100]);
   let s = `<svg viewBox="0 0 ${W} ${H}" class="evochart">`;
-  [0, 50, 100].forEach(v => { const y = y0 - v; s += `<line x1="${x0}" y1="${y}" x2="${W - 8}" y2="${y}" stroke="#ECE4F3" stroke-width="1.5"/><text x="${x0 - 6}" y="${y + 4}" text-anchor="end" font-size="10" font-weight="800" fill="#8A7B99" font-family="Nunito">${v}%</text>`; });
+  [0, 50, 100].forEach(v => { const y = y0 - v; s += `<line x1="${x0}" y1="${y}" x2="${W - 8}" y2="${y}" stroke="#ECE4F3" stroke-width="1.5"/><text x="${x0 - 6}" y="${y + 4}" text-anchor="end" font-size="10" font-weight="800" fill="#8A7B99" font-family="Lexend">${v}%</text>`; });
   if (pts.length > 1) s += `<polyline points="${pts.map(p => p.join(',')).join(' ')}" fill="none" stroke="#22B5A0" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" class="drawline"/>`;
-  pts.forEach((p, i) => { s += `<circle cx="${p[0]}" cy="${p[1]}" r="6" fill="#fff" stroke="#22B5A0" stroke-width="3" class="dot" style="animation-delay:${i * 120}ms"/><text x="${p[0]}" y="${p[1] - 11}" text-anchor="middle" font-size="11" font-weight="900" fill="#12806F" font-family="Nunito">${t[i].pct}%</text><text x="${p[0]}" y="${H - 8}" text-anchor="middle" font-size="9.5" font-weight="800" fill="#8A7B99" font-family="Nunito">${t[i].date.slice(8, 10)}/${t[i].date.slice(5, 7)}</text>`; });
+  pts.forEach((p, i) => { s += `<circle cx="${p[0]}" cy="${p[1]}" r="6" fill="#fff" stroke="#22B5A0" stroke-width="3" class="dot" style="animation-delay:${i * 120}ms"/><text x="${p[0]}" y="${p[1] - 11}" text-anchor="middle" font-size="11" font-weight="900" fill="#12806F" font-family="Lexend">${t[i].pct}%</text><text x="${p[0]}" y="${H - 8}" text-anchor="middle" font-size="9.5" font-weight="800" fill="#8A7B99" font-family="Lexend">${t[i].date.slice(8, 10)}/${t[i].date.slice(5, 7)}</text>`; });
   return s + '</svg>';
 }
 function scrEvolution(R) {

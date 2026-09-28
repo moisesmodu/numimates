@@ -48,7 +48,7 @@ function clockSVG(h, m) {
     const a = i * 6 * Math.PI / 180, r1 = i % 5 ? 81 : 75;
     s += `<line x1="${f(100 + 85 * Math.sin(a))}" y1="${f(100 - 85 * Math.cos(a))}" x2="${f(100 + r1 * Math.sin(a))}" y2="${f(100 - r1 * Math.cos(a))}" stroke="${INK}" stroke-width="${i % 5 ? 1.5 : 3.2}"/>`;
   }
-  for (let i = 1; i <= 12; i++) { const a = i * 30 * Math.PI / 180; s += `<text x="${f(100 + 61 * Math.sin(a))}" y="${f(100 - 61 * Math.cos(a) + 7)}" text-anchor="middle" font-size="20" font-weight="800" fill="${INK}" font-family="Nunito,sans-serif">${i}</text>`; }
+  for (let i = 1; i <= 12; i++) { const a = i * 30 * Math.PI / 180; s += `<text x="${f(100 + 61 * Math.sin(a))}" y="${f(100 - 61 * Math.cos(a) + 7)}" text-anchor="middle" font-size="20" font-weight="800" fill="${INK}" font-family="Lexend,sans-serif">${i}</text>`; }
   s += `<g class="hand-h"><line x1="100" y1="100" x2="${f(100 + 42 * Math.sin(ha))}" y2="${f(100 - 42 * Math.cos(ha))}" stroke="${INK}" stroke-width="9" stroke-linecap="round"/></g>`;
   s += `<g class="hand-m"><line x1="100" y1="100" x2="${f(100 + 70 * Math.sin(ma))}" y2="${f(100 - 70 * Math.cos(ma))}" stroke="#FF5A5F" stroke-width="5" stroke-linecap="round"/></g>`;
   return s + '<circle cx="100" cy="100" r="7" fill="#602B7A"/></svg>';
@@ -68,8 +68,8 @@ function shapeSVG(id, sides, col) {
 function rectSVG(w, h, lw, lh) {
   const sc = Math.min(160 / w, 90 / h), W = w * sc, H = h * sc, x = (230 - W) / 2 - 15, y = (130 - H) / 2;
   return `<svg viewBox="0 0 230 140" class="vsvg wide"><rect x="${x}" y="${y}" width="${W}" height="${H}" fill="#E8F5FE" stroke="#36A9E1" stroke-width="4" class="draw"/>
-  <text x="${x + W / 2}" y="${y + H + 22}" text-anchor="middle" font-size="17" font-weight="800" fill="${INK}" font-family="Nunito,sans-serif">${lw}</text>
-  <text x="${x + W + 8}" y="${y + H / 2 + 6}" font-size="17" font-weight="800" fill="${INK}" font-family="Nunito,sans-serif">${lh}</text></svg>`;
+  <text x="${x + W / 2}" y="${y + H + 22}" text-anchor="middle" font-size="17" font-weight="800" fill="${INK}" font-family="Lexend,sans-serif">${lw}</text>
+  <text x="${x + W + 8}" y="${y + H / 2 + 6}" font-size="17" font-weight="800" fill="${INK}" font-family="Lexend,sans-serif">${lh}</text></svg>`;
 }
 const moneyVis = cs => `<div class="money">${cs.map((c, i) => c >= 500 ? `<div class="bill b${c / 100}" style="animation-delay:${i * 70}ms">${c / 100} €</div>` : `<div class="coin c${c}" style="animation-delay:${i * 70}ms">${c >= 100 ? c / 100 + ' €' : c + ' c'}</div>`).join('')}</div>`;
 

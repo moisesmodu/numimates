@@ -4,7 +4,7 @@
   --ko:#FF5A5F;--ko-d:#D63C42;--ko-bg:#FFE8E9;--gold:#FFC93C;--gold-d:#E0A300;--blue:#36A9E1
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{margin:0;background:var(--bg);color:var(--ink);font-family:Nunito,system-ui,sans-serif;font-weight:700;-webkit-font-smoothing:antialiased}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:Lexend,system-ui,sans-serif;font-weight:700;-webkit-font-smoothing:antialiased}
 button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
 button:disabled{cursor:default}
 h1,h2,h3{font-weight:900;margin:0}
