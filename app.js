@@ -301,6 +301,23 @@ function trailHTML(ui) {
   return `<div class="trail ${passed ? 'open' : ''} ${JUST_OPEN === u.id ? 'fresh' : ''}"><i class="tsteps"></i><span>${passed ? `🏰 ${L('Camí obert cap a', 'Camino abierto hacia')} ${to}` : `🔒 ${L('La porta del Cavaller obre el camí cap a', 'La puerta del Caballero abre el camino hacia')} ${to}`}</span></div>`;
 }
 let JUST_OPEN = null; const UNFOLD = new Set();
+const gateMissTitles = u => { const ex = (P.exams || {})[u.id]; return [...new Set((ex?.miss || []).map(s => (u.lessons.find(l => (l.tier || 1) <= 2 && l.sk.includes(s)) || {}).t).filter(Boolean))].slice(0, 4).map(tx); };
+function scrGatePrep(ui) {
+  const u = UNITS_()[ui], ts = gateMissTitles(u);
+  app.innerHTML = `<div class="scr"><div class="rchar big tapme">${charSVG('cavaller', 'happy')}</div><h1>${L('Repassem-ho junts?', '¿Lo repasamos juntos?')}</h1>
+    <p class="sub">${L('Abans de tornar a la porta, practica el que t\'ha costat més:', 'Antes de volver a la puerta, practica lo que más te ha costado:')}</p>
+    ${ts.length ? `<ul class="preplist">${ts.map(t => `<li>${t}</li>`).join('')}</ul>` : ''}
+    <button class="btn big" onclick="startGatePrep(${ui})">${L('REPASSA ARA (+8 💎)', 'REPASA AHORA (+8 💎)')}</button>
+    <button class="btn ghost big" onclick="flowNext()">${L('MÉS TARD', 'MÁS TARDE')}</button></div>`;
+}
+function startGatePrep(ui) {
+  const u = UNITS_()[ui], ex = (P.exams || {})[u.id]; if (!ex || !ex.miss || !ex.miss.length) return;
+  if (ex.prep) return toast(L('Ja has fet aquest repàs. Ara, a la porta!', 'Ya has hecho este repaso. ¡Ahora, a la puerta!'));
+  ex.prep = true; FLOW = [];
+  const lv = s => (u.lessons.find(l => (l.tier || 1) <= 2 && l.sk.includes(s)) || u.lessons[0]).L, plan = [];
+  for (let i = 0; i < 8; i++) { const s = ex.miss[i % ex.miss.length]; plan.push([s, lv(s)]); }
+  startRun({ mode: 'prep', ui, li: null, plan: shuffle(plan), color: u.color });
+}
 function scrGate(ui) {
   const us = UNITS_(), u = us[ui], nx = us[ui + 1];
   app.innerHTML = `<div class="scr gatescr"><div class="burst gold"></div>
@@ -335,7 +352,7 @@ function openLesson(ui, li) {
   modal(`<div class="sheet" style="--uc:${u.color}"><div class="sk">${tx(CUR().name).toUpperCase()} · ${L('UNITAT', 'UNIDAD')} ${ui + 1} · ${isR ? L('PROVA FINAL', 'PRUEBA FINAL') : (isBonus(u, li) ? '⭐ BONUS · ' : '') + L('NIVELL ', 'NIVEL ') + (u.lessons[li].tier || 1) + ' · ' + L('LLIÇÓ ', 'LECCIÓN ') + (li % 10 + 1) + ' / 10'}</div>
     <h3>${isR ? L('🏰 La porta del Cavaller', '🏰 La puerta del Caballero') : tx(u.lessons[li].t)}</h3>
     <p>${isR ? L("El Cavaller del Codi vigila la porta de la unitat següent. Et farà 12 enigmes dels nivells 1 i 2: treu més d'un 7 i s'obrirà. Aquí no hi ha segones oportunitats… però la pots tornar a provar sempre que vulguis!", 'El Caballero del Código vigila la puerta de la unidad siguiente. Te hará 12 enigmas de los niveles 1 y 2: saca más de un 7 y se abrirá. Aquí no hay segundas oportunidades… ¡pero puedes volver a intentarlo siempre que quieras!') : L("8 exercicis. Si te n'equivoques algun, el tornaràs a practicar al final.", '8 ejercicios. Si fallas alguno, lo volverás a practicar al final.')}</p>
-    ${st ? `<div class="sstars">${starsHTML(st)}</div>` : ''}
+    ${st ? `<div class="sstars">${starsHTML(st)}</div>` : ''}${isR && st < PASS && (P.exams || {})[u.id]?.miss?.length && !P.exams[u.id].prep ? `<button class="btn ghost big" onclick="closeModal();startGatePrep(${ui})">🔁 ${L('Primer repassa el que et va costar (+8 💎)', 'Primero repasa lo que te costó (+8 💎)')}</button>` : ''}
     <button class="btn big" style="--c:${u.color}" onclick="closeModal();startLesson(${ui},${li})">${st ? L('REPETEIX', 'REPITE') : L('COMENÇA', 'EMPIEZA')}</button></div>`);
 }
 
@@ -351,8 +368,10 @@ function startLesson(ui, li) {
     // La porta del Cavaller: examen camuflat amb 8 preguntes del tema i 4 d'activitats visuals, sense segones oportunitats
     const ls = u.lessons.filter(l => (l.tier || 1) <= 2), lv = sk => (ls.find(l => l.tier === 2 && l.sk.includes(sk)) || ls.find(l => l.sk.includes(sk))).L;
     const core = shuffle([...new Set(ls.filter(l => !l.vis).flatMap(l => l.sk).filter(s => !/^v\./.test(s)))]), vis = shuffle([...new Set(ls.flatMap(l => l.sk).filter(s => /^v\./.test(s)))]);
-    for (let i = 0; i < 8; i++) plan.push([core[i % core.length], lv(core[i % core.length])]);
-    for (let i = 0; i < 4; i++) { const s = vis.length ? vis[i % vis.length] : core[(8 + i) % core.length]; plan.push([s, lv(s)]); }
+    const miss = shuffle(((P.exams || {})[u.id]?.miss || []).filter(s => ls.some(l => l.sk.includes(s)))).slice(0, 6);
+    miss.forEach(s => plan.push([s, lv(s)]));
+    let ci = 0, vi = 0;
+    while (plan.length < 12) { const s = vis.length && plan.filter(p => /^v\./.test(p[0])).length < 4 && (plan.length >= 8 || Math.random() < .35) ? vis[vi++ % vis.length] : core[ci++ % core.length]; plan.push([s, lv(s)]); }
     return startRun({ mode: 'repte', exam: true, ui, li, plan: shuffle(plan), review: {}, color: u.color });
   }
   else { const l = u.lessons[li]; for (let i = 0; i < 8; i++) plan.push([l.sk[i % l.sk.length], l.L]); }
@@ -384,7 +403,7 @@ function startRun(o) {
   const mix = !['place', 'evo'].includes(o.mode);
   LS = { ...o, seen, mix, queue: o.plan.map(([s, lv], i) => { const e = genEx(s, lv, seen, mix); if (o.review && o.review[i]) e.review = true; return e; }), total: o.plan.length, done: 0, miss: 0, combo: 0, maxCombo: 0, gold: 0, t0: Date.now(), res: [] };
   if (mix && !o.exam && o.plan.length >= 6) { const g = ri(2, o.plan.length - 1); LS.queue[g].gold = true; }
-  LS.eres = [];
+  LS.eres = []; LS.emiss = [];
   nextEx();
 }
 function nextEx() {
@@ -479,7 +498,7 @@ function check() {
   if (e.type === 'input') { $('#inbox').classList.add(ok ? 'right' : 'wrong'); target = $('#inbox'); }
   if (e.type === 'order') { $('#oslots').classList.add(ok ? 'right' : 'wrong'); target = $('#oslots'); }
   if (e.type === 'grid') { $('#tgrid').classList.add(ok ? 'right' : 'wrong'); target = $('#tgrid'); }
-  if (LS.exam) LS.eres.push(ok);
+  if (LS.exam) { LS.eres.push(ok); if (!ok) LS.emiss.push(e.sk); }
   $$('.pad button').forEach(b => { if (!b.classList.contains('pk-ok')) b.disabled = true; });
   const foot = $('#foot'), fb = $('#fb'), chk = $('#chk');
   foot.classList.add(ok ? 'ok' : 'ko');
@@ -542,6 +561,7 @@ function finishRun() {
   const R = { mode: LS.mode, ui: LS.ui, li: LS.li, acc: LS.exam ? 0 : Math.round(100 * LS.total / (LS.total + LS.miss)), perfect: LS.miss === 0, stars: 0, chest: 0 };
   if (R.mode === 'reco') { R.xp = 12 + (R.perfect ? 4 : 0); R.gems = 6; P.stats.trains++; if (R.acc >= 75) { P.reco = null; R.recoDone = true; } }
   else if (R.mode === 'train') { R.xp = 8 + (R.perfect ? 4 : 0); R.gems = 3 + (R.perfect ? 2 : 0); P.stats.trains++; }
+  else if (R.mode === 'prep') { R.xp = 10 + (R.perfect ? 4 : 0); R.gems = 8; P.stats.trains++; R.sub = L('Ben repassat! Ara ja pots tornar a la porta del Cavaller.', '¡Bien repasado! Ahora ya puedes volver a la puerta del Caballero.'); }
   else if (R.mode === 'review') { R.pass = LS.miss <= 2; R.xp = 12 + (R.perfect ? 4 : 0); R.gems = R.pass ? 6 : 2; P.stats.trains++; reviewDone(LS.revKeys, R.pass);
     R.sub = R.pass ? L('Lliçons repassades i a punt. Tornaran a sortir d\'aquí uns dies.', 'Lecciones repasadas y a punto. Volverán a salir dentro de unos días.') : L('Encara costen una mica: tornaran a sortir aviat per reforçar-les.', 'Aún cuestan un poco: volverán a salir pronto para reforzarlas.'); }
   else {
@@ -550,7 +570,8 @@ function finishRun() {
     if (LS.exam) {
       const okN = LS.total - LS.miss; R.exam = true; R.acc = Math.round(100 * okN / LS.total); R.stars = okN >= 11 ? 3 : okN >= 9 ? 2 : 1;
       const uid = UNITS_()[R.ui].id; P.exams = P.exams || {}; const ex = P.exams[uid] || { tries: 0, best: 0 };
-      ex.tries++; ex.last = R.acc; ex.best = Math.max(ex.best, R.acc); ex.d = today(); P.exams[uid] = ex;
+      ex.tries++; ex.last = R.acc; ex.best = Math.max(ex.best, R.acc); ex.d = today(); ex.miss = [...new Set(LS.emiss)]; ex.prep = false; P.exams[uid] = ex;
+      if (R.stars < PASS && ex.miss.length) R.prep = R.ui;
       const nota = String(Math.round(okN / LS.total * 100) / 10).replace('.', ','); R.nota = nota;
       R.sub = R.stars >= PASS ? L(`Nota: <b>${nota}</b> (${okN} de ${LS.total}). La porta s'ha obert: la unitat següent t'espera, i també el nivell 3 de bonus!`, `Nota: <b>${nota}</b> (${okN} de ${LS.total}). La puerta se ha abierto: ¡te espera la unidad siguiente y también el nivel 3 de bonus!`) : L(`Nota: <b>${nota}</b> (${okN} de ${LS.total}). Per obrir la porta cal més d'un 7: repassa una mica i torna-ho a provar!`, `Nota: <b>${nota}</b> (${okN} de ${LS.total}). Para abrir la puerta hace falta más de un 7: ¡repasa un poco y vuelve a intentarlo!`);
     }
@@ -566,7 +587,7 @@ function finishRun() {
   R.bonus = Math.floor(LS.maxCombo / 3) * 2 + LS.gold * 5; R.xp += R.bonus;
   if (R.mode === 'lesson' || R.mode === 'repte' || R.mode === 'reco' || (R.mode === 'review' && R.pass)) { misEvent('lesson'); R.pack = openPack(R.mode === 'repte' ? 2 : 1); }
   if (R.perfect && R.mode !== 'train') misEvent('perfect');
-  if (R.mode === 'train' || R.mode === 'reco' || R.mode === 'review') misEvent('train');
+  if (R.mode === 'train' || R.mode === 'reco' || R.mode === 'review' || R.mode === 'prep') misEvent('train');
   LS = null; reward(R);
 }
 function reward(R) {
@@ -589,6 +610,7 @@ function reward(R) {
   if (R.clv) FLOW.push(() => scrCharLevel(...R.clv));
   if (R.knight) FLOW.push(scrKnight);
   if (R.gate != null) FLOW.push(() => scrGate(R.gate));
+  if (R.prep != null) FLOW.push(() => scrGatePrep(R.prep));
   if (R.crown) FLOW.push(() => scrCrown(R.crown));
   const mc_ = COURSES[P.maxCourse];
   if (mc_ && P.maxCourse < COURSES.length - 1 && mc_.units.every(u => udone(P, u))) { P.maxCourse++; save(); const nl = P.maxCourse; FLOW.push(() => scrNewLevel(nl)); }
@@ -599,7 +621,7 @@ function flowNext() { closeModal(); const f = FLOW.shift(); if (f) f(); else go(
 function countUp() { $$('[data-count]').forEach(el => { const to = +el.dataset.count, suf = el.dataset.suf || '', t0 = performance.now(); (function step(t) { const k = Math.min(1, (t - t0) / 800); el.textContent = Math.round(to * (1 - (1 - k) ** 3)) + suf; if (k < 1) requestAnimationFrame(step); })(t0); }); }
 function scrResult(R) {
   const game = R.mode === 'game' || R.mode === 'battle';
-  const title = game ? tx(R.title) : R.exam ? (R.stars >= PASS ? L('Porta oberta!', '¡Puerta abierta!') : L('La porta encara resisteix…', 'La puerta aún resiste…')) : R.recoDone ? L('Missió del Cavaller complerta!', '¡Misión del Caballero cumplida!') : R.perfect ? L('Lliçó perfecta!', '¡Lección perfecta!') : R.mode === 'reco' ? L('Bona feina! Torna-ho a provar per completar la missió.', '¡Buen trabajo! Vuelve a intentarlo para completar la misión.') : R.mode === 'train' ? L('Entrenament fet!', '¡Entrenamiento hecho!') : R.mode === 'review' ? L('Repàs fet!', '¡Repaso hecho!') : R.exam ? (R.stars >= PASS ? L('Porta oberta!', '¡Puerta abierta!') : L('La porta encara resisteix…', 'La puerta aún resiste…')) : R.stars && R.stars < PASS ? L('Gairebé!', '¡Casi!') : L('Lliçó completada!', '¡Lección completada!');
+  const title = game ? tx(R.title) : R.exam ? (R.stars >= PASS ? L('Porta oberta!', '¡Puerta abierta!') : L('La porta encara resisteix…', 'La puerta aún resiste…')) : R.recoDone ? L('Missió del Cavaller complerta!', '¡Misión del Caballero cumplida!') : R.perfect ? L('Lliçó perfecta!', '¡Lección perfecta!') : R.mode === 'reco' ? L('Bona feina! Torna-ho a provar per completar la missió.', '¡Buen trabajo! Vuelve a intentarlo para completar la misión.') : R.mode === 'train' ? L('Entrenament fet!', '¡Entrenamiento hecho!') : R.mode === 'review' || R.mode === 'prep' ? L('Repàs fet!', '¡Repaso hecho!') : R.exam ? (R.stars >= PASS ? L('Porta oberta!', '¡Puerta abierta!') : L('La porta encara resisteix…', 'La puerta aún resiste…')) : R.stars && R.stars < PASS ? L('Gairebé!', '¡Casi!') : L('Lliçó completada!', '¡Lección completada!');
   const sub = R.sub || (game ? (R.record ? L('🏆 Nou rècord personal!', '🏆 ¡Nuevo récord personal!') : L(`El teu rècord: ${R.best}`, `Tu récord: ${R.best}`)) : R.perfect ? L('Ni un sol error. Ets imparable!', 'Ni un solo error. ¡Eres imparable!') : L('Cada error és una oportunitat per aprendre.', 'Cada error es una oportunidad para aprender.'));
   const third = game ? `<div class="rs acc"><span>${L('PUNTS', 'PUNTOS')}</span><b data-count="${R.score}">0</b></div>` : `<div class="rs acc"><span>${L('PRECISIÓ', 'PRECISIÓN')}</span><b data-count="${R.acc}" data-suf="%">0</b></div>`;
   app.innerHTML = `<div class="scr"><div class="burst"></div><div class="cheer"><div class="saybubble">${cheerMsg(R)}</div><div class="rchar dance tapme">${meC('happy')}</div></div>

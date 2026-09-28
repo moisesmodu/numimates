@@ -872,3 +872,4 @@ body{background:radial-gradient(1200px 500px at 50% -120px,#F1E6FA 0%,rgba(241,2
 .gatescr .knightc{width:100px;margin:-6px auto 0;position:relative}
 .unfold{display:block;margin:10px auto 0;font-weight:900;font-size:14px;color:var(--pri);background:#fff;border:2px solid #D9CCE6;border-radius:14px;padding:10px 16px}
 .unit:has(.trail.open) .unfold{color:#1E7A3C;background:#E6F7EC;border-color:#8FD9A8}
+.preplist{text-align:left;margin:4px auto 16px;max-width:320px;font-weight:800;line-height:1.7}
