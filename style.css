@@ -923,3 +923,6 @@ body.pro .pdiv{z-index:3}body.pro .pdiv span{box-shadow:0 4px 0 color-mix(in srg
 .lans{background:#E6F7EC;border:2px solid #8FD9A8;border-radius:14px;padding:10px 12px;font-size:16px}.lans span{color:#1E7A3C;font-weight:900}
 .lex{margin-top:10px;background:#FFF8E1;border-radius:14px;padding:10px 12px;line-height:1.5;font-size:15px}
 .lnav{display:flex;gap:10px}.lnav .btn{flex:1}.lnav>span{flex:1}
+
+/* Icones pròpies (icons.js): substitueixen els emojis amb la mateixa mida que el text */
+img.ic{display:inline-block;width:1.2em;height:1.2em;object-fit:contain;vertical-align:-.22em;margin:0 .02em;pointer-events:none;-webkit-user-drag:none}
