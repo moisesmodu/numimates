@@ -113,5 +113,8 @@ const SCN = {
 };
 // personatges guia animats (vídeos curts en bucle fets amb Higgsfield a partir de les il·lustracions de l'app)
 const CHAR_CLIP = ['numi', 'estel', 'flama', 'guida', 'tuga', 'vuit', 'cavaller'];
+// vídeo d'entrada de la unitat (una situació real del tema, sense números que s'hagin de comptar)
+const HOOK_CLIP = ['c3-5'];
+const hookClip = uid => HOOK_CLIP.includes(uid) ? `<video class="lhookv" src="img/anim/hook-${uid}.mp4" autoplay muted loop playsinline preload="auto" aria-hidden="true"></video>` : '';
 const charClip = (id, mood = 'happy') => CHAR_CLIP.includes(id) ? `<video class="lvid" src="img/anim/${id}.mp4" poster="img/chars/${id}-happy.webp" autoplay muted loop playsinline preload="auto" aria-hidden="true"></video>` : charSVG(id, mood);
 function animScene(uid, i) { const a = (TANIM[uid] || [])[i]; if (!a || !SCN[a.k]) return null; try { return SCN[a.k](a); } catch (e) { return null; } }

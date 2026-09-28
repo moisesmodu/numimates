@@ -930,6 +930,8 @@ body.pro .pdiv{z-index:3}body.pro .pdiv span{box-shadow:0 4px 0 color-mix(in srg
 .lcard .lk{display:block;font-weight:900;font-size:11.5px;letter-spacing:.12em;color:color-mix(in srgb,var(--uc) 80%,#000);margin-bottom:8px}
 .lcard h2{margin:2px 0 6px;font-size:24px;color:var(--ink)}.lcard .ld{color:var(--mut);margin:0 0 10px}
 .lchar{width:110px;height:110px;margin:-4px auto 6px}.lchar svg{width:100%;height:100%}
+.lhook{position:relative;margin:-4px -4px 14px;border-radius:20px;overflow:hidden;background:#fff;aspect-ratio:16/10}.lhookv{width:100%;height:100%;object-fit:cover;display:block}
+.lhook .lchar.mini{position:absolute;left:6px;bottom:-4px;width:92px;height:92px;margin:0}.lhook .lchar.mini .lvid{border-radius:0}
 .lchar .lvid{width:100%;height:100%;object-fit:contain;mix-blend-mode:multiply;border-radius:50%;display:block}.lcard>.lchar:has(.lvid){width:150px;height:150px;margin:-10px auto 0}
 .llist{margin:6px 0 0;padding-left:20px;line-height:1.8;font-weight:800}
 .lidea{font-size:17.5px;line-height:1.55;margin:0}
