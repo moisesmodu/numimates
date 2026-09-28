@@ -33,3 +33,5 @@ function proMap() {
   const cur = $('.node.cur');
   if (cur) { const w = cur.closest('.nwrap'), x = parseFloat(w.style.getPropertyValue('--x')) || 0; w.insertAdjacentHTML('beforeend', `<div class="mate ${x > 0 ? 'l' : 'r'}">${meC('happy')}</div>`); }
 }
+// app.js ja ha pintat la primera pantalla abans que es carregués aquest fitxer: la tornem a pintar
+if (PRO && VIEW) { if (VIEW === 'onboard') onb(0); else go(VIEW); }
