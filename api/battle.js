@@ -87,7 +87,7 @@ export default async function handler(req, res) {
     const done = Math.max(0, Math.min(10, b.done | 0)), correct = Math.max(0, Math.min(done, b.correct | 0)), ms = Math.max(0, Math.min(3600e3, b.ms | 0)), fin = !!b.finished;
     // Només endavant: no es pot desfer una resposta ni tornar a jugar
     await sql`UPDATE mates.batalla_jug SET done = ${done}, correct = ${correct}, ms = ${ms}, finished = finished OR ${fin}, finished_at = CASE WHEN ${fin} AND NOT finished THEN now() ELSE finished_at END
-      WHERE code = ${bcode} AND sid = ${sid} AND NOT finished AND ${done} >= done AND ${correct} >= correct`;
+      WHERE code = ${bcode} AND sid = ${sid} AND NOT finished AND ${done} >= done AND ${correct} >= correct AND ${ms} >= ms`;
     if (st0.kind === 'duel' && st0.status === 'lobby') await sql`UPDATE mates.batalles SET status = 'live' WHERE code = ${bcode}`;
     return ok(res, await state(bcode, sid));
   }

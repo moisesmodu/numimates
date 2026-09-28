@@ -11,7 +11,7 @@ export default async function handler(req, res) {
   if (!cur[0].active) return ok(res, { error: 'baixa' }, 410);
   cleanState(state);
   // Regla de conflicte: l'XP només creix. Si arriba un estat amb menys XP, retornem el del servidor.
-  if (!b.reset && (state.xp | 0) < cur[0].xp) return ok(res, { ok: false, state: cur[0].state });
+  if (!b.reset && (state.xp | 0) < cur[0].xp) return ok(res, { ok: false, state: { ...cur[0].state, xp: cur[0].xp } });
   state.code = code;
   state.unlockAll = !!(cur[0].state && cur[0].state.unlockAll);
   const s = summary(state);
