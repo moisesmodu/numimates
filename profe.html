@@ -35,6 +35,11 @@ tr:last-child td{border-bottom:0}.code{font-family:ui-monospace,monospace;color:
 .ov{position:fixed;inset:0;background:rgba(43,26,56,.45);display:flex;align-items:center;justify-content:center;padding:16px;z-index:9}.ovc{background:#fff;border-radius:20px;padding:22px;max-width:620px;width:100%;max-height:90vh;overflow:auto}.rrow{display:grid;grid-template-columns:1fr 160px 110px;gap:10px;align-items:center;margin:8px 0;font-size:14px}.rbar{height:12px;background:#EEE;border-radius:6px;overflow:hidden}.rbar div{height:100%}
 .h2{color:var(--pri);font-weight:900;margin:30px 0 10px}.rwgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(320px,100%),1fr));gap:12px}.rwbox{background:#fff;border:2px solid var(--line);border-radius:16px;padding:12px 14px}.rwbox h3{margin:0 0 6px}.rwbox table{font-size:13.5px}.rwbox td{white-space:normal;padding:6px 4px;vertical-align:top}.rwbox td:first-child{color:var(--mut);width:48%}
 .spark{display:inline-flex;gap:2px;align-items:flex-end;height:22px;vertical-align:middle}.spark i{width:6px;background:#22B5A0;border-radius:2px}
+.ggrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;margin-bottom:12px}
+.gcard{background:#fff;border:2px solid var(--line);border-radius:16px;padding:14px;display:grid;gap:10px}.gcard>div:first-child{display:grid;gap:2px}
+.gcode{font:900 26px ui-monospace,monospace;letter-spacing:.08em;color:var(--pri);background:#F4ECFA;border-radius:12px;padding:10px;text-align:center}
+.form{display:flex;flex-wrap:wrap;gap:8px;align-items:center;background:#fff;border:2px dashed var(--line);border-radius:16px;padding:12px;margin-top:10px}.form input,.form select{width:auto;flex:1 1 150px}
+select.mini{padding:4px 8px;font-size:12px;border-radius:9px;width:auto}
 </style>
 </head>
 <body>
@@ -50,22 +55,38 @@ const days = d => Math.round((new Date(todayStr() + 'T12:00') - new Date(d + 'T1
 const ago = d => { if (!d) return '—'; const n = days(d); return n <= 0 ? 'hoy' : n === 1 ? 'ayer' : `hace ${n} días`; };
 const alive = r => r.last_day && days(r.last_day) <= 1;
 function weekId(d = new Date()) { const t = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate())), day = t.getUTCDay() || 7; t.setUTCDate(t.getUTCDate() + 4 - day); const y = t.getUTCFullYear(), w = Math.ceil(((t - Date.UTC(y, 0, 1)) / 864e5 + 1) / 7); return `${y}-W${String(w).padStart(2, '0')}`; }
-const pass = () => sessionStorage.getItem('pp');
-function login(err) {
-  root.innerHTML = `<div class="login"><h1>Administración</h1><p class="lead">Numi Mates</p><input id="pw" type="password" placeholder="Contraseña" autocomplete="current-password"><div class="err">${err || ''}</div><button onclick="go()">ENTRAR</button></div>`;
-  $('#pw').focus(); $('#pw').addEventListener('keydown', e => { if (e.key === 'Enter') go(); });
+// Qui entra: l'administrador (contrasenya) o un docent (correu + contrasenya → testimoni de 12 h)
+let ME = null, ADMIN = false, GRUPS = [], CENTRES = [], DOCENTS = [];
+const pass = () => sessionStorage.getItem('pp'), dtok = () => sessionStorage.getItem('dt');
+const AUTH = () => pass() ? { 'x-profe': pass() } : dtok() ? { 'x-docent': dtok() } : null;
+function login(err, mode) {
+  mode = mode || (location.hash === '#admin' ? 'admin' : 'docent');
+  root.innerHTML = `<div class="login"><img src="img/brand/logo-horitzontal.svg" alt="Numi Mates" style="height:44px;margin:0 auto 10px;display:block"><h1 style="font-size:22px">${mode === 'admin' ? 'Administración' : 'Panel del docente'}</h1>
+    ${mode === 'admin' ? `<input id="pw" type="password" placeholder="Contraseña de administración" autocomplete="current-password">`
+      : `<input id="em" type="email" placeholder="Correo electrónico" autocomplete="username" style="margin-bottom:10px"><input id="pw" type="password" placeholder="Contraseña" autocomplete="current-password">`}
+    <div class="err">${err || ''}</div><button onclick="doLogin('${mode}')">ENTRAR</button>
+    <p class="note" style="text-align:center"><a href="#" onclick="event.preventDefault();login('', '${mode === 'admin' ? 'docent' : 'admin'}')">${mode === 'admin' ? 'Soy docente' : 'Administración'}</a></p></div>`;
+  ($('#em') || $('#pw')).focus(); root.querySelectorAll('input').forEach(i => i.addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(mode); }));
 }
-async function go(p) {
-  p = p || $('#pw').value;
-  const r = await fetch('/api/profe', { headers: { 'x-profe': p } });
-  if (r.status !== 200) { sessionStorage.removeItem('pp'); return login('Contraseña incorrecta.'); }
-  sessionStorage.setItem('pp', p);
-  const J = await r.json(); BATS = J.battles || []; TRADES = J.trades || []; CONTACTS = J.contacts || [];
-  ROWS = J.map(r => ({ ...r, cards: Object.keys(r.album || {}).length, bwins: r.bwins || 0, ncrowns: (r.crowns || []).length, stier: r.season && r.season.id === seasonNow() ? Math.min(25, Math.floor(r.season.xp / 40)) : 0, evo: (r.tests || []).filter(t => t.kind === 'evo'), streakNow: alive(r) ? r.streak : 0, wxp: r.week && r.week.id === weekId() ? r.week.xp : 0 }));
+async function doLogin(mode) {
+  sessionStorage.removeItem('pp'); sessionStorage.removeItem('dt');
+  if (mode === 'admin') { sessionStorage.setItem('pp', $('#pw').value); return go(); }
+  const r = await fetch('/api/docent', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ action: 'login', email: $('#em').value, password: $('#pw').value }) });
+  const j = await r.json(); if (!j.token) return login('Correo o contraseña incorrectos.', 'docent');
+  sessionStorage.setItem('dt', j.token); go();
+}
+function logout() { sessionStorage.removeItem('pp'); sessionStorage.removeItem('dt'); login(); }
+async function go() {
+  const h = AUTH(); if (!h) return login();
+  const r = await fetch('/api/profe', { headers: h });
+  if (r.status !== 200) { const m = pass() ? 'admin' : 'docent'; sessionStorage.removeItem('pp'); sessionStorage.removeItem('dt'); return login(m === 'admin' ? 'Contraseña incorrecta.' : 'La sesión ha caducado. Vuelve a entrar.', m); }
+  const J = await r.json(); ADMIN = !!J.admin; ME = J.me || null; GRUPS = J.grups || []; CENTRES = J.centres || []; DOCENTS = J.docents || [];
+  BATS = J.battles || []; TRADES = J.trades || []; CONTACTS = J.contacts || [];
+  ROWS = (J.rows || []).map(r => ({ ...r, cards: Object.keys(r.album || {}).length, bwins: r.bwins || 0, ncrowns: (r.crowns || []).length, stier: r.season && r.season.id === seasonNow() ? Math.min(25, Math.floor(r.season.xp / 40)) : 0, evo: (r.tests || []).filter(t => t.kind === 'evo'), streakNow: alive(r) ? r.streak : 0, wxp: r.week && r.week.id === weekId() ? r.week.xp : 0 }));
   render();
 }
 async function act(action, code, extra = {}) {
-  const r = await fetch('/api/profe', { method: 'POST', headers: { 'x-profe': pass(), 'content-type': 'application/json' }, body: JSON.stringify({ action, code, ...extra }) });
+  const r = await fetch('/api/profe', { method: 'POST', headers: { ...AUTH(), 'content-type': 'application/json' }, body: JSON.stringify({ action, code, ...extra }) });
   return r.json();
 }
 async function setPass(code, name) {
@@ -73,7 +94,7 @@ async function setPass(code, name) {
   const r = await act('setpass', code, { password: p });
   alert(r.ok ? `Contraseña cambiada. Díselo a ${name}.` : r.error === 'contrasenya-format' ? 'Mínimo 4 caracteres.' : 'Este alumno aún no tiene usuario (entra con código).');
 }
-async function unlock(code, v) { await act('unlock', code, { value: v }); go(pass()); }
+async function unlock(code, v) { await act('unlock', code, { value: v }); go(); }
 const SENT = { num: ['🔢', 'Sentido numérico'], mes: ['📏', 'Sentido de la medida'], esp: ['📐', 'Sentido espacial'], alg: ['🧩', 'Sentido algebraico y pensamiento computacional'], est: ['🎲', 'Sentido estocástico'] };
 function skillSent(sk) { const n = sk.split(':')[0]; if (/^(me\.clock|me\.units|me\.money|me\.perim|g\.clock|g\.coins|g\.ruler|geo\.area)$/.test(n)) return 'mes'; if (/^(me\.shape|g\.shape|geo\.angle|vol|e\.)/.test(n)) return 'esp'; if (/^(l\.|g\.seq|pc\.|g\.repeat)/.test(n)) return 'alg'; if (/^(stat|at\.)/.test(n)) return 'est'; return 'num'; }
 function report(code) {
@@ -90,7 +111,7 @@ function report(code) {
     <button onclick="this.closest('.ov').remove()">Cerrar</button></div>`;
   document.body.appendChild(d);
 }
-async function off(code, name) { if (!confirm(`¿Dar de baja a ${name}? Dejará de aparecer y no podrá entrar.`)) return; await act('off', code); go(pass()); }
+async function off(code, name) { if (!confirm(`¿Dar de baja a ${name}? Dejará de aparecer y no podrá entrar.`)) return; await act('off', code); go(); }
 function evoCell(r) {
   const t = r.tests || []; if (!t.length) return '<span class="mut">—</span>';
   const last = t[t.length - 1], prev = t[t.length - 2], d = prev ? last.pct - prev.pct : null;
@@ -98,26 +119,84 @@ function evoCell(r) {
 }
 function render() {
   const f = $('#fc')?.value || '', q = ($('#q')?.value || '').toLowerCase();
-  let rows = ROWS.filter(r => (!f || String(r.course) === f) && (!q || (r.name + r.code + (r.username || '')).toLowerCase().includes(q)));
+  const gf = $('#fg')?.value || ''; let rows = ROWS.filter(r => (!f || String(r.course) === f) && (!gf || String(r.grup_id || '') === gf) && (!q || (r.name + r.code + (r.username || '')).toLowerCase().includes(q)));
   const [k, dir] = SORT; rows.sort((a, b) => (a[k] > b[k] ? 1 : a[k] < b[k] ? -1 : 0) * dir);
   const act_ = ROWS.filter(alive).length, prem = ROWS.reduce((n, r) => n + (r.srw || []).length, 0), ev = ROWS.filter(r => r.evo.length).length;
   const th = (key, label) => `<th onclick="SORT=['${key}',SORT[0]==='${key}'?-SORT[1]:-1];render()">${label}${SORT[0] === key ? (SORT[1] < 0 ? ' ↓' : ' ↑') : ''}</th>`;
-  root.innerHTML = `<h1>Administración · Numi Mates</h1><p class="lead">Ranking de rachas y progreso de cada alumno. Los premios de racha son los que el alumno ha ganado en la app: puedes premiarlos también en la academia.</p>
+  root.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap"><h1>${ADMIN ? 'Administración · Numi Mates' : 'Panel del docente'}</h1><span>${ME ? `<span class="mut">${esc(ME.nom)} · ${esc(ME.centre || '')}</span> ` : ''}<button class="mini ghost" onclick="logout()">Salir</button></span></div><p class="lead">${ADMIN ? 'Todos los alumnos, centros, docentes y grupos.' : 'Los alumnos de tus grupos: progreso, rachas, pruebas e informes para las tutorías.'}</p>
   <div class="kpis"><div class="kpi"><b>${ROWS.length}</b><span>alumnos registrados</span></div><div class="kpi"><b class="fire">${act_}</b><span>con la racha encendida</span></div><div class="kpi"><b>${Math.max(0, ...ROWS.map(r => r.best))}</b><span>mejor racha (días)</span></div><div class="kpi"><b>${prem}</b><span>premios de racha ganados</span></div><div class="kpi"><b>${ev}</b><span>han hecho prueba de evolución</span></div></div>
   <div class="bar"><select id="fc" onchange="render()"><option value="">Todos los cursos</option>${CUR.map((n, i) => `<option value="${i}" ${f === String(i) ? 'selected' : ''}>${n}</option>`).join('')}</select>
-  <input id="q" placeholder="Buscar nombre, usuario o código" value="${esc(q)}" oninput="render()"><button class="ghost" onclick="csv()">Descargar CSV</button><button class="ghost" onclick="go(pass())">Actualizar</button></div>
-  <div class="tw"><table><thead><tr>${th('name', 'Alumno')}${th('username', 'Usuario')}${th('code', 'Código')}${th('course', 'Curso')}${th('streakNow', 'Racha')}${th('best', 'Mejor')}<th>Premios racha</th>${th('xp', 'XP')}${th('lessons', 'Lecciones')}${th('cards', 'Cartas')}${th('bwins', 'Victorias')}${th('ncrowns', 'Coronas')}${th('stier', 'Temporada')}<th>Aciertos</th><th>Evolución</th>${th('last_day', 'Último día')}<th>Prueba inicial</th><th>Idioma</th><th></th></tr></thead><tbody>
-  ${rows.map(r => `<tr class="${alive(r) ? '' : 'cold'}"><td><b>${esc(r.name)}</b></td><td>${r.username ? esc(r.username) : '<span class="mut">—</span>'}</td><td class="code">${esc(r.code)}</td><td>${CUR[r.course] || '—'}${r.survey && r.survey.age ? `<br><small class="mut">${r.survey.age} años</small>` : ''}</td>
+  ${GRUPS.length ? `<select id="fg" onchange="render()"><option value="">Todos los grupos</option>${GRUPS.map(g => `<option value="${g.id}" ${gf === String(g.id) ? 'selected' : ''}>${esc(g.nom)}${ADMIN ? ' · ' + esc(g.centre) : ''}</option>`).join('')}</select>` : ''}<input id="q" placeholder="Buscar nombre, usuario o código" value="${esc(q)}" oninput="render()"><button class="ghost" onclick="csv()">Descargar CSV</button><button class="ghost" onclick="go()">Actualizar</button></div>
+  <div class="tw"><table><thead><tr>${th('name', 'Alumno')}${th('username', 'Usuario')}${th('code', 'Código')}${th('course', 'Curso')}<th>Grupo</th>${ADMIN ? '<th>Plan</th>' : ''}${th('streakNow', 'Racha')}${th('best', 'Mejor')}<th>Premios racha</th>${th('xp', 'XP')}${th('lessons', 'Lecciones')}${th('cards', 'Cartas')}${th('bwins', 'Victorias')}${th('ncrowns', 'Coronas')}${th('stier', 'Temporada')}<th>Aciertos</th><th>Evolución</th>${th('last_day', 'Último día')}<th>Prueba inicial</th><th>Idioma</th><th></th></tr></thead><tbody>
+  ${rows.map(r => `<tr class="${alive(r) ? '' : 'cold'}"><td><b>${esc(r.name)}</b></td><td>${r.username ? esc(r.username) : '<span class="mut">—</span>'}</td><td class="code">${esc(r.code)}</td><td>${CUR[r.course] || '—'}${r.survey && r.survey.age ? `<br><small class="mut">${r.survey.age} años</small>` : ''}</td><td>${r.grup_id ? esc((GRUPS.find(g => g.id === r.grup_id) || {}).nom || '—') : '<span class="mut">—</span>'}</td>${ADMIN ? `<td><select class="mini" onchange="setPla('${r.code}',this.value)">${['free', 'premium', 'escola'].map(p => `<option value="${p}" ${r.pla === p ? 'selected' : ''}>${({ free: 'Gratis', premium: 'Premium', escola: 'Escuela' })[p]}</option>`).join('')}</select></td>` : ''}
     <td class="fire">🔥 ${r.streakNow}</td><td>${r.best}</td><td class="rw">${SRW.map(([d, i]) => (r.srw || []).includes(d) ? i : '').join('') || '<span class="mut">—</span>'}</td>
     <td>${r.xp}</td><td>${r.lessons}</td><td>${r.cards}/56</td><td>${r.bwins ? '⚔️ ' + r.bwins : '<span class="mut">—</span>'}</td><td>${r.ncrowns ? '👑 ' + r.ncrowns : '<span class="mut">—</span>'}</td><td>${r.stier}/25</td><td>${r.answers ? Math.round(100 * r.correct / r.answers) + '%' : '—'}</td><td>${evoCell(r)}</td><td>${ago(r.last_day)}</td>
     <td>${r.survey ? `<span class="pill">${esc(r.survey.result || '')}</span> ${FEEL[r.survey.feel] || ''}` : '<span class="mut">—</span>'}</td><td>${r.lang === 'es' ? 'ES' : 'CAT'}</td>
-    <td>${r.username ? `<button class="mini ghost" onclick="setPass('${r.code}','${esc(r.name)}')">Contraseña</button> ` : ''}<button class="mini ghost" onclick="report('${r.code}')">Informe</button> <button class="mini ghost" title="Abre todas las unidades a este alumno (modo maestro)" onclick="unlock('${r.code}',${!r.unlock_all})">${r.unlock_all ? '🔓 Todo abierto' : '🔒 Normal'}</button> <button class="mini ghost red" onclick="off('${r.code}','${esc(r.name)}')">Baja</button></td></tr>`).join('') || '<tr><td colspan="15" class="mut">Aún no hay alumnos.</td></tr>'}
+    <td>${r.username ? `<button class="mini ghost" onclick="setPass('${r.code}','${esc(r.name)}')">Contraseña</button> ` : ''}<button class="mini ghost" onclick="report('${r.code}')">Informe</button> <button class="mini ghost" title="Abre todas las unidades a este alumno (modo maestro)" onclick="unlock('${r.code}',${!r.unlock_all})">${r.unlock_all ? '🔓 Todo abierto' : '🔒 Normal'}</button> ${r.grup_id ? `<button class="mini ghost" onclick="treure('${r.code}','${esc(r.name)}')">Quitar del grupo</button> ` : ''}${ADMIN ? `<button class="mini ghost red" onclick="off('${r.code}','${esc(r.name)}')">Baja</button>` : ''}</td></tr>`).join('') || '<tr><td colspan="15" class="mut">Aún no hay alumnos.</td></tr>'}
   </tbody></table></div>
   <p class="note">Premios de racha: 🎁 3 días · 🏅 7 días · 🎧 14 días · ⭐ 30 días · 👑 60 días · 🏆 100 días. El botón 🔒/🔓 activa el «modo maestro» (todas las unidades abiertas) solo para ese alumno: el alumno ya no puede activarlo él mismo. Las filas en gris son alumnos que han perdido la racha (hace más de un día que no practican). La columna «Evolución» muestra las últimas pruebas (cada 14 días) y cuánto ha subido o bajado respecto a la anterior.</p>`;
-  root.insertAdjacentHTML('beforeend', contactsHTML() + battlesHTML() + tradesHTML() + rewardsHTML());
+  root.insertAdjacentHTML('beforeend', ADMIN ? gestioHTML() + contactsHTML() + battlesHTML() + tradesHTML() + rewardsHTML() : grupsHTML() + passHTML());
 }
 const seasonNow = () => { const d = new Date(), id = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`; return id < '2026-10' ? '2026-10' : id; };
 const secs = ms => (ms / 1000).toFixed(1).replace('.', ',') + ' s';
+/* ---------- Grups, centres i docents ---------- */
+const CURS = i => i == null ? '—' : (CUR[i] || '—').replace(/^Nivel \d+ \((.*)\)$/, '$1');
+async function setPla(code, pla) { await act('pla', code, { pla }); go(); }
+async function treure(code, name) { if (!confirm(`¿Quitar a ${name} del grupo? Volverá al plan gratuito.`)) return; await act('treure', code); go(); }
+function grupCard(g) {
+  return `<div class="gcard"><div><b>${esc(g.nom)}</b><span class="mut">${CURS(g.curs)}${ADMIN ? ' · ' + esc(g.centre) + (g.docent ? ' · ' + esc(g.docent) : '') : ''}</span><span class="mut">${ROWS.filter(r => r.grup_id === g.id).length} alumnos</span></div>
+    <div class="gcode" title="Los alumnos lo escriben en la app: Perfil → Tengo un código de clase">${esc(g.codi)}</div>
+    <div class="gact"><button class="mini ghost" onclick="copyCode('${g.codi}')">Copiar instrucciones</button> <button class="mini ghost" onclick="grupCodi(${g.id})">Código nuevo</button> <button class="mini ghost red" onclick="grupOff(${g.id},'${esc(g.nom)}')">Cerrar grupo</button></div></div>`;
+}
+function grupForm() {
+  const centreSel = ADMIN ? `<select id="g_centre">${CENTRES.map(c => `<option value="${c.id}">${esc(c.nom)}</option>`).join('')}</select>` : '';
+  const docSel = ADMIN || ME?.rol === 'admin_centre' ? `<select id="g_doc"><option value="">Sin docente</option>${DOCENTS.filter(d => ADMIN || d.centre_id === ME.centre_id).map(d => `<option value="${d.id}">${esc(d.nom)}</option>`).join('')}</select>` : '';
+  return `<div class="form"><input id="g_nom" placeholder="Nombre del grupo (p. ej. 4t A)"><select id="g_curs"><option value="">Curso</option>${CUR.map((n, i) => `<option value="${i}">${n}</option>`).join('')}</select>${centreSel}${docSel}<button onclick="grupNew()">Crear grupo</button></div>`;
+}
+async function grupNew() {
+  const r = await act('grup_save', '', { nom: $('#g_nom').value, curs: $('#g_curs').value, centre_id: $('#g_centre')?.value, docent_id: $('#g_doc')?.value });
+  if (r.ok) go(); else alert(r.error === 'centre' ? 'Primero crea un centro.' : 'Pon un nombre al grupo.');
+}
+async function grupCodi(id) { if (!confirm('¿Crear un código nuevo? El anterior dejará de funcionar (los alumnos que ya están dentro no salen).')) return; await act('grup_codi', '', { id }); go(); }
+async function grupOff(id, nom) { if (!confirm(`¿Cerrar el grupo ${nom}? Sus alumnos salen del grupo y vuelven al plan gratuito.`)) return; await act('grup_off', '', { id }); go(); }
+function copyCode(c) {
+  const t = `Para unirte a la clase en Numi Mates:\n1. Entra en https://app.numimates.com\n2. Ve a Perfil → «Tinc un codi de classe»\n3. Escribe el código: ${c}`;
+  navigator.clipboard?.writeText(t).then(() => alert('Instrucciones copiadas. Pégalas en el grupo de la clase o en el aula virtual.'), () => prompt('Copia estas instrucciones:', t));
+}
+function grupsHTML() {
+  return `<h2 class="h2">Mis grupos</h2><p class="mut">Cada grupo tiene un código. Los alumnos lo escriben en la app (Perfil → «Tinc un codi de classe») y aparecen aquí.</p>
+    <div class="ggrid">${GRUPS.map(grupCard).join('') || '<p class="mut">Aún no tienes grupos. Crea el primero:</p>'}</div>${grupForm()}`;
+}
+function passHTML() {
+  return `<h2 class="h2">Mi contraseña</h2><div class="form"><input id="np" type="password" placeholder="Nueva contraseña (mínimo 8 caracteres)" autocomplete="new-password"><button onclick="newPass()">Cambiar</button></div>`;
+}
+async function newPass() {
+  const r = await fetch('/api/docent', { method: 'POST', headers: { ...AUTH(), 'content-type': 'application/json' }, body: JSON.stringify({ action: 'setpass', password: $('#np').value }) });
+  const j = await r.json(); alert(j.ok ? 'Contraseña cambiada.' : 'Mínimo 8 caracteres.');
+}
+function gestioHTML() {
+  const PLA = { pilot: 'Piloto', escola: 'De pago', gratuit: 'Gratuito' };
+  return `<h2 class="h2">Centros</h2><div class="tw"><table><thead><tr><th>Centro</th><th>Tipo</th><th>Plan</th><th>Plazas</th><th>Alumnos</th><th>Vigencia</th><th>Notas</th></tr></thead><tbody>
+    ${CENTRES.map(c => `<tr><td><b>${esc(c.nom)}</b></td><td>${esc(c.tipus)}</td><td><span class="pill">${PLA[c.pla] || c.pla}</span></td><td>${c.places ?? '—'}</td><td>${c.alumnes}${c.places && c.alumnes > c.places ? ' <span class="down">⚠︎ supera las plazas</span>' : ''}</td><td>${c.inici ? c.inici.slice(0, 10) : '—'} → ${c.fi ? c.fi.slice(0, 10) : '—'}</td><td style="white-space:normal">${esc(c.notes || '')}</td></tr>`).join('') || '<tr><td colspan="7" class="mut">Aún no hay centros.</td></tr>'}
+    </tbody></table></div>
+    <div class="form"><input id="c_nom" placeholder="Nombre del centro"><select id="c_tipus"><option value="escola">Escuela</option><option value="institut">Instituto</option><option value="academia">Academia</option></select><select id="c_pla"><option value="pilot">Piloto</option><option value="escola">De pago</option><option value="gratuit">Gratuito</option></select><input id="c_places" type="number" placeholder="Plazas" style="width:110px"><input id="c_inici" type="date" title="Inicio"><input id="c_fi" type="date" title="Fin"><button onclick="centreNew()">Crear centro</button></div>
+    <h2 class="h2">Docentes</h2><div class="tw"><table><thead><tr><th>Nombre</th><th>Correo</th><th>Centro</th><th>Rol</th><th>Último acceso</th><th></th></tr></thead><tbody>
+    ${DOCENTS.map(d => `<tr class="${d.actiu ? '' : 'cold'}"><td><b>${esc(d.nom)}</b></td><td>${esc(d.email)}</td><td>${esc((CENTRES.find(c => c.id === d.centre_id) || {}).nom || '—')}</td><td>${d.rol === 'admin_centre' ? 'Coordinador/a del centro' : 'Docente'}</td><td>${d.last_login ? d.last_login.slice(0, 10) : 'nunca'}</td><td><button class="mini ghost" onclick="docPass(${d.id},'${esc(d.nom)}')">Nueva contraseña</button></td></tr>`).join('') || '<tr><td colspan="6" class="mut">Aún no hay docentes.</td></tr>'}
+    </tbody></table></div>
+    <div class="form"><input id="d_nom" placeholder="Nombre y apellidos"><input id="d_email" type="email" placeholder="Correo"><select id="d_centre">${CENTRES.map(c => `<option value="${c.id}">${esc(c.nom)}</option>`).join('')}</select><select id="d_rol"><option value="docent">Docente</option><option value="admin_centre">Coordinador/a (ve todo el centro)</option></select><button onclick="docNew()">Dar de alta</button></div>
+    <h2 class="h2">Grupos</h2><div class="ggrid">${GRUPS.map(grupCard).join('') || '<p class="mut">Aún no hay grupos.</p>'}</div>${CENTRES.length ? grupForm() : ''}`;
+}
+async function centreNew() {
+  const r = await act('centre_save', '', { nom: $('#c_nom').value, tipus: $('#c_tipus').value, pla: $('#c_pla').value, places: $('#c_places').value, inici: $('#c_inici').value, fi: $('#c_fi').value });
+  if (r.ok) go(); else alert('Pon el nombre del centro.');
+}
+async function docNew() {
+  const r = await act('docent_save', '', { nom: $('#d_nom').value, email: $('#d_email').value, centre_id: $('#d_centre').value, rol: $('#d_rol').value });
+  if (r.ok) { alert(`Docente dado de alta.\n\nEntra en https://app.numimates.com/profe.html con:\nCorreo: ${$('#d_email').value}\nContraseña provisional: ${r.password}\n\nDíselo tú (y que la cambie al entrar).`); go(); }
+  else alert(r.error === 'ja existeix' ? 'Ya hay un docente con ese correo.' : 'Revisa nombre, correo y centro.');
+}
+async function docPass(id, nom) { if (!confirm(`¿Generar una contraseña nueva para ${nom}?`)) return; const r = await act('docent_pass', '', { id }); if (r.ok) alert(`Contraseña provisional de ${nom}: ${r.password}`); }
+
 function contactsHTML() {
   if (!CONTACTS.length) return `<h2 class="h2">Peticiones de demostración (numimates.com)</h2><p class="mut">Todavía no ha llegado ninguna desde el formulario de la web.</p>`;
   return `<h2 class="h2">Peticiones de demostración (numimates.com)</h2><div class="tw"><table><thead><tr><th>Fecha</th><th>Nombre</th><th>Centro</th><th>Correo</th><th>Cursos</th><th>Idioma</th></tr></thead><tbody>${CONTACTS.map(c => `<tr><td>${when(c.created_at)}</td><td><b>${esc(c.nom)}</b></td><td>${esc(c.centre)}</td><td><a href="mailto:${esc(c.mail)}">${esc(c.mail)}</a></td><td style="white-space:normal">${esc(c.cursos || '—')}</td><td>${c.lang === 'es' ? 'ES' : 'CA'}</td></tr>`).join('')}</tbody></table></div>`;
@@ -153,7 +232,7 @@ function csv() {
   const lines = ROWS.map(r => { const t = r.tests || []; return [r.name, r.username || '', r.code, CUR[r.course] || '', r.streakNow, r.best, (r.srw || []).join(' '), r.xp, r.lessons, r.answers ? Math.round(100 * r.correct / r.answers) : '', t.length ? t[t.length - 1].pct + '%' : '', r.last_day || '', r.lang === 'es' ? 'ES' : 'CAT'].map(v => `"${String(v).replace(/"/g, '""')}"`).join(';'); });
   const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob(['﻿' + [head.join(';'), ...lines].join('\n')], { type: 'text/csv' })); a.download = 'mates-numi-alumnos.csv'; a.click();
 }
-pass() ? go(pass()) : login();
+AUTH() ? go() : login();
 </script>
 <script src="icons.js"></script>
 </body>

@@ -1002,6 +1002,10 @@ function renderBadges(tabs = '') {
 const FEEL = { love: ["😍 M'encanten", '😍 Me encantan'], good: ['🙂 Em van bé', '🙂 Me van bien'], meh: ['😐 Normal', '😐 Normal'], hard: ['😟 Em costen', '😟 Me cuestan'] };
 const LIKE = { calc: ['🧮 Calcular', '🧮 Calcular'], logic: ['🧩 Enigmes i lògica', '🧩 Enigmas y lógica'], geo: ['📐 Formes i mesures', '📐 Formas y medidas'], prob: ['🕵️ Problemes', '🕵️ Problemas'] };
 function renderProfile() {
+  if (!renderProfile.q) { renderProfile.q = 1; classeRefresh().then(() => { renderProfile.q = 0; if (VIEW === 'profile') renderProfile.inner(); }); }
+  return renderProfile.inner();
+}
+renderProfile.inner = function () {
   const l = lvlOf(P.xp), a = xpFor(l), b = xpFor(l + 1), s = P.stats, acc = s.answers ? Math.round(100 * s.correct / s.answers) : 0, ti = testInfo();
   const rows = UNITS_().map((u, i) => {
     const sks = new Set(u.lessons.flatMap(x => x.sk)); let c = 0, t = 0;
@@ -1029,6 +1033,7 @@ function renderProfile() {
     <div class="codecard"><div>${P.username ? `<small>${L('Usuari', 'Usuario')}</small><b>${esc(P.username)}</b>` : `<small>${L('El teu codi secret', 'Tu código secreto')}</small><b>${P.code || '…'}</b>`}<span id="cloud">${cloudTxt()}</span></div>
       <div class="ctip">${P.username ? L(`Entra des de qualsevol dispositiu amb el teu usuari i contrasenya. Codi de reserva: <b>${P.code || '…'}</b>`, `Entra desde cualquier dispositivo con tu usuario y contraseña. Código de reserva: <b>${P.code || '…'}</b>`) : L("✏️ Apunta'l! O crea un usuari i contrasenya, que és més fàcil de recordar.", '✏️ ¡Apúntalo! O crea un usuario y contraseña, que es más fácil de recordar.')}</div>
       <button class="btn sm gold" onclick="accountModal()">${P.username ? L('CANVIA LA CONTRASENYA', 'CAMBIAR LA CONTRASEÑA') : L('CREA USUARI I CONTRASENYA', 'CREAR USUARIO Y CONTRASEÑA')}</button></div>
+    <h2 class="h2">🏫 ${L('La meva classe', 'Mi clase')}</h2>${classeBox()}
     ${sv ? `<h2 class="h2">${L("Prova d'inici", 'Prueba inicial')}</h2><div class="survey"><div><span>${L('Curs', 'Curso')}</span><b>${esc(sv.curs)}</b></div><div><span>${L('Les mates…', 'Las mates…')}</span><b>${FEEL[sv.feel] ? tx(FEEL[sv.feel]) : '—'}</b></div><div><span>${L("M'agrada", 'Me gusta')}</span><b>${LIKE[sv.like] ? tx(LIKE[sv.like]) : '—'}</b></div><div><span>${L('Resultat', 'Resultado')}</span><b>${esc(sv.result)}</b></div></div>` : ''}
     <h2 class="h2">${L('Ajustos', 'Ajustes')}</h2>
     <div class="set"><span>${L('Idioma', 'Idioma')}</span><div class="seg"><button class="${LANG === 'ca' ? 'on' : ''}" onclick="setLang('ca')">Català</button><button class="${LANG === 'es' ? 'on' : ''}" onclick="setLang('es')">Castellano</button></div></div>
@@ -1037,6 +1042,38 @@ function renderProfile() {
     <div class="row2 pbtns"><button class="btn ghost" onclick="go('profiles')">${L("CANVIA D'ALUMNE", 'CAMBIAR DE ALUMNO')}</button><button class="btn ghost redt" onclick="resetP()">${L('ESBORRA EL PROGRÉS', 'BORRAR EL PROGRESO')}</button></div>
     <p class="foot"><img src="img/brand/logo-horitzontal.svg" alt="Numi Mates" class="footlogo"></p>`, 'profile');
 }
+/* ---------- La meva classe: unir-se al grup del docent amb el codi AULA-XXXX ---------- */
+function classeBox() {
+  const c = P.classe;
+  if (c) return `<div class="codecard"><div><small>${esc(c.centre)}</small><b>${esc(c.nom)}</b><span class="mut">${L('El teu docent veu el teu progrés.', 'Tu docente ve tu progreso.')}</span></div>
+    <button class="btn sm ghost" onclick="classeLeave()">${L('SURT DE LA CLASSE', 'SALIR DE LA CLASE')}</button></div>`;
+  return `<div class="codecard"><div><small>${L("Si el teu docent t'ha donat un codi", 'Si tu docente te ha dado un código')}</small><b>AULA-····</b></div>
+    <button class="btn sm gold" onclick="classeModal()">${L('TINC UN CODI DE CLASSE', 'TENGO UN CÓDIGO DE CLASE')}</button></div>`;
+}
+function classeModal() {
+  if (!P.code) return toast(L('Primer cal connexió a internet.', 'Primero hace falta conexión a internet.'));
+  modal(`<div class="sheet card cent"><h3>${L('Uneix-te a la teva classe', 'Únete a tu clase')}</h3><p>${L('Escriu el codi que t\'ha donat el teu docent.', 'Escribe el código que te ha dado tu docente.')}</p>
+    <input id="aula" class="nm" maxlength="9" placeholder="AULA-XXXX" autocapitalize="characters" autocomplete="off" style="text-transform:uppercase;text-align:center;letter-spacing:.1em">
+    <p class="err" id="aerr"></p><button class="btn big" onclick="classeJoin()">${L('ENTRA A LA CLASSE', 'ENTRA EN LA CLASE')}</button></div>`, true);
+  setTimeout(() => { const i = $('#aula'); i && i.focus(); i && i.addEventListener('keydown', e => { if (e.key === 'Enter') classeJoin(); }); }, 50);
+}
+async function classeJoin() {
+  const v = $('#aula').value.trim(); if (!v) return;
+  $('#aerr').textContent = '…';
+  try {
+    const r = await api('classe', { code: P.code, classe: v });
+    if (!r.grup) { $('#aerr').textContent = L('Aquest codi no existeix. Revisa-ho amb el teu docent.', 'Ese código no existe. Revísalo con tu docente.'); return; }
+    P.classe = r.grup; save(); closeModal(); SFX.win(); toast(L(`Ja ets a ${r.grup.nom}!`, `¡Ya estás en ${r.grup.nom}!`)); renderProfile();
+  } catch (e) { $('#aerr').textContent = ERR(); }
+}
+function classeLeave() {
+  ask(L('Segur que vols sortir de la classe? El teu docent ja no veurà el teu progrés.', '¿Seguro que quieres salir de la clase? Tu docente ya no verá tu progreso.'), L('SURT', 'SALIR'), L('CANCEL·LA', 'CANCELAR'), async () => {
+    try { await api('classe', { code: P.code, action: 'leave' }); } catch (e) { }
+    delete P.classe; save(); renderProfile();
+  });
+}
+// si el docent tanca el grup o treu l'alumne, l'app se n'assabenta en obrir el perfil
+async function classeRefresh() { if (!P || !P.code || !navigator.onLine) return; try { const r = await api('classe', { code: P.code, action: 'info' }); if (r.grup) P.classe = r.grup; else delete P.classe; save(); } catch (e) { } }
 function resetP() {
   ask(L(`Segur que vols esborrar tot el progrés de <b>${esc(P.name)}</b>? No es pot desfer.`, `¿Seguro que quieres borrar todo el progreso de <b>${esc(P.name)}</b>? No se puede deshacer.`), L('ESBORRA', 'BORRAR'), L('CANCEL·LA', 'CANCELAR'), async () => {
     const keep = { id: P.id, code: P.code, username: P.username, name: P.name, lang: P.lang, course: P.course, baseCourse: P.baseCourse, survey: P.survey, goal: P.goal, sound: P.sound, unlockAll: false };
