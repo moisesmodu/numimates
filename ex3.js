@@ -44,7 +44,7 @@ Object.assign(EX, {
     const set = shuffle(['🍎', '🐱', '⚽', '🌸', '🚗', '🎈', '🐶', '⭐']).slice(0, L_ <= 1 ? 4 : 5);
     if (L_ <= 2 || Math.random() < .5) {
       const i = ri(1, set.length - 2), right = Math.random() < .5, ans = set[right ? i + 1 : i - 1];
-      return mc(L(`Què hi ha just a la <b>${right ? 'dreta' : 'esquerra'}</b> de ${set[i]}?`, `¿Qué hay justo a la <b>${right ? 'derecha' : 'izquierda'}</b> de ${set[i]}?`), ans, set.filter(x => x !== ans && x !== set[i]), { big: true, vis: `<div class="seq em row">${set.map(x => `<span>${x}</span>`).join('')}</div>`, ex: L(`A la ${right ? 'dreta' : 'esquerra'} de ${set[i]} hi ha ${ans}. Recorda: la mà dreta és la que fas servir per escriure (si ets dretà/ana)!`, `A la ${right ? 'derecha' : 'izquierda'} de ${set[i]} está ${ans}.`) });
+      return mc(L(`Què hi ha just ${right ? 'a la <b>dreta</b>' : "a l'<b>esquerra</b>"} de ${set[i]}?`, `¿Qué hay justo a la <b>${right ? 'derecha' : 'izquierda'}</b> de ${set[i]}?`), ans, set.filter(x => x !== ans && x !== set[i]), { big: true, vis: `<div class="seq em row">${set.map(x => `<span>${x}</span>`).join('')}</div>`, ex: L(`${right ? 'A la dreta' : "A l'esquerra"} de ${set[i]} hi ha ${ans}. Recorda: la mà dreta és la que fas servir per escriure (si ets dretà/ana)!`, `A la ${right ? 'derecha' : 'izquierda'} de ${set[i]} está ${ans}.`) });
     }
     const cells = {}, pos = shuffle([...Array(9).keys()]).slice(0, 5); pos.forEach((p, i) => cells[Math.floor(p / 3) + ',' + p % 3] = set[i]);
     const cands = pos.filter(p => Math.floor(p / 3) > 0 && cells[(Math.floor(p / 3) - 1) + ',' + p % 3]);
