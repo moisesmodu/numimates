@@ -904,3 +904,22 @@ body.pro .l-vis>*{box-shadow:0 8px 20px rgba(60,30,90,.08)}
 
 /* etiquetes del camí (nivell, porta, bonus) per sobre del camí */
 body.pro .pdiv{z-index:3}body.pro .pdiv span{box-shadow:0 4px 0 color-mix(in srgb,var(--uc) 70%,#000),0 6px 14px rgba(40,20,60,.2)}
+
+/* Aprèn: teoria de la unitat */
+.learnbtn{margin-top:8px;background:rgba(255,255,255,.22);color:#fff;border:2px solid rgba(255,255,255,.5);border-radius:12px;padding:6px 12px;font-weight:900;font-size:13px}
+.lesson.learn{background:radial-gradient(900px 420px at 50% -80px,color-mix(in srgb,var(--uc) 22%,#fff),rgba(255,255,255,0) 70%),linear-gradient(180deg,#F7F2FC,#EEF5FC)}
+.ldots{flex:1;display:flex;gap:6px;justify-content:center}.ldots i{width:9px;height:9px;border-radius:5px;background:#D9CCE6;transition:all .2s}.ldots i.on{width:26px;background:var(--uc)}.ldots i.done{background:color-mix(in srgb,var(--uc) 55%,#fff)}
+.lstep{font-size:20px}
+.lwrap{flex:1;padding:6px 16px 20px;max-width:640px;margin:0 auto;width:100%;box-sizing:border-box}
+.lcard{background:#fff;border-radius:24px;padding:20px 18px;box-shadow:0 10px 30px rgba(60,30,90,.10);border:2px solid color-mix(in srgb,var(--uc) 25%,#fff);animation:cardIn .45s cubic-bezier(.2,1.2,.4,1) both}
+.lcard .lk{display:block;font-weight:900;font-size:11.5px;letter-spacing:.12em;color:color-mix(in srgb,var(--uc) 80%,#000);margin-bottom:8px}
+.lcard h2{margin:2px 0 6px;font-size:24px;color:var(--ink)}.lcard .ld{color:var(--mut);margin:0 0 10px}
+.lchar{width:110px;height:110px;margin:-4px auto 6px}.lchar svg{width:100%;height:100%}
+.llist{margin:6px 0 0;padding-left:20px;line-height:1.8;font-weight:800}
+.lidea{font-size:17.5px;line-height:1.55;margin:0}
+.lsteps{margin:14px 0 0;padding-left:0;list-style:none;counter-reset:st}.lsteps li{counter-increment:st;position:relative;padding:10px 12px 10px 46px;margin-bottom:8px;background:color-mix(in srgb,var(--uc) 9%,#fff);border-radius:14px;line-height:1.45}
+.lsteps li::before{content:counter(st);position:absolute;left:12px;top:9px;width:24px;height:24px;border-radius:50%;background:var(--uc);color:#fff;font-weight:900;display:grid;place-items:center;font-size:13px}
+.lq{font-size:17px;line-height:1.45;font-weight:800;margin-bottom:8px}.lvis{margin:6px 0 10px}
+.lans{background:#E6F7EC;border:2px solid #8FD9A8;border-radius:14px;padding:10px 12px;font-size:16px}.lans span{color:#1E7A3C;font-weight:900}
+.lex{margin-top:10px;background:#FFF8E1;border-radius:14px;padding:10px 12px;line-height:1.5;font-size:15px}
+.lnav{display:flex;gap:10px}.lnav .btn{flex:1}.lnav>span{flex:1}
