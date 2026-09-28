@@ -873,3 +873,6 @@ body{background:radial-gradient(1200px 500px at 50% -120px,#F1E6FA 0%,rgba(241,2
 .unfold{display:block;margin:10px auto 0;font-weight:900;font-size:14px;color:var(--pri);background:#fff;border:2px solid #D9CCE6;border-radius:14px;padding:10px 16px}
 .unit:has(.trail.open) .unfold{color:#1E7A3C;background:#E6F7EC;border-color:#8FD9A8}
 .preplist{text-align:left;margin:4px auto 16px;max-width:320px;font-weight:800;line-height:1.7}
+.gday{display:flex;align-items:center;gap:4px;margin-top:6px;flex-wrap:wrap}.gday i{width:18px;height:18px;border-radius:6px;background:#EEE8F3;font-style:normal;font-size:10px;display:grid;place-items:center;filter:grayscale(1);opacity:.7}
+.gday i.on{background:#DDF5E4;filter:none;opacity:1}.gday span{font-size:12px;color:var(--mut);font-weight:800;margin-left:4px}
+.dayinfo{font-size:13px!important;color:var(--mut)!important;font-weight:800;margin:4px 0 8px!important}

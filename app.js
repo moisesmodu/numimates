@@ -264,11 +264,23 @@ function showGain() {
 }
 
 /* ---------- Camí ---------- */
+const DAY_REWARD = 3, DAY_MAX = 5;
+function dayLessons() { if (!P.dayl || P.dayl.d !== today()) P.dayl = { d: today(), n: 0 }; return P.dayl; }
+const dayCapped = () => !P.unlockAll && dayLessons().n >= DAY_MAX;
+function dayTxt() {
+  const n = dayLessons().n, left = Math.max(0, DAY_REWARD - n);
+  return n >= DAY_MAX ? L('Avui ja has fet les 5 lliçons del dia', 'Hoy ya has hecho las 5 lecciones del día') : L(`Lliçons d'avui: ${n}/${DAY_MAX} · ${left ? `${left} amb premi` : 'ja sense diamants ni cartes'}`, `Lecciones de hoy: ${n}/${DAY_MAX} · ${left ? `${left} con premio` : 'ya sin diamantes ni cartas'}`);
+}
+function scrDayDone() {
+  modal(`<div class="sheet card cent"><div class="mchar tapme">${meC('happy')}</div><h3>${L('Avui ja has treballat molt!', '¡Hoy ya has trabajado mucho!')}</h3>
+    <p>${L(`Ja has fet les ${DAY_MAX} lliçons d'avui. El cervell aprèn millor si descansa: demà et n'esperen més! Mentrestant pots fer entrenaments, jocs d'agilitat, repassos o batalles.`, `Ya has hecho las ${DAY_MAX} lecciones de hoy. El cerebro aprende mejor si descansa: ¡mañana te esperan más! Mientras tanto puedes hacer entrenamientos, juegos de agilidad, repasos o batallas.`)}</p>
+    <button class="btn big" onclick="closeModal();go('train')">${L('ANEM A ENTRENAR', 'VAMOS A ENTRENAR')}</button><button class="btn ghost big" onclick="closeModal()">${L('TORNA', 'VOLVER')}</button></div>`, true);
+}
 function goalCard() {
   dailyRoll();
-  const x = P.daily.xp, g = P.goal, pc = Math.min(100, Math.round(x / g * 100));
+  const x = P.daily.xp, g = P.goal, pc = Math.min(100, Math.round(x / g * 100)), dl = dayLessons().n;
   const msg = x >= g ? L("Objectiu d'avui complert! Ets un crac.", '¡Objetivo de hoy cumplido! Eres un crack.') : x === 0 ? L(`Hola, ${esc(P.name)}! Fem una lliçó?`, `¡Hola, ${esc(P.name)}! ¿Hacemos una lección?`) : L(`Et falten ${g - x} XP per a l'objectiu d'avui.`, `Te faltan ${g - x} XP para el objetivo de hoy.`);
-  return `<div class="goal"><div class="gchar tapme">${meC(x >= g ? 'happy' : 'idle')}</div><div class="gbody"><div class="gmsg">${msg}</div><div class="gbar"><div style="width:${pc}%"></div></div><div class="gnum">${x} / ${g} ${L('XP avui', 'XP hoy')}</div></div></div>`;
+  return `<div class="goal"><div class="gchar tapme">${meC(x >= g ? 'happy' : 'idle')}</div><div class="gbody"><div class="gmsg">${msg}</div><div class="gbar"><div style="width:${pc}%"></div></div><div class="gnum">${x} / ${g} ${L('XP avui', 'XP hoy')}</div><div class="gday">${[...Array(DAY_MAX).keys()].map(i => `<i class="${i < dl ? 'on' : ''} ${i < DAY_REWARD ? 'rw' : ''}">${i < DAY_REWARD ? '💎' : ''}</i>`).join('')}<span>${dayTxt()}</span></div></div></div>`;
 }
 function testCard() {
   const t = testInfo(); if (!t.due) return '';
@@ -349,10 +361,11 @@ function setCourse(i) { if (!courseOpen(i)) { SFX.ko(); toast(L(`🔒 Primer aca
 function openLesson(ui, li) {
   if (!lessonOpen(ui, li)) { toast(li === 0 ? L('🔒 Primer supera el repte de la unitat anterior.', '🔒 Primero supera el reto de la unidad anterior.') : (isBonus(UNITS_()[ui], li) ? L("⭐ El nivell 3 és de bonus: s'obre quan superes la porta del Cavaller.", '⭐ El nivel 3 es de bonus: se abre cuando superas la puerta del Caballero.') : li === REP(UNITS_()[ui]) ? L('🔒 La porta s\'obre quan acabes el nivell 2 (2 estrelles a cada lliçó).', '🔒 La puerta se abre cuando acabas el nivel 2 (2 estrellas en cada lección).') : prog(ui).stars[ORD(UNITS_()[ui])[ORD(UNITS_()[ui]).indexOf(li) - 1]] ? L('🔒 Necessites 2 estrelles a la lliçó anterior (màxim 2 errors).', '🔒 Necesitas 2 estrellas en la lección anterior (máximo 2 errores).') : L('🔒 Primer fes la lliçó anterior.', '🔒 Primero haz la lección anterior.'))); SFX.ko(); return; }
   const u = UNITS_()[ui], isR = li === REP(u), st = prog(ui).stars[li];
+  if (!isR && dayCapped()) return scrDayDone();
   modal(`<div class="sheet" style="--uc:${u.color}"><div class="sk">${tx(CUR().name).toUpperCase()} · ${L('UNITAT', 'UNIDAD')} ${ui + 1} · ${isR ? L('PROVA FINAL', 'PRUEBA FINAL') : (isBonus(u, li) ? '⭐ BONUS · ' : '') + L('NIVELL ', 'NIVEL ') + (u.lessons[li].tier || 1) + ' · ' + L('LLIÇÓ ', 'LECCIÓN ') + (li % 10 + 1) + ' / 10'}</div>
     <h3>${isR ? L('🏰 La porta del Cavaller', '🏰 La puerta del Caballero') : tx(u.lessons[li].t)}</h3>
     <p>${isR ? L("El Cavaller del Codi vigila la porta de la unitat següent. Et farà 12 enigmes dels nivells 1 i 2: treu més d'un 7 i s'obrirà. Aquí no hi ha segones oportunitats… però la pots tornar a provar sempre que vulguis!", 'El Caballero del Código vigila la puerta de la unidad siguiente. Te hará 12 enigmas de los niveles 1 y 2: saca más de un 7 y se abrirá. Aquí no hay segundas oportunidades… ¡pero puedes volver a intentarlo siempre que quieras!') : L("8 exercicis. Si te n'equivoques algun, el tornaràs a practicar al final.", '8 ejercicios. Si fallas alguno, lo volverás a practicar al final.')}</p>
-    ${st ? `<div class="sstars">${starsHTML(st)}</div>` : ''}${isR && st < PASS && (P.exams || {})[u.id]?.miss?.length && !P.exams[u.id].prep ? `<button class="btn ghost big" onclick="closeModal();startGatePrep(${ui})">🔁 ${L('Primer repassa el que et va costar (+8 💎)', 'Primero repasa lo que te costó (+8 💎)')}</button>` : ''}
+    ${!isR ? `<p class="dayinfo">${dayTxt()}</p>` : ''}${st ? `<div class="sstars">${starsHTML(st)}</div>` : ''}${isR && st < PASS && (P.exams || {})[u.id]?.miss?.length && !P.exams[u.id].prep ? `<button class="btn ghost big" onclick="closeModal();startGatePrep(${ui})">🔁 ${L('Primer repassa el que et va costar (+8 💎)', 'Primero repasa lo que te costó (+8 💎)')}</button>` : ''}
     <button class="btn big" style="--c:${u.color}" onclick="closeModal();startLesson(${ui},${li})">${st ? L('REPETEIX', 'REPITE') : L('COMENÇA', 'EMPIEZA')}</button></div>`);
 }
 
@@ -583,9 +596,10 @@ function finishRun() {
     if (R.mode === 'repte' && first) R.chest = ri(30, 50);
     if (R.exam && first) R.gate = R.ui;
     P.stats.lessons++; if (R.perfect) P.stats.perfect++;
+    if (R.mode === 'lesson') { const dl = dayLessons(); dl.n++; if (dl.n > DAY_REWARD && !P.unlockAll) { R.gems = 0; R.noPrize = true; R.sub = (R.sub ? R.sub + ' ' : '') + L(`Lliçó ${dl.n} de ${DAY_MAX} d'avui: els diamants i les cartes són per a les ${DAY_REWARD} primeres, però l'XP i les estrelles compten igual!`, `Lección ${dl.n} de ${DAY_MAX} de hoy: los diamantes y las cartas son para las ${DAY_REWARD} primeras, ¡pero la XP y las estrellas cuentan igual!`); } }
   }
   R.bonus = Math.floor(LS.maxCombo / 3) * 2 + LS.gold * 5; R.xp += R.bonus;
-  if (R.mode === 'lesson' || R.mode === 'repte' || R.mode === 'reco' || (R.mode === 'review' && R.pass)) { misEvent('lesson'); R.pack = openPack(R.mode === 'repte' ? 2 : 1); }
+  if (R.mode === 'lesson' || R.mode === 'repte' || R.mode === 'reco' || (R.mode === 'review' && R.pass)) { misEvent('lesson'); if (!R.noPrize) R.pack = openPack(R.mode === 'repte' ? 2 : 1); }
   if (R.perfect && R.mode !== 'train') misEvent('perfect');
   if (R.mode === 'train' || R.mode === 'reco' || R.mode === 'review' || R.mode === 'prep') misEvent('train');
   LS = null; reward(R);
