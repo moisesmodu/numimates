@@ -164,22 +164,8 @@ function streakCard() {
 }
 
 /* ---------- So, confeti i animacions ---------- */
-let AC;
-function tone(f, d, t = 0, type = 'sine', v = .14) {
-  if (!P || !P.sound) return;
-  try {
-    AC = AC || new (window.AudioContext || window.webkitAudioContext)();
-    const o = AC.createOscillator(), g = AC.createGain(), n = AC.currentTime + t;
-    o.type = type; o.frequency.value = f;
-    g.gain.setValueAtTime(.0001, n); g.gain.exponentialRampToValueAtTime(v, n + .02); g.gain.exponentialRampToValueAtTime(.0001, n + d);
-    o.connect(g).connect(AC.destination); o.start(n); o.stop(n + d + .05);
-  } catch (e) { }
-}
-const SFX = {
-  ok() { tone(660, .12); tone(990, .2, .09); }, ko() { tone(200, .28, 0, 'triangle', .12); }, tap() { tone(520, .05, 0, 'sine', .05); },
-  win() { [523, 659, 784, 1047].forEach((f, i) => tone(f, .25, i * .11)); }, coin() { tone(988, .08); tone(1319, .18, .07); },
-  tick() { tone(880, .04, 0, 'square', .03); }, boing() { tone(300, .1); tone(600, .15, .06); }
-};
+// Sons: sfx.js (campanetes, reverberació i espurnes; es carrega abans que aquest fitxer)
+const SFX = makeSFX(() => P && P.sound);
 function confetti(n = 140) {
   if (REDUCED) return;
   const c = document.createElement('canvas'), dpr = devicePixelRatio || 1; c.className = 'confetti'; document.body.appendChild(c);
