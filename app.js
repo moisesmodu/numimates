@@ -437,7 +437,7 @@ function renderLesson() {
       ${e.vis ? `<div class="l-vis">${e.vis}</div>` : ''}
       <div class="l-ans">${ansHTML(e)}</div>
     </div>
-    <div class="l-foot" id="foot"><div class="fwrap"><div class="fb" id="fb"></div>${quiet ? `<button class="btn ghost skip" onclick="skipPlace()">${L('NO HO SÉ', 'NO LO SÉ')}</button>` : LS.mode === 'battle' || LS.exam ? '' : `<button class="btn ghost skip hintb" id="hintb" onclick="showHint()">💡 ${L('COM ES FA?', '¿CÓMO SE HACE?')}</button>`}<button class="btn check" id="chk" onclick="check()" disabled>${L('COMPROVA', 'COMPRUEBA')}</button></div></div>
+    <div class="l-foot" id="foot"><div class="fwrap"><div class="fb" id="fb"></div>${quiet ? `<button class="btn ghost skip" onclick="skipPlace()">${L('NO HO SÉ', 'NO LO SÉ')}</button>` : LS.mode === 'battle' || LS.exam ? '' : `<button class="btn hintb ${e.retry ? 'nudge' : ''}" id="hintb" onclick="showHint()" aria-label="${L('Com es fa?', '¿Cómo se hace?')}" title="${L('Com es fa?', '¿Cómo se hace?')}"><img class="hic" src="img/ic/bulb.webp" alt="" draggable="false"></button>`}<button class="btn check" id="chk" onclick="check()" disabled>${L('COMPROVA', 'COMPRUEBA')}</button></div></div>
   </div>`;
   if (LS.mode === 'battle') { LS.q0 = Date.now(); battleStrip(); }
 }
@@ -504,7 +504,7 @@ function showHint() {
   let x = null; for (let i = 0; i < 8 && (!x || x.q === e.q); i++) { try { x = genEx(e.sk, e.L, new Set(), false); } catch (err) { x = null; break; } }
   if (!x || x.q === e.q) return toast(L('Per a aquesta pregunta no hi ha exemple. Mira bé el dibuix i prova-ho!', 'Para esta pregunta no hay ejemplo. ¡Mira bien el dibujo e inténtalo!'));
   if (!e.helped) { e.helped = true; LS.helps = (LS.helps || 0) + 1; }
-  modal(`<div class="sheet hintsheet"><small class="lk">💡 ${L('MIRA COM ES FA AMB UN ALTRE EXEMPLE', 'MIRA CÓMO SE HACE CON OTRO EJEMPLO')}</small>
+  modal(`<div class="sheet hintsheet"><div class="hhead"><span class="hbulb"><img src="img/ic/bulb.webp" alt="" draggable="false"></span><div><b>${L('Com es fa?', '¿Cómo se hace?')}</b><small>${L('Mira aquest exemple amb altres números', 'Mira este ejemplo con otros números')}</small></div></div>
     <div class="lq">${x.q}</div>${x.vis ? `<div class="l-vis lvis">${x.vis}</div>` : ''}
     <div class="lans"><span>${L('Resposta', 'Respuesta')}:</span> <b>${ansText(x)}</b></div>${x.ex ? `<div class="lex">${x.ex}</div>` : ''}
     <p class="hnote">${L("Ara prova-ho tu amb la teva pregunta. Amb ajuda no perds punts, però aquesta no compta per a la ratxa.", 'Ahora pruébalo tú con tu pregunta. Con ayuda no pierdes puntos, pero esta no cuenta para la racha.')}</p>
