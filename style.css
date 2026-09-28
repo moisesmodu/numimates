@@ -926,3 +926,38 @@ body.pro .pdiv{z-index:3}body.pro .pdiv span{box-shadow:0 4px 0 color-mix(in srg
 
 /* Icones pròpies (icons.js): substitueixen els emojis amb la mateixa mida que el text */
 img.ic{display:inline-block;width:1.2em;height:1.2em;object-fit:contain;vertical-align:-.22em;margin:0 .02em;pointer-events:none;-webkit-user-drag:none}
+
+/* ===== Tauleta i ordinador =====
+   Mòbil: tot igual. Tauleta (≥700 px): menú lateral d'icones, columna més ampla i els quadres de la
+   pantalla principal en parelles. Ordinador (≥1100 px): menú lateral amb el logo, pantalla principal
+   en dues columnes (mapa + quadres fixos al costat) i la lliçó una mica més gran. */
+@media (min-width:700px){
+  .nav{top:0;right:auto;width:96px;flex-direction:column;justify-content:flex-start;align-items:center;gap:6px;border-top:0;border-right:2px solid var(--line);padding:18px 8px}
+  .nav button{flex:none;width:80px;max-width:none;padding:10px 0;font-size:12px}
+  .nav .ni{font-size:26px}
+  body:has(> #app > .nav) #app,#app:has(> .nav){padding-left:96px}
+  #app:has(> .nav) .page{max-width:680px;padding-bottom:48px}
+  .hside{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+  .hside>*{grid-column:1/-1;margin:0!important}
+  .hside>.mcard,.hside>.scard,.hside>.seasoncard:has(+ .testcard),.hside>.seasoncard+.testcard{grid-column:auto}
+  .modal-bg{align-items:center;padding:24px}
+  .sheet{border-radius:26px;max-width:520px;padding-bottom:24px}
+}
+@media (min-width:1100px){
+  .nav{width:232px;align-items:stretch;padding:22px 16px;gap:4px}
+  .nav::before{content:"Numi";display:block;height:52px;margin:0 6px 18px;padding-left:54px;background:url(img/chars/numi-happy.webp) left center/46px no-repeat;font:900 30px/52px Nunito,sans-serif;letter-spacing:-.02em;color:var(--pri)}
+  .nav button{width:auto;flex-direction:row;justify-content:flex-start;gap:14px;padding:10px 14px;font-size:15px;letter-spacing:.02em}
+  .nav .ni{font-size:28px}
+  #app:has(> .nav){padding-left:232px}
+  #app:has(> .nav) .page{max-width:880px;padding-inline:32px}
+  #app:has(> .nav) .page.home{max-width:1080px;display:grid;grid-template-columns:minmax(0,1fr) 340px;grid-template-areas:"top top" "main side";column-gap:40px;align-items:start}
+  .page.home>.topbar{grid-area:top}
+  .page.home>.hmain{grid-area:main;min-width:0}
+  .page.home>.hside{grid-area:side;position:sticky;top:84px;display:flex;flex-direction:column;gap:12px;max-height:calc(100vh - 100px);overflow-y:auto;scrollbar-width:none;padding:2px 2px 24px;margin:0}
+  .page.home>.hside::-webkit-scrollbar{display:none}
+  .page.home>.hside>*{flex-shrink:0}
+  .agrid{grid-template-columns:repeat(auto-fill,minmax(112px,1fr))}
+}
+@media (min-width:1100px) and (min-height:760px){
+  .lesson>.l-top,.lesson>.l-body,.lesson>.l-foot{zoom:1.12}
+}
