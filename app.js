@@ -106,9 +106,11 @@ function touchStreak() {
   return true;
 }
 const REP = u => u.lessons.length;
-// Ordre del camí: nivells 1-2 → porta del Cavaller → nivell 3 (bonus)
-const ORD = u => { const a = [], b = []; u.lessons.forEach((l, i) => ((l.tier || 1) >= 3 ? b : a).push(i)); return [...a, REP(u), ...b]; };
-const isBonus = (u, li) => li < REP(u) && (u.lessons[li].tier || 1) >= 3;
+// Ordre del camí: nivells 1-2 + 3 primeres lliçons del nivell 3 → porta del Cavaller → resta del nivell 3 (bonus)
+const PRE_T3 = 3;
+const ORD = u => { const a = [], b = []; let t3 = 0; u.lessons.forEach((l, i) => { if ((l.tier || 1) < 3 || t3++ < PRE_T3) a.push(i); else b.push(i); }); return [...a, REP(u), ...b]; };
+const preGate = u => { const o = ORD(u); return o.slice(0, o.indexOf(REP(u))); };
+const isBonus = (u, li) => li < REP(u) && !preGate(u).includes(li);
 function prog(ui, c = CUR()) {
   const u = c.units[ui], n = REP(u) + 1; let p = P.prog[u.id];
   if (!p) p = P.prog[u.id] = { stars: Array(n).fill(0) };
@@ -296,10 +298,10 @@ function unitHTML(u, ui) {
     const isR = li === R_, done = st[li] > 0, can = lessonOpen(ui, li), isCur = cur && cur[0] === ui && cur[1] === li;
     const cls = (!can ? 'locked' : isCur ? 'cur' : done ? (st[li] === 3 ? 'gold' : 'done') : 'open') + (done && !isR && isDue(ui, li) ? ' rust' : '');
     const icon = !can ? ICON.lock : isR ? (done ? ICON.trophy : ICON.gift) : done ? (st[li] === 3 ? ICON.crown : ICON.check) : ICON.star;
-    return `${li === R_ ? `<div class="pdiv gatediv"><span>🏰 ${L('LA PORTA DEL CAVALLER', 'LA PUERTA DEL CABALLERO')}</span></div>` : ''}${isBonus(u, li) && u.lessons.findIndex(l => (l.tier || 1) >= 3) === li ? `<div class="pdiv bonusdiv"><span>⭐ ${L('BONUS · NIVELL 3', 'BONUS · NIVEL 3')}</span></div>` : ''}<div class="nwrap ${isBonus(u, li) ? 'bonus' : ''}" style="--x:${OFF[pos % OFF.length]}px;transition-delay:${Math.min(pos, 12) * 50}ms">
+    return `${li === R_ ? `<div class="pdiv gatediv"><span>🏰 ${L('LA PORTA DEL CAVALLER', 'LA PUERTA DEL CABALLERO')}</span></div>` : ''}${isBonus(u, li) && ORD(u)[ORD(u).indexOf(R_) + 1] === li ? `<div class="pdiv bonusdiv"><span>⭐ ${L('BONUS · RESTA DEL NIVELL 3', 'BONUS · RESTO DEL NIVEL 3')}</span></div>` : ''}<div class="nwrap ${isBonus(u, li) ? 'bonus' : ''}" style="--x:${OFF[pos % OFF.length]}px;transition-delay:${Math.min(pos, 12) * 50}ms">
       ${isCur ? `<div class="tip">${isR ? L('LA PORTA!', '¡LA PUERTA!') : L('COMENÇA', 'EMPIEZA')}</div>` : ''}
       <button class="node ${cls} ${isR ? 'rep' : ''}" onclick="openLesson(${ui},${li})" aria-label="${isR ? L('Repte final', 'Reto final') : L('Lliçó ', 'Lección ') + (li + 1)}"><i class="nico">${icon}</i></button>
-      ${done && !isR ? starsHTML(st[li], 'mini') : ''}</div>${!isR && u.lessons[li + 1] && (u.lessons[li + 1].tier || 1) === 2 && (u.lessons[li].tier || 1) === 1 ? `<div class="pdiv"><span>${L('NIVELL 2', 'NIVEL 2')}</span></div>` : ''}`;
+      ${done && !isR ? starsHTML(st[li], 'mini') : ''}</div>${!isR && !isBonus(u, li) && u.lessons[li + 1] && (u.lessons[li + 1].tier || 1) !== (u.lessons[li].tier || 1) ? `<div class="pdiv"><span>${L('NIVELL', 'NIVEL')} ${u.lessons[li + 1].tier}</span></div>` : ''}`;
   }).join('');
   const deco = [0, 1, 2, 3].map(k => `<span class="deco" style="${k % 2 ? 'left' : 'right'}:${6 + (k * 7 + ui * 5) % 20}%;top:${14 + k * 22}%;animation-delay:${k * .7}s">${DECO[(ui * 3 + k) % DECO.length]}</span>`).join('');
   return `<section class="unit ${open ? '' : 'closed'}" style="--uc:${u.color}">
@@ -336,7 +338,7 @@ function scrGate(ui) {
     <div class="door"><div class="dpath">${nx ? `<b>${L('UNITAT', 'UNIDAD')} ${ui + 2}</b><span>${tx(nx.title)}</span>` : `<b>${L('NIVELL NOU', 'NIVEL NUEVO')}</b>`}</div><div class="dl"></div><div class="dr"></div></div>
     <div class="rchar tapme knightc">${charSVG('cavaller', 'happy')}</div>
     <h1>${L('La porta s\'obre!', '¡La puerta se abre!')}</h1>
-    <p class="sub">${nx ? L(`El Cavaller et deixa passar: s'ha obert el camí cap a <b>${tx(nx.title)}</b>. I el nivell 3 de «${tx(u.title)}» ja és teu per guanyar estrelles de bonus!`, `El Caballero te deja pasar: se ha abierto el camino hacia <b>${tx(nx.title)}</b>. ¡Y el nivel 3 de «${tx(u.title)}» ya es tuyo para ganar estrellas de bonus!`) : L("Has superat l'última porta d'aquest nivell!", '¡Has superado la última puerta de este nivel!')}</p>
+    <p class="sub">${nx ? L(`El Cavaller et deixa passar: s'ha obert el camí cap a <b>${tx(nx.title)}</b>. I la resta del nivell 3 de «${tx(u.title)}» ja és teva per guanyar estrelles de bonus!`, `El Caballero te deja pasar: se ha abierto el camino hacia <b>${tx(nx.title)}</b>. ¡Y el resto del nivel 3 de «${tx(u.title)}» ya es tuyo para ganar estrellas de bonus!`) : L("Has superat l'última porta d'aquest nivell!", '¡Has superado la última puerta de este nivel!')}</p>
     <button class="btn big" onclick="JUST_OPEN='${u.id}';flowNext()">${L('ANEM-HI!', '¡VAMOS!')}</button></div>`;
   SFX.win(); setTimeout(() => confetti(160), 900);
 }
@@ -359,12 +361,12 @@ function pickCourse() {
 }
 function setCourse(i) { if (!courseOpen(i)) { SFX.ko(); toast(L(`🔒 Primer acaba el nivell ${i}.`, `🔒 Primero acaba el nivel ${i}.`)); return; } P.course = i; save(); closeModal(); renderHome(); window.scrollTo(0, 0); }
 function openLesson(ui, li) {
-  if (!lessonOpen(ui, li)) { toast(li === 0 ? L('🔒 Primer supera el repte de la unitat anterior.', '🔒 Primero supera el reto de la unidad anterior.') : (isBonus(UNITS_()[ui], li) ? L("⭐ El nivell 3 és de bonus: s'obre quan superes la porta del Cavaller.", '⭐ El nivel 3 es de bonus: se abre cuando superas la puerta del Caballero.') : li === REP(UNITS_()[ui]) ? L('🔒 La porta s\'obre quan acabes el nivell 2 (2 estrelles a cada lliçó).', '🔒 La puerta se abre cuando acabas el nivel 2 (2 estrellas en cada lección).') : prog(ui).stars[ORD(UNITS_()[ui])[ORD(UNITS_()[ui]).indexOf(li) - 1]] ? L('🔒 Necessites 2 estrelles a la lliçó anterior (màxim 2 errors).', '🔒 Necesitas 2 estrellas en la lección anterior (máximo 2 errores).') : L('🔒 Primer fes la lliçó anterior.', '🔒 Primero haz la lección anterior.'))); SFX.ko(); return; }
+  if (!lessonOpen(ui, li)) { toast(li === 0 ? L('🔒 Primer supera el repte de la unitat anterior.', '🔒 Primero supera el reto de la unidad anterior.') : (isBonus(UNITS_()[ui], li) ? L("⭐ La resta del nivell 3 és de bonus: s'obre quan superes la porta del Cavaller.", '⭐ El resto del nivel 3 es de bonus: se abre cuando superas la puerta del Caballero.') : li === REP(UNITS_()[ui]) ? L('🔒 La porta s\'obre quan acabes les 3 primeres lliçons del nivell 3 (2 estrelles a cada lliçó).', '🔒 La puerta se abre cuando acabas las 3 primeras lecciones del nivel 3 (2 estrellas en cada lección).') : prog(ui).stars[ORD(UNITS_()[ui])[ORD(UNITS_()[ui]).indexOf(li) - 1]] ? L('🔒 Necessites 2 estrelles a la lliçó anterior (màxim 2 errors).', '🔒 Necesitas 2 estrellas en la lección anterior (máximo 2 errores).') : L('🔒 Primer fes la lliçó anterior.', '🔒 Primero haz la lección anterior.'))); SFX.ko(); return; }
   const u = UNITS_()[ui], isR = li === REP(u), st = prog(ui).stars[li];
   if (!isR && dayCapped()) return scrDayDone();
   modal(`<div class="sheet" style="--uc:${u.color}"><div class="sk">${tx(CUR().name).toUpperCase()} · ${L('UNITAT', 'UNIDAD')} ${ui + 1} · ${isR ? L('PROVA FINAL', 'PRUEBA FINAL') : (isBonus(u, li) ? '⭐ BONUS · ' : '') + L('NIVELL ', 'NIVEL ') + (u.lessons[li].tier || 1) + ' · ' + L('LLIÇÓ ', 'LECCIÓN ') + (li % 10 + 1) + ' / 10'}</div>
     <h3>${isR ? L('🏰 La porta del Cavaller', '🏰 La puerta del Caballero') : tx(u.lessons[li].t)}</h3>
-    <p>${isR ? L("El Cavaller del Codi vigila la porta de la unitat següent. Et farà 12 enigmes dels nivells 1 i 2: treu més d'un 7 i s'obrirà. Aquí no hi ha segones oportunitats… però la pots tornar a provar sempre que vulguis!", 'El Caballero del Código vigila la puerta de la unidad siguiente. Te hará 12 enigmas de los niveles 1 y 2: saca más de un 7 y se abrirá. Aquí no hay segundas oportunidades… ¡pero puedes volver a intentarlo siempre que quieras!') : L("8 exercicis. Si te n'equivoques algun, el tornaràs a practicar al final.", '8 ejercicios. Si fallas alguno, lo volverás a practicar al final.')}</p>
+    <p>${isR ? L("El Cavaller del Codi vigila la porta de la unitat següent. Et farà 12 enigmes de tot el que has practicat: treu més d'un 7 i s'obrirà. Aquí no hi ha segones oportunitats… però la pots tornar a provar sempre que vulguis!", 'El Caballero del Código vigila la puerta de la unidad siguiente. Te hará 12 enigmas de todo lo que has practicado: saca más de un 7 y se abrirá. Aquí no hay segundas oportunidades… ¡pero puedes volver a intentarlo siempre que quieras!') : L("8 exercicis. Si te n'equivoques algun, el tornaràs a practicar al final.", '8 ejercicios. Si fallas alguno, lo volverás a practicar al final.')}</p>
     ${!isR ? `<p class="dayinfo">${dayTxt()}</p>` : ''}${st ? `<div class="sstars">${starsHTML(st)}</div>` : ''}${isR && st < PASS && (P.exams || {})[u.id]?.miss?.length && !P.exams[u.id].prep ? `<button class="btn ghost big" onclick="closeModal();startGatePrep(${ui})">🔁 ${L('Primer repassa el que et va costar (+8 💎)', 'Primero repasa lo que te costó (+8 💎)')}</button>` : ''}
     <button class="btn big" style="--c:${u.color}" onclick="closeModal();startLesson(${ui},${li})">${st ? L('REPETEIX', 'REPITE') : L('COMENÇA', 'EMPIEZA')}</button></div>`);
 }
@@ -379,7 +381,7 @@ function startLesson(ui, li) {
   const u = UNITS_()[ui]; let plan = [];
   if (li === REP(u)) {
     // La porta del Cavaller: examen camuflat amb 8 preguntes del tema i 4 d'activitats visuals, sense segones oportunitats
-    const ls = u.lessons.filter(l => (l.tier || 1) <= 2), lv = sk => (ls.find(l => l.tier === 2 && l.sk.includes(sk)) || ls.find(l => l.sk.includes(sk))).L;
+    const ls = preGate(u).map(i => u.lessons[i]), lv = sk => (ls.find(l => l.tier === 2 && l.sk.includes(sk)) || ls.find(l => l.sk.includes(sk))).L;
     const core = shuffle([...new Set(ls.filter(l => !l.vis).flatMap(l => l.sk).filter(s => !/^v\./.test(s)))]), vis = shuffle([...new Set(ls.flatMap(l => l.sk).filter(s => /^v\./.test(s)))]);
     const miss = shuffle(((P.exams || {})[u.id]?.miss || []).filter(s => ls.some(l => l.sk.includes(s)))).slice(0, 6);
     miss.forEach(s => plan.push([s, lv(s)]));
@@ -586,7 +588,7 @@ function finishRun() {
       ex.tries++; ex.last = R.acc; ex.best = Math.max(ex.best, R.acc); ex.d = today(); ex.miss = [...new Set(LS.emiss)]; ex.prep = false; P.exams[uid] = ex;
       if (R.stars < PASS && ex.miss.length) R.prep = R.ui;
       const nota = String(Math.round(okN / LS.total * 100) / 10).replace('.', ','); R.nota = nota;
-      R.sub = R.stars >= PASS ? L(`Nota: <b>${nota}</b> (${okN} de ${LS.total}). La porta s'ha obert: la unitat següent t'espera, i també el nivell 3 de bonus!`, `Nota: <b>${nota}</b> (${okN} de ${LS.total}). La puerta se ha abierto: ¡te espera la unidad siguiente y también el nivel 3 de bonus!`) : L(`Nota: <b>${nota}</b> (${okN} de ${LS.total}). Per obrir la porta cal més d'un 7: repassa una mica i torna-ho a provar!`, `Nota: <b>${nota}</b> (${okN} de ${LS.total}). Para abrir la puerta hace falta más de un 7: ¡repasa un poco y vuelve a intentarlo!`);
+      R.sub = R.stars >= PASS ? L(`Nota: <b>${nota}</b> (${okN} de ${LS.total}). La porta s'ha obert: la unitat següent t'espera, i també les lliçons de bonus!`, `Nota: <b>${nota}</b> (${okN} de ${LS.total}). La puerta se ha abierto: ¡te espera la unidad siguiente y también las lecciones de bonus!`) : L(`Nota: <b>${nota}</b> (${okN} de ${LS.total}). Per obrir la porta cal més d'un 7: repassa una mica i torna-ho a provar!`, `Nota: <b>${nota}</b> (${okN} de ${LS.total}). Para abrir la puerta hace falta más de un 7: ¡repasa un poco y vuelve a intentarlo!`);
     }
     const pr = prog(R.ui), first = (pr.stars[R.li] || 0) < PASS && R.stars >= PASS;
     pr.stars[R.li] = Math.max(pr.stars[R.li], R.stars);
