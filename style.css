@@ -846,7 +846,7 @@ body{background:radial-gradient(1200px 500px at 50% -120px,#F1E6FA 0%,rgba(241,2
 .pdiv.gatediv span{background:#FFF3C4;color:#9A6A00;border-color:#F0C24B}
 .bals{display:grid;gap:4px;width:100%;justify-items:center}.bals .vpic.bal{width:100%!important;max-width:320px}
 .pdiv.bonusdiv span{background:#E9F7FF;color:#1F6FA3;border-color:#8FD0F2}
-.nwrap.bonus .node:not(.locked){box-shadow:0 7px 0 var(--ucd),0 0 0 4px #FFE27A}
+.nwrap.bonusn .node:not(.locked){box-shadow:0 7px 0 var(--ucd),0 0 0 4px #FFE27A}
 /* Intercanvis */
 .tcard.trade{border-color:#9FD3DC}.tcard.trade:disabled{opacity:.6}
 .trow{background:#fff;border:2px solid #E6DCF2;border-radius:16px;padding:10px 12px;margin-bottom:10px;display:grid;gap:6px}
@@ -885,10 +885,7 @@ body.pro .topbar{background:linear-gradient(#F3ECFA 78%,rgba(243,236,250,0))}
 @keyframes chHop{0%,100%{transform:translateY(0)}50%{transform:translateY(-5%)}}
 body.pro .unit .path{margin-top:10px;border-radius:26px;background:#DDEBC8;box-shadow:inset 0 0 0 1px rgba(255,255,255,.6),0 10px 30px rgba(60,30,90,.10);overflow:clip}
 /* terreny que es desplaça amb el camí */
-body.pro .terrain{position:absolute;inset:0;overflow:hidden;z-index:0;pointer-events:none}
-body.pro .terrain .tile{position:absolute;left:0;right:0;background:center 62%/100% auto no-repeat}
-body.pro .terrain .tile.fl{transform:scaleX(-1)}
-body.pro .terrain .tile.fade{-webkit-mask-image:linear-gradient(transparent,#000 22%);mask-image:linear-gradient(transparent,#000 22%)}
+body.pro .terrain{position:absolute;inset:0;z-index:0;pointer-events:none;background:center top/100% auto repeat-y}
 body.pro .unit.closed .path{filter:grayscale(.7) brightness(1.05)}
 body.pro .road{position:absolute;left:0;top:0;pointer-events:none;z-index:1}
 body.pro .road .rb{fill:none;stroke:#E9D9B6;stroke-width:34;stroke-linecap:round;opacity:.9}
@@ -904,3 +901,6 @@ body.pro .goal,body.pro .mcard,body.pro .seasoncard,body.pro .course{box-shadow:
 body.pro .lesson{background:radial-gradient(900px 420px at 50% -80px,color-mix(in srgb,var(--uc) 22%,#fff),rgba(255,255,255,0) 70%),linear-gradient(180deg,#F7F2FC,#EEF5FC)}
 body.pro .l-q .buddy{width:96px;height:96px}
 body.pro .l-vis>*{box-shadow:0 8px 20px rgba(60,30,90,.08)}
+
+/* etiquetes del camí (nivell, porta, bonus) per sobre del camí */
+body.pro .pdiv{z-index:3}body.pro .pdiv span{box-shadow:0 4px 0 color-mix(in srgb,var(--uc) 70%,#000),0 6px 14px rgba(40,20,60,.2)}
