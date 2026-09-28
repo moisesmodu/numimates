@@ -21,5 +21,7 @@ export default async function handler(req, res) {
     COALESCE(json_agg(json_build_object('name', j.name, 'correct', j.correct, 'ms', j.ms, 'done', j.done, 'finished', j.finished, 'card', j.card) ORDER BY j.correct DESC, j.ms) FILTER (WHERE j.sid IS NOT NULL), '[]') AS players
     FROM mates.batalles b LEFT JOIN mates.batalla_jug j USING (code) WHERE b.created_at > now() - interval '30 days' GROUP BY b.code ORDER BY b.created_at DESC LIMIT 60`;
   const trades = await sql`SELECT code, a_name, a_card, b_name, b_card, status, created_at FROM mates.canvis WHERE created_at > now() - interval '30 days' ORDER BY created_at DESC LIMIT 60`;
-  return ok(res, { rows, battles, trades });
+  let contacts = [];
+  try { contacts = await sql`SELECT nom, centre, mail, cursos, lang, created_at FROM mates.contactes ORDER BY created_at DESC LIMIT 100`; } catch (e) { /* la taula es crea amb la primera petició del web */ }
+  return ok(res, { rows, battles, trades, contacts });
 }

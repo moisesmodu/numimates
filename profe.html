@@ -44,7 +44,7 @@ const $ = s => document.querySelector(s), root = $('#root');
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 const SRW = [[3, '🎁'], [7, '🏅'], [14, '🎧'], [30, '⭐'], [60, '👑'], [100, '🏆']];
 const FEEL = { love: '😍', good: '🙂', meh: '😐', hard: '😟' }, CUR = ['Nivel 1 (1º prim.)', 'Nivel 2 (2º prim.)', 'Nivel 3 (3º prim.)', 'Nivel 4 (4º prim.)', 'Nivel 5 (5º prim.)', 'Nivel 6 (6º prim.)', 'Nivel 7 (1º ESO)', 'Nivel 8 (2º ESO)', 'Nivel 9 (3º ESO)', 'Nivel 10 (4º ESO)'];
-let TRADES = [], BATS = [], ROWS = [], SORT = ['streak', -1];
+let TRADES = [], BATS = [], CONTACTS = [], ROWS = [], SORT = ['streak', -1];
 const todayStr = () => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; };
 const days = d => Math.round((new Date(todayStr() + 'T12:00') - new Date(d + 'T12:00')) / 864e5);
 const ago = d => { if (!d) return '—'; const n = days(d); return n <= 0 ? 'hoy' : n === 1 ? 'ayer' : `hace ${n} días`; };
@@ -60,7 +60,7 @@ async function go(p) {
   const r = await fetch('/api/profe', { headers: { 'x-profe': p } });
   if (r.status !== 200) { sessionStorage.removeItem('pp'); return login('Contraseña incorrecta.'); }
   sessionStorage.setItem('pp', p);
-  const J = await r.json(); BATS = J.battles || []; TRADES = J.trades || [];
+  const J = await r.json(); BATS = J.battles || []; TRADES = J.trades || []; CONTACTS = J.contacts || [];
   ROWS = J.map(r => ({ ...r, cards: Object.keys(r.album || {}).length, bwins: r.bwins || 0, ncrowns: (r.crowns || []).length, stier: r.season && r.season.id === seasonNow() ? Math.min(25, Math.floor(r.season.xp / 40)) : 0, evo: (r.tests || []).filter(t => t.kind === 'evo'), streakNow: alive(r) ? r.streak : 0, wxp: r.week && r.week.id === weekId() ? r.week.xp : 0 }));
   render();
 }
@@ -114,10 +114,14 @@ function render() {
     <td>${r.username ? `<button class="mini ghost" onclick="setPass('${r.code}','${esc(r.name)}')">Contraseña</button> ` : ''}<button class="mini ghost" onclick="report('${r.code}')">Informe</button> <button class="mini ghost" title="Abre todas las unidades a este alumno (modo maestro)" onclick="unlock('${r.code}',${!r.unlock_all})">${r.unlock_all ? '🔓 Todo abierto' : '🔒 Normal'}</button> <button class="mini ghost red" onclick="off('${r.code}','${esc(r.name)}')">Baja</button></td></tr>`).join('') || '<tr><td colspan="15" class="mut">Aún no hay alumnos.</td></tr>'}
   </tbody></table></div>
   <p class="note">Premios de racha: 🎁 3 días · 🏅 7 días · 🎧 14 días · ⭐ 30 días · 👑 60 días · 🏆 100 días. El botón 🔒/🔓 activa el «modo maestro» (todas las unidades abiertas) solo para ese alumno: el alumno ya no puede activarlo él mismo. Las filas en gris son alumnos que han perdido la racha (hace más de un día que no practican). La columna «Evolución» muestra las últimas pruebas (cada 14 días) y cuánto ha subido o bajado respecto a la anterior.</p>`;
-  root.insertAdjacentHTML('beforeend', battlesHTML() + tradesHTML() + rewardsHTML());
+  root.insertAdjacentHTML('beforeend', contactsHTML() + battlesHTML() + tradesHTML() + rewardsHTML());
 }
 const seasonNow = () => { const d = new Date(), id = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`; return id < '2026-10' ? '2026-10' : id; };
 const secs = ms => (ms / 1000).toFixed(1).replace('.', ',') + ' s';
+function contactsHTML() {
+  if (!CONTACTS.length) return `<h2 class="h2">Peticiones de demostración (numimates.com)</h2><p class="mut">Todavía no ha llegado ninguna desde el formulario de la web.</p>`;
+  return `<h2 class="h2">Peticiones de demostración (numimates.com)</h2><div class="tw"><table><thead><tr><th>Fecha</th><th>Nombre</th><th>Centro</th><th>Correo</th><th>Cursos</th><th>Idioma</th></tr></thead><tbody>${CONTACTS.map(c => `<tr><td>${when(c.created_at)}</td><td><b>${esc(c.nom)}</b></td><td>${esc(c.centre)}</td><td><a href="mailto:${esc(c.mail)}">${esc(c.mail)}</a></td><td style="white-space:normal">${esc(c.cursos || '—')}</td><td>${c.lang === 'es' ? 'ES' : 'CA'}</td></tr>`).join('')}</tbody></table></div>`;
+}
 function battlesHTML() {
   if (!BATS.length) return `<h2 class="h2">Batallas</h2><p class="mut">Aún no se ha jugado ninguna batalla.</p>`;
   const when = d => new Date(d).toLocaleString('es-ES', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
