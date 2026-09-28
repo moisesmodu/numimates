@@ -142,7 +142,8 @@ Object.assign(EX, {
       return inp(HOW(), x + y, { vis: eqv(`${x} + ${y} = ${BOX}`), ex: `${x} + ${y} = ${x + y}.` });
     }
     if (L_ <= 1) { x = ri(1, 7) * 10; y = ri(1, 9 - x / 10) * 10; return inp(HOW(), x + y, { vis: eqv(`${x} + ${y} = ${BOX}`), ex: L(`${x / 10} desenes + ${y / 10} desenes = ${(x + y) / 10} desenes = ${x + y}.`, `${x / 10} decenas + ${y / 10} decenas = ${(x + y) / 10} decenas = ${x + y}.`) }); }
-    if (L_ <= 3) return EX['a.add'](L_ === 2 ? 1 : 2);
+    if (L_ === 3) { x = ri(15, 68); y = ri(12, 100 - x); return inp(HOW(), x + y, { vis: eqv(`${x} + ${y} = ${BOX}`), ex: L(`Primer les desenes i després les unitats: ${x} + ${y} = ${x + y}.`, `Primero las decenas y después las unidades: ${x} + ${y} = ${x + y}.`) }); }   // a 1r, com a molt 100
+    if (L_ <= 2) return EX['a.add'](1);
     if (L_ === 4) { x = ri(15, 68); y = ri(12, 99 - x); return inp(L('Fes la suma:', 'Haz la suma:'), x + y, { vis: colOp(x, y, '+'), ex: L(`Suma les unitats i després les desenes (sense oblidar les que et portes): ${x} + ${y} = ${x + y}.`, `Suma las unidades y después las decenas (sin olvidar las que te llevas): ${x} + ${y} = ${x + y}.`) }); }
     return EX['a.missing'](1);
   },
@@ -199,7 +200,8 @@ Object.assign(EX, {
     return inp(L('Quin número falta?', '¿Qué número falta?'), arr[miss], { vis: `<div class="seq">${arr.map((v, i) => i === miss ? BOX : `<span style="animation-delay:${i * 80}ms">${v}</span>`).join('')}</div>`, ex: L(`Comptem de ${step} en ${step}: ${arr.join(', ')}.`, `Contamos de ${step} en ${step}: ${arr.join(', ')}.`) });
   },
   'g.prob': (L_, A) => {
-    const lim = L_ <= 2 ? 10 : 20, N = nomP(), M = nomP(), { em, nm, Q } = pickShare();
+    const lim = L_ <= 2 ? 10 : 20, N = nomP(), { em, nm, Q } = pickShare();
+    let M = nomP(); for (let t = 0; t < 20 && M.c === N.c; t++) M = nomP();   // dues persones diferents
     if (A === 'mul') { const k = pick([2, 5, 10]), g = ri(2, 6); return inp(L(`En una capsa hi ha ${k} ${nm}. ${Q} ${nm} hi ha en ${g} capses?`, `En una caja hay ${k} ${nm}. ¿${Q} ${nm} hay en ${g} cajas?`), g * k, { long: true, ex: L(`${g} capses de ${k}: ${g} × ${k} = ${g * k}.`, `${g} cajas de ${k}: ${g} × ${k} = ${g * k}.`) }); }
     if (A === 'sub') { const x = ri(30, 90), y = ri(10, x - 5); return inp(L(`A l'excursió hi van ${x} nens i nenes. ${y} tornen amb autobús i la resta, caminant. Quants tornen caminant?`, `A la excursión van ${x} niños y niñas. ${y} vuelven en autobús y el resto, andando. ¿Cuántos vuelven andando?`), x - y, { long: true, ex: L(`«La resta» vol dir restar: ${x} − ${y} = ${x - y}.`, `«El resto» quiere decir restar: ${x} − ${y} = ${x - y}.`) }); }
     if (A === 'cmp') { const x = ri(4, lim), y = ri(1, x - 1); return inp(L(`${N.C} té ${x} ${nm} i ${M.c} en té ${y}. ${Q} ${nm} més té ${N.c}?`, `${N.C} tiene ${x} ${nm} y ${M.c} tiene ${y}. ¿${Q} ${nm} más tiene ${N.c}?`), x - y, { long: true, ex: L(`Per saber quantes més, restem: ${x} − ${y} = ${x - y}.`, `Para saber cuántas más, restamos: ${x} − ${y} = ${x - y}.`) }); }
@@ -233,8 +235,9 @@ Object.assign(EX, {
     return dinp(add ? L('Fes la suma:', 'Haz la suma:') : L('Fes la resta:', 'Haz la resta:'), r / m, { vis: colOp(sa, sb, add ? '+' : '−'), ex: L(`Posa les comes una sota l'altra i opera com sempre: ${sa} ${add ? '+' : '−'} ${sb} = ${fmtDf(r / m, d)}.`, `Pon las comas una debajo de la otra y opera como siempre: ${sa} ${add ? '+' : '−'} ${sb} = ${fmtDf(r / m, d)}.`) });
   },
   'dec.x10': L_ => {
-    const x = ri(1, 999) / pick([10, 100]), m = pick([10, 100, 1000]), mul = L_ < 3 || Math.random() < .5, k = String(m).length - 1, r = mul ? x * m : x / m;
-    return dinp(HOW(), r, { vis: eqv(`${fmtD(x)} ${mul ? '×' : '÷'} ${fmt(m)} = ${BOX}`), ex: L(`${mul ? 'Multiplicar' : 'Dividir'} per ${fmt(m)} és moure la coma ${['', 'un lloc', 'dos llocs', 'tres llocs'][k]} cap a la ${mul ? 'dreta' : 'esquerra'}: ${fmtD(r)}.`, `${mul ? 'Multiplicar' : 'Dividir'} por ${fmt(m)} es mover la coma ${['', 'un lugar', 'dos lugares', 'tres lugares'][k]} hacia la ${mul ? 'derecha' : 'izquierda'}: ${fmtD(r)}.`) });
+    // el resultat ha de tenir com a molt 3 decimals (el que admet el teclat): amb 2 decimals, dividir només entre 10
+    const dd = pick([1, 2]), x = ri(1, 999) / 10 ** dd, mul = L_ < 3 || Math.random() < .5, k = mul ? ri(1, 3) : ri(1, 3 - dd), m = 10 ** k, r = mul ? x * m : x / m;
+    return dinp(HOW(), r, { vis: eqv(`${fmtD(x)} ${mul ? '×' : '÷'} ${fmt(m)} = ${BOX}`), ex: L(`${mul ? 'Multiplicar' : 'Dividir'} per ${fmt(m)} és moure la coma ${['', 'un lloc', 'dos llocs', 'tres llocs'][k]} cap a ${mul ? 'la dreta' : "l'esquerra"}: ${fmtD(r)}.`, `${mul ? 'Multiplicar' : 'Dividir'} por ${fmt(m)} es mover la coma ${['', 'un lugar', 'dos lugares', 'tres lugares'][k]} hacia la ${mul ? 'derecha' : 'izquierda'}: ${fmtD(r)}.`) });
   },
   'dec.mul': L_ => {
     if (L_ <= 2 || Math.random() < .5) { const a = ri(5, 99) / 10, b = ri(2, 9), r = a * b; return dinp(L('Fes la multiplicació:', 'Haz la multiplicación:'), r, { vis: eqv(`${fmtD(a)} × ${b} = ${BOX}`), ex: L(`Multiplica sense la coma (${Math.round(a * 10)} × ${b} = ${Math.round(r * 10)}) i després posa-hi un decimal: ${fmtD(r)}.`, `Multiplica sin la coma (${Math.round(a * 10)} × ${b} = ${Math.round(r * 10)}) y después pon un decimal: ${fmtD(r)}.`) }); }
@@ -292,14 +295,15 @@ Object.assign(EX, {
     const d = ri(4, 12), add = L_ <= 2 || Math.random() < .5; let a = ri(1, d - 2), b = ri(1, d - 1 - a);
     if (!add && a < b) [a, b] = [b, a]; if (!add && a === b) a++;
     const r = add ? a + b : a - b;
-    return mc(HOW(), frac(r, d), [frac(r, 2 * d), frac(r + 1, d), frac(add ? a * b : a + b, d)].filter(x => x !== frac(r, d)), { vis: eqv(`${frac(a, d)} ${add ? '+' : '−'} ${frac(b, d)}`), big: true, ex: L(`Amb el mateix denominador, ${add ? 'sumem' : 'restem'} els numeradors: ${a} ${add ? '+' : '−'} ${b} = ${r}. El denominador (${d}) no canvia!`, `Con el mismo denominador, ${add ? 'sumamos' : 'restamos'} los numeradores: ${a} ${add ? '+' : '−'} ${b} = ${r}. ¡El denominador (${d}) no cambia!`) });
+    return mc(HOW(), frac(r, d), [frac(r, 2 * d), frac(r + 1, d), frac(add ? a * b : a + b, d), frac(r + 2, d)].filter(x => x !== frac(r, d)).slice(0, 3), { vis: eqv(`${frac(a, d)} ${add ? '+' : '−'} ${frac(b, d)}`), big: true, ex: L(`Amb el mateix denominador, ${add ? 'sumem' : 'restem'} els numeradors: ${a} ${add ? '+' : '−'} ${b} = ${r}. El denominador (${d}) no canvia!`, `Con el mismo denominador, ${add ? 'sumamos' : 'restamos'} los numeradores: ${a} ${add ? '+' : '−'} ${b} = ${r}. ¡El denominador (${d}) no cambia!`) });
   },
   'fr.addD': L_ => {
     const pairs = L_ <= 3 ? [[2, 4], [2, 6], [3, 6], [4, 8], [3, 9], [5, 10], [2, 8]] : [[2, 3], [3, 4], [2, 5], [4, 6], [3, 5], [4, 10]];
     const [d1, d2] = shuffle(pick(pairs)), m = lcm(d1, d2), a = ri(1, d1 - 1), b = ri(1, d2 - 1), A_ = a * m / d1, B = b * m / d2;
     const add = L_ <= 2 || A_ <= B ? true : Math.random() < .5, r = add ? A_ + B : A_ - B;
     if (r <= 0) return EX['fr.addD'](L_);
-    return mc(HOW(), frac(r, m), [frac(add ? a + b : Math.abs(a - b), d1 + d2), frac(r + 1, m), frac(r, m * 2)], { vis: eqv(`${frac(a, d1)} ${add ? '+' : '−'} ${frac(b, d2)}`), big: true, ex: L(`Primer, el mateix denominador (${m}): ${a}/${d1} = ${A_}/${m} i ${b}/${d2} = ${B}/${m}. Després: ${A_} ${add ? '+' : '−'} ${B} = ${r} → ${r}/${m}.`, `Primero, el mismo denominador (${m}): ${a}/${d1} = ${A_}/${m} y ${b}/${d2} = ${B}/${m}. Después: ${A_} ${add ? '+' : '−'} ${B} = ${r} → ${r}/${m}.`) });
+    // cap distractor pot valdre el mateix que la resposta (4/10 − 1/5 = 2/10, i 3/15 també és 1/5)
+    return mc(HOW(), frac(r, m), [[add ? a + b : Math.abs(a - b), d1 + d2], [r + 1, m], [r, m * 2], [r + 2, m], [Math.max(1, r - 1), m]].filter(([n, dd]) => n * m !== r * dd).slice(0, 3).map(([n, dd]) => frac(n, dd)), { vis: eqv(`${frac(a, d1)} ${add ? '+' : '−'} ${frac(b, d2)}`), big: true, ex: L(`Primer, el mateix denominador (${m}): ${a}/${d1} = ${A_}/${m} i ${b}/${d2} = ${B}/${m}. Després: ${A_} ${add ? '+' : '−'} ${B} = ${r} → ${r}/${m}.`, `Primero, el mismo denominador (${m}): ${a}/${d1} = ${A_}/${m} y ${b}/${d2} = ${B}/${m}. Después: ${A_} ${add ? '+' : '−'} ${B} = ${r} → ${r}/${m}.`) });
   },
   'fr.simp': L_ => {
     let p, q; do { q = ri(2, 9); p = ri(1, q - 1); } while (gcd(p, q) > 1);
@@ -337,7 +341,7 @@ Object.assign(EX, {
     }
     if (L_ === 3) { const t = ri(-8, 12), d = ri(2, 12), up = Math.random() < .5, r = up ? t + d : t - d; return ninp(L(`Al matí fa <b>${fmt(t)} °C</b>. Després la temperatura ${up ? 'puja' : 'baixa'} <b>${d} graus</b>. Quina temperatura fa?`, `Por la mañana hace <b>${fmt(t)} °C</b>. Después la temperatura ${up ? 'sube' : 'baja'} <b>${d} grados</b>. ¿Qué temperatura hace?`), r, { unit: '°C', vis: thermoSVG(t), ex: `${fmt(t)} ${up ? '+' : '−'} ${d} = ${fmt(r)} °C.` }); }
     if (L_ === 4 || Math.random() < .5) { const a = ri(-9, 9), b = ri(2, 12), add = Math.random() < .5, r = add ? a + b : a - b; return ninp(HOW(), r, { vis: eqv(`${a < 0 ? '(' + fmt(a) + ')' : a} ${add ? '+' : '−'} ${b} = ${BOX}`), ex: L(`Imagina la recta numèrica: surts del ${fmt(a)} i ${add ? 'avances' : 'retrocedeixes'} ${b}: arribes al ${fmt(r)}.`, `Imagina la recta numérica: sales del ${fmt(a)} y ${add ? 'avanzas' : 'retrocedes'} ${b}: llegas al ${fmt(r)}.`) }); }
-    const p = ri(20, 60), s = ri(5, 30), r = -p + s;
+    const p = ri(20, 60), s = ri(5, Math.min(30, p - 1)), r = -p + s;   // continua sota l'aigua
     return ninp(L(`Un submarí és a <b>${fmt(-p)} m</b> i puja <b>${s} m</b>. A quina altura és ara?`, `Un submarino está a <b>${fmt(-p)} m</b> y sube <b>${s} m</b>. ¿A qué altura está ahora?`), r, { unit: 'm', ex: `${fmt(-p)} + ${s} = ${fmt(r)} m.` });
   },
   'pow': L_ => {
@@ -347,7 +351,7 @@ Object.assign(EX, {
     if (v === 2) { const k = ri(2, 6); if (Math.random() < .5) return inp(HOW(), 10 ** k, { vis: eqv(`10${sup(k)} = ${BOX}`), ex: L(`10${sup(k)} és un 1 seguit de ${k} zeros: ${fmt(10 ** k)}.`, `10${sup(k)} es un 1 seguido de ${k} ceros: ${fmt(10 ** k)}.`) }); return inp(HOW(), 2 ** k, { vis: eqv(`2${sup(k)} = ${BOX}`), ex: `${Array(k).fill(2).join(' × ')} = ${2 ** k}.` }); }
     if (v === 3) { const a = ri(2, 12); return inp(HOW(), a, { vis: eqv(`√${a * a} = ${BOX}`), ex: L(`Quin número multiplicat per ell mateix fa ${a * a}? ${a} × ${a} = ${a * a}, per tant √${a * a} = ${a}.`, `¿Qué número multiplicado por sí mismo da ${a * a}? ${a} × ${a} = ${a * a}, por lo tanto √${a * a} = ${a}.`) }); }
     const a = ri(2, 6), k = ri(3, 5);
-    return mc(L("Com s'escriu com a potència?", '¿Cómo se escribe como potencia?'), `${a}${sup(k)}`, [`${k}${sup(a)}`, `${a * k}`, `${a}${sup(k + 1)}`], { vis: eqv(Array(k).fill(a).join(' × ')), big: true, ex: L(`El ${a} es multiplica ${k} vegades: ${a}${sup(k)}. El ${a} és la base i el ${k}, l'exponent.`, `El ${a} se multiplica ${k} veces: ${a}${sup(k)}. El ${a} es la base y el ${k}, el exponente.`) });
+    return mc(L("Com s'escriu com a potència?", '¿Cómo se escribe como potencia?'), `${a}${sup(k)}`, [...(k ** a === a ** k ? [`${a}${sup(k - 1)}`] : [`${k}${sup(a)}`]), `${a * k}`, `${a}${sup(k + 1)}`], { vis: eqv(Array(k).fill(a).join(' × ')), big: true, ex: L(`El ${a} es multiplica ${k} vegades: ${a}${sup(k)}. El ${a} és la base i el ${k}, l'exponent.`, `El ${a} se multiplica ${k} veces: ${a}${sup(k)}. El ${a} es la base y el ${k}, el exponente.`) });
   },
   'pct': L_ => {
     const P_ = pick(L_ <= 1 ? [50, 10, 25] : L_ <= 3 ? [10, 20, 25, 50, 75] : [5, 10, 15, 20, 25, 30, 50, 75]), step = 100 / gcd(P_, 100), q = step * ri(Math.max(1, Math.ceil(20 / step)), Math.max(2, Math.floor(400 / step))), v = q * P_ / 100;

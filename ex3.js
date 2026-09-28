@@ -112,7 +112,7 @@ Object.assign(EX, {
     }
     if (L_ === 3) {
       const [a, b, c] = shuffle(['r', 'b', 'g']), na = ri(4, 6), nb = ri(1, 3), nc = ri(1, 3), bag = [...Array(na).fill(a), ...Array(nb).fill(b), ...Array(nc).fill(c)];
-      return mc(L('De quin color és <b>més probable</b> treure una bola?', '¿De qué color es <b>más probable</b> sacar una bola?'), BALL[a], [BALL[b], BALL[c]], { big: true, vis: `<div class="bag">${shuffle(bag).map(x => `<span>${BALL[x]}</span>`).join('')}</div>`, ex: L(`Hi ha més boles ${BN[a][0]}s (${na}), per tant és el color més probable.`, `Hay más bolas ${BN[a][1] === 'azul' ? 'azules' : BN[a][1] + 's'} (${na}), por lo tanto es el color más probable.`) });
+      return mc(L('De quin color és <b>més probable</b> treure una bola?', '¿De qué color es <b>más probable</b> sacar una bola?'), BALL[a], [BALL[b], BALL[c]], { big: true, vis: `<div class="bag">${shuffle(bag).map(x => `<span>${BALL[x]}</span>`).join('')}</div>`, ex: L(`Hi ha més boles ${({ r: 'vermelles', b: 'blaves', g: 'verdes', y: 'grogues' })[a]} (${na}), per tant és el color més probable.`, `Hay más bolas ${BN[a][1] === 'azul' ? 'azules' : BN[a][1] + 's'} (${na}), por lo tanto es el color más probable.`) });
     }
     if (Math.random() < .5) {
       const q = pick([[L('un 6', 'un 6'), 1], [L('un número parell', 'un número par'), 3], [L('un número més gran que 4', 'un número mayor que 4'), 2], [L('un 1 o un 2', 'un 1 o un 2'), 2], [L('un número més petit que 5', 'un número menor que 5'), 4]]);

@@ -437,7 +437,7 @@ function renderLesson() {
       ${e.vis ? `<div class="l-vis">${e.vis}</div>` : ''}
       <div class="l-ans">${ansHTML(e)}</div>
     </div>
-    <div class="l-foot" id="foot"><div class="fwrap"><div class="fb" id="fb"></div>${quiet ? `<button class="btn ghost skip" onclick="skipPlace()">${L('NO HO SÉ', 'NO LO SÉ')}</button>` : LS.mode === 'battle' || LS.exam ? '' : `<button class="btn hintb ${e.retry ? 'nudge' : ''}" id="hintb" onclick="showHint()" aria-label="${L('Com es fa?', '¿Cómo se hace?')}" title="${L('Com es fa?', '¿Cómo se hace?')}"><img class="hic" src="img/ic/bulb.webp" alt="" draggable="false"></button>`}<button class="btn check" id="chk" onclick="check()" disabled>${L('COMPROVA', 'COMPRUEBA')}</button></div></div>
+    <div class="l-foot" id="foot"><div class="fwrap"><div class="fb" id="fb"></div>${quiet ? `<button class="btn ghost skip" onclick="skipPlace()">${L('NO HO SÉ', 'NO LO SÉ')}</button>` : LS.mode === 'battle' || LS.exam ? '' : (LS.helps || 0) >= HINTS && !e.helped ? '' : `<button class="btn hintb ${e.retry ? 'nudge' : ''}" id="hintb" onclick="showHint()" data-n="${HINTS - (LS.helps || 0)}" aria-label="${L('Com es fa?', '¿Cómo se hace?')}" title="${L('Com es fa?', '¿Cómo se hace?')}"><img class="hic" src="img/ic/bulb.webp" alt="" draggable="false"></button>`}<button class="btn check" id="chk" onclick="check()" disabled>${L('COMPROVA', 'COMPRUEBA')}</button></div></div>
   </div>`;
   if (LS.mode === 'battle') { LS.q0 = Date.now(); battleStrip(); }
 }
@@ -499,15 +499,21 @@ function ready(e) { return e.type === 'grid' ? LS.gsel && LS.gsel.size > 0 : e.t
 function skipPlace() { if (!LS) return; LS.res.push(false); LS.done++; SFX.tap(); nextEx(); }
 // Ajuda pas a pas: un exemple resolt del mateix tipus (amb altres números), sense donar la resposta de la pregunta.
 // No resta punts, però la pregunta no suma a la ratxa i la lliçó ja no pot ser perfecta (com a molt, 2 estrelles).
-function showHint() {
+const HINTS = 2;   // ajudes per lliçó
+function showHint(ok) {
   if (!LS || LS.state !== 'ask') return; const e = LS.cur;
+  if (!e.helped && (LS.helps || 0) >= HINTS) return toast(L(`Ja has fet servir les ${HINTS} ajudes d'aquesta lliçó. Tu pots!`, `Ya has usado las ${HINTS} ayudas de esta lección. ¡Tú puedes!`));
+  // les 3 primeres vegades (i sempre que la lliçó encara pot ser perfecta) avisem del que costa l'ajuda abans de mostrar-la
+  if (!ok && !e.helped && (P.hintAsk || 0) < 3) return modal(`<div class="sheet card cent hintsheet"><div class="hhead"><span class="hbulb"><img src="img/ic/bulb.webp" alt="" draggable="false"></span><div><b>${L('Vols una ajuda?', '¿Quieres una ayuda?')}</b><small>${L('Et mostrarem un exemple resolt', 'Te mostraremos un ejemplo resuelto')}</small></div></div>
+    <ul class="hwarn"><li>${L(`Tens <b>${HINTS} ajudes</b> per lliçó.`, `Tienes <b>${HINTS} ayudas</b> por lección.`)}</li><li>${L('Aquesta pregunta <b>no sumarà a la ratxa</b>.', 'Esta pregunta <b>no sumará a la racha</b>.')}</li><li>${L('La lliçó quedarà com a molt en <b>2 estrelles</b> (per passar en calen 2, així que no et bloqueja).', 'La lección quedará como mucho en <b>2 estrellas</b> (para pasar hacen falta 2, así que no te bloquea).')}</li></ul>
+    <div class="row2"><button class="btn ghost" onclick="closeModal()">${L('HO PROVO', 'LO INTENTO')}</button><button class="btn gold" onclick="P.hintAsk=(P.hintAsk||0)+1;saveLocal();showHint(1)">${L("VULL L'AJUDA", 'QUIERO LA AYUDA')}</button></div></div>`, true);
   let x = null; for (let i = 0; i < 8 && (!x || x.q === e.q); i++) { try { x = genEx(e.sk, e.L, new Set(), false); } catch (err) { x = null; break; } }
   if (!x || x.q === e.q) return toast(L('Per a aquesta pregunta no hi ha exemple. Mira bé el dibuix i prova-ho!', 'Para esta pregunta no hay ejemplo. ¡Mira bien el dibujo e inténtalo!'));
   if (!e.helped) { e.helped = true; LS.helps = (LS.helps || 0) + 1; }
   modal(`<div class="sheet hintsheet"><div class="hhead"><span class="hbulb"><img src="img/ic/bulb.webp" alt="" draggable="false"></span><div><b>${L('Com es fa?', '¿Cómo se hace?')}</b><small>${L('Mira aquest exemple amb altres números', 'Mira este ejemplo con otros números')}</small></div></div>
     <div class="lq">${x.q}</div>${x.vis ? `<div class="l-vis lvis">${x.vis}</div>` : ''}
     <div class="lans"><span>${L('Resposta', 'Respuesta')}:</span> <b>${ansText(x)}</b></div>${x.ex ? `<div class="lex">${x.ex}</div>` : ''}
-    <p class="hnote">${L("Ara prova-ho tu amb la teva pregunta. Amb ajuda no perds punts, però aquesta no compta per a la ratxa.", 'Ahora pruébalo tú con tu pregunta. Con ayuda no pierdes puntos, pero esta no cuenta para la racha.')}</p>
+    <p class="hnote">${L("Ara prova-ho tu amb la teva pregunta. Amb ajuda no perds punts, però aquesta no suma a la ratxa i la lliçó queda com a molt en 2 estrelles.", 'Ahora pruébalo tú con tu pregunta. Con ayuda no pierdes puntos, pero esta no suma a la racha y la lección queda como mucho en 2 estrellas.')}</p>
     <button class="btn big" onclick="closeModal()">${L('HO PROVO!', '¡LO INTENTO!')}</button></div>`);
 }
 function check() {
