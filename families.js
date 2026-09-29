@@ -119,7 +119,7 @@ const vSent = () => `<div class="card done"><img src="${img('envelope')}" alt=""
 function kidCard(k) {
   const u = curUnit(k), w = week(k);
   return `<div class="card tap" onclick="openKid('${esc(k.code)}')" role="button" tabindex="0">
-    <div class="kid"><img class="av" src="${av(k)}" alt=""><div><b>${esc(k.name)} ${pill(k)}</b><small>${tx(COURSE[k.course] || '')} · ${L('última vegada', 'última vez')} ${ago(k.last_day)}</small></div></div>
+    <div class="kid"><img class="av" src="${av(k)}" alt=""><div><b>${esc(k.name)} ${pill(k)}</b><small>${tx(COURSE[k.course] || '')} · ${k.last_day ? L('última vegada', 'última vez') + ' ' + ago(k.last_day) : L('encara no ha començat', 'aún no ha empezado')}</small></div></div>
     <div class="row3"><div class="stat"><img src="${img('fire')}" alt=""><b>${k.streak}</b><span>${L('dies seguits', 'días seguidos')}</span></div><div class="stat"><img src="${img('books')}" alt=""><b>${k.lessons}</b><span>${L('lliçons fetes', 'lecciones hechas')}</span></div><div class="stat"><img src="${img('target')}" alt=""><b>${acc(k)}</b><span>${L("d'encerts", 'de aciertos')}</span></div></div>
     <div class="week">${w.map(d => `<i class="${d.on ? 'on' : ''} ${d.today ? 'today' : ''}" title="${d.wd}"></i>`).join('')}</div><div class="wd">${w.map(d => `<span>${d.wd}</span>`).join('')}</div>
     ${u ? `<div class="unit"><span>${L('Unitat', 'Unidad')} ${u.n} · ${esc(u.t)}</span><div class="bar"><i style="width:${u.pct}%"></i></div></div>` : ''}
