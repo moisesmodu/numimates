@@ -136,6 +136,7 @@ const AE = (() => {
       } else if (go.cls && gt > t) svg += `<g ${tt(t, cls)}><g ${tt(gt, go.cls)}>${inner}</g></g>`;
       else svg += `<g ${tt(gt, go.cls || (go.t == null ? cls : 'a-pop'))}>${inner}</g>`;
       const stt = (o.st || {})[g] ?? (st.includes('s') ? gt + .6 : null);
+      if (st.includes('o')) svg += `<line x1="${r1(b.x0)}" x2="${r1(b.x1)}" y1="${r1(b.y0 + 1)}" y2="${r1(b.y0 + 1)}" stroke="${col}" stroke-width="2" stroke-linecap="round" ${tt(gt, 'a-fade')}/>`;
       if (stt != null) svg += `<line x1="${r1(b.x0 - 3)}" y1="${r1(b.y1 - 2)}" x2="${r1(b.x1 + 3)}" y2="${r1(b.y0 + 2)}" stroke="${RED}" stroke-width="2.6" stroke-linecap="round" pathLength="1" ${tt(stt, 'a-draw')}/>`;
     });
     (o.arcs || []).forEach(([i, j, at, lab, h = 16]) => { const p = G[i], q = G[j]; svg += arc(p.cx, p.y0 - 2, q.cx, q.y0 - 2, h, at, { lab, w: 2 }); });
@@ -154,7 +155,7 @@ const AE = (() => {
     const { fs = 14, st = 'o', cls = 'a-pop', wt = 8, a = 'm' } = o, L = lay(s, fs, wt), p = fs * .62, w = L.w + p * 2, h = fs * (L.fr ? 2.35 : 1.6);
     const x0 = a === 'm' ? x - w / 2 : a === 's' ? x : x - w, top = y - fs * (L.fr ? 1.32 : 1.12);
     const bg = { o: ['#fff', UC, INK], f: [UC, UC, '#fff'], y: [YEL, YEL, INK], r: ['#fff', RED, RED], g: [GRN, GRN, '#fff'], k: ['#fff', LN, INK], R: [RED, RED, '#fff'] }[st];
-    const body = `<rect x="${r1(x0)}" y="${r1(top)}" width="${r1(w)}" height="${r1(h)}" rx="${r1(Math.min(h / 2, 12))}" fill="${bg[0]}" stroke="${bg[1]}" stroke-width="2"/>` + L.it.map(u => itemSvg(u, x0 + p, y, 'fgR'.includes(st) ? bg[2] : colOf(u.st, bg[2]), wt)).join('');
+    const body = `<rect x="${r1(x0)}" y="${r1(top)}" width="${r1(w)}" height="${r1(h)}" rx="${r1(Math.min(h / 2, 12))}" fill="${bg[0]}" stroke="${bg[1]}" stroke-width="2"/>` + L.it.map(u => itemSvg(u, x0 + p, y, 'fgR'.includes(st) ? bg[2] : st === 'y' && u.st && u.st.includes('u') ? INK : colOf(u.st, bg[2]), wt)).join('');
     return t == null ? body : `<g ${tt(t, cls)}>${body}</g>`;
   }
   const chipW = (s, fs = 14, wt = 8) => lay(s, fs, wt).w + fs * 1.24;
@@ -780,7 +781,8 @@ const AE = (() => {
       else if (o.k === 'table') {
         const { px, py, head, rows, dt = .35, cw = 40, rh = 25 } = o;
         s += `<g ${tt(t, 'a-fade')}><rect x="${px}" y="${py}" width="${cw * 2}" height="${rh * (rows.length + 1)}" rx="8" fill="#fff" stroke="${LN}" stroke-width="2"/><line x1="${px + cw}" x2="${px + cw}" y1="${py}" y2="${py + rh * (rows.length + 1)}" stroke="${LN}" stroke-width="2"/><line x1="${px}" x2="${px + 2 * cw}" y1="${py + rh}" y2="${py + rh}" stroke="${LN}" stroke-width="2"/>${M(px + cw / 2, py + rh - 8, head[0], { fs: 13, fill: GRY })}${M(px + cw * 1.5, py + rh - 8, head[1], { fs: 13, fill: GRY })}</g>`;
-        rows.forEach(([a, b], i) => { s += M(px + cw / 2, py + rh * (i + 2) - 8, A.sg(a), { fs: 14, t: t + .15 + dt * i }) + M(px + cw * 1.5, py + rh * (i + 2) - 8, `{u|${A.sg(b)}}`, { fs: 14, t: t + .3 + dt * i }); });
+        const cs = v => typeof v === 'number' ? A.sg(v) : v;
+        rows.forEach(([a, b, rv, tr], i) => { const yy = py + rh * (i + 2) - 8, bv = M(px + cw * 1.5, yy, `{u|${cs(b)}}`, { fs: 14 }); s += M(px + cw / 2, yy, cs(a), { fs: 14, t: t + .15 + dt * i }) + (rv != null ? A.inout(t + .3 + dt * i, tr, bv, 'a-pop') + M(px + cw * 1.5, yy, `{y|${cs(rv)}}`, { fs: 14, t: tr }) : `<g ${tt(t + .3 + dt * i)}>${bv}</g>`); });
       }
     });
     return s;
@@ -1136,16 +1138,19 @@ const AE = (() => {
       return { html: A.scene(ty + 16 + runs.length * 28, s), at };
     },
     // gallines i conills: si tots fossin gallines, falten potes; cada conill en posa 2 més
-    eHeadsLegs({ heads, legs, a = 2, b = 4, ia = 'chick', ib = 'rabbit', at }) {
+    eHeadsLegs({ heads, legs, a = 2, b = 4, ia = 'chick', ib = 'rabbit', at, lines }) {
       const y = (legs - a * heads) / (b - a), sz = 26, per = 10;
       let s = '';
       for (let i = 0; i < heads; i++) {
         const cx = 160 + ((i % per) - (per - 1) / 2) * 29, cy = 30 + Math.floor(i / per) * 32, k = i >= heads - y;
         s += k ? A.inout(.2 + .04 * i, 3.4 + .07 * (i - heads + y), ic(ia, cx, cy, sz), 'a-pop') + ic(ib, cx, cy, sz, 3.4 + .07 * (i - heads + y)) : ic(ia, cx, cy, sz, .2 + .04 * i);
       }
-      s += chip(160, 106, `${heads} caps: si tots fossin gallines → ${heads} × ${a} = ${heads * a} potes`, 1.3, { fs: 11.5 });
-      s += chip(160, 136, `${legs} − ${heads * a} = {r|${legs - heads * a}} potes de més`, 2.1, { fs: 12.5 });
-      s += chip(160, 166, `cada conill en té ${b - a} més → ${legs - heads * a} ÷ ${b - a} = {u|${y}}`, 2.7, { fs: 12.5, st: 'y' });
+      if (lines) lines.forEach(([yy, txt, t, st = 'o', fs = 12.5]) => { s += chip(160, yy, txt, t, { fs, st }); });
+      else {
+        s += chip(160, 106, `${heads} caps: si tots fossin gallines → ${heads} × ${a} = ${heads * a} potes`, 1.3, { fs: 11.5 });
+        s += chip(160, 136, `${legs} − ${heads * a} = {r|${legs - heads * a}} potes de més`, 2.1, { fs: 12.5 });
+        s += chip(160, 166, `cada conill en té ${b - a} més → ${legs - heads * a} ÷ ${b - a} = {u|${y}}`, 2.7, { fs: 12.5, st: 'y' });
+      }
       s += chip(100, 200, `${heads - y} gallines`, 4.1, { fs: 13, st: 'o' }) + chip(222, 200, `${y} conills`, 4.2, { fs: 13, st: 'f' });
       return { html: A.scene(214, s), at };
     }
@@ -1200,17 +1205,18 @@ const AE = (() => {
       return { html: A.scene(214, s), at };
     },
     // proporcionalitat inversa: rectangles velocitat × temps amb la mateixa àrea (la distància)
-    eRectArea({ r1: R1, r2: R2, sx, sy, hu, wu, au, at }) {
+    eRectArea({ r1: R1, r2: R2, sx, sy, hu, wu, au, at, known, chips = [] }) {
       const y0 = 190; let s = '';
       [R1, R2].forEach(([h, w], i) => {
         const x = i ? 44 + R1[1] * sx + 40 : 44, t = i ? 2.4 : .2, W = w * sx, H = h * sy;
         s += `<rect x="${x}" y="${r1(y0 - H)}" width="${r1(W)}" height="${r1(H)}" rx="4" fill="${i ? YEL : UC}" stroke="${INK}" stroke-width="2" ${tt(t, i ? 'a-grow' : 'ae-gy')}/>`;
         s += M(x - 6, y0 - H / 2 + 4, `${h}`, { fs: 13, a: 'e', t: t + .2 }) + M(x - 6, y0 - H / 2 + 17, hu, { fs: 9.5, wt: 7, fill: GRY, a: 'e', t: t + .2 });
-        s += i ? A.inout(t + .2, t + 1.1, M(x + W / 2, y0 + 17, '?', { fs: 15, fill: RED })) + M(x + W / 2, y0 + 17, `{u|${w} ${wu}}`, { fs: 14, t: t + 1.1 }) : M(x + W / 2, y0 + 17, `${w} ${wu}`, { fs: 14, t: t + .2 });
+        s += i && !known ? A.inout(t + .2, t + 1.1, M(x + W / 2, y0 + 17, '?', { fs: 15, fill: RED })) + M(x + W / 2, y0 + 17, `{u|${w} ${wu}}`, { fs: 14, t: t + 1.1 }) : M(x + W / 2, y0 + 17, `${w} ${wu}`, { fs: 14, t: t + .2 });
         for (let k = 1; k < w; k++) s += `<line x1="${r1(x + k * sx)}" x2="${r1(x + k * sx)}" y1="${r1(y0 - H)}" y2="${y0}" stroke="#fff" stroke-width="1.5" stroke-dasharray="3 3" ${tt(t + .5, 'a-fade')}/>`;
         s += M(x + W / 2, y0 - H / 2 + 5, `${h * w} ${au}`, { fs: 14, fill: i ? INK : '#fff', t: i ? t + .8 : 1.4 });
       });
       s += chip(160, 22, `${R1[0]} × ${R1[1]} = ${R1[0] * R1[1]} ${au}`, 1.5, { fs: 13, st: 'y' });
+      chips.forEach(([x, y, txt, t, st = 'o', fs = 13]) => { s += chip(x, y, txt, t, { fs, st }); });
       return { html: A.scene(212, s), at };
     }
   });
