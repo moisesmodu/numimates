@@ -68,8 +68,8 @@ async function checkout(req, res) {
     billing_address_collection: 'auto',
     locale: b.lang === 'es' ? 'es' : 'auto',
     custom_text: { submit: { message: b.lang === 'es'
-      ? 'Se renueva automáticamente y puedes cancelarlo cuando quieras. Condiciones: numimates.com/condicions'
-      : "Es renova automàticament i el pots cancel·lar quan vulguis. Condicions: numimates.com/condicions" } },
+      ? 'Al confirmar contratas Numi Mates Premium con obligación de pago. Se renueva automáticamente y lo puedes cancelar cuando quieras desde la app. Tienes 14 días para desistir con reembolso íntegro. Condiciones: numimates.com/condicions'
+      : "En confirmar contractes Numi Mates Premium amb obligació de pagament. Es renova automàticament i el pots cancel·lar quan vulguis des de l'app. Tens 14 dies per desistir-ne amb el reemborsament íntegre. Condicions: numimates.com/condicions" } },
     success_url: origin + (b.ret === 'families' ? '/families?premium=ok' : '/?premium=ok'),
     cancel_url: origin + (b.ret === 'families' ? '/families?premium=cancel' : '/?premium=cancel')
   };

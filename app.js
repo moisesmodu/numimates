@@ -334,15 +334,15 @@ function dayTxt() {
   return n >= M ? (M === 1 ? L("Avui ja has fet la lliçó del dia", 'Hoy ya has hecho la lección del día') : L(`Avui ja has fet les ${M} lliçons del dia`, `Hoy ya has hecho las ${M} lecciones del día`)) : M === 1 ? L("Lliçó d'avui: 0/1 · amb premi", 'Lección de hoy: 0/1 · con premio') : M === Infinity ? L(`Lliçons d'avui: ${n} · ${left ? `${left} amb premi` : 'ja sense diamants ni cartes'}`, `Lecciones de hoy: ${n} · ${left ? `${left} con premio` : 'ya sin diamantes ni cartas'}`) : L(`Lliçons d'avui: ${n}/${M} · ${left ? `${left} amb premi` : 'ja sense diamants ni cartes'}`, `Lecciones de hoy: ${n}/${M} · ${left ? `${left} con premio` : 'ya sin diamantes ni cartas'}`);
 }
 function premiumModal(what) {
-  // títol segons el que ha tocat l'alumne; poc text: què hi guanya i els dos plans
-  const head = what === 'batalles' ? L('Les batalles són de Premium', 'Las batallas son de Premium') : what === 'temporada' ? L('La ruta de temporada és de Premium', 'La ruta de temporada es de Premium') : what === 'dia' ? L('Vols fer més lliçons?', '¿Quieres hacer más lecciones?') : 'Numi Mates Premium';
+  // títol segons el que ha tocat l'alumne. És informativa: els preus i la compra només surten a la pantalla de l'adult
+  // (la llei de competència deslleial, art. 30, prohibeix exhortar directament els nens a comprar)
+  const head = what === 'batalles' ? L('Les batalles són de Premium', 'Las batallas son de Premium') : what === 'temporada' ? L('La ruta de temporada és de Premium', 'La ruta de temporada es de Premium') : what === 'dia' ? L('Amb Premium, lliçons sense límit', 'Con Premium, lecciones sin límite') : 'Numi Mates Premium';
   modal(`<div class="sheet card cent prem-sheet"><h3>${head}</h3>
     <ul class="prem"><li><span>📚</span><span>${L('<b>Lliçons sense límit</b>', '<b>Lecciones sin límite</b>')}</span></li>
       <li><span>⚔️</span><span>${L('<b>Batalles</b> de mates', '<b>Batallas</b> de mates')}</span></li>
       <li><span>🏆</span><span>${L('<b>Ruta de temporada</b> i cartes exclusives', '<b>Ruta de temporada</b> y cartas exclusivas')}</span></li></ul>
-    <div class="prem-plans" id="premplans"><button onclick="buyPremium('mes')"><b>${L('Mensual', 'Mensual')}</b><span>4,99 €<small>/${L('mes', 'mes')}</small></span></button>
-      <button class="best" onclick="buyPremium('any')"><i>${L('Estalvia un 18 %', 'Ahorra un 18 %')}</i><b>${L('Anual', 'Anual')}</b><span>49 €<small>/${L('any', 'año')}</small></span></button></div>
-    <p class="prem-note" id="premnote">${L('IVA inclòs · Es cancel·la quan vulguis', 'IVA incluido · Se cancela cuando quieras')}</p>
+    <p class="prem-note">${L('Premium el decideix i el contracta un adult.', 'Premium lo decide y lo contrata un adulto.')}</p>
+    <div id="premplans"><button class="btn big gold" onclick="buyPremium()">${L('PER A UN ADULT', 'PARA UN ADULTO')} ›</button></div>
     ${P && P.code && !P.classe ? `<p class="prem-school">🏫 ${L('Si la teva escola fa servir Numi Mates, ja el tens.', 'Si tu escuela usa Numi Mates, ya lo tienes.')} <button class="link" onclick="closeModal();classeModal()">${L('Tinc un codi de classe', 'Tengo un código de clase')} ›</button></p>` : ''}
     <button class="btn big ghost" onclick="closeModal()">${L('ARA NO', 'AHORA NO')}</button></div>`, true);
   // si encara no es pot pagar des de l'app, en lloc dels plans surt el correu
@@ -359,15 +359,18 @@ async function payCheck() {
 // Compra de Premium: la fa un adult a la pàgina de pagament de Stripe (l'app no veu mai la targeta).
 // Premium és per a aquest perfil; el portal de Stripe (amb el correu de l'adult) serveix per canviar-lo o cancel·lar-lo.
 const PLA_TXT = { mes: ['Mensual · 4,99 € al mes', 'Mensual · 4,99 € al mes'], any: ['Anual · 49 € a l\'any', 'Anual · 49 € al año'] };
+let PREM_PLA = 'any';
 function buyPremium(pla) {
+  if (pla) PREM_PLA = pla === 'mes' ? 'mes' : 'any';
   if (!P || !P.code) { syncNow(); return toast(L('Primer cal guardar el perfil al núvol: connecta\'t a internet i torna-ho a provar.', 'Primero hay que guardar el perfil en la nube: conéctate a internet y vuelve a probarlo.')); }
-  modal(`<div class="sheet card cent prem-sheet"><h3>🔒 ${L('Això ho ha de fer un adult', 'Esto lo tiene que hacer un adulto')}</h3>
-    <p class="prem-sum">${L('Numi Mates Premium per a', 'Numi Mates Premium para')} <b>${esc(P.name)}</b><br><span>${esc(L(PLA_TXT[pla][0], PLA_TXT[pla][1]))}</span></p>
-    <ul class="prem prem-small"><li><span>💳</span><span>${L('Pagament amb targeta a Stripe. L\'app no la veu mai.', 'Pago con tarjeta en Stripe. La app nunca la ve.')}</span></li>
-      <li><span>🔁</span><span>${L('Es renova sol i es cancel·la quan vulgueu.', 'Se renueva solo y se cancela cuando queráis.')}</span></li></ul>
-    <label class="prem-ok"><input type="checkbox" id="premok" onchange="$('#premgo').disabled=!this.checked"> <span>${L('Sóc el pare, la mare o el tutor legal i accepto les', 'Soy el padre, la madre o el tutor legal y acepto las')} <a href="https://numimates.com/condicions?l=${LANG}" target="_blank" rel="noopener">${L('condicions', 'condiciones')}</a>.</span></label>
+  const pb = (k, t, pr, per, tag) => `<button class="${PREM_PLA === k ? 'sel' : ''} ${k === 'any' ? 'best' : ''}" onclick="buyPremium('${k}')">${tag ? `<i>${tag}</i>` : ''}<b>${t}</b><span>${pr}<small>/${per}</small></span></button>`;
+  modal(`<div class="sheet card cent prem-sheet"><h3>🔒 ${L('Per a un adult', 'Para un adulto')}</h3>
+    <p class="prem-sum">${L('Numi Mates Premium per a', 'Numi Mates Premium para')} <b>${esc(P.name)}</b></p>
+    <div class="prem-plans">${pb('mes', L('Mensual', 'Mensual'), '4,99 €', L('mes', 'mes'))}${pb('any', L('Anual', 'Anual'), '49 €', L('any', 'año'), L('Estalvia un 18 %', 'Ahorra un 18 %'))}</div>
+    <p class="prem-note">${L('IVA inclòs · Es renova sol i es cancel·la quan vulgueu des de l\'app · Pagament amb targeta a Stripe', 'IVA incluido · Se renueva solo y se cancela cuando queráis desde la app · Pago con tarjeta en Stripe')}</p>
+    <label class="prem-ok"><input type="checkbox" id="premok" onchange="$('#premgo').disabled=!this.checked"> <span>${L('Sóc el pare, la mare o el tutor legal i accepto les', 'Soy el padre, la madre o el tutor legal y acepto las')} <a href="https://numimates.com/condicions?l=${LANG}" target="_blank" rel="noopener">${L('condicions de contractació', 'condiciones de contratación')}</a>.</span></label>
     <p class="err" id="premerr"></p>
-    <button class="btn big gold" id="premgo" disabled onclick="payGo('${pla === 'any' ? 'any' : 'mes'}')">${L('CONTINUA AL PAGAMENT', 'CONTINUAR AL PAGO')}</button>
+    <button class="btn big gold" id="premgo" disabled onclick="payGo(PREM_PLA)">${L('CONTINUA AL PAGAMENT', 'CONTINUAR AL PAGO')}</button>
     <button class="btn ghost big" onclick="closeModal()">${L('ARA NO', 'AHORA NO')}</button></div>`, true);
 }
 async function payGo(pla) {
