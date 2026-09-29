@@ -245,7 +245,13 @@ const COURSES = [
       ['Gràfics de sectors|Gráficos de sectores', ['stat.pie'], 1], ['Els graus de cada sector|Los grados de cada sector', ['stat.pie'], 3]]),
     U('Algorismes i programació|Algoritmos y programación', 'Llegir programes: variables, condicions i bucles.|Leer programas: variables, condiciones y bucles.', 'cavaller', [
       ['Variables|Variables', ['pc.py:var'], 1], ['Condicionals|Condicionales', ['pc.py:if'], 1], ['Bucles|Bucles', ['pc.py:loop'], 1],
-      ['Acumuladors|Acumuladores', ['pc.py:loop', 'pc.py:var'], 2], ['Troba l\'error|Encuentra el error', ['pc.py:debug'], 1]])
+      ['Acumuladors|Acumuladores', ['pc.py:loop', 'pc.py:var'], 2], ['Troba l\'error|Encuentra el error', ['pc.py:debug'], 1]]),
+    U('Fraccions, decimals i la recta|Fracciones, decimales y la recta', 'De fracció a decimal i a percentatge, i la recta numèrica.|De fracción a decimal y a porcentaje, y la recta numérica.', 'numi', [
+      ['De fracció a decimal|De fracción a decimal', ['fdp.conv7'], 1], ['Fracció, decimal i percentatge|Fracción, decimal y porcentaje', ['fdp.conv7'], 2], ['Ordenar i comparar|Ordenar y comparar', ['fdp.conv7'], 3],
+      ['Enters a la recta|Enteros en la recta', ['n.line7'], 1], ['Fraccions a la recta|Fracciones en la recta', ['n.line7'], 3]]),
+    U('Angles i figures planes|Ángulos y figuras planas', 'Angles, triangles, quadrilàters i el cercle.|Ángulos, triángulos, cuadriláteros y el círculo.', 'tuga', [
+      ['Complementaris i suplementaris|Complementarios y suplementarios', ['e.ang'], 1], ['Classificar triangles|Clasificar triángulos', ['e.class'], 1], ['Classificar quadrilàters|Clasificar cuadriláteros', ['e.class'], 3],
+      ['Elements del cercle|Elementos del círculo', ['e.circ'], 1], ['Angles dels polígons|Ángulos de los polígonos', ['e.ang'], 4]])
   ] },
   { id: 'c8', n: 8, name: '8|8', long: 'Nivell 8|Nivel 8', emoji: '🦅', units: [
     U('Enters i fraccions|Enteros y fracciones', 'Operacions combinades.|Operaciones combinadas.', 'numi', [
@@ -284,7 +290,10 @@ const COURSES = [
       ['Gràfiques de la vida real|Gráficas de la vida real', ['fn.graph:story'], 1], ['Velocitats i trams|Velocidades y tramos', ['fn.graph:story'], 3]]),
     U('Programació: condicions i bucles|Programación: condiciones y bucles', 'Operadors lògics, condicions i bucles.|Operadores lógicos, condiciones y bucles.', 'cavaller', [
       ['Operacions i variables|Operaciones y variables', ['pc.py:var'], 3], ['I, O, NO|Y, O, NO', ['pc.py:logic'], 1], ['Si… si no…|Si… si no…', ['pc.py:if'], 3],
-      ['Bucles amb condicions|Bucles con condiciones', ['pc.py:loop'], 4], ['Troba l\'error|Encuentra el error', ['pc.py:debug'], 3]])
+      ['Bucles amb condicions|Bucles con condiciones', ['pc.py:loop'], 4], ['Troba l\'error|Encuentra el error', ['pc.py:debug'], 3]]),
+    U('IVA, IRPF i compres|IVA, IRPF y compras', 'Impostos, factures, ofertes i canvi de moneda.|Impuestos, facturas, ofertas y cambio de moneda.', 'flama', [
+      ['L\'IVA|El IVA', ['fin.tax:iva'], 1], ['Preu sense IVA|Precio sin IVA', ['fin.tax:iva'], 3], ['L\'IRPF|El IRPF', ['fin.tax:irpf'], 1],
+      ['Factures i nòmines|Facturas y nóminas', ['fin.tax:irpf'], 3], ['Quin surt més a compte?|¿Qué sale más a cuenta?', ['fin.shop'], 1]])
   ] },
   { id: 'c9', n: 9, name: '9|9', long: 'Nivell 9|Nivel 9', emoji: '🐺', units: [
     U('Nombres reals|Números reales', 'Notació científica i arrels.|Notación científica y raíces.', 'numi', [
@@ -320,7 +329,10 @@ const COURSES = [
       ['Diagrama de caixa|Diagrama de caja', ['stat.box'], 3], ['Desviació típica|Desviación típica', ['stat.disp'], 4]]),
     U('La hipèrbola|La hipérbola', 'Proporcionalitat inversa i tipus de funcions.|Proporcionalidad inversa y tipos de funciones.', 'guida', [
       ['Proporcionalitat inversa|Proporcionalidad inversa', ['fn.inv'], 1], ['La constant k|La constante k', ['fn.inv'], 2], ['L\'expressió y = k/x|La expresión y = k/x', ['fn.inv'], 3],
-      ['Llegir la hipèrbola|Leer la hipérbola', ['fn.inv'], 4], ['Quin tipus de funció és?|¿Qué tipo de función es?', ['fn.inv', 'fn.graph'], 5]])
+      ['Llegir la hipèrbola|Leer la hipérbola', ['fn.inv'], 4], ['Quin tipus de funció és?|¿Qué tipo de función es?', ['fn.inv', 'fn.graph'], 5]]),
+    U('Nombres i algorismes|Números y algoritmos', 'Fraccions generatrius i programes amb bucles niats.|Fracciones generatrices y programas con bucles anidados.', 'numi', [
+      ['Tipus de decimals|Tipos de decimales', ['fdp.gen'], 1], ['Decimals exactes|Decimales exactos', ['fdp.gen'], 2], ['Periòdics purs i mixtos|Periódicos puros y mixtos', ['fdp.gen'], 3],
+      ['Bucles niats|Bucles anidados', ['pc.py:nest'], 2], ['Algorismes amb decisions|Algoritmos con decisiones', ['pc.py:logic', 'pc.py:if'], 4]])
   ] },
   { id: 'c10', n: 10, name: '10|10', long: 'Nivell 10|Nivel 10', emoji: '🦁', units: [
     U('Equacions i inequacions|Ecuaciones e inecuaciones', 'Segon grau, discriminant i desigualtats.|Segundo grado, discriminante y desigualdades.', 'cavaller', [
@@ -350,7 +362,10 @@ const COURSES = [
       ['Simular l\'atzar|Simular el azar', ['pc.py:sim'], 1], ['Freqüència i probabilitat|Frecuencia y probabilidad', ['pc.py:sim'], 2]]),
     U('Funcions exponencials|Funciones exponenciales', 'Creixement exponencial, màxims i mínims.|Crecimiento exponencial, máximos y mínimos.', 'guida', [
       ['La funció exponencial|La función exponencial', ['fn.exp'], 1], ['Creix o decreix?|¿Crece o decrece?', ['fn.mono'], 1], ['Màxims i mínims|Máximos y mínimos', ['fn.mono'], 2],
-      ['Creixement exponencial|Crecimiento exponencial', ['fn.exp'], 4], ['Quina gràfica és?|¿Qué gráfica es?', ['fn.exp', 'fn.inv'], 5]])
+      ['Creixement exponencial|Crecimiento exponencial', ['fn.exp'], 4], ['Quina gràfica és?|¿Qué gráfica es?', ['fn.exp', 'fn.inv'], 5]]),
+    U('Interès compost|Interés compuesto', 'Estalvis, interessos, TAE i depreciació.|Ahorros, intereses, TAE y depreciación.', 'flama', [
+      ['Capital final|Capital final', ['fin.comp'], 1], ['Els interessos|Los intereses', ['fin.comp'], 2], ['Simple o compost?|¿Simple o compuesto?', ['fin.comp'], 3],
+      ['Quants anys calen?|¿Cuántos años hacen falta?', ['fin.comp'], 4], ['TAE i depreciació|TAE y depreciación', ['fin.comp'], 5]])
   ] }
 ];
 const vt = (v, t) => { const s = t > 1 ? ` · ${t}` : ''; return `${tx0(VIS[v])}${s}|${tx1(VIS[v])}${s}`; };
