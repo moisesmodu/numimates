@@ -1066,3 +1066,5 @@ img.ic{display:inline-block;width:1.2em;height:1.2em;object-fit:contain;vertical
 .prem-school{font-size:13.5px;color:#6A5F78;margin:10px 0 12px;text-align:center;line-height:1.4}
 .prem-sheet .prem{margin:6px 0 4px;font-size:16px}
 .btn.red{--cd:var(--ko-d);color:#fff}
+.aout{animation:aOut .45s ease-in var(--o,0s) both}@keyframes aOut{from{opacity:1}to{opacity:0}}
+@media (prefers-reduced-motion:reduce){.aout{display:none}}

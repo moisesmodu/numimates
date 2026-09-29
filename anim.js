@@ -4,7 +4,7 @@
    cada línia de l'exemple, perquè el text i el dibuix vagin sincronitzats. Tot és codi: els números
    i les formes són exactes, i amb «moviment reduït» es veu directament el resultat final. */
 const TANIM = {
-  'c3-5': [{ k: 'frac', d: 4, n: 1, pizza: true }, { k: 'frac', d: 5, n: 3 }, { k: 'fracCmp', ds: [2, 3, 4] }, { k: 'share', total: 12, g: 2 }],
+  'c3-5': [{ k: 'frac', d: 4, n: 1, pizza: true }, { k: 'frac', d: 5, n: 3 }, { k: 'fracCmp', ds: [2, 3, 4] }, { k: 'share', total: 12, g: 2, then: { total: 20, g: 4 } }],
   'c4-3': [{ k: 'groups', g: 3, n: 5 }, { k: 'arrMinus', r: 10, c: 7 }, { k: 'shift', n: 34 }, { k: 'area', a: 30, b: 6, m: 4 }]
 };
 const AN_INK = '#2B1A38', AN_F = 'font-family="Lexend,sans-serif"';
@@ -53,17 +53,24 @@ const SCN = {
     return { html: anSvg(320, 14 + ds.length * 50 + 4, s), at };
   },
   // repartir: els caramels van d'un en un a cada plat
-  share({ total, g }) {
-    let s = ''; const W = 320, px = k => (k + .5) * W / g, py = 150, t0 = .5, dt = .16, per = Math.ceil(total / g), cols = Math.min(per, 3), sz = 24;
-    for (let k = 0; k < g; k++) s += `<ellipse cx="${px(k)}" cy="${py + 14}" rx="${Math.min(66, W / g / 2 - 8)}" ry="16" fill="#F3ECF8" stroke="var(--uc)" stroke-width="2.5"/>`;
-    for (let i = 0; i < total; i++) {
-      const k = i % g, j = Math.floor(i / g), fx = px(k) + ((j % cols) - (cols - 1) / 2) * 27, fy = py - 4 - Math.floor(j / cols) * 22;
-      const sx = W / 2 + ((i % 6) - 2.5) * 26, sy = 24 + Math.floor(i / 6) * 24;
-      s += `<image href="img/ic/candy.webp" x="${(fx - sz / 2).toFixed(1)}" y="${(fy - sz / 2).toFixed(1)}" width="${sz}" height="${sz}" class="an a-move" style="--t:${(t0 + i * dt).toFixed(2)}s;--fx:${(sx - fx).toFixed(1)}px;--fy:${(sy - fy).toFixed(1)}px"/>`;
-    }
-    const te = t0 + total * dt + .3;
-    for (let k = 0; k < g; k++) s += tag(px(k), 62, `1/${g}`, te, 18) + tag(px(k), py + 52, `${total / g}`, te + .3, 18);
-    return { html: anSvg(W, 206, s), at: [.2, te + .5, te + 1.3] };
+  share({ total, g, then }) {
+    // un repartiment: caramels que baixen als plats i, a sota, quants en toca a cada plat
+    const one = (total, g, t0, dt) => {
+      let s = ''; const W = 320, px = k => (k + .5) * W / g, py = 150, per = Math.ceil(total / g), cols = Math.min(per, 3), sz = g > 3 ? 20 : 24;
+      for (let k = 0; k < g; k++) s += `<ellipse cx="${px(k)}" cy="${py + 14}" rx="${Math.min(66, W / g / 2 - 8)}" ry="16" fill="#F3ECF8" stroke="var(--uc)" stroke-width="2.5" ${at_(t0 - .2, 'a-fade')}/>`;
+      for (let i = 0; i < total; i++) {
+        const k = i % g, j = Math.floor(i / g), fx = px(k) + ((j % cols) - (cols - 1) / 2) * (sz + 3), fy = py - 4 - Math.floor(j / cols) * (sz - 2);
+        const sx = W / 2 + ((i % 6) - 2.5) * 26, sy = 24 + Math.floor(i / 6) * 24;
+        s += `<image href="img/ic/candy.webp" x="${(fx - sz / 2).toFixed(1)}" y="${(fy - sz / 2).toFixed(1)}" width="${sz}" height="${sz}" class="an a-move" style="--t:${(t0 + i * dt).toFixed(2)}s;--fx:${(sx - fx).toFixed(1)}px;--fy:${(sy - fy).toFixed(1)}px"/>`;
+      }
+      const te = t0 + total * dt + .3;
+      for (let k = 0; k < g; k++) s += tag(px(k), 62, `1/${g}`, te, 18) + tag(px(k), py + 52, `${total / g}`, te + .3, 18);
+      return { s, te };
+    };
+    if (!then) { const a = one(total, g, .5, .16); return { html: anSvg(320, 206, a.s), at: [.2, a.te + .5, a.te + 1.3] }; }
+    // dos repartiments seguits al mateix lloc (la meitat de 12 i després un quart de 20): el primer s'esvaeix
+    const a = one(total, g, .5, .12), out = a.te + 1.1, b = one(then.total, then.g, out + .4, .07);
+    return { html: anSvg(320, 206, `<g class="aout" style="--o:${out.toFixed(2)}s">${a.s}</g><g ${at_(out + .3, 'a-fade')}>${b.s}</g>`), at: [.2, a.te + .5, b.te + .5] };
   },
   // grups iguals: 3 bosses de 5 caramels → 5 + 5 + 5
   groups({ g, n }) {
