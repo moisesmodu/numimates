@@ -28,11 +28,11 @@ export async function blocked(req, b, max, mins = 15, acct = null, maxAcct = Mat
     FROM mates.fails WHERE b = ${b} AND t > now() - make_interval(mins => ${mins}) AND k IN (${'ip:' + ipOf(req)}, ${'ac:' + acct})`;
   return r[0].ip >= max || (acct != null && r[0].ac >= maxAcct);
 }
-export async function note(req, b) { await sql`INSERT INTO mates.fails (k, b) VALUES (${'ip:' + ipOf(req)}, ${b})`; }
+// els registres d'intents (amb la IP) s'esborren sempre al cap d'un dia
+export async function note(req, b) { await sql`INSERT INTO mates.fails (k, b) VALUES (${'ip:' + ipOf(req)}, ${b})`; await sql`DELETE FROM mates.fails WHERE t < now() - interval '1 day'`; }
 export async function fail(req, b, acct = null) {
   await note(req, b);
   if (acct != null) await sql`INSERT INTO mates.fails (k, b) VALUES (${'ac:' + acct}, ${b})`;
-  if (Math.random() < 0.03) await sql`DELETE FROM mates.fails WHERE t < now() - interval '1 day'`;
   await slow();
 }
 export const tooMany = res => ok(res, { error: 'massa' }, 429);

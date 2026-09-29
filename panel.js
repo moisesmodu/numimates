@@ -341,7 +341,7 @@ function reportHTML(r, print) {
       <label class="switch" style="margin-top:16px"><input type="checkbox" ${r.unlock_all ? 'checked' : ''} onchange="doUnlock(${js(r.code)},this.checked)"><span><b style="font-weight:600">${L('Mode mestre: obre totes les unitats', 'Modo maestro: abre todas las unidades')}</b><br><small class="t3">${L("L'alumne podrà fer qualsevol unitat sense passar la porta.", 'El alumno podrá hacer cualquier unidad sin pasar la puerta.')}</small></span></label>
       ${ADMIN ? `<div class="inline-form"><label class="field"><span>${L('Pla', 'Plan')}</span><select onchange="doPla(${js(r.code)},this.value)">${[['free', 'Gratuït|Gratuito'], ['premium', 'Premium|Premium'], ['escola', 'Escola|Escuela']].map(([k, t]) => `<option value="${k}" ${r.pla === k ? 'selected' : ''}>${tx(t)}</option>`).join('')}</select></label>${uInfo(r.code)}
         <label class="field"><span>${L('Grup', 'Grupo')}</span><select onchange="doAssign(${js(r.code)},this.value)"><option value="">${L('Sense grup', 'Sin grupo')}</option>${GRUPS.map(g => `<option value="${g.id}" ${g.id === r.grup_id ? 'selected' : ''}>${esc(g.nom)} · ${esc(g.centre)}</option>`).join('')}</select></label>
-        <button class="btn danger sm" style="justify-self:start" onclick="doBaixa(${js(r.code)})">${ico('trash-2')}${L('Dona de baixa', 'Dar de baja')}</button></div>` : r.grup_id ? `<button class="btn sm" style="margin-top:12px" onclick="doTreure(${js(r.code)})">${ico('user-minus')}${L('Treu del grup', 'Quitar del grupo')}</button>` : ''}`);
+        <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn danger sm" onclick="doBaixa(${js(r.code)})">${ico('user-minus')}${L('Dona de baixa', 'Dar de baja')}</button><button class="btn danger solid sm" onclick="uErase(${js(r.code)})">${ico('trash-2')}${L('Esborra les dades', 'Borrar los datos')}</button></div></div>` : r.grup_id ? `<button class="btn sm" style="margin-top:12px" onclick="doTreure(${js(r.code)})">${ico('user-minus')}${L('Treu del grup', 'Quitar del grupo')}</button>` : ''}`);
   return `
     ${sec(L('Resum', 'Resumen'), `<div class="stats4"><div><span>${L('Dies actius (30 d)', 'Días activos (30 d)')}</span><b class="num">${r.act30}</b></div><div><span>${L('Lliçons fetes', 'Lecciones hechas')}</span><b class="num">${r.lessons}</b></div><div><span>${L('Precisió', 'Precisión')}</span><b class="num">${r.acc == null ? '—' : r.acc + ' %'}</b></div><div><span>${L('Ratxa · millor', 'Racha · mejor')}</span><b class="num">${r.idle != null && r.idle <= 1 ? r.streak : 0} · ${r.best} ${L('dies', 'días')}</b></div></div>`)}
     ${sec(L('Sentits del currículum', 'Sentidos del currículo'), Object.keys(SENT).map(k => { const x = s[k], b = band(x.pct, x.t); return `<div class="snt"><span>${tx(SENT[k][0])}</span><div class="bar"><i style="width:${x.pct || 0}%;background:var(--${b === 'none' ? 'none' : b}-fill)"></i></div><span class="p num">${x.pct == null ? '—' : x.pct + ' %'}</span><small class="t3 num">(${x.t} ${L('resp.', 'resp.')})</small><span class="chip ${b}">${tx(BAND[b])}</span></div>`; }).join(''))}
@@ -641,7 +641,16 @@ function uTable() {
 }
 function uOpen(code) {
   if (ROWS.some(r => r.code === code)) { G = ''; location.hash = '#/alumnes/' + encodeURIComponent(code); return; }
-  toast(L('Aquest usuari està de baixa: no té fitxa al panell.', 'Este usuario está de baja: no tiene ficha en el panel.'));
+  uErase(code);
+}
+// esborrar de veritat, amb confirmació: no es pot desfer
+async function uErase(code) {
+  const u = (UD && UD.users.find(x => x.code === code)) || ROWS.find(x => x.code === code); if (!u) return;
+  if (!await confirmBox(L(`Esborrar totes les dades de ${u.name}?`, `¿Borrar todos los datos de ${u.name}?`), L("S'esborren el compte i tot el progrés, i se'n treu el nom de les batalles i dels intercanvis. No es pot desfer. Feu-ho quan ho demani la família o el centre.", 'Se borran la cuenta y todo el progreso, y se quita su nombre de las batallas e intercambios. No se puede deshacer. Hacedlo cuando lo pida la familia o el centro.'), L('Esborra-ho tot', 'Borrarlo todo'), true, L('No', 'No'))) return;
+  const j = await act('esborra', { code });
+  if (j.error === 'subscripció') return toast(L('Té una subscripció de Stripe activa: cancel·leu-la primer.', 'Tiene una suscripción de Stripe activa: cancelad antes la suscripción.'));
+  if (!j.ok) return toast(L("No s'ha pogut esborrar.", 'No se ha podido borrar.'));
+  closeDrawer(true); toast(L('Dades esborrades.', 'Datos borrados.')); UD = null; await reload();
 }
 function uInfo(code) {
   const u = UD && UD.users && UD.users.find(x => x.code === code); if (!u || !(u.cat === 'pagament' || u.cat === 'manual' || u.caducat)) return '';

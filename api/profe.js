@@ -98,6 +98,19 @@ export default async function handler(req, res) {
       if (c.error) return ok(res, { error: c.error }, c.error === 'sense subscripció' ? 409 : 502);
       return ok(res, { ok: true });
     }
+    // supressió de veritat (dret de supressió o final del contracte amb un centre): només l'administrador.
+    // S'esborra l'alumne i el que el vincula a famílies; a batalles i intercanvis s'hi treu el nom i el codi.
+    if (b.action === 'esborra' && me.admin) {
+      const a = (await sql`SELECT stripe_sub FROM mates.alumnes WHERE code = ${code}`)[0];
+      if (!a) return ok(res, { error: 'no trobat' }, 404);
+      if (a.stripe_sub) return ok(res, { error: 'subscripció' }, 409);
+      await sql`DELETE FROM mates.batalla_jug WHERE sid = ${code}`;
+      await sql`UPDATE mates.canvis SET a_sid = NULL, a_name = '—' WHERE a_sid = ${code}`;
+      await sql`UPDATE mates.canvis SET b_sid = NULL, b_name = '—' WHERE b_sid = ${code}`;
+      try { await sql`DELETE FROM mates.familia_fills WHERE code = ${code}`; await sql`DELETE FROM mates.familia_links WHERE code = ${code}`; } catch (e) { }
+      await sql`DELETE FROM mates.alumnes WHERE code = ${code}`;
+      return ok(res, { ok: true });
+    }
     if (b.action === 'pla') {
       const pla = PLANS.includes(b.pla) ? b.pla : 'free';
       await sql`UPDATE mates.alumnes SET pla = ${pla}, pla_fins = ${date(b.fins)} WHERE code = ${code}`; return ok(res, { ok: true });
