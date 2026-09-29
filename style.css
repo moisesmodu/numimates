@@ -1097,3 +1097,34 @@ img.ic{display:inline-block;width:1.2em;height:1.2em;object-fit:contain;vertical
 @media (min-width:700px){.xatfab{bottom:24px;right:24px}.xatfab.inles{top:auto;bottom:24px;right:24px;padding:6px 14px 6px 6px}.xatfab.inles .xatlbl{display:inline}.xatwin{left:auto;right:24px;bottom:24px;width:400px;border-radius:24px;height:min(80dvh,600px)}}
 body.xat-les .lesson .l-q{margin-right:46px}
 .varsplash .onb-logo{width:min(260px,70vw);margin:10px auto 22px;animation:up .6s cubic-bezier(.2,1.2,.4,1)}
+
+/* ---------- Eines d'ESO (Numi Pro): examen, contrarellotge, fitxes ---------- */
+.excard{background:#fff;border:2px solid var(--line);border-radius:22px;padding:16px;margin:0 0 14px}
+.exhead{display:flex;gap:12px;align-items:center}.exhead .ti{font-size:30px}.exhead b{display:block;font-size:17px}.exhead small{display:block;color:var(--mut);font-size:13px;font-weight:700;margin-top:2px}
+.exedit{margin-left:auto;font-size:13px}
+.exdots{display:flex;gap:5px;margin:14px 0 4px}.exdots i{flex:1;height:8px;border-radius:4px;background:var(--line)}.exdots i.on{background:var(--ok)}
+.exinfo{font-size:13px;color:var(--mut);font-weight:700;margin:4px 0 12px}
+.exbtns{display:flex;gap:10px;flex-wrap:wrap}.exbtns .btn{flex:1;min-width:140px;padding:12px 14px;font-size:14px}
+.exsheet{max-height:88dvh;overflow:auto}
+.exsel{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}.exsel button{border:2px solid var(--line);border-radius:12px;padding:8px 12px;font-weight:800;background:#fff;color:var(--ink);cursor:pointer}.exsel button.on{border-color:var(--pri);background:var(--pri);color:#fff}
+.exunits{display:grid;gap:6px;margin-bottom:12px}.exu{display:flex;align-items:center;gap:10px;border:2px solid var(--line);border-radius:14px;padding:10px 12px;font-weight:700;font-size:15px;cursor:pointer;background:#fff}
+.exu input{position:absolute;opacity:0;pointer-events:none}.exu span{width:26px;height:26px;border-radius:8px;background:var(--line);display:grid;place-items:center;font-size:13px;font-weight:900;flex:none}
+.exu.on{border-color:var(--pri)}.exu.on span{background:var(--pri);color:#fff}
+.crlist{display:grid;gap:8px;max-height:60dvh;overflow:auto}
+.crono{margin-left:auto;font-weight:900;font-size:20px;font-variant-numeric:tabular-nums;background:var(--pri);color:#fff;border-radius:12px;padding:4px 12px;min-width:72px;text-align:center}
+.crono.hurry{background:var(--ko);animation:pulse 1s infinite}
+.simtag{text-align:center;font-weight:900;font-size:13px;letter-spacing:.04em;color:var(--mut);margin:-4px 0 6px}
+.learnbtn.fx{margin-left:6px}
+.fitxa{padding-bottom:30px}.fxback{margin:4px 0 8px;display:inline-block}
+.fxhead{border-left:6px solid var(--uc);padding:4px 0 4px 14px;margin-bottom:10px}.fxhead small{font-weight:900;letter-spacing:.08em;color:var(--mut);font-size:12px}.fxhead h1{font-size:28px;margin:4px 0 6px}.fxhead p{margin:0;color:var(--mut);font-weight:700}
+.fitxa section{background:#fff;border:2px solid var(--line);border-radius:20px;padding:14px 16px;margin:12px 0}
+.fitxa h2{font-size:17px;margin:0 0 10px}
+.fxkeys{margin:0;padding-left:20px;display:grid;gap:8px;font-weight:700;line-height:1.45}
+.fxwords{margin:0;display:grid;grid-template-columns:auto 1fr;gap:8px 14px;font-size:15px;line-height:1.4}.fxwords dt{font-weight:900;color:var(--uc)}.fxwords dd{margin:0;font-weight:600}
+.fxex{border-top:2px dashed var(--line);padding:10px 0;display:grid;gap:3px;font-size:15px;line-height:1.45;font-weight:600}.fxex:first-of-type{border-top:0;padding-top:0}.fxex b{font-size:14px;color:var(--uc)}
+.fxex .hl{background:#FFF1B8;border-radius:5px;padding:0 4px;font-weight:900}
+.fxerr{margin:0;padding:0;list-style:none;display:grid;gap:10px}.fxerr li{display:grid;gap:3px;font-size:15px;line-height:1.4;font-weight:600}.fxno{color:var(--ko-d)}.fxyes{color:var(--ok-d)}
+.fxtip{line-height:1.45;font-weight:600}
+.fxbtns{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}.fxbtns .btn{flex:1;min-width:160px}
+@media (max-width:480px){.fxwords{grid-template-columns:1fr}.fxwords dd{margin-bottom:6px}}
+@media print{.nav,.topbar,.fxbtns,.fxback,.xatfab,.side{display:none!important}html,body{background:#fff!important;color:#000!important}.fitxa section{break-inside:avoid;border-color:#ccc!important;background:#fff!important}.fitxa *{color:#000!important}}

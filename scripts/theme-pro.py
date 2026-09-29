@@ -89,8 +89,9 @@ def walk(src, wrap=None):
                 kd = kind_of(p)
                 if not kd: continue
                 nv, ch = sub_colors(v, kd)
-                if ch: decls.append(f'{p}:{nv}')
-            if decls and sel != ':root':
+                # també les que fan servir variables: així es manté l'ordre de la cascada (p. ex. .x.on després de .x)
+                decls.append(f'{p}:{nv}')
+            if any(d.split(':', 1)[1] != '' for d in decls) and decls and sel != ':root':
                 sels = ','.join('html[data-v=pro] ' + s.strip() if not s.strip().startswith(('html', 'body')) else s.strip().replace('html', 'html[data-v=pro]', 1) if s.strip().startswith('html') else 'html[data-v=pro] ' + s.strip() for s in sel.split(','))
                 rule = f'{sels}{{{";".join(decls)}}}'
                 out.append(f'{wrap}{{{rule}}}' if wrap else rule)

@@ -17,7 +17,7 @@ function xatCtx() {
   } catch (e) { }
   return c;
 }
-const xatBlocked = () => (VIEW === 'onboard') || (LS && (LS.exam || ['place', 'evo', 'battle'].includes(LS.mode)));
+const xatBlocked = () => (VIEW === 'onboard') || (LS && (LS.exam || LS.crono || LS.sim || ['place', 'evo', 'battle'].includes(LS.mode)));
 
 function xatSync() {
   let b = document.getElementById('xatfab');
