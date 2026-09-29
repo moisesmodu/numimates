@@ -52,11 +52,15 @@ export function subOf(a) {
 // tornant-les a llegir de Stripe. Només torna ok si Stripe confirma que cap no es tornarà a cobrar (o, en reactivar, que sí).
 export async function setCancel(code, resume) {
   const a = (await sql`SELECT stripe_sub, stripe_customer FROM mates.alumnes WHERE code = ${code}`)[0];
-  if (!a || (!a.stripe_sub && !a.stripe_customer)) return { error: 'sense subscripció' };
+  if (!a) return { error: 'sense subscripció' };
   const ids = new Set(a.stripe_sub ? [a.stripe_sub] : []);
   if (!resume && a.stripe_customer) {
     const l = await stripe(`subscriptions?customer=${encodeURIComponent(a.stripe_customer)}&status=all&limit=100`);
     l.data.filter(s => LIVE.includes(s.status) && (s.id === a.stripe_sub || cleanCode(s.metadata && s.metadata.code) === code)).forEach(s => ids.add(s.id));
+  }
+  if (!resume) {
+    // i qualsevol altra subscripció que porti el codi de l'alumne, encara que sigui d'un altre client de Stripe
+    try { const f = await stripe(`subscriptions/search?limit=100&query=${encodeURIComponent(`metadata['code']:'${code}'`)}`); f.data.filter(s => LIVE.includes(s.status)).forEach(s => ids.add(s.id)); } catch (e) { }
   }
   if (!ids.size) return { error: 'sense subscripció' };
   for (const id of ids) await stripe('subscriptions/' + id, { cancel_at_period_end: resume ? 'false' : 'true' });
