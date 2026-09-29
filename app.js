@@ -348,9 +348,12 @@ function premiumModal(what) {
   payCheck().then(ok => { const d = $('#premplans'); if (ok !== false || !d) return; d.outerHTML = `<p class="prem-school">${L('Un adult ens pot escriure a <b>hola@numimates.com</b> per activar-lo.', 'Un adulto nos puede escribir a <b>hola@numimates.com</b> para activarlo.')}</p>`; const n = $('#premnote'); if (n) n.remove(); });
 }
 let PAY_OK;
+// Stripe en mode prova: els botons de pagament només surten si s'entra amb ?provapagament (per provar-ho sense que ho vegin les famílies)
+const payTest = () => { try { return sessionStorage.getItem('numi-prova-pagament') === '1'; } catch (e) { return false; } };
+(() => { try { if (new URLSearchParams(location.search).has('provapagament')) { sessionStorage.setItem('numi-prova-pagament', '1'); history.replaceState(null, '', location.pathname); } } catch (e) { } })();
 async function payCheck() {
   if (PAY_OK !== undefined) return PAY_OK;
-  try { const r = await fetch('/api/pay?a=info'); if (r.status === 503) return (PAY_OK = false); const j = await r.json(); if (j.mes) PAY_OK = true; return !!j.mes; } catch (e) { return null; }
+  try { const r = await fetch('/api/pay?a=info'); if (r.status === 503) return (PAY_OK = false); const j = await r.json(); if (j.mes) PAY_OK = j.mode === 'live' || payTest(); return j.mes ? PAY_OK : false; } catch (e) { return null; }
 }
 // Compra de Premium: la fa un adult a la pàgina de pagament de Stripe (l'app no veu mai la targeta).
 // Premium és per a aquest perfil; el portal de Stripe (amb el correu de l'adult) serveix per canviar-lo o cancel·lar-lo.
@@ -370,7 +373,7 @@ async function payGo(pla) {
   const b = $('#premgo'), e = $('#premerr'); if (!b || b.disabled) return;
   b.disabled = true; b.textContent = L('UN MOMENT…', 'UN MOMENTO…'); e.textContent = '';
   try {
-    const r = await api('pay?a=checkout', { code: P.code, pla, lang: LANG });
+    const r = await api('pay?a=checkout', { code: P.code, pla, lang: LANG, prova: payTest() });
     if (r.url && /^https:\/\/checkout\.stripe\.com\//.test(r.url)) { try { sessionStorage.setItem('numi-pay-code', P.code); } catch (x) { } location.href = r.url; return; }
     e.textContent = r.error === 'escola' ? L('Aquest perfil és d\'una classe: ja té Premium amb l\'escola.', 'Este perfil es de una clase: ya tiene Premium con la escuela.')
       : r.error === 'ja' ? L('Aquest perfil ja té Premium.', 'Este perfil ya tiene Premium.')

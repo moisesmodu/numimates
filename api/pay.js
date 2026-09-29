@@ -5,7 +5,7 @@
                                                       a Stripe amb la clau secreta, així un avís inventat no pot activar res. */
 import { sql, body, cleanCode, ok, blocked, fail, note, tooMany } from './_lib.js';
 
-import { STRIPE_KEY as KEY, stripe } from './_stripe.js';
+import { STRIPE_KEY as KEY, stripe, stripeMode } from './_stripe.js';
 const LOOKUP = { mes: 'numi_premium_mes', any: 'numi_premium_any' };
 const ORIGINS = ['https://app.numimates.com', 'https://mates-numi.vercel.app', 'http://localhost:5176', 'http://127.0.0.1:5176'];
 const GRACE = 3; // dies de marge si la renovació tarda (reintents de cobrament)
@@ -73,6 +73,8 @@ async function checkout(req, res) {
   if (!a) { await fail(req, 'pagament'); return ok(res, { error: 'no trobat' }, 404); }
   if (!a.active) return ok(res, { error: 'baixa' }, 410);
   if (a.grup_id) return ok(res, { error: 'escola' }, 409);
+  // en mode prova només es pot provar a posta (?provapagament): les famílies no han d'arribar a un pagament de prova
+  if (stripeMode() !== 'live' && b.prova !== true) return ok(res, { error: 'no configurat' }, 503);
   if (a.stripe_sub && a.pla === 'premium' && a.pla_fins && new Date(a.pla_fins) >= new Date(new Date().toISOString().slice(0, 10))) return ok(res, { error: 'ja' }, 409);
   const origin = ORIGINS.includes(req.headers.origin) ? req.headers.origin : ORIGINS[0];
   const P = await prices();
@@ -98,7 +100,7 @@ async function checkout(req, res) {
 
 async function info(req, res) {
   const P = await prices();
-  return ok(res, { mes: P.mes.unit_amount, any: P.any.unit_amount, portal: await portal() });
+  return ok(res, { mes: P.mes.unit_amount, any: P.any.unit_amount, portal: await portal(), mode: stripeMode() });
 }
 
 export default async function handler(req, res) {
