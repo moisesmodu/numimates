@@ -1,4 +1,5 @@
 import { sql, body, cleanCode, summary, ok, cleanState, blocked, fail, tooMany, alumneOk } from './_lib.js';
+import { addPunts } from './_lliga.js';
 export default async function handler(req, res) {
   if (req.method !== 'POST') return ok(res, { error: 'method' }, 405);
   const b = body(req), code = cleanCode(b.code), state = b.state;
@@ -19,5 +20,7 @@ export default async function handler(req, res) {
   await sql`UPDATE mates.alumnes SET state = ${JSON.stringify(state)}, name = ${String(state.name || '').slice(0, 30) || 'Alumne'}, course = ${s.course},
     xp = ${s.xp}, streak = ${s.streak}, best = ${s.best}, last_day = ${s.last_day}, lessons = ${s.lessons}, answers = ${s.answers}, correct = ${s.correct}, updated_at = now()
     WHERE code = ${code}`;
+  // Lliga Numi: l'XP guanyada des de l'última sincronització compta com a punts (amb topalls)
+  if (!b.reset) { try { await addPunts(code, s.xp - (cur[0].xp | 0), state); } catch (e) { console.error('lliga', e.message); } }
   return ok(res, { ok: true });
 }

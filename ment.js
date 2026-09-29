@@ -144,6 +144,7 @@ function mShell(t, body, dark, hero = '') {
   return `<div class="mpage ${dark ? 'dark' : ''}"><header class="mtop"><img src="${dark ? 'img/brand/logo-ment-negatiu.svg' : VAR.logo}" alt="${VAR.name}"><span class="mchip" title="${L('Dies seguits', 'Días seguidos')}">${mSvg('foc')} ${P.streak || 0}</span></header>${hero}<main class="mmain">${body}</main>${mNav(t)}</div>`;
 }
 function mentGo(v) {
+  if (v === 'home') setTimeout(() => typeof lligaCheck === 'function' && lligaCheck(), 2500);
   mStop(); VIEW = ['home', 'jocs', 'progres', 'profile'].includes(v) ? v : 'home';
   ({ home: mentHome, jocs: mentJocs, progres: mentProgres, profile: mentProfile })[VIEW]();
   window.scrollTo(0, 0);
@@ -177,7 +178,7 @@ function mentHome() {
     ${m.rem == null ? `<button class="mlnk" onclick="mRemind()">${mTile('campana', 'gold')}<span><b>${L('Recorda-m\'ho cada dia', 'Recuérdamelo cada día')}</b><small>${L('Afegeix un avís diari al calendari del mòbil.', 'Añade un aviso diario al calendario del móvil.')}</small></span><span class="mnext">${mSvg('seg')}</span></button>` : ''}
     <button class="mlnk" onclick="mentCiencia()">${mTile('llibre', 'ink')}<span><b>${L('Com entrenar la ment', 'Cómo entrenar la mente')}</b><small>${L('Què diu la ciència i què pots fer cada dia.', 'Qué dice la ciencia y qué puedes hacer cada día.')}</small></span><span class="mnext">${mSvg('seg')}</span></button>`, true, hero);
 }
-function mHab() { const d = mDay(); d.hab = d.hab ? 0 : 1; save(); if (d.hab) { SFX.ok && SFX.ok(); toast(L('Molt bé! La ment també s\'entrena fora de la pantalla.', '¡Muy bien! La mente también se entrena fuera de la pantalla.')); } mentHome(); }
+function mHab() { const d = mDay(); d.hab = d.hab ? 0 : 1; if (d.hab && !d.hxp) { d.hxp = 1; P.xp = (P.xp || 0) + 5; } save(); if (d.hab) { SFX.ok && SFX.ok(); toast(L('Molt bé! La ment també s\'entrena fora de la pantalla.', '¡Muy bien! La mente también se entrena fuera de la pantalla.')); } mentHome(); }
 // indicador semicircular de 20 a 90 anys: el punt daurat és l'edat de la ment; la marca blanca, l'edat real
 function mGauge(age, real) {
   const a = v => Math.PI * (1 - (Math.max(20, Math.min(90, v)) - 20) / 70), P = (v, r) => [150 + r * Math.cos(a(v)), 150 - r * Math.sin(a(v))], [x, y] = P(age, 118);
@@ -287,7 +288,9 @@ function mEnd(g, score, up, msg) {
   (m.hist[g] = m.hist[g] || []).push([today(), score]); if (m.hist[g].length > 40) m.hist[g].shift();
   if (!MG[g].span && !MG[g].lvx) m.lvl[g] = Math.max(1, Math.min(10, mLvl(g) + (up || 0)));
   const d = mDay(); if (ses && !d.s.includes(g) && mSession().includes(g)) d.s.push(g);
-  touchStreak(); P.xp = (P.xp || 0) + 10; save(); syncNow();
+  // punts (XP) per a la Lliga: 10 per partida i 20 més en completar la sessió del dia
+  P.xp = (P.xp || 0) + 10; if (ses && d.s.length >= 3 && !d.bonus) { d.bonus = 1; P.xp += 20; }
+  touchStreak(); save(); syncNow();
   const s = mSession(), left = s.filter(x => !mDay().s.includes(x)), nx = left[0], fita = mFitesNew();
   app.innerHTML = `<div class="mgame"><div class="mgbody"><div class="mres">${mGic(g)}<h2>${rec && was != null ? L('Nou rècord!', '¡Nuevo récord!') : L('Ben fet!', '¡Bien hecho!')}</h2>
     <p class="mscore">${mNice(g, score)}</p><p>${msg || ''}</p>${was != null && !rec ? `<p class="mmut">${L('El teu millor resultat', 'Tu mejor resultado')}: ${mNice(g, was)}</p>` : ''}
@@ -946,7 +949,7 @@ function mTestFin() {
   const t = { d: today(), age, real, r, z };
   const same = m.tests.findIndex(x => x.d === t.d); if (same >= 0) m.tests[same] = t; else m.tests.push(t); if (m.tests.length > 30) m.tests.shift();
   const d = mDay(); d.ses = null; mSession();
-  mFitesNew(); touchStreak(); save(); syncNow(); MT = null; MGA = null;
+  P.xp = (P.xp || 0) + 30; mFitesNew(); touchStreak(); save(); syncNow(); MT = null; MGA = null;
   mAgeInfo(true);
 }
 // detall de l'últim test (i del primer, per comparar)
@@ -1069,6 +1072,27 @@ async function mShGo() {
   setTimeout(() => window.open('https://wa.me/?text=' + encodeURIComponent(txt), '_blank', 'noopener'), 900);
 }
 
+/* ---------- Lliga Numi Ment (rànquing amb àlies; punts = XP: 10 per joc, 20 per sessió completa, 5 per hàbit, 30 pel test) ---------- */
+async function mentLliga(period) {
+  mStop(); VIEW = 'progres'; period = period === 'm' ? 'm' : 'w';
+  if (!P.code) return toast(L('Cal connexió per veure la lliga.', 'Hace falta conexión para ver la liga.'));
+  const left = period === 'w' ? daysLeftWeek() : daysLeftMonth();
+  app.innerHTML = mShell('progres', `<button class="link mback" onclick="go('progres')">‹ ${L('Progrés', 'Progreso')}</button><h1 class="mh1">${L('Lliga Numi Ment', 'Liga Numi Ment')}</h1>
+    <div class="mseg" style="margin-bottom:14px"><button class="${period === 'w' ? 'on' : ''}" onclick="mentLliga('w')">${L('Aquesta setmana', 'Esta semana')}</button><button class="${period === 'm' ? 'on' : ''}" onclick="mentLliga('m')">${L('Aquest mes', 'Este mes')}</button></div>
+    <p class="mlead">${L(`Queden ${left} ${left === 1 ? 'dia' : 'dies'}. Cada joc suma 10 punts; la sessió completa, 20 més.`, `Quedan ${left} ${left === 1 ? 'día' : 'días'}. Cada juego suma 10 puntos; la sesión completa, 20 más.`)}</p>
+    <section class="mtcard" id="mlg"><p class="mmut">${L('Carregant…', 'Cargando…')}</p></section>
+    <section class="mtcard"><div class="mthead"><b>${L('Premis de cada mes', 'Premios de cada mes')}</b></div><p style="margin:0 0 8px;font-size:17px;line-height:1.5">${L("Els 3 primers guanyen una medalla d'or, de plata o de bronze i, si no tenen Premium, <b>un mes de Premium</b>.", 'Los 3 primeros ganan una medalla de oro, de plata o de bronce y, si no tienen Premium, <b>un mes de Premium</b>.')}</p>
+      <p class="mmut" style="margin:0">${L('A la lliga surts amb un àlies, mai amb el teu nom. Màxim 1.500 punts al dia.', 'En la liga sales con un alias, nunca con tu nombre. Máximo 1.500 puntos al día.')}</p>
+      <button class="link" onclick="P.lliga=P.lliga===false?true:false;save();mentLliga('${period}')">${P.lliga === false ? L('Tornar a sortir a la lliga', 'Volver a salir en la liga') : L('No vull sortir a la lliga', 'No quiero salir en la liga')}</button></section>`);
+  let r = {}; try { r = await api('lliga', { code: P.code, period }); } catch (e) { }
+  const box = $('#mlg'); if (!box) return;
+  if (!r.rows) { box.innerHTML = `<p class="mmut">${L("Ara no s'ha pogut carregar.", 'Ahora no se ha podido cargar.')}</p>`; return; }
+  const me = r.me || {};
+  box.innerHTML = `<div class="mdrank">${r.rows.length ? r.rows.map((x, i) => `<div class="mdrow ${x.me ? 'me' : ''}"><span class="mdpos">${i < 3 ? ['🥇', '🥈', '🥉'][i] : i + 1}</span><b>${esc(lligaAlias(x.a))}${x.me ? ' · ' + L('tu', 'tú') : ''}</b><span>${x.p}</span></div>`).join('') : `<p class="mmut">${L('Encara ningú no té punts. Fes la sessió i sigues el primer!', 'Todavía nadie tiene puntos. ¡Haz la sesión y sé el primero!')}</p>`}
+    ${me.pos && !r.rows.some(x => x.me) ? `<div class="mdrow me" style="margin-top:8px"><span class="mdpos">${me.pos}</span><b>${esc(lligaAlias(me.a))} · ${L('tu', 'tú')}</b><span>${me.p}</span></div>` : ''}</div>
+    ${!me.pos && !me.hidden ? `<p class="mmut" style="margin:10px 0 0">${L(`El teu àlies és <b>${esc(lligaAlias(me.a))}</b>.`, `Tu alias es <b>${esc(lligaAlias(me.a))}</b>.`)}</p>` : ''}`;
+}
+
 /* ---------- Progrés ---------- */
 function mSpark(h, low) {
   if (!h || h.length < 2) return '';
@@ -1109,6 +1133,7 @@ function mentProgres() {
   const fit = new Set(MFITES.filter(f => f[2](m) || (m.fit || []).includes(f[0])).map(f => f[0]));
   app.innerHTML = mShell('progres', `<h1 class="mh1">${L('El teu progrés', 'Tu progreso')}</h1>
     <button class="mlnk" onclick="mShare()">${mTile('compartir', 'gold')}<span><b>${L('Comparteix la teva evolució', 'Comparte tu evolución')}</b><small>${L('Per WhatsApp, Instagram o on vulguis.', 'Por WhatsApp, Instagram o donde quieras.')}</small></span><span class="mnext">${mSvg('seg')}</span></button>
+    <button class="mlnk" onclick="mentLliga('w')">${mTile('copa', 'gold')}<span><b>${L('Lliga Numi Ment', 'Liga Numi Ment')}</b><small>${L('El teu lloc a la setmana i al mes. Els 3 primers de cada mes guanyen premi.', 'Tu puesto en la semana y en el mes. Los 3 primeros de cada mes ganan premio.')}</small></span><span class="mnext">${mSvg('seg')}</span></button>
     <div class="mstats"><div><b>${P.streak || 0}</b><span>${L('dies seguits', 'días seguidos')}</span></div><div><b>${mSessions()}</b><span>${L('sessions fetes', 'sesiones hechas')}</span></div><div><b>${hab}</b><span>${L('hàbits fets', 'hábitos hechos')}</span></div></div>
     <section class="mtcard"><div class="mthead"><b>${L('Edat de la ment', 'Edad de la mente')}</b><span>${T.length ? L(`${T.length} ${T.length === 1 ? 'test' : 'tests'}`, `${T.length} ${T.length === 1 ? 'test' : 'tests'}`) : ''}</span></div>
       ${T.length ? `${mAgeChart(T) || `<p style="margin:0 0 12px">${L(`Última: <b>${T[T.length - 1].age} anys</b> (${dayShort(T[T.length - 1].d)}). Quan facis el segon test veuràs aquí l'evolució.`, `Última: <b>${T[T.length - 1].age} años</b> (${dayShort(T[T.length - 1].d)}). Cuando hagas el segundo test verás aquí la evolución.`)}</p>`}<button class="btn ghost mbtn" onclick="mAgeInfo()">${L('Veure el detall', 'Ver el detalle')}</button>` : `<p style="margin:0 0 12px">${L('Encara no has fet el test.', 'Aún no has hecho el test.')}</p><button class="btn mbtn" onclick="mTestIntro()">${L('Fes el test', 'Haz el test')}</button>`}</section>

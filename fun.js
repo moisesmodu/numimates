@@ -258,22 +258,48 @@ function weekId(d = new Date()) {
 }
 function weekXP(x) { const id = weekId(); if (!P.week || P.week.id !== id) P.week = { id, xp: 0 }; P.week.xp += x; }
 const daysLeftWeek = () => { const d = new Date().getDay(); return d === 0 ? 1 : 8 - d; };
-async function renderLeague(scope) {
-  VIEW = 'league';
-  scope = scope || 'all';
-  const me = (P.week && P.week.id === weekId()) ? P.week.xp : 0;
-  const head = `<h1 class="ph1">🏆 ${L('Lliga setmanal', 'Liga semanal')}</h1>
-    <div class="tabs"><button class="${scope === 'all' ? 'on' : ''}" onclick="renderLeague('all')">${L("Tota l'acadèmia", 'Toda la academia')}</button><button class="${scope === 'course' ? 'on' : ''}" onclick="renderLeague('course')">${L('El meu curs', 'Mi curso')}</button></div>
-    <p class="lead">${L(`Guanya XP aquesta setmana per pujar al rànquing. Queden <b>${daysLeftWeek()} ${dies(daysLeftWeek())}</b>. Els 3 primers reben un premi a l'acadèmia!`, `Gana XP esta semana para subir en el ranking. Quedan <b>${daysLeftWeek()} ${dies(daysLeftWeek())}</b>. ¡Los 3 primeros reciben un premio en la academia!`)}</p>`;
-  app.innerHTML = shell(`${head}<div id="lg" class="lgload">⏳</div>`, 'league');
-  let rows = [];
-  try { const r = await api('league', { code: P.code, week: weekId(), course: scope === 'course' ? P.course : null }); rows = r.rows || []; } catch (e) { }
-  if (VIEW !== 'league') return;
-  if (P.code && !rows.some(r => r.me) && me > 0) rows.push({ name: P.name, companion: P.companion, xp: me, me: true });
-  rows.sort((a, b) => b.xp - a.xp);
-  const box = $('#lg'); if (!box) return;
+/* Lliga Numi: rànquing setmanal i mensual per lligues (Mates per cicles, Pro, Ment) amb àlies automàtics.
+   Els punts són l'XP guanyada, comptada al servidor (api/_lliga.js). Premis del mes: medalla i, al pla gratuït, un mes de Premium. */
+const LLIGA_ANI = [['Guineu', 'Zorro'], ['Llop', 'Lobo'], ['Mussol', 'Búho'], ['Dofí', 'Delfín'], ['Tortuga', 'Tortuga'], ['Àguila', 'Águila'], ['Linx', 'Lince'], ['Os', 'Oso'], ['Cérvol', 'Ciervo'], ['Esquirol', 'Ardilla'],
+  ['Falcó', 'Halcón'], ['Balena', 'Ballena'], ['Pegàs', 'Pegaso'], ['Fènix', 'Fénix'], ['Centaure', 'Centauro'], ['Grifó', 'Grifo'], ['Drac', 'Dragón'], ['Tritó', 'Tritón'], ['Cavall', 'Caballo'], ['Lleó', 'León'],
+  ['Tigre', 'Tigre'], ['Pingüí', 'Pingüino'], ['Koala', 'Koala'], ['Panda', 'Panda'], ['Castor', 'Castor'], ['Llebre', 'Liebre'], ['Garsa', 'Urraca'], ['Gavina', 'Gaviota'], ['Cigne', 'Cisne'], ['Colibrí', 'Colibrí'],
+  ['Flamenc', 'Flamenco'], ['Pop', 'Pulpo'], ['Cometa', 'Cometa'], ['Llamp', 'Rayo'], ['Roure', 'Roble'], ['Tauró', 'Tiburón'], ['Rinoceront', 'Rinoceronte'], ['Camell', 'Camello'], ['Foca', 'Foca'], ['Gat', 'Gato']];
+const lligaAlias = a => Array.isArray(a) ? `${tx(LLIGA_ANI[a[0] % LLIGA_ANI.length])} ${a[1]}` : '';
+const LLIGA_NOM = { 'mates-12': ['Lliga de 1r i 2n', 'Liga de 1.º y 2.º'], 'mates-34': ['Lliga de 3r i 4t', 'Liga de 3.º y 4.º'], 'mates-56': ['Lliga de 5è i 6è', 'Liga de 5.º y 6.º'], pro: ["Lliga d'ESO", 'Liga de ESO'], ment: ['Lliga Numi Ment', 'Liga Numi Ment'] };
+const lligaApi = d => api('lliga', { code: P.code, ...d });
+const daysLeftMonth = () => { const d = new Date(), e = new Date(d.getFullYear(), d.getMonth() + 1, 0); return e.getDate() - d.getDate() + 1; };
+async function renderLeague(period) {
+  VIEW = 'league'; period = period === 'm' ? 'm' : 'w';
+  if (!P.code) { toast(L('Per veure la lliga cal connexió a internet.', 'Para ver la liga hace falta conexión a internet.')); return go('home'); }
+  const left = period === 'w' ? daysLeftWeek() : daysLeftMonth();
+  app.innerHTML = shell(`<h1 class="ph1">🏆 ${L('Lliga Numi', 'Liga Numi')}</h1>
+    <div class="tabs"><button class="${period === 'w' ? 'on' : ''}" onclick="renderLeague('w')">${L('Aquesta setmana', 'Esta semana')}</button><button class="${period === 'm' ? 'on' : ''}" onclick="renderLeague('m')">${L('Aquest mes', 'Este mes')}</button></div>
+    <p class="lead" id="lglead">${L(`Cada XP que guanyes és un punt. Queden <b>${left} ${dies(left)}</b>.`, `Cada XP que ganas es un punto. Quedan <b>${left} ${dies(left)}</b>.`)}</p>
+    <div id="lg" class="lgload">⏳</div>
+    <div class="lgrules"><b>🎁 ${L('Premis de cada mes', 'Premios de cada mes')}</b><p>${L("Els 3 primers de cada lliga guanyen una medalla d'or, de plata o de bronze i, si no tenen Premium, <b>un mes de Premium</b>.", 'Los 3 primeros de cada liga ganan una medalla de oro, de plata o de bronce y, si no tienen Premium, <b>un mes de Premium</b>.')}</p>
+      <p class="lgsmall">${L("Com es guanyen punts: lliçons, entrenaments, repassos i batalles. Per ser just, com a màxim 1.500 punts al dia. A la lliga surts amb un àlies, mai amb el teu nom.", 'Cómo se ganan puntos: lecciones, entrenamientos, repasos y batallas. Para ser justos, como máximo 1.500 puntos al día. En la liga sales con un alias, nunca con tu nombre.')}</p>
+      <button class="link" onclick="P.lliga=P.lliga===false?true:false;save();renderLeague('${period}')">${P.lliga === false ? L('Tornar a sortir a la lliga', 'Volver a salir en la liga') : L('No vull sortir a la lliga', 'No quiero salir en la liga')}</button></div>`, 'train');
+  let r = {}; try { r = await lligaApi({ period }); } catch (e) { }
+  if (VIEW !== 'league') return; const box = $('#lg'); if (!box) return;
+  if (!r.rows) { box.className = 'empty'; box.textContent = L("Ara no s'ha pogut carregar la lliga.", 'Ahora no se ha podido cargar la liga.'); return; }
+  const h = $('.ph1'); if (h && LLIGA_NOM[r.lliga]) h.innerHTML = `🏆 ${tx(LLIGA_NOM[r.lliga])}`;
+  const me = r.me || {}, rows = r.rows;
   box.className = 'league';
-  box.innerHTML = rows.length ? rows.map((r, i) => `<div class="lrow ${r.me ? 'me' : ''} ${i < 3 ? 'top' + (i + 1) : ''}" style="animation-delay:${i * 50}ms"><span class="lpos">${i < 3 ? ['🥇', '🥈', '🥉'][i] : i + 1}</span><span class="lav">${charSVG(CH[r.companion] ? r.companion : 'numi', 'idle')}</span><b>${esc(r.name)}${r.me ? ` <small>(${L('tu', 'tú')})</small>` : ''}</b><span class="lxp">${r.xp} XP</span></div>`).join('')
-    : `<p class="empty">${L('Encara ningú ha guanyat XP aquesta setmana. Sigues el primer!', 'Todavía nadie ha ganado XP esta semana. ¡Sé el primero!')}</p>`;
-  if (!P.code) box.insertAdjacentHTML('afterbegin', `<p class="empty">${L('Cal connexió per veure la lliga.', 'Hace falta conexión para ver la liga.')}</p>`);
+  box.innerHTML = (rows.length ? rows.map((x, i) => `<div class="lrow ${x.me ? 'me' : ''} ${i < 3 ? 'top' + (i + 1) : ''}" style="animation-delay:${i * 40}ms"><span class="lpos">${i < 3 ? ['🥇', '🥈', '🥉'][i] : i + 1}</span><b>${esc(lligaAlias(x.a))}${x.me ? ` <small>(${L('tu', 'tú')})</small>` : ''}</b><span class="lxp">${x.p}</span></div>`).join('')
+    : `<p class="empty">${L('Encara ningú no té punts. Fes una lliçó i sigues el primer!', 'Todavía nadie tiene puntos. ¡Haz una lección y sé el primero!')}</p>`)
+    + (me.pos && !rows.some(x => x.me) ? `<div class="lrow me lsep"><span class="lpos">${me.pos}</span><b>${esc(lligaAlias(me.a))} <small>(${L('tu', 'tú')})</small></b><span class="lxp">${me.p}</span></div>` : '')
+    + (me.hidden ? `<p class="lgsmall">${L('Ara mateix no surts a la lliga (ho has triat tu).', 'Ahora mismo no sales en la liga (lo has elegido tú).')}</p>` : !me.pos ? `<p class="lgsmall">${L(`El teu àlies és <b>${esc(lligaAlias(me.a))}</b>. Guanya XP per entrar al rànquing.`, `Tu alias es <b>${esc(lligaAlias(me.a))}</b>. Gana XP para entrar en el ranking.`)}</p>` : '');
+}
+// Premis de la lliga: un cop al dia es mira si hi ha medalles noves i es felicita (i es guarden per ensenyar-les)
+async function lligaCheck() {
+  if (!P || !P.code || lligaCheck.d === today()) return; lligaCheck.d = today();
+  let r; try { r = await api('lliga', { code: P.code, action: 'medalles' }); } catch (e) { return; }
+  const list = (r && r.list) || [], seen = P.lligaSeen = P.lligaSeen || [];
+  const nw = list.filter(m => !seen.includes(m.periode + m.lliga)); if (!nw.length) return;
+  nw.forEach(m => seen.push(m.periode + m.lliga)); P.lligaMed = list; save();
+  const m = nw[0], mes = new Date(m.periode + '-15').toLocaleDateString(LANG === 'es' ? 'es-ES' : 'ca-ES', { month: 'long' });
+  modal(`<div class="sheet card cent"><div style="font-size:64px">${['🥇', '🥈', '🥉'][m.pos - 1]}</div><h3>${L(`${m.pos}r lloc a la lliga de ${mes}!`, `¡${m.pos}.º puesto en la liga de ${mes}!`)}</h3>
+    <p>${L(`Has guanyat la medalla ${['d’or', 'de plata', 'de bronze'][m.pos - 1]}.`, `Has ganado la medalla ${['de oro', 'de plata', 'de bronce'][m.pos - 1]}.`)} ${m.premium ? L('I tens <b>un mes de Premium</b> de regal!', '¡Y tienes <b>un mes de Premium</b> de regalo!') : ''}</p>
+    <button class="btn big" onclick="closeModal()">${L('Genial!', '¡Genial!')}</button></div>`, true);
+  if (typeof confetti === 'function') confetti(100);
 }

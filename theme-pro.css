@@ -601,3 +601,6 @@ html[data-v=pro] .morebtn{border:0;background:var(--pri);color:#fff;box-shadow:0
 html[data-v=pro] .nav .navxat{color:var(--pri-t);border:2px solid transparent;background:none}
 html[data-v=pro] .xattop{border:2px solid var(--line);background:#1C1927}
 html[data-v=pro] .ogrid.stages .obtn small{color:var(--mut)}
+html[data-v=pro] .tcard.lliga{border-color:#F3D27A;background:linear-gradient(90deg,#463C1A,#1C1927)}
+html[data-v=pro] .lgrules{background:#1C1927;border:2px solid var(--line)}
+html[data-v=pro] .lgsmall{color:var(--mut)}

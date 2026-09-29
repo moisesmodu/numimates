@@ -330,9 +330,9 @@ function go(v) {
   if ((v === 'battles' && classOff('batalles'))) { toast(L("El teu docent ha desactivat les batalles per a la classe.", 'Tu docente ha desactivado las batallas para la clase.')); v = 'train'; }
   VIEW = v;
   if (v !== 'onboard') setVariant(varOf(P));
-  ({ home: renderHome, train: renderTrain, album: () => renderAlbum(), shop: renderShop, badges: () => renderAlbum('medals'), profile: renderProfile, profiles: renderProfiles, battles: () => renderBattles(), season: () => renderSeason(), onboard: () => onb(0) }[v] || renderHome)();
+  ({ home: renderHome, train: renderTrain, album: () => renderAlbum(), shop: renderShop, badges: () => renderAlbum('medals'), profile: renderProfile, profiles: renderProfiles, battles: () => renderBattles(), season: () => renderSeason(), league: () => renderLeague('w'), onboard: () => onb(0) }[v] || renderHome)();
   if (v !== 'home') window.scrollTo(0, 0);
-  else { setTimeout(classeLink, 500); setTimeout(payReturn, 400); }
+  else { setTimeout(classeLink, 500); setTimeout(payReturn, 400); setTimeout(() => typeof lligaCheck === 'function' && lligaCheck(), 2500); }
 }
 const NAV = () => [['home', '🗺️', L('Camí', 'Camino')], ['train', '🎯', L('Entrena', 'Entrena')], ['album', '🎴', L('Àlbum', 'Álbum')], ['shop', '🛍️', L('Botiga', 'Tienda')], ['profile', '👤', L('Perfil', 'Perfil')]];
 // a Numi Pro i Numi Ment, el xat amb en Numi és un botó més de la barra
@@ -1089,6 +1089,7 @@ function renderTrain() {
   const units = UNITS_().map((u, i) => ({ u, i })).filter(({ i }) => unitOpen(i) && trainPool(i).length), B = P.stats.bests;
   app.innerHTML = shell(`<h1 class="ph1">${L('Entrena', 'Entrena')}</h1><p class="lead">${L(`Practica el que ja has après de ${tx(CUR().long)} i posa a prova la teva agilitat mental.`, `Practica lo que ya has aprendido de ${tx(CUR().long)} y pon a prueba tu agilidad mental.`)}</p>
     ${classOff('batalles') ? '' : `<button class="tcard battle ${isPremium() ? '' : 'locked'}" onclick="${isPremium() ? "go('battles')" : "premiumModal('batalles')"}"><span class="ti">⚔️</span><span><b>${L('Batalles de mates', 'Batallas de mates')}</b><small>${L('Duels 1 contra 1 i partides de fins a 10. Mateixes preguntes per a tothom!', 'Duelos 1 contra 1 y partidas de hasta 10. ¡Mismas preguntas para todos!')}</small></span></button>`}
+    ${P.classe && classOff('lliga') ? '' : `<button class="tcard lliga" onclick="go('league')"><span class="ti">🏆</span><span><b>${L('Lliga Numi', 'Liga Numi')}</b><small>${L('Cada XP és un punt. Els 3 primers de cada mes guanyen premi!', 'Cada XP es un punto. ¡Los 3 primeros de cada mes ganan premio!')}</small></span></button>`}
     <button class="tcard" onclick="startTrain()"><span class="ti">🧠</span><span><b>${L('Entrenament intel·ligent', 'Entrenamiento inteligente')}</b><small>${L('8 exercicis del que et costa més. Ideal per repassar.', '8 ejercicios de lo que más te cuesta. Ideal para repasar.')}</small></span></button>
     ${testInfo().due ? `<button class="tcard evo" onclick="startEvolution()"><span class="ti">🧪</span><span><b>${L("Prova d'evolució", 'Prueba de evolución')}</b><small>${L('Ja la pots fer! Mira quant has millorat.', '¡Ya puedes hacerla! Mira cuánto has mejorado.')}</small></span></button>` : ''}
     <button class="tcard school" onclick="pickSchool()"><span class="ti">📚</span><span><b>${L("Què fas ara a l'escola?", '¿Qué estás dando en el cole?')}</b><small>${L("Tria el tema que fas a classe i practica'l: així t'anirà millor a l'escola!", 'Elige el tema que das en clase y practícalo: ¡así te irá mejor en el cole!')}</small></span></button>
