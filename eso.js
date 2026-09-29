@@ -4,8 +4,7 @@
    · Fitxes: el resum de cada unitat (claus, vocabulari, exemples i errors típics) a partir de la teoria, per repassar o imprimir.
    · Contrarellotge: 2 minuts per encertar tantes preguntes com puguis d'un tema; rècord per tema.
    Fa servir el motor de lliçons de sempre (mode 'train') amb marques pròpies a LS (expr, sim, crono). */
-const ESO_CURS = ['1r|1.º', '2n|2.º', '3r|3.º', '4t|4.º', '5è|5.º', '6è|6.º', "1r d'ESO|1.º de ESO", "2n d'ESO|2.º de ESO", "3r d'ESO|3.º de ESO", "4t d'ESO|4.º de ESO"];
-const esoCurs = c => tx(ESO_CURS[c] || '');
+const esoCurs = c => COURSES[c] ? tx(COURSES[c].long) : '';   // «Nivell 8», com a tota l'app
 const daysTo = d => Math.round((new Date(d + 'T12:00') - new Date(today() + 'T12:00')) / 864e5);
 const dayAdd = n => { const d = new Date(); d.setDate(d.getDate() + n); return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`; };
 const fDay = d => new Date(d + 'T12:00').toLocaleDateString(LANG === 'es' ? 'es-ES' : 'ca-ES', { weekday: 'long', day: 'numeric', month: 'long' });

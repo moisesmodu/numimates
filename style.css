@@ -1139,3 +1139,28 @@ img.ic{display:inline-block;width:1.2em;height:1.2em;object-fit:contain;vertical
 .nav .navxat{flex:1;max-width:116px;display:flex;flex-direction:column;align-items:center;gap:1px;padding:6px 2px;border-radius:14px;font-size:12px;font-weight:800;color:var(--pri);border:2px solid transparent;background:none;cursor:pointer}
 .nav .navxat .ni{width:30px;height:30px;display:grid;place-items:center;filter:none}.nav .navxat .ni svg{width:30px;height:30px}
 .xattop{flex:none;width:38px;height:38px;border-radius:50%;border:2px solid var(--line);background:#fff;display:grid;place-items:center;padding:0;cursor:pointer;margin-left:8px;overflow:hidden}.xattop svg{width:32px;height:32px}
+/* pregunta sencera a la pantalla del mòbil: si no hi cap, s'encongeix per passos (fit1…fit4, els posa fitLesson) */
+.lesson.fit1 .l-body{padding-bottom:8px}.lesson.fit1 .l-q{margin:4px 0 8px}.lesson.fit1 .buddy,.lesson.fit1 .buddy svg{width:56px;height:56px}
+.lesson.fit1 .bubble{font-size:17px;padding:10px 12px;margin-bottom:10px}.lesson.fit1 .l-vis{margin-bottom:10px}.lesson.fit1 .l-vis svg,.lesson.fit1 .l-vis img{max-height:30vh}
+.lesson.fit1 .opts{gap:8px}.lesson.fit1 .opt{padding:10px;min-height:0}.lesson.fit1 .opt svg,.lesson.fit1 .opt img{max-height:16vh}.lesson.fit1 .pad{gap:8px}.lesson.fit1 .pad button{height:46px}.lesson.fit1 .inbox{font-size:32px;margin-bottom:10px;padding:4px 20px}
+.lesson.fit2 .buddy,.lesson.fit2 .buddy svg{width:44px;height:44px}.lesson.fit2 .bubble{font-size:16px}.lesson.fit2 .l-vis svg,.lesson.fit2 .l-vis img{max-height:24vh}
+.lesson.fit2 .opt{font-size:19px}.lesson.fit2 .opts.list .opt{font-size:16px;min-height:0;padding:10px 10px 10px 42px}.lesson.fit2 .opts.big .opt{font-size:28px;min-height:60px}.lesson.fit2 .opt svg,.lesson.fit2 .opt img{max-height:13vh}
+.lesson.fit2 .pad{gap:6px}.lesson.fit2 .pad button{height:42px;font-size:22px}.lesson.fit2 .inbox{font-size:28px}
+.lesson.fit3 .buddy{display:none}.lesson.fit3 .bubble{font-size:15.5px;margin-bottom:8px}.lesson.fit3 .bubble::before{display:none}.lesson.fit3 .l-vis svg,.lesson.fit3 .l-vis img{max-height:19vh}
+.lesson.fit3 .opt svg,.lesson.fit3 .opt img{max-height:11vh}.lesson.fit3 .pad button{height:38px}.lesson.fit3 .opt .k{display:none}
+.lesson.fit4 .bubble{font-size:14.5px;padding:8px 10px}.lesson.fit4 .l-vis svg,.lesson.fit4 .l-vis img{max-height:15vh}.lesson.fit4 .opt{padding:6px;font-size:16px}.lesson.fit4 .opt svg,.lesson.fit4 .opt img{max-height:9vh}.lesson.fit4 .pad button{height:34px;font-size:19px}
+.lesson.fit1 .balloons{height:230px}.lesson.fit1 .bln.b1{margin-bottom:44px}.lesson.fit1 .bln.b3{margin-bottom:58px}.lesson.fit1 .bln::after{height:48px}
+.lesson.fit1 .colop{font-size:30px;padding:10px 20px}.lesson.fit1 .emgrid{font-size:25px;padding:10px 12px}.lesson.fit1 .code{font-size:15px;gap:3px}.lesson.fit1 .code .blk{padding:6px 10px}
+.lesson.fit2 .balloons{height:180px}.lesson.fit2 .bln{width:70px;height:84px}.lesson.fit2 .bln::after{top:88px;height:34px}.lesson.fit2 .bln.b1{margin-bottom:30px}.lesson.fit2 .bln.b2{margin-bottom:12px}.lesson.fit2 .bln.b3{margin-bottom:40px}
+.lesson.fit2 .colop{font-size:26px;padding:8px 16px}.lesson.fit2 .emgrid{font-size:21px;gap:4px 6px}.lesson.fit2 .code{font-size:14px}.lesson.fit2 .code .blk{padding:5px 9px}
+.lesson.fit3 .balloons{height:130px;align-items:center}.lesson.fit3 .bln{margin-bottom:0!important;width:66px;height:76px}.lesson.fit3 .bln::after{display:none}
+.lesson.fit3 .colop{font-size:23px}.lesson.fit3 .emgrid{font-size:18px}.lesson.fit3 .code{font-size:13px}.lesson.fit3 .code .blk{padding:4px 8px}
+.lesson.fit4 .balloons{height:100px}.lesson.fit4 .bln{width:60px;height:66px;font-size:18px}.lesson.fit4 .emgrid{font-size:16px}.lesson.fit4 .l-vis svg.bars{max-height:14vh}
+.lesson.fit2 .l-foot{padding:10px 14px calc(10px + env(safe-area-inset-bottom))}.lesson.fit2 .l-foot .btn{padding-top:12px;padding-bottom:12px}.lesson.fit2 .l-top{padding-top:6px;padding-bottom:6px}
+.lesson.fit3 .balloons{display:grid;grid-template-columns:repeat(auto-fit,minmax(64px,1fr));height:auto;gap:8px}.lesson.fit3 .bln{width:auto;height:54px;border-radius:14px}.lesson.fit3 .bln::before{display:none}
+.lesson.fit3 .l-vis{zoom:.85}.lesson.fit4 .l-vis{zoom:.7}.lesson.fit4 .balloons{height:auto}.lesson.fit4 .bln{height:48px}
+.lesson.fit5 .l-vis{zoom:.55}.lesson.fit5 .l-ans{zoom:.88}.lesson.fit5 .l-q{margin:0 0 6px}
+.lesson.fit6 .l-vis{zoom:.45}.lesson.fit6 .l-ans{zoom:.78}.lesson.fit6 .bubble{font-size:13.5px}
+.ogrid.stages{grid-template-columns:1fr;gap:10px}
+.ogrid.stages .obtn{display:grid;grid-template-columns:48px 1fr;grid-template-rows:auto auto;column-gap:10px;align-items:center;text-align:left;padding:12px 16px}
+.ogrid.stages .obtn span{grid-row:1/3;font-size:32px;text-align:center}.ogrid.stages .obtn b{font-size:18px}.ogrid.stages .obtn small{font-size:13.5px;color:var(--mut);font-weight:700}

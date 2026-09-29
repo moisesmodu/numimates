@@ -12,7 +12,6 @@ const VARIANTS = {
     tag: 'Entrena la ment cada dia|Entrena la mente cada día' }
 };
 const ESO_FROM = 6, ESO_AGE = 12;   // índex del nivell 7 (1r d'ESO) i edat a partir de la qual es va a Numi Pro
-const ESO_LONG = { 5: '6è de primària|6.º de primaria', 6: "1r d'ESO|1.º de ESO", 7: "2n d'ESO|2.º de ESO", 8: "3r d'ESO|3.º de ESO", 9: "4t d'ESO|4.º de ESO" };
 const VAR_TEST = (() => {
   try {
     const q = new URLSearchParams(location.search).get('v');
@@ -25,8 +24,6 @@ const varOf = p => VAR_TEST || (!p ? 'mates' : p.variant === 'ment' ? 'ment' : (
 const TITLE0 = document.title, THEME0 = (document.querySelector('meta[name=theme-color]') || {}).content;
 function setVariant(id) {
   const o = VARIANTS[VAR_TEST || id] || VARIANTS.mates;
-  // a Numi Pro els nivells es diuen pel curs (2n d'ESO en lloc de «Nivell 8»)
-  if (typeof COURSES !== 'undefined') COURSES.forEach((c, i) => { c.long0 = c.long0 || c.long; c.long = o.id === 'pro' && ESO_LONG[i] ? ESO_LONG[i] : c.long0; });
   if (o === VAR && document.documentElement.dataset.v === o.id) return false;
   VAR = o; IS_PRO = o.id === 'pro'; IS_MENT = o.id === 'ment';
   document.documentElement.dataset.v = o.id;

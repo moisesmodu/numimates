@@ -1430,8 +1430,9 @@ function onbShell(step, inner, back = true) {
 }
 function onb(step) {
   VIEW = 'onboard';
-  setVariant(step >= 2 && ONB.variant ? ONB.variant : 'mates');
+  setVariant(ONB.variant && (step >= 2 || (step === 1 && ONB.stage)) ? ONB.variant : 'mates');
   if (step === 0) {
+    ONB.stage = null; ONB.variant = null;
     onbShell(0, `<img class="onb-logo" src="${VAR.logo}" alt="${VAR.name}"><div class="onb-char tapme">${charSVG('numi', 'happy')}</div>
       <div class="bubble big">${L("Hola! Soc en <b>Numi</b>. T'acompanyaré pas a pas perquè les mates et surtin rodones. <b>Com et dius?</b>", '¡Hola! Soy <b>Numi</b>. Te acompañaré paso a paso para que las mates te salgan redondas. <b>¿Cómo te llamas?</b>')}</div>
       <input id="nm" class="nm" maxlength="16" placeholder="${L('El teu nom', 'Tu nombre')}" autocomplete="off" enterkeyhint="go" value="${esc(ONB.name || '')}">
@@ -1439,8 +1440,11 @@ function onb(step) {
       <button class="link" onclick="loginModal()">🔑 ${L('Ja tinc compte', 'Ya tengo cuenta')}</button>`);
     const i = $('#nm'); i.addEventListener('keydown', e => { if (e.key === 'Enter') onbName(); });
   }
-  if (step === 1) onbShell(1, `<div class="onb-char sm tapme">${charSVG('numi', 'idle')}</div><div class="bubble big">${L(`Encantat, <b>${esc(ONB.name)}</b>! <b>Quants anys tens?</b>`, `¡Encantado, <b>${esc(ONB.name)}</b>! <b>¿Cuántos años tienes?</b>`)}</div>
-    <div class="cgrid ages">${[5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16].map((a, i) => `<button class="cbtn ${ONB.age === a ? 'on' : ''}" style="animation-delay:${i * 40}ms" onclick="onbAge(${a})"><b>${a}${a === 16 ? '+' : ''}</b><small>${L('anys', 'años')}</small></button>`).join('')}</div>`);
+  if (step === 1 && !ONB.stage) onbShell(1, `<div class="onb-char sm tapme">${charSVG('numi', 'idle')}</div><div class="bubble big">${L(`Encantat, <b>${esc(ONB.name)}</b>! <b>Què estàs estudiant?</b>`, `¡Encantado, <b>${esc(ONB.name)}</b>! <b>¿Qué estás estudiando?</b>`)}</div>
+    <div class="ogrid stages">${[['primaria', '🎒', L('Primària', 'Primaria'), L('de 1r a 6è', 'de 1.º a 6.º')], ['eso', '🎓', L('Secundària', 'Secundaria'), L("ESO, de 1r a 4t", 'ESO, de 1.º a 4.º')], ['altres', '🌱', L('Altres', 'Otros'), L('Soc adult i vull entrenar la ment', 'Soy adulto y quiero entrenar la mente')]].map(([k, e, t, d], i) => `<button class="obtn ${ONB.stage === k ? 'on' : ''}" style="animation-delay:${i * 60}ms" onclick="onbStage('${k}')"><span>${e}</span><b>${t}</b><small>${d}</small></button>`).join('')}</div>`);
+  else if (step === 1) onbShell(1, `<div class="onb-char sm tapme">${charSVG('numi', 'idle')}</div><div class="bubble big">${L('<b>Quants anys tens?</b>', '<b>¿Cuántos años tienes?</b>')}</div>
+    <div class="cgrid ages">${(ONB.stage === 'eso' ? [12, 13, 14, 15, 16] : [5, 6, 7, 8, 9, 10, 11, 12]).map((a, i) => `<button class="cbtn ${ONB.age === a ? 'on' : ''}" style="animation-delay:${i * 40}ms" onclick="onbAge(${a})"><b>${a}${a === 16 ? '+' : ''}</b><small>${L('anys', 'años')}</small></button>`).join('')}</div>
+    <button class="link" onclick="ONB.stage=null;ONB.variant=null;onb(1)">${L('No, estudio una altra cosa', 'No, estudio otra cosa')}</button>`);
   if (step === 2) onbShell(2, `<div class="onb-char sm tapme">${charSVG('guida', 'idle')}</div><div class="bubble big">${L("Soc la <b>Guida</b>. Explica'm una mica: <b>com et sents amb les mates?</b>", 'Soy <b>Guida</b>. Cuéntame un poco: <b>¿cómo te sientes con las mates?</b>')}</div>
     <div class="ogrid">${Object.entries(FEEL).map(([k, v], i) => { const t = tx(v); return `<button class="obtn ${ONB.feel === k ? 'on' : ''}" style="animation-delay:${i * 60}ms" onclick="ONB.feel='${k}';onb(3)"><span>${t.split(' ')[0]}</span>${t.slice(t.indexOf(' ') + 1)}</button>`; }).join('')}</div>`);
   if (step === 3) onbShell(3, `<div class="onb-char sm tapme">${charSVG('vuit', 'idle')}</div><div class="bubble big">${L("I ara, <b>què t'agrada més?</b>", 'Y ahora, <b>¿qué te gusta más?</b>')}</div>
@@ -1450,14 +1454,22 @@ function onb(step) {
     <button class="btn big" onclick="startPlacement()">${L('COMENCEM!', '¡EMPECEMOS!')}</button><button class="link" onclick="LS={res:[]};finishPlacement(true)">${L('Salta la prova i comença pel principi', 'Salta la prueba y empieza por el principio')}</button>`);
 }
 // l'edat decideix la variant: a partir de 12 anys, Numi Pro (la mateixa app amb l'aspecte i les eines de l'ESO)
-function onbAge(a) {
-  ONB.age = a; ONB.course = Math.min(9, Math.max(0, a - 6)); ONB.variant = a >= ESO_AGE ? 'pro' : 'mates';
-  if (ONB.variant !== 'pro' || VAR.id === 'pro') return onb(2);
+// primer què estudia (primària → Numi Mates, ESO → Numi Pro, altres → Numi Ment) i després l'edat
+function onbStage(k) {
+  ONB.stage = k; ONB.age = null;
+  if (k === 'altres') { ONB.variant = 'ment'; return typeof onbMent === 'function' ? onbMent() : toast(L('Numi Ment, per entrenar la ment, arriba molt aviat!', '¡Numi Ment, para entrenar la mente, llega muy pronto!')); }
+  ONB.variant = k === 'eso' ? 'pro' : 'mates';
+  if (k !== 'eso') return onb(1);
   setVariant('pro');
   app.innerHTML = `<div class="scr varsplash"><img class="onb-logo" src="${VAR.logo}" alt="${VAR.name}"><h1>${L("Et donem la benvinguda a Numi Pro", 'Te damos la bienvenida a Numi Pro')}</h1>
     <p class="sub">${L("La versió de Numi per a l'ESO: el temari d'institut, reptes més durs i en Numi com a assistent quan t'encallis.", 'La versión de Numi para la ESO: el temario del instituto, retos más duros y Numi como asistente cuando te atasques.')}</p>
-    <button class="btn big" onclick="onb(2)">${L('ENDAVANT', 'ADELANTE')}</button></div>`;
+    <button class="btn big" onclick="onb(1)">${L('ENDAVANT', 'ADELANTE')}</button></div>`;
   SFX.win && SFX.win();
+}
+function onbAge(a) {
+  ONB.age = a;
+  ONB.course = ONB.stage === 'eso' ? Math.min(9, Math.max(ESO_FROM, a - 6)) : Math.min(5, Math.max(0, a - 6));
+  onb(2);
 }
 function onbName() { const n = $('#nm').value.trim(); if (!n) { $('#nm').classList.add('shake'); setTimeout(() => $('#nm').classList.remove('shake'), 500); return; } ONB.name = n; onb(1); }
 function startPlacement() {
@@ -1540,20 +1552,30 @@ document.addEventListener('keydown', e => {
 if (P) { pull(); syncNow(); classeRefresh(); }
 go(P ? 'home' : 'onboard');
 
+/* ---------- Pregunta sencera a la pantalla: si l'exercici no hi cap, s'encongeix per passos ---------- */
+// alçada real del contingut (sense comptar les animacions, que amb transform semblen ocupar més)
+const contentH = b => { const kids = [...b.children].filter(c => !c.classList.contains('morebtn')); return Math.max(0, ...kids.map(c => c.offsetTop + c.offsetHeight)) - b.offsetTop + parseFloat(getComputedStyle(b).paddingBottom || 0); };
+const lessonOver = b => contentH(b) > b.clientHeight + 2;
+function fitLesson() {
+  const les = document.querySelector('.lesson:not(.learn)'), b = les && les.querySelector('.l-body'); if (!b) return;
+  for (let k = 1; k <= 6 && lessonOver(b); k++) les.classList.add('fit' + k);
+  les.querySelectorAll('.l-body img').forEach(i => i.complete || i.addEventListener('load', fitLesson, { once: true }));
+}
+{ const rl = renderLesson; renderLesson = function () { rl(); fitLesson(); }; }
 /* ---------- «Més a sota»: si la teoria o l'exercici no hi caben, un botó ho indica i hi baixa ---------- */
 function moreHints() {
   $$('.l-body, .lwrap').forEach(el => {
     let b = el.querySelector(':scope > .morebtn');
-    const more = el.scrollHeight - el.clientHeight - el.scrollTop > 40;
-    if (!b && el.scrollHeight - el.clientHeight > 40) {
+    const left = () => contentH(el) - el.clientHeight - el.scrollTop, more = left() > 40;
+    if (!b && contentH(el) - el.clientHeight > 40) {
       b = document.createElement('button'); b.className = 'morebtn'; b.type = 'button';
       b.innerHTML = `▾ ${L('Més a sota', 'Más abajo')}`;
       b.onclick = () => el.scrollBy({ top: el.clientHeight * .7, behavior: 'smooth' });
       el.appendChild(b);
-      el.addEventListener('scroll', () => b.classList.toggle('gone', el.scrollHeight - el.clientHeight - el.scrollTop < 40), { passive: true });
+      el.addEventListener('scroll', () => b.classList.toggle('gone', left() < 40), { passive: true });
     }
     if (b) b.classList.toggle('gone', !more);
   });
 }
-new MutationObserver(() => { clearTimeout(moreHints.t); moreHints.t = setTimeout(moreHints, 350); }).observe(document.getElementById('app'), { childList: true, subtree: true });
-addEventListener('resize', () => setTimeout(moreHints, 200));
+new MutationObserver(() => { fitLesson(); clearTimeout(moreHints.t); moreHints.t = setTimeout(moreHints, 350); }).observe(document.getElementById('app'), { childList: true, subtree: true });
+addEventListener('resize', () => setTimeout(() => { fitLesson(); moreHints(); }, 200));
