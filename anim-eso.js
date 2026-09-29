@@ -131,20 +131,22 @@ const AE = (() => {
       if (st.includes('b')) inner += `<rect x="${r1(b.x0 - 3)}" y="${r1(b.y0 - 3)}" width="${r1(b.x1 - b.x0 + 6)}" height="${r1(b.y1 - b.y0 + 6)}" rx="8" fill="#fff" stroke="${UC}" stroke-width="2.2"/>`;
       inner += its.map(u => itemSvg(u, x0, y, col, wt)).join('');
       if (go.from) {
-        const src = typeof go.from === 'string' ? (() => { const [r, k] = go.from.split('.'), q = r === '' ? G[+k] : reg[+r].G[+k]; return [q.cx, q.cy, q.t]; })() : go.from;
+        const src = typeof go.from === 'string' ? (() => { if (go.from[0] === 'B') { const [r, k] = go.from.slice(1).split('.'); return reg[+r].BR[+k]; } const [r, k] = go.from.split('.'), q = r === '' ? G[+k] : reg[+r].G[+k]; return [q.cx, q.cy, q.t]; })() : go.from;
         svg += `<g ${tt(src[2] ?? 0, 'a-fade')}><g class="an a-move" style="--t:${gt.toFixed(2)}s;--fx:${r1(src[0] - b.cx)}px;--fy:${r1(src[1] - b.cy)}px">${inner}</g></g>`;
       } else svg += `<g ${tt(gt, go.cls || (go.t == null ? cls : 'a-pop'))}>${inner}</g>`;
       const stt = (o.st || {})[g] ?? (st.includes('s') ? gt + .6 : null);
       if (stt != null) svg += `<line x1="${r1(b.x0 - 3)}" y1="${r1(b.y1 - 2)}" x2="${r1(b.x1 + 3)}" y2="${r1(b.y0 + 2)}" stroke="${RED}" stroke-width="2.6" stroke-linecap="round" pathLength="1" ${tt(stt, 'a-draw')}/>`;
     });
     (o.arcs || []).forEach(([i, j, at, lab, h = 16]) => { const p = G[i], q = G[j]; svg += arc(p.cx, p.y0 - 2, q.cx, q.y0 - 2, h, at, { lab, w: 2 }); });
+    const BR = [];
     (o.br || []).forEach(([i, j, lab, at, col = UC]) => {
       const p = G[i], q = G[j], xa = p.x0, xb = q.x1, yb = Math.max(p.y1, q.y1) + 3, m = (xa + xb) / 2;
+      BR.push([m, yb + 10 + fs * .72 - fs * .74 * .3, at]);
       svg += `<g ${tt(at, 'a-fade')}><path d="M${r1(xa)},${r1(yb)} q0,5 5,5 H${r1(m - 5)} q5,0 5,5 q0,-5 5,-5 H${r1(xb - 5)} q5,0 5,-5" fill="none" stroke="${col}" stroke-width="2" stroke-linecap="round"/>${lab ? M(m, yb + 10 + fs * .72, lab, { fs: fs * .74, fill: col === UC ? UC : col }) : ''}</g>`;
     });
     if (base) svg += `<g ${tt(t, cls)}>${base}</g>`;
     if (o.out != null) svg = out(o.out, svg);
-    const R = { svg, G, x0, w: L.w, y, fs, t }; if (reg) reg.push(R); return R;
+    const R = { svg, G, BR, x0, w: L.w, y, fs, t }; if (reg) reg.push(R); return R;
   }
   // etiqueta arrodonida amb text matemàtic, centrada a x (y = línia base)
   function chip(x, y, s, t, o = {}) {
@@ -528,7 +530,7 @@ const AE = (() => {
           bg += M(x0 + (m + n / 2) * g, y - 19, `${b}^${n}`, { fs: 13, fill: '#B98900', t: t + .5 });
           s += `<g ${tt(t + 1.1, 'ae-tr', mv)}>${bg}</g>`;
           s += M(x0 + m * g / 2, y - 19, `${b}^${m}`, { fs: 13, fill: UC, t: t + .2 });
-          s += `<g ${tt(t + 1.6, 'a-fade')}><path d="M${r1(x0 + 2)},${y + 16} q0,5 5,5 H${r1(x - 5)} q5,0 5,5 q0,-5 5,-5 H${r1(x0 + tot * g - 7)} q5,0 5,-5" fill="none" stroke="${INK}" stroke-width="2"/></g>` + M(x, y + 42, `${tot} factors`, { fs: 12, wt: 7, fill: GRY, t: t + 1.7 });
+          if (!o.nobr) s += `<g ${tt(t + 1.6, 'a-fade')}><path d="M${r1(x0 + 2)},${y + 16} q0,5 5,5 H${r1(x - 5)} q5,0 5,5 q0,-5 5,-5 H${r1(x0 + tot * g - 7)} q5,0 5,-5" fill="none" stroke="${INK}" stroke-width="2"/></g>` + M(x, y + 42, `${tot} factors`, { fs: 12, wt: 7, fill: GRY, t: t + 1.7 });
           s += M(x0 + tot * g + 12, y + 6, res, { fs: 17, a: 's', t: t + 2 });
           at.push(t + 1.9);
         } else if (k === 'div') {
@@ -766,6 +768,11 @@ const AE = (() => {
       else if (o.k === 'cm') s += chip(o.px, o.py, o.s, t, { fs: o.fs || 13, st: o.st || 'o' });
       else if (o.k === 'mk') s += mark(o.px, o.py, o.ok, t, o.sz || 10);
       else if (o.k === 'svg') s += o.s;
+      else if (o.k === 'table') {
+        const { px, py, head, rows, dt = .35, cw = 40, rh = 25 } = o;
+        s += `<g ${tt(t, 'a-fade')}><rect x="${px}" y="${py}" width="${cw * 2}" height="${rh * (rows.length + 1)}" rx="8" fill="#fff" stroke="${LN}" stroke-width="2"/><line x1="${px + cw}" x2="${px + cw}" y1="${py}" y2="${py + rh * (rows.length + 1)}" stroke="${LN}" stroke-width="2"/><line x1="${px}" x2="${px + 2 * cw}" y1="${py + rh}" y2="${py + rh}" stroke="${LN}" stroke-width="2"/>${M(px + cw / 2, py + rh - 8, head[0], { fs: 13, fill: GRY })}${M(px + cw * 1.5, py + rh - 8, head[1], { fs: 13, fill: GRY })}</g>`;
+        rows.forEach(([a, b], i) => { s += M(px + cw / 2, py + rh * (i + 2) - 8, A.sg(a), { fs: 14, t: t + .15 + dt * i }) + M(px + cw * 1.5, py + rh * (i + 2) - 8, `{u|${A.sg(b)}}`, { fs: 14, t: t + .3 + dt * i }); });
+      }
     });
     return s;
   };
@@ -878,7 +885,7 @@ const AE = (() => {
     },
     // barres amb la mitjana; després s'ordenen i es marca la mediana
     eBarsStats({ data, max, at, tm = 1.4, ts, tmed, meanLab, medLab, H = 118 }) {
-      const n = data.length, bw = Math.min(34, 200 / n), gap = Math.min(14, 90 / n), x0 = 34, by = 176, X = i => x0 + i * (bw + gap), Hv = v => v / max * H;
+      const n = data.length, bw = Math.min(34, 196 / (n + (n - 1) * .4)), gap = bw * .4, x0 = 30, by = 176, X = i => x0 + i * (bw + gap), Hv = v => v / max * H;
       const ord = data.map((v, i) => [v, i]).sort((a, b) => a[0] - b[0] || a[1] - b[1]), pos = []; ord.forEach(([, i], j) => { pos[i] = j; });
       const mean = data.reduce((a, b) => a + b, 0) / n, sd = ord.map(q => q[0]), med = n % 2 ? sd[(n - 1) / 2] : (sd[n / 2 - 1] + sd[n / 2]) / 2;
       let s = `<line x1="${x0 - 8}" x2="${X(n - 1) + bw + 8}" y1="${by}" y2="${by}" stroke="${INK}" stroke-width="2" ${tt(.05, 'a-fade')}/>`;
@@ -925,15 +932,262 @@ const AE = (() => {
     // arbre de dues monedes: 4 casos igual de probables
     eCoinTree({ hl = [], at, legend, res }) {
       const coin = (x, y, c, t) => `<g ${tt(t)}><circle cx="${x}" cy="${y}" r="13" fill="${c === 'C' ? YEL : '#D9CCE6'}" stroke="${INK}" stroke-width="2"/>${M(x, y + 5, c, { fs: 13 })}</g>`;
-      let s = '', R = [46, 106]; const x1 = 90, x2 = 154, xl = 198;
+      let s = '', R = [46, 106]; const x1 = 78, x2 = 136, xl = 176;
       if (legend) s += coin(28, 20, 'C', .1) + M(46, 25, 'cara', { fs: 12, a: 's', wt: 7, fill: GRY, t: .1 }) + coin(98, 20, 'X', .2) + M(116, 25, 'creu', { fs: 12, a: 's', wt: 7, fill: GRY, t: .2 });
       const y0 = legend ? 124 : 100, ys1 = [y0 - 46, y0 + 46], ys2 = [y0 - 69, y0 - 23, y0 + 23, y0 + 69], L = ['CC', 'CX', 'XC', 'XX'];
-      s += `<circle cx="34" cy="${y0}" r="6" fill="${INK}" ${tt(.3)}/>`;
-      ys1.forEach((y, i) => { s += line(40, y0, x1 - 14, y, .45) + coin(x1, y, 'CX'[i], .7); });
+      s += `<circle cx="24" cy="${y0}" r="6" fill="${INK}" ${tt(.3)}/>`;
+      ys1.forEach((y, i) => { s += line(30, y0, x1 - 14, y, .45) + coin(x1, y, 'CX'[i], .7); });
       ys2.forEach((y, j) => { const p = ys1[j >> 1]; s += line(x1 + 14, p, x2 - 14, y, 1 + .1 * j) + coin(x2, y, 'CX'[j % 2], 1.2 + .1 * j); s += `<g ${tt(1.5 + .1 * j)}><rect x="${xl - 4}" y="${y - 13}" width="46" height="26" rx="8" fill="#fff" stroke="${LN}" stroke-width="2"/>${M(xl + 19, y + 5, L[j], { fs: 14 })}</g>`; });
-      hl.forEach(({ leaves, t, lab }) => { leaves.forEach(j => { s += `<g ${tt(t)}><rect x="${xl - 4}" y="${ys2[j] - 13}" width="46" height="26" rx="8" fill="${UC}"/>${M(xl + 19, ys2[j] + 5, L[j], { fs: 14, fill: '#fff' })}</g>`; }); if (lab) s += chip(284, (ys2[leaves[0]] + ys2[leaves[leaves.length - 1]]) / 2 + 5, lab, t + .3, { fs: 13, st: 'y' }); });
+      hl.forEach(({ leaves, t, lab }) => { leaves.forEach(j => { s += `<g ${tt(t)}><rect x="${xl - 4}" y="${ys2[j] - 13}" width="46" height="26" rx="8" fill="${UC}"/>${M(xl + 19, ys2[j] + 5, L[j], { fs: 14, fill: '#fff' })}</g>`; }); if (lab) s += chip(Math.max(xl + 50 + A.chipW(lab, 13) / 2, 250), (ys2[leaves[0]] + ys2[leaves[leaves.length - 1]]) / 2 + 5, lab, t + .3, { fs: 13, st: 'y' }); });
       void R; void res;
       return { html: A.scene(y0 + 88, s), at };
+    }
+  });
+})();
+
+/* ---------- Pitàgores, Tales i cossos geomètrics ---------- */
+(() => {
+  const A = AE, { M, chip, chipW, rect, tt, inout, out, line, dot, trm, ic, UC, RED, GRN, INK, LN, GRY, YEL, nf, r1 } = A;
+  const pts = a => a.map(v => v.map(r1).join(',')).join(' ');
+  // quadrat sobre un segment p→q (cap a la banda de n), amb quadrícula d'unitats
+  const sqOn = (p, q, units, fill, t, cls = 'a-fade') => {
+    const dx = q[0] - p[0], dy = q[1] - p[1], nx = -dy, ny = dx, P4 = [p, q, [q[0] + nx, q[1] + ny], [p[0] + nx, p[1] + ny]];
+    let g = `<polygon points="${pts(P4)}" fill="${fill}" fill-opacity=".8" stroke="${INK}" stroke-width="2" stroke-linejoin="round"/>`;
+    for (let i = 1; i < units; i++) { const f = i / units; g += `<line x1="${r1(p[0] + dx * f)}" y1="${r1(p[1] + dy * f)}" x2="${r1(p[0] + dx * f + nx)}" y2="${r1(p[1] + dy * f + ny)}" stroke="#fff" stroke-opacity=".6" stroke-width=".8"/><line x1="${r1(p[0] + nx * f)}" y1="${r1(p[1] + ny * f)}" x2="${r1(q[0] + nx * f)}" y2="${r1(q[1] + ny * f)}" stroke="#fff" stroke-opacity=".6" stroke-width=".8"/>`; }
+    return { s: `<g ${tt(t, cls)}>${g}</g>`, c: [(p[0] + q[0]) / 2 + nx / 2, (p[1] + q[1]) / 2 + ny / 2] };
+  };
+  Object.assign(SCN, {
+    // Pitàgores amb els quadrats sobre els costats: els dels catets sumen el de la hipotenusa
+    ePyth({ a, b, at }) {
+      const c = Math.hypot(a, b), sx = Math.min(300 / (a + 2 * b), 206 / (2 * a + b)), s = Math.min(sx, 11);
+      const Cx = 10 + b * s + (300 - (a + 2 * b) * s) / 2, Cy = 8 + (a + b) * s, C = [Cx, Cy], B = [Cx + a * s, Cy], Av = [Cx, Cy - b * s];
+      let o = `<polygon points="${pts([C, B, Av])}" fill="#fff" stroke="${INK}" stroke-width="3" stroke-linejoin="round" ${tt(.15, 'a-fade')}/><path d="M${Cx},${Cy - 10} h10 v10" fill="none" stroke="${INK}" stroke-width="1.6" ${tt(.15, 'a-fade')}/>`;
+      o += M((Cx + B[0]) / 2, Cy - 6, nf(a), { fs: 13, t: .4 }) + M(Cx + 8, (Cy + Av[1]) / 2 + 4, nf(b), { fs: 13, t: .5, a: 's' });
+      const q1 = sqOn(C, B, a, UC, 1.0), q2 = sqOn(Av, C, b, YEL, 1.6), q3 = sqOn(B, Av, Math.round(c) === c ? c : 0, '#FF8FB1', 2.5);
+      o += q1.s + M(q1.c[0], q1.c[1] + 5, `${nf(a)}^2 = {u|${nf(a * a)}}`, { fs: 13, t: 1.2 }).replace(/fill="var\(--uc\)"/g, 'fill="#fff"');
+      o += q2.s + M(q2.c[0], q2.c[1] + 5, `${nf(b)}^2 = ${nf(b * b)}`, { fs: 13, t: 1.8 });
+      o += q3.s + M(q3.c[0], q3.c[1] + 5, `${nf(a * a)} + ${nf(b * b)} = ${nf(a * a + b * b)}`, { fs: 12.5, t: 2.7 });
+      const mh = [(Av[0] + B[0]) / 2 - 10, (Av[1] + B[1]) / 2 - 6];
+      o += chip(mh[0], mh[1], nf(c), 3.3, { fs: 14, st: 'y' });
+      return { html: A.scene(Cy + a * s + 6, o), at: at || [.6, 2.8, 3.5] };
+    },
+    // escala recolzada a la paret: la hipotenusa i els quadrats que es resten
+    eLadder({ L, d, h, at, hyp, unit = 'm' }) {
+      const s = Math.min(150 / h, 100 / d), wx = 300, gy = 196, fx = wx - d * s, ty = gy - h * s;
+      let o = `<g ${tt(.1, 'a-fade')}><rect x="${wx}" y="${ty - 14}" width="14" height="${gy - ty + 14}" fill="#E9DFF1" stroke="${INK}" stroke-width="2"/><line x1="${fx - 34}" x2="${wx + 14}" y1="${gy}" y2="${gy}" stroke="${INK}" stroke-width="3"/></g>`;
+      const nr = Math.max(4, Math.round(L * s / 16)), ux = (wx - fx) / L / s, uy = (gy - ty) / L / s;
+      let ld = `<line x1="${r1(fx - 4)}" y1="${gy}" x2="${r1(wx - 4)}" y2="${r1(ty)}" stroke="#B98900" stroke-width="4" stroke-linecap="round"/><line x1="${r1(fx + 5)}" y1="${gy}" x2="${r1(wx + 1)}" y2="${r1(ty + 7)}" stroke="#B98900" stroke-width="4" stroke-linecap="round"/>`;
+      for (let i = 1; i < nr; i++) { const f = i / nr, x = fx + (wx - fx) * f, y = gy + (ty - gy) * f; ld += `<line x1="${r1(x - 4)}" y1="${r1(y)}" x2="${r1(x + 4)}" y2="${r1(y + 4)}" stroke="#B98900" stroke-width="2.5"/>`; }
+      o += `<g ${tt(.4, 'a-fade')}>${ld}</g>`; void ux; void uy;
+      o += chip((fx + wx) / 2 - 12, (gy + ty) / 2 - 6, `${nf(L)} ${unit}`, .7, { fs: 13 }) + M((fx + wx) / 2, gy + 16, `${nf(d)} ${unit}`, { fs: 13, t: .9 });
+      o += A.inout(1.0, 3.4, M(wx - 8, (gy + ty) / 2 + 4, '?', { fs: 18, fill: RED, a: 'e' }), 'a-pop') + chip(wx - 30, (gy + ty) / 2 + 30, `${nf(h)} ${unit}`, 3.4, { fs: 14, st: 'y' });
+      const t0 = hyp ? 1.9 : 1.5;
+      if (hyp) o += `<line x1="${r1(fx)}" y1="${gy}" x2="${r1(wx)}" y2="${r1(ty)}" stroke="${RED}" stroke-width="7" stroke-opacity=".35" stroke-linecap="round" ${tt(1.4, 'a-fade')}/>` + chip((fx + wx) / 2 + 36, (gy + ty) / 2 - 18, 'hipotenusa', 1.5, { fs: 11.5, st: 'r' });
+      // quadrats: L² − d² = h²
+      const q = Math.min(11, 138 / (L + d + h)), y0 = 26, sq = (x, n, t, f, lab) => `<g ${tt(t)}><rect x="${r1(x)}" y="${y0}" width="${r1(n * q)}" height="${r1(n * q)}" rx="3" fill="${f}" stroke="${INK}" stroke-width="1.6"/></g>` + M(x + n * q / 2, y0 + n * q + 15, lab, { fs: 12.5, t: t + .1 });
+      let x = 12; o += sq(x, L, t0, UC, `${nf(L)}^2 = ${nf(L * L)}`); x += L * q + 6; o += M(x + 5, y0 + L * q / 2 + 6, '−', { fs: 18, t: t0 + .4 }); x += 16;
+      o += sq(x, d, t0 + .4, RED, `${nf(d * d)}`); x += d * q + 6; o += M(x + 5, y0 + L * q / 2 + 6, '=', { fs: 18, t: t0 + .8 }); x += 16;
+      o += sq(x, h, t0 + .9, YEL, `{u|${nf(h * h)}}`);
+      return { html: A.scene(gy + 22, o), at: at || [1.1, t0 + 1.2, 3.5] };
+    },
+    // Tales amb ombres: mateixa hora, mateix angle del sol → triangles semblants
+    eShadow({ pole, ps, ts, obj = 'tree', at }) {
+      const H = ts * pole / ps, s = Math.min(270 / (ps + ts + 1.4), 178 / H), gy = 206, px = 16, tx = px + (ps + 1.4) * s, k = ts / ps;
+      let o = ic('sun', 290, 22, 30, .1) + `<line x1="4" x2="316" y1="${gy}" y2="${gy}" stroke="${INK}" stroke-width="3" ${tt(.1, 'a-fade')}/>`;
+      // pal i la seva ombra
+      o += `<polygon points="${pts([[px, gy], [px, gy - pole * s], [px + ps * s, gy]])}" fill="${UC}" fill-opacity=".25" ${tt(.5, 'a-fade')}/>`;
+      o += line(px, gy, px, gy - pole * s, .2, { w: 4 }) + line(px, gy, px + ps * s, gy, .45, { col: '#6B5A7B', w: 6 }) + line(px, gy - pole * s, px + ps * s, gy, .6, { col: '#E0A800', w: 1.8, dash: '5 4' });
+      o += M(px + 5, gy - pole * s / 2, `${nf(pole)} m`, { fs: 11.5, a: 's', t: .5 }) + M(px + ps * s / 2, gy + 16, `${nf(ps)} m`, { fs: 11.5, t: .5 });
+      // objecte gran i la seva ombra
+      const top = gy - H * s;
+      const shape = obj === 'tree' ? `<rect x="${r1(tx - 5)}" y="${r1(top + H * s * .45)}" width="10" height="${r1(H * s * .55)}" fill="#8B5E3C"/><ellipse cx="${r1(tx)}" cy="${r1(top + H * s * .28)}" rx="${r1(Math.max(18, H * s * .2))}" ry="${r1(H * s * .28)}" fill="#3CC46A" stroke="${INK}" stroke-width="1.5"/>`
+        : `<rect x="${r1(tx - 34)}" y="${r1(top)}" width="34" height="${r1(H * s)}" fill="#D9CCE6" stroke="${INK}" stroke-width="2"/>` + Array.from({ length: Math.floor(H * s / 16) }, (_, i) => `<rect x="${r1(tx - 27)}" y="${r1(top + 6 + i * 16)}" width="8" height="8" fill="#fff"/><rect x="${r1(tx - 14)}" y="${r1(top + 6 + i * 16)}" width="8" height="8" fill="#fff"/>`).join('');
+      o += `<g ${tt(1.0, 'a-fade')}>${shape}</g>`;
+      o += `<polygon points="${pts([[tx, gy], [tx, top], [tx + ts * s, gy]])}" fill="${YEL}" fill-opacity=".25" ${tt(1.3, 'a-fade')}/>`;
+      o += line(tx, gy, tx + ts * s, gy, 1.2, { col: '#6B5A7B', w: 6 }) + line(tx, top, tx + ts * s, gy, 1.35, { col: '#E0A800', w: 1.8, dash: '5 4' });
+      o += M(tx + ts * s / 2, gy + 16, `${nf(ts)} m`, { fs: 11.5, t: 1.2 });
+      // la raó: l'ombra gran conté k ombres petites
+      for (let i = 1; i < Math.round(k); i++) o += `<line x1="${r1(tx + i * ps * s)}" x2="${r1(tx + i * ps * s)}" y1="${gy - 7}" y2="${gy + 5}" stroke="${UC}" stroke-width="2.5" ${tt(2.0 + .08 * i, 'a-pop')}/>`;
+      o += chip(tx + ts * s / 2, gy - 18, `× ${nf(k)}`, 2.3, { fs: 13, st: 'f' });
+      // alçada: k vegades el pal
+      for (let i = 1; i < Math.round(k); i++) o += `<line x1="${r1(tx + 4)}" x2="${r1(tx + 16)}" y1="${r1(gy - i * pole * s)}" y2="${r1(gy - i * pole * s)}" stroke="${RED}" stroke-width="2.5" ${tt(3.0 + .08 * i, 'a-pop')}/>`;
+      o += line(tx + 10, gy, tx + 10, top, 2.9, { col: RED, w: 2.5 }) + chip(tx + 12 + chipW(`${nf(H)} m`, 14) / 2, top + 16, `${nf(H)} m`, 3.4, { fs: 14, st: 'y' });
+      return { html: A.scene(gy + 22, o), at: at || [.6, 1.4, 2.4, 3.5] };
+    }
+  });
+  // cossos: prisma de cubets, cilindre de capes, con dins del cilindre, esfera, semicercle, desenvolupament del cilindre
+  const iso = (cx, by, u) => (x, y, z) => [cx + (x - y) * .866 * u, by - (x + y) * .5 * u - z * u];
+  A.body = (o) => {
+    const { k, x, y, t } = o; let s = '';
+    if (k === 'prism') {
+      const { a, b, c, u = 12 } = o, P = iso(x, y, u);
+      for (let z = 0; z < c; z++) {
+        let g = `<polygon points="${pts([P(0, 0, z), P(0, b, z), P(0, b, z + 1), P(0, 0, z + 1)])}" style="fill:color-mix(in srgb,${UC} 78%,#000)" stroke="${INK}" stroke-width="1.2"/><polygon points="${pts([P(0, 0, z), P(a, 0, z), P(a, 0, z + 1), P(0, 0, z + 1)])}" style="fill:${UC}" stroke="${INK}" stroke-width="1.2"/><polygon points="${pts([P(0, 0, z + 1), P(a, 0, z + 1), P(a, b, z + 1), P(0, b, z + 1)])}" style="fill:color-mix(in srgb,${UC} 40%,#fff)" stroke="${INK}" stroke-width="1.2"/>`;
+        for (let i = 1; i < a; i++) g += `<line x1="${r1(P(i, 0, z)[0])}" y1="${r1(P(i, 0, z)[1])}" x2="${r1(P(i, 0, z + 1)[0])}" y2="${r1(P(i, 0, z + 1)[1])}" stroke="${INK}" stroke-width=".8"/><line x1="${r1(P(i, 0, z + 1)[0])}" y1="${r1(P(i, 0, z + 1)[1])}" x2="${r1(P(i, b, z + 1)[0])}" y2="${r1(P(i, b, z + 1)[1])}" stroke="${INK}" stroke-width=".8"/>`;
+        for (let j = 1; j < b; j++) g += `<line x1="${r1(P(0, j, z)[0])}" y1="${r1(P(0, j, z)[1])}" x2="${r1(P(0, j, z + 1)[0])}" y2="${r1(P(0, j, z + 1)[1])}" stroke="${INK}" stroke-width=".8"/><line x1="${r1(P(0, j, z + 1)[0])}" y1="${r1(P(0, j, z + 1)[1])}" x2="${r1(P(a, j, z + 1)[0])}" y2="${r1(P(a, j, z + 1)[1])}" stroke="${INK}" stroke-width=".8"/>`;
+        s += `<g ${tt(t + .45 * z, 'a-move', `--fx:0px;--fy:-${u * 2}px`)}>${g}</g>`;
+      }
+      s += M(P(a / 2, 0, 0)[0] + 6, P(a / 2, 0, 0)[1] + 16, `${a}`, { fs: 12, wt: 7, fill: GRY, t }) + M(P(0, b / 2, 0)[0] - 8, P(0, b / 2, 0)[1] + 16, `${b}`, { fs: 12, wt: 7, fill: GRY, t }) + M(P(a, 0, c / 2)[0] + 8, P(a, 0, c / 2)[1] + 4, `${c}`, { fs: 12, wt: 7, fill: GRY, a: 's', t: t + .45 * c });
+    } else if (k === 'cyl' || k === 'cone') {
+      const { r, h, u = 14, fillT } = o, rx = r * u, ry = rx * .32, H = h * u;
+      if (k === 'cyl') {
+        for (let z = 0; z < h; z++) { const yb = y - z * u; s += `<g ${tt(t + .3 * z, 'a-move', `--fx:0px;--fy:-${u * 2}px`)}><path d="M${r1(x - rx)},${r1(yb)} A${r1(rx)},${r1(ry)} 0 0 0 ${r1(x + rx)},${r1(yb)} V${r1(yb - u)} A${r1(rx)},${r1(ry)} 0 0 1 ${r1(x - rx)},${r1(yb - u)} Z" style="fill:${UC}" stroke="${INK}" stroke-width="1.2"/><ellipse cx="${r1(x)}" cy="${r1(yb - u)}" rx="${r1(rx)}" ry="${r1(ry)}" style="fill:color-mix(in srgb,${UC} 45%,#fff)" stroke="${INK}" stroke-width="1.2"/></g>`; }
+        s += line(x, y - H, x + rx, y - H, t + .3 * h, { w: 1.8 }) + M(x + rx / 2, y - H - 5, `r = ${r}`, { fs: 11, t: t + .3 * h }) + M(x + rx + 6, y - H / 2, `h = ${h}`, { fs: 11, a: 's', t: t + .3 * h });
+      } else {
+        s += `<g ${tt(t, 'a-fade')}><path d="M${r1(x - rx)},${r1(y)} A${r1(rx)},${r1(ry)} 0 0 0 ${r1(x + rx)},${r1(y)} V${r1(y - H)} M${r1(x - rx)},${r1(y)} V${r1(y - H)}" fill="none" stroke="${GRY}" stroke-width="1.6" stroke-dasharray="4 3"/><ellipse cx="${r1(x)}" cy="${r1(y - H)}" rx="${r1(rx)}" ry="${r1(ry)}" fill="none" stroke="${GRY}" stroke-width="1.6" stroke-dasharray="4 3"/></g>`;
+        s += `<g ${tt(t + .3, 'a-fade')}><path d="M${r1(x - rx)},${r1(y)} A${r1(rx)},${r1(ry)} 0 0 0 ${r1(x + rx)},${r1(y)} L${r1(x)},${r1(y - H)} Z" style="fill:${UC}" stroke="${INK}" stroke-width="1.6" stroke-linejoin="round"/><ellipse cx="${r1(x)}" cy="${r1(y)}" rx="${r1(rx)}" ry="${r1(ry)}" style="fill:color-mix(in srgb,${UC} 45%,#fff)" stroke="${INK}" stroke-width="1.4"/></g>`;
+        s += line(x, y, x + rx, y, t + .6, { w: 1.8 }) + M(x + rx / 2, y + ry + 12, `r = ${r}`, { fs: 11, t: t + .6 }) + line(x, y, x, y - H, t + .6, { col: RED, w: 1.8, dash: '3 3' }) + M(x + rx + 6, y - H / 2, `h = ${h}`, { fs: 11, a: 's', t: t + .6 });
+        if (fillT != null) s += chip(x, y - H - 16, '1/3 del cilindre', fillT, { fs: 11, st: 'y' });
+      }
+    } else if (k === 'sphere') {
+      const { r, u = 14 } = o, R = r * u;
+      s += `<g ${tt(t)}><circle cx="${x}" cy="${y}" r="${R}" style="fill:color-mix(in srgb,${UC} 55%,#fff)" stroke="${INK}" stroke-width="2"/><ellipse cx="${x}" cy="${y}" rx="${R}" ry="${r1(R * .3)}" fill="none" stroke="${INK}" stroke-width="1.3" stroke-dasharray="4 3"/><circle cx="${r1(x - R * .35)}" cy="${r1(y - R * .4)}" r="${r1(R * .18)}" fill="#fff" opacity=".6"/></g>`;
+      s += line(x, y, x + R, y, t + .3, { w: 1.8 }) + M(x + R / 2, y - 5, `r = ${r}`, { fs: 11, t: t + .3 });
+    } else if (k === 'semi') {
+      const { r, u = 14 } = o, R = r * u;
+      s += `<path d="M${x - R},${y} A${R},${R} 0 0 1 ${x + R},${y} Z" style="fill:${UC}" fill-opacity=".85" stroke="${INK}" stroke-width="2" ${tt(t, 'ae-gy')}/><path d="M${x - R},${y} A${R},${R} 0 0 0 ${x + R},${y}" fill="none" stroke="${GRY}" stroke-width="1.5" stroke-dasharray="4 3" ${tt(t, 'a-fade')}/>`;
+      s += line(x, y, x + R, y, t + .3, { w: 1.8, col: '#fff' }) + M(x + R / 2, y + 14, `r = ${r}`, { fs: 11, t: t + .3 });
+    } else if (k === 'net') {
+      // desenvolupament del cilindre: dues bases i un rectangle de 2πr × h
+      const { r, h, u = 9 } = o, R = r * u, W = 2 * Math.PI * r * u, H = h * u;
+      s += `<circle cx="${r1(x + W / 2)}" cy="${r1(y - H - R)}" r="${R}" style="fill:color-mix(in srgb,${UC} 45%,#fff)" stroke="${INK}" stroke-width="1.8" ${tt(t)}/><circle cx="${r1(x + W / 2)}" cy="${r1(y + R)}" r="${R}" style="fill:color-mix(in srgb,${UC} 45%,#fff)" stroke="${INK}" stroke-width="1.8" ${tt(t + .15)}/>`;
+      s += `<rect x="${r1(x)}" y="${r1(y - H)}" width="${r1(W)}" height="${r1(H)}" style="fill:${UC}" stroke="${INK}" stroke-width="1.8" ${tt(t + .5, 'a-grow')}/>`;
+      s += M(x + W / 2, y - H / 2 + 5, `2π × ${r} × ${h} = {y|${2 * r * h}π}`, { fs: 12.5, fill: '#fff', t: t + 1.1 }) + M(x + W / 2 + R + 6, y - H - R + 5, `π × ${r}^2 = ${r * r}π`, { fs: 11.5, a: 's', t: t + .3 }) + M(x + W / 2 + R + 6, y + R + 5, `${r * r}π`, { fs: 11.5, a: 's', t: t + .4 });
+      s += M(x + W / 2, y + 14, '', { fs: 11 }) + M(x - 6, y - H / 2 + 4, `h = ${h}`, { fs: 11, a: 'e', t: t + .6 });
+    }
+    return s;
+  };
+  Object.assign(SCN, {
+    eVol({ items, h, at }) {
+      let s = ''; items.forEach(o => { s += o.k === 'm' ? M(o.x, o.y, o.s, { fs: o.fs || 13, t: o.t, a: o.a || 'm' }) : o.k === 'chip' ? chip(o.x, o.y, o.s, o.t, { fs: o.fs || 13, st: o.st || 'o' }) : A.body(o); });
+      return { html: A.scene(h, s), at };
+    }
+  });
+})();
+
+/* ---------- més estadística, probabilitat i funcions ---------- */
+(() => {
+  const A = AE, { M, chip, chipW, rect, tt, inout, out, line, dot, mark, ic, mrow, UC, RED, GRN, INK, LN, GRY, YEL, nf, sg, r1 } = A;
+  Object.assign(SCN, {
+    // el valor que falta: el total ha de ser mitjana × nombre de dades
+    eMissing({ mean, n, have, at, lab = 'x' }) {
+      const T = mean * n, sum = have.reduce((a, b) => a + b, 0), miss = T - sum, x0 = 20, W = 280, u = W / T, cols = [UC, '#5FC98B', '#FF8FB1', '#36A9E1'];
+      let s = chip(160, 22, `${mean} × ${n} = {u|${T}}`, 1.0, { fs: 14 });
+      for (let i = 0; i < n; i++) s += `<rect x="${r1(x0 + i * mean * u + 1)}" y="44" width="${r1(mean * u - 2)}" height="24" rx="5" fill="#fff" stroke="${UC}" stroke-width="2" ${tt(.3 + .15 * i)}/>` + M(x0 + (i + .5) * mean * u, 61, String(mean), { fs: 13, fill: UC, t: .35 + .15 * i });
+      let x = x0;
+      have.forEach((v, i) => { s += `<rect x="${r1(x + 1)}" y="96" width="${r1(v * u - 2)}" height="28" rx="5" fill="${cols[i % 4]}" ${tt(1.8 + .3 * i, 'a-grow')}/>` + M(x + v * u / 2, 115, String(v), { fs: 14, fill: '#fff', t: 1.95 + .3 * i }); x += v * u; });
+      const ts = 1.9 + .3 * have.length;
+      s += `<g ${tt(ts, 'a-fade')}><path d="M${x0 + 1},128 q0,5 5,5 H${r1(x0 + sum * u / 2 - 5)} q5,0 5,5 q0,-5 5,-5 H${r1(x - 6)} q5,0 5,-5" fill="none" stroke="${INK}" stroke-width="2"/></g>` + M(x0 + sum * u / 2, 154, `${have.join(' + ')} = ${sum}`, { fs: 13, t: ts + .1 });
+      s += `<rect x="${r1(x + 1)}" y="96" width="${r1(miss * u - 2)}" height="28" rx="5" fill="${YEL}" stroke="${INK}" stroke-width="2" stroke-dasharray="5 3" ${tt(ts + .6, 'a-grow')}/>` + A.inout(ts + .7, ts + 1.4, M(x + miss * u / 2, 116, lab, { fs: 15 })) + M(x + miss * u / 2, 116, `{u|${miss}}`, { fs: 16, t: ts + 1.4 });
+      s += chip(x + miss * u / 2 - 10, 180, `${T} − ${sum} = {u|${miss}}`, ts + 1.4, { fs: 14, st: 'y' });
+      return { html: A.scene(196, s), at };
+    },
+    // dos daus: la taula de 36 casos
+    eDiceGrid({ steps, at, head = '6 × 6 = {u|36} casos', ht = 1.1 }) {
+      const c = 23, x0 = 36, y0 = 30; let s = head ? chip(236, 24, head, ht, { fs: 13 }) : '';
+      for (let i = 1; i <= 6; i++) s += M(x0 + (i - .5) * c, y0 - 8, String(i), { fs: 12, fill: UC, t: .1 }) + M(x0 - 9, y0 + (i - .5) * c + 4, String(i), { fs: 12, fill: '#B98900', t: .1 });
+      s += M(x0 + 3 * c, y0 - 22, '2n dau', { fs: 10, wt: 7, fill: GRY, t: .1 }) + `<g ${tt(.1, 'a-fade')}>${M(x0 - 22, y0 + 3 * c, '1r dau', { fs: 10, wt: 7, fill: GRY })}</g>`.replace('<text', `<text transform="rotate(-90 ${x0 - 22} ${y0 + 3 * c})"`);
+      for (let i = 1; i <= 6; i++) for (let j = 1; j <= 6; j++) s += `<g ${tt(.2 + .025 * (i * 6 + j), 'a-fade')}><rect x="${x0 + (j - 1) * c + 1}" y="${y0 + (i - 1) * c + 1}" width="${c - 2}" height="${c - 2}" rx="4" fill="#fff" stroke="${LN}" stroke-width="1.5"/>${M(x0 + (j - .5) * c, y0 + (i - .5) * c + 4, String(i + j), { fs: 10.5, wt: 7, fill: GRY })}</g>`;
+      const sets = { sum: v => (i, j) => i + j === v, no6: () => (i, j) => i < 6 && j < 6, has6: () => (i, j) => i === 6 || j === 6 };
+      steps.forEach(({ set, v, col, t, lab, ly, out: to }) => {
+        const f = sets[set](v); let g = '', k = 0;
+        for (let i = 1; i <= 6; i++) for (let j = 1; j <= 6; j++) if (f(i, j)) { g += `<g ${tt(t + .04 * k++)}><rect x="${x0 + (j - 1) * c + 1}" y="${y0 + (i - 1) * c + 1}" width="${c - 2}" height="${c - 2}" rx="4" fill="${col === 'y' ? YEL : col === 'r' ? RED : col === 'k' ? '#CFC6D8' : UC}"/>${M(x0 + (j - .5) * c, y0 + (i - .5) * c + 4, String(i + j), { fs: 10.5, wt: 8, fill: col === 'y' || col === 'k' ? INK : '#fff' })}</g>`; }
+        s += to != null ? out(to, g) : g;
+        if (lab) s += chip(236, ly, lab, t + .04 * k + .1, { fs: 13, st: col === 'y' ? 'y' : 'o' });
+      });
+      return { html: A.scene(y0 + 6 * c + 12, s), at };
+    },
+    // màquina de funcions: entra x, surt f(x)
+    eMachine({ f, runs, at }) {
+      const mx = 160, my = 58; let s = `<g ${tt(.1)}><rect x="${mx - 62}" y="${my - 30}" width="124" height="56" rx="14" fill="${UC}" stroke="${INK}" stroke-width="2.5"/><circle cx="${mx - 44}" cy="${my - 16}" r="5" fill="#fff" opacity=".5"/><circle cx="${mx + 44}" cy="${my + 14}" r="5" fill="#fff" opacity=".5"/>${M(mx, my + 7, `f(x) = ${f}`, { fs: 15, fill: '#fff' })}</g>`;
+      s += `<path d="M22,${my} H${mx - 62}" stroke="${LN}" stroke-width="3" stroke-dasharray="5 4" ${tt(.1, 'a-fade')}/><path d="M${mx + 62},${my} H298" stroke="${LN}" stroke-width="3" stroke-dasharray="5 4" ${tt(.1, 'a-fade')}/>`;
+      // taula
+      const tx = 116, ty = 130; s += `<g ${tt(.2, 'a-fade')}><rect x="${tx}" y="${ty - 20}" width="88" height="${24 + runs.length * 28}" rx="8" fill="#fff" stroke="${LN}" stroke-width="2"/><line x1="${tx + 44}" x2="${tx + 44}" y1="${ty - 20}" y2="${ty + 4 + runs.length * 28}" stroke="${LN}" stroke-width="2"/><line x1="${tx}" x2="${tx + 88}" y1="${ty + 4}" y2="${ty + 4}" stroke="${LN}" stroke-width="2"/>${M(tx + 22, ty - 2, 'x', { fs: 13, fill: GRY })}${M(tx + 66, ty - 2, 'f(x)', { fs: 13, fill: GRY })}</g>`;
+      runs.forEach((r, i) => {
+        const t = r.t, y = ty + 26 + i * 28;
+        s += A.inout(t, t + .9, `<g class="an a-move" style="--t:${t.toFixed(2)}s;--fx:-70px;--fy:0px">${chip(mx - 80, my + 5, nf(r.x), null, { fs: 15, st: 'y' })}</g>`, 'a-fade');
+        s += A.inout(t + .9, t + 2.1, M(mx, my + 44, r.calc, { fs: 13 }), 'a-fade');
+        const oc = `<g ${tt(t + 1.3, 'a-fade')}><g ${tt(t + 1.3, 'a-move', '--fx:-80px;--fy:0px')}>${chip(mx + 100, my + 5, sg(r.y), null, { fs: 15, st: 'f' })}</g></g>`;
+        s += runs[i + 1] ? out(runs[i + 1].t, oc) : oc;
+        s += M(tx + 22, y, sg(r.x), { fs: 15, t: t + .3 }) + M(tx + 66, y, `{u|${sg(r.y)}}`, { fs: 15, t: t + 1.6 });
+      });
+      return { html: A.scene(ty + 16 + runs.length * 28, s), at };
+    },
+    // gallines i conills: si tots fossin gallines, falten potes; cada conill en posa 2 més
+    eHeadsLegs({ heads, legs, a = 2, b = 4, ia = 'chick', ib = 'rabbit', at }) {
+      const y = (legs - a * heads) / (b - a), sz = 26, per = 10;
+      let s = '';
+      for (let i = 0; i < heads; i++) {
+        const cx = 160 + ((i % per) - (per - 1) / 2) * 29, cy = 30 + Math.floor(i / per) * 32, k = i >= heads - y;
+        s += k ? A.inout(.2 + .04 * i, 3.4 + .07 * (i - heads + y), ic(ia, cx, cy, sz), 'a-pop') + ic(ib, cx, cy, sz, 3.4 + .07 * (i - heads + y)) : ic(ia, cx, cy, sz, .2 + .04 * i);
+      }
+      s += chip(160, 106, `${heads} caps: si tots fossin gallines → ${heads} × ${a} = ${heads * a} potes`, 1.3, { fs: 11.5 });
+      s += chip(160, 136, `${legs} − ${heads * a} = {r|${legs - heads * a}} potes de més`, 2.1, { fs: 12.5 });
+      s += chip(160, 166, `cada conill en té ${b - a} més → ${legs - heads * a} ÷ ${b - a} = {u|${y}}`, 2.7, { fs: 12.5, st: 'y' });
+      s += chip(100, 200, `${heads - y} gallines`, 4.1, { fs: 13, st: 'o' }) + chip(222, 200, `${y} conills`, 4.2, { fs: 13, st: 'f' });
+      return { html: A.scene(214, s), at };
+    }
+  });
+})();
+
+/* ---------- polinomis, proporcions i rectangles ---------- */
+(() => {
+  const A = AE, { M, chip, rect, tt, inout, out, line, mrow, UC, RED, GRN, INK, LN, GRY, YEL, nf, r1 } = A;
+  const term = (c, k, first) => { if (c === 0) return first ? '0' : ''; const sgn = c < 0 ? '−' : first ? '' : '+', a = Math.abs(c), v = k === 0 ? String(a) : (a === 1 ? '' : a) + (k === 1 ? 'x' : 'x^' + k); return first ? sgn + v : sgn + ' ' + v; };
+  Object.assign(SCN, {
+    // polinomis en columnes: cada columna és un grau i només s'operen termes semblants
+    ePolyCols({ P, Q, ops = ['+'], names = ['P', 'Q'], at }) {
+      const n = P.length, cx = [128, 196, 262], deg = i => n - 1 - i;
+      let s = '';
+      cx.slice(0, n).forEach((x, i) => { s += `<rect x="${x - 32}" y="8" width="64" height="${ops.length > 1 ? 206 : 128}" rx="10" fill="${i % 2 ? YEL : UC}" fill-opacity=".1" ${tt(.05, 'a-fade')}/>` + M(x, 22, deg(i) ? (deg(i) === 1 ? 'x' : 'x^' + deg(i)) : 'nombres', { fs: 11, wt: 7, fill: GRY, t: .05 }); });
+      const row = (cs, y, t, lab, col, per) => { let r = M(58, y, lab, { fs: 15, a: 'e', t, fill: GRY }); cs.forEach((c, i) => { r += M(cx[i], y, `{${col}|${term(c, deg(i), i === 0)}}`, { fs: 17, t: per ? t + .25 * i : t }); }); return r; };
+      s += row(P, 48, .2, names[0] + ' =', 'p') + row(Q, 76, 1.0, names[1] + ' =', 'p');
+      s += line(70, 88, 296, 88, 1.8, { w: 2 }) + M(58, 76, ops[0], { fs: 15, t: 1.8, a: 's' }).replace(/x="58"/, 'x="22"');
+      const S = P.map((c, i) => c + Q[i]);
+      s += row(S, 112, 2.2, names[0] + ' ' + ops[0] + ' ' + names[1] + ' =', 'u', true);
+      if (ops[1]) {
+        const nQ = Q.map(c => -c), D = P.map((c, i) => c - Q[i]);
+        s += row(nQ, 152, 3.4, '−' + names[1] + ' =', 'r', true) + M(170, 138, `restar ${names[1]} = sumar el seu oposat`, { fs: 10.5, wt: 7, fill: RED, t: 3.4 });
+        s += line(70, 164, 296, 164, 4.3, { w: 2 }) + row(D, 190, 4.5, names[0] + ' − ' + names[1] + ' =', 'u', true);
+      }
+      return { html: A.scene(ops[1] ? 204 : 126, s), at };
+    },
+    // directa: el doble i el doble; inversa: rectangles amb la mateixa àrea
+    eDirInv({ d, inv, du = ['kg', '€'], iu = ['aixetes', 'h'], at }) {
+      let s = '';
+      // directa: dues barres que es dupliquen
+      const bu = 11;
+      d.forEach(([k, e], i) => {
+        const y = 22 + i * 34, t = .2 + .7 * i;
+        s += `<rect x="20" y="${y}" width="${k * bu}" height="13" rx="4" fill="${UC}" ${tt(t, 'a-grow')}/>` + M(24 + k * bu, y + 11, `${k} ${du[0]}`, { fs: 12, a: 's', t: t + .1 });
+        s += `<rect x="20" y="${y + 15}" width="${e * bu}" height="13" rx="4" fill="${YEL}" ${tt(t + .2, 'a-grow')}/>` + M(24 + e * bu, y + 26, `${e} ${du[1]}`, { fs: 12, a: 's', t: t + .3 });
+      });
+      s += chip(250, 46, '{u|×2} i {u|×2}', 1.4, { fs: 13 }) + chip(250, 76, 'directa', 1.7, { fs: 14, st: 'f' });
+      // inversa: aixetes × hores = sempre la mateixa feina
+      const u = 11, y0 = 208;
+      inv.forEach(([a, h], i) => {
+        const x = 20 + i * 100, t = 2.5 + .7 * i;
+        let g = `<rect x="${x}" y="${y0 - h * u}" width="${a * u}" height="${h * u}" fill="${i ? '#5FC98B' : UC}" stroke="${INK}" stroke-width="2"/>`;
+        for (let p = 1; p < a; p++) g += `<line x1="${x + p * u}" x2="${x + p * u}" y1="${y0 - h * u}" y2="${y0}" stroke="#fff" stroke-width="1"/>`;
+        for (let q = 1; q < h; q++) g += `<line x1="${x}" x2="${x + a * u}" y1="${y0 - q * u}" y2="${y0 - q * u}" stroke="#fff" stroke-width="1"/>`;
+        s += `<g ${tt(t, 'ae-gy')}>${g}</g>` + M(x + a * u + 6, y0 - h * u / 2 + 4, `${h} ${iu[1]}`, { fs: 12, a: 's', t: t + .2 }) + M(x + a * u / 2, y0 - h * u - 6, `${a} ${iu[0]}`, { fs: 11, wt: 7, fill: GRY, t: t + .2 });
+      });
+      s += chip(250, 150, `${inv[0][0]} × ${inv[0][1]} = ${inv[1][0]} × ${inv[1][1]}`, 3.6, { fs: 13 }) + chip(250, 182, 'inversa', 3.9, { fs: 14, st: 'f' });
+      return { html: A.scene(214, s), at };
+    },
+    // proporcionalitat inversa: rectangles velocitat × temps amb la mateixa àrea (la distància)
+    eRectArea({ r1: R1, r2: R2, sx, sy, hu, wu, au, at }) {
+      const y0 = 190; let s = '';
+      [R1, R2].forEach(([h, w], i) => {
+        const x = i ? 44 + R1[1] * sx + 40 : 44, t = i ? 2.4 : .2, W = w * sx, H = h * sy;
+        s += `<rect x="${x}" y="${r1(y0 - H)}" width="${r1(W)}" height="${r1(H)}" rx="4" fill="${i ? YEL : UC}" stroke="${INK}" stroke-width="2" ${tt(t, i ? 'a-grow' : 'ae-gy')}/>`;
+        s += M(x - 6, y0 - H / 2 + 4, `${h}`, { fs: 13, a: 'e', t: t + .2 }) + M(x - 6, y0 - H / 2 + 17, hu, { fs: 9.5, wt: 7, fill: GRY, a: 'e', t: t + .2 });
+        s += i ? A.inout(t + .2, t + 1.1, M(x + W / 2, y0 + 17, '?', { fs: 15, fill: RED })) + M(x + W / 2, y0 + 17, `{u|${w} ${wu}}`, { fs: 14, t: t + 1.1 }) : M(x + W / 2, y0 + 17, `${w} ${wu}`, { fs: 14, t: t + .2 });
+        for (let k = 1; k < w; k++) s += `<line x1="${r1(x + k * sx)}" x2="${r1(x + k * sx)}" y1="${r1(y0 - H)}" y2="${y0}" stroke="#fff" stroke-width="1.5" stroke-dasharray="3 3" ${tt(t + .5, 'a-fade')}/>`;
+        s += M(x + W / 2, y0 - H / 2 + 5, `${h * w} ${au}`, { fs: 14, fill: i ? INK : '#fff', t: i ? t + .8 : 1.4 });
+      });
+      s += chip(160, 22, `${R1[0]} × ${R1[1]} = ${R1[0] * R1[1]} ${au}`, 1.5, { fs: 13, st: 'y' });
+      return { html: A.scene(212, s), at };
     }
   });
 })();
@@ -1068,6 +1322,166 @@ Object.assign(TANIM, {
     ] },
     { k: 'eDice', fav: [2, 4, 6], at: [.5, 2.2, 3.7] },
     { k: 'eCoinTree', at: [1.7, 2.6, 3.8], hl: [{ leaves: [0], t: 2.3, lab: '[1/4]' }, { leaves: [1, 2], t: 3.4, lab: '[2/4] = [1/2]' }] }
+  ],
+  'c8-1': [
+    { k: 'eRows', h: 214, fs: 19, rows: [
+      { s: '5 − 3 × {b|(2 − 6)}', x: 60, a: 's', y: 36, t: .2, br: [[0, 0, '1r: {r|−4}', .9]] },
+      { s: '5 − {p|3 ×} {u|(−4)}', x: 60, a: 's', y: 118, t: 1.6, g: { 1: { from: 'B0.0' } }, br: [[0, 1, '2n: {r|−12}', 2.3]] },
+      { s: '5 − {u|(−12)}', x: 60, a: 's', y: 198, t: 3.0, g: { 0: { from: 'B1.0' } } },
+      { s: '= 5 + 12 = {y|17}', after: 2, t: 3.6 }
+    ], at: [.3, 1.1, 2.5, 3.9] },
+    { k: 'eRows', h: 222, fs: 19, rows: [
+      { s: '{p|(−3)}{p|(−3)} = {y|9}', y: 36, t: .2, g: { 2: { t: 1.2 } }, br: [[0, 1, '{g|+9}', .8]] },
+      { s: '{p|(−2)}{p|(−2)}{p|(−2)} = {y|−8}', y: 108, t: 1.9, g: { 3: { t: 3.1 } }, br: [[0, 1, '{g|+4}', 2.4], [2, 2, '{r|−2}', 2.7, '#E4574B']] },
+      { s: '{r|−}({b|3 × 3}) = {y|−9}', y: 180, t: 3.8, g: { 2: { t: 4.6 } }, br: [[1, 1, 'només el 3 va al quadrat', 4.2]] }
+    ], at: [1.3, 3.2, 4.7] },
+    { k: 'eRows', h: 222, rows: [], add: [
+      { p: 'm', x: 160, y: 22, s: '[2/3] − {u|[1/2] × [4/5]}', fs: 18, t: .1 },
+      { p: 'farea', x: 70, y: 66, w: 120, h: 48, fr: [1, 2], fc: [4, 5], t: .5, lab: '= [4/10] = {u|[2/5]}', labT: 2.2 },
+      { p: 'fbar', x: 84, y: 130, w: 216, d: 3, n: 2, t: 3.0, lab: '[2/3]', sub: 15, st: 3.6, lab2: '[10/15]' },
+      { p: 'fbar', x: 84, y: 164, w: 216, d: 5, n: 2, col: '#E4574B', t: 3.2, lab: '[2/5]', sub: 15, st: 3.8, lab2: '[6/15]' },
+      { p: 'fseg', x: 84, y: 198, w: 216, d: 15, t: 4.6, segs: [[0, 10, 'u', 4.7]], cross: [4, 6, 5.2], lab: '[4/15]', labT: 6 }
+    ], at: [.3, 2.3, 4.0, 6.1] },
+    { k: 'eRows', h: 214, fs: 19, rows: [
+      { s: '(−[2/3])^3 = {r|−}[8/27]', y: 40, t: .2, g: { 0: { t: .8 } } },
+      { s: '(−[1/2])^2 × 8 − 3', y: 100, t: 1.6 },
+      { s: '= {u|[1/4]} × 8 − 3', y: 152, t: 2.6 },
+      { s: '= {u|2} − 3 = {y|−1}', y: 202, t: 3.6 }
+    ], add: [
+      { p: 'chip', x: 270, y: 40, s: 'senar → −', t: 1.0, fs: 11.5, st: 'r' },
+      { p: 'chip', x: 270, y: 100, s: 'parell → +', t: 2.0, fs: 11.5, st: 'g' }
+    ], at: [1.0, 1.8, 2.8, 3.9] }
+  ],
+  'c8-2': [
+    { k: 'eFactors', h: 226, at: [1.9, 3.8, 6.0], items: [
+      { k: 'mul', b: 2, m: 3, n: 4, y: 34, x: 140, t: .2, w: 18, res: '= 2^7 = {u|128}', nobr: true },
+      { k: 'div', b: 5, m: 6, n: 4, y: 104, x: 120, t: 2.0, res: '= 5^2 = {u|25}' },
+      { k: 'pow', b: 3, m: 2, n: 3, y: 180, x: 124, t: 4.3, w: 20, res: '= 3^6 = {u|729}' }
+    ] },
+    { k: 'eFactors', h: 226, at: [1.9, 3.9, 4.4, 5.4], items: [
+      { k: 'div', b: 2, m: 3, n: 3, y: 40, x: 150, t: .2, res: '= 2^0 = {y|1}', lab: '2^3 ÷ 2^3' },
+      { k: 'div', b: 2, m: 2, n: 5, y: 120, x: 150, t: 2.2, res: '= 2^{−3}', lab: '2^2 ÷ 2^5' },
+      { k: 'row', s: '2^{−3} = [1/2^3] = {y|[1/8]}', x: 250, y: 186, t: 4.2, fs: 15 },
+      { k: 'row', s: '10^{−2} = [1/10^2] = [1/100] = {y|0,01}', x: 160, y: 218, t: 5.2, fs: 15 }
+    ] },
+    { k: 'eRows', h: 212, rows: [], at: [.3, 1.6, 2.9, 4.9], add: [
+      { p: 'svg', s: '<image href="img/ic/sun.webp" x="18" y="10" width="30" height="30"/>' },
+      { p: 'm', x: 56, y: 30, s: 'Terra–Sol', fs: 13, a: 's', fill: '#8E829A', t: .1 },
+      { p: 'sci', m: '15', e: 8, dir: 'in', x: 160, y: 72, t: .5, res: '= {u|1,5 × 10^8} km', resY: 108 },
+      { p: 'sci', m: '32', e: -4, dir: 'in', x: 160, y: 164, t: 3.3, res: '= {u|3,2 × 10^{−4}}', resY: 200 }
+    ] },
+    { k: 'eRows', h: 226, rows: [
+      { s: '12^2 = 144 → √144 = {u|12}', x: 196, y: 130, t: 2.8, fs: 15 },
+      { s: '7^2 = 49 < {y|50} < 64 = 8^2', x: 196, y: 166, t: 3.7, fs: 14 }
+    ], add: [
+      { p: 'sci', m: '32', e: 4, dir: 'out', x: 86, y: 34, t: .2, fs: 20, res: '= {u|32.000}', resX: 232, resY: 34 },
+      { p: 'sci', m: '7', e: -3, dir: 'out', x: 86, y: 84, t: 1.4, fs: 20, res: '= {u|0,007}', resX: 232, resY: 84 },
+      { p: 'sq', x: 24, y: 104, c: 4.5, n: 12, t: 2.6, side: '12' },
+      { p: 'nl', x0: 40, x1: 290, y: 204, a: 7, b: 8, tick: .1, lab: 1, t: 4.1, big: [7, 8], pts: [[7.0711, 4.5, {}, '√50 ≈ 7,07', { st: 'y' }]] }
+    ], at: [1.3, 2.5, 3.1, 4.0, 4.7] }
+  ],
+  'c8-3': [
+    { k: 'eDirInv', d: [[3, 6], [6, 12]], inv: [[2, 6], [4, 3]], at: [.9, 1.8, 3.2, 4.1] },
+    { k: 'eRectArea', r1: [60, 3], r2: [90, 2], sx: 44, sy: 1.5, hu: 'km/h', wu: 'h', au: 'km', at: [.7, 1.6, 3.6] },
+    { k: 'ePct', max: 44, W: 220, h: 200, at: [.4, 1.7, 2.4, 4.3], items: [
+      { k: 'down', y: 38, base: 40, pct: 20, t: .2, lab: 'jaqueta de 40 €', idx: '× 0,80' },
+      { k: 'rev', y: 116, fin: 32, pct: 80, t: 2.2 }
+    ] },
+    { k: 'eShare', total: 90, parts: [2, 3, 4], at: [.4, 1.2, 2.0, 3.8] }
+  ],
+  'c8-4': [
+    { k: 'eRows', h: 222, fs: 19, rows: [
+      { s: '{u|3}({p|x} {p|+ 2})', x: 44, a: 's', y: 44, t: .2, arcs: [[0, 1, .6, '', 14], [0, 2, .8, '', 18]] },
+      { s: '= {u|3x} {u|+ 6}', after: 0, t: 1.2, g: { 0: { from: '0.1' }, 1: { from: '0.2' } } },
+      { s: '{u|−2}({p|x} {p|− 5})', x: 44, a: 's', y: 104, t: 1.9, arcs: [[0, 1, 2.2, '', 14], [0, 2, 2.4, '', 18]] },
+      { s: '= {u|−2x} {g|+ 10}', after: 2, t: 2.8, g: { 0: { from: '2.1' }, 1: { from: '2.2' } } },
+      { s: '4 {u|−}({p|x} {p|− 3})', x: 44, a: 's', y: 164, t: 3.5, arcs: [[0, 1, 3.8, '', 14], [0, 2, 4.0, '', 18]] },
+      { s: '= 4 {r|− x} {g|+ 3}', after: 4, t: 4.4, g: { 0: { from: '4.1' }, 1: { from: '4.2' } } },
+      { s: '= {y|7 − x}', x: 160, a: 's', y: 210, t: 5.2 }
+    ], at: [1.4, 3.0, 4.6, 5.4] },
+    { k: 'eRows', h: 186, fs: 19, rows: [
+      { s: '{f|x = −1}', x: 62, y: 36, t: .2 },
+      { s: '2{b|x}^2 − 3{b|x}', x: 204, y: 36, t: .2 },
+      { s: '2 × {u|(−1)}^2 − 3 × {u|(−1)}', y: 100, t: 1.0, g: { 0: { from: '0.0' }, 1: { from: '0.0' } }, br: [[0, 0, '= 1', 1.8], [1, 1, '−3 × (−1) = +3', 2.1]] },
+      { s: '= 2 × 1 {g|+ 3} = {y|5}', y: 176, t: 2.8 }
+    ], at: [.3, 1.3, 3.0] },
+    { k: 'eBalance', h: 204, at: [.4, 1.7, 4.3, 5.6], phases: [
+      { t0: .2, dur: 1.3, eqs: ['3(x − 2) = x + 8', '3x − 6 = x + 8', '2x − 6 = 8', '2x = 14', 'x = {u|7}'],
+        states: [{ L: { x: 3, n: 6 }, R: { x: 1, u: 8 } }, { L: { x: 3, n: 6 }, R: { x: 1, u: 8 } }, { L: { x: 2, n: 6 }, R: { u: 8 } }, { L: { x: 2 }, R: { u: 14 } }, { L: { x: 1 }, R: { u: 7 } }],
+        steps: [{ op: 'none', lab: 'treiem el parèntesi' }, { op: 'rm', x: 1, lab: '−x als dos costats' }, { op: 'add', u: 6, lab: '+6 als dos costats' }, { op: 'div', d: 2, lab: '÷ 2' }] }
+    ] },
+    { k: 'ePolyCols', P: [3, 2, -1], Q: [1, -5, 4], ops: ['+', '−'], at: [.4, 1.2, 3.0, 5.2] }
+  ],
+  'c8-5': [
+    { k: 'ePlane', x0: 36, y0: 12, xr: [0, 10], yr: [-2, 10], ux: 20, uy: 15, grid: 1, lx: 2, ly: 2, h: 208, at: [1.3, 2.3, 3.5], items: [
+      { k: 'line', m: -1, n: 10, t: .3 }, { k: 'chip', x: 1.6, y: 9.6, s: 'x + y = 10', t: .6, fs: 11.5 },
+      { k: 'line', m: 1, n: -2, t: .8, col: 'y' }, { k: 'chip', x: 8.6, y: 8.2, s: 'x − y = 2', t: 1.1, fs: 11.5, st: 'y' },
+      { k: 'pt', x: 6, y: 4, t: 1.8, lab: '(6, 4)', lp: 'e', r: 6.5 }, { k: 'mark', x: 6, y: 4, ok: true, t: 2.2, dx: 0, dy: -18 },
+      { k: 'pt', x: 7, y: 3, t: 3.0, lab: '(7, 3)', lp: 'e', col: 'r', open: true }, { k: 'mark', x: 7, y: 3, ok: false, t: 3.4, dx: 0, dy: 20 }
+    ] },
+    { k: 'ePlane', x0: 200, y0: 16, xr: [0, 20], yr: [0, 20], u: 5.4, grid: 5, lx: 10, ly: 10, fs: 9.5, h: 196, at: [.3, 1.1, 2.4, 3.4], items: [
+      { k: 'line', m: -1, n: 20, t: 1.0 }, { k: 'line', m: 1, n: -6, t: 1.3, col: 'y' },
+      { k: 'vline', x: 13, t: 2.4, col: 'r' }, { k: 'pt', x: 13, y: 7, t: 3.3, lab: '(13, 7)', lp: 'n', r: 6 }
+    ], rows: [
+      { s: 'x {g|+ y} = 20', x: 20, a: 's', y: 40, t: .6, st: { 0: 1.7 } },
+      { s: 'x {r|− y} = 6', x: 20, a: 's', y: 74, t: .9, st: { 0: 1.7 } },
+      { s: '2x = 26 → x = {u|13}', x: 20, a: 's', y: 124, t: 1.9 },
+      { s: 'y = 20 − 13 = {y|7}', x: 20, a: 's', y: 170, t: 3.0 }
+    ] },
+    { k: 'ePlane', x0: 206, y0: 26, xr: [0, 6], yr: [0, 5], u: 17, lx: 1, ly: 1, h: 212, at: [.3, 1.3, 2.4, 3.4, 4.3], items: [
+      { k: 'line', m: -2 / 3, n: 4, t: .5 }, { k: 'line', m: -1, n: 5, t: .8, col: 'y' }, { k: 'pt', x: 3, y: 2, t: 4.1, lab: '(3, 2)', lp: 'n' }
+    ], rows: [
+      { s: '2x + 3y = 12', x: 16, a: 's', y: 34, t: .2 },
+      { s: 'x + y = 5', x: 16, a: 's', y: 64, t: .3 },
+      { s: '{u|2x + 2y = 10}', x: 16, a: 's', y: 102, t: 1.1 },
+      { s: 'restem: {u|y = 2}', x: 16, a: 's', y: 144, t: 2.2 },
+      { s: 'x + 2 = 5 → {u|x = 3}', x: 16, a: 's', y: 184, t: 3.2 }
+    ] },
+    { k: 'eHeadsLegs', heads: 20, legs: 56, at: [.5, 1.4, 2.9, 4.4] }
+  ],
+  'c8-6': [
+    { k: 'ePlane', x0: 36, y0: 16, xr: [-5, 5], yr: [-3, 3], u: 24, h: 184, at: [1.4, 2.6, 3.2], items: [
+      { k: 'pt', x: 3, y: -2, t: 1.2, walk: true, lab: 'A(3, −2)', lp: 'w' },
+      { k: 'pt', x: -4, y: 1, t: 2.4, walk: true, lab: 'B(−4, 1)', lp: 'n', col: 'y' },
+      { k: 'quad', q: 4, t: 2.9, lab: '4t' }, { k: 'quad', q: 2, t: 3.1, lab: '2n', col: 'y' }
+    ] },
+    { k: 'eMachine', f: '3x − 2', runs: [{ x: 4, calc: '3 × 4 − 2 = 10', y: 10, t: .6 }, { x: -1, calc: '3 × (−1) − 2 = −5', y: -5, t: 2.8 }], at: [.3, 2.3, 4.5] },
+    { k: 'ePlane', x0: 36, y0: 14, xr: [-1, 5], yr: [-1, 10], u: 17, lx: 1, ly: 2, h: 214, at: [.7, 2.0, 2.9, 4.5], items: [
+      { k: 'pt', x: 1, y: 3, t: .3, lab: '(1, 3)', lp: 'e' }, { k: 'pt', x: 4, y: 9, t: .5, lab: '(4, 9)', lp: 'e' },
+      { k: 'slope', p: [1, 3], run: 3, rise: 6, t: 1.0, steps: true },
+      { k: 'line', m: 2, n: 1, t: 2.4, w: 2.5 },
+      { k: 'cm', px: 250, py: 60, s: 'puja 6, avança 3', t: 1.9, fs: 12 }, { k: 'cm', px: 250, py: 92, s: 'm = 6 ÷ 3 = {u|2}', t: 2.6, fs: 13, st: 'y' },
+      { k: 'line', m: -2, n: 5, t: 3.4, col: 'r', w: 2.5 }, { k: 'pt', x: 0, y: 5, t: 4.0, col: 'r', lab: 'n = 5', lp: 'w' },
+      { k: 'cm', px: 250, py: 150, s: 'y = −2x + 5', t: 3.6, fs: 12.5, st: 'r' }, { k: 'cm', px: 250, py: 180, s: 'm = −2: baixa', t: 4.2, fs: 12 }
+    ] },
+    { k: 'ePlane', x0: 176, y0: 14, xr: [-2, 4], yr: [-4, 6], u: 16, lx: 1, ly: 2, h: 222, at: [.4, 2.4, 3.6, 4.8], items: [
+      { k: 'table', px: 30, py: 14, head: ['x', 'y'], rows: [[-1, -3], [0, -1], [1, 1], [2, 3]], t: .6, dt: .35 },
+      { k: 'pt', x: -1, y: -3, t: 1.0 }, { k: 'pt', x: 0, y: -1, t: 1.35 }, { k: 'pt', x: 1, y: 1, t: 1.7 }, { k: 'pt', x: 2, y: 3, t: 2.05 },
+      { k: 'line', m: 2, n: -1, t: 2.3 }, { k: 'chip', x: 0.2, y: 5.2, s: 'y = 2x − 1', t: 2.5, fs: 11.5 },
+      { k: 'pt', x: 3, y: 5, t: 3.3, col: 'g' }, { k: 'cm', px: 80, py: 170, s: '(3, 5): 2·3 − 1 = 5', t: 3.4, fs: 12 }, { k: 'mk', px: 152, py: 165, ok: true, t: 3.6 },
+      { k: 'pt', x: 2, y: 4, t: 4.5, col: 'r', open: true }, { k: 'cm', px: 80, py: 204, s: '(2, 4): 2·2 − 1 = 3', t: 4.6, fs: 12 }, { k: 'mk', px: 152, py: 199, ok: false, t: 4.8 }
+    ] }
+  ],
+  'c8-7': [
+    { k: 'ePyth', a: 6, b: 8 },
+    { k: 'eLadder', L: 13, d: 5, h: 12 },
+    { k: 'eShadow', pole: 2, ps: 3, ts: 12 },
+    { k: 'eVol', h: 196, at: [.6, 2.2, 3.0, 4.3, 5.0], items: [
+      { k: 'prism', a: 4, b: 5, c: 3, x: 80, y: 150, u: 13, t: .3 },
+      { k: 'chip', x: 80, y: 186, s: '20 × 3 = {u|60} cm³', t: 2.0, fs: 13 },
+      { k: 'cyl', r: 2, h: 5, x: 236, y: 150, u: 17, t: 2.9 },
+      { k: 'chip', x: 236, y: 186, s: '3,14 × 4 × 5 ≈ {u|62,8}', t: 4.5, fs: 12.5 }
+    ] }
+  ],
+  'c8-8': [
+    { k: 'eBarsStats', data: [7, 2, 9, 4, 12, 6], max: 12, tm: 1.4, ts: 2.6, tmed: 3.8, meanLab: '≈ 6,67', medLab: 'Me = 6,5', at: [.9, 1.6, 3.2, 4.1] },
+    { k: 'eMissing', mean: 7, n: 4, have: [6, 8, 5], at: [.4, 1.2, 2.9, 3.9] },
+    { k: 'eCoinTree', legend: true, at: [.4, 1.7, 2.6, 3.5], hl: [{ leaves: [1, 2], t: 2.3, lab: '2 de 4' }, { leaves: [1, 2], t: 3.2, lab: 'P = [2/4] = [1/2]' }] },
+    { k: 'eDiceGrid', at: [1.3, 2.6, 3.4, 4.5], steps: [
+      { set: 'sum', v: 7, t: 1.8, lab: 'suma 7: {u|6}', ly: 60 },
+      { set: 'sum', v: 7, t: 3.2, col: 'u', lab: '[6/36] = {u|[1/6]}', ly: 100 },
+      { set: 'sum', v: 12, t: 4.2, col: 'y', lab: 'suma 12: [1/36]', ly: 146 }
+    ] }
   ]
 });
 /* @@END */
