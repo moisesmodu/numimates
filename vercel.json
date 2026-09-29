@@ -46,5 +46,11 @@
         }
       ]
     }
+  ],
+  "rewrites": [
+    {
+      "source": "/families",
+      "destination": "/families.html"
+    }
   ]
 }

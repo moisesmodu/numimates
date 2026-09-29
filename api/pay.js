@@ -70,8 +70,8 @@ async function checkout(req, res) {
     custom_text: { submit: { message: b.lang === 'es'
       ? 'Se renueva automáticamente y puedes cancelarlo cuando quieras. Condiciones: numimates.com/condicions'
       : "Es renova automàticament i el pots cancel·lar quan vulguis. Condicions: numimates.com/condicions" } },
-    success_url: origin + '/?premium=ok',
-    cancel_url: origin + '/?premium=cancel'
+    success_url: origin + (b.ret === 'families' ? '/families?premium=ok' : '/?premium=ok'),
+    cancel_url: origin + (b.ret === 'families' ? '/families?premium=cancel' : '/?premium=cancel')
   });
   await note(req, 'pagament'); // màxim 20 pagaments començats per hora i IP
   return ok(res, { url: s.url });

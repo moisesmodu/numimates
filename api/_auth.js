@@ -9,6 +9,9 @@ const same = (a, b) => { const x = Buffer.from(String(a)), y = Buffer.from(Strin
 const b64 = s => Buffer.from(s).toString('base64url');
 const sign = s => createHmac('sha256', process.env.SESSION_SECRET || '').update(s).digest('base64url');
 export function makeToken(d) { const p = b64(JSON.stringify({ id: d.id, exp: Date.now() + 12 * 3600e3 })); return p + '.' + sign(p); }
+// sessió de la zona de famílies (60 dies): només identifica la família; no dona accés al panell
+export function famToken(id) { const p = b64(JSON.stringify({ fam: id, exp: Date.now() + 60 * 864e5 })); return p + '.' + sign(p); }
+export function famOf(t) { const d = readToken(t); return d && Number.isInteger(d.fam) ? d.fam : null; }
 export function adminToken() { const p = b64(JSON.stringify({ adm: 1, exp: Date.now() + 8 * 3600e3 })); return p + '.' + sign(p); }
 // comprova la contrasenya d'administrador amb límit d'intents
 export async function adminPass(req, p) {
@@ -24,7 +27,7 @@ function readToken(t) {
 export async function who(req) {
   const pp = req.headers['x-profe'];
   if (pp) return (await adminPass(req, pp)) ? { admin: true } : null;
-  const d = readToken(req.headers['x-docent']); if (!d) return null;
+  const d = readToken(req.headers['x-docent']); if (!d || d.fam) return null;
   if (d.adm === 1) return { admin: true };
   const r = (await sql`SELECT d.id, d.nom, d.email, d.rol, d.centre_id, c.nom AS centre FROM mates.docents d LEFT JOIN mates.centres c ON c.id = d.centre_id WHERE d.id = ${d.id} AND d.actiu`)[0];
   return !r ? null : r.rol === 'admin' ? { admin: true, docent: r } : { docent: r };

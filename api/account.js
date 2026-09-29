@@ -1,7 +1,10 @@
 import { sql, body, cleanCode, cleanUser, validUser, validPass, hashPass, checkPass, ok, blocked, fail, tooMany } from './_lib.js';
+import familia from './_familia.js';
 // Crea o canvia l'usuari i la contrasenya d'un alumne (el codi fa de clau) · o comprova si un usuari està lliure.
 // Si l'alumne ja té contrasenya, per canviar-la cal la contrasenya actual (o que la canviï el docent des del panell).
 export default async function handler(req, res) {
+  // zona de famílies (va aquí per no passar de les 12 funcions del pla Hobby de Vercel)
+  if (req.query && req.query.f) return familia(req, res);
   if (req.method !== 'POST') return ok(res, { error: 'method' }, 405);
   const b = body(req), user = cleanUser(b.username);
   if (b.check) return ok(res, { free: validUser(user) && !(await sql`SELECT 1 FROM mates.alumnes WHERE username = ${user}`).length });
