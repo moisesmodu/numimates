@@ -131,7 +131,7 @@ export default async function handler(req, res) {
   // --- panell de control de l'administrador: tots els usuaris (també els de baixa), plans i cobraments ---
   if (me.admin && req.query && req.query.v === 'usuaris') {
     const users = await sql`SELECT a.code, a.username, a.name, a.course, a.xp, a.lessons, a.answers, a.correct, a.streak, a.last_day, a.created_at, a.active, a.grup_id,
-      a.pla, a.pla_fins, a.pla_periode, a.stripe_status, a.pla_cancel, a.pla_des, a.stripe_customer, (a.stripe_sub IS NOT NULL) AS stripe, a.survey->>'curs' AS curs, to_jsonb(a)->>'variant' AS variant, g.nom AS grup, c.nom AS centre
+      a.pla, a.pla_fins, a.pla_periode, a.stripe_status, a.pla_cancel, a.pla_des, a.stripe_customer, (a.stripe_sub IS NOT NULL) AS stripe, a.survey->>'curs' AS curs, CASE WHEN a.state->>'variant' = 'ment' THEN 'ment' WHEN a.state->>'variant' = 'pro' OR COALESCE((a.state->>'maxCourse')::numeric, a.course, 0) >= 6 THEN 'pro' ELSE 'mates' END AS variant, g.nom AS grup, c.nom AS centre
       FROM mates.alumnes a LEFT JOIN mates.grups g ON g.id = a.grup_id LEFT JOIN mates.centres c ON c.id = g.centre_id ORDER BY a.created_at DESC`;
     let cobrat = null;
     if (STRIPE_KEY) {

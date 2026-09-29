@@ -49,6 +49,7 @@ function migrate(p) {
 }
 Object.values(DB.profiles).forEach(migrate);
 let P = DB.current && DB.profiles[DB.current] || null;
+setVariant(varOf(P));
 function setLang(l, rerender = true) {
   LANG = l; document.documentElement.lang = l; DB.lang = l;
   if (P && P.id !== 'tmp') { P.lang = l; save(); } else saveLocal();
@@ -305,6 +306,7 @@ function go(v) {
   if ((v === 'battles' || v === 'season') && !isPremium()) { premiumModal(v === 'battles' ? 'batalles' : 'temporada'); v = VIEW && VIEW !== v ? VIEW : 'home'; if (v === VIEW) return; }
   if ((v === 'battles' && classOff('batalles'))) { toast(L("El teu docent ha desactivat les batalles per a la classe.", 'Tu docente ha desactivado las batallas para la clase.')); v = 'train'; }
   VIEW = v;
+  if (v !== 'onboard') setVariant(varOf(P));
   ({ home: renderHome, train: renderTrain, album: () => renderAlbum(), shop: renderShop, badges: () => renderAlbum('medals'), profile: renderProfile, profiles: renderProfiles, battles: () => renderBattles(), season: () => renderSeason(), onboard: () => onb(0) }[v] || renderHome)();
   if (v !== 'home') window.scrollTo(0, 0);
   else { setTimeout(classeLink, 500); setTimeout(payReturn, 400); }
@@ -1413,6 +1415,7 @@ function onbShell(step, inner, back = true) {
 }
 function onb(step) {
   VIEW = 'onboard';
+  setVariant(step >= 2 && ONB.variant ? ONB.variant : 'mates');
   if (step === 0) {
     onbShell(0, `<img class="onb-logo" src="${VAR.logo}" alt="${VAR.name}"><div class="onb-char tapme">${charSVG('numi', 'happy')}</div>
       <div class="bubble big">${L("Hola! Soc en <b>Numi</b>. T'acompanyaré pas a pas perquè les mates et surtin rodones. <b>Com et dius?</b>", '¡Hola! Soy <b>Numi</b>. Te acompañaré paso a paso para que las mates te salgan redondas. <b>¿Cómo te llamas?</b>')}</div>
@@ -1422,7 +1425,7 @@ function onb(step) {
     const i = $('#nm'); i.addEventListener('keydown', e => { if (e.key === 'Enter') onbName(); });
   }
   if (step === 1) onbShell(1, `<div class="onb-char sm tapme">${charSVG('numi', 'idle')}</div><div class="bubble big">${L(`Encantat, <b>${esc(ONB.name)}</b>! <b>Quants anys tens?</b>`, `¡Encantado, <b>${esc(ONB.name)}</b>! <b>¿Cuántos años tienes?</b>`)}</div>
-    <div class="cgrid ages">${VAR.ages.map((a, i) => `<button class="cbtn ${ONB.age === a ? 'on' : ''}" style="animation-delay:${i * 40}ms" onclick="ONB.age=${a};ONB.course=${Math.min(9, Math.max(VAR.courses[0] + (IS_PRO ? 1 : 0), a - 6))};onb(2)"><b>${a}${a === 16 ? '+' : ''}</b><small>${L('anys', 'años')}</small></button>`).join('')}</div>`);
+    <div class="cgrid ages">${[5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16].map((a, i) => `<button class="cbtn ${ONB.age === a ? 'on' : ''}" style="animation-delay:${i * 40}ms" onclick="onbAge(${a})"><b>${a}${a === 16 ? '+' : ''}</b><small>${L('anys', 'años')}</small></button>`).join('')}</div>`);
   if (step === 2) onbShell(2, `<div class="onb-char sm tapme">${charSVG('guida', 'idle')}</div><div class="bubble big">${L("Soc la <b>Guida</b>. Explica'm una mica: <b>com et sents amb les mates?</b>", 'Soy <b>Guida</b>. Cuéntame un poco: <b>¿cómo te sientes con las mates?</b>')}</div>
     <div class="ogrid">${Object.entries(FEEL).map(([k, v], i) => { const t = tx(v); return `<button class="obtn ${ONB.feel === k ? 'on' : ''}" style="animation-delay:${i * 60}ms" onclick="ONB.feel='${k}';onb(3)"><span>${t.split(' ')[0]}</span>${t.slice(t.indexOf(' ') + 1)}</button>`; }).join('')}</div>`);
   if (step === 3) onbShell(3, `<div class="onb-char sm tapme">${charSVG('vuit', 'idle')}</div><div class="bubble big">${L("I ara, <b>què t'agrada més?</b>", 'Y ahora, <b>¿qué te gusta más?</b>')}</div>
@@ -1431,12 +1434,22 @@ function onb(step) {
     <div class="bubble big">${L("Perfecte! Ara et faré <b>unes preguntes</b> per saber per on hem de començar. <b>No és cap examen:</b> si no en saps alguna, toca «No ho sé» i ja està.", '¡Perfecto! Ahora te haré <b>unas preguntas</b> para saber por dónde empezar. <b>No es un examen:</b> si no sabes alguna, toca «No lo sé» y ya está.')}</div>
     <button class="btn big" onclick="startPlacement()">${L('COMENCEM!', '¡EMPECEMOS!')}</button><button class="link" onclick="LS={res:[]};finishPlacement(true)">${L('Salta la prova i comença pel principi', 'Salta la prueba y empieza por el principio')}</button>`);
 }
+// l'edat decideix la variant: a partir de 12 anys, Numi Pro (la mateixa app amb l'aspecte i les eines de l'ESO)
+function onbAge(a) {
+  ONB.age = a; ONB.course = Math.min(9, Math.max(0, a - 6)); ONB.variant = a >= ESO_AGE ? 'pro' : 'mates';
+  if (ONB.variant !== 'pro' || VAR.id === 'pro') return onb(2);
+  setVariant('pro');
+  app.innerHTML = `<div class="scr varsplash"><img class="onb-logo" src="${VAR.logo}" alt="${VAR.name}"><h1>${L("Et donem la benvinguda a Numi Pro", 'Te damos la bienvenida a Numi Pro')}</h1>
+    <p class="sub">${L("La versió de Numi per a l'ESO: el temari d'institut, reptes més durs i en Numi com a assistent quan t'encallis.", 'La versión de Numi para la ESO: el temario del instituto, retos más duros y Numi como asistente cuando te atasques.')}</p>
+    <button class="btn big" onclick="onb(2)">${L('ENDAVANT', 'ADELANTE')}</button></div>`;
+  SFX.win && SFX.win();
+}
 function onbName() { const n = $('#nm').value.trim(); if (!n) { $('#nm').classList.add('shake'); setTimeout(() => $('#nm').classList.remove('shake'), 500); return; } ONB.name = n; onb(1); }
 function startPlacement() {
   const ci = ONB.course, c = COURSES[ci], meta = [];
   if (ci > 0) { const pc = COURSES[ci - 1]; [1, 2].forEach(k => { const l = pc.units[k].lessons[2]; meta.push({ sk: l.sk[0], L: l.L, tag: 'prev' }); }); }
   c.units.slice(0, 6).forEach((u, ui) => { const l = u.lessons[2]; meta.push({ sk: l.sk[0], L: l.L, tag: 'cur', ui }); });
-  P = { id: 'tmp', name: ONB.name, companion: 'numi', acc: {}, sound: true, stats: { sk: {} } };
+  P = { id: 'tmp', name: ONB.name, companion: 'numi', acc: {}, sound: true, stats: { sk: {} }, variant: ONB.variant };
   startRun({ mode: 'place', plan: meta.map(m => [m.sk, m.L]), meta, color: '#602B7A' });
 }
 function finishPlacement(skipped) {
@@ -1452,7 +1465,7 @@ function finishPlacement(skipped) {
   const result = skipped ? L('Sense prova', 'Sin prueba') : `${prevN ? L(`Nivell anterior ${prevOk}/${prevN} · `, `Nivel anterior ${prevOk}/${prevN} · `) : ''}${tx(c.long)}: ${curOk}/${cur.length}`;
   LS = null;
   const id = 'p' + Date.now().toString(36);
-  P = { id, name: ONB.name, goal: 20, sound: true, unlockAll: false, lang: LANG, ...freshProgress(), course, baseCourse: course, maxCourse: course, holdReg: true,
+  P = { id, name: ONB.name, goal: 20, sound: true, unlockAll: false, lang: LANG, ...freshProgress(), course, baseCourse: course, maxCourse: course, holdReg: true, variant: ONB.variant || 'mates',
     survey: { curs: tx(c.long), age: ONB.age, feel: ONB.feel, like: ONB.like, result, start: `${tx(COURSES[course].long)} · ${L('unitat', 'unidad')} ${(course === ci ? skip : 0) + 1}`, date: today() } };
   if (!skipped) makeReco(meta.filter(m => m.tag === 'cur').filter((m, i) => !cur[i]), 'place');
   if (!skipped && cur.length) P.tests.push({ date: today(), course: ci, pct: Math.round(100 * curOk / cur.length), ok: curOk, n: cur.length, kind: 'inicial' });

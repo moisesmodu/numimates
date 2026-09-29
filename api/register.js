@@ -6,13 +6,8 @@ const WORDS = [
   'CASTELL', 'VOLCA', 'COET', 'GALAXIA', 'CACTUS', 'PIRATA', 'BRUIXOLA', 'FLAMENC', 'ESQUIROL', 'GIRAFA', 'KOALA', 'LLAMA', 'CAMALEO', 'ORCA', 'TAURO', 'COLIBRI',
   'CANGUR', 'ELEFANT', 'ZEBRA', 'MARMOTA', 'CRANC', 'MEDUSA', 'ABELLA', 'FORMIGA', 'TEMPESTA', 'AURORA', 'METEOR', 'SATURN', 'LLUNA', 'ICEBERG', 'OASI', 'SELVA', 'DUNA',
   'CASCADA', 'TRITO', 'SIRENA', 'GEGANT', 'FOLLET', 'LINX', 'CORB', 'GAVINA', 'TAIGA'];
-// variant de l'app on s'ha registrat (Numi Mates, Numi Pro o Numi Ment)
-let ready = null;
-const col = () => ready || (ready = sql`ALTER TABLE mates.alumnes ADD COLUMN IF NOT EXISTS variant text NOT NULL DEFAULT 'mates'`.catch(e => { ready = null; throw e; }));
 export default async function handler(req, res) {
   if (req.method !== 'POST') return ok(res, { error: 'method' }, 405);
-  await col();
-  const variant = ['pro', 'ment'].includes(body(req).variant) ? body(req).variant : 'mates';
   const b = body(req), name = String(b.name || '').trim().slice(0, 30), state = b.state;
   if (!name || !state || typeof state !== 'object' || Array.isArray(state)) return ok(res, { error: 'dades' }, 400);
   if (JSON.stringify(state).length > 300000) return ok(res, { error: 'massa gran' }, 413);
@@ -32,8 +27,8 @@ export default async function handler(req, res) {
     const code = WORDS[randomInt(WORDS.length)] + '-' + randomInt(1000, 10000);
     state.code = code; if (user) state.username = user; state.unlockAll = false;
     const s = summary(state);
-    const r = await sql`INSERT INTO mates.alumnes (code, name, course, survey, state, xp, streak, best, last_day, lessons, answers, correct, username, pass_hash, variant)
-      VALUES (${code}, ${name}, ${s.course}, ${JSON.stringify(b.survey || null)}, ${JSON.stringify(state)}, ${s.xp}, ${s.streak}, ${s.best}, ${s.last_day}, ${s.lessons}, ${s.answers}, ${s.correct}, ${user}, ${hash}, ${variant})
+    const r = await sql`INSERT INTO mates.alumnes (code, name, course, survey, state, xp, streak, best, last_day, lessons, answers, correct, username, pass_hash)
+      VALUES (${code}, ${name}, ${s.course}, ${JSON.stringify(b.survey || null)}, ${JSON.stringify(state)}, ${s.xp}, ${s.streak}, ${s.best}, ${s.last_day}, ${s.lessons}, ${s.answers}, ${s.correct}, ${user}, ${hash})
       ON CONFLICT (code) DO NOTHING RETURNING code`;
     if (r.length) return ok(res, { code, username: user });
   }
