@@ -283,8 +283,12 @@ function modal(html, center) {
   closeModal();
   const d = document.createElement('div'); d.className = 'modal-bg' + (center ? ' center' : ''); d.innerHTML = html;
   d.addEventListener('click', e => { if (e.target === d && !center) closeModal(); });
+  // totes les finestres es poden tancar amb la creu (menys les que esperen un pagament: .nox)
+  const sh = d.querySelector('.sheet');
+  if (sh && !sh.classList.contains('nox')) sh.insertAdjacentHTML('afterbegin', `<button class="mx" onclick="closeModal()" aria-label="${L('Tanca', 'Cierra')}">×</button>`);
   document.body.appendChild(d);
 }
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && $('.modal-bg .mx')) closeModal(); });
 const closeModal = () => $$('.modal-bg').forEach(m => m.remove());
 function ask(txt, yes, no, onYes) {
   modal(`<div class="sheet card"><p class="askt">${txt}</p><div class="row2"><button class="btn ghost" onclick="closeModal()">${no}</button><button class="btn red" id="askYes">${yes}</button></div></div>`, true);
@@ -393,7 +397,7 @@ async function payReturn() {
   try { sessionStorage.removeItem('numi-pay'); } catch (e) { }
   if (q === 'cancel') return toast(L('Pagament cancel·lat: no s\'ha cobrat res.', 'Pago cancelado: no se ha cobrado nada.'));
   if (who && who !== P.code) return;
-  modal(`<div class="sheet card cent"><div class="mchar">${meC('happy')}</div><h3>${L('Gràcies!', '¡Gracias!')}</h3><p id="paymsg">${L('Estem activant Premium…', 'Estamos activando Premium…')}</p></div>`, true);
+  modal(`<div class="sheet card cent nox"><div class="mchar">${meC('happy')}</div><h3>${L('Gràcies!', '¡Gracias!')}</h3><p id="paymsg">${L('Estem activant Premium…', 'Estamos activando Premium…')}</p></div>`, true);
   for (let i = 0; i < 10 && P.pla !== 'premium'; i++) { await new Promise(r => setTimeout(r, 2500)); await pull(); }
   closeModal();
   if (P.pla === 'premium') {

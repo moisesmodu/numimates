@@ -14,7 +14,8 @@ const api = (f, data) => fetch('/api/account?f=' + f, { method: 'POST', headers:
   .then(r => r.json().then(j => ({ status: r.status, ...j }))).catch(() => ({ status: 0, error: 'xarxa' }));
 const ERR = s => s === 429 ? L("Massa intents seguits. Espera una estona i torna-ho a provar.", 'Demasiados intentos seguidos. Espera un rato y vuelve a intentarlo.') : L("No s'ha pogut fer. Comprova la connexió i torna-ho a provar.", 'No se ha podido hacer. Comprueba la conexión y vuelve a intentarlo.');
 function toast(t) { const d = document.createElement('div'); d.className = 'toast'; d.innerHTML = t; document.body.appendChild(d); setTimeout(() => d.remove(), 3600); }
-function modal(html) { closeModal(); document.body.insertAdjacentHTML('beforeend', `<div class="modal-bg" onclick="if(event.target===this)closeModal()"><div class="modal" role="dialog" aria-modal="true">${html}</div></div>`); }
+function modal(html) { closeModal(); document.body.insertAdjacentHTML('beforeend', `<div class="modal-bg" onclick="if(event.target===this)closeModal()"><div class="modal" role="dialog" aria-modal="true"><button class="mx" onclick="closeModal()" aria-label="${L('Tanca', 'Cierra')}">×</button>${html}</div></div>`); }
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 function closeModal() { const m = $('.modal-bg'); if (m) m.remove(); }
 function setLang(l) { LANG = l; store.set('numi-fam-lang', l); document.documentElement.lang = l; render(); }
 

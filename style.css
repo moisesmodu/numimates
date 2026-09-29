@@ -96,6 +96,8 @@ h1,h2,h3{font-weight:900;margin:0}
 .sheet{background:#fff;width:100%;max-width:580px;border-radius:26px 26px 0 0;padding:24px 22px calc(24px + env(safe-area-inset-bottom));animation:up .28s cubic-bezier(.2,1.2,.4,1)}
 .sheet.card{border-radius:26px;max-width:420px;padding:26px 22px}
 .sheet.cent{text-align:center}
+.sheet{position:relative}.sheet .mx{position:absolute;top:10px;right:10px;width:38px;height:38px;border:0;border-radius:50%;background:#F3ECF8;color:#6A5F78;font:900 24px/1 Lexend,system-ui,sans-serif;display:grid;place-items:center;cursor:pointer;z-index:2;padding:0 0 2px}
+.sheet .mx:active{transform:scale(.92)}.sheet>h3:nth-child(2),.sheet>.sk:nth-child(2){padding-right:40px}.sheet.cent>h3:nth-child(2){padding-left:40px}
 .sheet .sk{font-size:13px;font-weight:900;letter-spacing:.1em;color:var(--uc)}
 .sheet h3{font-size:24px;margin:4px 0 8px}
 .sheet p{color:#5A4B68;line-height:1.45;margin:0 0 16px;font-size:16px}
