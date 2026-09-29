@@ -38,6 +38,8 @@ export default async function handler(req, res) {
       let centre = int(b.centre_id), docent = int(b.docent_id);
       if (!me.admin) { centre = me.docent.centre_id; if (me.docent.rol !== 'admin_centre') docent = me.docent.id; }
       if (!centre) return ok(res, { error: 'centre' }, 400);
+      // la coordinació només pot donar el grup a un docent del seu centre (si no, un docent d'un altre centre en veuria els alumnes)
+      if (!me.admin && docent && docent !== me.docent.id && !(await sql`SELECT 1 FROM mates.docents WHERE id = ${docent} AND centre_id = ${centre}`).length) return ok(res, { error: 'permís' }, 403);
       if (b.id) {
         if (!gids.includes(+b.id)) return ok(res, { error: 'permís' }, 403);
         await sql`UPDATE mates.grups SET nom = ${nom}, curs = ${curs}, docent_id = ${docent} WHERE id = ${+b.id}`;
@@ -108,6 +110,8 @@ export default async function handler(req, res) {
       await sql`UPDATE mates.canvis SET a_sid = NULL, a_name = '—' WHERE a_sid = ${code}`;
       await sql`UPDATE mates.canvis SET b_sid = NULL, b_name = '—' WHERE b_sid = ${code}`;
       try { await sql`DELETE FROM mates.familia_fills WHERE code = ${code}`; await sql`DELETE FROM mates.familia_links WHERE code = ${code}`; } catch (e) { }
+      try { await sql`DELETE FROM mates.xat_us WHERE code = ${code}`; await sql`DELETE FROM mates.fails WHERE k = ${'ac:' + code}`; } catch (e) { }
+      try { await sql`UPDATE mates.batalles SET host = NULL WHERE host = ${code}`; } catch (e) { }
       await sql`DELETE FROM mates.alumnes WHERE code = ${code}`;
       return ok(res, { ok: true });
     }

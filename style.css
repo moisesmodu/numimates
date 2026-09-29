@@ -110,7 +110,7 @@ h1,h2,h3{font-weight:900;margin:0}
 .how span{font-size:26px;width:36px;text-align:center;flex:none}
 @keyframes fade{from{opacity:0}}
 @keyframes up{from{transform:translateY(40px);opacity:0}}
-.toast{position:fixed;left:50%;top:18px;transform:translateX(-50%);z-index:80;background:var(--ink);color:#fff;padding:12px 18px;border-radius:14px;font-size:15px;box-shadow:0 8px 24px rgba(0,0,0,.2);animation:up .3s;max-width:calc(100% - 32px);text-align:center;transition:opacity .4s}
+.toast{position:fixed;left:50%;top:18px;transform:translateX(-50%);z-index:80;pointer-events:none;background:var(--ink);color:#fff;padding:12px 18px;border-radius:14px;font-size:15px;box-shadow:0 8px 24px rgba(0,0,0,.2);animation:up .3s;max-width:calc(100% - 32px);text-align:center;transition:opacity .4s}
 .toast.out{opacity:0}
 .confetti{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:90}
 
@@ -788,6 +788,7 @@ body{background:radial-gradient(1200px 500px at 50% -120px,#F1E6FA 0%,rgba(241,2
 .tcard.duel{border-color:#F2B8A0}.tcard.party{border-color:#9FD3DC}
 .mhint{position:absolute;left:0;right:0;bottom:8px;font-size:9px;font-weight:900;color:#6B4F85;text-align:center;line-height:1.1;padding:0 4px}
 .joinbox{display:flex;gap:8px;margin:14px 0 4px}.joinbox .nm{flex:1;min-width:0;margin:0;text-transform:uppercase;letter-spacing:.06em}
+.joinbox .nm::placeholder{text-transform:none;letter-spacing:0;font-size:15px}
 .brules{background:#fff;border:2px solid #E6DCF2;border-radius:18px;padding:12px 14px;display:grid;gap:8px;font-size:14px;line-height:1.4}
 .brules b{color:var(--pri)}.bfine{font-size:12.5px;color:var(--mut)}
 .bitem{align-items:center}.bic{font-size:26px;width:40px;text-align:center}

@@ -51,11 +51,11 @@ Object.values(DB.profiles).forEach(migrate);
 let P = DB.current && DB.profiles[DB.current] || null;
 setVariant(varOf(P));
 function setLang(l, rerender = true) {
-  LANG = l; document.documentElement.lang = l; DB.lang = l;
+  LANG = l; document.documentElement.lang = l; DB.lang = l; document.title = `${VAR.name} · ${tx(VAR.tag)}`;
   if (P && P.id !== 'tmp') { P.lang = l; save(); } else saveLocal();
   if (rerender) { const v = VIEW; if (v === 'onboard') onb(ONB.step || 0); else go(v || 'home'); }
 }
-LANG = P ? P.lang : DB.lang; document.documentElement.lang = LANG;
+LANG = P ? P.lang : DB.lang; document.documentElement.lang = LANG; document.title = `${VAR.name} · ${tx(VAR.tag)}`;
 function saveLocal() { try { localStorage.setItem(SKEY, JSON.stringify(DB)); } catch (e) { } }
 // save.n compta els desaments: si n'hi ha durant una pujada, el perfil continua pendent de sincronitzar
 function save() { save.n = (save.n || 0) + 1; saveLocal(); if (P && P.id !== 'tmp') { P.dirty = true; clearTimeout(save.t); save.t = setTimeout(syncNow, 1500); } }
@@ -420,7 +420,7 @@ function premiumBox() {
   if (P.classe) return '';
   if (P.pla === 'premium') {
     const S = P.sub, per = S && (S.periode === 'any' ? L('Anual', 'Anual') : L('Mensual', 'Mensual'));
-    const estat = !S ? L('Lliçons sense límit, batalles i ruta de temporada.', 'Lecciones sin límite, batallas y ruta de temporada.')
+    const estat = !S ? (IS_MENT ? L('Tots els jocs sense límit i reptes amb amics.', 'Todos los juegos sin límite y retos con amigos.') : L('Lliçons sense límit, batalles i ruta de temporada.', 'Lecciones sin límite, batallas y ruta de temporada.'))
       : S.cancel ? L(`Cancel·lada: no es cobrarà res més. Tens Premium fins al ${dayLong(S.renova)} i després passes al pla gratuït.`, `Cancelada: no se cobrará nada más. Tienes Premium hasta el ${dayLong(S.renova)} y después pasas al plan gratuito.`)
       : S.pendent ? L('No s\'ha pogut cobrar la renovació: revisa la targeta.', 'No se ha podido cobrar la renovación: revisa la tarjeta.')
       : L(`${per} · es renova el ${dayLong(S.renova)}.`, `${per} · se renueva el ${dayLong(S.renova)}.`);
@@ -646,8 +646,9 @@ function ansHTML(e) {
   if (e.type === 'choice' && e.balloon) return `<div class="balloons">${e.opts.map((o, i) => `<button class="bln b${i}" style="--d:${i * .35}s;--c:${['#FF6FA3', '#36A9E1', '#3CC46A', '#FF9A3C'][i]}" onclick="pickOpt(${i})"><span>${o}</span></button>`).join('')}</div>`;
   if (e.type === 'choice' && e.tf) return `<div class="opts tfopts">${e.opts.map((o, i) => `<button class="opt tf${i}" onclick="pickOpt(${i})"><span class="ov">${o}</span></button>`).join('')}</div>`;
   if (e.type === 'choice') {
-    const long = !e.pics && (e.list || e.opts.some(o => String(o).replace(/<[^>]+>/g, '').length > 10));
-    return `<div class="opts ${e.pics ? 'pics' : ''} ${e.big && !long ? 'big' : ''} ${long ? 'list' : ''}">${e.opts.map((o, i) => `<button class="opt" style="animation-delay:${80 + i * 60}ms" onclick="pickOpt(${i})"><span class="k">${i + 1}</span><span class="ov">${o}</span></button>`).join('')}</div>`;
+    const len = o => String(o).replace(/<[^>]+>/g, '').length, long = !e.pics && (e.list || e.opts.some(o => len(o) > 10));
+    // lletra grossa només si totes les opcions són curtes: «Decreixent» a 38 px no cap en dues columnes al mòbil
+    return `<div class="opts ${e.pics ? 'pics' : ''} ${e.big && !long && e.opts.every(o => len(o) <= 9) ? 'big' : ''} ${long ? 'list' : ''}">${e.opts.map((o, i) => `<button class="opt" style="animation-delay:${80 + i * 60}ms" onclick="pickOpt(${i})"><span class="k">${i + 1}</span><span class="ov">${o}</span></button>`).join('')}</div>`;
   }
   if (e.type === 'input') return `<div class="inbox" id="inbox"><span id="inval" class="ph">?</span>${e.unit ? `<span class="iu">${e.unit}</span>` : ''}</div>${padHTML('key', e.dec ? ',' : e.neg ? '−' : null)}`;
   return `<div class="oslots" id="oslots"><span class="ohint">${L('Toca els números en ordre', 'Toca los números en orden')}</span></div><div class="obank" id="obank">${e.items.map((v, i) => `<button class="chipn" data-i="${i}" onclick="ordTap(${i})">${showOf(e)(v)}</button>`).join('')}</div>`;
@@ -1560,7 +1561,8 @@ go(P ? 'home' : 'onboard');
 /* ---------- Pregunta sencera a la pantalla: si l'exercici no hi cap, s'encongeix per passos ---------- */
 // alçada real del contingut (sense comptar les animacions, que amb transform semblen ocupar més)
 const contentH = b => { const kids = [...b.children].filter(c => !c.classList.contains('morebtn')); return Math.max(0, ...kids.map(c => c.offsetTop + c.offsetHeight)) - b.offsetTop + parseFloat(getComputedStyle(b).paddingBottom || 0); };
-const lessonOver = b => contentH(b) > b.clientHeight + 2;
+// també si alguna cosa surt pels costats (una fila d'emojis o dos números llargs a comparar)
+const lessonOver = b => contentH(b) > b.clientHeight + 2 || b.scrollWidth > b.clientWidth + 1;
 function fitLesson() {
   const les = document.querySelector('.lesson:not(.learn)'), b = les && les.querySelector('.l-body'); if (!b) return;
   for (let k = 1; k <= 6 && lessonOver(b); k++) les.classList.add('fit' + k);

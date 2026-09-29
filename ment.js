@@ -1,30 +1,100 @@
 /* ===== Numi Ment: entrenament mental per a adults =====
-   Mateixa app i mateix compte que Numi Mates; la variant la marca el perfil (P.variant = 'ment').
-   Cada dia, una sessió de ~10 minuts amb 3 jocs (velocitat/atenció · memòria · càlcul/lògica/llenguatge),
-   un hàbit fora de la pantalla i el progrés per capacitats. La dificultat s'adapta a cada persona.
+   Mateix motor i mateix compte que Numi Mates; la variant la marca el perfil (P.variant = 'ment').
+   · Cada dia, una sessió d'uns 10 minuts amb 3 jocs (rapidesa/atenció · memòria · càlcul, lògica o llenguatge),
+     triats pel que fa més dies que no es practica i reforçant la capacitat més fluixa del test.
+   · «Edat de la ment»: un test de 4 proves (uns 4 minuts) que compara els resultats amb com canvien de mitjana
+     amb l'edat. És orientatiu (no és cap prova mèdica) i es pot repetir cada 14 dies.
+   · Constància: objectiu de dies a la setmana, fites, hàbit fora de la pantalla i recordatori al calendari.
    Honestedat: mai diem que prevé el deteriorament ni cap malaltia (RD 1907/1996); vegeu mentCiencia(). */
 
-const MCAP = { vel: 'Velocitat|Velocidad', ate: 'Atenció|Atención', mem: 'Memòria|Memoria', cal: 'Càlcul|Cálculo', log: 'Lògica|Lógica', llg: 'Llenguatge|Lenguaje' };
+const MCAP = { vel: 'Rapidesa|Rapidez', ate: 'Atenció|Atención', mem: 'Memòria|Memoria', cal: 'Càlcul|Cálculo', log: 'Lògica|Lógica', llg: 'Llenguatge|Lenguaje' };
+const MCAPD = {
+  vel: 'Com de ràpid captes el que veus i hi respons.|Lo rápido que captas lo que ves y respondes.',
+  ate: 'Fixar-te en el que importa sense deixar-te distreure.|Fijarte en lo que importa sin dejarte distraer.',
+  mem: 'Retenir el que acabes de veure o sentir i fer-ho servir.|Retener lo que acabas de ver u oír y usarlo.',
+  cal: 'Fer comptes de cap amb soltesa, com a la vida diària.|Hacer cuentas de cabeza con soltura, como en el día a día.',
+  log: 'Trobar regles, ordenar i planificar.|Encontrar reglas, ordenar y planificar.',
+  llg: 'Paraules, significats i expressions de sempre.|Palabras, significados y expresiones de siempre.'
+};
 const MG = {
-  vel: { ic: '👁️', cap: 'vel', n: 'Mirada ràpida|Mirada rápida', d: "Què has vist al centre i on era l'estrella?|¿Qué has visto en el centro y dónde estaba la estrella?", low: true, unit: 'ms' },
-  ate: { ic: '🎨', cap: 'ate', n: 'Colors|Colores', d: 'Toca el color de la tinta, no la paraula.|Toca el color de la tinta, no la palabra.' },
-  mem: { ic: '🔷', cap: 'mem', n: 'Seqüències|Secuencias', d: "Repeteix l'ordre en què s'encenen les caselles.|Repite el orden en que se encienden las casillas." },
-  par: { ic: '🃏', cap: 'mem', n: 'Parelles|Parejas', d: 'Troba les parelles amb els menys intents possibles.|Encuentra las parejas con los menos intentos posibles.', unit: '%' },
-  cal: { ic: '➕', cap: 'cal', n: 'Càlcul ràpid|Cálculo rápido', d: 'Un minut de comptes de cap.|Un minuto de cuentas de cabeza.' },
-  sud: { ic: '🔢', cap: 'log', n: 'Sudoku|Sudoku', d: 'Cada número una sola vegada per fila, columna i quadre.|Cada número una sola vez por fila, columna y cuadro.' },
-  pal: { ic: '🔤', cap: 'llg', n: 'Paraules|Palabras', d: 'Ordena les lletres i troba la paraula.|Ordena las letras y encuentra la palabra.' },
-  int: { ic: '🔎', cap: 'ate', n: "L'intrús|El intruso", d: 'Troba el signe diferent tan ràpid com puguis.|Encuentra el signo diferente lo más rápido que puedas.' },
-  lli: { ic: '📝', cap: 'mem', n: 'Llista de la compra|Lista de la compra', d: 'Memoritza la llista i després reconeix-la entre altres productes.|Memoriza la lista y después reconócela entre otros productos.' },
-  dir: { ic: '🧭', cap: 'mem', n: 'Direccions|Direcciones', d: 'Segueix les indicacions i troba on acabes.|Sigue las indicaciones y encuentra dónde acabas.' },
-  com: { ic: '🛍', cap: 'cal', n: 'La compra|La compra', d: 'Preus, canvi i ofertes: les mates de cada dia.|Precios, cambio y ofertas: las mates de cada día.' },
-  ref: { ic: '📖', cap: 'llg', n: 'Refranys|Refranes', d: 'Completa el refrany.|Completa el refrán.' },
-  rel: { ic: '🕐', cap: 'log', n: 'El rellotge|El reloj', d: "Llegeix l'hora i calcula quina hora serà.|Lee la hora y calcula qué hora será." }
+  vel: { cap: 'vel', n: 'Mirada ràpida|Mirada rápida', d: "Què has vist al centre i on era l'estrella?|¿Qué has visto en el centro y dónde estaba la estrella?", unit: 'ms', low: true, lvx: true },
+  rfx: { cap: 'vel', n: 'Reflexos|Reflejos', d: 'Toca el costat on apareix el cercle, tan ràpid com puguis.|Toca el lado donde aparece el círculo, lo más rápido que puedas.', unit: 'ms', low: true, lvx: true, nou: true },
+  sim: { cap: 'vel', n: 'Símbols i números|Símbolos y números', d: 'Cada símbol té un número. Digues quin és, tan ràpid com puguis.|Cada símbolo tiene un número. Di cuál es, lo más rápido que puedas.', nou: true },
+  ate: { cap: 'ate', n: 'Colors|Colores', d: 'Toca el color de la tinta, no la paraula.|Toca el color de la tinta, no la palabra.' },
+  int: { cap: 'ate', n: "L'intrús|El intruso", d: 'Troba el signe diferent tan ràpid com puguis.|Encuentra el signo diferente lo más rápido que puedas.' },
+  uni: { cap: 'ate', n: 'Uneix els punts|Une los puntos', d: 'Toca els cercles en ordre: 1, 2, 3… i, més endavant, 1, A, 2, B…|Toca los círculos en orden: 1, 2, 3… y, más adelante, 1, A, 2, B…', unit: 's', low: true, nou: true },
+  atu: { cap: 'ate', n: 'Verd sí, vermell no|Verde sí, rojo no', d: 'Toca els cercles verds i no toquis els quadrats vermells.|Toca los círculos verdes y no toques los cuadrados rojos.', unit: '%', nou: true },
+  mem: { cap: 'mem', n: 'Seqüències|Secuencias', d: "Repeteix l'ordre en què s'encenen les caselles.|Repite el orden en que se encienden las casillas.", span: true },
+  dig: { cap: 'mem', n: 'Dígits|Dígitos', d: 'Recorda els números en el mateix ordre (i, més endavant, al revés).|Recuerda los números en el mismo orden (y, más adelante, al revés).', span: true, nou: true },
+  par: { cap: 'mem', n: 'Parelles|Parejas', d: 'Troba les parelles amb els menys intents possibles.|Encuentra las parejas con los menos intentos posibles.', unit: '%' },
+  lli: { cap: 'mem', n: 'Llista de la compra|Lista de la compra', d: 'Memoritza la llista i després reconeix-la entre altres productes.|Memoriza la lista y después reconócela entre otros productos.', unit: '%' },
+  nom: { cap: 'mem', n: 'Qui viu on?|¿Quién vive dónde?', d: 'Recorda a quina ciutat viu cada persona.|Recuerda en qué ciudad vive cada persona.', unit: '%', nou: true },
+  nbk: { cap: 'mem', n: 'Igual que abans?|¿Igual que antes?', d: "Digues si la lletra és la mateixa que la d'abans.|Di si la letra es la misma que la de antes.", unit: '%', nou: true },
+  dir: { cap: 'mem', n: 'Direccions|Direcciones', d: 'Segueix les indicacions i troba on acabes.|Sigue las indicaciones y encuentra dónde acabas.' },
+  cal: { cap: 'cal', n: 'Càlcul ràpid|Cálculo rápido', d: 'Un minut de comptes de cap.|Un minuto de cuentas de cabeza.' },
+  cad: { cap: 'cal', n: 'Suma en cadena|Suma en cadena', d: 'Van sortint números: porta el total de cap.|Van saliendo números: lleva el total de cabeza.', nou: true },
+  com: { cap: 'cal', n: 'La compra|La compra', d: 'Preus, canvi i ofertes: les mates de cada dia.|Precios, cambio y ofertas: las mates de cada día.' },
+  sud: { cap: 'log', n: 'Sudoku|Sudoku', d: 'Cada número una sola vegada per fila, columna i quadre.|Cada número una sola vez por fila, columna y cuadro.', unit: 's', low: true },
+  ser: { cap: 'log', n: 'Sèries|Series', d: 'Descobreix la regla i digues quin número ve després.|Descubre la regla y di qué número viene después.', nou: true },
+  rel: { cap: 'log', n: 'El rellotge|El reloj', d: "Llegeix l'hora i calcula quina hora serà.|Lee la hora y calcula qué hora será." },
+  pal: { cap: 'llg', n: 'Paraules|Palabras', d: 'Ordena les lletres i troba la paraula.|Ordena las letras y encuentra la palabra.' },
+  sin: { cap: 'llg', n: 'Sinònims i contraris|Sinónimos y contrarios', d: 'Tria la paraula que vol dir el mateix, o el contrari.|Elige la palabra que significa lo mismo, o lo contrario.', nou: true },
+  ref: { cap: 'llg', n: 'Refranys|Refranes', d: 'Completa el refrany.|Completa el refrán.' }
 };
 const MHAB = ['Camina 20 minuts a bon pas.|Camina 20 minutos a buen paso.', 'Truca o queda amb algú que fa temps que no veus.|Llama o queda con alguien a quien hace tiempo que no ves.',
   'Llegeix 15 minuts: un llibre, una revista o el diari.|Lee 15 minutos: un libro, una revista o el periódico.', 'Aprèn alguna cosa nova: una paraula, una recepta, una cançó.|Aprende algo nuevo: una palabra, una receta, una canción.',
   'Balla o fes estiraments amb música.|Baila o haz estiramientos con música.', 'Fes un trajecte conegut per un camí diferent.|Haz un trayecto conocido por un camino diferente.',
   "Explica a algú una cosa que hagis après avui.|Cuéntale a alguien algo que hayas aprendido hoy.", 'Surt una estona a prendre la llum del sol.|Sal un rato a tomar la luz del sol.',
-  'Fes de cap les sumes de la compra abans de pagar.|Haz de cabeza las sumas de la compra antes de pagar.', 'Intenta dormir 7 o 8 hores aquesta nit.|Intenta dormir 7 u 8 horas esta noche.'];
+  'Fes de cap les sumes de la compra abans de pagar.|Haz de cabeza las sumas de la compra antes de pagar.', 'Intenta dormir 7 o 8 hores aquesta nit.|Intenta dormir 7 u 8 horas esta noche.',
+  'Puja les escales en lloc d\'agafar l\'ascensor.|Sube las escaleras en lugar de coger el ascensor.', 'Escriu tres coses bones que t\'hagin passat avui.|Escribe tres cosas buenas que te hayan pasado hoy.',
+  'Cuina una recepta que no hagis fet mai.|Cocina una receta que no hayas hecho nunca.', 'Si et costa sentir bé, parla-ho amb el metge: l\'oïda també compta.|Si te cuesta oír bien, háblalo con el médico: el oído también cuenta.'];
+
+/* ---------- Icones (línia, 24×24) ---------- */
+const MICO = {
+  vel: '<path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
+  rfx: '<path d="M13 2 4 14h7l-1 8 9-12h-7z"/>',
+  sim: '<path d="M7 3.5 11 10H3z"/><circle cx="17" cy="7" r="3.2"/><path d="M4 15h6v6H4zM15 16.5l1.5-1.5v6M14.5 21h4"/>',
+  ate: '<path d="M12 3a9 9 0 1 0 0 18c1.1 0 1.6-.8 1.6-1.6 0-1.3-1-1.6-1-2.6 0-.9.7-1.6 1.6-1.6H17a4 4 0 0 0 4-4C21 6.6 17 3 12 3z"/><circle cx="7.5" cy="11" r="1.1"/><circle cx="10" cy="7" r="1.1"/><circle cx="15" cy="7.5" r="1.1"/>',
+  int: '<circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 21 21"/>',
+  uni: '<circle cx="5" cy="18" r="2.4"/><circle cx="12" cy="6" r="2.4"/><circle cx="19" cy="15" r="2.4"/><path d="M6.3 15.9 10.7 8.1M13.7 7.9l3.7 5.2"/>',
+  atu: '<circle cx="8" cy="12" r="5"/><rect x="15" y="8.5" width="7" height="7" rx="1.2"/><path d="m5.8 12 1.6 1.6 3-3.2"/>',
+  mem: '<rect x="3" y="3" width="7.5" height="7.5" rx="1.6"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="1.6" fill="currentColor"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="1.6"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="1.6"/>',
+  dig: '<path d="M3.5 8 6 6.5V17M9.5 8.3a2.3 2.3 0 0 1 4.3 1.1c0 2.3-4.3 4-4.3 7.6h4.6M16 6.5h4.5l-2.6 4a3 3 0 1 1-2.6 5"/>',
+  par: '<rect x="3" y="6" width="10" height="14" rx="2"/><path d="M8 6V5a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2h-6"/>',
+  lli: '<path d="M9 6h11M9 12h11M9 18h11"/><path d="M4 6h.01M4 12h.01M4 18h.01" stroke-width="3"/>',
+  nom: '<circle cx="9" cy="8" r="3.5"/><path d="M3 20c.6-3.5 3-5.5 6-5.5s5.4 2 6 5.5"/><path d="M19 3.5a3 3 0 0 1 3 3c0 2.3-3 5-3 5s-3-2.7-3-5a3 3 0 0 1 3-3z"/>',
+  nbk: '<path d="M4 12a8 8 0 0 1 14-5.3M20 12a8 8 0 0 1-14 5.3"/><path d="M18 3v4h-4M6 21v-4h4"/>',
+  dir: '<circle cx="12" cy="12" r="9"/><path d="m15.5 8.5-2 5-5 2 2-5z"/>',
+  cal: '<rect x="5" y="3" width="14" height="18" rx="2.5"/><path d="M8.5 7.5h7M8.5 12h.01M12 12h.01M15.5 12h.01M8.5 16h.01M12 16h.01M15.5 16h.01" stroke-width="2.2"/>',
+  cad: '<path d="M9 15l6-6"/><path d="M10.5 6.5l1.8-1.8a4 4 0 0 1 5.7 5.7l-1.8 1.8M13.5 17.5l-1.8 1.8a4 4 0 0 1-5.7-5.7l1.8-1.8"/>',
+  com: '<path d="M5 8h14l-1.2 11.2a2 2 0 0 1-2 1.8H8.2a2 2 0 0 1-2-1.8z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/>',
+  sud: '<rect x="3" y="3" width="18" height="18" rx="2.5"/><path d="M9 3v18M15 3v18M3 9h18M3 15h18"/>',
+  ser: '<path d="M5 20v-4M10 20v-8M15 20V8"/><path d="M20 20V4" stroke-dasharray="2 2.6"/>',
+  rel: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+  pal: '<path d="M3 19 7.5 5h1L13 19M4.8 14h6.4"/><circle cx="17.5" cy="15.5" r="3"/><path d="M20.5 12v7"/>',
+  sin: '<path d="M4 9c2.5-2 5.5 2 8 0s5.5-2 8 0M4 15c2.5-2 5.5 2 8 0s5.5-2 8 0"/>',
+  ref: '<path d="M4 11.5h4.5V17H4v-4c0-3 1.3-5 4-6M14 11.5h4.5V17H14v-4c0-3 1.3-5 4-6"/>',
+  // interfície
+  avui: '<rect x="3" y="5" width="18" height="16" rx="2.5"/><path d="M3 10h18M8 3v4M16 3v4"/><path d="m9 15 2 2 4-4"/>',
+  jocs: '<rect x="3" y="3" width="7.5" height="7.5" rx="2"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="2"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="2"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="2"/>',
+  progres: '<path d="M4 20h16M7 16v-5M12 16V7M17 16v-8"/>',
+  perfil: '<circle cx="12" cy="8" r="4"/><path d="M4 21c.8-4.2 4-6.5 8-6.5s7.2 2.3 8 6.5"/>',
+  xat: '<path d="M4 5.5A1.5 1.5 0 0 1 5.5 4h13A1.5 1.5 0 0 1 20 5.5v9a1.5 1.5 0 0 1-1.5 1.5H10l-4.5 4v-4h0A1.5 1.5 0 0 1 4 14.5z"/><path d="M8.5 9.5h7M8.5 12.5h4.5"/>',
+  foc: '<path d="M12 3c1 3.5 5 5.5 5 10a5 5 0 0 1-10 0c0-2 .8-3.3 2-4.5.3 1.7 1.2 2.5 2 2.5-.6-2.8 0-5.6 1-8z"/>',
+  ment: '<path d="M9.5 4A3 3 0 0 0 6.5 7a3 3 0 0 0-2 5 3 3 0 0 0 2 5 3 3 0 0 0 5.5 1.8V5.6A2.5 2.5 0 0 0 9.5 4zM14.5 4a3 3 0 0 1 3 3 3 3 0 0 1 2 5 3 3 0 0 1-2 5 3 3 0 0 1-5.5 1.8"/><path d="M12 9h1.5M12 14h2"/>',
+  fulla: '<path d="M5 19c0-8 5-14 15-14 0 10-6 15-14 15"/><path d="M5 19c3-4 6-7 10-9"/>',
+  campana: '<path d="M6 16v-5a6 6 0 0 1 12 0v5l2 2H4z"/><path d="M10 20.5a2 2 0 0 0 4 0"/>',
+  llibre: '<path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M4 20.5V5.5M8 7.5h8"/>',
+  copa: '<path d="M8 4h8v5a4 4 0 0 1-8 0z"/><path d="M8 6H5a3 3 0 0 0 3 4M16 6h3a3 3 0 0 1-3 4M12 13v4M8 21h8M10 17h4"/>',
+  ok: '<path d="m5 12.5 4.5 4.5L19 7.5"/>',
+  seg: '<path d="m9 5 7 7-7 7"/>',
+  so: '<path d="M4 9.5v5h4l5 4v-13l-5 4z"/><path d="M16.5 9a4 4 0 0 1 0 6M19 6.5a7.5 7.5 0 0 1 0 11"/>',
+  medalla: '<circle cx="12" cy="14.5" r="5.5"/><path d="M8.7 10 6 3h4l2 4 2-4h4l-2.7 7"/><path d="m10 14.5 1.4 1.4 2.8-2.8"/>',
+  diana: '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.2" fill="currentColor"/>'
+};
+const mSvg = (k, cls = 'mico') => `<svg class="${cls}" viewBox="0 0 24 24" aria-hidden="true">${MICO[k] || ''}</svg>`;
+const mGic = g => `<span class="mgic" style="--dc:var(--c-${MG[g] ? MG[g].cap : 'cal'})">${mSvg(g)}</span>`;
+
 // atzar amb llavor: als reptes, tothom rep exactament les mateixes preguntes
 let MRNG = Math.random;
 const mrnd = () => MRNG(), mri = (a, b) => a + Math.floor(mrnd() * (b - a + 1)), mpick = a => a[Math.floor(mrnd() * a.length)];
@@ -32,31 +102,44 @@ const mshuf = a => { for (let i = a.length - 1; i > 0; i--) { const j = Math.flo
 const mSeed = seed => { let t = seed >>> 0; return () => { t += 0x6D2B79F5; let r = Math.imul(t ^ (t >>> 15), 1 | t); r ^= r + Math.imul(r ^ (r >>> 7), 61 | r); return ((r ^ (r >>> 14)) >>> 0) / 4294967296; }; };
 const mDlv = g => MGA && MGA.duel ? MGA.duel.lv : mLvl(g);
 const mDayN = d => Math.floor(new Date(d + 'T12:00') / 864e5);
-const MS = () => { const m = P.ment = P.ment || {}; for (const k of ['lvl', 'best', 'hist', 'days', 'free']) m[k] = m[k] || {}; return m; };
+const mKey = d => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+const MS = () => { const m = P.ment = P.ment || {}; for (const k of ['lvl', 'best', 'hist', 'days', 'free']) m[k] = m[k] || {}; m.tests = Array.isArray(m.tests) ? m.tests : []; m.goal = m.goal || 5;
+  // que el perfil no creixi sense límit: 400 dies d'historial i només el comptador de partides gratis d'avui
+  if (!MS.net || MS.net !== today()) { MS.net = today(); const ks = Object.keys(m.days).sort(); ks.slice(0, Math.max(0, ks.length - 400)).forEach(k => delete m.days[k]); Object.keys(m.free).forEach(k => k !== today() && delete m.free[k]); }
+  return m; };
 const mDay = (d = today()) => { const m = MS(); return m.days[d] = m.days[d] || { s: [], hab: 0 }; };
-// sessió del dia: un joc de cada grup, el que fa més dies que no es practica (es decideix un cop al dia i es guarda)
-const MSLOT = [['vel', 'ate', 'int'], ['mem', 'par', 'lli', 'dir'], ['cal', 'sud', 'pal', 'com', 'ref', 'rel']];
+const mLoc = () => LANG === 'es' ? 'es-ES' : 'ca-ES';
+// sessió del dia: un joc de cada grup; primer els que fa més dies que no es practiquen, i la capacitat a reforçar compta com si fes 3 dies més
+const MSLOT = [['vel', 'rfx', 'sim', 'ate', 'int', 'uni', 'atu'], ['mem', 'dig', 'par', 'lli', 'nom', 'nbk', 'dir'], ['cal', 'cad', 'com', 'sud', 'ser', 'rel', 'pal', 'sin', 'ref']];
 function mSession(d = today()) {
   const m = MS(), dd = m.days[d];
-  if (dd && Array.isArray(dd.ses) && dd.ses.length === 3) return dd.ses;
-  const n = mDayN(d), last = g => { const h = m.hist[g]; return h && h.length ? h[h.length - 1][0] : ''; };
-  const ses = MSLOT.map((sl, k) => [...sl].sort((a, b) => last(a).localeCompare(last(b)) || ((sl.indexOf(a) + n + k) % sl.length) - ((sl.indexOf(b) + n + k) % sl.length))[0]);
+  if (dd && Array.isArray(dd.ses) && dd.ses.length === 3 && dd.ses.every(g => MG[g])) return dd.ses;
+  const n = mDayN(d), fo = m.focus;
+  const age = g => { const h = m.hist[g]; const t = h && h.length ? n - mDayN(h[h.length - 1][0]) : 99; return t + (MG[g].cap === fo ? 3 : 0); };
+  const ses = MSLOT.map((sl, k) => [...sl].sort((a, b) => age(b) - age(a) || ((sl.indexOf(a) + n + k) % sl.length) - ((sl.indexOf(b) + n + k) % sl.length))[0]);
   if (d === today()) mDay(d).ses = ses;
   return ses;
 }
-const mLvl = g => MS().lvl[g] ?? (g === 'vel' ? 500 : g === 'mem' ? 3 : 1);
-const mNice = (g, v) => v == null ? '—' : g === 'vel' ? `${v} ms` : g === 'par' ? `${v} %` : g === 'sud' ? `${Math.floor(v / 60)}:${pad(v % 60)}` : String(v);
+const mLvl = g => MS().lvl[g] ?? (g === 'vel' ? 500 : g === 'mem' ? 3 : g === 'dig' ? 4 : 1);
+const mTime = v => v >= 60 ? `${Math.floor(v / 60)}:${pad(v % 60)}` : `${v} s`;
+const mNice = (g, v) => v == null ? '—' : !MG[g] ? String(v) : MG[g].unit === 'ms' ? `${v} ms` : MG[g].unit === '%' ? `${v} %` : MG[g].unit === 's' ? mTime(v) : MG[g].span ? `${v} ${L('seguits', 'seguidos')}` : String(v);
 const mHello = () => { const h = new Date().getHours(); return h < 13 ? L('Bon dia', 'Buenos días') : h < 20 ? L('Bona tarda', 'Buenas tardes') : L('Bona nit', 'Buenas noches'); };
+// dies entrenats (sessió completa) d'una setmana que comença en dilluns
+const mMonday = (d = new Date()) => { const x = new Date(d); x.setHours(12, 0, 0, 0); x.setDate(x.getDate() - (x.getDay() + 6) % 7); return x; };
+const mWeekDays = (mon = mMonday()) => [...Array(7).keys()].map(i => { const d = new Date(mon); d.setDate(d.getDate() + i); return d; });
+const mDone = k => { const x = MS().days[k]; return x && x.s.length >= 3 ? 2 : x && x.s.length ? 1 : 0; };
+const mWeekN = (mon = mMonday()) => mWeekDays(mon).filter(d => mDone(mKey(d)) === 2).length;
+const mSessions = () => Object.values(MS().days).filter(x => x.s && x.s.length >= 3).length;
 
 /* ---------- Navegació ---------- */
 let MGCUR = null, MGT = null, MGA = null, MGA_TK = null;
-function mStop() { mHush(); MRNG = Math.random; clearTimeout(MGT); clearInterval(MGA_TK); MGT = MGA_TK = null; MGA = null; MGCUR = null; }
+function mStop() { mHush(); MRNG = Math.random; clearTimeout(MGT); clearInterval(MGA_TK); if (MGA && MGA.to) clearTimeout(MGA.to); MGT = MGA_TK = null; MGA = null; MGCUR = null; }
 function mNav(t) {
-  const it = [['home', '☀️', L('Avui', 'Hoy')], ['jocs', '🧩', L('Jocs', 'Juegos')], ['progres', '📈', L('Progrés', 'Progreso')], ['profile', '👤', L('Perfil', 'Perfil')]];
-  return `<nav class="nav mnav">${it.map(([v, i, l]) => `<button class="${v === t ? 'on' : ''}" onclick="go('${v}')"><span class="ni">${i}</span><span>${l}</span></button>`).join('')}<button class="navxat" onclick="xatOpen()" aria-label="${L('Pregunta a en Numi', 'Pregunta a Numi')}"><span class="ni">${charSVG('numi', 'happy')}</span><span>${L('Pregunta', 'Pregunta')}</span></button></nav>`;
+  const it = [['home', 'avui', L('Avui', 'Hoy')], ['jocs', 'jocs', L('Entrena', 'Entrena')], ['progres', 'progres', L('Progrés', 'Progreso')], ['profile', 'perfil', L('Perfil', 'Perfil')]];
+  return `<nav class="nav mnav">${it.map(([v, i, l]) => `<button class="${v === t ? 'on' : ''}" onclick="go('${v}')"><span class="ni">${mSvg(i)}</span><span>${l}</span></button>`).join('')}<button class="navxat" onclick="xatOpen()" aria-label="${L('Pregunta a en Numi', 'Pregunta a Numi')}"><span class="ni">${mSvg('xat')}</span><span>${L('Pregunta', 'Pregunta')}</span></button></nav>`;
 }
 function mShell(t, body) {
-  return `<div class="mpage"><header class="mtop"><img src="${VAR.logo}" alt="${VAR.name}"><span class="mstreak" title="${L('Dies seguits', 'Días seguidos')}">🔥 ${P.streak || 0}</span></header><main class="mmain">${body}</main>${mNav(t)}</div>`;
+  return `<div class="mpage"><header class="mtop"><img src="${VAR.logo}" alt="${VAR.name}"><span class="mchip" title="${L('Dies seguits', 'Días seguidos')}">${mSvg('foc')} ${P.streak || 0}</span></header><main class="mmain">${body}</main>${mNav(t)}</div>`;
 }
 function mentGo(v) {
   mStop(); VIEW = ['home', 'jocs', 'progres', 'profile'].includes(v) ? v : 'home';
@@ -72,30 +155,50 @@ function mentGo(v) {
 }
 
 /* ---------- Avui ---------- */
+function mRing(k, n) { const C = 2 * Math.PI * 27; return `<div class="mring"><svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="27" fill="none" stroke="#EEE8DD" stroke-width="7"/>${k ? `<circle cx="32" cy="32" r="27" fill="none" stroke="var(--pri)" stroke-width="7" stroke-linecap="round" stroke-dasharray="${(C * k / n).toFixed(1)} ${C.toFixed(1)}"/>` : ''}</svg><b>${k}/${n}</b></div>`; }
 function mentHome() {
-  const s = mSession(), dd = mDay(), fets = s.filter(g => dd.s.includes(g)).length, nxt = s.find(g => !dd.s.includes(g));
-  const hab = MHAB[mDayN(today()) % MHAB.length];
-  const week = [...Array(7).keys()].map(i => { const d = new Date(); d.setDate(d.getDate() - 6 + i); const k = `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`, x = MS().days[k];
-    return `<i class="${x && x.s.length >= 3 ? 'on' : x && x.s.length ? 'mid' : ''} ${k === today() ? 'today' : ''}"><b>${d.toLocaleDateString(LANG === 'es' ? 'es-ES' : 'ca-ES', { weekday: 'narrow' })}</b></i>`; }).join('');
-  app.innerHTML = mShell('home', `<h1 class="mh1">${mHello()}, ${esc(P.name)}</h1>
-    <section class="mtcard msess"><div class="mthead"><b>${L("Sessió d'avui", 'Sesión de hoy')}</b><span>${L('uns 10 minuts', 'unos 10 minutos')}</span></div>
-      <div class="mgames">${s.map(g => `<button class="mg ${dd.s.includes(g) ? 'done' : ''}" onclick="mPlay('${g}',true)"><span class="mgi">${MG[g].ic}</span><b>${tx(MG[g].n)}</b><small>${tx(MCAP[MG[g].cap])}</small>${dd.s.includes(g) ? '<i class="mok">✓</i>' : ''}</button>`).join('')}</div>
-      ${nxt ? `<button class="btn big mbtn" onclick="mPlay('${nxt}',true)">${fets ? L('CONTINUA', 'CONTINÚA') : L('COMENÇA', 'EMPIEZA')}</button>` : `<p class="mtdone">🎉 ${L('Sessió feta! Demà en tens una de nova.', '¡Sesión hecha! Mañana tienes una nueva.')}</p><button class="btn ghost big" onclick="go('jocs')">${L('JUGA UNA ESTONA MÉS', 'JUEGA UN RATO MÁS')}</button>`}</section>
-    <section class="mtcard"><div class="mthead"><b>${L('Aquesta setmana', 'Esta semana')}</b><span>${L(`${P.streak || 0} ${P.streak === 1 ? 'dia seguit' : 'dies seguits'}`, `${P.streak || 0} ${P.streak === 1 ? 'día seguido' : 'días seguidos'}`)}</span></div><div class="mweek">${week}</div></section>
-    <section class="mtcard mhab ${dd.hab ? 'on' : ''}"><div class="mthead"><b>🌿 ${L('Fora de la pantalla', 'Fuera de la pantalla')}</b></div><p>${tx(hab)}</p>
-      <button class="btn ${dd.hab ? 'ghost' : ''}" onclick="mHab()">${dd.hab ? '✓ ' + L('FET!', '¡HECHO!') : L("HO FARÉ AVUI", 'LO HARÉ HOY')}</button></section>
-    <button class="link mcien" onclick="mentCiencia()">${L('Què diu la ciència sobre entrenar la ment?', '¿Qué dice la ciencia sobre entrenar la mente?')}</button>`);
+  const m = MS(), s = mSession(), dd = mDay(), fets = s.filter(g => dd.s.includes(g)).length, nxt = s.find(g => !dd.s.includes(g));
+  const hab = MHAB[mDayN(today()) % MHAB.length], wn = mWeekN(), first = !m.tests.length && !Object.keys(m.hist).length;
+  const week = mWeekDays().map(d => { const k = mKey(d), st = mDone(k);
+    return `<i class="${st === 2 ? 'on' : st ? 'mid' : ''} ${k === today() ? 'today' : ''}"><em>${st === 2 ? mSvg('ok') : ''}</em><b>${d.toLocaleDateString(mLoc(), { weekday: 'narrow' })}</b></i>`; }).join('');
+  const sess = `<section class="mtcard msess"><div class="msessh">${mRing(fets, 3)}<div><h2>${nxt ? L("La sessió d'avui", 'La sesión de hoy') : L('Sessió feta', 'Sesión hecha')}</h2><p>${nxt ? L('3 jocs · uns 10 minuts', '3 juegos · unos 10 minutos') : L('Demà en tindràs una de nova.', 'Mañana tendrás una nueva.')}</p></div></div>
+      <div class="mgames">${s.map(g => `<button class="mg ${dd.s.includes(g) ? 'done' : ''}" onclick="mPlay('${g}',true)">${mGic(g)}<span><b>${tx(MG[g].n)}</b><span class="mdom" style="--dc:var(--c-${MG[g].cap})">${tx(MCAP[MG[g].cap])}</span></span>${dd.s.includes(g) ? `<i class="mok">${mSvg('ok')}</i>` : `<span class="mnext">${mSvg('seg')}</span>`}</button>`).join('')}</div>
+      ${nxt ? `<button class="btn big mbtn" onclick="mPlay('${nxt}',true)">${fets ? L('Continua la sessió', 'Continúa la sesión') : L('Comença la sessió', 'Empieza la sesión')}</button>` : `<p class="mtdone">${L('Molt bé! Avui ja has entrenat.', '¡Muy bien! Hoy ya has entrenado.')}</p><button class="btn ghost big" onclick="go('jocs')">${L('Juga una estona més', 'Juega un rato más')}</button>`}</section>`;
+  app.innerHTML = mShell('home', `<p class="mdate">${(t => t[0].toUpperCase() + t.slice(1))(new Date().toLocaleDateString(mLoc(), { weekday: 'long', day: 'numeric', month: 'long' }))}</p><h1 class="mh1">${mHello()}, ${esc(P.name)}</h1>
+    ${first ? mAgeCard() + sess : sess + mAgeCard()}
+    <section class="mtcard"><div class="mthead"><b>${L('Aquesta setmana', 'Esta semana')}</b><span>${P.streak > 1 ? L(`${P.streak} dies seguits`, `${P.streak} días seguidos`) : ''}</span></div><div class="mweek">${week}</div>
+      <div class="mgoal"><div><b>${L(`${wn} de ${m.goal} dies entrenats`, `${wn} de ${m.goal} días entrenados`)}</b><span>${wn >= m.goal ? L('Objectiu complert!', '¡Objetivo cumplido!') : L('objectiu setmanal', 'objetivo semanal')}</span></div><div class="mprg"><i style="width:${Math.min(100, 100 * wn / m.goal)}%"></i></div></div></section>
+    <section class="mtcard mhab ${dd.hab ? 'on' : ''}"><span class="mgic">${mSvg('fulla')}</span><h3>${L('Fora de la pantalla', 'Fuera de la pantalla')}</h3><p>${tx(hab)}</p>
+      <button class="btn ghost" onclick="mHab()">${dd.hab ? L('Fet! ✓', '¡Hecho! ✓') : L('Ho faré avui', 'Lo haré hoy')}</button></section>
+    ${m.rem == null ? `<button class="mlnk" onclick="mRemind()"><span class="mgic" style="--dc:var(--acc)">${mSvg('campana')}</span><span><b>${L('Recorda-m\'ho cada dia', 'Recuérdamelo cada día')}</b><small>${L('Afegeix un avís diari al calendari del mòbil.', 'Añade un aviso diario al calendario del móvil.')}</small></span><span class="mnext">${mSvg('seg')}</span></button>` : ''}
+    <button class="mlnk" onclick="mentCiencia()"><span class="mgic" style="--dc:var(--c-log)">${mSvg('llibre')}</span><span><b>${L('Com entrenar la ment', 'Cómo entrenar la mente')}</b><small>${L('Què diu la ciència i què pots fer cada dia.', 'Qué dice la ciencia y qué puedes hacer cada día.')}</small></span><span class="mnext">${mSvg('seg')}</span></button>`);
 }
 function mHab() { const d = mDay(); d.hab = d.hab ? 0 : 1; save(); if (d.hab) { SFX.ok && SFX.ok(); toast(L('Molt bé! La ment també s\'entrena fora de la pantalla.', '¡Muy bien! La mente también se entrena fuera de la pantalla.')); } mentHome(); }
+// targeta de l'edat de la ment: convida a fer el test, o mostra l'última i quan toca repetir-lo
+function mAgeCard() {
+  const T = MS().tests, t = T[T.length - 1];
+  if (!t) return `<section class="mtcard mage"><div class="mthead"><b>${L('Quina edat té la teva ment?', '¿Qué edad tiene tu mente?')}</b></div>
+    <p>${L('Fes el test de 4 proves curtes (uns 4 minuts): rapidesa, atenció i memòria. Sabràs el teu punt de partida i què et convé entrenar.', 'Haz el test de 4 pruebas cortas (unos 4 minutos): rapidez, atención y memoria. Sabrás tu punto de partida y qué te conviene entrenar.')}</p>
+    <button class="btn big mbtn" onclick="mTestIntro()">${L('Fes el test', 'Haz el test')}</button></section>`;
+  const prev = T[T.length - 2], dif = prev ? prev.age - t.age : 0, left = 14 - (mDayN(today()) - mDayN(t.d));
+  return `<section class="mtcard mage"><div class="mthead"><b>${L('Edat de la ment', 'Edad de la mente')}</b><span>${L('orientativa', 'orientativa')}</span></div>
+    <div class="magebig"><b>${t.age}</b><span>${L('anys', 'años')}${t.real ? `<br>${L(`tu en tens ${t.real}`, `tú tienes ${t.real}`)}` : ''}</span></div>
+    ${prev ? `<span class="mtrend ${dif > 0 ? 'up' : ''}">${dif > 0 ? L(`${dif} ${dif === 1 ? 'any' : 'anys'} menys que la vegada anterior`, `${dif} ${dif === 1 ? 'año' : 'años'} menos que la vez anterior`) : dif < 0 ? L('Una mica més que la vegada anterior', 'Algo más que la vez anterior') : L('Igual que la vegada anterior', 'Igual que la vez anterior')}</span>` : ''}
+    ${left > 0 ? `<p>${L(`Podràs tornar a fer el test d'aquí a ${left} ${left === 1 ? 'dia' : 'dies'}. Mentrestant, entrena cada dia.`, `Podrás volver a hacer el test dentro de ${left} ${left === 1 ? 'día' : 'días'}. Mientras tanto, entrena cada día.`)}</p><button class="btn ghost mbtn" onclick="mAgeInfo()">${L('Veure el detall', 'Ver el detalle')}</button>`
+      : `<p>${L('Ja han passat dues setmanes: és hora de tornar-la a mesurar.', 'Ya han pasado dos semanas: es hora de volver a medirla.')}</p><button class="btn big mbtn" onclick="mTestIntro()">${L('Torna a fer el test', 'Vuelve a hacer el test')}</button>`}</section>`;
+}
 
-/* ---------- Jocs ---------- */
+/* ---------- Entrena (tots els jocs, per capacitats) ---------- */
 function mentJocs() {
-  const m = MS(), prem = isPremium(), fr = m.free[today()] || {};
-  app.innerHTML = mShell('jocs', `<h1 class="mh1">${L('Jocs', 'Juegos')}</h1><p class="mlead">${prem ? L('Juga tant com vulguis. La dificultat s\'adapta a tu.', 'Juega tanto como quieras. La dificultad se adapta a ti.') : L("Fora de la sessió d'avui, una partida gratis de cada joc al dia. Amb Premium, sense límit.", 'Fuera de la sesión de hoy, una partida gratis de cada juego al día. Con Premium, sin límite.')}</p>
-    <button class="mreptes" onclick="mentReptes()"><span class="mgi">🏆</span><span><b>${L('Reptes amb amics', 'Retos con amigos')}</b><small>${L("Repta algú o un grup al mateix joc, amb les mateixes preguntes.", 'Reta a alguien o a un grupo al mismo juego, con las mismas preguntas.')}</small></span><span class="mgo">›</span></button>
-    <div class="mjocs">${Object.entries(MG).map(([g, o]) => `<button class="mjoc" onclick="mPlay('${g}',false)"><span class="mgi">${o.ic}</span><b>${tx(o.n)}</b><small>${tx(o.d)}</small><span class="mrec">${L('Millor', 'Mejor')}: <b>${mNice(g, m.best[g])}</b>${!prem && fr[g] && !mSession().includes(g) ? ` · <i>${L('demà més', 'mañana más')}</i>` : ''}</span></button>`).join('')}</div>`);
+  const m = MS(), prem = isPremium(), fr = m.free[today()] || {}, ses = mSession();
+  const card = g => { const o = MG[g]; return `<button class="mjoc" onclick="mPlay('${g}',false)">${mGic(g)}<span><b>${tx(o.n)}${o.nou && !m.hist[g] ? `<span class="mnew">${L('Nou', 'Nuevo')}</span>` : ''}</b><small>${tx(o.d)}</small><span class="mrec">${m.hist[g] ? `${L('Millor', 'Mejor')}: <b>${mNice(g, m.best[g])}</b>` : L('Encara no hi has jugat', 'Aún no has jugado')}${!prem && fr[g] && !ses.includes(g) ? ` · <i>${L('demà més', 'mañana más')}</i>` : ''}</span></span></button>`; };
+  app.innerHTML = mShell('jocs', `<h1 class="mh1">${L('Entrena', 'Entrena')}</h1><p class="mlead">${prem ? L('Juga tant com vulguis. La dificultat s\'adapta a tu.', 'Juega tanto como quieras. La dificultad se adapta a ti.') : L("Els jocs de la sessió d'avui són lliures. De la resta, una partida gratis de cada joc al dia; amb Premium, sense límit.", 'Los juegos de la sesión de hoy son libres. Del resto, una partida gratis de cada juego al día; con Premium, sin límite.')}</p>
+    <button class="mlnk" onclick="${m.tests.length && 14 - (mDayN(today()) - mDayN(m.tests[m.tests.length - 1].d)) > 0 ? 'mAgeInfo()' : 'mTestIntro()'}"><span class="mgic" style="--dc:var(--ink)">${mSvg('ment')}</span><span><b>${L('Test de la ment', 'Test de la mente')}</b><small>${L('4 proves · uns 4 minuts · cada 2 setmanes', '4 pruebas · unos 4 minutos · cada 2 semanas')}</small></span><span class="mnext">${mSvg('seg')}</span></button>
+    <button class="mlnk mreptes" onclick="mentReptes()"><span class="mgic">${mSvg('copa')}</span><span><b>${L('Reptes amb amics', 'Retos con amigos')}</b><small>${L('Repta algú o un grup al mateix joc, amb les mateixes preguntes.', 'Reta a alguien o a un grupo al mismo juego, con las mismas preguntas.')}</small></span><span class="mnext">${mSvg('seg')}</span></button>
+    ${Object.keys(MCAP).map(c => `<div class="mdomh" style="--dc:var(--c-${c})"><h2>${tx(MCAP[c])}</h2></div><p class="mdomd">${tx(MCAPD[c])}</p><div class="mjocs">${Object.keys(MG).filter(g => MG[g].cap === c).map(card).join('')}</div>`).join('')}`);
 }
 function mPlay(g, ses) {
+  if (!MG[g]) return go('jocs');
   const prem = isPremium(), m = MS(), fr = m.free[today()] = m.free[today()] || {};
   const inSes = mSession().includes(g) && !mDay().s.includes(g);
   if (!ses && !inSes && !prem && fr[g]) return mPremium();
@@ -104,71 +207,82 @@ function mPlay(g, ses) {
   mIntro(g, inSes);
 }
 function mPremium() {
-  modal(`<div class="sheet card cent"><h3>${VAR.name} Premium</h3><p>${L("Avui ja has fet la partida gratis d'aquest joc. Amb Premium pots jugar a tots els jocs tant com vulguis.", 'Hoy ya has hecho la partida gratis de este juego. Con Premium puedes jugar a todos los juegos tanto como quieras.')}</p>
-    <button class="btn big gold" onclick="closeModal();buyPremium()">${L('VULL PREMIUM', 'QUIERO PREMIUM')}</button><button class="btn ghost big" onclick="closeModal()">${L('DEMÀ HO TORNO A PROVAR', 'MAÑANA LO VUELVO A PROBAR')}</button></div>`, true);
+  modal(`<div class="sheet card cent"><h3>${VAR.name} Premium</h3><p>${L("Avui ja has fet la partida gratis d'aquest joc. Amb Premium pots jugar a tots els jocs tant com vulguis i fer reptes amb amics.", 'Hoy ya has hecho la partida gratis de este juego. Con Premium puedes jugar a todos los juegos tanto como quieras y hacer retos con amigos.')}</p>
+    <button class="btn big gold" onclick="closeModal();buyPremium()">${L('Vull Premium', 'Quiero Premium')}</button><button class="btn ghost big" onclick="closeModal()">${L('Demà ho torno a provar', 'Mañana lo vuelvo a probar')}</button></div>`, true);
 }
-function mGameShell(g, top, body) {
-  app.innerHTML = `<div class="mgame"><div class="mgtop"><button class="xbtn" onclick="mQuit()" aria-label="${L('Surt', 'Salir')}">✕</button><b>${MG[g].ic} ${tx(MG[g].n)}</b><span id="mgstat">${top || ''}</span></div><div class="mgbody" id="mgb">${body}</div></div>`;
+function mGameShell(g, top, body, title) {
+  app.innerHTML = `<div class="mgame"><div class="mgtop"><button class="xbtn" onclick="mQuit()" aria-label="${L('Surt', 'Salir')}">✕</button><b>${title || tx(MG[g].n)}</b><span id="mgstat">${top || ''}</span></div><div class="mgbody" id="mgb">${body}</div></div>`;
 }
-function mQuit() { ask(L('Vols deixar aquesta partida?', '¿Quieres dejar esta partida?'), L('SURT', 'SALIR'), L('CONTINUA', 'SIGUE'), () => { mStop(); go('home'); }); }
+function mQuit() { ask(MGA && MGA.test ? L('Vols deixar el test? Hauràs de tornar a començar.', '¿Quieres dejar el test? Tendrás que volver a empezar.') : L('Vols deixar aquesta partida?', '¿Quieres dejar esta partida?'), L('Surt', 'Salir'), L('Continua', 'Sigue'), () => { mStop(); MT = null; go('home'); }); }
 function mIntro(g, inSes) {
   MGA = { ses: inSes };
-  mGameShell(g, '', `<div class="mintro"><span class="mbig">${MG[g].ic}</span><h2>${tx(MG[g].n)}</h2><p>${tx(MG[g].d)}</p>${mHow(g)}${'speechSynthesis' in window ? `<button class="btn ghost mspeak" onclick="mSpeak('${g}')">🔊 ${L("Escolta-ho", 'Escúchalo')}</button>` : ''}<button class="btn big mbtn" onclick="mStart('${g}')">${L('JUGA', 'JUEGA')}</button></div>`);
+  mGameShell(g, '', `<div class="mintro">${mGic(g)}<h2>${tx(MG[g].n)}</h2><p class="mdom" style="--dc:var(--c-${MG[g].cap});justify-content:center;display:flex">${tx(MCAP[MG[g].cap])}</p>${mHow(g)}${'speechSynthesis' in window ? `<button class="btn ghost mspeak" onclick="mSpeak('${g}')">${mSvg('so', 'mico')} ${L("Escolta-ho", 'Escúchalo')}</button>` : ''}<button class="btn big mbtn" onclick="mStart('${g}')">${L('Juga', 'Juega')}</button></div>`);
 }
 function mHow(g) {
   const h = {
     vel: L("Mira el centre. Durant un instant veuràs un cotxe o un camió i, al voltant, una estrella. Després et preguntarem què hi havia i on era l'estrella. Si l'encertes, cada vegada anirà més ràpid.", 'Mira el centro. Durante un instante verás un coche o un camión y, alrededor, una estrella. Después te preguntaremos qué había y dónde estaba la estrella. Si aciertas, cada vez irá más rápido.'),
+    rfx: L("Hi ha dos botons grans. Quan en un aparegui el cercle, toca'l tan ràpid com puguis. Els tres primers són d'escalfament. No toquis abans d'hora!", 'Hay dos botones grandes. Cuando en uno aparezca el círculo, tócalo lo más rápido que puedas. Los tres primeros son de calentamiento. ¡No toques antes de tiempo!'),
+    sim: L('A dalt tens la clau: cada símbol amb el seu número. Al mig surt un símbol: toca el seu número. Tens un minut.', 'Arriba tienes la clave: cada símbolo con su número. En el centro sale un símbolo: toca su número. Tienes un minuto.'),
     ate: L('Surt una paraula de color escrita amb una tinta d\'un altre color. Toca el botó del color de la <b>tinta</b>. Tens 45 segons.', 'Sale una palabra de color escrita con una tinta de otro color. Toca el botón del color de la <b>tinta</b>. Tienes 45 segundos.'),
-    mem: L("Les caselles s'encendran una darrere l'altra. Quan acabi, toca-les en el mateix ordre. Cada vegada que l'encertes, n'hi haurà una més.", 'Las casillas se encenderán una detrás de otra. Cuando acabe, tócalas en el mismo orden. Cada vez que aciertes, habrá una más.'),
-    par: L('Gira dues cartes cada vegada. Si són iguals, es queden girades.', 'Gira dos cartas cada vez. Si son iguales, se quedan giradas.'),
-    cal: L('Escriu el resultat amb el teclat. Quan és correcte, passa sol a la següent. Tens un minut.', 'Escribe el resultado con el teclado. Cuando es correcto, pasa solo a la siguiente. Tienes un minuto.'),
-    sud: L('Toca una casella buida i després el número. Si ho necessites, pots demanar una pista.', 'Toca una casilla vacía y después el número. Si lo necesitas, puedes pedir una pista.'),
-    pal: L('Toca les lletres en ordre per formar la paraula. La pista et diu de què va.', 'Toca las letras en orden para formar la palabra. La pista te dice de qué va.'),
     int: L('Totes les lletres són iguals menys una. Toca la diferent. Cada vegada n\'hi haurà més. Tens 45 segons.', 'Todas las letras son iguales menos una. Toca la diferente. Cada vez habrá más. Tienes 45 segundos.'),
+    uni: L('Toca els cercles en ordre, tan ràpid com puguis: 1, 2, 3… Quan hi hagi lletres, alterna número i lletra: 1, A, 2, B, 3, C…', 'Toca los círculos en orden, lo más rápido que puedas: 1, 2, 3… Cuando haya letras, alterna número y letra: 1, A, 2, B, 3, C…'),
+    atu: L('Aniran sortint figures. Si és un <b>cercle verd</b>, toca-la ràpid. Si és un <b>quadrat vermell</b>, no la toquis.', 'Irán saliendo figuras. Si es un <b>círculo verde</b>, tócala rápido. Si es un <b>cuadrado rojo</b>, no la toques.'),
+    mem: L("Les caselles s'encendran una darrere l'altra. Quan acabi, toca-les en el mateix ordre. Cada vegada que l'encertes, n'hi haurà una més.", 'Las casillas se encenderán una detrás de otra. Cuando acabe, tócalas en el mismo orden. Cada vez que aciertes, habrá una más.'),
+    dig: L("Sortiran uns números, d'un en un. Després, escriu-los en el mateix ordre. Si l'encertes, la llista s'allarga. Si et diem «al revés», escriu-los del final al principi.", 'Saldrán unos números, de uno en uno. Después, escríbelos en el mismo orden. Si aciertas, la lista se alarga. Si te decimos «al revés», escríbelos del final al principio.'),
+    par: L('Gira dues cartes cada vegada. Si són iguals, es queden girades.', 'Gira dos cartas cada vez. Si son iguales, se quedan giradas.'),
     lli: L('Veuràs una llista de la compra durant uns segons. Després, entre molts productes, toca només els que hi eren.', 'Verás una lista de la compra durante unos segundos. Después, entre muchos productos, toca solo los que estaban.'),
+    nom: L('Veuràs unes quantes persones i la ciutat on viu cadascuna. Després et preguntarem on viu cada persona.', 'Verás a unas cuantas personas y la ciudad donde vive cada una. Después te preguntaremos dónde vive cada persona.'),
+    nbk: L("Aniran sortint lletres, d'una en una. Per a cada lletra, digues si és <b>igual</b> que la d'abans o <b>diferent</b>. Més endavant, la compararàs amb la de fa dues.", 'Irán saliendo letras, de una en una. Para cada letra, di si es <b>igual</b> que la de antes o <b>diferente</b>. Más adelante, la compararás con la de hace dos.'),
     dir: L('Surts de la casella de la casa. Llegeix les indicacions (amunt, avall, dreta, esquerra) i toca la casella on acabes.', 'Sales de la casilla de la casa. Lee las indicaciones (arriba, abajo, derecha, izquierda) y toca la casilla donde acabas.'),
+    cal: L('Escriu el resultat amb el teclat. Quan és correcte, passa sol a la següent. Tens un minut.', 'Escribe el resultado con el teclado. Cuando es correcto, pasa solo a la siguiente. Tienes un minuto.'),
+    cad: L('Sortirà un número i després unes quantes sumes i restes, d\'una en una. Porta el total de cap i, al final, escriu-lo. Sis rondes.', 'Saldrá un número y después unas cuantas sumas y restas, de una en una. Lleva el total de cabeza y, al final, escríbelo. Seis rondas.'),
     com: L('Vuit preguntes de la compra de cada dia: quant costa tot, quant et tornen, quina oferta surt més a compte. Sense presses.', 'Ocho preguntas de la compra de cada día: cuánto cuesta todo, cuánto te devuelven, qué oferta sale más a cuenta. Sin prisas.'),
-    ref: L('Vuit refranys de sempre. Tria com acaba cadascun.', 'Ocho refranes de siempre. Elige cómo acaba cada uno.'),
-    rel: L("Vuit rellotges. Digues quina hora marquen i, més endavant, quina hora serà d'aquí a una estona.", 'Ocho relojes. Di qué hora marcan y, más adelante, qué hora será dentro de un rato.')
+    sud: L('Toca una casella buida i després el número. Si ho necessites, pots demanar una pista.', 'Toca una casilla vacía y después el número. Si lo necesitas, puedes pedir una pista.'),
+    ser: L('Vuit sèries de números. Mira com canvien d\'un a l\'altre i tria el que ve després.', 'Ocho series de números. Mira cómo cambian de uno a otro y elige el que viene después.'),
+    rel: L("Vuit rellotges. Digues quina hora marquen i, més endavant, quina hora serà d'aquí a una estona.", 'Ocho relojes. Di qué hora marcan y, más adelante, qué hora será dentro de un rato.'),
+    pal: L('Toca les lletres en ordre per formar la paraula. La pista et diu de què va.', 'Toca las letras en orden para formar la palabra. La pista te dice de qué va.'),
+    sin: L('Vuit paraules. Tria la que vol dir el mateix (sinònim) o el contrari, segons el que et demanem.', 'Ocho palabras. Elige la que significa lo mismo (sinónimo) o lo contrario, según lo que te pidamos.'),
+    ref: L('Vuit refranys de sempre. Tria com acaba cadascun.', 'Ocho refranes de siempre. Elige cómo acaba cada uno.')
   }[g];
   return `<p class="mhow">${h}</p>`;
 }
 // instruccions en veu alta (útil per a qui hi veu poc o prefereix escoltar)
 function mSpeak(g) {
   try {
-    const t = `${tx(MG[g].n)}. ${xatPlain ? xatPlain(mHow(g)) : ''}`, u = new SpeechSynthesisUtterance(t);
-    u.lang = LANG === 'es' ? 'es-ES' : 'ca-ES'; u.rate = .92;
+    const t = `${tx(MG[g].n)}. ${typeof xatPlain === 'function' ? xatPlain(mHow(g)) : mHow(g).replace(/<[^>]+>/g, '')}`, u = new SpeechSynthesisUtterance(t);
+    u.lang = mLoc(); u.rate = .92;
     const v = speechSynthesis.getVoices().find(v => v.lang && v.lang.toLowerCase().startsWith(LANG === 'es' ? 'es' : 'ca')); if (v) u.voice = v;
     speechSynthesis.cancel(); speechSynthesis.speak(u);
   } catch (e) { }
 }
 const mHush = () => { try { speechSynthesis.cancel(); } catch (e) { } };
-function mStart(g) { mHush(); SFX.tap && SFX.tap(); ({ vel: velGo, ate: ateGo, mem: memGo, par: parGo, cal: calGo, sud: sudGo, pal: palGo, int: intGo, lli: lliGo, dir: dirGo, com: comGo, ref: refGo, rel: relGo })[g](); }
+function mStart(g) { mHush(); SFX.tap && SFX.tap(); ({ vel: velGo, ate: ateGo, mem: memGo, par: parGo, cal: calGo, sud: sudGo, pal: palGo, int: intGo, lli: lliGo, dir: dirGo, com: comGo, ref: refGo, rel: relGo, rfx: rfxGo, sim: simGo, uni: uniGo, atu: atuGo, dig: digGo, nbk: nbkGo, nom: nomGo, cad: cadGo, ser: serGo, sin: sinGo })[g](); }
 
 // resultat: guarda, adapta el nivell i marca la sessió
 function mEnd(g, score, up, msg) {
   if (MGA && MGA.duel) return mDuelEnd(g);
-  const m = MS(), was = m.best[g], lowB = MG[g].low || g === 'sud', ses = !!(MGA && MGA.ses);
+  if (MGA && MGA.test) return mTestStep(g, score);
+  const m = MS(), was = m.best[g], lowB = !!MG[g].low, ses = !!(MGA && MGA.ses);
   mStop();
-  if (score != null) {
-    const rec = was == null || (lowB ? score < was : score > was);
-    if (rec) m.best[g] = score;
-    (m.hist[g] = m.hist[g] || []).push([today(), score]); if (m.hist[g].length > 40) m.hist[g].shift();
-    if (g !== 'vel' && g !== 'mem') m.lvl[g] = Math.max(1, Math.min(10, mLvl(g) + (up || 0)));
-    const d = mDay(); if (ses && !d.s.includes(g) && mSession().includes(g)) d.s.push(g);
-    touchStreak(); P.xp = (P.xp || 0) + 10; save(); syncNow();
-    const s = mSession(), left = s.filter(x => !mDay().s.includes(x)), nx = left[0];
-    app.innerHTML = `<div class="mgame"><div class="mres"><span class="mbig">${rec && was != null ? '🏆' : MG[g].ic}</span><h2>${rec && was != null ? L('Nou rècord!', '¡Nuevo récord!') : L('Ben fet!', '¡Bien hecho!')}</h2>
-      <p class="mscore">${mNice(g, score)}</p><p>${msg || ''}</p>${was != null && !rec ? `<p class="mmut">${L('El teu millor resultat', 'Tu mejor resultado')}: ${mNice(g, was)}</p>` : ''}
-      ${ses && nx ? `<p class="mmut">${L(`Sessió d'avui: ${3 - left.length} de 3`, `Sesión de hoy: ${3 - left.length} de 3`)}</p><button class="btn big mbtn" onclick="mPlay('${nx}',true)">${L('SEGÜENT JOC', 'SIGUIENTE JUEGO')} · ${tx(MG[nx].n)}</button>` : ''}
-      ${ses && !nx ? `<p class="mtdone">🎉 ${L('Sessió d\'avui completada!', '¡Sesión de hoy completada!')}</p>` : ''}
-      <button class="btn ${ses && nx ? 'ghost' : ''} big" onclick="go('home')">${L('TORNA A L\'INICI', 'VUELVE AL INICIO')}</button></div></div>`;
-    SFX.win && SFX.win(); if (rec && was != null && typeof confetti === 'function') confetti(80);
-  } else go('home');
+  if (score == null) return go('home');
+  const rec = was == null || (lowB ? score < was : score > was);
+  if (rec) m.best[g] = score;
+  (m.hist[g] = m.hist[g] || []).push([today(), score]); if (m.hist[g].length > 40) m.hist[g].shift();
+  if (!MG[g].span && !MG[g].lvx) m.lvl[g] = Math.max(1, Math.min(10, mLvl(g) + (up || 0)));
+  const d = mDay(); if (ses && !d.s.includes(g) && mSession().includes(g)) d.s.push(g);
+  touchStreak(); P.xp = (P.xp || 0) + 10; save(); syncNow();
+  const s = mSession(), left = s.filter(x => !mDay().s.includes(x)), nx = left[0], fita = mFitesNew();
+  app.innerHTML = `<div class="mgame"><div class="mgbody"><div class="mres">${mGic(g)}<h2>${rec && was != null ? L('Nou rècord!', '¡Nuevo récord!') : L('Ben fet!', '¡Bien hecho!')}</h2>
+    <p class="mscore">${mNice(g, score)}</p><p>${msg || ''}</p>${was != null && !rec ? `<p class="mmut">${L('El teu millor resultat', 'Tu mejor resultado')}: ${mNice(g, was)}</p>` : ''}
+    ${fita ? `<p class="mtcard" style="display:flex;gap:12px;align-items:center;text-align:left"><span class="mgic" style="--dc:var(--acc)">${mSvg('medalla')}</span><span><b>${L('Nova fita', 'Nuevo logro')}</b><br>${tx(fita[1])}</span></p>` : ''}
+    ${ses && nx ? `<p class="mmut">${L(`Sessió d'avui: ${3 - left.length} de 3`, `Sesión de hoy: ${3 - left.length} de 3`)}</p><button class="btn big mbtn" onclick="mPlay('${nx}',true)">${L('Següent joc', 'Siguiente juego')}: ${tx(MG[nx].n)}</button>` : ''}
+    ${ses && !nx ? `<p class="mtdone">${L('Sessió d\'avui completada!', '¡Sesión de hoy completada!')}</p>` : ''}
+    <button class="btn ${ses && nx ? 'ghost' : ''} big mbtn" style="margin-top:10px" onclick="go('home')">${L('Torna a l\'inici', 'Vuelve al inicio')}</button></div></div></div>`;
+  SFX.win && SFX.win(); if ((rec && was != null || (ses && !nx)) && typeof confetti === 'function') confetti(70);
 }
 const mSet = h => { const e = $('#mgstat'); if (e) e.innerHTML = h; };
 const mSleep = ms => new Promise(r => { MGT = setTimeout(r, ms); });
-
+const mTimer = (secs, onEnd, extra) => { MGA.end = Date.now() + secs * 1000; MGA_TK = setInterval(() => { if (!MGA) return; const s = Math.max(0, Math.ceil((MGA.end - Date.now()) / 1000)); mSet(`${s} s${extra ? ' · ' + extra() : ''}`); if (s <= 0) onEnd(); }, 250); };
 /* ---------- 1. Mirada ràpida (velocitat de processament, com l'estudi ACTIVE) ---------- */
 function velGo() { MGA = { ...MGA, T: mLvl('vel'), n: 0, ok: 0, g: MGCUR }; velTrial(); }
 async function velTrial() {
@@ -202,17 +316,18 @@ const MCOL = [['VERMELL', 'ROJO', '#D93A3A'], ['BLAU', 'AZUL', '#2166D1'], ['VER
 function ateGo() {
   const lv = mDlv('ate'); MGA = { ...MGA, ok: 0, ko: 0, end: Date.now() + 45000, inc: Math.min(.9, .45 + lv * .05) };
   $('#mgb').innerHTML = `<div class="atew" id="atew"></div><div class="ateb">${MCOL.map((c, i) => `<button class="atebtn" style="--c:${c[2]}" onclick="ateA(${i})">${LANG === 'es' ? c[1] : c[0]}</button>`).join('')}</div>`;
-  ateNext(); MGA_TK = setInterval(() => { const s = Math.max(0, Math.ceil((MGA.end - Date.now()) / 1000)); mSet(`⏱ ${s} s · ✓ ${MGA.ok}`); if (s <= 0) ateEnd(); }, 250);
+  ateNext(); MGA_TK = setInterval(() => { const s = Math.max(0, Math.ceil((MGA.end - Date.now()) / 1000)); mSet(`${s} s · ✓ ${MGA.ok}`); if (s <= 0) ateEnd(); }, 250);
 }
 function ateNext() { const A = MGA, w = mri(0, 3); let ink = w; if (mrnd() < A.inc) while (ink === w) ink = mri(0, 3); A.ink = ink; const el = $('#atew'); if (el) { el.textContent = LANG === 'es' ? MCOL[w][1] : MCOL[w][0]; el.style.color = MCOL[ink][2]; el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop'); } }
-function ateA(i) { const A = MGA; if (!A || A.ink == null) return; if (i === A.ink) { A.ok++; SFX.tap && SFX.tap(); } else { A.ko++; SFX.ko && SFX.ko(); const el = $('#atew'); el && el.classList.add('shake'); } ateNext(); }
+function ateA(i) { const A = MGA; if (!A || A.ink == null) return; const b = $$('.atebtn')[i]; if (i === A.ink) { A.ok++; SFX.tap && SFX.tap(); } else { A.ko++; SFX.ko && SFX.ko(); const el = $('#atew'); el && (el.classList.remove('shake'), void el.offsetWidth, el.classList.add('shake')); } mFlash(b, i === A.ink); ateNext(); }
+const mFlash = (b, ok) => { if (!b) return; b.classList.remove('fok', 'fko'); void b.offsetWidth; b.classList.add(ok ? 'fok' : 'fko'); clearTimeout(b._f); b._f = setTimeout(() => b.classList.remove('fok', 'fko'), 450); };
 function ateEnd() {
   clearInterval(MGA_TK); const A = MGA, acc = A.ok + A.ko ? A.ok / (A.ok + A.ko) : 0;
   mEnd('ate', A.ok, acc >= .9 && A.ok >= 20 ? 1 : acc < .7 ? -1 : 0, L(`${A.ok} encerts i ${A.ko} errors. La clau és no deixar-se enganyar per la paraula.`, `${A.ok} aciertos y ${A.ko} errores. La clave es no dejarse engañar por la palabra.`));
 }
 
 /* ---------- 3. Seqüències (memòria de treball visoespacial, tipus Corsi) ---------- */
-function memGo() { const span = mLvl('mem'); MGA = { ...MGA, len: Math.max(3, span - 1), fails: 0, best: 0, n: span >= 6 ? 4 : 3 }; memRound(); }
+function memGo() { const test = MGA && MGA.test, span = test ? 4 : mLvl('mem'); MGA = { ...MGA, len: Math.max(3, span - 1), fails: 0, best: 0, n: span >= 6 ? 4 : 3 }; memRound(); }
 async function memRound() {
   const A = MGA, N = A.n * A.n; if (!A || MGCUR !== 'mem') return;
   A.seq = []; while (A.seq.length < A.len) { const c = ri(0, N - 1); if (c !== A.seq[A.seq.length - 1]) A.seq.push(c); } A.inp = []; A.lock = true;
@@ -229,10 +344,10 @@ async function memTap(i) {
   if (A.inp[k] !== A.seq[k]) {
     A.lock = true; A.fails++; SFX.ko && SFX.ko(); $('#memq').textContent = L('Oh! No era aquesta.', '¡Oh! No era esta.');
     await mSleep(900); if (MGA !== A) return;
-    if (A.fails >= 2) { MS().lvl.mem = Math.max(3, A.best || A.len - 1); return mEnd('mem', A.best || A.len - 1, 0, L(`Has recordat seqüències de fins a ${A.best || A.len - 1} caselles.`, `Has recordado secuencias de hasta ${A.best || A.len - 1} casillas.`)); }
+    if (A.fails >= 2) { if (!A.test) MS().lvl.mem = Math.max(3, A.best || A.len - 1); return mEnd('mem', A.best || A.len - 1, 0, L(`Has recordat seqüències de fins a ${A.best || A.len - 1} caselles.`, `Has recordado secuencias de hasta ${A.best || A.len - 1} casillas.`)); }
     return memRound();
   }
-  if (A.inp.length === A.seq.length) { A.lock = true; A.best = A.len; A.fails = 0; A.len++; SFX.ok && SFX.ok(); $('#memq').textContent = L('Perfecte! Una més…', '¡Perfecto! Una más…'); await mSleep(900); if (MGA === A) { if (A.len > 12) { MS().lvl.mem = 12; return mEnd('mem', 12, 0, ''); } memRound(); } }
+  if (A.inp.length === A.seq.length) { A.lock = true; A.best = A.len; A.fails = 0; A.len++; SFX.ok && SFX.ok(); $('#memq').textContent = L('Perfecte! Una més…', '¡Perfecto! Una más…'); await mSleep(900); if (MGA === A) { if (A.len > 12) { if (!A.test) MS().lvl.mem = 12; return mEnd('mem', 12, 0, ''); } memRound(); } }
 }
 
 /* ---------- 4. Parelles (memòria visual) ---------- */
@@ -273,8 +388,8 @@ function calQ(lv) {
 }
 function calGo() {
   const lv = mDlv('cal'); MGA = { ...MGA, lv, ok: 0, end: Date.now() + 60000, inp: '' };
-  $('#mgb').innerHTML = `<p class="calq" id="calq"></p><div class="calin" id="calin">?</div><div class="mpad">${[1, 2, 3, 4, 5, 6, 7, 8, 9, '⌫', 0].map(k => `<button onclick="calK('${k}')">${k}</button>`).join('')}</div>`;
-  calNext(); MGA_TK = setInterval(() => { const s = Math.max(0, Math.ceil((MGA.end - Date.now()) / 1000)); mSet(`⏱ ${s} s · ✓ ${MGA.ok}`); if (s <= 0) calEnd(); }, 250);
+  $('#mgb').innerHTML = `<p class="calq" id="calq"></p><div class="calin" id="calin">?</div><div class="mpad">${[1, 2, 3, 4, 5, 6, 7, 8, 9, '⌫', 0].map(k => `<button class="${k === 0 ? 'k0' : ''}" onclick="calK('${k}')">${k}</button>`).join('')}</div>`;
+  calNext(); MGA_TK = setInterval(() => { const s = Math.max(0, Math.ceil((MGA.end - Date.now()) / 1000)); mSet(`${s} s · ✓ ${MGA.ok}`); if (s <= 0) calEnd(); }, 250);
 }
 function calNext() { const A = MGA, [q, r] = calQ(A.lv); A.q = q; A.r = r; A.inp = ''; $('#calq').textContent = q + ' ='; $('#calin').textContent = '?'; $('#calin').className = 'calin'; }
 function calK(k) {
@@ -303,7 +418,7 @@ function sudGo() {
   const lv = mLvl('sud'), cfg = [[4, 2, 2, 6], [4, 2, 2, 9], [6, 2, 3, 14], [6, 2, 3, 18], [6, 2, 3, 22], [9, 3, 3, 36], [9, 3, 3, 40], [9, 3, 3, 44], [9, 3, 3, 48], [9, 3, 3, 52]][lv - 1];
   const S = sudMake(...cfg);
   MGA = { ...MGA, S, cur: S.g.map(r => r.slice()), fix: S.g.map(r => r.map(v => !!v)), sel: null, hints: 0, t0: Date.now() };
-  sudDraw(); MGA_TK = setInterval(() => { const s = Math.floor((Date.now() - MGA.t0) / 1000); mSet(`⏱ ${Math.floor(s / 60)}:${pad(s % 60)}`); }, 1000);
+  sudDraw(); MGA_TK = setInterval(() => { const s = Math.floor((Date.now() - MGA.t0) / 1000); mSet(`${Math.floor(s / 60)}:${pad(s % 60)}`); }, 1000);
 }
 function sudDraw() {
   const A = MGA, { n, br, bc } = A.S, cur = A.cur;
@@ -345,7 +460,7 @@ function palPick(lv, used) {
   let c = all.filter(([, w]) => Math.abs(len(w) - want) <= (lv >= 9 ? 2 : 0) && !used.has(w)); if (c.length < 3) c = all.filter(([, w]) => !used.has(w));
   return pick(c);
 }
-function palGo() { MGA = { ...MGA, lv: mLvl('pal'), ok: 0, n: 0, used: new Set(), end: Date.now() + 120000 }; palNext(); MGA_TK = setInterval(() => { const s = Math.max(0, Math.ceil((MGA.end - Date.now()) / 1000)); mSet(`⏱ ${Math.floor(s / 60)}:${pad(s % 60)} · ✓ ${MGA.ok}`); if (s <= 0) palEnd(); }, 250); }
+function palGo() { MGA = { ...MGA, lv: mLvl('pal'), ok: 0, n: 0, used: new Set(), end: Date.now() + 120000 }; palNext(); MGA_TK = setInterval(() => { const s = Math.max(0, Math.ceil((MGA.end - Date.now()) / 1000)); mSet(`${Math.floor(s / 60)}:${pad(s % 60)} · ✓ ${MGA.ok}`); if (s <= 0) palEnd(); }, 250); }
 function palNext() {
   const A = MGA; if (A.n >= 6) return palEnd();
   const [cat, w] = palPick(A.lv, A.used); A.used.add(w); A.n++;
@@ -372,13 +487,18 @@ function palEnd() { clearInterval(MGA_TK); const A = MGA; mEnd('pal', A.ok, A.ok
 
 /* ---------- 8. L'intrús (atenció visual: cerca del signe diferent) ---------- */
 const MINT = [['O', 'Q'], ['E', 'F'], ['b', 'd'], ['6', '9'], ['M', 'N'], ['p', 'q'], ['C', 'G'], ['V', 'Y'], ['8', 'B'], ['u', 'n']];
-function intGo() { MGA = { ...MGA, lv: mDlv('int'), ok: 0, ko: 0, end: Date.now() + 45000 }; intNext(); MGA_TK = setInterval(() => { const s = Math.max(0, Math.ceil((MGA.end - Date.now()) / 1000)); mSet(`⏱ ${s} s · ✓ ${MGA.ok}`); if (s <= 0) intEnd(); }, 250); }
+function intGo() { MGA = { ...MGA, lv: mDlv('int'), ok: 0, ko: 0, end: Date.now() + 45000 }; intNext(); MGA_TK = setInterval(() => { const s = Math.max(0, Math.ceil((MGA.end - Date.now()) / 1000)); mSet(`${s} s · ✓ ${MGA.ok}${MGA.ko ? ` · ✗ ${MGA.ko}` : ''}`); if (s <= 0) intEnd(); }, 250); }
 function intNext() {
   const A = MGA, n = Math.min(8, 4 + Math.floor((A.lv - 1) / 2) + Math.floor(A.ok / 4)), pr = mpick(MINT.slice(0, Math.min(MINT.length, 3 + A.lv))), sw = mrnd() < .5;
   const [base, odd] = sw ? [pr[1], pr[0]] : pr; A.odd = mri(0, n * n - 1);
   $('#mgb').innerHTML = `<p class="mtq">${L('Toca el diferent', 'Toca el diferente')}</p><div class="intg" style="--n:${n}">${[...Array(n * n).keys()].map(i => `<button class="intc" onclick="intTap(${i})">${i === A.odd ? odd : base}</button>`).join('')}</div>`;
 }
-function intTap(i) { const A = MGA; if (!A) return; if (i === A.odd) { A.ok++; SFX.ok && SFX.ok(); intNext(); } else { A.ko++; SFX.ko && SFX.ko(); const g = $('.intg'); g && (g.classList.remove('shake'), void g.offsetWidth, g.classList.add('shake')); } }
+// en tocar, la casella es marca: verd si és l'intrús, vermell si no ho és (i es veu on era)
+function intTap(i) {
+  const A = MGA; if (!A || A.lock) return; const c = $$('.intc');
+  if (i === A.odd) { A.ok++; SFX.ok && SFX.ok(); A.lock = true; c[i].classList.add('ok'); MGT = setTimeout(() => { if (MGA === A) { A.lock = false; intNext(); } }, 280); }
+  else { A.ko++; SFX.ko && SFX.ko(); c[i].classList.remove('ko'); void c[i].offsetWidth; c[i].classList.add('ko'); setTimeout(() => c[i] && c[i].classList.remove('ko'), 700); mSet(`${Math.max(0, Math.ceil((A.end - Date.now()) / 1000))} s · ✓ ${A.ok} · ✗ ${A.ko}`); }
+}
 function intEnd() { clearInterval(MGA_TK); const A = MGA; mEnd('int', A.ok, A.ok >= 14 && A.ko <= 2 ? 1 : A.ok <= 6 ? -1 : 0, L(`${A.ok} trobats${A.ko ? ` i ${A.ko} errors` : ''} en 45 segons.`, `${A.ok} encontrados${A.ko ? ` y ${A.ko} errores` : ''} en 45 segundos.`)); }
 
 /* ---------- 9. Llista de la compra (memòria verbal: reconeixement) ---------- */
@@ -499,48 +619,443 @@ async function relTap(i) {
   b[A.ans].classList.add('okc'); if (!ok) b[i].classList.add('koc'); ok ? (A.ok++, SFX.ok && SFX.ok()) : SFX.ko && SFX.ko();
   await mSleep(1100); if (MGA === A) { A.lock = false; relNext(); }
 }
+/* ---------- 14. Reflexos (temps de reacció d'elecció entre dos costats) ---------- */
+function rfxGo() {
+  MGA = { ...MGA, n: 0, N: MGA && MGA.test ? 13 : 15, pr: 3, rts: [], ko: 0, early: 0 };
+  $('#mgb').innerHTML = `<p class="mtq" id="rfxq">${L('Escalfament: toca on surti el cercle', 'Calentamiento: toca donde salga el círculo')}</p><div class="rfxb"><button id="rb0" onpointerdown="rfxTap(0)" aria-label="${L('Esquerra', 'Izquierda')}"><i></i></button><button id="rb1" onpointerdown="rfxTap(1)" aria-label="${L('Dreta', 'Derecha')}"><i></i></button></div>`;
+  rfxNext();
+}
+async function rfxNext() {
+  const A = MGA; if (!A || MGCUR !== 'rfx') return;
+  if (A.n >= A.N) return rfxEnd();
+  A.side = null; mSet(A.n < A.pr ? L('Escalfament', 'Calentamiento') : `${A.n - A.pr + 1}/${A.N - A.pr}`);
+  if (A.n === A.pr) { const q = $('#rfxq'); if (q) q.textContent = L('Ara de veritat: tan ràpid com puguis', 'Ahora de verdad: lo más rápido que puedas'); }
+  await mSleep(900 + mrnd() * 1700); if (MGA !== A) return;
+  A.side = mri(0, 1); A.t = performance.now(); $('#rb' + A.side).classList.add('on');
+  A.to = setTimeout(() => { if (MGA === A && A.side != null) rfxTap(-1); }, 2500);
+}
+function rfxTap(i) {
+  const A = MGA; if (!A || MGCUR !== 'rfx') return;
+  if (A.side == null) { if (i >= 0) { A.early++; const q = $('#rfxq'); if (q) q.textContent = L('Espera que surti el cercle!', '¡Espera a que salga el círculo!'); } return; }
+  const rt = performance.now() - A.t, ok = i === A.side; clearTimeout(A.to);
+  $('#rb' + A.side).classList.remove('on'); A.side = null;
+  if (A.n >= A.pr) { if (ok && rt >= 150) A.rts.push(rt); else if (!ok) A.ko++; }
+  A.n++; ok ? SFX.tap && SFX.tap() : SFX.ko && SFX.ko();
+  rfxNext();
+}
+function rfxEnd() {
+  const A = MGA, r = [...A.rts].sort((a, b) => a - b), med = r.length ? Math.round(r[Math.floor(r.length / 2)]) : 999;
+  mEnd('rfx', med, 0, L(`Temps típic de resposta: ${med} ms${A.ko ? ` (${A.ko} ${A.ko === 1 ? 'error' : 'errors'})` : ''}. Com més baix, més ràpid.`, `Tiempo típico de respuesta: ${med} ms${A.ko ? ` (${A.ko} ${A.ko === 1 ? 'error' : 'errores'})` : ''}. Cuanto más bajo, más rápido.`));
+}
+
+/* ---------- 15. Símbols i números (velocitat de processament, com el test de símbols i dígits) ---------- */
+const MSYM = ['<path d="M12 4 20.5 19h-17z"/>', '<circle cx="12" cy="12" r="8"/>', '<rect x="4.5" y="4.5" width="15" height="15" rx="1"/>', '<path d="M12 3.5v17M3.5 12h17"/>', '<path d="M5 5l14 14M19 5 5 19"/>',
+  '<path d="M12 3l8.5 9-8.5 9-8.5-9z"/>', '<path d="M3 15c3-8 6-8 9 0s6 8 9 0"/>', '<path d="M4 6h16M4 12h16M4 18h16"/>', '<path d="M6 3.5v17h13"/>'];
+const mSym = i => `<svg class="msym" viewBox="0 0 24 24">${MSYM[i]}</svg>`;
+function simGo() {
+  const test = MGA && MGA.test, k = test ? 9 : Math.min(9, 4 + mDlv('sim'));
+  const key = mshuf([...Array(9).keys()]).slice(0, k);
+  MGA = { ...MGA, k, key, ok: 0, ko: 0, cur: -1 };
+  $('#mgb').innerHTML = `<div class="simkey" style="--k:${k}">${key.map((s, i) => `<div>${mSym(s)}<b>${i + 1}</b></div>`).join('')}</div><div class="simbig" id="simb"></div><div class="simpad" style="--c:${k <= 5 ? k : Math.ceil(k / 2)}">${key.map((_, i) => `<button onclick="simTap(${i})">${i + 1}</button>`).join('')}</div>`;
+  simNext(); mTimer(60, simEnd, () => `✓ ${MGA.ok}`);
+}
+function simNext() { const A = MGA; let c; do c = mri(0, A.k - 1); while (c === A.cur && A.k > 1); A.cur = c; const b = $('#simb'); if (b) { b.innerHTML = mSym(A.key[c]); b.classList.remove('pop'); void b.offsetWidth; b.classList.add('pop'); } }
+function simTap(i) { const A = MGA; if (!A || A.cur < 0) return; const ok = i === A.cur; if (ok) { A.ok++; SFX.tap && SFX.tap(); } else { A.ko++; SFX.ko && SFX.ko(); } mFlash($$('.simpad button')[i], ok); simNext(); }
+function simEnd() { clearInterval(MGA_TK); const A = MGA; A.cur = -1; mEnd('sim', A.ok, A.ok >= 32 && A.ko <= 2 ? 1 : A.ok < 16 ? -1 : 0, L(`${A.ok} encerts${A.ko ? ` i ${A.ko} errors` : ''} en un minut.`, `${A.ok} aciertos${A.ko ? ` y ${A.ko} errores` : ''} en un minuto.`)); }
+
+/* ---------- 16. Uneix els punts (atenció i flexibilitat, com el Trail Making) ---------- */
+function uniGo() {
+  const lv = mLvl('uni'), B = lv >= 4, n = B ? Math.min(16, 8 + (lv - 4) * 2) : [10, 12, 15][lv - 1];
+  const lab = [...Array(n).keys()].map(i => B ? (i % 2 ? 'ABCDEFGH'[(i - 1) / 2] : String(i / 2 + 1)) : String(i + 1));
+  const pts = [];
+  for (let t = 0; pts.length < n && t < 4000; t++) { const p = [mri(9, 91), mri(9, 91)]; if (pts.every(q => Math.hypot(q[0] - p[0], q[1] - p[1]) > 17)) pts.push(p); }
+  while (pts.length < n) pts.push([mri(9, 91), mri(9, 91)]);
+  MGA = { ...MGA, n, lab, pts, next: 0, err: 0, B, t0: Date.now() };
+  $('#mgb').innerHTML = `<p class="mtq">${B ? L('1 → A → 2 → B → 3…', '1 → A → 2 → B → 3…') : L('1 → 2 → 3 → 4…', '1 → 2 → 3 → 4…')}</p><div class="unibox" id="unib"><svg viewBox="0 0 100 100" preserveAspectRatio="none" id="unil"></svg>${pts.map((p, i) => `<button class="unic ${/\d/.test(lab[i]) ? '' : 'let'}" id="uc${i}" style="left:${p[0]}%;top:${p[1]}%" onclick="uniTap(${i})">${lab[i]}</button>`).join('')}</div>`;
+  MGA_TK = setInterval(() => { if (MGA) mSet(mTime(Math.floor((Date.now() - MGA.t0) / 1000))); }, 500);
+}
+function uniTap(i) {
+  const A = MGA; if (!A || MGCUR !== 'uni') return; const b = $('#uc' + i);
+  if (i < A.next) return;
+  if (i !== A.next) { A.err++; SFX.ko && SFX.ko(); b.classList.remove('bad'); void b.offsetWidth; b.classList.add('bad'); return; }
+  b.classList.add('done'); SFX.tap && SFX.tap();
+  if (i > 0) { const p = A.pts[i - 1], q = A.pts[i]; $('#unil').insertAdjacentHTML('beforeend', `<line x1="${p[0]}" y1="${p[1]}" x2="${q[0]}" y2="${q[1]}" stroke="#177E6E" stroke-width="1.2" stroke-linecap="round" vector-effect="non-scaling-stroke" style="stroke-width:4"/>`); }
+  A.next++;
+  if (A.next === A.n) { clearInterval(MGA_TK); const s = Math.round((Date.now() - A.t0) / 1000), per = s / A.n;
+    setTimeout(() => MGA === A && mEnd('uni', s, per < (A.B ? 2.2 : 1.6) && A.err <= 1 ? 1 : per > (A.B ? 4.5 : 3.2) ? -1 : 0, L(`${A.n} punts en ${mTime(s)}${A.err ? ` amb ${A.err} ${A.err === 1 ? 'error' : 'errors'}` : ' sense errors'}.`, `${A.n} puntos en ${mTime(s)}${A.err ? ` con ${A.err} ${A.err === 1 ? 'error' : 'errores'}` : ' sin errores'}.`)), 500); }
+}
+
+/* ---------- 17. Verd sí, vermell no (control de la resposta: go/no-go) ---------- */
+function atuGo() {
+  const lv = mDlv('atu'); MGA = { ...MGA, N: 30, i: 0, ok: 0, ko: 0, rts: [], dur: Math.max(560, 1300 - lv * 75), cur: null };
+  $('#mgb').innerHTML = `<p class="mtq">${L('Verd: toca. Vermell: no.', 'Verde: toca. Rojo: no.')}</p><button class="atubox" id="atub" onpointerdown="atuTap()" aria-label="${L('Toca', 'Toca')}"></button>`;
+  atuNext();
+}
+async function atuNext() {
+  const A = MGA; if (!A || MGCUR !== 'atu') return;
+  if (A.i >= A.N) { const avg = A.rts.length ? Math.round(A.rts.reduce((a, b) => a + b, 0) / A.rts.length) : 0, pct = Math.round(100 * A.ok / A.N);
+    return mEnd('atu', pct, pct >= 94 ? 1 : pct < 78 ? -1 : 0, L(`${A.ok} de ${A.N} bé${avg ? ` · temps mitjà als verds: ${avg} ms` : ''}.`, `${A.ok} de ${A.N} bien${avg ? ` · tiempo medio en los verdes: ${avg} ms` : ''}.`)); }
+  mSet(`${A.i + 1}/${A.N}`); const b = $('#atub'); if (b) b.innerHTML = '';
+  await mSleep(450 + mrnd() * 650); if (MGA !== A) return;
+  A.cur = mrnd() < .3 ? 'no' : 'go'; A.resp = false; A.t = performance.now();
+  if (b) b.innerHTML = `<i class="${A.cur}"></i>`;
+  await mSleep(A.dur); if (MGA !== A) return;
+  if (!A.resp) A.cur === 'go' ? A.ko++ : A.ok++;
+  A.cur = null; A.i++; atuNext();
+}
+function atuTap() {
+  const A = MGA; if (!A || MGCUR !== 'atu' || !A.cur || A.resp) return; A.resp = true; const b = $('#atub');
+  if (A.cur === 'go') { A.ok++; A.rts.push(performance.now() - A.t); SFX.tap && SFX.tap(); if (b) b.innerHTML = ''; }
+  else { A.ko++; SFX.ko && SFX.ko(); if (b) { b.classList.remove('shake'); void b.offsetWidth; b.classList.add('shake'); } }
+}
+
+/* ---------- 18. Dígits (memòria de treball verbal: amplitud de dígits) ---------- */
+function digGo() { const test = MGA && MGA.test; MGA = { ...MGA, len: test ? 3 : Math.max(3, mLvl('dig') - 1), fails: 0, best: 0, rev: false }; digRound(); }
+async function digRound() {
+  const A = MGA; if (!A || MGCUR !== 'dig') return;
+  A.rev = !A.test && mLvl('dig') >= 6 && A.len >= 4 && mrnd() < .4;
+  const n = A.rev ? A.len - 1 : A.len; A.seq = []; while (A.seq.length < n) { const d = mri(0, 9); if (d !== A.seq[A.seq.length - 1]) A.seq.push(d); }
+  A.inp = ''; A.lock = true; mSet(`${L('Llargada', 'Longitud')}: ${n}`);
+  $('#mgb').innerHTML = `<p class="mtq" id="digq">${L('Mira i recorda…', 'Mira y recuerda…')}</p><div class="dignum" id="dign"></div>`;
+  await mSleep(700);
+  for (const d of A.seq) { if (MGA !== A) return; const e = $('#dign'); if (e) { e.textContent = d; e.classList.remove('pop'); void e.offsetWidth; e.classList.add('pop'); } await mSleep(850); if (e) e.textContent = ''; await mSleep(250); }
+  if (MGA !== A) return; A.lock = false;
+  $('#mgb').innerHTML = `<p class="mtq">${A.rev ? `<span class="digrev">${L('Al revés', 'Al revés')}</span> ${L('del final al principi', 'del final al principio')}` : L('Escriu-los en el mateix ordre', 'Escríbelos en el mismo orden')}</p><div class="digin" id="digi">&nbsp;</div>
+    <div class="mpad">${[1, 2, 3, 4, 5, 6, 7, 8, 9, '⌫', 0, 'OK'].map(k => `<button class="${k === 'OK' ? 'kok' : ''}" onclick="digK('${k}')">${k}</button>`).join('')}</div>`;
+}
+async function digK(k) {
+  const A = MGA; if (!A || A.lock) return;
+  if (k === '⌫') A.inp = A.inp.slice(0, -1); else if (k !== 'OK' && A.inp.length < A.seq.length) A.inp += k;
+  const el = $('#digi'); el.innerHTML = A.inp || '&nbsp;';
+  if (k !== 'OK' && A.inp.length < A.seq.length) return;
+  if (k !== 'OK') return;
+  A.lock = true; const want = (A.rev ? [...A.seq].reverse() : A.seq).join(''), ok = A.inp === want;
+  el.className = 'digin ' + (ok ? 'ok' : 'ko'); if (!ok) el.textContent = `${L('Era', 'Era')} ${want}`;
+  ok ? SFX.ok && SFX.ok() : SFX.ko && SFX.ko();
+  await mSleep(ok ? 800 : 1500); if (MGA !== A) return;
+  if (ok) { A.best = Math.max(A.best, A.len); A.fails = 0; A.len++; if (A.len > 12) return digEnd(); }
+  else if (++A.fails >= 2) return digEnd();
+  digRound();
+}
+function digEnd() { const A = MGA, b = A.best || Math.max(2, A.len - 1); if (!A.test) MS().lvl.dig = Math.max(3, b); mEnd('dig', b, 0, L(`Has recordat fins a ${b} números seguits.`, `Has recordado hasta ${b} números seguidos.`)); }
+
+/* ---------- 19. Igual que abans? (memòria de treball: 1-back i 2-back) ---------- */
+function nbkGo() {
+  const lv = mDlv('nbk'), k = lv >= 5 ? 2 : 1, N = 20 + k, pool = mshuf('BCDFGHKLMNPRST'.split('')).slice(0, k === 1 ? 5 : 6), seq = [];
+  for (let i = 0; i < N; i++) { if (i >= k && mrnd() < .34) seq.push(seq[i - k]); else { let c; do c = mpick(pool); while (i >= k && c === seq[i - k]); seq.push(c); } }
+  MGA = { ...MGA, k, N, seq, i: 0, ok: 0, ko: 0, show: Math.max(1900, 3300 - (lv - 1) * 150) };
+  $('#mgb').innerHTML = `<p class="mtq" id="nbkq">${k === 1 ? L("És igual que la d'abans?", '¿Es igual que la de antes?') : L('És igual que la de fa <b>dues</b>?', '¿Es igual que la de hace <b>dos</b>?')}</p><div class="nbkcard" id="nbkc"></div>
+    <div class="nbkb"><button class="btn ghost" id="nbk0" onclick="nbkA(0)">${L('Diferent', 'Diferente')}</button><button class="btn" id="nbk1" onclick="nbkA(1)">${L('Igual', 'Igual')}</button></div>`;
+  nbkNext();
+}
+async function nbkNext() {
+  const A = MGA; if (!A || MGCUR !== 'nbk') return;
+  if (A.i >= A.N) { const pct = Math.round(100 * A.ok / (A.N - A.k)); return mEnd('nbk', pct, pct >= 90 ? 1 : pct < 65 ? -1 : 0, L(`${A.ok} de ${A.N - A.k} respostes bé${A.k === 2 ? ' comparant amb la de fa dues' : ''}.`, `${A.ok} de ${A.N - A.k} respuestas bien${A.k === 2 ? ' comparando con la de hace dos' : ''}.`)); }
+  const c = $('#nbkc'); c.className = 'nbkcard'; c.textContent = ''; await mSleep(250); if (MGA !== A) return;
+  c.textContent = A.seq[A.i]; c.classList.add('pop'); A.wait = A.i >= A.k;
+  mSet(`${A.i + 1}/${A.N}`);
+  $$('.nbkb .btn').forEach(b => b.disabled = !A.wait);
+  const q = $('#nbkq'); if (q && !A.wait) q.innerHTML = L('Memoritza…', 'Memoriza…'); else if (q) q.innerHTML = A.k === 1 ? L("És igual que la d'abans?", '¿Es igual que la de antes?') : L('És igual que la de fa <b>dues</b>?', '¿Es igual que la de hace <b>dos</b>?');
+  await mSleep(A.wait ? A.show : 1500); if (MGA !== A) return;
+  if (A.wait) { A.wait = false; A.ko++; c.classList.add('ko'); SFX.ko && SFX.ko(); await mSleep(400); if (MGA !== A) return; }
+  A.i++; nbkNext();
+}
+async function nbkA(same) {
+  const A = MGA; if (!A || !A.wait) return; A.wait = false; clearTimeout(MGT);
+  const ok = (A.seq[A.i] === A.seq[A.i - A.k]) === !!same, c = $('#nbkc');
+  ok ? (A.ok++, SFX.ok && SFX.ok()) : (A.ko++, SFX.ko && SFX.ko()); c.classList.add(ok ? 'ok' : 'ko');
+  await mSleep(450); if (MGA !== A) return; A.i++; nbkNext();
+}
+
+/* ---------- 20. Qui viu on? (memòria associativa: nom i lloc) ---------- */
+const MNOM = { ca: ['Anna', 'Jordi', 'Montse', 'Pere', 'Núria', 'Josep', 'Rosa', 'Joan', 'Carme', 'Ramon', 'Teresa', 'Lluís', 'Pilar', 'Xavier'], es: ['Ana', 'Jorge', 'Carmen', 'Pedro', 'Lucía', 'José', 'Rosa', 'Juan', 'Pilar', 'Ramón', 'Teresa', 'Luis', 'Elena', 'Javier'] };
+const MCIU = { ca: ['Lleida', 'Girona', 'Tarragona', 'Reus', 'Vic', 'Manresa', 'Tortosa', 'Balaguer', 'Figueres', 'Sitges', 'Olot', 'Tàrrega', 'Solsona', 'Berga'], es: ['Madrid', 'Sevilla', 'Valencia', 'Bilbao', 'Toledo', 'Cádiz', 'Málaga', 'Salamanca', 'Burgos', 'Granada', 'Zaragoza', 'Oviedo', 'Cuenca', 'Soria'] };
+function nomGo() { MGA = { ...MGA, lv: mDlv('nom'), round: 0, ok: 0, tot: 0 }; nomRound(); }
+async function nomRound() {
+  const A = MGA; if (!A || MGCUR !== 'nom') return;
+  if (A.round >= 2) { const pct = Math.round(100 * A.ok / A.tot); return mEnd('nom', pct, pct >= 90 ? 1 : pct < 60 ? -1 : 0, L(`Has encertat ${A.ok} de ${A.tot}.`, `Has acertado ${A.ok} de ${A.tot}.`)); }
+  A.round++; const k = Math.min(7, 2 + Math.ceil(A.lv / 2)), lg = LANG === 'es' ? 'es' : 'ca';
+  const noms = mshuf([...MNOM[lg]]).slice(0, k), ciu = mshuf([...MCIU[lg]]).slice(0, k);
+  A.pairs = noms.map((n, i) => [n, ciu[i]]); A.ask = mshuf([...A.pairs]); A.q = 0; A.tot += k;
+  mSet(`${L('Ronda', 'Ronda')} ${A.round}/2`);
+  $('#mgb').innerHTML = `<p class="mtq">${L('Recorda on viu cadascú', 'Recuerda dónde vive cada uno')}</p><div class="nomlist">${A.pairs.map(([n, c]) => `<div><b>${n}</b><span>${c}</span></div>`).join('')}</div><div class="llibar"><i style="animation-duration:${k * 3}s"></i></div>`;
+  await mSleep(k * 3000); if (MGA !== A) return; nomAsk();
+}
+function nomAsk() {
+  const A = MGA; if (A.q >= A.ask.length) return nomRound();
+  const [n] = A.ask[A.q], opts = mshuf(A.pairs.map(p => p[1])); A.opts = opts;
+  $('#mgb').innerHTML = `<p class="mtq">${L(`On viu ${/^[AEIOUÀÈÉÍÒÓÚ]/i.test(n) ? "l'" : /^(Anna|Montse|Núria|Rosa|Carme|Teresa|Pilar)$/.test(n) ? 'la ' : 'en '}<b>${n}</b>?`, `¿Dónde vive <b>${n}</b>?`)}</p><div class="copts">${opts.map((o, i) => `<button class="mopt copt" onclick="nomTap(${i})">${o}</button>`).join('')}</div>`;
+}
+async function nomTap(i) {
+  const A = MGA; if (!A || A.lock) return; A.lock = true; const want = A.ask[A.q][1], b = $$('.copt'), ok = A.opts[i] === want;
+  b[A.opts.indexOf(want)].classList.add('okc'); if (!ok) b[i].classList.add('koc'); ok ? (A.ok++, SFX.ok && SFX.ok()) : SFX.ko && SFX.ko();
+  await mSleep(1000); if (MGA === A) { A.lock = false; A.q++; nomAsk(); }
+}
+
+/* ---------- 21. Suma en cadena (càlcul i memòria de treball) ---------- */
+function cadGo() { MGA = { ...MGA, lv: mDlv('cad'), q: 0, ok: 0 }; cadNext(); }
+async function cadNext() {
+  const A = MGA; if (!A || MGCUR !== 'cad') return;
+  if (A.q >= 6) return mEnd('cad', A.ok, A.ok >= 5 ? 1 : A.ok <= 2 ? -1 : 0, L(`${A.ok} de 6 totals encertats.`, `${A.ok} de 6 totales acertados.`));
+  A.q++; A.lock = true; A.inp = '';
+  const lv = A.lv, len = Math.min(8, 3 + Math.floor(lv / 2)), mx = lv <= 3 ? 9 : lv <= 6 ? 15 : 25, sub = lv >= 3;
+  let tot = mri(2, mx); const st = [String(tot)];
+  for (let i = 1; i < len; i++) { if (sub && tot > 3 && mrnd() < .4) { const v = mri(1, Math.min(mx, tot - 1)); tot -= v; st.push(`− ${v}`); } else { const v = mri(1, mx); tot += v; st.push(`+ ${v}`); } }
+  A.r = tot; mSet(`${A.q}/6`);
+  $('#mgb').innerHTML = `<p class="mtq" id="cadq">${L('Porta el total de cap', 'Lleva el total de cabeza')}</p><div class="dignum" id="dign"></div>`;
+  const t = Math.max(850, 1600 - lv * 70);
+  await mSleep(600);
+  for (const s of st) { if (MGA !== A) return; const e = $('#dign'); if (e) { e.textContent = s; e.classList.remove('pop'); void e.offsetWidth; e.classList.add('pop'); } await mSleep(t); if (e) e.textContent = ''; await mSleep(200); }
+  if (MGA !== A) return; A.lock = false;
+  $('#mgb').innerHTML = `<p class="mtq">${L('Quin és el total?', '¿Cuál es el total?')}</p><div class="digin" id="digi">&nbsp;</div><div class="mpad">${[1, 2, 3, 4, 5, 6, 7, 8, 9, '⌫', 0, 'OK'].map(k => `<button class="${k === 'OK' ? 'kok' : ''}" onclick="cadK('${k}')">${k}</button>`).join('')}</div>`;
+}
+async function cadK(k) {
+  const A = MGA; if (!A || A.lock) return;
+  if (k === '⌫') A.inp = A.inp.slice(0, -1); else if (k !== 'OK' && A.inp.length < 4) A.inp += k;
+  const el = $('#digi'); el.innerHTML = A.inp || '&nbsp;'; if (k !== 'OK' || !A.inp) return;
+  A.lock = true; const ok = +A.inp === A.r; el.className = 'digin ' + (ok ? 'ok' : 'ko'); if (!ok) el.textContent = `${L('Era', 'Era')} ${A.r}`;
+  ok ? (A.ok++, SFX.ok && SFX.ok()) : SFX.ko && SFX.ko();
+  await mSleep(ok ? 800 : 1500); if (MGA === A) cadNext();
+}
+
+/* ---------- 22. Sèries (raonament: trobar la regla) ---------- */
+function serQ(lv) {
+  const kinds = lv <= 2 ? ['ari'] : lv <= 4 ? ['ari', 'ari', 'geo', 'dec'] : lv <= 6 ? ['ari', 'geo', 'dec', 'inc', 'alt'] : ['geo', 'inc', 'alt', 'sq', 'fib', 'ma'];
+  const k = mpick(kinds); let s = [], ans, d;
+  if (k === 'ari') { d = mri(2, lv <= 2 ? 5 : 12); const a = mri(1, 20); s = [0, 1, 2, 3].map(i => a + i * d); ans = a + 4 * d; }
+  if (k === 'dec') { d = mri(2, 9); const a = mri(40, 90); s = [0, 1, 2, 3].map(i => a - i * d); ans = a - 4 * d; }
+  if (k === 'geo') { const r = mpick([2, 2, 3]), a = mri(1, r === 2 ? 6 : 3); s = [0, 1, 2, 3].map(i => a * r ** i); ans = a * r ** 4; d = r; }
+  if (k === 'inc') { const a = mri(1, 10), st = mri(1, 3); s = [a]; for (let i = 1; i < 5; i++) s.push(s[i - 1] + st + i - 1); ans = s.pop(); d = 1; }
+  if (k === 'alt') { const a = mri(10, 30), u = mri(3, 9), v = mri(1, u - 1); s = [a, a + u, a + u - v, a + 2 * u - v, a + 2 * u - 2 * v]; ans = a + 3 * u - 2 * v; d = u; }
+  if (k === 'sq') { const a = mri(1, 5); s = [0, 1, 2, 3].map(i => (a + i) ** 2); ans = (a + 4) ** 2; d = 2 * (a + 4) - 1; }
+  if (k === 'fib') { const a = mri(1, 4), b = mri(a, 6); s = [a, b]; while (s.length < 5) s.push(s[s.length - 1] + s[s.length - 2]); ans = s[4] + s[3]; d = s[4] - s[3]; }
+  if (k === 'ma') { const a = mri(1, 4), c = mpick([1, -1]); s = [a]; for (let i = 1; i < 4; i++) s.push(s[i - 1] * 2 + c); ans = s[3] * 2 + c; d = 2; }
+  const last = s[s.length - 1], dis = [ans + 1, ans - 1, ans + d, ans - d, last + (s[s.length - 1] - s[s.length - 2]), ans + 2, ans * 2].filter(v => v !== ans && v >= 0);
+  const opts = mshuf([ans, ...mshuf([...new Set(dis)]).slice(0, 3)]);
+  return { s, ans, opts };
+}
+function serGo() { MGA = { ...MGA, lv: mDlv('ser'), q: 0, ok: 0 }; serNext(); }
+function serNext() {
+  const A = MGA; if (A.q >= 8) return mEnd('ser', A.ok, A.ok >= 7 ? 1 : A.ok <= 4 ? -1 : 0, L(`${A.ok} de 8 sèries.`, `${A.ok} de 8 series.`));
+  A.q++; A.cur = serQ(A.lv); mSet(`${A.q}/8`);
+  $('#mgb').innerHTML = `<p class="mtq">${L('Quin número ve després?', '¿Qué número viene después?')}</p><p class="serq">${A.cur.s.join(', ')}, <b>?</b></p><div class="copts">${A.cur.opts.map((o, i) => `<button class="mopt copt" onclick="serTap(${i})">${o}</button>`).join('')}</div>`;
+}
+async function serTap(i) {
+  const A = MGA; if (!A || A.lock) return; A.lock = true; const b = $$('.copt'), ai = A.cur.opts.indexOf(A.cur.ans), ok = i === ai;
+  b[ai].classList.add('okc'); if (!ok) b[i].classList.add('koc'); ok ? (A.ok++, SFX.ok && SFX.ok()) : SFX.ko && SFX.ko();
+  const q = $('.serq'); if (q) q.innerHTML = `${A.cur.s.join(', ')}, <b>${A.cur.ans}</b>`;
+  await mSleep(ok ? 1000 : 1700); if (MGA === A) { A.lock = false; serNext(); }
+}
+
+/* ---------- 23. Sinònims i contraris (vocabulari) ---------- */
+const MSIN = {
+  ca: [['ràpid', 'veloç'], ['content', 'alegre'], ['començar', 'iniciar'], ['acabar', 'finalitzar'], ['enorme', 'gegantí'], ['bonic', 'formós'], ['ajudar', 'auxiliar'], ['pujar', 'ascendir'], ['mirar', 'observar'], ['tornar', 'regressar'],
+    ['trist', 'afligit'], ['vell', 'antic'], ['cansat', 'esgotat'], ['valent', 'coratjós'], ['quiet', 'tranquil'], ['enfadat', 'enutjat'], ['ric', 'adinerat'], ['difícil', 'complicat'], ['escollir', 'triar'], ['amagar', 'ocultar'],
+    ['petit', 'menut'], ['fosc', 'obscur'], ['rostre', 'cara'], ['casa', 'llar'], ['feina', 'treball'], ['por', 'temor'], ['parlar', 'conversar'], ['desitjar', 'anhelar']],
+  es: [['rápido', 'veloz'], ['contento', 'alegre'], ['empezar', 'comenzar'], ['terminar', 'finalizar'], ['enorme', 'gigantesco'], ['bonito', 'hermoso'], ['ayudar', 'auxiliar'], ['subir', 'ascender'], ['mirar', 'observar'], ['volver', 'regresar'],
+    ['triste', 'afligido'], ['viejo', 'antiguo'], ['cansado', 'agotado'], ['valiente', 'valeroso'], ['tranquilo', 'sosegado'], ['enfadado', 'enojado'], ['rico', 'adinerado'], ['difícil', 'complicado'], ['elegir', 'escoger'], ['esconder', 'ocultar'],
+    ['pequeño', 'diminuto'], ['oscuro', 'sombrío'], ['rostro', 'cara'], ['casa', 'hogar'], ['trabajo', 'empleo'], ['miedo', 'temor'], ['hablar', 'conversar'], ['desear', 'anhelar']]
+};
+const MANT = {
+  ca: [['alt', 'baix'], ['ple', 'buit'], ['obrir', 'tancar'], ['calent', 'fred'], ['ràpid', 'lent'], ['fort', 'feble'], ['guanyar', 'perdre'], ['entrar', 'sortir'], ['gros', 'prim'], ['dolç', 'amarg'], ['net', 'brut'], ['amic', 'enemic'], ['aviat', 'tard'], ['pujar', 'baixar'], ['recordar', 'oblidar'], ['comprar', 'vendre']],
+  es: [['alto', 'bajo'], ['lleno', 'vacío'], ['abrir', 'cerrar'], ['caliente', 'frío'], ['rápido', 'lento'], ['fuerte', 'débil'], ['ganar', 'perder'], ['entrar', 'salir'], ['gordo', 'delgado'], ['dulce', 'amargo'], ['limpio', 'sucio'], ['amigo', 'enemigo'], ['pronto', 'tarde'], ['subir', 'bajar'], ['recordar', 'olvidar'], ['comprar', 'vender']]
+};
+function sinGo() { const lg = LANG === 'es' ? 'es' : 'ca'; MGA = { ...MGA, q: 0, ok: 0, syn: mshuf([...MSIN[lg]]), ant: mshuf([...MANT[lg]]), lv: mDlv('sin') }; sinNext(); }
+function sinNext() {
+  const A = MGA; if (A.q >= 8) return mEnd('sin', A.ok, A.ok >= 7 ? 1 : A.ok <= 4 ? -1 : 0, L(`${A.ok} de 8 encertades.`, `${A.ok} de 8 acertadas.`));
+  const anti = A.q % 2 === 1, deck = anti ? A.ant : A.syn, [w, r] = deck[Math.floor(A.q / 2)];
+  const others = mshuf(deck.filter(x => x[0] !== w && x[1] !== r && x[0] !== r && x[1] !== w).flatMap(x => anti ? [x[0], x[1]] : [x[1]])).slice(0, 3);
+  A.q++; A.opts = mshuf([r, ...others]); A.ans = A.opts.indexOf(r); mSet(`${A.q}/8`);
+  $('#mgb').innerHTML = `<p class="mtq">${anti ? L('Quin és el <b>contrari</b> de…', '¿Cuál es el <b>contrario</b> de…') : L('Quina paraula vol dir el <b>mateix</b> que…', '¿Qué palabra significa lo <b>mismo</b> que…')}</p><p class="sinw">${w}</p><div class="copts">${A.opts.map((o, i) => `<button class="mopt copt" onclick="sinTap(${i})">${o}</button>`).join('')}</div>`;
+}
+async function sinTap(i) {
+  const A = MGA; if (!A || A.lock) return; A.lock = true; const b = $$('.copt'), ok = i === A.ans;
+  b[A.ans].classList.add('okc'); if (!ok) b[i].classList.add('koc'); ok ? (A.ok++, SFX.ok && SFX.ok()) : SFX.ko && SFX.ko();
+  await mSleep(1100); if (MGA === A) { A.lock = false; sinNext(); }
+}
+
+/* ---------- Test de la ment: 4 proves i una edat orientativa ----------
+   Reflexos (temps de reacció), Símbols i números (velocitat de processament), Dígits (memòria de treball verbal)
+   i Seqüències (memòria de treball visoespacial). Cada resultat es compara amb la tendència mitjana per edats
+   que descriuen els estudis de normes (vegeu MNORM) i la mitjana de les quatre dona l'edat orientativa. */
+let MT = null;
+const MTEST = ['rfx', 'sim', 'dig', 'mem'];
+function mTestIntro() {
+  mStop(); VIEW = 'mgame'; MGCUR = null; const m = MS(), yr = new Date().getFullYear();
+  MT = { i: 0, r: {}, born: m.born || null };
+  mGameShell('rfx', '', `<div class="mintro"><span class="mgic" style="--dc:var(--ink)">${mSvg('ment')}</span><h2>${L('Test de la ment', 'Test de la mente')}</h2>
+    <p>${L('Quatre proves curtes, uns 4 minuts: <b>reflexos</b>, <b>símbols i números</b>, <b>dígits</b> i <b>seqüències</b>. Fes-lo tranquil·lament, en un lloc sense distraccions.', 'Cuatro pruebas cortas, unos 4 minutos: <b>reflejos</b>, <b>símbolos y números</b>, <b>dígitos</b> y <b>secuencias</b>. Hazlo con calma, en un sitio sin distracciones.')}</p>
+    ${m.born ? '' : `<div class="mbirth"><p class="mmut" style="margin:0">${L("En quin any vas néixer? El farem servir només per comparar el resultat amb la teva edat.", '¿En qué año naciste? Solo lo usaremos para comparar el resultado con tu edad.')}</p><select id="mtborn"><option value="">${L('Prefereixo no dir-ho', 'Prefiero no decirlo')}</option>${[...Array(83).keys()].map(i => yr - 18 - i).map(y => `<option ${y === yr - 60 ? 'selected' : ''}>${y}</option>`).join('')}</select></div>`}
+    <p class="mmut">${L('És un resultat orientatiu per seguir la teva evolució; no és cap prova mèdica.', 'Es un resultado orientativo para seguir tu evolución; no es ninguna prueba médica.')}</p>
+    <button class="btn big mbtn" onclick="mTestGo()">${L('Comença el test', 'Empieza el test')}</button></div>`, L('Test de la ment', 'Test de la mente'));
+}
+function mTestGo() { const s = $('#mtborn'); if (s) { MS().born = +s.value || 0; MT.born = MS().born; save(); } mTestNext(); }
+function mTestNext() {
+  if (!MT) return go('home');
+  if (MT.i >= MTEST.length) return mTestFin();
+  const g = MTEST[MT.i]; mStop(); MGCUR = g; VIEW = 'mgame';
+  mGameShell(g, '', `<div class="mintro"><div class="mtbar" style="margin:0 auto 14px">${MTEST.map((_, i) => `<i class="${i <= MT.i ? 'on' : ''}"></i>`).join('')}</div><p class="mstep">${L(`Prova ${MT.i + 1} de 4`, `Prueba ${MT.i + 1} de 4`)}</p>${mGic(g)}<h2>${tx(MG[g].n)}</h2>${mHow(g)}
+    ${'speechSynthesis' in window ? `<button class="btn ghost mspeak" onclick="mSpeak('${g}')">${mSvg('so', 'mico')} ${L("Escolta-ho", 'Escúchalo')}</button>` : ''}<button class="btn big mbtn" onclick="MGA={test:true};mStart('${g}')">${L('Comença', 'Empieza')}</button></div>`, L('Test de la ment', 'Test de la mente'));
+  MGA = { test: true };
+}
+function mTestStep(g, score) {
+  mStop(); if (!MT) return go('home');
+  MT.r[g] = score; MT.i++; mTestNext();
+}
+/* Com es calcula (vegeu mentCiencia() per a les fonts):
+   1) Cada prova es passa a una puntuació z respecte d'una referència de 60 anys (MAGER: mitjana i desviació a l'app).
+   2) Pendents de canvi amb l'edat, en desviacions per any (Park et al. 2002; Kiely et al. 2014 per a la rapidesa després dels 55):
+      rapidesa ~0,05, blocs (Corsi) 0,025, dígits 0,013. Edat equivalent = 60 − Σ(b·z)/Σb² (mínims quadrats).
+   3) Com que persones de la mateixa edat difereixen molt (error típic de ±15-20 anys), s'acosta a l'edat real a la meitat,
+      com a màxim ±12 anys, i es mostra amb una franja. 4) Als tests repetits es descompta la millora que ve només de
+      conèixer les proves (efecte pràctica, Bartels 2010; Goldberg 2015).
+   Les mitjanes de MAGER són provisionals (adaptades de normes publicades al format del mòbil): quan hi hagi prou
+   dades de l'app s'han de substituir per normes pròpies. */
+const MAGER = { rfx: { mu: 600, sd: 110, b: .05, low: true }, sim: { mu: 26, sd: 6, b: .05 }, dig: { mu: 5, sd: 1, b: .013 }, mem: { mu: 5, sd: 1, b: .025 } };
+function mAgeCalc(r, real, nPrev) {
+  const prac = .3 * (1 - Math.exp(-nPrev / 2.5)), z = {};
+  let num = 0, den = 0;
+  for (const g of MTEST) { const R = MAGER[g]; if (r[g] == null) continue; let v = (r[g] - R.mu) / R.sd; if (R.low) v = -v; v = Math.max(-3, Math.min(3, v - prac)); z[g] = v; num += R.b * v; den += R.b * R.b; }
+  const A = den ? 60 - num / den : 60, E = real || 60;
+  let age = E + .5 * (A - E); age = Math.max(E - 12, Math.min(E + 12, age)); age = Math.round(Math.max(real ? 20 : 30, Math.min(90, age)));
+  const rel = g => z[g] == null ? 0 : z[g] + MAGER[g].b * ((real || age) - 60);
+  return { age, z, rel };
+}
+function mTestFin() {
+  const m = MS(), r = MT.r, real = m.born ? new Date().getFullYear() - m.born : null;
+  const nPrev = m.tests.filter(x => x.d !== today()).length, { age, z, rel } = mAgeCalc(r, real, nPrev);
+  const vel = (rel('rfx') + rel('sim')) / 2, mem = (rel('dig') + rel('mem')) / 2;
+  m.focus = vel < mem ? 'vel' : 'mem';
+  const t = { d: today(), age, real, r, z };
+  const same = m.tests.findIndex(x => x.d === t.d); if (same >= 0) m.tests[same] = t; else m.tests.push(t); if (m.tests.length > 30) m.tests.shift();
+  const d = mDay(); d.ses = null; mSession();
+  mFitesNew(); touchStreak(); save(); syncNow(); MT = null; MGA = null;
+  mAgeInfo(true);
+}
+// detall de l'últim test (i del primer, per comparar)
+function mAgeInfo(fresh) {
+  const m = MS(), T = m.tests, t = T[T.length - 1]; if (!t) return mTestIntro();
+  mStop(); VIEW = 'mgame';
+  const lab = { rfx: L('Reflexos', 'Reflejos'), sim: L('Símbols i números', 'Símbolos y números'), dig: L('Dígits', 'Dígitos'), mem: L('Seqüències', 'Secuencias') };
+  const val = { rfx: v => `${v} ms`, sim: v => L(`${v} encerts`, `${v} aciertos`), dig: v => L(`${v} números`, `${v} números`), mem: v => L(`${v} caselles`, `${v} casillas`) };
+  const zr = g => t.z && t.z[g] != null ? t.z[g] + MAGER[g].b * ((t.real || t.age) - 60) : 0;
+  const cmp = g => { const v = zr(g); return v > .5 ? L(`per sobre de la mitjana ${t.real ? 'de la teva edat' : 'de la teva franja'}`, `por encima de la media ${t.real ? 'de tu edad' : 'de tu franja'}`) : v < -.5 ? L('per sota de la mitjana: bon punt per entrenar', 'por debajo de la media: buen punto para entrenar') : L('dins de la mitjana', 'dentro de la media'); };
+  const fo = m.focus, foTxt = { vel: L('la <b>rapidesa</b>', 'la <b>rapidez</b>'), mem: L('la <b>memòria</b>', 'la <b>memoria</b>'), ate: L("l'<b>atenció</b>", 'la <b>atención</b>') }[fo];
+  const first = T.length > 1 ? T[0] : null, dif = t.real ? t.real - t.age : null;
+  mGameShell('rfx', '', `<div class="mres" style="max-width:520px"><div class="mageres"><p class="mstep" style="color:#8FE3CF">${L('Edat de la ment · orientativa', 'Edad de la mente · orientativa')}</p><div class="magebig"><b>${t.age}</b><span>${L('anys', 'años')}<br>${L(`franja: ${t.age - 5}–${t.age + 5}`, `franja: ${t.age - 5}–${t.age + 5}`)}</span></div>
+      <p>${dif == null ? L('Rendiment semblant a la mitjana de les persones d\'aquesta edat.', 'Rendimiento parecido a la media de las personas de esta edad.') : dif >= 3 ? L(`${dif} anys menys que la teva edat real (${t.real}). Molt bé!`, `${dif} años menos que tu edad real (${t.real}). ¡Muy bien!`) : dif <= -3 ? L(`Una mica per sobre de la teva edat real (${t.real}). Entrenant cada dia és normal anar millorant.`, `Algo por encima de tu edad real (${t.real}). Entrenando cada día es normal ir mejorando.`) : L(`Molt a prop de la teva edat real (${t.real}).`, `Muy cerca de tu edad real (${t.real}).`)}</p></div>
+    <div class="mtres mtcard" style="margin-top:14px">${MTEST.map(g => `<div class="mdrow2"><b>${lab[g]}</b><span>${val[g](t.r[g])}</span><small class="mmut" style="grid-column:1/3">${cmp(g)}</small></div>`).join('')}</div>
+    ${first ? `<p class="mmut">${L(`Primer test (${dayShort(first.d)}): ${first.age} anys.`, `Primer test (${dayShort(first.d)}): ${first.age} años.`)}</p>` : ''}
+    <div class="mtcard" style="text-align:left"><b>${L('Com l\'entrenem', 'Cómo la entrenamos')}</b><p style="font-size:17px;margin:6px 0 0">${L(`A les sessions et posarem més jocs per treballar ${foTxt}, sense deixar la resta. Torna a fer el test d'aquí a dues setmanes per veure l'evolució.`, `En las sesiones te pondremos más juegos para trabajar ${foTxt}, sin dejar el resto. Vuelve a hacer el test dentro de dos semanas para ver la evolución.`)}</p></div>
+    <p class="mmut" style="font-size:14.5px">${L("Resultat orientatiu: compara les teves proves amb com canvien de mitjana la rapidesa i la memòria amb l'edat. Persones de la mateixa edat poden ser molt diferents, per això et donem una franja. Als tests repetits descomptem la millora que ve només de conèixer les proves. No és cap diagnòstic: si et preocupa la memòria, parla-ho amb el metge.", 'Resultado orientativo: compara tus pruebas con cómo cambian de media la rapidez y la memoria con la edad. Personas de la misma edad pueden ser muy distintas, por eso te damos una franja. En los tests repetidos descontamos la mejora que viene solo de conocer las pruebas. No es ningún diagnóstico: si te preocupa la memoria, háblalo con el médico.')}</p>
+    <button class="btn big mbtn" onclick="go('home')">${fresh ? L('Comença a entrenar', 'Empieza a entrenar') : L('Torna', 'Vuelve')}</button></div>`, L('Edat de la ment', 'Edad de la mente'));
+  if (fresh && typeof confetti === 'function') confetti(60);
+}
+const dayShort = d => new Date(d + 'T12:00').toLocaleDateString(mLoc(), { day: 'numeric', month: 'short' });
+
+/* ---------- Constància: fites i recordatori ---------- */
+const MFITES = [
+  ['s1', 'Primera sessió completa|Primera sesión completa', m => mSessions() >= 1],
+  ['t1', 'Primer test de la ment|Primer test de la mente', m => m.tests.length >= 1],
+  ['r3', '3 dies seguits|3 días seguidos', m => (P.best || 0) >= 3],
+  ['w1', 'Objectiu setmanal complert|Objetivo semanal cumplido', m => mWeekN() >= m.goal || mWeekN(mMonday(new Date(Date.now() - 7 * 864e5))) >= m.goal],
+  ['r7', '7 dies seguits|7 días seguidos', m => (P.best || 0) >= 7],
+  ['s10', '10 sessions|10 sesiones', m => mSessions() >= 10],
+  ['h10', '10 hàbits fora de la pantalla|10 hábitos fuera de la pantalla', m => Object.values(m.days).filter(x => x.hab).length >= 10],
+  ['t2', 'Segon test de la ment|Segundo test de la mente', m => m.tests.length >= 2],
+  ['j', 'Has provat tots els jocs|Has probado todos los juegos', m => Object.keys(MG).every(g => m.hist[g])],
+  ['r30', '30 dies seguits|30 días seguidos', m => (P.best || 0) >= 30],
+  ['s50', '50 sessions|50 sesiones', m => mSessions() >= 50],
+  ['s100', '100 sessions|100 sesiones', m => mSessions() >= 100]
+];
+function mFitesNew() { const m = MS(), seen = m.fit = Array.isArray(m.fit) ? m.fit : []; const nw = MFITES.filter(f => !seen.includes(f[0]) && f[2](m)); nw.forEach(f => seen.push(f[0])); return nw[0] || null; }
+// recordatori: un esdeveniment diari al calendari del mòbil (.ics), sense notificacions ni dades al servidor
+function mRemind() {
+  modal(`<div class="sheet card"><h3>${L('Un recordatori cada dia', 'Un recordatorio cada día')}</h3><p>${L("Et descarregarem un avís per al calendari del mòbil que es repeteix cada dia a l'hora que triïs. L'obres i el calendari te'l guarda.", 'Te descargaremos un aviso para el calendario del móvil que se repite cada día a la hora que elijas. Lo abres y el calendario te lo guarda.')}</p>
+    <div class="mseg">${[9, 11, 17, 20].map(h => `<button onclick="mRemindGo(${h})">${h}:00</button>`).join('')}</div></div>`);
+}
+function mRemindGo(h) {
+  const d = new Date(), ymd = `${d.getFullYear()}${pad(d.getMonth() + 1)}${pad(d.getDate())}`, uid = `numi-ment-${P.id}@numimates.com`;
+  const ics = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Numi//Numi Ment//CA', 'BEGIN:VEVENT', `UID:${uid}`, `DTSTAMP:${ymd}T000000Z`, `DTSTART:${ymd}T${pad(h)}0000`, `DTEND:${ymd}T${pad(h)}1000`, 'RRULE:FREQ=DAILY',
+    `SUMMARY:${L('Numi Ment · 10 minuts per a la ment', 'Numi Ment · 10 minutos para la mente')}`, 'URL:https://ment.numimates.com', `DESCRIPTION:${L('La sessió d\'avui t\'espera', 'La sesión de hoy te espera')}: https://ment.numimates.com`,
+    'BEGIN:VALARM', 'ACTION:DISPLAY', `DESCRIPTION:Numi Ment`, 'TRIGGER:PT0M', 'END:VALARM', 'END:VEVENT', 'END:VCALENDAR'].join('\r\n');
+  const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([ics], { type: 'text/calendar' })); a.download = 'numi-ment.ics'; document.body.appendChild(a); a.click(); a.remove();
+  MS().rem = h; save(); closeModal(); toast(L(`Obre el fitxer per afegir l'avís de les ${h}:00 al calendari.`, `Abre el archivo para añadir el aviso de las ${h}:00 al calendario.`)); if (VIEW === 'home') mentHome(); else if (VIEW === 'profile') mentProfile();
+}
 
 /* ---------- Progrés ---------- */
 function mSpark(h, low) {
   if (!h || h.length < 2) return '';
-  const v = h.slice(-12).map(x => x[1]), mn = Math.min(...v), mx = Math.max(...v), W = 120, H = 34;
+  const v = h.slice(-12).map(x => x[1]), mn = Math.min(...v), mx = Math.max(...v), W = 120, H = 30;
   const pts = v.map((y, i) => `${(i / (v.length - 1) * W).toFixed(1)},${(mx === mn ? H / 2 : low ? 4 + (y - mn) / (mx - mn) * (H - 8) : H - 4 - (y - mn) / (mx - mn) * (H - 8)).toFixed(1)}`).join(' ');
-  return `<svg class="mspark" viewBox="0 0 ${W} ${H}" aria-hidden="true"><polyline points="${pts}" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+  return `<svg class="mspark" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" aria-hidden="true"><polyline points="${pts}" fill="none" stroke="currentColor" stroke-width="2.5" vector-effect="non-scaling-stroke" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+}
+// nivell d'1 a 10 de cada joc, per fer la mitjana de cada capacitat
+function mLv10(g) {
+  const m = MS(); if (!m.hist[g]) return null;
+  if (g === 'vel') return Math.max(1, Math.min(10, Math.round(10 - 9 * Math.log(mLvl('vel') / 34) / Math.log(1000 / 34))));
+  if (g === 'rfx') { const b = m.best.rfx; return b ? Math.max(1, Math.min(10, Math.round(10 - (b - 330) / 40))) : null; }
+  if (MG[g].span) return Math.max(1, Math.min(10, (m.lvl[g] || 3) - 2));
+  return mLvl(g);
+}
+function mAgeChart(T) {
+  if (T.length < 2) return '';
+  const v = T.slice(-8), ys = v.map(t => t.age), mn = Math.min(...ys) - 3, mx = Math.max(...ys) + 3, W = 300, H = 120, x = i => 20 + i * (W - 40) / (v.length - 1), y = a => 12 + (a - mn) / (mx - mn) * (H - 34);
+  return `<svg class="magech" viewBox="0 0 ${W} ${H}"><polyline points="${v.map((t, i) => `${x(i)},${y(t.age)}`).join(' ')}" fill="none" stroke="var(--pri)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>${v.map((t, i) => `<circle cx="${x(i)}" cy="${y(t.age)}" r="5" fill="#fff" stroke="var(--pri)" stroke-width="3"/><text x="${x(i)}" y="${y(t.age) - 10}" text-anchor="middle" font-size="13" font-weight="700" fill="#1B2323">${t.age}</text><text x="${x(i)}" y="${H - 4}" text-anchor="middle" font-size="11.5" fill="#56615F">${dayShort(t.d)}</text>`).join('')}</svg>`;
 }
 function mentProgres() {
-  const m = MS(), days = Object.entries(m.days), mes = today().slice(0, 7), dMes = days.filter(([d, x]) => d.startsWith(mes) && x.s.length).length, hab = days.filter(([, x]) => x.hab).length;
+  const m = MS(), days = Object.entries(m.days), hab = days.filter(([, x]) => x.hab).length, T = m.tests;
+  const now = new Date(), y = now.getFullYear(), mo = now.getMonth(), first = new Date(y, mo, 1), nd = new Date(y, mo + 1, 0).getDate(), off = (first.getDay() + 6) % 7;
+  const cal = [...Array(off).fill('<i class="x"></i>'), ...[...Array(nd).keys()].map(i => { const k = `${y}-${pad(mo + 1)}-${pad(i + 1)}`, st = mDone(k); return `<i class="${st === 2 ? 'on' : st ? 'mid' : ''} ${k === today() ? 'today' : ''}">${i + 1}</i>`; })].join('');
+  const doms = Object.keys(MCAP).map(c => { const l = Object.keys(MG).filter(g => MG[g].cap === c).map(mLv10).filter(v => v != null); return [c, l.length ? l.reduce((a, b) => a + b, 0) / l.length : null]; });
+  const fit = new Set(MFITES.filter(f => f[2](m) || (m.fit || []).includes(f[0])).map(f => f[0]));
   app.innerHTML = mShell('progres', `<h1 class="mh1">${L('El teu progrés', 'Tu progreso')}</h1>
-    <div class="mstats"><div><b>${P.streak || 0}</b><span>${L('dies seguits', 'días seguidos')}</span></div><div><b>${dMes}</b><span>${L('dies aquest mes', 'días este mes')}</span></div><div><b>${hab}</b><span>${L('hàbits fets', 'hábitos hechos')}</span></div></div>
+    <div class="mstats"><div><b>${P.streak || 0}</b><span>${L('dies seguits', 'días seguidos')}</span></div><div><b>${mSessions()}</b><span>${L('sessions fetes', 'sesiones hechas')}</span></div><div><b>${hab}</b><span>${L('hàbits fets', 'hábitos hechos')}</span></div></div>
+    <section class="mtcard"><div class="mthead"><b>${L('Edat de la ment', 'Edad de la mente')}</b><span>${T.length ? L(`${T.length} ${T.length === 1 ? 'test' : 'tests'}`, `${T.length} ${T.length === 1 ? 'test' : 'tests'}`) : ''}</span></div>
+      ${T.length ? `${mAgeChart(T) || `<p style="margin:0 0 12px">${L(`Última: <b>${T[T.length - 1].age} anys</b> (${dayShort(T[T.length - 1].d)}). Quan facis el segon test veuràs aquí l'evolució.`, `Última: <b>${T[T.length - 1].age} años</b> (${dayShort(T[T.length - 1].d)}). Cuando hagas el segundo test verás aquí la evolución.`)}</p>`}<button class="btn ghost mbtn" onclick="mAgeInfo()">${L('Veure el detall', 'Ver el detalle')}</button>` : `<p style="margin:0 0 12px">${L('Encara no has fet el test.', 'Aún no has hecho el test.')}</p><button class="btn mbtn" onclick="mTestIntro()">${L('Fes el test', 'Haz el test')}</button>`}</section>
+    <section class="mtcard"><div class="mthead"><b>${L('Les teves capacitats', 'Tus capacidades')}</b><span>${L('nivell 1–10', 'nivel 1–10')}</span></div><div class="mdoms">${doms.map(([c, v]) => `<div class="mdrow2" style="--dc:var(--c-${c})"><b>${tx(MCAP[c])}</b><span>${v == null ? L('sense dades', 'sin datos') : v.toFixed(1).replace('.', LANG === 'es' ? ',' : ',')}</span><div class="mprg"><i style="width:${v == null ? 0 : v * 10}%"></i></div></div>`).join('')}</div></section>
+    <section class="mtcard"><div class="mthead"><b>${now.toLocaleDateString(mLoc(), { month: 'long', year: 'numeric' })}</b><span>${L('dies entrenats', 'días entrenados')}</span></div><div class="mcalh">${mWeekDays().map(d => `<b>${d.toLocaleDateString(mLoc(), { weekday: 'narrow' })}</b>`).join('')}</div><div class="mcal">${cal}</div></section>
+    <section class="mtcard"><div class="mthead"><b>${L('Fites', 'Logros')}</b><span>${MFITES.filter(f => fit.has(f[0])).length}/${MFITES.length}</span></div><div class="mfites">${MFITES.map(f => `<div class="mfita ${fit.has(f[0]) ? 'on' : ''}"><span>${mSvg('medalla')}</span>${tx(f[1])}</div>`).join('')}</div></section>
+    <details class="mdet"><summary class="mh2">${L('Joc a joc', 'Juego a juego')}</summary>
     <div class="mprog">${Object.entries(MG).map(([g, o]) => { const h = m.hist[g] || [], last = h.length ? h[h.length - 1][1] : null;
-      return `<div class="mpr"><span class="mgi">${o.ic}</span><div><b>${tx(o.n)}</b><small>${tx(MCAP[o.cap])}${g !== 'vel' && g !== 'mem' ? ` · ${L('nivell', 'nivel')} ${mLvl(g)}` : ''}</small></div><div class="mprv">${h.length ? `<b>${mNice(g, m.best[g])}</b><small>${L('últim', 'último')}: ${mNice(g, last)}</small>` : `<small>${L('encara no hi has jugat', 'aún no has jugado')}</small>`}</div>${mSpark(h, o.low || g === 'sud')}</div>`; }).join('')}</div>
-    <p class="mnote">${L("Compara't només amb tu mateix: cada persona té el seu ritme. El que compta és la constància.", 'Compárate solo contigo: cada persona tiene su ritmo. Lo que cuenta es la constancia.')}</p>
-    <button class="link mcien" onclick="mentCiencia()">${L('Què diu la ciència sobre entrenar la ment?', '¿Qué dice la ciencia sobre entrenar la mente?')}</button>`);
+      return `<div class="mpr">${mGic(g)}<div><b>${tx(o.n)}</b><small>${tx(MCAP[o.cap])}${!o.span && !o.lvx ? ` · ${L('nivell', 'nivel')} ${mLvl(g)}` : ''}</small></div><div class="mprv">${h.length ? `<b>${mNice(g, m.best[g])}</b><small>${L('últim', 'último')}: ${mNice(g, last)}</small>` : `<small>${L('encara no', 'aún no')}</small>`}</div>${mSpark(h, o.low)}</div>`; }).join('')}</div></details>
+    <p class="mnote">${L("Compara't només amb tu mateix: cada persona té el seu ritme. El que compta és la constància.", 'Compárate solo contigo: cada persona tiene su ritmo. Lo que cuenta es la constancia.')}</p>`);
 }
 function mentCiencia() {
-  modal(`<div class="sheet mcsheet"><h3>${L('Què en sabem?', '¿Qué sabemos?')}</h3>
-    <p>${L('Els jocs mentals entrenen sobretot allò que practiques: si fas sudokus, et sortiran millor els sudokus. Que aquesta millora passi a la vida diària encara s\'està estudiant.', 'Los juegos mentales entrenan sobre todo lo que practicas: si haces sudokus, te saldrán mejor los sudokus. Que esa mejora pase a la vida diaria todavía se está estudiando.')}</p>
-    <p>${L("En estudis amb gent gran, com l'estudi ACTIVE als Estats Units, entrenar la velocitat amb què processem el que veiem (com a «Mirada ràpida») ha donat resultats interessants a llarg termini, però la ciència encara no en treu conclusions definitives.", 'En estudios con personas mayores, como el estudio ACTIVE en Estados Unidos, entrenar la velocidad con la que procesamos lo que vemos (como en «Mirada rápida») ha dado resultados interesantes a largo plazo, pero la ciencia aún no saca conclusiones definitivas.')}</p>
-    <p>${L("El que més s'associa a un envelliment saludable és la combinació de coses: moure's cada dia, tenir vida social, dormir bé, cuidar l'oïda i la tensió, i continuar aprenent. Per això cada dia et proposem també un hàbit fora de la pantalla.", 'Lo que más se asocia a un envejecimiento saludable es la combinación de cosas: moverse cada día, tener vida social, dormir bien, cuidar el oído y la tensión, y seguir aprendiendo. Por eso cada día te proponemos también un hábito fuera de la pantalla.')}</p>
+  modal(`<div class="sheet mcsheet"><h3>${L('Com entrenar la ment', 'Cómo entrenar la mente')}</h3>
+    <h4>${L('El que et proposem cada dia', 'Lo que te proponemos cada día')}</h4>
+    <ul><li>${L('<b>Poc i sovint.</b> Deu minuts, cinc dies a la setmana, funcionen millor que una hora de tant en tant. Crear l\'hàbit costa unes setmanes: per això hi ha l\'objectiu setmanal i el recordatori.', '<b>Poco y a menudo.</b> Diez minutos, cinco días a la semana, funcionan mejor que una hora de vez en cuando. Crear el hábito cuesta unas semanas: por eso hay objetivo semanal y recordatorio.')}</li>
+    <li>${L('<b>Varietat.</b> Cada sessió combina rapidesa o atenció, memòria i càlcul, lògica o llenguatge.', '<b>Variedad.</b> Cada sesión combina rapidez o atención, memoria y cálculo, lógica o lenguaje.')}</li>
+    <li>${L("<b>Un repte a la teva mida.</b> La dificultat puja quan ho fas bé i baixa quan costa: l'esforç és el que entrena.", '<b>Un reto a tu medida.</b> La dificultad sube cuando lo haces bien y baja cuando cuesta: el esfuerzo es lo que entrena.')}</li>
+    <li>${L('<b>Fora de la pantalla.</b> Moure\'s, veure gent, dormir bé i cuidar l\'oïda i la tensió són el que més s\'associa amb una ment en forma.', '<b>Fuera de la pantalla.</b> Moverse, ver gente, dormir bien y cuidar el oído y la tensión es lo que más se asocia con una mente en forma.')}</li></ul>
+    <h4>${L('Què en sabem', 'Qué sabemos')}</h4>
+    <p>${L('Els jocs mentals entrenen sobretot allò que practiques: si fas sudokus, et sortiran millor els sudokus. Que aquesta millora passi a la vida diària encara s\'està estudiant i els experts no hi estan d\'acord del tot.', 'Los juegos mentales entrenan sobre todo lo que practicas: si haces sudokus, te saldrán mejor los sudokus. Que esa mejora pase a la vida diaria todavía se está estudiando y los expertos no se ponen del todo de acuerdo.')}</p>
+    <p>${L("A l'estudi ACTIVE (Estats Units, 2.832 persones grans), entrenar la velocitat de processament, com a «Mirada ràpida», va millorar aquesta habilitat i la millora en part es mantenia deu anys després. L'estudi FINGER (Finlàndia) va combinar exercici, alimentació, entrenament mental i control de la salut, i qui el va seguir va obtenir resultats una mica millors en les proves de memòria i raonament.", 'En el estudio ACTIVE (Estados Unidos, 2.832 personas mayores), entrenar la velocidad de procesamiento, como en «Mirada rápida», mejoró esa habilidad y la mejora en parte se mantenía diez años después. El estudio FINGER (Finlandia) combinó ejercicio, alimentación, entrenamiento mental y control de la salud, y quien lo siguió obtuvo resultados algo mejores en las pruebas de memoria y razonamiento.')}</p>
+    <p>${L("L'«edat de la ment» compara les teves proves amb com canvien de mitjana la rapidesa i la memòria amb l'edat, segons estudis amb milers de persones. Serveix per seguir la teva evolució, no per diagnosticar res.", 'La «edad de la mente» compara tus pruebas con cómo cambian de media la rapidez y la memoria con la edad, según estudios con miles de personas. Sirve para seguir tu evolución, no para diagnosticar nada.')}</p>
     <p class="mwarn">${L("Numi Ment és una manera agradable de mantenir la ment activa. No és un tractament mèdic ni en substitueix cap. Si et preocupa la memòria, parla-ho amb el teu metge.", 'Numi Ment es una manera agradable de mantener la mente activa. No es un tratamiento médico ni sustituye a ninguno. Si te preocupa la memoria, háblalo con tu médico.')}</p>
-    <button class="btn big" onclick="closeModal()">${L("D'ACORD", 'DE ACUERDO')}</button></div>`);
+    <p class="mrefs">${L('Fonts', 'Fuentes')}: Ball et al., JAMA 2002; Rebok et al., J Am Geriatr Soc 2014 (ACTIVE) · Ngandu et al., Lancet 2015 (FINGER) · Livingston et al., Lancet 2024 (factors de risc modificables) · Simons et al., Psychol Sci Public Interest 2016 · Park et al., Psychol Aging 2002 · Kiely et al. 2014 (HILDA) · Der i Deary, Intelligence 2017 · Bartels et al. 2010 i Goldberg et al. 2015 (efecte pràctica) · Lally et al., Eur J Soc Psychol 2010.</p>
+    <button class="btn big" onclick="closeModal()">${L("D'acord", 'De acuerdo')}</button></div>`);
 }
 
 /* ---------- Perfil ---------- */
 function mentProfile() {
+  const m = MS();
   app.innerHTML = mShell('profile', `<h1 class="mh1">${esc(P.name)}</h1>
+    <section class="mtcard"><div class="mthead"><b>${L('Objectiu setmanal', 'Objetivo semanal')}</b><span>${L('dies d\'entrenament', 'días de entrenamiento')}</span></div><div class="mseg">${[3, 4, 5, 6, 7].map(n => `<button class="${m.goal === n ? 'on' : ''}" onclick="MS().goal=${n};save();mentProfile()">${n}</button>`).join('')}</div><p class="mmut" style="margin:10px 0 0">${L('Recomanem 5 dies: prou per notar-ho i amb marge per descansar.', 'Recomendamos 5 días: suficiente para notarlo y con margen para descansar.')}</p></section>
+    <section class="mtcard"><div class="mthead"><b>${L('Recordatori diari', 'Recordatorio diario')}</b><span>${m.rem != null ? `${m.rem}:00` : ''}</span></div><button class="btn ghost mbtn" onclick="mRemind()">${m.rem != null ? L("Canvia l'hora", 'Cambia la hora') : L('Afegeix-lo al calendari', 'Añádelo al calendario')}</button></section>
     <section class="mtcard"><div class="mthead"><b>${L('Idioma', 'Idioma')}</b></div>${langPill()}</section>
-    ${P.code ? `<section class="mtcard"><div class="mthead"><b>${L('El meu compte', 'Mi cuenta')}</b></div>${P.username ? `<p>${L('Usuari', 'Usuario')}: <b>${esc(P.username)}</b></p>` : ''}<p>${L('Codi secret', 'Código secreto')}: <b class="mono">${P.code}</b></p><p class="mmut">${L("Amb l'usuari i la contrasenya, o amb el codi, pots entrar des de qualsevol mòbil o ordinador.", 'Con el usuario y la contraseña, o con el código, puedes entrar desde cualquier móvil u ordenador.')}</p>${P.username ? '' : `<button class="btn ghost" onclick="accountModal()">${L('CREA USUARI I CONTRASENYA', 'CREA USUARIO Y CONTRASEÑA')}</button>`}</section>` : ''}
+    ${P.code ? `<section class="mtcard"><div class="mthead"><b>${L('El meu compte', 'Mi cuenta')}</b></div>${P.username ? `<p>${L('Usuari', 'Usuario')}: <b>${esc(P.username)}</b></p>` : ''}<p>${L('Codi secret', 'Código secreto')}: <b class="mono">${esc(P.code)}</b></p><p class="mmut">${L("Amb l'usuari i la contrasenya, o amb el codi, pots entrar des de qualsevol mòbil o ordinador. No el comparteixis.", 'Con el usuario y la contraseña, o con el código, puedes entrar desde cualquier móvil u ordenador. No lo compartas.')}</p>${P.username ? '' : `<button class="btn ghost mbtn" onclick="accountModal()">${L('Crea usuari i contrasenya', 'Crea usuario y contraseña')}</button>`}</section>` : ''}
     <section class="mtcard"><div class="mthead"><b>Premium</b></div>${typeof premiumBox === 'function' ? premiumBox() : ''}</section>
-    <section class="mtcard"><div class="mthead"><b>${L('So', 'Sonido')}</b></div><button class="btn ghost" onclick="P.sound=!P.sound;save();mentProfile()">${P.sound ? '🔊 ' + L('ACTIVAT', 'ACTIVADO') : '🔇 ' + L('DESACTIVAT', 'DESACTIVADO')}</button></section>
-    <div class="mprofb"><button class="btn ghost" onclick="renderProfiles()">${L('CANVIA DE PERFIL', 'CAMBIA DE PERFIL')}</button><button class="link" onclick="mentCiencia()">${L('Sobre Numi Ment', 'Sobre Numi Ment')}</button><a class="link" href="https://numimates.com/privacitat" target="_blank" rel="noopener">${L('Privadesa', 'Privacidad')}</a></div>`);
+    <section class="mtcard"><div class="mthead"><b>${L('So', 'Sonido')}</b></div><button class="btn ghost mbtn" onclick="P.sound=!P.sound;save();mentProfile()">${P.sound ? L('Activat', 'Activado') : L('Desactivat', 'Desactivado')}</button></section>
+    <div class="mprofb"><button class="btn ghost mbtn" onclick="renderProfiles()">${L('Canvia de perfil', 'Cambia de perfil')}</button><button class="link" onclick="mentCiencia()">${L('Com entrenar la ment', 'Cómo entrenar la mente')}</button><a class="link" href="https://numimates.com/privacitat" target="_blank" rel="noopener">${L('Privadesa', 'Privacidad')}</a></div>`);
 }
 
 /* ---------- Alta: «Altres» a la pantalla de què estudies ---------- */
 function onbMent() {
   setVariant('ment');
   app.innerHTML = `<div class="scr varsplash mentsplash"><img class="onb-logo" src="${VAR.logo}" alt="${VAR.name}"><h1>${L('Et donem la benvinguda a Numi Ment', 'Te damos la bienvenida a Numi Ment')}</h1>
-    <p class="sub">${L("Cada dia, una sessió d'uns 10 minuts amb 3 jocs per mantenir la ment activa: memòria, atenció, càlcul, lògica i paraules. La dificultat s'adapta a tu.", 'Cada día, una sesión de unos 10 minutos con 3 juegos para mantener la mente activa: memoria, atención, cálculo, lógica y palabras. La dificultad se adapta a ti.')}</p>
-    <button class="btn big" onclick="onbMentGo()">${L('COMENCEM', 'EMPECEMOS')}</button><button class="link" onclick="ONB.stage=null;ONB.variant=null;onb(1)">${L('Tornar', 'Volver')}</button></div>`;
+    <p class="sub">${L("Deu minuts al dia per mantenir la ment activa: rapidesa, atenció, memòria, càlcul, lògica i llenguatge. Començarem amb un test curt per saber la teva edat de la ment, i la dificultat s'adaptarà a tu.", 'Diez minutos al día para mantener la mente activa: rapidez, atención, memoria, cálculo, lógica y lenguaje. Empezaremos con un test corto para saber la edad de tu mente, y la dificultad se adaptará a ti.')}</p>
+    <button class="btn big" onclick="onbMentGo()">${L('Comencem', 'Empecemos')}</button><button class="link" onclick="ONB.stage=null;ONB.variant=null;onb(1)">${L('Tornar', 'Volver')}</button></div>`;
 }
 function onbMentGo() {
   const id = 'p' + Date.now().toString(36);
@@ -555,8 +1070,8 @@ if (P && varOf(P) === 'ment' && !appMismatch(P) && VIEW !== 'onboard') go('home'
 /* ---------- Reptes amb amics (duels de 2 o reptes de grup fins a 10, 48 hores) ----------
    Fan servir l'API de batalles de Numi Mates (api/battle.js) amb joc i dificultat fixos: tothom rep les mateixes
    preguntes (llavor comuna) i es classifica per encerts; en empat, menys errors o menys temps. És de Premium. */
-const MDUEL = ['cal', 'com', 'ref', 'rel', 'ate', 'int'];
-const MTIMED = ['ate', 'int', 'cal'];
+const MDUEL = ['cal', 'sim', 'com', 'ser', 'sin', 'ref', 'rel', 'ate', 'int'];
+const MTIMED = ['ate', 'int', 'cal', 'sim'];
 let MD = null;
 const mBat = async (action, extra = {}) => { const r = await fetch('/api/battle', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action, code: P.code, name: P.name, ment: true, ...extra }) }); const d = await r.json().catch(() => ({})); return { status: r.status, ...d }; };
 const mDuelErr = e => e.status === 402 || e.error === 'premium' ? L('Els reptes amb amics són de Premium.', 'Los retos con amigos son de Premium.') : e.error === 'no-existeix' ? L('No trobem aquest codi. Revisa-ho.', 'No encontramos ese código. Revísalo.') : e.error === 'plena' ? L('Aquest repte ja és ple.', 'Este reto ya está lleno.') : e.error === 'caducada' ? L('Aquest repte ja ha acabat.', 'Este reto ya ha terminado.') : e.error === 'altra-app' ? L('Aquest codi és una batalla de Numi Mates, no un repte de Numi Ment.', 'Este código es una batalla de Numi Mates, no un reto de Numi Ment.') : L("No s'ha pogut fer. Comprova la connexió.", 'No se ha podido hacer. Comprueba la conexión.');
@@ -564,13 +1079,13 @@ async function mentReptes() {
   mStop(); VIEW = 'reptes';
   app.innerHTML = mShell('jocs', `<button class="link mback" onclick="go('jocs')">‹ ${L('Jocs', 'Juegos')}</button><h1 class="mh1">${L('Reptes amb amics', 'Retos con amigos')}</h1>
     <p class="mlead">${L("Repta algú (o un grup de fins a 10) al mateix joc, amb les mateixes preguntes. Cadascú juga quan vol durant 48 hores i després veieu qui ho ha fet millor.", 'Reta a alguien (o a un grupo de hasta 10) al mismo juego, con las mismas preguntas. Cada uno juega cuando quiere durante 48 horas y después veis quién lo ha hecho mejor.')}</p>
-    <div class="mdbtns"><button class="btn big mbtn" onclick="mDuelNew()">${L('CREA UN REPTE', 'CREA UN RETO')}</button><button class="btn ghost big" onclick="mDuelCode()">${L('TINC UN CODI', 'TENGO UN CÓDIGO')}</button></div>
+    <div class="mdbtns"><button class="btn big mbtn" onclick="mDuelNew()">${L('Crea un repte', 'Crea un reto')}</button><button class="btn ghost big" onclick="mDuelCode()">${L('Tinc un codi', 'Tengo un código')}</button></div>
     <h2 class="mh2">${L('Els teus reptes', 'Tus retos')}</h2><div id="mdlist" class="mdlist"><p class="mmut">${L('Carregant…', 'Cargando…')}</p></div>`);
   if (!P.code) { $('#mdlist').innerHTML = `<p class="mmut">${L('Primer cal que tinguis el compte creat.', 'Primero necesitas tener la cuenta creada.')}</p>`; return; }
   const r = await mBat('mine'); const el = $('#mdlist'); if (!el) return;
   const list = (r.list || []).filter(Boolean);
   el.innerHTML = list.length ? list.map(st => { const me = st.players.find(p => p.me) || {}, done = st.players.filter(p => p.finished).length;
-    return `<button class="mdit" onclick="mDuelOpen('${st.code}')"><span class="mgi">${MG[st.joc] ? MG[st.joc].ic : '🏆'}</span><span><b>${MG[st.joc] ? tx(MG[st.joc].n) : ''} · ${st.kind === 'repte' ? L('grup', 'grupo') : L('duel', 'duelo')}</b><small>${st.players.length} ${L('participants', 'participantes')} · ${done} ${L('han jugat', 'han jugado')}${!st.over && !st.expired ? ` · ${L('queden', 'quedan')} ${st.hoursLeft} h` : ''}</small></span><span class="mdst ${me.finished ? '' : 'go'}">${me.finished ? (me.pos ? me.pos + 'r' : '✓') : L('JUGA', 'JUEGA')}</span></button>`; }).join('')
+    return `<button class="mdit" onclick="mDuelOpen('${st.code}')">${MG[st.joc] ? mGic(st.joc) : ''}<span><b>${MG[st.joc] ? tx(MG[st.joc].n) : ''} · ${st.kind === 'repte' ? L('grup', 'grupo') : L('duel', 'duelo')}</b><small>${st.players.length} ${L('participants', 'participantes')} · ${done} ${L('han jugat', 'han jugado')}${!st.over && !st.expired ? ` · ${L('queden', 'quedan')} ${st.hoursLeft} h` : ''}</small></span><span class="mdst ${me.finished ? '' : 'go'}">${me.finished ? (me.pos ? me.pos + 'r' : '✓') : L('Juga', 'Juega')}</span></button>`; }).join('')
     : `<p class="mmut">${L('Encara no en tens cap. Crea el primer!', 'Aún no tienes ninguno. ¡Crea el primero!')}</p>`;
 }
 function mDuelNew() {
@@ -581,10 +1096,10 @@ function mDuelNew() {
 function mDuelForm() {
   const lvs = [[2, L('Fàcil', 'Fácil')], [5, L('Normal', 'Normal')], [8, L('Difícil', 'Difícil')]];
   modal(`<div class="sheet mdform"><h3>${L('Nou repte', 'Nuevo reto')}</h3>
-    <p class="mlab">${L('Joc', 'Juego')}</p><div class="mdgrid">${MDUEL.map(g => `<button class="${MD.joc === g ? 'on' : ''}" onclick="MD.joc='${g}';mDuelForm()"><span>${MG[g].ic}</span>${tx(MG[g].n)}</button>`).join('')}</div>
+    <p class="mlab">${L('Joc', 'Juego')}</p><div class="mdgrid">${MDUEL.map(g => `<button class="${MD.joc === g ? 'on' : ''}" onclick="MD.joc='${g}';mDuelForm()">${mGic(g)}${tx(MG[g].n)}</button>`).join('')}</div>
     <p class="mlab">${L('Amb qui', 'Con quién')}</p><div class="mdseg"><button class="${MD.kind === 'duel' ? 'on' : ''}" onclick="MD.kind='duel';mDuelForm()">${L('Una persona', 'Una persona')}</button><button class="${MD.kind === 'repte' ? 'on' : ''}" onclick="MD.kind='repte';mDuelForm()">${L('Un grup (fins a 10)', 'Un grupo (hasta 10)')}</button></div>
     <p class="mlab">${L('Dificultat', 'Dificultad')}</p><div class="mdseg">${lvs.map(([v, t]) => `<button class="${MD.lv === v ? 'on' : ''}" onclick="MD.lv=${v};mDuelForm()">${t}</button>`).join('')}</div>
-    <p class="err" id="mderr"></p><button class="btn big mbtn" onclick="mDuelCreate()">${L('CREA EL REPTE', 'CREA EL RETO')}</button></div>`);
+    <p class="err" id="mderr"></p><button class="btn big mbtn" onclick="mDuelCreate()">${L('Crea el repte', 'Crea el reto')}</button></div>`);
 }
 async function mDuelCreate() {
   const r = await mBat('create', { joc: MD.joc, kind: MD.kind, lv: MD.lv });
@@ -596,15 +1111,15 @@ function mDuelShare(st) {
   const msg = MD_MSG = L(`Et repto a ${tx(MG[st.joc].n)} a Numi Ment! Entra a ment.numimates.com, ves a Jocs → Reptes amb amics i posa el codi ${st.code}. Tens 48 hores.`, `¡Te reto a ${tx(MG[st.joc].n)} en Numi Ment! Entra en ment.numimates.com, ve a Juegos → Retos con amigos y pon el código ${st.code}. Tienes 48 horas.`);
   modal(`<div class="sheet card cent"><h3>${L('Repte creat', 'Reto creado')}</h3><p>${L('Envia aquest codi a qui vulguis reptar:', 'Envía este código a quien quieras retar:')}</p>
     <div class="codecard big"><div><small>${tx(MG[st.joc].n)}</small><b>${st.code}</b></div></div>
-    <a class="btn big mbtn" href="https://wa.me/?text=${encodeURIComponent(msg)}" target="_blank" rel="noopener">${L('ENVIA PER WHATSAPP', 'ENVIAR POR WHATSAPP')}</a>
-    ${navigator.share ? `<button class="btn ghost big" onclick="navigator.share({text:MD_MSG}).catch(()=>{})">${L('ALTRES MANERES', 'OTRAS FORMAS')}</button>` : ''}
-    <button class="btn ghost big" onclick="closeModal();mDuelPlay('${st.code}')">${L('JUGA ARA', 'JUEGA AHORA')}</button></div>`);
+    <a class="btn big mbtn" href="https://wa.me/?text=${encodeURIComponent(msg)}" target="_blank" rel="noopener">${L('Envia per WhatsApp', 'Enviar por WhatsApp')}</a>
+    ${navigator.share ? `<button class="btn ghost big" onclick="navigator.share({text:MD_MSG}).catch(()=>{})">${L('Altres maneres', 'Otras formas')}</button>` : ''}
+    <button class="btn ghost big" onclick="closeModal();mDuelPlay('${st.code}')">${L('Juga ara', 'Juega ahora')}</button></div>`);
 }
 function mDuelCode() {
   if (!isPremium()) return mPremium();
   modal(`<div class="sheet card cent"><h3>${L('Entra a un repte', 'Entra en un reto')}</h3><p>${L("Escriu el codi que t'han enviat.", 'Escribe el código que te han enviado.')}</p>
     <input id="mdcode" class="nm" maxlength="14" placeholder="ZEUS-1234" autocapitalize="characters" autocomplete="off" style="text-transform:uppercase;text-align:center;letter-spacing:.08em">
-    <p class="err" id="mderr"></p><button class="btn big mbtn" onclick="mDuelJoin()">${L('ENTRA', 'ENTRA')}</button></div>`);
+    <p class="err" id="mderr"></p><button class="btn big mbtn" onclick="mDuelJoin()">${L('Entra', 'Entra')}</button></div>`);
   setTimeout(() => { const i = $('#mdcode'); i && i.focus(); }, 60);
 }
 async function mDuelJoin() {
@@ -627,9 +1142,9 @@ async function mDuelPlay(code, st) {
   mStop(); MGCUR = st.joc; VIEW = 'mgame';
   const g = st.joc, rivals = st.players.filter(p => !p.me).map(p => esc(p.name)).join(', ');
   MGA = { ses: false, duel: { code: st.code, seed: st.seed, lv: st.lv || 5 } };
-  mGameShell(g, '', `<div class="mintro"><span class="mbig">${MG[g].ic}</span><h2>${tx(MG[g].n)}</h2><p class="mdtag">${st.kind === 'repte' ? L('Repte de grup', 'Reto de grupo') : L('Duel', 'Duelo')}${rivals ? ' · ' + L('amb', 'con') + ' ' + rivals : ''}</p>${mHow(g)}
+  mGameShell(g, '', `<div class="mintro">${mGic(g)}<h2>${tx(MG[g].n)}</h2><p class="mdtag">${st.kind === 'repte' ? L('Repte de grup', 'Reto de grupo') : L('Duel', 'Duelo')}${rivals ? ' · ' + L('amb', 'con') + ' ' + rivals : ''}</p>${mHow(g)}
     <p class="mmut">${L('Només tens una oportunitat: quan comencis, compta.', 'Solo tienes una oportunidad: cuando empieces, cuenta.')}</p>
-    <button class="btn big mbtn" onclick="mDuelGo()">${L('COMENÇA EL REPTE', 'EMPIEZA EL RETO')}</button></div>`);
+    <button class="btn big mbtn" onclick="mDuelGo()">${L('Comença el repte', 'Empieza el reto')}</button></div>`);
 }
 async function mDuelGo() {
   const A = MGA; if (!A || !A.duel) return;
@@ -643,7 +1158,7 @@ async function mDuelEnd(g) {
   const correct = A.ok | 0, errs = timed ? (A.ko | 0) : Math.max(0, (A.q | 0) - correct), done = correct + errs;
   const ms = timed ? errs * 1000 : Date.now() - d.t0;
   mStop(); VIEW = 'mgame';
-  app.innerHTML = `<div class="mgame"><div class="mres"><span class="mbig">${MG[g].ic}</span><h2>${L('Repte fet!', '¡Reto hecho!')}</h2><p class="mscore">${correct}</p><p class="mmut">${L('Enviant el resultat…', 'Enviando el resultado…')}</p></div></div>`;
+  app.innerHTML = `<div class="mgame"><div class="mgbody"><div class="mres">${mGic(g)}<h2>${L('Repte fet!', '¡Reto hecho!')}</h2><p class="mscore">${correct}</p><p class="mmut">${L('Enviant el resultat…', 'Enviando el resultado…')}</p></div></div></div>`;
   let st = null;
   for (let t = 0; t < 3 && !(st && st.code); t++) { st = await mBat('progress', { bcode: d.code, done, correct, ms, finished: true }).catch(() => null); if (!(st && st.code)) await new Promise(r => setTimeout(r, 1500)); }
   touchStreak(); save(); syncNow();
@@ -655,9 +1170,9 @@ function mDuelResult(st) {
   const me = st.players.find(p => p.me) || {}, pos = fin.indexOf(me) + 1;
   const row = (p, i) => `<div class="mdrow ${p.me ? 'me' : ''}"><span class="mdpos">${i + 1}</span><b>${esc(p.name)}${p.me ? ' · ' + L('tu', 'tú') : ''}</b><span>${p.correct} ${L('encerts', 'aciertos')}${timed ? (p.done - p.correct ? ` · ${p.done - p.correct} ${L('errors', 'errores')}` : '') : ` · ${Math.round(p.ms / 1000)} s`}</span></div>`;
   app.innerHTML = mShell('jocs', `<button class="link mback" onclick="mentReptes()">‹ ${L('Reptes', 'Retos')}</button>
-    <h1 class="mh1">${MG[st.joc] ? MG[st.joc].ic + ' ' + tx(MG[st.joc].n) : ''}</h1>
+    <h1 class="mh1">${MG[st.joc] ? tx(MG[st.joc].n) : ''}</h1>
     <p class="mlead">${st.over || st.expired ? (pos === 1 ? L('Has guanyat el repte! 🏆', '¡Has ganado el reto! 🏆') : L('Repte acabat.', 'Reto terminado.')) : wait.length ? L(`Esperant ${wait.length === 1 ? 'una persona' : wait.length + ' persones'} · queden ${st.hoursLeft} h`, `Esperando a ${wait.length === 1 ? 'una persona' : wait.length + ' personas'} · quedan ${st.hoursLeft} h`) : L('Ja heu jugat tots.', 'Ya habéis jugado todos.')}</p>
     <section class="mtcard"><div class="mdrank">${fin.map(row).join('')}${wait.map(p => `<div class="mdrow wait"><span class="mdpos">·</span><b>${esc(p.name)}</b><span>${L('encara no ha jugat', 'aún no ha jugado')}</span></div>`).join('')}</div></section>
-    ${!st.over && !st.expired && st.players.length < st.max ? `<button class="btn big mbtn" onclick="mDuelShare({ code: '${st.code}', joc: '${st.joc}' })">${L('CONVIDA ALGÚ MÉS', 'INVITA A ALGUIEN MÁS')}</button>` : ''}
-    <button class="btn ghost big" onclick="mentReptes()">${L('TORNA ALS REPTES', 'VUELVE A LOS RETOS')}</button>`);
+    ${!st.over && !st.expired && st.players.length < st.max ? `<button class="btn big mbtn" onclick="mDuelShare({ code: '${st.code}', joc: '${st.joc}' })">${L('Convida algú més', 'Invita a alguien más')}</button>` : ''}
+    <button class="btn ghost big" onclick="mentReptes()">${L('Torna als reptes', 'Vuelve a los retos')}</button>`);
 }

@@ -5,7 +5,7 @@ import { randomInt } from 'crypto';
 // Cada app aplica la seva part quan veu l'estat final (les cartes ofertes queden «guardades» mentrestant).
 const WORDS = ['CANVI', 'TRUC', 'PACTE', 'OFERTA', 'MERCAT', 'AGORA'];
 const HOURS = 48;
-const first = n => String(n || '').trim().split(/\s+/)[0].slice(0, 20) || 'Alumne';
+const first = n => String(n || '').replace(/[<>&"'`\\]/g, '').trim().split(/\s+/)[0].slice(0, 20) || 'Alumne';
 const cleanT = c => String(c || '').toUpperCase().replace(/[^A-Z0-9-]/g, '').slice(0, 14);
 const cleanCard = c => (typeof c === 'string' && /^[a-z]{2,12}$/.test(c)) ? c : null;
 const view = (t, sid) => {
@@ -18,8 +18,10 @@ export default async function handler(req, res) {
   const b = body(req), sid = cleanCode(b.code), act = b.action;
   if (!sid) return ok(res, { error: 'codi' }, 400);
   if (await blocked(req, 'codi', 40)) return tooMany(res);
-  const me = (await sql`SELECT name FROM mates.alumnes WHERE code = ${sid} AND active`)[0];
+  const me = (await sql`SELECT a.name, g.opts FROM mates.alumnes a LEFT JOIN mates.grups g ON g.id = a.grup_id AND g.actiu WHERE a.code = ${sid} AND a.active`)[0];
   if (!me) { await fail(req, 'codi'); return ok(res, { error: 'alumne' }, 404); }
+  // «mode escola»: el docent pot apagar els intercanvis del grup (també aquí, no només a l'app)
+  if (me.opts && me.opts.intercanvis === false && (act === 'create' || act === 'offer')) return ok(res, { error: 'escola-off' }, 403);
   const name = first(b.name || me.name);
 
   if (act === 'create') {
@@ -37,9 +39,11 @@ export default async function handler(req, res) {
     const rows = await sql`SELECT * FROM mates.canvis WHERE (a_sid = ${sid} OR b_sid = ${sid}) AND created_at > now() - interval '30 days' ORDER BY created_at DESC LIMIT 20`;
     return ok(res, { list: rows.map(t => view(t, sid)) });
   }
+  // un codi d'intercanvi que no existeix compta com a intent fallit (no es poden anar provant codis)
+  if (await blocked(req, 'canvi', 60)) return tooMany(res);
   const code = cleanT(b.tcode);
-  const t = (await sql`SELECT * FROM mates.canvis WHERE code = ${code}`)[0];
-  if (!t) return ok(res, { error: 'no-existeix' }, 404);
+  const t = code && (await sql`SELECT * FROM mates.canvis WHERE code = ${code}`)[0];
+  if (!t) { await fail(req, 'canvi'); return ok(res, { error: 'no-existeix' }, 404); }
   const v = view(t, sid);
   if (act === 'view') return ok(res, v);
   if (v.status === 'expired') return ok(res, { error: 'caducat' }, 410);

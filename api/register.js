@@ -15,6 +15,8 @@ export default async function handler(req, res) {
   if (await blocked(req, 'registre', 120, 60)) return tooMany(res);
   await note(req, 'registre');
   cleanState(state);
+  // l'enquesta inicial és petita (curs, edat, com se sent…): res de guardar objectes grans ni d'altres tipus
+  const survey = b.survey && typeof b.survey === 'object' && !Array.isArray(b.survey) && JSON.stringify(b.survey).length <= 2000 ? b.survey : null;
   let user = null, hash = null;
   if (b.username) {
     user = cleanUser(b.username);
@@ -28,7 +30,7 @@ export default async function handler(req, res) {
     state.code = code; if (user) state.username = user; state.unlockAll = false;
     const s = summary(state);
     const r = await sql`INSERT INTO mates.alumnes (code, name, course, survey, state, xp, streak, best, last_day, lessons, answers, correct, username, pass_hash)
-      VALUES (${code}, ${name}, ${s.course}, ${JSON.stringify(b.survey || null)}, ${JSON.stringify(state)}, ${s.xp}, ${s.streak}, ${s.best}, ${s.last_day}, ${s.lessons}, ${s.answers}, ${s.correct}, ${user}, ${hash})
+      VALUES (${code}, ${name}, ${s.course}, ${JSON.stringify(survey)}, ${JSON.stringify(state)}, ${s.xp}, ${s.streak}, ${s.best}, ${s.last_day}, ${s.lessons}, ${s.answers}, ${s.correct}, ${user}, ${hash})
       ON CONFLICT (code) DO NOTHING RETURNING code`;
     if (r.length) return ok(res, { code, username: user });
   }

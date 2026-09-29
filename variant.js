@@ -46,7 +46,7 @@ function setVariant(id) {
   if (IS_PRO && !document.getElementById('th-pro')) ['theme-pro.css', 'theme-pro-extra.css'].forEach((f, i) => { const l = document.createElement('link'); l.rel = 'stylesheet'; l.href = f; if (!i) l.id = 'th-pro'; document.head.appendChild(l); });
   if (IS_MENT && !document.getElementById('th-ment')) { const l = document.createElement('link'); l.rel = 'stylesheet'; l.href = 'ment.css'; l.id = 'th-ment'; document.head.appendChild(l); }
   // nom, color, icona i manifest de l'app (per instal·lar-la al mòbil amb el seu nom i la seva icona)
-  document.title = `${o.name} · ${o.tag.split('|')[0]}`;
+  document.title = `${o.name} · ${typeof tx === 'function' ? tx(o.tag) : o.tag.split('|')[0]}`;
   const set = (sel, attr, v) => { const e = document.querySelector(sel); if (e) e.setAttribute(attr, v); };
   set('meta[name=theme-color]', 'content', o.theme); set('meta[name=apple-mobile-web-app-title]', 'content', o.name);
   set('link[rel=manifest]', 'href', o.manifest); set('link[rel=apple-touch-icon]', 'href', o.apple);

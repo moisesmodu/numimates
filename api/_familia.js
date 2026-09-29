@@ -3,12 +3,13 @@
    (obligatòria per a menors de 14 anys, art. 7 LOPDGDD): en queda la data i la IP.
    Accions (POST /api/account?f=…): link · enter · data · add · remove */
 import { createHash, randomBytes } from 'crypto';
-import { sql, body, cleanCode, cleanUser, ok, blocked, fail, note, tooMany, ipOf, plaOf } from './_lib.js';
+import { sql, body, cleanCode, ok, blocked, fail, note, tooMany, ipOf, plaOf } from './_lib.js';
 import { famToken, famOf, who } from './_auth.js';
 import { subOf } from './_stripe.js';
 import { MAIL_OK, sendMail } from './_mail.js';
 
-const ORIGINS = ['https://app.numimates.com', 'https://pro.numimates.com', 'https://ment.numimates.com', 'https://mates-numi.vercel.app', 'http://localhost:5176', 'http://127.0.0.1:5176'];
+const ORIGINS = ['https://app.numimates.com', 'https://pro.numimates.com', 'https://ment.numimates.com', 'https://mates-numi.vercel.app', 'http://localhost:5176', 'http://127.0.0.1:5176']
+  .filter(o => process.env.VERCEL_ENV !== 'production' || !/localhost|127\.0\.0\.1/.test(o));   // en producció, els enllaços mai porten a localhost
 const hash = t => createHash('sha256').update(t).digest('hex');
 const cleanMail = m => String(m || '').trim().toLowerCase().slice(0, 160);
 const validMail = m => /^[^\s@<>"',;]+@[^\s@<>"',;]+\.[a-z]{2,}$/i.test(m);
@@ -19,10 +20,10 @@ const tables = () => ready || (ready = sql`CREATE TABLE IF NOT EXISTS mates.fami
   .then(() => sql`CREATE TABLE IF NOT EXISTS mates.familia_links (token_hash text PRIMARY KEY, email text NOT NULL, code text, lang text, consent_ip text, expires timestamptz NOT NULL, used boolean NOT NULL DEFAULT false)`)
   .catch(e => { ready = null; throw e; }));
 
-// l'alumne pel codi o pel nom d'usuari
+// l'alumne NOMÉS pel codi: el nom d'usuari no és secret (qualsevol el podria endevinar i veure el progrés i el codi del nen)
 async function student(v) {
-  const c = cleanCode(v), u = cleanUser(v);
-  const r = await sql`SELECT code, name FROM mates.alumnes WHERE active AND (code = ${c} OR username = ${u}) LIMIT 1`;
+  const c = cleanCode(v); if (!c) return null;
+  const r = await sql`SELECT code, name FROM mates.alumnes WHERE active AND code = ${c} LIMIT 1`;
   return r[0] || null;
 }
 

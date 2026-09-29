@@ -3,3 +3,8 @@ html[data-v=pro]{background:#0F0D18}
 html[data-v=pro] body{min-height:100dvh;background:radial-gradient(120% 60% at 50% 0,#241B3D 0,#15111F 55%,#0F0D18 100%) fixed}
 html[data-v=pro] .toast{background:#2E2745;color:#F2EEF8;border:1px solid #433A62;box-shadow:0 10px 30px rgba(0,0,0,.45)}
 html[data-v=pro] .nav::before{background-image:url(img/brand/logo-pro-negatiu.svg)}
+/* sobre fons groc (or) el text ha de ser fosc: el generador l'aclaria i quedava crema sobre groc (contrast 1,3:1) */
+html[data-v=pro] .btn.gold,html[data-v=pro] .prem-plans .best i{color:#5A3B00}
+html[data-v=pro] .node.gold,html[data-v=pro] .lvbadge,html[data-v=pro] .retry.goldq,html[data-v=pro] .cmd.q,html[data-v=pro] .code .blk.ev{color:#6B4A00}
+/* text vermell sobre fons fosc: el vermell de marca (#D63C42) no arriba a 4,5:1; un to més clar per llegir-lo bé */
+html[data-v=pro] .btn.redt,html[data-v=pro] .err,html[data-v=pro] .cn small.down,html[data-v=pro] .fxno,html[data-v=pro] .pad .pk-del,html[data-v=pro] .fb .ans,html[data-v=pro] .l-foot.ko .fbh{color:#FF8A8E}

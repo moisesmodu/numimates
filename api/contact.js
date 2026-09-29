@@ -1,7 +1,7 @@
 import { sql, body, ok, blocked, note, tooMany } from './_lib.js';
 // Peticions de demostració del web numimates.com (formulari «Demana una demostració»).
 // Es guarden a mates.contactes i es veuen al panell /profe.html.
-const ORIGINS = ['https://numimates.com', 'https://www.numimates.com', 'http://localhost:5180'];
+const ORIGINS = ['https://numimates.com', 'https://www.numimates.com', ...(process.env.VERCEL_ENV === 'production' ? [] : ['http://localhost:5180'])];
 const clip = (s, n) => String(s || '').trim().slice(0, n);
 let ready = false;
 

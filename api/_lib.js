@@ -23,13 +23,20 @@ export const slow = () => new Promise(r => setTimeout(r, 700));
 // Es compta per IP i, si n'hi ha, també per compte. Una escola surt a internet amb una sola IP,
 // per això els límits per IP són generosos i els de compte, més estrictes.
 export const ipOf = req => String(req.headers['x-real-ip'] || String(req.headers['x-forwarded-for'] || '').split(',')[0] || 'local').trim().slice(0, 64);
+// per als límits, una IPv6 compta pel seu /64 (una sola connexió en té milions: si no, n'hi hauria prou canviant d'adreça)
+const ipKey = req => {
+  const ip = ipOf(req).toLowerCase(), v4 = ip.match(/(\d{1,3}(?:\.\d{1,3}){3})$/);
+  if (!ip.includes(':')) return ip; if (v4) return v4[1];
+  const [h, t = ''] = ip.replace(/%.*$/, '').split('::'), a = h ? h.split(':') : [], z = t ? t.split(':') : [];
+  return [...a, ...Array(Math.max(0, 8 - a.length - z.length)).fill('0'), ...z].slice(0, 4).map(x => x.replace(/^0+(?=.)/, '')).join(':') + '::/64';
+};
 export async function blocked(req, b, max, mins = 15, acct = null, maxAcct = Math.ceil(max / 2)) {
-  const r = await sql`SELECT count(*) FILTER (WHERE k = ${'ip:' + ipOf(req)})::int AS ip, count(*) FILTER (WHERE k = ${'ac:' + acct})::int AS ac
-    FROM mates.fails WHERE b = ${b} AND t > now() - make_interval(mins => ${mins}) AND k IN (${'ip:' + ipOf(req)}, ${'ac:' + acct})`;
+  const r = await sql`SELECT count(*) FILTER (WHERE k = ${'ip:' + ipKey(req)})::int AS ip, count(*) FILTER (WHERE k = ${'ac:' + acct})::int AS ac
+    FROM mates.fails WHERE b = ${b} AND t > now() - make_interval(mins => ${mins}) AND k IN (${'ip:' + ipKey(req)}, ${'ac:' + acct})`;
   return r[0].ip >= max || (acct != null && r[0].ac >= maxAcct);
 }
 // els registres d'intents (amb la IP) s'esborren sempre al cap d'un dia
-export async function note(req, b) { await sql`INSERT INTO mates.fails (k, b) VALUES (${'ip:' + ipOf(req)}, ${b})`; await sql`DELETE FROM mates.fails WHERE t < now() - interval '1 day'`; }
+export async function note(req, b) { await sql`INSERT INTO mates.fails (k, b) VALUES (${'ip:' + ipKey(req)}, ${b})`; await sql`DELETE FROM mates.fails WHERE t < now() - interval '1 day'`; }
 export async function fail(req, b, acct = null) {
   await note(req, b);
   if (acct != null) await sql`INSERT INTO mates.fails (k, b) VALUES (${'ac:' + acct}, ${b})`;

@@ -488,8 +488,10 @@ function vInformes(tab = 'sentits') {
   }
   shell('informes', L('Informes', 'Informes'), `<nav class="tabs">${tabs.map(([k, t]) => `<a href="#/informes/${k}" class="${tab === k ? 'on' : ''}">${t}</a>`).join('')}</nav>${body}`, { fluid: tab === 'sentits' || tab === 'porta' });
 }
+// cel·la de CSV: entre cometes i, si és text que comença per = + - @ (fórmula d'Excel), amb un apòstrof davant
+const csvQ = v => `"${(typeof v === 'string' && /^[=+\-@\t\r]/.test(v) ? "'" + v : String(v ?? '')).replace(/"/g, '""')}"`;
 function download(name, head, rows) {
-  const s = '﻿' + [head, ...rows].map(r => r.map(v => `"${String(v ?? '').replace(/"/g, '""')}"`).join(';')).join('\n');
+  const s = '﻿' + [head, ...rows].map(r => r.map(csvQ).join(';')).join('\n');
   const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([s], { type: 'text/csv' }));
   const g = G ? gName(+G).replace(/\W+/g, '-').toLowerCase() : 'tots'; a.download = `numi-${g}-${name}-${TODAY}.csv`; a.click();
 }
@@ -668,7 +670,7 @@ async function uSub(code, resume) {
   UD = null; await loadUsuaris(); reload();
 }
 function uCsv() {
-  const q = v => `"${String(v ?? '').replace(/"/g, '""')}"`;
+  const q = csvQ;
   const head = ['codi', 'usuari', 'nom', 'pla', 'periode', 'estat_stripe', 'cancel·la', 'premium_des_de', 'premium_fins', 'alta', 'ultima_activitat', 'curs', 'llicons', 'xp', 'grup', 'centre', 'familia'];
   const rows = uList().map(u => [u.code, u.username, u.name, tx(CAT[u.cat]), u.pla_periode, u.stripe_status, u.pla_cancel ? 'sí' : '', u.pla_des ? String(u.pla_des).slice(0, 10) : '', u.renova || (u.pla_fins ? String(u.pla_fins).slice(0, 10) : ''), u.alta, u.last_day || '', u.course != null ? (u.course | 0) + 1 : '', u.lessons || 0, u.xp || 0, u.grup, u.centre, u.fam ? 'sí' : ''].map(q).join(';'));
   const blob = new Blob(['﻿' + [head.join(';'), ...rows].join('\n')], { type: 'text/csv;charset=utf-8' });

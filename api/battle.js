@@ -7,11 +7,12 @@ const WORDS = ['ZEUS', 'HERA', 'ATENA', 'APOL', 'HERMES', 'ARES', 'NIKE', 'IRIS'
 const MAX = { duel: 2, party: 10, repte: 10 };
 const HOURS = { duel: 48, party: 3, repte: 48 };   // caducitat per entrar
 // Numi Ment: el duel o repte és d'un dels seus jocs (joc) amb una dificultat fixa (lv) per a tothom
-const JOCS_MENT = ['ate', 'int', 'cal', 'com', 'ref', 'rel'];
+const JOCS_MENT = ['ate', 'int', 'cal', 'com', 'ref', 'rel', 'sim', 'ser', 'sin'];
 let ready = null;
 const cols = () => ready || (ready = sql`ALTER TABLE mates.batalles ADD COLUMN IF NOT EXISTS joc text, ADD COLUMN IF NOT EXISTS lv int`.catch(e => { ready = null; throw e; }));
 const PARTY_MS = 6 * 60 * 1000;                // una partida de grup es tanca 6 min després de començar
-const first = n => String(n || '').trim().split(/\s+/)[0].slice(0, 20) || 'Alumne';
+// el nom el tria l'app: sense caràcters d'HTML, per si algun lloc el pinta sense escapar
+const first = n => String(n || '').replace(/[<>&"'`\\]/g, '').trim().split(/\s+/)[0].slice(0, 20) || 'Alumne';
 const cleanB = c => String(c || '').toUpperCase().replace(/[^A-Z0-9-]/g, '').slice(0, 14);
 const cleanCard = c => (typeof c === 'string' && /^[a-z]{2,12}$/.test(c)) ? c : null;
 
@@ -37,11 +38,13 @@ export default async function handler(req, res) {
   const b = body(req), sid = cleanCode(b.code), act = b.action;
   if (!sid) return ok(res, { error: 'codi' }, 400);
   if (await blocked(req, 'codi', 40)) return tooMany(res);
-  const me = (await sql`SELECT name, pla, pla_fins, grup_id FROM mates.alumnes WHERE code = ${sid} AND active`)[0];
+  const me = (await sql`SELECT a.name, a.pla, a.pla_fins, a.grup_id, g.opts FROM mates.alumnes a LEFT JOIN mates.grups g ON g.id = a.grup_id AND g.actiu WHERE a.code = ${sid} AND a.active`)[0];
   if (!me) { await fail(req, 'codi'); return ok(res, { error: 'alumne' }, 404); }
   // les batalles són del pla Premium (o de l'escola): el pla gratuït només pot mirar les que ja té
   if (plaOf(me) === 'free' && (act === 'create' || act === 'join')) return ok(res, { error: 'premium' }, 402);
-  const name = first(b.name || me.name), comp = String(b.companion || 'numi').slice(0, 12);
+  // «mode escola»: si el docent ha apagat les batalles del grup, tampoc es poden fer saltant-se l'app
+  if (me.opts && me.opts.batalles === false && (act === 'create' || act === 'join')) return ok(res, { error: 'escola-off' }, 403);
+  const name = first(b.name || me.name), comp = /^[a-z]{2,12}$/.test(b.companion) ? b.companion : 'numi';
 
   if (act === 'create') {
     const joc = JOCS_MENT.includes(b.joc) ? b.joc : null, lv = joc ? Math.max(1, Math.min(10, b.lv | 0 || 5)) : null;
@@ -68,9 +71,11 @@ export default async function handler(req, res) {
     return ok(res, { list });
   }
 
+  // els codis de batalla que no existeixen compten com a intent fallit (si no, es podrien anar provant fins a trobar-ne una d'oberta)
+  if (await blocked(req, 'batalla', 60)) return tooMany(res);
   const bcode = cleanB(b.bcode);
-  const st0 = await state(bcode, sid);
-  if (!st0) return ok(res, { error: 'no-existeix' }, 404);
+  const st0 = bcode ? await state(bcode, sid) : null;
+  if (!st0) { await fail(req, 'batalla'); return ok(res, { error: 'no-existeix' }, 404); }
   const inside = st0.players.some(p => p.me);
 
   if (act === 'join') {
