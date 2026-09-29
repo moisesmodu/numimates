@@ -323,20 +323,20 @@ function showGain() {
 }
 
 /* ---------- Camí ---------- */
-// Plans: gratuït = 1 lliçó nova al dia; Premium o escola = 5 al dia, batalles i ruta de temporada
+// Plans: gratuït = 1 lliçó nova al dia; Premium o escola = lliçons sense límit (diamants i cartes només a les 3 primeres), batalles i ruta de temporada
 const isPremium = () => !!(P && (P.unlockAll || P.classe || P.pla === 'premium' || P.pla === 'escola'));
-const dayMax = () => isPremium() ? 5 : 1, dayReward = () => isPremium() ? 3 : 1;
+const dayMax = () => isPremium() ? Infinity : 1, dayReward = () => isPremium() ? 3 : 1;
 function dayLessons() { if (!P.dayl || P.dayl.d !== today()) P.dayl = { d: today(), n: 0 }; return P.dayl; }
 const dayCapped = () => !P.unlockAll && dayLessons().n >= dayMax();
 function dayTxt() {
   const n = dayLessons().n, M = dayMax(), left = Math.max(0, dayReward() - n);
-  return n >= M ? (M === 1 ? L("Avui ja has fet la lliçó del dia", 'Hoy ya has hecho la lección del día') : L(`Avui ja has fet les ${M} lliçons del dia`, `Hoy ya has hecho las ${M} lecciones del día`)) : M === 1 ? L("Lliçó d'avui: 0/1 · amb premi", 'Lección de hoy: 0/1 · con premio') : L(`Lliçons d'avui: ${n}/${M} · ${left ? `${left} amb premi` : 'ja sense diamants ni cartes'}`, `Lecciones de hoy: ${n}/${M} · ${left ? `${left} con premio` : 'ya sin diamantes ni cartas'}`);
+  return n >= M ? (M === 1 ? L("Avui ja has fet la lliçó del dia", 'Hoy ya has hecho la lección del día') : L(`Avui ja has fet les ${M} lliçons del dia`, `Hoy ya has hecho las ${M} lecciones del día`)) : M === 1 ? L("Lliçó d'avui: 0/1 · amb premi", 'Lección de hoy: 0/1 · con premio') : M === Infinity ? L(`Lliçons d'avui: ${n} · ${left ? `${left} amb premi` : 'ja sense diamants ni cartes'}`, `Lecciones de hoy: ${n} · ${left ? `${left} con premio` : 'ya sin diamantes ni cartas'}`) : L(`Lliçons d'avui: ${n}/${M} · ${left ? `${left} amb premi` : 'ja sense diamants ni cartes'}`, `Lecciones de hoy: ${n}/${M} · ${left ? `${left} con premio` : 'ya sin diamantes ni cartas'}`);
 }
 function premiumModal(what) {
   // títol segons el que ha tocat l'alumne; poc text: què hi guanya i els dos plans
   const head = what === 'batalles' ? L('Les batalles són de Premium', 'Las batallas son de Premium') : what === 'temporada' ? L('La ruta de temporada és de Premium', 'La ruta de temporada es de Premium') : what === 'dia' ? L('Vols fer més lliçons?', '¿Quieres hacer más lecciones?') : 'Numi Mates Premium';
   modal(`<div class="sheet card cent prem-sheet"><h3>${head}</h3>
-    <ul class="prem"><li><span>📚</span><span>${L('Fins a <b>5 lliçons</b> al dia', 'Hasta <b>5 lecciones</b> al día')}</span></li>
+    <ul class="prem"><li><span>📚</span><span>${L('<b>Lliçons sense límit</b>', '<b>Lecciones sin límite</b>')}</span></li>
       <li><span>⚔️</span><span>${L('<b>Batalles</b> de mates', '<b>Batallas</b> de mates')}</span></li>
       <li><span>🏆</span><span>${L('<b>Ruta de temporada</b> i cartes exclusives', '<b>Ruta de temporada</b> y cartas exclusivas')}</span></li></ul>
     <div class="prem-plans" id="premplans"><button onclick="buyPremium('mes')"><b>${L('Mensual', 'Mensual')}</b><span>4,99 €<small>/${L('mes', 'mes')}</small></span></button>
@@ -392,7 +392,7 @@ async function payReturn() {
   if (P.pla === 'premium') {
     SFX.win(); renderHome();
     modal(`<div class="sheet card cent"><div class="mchar tapme">${meC('happy')}</div><h3>${L('Ja tens Numi Mates Premium!', '¡Ya tienes Numi Mates Premium!')}</h3>
-      <p>${L('Ara pots fer fins a 5 lliçons noves al dia, jugar batalles de mates i seguir la ruta de temporada.', 'Ahora puedes hacer hasta 5 lecciones nuevas al día, jugar batallas de mates y seguir la ruta de temporada.')}</p>
+      <p>${L('Ara pots fer totes les lliçons que vulguis, jugar batalles de mates i seguir la ruta de temporada.', 'Ahora puedes hacer todas las lecciones que quieras, jugar batallas de mates y seguir la ruta de temporada.')}</p>
       <button class="btn big" onclick="closeModal()">${L('SOM-HI!', '¡VAMOS!')}</button></div>`, true);
   } else {
     modal(`<div class="sheet card cent"><h3>${L('Pagament rebut', 'Pago recibido')}</h3><p>${L('Premium s\'activarà en uns minuts. Si d\'aquí a una estona encara no el teniu, escriviu-nos a <b>hola@numimates.com</b>.', 'Premium se activará en unos minutos. Si dentro de un rato todavía no lo tenéis, escribidnos a <b>hola@numimates.com</b>.')}</p>
@@ -402,9 +402,9 @@ async function payReturn() {
 // secció del perfil: què té aquest perfil i on es gestiona
 function premiumBox() {
   if (P.classe) return '';
-  if (P.pla === 'premium') return `<div class="prem-box on"><b>⭐ Numi Mates Premium</b><span>${L('Fins a 5 lliçons al dia, batalles i ruta de temporada.', 'Hasta 5 lecciones al día, batallas y ruta de temporada.')}</span>
+  if (P.pla === 'premium') return `<div class="prem-box on"><b>⭐ Numi Mates Premium</b><span>${L('Lliçons sense límit, batalles i ruta de temporada.', 'Lecciones sin límite, batallas y ruta de temporada.')}</span>
     <button class="btn sm ghost" onclick="payPortal()">${L('GESTIONA LA SUBSCRIPCIÓ', 'GESTIONAR LA SUSCRIPCIÓN')}</button></div>`;
-  return `<div class="prem-box"><b>${L('Pla gratuït', 'Plan gratuito')}</b><span>${L('1 lliçó nova al dia. Amb Premium, fins a 5, batalles i ruta de temporada.', '1 lección nueva al día. Con Premium, hasta 5, batallas y ruta de temporada.')}</span>
+  return `<div class="prem-box"><b>${L('Pla gratuït', 'Plan gratuito')}</b><span>${L('1 lliçó nova al dia. Amb Premium, sense límit, amb batalles i ruta de temporada.', '1 lección nueva al día. Con Premium, sin límite, con batallas y ruta de temporada.')}</span>
     <button class="btn sm gold" onclick="premiumModal()">${L('QUÈ ÉS PREMIUM?', '¿QUÉ ES PREMIUM?')}</button></div>`;
 }
 async function payPortal() {
@@ -417,13 +417,13 @@ function scrDayDone() {
     <h3>${M === 1 ? L("Ja has fet la lliçó d'avui!", '¡Ya has hecho la lección de hoy!') : L(`Ja has fet les ${M} lliçons d'avui!`, `¡Ya has hecho las ${M} lecciones de hoy!`)}</h3>
     <p>${L('Demà, més. Ara pots entrenar o repassar.', 'Mañana, más. Ahora puedes entrenar o repasar.')}</p>
     <button class="btn big" onclick="closeModal();go('train')">${L('ANEM A ENTRENAR', 'VAMOS A ENTRENAR')}</button><button class="btn ghost big" onclick="closeModal()">${L('TORNA', 'VOLVER')}</button>
-    ${free ? `<button class="link" onclick="premiumModal('dia')">⭐ ${L('Amb Premium, fins a 5 al dia', 'Con Premium, hasta 5 al día')}</button>` : ''}</div>`, true);
+    ${free ? `<button class="link" onclick="premiumModal('dia')">⭐ ${L('Amb Premium, sense límit', 'Con Premium, sin límite')}</button>` : ''}</div>`, true);
 }
 function goalCard() {
   dailyRoll();
   const x = P.daily.xp, g = P.goal, pc = Math.min(100, Math.round(x / g * 100)), dl = dayLessons().n;
   const msg = x >= g ? L("Objectiu d'avui complert! Ets un crac.", '¡Objetivo de hoy cumplido! Eres un crack.') : x === 0 ? L(`Hola, ${esc(P.name)}! Fem una lliçó?`, `¡Hola, ${esc(P.name)}! ¿Hacemos una lección?`) : L(`Et falten ${g - x} XP per a l'objectiu d'avui.`, `Te faltan ${g - x} XP para el objetivo de hoy.`);
-  return `<div class="goal"><div class="gchar tapme">${meC(x >= g ? 'happy' : 'idle')}</div><div class="gbody"><div class="gmsg">${msg}</div><div class="gbar"><div style="width:${pc}%"></div></div><div class="gnum">${x} / ${g} ${L('XP avui', 'XP hoy')}</div><div class="gday">${[...Array(dayMax()).keys()].map(i => `<i class="${i < dl ? 'on' : ''} ${i < dayReward() ? 'rw' : ''}">${i < dayReward() ? '💎' : ''}</i>`).join('')}<span>${dayTxt()}</span></div></div></div>`;
+  return `<div class="goal"><div class="gchar tapme">${meC(x >= g ? 'happy' : 'idle')}</div><div class="gbody"><div class="gmsg">${msg}</div><div class="gbar"><div style="width:${pc}%"></div></div><div class="gnum">${x} / ${g} ${L('XP avui', 'XP hoy')}</div><div class="gday">${[...Array(Math.min(dayMax(), dayReward())).keys()].map(i => `<i class="${i < dl ? 'on' : ''} ${i < dayReward() ? 'rw' : ''}">${i < dayReward() ? '💎' : ''}</i>`).join('')}<span>${dayTxt()}</span></div></div></div>`;
 }
 function testCard() {
   const t = testInfo(); if (!t.due) return '';
@@ -762,7 +762,7 @@ function finishRun() {
     R.firstPass = first;
     if (R.exam && first) R.gate = R.ui;
     P.stats.lessons++; if (R.perfect) P.stats.perfect++;
-    if (R.mode === 'lesson') { const dl = dayLessons(); dl.n++; if (dl.n > dayReward() && !P.unlockAll) { R.gems = 0; R.noPrize = true; R.sub = (R.sub ? R.sub + ' ' : '') + L(`Lliçó ${dl.n} de ${dayMax()} d'avui: els diamants i les cartes són per a les ${dayReward()} primeres, però l'XP i les estrelles compten igual!`, `Lección ${dl.n} de ${dayMax()} de hoy: los diamantes y las cartas son para las ${dayReward()} primeras, ¡pero la XP y las estrellas cuentan igual!`); } }
+    if (R.mode === 'lesson') { const dl = dayLessons(); dl.n++; if (dl.n > dayReward() && !P.unlockAll) { R.gems = 0; R.noPrize = true; R.sub = (R.sub ? R.sub + ' ' : '') + L(`Lliçó ${dl.n} d'avui: els diamants i les cartes són per a les ${dayReward()} primeres, però l'XP i les estrelles compten igual!`, `Lección ${dl.n} de hoy: los diamantes y las cartas son para las ${dayReward()} primeras, ¡pero la XP y las estrellas cuentan igual!`); } }
   }
   R.bonus = Math.floor(LS.maxCombo / 3) * 2 + LS.gold * 5; R.xp += R.bonus;
   // sobres: lliçons (amb el límit diari), la porta només la primera vegada que s'obre i la missió només quan s'acaba bé

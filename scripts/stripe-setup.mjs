@@ -28,7 +28,7 @@ console.log('Compte de Stripe en mode', mode);
 let prices = (await S('prices?active=true&lookup_keys[]=numi_premium_mes&lookup_keys[]=numi_premium_any&expand[]=data.product')).data;
 let product = prices[0] && prices[0].product;
 if (!product) {
-  product = await S('products', { name: 'Numi Mates Premium', description: 'Fins a 5 lliçons noves al dia, batalles de mates i la ruta de temporada.', statement_descriptor: 'NUMI MATES', url: WEB });
+  product = await S('products', { name: 'Numi Mates Premium', description: 'Lliçons sense límit, batalles de mates i la ruta de temporada.', statement_descriptor: 'NUMI MATES', url: WEB });
   console.log('Producte creat', product.id);
 }
 const want = [
