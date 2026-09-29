@@ -333,16 +333,24 @@ function dayTxt() {
   return n >= M ? L(`Avui ja has fet les ${M} lliçons del dia`, `Hoy ya has hecho las ${M} lecciones del día`) : L(`Lliçons d'avui: ${n}/${M} · ${left ? `${left} amb premi` : 'ja sense diamants ni cartes'}`, `Lecciones de hoy: ${n}/${M} · ${left ? `${left} con premio` : 'ya sin diamantes ni cartas'}`);
 }
 function premiumModal(what) {
-  const intro = what === 'batalles' ? L('Les batalles amb amics són del pla Premium.', 'Las batallas con amigos son del plan Premium.') : what === 'temporada' ? L('La ruta de temporada és del pla Premium.', 'La ruta de temporada es del plan Premium.') : L('Amb Premium pots avançar més cada dia.', 'Con Premium puedes avanzar más cada día.');
-  modal(`<div class="sheet card cent"><div class="mchar tapme">${meC('happy')}</div><h3>Numi Mates Premium</h3><p>${intro}</p>
-    <ul class="prem"><li>📚 ${L('Fins a <b>5 lliçons noves</b> al dia (gratis, 2)', 'Hasta <b>5 lecciones nuevas</b> al día (gratis, 2)')}</li><li>⚔️ ${L('<b>Batalles</b> amb amics i amb la classe', '<b>Batallas</b> con amigos y con la clase')}</li><li>🏆 ${L('<b>Ruta de temporada</b> amb cartes exclusives cada mes', '<b>Ruta de temporada</b> con cartas exclusivas cada mes')}</li></ul>
-    <p class="mut" style="font-size:14px">${L("Si fas servir Numi Mates amb la teva escola, ja ho tens tot inclòs: demana el codi de classe al teu docent i posa'l a Perfil → Tinc un codi de classe.", 'Si usas Numi Mates con tu escuela, ya lo tienes todo incluido: pide el código de clase a tu docente y ponlo en Perfil → Tengo un código de clase.')}</p>
-    <button class="btn big" onclick="closeModal()">${L('ENTESOS', 'ENTENDIDO')}</button></div>`, true);
+  // títol segons el que ha tocat l'alumne; to tranquil: explicar, no pressionar
+  const head = what === 'batalles' ? L('Les batalles són de Premium', 'Las batallas son de Premium') : what === 'temporada' ? L('La ruta de temporada és de Premium', 'La ruta de temporada es de Premium') : what === 'dia' ? L('Ja has fet les 2 lliçons d\'avui', 'Ya has hecho las 2 lecciones de hoy') : 'Numi Mates Premium';
+  modal(`<div class="sheet card cent prem-sheet"><h3>${head}</h3>
+    <p class="prem-h">${L('Amb Premium pots:', 'Con Premium puedes:')}</p>
+    <ul class="prem"><li><span>📚</span><span>${L('Fer <b>fins a 5 lliçons noves</b> cada dia (ara en pots fer 2).', 'Hacer <b>hasta 5 lecciones nuevas</b> cada día (ahora puedes hacer 2).')}</span></li>
+      <li><span>⚔️</span><span>${L('Jugar <b>batalles de mates</b> amb amics i amb la classe.', 'Jugar <b>batallas de mates</b> con amigos y con la clase.')}</span></li>
+      <li><span>🏆</span><span>${L('Seguir la <b>ruta de temporada</b> i guanyar cartes exclusives cada mes.', 'Seguir la <b>ruta de temporada</b> y ganar cartas exclusivas cada mes.')}</span></li></ul>
+    <p class="prem-free">${L('Sense Premium pots fer la teoria, els repassos, els entrenaments i els jocs tant com vulguis.', 'Sin Premium puedes hacer la teoría, los repasos, los entrenamientos y los juegos tanto como quieras.')}</p>
+    <div class="prem-how"><b>${L('Com el pots tenir?', '¿Cómo puedes tenerlo?')}</b>
+      <p>🏫 ${L('<b>Amb la teva escola:</b> si hi fan servir Numi Mates, ja el tens inclòs. Demana el codi de classe al teu docent.', '<b>Con tu escuela:</b> si usan Numi Mates, ya lo tienes incluido. Pide el código de clase a tu docente.')}</p>
+      <p>🧑 ${L('<b>Amb la teva família:</b> encara no es pot contractar des de l\'app. Un adult ens pot escriure a <b>hola@numimates.com</b>.', '<b>Con tu familia:</b> todavía no se puede contratar desde la app. Un adulto nos puede escribir a <b>hola@numimates.com</b>.')}</p></div>
+    ${P && P.code && !P.classe ? `<button class="btn big gold" onclick="closeModal();classeModal()">${L('TINC UN CODI DE CLASSE', 'TENGO UN CÓDIGO DE CLASE')}</button>` : ''}
+    <button class="btn big ${P && P.code && !P.classe ? 'ghost' : ''}" onclick="closeModal()">${L('ENTESOS', 'ENTENDIDO')}</button></div>`, true);
 }
 function scrDayDone() {
   const M = dayMax(), free = !isPremium();
   modal(`<div class="sheet card cent"><div class="mchar tapme">${meC('happy')}</div><h3>${L('Avui ja has treballat molt!', '¡Hoy ya has trabajado mucho!')}</h3>
-    ${free ? `<p class="mut" style="font-size:14px">${L('Amb el pla gratuït es poden fer 2 lliçons noves al dia.', 'Con el plan gratuito se pueden hacer 2 lecciones nuevas al día.')} <button class="link" onclick="premiumModal()">${L('Què és Premium?', '¿Qué es Premium?')}</button></p>` : ''}
+    ${free ? `<p class="mut" style="font-size:14px">${L('Amb el pla gratuït es poden fer 2 lliçons noves al dia.', 'Con el plan gratuito se pueden hacer 2 lecciones nuevas al día.')} <button class="link" onclick="premiumModal('dia')">${L('Què és Premium?', '¿Qué es Premium?')}</button></p>` : ''}
     <p>${L(`Ja has fet les ${M} lliçons d'avui. El cervell aprèn millor si descansa: demà et n'esperen més! Mentrestant pots fer entrenaments, jocs d'agilitat o repassos.`, `Ya has hecho las ${M} lecciones de hoy. El cerebro aprende mejor si descansa: ¡mañana te esperan más! Mientras tanto puedes hacer entrenamientos, juegos de agilidad o repasos.`)}</p>
     <button class="btn big" onclick="closeModal();go('train')">${L('ANEM A ENTRENAR', 'VAMOS A ENTRENAR')}</button><button class="btn ghost big" onclick="closeModal()">${L('TORNA', 'VOLVER')}</button></div>`, true);
 }
