@@ -5,7 +5,7 @@ import { streamText, toTextStream, pipeTextStreamToResponse } from 'ai';
 import { sql, body, cleanCode, ok, blocked, note, fail, tooMany, plaOf } from './_lib.js';
 
 const MODEL = 'anthropic/claude-haiku-4.5';
-const LIMIT = { free: 5, premium: 40, escola: 40 };
+const LIMIT = { free: 0, premium: 40, escola: 40 };   // el pla gratuït no té assistent
 const clip = (s, n) => String(s || '').replace(/\s+/g, ' ').trim().slice(0, n);
 
 let ready = null;
@@ -51,7 +51,8 @@ export default async function handler(req, res) {
   if (!a.active) return ok(res, { error: 'baixa' }, 410);
   // el docent pot apagar l'assistent per a tot el grup (mode escola)
   if (a.opts && a.opts.xat === false) return ok(res, { error: 'xat-off' }, 403);
-  const pla = plaOf(a), max = LIMIT[pla] || LIMIT.free;
+  const pla = plaOf(a), max = LIMIT[pla] ?? 0;
+  if (!max) return ok(res, { error: 'premium' }, 402);
   const n = (await sql`INSERT INTO mates.xat_us (code, n) VALUES (${code}, 1) ON CONFLICT (code, dia) DO UPDATE SET n = mates.xat_us.n + 1 RETURNING n`)[0].n;
   if (n > max) return ok(res, { error: 'limit', max, pla }, 429);
   await note(req, 'xat');

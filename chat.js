@@ -36,7 +36,10 @@ function xatSync() {
 new MutationObserver(() => xatSync()).observe(document.getElementById('app'), { childList: true });
 
 function xatOpen() {
-  if (XAT.open) return; XAT.open = true;
+  if (XAT.open) return;
+  // l'assistent és només de Premium (i dels alumnes d'escola)
+  if (!isPremium()) return IS_MENT ? buyPremium() : premiumModal('xat');
+  XAT.open = true;
   const d = document.createElement('div'); d.id = 'xat'; d.className = 'xatwin'; d.setAttribute('role', 'dialog'); d.setAttribute('aria-label', L("Xat d'ajuda", 'Chat de ayuda'));
   const hello = IS_MENT
     ? L('Hola! Soc en Numi. Pregunta\'m com funciona un joc, trucs per al sudoku o idees per mantenir la ment activa.', '¡Hola! Soy Numi. Pregúntame cómo funciona un juego, trucos para el sudoku o ideas para mantener la mente activa.')

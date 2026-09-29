@@ -344,11 +344,11 @@ function dayTxt() {
 function premiumModal(what) {
   // títol segons el que ha tocat l'alumne. És informativa: els preus i la compra només surten a la pantalla de l'adult
   // (la llei de competència deslleial, art. 30, prohibeix exhortar directament els nens a comprar)
-  const head = what === 'batalles' ? L('Les batalles són de Premium', 'Las batallas son de Premium') : what === 'temporada' ? L('La ruta de temporada és de Premium', 'La ruta de temporada es de Premium') : what === 'dia' ? L('Amb Premium, lliçons sense límit', 'Con Premium, lecciones sin límite') : `${VAR.name} Premium`;
+  const head = what === 'batalles' ? L('Les batalles són de Premium', 'Las batallas son de Premium') : what === 'temporada' ? L('La ruta de temporada és de Premium', 'La ruta de temporada es de Premium') : what === 'dia' ? L('Amb Premium, lliçons sense límit', 'Con Premium, lecciones sin límite') : what === 'xat' ? L("L'assistent amb IA és de Premium", 'El asistente con IA es de Premium') : `${VAR.name} Premium`;
   modal(`<div class="sheet card cent prem-sheet"><h3>${head}</h3>
     <ul class="prem"><li><span>📚</span><span>${L('<b>Lliçons sense límit</b>', '<b>Lecciones sin límite</b>')}</span></li>
       <li><span>⚔️</span><span>${L('<b>Batalles</b> de mates', '<b>Batallas</b> de mates')}</span></li>
-      <li><span>🏆</span><span>${L('<b>Ruta de temporada</b> i cartes exclusives', '<b>Ruta de temporada</b> y cartas exclusivas')}</span></li></ul>
+      <li><span>🏆</span><span>${L('<b>Ruta de temporada</b> i cartes exclusives', '<b>Ruta de temporada</b> y cartas exclusivas')}</span></li>${VAR.chat ? `<li><span>💬</span><span>${L("<b>Assistent amb IA</b>: pistes quan t'encallis", '<b>Asistente con IA</b>: pistas cuando te atasques')}</span></li>` : ''}</ul>
     <p class="prem-note">${L('Premium el decideix i el contracta un adult.', 'Premium lo decide y lo contrata un adulto.')}</p>
     <div id="premplans"><button class="btn big gold" onclick="buyPremium()">${L('PER A UN ADULT', 'PARA UN ADULTO')} ›</button></div>
     ${P && P.code && !P.classe ? `<p class="prem-school">🏫 ${L(`Si la teva escola fa servir ${VAR.name}, ja el tens.`, `Si tu escuela usa ${VAR.name}, ya lo tienes.`)} <button class="link" onclick="closeModal();classeModal()">${L('Tinc un codi de classe', 'Tengo un código de clase')} ›</button></p>` : ''}
@@ -705,7 +705,7 @@ function hintEx(e) {
 }
 // sense exemple: a Numi Pro, en Numi hi dona una pista pel xat; si no, un avís
 function noHint() {
-  if (VAR.chat && P.code && typeof xatOpen === 'function') { xatOpen(); const q = $('#xatq'); if (q) { q.value = L("Dona'm una pista per a aquesta pregunta, sense dir-me la resposta", 'Dame una pista para esta pregunta, sin decirme la respuesta'); q.focus(); } return; }
+  if (VAR.chat && P.code && isPremium() && typeof xatOpen === 'function') { xatOpen(); const q = $('#xatq'); if (q) { q.value = L("Dona'm una pista per a aquesta pregunta, sense dir-me la resposta", 'Dame una pista para esta pregunta, sin decirme la respuesta'); q.focus(); } return; }
   toast(L('Per a aquesta pregunta no hi ha exemple. Llegeix-la a poc a poc i prova-ho!', 'Para esta pregunta no hay ejemplo. ¡Léela despacio e inténtalo!'));
 }
 function showHint(ok) {
