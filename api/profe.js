@@ -125,7 +125,14 @@ export default async function handler(req, res) {
         cobrat = { d30: sum(i => i.created >= d30), mes: sum(i => i.created >= m0), n30: inv.data.filter(i => i.created >= d30).length, mes_n: inv.data.filter(i => i.created >= m0).length, mes_inici: new Date(m0 * 1000).toISOString().slice(0, 10) };
       } catch (e) { cobrat = { error: true }; }
     }
-    return ok(res, { users, stripe: { mode: stripeMode(), cobrat } });
+    // famílies de la zona de famílies (les taules es creen amb el primer ús)
+    let families = null;
+    try {
+      const fam = await sql`SELECT code, count(*)::int AS n FROM mates.familia_fills GROUP BY code`, m = new Map(fam.map(r => [r.code, r.n]));
+      users.forEach(u => u.fam = m.get(u.code) || 0);
+      families = (await sql`SELECT count(*)::int AS n, count(*) FILTER (WHERE EXISTS (SELECT 1 FROM mates.familia_fills ff WHERE ff.familia_id = f.id))::int AS amb FROM mates.families f`)[0];
+    } catch (e) { }
+    return ok(res, { users, families, stripe: { mode: stripeMode(), cobrat } });
   }
   // --- lectura ---
   const rows = await sql`SELECT code, username, name, course, survey, xp, streak, best, last_day, lessons, answers, correct, created_at, updated_at, grup_id, pla, pla_fins,

@@ -562,7 +562,7 @@ function uEstat(u) {
   if (u.caducat) return `<span class="t3">${L('Premium caducat el', 'Premium caducado el')} ${fdate(u.pla_fins)}</span>`;
   return '<span class="t3">—</span>';
 }
-const UFILT = () => [['tots', L('Tots', 'Todos')], ['pagament', L('De pagament', 'De pago')], ['manual', L('Manual', 'Manual')], ['free', L('Gratuïts', 'Gratuitos')], ['escola', L('Escola', 'Escuela')], ['nous', L('Nous (7 dies)', 'Nuevos (7 días)')], ['inactius', L('Inactius +30 dies', 'Inactivos +30 días')], ['baixa', L('Baixa', 'Baja')]];
+const UFILT = () => [['tots', L('Tots', 'Todos')], ['pagament', L('De pagament', 'De pago')], ['manual', L('Manual', 'Manual')], ['free', L('Gratuïts', 'Gratuitos')], ['escola', L('Escola', 'Escuela')], ['nous', L('Nous (7 dies)', 'Nuevos (7 días)')], ['inactius', L('Inactius +30 dies', 'Inactivos +30 días')], ['familia', L('Amb família', 'Con familia')], ['baixa', L('Baixa', 'Baja')]];
 const uCount = k => { const s = UF.f; UF.f = k; const q = UF.q; UF.q = ''; const n = uList().length; UF.f = s; UF.q = q; return n; };
 function uList() {
   const q = UF.q.trim().toLowerCase(), U = UD.users.filter(u => {
@@ -570,6 +570,7 @@ function uList() {
     if (UF.f === 'tots') return u.cat !== 'baixa';
     if (UF.f === 'nous') return u.cat !== 'baixa' && daysAgo(u.alta) <= 7;
     if (UF.f === 'inactius') return u.cat !== 'baixa' && (u.idle == null || u.idle > 30);
+    if (UF.f === 'familia') return u.cat !== 'baixa' && u.fam > 0;
     return u.cat === UF.f;
   });
   const by = { alta: (a, b) => b.alta.localeCompare(a.alta), act: (a, b) => (a.idle ?? 1e9) - (b.idle ?? 1e9), xp: (a, b) => (b.xp || 0) - (a.xp || 0), nom: (a, b) => a.name.localeCompare(b.name) };
@@ -615,7 +616,8 @@ function vUsuaris() {
       <section class="c5"><div class="sec-h"><h2>${L('Plans', 'Planes')}</h2></div><div class="card pad">
         <div class="pdist">${segs.map(x => `<i class="${x.cl}" style="width:${x.v / Math.max(1, n) * 100}%" title="${tx(CAT[x.k])}: ${x.v}"></i>`).join('')}</div>
         <ul class="plist">${[['pagament', 'gold'], ['manual', 'purple'], ['free', 'none'], ['escola', 'blue']].map(([k, cl]) => `<li onclick="UF.f='${k}';UF.n=100;vUsuaris()"><i class="${cl}"></i>${tx(CAT[k])}<b class="num">${c(k)}</b><span class="t3 num">${n ? Math.round(100 * c(k) / n) : 0} %</span></li>`).join('')}
-          <li onclick="UF.f='baixa';UF.n=100;vUsuaris()"><i class="crit"></i>${L('De baixa', 'De baja')}<b class="num">${UD.users.length - n}</b><span></span></li></ul></div>
+          <li onclick="UF.f='baixa';UF.n=100;vUsuaris()"><i class="crit"></i>${L('De baixa', 'De baja')}<b class="num">${UD.users.length - n}</b><span></span></li>
+          ${UD.families ? `<li onclick="UF.f='familia';UF.n=100;vUsuaris()"><i class="fam"></i>${L('Amb la família a la zona de famílies', 'Con la familia en la zona de familias')}<b class="num">${A.filter(u => u.fam).length}</b><span class="t3 num" title="${L('famílies registrades', 'familias registradas')}">${UD.families.n} ${L('fam.', 'fam.')}</span></li>` : ''}</ul></div>
         ${warn.length ? `<div class="sec-h" style="margin-top:16px"><h2>${L('Cal mirar', 'A revisar')}</h2></div><div class="card"><ul class="alist">${warn.map(([u, sev, t]) => `<li onclick="uOpen(${js(u.code)})"><div class="who"><b>${esc(u.name)}</b><div class="why"><span><i class="dot ${sev}"></i>${esc(t)}</span></div></div>${ico('chevron-right', 't3')}</li>`).join('')}</ul></div>` : ''}
       </section>
     </div>
@@ -631,7 +633,7 @@ function uTable() {
   const R = uList(), shown = R.slice(0, UF.n), el = $('#utbl'); if (!el) return;
   const sLink = UD.stripe && UD.stripe.mode === 'live' ? 'https://dashboard.stripe.com' : 'https://dashboard.stripe.com/test';
   el.innerHTML = !R.length ? `<div class="card">${emptyState('users', L('Cap usuari amb aquest filtre', 'Ningún usuario con este filtro'), L('Canvia la cerca o el filtre.', 'Cambia la búsqueda o el filtro.'))}</div>` : `<div class="tw us"><table><thead><tr><th>${L('Usuari', 'Usuario')}</th><th>${L('Pla', 'Plan')}</th><th>${L('Estat', 'Estado')}</th><th>${L('Alta', 'Alta')}</th><th>${L('Última activitat', 'Última actividad')}</th><th class="r">${L('Curs', 'Curso')}</th><th class="r">${L('Lliçons', 'Lecciones')}</th><th class="r">XP</th><th></th></tr></thead><tbody>
-    ${shown.map(u => `<tr onclick="if(!event.target.closest('a'))uOpen(${js(u.code)})"><td class="c-n"><div class="nm"><div><b>${esc(u.name)}</b><small class="mono">${esc(u.username || u.code)}</small></div></div></td><td class="c-p">${uPla(u)}</td><td class="c-e" data-l="${L('Estat', 'Estado')}">${uEstat(u)}</td>
+    ${shown.map(u => `<tr onclick="if(!event.target.closest('a'))uOpen(${js(u.code)})"><td class="c-n"><div class="nm"><div><b>${esc(u.name)}${u.fam ? ` <span class="famb" title="${L('Té la família vinculada a la zona de famílies', 'Tiene la familia vinculada en la zona de familias')}">👪</span>` : ''}</b><small class="mono">${esc(u.username || u.code)}</small></div></div></td><td class="c-p">${uPla(u)}</td><td class="c-e" data-l="${L('Estat', 'Estado')}">${uEstat(u)}</td>
       <td class="c-a" data-l="${L('Alta', 'Alta')}">${fdate(u.alta)}${u.alta.slice(0, 4) !== TODAY.slice(0, 4) ? ' ' + u.alta.slice(0, 4) : ''}</td><td class="c-u" data-l="${L('Última activitat', 'Última actividad')}">${u.last_day ? ago(u.last_day) : `<span class="t3">${L('mai', 'nunca')}</span>`}</td>
       <td class="r num">${u.course != null ? (u.course | 0) + 1 : '—'}</td><td class="r num">${u.lessons || 0}</td><td class="r num">${(u.xp || 0).toLocaleString(LANG)}</td>
       <td class="r">${u.stripe_customer ? `<a class="ib" href="${sLink}/customers/${encodeURIComponent(u.stripe_customer)}" target="_blank" rel="noopener" title="${L('Obre a Stripe', 'Abrir en Stripe')}">${ico('external-link')}</a>` : ''}</td></tr>`).join('')}</tbody></table></div>
@@ -657,8 +659,8 @@ async function uSub(code, resume) {
 }
 function uCsv() {
   const q = v => `"${String(v ?? '').replace(/"/g, '""')}"`;
-  const head = ['codi', 'usuari', 'nom', 'pla', 'periode', 'estat_stripe', 'cancel·la', 'premium_des_de', 'premium_fins', 'alta', 'ultima_activitat', 'curs', 'llicons', 'xp', 'grup', 'centre'];
-  const rows = uList().map(u => [u.code, u.username, u.name, tx(CAT[u.cat]), u.pla_periode, u.stripe_status, u.pla_cancel ? 'sí' : '', u.pla_des ? String(u.pla_des).slice(0, 10) : '', u.renova || (u.pla_fins ? String(u.pla_fins).slice(0, 10) : ''), u.alta, u.last_day || '', u.course != null ? (u.course | 0) + 1 : '', u.lessons || 0, u.xp || 0, u.grup, u.centre].map(q).join(';'));
+  const head = ['codi', 'usuari', 'nom', 'pla', 'periode', 'estat_stripe', 'cancel·la', 'premium_des_de', 'premium_fins', 'alta', 'ultima_activitat', 'curs', 'llicons', 'xp', 'grup', 'centre', 'familia'];
+  const rows = uList().map(u => [u.code, u.username, u.name, tx(CAT[u.cat]), u.pla_periode, u.stripe_status, u.pla_cancel ? 'sí' : '', u.pla_des ? String(u.pla_des).slice(0, 10) : '', u.renova || (u.pla_fins ? String(u.pla_fins).slice(0, 10) : ''), u.alta, u.last_day || '', u.course != null ? (u.course | 0) + 1 : '', u.lessons || 0, u.xp || 0, u.grup, u.centre, u.fam ? 'sí' : ''].map(q).join(';'));
   const blob = new Blob(['﻿' + [head.join(';'), ...rows].join('\n')], { type: 'text/csv;charset=utf-8' });
   const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `numi-usuaris-${TODAY}.csv`; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 1000);
 }
