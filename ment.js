@@ -12,7 +12,13 @@ const MG = {
   par: { ic: '🃏', cap: 'mem', n: 'Parelles|Parejas', d: 'Troba les parelles amb els menys intents possibles.|Encuentra las parejas con los menos intentos posibles.', unit: '%' },
   cal: { ic: '➕', cap: 'cal', n: 'Càlcul ràpid|Cálculo rápido', d: 'Un minut de comptes de cap.|Un minuto de cuentas de cabeza.' },
   sud: { ic: '🔢', cap: 'log', n: 'Sudoku|Sudoku', d: 'Cada número una sola vegada per fila, columna i quadre.|Cada número una sola vez por fila, columna y cuadro.' },
-  pal: { ic: '🔤', cap: 'llg', n: 'Paraules|Palabras', d: 'Ordena les lletres i troba la paraula.|Ordena las letras y encuentra la palabra.' }
+  pal: { ic: '🔤', cap: 'llg', n: 'Paraules|Palabras', d: 'Ordena les lletres i troba la paraula.|Ordena las letras y encuentra la palabra.' },
+  int: { ic: '🔎', cap: 'ate', n: "L'intrús|El intruso", d: 'Troba el signe diferent tan ràpid com puguis.|Encuentra el signo diferente lo más rápido que puedas.' },
+  lli: { ic: '📝', cap: 'mem', n: 'Llista de la compra|Lista de la compra', d: 'Memoritza la llista i després reconeix-la entre altres productes.|Memoriza la lista y después reconócela entre otros productos.' },
+  dir: { ic: '🧭', cap: 'mem', n: 'Direccions|Direcciones', d: 'Segueix les indicacions i troba on acabes.|Sigue las indicaciones y encuentra dónde acabas.' },
+  com: { ic: '🛍', cap: 'cal', n: 'La compra|La compra', d: 'Preus, canvi i ofertes: les mates de cada dia.|Precios, cambio y ofertas: las mates de cada día.' },
+  ref: { ic: '📖', cap: 'llg', n: 'Refranys|Refranes', d: 'Completa el refrany.|Completa el refrán.' },
+  rel: { ic: '🕐', cap: 'log', n: 'El rellotge|El reloj', d: "Llegeix l'hora i calcula quina hora serà.|Lee la hora y calcula qué hora será." }
 };
 const MHAB = ['Camina 20 minuts a bon pas.|Camina 20 minutos a buen paso.', 'Truca o queda amb algú que fa temps que no veus.|Llama o queda con alguien a quien hace tiempo que no ves.',
   'Llegeix 15 minuts: un llibre, una revista o el diari.|Lee 15 minutos: un libro, una revista o el periódico.', 'Aprèn alguna cosa nova: una paraula, una recepta, una cançó.|Aprende algo nuevo: una palabra, una receta, una canción.',
@@ -22,14 +28,23 @@ const MHAB = ['Camina 20 minuts a bon pas.|Camina 20 minutos a buen paso.', 'Tru
 const mDayN = d => Math.floor(new Date(d + 'T12:00') / 864e5);
 const MS = () => { const m = P.ment = P.ment || {}; for (const k of ['lvl', 'best', 'hist', 'days', 'free']) m[k] = m[k] || {}; return m; };
 const mDay = (d = today()) => { const m = MS(); return m.days[d] = m.days[d] || { s: [], hab: 0 }; };
-function mSession(d = today()) { const n = mDayN(d); return [['vel', 'ate'][n % 2], ['mem', 'par'][Math.floor(n / 2) % 2], ['cal', 'sud', 'pal'][n % 3]]; }
+// sessió del dia: un joc de cada grup, el que fa més dies que no es practica (es decideix un cop al dia i es guarda)
+const MSLOT = [['vel', 'ate', 'int'], ['mem', 'par', 'lli', 'dir'], ['cal', 'sud', 'pal', 'com', 'ref', 'rel']];
+function mSession(d = today()) {
+  const m = MS(), dd = m.days[d];
+  if (dd && Array.isArray(dd.ses) && dd.ses.length === 3) return dd.ses;
+  const n = mDayN(d), last = g => { const h = m.hist[g]; return h && h.length ? h[h.length - 1][0] : ''; };
+  const ses = MSLOT.map((sl, k) => [...sl].sort((a, b) => last(a).localeCompare(last(b)) || ((sl.indexOf(a) + n + k) % sl.length) - ((sl.indexOf(b) + n + k) % sl.length))[0]);
+  if (d === today()) mDay(d).ses = ses;
+  return ses;
+}
 const mLvl = g => MS().lvl[g] ?? (g === 'vel' ? 500 : g === 'mem' ? 3 : 1);
 const mNice = (g, v) => v == null ? '—' : g === 'vel' ? `${v} ms` : g === 'par' ? `${v} %` : g === 'sud' ? `${Math.floor(v / 60)}:${pad(v % 60)}` : String(v);
 const mHello = () => { const h = new Date().getHours(); return h < 13 ? L('Bon dia', 'Buenos días') : h < 20 ? L('Bona tarda', 'Buenas tardes') : L('Bona nit', 'Buenas noches'); };
 
 /* ---------- Navegació ---------- */
 let MGCUR = null, MGT = null, MGA = null, MGA_TK = null;
-function mStop() { clearTimeout(MGT); clearInterval(MGA_TK); MGT = MGA_TK = null; MGA = null; MGCUR = null; }
+function mStop() { mHush(); clearTimeout(MGT); clearInterval(MGA_TK); MGT = MGA_TK = null; MGA = null; MGCUR = null; }
 function mNav(t) {
   const it = [['home', '☀️', L('Avui', 'Hoy')], ['jocs', '🧩', L('Jocs', 'Juegos')], ['progres', '📈', L('Progrés', 'Progreso')], ['profile', '👤', L('Perfil', 'Perfil')]];
   return `<nav class="nav mnav">${it.map(([v, i, l]) => `<button class="${v === t ? 'on' : ''}" onclick="go('${v}')"><span class="ni">${i}</span><span>${l}</span></button>`).join('')}<button class="navxat" onclick="xatOpen()" aria-label="${L('Pregunta a en Numi', 'Pregunta a Numi')}"><span class="ni">${charSVG('numi', 'happy')}</span><span>${L('Pregunta', 'Pregunta')}</span></button></nav>`;
@@ -91,7 +106,7 @@ function mGameShell(g, top, body) {
 function mQuit() { ask(L('Vols deixar aquesta partida?', '¿Quieres dejar esta partida?'), L('SURT', 'SALIR'), L('CONTINUA', 'SIGUE'), () => { mStop(); go('home'); }); }
 function mIntro(g, inSes) {
   MGA = { ses: inSes };
-  mGameShell(g, '', `<div class="mintro"><span class="mbig">${MG[g].ic}</span><h2>${tx(MG[g].n)}</h2><p>${tx(MG[g].d)}</p>${mHow(g)}<button class="btn big mbtn" onclick="mStart('${g}')">${L('JUGA', 'JUEGA')}</button></div>`);
+  mGameShell(g, '', `<div class="mintro"><span class="mbig">${MG[g].ic}</span><h2>${tx(MG[g].n)}</h2><p>${tx(MG[g].d)}</p>${mHow(g)}${'speechSynthesis' in window ? `<button class="btn ghost mspeak" onclick="mSpeak('${g}')">🔊 ${L("Escolta-ho", 'Escúchalo')}</button>` : ''}<button class="btn big mbtn" onclick="mStart('${g}')">${L('JUGA', 'JUEGA')}</button></div>`);
 }
 function mHow(g) {
   const h = {
@@ -101,11 +116,27 @@ function mHow(g) {
     par: L('Gira dues cartes cada vegada. Si són iguals, es queden girades.', 'Gira dos cartas cada vez. Si son iguales, se quedan giradas.'),
     cal: L('Escriu el resultat amb el teclat. Quan és correcte, passa sol a la següent. Tens un minut.', 'Escribe el resultado con el teclado. Cuando es correcto, pasa solo a la siguiente. Tienes un minuto.'),
     sud: L('Toca una casella buida i després el número. Si ho necessites, pots demanar una pista.', 'Toca una casilla vacía y después el número. Si lo necesitas, puedes pedir una pista.'),
-    pal: L('Toca les lletres en ordre per formar la paraula. La pista et diu de què va.', 'Toca las letras en orden para formar la palabra. La pista te dice de qué va.')
+    pal: L('Toca les lletres en ordre per formar la paraula. La pista et diu de què va.', 'Toca las letras en orden para formar la palabra. La pista te dice de qué va.'),
+    int: L('Totes les lletres són iguals menys una. Toca la diferent. Cada vegada n\'hi haurà més. Tens 45 segons.', 'Todas las letras son iguales menos una. Toca la diferente. Cada vez habrá más. Tienes 45 segundos.'),
+    lli: L('Veuràs una llista de la compra durant uns segons. Després, entre molts productes, toca només els que hi eren.', 'Verás una lista de la compra durante unos segundos. Después, entre muchos productos, toca solo los que estaban.'),
+    dir: L('Surts de la casella de la casa. Llegeix les indicacions (amunt, avall, dreta, esquerra) i toca la casella on acabes.', 'Sales de la casilla de la casa. Lee las indicaciones (arriba, abajo, derecha, izquierda) y toca la casilla donde acabas.'),
+    com: L('Vuit preguntes de la compra de cada dia: quant costa tot, quant et tornen, quina oferta surt més a compte. Sense presses.', 'Ocho preguntas de la compra de cada día: cuánto cuesta todo, cuánto te devuelven, qué oferta sale más a cuenta. Sin prisas.'),
+    ref: L('Vuit refranys de sempre. Tria com acaba cadascun.', 'Ocho refranes de siempre. Elige cómo acaba cada uno.'),
+    rel: L("Vuit rellotges. Digues quina hora marquen i, més endavant, quina hora serà d'aquí a una estona.", 'Ocho relojes. Di qué hora marcan y, más adelante, qué hora será dentro de un rato.')
   }[g];
   return `<p class="mhow">${h}</p>`;
 }
-function mStart(g) { SFX.tap && SFX.tap(); ({ vel: velGo, ate: ateGo, mem: memGo, par: parGo, cal: calGo, sud: sudGo, pal: palGo })[g](); }
+// instruccions en veu alta (útil per a qui hi veu poc o prefereix escoltar)
+function mSpeak(g) {
+  try {
+    const t = `${tx(MG[g].n)}. ${xatPlain ? xatPlain(mHow(g)) : ''}`, u = new SpeechSynthesisUtterance(t);
+    u.lang = LANG === 'es' ? 'es-ES' : 'ca-ES'; u.rate = .92;
+    const v = speechSynthesis.getVoices().find(v => v.lang && v.lang.toLowerCase().startsWith(LANG === 'es' ? 'es' : 'ca')); if (v) u.voice = v;
+    speechSynthesis.cancel(); speechSynthesis.speak(u);
+  } catch (e) { }
+}
+const mHush = () => { try { speechSynthesis.cancel(); } catch (e) { } };
+function mStart(g) { mHush(); SFX.tap && SFX.tap(); ({ vel: velGo, ate: ateGo, mem: memGo, par: parGo, cal: calGo, sud: sudGo, pal: palGo, int: intGo, lli: lliGo, dir: dirGo, com: comGo, ref: refGo, rel: relGo })[g](); }
 
 // resultat: guarda, adapta el nivell i marca la sessió
 function mEnd(g, score, up, msg) {
@@ -330,6 +361,136 @@ function palCheck() {
   else { SFX.ko && SFX.ko(); palDraw(); const s = $('.palslots'); s && s.classList.add('shake'); setTimeout(() => { if (MGA === A) { A.pos = []; palDraw(); } }, 700); }
 }
 function palEnd() { clearInterval(MGA_TK); const A = MGA; mEnd('pal', A.ok, A.ok >= 5 ? 1 : A.ok <= 2 ? -1 : 0, L(`Has trobat ${A.ok} de ${A.n} paraules.`, `Has encontrado ${A.ok} de ${A.n} palabras.`)); }
+
+/* ---------- 8. L'intrús (atenció visual: cerca del signe diferent) ---------- */
+const MINT = [['O', 'Q'], ['E', 'F'], ['b', 'd'], ['6', '9'], ['M', 'N'], ['p', 'q'], ['C', 'G'], ['V', 'Y'], ['8', 'B'], ['u', 'n']];
+function intGo() { MGA = { ...MGA, lv: mLvl('int'), ok: 0, ko: 0, end: Date.now() + 45000 }; intNext(); MGA_TK = setInterval(() => { const s = Math.max(0, Math.ceil((MGA.end - Date.now()) / 1000)); mSet(`⏱ ${s} s · ✓ ${MGA.ok}`); if (s <= 0) intEnd(); }, 250); }
+function intNext() {
+  const A = MGA, n = Math.min(8, 4 + Math.floor((A.lv - 1) / 2) + Math.floor(A.ok / 4)), pr = pick(MINT.slice(0, Math.min(MINT.length, 3 + A.lv))), sw = Math.random() < .5;
+  const [base, odd] = sw ? [pr[1], pr[0]] : pr; A.odd = ri(0, n * n - 1);
+  $('#mgb').innerHTML = `<p class="mtq">${L('Toca el diferent', 'Toca el diferente')}</p><div class="intg" style="--n:${n}">${[...Array(n * n).keys()].map(i => `<button class="intc" onclick="intTap(${i})">${i === A.odd ? odd : base}</button>`).join('')}</div>`;
+}
+function intTap(i) { const A = MGA; if (!A) return; if (i === A.odd) { A.ok++; SFX.ok && SFX.ok(); intNext(); } else { A.ko++; SFX.ko && SFX.ko(); const g = $('.intg'); g && (g.classList.remove('shake'), void g.offsetWidth, g.classList.add('shake')); } }
+function intEnd() { clearInterval(MGA_TK); const A = MGA; mEnd('int', A.ok, A.ok >= 14 && A.ko <= 2 ? 1 : A.ok <= 6 ? -1 : 0, L(`${A.ok} trobats${A.ko ? ` i ${A.ko} errors` : ''} en 45 segons.`, `${A.ok} encontrados${A.ko ? ` y ${A.ko} errores` : ''} en 45 segundos.`)); }
+
+/* ---------- 9. Llista de la compra (memòria verbal: reconeixement) ---------- */
+const MPROD = { ca: ['Pa', 'Llet', 'Ous', 'Formatge', 'Tomàquets', 'Pomes', 'Arròs', 'Oli', 'Sucre', 'Cafè', 'Iogurts', 'Pollastre', 'Peix', 'Enciam', 'Cebes', 'Patates', 'Taronges', 'Plàtans', 'Galetes', 'Pernil', 'Mantega', 'Farina', 'Pasta', 'Sal', 'Aigua', 'Suc', 'Xocolata', 'Mongetes', 'Pastanagues', 'Sabó'],
+  es: ['Pan', 'Leche', 'Huevos', 'Queso', 'Tomates', 'Manzanas', 'Arroz', 'Aceite', 'Azúcar', 'Café', 'Yogures', 'Pollo', 'Pescado', 'Lechuga', 'Cebollas', 'Patatas', 'Naranjas', 'Plátanos', 'Galletas', 'Jamón', 'Mantequilla', 'Harina', 'Pasta', 'Sal', 'Agua', 'Zumo', 'Chocolate', 'Judías', 'Zanahorias', 'Jabón'] };
+function lliGo() { MGA = { ...MGA, lv: mLvl('lli'), round: 0, hits: 0, fals: 0, tot: 0 }; lliRound(); }
+async function lliRound() {
+  const A = MGA; if (A.round >= 2) return lliEnd();
+  A.round++; const N = Math.min(10, 3 + A.lv), all = shuffle([...MPROD[LANG === 'es' ? 'es' : 'ca']]);
+  A.list = all.slice(0, N); A.grid = shuffle(all.slice(0, N * 2)); A.sel = new Set(); A.tot += N;
+  mSet(`${L('Ronda', 'Ronda')} ${A.round}/2`);
+  $('#mgb').innerHTML = `<p class="mtq">${L('Memoritza la llista', 'Memoriza la lista')}</p><div class="llilist">${A.list.map(x => `<span>${x}</span>`).join('')}</div><div class="llibar"><i style="animation-duration:${N * 2.2}s"></i></div>`;
+  await mSleep(N * 2200); if (MGA !== A) return;
+  $('#mgb').innerHTML = `<p class="mtq">${L(`Toca els ${N} productes que hi havia`, `Toca los ${N} productos que había`)}</p><div class="lligrid">${A.grid.map((x, i) => `<button class="llic" id="lc${i}" onclick="lliTap(${i})">${x}</button>`).join('')}</div><button class="btn big mbtn" onclick="lliCheck()">${L('JA ESTÀ', 'YA ESTÁ')}</button>`;
+}
+function lliTap(i) { const A = MGA; A.sel.has(i) ? A.sel.delete(i) : A.sel.add(i); $('#lc' + i).classList.toggle('on', A.sel.has(i)); SFX.tap && SFX.tap(); }
+async function lliCheck() {
+  const A = MGA; let h = 0, f = 0;
+  A.grid.forEach((x, i) => { const inL = A.list.includes(x), s = A.sel.has(i), b = $('#lc' + i); if (inL && s) { h++; b.classList.add('okc'); } else if (!inL && s) { f++; b.classList.add('koc'); } else if (inL) b.classList.add('miss'); b.disabled = true; });
+  A.hits += h; A.fals += f; (h === A.list.length && !f ? SFX.ok : SFX.ko) && (h === A.list.length && !f ? SFX.ok() : SFX.ko());
+  await mSleep(2200); if (MGA === A) lliRound();
+}
+function lliEnd() { const A = MGA, pct = Math.max(0, Math.round(100 * (A.hits - A.fals) / A.tot)); mEnd('lli', pct, pct >= 90 ? 1 : pct < 60 ? -1 : 0, L(`Has recordat ${A.hits} de ${A.tot} productes${A.fals ? ` (i n'has marcat ${A.fals} que no hi eren)` : ''}.`, `Has recordado ${A.hits} de ${A.tot} productos${A.fals ? ` (y has marcado ${A.fals} que no estaban)` : ''}.`)); }
+
+/* ---------- 10. Direccions (memòria i orientació espacial) ---------- */
+function dirGo() { MGA = { ...MGA, lv: mLvl('dir'), q: 0, ok: 0 }; dirNext(); }
+async function dirNext() {
+  const A = MGA; if (A.q >= 6) return mEnd('dir', A.ok, A.ok >= 6 ? 1 : A.ok <= 3 ? -1 : 0, L(`${A.ok} de 6 recorreguts encertats.`, `${A.ok} de 6 recorridos acertados.`));
+  A.q++; const N = 5, k = Math.min(6, 2 + Math.floor(A.lv / 2)), hide = A.lv >= 3;
+  let x, y, moves;
+  for (let t = 0; t < 200; t++) {
+    x = ri(0, N - 1); y = ri(0, N - 1); const sx = x, sy = y; moves = []; let okp = true;
+    for (let m = 0; m < k; m++) { const d = pick([[0, -1], [0, 1], [1, 0], [-1, 0]]), st = ri(1, 2); const nx = x + d[0] * st, ny = y + d[1] * st; if (nx < 0 || ny < 0 || nx >= N || ny >= N) { okp = false; break; } moves.push([d, st]); x = nx; y = ny; }
+    if (okp && (x !== sx || y !== sy)) { A.start = [sx, sy]; break; }
+  }
+  A.end = [x, y]; A.lock = hide;
+  const arrow = d => d[1] === -1 ? L('↑ amunt', '↑ arriba') : d[1] === 1 ? L('↓ avall', '↓ abajo') : d[0] === 1 ? L('→ dreta', '→ derecha') : L('← esquerra', '← izquierda');
+  const steps = moves.map(([d, st]) => `<span>${arrow(d)} <b>${st}</b></span>`).join('');
+  const grid = () => `<div class="dirg">${[...Array(N * N).keys()].map(i => { const cx = i % N, cy = Math.floor(i / N), home = cx === A.start[0] && cy === A.start[1]; return `<button class="dirc ${home ? 'home' : ''}" id="dc${i}" onclick="dirTap(${i})">${home ? '🏠' : ''}</button>`; }).join('')}</div>`;
+  mSet(`${A.q}/6`);
+  $('#mgb').innerHTML = `<p class="mtq">${hide ? L('Memoritza el camí', 'Memoriza el camino') : L('On acabes?', '¿Dónde acabas?')}</p><div class="dirsteps">${steps}</div>${grid()}`;
+  if (hide) { await mSleep(2500 + k * 1300); if (MGA !== A) return; const s = $('.dirsteps'); if (s) s.innerHTML = `<span class="mmut">${L('Ara toca on acabes', 'Ahora toca dónde acabas')}</span>`; A.lock = false; }
+}
+async function dirTap(i) {
+  const A = MGA; if (!A || A.lock) return; A.lock = true;
+  const N = 5, ok = i === A.end[1] * N + A.end[0];
+  $('#dc' + (A.end[1] * N + A.end[0])).classList.add('okc'); if (!ok) $('#dc' + i).classList.add('koc');
+  ok ? (A.ok++, SFX.ok && SFX.ok()) : SFX.ko && SFX.ko();
+  await mSleep(1200); if (MGA === A) dirNext();
+}
+
+/* ---------- 11. La compra (càlcul de la vida diària) ---------- */
+const MPREU = { ca: [['Pa', 1.2], ['Llet', .95], ['Ous (dotzena)', 2.6], ['Formatge', 3.4], ['Pomes (kg)', 1.8], ['Cafè', 4.25], ['Oli', 6.5], ['Iogurts', 1.65], ['Galetes', 1.35], ['Arròs', 1.1], ['Pernil', 2.9], ['Taronges (kg)', 1.45]],
+  es: [['Pan', 1.2], ['Leche', .95], ['Huevos (docena)', 2.6], ['Queso', 3.4], ['Manzanas (kg)', 1.8], ['Café', 4.25], ['Aceite', 6.5], ['Yogures', 1.65], ['Galletas', 1.35], ['Arroz', 1.1], ['Jamón', 2.9], ['Naranjas (kg)', 1.45]] };
+const mEur = v => v.toFixed(2).replace('.', ',') + ' €';
+function comQ(lv) {
+  const P_ = shuffle([...MPREU[LANG === 'es' ? 'es' : 'ca']]), r2_ = v => Math.round(v * 100) / 100;
+  const kind = lv <= 2 ? 'sum2' : lv <= 4 ? pick(['sum3', 'change']) : lv <= 6 ? pick(['sum3', 'change', 'pack']) : pick(['change', 'pack', 'disc', 'best']);
+  let items, q, ans, dis;
+  if (kind === 'sum2' || kind === 'sum3') { items = P_.slice(0, kind === 'sum2' ? 2 : 3); ans = r2_(items.reduce((t, [, p]) => t + p, 0)); q = L('Quant pagues en total?', '¿Cuánto pagas en total?'); dis = [ans + .1, ans - .1, ans + 1, ans - 1, ans + .5]; }
+  if (kind === 'change') { items = P_.slice(0, ri(2, 3)); const t = r2_(items.reduce((a, [, p]) => a + p, 0)), b = t < 5 ? 5 : t < 10 ? 10 : 20; ans = r2_(b - t); q = L(`Pagues amb un bitllet de ${b} €. Quant et tornen?`, `Pagas con un billete de ${b} €. ¿Cuánto te devuelven?`); dis = [ans + .1, ans - .1, ans + 1, ans - 1, r2_(t)]; }
+  if (kind === 'pack') { const [n, p] = P_[0]; items = [[n, p]]; const k = ri(2, 4); ans = r2_(p * k); q = L(`Quant costen ${k} unitats de «${n}»?`, `¿Cuánto cuestan ${k} unidades de «${n}»?`); dis = [ans + p, ans - p, ans + .1, ans + 1]; }
+  if (kind === 'disc') { const v = pick([10, 20, 30, 40, 50]), pc = pick([10, 20, 25, 50]); items = []; ans = r2_(v * (1 - pc / 100)); q = L(`Una jaqueta de ${v} € té un ${pc} % de descompte. Quant costa ara?`, `Una chaqueta de ${v} € tiene un ${pc} % de descuento. ¿Cuánto cuesta ahora?`); dis = [r2_(v * pc / 100), v - pc, ans + 1, ans - 1]; }
+  if (kind === 'best') { const [n, p] = P_[0]; items = [[n, p]]; const a = r2_(p * 2 * pick([.7, .8, .9])), bb = r2_(p * 3 * .75); ans = null;
+    const good = bb / 3 < a / 2 ? 1 : 0; return { items, q: L(`«${n}» a ${mEur(p)}. Què surt més a compte per unitat?`, `«${n}» a ${mEur(p)}. ¿Qué sale más a cuenta por unidad?`), opts: [L(`2 per ${mEur(a)}`, `2 por ${mEur(a)}`), L(`3 amb un 25 % de descompte (${mEur(bb)})`, `3 con un 25 % de descuento (${mEur(bb)})`)], ans: good }; }
+  const o = [...new Set([ans, ...shuffle(dis.map(r2_).filter(v => v > 0 && v !== ans))])].slice(0, 4);
+  const opts = shuffle(o).map(mEur); return { items, q, opts, ans: opts.indexOf(mEur(ans)) };
+}
+function comGo() { MGA = { ...MGA, lv: mLvl('com'), q: 0, ok: 0 }; comNext(); }
+function comNext() {
+  const A = MGA; if (A.q >= 8) return mEnd('com', A.ok, A.ok >= 7 ? 1 : A.ok <= 4 ? -1 : 0, L(`${A.ok} de 8 encertades.`, `${A.ok} de 8 acertadas.`));
+  A.q++; A.cur = comQ(A.lv); mSet(`${A.q}/8`);
+  const it = A.cur.items.length ? `<div class="tiquet">${A.cur.items.map(([n, p]) => `<div><span>${n}</span><b>${mEur(p)}</b></div>`).join('')}</div>` : '';
+  $('#mgb').innerHTML = `${it}<p class="mtq">${A.cur.q}</p><div class="copts">${A.cur.opts.map((o, i) => `<button class="mopt copt" onclick="comTap(${i})">${o}</button>`).join('')}</div>`;
+}
+async function comTap(i) {
+  const A = MGA; if (!A || A.lock) return; A.lock = true; const b = $$('.copt'), ok = i === A.cur.ans;
+  b[A.cur.ans].classList.add('okc'); if (!ok) b[i].classList.add('koc'); ok ? (A.ok++, SFX.ok && SFX.ok()) : SFX.ko && SFX.ko();
+  await mSleep(1100); if (MGA === A) { A.lock = false; comNext(); }
+}
+
+/* ---------- 12. Refranys (llenguatge i memòria de sempre) ---------- */
+const MREF = { ca: [['Qui matina', 'fa farina'], ['A cavall regalat', 'no li miris el dentat'], ['Qui no plora', 'no mama'], ['Més val un ocell a la mà', 'que cent volant'], ['De mica en mica', "s'omple la pica"], ['Qui dia passa', 'any empeny'], ['Qui la fa', 'la paga'], ['Val més prevenir', 'que curar'], ['Qui té un amic', 'té un tresor'], ['Qui sembra vents', 'recull tempestes'], ['Quan el riu sona', 'aigua porta'], ['Poc a poc', "s'hi va lluny"], ['Qui té boca', "s'equivoca"], ['Més val tard', 'que mai'], ['Parlant', "la gent s'entén"], ['Qui avisa', 'no és traïdor'], ['Qui molt abraça', 'poc estreny'], ['Casa on entra el sol', 'no hi entra el metge'], ['Una flor', 'no fa estiu'], ['No diguis blat', 'que no sigui al sac i ben lligat'], ['A la taula i al llit', 'al primer crit'], ['Tal faràs', 'tal trobaràs']],
+  es: [['A quien madruga', 'Dios le ayuda'], ['Más vale pájaro en mano', 'que ciento volando'], ['A caballo regalado', 'no le mires el diente'], ['Camarón que se duerme', 'se lo lleva la corriente'], ['No por mucho madrugar', 'amanece más temprano'], ['Dime con quién andas', 'y te diré quién eres'], ['En casa de herrero', 'cuchillo de palo'], ['Perro ladrador', 'poco mordedor'], ['Ojos que no ven', 'corazón que no siente'], ['Más vale tarde', 'que nunca'], ['Quien mucho abarca', 'poco aprieta'], ['A buen entendedor', 'pocas palabras bastan'], ['Del dicho al hecho', 'hay mucho trecho'], ['Quien siembra vientos', 'recoge tempestades'], ['Cuando el río suena', 'agua lleva'], ['Poco a poco', 'se va lejos'], ['Agua que no has de beber', 'déjala correr'], ['Hablando', 'se entiende la gente'], ['Una golondrina', 'no hace verano'], ['Quien avisa', 'no es traidor'], ['Más vale prevenir', 'que curar'], ['Donde fueres', 'haz lo que vieres']] };
+function refGo() { MGA = { ...MGA, q: 0, ok: 0, deck: shuffle([...MREF[LANG === 'es' ? 'es' : 'ca']]) }; refNext(); }
+function refNext() {
+  const A = MGA; if (A.q >= 8) return mEnd('ref', A.ok, A.ok >= 7 ? 1 : A.ok <= 4 ? -1 : 0, L(`${A.ok} de 8 refranys.`, `${A.ok} de 8 refranes.`));
+  const [a, b] = A.deck[A.q]; A.q++; mSet(`${A.q}/8`);
+  const others = shuffle(A.deck.filter(x => x[1] !== b)).slice(0, 3).map(x => x[1]), opts = shuffle([b, ...others]); A.ans = opts.indexOf(b);
+  $('#mgb').innerHTML = `<p class="refq">«${a}…»</p><div class="copts list">${opts.map((o, i) => `<button class="mopt copt" onclick="refTap(${i})">…${o}</button>`).join('')}</div>`;
+}
+async function refTap(i) {
+  const A = MGA; if (!A || A.lock) return; A.lock = true; const b = $$('.copt'), ok = i === A.ans;
+  b[A.ans].classList.add('okc'); if (!ok) b[i].classList.add('koc'); ok ? (A.ok++, SFX.ok && SFX.ok()) : SFX.ko && SFX.ko();
+  await mSleep(1200); if (MGA === A) { A.lock = false; refNext(); }
+}
+
+/* ---------- 13. El rellotge (lectura de l'hora i càlcul de temps) ---------- */
+const hhmm = m => { m = ((m % 720) + 720) % 720; const h = Math.floor(m / 60) || 12; return `${h}:${pad(m % 60)}`; };
+function mClock(m) {
+  const h = (m / 60) % 12, mi = m % 60, ha = h * 30, ma = mi * 6;
+  const tick = [...Array(12).keys()].map(i => { const a = i * 30 * Math.PI / 180; return `<line x1="${50 + 38 * Math.sin(a)}" y1="${50 - 38 * Math.cos(a)}" x2="${50 + 44 * Math.sin(a)}" y2="${50 - 44 * Math.cos(a)}" stroke="#1E2A2B" stroke-width="${i % 3 ? 1.6 : 3}" stroke-linecap="round"/>`; }).join('');
+  const nums = [12, 3, 6, 9].map((n, i) => { const a = i * 90 * Math.PI / 180; return `<text x="${50 + 30 * Math.sin(a)}" y="${50 - 30 * Math.cos(a) + 4.5}" text-anchor="middle" font-size="12" font-weight="800" fill="#1E2A2B">${n}</text>`; }).join('');
+  return `<svg class="relsvg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="47" fill="#fff" stroke="#1E2A2B" stroke-width="3"/>${tick}${nums}<line x1="50" y1="50" x2="${50 + 22 * Math.sin(ha * Math.PI / 180)}" y2="${50 - 22 * Math.cos(ha * Math.PI / 180)}" stroke="#1E2A2B" stroke-width="5" stroke-linecap="round"/><line x1="50" y1="50" x2="${50 + 34 * Math.sin(ma * Math.PI / 180)}" y2="${50 - 34 * Math.cos(ma * Math.PI / 180)}" stroke="#177E6E" stroke-width="3.2" stroke-linecap="round"/><circle cx="50" cy="50" r="3.5" fill="#1E2A2B"/></svg>`;
+}
+function relGo() { MGA = { ...MGA, lv: mLvl('rel'), q: 0, ok: 0 }; relNext(); }
+function relNext() {
+  const A = MGA; if (A.q >= 8) return mEnd('rel', A.ok, A.ok >= 7 ? 1 : A.ok <= 4 ? -1 : 0, L(`${A.ok} de 8 encertades.`, `${A.ok} de 8 acertadas.`));
+  A.q++; mSet(`${A.q}/8`);
+  const step = A.lv <= 1 ? 30 : A.lv <= 3 ? 15 : 5, m = ri(1, 12) * 60 + ri(0, 60 / step - 1) * step, calc = A.lv >= 5 && Math.random() < .6;
+  const add = calc ? pick([15, 20, 25, 30, 40, 45, 50, 75, 90]) : 0, ans = m + add;
+  const d = [ans + 60, ans - 60, ans + 5 * (step > 5 ? 3 : 1), ans - 15, m + 30, (ans % 60) * 12 + Math.floor(ans / 60) * 5].map(v => hhmm(v)).filter(v => v !== hhmm(ans));
+  const opts = shuffle([hhmm(ans), ...shuffle([...new Set(d)]).slice(0, 3)]); A.ans = opts.indexOf(hhmm(ans));
+  $('#mgb').innerHTML = `${mClock(m)}<p class="mtq">${calc ? L(`Quina hora serà d'aquí a <b>${add} minuts</b>?`, `¿Qué hora será dentro de <b>${add} minutos</b>?`) : L('Quina hora és?', '¿Qué hora es?')}</p><div class="copts">${opts.map((o, i) => `<button class="mopt copt" onclick="relTap(${i})">${o}</button>`).join('')}</div>`;
+}
+async function relTap(i) {
+  const A = MGA; if (!A || A.lock) return; A.lock = true; const b = $$('.copt'), ok = i === A.ans;
+  b[A.ans].classList.add('okc'); if (!ok) b[i].classList.add('koc'); ok ? (A.ok++, SFX.ok && SFX.ok()) : SFX.ko && SFX.ko();
+  await mSleep(1100); if (MGA === A) { A.lock = false; relNext(); }
+}
 
 /* ---------- Progrés ---------- */
 function mSpark(h, low) {
