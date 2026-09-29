@@ -2,3 +2,4 @@
 html[data-v=pro]{background:#0F0D18}
 html[data-v=pro] body{min-height:100dvh;background:radial-gradient(120% 60% at 50% 0,#241B3D 0,#15111F 55%,#0F0D18 100%) fixed}
 html[data-v=pro] .toast{background:#2E2745;color:#F2EEF8;border:1px solid #433A62;box-shadow:0 10px 30px rgba(0,0,0,.45)}
+html[data-v=pro] .nav::before{background-image:url(img/brand/logo-pro-negatiu.svg)}

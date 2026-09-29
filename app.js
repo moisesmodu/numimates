@@ -371,11 +371,11 @@ function buyPremium(pla) {
   if (pla) PREM_PLA = pla === 'mes' ? 'mes' : 'any';
   if (!P || !P.code) { syncNow(); return toast(L('Primer cal guardar el perfil al núvol: connecta\'t a internet i torna-ho a provar.', 'Primero hay que guardar el perfil en la nube: conéctate a internet y vuelve a probarlo.')); }
   const pb = (k, t, pr, per, tag) => `<button class="${PREM_PLA === k ? 'sel' : ''} ${k === 'any' ? 'best' : ''}" onclick="buyPremium('${k}')">${tag ? `<i>${tag}</i>` : ''}<b>${t}</b><span>${pr}<small>/${per}</small></span></button>`;
-  modal(`<div class="sheet card cent prem-sheet"><h3>🔒 ${L('Per a un adult', 'Para un adulto')}</h3>
-    <p class="prem-sum">${L(`${VAR.name} Premium per a`, `${VAR.name} Premium para`)} <b>${esc(P.name)}</b></p>
+  modal(`<div class="sheet card cent prem-sheet"><h3>${IS_MENT ? `${VAR.name} Premium` : '🔒 ' + L('Per a un adult', 'Para un adulto')}</h3>
+    <p class="prem-sum">${IS_MENT ? L('Tots els jocs sense límit, cada dia.', 'Todos los juegos sin límite, cada día.') : `${L(`${VAR.name} Premium per a`, `${VAR.name} Premium para`)} <b>${esc(P.name)}</b>`}</p>
     <div class="prem-plans">${pb('mes', L('Mensual', 'Mensual'), '4,99 €', L('mes', 'mes'))}${pb('any', L('Anual', 'Anual'), '49 €', L('any', 'año'), L('Estalvia un 18 %', 'Ahorra un 18 %'))}</div>
     <p class="prem-note">${L('IVA inclòs · Es renova sol i es cancel·la quan vulgueu des de l\'app · Pagament amb targeta a Stripe', 'IVA incluido · Se renueva solo y se cancela cuando queráis desde la app · Pago con tarjeta en Stripe')}</p>
-    <label class="prem-ok"><input type="checkbox" id="premok" onchange="$('#premgo').disabled=!this.checked"> <span>${L('Sóc el pare, la mare o el tutor legal i accepto les', 'Soy el padre, la madre o el tutor legal y acepto las')} <a href="https://numimates.com/condicions?l=${LANG}" target="_blank" rel="noopener">${L('condicions de contractació', 'condiciones de contratación')}</a>.</span></label>
+    <label class="prem-ok"><input type="checkbox" id="premok" onchange="$('#premgo').disabled=!this.checked"> <span>${IS_MENT ? L("Sóc major d'edat i accepto les", 'Soy mayor de edad y acepto las') : L('Sóc el pare, la mare o el tutor legal i accepto les', 'Soy el padre, la madre o el tutor legal y acepto las')} <a href="https://numimates.com/condicions?l=${LANG}" target="_blank" rel="noopener">${L('condicions de contractació', 'condiciones de contratación')}</a>.</span></label>
     <p class="err" id="premerr"></p>
     <button class="btn big gold" id="premgo" disabled onclick="payGo(PREM_PLA)">${L('CONTINUA AL PAGAMENT', 'CONTINUAR AL PAGO')}</button>
     <button class="btn ghost big" onclick="closeModal()">${L('ARA NO', 'AHORA NO')}</button></div>`, true);

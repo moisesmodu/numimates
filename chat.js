@@ -9,6 +9,7 @@ const xatPlain = h => { const d = document.createElement('div'); d.innerHTML = h
 // on és l'alumne ara mateix (per donar context a la IA)
 function xatCtx() {
   const c = {};
+  if (IS_MENT) { if (typeof MGCUR !== 'undefined' && MGCUR && MG[MGCUR]) c.unit = tx(MG[MGCUR].n); return c; }
   try {
     c.course = tx(CUR().long);
     const us = UNITS_();

@@ -29,6 +29,7 @@ function setVariant(id) {
   document.documentElement.dataset.v = o.id;
   // aspecte propi (Numi Pro: fosc, generat de style.css amb scripts/theme-pro.py); es carrega una sola vegada
   if (IS_PRO && !document.getElementById('th-pro')) ['theme-pro.css', 'theme-pro-extra.css'].forEach((f, i) => { const l = document.createElement('link'); l.rel = 'stylesheet'; l.href = f; if (!i) l.id = 'th-pro'; document.head.appendChild(l); });
+  if (IS_MENT && !document.getElementById('th-ment')) { const l = document.createElement('link'); l.rel = 'stylesheet'; l.href = 'ment.css'; l.id = 'th-ment'; document.head.appendChild(l); }
   document.title = o.id === 'mates' ? TITLE0 : `${o.name} · ${o.tag.split('|')[0]}`;
   const m = document.querySelector('meta[name=theme-color]'); if (m) m.content = o.id === 'mates' ? THEME0 : o.theme;
   if (typeof xatSync === 'function') xatSync();
