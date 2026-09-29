@@ -27,7 +27,7 @@ export default async function middleware(request) {
     set(/<meta property="og:title" content="[^"]*">/, `<meta property="og:title" content="${attr(a.name)}">`);
     set(/<meta property="og:description" content="[^"]*">/, `<meta property="og:description" content="${attr(a.og)}">`);
     set(/<meta property="og:image" content="[^"]*">/, `<meta property="og:image" content="${a.img}">`);
-    const hd = new Headers(r.headers); hd.delete('content-length'); hd.delete('etag'); hd.set('content-type', 'text/html; charset=utf-8');
+    const hd = new Headers(r.headers); hd.delete('content-length'); hd.delete('content-encoding'); hd.delete('transfer-encoding'); hd.delete('etag'); hd.set('content-type', 'text/html; charset=utf-8');
     return new Response(h, { status: 200, headers: hd });
   } catch (e) { return; }
 }
