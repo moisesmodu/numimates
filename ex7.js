@@ -412,4 +412,963 @@
     'alg.word': (L_, A) => wordEx(A && W[A] ? A : null, L_),
     'mult.prob': L_ => multProb(L_)
   });
+
+  /* ================= 2. Estadística: taules, sectors, dispersió, histogrames, caixes i dues variables ================= */
+  const FT = 'font-family="Lexend,sans-serif"';
+  const r1 = v => Math.round(v * 10) / 10;
+  const tt = (x, y, s, o = {}) => `<text x="${r1(x)}" y="${r1(y)}" ${FT} font-size="${o.fs || 14}" font-weight="${o.fw || 700}" fill="${o.col || INK}"${o.a ? ` text-anchor="${o.a}"` : ''}>${s}</text>`;
+  const MUT = '#8A7B99', PRI = '#602B7A', GRID = '#EEE6F4';
+  const tlen = s => String(s).replace(/<[^>]+>/g, '').length;
+  // Taula en SVG: una fila de capçalera i files de dades; «?» es ressalta
+  function tabSVG(head, rows, o = {}) {
+    const all = [head, ...rows], cw = head.map((_, j) => Math.max(o.minW || 48, ...all.map(r => tlen(r[j]) * 8.4 + 22)));
+    const W = cw.reduce((a, b) => a + b, 0), rh = 30, H = rh * all.length;
+    let s = `<svg viewBox="0 0 ${r1(W + 4)} ${H + 4}" class="vsvg wide" style="width:${Math.round(Math.min(330, (W + 4) * 1.15))}px"><rect x="2" y="2" width="${r1(W)}" height="${H}" rx="6" fill="#fff" stroke="#CFC3DB" stroke-width="2"/><rect x="3" y="3" width="${r1(W - 2)}" height="${rh - 1}" rx="5" fill="#F4EEF9"/>`;
+    all.forEach((r, i) => {
+      let x = 2;
+      if (i) s += `<line x1="2" y1="${2 + i * rh}" x2="${r1(W + 2)}" y2="${2 + i * rh}" stroke="#E6DCEF" stroke-width="1.5"/>`;
+      r.forEach((c, j) => {
+        const m = x + cw[j] / 2;
+        if (c === '?') s += `<rect x="${r1(m - 15)}" y="${2 + i * rh + 4}" width="30" height="${rh - 8}" rx="6" fill="#FFE9A8" stroke="#E0A300" stroke-width="1.5"/>`;
+        s += tt(m, 2 + i * rh + rh / 2 + 5, c, { a: 'middle', fs: 14.5, fw: i === 0 || (o.bold && i === all.length - 1) ? 800 : 700, col: i === 0 ? PRI : INK });
+        x += cw[j];
+      });
+    });
+    let x = 2; for (let j = 0; j < head.length - 1; j++) { x += cw[j]; s += `<line x1="${r1(x)}" y1="2" x2="${r1(x)}" y2="${H + 2}" stroke="#E6DCEF" stroke-width="1.5"/>`; }
+    return s + '</svg>';
+  }
+  // Dades soltes en una graella
+  function dataSVG(vals, cols = 5) {
+    const w = 50, h = 36, W = cols * w, H = Math.ceil(vals.length / cols) * h;
+    let s = `<svg viewBox="0 0 ${W + 4} ${H + 4}" class="vsvg wide" style="width:${Math.round(Math.min(300, (W + 4) * 1.15))}px">`;
+    vals.forEach((v, i) => { const x = 2 + (i % cols) * w, y = 2 + Math.floor(i / cols) * h; s += `<rect x="${x + 3}" y="${y + 3}" width="${w - 6}" height="${h - 6}" rx="8" fill="#F4EEF9"/>` + tt(x + w / 2, y + h / 2 + 6, fmtD(v), { a: 'middle', fs: 17, fw: 800, col: PRI }); });
+    return s + '</svg>';
+  }
+  // Gràfic de sectors (amb llegenda opcional)
+  function sectSVG(parts, o = {}) {
+    const tot = parts.reduce((a, p) => a + p.v, 0), R = 62, cx = 72, cy = 72;
+    let a0 = -Math.PI / 2, s = '';
+    parts.forEach(p => {
+      const a1 = a0 + 2 * Math.PI * p.v / tot, P = a => `${r1(cx + R * Math.cos(a))} ${r1(cy + R * Math.sin(a))}`;
+      s += `<path class="sct" d="M${cx} ${cy} L${P(a0)} A${R} ${R} 0 ${a1 - a0 > Math.PI ? 1 : 0} 1 ${P(a1)} Z" fill="${p.col}" stroke="#fff" stroke-width="2.5" stroke-linejoin="round"/>`;
+      a0 = a1;
+    });
+    if (o.noLegend) return `<svg viewBox="0 0 144 144" class="vsvg">${s}</svg>`;
+    const lh = 24, top = cy - parts.length * lh / 2, lab = p => p.lab + (p.txt !== undefined ? ': ' + p.txt : '');
+    parts.forEach((p, i) => { const y = top + i * lh; s += `<rect x="152" y="${r1(y + 4)}" width="14" height="14" rx="3" fill="${p.col}"/>` + tt(172, y + 16, lab(p), { fs: 13.5 }); });
+    const W = 178 + Math.max(...parts.map(p => tlen(lab(p)))) * 8;
+    return `<svg viewBox="0 0 ${r1(W)} 144" class="vsvg wide" style="width:${Math.round(Math.min(340, W * 1.05))}px">${s}</svg>`;
+  }
+  // Histograma
+  function histSVG(ed, fr, o = {}) {
+    const k = fr.length, mx = Math.max(...fr), stp = mx > 10 ? 2 : 1, top = Math.ceil((mx + 1) / stp) * stp, x0 = 42, y0 = 168, W = 310, bw = (W - x0 - 14) / k, hh = v => v / top * 140;
+    let s = `<svg viewBox="0 0 ${W} 208" class="vsvg wide" style="width:320px">`;
+    for (let v = 0; v <= top; v += stp) { const y = y0 - hh(v); s += `<line x1="${x0}" y1="${r1(y)}" x2="${W - 8}" y2="${r1(y)}" stroke="${GRID}" stroke-width="1.5"/>` + tt(x0 - 6, y + 4, v, { a: 'end', fs: 11, col: MUT }); }
+    fr.forEach((f, i) => { s += `<rect class="hb" x="${r1(x0 + i * bw)}" y="${r1(y0 - hh(f))}" width="${r1(bw)}" height="${r1(hh(f))}" fill="${COLS[(o.c || 1) % COLS.length]}" stroke="${INK}" stroke-width="1.5"/>`; });
+    ed.forEach((e, i) => { s += tt(x0 + i * bw, y0 + 17, fmt(e), { a: 'middle', fs: 12 }); });
+    s += `<line x1="${x0}" y1="${y0}" x2="${W - 8}" y2="${y0}" stroke="${INK}" stroke-width="2"/><line x1="${x0}" y1="${y0}" x2="${x0}" y2="18" stroke="${INK}" stroke-width="2"/>`;
+    if (o.xl) s += tt((x0 + W) / 2, y0 + 35, o.xl, { a: 'middle', fs: 12.5, col: PRI });
+    if (o.yl) s += tt(8, 12, o.yl, { fs: 11.5, col: PRI });
+    return s + '</svg>';
+  }
+  // Diagrama de caixa (un o dos grups) sobre un eix
+  function boxSVG(rows, lo, hi, st) {
+    const x0 = rows.length > 1 ? 40 : 22, W = 320, x1 = W - 18, X = v => x0 + (v - lo) / (hi - lo) * (x1 - x0), rh = 46, H = rows.length * rh + 40, ay = H - 30, le = (hi - lo) / st > 12 ? 2 : 1;
+    let s = `<svg viewBox="0 0 ${W} ${H}" class="vsvg wide" style="width:320px">`;
+    for (let k = 0, v = lo; v <= hi + 1e-9; k++, v += st) s += `<line x1="${r1(X(v))}" y1="6" x2="${r1(X(v))}" y2="${ay + (k % le ? 3 : 6)}" stroke="${k % le ? '#F4EEF9' : GRID}" stroke-width="1.5"/>` + (k % le ? '' : tt(X(v), H - 12, fmt(v), { a: 'middle', fs: 11.5, col: MUT }));
+    rows.forEach((r, i) => {
+      const y = 12 + i * rh, m = y + 14, [a, q1, md, q3, b] = r.v.map(X);
+      s += `<g class="bx"><line x1="${r1(a)}" y1="${m}" x2="${r1(q1)}" y2="${m}" stroke="${INK}" stroke-width="2"/><line x1="${r1(q3)}" y1="${m}" x2="${r1(b)}" y2="${m}" stroke="${INK}" stroke-width="2"/><line x1="${r1(a)}" y1="${m - 8}" x2="${r1(a)}" y2="${m + 8}" stroke="${INK}" stroke-width="2"/><line x1="${r1(b)}" y1="${m - 8}" x2="${r1(b)}" y2="${m + 8}" stroke="${INK}" stroke-width="2"/><rect x="${r1(q1)}" y="${y}" width="${r1(q3 - q1)}" height="28" fill="${r.col}" stroke="${INK}" stroke-width="2"/><line x1="${r1(md)}" y1="${y}" x2="${r1(md)}" y2="${y + 28}" stroke="${INK}" stroke-width="3.5"/></g>`;
+      if (r.lab) s += tt(10, m + 5, r.lab, { fs: 15, fw: 800, col: PRI });
+    });
+    return s + `<line x1="${x0}" y1="${ay}" x2="${x1}" y2="${ay}" stroke="${INK}" stroke-width="2"/></svg>`;
+  }
+  // Núvol de punts (eixos a l'esquerra i a baix)
+  function scatSVG(pts, [xa, xb, xs], [ya, yb, ys], o = {}) {
+    const x0 = 46, y0 = 184, W = 320, x1 = W - 14, y1 = 16, X = v => x0 + (v - xa) / (xb - xa) * (x1 - x0), Y = v => y0 - (v - ya) / (yb - ya) * (y0 - y1);
+    let s = `<svg viewBox="0 0 ${W} 226" class="vsvg wide" style="width:320px">`;
+    for (let v = xa; v <= xb + 1e-9; v += xs) s += `<line x1="${r1(X(v))}" y1="${y1}" x2="${r1(X(v))}" y2="${y0}" stroke="${GRID}" stroke-width="1.2"/>` + tt(X(v), y0 + 16, fmt(v), { a: 'middle', fs: 11, col: MUT });
+    for (let v = ya; v <= yb + 1e-9; v += ys) s += `<line x1="${x0}" y1="${r1(Y(v))}" x2="${x1}" y2="${r1(Y(v))}" stroke="${GRID}" stroke-width="1.2"/>` + tt(x0 - 6, Y(v) + 4, fmt(v), { a: 'end', fs: 11, col: MUT });
+    s += `<line x1="${x0}" y1="${y0}" x2="${x1}" y2="${y0}" stroke="${INK}" stroke-width="2"/><line x1="${x0}" y1="${y0}" x2="${x0}" y2="${y1}" stroke="${INK}" stroke-width="2"/>`;
+    if (o.line) {
+      const [m, n] = o.line, xsA = [xa, xb, (ya - n) / m, (yb - n) / m].filter(x => x >= xa - 1e-9 && x <= xb + 1e-9 && m * x + n >= ya - 1e-9 && m * x + n <= yb + 1e-9).sort((p, q) => p - q);
+      if (xsA.length >= 2) s += `<line class="rl" x1="${r1(X(xsA[0]))}" y1="${r1(Y(m * xsA[0] + n))}" x2="${r1(X(xsA[xsA.length - 1]))}" y2="${r1(Y(m * xsA[xsA.length - 1] + n))}" stroke="#36A9E1" stroke-width="3" stroke-linecap="round"/>`;
+    }
+    if (o.poly) {
+      s += `<polyline class="pl" points="${o.poly.map(([x, y]) => `${r1(X(x))},${r1(Y(y))}`).join(' ')}" fill="none" stroke="#36A9E1" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"/>`;
+      o.poly.forEach(([x, y]) => { s += `<circle cx="${r1(X(x))}" cy="${r1(Y(y))}" r="3.5" fill="#1B6FA3"/>`; });
+      (o.segLab || []).forEach((lb, i) => { const [a, b] = [o.poly[i], o.poly[i + 1]]; s += `<circle cx="${r1((X(a[0]) + X(b[0])) / 2)}" cy="${r1((Y(a[1]) + Y(b[1])) / 2 - 14)}" r="9" fill="#FFE9A8" stroke="#E0A300" stroke-width="1.5"/>` + tt((X(a[0]) + X(b[0])) / 2, (Y(a[1]) + Y(b[1])) / 2 - 10, lb, { a: 'middle', fs: 11.5, fw: 800 }); });
+    }
+    pts.forEach(([x, y]) => { s += `<circle class="pt" cx="${r1(X(x))}" cy="${r1(Y(y))}" r="4.5" fill="#E24F86" stroke="#fff" stroke-width="1.5"/>`; });
+    if (o.xl) s += tt((x0 + x1) / 2, 221, o.xl, { a: 'middle', fs: 12.5, col: PRI });
+    if (o.yl) s += tt(6, 10, o.yl, { fs: 12, col: PRI });
+    return s + '</svg>';
+  }
+  const sum = a => a.reduce((p, q) => p + q, 0);
+  const mean = a => sum(a) / a.length;
+
+  // Contextos
+  // Variables numèriques: capçalera, dades soltes, «n o menys» i «més de n»
+  const pl = (n, a, b) => n === 1 ? a : b;
+  const NUMC = [
+    { h: ['Germans', 'Hermanos'], v: [0, 1, 2, 3, 4], raw: N => L(`Aquestes són les respostes de ${N} alumnes a la pregunta «Quants germans tens?».`, `Estas son las respuestas de ${N} alumnos a la pregunta «¿Cuántos hermanos tienes?».`),
+      le: n => L(`quants alumnes tenen ${n} ${pl(n, 'germà', 'germans')} o menys`, `cuántos alumnos tienen ${n} ${pl(n, 'hermano', 'hermanos')} o menos`), gt: n => L(`Quants alumnes tenen <b>més de ${n}</b> ${pl(n, 'germà', 'germans')}?`, `¿Cuántos alumnos tienen <b>más de ${n}</b> ${pl(n, 'hermano', 'hermanos')}?`) },
+    { h: ['Llibres', 'Libros'], v: [0, 1, 2, 3, 4, 5], raw: N => L(`Aquestes són les respostes de ${N} alumnes a la pregunta «Quants llibres has llegit aquest trimestre?».`, `Estas son las respuestas de ${N} alumnos a la pregunta «¿Cuántos libros has leído este trimestre?».`),
+      le: n => L(`quants alumnes han llegit ${n} ${pl(n, 'llibre', 'llibres')} o menys`, `cuántos alumnos han leído ${n} ${pl(n, 'libro', 'libros')} o menos`), gt: n => L(`Quants alumnes han llegit <b>més de ${n}</b> ${pl(n, 'llibre', 'llibres')}?`, `¿Cuántos alumnos han leído <b>más de ${n}</b> ${pl(n, 'libro', 'libros')}?`) },
+    { h: ['Gols', 'Goles'], v: [0, 1, 2, 3, 4], raw: N => L(`Aquests són els gols que ha marcat un equip de futbol en ${N} partits.`, `Estos son los goles que ha marcado un equipo de fútbol en ${N} partidos.`),
+      le: n => L(`en quants partits l'equip ha marcat ${n} ${pl(n, 'gol', 'gols')} o menys`, `en cuántos partidos el equipo ha marcado ${n} ${pl(n, 'gol', 'goles')} o menos`), gt: n => L(`En quants partits l'equip ha marcat <b>més de ${n}</b> ${pl(n, 'gol', 'gols')}?`, `¿En cuántos partidos el equipo ha marcado <b>más de ${n}</b> ${pl(n, 'gol', 'goles')}?`) },
+    { h: ['Mascotes', 'Mascotas'], v: [0, 1, 2, 3], raw: N => L(`Aquestes són les respostes de ${N} alumnes a la pregunta «Quantes mascotes tens a casa?».`, `Estas son las respuestas de ${N} alumnos a la pregunta «¿Cuántas mascotas tienes en casa?».`),
+      le: n => L(`quants alumnes tenen ${n} ${pl(n, 'mascota', 'mascotes')} o menys`, `cuántos alumnos tienen ${n} ${pl(n, 'mascota', 'mascotas')} o menos`), gt: n => L(`Quants alumnes tenen <b>més de ${n}</b> ${pl(n, 'mascota', 'mascotes')}?`, `¿Cuántos alumnos tienen <b>más de ${n}</b> ${pl(n, 'mascota', 'mascotas')}?`) }];
+  // Variables qualitatives: capçalera, «el gràfic mostra…», «s'ha preguntat…»
+  const CATC = [
+    { ca: ['Esport', "l'esport preferit dels alumnes d'un institut", 'quin és el seu esport preferit'], es: ['Deporte', 'el deporte preferido de los alumnos de un instituto', 'cuál es su deporte preferido'], c: [['futbol', 'fútbol'], ['bàsquet', 'baloncesto'], ['handbol', 'balonmano'], ['natació', 'natación'], ['atletisme', 'atletismo']] },
+    { ca: ['Transport', "com vénen a l'institut els alumnes", "com vénen a l'institut"], es: ['Transporte', 'cómo vienen al instituto los alumnos', 'cómo vienen al instituto'], c: [['a peu', 'a pie'], ['bicicleta', 'bicicleta'], ['autobús', 'autobús'], ['cotxe', 'coche']] },
+    { ca: ['Fruita', "la fruita preferida dels alumnes d'un institut", 'quina és la seva fruita preferida'], es: ['Fruta', 'la fruta preferida de los alumnos de un instituto', 'cuál es su fruta preferida'], c: [['poma', 'manzana'], ['plàtan', 'plátano'], ['maduixa', 'fresa'], ['taronja', 'naranja'], ['préssec', 'melocotón']] },
+    { ca: ['Música', "l'estil de música preferit dels alumnes d'un institut", 'quin és el seu estil de música preferit'], es: ['Música', 'el estilo de música preferido de los alumnos de un instituto', 'cuál es su estilo de música preferido'], c: [['pop', 'pop'], ['rock', 'rock'], ['rap', 'rap'], ['clàssica', 'clásica']] }];
+  const cn = (C, i) => L(C.c[i][0], C.c[i][1]);
+  // n parts enteres ≥ mn que sumen T (en múltiples de «u»)
+  function splitN(T, n, u = 1, mn = 1) { for (let t = 0; t < 500; t++) { const cut = [...new Set([...Array(n - 1)].map(() => ri(1, T / u - 1)))].sort((a, b) => a - b); if (cut.length !== n - 1) continue; const p = [...cut, T / u].map((c, i) => (c - (i ? cut[i - 1] : 0)) * u); if (p.every(v => v >= mn)) return p; } return null; }
+
+  function statFreq(L_) {
+    if (L_ <= 1 && Math.random() < .5) {
+      const C = pick(NUMC), N = ri(15, 20), v = C.v, data = [...Array(N)].map(() => pick(v)), t = pick(v), f = data.filter(x => x === t).length;
+      if (!f) return statFreq(L_);
+      return inp(`${C.raw(N)} ${L(`Quina és la <b>freqüència absoluta</b> del valor <b>${t}</b>?`, `¿Cuál es la <b>frecuencia absoluta</b> del valor <b>${t}</b>?`)}`, f, { vis: dataSVG(data), long: true, ex: L(`La freqüència absoluta és quantes vegades surt el valor: el ${t} surt ${f} ${f === 1 ? 'vegada' : 'vegades'}.`, `La frecuencia absoluta es cuántas veces sale el valor: el ${t} sale ${f} ${f === 1 ? 'vez' : 'veces'}.`), chk: { t: 'count', data, v: t } });
+    }
+    const C = pick(CATC), k = Math.min(C.c.length, ri(3, 5)), idx = shuffle([...Array(C.c.length).keys()]).slice(0, k), N = L_ <= 1 ? ri(18, 32) : pick([20, 25, 40, 50]);
+    const f = splitN(N, k), j = ri(0, k - 1), name = cn(C, idx[j]);
+    const head = [L(C.ca[0], C.es[0]), L('Freqüència', 'Frecuencia')], tot = [L('Total', 'Total'), String(N)];
+    if (L_ <= 1) return inp(L(`S'ha preguntat a ${N} alumnes ${C.ca[2]}. Quina freqüència falta a la taula?`, `Se ha preguntado a ${N} alumnos ${C.es[2]}. ¿Qué frecuencia falta en la tabla?`), f[j], { vis: tabSVG(head, [...idx.map((c, i) => [cn(C, c), i === j ? '?' : String(f[i])]), tot], { bold: true }), long: true, ex: L(`Les freqüències sumen el total: ${N} − (${f.filter((_, i) => i !== j).join(' + ')}) = ${f[j]}.`, `Las frecuencias suman el total: ${N} − (${f.filter((_, i) => i !== j).join(' + ')}) = ${f[j]}.`), chk: { t: 'miss', f, j, N } });
+    const vis = tabSVG(head, [...idx.map((c, i) => [cn(C, c), String(f[i])]), tot], { bold: true });
+    if (L_ === 2) return dinp(L(`Quina és la <b>freqüència relativa</b> de «${name}»? Escriu-la en forma decimal.`, `¿Cuál es la <b>frecuencia relativa</b> de «${name}»? Escríbela en forma decimal.`), f[j] / N, { vis, ex: L(`Freqüència relativa = freqüència ÷ total = ${f[j]} ÷ ${N} = ${fmtD(f[j] / N)}.`, `Frecuencia relativa = frecuencia ÷ total = ${f[j]} ÷ ${N} = ${fmtD(f[j] / N)}.`), chk: { t: 'rel', f, j, N } });
+    if (L_ === 3) return dinp(L(`Quin <b>percentatge</b> d'alumnes ha triat «${name}»?`, `¿Qué <b>porcentaje</b> de alumnos ha elegido «${name}»?`), f[j] / N * 100, { unit: '%', vis, ex: L(`${f[j]} ÷ ${N} = ${fmtD(f[j] / N)}, i per 100: ${pc(f[j] / N * 100)}.`, `${f[j]} ÷ ${N} = ${fmtD(f[j] / N)}, y por 100: ${pc(f[j] / N * 100)}.`), chk: { t: 'pct', f, j, N } });
+    // Variables numèriques: freqüència acumulada
+    const D = pick(NUMC), vv = D.v, NN = ri(16, 30), ff = splitN(NN, vv.length, 1, 1), hd = [L(...D.h), L('Freqüència', 'Frecuencia')];
+    const cum = ff.map((_, i) => sum(ff.slice(0, i + 1))), t = ri(0, vv.length - 2);
+    if (L_ === 4) return inp(L(`Quina és la <b>freqüència acumulada</b> del valor <b>${vv[t]}</b>? <span class="hint">(${D.le(vv[t])})</span>`, `¿Cuál es la <b>frecuencia acumulada</b> del valor <b>${vv[t]}</b>? <span class="hint">(${D.le(vv[t])})</span>`), cum[t], { vis: tabSVG(hd, vv.map((x, i) => [String(x), String(ff[i])])), ex: L(`Sumem les freqüències fins al ${vv[t]}: ${ff.slice(0, t + 1).join(' + ')} = ${cum[t]}.`, `Sumamos las frecuencias hasta el ${vv[t]}: ${ff.slice(0, t + 1).join(' + ')} = ${cum[t]}.`), chk: { t: 'cum', v: vv, f: ff, k: t } });
+    const hd3 = [...hd, L('F. acumulada', 'F. acumulada')];
+    if (Math.random() < .5) return inp(`${L(`La taula recull ${NN} dades.`, `La tabla recoge ${NN} datos.`)} ${D.gt(vv[t])}`, NN - cum[t], { vis: tabSVG(hd3, vv.map((x, i) => [String(x), String(ff[i]), String(cum[i])])), ex: L(`Fins al ${vv[t]} n'hi ha ${cum[t]} (freqüència acumulada). La resta: ${NN} − ${cum[t]} = ${NN - cum[t]}.`, `Hasta el ${vv[t]} hay ${cum[t]} (frecuencia acumulada). El resto: ${NN} − ${cum[t]} = ${NN - cum[t]}.`), chk: { t: 'more', v: vv, f: ff, k: t, N: NN } });
+    const m = ri(1, vv.length - 1);
+    return inp(L('Quina freqüència absoluta falta a la taula?', '¿Qué frecuencia absoluta falta en la tabla?'), ff[m], { vis: tabSVG(hd3, vv.map((x, i) => [String(x), i === m ? '?' : String(ff[i]), String(cum[i])])), ex: L(`La freqüència acumulada passa de ${cum[m - 1]} a ${cum[m]}: ${cum[m]} − ${cum[m - 1]} = ${ff[m]}.`, `La frecuencia acumulada pasa de ${cum[m - 1]} a ${cum[m]}: ${cum[m]} − ${cum[m - 1]} = ${ff[m]}.`), chk: { t: 'cumMiss', v: vv, f: ff, k: m } });
+  }
+
+  function statPie(L_) {
+    const C = pick(CATC), k = Math.min(C.c.length, ri(3, L_ >= 5 ? 4 : 5)), idx = shuffle([...Array(C.c.length).keys()]).slice(0, k), cols = shuffle(COLS).slice(0, k);
+    let p; do p = splitN(100, k, 5, 10); while (L_ >= 5 && new Set(p).size < k);
+    const j = ri(0, k - 1), name = cn(C, idx[j]), parts = idx.map((c, i) => ({ lab: cn(C, c), v: p[i], col: cols[i], txt: pc(p[i]) }));
+    const q0 = L(`El gràfic mostra ${C.ca[1]}.`, `El gráfico muestra ${C.es[1]}.`);
+    if (L_ <= 1) return inp(`${q0} ${L(`Quin percentatge correspon a «${name}»?`, `¿Qué porcentaje corresponde a «${name}»?`)}`, p[j], { unit: '%', vis: sectSVG(parts.map((x, i) => i === j ? { ...x, txt: '?' } : x)), ex: L(`Tot el cercle és el 100 %: 100 − (${p.filter((_, i) => i !== j).join(' + ')}) = ${p[j]} %.`, `Todo el círculo es el 100 %: 100 − (${p.filter((_, i) => i !== j).join(' + ')}) = ${p[j]} %.`), chk: { t: 'pmiss', p, j } });
+    if (L_ === 2) { const N = 20 * ri(2, 15); return inp(`${q0} ${L(`Si han respost <b>${N}</b> alumnes, quants han triat «${name}»?`, `Si han respondido <b>${N}</b> alumnos, ¿cuántos han elegido «${name}»?`)}`, N * p[j] / 100, { vis: sectSVG(parts), long: true, ex: L(`El ${p[j]} % de ${N} = ${N} · ${p[j]} : 100 = ${N * p[j] / 100}.`, `El ${p[j]} % de ${N} = ${N} · ${p[j]} : 100 = ${N * p[j] / 100}.`), chk: { t: 'pcount', p, j, N } }); }
+    if (L_ === 3) {
+      if (Math.random() < .5) return inp(`${q0} ${L(`Quants graus fa el sector de «${name}»?`, `¿Cuántos grados mide el sector de «${name}»?`)}`, 3.6 * p[j], { unit: '°', vis: sectSVG(parts), ex: L(`El cercle sencer fa 360°. El ${p[j]} % de 360° = 360 · ${p[j]} : 100 = ${fmtD(3.6 * p[j])}°.`, `El círculo entero mide 360°. El ${p[j]} % de 360° = 360 · ${p[j]} : 100 = ${fmtD(3.6 * p[j])}°.`), chk: { t: 'pdeg', p, j } });
+      const N = pick([20, 24, 30, 36, 40, 45, 60]), f = splitN(N, k);
+      return inp(L(`Volem fer un gràfic de sectors amb aquesta taula. Quants graus farà el sector de «${cn(C, idx[j])}»?`, `Queremos hacer un gráfico de sectores con esta tabla. ¿Cuántos grados medirá el sector de «${cn(C, idx[j])}»?`), 360 * f[j] / N, { unit: '°', vis: tabSVG([L(C.ca[0], C.es[0]), L('Freqüència', 'Frecuencia')], [...idx.map((c, i) => [cn(C, c), String(f[i])]), [L('Total', 'Total'), String(N)]], { bold: true }), long: true, ex: L(`Cada alumne val 360° : ${N} = ${fmtD(360 / N)}°. ${f[j]} · ${fmtD(360 / N)}° = ${360 * f[j] / N}°.`, `Cada alumno vale 360° : ${N} = ${fmtD(360 / N)}°. ${f[j]} · ${fmtD(360 / N)}° = ${360 * f[j] / N}°.`), chk: { t: 'tdeg', f, j, N } });
+    }
+    if (L_ === 4) {
+      const N = pick([20, 30, 36, 40, 60, 72, 90]), f = splitN(N, k, 1, Math.ceil(N / 12));
+      if (!f) return statPie(L_);
+      const deg = f.map(x => 360 * x / N);
+      return inp(L(`El gràfic mostra els graus de cada sector. Si han respost <b>${N}</b> alumnes, quants han triat «${cn(C, idx[j])}»?`, `El gráfico muestra los grados de cada sector. Si han respondido <b>${N}</b> alumnos, ¿cuántos han elegido «${cn(C, idx[j])}»?`), f[j], { vis: sectSVG(idx.map((c, i) => ({ lab: cn(C, c), v: f[i], col: cols[i], txt: fmtD(deg[i]) + '°' }))), long: true, ex: L(`${fmtD(deg[j])}° de 360° és la fracció ${fmtD(deg[j])}/360. ${N} · ${fmtD(deg[j])} : 360 = ${f[j]}.`, `${fmtD(deg[j])}° de 360° es la fracción ${fmtD(deg[j])}/360. ${N} · ${fmtD(deg[j])} : 360 = ${f[j]}.`), chk: { t: 'dcount', deg, j, N } });
+    }
+    // Quin gràfic correspon a la taula? (els colors són els de la llegenda)
+    const ok = sectSVG(parts, { noLegend: true }), wrong = [], seen = new Set([p.join()]);
+    for (let t = 0; t < 80 && wrong.length < 3; t++) {
+      let q = p.slice();
+      if (t % 2 === 0) { const a = ri(0, k - 1), b = ri(0, k - 1); if (Math.abs(p[a] - p[b]) < 10) continue; [q[a], q[b]] = [q[b], q[a]]; }
+      else { const a = ri(0, k - 1), b = ri(0, k - 1), d = 15; if (a === b || q[b] - d < 5) continue; q[a] += d; q[b] -= d; }
+      if (seen.has(q.join())) continue; seen.add(q.join());
+      wrong.push(sectSVG(parts.map((x, i) => ({ ...x, v: q[i] })), { noLegend: true }));
+    }
+    if (wrong.length < 3) return statPie(4);
+    const leg = tabSVG([L(C.ca[0], C.es[0]), '%'], idx.map((c, i) => [cn(C, c), pc(p[i])]));
+    const key = `<div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:6px">${parts.map(x => `<span style="display:inline-flex;align-items:center;gap:5px;font-size:15px;font-weight:700"><i style="width:14px;height:14px;border-radius:3px;background:${x.col};display:inline-block"></i>${x.lab}</span>`).join('')}</div>`;
+    return mc(L('Quin gràfic de sectors correspon a la taula? Cada color és una categoria.', '¿Qué gráfico de sectores corresponde a la tabla? Cada color es una categoría.'), ok, wrong, { pics: true, vis: `<div class="stack">${leg}${key}</div>`, ex: L(`El sector de «${parts[0].lab}» ha de ser el ${p[0]} % del cercle, el de «${parts[1].lab}», el ${p[1]} %, i així amb tots. Una meitat del cercle és el 50 % i un quart, el 25 %.`, `El sector de «${parts[0].lab}» debe ser el ${p[0]} % del círculo, el de «${parts[1].lab}», el ${p[1]} %, y así con todos. Medio círculo es el 50 % y un cuarto, el 25 %.`), chk: { t: 'pick', p, cols } });
+  }
+
+  const DISPC = [
+    { ca: "Temperatures màximes d'una setmana a Lleida (°C)", es: 'Temperaturas máximas de una semana en Lleida (°C)', lo: 8, hi: 36, two: ["Temperatures màximes (°C) de dues setmanes a Lleida, l'A i la B", 'Temperaturas máximas (°C) de dos semanas en Lleida, la A y la B'] },
+    { ca: "Punts d'una jugadora de bàsquet en cada partit", es: 'Puntos de una jugadora de baloncesto en cada partido', lo: 2, hi: 30, two: ["Punts de dues jugadores de bàsquet, l'A i la B, en els últims partits", 'Puntos de dos jugadoras de baloncesto, la A y la B, en los últimos partidos'] },
+    { ca: "Minuts que triga l'autobús cada dia", es: 'Minutos que tarda el autobús cada día', lo: 10, hi: 40, two: ["Minuts que triguen cada dia dues línies d'autobús, l'A i la B", 'Minutos que tardan cada día dos líneas de autobús, la A y la B'] },
+    { ca: "Notes d'un alumne en els exàmens del trimestre", es: 'Notas de un alumno en los exámenes del trimestre', lo: 1, hi: 10, two: ["Notes de dos alumnes, l'A i el B, en els exàmens del trimestre", 'Notas de dos alumnos, A y B, en los exámenes del trimestre'] }];
+  const variance = v => { const m = mean(v); return sum(v.map(x => (x - m) ** 2)) / v.length; };
+  // n dades enteres entre lo i hi, a una distància ≤ s de la mitjana (entera)
+  function aroundMean(C, n, s) {
+    s = Math.min(s, Math.floor((C.hi - C.lo) / 2));
+    for (let t = 0; t < 500; t++) {
+      const m = ri(C.lo + s, C.hi - s), v = [...Array(n)].map(() => ri(m - s, m + s));
+      if (sum(v) === m * n && new Set(v).size > 2) return v;
+    }
+    return null;
+  }
+  function statDisp(L_) {
+    const C = pick(DISPC), lab = L(C.ca, C.es);
+    if (L_ <= 1) {
+      const n = ri(6, 8), v = [...Array(n)].map(() => ri(C.lo, C.hi)), R = Math.max(...v) - Math.min(...v);
+      if (R < 3) return statDisp(L_);
+      return inp(`${lab}. ${L('Quin és el <b>rang</b> de les dades?', '¿Cuál es el <b>rango</b> de los datos?')}`, R, { vis: listVis(v), ex: L(`Rang = valor més gran − valor més petit = ${Math.max(...v)} − ${Math.min(...v)} = ${R}.`, `Rango = valor mayor − valor menor = ${Math.max(...v)} − ${Math.min(...v)} = ${R}.`), chk: { t: 'range', v } });
+    }
+    if (L_ === 2 || L_ === 5) {
+      const n = L_ === 2 ? 6 : 5, half = Math.floor((C.hi - C.lo) / 2), two = L(...C.two);
+      for (let t = 0; t < 400; t++) {
+        const sB = ri(Math.max(3, half - 3), half), m = ri(C.lo + sB, C.hi - sB), sA = ri(1, 2);
+        const A = [...Array(n)].map(() => ri(m - sA, m + sA)), Bv = [...Array(n)].map(() => ri(m - sB, m + sB));
+        if (sum(A) !== m * n || sum(Bv) !== m * n || new Set(A).size < 2) continue;
+        const flip = Math.random() < .5, G1 = flip ? Bv : A, G2 = flip ? A : Bv;
+        const row = (g, v) => `<div style="display:flex;align-items:center;gap:8px"><b style="font-size:20px;color:${PRI}">${g}</b>${listVis(v)}</div>`, vis = `<div class="stack">${row('A', G1)}${row('B', G2)}</div>`;
+        if (L_ === 2) {
+          const rA = Math.max(...G1) - Math.min(...G1), rB = Math.max(...G2) - Math.min(...G2);
+          if (Math.abs(rA - rB) < 4) continue;
+          const reg = rA < rB ? 'A' : 'B';
+          return mc(`${two}. ${L(`Totes dues sèries de dades tenen la mateixa mitjana (${m}). Quina és <b>més regular</b> (té menys dispersió)?`, `Las dos series de datos tienen la misma media (${m}). ¿Cuál es <b>más regular</b> (tiene menos dispersión)?`)}`, reg, [reg === 'A' ? 'B' : 'A'], { fixed: ['A', 'B'], big: true, vis, long: true, ex: L(`Rang de A: ${rA}. Rang de B: ${rB}. Com més petit és el rang, més a prop de la mitjana queden les dades: la sèrie ${reg} és més regular.`, `Rango de A: ${rA}. Rango de B: ${rB}. Cuanto menor es el rango, más cerca de la media quedan los datos: la serie ${reg} es más regular.`), chk: { t: 'reg', A: G1, B: G2 } });
+        }
+        const s1 = Math.sqrt(variance(G1)), s2 = Math.sqrt(variance(G2));
+        if (Math.max(s1, s2) / Math.min(s1, s2) < 1.6) continue;
+        const big = s1 > s2 ? 'A' : 'B', same = L('Tenen la mateixa', 'Tienen la misma');
+        return mc(`${two}. ${L(`Totes dues sèries tenen mitjana ${m}. Quina té la <b>desviació típica</b> més gran?`, `Las dos series tienen media ${m}. ¿Cuál tiene la <b>desviación típica</b> mayor?`)}`, big, [big === 'A' ? 'B' : 'A', same], { fixed: ['A', 'B', same], vis, long: true, ex: L(`σ(A) ≈ ${fmtDf(s1, 2)} i σ(B) ≈ ${fmtDf(s2, 2)}. Les dades de la sèrie ${big} s'allunyen més de la mitjana.`, `σ(A) ≈ ${fmtDf(s1, 2)} y σ(B) ≈ ${fmtDf(s2, 2)}. Los datos de la serie ${big} se alejan más de la media.`), chk: { t: 'sdcmp', A: G1, B: G2 } });
+      }
+      return statDisp(1);
+    }
+    const n = pick([4, 5]), v = aroundMean(C, n, ri(2, 5));
+    if (!v) return statDisp(L_);
+    const m = mean(v), d = v.map(x => x - m), va = variance(v), sd = Math.sqrt(va);
+    const dev = `(${d.map(x => `${sgn(x)}²`).join(' + ')}) : ${n}`;
+    if (L_ === 3) return dinp(`${lab}. ${L('Quina és la <b>variància</b>?', '¿Cuál es la <b>varianza</b>?')}`, va, { vis: listVis(v), long: true, ex: L(`Mitjana: ${sum(v)} : ${n} = ${m}. Desviacions: ${d.map(fmt).join(', ')}. Variància = ${dev} = ${fmtD(va)}.`, `Media: ${sum(v)} : ${n} = ${m}. Desviaciones: ${d.map(fmt).join(', ')}. Varianza = ${dev} = ${fmtD(va)}.`), chk: { t: 'var', v } });
+    if (Math.abs(sd * 100 - Math.floor(sd * 100) - .5) < .02) return statDisp(L_);
+    const ans = Math.round(sd * 100) / 100;
+    return dinp(`${lab}. ${L('Quina és la <b>desviació típica</b>? Arrodoneix a les centèsimes.', '¿Cuál es la <b>desviación típica</b>? Redondea a las centésimas.')}`, ans, { vis: listVis(v), long: true, ex: L(`Mitjana: ${m}. Variància = ${dev} = ${fmtD(va)}. Desviació típica = √${fmtD(va)} ≈ ${fmtD(ans)}.`, `Media: ${m}. Varianza = ${dev} = ${fmtD(va)}. Desviación típica = √${fmtD(va)} ≈ ${fmtD(ans)}.`), chk: { t: 'sd', v } });
+  }
+
+  const HISTC = [
+    { ca: ['Alçada dels alumnes (cm)', 'mesuren', 'alumnes'], es: ['Altura de los alumnos (cm)', 'miden', 'alumnos'], e0: [145, 150], w: 10, k: 4, u: 'cm' },
+    { ca: ["Temps per arribar a l'institut (min)", 'triguen', 'alumnes'], es: ['Tiempo para llegar al instituto (min)', 'tardan', 'alumnos'], e0: [0], w: 5, k: 5, u: 'min' },
+    { ca: ['Pes de les motxilles (kg)', 'pesen', 'motxilles'], es: ['Peso de las mochilas (kg)', 'pesan', 'mochilas'], e0: [2], w: 2, k: 4, u: 'kg' },
+    { ca: ['Hores de son de la nit passada', 'dormen', 'alumnes'], es: ['Horas de sueño de la noche pasada', 'duermen', 'alumnos'], e0: [5], w: 1, k: 5, u: 'h' }];
+  const ivl = (a, b) => `[${fmt(a)}, ${fmt(b)})`;
+  function statHist(L_) {
+    const C = pick(HISTC), e0 = pick(C.e0), ed = [...Array(C.k + 1)].map((_, i) => e0 + i * C.w), fr = [...Array(C.k)].map(() => ri(1, 12));
+    const N = sum(fr), vis = histSVG(ed, fr, { xl: L(C.ca[0], C.es[0]), yl: L('Freqüència', 'Frecuencia') }), i = ri(0, C.k - 1);
+    const vb = L(C.ca[1], C.es[1]), who = L(C.ca[2], C.es[2]), Q = /motxilles/.test(C.ca[2]) ? L('Quantes', 'Cuántas') : L('Quants', 'Cuántos');
+    if (L_ <= 1) return inp(L(`${Q} ${who} ${vb} entre ${fmt(ed[i])} i ${fmt(ed[i + 1])} ${C.u}? <span class="hint">(l'interval ${ivl(ed[i], ed[i + 1])} inclou el ${fmt(ed[i])} però no el ${fmt(ed[i + 1])})</span>`, `¿${Q} ${who} ${vb} entre ${fmt(ed[i])} y ${fmt(ed[i + 1])} ${C.u}? <span class="hint">(el intervalo ${ivl(ed[i], ed[i + 1])} incluye el ${fmt(ed[i])} pero no el ${fmt(ed[i + 1])})</span>`), fr[i], { vis, ex: L(`L'altura de la barra de l'interval ${ivl(ed[i], ed[i + 1])} és ${fr[i]}.`, `La altura de la barra del intervalo ${ivl(ed[i], ed[i + 1])} es ${fr[i]}.`), chk: { t: 'bar', ed, fr, i } });
+    if (L_ === 2) { const c = ri(1, C.k - 1), s = sum(fr.slice(0, c)); return inp(L(`${Q} ${who} ${vb} <b>menys de ${fmt(ed[c])} ${C.u}</b>?`, `¿${Q} ${who} ${vb} <b>menos de ${fmt(ed[c])} ${C.u}</b>?`), s, { vis, ex: L(`Sumem les barres de l'esquerra del ${fmt(ed[c])}: ${fr.slice(0, c).join(' + ')} = ${s}.`, `Sumamos las barras a la izquierda del ${fmt(ed[c])}: ${fr.slice(0, c).join(' + ')} = ${s}.`), chk: { t: 'less', ed, fr, c } }); }
+    if (L_ === 3) {
+      if (Math.random() < .5) return dinp(L(`Quina és la <b>marca de classe</b> de l'interval ${ivl(ed[i], ed[i + 1])}?`, `¿Cuál es la <b>marca de clase</b> del intervalo ${ivl(ed[i], ed[i + 1])}?`), (ed[i] + ed[i + 1]) / 2, { vis, ex: L(`La marca de classe és el punt del mig: (${fmt(ed[i])} + ${fmt(ed[i + 1])}) : 2 = ${fmtD((ed[i] + ed[i + 1]) / 2)}.`, `La marca de clase es el punto medio: (${fmt(ed[i])} + ${fmt(ed[i + 1])}) : 2 = ${fmtD((ed[i] + ed[i + 1]) / 2)}.`), chk: { t: 'mark', ed, i } });
+      const mx = Math.max(...fr); if (fr.filter(x => x === mx).length > 1) return statHist(L_);
+      const mi = fr.indexOf(mx);
+      return mc(L("Quin és l'<b>interval modal</b>?", '¿Cuál es el <b>intervalo modal</b>?'), ivl(ed[mi], ed[mi + 1]), fr.map((_, k) => ivl(ed[k], ed[k + 1])).filter((_, k) => k !== mi), { vis, ex: L(`L'interval modal és el que té la barra més alta (${mx}).`, `El intervalo modal es el que tiene la barra más alta (${mx}).`), chk: { t: 'modal', ed, fr } });
+    }
+    if (L_ === 4) {
+      const cm = ed.slice(0, -1).map((e, k) => e + C.w / 2), S = sum(cm.map((c, k) => c * fr[k])), mn = S / N;
+      if (Math.abs(mn * 100 - Math.round(mn * 100)) > 1e-6) return statHist(L_);
+      return dinp(L(`Quina és la <b>mitjana</b> aproximada? Fes servir les marques de classe.`, `¿Cuál es la <b>media</b> aproximada? Usa las marcas de clase.`), mn, { vis, long: true, ex: L(`Marques de classe: ${cm.map(fmtD).join(', ')}. Mitjana = (${cm.map((c, k) => `${fmtD(c)}·${fr[k]}`).join(' + ')}) : ${N} = ${fmtD(S)} : ${N} = ${fmtD(mn)}.`, `Marcas de clase: ${cm.map(fmtD).join(', ')}. Media = (${cm.map((c, k) => `${fmtD(c)}·${fr[k]}`).join(' + ')}) : ${N} = ${fmtD(S)} : ${N} = ${fmtD(mn)}.`), chk: { t: 'hmean', ed, fr } });
+    }
+    const cum = fr.map((_, k) => sum(fr.slice(0, k + 1)));
+    // amb N parell, la mediana és entre la dada N/2 i la N/2 + 1: han de quedar dins el mateix interval
+    if (N % 2 === 0 && cum.includes(N / 2)) return statHist(L_);
+    const mk = cum.findIndex(c => c >= Math.ceil(N / 2));
+    return mc(L(`En quin interval hi ha la <b>mediana</b>? <span class="hint">(hi ha ${N} ${who})</span>`, `¿En qué intervalo está la <b>mediana</b>? <span class="hint">(hay ${N} ${who})</span>`), ivl(ed[mk], ed[mk + 1]), fr.map((_, k) => ivl(ed[k], ed[k + 1])).filter((_, k) => k !== mk), { vis, long: true, ex: L(`La mediana deixa la meitat de les dades a cada costat. Freqüències acumulades: ${cum.join(', ')}. La dada del mig (${N % 2 ? `la ${(N + 1) / 2}a` : `entre la ${N / 2}a i la ${N / 2 + 1}a`}) és a ${ivl(ed[mk], ed[mk + 1])}.`, `La mediana deja la mitad de los datos a cada lado. Frecuencias acumuladas: ${cum.join(', ')}. El dato central (${N % 2 ? `el ${(N + 1) / 2}.º` : `entre el ${N / 2}.º y el ${N / 2 + 1}.º`}) está en ${ivl(ed[mk], ed[mk + 1])}.`), chk: { t: 'medInt', ed, fr } });
+  }
+
+  // Quartils sense ambigüitat: amb N = 4k + 3 dades, el mètode no importa si les dues dades que envolten cada quartil són iguals
+  function qList() {
+    const k = pick([1, 2]), N = 4 * k + 3, lo = ri(1, 20);
+    for (let t = 0; t < 400; t++) {
+      const s = [...Array(N)].map(() => lo + ri(0, 14)).sort((a, b) => a - b);
+      s[k + 1] = s[k]; s[3 * k + 1] = s[3 * k + 2];
+      s.sort((a, b) => a - b);
+      if (s[k] !== s[k + 1] || s[3 * k + 1] !== s[3 * k + 2]) continue;
+      if (s[k] === s[2 * k + 1] || s[2 * k + 1] === s[3 * k + 1]) continue;
+      return { s, k, q1: s[k], md: s[2 * k + 1], q3: s[3 * k + 1] };
+    }
+    return null;
+  }
+  const BOXC = [{ ca: 'Notes de l\'examen de mates', es: 'Notas del examen de mates', lo: 0, hi: 10, st: 1 }, { ca: 'Minuts diaris de lectura', es: 'Minutos diarios de lectura', lo: 0, hi: 60, st: 5 }, { ca: 'Punts per partit d\'un equip', es: 'Puntos por partido de un equipo', lo: 40, hi: 100, st: 5 }];
+  function boxData(C, spreadMin = 0) {
+    for (let t = 0; t < 400; t++) {
+      const g = (C.hi - C.lo) / C.st, v = [...Array(5)].map(() => C.lo + ri(0, g) * C.st).sort((a, b) => a - b);
+      if (new Set(v).size === 5 && v[3] - v[1] >= spreadMin) return v;
+    }
+    return null;
+  }
+  function statBox(L_) {
+    if (L_ <= 2) {
+      const d = qList(); if (!d) return statBox(L_);
+      const sh = shuffle(d.s), which = Math.random() < .5;
+      const ex0 = L(`Ordenem les ${d.s.length} dades: ${d.s.join(', ')}. La mediana és ${d.md} (la del mig). Q1 és la mediana de la meitat de sota (${d.q1}) i Q3, la de la meitat de dalt (${d.q3}).`, `Ordenamos los ${d.s.length} datos: ${d.s.join(', ')}. La mediana es ${d.md} (el del medio). Q1 es la mediana de la mitad de abajo (${d.q1}) y Q3, la de la mitad de arriba (${d.q3}).`);
+      if (L_ <= 1) return inp(which ? L('Quin és el <b>primer quartil</b> (Q1)?', '¿Cuál es el <b>primer cuartil</b> (Q1)?') : L('Quin és el <b>tercer quartil</b> (Q3)?', '¿Cuál es el <b>tercer cuartil</b> (Q3)?'), which ? d.q1 : d.q3, { vis: listVis(sh), ex: ex0, chk: { t: which ? 'q1' : 'q3', s: d.s } });
+      return inp(L('Quin és el <b>rang interquartílic</b> (Q3 − Q1)?', '¿Cuál es el <b>rango intercuartílico</b> (Q3 − Q1)?'), d.q3 - d.q1, { vis: listVis(sh), ex: ex0 + ` Q3 − Q1 = ${d.q3} − ${d.q1} = ${d.q3 - d.q1}.`, chk: { t: 'iqr', s: d.s } });
+    }
+    const C = pick(BOXC), lab = L(C.ca, C.es);
+    if (L_ <= 4) {
+      const v = boxData(C, 2 * C.st); if (!v) return statBox(L_);
+      const vis = boxSVG([{ v, col: '#8FD8FF' }], C.lo, C.hi, C.st);
+      if (L_ === 3) {
+        const q = pick([['md', L('la <b>mediana</b>', 'la <b>mediana</b>'), v[2]], ['q1', L('el <b>primer quartil</b>', 'el <b>primer cuartil</b>'), v[1]], ['q3', L('el <b>tercer quartil</b>', 'el <b>tercer cuartil</b>'), v[3]], ['iqr', L('el <b>rang interquartílic</b>', 'el <b>rango intercuartílico</b>'), v[3] - v[1]], ['rng', L('el <b>rang</b>', 'el <b>rango</b>'), v[4] - v[0]]]);
+        return inp(`${lab}. ${L(`Quin és ${q[1]}?`, `¿Cuál es ${q[1]}?`)}`, q[2], { vis, ex: L(`Al diagrama: mínim ${v[0]}, Q1 = ${v[1]}, mediana ${v[2]}, Q3 = ${v[3]} i màxim ${v[4]}. ${q[0] === 'iqr' ? `Q3 − Q1 = ${v[3] - v[1]}.` : q[0] === 'rng' ? `Màxim − mínim = ${v[4] - v[0]}.` : ''}`, `En el diagrama: mínimo ${v[0]}, Q1 = ${v[1]}, mediana ${v[2]}, Q3 = ${v[3]} y máximo ${v[4]}. ${q[0] === 'iqr' ? `Q3 − Q1 = ${v[3] - v[1]}.` : q[0] === 'rng' ? `Máximo − mínimo = ${v[4] - v[0]}.` : ''}`).trim(), chk: { t: 'read', v, q: q[0] } });
+      }
+      const q = pick([[L(`és inferior a ${v[1]}`, `es inferior a ${v[1]}`), 25], [L(`és inferior a ${v[2]}`, `es inferior a ${v[2]}`), 50], [L(`és inferior a ${v[3]}`, `es inferior a ${v[3]}`), 75], [L(`està entre ${v[1]} i ${v[3]}`, `está entre ${v[1]} y ${v[3]}`), 50], [L(`és superior a ${v[1]}`, `es superior a ${v[1]}`), 75], [L(`és superior a ${v[3]}`, `es superior a ${v[3]}`), 25]]);
+      return inp(`${lab}. ${L(`Aproximadament, quin percentatge de les dades ${q[0]}?`, `Aproximadamente, ¿qué porcentaje de los datos ${q[0]}?`)}`, q[1], { unit: '%', vis, ex: L('Els quartils parteixen les dades ordenades en quatre trossos amb el 25 % de les dades cadascun: mínim–Q1, Q1–mediana, mediana–Q3 i Q3–màxim.', 'Los cuartiles parten los datos ordenados en cuatro trozos con el 25 % de los datos cada uno: mínimo–Q1, Q1–mediana, mediana–Q3 y Q3–máximo.'), chk: { t: 'pct', v, q: q[1] } });
+    }
+    for (let t = 0; t < 200; t++) {
+      const A = boxData(C), Bv = boxData(C); if (!A || !Bv) continue;
+      const kind = pick(['iqr', 'md', 'rng']), f = v => kind === 'iqr' ? v[3] - v[1] : kind === 'md' ? v[2] : v[4] - v[0];
+      if (Math.abs(f(A) - f(Bv)) < 2 * C.st) continue;
+      const win = f(A) > f(Bv) ? 'A' : 'B', qq = kind === 'iqr' ? L('té el <b>rang interquartílic</b> més gran', 'tiene el <b>rango intercuartílico</b> mayor') : kind === 'md' ? L('té la <b>mediana</b> més alta', 'tiene la <b>mediana</b> más alta') : L('té el <b>rang</b> més gran', 'tiene el <b>rango</b> mayor');
+      return mc(`${lab} ${L('de dos grups', 'de dos grupos')}. ${L(`Quin grup ${qq}?`, `¿Qué grupo ${qq}?`)}`, L(`El grup ${win}`, `El grupo ${win}`), [L(`El grup ${win === 'A' ? 'B' : 'A'}`, `El grupo ${win === 'A' ? 'B' : 'A'}`)], { fixed: [L('El grup A', 'El grupo A'), L('El grup B', 'El grupo B')], vis: boxSVG([{ v: A, col: '#8FD8FF', lab: 'A' }, { v: Bv, col: '#FFC6DC', lab: 'B' }], C.lo, C.hi, C.st), ex: L(`A: mínim ${A[0]}, Q1 ${A[1]}, mediana ${A[2]}, Q3 ${A[3]}, màxim ${A[4]}. B: ${Bv[0]}, ${Bv[1]}, ${Bv[2]}, ${Bv[3]}, ${Bv[4]}.`, `A: mínimo ${A[0]}, Q1 ${A[1]}, mediana ${A[2]}, Q3 ${A[3]}, máximo ${A[4]}. B: ${Bv[0]}, ${Bv[1]}, ${Bv[2]}, ${Bv[3]}, ${Bv[4]}.`), chk: { t: 'cmp', A, B: Bv, kind } });
+    }
+    return statBox(3);
+  }
+
+  // Dues variables: núvol de punts i correlació
+  const S2C = [
+    { s: 1, ca: ["Hores d'estudi", 'Nota'], es: ['Horas de estudio', 'Nota'], x: [0, 10, 2], y: [0, 10, 2], m: .6, n: 3, px: [0, 10] },
+    { s: 1, ca: ['Temperatura (°C)', 'Gelats venuts'], es: ['Temperatura (°C)', 'Helados vendidos'], x: [10, 40, 5], y: [0, 200, 40], m: 5, n: -30, px: [12, 38] },
+    { s: 1, ca: ['Alçada (cm)', 'Pes (kg)'], es: ['Altura (cm)', 'Peso (kg)'], x: [140, 190, 10], y: [30, 90, 10], m: .8, n: -70, px: [145, 185] },
+    { s: -1, ca: ['Hores de mòbil', 'Hores de son'], es: ['Horas de móvil', 'Horas de sueño'], x: [0, 6, 1], y: [5, 11, 1], m: -.5, n: 10, px: [0, 6] },
+    { s: -1, ca: ['Anys del cotxe', "Preu (milers d'€)"], es: ['Años del coche', 'Precio (miles de €)'], x: [0, 12, 2], y: [0, 30, 5], m: -2, n: 26, px: [0, 12] },
+    { s: -1, ca: ['Altitud (m)', 'Temperatura (°C)'], es: ['Altitud (m)', 'Temperatura (°C)'], x: [0, 2000, 400], y: [0, 25, 5], m: -.008, n: 22, px: [0, 2000] },
+    { s: 0, ca: ['Número de sabata', 'Nota de mates'], es: ['Número de zapato', 'Nota de mates'], x: [34, 46, 2], y: [0, 10, 2], m: 0, n: 5.5, px: [35, 45] },
+    { s: 0, ca: ['Mes de naixement', 'Alçada (cm)'], es: ['Mes de nacimiento', 'Altura (cm)'], x: [0, 12, 2], y: [140, 180, 10], m: 0, n: 160, px: [1, 12] }];
+  const corr = P => { const n = P.length, mx = mean(P.map(p => p[0])), my = mean(P.map(p => p[1])); let a = 0, b = 0, c = 0; P.forEach(([x, y]) => { a += (x - mx) * (y - my); b += (x - mx) ** 2; c += (y - my) ** 2; }); return a / Math.sqrt(b * c); };
+  function cloud(C, cat) {
+    const [ya, yb] = C.y, spanY = yb - ya;
+    for (let t = 0; t < 600; t++) {
+      const noise = cat === 'strong' ? spanY * .05 : cat === 'weak' ? spanY * .2 : spanY * .25, P = [];
+      for (let i = 0; i < ri(12, 16); i++) {
+        const x = C.px[0] + Math.random() * (C.px[1] - C.px[0]), base = cat === 'none' ? ya + spanY * (.15 + .7 * Math.random()) : C.m * x + C.n, y = base + (Math.random() * 2 - 1) * noise * (cat === 'none' ? 0 : 1.7);
+        if (y < ya + spanY * .03 || y > yb - spanY * .03) { P.length = 0; break; }
+        P.push([Math.round(x * 100) / 100, Math.round(y * 100) / 100]);
+      }
+      if (P.length < 12) continue;
+      const rs = corr(P), r = Math.abs(rs);
+      if (cat !== 'none' && Math.sign(rs) !== C.s) continue;
+      if ((cat === 'strong' && r >= .9) || (cat === 'weak' && r >= .4 && r <= .7) || (cat === 'none' && r <= .15)) return P;
+    }
+    return null;
+  }
+  function stat2d(L_) {
+    const pool = L_ === 2 || L_ >= 4 ? S2C.filter(c => c.s) : S2C, C = pick(pool), cat = C.s ? (L_ <= 1 || L_ >= 4 ? 'strong' : pick(['strong', 'weak'])) : 'none';
+    const P = cloud(C, cat); if (!P) return stat2d(L_);
+    const r = corr(P), ax = { xl: L(C.ca[0], C.es[0]), yl: L(C.ca[1], C.es[1]) };
+    const T = { 1: L('positiva', 'positiva'), '-1': L('negativa', 'negativa'), 0: L('no hi ha correlació (nul·la)', 'no hay correlación (nula)') };
+    if (L_ <= 1) return mc(L('Quin tipus de correlació hi ha entre les dues variables?', '¿Qué tipo de correlación hay entre las dos variables?'), T[C.s], [T[1], T[-1], T[0]].filter(x => x !== T[C.s]), { fixed: [T[1], T[-1], T[0]], vis: scatSVG(P, C.x, C.y, ax), ex: C.s > 0 ? L('Quan una variable creix, l\'altra també tendeix a créixer: els punts pugen cap a la dreta. És positiva.', 'Cuando una variable crece, la otra también tiende a crecer: los puntos suben hacia la derecha. Es positiva.') : C.s < 0 ? L('Quan una variable creix, l\'altra tendeix a baixar: els punts baixen cap a la dreta. És negativa.', 'Cuando una variable crece, la otra tiende a bajar: los puntos bajan hacia la derecha. Es negativa.') : L('Els punts estan escampats sense cap direcció: no hi ha relació entre les variables.', 'Los puntos están dispersos sin ninguna dirección: no hay relación entre las variables.'), chk: { t: 'type', P, s: C.s } });
+    const lab = (s, st) => `${s > 0 ? L('Positiva', 'Positiva') : L('Negativa', 'Negativa')} ${L('i', 'y')} ${st === 'strong' ? L('forta', 'fuerte') : L('feble', 'débil')}`;
+    if (L_ === 2) return mc(L('Com és la correlació entre les dues variables?', '¿Cómo es la correlación entre las dos variables?'), lab(C.s, cat), [lab(1, 'strong'), lab(1, 'weak'), lab(-1, 'strong'), lab(-1, 'weak')].filter(x => x !== lab(C.s, cat)), { fixed: [lab(1, 'strong'), lab(1, 'weak'), lab(-1, 'strong'), lab(-1, 'weak')], vis: scatSVG(P, C.x, C.y, ax), ex: L(`El signe el dona la direcció (${C.s > 0 ? 'pugen' : 'baixen'} cap a la dreta) i la força, com de junts estan els punts al voltant d'una recta: ${cat === 'strong' ? 'molt junts, és forta' : 'força escampats, és feble'}.`, `El signo lo da la dirección (${C.s > 0 ? 'suben' : 'bajan'} hacia la derecha) y la fuerza, lo juntos que están los puntos alrededor de una recta: ${cat === 'strong' ? 'muy juntos, es fuerte' : 'bastante dispersos, es débil'}.`), chk: { t: 'strength', P, s: C.s, cat } });
+    if (L_ === 3) {
+      const V = { 's1': .94, 'w1': .55, 'n0': .03, 'w-1': -.55, 's-1': -.94 }, key = (cat === 'none' ? 'n' : cat === 'strong' ? 's' : 'w') + C.s, cands = Object.keys(V).filter(k => k !== key);
+      return mc(L('Quin d\'aquests valors pot ser el <b>coeficient de correlació</b>?', '¿Cuál de estos valores puede ser el <b>coeficiente de correlación</b>?'), fmtD(V[key]), shuffle(cands).slice(0, 3).map(k => fmtD(V[k])), { vis: scatSVG(P, C.x, C.y, ax), ex: L(`r és a prop d'1 si la correlació és positiva i forta, a prop de −1 si és negativa i forta, i a prop de 0 si no n'hi ha. Aquí r ≈ ${fmtDf(r, 2)}.`, `r está cerca de 1 si la correlación es positiva y fuerte, cerca de −1 si es negativa y fuerte, y cerca de 0 si no la hay. Aquí r ≈ ${fmtDf(r, 2)}.`), chk: { t: 'coef', P } });
+    }
+    // recta de regressió: la que fa servir la teoria per generar el núvol
+    const m = C.m, n = C.n;
+    if (L_ === 4) {
+      const [xa, xb, xs] = C.x; let x0; do x0 = xa + xs * ri(1, Math.round((xb - xa) / xs) - 1); while (m * x0 + n < C.y[0] || m * x0 + n > C.y[1]);
+      const y0 = Math.round((m * x0 + n) * 1000) / 1000;
+      return dinp(L(`La recta de regressió és <b>y = ${fmtD(m)}x ${n < 0 ? '−' : '+'} ${fmtD(Math.abs(n))}</b>. Quin valor de «${C.ca[1][0].toLowerCase() + C.ca[1].slice(1)}» es pot preveure per a x = ${fmt(x0)}?`, `La recta de regresión es <b>y = ${fmtD(m)}x ${n < 0 ? '−' : '+'} ${fmtD(Math.abs(n))}</b>. ¿Qué valor de «${C.es[1][0].toLowerCase() + C.es[1].slice(1)}» se puede prever para x = ${fmt(x0)}?`), y0, { vis: scatSVG(P, C.x, C.y, { ...ax, line: [m, n] }), long: true, ex: L(`Substituïm x = ${fmt(x0)}: y = ${fmtD(m)} · ${fmt(x0)} ${n < 0 ? '−' : '+'} ${fmtD(Math.abs(n))} = ${fmtD(y0)}. És una previsió: el valor real pot ser una mica diferent.`, `Sustituimos x = ${fmt(x0)}: y = ${fmtD(m)} · ${fmt(x0)} ${n < 0 ? '−' : '+'} ${fmtD(Math.abs(n))} = ${fmtD(y0)}. Es una previsión: el valor real puede ser algo distinto.`), chk: { t: 'pred', m, n, x0 } });
+    }
+    const mx = mean(P.map(p => p[0])), my = mean(P.map(p => p[1])), eqS = (a, b) => Math.abs(b) < 1e-9 ? `y = ${fmtD(a)}x` : `y = ${fmtD(a)}x ${b < 0 ? '−' : '+'} ${fmtD(Math.abs(b))}`;
+    const rn = v => Math.round(v), dm = -m, dn = rn(my - dm * mx), m3 = 3 * m, n3 = rn(my - m3 * mx), nShift = rn(n + (C.y[1] - C.y[0]) * .35 * (my > (C.y[0] + C.y[1]) / 2 ? -1 : 1));
+    const big = C.x[1] > 100, pt = `(${big ? fmt(Math.round(mx)) : fmtDf(mx, 1)}; ${fmtDf(my, 1)})`;
+    return mc(L('Quina recta s\'ajusta millor al núvol de punts?', '¿Qué recta se ajusta mejor a la nube de puntos?'), eqS(m, n), [eqS(dm, dn), eqS(m3, n3), eqS(m, nShift)], { list: true, vis: scatSVG(P, C.x, C.y, ax), ex: L(`El pendent ha de tenir el signe de la correlació (${C.s > 0 ? 'positiu' : 'negatiu'}) i la recta ha de passar pel mig dels punts, a prop de ${pt}.`, `La pendiente debe tener el signo de la correlación (${C.s > 0 ? 'positivo' : 'negativo'}) y la recta debe pasar por el medio de los puntos, cerca de ${pt}.`), chk: { t: 'fit', P, cands: [[m, n], [dm, dn], [m3, n3], [m, nShift]] } });
+  }
+
+  Object.assign(EX, {
+    'stat.freq': L_ => statFreq(L_),
+    'stat.pie': L_ => statPie(L_),
+    'stat.disp': L_ => statDisp(L_),
+    'stat.hist': L_ => statHist(L_),
+    'stat.box': L_ => statBox(L_),
+    'stat.2d': L_ => stat2d(L_)
+  });
+
+  /* ================= 6. Algorismes i programació: llegir programes en Python ================= */
+  const PYK = /\b(for|in|range|if|elif|else|while|print|and|or|not|import|True|False)\b/g;
+  const escH = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  const hlPy = ln => ln.split(/("[^"]*")/).map((p, i) => i % 2 ? `<span style="color:#FFD479">${escH(p)}</span>` : escH(p).replace(PYK, '<span style="color:#FF9EC0">$1</span>')).join('');
+  function codeHTML(lines) {
+    return `<div style="background:#2B1A38;color:#F4EEF9;border-radius:14px;padding:12px 16px 12px 8px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:16px;line-height:1.6;text-align:left;white-space:pre;overflow-x:auto;max-width:100%;box-sizing:border-box">${lines.map((l, i) => `<div><span data-n style="color:#8A7B99;display:inline-block;width:1.8em;user-select:none">${i + 1}</span>${hlPy(l)}</div>`).join('')}</div>`;
+  }
+  const inl = s => `<code style="font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.95em">${escH(s)}</code>`;
+  const QW = () => L('Què escriu aquest programa?', '¿Qué escribe este programa?');
+  const I = '    ';
+  // Cada generador torna { code, ans, q?, opts? (sortides de text), ex, hint? }
+  const PROG = {
+    var: L_ => {
+      if (L_ <= 1) { const op = pick(['+', '*', '-']), a = ri(4, 12), b = op === '-' ? ri(1, a - 1) : ri(2, 9), r = op === '+' ? a + b : op === '*' ? a * b : a - b;
+        return { code: [`a = ${a}`, `b = a ${op} ${b}`, 'print(b)'], ans: r, ex: L(`La variable a val ${a}. Llavors b = ${a} ${op === '*' ? '·' : op === '-' ? '−' : '+'} ${b} = ${r}, i print(b) escriu ${r}. A Python, * vol dir multiplicar.`, `La variable a vale ${a}. Entonces b = ${a} ${op === '*' ? '·' : op === '-' ? '−' : '+'} ${b} = ${r}, y print(b) escribe ${r}. En Python, * quiere decir multiplicar.`) }; }
+      if (L_ === 2) { const a = ri(2, 9), k = ri(2, 5), d = ri(1, a * k - 1), r = a * k - d;
+        return { code: [`a = ${a}`, `b = a * ${k}`, `a = b - ${d}`, 'print(a)'], ans: r, ex: L(`Línia a línia: a = ${a}; b = ${a} · ${k} = ${a * k}; després a canvia i passa a valer ${a * k} − ${d} = ${r}. Una variable guarda sempre l'últim valor que li donem.`, `Línea a línea: a = ${a}; b = ${a} · ${k} = ${a * k}; después a cambia y pasa a valer ${a * k} − ${d} = ${r}. Una variable guarda siempre el último valor que le damos.`) }; }
+      if (L_ === 3) { const x = ri(2, 6), dy = ri(1, 4), y = x + dy, x2 = x * y, y2 = x2 - y;
+        return { code: [`x = ${x}`, `y = x + ${dy}`, 'x = x * y', 'y = x - y', 'print(y)'], ans: y2, ex: L(`x = ${x}; y = ${x} + ${dy} = ${y}; x = ${x} · ${y} = ${x2}; y = ${x2} − ${y} = ${y2}. Compte: a la línia 4, x ja val ${x2}.`, `x = ${x}; y = ${x} + ${dy} = ${y}; x = ${x} · ${y} = ${x2}; y = ${x2} − ${y} = ${y2}. Cuidado: en la línea 4, x ya vale ${x2}.`) }; }
+      if (L_ === 4) { const n = ri(20, 99), d = ri(3, 9), q = Math.floor(n / d), r = n % d, w = pick(['q', 'r', 'q + r']), ans = w === 'q' ? q : w === 'r' ? r : q + r;
+        return { code: [`n = ${n}`, `q = n // ${d}`, `r = n % ${d}`, `print(${w})`], ans, hint: L('// és la divisió entera i % és el residu', '// es la división entera y % es el resto'), ex: L(`${n} : ${d} fa ${q} i en sobren ${r}: q = ${q} i r = ${r}. El programa escriu ${ans}.`, `${n} : ${d} da ${q} y sobran ${r}: q = ${q} y r = ${r}. El programa escribe ${ans}.`) }; }
+      const a = ri(2, 9), b = ri(2, 6), f = ri(0, 2), code = [`a = ${a}`, `b = ${b}`, ['c = a + b * 2 ** 2', 'c = (a + b) * 2 ** 2', 'c = a * b - a // 2'][f], 'print(c)'], ans = [a + b * 4, (a + b) * 4, a * b - Math.floor(a / 2)][f];
+      return { code, ans, hint: L('** és la potència i // la divisió entera', '** es la potencia y // la división entera'), ex: [L(`Primer la potència (2 ** 2 = 4), després el producte (${b} · 4 = ${4 * b}) i al final la suma: ${a} + ${4 * b} = ${ans}.`, `Primero la potencia (2 ** 2 = 4), después el producto (${b} · 4 = ${4 * b}) y al final la suma: ${a} + ${4 * b} = ${ans}.`), L(`El parèntesi va primer: ${a} + ${b} = ${a + b}; després 2 ** 2 = 4; ${a + b} · 4 = ${ans}.`, `El paréntesis va primero: ${a} + ${b} = ${a + b}; después 2 ** 2 = 4; ${a + b} · 4 = ${ans}.`), L(`${a} · ${b} = ${a * b}; ${a} // 2 = ${Math.floor(a / 2)} (divisió entera); ${a * b} − ${Math.floor(a / 2)} = ${ans}.`, `${a} · ${b} = ${a * b}; ${a} // 2 = ${Math.floor(a / 2)} (división entera); ${a * b} − ${Math.floor(a / 2)} = ${ans}.`)][f] };
+    },
+    if: L_ => {
+      if (L_ <= 1) { const n = ri(1, 12), op = pick(['>', '<', '>=', '<=', '==']), k = ri(3, 9), yes = { '>': n > k, '<': n < k, '>=': n >= k, '<=': n <= k, '==': n === k }[op], s1 = L('gran', 'grande'), s2 = L('petit', 'pequeño');
+        return { code: [`n = ${n}`, `if n ${op} ${k}:`, `${I}print("${s1}")`, 'else:', `${I}print("${s2}")`], ans: yes ? s1 : s2, opts: [s1, s2], ex: L(`La condició n ${op} ${k} amb n = ${n} és ${yes ? 'certa' : 'falsa'}, així que s'executa ${yes ? 'la part de l\'if' : 'la part de l\'else'}.`, `La condición n ${op} ${k} con n = ${n} es ${yes ? 'verdadera' : 'falsa'}, así que se ejecuta ${yes ? 'la parte del if' : 'la parte del else'}.`) }; }
+      if (L_ === 2) { const x = ri(5, 40), ev = x % 2 === 0, r = ev ? x / 2 : 3 * x + 1;
+        return { code: [`x = ${x}`, 'if x % 2 == 0:', `${I}x = x // 2`, 'else:', `${I}x = 3 * x + 1`, 'print(x)'], ans: r, ex: L(`${x} % 2 = ${x % 2}: el nombre és ${ev ? 'parell' : 'senar'}. ${ev ? `x = ${x} // 2 = ${r}` : `x = 3 · ${x} + 1 = ${r}`}.`, `${x} % 2 = ${x % 2}: el número es ${ev ? 'par' : 'impar'}. ${ev ? `x = ${x} // 2 = ${r}` : `x = 3 · ${x} + 1 = ${r}`}.`) }; }
+      if (L_ === 3) { const n = ri(2, 10), G = [L('Excel·lent', 'Sobresaliente'), 'Notable', L('Aprovat', 'Aprobado'), L('Suspès', 'Suspenso')], k = n >= 9 ? 0 : n >= 7 ? 1 : n >= 5 ? 2 : 3;
+        return { code: [`nota = ${n}`, 'if nota >= 9:', `${I}print("${G[0]}")`, 'elif nota >= 7:', `${I}print("${G[1]}")`, 'elif nota >= 5:', `${I}print("${G[2]}")`, 'else:', `${I}print("${G[3]}")`], ans: G[k], opts: G, ex: L(`Es comproven les condicions de dalt a baix i només s'executa la primera que és certa: amb nota = ${n}, és «${G[k]}».`, `Se comprueban las condiciones de arriba abajo y solo se ejecuta la primera que es verdadera: con nota = ${n}, es «${G[k]}».`) }; }
+      if (L_ === 4) { const e = ri(3, 80), a = ri(6, 10), b = ri(3, 6), c = ri(2, 4), r = e >= 12 ? (e < 65 ? a : b) : c, ed = L('edat', 'edad'), pr = L('preu', 'precio');
+        return { code: [`${ed} = ${e}`, `if ${ed} >= 12:`, `${I}if ${ed} < 65:`, `${I}${I}${pr} = ${a}`, `${I}else:`, `${I}${I}${pr} = ${b}`, 'else:', `${I}${pr} = ${c}`, `print(${pr})`], ans: r, ex: L(`${ed} = ${e}: ${e >= 12 ? `com que ${e} ≥ 12, entrem al primer if; ${e < 65 ? `${e} < 65, preu = ${a}` : `${e} no és < 65, preu = ${b}`}` : `${e} no és ≥ 12, anem a l'últim else: preu = ${c}`}.`, `${ed} = ${e}: ${e >= 12 ? `como ${e} ≥ 12, entramos en el primer if; ${e < 65 ? `${e} < 65, precio = ${a}` : `${e} no es < 65, precio = ${b}`}` : `${e} no es ≥ 12, vamos al último else: precio = ${c}`}.`) }; }
+      const p = ri(10, 60), t1 = ri(20, 40), d = ri(3, 12), t2 = ri(15, 35); let v = p; const f1 = v > t1; if (f1) v -= d; const f2 = v > t2; if (f2) v = Math.floor(v / 2);
+      return { code: [`p = ${p}`, `if p > ${t1}:`, `${I}p = p - ${d}`, `if p > ${t2}:`, `${I}p = p // 2`, 'print(p)'], ans: v, ex: L(`Són dos if seguits: primer ${p} > ${t1} és ${f1 ? `cert, p = ${p - d}` : 'fals'}; després ${f1 ? p - d : p} > ${t2} és ${f2 ? `cert, p = ${v}` : 'fals'}. Escriu ${v}.`, `Son dos if seguidos: primero ${p} > ${t1} es ${f1 ? `verdadero, p = ${p - d}` : 'falso'}; después ${f1 ? p - d : p} > ${t2} es ${f2 ? `verdadero, p = ${v}` : 'falso'}. Escribe ${v}.`) };
+    },
+    loop: L_ => {
+      if (L_ <= 1) { const a = ri(0, 3), b = a + ri(2, 7), w = L('hola', 'hola');
+        return { code: [`for i in range(${a === 0 ? '' : a + ', '}${b}):`, `${I}print("${w}")`], ans: b - a, m: 'lines', q: L(`Quantes vegades escriu «${w}»?`, `¿Cuántas veces escribe «${w}»?`), ex: L(`range(${a === 0 ? '' : a + ', '}${b}) va de ${a} fins a ${b - 1} (el ${b} no hi entra): ${b - a} voltes.`, `range(${a === 0 ? '' : a + ', '}${b}) va de ${a} hasta ${b - 1} (el ${b} no entra): ${b - a} vueltas.`) }; }
+      if (L_ === 2) { const a = ri(1, 4), b = a + ri(3, 6), s = (a + b - 1) * (b - a) / 2;
+        return { code: ['s = 0', `for i in range(${a}, ${b}):`, `${I}s = s + i`, 'print(s)'], ans: s, ex: L(`i pren els valors ${[...Array(b - a).keys()].map(k => k + a).join(', ')}, i s els va sumant: ${s}.`, `i toma los valores ${[...Array(b - a).keys()].map(k => k + a).join(', ')}, y s los va sumando: ${s}.`) }; }
+      if (L_ === 3) {
+        if (Math.random() < .5) { const s0 = ri(1, 5), m = ri(2, 3), k = ri(2, 5), r = s0 * m ** k; return { code: [`x = ${s0}`, `for i in range(${k}):`, `${I}x = x * ${m}`, 'print(x)'], ans: r, ex: L(`El bucle fa ${k} voltes i cada volta multiplica per ${m}: ${s0} · ${m}${sup(k)} = ${r}.`, `El bucle da ${k} vueltas y cada vuelta multiplica por ${m}: ${s0} · ${m}${sup(k)} = ${r}.`) }; }
+        const a = ri(0, 5), st = ri(2, 6), b = a + st * ri(3, 6) + ri(0, st - 1), vals = []; for (let i = a; i < b; i += st) vals.push(i);
+        return { code: [`for i in range(${a}, ${b}, ${st}):`, `${I}print(i)`], ans: vals[vals.length - 1], m: 'last', q: L("Quin és l'últim número que escriu?", '¿Cuál es el último número que escribe?'), ex: L(`Comença a ${a} i va sumant ${st} mentre no arribi a ${b}: ${vals.join(', ')}.`, `Empieza en ${a} y va sumando ${st} mientras no llegue a ${b}: ${vals.join(', ')}.`) };
+      }
+      if (L_ === 4) {
+        if (Math.random() < .5) { const N = ri(40, 99), T = ri(5, 20), d = ri(4, 9); let n = N, c = 0; while (n > T) { n -= d; c++; } return { code: [`n = ${N}`, `while n > ${T}:`, `${I}n = n - ${d}`, 'print(n)'], ans: n, ex: L(`Es resta ${d} mentre n sigui més gran que ${T}. Després de ${c} voltes, n = ${n}, que ja no és > ${T}.`, `Se resta ${d} mientras n sea mayor que ${T}. Después de ${c} vueltas, n = ${n}, que ya no es > ${T}.`) }; }
+        const N = ri(20, 200); let n = N, c = 0; while (n > 1) { n = Math.floor(n / 2); c++; }
+        return { code: [`n = ${N}`, 'c = 0', 'while n > 1:', `${I}n = n // 2`, `${I}c = c + 1`, 'print(c)'], ans: c, ex: L(`Cada volta divideix n entre 2 (divisió entera) i compta una volta. Calen ${c} voltes per arribar a 1.`, `Cada vuelta divide n entre 2 (división entera) y cuenta una vuelta. Hacen falta ${c} vueltas para llegar a 1.`) };
+      }
+      const k = ri(2, 5), N = ri(10, 20), cnt = Math.random() < .5; let r = 0; for (let i = 1; i <= N; i++) if (i % k === 0) r += cnt ? 1 : i;
+      return { code: ['s = 0', `for i in range(1, ${N + 1}):`, `${I}if i % ${k} == 0:`, `${I}${I}s = s + ${cnt ? '1' : 'i'}`, 'print(s)'], ans: r, ex: L(`Només compten els i múltiples de ${k} entre 1 i ${N}: ${[...Array(Math.floor(N / k)).keys()].map(j => (j + 1) * k).join(', ')}. ${cnt ? `N'hi ha ${r}.` : `Sumen ${r}.`}`, `Solo cuentan los i múltiplos de ${k} entre 1 y ${N}: ${[...Array(Math.floor(N / k)).keys()].map(j => (j + 1) * k).join(', ')}. ${cnt ? `Hay ${r}.` : `Suman ${r}.`}`) };
+    },
+    logic: L_ => {
+      const TF = ['True', 'False'], tf = b => b ? 'True' : 'False', ce = b => b ? L('cert (True)', 'verdadero (True)') : L('fals (False)', 'falso (False)');
+      const a = ri(1, 9), b = ri(1, 9), c = ri(0, 3), x = ri(2, 8), y = ri(2, 8);
+      if (L_ <= 1) { const r = a > x && b > y; return { code: [`a = ${a}`, `b = ${b}`, `print(a > ${x} and b > ${y})`], ans: tf(r), opts: TF, ex: L(`a > ${x} és ${ce(a > x)} i b > ${y} és ${ce(b > y)}. «and» només és cert si les dues condicions ho són: ${ce(r)}.`, `a > ${x} es ${ce(a > x)} y b > ${y} es ${ce(b > y)}. «and» solo es verdadero si las dos condiciones lo son: ${ce(r)}.`) }; }
+      if (L_ === 2) {
+        if (Math.random() < .5) { const r = a > x || b > y; return { code: [`a = ${a}`, `b = ${b}`, `print(a > ${x} or b > ${y})`], ans: tf(r), opts: TF, ex: L(`a > ${x} és ${ce(a > x)} i b > ${y} és ${ce(b > y)}. «or» és cert si almenys una de les dues ho és: ${ce(r)}.`, `a > ${x} es ${ce(a > x)} y b > ${y} es ${ce(b > y)}. «or» es verdadero si al menos una de las dos lo es: ${ce(r)}.`) }; }
+        const r = !(a > x); return { code: [`a = ${a}`, `print(not a > ${x})`], ans: tf(r), opts: TF, ex: L(`a > ${x} és ${ce(a > x)}, i «not» ho gira: ${ce(r)}.`, `a > ${x} es ${ce(a > x)}, y «not» lo invierte: ${ce(r)}.`) };
+      }
+      if (L_ === 3) { const r = (a > x && b < y) || c === 0; return { code: [`a = ${a}`, `b = ${b}`, `c = ${c}`, `print((a > ${x} and b < ${y}) or c == 0)`], ans: tf(r), opts: TF, ex: L(`Parèntesi: a > ${x} (${ce(a > x)}) and b < ${y} (${ce(b < y)}) → ${ce(a > x && b < y)}. c == 0 és ${ce(c === 0)}. Amb «or»: ${ce(r)}.`, `Paréntesis: a > ${x} (${ce(a > x)}) and b < ${y} (${ce(b < y)}) → ${ce(a > x && b < y)}. c == 0 es ${ce(c === 0)}. Con «or»: ${ce(r)}.`) }; }
+      if (L_ === 4) { const e = ri(8, 20), s1 = 'ESO', s2 = L('no és ESO', 'no es ESO'), ed = L('edat', 'edad'), r = e >= 12 && e <= 16; return { code: [`${ed} = ${e}`, `if ${ed} >= 12 and ${ed} <= 16:`, `${I}print("${s1}")`, 'else:', `${I}print("${s2}")`], ans: r ? s1 : s2, opts: [s1, s2], ex: L(`${e} ≥ 12 és ${ce(e >= 12)} i ${e} ≤ 16 és ${ce(e <= 16)}: la condició amb «and» és ${ce(r)}.`, `${e} ≥ 12 es ${ce(e >= 12)} y ${e} ≤ 16 es ${ce(e <= 16)}: la condición con «and» es ${ce(r)}.`) }; }
+      const p = ri(2, 4), q = pick([3, 5, 7].filter(z => z !== p)), N = ri(15, 30), useAnd = Math.random() < .5; let r = 0; for (let i = 1; i <= N; i++) if (useAnd ? (i % p === 0 && i % q === 0) : (i % p === 0 || i % q === 0)) r++;
+      return { code: ['c = 0', `for i in range(1, ${N + 1}):`, `${I}if i % ${p} == 0 ${useAnd ? 'and' : 'or'} i % ${q} == 0:`, `${I}${I}c = c + 1`, 'print(c)'], ans: r, ex: useAnd ? L(`Compta els nombres de l'1 al ${N} que són múltiples de ${p} i també de ${q} (múltiples de ${p * q / gcd(p, q)}): ${r}.`, `Cuenta los números del 1 al ${N} que son múltiplos de ${p} y también de ${q} (múltiplos de ${p * q / gcd(p, q)}): ${r}.`) : L(`Compta els nombres de l'1 al ${N} que són múltiples de ${p} o de ${q} (o de tots dos): ${r}.`, `Cuenta los números del 1 al ${N} que son múltiplos de ${p} o de ${q} (o de los dos): ${r}.`) };
+    },
+    nest: L_ => {
+      if (L_ <= 1) { const a = ri(2, 5), b = ri(2, 6); return { code: [`for i in range(${a}):`, `${I}for j in range(${b}):`, `${I}${I}print("*")`], ans: a * b, m: 'lines', q: L('Quants asteriscs escriu?', '¿Cuántos asteriscos escribe?'), ex: L(`El bucle de fora fa ${a} voltes i, a cada volta, el de dins en fa ${b}: ${a} · ${b} = ${a * b}.`, `El bucle de fuera da ${a} vueltas y, en cada vuelta, el de dentro da ${b}: ${a} · ${b} = ${a * b}.`) }; }
+      if (L_ === 2) { const a = ri(1, 3), b = a + ri(2, 4), c = ri(2, 6), n = (b - a) * c; return { code: ['c = 0', `for i in range(${a}, ${b}):`, `${I}for j in range(${c}):`, `${I}${I}c = c + 1`, 'print(c)'], ans: n, ex: L(`range(${a}, ${b}) fa ${b - a} voltes i range(${c}), ${c}: ${b - a} · ${c} = ${n}.`, `range(${a}, ${b}) da ${b - a} vueltas y range(${c}), ${c}: ${b - a} · ${c} = ${n}.`) }; }
+      if (L_ === 3) { const n = ri(3, 7), r = n * (n + 1) / 2; return { code: ['c = 0', `for i in range(1, ${n + 1}):`, `${I}for j in range(i):`, `${I}${I}c = c + 1`, 'print(c)'], ans: r, ex: L(`El bucle de dins fa i voltes: ${[...Array(n).keys()].map(k => k + 1).join(' + ')} = ${r}.`, `El bucle de dentro da i vueltas: ${[...Array(n).keys()].map(k => k + 1).join(' + ')} = ${r}.`) }; }
+      if (L_ === 4) { const a = ri(2, 3), b = ri(2, 4), sa = a * (a + 1) / 2, sb = b * (b + 1) / 2; return { code: ['s = 0', `for i in range(1, ${a + 1}):`, `${I}for j in range(1, ${b + 1}):`, `${I}${I}s = s + i * j`, 'print(s)'], ans: sa * sb, ex: L(`Suma tots els productes i · j amb i de 1 a ${a} i j de 1 a ${b}: (${[...Array(a).keys()].map(k => k + 1).join(' + ')}) · (${[...Array(b).keys()].map(k => k + 1).join(' + ')}) = ${sa} · ${sb} = ${sa * sb}.`, `Suma todos los productos i · j con i de 1 a ${a} y j de 1 a ${b}: (${[...Array(a).keys()].map(k => k + 1).join(' + ')}) · (${[...Array(b).keys()].map(k => k + 1).join(' + ')}) = ${sa} · ${sb} = ${sa * sb}.`) }; }
+      const n = ri(4, 8), sumMode = Math.random() < .5; let r = 0; for (let i = 1; i < n; i++) for (let j = 1; j < n; j++) if (sumMode ? i + j === n : i < j) r++;
+      return { code: ['c = 0', `for i in range(1, ${n}):`, `${I}for j in range(1, ${n}):`, `${I}${I}if ${sumMode ? `i + j == ${n}` : 'i < j'}:`, `${I}${I}${I}c = c + 1`, 'print(c)'], ans: r, ex: sumMode ? L(`Compta les parelles (i, j), amb valors de l'1 al ${n - 1}, que sumen ${n}: (1, ${n - 1}), (2, ${n - 2})… n'hi ha ${r}.`, `Cuenta las parejas (i, j), con valores del 1 al ${n - 1}, que suman ${n}: (1, ${n - 1}), (2, ${n - 2})… hay ${r}.`) : L(`Compta les parelles amb i < j entre l'1 i el ${n - 1}: ${[...Array(n - 2).keys()].map(k => n - 2 - k).join(' + ')} = ${r}.`, `Cuenta las parejas con i < j entre el 1 y el ${n - 1}: ${[...Array(n - 2).keys()].map(k => n - 2 - k).join(' + ')} = ${r}.`) };
+    }
+  };
+  // Troba l'error: un programa amb una sola línia equivocada
+  function progDebug(L_) {
+    const T = [
+      () => { const N = ri(6, 15); return { goal: L(`sumar els nombres de l'1 al ${N}`, `sumar los números del 1 al ${N}`), code: ['s = 0', `for i in range(1, ${N}):`, `${I}s = s + i`, 'print(s)'], bad: 2, fix: `for i in range(1, ${N + 1}):`, why: L(`range(1, ${N}) s'atura al ${N - 1}: el ${N} no s'hi suma. Cal range(1, ${N + 1}).`, `range(1, ${N}) se detiene en el ${N - 1}: el ${N} no se suma. Hace falta range(1, ${N + 1}).`), chk: { t: 'sum', N } }; },
+      () => { const n = 2 * ri(3, 20); return { goal: L(`dir si ${n} és parell o senar`, `decir si ${n} es par o impar`), code: [`n = ${n}`, 'if n % 2 == 1:', `${I}print("${L('parell', 'par')}")`, 'else:', `${I}print("${L('senar', 'impar')}")`], bad: 2, fix: 'if n % 2 == 0:', why: L('Un nombre és parell quan el residu de dividir-lo entre 2 és 0: la condició ha de ser n % 2 == 0.', 'Un número es par cuando el resto de dividirlo entre 2 es 0: la condición tiene que ser n % 2 == 0.'), chk: { t: 'even', n } }; },
+      () => { const n = ri(3, 6); return { goal: L(`fer un compte enrere de ${n} a 1`, `hacer una cuenta atrás de ${n} a 1`), code: [`n = ${n}`, 'while n > 0:', `${I}print(n)`, `${I}n = n + 1`], bad: 4, fix: `${I}n = n - 1`, why: L('Si n augmenta, n > 0 sempre és cert i el bucle no s\'acaba mai. Cal restar: n = n - 1.', 'Si n aumenta, n > 0 siempre es verdadero y el bucle no termina nunca. Hay que restar: n = n - 1.'), chk: { t: 'down', n } }; },
+      () => { const t = ri(2, 9); return { goal: L(`escriure la taula del ${t} (${t}, ${2 * t}, ${3 * t}… fins a ${10 * t})`, `escribir la tabla del ${t} (${t}, ${2 * t}, ${3 * t}… hasta ${10 * t})`), code: ['for i in range(1, 11):', `${I}print(${t} + i)`], bad: 2, fix: `${I}print(${t} * i)`, why: L(`La taula del ${t} multiplica: ${t} * i, no ${t} + i.`, `La tabla del ${t} multiplica: ${t} * i, no ${t} + i.`), chk: { t: 'table', k: t } }; },
+      () => { const a = ri(3, 9), b = ri(3, 9), c = ri(3, 9); return { goal: L(`calcular la mitjana de tres notes`, `calcular la media de tres notas`), code: [`a = ${a}`, `b = ${b}`, `c = ${c}`, 'm = a + b + c / 3', 'print(m)'], bad: 4, fix: 'm = (a + b + c) / 3', why: L('Sense parèntesi, només es divideix la c entre 3. Cal (a + b + c) / 3.', 'Sin paréntesis, solo se divide la c entre 3. Hace falta (a + b + c) / 3.'), chk: { t: 'mean', a, b, c } }; },
+      () => { const n = ri(4, 7); return { goal: L(`calcular ${n}! = ${[...Array(n).keys()].map(k => k + 1).join(' · ')}`, `calcular ${n}! = ${[...Array(n).keys()].map(k => k + 1).join(' · ')}`), code: ['f = 0', `for i in range(1, ${n + 1}):`, `${I}f = f * i`, 'print(f)'], bad: 1, fix: 'f = 1', why: L('Si f comença a 0, qualsevol producte dona 0. Per multiplicar s\'ha de començar per 1.', 'Si f empieza en 0, cualquier producto da 0. Para multiplicar hay que empezar por 1.'), chk: { t: 'fact', n } }; }];
+    const d = pick(L_ <= 2 ? [T[0], T[1], T[2], T[3]] : T)();
+    // opcions en l'ordre de les línies (com a màxim 4: si n'hi ha 5, se'n treu una de bona a l'atzar)
+    let ls = d.code.map((_, i) => i + 1); if (ls.length > 4) { const drop = pick(ls.filter(k => k !== d.bad)); ls = ls.filter(k => k !== drop); }
+    const opts = ls.map(k => L(`Línia ${k}`, `Línea ${k}`)), ok = L(`Línia ${d.bad}`, `Línea ${d.bad}`);
+    return mc(L(`Aquest programa hauria de ${d.goal}, però falla. Quina línia té l'error?`, `Este programa debería ${d.goal}, pero falla. ¿Qué línea tiene el error?`), ok, opts.filter(o => o !== ok), { fixed: opts, vis: codeHTML(d.code), ex: d.why, chk: { ...d.chk, bad: d.bad, fix: d.fix, code: d.code } });
+  }
+  // Simular l'atzar (4t d'ESO)
+  function progSim(L_) {
+    const im = 'import random';
+    if (L_ <= 1 || L_ === 4) {
+      const E = L_ <= 1 ? pick([
+        { t: 'coin', N: pick([1000, 2000, 5000]), cond: 'random.randint(1, 2) == 1', p: 1 / 2, v: L('cares', 'caras'), w: L('treure cara (1 de 2 possibilitats)', 'sacar cara (1 de 2 posibilidades)') },
+        { t: 'die6', N: pick([2400, 3000, 6000]), cond: 'random.randint(1, 6) == 6', p: 1 / 6, v: L('sisos', 'seises'), w: L('treure un 6 (1 de 6)', 'sacar un 6 (1 de 6)') },
+        { t: 'die4', N: pick([1600, 2000, 4000]), cond: 'random.randint(1, 4) == 1', p: 1 / 4, v: 'c', w: L('treure un 1 en un dau de 4 cares (1 de 4)', 'sacar un 1 en un dado de 4 caras (1 de 4)') },
+        { t: 'rnd', N: pick([2000, 5000]), cond: `random.random() < ${pick([0.2, 0.3, 0.4])}`, v: 'c' }]) :
+        { t: 'dice2', N: pick([3600, 7200]), cond: 'random.randint(1, 6) + random.randint(1, 6) == 7', p: 1 / 6, v: L('sets', 'sietes'), w: L('treure 7 sumant dos daus (6 de 36 casos)', 'sacar 7 sumando dos dados (6 de 36 casos)') };
+      if (E.t === 'rnd') { E.p = +E.cond.split('< ')[1]; E.w = L(`obtenir amb random.random() (un nombre a l'atzar entre 0 i 1) un valor menor que ${fmtD(E.p)}`, `obtener con random.random() (un número al azar entre 0 y 1) un valor menor que ${fmtD(E.p)}`); }
+      const pf = { coin: '1/2', die6: '1/6', die4: '1/4', dice2: '6/36 = 1/6' }[E.t] || fmtD(E.p);
+      const exp = Math.round(E.N * E.p), near = exp + ri(-3, 3) * Math.max(1, Math.round(E.N / 400)), cands = [E.N, Math.round(exp / 2), Math.round(exp * 2.5), Math.round(E.N / 2) === exp ? Math.round(E.N * .9) : Math.round(E.N / 2), Math.max(1, Math.round(exp / 10))].filter(v => Math.abs(v - exp) > exp * .4 && v !== near);
+      return mc(L(`El programa repeteix ${fmt(E.N)} vegades un experiment a l'atzar. Quin d'aquests resultats és més raonable que escrigui?`, `El programa repite ${fmt(E.N)} veces un experimento al azar. ¿Cuál de estos resultados es más razonable que escriba?`), fmt(near), shuffle([...new Set(cands)]).slice(0, 3).map(fmt), { vis: codeHTML([im, `${E.v} = 0`, `for i in range(${E.N}):`, `${I}if ${E.cond}:`, `${I}${I}${E.v} = ${E.v} + 1`, `print(${E.v})`]), long: true, ex: L(`La probabilitat de ${E.w} és ${pf}. En ${fmt(E.N)} proves esperem ${fmt(E.N)} · ${pf.split(' = ').pop()} = ${fmt(exp)} vegades, més o menys: el resultat real varia una mica cada cop.`, `La probabilidad de ${E.w} es ${pf}. En ${fmt(E.N)} pruebas esperamos ${fmt(E.N)} · ${pf.split(' = ').pop()} = ${fmt(exp)} veces, más o menos: el resultado real varía un poco cada vez.`), chk: { t: 'count', N: E.N, p: E.p } });
+    }
+    if (L_ === 2) {
+      const E = pick([{ cond: 'random.randint(1, 6) == 6', p: 1 / 6, w: L('treure un 6', 'sacar un 6') }, { cond: 'random.randint(1, 2) == 1', p: 1 / 2, w: L('treure cara', 'sacar cara') }, { cond: 'random.randint(1, 4) == 1', p: 1 / 4, w: L('treure un 1 amb un dau de 4 cares', 'sacar un 1 con un dado de 4 caras') }, { cond: 'random.randint(1, 10) <= 3', p: 3 / 10, w: L('treure 1, 2 o 3 d\'entre 10 números', 'sacar 1, 2 o 3 entre 10 números') }]), N = pick([5000, 10000, 20000]);
+      // les opcions errònies són lluny de la probabilitat (≥ 0,1) perquè l'atzar no pugui acostar-hi el resultat
+      const ok = fmtDf(E.p, 2), all = [0.06, 0.17, 0.3, 0.5, 0.6, 0.75, 0.83, 0.95].filter(v => Math.abs(v - E.p) >= .1).map(v => fmtDf(v, 2));
+      return mc(L('Quin valor s\'acostarà més al que escriu el programa?', '¿Qué valor se acercará más a lo que escribe el programa?'), ok, shuffle(all).slice(0, 3), { vis: codeHTML([im, 'c = 0', `for i in range(${N}):`, `${I}if ${E.cond}:`, `${I}${I}c = c + 1`, `print(c / ${N})`]), ex: L(`El programa calcula la freqüència relativa de ${E.w}. Amb moltes proves, s'acosta a la probabilitat: ${ok}.`, `El programa calcula la frecuencia relativa de ${E.w}. Con muchas pruebas, se acerca a la probabilidad: ${ok}.`), chk: { t: 'rel', p: E.p, N } });
+    }
+    if (L_ === 3) {
+      const ok = L('S\'acosta més a 0,5', 'Se acerca más a 0,5');
+      return mc(L('Aquest programa llança una moneda 100 vegades i escriu la freqüència relativa de cares. Si canviem el 100 per 100.000, què passarà?', 'Este programa lanza una moneda 100 veces y escribe la frecuencia relativa de caras. Si cambiamos el 100 por 100.000, ¿qué pasará?'), ok, [L('Serà exactament 0,5', 'Será exactamente 0,5'), L('S\'allunyarà de 0,5', 'Se alejará de 0,5'), L('Serà més gran que 1', 'Será mayor que 1')], { vis: codeHTML([im, 'c = 0', 'for i in range(100):', `${I}if random.randint(1, 2) == 1:`, `${I}${I}c = c + 1`, 'print(c / 100)']), list: true, ex: L('És la llei dels grans nombres: com més proves, més s\'acosta la freqüència relativa a la probabilitat (0,5). Però l\'atzar fa que gairebé mai sigui exacta.', 'Es la ley de los grandes números: cuantas más pruebas, más se acerca la frecuencia relativa a la probabilidad (0,5). Pero el azar hace que casi nunca sea exacta.'), chk: { t: 'lln' } });
+    }
+    const die = pick([6, 4, 8, 12]), ok = `random.randint(1, ${die})`;
+    return mc(L(`Quina instrucció simula llançar un dau de ${die} cares (números de l'1 al ${die})?`, `¿Qué instrucción simula lanzar un dado de ${die} caras (números del 1 al ${die})?`), inl(ok), [inl(`random.randint(0, ${die})`), inl(`random.randint(1, ${die + 1})`), inl(`random.randint(1, ${die}) + 1`)], { list: true, ex: L(`random.randint(a, b) dona un enter a l'atzar entre a i b, tots dos inclosos. Per a un dau de ${die} cares: randint(1, ${die}).`, `random.randint(a, b) da un entero al azar entre a y b, ambos incluidos. Para un dado de ${die} caras: randint(1, ${die}).`), chk: { t: 'die', die } });
+  }
+  function progEx(kind, L_) {
+    if (kind === 'debug') return progDebug(L_);
+    if (kind === 'sim') return progSim(L_);
+    const k = kind && PROG[kind] ? kind : pick(['var', 'if', 'loop']), d = PROG[k](L_);
+    const q = `${d.q || QW()}${d.hint ? ` <span class="hint">${d.hint}</span>` : ''}`, vis = codeHTML(d.code);
+    if (d.opts) return mc(q, d.ans, d.opts.filter(o => o !== d.ans), { fixed: d.opts, vis, ex: d.ex, chk: { t: 'run', code: d.code } });
+    return (d.ans < 0 ? ninp : inp)(q, d.ans, { vis, ex: d.ex, chk: { t: 'run', code: d.code, m: d.m || 'out' } });
+  }
+  Object.assign(EX, { 'pc.py': (L_, A) => progEx(A, L_) });
+
+  /* ================= 3-4. Coordenades cartesianes i gràfiques de funcions ================= */
+  // Pla cartesià: quadrícula, eixos amb fletxa, números, corbes, segments i punts
+  function planeSVG(o) {
+    const x0 = o.x0 ?? -6, x1 = o.x1 ?? 6, y0 = o.y0 ?? -6, y1 = o.y1 ?? 6, u = o.u || Math.min(24, 260 / (x1 - x0), 260 / (y1 - y0)), pd = 20;
+    const W = (x1 - x0) * u + 2 * pd, H = (y1 - y0) * u + 2 * pd, X = x => pd + (x - x0) * u, Y = y => pd + (y1 - y) * u, st = o.lab || (x1 - x0 > 12 || y1 - y0 > 12 ? 2 : 1);
+    let s = `<svg viewBox="0 0 ${r1(W)} ${r1(H)}" class="vsvg wide" style="width:${Math.round(Math.min(o.w || 290, W * 1.1))}px">`;
+    for (let x = Math.ceil(x0); x <= x1; x++) s += `<line x1="${r1(X(x))}" y1="${r1(Y(y1))}" x2="${r1(X(x))}" y2="${r1(Y(y0))}" stroke="${GRID}" stroke-width="1"/>`;
+    for (let y = Math.ceil(y0); y <= y1; y++) s += `<line x1="${r1(X(x0))}" y1="${r1(Y(y))}" x2="${r1(X(x1))}" y2="${r1(Y(y))}" stroke="${GRID}" stroke-width="1"/>`;
+    const hasY = x0 <= 0 && x1 >= 0, hasX = y0 <= 0 && y1 >= 0;
+    if (hasX) s += `<line x1="${r1(X(x0) - 4)}" y1="${r1(Y(0))}" x2="${r1(X(x1) + 8)}" y2="${r1(Y(0))}" stroke="${INK}" stroke-width="2"/><path d="M${r1(X(x1) + 14)} ${r1(Y(0))} l-8 -4.5 v9 Z" fill="${INK}"/>` + tt(X(x1) + 6, Y(0) - 8, 'x', { fs: 13, fw: 800, col: PRI });
+    if (hasY) s += `<line x1="${r1(X(0))}" y1="${r1(Y(y0) + 4)}" x2="${r1(X(0))}" y2="${r1(Y(y1) - 8)}" stroke="${INK}" stroke-width="2"/><path d="M${r1(X(0))} ${r1(Y(y1) - 14)} l-4.5 8 h9 Z" fill="${INK}"/>` + tt(X(0) + 8, Y(y1) - 6, 'y', { fs: 13, fw: 800, col: PRI });
+    if (!o.noNum) {
+      for (let x = Math.ceil(x0 / st) * st; x <= x1; x += st) if (x) s += tt(X(x), (hasX ? Y(0) : Y(y0)) + 14, fmt(x), { a: 'middle', fs: 10.5, col: MUT });
+      for (let y = Math.ceil(y0 / st) * st; y <= y1; y += st) if (y) s += tt((hasY ? X(0) : X(x0)) - 4, Y(y) + 4, fmt(y), { a: 'end', fs: 10.5, col: MUT });
+      if (hasX && hasY) s += tt(X(0) - 4, Y(0) + 14, '0', { a: 'end', fs: 10.5, col: MUT });
+    }
+    (o.curves || []).forEach(c => {
+      let d = '', pen = false; const N = 300;
+      for (let i = 0; i <= N; i++) {
+        const x = x0 + (x1 - x0) * i / N, y = c.f(x);
+        if ((c.br || []).some(b => Math.abs(x - b) < 1e-9) || !Number.isFinite(y) || y < y0 - 1e-9 || y > y1 + 1e-9) { pen = false; continue; }
+        d += `${pen ? 'L' : 'M'}${r1(X(x))} ${r1(Y(y))}`; pen = true;
+      }
+      s += `<path class="cv" d="${d}" fill="none" stroke="${c.col || '#36A9E1'}" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>`;
+    });
+    if (o.poly) s += `<polyline class="pl" points="${o.poly.map(([x, y]) => `${r1(X(x))},${r1(Y(y))}`).join(' ')}" fill="none" stroke="#36A9E1" stroke-width="3" stroke-linejoin="round"/>` + o.poly.map(([x, y]) => `<circle cx="${r1(X(x))}" cy="${r1(Y(y))}" r="3" fill="#1B6FA3"/>`).join('');
+    (o.pts || []).forEach(p => { s += `<circle class="cp" cx="${r1(X(p.x))}" cy="${r1(Y(p.y))}" r="5" fill="${p.col || '#E24F86'}" stroke="#fff" stroke-width="1.5"/>`; if (p.lab) s += tt(X(p.x) + (p.x >= x1 - .5 ? -9 : 8), Y(p.y) - 7, p.lab, { fs: 14, fw: 800, col: p.col || '#E24F86', a: p.x >= x1 - .5 ? 'end' : undefined }); });
+    return s + '</svg>';
+  }
+  const cxy = (x, y) => `(${fmt(x)}, ${fmt(y)})`;
+  const QUAD = () => [L('1r quadrant', '1.er cuadrante'), L('2n quadrant', '2.º cuadrante'), L('3r quadrant', '3.er cuadrante'), L('4t quadrant', '4.º cuadrante')];
+  const quadOf = (a, b) => a > 0 ? (b > 0 ? 0 : 3) : (b > 0 ? 1 : 2);
+  const nz5 = () => { let a, b; do { a = ri(-5, 5); b = ri(-5, 5); } while (!a || !b || Math.abs(a) === Math.abs(b)); return [a, b]; };
+
+  function eCart(L_) {
+    if (L_ <= 2) {
+      let a, b; if (L_ <= 1) { do { a = ri(1, 6); b = ri(1, 6); } while (a === b); } else [a, b] = nz5();
+      const lab = pick(['A', 'B', 'P', 'Q']), vis = planeSVG(L_ <= 1 ? { x0: 0, x1: 7, y0: 0, y1: 7, pts: [{ x: a, y: b, lab }] } : { pts: [{ x: a, y: b, lab }] });
+      return mc(L(`Quines coordenades té el punt <b>${lab}</b>?`, `¿Qué coordenadas tiene el punto <b>${lab}</b>?`), cxy(a, b), L_ <= 1 ? [cxy(b, a), cxy(a, b + 1), cxy(a + 1, b)] : [cxy(b, a), cxy(-a, b), cxy(a, -b)], { vis, big: true, ex: L(`Primer la x (quant es mou a la dreta o a l'esquerra): ${fmt(a)}. Després la y (quant puja o baixa): ${fmt(b)}. ${lab}${cxy(a, b)}.`, `Primero la x (cuánto se mueve a la derecha o a la izquierda): ${fmt(a)}. Después la y (cuánto sube o baja): ${fmt(b)}. ${lab}${cxy(a, b)}.`), chk: { t: 'read', a, b, lab } });
+    }
+    if (L_ === 3) {
+      const [a, b] = nz5(), P = shuffle([[a, b], [b, a], [-a, b], [a, -b]]), labs = ['A', 'B', 'C', 'D'], k = P.findIndex(p => p[0] === a && p[1] === b);
+      return mc(L(`Quin punt té coordenades <b>${cxy(a, b)}</b>?`, `¿Qué punto tiene coordenadas <b>${cxy(a, b)}</b>?`), labs[k], labs.filter((_, i) => i !== k), { fixed: labs, big: true, vis: planeSVG({ pts: P.map((p, i) => ({ x: p[0], y: p[1], lab: labs[i], col: ['#E24F86', '#36A9E1', '#3CC46A', '#FF9A3C'][i] })) }), ex: L(`${cxy(a, b)}: ${Math.abs(a)} ${a > 0 ? 'a la dreta' : "a l'esquerra"} i ${Math.abs(b)} ${b > 0 ? 'amunt' : 'avall'}. És el punt ${labs[k]}.`, `${cxy(a, b)}: ${Math.abs(a)} ${a > 0 ? 'a la derecha' : 'a la izquierda'} y ${Math.abs(b)} ${b > 0 ? 'arriba' : 'abajo'}. Es el punto ${labs[k]}.`), chk: { t: 'which', a, b } });
+    }
+    if (L_ === 4) {
+      let a, b; do { a = ri(-9, 9); b = ri(-9, 9); } while (!a || !b);
+      const Q = QUAD(), k = quadOf(a, b);
+      return mc(L(`En quin quadrant hi ha el punt <b>${cxy(a, b)}</b>?`, `¿En qué cuadrante está el punto <b>${cxy(a, b)}</b>?`), Q[k], Q.filter((_, i) => i !== k), { fixed: Q, ex: L(`x ${a > 0 ? 'positiva (dreta)' : "negativa (esquerra)"} i y ${b > 0 ? 'positiva (amunt)' : 'negativa (avall)'}. Els quadrants es numeren en sentit contrari a les agulles del rellotge, començant per dalt a la dreta: és el ${Q[k]}.`, `x ${a > 0 ? 'positiva (derecha)' : 'negativa (izquierda)'} e y ${b > 0 ? 'positiva (arriba)' : 'negativa (abajo)'}. Los cuadrantes se numeran en sentido contrario a las agujas del reloj, empezando por arriba a la derecha: es el ${Q[k]}.`), chk: { t: 'quad', a, b } });
+    }
+    if (Math.random() < .5) {
+      const [a, b] = nz5(), ax = pick(['x', 'y', 'o']), ok = ax === 'x' ? [a, -b] : ax === 'y' ? [-a, b] : [-a, -b];
+      const cands = [[a, -b], [-a, b], [-a, -b], [b, a]].filter(p => p[0] !== ok[0] || p[1] !== ok[1]);
+      const nm = ax === 'x' ? L("l'eix X", 'el eje X') : ax === 'y' ? L("l'eix Y", 'el eje Y') : L("l'origen (0, 0)", 'el origen (0, 0)');
+      return mc(L(`Quin és el punt simètric de A${cxy(a, b)} respecte a ${nm}?`, `¿Cuál es el punto simétrico de A${cxy(a, b)} respecto a ${nm}?`), cxy(...ok), cands.map(p => cxy(...p)), { vis: planeSVG({ pts: [{ x: a, y: b, lab: 'A' }] }), big: true, ex: ax === 'x' ? L("Respecte a l'eix X, la x es queda igual i la y canvia de signe.", 'Respecto al eje X, la x se queda igual y la y cambia de signo.') : ax === 'y' ? L("Respecte a l'eix Y, la y es queda igual i la x canvia de signe.", 'Respecto al eje Y, la y se queda igual y la x cambia de signo.') : L("Respecte a l'origen, canvien de signe totes dues coordenades.", 'Respecto al origen, cambian de signo las dos coordenadas.'), chk: { t: 'sym', a, b, ax } });
+    }
+    let xa, xb, ya, yb; do { xa = ri(-5, 4); xb = ri(xa + 2, 5); ya = ri(-5, 4); yb = ri(ya + 2, 5); } while (xa === ya || xb === yb || xa === yb || ya === xb);
+    const A = [xa, ya], Bp = [xb, ya], C = [xb, yb], D = [xa, yb], cand = [[yb, xa], [xb, yb + 1], [xa, ya - 1], [-xa, yb], [xa + 1, yb]].filter(p => !(p[0] === D[0] && p[1] === D[1]) && !(p[0] === C[0] && p[1] === C[1]) && !(p[0] === A[0] && p[1] === A[1]) && !(p[0] === Bp[0] && p[1] === Bp[1]));
+    return mc(L('A, B i C són tres vèrtexs d\'un rectangle amb els costats paral·lels als eixos. Quines coordenades té el quart vèrtex, D?', 'A, B y C son tres vértices de un rectángulo con los lados paralelos a los ejes. ¿Qué coordenadas tiene el cuarto vértice, D?'), cxy(...D), shuffle(cand).slice(0, 3).map(p => cxy(...p)), { vis: planeSVG({ pts: [{ x: A[0], y: A[1], lab: 'A' }, { x: Bp[0], y: Bp[1], lab: 'B' }, { x: C[0], y: C[1], lab: 'C' }] }), big: true, ex: L(`D té la mateixa x que A (${fmt(xa)}) i la mateixa y que C (${fmt(yb)}): D${cxy(...D)}.`, `D tiene la misma x que A (${fmt(xa)}) y la misma y que C (${fmt(yb)}): D${cxy(...D)}.`), chk: { t: 'rect', A, B: Bp, C } });
+  }
+
+  // Gràfiques de rectes
+  const lineEq = (m, n) => `y = ${lin(m, n)}`;
+  function fnGraph(L_, A) {
+    if (A === 'story') return fnStory(L_);
+    if (L_ === 5) {
+      const m = pick([-2, -1, 1, 2]), n = ri(-3, 3) || 1, alt = [[-m, n], [m, -n], [n === m ? -m : n, n === m ? -n : m]].filter(([a, b]) => a !== m || b !== n);
+      const mk = (a, b) => planeSVG({ x0: -4, x1: 4, y0: -4, y1: 4, u: 22, curves: [{ f: x => a * x + b }] });
+      return mc(L(`Quina gràfica correspon a la recta <b>${lineEq(m, n)}</b>?`, `¿Qué gráfica corresponde a la recta <b>${lineEq(m, n)}</b>?`), mk(m, n), alt.map(([a, b]) => mk(a, b)), { pics: true, ex: L(`Talla l'eix y a ${fmt(n)} (ordenada a l'origen) i el pendent és ${fmt(m)}: ${m > 0 ? 'puja' : 'baixa'} ${Math.abs(m)} ${Math.abs(m) === 1 ? 'quadret' : 'quadrets'} per cada quadret cap a la dreta.`, `Corta el eje y en ${fmt(n)} (ordenada en el origen) y la pendiente es ${fmt(m)}: ${m > 0 ? 'sube' : 'baja'} ${Math.abs(m)} ${Math.abs(m) === 1 ? 'cuadradito' : 'cuadraditos'} por cada cuadradito hacia la derecha.`), chk: { t: 'pick', m, n } });
+    }
+    if (L_ === 4) {
+      const [p, q] = pick([[1, 2], [-1, 2], [1, 3], [-1, 3], [2, 3], [-2, 3], [3, 2], [-3, 2]]), n = ri(-3, 3), f = x => p * x / q + n;
+      const lat = [-6, -3, 0, 3, 6, -4, -2, 2, 4].filter(x => x % q === 0 && Math.abs(f(x)) <= 6).sort((a, b) => a - b), P1 = lat[0], P2 = lat[lat.length - 1];
+      if (lat.length < 2) return fnGraph(L_);
+      return mc(L('Quin és el <b>pendent</b> de la recta?', '¿Cuál es la <b>pendiente</b> de la recta?'), fracS(p, q), [fracS(q, p), fracS(-p, q), fmt(p)], { vis: planeSVG({ curves: [{ f }], pts: [{ x: P1, y: f(P1) }, { x: P2, y: f(P2) }] }), big: true, ex: L(`Entre els punts ${cxy(P1, f(P1))} i ${cxy(P2, f(P2))}: la y canvia ${fmt(f(P2) - f(P1))} quan la x avança ${P2 - P1}. Pendent = ${fmt(f(P2) - f(P1))}/${P2 - P1} = ${fracS(p, q)}.`, `Entre los puntos ${cxy(P1, f(P1))} y ${cxy(P2, f(P2))}: la y cambia ${fmt(f(P2) - f(P1))} cuando la x avanza ${P2 - P1}. Pendiente = ${fmt(f(P2) - f(P1))}/${P2 - P1} = ${fracS(p, q)}.`), chk: { t: 'slopeFr', p, q, n } });
+    }
+    const m = pick([-3, -2, -1, 1, 2, 3]), n = ri(-4, 4), f = x => m * x + n, vis = planeSVG({ curves: [{ f }] });
+    const lat = [...Array(13).keys()].map(i => i - 6).filter(x => Math.abs(f(x)) <= 6 && x !== 0);
+    if (lat.length < 2) return fnGraph(L_);
+    if (L_ <= 1) {
+      const x = pick(lat);
+      if (Math.random() < .5) return ninp(L(`Mira la gràfica. Quant val <b>y</b> quan <b>x = ${fmt(x)}</b>?`, `Mira la gráfica. ¿Cuánto vale <b>y</b> cuando <b>x = ${fmt(x)}</b>?`), f(x), { vis, ex: L(`Busca x = ${fmt(x)} a l'eix horitzontal, puja o baixa fins a la recta i mira l'altura: y = ${fmt(f(x))}. El punt és ${cxy(x, f(x))}.`, `Busca x = ${fmt(x)} en el eje horizontal, sube o baja hasta la recta y mira la altura: y = ${fmt(f(x))}. El punto es ${cxy(x, f(x))}.`), chk: { t: 'yAt', x } });
+      return ninp(L(`Mira la gràfica. Per a quin valor de <b>x</b> la recta arriba a <b>y = ${fmt(f(x))}</b>?`, `Mira la gráfica. ¿Para qué valor de <b>x</b> la recta llega a <b>y = ${fmt(f(x))}</b>?`), x, { vis, ex: L(`Busca y = ${fmt(f(x))} a l'eix vertical, ves en horitzontal fins a la recta i baixa a l'eix x: x = ${fmt(x)}.`, `Busca y = ${fmt(f(x))} en el eje vertical, ve en horizontal hasta la recta y baja al eje x: x = ${fmt(x)}.`), chk: { t: 'xAt', y: f(x) } });
+    }
+    if (L_ === 2) {
+      if (Math.random() < .5) return ninp(L("Quina és l'<b>ordenada a l'origen</b> de la recta (on talla l'eix y)?", '¿Cuál es la <b>ordenada en el origen</b> de la recta (dónde corta el eje y)?'), n, { vis, ex: L(`La recta talla l'eix y al punt (0, ${fmt(n)}): l'ordenada a l'origen és ${fmt(n)}.`, `La recta corta el eje y en el punto (0, ${fmt(n)}): la ordenada en el origen es ${fmt(n)}.`), chk: { t: 'n' } });
+      return ninp(L('Quin és el <b>pendent</b> de la recta?', '¿Cuál es la <b>pendiente</b> de la recta?'), m, { vis, ex: L(`Quan la x avança 1, la y ${m > 0 ? 'puja' : 'baixa'} ${Math.abs(m)}: el pendent és ${fmt(m)}${m < 0 ? ' (negatiu perquè baixa)' : ''}.`, `Cuando la x avanza 1, la y ${m > 0 ? 'sube' : 'baja'} ${Math.abs(m)}: la pendiente es ${fmt(m)}${m < 0 ? ' (negativa porque baja)' : ''}.`), chk: { t: 'm' } });
+    }
+    const cand = [[-m, n], [m, -n], [n, m], [m, n + (n > 0 ? -2 : 2)], [2 * m, n]].filter(([a, b]) => (a !== m || b !== n) && a !== 0).map(([a, b]) => lineEq(a, b));
+    return mc(L('Quina és l\'equació de la recta?', '¿Cuál es la ecuación de la recta?'), lineEq(m, n), [...new Set(cand)].slice(0, 3), { vis, list: true, ex: L(`Ordenada a l'origen: ${fmt(n)} (talla l'eix y a ${cxy(0, n)}). Pendent: ${fmt(m)} (per cada pas a la dreta, ${m > 0 ? 'puja' : 'baixa'} ${Math.abs(m)}). Per tant, ${lineEq(m, n)}.`, `Ordenada en el origen: ${fmt(n)} (corta el eje y en ${cxy(0, n)}). Pendiente: ${fmt(m)} (por cada paso a la derecha, ${m > 0 ? 'sube' : 'baja'} ${Math.abs(m)}). Por tanto, ${lineEq(m, n)}.`), chk: { t: 'eq' } });
+  }
+  // Gràfiques de la vida real: distància a casa en funció del temps
+  function fnStory(L_) {
+    for (let t = 0; t < 300; t++) {
+      const P = per(), dt = [ri(1, 3), ri(1, 3), ri(1, 3), ri(1, 3)].map(v => v * 5), T = [0]; dt.forEach(d => T.push(T[T.length - 1] + d));
+      if (T[4] > 60) continue;
+      const d1 = ri(2, 6) * 200, D = [0, d1, d1, ri(Math.max(1, d1 / 200 - 3), Math.min(6, d1 / 200 + 3)) * 200, 0];
+      if (D[3] === D[2]) continue;
+      const shape = ri(0, 1); if (shape) { D[3] = D[2]; D[2] = d1; } // tram 2 parat o tram 3 parat
+      const pts = T.map((x, i) => [x, D[i]]), segs = [0, 1, 2, 3].map(i => ({ dt: T[i + 1] - T[i], dd: D[i + 1] - D[i] }));
+      if (segs.filter(s => s.dd === 0).length !== 1) continue;
+      const speeds = segs.map(s => Math.abs(s.dd) / s.dt);
+      if (speeds.some(v => !Number.isInteger(v))) continue;
+      const vis = scatSVG([], [0, 60, 10], [0, 1200, 200], { poly: pts, segLab: L_ >= 5 ? ['A', 'B', 'C', 'D'] : null, xl: L('Temps (minuts)', 'Tiempo (minutos)'), yl: L('Distància a casa (m)', 'Distancia a casa (m)') });
+      const st = L(`La gràfica mostra a quina distància de casa és ${P.c} mentre fa un passeig amb bicicleta.`, `La gráfica muestra a qué distancia de casa está ${P.c} mientras da un paseo en bicicleta.`);
+      if (L_ <= 1) { const i = ri(1, 3); return inp(`${st} ${L(`A quina distància de casa és al minut <b>${T[i]}</b>?`, `¿A qué distancia de casa está en el minuto <b>${T[i]}</b>?`)}`, D[i], { unit: 'm', vis, long: true, ex: L(`Busca el minut ${T[i]} a l'eix horitzontal i mira l'altura de la gràfica: ${fmt(D[i])} m.`, `Busca el minuto ${T[i]} en el eje horizontal y mira la altura de la gráfica: ${fmt(D[i])} m.`), chk: { t: 'dAt', x: T[i] } }); }
+      const k = segs.findIndex(s => s.dd === 0);
+      if (L_ === 2) return inp(`${st} ${L('Quants minuts ha estat aturat/ada?', '¿Cuántos minutos ha estado parado/a?')}`.replace('aturat/ada', P.g === 'm' ? 'aturat' : 'aturada').replace('parado/a', P.g === 'm' ? 'parado' : 'parada'), segs[k].dt, { unit: 'min', vis, long: true, ex: L(`Quan està aturat la distància no canvia: la gràfica és horitzontal del minut ${T[k]} al ${T[k + 1]}, ${segs[k].dt} minuts.`, `Cuando está parado la distancia no cambia: la gráfica es horizontal del minuto ${T[k]} al ${T[k + 1]}, ${segs[k].dt} minutos.`), chk: { t: 'stop' } });
+      if (L_ === 3) return inp(`${st} ${L('A quina velocitat va durant els primers minuts, fins que s\'atura o gira?', '¿A qué velocidad va durante los primeros minutos, hasta que se para o gira?')} <span class="hint">${L('en metres per minut', 'en metros por minuto')}</span>`, speeds[0], { unit: 'm/min', vis, long: true, ex: L(`En el primer tram recorre ${fmt(D[1])} m en ${T[1]} minuts: ${fmt(D[1])} : ${T[1]} = ${speeds[0]} m/min.`, `En el primer tramo recorre ${fmt(D[1])} m en ${T[1]} minutos: ${fmt(D[1])} : ${T[1]} = ${speeds[0]} m/min.`), chk: { t: 'v1' } });
+      if (L_ === 4) { const tot = segs.reduce((a, s) => a + Math.abs(s.dd), 0); return inp(`${st} ${L('Quants metres ha recorregut en total?', '¿Cuántos metros ha recorrido en total?')}`, tot, { unit: 'm', vis, long: true, ex: L(`Sumem el que avança en cada tram, tant si s'allunya com si torna: ${segs.map(s => fmt(Math.abs(s.dd))).join(' + ')} = ${fmt(tot)} m.`, `Sumamos lo que avanza en cada tramo, tanto si se aleja como si vuelve: ${segs.map(s => fmt(Math.abs(s.dd))).join(' + ')} = ${fmt(tot)} m.`), chk: { t: 'total' } }); }
+      const mx = Math.max(...speeds); if (speeds.filter(v => v === mx).length > 1) continue;
+      const labs = ['A', 'B', 'C', 'D'], w = speeds.indexOf(mx);
+      return mc(`${st} ${L('En quin tram va més de pressa?', '¿En qué tramo va más deprisa?')}`, labs[w], labs.filter((_, i) => i !== w), { fixed: labs, big: true, vis, long: true, ex: L(`Va més de pressa on la gràfica és més inclinada (pugi o baixi). Velocitats: ${labs.map((l, i) => `${l} ${speeds[i]} m/min`).join(', ')}.`, `Va más deprisa donde la gráfica está más inclinada (suba o baje). Velocidades: ${labs.map((l, i) => `${l} ${speeds[i]} m/min`).join(', ')}.`), chk: { t: 'fast' } });
+    }
+    return fnGraph(Math.min(3, L_));
+  }
+
+  // Proporcionalitat inversa: la hipèrbola
+  const KINV = [6, 8, 12, 18, 24, 36];
+  const divs = k => [...Array(Math.abs(k)).keys()].map(i => i + 1).filter(d => k % d === 0);
+  function fnInv(L_) {
+    if (L_ <= 3) {
+      const k = pick(KINV), xs = shuffle(divs(k).filter(d => d > 1 && d < k)).slice(0, 4).sort((a, b) => a - b);
+      if (xs.length < 3) return fnInv(L_);
+      const ys = xs.map(x => k / x), m = ri(0, xs.length - 1);
+      if (L_ <= 1) return inp(L('x i y són inversament proporcionals. Quin valor falta a la taula?', 'x e y son inversamente proporcionales. ¿Qué valor falta en la tabla?'), ys[m], { vis: tabSVG(['x', ...xs.map(String)], [['y', ...ys.map((y, i) => i === m ? '?' : String(y))]], { minW: 40 }), ex: L(`En la proporcionalitat inversa, x · y sempre dona el mateix: ${xs[m === 0 ? 1 : 0]} · ${ys[m === 0 ? 1 : 0]} = ${k}. Llavors y = ${k} : ${xs[m]} = ${ys[m]}.`, `En la proporcionalidad inversa, x · y siempre da lo mismo: ${xs[m === 0 ? 1 : 0]} · ${ys[m === 0 ? 1 : 0]} = ${k}. Entonces y = ${k} : ${xs[m]} = ${ys[m]}.`), chk: { t: 'miss', xs, ys, m } });
+      if (L_ === 2) {
+        if (Math.random() < .5) { const w = pick(xs.filter(x => x < 10)), d = k / w; return inp(L(`${w} aixetes iguals omplen una piscina en ${d} hores. El nombre d'aixetes i les hores són inversament proporcionals. Quina és la <b>constant de proporcionalitat</b> (aixetes · hores)?`, `${w} grifos iguales llenan una piscina en ${d} horas. El número de grifos y las horas son inversamente proporcionales. ¿Cuál es la <b>constante de proporcionalidad</b> (grifos · horas)?`), k, { long: true, ex: L(`k = ${w} · ${d} = ${k}. Vol dir que una sola aixeta trigaria ${k} hores.`, `k = ${w} · ${d} = ${k}. Quiere decir que un solo grifo tardaría ${k} horas.`), chk: { t: 'kctx', w, d } }); }
+        return inp(L('x i y són inversament proporcionals. Quina és la <b>constant</b> k = x · y?', 'x e y son inversamente proporcionales. ¿Cuál es la <b>constante</b> k = x · y?'), k, { vis: tabSVG(['x', ...xs.map(String)], [['y', ...ys.map(String)]], { minW: 40 }), ex: L(`${xs.map((x, i) => `${x} · ${ys[i]}`).join(' = ')} = ${k}.`, `${xs.map((x, i) => `${x} · ${ys[i]}`).join(' = ')} = ${k}.`), chk: { t: 'k', xs, ys } });
+      }
+      return mc(L('Quina expressió correspon a la taula?', '¿Qué expresión corresponde a la tabla?'), `y = ${frac(k, 'x')}`, [`y = ${k}x`, `y = ${frac('x', k)}`, `y = ${k} − x`], { vis: tabSVG(['x', ...xs.map(String)], [['y', ...ys.map(String)]], { minW: 40 }), big: true, ex: L(`x · y = ${k} sempre, així que y = ${k}/x: és una funció de proporcionalitat inversa i la seva gràfica és una hipèrbola.`, `x · y = ${k} siempre, así que y = ${k}/x: es una función de proporcionalidad inversa y su gráfica es una hipérbola.`), chk: { t: 'expr', xs, ys } });
+    }
+    if (L_ === 4) {
+      const k = pick([4, 6, 8, -4, -6, -8]), f = x => k / x, xs = divs(k).flatMap(d => [d, -d]).filter(x => Math.abs(k / x) <= 8 && Math.abs(x) <= 8), x = pick(xs.filter(v => Math.abs(v) > 1 && Math.abs(k / v) > 1) .length ? xs.filter(v => Math.abs(v) > 1 && Math.abs(k / v) > 1) : xs);
+      return ninp(L(`La gràfica és la hipèrbola y = ${k < 0 ? '−' : ''}${frac(Math.abs(k), 'x')}. Quant val <b>y</b> quan <b>x = ${fmt(x)}</b>?`, `La gráfica es la hipérbola y = ${k < 0 ? '−' : ''}${frac(Math.abs(k), 'x')}. ¿Cuánto vale <b>y</b> cuando <b>x = ${fmt(x)}</b>?`), f(x), { vis: planeSVG({ x0: -8, x1: 8, y0: -8, y1: 8, curves: [{ f, br: [0] }], pts: xs.filter(v => v > 0 === x > 0).map(v => ({ x: v, y: f(v), col: '#1B6FA3' })) }), ex: L(`y = ${fmt(k)} : ${sgn(x)} = ${fmt(f(x))}. Comprova-ho a la gràfica: el punt ${cxy(x, f(x))} és de la hipèrbola.`, `y = ${fmt(k)} : ${sgn(x)} = ${fmt(f(x))}. Compruébalo en la gráfica: el punto ${cxy(x, f(x))} es de la hipérbola.`), chk: { t: 'hy', k, x } });
+    }
+    const T = [L('Lineal', 'Lineal'), L('Quadràtica', 'Cuadrática'), L('De proporcionalitat inversa', 'De proporcionalidad inversa')], w = ri(0, 2);
+    // els paràmetres es trien una sola vegada (fora de la funció que es dibuixa)
+    const s = pick([-2, -1, 1, 2]), c0 = ri(-2, 2), qa = pick([1, -1, .5]), qc = ri(-3, 1), kk = pick([2, 3, 4, -2, -3, -4]);
+    const f = w === 0 ? x => s * x + c0 : w === 1 ? x => qa * x * x + qc : x => kk / x;
+    return mc(L('Quin tipus de funció representa la gràfica?', '¿Qué tipo de función representa la gráfica?'), T[w], T.filter((_, i) => i !== w), { fixed: T, vis: planeSVG({ curves: [{ f, br: [0] }] }), ex: [L('És una recta: funció lineal (y = mx + n).', 'Es una recta: función lineal (y = mx + n).'), L('És una paràbola: funció quadràtica (y = ax² + bx + c).', 'Es una parábola: función cuadrática (y = ax² + bx + c).'), L('Són dues branques que s\'acosten als eixos sense tocar-los: una hipèrbola, y = k/x.', 'Son dos ramas que se acercan a los ejes sin tocarlos: una hipérbola, y = k/x.')][w], chk: { t: 'kind', w } });
+  }
+
+  // Funció exponencial
+  const bx = (b, x = 'x') => `${b}<sup>${x}</sup>`;
+  function fnExp(L_) {
+    if (L_ <= 1) { const a = pick([1, 2, 3, 5]), b = pick([2, 3]), x = ri(0, 4), r = a * b ** x; return inp(L(`Si f(x) = ${a === 1 ? '' : a + ' · '}${bx(b)}, quant val <b>f(${x})</b>?`, `Si f(x) = ${a === 1 ? '' : a + ' · '}${bx(b)}, ¿cuánto vale <b>f(${x})</b>?`), r, { ex: L(`f(${x}) = ${a === 1 ? '' : a + ' · '}${b}${sup(x)} = ${a === 1 ? '' : a + ' · '}${b ** x} = ${r}.${x === 0 ? ' Recorda: qualsevol nombre elevat a 0 val 1.' : ''}`, `f(${x}) = ${a === 1 ? '' : a + ' · '}${b}${sup(x)} = ${a === 1 ? '' : a + ' · '}${b ** x} = ${r}.${x === 0 ? ' Recuerda: cualquier número elevado a 0 vale 1.' : ''}`), chk: { t: 'val', a, b, x } }); }
+    if (L_ === 2) {
+      const B = pick([['2', 2], ['3', 3], ['5', 5], ['1,5', 1.5], ['0,5', .5], ['0,2', .2], ['0,8', .8], [`(${frac(1, 3)})`, 1 / 3]]), up = B[1] > 1, T = [L('Creixent', 'Creciente'), L('Decreixent', 'Decreciente')];
+      return mc(L(`La funció <b>y = ${bx(B[0])}</b> és creixent o decreixent?`, `¿La función <b>y = ${bx(B[0])}</b> es creciente o decreciente?`), T[up ? 0 : 1], [T[up ? 1 : 0]], { fixed: T, big: true, ex: L(`La base és ${B[0].replace(/<[^>]+>/g, '').replace(/\(|\)/g, '')}, ${up ? 'més gran que 1: cada vegada que x augmenta, y es multiplica per un nombre més gran que 1 i creix.' : 'entre 0 i 1: cada vegada que x augmenta, y es multiplica per un nombre més petit que 1 i decreix.'}`, `La base es ${B[0].replace(/<[^>]+>/g, '').replace(/\(|\)/g, '')}, ${up ? 'mayor que 1: cada vez que x aumenta, y se multiplica por un número mayor que 1 y crece.' : 'entre 0 y 1: cada vez que x aumenta, y se multiplica por un número menor que 1 y decrece.'}`), chk: { t: 'mono', b: B[1] } });
+    }
+    if (L_ === 3) {
+      const a = pick([1, 2, 3, 4, 5]), b = pick([2, 3, 4]), xs = [0, 1, 2, 3], ys = xs.map(x => a * b ** x), vis = tabSVG(['x', ...xs.map(String)], [['y', ...ys.map(v => fmt(v))]], { minW: 44 });
+      if (Math.random() < .5) return inp(L('Aquesta taula és d\'una funció exponencial. Per quin nombre es multiplica y cada vegada que x augmenta 1?', 'Esta tabla es de una función exponencial. ¿Por qué número se multiplica y cada vez que x aumenta 1?'), b, { vis, ex: L(`${ys[1]} : ${ys[0]} = ${b}, ${ys[2]} : ${ys[1]} = ${b}… La base és ${b}.`, `${ys[1]} : ${ys[0]} = ${b}, ${ys[2]} : ${ys[1]} = ${b}… La base es ${b}.`), chk: { t: 'base', xs, ys } });
+      const ok = `y = ${a === 1 ? '' : a + ' · '}${bx(b)}`;
+      return mc(L('Quina expressió correspon a la taula?', '¿Qué expresión corresponde a la tabla?'), ok, [`y = ${b === a ? a + 1 : b} · ${bx(a === 1 ? 2 : a)}`, `y = ${a} + ${b}x`, `y = ${a === 1 ? '' : a + ' · '}x${sup(b)}`].filter(o => o !== ok), { vis, list: true, ex: L(`Quan x = 0, y = ${a} (el valor inicial). Cada pas es multiplica per ${b}: y = ${a} · ${b}ˣ.`, `Cuando x = 0, y = ${a} (el valor inicial). Cada paso se multiplica por ${b}: y = ${a} · ${b}ˣ.`), chk: { t: 'expr', xs, ys } });
+    }
+    if (L_ === 4) {
+      const c = ri(0, 2);
+      if (c === 0) { const a = pick([100, 200, 250, 300, 500]), t = ri(3, 6), r = a * 2 ** t; return inp(L(`Un cultiu comença amb ${a} bacteris i el nombre es duplica cada hora. Quants bacteris hi haurà al cap de ${t} hores?`, `Un cultivo empieza con ${a} bacterias y el número se duplica cada hora. ¿Cuántas bacterias habrá al cabo de ${t} horas?`), r, { long: true, ex: L(`N = ${a} · 2${sup(t)} = ${a} · ${2 ** t} = ${fmt(r)}.`, `N = ${a} · 2${sup(t)} = ${a} · ${2 ** t} = ${fmt(r)}.`), chk: { t: 'grow', a, b: 2, n: t } }); }
+      if (c === 1) { const a = pick([500, 1000, 2500, 5000, 10000]), p = pick([10, 20, 50]), t = ri(2, 3), r = +(a * (1 - p / 100) ** t).toFixed(2); return dinp(L(`Un aparell de ${fmt(a)} € perd un ${p} % del valor cada any. Quant valdrà al cap de ${t} anys?`, `Un aparato de ${fmt(a)} € pierde un ${p} % de su valor cada año. ¿Cuánto valdrá al cabo de ${t} años?`), r, { unit: '€', long: true, ex: L(`Cada any en queda el ${100 - p} %: ${fmt(a)} · ${fmtD(1 - p / 100)}${sup(t)} = ${euro(r)}.`, `Cada año queda el ${100 - p} %: ${fmt(a)} · ${fmtD(1 - p / 100)}${sup(t)} = ${euro(r)}.`), chk: { t: 'grow', a, b: 1 - p / 100, n: t } }); }
+      const a = pick([1000, 2000, 5000, 10000]), p = pick([10, 20]), t = ri(2, 3), r = +(a * (1 + p / 100) ** t).toFixed(2);
+      return dinp(L(`Un poble té ${fmt(a)} habitants i la població creix un ${p} % cada any. Quants habitants tindrà al cap de ${t} anys?`, `Un pueblo tiene ${fmt(a)} habitantes y la población crece un ${p} % cada año. ¿Cuántos habitantes tendrá al cabo de ${t} años?`), r, { long: true, ex: L(`Cada any es multiplica per ${fmtD(1 + p / 100)}: ${fmt(a)} · ${fmtD(1 + p / 100)}${sup(t)} = ${fmtD(r)}.`, `Cada año se multiplica por ${fmtD(1 + p / 100)}: ${fmt(a)} · ${fmtD(1 + p / 100)}${sup(t)} = ${fmtD(r)}.`), chk: { t: 'grow', a, b: 1 + p / 100, n: t } });
+    }
+    const G = [[`y = ${bx(2)}`, x => 2 ** x], [`y = (${frac(1, 2)})<sup>x</sup>`, x => .5 ** x], ['y = 2x', x => 2 * x], ['y = x²', x => x * x]], w = ri(0, 1);
+    const mk = f => planeSVG({ x0: -3, x1: 3, y0: -2, y1: 8, u: 20, curves: [{ f }] });
+    return mc(L(`Quina gràfica correspon a <b>${G[w][0]}</b>?`, `¿Qué gráfica corresponde a <b>${G[w][0]}</b>?`), mk(G[w][1]), G.filter((_, i) => i !== w).map(g => mk(g[1])), { pics: true, ex: w === 0 ? L('y = 2ˣ passa per (0, 1), creix cada vegada més de pressa cap a la dreta i a l\'esquerra s\'acosta a 0 sense arribar-hi.', 'y = 2ˣ pasa por (0, 1), crece cada vez más deprisa hacia la derecha y a la izquierda se acerca a 0 sin llegar.') : L('y = (1/2)ˣ passa per (0, 1) i decreix: cada pas a la dreta la y es fa la meitat.', 'y = (1/2)ˣ pasa por (0, 1) y decrece: cada paso a la derecha la y se hace la mitad.'), chk: { t: 'pickExp', w } });
+  }
+
+  // Creix o decreix? Màxims i mínims
+  function monoFn() {
+    for (let t = 0; t < 300; t++) {
+      const xs = [-6, ri(-4, -2), ri(-1, 2), ri(3, 4), 6], up = Math.random() < .5, ys = [];
+      let y = ri(-4, 4); ys.push(y);
+      for (let i = 1; i < xs.length; i++) { const dir = (i % 2 === 1) === up ? 1 : -1; y += dir * ri(1, 4); ys.push(y); }
+      if (ys.some(v => v < -5 || v > 5)) continue;
+      const mx = Math.max(...ys), mn = Math.min(...ys);
+      if (ys.filter(v => v === mx).length > 1 || ys.filter(v => v === mn).length > 1) continue;
+      return { xs, ys, up };
+    }
+    return null;
+  }
+  function fnMono(L_) {
+    if (L_ >= 5) {
+      if (Math.random() < .5) {
+        const k = ri(0, 2), T = [L('Creixent', 'Creciente'), L('Decreixent', 'Decreciente')];
+        const [s, up] = k === 0 ? (m => [`y = ${lin(m, ri(-5, 5))}`, m > 0])(pick([-3, -2, 2, 3, -1])) : k === 1 ? (b => [`y = ${bx(b[0])}`, b[1] > 1])(pick([['3', 3], ['0,5', .5], ['1,2', 1.2], ['0,9', .9]])) : (m => [`y = ${fmt(m)} − ${Math.abs(m) === 1 ? '' : Math.abs(m)}x`.replace('− x', '− x'), false])(ri(1, 9));
+        return mc(L(`La funció <b>${s}</b> és creixent o decreixent?`, `¿La función <b>${s}</b> es creciente o decreciente?`), T[up ? 0 : 1], [T[up ? 1 : 0]], { fixed: T, big: true, ex: k === 1 ? L('Una exponencial creix si la base és més gran que 1 i decreix si és entre 0 i 1.', 'Una exponencial crece si la base es mayor que 1 y decrece si está entre 0 y 1.') : L('Una recta creix si el pendent (el número que multiplica la x) és positiu i decreix si és negatiu.', 'Una recta crece si la pendiente (el número que multiplica la x) es positiva y decrece si es negativa.'), chk: { t: 'formula', up, s } });
+      }
+      const h = ri(-4, 4), a = pick([1, -1, 2]), k = ri(-5, 5), b = -2 * a * h, c = a * h * h + k;
+      return ninp(L(`La paràbola <b>y = ${poly(a, b, c)}</b> té el ${a > 0 ? 'mínim' : 'màxim'} en el vèrtex. Per a quin valor de <b>x</b>?`, `La parábola <b>y = ${poly(a, b, c)}</b> tiene el ${a > 0 ? 'mínimo' : 'máximo'} en el vértice. ¿Para qué valor de <b>x</b>?`), h, { ex: L(`x = −b / 2a = ${fmt(-b)} / ${2 * a} = ${fmt(h)}. ${a > 0 ? 'Com que a > 0, la paràbola s\'obre cap amunt i el vèrtex és un mínim.' : 'Com que a < 0, la paràbola s\'obre cap avall i el vèrtex és un màxim.'}`, `x = −b / 2a = ${fmt(-b)} / ${2 * a} = ${fmt(h)}. ${a > 0 ? 'Como a > 0, la parábola se abre hacia arriba y el vértice es un mínimo.' : 'Como a < 0, la parábola se abre hacia abajo y el vértice es un máximo.'}`), chk: { t: 'vertex', a, b, c } });
+    }
+    const F = monoFn(); if (!F) return fnMono(L_);
+    const { xs, ys } = F, pts = xs.map((x, i) => [x, ys[i]]), vis = planeSVG({ poly: pts });
+    if (L_ <= 1) {
+      const i = ri(0, 3), T = [L('Creix', 'Crece'), L('Decreix', 'Decrece'), L('És constant', 'Es constante')], w = ys[i + 1] > ys[i] ? 0 : 1;
+      return mc(L(`Entre x = ${fmt(xs[i])} i x = ${fmt(xs[i + 1])}, la funció creix o decreix?`, `Entre x = ${fmt(xs[i])} y x = ${fmt(xs[i + 1])}, ¿la función crece o decrece?`), T[w], T.filter((_, k) => k !== w), { fixed: T, vis, ex: L(`D'esquerra a dreta, la gràfica ${w === 0 ? 'puja: creix' : 'baixa: decreix'} (y passa de ${fmt(ys[i])} a ${fmt(ys[i + 1])}).`, `De izquierda a derecha, la gráfica ${w === 0 ? 'sube: crece' : 'baja: decrece'} (y pasa de ${fmt(ys[i])} a ${fmt(ys[i + 1])}).`), chk: { t: 'seg', i } });
+    }
+    const imx = ys.indexOf(Math.max(...ys)), imn = ys.indexOf(Math.min(...ys));
+    if (L_ === 2) return ninp(L('Quin és el <b>valor màxim</b> que pren la funció (la y més alta)?', '¿Cuál es el <b>valor máximo</b> que toma la función (la y más alta)?'), ys[imx], { vis, ex: L(`El punt més alt de la gràfica és ${cxy(xs[imx], ys[imx])}: el màxim val ${fmt(ys[imx])}.`, `El punto más alto de la gráfica es ${cxy(xs[imx], ys[imx])}: el máximo vale ${fmt(ys[imx])}.`), chk: { t: 'max' } });
+    if (L_ === 3) return ninp(L('Per a quin valor de <b>x</b> la funció pren el valor <b>mínim</b>?', '¿Para qué valor de <b>x</b> la función toma el valor <b>mínimo</b>?'), xs[imn], { vis, ex: L(`El punt més baix és ${cxy(xs[imn], ys[imn])}: el mínim és a x = ${fmt(xs[imn])}.`, `El punto más bajo es ${cxy(xs[imn], ys[imn])}: el mínimo está en x = ${fmt(xs[imn])}.`), chk: { t: 'argmin' } });
+    // interval de creixement (amb la forma baixa-puja-baixa n'hi ha un de sol al mig)
+    const inc = []; for (let i = 0; i < 4; i++) if (ys[i + 1] > ys[i]) inc.push(i);
+    const want = F.up ? L("En quin d'aquests intervals la funció és <b>decreixent</b>?", '¿En cuál de estos intervalos la función es <b>decreciente</b>?') : L("En quin d'aquests intervals la funció és <b>creixent</b>?", '¿En cuál de estos intervalos la función es <b>creciente</b>?');
+    const seg = F.up ? [1, 2] : [1, 2], okI = `(${fmt(xs[seg[0]])}, ${fmt(xs[seg[1]])})`, cand = [`(${fmt(xs[0])}, ${fmt(xs[1])})`, `(${fmt(xs[2])}, ${fmt(xs[3])})`, `(${fmt(xs[0])}, ${fmt(xs[2])})`, `(${fmt(xs[3])}, ${fmt(xs[4])})`].filter(s => s !== okI);
+    return mc(want, okI, cand, { vis, ex: L(`Del x = ${fmt(xs[1])} al x = ${fmt(xs[2])} la gràfica ${F.up ? 'baixa' : 'puja'} tota l'estona. Els intervals s'escriuen amb les x, d'esquerra a dreta.`, `Del x = ${fmt(xs[1])} al x = ${fmt(xs[2])} la gráfica ${F.up ? 'baja' : 'sube'} todo el rato. Los intervalos se escriben con las x, de izquierda a derecha.`), chk: { t: 'interval', xs, ys, dec: F.up } });
+  }
+
+  Object.assign(EX, {
+    'e.cart4': L_ => eCart(L_),
+    'fn.graph': (L_, A) => fnGraph(L_, A),
+    'fn.inv': L_ => fnInv(L_),
+    'fn.exp': L_ => fnExp(L_),
+    'fn.mono': L_ => fnMono(L_)
+  });
+
+  /* ================= 5. Fraccions, decimals, percentatges i la recta numèrica ================= */
+  const fq = (n, d) => fracS(n, d);
+  // fraccions amb decimal exacte (denominador amb només 2 i 5)
+  const EXD = [2, 4, 5, 8, 10, 20, 25, 50];
+  const irr = d => { let n; do n = ri(1, 2 * d - 1); while (gcd(n, d) !== 1 || n === d); return n; };
+  function fdpConv(L_) {
+    if (L_ <= 1) { const d = pick(EXD), n = irr(d); return dinp(L(`Escriu la fracció en forma <b>decimal</b>:`, `Escribe la fracción en forma <b>decimal</b>:`), n / d, { vis: eqv(`${frac(n, d)} = ${BOX}`), ex: L(`Una fracció és una divisió: ${n} : ${d} = ${fmtD(n / d)}.`, `Una fracción es una división: ${n} : ${d} = ${fmtD(n / d)}.`), chk: { t: 'f2d', n, d } }); }
+    if (L_ === 2) {
+      const k = ri(0, 3);
+      if (k === 0) { const p = ri(1, 99), v = p / 100; return inp(L(`Quin percentatge és <b>${fmtD(v)}</b>?`, `¿Qué porcentaje es <b>${fmtD(v)}</b>?`), p, { unit: '%', ex: L(`Per passar de decimal a percentatge es multiplica per 100: ${fmtD(v)} · 100 = ${p} %.`, `Para pasar de decimal a porcentaje se multiplica por 100: ${fmtD(v)} · 100 = ${p} %.`), chk: { t: 'd2p', v } }); }
+      if (k === 1) { const d = pick([2, 4, 5, 10, 20, 25, 50]), n = ri(1, d - 1); return dinp(L(`Quin percentatge és ${frac(n, d)}?`, `¿Qué porcentaje es ${frac(n, d)}?`), n / d * 100, { unit: '%', big: true, ex: L(`${n} : ${d} = ${fmtD(n / d)} i per 100: ${fmtD(n / d * 100)} %.`, `${n} : ${d} = ${fmtD(n / d)} y por 100: ${fmtD(n / d * 100)} %.`), chk: { t: 'f2p', n, d } }); }
+      if (k === 2) { const p = ri(1, 150); return dinp(L(`Escriu <b>${pc(p)}</b> en forma decimal.`, `Escribe <b>${pc(p)}</b> en forma decimal.`), p / 100, { ex: L(`${p} % vol dir ${p} de cada 100: ${p} : 100 = ${fmtD(p / 100)}.`, `${p} % quiere decir ${p} de cada 100: ${p} : 100 = ${fmtD(p / 100)}.`), chk: { t: 'p2d', p } }); }
+      const d = pick([2, 4, 5, 10, 20, 25]), n = ri(1, d - 1), [a, b] = simp(n, d), p = n / d * 100;
+      const dis = [[b, a], [a, b + 1], [a + 1, b], [p, 10], [1, a + b]].filter(([x, y]) => Math.abs(x / y - a / b) > 1e-9);
+      return mc(L(`Quina fracció irreductible és el <b>${pc(p)}</b>?`, `¿Qué fracción irreducible es el <b>${pc(p)}</b>?`), fq(a, b), uniqVal(dis).slice(0, 3).map(([x, y]) => fq(x, y)), { big: true, ex: L(`${p} % = ${frac(p, 100)}, i simplificant: ${frac(a, b)}.`, `${p} % = ${frac(p, 100)}, y simplificando: ${frac(a, b)}.`), chk: { t: 'p2f', p } });
+    }
+    if (L_ === 3) {
+      for (let t = 0; t < 300; t++) {
+        const base = ri(10, 90) / 100, V = [];
+        const make = () => { const k = ri(0, 2); if (k === 0) { const d = pick([4, 5, 8, 10, 20, 25]), n = Math.max(1, Math.round((base + (Math.random() - .5) * .3) * d)), [a, b] = simp(n, d); return b === 1 ? null : [a / b, frac(a, b)]; } if (k === 1) { const v = Math.round((base + (Math.random() - .5) * .3) * 100) / 100; return [v, fmtD(v)]; } const p = Math.round((base + (Math.random() - .5) * .3) * 100); return [p / 100, pc(p)]; };
+        while (V.length < 4) { const r = make(); if (r && r[0] > 0 && V.every(([w]) => Math.abs(w - r[0]) > .009)) V.push(r); }
+        if (new Set(V.map(x => x[1].includes('%') ? 'p' : x[1].includes('frac') ? 'f' : 'd')).size < 2) continue;
+        const map = new Map(V), items = shuffle(V.map(x => x[0])), ans = V.map(x => x[0]).sort((a, b) => a - b);
+        return { type: 'order', q: L('Ordena de <b>més petit a més gran</b>:', 'Ordena de <b>menor a mayor</b>:'), items, show: v => map.get(v), ans, ex: L(`Passa-ho tot a decimal per comparar: ${ans.map(v => /frac|%/.test(map.get(v)) ? `${map.get(v)} = ${fmtD(v)}` : map.get(v)).join('; ')}.`, `Pásalo todo a decimal para comparar: ${ans.map(v => /frac|%/.test(map.get(v)) ? `${map.get(v)} = ${fmtD(v)}` : map.get(v)).join('; ')}.`), chk: { t: 'order' } };
+      }
+    }
+    if (L_ === 4) {
+      const d = pick([3, 4, 5, 6, 8, 20, 25]), n = irr(d), v = n / d, eq = Math.random() < .25 && Number.isInteger(v * 100), w = eq ? v : Math.round((v + pick([-1, 1]) * ri(1, 8) / 100) * 100) / 100;
+      if (w <= 0 || (!eq && Math.abs(w - v) < 1e-9)) return fdpConv(L_);
+      const A = frac(n, d), Bd = fmtD(w), same = L('Són iguals', 'Son iguales'), ok = eq ? same : v > w ? A : Bd, vs = Number.isInteger(v * 1000) ? fmtD(v) : fmtDf(v, 3) + '…';
+      return mc(L('Quin nombre és <b>més gran</b>?', '¿Qué número es <b>mayor</b>?'), ok, [A, Bd, same].filter(o => o !== ok), { fixed: [A, Bd, same], big: true, ex: L(`${frac(n, d)} = ${n} : ${d} = ${vs}. ${eq ? `És el mateix nombre que ${Bd}.` : `Comparant-lo amb ${Bd}, el més gran és ${v > w ? frac(n, d) : Bd}.`}`, `${frac(n, d)} = ${n} : ${d} = ${vs}. ${eq ? `Es el mismo número que ${Bd}.` : `Comparándolo con ${Bd}, el mayor es ${v > w ? frac(n, d) : Bd}.`}`), chk: { t: 'cmp', n, d, w } });
+    }
+    if (Math.random() < .5) { const d = pick([3, 6, 7, 9, 11, 12]), n = irr(d), r = Math.round(n / d * 100) / 100; if (Math.abs(n / d * 100 - Math.floor(n / d * 100) - .5) < 1e-6) return fdpConv(L_); return dinp(L(`Escriu ${frac(n, d)} en forma decimal <b>arrodonida a les centèsimes</b>.`, `Escribe ${frac(n, d)} en forma decimal <b>redondeada a las centésimas</b>.`), r, { big: true, ex: L(`${n} : ${d} = ${fmtDf(n / d, 4)}… i arrodonint a les centèsimes: ${fmtDf(r, 2)}.`, `${n} : ${d} = ${fmtDf(n / d, 4)}… y redondeando a las centésimas: ${fmtDf(r, 2)}.`), chk: { t: 'round', n, d } }); }
+    const [p, a, b] = pick([[12.5, 1, 8], [37.5, 3, 8], [62.5, 5, 8], [87.5, 7, 8], [2.5, 1, 40], [7.5, 3, 40], [0.5, 1, 200], [150, 3, 2], [125, 5, 4], [175, 7, 4], [120, 6, 5], [0.2, 1, 500]]);
+    const dis = uniqVal([[b, a], [a, b * 10], [a * 10, b], [Math.round(p), 100], [a + 1, b]].filter(([x, y]) => Math.abs(x / y - a / b) > 1e-9));
+    return mc(L(`Quina fracció irreductible és el <b>${pc(p)}</b>?`, `¿Qué fracción irreducible es el <b>${pc(p)}</b>?`), fq(a, b), dis.slice(0, 3).map(([x, y]) => fq(x, y)), { big: true, ex: L(`${pc(p)} = ${fmtD(p)} : 100 = ${fmtD(p / 100)} = ${frac(a, b)}. Hi ha percentatges més grans que 100 % (més que el total) i més petits que 1 %.`, `${pc(p)} = ${fmtD(p)} : 100 = ${fmtD(p / 100)} = ${frac(a, b)}. Hay porcentajes mayores que 100 % (más que el total) y menores que 1 %.`), chk: { t: 'p2f', p } });
+  }
+  // treu valors repetits (fraccions equivalents) d'una llista [n, d]
+  function uniqVal(list) { const out = []; list.forEach(([x, y]) => { if (y > 0 && x > 0 && out.every(([a, b]) => Math.abs(a / b - x / y) > 1e-9)) out.push([x, y]); }); return out; }
+
+  // Recta numèrica
+  function lineSVG(a, b, step, labs, marks) {
+    const W = 320, x0 = 22, x1 = W - 22, X = v => x0 + (v - a) / (b - a) * (x1 - x0), y = 56, n = Math.round((b - a) / step), isInt = v => Math.abs(v - Math.round(v)) < 1e-9;
+    let s = `<svg viewBox="0 0 ${W} 92" class="vsvg wide" style="width:320px"><line x1="${x0 - 12}" y1="${y}" x2="${x1 + 12}" y2="${y}" stroke="${INK}" stroke-width="2.5"/><path d="M${x1 + 18} ${y} l-8 -4.5 v9 Z" fill="${INK}"/><path d="M${x0 - 18} ${y} l8 -4.5 v9 Z" fill="${INK}"/>`;
+    for (let i = 0; i <= n; i++) { const v = a + i * step, big = step < 1 ? isInt(v) : labs.some(w => Math.abs(w - v) < 1e-9); s += `<line x1="${r1(X(v))}" y1="${y - (big ? 9 : 6)}" x2="${r1(X(v))}" y2="${y + (big ? 9 : 6)}" stroke="${INK}" stroke-width="${big ? 2.2 : 1.4}"/>`; }
+    labs.forEach(v => { s += tt(X(v), y + 26, fmt(v), { a: 'middle', fs: 13, fw: 800 }); });
+    marks.forEach(m => { s += `<path class="mk" d="M${r1(X(m.v))} ${y - 4} l-7 -13 h14 Z" fill="${m.col || '#E24F86'}"/>` + tt(X(m.v), y - 21, m.lab, { a: 'middle', fs: 14, fw: 800, col: m.col || '#E24F86' }); });
+    return s + '</svg>';
+  }
+  function nLine(L_) {
+    if (L_ <= 2) {
+      const st = L_ <= 1 ? 1 : pick([2, 5, 10]), cnt = 12, a = st * ri(-8, -2), b = a + st * cnt, k = ri(1, cnt - 1), v = a + k * st, labs = [];
+      for (let i = 0; i <= cnt; i++) { const w = a + i * st; if (w === 0 || i === 0 || i === cnt || (L_ >= 2 && i % 4 === 0)) labs.push(w); }
+      if (labs.includes(v)) return nLine(L_);
+      const lb = pick(['A', 'P', 'M']), lw = labs.filter(w => w < v).pop(), j = (v - lw) / st;
+      return ninp(L(`Quin nombre marca la lletra <b>${lb}</b>?`, `¿Qué número marca la letra <b>${lb}</b>?`), v, { vis: lineSVG(a, b, st, labs, [{ v, lab: lb }]), ex: L(`Cada marca ${st === 1 ? 'augmenta 1' : `augmenta ${st}`}. Des del ${fmt(lw)} fins a ${lb} hi ha ${j} ${j === 1 ? 'salt' : 'salts'}: ${fmt(lw)} + ${j * st} = ${fmt(v)}.`, `Cada marca ${st === 1 ? 'aumenta 1' : `aumenta ${st}`}. Desde el ${fmt(lw)} hasta ${lb} hay ${j} ${j === 1 ? 'salto' : 'saltos'}: ${fmt(lw)} + ${j * st} = ${fmt(v)}.`), chk: { t: 'int', v } });
+    }
+    if (L_ === 3) {
+      const d = pick([2, 3, 4, 5, 6, 8]), a = pick([0, 0, -1]), b = a + 2, k = ri(1, 2 * d - 1), v = a + k / d;
+      if (Number.isInteger(v)) return nLine(L_);
+      const [p, q] = simp(Math.round(v * d), d), dis = uniqVal([[Math.abs(p), q + 1], [Math.abs(p) + 1, q], [q, Math.abs(p)], [Math.abs(p) - 1 || Math.abs(p) + 2, q]]).map(([x, y]) => [v < 0 ? -x : x, y]).filter(([x, y]) => Math.abs(x / y - v) > 1e-9);
+      return mc(L(`Cada unitat està dividida en <b>${d}</b> parts iguals. Quin nombre marca la lletra <b>A</b>?`, `Cada unidad está dividida en <b>${d}</b> partes iguales. ¿Qué número marca la letra <b>A</b>?`), fq(p, q), dis.slice(0, 3).map(([x, y]) => fq(x, y)), { vis: lineSVG(a, b, 1 / d, [a, a + 1, b], [{ v, lab: 'A' }]), big: true, ex: L(`Cada marca petita val ${frac(1, d)}. A és ${Math.abs(Math.round(v * d))} ${Math.abs(Math.round(v * d)) === 1 ? 'marca' : 'marques'} ${v < 0 ? "a l'esquerra" : 'a la dreta'} del 0: ${fqTxt(Math.round(v * d), d)}${gcd(Math.abs(Math.round(v * d)), d) > 1 ? ` = ${fqTxt(p, q)}` : ''}.`, `Cada marca pequeña vale ${frac(1, d)}. A está ${Math.abs(Math.round(v * d))} ${Math.abs(Math.round(v * d)) === 1 ? 'marca' : 'marcas'} ${v < 0 ? 'a la izquierda' : 'a la derecha'} del 0: ${fqTxt(Math.round(v * d), d)}${gcd(Math.abs(Math.round(v * d)), d) > 1 ? ` = ${fqTxt(p, q)}` : ''}.`), chk: { t: 'frac', v } });
+    }
+    if (L_ === 4) {
+      const d = pick([2, 4, 5, 10]), a = -2, b = 2, k = ri(1, 4 * d - 1), v = a + k / d;
+      if (Number.isInteger(v) || v === 0) return nLine(L_);
+      const dis = [...new Set([-v, v + 1 / d, v - 1 / d, v + 1, v - 1].filter(w => Math.abs(w - v) > 1e-9 && w > -2.001 && w < 2.001).map(w => Math.round(w * 100) / 100))];
+      return mc(L('Quin nombre marca la lletra <b>A</b>?', '¿Qué número marca la letra <b>A</b>?'), fmtD(v), shuffle(dis).slice(0, 3).map(fmtD), { vis: lineSVG(a, b, 1 / d, [-2, -1, 0, 1, 2], [{ v, lab: 'A' }]), big: true, ex: L(`Entre dos enters hi ha ${d} parts: cada marca val ${fmtD(1 / d)}. A = ${fmtD(v)}${v < 0 ? ' (a l\'esquerra del 0, és negatiu)' : ''}.`, `Entre dos enteros hay ${d} partes: cada marca vale ${fmtD(1 / d)}. A = ${fmtD(v)}${v < 0 ? ' (a la izquierda del 0, es negativo)' : ''}.`), chk: { t: 'dec', v } });
+    }
+    const d = pick([2, 3, 4]), vals = [];
+    const target = (() => { let k; do k = ri(-2 * d + 1, 2 * d - 1); while (k % d === 0); return k / d; })();
+    [target, -target, target + 1 / d, target - 1 / d].forEach(w => { if (w > -2 && w < 2 && vals.every(u => Math.abs(u - w) > 1e-9)) vals.push(w); });
+    while (vals.length < 4) { const w = ri(-2 * d + 1, 2 * d - 1) / d; if (vals.every(u => Math.abs(u - w) > 1e-9)) vals.push(w); }
+    const labs = ['A', 'B', 'C', 'D'], ord = shuffle(vals.slice(0, 4)), k = ord.findIndex(w => Math.abs(w - target) < 1e-9), [p, q] = simp(Math.round(target * d), d);
+    return mc(L(`Quina lletra marca el nombre <b>${fqTxtH(p, q)}</b>?`, `¿Qué letra marca el número <b>${fqTxtH(p, q)}</b>?`), labs[k], labs.filter((_, i) => i !== k), { fixed: labs, big: true, vis: lineSVG(-2, 2, 1 / d, [-2, -1, 0, 1, 2], ord.map((w, i) => ({ v: w, lab: labs[i], col: ['#E24F86', '#36A9E1', '#3CC46A', '#FF9A3C'][i] }))), ex: L(`${fqTxt(p, q)} = ${fmtDf(p / q, 2)}${Number.isInteger(p / q * 100) ? '' : '…'}: és ${p < 0 ? 'a l\'esquerra del 0' : 'a la dreta del 0'}, a ${Math.abs(Math.round(target * d))} parts de ${frac(1, d)}. És la ${labs[k]}.`, `${fqTxt(p, q)} = ${fmtDf(p / q, 2)}${Number.isInteger(p / q * 100) ? '' : '…'}: está ${p < 0 ? 'a la izquierda del 0' : 'a la derecha del 0'}, a ${Math.abs(Math.round(target * d))} partes de ${frac(1, d)}. Es la ${labs[k]}.`), chk: { t: 'which', v: target } });
+  }
+  const fqTxt = (p, q) => `${p < 0 ? '−' : ''}${Math.abs(p)}/${q}`;
+  const fqTxtH = (p, q) => `${p < 0 ? '−' : ''}${frac(Math.abs(p), q)}`;
+
+  // Fraccions generatrius
+  const ovl = s => `<span style="text-decoration:overline">${s}</span>`;
+  const decTxt = (ip, pre, per) => `${ip},${pre}${ovl(per)}`;
+  function fdpGen(L_) {
+    if (L_ <= 1) {
+      const d = pick([3, 6, 7, 8, 9, 11, 12, 15, 16, 20, 22, 24, 25, 30, 40, 45]), n = irr(d);
+      let m = d; while (m % 2 === 0) m /= 2; while (m % 5 === 0) m /= 5;
+      const T = [L('Decimal exacte', 'Decimal exacto'), L('Periòdic pur', 'Periódico puro'), L('Periòdic mixt', 'Periódico mixto')], k = m === 1 ? 0 : m === d ? 1 : 2;
+      return mc(L(`Quin tipus de nombre decimal és ${frac(n, d)}?`, `¿Qué tipo de número decimal es ${frac(n, d)}?`), T[k], T.filter((_, i) => i !== k), { fixed: T, ex: L(`${d} = ${factor(d)}. ${k === 0 ? 'Només té els factors 2 i 5: decimal exacte' : k === 1 ? 'No té cap factor 2 ni 5: periòdic pur' : 'Té factors 2 o 5 i també altres: periòdic mixt'} (${n} : ${d} = ${k ? fmtDf(n / d, 4) + '…' : fmtD(n / d)}).`, `${d} = ${factor(d)}. ${k === 0 ? 'Solo tiene los factores 2 y 5: decimal exacto' : k === 1 ? 'No tiene ningún factor 2 ni 5: periódico puro' : 'Tiene factores 2 o 5 y también otros: periódico mixto'} (${n} : ${d} = ${k ? fmtDf(n / d, 4) + '…' : fmtD(n / d)}).`), chk: { t: 'type', n, d } });
+    }
+    let ip, pre, per, num, den, shown;
+    const kind = L_ === 2 ? 'ex' : L_ === 3 ? 'pure' : L_ === 4 ? 'mixed' : pick(['ex', 'pure', 'mixed']);
+    if (kind === 'ex') { const d = pick([4, 5, 8, 20, 25, 40, 50]), n0 = irr(d); ip = Math.floor(n0 / d); pre = String(Math.round((n0 / d - ip) * 1000) / 1000).split('.')[1]; per = ''; den = 10 ** pre.length; num = Math.round(n0 / d * den); shown = fmtD(n0 / d); }
+    else if (kind === 'pure') { ip = ri(0, 2); per = String(pick([ri(1, 8), ri(10, 98)])); if (/^(\d)\1+$/.test(per) || per.endsWith('9')) return fdpGen(L_); pre = ''; den = 10 ** per.length - 1; num = +(ip + per) - ip; shown = decTxt(ip, '', per); }
+    else { ip = ri(0, 2); pre = String(ri(1, 9)); per = String(ri(1, 8)); if (per === pre) return fdpGen(L_); den = 90; num = +(ip + pre + per) - +(ip + pre); shown = decTxt(ip, pre, per); }
+    const [a, b] = simp(num, den), v = a / b, all = String(+(ip + pre + per)), noP = String(+(ip + pre));
+    const cands = kind === 'ex' ? [[num * 10, den], [num, den * 10], [a + 1, b], [b, a]] : kind === 'pure' ? [[+(ip + per), 10 ** per.length], [+(ip + per), 10 ** per.length - 1], [+per, 10 ** per.length], [+(ip + per) + ip, den], [a + 1, b], [a, b + 1]] : [[+all - +noP, 99], [+all - ip, 90], [+all, 90], [+all - +noP, 900], [a + 1, b], [a, b + 1]];
+    const dis = uniqVal(cands.map(([x, y]) => simp(x, y))).filter(([x, y]) => Math.abs(x / y - v) > 1e-9);
+    const top = noP === '0' ? all : `${all} − ${noP}`;
+    const rule = kind === 'ex' ? L(`Un decimal exacte es pot escriure com una fracció decimal: ${shown} = ${frac(num, den)}`, `Un decimal exacto se puede escribir como una fracción decimal: ${shown} = ${frac(num, den)}`) : kind === 'pure' ? L(`Periòdic pur: (nombre sense coma − part entera) dividit per tants 9 com xifres té el període: ${frac(top, den)}`, `Periódico puro: (número sin coma − parte entera) dividido por tantos 9 como cifras tiene el período: ${frac(top, den)}`) : L(`Periòdic mixt: (nombre sense coma − part no periòdica) dividit per tants 9 com xifres té el període i tants 0 com xifres no periòdiques hi ha després de la coma: ${frac(top, den)}`, `Periódico mixto: (número sin coma − parte no periódica) dividido por tantos 9 como cifras tiene el período y tantos 0 como cifras no periódicas hay después de la coma: ${frac(top, den)}`);
+    const tail = `${kind === 'ex' || top === String(num) ? '' : ` = ${frac(num, den)}`}${b === den ? '' : ` = ${frac(a, b)}`}`;
+    return mc(L(`Quina és la <b>fracció generatriu</b> (irreductible) de ${shown}?`, `¿Cuál es la <b>fracción generatriz</b> (irreducible) de ${shown}?`), fq(a, b), dis.slice(0, 3).map(([x, y]) => fq(x, y)), { big: true, ex: `${rule}${tail}.`, chk: { t: kind, ip, pre, per } });
+  }
+
+  Object.assign(EX, {
+    'fdp.conv7': L_ => fdpConv(L_),
+    'n.line7': L_ => nLine(L_),
+    'fdp.gen': L_ => fdpGen(L_)
+  });
+
+  /* ================= 7. Geometria de 1r d'ESO: angles, triangles, quadrilàters i el cercle ================= */
+  const HL = '#E24F86', SH = '#36A9E1';
+  const pt = (cx, cy, r, deg) => [cx + r * Math.cos(deg * Math.PI / 180), cy - r * Math.sin(deg * Math.PI / 180)];
+  const arc = (cx, cy, r, a0, a1, col) => { const [x0, y0] = pt(cx, cy, r, a0), [x1, y1] = pt(cx, cy, r, a1); return `<path d="M${r1(x0)} ${r1(y0)} A${r} ${r} 0 ${a1 - a0 > 180 ? 1 : 0} 0 ${r1(x1)} ${r1(y1)}" fill="none" stroke="${col}" stroke-width="3"/>`; };
+  // Dos angles que sumen 90° o 180°: un rajos des del vèrtex
+  function angPairSVG(a, total) {
+    const cx = total === 90 ? 70 : 150, cy = 140, R = 110, s = [`<svg viewBox="0 0 300 165" class="vsvg wide" style="width:300px">`];
+    const ray = d => { const [x, y] = pt(cx, cy, R, d); return `<line x1="${cx}" y1="${cy}" x2="${r1(x)}" y2="${r1(y)}" stroke="${INK}" stroke-width="3.5" stroke-linecap="round"/>`; };
+    s.push(ray(0), ray(total), `<line x1="${cx}" y1="${cy}" x2="${r1(pt(cx, cy, R, a)[0])}" y2="${r1(pt(cx, cy, R, a)[1])}" stroke="${PRI}" stroke-width="3.5" stroke-linecap="round"/>`);
+    if (total === 90) s.push(`<path d="M${cx + 16} ${cy} V${cy - 16} H${cx}" fill="none" stroke="${INK}" stroke-width="1.8"/>`);
+    s.push(arc(cx, cy, 34, 0, a, SH), arc(cx, cy, 46, a, total, HL));
+    const [lx, ly] = pt(cx, cy, 58, a / 2), [qx, qy] = pt(cx, cy, 70, (a + total) / 2);
+    s.push(tt(lx + (total === 90 ? 6 : 0), ly + 5, `${a}°`, { a: 'middle', fs: 15, fw: 800, col: '#1B6FA3' }), tt(qx, qy + 5, '?', { a: 'middle', fs: 18, fw: 900, col: HL }));
+    return s.join('') + '</svg>';
+  }
+  // Dues rectes que es tallen: un angle conegut i un de marcat
+  function crossSVG(a, which) {
+    const cx = 150, cy = 80, R = 120, s = [`<svg viewBox="0 0 300 160" class="vsvg wide" style="width:300px">`];
+    const ln = d => { const [x0, y0] = pt(cx, cy, R, d), [x1, y1] = pt(cx, cy, R, d + 180); return `<line x1="${r1(x0)}" y1="${r1(y0)}" x2="${r1(x1)}" y2="${r1(y1)}" stroke="${INK}" stroke-width="3.5" stroke-linecap="round"/>`; };
+    s.push(ln(0), ln(a), arc(cx, cy, 30, 0, a, SH));
+    const [lx, ly] = pt(cx, cy, 48, a / 2); s.push(tt(lx + 8, ly + 5, `${a}°`, { a: 'middle', fs: 15, fw: 800, col: '#1B6FA3' }));
+    const [f, t] = which === 'opp' ? [180, 180 + a] : [a, 180];
+    s.push(arc(cx, cy, 40, f, t, HL)); const [qx, qy] = pt(cx, cy, 58, (f + t) / 2); s.push(tt(qx, qy + 6, '?', { a: 'middle', fs: 18, fw: 900, col: HL }));
+    return s.join('') + '</svg>';
+  }
+  const NGON = { 3: ['triangle', 'triángulo'], 4: ['quadrilàter', 'cuadrilátero'], 5: ['pentàgon', 'pentágono'], 6: ['hexàgon', 'hexágono'], 7: ['heptàgon', 'heptágono'], 8: ['octàgon', 'octógono'], 9: ['enneàgon', 'eneágono'], 10: ['decàgon', 'decágono'], 12: ['dodecàgon', 'dodecágono'] };
+  const ngon = n => L(...NGON[n]);
+  function eAng(L_) {
+    if (L_ <= 1) {
+      const sup = Math.random() < .5, T = sup ? 180 : 90, a = ri(sup ? 20 : 10, T - (sup ? 20 : 10)), nm = sup ? L('suplementari', 'suplementario') : L('complementari', 'complementario');
+      return inp(L(`Quant fa l'angle <b>${nm}</b> d'un angle de ${a}°?`, `¿Cuánto mide el ángulo <b>${nm}</b> de un ángulo de ${a}°?`), T - a, { unit: '°', vis: angPairSVG(a, T), ex: L(`Dos angles ${sup ? 'suplementaris sumen 180° (un angle pla)' : 'complementaris sumen 90° (un angle recte)'}: ${T} − ${a} = ${T - a}°.`, `Dos ángulos ${sup ? 'suplementarios suman 180° (un ángulo llano)' : 'complementarios suman 90° (un ángulo recto)'}: ${T} − ${a} = ${T - a}°.`), chk: { t: 'pair', a, T } });
+    }
+    if (L_ === 2) {
+      const a = ri(25, 155), w = pick(['opp', 'adj']), ans = w === 'opp' ? a : 180 - a;
+      if (Math.abs(a - 90) < 6) return eAng(L_);
+      return inp(L("Dues rectes es tallen. Quant fa l'angle marcat amb l'interrogant?", 'Dos rectas se cortan. ¿Cuánto mide el ángulo marcado con el interrogante?'), ans, { unit: '°', vis: crossSVG(a, w), ex: w === 'opp' ? L(`Són angles oposats pel vèrtex: són iguals, ${a}°.`, `Son ángulos opuestos por el vértice: son iguales, ${a}°.`) : L(`Són angles consecutius sobre una recta: sumen 180°. 180 − ${a} = ${180 - a}°.`, `Son ángulos consecutivos sobre una recta: suman 180°. 180 − ${a} = ${180 - a}°.`), chk: { t: 'cross', a, w } });
+    }
+    if (L_ === 3) {
+      const sup = Math.random() < .5, T = sup ? 180 : 90;
+      if (Math.random() < .5) { const k = pick([2, 3, 4, 5]); if (T % (k + 1)) return eAng(L_); const x = T / (k + 1); return inp(L(`Un angle fa ${k === 2 ? 'el doble' : k === 3 ? 'el triple' : k === 4 ? 'el quàdruple' : 'cinc vegades'} que el seu ${sup ? 'suplementari' : 'complementari'}. Quant fa l'angle <b>petit</b>?`, `Un ángulo mide ${k === 2 ? 'el doble' : k === 3 ? 'el triple' : k === 4 ? 'el cuádruple' : 'cinco veces'} que su ${sup ? 'suplementario' : 'complementario'}. ¿Cuánto mide el ángulo <b>pequeño</b>?`), x, { unit: '°', long: true, ex: L(`Si el petit fa x, el gran fa ${k}x i sumen ${T}°: ${k + 1}x = ${T} → x = ${x}°.`, `Si el pequeño mide x, el grande mide ${k}x y suman ${T}°: ${k + 1}x = ${T} → x = ${x}°.`), chk: { t: 'kx', k, T } }); }
+      const d = 2 * ri(3, T === 90 ? 20 : 40), x = (T - d) / 2;
+      return inp(L(`Dos angles ${sup ? 'suplementaris' : 'complementaris'} es diferencien en ${d}°. Quant fa el <b>gran</b>?`, `Dos ángulos ${sup ? 'suplementarios' : 'complementarios'} se diferencian en ${d}°. ¿Cuánto mide el <b>grande</b>?`), x + d, { unit: '°', long: true, ex: L(`Si el petit fa x, el gran fa x + ${d}: 2x + ${d} = ${T} → x = ${x}°, i el gran, ${x + d}°.`, `Si el pequeño mide x, el grande mide x + ${d}: 2x + ${d} = ${T} → x = ${x}°, y el grande, ${x + d}°.`), chk: { t: 'diff', d, T } });
+    }
+    if (L_ === 4) { const n = pick([4, 5, 6, 7, 8, 9, 10, 12]); return inp(L(`Quant sumen els angles interiors d'un <b>${ngon(n)}</b> (${n} costats)?`, `¿Cuánto suman los ángulos interiores de un <b>${ngon(n)}</b> (${n} lados)?`), (n - 2) * 180, { unit: '°', vis: shapeSVG('p' + n, n, pick(COLS)), ex: L(`Des d'un vèrtex es pot dividir en ${n - 2} triangles, i cada triangle suma 180°: (${n} − 2) · 180 = ${(n - 2) * 180}°.`, `Desde un vértice se puede dividir en ${n - 2} triángulos, y cada triángulo suma 180°: (${n} − 2) · 180 = ${(n - 2) * 180}°.`), chk: { t: 'sum', n } }); }
+    if (Math.random() < .5) { const n = pick([3, 4, 5, 6, 8, 9, 10, 12]); return inp(L(`Quant fa <b>cada angle</b> interior d'un ${ngon(n)} <b>regular</b>?`, `¿Cuánto mide <b>cada ángulo</b> interior de un ${ngon(n)} <b>regular</b>?`), (n - 2) * 180 / n, { unit: '°', vis: shapeSVG('p' + n, n, pick(COLS)), ex: L(`Tots els angles són iguals: (${n} − 2) · 180 : ${n} = ${(n - 2) * 180} : ${n} = ${(n - 2) * 180 / n}°.`, `Todos los ángulos son iguales: (${n} − 2) · 180 : ${n} = ${(n - 2) * 180} : ${n} = ${(n - 2) * 180 / n}°.`), chk: { t: 'reg', n } }); }
+    const n = pick([4, 5]), S = (n - 2) * 180, known = []; let rest = S;
+    for (let i = 0; i < n - 1; i++) { const v = ri(60, 140); known.push(v); rest -= v; }
+    if (rest < 30 || rest > 170) return eAng(L_);
+    return inp(L(`Un ${ngon(n)} té ${n - 1} angles de ${known.slice(0, -1).join('°, ')}° i ${known[known.length - 1]}°. Quant fa l'angle que falta?`, `Un ${ngon(n)} tiene ${n - 1} ángulos de ${known.slice(0, -1).join('°, ')}° y ${known[known.length - 1]}°. ¿Cuánto mide el ángulo que falta?`), rest, { unit: '°', long: true, ex: L(`Els angles d'un ${ngon(n)} sumen ${S}°: ${S} − (${known.join(' + ')}) = ${rest}°.`, `Los ángulos de un ${ngon(n)} suman ${S}°: ${S} − (${known.join(' + ')}) = ${rest}°.`), chk: { t: 'miss', n, known } });
+  }
+
+  // Triangles i quadrilàters
+  const polySVG7 = (P, o = {}) => {
+    const xs = P.map(p => p[0]), ys = P.map(p => p[1]), mx = Math.min(...xs), Mx = Math.max(...xs), my = Math.min(...ys), My = Math.max(...ys);
+    const sc = Math.min(220 / (Mx - mx || 1), 120 / (My - my || 1)), X = x => 40 + (x - mx) * sc, Y = y => 20 + (My - y) * sc, W = (Mx - mx) * sc + 80, H = (My - my) * sc + 40;
+    let s = `<svg viewBox="0 0 ${r1(W)} ${r1(H)}" class="vsvg wide" style="width:${Math.round(Math.min(280, W))}px"><polygon class="pg" points="${P.map(p => `${r1(X(p[0]))},${r1(Y(p[1]))}`).join(' ')}" fill="#E8F5FE" stroke="${SH}" stroke-width="3.5" stroke-linejoin="round"/>`;
+    (o.labs || []).forEach((lb, i) => { if (!lb) return; const a = P[i], b = P[(i + 1) % P.length], mxp = (X(a[0]) + X(b[0])) / 2, myp = (Y(a[1]) + Y(b[1])) / 2, cxp = P.reduce((u, p) => u + X(p[0]), 0) / P.length, cyp = P.reduce((u, p) => u + Y(p[1]), 0) / P.length, dx = mxp - cxp, dy = myp - cyp, dl = Math.hypot(dx, dy) || 1; s += tt(mxp + dx / dl * 16, myp + dy / dl * 16 + 5, lb, { a: 'middle', fs: 14, fw: 800 }); });
+    (o.ticks || []).forEach((k, i) => { if (!k) return; const a = P[i], b = P[(i + 1) % P.length], mxp = (X(a[0]) + X(b[0])) / 2, myp = (Y(a[1]) + Y(b[1])) / 2, ang = Math.atan2(Y(b[1]) - Y(a[1]), X(b[0]) - X(a[0])), nx = -Math.sin(ang), ny = Math.cos(ang), tx = Math.cos(ang), ty = Math.sin(ang); for (let j = 0; j < k; j++) { const off = (j - (k - 1) / 2) * 5; s += `<line x1="${r1(mxp + tx * off - nx * 7)}" y1="${r1(myp + ty * off - ny * 7)}" x2="${r1(mxp + tx * off + nx * 7)}" y2="${r1(myp + ty * off + ny * 7)}" stroke="${INK}" stroke-width="2"/>`; } });
+    (o.right || []).forEach(i => { const n = P.length, p = P[i], a = P[(i + n - 1) % n], b = P[(i + 1) % n], u = [X(a[0]) - X(p[0]), Y(a[1]) - Y(p[1])], v = [X(b[0]) - X(p[0]), Y(b[1]) - Y(p[1])], lu = Math.hypot(...u), lv = Math.hypot(...v), q = 13; s += `<path d="M${r1(X(p[0]) + u[0] / lu * q)} ${r1(Y(p[1]) + u[1] / lu * q)} L${r1(X(p[0]) + u[0] / lu * q + v[0] / lv * q)} ${r1(Y(p[1]) + u[1] / lu * q + v[1] / lv * q)} L${r1(X(p[0]) + v[0] / lv * q)} ${r1(Y(p[1]) + v[1] / lv * q)}" fill="none" stroke="${INK}" stroke-width="1.8"/>`; });
+    return s + '</svg>';
+  };
+  // triangle a partir dels tres costats (a = base)
+  const triPts = (a, b, c) => { const x = (a * a + c * c - b * b) / (2 * a), y = Math.sqrt(Math.max(0, c * c - x * x)); return [[0, 0], [a, 0], [x, y]]; };
+  const QD = () => ({ sq: L('Quadrat', 'Cuadrado'), re: L('Rectangle', 'Rectángulo'), rh: L('Rombe', 'Rombo'), rb: L('Romboide', 'Romboide'), tz: L('Trapezi', 'Trapecio'), td: L('Trapezoide', 'Trapezoide') });
+  function quadShape(k) {
+    const r = (a, b) => ri(a, b);
+    if (k === 'sq') { const a = r(3, 5); return { P: [[0, 0], [a, 0], [a, a], [0, a]], ticks: [1, 1, 1, 1], right: [0, 1, 2, 3] }; }
+    if (k === 're') { const a = r(5, 8), b = r(2, 4); return { P: [[0, 0], [a, 0], [a, b], [0, b]], ticks: [1, 2, 1, 2], right: [0, 1, 2, 3] }; }
+    if (k === 'rh') { const d1 = r(6, 9), d2 = r(3, 5); if (d1 === d2) return quadShape(k); return { P: [[0, d2 / 2], [d1 / 2, 0], [d1, d2 / 2], [d1 / 2, d2]], ticks: [1, 1, 1, 1], right: [] }; }
+    if (k === 'rb') { const a = r(5, 7), h = r(2, 3), s = r(2, 3); return { P: [[0, 0], [a, 0], [a + s, h], [s, h]], ticks: [1, 2, 1, 2], right: [] }; }
+    if (k === 'tz') { const B = r(7, 9), b = r(3, 5), h = r(2, 4), off = Math.random() < .5 ? 0 : r(1, B - b - 1); return { P: [[0, 0], [B, 0], [off + b, h], [off, h]], ticks: [0, 0, 0, 0], right: off === 0 ? [0, 3] : [], par: true }; }
+    // trapezoide: cap parell de costats paral·lels (si en surt algun, se'n genera un altre)
+    const P = [[0, 0], [r(6, 8), r(-1, 1) * .5], [r(5, 7), r(3, 4)], [r(1, 2), r(2, 3)]], sd = i => [P[(i + 1) % 4][0] - P[i][0], P[(i + 1) % 4][1] - P[i][1]], par = (u, v) => Math.abs(u[0] * v[1] - u[1] * v[0]) / (Math.hypot(...u) * Math.hypot(...v)) < .08;
+    if (par(sd(0), sd(2)) || par(sd(1), sd(3))) return quadShape(k);
+    return { P, ticks: [0, 0, 0, 0], right: [] };
+  }
+  function eClass(L_) {
+    if (L_ <= 1) {
+      const k = ri(0, 2), T = [L('Equilàter', 'Equilátero'), L('Isòsceles', 'Isósceles'), L('Escalè', 'Escaleno')];
+      let a, b, c; for (let t = 0; t < 200; t++) { a = ri(4, 9); b = k === 0 ? a : ri(4, 9); c = k === 0 ? a : k === 1 ? b : ri(4, 9); if (k === 1 && a === b) continue; if (k === 2 && new Set([a, b, c]).size < 3) continue; if (a < b + c && b < a + c && c < a + b) break; }
+      const P = triPts(a, b, c), sh = shuffle([0, 1, 2]);
+      return mc(L('Segons els costats, quin tipus de triangle és?', 'Según los lados, ¿qué tipo de triángulo es?'), T[k], T.filter((_, i) => i !== k), { fixed: T, vis: polySVG7(P, { labs: [`${a} cm`, `${b} cm`, `${c} cm`] }), ex: [L('Els tres costats són iguals: equilàter.', 'Los tres lados son iguales: equilátero.'), L('Té dos costats iguals: isòsceles.', 'Tiene dos lados iguales: isósceles.'), L('Els tres costats són diferents: escalè.', 'Los tres lados son distintos: escaleno.')][k], chk: { t: 'sides', a, b, c, sh } });
+    }
+    if (L_ === 2) {
+      const k = ri(0, 2), T = [L('Acutangle', 'Acutángulo'), L('Rectangle', 'Rectángulo'), L('Obtusangle', 'Obtusángulo')];
+      let A; for (let t = 0; t < 200; t++) { const x = k === 1 ? 90 : k === 2 ? ri(95, 150) : ri(50, 85), y = ri(20, 180 - x - 20), z = 180 - x - y; A = shuffle([x, y, z]); if (k === 0 && Math.max(...A) >= 90) continue; if (A.every(v => v >= 15)) break; }
+      return mc(L(`Els angles d'un triangle fan ${A[0]}°, ${A[1]}° i ${A[2]}°. Segons els angles, quin tipus de triangle és?`, `Los ángulos de un triángulo miden ${A[0]}°, ${A[1]}° y ${A[2]}°. Según los ángulos, ¿qué tipo de triángulo es?`), T[k], T.filter((_, i) => i !== k), { fixed: T, ex: [L('Tots tres angles són aguts (menys de 90°): acutangle.', 'Los tres ángulos son agudos (menos de 90°): acutángulo.'), L('Té un angle recte (90°): rectangle.', 'Tiene un ángulo recto (90°): rectángulo.'), L('Té un angle obtús (més de 90°): obtusangle.', 'Tiene un ángulo obtuso (más de 90°): obtusángulo.')][k], chk: { t: 'angles', A } });
+    }
+    const Q = QD(), keys = Object.keys(Q);
+    if (L_ === 3) {
+      const k = pick(keys), S = quadShape(k), others = shuffle(keys.filter(x => x !== k)).slice(0, 3);
+      return mc(L('Quin quadrilàter és? Les ratlletes marquen els costats iguals i el quadradet, els angles rectes.', '¿Qué cuadrilátero es? Las rayitas marcan los lados iguales y el cuadradito, los ángulos rectos.'), Q[k], others.map(x => Q[x]), { vis: polySVG7(S.P, { ticks: S.ticks, right: S.right }), ex: { sq: L('Quatre costats iguals i quatre angles rectes: quadrat.', 'Cuatro lados iguales y cuatro ángulos rectos: cuadrado.'), re: L('Quatre angles rectes i els costats oposats iguals: rectangle.', 'Cuatro ángulos rectos y los lados opuestos iguales: rectángulo.'), rh: L('Quatre costats iguals però sense angles rectes: rombe.', 'Cuatro lados iguales pero sin ángulos rectos: rombo.'), rb: L('Costats oposats paral·lels i iguals, sense angles rectes ni tots els costats iguals: romboide.', 'Lados opuestos paralelos e iguales, sin ángulos rectos ni todos los lados iguales: romboide.'), tz: L('Només té dos costats paral·lels (les bases): trapezi.', 'Solo tiene dos lados paralelos (las bases): trapecio.'), td: L('No té cap parell de costats paral·lels: trapezoide.', 'No tiene ningún par de lados paralelos: trapezoide.') }[k], chk: { t: 'quad', k, P: S.P } });
+    }
+    if (L_ === 4) {
+      const F = pick([
+        ['rh', L('Quin quadrilàter té els quatre costats iguals però cap angle recte?', '¿Qué cuadrilátero tiene los cuatro lados iguales pero ningún ángulo recto?')],
+        ['tz', L('Quin quadrilàter té només un parell de costats paral·lels?', '¿Qué cuadrilátero tiene solo un par de lados paralelos?')],
+        ['td', L('Quin quadrilàter no té cap parell de costats paral·lels?', '¿Qué cuadrilátero no tiene ningún par de lados paralelos?')],
+        ['re', L('Quin quadrilàter té quatre angles rectes però no té els quatre costats iguals?', '¿Qué cuadrilátero tiene cuatro ángulos rectos pero no tiene los cuatro lados iguales?')],
+        ['sq', L('Quin quadrilàter té quatre angles rectes i els quatre costats iguals?', '¿Qué cuadrilátero tiene cuatro ángulos rectos y los cuatro lados iguales?')],
+        ['rb', L('Quin paral·lelogram no té angles rectes ni els quatre costats iguals?', '¿Qué paralelogramo no tiene ángulos rectos ni los cuatro lados iguales?')]]);
+      const others = shuffle(keys.filter(x => x !== F[0])).slice(0, 3);
+      return mc(F[1], Q[F[0]], others.map(x => Q[x]), { ex: L('Recorda: quadrat, rectangle, rombe i romboide són paral·lelograms (dos parells de costats paral·lels); el trapezi en té un i el trapezoide, cap.', 'Recuerda: cuadrado, rectángulo, rombo y romboide son paralelogramos (dos pares de lados paralelos); el trapecio tiene uno y el trapezoide, ninguno.'), chk: { t: 'prop', k: F[0] } });
+    }
+    if (Math.random() < .5) { const a = 2 * ri(10, 70); return inp(L(`Un triangle isòsceles té l'angle desigual de <b>${a}°</b>. Quant fa cadascun dels altres dos angles?`, `Un triángulo isósceles tiene el ángulo desigual de <b>${a}°</b>. ¿Cuánto mide cada uno de los otros dos ángulos?`), (180 - a) / 2, { unit: '°', long: true, ex: L(`Els dos angles iguals sumen 180 − ${a} = ${180 - a}°, i cadascun fa ${180 - a} : 2 = ${(180 - a) / 2}°.`, `Los dos ángulos iguales suman 180 − ${a} = ${180 - a}°, y cada uno mide ${180 - a} : 2 = ${(180 - a) / 2}°.`), chk: { t: 'iso1', a } }); }
+    const b = ri(20, 85); return inp(L(`Els dos angles iguals d'un triangle isòsceles fan <b>${b}°</b> cadascun. Quant fa el tercer angle?`, `Los dos ángulos iguales de un triángulo isósceles miden <b>${b}°</b> cada uno. ¿Cuánto mide el tercer ángulo?`), 180 - 2 * b, { unit: '°', long: true, ex: L(`180 − 2 · ${b} = ${180 - 2 * b}°.`, `180 − 2 · ${b} = ${180 - 2 * b}°.`), chk: { t: 'iso2', b } });
+  }
+
+  // Elements del cercle
+  const CEL = () => ({ radi: L('Radi', 'Radio'), diam: L('Diàmetre', 'Diámetro'), corda: L('Corda', 'Cuerda'), arc: L('Arc', 'Arco'), sect: L('Sector circular', 'Sector circular'), segm: L('Segment circular', 'Segmento circular'), tang: L('Recta tangent', 'Recta tangente'), sec: L('Recta secant', 'Recta secante'), cen: L('Centre', 'Centro') });
+  function circSVG(k) {
+    const cx = 110, cy = 80, R = 60, s = [`<svg viewBox="0 0 220 160" class="vsvg wide" style="width:240px"><circle class="cc" cx="${cx}" cy="${cy}" r="${R}" fill="#F4EEF9" stroke="${INK}" stroke-width="2.5"/>`];
+    const a0 = ri(0, 359), a1 = a0 + ri(70, 140), P = d => pt(cx, cy, R, d).map(r1), line = (p, q, cls) => `<line class="${cls}" x1="${p[0]}" y1="${p[1]}" x2="${q[0]}" y2="${q[1]}" stroke="${HL}" stroke-width="4" stroke-linecap="round"/>`;
+    if (k === 'radi') s.push(line([cx, cy], P(a0), 'el'));
+    if (k === 'diam') s.push(line(P(a0), P(a0 + 180), 'el'));
+    if (k === 'corda') s.push(line(P(a0), P(a1), 'el'));
+    if (k === 'arc') s.push(`<path class="el" d="M${P(a0).join(' ')} A${R} ${R} 0 0 0 ${P(a1).join(' ')}" fill="none" stroke="${HL}" stroke-width="6" stroke-linecap="round"/>`);
+    if (k === 'sect') s.push(`<path class="el" d="M${cx} ${cy} L${P(a0).join(' ')} A${R} ${R} 0 0 0 ${P(a1).join(' ')} Z" fill="${HL}" fill-opacity=".55" stroke="${HL}" stroke-width="2.5"/>`);
+    if (k === 'segm') s.push(`<path class="el" d="M${P(a0).join(' ')} A${R} ${R} 0 0 0 ${P(a1).join(' ')} Z" fill="${HL}" fill-opacity=".55" stroke="${HL}" stroke-width="2.5"/>`);
+    if (k === 'tang') { const t = P(a0), dx = -Math.sin(a0 * Math.PI / 180), dy = -Math.cos(a0 * Math.PI / 180); s.push(line([r1(t[0] - 70 * dx), r1(t[1] - 70 * dy)], [r1(t[0] + 70 * dx), r1(t[1] + 70 * dy)], 'el')); }
+    if (k === 'sec') { const m = R * .45, u = a0 * Math.PI / 180, c0 = [cx + m * Math.cos(u), cy - m * Math.sin(u)], dx = -Math.sin(u), dy = -Math.cos(u), h = Math.sqrt(R * R - m * m) + 28; s.push(line([r1(c0[0] - h * dx), r1(c0[1] - h * dy)], [r1(c0[0] + h * dx), r1(c0[1] + h * dy)], 'el')); }
+    s.push(k === 'cen' ? `<circle class="el" cx="${cx}" cy="${cy}" r="6" fill="${HL}"/>` : `<circle cx="${cx}" cy="${cy}" r="3" fill="${INK}"/>`);
+    return s.join('') + '</svg>';
+  }
+  function eCirc(L_) {
+    const C = CEL(), keys = Object.keys(C);
+    if (L_ <= 1) { const k = pick(keys), others = shuffle(keys.filter(x => x !== k)).slice(0, 3); return mc(L("Com es diu l'element marcat en rosa?", '¿Cómo se llama el elemento marcado en rosa?'), C[k], others.map(x => C[x]), { vis: circSVG(k), ex: { radi: L('El radi va del centre a un punt de la circumferència.', 'El radio va del centro a un punto de la circunferencia.'), diam: L('El diàmetre uneix dos punts de la circumferència passant pel centre: fa dos radis.', 'El diámetro une dos puntos de la circunferencia pasando por el centro: mide dos radios.'), corda: L('Una corda uneix dos punts de la circumferència sense passar pel centre.', 'Una cuerda une dos puntos de la circunferencia sin pasar por el centro.'), arc: L('Un arc és un tros de la circumferència.', 'Un arco es un trozo de la circunferencia.'), sect: L('El sector circular és el tros de cercle entre dos radis i un arc (com un tros de pizza).', 'El sector circular es el trozo de círculo entre dos radios y un arco (como un trozo de pizza).'), segm: L('El segment circular és el tros de cercle entre una corda i un arc.', 'El segmento circular es el trozo de círculo entre una cuerda y un arco.'), tang: L('La recta tangent toca la circumferència en un sol punt.', 'La recta tangente toca la circunferencia en un solo punto.'), sec: L('La recta secant talla la circumferència en dos punts.', 'La recta secante corta la circunferencia en dos puntos.'), cen: L('El centre és el punt que és a la mateixa distància de tots els punts de la circumferència.', 'El centro es el punto que está a la misma distancia de todos los puntos de la circunferencia.') }[k], chk: { t: 'elem', k } }); }
+    if (L_ === 2) { const r = ri(3, 25), toR = Math.random() < .5; return inp(toR ? L(`El diàmetre d'una circumferència fa ${2 * r} cm. Quant fa el <b>radi</b>?`, `El diámetro de una circunferencia mide ${2 * r} cm. ¿Cuánto mide el <b>radio</b>?`) : L(`El radi d'una circumferència fa ${r} cm. Quant fa el <b>diàmetre</b>?`, `El radio de una circunferencia mide ${r} cm. ¿Cuánto mide el <b>diámetro</b>?`), toR ? r : 2 * r, { unit: 'cm', ex: L(`El diàmetre fa el doble que el radi: ${toR ? `${2 * r} : 2 = ${r}` : `2 · ${r} = ${2 * r}`} cm. El diàmetre és la corda més llarga.`, `El diámetro mide el doble que el radio: ${toR ? `${2 * r} : 2 = ${r}` : `2 · ${r} = ${2 * r}`} cm. El diámetro es la cuerda más larga.`), chk: { t: 'rd', r, toR } }); }
+    if (L_ === 3) { const r = ri(3, 12), k = ri(0, 2), d = k === 0 ? r + ri(1, 6) : k === 1 ? r : ri(1, r - 1), T = [L('Exterior (no la toca)', 'Exterior (no la toca)'), L('Tangent', 'Tangente'), L('Secant', 'Secante')]; return mc(L(`Una circumferència té ${r} cm de radi i una recta passa a ${d} cm del centre. Com és la recta?`, `Una circunferencia tiene ${r} cm de radio y una recta pasa a ${d} cm del centro. ¿Cómo es la recta?`), T[k], T.filter((_, i) => i !== k), { fixed: T, ex: L(`Si la distància al centre és més gran que el radi, la recta és exterior; si és igual, tangent; si és més petita, secant. Aquí ${d} ${d > r ? '>' : d === r ? '=' : '<'} ${r}.`, `Si la distancia al centro es mayor que el radio, la recta es exterior; si es igual, tangente; si es menor, secante. Aquí ${d} ${d > r ? '>' : d === r ? '=' : '<'} ${r}.`), chk: { t: 'pos', r, d } }); }
+    const r = ri(2, 12), a = pick([30, 45, 60, 90, 120, 135, 150, 180, 270]);
+    if (L_ === 4) return dinp(L(`Quina és la longitud d'un <b>arc</b> de ${a}° en una circumferència de radi ${r} cm? (π ≈ 3,14)`, `¿Cuál es la longitud de un <b>arco</b> de ${a}° en una circunferencia de radio ${r} cm? (π ≈ 3,14)`), 2 * 3.14 * r * a / 360, { unit: 'cm', ex: L(`L = 2 · π · r · ${a}/360 = 2 · 3,14 · ${r} · ${a}/360 = ${fmtD(2 * 3.14 * r * a / 360)} cm.`, `L = 2 · π · r · ${a}/360 = 2 · 3,14 · ${r} · ${a}/360 = ${fmtD(2 * 3.14 * r * a / 360)} cm.`), chk: { t: 'arc', r, a } });
+    return dinp(L(`Quina és l'àrea d'un <b>sector circular</b> de ${a}° en un cercle de radi ${r} cm? (π ≈ 3,14)`, `¿Cuál es el área de un <b>sector circular</b> de ${a}° en un círculo de radio ${r} cm? (π ≈ 3,14)`), 3.14 * r * r * a / 360, { unit: 'cm²', ex: L(`A = π · r² · ${a}/360 = 3,14 · ${r * r} · ${a}/360 = ${fmtD(3.14 * r * r * a / 360)} cm².`, `A = π · r² · ${a}/360 = 3,14 · ${r * r} · ${a}/360 = ${fmtD(3.14 * r * r * a / 360)} cm².`), chk: { t: 'sector', r, a } });
+  }
+
+  Object.assign(EX, {
+    'e.ang': L_ => eAng(L_),
+    'e.class': L_ => eClass(L_),
+    'e.circ': L_ => eCirc(L_)
+  });
 })();

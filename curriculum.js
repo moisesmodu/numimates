@@ -193,14 +193,20 @@ const COURSES = [
       ['Proporcionalitat directa|Proporcionalidad directa', ['prop'], 5], ['Repartiments proporcionals|Repartos proporcionales', ['prop2'], 4]]),
     U('Geometria|Geometría', 'Angles, àrees i el cercle.|Ángulos, áreas y el círculo.', 'tuga', [
       ['Angles del triangle|Ángulos del triángulo', ['geo.angle'], 5], ['Àrees de polígons|Áreas de polígonos', ['geo.area'], 5], ['Longitud de la circumferència|Longitud de la circunferencia', ['geo.circle'], 1],
-      ['Àrea del cercle|Área del círculo', ['geo.circle'], 2], ['Coordenades|Coordenadas', ['e.coord'], 5]]),
+      ['Àrea del cercle|Área del círculo', ['geo.circle'], 2], ['Coordenades|Coordenadas', ['e.cart4'], 2]]),
     U('Estadística i probabilitat|Estadística y probabilidad', 'Mitjana, mediana, moda i probabilitat.|Media, mediana, moda y probabilidad.', 'guida', [
       ['La mitjana|La media', ['stat2'], 1], ['La mediana|La mediana', ['stat2'], 2], ['La moda|La moda', ['stat2'], 3],
       ['Probabilitat|Probabilidad', ['at.prob'], 5], ['Dues monedes|Dos monedas', ['prob2'], 1]]),
     // Unitats noves (Decret 175/2022): s'afegeixen sempre al final perquè el progrés es desa per posició
     U('De l\'enunciat a l\'equació|Del enunciado a la ecuación', 'Plantejar i resoldre problemes amb equacions.|Plantear y resolver problemas con ecuaciones.', 'cavaller', [
       ['Del text a l\'àlgebra|Del texto al álgebra', ['alg.word:tr'], 1], ['Problemes d\'edats|Problemas de edades', ['alg.word:age'], 2], ['Preus i monedes|Precios y monedas', ['alg.word:price', 'alg.word:coin'], 2],
-      ['Perímetres i angles|Perímetros y ángulos', ['alg.word:perim'], 3], ['Planteja i resol|Plantea y resuelve', ['alg.word'], 3]])
+      ['Perímetres i angles|Perímetros y ángulos', ['alg.word:perim'], 3], ['Planteja i resol|Plantea y resuelve', ['alg.word'], 3]]),
+    U('Taules i gràfics estadístics|Tablas y gráficos estadísticos', 'Freqüències, percentatges i gràfics de sectors.|Frecuencias, porcentajes y gráficos de sectores.', 'guida', [
+      ['Freqüència absoluta|Frecuencia absoluta', ['stat.freq'], 1], ['Freqüència relativa|Frecuencia relativa', ['stat.freq'], 2], ['Percentatges|Porcentajes', ['stat.freq'], 3],
+      ['Gràfics de sectors|Gráficos de sectores', ['stat.pie'], 1], ['Els graus de cada sector|Los grados de cada sector', ['stat.pie'], 3]]),
+    U('Algorismes i programació|Algoritmos y programación', 'Llegir programes: variables, condicions i bucles.|Leer programas: variables, condiciones y bucles.', 'cavaller', [
+      ['Variables|Variables', ['pc.py:var'], 1], ['Condicionals|Condicionales', ['pc.py:if'], 1], ['Bucles|Bucles', ['pc.py:loop'], 1],
+      ['Acumuladors|Acumuladores', ['pc.py:loop', 'pc.py:var'], 2], ['Troba l\'error|Encuentra el error', ['pc.py:debug'], 1]])
   ] },
   { id: 'c8', n: 8, name: '8|8', long: 'Nivell 8|Nivel 8', emoji: '🦅', units: [
     U('Enters i fraccions|Enteros y fracciones', 'Operacions combinades.|Operaciones combinadas.', 'numi', [
@@ -220,7 +226,7 @@ const COURSES = [
       ['La solució|La solución', ['alg.sys'], 4], ['Tot plegat|Todo junto', ['alg.sys', 'alg.eq1'], 4]]),
     U('Funcions|Funciones', 'Rectes, pendents i taules.|Rectas, pendientes y tablas.', 'guida', [
       ['Valor d\'una funció|Valor de una función', ['fn.lin'], 1], ['El pendent|La pendiente', ['fn.lin'], 2], ['Taules de valors|Tablas de valores', ['fn.lin'], 3],
-      ['Punts d\'una recta|Puntos de una recta', ['fn.lin'], 4], ['Coordenades|Coordenadas', ['e.coord'], 5]]),
+      ['Punts d\'una recta|Puntos de una recta', ['fn.lin'], 4], ['Coordenades|Coordenadas', ['e.cart4'], 3]]),
     U('Geometria|Geometría', 'Pitàgores, Tales i volums.|Pitágoras, Tales y volúmenes.', 'tuga', [
       ['Teorema de Pitàgores|Teorema de Pitágoras', ['geo.pyth'], 1], ['Catets|Catetos', ['geo.pyth'], 3], ['Triangles semblants|Triángulos semejantes', ['geo.thales'], 1],
       ['Volum del prisma|Volumen del prisma', ['geo.vol2'], 1], ['Volum del cilindre|Volumen del cilindro', ['geo.vol2'], 2]]),
@@ -230,7 +236,16 @@ const COURSES = [
     // Unitats noves (Decret 175/2022): sempre al final
     U('Problemes amb equacions|Problemas con ecuaciones', 'Edats, preus, monedes i sistemes.|Edades, precios, monedas y sistemas.', 'cavaller', [
       ['Planteja l\'equació|Plantea la ecuación', ['alg.word:tr', 'alg.word:age'], 2], ['Edats i nombres|Edades y números', ['alg.word:age', 'alg.word:tr'], 4], ['Preus, monedes i perímetres|Precios, monedas y perímetros', ['alg.word:price', 'alg.word:coin', 'alg.word:perim'], 4],
-      ['Problemes amb sistemes|Problemas con sistemas', ['alg.word:sys'], 1], ['Resol el sistema|Resuelve el sistema', ['alg.word:sys'], 3]])
+      ['Problemes amb sistemes|Problemas con sistemas', ['alg.word:sys'], 1], ['Resol el sistema|Resuelve el sistema', ['alg.word:sys'], 3]]),
+    U('Estadística: freqüències i dispersió|Estadística: frecuencias y dispersión', 'Freqüència acumulada, rang i gràfics de sectors.|Frecuencia acumulada, rango y gráficos de sectores.', 'flama', [
+      ['Freqüència acumulada|Frecuencia acumulada', ['stat.freq'], 4], ['El rang|El rango', ['stat.disp'], 1], ['Quina sèrie és més regular?|¿Qué serie es más regular?', ['stat.disp'], 2],
+      ['Sectors i graus|Sectores y grados', ['stat.pie'], 4], ['Tot plegat|Todo junto', ['stat.freq', 'stat.disp', 'stat.pie'], 3]]),
+    U('Llegir gràfiques|Leer gráficas', 'Rectes, pendent i gràfiques de la vida real.|Rectas, pendiente y gráficas de la vida real.', 'guida', [
+      ['De la gràfica a la taula|De la gráfica a la tabla', ['fn.graph'], 1], ['Pendent i ordenada a l\'origen|Pendiente y ordenada en el origen', ['fn.graph'], 2], ['L\'equació de la recta|La ecuación de la recta', ['fn.graph'], 3],
+      ['Gràfiques de la vida real|Gráficas de la vida real', ['fn.graph:story'], 1], ['Velocitats i trams|Velocidades y tramos', ['fn.graph:story'], 3]]),
+    U('Programació: condicions i bucles|Programación: condiciones y bucles', 'Operadors lògics, condicions i bucles.|Operadores lógicos, condiciones y bucles.', 'cavaller', [
+      ['Operacions i variables|Operaciones y variables', ['pc.py:var'], 3], ['I, O, NO|Y, O, NO', ['pc.py:logic'], 1], ['Si… si no…|Si… si no…', ['pc.py:if'], 3],
+      ['Bucles amb condicions|Bucles con condiciones', ['pc.py:loop'], 4], ['Troba l\'error|Encuentra el error', ['pc.py:debug'], 3]])
   ] },
   { id: 'c9', n: 9, name: '9|9', long: 'Nivell 9|Nivel 9', emoji: '🐺', units: [
     U('Nombres reals|Números reales', 'Notació científica i arrels.|Notación científica y raíces.', 'numi', [
@@ -260,7 +275,13 @@ const COURSES = [
     // Unitats noves (Decret 175/2022): sempre al final
     U('Problemes: sistemes i segon grau|Problemas: sistemas y segundo grado', 'Plantejar sistemes i equacions de segon grau.|Plantear sistemas y ecuaciones de segundo grado.', 'cavaller', [
       ['Planteja el sistema|Plantea el sistema', ['alg.word:sys'], 2], ['Problemes amb sistemes|Problemas con sistemas', ['alg.word:sys'], 4], ['Planteja el segon grau|Plantea el segundo grado', ['alg.word:quad'], 1],
-      ['Àrees i nombres|Áreas y números', ['alg.word:quad'], 3], ['Tot plegat|Todo junto', ['alg.word:sys', 'alg.word:quad', 'alg.word'], 4]])
+      ['Àrees i nombres|Áreas y números', ['alg.word:quad'], 3], ['Tot plegat|Todo junto', ['alg.word:sys', 'alg.word:quad', 'alg.word'], 4]]),
+    U('Estadística: gràfics i dispersió|Estadística: gráficos y dispersión', 'Histogrames, quartils, diagrames de caixa i desviació típica.|Histogramas, cuartiles, diagramas de caja y desviación típica.', 'guida', [
+      ['Histogrames|Histogramas', ['stat.hist'], 1], ['Marques de classe|Marcas de clase', ['stat.hist'], 3], ['Quartils|Cuartiles', ['stat.box'], 1],
+      ['Diagrama de caixa|Diagrama de caja', ['stat.box'], 3], ['Desviació típica|Desviación típica', ['stat.disp'], 4]]),
+    U('La hipèrbola|La hipérbola', 'Proporcionalitat inversa i tipus de funcions.|Proporcionalidad inversa y tipos de funciones.', 'guida', [
+      ['Proporcionalitat inversa|Proporcionalidad inversa', ['fn.inv'], 1], ['La constant k|La constante k', ['fn.inv'], 2], ['L\'expressió y = k/x|La expresión y = k/x', ['fn.inv'], 3],
+      ['Llegir la hipèrbola|Leer la hipérbola', ['fn.inv'], 4], ['Quin tipus de funció és?|¿Qué tipo de función es?', ['fn.inv', 'fn.graph'], 5]])
   ] },
   { id: 'c10', n: 10, name: '10|10', long: 'Nivell 10|Nivel 10', emoji: '🦁', units: [
     U('Equacions i inequacions|Ecuaciones e inecuaciones', 'Segon grau, discriminant i desigualtats.|Segundo grado, discriminante y desigualdades.', 'cavaller', [
@@ -283,7 +304,14 @@ const COURSES = [
       ['Potències|Potencias', ['pow.rules'], 5], ['Notació científica|Notación científica', ['pow.sci'], 4]]),
     U('Estadística i probabilitat|Estadística y probabilidad', 'Dades, combinacions i probabilitat.|Datos, combinaciones y probabilidad.', 'guida', [
       ['Mitjana i mediana|Media y mediana', ['stat2'], 4], ['El valor que falta|El valor que falta', ['stat2'], 5], ['Sense reemplaçament|Sin reemplazo', ['prob2'], 4],
-      ['Combinacions|Combinaciones', ['prob2'], 5], ['Tot plegat|Todo junto', ['stat2', 'prob2'], 5]])
+      ['Combinacions|Combinaciones', ['prob2'], 5], ['Tot plegat|Todo junto', ['stat2', 'prob2'], 5]]),
+    // Unitats noves (Decret 175/2022): sempre al final
+    U('Dues variables i atzar|Dos variables y azar', 'Núvols de punts, correlació i simulacions.|Nubes de puntos, correlación y simulaciones.', 'guida', [
+      ['Núvol de punts|Nube de puntos', ['stat.2d'], 1], ['Correlació|Correlación', ['stat.2d'], 2], ['La recta de regressió|La recta de regresión', ['stat.2d'], 4],
+      ['Simular l\'atzar|Simular el azar', ['pc.py:sim'], 1], ['Freqüència i probabilitat|Frecuencia y probabilidad', ['pc.py:sim'], 2]]),
+    U('Funcions exponencials|Funciones exponenciales', 'Creixement exponencial, màxims i mínims.|Crecimiento exponencial, máximos y mínimos.', 'guida', [
+      ['La funció exponencial|La función exponencial', ['fn.exp'], 1], ['Creix o decreix?|¿Crece o decrece?', ['fn.mono'], 1], ['Màxims i mínims|Máximos y mínimos', ['fn.mono'], 2],
+      ['Creixement exponencial|Crecimiento exponencial', ['fn.exp'], 4], ['Quina gràfica és?|¿Qué gráfica es?', ['fn.exp', 'fn.inv'], 5]])
   ] }
 ];
 const vt = (v, t) => { const s = t > 1 ? ` · ${t}` : ''; return `${tx0(VIS[v])}${s}|${tx1(VIS[v])}${s}`; };
