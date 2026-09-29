@@ -133,7 +133,8 @@ const AE = (() => {
       if (go.from) {
         const src = typeof go.from === 'string' ? (() => { if (go.from[0] === 'B') { const [r, k] = go.from.slice(1).split('.'); return reg[+r].BR[+k]; } const [r, k] = go.from.split('.'), q = r === '' ? G[+k] : reg[+r].G[+k]; return [q.cx, q.cy, q.t]; })() : go.from;
         svg += `<g ${tt(src[2] ?? 0, 'a-fade')}><g class="an a-move" style="--t:${gt.toFixed(2)}s;--fx:${r1(src[0] - b.cx)}px;--fy:${r1(src[1] - b.cy)}px">${inner}</g></g>`;
-      } else svg += `<g ${tt(gt, go.cls || (go.t == null ? cls : 'a-pop'))}>${inner}</g>`;
+      } else if (go.cls && gt > t) svg += `<g ${tt(t, cls)}><g ${tt(gt, go.cls)}>${inner}</g></g>`;
+      else svg += `<g ${tt(gt, go.cls || (go.t == null ? cls : 'a-pop'))}>${inner}</g>`;
       const stt = (o.st || {})[g] ?? (st.includes('s') ? gt + .6 : null);
       if (stt != null) svg += `<line x1="${r1(b.x0 - 3)}" y1="${r1(b.y1 - 2)}" x2="${r1(b.x1 + 3)}" y2="${r1(b.y0 + 2)}" stroke="${RED}" stroke-width="2.6" stroke-linecap="round" pathLength="1" ${tt(stt, 'a-draw')}/>`;
     });
@@ -190,11 +191,11 @@ const AE = (() => {
 
   /* ---------- pla cartesià ---------- */
   function PL(o) {
-    const { x0, y0, xr, yr, u = 16, ux = u, uy = u, t = 0, grid = 1, lx = 1, ly = 1, fs = 10, names = true, skip = [] } = o;
+    const { x0, y0, xr, yr, u = 16, ux = u, uy = u, t = 0, grid = 1, gy = grid, lx = 1, ly = 1, fs = 10, names = true, skip = [] } = o;
     const [xa, xb] = xr, [ya, yb] = yr, X = v => x0 + (v - xa) * ux, Y = v => y0 + (yb - v) * uy, W = (xb - xa) * ux, H = (yb - ya) * uy;
     let s = `<rect x="${r1(x0)}" y="${r1(y0)}" width="${r1(W)}" height="${r1(H)}" fill="#fff" rx="3"/>`;
     for (let v = Math.ceil(xa / grid) * grid; v <= xb + 1e-9; v += grid) s += `<line x1="${r1(X(v))}" x2="${r1(X(v))}" y1="${r1(y0)}" y2="${r1(y0 + H)}" stroke="${LN}" stroke-width="1"/>`;
-    for (let v = Math.ceil(ya / grid) * grid; v <= yb + 1e-9; v += grid) s += `<line y1="${r1(Y(v))}" y2="${r1(Y(v))}" x1="${r1(x0)}" x2="${r1(x0 + W)}" stroke="${LN}" stroke-width="1"/>`;
+    for (let v = Math.ceil(ya / gy) * gy; v <= yb + 1e-9; v += gy) s += `<line y1="${r1(Y(v))}" y2="${r1(Y(v))}" x1="${r1(x0)}" x2="${r1(x0 + W)}" stroke="${LN}" stroke-width="1"/>`;
     const ox = xa <= 0 && xb >= 0 ? X(0) : x0, oy = ya <= 0 && yb >= 0 ? Y(0) : y0 + H;
     s += `<line x1="${r1(x0 - 4)}" x2="${r1(x0 + W + 6)}" y1="${r1(oy)}" y2="${r1(oy)}" stroke="${INK}" stroke-width="1.8"/>` + arrowHead(x0 + W + 9, oy, 0, 7);
     s += `<line y1="${r1(y0 + H + 4)}" y2="${r1(y0 - 6)}" x1="${r1(ox)}" x2="${r1(ox)}" stroke="${INK}" stroke-width="1.8"/>` + arrowHead(ox, y0 - 9, -Math.PI / 2, 7);
@@ -253,6 +254,12 @@ const AE = (() => {
     if (b.p === 'mark') return A.mark(b.x, b.y, b.ok, b.t, b.sz);
     if (b.p === 'nl') {
       const N = A.NL(b); let s = N.s;
+      if (b.jumps) { const { from, step, n, t0, dt, h = 12, lab } = b.jumps; b.hops = (b.hops || []).concat(Array.from({ length: n }, (_, i) => [from + i * step, from + (i + 1) * step, t0 + dt * i, { h, dur: Math.max(.15, dt * 1.2), w: 2, lab: lab && i === 0 ? lab : '' }])); }
+      if (b.ray) {
+        const [v, dir, closed, t, col = A.UC] = b.ray, xe = dir > 0 ? (b.x1 ?? 298) + 12 : (b.x0 ?? 22) - 12, x = N.X(v);
+        s += `<line x1="${A.r1(x)}" x2="${A.r1(xe - dir * 8)}" y1="${N.y}" y2="${N.y}" stroke="${col}" stroke-width="7" stroke-linecap="round" stroke-opacity=".75" pathLength="1" ${A.tt(t, 'a-draw', 'animation-duration:.7s')}/><g ${A.tt(t + .6, 'a-fade')}>${A.arrowHead(xe + dir * 2, N.y, dir > 0 ? 0 : Math.PI, 12, col)}</g>`;
+        s += A.dot(x, N.y, t, { fill: col, r: 7, open: !closed });
+      }
       (b.hops || []).forEach(h => { s += A.hop(N, h[0], h[1], h[2], h[3] || {}); });
       (b.pts || []).forEach(q => { s += A.dot(N.X(q[0]), N.y, q[1], q[2] || {}); if (q[3]) s += A.chip(N.X(q[0]), N.y - 16, q[3], q[1] + .1, { fs: 13, ...(q[4] || {}) }); });
       return s;
@@ -534,9 +541,10 @@ const AE = (() => {
           s += M(x0 + tot * g + 12, y + 6, res, { fs: 17, a: 's', t: t + 2 });
           at.push(t + 1.9);
         } else if (k === 'div') {
-          const W = Math.max(m, n) * g, x0 = x - W / 2, c = Math.min(m, n);
+          const W = Math.max(m, n, 1) * g, x0 = x - W / 2, c = Math.min(m, n);
           const nx = i => x - m * g / 2 + i * g + g / 2, dx = i => x - n * g / 2 + i * g + g / 2;
           for (let i = 0; i < m; i++) s += fch(nx(i), y - 16, b, t + .05 * i, 'u', w);
+          if (!m) s += M(x, y - 9, '1', { fs: 17, t });
           s += `<line x1="${r1(x0 - 4)}" x2="${r1(x0 + W + 4)}" y1="${y + 2}" y2="${y + 2}" stroke="${INK}" stroke-width="2.4" stroke-linecap="round" ${tt(t, 'a-fade')}/>`;
           for (let i = 0; i < n; i++) s += fch(dx(i), y + 22, b, t + .25 + .05 * i, 'u', w);
           for (let i = 0; i < c; i++) { const tc = t + .9 + .28 * i; s += line(nx(i) - 9, y - 6, nx(i) + 9, y - 26, tc, { col: RED, w: 3 }) + line(dx(i) - 9, y + 32, dx(i) + 9, y + 12, tc + .08, { col: RED, w: 3 }); }
@@ -751,7 +759,7 @@ const AE = (() => {
       else if (o.k === 'poly') { const [a, b, c] = o.c; s += curve(P, x => a * x * x + b * x + c, t, { col, dur: o.dur || 1.2, from: o.from ?? P.xa, to: o.to ?? P.xb, w: o.w || 3 }); }
       else if (o.k === 'seg') { const [x1, y1, x2, y2] = o.p; s += line(P.X(x1), P.Y(y1), P.X(x2), P.Y(y2), t, { col, w: o.w || 2.4, dash: o.dash }); }
       else if (o.k === 'vline') s += line(P.X(o.x), P.y0, P.X(o.x), P.y0 + P.H, t, { col, w: 2, dash: '5 4' }) + (o.lab ? M(P.X(o.x) + 4, P.y0 + 11, o.lab, { fs: 11, wt: 7, fill: col, a: 's', t }) : '');
-      else if (o.k === 'hline') s += line(P.x0, P.Y(o.y), P.x0 + P.W, P.Y(o.y), t, { col, w: 2, dash: '5 4' }) + (o.lab ? M(P.x0 + P.W - 3, P.Y(o.y) - 5, o.lab, { fs: 11, wt: 7, fill: col, a: 'e', t }) : '');
+      else if (o.k === 'hline') s += line(P.x0, P.Y(o.y), P.x0 + P.W, P.Y(o.y), t, { col, w: 2, dash: '5 4' }) + (o.lab ? M(o.la === 's' ? P.x0 + 3 : P.x0 + P.W - 3, P.Y(o.y) - 5, o.lab, { fs: 11, wt: 7, fill: col, a: o.la || 'e', t }) : '');
       else if (o.k === 'slope') {
         // triangle de pendent: avança run i puja rise (o esglaons d'1 en 1)
         const [x, y] = o.p, { run, rise } = o, st = o.steps ? run : 1;
@@ -768,6 +776,7 @@ const AE = (() => {
       else if (o.k === 'cm') s += chip(o.px, o.py, o.s, t, { fs: o.fs || 13, st: o.st || 'o' });
       else if (o.k === 'mk') s += mark(o.px, o.py, o.ok, t, o.sz || 10);
       else if (o.k === 'svg') s += o.s;
+      else if (o.k === 'blk') s += A.blk(o.b, []);
       else if (o.k === 'table') {
         const { px, py, head, rows, dt = .35, cw = 40, rh = 25 } = o;
         s += `<g ${tt(t, 'a-fade')}><rect x="${px}" y="${py}" width="${cw * 2}" height="${rh * (rows.length + 1)}" rx="8" fill="#fff" stroke="${LN}" stroke-width="2"/><line x1="${px + cw}" x2="${px + cw}" y1="${py}" y2="${py + rh * (rows.length + 1)}" stroke="${LN}" stroke-width="2"/><line x1="${px}" x2="${px + 2 * cw}" y1="${py + rh}" y2="${py + rh}" stroke="${LN}" stroke-width="2"/>${M(px + cw / 2, py + rh - 8, head[0], { fs: 13, fill: GRY })}${M(px + cw * 1.5, py + rh - 8, head[1], { fs: 13, fill: GRY })}</g>`;
@@ -958,7 +967,7 @@ const AE = (() => {
   };
   Object.assign(SCN, {
     // Pitàgores amb els quadrats sobre els costats: els dels catets sumen el de la hipotenusa
-    ePyth({ a, b, at }) {
+    ePyth({ a, b, at, leg }) {
       const c = Math.hypot(a, b), sx = Math.min(300 / (a + 2 * b), 206 / (2 * a + b)), s = Math.min(sx, 11);
       const Cx = 10 + b * s + (300 - (a + 2 * b) * s) / 2, Cy = 8 + (a + b) * s, C = [Cx, Cy], B = [Cx + a * s, Cy], Av = [Cx, Cy - b * s];
       let o = `<polygon points="${pts([C, B, Av])}" fill="#fff" stroke="${INK}" stroke-width="3" stroke-linejoin="round" ${tt(.15, 'a-fade')}/><path d="M${Cx},${Cy - 10} h10 v10" fill="none" stroke="${INK}" stroke-width="1.6" ${tt(.15, 'a-fade')}/>`;
@@ -969,7 +978,19 @@ const AE = (() => {
       o += q3.s + M(q3.c[0], q3.c[1] + 5, `${nf(a * a)} + ${nf(b * b)} = ${nf(a * a + b * b)}`, { fs: 12.5, t: 2.7 });
       const mh = [(Av[0] + B[0]) / 2 - 10, (Av[1] + B[1]) / 2 - 6];
       o += chip(mh[0], mh[1], nf(c), 3.3, { fs: 14, st: 'y' });
-      return { html: A.scene(Cy + a * s + 6, o), at: at || [.6, 2.8, 3.5] };
+      const H = Cy + a * s + 6;
+      if (leg) {
+        // segona part: un catet a partir de la hipotenusa (h² − c² = b²)
+        const [L, d, t0] = leg, h = Math.sqrt(L * L - d * d), q = Math.min(8, 250 / (L + d + h + 6)), y0 = 40;
+        let p = '', x = 160 - (L + d + h) * q / 2 - 24;
+        const sq = (n, t, f, lab) => { const r = `<g ${tt(t)}><rect x="${r1(x)}" y="${r1(y0 + (L - n) * q)}" width="${r1(n * q)}" height="${r1(n * q)}" rx="3" fill="${f}" stroke="${INK}" stroke-width="1.6"/></g>` + M(x + n * q / 2, y0 + L * q + 18, lab, { fs: 13, t: t + .1 }); x += n * q; return r; };
+        p += sq(L, t0 + .2, '#FF8FB1', `${L}^2 = ${L * L}`) + M(x + 12, y0 + L * q / 2 + 6, '−', { fs: 20, t: t0 + .5 }); x += 24;
+        p += sq(d, t0 + .5, YEL, `${d}^2 = ${d * d}`) + M(x + 12, y0 + L * q / 2 + 6, '=', { fs: 20, t: t0 + .8 }); x += 24;
+        p += sq(h, t0 + .9, UC, `{u|${nf(h * h)}}`);
+        p += chip(160, y0 + L * q + 56, `√${nf(h * h)} = {u|${nf(h)}}`, t0 + 1.3, { fs: 15, st: 'y' });
+        return { html: A.scene(H, out(t0, o) + p), at: at || [.6, 2.8, 3.5, t0 + 1.4] };
+      }
+      return { html: A.scene(H, o), at: at || [.6, 2.8, 3.5] };
     },
     // escala recolzada a la paret: la hipotenusa i els quadrats que es resten
     eLadder({ L, d, h, at, hyp, unit = 'm' }) {
@@ -982,7 +1003,7 @@ const AE = (() => {
       o += chip((fx + wx) / 2 - 12, (gy + ty) / 2 - 6, `${nf(L)} ${unit}`, .7, { fs: 13 }) + M((fx + wx) / 2, gy + 16, `${nf(d)} ${unit}`, { fs: 13, t: .9 });
       o += A.inout(1.0, 3.4, M(wx - 8, (gy + ty) / 2 + 4, '?', { fs: 18, fill: RED, a: 'e' }), 'a-pop') + chip(wx - 30, (gy + ty) / 2 + 30, `${nf(h)} ${unit}`, 3.4, { fs: 14, st: 'y' });
       const t0 = hyp ? 1.9 : 1.5;
-      if (hyp) o += `<line x1="${r1(fx)}" y1="${gy}" x2="${r1(wx)}" y2="${r1(ty)}" stroke="${RED}" stroke-width="7" stroke-opacity=".35" stroke-linecap="round" ${tt(1.4, 'a-fade')}/>` + chip((fx + wx) / 2 + 36, (gy + ty) / 2 - 18, 'hipotenusa', 1.5, { fs: 11.5, st: 'r' });
+      if (hyp) o += `<line x1="${r1(fx)}" y1="${gy}" x2="${r1(wx)}" y2="${r1(ty)}" stroke="${RED}" stroke-width="7" stroke-opacity=".35" stroke-linecap="round" ${tt(1.4, 'a-fade')}/>` + chip(fx - 34, gy - 26, 'hipotenusa', 1.5, { fs: 11.5, st: 'r' });
       // quadrats: L² − d² = h²
       const q = Math.min(11, 138 / (L + d + h)), y0 = 26, sq = (x, n, t, f, lab) => `<g ${tt(t)}><rect x="${r1(x)}" y="${y0}" width="${r1(n * q)}" height="${r1(n * q)}" rx="3" fill="${f}" stroke="${INK}" stroke-width="1.6"/></g>` + M(x + n * q / 2, y0 + n * q + 15, lab, { fs: 12.5, t: t + .1 });
       let x = 12; o += sq(x, L, t0, UC, `${nf(L)}^2 = ${nf(L * L)}`); x += L * q + 6; o += M(x + 5, y0 + L * q / 2 + 6, '−', { fs: 18, t: t0 + .4 }); x += 16;
@@ -992,7 +1013,7 @@ const AE = (() => {
     },
     // Tales amb ombres: mateixa hora, mateix angle del sol → triangles semblants
     eShadow({ pole, ps, ts, obj = 'tree', at }) {
-      const H = ts * pole / ps, s = Math.min(270 / (ps + ts + 1.4), 178 / H), gy = 206, px = 16, tx = px + (ps + 1.4) * s, k = ts / ps;
+      const H = ts * pole / ps, bw = obj === 'tree' ? 0 : 46, s = Math.min((270 - bw) / (ps + ts + 1.4), 178 / H), gy = 206, px = 16, tx = px + (ps + 1.4) * s + bw, k = ts / ps;
       let o = ic('sun', 290, 22, 30, .1) + `<line x1="4" x2="316" y1="${gy}" y2="${gy}" stroke="${INK}" stroke-width="3" ${tt(.1, 'a-fade')}/>`;
       // pal i la seva ombra
       o += `<polygon points="${pts([[px, gy], [px, gy - pole * s], [px + ps * s, gy]])}" fill="${UC}" fill-opacity=".25" ${tt(.5, 'a-fade')}/>`;
@@ -1083,7 +1104,7 @@ const AE = (() => {
       return { html: A.scene(196, s), at };
     },
     // dos daus: la taula de 36 casos
-    eDiceGrid({ steps, at, head = '6 × 6 = {u|36} casos', ht = 1.1 }) {
+    eDiceGrid({ steps, at, head = '6 × 6 = {u|36} casos', ht = 1.1, chips = [] }) {
       const c = 23, x0 = 36, y0 = 30; let s = head ? chip(236, 24, head, ht, { fs: 13 }) : '';
       for (let i = 1; i <= 6; i++) s += M(x0 + (i - .5) * c, y0 - 8, String(i), { fs: 12, fill: UC, t: .1 }) + M(x0 - 9, y0 + (i - .5) * c + 4, String(i), { fs: 12, fill: '#B98900', t: .1 });
       s += M(x0 + 3 * c, y0 - 22, '2n dau', { fs: 10, wt: 7, fill: GRY, t: .1 }) + `<g ${tt(.1, 'a-fade')}>${M(x0 - 22, y0 + 3 * c, '1r dau', { fs: 10, wt: 7, fill: GRY })}</g>`.replace('<text', `<text transform="rotate(-90 ${x0 - 22} ${y0 + 3 * c})"`);
@@ -1095,6 +1116,7 @@ const AE = (() => {
         s += to != null ? out(to, g) : g;
         if (lab) s += chip(236, ly, lab, t + .04 * k + .1, { fs: 13, st: col === 'y' ? 'y' : 'o' });
       });
+      chips.forEach(([txt, y, t, st = 'o']) => { s += chip(236, y, txt, t, { fs: 13, st }); });
       return { html: A.scene(y0 + 6 * c + 12, s), at };
     },
     // màquina de funcions: entra x, surt f(x)
@@ -1136,21 +1158,23 @@ const AE = (() => {
   const term = (c, k, first) => { if (c === 0) return first ? '0' : ''; const sgn = c < 0 ? '−' : first ? '' : '+', a = Math.abs(c), v = k === 0 ? String(a) : (a === 1 ? '' : a) + (k === 1 ? 'x' : 'x^' + k); return first ? sgn + v : sgn + ' ' + v; };
   Object.assign(SCN, {
     // polinomis en columnes: cada columna és un grau i només s'operen termes semblants
-    ePolyCols({ P, Q, ops = ['+'], names = ['P', 'Q'], at }) {
-      const n = P.length, cx = [128, 196, 262], deg = i => n - 1 - i;
+    ePolyCols({ P, Q, ops = ['+'], names = ['P', 'Q'], at, mid }) {
+      const n = P.length, cx = [128, 196, 262], deg = i => n - 1 - i, sy = mid ? 134 : 112;
       let s = '';
-      cx.slice(0, n).forEach((x, i) => { s += `<rect x="${x - 32}" y="8" width="64" height="${ops.length > 1 ? 206 : 128}" rx="10" fill="${i % 2 ? YEL : UC}" fill-opacity=".1" ${tt(.05, 'a-fade')}/>` + M(x, 22, deg(i) ? (deg(i) === 1 ? 'x' : 'x^' + deg(i)) : 'nombres', { fs: 11, wt: 7, fill: GRY, t: .05 }); });
-      const row = (cs, y, t, lab, col, per) => { let r = M(58, y, lab, { fs: 15, a: 'e', t, fill: GRY }); cs.forEach((c, i) => { r += M(cx[i], y, `{${col}|${term(c, deg(i), i === 0)}}`, { fs: 17, t: per ? t + .25 * i : t }); }); return r; };
-      s += row(P, 48, .2, names[0] + ' =', 'p') + row(Q, 76, 1.0, names[1] + ' =', 'p');
-      s += line(70, 88, 296, 88, 1.8, { w: 2 }) + M(58, 76, ops[0], { fs: 15, t: 1.8, a: 's' }).replace(/x="58"/, 'x="22"');
+      cx.slice(0, n).forEach((x, i) => { s += `<rect x="${x - 32}" y="8" width="64" height="${ops.length > 1 ? 190 : sy + 4}" rx="10" fill="${i % 2 ? YEL : UC}" fill-opacity=".1" ${tt(.05, 'a-fade')}/>` + M(x, 22, deg(i) ? (deg(i) === 1 ? 'x' : 'x^' + deg(i)) : 'nombres', { fs: 11, wt: 7, fill: GRY, t: .05 }); });
+      const row = (cs, y, t, lab, col, per) => { let r = lab ? M(58, y, lab, { fs: 15, a: 'e', t, fill: GRY }) : ''; cs.forEach((c, i) => { r += M(cx[i], y, `{${col}|${term(c, deg(i), i === 0)}}`, { fs: 17, t: per ? t + .25 * i : t }); }); return r; };
+      const nm = names || ['', ''];
+      s += row(P, 48, .2, names ? nm[0] + ' =' : '', 'p') + row(Q, 76, 1.0, names ? nm[1] + ' =' : '+', 'p');
+      s += line(70, 88, 296, 88, 1.8, { w: 2 }) + (names ? M(22, 76, ops[0], { fs: 15, t: 1.8, a: 's' }) : '');
       const S = P.map((c, i) => c + Q[i]);
-      s += row(S, 112, 2.2, names[0] + ' ' + ops[0] + ' ' + names[1] + ' =', 'u', true);
+      if (mid) P.forEach((c, i) => { s += M(cx[i], 108, `${A.sg(c)} ${Q[i] < 0 ? '−' : '+'} ${nf(Math.abs(Q[i]))}`, { fs: 12.5, fill: GRY, t: 2.0 + .25 * i }); });
+      s += row(S, sy, mid ? 3.0 : 2.2, names ? nm[0] + ' ' + ops[0] + ' ' + nm[1] + ' =' : '=', 'u', true);
       if (ops[1]) {
         const nQ = Q.map(c => -c), D = P.map((c, i) => c - Q[i]);
         s += row(nQ, 152, 3.4, '−' + names[1] + ' =', 'r', true) + M(170, 138, `restar ${names[1]} = sumar el seu oposat`, { fs: 10.5, wt: 7, fill: RED, t: 3.4 });
         s += line(70, 164, 296, 164, 4.3, { w: 2 }) + row(D, 190, 4.5, names[0] + ' − ' + names[1] + ' =', 'u', true);
       }
-      return { html: A.scene(ops[1] ? 204 : 126, s), at };
+      return { html: A.scene(ops[1] ? 204 : sy + 16, s), at };
     },
     // directa: el doble i el doble; inversa: rectangles amb la mateixa àrea
     eDirInv({ d, inv, du = ['kg', '€'], iu = ['aixetes', 'h'], at }) {
@@ -1188,6 +1212,191 @@ const AE = (() => {
       });
       s += chip(160, 22, `${R1[0]} × ${R1[1]} = ${R1[0] * R1[1]} ${au}`, 1.5, { fs: 13, st: 'y' });
       return { html: A.scene(212, s), at };
+    }
+  });
+})();
+
+/* ---------- 3r i 4t d'ESO: àlgebra visual, successions, trigonometria i probabilitat ---------- */
+(() => {
+  const A = AE, { M, chip, chipW, rect, tt, inout, out, line, dot, mark, ic, mrow, UC, RED, GRN, INK, LN, GRY, YEL, nf, sg, r1, arrowHead } = A;
+  const oldBlk = A.blk;
+  A.blk = (b, reg) => {
+    // model d'àrea d'un producte de binomis: cada casella és un producte parcial
+    if (b.p === 'amodel') {
+      const { x, y, rs, cs, cells, t = 0, dt = .35, fs = 14 } = b; let s = '', yy = y;
+      const W = cs.reduce((a, c) => a + c[1], 0), H = rs.reduce((a, r) => a + r[1], 0);
+      s += `<rect x="${x}" y="${y}" width="${W}" height="${H}" fill="#fff" stroke="${INK}" stroke-width="2.4" ${tt(t, 'a-fade')}/>`;
+      let xx = x; cs.forEach(([l, w], j) => { s += M(xx + w / 2, y - 7, l, { fs, t: t + .1, fill: UC }); xx += w; });
+      rs.forEach(([l, h], i) => {
+        s += M(x - 7, yy + h / 2 + 5, l, { fs, a: 'e', t: t + .1, fill: '#B98900' }); xx = x;
+        cs.forEach(([, w], j) => {
+          const lab = cells[i][j], neg = lab[0] === '−', f = /x\^2|x²/.test(lab) ? UC : /x/.test(lab) ? YEL : '#5FC98B', tc = t + .5 + dt * (i * cs.length + j);
+          s += `<rect x="${r1(xx + 1.5)}" y="${r1(yy + 1.5)}" width="${r1(w - 3)}" height="${r1(h - 3)}" rx="3" fill="${neg ? RED : f}" fill-opacity="${neg ? .75 : .85}" ${tt(tc, 'a-fade')}/>` + M(xx + w / 2, yy + h / 2 + 5, lab, { fs: Math.min(fs, h * .55 + 4), fill: neg || f === UC ? '#fff' : INK, t: tc + .1 });
+          xx += w;
+        });
+        yy += h;
+      });
+      return s;
+    }
+    // busquem dos nombres amb un producte i una suma donats
+    if (b.p === 'pairs') {
+      const { x = 20, y, pairs, sum, t = 0, dt = .4, fs = 14, cw = [96, 64] } = b; let s = `<g ${tt(t, 'a-fade')}>${M(x + cw[0] / 2, y, 'r · s', { fs: 12, wt: 7, fill: GRY })}${M(x + cw[0] + cw[1] / 2, y, 'r + s', { fs: 12, wt: 7, fill: GRY })}</g>`;
+      pairs.forEach(([p, q], i) => {
+        const yy = y + 26 + 24 * i, ti = t + .3 + dt * i, ok = p + q === sum;
+        s += M(x + cw[0] / 2, yy, `${sg(p)} · ${A.ps(q)} = ${sg(p * q)}`, { fs, t: ti }) + M(x + cw[0] + cw[1] / 2, yy, `{${ok ? 'u' : 'k'}|${sg(p + q)}}`, { fs, t: ti + .15 }) + mark(x + cw[0] + cw[1] + 14, yy - 5, ok, ti + .25, 8);
+        if (ok) s += `<rect x="${x - 4}" y="${yy - 18}" width="${cw[0] + cw[1] + 34}" height="24" rx="8" fill="none" stroke="${YEL}" stroke-width="3" ${tt(ti + .3, 'a-fade')}/>`;
+      });
+      return s;
+    }
+    // successió: caselles amb els salts entre terme i terme (i barres a escala, si cal)
+    if (b.p === 'seq') {
+      const { x0 = 20, y, terms, op, t = 0, dt = .45, hl = [], sub, bw = 42, gap = 16, bars, next = [], nextT, fs = 16 } = b, X = i => x0 + i * (bw + gap);
+      let s = '';
+      terms.forEach((v, i) => {
+        const nx = next.includes(i), ti = nx ? (nextT != null ? [].concat(nextT)[next.indexOf(i)] ?? [].concat(nextT)[0] : t + dt * i + .3) : t + dt * i;
+        s += `<g ${tt(ti)}><rect x="${X(i)}" y="${y - 20}" width="${bw}" height="30" rx="8" fill="${nx ? YEL : hl.includes(i) ? UC : '#fff'}" stroke="${nx ? INK : UC}" stroke-width="2" ${nx ? 'stroke-dasharray="4 3"' : ''}/>${M(X(i) + bw / 2, y + 1, nf(v), { fs: String(v).length > 3 ? fs - 3 : fs, fill: hl.includes(i) ? '#fff' : INK })}</g>`;
+        if (sub && sub[i]) s += M(X(i) + bw / 2, y + 26, sub[i], { fs: 12, fill: GRY, t: (b.subT ?? ti) });
+        if (i) s += A.arc(X(i - 1) + bw / 2 + 4, y - 22, X(i) + bw / 2 - 4, y - 22, 12, ti - .2, { lab: Array.isArray(op) ? op[i - 1] : op, fs: 11.5, w: 2, dur: .3 });
+        if (bars) { const { y: by, h, max } = bars, hh = Math.max(1, v / max * h); s += `<rect x="${X(i) + 8}" y="${r1(by - hh)}" width="${bw - 16}" height="${r1(hh)}" rx="3" fill="${nx ? YEL : UC}" fill-opacity=".85" ${tt(ti + .1, 'ae-gy')}/>`; }
+      });
+      if (bars) s += `<line x1="${x0 - 4}" x2="${X(terms.length - 1) + bw + 4}" y1="${bars.y}" y2="${bars.y}" stroke="${INK}" stroke-width="1.6" ${tt(t, 'a-fade')}/>`;
+      return s;
+    }
+    return oldBlk(b, reg);
+  };
+  const pts = a => a.map(v => v.map(r1).join(',')).join(' ');
+  Object.assign(SCN, {
+    // és rectangle? triangles dibuixats amb les seves mides i els quadrats comparats
+    ePythCheck({ tris, at }) {
+      let s = '';
+      tris.forEach(([a, b, c], k) => {
+        const t = .2 + 2.4 * k, u = 9.5, x0 = 22 + 156 * k, by = 96, cosC = (a * a + b * b - c * c) / (2 * a * b), ang = Math.acos(cosC);
+        const P0 = [x0, by], P1 = [x0 + a * u, by], P2 = [x0 + b * u * Math.cos(ang), by - b * u * Math.sin(ang)];
+        const right = Math.abs(cosC) < 1e-9;
+        s += `<polygon points="${pts([P0, P1, P2])}" fill="${right ? UC : RED}" fill-opacity=".15" stroke="${INK}" stroke-width="2.6" stroke-linejoin="round" ${tt(t, 'a-fade')}/>`;
+        s += M((P0[0] + P1[0]) / 2, by + 15, nf(a), { fs: 13, t }) + M((P0[0] + P2[0]) / 2 - 10, (P0[1] + P2[1]) / 2, nf(b), { fs: 13, t, a: 'e' }) + M((P1[0] + P2[0]) / 2 + 8, (P1[1] + P2[1]) / 2, `{u|${nf(c)}}`, { fs: 13, t, a: 's' });
+        if (right) s += `<path d="M${r1(P0[0] + 9)},${by} v-9 h-9" fill="none" stroke="${INK}" stroke-width="1.6" ${tt(t + 1.6, 'a-fade')}/>`;
+        else s += `<path d="M${r1(P0[0] + 12)},${by} A12,12 0 0 0 ${r1(P0[0] + 12 * Math.cos(ang))},${r1(by - 12 * Math.sin(ang))}" fill="none" stroke="${RED}" stroke-width="2" ${tt(t + 1.6, 'a-fade')}/>`;
+        // barres: a² + b² contra c²
+        const bx = x0 - 6, bu = 1.3, y1 = 142, y2 = 170;
+        s += `<rect x="${bx}" y="${y1}" width="${r1(a * a * bu)}" height="18" rx="3" fill="${UC}" ${tt(t + .6, 'a-grow')}/><rect x="${r1(bx + a * a * bu)}" y="${y1}" width="${r1(b * b * bu)}" height="18" rx="3" fill="${YEL}" ${tt(t + .9, 'a-grow')}/>`;
+        s += M(bx, y1 - 4, `${a * a} + ${b * b} = ${a * a + b * b}`, { fs: 11.5, a: 's', t: t + .9 });
+        s += `<rect x="${bx}" y="${y2}" width="${r1(c * c * bu)}" height="18" rx="3" fill="#FF8FB1" ${tt(t + 1.2, 'a-grow')}/>` + M(bx, y2 + 32, `${nf(c)}^2 = ${c * c}`, { fs: 11.5, a: 's', t: t + 1.3 });
+        s += mark(x0 + 132, y2 + 26, right, t + 1.6, 10) + chip(x0 + 66, 20, right ? 'rectangle' : 'no és rectangle', t + 1.7, { fs: 12, st: right ? 'g' : 'R' });
+      });
+      return { html: A.scene(212, s), at };
+    },
+    // menús: cada primer es pot combinar amb cada segon i cada postres
+    eMenu({ cols, at, dice = true }) {
+      const cx = [34, 96, 158], cl = [UC, YEL, '#5FC98B']; let s = '';
+      const ys = n => Array.from({ length: n }, (_, i) => 108 + (i - (n - 1) / 2) * 34);
+      cols.forEach(([n, lab], j) => { s += M(cx[j], 22, lab, { fs: 11, wt: 7, fill: GRY, t: .1 + .15 * j }); ys(n).forEach((y, i) => { s += `<g ${tt(.2 + .15 * j + .06 * i)}><circle cx="${cx[j]}" cy="${y}" r="12" fill="${cl[j]}" stroke="${INK}" stroke-width="1.8"/>${M(cx[j], y + 5, String(i + 1), { fs: 12, fill: j === 1 ? INK : '#fff' })}</g>`; }); });
+      let k = 0;
+      ys(cols[0][0]).forEach((ya, i) => ys(cols[1][0]).forEach((yb, j) => { s += line(cx[0] + 12, ya, cx[1] - 12, yb, 1.1 + .05 * k++, { col: GRY, w: 1.2, dur: .2 }); }));
+      k = 0; ys(cols[1][0]).forEach(yb => ys(cols[2][0]).forEach(yc => { s += line(cx[1] + 12, yb, cx[2] - 12, yc, 1.9 + .05 * k++, { col: GRY, w: 1.2, dur: .2 }); }));
+      const [a, b, c] = cols.map(q => q[0]);
+      s += chip(96, 196, `${a} × ${b} × ${c} = {u|${a * b * c}}`, 2.6, { fs: 14, st: 'o' });
+      if (dice) {
+        const x0 = 208, y0 = 44, cc = 15; let g = '';
+        for (let i = 0; i < 6; i++) for (let j = 0; j < 6; j++) g += `<rect x="${x0 + j * cc + 1}" y="${y0 + i * cc + 1}" width="${cc - 2}" height="${cc - 2}" rx="3" fill="${(i + j) % 2 ? UC : YEL}" fill-opacity=".7" ${tt(3.4 + .02 * (i * 6 + j))}/>`;
+        s += g + M(x0 + 45, 32, 'dau 1 × dau 2', { fs: 11, wt: 7, fill: GRY, t: 3.3 }) + chip(x0 + 45, 164, `6 × 6 = {u|36}`, 4.3, { fs: 14 });
+      }
+      return { html: A.scene(212, s), at };
+    },
+    // bossa: extraccions sense retorn (la segona té una bola menys)
+    eBag({ a, b, ca = 'r', cb = 'b', naS = 'vermella', naP = 'vermelles', at, res }) {
+      const colOf = c => c === 'r' ? RED : c === 'b' ? '#36A9E1' : c === 'w' ? '#fff' : INK;
+      const N = a + b, balls = [], per = 5, bx = 22, by = 44, bw = 128;
+      for (let i = 0; i < N; i++) { const r = Math.floor(i / per), c = i % per; balls.push({ x: bx + 16 + c * 24, y: by + 18 + r * 24, col: i < a ? ca : cb }); }
+      let s = `<path d="M${bx},${by - 10} v${r1(Math.ceil(N / per) * 24 + 16)} q0,12 12,12 h${bw - 24} q12,0 12,-12 v${-r1(Math.ceil(N / per) * 24 + 16)}" fill="#F7F2FB" stroke="${INK}" stroke-width="2.4" ${tt(.1, 'a-fade')}/>`;
+      const ball = (x, y, c) => `<circle cx="${r1(x)}" cy="${r1(y)}" r="10" fill="${colOf(c)}" stroke="${INK}" stroke-width="1.8"/>`;
+      const slot = [[210, 60], [270, 60]], T = [1.3, 3.0];
+      balls.forEach((q, i) => {
+        const k = i === 0 ? 0 : i === 1 ? 1 : -1;
+        if (k < 0) s += `<g ${tt(.2 + .04 * i)}>${ball(q.x, q.y, q.col)}</g>`;
+        else s += `<g ${tt(.2 + .04 * i)}>${A.trm(ball(slot[k][0], slot[k][1], q.col), T[k] + .4, q.x - slot[k][0], q.y - slot[k][1], 0, 0, 0, .7)}</g>`;
+      });
+      s += M(210, 36, '1a', { fs: 12, wt: 7, fill: GRY, t: T[0] }) + M(270, 36, '2a', { fs: 12, wt: 7, fill: GRY, t: T[1] });
+      // recompte abans de cada extracció
+      s += inout(T[0] - .2, T[1] - .2, M(bx + bw / 2, by + Math.ceil(N / per) * 24 + 34, `${a} ${a > 1 ? naP : naS} de ${N}`, { fs: 12.5, fill: INK }));
+      s += M(bx + bw / 2, by + Math.ceil(N / per) * 24 + 34, `queden ${a - 1} ${a - 1 === 1 ? naS : naP} de ${N - 1}`, { fs: 12.5, t: T[1] - .2 });
+      s += chip(210, 100, `[${a}/${N}]`, T[0] + 1, { fs: 15, st: 'o' }) + chip(270, 100, `[${a - 1}/${N - 1}]`, T[1] + 1, { fs: 15, st: 'o' }) + M(240, 106, '×', { fs: 16, t: T[1] + 1 });
+      s += chip(214, 158, res[0], 4.6, { fs: 14, st: 'o' });
+      if (res[1]) s += chip(214, 194, res[1], 5.4, { fs: 14, st: 'y' });
+      return { html: A.scene(212, s), at };
+    },
+    // combinacions: tries ordenades i després les ordenacions de cada grup
+    eCombo({ n, r: k, at }) {
+      const L = 'ABCDEFGH'.slice(0, n).split(''), cl = [UC, YEL, '#5FC98B', '#FF8FB1', '#36A9E1', '#FF9A3C'];
+      const pc = (x, y, i, t, r = 13) => `<g ${t == null ? '' : tt(t)}><circle cx="${r1(x)}" cy="${r1(y)}" r="${r}" fill="${cl[i]}" stroke="${INK}" stroke-width="1.8"/>${M(x, y + 5, L[i], { fs: 13, fill: i === 1 ? INK : '#fff' })}</g>`;
+      let s = ''; L.forEach((_, i) => { s += pc(40 + i * 34, 26, i, .1 + .06 * i); });
+      // tres caselles: 6 × 5 × 4
+      const sx = i => 60 + i * 58, cnt = Array.from({ length: k }, (_, i) => n - i);
+      cnt.forEach((c, i) => { const t = .8 + .5 * i; s += `<rect x="${sx(i) - 22}" y="58" width="44" height="40" rx="8" fill="#fff" stroke="${UC}" stroke-width="2" ${tt(t)}/>` + M(sx(i), 84, String(c), { fs: 17, fill: UC, t: t + .1 }) + (i ? M(sx(i) - 29, 84, '×', { fs: 14, t }) : ''); });
+      const P = cnt.reduce((a, b) => a * b, 1), f = Array.from({ length: k }, (_, i) => i + 1).reduce((a, b) => a * b, 1);
+      s += M(sx(k - 1) + 34, 84, `= {u|${P}}`, { fs: 17, a: 's', t: 2.2 }) + M(160, 116, 'amb ordre', { fs: 11, wt: 7, fill: GRY, t: 2.2 });
+      // les ordenacions d'un mateix grup (A, B, C)
+      const perm = arr => arr.length <= 1 ? [arr] : arr.flatMap((v, i) => perm(arr.filter((_, j) => j !== i)).map(p => [v, ...p]));
+      perm([0, 1, 2].slice(0, k)).forEach((p, j) => { const x = 30 + (j % 3) * 62, y = 140 + Math.floor(j / 3) * 30, t = 3.0 + .15 * j; p.forEach((i, q) => { s += pc(x + q * 18, y, i, t, 8.5).replace(/font-size="13"/, 'font-size="10"'); }); });
+      s += chip(160, 206, `el mateix grup ${f} vegades → ${P} ÷ ${f} = {u|${P / f}}`, 4.2, { fs: 12.5, st: 'y' });
+      s += chip(262, 152, `P = [1/${P / f}]`, 5.2, { fs: 14 });
+      return { html: A.scene(222, s), at };
+    },
+    // interès simple: cada any el mateix interès (barres que creixen iguals)
+    eInterest({ C, r, years, at }) {
+      const I = C * r / 100; let s = `<rect x="20" y="30" width="96" height="140" rx="8" fill="${UC}" ${tt(.2, 'ae-gy')}/>` + M(68, 104, `${nf(C)} €`, { fs: 15, fill: '#fff', t: .5 }) + M(68, 190, 'capital', { fs: 11, wt: 7, fill: GRY, t: .3 });
+      s += chip(204, 22, `${nf(r)} % de ${nf(C)} = {u|${nf(I)} €} cada any`, .9, { fs: 12.5 });
+      const bw = 30, x0 = 140, u = 110 / (I * years);
+      for (let y = 1; y <= years; y++) {
+        const x = x0 + (y - 1) * 42, t = 1.6 + .45 * (y - 1);
+        for (let k = 0; k < y; k++) s += `<rect x="${x}" y="${r1(170 - (k + 1) * I * u)}" width="${bw}" height="${r1(I * u - 2)}" rx="3" fill="${k === y - 1 ? YEL : '#F3D98A'}" stroke="${INK}" stroke-width="1" ${tt(t + .06 * k, k === y - 1 ? 'a-pop' : 'a-fade')}/>`;
+        s += M(x + bw / 2, 186, `any ${y}`, { fs: 10.5, wt: 7, fill: GRY, t }) + M(x + bw / 2, 170 - y * I * u - 5, nf(I * y), { fs: 11.5, t: t + .2 });
+      }
+      s += line(x0 - 6, 170, x0 + years * 42, 170, 1.5, { w: 1.6 });
+      s += chip(160, 210, `${nf(C)} + ${nf(I * years)} = {y|${nf(C + I * years)} €}`, 4.2, { fs: 14 });
+      return { html: A.scene(222, s), at };
+    },
+    // trigonometria al triangle 3-4-5 (i a la circumferència de radi 1)
+    eTrig({ mode, at }) {
+      let s = '';
+      if (mode === 'ramp') {
+        const L = 8, ang = 30, u = 22, x0 = 30, by = 150, P1 = [x0 + L * u * Math.cos(ang * Math.PI / 180), by], P2 = [P1[0], by - L * u * Math.sin(ang * Math.PI / 180)];
+        s += `<line x1="10" x2="310" y1="${by}" y2="${by}" stroke="${INK}" stroke-width="2.5" ${tt(.1, 'a-fade')}/>`;
+        s += `<polygon points="${pts([[x0, by], P1, P2])}" fill="${UC}" fill-opacity=".14" stroke="none" ${tt(.2, 'a-fade')}/>` + line(x0, by, P2[0], P2[1], .2, { col: UC, w: 5 }) + line(P1[0], by, P2[0], P2[1], 1.4, { col: RED, w: 3, dash: '6 4' });
+        s += `<path d="M${x0 + 34},${by} A34,34 0 0 0 ${r1(x0 + 34 * Math.cos(Math.PI / 6))},${r1(by - 34 * Math.sin(Math.PI / 6))}" fill="none" stroke="${INK}" stroke-width="2" ${tt(.5, 'a-fade')}/>` + M(x0 + 48, by - 7, '30°', { fs: 13, a: 's', t: .5 });
+        s += `<path d="M${r1(P1[0] - 11)},${by} v-11 h11" fill="none" stroke="${INK}" stroke-width="1.6" ${tt(1.4, 'a-fade')}/>`;
+        s += chip((x0 + P2[0]) / 2 - 30, (by + P2[1]) / 2 - 16, '8 m · hipotenusa', 1.0, { fs: 12 }) + chip(P1[0] + 70, by - 18, 'altura · oposat', 1.6, { fs: 11.5, st: 'r' });
+        s += chip(160, 186, 'altura = 8 × sin 30° = 8 × 0,5', 2.4, { fs: 13 }) + A.inout(1.6, 3.4, M(P1[0] + 10, (by + P2[1]) / 2 + 4, '?', { fs: 17, fill: RED, a: 's' })) + chip(P1[0] + 26, (by + P2[1]) / 2 + 4, '4 m', 3.4, { fs: 14, st: 'y' });
+        return { html: A.scene(200, s), at };
+      }
+      const u = 30, x0 = 34, by = 150, B = [x0 + 4 * u, by], Cc = [B[0], by - 3 * u], O = [x0, by];
+      s += `<polygon points="${pts([O, B, Cc])}" fill="#fff" stroke="${INK}" stroke-width="2.6" stroke-linejoin="round" ${tt(.1, 'a-fade')}/><path d="M${B[0] - 11},${by} v-11 h11" fill="none" stroke="${INK}" stroke-width="1.6" ${tt(.1, 'a-fade')}/>`;
+      const al = Math.atan2(3, 4);
+      s += `<path d="M${x0 + 26},${by} A26,26 0 0 0 ${r1(x0 + 26 * Math.cos(al))},${r1(by - 26 * Math.sin(al))}" fill="none" stroke="${INK}" stroke-width="2" ${tt(.3, 'a-fade')}/>` + M(x0 + 36, by - 7, 'α', { fs: 15, a: 's', t: .3 });
+      const lab = (p, q, txt, t, d, col) => M((p[0] + q[0]) / 2 + d[0], (p[1] + q[1]) / 2 + d[1], txt, { fs: 14, t, fill: col || INK });
+      const opp = [B, Cc, [B[0] + 40, by - 30]], adj = [O, B, [x0 + 2 * u, by + 36]], hyp = [O, Cc, [x0 + 30, by - 70]];
+      const hi = (seg, col, t, txt) => line(seg[0][0], seg[0][1], seg[1][0], seg[1][1], t, { col, w: 6, cls: 'a-draw' }) + (txt ? chip(seg[2][0], seg[2][1], txt, t + .3, { fs: 11.5, st: col === RED ? 'r' : col === UC ? 'o' : 'y' }) : '');
+      s += lab(B, Cc, '3', .4, [10, 5]) + lab(O, B, '4', .4, [0, 18]) + lab(O, Cc, '5', .4, [-10, -2]);
+      if (mode === 'sin') {
+        s += hi(opp, RED, 1.2, 'oposat') + hi(hyp, UC, 1.8, 'hipotenusa');
+        s += chip(258, 50, 'sin α = [3/5]', 2.4, { fs: 15 }) + chip(258, 100, '= {u|0,6}', 2.8, { fs: 16, st: 'y' });
+      } else if (mode === 'cos') {
+        s += hi(adj, '#E0A800', .9, 'contigu') + hi(hyp, UC, 1.3, '');
+        s += chip(86, 36, 'cos α = [4/5] = {u|0,8}', 1.6, { fs: 14 });
+        // circumferència de radi 1: el mateix triangle dividit entre 5
+        const R = 88, cx = 214, cy = 150, px = cx + .8 * R, py = cy - .6 * R;
+        s += `<path d="M${cx + R},${cy} A${R},${R} 0 0 0 ${cx},${cy - R}" fill="none" stroke="${UC}" stroke-width="2.4" ${tt(2.5, 'a-fade')}/>` + line(cx - 6, cy, cx + R + 10, cy, 2.5, { w: 1.6 }) + line(cx, cy + 6, cx, cy - R - 10, 2.5, { w: 1.6 });
+        s += `<polygon points="${pts([[cx, cy], [px, cy], [px, py]])}" fill="${UC}" fill-opacity=".15" stroke="${INK}" stroke-width="2" ${tt(2.8, 'a-fade')}/>` + dot(px, py, 2.9, { r: 5 });
+        s += M((cx + px) / 2, cy + 15, '0,8', { fs: 12, fill: '#B98900', t: 3.0 }) + M(px + 5, (cy + py) / 2 + 4, '0,6', { fs: 12, fill: RED, a: 's', t: 3.0 }) + M((cx + px) / 2 - 12, (cy + py) / 2 - 4, '1', { fs: 12, fill: UC, t: 3.0 });
+        s += chip(cx + 36, 30, '0,36 + 0,64 = {u|1}', 3.3, { fs: 12.5, st: 'y' });
+      } else if (mode === 'tan') {
+        s += hi(opp, RED, .9, '') + hi(adj, '#E0A800', 1.3, 'contigu');
+        s += chip(250, 40, 'tan α = [3/4] = {u|0,75}', 1.7, { fs: 14 });
+        // pendent: per cada 1 que avança, puja 0,75
+        const st = 4; for (let i = 0; i < st; i++) { const xa = x0 + i * u, ya = by - i * .75 * u, t = 2.4 + .3 * i; s += line(xa, ya, xa + u, ya, t, { col: '#E0A800', w: 2 }) + line(xa + u, ya, xa + u, ya - .75 * u, t + .12, { col: RED, w: 2 }); }
+        s += chip(250, 88, 'avança 1, puja 0,75', 3.0, { fs: 12 }) + chip(250, 132, '0,6 ÷ 0,8 = 0,75', 3.8, { fs: 13, st: 'y' });
+      }
+      return { html: A.scene(200, s), at };
     }
   });
 })();
@@ -1335,7 +1544,7 @@ Object.assign(TANIM, {
       { s: '{p|(−2)}{p|(−2)}{p|(−2)} = {y|−8}', y: 108, t: 1.9, g: { 3: { t: 3.1 } }, br: [[0, 1, '{g|+4}', 2.4], [2, 2, '{r|−2}', 2.7, '#E4574B']] },
       { s: '{r|−}({b|3 × 3}) = {y|−9}', y: 180, t: 3.8, g: { 2: { t: 4.6 } }, br: [[1, 1, 'només el 3 va al quadrat', 4.2]] }
     ], at: [1.3, 3.2, 4.7] },
-    { k: 'eRows', h: 222, rows: [], add: [
+    { k: 'eRows', h: 230, rows: [], add: [
       { p: 'm', x: 160, y: 22, s: '[2/3] − {u|[1/2] × [4/5]}', fs: 18, t: .1 },
       { p: 'farea', x: 70, y: 66, w: 120, h: 48, fr: [1, 2], fc: [4, 5], t: .5, lab: '= [4/10] = {u|[2/5]}', labT: 2.2 },
       { p: 'fbar', x: 84, y: 130, w: 216, d: 3, n: 2, t: 3.0, lab: '[2/3]', sub: 15, st: 3.6, lab2: '[10/15]' },
@@ -1370,14 +1579,14 @@ Object.assign(TANIM, {
       { p: 'sci', m: '15', e: 8, dir: 'in', x: 160, y: 72, t: .5, res: '= {u|1,5 × 10^8} km', resY: 108 },
       { p: 'sci', m: '32', e: -4, dir: 'in', x: 160, y: 164, t: 3.3, res: '= {u|3,2 × 10^{−4}}', resY: 200 }
     ] },
-    { k: 'eRows', h: 226, rows: [
-      { s: '12^2 = 144 → √144 = {u|12}', x: 196, y: 130, t: 2.8, fs: 15 },
-      { s: '7^2 = 49 < {y|50} < 64 = 8^2', x: 196, y: 166, t: 3.7, fs: 14 }
+    { k: 'eRows', h: 228, rows: [
+      { s: '12^2 = 144 → √144 = {u|12}', x: 196, y: 134, t: 2.8, fs: 15 },
+      { s: '7^2 = 49 < {y|50} < 64 = 8^2', x: 196, y: 168, t: 3.7, fs: 14 }
     ], add: [
-      { p: 'sci', m: '32', e: 4, dir: 'out', x: 86, y: 34, t: .2, fs: 20, res: '= {u|32.000}', resX: 232, resY: 34 },
-      { p: 'sci', m: '7', e: -3, dir: 'out', x: 86, y: 84, t: 1.4, fs: 20, res: '= {u|0,007}', resX: 232, resY: 84 },
-      { p: 'sq', x: 24, y: 104, c: 4.5, n: 12, t: 2.6, side: '12' },
-      { p: 'nl', x0: 40, x1: 290, y: 204, a: 7, b: 8, tick: .1, lab: 1, t: 4.1, big: [7, 8], pts: [[7.0711, 4.5, {}, '√50 ≈ 7,07', { st: 'y' }]] }
+      { p: 'sci', m: '32', e: 4, dir: 'out', x: 86, y: 44, t: .2, fs: 20, res: '= {u|32.000}', resX: 232, resY: 44 },
+      { p: 'sci', m: '7', e: -3, dir: 'out', x: 86, y: 92, t: 1.4, fs: 20, res: '= {u|0,007}', resX: 232, resY: 92 },
+      { p: 'sq', x: 24, y: 110, c: 4.5, n: 12, t: 2.6, side: '12' },
+      { p: 'nl', x0: 40, x1: 290, y: 206, a: 7, b: 8, tick: .1, lab: 1, t: 4.1, big: [7, 8], pts: [[7.0711, 4.5, {}, '√50 ≈ 7,07', { st: 'y' }]] }
     ], at: [1.3, 2.5, 3.1, 4.0, 4.7] }
   ],
   'c8-3': [
@@ -1482,6 +1691,329 @@ Object.assign(TANIM, {
       { set: 'sum', v: 7, t: 3.2, col: 'u', lab: '[6/36] = {u|[1/6]}', ly: 100 },
       { set: 'sum', v: 12, t: 4.2, col: 'y', lab: 'suma 12: [1/36]', ly: 146 }
     ] }
+  ],
+  'c9-1': [
+    { k: 'eFactors', h: 222, at: [1.9, 3.4, 5.0], items: [
+      { k: 'div', b: 5, m: 2, n: 2, y: 36, x: 150, t: .2, res: '= 5^0 = {y|1}', lab: '5^2 ÷ 5^2' },
+      { k: 'div', b: 2, m: 0, n: 2, y: 110, x: 150, t: 2.2, res: '= [1/4]', lab: '2^{−2} =' },
+      { k: 'div', b: 10, m: 0, n: 3, y: 184, x: 118, t: 3.8, w: 28, res: '= [1/1.000]', lab: '10^{−3} =' },
+      { k: 'row', s: '= {y|0,001}', x: 282, y: 192, t: 4.9, fs: 17 }
+    ] },
+    { k: 'eRows', h: 196, rows: [], at: [2.0, 2.5, 4.3, 4.9], add: [
+      { p: 'sci', m: '32', e: 7, dir: 'in', x: 160, y: 50, t: .2, res: '= {u|3,2 × 10^7}', resY: 86 },
+      { p: 'sci', m: '45', e: -4, dir: 'in', x: 160, y: 146, t: 3.2, res: '= {u|4,5 × 10^{−4}}', resY: 182 }
+    ] },
+    { k: 'eRows', h: 222, fs: 18, rows: [
+      { s: '({u|5} × {y|10^3}) × ({u|4} × {y|10^2})', y: 32, t: .2 },
+      { s: '= ({u|5} × {u|4}) × {y|10^{3+2}}', y: 78, t: 1.2, g: { 0: { from: '0.0' }, 1: { from: '0.2' }, 2: { from: '0.1' } } },
+      { s: '= {u|20} × {y|10^5}', y: 124, t: 2.2 },
+      { s: '{u|20} = 2 × {r|10} → 10^5 × {r|10} = 10^6', y: 168, t: 3.0, fs: 15 },
+      { s: '= {y|2 × 10^6}', y: 210, t: 3.8 }
+    ], at: [.4, 2.4, 3.2, 4.0] },
+    { k: 'eRows', h: 226, fs: 15, rows: [
+      { s: '5 < {y|√30} < 6', x: 214, y: 104, t: 1.8, fs: 16 },
+      { s: '√72 = √(36 × 2)', x: 150, a: 's', y: 150, t: 2.8 },
+      { s: '= √36 × √2', x: 150, a: 's', y: 182, t: 3.4 },
+      { s: '= {y|6√2}', x: 150, a: 's', y: 214, t: 4.2, fs: 17 }
+    ], add: [
+      { p: 'sq', x: 24, y: 22, c: 11, n: 6, k: 5, t: .2, t2: .3, extra: 5, t3: .8, lab: '25 + 5 = 30', labT: 1.0 },
+      { p: 'nl', x0: 130, x1: 296, y: 56, a: 5, b: 6, tick: .1, lab: 1, t: 1.3, big: [5, 6], pts: [[5.4772, 1.6, {}, '√30 ≈ 5,48', { st: 'y' }]] },
+      { p: 'sq', x: 22, y: 138, c: 8, n: 6, t: 2.6, lab: '36', labT: 2.7 },
+      { p: 'sq', x: 76, y: 138, c: 8, n: 6, t: 2.8, col: '#FFC93C', lab: '36', labT: 2.9 }
+    ], at: [1.9, 3.5, 4.3] }
+  ],
+  'c9-2': [
+    { k: 'ePolyCols', P: [2, 3, -1], Q: [1, -5, 4], names: null, mid: true, at: [1.2, 2.6, 3.8] },
+    { k: 'eRows', h: 196, fs: 18, rows: [
+      { s: '{f|x = −2}', x: 60, y: 36, t: .2 },
+      { s: 'P(x) = {b|x}^2 − 3{b|x} + 1', x: 200, y: 36, t: .2 },
+      { s: 'P(−2) = {u|(−2)}^2 − 3 × {u|(−2)} + 1', y: 100, t: 1.0, g: { 0: { from: '0.0' }, 1: { from: '0.0' } }, br: [[0, 0, '= 4', 1.8], [1, 1, '−3 × (−2) = +6', 2.1]] },
+      { s: '= 4 {g|+ 6} + 1 = {y|11}', y: 180, t: 2.8 }
+    ], at: [.3, 1.3, 3.0] },
+    { k: 'eRows', h: 200, fs: 18, rows: [
+      { s: '{u|3x}({p|2x} {p|− 5})', x: 26, a: 's', y: 38, t: .2, arcs: [[0, 1, .6, '', 14], [0, 2, .8, '', 18]] },
+      { s: '= {u|6x^2} {r|− 15x}', after: 0, t: 1.2, g: { 0: { from: '0.1' }, 1: { from: '0.2' } } },
+      { s: 'x^2 {r|− 2x} + 3x {r|− 6}', x: 176, a: 's', y: 130, t: 3.2, fs: 16 },
+      { s: '= {y|x^2 + x − 6}', x: 176, a: 's', y: 168, t: 4.1, fs: 17 }
+    ], add: [{ p: 'amodel', x: 60, y: 92, rs: [['x', 58], ['+3', 32]], cs: [['x', 58], ['−2', 26]], cells: [['x^2', '−2x'], ['3x', '−6']], t: 1.8, dt: .3 }],
+      at: [1.4, 3.4, 4.3] },
+    { k: 'eRows', h: 226, fs: 16, rows: [
+      { s: '(x + 5)^2', x: 226, y: 42, t: .2, fs: 18 },
+      { s: '= x^2 + {y|5x + 5x} + 25', x: 226, y: 84, t: 1.6, fs: 15 },
+      { s: '= x^2 + {y|10x} + 25', x: 226, y: 118, t: 2.4 },
+      { s: '(x − 3)^2 = x^2 {r|− 6x} + 9', y: 176, t: 3.3 },
+      { s: '(x + 4)(x − 4) = x^2 {k|+ 4x − 4x} − 16', y: 212, t: 4.2, fs: 15, st: { 0: 4.8 } }
+    ], add: [{ p: 'amodel', x: 26, y: 22, rs: [['x', 70], ['+5', 42]], cs: [['x', 70], ['+5', 42]], cells: [['x^2', '5x'], ['5x', '25']], t: .2, dt: .3 }],
+      at: [1.9, 2.6, 3.5, 4.9] }
+  ],
+  'c9-3': [
+    { k: 'eBalance', h: 204, at: [.4, 2.0, 3.0, 4.4], phases: [
+      { t0: .2, dur: 1.3, eqs: ['5x + 3 = 2x + 15', '3x + 3 = 15', '3x = 12', 'x = {u|4}'],
+        states: [{ L: { x: 5, u: 3 }, R: { x: 2, u: 15 } }, { L: { x: 3, u: 3 }, R: { u: 15 } }, { L: { x: 3 }, R: { u: 12 } }, { L: { x: 1 }, R: { u: 4 } }],
+        steps: [{ op: 'rm', x: 2, lab: '−2x als dos costats' }, { op: 'rm', u: 3, lab: '−3 als dos costats' }, { op: 'div', d: 3, lab: '÷ 3' }] }
+    ] },
+    { k: 'ePlane', x0: 70, y0: 14, xr: [-3, 3], yr: [-1, 9], ux: 30, uy: 19, lx: 1, ly: 2, h: 222, at: [.5, 1.5, 2.4, 3.1], items: [
+      { k: 'poly', c: [1, 0, 0], t: .3 }, { k: 'chip', x: 2.2, y: 8.6, s: 'y = x^2', t: .9, fs: 12, dx: 34 },
+      { k: 'hline', y: 4, t: 1.3, col: 'r', lab: 'x^2 = 4', la: 's' },
+      { k: 'pt', x: -2, y: 4, t: 2.2, guides: true, col: 'r' }, { k: 'pt', x: 2, y: 4, t: 2.2, guides: true, col: 'r' },
+      { k: 'chip', x: -2, y: 0, s: 'x = −2', t: 2.9, fs: 12.5, st: 'y', dy: 22 }, { k: 'chip', x: 2, y: 0, s: 'x = 2', t: 2.9, fs: 12.5, st: 'y', dy: 22 }
+    ] },
+    { k: 'ePlane', x0: 40, y0: 12, xr: [-6, 4], yr: [-16, 4], ux: 24, uy: 9.5, gy: 2, lx: 1, ly: 4, h: 214, at: [.6, 1.9, 3.1], items: [
+      { k: 'poly', c: [1, 2, -15], t: .3 }, { k: 'chip', x: -1, y: -12, s: '(x − 3)(x + 5)', t: .9, fs: 12, dy: 0 },
+      { k: 'pt', x: 3, y: 0, t: 1.6, col: 'r', lab: 'x = 3', lp: 'ne', st: 'y' },
+      { k: 'pt', x: -5, y: 0, t: 2.8, col: 'r', lab: 'x = −5', lp: 'ne', st: 'y' }
+    ] },
+    { k: 'eRows', h: 228, fs: 16, rows: [
+      { s: 'x^2 + 2x − 15 = 0', y: 22, t: .1, fs: 18 },
+      { s: '(x − 3)(x + 5) = 0', y: 194, t: 3.4, fs: 17 },
+      { s: 'x = {y|3} o x = {y|−5}', y: 222, t: 4.2, fs: 17 }
+    ], add: [
+      { p: 'chip', x: 160, y: 50, s: 'r · s = {u|−15} i r + s = {u|−2}', t: .6, fs: 12.5 },
+      { p: 'pairs', x: 70, y: 76, pairs: [[1, -15], [-1, 15], [3, -5], [-3, 5]], sum: -2, t: 1.0, dt: .45 }
+    ], at: [.3, 2.9, 3.6, 4.4] }
+  ],
+  'c9-4': [
+    { k: 'ePlane', x0: 40, y0: 12, xr: [0, 10], yr: [0, 10], ux: 20, uy: 17, lx: 2, ly: 2, h: 206, at: [.8, 2.0, 3.1, 3.8], items: [
+      { k: 'line', m: -1, n: 10, t: .3 }, { k: 'chip', x: 1.8, y: 9.4, s: 'x + y = 10', t: .6, fs: 11.5 },
+      { k: 'line', m: 1, n: -4, t: .6, col: 'y' }, { k: 'chip', x: 8.2, y: 5.6, s: 'x − y = 4', t: .9, fs: 11.5, st: 'y' },
+      { k: 'pt', x: 6, y: 4, t: 1.5, col: 'r', open: true, lab: '(6, 4)', lp: 'w' }, { k: 'mark', x: 6, y: 4, ok: false, t: 1.9, dx: 0, dy: -20 },
+      { k: 'pt', x: 7, y: 3, t: 2.7, lab: '(7, 3)', lp: 'e' }, { k: 'mark', x: 7, y: 3, ok: true, t: 3.0, dx: 0, dy: 22 }
+    ] },
+    { k: 'ePlane', x0: 214, y0: 24, xr: [0, 4], yr: [0, 6], u: 22, h: 212, at: [.4, 1.3, 2.5, 3.6], items: [
+      { k: 'line', m: -1.5, n: 6, t: .4 }, { k: 'line', m: 1, n: 1, t: .7, col: 'y' }, { k: 'pt', x: 2, y: 3, t: 3.7, lab: '(2, 3)', lp: 'e', st: 'y' }
+    ], rows: [
+      { s: '3x {g|+ 2y} = 12', x: 14, a: 's', y: 34, t: .2, st: { 0: 2.0 } },
+      { s: 'x − y = −1', x: 14, a: 's', y: 64, t: .3 },
+      { s: '× 2: {u|2x} {r|− 2y} = {u|−2}', x: 14, a: 's', y: 102, t: 1.1, st: { 1: 2.0 } },
+      { s: 'sumem: {u|5x = 10}', x: 14, a: 's', y: 142, t: 2.2 },
+      { s: '→ {u|x = 2}', x: 14, a: 's', y: 166, t: 2.5 },
+      { s: '2 − y = −1 → {u|y = 3}', x: 14, a: 's', y: 200, t: 3.3 }
+    ] },
+    { k: 'eRows', h: 214, fs: 19, rows: [
+      { s: '2x − 3 > 7', y: 30, t: .2 },
+      { s: '2x > 10', y: 64, t: 1.0 },
+      { s: '{y|x > 5}', y: 98, t: 1.8 }
+    ], add: [
+      { p: 'chip', x: 250, y: 64, s: '+3', t: .8, fs: 12, st: 'g' }, { p: 'chip', x: 250, y: 98, s: '÷ 2', t: 1.6, fs: 12, st: 'f' },
+      { p: 'nl', y: 158, a: 0, b: 10, x0: 30, x1: 280, tick: 1, lab: 1, t: 2.0, big: [5], ray: [5, 1, false, 2.3] },
+      { p: 'mark', x: 160, y: 196, ok: false, t: 3.8, sz: 9 }, { p: 'm', x: 172, y: 201, s: 'el 5 no', fs: 12, a: 's', t: 3.8, fill: '#E4574B' },
+      { p: 'chip', x: 190, y: 134, s: '5,1 ✓', t: 3.2, fs: 11.5, st: 'g' }, { p: 'chip', x: 274, y: 134, s: '100 ✓', t: 3.5, fs: 11.5, st: 'g' }
+    ], at: [.3, 1.1, 2.3, 3.8] },
+    { k: 'eRows', h: 222, fs: 19, rows: [
+      { s: '−3x > 12', y: 30, t: .2 },
+      { s: 'x {p|<} 12 ÷ (−3)', y: 70, t: 1.0, g: { 0: { t: 1.7, cls: 'ae-fx' } } },
+      { s: '{y|x < −4}', y: 132, t: 2.4 }
+    ], add: [
+      { p: 'chip', x: 160, y: 102, s: 'dividim per un negatiu: el signe es gira', t: 1.3, fs: 11.5, st: 'r' },
+      { p: 'nl', y: 178, a: -8, b: 0, x0: 30, x1: 290, tick: 1, lab: 1, t: 2.6, big: [-4], ray: [-4, -1, false, 2.9], pts: [[-5, 3.6, { fill: '#2E9E5B' }]] },
+      { p: 'chip', x: 130, y: 218, s: 'x = −5: −3 · (−5) = 15 > 12 ✓', t: 3.8, fs: 12, st: 'g' }
+    ], at: [.3, 1.8, 2.6, 4.0] }
+  ],
+  'c9-5': [
+    { k: 'eRows', h: 214, rows: [], at: [1.4, 2.4, 3.2], add: [
+      { p: 'seq', x0: 23, y: 58, terms: [3, 7, 11, 15, 19], op: '+4', t: .2, dt: .35, next: [4], nextT: 3.0, sub: ['a_1', 'a_2', 'a_3', 'a_4', 'a_5'], subT: 2.2, bars: { y: 200, h: 96, max: 19 } }
+    ] },
+    { k: 'eRows', h: 214, rows: [], at: [1.4, 1.9, 2.9], add: [
+      { p: 'seq', x0: 23, y: 58, terms: [20, 17, 14, 11, 8], op: '−3', t: .2, dt: .35, next: [4], nextT: 2.7, bars: { y: 200, h: 96, max: 20 } },
+      { p: 'chip', x: 160, y: 104, s: 'd = 17 − 20 = {r|−3}', t: 1.7, fs: 13.5, st: 'o' }
+    ] },
+    { k: 'eRows', h: 214, fs: 17, rows: [
+      { s: 'a_n = 3 + {u|(n − 1)} × 4 = {y|4n − 1}', y: 94, t: 1.3 }
+    ], at: [.9, 1.6, 4.9], add: [
+      { p: 'seq', x0: 50, y: 42, terms: [3, 7, 11, 15], op: '+4', t: .1, dt: .2, bw: 38, gap: 14 },
+      { p: 'nl', y: 168, a: 0, b: 80, x0: 22, x1: 296, tick: 4, lab: 20, t: 2.0, fs: 11, jumps: { from: 3, step: 4, n: 19, t0: 2.3, dt: .12, h: 9 }, pts: [[3, 2.2], [79, 4.7, { fill: '#FFC93C', stroke: '#2B1A38' }]] },
+      { p: 'chip', x: 40, y: 142, s: 'a_1', t: 2.2, fs: 11.5 },
+      { p: 'chip', x: 236, y: 132, s: '19 salts de 4 → a_{20} = {u|79}', t: 4.7, fs: 12.5, st: 'y' }
+    ] },
+    { k: 'eRows', h: 214, rows: [], at: [1.4, 1.8, 3.0, 4.2], add: [
+      { p: 'seq', x0: 12, y: 58, terms: [2, 6, 18, 54, 162, 486], op: '×3', t: .2, dt: .3, bw: 40, gap: 12, fs: 15, next: [4, 5], nextT: [2.8, 3.8], sub: ['a_1', '', '', '', '', 'a_6'], subT: 3.8, bars: { y: 204, h: 100, max: 486 } },
+      { p: 'chip', x: 90, y: 118, s: 'r = 6 ÷ 2 = {u|3}', t: 1.6, fs: 13 },
+      { p: 'chip', x: 96, y: 150, s: 'a_6 = 2 × 3^5 = 2 × 243 = {y|486}', t: 4.0, fs: 12.5 }
+    ] }
+  ],
+  'c9-6': [
+    { k: 'ePlane', x0: 60, y0: 14, xr: [-1, 4], yr: [-1, 10], u: 17, lx: 1, ly: 2, h: 214, at: [.5, 1.7, 2.9], items: [
+      { k: 'line', m: 3, n: 1, t: .3 }, { k: 'chip', x: 3.2, y: 9.5, s: 'y = 3x + 1', t: .6, fs: 11.5, dx: 26 },
+      { k: 'pt', x: 2, y: 7, t: 1.3, guides: true, lab: '(2, 7)', lp: 'e' }, { k: 'cm', px: 250, py: 80, s: '3 · 2 + 1 = 7', t: 1.5, fs: 12.5 }, { k: 'mk', px: 250, py: 106, ok: true, t: 1.7 },
+      { k: 'pt', x: 1, y: 5, t: 2.4, col: 'r', open: true, lab: '(1, 5)', lp: 'w' }, { k: 'pt', x: 1, y: 4, t: 2.7, col: 'g', r: 4 },
+      { k: 'cm', px: 250, py: 150, s: '3 · 1 + 1 = 4 ≠ 5', t: 2.6, fs: 12.5, st: 'r' }, { k: 'mk', px: 250, py: 176, ok: false, t: 2.8 }
+    ] },
+    { k: 'ePlane', x0: 50, y0: 14, xr: [-1, 4], yr: [-1, 8], u: 20, lx: 1, ly: 1, h: 206, at: [.5, 1.9, 3.2, 3.9], items: [
+      { k: 'pt', x: 1, y: 3, t: .3, lab: '(1, 3)', lp: 'nw' }, { k: 'pt', x: 3, y: 7, t: .5, lab: '(3, 7)', lp: 'e' },
+      { k: 'slope', p: [1, 3], run: 2, rise: 4, t: 1.0, rl: 'avança 2', ul: 'puja 4' },
+      { k: 'cm', px: 250, py: 70, s: 'm = 4 ÷ 2 = {u|2}', t: 1.8, fs: 13 },
+      { k: 'line', m: 2, n: 1, t: 2.5, w: 2.5 }, { k: 'pt', x: 0, y: 1, t: 3.0, col: 'y', lab: 'n = 1', lp: 'w' },
+      { k: 'cm', px: 250, py: 150, s: 'y = 2x + 1', t: 3.7, fs: 14, st: 'y' }
+    ] },
+    { k: 'ePlane', x0: 50, y0: 14, xr: [-2, 5], yr: [-2, 9], ux: 26, uy: 17, lx: 1, ly: 2, h: 212, at: [.6, 1.7, 2.8], items: [
+      { k: 'poly', c: [1, -4, 3], t: .3 }, { k: 'chip', x: 4.4, y: 7.6, s: 'f(x)', t: .9, fs: 11.5, dx: 16 },
+      { k: 'pt', x: -1, y: 8, t: 1.5, guides: true, lab: 'f(−1) = 8', lp: 'e' },
+      { k: 'pt', x: 0, y: 3, t: 2.6, col: 'y', lab: '(0, 3)', lp: 'e', st: 'y' }
+    ] },
+    { k: 'ePlane', x0: 50, y0: 14, xr: [-2, 5], yr: [-2, 9], ux: 26, uy: 17, lx: 1, ly: 2, h: 212, at: [.5, 1.6, 2.5, 3.1], items: [
+      { k: 'poly', c: [1, -4, 3], t: .3 },
+      { k: 'pt', x: 0, y: 3, t: 1.0, r: 4.5 }, { k: 'pt', x: 4, y: 3, t: 1.1, r: 4.5 }, { k: 'seg', p: [0, 3, 4, 3], t: 1.1, col: 'k', w: 1.6, dash: '4 3' },
+      { k: 'vline', x: 2, t: 1.4, col: 'r', lab: 'x = 2' },
+      { k: 'pt', x: 2, y: -1, t: 2.4, col: 'y', lab: 'V(2, −1)', lp: 'e', st: 'y', r: 6.5 }
+    ] }
+  ],
+  'c9-7': [
+    { k: 'eLadder', L: 5, d: 3, h: 4, hyp: true, at: [1.0, 1.7, 3.1, 3.6] },
+    { k: 'ePythCheck', tris: [[6, 8, 10], [5, 6, 8]], at: [1.3, 2.0, 3.7, 4.4] },
+    { k: 'eShadow', pole: 2, ps: 3, ts: 15 },
+    { k: 'eVol', h: 214, at: [.8, 2.0, 3.0, 4.0], items: [
+      { k: 'cone', r: 3, h: 4, x: 80, y: 152, u: 14, t: .3, fillT: 1.2 },
+      { k: 'chip', x: 80, y: 200, s: '9π × 4 ÷ 3 ≈ {u|37,68} cm³', t: 1.8, fs: 12 },
+      { k: 'sphere', r: 3, x: 236, y: 110, u: 14, t: 2.8 },
+      { k: 'chip', x: 236, y: 200, s: '[4/3] × 3,14 × 27 ≈ {u|113,04}', t: 3.8, fs: 11.5 }
+    ] }
+  ],
+  'c9-8': [
+    { k: 'eMenu', cols: [[3, '1r plat'], [4, '2n plat'], [2, 'postres']], at: [.8, 2.8, 4.4] },
+    { k: 'eDiceGrid', head: '', at: [1.1, 1.8, 2.9, 4.0], steps: [
+      { set: 'sum', v: 7, t: .5, out: 2.3 }, { set: 'no6', col: 'k', t: 2.4 }, { set: 'has6', col: 'r', t: 3.4 }
+    ], chips: [['suma 7: {u|6} casos', 40, 1.0], ['[6/36] = {u|[1/6]}', 78, 1.7], ['cap 6: 5 × 5 = 25', 120, 2.8], ['1 − [25/36] = {r|[11/36]}', 160, 3.9, 'y']] },
+    { k: 'eBag', a: 3, b: 2, ca: 'r', cb: 'b', naS: 'vermella', naP: 'vermelles', res: ['[3/5] × [2/4] = [6/20]', '= {u|[3/10]}'], at: [.5, 3.3, 5.5] },
+    { k: 'eBarsStats', data: [10, 3, 9, 5, 8, 1], max: 10, tm: 1.3, ts: 2.4, tmed: 3.6, meanLab: '6', medLab: 'Me = 6,5', at: [.9, 1.5, 3.1, 3.9] }
+  ],
+  'c10-1': [
+    { k: 'ePlane', x0: 40, y0: 16, xr: [0, 5], yr: [-1, 6], ux: 44, uy: 25, lx: 1, ly: 1, h: 212, at: [.5, 1.5, 2.6, 3.4], items: [
+      { k: 'poly', c: [1, -5, 6], t: .3 }, { k: 'chip', x: 1.2, y: 5.2, s: 'y = x^2 − 5x + 6', t: .8, fs: 11.5, dx: 40 },
+      { k: 'chip', x: 3.3, y: 3.3, s: 'Δ = 1 > 0 → 2 solucions', t: 1.3, fs: 11.5, st: 'y' },
+      { k: 'vline', x: 2.5, t: 2.1, col: 'y', lab: '5 ÷ 2' },
+      { k: 'svg', s: '' },
+      { k: 'pt', x: 2, y: 0, t: 2.9, col: 'r', lab: 'x₂ = 2', lp: 'sw' }, { k: 'pt', x: 3, y: 0, t: 3.2, col: 'r', lab: 'x₁ = 3', lp: 'se' },
+      { k: 'chip', x: 2.5, y: 2.1, s: '(5 ± 1) ÷ 2', t: 2.4, fs: 12 }
+    ] },
+    { k: 'ePlane', x0: 196, y0: 64, xr: [0, 7], yr: [-3, 6], ux: 16, uy: 12, lx: 1, ly: 3, fs: 9, t: 2.6, h: 226, at: [.3, 1.0, 2.4, 3.6], items: [
+      { k: 'poly', c: [1, -7, 10], t: 2.8 }, { k: 'pt', x: 2, y: 0, t: 3.3, col: 'r', r: 5 }, { k: 'pt', x: 5, y: 0, t: 3.4, col: 'r', r: 5 },
+      { k: 'blk', b: { p: 'pairs', x: 10, y: 92, pairs: [[1, 10], [2, 5]], sum: 7, t: 1.1, dt: .5, cw: [88, 48] } }
+    ], rows: [
+      { s: 'x^2 − 7x + 10 = 0', y: 26, t: .1, fs: 18 },
+      { s: 'sumen {u|7}, multipliquen {u|10}', x: 96, y: 60, t: .8, fs: 13 },
+      { s: '(x − 2)(x − 5) = 0', x: 96, y: 184, t: 3.0, fs: 15 },
+      { s: 'x = {y|2} i x = {y|5}', x: 96, y: 214, t: 3.5, fs: 16 }
+    ] },
+    { k: 'eRows', h: 226, fs: 16, rows: [
+      { s: '2x − 3 < 7 → 2x < 10 → {y|x < 5}', y: 24, t: .2 },
+      { s: '−3x ≥ 12 → x {p|≤} 12 ÷ (−3)', y: 110, t: 2.0, g: { 0: { t: 2.8, cls: 'ae-fx' } } },
+      { s: '{y|x ≤ −4} → (−∞, −4]', y: 166, t: 3.6 }
+    ], add: [
+      { p: 'nl', y: 62, a: -6, b: 6, x0: 30, x1: 290, tick: 1, lab: 2, t: .6, big: [5], ray: [5, -1, false, .9], labs: [-6, -4, -2, 0, 2, 4, 5, 6] },
+      { p: 'chip', x: 160, y: 138, s: 'dividim per −3: el signe es gira', t: 2.4, fs: 11.5, st: 'r' },
+      { p: 'nl', y: 198, a: -6, b: 6, x0: 30, x1: 290, tick: 1, lab: 2, t: 3.4, big: [-4], ray: [-4, -1, true, 3.8] }
+    ], at: [1.0, 2.9, 4.2] },
+    { k: 'ePlane', x0: 194, y0: 30, xr: [0, 9], yr: [0, 9], u: 12.5, lx: 3, ly: 3, h: 180, at: [.5, 1.9, 2.8, 3.6], items: [
+      { k: 'line', m: -1, n: 9, t: .4 }, { k: 'line', m: 1, n: -3, t: .7, col: 'y' }, { k: 'pt', x: 6, y: 3, t: 3.4, lab: '(6, 3)', lp: 'n', st: 'y' }
+    ], rows: [
+      { s: 'x {g|+ y} = 9', x: 16, a: 's', y: 40, t: .2, st: { 0: 1.5 } },
+      { s: 'x {r|− y} = 3', x: 16, a: 's', y: 70, t: .3, st: { 0: 1.5 } },
+      { s: 'sumem: 2x = 12', x: 16, a: 's', y: 112, t: 1.3 },
+      { s: '→ {u|x = 6}', x: 16, a: 's', y: 138, t: 1.8 },
+      { s: '6 + y = 9 → {u|y = 3}', x: 16, a: 's', y: 172, t: 2.6 }
+    ] }
+  ],
+  'c10-2': [
+    { k: 'ePlane', x0: 60, y0: 14, xr: [-1, 4], yr: [0, 10], u: 18, lx: 1, ly: 2, h: 212, at: [.6, 1.9, 3.1, 3.7], items: [
+      { k: 'pt', x: 1, y: 5, t: .3, lab: '(1, 5)', lp: 'nw' }, { k: 'pt', x: 3, y: 9, t: .5, lab: '(3, 9)', lp: 'e' },
+      { k: 'slope', p: [1, 5], run: 2, rise: 4, t: 1.0, rl: '2', ul: '4' },
+      { k: 'cm', px: 250, py: 60, s: 'm = 4 ÷ 2 = {u|2}', t: 1.8, fs: 13 },
+      { k: 'line', m: 2, n: 3, t: 2.4, w: 2.5 }, { k: 'pt', x: 0, y: 3, t: 3.0, col: 'y', lab: 'n = 3', lp: 'w' },
+      { k: 'cm', px: 250, py: 140, s: 'y = 2x + 3', t: 3.6, fs: 14, st: 'y' }
+    ] },
+    { k: 'ePlane', x0: 40, y0: 12, xr: [-3, 4], yr: [-5, 6], ux: 24, uy: 17, lx: 1, ly: 1, h: 206, at: [.5, 1.9, 2.6], items: [
+      { k: 'poly', c: [1, -2, -3], t: .3 },
+      { k: 'pt', x: -2, y: 5, t: 1.6, guides: true, lab: '(−2, 5)', lp: 'e' },
+      { k: 'cm', px: 262, py: 50, s: '(−2)^2 = 4', t: 1.2, fs: 12.5 }, { k: 'cm', px: 262, py: 84, s: '−2 × (−2) = +4', t: 1.7, fs: 12 }, { k: 'cm', px: 262, py: 120, s: '4 + 4 − 3 = {u|5}', t: 2.3, fs: 13, st: 'y' }
+    ] },
+    { k: 'ePlane', x0: 40, y0: 12, xr: [-3, 4], yr: [-5, 6], ux: 24, uy: 17, lx: 1, ly: 1, h: 206, at: [.5, 1.5, 2.4, 3.1], items: [
+      { k: 'poly', c: [1, -2, -3], t: .3 },
+      { k: 'vline', x: 1, t: 1.2, col: 'r', lab: 'x = 1' },
+      { k: 'pt', x: 1, y: -4, t: 2.2, col: 'y', lab: 'V(1, −4)', lp: 'e', st: 'y', r: 6.5 },
+      { k: 'cm', px: 268, py: 60, s: 'x = [2/2] = 1', t: 1.4, fs: 12.5 }, { k: 'cm', px: 268, py: 100, s: 'f(1) = −4', t: 2.3, fs: 12.5 }, { k: 'cm', px: 268, py: 140, s: 'mínim', t: 3.0, fs: 13, st: 'f' }
+    ] },
+    { k: 'ePlane', x0: 40, y0: 12, xr: [-3, 4], yr: [-5, 6], ux: 24, uy: 17, lx: 1, ly: 1, h: 206, at: [.5, 1.4, 2.4, 2.9], items: [
+      { k: 'poly', c: [1, -2, -3], t: .3 },
+      { k: 'pt', x: 0, y: -3, t: 1.2, col: 'y', lab: '(0, −3)', lp: 'e', st: 'y' },
+      { k: 'pt', x: -1, y: 0, t: 2.2, col: 'r', lab: '(−1, 0)', lp: 'nw' }, { k: 'pt', x: 3, y: 0, t: 2.5, col: 'r', lab: '(3, 0)', lp: 'ne' },
+      { k: 'cm', px: 270, py: 150, s: 'eix y: x = 0', t: 1.2, fs: 12 }, { k: 'cm', px: 270, py: 184, s: 'eix x: y = 0', t: 2.1, fs: 12, st: 'r' }
+    ] }
+  ],
+  'c10-3': [
+    { k: 'ePct', max: 240, W: 210, h: 214, at: [.4, 1.8, 3.6, 4.2], items: [
+      { k: 'up', y: 40, base: 200, pct: 10, t: .3, lab: '200 €, puja un 10 %', idx: '× 1,1' },
+      { k: 'down', y: 122, base: 220, pct: 10, t: 2.1, lab: '220 €, baixa un 10 %', idx: '× 0,9' },
+      { k: 'svg', s: '<line x1="197" x2="197" y1="26" y2="160" stroke="#2B1A38" stroke-width="1.6" stroke-dasharray="4 4" class="an a-fade" style="--t:3.40s"/><text x="197" y="172" text-anchor="middle" font-size="11" font-weight="700" fill="#8E829A" font-family="Lexend,sans-serif" class="an a-fade" style="--t:3.40s">200 €</text>' },
+      { k: 'row', s: '1,1 × 0,9 = 0,99 → {r|1 % menys}', y: 204, t: 3.9 }
+    ] },
+    { k: 'ePct', max: 84, W: 240, h: 170, at: [.5, 1.4, 2.4, 3.3], items: [
+      { k: 'row', s: 'inicial × 0,85 = 68', x: 160, y: 24, t: 1.2, fs: 14 },
+      { k: 'rev', y: 52, fin: 68, pct: 85, t: .3 },
+      { k: 'row', s: 'comprova: 80 × 0,85 = {u|68 €}', y: 156, t: 3.1, fs: 14 }
+    ] },
+    { k: 'eInterest', C: 2000, r: 3, years: 4, at: [.9, 3.2, 4.3] },
+    { k: 'eShare', total: 900, parts: [2, 3, 4], at: [.4, 1.2, 3.8, 4.4] }
+  ],
+  'c10-4': [
+    { k: 'eTrig', mode: 'sin', at: [.3, 1.4, 2.6] },
+    { k: 'eTrig', mode: 'cos', at: [.3, 1.8, 3.4] },
+    { k: 'eTrig', mode: 'tan', at: [.3, 1.9, 3.9] },
+    { k: 'eTrig', mode: 'ramp', at: [.5, 1.7, 2.5, 3.5] }
+  ],
+  'c10-5': [
+    { k: 'ePyth', a: 5, b: 12, leg: [10, 6, 4.2] },
+    { k: 'eVol', h: 226, at: [.5, 1.5, 2.2, 4.7], items: [
+      { k: 'net', r: 2, h: 5, x: 34, y: 150, u: 9, t: .3 },
+      { k: 'chip', x: 100, y: 212, s: '8π + 20π = 28π ≈ {u|87,96} cm²', t: 2.0, fs: 12 },
+      { k: 'cyl', r: 2, h: 5, x: 250, y: 160, u: 14, t: 2.7 },
+      { k: 'chip', x: 250, y: 212, s: '20π ≈ {u|62,83} cm³', t: 4.5, fs: 12 }
+    ] },
+    { k: 'eVol', h: 222, at: [.8, 1.4, 3.1, 3.9, 4.6], items: [
+      { k: 'semi', r: 4, x: 76, y: 92, u: 13, t: .3 },
+      { k: 'chip', x: 76, y: 128, s: '[π · 4^2/2] = 8π ≈ {u|25,13}', t: 1.2, fs: 12 },
+      { k: 'sphere', r: 6, x: 240, y: 76, u: 10, t: 2.2 },
+      { k: 'chip', x: 102, y: 176, s: 'A = 4π · 6^2 = 144π', t: 3.0, fs: 12.5 },
+      { k: 'chip', x: 102, y: 210, s: 'V = [4/3]π · 6^3 = 288π', t: 3.8, fs: 12.5 },
+      { k: 'chip', x: 256, y: 176, s: '≈ 452,39 cm²', t: 4.5, fs: 12.5, st: 'y' }, { k: 'chip', x: 256, y: 210, s: '≈ {u|904,78} cm³', t: 4.6, fs: 12.5, st: 'y' }
+    ] },
+    { k: 'eShadow', pole: 1, ps: .8, ts: 12, obj: 'building' }
+  ],
+  'c10-6': [
+    { k: 'eRows', h: 226, fs: 16, rows: [
+      { s: '= x^2 + {y|6x} + 9', x: 150, a: 's', y: 66, t: 1.7 },
+      { s: '(x − 3)^2 = x^2 {r|− 6x} + 9', y: 150, t: 2.4 },
+      { s: '(x + 4)(x − 4) = x^2 {k|+ 4x − 4x} − 16', y: 184, t: 3.2, fs: 15, st: { 0: 3.7 } },
+      { s: '21 × 19 = 20^2 − 1^2 = 400 − 1 = {y|399}', y: 218, t: 4.2, fs: 15 }
+    ], add: [{ p: 'amodel', x: 30, y: 20, rs: [['x', 62], ['+3', 32]], cs: [['x', 62], ['+3', 32]], cells: [['x^2', '3x'], ['3x', '9']], t: .2, dt: .3 }],
+      at: [1.8, 2.6, 3.8, 4.4] },
+    { k: 'eRows', h: 226, fs: 16, rows: [
+      { s: 'a_{20} = 5 + 19 × 3 = {y|62}', x: 20, a: 's', y: 94, t: 1.6 },
+      { s: 'a_6 = 3 × 2^5 = 3 × 32 = {y|96}', y: 218, t: 4.4 }
+    ], at: [1.3, 2.0, 3.0, 4.6], add: [
+      { p: 'seq', x0: 20, y: 44, terms: [5, 8, 11], op: '+3', t: .2, dt: .35, bw: 38, gap: 14 },
+      { p: 'chip', x: 230, y: 44, s: 'd = {u|3}', t: 1.2, fs: 13 },
+      { p: 'seq', x0: 10, y: 160, terms: [3, 6, 12, 24, 48, 96], op: '×2', t: 2.2, dt: .3, bw: 40, gap: 12, next: [3, 4, 5], nextT: [3.6, 3.8, 4.0], sub: ['a_1', '', '', '', '', 'a_6'], subT: 4.0 },
+      { p: 'chip', x: 270, y: 94, s: 'r = {u|2}', t: 2.9, fs: 13 }
+    ] },
+    { k: 'eFactors', h: 228, at: [1.9, 3.1, 5.2, 5.8], items: [
+      { k: 'mul', b: 2, m: 3, n: 4, y: 30, x: 140, t: .2, w: 18, res: '= 2^7 = {u|128}', nobr: true },
+      { k: 'pow', b: 2, m: 3, n: 2, y: 88, x: 120, t: 2.0, w: 20, res: '= 2^6 = {u|64}' },
+      { k: 'div', b: 2, m: 3, n: 5, y: 164, x: 110, t: 3.6, res: '= 2^{−2} = {y|[1/4]}' },
+      { k: 'row', s: 'comprova: 8 ÷ 32 = [1/4]', x: 160, y: 220, t: 5.6, fs: 13 }
+    ] },
+    { k: 'eRows', h: 222, rows: [
+      { s: '({u|6} × {y|10^5}) × ({u|3} × {y|10^4}) = {u|18} × {y|10^9}', y: 156, t: 3.4, fs: 15 },
+      { s: '= {u|1,8} × 10 × 10^9 = {y|1,8 × 10^{10}}', y: 204, t: 4.4, fs: 15 }
+    ], add: [
+      { p: 'sci', m: '35', e: 5, dir: 'in', x: 96, y: 40, fs: 18, t: .2, res: '= {u|3,5 × 10^5}', resX: 236, resY: 40 },
+      { p: 'sci', m: '72', e: -4, dir: 'in', x: 96, y: 100, fs: 18, t: 1.9, res: '= {u|7,2 × 10^{−4}}', resX: 236, resY: 100 }
+    ], at: [1.6, 3.1, 3.8, 4.8] }
+  ],
+  'c10-7': [
+    { k: 'eBarsStats', data: [3, 5, 7, 9, 21], max: 21, tm: 1.3, tmed: 2.4, meanLab: '9', medLab: 'Me = 7', at: [.8, 1.5, 2.6] },
+    { k: 'eMissing', mean: 6, n: 4, have: [4, 5, 8], at: [.4, 1.2, 2.9, 4.3] },
+    { k: 'eBag', a: 4, b: 6, ca: 'w', cb: 'k', naS: 'blanca', naP: 'blanques', res: ['[4/10] × [3/9] = [12/90]', '= {u|[2/15]} ≈ 0,13'], at: [.5, 4.1, 4.7, 5.5] },
+    { k: 'eCombo', n: 6, r: 3, at: [.6, 2.3, 4.3, 5.3] }
   ]
 });
 /* @@END */
