@@ -1140,7 +1140,8 @@ renderProfile.inner = function () {
     <div class="set"><span>${L('Objectiu diari', 'Objetivo diario')}</span><div class="seg">${[10, 20, 30, 50].map(g => `<button class="${P.goal === g ? 'on' : ''}" onclick="P.goal=${g};save();renderProfile()">${g} XP</button>`).join('')}</div></div>
     <div class="set"><span>${L('Sons', 'Sonidos')}</span><button class="tog ${P.sound ? 'on' : ''}" onclick="P.sound=!P.sound;save();renderProfile()" aria-label="${L('Sons', 'Sonidos')}"><i></i></button></div>
     <div class="row2 pbtns"><button class="btn ghost" onclick="go('profiles')">${L("CANVIA D'ALUMNE", 'CAMBIAR DE ALUMNO')}</button><button class="btn ghost redt" onclick="resetP()">${L('ESBORRA EL PROGRÉS', 'BORRAR EL PROGRESO')}</button></div>
-    <p class="foot"><img src="img/brand/logo-horitzontal.svg" alt="Numi Mates" class="footlogo"></p>`, 'profile');
+    <p class="foot"><img src="img/brand/logo-horitzontal.svg" alt="Numi Mates" class="footlogo"></p>
+    <p class="legalf"><a href="https://numimates.com/privacitat?l=${LANG}" target="_blank" rel="noopener">${L('Privadesa', 'Privacidad')}</a> · <a href="https://numimates.com/avis-legal?l=${LANG}" target="_blank" rel="noopener">${L('Avís legal', 'Aviso legal')}</a></p>`, 'profile');
 }
 /* ---------- La meva classe: unir-se al grup del docent amb el codi AULA-XXXX ---------- */
 function classeBox() {
@@ -1336,7 +1337,8 @@ function onbAccount() {
     <label class="lbl">${L('Contrasenya (mínim 4)', 'Contraseña (mínimo 4)')}</label>${passField('ap', '••••')}
     <div id="aerr" class="err"></div>
     <button class="btn big" id="regBtn" onclick="doRegister()">${L('CREA EL COMPTE', 'CREAR LA CUENTA')}</button>
-    <button class="link" onclick="doRegister(true)">${L('Ara no (et donarem un codi secret)', 'Ahora no (te daremos un código secreto)')}</button></div>`;
+    <button class="link" onclick="doRegister(true)">${L('Ara no (et donarem un codi secret)', 'Ahora no (te daremos un código secreto)')}</button>
+    <p class="legalf">${L("Si tens menys de 14 anys, fes-ho amb permís de la teva família. Guardem el mínim de dades i no hi ha publicitat:", 'Si tienes menos de 14 años, hazlo con permiso de tu familia. Guardamos el mínimo de datos y no hay publicidad:')} <a href="https://numimates.com/privacitat?l=${LANG}" target="_blank" rel="noopener">${L('política de privadesa', 'política de privacidad')}</a>.</p></div>`;
 }
 async function doRegister(noUser) {
   const u = noUser ? null : $('#au').value.trim().toLowerCase(), p = noUser ? null : $('#ap').value;

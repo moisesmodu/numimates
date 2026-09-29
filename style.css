@@ -1035,3 +1035,5 @@ img.ic{display:inline-block;width:1.2em;height:1.2em;object-fit:contain;vertical
 @keyframes aDraw{from{stroke-dashoffset:1}}
 @keyframes aMove{from{transform:translate(var(--fx),var(--fy));opacity:.4}}
 @keyframes aLine{from{opacity:0;transform:translateY(8px)}}
+
+.legalf{text-align:center;font-size:13px;color:#7A6F86;font-weight:700;margin:10px 0 0}.legalf a{color:var(--pri);font-weight:800}
