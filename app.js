@@ -86,7 +86,8 @@ async function syncNow() {
 async function pull() {
   if (!P || !P.code || !navigator.onLine) return;
   if (P.gone) return;
-  try { const r = await api('login', { code: P.code }); if (r.status === 410) { P.gone = true; saveLocal(); return; } if (r.state && r.state.xp > P.xp && !P.resetPending) { mergeIn(r.state); if (VIEW === 'home') renderHome(); }
+  try { const r = await api('login', { code: P.code }); if (r.status === 410) { P.gone = true; saveLocal(); return; }
+    if (r.pla && r.pla !== P.pla) { P.pla = r.pla; saveLocal(); if (VIEW === 'home') renderHome(); } if (r.state && r.state.xp > P.xp && !P.resetPending) { mergeIn(r.state); if (VIEW === 'home') renderHome(); }
     if (r.state && !!r.state.unlockAll !== !!P.unlockAll) { P.unlockAll = !!r.state.unlockAll; saveLocal(); if (VIEW === 'home') renderHome(); } if (r.username && !P.username) { P.username = r.username; saveLocal(); } } catch (e) { }
 }
 // Fusiona el progrés de dos dispositius (la tauleta de l'escola i el mòbil de casa) sense perdre res de cap dels dos:
@@ -296,6 +297,7 @@ let LS = null, SP = null, AG = null, FLOW = [], VIEW = '', GAIN = null;
 function go(v) {
   LS = null; stopSprint(); stopAgility(); closeModal();
   if (!P && v !== 'profiles') v = Object.keys(DB.profiles).length ? 'profiles' : 'onboard';
+  if ((v === 'battles' || v === 'season') && !isPremium()) { premiumModal(v === 'battles' ? 'batalles' : 'temporada'); v = VIEW && VIEW !== v ? VIEW : 'home'; if (v === VIEW) return; }
   if ((v === 'battles' && classOff('batalles'))) { toast(L("El teu docent ha desactivat les batalles per a la classe.", 'Tu docente ha desactivado las batallas para la clase.')); v = 'train'; }
   VIEW = v;
   ({ home: renderHome, train: renderTrain, league: () => renderLeague(), album: () => renderAlbum(), shop: renderShop, badges: () => renderAlbum('medals'), profile: renderProfile, profiles: renderProfiles, battles: () => renderBattles(), season: () => renderSeason(), onboard: () => onb(0) }[v] || renderHome)();
@@ -321,23 +323,34 @@ function showGain() {
 }
 
 /* ---------- Camí ---------- */
-const DAY_REWARD = 3, DAY_MAX = 5;
+// Plans: gratuït = 2 lliçons noves al dia; Premium o escola = 5 al dia, batalles i ruta de temporada
+const isPremium = () => !!(P && (P.unlockAll || P.classe || P.pla === 'premium' || P.pla === 'escola'));
+const dayMax = () => isPremium() ? 5 : 2, dayReward = () => isPremium() ? 3 : 2;
 function dayLessons() { if (!P.dayl || P.dayl.d !== today()) P.dayl = { d: today(), n: 0 }; return P.dayl; }
-const dayCapped = () => !P.unlockAll && dayLessons().n >= DAY_MAX;
+const dayCapped = () => !P.unlockAll && dayLessons().n >= dayMax();
 function dayTxt() {
-  const n = dayLessons().n, left = Math.max(0, DAY_REWARD - n);
-  return n >= DAY_MAX ? L('Avui ja has fet les 5 lliçons del dia', 'Hoy ya has hecho las 5 lecciones del día') : L(`Lliçons d'avui: ${n}/${DAY_MAX} · ${left ? `${left} amb premi` : 'ja sense diamants ni cartes'}`, `Lecciones de hoy: ${n}/${DAY_MAX} · ${left ? `${left} con premio` : 'ya sin diamantes ni cartas'}`);
+  const n = dayLessons().n, M = dayMax(), left = Math.max(0, dayReward() - n);
+  return n >= M ? L(`Avui ja has fet les ${M} lliçons del dia`, `Hoy ya has hecho las ${M} lecciones del día`) : L(`Lliçons d'avui: ${n}/${M} · ${left ? `${left} amb premi` : 'ja sense diamants ni cartes'}`, `Lecciones de hoy: ${n}/${M} · ${left ? `${left} con premio` : 'ya sin diamantes ni cartas'}`);
+}
+function premiumModal(what) {
+  const intro = what === 'batalles' ? L('Les batalles amb amics són del pla Premium.', 'Las batallas con amigos son del plan Premium.') : what === 'temporada' ? L('La ruta de temporada és del pla Premium.', 'La ruta de temporada es del plan Premium.') : L('Amb Premium pots avançar més cada dia.', 'Con Premium puedes avanzar más cada día.');
+  modal(`<div class="sheet card cent"><div class="mchar tapme">${meC('happy')}</div><h3>Numi Mates Premium</h3><p>${intro}</p>
+    <ul class="prem"><li>📚 ${L('Fins a <b>5 lliçons noves</b> al dia (gratis, 2)', 'Hasta <b>5 lecciones nuevas</b> al día (gratis, 2)')}</li><li>⚔️ ${L('<b>Batalles</b> amb amics i amb la classe', '<b>Batallas</b> con amigos y con la clase')}</li><li>🏆 ${L('<b>Ruta de temporada</b> amb cartes exclusives cada mes', '<b>Ruta de temporada</b> con cartas exclusivas cada mes')}</li></ul>
+    <p class="mut" style="font-size:14px">${L("Si fas servir Numi Mates amb la teva escola, ja ho tens tot inclòs: demana el codi de classe al teu docent i posa'l a Perfil → Tinc un codi de classe.", 'Si usas Numi Mates con tu escuela, ya lo tienes todo incluido: pide el código de clase a tu docente y ponlo en Perfil → Tengo un código de clase.')}</p>
+    <button class="btn big" onclick="closeModal()">${L('ENTESOS', 'ENTENDIDO')}</button></div>`, true);
 }
 function scrDayDone() {
+  const M = dayMax(), free = !isPremium();
   modal(`<div class="sheet card cent"><div class="mchar tapme">${meC('happy')}</div><h3>${L('Avui ja has treballat molt!', '¡Hoy ya has trabajado mucho!')}</h3>
-    <p>${L(`Ja has fet les ${DAY_MAX} lliçons d'avui. El cervell aprèn millor si descansa: demà et n'esperen més! Mentrestant pots fer entrenaments, jocs d'agilitat, repassos o batalles.`, `Ya has hecho las ${DAY_MAX} lecciones de hoy. El cerebro aprende mejor si descansa: ¡mañana te esperan más! Mientras tanto puedes hacer entrenamientos, juegos de agilidad, repasos o batallas.`)}</p>
+    ${free ? `<p class="mut" style="font-size:14px">${L('Amb el pla gratuït es poden fer 2 lliçons noves al dia.', 'Con el plan gratuito se pueden hacer 2 lecciones nuevas al día.')} <button class="link" onclick="premiumModal()">${L('Què és Premium?', '¿Qué es Premium?')}</button></p>` : ''}
+    <p>${L(`Ja has fet les ${M} lliçons d'avui. El cervell aprèn millor si descansa: demà et n'esperen més! Mentrestant pots fer entrenaments, jocs d'agilitat o repassos.`, `Ya has hecho las ${M} lecciones de hoy. El cerebro aprende mejor si descansa: ¡mañana te esperan más! Mientras tanto puedes hacer entrenamientos, juegos de agilidad o repasos.`)}</p>
     <button class="btn big" onclick="closeModal();go('train')">${L('ANEM A ENTRENAR', 'VAMOS A ENTRENAR')}</button><button class="btn ghost big" onclick="closeModal()">${L('TORNA', 'VOLVER')}</button></div>`, true);
 }
 function goalCard() {
   dailyRoll();
   const x = P.daily.xp, g = P.goal, pc = Math.min(100, Math.round(x / g * 100)), dl = dayLessons().n;
   const msg = x >= g ? L("Objectiu d'avui complert! Ets un crac.", '¡Objetivo de hoy cumplido! Eres un crack.') : x === 0 ? L(`Hola, ${esc(P.name)}! Fem una lliçó?`, `¡Hola, ${esc(P.name)}! ¿Hacemos una lección?`) : L(`Et falten ${g - x} XP per a l'objectiu d'avui.`, `Te faltan ${g - x} XP para el objetivo de hoy.`);
-  return `<div class="goal"><div class="gchar tapme">${meC(x >= g ? 'happy' : 'idle')}</div><div class="gbody"><div class="gmsg">${msg}</div><div class="gbar"><div style="width:${pc}%"></div></div><div class="gnum">${x} / ${g} ${L('XP avui', 'XP hoy')}</div><div class="gday">${[...Array(DAY_MAX).keys()].map(i => `<i class="${i < dl ? 'on' : ''} ${i < DAY_REWARD ? 'rw' : ''}">${i < DAY_REWARD ? '💎' : ''}</i>`).join('')}<span>${dayTxt()}</span></div></div></div>`;
+  return `<div class="goal"><div class="gchar tapme">${meC(x >= g ? 'happy' : 'idle')}</div><div class="gbody"><div class="gmsg">${msg}</div><div class="gbar"><div style="width:${pc}%"></div></div><div class="gnum">${x} / ${g} ${L('XP avui', 'XP hoy')}</div><div class="gday">${[...Array(dayMax()).keys()].map(i => `<i class="${i < dl ? 'on' : ''} ${i < dayReward() ? 'rw' : ''}">${i < dayReward() ? '💎' : ''}</i>`).join('')}<span>${dayTxt()}</span></div></div></div>`;
 }
 function testCard() {
   const t = testInfo(); if (!t.due) return '';
@@ -676,7 +689,7 @@ function finishRun() {
     R.firstPass = first;
     if (R.exam && first) R.gate = R.ui;
     P.stats.lessons++; if (R.perfect) P.stats.perfect++;
-    if (R.mode === 'lesson') { const dl = dayLessons(); dl.n++; if (dl.n > DAY_REWARD && !P.unlockAll) { R.gems = 0; R.noPrize = true; R.sub = (R.sub ? R.sub + ' ' : '') + L(`Lliçó ${dl.n} de ${DAY_MAX} d'avui: els diamants i les cartes són per a les ${DAY_REWARD} primeres, però l'XP i les estrelles compten igual!`, `Lección ${dl.n} de ${DAY_MAX} de hoy: los diamantes y las cartas son para las ${DAY_REWARD} primeras, ¡pero la XP y las estrellas cuentan igual!`); } }
+    if (R.mode === 'lesson') { const dl = dayLessons(); dl.n++; if (dl.n > dayReward() && !P.unlockAll) { R.gems = 0; R.noPrize = true; R.sub = (R.sub ? R.sub + ' ' : '') + L(`Lliçó ${dl.n} de ${dayMax()} d'avui: els diamants i les cartes són per a les ${dayReward()} primeres, però l'XP i les estrelles compten igual!`, `Lección ${dl.n} de ${dayMax()} de hoy: los diamantes y las cartas son para las ${dayReward()} primeras, ¡pero la XP y las estrellas cuentan igual!`); } }
   }
   R.bonus = Math.floor(LS.maxCombo / 3) * 2 + LS.gold * 5; R.xp += R.bonus;
   // sobres: lliçons (amb el límit diari), la porta només la primera vegada que s'obre i la missió només quan s'acaba bé
@@ -916,7 +929,7 @@ const GAMES = () => [
 function renderTrain() {
   const units = UNITS_().map((u, i) => ({ u, i })).filter(({ i }) => unitOpen(i) && trainPool(i).length), B = P.stats.bests;
   app.innerHTML = shell(`<h1 class="ph1">${L('Entrena', 'Entrena')}</h1><p class="lead">${L(`Practica el que ja has après de ${tx(CUR().long)} i posa a prova la teva agilitat mental.`, `Practica lo que ya has aprendido de ${tx(CUR().long)} y pon a prueba tu agilidad mental.`)}</p>
-    ${classOff('batalles') ? '' : `<button class="tcard battle" onclick="go('battles')"><span class="ti">⚔️</span><span><b>${L('Batalles de mates', 'Batallas de mates')}</b><small>${L('Duels 1 contra 1 i partides de fins a 10. Mateixes preguntes per a tothom!', 'Duelos 1 contra 1 y partidas de hasta 10. ¡Mismas preguntas para todos!')}</small></span></button>`}
+    ${classOff('batalles') ? '' : `<button class="tcard battle ${isPremium() ? '' : 'locked'}" onclick="${isPremium() ? "go('battles')" : "premiumModal('batalles')"}"><span class="ti">⚔️</span><span><b>${L('Batalles de mates', 'Batallas de mates')}</b><small>${L('Duels 1 contra 1 i partides de fins a 10. Mateixes preguntes per a tothom!', 'Duelos 1 contra 1 y partidas de hasta 10. ¡Mismas preguntas para todos!')}</small></span></button>`}
     <button class="tcard" onclick="startTrain()"><span class="ti">🧠</span><span><b>${L('Entrenament intel·ligent', 'Entrenamiento inteligente')}</b><small>${L('8 exercicis del que et costa més. Ideal per repassar.', '8 ejercicios de lo que más te cuesta. Ideal para repasar.')}</small></span></button>
     ${testInfo().due ? `<button class="tcard evo" onclick="startEvolution()"><span class="ti">🧪</span><span><b>${L("Prova d'evolució", 'Prueba de evolución')}</b><small>${L('Ja la pots fer! Mira quant has millorat.', '¡Ya puedes hacerla! Mira cuánto has mejorado.')}</small></span></button>` : ''}
     <button class="tcard school" onclick="pickSchool()"><span class="ti">📚</span><span><b>${L("Què fas ara a l'escola?", '¿Qué estás dando en el cole?')}</b><small>${L("Tria el tema que fas a classe i practica'l: així t'anirà millor a l'escola!", 'Elige el tema que das en clase y practícalo: ¡así te irá mejor en el cole!')}</small></span></button>
@@ -1264,7 +1277,7 @@ async function doLogin(withCode) {
     const code = r.code || data.code, ex = Object.values(DB.profiles).find(p => p.code === code);
     if (ex) { closeModal(); return switchP(ex.id); }
     const id = 'p' + Date.now().toString(36);
-    P = migrate({ ...r.state, id, code, name: r.name, username: r.state.username || r.username || (withCode ? null : data.username) }); P.dirty = false; P.holdReg = false;
+    P = migrate({ ...r.state, id, code, name: r.name, username: r.state.username || r.username || (withCode ? null : data.username), pla: r.pla || 'free' }); P.dirty = false; P.holdReg = false;
     DB.profiles[id] = P; DB.current = id; LANG = P.lang; saveLocal();
     closeModal(); go('home'); toast(L(`Hola de nou, ${esc(P.name)}! 👋`, `¡Hola de nuevo, ${esc(P.name)}! 👋`));
   } catch (e) { $('#lerr').textContent = ERR(); }

@@ -102,6 +102,7 @@ function rewardLabel(r) {
   return `💎 ${r.gems}`;
 }
 function seasonCard() {
+  if (!isPremium()) { const { cfg } = seasonInfo(); return `<button class="seasoncard locked" style="--sc:${cfg.color}" onclick="premiumModal('temporada')"><span class="sci">${cfg.icon}</span><span class="scx"><small>${L('RUTA DE TEMPORADA', 'RUTA DE TEMPORADA')} · PREMIUM</small><b>${tx(cfg.name)}</b><em>${L('Cartes exclusives cada mes', 'Cartas exclusivas cada mes')}</em></span><span class="go">🔒</span></button>`; }
   const { cfg, left } = seasonInfo(), s = seasonState(), t = seasonTier(s), pend = [...Array(t).keys()].map(i => i + 1).filter(i => !s.got.includes(i)).length;
   return `<button class="seasoncard" style="--sc:${cfg.color}" onclick="go('season')"><span class="sci">${cfg.icon}</span><span class="scx"><small>${L('RUTA DE TEMPORADA', 'RUTA DE TEMPORADA')} · ${L(`queden ${left} dies`, `quedan ${left} días`)}</small><b>${tx(cfg.name)}</b>
     <span class="scbar"><i style="width:${t / SP_TIERS * 100}%"></i></span><em>${L('Nivell', 'Nivel')} ${t}/${SP_TIERS}${pend ? ` · 🎁 ${pend} ${L('per recollir', 'por recoger')}` : ''}</em></span><span class="go">›</span></button>`;
