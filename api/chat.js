@@ -46,9 +46,11 @@ export default async function handler(req, res) {
   if (await blocked(req, 'xat', 60)) return tooMany(res);
   if (await blocked(req, 'codi', 40)) return tooMany(res);
   await tables();
-  const a = (await sql`SELECT code, pla, pla_fins, grup_id, active FROM mates.alumnes WHERE code = ${code}`)[0];
+  const a = (await sql`SELECT a.code, a.pla, a.pla_fins, a.grup_id, a.active, g.opts FROM mates.alumnes a LEFT JOIN mates.grups g ON g.id = a.grup_id WHERE a.code = ${code}`)[0];
   if (!a) { await fail(req, 'codi'); return ok(res, { error: 'no trobat' }, 404); }
   if (!a.active) return ok(res, { error: 'baixa' }, 410);
+  // el docent pot apagar l'assistent per a tot el grup (mode escola)
+  if (a.opts && a.opts.xat === false) return ok(res, { error: 'xat-off' }, 403);
   const pla = plaOf(a), max = LIMIT[pla] || LIMIT.free;
   const n = (await sql`INSERT INTO mates.xat_us (code, n) VALUES (${code}, 1) ON CONFLICT (code, dia) DO UPDATE SET n = mates.xat_us.n + 1 RETURNING n`)[0].n;
   if (n > max) return ok(res, { error: 'limit', max, pla }, 429);

@@ -394,7 +394,7 @@ function grupCard(g) {
     <hr class="gsep">${temaField(g)}
     <details class="more gopts"><summary>${ico('chevron-right')}${L('Mode escola', 'Modo escuela')}<small>${modeSummary(g)}</small></summary>
       <p class="t3" style="margin:8px 0 4px;font-size:12.5px">${L("Tria què poden fer els alumnes d'aquest grup a l'app. Les lliçons, els repassos i la porta sempre hi són.", 'Elige qué pueden hacer los alumnos de este grupo en la app. Las lecciones, los repasos y la puerta siempre están.')}</p>
-      ${[['batalles', L('Batalles entre alumnes', 'Batallas entre alumnos')], ['intercanvis', L('Intercanvi de cartes', 'Intercambio de cartas')]].map(([k, t]) => `<label class="switch"><input type="checkbox" ${(g.opts || {})[k] !== false ? 'checked' : ''} onchange="grupOpt(${g.id},'${k}',this.checked,this)"><span>${t}</span></label>`).join('')}
+      ${[['batalles', L('Batalles entre alumnes', 'Batallas entre alumnos')], ['intercanvis', L('Intercanvi de cartes', 'Intercambio de cartas')], ['xat', L('Assistent amb IA (Numi Pro)', 'Asistente con IA (Numi Pro)')]].map(([k, t]) => `<label class="switch"><input type="checkbox" ${(g.opts || {})[k] !== false ? 'checked' : ''} onchange="grupOpt(${g.id},'${k}',this.checked,this)"><span>${t}</span></label>`).join('')}
     </details></div>`;
 }
 // tema que es treballa a classe: l'app el mostra a la pantalla principal i en fa pràctiques (70 % tema, 30 % repàs)
@@ -405,7 +405,7 @@ function temaField(g) {
     <small>${g.tema ? L(`Marcat el ${fdate(localDay(g.tema_at))} · l'app el posa a la pantalla principal: 70 % del tema i 30 % de repàs.`, `Marcado el ${fdate(localDay(g.tema_at))} · la app lo pone en la pantalla principal: 70 % del tema y 30 % de repaso.`) : L("Si el marqueu, l'app el posarà a la pantalla principal de tots els alumnes del grup.", 'Si lo marcáis, la app lo pondrá en la pantalla principal de todos los alumnos del grupo.')}</small></label>`;
 }
 const localDay = d => { const x = d ? new Date(d) : new Date(); return `${x.getFullYear()}-${String(x.getMonth() + 1).padStart(2, '0')}-${String(x.getDate()).padStart(2, '0')}`; };
-const modeSummary = g => { const o = g.opts || {}, off = ['batalles', 'intercanvis'].filter(k => o[k] === false).length; return off ? L(` · ${off} apagat${off > 1 ? 's' : ''}`, ` · ${off} desactivado${off > 1 ? 's' : ''}`) : L(' · tot actiu', ' · todo activo'); };
+const modeSummary = g => { const o = g.opts || {}, off = ['batalles', 'intercanvis', 'xat'].filter(k => o[k] === false).length; return off ? L(` · ${off} apagat${off > 1 ? 's' : ''}`, ` · ${off} desactivado${off > 1 ? 's' : ''}`) : L(' · tot actiu', ' · todo activo'); };
 async function grupTema(id, v) {
   const j = await act('grup_tema', { id, tema: v || null }), g = GRUPS.find(x => x.id === id);
   if (!j.ok) return toast(L("No s'ha pogut desar el tema.", 'No se ha podido guardar el tema.'));

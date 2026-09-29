@@ -58,7 +58,7 @@ export default async function handler(req, res) {
         await sql`UPDATE mates.grups SET tema = ${tema}, tema_at = ${tema ? new Date().toISOString() : null} WHERE id = ${+b.id}`;
         return ok(res, { ok: true, tema });
       }
-      const o = b.opts || {}, opts = Object.fromEntries(['batalles', 'intercanvis'].map(k => [k, o[k] !== false]));
+      const o = b.opts || {}, opts = Object.fromEntries(['batalles', 'intercanvis', 'xat'].map(k => [k, o[k] !== false]));
       await sql`UPDATE mates.grups SET opts = ${JSON.stringify(opts)}::jsonb WHERE id = ${+b.id}`;
       return ok(res, { ok: true, opts });
     }
