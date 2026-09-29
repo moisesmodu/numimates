@@ -57,11 +57,11 @@ function mentHome() {
   const week = [...Array(7).keys()].map(i => { const d = new Date(); d.setDate(d.getDate() - 6 + i); const k = `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`, x = MS().days[k];
     return `<i class="${x && x.s.length >= 3 ? 'on' : x && x.s.length ? 'mid' : ''} ${k === today() ? 'today' : ''}"><b>${d.toLocaleDateString(LANG === 'es' ? 'es-ES' : 'ca-ES', { weekday: 'narrow' })}</b></i>`; }).join('');
   app.innerHTML = mShell('home', `<h1 class="mh1">${mHello()}, ${esc(P.name)}</h1>
-    <section class="mcard msess"><div class="mhead"><b>${L("Sessió d'avui", 'Sesión de hoy')}</b><span>${L('uns 10 minuts', 'unos 10 minutos')}</span></div>
+    <section class="mtcard msess"><div class="mthead"><b>${L("Sessió d'avui", 'Sesión de hoy')}</b><span>${L('uns 10 minuts', 'unos 10 minutos')}</span></div>
       <div class="mgames">${s.map(g => `<button class="mg ${dd.s.includes(g) ? 'done' : ''}" onclick="mPlay('${g}',true)"><span class="mgi">${MG[g].ic}</span><b>${tx(MG[g].n)}</b><small>${tx(MCAP[MG[g].cap])}</small>${dd.s.includes(g) ? '<i class="mok">✓</i>' : ''}</button>`).join('')}</div>
-      ${nxt ? `<button class="btn big mbtn" onclick="mPlay('${nxt}',true)">${fets ? L('CONTINUA', 'CONTINÚA') : L('COMENÇA', 'EMPIEZA')}</button>` : `<p class="mdone">🎉 ${L('Sessió feta! Demà en tens una de nova.', '¡Sesión hecha! Mañana tienes una nueva.')}</p><button class="btn ghost big" onclick="go('jocs')">${L('JUGA UNA ESTONA MÉS', 'JUEGA UN RATO MÁS')}</button>`}</section>
-    <section class="mcard"><div class="mhead"><b>${L('Aquesta setmana', 'Esta semana')}</b><span>${L(`${P.streak || 0} ${P.streak === 1 ? 'dia seguit' : 'dies seguits'}`, `${P.streak || 0} ${P.streak === 1 ? 'día seguido' : 'días seguidos'}`)}</span></div><div class="mweek">${week}</div></section>
-    <section class="mcard mhab ${dd.hab ? 'on' : ''}"><div class="mhead"><b>🌿 ${L('Fora de la pantalla', 'Fuera de la pantalla')}</b></div><p>${tx(hab)}</p>
+      ${nxt ? `<button class="btn big mbtn" onclick="mPlay('${nxt}',true)">${fets ? L('CONTINUA', 'CONTINÚA') : L('COMENÇA', 'EMPIEZA')}</button>` : `<p class="mtdone">🎉 ${L('Sessió feta! Demà en tens una de nova.', '¡Sesión hecha! Mañana tienes una nueva.')}</p><button class="btn ghost big" onclick="go('jocs')">${L('JUGA UNA ESTONA MÉS', 'JUEGA UN RATO MÁS')}</button>`}</section>
+    <section class="mtcard"><div class="mthead"><b>${L('Aquesta setmana', 'Esta semana')}</b><span>${L(`${P.streak || 0} ${P.streak === 1 ? 'dia seguit' : 'dies seguits'}`, `${P.streak || 0} ${P.streak === 1 ? 'día seguido' : 'días seguidos'}`)}</span></div><div class="mweek">${week}</div></section>
+    <section class="mtcard mhab ${dd.hab ? 'on' : ''}"><div class="mthead"><b>🌿 ${L('Fora de la pantalla', 'Fuera de la pantalla')}</b></div><p>${tx(hab)}</p>
       <button class="btn ${dd.hab ? 'ghost' : ''}" onclick="mHab()">${dd.hab ? '✓ ' + L('FET!', '¡HECHO!') : L("HO FARÉ AVUI", 'LO HARÉ HOY')}</button></section>
     <button class="link mcien" onclick="mentCiencia()">${L('Què diu la ciència sobre entrenar la ment?', '¿Qué dice la ciencia sobre entrenar la mente?')}</button>`);
 }
@@ -122,7 +122,7 @@ function mEnd(g, score, up, msg) {
     app.innerHTML = `<div class="mgame"><div class="mres"><span class="mbig">${rec && was != null ? '🏆' : MG[g].ic}</span><h2>${rec && was != null ? L('Nou rècord!', '¡Nuevo récord!') : L('Ben fet!', '¡Bien hecho!')}</h2>
       <p class="mscore">${mNice(g, score)}</p><p>${msg || ''}</p>${was != null && !rec ? `<p class="mmut">${L('El teu millor resultat', 'Tu mejor resultado')}: ${mNice(g, was)}</p>` : ''}
       ${ses && nx ? `<p class="mmut">${L(`Sessió d'avui: ${3 - left.length} de 3`, `Sesión de hoy: ${3 - left.length} de 3`)}</p><button class="btn big mbtn" onclick="mPlay('${nx}',true)">${L('SEGÜENT JOC', 'SIGUIENTE JUEGO')} · ${tx(MG[nx].n)}</button>` : ''}
-      ${ses && !nx ? `<p class="mdone">🎉 ${L('Sessió d\'avui completada!', '¡Sesión de hoy completada!')}</p>` : ''}
+      ${ses && !nx ? `<p class="mtdone">🎉 ${L('Sessió d\'avui completada!', '¡Sesión de hoy completada!')}</p>` : ''}
       <button class="btn ${ses && nx ? 'ghost' : ''} big" onclick="go('home')">${L('TORNA A L\'INICI', 'VUELVE AL INICIO')}</button></div></div>`;
     SFX.win && SFX.win(); if (rec && was != null && typeof confetti === 'function') confetti(80);
   } else go('home');
@@ -143,13 +143,13 @@ async function velTrial() {
   $('#mgb').innerHTML = box(`<span class="velc">${c}</span>${[...Array(8).keys()].map(i => i === p ? `<span class="velp" style="${pos(i)}">⭐</span>` : dis ? `<span class="velp dis" style="${pos(i)}">▲</span>` : '').join('')}`);
   await mSleep(A.T); if (MGA !== A) return;
   $('#mgb').innerHTML = box(`<span class="velmask"></span>${[...Array(8).keys()].map(i => `<span class="velp mk" style="${pos(i)}">▦</span>`).join('')}`); await mSleep(250); if (MGA !== A) return;
-  $('#mgb').innerHTML = `<p class="mq">${L('Què hi havia al centre?', '¿Qué había en el centro?')}</p><div class="velq"><button class="mopt" onclick="velA1('🚗')">🚗<small>${L('Cotxe', 'Coche')}</small></button><button class="mopt" onclick="velA1('🚚')">🚚<small>${L('Camió', 'Camión')}</small></button></div>`;
+  $('#mgb').innerHTML = `<p class="mtq">${L('Què hi havia al centre?', '¿Qué había en el centro?')}</p><div class="velq"><button class="mopt" onclick="velA1('🚗')">🚗<small>${L('Cotxe', 'Coche')}</small></button><button class="mopt" onclick="velA1('🚚')">🚚<small>${L('Camió', 'Camión')}</small></button></div>`;
   A.c = c; A.p = p;
 }
 function velA1(x) {
   const A = MGA; A.a1 = x === A.c;
   const pos = i => { const a = i * Math.PI / 4 - Math.PI / 2; return `left:${50 + 40 * Math.cos(a)}%;top:${50 + 40 * Math.sin(a)}%`; };
-  $('#mgb').innerHTML = `<p class="mq">${L("On era l'estrella?", '¿Dónde estaba la estrella?')}</p><div class="velbox pick">${[...Array(8).keys()].map(i => `<button class="velpos" style="${pos(i)}" onclick="velA2(${i})" aria-label="${i + 1}"></button>`).join('')}<span class="velfix">+</span></div>`;
+  $('#mgb').innerHTML = `<p class="mtq">${L("On era l'estrella?", '¿Dónde estaba la estrella?')}</p><div class="velbox pick">${[...Array(8).keys()].map(i => `<button class="velpos" style="${pos(i)}" onclick="velA2(${i})" aria-label="${i + 1}"></button>`).join('')}<span class="velfix">+</span></div>`;
 }
 async function velA2(i) {
   const A = MGA, ok = A.a1 && i === A.p;
@@ -178,7 +178,7 @@ async function memRound() {
   const A = MGA, N = A.n * A.n; if (!A || MGCUR !== 'mem') return;
   A.seq = []; while (A.seq.length < A.len) { const c = ri(0, N - 1); if (c !== A.seq[A.seq.length - 1]) A.seq.push(c); } A.inp = []; A.lock = true;
   mSet(`${L('Llargada', 'Longitud')}: ${A.len}`);
-  $('#mgb').innerHTML = `<p class="mq" id="memq">${L('Mira…', 'Mira…')}</p><div class="memg" style="--n:${A.n}">${[...Array(N).keys()].map(i => `<button class="memc" id="mc${i}" onclick="memTap(${i})"></button>`).join('')}</div>`;
+  $('#mgb').innerHTML = `<p class="mtq" id="memq">${L('Mira…', 'Mira…')}</p><div class="memg" style="--n:${A.n}">${[...Array(N).keys()].map(i => `<button class="memc" id="mc${i}" onclick="memTap(${i})"></button>`).join('')}</div>`;
   await mSleep(800);
   for (const c of A.seq) { if (MGA !== A) return; const b = $('#mc' + c); b && b.classList.add('on'); SFX.tap && SFX.tap(); await mSleep(650); b && b.classList.remove('on'); await mSleep(220); }
   if (MGA !== A) return; A.lock = false; const q = $('#memq'); if (q) q.textContent = L('Ara tu: toca-les en el mateix ordre', 'Ahora tú: tócalas en el mismo orden');
@@ -359,10 +359,10 @@ function mentCiencia() {
 /* ---------- Perfil ---------- */
 function mentProfile() {
   app.innerHTML = mShell('profile', `<h1 class="mh1">${esc(P.name)}</h1>
-    <section class="mcard"><div class="mhead"><b>${L('Idioma', 'Idioma')}</b></div>${langPill()}</section>
-    ${P.code ? `<section class="mcard"><div class="mhead"><b>${L('El meu compte', 'Mi cuenta')}</b></div>${P.username ? `<p>${L('Usuari', 'Usuario')}: <b>${esc(P.username)}</b></p>` : ''}<p>${L('Codi secret', 'Código secreto')}: <b class="mono">${P.code}</b></p><p class="mmut">${L("Amb l'usuari i la contrasenya, o amb el codi, pots entrar des de qualsevol mòbil o ordinador.", 'Con el usuario y la contraseña, o con el código, puedes entrar desde cualquier móvil u ordenador.')}</p>${P.username ? '' : `<button class="btn ghost" onclick="accountModal()">${L('CREA USUARI I CONTRASENYA', 'CREA USUARIO Y CONTRASEÑA')}</button>`}</section>` : ''}
-    <section class="mcard"><div class="mhead"><b>Premium</b></div>${typeof premiumBox === 'function' ? premiumBox() : ''}</section>
-    <section class="mcard"><div class="mhead"><b>${L('So', 'Sonido')}</b></div><button class="btn ghost" onclick="P.sound=!P.sound;save();mentProfile()">${P.sound ? '🔊 ' + L('ACTIVAT', 'ACTIVADO') : '🔇 ' + L('DESACTIVAT', 'DESACTIVADO')}</button></section>
+    <section class="mtcard"><div class="mthead"><b>${L('Idioma', 'Idioma')}</b></div>${langPill()}</section>
+    ${P.code ? `<section class="mtcard"><div class="mthead"><b>${L('El meu compte', 'Mi cuenta')}</b></div>${P.username ? `<p>${L('Usuari', 'Usuario')}: <b>${esc(P.username)}</b></p>` : ''}<p>${L('Codi secret', 'Código secreto')}: <b class="mono">${P.code}</b></p><p class="mmut">${L("Amb l'usuari i la contrasenya, o amb el codi, pots entrar des de qualsevol mòbil o ordinador.", 'Con el usuario y la contraseña, o con el código, puedes entrar desde cualquier móvil u ordenador.')}</p>${P.username ? '' : `<button class="btn ghost" onclick="accountModal()">${L('CREA USUARI I CONTRASENYA', 'CREA USUARIO Y CONTRASEÑA')}</button>`}</section>` : ''}
+    <section class="mtcard"><div class="mthead"><b>Premium</b></div>${typeof premiumBox === 'function' ? premiumBox() : ''}</section>
+    <section class="mtcard"><div class="mthead"><b>${L('So', 'Sonido')}</b></div><button class="btn ghost" onclick="P.sound=!P.sound;save();mentProfile()">${P.sound ? '🔊 ' + L('ACTIVAT', 'ACTIVADO') : '🔇 ' + L('DESACTIVAT', 'DESACTIVADO')}</button></section>
     <div class="mprofb"><button class="btn ghost" onclick="renderProfiles()">${L('CANVIA DE PERFIL', 'CAMBIA DE PERFIL')}</button><button class="link" onclick="mentCiencia()">${L('Sobre Numi Ment', 'Sobre Numi Ment')}</button><a class="link" href="https://numimates.com/privacitat" target="_blank" rel="noopener">${L('Privadesa', 'Privacidad')}</a></div>`);
 }
 
