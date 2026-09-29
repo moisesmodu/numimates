@@ -1,0 +1,3 @@
+/* Retocs a mà de l'aspecte fosc de Numi Pro (després de theme-pro.css) */
+html[data-v=pro]{background:#0F0D18}
+html[data-v=pro] body{min-height:100dvh;background:radial-gradient(120% 60% at 50% 0,#241B3D 0,#15111F 55%,#0F0D18 100%) fixed}

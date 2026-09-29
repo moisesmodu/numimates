@@ -562,7 +562,7 @@ function uEstat(u) {
   if (u.caducat) return `<span class="t3">${L('Premium caducat el', 'Premium caducado el')} ${fdate(u.pla_fins)}</span>`;
   return '<span class="t3">—</span>';
 }
-const UFILT = () => [['tots', L('Tots', 'Todos')], ['pagament', L('De pagament', 'De pago')], ['manual', L('Manual', 'Manual')], ['free', L('Gratuïts', 'Gratuitos')], ['escola', L('Escola', 'Escuela')], ['nous', L('Nous (7 dies)', 'Nuevos (7 días)')], ['inactius', L('Inactius +30 dies', 'Inactivos +30 días')], ['familia', L('Amb família', 'Con familia')], ['baixa', L('Baixa', 'Baja')]];
+const UFILT = () => [['tots', L('Tots', 'Todos')], ['pagament', L('De pagament', 'De pago')], ['manual', L('Manual', 'Manual')], ['free', L('Gratuïts', 'Gratuitos')], ['escola', L('Escola', 'Escuela')], ['nous', L('Nous (7 dies)', 'Nuevos (7 días)')], ['inactius', L('Inactius +30 dies', 'Inactivos +30 días')], ['familia', L('Amb família', 'Con familia')], ['pro', 'Numi Pro'], ['ment', 'Numi Ment'], ['baixa', L('Baixa', 'Baja')]];
 const uCount = k => { const s = UF.f; UF.f = k; const q = UF.q; UF.q = ''; const n = uList().length; UF.f = s; UF.q = q; return n; };
 function uList() {
   const q = UF.q.trim().toLowerCase(), U = UD.users.filter(u => {
@@ -571,6 +571,7 @@ function uList() {
     if (UF.f === 'nous') return u.cat !== 'baixa' && daysAgo(u.alta) <= 7;
     if (UF.f === 'inactius') return u.cat !== 'baixa' && (u.idle == null || u.idle > 30);
     if (UF.f === 'familia') return u.cat !== 'baixa' && u.fam > 0;
+    if (UF.f === 'pro' || UF.f === 'ment') return u.cat !== 'baixa' && u.variant === UF.f;
     return u.cat === UF.f;
   });
   const by = { alta: (a, b) => b.alta.localeCompare(a.alta), act: (a, b) => (a.idle ?? 1e9) - (b.idle ?? 1e9), xp: (a, b) => (b.xp || 0) - (a.xp || 0), nom: (a, b) => a.name.localeCompare(b.name) };
@@ -633,7 +634,7 @@ function uTable() {
   const R = uList(), shown = R.slice(0, UF.n), el = $('#utbl'); if (!el) return;
   const sLink = UD.stripe && UD.stripe.mode === 'live' ? 'https://dashboard.stripe.com' : 'https://dashboard.stripe.com/test';
   el.innerHTML = !R.length ? `<div class="card">${emptyState('users', L('Cap usuari amb aquest filtre', 'Ningún usuario con este filtro'), L('Canvia la cerca o el filtre.', 'Cambia la búsqueda o el filtro.'))}</div>` : `<div class="tw us"><table><thead><tr><th>${L('Usuari', 'Usuario')}</th><th>${L('Pla', 'Plan')}</th><th>${L('Estat', 'Estado')}</th><th>${L('Alta', 'Alta')}</th><th>${L('Última activitat', 'Última actividad')}</th><th class="r">${L('Curs', 'Curso')}</th><th class="r">${L('Lliçons', 'Lecciones')}</th><th class="r">XP</th><th></th></tr></thead><tbody>
-    ${shown.map(u => `<tr onclick="if(!event.target.closest('a'))uOpen(${js(u.code)})"><td class="c-n"><div class="nm"><div><b>${esc(u.name)}${u.fam ? ` <span class="famb" title="${L('Té la família vinculada a la zona de famílies', 'Tiene la familia vinculada en la zona de familias')}">👪</span>` : ''}</b><small class="mono">${esc(u.username || u.code)}</small></div></div></td><td class="c-p">${uPla(u)}</td><td class="c-e" data-l="${L('Estat', 'Estado')}">${uEstat(u)}</td>
+    ${shown.map(u => `<tr onclick="if(!event.target.closest('a'))uOpen(${js(u.code)})"><td class="c-n"><div class="nm"><div><b>${esc(u.name)}${u.variant === 'pro' || u.variant === 'ment' ? ` <span class="varb ${u.variant}">${u.variant === 'pro' ? 'PRO' : 'MENT'}</span>` : ''}${u.fam ? ` <span class="famb" title="${L('Té la família vinculada a la zona de famílies', 'Tiene la familia vinculada en la zona de familias')}">👪</span>` : ''}</b><small class="mono">${esc(u.username || u.code)}</small></div></div></td><td class="c-p">${uPla(u)}</td><td class="c-e" data-l="${L('Estat', 'Estado')}">${uEstat(u)}</td>
       <td class="c-a" data-l="${L('Alta', 'Alta')}">${fdate(u.alta)}${u.alta.slice(0, 4) !== TODAY.slice(0, 4) ? ' ' + u.alta.slice(0, 4) : ''}</td><td class="c-u" data-l="${L('Última activitat', 'Última actividad')}">${u.last_day ? ago(u.last_day) : `<span class="t3">${L('mai', 'nunca')}</span>`}</td>
       <td class="r num">${u.course != null ? (u.course | 0) + 1 : '—'}</td><td class="r num">${u.lessons || 0}</td><td class="r num">${(u.xp || 0).toLocaleString(LANG)}</td>
       <td class="r">${u.stripe_customer ? `<a class="ib" href="${sLink}/customers/${encodeURIComponent(u.stripe_customer)}" target="_blank" rel="noopener" title="${L('Obre a Stripe', 'Abrir en Stripe')}">${ico('external-link')}</a>` : ''}</td></tr>`).join('')}</tbody></table></div>
