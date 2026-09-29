@@ -60,3 +60,10 @@ export function cleanState(s) {
   if (isObj(s.daily)) s.daily.xp = num(s.daily.xp) ?? 0;
   return s;
 }
+
+// Pla efectiu de l'alumne: «escola» si és dins d'un grup, «premium» si el té i no ha caducat, si no «free»
+export function plaOf(a) {
+  if (a.grup_id || a.pla === 'escola') return 'escola';
+  if (a.pla === 'premium' && (!a.pla_fins || new Date(a.pla_fins) >= new Date(new Date().toISOString().slice(0, 10)))) return 'premium';
+  return 'free';
+}

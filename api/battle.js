@@ -1,4 +1,4 @@
-import { sql, body, cleanCode, ok, blocked, fail, tooMany } from './_lib.js';
+import { sql, body, cleanCode, ok, blocked, fail, tooMany, plaOf } from './_lib.js';
 import { randomInt } from 'crypto';
 // Batalles de mates. Tothom rep les mateixes preguntes (surten de la llavor `seed`).
 // Guanya qui n'encerta més; si hi ha empat, qui ha trigat menys. Els codis secrets dels alumnes
@@ -32,8 +32,10 @@ export default async function handler(req, res) {
   const b = body(req), sid = cleanCode(b.code), act = b.action;
   if (!sid) return ok(res, { error: 'codi' }, 400);
   if (await blocked(req, 'codi', 40)) return tooMany(res);
-  const me = (await sql`SELECT name FROM mates.alumnes WHERE code = ${sid} AND active`)[0];
+  const me = (await sql`SELECT name, pla, pla_fins, grup_id FROM mates.alumnes WHERE code = ${sid} AND active`)[0];
   if (!me) { await fail(req, 'codi'); return ok(res, { error: 'alumne' }, 404); }
+  // les batalles són del pla Premium (o de l'escola): el pla gratuït només pot mirar les que ja té
+  if (plaOf(me) === 'free' && (act === 'create' || act === 'join')) return ok(res, { error: 'premium' }, 402);
   const name = first(b.name || me.name), comp = String(b.companion || 'numi').slice(0, 12);
 
   if (act === 'create') {
