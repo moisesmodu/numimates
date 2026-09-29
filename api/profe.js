@@ -1,6 +1,6 @@
 import { sql, ok, body, cleanCode, validPass, hashPass } from './_lib.js';
 import { who, groupsOf } from './_auth.js';
-import { STRIPE_KEY, stripe, stripeMode, setCancel } from './_stripe.js';
+import { STRIPE_KEY, stripe, stripeMode, setCancel, setupStripe } from './_stripe.js';
 import { randomInt } from 'crypto';
 // Panell /profe.html. L'administrador ho veu tot i gestiona centres, docents, grups i plans.
 // Un docent només veu (i gestiona) els alumnes dels seus grups; l'admin de centre, tots els del seu centre.
@@ -110,6 +110,11 @@ export default async function handler(req, res) {
       try { await sql`DELETE FROM mates.familia_fills WHERE code = ${code}`; await sql`DELETE FROM mates.familia_links WHERE code = ${code}`; } catch (e) { }
       await sql`DELETE FROM mates.alumnes WHERE code = ${code}`;
       return ok(res, { ok: true });
+    }
+    // prepara el compte de Stripe (producte, preus, portal i webhook) amb la clau que hi hagi a Vercel
+    if (b.action === 'stripe_setup' && me.admin) {
+      if (!STRIPE_KEY) return ok(res, { error: 'sense clau' }, 409);
+      try { return ok(res, { ok: true, ...(await setupStripe()) }); } catch (e) { return ok(res, { error: e.message }, 502); }
     }
     if (b.action === 'pla') {
       const pla = PLANS.includes(b.pla) ? b.pla : 'free';

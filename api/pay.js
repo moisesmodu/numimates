@@ -57,7 +57,7 @@ async function checkout(req, res) {
   if (a.stripe_sub && a.pla === 'premium' && a.pla_fins && new Date(a.pla_fins) >= new Date(new Date().toISOString().slice(0, 10))) return ok(res, { error: 'ja' }, 409);
   const origin = ORIGINS.includes(req.headers.origin) ? req.headers.origin : ORIGINS[0];
   const P = await prices();
-  const s = await stripe('checkout/sessions', {
+  const params = {
     mode: 'subscription',
     line_items: { 0: { price: P[pla].id, quantity: 1 } },
     client_reference_id: code,
@@ -72,7 +72,11 @@ async function checkout(req, res) {
       : "Es renova automàticament i el pots cancel·lar quan vulguis. Condicions: numimates.com/condicions" } },
     success_url: origin + (b.ret === 'families' ? '/families?premium=ok' : '/?premium=ok'),
     cancel_url: origin + (b.ret === 'families' ? '/families?premium=cancel' : '/?premium=cancel')
-  });
+  };
+  let s;
+  // un client creat en proves no existeix al compte real: en aquest cas, Checkout en crea un de nou
+  try { s = await stripe('checkout/sessions', params); }
+  catch (e) { if (!params.customer || !/No such customer/i.test(e.message)) throw e; delete params.customer; s = await stripe('checkout/sessions', params); }
   await note(req, 'pagament'); // màxim 20 pagaments començats per hora i IP
   return ok(res, { url: s.url });
 }

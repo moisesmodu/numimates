@@ -1,6 +1,7 @@
 // Crides a l'API de Stripe (format x-www-form-urlencoded amb claus niades), compartides per pay.js, profe.js i login.js
 import { sql, cleanCode } from './_lib.js';
-export const STRIPE_KEY = process.env.STRIPE_SECRET_KEY;
+// STRIPE_LIVE_KEY = clau real del compte NUMI MATES (la posa el Moisés); si no hi és, la de proves de la integració de Vercel
+export const STRIPE_KEY = process.env.STRIPE_LIVE_KEY || process.env.STRIPE_SECRET_KEY;
 export const stripeMode = () => !STRIPE_KEY ? null : /^(sk|rk)_live_/.test(STRIPE_KEY) ? 'live' : 'test';
 function form(o, pre = '', out = new URLSearchParams()) {
   for (const [k, v] of Object.entries(o)) {
@@ -63,9 +64,51 @@ export async function setCancel(code, resume) {
     try { const f = await stripe(`subscriptions/search?limit=100&query=${encodeURIComponent(`metadata['code']:'${code}'`)}`); f.data.filter(s => LIVE.includes(s.status)).forEach(s => ids.add(s.id)); } catch (e) { }
   }
   if (!ids.size) return { error: 'sense subscripció' };
-  for (const id of ids) await stripe('subscriptions/' + id, { cancel_at_period_end: resume ? 'false' : 'true' });
+  // una subscripció de proves no existeix al compte real (o al revés): es dona per acabada
+  const gone = [];
+  for (const id of ids) {
+    try { await stripe('subscriptions/' + id, { cancel_at_period_end: resume ? 'false' : 'true' }); }
+    catch (e) { if (!/No such subscription/i.test(e.message)) throw e; gone.push(id); }
+  }
+  if (gone.length) { await sql`UPDATE mates.alumnes SET stripe_sub = NULL, stripe_status = 'canceled', pla_cancel = false, pla_fins = LEAST(COALESCE(pla_fins, CURRENT_DATE), CURRENT_DATE - 1) WHERE code = ${code} AND stripe_sub = ANY(${gone})`; gone.forEach(id => ids.delete(id)); }
+  if (!ids.size) return resume ? { error: 'sense subscripció' } : { ok: true, n: 0 };
   const subs = await Promise.all([...ids].map(id => stripe('subscriptions/' + id)));
   for (const s of subs) await applySub(s, code);
   const ok = subs.every(s => resume ? LIVE.includes(s.status) && !s.cancel_at_period_end && !s.cancel_at : s.status === 'canceled' || s.cancel_at_period_end || s.cancel_at);
   return ok ? { ok: true, n: subs.length } : { error: 'no confirmat' };
+}
+
+// Prepara el compte: producte, preus (IVA inclòs), portal de la família i webhook. Idempotent; mateixa lògica que scripts/stripe-setup.mjs,
+// però s'executa al servidor (acció d'administrador) perquè la clau real no hagi de sortir mai de Vercel.
+export async function setupStripe() {
+  const APP = 'https://app.numimates.com', WEB = 'https://numimates.com', HOOK = APP + '/api/pay?a=hook';
+  const EVENTS = ['checkout.session.completed', 'invoice.paid', 'customer.subscription.updated', 'customer.subscription.deleted'];
+  const arr = a => Object.fromEntries(a.map((v, i) => [i, v])), log = [];
+  let prices = (await stripe('prices?active=true&lookup_keys[]=numi_premium_mes&lookup_keys[]=numi_premium_any&expand[]=data.product')).data;
+  let product = prices[0] && prices[0].product;
+  if (!product) { product = await stripe('products', { name: 'Numi Mates Premium', description: 'Lliçons sense límit, batalles de mates i la ruta de temporada.', statement_descriptor: 'NUMI MATES', url: WEB }); log.push('producte ' + product.id); }
+  for (const w of [{ k: 'numi_premium_mes', a: 499, i: 'month', n: 'Mensual' }, { k: 'numi_premium_any', a: 4900, i: 'year', n: 'Anual' }]) {
+    const have = prices.find(p => p.lookup_key === w.k);
+    if (have && have.unit_amount === w.a) continue;
+    const p = await stripe('prices', { product: product.id, currency: 'eur', unit_amount: w.a, recurring: { interval: w.i }, tax_behavior: 'inclusive', nickname: w.n, lookup_key: w.k, transfer_lookup_key: 'true' });
+    log.push('preu ' + w.n + ' ' + p.id);
+  }
+  prices = (await stripe('prices?active=true&lookup_keys[]=numi_premium_mes&lookup_keys[]=numi_premium_any')).data;
+  const portal = {
+    business_profile: { headline: 'Numi Mates Premium', privacy_policy_url: WEB + '/privacitat', terms_of_service_url: WEB + '/condicions' },
+    default_return_url: APP, login_page: { enabled: 'true' },
+    features: {
+      invoice_history: { enabled: 'true' }, payment_method_update: { enabled: 'true' },
+      customer_update: { enabled: 'true', allowed_updates: arr(['email', 'address', 'name']) },
+      subscription_cancel: { enabled: 'true', mode: 'at_period_end' },
+      subscription_update: { enabled: 'true', default_allowed_updates: arr(['price']), proration_behavior: 'create_prorations', products: { 0: { product: product.id, prices: arr(prices.map(p => p.id)) } } }
+    }
+  };
+  const confs = (await stripe('billing_portal/configurations?active=true&limit=20')).data;
+  const conf = confs.find(c => c.login_page && c.login_page.enabled) || confs.find(c => c.is_default);
+  const saved = conf ? await stripe('billing_portal/configurations/' + conf.id, portal) : await stripe('billing_portal/configurations', portal);
+  const hooks = (await stripe('webhook_endpoints?limit=100')).data, h = hooks.find(x => x.url === HOOK);
+  if (h) await stripe('webhook_endpoints/' + h.id, { enabled_events: arr(EVENTS), disabled: 'false' });
+  else { const n = await stripe('webhook_endpoints', { url: HOOK, enabled_events: arr(EVENTS), description: 'Numi Mates: activa Premium' }); log.push('webhook ' + n.id); }
+  return { mode: stripeMode(), product: product.id, prices: prices.map(p => p.lookup_key + ' ' + p.unit_amount), portal: saved.login_page && saved.login_page.url, log };
 }
