@@ -365,7 +365,13 @@ const COURSES = [
       ['Creixement exponencial|Crecimiento exponencial', ['fn.exp'], 4], ['Quina gràfica és?|¿Qué gráfica es?', ['fn.exp', 'fn.inv'], 5]]),
     U('Interès compost|Interés compuesto', 'Estalvis, interessos, TAE i depreciació.|Ahorros, intereses, TAE y depreciación.', 'flama', [
       ['Capital final|Capital final', ['fin.comp'], 1], ['Els interessos|Los intereses', ['fin.comp'], 2], ['Simple o compost?|¿Simple o compuesto?', ['fin.comp'], 3],
-      ['Quants anys calen?|¿Cuántos años hacen falta?', ['fin.comp'], 4], ['TAE i depreciació|TAE y depreciación', ['fin.comp'], 5]])
+      ['Quants anys calen?|¿Cuántos años hacen falta?', ['fin.comp'], 4], ['TAE i depreciació|TAE y depreciación', ['fin.comp'], 5]]),
+    U('Vectors i rectes|Vectores y rectas', 'Vectors, distàncies i equacions de la recta.|Vectores, distancias y ecuaciones de la recta.', 'tuga', [
+      ['Vectors|Vectores', ['e.vec'], 1], ['Mòdul i distància|Módulo y distancia', ['e.vec'], 2], ['Punt mitjà i operacions|Punto medio y operaciones', ['e.vec'], 4],
+      ['El pendent i l\'equació|La pendiente y la ecuación', ['e.line'], 1], ['Paral·leles i perpendiculars|Paralelas y perpendiculares', ['e.line'], 3]]),
+    U('Nombres reals i intervals|Números reales e intervalos', 'Conjunts numèrics, irracionals i intervals.|Conjuntos numéricos, irracionales e intervalos.', 'numi', [
+      ['Conjunts de nombres|Conjuntos de números', ['num.real'], 1], ['Nombres irracionals|Números irracionales', ['num.real'], 2], ['Intervals|Intervalos', ['num.int'], 1],
+      ['Intervals a la recta|Intervalos en la recta', ['num.int'], 2], ['Ordenar i aproximar|Ordenar y aproximar', ['num.real'], 3]])
   ] }
 ];
 const vt = (v, t) => { const s = t > 1 ? ` · ${t}` : ''; return `${tx0(VIS[v])}${s}|${tx1(VIS[v])}${s}`; };

@@ -567,5 +567,57 @@ Object.assign(THEORY, {
 ],
 "recap": ["Compost: C · (1 + r)ᵗ.|Compuesto: C · (1 + r)ᵗ.", "Simple: C · (1 + r · t).|Simple: C · (1 + r · t).", "Interessos = capital final − capital inicial.|Intereses = capital final − capital inicial.", "Depreciació: × (1 − r) cada any.|Depreciación: × (1 − r) cada año."],
 "tip": "La regla del 72: divideix 72 entre el percentatge anual i sabràs, aproximadament, en quants anys es duplicarà el capital. Al 6 %, uns 12 anys.|La regla del 72: divide 72 entre el porcentaje anual y sabrás, aproximadamente, en cuántos años se duplicará el capital. Al 6 %, unos 12 años."
+},
+"c10-11": {
+"hook": "Els GPS, els videojocs i els programes de disseny guarden les posicions amb coordenades i els moviments amb vectors. Amb uns quants càlculs saps la distància entre dos llocs o si dos camins es tallaran.|Los GPS, los videojuegos y los programas de diseño guardan las posiciones con coordenadas y los movimientos con vectores. Con unos cuantos cálculos sabes la distancia entre dos lugares o si dos caminos se cortarán.",
+"parts": [
+{ "t": "Vectors|Vectores", "x": "Un <b>vector</b> és una fletxa: té direcció, sentit i longitud. El vector que va d'A a B es calcula restant: <b>AB = B − A</b>. Les coordenades diuen quant es mou en horitzontal i en vertical.|Un <b>vector</b> es una flecha: tiene dirección, sentido y longitud. El vector que va de A a B se calcula restando: <b>AB = B − A</b>. Las coordenadas dicen cuánto se mueve en horizontal y en vertical.",
+  "ex": ["A(1, 2) i B(4, −2)|A(1, 2) y B(4, −2)", "AB = (4 − 1, −2 − 2)|AB = (4 − 1, −2 − 2)", "AB = <span class=\"hl\">(3, −4)</span>|AB = <span class=\"hl\">(3, −4)</span>"] },
+{ "t": "Mòdul i distància|Módulo y distancia", "x": "El <b>mòdul</b> d'un vector (x, y) és la seva longitud: √(x² + y²), per Pitàgores. La <b>distància</b> entre dos punts és el mòdul del vector que els uneix.|El <b>módulo</b> de un vector (x, y) es su longitud: √(x² + y²), por Pitágoras. La <b>distancia</b> entre dos puntos es el módulo del vector que los une.",
+  "ex": ["|(3, −4)| = √(9 + 16)|(3, −4)| = √(9 + 16)", "= √25 = <span class=\"hl\">5</span>|= √25 = <span class=\"hl\">5</span>"] },
+{ "t": "Punt mitjà i operacions|Punto medio y operaciones", "x": "El <b>punt mitjà</b> d'un segment és la mitjana de les coordenades dels extrems. Els vectors se sumen i es multipliquen per un nombre coordenada a coordenada.|El <b>punto medio</b> de un segmento es la media de las coordenadas de los extremos. Los vectores se suman y se multiplican por un número coordenada a coordenada.",
+  "ex": ["A(2, 5) i B(6, −1) → M((2 + 6) ÷ 2, (5 − 1) ÷ 2) = <span class=\"hl\">(4, 2)</span>|A(2, 5) y B(6, −1) → M((2 + 6) ÷ 2, (5 − 1) ÷ 2) = <span class=\"hl\">(4, 2)</span>", "u = (1, 3), v = (2, −1) → 2u − v = (0, 7)|u = (1, 3), v = (2, −1) → 2u − v = (0, 7)"] },
+{ "t": "Equacions de la recta|Ecuaciones de la recta", "x": "El pendent entre dos punts és m = (y₂ − y₁) ÷ (x₂ − x₁). Una recta es pot escriure de diverses maneres: <b>explícita</b> y = mx + n, <b>punt-pendent</b> y − y₀ = m(x − x₀) i <b>general</b> ax + by + c = 0 (pendent −a/b). Dues rectes amb el mateix pendent són <b>paral·leles</b>; si el producte dels pendents és −1, són <b>perpendiculars</b>.|La pendiente entre dos puntos es m = (y₂ − y₁) ÷ (x₂ − x₁). Una recta se puede escribir de varias maneras: <b>explícita</b> y = mx + n, <b>punto-pendiente</b> y − y₀ = m(x − x₀) y <b>general</b> ax + by + c = 0 (pendiente −a/b). Dos rectas con la misma pendiente son <b>paralelas</b>; si el producto de las pendientes es −1, son <b>perpendiculares</b>.",
+  "ex": ["Per P(1, 3) amb m = 2: y − 3 = 2(x − 1)|Por P(1, 3) con m = 2: y − 3 = 2(x − 1)", "y = 2x + 1 i y = −½x + 4: 2 × (−½) = −1|y = 2x + 1 e y = −½x + 4: 2 × (−½) = −1", "Són <span class=\"hl\">perpendiculars</span>|Son <span class=\"hl\">perpendiculares</span>"] }
+],
+"words": [
+["vector|vector", "fletxa amb direcció, sentit i longitud; AB = B − A|flecha con dirección, sentido y longitud; AB = B − A"],
+["mòdul|módulo", "longitud d'un vector: √(x² + y²)|longitud de un vector: √(x² + y²)"],
+["punt mitjà|punto medio", "punt que parteix un segment en dues meitats|punto que parte un segmento en dos mitades"],
+["vector director|vector director", "vector que marca la direcció d'una recta; per a y = mx + n, (1, m)|vector que marca la dirección de una recta; para y = mx + n, (1, m)"]
+],
+"mistakes": [
+["«AB = A − B.»|«AB = A − B.»", "És al revés: final menys origen, B − A.|Es al revés: final menos origen, B − A."],
+["«|(3, −4)| = 3 + (−4) = −1.»|«|(3, −4)| = 3 + (−4) = −1.»", "El mòdul és una longitud: √(3² + (−4)²) = 5, sempre positiu.|El módulo es una longitud: √(3² + (−4)²) = 5, siempre positivo."],
+["«y = 2x + 1 i y = −2x + 3 són perpendiculars.»|«y = 2x + 1 e y = −2x + 3 son perpendiculares.»", "2 × (−2) = −4, no −1. Perpendicular a pendent 2 és pendent −1/2.|2 × (−2) = −4, no −1. Perpendicular a pendiente 2 es pendiente −1/2."]
+],
+"recap": ["AB = B − A.|AB = B − A.", "Mòdul: √(x² + y²).|Módulo: √(x² + y²).", "Punt mitjà: mitjana de les coordenades.|Punto medio: media de las coordenadas.", "Paral·leles: mateix pendent. Perpendiculars: producte −1.|Paralelas: misma pendiente. Perpendiculares: producto −1."],
+"tip": "Fes sempre un dibuix ràpid: si el vector AB va cap a l'esquerra i avall, les dues coordenades han de ser negatives. El dibuix t'avisa dels errors de signe.|Haz siempre un dibujo rápido: si el vector AB va hacia la izquierda y abajo, las dos coordenadas deben ser negativas. El dibujo te avisa de los errores de signo."
+},
+"c10-12": {
+"hook": "Hi ha nombres que no es poden escriure com una fracció, com π o √2, i conjunts que no tenen fi, com «tots els nombres més grans que 3». Els nombres reals i els intervals ho ordenen tot.|Hay números que no se pueden escribir como una fracción, como π o √2, y conjuntos que no tienen fin, como «todos los números mayores que 3». Los números reales y los intervalos lo ordenan todo.",
+"parts": [
+{ "t": "Conjunts de nombres|Conjuntos de números", "x": "<b>ℕ</b>, naturals (0, 1, 2…); <b>ℤ</b>, enters (també els negatius); <b>ℚ</b>, racionals (els que es poden escriure com a fracció: exactes i periòdics); i <b>ℝ</b>, reals (els racionals més els <b>irracionals</b>). Cada conjunt conté l'anterior.|<b>ℕ</b>, naturales (0, 1, 2…); <b>ℤ</b>, enteros (también los negativos); <b>ℚ</b>, racionales (los que se pueden escribir como fracción: exactos y periódicos); y <b>ℝ</b>, reales (los racionales más los <b>irracionales</b>). Cada conjunto contiene al anterior.",
+  "ex": ["√49 = 7 → natural|√49 = 7 → natural", "−3 → enter; 2/5 = 0,4 → racional|−3 → entero; 2/5 = 0,4 → racional", "√2 = 1,41421… → <span class=\"hl\">irracional</span>|√2 = 1,41421… → <span class=\"hl\">irracional</span>"] },
+{ "t": "Nombres irracionals|Números irracionales", "x": "Un nombre <b>irracional</b> té infinites xifres decimals sense cap període: π, √2, √3, √5… L'arrel quadrada d'un nombre que no és un quadrat perfecte és irracional; la d'un quadrat perfecte, no (√16 = 4).|Un número <b>irracional</b> tiene infinitas cifras decimales sin ningún período: π, √2, √3, √5… La raíz cuadrada de un número que no es un cuadrado perfecto es irracional; la de un cuadrado perfecto, no (√16 = 4).",
+  "ex": ["√10 ≈ 3,162… → irracional|√10 ≈ 3,162… → irracional", "0,333… = 1/3 → racional (té període)|0,333… = 1/3 → racional (tiene período)"] },
+{ "t": "Intervals|Intervalos", "x": "Un <b>interval</b> és un tros de la recta real. El claudàtor [ ] vol dir que l'extrem hi entra (≤) i el parèntesi ( ), que no (<). Si no té fi s'escriu amb ∞, sempre amb parèntesi: x > 3 és (3, +∞).|Un <b>intervalo</b> es un trozo de la recta real. El corchete [ ] quiere decir que el extremo entra (≤) y el paréntesis ( ), que no (<). Si no tiene fin se escribe con ∞, siempre con paréntesis: x > 3 es (3, +∞).",
+  "ex": ["−2 ≤ x &lt; 5 → [−2, 5)|−2 ≤ x &lt; 5 → [−2, 5)", "A la recta: punt ple al −2, punt buit al 5|En la recta: punto lleno en el −2, punto vacío en el 5", "x ≤ 1 → <span class=\"hl\">(−∞, 1]</span>|x ≤ 1 → <span class=\"hl\">(−∞, 1]</span>"] },
+{ "t": "Ordenar i aproximar reals|Ordenar y aproximar reales", "x": "Per ordenar reals, escriu-los tots amb decimals (π ≈ 3,142; √8 ≈ 2,828). Per aproximar una arrel, busca entre quins nombres és el seu quadrat, o arrodoneix el decimal a les xifres que et demanen.|Para ordenar reales, escríbelos todos con decimales (π ≈ 3,142; √8 ≈ 2,828). Para aproximar una raíz, busca entre qué números está su cuadrado, o redondea el decimal a las cifras que te piden.",
+  "ex": ["√2: 1,4² = 1,96 i 1,5² = 2,25|√2: 1,4² = 1,96 y 1,5² = 2,25", "√2 és entre 1,4 i 1,5|√2 está entre 1,4 y 1,5", "√2 ≈ <span class=\"hl\">1,41</span> (a les centèsimes)|√2 ≈ <span class=\"hl\">1,41</span> (a las centésimas)"] }
+],
+"words": [
+["nombre racional|número racional", "el que es pot escriure com a fracció|el que se puede escribir como fracción"],
+["nombre irracional|número irracional", "decimal infinit sense període, com π o √2|decimal infinito sin período, como π o √2"],
+["interval obert i tancat|intervalo abierto y cerrado", "obert (a, b): sense els extrems; tancat [a, b]: amb els extrems|abierto (a, b): sin los extremos; cerrado [a, b]: con los extremos"],
+["intersecció (∩)|intersección (∩)", "els nombres que són a tots dos intervals alhora|los números que están en los dos intervalos a la vez"]
+],
+"mistakes": [
+["«√16 és irracional perquè porta arrel.»|«√16 es irracional porque lleva raíz.»", "√16 = 4, que és natural. Només són irracionals les arrels que no són exactes.|√16 = 4, que es natural. Solo son irracionales las raíces que no son exactas."],
+["«0,5555… és irracional perquè no s'acaba.»|«0,5555… es irracional porque no se acaba.»", "Té període: és 5/9, racional.|Tiene período: es 5/9, racional."],
+["«x > 3 és [3, +∞].»|«x > 3 es [3, +∞].»", "El 3 no hi entra i l'infinit mai: (3, +∞).|El 3 no entra y el infinito nunca: (3, +∞)."]
+],
+"recap": ["ℕ ⊂ ℤ ⊂ ℚ ⊂ ℝ.|ℕ ⊂ ℤ ⊂ ℚ ⊂ ℝ.", "Irracional: infinites xifres sense període.|Irracional: infinitas cifras sin período.", "[ ] hi entra; ( ) no hi entra; ∞ sempre amb ( ).|[ ] entra; ( ) no entra; ∞ siempre con ( ).", "Per ordenar, passa-ho tot a decimal.|Para ordenar, pásalo todo a decimal."],
+"tip": "Recorda tres valors de memòria: √2 ≈ 1,41, √3 ≈ 1,73 i π ≈ 3,14. Amb aquests, moltes comparacions es fan de cap.|Recuerda tres valores de memoria: √2 ≈ 1,41, √3 ≈ 1,73 y π ≈ 3,14. Con estos, muchas comparaciones se hacen de cabeza."
 }
 });
