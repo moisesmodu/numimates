@@ -1062,4 +1062,6 @@ img.ic{display:inline-block;width:1.2em;height:1.2em;object-fit:contain;vertical
 .prem-sheet .btn:disabled{opacity:.45;pointer-events:none}
 .prem-box{display:flex;flex-direction:column;align-items:flex-start;gap:6px;background:#fff;border:2px solid var(--line);border-radius:20px;padding:14px 16px}
 .prem-box.on{border-color:var(--gold);background:#FFFBEF}.prem-box span{font-size:14.5px;color:#6A5F78}
-.prem-how .link{display:inline;margin:0;padding:0;border:0;background:none;font:inherit;font-weight:800;color:var(--pri);cursor:pointer}
+.prem-school .link{display:inline;margin:0;padding:0;border:0;background:none;font:inherit;font-weight:800;color:var(--pri);cursor:pointer}
+.prem-school{font-size:13.5px;color:#6A5F78;margin:10px 0 12px;text-align:center;line-height:1.4}
+.prem-sheet .prem{margin:6px 0 4px;font-size:16px}
