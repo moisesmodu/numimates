@@ -50,7 +50,7 @@ export default async function handler(req, res) {
   if (!a) { await fail(req, 'codi'); return ok(res, { error: 'no trobat' }, 404); }
   if (!a.active) return ok(res, { error: 'baixa' }, 410);
   const pla = plaOf(a), max = LIMIT[pla] || LIMIT.free;
-  const n = (await sql`INSERT INTO mates.xat_us (code) VALUES (${code}) ON CONFLICT (code, dia) DO UPDATE SET n = mates.xat_us.n + 1 RETURNING n`)[0].n;
+  const n = (await sql`INSERT INTO mates.xat_us (code, n) VALUES (${code}, 1) ON CONFLICT (code, dia) DO UPDATE SET n = mates.xat_us.n + 1 RETURNING n`)[0].n;
   if (n > max) return ok(res, { error: 'limit', max, pla }, 429);
   await note(req, 'xat');
   const c = b.ctx && typeof b.ctx === 'object' ? b.ctx : {};

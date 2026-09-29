@@ -85,7 +85,7 @@ async function xatSend() {
     if (!txt.trim()) throw new Error('buit');
     XAT.msgs.push({ role: 'assistant', content: txt });
   } catch (e) {
-    if (!txt.trim()) { XAT.msgs.pop(); out.classList.remove('typing'); out.classList.add('warn'); out.textContent = L('Sense connexió. Torna-ho a provar.', 'Sin conexión. Vuelve a probarlo.'); }
+    if (!txt.trim()) { XAT.msgs.pop(); out.classList.remove('typing'); out.classList.add('warn'); out.textContent = navigator.onLine === false ? L('Sense connexió. Torna-ho a provar.', 'Sin conexión. Vuelve a probarlo.') : L("Ara no puc respondre. Torna-ho a provar d'aquí a una estona.", 'Ahora no puedo responder. Vuelve a probarlo en un rato.'); }
   } finally { XAT.busy = false; out.removeAttribute('id'); xatScroll(); }
 }
 xatSync();
