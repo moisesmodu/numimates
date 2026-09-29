@@ -410,7 +410,7 @@ function premiumBox() {
   if (P.pla === 'premium') {
     const S = P.sub, per = S && (S.periode === 'any' ? L('Anual', 'Anual') : L('Mensual', 'Mensual'));
     const estat = !S ? L('Lliçons sense límit, batalles i ruta de temporada.', 'Lecciones sin límite, batallas y ruta de temporada.')
-      : S.cancel ? L(`Cancel·lada: tens Premium fins al ${dayLong(S.renova)} i després passes al pla gratuït.`, `Cancelada: tienes Premium hasta el ${dayLong(S.renova)} y después pasas al plan gratuito.`)
+      : S.cancel ? L(`Cancel·lada: no es cobrarà res més. Tens Premium fins al ${dayLong(S.renova)} i després passes al pla gratuït.`, `Cancelada: no se cobrará nada más. Tienes Premium hasta el ${dayLong(S.renova)} y después pasas al plan gratuito.`)
       : S.pendent ? L('No s\'ha pogut cobrar la renovació: revisa la targeta.', 'No se ha podido cobrar la renovación: revisa la tarjeta.')
       : L(`${per} · es renova el ${dayLong(S.renova)}.`, `${per} · se renueva el ${dayLong(S.renova)}.`);
     return `<div class="prem-box on"><b>⭐ Numi Mates Premium</b><span>${estat}</span>
@@ -442,9 +442,9 @@ async function subDo(resume) {
     if (r.ok) {
       P.sub = r.sub || null; saveLocal(); closeModal(); renderProfile();
       return toast(resume ? L('Subscripció reactivada. Continues amb Premium!', '¡Suscripción reactivada. Sigues con Premium!')
-        : L(`Subscripció cancel·lada. Tens Premium fins al ${dayLong(P.sub ? P.sub.renova : today())}.`, `Suscripción cancelada. Tienes Premium hasta el ${dayLong(P.sub ? P.sub.renova : today())}.`));
+        : L(`Cancel·lada a Stripe: no es farà cap més cobrament. Tens Premium fins al ${dayLong(P.sub ? P.sub.renova : today())}.`, `Cancelada en Stripe: no se hará ningún cobro más. Tienes Premium hasta el ${dayLong(P.sub ? P.sub.renova : today())}.`));
     }
-    const m = r.status === 429 ? ERR('massa') : ERR();
+    const m = r.status === 429 ? ERR('massa') : r.status === 502 ? (resume ? L('Stripe no ha confirmat la reactivació. Torna-ho a provar.', 'Stripe no ha confirmado la reactivación. Vuelve a intentarlo.') : L('Stripe no ha confirmat la cancel·lació, així que encara no està cancel·lada. Torna-ho a provar o escriu a hola@numimates.com.', 'Stripe no ha confirmado la cancelación, así que todavía no está cancelada. Vuelve a intentarlo o escribe a hola@numimates.com.')) : ERR();
     if ($('#suberr')) $('#suberr').textContent = m; else toast(m);
   } catch (e) { if ($('#suberr')) $('#suberr').textContent = ERR(); else toast(ERR()); }
   if (b) { b.disabled = false; b.textContent = L('CANCEL·LA LA SUBSCRIPCIÓ', 'CANCELAR LA SUSCRIPCIÓN'); }

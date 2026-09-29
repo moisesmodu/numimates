@@ -23,7 +23,7 @@ export async function stripe(path, data, method = data ? 'POST' : 'GET') {
 const GRACE = 3; // dies de marge si la renovació tarda (reintents de cobrament)
 const periodEnd = s => s.current_period_end || (s.items && s.items.data && s.items.data[0] && s.items.data[0].current_period_end) || 0;
 const endDate = ts => new Date((ts + GRACE * 86400) * 1000).toISOString().slice(0, 10);
-const LIVE = ['active', 'trialing', 'past_due'];
+export const LIVE = ['active', 'trialing', 'past_due'];
 
 // deixa l'alumne com diu la subscripció de Stripe (idempotent: es pot cridar tantes vegades com calgui)
 export async function applySub(s, code) {
@@ -46,4 +46,22 @@ export function subOf(a) {
   if (!a || !a.stripe_sub || a.pla !== 'premium' || !a.pla_fins) return null;
   const fins = new Date(a.pla_fins); if (isNaN(fins)) return null;
   return { periode: a.pla_periode || 'mes', renova: new Date(fins.getTime() - GRACE * 864e5).toISOString().slice(0, 10), cancel: !!a.pla_cancel, pendent: a.stripe_status === 'past_due' };
+}
+
+// Cancel·la (al final del període pagat) o reactiva a Stripe TOTES les subscripcions vives d'un alumne i ho comprova
+// tornant-les a llegir de Stripe. Només torna ok si Stripe confirma que cap no es tornarà a cobrar (o, en reactivar, que sí).
+export async function setCancel(code, resume) {
+  const a = (await sql`SELECT stripe_sub, stripe_customer FROM mates.alumnes WHERE code = ${code}`)[0];
+  if (!a || (!a.stripe_sub && !a.stripe_customer)) return { error: 'sense subscripció' };
+  const ids = new Set(a.stripe_sub ? [a.stripe_sub] : []);
+  if (!resume && a.stripe_customer) {
+    const l = await stripe(`subscriptions?customer=${encodeURIComponent(a.stripe_customer)}&status=all&limit=100`);
+    l.data.filter(s => LIVE.includes(s.status) && (s.id === a.stripe_sub || cleanCode(s.metadata && s.metadata.code) === code)).forEach(s => ids.add(s.id));
+  }
+  if (!ids.size) return { error: 'sense subscripció' };
+  for (const id of ids) await stripe('subscriptions/' + id, { cancel_at_period_end: resume ? 'false' : 'true' });
+  const subs = await Promise.all([...ids].map(id => stripe('subscriptions/' + id)));
+  for (const s of subs) await applySub(s, code);
+  const ok = subs.every(s => resume ? LIVE.includes(s.status) && !s.cancel_at_period_end && !s.cancel_at : s.status === 'canceled' || s.cancel_at_period_end || s.cancel_at);
+  return ok ? { ok: true, n: subs.length } : { error: 'no confirmat' };
 }

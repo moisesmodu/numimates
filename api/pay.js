@@ -5,7 +5,7 @@
                                                       a Stripe amb la clau secreta, així un avís inventat no pot activar res. */
 import { sql, body, cleanCode, ok, blocked, fail, note, tooMany } from './_lib.js';
 
-import { STRIPE_KEY as KEY, stripe, stripeMode, applySub, subOf } from './_stripe.js';
+import { STRIPE_KEY as KEY, stripe, stripeMode, applySub, subOf, setCancel } from './_stripe.js';
 const LOOKUP = { mes: 'numi_premium_mes', any: 'numi_premium_any' };
 const ORIGINS = ['https://app.numimates.com', 'https://mates-numi.vercel.app', 'http://localhost:5176', 'http://127.0.0.1:5176'];
 
@@ -82,13 +82,14 @@ async function cancel(req, res, resume) {
   const b = body(req), code = cleanCode(b.code);
   if (!code) return ok(res, { error: 'codi' }, 400);
   if (await blocked(req, 'pagament', 20, 60)) return tooMany(res);
-  const a = (await sql`SELECT stripe_sub FROM mates.alumnes WHERE code = ${code} AND active`)[0];
+  const a = (await sql`SELECT 1 FROM mates.alumnes WHERE code = ${code} AND active`)[0];
   if (!a) { await fail(req, 'pagament'); return ok(res, { error: 'no trobat' }, 404); }
-  if (!a.stripe_sub) return ok(res, { error: 'sense subscripció' }, 409);
-  await applySub(await stripe('subscriptions/' + a.stripe_sub, { cancel_at_period_end: resume ? 'false' : 'true' }), code);
+  const c = await setCancel(code, resume);
+  if (c.error === 'sense subscripció') return ok(res, { error: c.error }, 409);
+  if (c.error) return ok(res, { error: 'stripe' }, 502);
   await note(req, 'pagament');
   const r = (await sql`SELECT stripe_sub, pla, pla_fins, pla_periode, pla_cancel, stripe_status FROM mates.alumnes WHERE code = ${code}`)[0];
-  return ok(res, { ok: true, sub: subOf(r) });
+  return ok(res, { ok: true, sub: subOf(r), verificat: true });
 }
 
 async function info(req, res) {

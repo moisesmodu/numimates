@@ -1,6 +1,6 @@
 import { sql, ok, body, cleanCode, validPass, hashPass } from './_lib.js';
 import { who, groupsOf } from './_auth.js';
-import { STRIPE_KEY, stripe, stripeMode, applySub } from './_stripe.js';
+import { STRIPE_KEY, stripe, stripeMode, setCancel } from './_stripe.js';
 import { randomInt } from 'crypto';
 // Panell /profe.html. L'administrador ho veu tot i gestiona centres, docents, grups i plans.
 // Un docent només veu (i gestiona) els alumnes dels seus grups; l'admin de centre, tots els del seu centre.
@@ -93,10 +93,9 @@ export default async function handler(req, res) {
     if (b.action === 'docent_pass') { const p = tmpPass(); await sql`UPDATE mates.docents SET pass_hash = ${hashPass(p)} WHERE id = ${+b.id}`; return ok(res, { ok: true, password: p }); }
     // subscripció de Stripe d'un alumne: cancel·lar al final del període o desfer-ho (només l'administrador)
     if ((b.action === 'sub_cancel' || b.action === 'sub_resume') && me.admin) {
-      const a = (await sql`SELECT stripe_sub FROM mates.alumnes WHERE code = ${code}`)[0];
-      if (!a || !a.stripe_sub || !STRIPE_KEY) return ok(res, { error: 'sense subscripció' }, 409);
-      try { await applySub(await stripe('subscriptions/' + a.stripe_sub, { cancel_at_period_end: b.action === 'sub_cancel' ? 'true' : 'false' }), code); }
-      catch (e) { return ok(res, { error: 'stripe' }, 502); }
+      if (!STRIPE_KEY) return ok(res, { error: 'sense subscripció' }, 409);
+      let c; try { c = await setCancel(code, b.action === 'sub_resume'); } catch (e) { return ok(res, { error: 'stripe' }, 502); }
+      if (c.error) return ok(res, { error: c.error }, c.error === 'sense subscripció' ? 409 : 502);
       return ok(res, { ok: true });
     }
     if (b.action === 'pla') {
