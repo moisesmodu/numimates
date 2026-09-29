@@ -100,9 +100,9 @@ const S = {
       const sign = pr.sign === '<' ? '&lt;' : '&gt;';
       if (pr.mode === 'count') {
         const cw = c => c === '.' ? 8 : 15, wa = [...pr.a].reduce((a, c) => a + cw(c), 0), wb = [...pr.b].reduce((a, c) => a + cw(c), 0), x0 = 160 - (wa + 44 + wb) / 2;
-        const put = (str, xs, tc) => { let x = xs, k = 0, o = ''; [...str].forEach(c => { const w = cw(c); o += txt(x + w / 2, y + 24, c, 22, { an: A(t) }); if (c !== '.') { k++; o += txt(x + w / 2, y + 42, k, 10, { c: UC, an: A(tc + k * .09) }); } x += w; }); return [o, k]; };
-        const [sa, ka] = put(pr.a, x0, t + .5), [sb, kb] = put(pr.b, x0 + wa + 44, t + .5 + ka * .09 + .2);
-        const tn = t + .9 + (ka + kb) * .09;
+        const put = (str, xs, tc) => { let x = xs, k = 0, o = ''; [...str].forEach(c => { const w = cw(c); o += txt(x + w / 2, y + 24, c, 22, { an: A(t) }); if (c !== '.') { k++; o += txt(x + w / 2, y + 42, k, 10, { c: UC, an: A(tc + k * .06) }); } x += w; }); return [o, k]; };
+        const [sa, ka] = put(pr.a, x0, t + .5), [sb, kb] = put(pr.b, x0 + wa + 44, t + .5 + ka * .06 + .2);
+        const tn = t + .9 + (ka + kb) * .06;
         s += sa + sb + pop(tn, pill(x0 + wa / 2, y + 64, `${ka} ${L_('xifres', 'cifras')}`, 12)) + pop(tn + .2, pill(x0 + wa + 44 + wb / 2, y + 64, `${kb} ${L_('xifres', 'cifras')}`, 12));
         ph[P + 'n'] = tn + .4; ph[P + 'e'] = tn + .8;
         s += txt(x0 + wa + 22, y + 26, sign, 26, { c: RED, an: A(ph[P + 'e'] - .2) });
@@ -128,7 +128,7 @@ const S = {
         if (p < 0 && pads.length && ph[P + 'pad'] == null) { pads.forEach(([pp, yy]) => s += txt(px(pp), yy, '0', 22, { c: RED, an: A(tc) })); ph[P + 'pad'] = tc + .3; tc += .7; }
         const da = dig(a, p) ?? '0', db = dig(b, p) ?? '0';
         const fr = rect(px(p) - cw / 2 - 1, ya - 26, cw + 2, yb - ya + 36, { rx: 8, f: 'none', s: Y, sw: 3.5 });
-        if (da === db) { under += win(tc, tc + .5, fr, 'a-fade'); s += txt(px(p), yb + 22, '=', 16, { c: GRY, an: A(tc + .2) }); ph[`${P}c${j}`] = tc + .3; tc += .55; j++; continue; }
+        if (da === db) { under += win(tc, tc + .5, fr, 'a-fade'); s += txt(px(p), yb + 22, '=', 16, { c: GRY, an: A(tc + .2) }); ph[`${P}c${j}`] = tc + .3; tc += .5; j++; continue; }
         under += pop(tc, rect(px(p) - cw / 2 - 1, ya - 26, cw + 2, yb - ya + 36, { rx: 8, f: Y, op: .6 }), 'a-fade');
         s += pop(tc + .35, pill(px(p), yb + 28, `${da} ${+da < +db ? '&lt;' : '&gt;'} ${db}`, 13, { s: RED }));
         ph[`${P}c${j}`] = ph[P + 'd'] = tc + .5; break;
@@ -182,9 +182,9 @@ const S = {
         const a = r.pts[j], b = r.pts[j + 1], dir = b > a ? 1 : -1, c = dir > 0 ? UC : RED, xa = X(a), xb = X(b);
         let dur;
         if (r.unit) { const n = Math.abs(b - a); for (let k = 0; k < n; k++) s += hop(X(a + dir * k), X(a + dir * (k + 1)), ly - 3, 7, tj + k * .15, c); dur = n * .15 + .35; }
-        else { const hh = Math.min(26, Math.max(10, Math.abs(xb - xa) * .3)); s += hop(xa, xb, ly - 4, hh, tj, c); dur = .45; }
-        if (r.jl && r.jl[j]) { const hh = r.unit ? 7 : Math.min(26, Math.max(10, Math.abs(xb - xa) * .3)); s += pop(tj + .2, pill((xa + xb) / 2, ly - 12 - hh - 12, r.jl[j], 12, { s: c, pad: 12 })); }
-        if (r.cnt) s += txt((xa + xb) / 2, ly - 8, j + 1, 10, { c: GRY, an: A(tj + .3) });
+        else { const hh = r.ah || Math.min(26, Math.max(10, Math.abs(xb - xa) * .3)); s += hop(xa, xb, ly - 4, hh, tj, c); dur = .45; }
+        if (r.jl && r.jl[j]) { const hh = r.unit ? 7 : r.ah || Math.min(26, Math.max(10, Math.abs(xb - xa) * .3)); s += pop(tj + .2, pill((xa + xb) / 2, ly - 12 - hh - 12, r.jl[j], 12, { s: c, pad: 12 })); }
+        if (r.cnt) s += txt((xa + xb) / 2, ly - 9, j + 1, 11, { c: GRY, an: A(tj + .3) });
         if (j + 1 >= sh) s += ptEl(j + 1, tj + dur - .05);
         ph[`${R}h${j}`] = tj + dur + .1; tj += dur + .3;
       }
@@ -802,7 +802,7 @@ const S = {
     steps.forEach((st, k) => {
       const T = .8 + k * 1.35, len = String(st.c).length, xa = X(st.e - len + 1) - cw / 2 + 2, xb = X(st.e) + cw / 2 - 2, last = k === steps.length - 1;
       s += line(xa, rowY(k) + 7, xb, rowY(k) + 7, { s: UC, sw: 3, an: A(T, 'a-draw') });
-      s += txt(xl + 16 + k * 18, y0 + 40, st.qd, 24, { a: 'start', c: UC, an: A(T + .35) });
+      s += txt(xl + 16 + k * 18, y0 + 40, st.qd, 24, { a: 'start', c: INK, an: A(T + .35) });
       const rs = String(st.r);
       [...rs].forEach((ch, m) => s += txt(X(st.e - rs.length + 1 + m), rowY(k + 1), ch, 22, { c: !last && st.r === 0 ? GRY : INK, an: A(T + .7) }));
       if (!last) { const nx = X(st.e + 1); s += arrow(nx, y0 + 10, nx, rowY(k + 1) - 20, T + .9, GRY, 2) + txt(nx, rowY(k + 1), D[st.e + 1], 22, { an: A(T + 1.1) }); }
@@ -810,7 +810,7 @@ const S = {
     });
     const tE = .8 + steps.length * 1.35, lst = steps[steps.length - 1], q = steps.map(x => x.qd).join('');
     under += pop(tE, rect(xl + 8, y0 + 16, q.length * 18 + 12, 32, { rx: 9, f: Y }), 'a-fade');
-    s += txt(xl + 14 + q.length * 9, y0 + 64, L_('quocient', 'cociente'), 11, { c: UC, an: A(tE + .1) });
+    s += txt(xl + 26 + q.length * 18, y0 + 38, L_('quocient', 'cociente'), 11, { a: 'start', c: UC, an: A(tE + .1) });
     const rx = X(lst.e) - (String(lst.r).length - 1) * cw / 2, ry = rowY(steps.length) - 8;
     s += pop(tE + .2, circ(rx, ry, 15, { f: 'none', s: RED, sw: 3 })) + txt(rx + 22, ry + 4, L_('residu', 'resto'), 11, { a: 'start', c: RED, an: A(tE + .3) });
     ph.end = tE + .4;
@@ -819,29 +819,32 @@ const S = {
     return done(h, under + s, ph, L);
   },
   // l'ordre de les operacions: es marca el que va primer i l'expressió es va fent petita
-  p2expr({ rows, fs = 20, L }) {
-    let s = ''; const ph = {}; let t = .2;
+  p2expr({ rows, fs = 19, L }) {
+    // a dalt, l'expressió tal com és (amb el que va primer subratllat); a sota, es va fent petita fins al resultat
+    let s = ''; const ph = {}; let t = .2; const gapR = rows.length > 2 ? 66 : 76;
     rows.forEach((r, i) => {
-      const y = 36 + i * 58, R = 'r' + i;
+      const y = 28 + i * gapR, y2 = y + 30, R = 'r' + i, step = rows.length > 2 ? .85 : 1.05;
       const lay = str => { const tk = str.split(' '), ws = tk.map(k => tw(k, fs) * .95); let W = 0; const xs = []; tk.forEach((k, j) => { if (j) W += (tk[j - 1] === '(' || k === ')') ? 3 : 10; xs.push(W + ws[j] / 2); W += ws[j]; }); return { tk, ws, xs: xs.map(x => x + 160 - W / 2) }; };
-      const Ls = r.st.map(lay), T = r.st.map((_, j) => t + j * 1.05);
-      Ls.forEach((ly, j) => {
-        const last = j === Ls.length - 1, prev = j ? Ls[j - 1] : null;
+      const Ls = r.st.map(lay), T = r.st.map((_, j) => t + j * step);
+      const ul = (ly, [a, b], yy, tt) => { const xa = ly.xs[a] - ly.ws[a] / 2 - 3, xb = ly.xs[b] + ly.ws[b] / 2 + 3; return rect(xa, yy + 6, xb - xa, 5, { rx: 2.5, f: UC, an: A(tt, 'a-grow') }); };
+      s += pop(T[0], Ls[0].tk.map((k, m) => txt(Ls[0].xs[m], y, k, fs)).join(''), 'a-fade') + ul(Ls[0], r.rg[0], y, T[0] + .45);
+      for (let j = 1; j < Ls.length; j++) {
+        const ly = Ls[j], prev = Ls[j - 1], [a, b] = r.rg[j - 1], last = j === Ls.length - 1, py = j === 1 ? y : y2;
         let row = '';
         ly.tk.forEach((k, m) => {
-          const el = txt(ly.xs[m], y, k, fs);
-          if (!j) { row += el; return; }
-          const [a, b] = r.rg[j - 1], om = m < a ? m : m > a ? m + (b - a) : null;
-          row += om == null ? pop(T[j] + .15, rect(ly.xs[m] - ly.ws[m] / 2 - 6, y - fs - 2, ly.ws[m] + 12, fs + 12, { rx: 9, f: Y }) + el) : move(T[j], prev.xs[om] - ly.xs[m], 0, el);
+          const el = txt(ly.xs[m], y2, k, fs), om = m < a ? m : m > a ? m + (b - a) : null;
+          row += om == null ? pop(T[j] + .15, rect(ly.xs[m] - ly.ws[m] / 2 - 6, y2 - fs - 1, ly.ws[m] + 12, fs + 11, { rx: 9, f: last ? Y : '#FFE7A3' }) + el) : move(T[j], prev.xs[om] - ly.xs[m], py - y2, el);
         });
-        if (!last) { const [a, b] = r.rg[j], xa = ly.xs[a] - ly.ws[a] / 2 - 3, xb = ly.xs[b] + ly.ws[b] / 2 + 3; row += rect(xa, y + 7, xb - xa, 5, { rx: 2.5, f: UC, an: A(T[j] + .45, 'a-grow') }); }
-        const g = j ? pop(T[j], row, 'a-fade') : pop(T[0], row, 'a-fade');
+        if (!last) row += ul(ly, r.rg[j], y2, T[j] + .45);
+        row += txt(ly.xs[0] - ly.ws[0] / 2 - (last ? 18 : 14), y2, '=', fs, { c: GRY });
+        const g = pop(T[j], row, 'a-fade');
         s += last ? g : gone(T[j + 1], g);
         ph[`${R}s${j}`] = T[j] + .35;
-      });
-      t = T[T.length - 1] + .7;
+      }
+      ph[R + 's0'] = T[0] + .35;
+      t = T[T.length - 1] + (rows.length > 2 ? .45 : .7);
     });
-    return done(36 + (rows.length - 1) * 58 + 24, s, ph, L);
+    return done(28 + (rows.length - 1) * gapR + 44, s, ph, L);
   },
   /* ---------- divisibilitat ---------- */
   // els divisors com a rectangles: totes les maneres de posar n quadrets en files iguals
@@ -862,10 +865,10 @@ const S = {
   },
   // primers i compostos: el 13 només fa una fila; el 15 també es pot posar en 3 files de 5
   p2primes({ L }) {
-    const cs = 12, x0 = 52; let s = ''; const ph = {};
+    const cs = 11, x0 = 52; let s = ''; const ph = {};
     const cells = (x, y, a, b) => { let o = ''; for (let r = 0; r < a; r++) for (let c = 0; c < b; c++) o += rect(x + c * cs, y + r * cs, cs, cs, { rx: 2, f: UC, s: WH, sw: 1.5 }); return o; };
-    s += txt(26, 30, '13', 19, { an: A(.2) }) + pop(.3, cells(x0, 18, 1, 13), 'a-fade') + txt(x0 + 13 * cs + 8, 29, '1 × 13', 12, { a: 'start', c: GRY, an: A(.5) }) + pop(.9, pill(282, 24, L_('primer', 'primo'), 13, { f: Y, s: INK }));
-    s += txt(26, 64, '15', 19, { an: A(1.4) }) + pop(1.5, cells(x0, 52, 1, 15), 'a-fade') + txt(x0 + 15 * cs + 6, 63, '1 × 15', 12, { a: 'start', c: GRY, an: A(1.6) }) + pop(2.0, cells(x0, 72, 3, 5), 'a-fade') + txt(x0 + 5 * cs + 8, 94, '3 × 5', 12, { a: 'start', c: GRY, an: A(2.1) }) + pop(2.4, pill(282, 84, L_('compost', 'compuesto'), 13, { s: INK }));
+    s += txt(26, 30, '13', 19, { an: A(.2) }) + pop(.3, cells(x0, 18, 1, 13), 'a-fade') + txt(x0 + 13 * cs + 8, 29, '1 × 13', 12, { a: 'start', c: GRY, an: A(.5) }) + pop(.9, pill(286, 24, L_('primer', 'primo'), 13, { f: Y, s: INK }));
+    s += txt(26, 64, '15', 19, { an: A(1.4) }) + pop(1.5, cells(x0, 52, 1, 15), 'a-fade') + txt(x0 + 15 * cs + 6, 63, '1 × 15', 12, { a: 'start', c: GRY, an: A(1.6) }) + pop(2.0, cells(x0, 70, 3, 5), 'a-fade') + txt(x0 + 5 * cs + 8, 91, '3 × 5', 12, { a: 'start', c: GRY, an: A(2.1) }) + pop(2.4, pill(282, 86, L_('compost', 'compuesto'), 13, { s: INK }));
     ph.r13 = 1.1; ph.r15 = 2.6;
     const PR = [2, 3, 5, 7, 11, 13, 17, 19], gx = v => 34 + ((v - 1) % 10) * 28, gy = v => 136 + Math.floor((v - 1) / 10) * 30;
     for (let v = 1; v <= 20; v++) { const k = PR.indexOf(v); s += txt(gx(v), gy(v) + 5, v, 13, { c: k < 0 ? GRY : INK, an: A(3.0 + v * .02) }); if (k >= 0) s += pop(3.6 + k * .18, circ(gx(v), gy(v), 12, { f: UC }) + txt(gx(v), gy(v) + 5, v, 13, { c: WH })); }
@@ -972,13 +975,13 @@ const S = {
     let gr = ''; for (let i = 1; i < b; i++) gr += line(x0 + i * u, y0, x0 + i * u, yB, { s: LN, sw: 1.2 }); for (let j = 1; j < h; j++) gr += line(x0, y0 + j * u, x0 + W, y0 + j * u, { s: LN, sw: 1.2 });
     under += pop(tR, `<rect x="${r1(x0)}" y="${r1(y0)}" width="${r1(W)}" height="${r1(H)}" class="p2f1"/>` + gr, 'a-fade');
     s += pop(tR, rect(x0, y0, W, H, { rx: 1, f: 'none', s: INK, sw: 2.5, da: '7 5' }), 'a-fade');
-    under += pop(tH, path(`M${r1(x0)},${r1(yB)} L${r1(x0)},${r1(y0)} L${r1(xa)},${r1(y0)} Z M${r1(xa)},${r1(y0)} L${r1(x0 + W)},${r1(y0)} L${r1(x0 + W)},${r1(yB)} Z`, { f: Y, s: 'none', sw: 0, op: .75 }), 'a-fade');
+    under += pop(tH, path(`M${r1(x0)},${r1(yB)} L${r1(x0)},${r1(y0)} L${r1(xa)},${r1(y0)} Z M${r1(xa)},${r1(y0)} L${r1(x0 + W)},${r1(y0)} L${r1(x0 + W)},${r1(yB)} Z`, { f: '#DCD0EC', s: 'none', sw: 0 }), 'a-fade');
     s += pop(tT, path(`M${r1(x0)},${r1(yB)} L${r1(x0 + W)},${r1(yB)} L${r1(xa)},${r1(y0)} Z`, { f: UC, s: INK, sw: 3, op: .9 }), 'a-fade');
-    s += pop(tT + .3, line(xa, y0 + 3, xa, yB - 3, { s: WH, sw: 2.5, da: '5 4' }) + path(`M${r1(xa)},${r1(yB - 12)} h10 v12`, { s: WH, sw: 2 }) + txt(xa + 8, (y0 + yB) / 2 + 5, `${h} ${unit}`, 13, { a: 'start', c: WH }), 'a-fade');
+    s += pop(tT + .3, line(xa, y0 + 3, xa, yB - 3, { s: WH, sw: 2.5, da: '5 4' }) + path(`M${r1(xa)},${r1(yB - 12)} h10 v12`, { s: WH, sw: 2 }) + txt(xa + 7, y0 + H * .36, `${h} ${unit}`, 13, { a: 'start', c: WH }), 'a-fade');
     s += txt(x0 + W / 2, yB + 20, `${b} ${unit}`, 14, { an: A(Math.min(tR, tT)) }) + txt(x0 - 8, (y0 + yB) / 2 + 5, `${h}`, 14, { a: 'end', an: A(tR) });
     const py = yB + 46, rectS = `${b} × ${h} = ${b * h}${first === 'rect' ? ` ${unit}²` : ''}`, triS = first === 'rect' ? `${b} × ${h} ÷ 2 = ${b * h / 2} ${unit}²` : `${b * h} ÷ 2 = ${b * h / 2}`;
     s += win(tR + .3, tH, pill(160, py, rectS, 15, { s: INK })) + win(tH + .2, first === 'rect' ? null : tA, pill(160, py, triS, 15, { f: Y, s: INK }));
-    s += txt(x0 + (W + ap * W) / 3 + (xa - x0) * 0, yB - H / 3 + 5, b * h / 2, 16, { c: WH, an: A(tH + .3) });
+    s += txt(x0 + (W + ap * W) / 3, yB - H * .16, b * h / 2, 16, { c: WH, an: A(tH + .3) });
     if (first !== 'rect') s += pop(tA, pill(160, py, `A = ${b * h / 2} ${unit}²`, 16, { f: Y, s: INK }));
     Object.assign(ph, { tri: tT + .5, rect: tR + .5, half: tH + .5, area: tA + .3 });
     return done(py + 18, under + s, ph, L);
@@ -1140,13 +1143,13 @@ const S = {
   p2root({ n, m, L }) {
     const r = Math.round(Math.sqrt(n)), cs = 11, x0 = 34, y0 = 34; let s = '', under = ''; const ph = {};
     const sq = (x, y, k, an, col = UC) => { let o = rect(x, y, k * cs, k * cs, { rx: 1, f: col, op: .75 }); for (let j = 1; j < k; j++) o += line(x + j * cs, y, x + j * cs, y + k * cs, { s: WH, sw: 1 }) + line(x, y + j * cs, x + k * cs, y + j * cs, { s: WH, sw: 1 }); return pop(an, o, 'a-fade'); };
-    s += sq(x0, y0, r, .3) + txt(x0 + r * cs / 2, y0 + r * cs / 2 + 7, n, 20, { c: WH, an: A(.5) });
+    s += sq(x0, y0, r, .3) + pop(.5, pill(x0 + r * cs / 2, y0 + r * cs / 2, n, 16, { s: INK }));
     s += win(.6, 1.6, txt(x0 + r * cs / 2, y0 - 8, '?', 15) + txt(x0 - 8, y0 + r * cs / 2 + 5, '?', 15, { a: 'end' })) + pop(1.6, txt(x0 + r * cs / 2, y0 - 8, r, 15, { c: UC }) + txt(x0 - 8, y0 + r * cs / 2 + 5, r, 15, { a: 'end', c: UC }));
     s += pop(1.9, pill(x0 + r * cs / 2, y0 + r * cs + 24, `√${n} = ${r}`, 15, { f: Y, s: INK }));
     ph.q = .8; ph.a = 2.1;
     const lo = Math.floor(Math.sqrt(m)), x1 = 178, y1 = y0;
     s += pop(2.6, rect(x1, y1, (lo + 1) * cs, (lo + 1) * cs, { rx: 1, f: 'none', s: INK, sw: 2, da: '4 3' }), 'a-fade') + sq(x1, y1, lo, 2.6);
-    s += txt(x1 + lo * cs / 2, y1 + lo * cs / 2 + 6, lo * lo, 16, { c: WH, an: A(2.8) }) + txt(x1 + (lo + 1) * cs + 6, y1 + (lo + 1) * cs - 2, (lo + 1) ** 2, 13, { a: 'start', an: A(2.9) });
+    s += pop(2.8, pill(x1 + lo * cs / 2, y1 + lo * cs / 2, lo * lo, 14, { s: INK })) + txt(x1 + (lo + 1) * cs + 6, y1 + (lo + 1) * cs - 2, (lo + 1) ** 2, 13, { a: 'start', an: A(2.9) });
     s += txt(x1 + lo * cs / 2, y1 - 8, lo, 13, { c: UC, an: A(2.8) }) + txt(x1 + (lo + 1) * cs + 6, y1 + 8, lo + 1, 13, { a: 'start', c: GRY, an: A(2.9) });
     ph.b = 3.2;
     for (let k = 0; k < m - lo * lo; k++) s += pop(3.7 + k * .1, rect(x1 + lo * cs + 1, y1 + k * cs + 1, cs - 2, cs - 2, { rx: 1, f: Y, s: INK, sw: 1 }));
@@ -1188,7 +1191,7 @@ const S = {
   p2scale({ e: k, cm, L }) {
     const px = 30, x0 = 30, y0 = 26; let s = ''; const ph = {};
     const wx1 = x0 + cm * px;
-    s += pop(.2, rect(x0 - 4, y0, cm * px + 30, 64, { rx: 3, f: PAL, s: INK, sw: 3 }) + rect(x0 + 40, y0 + 20, 26, 20, { rx: 2, f: WH, s: GRY, sw: 1.5 }) + txt(x0 + cm * px + 10, y0 + 22, L_('plànol', 'plano'), 11, { a: 'start', c: GRY }), 'a-fade');
+    s += pop(.2, rect(x0 - 4, y0, cm * px + 30, 64, { rx: 3, f: PAL, s: INK, sw: 3 }) + rect(x0 + 40, y0 + 20, 26, 20, { rx: 2, f: WH, s: GRY, sw: 1.5 }) + txt(x0 + cm * px + 34, y0 + 56, L_('plànol', 'plano'), 11, { a: 'start', c: GRY }), 'a-fade');
     s += pop(.4, pill(250, y0 + 14, `1:${k}`, 18, { f: Y, s: INK }));
     s += line(x0, y0 + 64, wx1, y0 + 64, { s: UC, sw: 6, an: A(.8, 'a-draw') });
     ph.plan = .9;
@@ -1196,7 +1199,7 @@ const S = {
     for (let c = 0; c <= cm; c++) s += pop(1.3 + c * .12, line(x0 + c * px, ry - 6, x0 + c * px, ry + 6, { sw: 2 }) + txt(x0 + c * px, ry + 20, c, 11, { c: GRY }));
     s += pop(1.3, line(x0, ry, wx1, ry, { sw: 2 }), 'a-fade') + txt(wx1 + 8, ry + 5, `${cm} cm`, 14, { a: 'start', an: A(1.8) });
     ph.cm = 2.0;
-    const by = 170, bx0 = 30, bw = 260, sw = bw / cm;
+    const by = 164, bx0 = 30, bw = 260, sw = bw / cm;
     for (let c = 0; c < cm; c++) { s += path(`M${x0 + c * px},${ry + 26} L${bx0 + c * sw},${by - 4} M${x0 + (c + 1) * px},${ry + 26} L${bx0 + (c + 1) * sw},${by - 4}`, { s: RED, sw: 1.5, da: '3 3', op: .8, an: A(2.4 + c * .35, 'a-fade') }); s += rect(bx0 + c * sw, by, sw, 26, { rx: 3, f: c % 2 ? '#E9E1F2' : WH, s: INK, sw: 2, an: A(2.6 + c * .35, 'a-grow') }) + txt(bx0 + c * sw + sw / 2, by + 18, `${k} cm`, 12, { an: A(2.8 + c * .35) }); }
     s += pop(3.9, pill(160, by + 44, `${cm} × ${k} = ${cm * k} cm = ${cm * k / 100} m`, 15, { f: Y, s: INK }));
     ph.real = 4.1;
@@ -1204,18 +1207,18 @@ const S = {
   },
   // un cinema: files × seients, els que s'omplen i els que queden lliures
   p2seats({ rows: R, cols: C, taken, L }) {
-    const cw = 14, ch = 11.5, x0 = 70, y0 = 30; let s = '', under = ''; const ph = {};
+    const cw = 11.5, ch = 10.5, x0 = 36, y0 = 28, px = 264; let s = '', under = ''; const ph = {};
     s += pop(.2, rect(x0 + 10, 8, C * cw - 20, 8, { rx: 4, f: INK, op: .75 }), 'a-fade');
     for (let r = 0; r < R; r++) { let row = ''; for (let c = 0; c < C; c++) row += rect(x0 + c * cw + 1.5, y0 + r * ch + 1, cw - 3, ch - 2, { rx: 3, f: WH, s: '#CFC4DA', sw: 1.2 }); s += pop(.3 + r * .06, row, 'a-fade'); }
     s += path(brace(x0, x0 + C * cw, y0 + R * ch + 4, 1, 8), { s: UC, sw: 2, an: A(1.2, 'a-draw') }) + txt(x0 + C * cw / 2, y0 + R * ch + 26, C, 13, { c: UC, an: A(1.3) });
     s += path(vbrace(y0, y0 + R * ch, x0 - 6, -1, 8), { s: UC, sw: 2, an: A(1.2, 'a-draw') }) + txt(x0 - 18, y0 + R * ch / 2 + 5, R, 13, { a: 'end', c: UC, an: A(1.3) });
     ph.grid = 1.4;
-    s += pop(1.8, pill(270, 40, `${R} × ${C} = ${R * C}`, 14, { s: INK }));
+    s += pop(1.8, pill(px, 44, `${R} × ${C} = ${R * C}`, 12, { s: INK, pad: 10 }));
     ph.tot = 2.0;
     for (let i = 0; i < taken; i++) { const r = Math.floor(i / C), c = i % C; s += rect(x0 + c * cw + 1.5, y0 + r * ch + 1, cw - 3, ch - 2, { rx: 3, f: UC, an: A(2.5 + r * .2 + c * .004, 'a-fade') }); }
     const tE = 2.5 + Math.floor((taken - 1) / C) * .2 + .5;
     for (let i = taken; i < R * C; i++) { const r = Math.floor(i / C), c = i % C; under += rect(x0 + c * cw, y0 + r * ch, cw, ch, { rx: 3, f: Y, an: A(tE + .2, 'a-fade') }); }
-    s += pop(tE + .5, pill(270, 150, `${R * C} − ${taken} = ${R * C - taken}`, 14, { f: Y, s: INK })) + pop(tE, pill(270, 100, `${taken}`, 13, { f: UC, s: UC, c: WH }));
+    s += pop(tE + .5, pill(px, 140, `${R * C} − ${taken} = ${R * C - taken}`, 12, { f: Y, s: INK, pad: 10 })) + pop(tE, pill(px, 92, `${taken}`, 13, { f: UC, s: UC, c: WH }));
     ph.free = tE + .8;
     return done(y0 + R * ch + 36, under + s, ph, L);
   }
@@ -1311,6 +1314,114 @@ Object.assign(TANIM, {
     { k: 'p2rect', a: [20, 4], b: [6], L: ['box', 'p1', 'tot'] },
     { k: 'p2tables', n: 30, per: 4, L: ['start', 'rem', 'ext', 'end'] },
     { k: 'p2tape', h: 130, rows: [{ y: 44, segs: [{ v: 12, c: 'uc', lab: '12 €', t: .3 }, { v: 12, c: 'uc', lab: '12 €', t: .5 }, { v: 12, c: 'uc', lab: '12 €', t: .7 }, { v: 14, c: 'y', sw: [['?', 2.4], ['14 €', 3.4]], t: .9 }], tot: { lab: '50 €', t: .9 }, br: [{ a: 0, b: 3, dn: true, lab: '3 × 12 = 36 €', t: 1.5 }, { a: 3, b: 4, dn: true, lab: '14 €', t: 2.6, f: WH, c: RED }] }], L: [1.0, 1.9, 3.0, 3.7] }
+  ],
+  'c5-1': [
+    { k: 'p2place', n: 452318, cols: ['CM', 'DM', 'UM', 'C', 'D', 'U'], hi: 1, L: ['num', 'cols', 'vals', 'hi'] },
+    { k: 'p2groups3', n: '3205040', L: ['split', 'g0', 'g1', 'g2', 'all'] },
+    { k: 'p2cmp', pairs: [{ a: '1.250.000', b: '987.654', mode: 'count', sign: '>' }, { a: '345.912', b: '345.219', sign: '>', heads: true, fin: false }], L: ['p0n', 'p0e', 'p1c2', 'p1e'] },
+    { k: 'p2round', num: '348.617', lines: [{ lo: 348000, hi: 349000, v: 348617, step: 100, res: 349000, dig: 4 }, { lo: 340000, hi: 350000, v: 348617, step: 1000, res: 350000, dig: 2 }], L: ['num', 'dig0', 'res0', 'res1'] }
+  ],
+  'c5-2': [
+    { k: 'p2dec100', v: '3,47', L: ['grid', 'read', 'money'] },
+    { k: 'p2cmp', pairs: [{ a: '2,5', b: '2,38', sign: '>', heads: true }], L: ['p0c0', 'p0pad', 'p0d', 'p0e'] },
+    { k: 'p2col', heads: true, ops: [{ a: '12,6', b: '3,45', op: '+' }, { a: '5,2', b: '1,75', op: '−' }], L: ['o0pad', 'o0res', 'o1pad', 'o1res'] },
+    { k: 'p2comma', rows: [['3,25', 1, '× 10'], ['3,25', 2, '× 100'], ['3,25', 3, '× 1.000'], ['48,6', -2, '÷ 100']], L: ['r0', 'r1', 'r2', 'r3'] }
+  ],
+  'c5-3': [
+    { k: 'p2rect', a: [234], b: [20, 6], order: [1, 0], L: ['split', 'p0', 'p1', 'tot'] },
+    { k: 'p2longdiv', dd: 875, dv: 4, L: ['s0', 's1', 's2', 'end'] },
+    { k: 'p2longdiv', dd: 396, dv: 12, prova: true, L: ['s0', 's1', 'end', 'prova'] },
+    { k: 'p2expr', rows: [{ st: ['20 − 3 × 4 + 6', '20 − 12 + 6', '14'], rg: [[2, 4], [0, 4]] }, { st: ['( 20 − 3 ) × 4', '17 × 4', '68'], rg: [[0, 4], [0, 2]] }], L: ['r0s0', 'r0s2', 'r1s0', 'r1s2'] }
+  ],
+  'c5-4': [
+    { k: 'p2hops', rows: [{ pts: [0, 6, 12, 18, 24, 30, 36, 42], jl: Array(7).fill('+6'), min: 0, max: 42, cnt: true, h: 96, ah: 17, tag: { s: '6 × 7 = 42' } }], L: ['r0h2', 'r0h6', 'r0e'] },
+    { k: 'p2rects', n: 18, L: ['a0', 'all', 'div'] },
+    { k: 'p2primes', L: ['r13', 'r15', 'grid', 'pr'] },
+    { k: 'p2digsum', n: 234, m: 3, n2: 235, L: ['ask', 'mult', 'yes', 'five'] }
+  ],
+  'c5-5': [
+    { k: 'p2fbars', bars: [{ y: 30, st: [[2, 3], [8, 12]], ops: ['× 4'], t: .3, ts: [1.4] }, { y: 104, st: [[12, 18], [6, 9], [2, 3]], ops: ['÷ 2', '÷ 3'], t: 2.4, ts: [3.6, 4.8] }], ex: [{ k: 'check', x: 306, y: 98, t: 5.5 }], L: ['b0s1', 'b1s0', 'b1s2', 5.7] },
+    { k: 'p2fbars', bars: [{ y: 30, st: [[3, 4], [6, 8]], ops: ['× 2'], t: .3, ts: [1.5] }, { y: 100, st: [[5, 8]], t: .6, col: Y }], ex: [{ k: 'vline', f: .75, y0: 20, y1: 136, t: 2.6 }, { k: 'pill', x: 116, y: 164, s: '3/4 &gt; 5/8', t: 3.4 }], L: [.9, 'b0s1', 2.9, 3.7] },
+    { k: 'p2fsum', rows: [{ a: [2, 9], b: [5, 9], op: '+' }, { a: [7, 8], b: [3, 8], op: '−', simp: [1, 2] }], L: ['r0res', 'r1res', 'r1simp'] },
+    { k: 'p2fracOf', rows: [{ n: 3, d: 5, total: 40, icon: 'cards' }], L: ['r0', 'r0one', 'r0tot'] }
+  ],
+  'c5-6': [
+    { k: 'p2angle', angs: [35, 90, 120, 180], L: ['a0', 'a1', 'a2', 'a3'] },
+    { k: 'p2tearoff', A: 50, B: 60, L: ['s0', 's1', 's2'] },
+    { k: 'p2perim', w: 8, h: 5, area: true, L: ['shape', 'per', 'area'] },
+    { k: 'p2tri', b: 10, h: 6, ap: .3, L: ['tri', 'rect', 'half', 'area'] }
+  ],
+  'c5-7': [
+    { k: 'p2coord', p: [4, 2], alt: [2, 4], L: ['start', 'x', 'y', 'alt'] },
+    { k: 'p2solid', items: [{ sh: 'cube', x: 44, y: 62, s: 48, ly: 124, t: .2 }, { sh: 'pyr', x: 122, y: 60, s: 50, ly: 124, t: 1.2 }, { sh: 'prism', x: 202, y: 62, s: 44, ly: 124, t: 2.2 }, { sh: 'sphere', x: 280, y: 64, s: 46, ly: 124, t: 3.2 }], L: ['i0', 'i1', 'i2', 'i3'] },
+    { k: 'p2sym', items: [{ sh: 'rect', x: 44, y: 64, a: 62, gt: [.8], cy: 128 }, { sh: 'tri', x: 122, y: 70, a: 62, gt: [2.0], cy: 128 }, { sh: 'square', x: 200, y: 64, a: 52, gt: [3.0, 3.5], cy: 128 }, { sh: 'A', x: 278, y: 64, a: 60, gt: [4.6], cy: 128 }], L: ['i0', 'i1', 'i2', 'i3'] },
+    { k: 'p2loop', name: 'n', v: [5, 9, 13, 17], op: '+ 4', L: ['init', 'loop', 't3', 'end'] }
+  ],
+  'c5-8': [
+    { k: 'p2bars', bars: [{ v: 9, ic: 'football' }, { v: 5, ic: 'basketball' }, { v: 6, ic: 'swimmer' }], max: 11, ex: [{ k: 'top', i: 0, t: 1.9 }, { k: 'diff', i: 0, j: 1, t: 2.8 }, { k: 'sum', x: 236, y: 16, s: '9 + 5 + 6 = 20', t: 3.8 }], L: ['bars', 2.1, 3.1, 4.0] },
+    { k: 'p2mean', vals: [7, 9, 6, 10, 8], L: ['cols', 'sum', 'lev', 'end'] },
+    { k: 'p2bag', red: 3, blue: 2, L: ['bag', 'pos', 'fav', 'p'] },
+    { k: 'p2dice', fav: [5, 6], simp: [1, 3], imp: true, L: ['fav', 'frac', 'simp', 'imp'] }
+  ],
+  'c5-9': [
+    { k: 'p2tape', h: 112, rows: [{ y: 44, segs: [{ v: 18.75, c: 'uc', lab: '18,75 €', t: .3, x: 1.5 }, { v: 26.85, c: 'y', sw: [['?', 1.3], ['26,85 €', 2.8]], t: .5 }], tot: { lab: '45,60 €', t: .5 } }], L: [.9, 1.9, 3.0] },
+    { k: 'p2tape', h: 136, rows: [{ y: 44, segs: [{ v: 7.5, c: 'uc', lab: '7,50', t: .3 }, { v: 7.5, c: 'uc', lab: '7,50', t: .45 }, { v: 7.5, c: 'uc', lab: '7,50', t: .6 }, { v: 27.5, c: 'y', sw: [['?', .9], ['27,50 €', 2.8]], t: .75 }], tot: { lab: '50 €', t: .75 }, br: [{ a: 0, b: 3, dn: true, lab: '22,50 €', t: 1.5 }, { a: 3, b: 4, dn: true, lab: '50 − 22,50', t: 2.5, f: WH, c: RED }] }], L: [1.0, 1.8, 3.0, 3.6] },
+    { k: 'p2tape', h: 200, rows: [{ y: 44, x0: 48, W: 252, segs: Array.from({ length: 24 }, (_, k) => ({ v: 150, c: k % 2 ? 'l' : 'w', t: .3 + k * .03 })), tot: { lab: '24 × 150 = 3.600', t: 1.3 }, img: [{ n: 'pencil', x: 22, y: 59, t: .2 }] }, { y: 128, x0: 48, W: 252, segs: Array.from({ length: 18 }, (_, k) => ({ v: 200, c: k ? (k % 2 ? 'l' : 'w') : 'y', t: 2.3 + k * .04 })), tot: { lab: '3.600 ÷ 18', t: 2.5 }, br: [{ a: 0, b: 1, dn: true, lab: '200', t: 3.4, px: 62 }], img: [{ n: 'school', x: 22, y: 143, t: 2.2 }] }], L: [1.0, 1.6, 2.8, 3.7] },
+    { k: 'p2tape', h: 136, rows: [{ y: 50, segs: [{ v: 26.85, c: 'y', sw: [['≈ 27', .3], ['26,85', 1.8]], t: .3 }, { v: 18.75, c: 'uc', sw: [['≈ 19', .4], ['18,75', 1.9]], t: .4 }], tot: { sw: [['≈ 46', .6], ['26,85 + 18,75 = 45,60', 2.1]], t: .5 }, br: [{ a: 0, b: 1, dn: true, lab: '26,85 €', t: 2.9 }] }], L: [.9, 2.4, 3.2] }
+  ],
+  'c6-1': [
+    { k: 'p2neg', L: ['p0', 'p1', 'p2'] },
+    { k: 'p2zline', min: -7, max: 5, a: -7, b: -2, ord: [-6, -2, 0, 3, 5], L: ['l0', 'cmp', 'ord'] },
+    { k: 'p2thermo', from: -3, up: 8, a2: -4, b2: 6, L: ['l0', 'l1', 'l2', 'r'] },
+    { k: 'p2hops', rows: [{ pts: [-4, 2], jl: ['+ 6'], min: -6, max: 4, unit: true, h: 68 }, { pts: [3, -2], jl: ['− 5'], min: -6, max: 4, unit: true, h: 68 }, { pts: [-2, -5], jl: ['− 3'], min: -6, max: 4, unit: true, h: 68 }], L: ['r0h0', 'r1h0', 'r2h0'] }
+  ],
+  'c6-2': [
+    { k: 'p2sq', n: 6, L: ['ask', 'fill', 'area'] },
+    { k: 'p2cubes', blocks: [{ a: 3, b: 3, c: 3, sz: 24, cx: 104, cy: 98, t: .4, dt: 1.0, h: 204 }, { a: 2, b: 2, c: 2, sz: 24, cx: 252, cy: 122, t: 4.0, dt: .5, h: 204 }], tags: [{ x: 104, y: 190, s: '3 × 3 = 9', t: 1.0, end: 3.0 }, { x: 104, y: 190, s: '9 × 3 = 27', t: 3.0 }, { x: 252, y: 190, s: '2 × 2 × 2 = 8', t: 5.0 }], L: [.4, 1.2, 3.2, 5.2] },
+    { k: 'p2pow10', rows: [{ e: 2 }, { e: 4 }, { e: 6 }, { m: 5, e: 3 }], L: ['r0', 'r1', 'r2', 'r3'] },
+    { k: 'p2root', n: 64, m: 50, L: ['q', 'a', 'b', 'c'] }
+  ],
+  'c6-3': [
+    { k: 'p2col', heads: true, ops: [{ a: '12,5', b: '3,75', op: '+' }, { a: '8', b: '2,35', op: '−' }], L: ['o0pad', 'o0res', 'o1res'] },
+    { k: 'p2comma', rows: [['3,25', 2, '× 100'], ['4,2', -1, '÷ 10'], ['7', -3, '÷ 1.000']], L: ['r0', 'r1', 'r2'] },
+    { k: 'p2decmul', L: ['a', 'b', 'c', 'd'] },
+    { k: 'p2expr', rows: [{ st: ['5 + 2 × 1,5', '5 + 3', '8'], rg: [[2, 4], [0, 2]] }, { st: ['( 5 + 2 ) × 1,5', '7 × 1,5', '10,5'], rg: [[0, 4], [0, 2]] }, { st: ['20 − 12 ÷ 4', '20 − 3', '17'], rg: [[2, 4], [0, 2]] }], L: ['r0s2', 'r1s2', 'r2s2'] }
+  ],
+  'c6-4': [
+    { k: 'p2fbars', fs: 13, bars: [{ y: 10, h: 22, st: [[1, 2]], t: .2 }, { y: 44, h: 22, st: [[2, 4]], t: .5 }, { y: 78, h: 22, st: [[3, 6]], t: .8 }, { y: 112, h: 22, st: [[4, 8]], t: 1.1 }, { y: 162, h: 26, fs: 17, st: [[2, 5], [6, 15]], ops: ['× 3'], t: 2.4, ts: [3.5], col: Y }], ex: [{ k: 'vline', f: .5, y0: 4, y1: 140, t: 1.6 }], L: [1.9, 3.2, 4.0] },
+    { k: 'p2fbars', bars: [{ y: 56, h: 34, st: [[12, 18], [2, 3]], ops: ['÷ 6'], t: .3, ts: [2.0], br: [{ a: 0, b: 1 / 3, up: true, s: '6', t: 1.0 }, { a: 1 / 3, b: 2 / 3, up: true, s: '6', t: 1.1 }, { a: 2 / 3, b: 1, up: true, s: '6', t: 1.2 }] }], L: [1.3, 1.8, 2.5] },
+    { k: 'p2fsum', rows: [{ a: [1, 2], b: [1, 3], op: '+', cd: 6 }, { a: [3, 4], b: [1, 6], op: '−', cd: 12 }, { a: [1, 4], b: [5, 12], op: '+', cd: 12, simp: [2, 3] }], L: ['r0res', 'r1res', 'r2res', 'r2simp'] },
+    { k: 'p2fracOf', rows: [{ n: 2, d: 5, total: 30, icon: 'coin' }], L: ['r0', 'r0one', 'r0tot'] }
+  ],
+  'c6-5': [
+    { k: 'p2pct', total: 80, rows: [[50, 2], [25, 4], [10, 10], [5, 20]], L: ['r0', 'r1', 'r2', 'r3'] },
+    { k: 'p2tape', h: 132, rows: [{ y: 40, segs: Array.from({ length: 10 }, (_, k) => ({ v: 6, c: k < 3 ? 'r' : 'l', lab: '6', t: .3 + k * .05, x: k < 3 ? 1.9 + k * .15 : null })), tot: { lab: '60 €', t: .4 }, br: [{ a: 0, b: 3, dn: true, lab: '30% = 18 €', t: 2.2, f: WH, c: RED }, { a: 3, b: 10, dn: true, lab: '60 − 18 = 42 €', t: 3.2 }] }], L: [.9, 2.5, 3.5] },
+    { k: 'p2ratio', heads: [{ ic: 'person' }, { ic: 'cupcake' }], cols: [['4', '200 g'], ['1', '50 g'], ['6', '300 g']], ops: ['÷ 4', '× 6'], L: ['c0', 'c1', 'c2'] },
+    { k: 'p2scale', e: 200, cm: 3, L: ['plan', 'cm', 'real'] }
+  ],
+  'c6-6': [
+    { k: 'p2bars', bars: [{ v: 8, ic: 'apple' }, { v: 5, ic: 'banana' }, { v: 12, ic: 'strawberry' }], max: 15, ex: [{ k: 'top', i: 2, t: 2.0 }, { k: 'sum', x: 124, y: 18, s: '8 + 5 + 12 = 25', t: 3.0 }], L: [.3, 'bars', 2.2, 3.2] },
+    { k: 'p2dots', data: [2, 0, 3, 2, 1, 2], xs: [0, 1, 2, 3], mode: 3.2, L: ['data', 'dots', 'mode'] },
+    { k: 'p2mean', vals: [6, 8, 7, 9], L: ['cols', 'sum', 'lev'] },
+    { k: 'p2bars', bars: [{ v: 12 }, { v: 18 }, { v: 9 }, { v: 15 }], unit: '°', max: 20, step: 2, lstep: 4, ex: [{ k: 'range', t: 2.2, s: '18 − 9 = 9', x: 206, y: 66 }], L: ['bars', 2.4, 3.0] }
+  ],
+  'c6-7': [
+    { k: 'p2tearoff', A: 50, B: 75, L: ['s0', 's1', 's2'] },
+    { k: 'p2tri', b: 8, h: 5, ap: .4, first: 'rect', L: ['rect', 'tri', 'half'] },
+    { k: 'p2cubes', blocks: [{ a: 4, b: 3, c: 3, sz: 22, cx: 122, cy: 96, t: .3, dt: 1.1, h: 206 }, { a: 1, b: 1, c: 1, sz: 24, cx: 272, cy: 92, t: 3.4, h: 206 }], tags: [{ x: 122, y: 190, s: '4 × 3 = 12', t: 1.0, end: 2.7 }, { x: 122, y: 190, s: '12 × 3 = 36', t: 2.7 }, { x: 272, y: 136, s: '1 cm³', t: 3.6, f: WH }], L: [1.0, 2.9, 3.8] },
+    { k: 'p2cubes', blocks: [{ a: 10, b: 5, c: 4, sz: 15, cx: 150, cy: 96, t: .6, dt: .9, h: 212, dims: ['10 cm', '5 cm', '4 cm'], dimt: .3 }], tags: [{ x: 160, y: 196, s: '10 × 5 = 50 cm²', t: 1.2, end: 3.7 }, { x: 160, y: 196, s: '50 × 4 = 200 cm³', t: 3.7 }], L: [.4, 1.4, 3.9] }
+  ],
+  'c6-8': [
+    { k: 'p2coord', p: [4, 1], L: ['start', 'x', 'y'] },
+    { k: 'p2solid', items: [{ sh: 'cube', x: 58, y: 64, s: 54, ly: 132, t: .2 }, { sh: 'pyr', x: 160, y: 62, s: 56, ly: 132, t: 1.2 }, { sh: 'cyl', x: 262, y: 66, s: 56, ly: 132, t: 3.0 }], L: ['i0', 1.4, 'i1', 'i2'] },
+    { k: 'p2loop', name: 'punts|puntos', v: [0, 5, 10, 15], op: '+ 5', L: ['init', 'loop', 't3', 'end'] },
+    { k: 'p2bag', red: 3, blue: 2, dado: true, L: ['bag', 'fav', 'p', 'die'] }
+  ],
+  'c6-9': [
+    { k: 'p2tape', h: 130, rows: [{ y: 44, segs: [{ v: 2.4, c: 'uc', lab: '2,40', t: .3 }, { v: 2.4, c: 'uc', lab: '2,40', t: .45 }, { v: 2.4, c: 'uc', lab: '2,40', t: .6 }, { v: 2.8, c: 'y', sw: [['?', .8], ['2,80 €', 2.6]], t: .75 }], tot: { lab: '10 €', t: .75 }, br: [{ a: 0, b: 3, dn: true, lab: '3 × 2,40 = 7,20 €', t: 1.4 }, { a: 3, b: 4, dn: true, lab: '2,80 €', t: 2.6, f: WH, c: RED }] }], L: [1.0, 1.8, 2.9] },
+    { k: 'p2seats', rows: 12, cols: 15, taken: 134, L: ['grid', 'tot', 'free'] },
+    { k: 'p2ratio', heads: [{ ic: 'orange' }, { s: '€' }], cols: [['5 kg', '7,50 €'], ['1 kg', '1,50 €'], ['8 kg', '12 €']], ops: ['÷ 5', '× 8'], L: ['c0', 'c1', 'c2'] },
+    { k: 'p2tape', h: 228, rows: [{ y: 40, x0: 50, W: 250, segs: Array.from({ length: 25 }, (_, k) => ({ v: 12, c: k ? (k % 2 ? 'l' : 'w') : 'uc', t: .3 + k * .025 })), tot: { lab: '300 €', t: .4 }, br: [{ a: 0, b: 1, dn: true, lab: '300 ÷ 25 = 12 €', t: 1.5, px: 118 }], img: [{ n: 'car', x: 24, y: 55, t: .2 }] }, { y: 148, x0: 50, W: 140, segs: Array.from({ length: 4 }, (_, k) => ({ v: 2, c: k ? 'y' : 'r', lab: '2 €', t: 2.3 + k * .06, x: k ? null : 2.9 })), tot: { lab: '8 €', t: 2.4 }, br: [{ a: 1, b: 4, dn: true, lab: '8 − 2 = 6 €', t: 3.2 }], img: [{ n: 'temple', x: 24, y: 163, t: 2.2 }], pills: [{ x: 258, y: 163, s: '12 + 6 = 18 €', t: 4.2, fs: 13 }] }], L: [.9, 1.8, 3.4, 4.4] }
   ]
 });
 
