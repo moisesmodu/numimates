@@ -49,8 +49,8 @@ function skillSent(sk) {
   if (/^v\.(balance|pattern|maze)$/.test(n)) return 'alg';
   if (n === 'v.frac') return 'num';
   if (/^v\./.test(n)) return 'esp';
-  if (/^(me\.clock|me\.units|me\.money|me\.perim|g\.clock|g\.coins|g\.ruler|geo\.area)$/.test(n)) return 'mes';
-  if (/^(me\.shape|g\.shape|geo\.angle|vol|e\.|geo\.pyth|geo\.thales|trig)/.test(n)) return 'esp';
+  if (/^(me\.clock|me\.units|me\.money|me\.perim|g\.clock|g\.coins|g\.ruler|geo\.area|me\.cal|me\.time|me\.smd)$/.test(n)) return 'mes';
+  if (/^(me\.shape|g\.shape|geo\.angle|vol|e\.|geo\.pyth|geo\.thales|trig|geo\.tri|geo\.quad|geo\.lines|geo\.poly)/.test(n)) return 'esp';
   if (/^(geo\.circle|geo\.vol2)$/.test(n)) return 'mes';
   if (/^(l\.|g\.seq|pc\.|g\.repeat|alg\.|fn\.|seq\.)/.test(n)) return 'alg';
   if (/^(stat|at\.|prob2)/.test(n)) return 'est';
