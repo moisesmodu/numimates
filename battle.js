@@ -22,9 +22,12 @@ const bApi = (action, extra = {}) => api('battle', { action, code: P.code, name:
 const cardById = id => STK.find(s => s[0] === id);
 const BERR = e => ({ 'no-existeix': L("Aquest codi no existeix. Revisa'l!", 'Ese código no existe. ¡Revísalo!'), caducada: L('Aquesta batalla ja ha acabat.', 'Esta batalla ya ha terminado.'), 'començada': L('Aquesta partida ja ha començat.', 'Esta partida ya ha empezado.'), plena: L('Aquesta batalla ja és plena.', 'Esta batalla ya está llena.'), massa: L('Has creat moltes batalles. Espera una estona.', 'Has creado muchas batallas. Espera un rato.'), sols: L('Cal almenys un altre jugador.', 'Hace falta al menos otro jugador.') })[e] || L('No hi ha connexió. Torna-ho a provar.', 'No hay conexión. Vuelve a intentarlo.');
 // Bucle de consulta lligat a la pantalla: s'atura sol quan canvies de pantalla
+// Només un bucle per clau: en repintar la pantalla no se n'engega un altre (abans es multiplicaven)
+const BLOOPS = new Set();
 function bLoop(key, fn, every = 2000) {
+  if (BLOOPS.has(key)) return; BLOOPS.add(key);
   const live = () => !!document.querySelector(`[data-bk="${key}"]`);
-  const tick = async () => { if (!live()) return; try { await fn(live); } catch (e) { } if (live()) setTimeout(tick, every); };
+  const tick = async () => { if (!live()) return BLOOPS.delete(key); try { await fn(live); } catch (e) { } if (live()) setTimeout(tick, every); else BLOOPS.delete(key); };
   setTimeout(tick, every);
 }
 
@@ -149,7 +152,9 @@ function partyCountdown(st) {
 function startBattle() {
   const st = BT.st; closeModal();
   if (st.kind === 'duel') { P.bpaid = P.bpaid || {}; if (!P.bpaid[st.code]) { if (P.gems < DUEL_COST) return noGems(); P.gems -= DUEL_COST; P.bpaid[st.code] = 1; save(); toast(`−${DUEL_COST} 💎`); } }
-  LS = { mode: 'battle', bcode: st.code, kind: st.kind, color: st.kind === 'duel' ? '#C0392B' : '#1F7A8C', seen: new Set(), mix: true, queue: battlePlan(st), total: BQ, done: 0, miss: 0, combo: 0, maxCombo: 0, gold: 0, t0: Date.now(), res: [], bOk: 0, bMs: 0, q0: 0 };
+  // si ja havia començat (ha tancat l'app a mitja partida), continua on era: no es poden repetir les preguntes per millorar el temps
+  const me = st.players.find(p => p.me) || {}, done = Math.min(me.done || 0, BQ);
+  LS = { mode: 'battle', bcode: st.code, kind: st.kind, color: st.kind === 'duel' ? '#C0392B' : '#1F7A8C', seen: new Set(), mix: true, queue: battlePlan(st).slice(done), total: BQ, done, miss: 0, combo: 0, maxCombo: 0, gold: 0, t0: Date.now(), res: [], bOk: me.correct || 0, bMs: me.ms || 0, q0: 0 };
   nextEx();
   const run = async () => { if (!LS || LS.bcode !== st.code) return; try { const n = await bApi('state', { bcode: st.code }); if (!n.error) { BT.st = n; battleStrip(); } } catch (e) { } setTimeout(run, 3000); };
   setTimeout(run, 3000);
