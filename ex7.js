@@ -450,7 +450,7 @@
     let a0 = -Math.PI / 2, s = '';
     parts.forEach(p => {
       const a1 = a0 + 2 * Math.PI * p.v / tot, P = a => `${r1(cx + R * Math.cos(a))} ${r1(cy + R * Math.sin(a))}`;
-      s += `<path class="sct" d="M${cx} ${cy} L${P(a0)} A${R} ${R} 0 ${a1 - a0 > Math.PI ? 1 : 0} 1 ${P(a1)} Z" fill="${p.col}" stroke="#fff" stroke-width="2.5" stroke-linejoin="round"/>`;
+      s += `<path class="sct" d="M${cx} ${cy} L${P(a0)} A${R} ${R} 0 ${a1 - a0 > Math.PI + 1e-9 ? 1 : 0} 1 ${P(a1)} Z" fill="${p.col}" stroke="#fff" stroke-width="2.5" stroke-linejoin="round"/>`;
       a0 = a1;
     });
     if (o.noLegend) return `<svg viewBox="0 0 144 144" class="vsvg">${s}</svg>`;
