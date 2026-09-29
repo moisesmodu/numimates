@@ -174,3 +174,6 @@ let EXFLAG = null;
     if (wasAsk && LS && LS.crono && LS.state === 'fb' && $('#foot') && $('#foot').classList.contains('ok')) setTimeout(() => { if (LS && LS.crono && LS.state === 'fb') nextEx(); }, 450);
   };
 }
+
+// app.js pinta la primera pantalla abans que es carregui aquest fitxer: la tornem a pintar amb les eines d'ESO
+if (P && IS_PRO && VIEW === 'home') renderHome();

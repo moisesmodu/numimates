@@ -1095,7 +1095,6 @@ img.ic{display:inline-block;width:1.2em;height:1.2em;object-fit:contain;vertical
 .xatin textarea:focus{border-color:var(--pri)}
 .xatgo{width:46px;height:46px;flex:none;border:0;border-radius:50%;background:var(--pri);color:#fff;font-size:18px;cursor:pointer;box-shadow:0 3px 0 var(--pri-d)}
 @media (min-width:700px){.xatfab{bottom:24px;right:24px}.xatfab.inles{top:auto;bottom:24px;right:24px;padding:6px 14px 6px 6px}.xatfab.inles .xatlbl{display:inline}.xatwin{left:auto;right:24px;bottom:24px;width:400px;border-radius:24px;height:min(80dvh,600px)}}
-body.xat-les .lesson .l-q{margin-right:46px}
 .varsplash .onb-logo{width:min(260px,70vw);margin:10px auto 22px;animation:up .6s cubic-bezier(.2,1.2,.4,1)}
 
 /* ---------- Eines d'ESO (Numi Pro): examen, contrarellotge, fitxes ---------- */
@@ -1128,3 +1127,15 @@ body.xat-les .lesson .l-q{margin-right:46px}
 .fxbtns{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}.fxbtns .btn{flex:1;min-width:160px}
 @media (max-width:480px){.fxwords{grid-template-columns:1fr}.fxwords dd{margin-bottom:6px}}
 @media print{.nav,.topbar,.fxbtns,.fxback,.xatfab,.side{display:none!important}html,body{background:#fff!important;color:#000!important}.fitxa section{break-inside:avoid;border-color:#ccc!important;background:#fff!important}.fitxa *{color:#000!important}}
+/* teoria i exercicis: sempre es poden desplaçar, i un avís quan hi ha més a sota */
+.lwrap{overflow-y:auto;min-height:0;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+.l-body{min-height:0;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+.morebtn{position:sticky;bottom:6px;margin:-44px auto 0;display:flex;align-items:center;gap:6px;width:max-content;padding:8px 14px;border-radius:99px;border:0;background:var(--pri);color:#fff;font-weight:900;font-size:13px;letter-spacing:.04em;box-shadow:0 6px 18px rgba(30,15,50,.3);cursor:pointer;z-index:3;animation:morebob 1.6s ease-in-out infinite}
+.morebtn.gone{opacity:0;pointer-events:none;transition:opacity .2s}
+@keyframes morebob{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+@media (max-height:760px){.l-vis .vpic.iso{max-height:150px}.l-vis svg{max-height:32vh}.l-vis{margin-bottom:12px}}
+
+/* botó del xat: a la barra del menú i a la barra de dalt de les lliçons */
+.nav .navxat{flex:1;max-width:116px;display:flex;flex-direction:column;align-items:center;gap:1px;padding:6px 2px;border-radius:14px;font-size:12px;font-weight:800;color:var(--pri);border:2px solid transparent;background:none;cursor:pointer}
+.nav .navxat .ni{width:30px;height:30px;display:grid;place-items:center;filter:none}.nav .navxat .ni svg{width:30px;height:30px}
+.xattop{flex:none;width:38px;height:38px;border-radius:50%;border:2px solid var(--line);background:#fff;display:grid;place-items:center;padding:0;cursor:pointer;margin-left:8px;overflow:hidden}.xattop svg{width:32px;height:32px}

@@ -312,7 +312,8 @@ function go(v) {
   else { setTimeout(classeLink, 500); setTimeout(payReturn, 400); }
 }
 const NAV = () => [['home', '🗺️', L('Camí', 'Camino')], ['train', '🎯', L('Entrena', 'Entrena')], ['album', '🎴', L('Àlbum', 'Álbum')], ['shop', '🛍️', L('Botiga', 'Tienda')], ['profile', '👤', L('Perfil', 'Perfil')]];
-const nav = t => `<nav class="nav">${NAV().map(([v, i, l]) => `<button class="${v === t ? 'on' : ''}" onclick="go('${v}')"><span class="ni">${i}</span><span>${l}</span></button>`).join('')}</nav>`;
+// a Numi Pro i Numi Ment, el xat amb en Numi és un botó més de la barra
+const nav = t => `<nav class="nav">${NAV().map(([v, i, l]) => `<button class="${v === t ? 'on' : ''}" onclick="go('${v}')"><span class="ni">${i}</span><span>${l}</span></button>`).join('')}${VAR.chat ? `<button class="navxat" onclick="xatOpen()" aria-label="${L("Pregunta a en Numi (xat d'ajuda)", 'Pregunta a Numi (chat de ayuda)')}"><span class="ni">${charSVG('numi', 'happy')}</span><span>${L('Pregunta', 'Pregunta')}</span></button>` : ''}</nav>`;
 const shell = (inner, tab) => `<div class="page">${topbar()}${inner}</div>${nav(tab)}`;
 function topbar() {
   const s = streakNow();
@@ -534,7 +535,7 @@ function renderHome() {
   VIEW = 'home';
   const c = CUR();
   app.innerHTML = shell(`<button class="course" onclick="pickCourse()"><span class="cem">${c.emoji}</span><span><small>${L('Estàs fent', 'Estás haciendo')}</small><b>${tx(c.long)}</b></span><span class="cch">${L('Canvia', 'Cambia')} ▾</span></button>
-    ${seasonCard()}${IS_PRO ? examCard() : ''}${testCard()}${reviewCard()}${recoBox()}${schoolCard()}${goalCard()}${missionsCard()}${streakCard()}${UNITS_().map(unitHTML).join('')}
+    ${seasonCard()}${IS_PRO && typeof examCard === 'function' ? examCard() : ''}${testCard()}${reviewCard()}${recoBox()}${schoolCard()}${goalCard()}${missionsCard()}${streakCard()}${UNITS_().map(unitHTML).join('')}
     <div class="theend">${P.course < COURSES.length - 1 ? L(`Quan acabis ${tx(c.long)}, t'espera <b>${tx(COURSES[P.course + 1].long)}</b>! 🚀`, `Cuando acabes ${tx(c.long)}, ¡te espera <b>${tx(COURSES[P.course + 1].long)}</b>! 🚀`) : L('Has arribat a l\'últim nivell! 🎓', '¡Has llegado al último nivel! 🎓')}</div>`, 'home');
   revealNodes(); showGain();
   if (JUST_OPEN) { const t = $('.trail.fresh'); if (t) setTimeout(() => t.scrollIntoView({ block: 'center', behavior: 'smooth' }), 80); JUST_OPEN = null; return; }
@@ -693,15 +694,29 @@ function skipPlace() { if (!LS) return; LS.res.push(false); LS.done++; SFX.tap()
 // Ajuda pas a pas: un exemple resolt del mateix tipus (amb altres números), sense donar la resposta de la pregunta.
 // No resta punts, però la pregunta no suma a la ratxa i la lliçó ja no pot ser perfecta (com a molt, 2 estrelles).
 const HINTS = 2;   // ajudes per lliçó
+// exemple resolt semblant (mateixa habilitat, altres números o un altre dibuix); es genera una sola vegada per pregunta
+const exKey = x => [x.q, x.vis, x.opts, x.items, x.fixed, x.need].map(v => typeof v === 'string' ? v : JSON.stringify(v ?? '')).join('|');
+function hintEx(e) {
+  if (e.hx !== undefined) return e.hx;
+  let x = null;
+  for (let i = 0; i < 12; i++) { try { x = genEx(e.sk, e.L, new Set(), false); } catch (err) { x = null; break; } if (x && exKey(x) !== exKey(e)) break; x = null; }
+  return (e.hx = x);
+}
+// sense exemple: a Numi Pro, en Numi hi dona una pista pel xat; si no, un avís
+function noHint() {
+  if (VAR.chat && P.code && typeof xatOpen === 'function') { xatOpen(); const q = $('#xatq'); if (q) { q.value = L("Dona'm una pista per a aquesta pregunta, sense dir-me la resposta", 'Dame una pista para esta pregunta, sin decirme la respuesta'); q.focus(); } return; }
+  toast(L('Per a aquesta pregunta no hi ha exemple. Llegeix-la a poc a poc i prova-ho!', 'Para esta pregunta no hay ejemplo. ¡Léela despacio e inténtalo!'));
+}
 function showHint(ok) {
   if (!LS || LS.state !== 'ask') return; const e = LS.cur;
   if (!e.helped && (LS.helps || 0) >= HINTS) return toast(L(`Ja has fet servir les ${HINTS} ajudes d'aquesta lliçó. Tu pots!`, `Ya has usado las ${HINTS} ayudas de esta lección. ¡Tú puedes!`));
   // les 3 primeres vegades (i sempre que la lliçó encara pot ser perfecta) avisem del que costa l'ajuda abans de mostrar-la
+  if (!hintEx(e)) return noHint();
   if (!ok && !e.helped && (P.hintAsk || 0) < 3) return modal(`<div class="sheet card cent hintsheet"><div class="hhead"><span class="hbulb"><img src="img/ic/bulb.webp" alt="" draggable="false"></span><div><b>${L('Vols una ajuda?', '¿Quieres una ayuda?')}</b><small>${L('Et mostrarem un exemple resolt', 'Te mostraremos un ejemplo resuelto')}</small></div></div>
     <ul class="hwarn"><li>${L(`Tens <b>${HINTS} ajudes</b> per lliçó.`, `Tienes <b>${HINTS} ayudas</b> por lección.`)}</li><li>${L('Aquesta pregunta <b>no sumarà a la ratxa</b>.', 'Esta pregunta <b>no sumará a la racha</b>.')}</li><li>${L('La lliçó quedarà com a molt en <b>2 estrelles</b> (per passar en calen 2, així que no et bloqueja).', 'La lección quedará como mucho en <b>2 estrellas</b> (para pasar hacen falta 2, así que no te bloquea).')}</li></ul>
     <div class="row2"><button class="btn ghost" onclick="closeModal()">${L('HO PROVO', 'LO INTENTO')}</button><button class="btn gold" onclick="P.hintAsk=(P.hintAsk||0)+1;saveLocal();showHint(1)">${L("VULL L'AJUDA", 'QUIERO LA AYUDA')}</button></div></div>`, true);
-  let x = null; for (let i = 0; i < 8 && (!x || x.q === e.q); i++) { try { x = genEx(e.sk, e.L, new Set(), false); } catch (err) { x = null; break; } }
-  if (!x || x.q === e.q) return toast(L('Per a aquesta pregunta no hi ha exemple. Mira bé el dibuix i prova-ho!', 'Para esta pregunta no hay ejemplo. ¡Mira bien el dibujo e inténtalo!'));
+  const x = hintEx(e);
+  if (!x) return noHint();
   if (!e.helped) { e.helped = true; LS.helps = (LS.helps || 0) + 1; }
   modal(`<div class="sheet hintsheet"><div class="hhead"><span class="hbulb"><img src="img/ic/bulb.webp" alt="" draggable="false"></span><div><b>${L('Com es fa?', '¿Cómo se hace?')}</b><small>${L('Mira aquest exemple amb altres números', 'Mira este ejemplo con otros números')}</small></div></div>
     <div class="lq">${x.q}</div>${x.vis ? `<div class="l-vis lvis">${x.vis}</div>` : ''}
@@ -1053,7 +1068,7 @@ function renderTrain() {
     <button class="tcard" onclick="startTrain()"><span class="ti">🧠</span><span><b>${L('Entrenament intel·ligent', 'Entrenamiento inteligente')}</b><small>${L('8 exercicis del que et costa més. Ideal per repassar.', '8 ejercicios de lo que más te cuesta. Ideal para repasar.')}</small></span></button>
     ${testInfo().due ? `<button class="tcard evo" onclick="startEvolution()"><span class="ti">🧪</span><span><b>${L("Prova d'evolució", 'Prueba de evolución')}</b><small>${L('Ja la pots fer! Mira quant has millorat.', '¡Ya puedes hacerla! Mira cuánto has mejorado.')}</small></span></button>` : ''}
     <button class="tcard school" onclick="pickSchool()"><span class="ti">📚</span><span><b>${L("Què fas ara a l'escola?", '¿Qué estás dando en el cole?')}</b><small>${L("Tria el tema que fas a classe i practica'l: així t'anirà millor a l'escola!", 'Elige el tema que das en clase y practícalo: ¡así te irá mejor en el cole!')}</small></span></button>
-    ${esoTools()}<h2 class="h2">⚡ ${L('Agilitat mental', 'Agilidad mental')}</h2>
+    ${typeof esoTools === 'function' ? esoTools() : ''}<h2 class="h2">⚡ ${L('Agilitat mental', 'Agilidad mental')}</h2>
     <div class="ggrid">${GAMES().map(([id, ic, t, d]) => `<button class="gcard" onclick="startGame('${id}')"><span class="gi">${ic}</span><b>${t}</b><small>${d}</small><span class="grec">🏆 ${B[id] || 0}</span></button>`).join('')}</div>
     <h2 class="h2">${L('Repassa una unitat', 'Repasa una unidad')}</h2>
     ${units.length ? units.map(({ u, i }) => `<button class="ucard" style="--uc:${u.color}" onclick="startTrain(${i})"><span class="uic">${charSVG(u.guide, 'idle')}</span><span><b>${tx(u.title)}</b><small>${L('Unitat', 'Unidad')} ${i + 1}</small></span><span class="go">›</span></button>`).join('') : `<p class="empty">${L('Quan acabis la primera lliçó del camí, aquí podràs repassar-la.', 'Cuando acabes la primera lección del camino, aquí podrás repasarla.')}</p>`}`, 'train');
@@ -1524,3 +1539,21 @@ document.addEventListener('keydown', e => {
 
 if (P) { pull(); syncNow(); classeRefresh(); }
 go(P ? 'home' : 'onboard');
+
+/* ---------- «Més a sota»: si la teoria o l'exercici no hi caben, un botó ho indica i hi baixa ---------- */
+function moreHints() {
+  $$('.l-body, .lwrap').forEach(el => {
+    let b = el.querySelector(':scope > .morebtn');
+    const more = el.scrollHeight - el.clientHeight - el.scrollTop > 40;
+    if (!b && el.scrollHeight - el.clientHeight > 40) {
+      b = document.createElement('button'); b.className = 'morebtn'; b.type = 'button';
+      b.innerHTML = `▾ ${L('Més a sota', 'Más abajo')}`;
+      b.onclick = () => el.scrollBy({ top: el.clientHeight * .7, behavior: 'smooth' });
+      el.appendChild(b);
+      el.addEventListener('scroll', () => b.classList.toggle('gone', el.scrollHeight - el.clientHeight - el.scrollTop < 40), { passive: true });
+    }
+    if (b) b.classList.toggle('gone', !more);
+  });
+}
+new MutationObserver(() => { clearTimeout(moreHints.t); moreHints.t = setTimeout(moreHints, 350); }).observe(document.getElementById('app'), { childList: true, subtree: true });
+addEventListener('resize', () => setTimeout(moreHints, 200));

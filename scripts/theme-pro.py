@@ -58,6 +58,7 @@ def sub_colors(v, kind):
     return v, changed[0]
 
 def kind_of(p):
+    if p.startswith('--'): return 'bg'                # variables locals (--c dels botons…): gairebé sempre són fons
     if p in BG: return 'bg'
     if p in LINE: return 'line'
     if p in TEXT: return 'text'

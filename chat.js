@@ -19,23 +19,23 @@ function xatCtx() {
 }
 const xatBlocked = () => (VIEW === 'onboard') || (LS && (LS.exam || LS.crono || LS.sim || ['place', 'evo', 'battle'].includes(LS.mode)));
 
+// el botó del xat és a la barra del menú (app.js, nav) i, dins de les lliçons, a la barra de dalt
 function xatSync() {
-  let b = document.getElementById('xatfab');
-  const show = VAR.chat && P && !xatBlocked() && !XAT.open;
-  if (!show) { if (b) b.remove(); document.body.classList.remove('xat-les'); return; }
-  if (!b) {
-    b = document.createElement('button'); b.id = 'xatfab'; b.className = 'xatfab'; b.onclick = xatOpen;
-    b.innerHTML = `<span class="xatico">${charSVG('numi', 'happy')}</span><span class="xatlbl">${L('Pregunta', 'Pregunta')}</span>`;
-    b.setAttribute('aria-label', L("Obre el xat d'ajuda", 'Abre el chat de ayuda'));
-    document.body.appendChild(b);
+  const top = document.querySelector('.lesson .l-top');
+  const show = VAR.chat && P && !xatBlocked();
+  document.querySelectorAll('.navxat').forEach(b => b.hidden = !show);
+  if (top && show && LS && LS.cur && !top.querySelector('.xattop')) {
+    const b = document.createElement('button'); b.className = 'xattop'; b.onclick = xatOpen;
+    b.setAttribute('aria-label', L("Pregunta a en Numi (xat d'ajuda)", 'Pregunta a Numi (chat de ayuda)'));
+    b.innerHTML = charSVG('numi', 'happy');
+    const last = top.querySelector('#combo, .pcount, .crono'); last ? top.insertBefore(b, last) : top.appendChild(b);
   }
-  b.classList.toggle('inles', !!(LS && LS.cur));
-  document.body.classList.toggle('xat-les', !!(LS && LS.cur));
+  if (!show) document.querySelectorAll('.xattop').forEach(b => b.remove());
 }
 new MutationObserver(() => xatSync()).observe(document.getElementById('app'), { childList: true });
 
 function xatOpen() {
-  XAT.open = true; xatSync();
+  if (XAT.open) return; XAT.open = true;
   const d = document.createElement('div'); d.id = 'xat'; d.className = 'xatwin'; d.setAttribute('role', 'dialog'); d.setAttribute('aria-label', L("Xat d'ajuda", 'Chat de ayuda'));
   const hello = IS_MENT
     ? L('Hola! Soc en Numi. Pregunta\'m com funciona un joc, trucs per al sudoku o idees per mantenir la ment activa.', '¡Hola! Soy Numi. Pregúntame cómo funciona un juego, trucos para el sudoku o ideas para mantener la mente activa.')
@@ -53,7 +53,7 @@ function xatOpen() {
   if (!P.code) { $('#xatlog').insertAdjacentHTML('beforeend', `<div class="xm bot">${L('Per fer servir el xat, primer cal que tinguis el compte creat (Perfil → El meu compte).', 'Para usar el chat, primero necesitas tener la cuenta creada (Perfil → Mi cuenta).')}</div>`); q.disabled = true; }
   setTimeout(() => { q.focus(); xatScroll(); }, 60);
 }
-function xatClose() { const d = $('#xat'); if (d) d.remove(); XAT.open = false; xatSync(); }
+function xatClose() { const d = $('#xat'); if (d) d.remove(); XAT.open = false; }
 document.addEventListener('keydown', e => { if (e.key === 'Escape' && XAT.open && !$('.modal-bg')) xatClose(); });
 const xatScroll = () => { const l = $('#xatlog'); if (l) l.scrollTop = l.scrollHeight; };
 
