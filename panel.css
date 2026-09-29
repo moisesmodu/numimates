@@ -309,3 +309,4 @@ details.more[open] summary .i{transform:rotate(90deg)}
   #print *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
 }
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+.drawer:focus{outline:none}

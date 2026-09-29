@@ -114,7 +114,7 @@ const SCN = {
 // personatges guia animats (vídeos curts en bucle fets amb Higgsfield a partir de les il·lustracions de l'app)
 const CHAR_CLIP = ['numi', 'estel', 'flama', 'guida', 'tuga', 'vuit', 'cavaller'];
 // vídeo d'entrada de la unitat (una situació real del tema, sense números que s'hagin de comptar)
-const HOOK_CLIP = ['c3-5'];
-const hookClip = uid => HOOK_CLIP.includes(uid) ? `<video class="lhookv" src="img/anim/hook-${uid}.mp4" autoplay muted loop playsinline preload="auto" aria-hidden="true"></video>` : '';
+const HOOK_CLIP = new Set(['c1-1', 'c1-2', 'c1-3', 'c1-4', 'c1-5', 'c1-6', 'c1-7', 'c1-8', 'c1-9', 'c2-1', 'c2-2', 'c2-3', 'c2-4', 'c2-5', 'c2-6', 'c2-7', 'c2-8', 'c3-1', 'c3-2', 'c3-3', 'c3-4', 'c3-5', 'c3-6', 'c3-7', 'c3-8', 'c3-9', 'c3-10', 'c4-1', 'c4-2', 'c4-3', 'c4-4', 'c4-5', 'c4-6', 'c4-7', 'c4-8', 'c4-9', 'c4-10', 'c4-11', 'c4-12', 'c5-1', 'c5-2', 'c5-3', 'c5-4', 'c5-5', 'c5-6', 'c5-7', 'c5-8', 'c5-9', 'c5-10', 'c5-11', 'c5-12', 'c6-1', 'c6-2', 'c6-3', 'c6-4', 'c6-5', 'c6-6', 'c6-7', 'c6-8', 'c6-9', 'c6-10', 'c6-11', 'c6-12', 'c7-1', 'c7-2', 'c7-3', 'c7-4', 'c7-5', 'c7-6', 'c7-7', 'c7-8', 'c8-1', 'c8-2', 'c8-3', 'c8-4', 'c8-5', 'c8-6', 'c8-7', 'c8-8', 'c9-1', 'c9-2', 'c9-3', 'c9-4', 'c9-5', 'c9-6', 'c9-7', 'c9-8', 'c10-1', 'c10-2', 'c10-3', 'c10-4', 'c10-5', 'c10-6', 'c10-7']);
+const hookClip = uid => HOOK_CLIP.has(uid) ? `<video class="lhookv" src="img/anim/hook-${uid}.mp4" autoplay muted loop playsinline preload="auto" aria-hidden="true"></video>` : '';
 const charClip = (id, mood = 'happy') => CHAR_CLIP.includes(id) ? `<video class="lvid" src="img/anim/${id}.mp4" poster="img/chars/${id}-happy.webp" autoplay muted loop playsinline preload="auto" aria-hidden="true"></video>` : charSVG(id, mood);
 function animScene(uid, i) { const a = (TANIM[uid] || [])[i]; if (!a || !SCN[a.k]) return null; try { return SCN[a.k](a); } catch (e) { return null; } }

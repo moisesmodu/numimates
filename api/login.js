@@ -12,7 +12,8 @@ export default async function handler(req, res) {
   const code = cleanCode(b.code);
   if (!code) return ok(res, { error: 'codi' }, 400);
   if (await blocked(req, 'codi', 40)) return tooMany(res);
-  const r = await sql`SELECT name, state, username FROM mates.alumnes WHERE code = ${code} AND active`;
+  const r = await sql`SELECT name, state, username, active, xp FROM mates.alumnes WHERE code = ${code}`;
   if (!r.length) { await fail(req, 'codi'); return ok(res, { error: 'no trobat' }, 404); }
-  return ok(res, { code, name: r[0].name, state: r[0].state, username: r[0].username });
+  if (!r[0].active) return ok(res, { error: 'baixa' }, 410);
+  return ok(res, { code, name: r[0].name, state: { ...r[0].state, xp: Math.max(r[0].xp | 0, (r[0].state || {}).xp | 0) }, username: r[0].username });
 }

@@ -21,11 +21,12 @@ async function load() {
   const h = AUTH(); if (!h) return login();
   const r = await fetch('/api/profe', { headers: h }).catch(() => null);
   if (!r) return banner(L("No s'ha pogut carregar. Comprova la connexió.", 'No se ha podido cargar. Comprueba la conexión.'));
-  if (r.status !== 200) { const adm = wasAdmin(); sessionStorage.clear(); return login(L('La sessió ha caducat. Torna a entrar.', 'La sesión ha caducado. Vuelve a entrar.'), adm); }
+  if (r.status === 401 || r.status === 403) { const adm = wasAdmin(); sessionStorage.clear(); return login(L('La sessió ha caducat. Torna a entrar.', 'La sesión ha caducado. Vuelve a entrar.'), adm); }
+  if (r.status !== 200) return banner(L("El servidor no respon ara mateix. Torna-ho a provar d'aquí a un moment.", 'El servidor no responde ahora mismo. Vuelve a intentarlo en un momento.'));
   D = await r.json(); ADMIN = !!D.admin; ME = D.me || null; GRUPS = D.grups || [];
   if (G && !GRUPS.some(g => String(g.id) === G)) G = '';
   ROWS = (D.rows || []).map(enrich);
-  route();
+  route.last = null; route();
 }
 async function act(action, extra = {}) {
   const r = await fetch('/api/profe', { method: 'POST', headers: { ...AUTH(), 'content-type': 'application/json' }, body: JSON.stringify({ action, ...extra }) });
@@ -48,8 +49,8 @@ function skillSent(sk) {
   if (/^v\.(balance|pattern|maze)$/.test(n)) return 'alg';
   if (n === 'v.frac') return 'num';
   if (/^v\./.test(n)) return 'esp';
-  if (/^(me\.clock|me\.units|me\.money|me\.perim|g\.clock|g\.coins|g\.ruler|geo\.area)$/.test(n)) return 'mes';
-  if (/^(me\.shape|g\.shape|geo\.angle|vol|e\.|geo\.pyth|geo\.thales|trig)/.test(n)) return 'esp';
+  if (/^(me\.clock|me\.units|me\.money|me\.perim|g\.clock|g\.coins|g\.ruler|geo\.area|me\.cal|me\.time|me\.smd)$/.test(n)) return 'mes';
+  if (/^(me\.shape|g\.shape|geo\.angle|vol|e\.|geo\.pyth|geo\.thales|trig|geo\.tri|geo\.quad|geo\.lines|geo\.poly)/.test(n)) return 'esp';
   if (/^(geo\.circle|geo\.vol2)$/.test(n)) return 'mes';
   if (/^(l\.|g\.seq|pc\.|g\.repeat|alg\.|fn\.|seq\.)/.test(n)) return 'alg';
   if (/^(stat|at\.|prob2)/.test(n)) return 'est';
@@ -95,14 +96,16 @@ function enrich(r) {
   Object.entries(r.sk || {}).forEach(([k, v]) => { if (['sprint', 'flash', 'chain'].includes(k) || !Array.isArray(v)) return; const s = sent[skillSent(k)]; s.c += v[0] || 0; s.t += v[1] || 0; });
   Object.values(sent).forEach(s => s.pct = s.t ? Math.round(100 * s.c / s.t) : null);
   const tests = (r.tests || []).slice().sort((a, b) => String(a.date).localeCompare(String(b.date)));
-  const lt = tests[tests.length - 1], pt = tests[tests.length - 2], evoD = lt && pt ? lt.pct - pt.pct : null;
+  // l'evolució només es compara amb la prova anterior del mateix nivell
+  const lt = tests[tests.length - 1], pt = lt ? tests.slice(0, -1).reverse().find(t => t.course === lt.course) : null, evoD = lt && pt ? lt.pct - pt.pct : null;
   const exams = Object.entries(r.exams || {}).map(([uid, x]) => ({ uid, ...x })).sort((a, b) => String(b.d || '').localeCompare(String(a.d || '')));
   const acc = r.answers ? Math.round(100 * r.correct / r.answers) : null;
   const reasons = [], add = (sev, txt) => reasons.push({ sev, txt });
   const idle = daysAgo(r.last_day);
-  if (!r.lessons && daysAgo(r.created_at) > 3) add('crit', L("No ha entrat mai", 'No ha entrado nunca'));
+  if (!r.lessons && !r.days.length && daysAgo(r.created_at) > 3) add('crit', L("No ha entrat mai", 'No ha entrado nunca'));
   else if (idle != null && idle > 14) add('crit', L(`Sense activitat fa ${idle} dies`, `Sin actividad hace ${idle} días`));
-  const stuck = exams.find(x => (x.tries || 0) >= 2 && (x.best || 0) < 75);
+  // porta encallada: 2 intents o més sense aprovar, i l'últim fa menys de 30 dies
+  const stuck = exams.find(x => (x.tries || 0) >= 2 && (x.best || 0) < 75 && x.d && daysAgo(x.d) <= 30);
   if (stuck) add('crit', L(`No supera la porta (U${stuck.uid.split('-')[1]}, ${stuck.tries} intents)`, `No supera la puerta (U${stuck.uid.split('-')[1]}, ${stuck.tries} intentos)`));
   if (idle != null && idle >= 8 && idle <= 14) add('warn', L(`Sense activitat fa ${idle} dies`, `Sin actividad hace ${idle} días`));
   if (r.answers >= 40 && acc < 60) add('warn', L(`Precisió baixa (${acc} %)`, `Precisión baja (${acc} %)`));
@@ -150,7 +153,7 @@ function login(err = '', admin = location.hash === '#admin') {
   };
 }
 function logout() { sessionStorage.clear(); D = null; ROWS = []; GRUPS = []; ME = null; ADMIN = false; closeDrawer(true); $$('.modal-s,.proj').forEach(x => x.remove()); clearInterval(PROJ_T); history.replaceState(null, '', location.pathname); login(); }
-function setLang(l, onLogin) { LANG = l; store.set('numi-profe-lang', l); document.documentElement.lang = l; if (onLogin && !D) return login(); ROWS = (D?.rows || []).map(enrich); route(); }
+function setLang(l, onLogin) { LANG = l; store.set('numi-profe-lang', l); document.documentElement.lang = l; if (onLogin && !D) return login(); ROWS = (D?.rows || []).map(enrich); route.last = null; route(); }
 
 /* ---------- carcassa ---------- */
 const NAV = () => [['resum', 'layout-dashboard', L('Resum', 'Resumen')], ['alumnes', 'users', L('Alumnes', 'Alumnos'), scope().length], ['grups', 'school', L('Grups', 'Grupos')], ['informes', 'chart-column', L('Informes', 'Informes')]];
@@ -183,7 +186,7 @@ function toggleSw(e) {
   w.insertAdjacentHTML('beforeend', `<div class="pop"><button class="${G ? '' : 'on'}" onclick="setG('')">${ADMIN ? L('Tots els grups', 'Todos los grupos') : L('Tots els meus grups', 'Todos mis grupos')}<span class="n">${ROWS.length}</span></button>
     ${Object.entries(by).map(([k, gs]) => `${k ? `<div class="h">${esc(k)}</div>` : '<hr>'}${gs.map(g => `<button class="${String(g.id) === G ? 'on' : ''}" onclick="setG('${g.id}')">${esc(g.nom)}<span class="n">${n(g.id)}</span></button>`).join('')}`).join('')}</div>`);
 }
-function setG(id) { G = String(id); store.set('numi-profe-g', G); closePops(); route(); }
+function setG(id) { G = String(id); store.set('numi-profe-g', G); closePops(); route.last = null; route(); }
 function closePops() { $$('.pop').forEach(p => p.remove()); }
 document.addEventListener('click', e => { if (!e.target.closest('.pop')) closePops(); });
 
@@ -191,6 +194,8 @@ document.addEventListener('click', e => { if (!e.target.closest('.pop')) closePo
 function route() {
   if (!D) return;
   const h = location.hash.replace(/^#\/?/, '').split('?')[0], [v, arg] = h.split('/');
+  if (v === 'alumnes' && route.last === 'alumnes' && $('#tbl')) { if (arg) openDrawer(decodeURIComponent(arg), true); else if ($('.drawer')) closeDrawer(true); return; }
+  route.last = v;
   const V = { resum: vResum, alumnes: vAlumnes, grups: vGrups, informes: vInformes, guia: vGuia, compte: vCompte };
   if (ADMIN) Object.assign(V, { centres: vCentres, docents: vDocents, totsgrups: vTotsGrups, sollicituds: vSol, activitat: vActivitat });
   (V[v] || vResum)(arg);
@@ -222,7 +227,7 @@ function vResum() {
       ${kpi(L('Actius aquesta setmana', 'Activos esta semana'), `${a7} <span class="t3" style="font-size:18px;font-weight:600">/ ${n}</span>`, p7 || a7 ? `${ico(dA >= 0 ? 'trending-up' : 'trending-down', dA >= 0 ? 'up' : 'down')}${dA >= 0 ? '+' : ''}${dA} ${L('respecte la setmana passada', 'respecto a la semana pasada')}` : L('Encara sense activitat', 'Aún sin actividad'))}
       ${kpi(L('Precisió mitjana', 'Precisión media'), ans ? Math.round(100 * cor / ans) + ' %' : '—', `${L("des de l'inici", 'desde el inicio')} · ${ans.toLocaleString(LANG)} ${L('respostes', 'respuestas')}`)}
       ${kpi(L('Porta del Cavaller', 'Puerta del Caballero'), ex.length ? Math.round(100 * exOk / ex.length) + ' %' : '—', ex.length ? `${exOk} ${L('de', 'de')} ${ex.length} ${L('portes superades', 'puertas superadas')}` : L('Encara ningú no hi ha arribat', 'Aún nadie ha llegado'))}
-      ${kpi(L('Necessiten atenció', 'Necesitan atención'), att.length, att.length ? `<a href="#att">${L('Veure la llista', 'Ver la lista')}</a>` : L('Tot en ordre', 'Todo en orden'), att.length ? 'crit' : '')}
+      ${kpi(L('Necessiten atenció', 'Necesitan atención'), att.length, att.length ? `<a href="#/alumnes?f=att">${L('Veure la llista', 'Ver la lista')}</a>` : L('Tot en ordre', 'Todo en orden'), att.length ? 'crit' : '')}
     </div>
     <div class="grid12">
       <section class="c8" id="att"><div class="sec-h"><h2>${L('Necessiten atenció', 'Necesitan atención')}</h2></div><div class="card">
@@ -246,7 +251,7 @@ const emptyState = (ic, t, m, extra = '') => `<div class="empty">${ico(ic)}<b>${
 /* ---------- Alumnes ---------- */
 let AF = { f: 'all', q: '', lv: '', sort: ['sev', -1], compact: store.get('numi-profe-compact', '') === '1' };
 function vAlumnes() {
-  const qs = new URLSearchParams(location.hash.split('?')[1] || ''); if (qs.get('f')) AF.f = qs.get('f');
+  const qs = new URLSearchParams(location.hash.split('?')[1] || ''); if (qs.get('f')) { AF.f = qs.get('f'); history.replaceState(null, '', '#/alumnes'); }
   const R = scope(), counts = { all: R.length, att: R.filter(r => r.sev).length, idle: R.filter(r => r.idle == null || r.idle > 7).length, new: R.filter(r => !r.lessons).length };
   const lvls = [...new Set(R.map(r => r.course))].sort((a, b) => a - b);
   shell('alumnes', L('Alumnes', 'Alumnos'), `
@@ -268,7 +273,7 @@ function filtered() {
 function drawTable() {
   const R = filtered(), q = AF.q.trim();
   $('#cnt').textContent = `${R.length} ${R.length === 1 ? L('alumne', 'alumno') : L('alumnes', 'alumnos')}`;
-  const th = (k, t, cls = '') => `<th class="s ${cls} ${AF.sort[0] === k ? 'on' : ''}" onclick="AF.sort=['${k}',AF.sort[0]==='${k}'?-AF.sort[1]:-1];drawTable()" aria-sort="${AF.sort[0] === k ? (AF.sort[1] < 0 ? 'descending' : 'ascending') : 'none'}">${t} ${ico(AF.sort[0] === k && AF.sort[1] > 0 ? 'chevron-down' : 'chevron-down')}</th>`;
+  const th = (k, t, cls = '') => `<th class="s ${cls} ${AF.sort[0] === k ? 'on' : ''}" onclick="AF.sort=['${k}',AF.sort[0]==='${k}'?-AF.sort[1]:-1];drawTable()" aria-sort="${AF.sort[0] === k ? ((k === 'name' ? -AF.sort[1] : AF.sort[1]) < 0 ? 'descending' : 'ascending') : 'none'}">${t} ${ico(AF.sort[0] === k && AF.sort[1] > 0 ? 'chevron-down' : 'chevron-down')}</th>`;
   const sevDot = r => `<i class="dot ${r.sev === 2 ? 'crit' : r.sev ? 'warn' : ''}" style="${r.sev ? '' : 'visibility:hidden'}"></i>`;
   $('#tbl').innerHTML = !scope().length ? `<div class="card">${emptyState('users', L('Encara no hi ha alumnes', 'Aún no hay alumnos'), L('Comparteix el codi del grup perquè els alumnes hi entrin.', 'Comparte el código del grupo para que los alumnos entren.'), `<a class="btn" href="#/grups">${L('Ves als grups', 'Ir a los grupos')}</a>`)}</div>`
     : `<div class="tw al ${AF.compact ? 'compact' : ''}"><table><thead><tr>${th('name', L('Alumne', 'Alumno'), 'stick')}${th('course', L('Nivell', 'Nivel'), 'hide-sm')}${th('last', L('Última activitat', 'Última actividad'), 'r')}${th('act', L('Dies actius (14 d)', 'Días activos (14 d)'), 'hide-md')}${th('les', L('Lliçons', 'Lecciones'), 'r hide-lg')}${th('acc', L('Precisió', 'Precisión'), 'r')}${th('evo', L('Evolució', 'Evolución'), 'r hide-sm')}${th('gate', L('Porta del Cavaller', 'Puerta del Caballero'), 'hide-sm')}<th></th></tr></thead><tbody>
@@ -300,16 +305,17 @@ function rowMenu(e, code) {
 /* ---------- fitxa de l'alumne ---------- */
 function openDrawer(code, keep) {
   const r = ROWS.find(x => x.code === code); if (!r) return;
-  closeDrawer(true);
+  if (!$('.drawer')) closeDrawer.from = document.activeElement; closeDrawer(true);
   const list = $('#tbl') ? filtered() : scope(), i = list.findIndex(x => x.code === code), prev = list[i - 1], next = list[i + 1];
-  document.body.insertAdjacentHTML('beforeend', `<div class="scrim" onclick="closeDrawer()"></div><aside class="drawer" role="dialog" aria-label="${esc(r.name)}">
+  document.body.insertAdjacentHTML('beforeend', `<div class="scrim" onclick="closeDrawer()"></div><aside class="drawer" role="dialog" aria-modal="true" tabindex="-1" aria-label="${esc(r.name)}">
     <div class="dr-h">${avatar(r, 'lg')}<div><h2>${esc(r.name)}</h2><small>${[r.grup_id ? gName(r.grup_id) : '', curs(r.course), r.lang === 'es' ? 'Castellano' : 'Català'].filter(Boolean).map(esc).join(' · ')}</small></div>
       <div class="acts"><button class="ib" ${prev ? `onclick="location.hash='#/alumnes/${encodeURIComponent(prev.code)}'"` : 'disabled'} aria-label="${L('Anterior', 'Anterior')}">${ico('chevron-left')}</button><button class="ib" ${next ? `onclick="location.hash='#/alumnes/${encodeURIComponent(next.code)}'"` : 'disabled'} aria-label="${L('Següent', 'Siguiente')}">${ico('chevron-right')}</button>
       <button class="btn sm" onclick="printReport(${js(r.code)})">${ico('printer')}${L('Imprimeix', 'Imprimir')}</button><button class="ib" onclick="closeDrawer()" aria-label="${L('Tanca', 'Cerrar')}">${ico('x')}</button></div></div>
     <div class="dr-b">${reportHTML(r, false)}</div></aside>`);
   $$('tbody tr').forEach(t => t.classList.toggle('sel', t.dataset.c === code));
+  requestAnimationFrame(() => { const d = $('.drawer'); if (d && !d.contains(document.activeElement)) d.focus(); });
 }
-function closeDrawer(silent) { $$('.drawer,.scrim').forEach(x => x.remove()); $$('tbody tr.sel').forEach(t => t.classList.remove('sel')); if (!silent && /^#\/alumnes\/./.test(location.hash)) history.replaceState(null, '', '#/alumnes'); }
+function closeDrawer(silent) { const had = $('.drawer'); $$('.drawer,.scrim').forEach(x => x.remove()); $$('tbody tr.sel').forEach(t => t.classList.remove('sel')); if (had && !silent && closeDrawer.from && document.contains(closeDrawer.from)) closeDrawer.from.focus(); if (!silent && /^#\/alumnes\/./.test(location.hash)) history.replaceState(null, '', '#/alumnes'); }
 function reportHTML(r, print) {
   const s = r.sent, best = Object.entries(s).filter(([, x]) => x.t >= 20).sort((a, b) => b[1].pct - a[1].pct);
   const pts = [];
@@ -447,9 +453,9 @@ function projectar(id) {
   const g = GRUPS.find(x => x.id === id), qr = window.qrcode ? (() => { const q = qrcode(0, 'M'); q.addData(JOIN(g.codi)); q.make(); return q.createSvgTag({ cellSize: 8, margin: 0, scalable: true }); })() : '';
   const cnt = () => `${ROWS.filter(r => r.grup_id === id).length} ${L('alumnes ja són dins', 'alumnos ya están dentro')}`;
   document.body.insertAdjacentHTML('beforeend', `<div class="proj"><button class="btn close" onclick="$('.proj').remove();clearInterval(PROJ_T)">${ico('x')}${L('Tanca', 'Cerrar')}</button>
-    <div><h2>${L('Uneix-te a la classe', 'Únete a la clase')} ${esc(g.nom)}</h2><ol><li>${L('Obre', 'Abre')} <b>app.numimates.com</b></li><li>${L('Ves a Perfil → Tinc un codi de classe', 'Ve a Perfil → Tinc un codi de classe')}</li><li>${L('Escriu aquest codi', 'Escribe este código')}</li></ol><code>${esc(g.codi)}</code><div class="cnt" id="pcnt">${cnt()}</div></div>
+    <div><h2>${L('Uneix-te a la classe', 'Únete a la clase')} ${esc(g.nom)}</h2><ol><li>${L('Obre', 'Abre')} <b>app.numimates.com</b></li><li>${L('Ves a Perfil → Tinc un codi de classe', 'Ve a Perfil → Tengo un código de clase')}</li><li>${L('Escriu aquest codi', 'Escribe este código')}</li></ol><code>${esc(g.codi)}</code><div class="cnt" id="pcnt">${cnt()}</div></div>
     <div class="qr">${qr}${qr ? `<p>${L('O escaneja aquest codi amb la tauleta', 'O escanea este código con la tableta')}</p>` : ''}</div></div>`);
-  clearInterval(PROJ_T); PROJ_T = setInterval(async () => { if (!$('.proj')) return clearInterval(PROJ_T); const h = location.hash; await fetch('/api/profe', { headers: AUTH() }).then(r => r.json()).then(j => { D = j; ROWS = (j.rows || []).map(enrich); const e = $('#pcnt'); if (e) e.textContent = cnt(); }).catch(() => { }); }, 10000);
+  clearInterval(PROJ_T); PROJ_T = setInterval(async () => { if (!$('.proj')) return clearInterval(PROJ_T); const h = location.hash; await fetch('/api/profe', { headers: AUTH() }).then(r => r.json()).then(j => { if (!j || !Array.isArray(j.rows)) return; D = j; ROWS = j.rows.map(enrich); const e = $('#pcnt'); if (e) e.textContent = cnt(); }).catch(() => { }); }, 15000);
 }
 
 /* ---------- Informes ---------- */
