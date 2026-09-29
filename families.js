@@ -113,7 +113,7 @@ async function sendLink() {
 }
 const vSent = () => `<div class="card done"><img src="${img('envelope')}" alt=""><h1>${L('Mira el correu', 'Mira tu correo')}</h1>
   <p class="sub">${L(`Si hi ha un compte per a <b>${esc(SENT_TO)}</b>, t'hi hem enviat un enllaç per entrar. Caduca d'aquí a 30 minuts.`, `Si hay una cuenta para <b>${esc(SENT_TO)}</b>, te hemos enviado un enlace para entrar. Caduca en 30 minutos.`)}</p>
-  ${DEV ? `<a class="btn gold" href="${esc(DEV)}" onclick="setTimeout(boot,50)">${L('ENTRA (ENLLAÇ DE PROVA)', 'ENTRAR (ENLACE DE PRUEBA)')}</a>` : ''}
+  ${DEV ? `<a class="btn gold" href="${esc(DEV)}" >${L('ENTRA (ENLLAÇ DE PROVA)', 'ENTRAR (ENLACE DE PRUEBA)')}</a>` : ''}
   <button class="btn ghost" onclick="VIEW='home';render()">${L('TORNA', 'VOLVER')}</button></div>${foot()}`;
 
 function kidCard(k) {
@@ -244,4 +244,6 @@ async function boot() {
   }
 }
 document.documentElement.lang = LANG;
+// si la pàgina ja era oberta i s'hi obre un enllaç d'entrada nou (#t=…), també s'ha de fer servir
+addEventListener('hashchange', () => { if (/^#t=/.test(location.hash)) boot(); });
 boot();
