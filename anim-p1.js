@@ -110,8 +110,8 @@
       s += (k >= 1 && k <= 3 ? (t => PUL(tO + (k - 1) * .4, t)) : (t => t))(T(cx(k), top(k) + 24, n - 2 + k, { fs: 18, t: .25 + k * .12 }));
     }
     s += IC('child', cx(2), top(2) - 21, 42, .9);
-    s += qArr(x(2) + 4, top(2) - 8, cx(1) + 6, top(2) - 12, cx(1), top(1) - 8, tA, { c: RED, lab: '−1', lx: -10, ly: -2, fs: 15 });
-    s += qArr(x(3) - 7, top(2) - 8, cx(3) - 8, top(2) - 12, cx(3), top(3) - 8, tD, { lab: '+1', lx: 8, ly: -4, fs: 15 });
+    s += qArr(cx(2) - 22, top(2) - 34, cx(1) + 2, top(2) - 40, cx(1), top(1) - 8, tA, { c: RED, sw: 3.5, hs: 9, d: .45 }) + T(cx(1) - 18, top(2) - 30, '−1', { fs: 18, c: RED, t: tA + .3 });
+    s += qArr(cx(2) + 22, top(2) - 34, cx(3) - 2, top(3) - 44, cx(3), top(3) - 8, tD, { c: OK, sw: 3.5, hs: 9, d: .45 }) + T(cx(3) - 26, top(3) - 40, '+1', { fs: 18, c: OK, t: tD + .3 });
     [0, 1, 2].forEach(j => s += pill(40 + j * 44, 22, n - 1 + j, tO + j * .4, { fs: 16, w: 38, bg: j === 1 ? '#fff' : Y, sc: j === 1 ? UC : Y }));
     return { html: anSvg(W, 190, s), at: [tA, tD, tO] };
   };
@@ -206,11 +206,11 @@
     const D = { q: 1, start: 1, hops: m * .5 + .5, brk: 1.2, eq: 1 };
     const e = TL(c.seq.map(k => [k, D[k]]));
     let bg = '', s = `<line x1="${x0 - 14}" x2="${x1 + 14}" y1="${y}" y2="${y}" stroke="${INK}" stroke-width="3" stroke-linecap="round" ${A(.1, 'a-fade')}/>`;
-    for (let v = lo; v <= hi; v++) s += `<line x1="${r1(X(v))}" x2="${r1(X(v))}" y1="${y - 6}" y2="${y + 6}" stroke="${INK}" stroke-width="2.5" ${A(.1, 'a-fade')}/>` + T(X(v), y + 27, v, { fs: 15, w: 800, t: .15, cls: 'a-fade' });
+    for (let v = lo; v <= hi; v++) s += `<line x1="${r1(X(v))}" x2="${r1(X(v))}" y1="${y - 6}" y2="${y + 6}" stroke="${INK}" stroke-width="2.5" ${A(.1, 'a-fade')}/>` + T(X(v), y + 28, v, { fs: 16, w: 800, t: .15, cls: 'a-fade' });
     const t0 = e.start ?? e.q;
     bg += `<circle cx="${r1(X(start))}" cy="${y + 22}" r="14" fill="none" stroke="${UC}" stroke-width="3" ${A(t0)}/>`;
     if (c.target != null) bg += `<circle cx="${r1(X(c.target))}" cy="${y + 22}" r="14" fill="none" stroke="${UC}" stroke-width="2.5" stroke-dasharray="4 3" ${A(t0)}/>`;
-    let rab = IC('rabbit', X(start + n), y - 20, 34);
+    let rab = IC('rabbit', X(start + n), y - 21, 38);
     for (let k = 0; k < m; k++) {
       const a = start + dir * k, b = a + dir, tk = e.hops + k * .5;
       s += hop(X(a), X(b), y - 5, 17, tk);
@@ -229,7 +229,7 @@
     const rows = c.rows, gap = 7, rowH = c.rowH || 64;
     const nT = r => r.v.length + (r.ext ? 1 : 0), maxN = Math.max(...rows.map(r => nT(r) + (r.dots ? .5 : 0)));
     const tw_ = Math.min(48, (W - 22 - gap * (maxN - 1)) / maxN), X = j => 12 + tw_ / 2 + j * (tw_ + gap), fs = tw_ < 40 ? 15 : 17;
-    const steps = []; rows.forEach((r, i) => { steps.push(['r' + i, r.v.length * .1 + .35]); if (r.step) steps.push(['a' + i, (r.v.length - 1) * .16 + .4]); if (r.u) steps.push(['u' + i, 1]); if (r.q) steps.push(['q' + i, 1]); });
+    const steps = []; rows.forEach((r, i) => { steps.push(['r' + i, r.v.length * .08 + .3]); if (r.step) steps.push(['a' + i, (r.v.length - 1) * .12 + .3]); if (r.u) steps.push(['u' + i, 1]); if (r.q) steps.push(['q' + i, 1]); });
     rows.forEach((r, i) => { if (r.ext) steps.push(['x' + i, 1.3]); });
     const e = TL(steps);
     let s = '';
@@ -238,9 +238,9 @@
       const tl = (j, val, t, o = {}) => { const str = String(val), cx = X(j); let g = `<rect x="${r1(cx - tw_ / 2)}" y="${y - 16}" width="${r1(tw_)}" height="32" rx="9" fill="${o.bg || '#fff'}" stroke="${o.sc || UC}" stroke-width="2.5"${o.dash ? ' stroke-dasharray="5 4"' : ''}/>`;
         if (r.u && !o.dash) g += `<circle cx="${r1(cx + (str.length - 1) * fs * .31)}" cy="${y}" r="${r1(fs * .56)}" fill="${Y}" ${A(e['u' + i] + j * .12)}/>`;
         return G(t, 'a-pop', g + T(cx, y + fs * .36, str, { fs })); };
-      r.v.forEach((v, j) => { const last = j === n - 1 && r.q; s += tl(j, last ? '?' : v, e['r' + i] + j * .1, last ? { dash: true } : {}); if (last) s += tl(j, v, e['q' + i], { bg: Y, sc: Y }); });
+      r.v.forEach((v, j) => { const last = j === n - 1 && r.q; s += tl(j, last ? '?' : v, e['r' + i] + j * .08, last ? { dash: true } : {}); if (last) s += tl(j, v, e['q' + i], { bg: Y, sc: Y }); });
       if (r.dots) { const dd = T(X(n) - tw_ / 4, y + 6, '…', { fs: 20, t: e['r' + i] + n * .1 }); s += r.ext ? OUT(e['x' + i], dd) + T(X(n + 1) - tw_ / 4, y + 6, '…', { fs: 20, t: e['x' + i] + 1 }) : dd; }
-      if (r.step) for (let j = 0; j < n - 1; j++) s += hop(X(j) + tw_ * .18, X(j + 1) - tw_ * .18, y - 18, 9, e['a' + i] + j * .16, { lab: r.step, fs: 11, hs: 5, sw: 2 });
+      if (r.step) for (let j = 0; j < n - 1; j++) s += hop(X(j) + tw_ * .18, X(j + 1) - tw_ * .18, y - 18, 9, e['a' + i] + j * .12, { lab: r.step, fs: 11, hs: 5, sw: 2 });
       if (r.ext) { const te = e['x' + i]; s += hop(X(n - 1) + tw_ * .18, X(n) - tw_ * .18, y - 18, 9, te, { lab: r.step, fs: 11, hs: 5, sw: 2 }) + tl(n, r.ext.v, te + .9, { bg: Y, sc: Y });
         for (let j = 0; j <= n; j++) s += T(X(j), y + 29, j + 1, { fs: 11, c: UC, t: te + .15 + j * .1 }); }
     });
@@ -250,7 +250,7 @@
 
   // el marc de 10: primer completem (o buidem) la desena i després la resta
   S.p1tenFr = ({ a, b, op }) => {
-    const cs = 26, fw = cs * 5, X1 = 22, X2 = 168, FY = op === '+' ? 36 : 30, cell = (f, k) => [(f ? X2 : X1) + (k % 5) * cs + cs / 2, FY + Math.floor(k / 5) * cs + cs / 2], rr = cs * .36;
+    const cs = 26, fw = cs * 5, X1 = 22, X2 = 168, FY = 34, cell = (f, k) => [(f ? X2 : X1) + (k % 5) * cs + cs / 2, FY + Math.floor(k / 5) * cs + cs / 2], rr = cs * .36;
     let s = '', bg = '';
     for (const X of [X1, X2]) bg += `<g ${A(.15, 'a-fade')}><rect x="${X}" y="${FY}" width="${fw}" height="${2 * cs}" rx="6" fill="#fff" stroke="${INK}" stroke-width="2.5"/>` + [1, 2, 3, 4].map(k => `<line x1="${X + k * cs}" x2="${X + k * cs}" y1="${FY}" y2="${FY + 2 * cs}" stroke="${INK}" stroke-width="1.4"/>`).join('') + `<line x1="${X}" x2="${X + fw}" y1="${FY + cs}" y2="${FY + cs}" stroke="${INK}" stroke-width="1.4"/></g>`;
     if (op === '+') {
@@ -268,12 +268,12 @@
     const u = a - 10, r2 = b - u, e = TL([['q', 1.5], ['split', 1.4], ['first', 1.5], ['second', 1.5], ['eq', 1]]);
     for (let k = 0; k < 10; k++) { const [x, y] = cell(0, k), gone = k >= 10 - r2; s += gone ? G(.3 + k * .06, 'a-fade', AWAY(e.second + (k - 10 + r2) * .15, 0, -40, dot(x, y, UC, rr))) : G(.3 + k * .06, 'a-pop', dot(x, y, UC, rr)); if (gone) bg += `<circle cx="${x}" cy="${y}" r="${rr}" fill="none" stroke="${RED}" stroke-width="2" stroke-dasharray="3 3" ${A(e.second + .4, 'a-fade')}/>`; }
     for (let k = 0; k < u; k++) { const [x, y] = cell(1, k); s += G(.9 + k * .06, 'a-fade', AWAY(e.first + k * .15, 0, -40, dot(x, y, UC, rr))); bg += `<circle cx="${x}" cy="${y}" r="${rr}" fill="none" stroke="${RED}" stroke-width="2" stroke-dasharray="3 3" ${A(e.first + .4, 'a-fade')}/>`; }
-    const by = FY + 2 * cs + 22;
+    const by = FY + 2 * cs + 20;
     s += pill(X2 + (u * cs) / 2, by, u, e.split, { fs: 15, w: 34, sc: RED }) + pill(X1 + fw - (r2 * cs) / 2, by, r2, e.split + .3, { fs: 15, w: 34, sc: RED });
-    s += pill(W / 2, by + 40, `${b} = ${u} + ${r2}`, e.split + .6, { fs: 15 });
-    s += pill(X2 + fw / 2, by + 80, `${a} − ${u} = 10`, e.first + .6, { fs: 15 }) + pill(X1 + fw / 2, by + 80, `10 − ${r2} = ${a - b}`, e.second + .6, { fs: 15 });
-    s += pill(W / 2, by + 120, `${a} − ${b} = ${a - b}`, e.eq, { fs: 18, bg: Y, sc: Y });
-    return { html: anSvg(W, by + 142, bg + s), at: [e.q, e.split, e.first, e.second, e.eq] };
+    s += pill(W / 2, 15, `${b} = ${u} + ${r2}`, e.split + .6, { fs: 14 });
+    s += pill(X2 + fw / 2, by + 40, `${a} − ${u} = 10`, e.first + .6, { fs: 15 }) + pill(X1 + fw / 2, by + 40, `10 − ${r2} = ${a - b}`, e.second + .6, { fs: 15 });
+    s += pill(W / 2, by + 80, `${a} − ${b} = ${a - b}`, e.eq, { fs: 18, bg: Y, sc: Y });
+    return { html: anSvg(W, by + 100, bg + s), at: [e.q, e.split, e.first, e.second, e.eq] };
   };
 
   // el doble (un mirall) i la meitat (partir en dues parts iguals)
@@ -287,21 +287,21 @@
         const tf = t + n * .08 + .3;
         s += `<line x1="${ax}" x2="${ax}" y1="${y - 16}" y2="${y + 16}" stroke="${UC}" stroke-width="2" stroke-dasharray="4 4" ${A(t, 'a-fade')}/>` + Lg + G(tf, 'a-fade', G(tf, 'p1-id', Rg, `transform:scaleX(-1);transform-origin:${ax}px ${y}px;--d:.7s`));
         s += pill(ax, y + 31, `${n} + ${n} = ${2 * n}`, tf + .8, { fs: 15 });
-        t = tf + 1.7;
+        t = tf + 1.3;
       } else if (r.k === 'half') {
         const n = r.n, h = n / 2, gx = 12; let Lg = '', Rg = '';
-        for (let k = 0; k < n; k++) { const d_ = G(t + k * .05, 'a-pop', dot(W / 2 + (k - (n - 1) / 2) * sp, y, UC)); if (k < h) Lg += d_; else Rg += d_; }
-        const tc = t + n * .05 + .4, tr = tc + 1.1;
+        for (let k = 0; k < n; k++) { const d_ = G(t + k * .03, 'a-pop', dot(W / 2 + (k - (n - 1) / 2) * sp, y, UC)); if (k < h) Lg += d_; else Rg += d_; }
+        const tc = t + n * .03 + .3, tr = tc + .9;
         s += `<line x1="${W / 2}" x2="${W / 2}" y1="${y - 17}" y2="${y + 17}" stroke="${RED}" stroke-width="3" stroke-dasharray="5 4" ${A(tc, 'a-fade')}/>`;
         s += G(tc + .3, 'p1-id', Lg, `transform:translateX(-${gx}px);--d:.5s`) + G(tc + .3, 'p1-id', Rg, `transform:translateX(${gx}px);--d:.5s`);
         s += pill(W / 2 - gx - h * sp / 2, y + 31, h, tr, { fs: 15, w: 36 }) + pill(W / 2 + gx + h * sp / 2, y + 31, h, tr + .15, { fs: 15, w: 36 });
         if (r.res) at.push(tr);
-        t = tr + 1.1;
+        t = tr + .8;
       } else {
         const n = r.n, bw = 118, bh = 30, x0 = W / 2 - bw - 1;
         s += G(t, 'a-grow', `<rect x="${x0}" y="${y - bh / 2}" width="${bw}" height="${bh}" rx="7" fill="${UC}"/>`) + T(x0 + bw / 2, y + 6, n, { fs: 16, c: '#fff', t: t + .3 });
-        s += G(t + .8, 'a-fade', SL(t + .8, -bw, 0, `<rect x="${x0 + bw + 2}" y="${y - bh / 2}" width="${bw}" height="${bh}" rx="7" fill="${Y}"/>` + T(x0 + bw * 1.5 + 2, y + 6, n, { fs: 16 })));
-        s += `<path d="M${x0},${y + bh / 2 + 4} v6 h${2 * bw + 2} v-6" fill="none" stroke="${UC}" stroke-width="2.5" stroke-linecap="round" pathLength="1" ${A(t + 1.7, 'a-draw')}/>` + pill(W / 2, y + 36, `${n} + ${n} = ${2 * n}`, t + 1.9, { fs: 15 });
+        s += G(t + .6, 'a-fade', SL(t + .6, -bw, 0, `<rect x="${x0 + bw + 2}" y="${y - bh / 2}" width="${bw}" height="${bh}" rx="7" fill="${Y}"/>` + T(x0 + bw * 1.5 + 2, y + 6, n, { fs: 16 })));
+        s += `<path d="M${x0},${y + bh / 2 + 4} v6 h${2 * bw + 2} v-6" fill="none" stroke="${UC}" stroke-width="2.5" stroke-linecap="round" pathLength="1" ${A(t + 1.3, 'a-draw')}/>` + pill(W / 2, y + 36, `${n} + ${n} = ${2 * n}`, t + 1.5, { fs: 15 });
         t += 2.8;
       }
       y += 70;
@@ -410,7 +410,7 @@
       let tm = t; if (o.m0 != null && mA == null) { mA = mA0 = o.m0; mShow = t; tm = t + .5; }
       if (o.m != null) { if (mA == null) { mA = mA0 = o.m; mShow = t; } else { const d = Math.max(.6, Math.abs(o.m - mA) / 140); mR.push([tm, o.m - mA, d]);
         if (o.fives) for (let k = Math.round(mA / 30) + 1; k <= Math.round(o.m / 30); k++) { const [x, y] = P(k * 30, R + 14); s += T(x, y + 5, k * 5, { fs: 13, c: UC, t: tm + d * (k * 30 - mA) / (o.m - mA) }); }
-        if (o.sec) { const [a0, a1, lab] = o.sec, pa = rad(a0 * 6 - 90), pb = rad(a1 * 6 - 90), [lx, ly] = P((a0 + a1) * 3, R * .52); hl += `<path d="${sector(cx, cy, R - 4, pa, pb)}" fill="${Y}" opacity=".55" ${A(tm + d * .5, 'a-fade')}/>`; s += T(lx, ly + 6, lab, { fs: 17, c: INK, t: tm + d }); }
+        if (o.sec) { const [a0, a1, lab] = o.sec, pa = rad(a0 * 6 - 90), pb = rad(a1 * 6 - 90), [lx, ly] = P((a0 + a1) * 3, R * .36); hl += `<path d="${sector(cx, cy, R - 4, pa, pb)}" fill="${Y}" opacity=".55" ${A(tm + d * .5, 'a-fade')}/>`; if (lab) s += T(lx, ly + 6, lab, { fs: 16, c: INK, t: tm + d }); }
         mA = o.m; td = Math.max(td, d + tm - t); } }
       (o.hl || []).forEach(n => { const [x, y] = P(n * 30, R - 25); hl += `<circle cx="${r1(x)}" cy="${r1(y)}" r="12" fill="${Y}" ${A(t + td)}/>`; });
       if (o.dig) digs.push([o.dig, t + td]);
@@ -422,6 +422,7 @@
     if (mShow != null) s += G(mShow, 'a-fade', buildR(hand(R * .76, 5, UC, mA0), mR));
     s += `<circle cx="${cx}" cy="${cy}" r="6" fill="${INK}"/>`;
     const dx = cx + R + 58;
+    if (c.ic) s += IC(c.ic, dx, 34, 44, .3);
     digs.forEach(([str, tt], i) => { const g = `<rect x="${dx - 46}" y="${cy - 26}" width="92" height="48" rx="12" fill="${INK}"/>` + T(dx, cy + 9, str, { fs: 26, c: '#fff' }); s += i < digs.length - 1 ? OUT(digs[i + 1][1], G(tt, 'a-pop', g)) : G(tt, 'a-pop', g); });
     return { html: anSvg(W, cy + R + 8, G(.1, 'a-fade', base) + hl + G(.1, 'a-fade', nums) + s), at };
   };
@@ -487,20 +488,20 @@
     let bg = '', s = `<g ${A(.1, 'a-fade')}>`;
     for (let i = 0; i < cols; i++) for (let j = 0; j < rows; j++) s += `<rect x="${gx + i * cs}" y="${gy + j * cs}" width="${cs}" height="${cs}" fill="${(i + j) % 2 ? '#fff' : SOFT}" stroke="#D9CCE6" stroke-width="1.5"/>`;
     s += `<rect x="${gx}" y="${gy}" width="${cols * cs}" height="${rows * cs}" rx="4" fill="none" stroke="${UC}" stroke-width="2.5"/></g>`;
-    s += IC(c.goal, CX(fx), CY(fy), 32, .3);
+    s += IC(c.goal, CX(fx) + 11, CY(fy) - 9, 26, .3);
     const cardX = k => 212 + k * 34, cardY = 64;
     let e, tm = [];
     if (c.mode === 'plan') {
-      e = { p0: .6, p1: 2.2, code: 3.6 };
+      e = { p0: .6, p1: 1.9, code: 3.2 };
       moves.forEach((m, k) => { const [x, y] = path[k], [x2, y2] = path[k + 1], t = k < c.split ? e.p0 + k * .5 : e.p1 + (k - c.split) * .5; s += sArr(CX(x) + (x2 - x) * 8, CY(y) + (y2 - y) * 8, CX(x2) - (x2 - x) * 10, CY(y2) - (y2 - y) * 10, t, { c: UC, sw: 3, hs: 7 }); });
-      tm = moves.map((_, k) => e.code + 1 + k * .6);
+      tm = moves.map((_, k) => e.code + .8 + k * .55);
     } else { e = { code: .3, g0: 1.6 }; e.g1 = e.g0 + c.split * .7 + .4; e.goal = e.g1 + (moves.length - c.split) * .7 + .4; tm = moves.map((_, k) => k < c.split ? e.g0 + k * .7 : e.g1 + (k - c.split) * .7); }
     moves.forEach((m, k) => { s += G(e.code + k * .2, 'a-pop', `<rect x="${cardX(k) - 15}" y="${cardY - 15}" width="30" height="30" rx="7" fill="#fff" stroke="${UC}" stroke-width="2.5"/>`); bg += ''; s += `<rect x="${cardX(k) - 13}" y="${cardY - 13}" width="26" height="26" rx="5" fill="${Y}" ${A(tm[k], 'a-fill')}/>` + G(e.code + k * .2, 'a-pop', arrowGl(cardX(k), cardY, m)); });
-    let rob = IC('robot', CX(fx), CY(fy), 34);
+    let rob = IC('robot', CX(fx) - 3, CY(fy) + 3, 32);
     moves.forEach((m, k) => { rob = SL(tm[k], -mv[m][0] * cs, -mv[m][1] * cs, rob, .55); });
     s += G(.3, 'a-fade', rob);
     const tEnd = tm[tm.length - 1] + .7;
-    s += IC('sparkles', CX(fx) + 16, CY(fy) - 16, 26, tEnd) + mark(cardX(moves.length - 1) + 20, cardY + 30, tEnd, true, 9);
+    s += IC('sparkles', CX(fx) - 14, CY(fy) - 14, 24, tEnd) + mark(cardX(moves.length - 1) + 20, cardY + 30, tEnd, true, 9);
     return { html: anSvg(W, gy + rows * cs + 10, bg + s), at: c.mode === 'plan' ? [e.p0, e.p1, e.code] : [e.code, e.g0, e.g1, tEnd] };
   };
 
@@ -517,23 +518,25 @@
   };
 
   // recomptes amb ratlletes: 4 de dretes i la cinquena creuada
-  const tallyG = (x, y, n, t, dt, h = 30) => { let s = ''; for (let k = 0; k < Math.min(n, 4); k++) s += `<line x1="${x + k * 9}" x2="${x + k * 9}" y1="${y - h / 2}" y2="${y + h / 2}" stroke="${INK}" stroke-width="3.5" stroke-linecap="round" pathLength="1" ${A(t + k * dt, 'a-draw')}/>`; if (n === 5) s += `<line x1="${x - 6}" y1="${y + h / 2 - 5}" x2="${x + 33}" y2="${y - h / 2 + 5}" stroke="${RED}" stroke-width="3.5" stroke-linecap="round" pathLength="1" ${A(t + 4 * dt, 'a-draw')}/>`; return s; };
+  const tallyG = (x, y, n, t, dt, h = 30) => { const sp = h * .3; let s = ''; for (let k = 0; k < Math.min(n, 4); k++) s += `<line x1="${r1(x + k * sp)}" x2="${r1(x + k * sp)}" y1="${y - h / 2}" y2="${y + h / 2}" stroke="${INK}" stroke-width="3.5" stroke-linecap="round" pathLength="1" ${A(t + k * dt, 'a-draw')}/>`; if (n === 5) s += `<line x1="${x - 6}" y1="${y + h / 2 - 5}" x2="${r1(x + 3 * sp + 6)}" y2="${y - h / 2 + 5}" stroke="${RED}" stroke-width="3.5" stroke-linecap="round" pathLength="1" ${A(t + 4 * dt, 'a-draw')}/>`; return s; };
   S.p1tally = (c) => {
     let s = '', t = .25; const at = [];
     c.rows.forEach(r => {
       const y = r.y, groups = [], t0 = t; let left = r.n; while (left > 0) { groups.push(Math.min(5, left)); left -= 5; }
       at.push(t0);
-      let x = r.ic ? 72 : 60; const gx = [];
-      groups.forEach(gn => { gx.push(x); s += tallyG(x, y, gn, t + .2, .25); t += gn * .25 + .15; x += 60; });
+      const th_ = r.h || 30, gw = th_ * .9 + 12, isz = Math.max(38, th_ * 1.1);
+      let x = r.ic ? 30 + isz * .9 : 60; const gx = [];
+      const dm = r.dt || (r.n > 8 ? .12 : .22);
+      groups.forEach(gn => { gx.push(x); s += tallyG(x, y, gn, t + .2, dm, th_); t += gn * dm + .15; x += gw + 10; });
       t += .4;
       if (r.demo) { s += pill(x + 16, y, '4 + 1 = 5', t - .2, { fs: 15 }); t += .5; return; }
       at.push(t);
-      groups.forEach((gn, k) => s += pill(gx[k] + (gn === 5 ? 13 : (gn - 1) * 4.5), y + 34, gn, t + k * .3, { fs: 14, w: 30 }));
-      const tt = t + groups.length * .3 + .4, txt = groups.join(' + ') + ' = ' + r.n, w = tw(txt, 15) + 20, xr = gx[gx.length - 1] + 45 + w / 2;
-      s += xr + w / 2 < W - 4 ? pill(xr, y, txt, tt, { fs: 15, bg: Y, sc: Y }) : pill(W / 2, y + 70, txt, tt, { fs: 15, bg: Y, sc: Y });
+      groups.forEach((gn, k) => s += pill(gx[k] + (gn === 5 ? th_ * .45 : (gn - 1) * th_ * .15), y + th_ / 2 + 20, gn, t + k * .2, { fs: 14, w: 30 }));
+      const tt = t + groups.length * .2 + .3, txt = groups.join(' + ') + ' = ' + r.n, w = tw(txt, 15) + 20, xr = gx[gx.length - 1] + gw + 10 + w / 2;
+      s += xr + w / 2 < W - 4 ? pill(xr, y, txt, tt, { fs: 15, bg: Y, sc: Y }) : pill(W / 2, y + th_ / 2 + 56, txt, tt, { fs: 15, bg: Y, sc: Y });
       t = tt + 1;
-      let icn = r.ic ? IC(r.ic, 34, y, 38, t0) : '';
-      if (r.fin) { at.push(t); icn = PUL(t, icn) + `<g ${A(t + .2)}><circle cx="56" cy="${y - 18}" r="14" fill="${UC}"/>` + T(56, y - 13, r.n, { fs: 15, c: '#fff' }) + '</g>'; t += 1; }
+      let icn = r.ic ? IC(r.ic, 12 + isz / 2, y, isz, t0) : '';
+      if (r.fin) { at.push(t); icn = PUL(t, icn) + `<g ${A(t + .2)}><circle cx="${r1(12 + isz)}" cy="${r1(y - isz / 2)}" r="14" fill="${UC}"/>` + T(12 + isz, y - isz / 2 + 5, r.n, { fs: 15, c: '#fff' }) + '</g>'; t += 1; }
       s += icn;
     });
     return { html: anSvg(W, c.h, s), at: c.pick ? c.pick.map(i => at[i]) : at };
@@ -565,26 +568,26 @@
     for (let j = 0; j < n; j++) { const da = dig(a, j), db = dig(b, j); if (da != null) s += T(colX(j), yA, da, { fs: 30, t: .2 + j * .08 }); if (db != null) s += T(colX(j), yB, db, { fs: 30, t: .5 + j * .08 }); }
     s += T(x0 - 16, yB, add ? '+' : '−', { fs: 28, t: .6 }) + `<line x1="${x0 - 30}" x2="${xR + 4}" y1="${yL}" y2="${yL}" stroke="${INK}" stroke-width="3" stroke-linecap="round" ${A(.7, 'a-fade')}/>`;
     const e = { nums: .2 }, top = [...Array(n)].map((_, j) => dig(a, j) ?? 0), small = [...Array(n)].map(() => []), crossed = {};
-    let t = 1.1, carry = 0;
+    let t = 1, carry = 0;
     for (let st = 0; st < n; st++) {
       const j = n - 1 - st, db = dig(b, j) ?? 0;
       if (dig(a, j) == null && dig(b, j) == null && !carry) break;
       e['s' + st] = t;
       let dur, rd, txt, tr;
       if (add) {
-        const sum = top[j] + db + carry; rd = sum % 10; txt = `${top[j]} + ${db}${carry ? ' + 1' : ''} = ${sum}`; tr = t + .5; dur = 1.45;
+        const sum = top[j] + db + carry; rd = sum % 10; txt = `${top[j]} + ${db}${carry ? ' + 1' : ''} = ${sum}`; tr = t + .45; dur = 1.3;
         carry = sum >= 10 ? 1 : 0;
         if (carry && j > 0) s += G(tr + .3, 'a-fade', SL(tr + .3, cw, yR - yC, T(colX(j - 1), yC + 6, 1, { fs: 17, c: RED }), .6));
       } else {
         if (top[j] < db) {
-          e['f' + st] = t; const tb = t + .8, k = j - 1; e['b' + st] = tb;
-          s += OUT(t + .75, mark(colX(j) + 17, yA - 26, t + .15, false, 8));
+          e['f' + st] = t; const tb = t + .6, k = j - 1; e['b' + st] = tb;
+          s += OUT(t + .55, mark(colX(j) + 17, yA - 26, t + .1, false, 8));
           if (!crossed[k]) { crossed[k] = 1; s += strike(colX(k), tb); }
           top[k] -= 1; small[k].push([top[k], tb + .2]);
-          if (!crossed[j]) { crossed[j] = 1; s += strike(colX(j), tb + .3); }
-          top[j] += 10; small[j].push([top[j], tb + .5]);
-          tr = tb + 1.1; dur = 2.1;
-        } else { tr = t + .5; dur = 1.35; }
+          if (!crossed[j]) { crossed[j] = 1; s += strike(colX(j), tb + .25); }
+          top[j] += 10; small[j].push([top[j], tb + .45]);
+          tr = tb + .9; dur = 1.8;
+        } else { tr = t + .45; dur = 1.2; }
         rd = top[j] - db; txt = `${top[j]} − ${db} = ${rd}`;
       }
       bg += HL(t, dur - .1, `<rect x="${r1(colX(j) - 19)}" y="${yC - 18}" width="38" height="${yR - yC + 28}" rx="10" fill="${Y}"/>`);
@@ -595,7 +598,7 @@
     e.tot = +t.toFixed(2);
     bg += `<rect x="${x0 + 2}" y="${yR - 28}" width="${n * cw - 4}" height="36" rx="10" fill="${Y}" opacity=".5" ${A(t, 'a-fade')}/>`;
     let H = yR + 14;
-    if (c.chk) { s += pill(W / 2 - 14, yR + 38, `${res} + ${b} = ${a}`, t + .3, { fs: 16 }) + mark(W / 2 + 76, yR + 38, t + .8, true, 11); H = yR + 58; }
+    if (c.chk) { s += pill(W / 2 - 14, yR + 38, `${res} + ${b} = ${a}`, t + .2, { fs: 16 }) + mark(W / 2 + 76, yR + 38, t + .5, true, 11); H = yR + 58; }
     return { html: anSvg(W, H, bg + s), at: AT(c, e) };
   };
 
@@ -607,10 +610,10 @@
       s += `<path d="M${X - 8},${y0 + 16} L${X - 24},${y1 - 15} M${X + 8},${y0 + 16} L${X + 24},${y1 - 15}" stroke="${INK}" stroke-width="2.5" stroke-linecap="round" fill="none" ${A(.9 + i * .2, 'a-fade')}/>`;
       s += tile(X - 26, y1, d, 1.1 + i * .2, { w: 40 }) + tile(X + 26, y1, u, 1.2 + i * .2, { w: 34, sc: YD, bg: '#FFF4D6' });
     });
-    const tP = 2, tR = tP + 1.4;
+    const tP = 1.8, tR = tP + 1.2;
     s += pill(84, 118, `${da} + ${db} = ${da + db}`, tP, { fs: 15 }) + pill(226, 118, `${ua} + ${ub} = ${ua + ub}`, tP + .4, { fs: 15, sc: YD });
     s += T(226, y0 + 8, '=', { fs: 22, t: tR }) + tile(268, y0, a + b, tR + .2, { bg: Y, sc: Y, w: 52 });
-    const dn = n - n % 10, un = n % 10, lo = Math.floor((m - n) / 10) * 10, hi = Math.ceil((m + 1) / 10) * 10, ly = 192, X = v => 22 + (v - lo) * 276 / (hi - lo), tJ1 = tR + 1.3, tJ2 = tJ1 + 1.5;
+    const dn = n - n % 10, un = n % 10, lo = Math.floor((m - n) / 10) * 10, hi = Math.ceil((m + 1) / 10) * 10, ly = 192, X = v => 22 + (v - lo) * 276 / (hi - lo), tJ1 = tR + 1.1, tJ2 = tJ1 + 1.3;
     s += `<g ${A(tJ1 - .5, 'a-fade')}><line x1="14" x2="306" y1="${ly}" y2="${ly}" stroke="${INK}" stroke-width="3" stroke-linecap="round"/>` + [...Array(hi - lo + 1)].map((_, k) => `<line x1="${r1(X(lo + k))}" x2="${r1(X(lo + k))}" y1="${ly - ((lo + k) % 10 ? 4 : 7)}" y2="${ly + ((lo + k) % 10 ? 4 : 7)}" stroke="${INK}" stroke-width="${(lo + k) % 10 ? 1.3 : 2.5}"/>`).join('') + '</g>';
     s += pill(46, 150, `${m} − ${n}`, tJ1 - .5, { fs: 14 });
     [[m, tJ1 - .5], [m - dn, tJ1 + .5], [m - n, tJ2 + .5]].forEach(([v, t], i) => { bg += `<circle cx="${r1(X(v))}" cy="${ly + 20}" r="13" fill="${i === 2 ? Y : SOFT}" ${A(t)}/>`; s += T(X(v), ly + 25, v, { fs: 14, t }); });
@@ -655,7 +658,7 @@
   // valor de posició amb blocs: 2 centenes, 4 desenes i 5 unitats
   S.p1pvBlk = ({ n }) => {
     const hc = Math.floor(n / 100), d = Math.floor(n / 10) % 10, u = n % 10, s0 = 7, yb = 136, tp = yb - 10 * s0;
-    const wF = hc * (10 * s0 + 6) - 6, wR = d * (s0 + 4) - 4, wU = Math.ceil(u / 5) * (s0 + 2), tot = wF + 22 + wR + 22 + wU, xF = (W - tot) / 2, xRd = xF + wF + 22, xU = xRd + wR + 22;
+    const wF = hc * (10 * s0 + 6) - 6, wR = d * (s0 + 4) - 4, wU = Math.ceil(u / 5) * (s0 + 2), tot = wF + 30 + wR + 38 + wU, xF = (W - tot) / 2, xRd = xF + wF + 30, xU = xRd + wR + 38;
     const cC = xF + wF / 2, cD = xRd + wR / 2, cU = xU + wU / 2, t0 = 2.3, t1 = 3.5, t2 = 5;
     let bg = `<circle cx="${r1(cC)}" cy="40" r="19" fill="${Y}" ${A(t2)}/>`, s = '';
     [['C', cC, hc], ['D', cD, d], ['U', cU, u]].forEach(([h, X, v], i) => s += T(X, 14, h, { fs: 13, c: UC, t: .1 }) + T(X, 51, v, { fs: 30, t: .2 + i * .15 }));
@@ -670,7 +673,7 @@
 
   // comparar i ordenar números de tres xifres, i el número següent
   S.p1cmpOrder = ({ a, b, list, nx }) => {
-    const e = TL([['c', 1.5], ['s', 1.2], ['l', 1.3], ['o', 1.7], ['n', 1]]), ya = 40, yo = 108, yn = 174;
+    const e = TL([['c', 1.5], ['s', 1.2], ['l', 1.3], ['o', 1.5], ['n', 1]]), ya = 40, yo = 108, yn = 174;
     const big = (x, y, v, t) => String(v).split('').map((d, i, arr) => T(x + (i - (arr.length - 1) / 2) * 19, y, d, { fs: 30, t })).join('');
     let bg = `<circle cx="${80 - 19}" cy="${ya - 10}" r="17" fill="${Y}" ${A(e.c + .7)}/><circle cx="${240 - 19}" cy="${ya - 10}" r="17" fill="none" stroke="${UC}" stroke-width="2.5" ${A(e.c + .7)}/>`;
     let s = big(80, ya, a, e.c) + big(240, ya, b, e.c + .2) + T(80 - 19, ya + 22, 'C', { fs: 12, c: UC, t: e.c + .8 }) + T(240 - 19, ya + 22, 'C', { fs: 12, c: UC, t: e.c + .8 });
@@ -714,8 +717,8 @@
       return g;
     };
     const t10 = Math.round(n / 10) * 10, t100 = Math.round(n / 100) * 100;
-    s += line(86, Math.floor(n / 10) * 10, 1, e.u, t10, e.up) + line(176, Math.floor(n / 100) * 100, 10, e.d, t100, e.down);
-    return { html: anSvg(W, 230, bg + s), at: [e.u, e.up, e.d, e.down] };
+    s += line(84, Math.floor(n / 10) * 10, 1, e.u, t10, e.up) + line(166, Math.floor(n / 100) * 100, 10, e.d, t100, e.down);
+    return { html: anSvg(W, 226, bg + s), at: [e.u, e.up, e.d, e.down] };
   };
 
   // unitats de miler i valor de posició d'un número de 4 xifres
@@ -760,14 +763,14 @@
     for (let i = 0; i < r; i++) for (let j = 0; j < c; j++) R += dot(ax + (j - (c - 1) / 2) * sp, ay + (i - (r - 1) / 2) * sp, Y);
     s += G(t2 - .4, 'a-fade', G(t2, 'p1-id', R, `transform:rotate(90deg);transform-origin:${ax}px ${ay}px;--d:.9s`));
     s += pill(ax, ay + c * sp / 2 + 16, `${c} × ${r} = ${r * c}`, t2 + 1, { fs: 15 });
-    s += T(170, ay + 8, '=', { fs: 28, c: UC, t: t3 }) + pill(84, 184, r * c, t3 + .1, { fs: 18, bg: Y, sc: Y, w: 50 }) + pill(ax, 196, r * c, t3 + .1, { fs: 18, bg: Y, sc: Y, w: 50 });
-    return { html: anSvg(W, 214, s), at: [t1, t2 + 1, t3] };
+    s += T(170, ay + 8, '=', { fs: 28, c: UC, t: t3 }) + pill(lx + (c - 1) * sp / 2, ly + r * sp + 14, `${r} × ${c} = ${r * c}`, t3 + .1, { fs: 15, bg: Y, sc: Y }) + pill(ax, ay + c * sp / 2 + 16, `${c} × ${r} = ${r * c}`, t3 + .2, { fs: 15, bg: Y, sc: Y });
+    return { html: anSvg(W, 194, s), at: [t1, t2 + 1, t3] };
   };
 
   // files de cadires: cada fila en té les mateixes
-  const chair = (x, y, col) => `<rect x="${x - 10}" y="${y - 16}" width="5" height="28" rx="2" fill="${col}"/><rect x="${x - 10}" y="${y}" width="21" height="5" rx="2" fill="${col}"/><rect x="${x + 7}" y="${y + 4}" width="4" height="11" rx="1.5" fill="${col}"/><rect x="${x - 10}" y="${y + 4}" width="4" height="11" rx="1.5" fill="${col}"/>`;
+  const chair = (x, y, col) => `<rect x="${x - 9}" y="${y - 17}" width="18" height="12" rx="4" fill="${col}"/><rect x="${x - 8}" y="${y - 6}" width="3" height="6" fill="${col}"/><rect x="${x + 5}" y="${y - 6}" width="3" height="6" fill="${col}"/><rect x="${x - 11}" y="${y}" width="22" height="6" rx="2.5" fill="${col}"/><rect x="${x - 10}" y="${y + 5}" width="3.5" height="12" rx="1.5" fill="${col}"/><rect x="${x + 6.5}" y="${y + 5}" width="3.5" height="12" rx="1.5" fill="${col}"/>`;
   S.p1chairs = ({ r, c }) => {
-    const sx = 38, sy = 44, x0 = 50, y0 = 56, t1 = .25 + r * .6 + .4, t2 = t1 + r * .6 + .6;
+    const sx = 36, sy = 44, x0 = 46, y0 = 56, t1 = .25 + r * .6 + .4, t2 = t1 + r * .6 + .6;
     let s = '';
     for (let i = 0; i < r; i++) for (let j = 0; j < c; j++) s += G(.25 + i * .6 + j * .08, 'a-pop', chair(x0 + j * sx, y0 + i * sy, UC));
     for (let i = 0; i < r; i++) s += pill(262, y0 + i * sy, i ? `+ ${c} = ${c * (i + 1)}` : String(c), t1 + i * .6, { fs: 15 });
@@ -828,7 +831,7 @@
     const px = i => W / 2 + ((i % pc) - (Math.min(n, pc) - 1) / 2) * psp, py = i => 16 + psz / 2 + Math.floor(i / pc) * psp, pileH = Math.ceil(n / pc) * psp;
     const bw = Math.min(64, (W - 12) / nb - 8), bx = k => W / 2 + (k - (nb - 1) / 2) * (bw + 8), by = pileH + 30, bc = c.bc || (gs <= 4 ? 2 : 3), isz = Math.min(psz, (bw - 8) / bc - 2), isp = isz + 2, bh = Math.ceil(gs / bc) * isp + 12;
     const fin = i => { const k = Math.floor(i / gs), j = i % gs; return [bx(k) + ((j % bc) - (bc - 1) / 2) * isp, by + 6 + isz / 2 + Math.floor(j / bc) * isp]; };
-    const D = { pile: .9, fill: q * gs * c.dt + .6, extra: 1.2, rem: 1.2, res: 1.3, chk1: 1.2, chk2: 1 }, e = TL(c.seq.map(k => [k, D[k]]));
+    const D = { pile: .9, fill: q * gs * c.dt + .4, extra: 1.2, rem: 1, res: 1.2, chk1: 1, chk2: 1 }, e = TL(c.seq.map(k => [k, D[k]]));
     let bg = '', s = '';
     for (let k = 0; k < q; k++) { const x = bx(k); s += `<g ${A(e.fill - .3 + k * .05, 'a-fade')}><rect x="${r1(x - bw / 2)}" y="${by}" width="${r1(bw)}" height="${bh}" rx="8" fill="${c.env ? '#FFF8E8' : SOFT}" stroke="${UC}" stroke-width="2.2"/>${c.env ? `<path d="M${r1(x - bw / 2)},${by + 2} L${x},${by + 14} L${r1(x + bw / 2)},${by + 2}" fill="none" stroke="${UC}" stroke-width="1.8" stroke-linejoin="round"/>` : ''}</g>`; }
     for (let i = 0; i < n; i++) {
@@ -836,7 +839,7 @@
       else { s += IC(ic, px(i), py(i), psz, .25 + i * .02); if (e.rem != null) bg += `<circle cx="${r1(px(i))}" cy="${r1(py(i))}" r="${psz * .62}" fill="none" stroke="${RED}" stroke-width="2.5" ${A(e.rem + (i - q * gs) * .15)}/>`; }
     }
     const y1 = by + bh + 22, y2 = y1 + 36, tF = e.fill + q * gs * c.dt + .3;
-    if (e.extra != null) { const x = bx(q); s += `<g ${A(e.extra, 'a-fade')}><rect x="${r1(x - bw / 2)}" y="${by}" width="${r1(bw)}" height="${bh}" rx="8" fill="none" stroke="${RED}" stroke-width="2.2" stroke-dasharray="5 4"/>` + [...Array(gs)].map((_, j) => `<circle cx="${r1(x + ((j % bc) - (bc - 1) / 2) * isp)}" cy="${r1(by + 6 + isz / 2 + Math.floor(j / bc) * isp)}" r="${r1(isz * .4)}" fill="none" stroke="${RED}" stroke-width="1.5" stroke-dasharray="3 2"/>`).join('') + '</g>' + mark(x + bw / 2 - 4, by + 4, e.extra + .4, false, 10); s += pill(88, y1, `${gs} × ${q} = ${q * gs}`, tF, { fs: 15 }); }
+    if (e.extra != null) { const x = bx(q); s += `<g ${A(e.extra, 'a-fade')}><rect x="${r1(x - bw / 2)}" y="${by}" width="${r1(bw)}" height="${bh}" rx="8" fill="none" stroke="${RED}" stroke-width="2.2" stroke-dasharray="5 4"/>` + [...Array(gs)].map((_, j) => `<circle cx="${r1(x + ((j % bc) - (bc - 1) / 2) * isp)}" cy="${r1(by + 6 + isz / 2 + Math.floor(j / bc) * isp)}" r="${r1(isz * .4)}" fill="none" stroke="${RED}" stroke-width="1.5" stroke-dasharray="3 2"/>`).join('') + '</g>' + mark(x + bw / 2 - 4, by + 4, e.extra + .4, false, 10) + T(x, by - 6, `${gs} × ${q + 1} = ${gs * (q + 1)}`, { fs: 12, c: RED, t: e.extra + .3 }); s += pill(88, y1, `${gs} × ${q} = ${q * gs}`, tF, { fs: 15 }); }
     if (e.rem != null && c.remPill !== false) s += pill(e.extra != null ? 236 : W / 2, y1, `${n} − ${q * gs} = ${r}`, e.rem + .3, { fs: 15, sc: RED });
     if (e.res != null) { for (let k = 0; k < q; k++) s += G(e.res + k * .12, 'a-pop', badge(bx(k) - bw / 2 + 4, by + 2, k + 1, 10)); s += pill(W / 2, e.rem != null ? y2 : y1, r ? `${n} ÷ ${gs} = ${q} · ${Lc('sobren', 'sobran')} ${r}` : `${n} ÷ ${gs} = ${q}`, e.res + q * .12 + .2, { fs: 16, bg: Y, sc: Y }); }
     if (e.chk1 != null) { const yy = e.res != null && e.rem == null ? y2 : y1; s += pill(W / 2 - (r ? 0 : 14), yy, `${q} × ${gs} = ${q * gs}`, e.chk1, { fs: 16 }); if (!r) s += mark(W / 2 + 70, yy, e.chk1 + .5, true, 11); }
@@ -852,8 +855,8 @@
     const [am] = a, ax = 14, tA = .25;
     s += gridD(ax, y0, am, 1, UC, tA) + G(tA + .6, 'a-fade', SL(tA + .6, 0, -sp, gridD(ax, y0 + sp, am, 1, UC, 0, 0))) + G(tA + 1.6, 'a-fade', SL(tA + 1.6, 0, -2 * sp, gridD(ax, y0 + 2 * sp, am, 2, Y, 0, 0)));
     const bx1 = ax + (am - 1) * sp + 9;
-    s += `<path d="M${bx1},${y0 - 4} h4 v${sp + 8} h-4" fill="none" stroke="${UC}" stroke-width="2" ${A(tA + 1.1, 'a-fade')}/>` + T(bx1 + 16, y0 + 9, am * 2, { fs: 13, c: UC, t: tA + 1.1 });
-    s += `<path d="M${bx1 + 26},${y0 - 4} h4 v${3 * sp + 8} h-4" fill="none" stroke="${YD}" stroke-width="2" ${A(tA + 2.2, 'a-fade')}/>` + T(bx1 + 42, y0 + 19, am * 4, { fs: 13, c: YD, t: tA + 2.2 });
+    s += `<path d="M${bx1},${y0 - 4} h4 v${sp + 8} h-4" fill="none" stroke="${UC}" stroke-width="2" ${A(tA + 1.1, 'a-fade')}/>` + T(bx1 + 8, y0 + 9, am * 2, { fs: 12, c: UC, t: tA + 1.1, a: 'start' });
+    s += `<path d="M${bx1},${y0 + 2 * sp - 4} h4 v${sp + 8} h-4" fill="none" stroke="${YD}" stroke-width="2" ${A(tA + 2.2, 'a-fade')}/>` + T(bx1 + 8, y0 + 2 * sp + 9, `+${am * 2}`, { fs: 12, c: YD, t: tA + 2.2, a: 'start' });
     s += pill(ax + (am - 1) * sp / 2 + 18, y0 + 56, `${am * 2} → ${am * 4}`, tA + 2.4, { fs: 13 });
     // B: m × k = m × (k − 1) + m
     const [bm, bk] = b, bxx = 128, tB = 3;
@@ -879,7 +882,6 @@
         const y = y0 + k * rh, t = times[ti][k];
         dg.forEach((d, i) => { const from = 4 - dg.length + i, to = from - k; s += G(t, 'a-fade', SL(t + .1, cx(ti, from) - cx(ti, to), k ? -rh : 0, T(cx(ti, to), y, d, { fs: 22 }), .6)); });
         for (let z = 0; z < k; z++) s += T(cx(ti, 3 - z), y, 0, { fs: 22, c: RED, t: t + .7 + z * .2 });
-        if (dg.length + k >= 4) s += T(X0[ti] + cw, y + 2, '.', { fs: 22, t: t + 1.1 });
       });
     });
     return { html: anSvg(W, y0 + 2 * rh + 16, s), at: [1, 2.2, 3.4, 4.6] };
@@ -888,7 +890,7 @@
   // taules del 2, del 5 i del 10; i girar la graella (3 × 8 = 8 × 3)
   S.p1tab3 = ({ m, rot }) => {
     let s = '', bg = '';
-    const sp = 13, tA = .25, tB = 1.9, tC = 3.3, tD = 4.7;
+    const sp = 13, tA = .25, tB = 1.7, tC = 3, tD = 4.3;
     for (let i = 0; i < 2; i++) for (let j = 0; j < m; j++) s += G(tA + i * .5 + j * .05, 'a-pop', `<circle cx="${22 + j * sp}" cy="${16 + i * 15}" r="5" fill="${i ? Y : UC}"/>`);
     s += pill(22 + m * sp + 38, 23, `${m} + ${m} = ${2 * m}`, tA + 1.1, { fs: 13 });
     const row = (y, step, t) => { for (let j = 0; j < m; j++) { const v = step * (j + 1), x = 30 + j * 40, str = String(v), last = j === m - 1; bg += `<circle cx="${r1(x + (str.length - 1) * 4.7)}" cy="${y}" r="7.5" fill="${Y}" ${A(t + j * .15 + .1)}/>`; s += G(t + j * .15, 'a-pop', `<rect x="${x - 17}" y="${y - 14}" width="34" height="28" rx="8" fill="${last ? 'none' : 'none'}" stroke="${UC}" stroke-width="${last ? 3 : 2}"/>`) + T(x, y + 5.5, v, { fs: 15, t: t + j * .15 }); } };
@@ -897,17 +899,17 @@
     let Rg = '';
     for (let i = 0; i < r; i++) for (let j = 0; j < c; j++) { s += G(tD + i * .15, 'a-pop', `<circle cx="${lx + j * dsp}" cy="${ly + i * dsp}" r="4" fill="${UC}"/>`); Rg += `<circle cx="${r1(ax + (j - (c - 1) / 2) * dsp)}" cy="${r1(ay + (i - (r - 1) / 2) * dsp)}" r="4" fill="${Y}" stroke="${INK}" stroke-width=".8"/>`; }
     s += T(lx + (c - 1) * dsp / 2, ly + r * dsp + 16, `${r} × ${c}`, { fs: 14, t: tD + .4 });
-    s += G(tD + .7, 'a-fade', G(tD + 1, 'p1-id', Rg, `transform:rotate(90deg);transform-origin:${ax}px ${ay}px;--d:.9s`)) + T(ax + 42, ay + 5, `${c} × ${r}`, { fs: 14, t: tD + 2, a: 'start' });
-    s += pill(150, ay - 4, `= ${r * c}`, tD + 2.1, { fs: 16, bg: Y, sc: Y });
+    s += G(tD + .5, 'a-fade', G(tD + .8, 'p1-id', Rg, `transform:rotate(90deg);transform-origin:${ax}px ${ay}px;--d:.9s`)) + T(ax + 42, ay + 5, `${c} × ${r}`, { fs: 14, t: tD + 1.7, a: 'start' });
+    s += pill(150, ay - 4, `= ${r * c}`, tD + 1.8, { fs: 16, bg: Y, sc: Y });
     return { html: anSvg(W, 226, bg + s), at: [tA, tB, tC, tD] };
   };
 
   // pes, capacitat i diners (el canvi)
   S.p1units3 = ({ kg, ml, price, pay }) => {
-    const wt = (x, y) => `<circle cx="${x}" cy="${y - 13}" r="5" fill="none" stroke="#4A4E59" stroke-width="3"/><path d="M${x - 14},${y + 14} L${x - 10},${y - 8} L${x + 10},${y - 8} L${x + 14},${y + 14} Z" fill="#5B5F6B" stroke="${INK}" stroke-width="1.3" stroke-linejoin="round"/><text x="${x}" y="${y + 8}" text-anchor="middle" font-size="9.5" font-weight="900" fill="#fff" ${FF}>1 kg</text>`;
+    const wt = (x, y) => `<circle cx="${x}" cy="${y - 17}" r="6" fill="none" stroke="#4A4E59" stroke-width="3.5"/><path d="M${x - 18},${y + 17} L${x - 13},${y - 11} L${x + 13},${y - 11} L${x + 18},${y + 17} Z" fill="#5B5F6B" stroke="${INK}" stroke-width="1.3" stroke-linejoin="round"/><text x="${x}" y="${y + 10}" text-anchor="middle" font-size="12" font-weight="900" fill="#fff" ${FF}>1 kg</text>`;
     let s = '';
-    for (let k = 0; k < kg; k++) s += G(.25 + k * .3, 'a-pop', wt(28 + k * 38, 36));
-    s += pill(68, 78, `${kg} kg = ${th(kg * 1000)} g`, 1.2, { fs: 12 });
+    for (let k = 0; k < kg; k++) s += G(.25 + k * .3, 'a-pop', wt(26 + k * 44, 38));
+    s += pill(70, 84, `${kg} kg = ${th(kg * 1000)} g`, 1.2, { fs: 13 });
     const jx = 204, t1 = 1.9;
     s += `<g ${A(t1 - .2, 'a-fade')}><path d="M${jx - 22},12 L${jx + 22},12 L${jx + 25},80 Q${jx + 25},86 ${jx + 19},86 L${jx - 19},86 Q${jx - 25},86 ${jx - 25},80 Z" fill="#fff" stroke="${INK}" stroke-width="2.5" stroke-linejoin="round"/><path d="M${jx + 24},26 Q${jx + 40},30 ${jx + 26},58" fill="none" stroke="${INK}" stroke-width="2.5"/></g>`;
     s += G(t1 + .2, 'p1-gy', `<rect x="${jx - 21}" y="49" width="44" height="34" rx="3" fill="${BLUE}" opacity=".55"/>`);
@@ -990,14 +992,14 @@
   S.p1cube = () => {
     const f = [[30, 72], [110, 72], [110, 152], [30, 152]], D = [36, -30], b = f.map(([x, y]) => [x + D[0], y + D[1]]), P = pts => pts.map(p => p.join(',')).join(' ');
     let s = `<polygon points="${P([f[0], f[1], b[1], b[0]])}" fill="${UC}" opacity=".3" ${A(.25, 'a-fade')}/><polygon points="${P([f[1], b[1], b[2], f[2]])}" fill="${UC}" opacity=".5" ${A(.45, 'a-fade')}/><rect x="30" y="72" width="80" height="80" fill="${UC}" opacity=".18" ${A(.65, 'a-fade')}/>`;
-    const edges = [[f[0], f[1]], [f[1], f[2]], [f[2], f[3]], [f[3], f[0]], [b[0], b[1]], [b[1], b[2]], [f[0], b[0]], [f[1], b[1]], [f[2], b[2]], [b[2], b[3], 1], [b[3], b[0], 1], [f[3], b[3], 1]], t1 = 1.4;
-    edges.forEach(([p, q, hid], k) => s += `<line x1="${p[0]}" y1="${p[1]}" x2="${q[0]}" y2="${q[1]}" stroke="${INK}" stroke-width="3" stroke-linecap="round"${hid ? ` stroke-dasharray="5 4" ${A(t1 + k * .12, 'a-fade')}` : ` pathLength="1" ${A(t1 + k * .12, 'a-draw')}`}/>`);
-    const t2 = t1 + 12 * .12 + .4, vs = [...f, ...b];
-    vs.forEach(([x, y], k) => s += `<circle cx="${x}" cy="${y}" r="5.5" fill="${RED}" stroke="#fff" stroke-width="1.5" ${A(t2 + k * .1)}/>`);
-    s += pill(206, 60, Lc('6 cares', '6 caras'), .9, { fs: 14 }) + pill(206, 100, Lc('12 arestes', '12 aristas'), t1 + 12 * .12 + .1, { fs: 14 }) + pill(206, 140, Lc('8 vèrtexs', '8 vértices'), t2 + .9, { fs: 14 });
-    const t3 = t2 + 1.4, t4 = t3 + 1.3;
-    s += roll(284, 56, 22, t3) + T(284, 98, Lc('0 vèrtexs', '0 vértices'), { fs: 11, t: t3 + .6 });
-    s += G(t4, 'a-pop', coneD(284, 160, 50, 64, true)) + `<ellipse cx="284" cy="192" rx="25" ry="8" fill="none" stroke="${Y}" stroke-width="4" ${A(t4 + .4, 'a-fade')}/>` + PUL(t4 + .8, `<circle cx="284" cy="128" r="5.5" fill="${RED}" stroke="#fff" stroke-width="1.5"/>`);
+    const edges = [[f[0], f[1]], [f[1], f[2]], [f[2], f[3]], [f[3], f[0]], [b[0], b[1]], [b[1], b[2]], [f[0], b[0]], [f[1], b[1]], [f[2], b[2]], [b[2], b[3], 1], [b[3], b[0], 1], [f[3], b[3], 1]], t1 = 1.2;
+    edges.forEach(([p, q, hid], k) => s += `<line x1="${p[0]}" y1="${p[1]}" x2="${q[0]}" y2="${q[1]}" stroke="${INK}" stroke-width="3" stroke-linecap="round"${hid ? ` stroke-dasharray="5 4" ${A(t1 + k * .1, 'a-fade')}` : ` pathLength="1" ${A(t1 + k * .1, 'a-draw')}`}/>`);
+    const t2 = t1 + 12 * .1 + .3, vs = [...f, ...b];
+    vs.forEach(([x, y], k) => s += `<circle cx="${x}" cy="${y}" r="5.5" fill="${RED}" stroke="#fff" stroke-width="1.5" ${A(t2 + k * .08)}/>`);
+    s += pill(206, 60, Lc('6 cares', '6 caras'), .9, { fs: 14 }) + pill(206, 100, Lc('12 arestes', '12 aristas'), t1 + 12 * .1 + .1, { fs: 14 }) + pill(206, 140, Lc('8 vèrtexs', '8 vértices'), t2 + .75, { fs: 14 });
+    const t3 = t2 + 1.2, t4 = t3 + 1.2;
+    s += roll(284, 56, 22, t3) + T(284, 99, Lc('0 vèrtexs', '0 vértices'), { fs: 12, t: t3 + .6 });
+    s += G(t4, 'a-pop', coneD(284, 160, 50, 64, true)) + `<ellipse cx="284" cy="192" rx="25" ry="8" fill="none" stroke="${Y}" stroke-width="4" ${A(t4 + .4, 'a-fade')}/>` + PUL(t4 + .8, G(t4 + .3, 'a-pop', `<circle cx="284" cy="128" r="5.5" fill="${RED}" stroke="#fff" stroke-width="1.5"/>`));
     return { html: anSvg(W, 206, s), at: [.25, t3, t4] };
   };
 
@@ -1091,7 +1093,7 @@
     return { html: anSvg(W, 202, s), at: [.3, tB, tE] };
   };
   // dues balances petites: treure el mateix dels dos costats i repartir en parts iguals
-  S.p1bal2 = ({ add, tot, k }) => {
+  S.p1bal2 = ({ add, tot, parts: k }) => {
     const bal = (cx, t) => `<g ${A(t, 'a-fade')}><path d="M${cx},46 L${cx - 14},150 L${cx + 14},150 Z" fill="${SOFT}" stroke="${UC}" stroke-width="2.5" stroke-linejoin="round"/><rect x="${cx - 30}" y="148" width="60" height="7" rx="3.5" fill="${UC}"/><rect x="${cx - 56}" y="42" width="112" height="7" rx="3.5" fill="${UC}"/>` + [-1, 1].map(sg => { const x = cx + sg * 50; return `<line x1="${x}" y1="46" x2="${x - 20}" y2="112" stroke="${INK}" stroke-width="1.4"/><line x1="${x}" y1="46" x2="${x + 20}" y2="112" stroke="${INK}" stroke-width="1.4"/><path d="M${x - 26},112 Q${x},127 ${x + 26},112 Z" fill="#fff" stroke="${INK}" stroke-width="2"/>`; }).join('') + `<circle cx="${cx}" cy="46" r="5" fill="${INK}"/></g>`;
     const cub = (x, y, col = '#9BD2F2') => `<rect x="${r1(x)}" y="${r1(y)}" width="8" height="8" rx="1.5" fill="${col}" stroke="${INK}" stroke-width=".9"/>`;
     const grid = (x0, y0, n, cols, t, outT, outFrom) => { let g = ''; for (let i = 0; i < n; i++) { const c_ = cub(x0 + (i % cols) * 9, y0 - Math.floor(i / cols) * 9); g += i >= outFrom ? OUT(outT, G(outT - .6, 'a-fill', `<rect x="${r1(x0 + (i % cols) * 9 - 1)}" y="${r1(y0 - Math.floor(i / cols) * 9 - 1)}" width="10" height="10" rx="2" fill="${RED}"/>`) + c_) : c_; } return G(t, 'a-fade', g); };
@@ -1114,7 +1116,7 @@
     for (let k = 1; k <= 6; k++) s += tile(88 + (k - 1) * 32, 40, k, .4 + k * .08, { w: 28, h: 28, fs: 15, bg: k === 6 ? Y : '#fff', sc: k === 6 ? Y : UC });
     s += mark(248, 22, 1.3, true, 9) + tile(292, 40, 7, 2.2, { w: 28, h: 28, fs: 15, dash: true, sc: RED }) + mark(306, 22, 2.5, false, 9);
     const t2 = 3.3, ya = 116, yb = 166;
-    s += IC('cat', 30, ya, 38, t2) + IC('dog', 30, yb, 38, t2 + .2) + tallyG(70, ya, a, t2 + .3, .18) + tallyG(70, yb, b, t2 + .4 + a * .18, .18);
+    s += IC('cat', 30, ya, 38, t2) + IC('dog', 30, yb, 38, t2 + .2) + tallyG(70, ya, a, t2 + .3, .18, 36) + tallyG(70, yb, b, t2 + .4 + a * .18, .18, 36);
     const t3 = t2 + (a + b) * .18 + 1;
     s += pill(210, (ya + yb) / 2, `${a} &gt; ${b}`, t3, { fs: 18, bg: Y, sc: Y }) + IC('crown', 30, ya - 26, 24, t3 + .3);
     return { html: anSvg(W, 192, s), at: [.25, 2.2, t2, t3] };
@@ -1161,9 +1163,121 @@
     s += `<line x1="${r1(xd)}" x2="${r1(xd)}" y1="${ya - 4}" y2="${yb + bh + 4}" stroke="${RED}" stroke-width="2" stroke-dasharray="4 3" ${A(e.q, 'a-fade')}/><rect x="${r1(xd + 2)}" y="${yb}" width="${r1(xe - xd - 2)}" height="${bh}" rx="8" fill="#fff" stroke="${UC}" stroke-width="2.5" stroke-dasharray="6 4" ${A(e.q, 'a-fade')}/>`;
     s += `<rect x="${r1(xd + 4)}" y="${yb + 2}" width="${r1(xe - xd - 6)}" height="${bh - 4}" rx="7" fill="${Y}" ${A(e.chk, 'a-fill')}/>`;
     s += OUT(e.sub, T((xd + xe) / 2, yb + 23, '?', { fs: 18, c: UC, t: e.q + .2 })) + T((xd + xe) / 2, yb + 23, a - b, { fs: 18, t: e.sub });
-    s += pill(W / 2 - 60, 168, `${a} − ${b} = ${a - b}`, e.sub + .2, { fs: 15 }) + pill(W / 2 + 70, 168, `${b} + ${a - b} = ${a}`, e.chk + .3, { fs: 15 }) + mark(W / 2 + 70, 146, e.chk + .8, true, 9);
+    s += pill(W / 2 - 74, 168, `${a} − ${b} = ${a - b}`, e.sub + .2, { fs: 15 }) + pill(W / 2 + 74, 168, `${b} + ${a - b} = ${a}`, e.chk + .3, { fs: 15 }) + mark(W / 2 + 74, 146, e.chk + .8, true, 9);
     s += `<path d="M${r1(xd)},${ya - 6} v-6 h${r1(xe - xd)} v6" fill="none" stroke="${YD}" stroke-width="2.5" stroke-linecap="round" ${A(e.ans, 'a-fade')}/>` + pill((xd + xe) / 2, ya - 22, `${a - b} ${u}`, e.ans + .2, { fs: 14, bg: Y, sc: Y });
     return { html: anSvg(W, 190, s), at: [e.bars, e.q, e.sub, e.chk, e.ans] };
+  };
+
+  // ===== unitats noves (theory6.js): recta per llegir, setmana, mesos, calendari, dies que falten, si… llavors… si no =====
+  // llegir una recta: números escrits, quant val cada marca i on és la fletxa
+  S.p1lineRead = (c) => {
+    const { lo, hi, to } = c, n = c.n || 10, x0 = 26, x1 = 294, u = (x1 - x0) / n, st = (hi - lo) / n, X = v => x0 + (v - lo) / st * u, y = 118, big = hi >= 1000, fs = big ? 12 : 14;
+    const from = c.from ?? lo, m = Math.round((to - from) / st);
+    const D = { line: 1.2, arrow: .9, cnt: n * .12 + .5, step: 1.3, hl: 1.4, hops: m * .45 + .6, res: 1 }, e = TL(c.seq.map(k => [k, D[k]]));
+    let bg = '', s = `<g ${A(e.line, 'a-fade')}><line x1="${x0 - 12}" x2="${x1 + 12}" y1="${y}" y2="${y}" stroke="${INK}" stroke-width="3" stroke-linecap="round"/>` + [...Array(n + 1)].map((_, k) => `<line x1="${r1(x0 + k * u)}" x2="${r1(x0 + k * u)}" y1="${y - 8}" y2="${y + 8}" stroke="${INK}" stroke-width="2.5"/>`).join('') + '</g>';
+    (c.labs || []).forEach(v => s += T(X(v), y + 27, th(v), { fs, w: 800, t: e.line }));
+    if (c.hl != null) { bg += `<circle cx="${r1(X(c.hl))}" cy="${y + 22}" r="${big ? 20 : 15}" fill="${Y}" ${A(e.hl)}/>`; if (!(c.labs || []).includes(c.hl)) s += T(X(c.hl), y + 27, th(c.hl), { fs, w: 800, t: e.hl }); }
+    const ta = e[c.arrowAt || 'arrow'] ?? e.line, tr = e.res ?? e.hops + m * .45 + .3;
+    s += `<g ${A(ta)}><line x1="${r1(X(to))}" x2="${r1(X(to))}" y1="${y - 58}" y2="${y - 20}" stroke="${RED}" stroke-width="4" stroke-linecap="round"/><path d="M${r1(X(to) - 8)},${y - 24} L${r1(X(to))},${y - 12} L${r1(X(to) + 8)},${y - 24} Z" fill="${RED}"/></g>`;
+    s += OUT(tr, T(X(to), y - 66, '?', { fs: 20, c: RED, t: ta })) + pill(X(to), y - 76, th(to), tr, { fs: 16, bg: Y, sc: Y });
+    if (e.cnt != null) for (let k = 0; k < n; k++) s += T(x0 + (k + .5) * u, y - 6, k + 1, { fs: 10, c: UC, t: e.cnt + k * .12 });
+    if (e.step != null) s += pill(W / 2, y + 62, c.stepTxt, e.step, { fs: 15 });
+    for (let k = 0; k < m; k++) {
+      const a = from + k * st, b = a + st, tk = e.hops + k * .45;
+      if (c.cnt) s += `<line x1="${r1(X(a) + 2)}" x2="${r1(X(b) - 2)}" y1="${y}" y2="${y}" stroke="${Y}" stroke-width="7" stroke-linecap="round" ${A(tk, 'a-grow')}/>`;
+      else s += hop(X(a), X(b), y - 8, 12, tk, { hs: 5, sw: 2.2 });
+      if (c.vals && k < m - 1) s += T(X(b), y + 27, th(b), { fs, w: 800, c: UC, t: tk + .3 });
+    }
+    if (c.vals || c.cnt) { bg += `<circle cx="${r1(X(to))}" cy="${y + 22}" r="${big ? 20 : 15}" fill="${Y}" ${A(tr)}/>`; s += T(X(to), y + 27, th(to), { fs, w: 900, t: tr }); }
+    return { html: anSvg(W, e.step != null ? y + 82 : y + 40, bg + s), at: AT(c, e) };
+  };
+
+  // la setmana: avui, demà i ahir
+  const WD = () => Lc('dl dt dc dj dv ds dg', 'L M X J V S D').split(' ');
+  S.p1week = ({ today }) => {
+    const tw_ = 40, gap = 2, x = k => 14 + tw_ / 2 + k * (tw_ + gap), y = 64, e = [.25, 1.8, 3.3], wd = WD();
+    let bg = '', s = '';
+    wd.forEach((d, k) => { const we = k >= 5; s += G(.25 + k * .1, 'a-pop', `<rect x="${r1(x(k) - tw_ / 2)}" y="${y - 22}" width="${tw_}" height="44" rx="10" fill="${we ? '#E9DDF3' : '#fff'}" stroke="${UC}" stroke-width="2.5"/>` + T(x(k), y + 6, d, { fs: 15 })); });
+    bg += `<rect x="${r1(x(today) - tw_ / 2 - 3)}" y="${y - 25}" width="${tw_ + 6}" height="50" rx="12" fill="${Y}" ${A(e[0] + .8)}/>`;
+    s += pill(x(today), y + 42, Lc('avui', 'hoy'), e[0] + .9, { fs: 14, bg: Y, sc: Y });
+    s += qArr(x(today) + 6, y - 26, x(today + 1) - 2, y - 58, x(today + 1), y - 26, e[1], { c: OK, sw: 3, lab: '+1', ly: -6, fs: 14 }) + `<rect x="${r1(x(today + 1) - tw_ / 2 - 3)}" y="${y - 25}" width="${tw_ + 6}" height="50" rx="12" fill="none" stroke="${OK}" stroke-width="3" ${A(e[1] + .4)}/>` + pill(x(today + 1) + 14, y + 74, Lc('demà', 'mañana'), e[1] + .5, { fs: 14, sc: OK });
+    s += qArr(x(today) - 6, y - 26, x(today - 1) + 2, y - 58, x(today - 1), y - 26, e[2], { c: RED, sw: 3, lab: '−1', ly: -6, fs: 14 }) + `<rect x="${r1(x(today - 1) - tw_ / 2 - 3)}" y="${y - 25}" width="${tw_ + 6}" height="50" rx="12" fill="none" stroke="${RED}" stroke-width="3" ${A(e[2] + .4)}/>` + pill(x(today - 1) - 14, y + 74, Lc('ahir', 'ayer'), e[2] + .5, { fs: 14, sc: RED });
+    return { html: anSvg(W, y + 94, bg + s), at: e };
+  };
+
+  // els mesos de l'any i un full de calendari
+  S.p1months = ({ cur, day }) => {
+    const mn = Lc('gen febr març abr maig juny jul ag set oct nov des', 'ene feb mar abr may jun jul ago sep oct nov dic').split(' '), full = Lc('gener febrer març abril maig juny juliol agost setembre octubre novembre desembre', 'enero febrero marzo abril mayo junio julio agosto septiembre octubre noviembre diciembre').split(' ');
+    const tw_ = 46, gap = 5, x = k => 10 + tw_ / 2 + (k % 6) * (tw_ + gap), y = k => 40 + Math.floor(k / 6) * 44, e = [.25, 2, 3.4], nx = (cur + 1) % 12;
+    let bg = '', s = '';
+    mn.forEach((m, k) => s += G(.2 + k * .08, 'a-pop', `<rect x="${r1(x(k) - tw_ / 2)}" y="${y(k) - 17}" width="${tw_}" height="34" rx="9" fill="#fff" stroke="${UC}" stroke-width="2.2"/>` + T(x(k), y(k) + 5, m, { fs: 13 })));
+    bg += `<rect x="${r1(x(cur) - tw_ / 2 - 3)}" y="${y(cur) - 20}" width="${tw_ + 6}" height="40" rx="11" fill="${Y}" ${A(e[0] + 1.1)}/>`;
+    s += qArr(x(cur) + 8, y(cur) - 18, x(nx) - 4, y(nx) - 40, x(nx), y(nx) - 19, e[1], { c: OK, sw: 3, lab: '+1', ly: -5, fs: 13 }) + `<rect x="${r1(x(nx) - tw_ / 2 - 3)}" y="${y(nx) - 20}" width="${tw_ + 6}" height="40" rx="11" fill="none" stroke="${OK}" stroke-width="3" ${A(e[1] + .4)}/>`;
+    const lx = 110, ly = 116, lw = 100, lh = 96;
+    s += `<g ${A(e[2])}><rect x="${lx}" y="${ly}" width="${lw}" height="${lh}" rx="10" fill="#fff" stroke="${INK}" stroke-width="2"/><path d="M${lx},${ly + 10} Q${lx},${ly} ${lx + 10},${ly} L${lx + lw - 10},${ly} Q${lx + lw},${ly} ${lx + lw},${ly + 10} L${lx + lw},${ly + 26} L${lx},${ly + 26} Z" fill="${RED}"/>` + T(lx + lw / 2, ly + 19, full[nx], { fs: 13, c: '#fff' }) + T(lx + lw / 2, ly + 76, day, { fs: 42 }) + '</g>';
+    s += IC('flower', lx - 30, ly + 58, 40, e[2] + .4) + IC('book', lx + lw + 32, ly + 58, 40, e[2] + .6);
+    return { html: anSvg(W, ly + lh + 8, bg + s), at: e };
+  };
+
+  // el full del calendari: files = setmanes, columnes = dies de la setmana
+  S.p1cal = (c) => {
+    const { start, days } = c, cw = 40, ch = 24, x0 = 20, hy = 20, gy = 34, wd = WD(), rows = Math.ceil((start + days) / 7);
+    const pos = d => { const k = start + d - 1; return [x0 + (k % 7) * cw + cw / 2, gy + Math.floor(k / 7) * ch + ch / 2]; };
+    let bg = `<g ${A(.1, 'a-fade')}><rect x="${x0}" y="${hy - 16}" width="${7 * cw}" height="24" rx="8" fill="${SOFT}"/></g>`, s = '';
+    wd.forEach((d, k) => s += T(x0 + k * cw + cw / 2, hy + 1, d, { fs: 13, c: k >= 5 ? RED : UC, t: .1 }));
+    s += `<g ${A(.15, 'a-fade')}>` + [...Array(rows + 1)].map((_, r) => `<line x1="${x0}" x2="${x0 + 7 * cw}" y1="${gy + r * ch}" y2="${gy + r * ch}" stroke="#E6DEEE" stroke-width="1.2"/>`).join('') + '</g>';
+    for (let d = 1; d <= days; d++) { const [x, y] = pos(d); s += T(x, y + 5, d, { fs: 13, w: 700, t: .2 + d * .012, cls: 'a-fade' }); }
+    let t = .25; const at = [];
+    c.ev.forEach(o => {
+      at.push(t);
+      (o.ring || []).forEach((d, i) => { const [x, y] = pos(d); s += `<circle cx="${x}" cy="${y}" r="11.5" fill="none" stroke="${o.soft ? UC : RED}" stroke-width="${o.soft ? 2 : 3}"${o.soft ? ' stroke-dasharray="3 2"' : ''} ${A(t + .2 + i * .25)}/>`; });
+      if (o.col != null) bg += `<rect x="${x0 + o.col * cw + 3}" y="${hy - 15}" width="${cw - 6}" height="${gy - hy + rows * ch + 12}" rx="9" fill="${Y}" opacity=".45" ${A(t, 'a-fade')}/>`;
+      if (o.up != null) { const [x, y] = pos(o.up); s += sArr(x, y - 13, x, hy + 10, t + .3, { c: UC, sw: 3, hs: 7, d: .5 }); }
+      if (o.head != null) bg += `<circle cx="${x0 + o.head * cw + cw / 2}" cy="${hy - 4}" r="13" fill="${Y}" ${A(t)}/>`;
+      if (o.jump) { const [a, b] = o.jump, [xa, ya] = pos(a), [xb, yb] = pos(b); s += qArr(xa + 8, ya + 6, xa + 22, (ya + yb) / 2, xb + 8, yb - 8, t + .2, { c: OK, sw: 3, lab: `+${b - a}`, lx: 16, fs: 14 }); }
+      if (o.pill) s += pill(W / 2, gy + rows * ch + 22, Lc(...o.pill), t + .3, { fs: 16, bg: Y, sc: Y });
+      t += o.dur || 1.5;
+    });
+    return { html: anSvg(W, gy + rows * ch + 42, bg + s), at };
+  };
+
+  // una tira de dies: quants en falten o quin dia serà (també passant al mes següent)
+  S.p1days = (c) => {
+    const tiles = c.tiles, n = tiles.length, gap = 3, sepW = c.months ? 10 : 0, tw_ = Math.min(40, (W - 20 - gap * (n - 1) - sepW) / n);
+    const brk = c.months ? c.months[0][1] : n; const X = k => 10 + tw_ / 2 + k * (tw_ + gap) + (k >= brk ? sepW : 0), y = 74;
+    const { start, hops: m } = c, end = start + m, e = [.25, 1.8, 1.8 + m * .45 + .9];
+    let bg = '', s = '';
+    tiles.forEach((d, k) => s += G(.2 + k * .06, 'a-pop', `<rect x="${r1(X(k) - tw_ / 2)}" y="${y - 17}" width="${r1(tw_)}" height="34" rx="8" fill="#fff" stroke="${UC}" stroke-width="2.2"/>` + T(X(k), y + 6, d, { fs: 15 })));
+    bg += `<rect x="${r1(X(start) - tw_ / 2 - 3)}" y="${y - 20}" width="${r1(tw_ + 6)}" height="40" rx="10" fill="${Y}" ${A(.9)}/>`;
+    s += pill(X(start), y + 34, Lc('avui', 'hoy'), 1, { fs: 13, bg: Y, sc: Y });
+    if (c.goal) s += IC(c.goal, X(end), y + 36, 30, 1.2);
+    else s += OUT(e[2], T(X(end), y + 42, '?', { fs: 18, c: RED, t: 1.2 }));
+    for (let k = 0; k < m; k++) { const tk = e[1] + k * .45; s += hop(X(start + k) + 3, X(start + k + 1) - 3, y - 19, 12, tk, { lab: k + 1, fs: 11, hs: 5, sw: 2.2 }); bg += `<rect x="${r1(X(start + k + 1) - tw_ / 2 + 2)}" y="${y - 15}" width="${r1(tw_ - 4)}" height="30" rx="7" fill="${Y}" opacity=".45" ${A(tk + .3, 'a-fade')}/>`; }
+    s += `<rect x="${r1(X(end) - tw_ / 2 - 3)}" y="${y - 20}" width="${r1(tw_ + 6)}" height="40" rx="10" fill="none" stroke="${RED}" stroke-width="3" ${A(e[1] + m * .45)}/>`;
+    let py = y + 70;
+    if (c.months) c.months.forEach(([name, a, b], i) => { const xa = X(a) - tw_ / 2, xb = X(b - 1) + tw_ / 2; s += `<path d="M${r1(xa)},${y + 58} v6 h${r1(xb - xa)} v-6" fill="none" stroke="${UC}" stroke-width="2" ${A(.4 + i * .2, 'a-fade')}/>` + T((xa + xb) / 2, y + 80, Lc(...name), { fs: 13, c: UC, t: .4 + i * .2 }); });
+    if (c.months) py = y + 106;
+    if (c.sub) s += pill(W / 2, py, c.sub, e[1] + .2, { fs: 16 });
+    s += pill(W / 2, py + (c.sub ? 38 : 0), Lc(...c.res), e[2], { fs: 17, bg: Y, sc: Y });
+    return { html: anSvg(W, py + (c.sub ? 38 : 0) + 22, bg + s), at: e };
+  };
+
+  // si… llavors… si no: el programa mira la condició i només fa una de les dues branques
+  S.p1ifelse = ({ n, lim: k, yes, no }) => {
+    const e = [.25, 2.3, 3.7], dx = 160, dy = 88, dw = 66, dh = 30, lx = 66, rx = 254, oy = 164;
+    let s = `<g ${A(.25)}><rect x="${dx - 48}" y="6" width="96" height="32" rx="10" fill="#fff" stroke="${UC}" stroke-width="2.5"/>` + T(dx, 28, `n = ${n}`, { fs: 17 }) + '</g>';
+    s += sArr(dx, 40, dx, dy - dh - 4, .6, { c: INK, sw: 2.5, hs: 6 });
+    s += `<g ${A(.9)}><path d="M${dx},${dy - dh} L${dx + dw},${dy} L${dx},${dy + dh} L${dx - dw},${dy} Z" fill="${SOFT}" stroke="${UC}" stroke-width="2.5" stroke-linejoin="round"/></g>`;
+    s += OUT(e[1], T(dx, dy + 6, `n &gt; ${k} ?`, { fs: 16, t: 1 })) + T(dx, dy + 6, `${n} &gt; ${k}`, { fs: 16, t: e[1], c: OK });
+    const br = (x, lab, t) => `<path d="M${dx + Math.sign(x - dx) * dw},${dy} L${x},${dy} L${x},${oy - 22}" fill="none" stroke="${INK}" stroke-width="2.5" stroke-linejoin="round" pathLength="1" ${A(t, 'a-draw', 'animation-duration:.5s')}/>` + T((dx + Math.sign(x - dx) * dw + x) / 2, dy - 8, lab, { fs: 13, c: UC, t: t + .2 });
+    s += br(lx, Lc('sí', 'sí'), 1.3) + br(rx, 'no', 1.5);
+    const out = (x, txt, t) => G(t, 'a-pop', `<rect x="${x - 50}" y="${oy - 18}" width="100" height="36" rx="18" fill="#fff" stroke="${UC}" stroke-width="2.5"/>` + T(x, oy + 6, `«${txt}»`, { fs: 16 }));
+    s += PUL(e[2] + .6, out(lx, Lc(...yes), 1.7)) + out(rx, Lc(...no), 1.8);
+    s += mark(dx + 40, dy - 30, e[1] + .3, true, 11);
+    s += `<path d="M${dx - dw},${dy} L${lx},${dy} L${lx},${oy - 22}" fill="none" stroke="${Y}" stroke-width="7" stroke-linejoin="round" stroke-linecap="round" pathLength="1" ${A(e[2], 'a-draw', 'animation-duration:.5s')}/>`;
+    s += `<rect x="${lx - 47}" y="${oy - 15}" width="94" height="30" rx="15" fill="${Y}" opacity=".6" ${A(e[2] + .5, 'a-fade')}/>` + `<rect x="${rx - 50}" y="${oy - 18}" width="100" height="36" rx="18" fill="#fff" opacity=".7" ${A(e[2] + .5, 'a-fade')}/>`;
+    s += IC('robot', lx + 64, oy - 8, 30, e[2] + .6);
+    return { html: anSvg(W, oy + 26, s), at: e };
   };
 
   Object.assign(SCN, S);
@@ -1201,7 +1315,7 @@
     ],
     // 1r · 5 Formes i patrons
     'c1-5': [
-      { k: 'p1shapes', num: true, ticks: true, rectCol: true, h: 200, g: [0, 1, 2, 3], items: [{ k: 'tri', x: 58, y: 56, R: 32, lx: 132, lyA: 56 }, { k: 'sq', x: 218, y: 56, R: 32, lx: 290, lyA: 56 }, { k: 'rect', x: 70, y: 154, R: 30, lab: '2 + 2', lx: 160, lyA: 154 }, { k: 'circ', x: 230, y: 154, R: 32, lab: '0', lx: 290, lyA: 154 }] },
+      { k: 'p1shapes', num: true, ticks: true, rectCol: true, h: 214, g: [0, 1, 2, 3], items: [{ k: 'tri', x: 62, y: 62, R: 42, lx: 138, lyA: 62 }, { k: 'sq', x: 226, y: 60, R: 40, lx: 300, lyA: 60 }, { k: 'rect', x: 74, y: 166, R: 38, lab: '2 + 2', lx: 174, lyA: 166 }, { k: 'circ', x: 244, y: 166, R: 40, lab: '0', lx: 302, lyA: 166 }] },
       { k: 'p1shapes', vtx: true, h: 156, g: [0, 1, 2], items: [{ k: 'tri', x: 58, y: 66, R: 40 }, { k: 'sq', x: 160, y: 66, R: 40 }, { k: 'circ', x: 262, y: 66, R: 40 }] },
       { k: 'p1pattern', seq: ['r', 'b', 'r', 'b'], unit: 2, next: 'r' },
       { k: 'p1seq', rows: [{ v: [2, 4, 6, 8, 10], step: '+2' }, { v: [13, 23, 33, 43], step: '+10', u: true }], L: ['r0', 'r1', 'u1'] }
@@ -1218,7 +1332,7 @@
       { k: 'p1lr', ics: ['apple', 'cat', 'football'] },
       { k: 'p1robot', start: [0, 2], moves: 'RRU', goal: 'flag', split: 2, mode: 'run' },
       { k: 'p1bag', n: 5 },
-      { k: 'p1tally', h: 112, rows: [{ ic: 'banana', n: 8, y: 50, fin: true }] }
+      { k: 'p1tally', h: 136, rows: [{ ic: 'banana', n: 8, y: 60, h: 46, fin: true }] }
     ],
     // 1r · 8 Problemes
     'c1-8': [
@@ -1245,7 +1359,7 @@
     'c2-3': [
       { k: 'p1groups', g: 3, n: 4, ic: 'apple', box: 'bag', cols: 2, sz: 28 },
       { k: 'p1array', r: 2, c: 5 },
-      { k: 'p1seq', rowH: 70, rows: [{ v: [2, 4, 6, 8, 10], step: '+2', dots: true }, { v: [5, 10, 15, 20, 25], step: '+5', dots: true, ext: { v: 30 } }, { v: [10, 20, 30, 40], step: '+10', dots: true }], L: ['r0', 'r1', 'r2', 'x1'] },
+      { k: 'p1seq', rowH: 74, rows: [{ v: [2, 4, 6, 8, 10], step: '+2', dots: true }, { v: [5, 10, 15, 20, 25], step: '+5', dots: true, ext: { v: 30 } }, { v: [10, 20, 30, 40], step: '+10', dots: true }], L: ['r0', 'r1', 'r2', 'x1'] },
       { k: 'p1dblHalf', rows: [{ k: 'dbl', n: 7 }, { k: 'half', n: 14 }, { k: 'dblBar', n: 25 }] }
     ],
     // 2n · 4 Lògica
@@ -1257,7 +1371,7 @@
     ],
     // 2n · 5 Mesures i formes
     'c2-5': [
-      { k: 'p1clock', ev: [{ h: 90, m: 0, hl: [3, 12] }, { dig: '3:00' }, { m: 180, h: 105, hl: [6], sec: [0, 30, '30'] }, { dig: '3:30' }] },
+      { k: 'p1clock', ev: [{ h: 90, m: 0, hl: [3, 12] }, { dig: '3:00' }, { m: 180, h: 105, hl: [6], sec: [0, 30, ''] }, { dig: '3:30' }] },
       { k: 'p1ruler', a: 0, b: 12, max: 13, door: true, seq: ['pen', 'len', 'm1', 'door'], L: ['pen', 'len', 'm1', 'door'] },
       { k: 'p1money', items: [20, 10, 5, 2], steps: [['g', [0, 1, 2, 3]], ['run', [0, 1]], ['run', [2, 3], 1]] },
       { k: 'p1shapes', fast: true, dt: .09, h: 218, g: [0, 1, 3, 6], items: [{ k: 'tri', x: 52, y: 52, R: 30 }, { k: 'sq', x: 150, y: 52, R: 30 }, { k: 'rect', x: 252, y: 52, R: 30 }, { k: 5, x: 44, y: 150, R: 30 }, { k: 6, x: 124, y: 150, R: 30 }, { k: 8, x: 204, y: 150, R: 30 }, { k: 'circ', x: 282, y: 150, R: 30 }] }
@@ -1320,17 +1434,38 @@
     ],
     // 3r · 8 Dades i atzar
     'c3-8': [
-      { k: 'p1tally', h: 206, rows: [{ n: 5, y: 40, demo: true }, { ic: 'apple', n: 13, y: 112 }] },
+      { k: 'p1tally', h: 200, rows: [{ n: 5, y: 36, h: 34, demo: true }, { ic: 'apple', n: 13, y: 104, h: 36 }] },
       { k: 'p1bars', bars: [{ ic: 'football', v: 8 }, { ic: 'basketball', v: 5 }] },
       { k: 'p1modeMean', vals: [2, 5, 2, 7] },
       { k: 'p1prob', cnt: [['r', 6], ['b', 2], ['g', 1], ['y', 0]] }
     ],
+    // 1r · 9 (nova) La recta, la setmana i els mesos
+    'c1-9': [
+      { k: 'p1lineRead', lo: 0, hi: 10, labs: [0, 10], hl: 5, from: 5, to: 8, vals: true, seq: ['line', 'hl', 'hops'], L: ['line', 'hl', 'hops'] },
+      { k: 'p1lineRead', lo: 0, hi: 100, labs: [0, 100], hl: 50, from: 50, to: 70, vals: true, arrowAt: 'line', seq: ['line', 'hl', 'hops', 'res'], L: ['hl', 'hops', 'res'] },
+      { k: 'p1week', today: 3 },
+      { k: 'p1months', cur: 2, day: 23 }
+    ],
+    // 2n · 8 (nova) Rectes i calendari
+    'c2-8': [
+      { k: 'p1lineRead', lo: 300, hi: 400, labs: [300, 400], from: 300, to: 330, cnt: true, stepTxt: '1 marca = 10', arrowAt: 'line', seq: ['line', 'cnt', 'step', 'hops'], L: ['line', 'step', 'hops'] },
+      { k: 'p1cal', start: 1, days: 30, ev: [{ ring: [17] }, { col: 3, up: 17 }, { head: 3, pill: ['dijous', 'jueves'] }] },
+      { k: 'p1days', tiles: [4, 5, 6, 7, 8, 9, 10, 11, 12, 13], start: 1, hops: 7, goal: 'party', sub: '12 − 5 = 7', res: ['7 dies', '7 días'] },
+      { k: 'p1cal', start: 6, days: 30, ev: [{ ring: [3], head: 1 }, { jump: [3, 10] }, { ring: [10, 17, 24], soft: false, col: 1 }] }
+    ],
     // 3r · 9 Lògica i problemes
     'c3-9': [
       { k: 'p1seq', rows: [{ v: [3, 7, 11, 15, 19], step: '+4', q: true }], L: ['r0', 'a0', 'q0'] },
-      { k: 'p1bal2', add: 5, tot: 12, k: 3 },
+      { k: 'p1bal2', add: 5, tot: 12, parts: 3 },
       { k: 'p1groups', g: 4, n: 6, box: 'carton', cols: 3, isp: 20, rep: true, bh: 60 },
       { k: 'p1grpRem', n: 30, s: 5, ic: 'cards', env: true, pc: 15, psz: 18, dt: .08, seq: ['pile', 'fill', 'res', 'chk1'], L: ['pile', 'fill', 'res', 'chk1'] }
+    ],
+    // 3r · 10 (nova) Rectes, dates, 24 hores i decisions
+    'c3-10': [
+      { k: 'p1lineRead', lo: 2000, hi: 3000, labs: [2000, 3000], from: 2000, to: 2400, cnt: true, stepTxt: '1 marca = 100', arrowAt: 'line', seq: ['line', 'cnt', 'step', 'hops'], L: ['line', 'step', 'hops'] },
+      { k: 'p1days', tiles: [26, 27, 28, 29, 30, 1, 2, 3, 4], months: [[['abril', 'abril'], 0, 5], [['maig', 'mayo'], 5, 9]], start: 2, hops: 5, res: ['3 de maig', '3 de mayo'] },
+      { k: 'p1clock', ic: 'sun', ev: [{ h: 150, m: 0, hl: [5] }, { lab: '5 + 12 = 17' }, { dig: '17:00' }] },
+      { k: 'p1ifelse', n: 7, lim: 5, yes: ['gran', 'grande'], no: ['petit', 'pequeño'] }
     ]
   });
 })();
