@@ -79,6 +79,7 @@ async function xatSend() {
       out.innerHTML = e.error === 'limit'
         ? (e.pla === 'free' ? L(`Avui ja has fet les ${e.max} preguntes del pla gratuït. Demà en tens més, o amb Premium en tens fins a 40 al dia.`, `Hoy ya has hecho las ${e.max} preguntas del plan gratuito. Mañana tienes más, o con Premium tienes hasta 40 al día.`)
           : L(`Avui ja has fet ${e.max} preguntes. Demà en tens més!`, `Hoy ya has hecho ${e.max} preguntas. ¡Mañana tienes más!`))
+        : e.error === 'xat-ple' ? L("L'assistent ha arribat al màxim de preguntes d'avui. Torna-hi demà!", 'El asistente ha llegado al máximo de preguntas de hoy. ¡Vuelve mañana!')
         : e.error === 'xat-off' ? L("El teu docent ha desactivat l'assistent per a la classe.", 'Tu docente ha desactivado el asistente para la clase.')
         : r.status === 429 ? L('Massa preguntes seguides. Espera una estona.', 'Demasiadas preguntas seguidas. Espera un rato.')
         : L("Ara no puc respondre. Torna-ho a provar d'aquí a una estona.", 'Ahora no puedo responder. Vuelve a probarlo en un rato.');

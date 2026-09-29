@@ -201,7 +201,7 @@ function subCancel(code, step) {
 }
 async function subDo(code, resume) {
   const b = $('#sg'); if (b) b.disabled = true;
-  const r = await fetch('/api/pay?a=' + (resume ? 'resume' : 'cancel'), { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ code }) }).then(x => x.json().then(j => ({ status: x.status, ...j }))).catch(() => ({ status: 0 }));
+  const r = await fetch('/api/pay?a=' + (resume ? 'resume' : 'cancel'), { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ code, tok: TOK }) }).then(x => x.json().then(j => ({ status: x.status, ...j }))).catch(() => ({ status: 0 }));
   if (r.ok) { closeModal(); await refresh(); return toast(resume ? L('Subscripció reactivada.', 'Suscripción reactivada.') : L("Cancel·lada a Stripe: no es farà cap més cobrament.", 'Cancelada en Stripe: no se hará ningún cobro más.')); }
   const m = r.status === 502 ? L("Stripe no ho ha confirmat, així que no s'ha fet. Torna-ho a provar o escriu a hola@numimates.com.", 'Stripe no lo ha confirmado, así que no se ha hecho. Vuelve a intentarlo o escribe a hola@numimates.com.') : ERR(r.status);
   if ($('#se')) $('#se').textContent = m; else toast(m);

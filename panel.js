@@ -529,6 +529,7 @@ async function myPass() {
   if (a !== b) return $('#cpe').textContent = L('Les contrasenyes no coincideixen.', 'Las contraseñas no coinciden.');
   const j = await fetch('/api/docent', { method: 'POST', headers: { ...AUTH(), 'content-type': 'application/json' }, body: JSON.stringify({ action: 'setpass', password: a }) }).then(r => r.json()).catch(() => ({}));
   if (!j.ok) return $('#cpe').textContent = L("No s'ha pogut canviar.", 'No se ha podido cambiar.');
+  if (j.token) sessionStorage.setItem('dt', j.token);
   $('#cp1').value = $('#cp2').value = ''; $('#cpe').textContent = ''; toast(L('Contrasenya canviada.', 'Contraseña cambiada.'));
 }
 

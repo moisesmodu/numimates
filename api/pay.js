@@ -3,8 +3,9 @@
    GET  /api/pay?a=info                             → preus i enllaç del portal (la família hi entra amb el seu correu)
    POST /api/pay?a=hook                             → avisos de Stripe. No ens fiem del cos: tornem a demanar l'esdeveniment
                                                       a Stripe amb la clau secreta, així un avís inventat no pot activar res. */
-import { sql, body, cleanCode, ok, blocked, fail, note, tooMany } from './_lib.js';
+import { sql, body, cleanCode, ok, blocked, fail, note, tooMany, alumneOk } from './_lib.js';
 
+import { famOf } from './_auth.js';
 import { STRIPE_KEY as KEY, stripe, stripeMode, applySub, subOf, setCancel } from './_stripe.js';
 const LOOKUP = { mes: 'numi_premium_mes', any: 'numi_premium_any' };
 const ORIGINS = ['https://app.numimates.com', 'https://pro.numimates.com', 'https://ment.numimates.com', 'https://mates-numi.vercel.app', 'http://localhost:5176', 'http://127.0.0.1:5176']
@@ -87,8 +88,11 @@ async function cancel(req, res, resume) {
   const b = body(req), code = cleanCode(b.code);
   if (!code) return ok(res, { error: 'codi' }, 400);
   if (await blocked(req, 'pagament', 20, 60)) return tooMany(res);
-  const a = (await sql`SELECT 1 FROM mates.alumnes WHERE code = ${code} AND active`)[0];
+  const a = (await sql`SELECT pass_hash FROM mates.alumnes WHERE code = ${code} AND active`)[0];
   if (!a) { await fail(req, 'pagament'); return ok(res, { error: 'no trobat' }, 404); }
+  // ho pot fer la família que té aquest fill a la seva zona, o l'app de l'alumne (amb la clau del dispositiu si té contrasenya)
+  const fam = famOf(b.tok), okFam = fam && (await sql`SELECT 1 FROM mates.familia_fills WHERE familia_id = ${fam} AND code = ${code}`.catch(() => [])).length;
+  if (!okFam && !(await alumneOk(req, res, code, a.pass_hash))) return;
   const c = await setCancel(code, resume);
   if (c.error === 'sense subscripció') return ok(res, { error: c.error }, 409);
   if (c.error) return ok(res, { error: 'stripe' }, 502);

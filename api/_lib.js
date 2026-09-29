@@ -7,7 +7,7 @@ export function summary(s) {
   return { xp: s.xp | 0, streak: s.streak | 0, best: s.best | 0, last_day: s.lastDay || null, lessons: st.lessons | 0, answers: st.answers | 0, correct: st.correct | 0, course: s.course | 0 };
 }
 export function ok(res, data, status = 200) { res.setHeader('Cache-Control', 'no-store'); res.status(status).json(data); }
-import { scryptSync, randomBytes, timingSafeEqual } from 'crypto';
+import { scryptSync, randomBytes, timingSafeEqual, createHash } from 'crypto';
 export const cleanUser = u => String(u || '').trim().toLowerCase();
 export const validUser = u => /^[a-z0-9._-]{3,20}$/.test(u);
 export const validPass = p => typeof p === 'string' && p.length >= 4 && p.length <= 60;
@@ -43,6 +43,38 @@ export async function fail(req, b, acct = null) {
   await slow();
 }
 export const tooMany = res => ok(res, { error: 'massa' }, 429);
+
+// --- Clau de dispositiu (comptes d'alumne amb contrasenya) ---
+// Si l'alumne té contrasenya, el codi sol ja no dona accés al compte: cada dispositiu rep una clau secreta en entrar
+// amb usuari i contrasenya (o en posar-la), i l'envia a la capçalera x-alumne. Es guarda només el resum (sha-256).
+// Sense contrasenya, el codi continua sent la clau (és el que fan servir els infants a l'aula).
+let TOKT = null;
+const tokTable = () => TOKT || (TOKT = sql`CREATE TABLE IF NOT EXISTS mates.alumne_tok (hash text PRIMARY KEY, code text NOT NULL, created timestamptz NOT NULL DEFAULT now(), last timestamptz NOT NULL DEFAULT now())`
+  .then(() => sql`CREATE INDEX IF NOT EXISTS alumne_tok_code ON mates.alumne_tok (code)`).catch(e => { TOKT = null; throw e; }));
+const sha = t => createHash('sha256').update(String(t)).digest('hex');
+export async function issueTok(res, code) {
+  await tokTable(); const t = randomBytes(24).toString('base64url');
+  await sql`INSERT INTO mates.alumne_tok (hash, code) VALUES (${sha(t)}, ${code})`;
+  // com a molt 20 dispositius per compte (els més antics es tanquen)
+  await sql`DELETE FROM mates.alumne_tok WHERE code = ${code} AND hash NOT IN (SELECT hash FROM mates.alumne_tok WHERE code = ${code} ORDER BY last DESC LIMIT 20)`;
+  res.setHeader('x-alumne-new', t); return t;
+}
+export async function dropToks(code) { await tokTable(); await sql`DELETE FROM mates.alumne_tok WHERE code = ${code}`; }
+// true si la petició pot continuar; si no, ja ha respost 401 { error: 'clau' }
+export async function alumneOk(req, res, code, passHash) {
+  if (!passHash) return true;
+  await tokTable();
+  const t = String(req.headers['x-alumne'] || '').slice(0, 100);
+  if (t && (await sql`UPDATE mates.alumne_tok SET last = now() WHERE hash = ${sha(t)} AND code = ${code} RETURNING 1`).length) return true;
+  // pas a les claus: el primer dispositiu que arriba a un compte que encara no en té cap la rep
+  if (!(await sql`SELECT 1 FROM mates.alumne_tok WHERE code = ${code} LIMIT 1`).length) { await issueTok(res, code); return true; }
+  await fail(req, 'clau', code); ok(res, { error: 'clau' }, 401); return false;
+}
+// per als endpoints que només tenen el codi: busca la contrasenya i aplica alumneOk
+export async function alumneGuard(req, res, code) {
+  const r = (await sql`SELECT pass_hash FROM mates.alumnes WHERE code = ${code}`)[0];
+  return !r || alumneOk(req, res, code, r.pass_hash);
+}
 
 // --- Estat de l'alumne: el guardem tal com arriba, però els camps que es pinten al panell o a l'app
 // han de tenir el tipus correcte (números com a números, dates com a dates). Tot el que no ho compleixi es descarta.

@@ -1,4 +1,4 @@
-import { sql, body, cleanCode, ok, blocked, fail, tooMany, plaOf } from './_lib.js';
+import { sql, body, cleanCode, ok, blocked, fail, tooMany, plaOf, alumneOk } from './_lib.js';
 import { randomInt } from 'crypto';
 // Batalles de mates. Tothom rep les mateixes preguntes (surten de la llavor `seed`).
 // Guanya qui n'encerta més; si hi ha empat, qui ha trigat menys. Els codis secrets dels alumnes
@@ -38,8 +38,9 @@ export default async function handler(req, res) {
   const b = body(req), sid = cleanCode(b.code), act = b.action;
   if (!sid) return ok(res, { error: 'codi' }, 400);
   if (await blocked(req, 'codi', 40)) return tooMany(res);
-  const me = (await sql`SELECT a.name, a.pla, a.pla_fins, a.grup_id, g.opts FROM mates.alumnes a LEFT JOIN mates.grups g ON g.id = a.grup_id AND g.actiu WHERE a.code = ${sid} AND a.active`)[0];
+  const me = (await sql`SELECT a.name, a.pla, a.pla_fins, a.grup_id, a.pass_hash, g.opts FROM mates.alumnes a LEFT JOIN mates.grups g ON g.id = a.grup_id AND g.actiu WHERE a.code = ${sid} AND a.active`)[0];
   if (!me) { await fail(req, 'codi'); return ok(res, { error: 'alumne' }, 404); }
+  if (!(await alumneOk(req, res, sid, me.pass_hash))) return;
   // les batalles són del pla Premium (o de l'escola): el pla gratuït només pot mirar les que ja té
   if (plaOf(me) === 'free' && (act === 'create' || act === 'join')) return ok(res, { error: 'premium' }, 402);
   // «mode escola»: si el docent ha apagat les batalles del grup, tampoc es poden fer saltant-se l'app

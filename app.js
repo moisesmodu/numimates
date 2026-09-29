@@ -61,6 +61,28 @@ function saveLocal() { try { localStorage.setItem(SKEY, JSON.stringify(DB)); } c
 function save() { save.n = (save.n || 0) + 1; saveLocal(); if (P && P.id !== 'tmp') { P.dirty = true; clearTimeout(save.t); save.t = setTimeout(syncNow, 1500); } }
 
 /* ---------- Núvol ---------- */
+// Clau de dispositiu: als comptes amb contrasenya, el servidor dona a cada dispositiu una clau secreta (capçalera
+// x-alumne-new) que s'envia a totes les peticions d'aquell compte. Es guarda a DB.toks[codi], fora dels perfils
+// (que es sincronitzen), perquè no surti mai del dispositiu.
+{
+  const f0 = window.fetch.bind(window);
+  window.fetch = async (u, o) => {
+    const isApi = typeof u === 'string' && u.startsWith('/api/'); let code = null;
+    if (isApi && o && typeof o.body === 'string') { try { code = JSON.parse(o.body).code || null; } catch (e) { } }
+    const toks = (typeof DB === 'object' && DB) ? (DB.toks = DB.toks || {}) : {};
+    if (code && toks[code]) o = { ...o, headers: { ...(o.headers || {}), 'x-alumne': toks[code] } };
+    const r = await f0(u, o), nt = isApi && r.headers.get('x-alumne-new');
+    if (nt) { let c = code; if (!c) { try { c = (await r.clone().json()).code; } catch (e) { } } if (c) { toks[c] = nt; saveLocal(); } }
+    if (isApi && r.status === 401 && code && P && P.code === code && !['/api/profe', '/api/docent'].some(x => u.startsWith(x))) askPassAgain();
+    return r;
+  };
+}
+// aquest dispositiu ja no té la clau del compte (s'ha posat o canviat la contrasenya en un altre lloc): cal tornar a entrar
+function askPassAgain() {
+  if (askPassAgain.on || $('.modal-bg')) return; askPassAgain.on = true; setTimeout(() => askPassAgain.on = false, 60000);
+  toast(L('Per seguretat, torna a escriure la teva contrasenya.', 'Por seguridad, vuelve a escribir tu contraseña.'));
+  setTimeout(() => { if (!$('.modal-bg')) { loginModal(0); const u = $('#lu'); if (u && P && P.username) { u.value = P.username; const p = $('#lp'); p && p.focus(); } } }, 400);
+}
 // amb 15 s de marge: una petició penjada no pot deixar la sincronització bloquejada
 const api = (path, data) => { const c = new AbortController(), t = setTimeout(() => c.abort(), 15000);
   return fetch('/api/' + path, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(data), signal: c.signal }).then(r => r.json().then(j => ({ status: r.status, ...j }))).finally(() => clearTimeout(t)); };
@@ -1413,7 +1435,7 @@ async function doLogin(withCode) {
   $('#lerr').textContent = '…';
   try {
     const r = await api('login', data);
-    if (!r.state) { $('#lerr').textContent = r.status === 429 ? ERR('massa') : withCode ? L('No trobem aquest codi. Revisa les lletres i els números.', 'No encontramos ese código. Revisa las letras y los números.') : ERR('credencials'); return; }
+    if (!r.state) { $('#lerr').textContent = r.status === 429 ? ERR('massa') : r.error === 'clau' ? L('Aquest compte té contrasenya: entra amb el teu usuari i la contrasenya.', 'Esta cuenta tiene contraseña: entra con tu usuario y la contraseña.') : withCode ? L('No trobem aquest codi. Revisa les lletres i els números.', 'No encontramos ese código. Revisa las letras y los números.') : ERR('credencials'); return; }
     const code = r.code || data.code, ex = Object.values(DB.profiles).find(p => p.code === code);
     if (ex) { closeModal(); return switchP(ex.id); }
     const id = 'p' + Date.now().toString(36);

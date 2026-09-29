@@ -1,4 +1,4 @@
-import { createHmac, timingSafeEqual } from 'crypto';
+import { createHmac, createHash, timingSafeEqual } from 'crypto';
 import { sql, blocked, fail } from './_lib.js';
 // Qui fa la petició al panell:
 //  · administrador (el Moisés): entra amb PROFE_PASS i rep un testimoni signat d'administrador (8 h) → ho veu i ho gestiona tot.
@@ -8,7 +8,9 @@ import { sql, blocked, fail } from './_lib.js';
 const same = (a, b) => { const x = Buffer.from(String(a)), y = Buffer.from(String(b)); return x.length === y.length && timingSafeEqual(x, y); };
 const b64 = s => Buffer.from(s).toString('base64url');
 const sign = s => createHmac('sha256', process.env.SESSION_SECRET || '').update(s).digest('base64url');
-export function makeToken(d) { const p = b64(JSON.stringify({ id: d.id, exp: Date.now() + 12 * 3600e3 })); return p + '.' + sign(p); }
+// pv = empremta de la contrasenya: si el docent la canvia (o l'admin la reinicia), els testimonis anteriors deixen de valer
+const pvOf = h => createHash('sha256').update(String(h || '')).digest('base64url').slice(0, 12);
+export function makeToken(d) { const p = b64(JSON.stringify({ id: d.id, pv: pvOf(d.pass_hash), exp: Date.now() + 12 * 3600e3 })); return p + '.' + sign(p); }
 // sessió de la zona de famílies (60 dies): només identifica la família; no dona accés al panell
 export function famToken(id) { const p = b64(JSON.stringify({ fam: id, exp: Date.now() + 60 * 864e5 })); return p + '.' + sign(p); }
 export function famOf(t) { const d = readToken(t); return d && Number.isInteger(d.fam) ? d.fam : null; }
@@ -29,8 +31,10 @@ export async function who(req) {
   if (pp) return (await adminPass(req, pp)) ? { admin: true } : null;
   const d = readToken(req.headers['x-docent']); if (!d || d.fam) return null;
   if (d.adm === 1) return { admin: true };
-  const r = (await sql`SELECT d.id, d.nom, d.email, d.rol, d.centre_id, c.nom AS centre FROM mates.docents d LEFT JOIN mates.centres c ON c.id = d.centre_id WHERE d.id = ${d.id} AND d.actiu`)[0];
-  return !r ? null : r.rol === 'admin' ? { admin: true, docent: r } : { docent: r };
+  const r = (await sql`SELECT d.id, d.nom, d.email, d.rol, d.centre_id, d.pass_hash, c.nom AS centre FROM mates.docents d LEFT JOIN mates.centres c ON c.id = d.centre_id WHERE d.id = ${d.id} AND d.actiu`)[0];
+  if (!r || (d.pv && d.pv !== pvOf(r.pass_hash))) return null;
+  delete r.pass_hash;
+  return r.rol === 'admin' ? { admin: true, docent: r } : { docent: r };
 }
 // grups que pot veure un docent: els seus, o tots els del centre si és admin de centre
 export async function groupsOf(me) {

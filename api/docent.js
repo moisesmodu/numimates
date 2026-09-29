@@ -20,8 +20,9 @@ export default async function handler(req, res) {
   if (b.action === 'setpass') {
     const me = await who(req); if (!me || !me.docent) return ok(res, { error: 'sessio' }, 401);
     if (!validPass(b.password) || String(b.password).length < 8) return ok(res, { error: 'contrasenya-format' }, 400);
-    await sql`UPDATE mates.docents SET pass_hash = ${hashPass(b.password)} WHERE id = ${me.docent.id}`;
-    return ok(res, { ok: true });
+    const h = hashPass(b.password); await sql`UPDATE mates.docents SET pass_hash = ${h} WHERE id = ${me.docent.id}`;
+    // els testimonis anteriors deixen de valer (també els d'altres ordinadors); aquest en rep un de nou
+    return ok(res, { ok: true, token: makeToken({ id: me.docent.id, pass_hash: h }) });
   }
   return ok(res, { error: 'acció' }, 400);
 }

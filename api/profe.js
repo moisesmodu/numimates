@@ -1,4 +1,4 @@
-import { sql, ok, body, cleanCode, validPass, hashPass } from './_lib.js';
+import { sql, ok, body, cleanCode, validPass, hashPass, dropToks } from './_lib.js';
 import { who, groupsOf } from './_auth.js';
 import { STRIPE_KEY, stripe, stripeMode, setCancel, setupStripe } from './_stripe.js';
 import { randomInt } from 'crypto';
@@ -24,7 +24,7 @@ export default async function handler(req, res) {
       if (!(await mine(code))) return ok(res, { error: 'permís' }, 403);
       if (b.action === 'setpass') {
         if (!validPass(b.password)) return ok(res, { error: 'contrasenya-format' }, 400);
-        const r = await sql`UPDATE mates.alumnes SET pass_hash = ${hashPass(b.password)} WHERE code = ${code} AND username IS NOT NULL RETURNING code`;
+        const r = await sql`UPDATE mates.alumnes SET pass_hash = ${hashPass(b.password)} WHERE code = ${code} AND username IS NOT NULL RETURNING code`; if (r.length) await dropToks(code);
         return ok(res, r.length ? { ok: true } : { error: 'sense usuari' }, r.length ? 200 : 404);
       }
       if (b.action === 'unlock') { await sql`UPDATE mates.alumnes SET state = jsonb_set(state, '{unlockAll}', to_jsonb(${!!b.value}::boolean)) WHERE code = ${code}`; return ok(res, { ok: true }); }

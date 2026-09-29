@@ -2,7 +2,7 @@
    Respon en streaming (text pla). No es guarda cap conversa: només quantes preguntes fa cada alumne al dia (per limitar el cost).
    Model via Vercel AI Gateway (autenticació OIDC del projecte, sense clau). */
 import { streamText, toTextStream, pipeTextStreamToResponse } from 'ai';
-import { sql, body, cleanCode, ok, blocked, note, fail, tooMany, plaOf } from './_lib.js';
+import { sql, body, cleanCode, ok, blocked, note, fail, tooMany, plaOf, alumneOk } from './_lib.js';
 
 const MODEL = 'anthropic/claude-haiku-4.5';
 const LIMIT = { free: 0, premium: 40, escola: 40 };   // el pla gratuït no té assistent
@@ -54,9 +54,10 @@ export default async function handler(req, res) {
   if (await blocked(req, 'xat', 60)) return tooMany(res);
   if (await blocked(req, 'codi', 40)) return tooMany(res);
   await tables();
-  const a = (await sql`SELECT a.code, a.pla, a.pla_fins, a.grup_id, a.active, g.opts FROM mates.alumnes a LEFT JOIN mates.grups g ON g.id = a.grup_id WHERE a.code = ${code}`)[0];
+  const a = (await sql`SELECT a.code, a.pla, a.pla_fins, a.grup_id, a.active, a.pass_hash, g.opts FROM mates.alumnes a LEFT JOIN mates.grups g ON g.id = a.grup_id WHERE a.code = ${code}`)[0];
   if (!a) { await fail(req, 'codi'); return ok(res, { error: 'no trobat' }, 404); }
   if (!a.active) return ok(res, { error: 'baixa' }, 410);
+  if (!(await alumneOk(req, res, code, a.pass_hash))) return;
   // el docent pot apagar l'assistent per a tot el grup (mode escola)
   if (a.opts && a.opts.xat === false) return ok(res, { error: 'xat-off' }, 403);
   const pla = plaOf(a), max = LIMIT[pla] ?? 0;
