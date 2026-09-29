@@ -7,7 +7,7 @@ import { sql, body, cleanCode, ok, blocked, fail, note, tooMany } from './_lib.j
 
 import { STRIPE_KEY as KEY, stripe, stripeMode, applySub, subOf, setCancel } from './_stripe.js';
 const LOOKUP = { mes: 'numi_premium_mes', any: 'numi_premium_any' };
-const ORIGINS = ['https://app.numimates.com', 'https://mates-numi.vercel.app', 'http://localhost:5176', 'http://127.0.0.1:5176'];
+const ORIGINS = ['https://app.numimates.com', 'https://pro.numimates.com', 'https://ment.numimates.com', 'https://mates-numi.vercel.app', 'http://localhost:5176', 'http://127.0.0.1:5176'];
 
 let PRICES = null, PORTAL = null;
 async function prices() {

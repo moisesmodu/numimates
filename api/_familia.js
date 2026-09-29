@@ -8,7 +8,7 @@ import { famToken, famOf, who } from './_auth.js';
 import { subOf } from './_stripe.js';
 import { MAIL_OK, sendMail } from './_mail.js';
 
-const ORIGINS = ['https://app.numimates.com', 'https://mates-numi.vercel.app', 'http://localhost:5176', 'http://127.0.0.1:5176'];
+const ORIGINS = ['https://app.numimates.com', 'https://pro.numimates.com', 'https://ment.numimates.com', 'https://mates-numi.vercel.app', 'http://localhost:5176', 'http://127.0.0.1:5176'];
 const hash = t => createHash('sha256').update(t).digest('hex');
 const cleanMail = m => String(m || '').trim().toLowerCase().slice(0, 160);
 const validMail = m => /^[^\s@<>"',;]+@[^\s@<>"',;]+\.[a-z]{2,}$/i.test(m);

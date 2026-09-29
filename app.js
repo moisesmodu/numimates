@@ -303,6 +303,7 @@ let LS = null, SP = null, AG = null, FLOW = [], VIEW = '', GAIN = null;
 function go(v) {
   LS = null; stopSprint(); stopAgility(); closeModal();
   if (!P && v !== 'profiles') v = Object.keys(DB.profiles).length ? 'profiles' : 'onboard';
+  if (v !== 'profiles' && v !== 'onboard' && appMismatch(P)) { LS = null; closeModal(); return appHandoff(); }
   if ((v === 'battles' || v === 'season') && !isPremium()) { premiumModal(v === 'battles' ? 'batalles' : 'temporada'); v = VIEW && VIEW !== v ? VIEW : 'home'; if (v === VIEW) return; }
   if ((v === 'battles' && classOff('batalles'))) { toast(L("El teu docent ha desactivat les batalles per a la classe.", 'Tu docente ha desactivado las batallas para la clase.')); v = 'train'; }
   VIEW = v;
@@ -1434,7 +1435,7 @@ function onb(step) {
   if (step === 0) {
     ONB.stage = null; ONB.variant = null;
     onbShell(0, `<img class="onb-logo" src="${VAR.logo}" alt="${VAR.name}"><div class="onb-char tapme">${charSVG('numi', 'happy')}</div>
-      <div class="bubble big">${L("Hola! Soc en <b>Numi</b>. T'acompanyaré pas a pas perquè les mates et surtin rodones. <b>Com et dius?</b>", '¡Hola! Soy <b>Numi</b>. Te acompañaré paso a paso para que las mates te salgan redondas. <b>¿Cómo te llamas?</b>')}</div>
+      <div class="bubble big">${IS_MENT ? L("Hola! Soc en <b>Numi</b>. T'acompanyaré cada dia a mantenir la ment activa. <b>Com et dius?</b>", '¡Hola! Soy <b>Numi</b>. Te acompañaré cada día a mantener la mente activa. <b>¿Cómo te llamas?</b>') : IS_PRO ? L("Ei! Soc en <b>Numi</b>. Les mates d'ESO, pas a pas i sense avorrir-te. <b>Com et dius?</b>", '¡Ey! Soy <b>Numi</b>. Las mates de ESO, paso a paso y sin aburrirte. <b>¿Cómo te llamas?</b>') : L("Hola! Soc en <b>Numi</b>. T'acompanyaré pas a pas perquè les mates et surtin rodones. <b>Com et dius?</b>", '¡Hola! Soy <b>Numi</b>. Te acompañaré paso a paso para que las mates te salgan redondas. <b>¿Cómo te llamas?</b>')}</div>
       <input id="nm" class="nm" maxlength="16" placeholder="${L('El teu nom', 'Tu nombre')}" autocomplete="off" enterkeyhint="go" value="${esc(ONB.name || '')}">
       <button class="btn big" onclick="onbName()">${L('SEGÜENT', 'SIGUIENTE')}</button>
       <button class="link" onclick="loginModal()">🔑 ${L('Ja tinc compte', 'Ya tengo cuenta')}</button>`);
@@ -1456,7 +1457,11 @@ function onb(step) {
 // l'edat decideix la variant: a partir de 12 anys, Numi Pro (la mateixa app amb l'aspecte i les eines de l'ESO)
 // primer què estudia (primària → Numi Mates, ESO → Numi Pro, altres → Numi Ment) i després l'edat
 function onbStage(k) {
+  // a les apps publicades, cada etapa és a la seva app
+  const want = k === 'eso' ? 'pro' : k === 'altres' ? 'ment' : 'mates';
+  if (HOST_VAR && want !== HOST_VAR) return stageHandoff(want);
   ONB.stage = k; ONB.age = null;
+  if (HOST_VAR === 'pro') { ONB.variant = 'pro'; return onb(1); }
   if (k === 'altres') { ONB.variant = 'ment'; return typeof onbMent === 'function' ? onbMent() : toast(L('Numi Ment, per entrenar la ment, arriba molt aviat!', '¡Numi Ment, para entrenar la mente, llega muy pronto!')); }
   ONB.variant = k === 'eso' ? 'pro' : 'mates';
   if (k !== 'eso') return onb(1);
@@ -1471,7 +1476,7 @@ function onbAge(a) {
   ONB.course = ONB.stage === 'eso' ? Math.min(9, Math.max(ESO_FROM, a - 6)) : Math.min(5, Math.max(0, a - 6));
   onb(2);
 }
-function onbName() { const n = $('#nm').value.trim(); if (!n) { $('#nm').classList.add('shake'); setTimeout(() => $('#nm').classList.remove('shake'), 500); return; } ONB.name = n; onb(1); }
+function onbName() { const n = $('#nm').value.trim(); if (!n) { $('#nm').classList.add('shake'); setTimeout(() => $('#nm').classList.remove('shake'), 500); return; } ONB.name = n; if (HOST_VAR === 'ment') { ONB.stage = 'altres'; ONB.variant = 'ment'; return onbMent(); } onb(1); }
 function startPlacement() {
   const ci = ONB.course, c = COURSES[ci], meta = [];
   if (ci > 0) { const pc = COURSES[ci - 1]; [1, 2].forEach(k => { const l = pc.units[k].lessons[2]; meta.push({ sk: l.sk[0], L: l.L, tag: 'prev' }); }); }

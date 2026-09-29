@@ -45,7 +45,7 @@ function mentGo(v) {
 {
   const g0 = go;
   go = function (v) {
-    if (P && P.id !== 'tmp' && varOf(P) === 'ment' && v !== 'profiles' && v !== 'onboard') { LS = null; closeModal(); setVariant('ment'); return mentGo(v); }
+    if (P && P.id !== 'tmp' && varOf(P) === 'ment' && !appMismatch(P) && v !== 'profiles' && v !== 'onboard') { LS = null; closeModal(); setVariant('ment'); return mentGo(v); }
     return g0(v);
   };
 }
@@ -381,4 +381,4 @@ function onbMentGo() {
 }
 
 // app.js ja ha pintat la primera pantalla abans que es carregués aquest fitxer
-if (P && varOf(P) === 'ment' && VIEW !== 'onboard') go('home');
+if (P && varOf(P) === 'ment' && !appMismatch(P) && VIEW !== 'onboard') go('home');
