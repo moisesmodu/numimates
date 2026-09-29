@@ -41,8 +41,8 @@ async function applySub(s, code) {
     await sql`UPDATE mates.alumnes SET pla = 'premium', pla_fins = ${endDate(periodEnd(s))}, stripe_customer = ${cust}, stripe_sub = ${s.id},
       pla_periode = ${per}, stripe_status = ${s.status}, pla_cancel = ${cancel}, pla_des = COALESCE(pla_des, CURRENT_DATE) WHERE code = ${code}`;
   } else if (['canceled', 'unpaid', 'incomplete_expired'].includes(s.status)) {
-    // s'acaba avui (si ja s'havia acabat abans, no l'allarguem)
-    await sql`UPDATE mates.alumnes SET pla_fins = LEAST(COALESCE(pla_fins, CURRENT_DATE), CURRENT_DATE), stripe_sub = NULL, stripe_status = ${s.status}, pla_cancel = false WHERE code = ${code} AND stripe_sub = ${s.id}`;
+    // s'acaba ara mateix: o ja s'ha esgotat el període pagat o s'ha tornat els diners (si ja s'havia acabat abans, no l'allarguem)
+    await sql`UPDATE mates.alumnes SET pla_fins = LEAST(COALESCE(pla_fins, CURRENT_DATE), CURRENT_DATE - 1), stripe_sub = NULL, stripe_status = ${s.status}, pla_cancel = false WHERE code = ${code} AND stripe_sub = ${s.id}`;
   }
 }
 
