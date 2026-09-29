@@ -21,11 +21,12 @@ async function load() {
   const h = AUTH(); if (!h) return login();
   const r = await fetch('/api/profe', { headers: h }).catch(() => null);
   if (!r) return banner(L("No s'ha pogut carregar. Comprova la connexió.", 'No se ha podido cargar. Comprueba la conexión.'));
-  if (r.status !== 200) { const adm = wasAdmin(); sessionStorage.clear(); return login(L('La sessió ha caducat. Torna a entrar.', 'La sesión ha caducado. Vuelve a entrar.'), adm); }
+  if (r.status === 401 || r.status === 403) { const adm = wasAdmin(); sessionStorage.clear(); return login(L('La sessió ha caducat. Torna a entrar.', 'La sesión ha caducado. Vuelve a entrar.'), adm); }
+  if (r.status !== 200) return banner(L("El servidor no respon ara mateix. Torna-ho a provar d'aquí a un moment.", 'El servidor no responde ahora mismo. Vuelve a intentarlo en un momento.'));
   D = await r.json(); ADMIN = !!D.admin; ME = D.me || null; GRUPS = D.grups || [];
   if (G && !GRUPS.some(g => String(g.id) === G)) G = '';
   ROWS = (D.rows || []).map(enrich);
-  route();
+  route.last = null; route();
 }
 async function act(action, extra = {}) {
   const r = await fetch('/api/profe', { method: 'POST', headers: { ...AUTH(), 'content-type': 'application/json' }, body: JSON.stringify({ action, ...extra }) });
@@ -48,8 +49,8 @@ function skillSent(sk) {
   if (/^v\.(balance|pattern|maze)$/.test(n)) return 'alg';
   if (n === 'v.frac') return 'num';
   if (/^v\./.test(n)) return 'esp';
-  if (/^(me\.clock|me\.units|me\.money|me\.perim|g\.clock|g\.coins|g\.ruler|geo\.area)$/.test(n)) return 'mes';
-  if (/^(me\.shape|g\.shape|geo\.angle|vol|e\.|geo\.pyth|geo\.thales|trig)/.test(n)) return 'esp';
+  if (/^(me\.clock|me\.units|me\.money|me\.perim|g\.clock|g\.coins|g\.ruler|geo\.area|me\.cal|me\.time|me\.smd)$/.test(n)) return 'mes';
+  if (/^(me\.shape|g\.shape|geo\.angle|vol|e\.|geo\.pyth|geo\.thales|trig|geo\.tri|geo\.quad|geo\.lines|geo\.poly)/.test(n)) return 'esp';
   if (/^(geo\.circle|geo\.vol2)$/.test(n)) return 'mes';
   if (/^(l\.|g\.seq|pc\.|g\.repeat|alg\.|fn\.|seq\.)/.test(n)) return 'alg';
   if (/^(stat|at\.|prob2)/.test(n)) return 'est';
@@ -95,14 +96,16 @@ function enrich(r) {
   Object.entries(r.sk || {}).forEach(([k, v]) => { if (['sprint', 'flash', 'chain'].includes(k) || !Array.isArray(v)) return; const s = sent[skillSent(k)]; s.c += v[0] || 0; s.t += v[1] || 0; });
   Object.values(sent).forEach(s => s.pct = s.t ? Math.round(100 * s.c / s.t) : null);
   const tests = (r.tests || []).slice().sort((a, b) => String(a.date).localeCompare(String(b.date)));
-  const lt = tests[tests.length - 1], pt = tests[tests.length - 2], evoD = lt && pt ? lt.pct - pt.pct : null;
+  // l'evolució només es compara amb la prova anterior del mateix nivell
+  const lt = tests[tests.length - 1], pt = lt ? tests.slice(0, -1).reverse().find(t => t.course === lt.course) : null, evoD = lt && pt ? lt.pct - pt.pct : null;
   const exams = Object.entries(r.exams || {}).map(([uid, x]) => ({ uid, ...x })).sort((a, b) => String(b.d || '').localeCompare(String(a.d || '')));
   const acc = r.answers ? Math.round(100 * r.correct / r.answers) : null;
   const reasons = [], add = (sev, txt) => reasons.push({ sev, txt });
   const idle = daysAgo(r.last_day);
-  if (!r.lessons && daysAgo(r.created_at) > 3) add('crit', L("No ha entrat mai", 'No ha entrado nunca'));
+  if (!r.lessons && !r.days.length && daysAgo(r.created_at) > 3) add('crit', L("No ha entrat mai", 'No ha entrado nunca'));
   else if (idle != null && idle > 14) add('crit', L(`Sense activitat fa ${idle} dies`, `Sin actividad hace ${idle} días`));
-  const stuck = exams.find(x => (x.tries || 0) >= 2 && (x.best || 0) < 75);
+  // porta encallada: 2 intents o més sense aprovar, i l'últim fa menys de 30 dies
+  const stuck = exams.find(x => (x.tries || 0) >= 2 && (x.best || 0) < 75 && x.d && daysAgo(x.d) <= 30);
   if (stuck) add('crit', L(`No supera la porta (U${stuck.uid.split('-')[1]}, ${stuck.tries} intents)`, `No supera la puerta (U${stuck.uid.split('-')[1]}, ${stuck.tries} intentos)`));
   if (idle != null && idle >= 8 && idle <= 14) add('warn', L(`Sense activitat fa ${idle} dies`, `Sin actividad hace ${idle} días`));
   if (r.answers >= 40 && acc < 60) add('warn', L(`Precisió baixa (${acc} %)`, `Precisión baja (${acc} %)`));
@@ -150,7 +153,7 @@ function login(err = '', admin = location.hash === '#admin') {
   };
 }
 function logout() { sessionStorage.clear(); D = null; ROWS = []; GRUPS = []; ME = null; ADMIN = false; closeDrawer(true); $$('.modal-s,.proj').forEach(x => x.remove()); clearInterval(PROJ_T); history.replaceState(null, '', location.pathname); login(); }
-function setLang(l, onLogin) { LANG = l; store.set('numi-profe-lang', l); document.documentElement.lang = l; if (onLogin && !D) return login(); ROWS = (D?.rows || []).map(enrich); route(); }
+function setLang(l, onLogin) { LANG = l; store.set('numi-profe-lang', l); document.documentElement.lang = l; if (onLogin && !D) return login(); ROWS = (D?.rows || []).map(enrich); route.last = null; route(); }
 
 /* ---------- carcassa ---------- */
 const NAV = () => [['resum', 'layout-dashboard', L('Resum', 'Resumen')], ['alumnes', 'users', L('Alumnes', 'Alumnos'), scope().length], ['grups', 'school', L('Grups', 'Grupos')], ['informes', 'chart-column', L('Informes', 'Informes')]];
@@ -183,7 +186,7 @@ function toggleSw(e) {
   w.insertAdjacentHTML('beforeend', `<div class="pop"><button class="${G ? '' : 'on'}" onclick="setG('')">${ADMIN ? L('Tots els grups', 'Todos los grupos') : L('Tots els meus grups', 'Todos mis grupos')}<span class="n">${ROWS.length}</span></button>
     ${Object.entries(by).map(([k, gs]) => `${k ? `<div class="h">${esc(k)}</div>` : '<hr>'}${gs.map(g => `<button class="${String(g.id) === G ? 'on' : ''}" onclick="setG('${g.id}')">${esc(g.nom)}<span class="n">${n(g.id)}</span></button>`).join('')}`).join('')}</div>`);
 }
-function setG(id) { G = String(id); store.set('numi-profe-g', G); closePops(); route(); }
+function setG(id) { G = String(id); store.set('numi-profe-g', G); closePops(); route.last = null; route(); }
 function closePops() { $$('.pop').forEach(p => p.remove()); }
 document.addEventListener('click', e => { if (!e.target.closest('.pop')) closePops(); });
 
@@ -191,6 +194,8 @@ document.addEventListener('click', e => { if (!e.target.closest('.pop')) closePo
 function route() {
   if (!D) return;
   const h = location.hash.replace(/^#\/?/, '').split('?')[0], [v, arg] = h.split('/');
+  if (v === 'alumnes' && route.last === 'alumnes' && $('#tbl')) { if (arg) openDrawer(decodeURIComponent(arg), true); else if ($('.drawer')) closeDrawer(true); return; }
+  route.last = v;
   const V = { resum: vResum, alumnes: vAlumnes, grups: vGrups, informes: vInformes, guia: vGuia, compte: vCompte };
   if (ADMIN) Object.assign(V, { centres: vCentres, docents: vDocents, totsgrups: vTotsGrups, sollicituds: vSol, activitat: vActivitat });
   (V[v] || vResum)(arg);
@@ -222,7 +227,7 @@ function vResum() {
       ${kpi(L('Actius aquesta setmana', 'Activos esta semana'), `${a7} <span class="t3" style="font-size:18px;font-weight:600">/ ${n}</span>`, p7 || a7 ? `${ico(dA >= 0 ? 'trending-up' : 'trending-down', dA >= 0 ? 'up' : 'down')}${dA >= 0 ? '+' : ''}${dA} ${L('respecte la setmana passada', 'respecto a la semana pasada')}` : L('Encara sense activitat', 'Aún sin actividad'))}
       ${kpi(L('Precisió mitjana', 'Precisión media'), ans ? Math.round(100 * cor / ans) + ' %' : '—', `${L("des de l'inici", 'desde el inicio')} · ${ans.toLocaleString(LANG)} ${L('respostes', 'respuestas')}`)}
       ${kpi(L('Porta del Cavaller', 'Puerta del Caballero'), ex.length ? Math.round(100 * exOk / ex.length) + ' %' : '—', ex.length ? `${exOk} ${L('de', 'de')} ${ex.length} ${L('portes superades', 'puertas superadas')}` : L('Encara ningú no hi ha arribat', 'Aún nadie ha llegado'))}
-      ${kpi(L('Necessiten atenció', 'Necesitan atención'), att.length, att.length ? `<a href="#att">${L('Veure la llista', 'Ver la lista')}</a>` : L('Tot en ordre', 'Todo en orden'), att.length ? 'crit' : '')}
+      ${kpi(L('Necessiten atenció', 'Necesitan atención'), att.length, att.length ? `<a href="#/alumnes?f=att">${L('Veure la llista', 'Ver la lista')}</a>` : L('Tot en ordre', 'Todo en orden'), att.length ? 'crit' : '')}
     </div>
     <div class="grid12">
       <section class="c8" id="att"><div class="sec-h"><h2>${L('Necessiten atenció', 'Necesitan atención')}</h2></div><div class="card">
@@ -246,7 +251,7 @@ const emptyState = (ic, t, m, extra = '') => `<div class="empty">${ico(ic)}<b>${
 /* ---------- Alumnes ---------- */
 let AF = { f: 'all', q: '', lv: '', sort: ['sev', -1], compact: store.get('numi-profe-compact', '') === '1' };
 function vAlumnes() {
-  const qs = new URLSearchParams(location.hash.split('?')[1] || ''); if (qs.get('f')) AF.f = qs.get('f');
+  const qs = new URLSearchParams(location.hash.split('?')[1] || ''); if (qs.get('f')) { AF.f = qs.get('f'); history.replaceState(null, '', '#/alumnes'); }
   const R = scope(), counts = { all: R.length, att: R.filter(r => r.sev).length, idle: R.filter(r => r.idle == null || r.idle > 7).length, new: R.filter(r => !r.lessons).length };
   const lvls = [...new Set(R.map(r => r.course))].sort((a, b) => a - b);
   shell('alumnes', L('Alumnes', 'Alumnos'), `
@@ -268,7 +273,7 @@ function filtered() {
 function drawTable() {
   const R = filtered(), q = AF.q.trim();
   $('#cnt').textContent = `${R.length} ${R.length === 1 ? L('alumne', 'alumno') : L('alumnes', 'alumnos')}`;
-  const th = (k, t, cls = '') => `<th class="s ${cls} ${AF.sort[0] === k ? 'on' : ''}" onclick="AF.sort=['${k}',AF.sort[0]==='${k}'?-AF.sort[1]:-1];drawTable()" aria-sort="${AF.sort[0] === k ? (AF.sort[1] < 0 ? 'descending' : 'ascending') : 'none'}">${t} ${ico(AF.sort[0] === k && AF.sort[1] > 0 ? 'chevron-down' : 'chevron-down')}</th>`;
+  const th = (k, t, cls = '') => `<th class="s ${cls} ${AF.sort[0] === k ? 'on' : ''}" onclick="AF.sort=['${k}',AF.sort[0]==='${k}'?-AF.sort[1]:-1];drawTable()" aria-sort="${AF.sort[0] === k ? ((k === 'name' ? -AF.sort[1] : AF.sort[1]) < 0 ? 'descending' : 'ascending') : 'none'}">${t} ${ico(AF.sort[0] === k && AF.sort[1] > 0 ? 'chevron-down' : 'chevron-down')}</th>`;
   const sevDot = r => `<i class="dot ${r.sev === 2 ? 'crit' : r.sev ? 'warn' : ''}" style="${r.sev ? '' : 'visibility:hidden'}"></i>`;
   $('#tbl').innerHTML = !scope().length ? `<div class="card">${emptyState('users', L('Encara no hi ha alumnes', 'Aún no hay alumnos'), L('Comparteix el codi del grup perquè els alumnes hi entrin.', 'Comparte el código del grupo para que los alumnos entren.'), `<a class="btn" href="#/grups">${L('Ves als grups', 'Ir a los grupos')}</a>`)}</div>`
     : `<div class="tw al ${AF.compact ? 'compact' : ''}"><table><thead><tr>${th('name', L('Alumne', 'Alumno'), 'stick')}${th('course', L('Nivell', 'Nivel'), 'hide-sm')}${th('last', L('Última activitat', 'Última actividad'), 'r')}${th('act', L('Dies actius (14 d)', 'Días activos (14 d)'), 'hide-md')}${th('les', L('Lliçons', 'Lecciones'), 'r hide-lg')}${th('acc', L('Precisió', 'Precisión'), 'r')}${th('evo', L('Evolució', 'Evolución'), 'r hide-sm')}${th('gate', L('Porta del Cavaller', 'Puerta del Caballero'), 'hide-sm')}<th></th></tr></thead><tbody>
@@ -300,16 +305,17 @@ function rowMenu(e, code) {
 /* ---------- fitxa de l'alumne ---------- */
 function openDrawer(code, keep) {
   const r = ROWS.find(x => x.code === code); if (!r) return;
-  closeDrawer(true);
+  if (!$('.drawer')) closeDrawer.from = document.activeElement; closeDrawer(true);
   const list = $('#tbl') ? filtered() : scope(), i = list.findIndex(x => x.code === code), prev = list[i - 1], next = list[i + 1];
-  document.body.insertAdjacentHTML('beforeend', `<div class="scrim" onclick="closeDrawer()"></div><aside class="drawer" role="dialog" aria-label="${esc(r.name)}">
+  document.body.insertAdjacentHTML('beforeend', `<div class="scrim" onclick="closeDrawer()"></div><aside class="drawer" role="dialog" aria-modal="true" tabindex="-1" aria-label="${esc(r.name)}">
     <div class="dr-h">${avatar(r, 'lg')}<div><h2>${esc(r.name)}</h2><small>${[r.grup_id ? gName(r.grup_id) : '', curs(r.course), r.lang === 'es' ? 'Castellano' : 'Català'].filter(Boolean).map(esc).join(' · ')}</small></div>
       <div class="acts"><button class="ib" ${prev ? `onclick="location.hash='#/alumnes/${encodeURIComponent(prev.code)}'"` : 'disabled'} aria-label="${L('Anterior', 'Anterior')}">${ico('chevron-left')}</button><button class="ib" ${next ? `onclick="location.hash='#/alumnes/${encodeURIComponent(next.code)}'"` : 'disabled'} aria-label="${L('Següent', 'Siguiente')}">${ico('chevron-right')}</button>
       <button class="btn sm" onclick="printReport(${js(r.code)})">${ico('printer')}${L('Imprimeix', 'Imprimir')}</button><button class="ib" onclick="closeDrawer()" aria-label="${L('Tanca', 'Cerrar')}">${ico('x')}</button></div></div>
     <div class="dr-b">${reportHTML(r, false)}</div></aside>`);
   $$('tbody tr').forEach(t => t.classList.toggle('sel', t.dataset.c === code));
+  requestAnimationFrame(() => { const d = $('.drawer'); if (d && !d.contains(document.activeElement)) d.focus(); });
 }
-function closeDrawer(silent) { $$('.drawer,.scrim').forEach(x => x.remove()); $$('tbody tr.sel').forEach(t => t.classList.remove('sel')); if (!silent && /^#\/alumnes\/./.test(location.hash)) history.replaceState(null, '', '#/alumnes'); }
+function closeDrawer(silent) { const had = $('.drawer'); $$('.drawer,.scrim').forEach(x => x.remove()); $$('tbody tr.sel').forEach(t => t.classList.remove('sel')); if (had && !silent && closeDrawer.from && document.contains(closeDrawer.from)) closeDrawer.from.focus(); if (!silent && /^#\/alumnes\/./.test(location.hash)) history.replaceState(null, '', '#/alumnes'); }
 function reportHTML(r, print) {
   const s = r.sent, best = Object.entries(s).filter(([, x]) => x.t >= 20).sort((a, b) => b[1].pct - a[1].pct);
   const pts = [];
@@ -384,7 +390,33 @@ function grupCard(g) {
     <div class="meta">${[curs(g.curs), `${n} ${n === 1 ? L('alumne', 'alumno') : L('alumnes', 'alumnos')}`, g.docent ? L('Docent', 'Docente') + ': ' + g.docent : '', ADMIN ? g.centre : ''].filter(Boolean).map(esc).join(' · ')}</div>
     <div class="codebox"><code>${esc(g.codi)}</code><button class="ib" title="${L('Copia el codi', 'Copiar el código')}" onclick="copyTxt(${js(g.codi)},L('Codi copiat','Código copiado'))">${ico('copy')}</button><button class="ib" title="${L('Mostra el codi a la pissarra', 'Mostrar el código en la pizarra')}" onclick="projectar(${g.id})">${ico('qr-code')}</button></div>
     <button class="btn full" onclick="copyInstr(${js(g.codi)})">${ico('copy')}${L('Copia les instruccions', 'Copiar las instrucciones')}</button>
-    <div class="foot">${L("Els alumnes l'escriuen a Perfil → Tinc un codi de classe", 'Los alumnos lo escriben en Perfil → Tinc un codi de classe')}</div></div>`;
+    <div class="foot">${L("Els alumnes l'escriuen a Perfil → Tinc un codi de classe", 'Los alumnos lo escriben en Perfil → Tengo un código de clase')}</div>
+    <hr class="gsep">${temaField(g)}
+    <details class="more gopts"><summary>${ico('chevron-right')}${L('Mode escola', 'Modo escuela')}<small>${modeSummary(g)}</small></summary>
+      <p class="t3" style="margin:8px 0 4px;font-size:12.5px">${L("Tria què poden fer els alumnes d'aquest grup a l'app. Les lliçons, els repassos i la porta sempre hi són.", 'Elige qué pueden hacer los alumnos de este grupo en la app. Las lecciones, los repasos y la puerta siempre están.')}</p>
+      ${[['batalles', L('Batalles entre alumnes', 'Batallas entre alumnos')], ['intercanvis', L('Intercanvi de cartes', 'Intercambio de cartas')]].map(([k, t]) => `<label class="switch"><input type="checkbox" ${(g.opts || {})[k] !== false ? 'checked' : ''} onchange="grupOpt(${g.id},'${k}',this.checked,this)"><span>${t}</span></label>`).join('')}
+    </details></div>`;
+}
+// tema que es treballa a classe: l'app el mostra a la pantalla principal i en fa pràctiques (70 % tema, 30 % repàs)
+function temaField(g) {
+  const cs = g.curs != null ? [g.curs] : CURS.map((_, i) => i), opt = k => `<option value="${k}" ${g.tema === k ? 'selected' : ''}>${esc(unitName(k))}</option>`;
+  const byC = c => Object.keys(UNIT_T).filter(k => k.startsWith(`c${c + 1}-`));
+  return `<label class="field"><span>${L('Tema que treballeu ara', 'Tema que trabajáis ahora')}</span><select onchange="grupTema(${g.id},this.value)"><option value="">${L("Cap (cada alumne tria el seu)", 'Ninguno (cada alumno elige el suyo)')}</option>${cs.length === 1 ? byC(cs[0]).map(opt).join('') : cs.map(c => `<optgroup label="${esc(curs(c))}">${byC(c).map(opt).join('')}</optgroup>`).join('')}</select>
+    <small>${g.tema ? L(`Marcat el ${fdate(localDay(g.tema_at))} · l'app el posa a la pantalla principal: 70 % del tema i 30 % de repàs.`, `Marcado el ${fdate(localDay(g.tema_at))} · la app lo pone en la pantalla principal: 70 % del tema y 30 % de repaso.`) : L("Si el marqueu, l'app el posarà a la pantalla principal de tots els alumnes del grup.", 'Si lo marcáis, la app lo pondrá en la pantalla principal de todos los alumnos del grupo.')}</small></label>`;
+}
+const localDay = d => { const x = d ? new Date(d) : new Date(); return `${x.getFullYear()}-${String(x.getMonth() + 1).padStart(2, '0')}-${String(x.getDate()).padStart(2, '0')}`; };
+const modeSummary = g => { const o = g.opts || {}, off = ['batalles', 'intercanvis'].filter(k => o[k] === false).length; return off ? L(` · ${off} apagat${off > 1 ? 's' : ''}`, ` · ${off} desactivado${off > 1 ? 's' : ''}`) : L(' · tot actiu', ' · todo activo'); };
+async function grupTema(id, v) {
+  const j = await act('grup_tema', { id, tema: v || null }), g = GRUPS.find(x => x.id === id);
+  if (!j.ok) return toast(L("No s'ha pogut desar el tema.", 'No se ha podido guardar el tema.'));
+  g.tema = j.tema; g.tema_at = j.tema ? new Date().toISOString() : null; vGrups();
+  toast(j.tema ? L("Tema desat. Els alumnes el veuran la pròxima vegada que obrin l'app.", 'Tema guardado. Los alumnos lo verán la próxima vez que abran la app.') : L('Tema tret.', 'Tema quitado.'));
+}
+async function grupOpt(id, k, on, el) {
+  const g = GRUPS.find(x => x.id === id), j = await act('grup_opts', { id, opts: { ...(g.opts || {}), [k]: on } });
+  if (!j.ok) { toast(L("No s'ha pogut desar.", 'No se ha podido guardar.')); return vGrups(); }
+  g.opts = j.opts; const sm = el && $('.gopts summary small', el.closest('.gc')); if (sm) sm.textContent = modeSummary(g);
+  toast(on ? L('Activat per a aquest grup.', 'Activado para este grupo.') : L('Apagat per a aquest grup.', 'Desactivado para este grupo.'));
 }
 function vGrups() {
   const mine = GRUPS;
@@ -421,9 +453,9 @@ function projectar(id) {
   const g = GRUPS.find(x => x.id === id), qr = window.qrcode ? (() => { const q = qrcode(0, 'M'); q.addData(JOIN(g.codi)); q.make(); return q.createSvgTag({ cellSize: 8, margin: 0, scalable: true }); })() : '';
   const cnt = () => `${ROWS.filter(r => r.grup_id === id).length} ${L('alumnes ja són dins', 'alumnos ya están dentro')}`;
   document.body.insertAdjacentHTML('beforeend', `<div class="proj"><button class="btn close" onclick="$('.proj').remove();clearInterval(PROJ_T)">${ico('x')}${L('Tanca', 'Cerrar')}</button>
-    <div><h2>${L('Uneix-te a la classe', 'Únete a la clase')} ${esc(g.nom)}</h2><ol><li>${L('Obre', 'Abre')} <b>app.numimates.com</b></li><li>${L('Ves a Perfil → Tinc un codi de classe', 'Ve a Perfil → Tinc un codi de classe')}</li><li>${L('Escriu aquest codi', 'Escribe este código')}</li></ol><code>${esc(g.codi)}</code><div class="cnt" id="pcnt">${cnt()}</div></div>
+    <div><h2>${L('Uneix-te a la classe', 'Únete a la clase')} ${esc(g.nom)}</h2><ol><li>${L('Obre', 'Abre')} <b>app.numimates.com</b></li><li>${L('Ves a Perfil → Tinc un codi de classe', 'Ve a Perfil → Tengo un código de clase')}</li><li>${L('Escriu aquest codi', 'Escribe este código')}</li></ol><code>${esc(g.codi)}</code><div class="cnt" id="pcnt">${cnt()}</div></div>
     <div class="qr">${qr}${qr ? `<p>${L('O escaneja aquest codi amb la tauleta', 'O escanea este código con la tableta')}</p>` : ''}</div></div>`);
-  clearInterval(PROJ_T); PROJ_T = setInterval(async () => { if (!$('.proj')) return clearInterval(PROJ_T); const h = location.hash; await fetch('/api/profe', { headers: AUTH() }).then(r => r.json()).then(j => { D = j; ROWS = (j.rows || []).map(enrich); const e = $('#pcnt'); if (e) e.textContent = cnt(); }).catch(() => { }); }, 10000);
+  clearInterval(PROJ_T); PROJ_T = setInterval(async () => { if (!$('.proj')) return clearInterval(PROJ_T); const h = location.hash; await fetch('/api/profe', { headers: AUTH() }).then(r => r.json()).then(j => { if (!j || !Array.isArray(j.rows)) return; D = j; ROWS = j.rows.map(enrich); const e = $('#pcnt'); if (e) e.textContent = cnt(); }).catch(() => { }); }, 15000);
 }
 
 /* ---------- Informes ---------- */
@@ -473,6 +505,7 @@ function vGuia() {
     <div class="guide">
       ${box(L('El camí', 'El camino'), [[L('Unitat', 'Unidad'), L('Teoria + 3 nivells de 10 lliçons (5 del tema, 2 visuals, 2 de barreja, 1 enigma)', 'Teoría + 3 niveles de 10 lecciones (5 del tema, 2 visuales, 2 de mezcla, 1 enigma)')], [L('Per obrir la següent', 'Para abrir la siguiente'), L('Mínim 2 estrelles: com a màxim 2 errors de 8', 'Mínimo 2 estrellas: como máximo 2 errores de 8')], [L('Porta del Cavaller', 'Puerta del Caballero'), L('12 preguntes; cal 9 (més d\'un 7). Si no, repàs previ i preguntes sobre el que ha fallat', '12 preguntas; hacen falta 9 (más de un 7). Si no, repaso previo y preguntas sobre lo que ha fallado')], [L('Repàs espaiat', 'Repaso espaciado'), L('Cada lliçó torna als 2, 5, 12, 30 i 60 dies', 'Cada lección vuelve a los 2, 5, 12, 30 y 60 días')]])}
       ${box(L('Límits diaris', 'Límites diarios'), [[L('Lliçons noves', 'Lecciones nuevas'), L('Màxim 5 al dia; només les 3 primeres donen premi', 'Máximo 5 al día; solo las 3 primeras dan premio')], [L('Sense límit', 'Sin límite'), L('Porta del Cavaller, repassos i entrenaments', 'Puerta del Caballero, repasos y entrenamientos')], [L('Mode mestre', 'Modo maestro'), L("El docent pot obrir totes les unitats a un alumne des de la seva fitxa", 'El docente puede abrir todas las unidades a un alumno desde su ficha')]])}
+      ${box(L('Eines del docent', 'Herramientas del docente'), [[L('Tema de classe', 'Tema de clase'), L("A Grups, marqueu el tema que feu a classe: surt a la pantalla principal de tots els alumnes del grup, amb pràctiques de 10 preguntes (7 del tema i 3 de repàs del que més els costa)", 'En Grupos, marcad el tema que dais en clase: sale en la pantalla principal de todos los alumnos del grupo, con prácticas de 10 preguntas (7 del tema y 3 de repaso de lo que más les cuesta)')], [L('Mode escola', 'Modo escuela'), L('Per a cada grup podeu apagar les batalles i els intercanvis de cartes. Les lliçons, els repassos i la porta no es poden apagar', 'Para cada grupo podéis desactivar las batallas y los intercambios de cartas. Las lecciones, los repasos y la puerta no se pueden desactivar')], [L('Ajuda «Com es fa?»', 'Ayuda «¿Cómo se hace?»'), L("A les lliçons, l'alumne pot veure un exemple resolt del mateix tipus. No perd punts, però aquella pregunta no suma a la ratxa i la lliçó queda com a molt en 2 estrelles. No hi és a la porta ni a les proves", 'En las lecciones, el alumno puede ver un ejemplo resuelto del mismo tipo. No pierde puntos, pero esa pregunta no suma a la racha y la lección queda como máximo en 2 estrellas. No está en la puerta ni en las pruebas')]])}
       ${box(L('Proves', 'Pruebas'), [[L('Prova de nivell', 'Prueba de nivel'), L("En entrar, per saber on començar", 'Al entrar, para saber dónde empezar')], [L("Prova d'evolució", 'Prueba de evolución'), L('Cada 14 dies, 12 preguntes del seu nivell', 'Cada 14 días, 12 preguntas de su nivel')], [L('Precisió', 'Precisión'), L("Encerts sobre respostes des de l'inici", 'Aciertos sobre respuestas desde el inicio')]])}
       ${box(L('Motivació', 'Motivación'), [[L('Diamants', 'Diamantes'), L('Es guanyen fent lliçons, missions i ratxes; no es poden comprar', 'Se ganan haciendo lecciones, misiones y rachas; no se pueden comprar')], [L('Cartes', 'Cartas'), L('100 cartes de mitologia; un sobre en acabar cada lliçó amb premi', '100 cartas de mitología; un sobre al acabar cada lección con premio')], [L('Batalles', 'Batallas'), L('Duels i partides de fins a 10 amb les mateixes preguntes; només es guanyen diamants', 'Duelos y partidas de hasta 10 con las mismas preguntas; solo se ganan diamantes')], [L('Ruta de temporada', 'Ruta de temporada'), L('Cada mes, 25 trams i 3 cartes exclusives', 'Cada mes, 25 tramos y 3 cartas exclusivas')]])}
     </div>`, { switcher: false });

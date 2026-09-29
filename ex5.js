@@ -156,8 +156,8 @@ Object.assign(EX, {
   },
   'v.net': (L_, a) => {
     const col = pick(VCOL), neg = lvN(a) >= 6 && Math.random() < .4;
-    const good = netSet(!neg, neg ? 3 : 1), bad = netSet(neg, neg ? 1 : 3);
-    const right = (neg ? bad : good)[0], wrong = neg ? good : bad;
+    // la resposta es plega si i només si NO és la variant «NO es pot plegar»
+    const right = netSet(!neg, 1)[0], wrong = netSet(neg, 3);
     return mc(neg ? L('Quin d\'aquests desplegaments <b>NO</b> es pot plegar per fer un cub?', '¿Cuál de estos desarrollos <b>NO</b> se puede plegar para hacer un cubo?') : L('Quin d\'aquests desplegaments es pot plegar per fer un <b>cub</b>?', '¿Cuál de estos desarrollos se puede plegar para hacer un <b>cubo</b>?'), polySVG(right, col, 16), wrong.map(p => polySVG(p, col, 16)), { pics: true, vis: `<div class="bigemo">🎲</div>`, ex: L('Imagina que plegues les cares: en un cub cada cara ha de quedar en un lloc diferent. Si dues cares es trepitgen o hi ha un bloc de 2 × 2, no funciona.', 'Imagina que pliegas las caras: en un cubo cada cara tiene que quedar en un sitio diferente. Si dos caras se pisan o hay un bloque de 2 × 2, no funciona.') });
   },
   'v.rot': (L_, a) => {
@@ -211,7 +211,7 @@ Object.assign(EX, {
       seq = [0, 1, 2, 3, 4].map(T); right = T(5);
       [{ ...right, r: (right.r + 90) % 360 }, { ...right, r: (right.r + 180) % 360 }, { ...right, r: (right.r + 270) % 360 }, { ...right, f: pick(VCOL.filter(c => c !== right.f)) }].forEach(t => wrong.push(t));
     } else if (kind === 'dots') {
-      const d = n <= 2 ? 1 : ri(1, 2), s0 = ri(1, 2), f = pick(VCOL);
+      const d = n <= 2 ? 1 : ri(1, 2), s0 = d === 2 ? 1 : ri(1, 2), f = pick(VCOL);   // la fitxa en mostra com a molt 9
       const T = i => ({ k: 'dots', n: s0 + d * i, f });
       seq = [0, 1, 2, 3].map(T); right = T(4);
       [right.n - 1, right.n + 1, right.n + 2, right.n - 2, right.n + d + 1].filter(v => v > 0 && v <= 9 && v !== right.n).forEach(v => wrong.push({ k: 'dots', n: v, f }));

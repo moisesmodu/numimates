@@ -28,7 +28,11 @@ const COURSES = [
       ['Comptem amb ratlletes|Contamos con rayitas', ['at.tally'], 1], ['Programa el robot|Programa el robot', ['pc.robot', 'e.dir'], 2]]),
     U('Problemes|Problemas', 'Llegeix i pensa: sumo o resto?|Lee y piensa: ¿sumo o resto?', 'flama', [
       ['Problemes de sumar|Problemas de sumar', ['g.prob:add'], 1], ['Problemes de restar|Problemas de restar', ['g.prob:less'], 1], ['Sumar o restar?|¿Sumar o restar?', ['g.prob:add', 'g.prob:less'], 2],
-      ['Problemes fins al 20|Problemas hasta el 20', ['g.prob:add', 'g.prob:less'], 3], ['Petits detectius|Pequeños detectives', ['g.prob:add', 'g.prob:less', 'g.prob:cmp'], 3]])
+      ['Problemes fins al 20|Problemas hasta el 20', ['g.prob:add', 'g.prob:less'], 3], ['Petits detectius|Pequeños detectives', ['g.prob:add', 'g.prob:less', 'g.prob:cmp'], 3]]),
+    // Noves (Decret 175/2022): sempre al final del curs, perquè el progrés es desa per la posició de la unitat
+    U('La recta i el calendari|La recta y el calendario', 'Números a la recta, els dies i els mesos.|Números en la recta, los días y los meses.', 'tuga', [
+      ['La recta fins al 20|La recta hasta el 20', ['n.line:20'], 1], ['Els dies de la setmana|Los días de la semana', ['me.cal:week'], 1], ['La recta fins al 100|La recta hasta el 100', ['n.line:100'], 1],
+      ["Els mesos de l'any|Los meses del año", ['me.cal:year'], 1], ['Tot plegat|Todo junto', ['n.line:20', 'me.cal:week', 'me.cal:year'], 3]])
   ] },
   { id: 'c2', n: 2, name: '2|2', long: 'Nivell 2|Nivel 2', emoji: '🐥', units: [
     U('Números fins al 1.000|Números hasta el 1.000', 'Centenes, desenes i unitats.|Centenas, decenas y unidades.', 'numi', [
@@ -51,7 +55,11 @@ const COURSES = [
       ['Segur, possible o impossible|Seguro, posible o imposible', ['at.prob'], 2], ['Taules de recompte|Tablas de recuento', ['at.tally', 'stat'], 1]]),
     U('Problemes|Problemas', 'Llegeix, pensa i resol.|Lee, piensa y resuelve.', 'flama', [
       ['Problemes de sumar|Problemas de sumar', ['p.add'], 1], ['Problemes de restar|Problemas de restar', ['g.prob:sub', 'p.add'], 3], ['Problemes de multiplicar|Problemas de multiplicar', ['g.prob:mul'], 1],
-      ['Quin càlcul faig?|¿Qué cálculo hago?', ['p.add', 'g.prob:mul', 'g.prob:sub'], 3], ['Grans detectius|Grandes detectives', ['p.add', 'g.prob:mul', 'g.prob:sub'], 4]])
+      ['Quin càlcul faig?|¿Qué cálculo hago?', ['p.add', 'g.prob:mul', 'g.prob:sub'], 3], ['Grans detectius|Grandes detectives', ['p.add', 'g.prob:mul', 'g.prob:sub'], 4]]),
+    // Noves (Decret 175/2022): sempre al final del curs, perquè el progrés es desa per la posició de la unitat
+    U('La recta i el calendari|La recta y el calendario', 'La recta fins al 1.000 i el full del calendari.|La recta hasta el 1.000 y la hoja del calendario.', 'tuga', [
+      ['La recta fins al 100|La recta hasta el 100', ['n.line:100'], 2], ['La recta fins al 1.000|La recta hasta el 1.000', ['n.line:1000'], 1], ['El full del calendari|La hoja del calendario', ['me.cal:month'], 1],
+      ['Quants dies falten?|¿Cuántos días faltan?', ['me.cal:month'], 3], ['Tot plegat|Todo junto', ['n.line:1000', 'me.cal:month', 'me.cal:year'], 3]])
   ] },
   { id: 'c3', n: 3, name: '3|3', long: 'Nivell 3|Nivel 3', emoji: '🦊', units: [
     U('Números fins al 9.999|Números hasta el 9.999', 'Unitats de miler i valor de posició.|Unidades de millar y valor de posición.', 'numi', [
@@ -80,7 +88,11 @@ const COURSES = [
       ['La moda|La moda', ['stat'], 2], ['Tot plegat|Todo junto', ['stat', 'at.prob'], 3]]),
     U('Lògica i problemes|Lógica y problemas', 'Pensa com un detectiu.|Piensa como un detective.', 'flama', [
       ['Sèries|Series', ['l.series'], 3], ['Balances|Balanzas', ['l.balance'], 3], ['Problemes|Problemas', ['p.add', 'p.mul'], 2],
-      ['Problemes de dividir|Problemas de dividir', ['p.div'], 3], ['Detectius|Detectives', ['p.add', 'p.mul', 'p.div', 'l.balance'], 3]])
+      ['Problemes de dividir|Problemas de dividir', ['p.div'], 3], ['Detectius|Detectives', ['p.add', 'p.mul', 'p.div', 'l.balance'], 3]]),
+    // Noves (Decret 175/2022): sempre al final del curs, perquè el progrés es desa per la posició de la unitat
+    U('La recta, el temps i el codi|La recta, el tiempo y el código', 'La recta fins al 10.000, dates, les 24 hores i els condicionals.|La recta hasta el 10.000, fechas, las 24 horas y los condicionales.', 'cavaller', [
+      ['La recta numèrica|La recta numérica', ['n.line:10000'], 2], ['Dates i calendari|Fechas y calendario', ['me.cal:date'], 2], ['Rellotge de 24 hores|Reloj de 24 horas', ['me.time'], 1],
+      ['Si… llavors…|Si… entonces…', ['pc.if'], 1], ['Tot plegat|Todo junto', ['n.line:10000', 'me.cal:date', 'me.time', 'pc.if'], 3]])
   ] },
   { id: 'c4', n: 4, name: '4|4', long: 'Nivell 4|Nivel 4', emoji: '🐙', units: [
     U('Els grans números|Los números grandes', 'Llegeix, escriu i compara fins al 99.999.|Lee, escribe y compara hasta el 99.999.', 'numi', [
@@ -112,7 +124,14 @@ const COURSES = [
       ['La mitjana|La media', ['stat'], 3], ['Tot plegat|Todo junto', ['stat', 'at.prob'], 4]]),
     U('Problemes|Problemas', 'Llegeix, pensa i resol com un detectiu.|Lee, piensa y resuelve como un detective.', 'flama', [
       ['Sumar i restar|Sumar y restar', ['p.add'], 1], ['Multiplicar|Multiplicar', ['p.mul', 'p.add'], 2], ['Dividir|Dividir', ['p.div', 'p.mul'], 3],
-      ['Dos passos|Dos pasos', ['p.two'], 4], ['Grans reptes|Grandes retos', ['p.two', 'p.big'], 5]])
+      ['Dos passos|Dos pasos', ['p.two'], 4], ['Grans reptes|Grandes retos', ['p.two', 'p.big'], 5]]),
+    // Noves (Decret 175/2022): sempre al final del curs, perquè el progrés es desa per la posició de la unitat
+    U('Triangles i quadrilàters|Triángulos y cuadriláteros', 'Classificar triangles i quadrilàters, i rectes paral·leles i perpendiculars.|Clasificar triángulos y cuadriláteros, y rectas paralelas y perpendiculares.', 'tuga', [
+      ['Triangles segons els costats|Triángulos según los lados', ['geo.tri:s'], 1], ['Triangles segons els angles|Triángulos según los ángulos', ['geo.tri:a'], 1], ['Paral·leles i perpendiculars|Paralelas y perpendiculares', ['geo.lines'], 1],
+      ['Els quadrilàters|Los cuadriláteros', ['geo.quad'], 1], ['Tot plegat|Todo junto', ['geo.tri', 'geo.lines', 'geo.quad'], 3]]),
+    U('La recta, el temps i la lògica|La recta, el tiempo y la lógica', 'La recta fins al 100.000, dates, durades i els operadors I, O, NO.|La recta hasta el 100.000, fechas, duraciones y los operadores Y, O, NO.', 'cavaller', [
+      ['La recta numèrica|La recta numérica', ['n.line:100000'], 2], ['Dates i calendari|Fechas y calendario', ['me.cal:date'], 3], ['Hores i durades|Horas y duraciones', ['me.time'], 3],
+      ['I, O, NO|Y, O, NO', ['pc.logic'], 1], ['Tot plegat|Todo junto', ['n.line:100000', 'me.cal:date', 'me.time', 'pc.logic'], 4]])
   ] },
   { id: 'c5', n: 5, name: '5|5', long: 'Nivell 5|Nivel 5', emoji: '🐢', units: [
     U('Els grans números|Los números grandes', 'Fins al milió i més enllà.|Hasta el millón y más allá.', 'numi', [
@@ -141,7 +160,17 @@ const COURSES = [
       ['Probabilitat amb daus|Probabilidad con dados', ['at.prob'], 5], ['Tot plegat|Todo junto', ['stat', 'at.prob'], 5]]),
     U('Problemes|Problemas', 'Diners, decimals i dos passos.|Dinero, decimales y dos pasos.', 'flama', [
       ['Problemes amb decimals|Problemas con decimales', ['p.dec'], 2], ['Dos passos|Dos pasos', ['p.two'], 4], ['Grans reptes|Grandes retos', ['p.big'], 5],
-      ['Diners|Dinero', ['p.dec'], 4], ['Mestres dels problemes|Maestros de los problemas', ['p.two', 'p.big', 'p.dec'], 5]])
+      ['Diners|Dinero', ['p.dec'], 4], ['Mestres dels problemes|Maestros de los problemas', ['p.two', 'p.big', 'p.dec'], 5]]),
+    // Noves (Decret 175/2022): sempre al final del curs, perquè el progrés es desa per la posició de la unitat
+    U('Mesures i unitats|Medidas y unidades', 'Del km al mm, massa, capacitat, superfície, temps i dades digitals.|Del km al mm, masa, capacidad, superficie, tiempo y datos digitales.', 'tuga', [
+      ['Longitud: del km al mm|Longitud: del km al mm', ['me.smd:len'], 2], ['Massa i capacitat (1 l = 1 dm³)|Masa y capacidad (1 l = 1 dm³)', ['me.smd:mass', 'me.smd:cap', 'me.smd:vol'], 2], ['Unitats de superfície|Unidades de superficie', ['me.smd:area'], 1],
+      ['Hores, minuts i segons|Horas, minutos y segundos', ['me.smd:time'], 2], ['Bytes, KB, MB i GB|Bytes, KB, MB y GB', ['me.smd:info'], 2]]),
+    U('Polígons i simetria|Polígonos y simetría', 'Rectes, triangles, quadrilàters, polígons regulars i eixos de simetria.|Rectas, triángulos, cuadriláteros, polígonos regulares y ejes de simetría.', 'guida', [
+      ['Paral·leles i perpendiculars|Paralelas y perpendiculares', ['geo.lines'], 3], ['Triangles|Triángulos', ['geo.tri'], 3], ['Quadrilàters|Cuadriláteros', ['geo.quad'], 3],
+      ['Polígons regulars|Polígonos regulares', ['geo.poly'], 1], ['Eixos de simetria|Ejes de simetría', ['geo.poly'], 3]]),
+    U('La recta i els robots|La recta y los robots', 'Decimals a la recta numèrica i programes que funcionen alhora.|Decimales en la recta numérica y programas que funcionan a la vez.', 'cavaller', [
+      ['Dècimes a la recta|Décimas en la recta', ['n.line:dec'], 1], ['Centèsimes a la recta|Centésimas en la recta', ['n.line:dec'], 3], ['Dos programes alhora|Dos programas a la vez', ['pc.par'], 1],
+      ['Dos robots alhora|Dos robots a la vez', ['pc.par'], 4], ['Tot plegat|Todo junto', ['n.line:dec', 'pc.par'], 4]])
   ] },
   { id: 'c6', n: 6, name: '6|6', long: 'Nivell 6|Nivel 6', emoji: '🐉', units: [
     U('Nombres enters|Números enteros', 'Negatius, temperatures i la recta.|Negativos, temperaturas y la recta.', 'numi', [
@@ -170,7 +199,17 @@ const COURSES = [
       ['Bucles i variables|Bucles y variables', ['pc.loop'], 5], ['Probabilitat|Probabilidad', ['at.prob'], 5]]),
     U('Grans problemes|Grandes problemas', 'El repte final de primària!|¡El reto final de primaria!', 'flama', [
       ['Problemes amb decimals|Problemas con decimales', ['p.dec'], 5], ['Dos passos|Dos pasos', ['p.two'], 5], ['Grans reptes|Grandes retos', ['p.big'], 5],
-      ['Proporcions|Proporciones', ['prop'], 5], ['Mestres de primària|Maestros de primaria', ['p.dec', 'p.big', 'pct', 'prop'], 5]])
+      ['Proporcions|Proporciones', ['prop'], 5], ['Mestres de primària|Maestros de primaria', ['p.dec', 'p.big', 'pct', 'prop'], 5]]),
+    // Noves (Decret 175/2022): sempre al final del curs, perquè el progrés es desa per la posició de la unitat
+    U('Fraccions, decimals i percentatges|Fracciones, decimales y porcentajes', '½ = 0,5 = 50 %: el mateix nombre escrit de tres maneres.|½ = 0,5 = 50 %: el mismo número escrito de tres maneras.', 'guida', [
+      ['Fracció, decimal i percentatge|Fracción, decimal y porcentaje', ['fdp.conv'], 2], ['Més equivalències|Más equivalencias', ['fdp.conv'], 4], ['Ordenar nombres de tota mena|Ordenar números de todo tipo', ['fdp.order'], 2],
+      ['Fraccions a la recta|Fracciones en la recta', ['n.line:frac'], 1], ['Tot plegat|Todo junto', ['fdp.conv', 'fdp.order', 'n.line:frac'], 4]]),
+    U('Diners i mesures|Dinero y medidas', "El millor preu, l'IVA, els interessos i les unitats de superfície i volum.|El mejor precio, el IVA, los intereses y las unidades de superficie y volumen.", 'flama', [
+      ['El millor preu|El mejor precio', ['fin.best'], 1], ["L'IVA|El IVA", ['fin.iva'], 1], ['Els interessos|Los intereses', ['fin.int'], 1],
+      ['Unitats de superfície|Unidades de superficie', ['me.smd:area'], 3], ['Unitats de volum|Unidades de volumen', ['me.smd:vol'], 2]]),
+    U('Coordenades, dades i codi|Coordenadas, datos y código', 'Els enters a la recta, coordenades cartesianes, la mediana i programes amb bucles.|Los enteros en la recta, coordenadas cartesianas, la mediana y programas con bucles.', 'cavaller', [
+      ['Enters a la recta|Enteros en la recta', ['n.line:int'], 1], ['Coordenades cartesianes|Coordenadas cartesianas', ['e.cart'], 1], ['La mediana|La mediana', ['stat.med'], 1],
+      ['Bucles dins de bucles|Bucles dentro de bucles', ['pc.nest'], 1], ["Troba l'error|Encuentra el error", ['pc.debug'], 2]])
   ] },
   { id: 'c7', n: 7, name: '7|7', long: 'Nivell 7|Nivel 7', emoji: '🦉', units: [
     U('Nombres enters|Números enteros', 'Operacions amb signes i parèntesis.|Operaciones con signos y paréntesis.', 'numi', [

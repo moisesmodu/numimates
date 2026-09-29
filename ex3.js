@@ -44,7 +44,7 @@ Object.assign(EX, {
     const set = shuffle(['🍎', '🐱', '⚽', '🌸', '🚗', '🎈', '🐶', '⭐']).slice(0, L_ <= 1 ? 4 : 5);
     if (L_ <= 2 || Math.random() < .5) {
       const i = ri(1, set.length - 2), right = Math.random() < .5, ans = set[right ? i + 1 : i - 1];
-      return mc(L(`Què hi ha just a la <b>${right ? 'dreta' : 'esquerra'}</b> de ${set[i]}?`, `¿Qué hay justo a la <b>${right ? 'derecha' : 'izquierda'}</b> de ${set[i]}?`), ans, set.filter(x => x !== ans && x !== set[i]), { big: true, vis: `<div class="seq em row">${set.map(x => `<span>${x}</span>`).join('')}</div>`, ex: L(`A la ${right ? 'dreta' : 'esquerra'} de ${set[i]} hi ha ${ans}. Recorda: la mà dreta és la que fas servir per escriure (si ets dretà/ana)!`, `A la ${right ? 'derecha' : 'izquierda'} de ${set[i]} está ${ans}.`) });
+      return mc(L(`Què hi ha just ${right ? 'a la <b>dreta</b>' : "a l'<b>esquerra</b>"} de ${set[i]}?`, `¿Qué hay justo a la <b>${right ? 'derecha' : 'izquierda'}</b> de ${set[i]}?`), ans, set.filter(x => x !== ans && x !== set[i]), { big: true, vis: `<div class="seq em row">${set.map(x => `<span>${x}</span>`).join('')}</div>`, ex: L(`${right ? 'A la dreta' : "A l'esquerra"} de ${set[i]} hi ha ${ans}. Recorda: la mà dreta és la que fas servir per escriure (si ets dretà/ana)!`, `A la ${right ? 'derecha' : 'izquierda'} de ${set[i]} está ${ans}.`) });
     }
     const cells = {}, pos = shuffle([...Array(9).keys()]).slice(0, 5); pos.forEach((p, i) => cells[Math.floor(p / 3) + ',' + p % 3] = set[i]);
     const cands = pos.filter(p => Math.floor(p / 3) > 0 && cells[(Math.floor(p / 3) - 1) + ',' + p % 3]);
@@ -112,7 +112,7 @@ Object.assign(EX, {
     }
     if (L_ === 3) {
       const [a, b, c] = shuffle(['r', 'b', 'g']), na = ri(4, 6), nb = ri(1, 3), nc = ri(1, 3), bag = [...Array(na).fill(a), ...Array(nb).fill(b), ...Array(nc).fill(c)];
-      return mc(L('De quin color és <b>més probable</b> treure una bola?', '¿De qué color es <b>más probable</b> sacar una bola?'), BALL[a], [BALL[b], BALL[c]], { big: true, vis: `<div class="bag">${shuffle(bag).map(x => `<span>${BALL[x]}</span>`).join('')}</div>`, ex: L(`Hi ha més boles ${BN[a][0]}s (${na}), per tant és el color més probable.`, `Hay más bolas ${BN[a][1] === 'azul' ? 'azules' : BN[a][1] + 's'} (${na}), por lo tanto es el color más probable.`) });
+      return mc(L('De quin color és <b>més probable</b> treure una bola?', '¿De qué color es <b>más probable</b> sacar una bola?'), BALL[a], [BALL[b], BALL[c]], { big: true, vis: `<div class="bag">${shuffle(bag).map(x => `<span>${BALL[x]}</span>`).join('')}</div>`, ex: L(`Hi ha més boles ${({ r: 'vermelles', b: 'blaves', g: 'verdes', y: 'grogues' })[a]} (${na}), per tant és el color més probable.`, `Hay más bolas ${BN[a][1] === 'azul' ? 'azules' : BN[a][1] + 's'} (${na}), por lo tanto es el color más probable.`) });
     }
     if (Math.random() < .5) {
       const q = pick([[L('un 6', 'un 6'), 1], [L('un número parell', 'un número par'), 3], [L('un número més gran que 4', 'un número mayor que 4'), 2], [L('un 1 o un 2', 'un 1 o un 2'), 2], [L('un número més petit que 5', 'un número menor que 5'), 4]]);
@@ -149,8 +149,8 @@ function skillSent(sk) {
   if (/^v\.(balance|pattern|maze)$/.test(n)) return 'alg';
   if (n === 'v.frac') return 'num';
   if (/^v\./.test(n)) return 'esp';
-  if (/^(me\.clock|me\.units|me\.money|me\.perim|g\.clock|g\.coins|g\.ruler|geo\.area)$/.test(n)) return 'mes';
-  if (/^(me\.shape|g\.shape|geo\.angle|vol|e\.|geo\.pyth|geo\.thales|trig)/.test(n)) return 'esp';
+  if (/^(me\.clock|me\.units|me\.money|me\.perim|g\.clock|g\.coins|g\.ruler|geo\.area|me\.cal|me\.time|me\.smd)$/.test(n)) return 'mes';
+  if (/^(me\.shape|g\.shape|geo\.angle|vol|e\.|geo\.pyth|geo\.thales|trig|geo\.tri|geo\.quad|geo\.lines|geo\.poly)/.test(n)) return 'esp';
   if (/^(geo\.circle|geo\.vol2)$/.test(n)) return 'mes';
   if (/^(l\.|g\.seq|pc\.|g\.repeat|alg\.|fn\.|seq\.)/.test(n)) return 'alg';
   if (/^(stat|at\.|prob2)/.test(n)) return 'est';

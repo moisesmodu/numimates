@@ -48,6 +48,19 @@ export default async function handler(req, res) {
       }
       return ok(res, { error: 'codi' }, 500);
     }
+    // tema que es treballa ara a classe (l'app el posa a la pantalla principal i hi barreja un 30 % de repàs)
+    // i «mode escola»: el docent pot apagar les batalles i els intercanvis de cartes per al seu grup
+    if (b.action === 'grup_tema' || b.action === 'grup_opts') {
+      if (!gids.includes(+b.id)) return ok(res, { error: 'permís' }, 403);
+      if (b.action === 'grup_tema') {
+        const tema = /^c\d{1,2}-\d{1,2}$/.test(String(b.tema || '')) ? b.tema : null;
+        await sql`UPDATE mates.grups SET tema = ${tema}, tema_at = ${tema ? new Date().toISOString() : null} WHERE id = ${+b.id}`;
+        return ok(res, { ok: true, tema });
+      }
+      const o = b.opts || {}, opts = Object.fromEntries(['batalles', 'intercanvis'].map(k => [k, o[k] !== false]));
+      await sql`UPDATE mates.grups SET opts = ${JSON.stringify(opts)}::jsonb WHERE id = ${+b.id}`;
+      return ok(res, { ok: true, opts });
+    }
     if (b.action === 'grup_codi' || b.action === 'grup_off') {
       if (!gids.includes(+b.id)) return ok(res, { error: 'permís' }, 403);
       if (b.action === 'grup_off') { await sql`UPDATE mates.grups SET actiu = false WHERE id = ${+b.id}`; await sql`UPDATE mates.alumnes SET grup_id = NULL, pla = CASE WHEN pla = 'escola' THEN 'free' ELSE pla END WHERE grup_id = ${+b.id}`; return ok(res, { ok: true }); }
@@ -91,7 +104,7 @@ export default async function handler(req, res) {
 
   // --- lectura ---
   const rows = await sql`SELECT code, username, name, course, survey, xp, streak, best, last_day, lessons, answers, correct, created_at, updated_at, grup_id, pla, pla_fins,
-    state->'srw' AS srw, state->'tests' AS tests, state->'lang' AS lang, state->'stats'->'bests' AS bests, state->'unlockAll' AS unlock_all, state->'week' AS week, state->'stats'->'sk' AS sk, state->'reco' AS reco, state->'school' AS school, state->'album' AS album, state->'stats'->'bwins' AS bwins, state->'crowns' AS crowns, state->'exams' AS exams, state->'season' AS season, state->'days' AS days
+    state->'tests' AS tests, state->'lang' AS lang, state->'unlockAll' AS unlock_all, state->'week' AS week, state->'stats'->'sk' AS sk, state->'reco' AS reco, state->'school' AS school, state->'album' AS album, state->'stats'->'bwins' AS bwins, state->'crowns' AS crowns, state->'exams' AS exams, state->'days' AS days
     FROM mates.alumnes WHERE active AND (${!!me.admin} OR grup_id = ANY(${gids})) ORDER BY streak DESC, xp DESC`;
   if (!me.admin) return ok(res, { me: me.docent, rows, grups: groups });
   const battles = await sql`SELECT b.code, b.kind, b.course, b.status, b.created_at, b.start_at,

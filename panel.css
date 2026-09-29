@@ -211,6 +211,8 @@ details.more[open] summary .i{transform:rotate(90deg)}
 .codebox{display:flex;align-items:center;gap:4px;height:52px;padding:0 6px 0 14px;background:var(--surface-2);border:1px solid var(--border);border-radius:8px}
 .codebox code{font:600 20px/28px var(--mono);letter-spacing:.06em;color:var(--text);flex:1}
 .gc .foot{font-size:12px;color:var(--text-3)}
+.gsep{border:0;border-top:1px solid var(--border);margin:2px 0}.gc .field small{font-size:12px;color:var(--text-3);line-height:16px}
+.gopts summary small{font-weight:400;color:var(--text-3);margin-left:2px}.gopts .switch{margin-top:10px;font-size:13.5px}
 .proj{position:fixed;inset:0;background:#fff;z-index:60;display:grid;grid-template-columns:1fr auto;align-items:center;gap:48px;padding:64px}
 .proj h2{font-size:40px;line-height:48px;margin:0 0 24px}
 .proj ol{margin:0 0 32px;padding-left:28px;font-size:20px;line-height:36px;color:var(--text-2)}
@@ -307,3 +309,4 @@ details.more[open] summary .i{transform:rotate(90deg)}
   #print *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
 }
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+.drawer:focus{outline:none}

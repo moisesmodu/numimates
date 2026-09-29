@@ -9,15 +9,19 @@ function learnCards(ui) {
   const base = u.lessons.filter(l => l.core && (l.tier || 1) === 1);
   const full = T && T.parts && T.parts.length;
   // 1. portada de la unitat
-  cards.push(() => `<div class="lcard"><div class="lchar">${charSVG(u.guide, 'happy')}</div><small class="lk">${L('UNITAT', 'UNIDAD')} ${ui + 1} · ${L('QUÈ APRENDREM', 'QUÉ APRENDEREMOS')}</small>
+  const hk = typeof hookClip === 'function' ? hookClip(u.id) : '';
+  cards.push(() => `<div class="lcard">${hk ? `<div class="lhookbox">${hk}<div class="lchar mini">${charClip(u.guide)}</div></div>` : `<div class="lchar">${typeof charClip === 'function' ? charClip(u.guide) : charSVG(u.guide, 'happy')}</div>`}<small class="lk">${L('UNITAT', 'UNIDAD')} ${ui + 1} · ${L('QUÈ APRENDREM', 'QUÉ APRENDEREMOS')}</small>
     <h2>${tx(u.title)}</h2>${full && T.hook ? `<p class="lhook">${tx(T.hook)}</p>` : `<p class="ld">${tx(u.desc)}</p>`}
     ${full ? `<ol class="lidx">${T.parts.map((p, i) => `<li><button onclick="learnJump(${i + 1})"><b>${i + 1}</b>${tx(p.t)}</button></li>`).join('')}</ol>`
       : `<ul class="llist">${base.map(l => `<li>${tx(l.t)}</li>`).join('')}</ul>`}</div>`);
   if (full) {
     // 2. un concepte per targeta
-    T.parts.forEach((p, i) => cards.push(() => `<div class="lcard"><small class="lk">${L('CONCEPTE', 'CONCEPTO')} ${i + 1} ${L('DE', 'DE')} ${T.parts.length}</small>
+    // si el concepte té escena animada (anim.js), el dibuix i les línies de l'exemple surten sincronitzats
+    T.parts.forEach((p, i) => cards.push(() => { const sc = typeof animScene === 'function' ? animScene(u.id, i) : null, tl = k => sc.at[k] ?? sc.at[sc.at.length - 1] + .5 * (k - sc.at.length + 1);
+      return `<div class="lcard"><small class="lk">${L('CONCEPTE', 'CONCEPTO')} ${i + 1} ${L('DE', 'DE')} ${T.parts.length}</small>
       <h2>${tx(p.t)}</h2><p class="lidea">${tx(p.x)}</p>
-      ${p.ex && p.ex.length ? `<div class="lexbox"><small>${L('EXEMPLE', 'EJEMPLO')}</small>${p.ex.map((l, k) => `<div class="${k === p.ex.length - 1 ? 'res' : ''}">${tx(l)}</div>`).join('')}</div>` : ''}</div>`));
+      ${sc ? `<div class="lanim" data-loop="${(Math.max(...sc.at) + 2.6).toFixed(1)}">${sc.html}</div>` : ''}
+      ${p.ex && p.ex.length ? `<div class="lexbox"><small>${L('EXEMPLE', 'EJEMPLO')}</small>${p.ex.map((l, k) => `<div class="${k === p.ex.length - 1 ? 'res' : ''}${sc ? ' an a-line' : ''}"${sc ? ` style="--t:${tl(k).toFixed(2)}s"` : ''}>${tx(l)}</div>`).join('')}</div>` : ''}</div>`; }));
   } else if (T) {
     cards.push(() => `<div class="lcard"><small class="lk">💡 ${L('LA IDEA CLAU', 'LA IDEA CLAVE')}</small><p class="lidea">${tx(T.idea)}</p>
       ${T.steps && T.steps.length ? `<ol class="lsteps">${T.steps.map(s => `<li>${tx(s)}</li>`).join('')}</ol>` : ''}</div>`);
@@ -37,7 +41,7 @@ function learnCards(ui) {
     // 5. errors típics i el truc del Cavaller
     cards.push(() => `<div class="lcard"><small class="lk">🛡️ ${L('COMPTE AMB AQUESTS ERRORS', 'CUIDADO CON ESTOS ERRORES')}</small>
       ${(T.mistakes || []).map(([bad, good]) => `<div class="lmist"><p class="bad"><i>✕</i>${tx(bad)}</p><p class="good"><i>✓</i>${tx(good)}</p></div>`).join('')}
-      ${T.tip ? `<div class="ltip"><div class="lchar sm">${charSVG('cavaller', 'happy')}</div><p><small>${L('EL TRUC DEL CAVALLER', 'EL TRUCO DEL CABALLERO')}</small>${tx(T.tip)}</p></div>` : ''}</div>`);
+      ${T.tip ? `<div class="ltip"><div class="lchar sm">${typeof charClip === 'function' ? charClip('cavaller') : charSVG('cavaller', 'happy')}</div><p><small>${L('EL TRUC DEL CAVALLER', 'EL TRUCO DEL CABALLERO')}</small>${tx(T.tip)}</p></div>` : ''}</div>`);
     // 6. resum
     if (T.recap && T.recap.length) cards.push(() => `<div class="lcard"><small class="lk">✅ ${L('RECORDA', 'RECUERDA')}</small><h2>${L('En resum', 'En resumen')}</h2>
       <ul class="lrecap">${T.recap.map(r => `<li>${tx(r)}</li>`).join('')}</ul></div>`);
@@ -84,13 +88,15 @@ function renderLearn(keep) {
     <div class="l-foot"><div class="fwrap lnav">${LRN.i ? `<button class="btn ghost" onclick="learnGo(-1)">‹ ${L('ENRERE', 'ATRÁS')}</button>` : '<span></span>'}
       <button class="btn" onclick="${last ? 'closeLearn(true)' : 'learnGo(1)'}">${last ? (LRN.then ? L('COMENÇA LA LLIÇÓ', 'EMPIEZA LA LECCIÓN') : L('ENTESOS!', '¡ENTENDIDO!')) : L('SEGÜENT', 'SIGUIENTE') + ' ›'}</button></div></div></div>`;
   const w = $('#lwrap'); w.scrollTop = sy; let x0 = null;
+  clearInterval(renderLearn.loop); const an = $('.lanim');
+  if (an) renderLearn.loop = setInterval(() => { const sv = $('.lanim .scene'); if (!sv || !LRN) return clearInterval(renderLearn.loop); sv.replaceWith(sv.cloneNode(true)); }, +an.dataset.loop * 1000);
   w.addEventListener('touchstart', e => { x0 = e.touches[0].clientX; }, { passive: true });
   w.addEventListener('touchend', e => { if (x0 == null) return; const dx = e.changedTouches[0].clientX - x0; x0 = null; if (Math.abs(dx) > 50) learnGo(dx < 0 ? 1 : -1); });
 }
 function learnGo(d) { const j = LRN.i + d; if (j < 0 || j >= LRN.cards.length) return; LRN.i = j; SFX.tap(); renderLearn(); }
 function learnJump(j) { if (!LRN || j < 0 || j >= LRN.cards.length || j === LRN.i) return; LRN.i = j; SFX.tap(); renderLearn(); }
 function closeLearn(done) {
-  const r = LRN; LRN = null;
+  const r = LRN; LRN = null; clearInterval(renderLearn.loop);
   P.learned = P.learned || {};
   if (done && (!P.learned[r.uid] || P.learned[r.uid] === 'skip')) { P.learned[r.uid] = today(); addXP(5); save(); toast(L('📖 Teoria llegida: +5 XP', '📖 Teoría leída: +5 XP')); }
   else if (!P.learned[r.uid]) { P.learned[r.uid] = 'skip'; save(); }

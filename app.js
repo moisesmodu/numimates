@@ -56,10 +56,13 @@ function setLang(l, rerender = true) {
 }
 LANG = P ? P.lang : DB.lang; document.documentElement.lang = LANG;
 function saveLocal() { try { localStorage.setItem(SKEY, JSON.stringify(DB)); } catch (e) { } }
-function save() { saveLocal(); if (P && P.id !== 'tmp') { P.dirty = true; clearTimeout(save.t); save.t = setTimeout(syncNow, 1500); } }
+// save.n compta els desaments: si n'hi ha durant una pujada, el perfil continua pendent de sincronitzar
+function save() { save.n = (save.n || 0) + 1; saveLocal(); if (P && P.id !== 'tmp') { P.dirty = true; clearTimeout(save.t); save.t = setTimeout(syncNow, 1500); } }
 
 /* ---------- Núvol ---------- */
-const api = (path, data) => fetch('/api/' + path, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(data) }).then(r => r.json().then(j => ({ status: r.status, ...j })));
+// amb 15 s de marge: una petició penjada no pot deixar la sincronització bloquejada
+const api = (path, data) => { const c = new AbortController(), t = setTimeout(() => c.abort(), 15000);
+  return fetch('/api/' + path, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(data), signal: c.signal }).then(r => r.json().then(j => ({ status: r.status, ...j }))).finally(() => clearTimeout(t)); };
 let SYNCING = false;
 async function syncNow() {
   if (!P || P.id === 'tmp' || P.holdReg || SYNCING || !navigator.onLine) return;
@@ -68,10 +71,12 @@ async function syncNow() {
     if (!P.code) {
       const r = await api('register', { name: P.name, survey: P.survey || null, state: P });
       if (r.code) { P.code = r.code; P.pendingReg = false; P.dirty = false; saveLocal(); }
-    } else if (P.dirty) {
-      const r = await api('sync', { code: P.code, state: P });
-      if (r.ok === false && r.state && r.state.xp > P.xp) adopt(r.state);
-      else if (r.ok) P.dirty = false;
+    } else if (P.dirty && !P.gone) {
+      const n0 = save.n, r = await api('sync', { code: P.code, state: P, reset: !!P.resetPending });
+      // el perfil ja no existeix al núvol (donat de baixa o esborrat): deixem de provar-ho
+      if (r.status === 410 || r.status === 404) { P.gone = true; saveLocal(); SYNCING = false; return; }
+      if (r.ok === false && r.state) mergeIn(r.state);
+      else if (r.ok && save.n === n0) { P.dirty = false; P.resetPending = false; }
       saveLocal();
     }
   } catch (e) { }
@@ -80,13 +85,68 @@ async function syncNow() {
 }
 async function pull() {
   if (!P || !P.code || !navigator.onLine) return;
-  try { const r = await api('login', { code: P.code }); if (r.state && r.state.xp > P.xp) { adopt(r.state); if (VIEW === 'home') renderHome(); }
+  if (P.gone) return;
+  try { const r = await api('login', { code: P.code }); if (r.status === 410) { P.gone = true; saveLocal(); return; } if (r.state && r.state.xp > P.xp && !P.resetPending) { mergeIn(r.state); if (VIEW === 'home') renderHome(); }
     if (r.state && !!r.state.unlockAll !== !!P.unlockAll) { P.unlockAll = !!r.state.unlockAll; saveLocal(); if (VIEW === 'home') renderHome(); } if (r.username && !P.username) { P.username = r.username; saveLocal(); } } catch (e) { }
 }
+// Fusiona el progrés de dos dispositius (la tauleta de l'escola i el mòbil de casa) sense perdre res de cap dels dos:
+// estrelles, cartes, medalles, proves i estadístiques es combinen; els comptadors es queden amb el valor més alt.
+function mergeState(a, b) {
+  const base = (+b.xp || 0) > (+a.xp || 0) ? b : a, other = base === a ? b : a, o = JSON.parse(JSON.stringify(base));
+  const mx = (x, y) => Math.max(+x || 0, +y || 0), uni = (x, y) => [...new Set([...(x || []), ...(y || [])])];
+  const maxMap = (x, y) => { const r = { ...(y || {}) }; for (const k in x || {}) r[k] = mx(x[k], r[k]); return r; };
+  for (const k of ['xp', 'best', 'maxCourse', 'gems', 'freeze']) o[k] = mx(a[k], b[k]);
+  const la = a.lastDay || '', lb = b.lastDay || '';
+  if (la !== lb) { const w = la > lb ? a : b; o.lastDay = w.lastDay; o.streak = w.streak; } else o.streak = mx(a.streak, b.streak);
+  o.days = uni(a.days, b.days).sort().slice(-400);
+  for (const k of ['owned', 'accOwned', 'badges', 'crowns', 'srw']) o[k] = uni(a[k], b[k]);
+  const T = new Map(); [...(a.tests || []), ...(b.tests || [])].forEach(t => T.set(`${t.date}|${t.kind}|${t.course}`, t)); o.tests = [...T.values()].sort((x, y) => String(x.date).localeCompare(String(y.date)));
+  o.prog = {};
+  for (const id of uni(Object.keys(a.prog || {}), Object.keys(b.prog || {}))) {
+    const pa = (a.prog || {})[id], pb = (b.prog || {})[id];
+    if (!pa || !pb) { o.prog[id] = JSON.parse(JSON.stringify(pa || pb)); continue; }
+    const n = Math.max(pa.stars.length, pb.stars.length); o.prog[id] = { ...pb, ...pa, stars: Array.from({ length: n }, (_, i) => mx(pa.stars[i], pb.stars[i])) };
+  }
+  o.album = maxMap(a.album, b.album); o.cxp = maxMap(a.cxp, b.cxp); o.skip = maxMap(a.skip, b.skip);
+  o.learned = { ...(other.learned || {}), ...(base.learned || {}) }; o.bpaid = { ...(other.bpaid || {}), ...(base.bpaid || {}) };
+  o.rev = { ...(other.rev || {}) }; for (const k in base.rev || {}) { const x = base.rev[k], y = o.rev[k]; o.rev[k] = !y || x.b > y.b || (x.b === y.b && x.d > y.d) ? x : y; }
+  o.exams = { ...(other.exams || {}) };
+  for (const k in base.exams || {}) { const x = base.exams[k], y = o.exams[k]; if (!y) { o.exams[k] = x; continue; } const nw = String(x.d) >= String(y.d) ? x : y; o.exams[k] = { ...nw, best: mx(x.best, y.best), tries: mx(x.tries, y.tries) }; }
+  const sa = a.stats || {}, sb = b.stats || {}; o.stats = { ...sb, ...sa };
+  for (const k of ['answers', 'correct', 'perfect', 'lessons', 'trains', 'bestCombo', 'sprintBest', 'games', 'bwins']) o.stats[k] = mx(sa[k], sb[k]);
+  o.stats.bests = maxMap(sa.bests, sb.bests);
+  o.stats.sk = { ...(sb.sk || {}) }; for (const k in sa.sk || {}) { const x = sa.sk[k], y = o.stats.sk[k]; o.stats.sk[k] = !y || x[1] > y[1] ? x : y; }
+  if (a.season && b.season && a.season.id === b.season.id) o.season = { ...a.season, xp: mx(a.season.xp, b.season.xp), got: uni(a.season.got, b.season.got) };
+  else if (a.season || b.season) o.season = [a.season, b.season].filter(Boolean).sort((x, y) => String(y.id).localeCompare(String(x.id)))[0];
+  if (a.week && b.week && a.week.id === b.week.id) o.week = { ...a.week, xp: mx(a.week.xp, b.week.xp) };
+  return o;
+}
+// incorpora l'estat del núvol al perfil d'aquest dispositiu i, si hi ha res nou d'aquí, el torna a pujar
+function mergeIn(st) {
+  const keep = { id: P.id, code: P.code, classe: P.classe, hintAsk: P.hintAsk, gone: P.gone }, before = JSON.stringify({ ...st, dirty: 0 });
+  Object.assign(P, migrate(mergeState(JSON.parse(JSON.stringify(P)), st)), keep);
+  P.dirty = JSON.stringify({ ...P, id: st.id, code: st.code, classe: st.classe, hintAsk: st.hintAsk, gone: st.gone, dirty: 0 }) !== before;
+  DB.profiles[P.id] = P; LANG = P.lang; document.documentElement.lang = LANG; saveLocal();
+  // fre de seguretat: si el núvol i el dispositiu no es posen d'acord, no reintentem més de 3 vegades seguides
+  mergeIn.n = Date.now() - (mergeIn.t || 0) < 60000 ? (mergeIn.n || 0) + 1 : 1; mergeIn.t = Date.now();
+  if (P.dirty && mergeIn.n <= 3) { clearTimeout(save.t); save.t = setTimeout(syncNow, 1500); }
+}
 function adopt(st) { const id = P.id; Object.assign(P, migrate(st), { id, dirty: false }); DB.profiles[id] = P; LANG = P.lang; saveLocal(); }
-const cloudTxt = () => !P.code ? L("⏳ Encara no s'ha pogut desar al núvol (es tornarà a provar sol).", '⏳ Aún no se ha podido guardar en la nube (se volverá a intentar solo).') : P.dirty ? L('⏳ Desant els últims canvis…', '⏳ Guardando los últimos cambios…') : L('☁️ Progrés desat al núvol.', '☁️ Progreso guardado en la nube.');
+const cloudTxt = () => P.gone ? L("Aquest perfil ja no està actiu al núvol. Parla amb el teu docent.", 'Este perfil ya no está activo en la nube. Habla con tu docente.') : !P.code ? L("⏳ Encara no s'ha pogut desar al núvol (es tornarà a provar sol).", '⏳ Aún no se ha podido guardar en la nube (se volverá a intentar solo).') : P.dirty ? L('⏳ Desant els últims canvis…', '⏳ Guardando los últimos cambios…') : L('☁️ Progrés desat al núvol.', '☁️ Progreso guardado en la nube.');
 addEventListener('online', syncNow);
-setInterval(() => { if (P && (P.dirty || !P.code)) syncNow(); }, 30000);
+setInterval(() => { if (P && !P.gone && (P.dirty || !P.code)) syncNow(); syncOthers(); }, 30000);
+// tauleta compartida: els altres perfils del dispositiu amb canvis pendents també es pugen (un cada vegada)
+async function syncOthers() {
+  if (!navigator.onLine || SYNCING) return;
+  const p = Object.values(DB.profiles).find(x => x !== P && x.code && x.dirty && !x.gone); if (!p) return;
+  try {
+    const r = await api('sync', { code: p.code, state: p, reset: !!p.resetPending });
+    if (r.status === 410 || r.status === 404) p.gone = true;
+    else if (r.ok) { p.dirty = false; p.resetPending = false; }
+    else if (r.ok === false && r.state) { const keep = { id: p.id, code: p.code, classe: p.classe, hintAsk: p.hintAsk }; DB.profiles[p.id] = Object.assign(migrate(mergeState(p, r.state)), keep, { dirty: true }); }
+    saveLocal();
+  } catch (e) { }
+}
 addEventListener('visibilitychange', () => { if (document.hidden) syncNow(); });
 
 /* ---------- Cursos i progrés ---------- */
@@ -236,6 +296,7 @@ let LS = null, SP = null, AG = null, FLOW = [], VIEW = '', GAIN = null;
 function go(v) {
   LS = null; stopSprint(); stopAgility(); closeModal();
   if (!P && v !== 'profiles') v = Object.keys(DB.profiles).length ? 'profiles' : 'onboard';
+  if ((v === 'battles' && classOff('batalles'))) { toast(L("El teu docent ha desactivat les batalles per a la classe.", 'Tu docente ha desactivado las batallas para la clase.')); v = 'train'; }
   VIEW = v;
   ({ home: renderHome, train: renderTrain, league: () => renderLeague(), album: () => renderAlbum(), shop: renderShop, badges: () => renderAlbum('medals'), profile: renderProfile, profiles: renderProfiles, battles: () => renderBattles(), season: () => renderSeason(), onboard: () => onb(0) }[v] || renderHome)();
   if (v !== 'home') window.scrollTo(0, 0);
@@ -436,7 +497,7 @@ function renderLesson() {
       ${e.vis ? `<div class="l-vis">${e.vis}</div>` : ''}
       <div class="l-ans">${ansHTML(e)}</div>
     </div>
-    <div class="l-foot" id="foot"><div class="fwrap"><div class="fb" id="fb"></div>${quiet ? `<button class="btn ghost skip" onclick="skipPlace()">${L('NO HO SÉ', 'NO LO SÉ')}</button>` : ''}<button class="btn check" id="chk" onclick="check()" disabled>${L('COMPROVA', 'COMPRUEBA')}</button></div></div>
+    <div class="l-foot" id="foot"><div class="fwrap"><div class="fb" id="fb"></div>${quiet ? `<button class="btn ghost skip" onclick="skipPlace()">${L('NO HO SÉ', 'NO LO SÉ')}</button>` : LS.mode === 'battle' || LS.exam ? '' : (LS.helps || 0) >= HINTS && !e.helped ? '' : `<button class="btn hintb ${e.retry ? 'nudge' : ''}" id="hintb" onclick="showHint()" data-n="${HINTS - (LS.helps || 0)}" aria-label="${L('Com es fa?', '¿Cómo se hace?')}" title="${L('Com es fa?', '¿Cómo se hace?')}"><img class="hic" src="img/ic/bulb.webp" alt="" draggable="false"></button>`}<button class="btn check" id="chk" onclick="check()" disabled>${L('COMPROVA', 'COMPRUEBA')}</button></div></div>
   </div>`;
   if (LS.mode === 'battle') { LS.q0 = Date.now(); battleStrip(); }
 }
@@ -496,6 +557,25 @@ function isRight(e) {
 }
 function ready(e) { return e.type === 'grid' ? LS.gsel && LS.gsel.size > 0 : e.type === 'choice' ? LS.sel != null : e.type === 'input' ? /\d/.test(LS.input) : LS.order.length === e.items.length; }
 function skipPlace() { if (!LS) return; LS.res.push(false); LS.done++; SFX.tap(); nextEx(); }
+// Ajuda pas a pas: un exemple resolt del mateix tipus (amb altres números), sense donar la resposta de la pregunta.
+// No resta punts, però la pregunta no suma a la ratxa i la lliçó ja no pot ser perfecta (com a molt, 2 estrelles).
+const HINTS = 2;   // ajudes per lliçó
+function showHint(ok) {
+  if (!LS || LS.state !== 'ask') return; const e = LS.cur;
+  if (!e.helped && (LS.helps || 0) >= HINTS) return toast(L(`Ja has fet servir les ${HINTS} ajudes d'aquesta lliçó. Tu pots!`, `Ya has usado las ${HINTS} ayudas de esta lección. ¡Tú puedes!`));
+  // les 3 primeres vegades (i sempre que la lliçó encara pot ser perfecta) avisem del que costa l'ajuda abans de mostrar-la
+  if (!ok && !e.helped && (P.hintAsk || 0) < 3) return modal(`<div class="sheet card cent hintsheet"><div class="hhead"><span class="hbulb"><img src="img/ic/bulb.webp" alt="" draggable="false"></span><div><b>${L('Vols una ajuda?', '¿Quieres una ayuda?')}</b><small>${L('Et mostrarem un exemple resolt', 'Te mostraremos un ejemplo resuelto')}</small></div></div>
+    <ul class="hwarn"><li>${L(`Tens <b>${HINTS} ajudes</b> per lliçó.`, `Tienes <b>${HINTS} ayudas</b> por lección.`)}</li><li>${L('Aquesta pregunta <b>no sumarà a la ratxa</b>.', 'Esta pregunta <b>no sumará a la racha</b>.')}</li><li>${L('La lliçó quedarà com a molt en <b>2 estrelles</b> (per passar en calen 2, així que no et bloqueja).', 'La lección quedará como mucho en <b>2 estrellas</b> (para pasar hacen falta 2, así que no te bloquea).')}</li></ul>
+    <div class="row2"><button class="btn ghost" onclick="closeModal()">${L('HO PROVO', 'LO INTENTO')}</button><button class="btn gold" onclick="P.hintAsk=(P.hintAsk||0)+1;saveLocal();showHint(1)">${L("VULL L'AJUDA", 'QUIERO LA AYUDA')}</button></div></div>`, true);
+  let x = null; for (let i = 0; i < 8 && (!x || x.q === e.q); i++) { try { x = genEx(e.sk, e.L, new Set(), false); } catch (err) { x = null; break; } }
+  if (!x || x.q === e.q) return toast(L('Per a aquesta pregunta no hi ha exemple. Mira bé el dibuix i prova-ho!', 'Para esta pregunta no hay ejemplo. ¡Mira bien el dibujo e inténtalo!'));
+  if (!e.helped) { e.helped = true; LS.helps = (LS.helps || 0) + 1; }
+  modal(`<div class="sheet hintsheet"><div class="hhead"><span class="hbulb"><img src="img/ic/bulb.webp" alt="" draggable="false"></span><div><b>${L('Com es fa?', '¿Cómo se hace?')}</b><small>${L('Mira aquest exemple amb altres números', 'Mira este ejemplo con otros números')}</small></div></div>
+    <div class="lq">${x.q}</div>${x.vis ? `<div class="l-vis lvis">${x.vis}</div>` : ''}
+    <div class="lans"><span>${L('Resposta', 'Respuesta')}:</span> <b>${ansText(x)}</b></div>${x.ex ? `<div class="lex">${x.ex}</div>` : ''}
+    <p class="hnote">${L("Ara prova-ho tu amb la teva pregunta. Amb ajuda no perds punts, però aquesta no suma a la ratxa i la lliçó queda com a molt en 2 estrelles.", 'Ahora pruébalo tú con tu pregunta. Con ayuda no pierdes puntos, pero esta no suma a la racha y la lección queda como mucho en 2 estrellas.')}</p>
+    <button class="btn big" onclick="closeModal()">${L('HO PROVO!', '¡LO INTENTO!')}</button></div>`);
+}
 function check() {
   if (!LS) return;
   if (LS.state === 'fb') return nextEx();
@@ -511,12 +591,13 @@ function check() {
   if (e.type === 'grid') { $('#tgrid').classList.add(ok ? 'right' : 'wrong'); target = $('#tgrid'); }
   if (LS.exam) { LS.eres.push(ok); if (!ok) LS.emiss.push(e.sk); }
   $$('.pad button').forEach(b => { if (!b.classList.contains('pk-ok')) b.disabled = true; });
+  const hb = $('#hintb'); if (hb) hb.remove();
   const foot = $('#foot'), fb = $('#fb'), chk = $('#chk');
   foot.classList.add(ok ? 'ok' : 'ko');
   if (ok) {
-    LS.done++; LS.combo++; LS.maxCombo = Math.max(LS.maxCombo, LS.combo); SFX.ok(); sparkle(target); comboBanner(LS.combo);
+    LS.done++; if (!e.helped) LS.combo++; LS.maxCombo = Math.max(LS.maxCombo, LS.combo); SFX.ok(); sparkle(target); if (!e.helped) comboBanner(LS.combo);
     misEvent('answer'); misEvent('combo', LS.combo);
-    if (e.gold) { LS.gold++; misEvent('gold'); floatTxt(target, '⭐ +5 XP', 'gain xp'); }
+    if (e.gold && !e.helped) { LS.gold++; misEvent('gold'); floatTxt(target, '⭐ +5 XP', 'gain xp'); }
     const pf = $('.pfill'); pf.style.width = (LS.done / LS.total * 100) + '%'; pf.classList.remove('shine'); void pf.offsetWidth; pf.classList.add('shine');
     fb.innerHTML = `<div class="fbh">✔ ${LS.combo >= 3 ? L(`Ratxa de ${LS.combo}! 🔥`, `¡Racha de ${LS.combo}! 🔥`) : pick(PRAISE())}</div>${e.long || e.retry ? `<div class="exp">${e.ex || ''}</div>` : ''}`;
   } else {
@@ -569,7 +650,7 @@ const BADGES = [
 ];
 function checkBadges() { const nw = BADGES.filter(b => !P.badges.includes(b[0]) && b[4](P)); nw.forEach(b => { P.badges.push(b[0]); P.gems += 10; }); return nw; }
 function finishRun() {
-  const R = { mode: LS.mode, ui: LS.ui, li: LS.li, acc: LS.exam ? 0 : Math.round(100 * LS.total / (LS.total + LS.miss)), perfect: LS.miss === 0, stars: 0, chest: 0 };
+  const R = { mode: LS.mode, ui: LS.ui, li: LS.li, acc: LS.exam ? 0 : Math.round(100 * LS.total / (LS.total + LS.miss)), perfect: LS.miss === 0 && !LS.helps, stars: 0, chest: 0 };
   if (R.mode === 'reco') { R.xp = 12 + (R.perfect ? 4 : 0); R.gems = 6; P.stats.trains++; if (R.acc >= 75) { P.reco = null; R.recoDone = true; } }
   else if (R.mode === 'train') { R.xp = 8 + (R.perfect ? 4 : 0); R.gems = 3 + (R.perfect ? 2 : 0); P.stats.trains++; }
   else if (R.mode === 'prep') { R.xp = 10 + (R.perfect ? 4 : 0); R.gems = 8; P.stats.trains++; R.sub = L('Ben repassat! Ara ja pots tornar a la porta del Cavaller.', '¡Bien repasado! Ahora ya puedes volver a la puerta del Caballero.'); }
@@ -577,7 +658,7 @@ function finishRun() {
     R.sub = R.pass ? L('Lliçons repassades i a punt. Tornaran a sortir d\'aquí uns dies.', 'Lecciones repasadas y a punto. Volverán a salir dentro de unos días.') : L('Encara costen una mica: tornaran a sortir aviat per reforçar-les.', 'Aún cuestan un poco: volverán a salir pronto para reforzarlas.'); }
   else {
     R.xp = 10 + (R.perfect ? 5 : 0) + (R.mode === 'repte' ? 10 : 0); R.gems = 5 + (R.perfect ? 5 : 0);
-    R.stars = R.perfect ? 3 : LS.miss <= 2 ? 2 : 1;
+    R.stars = R.perfect ? 3 : LS.miss + Math.ceil((LS.helps || 0) / 2) <= 2 ? 2 : 1;
     if (LS.exam) {
       const okN = LS.total - LS.miss; R.exam = true; R.acc = Math.round(100 * okN / LS.total); R.stars = okN >= 11 ? 3 : okN >= 9 ? 2 : 1;
       const uid = UNITS_()[R.ui].id; P.exams = P.exams || {}; const ex = P.exams[uid] || { tries: 0, best: 0 };
@@ -592,12 +673,14 @@ function finishRun() {
     if (!R.exam && R.stars < PASS && pr.stars[R.li] < PASS) R.sub = L(`Per obrir ${R.mode === 'repte' ? 'la unitat següent' : 'la lliçó següent'} necessites 2 estrelles: com a molt 2 errors. Tu pots!`, `Para abrir ${R.mode === 'repte' ? 'la unidad siguiente' : 'la lección siguiente'} necesitas 2 estrellas: como mucho 2 errores. ¡Tú puedes!`);
     const cu = crownCheck(R.ui); if (cu) { R.crown = cu; R.gems += 50; }
     if (R.mode === 'repte' && first) R.chest = ri(30, 50);
+    R.firstPass = first;
     if (R.exam && first) R.gate = R.ui;
     P.stats.lessons++; if (R.perfect) P.stats.perfect++;
     if (R.mode === 'lesson') { const dl = dayLessons(); dl.n++; if (dl.n > DAY_REWARD && !P.unlockAll) { R.gems = 0; R.noPrize = true; R.sub = (R.sub ? R.sub + ' ' : '') + L(`Lliçó ${dl.n} de ${DAY_MAX} d'avui: els diamants i les cartes són per a les ${DAY_REWARD} primeres, però l'XP i les estrelles compten igual!`, `Lección ${dl.n} de ${DAY_MAX} de hoy: los diamantes y las cartas son para las ${DAY_REWARD} primeras, ¡pero la XP y las estrellas cuentan igual!`); } }
   }
   R.bonus = Math.floor(LS.maxCombo / 3) * 2 + LS.gold * 5; R.xp += R.bonus;
-  if (R.mode === 'lesson' || R.mode === 'repte' || R.mode === 'reco' || (R.mode === 'review' && R.pass)) { misEvent('lesson'); if (!R.noPrize) R.pack = openPack(R.mode === 'repte' ? 2 : 1); }
+  // sobres: lliçons (amb el límit diari), la porta només la primera vegada que s'obre i la missió només quan s'acaba bé
+  if (R.mode === 'lesson' || R.mode === 'repte' || R.mode === 'reco' || (R.mode === 'review' && R.pass)) { misEvent('lesson'); const packOk = R.mode === 'lesson' || R.mode === 'review' || (R.mode === 'repte' && R.firstPass) || (R.mode === 'reco' && R.recoDone); if (!R.noPrize && packOk) R.pack = openPack(R.mode === 'repte' ? 2 : 1); }
   if (R.perfect && R.mode !== 'train') misEvent('perfect');
   if (R.mode === 'train' || R.mode === 'reco' || R.mode === 'review' || R.mode === 'prep') misEvent('train');
   LS = null; reward(R);
@@ -750,6 +833,8 @@ function scrKnight() {
 
 /* ---------- Tema de l'escola i currículum ---------- */
 function schoolCard() {
+  const tt = teacherTema();
+  if (tt) return `<button class="testcard school" onclick="startSchool(true)"><span class="tci">📚</span><span><b>${L('Tema de classe:', 'Tema de clase:')} ${tx(tt.u.title)}</b><small>${L("L'ha triat el teu docent. 10 preguntes: 7 del tema i 3 de repàs.", 'Lo ha elegido tu docente. 10 preguntas: 7 del tema y 3 de repaso.')}</small></span><span class="go">›</span></button>`;
   const sc = P.school; if (!sc || sc.course !== P.course) return '';
   const u = UNITS_()[sc.ui]; if (!u) return '';
   return `<button class="testcard school" onclick="startSchool()"><span class="tci">📚</span><span><b>${L("A l'escola fas:", 'En el cole das:')} ${tx(u.title)}</b><small>${L('Practica-ho: 10 preguntes del tema. +XP i cromo!', 'Practícalo: 10 preguntas del tema. ¡+XP y cromo!')}</small></span><span class="go">›</span></button>`;
@@ -759,10 +844,17 @@ function pickSchool() {
     <div class="slist">${UNITS_().map((u, i) => `<button class="sitem ${P.school && P.school.course === P.course && P.school.ui === i ? 'on' : ''}" style="--uc:${u.color}" onclick="setSchool(${i})"><span class="sdot"></span><span><b>${tx(u.title)}</b><small>${unitSents(u).map(k => SENT[k][2] + ' ' + tx(SENT[k])).join(' · ')}</small></span></button>`).join('')}</div></div>`);
 }
 function setSchool(i) { P.school = { course: P.course, ui: i, date: today() }; save(); closeModal(); startSchool(); }
-function startSchool() {
-  const sc = P.school, u = UNITS_()[sc.ui], opts = u.lessons.map(l => l.sk.map(s => [s, l.L])).flat(), plan = [];
-  for (let i = 0; i < 10; i++) plan.push(pick(opts));
-  startRun({ mode: 'train', ui: sc.ui, li: null, plan, color: u.color });
+// Pràctica del tema de classe: 7 preguntes del tema i 3 de repàs del que ja ha fet (sobretot del que li costa)
+function startSchool(fromTeacher) {
+  const tt = fromTeacher ? teacherTema() : null, sc = P.school, u = tt ? tt.u : UNITS_()[sc.ui];
+  const own = new Set(u.lessons.flatMap(l => l.sk)), opts = u.lessons.map(l => l.sk.map(s => [s, l.L])).flat();
+  // repàs: el que ja ha obert del seu curs i, si el tema és d'un altre curs, les unitats anteriors d'aquell curs que ja ha practicat
+  const prev = tt && tt.ci !== P.course ? COURSES[tt.ci].units.slice(0, tt.ui).flatMap(x => x.lessons.flatMap(l => l.sk.filter(k => P.stats.sk[k]).map(k => [k, l.L]))) : [];
+  const rev = [...trainPool(null), ...prev].filter(([s]) => !own.has(s)), nRev = rev.length ? 3 : 0, plan = [];
+  for (let i = 0; i < 10 - nRev; i++) plan.push(pick(opts));
+  const w = rev.map(([s]) => { const [c, t] = P.stats.sk[s] || [0, 0]; return 1 + 4 * (1 - (c + 1) / (t + 2)); }), sum = w.reduce((a, b) => a + b, 0);
+  for (let i = 0; i < nRev; i++) { let r = Math.random() * sum, j = 0; while (j < w.length - 1 && r > w[j]) { r -= w[j]; j++; } plan.splice(ri(1, plan.length), 0, rev[j]); }
+  startRun({ mode: 'train', ui: tt ? (tt.ci === P.course ? tt.ui : null) : sc.ui, li: null, plan, color: u.color });
 }
 function curriculumBox() {
   const s = P.stats, rows = Object.keys(SENT).map(k => {
@@ -824,7 +916,7 @@ const GAMES = () => [
 function renderTrain() {
   const units = UNITS_().map((u, i) => ({ u, i })).filter(({ i }) => unitOpen(i) && trainPool(i).length), B = P.stats.bests;
   app.innerHTML = shell(`<h1 class="ph1">${L('Entrena', 'Entrena')}</h1><p class="lead">${L(`Practica el que ja has après de ${tx(CUR().long)} i posa a prova la teva agilitat mental.`, `Practica lo que ya has aprendido de ${tx(CUR().long)} y pon a prueba tu agilidad mental.`)}</p>
-    <button class="tcard battle" onclick="go('battles')"><span class="ti">⚔️</span><span><b>${L('Batalles de mates', 'Batallas de mates')}</b><small>${L('Duels 1 contra 1 i partides de fins a 10. Mateixes preguntes per a tothom!', 'Duelos 1 contra 1 y partidas de hasta 10. ¡Mismas preguntas para todos!')}</small></span></button>
+    ${classOff('batalles') ? '' : `<button class="tcard battle" onclick="go('battles')"><span class="ti">⚔️</span><span><b>${L('Batalles de mates', 'Batallas de mates')}</b><small>${L('Duels 1 contra 1 i partides de fins a 10. Mateixes preguntes per a tothom!', 'Duelos 1 contra 1 y partidas de hasta 10. ¡Mismas preguntas para todos!')}</small></span></button>`}
     <button class="tcard" onclick="startTrain()"><span class="ti">🧠</span><span><b>${L('Entrenament intel·ligent', 'Entrenamiento inteligente')}</b><small>${L('8 exercicis del que et costa més. Ideal per repassar.', '8 ejercicios de lo que más te cuesta. Ideal para repasar.')}</small></span></button>
     ${testInfo().due ? `<button class="tcard evo" onclick="startEvolution()"><span class="ti">🧪</span><span><b>${L("Prova d'evolució", 'Prueba de evolución')}</b><small>${L('Ja la pots fer! Mira quant has millorat.', '¡Ya puedes hacerla! Mira cuánto has mejorado.')}</small></span></button>` : ''}
     <button class="tcard school" onclick="pickSchool()"><span class="ti">📚</span><span><b>${L("Què fas ara a l'escola?", '¿Qué estás dando en el cole?')}</b><small>${L("Tria el tema que fas a classe i practica'l: així t'anirà millor a l'escola!", 'Elige el tema que das en clase y practícalo: ¡así te irá mejor en el cole!')}</small></span></button>
@@ -1090,13 +1182,23 @@ function classeLeave() {
   });
 }
 // si el docent tanca el grup o treu l'alumne, l'app se n'assabenta en obrir el perfil
-async function classeRefresh() { if (!P || !P.code || !navigator.onLine) return; try { const r = await api('classe', { code: P.code, action: 'info' }); if (r.grup) P.classe = r.grup; else delete P.classe; save(); } catch (e) { } }
+async function classeRefresh() {
+  if (!P || !P.code || !navigator.onLine) return; const was = JSON.stringify(P.classe || null);
+  try { const r = await api('classe', { code: P.code, action: 'info' }); if (r.grup) P.classe = r.grup; else delete P.classe; if (JSON.stringify(P.classe || null) !== was) { saveLocal(); if (VIEW === 'home') renderHome(); } } catch (e) { }
+}
+// «Mode escola»: el docent pot apagar les batalles o els intercanvis per al seu grup
+const classOff = k => !!(P && P.classe && P.classe.opts && P.classe.opts[k] === false);
+// Tema que el docent ha marcat per al grup (té prioritat sobre el que tria l'alumne)
+function teacherTema() {
+  const t = P && P.classe && P.classe.tema; if (!t) return null;
+  for (let ci = 0; ci < COURSES.length; ci++) { const ui = COURSES[ci].units.findIndex(u => u.id === t); if (ui >= 0) return { ci, ui, u: COURSES[ci].units[ui] }; }
+  return null;
+}
 function resetP() {
   ask(L(`Segur que vols esborrar tot el progrés de <b>${esc(P.name)}</b>? No es pot desfer.`, `¿Seguro que quieres borrar todo el progreso de <b>${esc(P.name)}</b>? No se puede deshacer.`), L('ESBORRA', 'BORRAR'), L('CANCEL·LA', 'CANCELAR'), async () => {
     const keep = { id: P.id, code: P.code, username: P.username, name: P.name, lang: P.lang, course: P.course, baseCourse: P.baseCourse, survey: P.survey, goal: P.goal, sound: P.sound, unlockAll: false };
-    for (const k in P) delete P[k]; Object.assign(P, freshProgress(), keep);
-    saveLocal();
-    if (P.code) { try { await api('sync', { code: P.code, state: P, reset: true }); } catch (e) { } }
+    for (const k in P) delete P[k]; Object.assign(P, freshProgress(), keep, { resetPending: true });
+    save();   // es queda pendent (i es torna a provar) fins que el servidor confirma l'esborrat
     go('home');
   });
 }
@@ -1133,7 +1235,7 @@ function renderProfiles() {
     <button class="btn big" onclick="onb(0)">+ ${L('SOC NOU/NOVA', 'SOY NUEVO/A')}</button>
     <button class="btn big ghost mt" onclick="loginModal()">🔑 ${L('JA TINC COMPTE', 'YA TENGO CUENTA')}</button></div>`;
 }
-function switchP(id) { P = DB.profiles[id]; DB.current = id; LANG = P.lang || DB.lang; saveLocal(); pull(); go('home'); }
+function switchP(id) { P = DB.profiles[id]; DB.current = id; LANG = P.lang || DB.lang; saveLocal(); pull(); classeRefresh(); go('home'); }
 function delP(id) {
   const p = DB.profiles[id];
   ask(L(`Vols treure <b>${esc(p.name)}</b> d'aquest dispositiu? El progrés continua desat al núvol.`, `¿Quieres quitar a <b>${esc(p.name)}</b> de este dispositivo? El progreso sigue guardado en la nube.`), L('TREU', 'QUITAR'), L('CANCEL·LA', 'CANCELAR'), () => {
@@ -1271,5 +1373,5 @@ document.addEventListener('keydown', e => {
   else if (t === 'order') { if (e.key === 'Backspace' && LS.order.length) ordRemove(LS.order.length - 1); else { const n = +e.key; if (n >= 1 && n <= LS.cur.items.length) ordTap(n - 1); } }
 });
 
-if (P) { pull(); syncNow(); }
+if (P) { pull(); syncNow(); classeRefresh(); }
 go(P ? 'home' : 'onboard');

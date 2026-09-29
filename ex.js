@@ -388,7 +388,7 @@ const EX = {
   },
 
   'l.series': L_ => {
-    let arr, rule;
+    let arr, rule, tail = false;   // tail: en les sèries que creixen o alternen, el forat va al final (al mig hi pot encaixar una altra regla)
     const lin = (s, d) => { arr = [0, 1, 2, 3, 4].map(i => s + i * d); rule = d > 0 ? L(`Cada vegada sumem ${d}.`, `Cada vez sumamos ${d}.`) : L(`Cada vegada restem ${-d}.`, `Cada vez restamos ${-d}.`); };
     if (L_ <= 1) lin(ri(1, 20), pick([2, 5, 10]));
     else if (L_ === 2) { const d = pick([3, 4, -2, -5, -10]); lin(d < 0 ? ri(45, 90) : ri(1, 30), d); }
@@ -398,10 +398,10 @@ const EX = {
       if (kind === 'big') { const d = pick([25, 50, 100, 11, -9, -11]); lin(d < 0 ? ri(80, 150) : ri(1, 60), d); }
       if (kind === 'x2') { const s = ri(1, 6); arr = [0, 1, 2, 3, 4].map(i => s * 2 ** i); rule = L("Cada número és el doble de l'anterior.", 'Cada número es el doble del anterior.'); }
       if (kind === 'x3') { const s = ri(1, 3); arr = [0, 1, 2, 3, 4].map(i => s * 3 ** i); rule = L("Cada número és el triple de l'anterior.", 'Cada número es el triple del anterior.'); }
-      if (kind === 'grow') { const s = ri(1, 10), d0 = ri(1, 3); arr = [s]; for (let i = 1; i < 5; i++) arr.push(arr[i - 1] + d0 + i - 1); rule = L(`Cada vegada sumem un més: +${d0}, +${d0 + 1}, +${d0 + 2}…`, `Cada vez sumamos uno más: +${d0}, +${d0 + 1}, +${d0 + 2}…`); }
-      if (kind === 'alt') { const a = ri(3, 6), b = ri(1, a - 1), s = ri(5, 20); arr = [s]; for (let i = 1; i < 6; i++) arr.push(arr[i - 1] + (i % 2 ? a : -b)); rule = L(`Alternem: +${a}, −${b}, +${a}, −${b}…`, `Alternamos: +${a}, −${b}, +${a}, −${b}…`); }
+      if (kind === 'grow') { const s = ri(1, 10), d0 = ri(1, 3); arr = [s]; for (let i = 1; i < 5; i++) arr.push(arr[i - 1] + d0 + i - 1); tail = true; rule = L(`Cada vegada sumem un més: +${d0}, +${d0 + 1}, +${d0 + 2}…`, `Cada vez sumamos uno más: +${d0}, +${d0 + 1}, +${d0 + 2}…`); }
+      if (kind === 'alt') { const a = ri(3, 6), b = ri(1, a - 1), s = ri(5, 20); arr = [s]; for (let i = 1; i < 6; i++) arr.push(arr[i - 1] + (i % 2 ? a : -b)); tail = true; rule = L(`Alternem: +${a}, −${b}, +${a}, −${b}…`, `Alternamos: +${a}, −${b}, +${a}, −${b}…`); }
     }
-    const miss = L_ >= 3 ? ri(1, arr.length - 1) : arr.length - 1;
+    const miss = L_ >= 3 && !tail ? ri(1, arr.length - 1) : arr.length - 1;
     return inp(L('Quin número falta a la sèrie?', '¿Qué número falta en la serie?'), arr[miss], { vis: `<div class="seq">${arr.map((v, i) => i === miss ? BOX : `<span style="animation-delay:${i * 80}ms">${fmt(v)}</span>`).join('')}</div>`, ex: rule });
   },
   'l.pattern': L_ => {

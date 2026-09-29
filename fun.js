@@ -190,8 +190,8 @@ function renderAlbum(tab) {
   VIEW = 'album';
   albumFix();
   const A = P.album, have = STK.filter(s => A[s[0]]).length;
-  const t = tab || 'cromos';
-  const tabs = `<div class="tabs"><button class="${t === 'cromos' ? 'on' : ''}" onclick="renderAlbum('cromos')">🏛️ ${L('Cartes', 'Cartas')}</button><button class="${t === 'trade' ? 'on' : ''}" onclick="renderAlbum('trade')">🔄 ${L('Canvis', 'Cambios')}</button><button class="${t === 'medals' ? 'on' : ''}" onclick="renderAlbum('medals')">🏅 ${L('Medalles', 'Medallas')}</button></div>`;
+  const t = tab === 'trade' && classOff('intercanvis') ? 'cromos' : (tab || 'cromos');
+  const tabs = `<div class="tabs"><button class="${t === 'cromos' ? 'on' : ''}" onclick="renderAlbum('cromos')">🏛️ ${L('Cartes', 'Cartas')}</button>${classOff('intercanvis') ? '' : `<button class="${t === 'trade' ? 'on' : ''}" onclick="renderAlbum('trade')">🔄 ${L('Canvis', 'Cambios')}</button>`}<button class="${t === 'medals' ? 'on' : ''}" onclick="renderAlbum('medals')">🏅 ${L('Medalles', 'Medallas')}</button></div>`;
   if (t === 'medals') { renderBadges(tabs); return; }
   if (t === 'trade') { renderTrades(tabs); return; }
   app.innerHTML = shell(`<h1 class="ph1">${L('Déus i herois', 'Dioses y héroes')}</h1>${tabs}
