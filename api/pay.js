@@ -1,0 +1,133 @@
+/* Numi Mates Premium amb Stripe (una sola funció per no passar de les 12 del pla Hobby).
+   POST /api/pay?a=checkout {code, pla:'mes'|'any'} → URL de Stripe Checkout per a aquest alumne
+   GET  /api/pay?a=info                             → preus i enllaç del portal (la família hi entra amb el seu correu)
+   POST /api/pay?a=hook                             → avisos de Stripe. No ens fiem del cos: tornem a demanar l'esdeveniment
+                                                      a Stripe amb la clau secreta, així un avís inventat no pot activar res. */
+import { sql, body, cleanCode, ok, blocked, fail, note, tooMany } from './_lib.js';
+
+const KEY = process.env.STRIPE_SECRET_KEY;
+const LOOKUP = { mes: 'numi_premium_mes', any: 'numi_premium_any' };
+const ORIGINS = ['https://app.numimates.com', 'https://mates-numi.vercel.app', 'http://localhost:5176', 'http://127.0.0.1:5176'];
+const GRACE = 3; // dies de marge si la renovació tarda (reintents de cobrament)
+
+// crida a l'API de Stripe amb el format que demana (x-www-form-urlencoded amb claus niades)
+function form(o, pre = '', out = new URLSearchParams()) {
+  for (const [k, v] of Object.entries(o)) {
+    if (v === undefined || v === null) continue;
+    const key = pre ? `${pre}[${k}]` : k;
+    if (typeof v === 'object') form(v, key, out); else out.append(key, String(v));
+  }
+  return out;
+}
+async function stripe(path, data, method = data ? 'POST' : 'GET') {
+  const r = await fetch('https://api.stripe.com/v1/' + path, {
+    method, headers: { authorization: 'Bearer ' + KEY, ...(data ? { 'content-type': 'application/x-www-form-urlencoded' } : {}) },
+    body: data ? form(data) : undefined
+  });
+  const j = await r.json();
+  if (!r.ok) { const e = new Error((j.error && j.error.message) || 'stripe'); e.status = r.status; throw e; }
+  return j;
+}
+
+let PRICES = null, PORTAL = null;
+async function prices() {
+  if (PRICES) return PRICES;
+  const q = Object.values(LOOKUP).map(k => 'lookup_keys[]=' + k).join('&');
+  const r = await stripe('prices?active=true&' + q);
+  const by = Object.fromEntries(r.data.map(p => [p.lookup_key, p]));
+  if (!by[LOOKUP.mes] || !by[LOOKUP.any]) throw new Error('preus');
+  return (PRICES = { mes: by[LOOKUP.mes], any: by[LOOKUP.any] });
+}
+async function portal() {
+  if (PORTAL !== null) return PORTAL;
+  const r = await stripe('billing_portal/configurations?active=true&limit=20');
+  const c = r.data.find(x => x.login_page && x.login_page.enabled && x.login_page.url);
+  return (PORTAL = c ? c.login_page.url : '');
+}
+
+const periodEnd = s => s.current_period_end || (s.items && s.items.data && s.items.data[0] && s.items.data[0].current_period_end) || 0;
+const endDate = ts => new Date((ts + GRACE * 86400) * 1000).toISOString().slice(0, 10);
+const LIVE = ['active', 'trialing', 'past_due'];
+
+// deixa l'alumne com diu la subscripció de Stripe (idempotent: es pot cridar tantes vegades com calgui)
+async function applySub(s, code) {
+  code = cleanCode(code || (s.metadata && s.metadata.code));
+  if (!code) return;
+  const cust = typeof s.customer === 'string' ? s.customer : s.customer && s.customer.id;
+  if (LIVE.includes(s.status) && periodEnd(s)) {
+    await sql`UPDATE mates.alumnes SET pla = 'premium', pla_fins = ${endDate(periodEnd(s))}, stripe_customer = ${cust}, stripe_sub = ${s.id} WHERE code = ${code}`;
+  } else if (['canceled', 'unpaid', 'incomplete_expired'].includes(s.status)) {
+    // s'acaba avui (si ja s'havia acabat abans, no l'allarguem)
+    await sql`UPDATE mates.alumnes SET pla_fins = LEAST(COALESCE(pla_fins, CURRENT_DATE), CURRENT_DATE), stripe_sub = NULL WHERE code = ${code} AND stripe_sub = ${s.id}`;
+  }
+}
+
+async function hook(req, res) {
+  const id = String(body(req).id || '');
+  if (!/^evt_[A-Za-z0-9]{8,80}$/.test(id)) return ok(res, { error: 'event' }, 400);
+  if (await blocked(req, 'stripe-hook', 300, 15)) return tooMany(res);
+  let ev;
+  try { ev = await stripe('events/' + id); } catch (e) { await fail(req, 'stripe-hook'); return ok(res, { error: 'event' }, 400); }
+  const o = ev.data.object;
+  if (ev.type === 'checkout.session.completed' && o.mode === 'subscription' && o.subscription) {
+    const s = await stripe('subscriptions/' + o.subscription);
+    await applySub(s, o.client_reference_id);
+  } else if (ev.type === 'invoice.paid' || ev.type === 'invoice.payment_succeeded') {
+    const sid = o.subscription || (o.parent && o.parent.subscription_details && o.parent.subscription_details.subscription);
+    if (sid) await applySub(await stripe('subscriptions/' + (typeof sid === 'string' ? sid : sid.id)));
+  } else if (ev.type === 'customer.subscription.updated' || ev.type === 'customer.subscription.deleted') {
+    await applySub(await stripe('subscriptions/' + o.id));
+  }
+  return ok(res, { ok: true });
+}
+
+async function checkout(req, res) {
+  const b = body(req), code = cleanCode(b.code), pla = b.pla === 'any' ? 'any' : 'mes';
+  if (!code) return ok(res, { error: 'codi' }, 400);
+  if (await blocked(req, 'pagament', 20, 60)) return tooMany(res);
+  const a = (await sql`SELECT name, active, grup_id, pla, pla_fins, stripe_customer, stripe_sub FROM mates.alumnes WHERE code = ${code}`)[0];
+  if (!a) { await fail(req, 'pagament'); return ok(res, { error: 'no trobat' }, 404); }
+  if (!a.active) return ok(res, { error: 'baixa' }, 410);
+  if (a.grup_id) return ok(res, { error: 'escola' }, 409);
+  if (a.stripe_sub && a.pla === 'premium' && a.pla_fins && new Date(a.pla_fins) >= new Date(new Date().toISOString().slice(0, 10))) return ok(res, { error: 'ja' }, 409);
+  const origin = ORIGINS.includes(req.headers.origin) ? req.headers.origin : ORIGINS[0];
+  const P = await prices();
+  const s = await stripe('checkout/sessions', {
+    mode: 'subscription',
+    line_items: { 0: { price: P[pla].id, quantity: 1 } },
+    client_reference_id: code,
+    metadata: { code },
+    subscription_data: { metadata: { code }, description: 'Numi Mates Premium · ' + String(a.name || '').slice(0, 60) },
+    customer: a.stripe_customer || undefined,
+    allow_promotion_codes: 'true',
+    billing_address_collection: 'auto',
+    locale: b.lang === 'es' ? 'es' : 'auto',
+    custom_text: { submit: { message: b.lang === 'es'
+      ? 'Se renueva automáticamente y puedes cancelarlo cuando quieras. Condiciones: numimates.com/condicions'
+      : "Es renova automàticament i el pots cancel·lar quan vulguis. Condicions: numimates.com/condicions" } },
+    success_url: origin + '/?premium=ok',
+    cancel_url: origin + '/?premium=cancel'
+  });
+  await note(req, 'pagament'); // màxim 20 pagaments començats per hora i IP
+  return ok(res, { url: s.url });
+}
+
+async function info(req, res) {
+  const P = await prices();
+  return ok(res, { mes: P.mes.unit_amount, any: P.any.unit_amount, portal: await portal() });
+}
+
+export default async function handler(req, res) {
+  if (!KEY) return ok(res, { error: 'no configurat' }, 503);
+  const a = String((req.query && req.query.a) || '');
+  try {
+    if (a === 'hook' && req.method === 'POST') return await hook(req, res);
+    if (a === 'checkout' && req.method === 'POST') return await checkout(req, res);
+    if (a === 'info') return await info(req, res);
+    return ok(res, { error: 'acció' }, 400);
+  } catch (e) {
+    console.error('pay', a, e.message);
+    // si Stripe torna un error, que ho reintenti (els avisos es reenvien sols)
+    return ok(res, { error: 'stripe' }, 502);
+  }
+}

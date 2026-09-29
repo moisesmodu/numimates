@@ -931,6 +931,8 @@ body.pro .pdiv{z-index:3}body.pro .pdiv span{box-shadow:0 4px 0 color-mix(in srg
 .lcard h2{margin:2px 0 6px;font-size:24px;color:var(--ink)}.lcard .ld{color:var(--mut);margin:0 0 10px}
 .lchar{width:110px;height:110px;margin:-4px auto 6px}.lchar svg{width:100%;height:100%}
 .lhookbox{position:relative;margin:-4px -4px 14px;border-radius:20px;overflow:hidden;background:#fff;aspect-ratio:16/10}.lhookv{width:100%;height:100%;object-fit:cover;display:block}
+.lhooki{transform-origin:50% 60%;animation:hookfloat 6s ease-in-out infinite}
+@keyframes hookfloat{0%,100%{transform:scale(1.01) translateY(0) rotate(0)}50%{transform:scale(1.055) translateY(-2%) rotate(-.4deg)}}
 .lhookbox .lchar.mini{position:absolute;left:6px;bottom:-4px;width:92px;height:92px;margin:0}.lhookbox .lchar.mini .lvid{border-radius:0}
 .lchar .lvid{width:100%;height:100%;object-fit:contain;mix-blend-mode:multiply;border-radius:50%;display:block}.lcard>.lchar:has(.lvid){width:150px;height:150px;margin:-10px auto 0}
 .llist{margin:6px 0 0;padding-left:20px;line-height:1.8;font-weight:800}
@@ -1043,5 +1045,21 @@ img.ic{display:inline-block;width:1.2em;height:1.2em;object-fit:contain;vertical
 .prem-sheet{max-height:calc(100dvh - 32px);overflow-y:auto;text-align:left}.prem-sheet h3{margin:0 0 2px;text-align:center;font-size:21px}.prem-h{margin:6px 0 4px;font-weight:900;text-align:left}
 .prem{list-style:none;padding:0;margin:0 0 8px;text-align:left;display:grid;gap:8px;font-size:15.5px;font-weight:700;line-height:1.35}.prem li{display:flex;gap:10px;align-items:flex-start}.prem li>span:first-child{flex:none;font-size:20px;line-height:1.1}
 .prem-free{font-size:14px;color:#6A5F78;font-weight:700;margin:0 0 12px;text-align:left}
-.prem-how{background:#F7F2FC;border-radius:16px;padding:10px 12px;margin:0 0 12px;text-align:left;font-size:14.5px;line-height:1.4}.prem-how b:first-child{display:block;margin-bottom:4px;font-size:15px}.prem-how p{margin:6px 0 0}
+.prem-how{background:#F7F2FC;border-radius:16px;padding:10px 12px;margin:0 0 12px;text-align:left;font-size:14.5px;line-height:1.4}.prem-how>b:first-child{display:block;margin-bottom:4px;font-size:15px}.prem-how p{margin:6px 0 0}
 .prem-sheet .btn+.btn{margin-top:10px}
+/* compra de Premium */
+.prem-plans{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0 6px}
+.prem-plans button{position:relative;font:inherit;color:var(--ink);background:#fff;border:2px solid var(--line);border-radius:16px;padding:12px 8px 10px;display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;box-shadow:0 3px 0 var(--line)}
+.prem-plans button:active{transform:translateY(2px);box-shadow:0 1px 0 var(--line)}
+.prem-plans button b{font-size:14px;color:var(--mut)}.prem-plans button span{font-size:22px;font-weight:900}.prem-plans button small{font-size:13px;color:var(--mut);font-weight:700}
+.prem-plans .best{border-color:var(--gold);box-shadow:0 3px 0 var(--gold-d)}
+.prem-plans .best i{position:absolute;top:-10px;left:50%;transform:translateX(-50%);white-space:nowrap;background:var(--gold);color:#5A3B00;font-style:normal;font-size:11.5px;font-weight:900;border-radius:99px;padding:2px 9px}
+.prem-note{font-size:12.5px;color:#6A5F78;margin:4px 0 0!important;text-align:center}
+.prem-sum{text-align:center;margin:8px 0 12px;font-size:15.5px}.prem-sum span{display:inline-block;margin-top:4px;background:#F7F2FC;border-radius:10px;padding:4px 10px;font-size:14.5px}
+.prem-small{font-size:14px;font-weight:700}
+.prem-ok{display:flex;gap:10px;align-items:flex-start;text-align:left;font-size:14px;line-height:1.35;background:#FFF8E1;border-radius:14px;padding:10px 12px;margin:4px 0 12px;cursor:pointer}
+.prem-ok input{width:22px;height:22px;flex:none;margin:0;accent-color:var(--gold-d)}
+.prem-sheet .btn:disabled{opacity:.45;pointer-events:none}
+.prem-box{display:flex;flex-direction:column;align-items:flex-start;gap:6px;background:#fff;border:2px solid var(--line);border-radius:20px;padding:14px 16px}
+.prem-box.on{border-color:var(--gold);background:#FFFBEF}.prem-box span{font-size:14.5px;color:#6A5F78}
+.prem-how .link{display:inline;margin:0;padding:0;border:0;background:none;font:inherit;font-weight:800;color:var(--pri);cursor:pointer}

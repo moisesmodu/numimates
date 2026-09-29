@@ -302,7 +302,7 @@ function go(v) {
   VIEW = v;
   ({ home: renderHome, train: renderTrain, league: () => renderLeague(), album: () => renderAlbum(), shop: renderShop, badges: () => renderAlbum('medals'), profile: renderProfile, profiles: renderProfiles, battles: () => renderBattles(), season: () => renderSeason(), onboard: () => onb(0) }[v] || renderHome)();
   if (v !== 'home') window.scrollTo(0, 0);
-  else setTimeout(classeLink, 500);
+  else { setTimeout(classeLink, 500); setTimeout(payReturn, 400); }
 }
 const NAV = () => [['home', '🗺️', L('Camí', 'Camino')], ['train', '🎯', L('Entrena', 'Entrena')], ['album', '🎴', L('Àlbum', 'Álbum')], ['shop', '🛍️', L('Botiga', 'Tienda')], ['profile', '👤', L('Perfil', 'Perfil')]];
 const nav = t => `<nav class="nav">${NAV().map(([v, i, l]) => `<button class="${v === t ? 'on' : ''}" onclick="go('${v}')"><span class="ni">${i}</span><span>${l}</span></button>`).join('')}</nav>`;
@@ -323,35 +323,96 @@ function showGain() {
 }
 
 /* ---------- Camí ---------- */
-// Plans: gratuït = 2 lliçons noves al dia; Premium o escola = 5 al dia, batalles i ruta de temporada
+// Plans: gratuït = 1 lliçó nova al dia; Premium o escola = 5 al dia, batalles i ruta de temporada
 const isPremium = () => !!(P && (P.unlockAll || P.classe || P.pla === 'premium' || P.pla === 'escola'));
-const dayMax = () => isPremium() ? 5 : 2, dayReward = () => isPremium() ? 3 : 2;
+const dayMax = () => isPremium() ? 5 : 1, dayReward = () => isPremium() ? 3 : 1;
 function dayLessons() { if (!P.dayl || P.dayl.d !== today()) P.dayl = { d: today(), n: 0 }; return P.dayl; }
 const dayCapped = () => !P.unlockAll && dayLessons().n >= dayMax();
 function dayTxt() {
   const n = dayLessons().n, M = dayMax(), left = Math.max(0, dayReward() - n);
-  return n >= M ? L(`Avui ja has fet les ${M} lliçons del dia`, `Hoy ya has hecho las ${M} lecciones del día`) : L(`Lliçons d'avui: ${n}/${M} · ${left ? `${left} amb premi` : 'ja sense diamants ni cartes'}`, `Lecciones de hoy: ${n}/${M} · ${left ? `${left} con premio` : 'ya sin diamantes ni cartas'}`);
+  return n >= M ? (M === 1 ? L("Avui ja has fet la lliçó del dia", 'Hoy ya has hecho la lección del día') : L(`Avui ja has fet les ${M} lliçons del dia`, `Hoy ya has hecho las ${M} lecciones del día`)) : M === 1 ? L("Lliçó d'avui: 0/1 · amb premi", 'Lección de hoy: 0/1 · con premio') : L(`Lliçons d'avui: ${n}/${M} · ${left ? `${left} amb premi` : 'ja sense diamants ni cartes'}`, `Lecciones de hoy: ${n}/${M} · ${left ? `${left} con premio` : 'ya sin diamantes ni cartas'}`);
 }
 function premiumModal(what) {
   // títol segons el que ha tocat l'alumne; to tranquil: explicar, no pressionar
-  const head = what === 'batalles' ? L('Les batalles són de Premium', 'Las batallas son de Premium') : what === 'temporada' ? L('La ruta de temporada és de Premium', 'La ruta de temporada es de Premium') : what === 'dia' ? L('Ja has fet les 2 lliçons d\'avui', 'Ya has hecho las 2 lecciones de hoy') : 'Numi Mates Premium';
+  const head = what === 'batalles' ? L('Les batalles són de Premium', 'Las batallas son de Premium') : what === 'temporada' ? L('La ruta de temporada és de Premium', 'La ruta de temporada es de Premium') : what === 'dia' ? L('Ja has fet la lliçó d\'avui', 'Ya has hecho la lección de hoy') : 'Numi Mates Premium';
   modal(`<div class="sheet card cent prem-sheet"><h3>${head}</h3>
     <p class="prem-h">${L('Amb Premium pots:', 'Con Premium puedes:')}</p>
-    <ul class="prem"><li><span>📚</span><span>${L('Fer <b>fins a 5 lliçons noves</b> cada dia (ara en pots fer 2).', 'Hacer <b>hasta 5 lecciones nuevas</b> cada día (ahora puedes hacer 2).')}</span></li>
+    <ul class="prem"><li><span>📚</span><span>${L('Fer <b>fins a 5 lliçons noves</b> cada dia (ara en pots fer una).', 'Hacer <b>hasta 5 lecciones nuevas</b> cada día (ahora puedes hacer una).')}</span></li>
       <li><span>⚔️</span><span>${L('Jugar <b>batalles de mates</b> amb amics i amb la classe.', 'Jugar <b>batallas de mates</b> con amigos y con la clase.')}</span></li>
       <li><span>🏆</span><span>${L('Seguir la <b>ruta de temporada</b> i guanyar cartes exclusives cada mes.', 'Seguir la <b>ruta de temporada</b> y ganar cartas exclusivas cada mes.')}</span></li></ul>
     <p class="prem-free">${L('Sense Premium pots fer la teoria, els repassos, els entrenaments i els jocs tant com vulguis.', 'Sin Premium puedes hacer la teoría, los repasos, los entrenamientos y los juegos tanto como quieras.')}</p>
     <div class="prem-how"><b>${L('Com el pots tenir?', '¿Cómo puedes tenerlo?')}</b>
-      <p>🏫 ${L('<b>Amb la teva escola:</b> si hi fan servir Numi Mates, ja el tens inclòs. Demana el codi de classe al teu docent.', '<b>Con tu escuela:</b> si usan Numi Mates, ya lo tienes incluido. Pide el código de clase a tu docente.')}</p>
-      <p>🧑 ${L('<b>Amb la teva família:</b> encara no es pot contractar des de l\'app. Un adult ens pot escriure a <b>hola@numimates.com</b>.', '<b>Con tu familia:</b> todavía no se puede contratar desde la app. Un adulto nos puede escribir a <b>hola@numimates.com</b>.')}</p></div>
-    ${P && P.code && !P.classe ? `<button class="btn big gold" onclick="closeModal();classeModal()">${L('TINC UN CODI DE CLASSE', 'TENGO UN CÓDIGO DE CLASE')}</button>` : ''}
-    <button class="btn big ${P && P.code && !P.classe ? 'ghost' : ''}" onclick="closeModal()">${L('ENTESOS', 'ENTENDIDO')}</button></div>`, true);
+      <p>🏫 ${L('<b>Amb la teva escola:</b> si hi fan servir Numi Mates, ja el tens inclòs. Demana el codi de classe al teu docent.', '<b>Con tu escuela:</b> si usan Numi Mates, ya lo tienes incluido. Pide el código de clase a tu docente.')}${P && P.code && !P.classe ? ` <button class="link" onclick="closeModal();classeModal()">${L('Tinc un codi de classe', 'Tengo un código de clase')} ›</button>` : ''}</p>
+      <p>🏠 ${L('<b>Amb la teva família:</b> un adult el pot activar ara mateix.', '<b>Con tu familia:</b> un adulto lo puede activar ahora mismo.')}</p>
+      <div class="prem-plans"><button onclick="buyPremium('mes')"><b>${L('Mensual', 'Mensual')}</b><span>4,99 €<small>/${L('mes', 'mes')}</small></span></button>
+        <button class="best" onclick="buyPremium('any')"><i>${L('Estalvia 10 €', 'Ahorra 10 €')}</i><b>${L('Anual', 'Anual')}</b><span>49 €<small>/${L('any', 'año')}</small></span></button></div>
+      <p class="prem-note">${L('IVA inclòs. Es renova sol i es pot cancel·lar quan vulguis.', 'IVA incluido. Se renueva solo y se puede cancelar cuando quieras.')}</p></div>
+    <button class="btn big ghost" onclick="closeModal()">${L('ARA NO', 'AHORA NO')}</button></div>`, true);
+}
+// Compra de Premium: la fa un adult a la pàgina de pagament de Stripe (l'app no veu mai la targeta).
+// Premium és per a aquest perfil; el portal de Stripe (amb el correu de l'adult) serveix per canviar-lo o cancel·lar-lo.
+const PLA_TXT = { mes: ['Mensual · 4,99 € al mes', 'Mensual · 4,99 € al mes'], any: ['Anual · 49 € a l\'any', 'Anual · 49 € al año'] };
+function buyPremium(pla) {
+  if (!P || !P.code) { syncNow(); return toast(L('Primer cal guardar el perfil al núvol: connecta\'t a internet i torna-ho a provar.', 'Primero hay que guardar el perfil en la nube: conéctate a internet y vuelve a probarlo.')); }
+  modal(`<div class="sheet card cent prem-sheet"><h3>🔒 ${L('Això ho ha de fer un adult', 'Esto lo tiene que hacer un adulto')}</h3>
+    <p class="prem-sum">${L('Numi Mates Premium per a', 'Numi Mates Premium para')} <b>${esc(P.name)}</b><br><span>${esc(L(PLA_TXT[pla][0], PLA_TXT[pla][1]))}</span></p>
+    <ul class="prem prem-small"><li><span>💳</span><span>${L('Es paga amb targeta a la pàgina segura de Stripe. L\'app no veu mai les dades de la targeta.', 'Se paga con tarjeta en la página segura de Stripe. La app nunca ve los datos de la tarjeta.')}</span></li>
+      <li><span>🔁</span><span>${L('Es renova sol. Es pot cancel·lar quan vulgueu amb l\'enllaç que rebreu per correu, i dura fins al final del període pagat.', 'Se renueva solo. Se puede cancelar cuando queráis con el enlace que recibiréis por correo, y dura hasta el final del periodo pagado.')}</span></li></ul>
+    <label class="prem-ok"><input type="checkbox" id="premok" onchange="$('#premgo').disabled=!this.checked"> <span>${L('Sóc el pare, la mare o el tutor legal i accepto les', 'Soy el padre, la madre o el tutor legal y acepto las')} <a href="https://numimates.com/condicions?l=${LANG}" target="_blank" rel="noopener">${L('condicions', 'condiciones')}</a>.</span></label>
+    <p class="err" id="premerr"></p>
+    <button class="btn big gold" id="premgo" disabled onclick="payGo('${pla === 'any' ? 'any' : 'mes'}')">${L('CONTINUA AL PAGAMENT', 'CONTINUAR AL PAGO')}</button>
+    <button class="btn ghost big" onclick="closeModal()">${L('ARA NO', 'AHORA NO')}</button></div>`, true);
+}
+async function payGo(pla) {
+  const b = $('#premgo'), e = $('#premerr'); if (!b || b.disabled) return;
+  b.disabled = true; b.textContent = L('UN MOMENT…', 'UN MOMENTO…'); e.textContent = '';
+  try {
+    const r = await api('pay?a=checkout', { code: P.code, pla, lang: LANG });
+    if (r.url && /^https:\/\/checkout\.stripe\.com\//.test(r.url)) { try { sessionStorage.setItem('numi-pay-code', P.code); } catch (x) { } location.href = r.url; return; }
+    e.textContent = r.error === 'escola' ? L('Aquest perfil és d\'una classe: ja té Premium amb l\'escola.', 'Este perfil es de una clase: ya tiene Premium con la escuela.')
+      : r.error === 'ja' ? L('Aquest perfil ja té Premium.', 'Este perfil ya tiene Premium.')
+      : r.status === 429 ? ERR('massa') : r.status === 503 ? L('Encara no es pot pagar des de l\'app. Escriviu-nos a hola@numimates.com.', 'Todavía no se puede pagar desde la app. Escribidnos a hola@numimates.com.') : ERR();
+  } catch (x) { e.textContent = ERR(); }
+  b.disabled = false; b.textContent = L('CONTINUA AL PAGAMENT', 'CONTINUAR AL PAGO');
+}
+// en tornar de Stripe (?premium=ok|cancel): Stripe avisa el servidor pel seu compte; aquí només esperem que arribi
+(() => { try { const q = new URLSearchParams(location.search).get('premium'); if (q === 'ok' || q === 'cancel') { sessionStorage.setItem('numi-pay', q); history.replaceState(null, '', location.pathname); } } catch (e) { } })();
+async function payReturn() {
+  let q = null, who = null; try { q = sessionStorage.getItem('numi-pay'); who = sessionStorage.getItem('numi-pay-code'); } catch (e) { }
+  if (!q || !P || !P.code || VIEW !== 'home' || $('.modal-bg')) return;
+  try { sessionStorage.removeItem('numi-pay'); } catch (e) { }
+  if (q === 'cancel') return toast(L('Pagament cancel·lat: no s\'ha cobrat res.', 'Pago cancelado: no se ha cobrado nada.'));
+  if (who && who !== P.code) return;
+  modal(`<div class="sheet card cent"><div class="mchar">${meC('happy')}</div><h3>${L('Gràcies!', '¡Gracias!')}</h3><p id="paymsg">${L('Estem activant Premium…', 'Estamos activando Premium…')}</p></div>`, true);
+  for (let i = 0; i < 10 && P.pla !== 'premium'; i++) { await new Promise(r => setTimeout(r, 2500)); await pull(); }
+  closeModal();
+  if (P.pla === 'premium') {
+    SFX.win(); renderHome();
+    modal(`<div class="sheet card cent"><div class="mchar tapme">${meC('happy')}</div><h3>${L('Ja tens Numi Mates Premium!', '¡Ya tienes Numi Mates Premium!')}</h3>
+      <p>${L('Ara pots fer fins a 5 lliçons noves al dia, jugar batalles de mates i seguir la ruta de temporada.', 'Ahora puedes hacer hasta 5 lecciones nuevas al día, jugar batallas de mates y seguir la ruta de temporada.')}</p>
+      <button class="btn big" onclick="closeModal()">${L('SOM-HI!', '¡VAMOS!')}</button></div>`, true);
+  } else {
+    modal(`<div class="sheet card cent"><h3>${L('Pagament rebut', 'Pago recibido')}</h3><p>${L('Premium s\'activarà en uns minuts. Si d\'aquí a una estona encara no el teniu, escriviu-nos a <b>hola@numimates.com</b>.', 'Premium se activará en unos minutos. Si dentro de un rato todavía no lo tenéis, escribidnos a <b>hola@numimates.com</b>.')}</p>
+      <button class="btn big" onclick="closeModal()">${L('ENTESOS', 'ENTENDIDO')}</button></div>`, true);
+  }
+}
+// secció del perfil: què té aquest perfil i on es gestiona
+function premiumBox() {
+  if (P.classe) return '';
+  if (P.pla === 'premium') return `<div class="prem-box on"><b>⭐ Numi Mates Premium</b><span>${L('Fins a 5 lliçons al dia, batalles i ruta de temporada.', 'Hasta 5 lecciones al día, batallas y ruta de temporada.')}</span>
+    <button class="btn sm ghost" onclick="payPortal()">${L('GESTIONA LA SUBSCRIPCIÓ', 'GESTIONAR LA SUSCRIPCIÓN')}</button></div>`;
+  return `<div class="prem-box"><b>${L('Pla gratuït', 'Plan gratuito')}</b><span>${L('1 lliçó nova al dia. Amb Premium, fins a 5, batalles i ruta de temporada.', '1 lección nueva al día. Con Premium, hasta 5, batallas y ruta de temporada.')}</span>
+    <button class="btn sm gold" onclick="premiumModal()">${L('QUÈ ÉS PREMIUM?', '¿QUÉ ES PREMIUM?')}</button></div>`;
+}
+async function payPortal() {
+  try { const r = await fetch('/api/pay?a=info').then(x => x.json()); if (r.portal && /^https:\/\/billing\.stripe\.com\//.test(r.portal)) { window.open(r.portal, '_blank', 'noopener'); return; } } catch (e) { }
+  toast(L('Per canviar-la o cancel·lar-la, escriviu a hola@numimates.com.', 'Para cambiarla o cancelarla, escribid a hola@numimates.com.'));
 }
 function scrDayDone() {
   const M = dayMax(), free = !isPremium();
   modal(`<div class="sheet card cent"><div class="mchar tapme">${meC('happy')}</div><h3>${L('Avui ja has treballat molt!', '¡Hoy ya has trabajado mucho!')}</h3>
-    ${free ? `<p class="mut" style="font-size:14px">${L('Amb el pla gratuït es poden fer 2 lliçons noves al dia.', 'Con el plan gratuito se pueden hacer 2 lecciones nuevas al día.')} <button class="link" onclick="premiumModal('dia')">${L('Què és Premium?', '¿Qué es Premium?')}</button></p>` : ''}
-    <p>${L(`Ja has fet les ${M} lliçons d'avui. El cervell aprèn millor si descansa: demà et n'esperen més! Mentrestant pots fer entrenaments, jocs d'agilitat o repassos.`, `Ya has hecho las ${M} lecciones de hoy. El cerebro aprende mejor si descansa: ¡mañana te esperan más! Mientras tanto puedes hacer entrenamientos, juegos de agilidad o repasos.`)}</p>
+    ${free ? `<p class="mut" style="font-size:14px">${L('Amb el pla gratuït es pot fer 1 lliçó nova al dia.', 'Con el plan gratuito se puede hacer 1 lección nueva al día.')} <button class="link" onclick="premiumModal('dia')">${L('Què és Premium?', '¿Qué es Premium?')}</button></p>` : ''}
+    <p>${M === 1 ? L("Ja has fet la lliçó d'avui. El cervell aprèn millor si descansa: demà te n'espera una altra! Mentrestant pots fer entrenaments, jocs d'agilitat o repassos.", 'Ya has hecho la lección de hoy. El cerebro aprende mejor si descansa: ¡mañana te espera otra! Mientras tanto puedes hacer entrenamientos, juegos de agilidad o repasos.') : L(`Ja has fet les ${M} lliçons d'avui. El cervell aprèn millor si descansa: demà et n'esperen més! Mentrestant pots fer entrenaments, jocs d'agilitat o repassos.`, `Ya has hecho las ${M} lecciones de hoy. El cerebro aprende mejor si descansa: ¡mañana te esperan más! Mientras tanto puedes hacer entrenamientos, juegos de agilidad o repasos.`)}</p>
     <button class="btn big" onclick="closeModal();go('train')">${L('ANEM A ENTRENAR', 'VAMOS A ENTRENAR')}</button><button class="btn ghost big" onclick="closeModal()">${L('TORNA', 'VOLVER')}</button></div>`, true);
 }
 function goalCard() {
@@ -1155,6 +1216,7 @@ renderProfile.inner = function () {
       <div class="ctip">${P.username ? L(`Entra des de qualsevol dispositiu amb el teu usuari i contrasenya. Codi de reserva: <b>${P.code || '…'}</b>`, `Entra desde cualquier dispositivo con tu usuario y contraseña. Código de reserva: <b>${P.code || '…'}</b>`) : L("✏️ Apunta'l! O crea un usuari i contrasenya, que és més fàcil de recordar.", '✏️ ¡Apúntalo! O crea un usuario y contraseña, que es más fácil de recordar.')}</div>
       <button class="btn sm gold" onclick="accountModal()">${P.username ? L('CANVIA LA CONTRASENYA', 'CAMBIAR LA CONTRASEÑA') : L('CREA USUARI I CONTRASENYA', 'CREAR USUARIO Y CONTRASEÑA')}</button></div>
     <h2 class="h2">🏫 ${L('La meva classe', 'Mi clase')}</h2>${classeBox()}
+    ${P.classe ? '' : `<h2 class="h2">⭐ ${L('El meu pla', 'Mi plan')}</h2>${premiumBox()}`}
     ${sv ? `<h2 class="h2">${L("Prova d'inici", 'Prueba inicial')}</h2><div class="survey"><div><span>${L('Curs', 'Curso')}</span><b>${esc(sv.curs)}</b></div><div><span>${L('Les mates…', 'Las mates…')}</span><b>${FEEL[sv.feel] ? tx(FEEL[sv.feel]) : '—'}</b></div><div><span>${L("M'agrada", 'Me gusta')}</span><b>${LIKE[sv.like] ? tx(LIKE[sv.like]) : '—'}</b></div><div><span>${L('Resultat', 'Resultado')}</span><b>${esc(sv.result)}</b></div></div>` : ''}
     <h2 class="h2">${L('Ajustos', 'Ajustes')}</h2>
     <div class="set"><span>${L('Idioma', 'Idioma')}</span><div class="seg"><button class="${LANG === 'ca' ? 'on' : ''}" onclick="setLang('ca')">Català</button><button class="${LANG === 'es' ? 'on' : ''}" onclick="setLang('es')">Castellano</button></div></div>

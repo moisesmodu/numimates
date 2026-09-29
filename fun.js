@@ -207,6 +207,7 @@ function stickerModal(id) {
 
 /* ---------- 3. Missions diàries ---------- */
 const MIS = [
+  { id: 'les1', ev: 'lesson', goal: 1, t: 'Completa una lliçó|Completa una lección', gems: 10, free: true },
   { id: 'les2', ev: 'lesson', goal: 2, t: 'Completa 2 lliçons|Completa 2 lecciones', gems: 15 },
   { id: 'les3', ev: 'lesson', goal: 3, t: 'Completa 3 lliçons|Completa 3 lecciones', gems: 20 },
   { id: 'perf', ev: 'perfect', goal: 1, t: 'Fes una lliçó perfecta|Haz una lección perfecta', gems: 20 },
@@ -220,7 +221,9 @@ const MIS = [
 function seededPick(seed, arr, n) { let h = 0; for (const c of seed) h = (h * 31 + c.charCodeAt(0)) >>> 0; const a = [...arr], out = []; while (out.length < n && a.length) { h = (h * 1103515245 + 12345) >>> 0; out.push(a.splice(h % a.length, 1)[0]); } return out; }
 function missions() {
   const d = today();
-  if (!P.mis || P.mis.d !== d) P.mis = { d, list: seededPick(d + (P.code || P.id), MIS, 3).map(m => ({ id: m.id, p: 0, done: false })), chest: false };
+  // el pla gratuït només té 1 lliçó nova al dia: no li toquen missions de 2 o 3 lliçons
+  const pool = typeof isPremium !== 'function' || isPremium() ? MIS.filter(m => !m.free) : MIS.filter(m => m.ev !== 'lesson' || m.free);
+  if (!P.mis || P.mis.d !== d) P.mis = { d, list: seededPick(d + (P.code || P.id), pool, 3).map(m => ({ id: m.id, p: 0, done: false })), chest: false };
   return P.mis;
 }
 function misEvent(ev, amount = 1) {
