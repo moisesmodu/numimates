@@ -56,7 +56,7 @@ export async function setCancel(code, resume) {
   if (!a) return { error: 'sense subscripció' };
   const ids = new Set(a.stripe_sub ? [a.stripe_sub] : []);
   if (!resume && a.stripe_customer) {
-    const l = await stripe(`subscriptions?customer=${encodeURIComponent(a.stripe_customer)}&status=all&limit=100`);
+    const l = await stripe(`subscriptions?customer=${encodeURIComponent(a.stripe_customer)}&status=all&limit=100`).catch(e => { if (/No such customer/i.test(e.message)) return { data: [] }; throw e; });
     l.data.filter(s => LIVE.includes(s.status) && (s.id === a.stripe_sub || cleanCode(s.metadata && s.metadata.code) === code)).forEach(s => ids.add(s.id));
   }
   if (!resume) {
