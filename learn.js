@@ -10,7 +10,7 @@ function learnCards(ui) {
   const full = T && T.parts && T.parts.length;
   // 1. portada de la unitat
   const hk = typeof hookClip === 'function' ? hookClip(u.id) : '';
-  cards.push(() => `<div class="lcard">${hk ? `<div class="lhook">${hk}<div class="lchar mini">${charClip(u.guide)}</div></div>` : `<div class="lchar">${typeof charClip === 'function' ? charClip(u.guide) : charSVG(u.guide, 'happy')}</div>`}<small class="lk">${L('UNITAT', 'UNIDAD')} ${ui + 1} · ${L('QUÈ APRENDREM', 'QUÉ APRENDEREMOS')}</small>
+  cards.push(() => `<div class="lcard">${hk ? `<div class="lhookbox">${hk}<div class="lchar mini">${charClip(u.guide)}</div></div>` : `<div class="lchar">${typeof charClip === 'function' ? charClip(u.guide) : charSVG(u.guide, 'happy')}</div>`}<small class="lk">${L('UNITAT', 'UNIDAD')} ${ui + 1} · ${L('QUÈ APRENDREM', 'QUÉ APRENDEREMOS')}</small>
     <h2>${tx(u.title)}</h2>${full && T.hook ? `<p class="lhook">${tx(T.hook)}</p>` : `<p class="ld">${tx(u.desc)}</p>`}
     ${full ? `<ol class="lidx">${T.parts.map((p, i) => `<li><button onclick="learnJump(${i + 1})"><b>${i + 1}</b>${tx(p.t)}</button></li>`).join('')}</ol>`
       : `<ul class="llist">${base.map(l => `<li>${tx(l.t)}</li>`).join('')}</ul>`}</div>`);

@@ -56,10 +56,13 @@ function setLang(l, rerender = true) {
 }
 LANG = P ? P.lang : DB.lang; document.documentElement.lang = LANG;
 function saveLocal() { try { localStorage.setItem(SKEY, JSON.stringify(DB)); } catch (e) { } }
-function save() { saveLocal(); if (P && P.id !== 'tmp') { P.dirty = true; clearTimeout(save.t); save.t = setTimeout(syncNow, 1500); } }
+// save.n compta els desaments: si n'hi ha durant una pujada, el perfil continua pendent de sincronitzar
+function save() { save.n = (save.n || 0) + 1; saveLocal(); if (P && P.id !== 'tmp') { P.dirty = true; clearTimeout(save.t); save.t = setTimeout(syncNow, 1500); } }
 
 /* ---------- Núvol ---------- */
-const api = (path, data) => fetch('/api/' + path, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(data) }).then(r => r.json().then(j => ({ status: r.status, ...j })));
+// amb 15 s de marge: una petició penjada no pot deixar la sincronització bloquejada
+const api = (path, data) => { const c = new AbortController(), t = setTimeout(() => c.abort(), 15000);
+  return fetch('/api/' + path, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(data), signal: c.signal }).then(r => r.json().then(j => ({ status: r.status, ...j }))).finally(() => clearTimeout(t)); };
 let SYNCING = false;
 async function syncNow() {
   if (!P || P.id === 'tmp' || P.holdReg || SYNCING || !navigator.onLine) return;
@@ -68,10 +71,12 @@ async function syncNow() {
     if (!P.code) {
       const r = await api('register', { name: P.name, survey: P.survey || null, state: P });
       if (r.code) { P.code = r.code; P.pendingReg = false; P.dirty = false; saveLocal(); }
-    } else if (P.dirty) {
-      const r = await api('sync', { code: P.code, state: P });
-      if (r.ok === false && r.state && r.state.xp > P.xp) adopt(r.state);
-      else if (r.ok) P.dirty = false;
+    } else if (P.dirty && !P.gone) {
+      const n0 = save.n, r = await api('sync', { code: P.code, state: P, reset: !!P.resetPending });
+      // el perfil ja no existeix al núvol (donat de baixa o esborrat): deixem de provar-ho
+      if (r.status === 410 || r.status === 404) { P.gone = true; saveLocal(); SYNCING = false; return; }
+      if (r.ok === false && r.state) mergeIn(r.state);
+      else if (r.ok && save.n === n0) { P.dirty = false; P.resetPending = false; }
       saveLocal();
     }
   } catch (e) { }
@@ -80,13 +85,68 @@ async function syncNow() {
 }
 async function pull() {
   if (!P || !P.code || !navigator.onLine) return;
-  try { const r = await api('login', { code: P.code }); if (r.state && r.state.xp > P.xp) { adopt(r.state); if (VIEW === 'home') renderHome(); }
+  if (P.gone) return;
+  try { const r = await api('login', { code: P.code }); if (r.status === 410) { P.gone = true; saveLocal(); return; } if (r.state && r.state.xp > P.xp && !P.resetPending) { mergeIn(r.state); if (VIEW === 'home') renderHome(); }
     if (r.state && !!r.state.unlockAll !== !!P.unlockAll) { P.unlockAll = !!r.state.unlockAll; saveLocal(); if (VIEW === 'home') renderHome(); } if (r.username && !P.username) { P.username = r.username; saveLocal(); } } catch (e) { }
 }
+// Fusiona el progrés de dos dispositius (la tauleta de l'escola i el mòbil de casa) sense perdre res de cap dels dos:
+// estrelles, cartes, medalles, proves i estadístiques es combinen; els comptadors es queden amb el valor més alt.
+function mergeState(a, b) {
+  const base = (+b.xp || 0) > (+a.xp || 0) ? b : a, other = base === a ? b : a, o = JSON.parse(JSON.stringify(base));
+  const mx = (x, y) => Math.max(+x || 0, +y || 0), uni = (x, y) => [...new Set([...(x || []), ...(y || [])])];
+  const maxMap = (x, y) => { const r = { ...(y || {}) }; for (const k in x || {}) r[k] = mx(x[k], r[k]); return r; };
+  for (const k of ['xp', 'best', 'maxCourse', 'gems', 'freeze']) o[k] = mx(a[k], b[k]);
+  const la = a.lastDay || '', lb = b.lastDay || '';
+  if (la !== lb) { const w = la > lb ? a : b; o.lastDay = w.lastDay; o.streak = w.streak; } else o.streak = mx(a.streak, b.streak);
+  o.days = uni(a.days, b.days).sort().slice(-400);
+  for (const k of ['owned', 'accOwned', 'badges', 'crowns', 'srw']) o[k] = uni(a[k], b[k]);
+  const T = new Map(); [...(a.tests || []), ...(b.tests || [])].forEach(t => T.set(`${t.date}|${t.kind}|${t.course}`, t)); o.tests = [...T.values()].sort((x, y) => String(x.date).localeCompare(String(y.date)));
+  o.prog = {};
+  for (const id of uni(Object.keys(a.prog || {}), Object.keys(b.prog || {}))) {
+    const pa = (a.prog || {})[id], pb = (b.prog || {})[id];
+    if (!pa || !pb) { o.prog[id] = JSON.parse(JSON.stringify(pa || pb)); continue; }
+    const n = Math.max(pa.stars.length, pb.stars.length); o.prog[id] = { ...pb, ...pa, stars: Array.from({ length: n }, (_, i) => mx(pa.stars[i], pb.stars[i])) };
+  }
+  o.album = maxMap(a.album, b.album); o.cxp = maxMap(a.cxp, b.cxp); o.skip = maxMap(a.skip, b.skip);
+  o.learned = { ...(other.learned || {}), ...(base.learned || {}) }; o.bpaid = { ...(other.bpaid || {}), ...(base.bpaid || {}) };
+  o.rev = { ...(other.rev || {}) }; for (const k in base.rev || {}) { const x = base.rev[k], y = o.rev[k]; o.rev[k] = !y || x.b > y.b || (x.b === y.b && x.d > y.d) ? x : y; }
+  o.exams = { ...(other.exams || {}) };
+  for (const k in base.exams || {}) { const x = base.exams[k], y = o.exams[k]; if (!y) { o.exams[k] = x; continue; } const nw = String(x.d) >= String(y.d) ? x : y; o.exams[k] = { ...nw, best: mx(x.best, y.best), tries: mx(x.tries, y.tries) }; }
+  const sa = a.stats || {}, sb = b.stats || {}; o.stats = { ...sb, ...sa };
+  for (const k of ['answers', 'correct', 'perfect', 'lessons', 'trains', 'bestCombo', 'sprintBest', 'games', 'bwins']) o.stats[k] = mx(sa[k], sb[k]);
+  o.stats.bests = maxMap(sa.bests, sb.bests);
+  o.stats.sk = { ...(sb.sk || {}) }; for (const k in sa.sk || {}) { const x = sa.sk[k], y = o.stats.sk[k]; o.stats.sk[k] = !y || x[1] > y[1] ? x : y; }
+  if (a.season && b.season && a.season.id === b.season.id) o.season = { ...a.season, xp: mx(a.season.xp, b.season.xp), got: uni(a.season.got, b.season.got) };
+  else if (a.season || b.season) o.season = [a.season, b.season].filter(Boolean).sort((x, y) => String(y.id).localeCompare(String(x.id)))[0];
+  if (a.week && b.week && a.week.id === b.week.id) o.week = { ...a.week, xp: mx(a.week.xp, b.week.xp) };
+  return o;
+}
+// incorpora l'estat del núvol al perfil d'aquest dispositiu i, si hi ha res nou d'aquí, el torna a pujar
+function mergeIn(st) {
+  const keep = { id: P.id, code: P.code, classe: P.classe, hintAsk: P.hintAsk, gone: P.gone }, before = JSON.stringify({ ...st, dirty: 0 });
+  Object.assign(P, migrate(mergeState(JSON.parse(JSON.stringify(P)), st)), keep);
+  P.dirty = JSON.stringify({ ...P, id: st.id, code: st.code, classe: st.classe, hintAsk: st.hintAsk, gone: st.gone, dirty: 0 }) !== before;
+  DB.profiles[P.id] = P; LANG = P.lang; document.documentElement.lang = LANG; saveLocal();
+  // fre de seguretat: si el núvol i el dispositiu no es posen d'acord, no reintentem més de 3 vegades seguides
+  mergeIn.n = Date.now() - (mergeIn.t || 0) < 60000 ? (mergeIn.n || 0) + 1 : 1; mergeIn.t = Date.now();
+  if (P.dirty && mergeIn.n <= 3) { clearTimeout(save.t); save.t = setTimeout(syncNow, 1500); }
+}
 function adopt(st) { const id = P.id; Object.assign(P, migrate(st), { id, dirty: false }); DB.profiles[id] = P; LANG = P.lang; saveLocal(); }
-const cloudTxt = () => !P.code ? L("⏳ Encara no s'ha pogut desar al núvol (es tornarà a provar sol).", '⏳ Aún no se ha podido guardar en la nube (se volverá a intentar solo).') : P.dirty ? L('⏳ Desant els últims canvis…', '⏳ Guardando los últimos cambios…') : L('☁️ Progrés desat al núvol.', '☁️ Progreso guardado en la nube.');
+const cloudTxt = () => P.gone ? L("Aquest perfil ja no està actiu al núvol. Parla amb el teu docent.", 'Este perfil ya no está activo en la nube. Habla con tu docente.') : !P.code ? L("⏳ Encara no s'ha pogut desar al núvol (es tornarà a provar sol).", '⏳ Aún no se ha podido guardar en la nube (se volverá a intentar solo).') : P.dirty ? L('⏳ Desant els últims canvis…', '⏳ Guardando los últimos cambios…') : L('☁️ Progrés desat al núvol.', '☁️ Progreso guardado en la nube.');
 addEventListener('online', syncNow);
-setInterval(() => { if (P && (P.dirty || !P.code)) syncNow(); }, 30000);
+setInterval(() => { if (P && !P.gone && (P.dirty || !P.code)) syncNow(); syncOthers(); }, 30000);
+// tauleta compartida: els altres perfils del dispositiu amb canvis pendents també es pugen (un cada vegada)
+async function syncOthers() {
+  if (!navigator.onLine || SYNCING) return;
+  const p = Object.values(DB.profiles).find(x => x !== P && x.code && x.dirty && !x.gone); if (!p) return;
+  try {
+    const r = await api('sync', { code: p.code, state: p, reset: !!p.resetPending });
+    if (r.status === 410 || r.status === 404) p.gone = true;
+    else if (r.ok) { p.dirty = false; p.resetPending = false; }
+    else if (r.ok === false && r.state) { const keep = { id: p.id, code: p.code, classe: p.classe, hintAsk: p.hintAsk }; DB.profiles[p.id] = Object.assign(migrate(mergeState(p, r.state)), keep, { dirty: true }); }
+    saveLocal();
+  } catch (e) { }
+}
 addEventListener('visibilitychange', () => { if (document.hidden) syncNow(); });
 
 /* ---------- Cursos i progrés ---------- */
@@ -613,12 +673,14 @@ function finishRun() {
     if (!R.exam && R.stars < PASS && pr.stars[R.li] < PASS) R.sub = L(`Per obrir ${R.mode === 'repte' ? 'la unitat següent' : 'la lliçó següent'} necessites 2 estrelles: com a molt 2 errors. Tu pots!`, `Para abrir ${R.mode === 'repte' ? 'la unidad siguiente' : 'la lección siguiente'} necesitas 2 estrellas: como mucho 2 errores. ¡Tú puedes!`);
     const cu = crownCheck(R.ui); if (cu) { R.crown = cu; R.gems += 50; }
     if (R.mode === 'repte' && first) R.chest = ri(30, 50);
+    R.firstPass = first;
     if (R.exam && first) R.gate = R.ui;
     P.stats.lessons++; if (R.perfect) P.stats.perfect++;
     if (R.mode === 'lesson') { const dl = dayLessons(); dl.n++; if (dl.n > DAY_REWARD && !P.unlockAll) { R.gems = 0; R.noPrize = true; R.sub = (R.sub ? R.sub + ' ' : '') + L(`Lliçó ${dl.n} de ${DAY_MAX} d'avui: els diamants i les cartes són per a les ${DAY_REWARD} primeres, però l'XP i les estrelles compten igual!`, `Lección ${dl.n} de ${DAY_MAX} de hoy: los diamantes y las cartas son para las ${DAY_REWARD} primeras, ¡pero la XP y las estrellas cuentan igual!`); } }
   }
   R.bonus = Math.floor(LS.maxCombo / 3) * 2 + LS.gold * 5; R.xp += R.bonus;
-  if (R.mode === 'lesson' || R.mode === 'repte' || R.mode === 'reco' || (R.mode === 'review' && R.pass)) { misEvent('lesson'); if (!R.noPrize) R.pack = openPack(R.mode === 'repte' ? 2 : 1); }
+  // sobres: lliçons (amb el límit diari), la porta només la primera vegada que s'obre i la missió només quan s'acaba bé
+  if (R.mode === 'lesson' || R.mode === 'repte' || R.mode === 'reco' || (R.mode === 'review' && R.pass)) { misEvent('lesson'); const packOk = R.mode === 'lesson' || R.mode === 'review' || (R.mode === 'repte' && R.firstPass) || (R.mode === 'reco' && R.recoDone); if (!R.noPrize && packOk) R.pack = openPack(R.mode === 'repte' ? 2 : 1); }
   if (R.perfect && R.mode !== 'train') misEvent('perfect');
   if (R.mode === 'train' || R.mode === 'reco' || R.mode === 'review' || R.mode === 'prep') misEvent('train');
   LS = null; reward(R);
@@ -1135,9 +1197,8 @@ function teacherTema() {
 function resetP() {
   ask(L(`Segur que vols esborrar tot el progrés de <b>${esc(P.name)}</b>? No es pot desfer.`, `¿Seguro que quieres borrar todo el progreso de <b>${esc(P.name)}</b>? No se puede deshacer.`), L('ESBORRA', 'BORRAR'), L('CANCEL·LA', 'CANCELAR'), async () => {
     const keep = { id: P.id, code: P.code, username: P.username, name: P.name, lang: P.lang, course: P.course, baseCourse: P.baseCourse, survey: P.survey, goal: P.goal, sound: P.sound, unlockAll: false };
-    for (const k in P) delete P[k]; Object.assign(P, freshProgress(), keep);
-    saveLocal();
-    if (P.code) { try { await api('sync', { code: P.code, state: P, reset: true }); } catch (e) { } }
+    for (const k in P) delete P[k]; Object.assign(P, freshProgress(), keep, { resetPending: true });
+    save();   // es queda pendent (i es torna a provar) fins que el servidor confirma l'esborrat
     go('home');
   });
 }
