@@ -176,3 +176,30 @@ let EXFLAG = null;
 
 // app.js pinta la primera pantalla abans que es carregui aquest fitxer: la tornem a pintar amb les eines d'ESO
 if (P && IS_PRO && VIEW === 'home') renderHome();
+
+/* ---------- ESO de cap, no de calculadora ----------
+   A partir del nivell 7, els exercicis d'escriure un número que demanen molts càlculs passen a triar entre 4 opcions
+   (es poden comprovar de cap o estimar). Només es queden d'escriure els càlculs ràpids i petits. */
+const ESO_RAPID = /^(int\.ops|pow|root|alg\.eq1|alg\.expr|v\.balance|v\.cubes|v\.maze|fdp\.conv7|n\.line7|e\.ang|mult\.mcm|pct$|prop$|geo\.area|stat2|alg\.poly)/;
+function esoOpts(e) {
+  // opcions que es poden descartar estimant (el doble, la meitat, ×10…), no només per la darrera xifra
+  const a = e.ans, dec = !Number.isInteger(a), d = dec ? Math.min(3, (String(a).split('.')[1] || '').length) : 0, m = Math.abs(a);
+  const z = !dec && a % 10 === 0 && m >= 100 ? 10 : 1, rnd = v => dec ? +v.toFixed(d) : Math.round(v / z) * z, s = new Set();
+  const c = m < 20 && !dec ? [a + 1, a - 1, a + 2, a * 2, a + 3] : [a * 2, a / 2, m >= 10 ? a / 10 : a * 10, a * 1.5, a * .75, a * 10];
+  c.forEach(v => s.add(rnd(v)));
+  if (e.neg && a) s.add(-a);
+  s.delete(a); if (!e.neg) [...s].forEach(v => v < 0 && s.delete(v));
+  return shuffle([...s].filter(v => Number.isFinite(v) && v !== a && (dec || v !== 0))).slice(0, 3);
+}
+{
+  const g = genEx;
+  genEx = function (sk, lv, seen, mix) {
+    const e = g(sk, lv, seen, mix);
+    if (!P || (P.course ?? 0) < ESO_FROM || e.type !== 'input' || typeof e.ans !== 'number') return e;
+    if (ESO_RAPID.test(sk) && Number.isInteger(e.ans) && Math.abs(e.ans) < 1000) return e;
+    const dis = esoOpts(e); if (dis.length < 3) return e;
+    const show = v => ansText({ ...e, ans: v, dec: e.dec || !Number.isInteger(v) });
+    const opts = shuffle([e.ans, ...dis]).map(show);
+    return { ...e, type: 'choice', opts, ans: opts.indexOf(show(e.ans)), big: opts.every(o => o.length <= 7), list: opts.some(o => o.length > 12) };
+  };
+}
