@@ -327,7 +327,7 @@
     s += T(292, 44, d * 10, { a: 'end', fs: 26, c: UC, t: t2 }) + T(292, 78, `+ ${u}`, { a: 'end', fs: 26, c: YD, t: t2 + .35 });
     s += `<line x1="212" x2="296" y1="90" y2="90" stroke="${INK}" stroke-width="3" stroke-linecap="round" pathLength="1" ${A(t2 + .7, 'a-draw')}/>`;
     s += T(292, 128, `<tspan fill="${UC}">${d}</tspan><tspan fill="${YD}">${u}</tspan>`, { a: 'end', fs: 36, t: t2 + 1 });
-    s += pill(250, 164, Lc(...word), t3, { fs: 13, bg: Y, sc: Y });
+    s += pill(240, 164, Lc(...word), t3, { fs: 12, bg: Y, sc: Y });
     return { html: anSvg(W, yb + 68, s), at: [t1, t2 + 1, t3] };
   };
 
@@ -910,7 +910,7 @@
     let s = '';
     for (let k = 0; k < kg; k++) s += G(.25 + k * .3, 'a-pop', wt(26 + k * 44, 38));
     s += pill(70, 84, `${kg} kg = ${th(kg * 1000)} g`, 1.2, { fs: 13 });
-    const jx = 204, t1 = 1.9;
+    const jx = 226, t1 = 1.9;
     s += `<g ${A(t1 - .2, 'a-fade')}><path d="M${jx - 22},12 L${jx + 22},12 L${jx + 25},80 Q${jx + 25},86 ${jx + 19},86 L${jx - 19},86 Q${jx - 25},86 ${jx - 25},80 Z" fill="#fff" stroke="${INK}" stroke-width="2.5" stroke-linejoin="round"/><path d="M${jx + 24},26 Q${jx + 40},30 ${jx + 26},58" fill="none" stroke="${INK}" stroke-width="2.5"/></g>`;
     s += G(t1 + .2, 'p1-gy', `<rect x="${jx - 21}" y="49" width="44" height="34" rx="3" fill="${BLUE}" opacity=".55"/>`);
     s += `<line x1="${jx - 26}" x2="${jx + 18}" y1="15" y2="15" stroke="${RED}" stroke-width="2" stroke-dasharray="3 2" ${A(t1, 'a-fade')}/><line x1="${jx - 26}" x2="${jx + 22}" y1="49" y2="49" stroke="${RED}" stroke-width="2" stroke-dasharray="3 2" ${A(t1 + .8, 'a-fade')}/>`;
@@ -1212,7 +1212,7 @@
     let bg = '', s = '';
     mn.forEach((m, k) => s += G(.2 + k * .08, 'a-pop', `<rect x="${r1(x(k) - tw_ / 2)}" y="${y(k) - 17}" width="${tw_}" height="34" rx="9" fill="#fff" stroke="${UC}" stroke-width="2.2"/>` + T(x(k), y(k) + 5, m, { fs: 13 })));
     bg += `<rect x="${r1(x(cur) - tw_ / 2 - 3)}" y="${y(cur) - 20}" width="${tw_ + 6}" height="40" rx="11" fill="${Y}" ${A(e[0] + 1.1)}/>`;
-    s += qArr(x(cur) + 8, y(cur) - 18, x(nx) - 4, y(nx) - 40, x(nx), y(nx) - 19, e[1], { c: OK, sw: 3, lab: '+1', ly: -5, fs: 13 }) + `<rect x="${r1(x(nx) - tw_ / 2 - 3)}" y="${y(nx) - 20}" width="${tw_ + 6}" height="40" rx="11" fill="none" stroke="${OK}" stroke-width="3" ${A(e[1] + .4)}/>`;
+    s += qArr(x(cur) + 8, y(cur) - 18, x(nx) - 4, y(nx) - 34, x(nx), y(nx) - 19, e[1], { c: OK, sw: 3, lab: '+1', ly: -2, fs: 13 }) + `<rect x="${r1(x(nx) - tw_ / 2 - 3)}" y="${y(nx) - 20}" width="${tw_ + 6}" height="40" rx="11" fill="none" stroke="${OK}" stroke-width="3" ${A(e[1] + .4)}/>`;
     const lx = 110, ly = 116, lw = 100, lh = 96;
     s += `<g ${A(e[2])}><rect x="${lx}" y="${ly}" width="${lw}" height="${lh}" rx="10" fill="#fff" stroke="${INK}" stroke-width="2"/><path d="M${lx},${ly + 10} Q${lx},${ly} ${lx + 10},${ly} L${lx + lw - 10},${ly} Q${lx + lw},${ly} ${lx + lw},${ly + 10} L${lx + lw},${ly + 26} L${lx},${ly + 26} Z" fill="${RED}"/>` + T(lx + lw / 2, ly + 19, full[nx], { fs: 13, c: '#fff' }) + T(lx + lw / 2, ly + 76, day, { fs: 42 }) + '</g>';
     s += IC('flower', lx - 30, ly + 58, 40, e[2] + .4) + IC('book', lx + lw + 32, ly + 58, 40, e[2] + .6);
