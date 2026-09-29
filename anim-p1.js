@@ -1208,12 +1208,12 @@
   // els mesos de l'any i un full de calendari
   S.p1months = ({ cur, day }) => {
     const mn = Lc('gen febr març abr maig juny jul ag set oct nov des', 'ene feb mar abr may jun jul ago sep oct nov dic').split(' '), full = Lc('gener febrer març abril maig juny juliol agost setembre octubre novembre desembre', 'enero febrero marzo abril mayo junio julio agosto septiembre octubre noviembre diciembre').split(' ');
-    const tw_ = 46, gap = 5, x = k => 10 + tw_ / 2 + (k % 6) * (tw_ + gap), y = k => 40 + Math.floor(k / 6) * 44, e = [.25, 2, 3.4], nx = (cur + 1) % 12;
+    const tw_ = 46, gap = 5, x = k => 10 + tw_ / 2 + (k % 6) * (tw_ + gap), y = k => 44 + Math.floor(k / 6) * 44, e = [.25, 2, 3.4], nx = (cur + 1) % 12;
     let bg = '', s = '';
     mn.forEach((m, k) => s += G(.2 + k * .08, 'a-pop', `<rect x="${r1(x(k) - tw_ / 2)}" y="${y(k) - 17}" width="${tw_}" height="34" rx="9" fill="#fff" stroke="${UC}" stroke-width="2.2"/>` + T(x(k), y(k) + 5, m, { fs: 13 })));
     bg += `<rect x="${r1(x(cur) - tw_ / 2 - 3)}" y="${y(cur) - 20}" width="${tw_ + 6}" height="40" rx="11" fill="${Y}" ${A(e[0] + 1.1)}/>`;
     s += qArr(x(cur) + 8, y(cur) - 18, x(nx) - 4, y(nx) - 34, x(nx), y(nx) - 19, e[1], { c: OK, sw: 3, lab: '+1', ly: -2, fs: 13 }) + `<rect x="${r1(x(nx) - tw_ / 2 - 3)}" y="${y(nx) - 20}" width="${tw_ + 6}" height="40" rx="11" fill="none" stroke="${OK}" stroke-width="3" ${A(e[1] + .4)}/>`;
-    const lx = 110, ly = 116, lw = 100, lh = 96;
+    const lx = 110, ly = 120, lw = 100, lh = 96;
     s += `<g ${A(e[2])}><rect x="${lx}" y="${ly}" width="${lw}" height="${lh}" rx="10" fill="#fff" stroke="${INK}" stroke-width="2"/><path d="M${lx},${ly + 10} Q${lx},${ly} ${lx + 10},${ly} L${lx + lw - 10},${ly} Q${lx + lw},${ly} ${lx + lw},${ly + 10} L${lx + lw},${ly + 26} L${lx},${ly + 26} Z" fill="${RED}"/>` + T(lx + lw / 2, ly + 19, full[nx], { fs: 13, c: '#fff' }) + T(lx + lw / 2, ly + 76, day, { fs: 42 }) + '</g>';
     s += IC('flower', lx - 30, ly + 58, 40, e[2] + .4) + IC('book', lx + lw + 32, ly + 58, 40, e[2] + .6);
     return { html: anSvg(W, ly + lh + 8, bg + s), at: e };
