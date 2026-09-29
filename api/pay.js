@@ -5,10 +5,9 @@
                                                       a Stripe amb la clau secreta, així un avís inventat no pot activar res. */
 import { sql, body, cleanCode, ok, blocked, fail, note, tooMany } from './_lib.js';
 
-import { STRIPE_KEY as KEY, stripe, stripeMode } from './_stripe.js';
+import { STRIPE_KEY as KEY, stripe, stripeMode, applySub, subOf } from './_stripe.js';
 const LOOKUP = { mes: 'numi_premium_mes', any: 'numi_premium_any' };
 const ORIGINS = ['https://app.numimates.com', 'https://mates-numi.vercel.app', 'http://localhost:5176', 'http://127.0.0.1:5176'];
-const GRACE = 3; // dies de marge si la renovació tarda (reintents de cobrament)
 
 let PRICES = null, PORTAL = null;
 async function prices() {
@@ -24,26 +23,6 @@ async function portal() {
   const r = await stripe('billing_portal/configurations?active=true&limit=20');
   const c = r.data.find(x => x.login_page && x.login_page.enabled && x.login_page.url);
   return (PORTAL = c ? c.login_page.url : '');
-}
-
-const periodEnd = s => s.current_period_end || (s.items && s.items.data && s.items.data[0] && s.items.data[0].current_period_end) || 0;
-const endDate = ts => new Date((ts + GRACE * 86400) * 1000).toISOString().slice(0, 10);
-const LIVE = ['active', 'trialing', 'past_due'];
-
-// deixa l'alumne com diu la subscripció de Stripe (idempotent: es pot cridar tantes vegades com calgui)
-async function applySub(s, code) {
-  code = cleanCode(code || (s.metadata && s.metadata.code));
-  if (!code) return;
-  const cust = typeof s.customer === 'string' ? s.customer : s.customer && s.customer.id;
-  const it = s.items && s.items.data && s.items.data[0], iv = it && it.price && it.price.recurring && it.price.recurring.interval;
-  const per = iv === 'year' ? 'any' : iv === 'month' ? 'mes' : null, cancel = !!(s.cancel_at_period_end || s.cancel_at);
-  if (LIVE.includes(s.status) && periodEnd(s)) {
-    await sql`UPDATE mates.alumnes SET pla = 'premium', pla_fins = ${endDate(periodEnd(s))}, stripe_customer = ${cust}, stripe_sub = ${s.id},
-      pla_periode = ${per}, stripe_status = ${s.status}, pla_cancel = ${cancel}, pla_des = COALESCE(pla_des, CURRENT_DATE) WHERE code = ${code}`;
-  } else if (['canceled', 'unpaid', 'incomplete_expired'].includes(s.status)) {
-    // s'acaba ara mateix: o ja s'ha esgotat el període pagat o s'ha tornat els diners (si ja s'havia acabat abans, no l'allarguem)
-    await sql`UPDATE mates.alumnes SET pla_fins = LEAST(COALESCE(pla_fins, CURRENT_DATE), CURRENT_DATE - 1), stripe_sub = NULL, stripe_status = ${s.status}, pla_cancel = false WHERE code = ${code} AND stripe_sub = ${s.id}`;
-  }
 }
 
 async function hook(req, res) {
@@ -98,6 +77,20 @@ async function checkout(req, res) {
   return ok(res, { url: s.url });
 }
 
+// cancel·lar (al final del període pagat) o desfer-ho, des de la mateixa app (sense passar pel portal de Stripe)
+async function cancel(req, res, resume) {
+  const b = body(req), code = cleanCode(b.code);
+  if (!code) return ok(res, { error: 'codi' }, 400);
+  if (await blocked(req, 'pagament', 20, 60)) return tooMany(res);
+  const a = (await sql`SELECT stripe_sub FROM mates.alumnes WHERE code = ${code} AND active`)[0];
+  if (!a) { await fail(req, 'pagament'); return ok(res, { error: 'no trobat' }, 404); }
+  if (!a.stripe_sub) return ok(res, { error: 'sense subscripció' }, 409);
+  await applySub(await stripe('subscriptions/' + a.stripe_sub, { cancel_at_period_end: resume ? 'false' : 'true' }), code);
+  await note(req, 'pagament');
+  const r = (await sql`SELECT stripe_sub, pla, pla_fins, pla_periode, pla_cancel, stripe_status FROM mates.alumnes WHERE code = ${code}`)[0];
+  return ok(res, { ok: true, sub: subOf(r) });
+}
+
 async function info(req, res) {
   const P = await prices();
   return ok(res, { mes: P.mes.unit_amount, any: P.any.unit_amount, portal: await portal(), mode: stripeMode() });
@@ -110,6 +103,7 @@ export default async function handler(req, res) {
     if (a === 'hook' && req.method === 'POST') return await hook(req, res);
     if (a === 'checkout' && req.method === 'POST') return await checkout(req, res);
     if (a === 'info') return await info(req, res);
+    if ((a === 'cancel' || a === 'resume') && req.method === 'POST') return await cancel(req, res, a === 'resume');
     return ok(res, { error: 'acció' }, 400);
   } catch (e) {
     console.error('pay', a, e.message);

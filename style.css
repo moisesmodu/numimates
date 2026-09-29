@@ -1065,3 +1065,4 @@ img.ic{display:inline-block;width:1.2em;height:1.2em;object-fit:contain;vertical
 .prem-school .link{display:inline;margin:0;padding:0;border:0;background:none;font:inherit;font-weight:800;color:var(--pri);cursor:pointer}
 .prem-school{font-size:13.5px;color:#6A5F78;margin:10px 0 12px;text-align:center;line-height:1.4}
 .prem-sheet .prem{margin:6px 0 4px;font-size:16px}
+.btn.red{--cd:var(--ko-d);color:#fff}

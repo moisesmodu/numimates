@@ -644,7 +644,16 @@ function uOpen(code) {
 function uInfo(code) {
   const u = UD && UD.users && UD.users.find(x => x.code === code); if (!u || !(u.cat === 'pagament' || u.cat === 'manual' || u.caducat)) return '';
   const sLink = UD.stripe && UD.stripe.mode === 'live' ? 'https://dashboard.stripe.com' : 'https://dashboard.stripe.com/test';
-  return `<div class="uinfo">${uPla(u)} <span>${uEstat(u)}${u.pla_des ? ` · ${L('Premium des del', 'Premium desde el')} ${fdate(u.pla_des)}` : ''}</span>${u.stripe_customer ? ` <a href="${sLink}/customers/${encodeURIComponent(u.stripe_customer)}" target="_blank" rel="noopener">${L('Obre a Stripe', 'Abrir en Stripe')} ${ico('external-link')}</a>` : ''}${u.cat === 'pagament' ? `<small>${L('Paga amb Stripe: canviar el pla aquí no atura el cobrament. Per donar-lo de baixa, cancel·leu la subscripció a Stripe.', 'Paga con Stripe: cambiar el plan aquí no detiene el cobro. Para darlo de baja, cancelad la suscripción en Stripe.')}</small>` : ''}</div>`;
+  return `<div class="uinfo">${uPla(u)} <span>${uEstat(u)}${u.pla_des ? ` · ${L('Premium des del', 'Premium desde el')} ${fdate(u.pla_des)}` : ''}</span>${u.stripe_customer ? ` <a href="${sLink}/customers/${encodeURIComponent(u.stripe_customer)}" target="_blank" rel="noopener">${L('Obre a Stripe', 'Abrir en Stripe')} ${ico('external-link')}</a>` : ''}${u.cat === 'pagament' ? `<small>${L('Paga amb Stripe: canviar el pla aquí no atura el cobrament; cal cancel·lar la subscripció.', 'Paga con Stripe: cambiar el plan aquí no detiene el cobro; hay que cancelar la suscripción.')}</small>
+    <button class="btn sm ${u.pla_cancel ? '' : 'danger'}" style="justify-self:start" onclick="uSub(${js(u.code)},${u.pla_cancel ? 'true' : 'false'})">${u.pla_cancel ? L('Reactiva la subscripció', 'Reactivar la suscripción') : L('Cancel·la la subscripció', 'Cancelar la suscripción')}</button>` : ''}</div>`;
+}
+async function uSub(code, resume) {
+  const u = UD.users.find(x => x.code === code); if (!u) return;
+  if (!resume && !await confirmBox(L(`Cancel·lar la subscripció de ${u.name}?`, `¿Cancelar la suscripción de ${u.name}?`), L(`No es cobrarà cap més quota. Té Premium fins al ${fdate(u.renova)} i després passa al pla gratuït.`, `No se cobrará ninguna cuota más. Tiene Premium hasta el ${fdate(u.renova)} y después pasa al plan gratuito.`), L('Cancel·la la subscripció', 'Cancelar la suscripción'), true, L('No, mantén-la', 'No, mantenla'))) return;
+  const j = await act(resume ? 'sub_resume' : 'sub_cancel', { code });
+  if (!j.ok) return toast(L("No s'ha pogut fer a Stripe. Torna-ho a provar.", 'No se ha podido hacer en Stripe. Vuelve a intentarlo.'));
+  toast(resume ? L('Subscripció reactivada.', 'Suscripción reactivada.') : L('Subscripció cancel·lada al final del període.', 'Suscripción cancelada al final del periodo.'));
+  UD = null; await loadUsuaris(); reload();
 }
 function uCsv() {
   const q = v => `"${String(v ?? '').replace(/"/g, '""')}"`;
@@ -734,9 +743,9 @@ function vActivitat(tab = 'batalles') {
 /* ---------- peces comunes ---------- */
 function modal(html, cls = '') { closeModal(); document.body.insertAdjacentHTML('beforeend', `<div class="modal-s" onclick="if(event.target===this)closeModal()"><div class="modal ${cls}" role="dialog">${html}</div></div>`); }
 function closeModal() { $$('.modal-s').forEach(m => m.remove()); }
-function confirmBox(title, text, okTxt, danger = true) {
+function confirmBox(title, text, okTxt, danger = true, noTxt = '') {
   return new Promise(res => {
-    modal(`<h3>${esc(title)}</h3><p>${esc(text)}</p><div class="acts"><button class="btn" id="cb0">${L('Cancel·la', 'Cancelar')}</button><button class="btn ${danger ? 'danger solid' : 'primary'}" id="cb1">${esc(okTxt)}</button></div>`);
+    modal(`<h3>${esc(title)}</h3><p>${esc(text)}</p><div class="acts"><button class="btn" id="cb0">${noTxt ? esc(noTxt) : L('Cancel·la', 'Cancelar')}</button><button class="btn ${danger ? 'danger solid' : 'primary'}" id="cb1">${esc(okTxt)}</button></div>`);
     $('#cb0').onclick = () => { closeModal(); res(false); }; $('#cb1').onclick = () => { closeModal(); res(true); }; $('#cb1').focus();
   });
 }

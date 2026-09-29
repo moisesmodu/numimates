@@ -87,7 +87,8 @@ async function pull() {
   if (!P || !P.code || !navigator.onLine) return;
   if (P.gone) return;
   try { const r = await api('login', { code: P.code }); if (r.status === 410) { P.gone = true; saveLocal(); return; }
-    if (r.pla && r.pla !== P.pla) { P.pla = r.pla; saveLocal(); if (VIEW === 'home') renderHome(); } if (r.state && r.state.xp > P.xp && !P.resetPending) { mergeIn(r.state); if (VIEW === 'home') renderHome(); }
+    if (r.pla && r.pla !== P.pla) { P.pla = r.pla; saveLocal(); if (VIEW === 'home') renderHome(); }
+    if ('sub' in r && JSON.stringify(r.sub || null) !== JSON.stringify(P.sub || null)) { P.sub = r.sub || null; saveLocal(); if (VIEW === 'profile') renderProfile(); } if (r.state && r.state.xp > P.xp && !P.resetPending) { mergeIn(r.state); if (VIEW === 'home') renderHome(); }
     if (r.state && !!r.state.unlockAll !== !!P.unlockAll) { P.unlockAll = !!r.state.unlockAll; saveLocal(); if (VIEW === 'home') renderHome(); } if (r.username && !P.username) { P.username = r.username; saveLocal(); } } catch (e) { }
 }
 // Fusiona el progrés de dos dispositius (la tauleta de l'escola i el mòbil de casa) sense perdre res de cap dels dos:
@@ -403,16 +404,50 @@ async function payReturn() {
   }
 }
 // secció del perfil: què té aquest perfil i on es gestiona
+const dayLong = d => new Date(d + 'T12:00').toLocaleDateString(LANG === 'es' ? 'es-ES' : 'ca-ES', { day: 'numeric', month: 'long' });
 function premiumBox() {
   if (P.classe) return '';
-  if (P.pla === 'premium') return `<div class="prem-box on"><b>⭐ Numi Mates Premium</b><span>${L('Lliçons sense límit, batalles i ruta de temporada.', 'Lecciones sin límite, batallas y ruta de temporada.')}</span>
-    <button class="btn sm ghost" onclick="payPortal()">${L('GESTIONA LA SUBSCRIPCIÓ', 'GESTIONAR LA SUSCRIPCIÓN')}</button></div>`;
+  if (P.pla === 'premium') {
+    const S = P.sub, per = S && (S.periode === 'any' ? L('Anual', 'Anual') : L('Mensual', 'Mensual'));
+    const estat = !S ? L('Lliçons sense límit, batalles i ruta de temporada.', 'Lecciones sin límite, batallas y ruta de temporada.')
+      : S.cancel ? L(`Cancel·lada: tens Premium fins al ${dayLong(S.renova)} i després passes al pla gratuït.`, `Cancelada: tienes Premium hasta el ${dayLong(S.renova)} y después pasas al plan gratuito.`)
+      : S.pendent ? L('No s\'ha pogut cobrar la renovació: revisa la targeta.', 'No se ha podido cobrar la renovación: revisa la tarjeta.')
+      : L(`${per} · es renova el ${dayLong(S.renova)}.`, `${per} · se renueva el ${dayLong(S.renova)}.`);
+    return `<div class="prem-box on"><b>⭐ Numi Mates Premium</b><span>${estat}</span>
+      ${S ? (S.cancel ? `<button class="btn sm gold" onclick="subResume()">${L('REACTIVA LA SUBSCRIPCIÓ', 'REACTIVAR LA SUSCRIPCIÓN')}</button>`
+        : `<button class="btn sm ghost redt" onclick="subCancel(1)">${L('CANCEL·LA LA SUBSCRIPCIÓ', 'CANCELAR LA SUSCRIPCIÓN')}</button>`) : ''}</div>`;
+  }
   return `<div class="prem-box"><b>${L('Pla gratuït', 'Plan gratuito')}</b><span>${L('1 lliçó nova al dia. Amb Premium, sense límit, amb batalles i ruta de temporada.', '1 lección nueva al día. Con Premium, sin límite, con batallas y ruta de temporada.')}</span>
     <button class="btn sm gold" onclick="premiumModal()">${L('QUÈ ÉS PREMIUM?', '¿QUÉ ES PREMIUM?')}</button></div>`;
 }
-async function payPortal() {
-  try { const r = await fetch('/api/pay?a=info').then(x => x.json()); if (r.portal && /^https:\/\/billing\.stripe\.com\//.test(r.portal)) { window.open(r.portal, '_blank', 'noopener'); return; } } catch (e) { }
-  toast(L('Per canviar-la o cancel·lar-la, escriviu a hola@numimates.com.', 'Para cambiarla o cancelarla, escribid a hola@numimates.com.'));
+// Cancel·lar des de l'app, amb doble confirmació: 1) què passarà; 2) confirmació d'adult. Es cancel·la al final del període pagat.
+function subCancel(step) {
+  const S = P.sub; if (!S) return;
+  if (step === 1) return modal(`<div class="sheet card cent"><h3>${L('Vols cancel·lar Premium?', '¿Quieres cancelar Premium?')}</h3>
+    <p>${L(`No es cobrarà cap més quota. Tens Premium fins al <b>${dayLong(S.renova)}</b> i després passes al pla gratuït sense perdre cap progrés.`, `No se cobrará ninguna cuota más. Tienes Premium hasta el <b>${dayLong(S.renova)}</b> y después pasas al plan gratuito sin perder ningún progreso.`)}</p>
+    <button class="btn big" onclick="closeModal()">${L('NO, EL MANTINC', 'NO, LO MANTENGO')}</button>
+    <button class="btn ghost big redt" onclick="subCancel(2)">${L('SÍ, VULL CANCEL·LAR', 'SÍ, QUIERO CANCELAR')}</button></div>`, true);
+  modal(`<div class="sheet card cent prem-sheet"><h3>${L('Confirma la cancel·lació', 'Confirma la cancelación')}</h3>
+    <p class="prem-sum">Numi Mates Premium · <b>${esc(P.name)}</b></p>
+    <label class="prem-ok"><input type="checkbox" onchange="$('#subgo').disabled=!this.checked"> <span>${L('Sóc el pare, la mare o el tutor legal i vull cancel·lar la subscripció.', 'Soy el padre, la madre o el tutor legal y quiero cancelar la suscripción.')}</span></label>
+    <p class="err" id="suberr"></p>
+    <button class="btn big red" id="subgo" disabled onclick="subDo(false)">${L('CANCEL·LA LA SUBSCRIPCIÓ', 'CANCELAR LA SUSCRIPCIÓN')}</button>
+    <button class="btn ghost big" onclick="closeModal()">${L('TORNA', 'VOLVER')}</button></div>`, true);
+}
+function subResume() { subDo(true); }
+async function subDo(resume) {
+  const b = $('#subgo'); if (b) { b.disabled = true; b.textContent = L('UN MOMENT…', 'UN MOMENTO…'); }
+  try {
+    const r = await api(resume ? 'pay?a=resume' : 'pay?a=cancel', { code: P.code });
+    if (r.ok) {
+      P.sub = r.sub || null; saveLocal(); closeModal(); renderProfile();
+      return toast(resume ? L('Subscripció reactivada. Continues amb Premium!', '¡Suscripción reactivada. Sigues con Premium!')
+        : L(`Subscripció cancel·lada. Tens Premium fins al ${dayLong(P.sub ? P.sub.renova : today())}.`, `Suscripción cancelada. Tienes Premium hasta el ${dayLong(P.sub ? P.sub.renova : today())}.`));
+    }
+    const m = r.status === 429 ? ERR('massa') : ERR();
+    if ($('#suberr')) $('#suberr').textContent = m; else toast(m);
+  } catch (e) { if ($('#suberr')) $('#suberr').textContent = ERR(); else toast(ERR()); }
+  if (b) { b.disabled = false; b.textContent = L('CANCEL·LA LA SUBSCRIPCIÓ', 'CANCELAR LA SUSCRIPCIÓN'); }
 }
 function scrDayDone() {
   const M = dayMax(), free = !isPremium();
@@ -1191,6 +1226,8 @@ function renderBadges(tabs = '') {
 const FEEL = { love: ["😍 M'encanten", '😍 Me encantan'], good: ['🙂 Em van bé', '🙂 Me van bien'], meh: ['😐 Normal', '😐 Normal'], hard: ['😟 Em costen', '😟 Me cuestan'] };
 const LIKE = { calc: ['🧮 Calcular', '🧮 Calcular'], logic: ['🧩 Enigmes i lògica', '🧩 Enigmas y lógica'], geo: ['📐 Formes i mesures', '📐 Formas y medidas'], prob: ['🕵️ Problemes', '🕵️ Problemas'] };
 function renderProfile() {
+  // Premium de pagament: l'estat de la subscripció (renovació, cancel·lació) es consulta en obrir el perfil
+  if (P.pla === 'premium' && !P.classe && !renderProfile.pulled) { renderProfile.pulled = 1; pull(); }
   if (!renderProfile.q) { renderProfile.q = 1; classeRefresh().then(() => { renderProfile.q = 0; if (VIEW === 'profile') renderProfile.inner(); }); }
   return renderProfile.inner();
 }
@@ -1354,7 +1391,7 @@ async function doLogin(withCode) {
     const code = r.code || data.code, ex = Object.values(DB.profiles).find(p => p.code === code);
     if (ex) { closeModal(); return switchP(ex.id); }
     const id = 'p' + Date.now().toString(36);
-    P = migrate({ ...r.state, id, code, name: r.name, username: r.state.username || r.username || (withCode ? null : data.username), pla: r.pla || 'free' }); P.dirty = false; P.holdReg = false;
+    P = migrate({ ...r.state, id, code, name: r.name, username: r.state.username || r.username || (withCode ? null : data.username), pla: r.pla || 'free', sub: r.sub || null }); P.dirty = false; P.holdReg = false;
     DB.profiles[id] = P; DB.current = id; LANG = P.lang; saveLocal();
     closeModal(); go('home'); toast(L(`Hola de nou, ${esc(P.name)}! 👋`, `¡Hola de nuevo, ${esc(P.name)}! 👋`));
   } catch (e) { $('#lerr').textContent = ERR(); }
