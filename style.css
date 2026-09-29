@@ -971,7 +971,7 @@ img.ic{display:inline-block;width:1.2em;height:1.2em;object-fit:contain;vertical
   .nav::before{content:"";display:block;height:58px;margin:0 6px 16px;background:url(img/brand/logo-horitzontal.svg) left center/contain no-repeat}
   .nav button{width:auto;flex-direction:row;justify-content:flex-start;gap:14px;padding:10px 14px;font-size:15px;letter-spacing:.02em}
   .nav .ni{font-size:28px}
-  #app:has(> .nav){padding-left:232px}
+  body:has(> #app > .nav) #app,#app:has(> .nav){padding-left:232px}
   #app:has(> .nav) .page{max-width:880px;padding-inline:32px}
   #app:has(> .nav) .page.home{max-width:1080px;display:grid;grid-template-columns:minmax(0,1fr) 340px;grid-template-areas:"top top" "main side";column-gap:40px;align-items:start}
   .page.home>.topbar{grid-area:top}
