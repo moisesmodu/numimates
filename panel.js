@@ -157,7 +157,7 @@ function setLang(l, onLogin) { LANG = l; store.set('numi-profe-lang', l); docume
 
 /* ---------- carcassa ---------- */
 const NAV = () => [['resum', 'layout-dashboard', L('Resum', 'Resumen')], ['alumnes', 'users', L('Alumnes', 'Alumnos'), scope().length], ['grups', 'school', L('Grups', 'Grupos')], ['informes', 'chart-column', L('Informes', 'Informes')]];
-const ADMIN_NAV = () => { const seen = +store.get('numi-profe-sol', 0), nou = (D.contacts || []).filter(c => new Date(c.created_at).getTime() > seen).length; return [['centres', 'building-2', L('Centres', 'Centros')], ['docents', 'graduation-cap', L('Docents', 'Docentes')], ['totsgrups', 'layout-grid', L('Tots els grups', 'Todos los grupos')], ['sollicituds', 'inbox', L('Sol·licituds', 'Solicitudes'), nou, true], ['activitat', 'activity', L('Activitat', 'Actividad')]]; };
+const ADMIN_NAV = () => { const seen = +store.get('numi-profe-sol', 0), nou = (D.contacts || []).filter(c => new Date(c.created_at).getTime() > seen).length; return [['usuaris', 'crown', L('Usuaris i Premium', 'Usuarios y Premium')], ['centres', 'building-2', L('Centres', 'Centros')], ['docents', 'graduation-cap', L('Docents', 'Docentes')], ['totsgrups', 'layout-grid', L('Tots els grups', 'Todos los grupos')], ['sollicituds', 'inbox', L('Sol·licituds', 'Solicitudes'), nou, true], ['activitat', 'activity', L('Activitat', 'Actividad')]]; };
 function shell(view, title, body, { acts = '', fluid = false, switcher = true } = {}) {
   const na = ([k, ic, t, n, isNew]) => `<a href="#/${k}" class="${view === k ? 'on' : ''}" title="${esc(t)}">${ico(ic, 'i20')}<span>${esc(t)}</span>${n ? `<i class="badge ${isNew ? 'new' : ''}">${n}</i>` : ''}</a>`;
   const who = ADMIN ? { nom: ME?.nom || L('Administració', 'Administración'), rol: 'Numi Mates' } : { nom: ME.nom, rol: ME.rol === 'admin_centre' ? L('Coordinació de centre', 'Coordinación de centro') : L('Docent', 'Docente') };
@@ -197,7 +197,7 @@ function route() {
   if (v === 'alumnes' && route.last === 'alumnes' && $('#tbl')) { if (arg) openDrawer(decodeURIComponent(arg), true); else if ($('.drawer')) closeDrawer(true); return; }
   route.last = v;
   const V = { resum: vResum, alumnes: vAlumnes, grups: vGrups, informes: vInformes, guia: vGuia, compte: vCompte };
-  if (ADMIN) Object.assign(V, { centres: vCentres, docents: vDocents, totsgrups: vTotsGrups, sollicituds: vSol, activitat: vActivitat });
+  if (ADMIN) Object.assign(V, { usuaris: vUsuaris, centres: vCentres, docents: vDocents, totsgrups: vTotsGrups, sollicituds: vSol, activitat: vActivitat });
   (V[v] || vResum)(arg);
   if (v === 'alumnes' && arg) openDrawer(decodeURIComponent(arg), true); else if ($('.drawer')) closeDrawer(true);
 }
@@ -339,7 +339,7 @@ function reportHTML(r, print) {
       <dt>${L('Usuari', 'Usuario')}</dt><dd>${r.username ? '@' + esc(r.username) : L('Entra amb codi', 'Entra con código')}</dd></dl>
       ${r.username ? `<div style="margin-top:12px"><button class="btn sm" onclick="pwForm(${js(r.code)})">${ico('key-round')}${L('Canvia la contrasenya', 'Cambiar la contraseña')}</button><div id="pwf"></div></div>` : ''}
       <label class="switch" style="margin-top:16px"><input type="checkbox" ${r.unlock_all ? 'checked' : ''} onchange="doUnlock(${js(r.code)},this.checked)"><span><b style="font-weight:600">${L('Mode mestre: obre totes les unitats', 'Modo maestro: abre todas las unidades')}</b><br><small class="t3">${L("L'alumne podrà fer qualsevol unitat sense passar la porta.", 'El alumno podrá hacer cualquier unidad sin pasar la puerta.')}</small></span></label>
-      ${ADMIN ? `<div class="inline-form"><label class="field"><span>${L('Pla', 'Plan')}</span><select onchange="doPla(${js(r.code)},this.value)">${[['free', 'Gratuït|Gratuito'], ['premium', 'Premium|Premium'], ['escola', 'Escola|Escuela']].map(([k, t]) => `<option value="${k}" ${r.pla === k ? 'selected' : ''}>${tx(t)}</option>`).join('')}</select></label>
+      ${ADMIN ? `<div class="inline-form"><label class="field"><span>${L('Pla', 'Plan')}</span><select onchange="doPla(${js(r.code)},this.value)">${[['free', 'Gratuït|Gratuito'], ['premium', 'Premium|Premium'], ['escola', 'Escola|Escuela']].map(([k, t]) => `<option value="${k}" ${r.pla === k ? 'selected' : ''}>${tx(t)}</option>`).join('')}</select></label>${uInfo(r.code)}
         <label class="field"><span>${L('Grup', 'Grupo')}</span><select onchange="doAssign(${js(r.code)},this.value)"><option value="">${L('Sense grup', 'Sin grupo')}</option>${GRUPS.map(g => `<option value="${g.id}" ${g.id === r.grup_id ? 'selected' : ''}>${esc(g.nom)} · ${esc(g.centre)}</option>`).join('')}</select></label>
         <button class="btn danger sm" style="justify-self:start" onclick="doBaixa(${js(r.code)})">${ico('trash-2')}${L('Dona de baixa', 'Dar de baja')}</button></div>` : r.grup_id ? `<button class="btn sm" style="margin-top:12px" onclick="doTreure(${js(r.code)})">${ico('user-minus')}${L('Treu del grup', 'Quitar del grupo')}</button>` : ''}`);
   return `
@@ -379,7 +379,7 @@ async function doPw(code) {
 async function doUnlock(code, v) { closePops(); await act('unlock', { code, value: v }); toast(v ? L('Totes les unitats obertes per a aquest alumne.', 'Todas las unidades abiertas para este alumno.') : L("L'alumne torna al camí normal.", 'El alumno vuelve al camino normal.')); reload(); }
 async function doTreure(code) { closePops(); const r = ROWS.find(x => x.code === code); if (!await confirmBox(L(`Treure ${r.name} del grup?`, `¿Quitar a ${r.name} del grupo?`), L('Tornarà al pla gratuït.', 'Volverá al plan gratuito.'), L('Treu del grup', 'Quitar del grupo'))) return; await act('treure', { code }); closeDrawer(); toast(L('Alumne tret del grup.', 'Alumno quitado del grupo.')); reload(); }
 async function doBaixa(code) { closePops(); const r = ROWS.find(x => x.code === code); if (!await confirmBox(L(`Donar de baixa ${r.name}?`, `¿Dar de baja a ${r.name}?`), L("Deixarà d'aparèixer i no podrà entrar.", 'Dejará de aparecer y no podrá entrar.'), L('Dona de baixa', 'Dar de baja'))) return; await act('off', { code }); closeDrawer(); toast(L('Alumne donat de baixa.', 'Alumno dado de baja.')); reload(); }
-async function doPla(code, pla) { await act('pla', { code, pla }); toast(L('Pla actualitzat.', 'Plan actualizado.')); reload(); }
+async function doPla(code, pla) { await act('pla', { code, pla }); toast(L('Pla actualitzat.', 'Plan actualizado.')); UD = null; reload(); }
 async function doAssign(code, grup_id) { await act('assign', { code, grup_id }); toast(L('Grup actualitzat.', 'Grupo actualizado.')); reload(); }
 async function reload() { const keep = location.hash; await load(); if (location.hash !== keep) location.hash = keep; }
 
@@ -532,6 +532,127 @@ async function myPass() {
 
 /* ---------- Administració ---------- */
 const PLA_C = { pilot: 'Pilot|Piloto', escola: 'De pagament|De pago', gratuit: 'Gratuït|Gratuito' }, TIP_C = { escola: 'Escola|Escuela', institut: 'Institut|Instituto', academia: 'Acadèmia|Academia' };
+/* ---------- Usuaris i Premium (només administrador) ----------
+   Tots els alumnes registrats (també els de baixa), el pla de cadascun, què paguen i què s'ha cobrat a Stripe. */
+let UD = null, UF = { q: '', f: 'tots', o: 'alta', n: 100 };
+const PRICE = { mes: 4.99, any: 49 };
+const eur = v => v.toLocaleString(LANG, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' €';
+async function loadUsuaris() {
+  const r = await fetch('/api/profe?v=usuaris', { headers: AUTH() }).catch(() => null);
+  if (!r || r.status !== 200) { UD = { error: true, users: [] }; return; }
+  UD = await r.json(); UD.at = Date.now();
+  UD.users.forEach(u => {
+    const fins = u.pla_fins ? String(u.pla_fins).slice(0, 10) : null, viu = u.pla === 'premium' && (!fins || fins >= TODAY);
+    u.cat = !u.active ? 'baixa' : (u.grup_id || u.pla === 'escola') ? 'escola' : viu && u.stripe ? 'pagament' : viu ? 'manual' : 'free';
+    u.caducat = u.pla === 'premium' && !viu;
+    // Stripe: pla_fins porta 3 dies de marge sobre la data de renovació
+    u.renova = u.stripe && fins ? iso(new Date(fins + 'T12:00').getTime() - 3 * DAY) : null;
+    u.alta = String(u.created_at).slice(0, 10); u.idle = daysAgo(u.last_day);
+  });
+}
+const CAT = { pagament: 'Premium de pagament|Premium de pago', manual: 'Premium manual|Premium manual', free: 'Gratuït|Gratuito', escola: 'Escola|Escuela', baixa: 'Baixa|Baja' };
+function uPla(u) {
+  if (u.cat === 'pagament') return `<span class="chip gold">${u.pla_periode === 'any' ? L('Premium anual', 'Premium anual') : L('Premium mensual', 'Premium mensual')}</span>`;
+  return `<span class="chip ${{ manual: 'purple', free: 'none', escola: 'blue', baixa: 'crit' }[u.cat]}">${tx(CAT[u.cat])}</span>`;
+}
+function uEstat(u) {
+  if (u.cat === 'pagament') return u.stripe_status === 'past_due' ? `<span class="down">${L('Pagament pendent', 'Pago pendiente')}</span>` : u.pla_cancel ? `<span class="warn-t">${L('Cancel·la el', 'Cancela el')} ${fdate(u.renova)}</span>` : `${L('Renova el', 'Renueva el')} ${fdate(u.renova)}`;
+  if (u.cat === 'manual') return u.pla_fins ? `${L('Fins al', 'Hasta el')} ${fdate(u.pla_fins)}` : L('Sense data de fi', 'Sin fecha de fin');
+  if (u.cat === 'escola') return esc([u.grup, u.centre].filter(Boolean).join(' · ') || L('Pla escola', 'Plan escuela'));
+  if (u.caducat) return `<span class="t3">${L('Premium caducat el', 'Premium caducado el')} ${fdate(u.pla_fins)}</span>`;
+  return '<span class="t3">—</span>';
+}
+const UFILT = () => [['tots', L('Tots', 'Todos')], ['pagament', L('De pagament', 'De pago')], ['manual', L('Manual', 'Manual')], ['free', L('Gratuïts', 'Gratuitos')], ['escola', L('Escola', 'Escuela')], ['nous', L('Nous (7 dies)', 'Nuevos (7 días)')], ['inactius', L('Inactius +30 dies', 'Inactivos +30 días')], ['baixa', L('Baixa', 'Baja')]];
+const uCount = k => { const s = UF.f; UF.f = k; const q = UF.q; UF.q = ''; const n = uList().length; UF.f = s; UF.q = q; return n; };
+function uList() {
+  const q = UF.q.trim().toLowerCase(), U = UD.users.filter(u => {
+    if (q && ![u.name, u.username, u.code, u.grup, u.centre].some(x => x && String(x).toLowerCase().includes(q))) return false;
+    if (UF.f === 'tots') return u.cat !== 'baixa';
+    if (UF.f === 'nous') return u.cat !== 'baixa' && daysAgo(u.alta) <= 7;
+    if (UF.f === 'inactius') return u.cat !== 'baixa' && (u.idle == null || u.idle > 30);
+    return u.cat === UF.f;
+  });
+  const by = { alta: (a, b) => b.alta.localeCompare(a.alta), act: (a, b) => (a.idle ?? 1e9) - (b.idle ?? 1e9), xp: (a, b) => (b.xp || 0) - (a.xp || 0), nom: (a, b) => a.name.localeCompare(b.name) };
+  return U.sort(by[UF.o] || by.alta);
+}
+function vUsuaris() {
+  if (!UD) { shell('usuaris', L('Usuaris i Premium', 'Usuarios y Premium'), `<div class="card pad t3">${L('Carregant…', 'Cargando…')}</div>`, { switcher: false }); return loadUsuaris().then(() => { if (route.last === 'usuaris') vUsuaris(); }); }
+  if (UD.error) return shell('usuaris', L('Usuaris i Premium', 'Usuarios y Premium'), `<div class="card">${emptyState('circle-alert', L("No s'han pogut carregar els usuaris", 'No se han podido cargar los usuarios'), L('Torna-ho a provar.', 'Vuelve a intentarlo.'), `<button class="btn" onclick="UD=null;vUsuaris()">${L('Torna-ho a provar', 'Reintentar')}</button>`)}</div>`, { switcher: false });
+  const A = UD.users.filter(u => u.cat !== 'baixa'), n = A.length, c = k => A.filter(u => u.cat === k).length;
+  const pay = A.filter(u => u.cat === 'pagament'), pm = pay.filter(u => u.pla_periode !== 'any').length, pa = pay.length - pm;
+  const mrr = pm * PRICE.mes + pa * PRICE.any / 12, nous7 = A.filter(u => daysAgo(u.alta) <= 7).length, nous30 = A.filter(u => daysAgo(u.alta) <= 30).length;
+  const prem30 = pay.filter(u => u.pla_des && daysAgo(u.pla_des) <= 30).length, part = c('free') + pay.length + c('manual');
+  const act0 = A.filter(u => u.idle === 0).length, act7 = A.filter(u => u.idle != null && u.idle <= 6).length, act30 = A.filter(u => u.idle != null && u.idle <= 29).length;
+  const cb = UD.stripe && UD.stripe.cobrat, mode = UD.stripe && UD.stripe.mode;
+  const kpi = (l, v, m, cls = '') => `<div class="kpi"><span class="kpi-l">${l}</span><span class="kpi-v ${cls}">${v}</span><span class="kpi-m">${m}</span></div>`;
+  // repartiment per plans
+  const segs = [['pagament', 'gold'], ['manual', 'purple'], ['free', 'none'], ['escola', 'blue']].map(([k, cl]) => ({ k, cl, v: c(k) })).filter(x => x.v);
+  // altes dels últims 30 dies, apilades pel pla que tenen ara
+  const days = Array.from({ length: 30 }, (_, i) => dayN(29 - i)), grp = u => u.cat === 'pagament' || u.cat === 'manual' ? 'p' : u.cat === 'escola' ? 'e' : 'f';
+  const perDay = days.map(d => { const U = A.filter(u => u.alta === d); return { d, f: U.filter(u => grp(u) === 'f').length, p: U.filter(u => grp(u) === 'p').length, e: U.filter(u => grp(u) === 'e').length, t: U.length }; });
+  const mx = Math.max(1, ...perDay.map(x => x.t));
+  // coses a mirar
+  const warn = [
+    ...pay.filter(u => u.stripe_status === 'past_due').map(u => [u, 'crit', L('Pagament pendent: Stripe està reintentant el cobrament', 'Pago pendiente: Stripe está reintentando el cobro')]),
+    ...pay.filter(u => u.pla_cancel).map(u => [u, 'warn', L(`Ha cancel·lat: Premium fins al ${fdate(u.renova)}`, `Ha cancelado: Premium hasta el ${fdate(u.renova)}`)]),
+    ...A.filter(u => u.cat === 'manual' && u.pla_fins && daysAgo(u.pla_fins) >= -7).map(u => [u, 'warn', L(`Premium manual: s'acaba el ${fdate(u.pla_fins)}`, `Premium manual: se acaba el ${fdate(u.pla_fins)}`)])
+  ];
+  const R = uList(), shown = R.slice(0, UF.n), sLink = mode === 'live' ? 'https://dashboard.stripe.com' : 'https://dashboard.stripe.com/test';
+  shell('usuaris', L('Usuaris i Premium', 'Usuarios y Premium'), `
+    <div class="card kpis k6">
+      ${kpi(L('Usuaris registrats', 'Usuarios registrados'), n, `+${nous7} ${L('aquesta setmana', 'esta semana')} · +${nous30} ${L('en 30 dies', 'en 30 días')}`)}
+      ${kpi(L('Premium de pagament', 'Premium de pago'), pay.length, `${pm} ${L('mensuals', 'mensuales')} · ${pa} ${L('anuals', 'anuales')} · +${prem30} ${L('en 30 dies', 'en 30 días')}`)}
+      ${kpi(L('Ingressos recurrents', 'Ingresos recurrentes'), eur(mrr), `${L('al mes', 'al mes')} · ≈ ${eur(mrr * 12)} ${L("l'any", 'al año')}`)}
+      ${kpi(L('Cobrat aquest mes', 'Cobrado este mes'), cb && !cb.error ? eur(cb.mes / 100) : '—', cb && !cb.error ? `${cb.mes_n} ${L('pagaments', 'pagos')} · ${L('30 dies', '30 días')}: ${eur(cb.d30 / 100)}${mode === 'test' ? ` · <b class="warn-t">${L('mode prova', 'modo prueba')}</b>` : ''}` : mode ? L('No s\'ha pogut llegir Stripe', 'No se ha podido leer Stripe') : L('Stripe no connectat', 'Stripe no conectado'))}
+      ${kpi(L('Conversió a Premium', 'Conversión a Premium'), part ? Math.round(100 * pay.length / part) + ' %' : '—', L(`${pay.length} de ${part} particulars (sense escola)`, `${pay.length} de ${part} particulares (sin escuela)`))}
+      ${kpi(L('Actius (7 dies)', 'Activos (7 días)'), `${act7} <span class="t3" style="font-size:18px;font-weight:600">/ ${n}</span>`, `${L('avui', 'hoy')} ${act0} · ${L('30 dies', '30 días')} ${act30}`)}
+    </div>
+    <div class="grid12">
+      <section class="c7"><div class="sec-h"><h2>${L('Altes dels últims 30 dies', 'Altas de los últimos 30 días')}</h2><span class="r t3">${nous30} ${L('en total', 'en total')}</span></div><div class="card pad">
+        <div class="bars30">${perDay.map(x => `<i title="${fdate(x.d)}: ${x.t}${x.t ? ` (${x.p} Premium · ${x.e} ${L('escola', 'escuela')} · ${x.f} ${L('gratuïts', 'gratuitos')})` : ''}" class="${x.d === TODAY ? 'today' : ''}">${x.e ? `<b class="e" style="height:${x.e / mx * 100}%"></b>` : ''}${x.f ? `<b class="f" style="height:${x.f / mx * 100}%"></b>` : ''}${x.p ? `<b class="p" style="height:${x.p / mx * 100}%"></b>` : ''}</i>`).join('')}</div>
+        <div class="bars30-x"><span>${fdate(days[0])}</span><span>${fdate(days[15])}</span><span>${L('avui', 'hoy')}</span></div>
+        <div class="leg"><span><i class="p"></i>Premium</span><span><i class="f"></i>${L('Gratuït', 'Gratuito')}</span><span><i class="e"></i>${L('Escola', 'Escuela')}</span></div></div></section>
+      <section class="c5"><div class="sec-h"><h2>${L('Plans', 'Planes')}</h2></div><div class="card pad">
+        <div class="pdist">${segs.map(x => `<i class="${x.cl}" style="width:${x.v / Math.max(1, n) * 100}%" title="${tx(CAT[x.k])}: ${x.v}"></i>`).join('')}</div>
+        <ul class="plist">${[['pagament', 'gold'], ['manual', 'purple'], ['free', 'none'], ['escola', 'blue']].map(([k, cl]) => `<li onclick="UF.f='${k}';UF.n=100;vUsuaris()"><i class="${cl}"></i>${tx(CAT[k])}<b class="num">${c(k)}</b><span class="t3 num">${n ? Math.round(100 * c(k) / n) : 0} %</span></li>`).join('')}
+          <li onclick="UF.f='baixa';UF.n=100;vUsuaris()"><i class="crit"></i>${L('De baixa', 'De baja')}<b class="num">${UD.users.length - n}</b><span></span></li></ul></div>
+        ${warn.length ? `<div class="sec-h" style="margin-top:16px"><h2>${L('Cal mirar', 'A revisar')}</h2></div><div class="card"><ul class="alist">${warn.map(([u, sev, t]) => `<li onclick="uOpen(${js(u.code)})"><div class="who"><b>${esc(u.name)}</b><div class="why"><span><i class="dot ${sev}"></i>${esc(t)}</span></div></div>${ico('chevron-right', 't3')}</li>`).join('')}</ul></div>` : ''}
+      </section>
+    </div>
+    <div class="sec-h" style="margin-top:20px"><h2>${L('Tots els usuaris', 'Todos los usuarios')}</h2><span class="r t3">${R.length} ${L('resultats', 'resultados')}</span></div>
+    <div class="toolbar"><div class="search">${ico('search')}<input id="uq" placeholder="${L('Nom, usuari, codi, grup o centre', 'Nombre, usuario, código, grupo o centro')}" value="${esc(UF.q)}" oninput="UF.q=this.value;UF.n=100;clearTimeout(window._uqt);window._uqt=setTimeout(uTable,120)"></div>
+      <span class="seg">${UFILT().map(([k, t]) => `<button class="${UF.f === k ? 'on' : ''}" onclick="UF.f='${k}';UF.n=100;vUsuaris()">${t}<b>${uCount(k)}</b></button>`).join('')}</span>
+      <select style="width:auto" aria-label="${L('Ordena', 'Ordena')}" onchange="UF.o=this.value;uTable()">${[['alta', L('Alta més recent', 'Alta más reciente')], ['act', L('Activitat més recent', 'Actividad más reciente')], ['xp', L('Més XP', 'Más XP')], ['nom', L('Nom', 'Nombre')]].map(([k, t]) => `<option value="${k}" ${UF.o === k ? 'selected' : ''}>${t}</option>`).join('')}</select></div>
+    <div id="utbl"></div>`,
+    { switcher: false, fluid: true, acts: `<button class="btn" onclick="UD=null;vUsuaris()" title="${L('Actualitza', 'Actualizar')}">${ico('refresh-cw')}</button><button class="btn" onclick="uCsv()">${ico('download')}CSV</button>${mode ? `<a class="btn" href="${sLink}" target="_blank" rel="noopener">${ico('external-link')}Stripe</a>` : ''}` });
+  uTable();
+}
+function uTable() {
+  const R = uList(), shown = R.slice(0, UF.n), el = $('#utbl'); if (!el) return;
+  const sLink = UD.stripe && UD.stripe.mode === 'live' ? 'https://dashboard.stripe.com' : 'https://dashboard.stripe.com/test';
+  el.innerHTML = !R.length ? `<div class="card">${emptyState('users', L('Cap usuari amb aquest filtre', 'Ningún usuario con este filtro'), L('Canvia la cerca o el filtre.', 'Cambia la búsqueda o el filtro.'))}</div>` : `<div class="tw us"><table><thead><tr><th>${L('Usuari', 'Usuario')}</th><th>${L('Pla', 'Plan')}</th><th>${L('Estat', 'Estado')}</th><th>${L('Alta', 'Alta')}</th><th>${L('Última activitat', 'Última actividad')}</th><th class="r">${L('Curs', 'Curso')}</th><th class="r">${L('Lliçons', 'Lecciones')}</th><th class="r">XP</th><th></th></tr></thead><tbody>
+    ${shown.map(u => `<tr onclick="if(!event.target.closest('a'))uOpen(${js(u.code)})"><td class="c-n"><div class="nm"><div><b>${esc(u.name)}</b><small class="mono">${esc(u.username || u.code)}</small></div></div></td><td class="c-p">${uPla(u)}</td><td class="c-e" data-l="${L('Estat', 'Estado')}">${uEstat(u)}</td>
+      <td class="c-a" data-l="${L('Alta', 'Alta')}">${fdate(u.alta)}${u.alta.slice(0, 4) !== TODAY.slice(0, 4) ? ' ' + u.alta.slice(0, 4) : ''}</td><td class="c-u" data-l="${L('Última activitat', 'Última actividad')}">${u.last_day ? ago(u.last_day) : `<span class="t3">${L('mai', 'nunca')}</span>`}</td>
+      <td class="r num">${u.course != null ? (u.course | 0) + 1 : '—'}</td><td class="r num">${u.lessons || 0}</td><td class="r num">${(u.xp || 0).toLocaleString(LANG)}</td>
+      <td class="r">${u.stripe_customer ? `<a class="ib" href="${sLink}/customers/${encodeURIComponent(u.stripe_customer)}" target="_blank" rel="noopener" title="${L('Obre a Stripe', 'Abrir en Stripe')}">${ico('external-link')}</a>` : ''}</td></tr>`).join('')}</tbody></table></div>
+    ${R.length > UF.n ? `<div style="text-align:center;margin-top:12px"><button class="btn" onclick="UF.n+=200;uTable()">${L(`Mostra'n més (${R.length - UF.n})`, `Mostrar más (${R.length - UF.n})`)}</button></div>` : ''}`;
+}
+function uOpen(code) {
+  if (ROWS.some(r => r.code === code)) { G = ''; location.hash = '#/alumnes/' + encodeURIComponent(code); return; }
+  toast(L('Aquest usuari està de baixa: no té fitxa al panell.', 'Este usuario está de baja: no tiene ficha en el panel.'));
+}
+function uInfo(code) {
+  const u = UD && UD.users && UD.users.find(x => x.code === code); if (!u || !(u.cat === 'pagament' || u.cat === 'manual' || u.caducat)) return '';
+  const sLink = UD.stripe && UD.stripe.mode === 'live' ? 'https://dashboard.stripe.com' : 'https://dashboard.stripe.com/test';
+  return `<div class="uinfo">${uPla(u)} <span>${uEstat(u)}${u.pla_des ? ` · ${L('Premium des del', 'Premium desde el')} ${fdate(u.pla_des)}` : ''}</span>${u.stripe_customer ? ` <a href="${sLink}/customers/${encodeURIComponent(u.stripe_customer)}" target="_blank" rel="noopener">${L('Obre a Stripe', 'Abrir en Stripe')} ${ico('external-link')}</a>` : ''}${u.cat === 'pagament' ? `<small>${L('Paga amb Stripe: canviar el pla aquí no atura el cobrament. Per donar-lo de baixa, cancel·leu la subscripció a Stripe.', 'Paga con Stripe: cambiar el plan aquí no detiene el cobro. Para darlo de baja, cancelad la suscripción en Stripe.')}</small>` : ''}</div>`;
+}
+function uCsv() {
+  const q = v => `"${String(v ?? '').replace(/"/g, '""')}"`;
+  const head = ['codi', 'usuari', 'nom', 'pla', 'periode', 'estat_stripe', 'cancel·la', 'premium_des_de', 'premium_fins', 'alta', 'ultima_activitat', 'curs', 'llicons', 'xp', 'grup', 'centre'];
+  const rows = uList().map(u => [u.code, u.username, u.name, tx(CAT[u.cat]), u.pla_periode, u.stripe_status, u.pla_cancel ? 'sí' : '', u.pla_des ? String(u.pla_des).slice(0, 10) : '', u.renova || (u.pla_fins ? String(u.pla_fins).slice(0, 10) : ''), u.alta, u.last_day || '', u.course != null ? (u.course | 0) + 1 : '', u.lessons || 0, u.xp || 0, u.grup, u.centre].map(q).join(';'));
+  const blob = new Blob(['﻿' + [head.join(';'), ...rows].join('\n')], { type: 'text/csv;charset=utf-8' });
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `numi-usuaris-${TODAY}.csv`; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+}
 function vCentres() {
   const C = D.centres || [];
   shell('centres', L('Centres', 'Centros'), C.length ? `<div class="tw"><table><thead><tr><th>${L('Centre', 'Centro')}</th><th>${L('Pla', 'Plan')}</th><th>${L('Places', 'Plazas')}</th><th class="r">${L('Docents', 'Docentes')}</th><th class="r">${L('Grups', 'Grupos')}</th><th>${L('Vigència', 'Vigencia')}</th><th>${L('Notes', 'Notas')}</th></tr></thead><tbody>

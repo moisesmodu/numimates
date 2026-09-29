@@ -5,29 +5,10 @@
                                                       a Stripe amb la clau secreta, així un avís inventat no pot activar res. */
 import { sql, body, cleanCode, ok, blocked, fail, note, tooMany } from './_lib.js';
 
-const KEY = process.env.STRIPE_SECRET_KEY;
+import { STRIPE_KEY as KEY, stripe } from './_stripe.js';
 const LOOKUP = { mes: 'numi_premium_mes', any: 'numi_premium_any' };
 const ORIGINS = ['https://app.numimates.com', 'https://mates-numi.vercel.app', 'http://localhost:5176', 'http://127.0.0.1:5176'];
 const GRACE = 3; // dies de marge si la renovació tarda (reintents de cobrament)
-
-// crida a l'API de Stripe amb el format que demana (x-www-form-urlencoded amb claus niades)
-function form(o, pre = '', out = new URLSearchParams()) {
-  for (const [k, v] of Object.entries(o)) {
-    if (v === undefined || v === null) continue;
-    const key = pre ? `${pre}[${k}]` : k;
-    if (typeof v === 'object') form(v, key, out); else out.append(key, String(v));
-  }
-  return out;
-}
-async function stripe(path, data, method = data ? 'POST' : 'GET') {
-  const r = await fetch('https://api.stripe.com/v1/' + path, {
-    method, headers: { authorization: 'Bearer ' + KEY, ...(data ? { 'content-type': 'application/x-www-form-urlencoded' } : {}) },
-    body: data ? form(data) : undefined
-  });
-  const j = await r.json();
-  if (!r.ok) { const e = new Error((j.error && j.error.message) || 'stripe'); e.status = r.status; throw e; }
-  return j;
-}
 
 let PRICES = null, PORTAL = null;
 async function prices() {
@@ -54,11 +35,14 @@ async function applySub(s, code) {
   code = cleanCode(code || (s.metadata && s.metadata.code));
   if (!code) return;
   const cust = typeof s.customer === 'string' ? s.customer : s.customer && s.customer.id;
+  const it = s.items && s.items.data && s.items.data[0], iv = it && it.price && it.price.recurring && it.price.recurring.interval;
+  const per = iv === 'year' ? 'any' : iv === 'month' ? 'mes' : null, cancel = !!(s.cancel_at_period_end || s.cancel_at);
   if (LIVE.includes(s.status) && periodEnd(s)) {
-    await sql`UPDATE mates.alumnes SET pla = 'premium', pla_fins = ${endDate(periodEnd(s))}, stripe_customer = ${cust}, stripe_sub = ${s.id} WHERE code = ${code}`;
+    await sql`UPDATE mates.alumnes SET pla = 'premium', pla_fins = ${endDate(periodEnd(s))}, stripe_customer = ${cust}, stripe_sub = ${s.id},
+      pla_periode = ${per}, stripe_status = ${s.status}, pla_cancel = ${cancel}, pla_des = COALESCE(pla_des, CURRENT_DATE) WHERE code = ${code}`;
   } else if (['canceled', 'unpaid', 'incomplete_expired'].includes(s.status)) {
     // s'acaba avui (si ja s'havia acabat abans, no l'allarguem)
-    await sql`UPDATE mates.alumnes SET pla_fins = LEAST(COALESCE(pla_fins, CURRENT_DATE), CURRENT_DATE), stripe_sub = NULL WHERE code = ${code} AND stripe_sub = ${s.id}`;
+    await sql`UPDATE mates.alumnes SET pla_fins = LEAST(COALESCE(pla_fins, CURRENT_DATE), CURRENT_DATE), stripe_sub = NULL, stripe_status = ${s.status}, pla_cancel = false WHERE code = ${code} AND stripe_sub = ${s.id}`;
   }
 }
 

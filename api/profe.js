@@ -1,5 +1,6 @@
 import { sql, ok, body, cleanCode, validPass, hashPass } from './_lib.js';
 import { who, groupsOf } from './_auth.js';
+import { STRIPE_KEY, stripe, stripeMode } from './_stripe.js';
 import { randomInt } from 'crypto';
 // Panell /profe.html. L'administrador ho veu tot i gestiona centres, docents, grups i plans.
 // Un docent només veu (i gestiona) els alumnes dels seus grups; l'admin de centre, tots els del seu centre.
@@ -102,6 +103,23 @@ export default async function handler(req, res) {
     return ok(res, { error: 'acció' }, 400);
   }
 
+  // --- panell de control de l'administrador: tots els usuaris (també els de baixa), plans i cobraments ---
+  if (me.admin && req.query && req.query.v === 'usuaris') {
+    const users = await sql`SELECT a.code, a.username, a.name, a.course, a.xp, a.lessons, a.answers, a.correct, a.streak, a.last_day, a.created_at, a.active, a.grup_id,
+      a.pla, a.pla_fins, a.pla_periode, a.stripe_status, a.pla_cancel, a.pla_des, a.stripe_customer, (a.stripe_sub IS NOT NULL) AS stripe, a.survey->>'curs' AS curs, g.nom AS grup, c.nom AS centre
+      FROM mates.alumnes a LEFT JOIN mates.grups g ON g.id = a.grup_id LEFT JOIN mates.centres c ON c.id = g.centre_id ORDER BY a.created_at DESC`;
+    let cobrat = null;
+    if (STRIPE_KEY) {
+      try {
+        // factures pagades dels últims 31 dies (i del mes en curs), directament de Stripe
+        const now = new Date(), m0 = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1) / 1000, d30 = Math.floor(Date.now() / 1000) - 30 * 86400;
+        const inv = await stripe(`invoices?status=paid&limit=100&created[gte]=${Math.min(m0, d30)}`);
+        const sum = f => inv.data.filter(f).reduce((t, i) => t + (i.amount_paid || 0), 0);
+        cobrat = { d30: sum(i => i.created >= d30), mes: sum(i => i.created >= m0), n30: inv.data.filter(i => i.created >= d30).length, mes_n: inv.data.filter(i => i.created >= m0).length, mes_inici: new Date(m0 * 1000).toISOString().slice(0, 10) };
+      } catch (e) { cobrat = { error: true }; }
+    }
+    return ok(res, { users, stripe: { mode: stripeMode(), cobrat } });
+  }
   // --- lectura ---
   const rows = await sql`SELECT code, username, name, course, survey, xp, streak, best, last_day, lessons, answers, correct, created_at, updated_at, grup_id, pla, pla_fins,
     state->'tests' AS tests, state->'lang' AS lang, state->'unlockAll' AS unlock_all, state->'week' AS week, state->'stats'->'sk' AS sk, state->'reco' AS reco, state->'school' AS school, state->'album' AS album, state->'stats'->'bwins' AS bwins, state->'crowns' AS crowns, state->'exams' AS exams, state->'days' AS days
