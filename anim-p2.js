@@ -442,7 +442,7 @@ const S = {
       // línies de partició: cada posició es veu des de la primera etapa que la té fins a l'última
       const pos = {}; st.forEach(([, d], j) => { for (let k = 1; k < d; k++) { const key = (k / d).toFixed(5); (pos[key] = pos[key] || []).push(j); } });
       Object.entries(pos).forEach(([key, js]) => { const j0 = Math.min(...js), j1 = Math.max(...js), x = x0 + W * +key; s += win(j0 ? ts[j0] + .1 : b.t, j1 < last ? ts[j1 + 1] : null, line(x, y + 1, x, y + bh - 1, { s: INK, sw: 2 }), 'a-fade'); });
-      if (b.lab !== false) st.forEach(([n, d], j) => s += win(ts[j] + (j ? .25 : .3), j < last ? ts[j + 1] + .1 : null, frac(n, d, b.lx || lx, y + bh / 2, b.fs || fs)));
+      if (b.lab !== false) st.forEach(([n, d], j) => s += win(ts[j] + (j ? .25 : .3), j < last ? ts[j + 1] + .1 : null, b.tl ? txt(b.lx || lx, y + bh / 2 + 7, b.tl[j], (b.fs || fs) + 2) : frac(n, d, b.lx || lx, y + bh / 2, b.fs || fs)));
       (b.ops || []).forEach((op, j) => s += win(ts[j + 1] - .35, j + 1 < last ? ts[j + 2] : null, pill(x0 + W + 26, y + bh / 2, op, 12, { s: RED, c: RED, pad: 8 })));
       st.forEach((_, j) => ph[`${B}s${j}`] = ts[j] + .45);
       (b.br || []).forEach(r => s += path(brace(x0 + W * r.a + 2, x0 + W * r.b - 2, r.up ? y - 5 : y + bh + 5, r.up ? -1 : 1, 9), { s: r.c || UC, sw: 2.5, an: A(r.t, 'a-draw') }) + (r.s ? txt(x0 + W * (r.a + r.b) / 2, r.up ? y - 20 : y + bh + 32, r.s, 13, { c: r.c || UC, an: A(r.t + .25) }) : r.n ? pop(r.t + .25, frac(r.n, r.d, x0 + W * (r.a + r.b) / 2, r.up ? y - 40 : y + bh + 31, 14, r.c || INK)) : ''));
@@ -963,7 +963,7 @@ const S = {
     s += pop(3.5, path(`M${P[0] - r - 8},${P[1]} A${r + 8},${r + 8} 0 0 1 ${P[0] + r + 8},${P[1]}`, { s: RED, sw: 2, da: '4 3' }), 'a-fade');
     s += move(3.8, Cx - P[0], Cy - P[1], rot(3.8, 0, P[0], P[1], wedge(P[0], P[1], PI + rad(b), 2 * PI - rad(a), CA), 180));
     s += pop(4.6, lab(P[0], P[1], PI + rad(b), 2 * PI - rad(a), `${c}°`, r + 16));
-    s += pop(3.9, pill(P[0], 136, `180° − ${a + b}° = ${c}°`, 14, { f: Y, s: INK }));
+    s += pop(4.1, pill(P[0], 136, `180° − ${a + b}° = ${c}°`, 14, { f: Y, s: INK }));
     ph.s2 = 5.0;
     return done(206, s, ph, L);
   },
@@ -1222,6 +1222,225 @@ const S = {
     ph.free = tE + .8;
     return done(y0 + R * ch + 36, under + s, ph, L);
   }
+  ,
+  /* ---------- unitats noves (theory6.js) ---------- */
+  // un polígon amb les seves marques: costats, ratlletes de costats iguals, angles, paral·lels, eixos i el nom
+  p2poly({ pts, fill = true, fc, t0 = .2, sides = [], ticks = [], arcs = [], par = [], axes = [], chip, inner, L }) {
+    let s = '', under = ''; const ph = {}, n = pts.length, cx = pts.reduce((a, p) => a + p[0], 0) / n, cy = pts.reduce((a, p) => a + p[1], 0) / n;
+    const P = i => pts[(i + n) % n], mid = i => [(P(i)[0] + P(i + 1)[0]) / 2, (P(i)[1] + P(i + 1)[1]) / 2];
+    const dir = i => { const dx = P(i + 1)[0] - P(i)[0], dy = P(i + 1)[1] - P(i)[1], l = Math.hypot(dx, dy); return [dx / l, dy / l]; };
+    const out = i => { const [ux, uy] = dir(i), [mx, my] = mid(i); let nx = -uy, ny = ux; if ((mx - cx) * nx + (my - cy) * ny < 0) { nx = -nx; ny = -ny; } return [nx, ny]; };
+    const d = `M${pts.map(p => p.map(r1).join(',')).join(' L')} Z`;
+    under += fc ? `<path d="${d}" fill="${fc}" ${A(t0, 'a-fade')}/>` : fill ? `<path d="${d}" ${A(t0, 'a-fade', 'p2f1')}/>` : '';
+    s += path(d, { s: INK, sw: 3, an: A(t0, 'a-draw') });
+    if (inner) s += inner;
+    sides.forEach(q => { const [mx, my] = mid(q.i), [nx, ny] = out(q.i); s += txt(mx + nx * 18, my + ny * 18 + 5, q.s, 14, { an: A(q.t) }); });
+    ticks.forEach(q => { const [mx, my] = mid(q.i), [ux, uy] = dir(q.i), [nx, ny] = [-uy, ux], k = q.n || 1; for (let j = 0; j < k; j++) { const o = (j - (k - 1) / 2) * 5; s += line(mx + ux * o - nx * 7, my + uy * o - ny * 7, mx + ux * o + nx * 7, my + uy * o + ny * 7, { s: q.c || RED, sw: 3, an: A(q.t, 'a-draw') }); } });
+    par.forEach(q => { const [mx, my] = [P(q.i)[0] * .7 + P(q.i + 1)[0] * .3, P(q.i)[1] * .7 + P(q.i + 1)[1] * .3], [ux, uy] = dir(q.i), [nx, ny] = [-uy, ux], k = q.n || 1; let o = ''; for (let j = 0; j < k; j++) { const bx = mx + ux * (j * 7 - (k - 1) * 3.5), by = my + uy * (j * 7 - (k - 1) * 3.5); o += path(`M${r1(bx - ux * 6 + nx * 6)},${r1(by - uy * 6 + ny * 6)} L${r1(bx)},${r1(by)} L${r1(bx - ux * 6 - nx * 6)},${r1(by - uy * 6 - ny * 6)}`, { s: q.c || BLUE, sw: 3 }); } s += pop(q.t, o); });
+    arcs.forEach(q => {
+      const v = P(q.v), a1 = Math.atan2(P(q.v - 1)[1] - v[1], P(q.v - 1)[0] - v[0]), a2 = Math.atan2(P(q.v + 1)[1] - v[1], P(q.v + 1)[0] - v[0]);
+      let a0 = a1, sw = a2 - a1; while (sw <= -Math.PI) sw += 2 * Math.PI; while (sw > Math.PI) sw -= 2 * Math.PI; if (sw < 0) { a0 = a2; sw = -sw; }
+      const r = q.r || 20, bis = a0 + sw / 2;
+      if (q.right) { const u1 = [Math.cos(a0), Math.sin(a0)], u2 = [Math.cos(a0 + sw), Math.sin(a0 + sw)], k = 14; s += pop(q.t, path(`M${r1(v[0] + u1[0] * k)},${r1(v[1] + u1[1] * k)} L${r1(v[0] + u1[0] * k + u2[0] * k)},${r1(v[1] + u1[1] * k + u2[1] * k)} L${r1(v[0] + u2[0] * k)},${r1(v[1] + u2[1] * k)}`, { f: q.hi ? Y : 'none', s: INK, sw: 2.5 }), 'a-fade'); }
+      else s += pop(q.t, `<path d="${sector(v[0], v[1], r, a0, a0 + sw)}" fill="${q.hi ? Y : UC}" opacity="${q.hi ? 1 : .55}"/>`, 'a-fade');
+      if (q.s) s += txt(v[0] + Math.cos(bis) * (r + 15), v[1] + Math.sin(bis) * (r + 15) + 5, q.s, 13, { an: A(q.t + .1) });
+      if (q.ring) s += pop(q.ring, circ(v[0], v[1], r + 3, { f: 'none', s: Y, sw: 4 }));
+    });
+    axes.forEach(q => s += pop(q.t, line(...q.a, { s: RED, sw: 2.5, da: '7 5' }), 'a-fade'));
+    if (chip) { const cs = chip.s.includes('|') ? L_(...chip.s.split('|')) : chip.s; s += pop(chip.t, pill(chip.x ?? 160, chip.y, cs, 16, { f: Y, s: INK })); ph.chip = chip.t + .3; }
+    ph.shape = t0 + .5;
+    const h = Math.max(...pts.map(p => p[1])) + 20, H = chip ? Math.max(h, chip.y + 20) : h;
+    return done(H, under + s, ph, L);
+  },
+  // dues rectes: perpendiculars (fan una creu amb angles rectes) o paral·leles (sempre a la mateixa distància)
+  p2lines({ mode, L }) {
+    let s = ''; const ph = {};
+    if (mode === 'perp') {
+      const C = [160, 100];
+      s += line(40, C[1], 280, C[1], { s: INK, sw: 4, an: A(.2, 'a-draw') }) + line(C[0], 20, C[0], 180, { s: UC, sw: 4, an: A(.6, 'a-draw') });
+      s += pop(1.3, path(`M${C[0] + 18},${C[1]} v-18 h-18`, { f: Y, s: INK, sw: 2.5 }), 'a-fade') + txt(C[0] + 24, C[1] - 22, '90°', 14, { a: 'start', an: A(1.5) });
+      s += pop(2.0, path(`M${C[0] - 12},${C[1]} v-12 h12 M${C[0] - 12},${C[1]} v12 h12 M${C[0] + 12},${C[1]} v12 h-12`, { s: GRY, sw: 1.8 }), 'a-fade');
+      s += pop(2.4, pill(160, 204, L_('perpendiculars', 'perpendiculares'), 16, { f: Y, s: INK }));
+      Object.assign(ph, { cut: .9, sq: 1.7, name: 2.6 });
+      return done(222, s, ph, L);
+    }
+    const road = y => pop(.2, line(24, y, 296, y, { s: '#D9D2E3', sw: 22 }) + line(30, y, 290, y, { s: WH, sw: 2.5, da: '10 8' }), 'a-fade');
+    s += road(62) + road(150) + pop(.5, img('car', 70, 62, 26) + img('cyclist', 230, 150, 26));
+    for (let k = 0; k < 3; k++) { const x = 80 + k * 80; s += arrow(x, 76, x, 136, 1.2 + k * .3, Y, 3.5) + arrow(x, 136, x, 76, 1.2 + k * .3, Y, 3.5); }
+    s += pop(2.4, pill(160, 204, L_('paral·lels', 'paralelas'), 16, { f: Y, s: INK }));
+    Object.assign(ph, { two: .7, dist: 2.1, name: 2.6 });
+    return done(222, s, ph, L);
+  },
+  // una recta partida en marques: quant val cada marca i on cau la que busquem
+  p2marks({ lo, hi, n, mk: k, fmt, d, majors = [], L }) {
+    const X = i => 30 + i * 260 / n, y = 104, step = (hi - lo) / n, dec = decs(step), ph = { line: .5 };
+    const lab = v => fmt === 'frac' ? String(Math.round(v)) : nf(v);
+    let s = pop(.2, line(22, y, 298, y, { sw: 3 }) + line(X(0), y - 12, X(0), y + 12, { sw: 3 }) + line(X(n), y - 12, X(n), y + 12, { sw: 3 }) + txt(X(0), y + 30, lab(lo), 15) + txt(X(n), y + 30, lab(hi), 15), 'a-fade');
+    majors.forEach(v => { const i = Math.round((v - lo) / step); s += pop(.3, line(X(i), y - 12, X(i), y + 12, { sw: 3 }) + txt(X(i), y + 30, lab(v), 15), 'a-fade'); });
+    for (let i = 1; i < n; i++) s += line(X(i), y - 7, X(i), y + 7, { s: INK, sw: 2, an: A(.6 + i * .07, 'a-draw') });
+    const tH0 = .7 + n * .07 + .2 + .4 + .4 + .3;
+    if (fmt !== 'frac') for (let i = 0; i < n; i++) { const g = txt((X(i) + X(i + 1)) / 2, y - 12, i + 1, 10, { c: GRY, an: A(.7 + i * .07) }); s += i < k ? gone(tH0 + i * .22, g) : g; }
+    ph.marks = .7 + n * .07 + .2;
+    const tS = ph.marks + .4;
+    if (fmt !== 'frac') { s += path(brace(X(0) + 1, X(1) - 1, y + 40, 1, 8), { s: UC, sw: 2.5, an: A(tS, 'a-draw') }) + pop(tS + .2, pill(X(0) + 26, y + 64, nf(step, dec), 14, { s: UC })); }
+    ph.step = tS + .4;
+    const tH = ph.step + .3;
+    for (let i = 0; i < k; i++) { s += hop(X(i), X(i + 1), y - 4, 12, tH + i * .22, RED); s += txt((X(i) + X(i + 1)) / 2, y - 22, i + 1, 11, { c: RED, an: A(tH + i * .22 + .2) }); }
+    ph.hops = tH + k * .22 + .3;
+    const tv = lo + k * step, tT = ph.hops + .2;
+    s += pop(tT, path(`M${r1(X(k) - 8)},${y - 44} L${r1(X(k) + 8)},${y - 44} L${r1(X(k))},${y - 32} Z`, { f: UC, s: UC, sw: 1.5 }) + circ(X(k), y, 6, { f: UC }));
+    s += pop(tT + .15, fmt === 'frac' ? rect(X(k) - 20, y - 98, 40, 50, { rx: 10, f: Y, s: INK, sw: 2 }) + frac(k, d, X(k), y - 72, 18) : pill(X(k), y - 60, nf(tv, dec), 17, { f: Y, s: INK }));
+    ph.tgt = tT + .4;
+    return done(y + (fmt !== 'frac' ? 84 : 46), s, ph, L);
+  },
+  // calendari: salts de setmana en setmana i els dies que sobren
+  p2cal({ first = 0, days = 31, a, b, L }) {
+    const cw = 38, chh = 26, x0 = 27, y0 = 38, pos = dd => { const i = first + dd - 1; return [x0 + (i % 7) * cw + cw / 2, y0 + Math.floor(i / 7) * chh + chh / 2]; };
+    const H = L_('dl dt dc dj dv ds dg', 'L M X J V S D').split(' '), NAMES = L_('dilluns dimarts dimecres dijous divendres dissabte diumenge', 'lunes martes miércoles jueves viernes sábado domingo').split(' ');
+    let s = '', under = ''; const ph = {}, wa = (first + a - 1) % 7, wb = (first + b - 1) % 7;
+    s += H.map((h, i) => txt(x0 + i * cw + cw / 2, y0 - 10, h, 12, { c: i > 4 ? RED : UC })).join('');
+    for (let dd = 1; dd <= days; dd++) { const [x, yy] = pos(dd); s += txt(x, yy + 5, dd, 14, { c: GRY }); }
+    under += pop(.4, rect(x0 + wa * cw + 3, y0 - 24, cw - 6, 20, { rx: 6, f: Y, op: .7 }), 'a-fade');
+    const [xa, ya] = pos(a), [xb, yb] = pos(b);
+    under += pop(.4, circ(xa, ya, 12, { f: UC })); s += txt(xa, ya + 5, a, 14, { c: WH, an: A(.4) });
+    s += pop(.7, circ(xb, yb, 13, { f: 'none', s: RED, sw: 2.5, da: '4 3' }));
+    ph.ask = .8;
+    let cur = a, t = 1.2; const weeks = Math.floor((b - a) / 7), rest = (b - a) % 7;
+    for (let w = 0; w < weeks; w++) { const [x1, y1] = pos(cur), [x2, y2] = pos(cur + 7); s += arrow(x1 + 11, y1 + 6, x2 + 11, y2 - 6, t, UC) + txt(x1 + 15, (y1 + y2) / 2 + 4, '+7', 11, { a: 'start', c: UC, an: A(t + .2) }); under += pop(t + .3, circ(x2, y2, 12, { f: '#E9E1F2' })); cur += 7; t += .55; }
+    for (let r = 0; r < rest; r++) { const [x1, y1] = pos(cur), [x2] = pos(cur + 1); s += hop(x1 + 4, x2 - 4, y1 - 9, 7, t, RED); cur++; t += .3; }
+    const tJ = t; ph.jump = t + .3; t += .7;
+    s += win(tJ, t, pill(160, y0 + 5 * chh + 22, `${b - a} = ${Array(weeks).fill(7).join(' + ')} + ${rest}`, 14, { s: INK }));
+    under += pop(t, circ(xb, yb, 13, { f: Y }), 'a-fade') + pop(t, rect(x0 + wb * cw + 3, y0 - 24, cw - 6, 20, { rx: 6, f: Y }), 'a-fade');
+    s += pop(t + .2, pill(160, y0 + 5 * chh + 22, `${NAMES[wa]} + ${rest} = ${NAMES[wb]}`, 14, { f: Y, s: INK }));
+    ph.day = t + .5;
+    return done(y0 + 5 * chh + 40, under + s, ph, L);
+  },
+  // condicions I / O: es marquen les figures que compleixen cada condició i queden les que compleixen les dues
+  p2logic({ items, L }) {
+    let s = '', under = ''; const ph = {}, X = i => 52 + (i % 4) * 72, Yc = i => 84 + Math.floor(i / 4) * 64, COL = { r: RED, b: BLUE };
+    s += pop(.2, pill(160, 20, `${L_('vermelles', 'rojas')} <tspan fill="${UC}">${L_('I', 'Y')}</tspan> ${L_('quadrades', 'cuadradas')}`, 16, { s: INK }));
+    const shape = (c, sh, x, y) => sh === 'sq' ? rect(x - 16, y - 16, 32, 32, { rx: 4, f: COL[c] }) : sh === 'ci' ? circ(x, y, 17, { f: COL[c] }) : path(`M${x},${y - 18} L${x + 18},${y + 14} L${x - 18},${y + 14} Z`, { f: COL[c], s: COL[c], sw: 2 });
+    items.forEach(([c, sh], i) => {
+      s += pop(.4 + i * .06, shape(c, sh, X(i), Yc(i)));
+      if (c === 'r') s += pop(1.0 + i * .03, circ(X(i), Yc(i), 25, { f: 'none', s: RED, sw: 2.5, da: '4 3' }));
+      if (sh === 'sq') s += pop(1.6 + i * .03, rect(X(i) - 29, Yc(i) - 29, 58, 58, { rx: 10, f: 'none', s: UC, sw: 2.5 }));
+      if (c === 'r' && sh === 'sq') { under += pop(2.6, rect(X(i) - 32, Yc(i) - 32, 64, 64, { rx: 12, f: Y }), 'a-fade'); s += check(X(i) + 24, Yc(i) - 24, 2.8); }
+      else s += pop(2.6, rect(X(i) - 30, Yc(i) - 30, 60, 60, { rx: 10, f: WH, op: .7 }), 'a-fade');
+    });
+    Object.assign(ph, { ask: .8, both: 2.0, only: 3.0 });
+    return done(Yc(items.length - 1) + 40, under + s, ph, L);
+  },
+  // l'escala de les unitats: cada graó multiplica per 10 (o per 100 a la superfície)
+  p2ladder({ units, from, to, v, f, L }) {
+    const n = units.length, bw = 42, sx = i => 8 + i * 44, sy = i => 34 + i * 17, ph = {};
+    let s = '', under = '';
+    units.forEach((u, i) => { under += rect(sx(i), sy(i), bw, 24, { rx: 6, f: i === from ? UC : BG, s: i === to ? INK : LN, sw: 2, an: A(.2 + i * .05, 'a-fade') }); s += txt(sx(i) + bw / 2, sy(i) + 17, u, 12, { c: i === from ? WH : INK, an: A(.2 + i * .05) }); });
+    s += pop(.7, pill(sx(from) + bw + 30, sy(from) - 8, `${nf(v)} ${units[from]}`, 13, { f: WH, s: UC }));
+    under += pop(.9, rect(sx(to) - 3, sy(to) - 3, bw + 6, 30, { rx: 8, f: Y }), 'a-fade');
+    ph.ask = 1.0;
+    let t = 1.4;
+    for (let i = from; i < to; i++) { const x1 = sx(i) + bw / 2, y1 = sy(i) + 26, x2 = sx(i + 1) + bw / 2 - 6, y2 = sy(i + 1) + 30; s += path(`M${r1(x1)},${r1(y1)} Q${r1(x1)},${r1(y2 + 14)} ${r1(x2)},${r1(y2 + 6)}`, { s: RED, sw: 2.5, an: A(t, 'a-draw') }) + txt(x1 - 2, y2 + 22, `× ${f}`, 11, { a: 'end', c: RED, an: A(t + .15) }); t += .45; }
+    const tot = f ** (to - from);
+    s += pop(t + .1, pill(250, 190, `× ${nf(tot)}`, 15, { s: RED, c: RED }));
+    ph.hops = t + .3;
+    s += pop(t + .7, pill(120, 190, `${nf(v)} ${units[from]} = ${nf(v * tot)} ${units[to]}`, 15, { f: Y, s: INK }));
+    ph.res = t + 1.0;
+    return done(208, under + s, ph, L);
+  },
+  // dos programes alhora: cada un fa les seves ordres i el temps total és el del que triga més
+  p2gantt({ rows, L }) {
+    const u = 34, x0 = 76, max = Math.max(...rows.map(r => r.n)), yb = 40 + rows.length * 58, ph = {};
+    let s = '';
+    rows.forEach((r, i) => { const y = 34 + i * 58; s += img(r.ic, 38, y + 16, 38, A(.2)); for (let k = 0; k < r.n; k++) s += rect(x0 + k * u + 1.5, y, u - 3, 32, { rx: 6, f: i ? Y : UC, an: A(.8 + k * .45, 'a-grow') }) + txt(x0 + k * u + u / 2, y + 21, k + 1, 12, { c: i ? INK : WH, an: A(.95 + k * .45) }); });
+    s += pop(.3, line(x0, yb, x0 + max * u + 8, yb, { sw: 2 }) + [...Array(max + 1)].map((_, k) => line(x0 + k * u, yb - 4, x0 + k * u, yb + 4, { sw: 2 }) + txt(x0 + k * u, yb + 18, k, 11, { c: GRY })).join('') + txt(x0 + max * u + 14, yb + 18, 's', 11, { a: 'start', c: GRY }), 'a-fade');
+    ph.go = .7; ph.par = .8 + (Math.min(...rows.map(r => r.n)) - 1) * .45 + .5;
+    const te = .8 + max * .45 + .2;
+    s += pop(te, line(x0 + max * u, 24, x0 + max * u, yb, { s: RED, sw: 2.5, da: '5 4' }), 'a-fade') + pop(te + .2, pill(x0 + max * u, yb + 40, `${max} s`, 16, { f: Y, s: INK }));
+    ph.end = te + .5;
+    return done(yb + 58, s, ph, L);
+  },
+  // dos robots que es mouen alhora per una quadrícula: pas a pas, fins que es troben
+  p2robots({ L }) {
+    const cs = 44, x0 = 50, y0 = 24, C = (c, r) => [x0 + c * cs + cs / 2, y0 + r * cs + cs / 2], ph = {};
+    let s = '', under = '';
+    for (let c = 0; c < 5; c++) for (let r = 0; r < 3; r++) under += rect(x0 + c * cs + 1, y0 + r * cs + 1, cs - 2, cs - 2, { rx: 6, f: (c + r) % 2 ? BG : WH, s: LN, sw: 1.5 });
+    const bot = (c, r, col) => { const [x, y] = C(c, r); return circ(x, y, 19, { f: col }) + img('robot', x, y, 30); };
+    const t1 = 1.2, t2 = 2.6;
+    s += move(t1, -cs, 0, move(t2, -cs, 0, bot(2, 1, UC))) + move(t1, cs, 0, move(t2, cs, 0, bot(2, 1, Y)));
+    const ord = (x, y, lab, arr, col) => pill(x, y, lab, 13, { f: col, s: INK }) + arr.map((a, k) => txt(x + 34 + k * 26, y + 6, a, 18)).join('');
+    s += pop(.3, ord(64, 176, 'A', ['→', '→'], UC) + ord(196, 176, 'B', ['←', '←'], Y));
+    s += win(t1 - .1, t2 - .1, rect(84, 160, 24, 32, { rx: 6, f: 'none', s: RED, sw: 2.5 }) + rect(216, 160, 24, 32, { rx: 6, f: 'none', s: RED, sw: 2.5 }), 'a-fade') + pop(t2 - .1, rect(110, 160, 24, 32, { rx: 6, f: 'none', s: RED, sw: 2.5 }) + rect(242, 160, 24, 32, { rx: 6, f: 'none', s: RED, sw: 2.5 }), 'a-fade');
+    const [mx, my] = C(2, 1);
+    s += pop(t2 + .8, circ(mx, my, 27, { f: 'none', s: RED, sw: 4 }) + img('star', mx + 20, my - 20, 22));
+    Object.assign(ph, { s1: t1 + .6, s2: t2 + .6, meet: t2 + 1.1 });
+    return done(198, under + s, ph, L);
+  },
+  // una quadrícula de 100: dècimes, centèsimes i percentatge
+  p2grid100({ tenths, L }) {
+    const cs = 14, x0 = 26, y0 = 22, W = cs * 10, ph = {};
+    let s = '', under = '';
+    under += rect(x0, y0, W, W, { rx: 2, f: WH });
+    for (let c = 0; c < tenths; c++) under += rect(x0 + c * cs, y0, cs, W, { rx: 0, f: UC, op: .8, an: A(.4 + c * .2, 'a-fade') });
+    let gr = ''; for (let k = 1; k < 10; k++) gr += line(x0 + k * cs, y0, x0 + k * cs, y0 + W, { s: '#CFC4DA', sw: 1 }) + line(x0, y0 + k * cs, x0 + W, y0 + k * cs, { s: '#CFC4DA', sw: 1 });
+    s += gr + rect(x0, y0, W, W, { rx: 2, f: 'none', s: INK, sw: 2 });
+    for (let c = 0; c < tenths; c++) s += txt(x0 + c * cs + cs / 2, y0 + W + 16, c + 1, 10, { c: UC, an: A(.4 + c * .2) });
+    const xr = 240, t0 = .4 + tenths * .2;
+    s += pop(t0, txt(xr, 58, nf(tenths / 10), 30));
+    ph.dec = t0 + .3;
+    s += pop(t0 + .8, frac(tenths * 10, 100, xr, 104, 22));
+    ph.hund = t0 + 1.1;
+    s += pop(t0 + 1.7, pill(xr, 164, `${nf(tenths / 10)} = ${tenths * 10} %`, 17, { f: Y, s: INK }));
+    ph.pct = t0 + 2.0;
+    return done(y0 + W + 26, under + s, ph, L);
+  },
+  // barres per ordenar nombres de tota mena: les passem a decimal i les posem en ordre
+  p2sortbars({ rows, L }) {
+    const x0 = 86, W = 150, bh = 24, gy = i => 26 + i * 50, order = rows.map((r, i) => i).sort((a, b) => rows[a].v - rows[b].v), ph = {};
+    let s = '';
+    rows.forEach((r, i) => {
+      const j = order.indexOf(i), dy = gy(i) - gy(j);
+      let g = rect(x0, gy(j), W, bh, { rx: 5, f: WH }) + rect(x0 + 1, gy(j) + 1, W * r.v - 2, bh - 2, { rx: 4, f: [UC, Y, '#8FD19E'][i % 3] });
+      for (let k = 1; k < r.parts; k++) g += line(x0 + k * W / r.parts, gy(j) + 1, x0 + k * W / r.parts, gy(j) + bh - 1, { s: INK, sw: 1.2 });
+      g += rect(x0, gy(j), W, bh, { rx: 5, f: 'none', s: INK, sw: 2 });
+      g += (r.fr ? frac(r.fr[0], r.fr[1], 44, gy(j) + bh / 2, 15) : txt(44, gy(j) + bh / 2 + 6, r.s, 16));
+      g += pop(1.4 + i * .2, pill(x0 + W + 40, gy(j) + bh / 2, nf(r.v, 2), 15, { f: Y, s: INK }));
+      s += move(3.0, 0, dy, pop(.3 + i * .25, g, 'a-fade'));
+    });
+    ph.show = 1.0; ph.dec = 2.2;
+    s += pop(4.0, pill(160, gy(rows.length - 1) + bh + 30, order.map(i => rows[i].lab).join(' &lt; '), 16, { f: Y, s: INK }));
+    ph.ord = 4.3;
+    return done(gy(rows.length - 1) + bh + 48, s, ph, L);
+  },
+  // la mediana: ordenem les dades i ens quedem amb la del mig
+  p2median({ data, L }) {
+    const n = data.length, sorted = [...data].sort((a, b) => a - b), x = i => 160 + (i - (n - 1) / 2) * 54, y1 = 40, y2 = 118, ph = { data: .6 };
+    let s = '', under = '';
+    const chip = (v, xx, yy, col = WH) => rect(xx - 20, yy - 18, 40, 36, { rx: 10, f: col, s: UC, sw: 2 }) + txt(xx, yy + 7, v, 18);
+    data.forEach((v, i) => s += pop(.2 + i * .08, chip(v, x(i), y1)));
+    const used = new Set();
+    sorted.forEach((v, j) => { const i = data.findIndex((d, k) => d === v && !used.has(k)); used.add(i); s += move(1.0 + j * .15, x(i) - x(j), y1 - y2, chip(v, x(j), y2)); });
+    ph.sorted = 1.0 + n * .15 + .5;
+    let t = ph.sorted + .3;
+    for (let k = 0; k < Math.floor(n / 2); k++) { [k, n - 1 - k].forEach(j => s += pop(t, line(x(j) - 16, y2 + 14, x(j) + 16, y2 - 14, { s: GRY, sw: 3 }) + rect(x(j) - 20, y2 - 18, 40, 36, { rx: 10, f: WH, op: .55 }), 'a-fade')); t += .45; }
+    const m = Math.floor(n / 2);
+    under += pop(t, rect(x(m) - 25, y2 - 23, 50, 46, { rx: 13, f: Y }), 'a-fade');
+    s += arrow(x(m), y2 + 56, x(m), y2 + 26, t + .1, UC) + txt(x(m), y2 + 72, L_('mediana', 'mediana'), 13, { c: UC, an: A(t + .2) });
+    ph.med = t + .4;
+    return done(y2 + 82, under + s, ph, L);
+  },
+  // bucles dins de bucles: cada volta del de fora fa totes les voltes del de dins
+  p2nested({ outer, inner, L }) {
+    let s = ''; const ph = {};
+    s += pop(.2, rect(10, 20, 150, 134, { rx: 14, cls: 'p2f1', s: UC, sw: 2.5 }) + img('repeat', 30, 40, 26) + txt(52, 47, `× ${outer}`, 17, { a: 'start' }) + rect(24, 62, 128, 80, { rx: 12, f: WH, s: UC, sw: 2.5 }) + img('repeat', 42, 82, 22) + txt(60, 88, `× ${inner}`, 15, { a: 'start' }) + rect(34, 100, 108, 30, { rx: 8, f: PAL }) + txt(88, 120, 'n = n + 1', 14));
+    const cx = c => 200 + c * 30, cy = r => 44 + r * 36; let k = 0;
+    for (let r = 0; r < outer; r++) { s += txt(cx(0) - 20, cy(r) + 5, r + 1, 12, { a: 'end', c: UC, an: A(.9 + r * inner * .17) }); for (let c = 0; c < inner; c++) { const t = .9 + k * .17; s += pop(t, circ(cx(c), cy(r), 12, { f: UC }) + txt(cx(c), cy(r) + 4.5, k + 1, 11, { c: WH })); k++; } }
+    const te = .9 + k * .17 + .2;
+    s += pop(te, pill(245, cy(outer - 1) + 40, `${outer} × ${inner} = ${outer * inner}`, 15, { f: Y, s: INK }));
+    ph.code = .6; ph.times = te + .3;
+    s += pop(te + .8, pill(85, 180, `n: 0 → ${outer * inner}`, 15, { f: Y, s: INK }));
+    ph.n = te + 1.1;
+    return done(198, s, ph, L);
+  }
 };
 // geometria de cossos en perspectiva cavallera: vèrtexs, arestes (amagades amb ratlles) i cares
 function solidGeom(sh, cx, cy, s, t = .9) {
@@ -1260,6 +1479,10 @@ const L_ = (ca, es) => typeof L === 'function' ? L(ca, es) : ca;
 Object.assign(SCN, S);
 
 /* ================= configuració de cada concepte ================= */
+// vèrtexs d'un polígon regular, punt mig d'un costat i un eix allargat pels dos cantons
+const REG = (n, cx, cy, R, a0) => [...Array(n)].map((_, k) => [cx + R * Math.cos(a0 + 2 * Math.PI * k / n), cy + R * Math.sin(a0 + 2 * Math.PI * k / n)]);
+const MID = (P, k) => [(P[k % P.length][0] + P[(k + 1) % P.length][0]) / 2, (P[k % P.length][1] + P[(k + 1) % P.length][1]) / 2];
+const AX = (p, q, e = 12) => { const dx = q[0] - p[0], dy = q[1] - p[1], l = Math.hypot(dx, dy); return [p[0] - dx / l * e, p[1] - dy / l * e, q[0] + dx / l * e, q[1] + dy / l * e]; };
 Object.assign(TANIM, {
   'c4-1': [
     { k: 'p2place', n: 3407, cols: ['UM', 'C', 'D', 'U'], L: ['cols', 'vals', 'end'] },
@@ -1421,7 +1644,55 @@ Object.assign(TANIM, {
     { k: 'p2tape', h: 130, rows: [{ y: 44, segs: [{ v: 2.4, c: 'uc', lab: '2,40', t: .3 }, { v: 2.4, c: 'uc', lab: '2,40', t: .45 }, { v: 2.4, c: 'uc', lab: '2,40', t: .6 }, { v: 2.8, c: 'y', sw: [['?', .8], ['2,80 €', 2.6]], t: .75 }], tot: { lab: '10 €', t: .75 }, br: [{ a: 0, b: 3, dn: true, lab: '3 × 2,40 = 7,20 €', t: 1.4 }, { a: 3, b: 4, dn: true, lab: '2,80 €', t: 2.6, f: WH, c: RED }] }], L: [1.0, 1.8, 2.9] },
     { k: 'p2seats', rows: 12, cols: 15, taken: 134, L: ['grid', 'tot', 'free'] },
     { k: 'p2ratio', heads: [{ ic: 'orange' }, { s: '€' }], cols: [['5 kg', '7,50 €'], ['1 kg', '1,50 €'], ['8 kg', '12 €']], ops: ['÷ 5', '× 8'], L: ['c0', 'c1', 'c2'] },
-    { k: 'p2tape', h: 228, rows: [{ y: 40, x0: 50, W: 250, segs: Array.from({ length: 25 }, (_, k) => ({ v: 12, c: k ? (k % 2 ? 'l' : 'w') : 'uc', t: .3 + k * .025 })), tot: { lab: '300 €', t: .4 }, br: [{ a: 0, b: 1, dn: true, lab: '300 ÷ 25 = 12 €', t: 1.5, px: 118 }], img: [{ n: 'car', x: 24, y: 55, t: .2 }] }, { y: 148, x0: 50, W: 140, segs: Array.from({ length: 4 }, (_, k) => ({ v: 2, c: k ? 'y' : 'r', lab: '2 €', t: 2.3 + k * .06, x: k ? null : 2.9 })), tot: { lab: '8 €', t: 2.4 }, br: [{ a: 1, b: 4, dn: true, lab: '8 − 2 = 6 €', t: 3.2 }], img: [{ n: 'temple', x: 24, y: 163, t: 2.2 }], pills: [{ x: 258, y: 163, s: '12 + 6 = 18 €', t: 4.2, fs: 13 }] }], L: [.9, 1.8, 3.4, 4.4] }
+    { k: 'p2tape', h: 230, rows: [{ y: 40, x0: 50, W: 250, segs: Array.from({ length: 25 }, (_, k) => ({ v: 12, c: k ? (k % 2 ? 'l' : 'w') : 'uc', t: .3 + k * .025 })), tot: { lab: '300 €', t: .4 }, br: [{ a: 0, b: 1, dn: true, lab: '300 ÷ 25 = 12 €', t: 1.5, px: 118 }], img: [{ n: 'car', x: 24, y: 55, t: .2 }] }, { y: 156, x0: 50, W: 140, segs: Array.from({ length: 4 }, (_, k) => ({ v: 2, c: k ? 'y' : 'r', lab: '2 €', t: 2.3 + k * .06, x: k ? null : 2.9 })), tot: { lab: '8 €', t: 2.4 }, br: [{ a: 1, b: 4, dn: true, lab: '8 − 2 = 6 €', t: 3.2 }], img: [{ n: 'temple', x: 24, y: 171, t: 2.2 }], pills: [{ x: 258, y: 171, s: '12 + 6 = 18 €', t: 4.2, fs: 13 }] }], L: [.9, 1.8, 3.4, 4.4] }
+  ],
+  'c4-11': [
+    { k: 'p2poly', pts: [[64, 116], [256, 116], [160, 44]], sides: [{ i: 0, s: '8 cm', t: .6 }, { i: 1, s: '5 cm', t: .8 }, { i: 2, s: '5 cm', t: 1.0 }], ticks: [{ i: 1, t: 1.8 }, { i: 2, t: 2.0 }], chip: { s: 'isòsceles|isósceles', t: 2.8, y: 166 }, L: [1.2, 2.2, 3.1] },
+    { k: 'p2poly', pts: [[66, 140], [256, 140], [66, 30]], arcs: [{ v: 1, s: '30°', t: .8, r: 30 }, { v: 2, s: '60°', t: 1.0 }, { v: 0, s: '90°', right: true, t: 1.2, ring: 2.0 }], chip: { s: 'rectangle|rectángulo', t: 2.8, y: 178 }, L: [1.5, 2.2, 3.1] },
+    { k: 'p2lines', mode: 'perp', L: ['cut', 'sq', 'name'] },
+    { k: 'p2poly', pts: [[70, 150], [190, 150], [250, 46], [130, 46]], ticks: [0, 1, 2, 3].map(i => ({ i, t: .8 + i * .12 })), arcs: [{ v: 0, s: '60°', t: 1.4 }, { v: 1, s: '120°', t: 1.5 }], par: [{ i: 0, n: 1, t: 2.0 }, { i: 2, n: 1, t: 2.0 }, { i: 1, n: 2, t: 2.3 }, { i: 3, n: 2, t: 2.3 }], chip: { s: 'rombe|rombo', t: 3.0, y: 188 }, L: [1.6, 2.6, 3.3] }
+  ],
+  'c4-12': [
+    { k: 'p2marks', lo: 40000, hi: 50000, n: 10, mk: 7, L: ['marks', 'step', 'tgt'] },
+    { k: 'p2cal', first: 0, a: 3, b: 20, L: ['ask', 'jump', 'day'] },
+    { k: 'p2hops', rows: [{ pts: [1000, 1020, 1045], lab: ['16:40', '17:00', '17:25'], jl: ['20 min', '25 min'], min: 990, max: 1055, brace: '20 + 25 = 45 min', h: 90 }], L: ['r0', 'r0h1', 'r0e'] },
+    { k: 'p2logic', items: [['r', 'sq'], ['b', 'sq'], ['r', 'ci'], ['r', 'sq'], ['b', 'ci'], ['r', 'tr'], ['b', 'sq'], ['r', 'sq']], L: ['ask', 'both', 'only'] }
+  ],
+  'c5-10': [
+    { k: 'p2ladder', units: ['km', 'hm', 'dam', 'm', 'dm', 'cm', 'mm'], from: 3, to: 5, v: 3, f: 10, L: ['ask', 'hops', 'res'] },
+    { k: 'p2ladder', units: ['kg', 'hg', 'dag', 'g', 'dg', 'cg', 'mg'], from: 0, to: 3, v: 1.5, f: 10, L: ['ask', 'hops', 'res'] },
+    { k: 'p2ladder', units: ['km²', 'hm²', 'dam²', 'm²', 'dm²', 'cm²', 'mm²'], from: 3, to: 4, v: 4, f: 100, L: ['ask', 'hops', 'res'] },
+    { k: 'p2tape', h: 124, rows: [{ y: 44, segs: [{ v: 60, lab: '1 h = 60 min', t: .3 }, { v: 60, lab: '1 h = 60 min', t: .5 }, { v: 15, c: 'y', lab: '15', t: .7 }], br: [{ a: 0, b: 2, dn: true, lab: '2 × 60 = 120', t: 1.4 }], tot: { lab: '120 + 15 = 135 min', t: 2.4 } }], L: [.9, 1.8, 2.8] }
+  ],
+  'c5-11': [
+    { k: 'p2lines', mode: 'par', L: ['two', 'dist', 'name'] },
+    { k: 'p2poly', pts: [[90, 170], [220, 170], [90, 40]], arcs: [{ v: 0, s: '90°', right: true, t: .8 }, { v: 1, s: '45°', t: 1.0, r: 26 }, { v: 2, s: '45°', t: 1.2, r: 26 }], ticks: [{ i: 0, t: 1.8 }, { i: 2, t: 1.9 }], chip: { s: 'rectangle i isòsceles|rectángulo e isósceles', t: 2.7, y: 200 }, L: [1.4, 2.1, 3.0] },
+    { k: 'p2poly', pts: REG(8, 160, 94, 76, Math.PI / 8), fc: RED, inner: txt(160, 105, 'STOP', 30, { c: WH }), ticks: [...Array(8)].map((_, i) => ({ i, t: .7 + i * .12, c: INK })), arcs: [...Array(8)].map((_, v) => ({ v, t: 1.9 + v * .1, r: 13, hi: true })), chip: { s: 'octàgon regular|octágono regular', t: 3.0, y: 200 }, L: [1.7, 2.8, 3.3] },
+    { k: 'p2poly', pts: REG(6, 160, 94, 74, 0), ticks: [...Array(6)].map((_, i) => ({ i, t: 1.0 + i * .12, c: UC })), axes: [0, 1, 2].map(k => ({ a: AX(REG(6, 160, 94, 74, 0)[k], REG(6, 160, 94, 74, 0)[k + 3]), t: 2.0 + k * .2 })).concat([0, 1, 2].map(k => ({ a: AX(MID(REG(6, 160, 94, 74, 0), k), MID(REG(6, 160, 94, 74, 0), k + 3)), t: 2.6 + k * .2 }))), chip: { s: '6 eixos|6 ejes', t: 3.4, y: 196 }, L: [.8, 1.9, 3.6] }
+  ],
+  'c5-12': [
+    { k: 'p2marks', lo: 2, hi: 3, n: 10, mk: 7, L: ['marks', 'step', 'tgt'] },
+    { k: 'p2marks', lo: 2.3, hi: 2.4, n: 10, mk: 5, L: ['marks', 'step', 'tgt'] },
+    { k: 'p2gantt', rows: [{ ic: 'cat', n: 4 }, { ic: 'dog', n: 6 }], L: ['go', 'par', 'end'] },
+    { k: 'p2robots', L: ['s1', 's2', 'meet'] }
+  ],
+  'c6-10': [
+    { k: 'p2fbars', W: 200, bars: [{ y: 30, st: [[2, 5]], t: .3 }, { y: 104, st: [[4, 10]], tl: ['0,4'], t: 1.3, col: Y }], ex: [{ k: 'pill', x: 120, y: 172, s: '2 ÷ 5 = 0,4', t: 1.8 }, { k: 'vline', f: .4, y0: 20, y1: 140, t: 2.4 }], L: [.8, 2.0, 2.7] },
+    { k: 'p2grid100', tenths: 4, L: ['dec', 'hund', 'pct'] },
+    { k: 'p2sortbars', rows: [{ fr: [3, 4], v: .75, parts: 4, lab: '3/4' }, { s: '70 %', v: .7, parts: 10, lab: '70 %' }, { s: '0,8', v: .8, parts: 10, lab: '0,8' }], L: ['show', 'dec', 'ord'] },
+    { k: 'p2marks', lo: 0, hi: 2, n: 8, mk: 5, fmt: 'frac', d: 4, majors: [1], L: ['marks', 'hops', 'tgt'] }
+  ],
+  'c6-11': [
+    { k: 'p2tape', h: 196, rows: [{ y: 40, W: 189, segs: [0, 1, 2, 3].map(k => ({ v: .6, c: 'l', lab: '0,60', lt: 1.4, t: .3 + k * .05 })), tot: { lab: '4 → 2,40 €', t: .3 } }, { y: 116, segs: [0, 1, 2, 3, 4, 5].map(k => ({ v: .55, c: 'y', lab: '0,55', lt: 1.5, t: .6 + k * .05 })), tot: { lab: '6 → 3,30 €', t: .6 }, pills: [{ x: 160, y: 178, s: '0,55 € &lt; 0,60 €', t: 2.4 }] }], L: [.9, 1.8, 2.6] },
+    { k: 'p2tape', h: 140, rows: [{ y: 50, segs: [{ v: 200, c: 'l', lab: '200 €', t: .3 }, { v: 42, c: 'y', sw: [['21 %', .9], ['42 €', 1.8]], t: .9 }], br: [{ a: 1, b: 2, dn: true, lab: '200 × 21 ÷ 100 = 42 €', t: 1.8, px: 190 }], tot: { lab: '200 + 42 = 242 €', t: 2.6 } }], L: [1.0, 2.1, 2.9] },
+    { k: 'p2tape', h: 206, rows: [{ y: 44, x0: 50, W: 200, segs: [{ v: 98, c: 'l', lab: '500 €', t: .3 }, { v: 2, c: 'y', t: .9 }], br: [{ a: 1, b: 2, lab: '2 % = 10 €', t: 1.1, px: 214 }], img: [{ n: 'chest', x: 26, y: 59, t: .2 }] }, { y: 128, x0: 50, W: 180, segs: [0, 1, 2].map(k => ({ v: 10, c: 'y', lab: '10 €', t: 1.6 + k * .35 })), br: [{ a: 0, b: 3, dn: true, lab: '3 × 10 = 30 €', t: 2.8 }], img: [{ n: 'calendar', x: 26, y: 143, t: 1.5 }] }], L: [.8, 1.6, 3.1] },
+    { k: 'p2cubes', blocks: [{ a: 5, b: 3, c: 4, sz: 20, cx: 150, cy: 92, t: .6, dt: .7, h: 212, dims: ['5 dm', '3 dm', '4 dm'], dimt: .3 }], tags: [{ x: 160, y: 196, s: '5 × 3 × 4 = 60 dm³', t: 3.3, end: 4.3 }, { x: 160, y: 196, s: '60 dm³ = 60 l', t: 4.3 }], L: [.4, 3.5, 4.5] }
+  ],
+  'c6-12': [
+    { k: 'p2hops', rows: [{ pts: [-3, 2], jl: ['+ 5'], min: -5, max: 4, unit: true, h: 90, tag: { s: '−3 + 5 = 2' } }], L: ['r0', 1.1, 'r0h0'] },
+    { k: 'p2coord', p: [3, 5], L: ['start', 'x', 'y'] },
+    { k: 'p2median', data: [9, 3, 21, 5, 7], L: ['data', 'sorted', 'med'] },
+    { k: 'p2nested', outer: 3, inner: 4, L: ['code', 'times', 'n'] }
   ]
 });
 
