@@ -262,7 +262,7 @@ function mGauge(age, real) {
   return `<svg class="mgauge" viewBox="0 -12 300 176" aria-hidden="true"><defs><linearGradient id="mgg" x1="0" x2="1"><stop offset="0" stop-color="#6FD8BD"/><stop offset=".55" stop-color="#F3D48E"/><stop offset="1" stop-color="#E9967A"/></linearGradient></defs>
     <path d="M32 150A118 118 0 0 1 268 150" fill="none" stroke="rgba(255,255,255,.12)" stroke-width="18" stroke-linecap="round"/><path d="M32 150A118 118 0 0 1 268 150" fill="none" stroke="url(#mgg)" stroke-width="10" stroke-linecap="round" opacity=".9"/>
     ${tick}<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="13" fill="#F3D48E" stroke="#1C1B3A" stroke-width="4"/>
-    <text x="150" y="128" text-anchor="middle" font-family="Newsreader,Georgia,serif" font-size="64" font-weight="500" fill="#F3D48E">${age}</text><text x="150" y="152" text-anchor="middle" font-size="15" font-weight="600" fill="#C9C6E6">${L('anys', 'años')}</text>
+    <text x="150" y="128" text-anchor="middle" font-family="Schibsted Grotesk,system-ui,sans-serif" font-size="60" font-weight="700" fill="#F3D48E">${age}</text><text x="150" y="152" text-anchor="middle" font-size="15" font-weight="600" fill="#C9C6E6">${L('anys', 'años')}</text>
     <text x="32" y="172" text-anchor="middle" font-size="12" fill="#8E8AB8">20</text><text x="268" y="172" text-anchor="middle" font-size="12" fill="#8E8AB8">90</text></svg>`;
 }
 // targeta de l'edat de la ment: convida a fer el test, o mostra l'última i quan toca repetir-lo
@@ -1265,9 +1265,9 @@ async function mShLogo() {
 }
 async function mShDraw() {
   $$('.mshkind button').forEach(b => b.classList.toggle('on', b.dataset.k ? b.dataset.k === MSH.kind : b.dataset.f === MSH.fmt));
-  try { await Promise.all(['500 120px Newsreader', '600 40px "Schibsted Grotesk"', '700 40px "Schibsted Grotesk"'].map(f => document.fonts.load(f))); } catch (e) { }
+  try { await Promise.all(['600 40px "Schibsted Grotesk"', '700 40px "Schibsted Grotesk"'].map(f => document.fonts.load(f))); } catch (e) { }
   const W = 1080, H = MSH.fmt === 'story' ? 1920 : 1350, c = document.createElement('canvas'); c.width = W; c.height = H; const x = c.getContext('2d');
-  const m = MS(), t = m.tests[m.tests.length - 1], serif = 'Newsreader, Georgia, serif', sans = '"Schibsted Grotesk", system-ui, sans-serif';
+  const m = MS(), t = m.tests[m.tests.length - 1], serif = '"Schibsted Grotesk", system-ui, sans-serif', sans = '"Schibsted Grotesk", system-ui, sans-serif';
   // fons
   let g = x.createLinearGradient(0, 0, W * .4, H); g.addColorStop(0, '#0D3B35'); g.addColorStop(1, '#155F54'); x.fillStyle = g; x.fillRect(0, 0, W, H);
   g = x.createRadialGradient(W, 0, 0, W, 0, W * .9); g.addColorStop(0, 'rgba(46,160,138,.45)'); g.addColorStop(1, 'rgba(46,160,138,0)'); x.fillStyle = g; x.fillRect(0, 0, W, H);
