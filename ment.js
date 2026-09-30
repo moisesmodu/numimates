@@ -226,6 +226,10 @@ function mentGo(v) {
   };
 }
 
+// capçalera verda de les altres pestanyes: títol, subtítol i, a sota, el que calgui (xifres, dreceres…)
+const mSub = (title, sub, extra = '') => `<section class="mhero msub"><h1 class="mh1">${title}</h1>${sub ? `<p class="msubp">${sub}</p>` : ''}${extra}</section>`;
+function mCapGo(c) { const e = document.getElementById('cap-' + c); if (e) window.scrollTo({ top: e.getBoundingClientRect().top + window.scrollY - 70, behavior: 'smooth' }); }
+
 /* ---------- Avui ---------- */
 function mRing(k, n) { const C = 2 * Math.PI * 27; return `<div class="mring"><svg viewBox="0 0 64 64"><defs><linearGradient id="mrg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#F7DE9F"/><stop offset="1" stop-color="#C9912F"/></linearGradient></defs><circle cx="32" cy="32" r="27" fill="none" stroke="rgba(255,255,255,.14)" stroke-width="7"/>${k ? `<circle cx="32" cy="32" r="27" fill="none" stroke="url(#mrg)" stroke-width="7" stroke-linecap="round" stroke-dasharray="${(C * k / n).toFixed(1)} ${C.toFixed(1)}"/>` : ''}</svg><b>${k}/${n}</b></div>`; }
 function mentHome() {
@@ -238,14 +242,14 @@ function mentHome() {
     ${nxt ? `<button class="btn big mbtn" onclick="mPlay('${nxt}',true)">${fets ? L('Continua la sessió', 'Continúa la sesión') : L('Comença la sessió', 'Empieza la sesión')}</button>` : `<button class="btn big mbtn" onclick="mShare()">${mSvg('compartir')} ${L('Comparteix-ho', 'Compártelo')}</button>`}</section>`;
   const sess = `<section class="mtcard msess mlift"><div class="mgames">${s.map(g => `<button class="mg ${dd.s.includes(g) ? 'done' : ''}" onclick="mPlay('${g}',true)">${mGic(g)}<span><b>${tx(MG[g].n)}</b><span class="mdom d-${MG[g].cap}">${tx(MCAP[MG[g].cap])}</span></span>${dd.s.includes(g) ? `<i class="mok">${mSvg('ok')}</i>` : `<span class="mnext">${mSvg('seg')}</span>`}</button>`).join('')}</div>
     ${nxt ? '' : `<button class="btn ghost mbtn" style="margin-top:8px" onclick="go('jocs')">${L('Juga una estona més', 'Juega un rato más')}</button>`}</section>`;
-  app.innerHTML = mShell('home', `${sess}${mAgeCard()}
+  app.innerHTML = mShell('home', `${sess}${mAnamCard()}${mAgeCard()}
     <section class="mtcard"><div class="mthead"><b>${L('Aquesta setmana', 'Esta semana')}</b><span>${P.streak > 1 ? L(`${P.streak} dies seguits`, `${P.streak} días seguidos`) : ''}</span></div><div class="mweek">${week}</div>
       <div class="mgoal ${wn >= m.goal ? 'ok' : ''}"><div><b>${L(`${wn} de ${m.goal} dies entrenats`, `${wn} de ${m.goal} días entrenados`)}</b><span>${wn >= m.goal ? L('Objectiu complert!', '¡Objetivo cumplido!') : L('objectiu setmanal', 'objetivo semanal')}</span></div><div class="mprg"><i style="width:${Math.min(100, 100 * wn / m.goal)}%"></i></div></div></section>
     <section class="mtcard mhab ${dd.hab ? 'on' : ''}">${mTile('fulla', 'log')}<h3>${L('Fora de la pantalla', 'Fuera de la pantalla')}</h3><p>${tx(hab)}</p>
       <button class="btn ghost" onclick="mHab()">${dd.hab ? L('Fet! ✓', '¡Hecho! ✓') : L('Ho faré avui', 'Lo haré hoy')}</button>${dd.hab ? '' : `<button class="link mhalt" onclick="mHabAlt()">${L("Proposa-me'n una altra", 'Propónme otra')}</button>`}</section>
-    ${first ? '' : `<button class="mlnk" onclick="mShare()">${mTile('compartir', 'gold')}<span><b>${L('Comparteix la teva evolució', 'Comparte tu evolución')}</b><small>${L('Una imatge per enviar per WhatsApp o penjar a Instagram.', 'Una imagen para enviar por WhatsApp o subir a Instagram.')}</small></span><span class="mnext">${mSvg('seg')}</span></button>`}
-    ${m.rem == null ? `<button class="mlnk" onclick="mRemind()">${mTile('campana', 'gold')}<span><b>${L('Recorda-m\'ho cada dia', 'Recuérdamelo cada día')}</b><small>${L('Afegeix un avís diari al calendari del mòbil.', 'Añade un aviso diario al calendario del móvil.')}</small></span><span class="mnext">${mSvg('seg')}</span></button>` : ''}
-    <button class="mlnk" onclick="mentCiencia()">${mTile('llibre', 'ink')}<span><b>${L('Com entrenar la ment', 'Cómo entrenar la mente')}</b><small>${L('Què diu la ciència i què pots fer cada dia.', 'Qué dice la ciencia y qué puedes hacer cada día.')}</small></span><span class="mnext">${mSvg('seg')}</span></button>`, true, hero);
+    <div class="mquick">${first ? '' : `<button onclick="mShare()">${mTile('compartir', 'gold')}<b>${L('Comparteix', 'Comparte')}</b><small>${L('la teva evolució', 'tu evolución')}</small></button>`}
+      <button onclick="mRemind()">${mTile('campana', 'gold')}<b>${L('Recordatori', 'Recordatorio')}</b><small>${m.rem != null ? L(`cada dia a les ${m.rem}`, `cada día a las ${m.rem}`) : L('diari al calendari', 'diario en el calendario')}</small></button>
+      <button onclick="mentCiencia()">${mTile('llibre', 'ink')}<b>${L('La ciència', 'La ciencia')}</b><small>${L('com entrenar la ment', 'cómo entrenar la mente')}</small></button></div>`, true, hero);
 }
 // ordre propi de cada persona (barreja amb llavor): no se'n repeteix cap fins que han sortit totes
 function mHabIdx(d = today()) {
@@ -286,10 +290,13 @@ function mentJocs() {
   const card = g => { const o = MG[g], lv = mLv10(g); return `<button class="mjoc d-${o.cap}" onclick="mPlay('${g}',false)">${o.nou && !m.hist[g] ? `<span class="mnew">${L('Nou', 'Nuevo')}</span>` : ''}${mGic(g)}<b>${tx(o.n)}</b>
     ${lv ? `<span class="mdots" aria-label="${L('nivell', 'nivel')} ${lv}">${[...Array(10).keys()].map(i => `<i class="${i < lv ? 'on' : ''}"></i>`).join('')}</span>` : ''}
     <span class="mrec">${m.hist[g] ? `${L('Millor', 'Mejor')}: <b>${mNice(g, m.best[g])}</b>` : L('Per estrenar', 'Por estrenar')}${!prem && fr[g] && !ses.includes(g) ? ` · <i>${L('demà més', 'mañana más')}</i>` : ''}</span></button>`; };
-  app.innerHTML = mShell('jocs', `<h1 class="mh1">${L('Entrena', 'Entrena')}</h1><p class="mlead">${L('Cada joc té 10 nivells: si et surt bé, puja; si et costa, baixa. Els punts de cada rajola són el teu nivell.', 'Cada juego tiene 10 niveles: si te sale bien, sube; si te cuesta, baja. Los puntos de cada casilla son tu nivel.')} ${prem ? L('Juga tant com vulguis.', 'Juega tanto como quieras.') : L("Els jocs de la sessió d'avui són lliures; de la resta, una partida gratis al dia de cada joc (amb Premium, sense límit).", 'Los juegos de la sesión de hoy son libres; del resto, una partida gratis al día de cada juego (con Premium, sin límite).')}</p>
-    <button class="mlnk" onclick="${m.tests.length && 14 - (mDayN(today()) - mDayN(m.tests[m.tests.length - 1].d)) > 0 ? 'mAgeInfo()' : 'mTestIntro()'}">${mTile('ment', 'ink')}<span><b>${L('Test de la ment', 'Test de la mente')}</b><small>${L('4 proves · uns 4 minuts · cada 2 setmanes', '4 pruebas · unos 4 minutos · cada 2 semanas')}</small></span><span class="mnext">${mSvg('seg')}</span></button>
+  const nj = Object.keys(MG).length;
+  const hero = mSub(L('Entrena', 'Entrena'), L(`${nj} jocs · 6 capacitats · 10 nivells cada joc`, `${nj} juegos · 6 capacidades · 10 niveles cada juego`),
+    `<div class="mcapch">${Object.keys(MCAP).map(c => `<button class="d-${c}" onclick="mCapGo('${c}')"><i></i>${tx(MCAP[c])}</button>`).join('')}</div>`);
+  app.innerHTML = mShell('jocs', `<div class="mlift"><button class="mlnk" onclick="${m.tests.length && 14 - (mDayN(today()) - mDayN(m.tests[m.tests.length - 1].d)) > 0 ? 'mAgeInfo()' : 'mTestIntro()'}">${mTile('ment', 'ink')}<span><b>${L('Test de la ment', 'Test de la mente')}</b><small>${L('4 proves · uns 4 minuts · cada 2 setmanes', '4 pruebas · unos 4 minutos · cada 2 semanas')}</small></span><span class="mnext">${mSvg('seg')}</span></button></div>
     <button class="mlnk mreptes" onclick="mentReptes()">${mTile('copa', 'gold')}<span><b>${L('Reptes amb amics', 'Retos con amigos')}</b><small>${L('Repta algú o un grup al mateix joc, amb les mateixes preguntes.', 'Reta a alguien o a un grupo al mismo juego, con las mismas preguntas.')}</small></span><span class="mnext">${mSvg('seg')}</span></button>
-    ${Object.keys(MCAP).map(c => `<div class="mdomh d-${c}"><i></i><h2>${tx(MCAP[c])}</h2></div><p class="mdomd">${tx(MCAPD[c])}</p><div class="mjocs">${Object.keys(MG).filter(g => MG[g].cap === c).map(card).join('')}</div>`).join('')}`);
+    <p class="mlvnote">${L('Si et surt bé, el joc puja de nivell; si et costa, baixa. Els punts de cada rajola són el teu nivell.', 'Si te sale bien, el juego sube de nivel; si te cuesta, baja. Los puntos de cada casilla son tu nivel.')}${prem ? '' : ` ${L("Els jocs de la sessió d'avui són lliures; de la resta, una partida gratis al dia (amb Premium, sense límit).", 'Los juegos de la sesión de hoy son libres; del resto, una partida gratis al día (con Premium, sin límite).')}`}</p>
+    ${Object.keys(MCAP).map(c => `<div class="mdomh d-${c}" id="cap-${c}"><i></i><h2>${tx(MCAP[c])}</h2></div><p class="mdomd">${tx(MCAPD[c])}</p><div class="mjocs">${Object.keys(MG).filter(g => MG[g].cap === c).map(card).join('')}</div>`).join('')}`, true, hero);
 }
 function mPlay(g, ses) {
   if (!MG[g]) return go('jocs');
@@ -374,7 +381,7 @@ function mEnd(g, score, up, msg) {
   P.xp = (P.xp || 0) + 10; if (ses && d.s.length >= 3 && !d.bonus) { d.bonus = 1; P.xp += 20; }
   touchStreak(); save(); syncNow();
   const s = mSession(), left = s.filter(x => !mDay().s.includes(x)), nx = left[0], fita = mFitesNew();
-  app.innerHTML = `<div class="mgame"><div class="mgbody"><div class="mres">${mGic(g)}<h2>${rec && was != null ? L('Nou rècord!', '¡Nuevo récord!') : L('Ben fet!', '¡Bien hecho!')}</h2>
+  app.innerHTML = `<div class="mgame ${MG[g] ? 'd-' + MG[g].cap : ''}"><div class="mgbody"><div class="mres">${mGic(g)}<h2>${rec && was != null ? L('Nou rècord!', '¡Nuevo récord!') : L('Ben fet!', '¡Bien hecho!')}</h2>
     <p class="mscore">${mNice(g, score)}</p><p>${msg || ''}</p>
     ${adapt ? `<p class="mlvl ${lvB > lvA ? 'up' : ''}">${lvB > lvA ? L(`Puges al nivell ${lvB} de 10!`, `¡Subes al nivel ${lvB} de 10!`) : lvB < lvA ? L(`La propera, nivell ${lvB}: una mica més assequible.`, `La próxima, nivel ${lvB}: algo más asequible.`) : L(`Nivell ${lvB} de 10${lvB < 10 ? ' · si ho fas una mica millor, pujaràs' : ''}`, `Nivel ${lvB} de 10${lvB < 10 ? ' · si lo haces un poco mejor, subirás' : ''}`)}</p>` : ''}${was != null && !rec ? `<p class="mmut">${L('El teu millor resultat', 'Tu mejor resultado')}: ${mNice(g, was)}</p>` : ''}
     ${fita ? `<p class="mtcard" style="display:flex;gap:12px;align-items:center;text-align:left">${mTile('medalla', 'gold')}<span><b>${L('Nova fita', 'Nuevo logro')}</b><br>${tx(fita[1])}</span></p>` : ''}
@@ -1132,6 +1139,101 @@ async function sobTap(i) {
   await mSleep(ok ? 1500 : 2400); if (MGA === A) sobNext();
 }
 
+/* ---------- Punt de partida: 10 preguntes d'hàbits i de com et notes (cada mes, per veure l'evolució) ----------
+   Hàbits que la recerca relaciona amb una ment en forma (activitat física, vida social, son, aprendre, estat d'ànim,
+   oïda: vegeu la Lancet Commission 2024) i com es nota la persona en el dia a dia. No és cap prova mèdica.
+   Les respostes NOMÉS es guarden en aquest dispositiu (localStorage), no se sincronitzen: són dades personals sensibles. */
+const MANQ = [
+  ['mov', 'h', 'Quants dies a la setmana camines o fas exercici almenys 30 minuts?|¿Cuántos días a la semana caminas o haces ejercicio al menos 30 minutos?', ['Cap o gairebé cap|Ninguno o casi ninguno', "1 o 2 dies|1 o 2 días", '3 o 4 dies|3 o 4 días', '5 o més|5 o más']],
+  ['soc', 'h', 'Quantes vegades a la setmana parles o quedes amb familiars o amics (no per missatge)?|¿Cuántas veces a la semana hablas o quedas con familiares o amigos (no por mensaje)?', ['Gairebé mai|Casi nunca', 'Una vegada|Una vez', '2 o 3 vegades|2 o 3 veces', 'Cada dia o gairebé|Cada día o casi']],
+  ['son', 'h', 'Com dorms normalment?|¿Cómo duermes normalmente?', ['Malament o poques hores|Mal o pocas horas', 'Irregular|Irregular', 'Bé, però em desperto sovint|Bien, pero me despierto a menudo', 'Bé, unes 7 o 8 hores|Bien, unas 7 u 8 horas']],
+  ['apr', 'h', 'Fas activitats que et facin pensar: llegir, aprendre coses noves, jocs, manualitats?|¿Haces actividades que te hagan pensar: leer, aprender cosas nuevas, juegos, manualidades?', ['Gairebé mai|Casi nunca', 'De tant en tant|De vez en cuando', 'Algunes vegades a la setmana|Algunas veces a la semana', 'Cada dia|Cada día']],
+  ['anim', 'h', "Com et trobes d'ànim, últimament?|¿Cómo te encuentras de ánimo, últimamente?", ['Sovint baix o amb estrès|A menudo bajo o con estrés', 'Amb alts i baixos|Con altibajos', 'Força bé|Bastante bien', 'Molt bé|Muy bien']],
+  ['oid', 'h', 'Segueixes bé una conversa quan hi ha soroll (un bar, un dinar amb molta gent)?|¿Sigues bien una conversación cuando hay ruido (un bar, una comida con mucha gente)?', ['Em costa molt|Me cuesta mucho', 'Em costa sovint|Me cuesta a menudo', 'De vegades em costa|A veces me cuesta', 'Sí, sense problema|Sí, sin problema']],
+  ['memp', 'p', "T'oblides d'encàrrecs, de noms o d'on has deixat les coses?|¿Te olvidas de recados, de nombres o de dónde has dejado las cosas?", ['Molt sovint|Muy a menudo', 'Sovint|A menudo', 'De vegades|A veces', 'Gairebé mai|Casi nunca']],
+  ['conc', 'p', "Et costa concentrar-te en una lectura, una conversa o una pel·lícula?|¿Te cuesta concentrarte en una lectura, una conversación o una película?", ['Molt sovint|Muy a menudo', 'Sovint|A menudo', 'De vegades|A veces', 'Gairebé mai|Casi nunca']],
+  ['agil', 'p', 'Com et sents fent comptes de cap o prenent decisions ràpides?|¿Cómo te sientes haciendo cuentas de cabeza o tomando decisiones rápidas?', ['Em costa molt|Me cuesta mucho', 'Em costa una mica|Me cuesta un poco', 'Bé|Bien', 'Amb molta agilitat|Con mucha agilidad']],
+  ['obj', 'o', "Què t'agradaria millorar més?|¿Qué te gustaría mejorar más?", ['La memòria|La memoria', "L'atenció i la concentració|La atención y la concentración", 'La rapidesa mental|La rapidez mental', 'El càlcul de cap|El cálculo de cabeza', 'Mantenir la ment activa en general|Mantener la mente activa en general']]
+];
+const MANOBJ = ['mem', 'ate', 'vel', 'cal', null];
+const MANAR = { mov: 'Activitat física|Actividad física', soc: 'Vida social|Vida social', son: 'Son|Sueño', apr: 'Aprendre coses noves|Aprender cosas nuevas', anim: "Estat d'ànim|Estado de ánimo", oid: 'Oïda|Oído', memp: 'Memòria del dia a dia|Memoria del día a día', conc: 'Concentració|Concentración', agil: 'Agilitat mental|Agilidad mental' };
+const MANTIP = {
+  mov: 'Camina cada dia: comença per 10 minuts i ves sumant fins a 30. És un dels hàbits més relacionats amb una ment en forma.|Camina cada día: empieza por 10 minutos y ve sumando hasta 30. Es uno de los hábitos más relacionados con una mente en forma.',
+  soc: 'Busca cada dia una estona de conversa: una trucada, un cafè, una activitat del barri. Parlar amb gent és un gran exercici per a la ment.|Busca cada día un rato de conversación: una llamada, un café, una actividad del barrio. Hablar con gente es un gran ejercicio para la mente.',
+  son: "Intenta anar a dormir i llevar-te sempre a la mateixa hora, i deixa les pantalles una hora abans d'anar al llit.|Intenta acostarte y levantarte siempre a la misma hora, y deja las pantallas una hora antes de ir a la cama.",
+  apr: 'Tria una cosa nova per aprendre aquest mes: una recepta, unes quantes paraules en un altre idioma, una cançó, un joc de cartes.|Elige algo nuevo para aprender este mes: una receta, unas cuantas palabras en otro idioma, una canción, un juego de cartas.',
+  anim: "Fes cada dia alguna cosa que t'agradi i explica a algú de confiança com et sents. Si fa setmanes que et trobes baix, parla'n amb el metge.|Haz cada día algo que te guste y cuéntale a alguien de confianza cómo te sientes. Si hace semanas que te encuentras bajo, háblalo con el médico.",
+  oid: "Si et costa seguir les converses, comenta-ho amb el metge: revisar l'oïda també és cuidar la ment.|Si te cuesta seguir las conversaciones, coméntalo con el médico: revisar el oído también es cuidar la mente.",
+  memp: 'Fes servir trucs: deixa les claus sempre al mateix lloc i repeteix en veu alta el que has de recordar. I juga als jocs de memòria.|Usa trucos: deja las llaves siempre en el mismo sitio y repite en voz alta lo que tienes que recordar. Y juega a los juegos de memoria.',
+  conc: 'Llegeix 15 minuts seguits amb el mòbil lluny, i prova els jocs d\'atenció, com «Colors» o «Verd sí, vermell no».|Lee 15 minutos seguidos con el móvil lejos, y prueba los juegos de atención, como «Colores» o «Verde sí, rojo no».',
+  agil: 'Fes de cap els comptes de la compra i prova els jocs de càlcul i de rapidesa.|Haz de cabeza las cuentas de la compra y prueba los juegos de cálculo y de rapidez.'
+};
+const MANV = ['Per millorar|Por mejorar', 'Regular|Regular', 'Bé|Bien', 'Molt bé|Muy bien'];
+const mAnKey = () => `numi-ment-anam:${P.code || P.id}`;
+function mAnam() { try { const v = JSON.parse(localStorage.getItem(mAnKey()) || '[]'); return Array.isArray(v) ? v : []; } catch (e) { return []; } }
+function mAnamSave(list) { try { localStorage.setItem(mAnKey(), JSON.stringify(list.slice(-24))); } catch (e) { } }
+// dies que falten per tornar-lo a respondre (cada 30 dies); null si no s'ha fet mai
+const mAnamLeft = () => { const A = mAnam(), a = A[A.length - 1]; return a ? 30 - (mDayN(today()) - mDayN(a.d)) : null; };
+let MAN = null;
+function mAnamIntro() {
+  const again = mAnam().length > 0;
+  mStop(); VIEW = 'mgame'; MGCUR = null;
+  app.innerHTML = `<div class="mgame d-ink"><div class="mgtop"><button class="xbtn" onclick="go('home')" aria-label="${L('Surt', 'Salir')}">✕</button><b>${again ? L('Revisió del mes', 'Revisión del mes') : L('Punt de partida', 'Punto de partida')}</b></div><div class="mgbody"><div class="mintro">${mTile('diana', 'ink')}
+    <h2>${again ? L("Com has evolucionat?", '¿Cómo has evolucionado?') : L("D'on parteixes?", '¿De dónde partes?')}</h2>
+    <p class="mhow">${again ? L('Les mateixes 10 preguntes que la vegada anterior. Així veuràs què ha canviat i què et convé treballar ara.', 'Las mismas 10 preguntas que la vez anterior. Así verás qué ha cambiado y qué te conviene trabajar ahora.') : L('10 preguntes curtes sobre els teus hàbits i com et notes en el dia a dia (uns 2 minuts). Serveix per saber d\'on parteixes, veure com evoluciones cada mes i saber què et convé millorar.', '10 preguntas cortas sobre tus hábitos y cómo te notas en el día a día (unos 2 minutos). Sirve para saber de dónde partes, ver cómo evolucionas cada mes y saber qué te conviene mejorar.')}</p>
+    <p class="mmut">${L('No és cap prova mèdica. Les respostes només es guarden en aquest mòbil.', 'No es ninguna prueba médica. Las respuestas solo se guardan en este móvil.')}</p>
+    <button class="btn big mbtn" onclick="mAnamGo()">${L('Comença', 'Empieza')}</button></div></div></div>`;
+}
+function mAnamGo() { MAN = { i: 0, a: {} }; mAnamQ(); }
+function mAnamQ() {
+  const q = MANQ[MAN.i], grp = { h: L('Els teus hàbits', 'Tus hábitos'), p: L('Com et notes', 'Cómo te notas'), o: L('El teu objectiu', 'Tu objetivo') }[q[1]];
+  $('.mgbody').innerHTML = `<div class="manq"><div class="mtbar">${MANQ.map((_, k) => `<i class="${k <= MAN.i ? 'on' : ''}"></i>`).join('')}</div><p class="manqg">${grp} · ${MAN.i + 1}/${MANQ.length}</p><h2 class="manqt">${tx(q[2])}</h2>
+    <div class="copts list">${q[3].map((o, k) => `<button class="mopt copt ${MAN.a[q[0]] === k ? 'on' : ''}" onclick="mAnamA(${k})">${tx(o)}</button>`).join('')}</div>
+    ${MAN.i ? `<button class="link" onclick="MAN.i--;mAnamQ()">${L('Enrere', 'Atrás')}</button>` : ''}</div>`;
+}
+async function mAnamA(k) {
+  const q = MANQ[MAN.i]; MAN.a[q[0]] = k; SFX.tap && SFX.tap();
+  const b = $$('.manq .copt')[k]; if (b) b.classList.add('on');
+  await new Promise(r => setTimeout(r, 220));
+  if (MAN.i < MANQ.length - 1) { MAN.i++; return mAnamQ(); }
+  const list = mAnam(), rec = { d: today(), a: MAN.a };
+  if (list.length && list[list.length - 1].d === today()) list.pop();
+  list.push(rec); mAnamSave(list);
+  const f = MANOBJ[MAN.a.obj]; if (f) { MS().focus = f; }
+  if (!MS().anx) { MS().anx = 1; P.xp = (P.xp || 0) + 20; }
+  save(); MAN = null; mAnamRes(true);
+}
+// resultat: barres per àrea, canvis respecte de la vegada anterior i del punt de partida, i què pots millorar
+function mAnamRes(fresh) {
+  const A = mAnam(), cur = A[A.length - 1]; if (!cur) return mAnamIntro();
+  const prev = A.length > 1 ? A[A.length - 2] : null, first = A.length > 2 ? A[0] : null;
+  const row = k => { const v = cur.a[k], p = prev ? prev.a[k] : null, d = p == null || v == null ? 0 : v - p;
+    return `<div class="manr v${v}"><b>${tx(MANAR[k])}</b><span>${d > 0 ? `<em class="up">▲ ${L('millor', 'mejor')}</em>` : d < 0 ? `<em class="dn">▼</em>` : ''}${tx(MANV[v] || '')}</span><div class="mprg"><i style="width:${((v ?? 0) + 1) * 25}%"></i></div></div>`; };
+  const hk = MANQ.filter(q => q[1] === 'h').map(q => q[0]), pk = MANQ.filter(q => q[1] === 'p').map(q => q[0]);
+  const weak = [...hk, ...pk].filter(k => cur.a[k] != null && cur.a[k] <= 1).sort((a, b) => cur.a[a] - cur.a[b]);
+  const mid = [...hk, ...pk].filter(k => cur.a[k] === 2);
+  const tips = [...weak, ...mid].slice(0, 3), strong = [...hk, ...pk].filter(k => cur.a[k] === 3);
+  const better = prev ? [...hk, ...pk].filter(k => cur.a[k] > prev.a[k]).length : 0, sinceFirst = first ? [...hk, ...pk].filter(k => cur.a[k] > first.a[k]).length : 0;
+  const left = mAnamLeft();
+  mStop(); VIEW = 'mgame';
+  app.innerHTML = `<div class="mgame d-ink"><div class="mgtop"><button class="xbtn" onclick="go('home')" aria-label="${L('Surt', 'Salir')}">✕</button><b>${L('El teu punt de partida', 'Tu punto de partida')}</b></div><div class="mgbody manres">
+    ${prev ? `<div class="mtcard manev"><b>${better ? L(`Has millorat en ${better} ${better === 1 ? 'àrea' : 'àrees'} des de la vegada anterior`, `Has mejorado en ${better} ${better === 1 ? 'área' : 'áreas'} desde la vez anterior`) : L('Tot força igual que la vegada anterior', 'Todo bastante igual que la vez anterior')}</b>${first ? `<span>${L(`I en ${sinceFirst} des del punt de partida (${dayShort(first.d)}).`, `Y en ${sinceFirst} desde el punto de partida (${dayShort(first.d)}).`)}</span>` : `<span>${L(`Comparat amb el ${dayShort(prev.d)}`, `Comparado con el ${dayShort(prev.d)}`)}</span>`}</div>` : fresh ? `<p class="mmut" style="text-align:center;margin:0">${L("Aquest és el teu punt de partida. D'aquí a un mes et tornarem a preguntar i veuràs com has evolucionat.", 'Este es tu punto de partida. Dentro de un mes te volveremos a preguntar y verás cómo has evolucionado.')}</p>` : ''}
+    <section class="mtcard"><div class="mthead"><b>${L('Els teus hàbits', 'Tus hábitos')}</b><span>${dayShort(cur.d)}</span></div><div class="manrs">${hk.map(row).join('')}</div></section>
+    <section class="mtcard"><div class="mthead"><b>${L('Com et notes', 'Cómo te notas')}</b></div><div class="manrs">${pk.map(row).join('')}</div></section>
+    ${tips.length ? `<section class="mtcard mantips"><div class="mthead"><b>${L('Què pots millorar', 'Qué puedes mejorar')}</b></div>${tips.map(k => `<div class="mantip">${mTile('fulla', 'log')}<div><b>${tx(MANAR[k])}</b><p>${tx(MANTIP[k])}</p></div></div>`).join('')}</section>` : ''}
+    ${strong.length ? `<p class="mmut" style="text-align:center">${L('Els teus punts forts', 'Tus puntos fuertes')}: <b>${strong.map(k => tx(MANAR[k]).toLowerCase()).join(', ')}</b>. ${L('Continua així!', '¡Sigue así!')}</p>` : ''}
+    <p class="mmut" style="text-align:center;font-size:14.5px">${L('És orientatiu: no és cap prova mèdica. Les respostes només es guarden en aquest mòbil.', 'Es orientativo: no es ninguna prueba médica. Las respuestas solo se guardan en este móvil.')}${left > 0 ? ` ${L(`El podràs tornar a respondre d'aquí a ${left} ${left === 1 ? 'dia' : 'dies'}.`, `Podrás volver a responderlo dentro de ${left} ${left === 1 ? 'día' : 'días'}.`)}` : ''}</p>
+    <button class="btn big mbtn" onclick="go('home')">${L("Torna a l'inici", 'Vuelve al inicio')}</button>${left <= 0 ? `<button class="link" onclick="mAnamIntro()">${L('Respon-lo ara', 'Respóndelo ahora')}</button>` : ''}</div></div>`;
+  window.scrollTo(0, 0);
+}
+// targeta de l'inici: convida a fer-lo, o a la revisió quan toca
+function mAnamCard() {
+  const left = mAnamLeft();
+  if (left == null) return `<section class="mtcard manc">${mTile('diana', 'ink')}<div><b>${L("El teu punt de partida", 'Tu punto de partida')}</b><p>${L('10 preguntes sobre els teus hàbits i com et notes. Cada mes veuràs com evoluciones i què pots millorar.', '10 preguntas sobre tus hábitos y cómo te notas. Cada mes verás cómo evolucionas y qué puedes mejorar.')}</p><button class="btn mbtn" onclick="mAnamIntro()">${L('Comença · 2 minuts', 'Empieza · 2 minutos')}</button></div></section>`;
+  if (left <= 0) return `<section class="mtcard manc">${mTile('diana', 'ink')}<div><b>${L('Revisió del mes', 'Revisión del mes')}</b><p>${L('Ha passat un mes: respon les mateixes preguntes i mira com has evolucionat.', 'Ha pasado un mes: responde las mismas preguntas y mira cómo has evolucionado.')}</p><button class="btn mbtn" onclick="mAnamIntro()">${L('Veure la meva evolució', 'Ver mi evolución')}</button></div></section>`;
+  return '';
+}
+
 /* ---------- Test de la ment: 4 proves i una edat orientativa ----------
    Reflexos (temps de reacció), Símbols i números (velocitat de processament), Dígits (memòria de treball verbal)
    i Seqüències (memòria de treball visoespacial). Cada resultat es compara amb la tendència mitjana per edats
@@ -1349,7 +1451,7 @@ function mLv10(g) {
 function mAgeChart(T) {
   if (T.length < 2) return '';
   const v = T.slice(-8), ys = v.map(t => t.age), mn = Math.min(...ys) - 3, mx = Math.max(...ys) + 3, W = 300, H = 120, x = i => 20 + i * (W - 40) / (v.length - 1), y = a => 12 + (a - mn) / (mx - mn) * (H - 34);
-  return `<svg class="magech" viewBox="0 0 ${W} ${H}"><polyline points="${v.map((t, i) => `${x(i)},${y(t.age)}`).join(' ')}" fill="none" stroke="var(--pri)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>${v.map((t, i) => `<circle cx="${x(i)}" cy="${y(t.age)}" r="5" fill="#fff" stroke="var(--pri)" stroke-width="3"/><text x="${x(i)}" y="${y(t.age) - 10}" text-anchor="middle" font-size="13" font-weight="700" fill="#1B2323">${t.age}</text><text x="${x(i)}" y="${H - 4}" text-anchor="middle" font-size="11.5" fill="#56615F">${dayShort(t.d)}</text>`).join('')}</svg>`;
+  return `<svg class="magech" viewBox="0 0 ${W} ${H}"><polyline points="${v.map((t, i) => `${x(i)},${y(t.age)}`).join(' ')}" fill="none" stroke="var(--pri)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>${v.map((t, i) => `<circle cx="${x(i)}" cy="${y(t.age)}" r="5" fill="#fff" stroke="var(--pri)" stroke-width="3"/><text x="${x(i)}" y="${y(t.age) - 10}" text-anchor="middle" font-size="13" font-weight="700" fill="#1B2323">${t.age}</text><text x="${x(i)}" y="${H - 4}" text-anchor="${i === 0 ? 'start' : i === v.length - 1 ? 'end' : 'middle'}" dx="${i === 0 ? -14 : i === v.length - 1 ? 14 : 0}" font-size="11.5" fill="#56615F">${dayShort(t.d)}</text>`).join('')}</svg>`;
 }
 // gràfic d'aranya de les sis capacitats (nivell mitjà d'1 a 10)
 function mRadar(doms) {
@@ -1369,19 +1471,20 @@ function mentProgres() {
   const cal = [...Array(off).fill('<i class="x"></i>'), ...[...Array(nd).keys()].map(i => { const k = `${y}-${pad(mo + 1)}-${pad(i + 1)}`, st = mDone(k); return `<i class="${st === 2 ? 'on' : st ? 'mid' : ''} ${k === today() ? 'today' : ''}">${i + 1}</i>`; })].join('');
   const doms = Object.keys(MCAP).map(c => { const l = Object.keys(MG).filter(g => MG[g].cap === c).map(mLv10).filter(v => v != null); return [c, l.length ? l.reduce((a, b) => a + b, 0) / l.length : null]; });
   const fit = new Set(MFITES.filter(f => f[2](m) || (m.fit || []).includes(f[0])).map(f => f[0]));
-  app.innerHTML = mShell('progres', `<h1 class="mh1">${L('El teu progrés', 'Tu progreso')}</h1>
-    <button class="mlnk" onclick="mShare()">${mTile('compartir', 'gold')}<span><b>${L('Comparteix la teva evolució', 'Comparte tu evolución')}</b><small>${L('Per WhatsApp, Instagram o on vulguis.', 'Por WhatsApp, Instagram o donde quieras.')}</small></span><span class="mnext">${mSvg('seg')}</span></button>
-    <button class="mlnk" onclick="mentLliga('w')">${mTile('copa', 'gold')}<span><b>${L('Lliga Numi Ment', 'Liga Numi Ment')}</b><small>${L('El teu lloc a la setmana i al mes. Els 3 primers de cada mes guanyen premi.', 'Tu puesto en la semana y en el mes. Los 3 primeros de cada mes ganan premio.')}</small></span><span class="mnext">${mSvg('seg')}</span></button>
-    <div class="mstats"><div><b>${P.streak || 0}</b><span>${L('dies seguits', 'días seguidos')}</span></div><div><b>${mSessions()}</b><span>${L('sessions fetes', 'sesiones hechas')}</span></div><div><b>${hab}</b><span>${L('hàbits fets', 'hábitos hechos')}</span></div></div>
-    <section class="mtcard"><div class="mthead"><b>${L('Edat de la ment', 'Edad de la mente')}</b><span>${T.length ? L(`${T.length} ${T.length === 1 ? 'test' : 'tests'}`, `${T.length} ${T.length === 1 ? 'test' : 'tests'}`) : ''}</span></div>
+  const hero = mSub(L('El teu progrés', 'Tu progreso'), '', `<div class="mhstats"><div><b>${P.streak || 0}</b><span>${L('dies seguits', 'días seguidos')}</span></div><div><b>${mSessions()}</b><span>${L('sessions', 'sesiones')}</span></div><div><b>${hab}</b><span>${L('fora de pantalla', 'fuera de pantalla')}</span></div></div>`);
+  const links = `<button class="mlnk" onclick="mShare()">${mTile('compartir', 'gold')}<span><b>${L('Comparteix la teva evolució', 'Comparte tu evolución')}</b><small>${L('Per WhatsApp, Instagram o on vulguis.', 'Por WhatsApp, Instagram o donde quieras.')}</small></span><span class="mnext">${mSvg('seg')}</span></button>
+    <button class="mlnk" onclick="mentLliga('w')">${mTile('copa', 'gold')}<span><b>${L('Lliga Numi Ment', 'Liga Numi Ment')}</b><small>${L('El teu lloc a la setmana i al mes. Els 3 primers de cada mes guanyen premi.', 'Tu puesto en la semana y en el mes. Los 3 primeros de cada mes ganan premio.')}</small></span><span class="mnext">${mSvg('seg')}</span></button>`;
+  app.innerHTML = mShell('progres', `<section class="mtcard mlift"><div class="mthead"><b>${L('Edat de la ment', 'Edad de la mente')}</b><span>${T.length ? L(`${T.length} ${T.length === 1 ? 'test' : 'tests'}`, `${T.length} ${T.length === 1 ? 'test' : 'tests'}`) : ''}</span></div>
       ${T.length ? `${mAgeChart(T) || `<p style="margin:0 0 12px">${L(`Última: <b>${T[T.length - 1].age} anys</b> (${dayShort(T[T.length - 1].d)}). Quan facis el segon test veuràs aquí l'evolució.`, `Última: <b>${T[T.length - 1].age} años</b> (${dayShort(T[T.length - 1].d)}). Cuando hagas el segundo test verás aquí la evolución.`)}</p>`}<button class="btn ghost mbtn" onclick="mAgeInfo()">${L('Veure el detall', 'Ver el detalle')}</button>` : `<p style="margin:0 0 12px">${L('Encara no has fet el test.', 'Aún no has hecho el test.')}</p><button class="btn mbtn" onclick="mTestIntro()">${L('Fes el test', 'Haz el test')}</button>`}</section>
     <section class="mtcard"><div class="mthead"><b>${L('Les teves capacitats', 'Tus capacidades')}</b><span>${L('nivell 1–10', 'nivel 1–10')}</span></div>${mRadar(doms)}<div class="mdoms">${doms.map(([c, v]) => `<div class="mdrow2 d-${c}"><b>${tx(MCAP[c])}</b><span>${v == null ? L('sense dades', 'sin datos') : v.toFixed(1).replace('.', LANG === 'es' ? ',' : ',')}</span><div class="mprg"><i style="width:${v == null ? 0 : v * 10}%"></i></div></div>`).join('')}</div></section>
+    ${mAnam().length ? `<button class="mlnk" onclick="mAnamRes()">${mTile('diana', 'ink')}<span><b>${L('Punt de partida i evolució', 'Punto de partida y evolución')}</b><small>${L(`Hàbits i com et notes · ${mAnam().length} ${mAnam().length === 1 ? 'resposta' : 'respostes'}`, `Hábitos y cómo te notas · ${mAnam().length} ${mAnam().length === 1 ? 'respuesta' : 'respuestas'}`)}</small></span><span class="mnext">${mSvg('seg')}</span></button>` : ''}
+    ${links}
     <section class="mtcard"><div class="mthead"><b>${now.toLocaleDateString(mLoc(), { month: 'long', year: 'numeric' })}</b><span>${L('dies entrenats', 'días entrenados')}</span></div><div class="mcalh">${mWeekDays().map(d => `<b>${d.toLocaleDateString(mLoc(), { weekday: 'narrow' })}</b>`).join('')}</div><div class="mcal">${cal}</div></section>
     <section class="mtcard"><div class="mthead"><b>${L('Fites', 'Logros')}</b><span>${MFITES.filter(f => fit.has(f[0])).length}/${MFITES.length}</span></div><div class="mfites">${MFITES.map(f => `<div class="mfita ${fit.has(f[0]) ? 'on' : ''}"><span>${mSvg('medalla')}</span>${tx(f[1])}</div>`).join('')}</div></section>
     <details class="mdet"><summary class="mh2">${L('Joc a joc', 'Juego a juego')}</summary>
     <div class="mprog">${Object.entries(MG).map(([g, o]) => { const h = m.hist[g] || [], last = h.length ? h[h.length - 1][1] : null;
       return `<div class="mpr">${mGic(g)}<div><b>${tx(o.n)}</b><small>${tx(MCAP[o.cap])}${!o.span && !o.lvx ? ` · ${L('nivell', 'nivel')} ${mLvl(g)}` : ''}</small></div><div class="mprv">${h.length ? `<b>${mNice(g, m.best[g])}</b><small>${L('últim', 'último')}: ${mNice(g, last)}</small>` : `<small>${L('encara no', 'aún no')}</small>`}</div>${mSpark(h, o.low)}</div>`; }).join('')}</div></details>
-    <p class="mnote">${L("Compara't només amb tu mateix: cada persona té el seu ritme. El que compta és la constància.", 'Compárate solo contigo: cada persona tiene su ritmo. Lo que cuenta es la constancia.')}</p>`);
+    <p class="mnote">${L("Compara't només amb tu mateix: cada persona té el seu ritme. El que compta és la constància.", 'Compárate solo contigo: cada persona tiene su ritmo. Lo que cuenta es la constancia.')}</p>`, true, hero);
 }
 function mentCiencia() {
   modal(`<div class="sheet mcsheet"><h3>${L('Com entrenar la ment', 'Cómo entrenar la mente')}</h3>
@@ -1402,14 +1505,15 @@ function mentCiencia() {
 /* ---------- Perfil ---------- */
 function mentProfile() {
   const m = MS();
-  app.innerHTML = mShell('profile', `<h1 class="mh1">${esc(P.name)}</h1>
-    <section class="mtcard"><div class="mthead"><b>${L('Objectiu setmanal', 'Objetivo semanal')}</b><span>${L('dies d\'entrenament', 'días de entrenamiento')}</span></div><div class="mseg">${[3, 4, 5, 6, 7].map(n => `<button class="${m.goal === n ? 'on' : ''}" onclick="MS().goal=${n};save();mentProfile()">${n}</button>`).join('')}</div><p class="mmut" style="margin:10px 0 0">${L('Recomanem 5 dies: prou per notar-ho i amb marge per descansar.', 'Recomendamos 5 días: suficiente para notarlo y con margen para descansar.')}</p></section>
+  const ini = (String(P.name || '?').trim()[0] || '?').toUpperCase(), prem = isPremium();
+  const hero = `<section class="mhero msub mprof"><span class="mavat">${esc(ini)}</span><div><h1 class="mh1">${esc(P.name)}</h1><p class="msubp">${prem ? 'Numi Ment Premium' : L('Numi Ment · pla gratuït', 'Numi Ment · plan gratuito')}${P.streak > 1 ? ` · ${L(`${P.streak} dies seguits`, `${P.streak} días seguidos`)}` : ''}</p></div></section>`;
+  app.innerHTML = mShell('profile', `<section class="mtcard mlift"><div class="mthead"><b>${L('Dies d\'entrenament a la setmana', 'Días de entrenamiento a la semana')}</b></div><div class="mseg">${[3, 4, 5, 6, 7].map(n => `<button class="${m.goal === n ? 'on' : ''}" onclick="MS().goal=${n};save();mentProfile()">${n}</button>`).join('')}</div><p class="mmut" style="margin:10px 0 0">${L('Recomanem 5 dies: prou per notar-ho i amb marge per descansar.', 'Recomendamos 5 días: suficiente para notarlo y con margen para descansar.')}</p></section>
     <section class="mtcard"><div class="mthead"><b>${L('Recordatori diari', 'Recordatorio diario')}</b><span>${m.rem != null ? `${m.rem}:00` : ''}</span></div><button class="btn ghost mbtn" onclick="mRemind()">${m.rem != null ? L("Canvia l'hora", 'Cambia la hora') : L('Afegeix-lo al calendari', 'Añádelo al calendario')}</button></section>
     <section class="mtcard"><div class="mthead"><b>${L('Idioma', 'Idioma')}</b></div>${langPill()}</section>
     ${P.code ? `<section class="mtcard"><div class="mthead"><b>${L('El meu compte', 'Mi cuenta')}</b></div>${P.username ? `<p>${L('Usuari', 'Usuario')}: <b>${esc(P.username)}</b></p>` : ''}<p>${L('Codi secret', 'Código secreto')}: <b class="mono">${esc(P.code)}</b></p><p class="mmut">${L("Amb l'usuari i la contrasenya, o amb el codi, pots entrar des de qualsevol mòbil o ordinador. No el comparteixis.", 'Con el usuario y la contraseña, o con el código, puedes entrar desde cualquier móvil u ordenador. No lo compartas.')}</p>${P.username ? '' : `<button class="btn ghost mbtn" onclick="accountModal()">${L('Crea usuari i contrasenya', 'Crea usuario y contraseña')}</button>`}</section>` : ''}
     <section class="mtcard"><div class="mthead"><b>Premium</b></div>${typeof premiumBox === 'function' ? premiumBox() : ''}</section>
     <section class="mtcard"><div class="mthead"><b>${L('So', 'Sonido')}</b></div><button class="btn ghost mbtn" onclick="P.sound=!P.sound;save();mentProfile()">${P.sound ? L('Activat', 'Activado') : L('Desactivat', 'Desactivado')}</button></section>
-    <div class="mprofb"><button class="btn ghost mbtn" onclick="renderProfiles()">${L('Canvia de perfil', 'Cambia de perfil')}</button><button class="link" onclick="mentCiencia()">${L('Com entrenar la ment', 'Cómo entrenar la mente')}</button><a class="link" href="https://numimates.com/privacitat" target="_blank" rel="noopener">${L('Privadesa', 'Privacidad')}</a></div>`);
+    <div class="mprofb"><button class="btn ghost mbtn" onclick="renderProfiles()">${L('Canvia de perfil', 'Cambia de perfil')}</button><button class="link" onclick="mentCiencia()">${L('Com entrenar la ment', 'Cómo entrenar la mente')}</button><a class="link" href="https://numimates.com/privacitat" target="_blank" rel="noopener">${L('Privadesa', 'Privacidad')}</a></div>`, true, hero);
 }
 
 /* ---------- Alta: «Altres» a la pantalla de què estudies ---------- */
@@ -1520,7 +1624,7 @@ async function mDuelEnd(g) {
   const correct = A.ok | 0, errs = timed ? (A.ko | 0) : Math.max(0, (A.q | 0) - correct), done = correct + errs;
   const ms = timed ? errs * 1000 : Date.now() - d.t0;
   mStop(); VIEW = 'mgame';
-  app.innerHTML = `<div class="mgame"><div class="mgbody"><div class="mres">${mGic(g)}<h2>${L('Repte fet!', '¡Reto hecho!')}</h2><p class="mscore">${correct}</p><p class="mmut">${L('Enviant el resultat…', 'Enviando el resultado…')}</p></div></div></div>`;
+  app.innerHTML = `<div class="mgame ${MG[g] ? 'd-' + MG[g].cap : ''}"><div class="mgbody"><div class="mres">${mGic(g)}<h2>${L('Repte fet!', '¡Reto hecho!')}</h2><p class="mscore">${correct}</p><p class="mmut">${L('Enviant el resultat…', 'Enviando el resultado…')}</p></div></div></div>`;
   let st = null;
   for (let t = 0; t < 3 && !(st && st.code); t++) { st = await mBat('progress', { bcode: d.code, done, correct, ms, finished: true }).catch(() => null); if (!(st && st.code)) await new Promise(r => setTimeout(r, 1500)); }
   touchStreak(); save(); syncNow();
