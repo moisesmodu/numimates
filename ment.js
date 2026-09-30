@@ -1142,7 +1142,9 @@ async function sobTap(i) {
 /* ---------- Punt de partida: 10 preguntes d'hàbits i de com et notes (cada mes, per veure l'evolució) ----------
    Hàbits que la recerca relaciona amb una ment en forma (activitat física, vida social, son, aprendre, estat d'ànim,
    oïda: vegeu la Lancet Commission 2024) i com es nota la persona en el dia a dia. No és cap prova mèdica.
-   Les respostes NOMÉS es guarden en aquest dispositiu (localStorage), no se sincronitzen: són dades personals sensibles. */
+   Són dades que poden ser de salut (son, ànim, oïda): per defecte es guarden NOMÉS al dispositiu (localStorage). Si la persona
+   ho accepta expressament (consentiment explícit, art. 9.2.a RGPD), es desen al compte (P.ment.anam) i se sincronitzen;
+   pot retirar-ho o esborrar-ho tot des del perfil. P.ment.anamOk: data del consentiment, false si ha dit que no, undefined si no s'ha preguntat. */
 const MANQ = [
   ['mov', 'h', 'Quants dies a la setmana camines o fas exercici almenys 30 minuts?|¿Cuántos días a la semana caminas o haces ejercicio al menos 30 minutos?', ['Cap o gairebé cap|Ninguno o casi ninguno', "1 o 2 dies|1 o 2 días", '3 o 4 dies|3 o 4 días', '5 o més|5 o más']],
   ['soc', 'h', 'Quantes vegades a la setmana parles o quedes amb familiars o amics (no per missatge)?|¿Cuántas veces a la semana hablas o quedas con familiares o amigos (no por mensaje)?', ['Gairebé mai|Casi nunca', 'Una vegada|Una vez', '2 o 3 vegades|2 o 3 veces', 'Cada dia o gairebé|Cada día o casi']],
@@ -1169,9 +1171,28 @@ const MANTIP = {
   agil: 'Fes de cap els comptes de la compra i prova els jocs de càlcul i de rapidesa.|Haz de cabeza las cuentas de la compra y prueba los juegos de cálculo y de rapidez.'
 };
 const MANV = ['Per millorar|Por mejorar', 'Regular|Regular', 'Bé|Bien', 'Molt bé|Muy bien'];
-const mAnKey = () => `numi-ment-anam:${P.code || P.id}`;
-function mAnam() { try { const v = JSON.parse(localStorage.getItem(mAnKey()) || '[]'); return Array.isArray(v) ? v : []; } catch (e) { return []; } }
-function mAnamSave(list) { try { localStorage.setItem(mAnKey(), JSON.stringify(list.slice(-24))); } catch (e) { } }
+const mAnKey = () => `numi-ment-anam:${P.id}`;
+function mAnLocal() { try { const v = JSON.parse(localStorage.getItem(mAnKey()) || '[]'); return Array.isArray(v) ? v : []; } catch (e) { return []; } }
+function mAnam() { const m = MS(); return m.anamOk && Array.isArray(m.anam) ? m.anam : mAnLocal(); }
+function mAnamSave(list) {
+  const m = MS(); list = list.slice(-12);
+  if (m.anamOk) { m.anam = list; try { localStorage.removeItem(mAnKey()); } catch (e) { } save(); }
+  else try { localStorage.setItem(mAnKey(), JSON.stringify(list)); } catch (e) { }
+}
+// consentiment per desar-ho al compte (sí) o només al mòbil (no); en retirar-lo, les respostes tornen al mòbil i surten del compte
+function mAnamSync(yes, back) {
+  const m = MS(), list = mAnam();
+  if (yes) { m.anamOk = today(); m.anam = list; try { localStorage.removeItem(mAnKey()); } catch (e) { } toast(L('Desat al teu compte.', 'Guardado en tu cuenta.')); }
+  else { if (m.anamOk) try { localStorage.setItem(mAnKey(), JSON.stringify(list)); } catch (e) { } m.anamOk = false; delete m.anam; }
+  save(); syncNow(); (back || mAnamRes)();
+}
+function mAnamDel() {
+  ask(L('Vols esborrar totes les respostes del punt de partida? No es poden recuperar.', '¿Quieres borrar todas las respuestas del punto de partida? No se pueden recuperar.'), L('Esborra-les', 'Bórralas'), L('Cancel·la', 'Cancela'), () => {
+    const m = MS(); delete m.anam; try { localStorage.removeItem(mAnKey()); } catch (e) { } save(); syncNow(); toast(L('Respostes esborrades.', 'Respuestas borradas.')); mentProfile();
+  });
+}
+// text del consentiment (és el mateix a la pantalla de resultat i al perfil)
+const mAnamWhy = () => L('Són dades sobre els teus hàbits i la teva salut. Només les fem servir per mostrar-te la teva evolució, no les compartim amb ningú i les pots esborrar quan vulguis des del perfil.', 'Son datos sobre tus hábitos y tu salud. Solo los usamos para mostrarte tu evolución, no los compartimos con nadie y puedes borrarlos cuando quieras desde el perfil.');
 // dies que falten per tornar-lo a respondre (cada 30 dies); null si no s'ha fet mai
 const mAnamLeft = () => { const A = mAnam(), a = A[A.length - 1]; return a ? 30 - (mDayN(today()) - mDayN(a.d)) : null; };
 let MAN = null;
@@ -1181,7 +1202,7 @@ function mAnamIntro() {
   app.innerHTML = `<div class="mgame d-ink"><div class="mgtop"><button class="xbtn" onclick="go('home')" aria-label="${L('Surt', 'Salir')}">✕</button><b>${again ? L('Revisió del mes', 'Revisión del mes') : L('Punt de partida', 'Punto de partida')}</b></div><div class="mgbody"><div class="mintro">${mTile('diana', 'ink')}
     <h2>${again ? L("Com has evolucionat?", '¿Cómo has evolucionado?') : L("D'on parteixes?", '¿De dónde partes?')}</h2>
     <p class="mhow">${again ? L('Les mateixes 10 preguntes que la vegada anterior. Així veuràs què ha canviat i què et convé treballar ara.', 'Las mismas 10 preguntas que la vez anterior. Así verás qué ha cambiado y qué te conviene trabajar ahora.') : L('10 preguntes curtes sobre els teus hàbits i com et notes en el dia a dia (uns 2 minuts). Serveix per saber d\'on parteixes, veure com evoluciones cada mes i saber què et convé millorar.', '10 preguntas cortas sobre tus hábitos y cómo te notas en el día a día (unos 2 minutos). Sirve para saber de dónde partes, ver cómo evolucionas cada mes y saber qué te conviene mejorar.')}</p>
-    <p class="mmut">${L('No és cap prova mèdica. Les respostes només es guarden en aquest mòbil.', 'No es ninguna prueba médica. Las respuestas solo se guardan en este móvil.')}</p>
+    <p class="mmut">${L('No és cap prova mèdica.', 'No es ninguna prueba médica.')} ${MS().anamOk ? L('Les respostes es desen al teu compte.', 'Las respuestas se guardan en tu cuenta.') : L('Les respostes es guarden només en aquest mòbil, llevat que després triïs desar-les al teu compte.', 'Las respuestas se guardan solo en este móvil, salvo que después elijas guardarlas en tu cuenta.')}</p>
     <button class="btn big mbtn" onclick="mAnamGo()">${L('Comença', 'Empieza')}</button></div></div></div>`;
 }
 function mAnamGo() { MAN = { i: 0, a: {} }; mAnamQ(); }
@@ -1222,7 +1243,8 @@ function mAnamRes(fresh) {
     <section class="mtcard"><div class="mthead"><b>${L('Com et notes', 'Cómo te notas')}</b></div><div class="manrs">${pk.map(row).join('')}</div></section>
     ${tips.length ? `<section class="mtcard mantips"><div class="mthead"><b>${L('Què pots millorar', 'Qué puedes mejorar')}</b></div>${tips.map(k => `<div class="mantip">${mTile('fulla', 'log')}<div><b>${tx(MANAR[k])}</b><p>${tx(MANTIP[k])}</p></div></div>`).join('')}</section>` : ''}
     ${strong.length ? `<p class="mmut" style="text-align:center">${L('Els teus punts forts', 'Tus puntos fuertes')}: <b>${strong.map(k => tx(MANAR[k]).toLowerCase()).join(', ')}</b>. ${L('Continua així!', '¡Sigue así!')}</p>` : ''}
-    <p class="mmut" style="text-align:center;font-size:14.5px">${L('És orientatiu: no és cap prova mèdica. Les respostes només es guarden en aquest mòbil.', 'Es orientativo: no es ninguna prueba médica. Las respuestas solo se guardan en este móvil.')}${left > 0 ? ` ${L(`El podràs tornar a respondre d'aquí a ${left} ${left === 1 ? 'dia' : 'dies'}.`, `Podrás volver a responderlo dentro de ${left} ${left === 1 ? 'día' : 'días'}.`)}` : ''}</p>
+    ${P.code && MS().anamOk == null ? `<section class="mtcard mancons"><b>${L('Vols desar-ho al teu compte?', '¿Quieres guardarlo en tu cuenta?')}</b><p>${L('Ara només és en aquest mòbil. Si ho deses al compte, no ho perdràs si canvies de mòbil.', 'Ahora solo está en este móvil. Si lo guardas en la cuenta, no lo perderás si cambias de móvil.')} ${mAnamWhy()}</p><button class="btn mbtn" onclick="mAnamSync(true)">${L('Sí, desa-ho al meu compte', 'Sí, guárdalo en mi cuenta')}</button><button class="btn ghost mbtn" onclick="mAnamSync(false)">${L('No, només en aquest mòbil', 'No, solo en este móvil')}</button></section>` : ''}
+    <p class="mmut" style="text-align:center;font-size:14.5px">${L('És orientatiu: no és cap prova mèdica.', 'Es orientativo: no es ninguna prueba médica.')} ${MS().anamOk ? L('Les respostes es desen al teu compte (ho pots canviar al perfil).', 'Las respuestas se guardan en tu cuenta (puedes cambiarlo en el perfil).') : L('Les respostes només es guarden en aquest mòbil.', 'Las respuestas solo se guardan en este móvil.')}${left > 0 ? ` ${L(`El podràs tornar a respondre d'aquí a ${left} ${left === 1 ? 'dia' : 'dies'}.`, `Podrás volver a responderlo dentro de ${left} ${left === 1 ? 'día' : 'días'}.`)}` : ''}</p>
     <button class="btn big mbtn" onclick="go('home')">${L("Torna a l'inici", 'Vuelve al inicio')}</button>${left <= 0 ? `<button class="link" onclick="mAnamIntro()">${L('Respon-lo ara', 'Respóndelo ahora')}</button>` : ''}</div></div>`;
   window.scrollTo(0, 0);
 }
@@ -1510,6 +1532,10 @@ function mentProfile() {
   app.innerHTML = mShell('profile', `<section class="mtcard mlift"><div class="mthead"><b>${L('Dies d\'entrenament a la setmana', 'Días de entrenamiento a la semana')}</b></div><div class="mseg">${[3, 4, 5, 6, 7].map(n => `<button class="${m.goal === n ? 'on' : ''}" onclick="MS().goal=${n};save();mentProfile()">${n}</button>`).join('')}</div><p class="mmut" style="margin:10px 0 0">${L('Recomanem 5 dies: prou per notar-ho i amb marge per descansar.', 'Recomendamos 5 días: suficiente para notarlo y con margen para descansar.')}</p></section>
     <section class="mtcard"><div class="mthead"><b>${L('Recordatori diari', 'Recordatorio diario')}</b><span>${m.rem != null ? `${m.rem}:00` : ''}</span></div><button class="btn ghost mbtn" onclick="mRemind()">${m.rem != null ? L("Canvia l'hora", 'Cambia la hora') : L('Afegeix-lo al calendari', 'Añádelo al calendario')}</button></section>
     <section class="mtcard"><div class="mthead"><b>${L('Idioma', 'Idioma')}</b></div>${langPill()}</section>
+    ${mAnam().length ? `<section class="mtcard"><div class="mthead"><b>${L('Punt de partida', 'Punto de partida')}</b><span>${mAnam().length} ${L(mAnam().length === 1 ? 'resposta' : 'respostes', mAnam().length === 1 ? 'respuesta' : 'respuestas')}</span></div>
+      <p class="mmut" style="margin:0 0 12px">${MS().anamOk ? L(`Es desa al teu compte (des del ${dayShort(MS().anamOk)}).`, `Se guarda en tu cuenta (desde el ${dayShort(MS().anamOk)}).`) : L('Només és en aquest mòbil.', 'Solo está en este móvil.')} ${mAnamWhy()}</p>
+      ${P.code ? (MS().anamOk ? `<button class="btn ghost mbtn" onclick="mAnamSync(false,mentProfile)">${L('Guarda-ho només en aquest mòbil', 'Guárdalo solo en este móvil')}</button>` : `<button class="btn ghost mbtn" onclick="mAnamSync(true,mentProfile)">${L('Desa-ho al meu compte', 'Guárdalo en mi cuenta')}</button>`) : ''}
+      <button class="link" onclick="mAnamDel()">${L('Esborra les meves respostes', 'Borra mis respuestas')}</button></section>` : ''}
     ${P.code ? `<section class="mtcard"><div class="mthead"><b>${L('El meu compte', 'Mi cuenta')}</b></div>${P.username ? `<p>${L('Usuari', 'Usuario')}: <b>${esc(P.username)}</b></p>` : ''}<p>${L('Codi secret', 'Código secreto')}: <b class="mono">${esc(P.code)}</b></p><p class="mmut">${L("Amb l'usuari i la contrasenya, o amb el codi, pots entrar des de qualsevol mòbil o ordinador. No el comparteixis.", 'Con el usuario y la contraseña, o con el código, puedes entrar desde cualquier móvil u ordenador. No lo compartas.')}</p>${P.username ? '' : `<button class="btn ghost mbtn" onclick="accountModal()">${L('Crea usuari i contrasenya', 'Crea usuario y contraseña')}</button>`}</section>` : ''}
     <section class="mtcard"><div class="mthead"><b>Premium</b></div>${typeof premiumBox === 'function' ? premiumBox() : ''}</section>
     <section class="mtcard"><div class="mthead"><b>${L('So', 'Sonido')}</b></div><button class="btn ghost mbtn" onclick="P.sound=!P.sound;save();mentProfile()">${P.sound ? L('Activat', 'Activado') : L('Desactivat', 'Desactivado')}</button></section>

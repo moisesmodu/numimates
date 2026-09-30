@@ -428,3 +428,4 @@ div.onnc{cursor:default}.onnc.okc{background:var(--ok-bg);border-color:var(--ok)
 .mantip{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:start;padding:10px 0}.mantip+.mantip{border-top:1px solid #F0EAE0}
 .mantip .mgic{width:40px;height:40px;border-radius:12px}.mantip .mgic svg{width:22px;height:22px}
 .mantip b{font-size:16.5px}.mantip p{margin:4px 0 0;font-size:16px;line-height:1.5;color:var(--ink)}
+.mancons{display:grid;gap:10px;background:linear-gradient(160deg,#FFFBF2,#FBF0DC);border-color:#EED9AE}.mancons b{font-size:18px}.mancons p{margin:0;font-size:15.5px;line-height:1.5;color:var(--ink)}
