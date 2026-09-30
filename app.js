@@ -13,7 +13,8 @@ const TEST_DAYS = 14;
 const SKEY = 'mates-numi-v1';
 let DB; try { DB = JSON.parse(localStorage.getItem(SKEY)); } catch (e) { }
 if (!DB || !DB.profiles) DB = { profiles: {}, current: null };
-if (!DB.lang) DB.lang = /^es/i.test(navigator.language || '') ? 'es' : 'ca';
+// idioma per defecte: català (es pot canviar a la primera pantalla i al perfil)
+if (!DB.lang) DB.lang = 'ca';
 function freshProgress() {
   return { companion: 'numi', owned: ['numi'], accOwned: [], acc: {}, xp: 0, gems: 20, streak: 0, best: 0, lastDay: null, days: [], freeze: 0, srw: [], tests: [],
     daily: { d: today(), xp: 0 }, prog: {}, skip: {}, badges: [], stats: { answers: 0, correct: 0, perfect: 0, lessons: 0, trains: 0, combo: 0, bestCombo: 0, sprintBest: 0, bests: {}, games: 0, sk: {} } };

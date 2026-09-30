@@ -350,3 +350,18 @@ html[data-v=ment] .mentsplash h1{font:600 30px/1.15 var(--serif)}
 .mgbody>:first-child{margin-top:auto}.mgbody>:last-child{margin-bottom:auto}
 .intc.ok{background:var(--ok-bg);border-color:var(--ok);color:var(--ok-d)}.intc.ko{background:var(--ko-bg);border-color:var(--ko);color:var(--ko-d);animation:shake .3s}
 .fok{box-shadow:0 0 0 4px var(--ok)!important}.fko{box-shadow:0 0 0 4px var(--ko)!important;animation:shake .3s}.simpad button.fko{background:var(--ko-bg)}.simpad button.fok{background:var(--ok-bg)}
+/* jocs nous: iguals o diferents, on era?, a ull, qui és el més gran?, la que sobra */
+.igub{display:grid;gap:12px;width:min(92vw,420px)}
+.igub span{display:block;text-align:center;background:#fff;border:2px solid var(--line2);border-radius:18px;padding:16px 8px;font:700 clamp(30px,9vw,44px)/1 ui-monospace,'SF Mono',Menlo,Consolas,monospace;letter-spacing:.14em;color:var(--ink)}
+.igub span.pop{animation:pop .2s}
+.onng{display:grid;grid-template-columns:repeat(var(--c),1fr);gap:8px;width:min(86vw,360px)}
+.onnc{aspect-ratio:1;border-radius:16px;border:2px solid var(--line2);background:#fff;display:grid;place-items:center;font-size:clamp(30px,10vw,46px);cursor:pointer;color:var(--ink);padding:0}
+div.onnc{cursor:default}.onnc.okc{background:var(--ok-bg);border-color:var(--ok)}.onnc.koc{background:var(--ko-bg);border-color:var(--ko)}
+.onnq{font-size:64px;line-height:1;margin:0;text-align:center}
+.dedp{display:grid;gap:8px;width:min(92vw,440px)}
+.dedp p{margin:0;background:#fff;border:1.5px solid var(--line);border-radius:14px;padding:12px 16px;font-size:19px;line-height:1.35;font-weight:500}
+.sobw{min-height:48px;text-align:center;max-width:420px;font-size:17px;margin:0}
+.mres .mlvl{display:inline-block;font-size:16px!important;font-weight:700!important;color:var(--mut);background:#F3EFE6;border-radius:999px;padding:6px 14px;margin:2px 0 8px}
+.mres .mlvl.up{color:#6B4A07;background:linear-gradient(135deg,#F7E3AE,#EFCB76);animation:pop .5s}
+.mhab .mhalt{grid-column:1/3;margin:10px auto 0;font-size:15px}
+.copts:not(.list)>.copt:last-child:nth-child(odd){grid-column:1/-1}

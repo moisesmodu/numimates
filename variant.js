@@ -44,7 +44,7 @@ function setVariant(id) {
   document.documentElement.dataset.v = o.id;
   // aspecte propi (Numi Pro: fosc, generat de style.css amb scripts/theme-pro.py; Numi Ment: ment.css); una sola vegada
   if (IS_PRO && !document.getElementById('th-pro')) ['theme-pro.css', 'theme-pro-extra.css'].forEach((f, i) => { const l = document.createElement('link'); l.rel = 'stylesheet'; l.href = f; if (!i) l.id = 'th-pro'; document.head.appendChild(l); });
-  if (IS_MENT && !document.getElementById('th-ment')) { const l = document.createElement('link'); l.rel = 'stylesheet'; l.href = 'ment.css'; l.id = 'th-ment'; document.head.appendChild(l); }
+  if (IS_MENT && !document.getElementById('th-ment')) { ['Newsreader', 'SchibstedGrotesk'].forEach(f => { const l = document.createElement('link'); l.rel = 'preload'; l.as = 'font'; l.type = 'font/woff2'; l.crossOrigin = 'anonymous'; l.href = `fonts/${f}-normal-latin.woff2`; document.head.appendChild(l); }); const l = document.createElement('link'); l.rel = 'stylesheet'; l.href = 'ment.css'; l.id = 'th-ment'; document.head.appendChild(l); }
   // nom, color, icona i manifest de l'app (per instal·lar-la al mòbil amb el seu nom i la seva icona)
   document.title = `${o.name} · ${typeof tx === 'function' ? tx(o.tag) : o.tag.split('|')[0]}`;
   const set = (sel, attr, v) => { const e = document.querySelector(sel); if (e) e.setAttribute(attr, v); };

@@ -27,6 +27,8 @@ export default async function middleware(request) {
     set(/<meta property="og:title" content="[^"]*">/, `<meta property="og:title" content="${attr(a.name)}">`);
     set(/<meta property="og:description" content="[^"]*">/, `<meta property="og:description" content="${attr(a.og)}">`);
     set(/<meta property="og:image" content="[^"]*">/, `<meta property="og:image" content="${a.img}">`);
+    // Numi Ment: el full d'estil i les fonts des del principi (si no, la primera pantalla canvia de lletra en carregar-se)
+    if (a.name === 'Numi Ment') set(/<\/head>/, '<link rel="preload" href="fonts/Newsreader-normal-latin.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="fonts/SchibstedGrotesk-normal-latin.woff2" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="ment.css" id="th-ment"></head>');
     const hd = new Headers(r.headers); hd.delete('content-length'); hd.delete('content-encoding'); hd.delete('transfer-encoding'); hd.delete('etag'); hd.set('content-type', 'text/html; charset=utf-8');
     return new Response(h, { status: 200, headers: hd });
   } catch (e) { return; }

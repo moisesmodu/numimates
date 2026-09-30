@@ -20,6 +20,7 @@ const MG = {
   vel: { cap: 'vel', n: 'Mirada ràpida|Mirada rápida', d: "Què has vist al centre i on era l'estrella?|¿Qué has visto en el centro y dónde estaba la estrella?", unit: 'ms', low: true, lvx: true },
   rfx: { cap: 'vel', n: 'Reflexos|Reflejos', d: 'Toca el costat on apareix el cercle, tan ràpid com puguis.|Toca el lado donde aparece el círculo, lo más rápido que puedas.', unit: 'ms', low: true, lvx: true, nou: true },
   sim: { cap: 'vel', n: 'Símbols i números|Símbolos y números', d: 'Cada símbol té un número. Digues quin és, tan ràpid com puguis.|Cada símbolo tiene un número. Di cuál es, lo más rápido que puedas.', nou: true },
+  igu: { cap: 'vel', n: 'Iguals o diferents|Iguales o diferentes', d: 'Compara les dues fileres i digues si són iguals, tan ràpid com puguis.|Compara las dos filas y di si son iguales, lo más rápido que puedas.', nou: true },
   ate: { cap: 'ate', n: 'Colors|Colores', d: 'Toca el color de la tinta, no la paraula.|Toca el color de la tinta, no la palabra.' },
   int: { cap: 'ate', n: "L'intrús|El intruso", d: 'Troba el signe diferent tan ràpid com puguis.|Encuentra el signo diferente lo más rápido que puedas.' },
   uni: { cap: 'ate', n: 'Uneix els punts|Une los puntos', d: 'Toca els cercles en ordre: 1, 2, 3… i, més endavant, 1, A, 2, B…|Toca los círculos en orden: 1, 2, 3… y, más adelante, 1, A, 2, B…', unit: 's', low: true, nou: true },
@@ -31,28 +32,85 @@ const MG = {
   nom: { cap: 'mem', n: 'Qui viu on?|¿Quién vive dónde?', d: 'Recorda a quina ciutat viu cada persona.|Recuerda en qué ciudad vive cada persona.', unit: '%', nou: true },
   nbk: { cap: 'mem', n: 'Igual que abans?|¿Igual que antes?', d: "Digues si la lletra és la mateixa que la d'abans.|Di si la letra es la misma que la de antes.", unit: '%', nou: true },
   dir: { cap: 'mem', n: 'Direccions|Direcciones', d: 'Segueix les indicacions i troba on acabes.|Sigue las indicaciones y encuentra dónde acabas.' },
+  onn: { cap: 'mem', n: 'On era?|¿Dónde estaba?', d: 'Memoritza on és cada objecte i després digues on era.|Memoriza dónde está cada objeto y después di dónde estaba.', unit: '%', nou: true },
   cal: { cap: 'cal', n: 'Càlcul ràpid|Cálculo rápido', d: 'Un minut de comptes de cap.|Un minuto de cuentas de cabeza.' },
   cad: { cap: 'cal', n: 'Suma en cadena|Suma en cadena', d: 'Van sortint números: porta el total de cap.|Van saliendo números: lleva el total de cabeza.', nou: true },
   com: { cap: 'cal', n: 'La compra|La compra', d: 'Preus, canvi i ofertes: les mates de cada dia.|Precios, cambio y ofertas: las mates de cada día.' },
+  est: { cap: 'cal', n: 'A ull|A ojo', d: 'Sense fer el compte exacte: tria el resultat més proper.|Sin hacer la cuenta exacta: elige el resultado más cercano.', nou: true },
   sud: { cap: 'log', n: 'Sudoku|Sudoku', d: 'Cada número una sola vegada per fila, columna i quadre.|Cada número una sola vez por fila, columna y cuadro.', unit: 's', low: true },
   ser: { cap: 'log', n: 'Sèries|Series', d: 'Descobreix la regla i digues quin número ve després.|Descubre la regla y di qué número viene después.', nou: true },
   rel: { cap: 'log', n: 'El rellotge|El reloj', d: "Llegeix l'hora i calcula quina hora serà.|Lee la hora y calcula qué hora será." },
+  ded: { cap: 'log', n: 'Qui és el més gran?|¿Quién es el mayor?', d: "Llegeix les pistes i dedueix l'ordre d'edat.|Lee las pistas y deduce el orden de edad.", nou: true },
   pal: { cap: 'llg', n: 'Paraules|Palabras', d: 'Ordena les lletres i troba la paraula.|Ordena las letras y encuentra la palabra.' },
   sin: { cap: 'llg', n: 'Sinònims i contraris|Sinónimos y contrarios', d: 'Tria la paraula que vol dir el mateix, o el contrari.|Elige la palabra que significa lo mismo, o lo contrario.', nou: true },
-  ref: { cap: 'llg', n: 'Refranys|Refranes', d: 'Completa el refrany.|Completa el refrán.' }
+  ref: { cap: 'llg', n: 'Refranys|Refranes', d: 'Completa el refrany.|Completa el refrán.' },
+  sob: { cap: 'llg', n: 'La que sobra|La que sobra', d: 'Troba la paraula que no és del mateix grup.|Encuentra la palabra que no es del mismo grupo.', nou: true }
 };
-const MHAB = ['Camina 20 minuts a bon pas.|Camina 20 minutos a buen paso.', 'Truca o queda amb algú que fa temps que no veus.|Llama o queda con alguien a quien hace tiempo que no ves.',
-  'Llegeix 15 minuts: un llibre, una revista o el diari.|Lee 15 minutos: un libro, una revista o el periódico.', 'Aprèn alguna cosa nova: una paraula, una recepta, una cançó.|Aprende algo nuevo: una palabra, una receta, una canción.',
-  'Balla o fes estiraments amb música.|Baila o haz estiramientos con música.', 'Fes un trajecte conegut per un camí diferent.|Haz un trayecto conocido por un camino diferente.',
-  "Explica a algú una cosa que hagis après avui.|Cuéntale a alguien algo que hayas aprendido hoy.", 'Surt una estona a prendre la llum del sol.|Sal un rato a tomar la luz del sol.',
-  'Fes de cap les sumes de la compra abans de pagar.|Haz de cabeza las sumas de la compra antes de pagar.', 'Intenta dormir 7 o 8 hores aquesta nit.|Intenta dormir 7 u 8 horas esta noche.',
-  'Puja les escales en lloc d\'agafar l\'ascensor.|Sube las escaleras en lugar de coger el ascensor.', 'Escriu tres coses bones que t\'hagin passat avui.|Escribe tres cosas buenas que te hayan pasado hoy.',
-  'Cuina una recepta que no hagis fet mai.|Cocina una receta que no hayas hecho nunca.', 'Si et costa sentir bé, parla-ho amb el metge: l\'oïda també compta.|Si te cuesta oír bien, háblalo con el médico: el oído también cuenta.'];
+// fora de la pantalla: activitats físiques o socials, senzilles i factibles. Cada persona les rep en un ordre propi
+// i no se'n repeteix cap fins que no han sortit totes (vegeu mHabIdx)
+const MHAB = [
+  'Camina 20 minuts a bon pas.|Camina 20 minutos a buen paso.',
+  'Truca a algú que fa temps que no veus.|Llama a alguien a quien hace tiempo que no ves.',
+  'Puja i baixa les escales de casa dues vegades.|Sube y baja las escaleras de casa dos veces.',
+  'Queda per fer un cafè amb un amic o una amiga.|Queda para tomar un café con un amigo o una amiga.',
+  "Aixeca't 10 vegades de la cadira sense ajudar-te amb les mans.|Levántate 10 veces de la silla sin ayudarte con las manos.",
+  "Explica a algú una cosa que hagis après avui.|Cuéntale a alguien algo que hayas aprendido hoy.",
+  'Balla dues cançons que t\'agradin.|Baila dos canciones que te gusten.',
+  'Pregunta a un veí o una veïna com li va.|Pregúntale a un vecino o una vecina cómo le va.',
+  "Estira't 5 minuts: coll, espatlles, esquena i cames.|Estírate 5 minutos: cuello, hombros, espalda y piernas.",
+  'Juga a cartes, al dòmino o al parxís amb algú.|Juega a las cartas, al dominó o al parchís con alguien.',
+  "Fes un encàrrec a peu en lloc d'agafar el cotxe.|Haz un recado a pie en lugar de coger el coche.",
+  'Cuina alguna cosa i comparteix-la amb algú.|Cocina algo y compártelo con alguien.',
+  "Aguanta't sobre un peu 20 segons, recolzat en una cadira, i canvia de peu.|Aguántate sobre un pie 20 segundos, apoyado en una silla, y cambia de pie.",
+  'Proposa a algú de la família un passeig junts.|Propón a alguien de la familia un paseo juntos.',
+  "Fes un passeig després de dinar o de sopar.|Da un paseo después de comer o de cenar.",
+  'Escriu a mà una postal o una nota a algú que estimis.|Escribe a mano una postal o una nota a alguien a quien quieras.',
+  'Rega les plantes o fes una estona de jardí o d\'hort.|Riega las plantas o dedica un rato al jardín o al huerto.',
+  'Ensenya a algú de la família una cosa que saps fer.|Enséñale a alguien de la familia algo que sepas hacer.',
+  'Camina 10 minuts i, durant 2 minuts, accelera el pas.|Camina 10 minutos y, durante 2 minutos, acelera el paso.',
+  "Demana a algú que t'ensenyi una cosa que sap fer i tu no.|Pide a alguien que te enseñe algo que sabe hacer y tú no.",
+  "Baixa una parada abans de l'autobús i fes l'últim tros caminant.|Bájate una parada antes del autobús y haz el último tramo andando.",
+  'Mira fotos antigues amb algú i expliqueu-vos els records.|Mira fotos antiguas con alguien y contaos los recuerdos.',
+  'Surt a prendre el sol 15 minuts, passejant.|Sal a tomar el sol 15 minutos, paseando.',
+  'Fes la compra a una botiga del barri i xerra una estona.|Haz la compra en una tienda del barrio y charla un rato.',
+  'Camina per un carrer o un parc on no hagis estat mai.|Camina por una calle o un parque donde no hayas estado nunca.',
+  'Convida algú a dinar o a berenar a casa.|Invita a alguien a comer o a merendar a casa.',
+  "Posa't de puntetes 15 vegades mentre esperes que bulli l'aigua.|Ponte de puntillas 15 veces mientras esperas a que hierva el agua.",
+  'Truca a un familiar només per preguntar-li com està.|Llama a un familiar solo para preguntarle cómo está.',
+  'Fes un trajecte conegut per un camí diferent.|Haz un trayecto conocido por un camino diferente.',
+  "Informa't de les activitats del casal, la biblioteca o el centre cívic.|Infórmate de las actividades del centro cívico, la biblioteca o el hogar del jubilado.",
+  "Puja les escales en lloc d'agafar l'ascensor.|Sube las escaleras en lugar de coger el ascensor.",
+  'Canta amb algú, encara que sigui a la cuina.|Canta con alguien, aunque sea en la cocina.',
+  'Porta la compra a peu, repartint el pes entre les dues mans.|Lleva la compra a pie, repartiendo el peso entre las dos manos.',
+  "Fes un petit favor a algú sense que t'ho demani.|Haz un pequeño favor a alguien sin que te lo pida.",
+  "Endreça un armari o un calaix: també és moviment.|Ordena un armario o un cajón: también es movimiento.",
+  'Explica un acudit o una anècdota divertida a algú.|Cuenta un chiste o una anécdota divertida a alguien.',
+  "Fes una volta en bicicleta, encara que sigui curta.|Da una vuelta en bicicleta, aunque sea corta.",
+  'Pregunta a algú gran de la família com era la seva infància.|Pregunta a alguien mayor de la familia cómo era su infancia.',
+  'Juga a petanca, a pàdel o a qualsevol joc de pilota.|Juega a la petanca, al pádel o a cualquier juego de pelota.',
+  'Surt a passejar amb algú i parleu sense mirar el mòbil.|Sal a pasear con alguien y hablad sin mirar el móvil.',
+  'Fes girs d\'espatlles i de canells mentre mires la tele.|Haz giros de hombros y de muñecas mientras ves la tele.',
+  'Saluda pel nom tres persones del barri.|Saluda por su nombre a tres personas del barrio.',
+  "Neda o camina dins l'aigua, si tens una piscina a prop.|Nada o camina dentro del agua, si tienes una piscina cerca.",
+  'Proposa un joc de taula o un trencaclosques en família.|Propón un juego de mesa o un rompecabezas en familia.',
+  'Camina 10 passes de puntetes i 10 de talons, a prop d\'una paret.|Camina 10 pasos de puntillas y 10 de talones, cerca de una pared.',
+  'Truca a algú per felicitar-lo o per donar-li les gràcies.|Llama a alguien para felicitarle o para darle las gracias.',
+  'Queda amb algú per caminar junts mitja hora.|Queda con alguien para caminar juntos media hora.',
+  'Prepara una recepta de família amb algú i explica-li la seva història.|Prepara una receta de familia con alguien y cuéntale su historia.',
+  "Llança i recull una pilota contra la paret 20 vegades.|Lanza y recoge una pelota contra la pared 20 veces.",
+  'Ves a una xerrada, un concert o una exposició del poble o del barri.|Ve a una charla, un concierto o una exposición del pueblo o del barrio.',
+  'Berena al parc amb amics o amb la família.|Merienda en el parque con amigos o con la familia.',
+  "Pregunta a algú què llegeix o què mira i recomana-li alguna cosa.|Pregunta a alguien qué lee o qué ve y recomiéndale algo.",
+  'Juga amb un nen o una nena de la família a un joc de carrer: pilota, xarranca, amagar.|Juega con un niño o una niña de la familia a un juego de calle: pelota, rayuela, escondite.',
+  'Porta alguna cosa a algú que no pot sortir de casa.|Lleva algo a alguien que no puede salir de casa.',
+  'Balla amb algú una cançó de quan éreu joves.|Baila con alguien una canción de cuando erais jóvenes.',
+  "Informa't d'alguna entitat del barri on puguis fer de voluntari.|Infórmate de alguna entidad del barrio donde puedas hacer voluntariado."];
 
 /* ---------- Icones (línia, 24×24) ---------- */
 const MICO = {
   vel: '<path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
   rfx: '<path d="M13 2 4 14h7l-1 8 9-12h-7z"/>',
+  igu: '<rect x="2.5" y="5" width="8" height="14" rx="1.8"/><rect x="13.5" y="5" width="8" height="14" rx="1.8"/><path d="M5 10h3M5 14h3M16 10h3M16 14h3"/>',
   sim: '<path d="M7 3.5 11 10H3z"/><circle cx="17" cy="7" r="3.2"/><path d="M4 15h6v6H4zM15 16.5l1.5-1.5v6M14.5 21h4"/>',
   ate: '<path d="M12 3a9 9 0 1 0 0 18c1.1 0 1.6-.8 1.6-1.6 0-1.3-1-1.6-1-2.6 0-.9.7-1.6 1.6-1.6H17a4 4 0 0 0 4-4C21 6.6 17 3 12 3z"/><circle cx="7.5" cy="11" r="1.1"/><circle cx="10" cy="7" r="1.1"/><circle cx="15" cy="7.5" r="1.1"/>',
   int: '<circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 21 21"/>',
@@ -65,15 +123,19 @@ const MICO = {
   nom: '<circle cx="9" cy="8" r="3.5"/><path d="M3 20c.6-3.5 3-5.5 6-5.5s5.4 2 6 5.5"/><path d="M19 3.5a3 3 0 0 1 3 3c0 2.3-3 5-3 5s-3-2.7-3-5a3 3 0 0 1 3-3z"/>',
   nbk: '<path d="M4 12a8 8 0 0 1 14-5.3M20 12a8 8 0 0 1-14 5.3"/><path d="M18 3v4h-4M6 21v-4h4"/>',
   dir: '<circle cx="12" cy="12" r="9"/><path d="m15.5 8.5-2 5-5 2 2-5z"/>',
+  onn: '<rect x="3" y="3" width="7.5" height="7.5" rx="1.6"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="1.6" fill="currentColor"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="1.6" fill="currentColor"/><path d="M15.3 15.9a1.9 1.9 0 1 1 2.8 1.7c-.6.3-.9.7-.9 1.3M17.2 21h.01"/>',
   cal: '<rect x="5" y="3" width="14" height="18" rx="2.5"/><path d="M8.5 7.5h7M8.5 12h.01M12 12h.01M15.5 12h.01M8.5 16h.01M12 16h.01M15.5 16h.01" stroke-width="2.2"/>',
   cad: '<path d="M9 15l6-6"/><path d="M10.5 6.5l1.8-1.8a4 4 0 0 1 5.7 5.7l-1.8 1.8M13.5 17.5l-1.8 1.8a4 4 0 0 1-5.7-5.7l1.8-1.8"/>',
+  est: '<path d="M4 17a8 8 0 1 1 16 0"/><path d="m12 17 3.5-4.5M4 21h16"/>',
   com: '<path d="M5 8h14l-1.2 11.2a2 2 0 0 1-2 1.8H8.2a2 2 0 0 1-2-1.8z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/>',
   sud: '<rect x="3" y="3" width="18" height="18" rx="2.5"/><path d="M9 3v18M15 3v18M3 9h18M3 15h18"/>',
   ser: '<path d="M5 20v-4M10 20v-8M15 20V8"/><path d="M20 20V4" stroke-dasharray="2 2.6"/>',
   rel: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+  ded: '<circle cx="5.5" cy="11" r="1.8"/><path d="M3.5 21v-5.5a2 2 0 0 1 4 0V21"/><circle cx="12" cy="4.8" r="2"/><path d="M9.8 21V10.8a2.2 2.2 0 0 1 4.4 0V21"/><circle cx="18.5" cy="8.3" r="1.9"/><path d="M16.4 21v-7.6a2.1 2.1 0 0 1 4.2 0V21"/>',
   pal: '<path d="M3 19 7.5 5h1L13 19M4.8 14h6.4"/><circle cx="17.5" cy="15.5" r="3"/><path d="M20.5 12v7"/>',
   sin: '<path d="M4 9c2.5-2 5.5 2 8 0s5.5-2 8 0M4 15c2.5-2 5.5 2 8 0s5.5-2 8 0"/>',
   ref: '<path d="M4 11.5h4.5V17H4v-4c0-3 1.3-5 4-6M14 11.5h4.5V17H14v-4c0-3 1.3-5 4-6"/>',
+  sob: '<circle cx="7" cy="7" r="3.3"/><circle cx="17" cy="7" r="3.3"/><circle cx="7" cy="17" r="3.3"/><rect x="13.7" y="13.7" width="6.6" height="6.6" rx="1.2"/>',
   // interfície
   avui: '<rect x="3" y="5" width="18" height="16" rx="2.5"/><path d="M3 10h18M8 3v4M16 3v4"/><path d="m9 15 2 2 4-4"/>',
   jocs: '<rect x="3" y="3" width="7.5" height="7.5" rx="2"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="2"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="2"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="2"/>',
@@ -111,14 +173,21 @@ const MS = () => { const m = P.ment = P.ment || {}; for (const k of ['lvl', 'bes
   return m; };
 const mDay = (d = today()) => { const m = MS(); return m.days[d] = m.days[d] || { s: [], hab: 0 }; };
 const mLoc = () => LANG === 'es' ? 'es-ES' : 'ca-ES';
-// sessió del dia: un joc de cada grup; primer els que fa més dies que no es practiquen, i la capacitat a reforçar compta com si fes 3 dies més
-const MSLOT = [['vel', 'rfx', 'sim', 'ate', 'int', 'uni', 'atu'], ['mem', 'dig', 'par', 'lli', 'nom', 'nbk', 'dir'], ['cal', 'cad', 'com', 'sud', 'ser', 'rel', 'pal', 'sin', 'ref']];
+// sessió del dia: un joc de cada grup. No repeteix cap joc de les sessions d'ahir i d'abans d'ahir; després tria el
+// que fa més dies que no es juga (la capacitat a reforçar compta com 3 dies més) i, en empat, a l'atzar però fix per a
+// cada persona i dia. El tercer grup, a més, canvia de capacitat respecte d'ahir (càlcul → lògica → llenguatge…).
+const MSLOT = [['vel', 'rfx', 'sim', 'igu', 'ate', 'int', 'uni', 'atu'], ['mem', 'dig', 'par', 'lli', 'nom', 'nbk', 'dir', 'onn'], ['cal', 'cad', 'com', 'est', 'sud', 'ser', 'rel', 'ded', 'pal', 'sin', 'ref', 'sob']];
+const mHash = s => { let h = 2166136261; for (let i = 0; i < s.length; i++) h = Math.imul(h ^ s.charCodeAt(i), 16777619); return h >>> 0; };
+const mDayBefore = (d, k) => { const x = new Date(d + 'T12:00'); x.setDate(x.getDate() - k); return mKey(x); };
 function mSession(d = today()) {
   const m = MS(), dd = m.days[d];
   if (dd && Array.isArray(dd.ses) && dd.ses.length === 3 && dd.ses.every(g => MG[g])) return dd.ses;
-  const n = mDayN(d), fo = m.focus;
-  const age = g => { const h = m.hist[g]; const t = h && h.length ? n - mDayN(h[h.length - 1][0]) : 99; return t + (MG[g].cap === fo ? 3 : 0); };
-  const ses = MSLOT.map((sl, k) => [...sl].sort((a, b) => age(b) - age(a) || ((sl.indexOf(a) + n + k) % sl.length) - ((sl.indexOf(b) + n + k) % sl.length))[0]);
+  const n = mDayN(d), fo = m.focus, rnd = mSeed(mHash(`${P.code || P.id || ''}:${d}`));
+  const prev = [1, 2].map(k => (m.days[mDayBefore(d, k)] || {}).ses).filter(Array.isArray), recent = new Set(prev.flat());
+  const capAhir = prev[0] && prev[0][2] && MG[prev[0][2]] ? MG[prev[0][2]].cap : null;
+  const score = (g, k) => { const h = m.hist[g], t = h && h.length ? Math.min(14, n - mDayN(h[h.length - 1][0])) : 10;
+    return (recent.has(g) ? -100 : 0) + t + (MG[g].cap === fo ? 3 : 0) + (k === 2 && MG[g].cap === capAhir ? -6 : 0) + rnd() * 2.5; };
+  const ses = MSLOT.map((sl, k) => sl.map(g => [g, score(g, k)]).sort((a, b) => b[1] - a[1])[0][0]);
   if (d === today()) mDay(d).ses = ses;
   return ses;
 }
@@ -161,7 +230,7 @@ function mentGo(v) {
 function mRing(k, n) { const C = 2 * Math.PI * 27; return `<div class="mring"><svg viewBox="0 0 64 64"><defs><linearGradient id="mrg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#F7DE9F"/><stop offset="1" stop-color="#C9912F"/></linearGradient></defs><circle cx="32" cy="32" r="27" fill="none" stroke="rgba(255,255,255,.14)" stroke-width="7"/>${k ? `<circle cx="32" cy="32" r="27" fill="none" stroke="url(#mrg)" stroke-width="7" stroke-linecap="round" stroke-dasharray="${(C * k / n).toFixed(1)} ${C.toFixed(1)}"/>` : ''}</svg><b>${k}/${n}</b></div>`; }
 function mentHome() {
   const m = MS(), s = mSession(), dd = mDay(), fets = s.filter(g => dd.s.includes(g)).length, nxt = s.find(g => !dd.s.includes(g));
-  const hab = MHAB[mDayN(today()) % MHAB.length], wn = mWeekN(), first = !m.tests.length && !Object.keys(m.hist).length;
+  const hab = MHAB[mHabIdx()], wn = mWeekN(), first = !m.tests.length && !Object.keys(m.hist).length;
   const week = mWeekDays().map(d => { const k = mKey(d), st = mDone(k);
     return `<i class="${st === 2 ? 'on' : st ? 'mid' : ''} ${k === today() ? 'today' : ''}"><em>${st === 2 ? mSvg('ok') : ''}</em><b>${d.toLocaleDateString(mLoc(), { weekday: 'narrow' })}</b></i>`; }).join('');
   const hero = `<section class="mhero"><p class="mdate">${(t => t[0].toUpperCase() + t.slice(1))(new Date().toLocaleDateString(mLoc(), { weekday: 'long', day: 'numeric', month: 'long' }))}</p><h1 class="mh1">${mHello()}, ${esc(P.name)}</h1>
@@ -173,11 +242,18 @@ function mentHome() {
     <section class="mtcard"><div class="mthead"><b>${L('Aquesta setmana', 'Esta semana')}</b><span>${P.streak > 1 ? L(`${P.streak} dies seguits`, `${P.streak} días seguidos`) : ''}</span></div><div class="mweek">${week}</div>
       <div class="mgoal ${wn >= m.goal ? 'ok' : ''}"><div><b>${L(`${wn} de ${m.goal} dies entrenats`, `${wn} de ${m.goal} días entrenados`)}</b><span>${wn >= m.goal ? L('Objectiu complert!', '¡Objetivo cumplido!') : L('objectiu setmanal', 'objetivo semanal')}</span></div><div class="mprg"><i style="width:${Math.min(100, 100 * wn / m.goal)}%"></i></div></div></section>
     <section class="mtcard mhab ${dd.hab ? 'on' : ''}">${mTile('fulla', 'log')}<h3>${L('Fora de la pantalla', 'Fuera de la pantalla')}</h3><p>${tx(hab)}</p>
-      <button class="btn ghost" onclick="mHab()">${dd.hab ? L('Fet! ✓', '¡Hecho! ✓') : L('Ho faré avui', 'Lo haré hoy')}</button></section>
+      <button class="btn ghost" onclick="mHab()">${dd.hab ? L('Fet! ✓', '¡Hecho! ✓') : L('Ho faré avui', 'Lo haré hoy')}</button>${dd.hab ? '' : `<button class="link mhalt" onclick="mHabAlt()">${L("Proposa-me'n una altra", 'Propónme otra')}</button>`}</section>
     ${first ? '' : `<button class="mlnk" onclick="mShare()">${mTile('compartir', 'gold')}<span><b>${L('Comparteix la teva evolució', 'Comparte tu evolución')}</b><small>${L('Una imatge per enviar per WhatsApp o penjar a Instagram.', 'Una imagen para enviar por WhatsApp o subir a Instagram.')}</small></span><span class="mnext">${mSvg('seg')}</span></button>`}
     ${m.rem == null ? `<button class="mlnk" onclick="mRemind()">${mTile('campana', 'gold')}<span><b>${L('Recorda-m\'ho cada dia', 'Recuérdamelo cada día')}</b><small>${L('Afegeix un avís diari al calendari del mòbil.', 'Añade un aviso diario al calendario del móvil.')}</small></span><span class="mnext">${mSvg('seg')}</span></button>` : ''}
     <button class="mlnk" onclick="mentCiencia()">${mTile('llibre', 'ink')}<span><b>${L('Com entrenar la ment', 'Cómo entrenar la mente')}</b><small>${L('Què diu la ciència i què pots fer cada dia.', 'Qué dice la ciencia y qué puedes hacer cada día.')}</small></span><span class="mnext">${mSvg('seg')}</span></button>`, true, hero);
 }
+// ordre propi de cada persona (barreja amb llavor): no se'n repeteix cap fins que han sortit totes
+function mHabIdx(d = today()) {
+  const N = MHAB.length, n = mDayN(d) + (mDay(d).hk || 0), c = Math.floor(n / N), rnd = mSeed(mHash(`hab:${P.code || P.id || ''}:${c}`));
+  const o = [...Array(N).keys()]; for (let i = N - 1; i > 0; i--) { const j = Math.floor(rnd() * (i + 1)); [o[i], o[j]] = [o[j], o[i]]; }
+  return o[((n % N) + N) % N];
+}
+function mHabAlt() { const d = mDay(); d.hk = (d.hk || 0) + 1; save(); mentHome(); }
 function mHab() { const d = mDay(); d.hab = d.hab ? 0 : 1; if (d.hab && !d.hxp) { d.hxp = 1; P.xp = (P.xp || 0) + 5; } save(); if (d.hab) { SFX.ok && SFX.ok(); toast(L('Molt bé! La ment també s\'entrena fora de la pantalla.', '¡Muy bien! La mente también se entrena fuera de la pantalla.')); } mentHome(); }
 // indicador semicircular de 20 a 90 anys: el punt daurat és l'edat de la ment; la marca blanca, l'edat real
 function mGauge(age, real) {
@@ -210,7 +286,7 @@ function mentJocs() {
   const card = g => { const o = MG[g], lv = mLv10(g); return `<button class="mjoc d-${o.cap}" onclick="mPlay('${g}',false)">${o.nou && !m.hist[g] ? `<span class="mnew">${L('Nou', 'Nuevo')}</span>` : ''}${mGic(g)}<b>${tx(o.n)}</b>
     ${lv ? `<span class="mdots" aria-label="${L('nivell', 'nivel')} ${lv}">${[...Array(10).keys()].map(i => `<i class="${i < lv ? 'on' : ''}"></i>`).join('')}</span>` : ''}
     <span class="mrec">${m.hist[g] ? `${L('Millor', 'Mejor')}: <b>${mNice(g, m.best[g])}</b>` : L('Per estrenar', 'Por estrenar')}${!prem && fr[g] && !ses.includes(g) ? ` · <i>${L('demà més', 'mañana más')}</i>` : ''}</span></button>`; };
-  app.innerHTML = mShell('jocs', `<h1 class="mh1">${L('Entrena', 'Entrena')}</h1><p class="mlead">${prem ? L('Juga tant com vulguis. La dificultat s\'adapta a tu.', 'Juega tanto como quieras. La dificultad se adapta a ti.') : L("Els jocs de la sessió d'avui són lliures. De la resta, una partida gratis de cada joc al dia; amb Premium, sense límit.", 'Los juegos de la sesión de hoy son libres. Del resto, una partida gratis de cada juego al día; con Premium, sin límite.')}</p>
+  app.innerHTML = mShell('jocs', `<h1 class="mh1">${L('Entrena', 'Entrena')}</h1><p class="mlead">${L('Cada joc té 10 nivells: si et surt bé, puja; si et costa, baixa. Els punts de cada rajola són el teu nivell.', 'Cada juego tiene 10 niveles: si te sale bien, sube; si te cuesta, baja. Los puntos de cada casilla son tu nivel.')} ${prem ? L('Juga tant com vulguis.', 'Juega tanto como quieras.') : L("Els jocs de la sessió d'avui són lliures; de la resta, una partida gratis al dia de cada joc (amb Premium, sense límit).", 'Los juegos de la sesión de hoy son libres; del resto, una partida gratis al día de cada juego (con Premium, sin límite).')}</p>
     <button class="mlnk" onclick="${m.tests.length && 14 - (mDayN(today()) - mDayN(m.tests[m.tests.length - 1].d)) > 0 ? 'mAgeInfo()' : 'mTestIntro()'}">${mTile('ment', 'ink')}<span><b>${L('Test de la ment', 'Test de la mente')}</b><small>${L('4 proves · uns 4 minuts · cada 2 setmanes', '4 pruebas · unos 4 minutos · cada 2 semanas')}</small></span><span class="mnext">${mSvg('seg')}</span></button>
     <button class="mlnk mreptes" onclick="mentReptes()">${mTile('copa', 'gold')}<span><b>${L('Reptes amb amics', 'Retos con amigos')}</b><small>${L('Repta algú o un grup al mateix joc, amb les mateixes preguntes.', 'Reta a alguien o a un grupo al mismo juego, con las mismas preguntas.')}</small></span><span class="mnext">${mSvg('seg')}</span></button>
     ${Object.keys(MCAP).map(c => `<div class="mdomh d-${c}"><i></i><h2>${tx(MCAP[c])}</h2></div><p class="mdomd">${tx(MCAPD[c])}</p><div class="mjocs">${Object.keys(MG).filter(g => MG[g].cap === c).map(card).join('')}</div>`).join('')}`);
@@ -240,6 +316,7 @@ function mHow(g) {
   const h = {
     vel: L("Mira el centre. Durant un instant veuràs un cotxe o un camió i, al voltant, una estrella. Després et preguntarem què hi havia i on era l'estrella. Si l'encertes, cada vegada anirà més ràpid.", 'Mira el centro. Durante un instante verás un coche o un camión y, alrededor, una estrella. Después te preguntaremos qué había y dónde estaba la estrella. Si aciertas, cada vez irá más rápido.'),
     rfx: L("Hi ha dos botons grans. Quan en un aparegui el cercle, toca'l tan ràpid com puguis. Els tres primers són d'escalfament. No toquis abans d'hora!", 'Hay dos botones grandes. Cuando en uno aparezca el círculo, tócalo lo más rápido que puedas. Los tres primeros son de calentamiento. ¡No toques antes de tiempo!'),
+    igu: L('Surten dues fileres de lletres i números. Si són exactament iguals, toca <b>Iguals</b>; si hi ha res diferent, toca <b>Diferents</b>. Tens 45 segons.', 'Salen dos filas de letras y números. Si son exactamente iguales, toca <b>Iguales</b>; si hay algo diferente, toca <b>Diferentes</b>. Tienes 45 segundos.'),
     sim: L('A dalt tens la clau: cada símbol amb el seu número. Al mig surt un símbol: toca el seu número. Tens un minut.', 'Arriba tienes la clave: cada símbolo con su número. En el centro sale un símbolo: toca su número. Tienes un minuto.'),
     ate: L('Surt una paraula de color escrita amb una tinta d\'un altre color. Toca el botó del color de la <b>tinta</b>. Tens 45 segons.', 'Sale una palabra de color escrita con una tinta de otro color. Toca el botón del color de la <b>tinta</b>. Tienes 45 segundos.'),
     int: L('Totes les lletres són iguals menys una. Toca la diferent. Cada vegada n\'hi haurà més. Tens 45 segons.', 'Todas las letras son iguales menos una. Toca la diferente. Cada vez habrá más. Tienes 45 segundos.'),
@@ -251,16 +328,20 @@ function mHow(g) {
     lli: L('Veuràs una llista de la compra durant uns segons. Després, entre molts productes, toca només els que hi eren.', 'Verás una lista de la compra durante unos segundos. Después, entre muchos productos, toca solo los que estaban.'),
     nom: L('Veuràs unes quantes persones i la ciutat on viu cadascuna. Després et preguntarem on viu cada persona.', 'Verás a unas cuantas personas y la ciudad donde vive cada una. Después te preguntaremos dónde vive cada persona.'),
     nbk: L("Aniran sortint lletres, d'una en una. Per a cada lletra, digues si és <b>igual</b> que la d'abans o <b>diferent</b>. Més endavant, la compararàs amb la de fa dues.", 'Irán saliendo letras, de una en una. Para cada letra, di si es <b>igual</b> que la de antes o <b>diferente</b>. Más adelante, la compararás con la de hace dos.'),
+    onn: L('Veuràs uns quants objectes en una graella durant uns segons. Després s\'amagaran i et preguntarem on era cadascun. Tres rondes.', 'Verás unos cuantos objetos en una cuadrícula durante unos segundos. Después se esconderán y te preguntaremos dónde estaba cada uno. Tres rondas.'),
     dir: L('Surts de la casella de la casa. Llegeix les indicacions (amunt, avall, dreta, esquerra) i toca la casella on acabes.', 'Sales de la casilla de la casa. Lee las indicaciones (arriba, abajo, derecha, izquierda) y toca la casilla donde acabas.'),
     cal: L('Escriu el resultat amb el teclat. Quan és correcte, passa sol a la següent. Tens un minut.', 'Escribe el resultado con el teclado. Cuando es correcto, pasa solo a la siguiente. Tienes un minuto.'),
     cad: L('Sortirà un número i després unes quantes sumes i restes, d\'una en una. Porta el total de cap i, al final, escriu-lo. Sis rondes.', 'Saldrá un número y después unas cuantas sumas y restas, de una en una. Lleva el total de cabeza y, al final, escríbelo. Seis rondas.'),
     com: L('Vuit preguntes de la compra de cada dia: quant costa tot, quant et tornen, quina oferta surt més a compte. Sense presses.', 'Ocho preguntas de la compra de cada día: cuánto cuesta todo, cuánto te devuelven, qué oferta sale más a cuenta. Sin prisas.'),
+    est: L('Vuit comptes per fer <b>a ull</b>, sense calcular-los exactes: tria el resultat més proper. Tens pocs segons per a cadascun, així que arrodoneix!', 'Ocho cuentas para hacer <b>a ojo</b>, sin calcularlas exactas: elige el resultado más cercano. Tienes pocos segundos para cada una, ¡así que redondea!'),
+    ded: L('Llegeix les pistes sobre qui és més gran i qui és més jove, i respon la pregunta. Vuit preguntes, sense presses.', 'Lee las pistas sobre quién es mayor y quién es más joven, y responde la pregunta. Ocho preguntas, sin prisas.'),
     sud: L('Toca una casella buida i després el número. Si ho necessites, pots demanar una pista.', 'Toca una casilla vacía y después el número. Si lo necesitas, puedes pedir una pista.'),
     ser: L('Vuit sèries de números. Mira com canvien d\'un a l\'altre i tria el que ve després.', 'Ocho series de números. Mira cómo cambian de uno a otro y elige el que viene después.'),
     rel: L("Vuit rellotges. Digues quina hora marquen i, més endavant, quina hora serà d'aquí a una estona.", 'Ocho relojes. Di qué hora marcan y, más adelante, qué hora será dentro de un rato.'),
     pal: L('Toca les lletres en ordre per formar la paraula. La pista et diu de què va.', 'Toca las letras en orden para formar la palabra. La pista te dice de qué va.'),
     sin: L('Vuit paraules. Tria la que vol dir el mateix (sinònim) o el contrari, segons el que et demanem.', 'Ocho palabras. Elige la que significa lo mismo (sinónimo) o lo contrario, según lo que te pidamos.'),
-    ref: L('Vuit refranys de sempre. Tria com acaba cadascun.', 'Ocho refranes de siempre. Elige cómo acaba cada uno.')
+    ref: L('Vuit refranys de sempre. Tria com acaba cadascun.', 'Ocho refranes de siempre. Elige cómo acaba cada uno.'),
+    sob: L('Surten unes quantes paraules: totes són del mateix grup menys una. Toca la que sobra. Vuit rondes.', 'Salen unas cuantas palabras: todas son del mismo grupo menos una. Toca la que sobra. Ocho rondas.')
   }[g];
   return `<p class="mhow">${h}</p>`;
 }
@@ -274,7 +355,7 @@ function mSpeak(g) {
   } catch (e) { }
 }
 const mHush = () => { try { speechSynthesis.cancel(); } catch (e) { } };
-function mStart(g) { mHush(); SFX.tap && SFX.tap(); ({ vel: velGo, ate: ateGo, mem: memGo, par: parGo, cal: calGo, sud: sudGo, pal: palGo, int: intGo, lli: lliGo, dir: dirGo, com: comGo, ref: refGo, rel: relGo, rfx: rfxGo, sim: simGo, uni: uniGo, atu: atuGo, dig: digGo, nbk: nbkGo, nom: nomGo, cad: cadGo, ser: serGo, sin: sinGo })[g](); }
+function mStart(g) { mHush(); SFX.tap && SFX.tap(); ({ vel: velGo, ate: ateGo, mem: memGo, par: parGo, cal: calGo, sud: sudGo, pal: palGo, int: intGo, lli: lliGo, dir: dirGo, com: comGo, ref: refGo, rel: relGo, rfx: rfxGo, sim: simGo, uni: uniGo, atu: atuGo, dig: digGo, nbk: nbkGo, nom: nomGo, cad: cadGo, ser: serGo, sin: sinGo, igu: iguGo, onn: onnGo, est: estGo, ded: dedGo, sob: sobGo })[g](); }
 
 // resultat: guarda, adapta el nivell i marca la sessió
 function mEnd(g, score, up, msg) {
@@ -286,14 +367,16 @@ function mEnd(g, score, up, msg) {
   const rec = was == null || (lowB ? score < was : score > was);
   if (rec) m.best[g] = score;
   (m.hist[g] = m.hist[g] || []).push([today(), score]); if (m.hist[g].length > 40) m.hist[g].shift();
-  if (!MG[g].span && !MG[g].lvx) m.lvl[g] = Math.max(1, Math.min(10, mLvl(g) + (up || 0)));
+  const lvA = mLvl(g), adapt = !MG[g].span && !MG[g].lvx; if (adapt) m.lvl[g] = Math.max(1, Math.min(10, lvA + (up || 0)));
+  const lvB = adapt ? m.lvl[g] : lvA;
   const d = mDay(); if (ses && !d.s.includes(g) && mSession().includes(g)) d.s.push(g);
   // punts (XP) per a la Lliga: 10 per partida i 20 més en completar la sessió del dia
   P.xp = (P.xp || 0) + 10; if (ses && d.s.length >= 3 && !d.bonus) { d.bonus = 1; P.xp += 20; }
   touchStreak(); save(); syncNow();
   const s = mSession(), left = s.filter(x => !mDay().s.includes(x)), nx = left[0], fita = mFitesNew();
   app.innerHTML = `<div class="mgame"><div class="mgbody"><div class="mres">${mGic(g)}<h2>${rec && was != null ? L('Nou rècord!', '¡Nuevo récord!') : L('Ben fet!', '¡Bien hecho!')}</h2>
-    <p class="mscore">${mNice(g, score)}</p><p>${msg || ''}</p>${was != null && !rec ? `<p class="mmut">${L('El teu millor resultat', 'Tu mejor resultado')}: ${mNice(g, was)}</p>` : ''}
+    <p class="mscore">${mNice(g, score)}</p><p>${msg || ''}</p>
+    ${adapt ? `<p class="mlvl ${lvB > lvA ? 'up' : ''}">${lvB > lvA ? L(`Puges al nivell ${lvB} de 10!`, `¡Subes al nivel ${lvB} de 10!`) : lvB < lvA ? L(`La propera, nivell ${lvB}: una mica més assequible.`, `La próxima, nivel ${lvB}: algo más asequible.`) : L(`Nivell ${lvB} de 10${lvB < 10 ? ' · si ho fas una mica millor, pujaràs' : ''}`, `Nivel ${lvB} de 10${lvB < 10 ? ' · si lo haces un poco mejor, subirás' : ''}`)}</p>` : ''}${was != null && !rec ? `<p class="mmut">${L('El teu millor resultat', 'Tu mejor resultado')}: ${mNice(g, was)}</p>` : ''}
     ${fita ? `<p class="mtcard" style="display:flex;gap:12px;align-items:center;text-align:left">${mTile('medalla', 'gold')}<span><b>${L('Nova fita', 'Nuevo logro')}</b><br>${tx(fita[1])}</span></p>` : ''}
     ${ses && nx ? `<p class="mmut">${L(`Sessió d'avui: ${3 - left.length} de 3`, `Sesión de hoy: ${3 - left.length} de 3`)}</p><button class="btn big mbtn" onclick="mPlay('${nx}',true)">${L('Següent joc', 'Siguiente juego')}: ${tx(MG[nx].n)}</button>` : ''}
     ${ses && !nx ? `<p class="mtdone">${L('Sessió d\'avui completada!', '¡Sesión de hoy completada!')}</p><button class="btn gold big mbtn mshare" onclick="mShare('ratxa')">${mSvg('compartir')} ${L('Comparteix-ho', 'Compártelo')}</button>` : ''}
@@ -343,7 +426,7 @@ function ateA(i) { const A = MGA; if (!A || A.ink == null) return; const b = $$(
 const mFlash = (b, ok) => { if (!b) return; b.classList.remove('fok', 'fko'); void b.offsetWidth; b.classList.add(ok ? 'fok' : 'fko'); clearTimeout(b._f); b._f = setTimeout(() => b.classList.remove('fok', 'fko'), 450); };
 function ateEnd() {
   clearInterval(MGA_TK); const A = MGA, acc = A.ok + A.ko ? A.ok / (A.ok + A.ko) : 0;
-  mEnd('ate', A.ok, acc >= .9 && A.ok >= 20 ? 1 : acc < .7 ? -1 : 0, L(`${A.ok} encerts i ${A.ko} errors. La clau és no deixar-se enganyar per la paraula.`, `${A.ok} aciertos y ${A.ko} errores. La clave es no dejarse engañar por la palabra.`));
+  mEnd('ate', A.ok, acc >= .9 && A.ok >= 20 ? 1 : acc < .7 ? -1 : 0, L(`${A.ok} encerts i ${A.ko} ${A.ko === 1 ? 'error' : 'errors'}. La clau és no deixar-se enganyar per la paraula.`, `${A.ok} aciertos y ${A.ko} ${A.ko === 1 ? 'error' : 'errores'}. La clave es no dejarse engañar por la palabra.`));
 }
 
 /* ---------- 3. Seqüències (memòria de treball visoespacial, tipus Corsi) ---------- */
@@ -519,7 +602,7 @@ function intTap(i) {
   if (i === A.odd) { A.ok++; SFX.ok && SFX.ok(); A.lock = true; c[i].classList.add('ok'); MGT = setTimeout(() => { if (MGA === A) { A.lock = false; intNext(); } }, 280); }
   else { A.ko++; SFX.ko && SFX.ko(); c[i].classList.remove('ko'); void c[i].offsetWidth; c[i].classList.add('ko'); setTimeout(() => c[i] && c[i].classList.remove('ko'), 700); mSet(`${Math.max(0, Math.ceil((A.end - Date.now()) / 1000))} s · ✓ ${A.ok} · ✗ ${A.ko}`); }
 }
-function intEnd() { clearInterval(MGA_TK); const A = MGA; mEnd('int', A.ok, A.ok >= 14 && A.ko <= 2 ? 1 : A.ok <= 6 ? -1 : 0, L(`${A.ok} trobats${A.ko ? ` i ${A.ko} errors` : ''} en 45 segons.`, `${A.ok} encontrados${A.ko ? ` y ${A.ko} errores` : ''} en 45 segundos.`)); }
+function intEnd() { clearInterval(MGA_TK); const A = MGA; mEnd('int', A.ok, A.ok >= 14 && A.ko <= 2 ? 1 : A.ok <= 6 ? -1 : 0, L(`${A.ok} trobats${A.ko ? ` i ${A.ko} ${A.ko === 1 ? 'error' : 'errors'}` : ''} en 45 segons.`, `${A.ok} encontrados${A.ko ? ` y ${A.ko} ${A.ko === 1 ? 'error' : 'errores'}` : ''} en 45 segundos.`)); }
 
 /* ---------- 9. Llista de la compra (memòria verbal: reconeixement) ---------- */
 const MPROD = { ca: ['Pa', 'Llet', 'Ous', 'Formatge', 'Tomàquets', 'Pomes', 'Arròs', 'Oli', 'Sucre', 'Cafè', 'Iogurts', 'Pollastre', 'Peix', 'Enciam', 'Cebes', 'Patates', 'Taronges', 'Plàtans', 'Galetes', 'Pernil', 'Mantega', 'Farina', 'Pasta', 'Sal', 'Aigua', 'Suc', 'Xocolata', 'Mongetes', 'Pastanagues', 'Sabó'],
@@ -681,7 +764,7 @@ function simGo() {
 }
 function simNext() { const A = MGA; let c; do c = mri(0, A.k - 1); while (c === A.cur && A.k > 1); A.cur = c; const b = $('#simb'); if (b) { b.innerHTML = mSym(A.key[c]); b.classList.remove('pop'); void b.offsetWidth; b.classList.add('pop'); } }
 function simTap(i) { const A = MGA; if (!A || A.cur < 0) return; const ok = i === A.cur; if (ok) { A.ok++; SFX.tap && SFX.tap(); } else { A.ko++; SFX.ko && SFX.ko(); } mFlash($$('.simpad button')[i], ok); simNext(); }
-function simEnd() { clearInterval(MGA_TK); const A = MGA; A.cur = -1; mEnd('sim', A.ok, A.ok >= 32 && A.ko <= 2 ? 1 : A.ok < 16 ? -1 : 0, L(`${A.ok} encerts${A.ko ? ` i ${A.ko} errors` : ''} en un minut.`, `${A.ok} aciertos${A.ko ? ` y ${A.ko} errores` : ''} en un minuto.`)); }
+function simEnd() { clearInterval(MGA_TK); const A = MGA; A.cur = -1; mEnd('sim', A.ok, A.ok >= 32 && A.ko <= 2 ? 1 : A.ok < 16 ? -1 : 0, L(`${A.ok} encerts${A.ko ? ` i ${A.ko} ${A.ko === 1 ? 'error' : 'errors'}` : ''} en un minut.`, `${A.ok} aciertos${A.ko ? ` y ${A.ko} ${A.ko === 1 ? 'error' : 'errores'}` : ''} en un minuto.`)); }
 
 /* ---------- 16. Uneix els punts (atenció i flexibilitat, com el Trail Making) ---------- */
 function uniGo() {
@@ -892,6 +975,161 @@ async function sinTap(i) {
   const A = MGA; if (!A || A.lock) return; A.lock = true; const b = $$('.copt'), ok = i === A.ans;
   b[A.ans].classList.add('okc'); if (!ok) b[i].classList.add('koc'); ok ? (A.ok++, SFX.ok && SFX.ok()) : SFX.ko && SFX.ko();
   await mSleep(1100); if (MGA === A) { A.lock = false; sinNext(); }
+}
+
+/* ---------- 24. Iguals o diferents (velocitat de comparació, com la «pattern comparison» de Salthouse) ---------- */
+const MIGU = 'ABCDEFGHJKLMNPRSTUVXZ2345679'.split('');
+function iguGo() {
+  MGA = { ...MGA, lv: mLvl('igu'), ok: 0, ko: 0 };
+  $('#mgb').innerHTML = `<p class="mtq">${L('Són iguals?', '¿Son iguales?')}</p><div class="igub"><span id="igu1"></span><span id="igu2"></span></div><div class="copts"><button class="mopt copt" onclick="iguA(1)">${L('Iguals', 'Iguales')}</button><button class="mopt copt" onclick="iguA(0)">${L('Diferents', 'Diferentes')}</button></div>`;
+  iguNext(); mTimer(45, iguEnd, () => `✓ ${MGA.ok}`);
+}
+function iguNext() {
+  const A = MGA, n = Math.min(8, 3 + Math.floor(A.lv / 2)), a = [...Array(n)].map(() => mpick(MIGU));
+  const b = [...a]; A.same = mrnd() < .5;
+  if (!A.same) {
+    const i = mri(0, n - 1);
+    // als nivells alts, de vegades dues lletres canviades d'ordre (costa més de veure)
+    if (A.lv >= 5 && mrnd() < .45 && i < n - 1 && a[i] !== a[i + 1]) [b[i], b[i + 1]] = [b[i + 1], b[i]];
+    else { let c; do c = mpick(MIGU); while (c === a[i]); b[i] = c; }
+  }
+  const e1 = $('#igu1'), e2 = $('#igu2'); if (!e1) return;
+  e1.textContent = a.join(''); e2.textContent = b.join('');
+  [e1, e2].forEach(e => { e.classList.remove('pop'); void e.offsetWidth; e.classList.add('pop'); });
+}
+function iguA(v) { const A = MGA; if (!A || A.same == null) return; const ok = !!v === A.same; ok ? (A.ok++, SFX.tap && SFX.tap()) : (A.ko++, SFX.ko && SFX.ko()); mFlash($$('.copt')[v ? 0 : 1], ok); iguNext(); }
+function iguEnd() { clearInterval(MGA_TK); const A = MGA; A.same = null; mEnd('igu', A.ok, A.ok >= 24 && A.ko <= 2 ? 1 : A.ok <= 11 || A.ko >= 6 ? -1 : 0, L(`${A.ok} encerts${A.ko ? ` i ${A.ko} ${A.ko === 1 ? 'error' : 'errors'}` : ''} en 45 segons.`, `${A.ok} aciertos${A.ko ? ` y ${A.ko} ${A.ko === 1 ? 'error' : 'errores'}` : ''} en 45 segundos.`)); }
+
+/* ---------- 25. On era? (memòria d'objectes i llocs) ---------- */
+function onnGo() { MGA = { ...MGA, lv: mLvl('onn'), round: 0, ok: 0, tot: 0 }; onnRound(); }
+async function onnRound() {
+  const A = MGA; if (!A || MGCUR !== 'onn') return;
+  if (A.round >= 3) { const pct = Math.round(100 * A.ok / A.tot); return mEnd('onn', pct, pct >= 90 ? 1 : pct < 60 ? -1 : 0, L(`Has recordat on eren ${A.ok} de ${A.tot} objectes.`, `Has recordado dónde estaban ${A.ok} de ${A.tot} objetos.`)); }
+  A.round++; const N = A.lv <= 4 ? 3 : 4, k = Math.min(N * N - 3, 3 + Math.floor(A.lv / 2));
+  const cells = mshuf([...Array(N * N).keys()]).slice(0, k), pics = mshuf([...MPIC]).slice(0, k);
+  A.N = N; A.at = {}; cells.forEach((c, i) => A.at[c] = pics[i]);
+  A.ask = mshuf(cells.map((c, i) => [c, pics[i]])).slice(0, 3); A.q = 0; A.tot += A.ask.length; A.lock = true;
+  mSet(`${L('Ronda', 'Ronda')} ${A.round}/3`);
+  const t = 2500 + k * 900;
+  $('#mgb').innerHTML = `<p class="mtq">${L('Memoritza on és cada cosa', 'Memoriza dónde está cada cosa')}</p><div class="onng" style="--c:${N}">${[...Array(N * N).keys()].map(i => `<div class="onnc">${A.at[i] || ''}</div>`).join('')}</div><div class="llibar"><i style="animation-duration:${t / 1000}s"></i></div>`;
+  await mSleep(t); if (MGA === A) onnAsk();
+}
+function onnAsk() {
+  const A = MGA; if (A.q >= A.ask.length) return onnRound();
+  A.lock = false;
+  $('#mgb').innerHTML = `<p class="mtq">${L('On era…', '¿Dónde estaba…')}</p><p class="onnq">${A.ask[A.q][1]}</p><div class="onng" style="--c:${A.N}">${[...Array(A.N * A.N).keys()].map(i => `<button class="onnc" id="oc${i}" onclick="onnTap(${i})"></button>`).join('')}</div>`;
+}
+async function onnTap(i) {
+  const A = MGA; if (!A || A.lock) return; A.lock = true;
+  const [c, pic] = A.ask[A.q], ok = i === c, e = $('#oc' + c);
+  e.classList.add('okc'); e.textContent = pic; if (!ok) $('#oc' + i).classList.add('koc');
+  ok ? (A.ok++, SFX.ok && SFX.ok()) : SFX.ko && SFX.ko();
+  await mSleep(ok ? 800 : 1400); if (MGA === A) { A.q++; onnAsk(); }
+}
+
+/* ---------- 26. A ull (estimació: arrodonir i calcular aproximadament) ---------- */
+const mNum = v => Math.round(v).toLocaleString(mLoc());
+function estQ(lv) {
+  const t = mpick(lv <= 2 ? ['add', 'add', 'mul'] : lv <= 5 ? ['add', 'mul', 'pct', 'mul'] : lv <= 8 ? ['mul', 'pct', 'mul2', 'div'] : ['mul2', 'pct', 'div', 'mix']);
+  let q, v;
+  if (t === 'add') { const a = mri(120, 899), b = mri(120, 899); q = `${a} + ${b}`; v = a + b; }
+  if (t === 'mul') { const a = mri(12, 99), b = mri(3, 9); q = `${a} × ${b}`; v = a * b; }
+  if (t === 'pct') { const p = mpick([10, 15, 20, 25, 30, 75]), b = mri(12, 95) * 10 + mri(1, 9); q = `${p} % ${L('de', 'de')} ${mNum(b)}`; v = p * b / 100; }
+  if (t === 'mul2') { const a = mri(21, 98), b = mri(21, 98); q = `${a} × ${b}`; v = a * b; }
+  if (t === 'div') { const b = mri(3, 9), a = mri(40, 300) * b + mri(0, b - 1); q = `${mNum(a)} : ${b}`; v = a / b; }
+  if (t === 'mix') { const a = mri(21, 89), b = mri(3, 9), c = mri(110, 890); q = `${a} × ${b} + ${c}`; v = a * b + c; }
+  // totes les opcions arrodonides igual, perquè no es pugui endevinar per la xifra de les unitats
+  const g = v >= 1000 ? 100 : v >= 100 ? 10 : 1, r = x => Math.max(g, Math.round(x / g) * g), ans = r(v);
+  const f = lv <= 3 ? [.3, .5, .7] : lv <= 6 ? [.2, .35, .5] : [.12, .22, .35];
+  const dis = mshuf([r(v * (1 + f[0])), r(v * (1 - f[0])), r(v * (1 + f[1])), r(v * (1 - f[1])), r(v * (1 + f[2]))]);
+  const opts = [ans]; for (const d of dis) if (opts.length < 3 && !opts.includes(d)) opts.push(d);
+  return { q, ans, opts: mshuf(opts) };
+}
+function estGo() { MGA = { ...MGA, lv: mDlv('est'), q: 0, ok: 0 }; estNext(); }
+function estNext() {
+  const A = MGA; if (A.q >= 8) return mEnd('est', A.ok, A.ok >= 7 ? 1 : A.ok <= 4 ? -1 : 0, L(`${A.ok} de 8 encertades a ull.`, `${A.ok} de 8 acertadas a ojo.`));
+  A.q++; A.cur = estQ(A.lv); A.lock = false; mSet(`${A.q}/8`);
+  const ms = Math.max(4500, 9000 - A.lv * 450);
+  $('#mgb').innerHTML = `<p class="mtq">${L('Quin és el resultat més proper?', '¿Cuál es el resultado más cercano?')}</p><p class="serq">${A.cur.q} ≈ <b>?</b></p><div class="copts">${A.cur.opts.map((o, i) => `<button class="mopt copt" onclick="estTap(${i})">${mNum(o)}</button>`).join('')}</div><div class="llibar"><i style="animation-duration:${ms / 1000}s"></i></div>`;
+  A.to = setTimeout(() => estTap(-1), ms);
+}
+async function estTap(i) {
+  const A = MGA; if (!A || A.lock) return; A.lock = true; clearTimeout(A.to); const bar = $('.llibar i'); if (bar) bar.style.animationPlayState = 'paused';
+  const b = $$('.copt'), ai = A.cur.opts.indexOf(A.cur.ans), ok = i === ai;
+  b[ai].classList.add('okc'); if (i >= 0 && !ok) b[i].classList.add('koc'); ok ? (A.ok++, SFX.ok && SFX.ok()) : SFX.ko && SFX.ko();
+  if (i < 0) { const q = $('.mtq'); if (q) q.textContent = L('Temps! Era aquesta:', '¡Tiempo! Era esta:'); }
+  await mSleep(ok ? 900 : 1600); if (MGA === A) estNext();
+}
+
+/* ---------- 27. Qui és el més gran? (raonament: deduir un ordre a partir de comparacions) ---------- */
+// als noms de MNOM, els parells són de dona i els senars d'home (per a l'article en català)
+const mArt = (i, cap) => { const n = MNOM.ca[i], a = /^[AEIOUÀÈÉÍÒÓÚ]/i.test(n) ? "l'" : i % 2 ? 'en ' : 'la '; return (cap ? a[0].toUpperCase() + a.slice(1) : a) + n; };
+function dedQ(lv) {
+  const es = LANG === 'es', k = lv <= 3 ? 3 : lv <= 7 ? 4 : 5, p = mshuf([...Array(MNOM.ca.length).keys()]).slice(0, k); // p[0] és el més gran
+  const nm = (i, cap) => es ? MNOM.es[i] : mArt(i, cap);
+  let pr = [];
+  for (let j = 0; j < k - 1; j++) {
+    const a = p[j], b = p[j + 1], inv = lv >= 5 && mrnd() < .5;
+    pr.push(inv ? (es ? `${nm(b)} es más joven que ${nm(a)}.` : `${nm(b, 1)} és més jove que ${nm(a)}.`) : (es ? `${nm(a)} es mayor que ${nm(b)}.` : `${nm(a, 1)} és més gran que ${nm(b)}.`));
+  }
+  if (lv >= 3) pr = mshuf(pr);
+  const kind = mpick(k >= 4 && lv >= 6 ? ['old', 'young', 'second'] : ['old', 'young']);
+  const ans = kind === 'old' ? p[0] : kind === 'young' ? p[k - 1] : p[1];
+  const qq = { old: L('Qui és el més gran?', '¿Quién es el mayor?'), young: L('Qui és el més jove?', '¿Quién es el más joven?'), second: L('Qui és el segon més gran?', '¿Quién es el segundo mayor?') }[kind];
+  const opts = mshuf([...p]);
+  return { pr, qq, opts: opts.map(i => MNOM[es ? 'es' : 'ca'][i]), ans: opts.indexOf(ans) };
+}
+function dedGo() { MGA = { ...MGA, lv: mDlv('ded'), q: 0, ok: 0 }; dedNext(); }
+function dedNext() {
+  const A = MGA; if (A.q >= 8) return mEnd('ded', A.ok, A.ok >= 7 ? 1 : A.ok <= 4 ? -1 : 0, L(`${A.ok} de 8 deduccions encertades.`, `${A.ok} de 8 deducciones acertadas.`));
+  A.q++; A.cur = dedQ(A.lv); A.lock = false; mSet(`${A.q}/8`);
+  $('#mgb').innerHTML = `<div class="dedp">${A.cur.pr.map(t => `<p>${t}</p>`).join('')}</div><p class="mtq">${A.cur.qq}</p><div class="copts">${A.cur.opts.map((o, i) => `<button class="mopt copt" onclick="dedTap(${i})">${o}</button>`).join('')}</div>`;
+}
+async function dedTap(i) {
+  const A = MGA; if (!A || A.lock) return; A.lock = true; const b = $$('.copt'), ok = i === A.cur.ans;
+  b[A.cur.ans].classList.add('okc'); if (!ok) b[i].classList.add('koc'); ok ? (A.ok++, SFX.ok && SFX.ok()) : SFX.ko && SFX.ko();
+  await mSleep(ok ? 1000 : 2200); if (MGA === A) dedNext();
+}
+
+/* ---------- 28. La que sobra (vocabulari i categories) ---------- */
+const MSOB = {
+  ca: [['fruites', 'poma pera préssec cirera maduixa taronja meló plàtan raïm albercoc'], ['verdures', 'enciam pastanaga ceba carbassó espinacs bròquil porro api'],
+    ['animals de granja', 'vaca porc gallina ovella cabra conill ànec cavall'], ['ocells', 'merla pardal oreneta colom garsa mussol cigonya àguila'],
+    ['eines', 'martell tornavís serra alicates trepant escarpra pala tenalles'], ['mobles', 'taula cadira armari sofà llit calaixera prestatgeria tamboret'],
+    ['instruments musicals', 'guitarra piano violí flauta trompeta tambor acordió arpa'], ['peces de roba', 'camisa pantalons jaqueta faldilla jersei abric mitjons bufanda'],
+    ['oficis', 'fuster pagès forner mestre cuiner pintor lampista bomber'], ['colors', 'vermell blau verd groc morat gris marró blanc'],
+    ['parts del cos', 'braç cama genoll colze espatlla turmell canell front'], ['esports', 'futbol tennis bàsquet natació ciclisme golf handbol esquí'],
+    ['flors', 'rosa clavell gira-sol tulipa margarida lliri gessamí orquídia'], ['begudes', 'aigua suc cafè te llet vi cervesa orxata'],
+    ['vehicles', 'cotxe autobús tren moto bicicleta camió tramvia furgoneta'], ['estris de cuina', 'cassola paella cullera forquilla ganivet colador bol olla']],
+  es: [['frutas', 'manzana pera melocotón cereza fresa naranja melón plátano uva albaricoque'], ['verduras', 'lechuga zanahoria cebolla calabacín espinacas brócoli puerro apio'],
+    ['animales de granja', 'vaca cerdo gallina oveja cabra conejo pato caballo'], ['pájaros', 'mirlo gorrión golondrina paloma urraca búho cigüeña águila'],
+    ['herramientas', 'martillo destornillador sierra alicates taladro cincel pala tenazas'], ['muebles', 'mesa silla armario sofá cama cómoda estantería taburete'],
+    ['instrumentos musicales', 'guitarra piano violín flauta trompeta tambor acordeón arpa'], ['prendas de ropa', 'camisa pantalones chaqueta falda jersey abrigo calcetines bufanda'],
+    ['oficios', 'carpintero agricultor panadero maestro cocinero pintor fontanero bombero'], ['colores', 'rojo azul verde amarillo morado gris marrón blanco'],
+    ['partes del cuerpo', 'brazo pierna rodilla codo hombro tobillo muñeca frente'], ['deportes', 'fútbol tenis baloncesto natación ciclismo golf balonmano esquí'],
+    ['flores', 'rosa clavel girasol tulipán margarita lirio jazmín orquídea'], ['bebidas', 'agua zumo café té leche vino cerveza horchata'],
+    ['vehículos', 'coche autobús tren moto bicicleta camión tranvía furgoneta'], ['utensilios de cocina', 'cazuela sartén cuchara tenedor cuchillo colador bol olla']]
+};
+// parelles de grups propers (als nivells alts costa més de veure quina sobra): índexs de MSOB
+const MSOBP = [[0, 1], [2, 3], [4, 15], [0, 12], [7, 10], [11, 14], [8, 4], [13, 0]];
+function sobQ(lv) {
+  const G = MSOB[LANG === 'es' ? 'es' : 'ca'];
+  let a, b; if (lv >= 5 && mrnd() < .6) { [a, b] = mpick(MSOBP); if (mrnd() < .5) [a, b] = [b, a]; } else { a = mri(0, G.length - 1); do b = mri(0, G.length - 1); while (b === a); }
+  const n = lv >= 7 ? 5 : 3, ws = mshuf(G[a][1].split(' ')).slice(0, n), odd = mpick(G[b][1].split(' ').filter(w => !G[a][1].split(' ').includes(w)));
+  const opts = mshuf([...ws, odd]);
+  return { opts, ans: opts.indexOf(odd), cat: G[a][0] };
+}
+function sobGo() { MGA = { ...MGA, lv: mDlv('sob'), q: 0, ok: 0 }; sobNext(); }
+function sobNext() {
+  const A = MGA; if (A.q >= 8) return mEnd('sob', A.ok, A.ok >= 7 ? 1 : A.ok <= 4 ? -1 : 0, L(`${A.ok} de 8 encertades.`, `${A.ok} de 8 acertadas.`));
+  A.q++; A.cur = sobQ(A.lv); A.lock = false; mSet(`${A.q}/8`);
+  $('#mgb').innerHTML = `<p class="mtq">${L('Quina paraula sobra?', '¿Qué palabra sobra?')}</p><div class="copts">${A.cur.opts.map((o, i) => `<button class="mopt copt" onclick="sobTap(${i})">${o}</button>`).join('')}</div><p class="mmut sobw" id="sobw"></p>`;
+}
+async function sobTap(i) {
+  const A = MGA; if (!A || A.lock) return; A.lock = true; const b = $$('.copt'), ok = i === A.cur.ans;
+  b[A.cur.ans].classList.add('okc'); if (!ok) b[i].classList.add('koc'); ok ? (A.ok++, SFX.ok && SFX.ok()) : SFX.ko && SFX.ko();
+  const w = $('#sobw'); if (w) w.textContent = L(`Sobra «${A.cur.opts[A.cur.ans]}»: les altres són ${A.cur.cat}.`, `Sobra «${A.cur.opts[A.cur.ans]}»: las otras son ${A.cur.cat}.`);
+  await mSleep(ok ? 1500 : 2400); if (MGA === A) sobNext();
 }
 
 /* ---------- Test de la ment: 4 proves i una edat orientativa ----------
