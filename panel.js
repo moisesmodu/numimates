@@ -524,7 +524,7 @@ function vGrups() {
     { acts: `<button class="btn primary" onclick="grupModal()">${ico('plus')}${L('Nou grup', 'Nuevo grupo')}</button>`, switcher: false });
 }
 function grupMenu(e, id) {
-  e.stopPropagation(); closePops(); e.currentTarget.insertAdjacentHTML('beforeend', `<div class="pop right" onclick="event.stopPropagation()"><button onclick="grupModal(${id})">${ico('pencil')}${L('Edita', 'Editar')}</button><button onclick="grupCodi(${id})">${ico('refresh-cw')}${L('Genera un codi nou', 'Generar un código nuevo')}</button><hr><button class="danger" onclick="grupOff(${id})">${ico('trash-2')}${L('Tanca el grup', 'Cerrar el grupo')}</button></div>`);
+  e.stopPropagation(); closePops(); e.currentTarget.insertAdjacentHTML('beforeend', `<div class="pop right" onclick="event.stopPropagation()"><button onclick="altaModal(${id})">${ico('plus')}${L('Afegeix alumnes', 'Añadir alumnos')}</button><button onclick="grupModal(${id})">${ico('pencil')}${L('Edita', 'Editar')}</button><button onclick="grupCodi(${id})">${ico('refresh-cw')}${L('Genera un codi nou', 'Generar un código nuevo')}</button><hr><button class="danger" onclick="grupOff(${id})">${ico('trash-2')}${L('Tanca el grup', 'Cerrar el grupo')}</button></div>`);
 }
 function grupModal(id) {
   closePops(); const g = GRUPS.find(x => x.id === id) || {};
@@ -537,6 +537,38 @@ function grupModal(id) {
     <div class="err-msg" id="g_err"></div>
     <div class="acts"><button class="btn" onclick="closeModal()">${L('Cancel·la', 'Cancelar')}</button><button class="btn primary" onclick="grupSave(${id || 0})">${id ? L('Desa els canvis', 'Guardar los cambios') : L('Crea el grup', 'Crear el grupo')}</button></div>`, 'w480');
   $('#g_nom').focus();
+}
+// alta d'alumnes en bloc: s'enganxa la taula (nom, usuari, contrasenya) i es creen els comptes ja dins del grup
+let ALTA = [];
+function altaParse() {
+  const t = ($('#al_txt')?.value || '').split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+  ALTA = t.map(l => l.includes('\t') ? l.split('\t') : l.split(/\s*[;,]\s*|\s{2,}/)).map(c => c.map(x => x.trim()).filter(Boolean))
+    .filter(c => c.length >= 3 && !/^(alumn|nom|nombre|name)/i.test(c[0]) && !/^(usuari|usuario|user)/i.test(c[1]))
+    .map(c => ({ name: c[0], username: c[1].toLowerCase(), password: c[2] }));
+  const bad = r => !/^[a-z0-9._-]{3,20}$/.test(r.username) ? L('usuari no vàlid', 'usuario no válido') : r.password.length < 4 ? L('contrasenya curta', 'contraseña corta') : '';
+  $('#al_prev').innerHTML = ALTA.length ? `<div class="tw" style="max-height:260px"><table><thead><tr><th>${L('Alumne', 'Alumno')}</th><th>${L('Usuari', 'Usuario')}</th><th>${L('Contrasenya', 'Contraseña')}</th><th></th></tr></thead><tbody>${ALTA.map(r => `<tr style="cursor:default"><td>${esc(r.name)}</td><td class="mono">${esc(r.username)}</td><td class="mono">${esc(r.password)}</td><td style="color:var(--crit)">${bad(r)}</td></tr>`).join('')}</tbody></table></div>` : `<p class="t3" style="margin:0">${L('Enganxa la taula: una fila per alumne amb nom, usuari i contrasenya (separats per tabulació, punt i coma o coma).', 'Pega la tabla: una fila por alumno con nombre, usuario y contraseña (separados por tabulación, punto y coma o coma).')}</p>`;
+  $('#al_go').disabled = !ALTA.length || ALTA.some(bad); $('#al_go').textContent = ALTA.length ? L(`Crea ${ALTA.length} alumnes`, `Crear ${ALTA.length} alumnos`) : L('Crea els alumnes', 'Crear los alumnos');
+}
+function altaModal(id) {
+  closePops(); const g = GRUPS.find(x => x.id === id); if (!g) return;
+  modal(`<h3>${L('Afegeix alumnes a', 'Añadir alumnos a')} ${esc(g.nom)}</h3>
+    <label class="field"><span>${L('Alumnes', 'Alumnos')}</span><textarea id="al_txt" rows="7" style="height:auto;padding:8px 12px;font:13px/1.5 ui-monospace,Menlo,monospace" placeholder="Martí Andorrà Velasco&#9;martiav&#9;0756" oninput="altaParse()"></textarea></label>
+    <div style="display:flex;gap:12px;flex-wrap:wrap"><label class="field" style="flex:1;min-width:180px"><span>${L('Curs on comencen', 'Curso en el que empiezan')}</span><select id="al_curs">${CURS.map((c, i) => `<option value="${i}" ${(g.curs ?? 3) === i ? 'selected' : ''}>${tx(c)}</option>`).join('')}</select></label>
+      <label class="field" style="flex:1;min-width:140px"><span>${L("Idioma de l'app", 'Idioma de la app')}</span><select id="al_lang"><option value="ca">Català</option><option value="es">Castellano</option></select></label></div>
+    <div id="al_prev"></div><div class="err-msg" id="al_err"></div>
+    <div class="acts"><button class="btn" onclick="closeModal()">${L('Cancel·la', 'Cancelar')}</button><button class="btn primary" id="al_go" disabled onclick="altaGo(${id})">${L('Crea els alumnes', 'Crear los alumnos')}</button></div>`, 'w640');
+  altaParse(); $('#al_txt').focus();
+}
+async function altaGo(id) {
+  $('#al_go').disabled = true; $('#al_go').textContent = L('Creant…', 'Creando…');
+  const j = await act('alta', { grup: id, rows: ALTA, curs: +$('#al_curs').value, lang: $('#al_lang').value });
+  if (!j.ok) { $('#al_err').textContent = j.error === 'permís' ? L('No tens permís en aquest grup.', 'No tienes permiso en este grupo.') : L("No s'ha pogut fer. Torna-ho a provar.", 'No se ha podido hacer. Vuelve a intentarlo.'); $('#al_go').disabled = false; return; }
+  const E = { 'usuari-ocupat': L('aquest usuari ja existeix', 'este usuario ya existe'), 'usuari-format': L('usuari no vàlid', 'usuario no válido'), 'contrasenya-format': L('contrasenya no vàlida', 'contraseña no válida'), nom: L('falta el nom', 'falta el nombre') };
+  const okN = j.rows.filter(r => r.ok).length;
+  modal(`<h3>${L(`${okN} de ${j.rows.length} alumnes creats`, `${okN} de ${j.rows.length} alumnos creados`)}</h3>
+    <div class="tw" style="max-height:340px"><table><thead><tr><th>${L('Alumne', 'Alumno')}</th><th>${L('Usuari', 'Usuario')}</th><th></th></tr></thead><tbody>${j.rows.map(r => `<tr style="cursor:default"><td>${esc(r.name || '')}</td><td class="mono">${esc(r.username || '')}</td><td>${r.ok ? `<span class="chip good">${L('Creat', 'Creado')}</span>` : `<span class="chip crit">${esc(E[r.error] || r.error)}</span>`}</td></tr>`).join('')}</tbody></table></div>
+    <p class="t3">${L("Entren a app.numimates.com amb el seu usuari i contrasenya. Ja són dins del grup.", 'Entran en app.numimates.com con su usuario y contraseña. Ya están dentro del grupo.')}</p>
+    <div class="acts"><button class="btn primary" onclick="closeModal();reload()">${L('Fet', 'Hecho')}</button></div>`, 'w640');
 }
 async function grupSave(id) {
   if (ADMIN && !id && !(D.centres || []).length) return $('#g_err').textContent = L('Primer crea un centre.', 'Primero crea un centro.');

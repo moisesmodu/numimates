@@ -1,4 +1,4 @@
-import { sql, ok, body, cleanCode, validPass, hashPass, dropToks } from './_lib.js';
+import { sql, ok, body, cleanCode, validPass, hashPass, dropToks, cleanUser, validUser, newStudentCode } from './_lib.js';
 import { who, groupsOf } from './_auth.js';
 import { STRIPE_KEY, stripe, stripeMode, setCancel, setupStripe } from './_stripe.js';
 import { randomInt } from 'crypto';
@@ -19,6 +19,30 @@ export default async function handler(req, res) {
 
   if (req.method === 'POST') {
     const b = body(req), code = cleanCode(b.code);
+    // --- alta d'alumnes en bloc dins d'un grup (admin o docent del grup): nom, usuari i contrasenya ---
+    if (b.action === 'alta') {
+      const gid = +b.grup; if (!me.admin && !gids.includes(gid)) return ok(res, { error: 'permís' }, 403);
+      const g = (await sql`SELECT id, curs FROM mates.grups WHERE id = ${gid} AND actiu`)[0]; if (!g) return ok(res, { error: 'grup' }, 404);
+      const cc = Number.isInteger(+b.curs) && +b.curs >= 0 && +b.curs <= 9 ? +b.curs : (g.curs ?? 3), out = [];
+      for (const r of (Array.isArray(b.rows) ? b.rows : []).slice(0, 60)) {
+        const name = String(r.name || '').trim().slice(0, 30), user = cleanUser(r.username), pass = String(r.password || '');
+        if (!name) { out.push({ username: user, error: 'nom' }); continue; }
+        if (!validUser(user)) { out.push({ name, username: user, error: 'usuari-format' }); continue; }
+        if (!validPass(pass)) { out.push({ name, username: user, error: 'contrasenya-format' }); continue; }
+        if ((await sql`SELECT 1 FROM mates.alumnes WHERE username = ${user}`).length) { out.push({ name, username: user, error: 'usuari-ocupat' }); continue; }
+        const lang = b.lang === 'es' ? 'es' : 'ca', hash = hashPass(pass);
+        let code = null;
+        for (let i = 0; i < 8 && !code; i++) {
+          const c = newStudentCode(), st = { name, lang, code: c, username: user, course: cc, baseCourse: cc, maxCourse: cc, holdReg: false, unlockAll: false };
+          const q = await sql`INSERT INTO mates.alumnes (code, name, course, survey, state, xp, streak, best, last_day, lessons, answers, correct, username, pass_hash, grup_id, pla)
+            VALUES (${c}, ${name}, ${cc}, ${JSON.stringify({ curs: 'alta del docent', date: new Date().toISOString().slice(0, 10) })}, ${JSON.stringify(st)}, 0, 0, 0, NULL, 0, 0, 0, ${user}, ${hash}, ${gid}, 'escola')
+            ON CONFLICT DO NOTHING RETURNING code`;
+          if (q.length) code = c;
+        }
+        out.push(code ? { name, username: user, code, ok: true } : { name, username: user, error: 'codi' });
+      }
+      return ok(res, { ok: true, rows: out });
+    }
     // --- accions sobre un alumne (admin o el seu docent) ---
     if (['setpass', 'unlock', 'off', 'treure'].includes(b.action)) {
       if (!(await mine(code))) return ok(res, { error: 'permís' }, 403);

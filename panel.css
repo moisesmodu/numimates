@@ -346,3 +346,4 @@ details.more[open] summary .i{transform:rotate(90deg)}
 .tw.us .nm{display:flex;align-items:center}
 .selbar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:12px;position:sticky;top:8px;z-index:5}
 .kpis.k3m{grid-template-columns:repeat(3,1fr)}
+.modal.w640{width:640px;max-width:calc(100vw - 24px)}

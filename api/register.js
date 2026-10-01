@@ -1,11 +1,4 @@
-import { sql, body, summary, ok, cleanUser, validUser, validPass, hashPass, cleanState, blocked, note, tooMany } from './_lib.js';
-import { randomInt } from 'crypto';
-// Paraules dels codis secrets (PARAULA-0000). Com més n'hi ha, més difícil és endevinar el codi d'un altre.
-const WORDS = [
-  'GUINEU', 'DRAC', 'ROBOT', 'TORTUGA', 'ESTEL', 'COMETA', 'CARGOL', 'LLEO', 'TIGRE', 'BALENA', 'PANDA', 'LLOP', 'FOCA', 'DOFI', 'MUSSOL', 'PINGUI', 'LLAMP', 'PLANETA',
-  'CASTELL', 'VOLCA', 'COET', 'GALAXIA', 'CACTUS', 'PIRATA', 'BRUIXOLA', 'FLAMENC', 'ESQUIROL', 'GIRAFA', 'KOALA', 'LLAMA', 'CAMALEO', 'ORCA', 'TAURO', 'COLIBRI',
-  'CANGUR', 'ELEFANT', 'ZEBRA', 'MARMOTA', 'CRANC', 'MEDUSA', 'ABELLA', 'FORMIGA', 'TEMPESTA', 'AURORA', 'METEOR', 'SATURN', 'LLUNA', 'ICEBERG', 'OASI', 'SELVA', 'DUNA',
-  'CASCADA', 'TRITO', 'SIRENA', 'GEGANT', 'FOLLET', 'LINX', 'CORB', 'GAVINA', 'TAIGA'];
+import { sql, body, summary, ok, cleanUser, validUser, validPass, hashPass, cleanState, blocked, note, tooMany, newStudentCode } from './_lib.js';
 export default async function handler(req, res) {
   if (req.method !== 'POST') return ok(res, { error: 'method' }, 405);
   const b = body(req), name = String(b.name || '').trim().slice(0, 30), state = b.state;
@@ -26,7 +19,7 @@ export default async function handler(req, res) {
     hash = hashPass(b.password);
   }
   for (let i = 0; i < 8; i++) {
-    const code = WORDS[randomInt(WORDS.length)] + '-' + randomInt(1000, 10000);
+    const code = newStudentCode();
     state.code = code; if (user) state.username = user; state.unlockAll = false;
     const s = summary(state);
     const r = await sql`INSERT INTO mates.alumnes (code, name, course, survey, state, xp, streak, best, last_day, lessons, answers, correct, username, pass_hash)

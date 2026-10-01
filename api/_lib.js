@@ -7,7 +7,7 @@ export function summary(s) {
   return { xp: s.xp | 0, streak: s.streak | 0, best: s.best | 0, last_day: s.lastDay || null, lessons: st.lessons | 0, answers: st.answers | 0, correct: st.correct | 0, course: s.course | 0 };
 }
 export function ok(res, data, status = 200) { res.setHeader('Cache-Control', 'no-store'); res.status(status).json(data); }
-import { scryptSync, randomBytes, timingSafeEqual, createHash } from 'crypto';
+import { scryptSync, randomBytes, timingSafeEqual, createHash, randomInt } from 'crypto';
 export const cleanUser = u => String(u || '').trim().toLowerCase();
 export const validUser = u => /^[a-z0-9._-]{3,20}$/.test(u);
 export const validPass = p => typeof p === 'string' && p.length >= 4 && p.length <= 60;
@@ -106,3 +106,11 @@ export function plaOf(a) {
   if (a.pla === 'premium' && (!a.pla_fins || new Date(a.pla_fins) >= new Date(new Date().toISOString().slice(0, 10)))) return 'premium';
   return 'free';
 }
+
+// Paraules dels codis secrets (PARAULA-0000). Com més n'hi ha, més difícil és endevinar el codi d'un altre.
+export const WORDS = [
+  'GUINEU', 'DRAC', 'ROBOT', 'TORTUGA', 'ESTEL', 'COMETA', 'CARGOL', 'LLEO', 'TIGRE', 'BALENA', 'PANDA', 'LLOP', 'FOCA', 'DOFI', 'MUSSOL', 'PINGUI', 'LLAMP', 'PLANETA',
+  'CASTELL', 'VOLCA', 'COET', 'GALAXIA', 'CACTUS', 'PIRATA', 'BRUIXOLA', 'FLAMENC', 'ESQUIROL', 'GIRAFA', 'KOALA', 'LLAMA', 'CAMALEO', 'ORCA', 'TAURO', 'COLIBRI',
+  'CANGUR', 'ELEFANT', 'ZEBRA', 'MARMOTA', 'CRANC', 'MEDUSA', 'ABELLA', 'FORMIGA', 'TEMPESTA', 'AURORA', 'METEOR', 'SATURN', 'LLUNA', 'ICEBERG', 'OASI', 'SELVA', 'DUNA',
+  'CASCADA', 'TRITO', 'SIRENA', 'GEGANT', 'FOLLET', 'LINX', 'CORB', 'GAVINA', 'TAIGA'];
+export const newStudentCode = () => WORDS[randomInt(WORDS.length)] + '-' + randomInt(1000, 10000);
