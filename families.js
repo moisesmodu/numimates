@@ -90,7 +90,7 @@ function vEntry() {
     <p class="note"><button class="link" onclick="ENTRY='new';render()">${L('És la primera vegada? Afegeix el teu fill o filla', '¿Es la primera vez? Añade a tu hijo o hija')}</button></p>${foot()}`;
   return `<h1>${L('Segueix com avança a mates', 'Sigue cómo avanza en mates')}</h1>
     <p class="sub">${L("Afegeix el perfil del teu fill o filla amb el codi que surt a l'app (Perfil → El meu compte).", 'Añade el perfil de tu hijo o hija con el código que sale en la app (Perfil → Mi cuenta).')}</p>
-    <div class="card"><label class="field"><span>${L("Codi secret de l'alumne (p. ex. GUINEU-4827)", 'Código secreto del alumno (p. ej. GUINEU-4827)')}</span><input id="fc" class="code" autocomplete="off" autocapitalize="characters" spellcheck="false" oninput="formOk()"></label>
+    <div class="card"><label class="field"><span>${L("Codi del compte de l'alumne (és al Perfil de l'app; p. ex. GUINEU-4827)", 'Código de la cuenta del alumno (está en el Perfil de la app; p. ej. GUINEU-4827)')}</span><input id="fc" class="code" autocomplete="off" autocapitalize="characters" spellcheck="false" oninput="formOk()"></label>
       <label class="field"><span>${L('El teu correu', 'Tu correo')}</span><input id="fm" type="email" autocomplete="email" inputmode="email" oninput="formOk()"></label>
       ${consentBox('fk')}<p class="err" id="fe"></p>
       <button class="btn" id="fg" disabled onclick="sendLink()">${L('AFEGEIX', 'AÑADIR')}</button></div>
@@ -130,7 +130,7 @@ const pill = k => `<span class="pill ${k.pla}">${k.pla === 'premium' ? 'PREMIUM'
 const vHome = () => `<h1>${L('Hola!', '¡Hola!')}</h1>${D.kids.map(kidCard).join('')}<button class="add" onclick="VIEW='add';render()">+ ${L('Afegeix un altre fill o filla', 'Añade otro hijo o hija')}</button>`;
 const vAdd = () => `${D.kids.length ? `<button class="back" onclick="VIEW='home';render()">‹ ${L('Tornar', 'Volver')}</button>` : ''}<h1>${D.kids.length ? L('Afegeix un altre fill o filla', 'Añade otro hijo o hija') : L('Afegeix el teu fill o filla', 'Añade a tu hijo o hija')}</h1>
   <p class="sub">${L("Amb el codi que surt a l'app (Perfil → El meu compte).", 'Con el código que sale en la app (Perfil → Mi cuenta).')}</p>
-  <div class="card"><label class="field"><span>${L("Codi secret de l'alumne (p. ex. GUINEU-4827)", 'Código secreto del alumno (p. ej. GUINEU-4827)')}</span><input id="fc" class="code" autocomplete="off" autocapitalize="characters" spellcheck="false" oninput="formOk()"></label>
+  <div class="card"><label class="field"><span>${L("Codi del compte de l'alumne (és al Perfil de l'app; p. ex. GUINEU-4827)", 'Código de la cuenta del alumno (está en el Perfil de la app; p. ej. GUINEU-4827)')}</span><input id="fc" class="code" autocomplete="off" autocapitalize="characters" spellcheck="false" oninput="formOk()"></label>
   ${consentBox('fk')}<p class="err" id="fe"></p><button class="btn" id="ag" disabled onclick="addKid()">${L('AFEGEIX', 'AÑADIR')}</button></div>`;
 async function addKid() {
   const g = $('#ag'), e = $('#fe'); g.disabled = true; e.textContent = '';

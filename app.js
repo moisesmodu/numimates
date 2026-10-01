@@ -329,7 +329,7 @@ function go(v) {
   if (v !== 'profiles' && v !== 'onboard' && appMismatch(P)) { LS = null; closeModal(); return appHandoff(); }
   if ((v === 'battles' || v === 'season') && !isPremium()) { premiumModal(v === 'battles' ? 'batalles' : 'temporada'); v = VIEW && VIEW !== v ? VIEW : 'home'; if (v === VIEW) return; }
   if ((v === 'battles' && classOff('batalles'))) { toast(L("El teu docent ha desactivat les batalles per a la classe.", 'Tu docente ha desactivado las batallas para la clase.')); v = 'train'; }
-  VIEW = v;
+  VIEW = v; if (v === 'home') setTimeout(credNudge, 1500);
   if (v !== 'onboard') setVariant(varOf(P));
   ({ home: renderHome, train: renderTrain, album: () => renderAlbum(), shop: renderShop, badges: () => renderAlbum('medals'), profile: renderProfile, profiles: renderProfiles, battles: () => renderBattles(), season: () => renderSeason(), league: () => renderLeague('w'), onboard: () => onb(0) }[v] || renderHome)();
   if (v !== 'home') window.scrollTo(0, 0);
@@ -1306,8 +1306,8 @@ renderProfile.inner = function () {
     ${curriculumBox()}
     <h2 class="h2">${L('Progrés a ', 'Progreso en ')}${tx(CUR().long)}</h2><div class="urows">${rows}</div>
     <h2 class="h2">🔑 ${L('El meu compte', 'Mi cuenta')}</h2>
-    <div class="codecard"><div>${P.username ? `<small>${L('Usuari', 'Usuario')}</small><b>${esc(P.username)}</b>` : `<small>${L('El teu codi secret', 'Tu código secreto')}</small><b>${P.code || '…'}</b>`}<span id="cloud">${cloudTxt()}</span></div>
-      <div class="ctip">${P.username ? L(`Entra des de qualsevol dispositiu amb el teu usuari i contrasenya. Codi de reserva: <b>${P.code || '…'}</b>`, `Entra desde cualquier dispositivo con tu usuario y contraseña. Código de reserva: <b>${P.code || '…'}</b>`) : L("✏️ Apunta'l! O crea un usuari i contrasenya, que és més fàcil de recordar.", '✏️ ¡Apúntalo! O crea un usuario y contraseña, que es más fácil de recordar.')}</div>
+    <div class="codecard"><div>${P.username ? `<small>${L('Usuari', 'Usuario')}</small><b>${esc(P.username)}</b>` : `<small>${L('Encara no tens usuari', 'Aún no tienes usuario')}</small><b>${L('Crea-te’n un', 'Créate uno')}</b>`}<span id="cloud">${cloudTxt()}</span></div>
+      <div class="ctip">${P.username ? L('Entra des de qualsevol dispositiu amb el teu usuari i contrasenya.', 'Entra desde cualquier dispositivo con tu usuario y contraseña.') : L('Amb usuari i contrasenya podràs entrar des de qualsevol dispositiu.', 'Con usuario y contraseña podrás entrar desde cualquier dispositivo.')}${P.code ? `<br><small class="codesm">${L('Codi del compte', 'Código de la cuenta')}: <b>${P.code}</b> · ${L('per a la zona de famílies i per recuperar el compte', 'para la zona de familias y para recuperar la cuenta')}</small>` : ''}</div>
       <button class="btn sm gold" onclick="accountModal()">${P.username ? L('CANVIA LA CONTRASENYA', 'CAMBIAR LA CONTRASEÑA') : L('CREA USUARI I CONTRASENYA', 'CREAR USUARIO Y CONTRASEÑA')}</button></div>
     <h2 class="h2">🏫 ${L('La meva classe', 'Mi clase')}</h2>${classeBox()}
     ${P.classe ? '' : `<h2 class="h2">⭐ ${L('El meu pla', 'Mi plan')}</h2>${premiumBox()}`}
@@ -1383,14 +1383,20 @@ function resetP() {
 function slugName(n) { return (n.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]/g, '') || 'alumne').slice(0, 14) + ri(10, 99); }
 const ERR = e => ({ 'usuari-ocupat': L('Aquest usuari ja existeix. Prova\'n un altre!', 'Ese usuario ya existe. ¡Prueba otro!'), 'usuari-format': L('L\'usuari ha de tenir de 3 a 20 lletres o números (sense espais).', 'El usuario debe tener de 3 a 20 letras o números (sin espacios).'), 'contrasenya-format': L('La contrasenya ha de tenir almenys 4 caràcters.', 'La contraseña debe tener al menos 4 caracteres.'), 'credencials': L('Usuari o contrasenya incorrectes.', 'Usuario o contraseña incorrectos.'), 'massa': L('Massa intents seguits. Espera uns minuts i torna-ho a provar.', 'Demasiados intentos seguidos. Espera unos minutos y vuelve a intentarlo.'), 'contrasenya-actual': L('La contrasenya actual no és correcta.', 'La contraseña actual no es correcta.') })[e] || L('No hi ha connexió. Torna-ho a provar.', 'No hay conexión. Vuelve a intentarlo.');
 const passField = (id, ph) => `<div class="passf"><input id="${id}" class="nm" type="password" maxlength="60" placeholder="${ph}" autocomplete="new-password"><button type="button" class="eye" onclick="const i=document.getElementById('${id}');i.type=i.type==='password'?'text':'password'" aria-label="👁">👁</button></div>`;
-function accountModal() {
+function accountModal(nudge) {
   if (!P.code) return toast(L('Primer cal connexió a internet.', 'Primero hace falta conexión a internet.'));
   const has = !!P.username;
   modal(`<div class="sheet card cent"><h3>${has ? L('Canvia la contrasenya', 'Cambia la contraseña') : L('Crea el teu usuari', 'Crea tu usuario')}</h3>
+    ${!has ? `<p style="margin:0 0 10px">${nudge ? L("Ara els comptes es fan amb <b>usuari i contrasenya</b>: és més fàcil de recordar i més segur. El teu progrés no canvia.", 'Ahora las cuentas se hacen con <b>usuario y contraseña</b>: es más fácil de recordar y más seguro. Tu progreso no cambia.') : L('Amb el teu usuari i contrasenya podràs entrar des de qualsevol dispositiu.', 'Con tu usuario y contraseña podrás entrar desde cualquier dispositivo.')}</p>` : ''}
     <input id="au" class="nm" maxlength="20" placeholder="${L('Usuari', 'Usuario')}" autocomplete="username" autocapitalize="none" value="${esc(P.username || slugName(P.name))}" ${has ? 'readonly' : ''}>
     ${has ? passField('ao', L('Contrasenya actual', 'Contraseña actual')) : ''}${passField('ap', has ? L('Contrasenya nova', 'Contraseña nueva') : L('Contrasenya', 'Contraseña'))}<div id="aerr" class="err"></div>
     ${has ? `<p class="mut" style="font-size:13px;margin:0">${L("Si no la recordes, el teu docent te la pot canviar.", 'Si no la recuerdas, tu docente te la puede cambiar.')}</p>` : ''}
-    <div class="row2"><button class="btn ghost" onclick="closeModal()">${L('TORNA', 'VOLVER')}</button><button class="btn" onclick="saveAccount()">${L('DESA', 'GUARDAR')}</button></div></div>`, true);
+    <div class="row2"><button class="btn ghost" onclick="closeModal()">${nudge ? L('ARA NO', 'AHORA NO') : L('TORNA', 'VOLVER')}</button><button class="btn" onclick="saveAccount()">${L('DESA', 'GUARDAR')}</button></div></div>`, true);
+}
+// comptes antics que només tenen codi: un cop al dia, convida a crear usuari i contrasenya
+function credNudge() {
+  if (!P || P.id === 'tmp' || !P.code || P.username || P.credAsk === today() || $('.modal-bg') || !['home'].includes(VIEW)) return;
+  P.credAsk = today(); saveLocal(); accountModal(true);
 }
 async function saveAccount() {
   const u = $('#au').value.trim().toLowerCase(), p = $('#ap').value;
@@ -1399,7 +1405,7 @@ async function saveAccount() {
   $('#aerr').textContent = '…';
   try {
     const r = await api('account', { code: P.code, username: u, password: p, old: $('#ao') ? $('#ao').value : undefined });
-    if (r.ok) { P.username = u; saveLocal(); closeModal(); toast(L('✅ Compte desat!', '✅ ¡Cuenta guardada!')); renderProfile(); }
+    if (r.ok) { P.username = u; saveLocal(); closeModal(); toast(L('✅ Compte desat!', '✅ ¡Cuenta guardada!')); go(VIEW === 'profile' ? 'profile' : VIEW || 'home'); }
     else $('#aerr').textContent = ERR(r.error);
   } catch (e) { $('#aerr').textContent = ERR(); }
 }
@@ -1422,12 +1428,13 @@ function delP(id) {
   });
 }
 function loginModal(withCode) {
-  modal(`<div class="sheet card cent"><h3>${L('Entra al teu compte', 'Entra en tu cuenta')}</h3>
-    ${withCode ? `<p>${L("Escriu el codi secret (per exemple, GUINEU-4827).", 'Escribe el código secreto (por ejemplo, GUINEU-4827).')}</p><input id="cd" class="nm" maxlength="20" placeholder="CODI-0000" autocomplete="off" autocapitalize="characters">`
+  modal(`<div class="sheet card cent"><h3>${withCode ? L('Recupera el compte', 'Recupera la cuenta') : L('Entra al teu compte', 'Entra en tu cuenta')}</h3>
+    ${withCode ? `<p>${L("Si el teu compte encara no té usuari i contrasenya, escriu el <b>codi del compte</b> (és al Perfil, a «El meu compte»; per exemple, GUINEU-4827). Després en crearàs un.", 'Si tu cuenta aún no tiene usuario y contraseña, escribe el <b>código de la cuenta</b> (está en el Perfil, en «Mi cuenta»; por ejemplo, GUINEU-4827). Después crearás uno.')}</p><input id="cd" class="nm" maxlength="20" placeholder="CODI-0000" autocomplete="off" autocapitalize="characters">`
       : `<input id="lu" class="nm" maxlength="20" placeholder="${L('Usuari', 'Usuario')}" autocomplete="username" autocapitalize="none">${passField('lp', L('Contrasenya', 'Contraseña')).replace('new-password', 'current-password')}`}
     <div id="lerr" class="err"></div>
-    <div class="row2"><button class="btn ghost" onclick="closeModal()">${L('TORNA', 'VOLVER')}</button><button class="btn" onclick="doLogin(${withCode ? 1 : 0})">${L('ENTRA', 'ENTRAR')}</button></div>
-    <button class="link" onclick="loginModal(${withCode ? 0 : 1})">${withCode ? L('Entra amb usuari i contrasenya', 'Entrar con usuario y contraseña') : L('Tinc un codi secret', 'Tengo un código secreto')}</button></div>`, true);
+    <div class="row2"><button class="btn ghost" onclick="${withCode ? 'loginModal()' : 'closeModal()'}">${L('TORNA', 'VOLVER')}</button><button class="btn" onclick="doLogin(${withCode ? 1 : 0})">${L('ENTRA', 'ENTRAR')}</button></div>
+    ${withCode ? `<p class="mut" style="font-size:13.5px;margin:12px 0 0">${L("Si el compte ja té contrasenya i no la recordes: si és de l'escola, el teu docent te la pot canviar; si no, escriu-nos a hola@numimates.com amb el teu usuari.", 'Si la cuenta ya tiene contraseña y no la recuerdas: si es del colegio, tu docente te la puede cambiar; si no, escríbenos a hola@numimates.com con tu usuario.')}</p>`
+      : `<button class="link" onclick="loginModal(1)">${L("He oblidat la contrasenya o no en tinc", 'He olvidado la contraseña o no tengo')}</button>`}</div>`, true);
   const i = $(withCode ? '#cd' : '#lu'); i.focus();
   $$('.modal-bg input').forEach(x => x.addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(withCode ? 1 : 0); }));
 }
@@ -1444,6 +1451,8 @@ async function doLogin(withCode) {
     P = migrate({ ...r.state, id, code, name: r.name, username: r.state.username || r.username || (withCode ? null : data.username), pla: r.pla || 'free', sub: r.sub || null }); P.dirty = false; P.holdReg = false;
     DB.profiles[id] = P; DB.current = id; LANG = P.lang; saveLocal();
     closeModal(); go('home'); toast(L(`Hola de nou, ${esc(P.name)}! 👋`, `¡Hola de nuevo, ${esc(P.name)}! 👋`));
+    // ha entrat amb el codi i el compte no té usuari: que el creï ara
+    if (withCode && !P.username) setTimeout(() => accountModal(true), 900);
   } catch (e) { $('#lerr').textContent = ERR(); }
 }
 
@@ -1541,7 +1550,6 @@ function onbAccount() {
     <label class="lbl">${L('Contrasenya (mínim 4)', 'Contraseña (mínimo 4)')}</label>${passField('ap', '••••')}
     <div id="aerr" class="err"></div>
     <button class="btn big" id="regBtn" onclick="doRegister()">${L('CREA EL COMPTE', 'CREAR LA CUENTA')}</button>
-    <button class="link" onclick="doRegister(true)">${L('Ara no (et donarem un codi secret)', 'Ahora no (te daremos un código secreto)')}</button>
     <p class="legalf">${L("Si tens menys de 14 anys, fes-ho amb permís de la teva família. Guardem el mínim de dades i no hi ha publicitat:", 'Si tienes menos de 14 años, hazlo con permiso de tu familia. Guardamos el mínimo de datos y no hay publicidad:')} <a href="https://numimates.com/privacitat?l=${LANG}" target="_blank" rel="noopener">${L('política de privadesa', 'política de privacidad')}</a>.</p></div>`;
 }
 async function doRegister(noUser) {
@@ -1554,12 +1562,14 @@ async function doRegister(noUser) {
   let r;
   try { r = await api('register', { name: P.name, survey: P.survey, state: { ...P, holdReg: false }, username: u, password: p, variant: VAR.id }); } catch (e) { r = { error: 'net' }; }
   if (r.error === 'usuari-ocupat' || r.error === 'usuari-format' || r.error === 'contrasenya-format') return $('#aerr').textContent = ERR(r.error);
+  // sense connexió: avisa i deixa continuar (el compte es crea sol quan torni la connexió i després es demanarà l'usuari)
+  if (!r.code && !noUser) { $('#aerr').innerHTML = `${L("No hi ha connexió a internet.", 'No hay conexión a internet.')} <button class="link" style="display:inline;margin:0" onclick="doRegister(true)">${L('Continua i desa-ho més tard', 'Continúa y guárdalo más tarde')}</button>`; return; }
   P.holdReg = false;
   if (r.code) { P.code = r.code; P.username = r.username || null; P.pendingReg = false; P.dirty = false; } else P.pendingReg = true;
   saveLocal();
   app.innerHTML = `<div class="scr"><div class="burst gold"></div><div class="rchar big tapme">${charSVG('numi', 'happy')}</div><h1>${L('Tot a punt!', '¡Todo listo!')}</h1>
-    ${P.username ? `<div class="codecard big"><div><small>${L('El teu usuari', 'Tu usuario')}</small><b>${esc(P.username)}</b></div><div class="ctip">${L(`Guarda bé la contrasenya. Codi de reserva: <b>${P.code}</b>`, `Guarda bien la contraseña. Código de reserva: <b>${P.code}</b>`)}</div></div>`
-      : P.code ? `<div class="codecard big"><div><small>${L('El teu codi secret', 'Tu código secreto')}</small><b>${P.code}</b></div><div class="ctip">${L("✏️ Apunta'l! Amb aquest codi pots continuar des de qualsevol dispositiu.", '✏️ ¡Apúntalo! Con este código puedes continuar desde cualquier dispositivo.')}</div></div>`
+    ${P.username ? `<div class="codecard big"><div><small>${L('El teu usuari', 'Tu usuario')}</small><b>${esc(P.username)}</b></div><div class="ctip">${L('Entra amb aquest usuari i la teva contrasenya des de qualsevol dispositiu. Guarda bé la contrasenya!', 'Entra con este usuario y tu contraseña desde cualquier dispositivo. ¡Guarda bien la contraseña!')}</div></div>`
+      : P.code ? `<p class="sub">${L("El progrés ja es desa. Quan vulguis, crea el teu usuari i contrasenya al Perfil.", 'El progreso ya se guarda. Cuando quieras, crea tu usuario y contraseña en el Perfil.')}</p>`
       : `<p class="sub">${L("No hi ha connexió. Es desarà sol quan tornis a tenir internet.", 'No hay conexión. Se guardará solo cuando vuelvas a tener internet.')}</p>`}
     <button class="btn big" onclick="ONB={};go('home')">${L('ANEM-HI!', '¡VAMOS!')}</button></div>`;
   SFX.win(); confetti(150);
