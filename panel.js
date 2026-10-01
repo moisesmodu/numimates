@@ -565,7 +565,26 @@ function uEstat(u) {
   if (u.caducat) return `<span class="t3">${L('Premium caducat el', 'Premium caducado el')} ${fdate(u.pla_fins)}</span>`;
   return '<span class="t3">—</span>';
 }
-const UFILT = () => [['tots', L('Tots', 'Todos')], ['pagament', L('De pagament', 'De pago')], ['manual', L('Manual', 'Manual')], ['free', L('Gratuïts', 'Gratuitos')], ['escola', L('Escola', 'Escuela')], ['nous', L('Nous (7 dies)', 'Nuevos (7 días)')], ['inactius', L('Inactius +30 dies', 'Inactivos +30 días')], ['familia', L('Amb família', 'Con familia')], ['pro', 'Numi Pro'], ['ment', 'Numi Ment'], ['baixa', L('Baixa', 'Baja')]];
+const UFILT = () => [['tots', L('Tots', 'Todos')], ['pagament', L('De pagament', 'De pago')], ['manual', L('Manual', 'Manual')], ['free', L('Gratuïts', 'Gratuitos')], ['escola', L('Escola', 'Escuela')], ['nous', L('Nous (7 dies)', 'Nuevos (7 días)')], ['inactius', L('Inactius +30 dies', 'Inactivos +30 días')], ['familia', L('Amb família', 'Con familia')], ['proves', L('Proves', 'Pruebas')], ['pro', 'Numi Pro'], ['ment', 'Numi Ment'], ['baixa', L('Baixa', 'Baja')]];
+// comptes de prova: nom, usuari o codi que comencen (o són) «prova», «test», «zz», «mostra», «demo»…
+const uIsTest = u => [u.name, u.username, u.code].some(x => x && /^(zz|xx|test|prova|prueba|mostra|muestra|demo|asdf|qwe|aaa)|\b(test|prova|prueba|proves|pruebas)\b/i.test(String(x).trim()));
+let USEL = new Set();
+function uSel(code, on) { on ? USEL.add(code) : USEL.delete(code); uSelBar(); }
+function uSelTests() { UD.users.filter(uIsTest).forEach(u => USEL.add(u.code)); UF.f = 'proves'; UF.n = 100; vUsuaris(); }
+function uSelBar() {
+  const el = $('#usel'); if (!el) return;
+  el.innerHTML = USEL.size ? `<div class="card pad selbar"><b>${USEL.size} ${L(USEL.size === 1 ? 'seleccionat' : 'seleccionats', USEL.size === 1 ? 'seleccionado' : 'seleccionados')}</b><button class="btn danger solid" onclick="uEraseSel()">${ico('trash-2')}${L('Esborra-ho tot', 'Borrarlo todo')}</button><button class="btn" onclick="USEL.clear();uTable();uSelBar()">${L('Desmarca', 'Desmarcar')}</button></div>` : '';
+}
+// esborrar de veritat diversos comptes alhora (p. ex. totes les proves), amb confirmació i la llista de noms
+async function uEraseSel() {
+  const us = [...USEL].map(c => UD.users.find(u => u.code === c)).filter(Boolean); if (!us.length) return;
+  const noms = us.slice(0, 20).map(u => u.name + (u.username ? ` (${u.username})` : '')).join(', ') + (us.length > 20 ? ` ${L('i', 'y')} ${us.length - 20} ${L('més', 'más')}` : '');
+  if (!await confirmBox(L(`Esborrar ${us.length} ${us.length === 1 ? 'compte' : 'comptes'}?`, `¿Borrar ${us.length} ${us.length === 1 ? 'cuenta' : 'cuentas'}?`), L(`S'esborren els comptes i tot el progrés. No es pot desfer. Comptes: ${noms}.`, `Se borran las cuentas y todo el progreso. No se puede deshacer. Cuentas: ${noms}.`), L('Esborra-ho tot', 'Borrarlo todo'), true, L('No', 'No'))) return;
+  let ok = 0, sub = 0, ko = 0;
+  for (const u of us) { const j = await act('esborra', { code: u.code }).catch(() => ({})); if (j.ok) { ok++; USEL.delete(u.code); } else if (j.error === 'subscripció') sub++; else ko++; }
+  toast(L(`${ok} esborrats`, `${ok} borrados`) + (sub ? L(` · ${sub} amb subscripció de Stripe (cancel·leu-la primer)`, ` · ${sub} con suscripción de Stripe (cancelad antes)`) : '') + (ko ? L(` · ${ko} amb error`, ` · ${ko} con error`) : ''));
+  UD = null; await reload();
+}
 const uCount = k => { const s = UF.f; UF.f = k; const q = UF.q; UF.q = ''; const n = uList().length; UF.f = s; UF.q = q; return n; };
 function uList() {
   const q = UF.q.trim().toLowerCase(), U = UD.users.filter(u => {
@@ -575,6 +594,7 @@ function uList() {
     if (UF.f === 'inactius') return u.cat !== 'baixa' && (u.idle == null || u.idle > 30);
     if (UF.f === 'familia') return u.cat !== 'baixa' && u.fam > 0;
     if (UF.f === 'pro' || UF.f === 'ment') return u.cat !== 'baixa' && u.variant === UF.f;
+    if (UF.f === 'proves') return uIsTest(u);
     return u.cat === UF.f;
   });
   const by = { alta: (a, b) => b.alta.localeCompare(a.alta), act: (a, b) => (a.idle ?? 1e9) - (b.idle ?? 1e9), xp: (a, b) => (b.xp || 0) - (a.xp || 0), nom: (a, b) => a.name.localeCompare(b.name) };
@@ -629,15 +649,15 @@ function vUsuaris() {
     <div class="toolbar"><div class="search">${ico('search')}<input id="uq" placeholder="${L('Nom, usuari, codi, grup o centre', 'Nombre, usuario, código, grupo o centro')}" value="${esc(UF.q)}" oninput="UF.q=this.value;UF.n=100;clearTimeout(window._uqt);window._uqt=setTimeout(uTable,120)"></div>
       <span class="seg">${UFILT().map(([k, t]) => `<button class="${UF.f === k ? 'on' : ''}" onclick="UF.f='${k}';UF.n=100;vUsuaris()">${t}<b>${uCount(k)}</b></button>`).join('')}</span>
       <select style="width:auto" aria-label="${L('Ordena', 'Ordena')}" onchange="UF.o=this.value;uTable()">${[['alta', L('Alta més recent', 'Alta más reciente')], ['act', L('Activitat més recent', 'Actividad más reciente')], ['xp', L('Més XP', 'Más XP')], ['nom', L('Nom', 'Nombre')]].map(([k, t]) => `<option value="${k}" ${UF.o === k ? 'selected' : ''}>${t}</option>`).join('')}</select></div>
-    <div id="utbl"></div>`,
-    { switcher: false, fluid: true, acts: `<button class="btn" onclick="UD=null;vUsuaris()" title="${L('Actualitza', 'Actualizar')}">${ico('refresh-cw')}</button><button class="btn" onclick="uCsv()">${ico('download')}CSV</button>${mode ? `<a class="btn" href="${sLink}" target="_blank" rel="noopener">${ico('external-link')}Stripe</a>` : ''}` });
-  uTable();
+    <div id="usel"></div><div id="utbl"></div>`,
+    { switcher: false, fluid: true, acts: `<button class="btn" onclick="UD=null;vUsuaris()" title="${L('Actualitza', 'Actualizar')}">${ico('refresh-cw')}</button><button class="btn" onclick="uSelTests()" title="${L('Marca els comptes de prova per esborrar-los', 'Marca las cuentas de prueba para borrarlas')}">${ico('trash-2')}${L('Proves', 'Pruebas')}</button><button class="btn" onclick="uCsv()">${ico('download')}CSV</button>${mode ? `<a class="btn" href="${sLink}" target="_blank" rel="noopener">${ico('external-link')}Stripe</a>` : ''}` });
+  uTable(); uSelBar();
 }
 function uTable() {
   const R = uList(), shown = R.slice(0, UF.n), el = $('#utbl'); if (!el) return;
   const sLink = UD.stripe && UD.stripe.mode === 'live' ? 'https://dashboard.stripe.com' : 'https://dashboard.stripe.com/test';
   el.innerHTML = !R.length ? `<div class="card">${emptyState('users', L('Cap usuari amb aquest filtre', 'Ningún usuario con este filtro'), L('Canvia la cerca o el filtre.', 'Cambia la búsqueda o el filtro.'))}</div>` : `<div class="tw us"><table><thead><tr><th>${L('Usuari', 'Usuario')}</th><th>${L('Pla', 'Plan')}</th><th>${L('Estat', 'Estado')}</th><th>${L('Alta', 'Alta')}</th><th>${L('Última activitat', 'Última actividad')}</th><th class="r">${L('Curs', 'Curso')}</th><th class="r">${L('Lliçons', 'Lecciones')}</th><th class="r">XP</th><th></th></tr></thead><tbody>
-    ${shown.map(u => `<tr onclick="if(!event.target.closest('a'))uOpen(${js(u.code)})"><td class="c-n"><div class="nm"><div><b>${esc(u.name)}${u.variant === 'pro' || u.variant === 'ment' ? ` <span class="varb ${u.variant}">${u.variant === 'pro' ? 'PRO' : 'MENT'}</span>` : ''}${u.fam ? ` <span class="famb" title="${L('Té la família vinculada a la zona de famílies', 'Tiene la familia vinculada en la zona de familias')}">👪</span>` : ''}</b><small class="mono">${esc(u.username || u.code)}</small></div></div></td><td class="c-p">${uPla(u)}</td><td class="c-e" data-l="${L('Estat', 'Estado')}">${uEstat(u)}</td>
+    ${shown.map(u => `<tr onclick="if(!event.target.closest('a,label'))uOpen(${js(u.code)})"><td class="c-n"><div class="nm"><label class="usel" title="${L('Selecciona', 'Selecciona')}"><input type="checkbox" ${USEL.has(u.code) ? 'checked' : ''} onchange="uSel(${js(u.code)},this.checked)"></label><div><b>${esc(u.name)}${u.variant === 'pro' || u.variant === 'ment' ? ` <span class="varb ${u.variant}">${u.variant === 'pro' ? 'PRO' : 'MENT'}</span>` : ''}${u.fam ? ` <span class="famb" title="${L('Té la família vinculada a la zona de famílies', 'Tiene la familia vinculada en la zona de familias')}">👪</span>` : ''}</b><small class="mono">${esc(u.username || u.code)}</small></div></div></td><td class="c-p">${uPla(u)}</td><td class="c-e" data-l="${L('Estat', 'Estado')}">${uEstat(u)}</td>
       <td class="c-a" data-l="${L('Alta', 'Alta')}">${fdate(u.alta)}${u.alta.slice(0, 4) !== TODAY.slice(0, 4) ? ' ' + u.alta.slice(0, 4) : ''}</td><td class="c-u" data-l="${L('Última activitat', 'Última actividad')}">${u.last_day ? ago(u.last_day) : `<span class="t3">${L('mai', 'nunca')}</span>`}</td>
       <td class="r num">${u.course != null ? (u.course | 0) + 1 : '—'}</td><td class="r num">${u.lessons || 0}</td><td class="r num">${(u.xp || 0).toLocaleString(LANG)}</td>
       <td class="r">${u.stripe_customer ? `<a class="ib" href="${sLink}/customers/${encodeURIComponent(u.stripe_customer)}" target="_blank" rel="noopener" title="${L('Obre a Stripe', 'Abrir en Stripe')}">${ico('external-link')}</a>` : ''}</td></tr>`).join('')}</tbody></table></div>

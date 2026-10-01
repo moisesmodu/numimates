@@ -112,6 +112,8 @@ export default async function handler(req, res) {
       try { await sql`DELETE FROM mates.familia_fills WHERE code = ${code}`; await sql`DELETE FROM mates.familia_links WHERE code = ${code}`; } catch (e) { }
       try { await sql`DELETE FROM mates.xat_us WHERE code = ${code}`; await sql`DELETE FROM mates.fails WHERE k = ${'ac:' + code}`; } catch (e) { }
       try { await sql`UPDATE mates.batalles SET host = NULL WHERE host = ${code}`; } catch (e) { }
+      try { await sql`DELETE FROM mates.alumne_tok WHERE code = ${code}`; } catch (e) { }
+      try { await sql`DELETE FROM mates.lliga WHERE code = ${code}`; await sql`DELETE FROM mates.lliga_premis WHERE code = ${code}`; } catch (e) { }
       await sql`DELETE FROM mates.alumnes WHERE code = ${code}`;
       return ok(res, { ok: true });
     }

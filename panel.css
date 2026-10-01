@@ -342,3 +342,6 @@ details.more[open] summary .i{transform:rotate(90deg)}
 .plist i.fam{background:#3CC46A}.famb{font-size:12px;font-weight:400}
 
 .varb{display:inline-block;font-size:10px;font-weight:800;letter-spacing:.06em;border-radius:6px;padding:1px 5px;vertical-align:2px;background:#1B1730;color:#E6D8FA}.varb.ment{background:#DDF4EF;color:#11705F}
+.usel{display:inline-flex;align-items:center;padding:4px 10px 4px 0;cursor:pointer}.usel input{width:18px;height:18px;cursor:pointer;accent-color:var(--crit,#C4362F)}
+.tw.us .nm{display:flex;align-items:center}
+.selbar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:12px;position:sticky;top:8px;z-index:5}
