@@ -532,7 +532,7 @@ function grupModal(id) {
   modal(`<h3>${id ? L('Edita el grup', 'Editar el grupo') : L('Nou grup', 'Nuevo grupo')}</h3>
     <label class="field"><span>${L('Nom del grup', 'Nombre del grupo')}</span><input id="g_nom" value="${esc(g.nom || '')}" placeholder="${L('p. ex. 4t A', 'p. ej. 4.º A')}"></label>
     <label class="field"><span>${L('Nivell', 'Nivel')}</span><select id="g_curs"><option value="">—</option>${CURS.map((c, i) => `<option value="${i}" ${g.curs === i ? 'selected' : ''}>${tx(c)}</option>`).join('')}</select></label>
-    ${id ? '' : `<label style="display:flex;gap:8px;align-items:flex-start;font-size:14px;margin:4px 0 10px"><input type="checkbox" id="al_prova" checked style="width:auto;height:auto;margin-top:3px"> <span>${L("Que facin la <b>prova de nivell</b> en entrar per primera vegada (l'app els col·loca al curs i la unitat que els toca, a partir del nivell triat)", 'Que hagan la <b>prueba de nivel</b> al entrar por primera vez (la app los coloca en el curso y la unidad que les toca, a partir del nivel elegido)')}</span></label>
+    ${id ? '' : `<label class="field"><span>${L('Com comencen els alumnes', 'Cómo empiezan los alumnos')}</span><select id="al_prova"><option value="1" selected>🧭 ${L('Fent la prova de nivell, a partir del nivell del grup (recomanat)', 'Haciendo la prueba de nivel, a partir del nivel del grupo (recomendado)')}</option><option value="">${L('Directament al nivell del grup', 'Directamente en el nivel del grupo')}</option></select></label>
     <label class="field"><span>${L('Alumnes (opcional): nom, usuari i contrasenya, un per línia', 'Alumnos (opcional): nombre, usuario y contraseña, uno por línea')}</span><textarea id="al_txt" rows="5" style="height:auto;padding:8px 12px;font:13px/1.5 ui-monospace,Menlo,monospace" placeholder="Martí Andorrà Velasco&#9;martiav&#9;0756" oninput="altaParse()"></textarea></label><div id="al_prev"></div>`}
     ${ADMIN && !id ? `<label class="field"><span>${L('Centre', 'Centro')}</span><select id="g_centre">${(D.centres || []).map(c => `<option value="${c.id}">${esc(c.nom)}</option>`).join('')}</select></label>` : ''}
     ${ADMIN || ME?.rol === 'admin_centre' ? `<label class="field"><span>${L('Docent', 'Docente')}</span><select id="g_doc"><option value="">${L('Sense docent', 'Sin docente')}</option>${docs.map(d => `<option value="${d.id}" ${g.docent_id === d.id ? 'selected' : ''}>${esc(d.nom)}</option>`).join('')}</select></label>` : ''}
@@ -556,16 +556,17 @@ function altaModal(id) {
   closePops(); const g = GRUPS.find(x => x.id === id); if (!g) return;
   modal(`<h3>${L('Afegeix alumnes a', 'Añadir alumnos a')} ${esc(g.nom)}</h3>
     <label class="field"><span>${L('Alumnes', 'Alumnos')}</span><textarea id="al_txt" rows="7" style="height:auto;padding:8px 12px;font:13px/1.5 ui-monospace,Menlo,monospace" placeholder="Martí Andorrà Velasco&#9;martiav&#9;0756" oninput="altaParse()"></textarea></label>
-    <div style="display:flex;gap:12px;flex-wrap:wrap"><label class="field" style="flex:1;min-width:180px"><span>${L('Curs on comencen', 'Curso en el que empiezan')}</span><select id="al_curs">${CURS.map((c, i) => `<option value="${i}" ${(g.curs ?? 3) === i ? 'selected' : ''}>${tx(c)}</option>`).join('')}</select></label>
+    <div style="display:flex;gap:12px;flex-wrap:wrap"><label class="field" style="flex:1;min-width:200px"><span>${L('Curs on comencen', 'Curso en el que empiezan')}</span><select id="al_mode" onchange="$('#al_refw').style.display=this.value==='prova'?'':'none'"><option value="prova" selected>🧭 ${L('Ho decideix la prova de nivell', 'Lo decide la prueba de nivel')}</option>${CURS.map((c, i) => `<option value="${i}">${tx(c)}</option>`).join('')}</select></label>
+      <label class="field" id="al_refw" style="flex:1;min-width:200px"><span>${L('La prova parteix de', 'La prueba parte de')}</span><select id="al_curs">${CURS.map((c, i) => `<option value="${i}" ${(g.curs ?? 3) === i ? 'selected' : ''}>${tx(c)}</option>`).join('')}</select></label>
       <label class="field" style="flex:1;min-width:140px"><span>${L("Idioma de l'app", 'Idioma de la app')}</span><select id="al_lang"><option value="ca">Català</option><option value="es">Castellano</option></select></label></div>
-    <label style="display:flex;gap:8px;align-items:flex-start;font-size:14px;margin:4px 0 10px"><input type="checkbox" id="al_prova" checked style="width:auto;height:auto;margin-top:3px"> <span>${L("Que facin la <b>prova de nivell</b> en entrar per primera vegada (l'app els col·loca al curs i la unitat que els toca, a partir del nivell triat)", 'Que hagan la <b>prueba de nivel</b> al entrar por primera vez (la app los coloca en el curso y la unidad que les toca, a partir del nivel elegido)')}</span></label>
+    <p class="t3" style="font-size:13px;margin:0 0 10px">${L("Amb la prova (uns 3 minuts, en entrar per primer cop), l'app col·loca cada alumne: pot baixar un curs o obrir-li unitats més avançades.", 'Con la prueba (unos 3 minutos, al entrar por primera vez), la app coloca a cada alumno: puede bajar un curso o abrirle unidades más avanzadas.')}</p>
     <div id="al_prev"></div><div class="err-msg" id="al_err"></div>
     <div class="acts"><button class="btn" onclick="closeModal()">${L('Cancel·la', 'Cancelar')}</button><button class="btn primary" id="al_go" disabled onclick="altaGo(${id})">${L('Crea els alumnes', 'Crear los alumnos')}</button></div>`, 'w640');
   altaParse(); $('#al_txt').focus();
 }
 async function altaGo(id) {
   $('#al_go').disabled = true; $('#al_go').textContent = L('Creant…', 'Creando…');
-  const j = await act('alta', { grup: id, rows: ALTA, curs: +$('#al_curs').value, lang: $('#al_lang').value, prova: $('#al_prova').checked });
+  const pv = $('#al_mode').value === 'prova', j = await act('alta', { grup: id, rows: ALTA, curs: pv ? +$('#al_curs').value : +$('#al_mode').value, lang: $('#al_lang').value, prova: pv });
   if (!j.ok) { $('#al_err').textContent = j.error === 'permís' ? L('No tens permís en aquest grup.', 'No tienes permiso en este grupo.') : L("No s'ha pogut fer. Torna-ho a provar.", 'No se ha podido hacer. Vuelve a intentarlo.'); $('#al_go').disabled = false; return; }
   altaShow(j);
 }
@@ -583,7 +584,7 @@ async function grupSave(id) {
   const j = await act('grup_save', { id: id || undefined, nom: $('#g_nom').value, curs: $('#g_curs').value, centre_id: $('#g_centre')?.value, docent_id: $('#g_doc')?.value });
   if (!j.ok) return $('#g_err').textContent = j.error === 'nom' ? L('Posa un nom al grup.', 'Pon un nombre al grupo.') : j.error === 'centre' ? L('Tria el centre del grup.', 'Elige el centro del grupo.') : j.error === 'permís' ? L("No tens permís per editar aquest grup.", 'No tienes permiso para editar este grupo.') : L("No s'ha pogut desar. Torna-ho a provar.", 'No se ha podido guardar. Vuelve a intentarlo.');
   if (!id && ALTA.length && ($('#al_txt')?.value || '').trim()) {
-    const cc = $('#g_curs').value, a = await act('alta', { grup: j.grup.id, rows: ALTA, curs: cc === '' ? undefined : +cc, lang: LANG, prova: $('#al_prova').checked });
+    const cc = $('#g_curs').value, a = await act('alta', { grup: j.grup.id, rows: ALTA, curs: cc === '' ? undefined : +cc, lang: LANG, prova: !!$('#al_prova').value });
     ALTA = []; if (a.ok) { toast(L(`Grup creat. Codi: ${j.grup.codi}`, `Grupo creado. Código: ${j.grup.codi}`)); return altaShow(a); }
     closeModal(); toast(L("Grup creat, però no s'han pogut crear els alumnes: torna-ho a provar des del menú del grup.", 'Grupo creado, pero no se han podido crear los alumnos: vuelve a intentarlo desde el menú del grupo.')); return reload();
   }
