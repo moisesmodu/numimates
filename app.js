@@ -330,6 +330,8 @@ function go(v) {
   if ((v === 'battles' || v === 'season') && !isPremium()) { premiumModal(v === 'battles' ? 'batalles' : 'temporada'); v = VIEW && VIEW !== v ? VIEW : 'home'; if (v === VIEW) return; }
   if ((v === 'battles' && classOff('batalles'))) { toast(L("El teu docent ha desactivat les batalles per a la classe.", 'Tu docente ha desactivado las batallas para la clase.')); v = 'train'; }
   VIEW = v; if (v === 'home') setTimeout(credNudge, 1500);
+  // compte creat pel docent amb «prova de nivell»: primer la prova, després la portada
+  if ((v === 'home' || v === 'place') && P && P.placeAsk && varOf(P) !== 'ment') return placeIntro();
   if (v !== 'onboard') setVariant(varOf(P));
   ({ home: renderHome, train: renderTrain, album: () => renderAlbum(), shop: renderShop, badges: () => renderAlbum('medals'), profile: renderProfile, profiles: renderProfiles, battles: () => renderBattles(), season: () => renderSeason(), league: () => renderLeague('w'), onboard: () => onb(0) }[v] || renderHome)();
   if (v !== 'home') window.scrollTo(0, 0);
@@ -1511,6 +1513,14 @@ function onbAge(a) {
   onb(2);
 }
 function onbName() { const n = $('#nm').value.trim(); if (!n) { $('#nm').classList.add('shake'); setTimeout(() => $('#nm').classList.remove('shake'), 500); return; } ONB.name = n; if (HOST_VAR === 'ment') { ONB.stage = 'altres'; ONB.variant = 'ment'; return onbMent(); } onb(1); }
+// prova de nivell per a un compte que ja existeix (alta feta pel docent): es fa sobre el mateix perfil
+function placeIntro() {
+  VIEW = 'place';
+  app.innerHTML = `<div class="page solo onb"><div class="onb-char tapme">${charSVG('numi', 'happy')}</div>
+    <div class="bubble big">${L(`Hola, <b>${esc(P.name)}</b>! Abans de començar farem una <b>prova de nivell</b> curta (uns 3 minuts) per saber per on començar. Si alguna cosa no la saps, no passa res!`, `¡Hola, <b>${esc(P.name)}</b>! Antes de empezar haremos una <b>prueba de nivel</b> corta (unos 3 minutos) para saber por dónde empezar. Si algo no lo sabes, ¡no pasa nada!`)}</div>
+    <button class="btn big" onclick="startPlacementMe()">${L('COMENÇA', 'EMPIEZA')}</button></div>`;
+}
+function startPlacementMe() { ONB = { course: Math.min(COURSES.length - 1, Math.max(0, P.course | 0)), name: P.name, variant: varOf(P), me: P }; startPlacement(); }
 function startPlacement() {
   const ci = ONB.course, c = COURSES[ci], meta = [];
   if (ci > 0) { const pc = COURSES[ci - 1]; [1, 2].forEach(k => { const l = pc.units[k].lessons[2]; meta.push({ sk: l.sk[0], L: l.L, tag: 'prev' }); }); }
@@ -1530,6 +1540,18 @@ function finishPlacement(skipped) {
   else msg = L(`Començarem ${tx(c.long)} per la unitat 1: ${tx(c.units[0].title)}. Pas a pas!`, `Empezaremos ${tx(c.long)} por la unidad 1: ${tx(c.units[0].title)}. ¡Paso a paso!`);
   const result = skipped ? L('Sense prova', 'Sin prueba') : `${prevN ? L(`Nivell anterior ${prevOk}/${prevN} · `, `Nivel anterior ${prevOk}/${prevN} · `) : ''}${tx(c.long)}: ${curOk}/${cur.length}`;
   LS = null;
+  // compte existent (alta del docent): s'aplica el resultat al mateix perfil
+  if (ONB.me) {
+    P = ONB.me; P.placeAsk = false; P.course = course; P.baseCourse = course; P.maxCourse = Math.max(P.maxCourse | 0, course);
+    P.survey = { ...(P.survey || {}), curs: tx(c.long), result, start: `${tx(COURSES[course].long)} · ${L('unitat', 'unidad')} ${(course === ci ? skip : 0) + 1}`, date: today() };
+    if (!skipped) makeReco(meta.filter(m => m.tag === 'cur').filter((m, i) => !cur[i]), 'place');
+    if (!skipped && cur.length) P.tests.push({ date: today(), course: ci, pct: Math.round(100 * curOk / cur.length), ok: curOk, n: cur.length, kind: 'inicial' });
+    P.skip[COURSES[course].id] = course === ci ? skip : 0;
+    save();
+    app.innerHTML = `<div class="scr"><div class="burst"></div><div class="rchar tapme">${charSVG('numi', 'happy')}</div><h1>${L('Ja tenim el teu punt de partida!', '¡Ya tenemos tu punto de partida!')}</h1>
+      <p class="sub">${msg}</p><button class="btn big" onclick="ONB={};go('home')">${L('ANEM-HI!', '¡VAMOS!')}</button></div>`;
+    SFX.win(); confetti(120); return;
+  }
   const id = 'p' + Date.now().toString(36);
   P = { id, name: ONB.name, goal: 20, sound: true, unlockAll: false, lang: LANG, ...freshProgress(), course, baseCourse: course, maxCourse: course, holdReg: true, variant: ONB.variant || 'mates',
     survey: { curs: tx(c.long), age: ONB.age, feel: ONB.feel, like: ONB.like, result, start: `${tx(COURSES[course].long)} · ${L('unitat', 'unidad')} ${(course === ci ? skip : 0) + 1}`, date: today() } };

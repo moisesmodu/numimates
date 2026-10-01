@@ -33,7 +33,7 @@ export default async function handler(req, res) {
         const lang = b.lang === 'es' ? 'es' : 'ca', hash = hashPass(pass);
         let code = null;
         for (let i = 0; i < 8 && !code; i++) {
-          const c = newStudentCode(), st = { name, lang, code: c, username: user, course: cc, baseCourse: cc, maxCourse: cc, holdReg: false, unlockAll: false };
+          const c = newStudentCode(), st = { name, lang, code: c, username: user, course: cc, baseCourse: cc, maxCourse: cc, holdReg: false, unlockAll: false, ...(b.prova ? { placeAsk: true } : {}) };
           const q = await sql`INSERT INTO mates.alumnes (code, name, course, survey, state, xp, streak, best, last_day, lessons, answers, correct, username, pass_hash, grup_id, pla)
             VALUES (${c}, ${name}, ${cc}, ${JSON.stringify({ curs: 'alta del docent', date: new Date().toISOString().slice(0, 10) })}, ${JSON.stringify(st)}, 0, 0, 0, NULL, 0, 0, 0, ${user}, ${hash}, ${gid}, 'escola')
             ON CONFLICT DO NOTHING RETURNING code`;
