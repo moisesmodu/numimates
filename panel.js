@@ -157,7 +157,7 @@ function setLang(l, onLogin) { LANG = l; store.set('numi-profe-lang', l); docume
 
 /* ---------- carcassa ---------- */
 const NAV = () => [['resum', 'layout-dashboard', L('Resum', 'Resumen')], ['alumnes', 'users', L('Alumnes', 'Alumnos'), scope().length], ['grups', 'school', L('Grups', 'Grupos')], ['informes', 'chart-column', L('Informes', 'Informes')]];
-const ADMIN_NAV = () => { const seen = +store.get('numi-profe-sol', 0), nou = (D.contacts || []).filter(c => new Date(c.created_at).getTime() > seen).length; return [['usuaris', 'crown', L('Usuaris i Premium', 'Usuarios y Premium')], ['centres', 'building-2', L('Centres', 'Centros')], ['docents', 'graduation-cap', L('Docents', 'Docentes')], ['totsgrups', 'layout-grid', L('Tots els grups', 'Todos los grupos')], ['sollicituds', 'inbox', L('Sol·licituds', 'Solicitudes'), nou, true], ['activitat', 'activity', L('Activitat', 'Actividad')]]; };
+const ADMIN_NAV = () => { const seen = +store.get('numi-profe-sol', 0), nou = (D.contacts || []).filter(c => new Date(c.created_at).getTime() > seen).length; return [['usuaris', 'crown', L('Usuaris i Premium', 'Usuarios y Premium')], ['centres', 'building-2', L('Centres', 'Centros')], ['docents', 'graduation-cap', L('Docents', 'Docentes')], ['totsgrups', 'layout-grid', L('Tots els grups', 'Todos los grupos')], ['sollicituds', 'inbox', L('Sol·licituds', 'Solicitudes'), nou, true], ['activitat', 'activity', L('Activitat', 'Actividad')], ['correus', 'mail', L('Correus', 'Correos')]]; };
 function shell(view, title, body, { acts = '', fluid = false, switcher = true } = {}) {
   const na = ([k, ic, t, n, isNew]) => `<a href="#/${k}" class="${view === k ? 'on' : ''}" title="${esc(t)}">${ico(ic, 'i20')}<span>${esc(t)}</span>${n ? `<i class="badge ${isNew ? 'new' : ''}">${n}</i>` : ''}</a>`;
   const who = ADMIN ? { nom: ME?.nom || L('Administració', 'Administración'), rol: 'Numi Mates' } : { nom: ME.nom, rol: ME.rol === 'admin_centre' ? L('Coordinació de centre', 'Coordinación de centro') : L('Docent', 'Docente') };
@@ -197,7 +197,7 @@ function route() {
   if (v === 'alumnes' && route.last === 'alumnes' && $('#tbl')) { if (arg) openDrawer(decodeURIComponent(arg), true); else if ($('.drawer')) closeDrawer(true); return; }
   route.last = v;
   const V = { resum: vResum, alumnes: vAlumnes, grups: vGrups, informes: vInformes, guia: vGuia, compte: vCompte };
-  if (ADMIN) Object.assign(V, { usuaris: vUsuaris, centres: vCentres, docents: vDocents, totsgrups: vTotsGrups, sollicituds: vSol, activitat: vActivitat });
+  if (ADMIN) Object.assign(V, { usuaris: vUsuaris, centres: vCentres, docents: vDocents, totsgrups: vTotsGrups, sollicituds: vSol, activitat: vActivitat, correus: vCorreus });
   (V[v] || vResum)(arg);
   if (v === 'alumnes' && arg) openDrawer(decodeURIComponent(arg), true); else if ($('.drawer')) closeDrawer(true);
 }
@@ -206,6 +206,106 @@ document.addEventListener('keydown', e => {
   if (e.key === 'Escape') { if ($('.modal-s')) return $('.modal-s').remove(); if ($('.proj')) return $('.proj').remove(), clearInterval(PROJ_T); if ($('.drawer')) return closeDrawer(); }
   if (e.key === '/' && !/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName) && $('#q')) { e.preventDefault(); $('#q').focus(); }
 });
+
+/* ---------- Correus (només administració): esborranys HTML, prova, enviament ara o programat ---------- */
+let MLS = null, MED = null;
+const mapi = async (action, extra = {}) => { const r = await fetch('/api/mails', { method: 'POST', headers: { ...AUTH(), 'content-type': 'application/json' }, body: JSON.stringify({ action, ...extra }) }).catch(() => null); return r ? r.json().catch(() => ({ error: 'xarxa' })) : { error: 'xarxa' }; };
+const MST = { esborrany: ['Esborrany|Borrador', 'none'], programat: ['Programat|Programado', 'purple'], enviant: ['Enviant…|Enviando…', 'gold'], enviat: ['Enviat|Enviado', 'good'] };
+const mkpi = (l, v, m) => `<div class="kpi"><span class="kpi-l">${l}</span><span class="kpi-v">${v}</span><span class="kpi-m">${m}</span></div>`;
+const MAUD = [['docents', 'Docents|Docentes'], ['families', 'Famílies (zona de famílies)|Familias (zona de familias)'], ['contactes', 'Contactes del web|Contactos de la web'], ['premium', 'Clients de Premium (Stripe)|Clientes de Premium (Stripe)']];
+const fdt = d => { if (!d) return '—'; const x = new Date(d); return `${x.getDate()} ${MES[LANG][x.getMonth()]} ${String(x.getHours()).padStart(2, '0')}:${String(x.getMinutes()).padStart(2, '0')}`; };
+const audTxt = a => [...MAUD.filter(([k]) => a && a[k]).map(([, t]) => tx(t).split(' (')[0]), ...(a && a.extra ? [L('llista', 'lista')] : [])].join(' · ') || '—';
+const MTPL = `<!doctype html>
+<html><body style="margin:0;background:#F4EFE6;font-family:Arial,Helvetica,sans-serif;color:#1B2323">
+<div style="max-width:600px;margin:0 auto;padding:24px 16px">
+  <div style="background:#602B7A;border-radius:16px 16px 0 0;padding:22px 24px;text-align:center">
+    <img src="https://numimates.com/img/brand/logo-numi-blanc.png" alt="Numi" width="87" height="34" style="height:34px;width:auto">
+  </div>
+  <div style="background:#ffffff;border-radius:0 0 16px 16px;padding:28px 24px;font-size:16px;line-height:1.6">
+    <h1 style="font-size:24px;margin:0 0 14px;color:#1B2323">Hola, {{nom}}!</h1>
+    <p style="margin:0 0 14px">Escriu aquí el missatge.</p>
+    <p style="text-align:center;margin:26px 0 8px"><a href="https://numimates.com" style="background:#602B7A;color:#ffffff;text-decoration:none;font-weight:bold;padding:14px 26px;border-radius:12px;display:inline-block">Entra a Numi</a></p>
+  </div>
+</div>
+</body></html>`;
+
+async function vCorreus(arg) {
+  if (arg) return vCorreu(arg);
+  shell('correus', L('Correus', 'Correos'), `<div class="card pad t3">${L('Carregant…', 'Cargando…')}</div>`, { switcher: false });
+  MLS = await mapi('list');
+  if (MLS.error) return shell('correus', L('Correus', 'Correos'), `<div class="card">${emptyState('circle-alert', L("No s'han pogut carregar", 'No se han podido cargar'), MLS.error)}</div>`, { switcher: false });
+  const warn = [!MLS.mail && L("Falta la clau de Resend (RESEND_API_KEY): no es pot enviar.", 'Falta la clave de Resend (RESEND_API_KEY): no se puede enviar.'), !MLS.cron && L('Falta CRON_SECRET: els correus programats no sortiran sols.', 'Falta CRON_SECRET: los correos programados no saldrán solos.')].filter(Boolean);
+  shell('correus', L('Correus', 'Correos'), `
+    ${warn.map(w => `<div class="card pad" style="border-color:var(--warn,#C98217);margin-bottom:12px">${ico('triangle-alert')} ${w}</div>`).join('')}
+    <div class="card kpis k3m">${mkpi(L('Enviats', 'Enviados'), MLS.list.filter(m => m.status === 'enviat').length, L(`${MLS.list.reduce((s, m) => s + (m.n_ok || 0), 0)} destinataris en total`, `${MLS.list.reduce((s, m) => s + (m.n_ok || 0), 0)} destinatarios en total`))}${mkpi(L('Programats', 'Programados'), MLS.list.filter(m => m.status === 'programat').length, '')}${mkpi(L('Baixes', 'Bajas'), MLS.baixes, L('no reben més correus', 'no reciben más correos'))}</div>
+    <div class="sec-h" style="margin-top:20px"><h2>${L('Tots els correus', 'Todos los correos')}</h2></div>
+    ${MLS.list.length ? `<div class="tw"><table><thead><tr><th>${L('Assumpte', 'Asunto')}</th><th>${L('Estat', 'Estado')}</th><th>${L('A qui', 'A quién')}</th><th>${L('Data', 'Fecha')}</th><th class="r">${L('Enviats', 'Enviados')}</th></tr></thead><tbody>
+      ${MLS.list.map(m => `<tr onclick="location.hash='#/correus/${m.id}'"><td><b>${esc(m.subject || L('(sense assumpte)', '(sin asunto)'))}</b> <span class="t3">${m.lang.toUpperCase()}</span>${m.err ? `<br><small class="crit-t" style="color:var(--crit)">${esc(m.err)}</small>` : ''}</td><td><span class="chip ${MST[m.status][1]}">${tx(MST[m.status][0])}</span></td><td>${esc(audTxt(m.aud))}</td><td>${m.status === 'enviat' ? fdt(m.sent_at) : m.status === 'programat' ? `${ico('clock')} ${fdt(m.send_at)}` : fdt(m.updated_at)}</td><td class="r num">${m.n_total ? `${m.n_ok}/${m.n_total}${m.n_ko ? ` · <span class="crit-t" style="color:var(--crit)">${m.n_ko} ✗</span>` : ''}` : '—'}</td></tr>`).join('')}</tbody></table></div>`
+      : `<div class="card">${emptyState('mail', L('Encara no hi ha cap correu', 'Aún no hay ningún correo'), L('Crea el primer: recordatoris, novetats, avisos… en HTML.', 'Crea el primero: recordatorios, novedades, avisos… en HTML.'), `<a class="btn primary" href="#/correus/nou">${ico('plus')}${L('Nou correu', 'Nuevo correo')}</a>`)}</div>`}`,
+    { switcher: false, acts: `<a class="btn primary" href="#/correus/nou">${ico('plus')}${L('Nou correu', 'Nuevo correo')}</a>` });
+}
+async function vCorreu(arg) {
+  if (arg === 'nou') MED = { id: null, subject: '', html: MTPL, aud: { lang: 'tots' }, lang: LANG, status: 'esborrany' };
+  else if (!MED || String(MED.id) !== String(arg)) { const r = await mapi('get', { id: +arg }); if (!r.mail) { location.hash = '#/correus'; return; } MED = r.mail; MED.aud = MED.aud || {}; }
+  const ro = !['esborrany', 'programat'].includes(MED.status), a = MED.aud;
+  const local = d => { const x = new Date(d - new Date().getTimezoneOffset() * 6e4); return x.toISOString().slice(0, 16); };
+  shell('correus', MED.id ? L('Correu', 'Correo') : L('Nou correu', 'Nuevo correo'), `
+    <a class="link" href="#/correus" style="display:inline-flex;gap:4px;align-items:center;margin-bottom:12px">${ico('chevron-left')}${L('Tots els correus', 'Todos los correos')}</a>
+    ${MED.status !== 'esborrany' ? `<div class="card pad" style="margin-bottom:12px"><span class="chip ${MST[MED.status][1]}">${tx(MST[MED.status][0])}</span> ${MED.status === 'programat' ? L(`Sortirà el ${fdt(MED.send_at)}.`, `Saldrá el ${fdt(MED.send_at)}.`) : MED.status === 'enviat' ? L(`Enviat el ${fdt(MED.sent_at)} a ${MED.n_ok} de ${MED.n_total}.`, `Enviado el ${fdt(MED.sent_at)} a ${MED.n_ok} de ${MED.n_total}.`) : L(`${MED.n_ok} de ${MED.n_total} enviats; continua sol.`, `${MED.n_ok} de ${MED.n_total} enviados; continúa solo.`)}${MED.err ? `<br><span class="crit-t" style="color:var(--crit)">${esc(MED.err)}</span> <button class="btn sm" onclick="mResume()">${ico('refresh-cw')}${L('Torna-ho a provar', 'Reintentar')}</button>` : ''}</div>` : ''}
+    <div class="grid12">
+      <section class="c6"><div class="card pad" style="display:grid;gap:14px">
+        <label class="field"><span>${L('Assumpte', 'Asunto')}</span><input id="msub" maxlength="200" value="${esc(MED.subject)}" ${ro ? 'disabled' : ''} oninput="MED.subject=this.value"></label>
+        <div class="field"><span>${L('A qui', 'A quién')}</span><div style="display:grid;gap:6px;margin-top:4px">${MAUD.map(([k, t]) => `<label style="display:flex;gap:8px;align-items:center"><input type="checkbox" style="width:auto;height:auto" ${a[k] ? 'checked' : ''} ${ro ? 'disabled' : ''} onchange="MED.aud.${k}=this.checked;mCount()"> ${tx(t)}</label>`).join('')}</div></div>
+        <label class="field"><span>${L('Altres correus (separats per comes o línies)', 'Otros correos (separados por comas o líneas)')}</span><textarea id="mext" rows="2" style="height:auto;padding:8px 12px" ${ro ? 'disabled' : ''} oninput="MED.aud.extra=this.value;clearTimeout(window._mct);window._mct=setTimeout(mCount,600)">${esc(a.extra || '')}</textarea></label>
+        <div style="display:flex;gap:12px;flex-wrap:wrap"><label class="field" style="flex:1;min-width:160px"><span>${L('Idioma dels destinataris', 'Idioma de los destinatarios')}</span><select ${ro ? 'disabled' : ''} onchange="MED.aud.lang=this.value;mCount()">${[['tots', L('Tots', 'Todos')], ['ca', 'Català'], ['es', 'Castellano']].map(([v, t]) => `<option value="${v}" ${(a.lang || 'tots') === v ? 'selected' : ''}>${t}</option>`).join('')}</select></label>
+          <label class="field" style="flex:1;min-width:160px"><span>${L('Idioma del peu (baixa)', 'Idioma del pie (baja)')}</span><select ${ro ? 'disabled' : ''} onchange="MED.lang=this.value"><option value="ca" ${MED.lang !== 'es' ? 'selected' : ''}>Català</option><option value="es" ${MED.lang === 'es' ? 'selected' : ''}>Castellano</option></select></label></div>
+        <p class="t3" id="mcount" style="margin:0">…</p>
+        <label class="field"><span>HTML <small class="t3">· ${L('{{nom}} posa el nom de la persona (si el tenim) · el peu amb la baixa s\'afegeix sol', '{{nom}} pone el nombre de la persona (si lo tenemos) · el pie con la baja se añade solo')}</small></span><textarea id="mhtml" spellcheck="false" style="height:420px;padding:10px 12px;font:13px/1.5 ui-monospace,Menlo,monospace;white-space:pre" ${ro ? 'disabled' : ''} oninput="MED.html=this.value;clearTimeout(window._mpt);window._mpt=setTimeout(mPrev,300)">${esc(MED.html)}</textarea></label>
+        ${ro ? '' : `<div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" onclick="if(confirm('${L('Substituir el contingut per la plantilla?', '¿Sustituir el contenido por la plantilla?')}')){MED.html=MTPL;$('#mhtml').value=MTPL;mPrev()}">${L('Plantilla Numi', 'Plantilla Numi')}</button><button class="btn" onclick="mSave()">${ico('check')}${L('Desa', 'Guardar')}</button></div>`}
+      </div></section>
+      <section class="c6"><div class="sec-h"><h2>${L('Vista prèvia', 'Vista previa')}</h2><span class="r t3">${L('així es veurà', 'así se verá')}</span></div>
+        <div class="card" style="padding:0;overflow:hidden"><iframe id="mprev" sandbox="allow-same-origin" style="width:100%;height:560px;border:0;background:#fff"></iframe></div>
+        <div class="card pad" style="margin-top:12px;display:grid;gap:10px">
+          <b>${L('Prova', 'Prueba')}</b><div style="display:flex;gap:8px"><input id="mto" type="email" placeholder="${L('el-teu@correu.com', 'tu@correo.com')}" value="${esc(store.get('numi-mail-test', ''))}"><button class="btn" onclick="mTest()">${ico('mail')}${L('Envia la prova', 'Enviar prueba')}</button></div>
+          ${ro ? '' : `<hr style="width:100%"><b>${L('Enviament', 'Envío')}</b>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center"><input id="mat" type="datetime-local" style="width:auto" value="${local(MED.send_at ? new Date(MED.send_at) : Date.now() + 3600e3)}"><button class="btn" onclick="mSchedule()">${ico('clock')}${MED.status === 'programat' ? L('Canvia la data', 'Cambiar la fecha') : L('Programa', 'Programar')}</button>${MED.status === 'programat' ? `<button class="btn" onclick="mCancel()">${L('Desprograma', 'Desprogramar')}</button>` : ''}</div>
+          <button class="btn primary" onclick="mSendNow()">${ico('mail')}${L('Envia ara', 'Enviar ahora')}</button>`}
+          <div style="display:flex;gap:8px;flex-wrap:wrap">${MED.id ? `<button class="btn sm" onclick="mDup()">${ico('copy')}${L('Duplica', 'Duplicar')}</button>` : ''}${MED.id && MED.status !== 'enviant' ? `<button class="btn sm danger" onclick="mDel()">${ico('trash-2')}${L('Esborra', 'Borrar')}</button>` : ''}</div>
+        </div></section>
+    </div>`, { switcher: false, fluid: true });
+  mPrev(); mCount();
+}
+function mPrev() { const f = $('#mprev'); if (f) f.srcdoc = String(MED.html || '').replace(/\{\{\s*nom\s*\}\}/g, 'Moisés'); }
+async function mCount() { const el = $('#mcount'); if (!el) return; el.textContent = L('Comptant destinataris…', 'Contando destinatarios…'); const r = await mapi('count', { aud: MED.aud }); if (!$('#mcount')) return; el.innerHTML = r.error ? esc(r.error) : `<b>${r.n}</b> ${L('destinataris', 'destinatarios')} ${L('(sense duplicats ni baixes)', '(sin duplicados ni bajas)')}${r.mostra && r.mostra.length ? `<br><small>${r.mostra.map(esc).join(', ')}${r.n > r.mostra.length ? '…' : ''}</small>` : ''}`; MED._n = r.n; }
+async function mSave(quiet) {
+  const r = await mapi('save', { id: MED.id, subject: MED.subject, html: MED.html, aud: MED.aud, lang: MED.lang });
+  if (!r.ok) { toast(L("No s'ha pogut desar.", 'No se ha podido guardar.')); return false; }
+  const nou = !MED.id; MED.id = r.id; if (!quiet) toast(L('Desat.', 'Guardado.')); if (nou) history.replaceState(null, '', '#/correus/' + r.id); return true;
+}
+async function mTest() {
+  const to = $('#mto').value.trim(); if (!to) return $('#mto').focus(); store.set('numi-mail-test', to);
+  const r = await mapi('test', { to, subject: MED.subject, html: MED.html, lang: MED.lang });
+  toast(r.ok ? L(`Prova enviada a ${to}.`, `Prueba enviada a ${to}.`) : r.error === 'resend' ? L('Falta la clau de Resend.', 'Falta la clave de Resend.') : L("No s'ha pogut enviar la prova.", 'No se ha podido enviar la prueba.'));
+}
+async function mSchedule() {
+  const v = $('#mat').value; if (!v) return; const at = new Date(v); if (at < Date.now() + 60e3) return toast(L('Tria una data i hora futures.', 'Elige una fecha y hora futuras.'));
+  if (!(await mSave(true))) return;
+  const r = await mapi('schedule', { id: MED.id, at: at.toISOString() });
+  if (r.ok) { toast(L(`Programat per al ${fdt(at)}.`, `Programado para el ${fdt(at)}.`)); MED = null; location.hash = '#/correus'; } else toast(r.error === 'buit' ? L("Falta l'assumpte o el contingut.", 'Falta el asunto o el contenido.') : L("No s'ha pogut programar.", 'No se ha podido programar.'));
+}
+async function mSendNow() {
+  if (!(await mSave(true))) return;
+  await mCount();
+  if (!await confirmBox(L(`Enviar ara a ${MED._n} ${MED._n === 1 ? 'persona' : 'persones'}?`, `¿Enviar ahora a ${MED._n} ${MED._n === 1 ? 'persona' : 'personas'}?`), L("Assumpte: «" + MED.subject + "». Un cop enviat no es pot desfer. Si no ho has fet, envia't primer una prova.", 'Asunto: «' + MED.subject + '». Una vez enviado no se puede deshacer. Si no lo has hecho, envíate antes una prueba.'), L('Envia', 'Enviar'), false)) return;
+  toast(L('Enviant…', 'Enviando…'));
+  const r = await mapi('send', { id: MED.id });
+  if (r.ok) { toast(r.mail && r.mail.status === 'enviat' ? L(`Enviat a ${r.mail.n_ok} de ${r.mail.n_total}.`, `Enviado a ${r.mail.n_ok} de ${r.mail.n_total}.`) : L('Enviant: la resta sortirà en uns minuts.', 'Enviando: el resto saldrá en unos minutos.')); MED = null; location.hash = '#/correus'; }
+  else toast(r.error === 'buit' ? L("Falta l'assumpte o el contingut.", 'Falta el asunto o el contenido.') : L("No s'ha pogut enviar.", 'No se ha podido enviar.'));
+}
+async function mCancel() { await mapi('cancel', { id: MED.id }); MED = null; location.hash = '#/correus'; }
+async function mResume() { toast(L('Reprenent l\'enviament…', 'Reanudando el envío…')); await mapi('resume', { id: MED.id }); MED = null; vCorreus(); location.hash = '#/correus'; }
+async function mDup() { const r = await mapi('dup', { id: MED.id }); if (r.ok) { MED = null; location.hash = '#/correus/' + r.id; } }
+async function mDel() { if (!await confirmBox(L('Esborrar aquest correu?', '¿Borrar este correo?'), L("S'esborra l'esborrany o el registre de l'enviament.", 'Se borra el borrador o el registro del envío.'), L('Esborra', 'Borrar'))) return; await mapi('delete', { id: MED.id }); MED = null; location.hash = '#/correus'; }
 
 /* ---------- Resum ---------- */
 function vResum() {

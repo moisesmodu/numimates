@@ -345,3 +345,4 @@ details.more[open] summary .i{transform:rotate(90deg)}
 .usel{display:inline-flex;align-items:center;padding:4px 10px 4px 0;cursor:pointer}.usel input{width:18px;height:18px;cursor:pointer;accent-color:var(--crit,#C4362F)}
 .tw.us .nm{display:flex;align-items:center}
 .selbar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:12px;position:sticky;top:8px;z-index:5}
+.kpis.k3m{grid-template-columns:repeat(3,1fr)}
