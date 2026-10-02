@@ -322,24 +322,52 @@ let MFX = null;
 function mGameFx() {
   if (MFX) { MFX.forEach(o => o.disconnect()); MFX = null; }
   const st = $('#mgstat'), bar = $('.mgprog'), gm = $('.mgame'), body = $('#mgb'); if (!st || !bar || !gm) return;
-  let tmax = 0;
+  let tmax = 0, segs = 0, cur = 0, run = 0;
+  const res = gm._res || (gm._res = []);
+  const draw = () => {
+    if (segs) { bar.classList.add('seg'); bar.innerHTML = Array.from({ length: segs }, (_, i) => `<i class="${res[i] || (i === cur - 1 ? 'cur' : i < cur - 1 ? 'done' : '')}"></i>`).join(''); }
+  };
   const upd = () => {
-    const t = st.textContent, r = t.match(/(\d+)\s*\/\s*(\d+)/), s = t.match(/(?:(\d+):)?(\d+)\s*s\b/) || t.match(/^(\d+):(\d{2})/);
+    const t = st.textContent, r = t.match(/(\d+)\s*\/\s*(\d+)/), s2 = t.match(/(?:(\d+):)?(\d+)\s*s\b/) || t.match(/^(\d+):(\d{2})/);
     let w = null, low = false;
+    if (r && +r[2] > 0 && +r[2] <= 12) { segs = +r[2]; cur = +r[1]; bar.hidden = false; return draw(); }
     if (r && +r[2] > 0) w = Math.min(1, +r[1] / +r[2]);
-    else if (s) { const sec = (s[1] ? +s[1] * 60 : 0) + +s[2]; if (sec > tmax) tmax = sec; if (tmax >= 10) { w = sec / tmax; low = sec <= 10; } }
+    else if (s2) { const sec = (s2[1] ? +s2[1] * 60 : 0) + +s2[2]; if (sec > tmax) tmax = sec; if (tmax >= 10) { w = sec / tmax; low = sec <= 10; } }
+    bar.classList.remove('seg'); if (!bar.firstChild || bar.children.length !== 1) bar.innerHTML = '<i></i>';
     bar.hidden = w == null; bar.classList.toggle('low', low); if (w != null) bar.firstChild.style.width = (w * 100).toFixed(1) + '%';
   };
   const o1 = new MutationObserver(upd); o1.observe(st, { childList: true, characterData: true, subtree: true }); upd();
-  const flash = k => { gm.classList.remove('fx-ok', 'fx-ko'); void gm.offsetWidth; gm.classList.add(k); setTimeout(() => gm.classList.remove(k), 650); };
-  const o2 = new MutationObserver(ms => { for (const m of ms) { const c = m.target.classList; if (!c) continue; if (c.contains('okc') || c.contains('fok') || (c.contains('ok') && m.oldValue && !/\bok\b/.test(m.oldValue))) return flash('fx-ok'); if (c.contains('koc') || c.contains('fko') || (c.contains('ko') && m.oldValue && !/\bko\b/.test(m.oldValue))) return flash('fx-ko'); } });
+  let lastFx = 0;
+  const flash = k => {
+    const now = Date.now(); if (now - lastFx < 250) return; lastFx = now;
+    gm.classList.remove('fx-ok', 'fx-ko'); void gm.offsetWidth; gm.classList.add(k); setTimeout(() => gm.classList.remove(k), 650);
+    if (segs && cur) { res[cur - 1] = k === 'fx-ok' ? 'ok' : 'ko'; draw(); }
+    run = k === 'fx-ok' ? run + 1 : 0;
+    // bombolla al mig: ✓ o ✗, i cada 3 encerts seguits, un missatge d'ànim
+    const bub = document.createElement('div'); bub.className = 'mfxb ' + (k === 'fx-ok' ? 'ok' : 'ko'); bub.setAttribute('aria-hidden', 'true');
+    bub.innerHTML = `<span>${k === 'fx-ok' ? '✓' : '✗'}</span>${k === 'fx-ok' && run >= 3 && run % 3 === 0 ? `<em>${run} ${L('seguides!', 'seguidas!')}</em>` : ''}`;
+    gm.appendChild(bub); setTimeout(() => bub.remove(), 900);
+  };
+  // un mateix toc pot marcar la resposta bona (okc) i la triada (koc): si n'hi ha cap d'error, mana l'error
+  const o2 = new MutationObserver(ms => {
+    let ok = false, ko = false;
+    for (const m of ms) { const c = m.target.classList; if (!c) continue; const was = m.oldValue || '';
+      if ((c.contains('koc') && !/\bkoc\b/.test(was)) || (c.contains('fko') && !/\bfko\b/.test(was)) || (c.contains('ko') && !/\bko\b/.test(was))) ko = true;
+      else if ((c.contains('okc') && !/\bokc\b/.test(was)) || (c.contains('fok') && !/\bfok\b/.test(was)) || (c.contains('ok') && !/\bok\b/.test(was) && m.target !== st)) ok = true; }
+    if (ko) flash('fx-ko'); else if (ok) flash('fx-ok');
+  });
   if (body) o2.observe(body, { subtree: true, attributes: true, attributeFilter: ['class'], attributeOldValue: true });
   MFX = [o1, o2];
 }
 function mQuit() { ask(MGA && MGA.test ? L('Vols deixar el test? Hauràs de tornar a començar.', '¿Quieres dejar el test? Tendrás que volver a empezar.') : L('Vols deixar aquesta partida?', '¿Quieres dejar esta partida?'), L('Surt', 'Salir'), L('Continua', 'Sigue'), () => { mStop(); MT = null; go('home'); }); }
 function mIntro(g, inSes) {
   MGA = { ses: inSes };
-  mGameShell(g, '', `<div class="mintro">${mGic(g)}<h2>${tx(MG[g].n)}</h2><p class="mdom" style="--dc:var(--c-${MG[g].cap});justify-content:center;display:flex">${tx(MCAP[MG[g].cap])}</p>${mHow(g)}${'speechSynthesis' in window ? `<button class="btn ghost mspeak" onclick="mSpeak('${g}')">${mSvg('so', 'mico')} ${L("Escolta-ho", 'Escúchalo')}</button>` : ''}<button class="btn big mbtn" onclick="mStart('${g}')">${L('Juga', 'Juega')}</button></div>`);
+  const m = MS(), best = m.best[g], adapt = !MG[g].span && !MG[g].lvx, lv = mLvl(g);
+  const chips = [adapt ? `<span>${mSvg('progres', 'mico')}${L(`Nivell ${lv} de 10`, `Nivel ${lv} de 10`)}</span>` : '',
+    best != null ? `<span>${mSvg('copa', 'mico')}${L('Rècord', 'Récord')}: <b>${mNice(g, best)}</b></span>` : `<span>${mSvg('fulla', 'mico')}${L('Primera partida', 'Primera partida')}</span>`].join('');
+  mGameShell(g, '', `<div class="mintro mintro2"><div class="mi-hero">${mGic(g)}<div><p class="mi-cap">${tx(MCAP[MG[g].cap])}</p><h2>${tx(MG[g].n)}</h2></div></div>
+    <div class="mi-chips">${chips}</div>${mHow(g)}
+    <div class="mi-acts">${'speechSynthesis' in window ? `<button class="btn ghost mspeak" onclick="mSpeak('${g}')">${mSvg('so', 'mico')} ${L("Escolta-ho", 'Escúchalo')}</button>` : ''}<button class="btn big mbtn mplay" onclick="mStart('${g}')">${L('Juga', 'Juega')}</button></div></div>`);
 }
 function mHow(g) {
   const h = {
@@ -403,11 +431,14 @@ function mEnd(g, score, up, msg) {
   P.xp = (P.xp || 0) + 10; if (ses && d.s.length >= 3 && !d.bonus) { d.bonus = 1; P.xp += 20; }
   touchStreak(); save(); syncNow();
   const s = mSession(), left = s.filter(x => !mDay().s.includes(x)), nx = left[0], fita = mFitesNew();
-  app.innerHTML = `<div class="mgame ${MG[g] ? 'd-' + MG[g].cap : ''}"><div class="mgbody"><div class="mres">${mGic(g)}<h2>${rec && was != null ? L('Nou rècord!', '¡Nuevo récord!') : L('Ben fet!', '¡Bien hecho!')}</h2>
-    <p class="mscore">${mNice(g, score)}</p><p>${msg || ''}</p>
+  const hist = (m.hist[g] || []).slice(-8).map(h => h[1]), hmax = Math.max(...hist, 1), hmin = Math.min(...hist, 0);
+  const spark = hist.length >= 2 ? `<div class="mr-spark" aria-hidden="true">${hist.map((v, i) => { const k = lowB ? (hmax - v) / ((hmax - hmin) || 1) : (v - hmin) / ((hmax - hmin) || 1); return `<i class="${i === hist.length - 1 ? 'now' : ''}" style="height:${Math.round(18 + k * 82)}%"></i>`; }).join('')}</div><p class="mr-sub">${L('Les teves últimes partides', 'Tus últimas partidas')}</p>` : '';
+  const prevTxt = was != null && !rec ? `<p class="mr-prev">${L('El teu rècord', 'Tu récord')}: <b>${mNice(g, was)}</b></p>` : '';
+  app.innerHTML = `<div class="mgame ${MG[g] ? 'd-' + MG[g].cap : ''}"><div class="mgbody"><div class="mres mres2"><div class="mr-hero">${rec && was != null ? `<span class="mr-rib">${L('Nou rècord', 'Nuevo récord')}</span>` : ''}${mGic(g)}<h2>${rec && was != null ? L('Nou rècord!', '¡Nuevo récord!') : L('Ben fet!', '¡Bien hecho!')}</h2>
+    <p class="mscore">${mNice(g, score)}</p><p class="mr-msg">${msg || ''}</p>${prevTxt}</div>${spark}
     ${adapt ? `<p class="mlvl ${lvB > lvA ? 'up' : ''}">${lvB > lvA ? L(`Puges al nivell ${lvB} de 10!`, `¡Subes al nivel ${lvB} de 10!`) : lvB < lvA ? L(`La propera, nivell ${lvB}: una mica més assequible.`, `La próxima, nivel ${lvB}: algo más asequible.`) : L(`Nivell ${lvB} de 10${lvB < 10 ? ' · si ho fas una mica millor, pujaràs' : ''}`, `Nivel ${lvB} de 10${lvB < 10 ? ' · si lo haces un poco mejor, subirás' : ''}`)}</p>` : ''}${was != null && !rec ? `<p class="mmut">${L('El teu millor resultat', 'Tu mejor resultado')}: ${mNice(g, was)}</p>` : ''}
     ${fita ? `<p class="mtcard" style="display:flex;gap:12px;align-items:center;text-align:left">${mTile('medalla', 'gold')}<span><b>${L('Nova fita', 'Nuevo logro')}</b><br>${tx(fita[1])}</span></p>` : ''}
-    ${ses && nx ? `<p class="mmut">${L(`Sessió d'avui: ${3 - left.length} de 3`, `Sesión de hoy: ${3 - left.length} de 3`)}</p><button class="btn big mbtn" onclick="mPlay('${nx}',true)">${L('Següent joc', 'Siguiente juego')}: ${tx(MG[nx].n)}</button>` : ''}
+    ${ses ? `<div class="mr-ses">${[0, 1, 2].map(i => `<i class="${i < 3 - left.length ? 'on' : ''}"></i>`).join('')}</div>` : ''}${ses && nx ? `<p class="mmut">${L(`Sessió d'avui: ${3 - left.length} de 3`, `Sesión de hoy: ${3 - left.length} de 3`)}</p><button class="btn big mbtn" onclick="mPlay('${nx}',true)">${L('Següent joc', 'Siguiente juego')}: ${tx(MG[nx].n)}</button>` : ''}
     ${ses && !nx ? `<p class="mtdone">${L('Sessió d\'avui completada!', '¡Sesión de hoy completada!')}</p><button class="btn gold big mbtn mshare" onclick="mShare('ratxa')">${mSvg('compartir')} ${L('Comparteix-ho', 'Compártelo')}</button>` : ''}
     <button class="btn ${ses && nx ? 'ghost' : ''} big mbtn" style="margin-top:10px" onclick="go('home')">${L('Torna a l\'inici', 'Vuelve al inicio')}</button></div></div></div>`;
   SFX.win && SFX.win(); if ((rec && was != null || (ses && !nx)) && typeof confetti === 'function') confetti(70);
@@ -703,7 +734,7 @@ function comGo() { MGA = { ...MGA, lv: mDlv('com'), q: 0, ok: 0 }; comNext(); }
 function comNext() {
   const A = MGA; if (A.q >= 8) return mEnd('com', A.ok, A.ok >= 7 ? 1 : A.ok <= 4 ? -1 : 0, L(`${A.ok} de 8 encertades.`, `${A.ok} de 8 acertadas.`));
   A.q++; A.cur = comQ(A.lv); mSet(`${A.q}/8`);
-  const it = A.cur.items.length ? `<div class="tiquet">${A.cur.items.map(([n, p]) => `<div><span>${n}</span><b>${mEur(p)}</b></div>`).join('')}</div>` : '';
+  const it = A.cur.items.length ? `<div class="tiquet"><p class="tq-h">${L('Supermercat', 'Supermercado')} <b>Numi</b></p>${A.cur.items.map(([n, p]) => `<div><span>${n}</span><i></i><b>${mEur(p)}</b></div>`).join('')}<p class="tq-f">${L('Gràcies per la seva compra', 'Gracias por su compra')}</p></div>` : '';
   $('#mgb').innerHTML = `${it}<p class="mtq">${A.cur.q}</p><div class="copts">${A.cur.opts.map((o, i) => `<button class="mopt copt" onclick="comTap(${i})">${o}</button>`).join('')}</div>`;
 }
 async function comTap(i) {
@@ -731,10 +762,14 @@ async function refTap(i) {
 /* ---------- 13. El rellotge (lectura de l'hora i càlcul de temps) ---------- */
 const hhmm = m => { m = ((m % 720) + 720) % 720; const h = Math.floor(m / 60) || 12; return `${h}:${pad(m % 60)}`; };
 function mClock(m) {
-  const h = (m / 60) % 12, mi = m % 60, ha = h * 30, ma = mi * 6;
-  const tick = [...Array(12).keys()].map(i => { const a = i * 30 * Math.PI / 180; return `<line x1="${50 + 38 * Math.sin(a)}" y1="${50 - 38 * Math.cos(a)}" x2="${50 + 44 * Math.sin(a)}" y2="${50 - 44 * Math.cos(a)}" stroke="#1E2A2B" stroke-width="${i % 3 ? 1.6 : 3}" stroke-linecap="round"/>`; }).join('');
-  const nums = [12, 3, 6, 9].map((n, i) => { const a = i * 90 * Math.PI / 180; return `<text x="${50 + 30 * Math.sin(a)}" y="${50 - 30 * Math.cos(a) + 4.5}" text-anchor="middle" font-size="12" font-weight="800" fill="#1E2A2B">${n}</text>`; }).join('');
-  return `<svg class="relsvg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="47" fill="#fff" stroke="#1E2A2B" stroke-width="3"/>${tick}${nums}<line x1="50" y1="50" x2="${50 + 22 * Math.sin(ha * Math.PI / 180)}" y2="${50 - 22 * Math.cos(ha * Math.PI / 180)}" stroke="#1E2A2B" stroke-width="5" stroke-linecap="round"/><line x1="50" y1="50" x2="${50 + 34 * Math.sin(ma * Math.PI / 180)}" y2="${50 - 34 * Math.cos(ma * Math.PI / 180)}" stroke="#177E6E" stroke-width="3.2" stroke-linecap="round"/><circle cx="50" cy="50" r="3.5" fill="#1E2A2B"/></svg>`;
+  // esfera de rellotge de paret: vora, 60 marques, les 12 hores, agulles amb ombra i el minuter del color de la capacitat
+  const h = (m / 60) % 12, mi = m % 60, ha = h * 30, ma = mi * 6, P2 = a => [Math.sin(a * Math.PI / 180), -Math.cos(a * Math.PI / 180)];
+  const ticks = [...Array(60).keys()].map(i => { const [x, y] = P2(i * 6), big = i % 5 === 0; return `<line x1="${(50 + (big ? 37 : 39.5) * x).toFixed(2)}" y1="${(50 + (big ? 37 : 39.5) * y).toFixed(2)}" x2="${(50 + 42 * x).toFixed(2)}" y2="${(50 + 42 * y).toFixed(2)}" stroke="${big ? '#27302F' : '#9AA19F'}" stroke-width="${big ? 1.8 : .7}" stroke-linecap="round"/>`; }).join('');
+  const nums = [...Array(12).keys()].map(i => { const n = i || 12, [x, y] = P2(i * 30); return `<text x="${(50 + 30.5 * x).toFixed(2)}" y="${(50 + 30.5 * y + 3.6).toFixed(2)}" text-anchor="middle" font-size="${n % 3 ? 8.4 : 10.5}" font-weight="${n % 3 ? 600 : 800}" fill="#27302F" font-family="inherit">${n}</text>`; }).join('');
+  const hand = (ang, len, w, col, tail) => { const [x, y] = P2(ang); return `<line x1="${(50 - tail * x).toFixed(2)}" y1="${(50 - tail * y).toFixed(2)}" x2="${(50 + len * x).toFixed(2)}" y2="${(50 + len * y).toFixed(2)}" stroke="${col}" stroke-width="${w}" stroke-linecap="round"/>`; };
+  return `<svg class="relsvg" viewBox="0 0 100 100" role="img" aria-label="${L('Rellotge', 'Reloj')}"><defs><radialGradient id="rf" cx="50%" cy="40%" r="60%"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#F3EEE3"/></radialGradient><linearGradient id="rr" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4A5553"/><stop offset="1" stop-color="#1C2423"/></linearGradient><filter id="rs" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx=".6" dy="1.2" stdDeviation=".9" flood-opacity=".28"/></filter></defs>
+    <circle cx="50" cy="50" r="49" fill="url(#rr)"/><circle cx="50" cy="50" r="45.2" fill="url(#rf)"/>${ticks}${nums}
+    <g filter="url(#rs)">${hand(ha, 21, 4.6, '#27302F', 4)}${hand(ma, 33, 2.8, 'var(--dc,#5F8A2C)', 5)}</g><circle cx="50" cy="50" r="3.2" fill="#27302F"/><circle cx="50" cy="50" r="1.2" fill="#F2B544"/></svg>`;
 }
 function relGo() { MGA = { ...MGA, lv: mDlv('rel'), q: 0, ok: 0 }; relNext(); }
 function relNext() {
@@ -970,12 +1005,12 @@ function serGo() { MGA = { ...MGA, lv: mDlv('ser'), q: 0, ok: 0 }; serNext(); }
 function serNext() {
   const A = MGA; if (A.q >= 8) return mEnd('ser', A.ok, A.ok >= 7 ? 1 : A.ok <= 4 ? -1 : 0, L(`${A.ok} de 8 sèries.`, `${A.ok} de 8 series.`));
   A.q++; A.cur = serQ(A.lv); mSet(`${A.q}/8`);
-  $('#mgb').innerHTML = `<p class="mtq">${L('Quin número ve després?', '¿Qué número viene después?')}</p><p class="serq">${A.cur.s.join(', ')}, <b>?</b></p><div class="copts">${A.cur.opts.map((o, i) => `<button class="mopt copt" onclick="serTap(${i})">${o}</button>`).join('')}</div>`;
+  $('#mgb').innerHTML = `<p class="mtq">${L('Quin número ve després?', '¿Qué número viene después?')}</p><div class="serq serchips" aria-label="${A.cur.s.join(', ')}, ?">${A.cur.s.map(v => `<span>${v}</span>`).join('<i></i>')}<i></i><span class="q">?</span></div><div class="copts">${A.cur.opts.map((o, i) => `<button class="mopt copt" onclick="serTap(${i})">${o}</button>`).join('')}</div>`;
 }
 async function serTap(i) {
   const A = MGA; if (!A || A.lock) return; A.lock = true; const b = $$('.copt'), ai = A.cur.opts.indexOf(A.cur.ans), ok = i === ai;
   b[ai].classList.add('okc'); if (!ok) b[i].classList.add('koc'); ok ? (A.ok++, SFX.ok && SFX.ok()) : SFX.ko && SFX.ko();
-  const q = $('.serq'); if (q) q.innerHTML = `${A.cur.s.join(', ')}, <b>${A.cur.ans}</b>`;
+  const q = $('.serchips .q'); if (q) { q.textContent = A.cur.ans; q.classList.add(ok ? 'ok' : 'show'); }
   await mSleep(ok ? 1000 : 1700); if (MGA === A) { A.lock = false; serNext(); }
 }
 
@@ -1112,7 +1147,8 @@ function dedGo() { MGA = { ...MGA, lv: mDlv('ded'), q: 0, ok: 0 }; dedNext(); }
 function dedNext() {
   const A = MGA; if (A.q >= 8) return mEnd('ded', A.ok, A.ok >= 7 ? 1 : A.ok <= 4 ? -1 : 0, L(`${A.ok} de 8 deduccions encertades.`, `${A.ok} de 8 deducciones acertadas.`));
   A.q++; A.cur = dedQ(A.lv); A.lock = false; mSet(`${A.q}/8`);
-  $('#mgb').innerHTML = `<div class="dedp">${A.cur.pr.map(t => `<p>${t}</p>`).join('')}</div><p class="mtq">${A.cur.qq}</p><div class="copts">${A.cur.opts.map((o, i) => `<button class="mopt copt" onclick="dedTap(${i})">${o}</button>`).join('')}</div>`;
+  const hue = n => [...String(n)].reduce((a, c) => a + c.charCodeAt(0), 0) * 47 % 360;
+  $('#mgb').innerHTML = `<div class="dedp">${A.cur.pr.map((t, i) => `<p><span class="dn">${i + 1}</span>${t}</p>`).join('')}</div><p class="mtq">${A.cur.qq}</p><div class="copts">${A.cur.opts.map((o, i) => `<button class="mopt copt dedo" onclick="dedTap(${i})"><span class="mav" style="--h:${hue(o)}">${String(o).trim()[0]}</span>${o}</button>`).join('')}</div>`;
 }
 async function dedTap(i) {
   const A = MGA; if (!A || A.lock) return; A.lock = true; const b = $$('.copt'), ok = i === A.cur.ans;

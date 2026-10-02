@@ -523,3 +523,69 @@ div.onnc{cursor:default}.onnc.okc{background:var(--ok-bg);border-color:var(--ok)
 .mres .mgic{animation:mbadge .5s cubic-bezier(.2,.9,.3,1.5) both}
 .mres .mscore{animation:mpop .6s .15s both cubic-bezier(.2,.9,.3,1.4)}
 @media (prefers-reduced-motion:reduce){.mgame *,.mgame::before,.mintro .mgic,.mres *{animation:none!important;transition:none!important}}
+
+/* ---- Jocs v2b: presentació, resultat, rondes, bombolla, rellotge, tiquet, sèries, pistes ---- */
+/* presentació */
+.mintro2{display:grid;gap:16px;text-align:left;max-width:480px}
+.mi-hero{display:flex;align-items:center;gap:16px;padding:20px;border-radius:26px;background:var(--dg,linear-gradient(135deg,#33B79F,#0F6F5F));color:#fff;box-shadow:0 18px 36px -18px color-mix(in srgb,var(--dc,#177E6E) 70%,transparent);position:relative;overflow:hidden}
+.mi-hero::after{content:"";position:absolute;right:-40px;top:-40px;width:160px;height:160px;border-radius:50%;background:rgba(255,255,255,.12)}
+.mi-hero .mgic{width:72px;height:72px;border-radius:22px;background:rgba(255,255,255,.18);box-shadow:inset 0 1px 0 rgba(255,255,255,.3);margin:0}
+.mi-hero .mgic svg{width:40px;height:40px}
+.mi-cap{margin:0;font-size:14px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;opacity:.85}
+.mintro2 .mi-hero h2{margin:2px 0 0;color:#fff;font-size:30px}
+.mi-chips{display:flex;flex-wrap:wrap;gap:8px}
+.mi-chips span{display:inline-flex;align-items:center;gap:6px;background:#fff;border:1.5px solid var(--edge,#E3DCCD);border-radius:999px;padding:7px 12px;font-size:15.5px;font-weight:600;color:var(--ink)}
+.mi-chips .mico{width:18px;height:18px;color:var(--dc,var(--pri))}
+.mintro2 .mhow{margin:0}
+.mi-acts{display:grid;gap:10px}.mi-acts .mspeak{margin:0;justify-self:center}
+.mplay{min-height:64px!important;font-size:21px!important;background:var(--dg,var(--pri))!important;border:0!important;box-shadow:0 5px 0 color-mix(in srgb,var(--dc,#177E6E) 70%,#000)!important}
+/* resultat */
+.mres2{display:grid;gap:14px;max-width:460px}
+.mr-hero{position:relative;padding:26px 20px 22px;border-radius:28px;background:#fff;box-shadow:var(--depth,0 10px 30px -14px rgba(0,0,0,.2));overflow:hidden}
+.mr-hero::before{content:"";position:absolute;inset:0 0 auto 0;height:90px;background:var(--dg,linear-gradient(135deg,#33B79F,#0F6F5F));opacity:.14}
+.mr-hero>*{position:relative}
+.mr-rib{position:absolute!important;top:14px;right:-34px;transform:rotate(35deg);background:var(--gold,#E5A93A);color:#2B1D02;font-size:12.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;padding:5px 40px}
+.mres2 .mscore{font-size:72px!important}
+.mr-msg{margin:4px 0 0!important}
+.mr-prev{margin:6px 0 0!important;font-size:16px!important;color:var(--mut)}
+.mr-spark{display:flex;align-items:flex-end;gap:6px;height:70px;padding:10px 14px;border-radius:18px;background:#fff;box-shadow:var(--depth,none)}
+.mr-spark i{flex:1;border-radius:6px 6px 3px 3px;background:color-mix(in srgb,var(--dc,#177E6E) 28%,#fff);animation:mbar .6s both cubic-bezier(.2,.8,.2,1);transform-origin:bottom}
+.mr-spark i.now{background:var(--dg,var(--dc,#177E6E))}
+.mr-spark i:nth-child(2){animation-delay:.04s}.mr-spark i:nth-child(3){animation-delay:.08s}.mr-spark i:nth-child(4){animation-delay:.12s}.mr-spark i:nth-child(5){animation-delay:.16s}.mr-spark i:nth-child(6){animation-delay:.2s}.mr-spark i:nth-child(7){animation-delay:.24s}.mr-spark i:nth-child(8){animation-delay:.28s}
+@keyframes mbar{from{transform:scaleY(0)}to{transform:none}}
+.mr-sub{margin:-6px 0 0!important;font-size:14px!important;color:var(--mut)}
+.mr-ses{display:flex;gap:8px;justify-content:center}.mr-ses i{width:44px;height:8px;border-radius:4px;background:#E7E0D3}.mr-ses i.on{background:var(--dg,var(--pri))}
+/* rondes en punts: es pinten verds o vermells segons el resultat */
+.mgprog.seg{display:flex;gap:5px;height:auto;padding:8px 14px;background:color-mix(in srgb,#fff 70%,transparent)}
+.mgprog.seg i{flex:1;height:8px;width:auto!important;border-radius:4px;background:color-mix(in srgb,var(--dc,#177E6E) 14%,#E9E2D5);transition:background .3s}
+.mgprog.seg i.cur{background:color-mix(in srgb,var(--dc,#177E6E) 45%,#fff);animation:mcur 1.4s ease-in-out infinite}
+.mgprog.seg i.ok{background:var(--ok)}.mgprog.seg i.ko{background:#E5845C}.mgprog.seg i.done{background:color-mix(in srgb,var(--dc,#177E6E) 60%,#fff)}
+@keyframes mcur{50%{opacity:.55}}
+/* bombolla d'encert / error */
+.mfxb{position:absolute;left:50%;top:clamp(110px,17%,150px);z-index:5;transform:translate(-50%,-50%);display:grid;justify-items:center;gap:6px;pointer-events:none;animation:mfxb .9s cubic-bezier(.2,.9,.3,1.2) forwards}
+.mfxb span{display:grid;place-items:center;width:66px;height:66px;border-radius:50%;font:800 36px/1 system-ui,sans-serif;color:#fff;box-shadow:0 16px 30px -10px rgba(0,0,0,.35)}
+.mfxb.ok span{background:var(--ok,#1F8A53)}.mfxb.ko span{background:#D4613A;font-size:38px}
+.mfxb em{font-style:normal;font-weight:800;font-size:18px;color:var(--ok-d,#14653B);background:#fff;border-radius:999px;padding:6px 14px;box-shadow:0 8px 18px -8px rgba(0,0,0,.25)}
+@keyframes mfxb{0%{opacity:0;transform:translate(-50%,-50%) scale(.4)}25%{opacity:1;transform:translate(-50%,-50%) scale(1.08)}45%{transform:translate(-50%,-50%) scale(1)}80%{opacity:1}100%{opacity:0;transform:translate(-50%,-62%) scale(.96)}}
+/* tiquet de supermercat */
+.mgame .tiquet{position:relative;background:#FFFEFA;border:0;border-radius:6px 6px 0 0;padding:16px 20px 22px;font-family:"SF Mono",ui-monospace,Menlo,monospace;font-size:18px;box-shadow:0 10px 24px -14px rgba(0,0,0,.35);transform:rotate(-1.2deg)}
+.mgame .tiquet::after{content:"";position:absolute;left:0;right:0;bottom:-10px;height:12px;background:radial-gradient(circle at 6px 0,transparent 6px,#FFFEFA 6.5px) 0 0/12px 12px repeat-x}
+.mgame .tiquet .tq-h{margin:0 0 8px;text-align:center;font-size:15px;letter-spacing:.12em;text-transform:uppercase;color:#6B6455;border-bottom:1.5px dashed #CFC6B5;padding-bottom:8px}
+.mgame .tiquet .tq-h b{color:var(--dc,#178C78)}
+.mgame .tiquet div{display:flex;align-items:baseline;gap:6px}.mgame .tiquet div i{flex:1;border-bottom:2px dotted #CFC6B5;transform:translateY(-4px)}
+.mgame .tiquet .tq-f{margin:10px 0 0;padding-top:8px;border-top:1.5px dashed #CFC6B5;text-align:center;font-size:12.5px;color:#9A917F;letter-spacing:.06em}
+/* sèries: fitxes amb fletxes */
+.serchips{display:flex;flex-wrap:nowrap;justify-content:center;align-items:center;gap:4px;max-width:100%}
+.serchips span{min-width:clamp(46px,13vw,62px);flex:0 1 auto;padding:12px 6px;border-radius:16px;background:#fff;border:2px solid var(--edge,#E3DCCD);box-shadow:var(--depth,none);font:800 clamp(24px,6.8vw,32px)/1 var(--serif);text-align:center;color:var(--ink);animation:mpop .35s both}
+.serchips span:nth-of-type(2){animation-delay:.06s}.serchips span:nth-of-type(3){animation-delay:.12s}.serchips span:nth-of-type(4){animation-delay:.18s}.serchips span:nth-of-type(5){animation-delay:.24s}.serchips span:nth-of-type(6){animation-delay:.3s}
+.serchips i{flex:none;width:7px;height:7px;border-top:2.5px solid color-mix(in srgb,var(--dc,#5F8A2C) 55%,#fff);border-right:3px solid color-mix(in srgb,var(--dc,#5F8A2C) 55%,#fff);transform:rotate(45deg);margin:0 1px}
+.serchips .q{border-style:dashed;border-color:var(--dc,#5F8A2C);color:var(--dc,#5F8A2C);background:color-mix(in srgb,var(--dc,#5F8A2C) 8%,#fff)}
+.serchips .q.ok{border-style:solid;background:var(--ok-bg);border-color:var(--ok);color:var(--ok-d);animation:mbadge .35s}
+.serchips .q.show{border-style:solid;background:#FFF4D6;border-color:#E3A33B;color:#7A5300;animation:mbadge .35s}
+/* qui és el més gran: pistes numerades i noms amb avatar */
+.mgame .dedp{display:grid;gap:10px;width:min(94vw,460px)}
+.mgame .dedp p{display:flex;gap:12px;align-items:center;margin:0;background:#fff;border:2px solid var(--edge,#E3DCCD);border-radius:18px;padding:14px 16px;font-size:19px;line-height:1.35;box-shadow:var(--depth,none);text-align:left}
+.mgame .dedp .dn{flex:none;display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:var(--dg,var(--pri));color:#fff;font-size:15px;font-weight:800}
+.mgame .dedo{flex-direction:row!important;justify-content:flex-start!important;gap:12px!important;padding-left:14px!important}
+.mav{display:grid;place-items:center;width:40px;height:40px;border-radius:50%;background:hsl(var(--h) 55% 88%);color:hsl(var(--h) 45% 30%);font-size:19px;font-weight:800;flex:none}
+@media (prefers-reduced-motion:reduce){.mfxb{display:none}}
