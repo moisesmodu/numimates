@@ -1276,8 +1276,7 @@ body.pro .energy{box-shadow:0 8px 22px rgba(60,30,90,.08)}
 .bhero p{margin:0 auto;max-width:34ch;font-size:15px;line-height:1.45;color:#E8DAF7;font-weight:700}
 .bh-chars{display:flex;align-items:flex-end;justify-content:center;gap:4px}
 .bh-chars svg{width:96px;height:96px;filter:drop-shadow(0 10px 12px rgba(0,0,0,.45))}
-.bh-a{animation:bhl 2.4s ease-in-out infinite}.bh-b{animation:bhr 2.4s ease-in-out infinite;transform:scaleX(-1)}
-.bh-b svg{transform:scaleX(-1)}
+.bh-a{display:inline-block;animation:bhl 2.4s ease-in-out infinite}.bh-b{display:inline-block;animation:bhr 2.4s ease-in-out infinite}
 @keyframes bhl{50%{transform:translate(6px,-6px) rotate(4deg)}}@keyframes bhr{50%{transform:translate(-6px,-6px) rotate(-4deg)}}
 .bh-wins{display:inline-block;margin-top:10px;background:linear-gradient(135deg,#FFE38A,#F2B92E);color:#3A2600;font-weight:900;font-size:14px;padding:6px 14px;border-radius:999px;box-shadow:0 4px 0 #C98217}
 /* VS amb llamp */
