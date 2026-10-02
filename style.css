@@ -1171,3 +1171,9 @@ img.ic{display:inline-block;width:1.2em;height:1.2em;object-fit:contain;vertical
 .lgrules{margin-top:18px;background:#fff;border:2px solid var(--line);border-radius:18px;padding:14px 16px}.lgrules p{margin:6px 0 0;font-size:15px;line-height:1.45;font-weight:700}
 .lgsmall{font-size:13.5px!important;color:var(--mut);font-weight:700;line-height:1.45}
 .lxp{font-variant-numeric:tabular-nums}
+/* medalles del docent */
+.medals{display:grid;gap:10px}
+.medal{display:flex;gap:12px;align-items:flex-start;text-align:left;background:#fff;border:2px solid #F0E6F6;border-radius:16px;padding:12px 14px}
+.medal .mdi{font-size:30px;line-height:1;flex:none;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 35% 30%,#FFF4C7,#F5C542 70%)}
+.medal b{display:block;font-size:16px}.medal small{display:block;font-size:13.5px;margin-top:2px}.medal small.mut{color:#8a7f96}
+.medalbig{font-size:64px;line-height:1;margin:4px 0 8px}

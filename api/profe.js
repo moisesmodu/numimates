@@ -1,6 +1,7 @@
 import { sql, ok, body, cleanCode, validPass, hashPass, dropToks, cleanUser, validUser, newStudentCode } from './_lib.js';
 import { who, groupsOf } from './_auth.js';
 import { STRIPE_KEY, stripe, stripeMode, setCancel, setupStripe } from './_stripe.js';
+import { batTables, batState, BWORDS, MEDALS } from './_batalla.js';
 import { randomInt } from 'crypto';
 // Panell /profe.html. L'administrador ho veu tot i gestiona centres, docents, grups i plans.
 // Un docent només veu (i gestiona) els alumnes dels seus grups; l'admin de centre, tots els del seu centre.
@@ -42,6 +43,66 @@ export default async function handler(req, res) {
         out.push(code ? { name, username: user, code, ok: true } : { name, username: user, error: 'codi' });
       }
       return ok(res, { ok: true, rows: out });
+    }
+    // --- batalles del docent: en directe per a la classe (les projecta i les fa començar) i competicions amb data final ---
+    if (['bat_new', 'bat_state', 'bat_start', 'bat_end', 'bat_list', 'medal_give', 'medal_del', 'alumne_bat'].includes(b.action)) {
+      await batTables();
+      const nomDoc = me.docent ? me.docent.nom : 'Administració', docId = me.docent ? me.docent.id : null;
+      const ownBat = async bc => { const r = (await sql`SELECT grup_id FROM mates.batalles WHERE code = ${bc} AND kind IN ('classe', 'comp')`)[0]; return r && (me.admin || gids.includes(r.grup_id)); };
+      const bc = String(b.bcode || '').toUpperCase().replace(/[^A-Z0-9-]/g, '').slice(0, 14);
+      if (b.action === 'bat_new') {
+        const gid = +b.grup; if (!me.admin && !gids.includes(gid)) return ok(res, { error: 'permís' }, 403);
+        const g = (await sql`SELECT id, curs FROM mates.grups WHERE id = ${gid} AND actiu`)[0]; if (!g) return ok(res, { error: 'grup' }, 404);
+        const kind = b.kind === 'comp' ? 'comp' : 'classe', course = Number.isInteger(+b.course) && +b.course >= 0 && +b.course <= 9 ? +b.course : (g.curs ?? 3);
+        const unit = Number.isInteger(b.unit) && b.unit >= 0 && b.unit < 12 ? b.unit : null, titol = String(b.titol || '').trim().slice(0, 60) || null;
+        const days = Math.max(1, Math.min(60, +b.days || 7)), tries = Math.max(1, Math.min(10, +b.tries || 3));
+        for (let t = 0; t < 8; t++) {
+          const code = BWORDS[randomInt(BWORDS.length)] + '-' + randomInt(1000, 10000);
+          const r = await sql`INSERT INTO mates.batalles (code, kind, course, unit, seed, host, grup_id, docent_id, titol, ends_at, tries)
+            VALUES (${code}, ${kind}, ${course}, ${unit}, ${randomInt(1, 2 ** 31 - 1)}, NULL, ${gid}, ${docId}, ${titol}, ${kind === 'comp' ? new Date(Date.now() + days * 864e5).toISOString() : null}, ${kind === 'comp' ? tries : null})
+            ON CONFLICT DO NOTHING RETURNING code`;
+          if (r.length) return ok(res, { ok: true, state: await batState(code, null) });
+        }
+        return ok(res, { error: 'codi' }, 500);
+      }
+      if (b.action === 'bat_list') {
+        const rows = await sql`SELECT b.code, g.nom AS grup FROM mates.batalles b JOIN mates.grups g ON g.id = b.grup_id WHERE b.kind IN ('classe', 'comp') AND b.grup_id = ANY(${me.admin && !b.grup ? (await sql`SELECT id FROM mates.grups WHERE actiu`).map(r => r.id) : (b.grup ? [+b.grup].filter(x => me.admin || gids.includes(x)) : gids)})
+          AND ((b.kind = 'comp' AND b.ends_at > now() - interval '30 days') OR (b.kind = 'classe' AND b.created_at > now() - interval '14 days')) ORDER BY b.created_at DESC LIMIT 40`;
+        const list = []; for (const r of rows) { const st = await batState(r.code, null); if (st) list.push({ ...st, grupNom: r.grup }); }
+        return ok(res, { list });
+      }
+      if (b.action === 'medal_give') {
+        if (!(await mine(code))) return ok(res, { error: 'permís' }, 403);
+        if (!MEDALS.includes(b.kind)) return ok(res, { error: 'medalla' }, 400);
+        const r = await sql`INSERT INTO mates.medalles (code, kind, comment, docent_id, docent_nom) VALUES (${code}, ${b.kind}, ${String(b.comment || '').trim().slice(0, 200) || null}, ${docId}, ${nomDoc}) RETURNING id`;
+        return ok(res, { ok: true, id: r[0].id });
+      }
+      if (b.action === 'medal_del') {
+        const m = (await sql`SELECT code FROM mates.medalles WHERE id = ${+b.id}`)[0]; if (!m || !(await mine(m.code))) return ok(res, { error: 'permís' }, 403);
+        await sql`DELETE FROM mates.medalles WHERE id = ${+b.id}`; return ok(res, { ok: true });
+      }
+      if (b.action === 'alumne_bat') {
+        if (!(await mine(code))) return ok(res, { error: 'permís' }, 403);
+        const medals = await sql`SELECT id, kind, comment, docent_nom, created_at FROM mates.medalles WHERE code = ${code} ORDER BY created_at DESC LIMIT 50`;
+        const bats = await sql`SELECT b.code, b.kind, b.titol, b.created_at, j.correct, j.ms, j.finished, j.best_c FROM mates.batalla_jug j JOIN mates.batalles b USING (code) WHERE j.sid = ${code} ORDER BY b.created_at DESC LIMIT 200`;
+        const fin = bats.filter(x => x.finished || x.best_c != null), n = fin.length, ok10 = fin.reduce((s, x) => s + Math.max(x.correct | 0, x.best_c | 0), 0);
+        const recent = [];
+        for (const x of bats.slice(0, 8)) { const st = await batState(x.code, code); if (st) { const p = st.players.find(q => q.me); recent.push({ code: x.code, kind: x.kind, title: x.titol, date: x.created_at, pos: p ? p.pos : 0, n: st.players.length, correct: p && p.best ? p.best.correct : p ? p.correct : 0, over: st.over }); } }
+        return ok(res, { medals, stats: { played: n, wins: recent.filter(r => r.over && r.pos === 1 && r.n > 1).length, accuracy: n ? Math.round(10 * ok10 / n) : null }, recent });
+      }
+      if (!bc || !(await ownBat(bc))) return ok(res, { error: 'permís' }, 403);
+      if (b.action === 'bat_state') return ok(res, { state: await batState(bc, null) });
+      if (b.action === 'bat_start') {
+        const st = await batState(bc, null); if (st.kind !== 'classe') return ok(res, { error: 'tipus' }, 400);
+        if (!st.players.length) return ok(res, { error: 'sols' }, 409);
+        await sql`UPDATE mates.batalles SET status = 'live', start_at = now() + interval '5 seconds' WHERE code = ${bc} AND status = 'lobby'`;
+        return ok(res, { ok: true, state: await batState(bc, null) });
+      }
+      if (b.action === 'bat_end') {
+        await sql`UPDATE mates.batalles SET ends_at = CASE WHEN kind = 'comp' THEN now() ELSE ends_at END, status = CASE WHEN kind = 'classe' AND status = 'lobby' THEN 'live' ELSE status END,
+          start_at = CASE WHEN kind = 'classe' THEN now() - interval '7 minutes' ELSE start_at END WHERE code = ${bc}`;
+        return ok(res, { ok: true, state: await batState(bc, null) });
+      }
     }
     // --- accions sobre un alumne (admin o el seu docent) ---
     if (['setpass', 'unlock', 'off', 'treure'].includes(b.action)) {

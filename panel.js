@@ -156,7 +156,7 @@ function logout() { sessionStorage.clear(); D = null; ROWS = []; GRUPS = []; ME 
 function setLang(l, onLogin) { LANG = l; store.set('numi-profe-lang', l); document.documentElement.lang = l; if (onLogin && !D) return login(); ROWS = (D?.rows || []).map(enrich); route.last = null; route(); }
 
 /* ---------- carcassa ---------- */
-const NAV = () => [['resum', 'layout-dashboard', L('Resum', 'Resumen')], ['alumnes', 'users', L('Alumnes', 'Alumnos'), scope().length], ['grups', 'school', L('Grups', 'Grupos')], ['informes', 'chart-column', L('Informes', 'Informes')]];
+const NAV = () => [['resum', 'layout-dashboard', L('Resum', 'Resumen')], ['alumnes', 'users', L('Alumnes', 'Alumnos'), scope().length], ['grups', 'school', L('Grups', 'Grupos')], ['batalles', 'swords', L('Batalles', 'Batallas')], ['informes', 'chart-column', L('Informes', 'Informes')]];
 const ADMIN_NAV = () => { const seen = +store.get('numi-profe-sol', 0), nou = (D.contacts || []).filter(c => new Date(c.created_at).getTime() > seen).length; return [['usuaris', 'crown', L('Usuaris i Premium', 'Usuarios y Premium')], ['centres', 'building-2', L('Centres', 'Centros')], ['docents', 'graduation-cap', L('Docents', 'Docentes')], ['totsgrups', 'layout-grid', L('Tots els grups', 'Todos los grupos')], ['sollicituds', 'inbox', L('Sol·licituds', 'Solicitudes'), nou, true], ['activitat', 'activity', L('Activitat', 'Actividad')], ['correus', 'mail', L('Correus', 'Correos')]]; };
 function shell(view, title, body, { acts = '', fluid = false, switcher = true } = {}) {
   const na = ([k, ic, t, n, isNew]) => `<a href="#/${k}" class="${view === k ? 'on' : ''}" title="${esc(t)}">${ico(ic, 'i20')}<span>${esc(t)}</span>${n ? `<i class="badge ${isNew ? 'new' : ''}">${n}</i>` : ''}</a>`;
@@ -196,7 +196,7 @@ function route() {
   const h = location.hash.replace(/^#\/?/, '').split('?')[0], [v, arg] = h.split('/');
   if (v === 'alumnes' && route.last === 'alumnes' && $('#tbl')) { if (arg) openDrawer(decodeURIComponent(arg), true); else if ($('.drawer')) closeDrawer(true); return; }
   route.last = v;
-  const V = { resum: vResum, alumnes: vAlumnes, grups: vGrups, informes: vInformes, guia: vGuia, compte: vCompte };
+  const V = { resum: vResum, alumnes: vAlumnes, grups: vGrups, batalles: vBatalles, informes: vInformes, guia: vGuia, compte: vCompte };
   if (ADMIN) Object.assign(V, { usuaris: vUsuaris, centres: vCentres, docents: vDocents, totsgrups: vTotsGrups, sollicituds: vSol, activitat: vActivitat, correus: vCorreus });
   (V[v] || vResum)(arg);
   if (v === 'alumnes' && arg) openDrawer(decodeURIComponent(arg), true); else if ($('.drawer')) closeDrawer(true);
@@ -206,6 +206,113 @@ document.addEventListener('keydown', e => {
   if (e.key === 'Escape') { if ($('.modal-s')) return $('.modal-s').remove(); if ($('.proj')) return $('.proj').remove(), clearInterval(PROJ_T); if ($('.drawer')) return closeDrawer(); }
   if (e.key === '/' && !/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName) && $('#q')) { e.preventDefault(); $('#q').focus(); }
 });
+
+/* ---------- Batalles del docent: en directe a classe (es projecten) i competicions; medalles ---------- */
+const MEDS = { esforc: ['💪', 'Ha treballat de valent|Ha trabajado a fondo'], ajuda: ['🤝', 'Ha ajudat els companys|Ha ayudado a los compañeros'], idees: ['💡', 'Idees originals|Ideas originales'], millora: ['📈', 'Ha millorat molt|Ha mejorado mucho'],
+  repte: ['🏔️', 'Ha superat un repte difícil|Ha superado un reto difícil'], atencio: ['👂', 'Molt atent i participatiu|Muy atento y participativo'], calcul: ['🧮', 'Màquina del càlcul mental|Máquina del cálculo mental'], constancia: ['🔥', 'Constància|Constancia'] };
+const BQN = 10, bsecs = ms => (ms / 1000).toFixed(1).replace('.', ',') + ' s';
+const unitsOf = c => Object.keys(UNIT_T).filter(k => k.startsWith(`c${c + 1}-`)).map(k => [+k.split('-')[1] - 1, tx(UNIT_T[k])]);
+const bTop = (st, n = 5) => st.players.filter(p => p.pos).sort((a, b) => a.pos - b.pos).slice(0, n);
+let BL = null;
+async function vBatalles() {
+  shell('batalles', L('Batalles', 'Batallas'), `<div class="card pad t3">${L('Carregant…', 'Cargando…')}</div>`, { switcher: false });
+  BL = await act('bat_list', { grup: G || undefined });
+  const list = BL.list || [], comps = list.filter(s => s.kind === 'comp'), live = list.filter(s => s.kind === 'classe');
+  const compCard = s => `<div class="card pad bcard"><div class="bch"><div><b>${esc(s.title || L('Competició', 'Competición'))}</b><small class="t3">${esc(s.grupNom)} · ${esc(curs(s.course))}${s.unit != null ? ' · ' + esc(tx(UNIT_T[`c${s.course + 1}-${s.unit + 1}`] || '')) : ''}</small></div>
+      <span class="chip ${s.over ? 'none' : 'good'}">${s.over ? L('Acabada', 'Terminada') : L(`Fins al ${fdate(s.endsAt)}`, `Hasta el ${fdate(s.endsAt)}`)}</span></div>
+    <p class="t3" style="margin:6px 0 10px;font-size:13px">${s.players.length} ${L('han jugat', 'han jugado')} · ${s.tries} ${L('intents per alumne', 'intentos por alumno')} · ${L('codi', 'código')} <span class="mono">${s.code}</span></p>
+    ${bTop(s).length ? `<ol class="brank">${bTop(s).map(p => `<li><span>${['🥇', '🥈', '🥉'][p.pos - 1] || p.pos}</span><b>${esc(p.name)}</b><span class="num">${p.best.correct}/${BQN} · ${bsecs(p.best.ms)}</span></li>`).join('')}</ol>` : `<p class="t3" style="margin:0">${L('Encara no ha jugat ningú.', 'Aún no ha jugado nadie.')}</p>`}
+    <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap"><button class="btn sm" onclick="batRank('${s.code}')">${L('Classificació completa', 'Clasificación completa')}</button>${s.over ? '' : `<button class="btn sm" onclick="batEnd('${s.code}')">${L('Acaba-la ara', 'Terminarla ahora')}</button>`}</div></div>`;
+  shell('batalles', L('Batalles', 'Batallas'), `
+    <p class="t2" style="margin:0 0 16px;max-width:760px">${L("Batalles de mates de Numi per a la classe. <b>En directe</b>: la projectes, els alumnes hi entren amb el codi des de l'app i tu decideixes quan comença; veus el rànquing en directe. <b>Competició</b>: dura uns dies, cadascú juga quan vol i compta el seu millor intent.", 'Batallas de mates de Numi para la clase. <b>En directo</b>: la proyectas, los alumnos entran con el código desde la app y tú decides cuándo empieza; ves el ranking en directo. <b>Competición</b>: dura unos días, cada uno juega cuando quiere y cuenta su mejor intento.')}</p>
+    <div class="sec-h"><h2>${L('Competicions', 'Competiciones')}</h2></div>
+    ${comps.length ? `<div class="bgrid">${comps.map(compCard).join('')}</div>` : `<div class="card">${emptyState('swords', L('Cap competició', 'Ninguna competición'), L('Crea una competició per a un grup: dura els dies que triïs.', 'Crea una competición para un grupo: dura los días que elijas.'), `<button class="btn primary" onclick="batModal('comp')">${ico('plus')}${L('Nova competició', 'Nueva competición')}</button>`)}</div>`}
+    <div class="sec-h" style="margin-top:22px"><h2>${L('Batalles en directe (últims 14 dies)', 'Batallas en directo (últimos 14 días)')}</h2></div>
+    ${live.length ? `<div class="tw"><table><thead><tr><th>${L('Batalla', 'Batalla')}</th><th>${L('Grup', 'Grupo')}</th><th>${L('Estat', 'Estado')}</th><th class="r">${L('Jugadors', 'Jugadores')}</th><th>${L('Guanyador', 'Ganador')}</th></tr></thead><tbody>
+      ${live.map(s => `<tr onclick="batProj('${s.code}')"><td><b>${esc(s.title || s.code)}</b> <span class="t3 mono">${s.code}</span></td><td>${esc(s.grupNom)}</td><td>${s.over ? `<span class="chip none">${L('Acabada', 'Terminada')}</span>` : s.status === 'live' ? `<span class="chip good">${L('Jugant', 'Jugando')}</span>` : `<span class="chip purple">${L('A la sala', 'En la sala')}</span>`}</td><td class="r num">${s.players.length}</td><td>${s.over && bTop(s, 1)[0] ? '🥇 ' + esc(bTop(s, 1)[0].name) : '—'}</td></tr>`).join('')}</tbody></table></div>`
+      : `<div class="card">${emptyState('swords', L('Cap batalla en directe', 'Ninguna batalla en directo'), L('Obre-ne una a classe: la projectes i els alumnes hi entren amb el codi.', 'Abre una en clase: la proyectas y los alumnos entran con el código.'), `<button class="btn primary" onclick="batModal('classe')">${ico('plus')}${L('Batalla en directe', 'Batalla en directo')}</button>`)}</div>`}`,
+    { acts: `<button class="btn" onclick="batModal('comp')">${ico('plus')}${L('Nova competició', 'Nueva competición')}</button><button class="btn primary" onclick="batModal('classe')">${ico('swords')}${L('Batalla en directe', 'Batalla en directo')}</button>` });
+}
+function batModal(kind) {
+  if (!GRUPS.length) return toast(L('Primer crea un grup.', 'Primero crea un grupo.'));
+  const g0 = GRUPS.find(g => String(g.id) === G) || GRUPS[0], c0 = g0.curs ?? 3;
+  modal(`<h3>${kind === 'comp' ? L('Nova competició', 'Nueva competición') : L('Batalla en directe', 'Batalla en directo')}</h3>
+    <label class="field"><span>${L('Grup', 'Grupo')}</span><select id="bt_g" onchange="const g=GRUPS.find(x=>x.id==this.value);if(g&&g.curs!=null){$('#bt_c').value=g.curs;batUnits()}">${GRUPS.map(g => `<option value="${g.id}" ${g.id === g0.id ? 'selected' : ''}>${esc(g.nom)}</option>`).join('')}</select></label>
+    <div style="display:flex;gap:10px;flex-wrap:wrap"><label class="field" style="flex:1;min-width:150px"><span>${L('Nivell de les preguntes', 'Nivel de las preguntas')}</span><select id="bt_c" onchange="batUnits()">${CURS.map((c, i) => `<option value="${i}" ${i === c0 ? 'selected' : ''}>${tx(c)}</option>`).join('')}</select></label>
+      <label class="field" style="flex:2;min-width:200px"><span>${L('Tema', 'Tema')}</span><select id="bt_u"></select></label></div>
+    <label class="field"><span>${L('Títol (opcional)', 'Título (opcional)')}</span><input id="bt_t" maxlength="60" placeholder="${kind === 'comp' ? L('p. ex. Lliga de les taules', 'p. ej. Liga de las tablas') : L('p. ex. Repte de divendres', 'p. ej. Reto del viernes')}"></label>
+    ${kind === 'comp' ? `<div style="display:flex;gap:10px"><label class="field" style="flex:1"><span>${L('Durada (dies)', 'Duración (días)')}</span><input id="bt_d" type="number" min="1" max="60" value="7"></label><label class="field" style="flex:1"><span>${L('Intents per alumne', 'Intentos por alumno')}</span><input id="bt_n" type="number" min="1" max="10" value="3"></label></div>` : `<p class="t3" style="font-size:13px;margin:0 0 8px">${L('10 preguntes iguals per a tothom. Guanya qui n\'encerta més i, si hi ha empat, el més ràpid. Es tanca sola 6 minuts després de començar.', '10 preguntas iguales para todos. Gana quien acierta más y, si hay empate, el más rápido. Se cierra sola 6 minutos después de empezar.')}</p>`}
+    <div class="err-msg" id="bt_e"></div>
+    <div class="acts"><button class="btn" onclick="closeModal()">${L('Cancel·la', 'Cancelar')}</button><button class="btn primary" onclick="batCreate('${kind}')">${kind === 'comp' ? L('Crea la competició', 'Crear la competición') : L('Obre la sala', 'Abrir la sala')}</button></div>`, 'w480');
+  batUnits();
+}
+function batUnits() { const c = +$('#bt_c').value, el = $('#bt_u'); if (el) el.innerHTML = `<option value="">${L('Tot el curs (barreja)', 'Todo el curso (mezcla)')}</option>` + unitsOf(c).map(([i, t]) => `<option value="${i}">${i + 1}. ${esc(t)}</option>`).join(''); }
+async function batCreate(kind) {
+  const u = $('#bt_u').value, j = await act('bat_new', { kind, grup: +$('#bt_g').value, course: +$('#bt_c').value, unit: u === '' ? undefined : +u, titol: $('#bt_t').value, days: $('#bt_d')?.value, tries: $('#bt_n')?.value });
+  if (!j.ok) return $('#bt_e').textContent = j.error === 'permís' ? L('No tens permís en aquest grup.', 'No tienes permiso en este grupo.') : L("No s'ha pogut crear.", 'No se ha podido crear.');
+  closeModal();
+  if (kind === 'comp') { toast(L(`Competició creada. Els alumnes la veuen a l'app, a Batalles. Codi: ${j.state.code}`, `Competición creada. Los alumnos la ven en la app, en Batallas. Código: ${j.state.code}`)); return vBatalles(); }
+  batProj(j.state.code);
+}
+async function batEnd(code) { if (!await confirmBox(L('Acabar la competició ara?', '¿Terminar la competición ahora?'), L('La classificació queda tancada amb els resultats que hi ha.', 'La clasificación queda cerrada con los resultados que hay.'), L('Acaba-la', 'Terminarla'), false)) return; await act('bat_end', { bcode: code }); toast(L('Competició acabada.', 'Competición terminada.')); vBatalles(); }
+async function batRank(code) {
+  const j = await act('bat_state', { bcode: code }), s = j.state; if (!s) return;
+  const rows = s.players.filter(p => p.pos).sort((a, b) => a.pos - b.pos), none = s.players.filter(p => !p.pos);
+  modal(`<h3>${esc(s.title || L('Competició', 'Competición'))}</h3><div class="tw" style="max-height:60vh"><table><thead><tr><th>#</th><th>${L('Alumne', 'Alumno')}</th><th class="r">${L('Millor', 'Mejor')}</th><th class="r">${L('Temps', 'Tiempo')}</th><th class="r">${L('Intents', 'Intentos')}</th></tr></thead><tbody>
+    ${rows.map(p => `<tr style="cursor:default"><td>${['🥇', '🥈', '🥉'][p.pos - 1] || p.pos}</td><td>${esc(p.name)}</td><td class="r num">${p.best.correct}/${BQN}</td><td class="r num">${bsecs(p.best.ms)}</td><td class="r num">${p.tries}</td></tr>`).join('')}
+    ${none.map(p => `<tr style="cursor:default"><td>—</td><td>${esc(p.name)}</td><td class="r t3" colspan="3">${L('jugant…', 'jugando…')}</td></tr>`).join('')}</tbody></table></div>
+    <div class="acts"><button class="btn primary" onclick="closeModal()">${L('Tanca', 'Cerrar')}</button></div>`, 'w640');
+}
+// sala projectada: codi i QR, qui ha entrat, botó de començar, progrés en directe i podi
+let BP_T = null;
+async function batProj(code) {
+  clearInterval(BP_T); $$('.proj').forEach(x => x.remove());
+  document.body.insertAdjacentHTML('beforeend', `<div class="proj bproj"><button class="btn close" onclick="$('.proj').remove();clearInterval(BP_T);if(route.last==='batalles')vBatalles()">${ico('x')}${L('Tanca', 'Cerrar')}</button><div id="bpb" style="width:100%"></div></div>`);
+  const draw = async () => {
+    const j = await act('bat_state', { bcode: code }).catch(() => ({})), s = j.state, el = $('#bpb'); if (!s || !el) return;
+    const join = JOIN_B(code), qr = window.qrcode ? (() => { const q = qrcode(0, 'M'); q.addData(join); q.make(); return q.createSvgTag({ cellSize: 8, margin: 0, scalable: true }); })() : '';
+    const pl = s.players;
+    if (s.status === 'lobby') {
+      el.innerHTML = `<div class="bpl-wrap"><div><h2>${esc(s.title || L('Batalla de mates', 'Batalla de mates'))}</h2><ol><li>${L('Obre', 'Abre')} <b>app.numimates.com</b> → ${L('Batalles', 'Batallas')}</li><li>${L('Escriu el codi', 'Escribe el código')}</li></ol><code>${s.code}</code>
+        <div class="bplayers-p">${pl.map(p => `<span>${esc(p.name)}</span>`).join('') || `<i class="t3">${L('Esperant alumnes…', 'Esperando alumnos…')}</i>`}</div>
+        <button class="btn primary bbig" ${pl.length ? '' : 'disabled'} onclick="batGo('${code}')">${L(`Comença (${pl.length})`, `Empezar (${pl.length})`)}</button></div><div class="qr">${qr}</div></div>`;
+    } else if (!s.over) {
+      const left = s.startIn > 0 ? Math.ceil(s.startIn / 1000) : null;
+      const rows = [...pl].sort((a, b) => b.correct - a.correct || b.done - a.done);
+      el.innerHTML = left ? `<div class="bcountp">${left}</div>` : `<h2 style="text-align:center">${esc(s.title || L('Batalla de mates', 'Batalla de mates'))} · <span class="mono">${s.code}</span></h2>
+        <div class="blive">${rows.map(p => `<div><b>${esc(p.name)}</b><span class="bbar"><i style="width:${p.done / BQN * 100}%"></i></span><span class="num">${p.finished ? '✅ ' : ''}${p.correct}/${BQN}</span></div>`).join('')}</div>
+        <p style="text-align:center;margin-top:16px"><button class="btn" onclick="batEndLive('${code}')">${L('Acaba la batalla', 'Terminar la batalla')}</button></p>`;
+    } else {
+      const top = bTop(s, 50);
+      el.innerHTML = `<h2 style="text-align:center">🏆 ${esc(s.title || L('Batalla de mates', 'Batalla de mates'))}</h2><div class="bpodium">${[1, 0, 2].map(i => top[i] ? `<div class="pd p${i + 1}"><span>${['🥇', '🥈', '🥉'][i]}</span><b>${esc(top[i].name)}</b><small>${top[i].best.correct}/${BQN} · ${bsecs(top[i].best.ms)}</small><i></i></div>` : '').join('')}</div>
+        ${top.length > 3 ? `<ol class="brank" start="4">${top.slice(3).map(p => `<li><span>${p.pos}</span><b>${esc(p.name)}</b><span class="num">${p.best.correct}/${BQN} · ${bsecs(p.best.ms)}</span></li>`).join('')}</ol>` : ''}`;
+      clearInterval(BP_T);
+    }
+  };
+  await draw(); BP_T = setInterval(() => { if (!$('.bproj')) return clearInterval(BP_T); draw(); }, 1500);
+}
+const JOIN_B = c => `https://app.numimates.com/?b=${c}`;
+async function batGo(code) { const j = await act('bat_start', { bcode: code }); if (!j.ok) toast(j.error === 'sols' ? L('Encara no hi ha ningú a la sala.', 'Aún no hay nadie en la sala.') : L("No s'ha pogut començar.", 'No se ha podido empezar.')); }
+async function batEndLive(code) { if (!await confirmBox(L('Acabar la batalla ara?', '¿Terminar la batalla ahora?'), L('Compta el que cadascú ha fet fins ara.', 'Cuenta lo que cada uno ha hecho hasta ahora.'), L('Acaba-la', 'Terminarla'), false)) return; await act('bat_end', { bcode: code }); }
+// fitxa de l'alumne: batalles i medalles (i donar-ne una)
+async function loadDrawerBat(code) {
+  const el = $('#dbat'); if (!el) return;
+  const j = await act('alumne_bat', { code }); if (!$('#dbat') || j.error) return;
+  const st = j.stats || {};
+  el.innerHTML = `<h3>${L('Batalles i medalles', 'Batallas y medallas')}</h3>
+    <div class="stats4"><div><span>${L('Batalles', 'Batallas')}</span><b class="num">${st.played || 0}</b></div><div><span>${L('Victòries', 'Victorias')}</span><b class="num">${st.wins || 0}</b></div><div><span>${L('Encert', 'Acierto')}</span><b class="num">${st.accuracy != null ? st.accuracy + ' %' : '—'}</b></div><div><span>${L('Medalles', 'Medallas')}</span><b class="num">${j.medals.length}</b></div></div>
+    ${j.recent && j.recent.length ? `<p class="t3" style="font-size:13px;margin:10px 0 4px">${L('Últimes batalles', 'Últimas batallas')}: ${j.recent.map(r => `${r.kind === 'comp' ? '🏆' : r.kind === 'classe' ? '📺' : '⚔️'} ${r.pos ? (r.pos === 1 ? '1r' : r.pos + 'è') : '—'} (${r.correct}/10)`).join(' · ')}</p>` : ''}
+    ${j.medals.length ? `<ul class="dmeds">${j.medals.map(m => `<li><span>${(MEDS[m.kind] || ['🏅'])[0]}</span><div><b>${tx((MEDS[m.kind] || [, 'Medalla|Medalla'])[1])}</b>${m.comment ? `<small>«${esc(m.comment)}»</small>` : ''}<small class="t3">${esc(m.docent_nom || '')} · ${fdate(m.created_at)}</small></div><button class="ib sm" title="${L('Treu', 'Quitar')}" onclick="medalDel(${m.id},${js(code)})">${ico('x')}</button></li>`).join('')}</ul>` : ''}
+    <div class="dgive"><b>${L('Dona una medalla', 'Dar una medalla')}</b><div class="mpick">${Object.entries(MEDS).map(([k, [e, t]]) => `<button type="button" data-k="${k}" onclick="$$('.mpick button').forEach(b=>b.classList.toggle('on',b===this))">${e} ${tx(t)}</button>`).join('')}</div>
+      <input id="mcom" maxlength="200" placeholder="${L("Per què? (opcional; ho veuran l'alumne i la família)", '¿Por qué? (opcional; lo verán el alumno y la familia)')}"><button class="btn primary sm" onclick="medalGive(${js(code)})">${L('Dona la medalla', 'Dar la medalla')}</button></div>`;
+}
+async function medalGive(code) {
+  const k = $('.mpick button.on')?.dataset.k; if (!k) return toast(L('Tria quina medalla.', 'Elige qué medalla.'));
+  const j = await act('medal_give', { code, kind: k, comment: $('#mcom').value });
+  if (!j.ok) return toast(L("No s'ha pogut donar.", 'No se ha podido dar.'));
+  toast(L("Medalla donada! L'alumne la veurà en obrir l'app.", '¡Medalla dada! El alumno la verá al abrir la app.')); loadDrawerBat(code);
+}
+async function medalDel(id, code) { if (!await confirmBox(L('Treure aquesta medalla?', '¿Quitar esta medalla?'), '', L('Treu-la', 'Quitarla'))) return; await act('medal_del', { id }); loadDrawerBat(code); }
 
 /* ---------- Correus (només administració): esborranys HTML, prova, enviament ara o programat ---------- */
 let MLS = null, MED = null;
@@ -413,6 +520,7 @@ function openDrawer(code, keep) {
       <button class="btn sm" onclick="printReport(${js(r.code)})">${ico('printer')}${L('Imprimeix', 'Imprimir')}</button><button class="ib" onclick="closeDrawer()" aria-label="${L('Tanca', 'Cerrar')}">${ico('x')}</button></div></div>
     <div class="dr-b">${reportHTML(r, false)}</div></aside>`);
   $$('tbody tr').forEach(t => t.classList.toggle('sel', t.dataset.c === code));
+  loadDrawerBat(code);
   requestAnimationFrame(() => { const d = $('.drawer'); if (d && !d.contains(document.activeElement)) d.focus(); });
 }
 function closeDrawer(silent) { const had = $('.drawer'); $$('.drawer,.scrim').forEach(x => x.remove()); $$('tbody tr.sel').forEach(t => t.classList.remove('sel')); if (had && !silent && closeDrawer.from && document.contains(closeDrawer.from)) closeDrawer.from.focus(); if (!silent && /^#\/alumnes\/./.test(location.hash)) history.replaceState(null, '', '#/alumnes'); }
@@ -448,6 +556,7 @@ function reportHTML(r, print) {
     ${sec(L("Proves d'evolució", 'Pruebas de evolución'), tests.length ? chart + `<p class="t2" style="margin:8px 0 0;font-size:13px">${tests.map((t, i) => `${fdate(t.date)} · ${t.pct} %${t.kind === 'inicial' ? ` (${L('inicial', 'inicial')})` : i ? ` (${t.pct - tests[i - 1].pct >= 0 ? '+' : ''}${t.pct - tests[i - 1].pct})` : ''}`).join(' · ')}</p>` : `<p class="t3" style="margin:0">${L("Encara no ha fet cap prova. La primera surt als 14 dies d'haver començat.", 'Aún no ha hecho ninguna prueba. La primera sale a los 14 días de empezar.')}</p>`)}
     ${sec(L('Porta del Cavaller', 'Puerta del Caballero'), r.exams.length ? `<table class="mini-t"><thead><tr><th>${L('Unitat', 'Unidad')}</th><th class="r">${L('Millor', 'Mejor')}</th><th class="r">${L('Últim', 'Último')}</th><th class="r">${L('Intents', 'Intentos')}</th><th>${L('Estat', 'Estado')}</th></tr></thead><tbody>${r.exams.map(x => `<tr><td style="white-space:normal">${esc(unitName(x.uid))}</td><td class="r num">${to12(x.best)}/12</td><td class="r num">${to12(x.last)}/12</td><td class="r num">${x.tries || 1}</td><td><span class="chip ${x.best >= 75 ? 'good' : 'warn'}">${x.best >= 75 ? L('Superada', 'Superada') : L('Pendent', 'Pendiente')}</span></td></tr>`).join('')}</tbody></table>` : `<p class="t3" style="margin:0">${L('Encara no ha arribat a cap porta.', 'Aún no ha llegado a ninguna puerta.')}</p>`)}
     ${sec(L('Hàbit', 'Hábito'), `<div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap"><div class="cal">${cal.map(o => `<i class="${o ? 'on' : ''}"></i>`).join('')}</div><span class="t2" style="font-size:13px">${topD.length ? L(`Practica sobretot ${topD.join(', ')}`, `Practica sobre todo ${topD.join(', ')}`) : L('Encara sense dies de pràctica.', 'Aún sin días de práctica.')}<br><span class="t3">${L('Últimes 8 setmanes', 'Últimas 8 semanas')}</span></span></div>`)}
+    ${print ? '' : `<section class="dsec" id="dbat"><h3>${L('Batalles i medalles', 'Batallas y medallas')}</h3><p class="t3">…</p></section>`}
     ${sec(L("Què diu l'alumne", 'Qué dice el alumno'), `<dl class="dl"><dt>${L('Resultat de la prova inicial', 'Resultado de la prueba inicial')}</dt><dd>${esc(sv.result || '—')}</dd><dt>${L('Com se sent amb les mates', 'Cómo se siente con las mates')}</dt><dd>${FEEL[sv.feel] ? tx(FEEL[sv.feel]) : '—'}</dd><dt>${L('Tema que diu que fa a classe', 'Tema que dice que da en clase')}</dt><dd>${r.school ? L(`Unitat ${r.school.ui + 1} de ${curs(r.school.course)}`, `Unidad ${r.school.ui + 1} de ${curs(r.school.course)}`) : '—'}</dd>${r.reco ? `<dt>${L('Missió recomanada pendent', 'Misión recomendada pendiente')}</dt><dd>${(r.reco.items || []).length} ${L('lliçons', 'lecciones')}</dd>` : ''}</dl>`)}
     ${sec(L('Punts per a la tutoria', 'Puntos para la tutoría'), `<ul class="bullets">${pts.map(p => `<li>${esc(p)}</li>`).join('')}</ul>${print ? `<div id="pnotes"></div>` : `<label class="field" style="margin-top:12px"><span>${L('Notes (només per imprimir)', 'Notas (solo para imprimir)')}</span><textarea id="notes" placeholder="${L('Apunts per a la reunió amb la família…', 'Apuntes para la reunión con la familia…')}"></textarea></label>`}`)}
     ${print ? '' : `<section class="dsec"><details class="more"><summary>${ico('chevron-right')}${L("Motivació a l'app", 'Motivación en la app')}</summary><dl class="dl" style="margin-top:12px"><dt>XP</dt><dd class="num">${r.xp}</dd><dt>${L('XP aquesta setmana', 'XP esta semana')}</dt><dd class="num">${r.week && r.week.xp ? r.week.xp : 0}</dd><dt>${L('Cartes', 'Cartas')}</dt><dd class="num">${Object.keys(r.album || {}).length} / 100</dd><dt>${L('Batalles guanyades', 'Batallas ganadas')}</dt><dd class="num">${r.bwins || 0}</dd><dt>${L('Corones', 'Coronas')}</dt><dd class="num">${(r.crowns || []).length}</dd></dl></details></section>`}

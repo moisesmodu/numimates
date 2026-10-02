@@ -139,6 +139,9 @@ async function addKid() {
   g.disabled = false; e.textContent = r.error === 'no trobat' ? L("No trobem aquest codi. El trobareu a l'app: Perfil → El meu compte.", 'No encontramos este código. Lo encontraréis en la app: Perfil → Mi cuenta.') : ERR(r.status);
 }
 
+// medalles que dona el docent des del panell (les mateixes que veu l'alumne a l'app)
+const FMEDS = { esforc: ['💪', 'Ha treballat de valent|Ha trabajado a fondo'], ajuda: ['🤝', 'Ha ajudat els companys|Ha ayudado a los compañeros'], idees: ['💡', 'Idees originals|Ideas originales'], millora: ['📈', 'Ha millorat molt|Ha mejorado mucho'],
+  repte: ['🏔️', 'Ha superat un repte difícil|Ha superado un reto difícil'], atencio: ['👂', 'Molt atent i participatiu|Muy atento y participativo'], calcul: ['🧮', 'Màquina del càlcul mental|Máquina del cálculo mental'], constancia: ['🔥', 'Constància|Constancia'] };
 function vKid(k) {
   const s = sents(k), w = week(k), active = w.filter(d => d.on).length;
   const ex = Object.entries(k.exams || {}).map(([uid, x]) => ({ uid, ...x })).filter(x => UNIT_T[x.uid]).sort((a, b) => String(b.d || '').localeCompare(String(a.d || ''))).slice(0, 5);
@@ -151,6 +154,7 @@ function vKid(k) {
       : `<p class="empty">${L("Encara no ha arribat a cap porta. La porta és la prova del final de cada unitat: 12 preguntes, i cal encertar-ne 9.", 'Aún no ha llegado a ninguna puerta. La puerta es la prueba del final de cada unidad: 12 preguntas, y hay que acertar 9.')}</p>`}</div>
     <h2>${L('On va bé i on li costa', 'Dónde va bien y dónde le cuesta')}</h2>
     <div class="card sent">${Object.entries(s).map(([key, o]) => `<div>${tx(SENT[key])}${o.t >= 20 ? `<span class="bar"><i class="${o.pct >= 80 ? '' : o.pct >= 60 ? 'warn' : 'crit'}" style="width:${o.pct}%"></i></span><b>${o.pct} %</b>` : `<span class="bar"></span><span class="few">${L('poques dades', 'pocos datos')}</span>`}</div>`).join('')}</div>
+    ${k.medals && k.medals.length ? `<h2>🏅 ${L('Medalles de la profe', 'Medallas de la profe')}</h2><div class="card fmeds">${k.medals.map(m => `<div><span>${(FMEDS[m.kind] || ['🏅'])[0]}</span><p><b>${tx((FMEDS[m.kind] || [, 'Medalla|Medalla'])[1])}</b>${m.comment ? `<br>«${esc(m.comment)}»` : ''}<small>${esc(m.docent_nom || '')} · ${new Date(m.created_at).toLocaleDateString(LANG === 'es' ? 'es-ES' : 'ca-ES', { day: 'numeric', month: 'long' })}</small></p></div>`).join('')}</div>` : ''}
     <div class="tip"><img src="img/chars/guida-happy.webp" alt=""><p><b>${L('A casa:', 'En casa:')}</b> ${esc(tip)}</p></div>
     ${planBox(k)}
     <p class="note"><button class="link" onclick="removeKid('${esc(k.code)}')">${L('Treu aquest perfil de la zona de famílies', 'Quitar este perfil de la zona de familias')}</button></p>`;

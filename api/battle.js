@@ -1,40 +1,22 @@
 import { sql, body, cleanCode, ok, blocked, fail, tooMany, plaOf, alumneOk } from './_lib.js';
 import { randomInt } from 'crypto';
+import { batTables, batState } from './_batalla.js';
 // Batalles de mates. Tothom rep les mateixes preguntes (surten de la llavor `seed`).
 // Guanya qui n'encerta més; si hi ha empat, qui ha trigat menys. Els codis secrets dels alumnes
 // no surten mai: als altres jugadors només se'ls ensenya el nom de pila.
 const WORDS = ['ZEUS', 'HERA', 'ATENA', 'APOL', 'HERMES', 'ARES', 'NIKE', 'IRIS', 'EOS', 'GEA', 'URA', 'TITA', 'FENIX', 'PEGAS', 'ARGO', 'HIDRA'];
-const MAX = { duel: 2, party: 10, repte: 10 };
-const HOURS = { duel: 48, party: 3, repte: 48 };   // caducitat per entrar
 // Numi Ment: el duel o repte és d'un dels seus jocs (joc) amb una dificultat fixa (lv) per a tothom
 const JOCS_MENT = ['ate', 'int', 'cal', 'com', 'ref', 'rel', 'sim', 'ser', 'sin'];
-let ready = null;
-const cols = () => ready || (ready = sql`ALTER TABLE mates.batalles ADD COLUMN IF NOT EXISTS joc text, ADD COLUMN IF NOT EXISTS lv int`.catch(e => { ready = null; throw e; }));
-const PARTY_MS = 6 * 60 * 1000;                // una partida de grup es tanca 6 min després de començar
 // el nom el tria l'app: sense caràcters d'HTML, per si algun lloc el pinta sense escapar
 const first = n => String(n || '').replace(/[<>&"'`\\]/g, '').trim().split(/\s+/)[0].slice(0, 20) || 'Alumne';
 const cleanB = c => String(c || '').toUpperCase().replace(/[^A-Z0-9-]/g, '').slice(0, 14);
 const cleanCard = c => (typeof c === 'string' && /^[a-z]{2,12}$/.test(c)) ? c : null;
 
-async function state(bcode, sid) {
-  const b = (await sql`SELECT * FROM mates.batalles WHERE code = ${bcode}`)[0];
-  if (!b) return null;
-  const pl = await sql`SELECT sid, name, companion, card, done, correct, ms, finished FROM mates.batalla_jug WHERE code = ${bcode} ORDER BY joined_at`;
-  const now = Date.now(), start = b.start_at ? new Date(b.start_at).getTime() : null;
-  const allDone = pl.length >= 2 && pl.every(p => p.finished);
-  const over = b.kind === 'duel' ? allDone : b.kind === 'repte' ? (now > new Date(b.created_at).getTime() + HOURS.repte * 3600e3 || (allDone && pl.length >= MAX.repte)) : (allDone || (start && now > start + PARTY_MS));
-  const expired = !over && now > new Date(b.created_at).getTime() + HOURS[b.kind] * 3600e3, hoursLeft = Math.max(0, Math.round((new Date(b.created_at).getTime() + HOURS[b.kind] * 3600e3 - now) / 3600e3));
-  const rank = [...pl].filter(p => p.finished || over).sort((x, y) => y.correct - x.correct || x.ms - y.ms);
-  return {
-    code: b.code, kind: b.kind, course: b.course, unit: b.unit, seed: b.seed, status: b.status, joc: b.joc || null, lv: b.lv || null, hoursLeft,
-    startIn: start ? start - now : null, over: !!over, expired, host: b.host === sid, max: MAX[b.kind],
-    players: pl.map(p => ({ name: p.name, companion: p.companion, card: p.card, done: p.done, correct: p.correct, ms: p.ms, finished: p.finished, me: p.sid === sid, pos: over ? rank.indexOf(p) + 1 : 0, isHost: p.sid === b.host }))
-  };
-}
+const state = batState;
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') return ok(res, { error: 'method' }, 405);
-  await cols();
+  await batTables();
   const b = body(req), sid = cleanCode(b.code), act = b.action;
   if (!sid) return ok(res, { error: 'codi' }, 400);
   if (await blocked(req, 'codi', 40)) return tooMany(res);
@@ -64,9 +46,18 @@ export default async function handler(req, res) {
     return ok(res, await state(bcode, sid));
   }
 
+  // batalles i competicions que el docent ha obert per al grup de l'alumne
+  if (act === 'classe') {
+    if (!me.grup_id) return ok(res, { list: [] });
+    const rows = await sql`SELECT code FROM mates.batalles WHERE grup_id = ${me.grup_id} AND ((kind = 'classe' AND created_at > now() - interval '3 hours') OR (kind = 'comp' AND ends_at > now() - interval '3 days')) ORDER BY created_at DESC LIMIT 10`;
+    const list = [];
+    for (const r of rows) { const st = await state(r.code, sid); if (st && !(st.kind === 'classe' && st.over && !st.players.some(p => p.me))) list.push(st); }
+    return ok(res, { list });
+  }
+
   if (act === 'mine') {
     // Numi Ment només veu els seus reptes (amb joc) i Numi Mates/Pro, les batalles de mates
-    const rows = await sql`SELECT j.code FROM mates.batalla_jug j JOIN mates.batalles b USING (code) WHERE j.sid = ${sid} AND b.created_at > now() - interval '14 days' AND ((b.joc IS NOT NULL) = ${!!b.ment}) ORDER BY b.created_at DESC LIMIT 8`;
+    const rows = await sql`SELECT j.code FROM mates.batalla_jug j JOIN mates.batalles b USING (code) WHERE j.sid = ${sid} AND b.created_at > now() - interval '14 days' AND ((b.joc IS NOT NULL) = ${!!b.ment}) AND b.kind IN ('duel', 'party', 'repte') ORDER BY b.created_at DESC LIMIT 8`;
     const list = [];
     for (const r of rows) list.push(await state(r.code, sid));
     return ok(res, { list });
@@ -82,7 +73,8 @@ export default async function handler(req, res) {
   if (act === 'join') {
     if (!inside) {
       if (st0.expired || st0.over) return ok(res, { error: 'caducada' }, 410);
-      if (st0.kind === 'party' && st0.status !== 'lobby') return ok(res, { error: 'començada' }, 409);
+      if ((st0.kind === 'classe' || st0.kind === 'comp') && st0.grup !== me.grup_id) return ok(res, { error: 'altra-classe' }, 403);
+      if ((st0.kind === 'party' || st0.kind === 'classe') && st0.status !== 'lobby') return ok(res, { error: 'començada' }, 409);
       if (!!st0.joc !== !!b.ment) return ok(res, { error: 'altra-app' }, 409);
       if (st0.players.length >= st0.max) return ok(res, { error: 'plena' }, 409);
       await sql`INSERT INTO mates.batalla_jug (code, sid, name, companion, card) VALUES (${bcode}, ${sid}, ${name}, ${comp}, ${st0.kind === 'duel' ? cleanCard(b.card) : null}) ON CONFLICT DO NOTHING`;
@@ -99,7 +91,18 @@ export default async function handler(req, res) {
     await sql`UPDATE mates.batalles SET status = 'live', start_at = now() + interval '5 seconds' WHERE code = ${bcode} AND status = 'lobby'`;
     return ok(res, await state(bcode, sid));
   }
+  // competició: tornar-hi (es guarda el millor intent i es comença de nou amb preguntes noves)
+  if (act === 'retry') {
+    const meP = st0.players.find(p => p.me);
+    if (st0.kind !== 'comp' || st0.over || !meP.finished || !(st0.triesLeft > 0)) return ok(res, { error: 'intents' }, 409);
+    await sql`UPDATE mates.batalla_jug SET best_c = CASE WHEN best_c IS NULL OR correct > best_c OR (correct = best_c AND ms < best_ms) THEN correct ELSE best_c END,
+      best_ms = CASE WHEN best_c IS NULL OR correct > best_c OR (correct = best_c AND ms < best_ms) THEN ms ELSE best_ms END,
+      done = 0, correct = 0, ms = 0, finished = false, finished_at = NULL, tries = tries + 1 WHERE code = ${bcode} AND sid = ${sid} AND finished`;
+    return ok(res, await state(bcode, sid));
+  }
   if (act === 'progress') {
+    if (st0.kind === 'comp' && st0.over) return ok(res, { error: 'caducada' }, 410);
+    if (st0.kind === 'classe' && st0.status !== 'live') return ok(res, { error: 'no-començada' }, 409);
     const lim = st0.joc ? 300 : 10, done = Math.max(0, Math.min(lim, b.done | 0)), correct = Math.max(0, Math.min(done, b.correct | 0)), ms = Math.max(0, Math.min(3600e3, b.ms | 0)), fin = !!b.finished;
     // Només endavant: no es pot desfer una resposta ni tornar a jugar
     await sql`UPDATE mates.batalla_jug SET done = ${done}, correct = ${correct}, ms = ${ms}, finished = finished OR ${fin}, finished_at = CASE WHEN ${fin} AND NOT finished THEN now() ELSE finished_at END

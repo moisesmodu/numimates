@@ -329,7 +329,7 @@ function go(v) {
   if (v !== 'profiles' && v !== 'onboard' && appMismatch(P)) { LS = null; closeModal(); return appHandoff(); }
   if ((v === 'battles' || v === 'season') && !isPremium()) { premiumModal(v === 'battles' ? 'batalles' : 'temporada'); v = VIEW && VIEW !== v ? VIEW : 'home'; if (v === VIEW) return; }
   if ((v === 'battles' && classOff('batalles'))) { toast(L("El teu docent ha desactivat les batalles per a la classe.", 'Tu docente ha desactivado las batallas para la clase.')); v = 'train'; }
-  VIEW = v; if (v === 'home') setTimeout(credNudge, 1500);
+  VIEW = v; if (v === 'home') { setTimeout(credNudge, 1500); setTimeout(medalCheck, 1200); setTimeout(classeBatCheck, 2200); }
   // compte creat pel docent amb «prova de nivell»: primer la prova, després la portada
   if ((v === 'home' || v === 'place') && P && P.placeAsk && varOf(P) !== 'ment') return placeIntro();
   if (v !== 'onboard') setVariant(varOf(P));
@@ -1312,6 +1312,7 @@ renderProfile.inner = function () {
       <div class="ctip">${P.username ? L('Entra des de qualsevol dispositiu amb el teu usuari i contrasenya.', 'Entra desde cualquier dispositivo con tu usuario y contraseña.') : L('Amb usuari i contrasenya podràs entrar des de qualsevol dispositiu.', 'Con usuario y contraseña podrás entrar desde cualquier dispositivo.')}${P.code ? `<br><small class="codesm">${L('Codi del compte', 'Código de la cuenta')}: <b>${P.code}</b> · ${L('per a la zona de famílies i per recuperar el compte', 'para la zona de familias y para recuperar la cuenta')}</small>` : ''}</div>
       <button class="btn sm gold" onclick="accountModal()">${P.username ? L('CANVIA LA CONTRASENYA', 'CAMBIAR LA CONTRASEÑA') : L('CREA USUARI I CONTRASENYA', 'CREAR USUARIO Y CONTRASEÑA')}</button></div>
     <h2 class="h2">🏫 ${L('La meva classe', 'Mi clase')}</h2>${classeBox()}
+    ${P.classe ? `<h2 class="h2">🏅 ${L('Medalles de la profe', 'Medallas de la profe')}</h2><div id="pmedals"><p class="empty">…</p></div>` : ''}
     ${P.classe ? '' : `<h2 class="h2">⭐ ${L('El meu pla', 'Mi plan')}</h2>${premiumBox()}`}
     ${sv ? `<h2 class="h2">${L("Prova d'inici", 'Prueba inicial')}</h2><div class="survey"><div><span>${L('Curs', 'Curso')}</span><b>${esc(sv.curs)}</b></div><div><span>${L('Les mates…', 'Las mates…')}</span><b>${FEEL[sv.feel] ? tx(FEEL[sv.feel]) : '—'}</b></div><div><span>${L("M'agrada", 'Me gusta')}</span><b>${LIKE[sv.like] ? tx(LIKE[sv.like]) : '—'}</b></div><div><span>${L('Resultat', 'Resultado')}</span><b>${esc(sv.result)}</b></div></div>` : ''}
     <h2 class="h2">${L('Ajustos', 'Ajustes')}</h2>
@@ -1321,6 +1322,7 @@ renderProfile.inner = function () {
     <div class="row2 pbtns"><button class="btn ghost" onclick="go('profiles')">${L("CANVIA D'ALUMNE", 'CAMBIAR DE ALUMNO')}</button><button class="btn ghost redt" onclick="resetP()">${L('ESBORRA EL PROGRÉS', 'BORRAR EL PROGRESO')}</button></div>
     <p class="foot"><img src="${VAR.logo}" alt="${VAR.name}" class="footlogo"></p>
     <p class="legalf"><a href="https://numimates.com/privacitat?l=${LANG}" target="_blank" rel="noopener">${L('Privadesa', 'Privacidad')}</a> · <a href="https://numimates.com/avis-legal?l=${LANG}" target="_blank" rel="noopener">${L('Avís legal', 'Aviso legal')}</a></p>`, 'profile');
+  if (P.classe) loadMedals();
 }
 /* ---------- La meva classe: unir-se al grup del docent amb el codi AULA-XXXX ---------- */
 function classeBox() {
@@ -1365,6 +1367,34 @@ function classeLeave() {
 async function classeRefresh() {
   if (!P || !P.code || !navigator.onLine) return; const was = JSON.stringify(P.classe || null);
   try { const r = await api('classe', { code: P.code, action: 'info' }); if (r.grup) P.classe = r.grup; else delete P.classe; if (JSON.stringify(P.classe || null) !== was) { saveLocal(); if (VIEW === 'home') renderHome(); } } catch (e) { }
+}
+// Medalles que dona el docent des del panell (amb un comentari). Les noves es mostren en obrir l'app.
+const MEDS = { esforc: ['💪', 'Ha treballat de valent|Ha trabajado a fondo'], ajuda: ['🤝', 'Ha ajudat els companys|Ha ayudado a los compañeros'], idees: ['💡', 'Idees originals|Ideas originales'], millora: ['📈', 'Ha millorat molt|Ha mejorado mucho'],
+  repte: ['🏔️', 'Ha superat un repte difícil|Ha superado un reto difícil'], atencio: ['👂', 'Molt atent i participatiu|Muy atento y participativo'], calcul: ['🧮', 'Màquina del càlcul mental|Máquina del cálculo mental'], constancia: ['🔥', 'Constància|Constancia'] };
+const medalHTML = m => `<div class="medal"><span class="mdi">${(MEDS[m.kind] || ['🏅'])[0]}</span><span><b>${tx((MEDS[m.kind] || [, 'Medalla|Medalla'])[1])}</b>${m.comment ? `<small>«${esc(m.comment)}»</small>` : ''}<small class="mut">${esc(m.docent_nom || '')} · ${dayLong(String(m.created_at).slice(0, 10))}</small></span></div>`;
+async function loadMedals() {
+  let r; try { r = await api('classe', { code: P.code, action: 'medals' }); } catch (e) { return; }
+  const el = $('#pmedals'); if (!el) return;
+  el.innerHTML = r.list && r.list.length ? `<div class="medals">${r.list.map(medalHTML).join('')}</div>` : `<p class="empty">${L('Encara no en tens cap. La teva profe te les dona quan ho fas molt bé a classe!', 'Aún no tienes ninguna. ¡Tu profe te las da cuando lo haces muy bien en clase!')}</p>`;
+}
+async function medalCheck() {
+  if (!P || !P.code || !P.classe || VIEW !== 'home' || $('.modal-bg')) return;
+  let r; try { r = await api('classe', { code: P.code, action: 'medals' }); } catch (e) { return; }
+  const nou = (r.list || []).filter(m => !m.seen); if (!nou.length || VIEW !== 'home' || $('.modal-bg')) return;
+  modal(`<div class="sheet card cent"><div class="medalbig">${(MEDS[nou[0].kind] || ['🏅'])[0]}</div><h3>${nou.length === 1 ? L('La teva profe t\'ha donat una medalla!', '¡Tu profe te ha dado una medalla!') : L(`La teva profe t'ha donat ${nou.length} medalles!`, `¡Tu profe te ha dado ${nou.length} medallas!`)}</h3>
+    <div class="medals">${nou.slice(0, 3).map(medalHTML).join('')}</div><button class="btn big gold" onclick="closeModal()">${L('GENIAL!', '¡GENIAL!')}</button></div>`, true);
+  SFX.win && SFX.win(); confetti && confetti(140);
+  api('classe', { code: P.code, action: 'medals', seen: true }).catch(() => { });
+}
+// batalla en directe oberta per la profe: avís a la portada (una vegada per batalla)
+async function classeBatCheck() {
+  if (!P || !P.code || !P.classe || classOff('batalles') || VIEW !== 'home' || $('.modal-bg')) return;
+  let r; try { r = await api('battle', { action: 'classe', code: P.code, name: P.name, companion: P.companion }); } catch (e) { return; }
+  const st = (r.list || []).find(x => x.kind === 'classe' && x.status === 'lobby' && !x.over && !x.players.some(p => p.me));
+  P.bseen = P.bseen || {}; if (!st || P.bseen[st.code] || VIEW !== 'home' || $('.modal-bg')) return;
+  P.bseen[st.code] = 1; saveLocal();
+  modal(`<div class="sheet card cent"><div class="medalbig">📺</div><h3>${L('La teva profe ha obert una batalla!', '¡Tu profe ha abierto una batalla!')}</h3><p>${esc(st.title || '')}</p>
+    <button class="btn big" onclick="closeModal();joinBattle('${st.code}')">${L('ENTRA A LA SALA', 'ENTRA EN LA SALA')}</button><button class="btn ghost big" onclick="closeModal()">${L('ARA NO', 'AHORA NO')}</button></div>`, true);
 }
 // «Mode escola»: el docent pot apagar les batalles o els intercanvis per al seu grup
 const classOff = k => !!(P && P.classe && P.classe.opts && P.classe.opts[k] === false);

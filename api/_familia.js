@@ -94,6 +94,8 @@ async function data(req, res, fam) {
     pla: plaOf(r), sub: subOf(r), grup: r.grup || null, companion: typeof r.companion === 'string' ? r.companion : 'numi',
     days: Array.isArray(r.days) ? r.days.slice(-60) : [], exams: r.exams && typeof r.exams === 'object' ? r.exams : {}, sk: r.sk && typeof r.sk === 'object' ? r.sk : {}, prog: r.prog && typeof r.prog === 'object' ? r.prog : {}
   }));
+  // medalles del docent de cada fill (la taula pot no existir encara si ningú n'ha donat cap)
+  try { const md = await sql`SELECT code, kind, comment, docent_nom, created_at FROM mates.medalles WHERE code = ANY(${kids.map(k => k.code)}) ORDER BY created_at DESC`; kids.forEach(k => { k.medals = md.filter(m => m.code === k.code).slice(0, 20).map(({ code, ...m }) => m); }); } catch (e) { kids.forEach(k => { k.medals = []; }); }
   return ok(res, { email: f.email, kids });
 }
 

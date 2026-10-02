@@ -20,7 +20,7 @@ const ordN = n => L(n + ({ 1: 'r', 2: 'n', 3: 'r', 4: 't' }[n] || 'è'), n + 'º
 const secs = ms => (ms / 1000).toFixed(1).replace('.', ',') + ' s';
 const bApi = (action, extra = {}) => api('battle', { action, code: P.code, name: P.name, companion: P.companion, ...extra });
 const cardById = id => STK.find(s => s[0] === id);
-const BERR = e => ({ premium: L('Les batalles són del pla Premium (o de la teva escola).', 'Las batallas son del plan Premium (o de tu escuela).'), 'no-existeix': L("Aquest codi no existeix. Revisa'l!", 'Ese código no existe. ¡Revísalo!'), caducada: L('Aquesta batalla ja ha acabat.', 'Esta batalla ya ha terminado.'), 'començada': L('Aquesta partida ja ha començat.', 'Esta partida ya ha empezado.'), plena: L('Aquesta batalla ja és plena.', 'Esta batalla ya está llena.'), massa: L('Has creat moltes batalles. Espera una estona.', 'Has creado muchas batallas. Espera un rato.'), sols: L('Cal almenys un altre jugador.', 'Hace falta al menos otro jugador.') })[e] || L('No hi ha connexió. Torna-ho a provar.', 'No hay conexión. Vuelve a intentarlo.');
+const BERR = e => ({ premium: L('Les batalles són del pla Premium (o de la teva escola).', 'Las batallas son del plan Premium (o de tu escuela).'), 'no-existeix': L("Aquest codi no existeix. Revisa'l!", 'Ese código no existe. ¡Revísalo!'), caducada: L('Aquesta batalla ja ha acabat.', 'Esta batalla ya ha terminado.'), 'començada': L('Aquesta partida ja ha començat.', 'Esta partida ya ha empezado.'), plena: L('Aquesta batalla ja és plena.', 'Esta batalla ya está llena.'), massa: L('Has creat moltes batalles. Espera una estona.', 'Has creado muchas batallas. Espera un rato.'), sols: L('Cal almenys un altre jugador.', 'Hace falta al menos otro jugador.'), 'altra-classe': L('Aquesta batalla és d\'una altra classe.', 'Esta batalla es de otra clase.'), intents: L('Ja has fet tots els intents.', 'Ya has hecho todos los intentos.') })[e] || L('No hi ha connexió. Torna-ho a provar.', 'No hay conexión. Vuelve a intentarlo.');
 // Bucle de consulta lligat a la pantalla: s'atura sol quan canvies de pantalla
 // Només un bucle per clau: en repintar la pantalla no se n'engega un altre (abans es multiplicaven)
 const BLOOPS = new Set();
@@ -43,13 +43,52 @@ function renderBattles() {
   if (!P.code) { toast(L('Per jugar batalles cal connexió a internet.', 'Para jugar batallas hace falta conexión a internet.')); return go('train'); }
   app.innerHTML = shell(`<div data-bk="hub"><h1 class="ph1">${L('Batalles de mates', 'Batallas de mates')}</h1>
     <p class="lead">${L("Tothom té les mateixes 10 preguntes. Guanya qui n'encerta més i, si hi ha empat, <b>el més ràpid</b>.", 'Todos tienen las mismas 10 preguntas. Gana quien acierta más y, si hay empate, <b>el más rápido</b>.')}</p>
+    <div id="bclasse"></div>
     <button class="tcard lliga" onclick="go('league')"><span class="ti">🏆</span><span><b>${L('Lliga Numi', 'Liga Numi')}</b><small>${L('Rànquing de la setmana i del mes. Els 3 primers de cada mes guanyen premi.', 'Ranking de la semana y del mes. Los 3 primeros de cada mes ganan premio.')}</small></span></button>
     <button class="tcard duel" onclick="newBattle('duel')"><span class="ti">⚔️</span><span><b>${L('Duel 1 contra 1', 'Duelo 1 contra 1')}</b><small>${L('Reta un amic amb un codi. Cadascú juga quan pot i qui guanya s\'emporta els diamants.', 'Reta a un amigo con un código. Cada uno juega cuando puede y quien gana se lleva los diamantes.')}</small></span><span class="bcost">${DUEL_COST} 💎</span></button>
     <button class="tcard party" onclick="newBattle('party')"><span class="ti">🏟️</span><span><b>${L('Partida de grup', 'Partida de grupo')}</b><small>${L('Fins a 10 jugadors. Tothom comença alhora!', 'Hasta 10 jugadores. ¡Todos empiezan a la vez!')}</small></span></button>
     <div class="joinbox"><input id="bcin" class="nm" placeholder="${L('Codi: ZEUS-1234', 'Código: ZEUS-1234')}" aria-label="${L('Tens un codi de batalla?', '¿Tienes un código de batalla?')}" maxlength="12" autocapitalize="characters" onkeydown="if(event.key==='Enter')joinBattle(this.value)"><button class="btn" onclick="joinBattle($('#bcin').value)">${L('ENTRA', 'ENTRA')}</button></div>
     <h2 class="h2">${L('Premis', 'Premios')}</h2>${battleRewardsHTML()}
     <h2 class="h2">${L('Les meves batalles', 'Mis batallas')}</h2><div id="bmine"><p class="empty">…</p></div></div>`, 'train');
-  loadMine();
+  loadMine(); loadClasse();
+}
+// batalles en directe i competicions que el docent ha obert per a la classe
+const kindLabel = st => st.kind === 'classe' ? '📺 ' + L('BATALLA DE CLASSE', 'BATALLA DE CLASE') : st.kind === 'comp' ? '🏆 ' + L('COMPETICIÓ', 'COMPETICIÓN') : st.kind === 'duel' ? '⚔️ ' + L('DUEL', 'DUELO') + ` · ${DUEL_COST} 💎` : '🏟️ ' + L('PARTIDA DE GRUP', 'PARTIDA DE GRUPO');
+const dayMonth = d => new Date(d).toLocaleDateString(LANG === 'es' ? 'es-ES' : 'ca-ES', { day: 'numeric', month: 'long' });
+async function loadClasse() {
+  if (!P.classe) return;
+  let r; try { r = await bApi('classe'); } catch (e) { return; }
+  const el = $('#bclasse'); if (!el || !r.list || !r.list.length) return;
+  el.innerHTML = `<h2 class="h2">🏫 ${L('De la teva classe', 'De tu clase')}</h2>` + r.list.map(st => {
+    const me = st.players.find(p => p.me);
+    if (st.kind === 'classe') return `<button class="tcard party" onclick="joinBattle('${st.code}')"><span class="ti">📺</span><span><b>${esc(st.title || L('Batalla de classe', 'Batalla de clase'))}</b><small>${st.over ? L('Acabada: mira la classificació', 'Terminada: mira la clasificación') : st.status === 'live' ? L('Ja ha començat', 'Ya ha empezado') : L(`${st.players.length} a la sala · entra-hi i espera que la profe comenci`, `${st.players.length} en la sala · entra y espera a que la profe empiece`)}</small></span></button>`;
+    const left = me ? (me.finished ? st.triesLeft : (st.tries || 1) - (me.tries || 0)) : st.tries;
+    return `<button class="tcard lliga" onclick="openComp('${st.code}')"><span class="ti">🏆</span><span><b>${esc(st.title || L('Competició', 'Competición'))}</b><small>${st.over ? L('Acabada: mira la classificació', 'Terminada: mira la clasificación') : L(`Fins al ${dayMonth(st.endsAt)} · ${me && me.best ? `el teu millor: ${me.best.correct}/${BQ} · ` : ''}${left} ${left === 1 ? 'intent' : 'intents'}`, `Hasta el ${dayMonth(st.endsAt)} · ${me && me.best ? `tu mejor: ${me.best.correct}/${BQ} · ` : ''}${left} ${left === 1 ? 'intento' : 'intentos'}`)}${me && me.pos ? ` · ${ordN(me.pos)}` : ''}</small></span></button>`;
+  }).join('');
+}
+// competició: entrar-hi, jugar, veure la classificació i tornar-hi mentre quedin intents
+async function openComp(bcode) {
+  let st; try { st = await bApi('join', { bcode }); } catch (e) { return toast(BERR()); }
+  if (st.error) { SFX.ko(); return toast(BERR(st.error)); }
+  const me = st.players.find(p => p.me);
+  if (!st.over && !me.finished) { BT = { st }; return startBattle(); }
+  scrComp(st);
+}
+function scrComp(st) {
+  BT = { st };
+  const me = st.players.find(p => p.me), rank = st.players.filter(p => p.pos).sort((a, b) => a.pos - b.pos);
+  app.innerHTML = `<div class="scr"><div class="burst ${me && me.pos === 1 ? 'gold' : ''}"></div><div class="bkind">${kindLabel(st)}</div><h1>${esc(st.title || L('Competició', 'Competición'))}</h1>
+    <p class="sub">${st.over ? L('Competició acabada.', 'Competición terminada.') : L(`Oberta fins al ${dayMonth(st.endsAt)}. Compta el teu millor intent.`, `Abierta hasta el ${dayMonth(st.endsAt)}. Cuenta tu mejor intento.`)}${me && me.best ? ` ${L(`El teu millor: <b>${me.best.correct}/${BQ}</b> en ${secs(me.best.ms)}.`, `Tu mejor: <b>${me.best.correct}/${BQ}</b> en ${secs(me.best.ms)}.`)}` : ''}</p>
+    <div class="podium">${rank.slice(0, 10).map(p => `<div class="prow ${p.me ? 'me' : ''} p${p.pos}"><span class="ppos">${['🥇', '🥈', '🥉'][p.pos - 1] || p.pos}</span><span class="pc">${charSVG(p.companion || 'numi', 'happy')}</span><b>${esc(p.name)}</b><span>${p.best.correct}/${BQ} · ${secs(p.best.ms)}</span></div>`).join('')}</div>
+    ${!st.over && st.triesLeft > 0 ? `<button class="btn big" onclick="retryComp()">${L(`TORNA-HI (${st.triesLeft} ${st.triesLeft === 1 ? 'intent' : 'intents'})`, `OTRA VEZ (${st.triesLeft} ${st.triesLeft === 1 ? 'intento' : 'intentos'})`)}</button>` : ''}
+    ${st.over && !(P.bclaim || {})[st.code] && me && me.best ? `<button class="btn big gold" onclick="claimBattle()">🎁 ${L('RECULL EL PREMI', 'RECOGE EL PREMIO')}</button>` : ''}
+    <button class="btn big ghost" onclick="go('battles')">${L('TORNA A LES BATALLES', 'VOLVER A LAS BATALLAS')}</button></div>`;
+  if (me && me.pos === 1 && st.over) { SFX.win(); confetti(160); }
+}
+async function retryComp() {
+  let st; try { st = await bApi('retry', { bcode: BT.st.code }); } catch (e) { return toast(BERR()); }
+  if (st.error) return toast(BERR(st.error));
+  BT = { st }; startBattle();
 }
 async function loadMine() {
   let r; try { r = await bApi('mine'); } catch (e) { return; }
@@ -116,11 +155,11 @@ function scrLobby(st) {
   let action;
   if (duel) action = `<button class="btn big" onclick="startBattle()">${(P.bpaid || {})[st.code] ? L('JUGA ARA', 'JUGAR AHORA') : L(`JUGA (${DUEL_COST} 💎)`, `JUGAR (${DUEL_COST} 💎)`)}</button><p class="sub small">${others.length ? L('Tens 48 hores per jugar.', 'Tienes 48 horas para jugar.') : L("No cal esperar: juga ara i el teu rival tindrà les mateixes preguntes quan entri.", 'No hace falta esperar: juega ahora y tu rival tendrá las mismas preguntas cuando entre.')}</p>`;
   else if (st.status === 'live') action = `<p class="sub">${L('Comencem!', '¡Empezamos!')}</p>`;
-  else action = st.host ? `<button class="btn big" id="bstart" onclick="startParty()" ${st.players.length < 2 ? 'disabled' : ''}>${L('COMENÇA LA PARTIDA', 'EMPEZAR LA PARTIDA')}</button><p class="sub small">${L(`${st.players.length} de ${st.max} jugadors. Quan hi siguin tots, comença!`, `${st.players.length} de ${st.max} jugadores. ¡Cuando estén todos, empieza!`)}</p>` : `<p class="sub">⏳ ${L("Esperant que l'amfitrió comenci…", 'Esperando a que el anfitrión empiece…')}</p>`;
+  else action = st.host ? `<button class="btn big" id="bstart" onclick="startParty()" ${st.players.length < 2 ? 'disabled' : ''}>${L('COMENÇA LA PARTIDA', 'EMPEZAR LA PARTIDA')}</button><p class="sub small">${L(`${st.players.length} de ${st.max} jugadors. Quan hi siguin tots, comença!`, `${st.players.length} de ${st.max} jugadores. ¡Cuando estén todos, empieza!`)}</p>` : `<p class="sub">⏳ ${st.kind === 'classe' ? L('Esperant que la profe comenci la batalla…', 'Esperando a que la profe empiece la batalla…') : L("Esperant que l'amfitrió comenci…", 'Esperando a que el anfitrión empiece…')}</p>`;
   app.innerHTML = `<div class="scr blobby" data-bk="${key}"><button class="xbtn bx" onclick="go('battles')" aria-label="${L('Surt', 'Salir')}">✕</button>
-    <div class="bkind">${duel ? '⚔️ ' + L('DUEL', 'DUELO') + ` · ${DUEL_COST} 💎` : '🏟️ ' + L('PARTIDA DE GRUP', 'PARTIDA DE GRUPO')} · ${tx(COURSES[st.course].long).toUpperCase()}</div>
+    <div class="bkind">${kindLabel(st)} · ${tx(COURSES[st.course].long).toUpperCase()}</div>${st.title ? `<h2 class="h2" style="margin:6px 0 0;text-align:center">${esc(st.title)}</h2>` : ''}
     <div class="bcode"><small>${L('Codi de la batalla', 'Código de la batalla')}</small><b>${st.code}</b></div>
-    <button class="btn sm gold" onclick="shareBattle('${st.code}','${st.kind}')">📨 ${L('ENVIA EL CODI', 'ENVIAR EL CÓDIGO')}</button>
+    ${st.kind === 'classe' ? '' : `<button class="btn sm gold" onclick="shareBattle('${st.code}','${st.kind}')">📨 ${L('ENVIA EL CODI', 'ENVIAR EL CÓDIGO')}</button>`}
     <div class="bplayers ${duel ? 'vs' : ''}" id="bpls">${duel ? `${playerChip(me, st)}<div class="vsx">VS</div>${others[0] ? playerChip(others[0], st) : `<div class="bpl ghost"><div class="bpc q">?</div><b>${L('Rival', 'Rival')}</b><small>${L('encara no ha entrat', 'aún no ha entrado')}</small></div>`}` : st.players.map(p => playerChip(p, st)).join('')}</div>
     ${action}</div>`;
   if (!duel && st.status === 'live') return partyCountdown(st);
@@ -186,6 +225,7 @@ function quitBattle() {
 
 /* Resultats */
 function scrBattleWait(st) {
+  if (st.kind === 'comp') return scrComp(st);
   BT = { st };
   if (st.over) return scrBattleResult(st);
   const me = st.players.find(p => p.me), key = 'wait' + st.code;
