@@ -19,3 +19,5 @@ html[data-v=pro] .energy b{color:#FFE29A}html[data-v=pro] .energy small{color:#D
 html[data-v=pro] .energy.empty,html[data-v=pro] .energy.prem{background:var(--card);border-color:var(--line)}
 html[data-v=pro] .energy.empty b,html[data-v=pro] .energy.prem b{color:var(--ink)}html[data-v=pro] .energy.empty small,html[data-v=pro] .energy.prem small{color:var(--mut)}
 html[data-v=pro] .en-pips i{background:#2B2640}html[data-v=pro] .en-pips i.on{background:#3A2E12;box-shadow:0 2px 0 #6B5520}
+/* podi de les batalles: els graons conserven el color de les medalles */
+html[data-v=pro] .s2 .step{background:linear-gradient(180deg,#E3E7EE,#9EA7B6)}html[data-v=pro] .s1 .step{background:linear-gradient(180deg,#FFD35C,#E59A1B)}html[data-v=pro] .s3 .step{background:linear-gradient(180deg,#F0B98A,#B86A33)}

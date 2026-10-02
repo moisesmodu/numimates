@@ -31,6 +31,20 @@ function bLoop(key, fn, every = 2000) {
   setTimeout(tick, every);
 }
 
+/* ---------- Escenari d'arena (només visual): focus de llum, estrelles i grades ---------- */
+const arenaBG = (tone = '') => `<div class="arena-bg ${tone}" aria-hidden="true"><i class="beam b1"></i><i class="beam b2"></i><i class="beam b3"></i><i class="stars"></i><i class="crowd"></i><i class="floor"></i></div>`;
+const vsBolt = () => `<div class="vsx" aria-hidden="true"><svg viewBox="0 0 64 64"><path d="M38 2 14 36h14l-6 26 28-38H34z" fill="url(#vsg)"/><defs><linearGradient id="vsg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFE38A"/><stop offset="1" stop-color="#FF8A3C"/></linearGradient></defs></svg><b>VS</b></div>`;
+// cursa de la batalla: un carril per jugador (tu sempre el primer), amb el company que avança
+function raceHTML(st) {
+  const me = { name: P.name, companion: P.companion, done: LS ? LS.done : 0, me: true };
+  const ps = [me, ...st.players.filter(p => !p.me).sort((a, b) => b.done - a.done).slice(0, 4)];
+  return ps.map(p => `<div class="lane ${p.me ? 'me' : ''}"><span class="ln">${esc(p.me ? L('Tu', 'Tú') : p.name)}</span><span class="track"><i class="fill" style="width:${Math.min(100, p.done / BQ * 100)}%"></i><span class="runner" style="left:${Math.min(100, p.done / BQ * 100)}%">${charSVG(p.companion || 'numi', p.done >= BQ ? 'happy' : 'idle')}</span><i class="flag">🏁</i></span></div>`).join('');
+}
+// podi en tres graons (2n · 1r · 3r) amb els personatges a dalt
+function podium3(rank) {
+  const top = [rank[1], rank[0], rank[2]];
+  return `<div class="pod3">${top.map((p, i) => p ? `<div class="pst s${p.pos} ${p.me ? 'me' : ''}" style="--d:${[.35, .7, .15][i]}s"><div class="pch">${p.pos === 1 ? '<span class="crown">👑</span>' : ''}${charSVG(p.companion || 'numi', 'happy')}</div><b>${esc(p.name)}</b><small>${p.correct}/${BQ} · ${secs(p.ms)}</small><div class="step"><span>${p.pos}</span></div></div>` : '<div class="pst empty"></div>').join('')}</div>`;
+}
 function battleRewardsHTML() {
   return `<div class="brules">
     <div><b>⚔️ ${L('Duel', 'Duelo')}</b> ${L(`Entrar costa ${DUEL_COST} 💎. Qui guanya s'emporta 30 💎. Si ningú accepta el duel, et tornem els ${DUEL_COST} 💎.`, `Entrar cuesta ${DUEL_COST} 💎. Quien gana se lleva 30 💎. Si nadie acepta el duelo, te devolvemos los ${DUEL_COST} 💎.`)}</div>
@@ -41,8 +55,10 @@ function battleRewardsHTML() {
 function renderBattles() {
   VIEW = 'battles';
   if (!P.code) { toast(L('Per jugar batalles cal connexió a internet.', 'Para jugar batallas hace falta conexión a internet.')); return go('train'); }
-  app.innerHTML = shell(`<div data-bk="hub"><h1 class="ph1">${L('Batalles de mates', 'Batallas de mates')}</h1>
-    <p class="lead">${L("Tothom té les mateixes 10 preguntes. Guanya qui n'encerta més i, si hi ha empat, <b>el més ràpid</b>.", 'Todos tienen las mismas 10 preguntas. Gana quien acierta más y, si hay empate, <b>el más rápido</b>.')}</p>
+  const wins = (P.stats && P.stats.bwins) || 0;
+  app.innerHTML = shell(`<div data-bk="hub"><div class="bhero">${arenaBG()}<div class="bh-chars"><span class="bh-a">${meC('happy')}</span>${vsBolt()}<span class="bh-b">${charSVG(P.companion === 'cavaller' ? 'numi' : 'cavaller', 'happy')}</span></div>
+      <h1>${L('Batalles de mates', 'Batallas de mates')}</h1><p>${L("Les mateixes 10 preguntes per a tothom. Guanya qui n'encerta més i, si hi ha empat, <b>el més ràpid</b>.", 'Las mismas 10 preguntas para todos. Gana quien acierta más y, si hay empate, <b>el más rápido</b>.')}</p>
+      ${wins ? `<span class="bh-wins">🏆 ${wins} ${wins === 1 ? L('victòria', 'victoria') : L('victòries', 'victorias')}</span>` : ''}</div>
     <div id="bclasse"></div>
     <button class="tcard lliga" onclick="go('league')"><span class="ti">🏆</span><span><b>${L('Lliga Numi', 'Liga Numi')}</b><small>${L('Rànquing de la setmana i del mes. Els 3 primers de cada mes guanyen premi.', 'Ranking de la semana y del mes. Los 3 primeros de cada mes ganan premio.')}</small></span></button>
     <button class="tcard duel" onclick="newBattle('duel')"><span class="ti">⚔️</span><span><b>${L('Duel 1 contra 1', 'Duelo 1 contra 1')}</b><small>${L('Reta un amic amb un codi. Cadascú juga quan pot i qui guanya s\'emporta els diamants.', 'Reta a un amigo con un código. Cada uno juega cuando puede y quien gana se lleva los diamantes.')}</small></span><span class="bcost">${DUEL_COST} 💎</span></button>
@@ -156,11 +172,11 @@ function scrLobby(st) {
   if (duel) action = `<button class="btn big" onclick="startBattle()">${(P.bpaid || {})[st.code] ? L('JUGA ARA', 'JUGAR AHORA') : L(`JUGA (${DUEL_COST} 💎)`, `JUGAR (${DUEL_COST} 💎)`)}</button><p class="sub small">${others.length ? L('Tens 48 hores per jugar.', 'Tienes 48 horas para jugar.') : L("No cal esperar: juga ara i el teu rival tindrà les mateixes preguntes quan entri.", 'No hace falta esperar: juega ahora y tu rival tendrá las mismas preguntas cuando entre.')}</p>`;
   else if (st.status === 'live') action = `<p class="sub">${L('Comencem!', '¡Empezamos!')}</p>`;
   else action = st.host ? `<button class="btn big" id="bstart" onclick="startParty()" ${st.players.length < 2 ? 'disabled' : ''}>${L('COMENÇA LA PARTIDA', 'EMPEZAR LA PARTIDA')}</button><p class="sub small">${L(`${st.players.length} de ${st.max} jugadors. Quan hi siguin tots, comença!`, `${st.players.length} de ${st.max} jugadores. ¡Cuando estén todos, empieza!`)}</p>` : `<p class="sub">⏳ ${st.kind === 'classe' ? L('Esperant que la profe comenci la batalla…', 'Esperando a que la profe empiece la batalla…') : L("Esperant que l'amfitrió comenci…", 'Esperando a que el anfitrión empiece…')}</p>`;
-  app.innerHTML = `<div class="scr blobby" data-bk="${key}"><button class="xbtn bx" onclick="go('battles')" aria-label="${L('Surt', 'Salir')}">✕</button>
+  app.innerHTML = `<div class="scr blobby arena" data-bk="${key}">${arenaBG(duel ? 'red' : '')}<button class="xbtn bx" onclick="go('battles')" aria-label="${L('Surt', 'Salir')}">✕</button>
     <div class="bkind">${kindLabel(st)} · ${tx(COURSES[st.course].long).toUpperCase()}</div>${st.title ? `<h2 class="h2" style="margin:6px 0 0;text-align:center">${esc(st.title)}</h2>` : ''}
     <div class="bcode"><small>${L('Codi de la batalla', 'Código de la batalla')}</small><b>${st.code}</b></div>
     ${st.kind === 'classe' ? '' : `<button class="btn sm gold" onclick="shareBattle('${st.code}','${st.kind}')">📨 ${L('ENVIA EL CODI', 'ENVIAR EL CÓDIGO')}</button>`}
-    <div class="bplayers ${duel ? 'vs' : ''}" id="bpls">${duel ? `${playerChip(me, st)}<div class="vsx">VS</div>${others[0] ? playerChip(others[0], st) : `<div class="bpl ghost"><div class="bpc q">?</div><b>${L('Rival', 'Rival')}</b><small>${L('encara no ha entrat', 'aún no ha entrado')}</small></div>`}` : st.players.map(p => playerChip(p, st)).join('')}</div>
+    <div class="bplayers ${duel ? 'vs' : ''}" id="bpls">${duel ? `${playerChip(me, st)}${vsBolt()}${others[0] ? playerChip(others[0], st) : `<div class="bpl ghost"><div class="bpc q">?</div><b>${L('Rival', 'Rival')}</b><small>${L('encara no ha entrat', 'aún no ha entrado')}</small></div>`}` : st.players.map(p => playerChip(p, st)).join('')}</div>
     ${action}</div>`;
   if (!duel && st.status === 'live') return partyCountdown(st);
   bLoop(key, async live => {
@@ -178,12 +194,12 @@ async function startParty() {
 function partyCountdown(st) {
   BT.st = st;
   const t0 = Date.now() + Math.max(0, st.startIn || 0);
-  app.innerHTML = `<div class="scr" data-bk="cd${st.code}"><div class="burst gold"></div><h1>${L('Preparats?', '¿Preparados?')}</h1><div class="bcount" id="bcount">…</div><p class="sub">${st.players.map(p => esc(p.name)).join(' · ')}</p></div>`;
+  app.innerHTML = `<div class="scr arena bcd" data-bk="cd${st.code}">${arenaBG('gold')}<h1>${L('Preparats?', '¿Preparados?')}</h1><div class="bring"><svg viewBox="0 0 120 120" aria-hidden="true"><circle cx="60" cy="60" r="54"/></svg><div class="bcount" id="bcount">…</div></div><div class="bcd-pl">${st.players.slice(0, 8).map(p => `<span>${charSVG(p.companion || 'numi', 'happy')}<b>${esc(p.name)}</b></span>`).join('')}</div></div>`;
   let last = null;
   const iv = setInterval(() => {
     const left = Math.ceil((t0 - Date.now()) / 1000), el = $('#bcount');
     if (!el) return clearInterval(iv);
-    if (left <= 0) { clearInterval(iv); return startBattle(); }
+    if (left <= 0) { clearInterval(iv); el.textContent = L('JA!', '¡YA!'); el.classList.add('go'); SFX.win && SFX.win(); return setTimeout(startBattle, 650); }
     if (left !== last) { last = left; el.textContent = left; el.classList.remove('pop-in'); void el.offsetWidth; el.classList.add('pop-in'); SFX.tap(); }
   }, 100);
 }
@@ -201,8 +217,7 @@ function startBattle() {
 }
 function battleStrip() {
   const el = $('#bstrip'); if (!el || !BT) return;
-  const ps = BT.st.players.filter(p => !p.me).sort((a, b) => b.done - a.done).slice(0, 4);
-  el.innerHTML = ps.map(p => `<span class="bsp"><b>${esc(p.name)}</b><i style="width:${p.done / BQ * 100}%"></i></span>`).join('');
+  el.classList.add('race'); el.innerHTML = raceHTML(BT.st);
 }
 function battleAnswer(ok) {
   LS.bMs += Math.min(120000, Date.now() - LS.q0); if (ok) LS.bOk++;
@@ -229,7 +244,7 @@ function scrBattleWait(st) {
   BT = { st };
   if (st.over) return scrBattleResult(st);
   const me = st.players.find(p => p.me), key = 'wait' + st.code;
-  app.innerHTML = `<div class="scr" data-bk="${key}"><div class="rchar big tapme">${meC('think')}</div><h1>${L('Fet!', '¡Hecho!')} ${me.correct}/${BQ}</h1>
+  app.innerHTML = `<div class="scr arena" data-bk="${key}">${arenaBG()}<div class="rchar big tapme">${meC('think')}</div><h1>${L('Fet!', '¡Hecho!')} <span class="bscore">${me.correct}/${BQ}</span></h1>
     <p class="sub">${L(`Temps: ${secs(me.ms)}. Esperant la resta de jugadors…`, `Tiempo: ${secs(me.ms)}. Esperando al resto de jugadores…`)}</p>
     <div class="bplayers">${st.players.map(p => playerChip(p, st)).join('')}</div>
     ${st.kind === 'duel' ? `<p class="sub small">${L("Quan el teu rival jugui, veuràs qui ha guanyat a «Les meves batalles».", 'Cuando tu rival juegue, verás quién ha ganado en «Mis batallas».')}</p><button class="btn sm gold" onclick="shareBattle('${st.code}','duel')">📨 ${L('RECORDA-LI EL CODI', 'RECUÉRDALE EL CÓDIGO')}</button>` : ''}
@@ -240,11 +255,11 @@ function scrBattleResult(st) {
   const rank = st.players.filter(p => p.pos).sort((a, b) => a.pos - b.pos), me = st.players.find(p => p.me), win = me.pos === 1 && rank.length > 1;
   const tie = rank.length > 1 && rank[0].correct === rank[1].correct;
   const claimed = (P.bclaim || {})[st.code];
-  app.innerHTML = `<div class="scr"><div class="burst ${win ? 'gold' : ''}"></div>
+  app.innerHTML = `<div class="scr arena bres">${arenaBG(win ? 'gold' : '')}
     <div class="cheer"><div class="saybubble">${win ? L(`Ho has aconseguit, ${esc(P.name)}!`, `¡Lo has conseguido, ${esc(P.name)}!`) : L('Molt ben jugat! La pròxima és teva.', '¡Muy bien jugado! La próxima es tuya.')}</div><div class="rchar dance tapme">${meC('happy')}</div></div>
     <h1>${win ? L('Has guanyat!', '¡Has ganado!') : me.pos ? L(`Has quedat ${ordN(me.pos)}`, `Has quedado ${ordN(me.pos)}`) : L('Batalla acabada', 'Batalla terminada')}</h1>
     ${tie ? `<p class="sub">⏱️ ${L("Empat d'encerts: guanya el més ràpid!", '¡Empate de aciertos: gana el más rápido!')}</p>` : ''}
-    <div class="podium">${rank.map(p => `<div class="prow ${p.me ? 'me' : ''} p${p.pos}"><span class="ppos">${['🥇', '🥈', '🥉'][p.pos - 1] || p.pos}</span><span class="pc">${charSVG(p.companion || 'numi', 'happy')}</span><b>${esc(p.name)}</b><span class="psc">${p.correct}/${BQ}</span><span class="pt">${secs(p.ms)}</span></div>`).join('')}</div>
+    ${rank.length > 1 ? podium3(rank) : ''}<div class="podium">${rank.slice(rank.length > 1 ? 3 : 0).map(p => `<div class="prow ${p.me ? 'me' : ''} p${p.pos}"><span class="ppos">${['🥇', '🥈', '🥉'][p.pos - 1] || p.pos}</span><span class="pc">${charSVG(p.companion || 'numi', 'happy')}</span><b>${esc(p.name)}</b><span class="psc">${p.correct}/${BQ}</span><span class="pt">${secs(p.ms)}</span></div>`).join('')}</div>
     ${claimed ? `<button class="btn big" onclick="go('battles')">${L('CONTINUA', 'CONTINÚA')}</button>` : `<button class="btn big gold" onclick="claimBattle()">🎁 ${L('RECULL EL PREMI', 'RECOGE EL PREMIO')}</button>`}</div>`;
   SFX.win(); if (win) confetti(220);
 }
