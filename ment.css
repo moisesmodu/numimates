@@ -926,3 +926,15 @@ html[data-v=ment] .mpage .nav button.on .ni{animation:mnav .5s cubic-bezier(.2,.
 .mres2 .mlvl.up{animation:mpop .6s .6s cubic-bezier(.2,.9,.3,1.6) both,mglow2 2s 1.2s ease-in-out infinite}
 @keyframes mglow2{50%{box-shadow:0 0 22px rgba(233,196,111,.7)}}
 @media (prefers-reduced-motion:reduce){.mpage::before,.mgame>.mgbody::before,.mpage .mhero::after,.mpage .msub::after,.mpage .mhero .mh1,.mpage .mring,.mpage .mmain>*,.mpage .btn::after,.mgame .mplay::after,.mpage .mjoc .mjart,.mpage .mjoc::after,.mpage .msess .mg,.mpage .mweek i em,.mpage .mchip svg,.mpage .mprg i,.mpage .mdomh::after,.mgame .mi-hero::before,.mgame .copts .copt,.mgame.fx-ko::after,.mres2 .mgic,.mres2 .mr-rib,.mres2 .mlvl.up{animation:none!important}.mpage .mhero .mh1{color:#fff!important;background:none}}
+
+/* =================== Menys moviment (03/10): fora tots els bucles continus ===================
+   Es manté només el que respon a una acció: l'entrada de les pantalles (un sol cop), el toc del ratolí,
+   les espurnes en encertar, el vermell en fallar i el resultat. */
+.mpage::before,.mgame>.mgbody::before,.mpage .mhero::after,.mpage .msub::after{animation:none!important}
+.mpage .mhero .mh1{animation:none!important;background:none!important;color:#fff!important;-webkit-background-clip:border-box;background-clip:border-box}
+.mpage .mring,.mpage .btn::after,.mgame .mplay::after,.mpage .mjoc .mjart,.mpage .mjoc::after,.mpage .msess .mg .mnext svg,.mpage .mchip svg,.mpage .mprg i,.mgame .mi-hero::before,.mgame .mi-hero .mgic,.mres2 .mr-rib,.mgic::after,.mfita.on span::after,.mres2 .mr-hero::after{animation:none!important}
+.mpage .btn::after,.mgame .mplay::after,.mpage .mjoc::after,.mgic::after,.mgame .mi-hero::before,.mfita.on span::after{display:none!important}
+.mpage .msess .mg:not(.done):first-of-type,.mpage .msess .mg.done+.mg:not(.done){animation:mtile .5s cubic-bezier(.2,.8,.2,1) both!important}
+.mres2 .mlvl.up{animation:mpop .6s .6s cubic-bezier(.2,.9,.3,1.6) both!important}
+.mres2 .mr-hero::after{opacity:.6}
+.mpage .mmain>*:nth-child(n+5){animation-delay:.2s}
