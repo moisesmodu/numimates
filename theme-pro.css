@@ -712,3 +712,4 @@ html[data-v=pro] .lesson.game .ring .rbg{fill:#F1ECFA;stroke:rgba(50,47,60,.1)}
 html[data-v=pro] .lesson.game .ring .rfg{stroke:#3DE0D0}
 html[data-v=pro] .lesson.game .ring .rfg.low{stroke:#FF5A5F}
 html[data-v=pro] .lesson.game .ring .sq{color:#fff}
+html[data-v=pro] .lesson.game .ring{box-shadow:0 0 34px rgba(61,224,208,.28)}
