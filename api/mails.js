@@ -2,7 +2,7 @@ import { createHmac, timingSafeEqual } from 'crypto';
 import { sql, ok, body } from './_lib.js';
 import { who } from './_auth.js';
 import { STRIPE_KEY, stripe } from './_stripe.js';
-import { informeTables, informesRun, prefOf, ajust, setAjust, reportMail, periodNow, kidRow, lastSnap } from './_informe.js';
+import { informeTables, informesRun, prefOf, ajust, setAjust, reportMail, periodNow, kidRow, reportExtra } from './_informe.js';
 // Correus des del panell (només l'administrador): esborranys en HTML, prova, enviament ara o programat.
 // Destinataris: docents, famílies (zona de famílies), contactes del web, clients de Premium (correu de Stripe)
 // i una llista lliure. Cada correu porta l'enllaç de baixa (LSSI art. 21) i la capçalera List-Unsubscribe.
@@ -181,13 +181,14 @@ export default async function handler(req, res) {
     else {
       // mostra amb dades inventades (s'indica al panell)
       const d = i => { const x = new Date(per.to); x.setUTCDate(x.getUTCDate() - i); return x.toISOString().slice(0, 10); };
-      k = { name: 'Laia', course: 3, xp: 1840, lessons: 64, answers: 520, correct: 447, days: [d(0), d(1), d(3), d(4), d(6)],
-        sk: { 'mul': [120, 132], 'div:2': [70, 84], 'frac': [40, 61], 'me.clock': [33, 38], 'v.sym': [25, 29] }, prog: { 'c4-1': { stars: [3, 3, 3, 3] }, 'c4-2': { stars: [3, 2, 1, 0, 0] } },
+      k = { name: 'Laia', course: 3, xp: 1840, lessons: 64, answers: 520, correct: 447, days: [d(0), d(1), d(3), d(4), d(6)], streak: 4, best: 9,
+        sk: { 'mul': [120, 132], 'div:2': [70, 84], 'frac': [40, 61], 'me.clock': [33, 38], 'v.sym': [25, 29], 'stat.bar': [14, 18] }, prog: { 'c4-1': { stars: [3, 3, 3, 3] }, 'c4-2': { stars: [3, 2, 1, 0, 0] } },
+        exams: { 'c4-1': { d: d(2), last: 83, best: 83, tries: 1 } },
         medals: [{ kind: 'millora', comment: 'Molt bé amb les divisions!', docent_nom: 'Marta', created_at: new Date(per.to).toISOString() }] };
       prev = { xp: 1700, lessons: 52, answers: 440, correct: 378 };
     }
-    if (b.code) prev = null;
-    const m = reportMail(k, prev, per, lang, 0);
+    const x = b.code ? await reportExtra(k.code, per) : { wxp: 245, wxpPrev: 180, bat: { n: 2, wins: 1 } };
+    const m = reportMail(k, prev, per, lang, 0, x);
     if (b.action === 'inf_preview') return ok(res, { subject: m.subject, html: m.html, sample: !b.code });
     const to = String(b.to || '').split(/[\s,;]+/).map(clean).filter(e => MAILRE.test(e)).slice(0, 3);
     if (!to.length) return ok(res, { error: 'correu' }, 400);
