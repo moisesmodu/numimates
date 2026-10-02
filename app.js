@@ -1310,6 +1310,33 @@ function renderBadges(tabs = '') {
 /* ---------- Perfil ---------- */
 const FEEL = { love: ["😍 M'encanten", '😍 Me encantan'], good: ['🙂 Em van bé', '🙂 Me van bien'], meh: ['😐 Normal', '😐 Normal'], hard: ['😟 Em costen', '😟 Me cuestan'] };
 const LIKE = { calc: ['🧮 Calcular', '🧮 Calcular'], logic: ['🧩 Enigmes i lògica', '🧩 Enigmas y lógica'], geo: ['📐 Formes i mesures', '📐 Formas y medidas'], prob: ['🕵️ Problemes', '🕵️ Problemas'] };
+/* ---------- Informe per a la família: l'alumne escriu el correu d'un adult, que rep una invitació per confirmar-ho
+   (amb aquell clic dona l'autorització) i, a partir d'aquí, l'informe setmanal. El correu no es desa a l'app. ---------- */
+const maskMail = m => { const [u, d] = String(m).split('@'); return (u.length <= 2 ? u[0] + '*' : u.slice(0, 2) + '***') + '@' + d; };
+function famBox() {
+  if (!P.code) return `<div class="famcard"><p>${L("Quan tinguis usuari i contrasenya, podràs fer que la teva família rebi un informe setmanal del que aprens.", 'Cuando tengas usuario y contraseña, podrás hacer que tu familia reciba un informe semanal de lo que aprendes.')}</p></div>`;
+  const inv = P.famInv;
+  return `<div class="famcard"><p>${L('El teu pare, la teva mare o qui tu vulguis pot rebre <b>cada setmana un correu</b> amb els dies que has practicat, com et van els exercicis i una idea per practicar a casa.', 'Tu padre, tu madre o quien tú quieras puede recibir <b>cada semana un correo</b> con los días que has practicado, cómo te van los ejercicios y una idea para practicar en casa.')}</p>
+    ${inv ? `<p class="faminv">✅ ${L(`Invitació enviada a <b>${esc(inv.m)}</b>. Quan la confirmi, rebrà l'informe.`, `Invitación enviada a <b>${esc(inv.m)}</b>. Cuando la confirme, recibirá el informe.`)}</p>` : ''}
+    <div class="famrow"><input id="famMail" type="email" inputmode="email" autocomplete="off" placeholder="${L('correu@exemple.com', 'correo@ejemplo.com')}" aria-label="${L("Correu d'un adult de la família", 'Correo de un adulto de la familia')}"><button class="btn sm" id="famBtn" onclick="famInvite()">${inv ? L('ENVIA-LA A UN ALTRE', 'ENVIARLA A OTRO') : L('ENVIA LA INVITACIÓ', 'ENVIAR LA INVITACIÓN')}</button></div>
+    <p class="famnote" id="famMsg">${L("L'adult haurà de confirmar-ho des del seu correu.", 'El adulto tendrá que confirmarlo desde su correo.')}</p></div>`;
+}
+async function famInvite() {
+  const m = ($('#famMail').value || '').trim().toLowerCase(), msg = $('#famMsg'), btn = $('#famBtn');
+  if (!/^[^\s@<>"',;]+@[^\s@<>"',;]+\.[a-z]{2,}$/i.test(m)) { msg.textContent = L('Revisa el correu: sembla que no està ben escrit.', 'Revisa el correo: parece que no está bien escrito.'); msg.className = 'famnote ko'; return; }
+  btn.disabled = true; msg.className = 'famnote'; msg.textContent = L('Enviant…', 'Enviando…');
+  try {
+    const r = await fetch('/api/account?f=link', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ email: m, code: P.code, invite: true, lang: LANG }) });
+    const j = await r.json().catch(() => ({}));
+    if (r.ok && j.ok) { P.famInv = { d: today(), m: maskMail(m) }; save(); SFX.ok(); toast(L('Invitació enviada!', '¡Invitación enviada!')); return go('profile'); }
+    msg.className = 'famnote ko';
+    msg.textContent = r.status === 429 ? L("Massa intents. Torna-ho a provar d'aquí a una estona.", 'Demasiados intentos. Vuelve a probarlo dentro de un rato.')
+      : j.error === 'correu-off' ? L("Ara mateix no podem enviar correus. Torna-ho a provar d'aquí a uns dies.", 'Ahora mismo no podemos enviar correos. Vuelve a probarlo dentro de unos días.')
+      : j.error === 'no trobat' ? L('Primer cal que el teu progrés estigui desat al núvol. Torna-ho a provar en un moment.', 'Primero tu progreso tiene que estar guardado en la nube. Vuelve a probarlo en un momento.')
+      : L("No s'ha pogut enviar. Torna-ho a provar.", 'No se ha podido enviar. Vuelve a probarlo.');
+  } catch (e) { msg.className = 'famnote ko'; msg.textContent = L('Sense connexió. Torna-ho a provar quan en tinguis.', 'Sin conexión. Vuelve a probarlo cuando tengas.'); }
+  btn.disabled = false;
+}
 function renderProfile() {
   // Premium de pagament: l'estat de la subscripció (renovació, cancel·lació) es consulta en obrir el perfil
   if (P.pla === 'premium' && !P.classe && !renderProfile.pulled) { renderProfile.pulled = 1; pull(); }
@@ -1345,6 +1372,7 @@ renderProfile.inner = function () {
       <div class="ctip">${P.username ? L('Entra des de qualsevol dispositiu amb el teu usuari i contrasenya.', 'Entra desde cualquier dispositivo con tu usuario y contraseña.') : L('Amb usuari i contrasenya podràs entrar des de qualsevol dispositiu.', 'Con usuario y contraseña podrás entrar desde cualquier dispositivo.')}${P.code ? `<br><small class="codesm">${L('Codi del compte', 'Código de la cuenta')}: <b>${P.code}</b> · ${L('per a la zona de famílies i per recuperar el compte', 'para la zona de familias y para recuperar la cuenta')}</small>` : ''}</div>
       <button class="btn sm gold" onclick="accountModal()">${P.username ? L('CANVIA LA CONTRASENYA', 'CAMBIAR LA CONTRASEÑA') : L('CREA USUARI I CONTRASENYA', 'CREAR USUARIO Y CONTRASEÑA')}</button></div>
     <h2 class="h2">🏫 ${L('La meva classe', 'Mi clase')}</h2>${classeBox()}
+    <h2 class="h2">📬 ${L('Informe per a la família', 'Informe para la familia')}</h2>${famBox()}
     ${P.classe ? `<h2 class="h2">🏅 ${L('Medalles de la profe', 'Medallas de la profe')}</h2><div id="pmedals"><p class="empty">…</p></div>` : ''}
     ${P.classe ? '' : `<h2 class="h2">⭐ ${L('El meu pla', 'Mi plan')}</h2>${premiumBox()}`}
     ${sv ? `<h2 class="h2">${L("Prova d'inici", 'Prueba inicial')}</h2><div class="survey"><div><span>${L('Curs', 'Curso')}</span><b>${esc(sv.curs)}</b></div><div><span>${L('Les mates…', 'Las mates…')}</span><b>${FEEL[sv.feel] ? tx(FEEL[sv.feel]) : '—'}</b></div><div><span>${L("M'agrada", 'Me gusta')}</span><b>${LIKE[sv.like] ? tx(LIKE[sv.like]) : '—'}</b></div><div><span>${L('Resultat', 'Resultado')}</span><b>${esc(sv.result)}</b></div></div>` : ''}

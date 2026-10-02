@@ -127,7 +127,12 @@ function kidCard(k) {
     <div class="more">${L('Veure el detall', 'Ver el detalle')} ›</div></div>`;
 }
 const pill = k => `<span class="pill ${k.pla}">${k.pla === 'premium' ? 'PREMIUM' : k.pla === 'escola' ? L('ESCOLA', 'ESCUELA') : L('GRATUÏT', 'GRATUITO')}</span>`;
-const vHome = () => `<h1>${L('Hola!', '¡Hola!')}</h1>${D.kids.map(kidCard).join('')}<button class="add" onclick="VIEW='add';render()">+ ${L('Afegeix un altre fill o filla', 'Añade otro hijo o hija')}</button>`;
+// informe per correu: cada setmana (per defecte), cada mes o cap
+const INF = [['setmanal', 'Cada setmana|Cada semana'], ['mensual', 'Cada mes|Cada mes'], ['no', 'No el vull|No lo quiero']];
+const infBox = () => `<div class="card infbox"><b>📬 ${L('Informe per correu', 'Informe por correo')}</b><p class="sub" style="margin:4px 0 10px">${L(`Un resum amb els dies que practica, com li van els exercicis i una idea per ajudar a casa, a ${esc(D.email)}.`, `Un resumen con los días que practica, cómo le van los ejercicios y una idea para ayudar en casa, a ${esc(D.email)}.`)}</p>
+  <div class="seg">${INF.map(([k, t]) => `<button class="${(D.informe || 'setmanal') === k ? 'on' : ''}" onclick="setInf('${k}')">${tx(t)}</button>`).join('')}</div></div>`;
+async function setInf(k) { const r = await api('cfg', { informe: k }); if (r.kids) { D = r; render(); toast(k === 'no' ? L('Fet: no rebràs informes.', 'Hecho: no recibirás informes.') : L('Fet!', '¡Hecho!')); } else toast(ERR(r.status)); }
+const vHome = () => `<h1>${L('Hola!', '¡Hola!')}</h1>${D.kids.map(kidCard).join('')}${infBox()}<button class="add" onclick="VIEW='add';render()">+ ${L('Afegeix un altre fill o filla', 'Añade otro hijo o hija')}</button>`;
 const vAdd = () => `${D.kids.length ? `<button class="back" onclick="VIEW='home';render()">‹ ${L('Tornar', 'Volver')}</button>` : ''}<h1>${D.kids.length ? L('Afegeix un altre fill o filla', 'Añade otro hijo o hija') : L('Afegeix el teu fill o filla', 'Añade a tu hijo o hija')}</h1>
   <p class="sub">${L("Amb el codi que surt a l'app (Perfil → El meu compte).", 'Con el código que sale en la app (Perfil → Mi cuenta).')}</p>
   <div class="card"><label class="field"><span>${L("Codi del compte de l'alumne (és al Perfil de l'app; p. ex. GUINEU-4827)", 'Código de la cuenta del alumno (está en el Perfil de la app; p. ej. GUINEU-4827)')}</span><input id="fc" class="code" autocomplete="off" autocapitalize="characters" spellcheck="false" oninput="formOk()"></label>

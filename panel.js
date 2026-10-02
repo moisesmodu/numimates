@@ -336,6 +336,47 @@ const MTPL = `<!doctype html>
 </div>
 </body></html>`;
 
+/* ---------- Informe setmanal/mensual a les famílies (api/_informe.js). Apagat fins que l'administrador l'encén. ---------- */
+let INF = null;
+async function infLoad() {
+  const el = $('#infcard'); if (!el) return;
+  INF = await mapi('inf_state');
+  if (INF.error) { el.innerHTML = esc(L("No s'ha pogut carregar l'informe a les famílies.", 'No se ha podido cargar el informe a las familias.')); return; }
+  const last = (INF.last || []).map(r => `<li>${esc(r.periode)}: ${r.ok} ${L('enviats', 'enviados')}${r.ko ? `, <b style="color:var(--bad,#C2414A)">${r.ko} ${L('errors', 'errores')}</b>` : ''}</li>`).join('');
+  el.innerHTML = `<div style="display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:flex-start">
+    <div style="flex:1;min-width:260px"><h3 style="margin:0 0 6px">📬 ${L('Informe a les famílies', 'Informe a las familias')} <span class="chip ${INF.on ? 'ok' : ''}">${INF.on ? L('Encès', 'Encendido') : L('Apagat', 'Apagado')}</span></h3>
+      <p class="t3" style="margin:0">${L(`Cada diumenge a partir de les 18 h (o el dia 1, el mensual), un correu per alumne a cada família que l'hagi confirmat. Ara: <b>${INF.fam || 0}</b> famílies, <b>${INF.fills || 0}</b> alumnes (${INF.setm || 0} setmanal, ${INF.mens || 0} mensual).`, `Cada domingo a partir de las 18 h (o el día 1, el mensual), un correo por alumno a cada familia que lo haya confirmado. Ahora: <b>${INF.fam || 0}</b> familias, <b>${INF.fills || 0}</b> alumnos (${INF.setm || 0} semanal, ${INF.mens || 0} mensual).`)}</p>
+      ${INF.mail ? '' : `<p style="margin:6px 0 0;color:var(--warn,#C98217)">${ico('triangle-alert')} ${L('Sense la clau de Resend no sortirà cap informe.', 'Sin la clave de Resend no saldrá ningún informe.')}</p>`}
+      ${last ? `<ul class="t3" style="margin:8px 0 0;padding-left:18px">${last}</ul>` : ''}</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" onclick="infPreview()">${ico('eye')}${L('Mostra', 'Muestra')}</button><button class="btn" onclick="infTest()">${ico('mail')}${L("Envia'm una prova", 'Envíame una prueba')}</button>
+      <button class="btn ${INF.on ? 'danger' : 'primary'}" onclick="infToggle()">${INF.on ? L('Apaga', 'Apagar') : L('Encén', 'Encender')}</button></div></div>`;
+}
+async function infPreview(code) {
+  const kind = $('#infKind') ? $('#infKind').value : 'setmanal', lang = $('#infLang') ? $('#infLang').value : LANG;
+  code = code ?? ($('#infCode') ? $('#infCode').value.trim() : '');
+  const r = await mapi('inf_preview', { code, kind, lang });
+  if (r.error) return toast(r.error === 'alumne' ? L('No hi ha cap alumne amb aquest codi.', 'No hay ningún alumno con este código.') : L("No s'ha pogut fer la mostra.", 'No se ha podido hacer la muestra.'));
+  modal(`<h3>${esc(r.subject)}</h3>${r.sample ? `<p class="t3" style="margin:0 0 8px">${L('Mostra amb dades inventades. Per veure la d’un alumne real, escriu-ne el codi.', 'Muestra con datos inventados. Para ver la de un alumno real, escribe su código.')}</p>` : ''}
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px"><input id="infCode" placeholder="${L("Codi d'alumne (opcional)", 'Código de alumno (opcional)')}" value="${esc(code || '')}" style="flex:1;min-width:160px">
+      <select id="infKind"><option value="setmanal" ${kind === 'setmanal' ? 'selected' : ''}>${L('Setmanal', 'Semanal')}</option><option value="mensual" ${kind === 'mensual' ? 'selected' : ''}>${L('Mensual', 'Mensual')}</option></select>
+      <select id="infLang"><option value="ca" ${lang === 'ca' ? 'selected' : ''}>CA</option><option value="es" ${lang === 'es' ? 'selected' : ''}>ES</option></select>
+      <button class="btn" onclick="infPreview()">${L('Actualitza', 'Actualizar')}</button></div>
+    <iframe id="infFrame" title="${L('Mostra de l’informe', 'Muestra del informe')}" style="width:100%;height:62vh;border:1px solid var(--line);border-radius:12px;background:#F3EFF7"></iframe>`, 'wide');
+  $('#infFrame').srcdoc = r.html;
+}
+async function infTest() {
+  const to = prompt(L('A quin correu envio la prova?', '¿A qué correo envío la prueba?'), localStorage.getItem('numi-inf-test') || '');
+  if (!to) return;
+  try { localStorage.setItem('numi-inf-test', to); } catch (e) { }
+  const r = await mapi('inf_test', { to, kind: 'setmanal', lang: LANG });
+  toast(r.ok ? L('Prova enviada.', 'Prueba enviada.') : r.error === 'resend' ? L('Falta la clau de Resend.', 'Falta la clave de Resend.') : L("No s'ha pogut enviar.", 'No se ha podido enviar.'));
+}
+async function infToggle() {
+  const on = !INF.on;
+  if (on && !(await confirmBox(L("Encendre l'informe a les famílies?", '¿Encender el informe a las familias?'), L("A partir del proper diumenge a les 18 h, totes les famílies que l'han confirmat rebran l'informe. Abans, mira'n la mostra.", 'A partir del próximo domingo a las 18 h, todas las familias que lo han confirmado recibirán el informe. Antes, mira la muestra.'), L('Encén', 'Encender'), false))) return;
+  const r = await mapi('inf_set', { on });
+  if (r.ok) { toast(on ? L('Informe encès.', 'Informe encendido.') : L('Informe apagat.', 'Informe apagado.')); infLoad(); } else toast(L("No s'ha pogut canviar.", 'No se ha podido cambiar.'));
+}
 async function vCorreus(arg) {
   if (arg) return vCorreu(arg);
   shell('correus', L('Correus', 'Correos'), `<div class="card pad t3">${L('Carregant…', 'Cargando…')}</div>`, { switcher: false });
@@ -344,12 +385,14 @@ async function vCorreus(arg) {
   const warn = [!MLS.mail && L("Falta la clau de Resend (RESEND_API_KEY): no es pot enviar.", 'Falta la clave de Resend (RESEND_API_KEY): no se puede enviar.'), !MLS.cron && L('Falta CRON_SECRET: els correus programats no sortiran sols.', 'Falta CRON_SECRET: los correos programados no saldrán solos.')].filter(Boolean);
   shell('correus', L('Correus', 'Correos'), `
     ${warn.map(w => `<div class="card pad" style="border-color:var(--warn,#C98217);margin-bottom:12px">${ico('triangle-alert')} ${w}</div>`).join('')}
+    <div class="card pad infcard" id="infcard">${L('Informe a les famílies: carregant…', 'Informe a las familias: cargando…')}</div>
     <div class="card kpis k3m">${mkpi(L('Enviats', 'Enviados'), MLS.list.filter(m => m.status === 'enviat').length, L(`${MLS.list.reduce((s, m) => s + (m.n_ok || 0), 0)} destinataris en total`, `${MLS.list.reduce((s, m) => s + (m.n_ok || 0), 0)} destinatarios en total`))}${mkpi(L('Programats', 'Programados'), MLS.list.filter(m => m.status === 'programat').length, '')}${mkpi(L('Baixes', 'Bajas'), MLS.baixes, L('no reben més correus', 'no reciben más correos'))}</div>
     <div class="sec-h" style="margin-top:20px"><h2>${L('Tots els correus', 'Todos los correos')}</h2></div>
     ${MLS.list.length ? `<div class="tw"><table><thead><tr><th>${L('Assumpte', 'Asunto')}</th><th>${L('Estat', 'Estado')}</th><th>${L('A qui', 'A quién')}</th><th>${L('Data', 'Fecha')}</th><th class="r">${L('Enviats', 'Enviados')}</th></tr></thead><tbody>
       ${MLS.list.map(m => `<tr onclick="location.hash='#/correus/${m.id}'"><td><b>${esc(m.subject || L('(sense assumpte)', '(sin asunto)'))}</b> <span class="t3">${m.lang.toUpperCase()}</span>${m.err ? `<br><small class="crit-t" style="color:var(--crit)">${esc(m.err)}</small>` : ''}</td><td><span class="chip ${MST[m.status][1]}">${tx(MST[m.status][0])}</span></td><td>${esc(audTxt(m.aud))}</td><td>${m.status === 'enviat' ? fdt(m.sent_at) : m.status === 'programat' ? `${ico('clock')} ${fdt(m.send_at)}` : fdt(m.updated_at)}</td><td class="r num">${m.n_total ? `${m.n_ok}/${m.n_total}${m.n_ko ? ` · <span class="crit-t" style="color:var(--crit)">${m.n_ko} ✗</span>` : ''}` : '—'}</td></tr>`).join('')}</tbody></table></div>`
       : `<div class="card">${emptyState('mail', L('Encara no hi ha cap correu', 'Aún no hay ningún correo'), L('Crea el primer: recordatoris, novetats, avisos… en HTML.', 'Crea el primero: recordatorios, novedades, avisos… en HTML.'), `<a class="btn primary" href="#/correus/nou">${ico('plus')}${L('Nou correu', 'Nuevo correo')}</a>`)}</div>`}`,
     { switcher: false, acts: `<a class="btn primary" href="#/correus/nou">${ico('plus')}${L('Nou correu', 'Nuevo correo')}</a>` });
+  infLoad();
 }
 async function vCorreu(arg) {
   if (arg === 'nou') MED = { id: null, subject: '', html: MTPL, aud: { lang: 'tots' }, lang: LANG, status: 'esborrany' };

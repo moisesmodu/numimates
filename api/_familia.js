@@ -7,6 +7,7 @@ import { sql, body, cleanCode, ok, blocked, fail, note, tooMany, ipOf, plaOf } f
 import { famToken, famOf, who } from './_auth.js';
 import { subOf } from './_stripe.js';
 import { MAIL_OK, sendMail } from './_mail.js';
+import { informeTables } from './_informe.js';
 
 const ORIGINS = ['https://app.numimates.com', 'https://pro.numimates.com', 'https://ment.numimates.com', 'https://mates-numi.vercel.app', 'http://localhost:5176', 'http://127.0.0.1:5176']
   .filter(o => process.env.VERCEL_ENV !== 'production' || !/localhost|127\.0\.0\.1/.test(o));   // en producció, els enllaços mai porten a localhost
@@ -27,6 +28,23 @@ async function student(v) {
   return r[0] || null;
 }
 
+// invitació des de l'app: l'alumne escriu el correu d'un adult; en prémer el botó, l'adult confirma que n'és el pare,
+// la mare o el tutor i dona l'autorització (en queda la data i la IP del clic, a enter()). I a partir d'aquí rep l'informe.
+function inviteText(lang, link, kid) {
+  const es = lang === 'es', n = String(kid || '').split(' ')[0].replace(/[<>&"']/g, '') || (es ? 'Tu hijo o hija' : 'El teu fill o filla');
+  const subject = es ? `${n} quiere que sigas su progreso en Numi Mates` : `${n} vol que segueixis el seu progrés a Numi Mates`;
+  const p1 = es ? `${n} usa Numi Mates para practicar matemáticas y ha escrito tu correo para que recibas un <b>informe semanal</b>: los días que practica, cómo le van los ejercicios, en qué le cuesta más y una idea para ayudarle en casa.` : `${n} fa servir Numi Mates per practicar matemàtiques i ha escrit el teu correu perquè rebis un <b>informe setmanal</b>: els dies que practica, com li van els exercicis, en què li costa més i una idea per ajudar-lo a casa.`;
+  const p2 = es ? 'Al pulsar el botón confirmas que eres su padre, madre o tutor legal y que autorizas que use Numi Mates (necesario si tiene menos de 14 años). Guardamos el mínimo de datos y no hay publicidad.' : 'En prémer el botó confirmes que ets el seu pare, mare o tutor legal i que autoritzes que faci servir Numi Mates (cal si té menys de 14 anys). Guardem el mínim de dades i no hi ha publicitat.';
+  const btn = es ? 'Confirmar y ver su progreso' : 'Confirma i mira el seu progrés';
+  const p3 = es ? 'El enlace caduca en 7 días. Si no conoces a quien te ha invitado, ignora este correo y no recibirás nada más.' : "L'enllaç caduca d'aquí a 7 dies. Si no coneixes qui t'ha convidat, ignora aquest correu i no rebràs res més.";
+  const sign = es ? 'El equipo de Numi Mates' : "L'equip de Numi Mates";
+  const html = `<div style="font-family:Arial,Helvetica,sans-serif;max-width:480px;margin:0 auto;padding:24px;color:#2B1A38">
+    <p style="font-size:22px;font-weight:800;color:#602B7A;margin:0 0 20px">numi mates</p>
+    <p style="font-size:16px;line-height:1.5">${p1}</p>
+    <p style="margin:24px 0"><a href="${link}" style="background:#602B7A;color:#fff;text-decoration:none;font-weight:700;padding:14px 22px;border-radius:12px;display:inline-block">${btn}</a></p>
+    <p style="font-size:13px;line-height:1.5;color:#6A5F78">${p2}</p><p style="font-size:13px;line-height:1.5;color:#6A5F78">${p3}</p><p style="font-size:14px;margin-top:24px">${sign}</p></div>`;
+  return { subject, html, text: `${p1.replace(/<[^>]+>/g, '')}\n\n${link}\n\n${p2}\n\n${p3}\n\n${sign}` };
+}
 function mailText(lang, link) {
   const es = lang === 'es';
   const subject = es ? 'Tu enlace para entrar en Numi Mates' : "El teu enllaç per entrar a Numi Mates";
@@ -48,8 +66,9 @@ async function link(req, res, b) {
   if (!validMail(email)) return ok(res, { error: 'correu' }, 400);
   if (await blocked(req, 'familia-link', 12, 60, email, 5)) return tooMany(res);
   let code = null;
+  const invite = b.invite === true && !!b.code;
   if (b.code) {
-    if (b.consent !== true) return ok(res, { error: 'consentiment' }, 400);
+    if (b.consent !== true && !invite) return ok(res, { error: 'consentiment' }, 400);
     if (await blocked(req, 'codi', 40)) return tooMany(res);
     const a = await student(b.code);
     if (!a) { await fail(req, 'codi'); return ok(res, { error: 'no trobat' }, 404); }
@@ -59,14 +78,15 @@ async function link(req, res, b) {
     await note(req, 'familia-link'); return ok(res, { ok: true });
   }
   const t = randomBytes(24).toString('base64url'), origin = ORIGINS.includes(req.headers.origin) ? req.headers.origin : ORIGINS[0];
-  await sql`INSERT INTO mates.familia_links (token_hash, email, code, lang, consent_ip, expires) VALUES (${hash(t)}, ${email}, ${code}, ${lang}, ${code ? ipOf(req) : null}, now() + interval '30 minutes')`;
+  await sql`INSERT INTO mates.familia_links (token_hash, email, code, lang, consent_ip, expires) VALUES (${hash(t)}, ${email}, ${code}, ${lang}, ${code && !invite ? ipOf(req) : null}, now() + ${invite ? '7 days' : '30 minutes'}::interval)`;
   await note(req, 'familia-link'); await sql`INSERT INTO mates.fails (k, b) VALUES (${'ac:' + email}, 'familia-link')`;
   const url = `${origin}${/localhost|127\.0\.0\.1/.test(origin) ? '/families.html' : '/families'}#t=${t}`;
   // sense Resend configurat, o si ho demana l'administrador (suport a una família), l'enllaç es torna a la resposta
   const adm = req.headers['x-docent'] ? !!(await who(req))?.admin : false;
   if (adm || (!MAIL_OK() && process.env.VERCEL_ENV !== 'production')) return ok(res, { ok: true, dev: url });
   if (!MAIL_OK()) return ok(res, { error: 'correu-off' }, 503);
-  try { await sendMail({ to: email, ...mailText(lang, url) }); } catch (e) { console.error('mail', e.message); return ok(res, { error: 'correu-off' }, 502); }
+  const kidName = invite ? ((await sql`SELECT name FROM mates.alumnes WHERE code = ${code}`)[0] || {}).name : null;
+  try { await sendMail({ to: email, ...(invite ? inviteText(lang, url, kidName) : mailText(lang, url)) }); } catch (e) { console.error('mail', e.message); return ok(res, { error: 'correu-off' }, 502); }
   return ok(res, { ok: true });
 }
 
@@ -77,12 +97,12 @@ async function enter(req, res, b) {
   const l = (await sql`UPDATE mates.familia_links SET used = true WHERE token_hash = ${hash(t)} AND NOT used AND expires > now() RETURNING email, code, lang, consent_ip`)[0];
   if (!l) { await fail(req, 'familia-enter'); return ok(res, { error: 'enllaç' }, 410); }
   const f = (await sql`INSERT INTO mates.families (email, lang, last_login) VALUES (${l.email}, ${l.lang}, now()) ON CONFLICT (email) DO UPDATE SET last_login = now() RETURNING id`)[0];
-  if (l.code) await sql`INSERT INTO mates.familia_fills (familia_id, code, consent_ip) VALUES (${f.id}, ${l.code}, ${l.consent_ip}) ON CONFLICT DO NOTHING`;
+  if (l.code) await sql`INSERT INTO mates.familia_fills (familia_id, code, consent_ip) VALUES (${f.id}, ${l.code}, ${l.consent_ip || ipOf(req)}) ON CONFLICT DO NOTHING`;
   return ok(res, { ok: true, tok: famToken(f.id), email: l.email });
 }
 
 async function data(req, res, fam) {
-  const f = (await sql`SELECT email FROM mates.families WHERE id = ${fam}`)[0];
+  let f; try { f = (await sql`SELECT email, informe FROM mates.families WHERE id = ${fam}`)[0]; } catch (e) { f = (await sql`SELECT email FROM mates.families WHERE id = ${fam}`)[0]; }
   if (!f) return ok(res, { error: 'sessió' }, 401);
   const rows = await sql`SELECT a.code, a.name, a.course, a.xp, a.streak, a.last_day, a.lessons, a.answers, a.correct, a.pla, a.pla_fins, a.grup_id,
       a.stripe_sub, a.pla_periode, a.pla_cancel, a.stripe_status, a.active, g.nom AS grup,
@@ -96,12 +116,12 @@ async function data(req, res, fam) {
   }));
   // medalles del docent de cada fill (la taula pot no existir encara si ningú n'ha donat cap)
   try { const md = await sql`SELECT code, kind, comment, docent_nom, created_at FROM mates.medalles WHERE code = ANY(${kids.map(k => k.code)}) ORDER BY created_at DESC`; kids.forEach(k => { k.medals = md.filter(m => m.code === k.code).slice(0, 20).map(({ code, ...m }) => m); }); } catch (e) { kids.forEach(k => { k.medals = []; }); }
-  return ok(res, { email: f.email, kids });
+  return ok(res, { email: f.email, informe: f.informe || 'setmanal', kids });
 }
 
 export default async function familia(req, res) {
   if (req.method !== 'POST') return ok(res, { error: 'method' }, 405);
-  await tables();
+  await tables(); await informeTables();
   const b = body(req), a = String(req.query.f);
   if (a === 'link') return link(req, res, b);
   if (a === 'enter') return enter(req, res, b);
@@ -116,6 +136,7 @@ export default async function familia(req, res) {
     await sql`INSERT INTO mates.familia_fills (familia_id, code, consent_ip) VALUES (${fam}, ${s.code}, ${ipOf(req)}) ON CONFLICT DO NOTHING`;
     return data(req, res, fam);
   }
+  if (a === 'cfg') { if (['setmanal', 'mensual', 'no'].includes(b.informe)) { await informeTables(); await sql`UPDATE mates.families SET informe = ${b.informe} WHERE id = ${fam}`; } return data(req, res, fam); }
   if (a === 'remove') { await sql`DELETE FROM mates.familia_fills WHERE familia_id = ${fam} AND code = ${cleanCode(b.code)}`; return data(req, res, fam); }
   return ok(res, { error: 'acció' }, 400);
 }

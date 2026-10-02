@@ -367,3 +367,5 @@ details.more[open] summary .i{transform:rotate(90deg)}
 .mpick button.on{border-color:var(--accent);background:var(--accent-soft);color:var(--accent);font-weight:600}
 @media (max-width:860px){.bproj{padding:24px}.bpl-wrap{grid-template-columns:1fr}.blive>div{grid-template-columns:120px 1fr 70px;font-size:16px}.bcountp{font-size:140px}}
 .bpodium .pd span{line-height:1.15;display:block}.bproj code{white-space:nowrap;font-size:clamp(44px,8vw,96px)}
+.modal.wide{max-width:780px;width:94vw}
+.infcard{margin-bottom:14px}.infcard .chip{font-size:12px;vertical-align:middle}

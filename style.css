@@ -1198,3 +1198,13 @@ img.ic{display:inline-block;width:1.2em;height:1.2em;object-fit:contain;vertical
 @keyframes enpulse{0%,100%{transform:none}50%{transform:scale(1.12) rotate(-6deg)}}
 body.pro .energy{box-shadow:0 8px 22px rgba(60,30,90,.08)}
 @media (prefers-reduced-motion:reduce){.en-pips i.on,.en-big span{animation:none}}
+
+/* ---------- Informe per a la família (perfil) ---------- */
+.famcard{background:#fff;border:2px solid var(--line);border-radius:20px;padding:16px;text-align:left;display:grid;gap:12px}
+.famcard p{margin:0;font-size:14.5px;font-weight:600;line-height:1.45;color:var(--ink2,#4A3F55)}
+.famrow{display:flex;gap:8px}
+.famrow input{flex:1;min-width:0;height:46px;border-radius:14px;border:2px solid var(--line);padding:0 12px;font:700 15px Lexend,system-ui,sans-serif;color:var(--ink)}
+.famrow input:focus{outline:none;border-color:#9A5BC4}
+.famnote{font-size:12.5px!important;color:#7A6E86!important}.famnote.ko{color:#C2414A!important}
+.faminv{background:#EEF8F1;border-radius:12px;padding:8px 12px}
+@media (max-width:380px){.famrow{flex-direction:column}}

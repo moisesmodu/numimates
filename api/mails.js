@@ -2,6 +2,7 @@ import { createHmac, timingSafeEqual } from 'crypto';
 import { sql, ok, body } from './_lib.js';
 import { who } from './_auth.js';
 import { STRIPE_KEY, stripe } from './_stripe.js';
+import { informeTables, informesRun, prefOf, ajust, setAjust, reportMail, periodNow, kidRow, lastSnap } from './_informe.js';
 // Correus des del panell (només l'administrador): esborranys en HTML, prova, enviament ara o programat.
 // Destinataris: docents, famílies (zona de famílies), contactes del web, clients de Premium (correu de Stripe)
 // i una llista lliure. Cada correu porta l'enllaç de baixa (LSSI art. 21) i la capçalera List-Unsubscribe.
@@ -101,13 +102,26 @@ export default async function handler(req, res) {
     await sql`INSERT INTO mates.mail_baixes (email) VALUES (${e}) ON CONFLICT DO NOTHING`;
     return res.status(200).send(page("T'has donat de baixa · Te has dado de baja", `${escH(e)} ja no rebrà més correus de Numi. · ya no recibirá más correos de Numi.`));
   }
+  // informe a les famílies: canviar la freqüència o deixar-lo des del mateix correu (enllaç signat, sense entrar)
+  if (q.informe) {
+    await informeTables();
+    const fam = prefOf(q.informe), f = ['setmanal', 'mensual', 'no'].includes(q.f) ? q.f : 'no';
+    res.setHeader('content-type', 'text/html; charset=utf-8'); res.setHeader('Cache-Control', 'no-store');
+    if (!fam) return res.status(400).send(page('Enllaç no vàlid · Enlace no válido', 'Escriu-nos a hola@numimates.com. · Escríbenos a hola@numimates.com.'));
+    await sql`UPDATE mates.families SET informe = ${f} WHERE id = ${fam}`;
+    const msg = f === 'no' ? ["Ja no rebràs més informes de Numi Mates.", 'Ya no recibirás más informes de Numi Mates.'] : f === 'mensual' ? ["A partir d'ara rebràs l'informe un cop al mes.", 'A partir de ahora recibirás el informe una vez al mes.'] : ["A partir d'ara rebràs l'informe cada setmana.", 'A partir de ahora recibirás el informe cada semana.'];
+    return res.status(200).send(page('Fet · Hecho', `${msg[0]} · ${msg[1]}<br><br><small>Ho pots tornar a canviar a la zona de famílies. · Lo puedes volver a cambiar en la zona de familias.</small>`));
+  }
   // cron de Vercel: envia els programats que ja toquen i continua els que s'havien quedat a mitges
   if (q.cron) {
     if (!process.env.CRON_SECRET || req.headers.authorization !== `Bearer ${process.env.CRON_SECRET}`) return ok(res, { error: 'permís' }, 401);
     const until = Date.now() + 45000;
     const due = await sql`SELECT id FROM mates.mails WHERE (status = 'programat' AND send_at <= now()) OR status = 'enviant' ORDER BY send_at NULLS FIRST, id LIMIT 5`;
     for (const d of due) { if (Date.now() > until) break; await work(d.id, until); }
-    return ok(res, { ok: true, n: due.length });
+    // informes setmanals i mensuals a les famílies (només si l'administrador els ha encès al panell)
+    let inf = null;
+    if (Date.now() < until) { try { inf = await informesRun(until, items => resendBatch(items.map(i => ({ from: FROM, reply_to: 'hola@numimates.com', ...i })))); } catch (e) { console.error('informes', e.message); } }
+    return ok(res, { ok: true, n: due.length, inf });
   }
   const me = await who(req);
   if (!me || !me.admin) { await new Promise(r => setTimeout(r, 600)); return ok(res, { error: 'permís' }, 403); }
@@ -149,6 +163,37 @@ export default async function handler(req, res) {
     await sql`UPDATE mates.mails SET status = 'programat', send_at = ${at.toISOString()}, err = NULL, updated_at = now() WHERE id = ${id}`;
     if (b.action === 'send') await work(id, Date.now() + 40000);
     return ok(res, { ok: true, mail: (await sql`SELECT id, status, n_total, n_ok, n_ko, err FROM mates.mails WHERE id = ${id}`)[0] });
+  }
+  // ---- informe a les famílies
+  if (b.action === 'inf_state') {
+    await informeTables();
+    const cfg = (await ajust('informes')) || {};
+    const c = (await sql`SELECT count(DISTINCT ff.familia_id)::int AS fam, count(*)::int AS fills, count(*) FILTER (WHERE f.informe = 'setmanal')::int AS setm, count(*) FILTER (WHERE f.informe = 'mensual')::int AS mens FROM mates.familia_fills ff JOIN mates.families f ON f.id = ff.familia_id`)[0];
+    const last = await sql`SELECT periode, count(*) FILTER (WHERE status = 'enviat')::int AS ok, count(*) FILTER (WHERE status = 'error')::int AS ko, max(sent_at) AS at FROM mates.informes GROUP BY periode ORDER BY max(sent_at) DESC LIMIT 6`;
+    return ok(res, { on: !!cfg.on, mail: !!process.env.RESEND_API_KEY, ...c, last, next: periodNow('setmanal').key });
+  }
+  if (b.action === 'inf_set') { await setAjust('informes', { on: !!b.on, by: me.docent ? me.docent.nom : 'admin', at: new Date().toISOString() }); return ok(res, { ok: true, on: !!b.on }); }
+  if (b.action === 'inf_preview' || b.action === 'inf_test') {
+    await informeTables();
+    const kind = b.kind === 'mensual' ? 'mensual' : 'setmanal', per = periodNow(kind), lang = b.lang === 'es' ? 'es' : 'ca';
+    let k = null, prev = null;
+    if (b.code) { k = await kidRow(String(b.code).trim().toUpperCase()); if (!k) return ok(res, { error: 'alumne' }, 404); }
+    else {
+      // mostra amb dades inventades (s'indica al panell)
+      const d = i => { const x = new Date(per.to); x.setUTCDate(x.getUTCDate() - i); return x.toISOString().slice(0, 10); };
+      k = { name: 'Laia', course: 3, xp: 1840, lessons: 64, answers: 520, correct: 447, days: [d(0), d(1), d(3), d(4), d(6)],
+        sk: { 'mul': [120, 132], 'div:2': [70, 84], 'frac': [40, 61], 'me.clock': [33, 38], 'v.sym': [25, 29] }, prog: { 'c4-1': { stars: [3, 3, 3, 3] }, 'c4-2': { stars: [3, 2, 1, 0, 0] } },
+        medals: [{ kind: 'millora', comment: 'Molt bé amb les divisions!', docent_nom: 'Marta', created_at: new Date(per.to).toISOString() }] };
+      prev = { xp: 1700, lessons: 52, answers: 440, correct: 378 };
+    }
+    if (b.code) prev = null;
+    const m = reportMail(k, prev, per, lang, 0);
+    if (b.action === 'inf_preview') return ok(res, { subject: m.subject, html: m.html, sample: !b.code });
+    const to = String(b.to || '').split(/[\s,;]+/).map(clean).filter(e => MAILRE.test(e)).slice(0, 3);
+    if (!to.length) return ok(res, { error: 'correu' }, 400);
+    if (!process.env.RESEND_API_KEY) return ok(res, { error: 'resend' }, 409);
+    try { await resendBatch(to.map(e => ({ from: FROM, reply_to: 'hola@numimates.com', to: [e], subject: '[PROVA] ' + m.subject, html: m.html, text: m.text }))); } catch (e) { return ok(res, { error: 'envia', detail: e.message }, 502); }
+    return ok(res, { ok: true, n: to.length });
   }
   if (b.action === 'cancel') { await sql`UPDATE mates.mails SET status = 'esborrany', send_at = NULL, updated_at = now() WHERE id = ${id} AND status = 'programat'`; return ok(res, { ok: true }); }
   if (b.action === 'resume') { await sql`UPDATE mates.mail_env SET status = 'pendent' WHERE mail_id = ${id} AND status = 'error'`; await sql`UPDATE mates.mails SET status = 'enviant', err = NULL WHERE id = ${id}`; await work(id, Date.now() + 40000); return ok(res, { ok: true }); }
