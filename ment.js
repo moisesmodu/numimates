@@ -312,6 +312,7 @@ function mPremium(gen) {
   modal(`<div class="sheet card cent"><h3>${VAR.name} Premium</h3><p>${gen ? L('Amb Premium pots jugar a tots els jocs tant com vulguis i fer reptes amb amics.', 'Con Premium puedes jugar a todos los juegos tanto como quieras y hacer retos con amigos.') : L("Avui ja has fet la partida gratis d'aquest joc. Amb Premium pots jugar a tots els jocs tant com vulguis i fer reptes amb amics.", 'Hoy ya has hecho la partida gratis de este juego. Con Premium puedes jugar a todos los juegos tanto como quieras y hacer retos con amigos.')}</p>
     <button class="btn big gold" onclick="closeModal();buyPremium()">${L('Vull Premium', 'Quiero Premium')}</button><button class="btn ghost big" onclick="closeModal()">${(gen ? L('Ara no', 'Ahora no') : L('Demà ho torno a provar', 'Mañana lo vuelvo a probar'))}</button></div>`, true);
 }
+const mPin = () => `<svg class="mpin" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22s7-6.2 7-12a7 7 0 0 0-14 0c0 5.8 7 12 7 12z" fill="currentColor" opacity=".18"/><path d="M12 22s7-6.2 7-12a7 7 0 0 0-14 0c0 5.8 7 12 7 12z" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="10" r="2.6" fill="currentColor"/></svg>`;
 function mGameShell(g, top, body, title) {
   app.innerHTML = `<div class="mgame d-${MG[g] ? MG[g].cap : 'cal'}"><div class="mgtop"><button class="xbtn" onclick="mQuit()" aria-label="${L('Surt', 'Salir')}">✕</button><b>${title || tx(MG[g].n)}</b><span id="mgstat">${top || ''}</span></div><div class="mgprog" hidden aria-hidden="true"><i></i></div><div class="mgbody" id="mgb">${body}</div></div>`;
   mGameFx();
@@ -945,7 +946,7 @@ async function nomRound() {
   const noms = mshuf([...MNOM[lg]]).slice(0, k), ciu = mshuf([...MCIU[lg]]).slice(0, k);
   A.pairs = noms.map((n, i) => [n, ciu[i]]); A.ask = mshuf([...A.pairs]); A.q = 0; A.tot += k;
   mSet(`${L('Ronda', 'Ronda')} ${A.round}/2`);
-  $('#mgb').innerHTML = `<p class="mtq">${L('Recorda on viu cadascú', 'Recuerda dónde vive cada uno')}</p><div class="nomlist">${A.pairs.map(([n, c]) => `<div><b>${n}</b><span>${c}</span></div>`).join('')}</div><div class="llibar"><i style="animation-duration:${k * 3}s"></i></div>`;
+  $('#mgb').innerHTML = `<p class="mtq">${L('Recorda on viu cadascú', 'Recuerda dónde vive cada uno')}</p><div class="nomlist">${A.pairs.map(([n, c], i) => `<div style="--i:${i}"><span class="mav" style="--h:${[...n].reduce((a, ch) => a + ch.charCodeAt(0), 0) * 47 % 360}">${n[0]}</span><b>${n}</b><span class="nomc">${mPin()}${c}</span></div>`).join('')}</div><div class="llibar"><i style="animation-duration:${k * 3}s"></i></div>`;
   await mSleep(k * 3000); if (MGA !== A) return; nomAsk();
 }
 function nomAsk() {
@@ -1560,7 +1561,7 @@ function mentProgres() {
     ${mAnam().length ? `<button class="mlnk" onclick="mAnamRes()">${mTile('diana', 'ink')}<span><b>${L('Punt de partida i evolució', 'Punto de partida y evolución')}</b><small>${L(`Hàbits i com et notes · ${mAnam().length} ${mAnam().length === 1 ? 'resposta' : 'respostes'}`, `Hábitos y cómo te notas · ${mAnam().length} ${mAnam().length === 1 ? 'respuesta' : 'respuestas'}`)}</small></span><span class="mnext">${mSvg('seg')}</span></button>` : ''}
     ${links}
     <section class="mtcard"><div class="mthead"><b>${now.toLocaleDateString(mLoc(), { month: 'long', year: 'numeric' })}</b><span>${L('dies entrenats', 'días entrenados')}</span></div><div class="mcalh">${mWeekDays().map(d => `<b>${d.toLocaleDateString(mLoc(), { weekday: 'narrow' })}</b>`).join('')}</div><div class="mcal">${cal}</div></section>
-    <section class="mtcard"><div class="mthead"><b>${L('Fites', 'Logros')}</b><span>${MFITES.filter(f => fit.has(f[0])).length}/${MFITES.length}</span></div><div class="mfites">${MFITES.map(f => `<div class="mfita ${fit.has(f[0]) ? 'on' : ''}"><span>${mSvg('medalla')}</span>${tx(f[1])}</div>`).join('')}</div></section>
+    <section class="mtcard"><div class="mthead"><b>${L('Fites', 'Logros')}</b><span>${MFITES.filter(f => fit.has(f[0])).length}/${MFITES.length}</span></div><div class="mfites">${MFITES.map((f, i) => `<div class="mfita ${fit.has(f[0]) ? 'on' : ''} t${i < 4 ? 1 : i < 8 ? 2 : 3}"><span>${mSvg({ s: 'avui', t: 'ment', r: 'foc', w: 'diana', h: 'fulla', j: 'jocs' }[f[0][0]] || 'medalla')}</span>${tx(f[1])}</div>`).join('')}</div></section>
     <details class="mdet"><summary class="mh2">${L('Joc a joc', 'Juego a juego')}</summary>
     <div class="mprog">${Object.entries(MG).map(([g, o]) => { const h = m.hist[g] || [], last = h.length ? h[h.length - 1][1] : null;
       return `<div class="mpr">${mGic(g)}<div><b>${tx(o.n)}</b><small>${tx(MCAP[o.cap])}${!o.span && !o.lvx ? ` · ${L('nivell', 'nivel')} ${mLvl(g)}` : ''}</small></div><div class="mprv">${h.length ? `<b>${mNice(g, m.best[g])}</b><small>${L('últim', 'último')}: ${mNice(g, last)}</small>` : `<small>${L('encara no', 'aún no')}</small>`}</div>${mSpark(h, o.low)}</div>`; }).join('')}</div></details>

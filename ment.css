@@ -589,3 +589,93 @@ div.onnc{cursor:default}.onnc.okc{background:var(--ok-bg);border-color:var(--ok)
 .mgame .dedo{flex-direction:row!important;justify-content:flex-start!important;gap:12px!important;padding-left:14px!important}
 .mav{display:grid;place-items:center;width:40px;height:40px;border-radius:50%;background:hsl(var(--h) 55% 88%);color:hsl(var(--h) 45% 30%);font-size:19px;font-weight:800;flex:none}
 @media (prefers-reduced-motion:reduce){.mfxb{display:none}}
+
+/* ---- Jocs v3: disseny propi per a cada joc ---- */
+/* Reflexos: dos polsadors grans; el cercle és una bola de llum */
+.mgame .rfxb button{border-radius:50%!important;aspect-ratio:1;height:auto!important;background:radial-gradient(circle at 50% 35%,#fff,#F3EEE4);border:3px solid var(--edge);box-shadow:inset 0 -8px 0 rgba(0,0,0,.05),0 8px 0 var(--edge),0 18px 30px -18px rgba(0,0,0,.4)}
+.mgame .rfxb button i{width:64%!important;background:radial-gradient(circle at 35% 30%,#8FB8FF,var(--dc,#2E6CC4) 60%,#173C7A)!important;box-shadow:0 0 0 10px color-mix(in srgb,var(--dc,#2E6CC4) 18%,transparent),0 0 40px color-mix(in srgb,var(--dc,#2E6CC4) 70%,transparent)!important}
+.mgame .rfxb button:active{transform:translateY(5px);box-shadow:inset 0 -4px 0 rgba(0,0,0,.05),0 3px 0 var(--edge)}
+/* Verd sí, vermell no: un semàfor rodó amb anells */
+.mgame .atubox{width:min(76vw,300px);background:radial-gradient(circle,#fff 0 55%,color-mix(in srgb,var(--dc,#C98217) 6%,#fff) 56% 70%,#fff 71%);box-shadow:0 0 0 10px color-mix(in srgb,var(--dc,#C98217) 8%,transparent),0 0 0 22px color-mix(in srgb,var(--dc,#C98217) 5%,transparent),var(--depth)}
+.mgame .atubox i.go{background:radial-gradient(circle at 35% 30%,#7FE3A0,#2E9D55 60%,#1B6B38);box-shadow:0 0 40px rgba(46,157,85,.6)}
+.mgame .atubox i.no{background:radial-gradient(circle at 35% 30%,#FF9A92,#D4413A 60%,#8E2520);box-shadow:0 0 40px rgba(212,65,58,.55)}
+/* Igual que abans?: pila de cartes, la d'abans asoma per darrere */
+.mgame .nbkcard{position:relative;width:170px;height:200px;border-radius:24px;font-size:96px;background:#fff;border:2px solid var(--edge);box-shadow:var(--depth);z-index:1}
+.mgame .nbkcard::before,.mgame .nbkcard::after{content:"";position:absolute;inset:0;border-radius:24px;background:#fff;border:2px solid var(--edge);z-index:-1}
+.mgame .nbkcard::before{transform:rotate(-7deg) translate(-12px,6px);opacity:.75}.mgame .nbkcard::after{transform:rotate(6deg) translate(12px,8px);opacity:.5}
+.mgame .nbkcard.pop{animation:mflipin .32s cubic-bezier(.2,.9,.3,1.2)}
+@keyframes mflipin{from{transform:rotateY(70deg) scale(.9);opacity:.3}to{transform:none;opacity:1}}
+.mgame .nbkhist i{border-radius:10px;background:#fff;border:1.5px solid var(--edge);color:#9C9384}
+.mgame .nbkb .btn{min-height:76px!important;font-size:22px!important}
+/* Direccions: un planell de ciutat, amb carrers */
+.mgame .dirg{gap:0;padding:10px;border-radius:22px;background:#E9E3D6;box-shadow:var(--depth);width:min(90vw,360px)}
+.mgame .dirc{border-radius:0!important;border:0!important;box-shadow:none!important;background:#FBF8F1;margin:3px;border-radius:8px!important;background-image:linear-gradient(#EFE8DA 0 0),linear-gradient(#EFE8DA 0 0);background-size:100% 3px,3px 100%;background-position:0 50%,50% 0;background-repeat:no-repeat}
+.mgame .dirc.home{background:radial-gradient(circle,#FFE9B0,#F2B544);box-shadow:0 0 0 3px #E3A33B!important}
+.mgame .dirc.okc{background:var(--ok-bg)!important;box-shadow:0 0 0 3px var(--ok)!important}.mgame .dirc.koc{background:var(--ko-bg)!important;box-shadow:0 0 0 3px var(--ko)!important}
+.mgame .dirsteps span{border-radius:999px;padding:9px 14px;box-shadow:0 3px 0 var(--edge);border:2px solid var(--edge);background:#fff;font-size:19px}
+.mgame .dirsteps b{color:var(--dc,var(--pri))}
+/* Dígits i Suma en cadena: una pantalla fosca on surten els números */
+.mgame .dignum{min-width:min(70vw,260px);min-height:1.35em;padding:10px 26px;border-radius:26px;background:linear-gradient(180deg,#24302F,#141B1A);color:#fff;font-size:clamp(76px,22vw,112px);box-shadow:inset 0 2px 0 rgba(255,255,255,.08),0 6px 0 #0B100F,0 20px 34px -18px rgba(0,0,0,.6);text-shadow:0 0 22px color-mix(in srgb,var(--dc,#7E52B3) 60%,transparent)}
+.mgame .dignum:empty::after{content:"·";opacity:.25}
+.mgame .digin{min-width:min(80vw,300px)}
+/* Llista de la compra: un paper de notes a la fase de memoritzar */
+.mgame .llilist{position:relative;flex-direction:column;align-items:stretch;gap:0;width:min(82vw,320px);padding:22px 22px 18px 46px;background:repeating-linear-gradient(180deg,#FFFDF5 0 39px,#E7EEF6 39px 40px);border-radius:6px;box-shadow:0 14px 26px -16px rgba(0,0,0,.45);transform:rotate(-1.5deg)}
+.mgame .llilist::before{content:"";position:absolute;left:30px;top:0;bottom:0;width:2px;background:#F1B7B7}
+.mgame .llilist::after{content:"";position:absolute;left:50%;top:-12px;width:90px;height:24px;transform:translateX(-50%) rotate(2deg);background:rgba(242,181,68,.45);border-radius:3px}
+.mgame .llilist span{background:none!important;border:0!important;box-shadow:none!important;padding:0!important;line-height:40px;font:600 24px/40px var(--serif)!important;color:#2B3A4A;text-align:left}
+/* Qui viu on?: targetes amb avatar i agulla de mapa */
+.mgame .nomlist div{border:2px solid var(--edge);box-shadow:var(--depth);border-radius:18px;padding:12px 14px;gap:12px;animation:mpop .35s calc(var(--i,0) * .08s) both}
+.mgame .nomlist b{flex:1;font-size:21px}
+.mgame .nomc{display:inline-flex;align-items:center;gap:6px;color:var(--dc,var(--pri-d));font-weight:700;font-size:19px}
+.mpin{width:22px;height:22px;flex:none}
+/* On era?: un tauler de caselles */
+.mgame .onng{gap:8px;padding:10px;border-radius:24px;background:color-mix(in srgb,var(--dc,#7E52B3) 10%,#EFE9DE);box-shadow:var(--depth)}
+.mgame .onnc{border:0;border-radius:14px;background:#fff;box-shadow:0 4px 0 var(--edge)}
+.mgame .onnq{font-size:72px;filter:drop-shadow(0 10px 14px rgba(0,0,0,.18));animation:mpop .4s both}
+/* Iguals o diferents: dues etiquetes de codi */
+.mgame .igub span{position:relative;border:2px solid var(--edge);box-shadow:var(--depth);letter-spacing:.18em;background:repeating-linear-gradient(90deg,#fff 0 22px,#FAF7F0 22px 44px)}
+.mgame .igub span::before{content:"";position:absolute;left:14px;top:50%;width:10px;height:10px;margin-top:-5px;border-radius:50%;background:var(--bg,#F3EEE4);box-shadow:inset 0 1px 2px rgba(0,0,0,.2)}
+/* Uneix els punts: fitxes amb relleu i el camí de colors */
+.mgame .unibox{background:radial-gradient(circle at 1px 1px,rgba(0,0,0,.06) 1px,transparent 1.5px) 0 0/18px 18px,#fff}
+.mgame .unic{border:0;background:#fff;box-shadow:0 0 0 2px var(--edge),0 4px 0 var(--edge);font-weight:800}
+.mgame .unic.done{background:var(--dg,var(--pri));color:#fff;box-shadow:0 4px 0 color-mix(in srgb,var(--dc,#C98217) 70%,#000)}
+.mgame .unibox svg polyline,.mgame .unibox svg path,.mgame .unibox svg line{stroke:var(--dc,#C98217);stroke-width:4;stroke-linecap:round;stroke-linejoin:round}
+/* L'intrús: fitxes que entren en onada */
+.mgame .intc{font-family:var(--serif);font-weight:700;animation:mpop .3s both}
+.mgame .intc:nth-child(4n+2){animation-delay:.03s}.mgame .intc:nth-child(4n+3){animation-delay:.06s}.mgame .intc:nth-child(4n){animation-delay:.09s}
+/* Símbols i números: la clau com una taula amb capçalera de color */
+.mgame .simkey{border:2px solid var(--edge);box-shadow:var(--depth);border-radius:18px}
+.mgame .simkey div{padding:8px 0 6px}
+.mgame .simkey b{display:block;width:100%;margin-top:4px;padding-top:4px;border-top:1.5px solid var(--line)}
+.mgame .simbig{width:130px;height:130px;border-radius:30px;box-shadow:var(--depth)}
+/* Mirada ràpida: una pantalla amb punt de mira */
+.mgame .velbox{border:0;background:radial-gradient(circle,transparent 0 22%,rgba(0,0,0,.035) 22.4% 22.8%,transparent 23.2% 47%,rgba(0,0,0,.035) 47.4% 47.8%,transparent 48.2%),#fff;box-shadow:0 0 0 2px var(--edge),var(--depth)}
+.mgame .velpos{border-color:var(--dc,var(--pri));background:color-mix(in srgb,var(--dc,#2E6CC4) 10%,#fff);box-shadow:0 3px 0 color-mix(in srgb,var(--dc,#2E6CC4) 35%,#fff)}
+/* Càlcul ràpid: l'operació gran i la resposta en una pantalla */
+.mgame .calin{min-width:min(60vw,220px);border-radius:20px;box-shadow:var(--depth);border-color:var(--edge)}
+/* Refranys: una cita amb cometes grans */
+.mgame .refq{position:relative;background:#fff;border-radius:24px;padding:26px 24px 22px;box-shadow:var(--depth);border:2px solid var(--edge);max-width:440px}
+/* Sinònims: la paraula en una targeta */
+.mgame .sinw{background:#fff;border-radius:22px;padding:16px 30px;box-shadow:var(--depth);border:2px solid var(--edge)}
+@media (prefers-reduced-motion:reduce){.mgame .nbkcard.pop,.mgame .nomlist div,.mgame .intc,.mgame .onnq{animation:none!important}}
+
+.mgame .simkey div{justify-items:center;text-align:center}.mgame .simkey b{text-align:center}
+
+/* ---- Pantalles v3: la sessió com un camí i fites de bronze, plata i or ---- */
+.msess .mgames{position:relative;gap:10px;counter-reset:mst}
+.msess .mgames::before{content:"";position:absolute;left:37px;top:30px;bottom:30px;width:3px;border-radius:3px;background:repeating-linear-gradient(180deg,#DCD3C2 0 6px,transparent 6px 12px)}
+.msess .mg{counter-increment:mst;border:1.5px solid var(--line);box-shadow:0 3px 0 rgba(214,204,186,.6);background:#fff;z-index:1}
+.msess .mg .mgic{position:relative}
+.msess .mg .mgic::after{content:counter(mst);position:absolute;right:-6px;top:-6px;width:20px;height:20px;border-radius:50%;background:#fff;color:var(--ink);font:800 11.5px/20px system-ui,sans-serif;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.msess .mg.done{background:color-mix(in srgb,var(--ok-bg,#E3F4EA) 70%,#fff);border-color:color-mix(in srgb,var(--ok,#1F8A53) 35%,#fff)}
+.msess .mg.done b{text-decoration:line-through;text-decoration-color:color-mix(in srgb,var(--ok,#1F8A53) 50%,transparent);text-decoration-thickness:2px}
+.msess .mg:not(.done):first-of-type,.msess .mg.done+.mg:not(.done){box-shadow:0 0 0 3px color-mix(in srgb,#E5A93A 45%,transparent),0 3px 0 rgba(214,204,186,.6)}
+.mfita span{transition:transform .3s}
+.mfita.on.t1 span{background:radial-gradient(circle at 35% 30%,#F3C9A0,#C07A44 60%,#8A4F24);box-shadow:0 6px 14px rgba(138,79,36,.35)}
+.mfita.on.t2 span{background:radial-gradient(circle at 35% 30%,#FFFFFF,#AEB7C4 60%,#78828F);box-shadow:0 6px 14px rgba(120,130,143,.4)}
+.mfita.on.t3 span{background:radial-gradient(circle at 35% 30%,#FFF1B8,#E5B23A 55%,#A9781E);box-shadow:0 0 0 4px rgba(229,178,58,.18),0 6px 16px rgba(169,120,30,.45)}
+.mfita.on span{position:relative;overflow:hidden}
+.mfita.on span::after{content:"";position:absolute;inset:-40%;background:linear-gradient(115deg,transparent 40%,rgba(255,255,255,.55) 50%,transparent 60%);transform:translateX(-60%);animation:mshine 4.5s ease-in-out infinite}
+@keyframes mshine{0%,70%{transform:translateX(-60%)}100%{transform:translateX(60%)}}
+.mfita:not(.on) span{background:repeating-linear-gradient(45deg,#F1ECE2 0 6px,#EAE3D6 6px 12px);color:#C2B9A8}
+@media (prefers-reduced-motion:reduce){.mfita.on span::after{animation:none}}
