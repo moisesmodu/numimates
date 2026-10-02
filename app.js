@@ -453,8 +453,8 @@ function premiumBox() {
       ${S ? (S.cancel ? `<button class="btn sm gold" onclick="subResume()">${L('REACTIVA LA SUBSCRIPCIÓ', 'REACTIVAR LA SUSCRIPCIÓN')}</button>`
         : `<button class="btn sm ghost redt" onclick="subCancel(1)">${L('CANCEL·LA LA SUBSCRIPCIÓ', 'CANCELAR LA SUSCRIPCIÓN')}</button>`) : ''}</div>`;
   }
-  return `<div class="prem-box"><b>${L('Pla gratuït', 'Plan gratuito')}</b><span>${L('1 lliçó nova al dia. Amb Premium, sense límit, amb batalles i ruta de temporada.', '1 lección nueva al día. Con Premium, sin límite, con batallas y ruta de temporada.')}</span>
-    <button class="btn sm gold" onclick="premiumModal()">${L('QUÈ ÉS PREMIUM?', '¿QUÉ ES PREMIUM?')}</button></div>`;
+  return `<div class="prem-box"><b>${L('Pla gratuït', 'Plan gratuito')}</b><span>${IS_MENT ? L('La sessió diària completa i una partida de cada joc al dia. Amb Premium, tots els jocs sense límit i reptes amb amics.', 'La sesión diaria completa y una partida de cada juego al día. Con Premium, todos los juegos sin límite y retos con amigos.') : L('1 lliçó nova al dia. Amb Premium, sense límit, amb batalles i ruta de temporada.', '1 lección nueva al día. Con Premium, sin límite, con batallas y ruta de temporada.')}</span>
+    <button class="btn sm gold" onclick="${IS_MENT ? 'mPremium(1)' : 'premiumModal()'}">${L('QUÈ ÉS PREMIUM?', '¿QUÉ ES PREMIUM?')}</button></div>`;
 }
 // Cancel·lar des de l'app, amb doble confirmació: 1) què passarà; 2) confirmació d'adult. Es cancel·la al final del període pagat.
 function subCancel(step) {
@@ -1596,13 +1596,14 @@ function finishPlacement(skipped) {
 }
 function onbAccount() {
   ONB.step = 5;
-  app.innerHTML = `<div class="page solo onb"><div class="onb-char sm tapme">${charSVG('numi', 'happy')}</div>
-    <div class="bubble big">${L('Últim pas! <b>Crea el teu usuari i contrasenya</b> per guardar el progrés i entrar des de qualsevol ordinador o tauleta.', '¡Último paso! <b>Crea tu usuario y contraseña</b> para guardar tu progreso y entrar desde cualquier ordenador o tablet.')}</div>
+  const adult = IS_MENT || ONB.variant === 'ment';   // a Numi Ment (adults) sense mascota ni avís de menors
+  app.innerHTML = `<div class="page solo onb">${adult ? '' : `<div class="onb-char sm tapme">${charSVG('numi', 'happy')}</div>`}
+    <div class="bubble big${adult ? ' notail' : ''}">${L('Últim pas! <b>Crea el teu usuari i contrasenya</b> per guardar el progrés i entrar des de qualsevol ordinador o tauleta.', '¡Último paso! <b>Crea tu usuario y contraseña</b> para guardar tu progreso y entrar desde cualquier ordenador o tablet.')}</div>
     <label class="lbl">${L('Usuari', 'Usuario')}</label><input id="au" class="nm" maxlength="20" autocomplete="username" autocapitalize="none" value="${esc(slugName(P.name))}">
     <label class="lbl">${L('Contrasenya (mínim 4)', 'Contraseña (mínimo 4)')}</label>${passField('ap', '••••')}
     <div id="aerr" class="err"></div>
     <button class="btn big" id="regBtn" onclick="doRegister()">${L('CREA EL COMPTE', 'CREAR LA CUENTA')}</button>
-    <p class="legalf">${L("Si tens menys de 14 anys, fes-ho amb permís de la teva família. Guardem el mínim de dades i no hi ha publicitat:", 'Si tienes menos de 14 años, hazlo con permiso de tu familia. Guardamos el mínimo de datos y no hay publicidad:')} <a href="https://numimates.com/privacitat?l=${LANG}" target="_blank" rel="noopener">${L('política de privadesa', 'política de privacidad')}</a>.</p></div>`;
+    <p class="legalf">${adult ? L('Guardem el mínim de dades i no hi ha publicitat:', 'Guardamos el mínimo de datos y no hay publicidad:') : L("Si tens menys de 14 anys, fes-ho amb permís de la teva família. Guardem el mínim de dades i no hi ha publicitat:", 'Si tienes menos de 14 años, hazlo con permiso de tu familia. Guardamos el mínimo de datos y no hay publicidad:')} <a href="https://numimates.com/privacitat?l=${LANG}" target="_blank" rel="noopener">${L('política de privadesa', 'política de privacidad')}</a>.</p></div>`;
 }
 async function doRegister(noUser) {
   const u = noUser ? null : $('#au').value.trim().toLowerCase(), p = noUser ? null : $('#ap').value;

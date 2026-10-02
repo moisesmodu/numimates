@@ -5,6 +5,8 @@
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;background:var(--bg);color:var(--ink);font-family:Lexend,system-ui,sans-serif;font-weight:700;-webkit-font-smoothing:antialiased}
+/* el fons (degradat de body) ha d'arribar a baix de tot encara que el contingut sigui curt */
+body{min-height:100vh;min-height:100dvh}
 button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
 button:disabled{cursor:default}
 h1,h2,h3{font-weight:900;margin:0}
@@ -137,6 +139,7 @@ h1,h2,h3{font-weight:900;margin:0}
 .l-q.long .bubble{font-size:18.5px}
 .bubble.big{font-size:19px;margin:0 0 18px}
 .bubble.big::before{left:50%;top:-9px;bottom:auto;transform:translateX(-50%) rotate(135deg)}
+.bubble.notail::before{display:none}
 .l-vis{display:flex;justify-content:center;margin:0 0 20px}
 .l-foot{border-top:2px solid var(--line);padding:16px 16px calc(16px + env(safe-area-inset-bottom));transition:background .2s}
 .l-foot.ok{background:var(--ok-bg);border-color:transparent}
@@ -544,6 +547,8 @@ body{background:radial-gradient(1200px 500px at 50% -120px,#F1E6FA 0%,rgba(241,2
 .testcard b{display:block;font-size:17px}.testcard small{opacity:.9;font-size:13.5px}.testcard span:nth-child(2){flex:1}.testcard .go{color:#fff}
 .tcard.evo .ti{background:#DDF6F1}
 .ggrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}
+/* al mòbil (2 columnes), si el nombre de jocs és senar, l'últim ocupa tota la fila i no queda cap forat */
+@media (max-width:520px){.ggrid>.gcard:last-child:nth-child(odd){grid-column:1/-1}}
 .gcard{position:relative;display:flex;flex-direction:column;gap:4px;text-align:left;background:#fff;border:2px solid var(--line);border-bottom-width:5px;border-radius:20px;padding:14px;transition:transform .08s}
 .gcard:active{transform:translateY(3px);border-bottom-width:2px}
 .gcard .gi{font-size:34px;width:52px;height:52px;border-radius:16px;display:grid;place-items:center;background:#FFF1DE;margin-bottom:4px}

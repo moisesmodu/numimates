@@ -307,9 +307,10 @@ function mPlay(g, ses) {
   mStop(); MGCUR = g; MGA = null; VIEW = 'mgame';
   mIntro(g, inSes);
 }
-function mPremium() {
-  modal(`<div class="sheet card cent"><h3>${VAR.name} Premium</h3><p>${L("Avui ja has fet la partida gratis d'aquest joc. Amb Premium pots jugar a tots els jocs tant com vulguis i fer reptes amb amics.", 'Hoy ya has hecho la partida gratis de este juego. Con Premium puedes jugar a todos los juegos tanto como quieras y hacer retos con amigos.')}</p>
-    <button class="btn big gold" onclick="closeModal();buyPremium()">${L('Vull Premium', 'Quiero Premium')}</button><button class="btn ghost big" onclick="closeModal()">${L('Demà ho torno a provar', 'Mañana lo vuelvo a probar')}</button></div>`, true);
+// gen = s'obre des del perfil (no perquè s'hagi acabat la partida gratis del dia)
+function mPremium(gen) {
+  modal(`<div class="sheet card cent"><h3>${VAR.name} Premium</h3><p>${gen ? L('Amb Premium pots jugar a tots els jocs tant com vulguis i fer reptes amb amics.', 'Con Premium puedes jugar a todos los juegos tanto como quieras y hacer retos con amigos.') : L("Avui ja has fet la partida gratis d'aquest joc. Amb Premium pots jugar a tots els jocs tant com vulguis i fer reptes amb amics.", 'Hoy ya has hecho la partida gratis de este juego. Con Premium puedes jugar a todos los juegos tanto como quieras y hacer retos con amigos.')}</p>
+    <button class="btn big gold" onclick="closeModal();buyPremium()">${L('Vull Premium', 'Quiero Premium')}</button><button class="btn ghost big" onclick="closeModal()">${(gen ? L('Ara no', 'Ahora no') : L('Demà ho torno a provar', 'Mañana lo vuelvo a probar'))}</button></div>`, true);
 }
 function mGameShell(g, top, body, title) {
   app.innerHTML = `<div class="mgame d-${MG[g] ? MG[g].cap : 'cal'}"><div class="mgtop"><button class="xbtn" onclick="mQuit()" aria-label="${L('Surt', 'Salir')}">✕</button><b>${title || tx(MG[g].n)}</b><span id="mgstat">${top || ''}</span></div><div class="mgbody" id="mgb">${body}</div></div>`;
