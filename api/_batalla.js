@@ -9,7 +9,9 @@ export const PARTY_MS = 6 * 60 * 1000;
 export const BWORDS = ['ZEUS', 'HERA', 'ATENA', 'APOL', 'HERMES', 'ARES', 'NIKE', 'IRIS', 'EOS', 'GEA', 'URA', 'TITA', 'FENIX', 'PEGAS', 'ARGO', 'HIDRA'];
 export const MEDALS = ['esforc', 'ajuda', 'idees', 'millora', 'repte', 'atencio', 'calcul', 'constancia'];
 let READY = null;
-export const batTables = () => READY || (READY = sql`ALTER TABLE mates.batalles ADD COLUMN IF NOT EXISTS joc text, ADD COLUMN IF NOT EXISTS lv int, ADD COLUMN IF NOT EXISTS grup_id int, ADD COLUMN IF NOT EXISTS docent_id int, ADD COLUMN IF NOT EXISTS titol text, ADD COLUMN IF NOT EXISTS ends_at timestamptz, ADD COLUMN IF NOT EXISTS tries int`
+// les batalles del docent (classe, comp) no tenen amfitrió: a producció la columna host era NOT NULL i no es podien crear
+export const batTables = () => READY || (READY = sql`ALTER TABLE mates.batalles ALTER COLUMN host DROP NOT NULL`
+  .then(() => sql`ALTER TABLE mates.batalles ADD COLUMN IF NOT EXISTS joc text, ADD COLUMN IF NOT EXISTS lv int, ADD COLUMN IF NOT EXISTS grup_id int, ADD COLUMN IF NOT EXISTS docent_id int, ADD COLUMN IF NOT EXISTS titol text, ADD COLUMN IF NOT EXISTS ends_at timestamptz, ADD COLUMN IF NOT EXISTS tries int`)
   .then(() => sql`ALTER TABLE mates.batalla_jug ADD COLUMN IF NOT EXISTS tries int NOT NULL DEFAULT 0, ADD COLUMN IF NOT EXISTS best_c int, ADD COLUMN IF NOT EXISTS best_ms int`)
   .then(() => sql`CREATE INDEX IF NOT EXISTS batalles_grup ON mates.batalles (grup_id, kind, created_at DESC)`)
   .then(() => sql`CREATE TABLE IF NOT EXISTS mates.medalles (id serial PRIMARY KEY, code text NOT NULL, kind text NOT NULL, comment text, docent_id int, docent_nom text, seen boolean NOT NULL DEFAULT false, created_at timestamptz NOT NULL DEFAULT now())`)
