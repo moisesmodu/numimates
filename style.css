@@ -1378,3 +1378,11 @@ body.pro .energy{box-shadow:0 8px 22px rgba(60,30,90,.08)}
 .lesson.game .chaindots i,.lesson.game .chaindots span{background:rgba(255,255,255,.25)}
 .lesson.game .chaindots .on,.lesson.game .chaindots i.on{background:#FFD35C}
 .lesson.game .chainhint,.lesson.game .l-body>p{color:#C9B8E0}
+
+/* =================== Ordinador: menú lateral net (Mates i Pro) =================== */
+@media (min-width:700px){.nav .navxat{flex:none;width:80px;max-width:none;padding:10px 0}}
+@media (min-width:1100px){
+  .nav .navxat{width:auto;flex-direction:row;justify-content:flex-start;gap:14px;padding:10px 14px;font-size:15px;letter-spacing:.02em;margin-top:auto;border:2px dashed color-mix(in srgb,var(--pri) 30%,transparent)}
+  .nav .navxat .ni{width:28px;height:28px}.nav .navxat .ni svg{width:26px;height:26px}
+  .lesson .l-body{max-width:720px}
+}

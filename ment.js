@@ -210,7 +210,7 @@ function mNav(t) {
   return `<nav class="nav mnav">${it.map(([v, i, l]) => `<button class="${v === t ? 'on' : ''}" onclick="go('${v}')"><span class="ni">${mSvg(i)}</span><span>${l}</span></button>`).join('')}<button class="navxat" onclick="xatOpen()" aria-label="${L('Pregunta a en Numi', 'Pregunta a Numi')}"><span class="ni">${mSvg('xat')}</span><span>${L('Pregunta', 'Pregunta')}</span></button></nav>`;
 }
 function mShell(t, body, dark, hero = '') {
-  return `<div class="mpage ${dark ? 'dark' : ''}"><header class="mtop"><img src="${dark ? 'img/brand/logo-ment-negatiu.svg' : VAR.logo}" alt="${VAR.name}"><span class="mchip" title="${L('Dies seguits', 'Días seguidos')}">${mSvg('foc')} ${P.streak || 0}</span></header>${hero}<main class="mmain">${body}</main>${mNav(t)}</div>`;
+  return `<div class="mpage mp-${t} ${dark ? 'dark' : ''}"><header class="mtop"><img src="${dark ? 'img/brand/logo-ment-negatiu.svg' : VAR.logo}" alt="${VAR.name}"><span class="mchip" title="${L('Dies seguits', 'Días seguidos')}">${mSvg('foc')} ${P.streak || 0}</span></header>${hero}<main class="mmain">${body}</main>${mNav(t)}</div>`;
 }
 function mentGo(v) {
   if (v === 'home') { setTimeout(() => typeof lligaCheck === 'function' && lligaCheck(), 2500); setTimeout(() => typeof credNudge === 'function' && credNudge(), 1500); }

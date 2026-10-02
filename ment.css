@@ -679,3 +679,38 @@ div.onnc{cursor:default}.onnc.okc{background:var(--ok-bg);border-color:var(--ok)
 @keyframes mshine{0%,70%{transform:translateX(-60%)}100%{transform:translateX(60%)}}
 .mfita:not(.on) span{background:repeating-linear-gradient(45deg,#F1ECE2 0 6px,#EAE3D6 6px 12px);color:#C2B9A8}
 @media (prefers-reduced-motion:reduce){.mfita.on span::after{animation:none}}
+
+/* =================== Numi Ment a l'ordinador (≥ 1100 px) ===================
+   Menú lateral fix (panell sencer), capçalera en una targeta arrodonida al costat, contingut ample i,
+   a Avui, Progrés i Perfil, en dues columnes. Tauleta (700–1099 px): menú d'icones i una columna més ampla. */
+@media (min-width:700px){
+  html[data-v=ment] .nav{top:16px;bottom:16px;left:16px;right:auto;width:80px;border-radius:24px;padding:14px 8px;justify-content:flex-start;gap:6px}
+  html[data-v=ment] .nav button,html[data-v=ment] .nav .navxat{width:64px;padding:10px 0;flex-direction:column;align-items:center}
+  html[data-v=ment] .nav .navxat{margin-top:auto}
+  .mpage{padding-left:112px!important;padding-right:16px}
+  .mhero,.msub{margin:16px 0 0;border-radius:28px}
+  .mmain{max-width:760px}
+  .mgame{left:0}
+}
+@media (min-width:1100px){
+  html[data-v=ment] .nav{width:236px;padding:22px 14px;align-items:stretch;gap:4px}
+  html[data-v=ment] .nav::before{content:"";display:block;height:46px;margin:0 8px 20px;background:url(img/brand/logo-ment.svg) left center/contain no-repeat}
+  html[data-v=ment] .nav button,html[data-v=ment] .nav .navxat{width:auto;flex-direction:row;justify-content:flex-start;gap:14px;padding:12px 16px;font-size:15.5px}
+  html[data-v=ment] .nav .navxat{margin-top:auto;border:1.5px dashed rgba(23,126,110,.35)}
+  .mpage{padding-left:268px!important;padding-right:24px;padding-bottom:40px}
+  .mhero,.msub{padding:28px 40px 96px;margin-top:24px}
+  .mhero>*,.msub>*{max-width:1080px}
+  .mhero .mh1,.msub .mh1{font-size:40px}
+  .mmain{max-width:1080px;padding:20px 0 40px}
+  /* dues columnes a Avui, Progrés i Perfil (cada targeta sencera dins una columna) */
+  .mp-home .mmain,.mp-progres .mmain,.mp-profile .mmain{columns:2;column-gap:22px}
+  .mp-home .mmain>*,.mp-progres .mmain>*,.mp-profile .mmain>*{break-inside:avoid;width:100%;margin:0 0 20px!important}
+  .mp-home .mmain>.mlift:first-child,.mp-progres .mmain>.mlift:first-child,.mp-profile .mmain>.mlift:first-child{margin-top:-66px!important}
+  .mp-home .mquick{display:grid!important}
+  /* Entrena: més jocs per fila i capçaleres de capacitat més aire */
+  .mp-jocs .mjocs{grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:16px}
+  .mp-jocs .mmain{padding-top:24px}
+  /* els jocs, una mica més grans */
+  .mgame>.mgtop,.mgame>.mgprog,.mgame>.mgbody{zoom:1.12}
+}
+@media (min-width:700px){.mcapch{flex-wrap:wrap;overflow:visible!important}}

@@ -720,3 +720,4 @@ html[data-v=pro] .lesson.game .chainnum{background:#160C2A;color:#fff;border:3px
 html[data-v=pro] .lesson.game .chaindots i,html[data-v=pro] .lesson.game .chaindots span{background:rgba(28,25,39,.25)}
 html[data-v=pro] .lesson.game .chaindots .on,html[data-v=pro] .lesson.game .chaindots i.on{background:#FFD35C}
 html[data-v=pro] .lesson.game .chainhint,html[data-v=pro] .lesson.game .l-body>p{color:#C9B8E0}
+@media (min-width:1100px){html[data-v=pro] .nav .navxat{border:2px dashed color-mix(in srgb,var(--pri) 30%,transparent)}}
