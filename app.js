@@ -1178,7 +1178,7 @@ function startAgility(id) {
   if (id === 'flash') {
     AG.total = 15;
     gameShell(id, `<div class="pbar"><div class="pfill" id="gbar" style="width:0%"></div></div><div class="combo on">⚡<b id="sc">0</b></div>`,
-      `<div class="ring"><svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="52" class="rbg"/><circle cx="60" cy="60" r="52" class="rfg" id="rfg"/></svg><div class="sq" id="sq"></div></div><div class="inbox" id="inbox"><span id="inval" class="ph">?</span></div>${padHTML('akey')}`);
+      `<div class="ring"><svg viewBox="0 0 120 120"><defs><linearGradient id="rgrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFD35C"/><stop offset="1" stop-color="#3DE0D0"/></linearGradient></defs><circle cx="60" cy="60" r="52" class="rbg"/><circle cx="60" cy="60" r="52" class="rfg" id="rfg"/></svg><div class="sq" id="sq"></div></div><div class="inbox" id="inbox"><span id="inval" class="ph">?</span></div>${padHTML('akey')}`);
     return nextFlash();
   }
   AG.total = 5;

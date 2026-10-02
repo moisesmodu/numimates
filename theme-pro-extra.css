@@ -27,3 +27,5 @@ html[data-v=pro] .lesson.game .ring .sq,html[data-v=pro] .lesson.game .sq{color:
 html[data-v=pro] .lesson.game .ring,html[data-v=pro] .lesson.game .l-vis{background:none;box-shadow:none;border:0}
 html[data-v=pro] .lesson.game .pad button{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.2);border-bottom-color:rgba(0,0,0,.4);color:#fff}
 html[data-v=pro] .lesson.game .pad button.pk-ok{background:linear-gradient(180deg,#45D07B,#23A458);border-color:transparent}
+html[data-v=pro] .lesson.game .ring .rfg{stroke:url(#rgrad)}html[data-v=pro] .lesson.game .ring .rfg.low{stroke:#FF5A5F}
+html[data-v=pro] .lesson.game .chainnum{background:#160C2A;color:#fff}
