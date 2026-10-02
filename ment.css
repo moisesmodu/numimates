@@ -854,3 +854,75 @@ html[data-v=ment] .mpage .nav .navxat{border-color:rgba(233,196,111,.35)!importa
 .mpage .mradar polygon[stroke="#0E5C50"]{stroke:#F3D58C;stroke-width:2.5}
 .mpage .mradar circle{fill:#F3D58C}
 .mgame .palcat b{color:#FFE7A8!important}
+
+/* =================== PREMIUM v4b: més visual i més animació =================== */
+/* aurora: taques de llum que es mouen lentament darrere les pàgines i els jocs */
+.mpage::before,.mgame>.mgbody::before{content:"";position:fixed;inset:-20%;z-index:0;pointer-events:none;
+  background:radial-gradient(38% 30% at 20% 25%,rgba(60,194,166,.22),transparent 70%),radial-gradient(32% 28% at 80% 18%,rgba(233,196,111,.18),transparent 70%),radial-gradient(40% 32% at 70% 80%,rgba(126,82,179,.16),transparent 70%);
+  animation:maurora 22s ease-in-out infinite alternate;filter:blur(10px)}
+.mgame>.mgbody::before{background:radial-gradient(36% 28% at 25% 30%,color-mix(in srgb,var(--dc) 45%,transparent),transparent 70%),radial-gradient(30% 26% at 78% 70%,rgba(233,196,111,.16),transparent 70%)}
+.mgame>.mgbody{position:relative;isolation:isolate}.mgame>.mgbody>*{position:relative;z-index:1}
+@keyframes maurora{0%{transform:translate3d(0,0,0) rotate(0)}50%{transform:translate3d(4%,-3%,0) rotate(8deg)}100%{transform:translate3d(-4%,4%,0) rotate(-6deg)}}
+/* pols daurada a la capçalera */
+.mpage .mhero::after,.mpage .msub::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:0;opacity:.8;
+  background-image:radial-gradient(1.6px 1.6px at 12% 30%,#F7DE9F,transparent),radial-gradient(1.2px 1.2px at 30% 70%,#fff,transparent),radial-gradient(2px 2px at 55% 22%,#F7DE9F,transparent),radial-gradient(1.3px 1.3px at 72% 60%,#fff,transparent),radial-gradient(1.8px 1.8px at 88% 35%,#F7DE9F,transparent),radial-gradient(1.2px 1.2px at 45% 85%,#fff,transparent);
+  animation:mdust 7s ease-in-out infinite}
+@keyframes mdust{0%,100%{transform:translateY(0);opacity:.55}50%{transform:translateY(-10px);opacity:1}}
+.mpage .mhero .mh1{background:linear-gradient(90deg,#fff 0,#fff 40%,#F7DE9F 50%,#fff 60%,#fff 100%) 0 0/250% 100%;-webkit-background-clip:text;background-clip:text;color:transparent!important;animation:mtitle 6s ease-in-out infinite}
+@keyframes mtitle{0%,60%{background-position:100% 0}100%{background-position:-50% 0}}
+.mpage .mring{filter:drop-shadow(0 0 12px rgba(233,196,111,.35));animation:mglow 3s ease-in-out infinite}
+@keyframes mglow{50%{filter:drop-shadow(0 0 20px rgba(233,196,111,.6))}}
+/* entrada en cascada de totes les targetes */
+.mpage .mmain>*{animation:mtile .6s cubic-bezier(.2,.8,.2,1) both}
+.mpage .mmain>*:nth-child(2){animation-delay:.06s}.mpage .mmain>*:nth-child(3){animation-delay:.12s}.mpage .mmain>*:nth-child(4){animation-delay:.18s}.mpage .mmain>*:nth-child(5){animation-delay:.24s}.mpage .mmain>*:nth-child(6){animation-delay:.3s}.mpage .mmain>*:nth-child(n+7){animation-delay:.36s}
+/* brillantor que travessa els botons principals */
+.mpage .btn:not(.ghost),.mgame .mplay,.mgame .mres2 .btn:not(.ghost){position:relative;overflow:hidden}
+.mpage .btn:not(.ghost)::after,.mgame .mplay::after{content:"";position:absolute;inset:0;background:linear-gradient(110deg,transparent 35%,rgba(255,255,255,.45) 50%,transparent 65%);transform:translateX(-120%);animation:mbtn 4.2s ease-in-out infinite;pointer-events:none}
+@keyframes mbtn{0%,65%{transform:translateX(-120%)}100%{transform:translateX(120%)}}
+/* rajoles: la il·lustració respira i un raig de llum les travessa de tant en tant */
+.mpage .mjoc .mjart{animation:mart 9s ease-in-out infinite}
+@keyframes mart{50%{transform:rotate(-6deg) scale(1.08) translate(-4px,-4px)}}
+.mpage .mjoc::after{content:"";position:absolute;inset:0;z-index:0;pointer-events:none;background:linear-gradient(115deg,transparent 40%,rgba(255,255,255,.12) 50%,transparent 60%);transform:translateX(-100%);animation:msweep 7s ease-in-out infinite}
+.mpage .mjocs .mjoc:nth-child(2n)::after{animation-delay:1.2s}.mpage .mjocs .mjoc:nth-child(3n)::after{animation-delay:2.4s}
+@keyframes msweep{0%,70%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+.mpage .mjoc .mgic{transition:transform .4s cubic-bezier(.2,.9,.3,1.4)}
+.mpage .mjoc:hover .mgic{transform:rotate(-8deg) scale(1.12)}
+/* el joc següent de la sessió batega */
+.mpage .msess .mg:not(.done):first-of-type,.mpage .msess .mg.done+.mg:not(.done){animation:mtile .5s cubic-bezier(.2,.8,.2,1) both,mnext 2.4s ease-in-out .6s infinite}
+@keyframes mnext{50%{box-shadow:0 0 0 2px var(--pm-gold),0 0 44px -4px rgba(233,196,111,.75),var(--pm-sh)}}
+.mpage .msess .mg .mnext svg{animation:marrow 1.4s ease-in-out infinite}
+@keyframes marrow{50%{transform:translateX(4px)}}
+/* setmana: els dies entrenats apareixen un a un i la ratxa crema */
+.mpage .mweek i em{animation:mpop .4s cubic-bezier(.2,.9,.3,1.5) both}
+.mpage .mweek i:nth-child(2) em{animation-delay:.05s}.mpage .mweek i:nth-child(3) em{animation-delay:.1s}.mpage .mweek i:nth-child(4) em{animation-delay:.15s}.mpage .mweek i:nth-child(5) em{animation-delay:.2s}.mpage .mweek i:nth-child(6) em{animation-delay:.25s}.mpage .mweek i:nth-child(7) em{animation-delay:.3s}
+.mpage .mchip svg{color:#FFB547;animation:mflame 1.2s ease-in-out infinite;transform-origin:50% 90%}
+@keyframes mflame{50%{transform:scale(1.15) rotate(-6deg)}}
+.mpage .mprg i{background-size:200% 100%;background-image:linear-gradient(90deg,#3CC2A6,#F3D58C,#3CC2A6);animation:mbar2 3s linear infinite}
+@keyframes mbar2{to{background-position:-200% 0}}
+/* menú: la icona activa salta */
+html[data-v=ment] .mpage .nav button.on .ni{animation:mnav .5s cubic-bezier(.2,.9,.3,1.5)}
+@keyframes mnav{0%{transform:scale(.6)}100%{transform:none}}
+/* capçaleres de capacitat amb la línia que s'omple */
+.mpage .mdomh{position:relative}
+.mpage .mdomh::after{content:"";position:absolute;left:0;right:0;bottom:-6px;height:2px;background:linear-gradient(90deg,var(--dc),transparent);transform-origin:left;animation:mline 1s cubic-bezier(.2,.8,.2,1) both}
+@keyframes mline{from{transform:scaleX(0)}}
+/* jocs: presentació amb òrbita d'espurnes, peces que entren, error amb vinyeta vermella */
+.mgame .mi-hero::before{content:"";position:absolute;left:46px;top:50%;width:110px;height:110px;margin:-55px 0 0 -55px;border-radius:50%;border:1.5px dashed rgba(255,255,255,.35);animation:morbit 9s linear infinite}
+.mgame .mi-hero{position:relative}
+@keyframes morbit{to{transform:rotate(360deg)}}
+.mgame .copts .copt{animation:mtile .45s cubic-bezier(.2,.8,.2,1) both}
+.mgame .copts .copt:nth-child(2){animation-delay:.06s}.mgame .copts .copt:nth-child(3){animation-delay:.12s}.mgame .copts .copt:nth-child(4){animation-delay:.18s}
+.mgame.fx-ko::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:4;box-shadow:inset 0 0 120px rgba(255,90,70,.55);animation:mvig .5s ease-out forwards}
+@keyframes mvig{from{opacity:1}to{opacity:0}}
+.mgame.fx-ok .mgbody{animation:mbump .35s cubic-bezier(.2,.9,.3,1.4)}
+@keyframes mbump{40%{transform:scale(1.015)}}
+.mgame .mfxb.ok span{box-shadow:0 0 0 0 rgba(79,208,138,.6),0 16px 30px -10px rgba(0,0,0,.35);animation:mring2 .8s ease-out}
+@keyframes mring2{to{box-shadow:0 0 0 28px rgba(79,208,138,0),0 16px 30px -10px rgba(0,0,0,.35)}}
+/* resultat: la icona surt girant, el rècord brilla i el nivell nou rebota */
+.mres2 .mgic{animation:mspin .9s cubic-bezier(.2,.9,.3,1.3) both}
+@keyframes mspin{from{transform:rotate(-180deg) scale(.2);opacity:0}to{transform:none;opacity:1}}
+.mres2 .mr-rib{animation:mrib 2.2s ease-in-out infinite}
+@keyframes mrib{50%{filter:brightness(1.25)}}
+.mres2 .mlvl.up{animation:mpop .6s .6s cubic-bezier(.2,.9,.3,1.6) both,mglow2 2s 1.2s ease-in-out infinite}
+@keyframes mglow2{50%{box-shadow:0 0 22px rgba(233,196,111,.7)}}
+@media (prefers-reduced-motion:reduce){.mpage::before,.mgame>.mgbody::before,.mpage .mhero::after,.mpage .msub::after,.mpage .mhero .mh1,.mpage .mring,.mpage .mmain>*,.mpage .btn::after,.mgame .mplay::after,.mpage .mjoc .mjart,.mpage .mjoc::after,.mpage .msess .mg,.mpage .mweek i em,.mpage .mchip svg,.mpage .mprg i,.mpage .mdomh::after,.mgame .mi-hero::before,.mgame .copts .copt,.mgame.fx-ko::after,.mres2 .mgic,.mres2 .mr-rib,.mres2 .mlvl.up{animation:none!important}.mpage .mhero .mh1{color:#fff!important;background:none}}
