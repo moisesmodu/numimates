@@ -203,3 +203,5 @@ function esoOpts(e) {
     return { ...e, type: 'choice', opts, ans: opts.indexOf(show(e.ans)), big: opts.every(o => o.length <= 7), list: opts.some(o => o.length > 12) };
   };
 }
+// la contrarellotge per tema també gasta energia mental (vegeu useEnergy a app.js)
+{ const cg = cronoGo; cronoGo = ui => useEnergy(() => cg(ui)); }

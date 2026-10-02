@@ -369,9 +369,10 @@ function dayTxt() {
 function premiumModal(what) {
   // títol segons el que ha tocat l'alumne. És informativa: els preus i la compra només surten a la pantalla de l'adult
   // (la llei de competència deslleial, art. 30, prohibeix exhortar directament els nens a comprar)
-  const head = what === 'batalles' ? L('Les batalles són de Premium', 'Las batallas son de Premium') : what === 'temporada' ? L('La ruta de temporada és de Premium', 'La ruta de temporada es de Premium') : what === 'dia' ? L('Amb Premium, lliçons sense límit', 'Con Premium, lecciones sin límite') : what === 'xat' ? L("L'assistent amb IA és de Premium", 'El asistente con IA es de Premium') : `${VAR.name} Premium`;
+  const head = what === 'batalles' ? L('Les batalles són de Premium', 'Las batallas son de Premium') : what === 'temporada' ? L('La ruta de temporada és de Premium', 'La ruta de temporada es de Premium') : what === 'dia' ? L('Amb Premium, lliçons sense límit', 'Con Premium, lecciones sin límite') : what === 'energia' ? L('Amb Premium, entrenaments sense límit', 'Con Premium, entrenamientos sin límite') : what === 'xat' ? L("L'assistent amb IA és de Premium", 'El asistente con IA es de Premium') : `${VAR.name} Premium`;
   modal(`<div class="sheet card cent prem-sheet"><h3>${head}</h3>
     <ul class="prem"><li><span>📚</span><span>${L('<b>Lliçons sense límit</b>', '<b>Lecciones sin límite</b>')}</span></li>
+      <li><span>⚡</span><span>${L('<b>Energia mental il·limitada</b>: entrena tant com vulguis', '<b>Energía mental ilimitada</b>: entrena tanto como quieras')}</span></li>
       <li><span>⚔️</span><span>${L('<b>Batalles</b> de mates', '<b>Batallas</b> de mates')}</span></li>
       <li><span>🏆</span><span>${L('<b>Ruta de temporada</b> i cartes exclusives', '<b>Ruta de temporada</b> y cartas exclusivas')}</span></li>${VAR.chat ? `<li><span>💬</span><span>${L("<b>Assistent amb IA</b>: pistes quan t'encallis", '<b>Asistente con IA</b>: pistas cuando te atasques')}</span></li>` : ''}</ul>
     <p class="prem-note">${L('Premium el decideix i el contracta un adult.', 'Premium lo decide y lo contrata un adulto.')}</p>
@@ -453,7 +454,7 @@ function premiumBox() {
       ${S ? (S.cancel ? `<button class="btn sm gold" onclick="subResume()">${L('REACTIVA LA SUBSCRIPCIÓ', 'REACTIVAR LA SUSCRIPCIÓN')}</button>`
         : `<button class="btn sm ghost redt" onclick="subCancel(1)">${L('CANCEL·LA LA SUBSCRIPCIÓ', 'CANCELAR LA SUSCRIPCIÓN')}</button>`) : ''}</div>`;
   }
-  return `<div class="prem-box"><b>${L('Pla gratuït', 'Plan gratuito')}</b><span>${IS_MENT ? L('La sessió diària completa i una partida de cada joc al dia. Amb Premium, tots els jocs sense límit i reptes amb amics.', 'La sesión diaria completa y una partida de cada juego al día. Con Premium, todos los juegos sin límite y retos con amigos.') : L('1 lliçó nova al dia. Amb Premium, sense límit, amb batalles i ruta de temporada.', '1 lección nueva al día. Con Premium, sin límite, con batallas y ruta de temporada.')}</span>
+  return `<div class="prem-box"><b>${L('Pla gratuït', 'Plan gratuito')}</b><span>${IS_MENT ? L('La sessió diària completa i una partida de cada joc al dia. Amb Premium, tots els jocs sense límit i reptes amb amics.', 'La sesión diaria completa y una partida de cada juego al día. Con Premium, todos los juegos sin límite y retos con amigos.') : L('1 lliçó nova i 3 entrenaments al dia. Amb Premium, sense límit, amb batalles i ruta de temporada.', '1 lección nueva y 3 entrenamientos al día. Con Premium, sin límite, con batallas y ruta de temporada.')}</span>
     <button class="btn sm gold" onclick="${IS_MENT ? 'mPremium(1)' : 'premiumModal()'}">${L('QUÈ ÉS PREMIUM?', '¿QUÉ ES PREMIUM?')}</button></div>`;
 }
 // Cancel·lar des de l'app, amb doble confirmació: 1) què passarà; 2) confirmació d'adult. Es cancel·la al final del període pagat.
@@ -1090,7 +1091,7 @@ const GAMES = () => [
 ];
 function renderTrain() {
   const units = UNITS_().map((u, i) => ({ u, i })).filter(({ i }) => unitOpen(i) && trainPool(i).length), B = P.stats.bests;
-  app.innerHTML = shell(`<h1 class="ph1">${L('Entrena', 'Entrena')}</h1><p class="lead">${L(`Practica el que ja has après de ${tx(CUR().long)} i posa a prova la teva agilitat mental.`, `Practica lo que ya has aprendido de ${tx(CUR().long)} y pon a prueba tu agilidad mental.`)}</p>
+  app.innerHTML = shell(`<h1 class="ph1">${L('Entrena', 'Entrena')}</h1><p class="lead">${L(`Practica el que ja has après de ${tx(CUR().long)} i posa a prova la teva agilitat mental.`, `Practica lo que ya has aprendido de ${tx(CUR().long)} y pon a prueba tu agilidad mental.`)}</p>${energyBar()}
     ${classOff('batalles') ? '' : `<button class="tcard battle ${isPremium() ? '' : 'locked'}" onclick="${isPremium() ? "go('battles')" : "premiumModal('batalles')"}"><span class="ti">⚔️</span><span><b>${L('Batalles de mates', 'Batallas de mates')}</b><small>${L('Duels 1 contra 1 i partides de fins a 10. Mateixes preguntes per a tothom!', 'Duelos 1 contra 1 y partidas de hasta 10. ¡Mismas preguntas para todos!')}</small></span></button>`}
     ${P.classe && classOff('lliga') ? '' : `<button class="tcard lliga" onclick="go('league')"><span class="ti">🏆</span><span><b>${L('Lliga Numi', 'Liga Numi')}</b><small>${L('Cada XP és un punt. Els 3 primers de cada mes guanyen premi!', 'Cada XP es un punto. ¡Los 3 primeros de cada mes ganan premio!')}</small></span></button>`}
     <button class="tcard" onclick="startTrain()"><span class="ti">🧠</span><span><b>${L('Entrenament intel·ligent', 'Entrenamiento inteligente')}</b><small>${L('8 exercicis del que et costa més. Ideal per repassar.', '8 ejercicios de lo que más te cuesta. Ideal para repasar.')}</small></span></button>
@@ -1112,6 +1113,38 @@ function quickQ() {
   }
 }
 function startGame(id) { if (id === 'sprint') return startSprint(); startAgility(id); }
+
+/* ---------- Energia mental: al pla gratuït, 3 entrenaments al dia (Premium i escoles, sense límit) ----------
+   La gasten els entrenaments d'Entrena (intel·ligent, agilitat mental, repassar una unitat, el tema de classe i la
+   contrarellotge de Pro). No la gasten les lliçons del camí, la teoria, les fitxes ni el pla d'examen. Es recarrega cada dia. */
+const ENERGY_MAX = 3;
+const energyLeft = () => isPremium() ? Infinity : Math.max(0, ENERGY_MAX - (P.energ && P.energ.d === today() ? P.energ.n : 0));
+function useEnergy(fn) {
+  if (isPremium()) return fn();
+  const left = energyLeft();
+  if (left <= 0) return energyModal();
+  P.energ = { d: today(), n: ENERGY_MAX - left + 1 }; save();
+  fn();
+}
+function energyBar() {
+  if (P.classe) return '';
+  if (isPremium()) return `<div class="energy prem"><span class="en-pips"><i class="on inf">∞</i></span><span><b>${L('Energia mental il·limitada', 'Energía mental ilimitada')}</b><small>${L('Amb Premium, entrena tant com vulguis.', 'Con Premium, entrena tanto como quieras.')}</small></span></div>`;
+  const left = energyLeft();
+  return `<div class="energy ${left ? '' : 'empty'}"><span class="en-pips">${Array.from({ length: ENERGY_MAX }, (_, i) => `<i class="${i < left ? 'on' : ''}">⚡</i>`).join('')}</span><span><b>${L('Energia mental', 'Energía mental')}: ${left}/${ENERGY_MAX}</b><small>${left ? L('Cada entrenament en gasta una. Demà es recarrega.', 'Cada entrenamiento gasta una. Mañana se recarga.') : L("Per avui ja n'hi ha prou! Demà tindràs 3 entrenaments més.", '¡Por hoy ya es suficiente! Mañana tendrás 3 entrenamientos más.')}</small></span></div>`;
+}
+function energyModal() {
+  SFX.tap && SFX.tap();
+  modal(`<div class="sheet card cent"><div class="en-big">🧠<span>⚡</span></div><h3>${L("Has fet servir l'energia mental d'avui", 'Has usado la energía mental de hoy')}</h3>
+    <p>${L('El cervell també aprèn mentre descansa: demà tindràs 3 entrenaments més. Mentrestant, pots fer la lliçó del camí o repassar la teoria.', 'El cerebro también aprende mientras descansa: mañana tendrás 3 entrenamientos más. Mientras tanto, puedes hacer la lección del camino o repasar la teoría.')}</p>
+    <button class="btn big" onclick="closeModal();go('home')">${L('ANAR AL CAMÍ', 'IR AL CAMINO')}</button>
+    <button class="btn big ghost" onclick="closeModal();premiumModal('energia')">${L('QUÈ ÉS PREMIUM?', '¿QUÉ ES PREMIUM?')}</button></div>`, true);
+}
+{
+  const st = startTrain, ss = startSchool, sg = startGame;
+  startTrain = ui => trainPool(ui).length ? useEnergy(() => st(ui)) : st(ui);   // si encara no hi ha res per entrenar, no la gasta
+  startSchool = t => useEnergy(() => ss(t));
+  startGame = id => useEnergy(() => sg(id));
+}
 function gameShell(id, extraTop, body) {
   app.innerHTML = `<div class="lesson game"><div class="l-top"><button class="xbtn" onclick="go('train')" aria-label="${L('Surt', 'Salir')}">✕</button>${extraTop}</div><div class="l-body">${body}</div></div>`;
 }

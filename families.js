@@ -165,7 +165,7 @@ function planBox(k) {
   if (k.pla === 'premium' && S) return `<div class="card plan"><span>${S.periode === 'any' ? L('Premium anual', 'Premium anual') : L('Premium mensual', 'Premium mensual')}<small>${S.cancel ? L(`Cancel·lada: Premium fins al ${dayLong(S.renova)}`, `Cancelada: Premium hasta el ${dayLong(S.renova)}`) : S.pendent ? L('No s\'ha pogut cobrar la renovació: revisa la targeta', 'No se ha podido cobrar la renovación: revisa la tarjeta') : L(`Es renova el ${dayLong(S.renova)}`, `Se renueva el ${dayLong(S.renova)}`)}</small></span>
     ${S.cancel ? `<button class="btn gold sm" onclick="subDo('${esc(k.code)}',true)">${L('REACTIVA', 'REACTIVAR')}</button>` : `<button class="btn ghost sm redt" onclick="subCancel('${esc(k.code)}',1)">${L('CANCEL·LA', 'CANCELAR')}</button>`}</div>`;
   if (k.pla === 'premium') return `<div class="card plan"><span>Premium<small>${L("Activat per l'equip de Numi Mates", 'Activado por el equipo de Numi Mates')}</small></span></div>`;
-  return `<div class="card"><div class="plan"><span>${L('Pla gratuït', 'Plan gratuito')}<small>${L('1 lliçó nova al dia', '1 lección nueva al día')}</small></span></div>
+  return `<div class="card"><div class="plan"><span>${L('Pla gratuït', 'Plan gratuito')}<small>${L('1 lliçó nova i 3 entrenaments al dia', '1 lección nueva y 3 entrenamientos al día')}</small></span></div>
     <p class="sub" style="margin:10px 0 0">${L('Amb Premium: lliçons sense límit, batalles de mates i la ruta de temporada.', 'Con Premium: lecciones sin límite, batallas de mates y la ruta de temporada.')}</p>
     <div id="plans-${esc(k.code)}">${PAY_OK === false ? payOff() : plansHtml(k)}</div></div>`;
 }
