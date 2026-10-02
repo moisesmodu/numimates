@@ -708,3 +708,7 @@ html[data-v=pro] .lesson.game .ring .rfg.low{stroke:#FF5A5F}
 html[data-v=pro] .arena .saybubble{color:#EDE6F3}
 html[data-v=pro] .arena .prow b,html[data-v=pro] .arena .prow .psc{color:#fff}
 html[data-v=pro] .arena .prow .pt{color:#E3D3F5}
+html[data-v=pro] .lesson.game .ring .rbg{fill:#F1ECFA;stroke:rgba(50,47,60,.1)}
+html[data-v=pro] .lesson.game .ring .rfg{stroke:#3DE0D0}
+html[data-v=pro] .lesson.game .ring .rfg.low{stroke:#FF5A5F}
+html[data-v=pro] .lesson.game .ring .sq{color:#fff}

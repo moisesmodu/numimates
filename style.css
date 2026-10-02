@@ -1355,3 +1355,10 @@ body.pro .energy{box-shadow:0 8px 22px rgba(60,30,90,.08)}
 .arena .saybubble{color:#2B1A38}
 .arena .prow b,.arena .prow .psc{color:#fff}.arena .prow .pt{color:#E3D3F5}
 .lesson.game .ring .sq{font-size:clamp(34px,10vw,46px);white-space:nowrap}
+/* Llampec: disc fosc perquè els números blancs ressaltin; anell turquesa (vermell al final); operació en una línia */
+.lesson.game .ring{width:min(70vw,230px);height:min(70vw,230px)}
+.lesson.game .ring .rbg{fill:#160C2A;stroke:rgba(255,255,255,.1)}
+.lesson.game .ring .rfg{stroke:#3DE0D0;filter:drop-shadow(0 0 8px rgba(61,224,208,.75))}
+.lesson.game .ring .rfg.low{stroke:#FF5A5F;filter:drop-shadow(0 0 8px rgba(255,90,95,.8))}
+.lesson.game .ring .sq{font-size:clamp(32px,9.5vw,44px);white-space:nowrap;color:#fff;text-shadow:0 0 18px rgba(61,224,208,.45),0 3px 0 #000}
+.lesson.game .sq{white-space:nowrap}
