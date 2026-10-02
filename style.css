@@ -1208,3 +1208,43 @@ body.pro .energy{box-shadow:0 8px 22px rgba(60,30,90,.08)}
 .famnote{font-size:12.5px!important;color:#7A6E86!important}.famnote.ko{color:#C2414A!important}
 .faminv{background:#EEF8F1;border-radius:12px;padding:8px 12px}
 @media (max-width:380px){.famrow{flex-direction:column}}
+
+/* =================== Lliçons v2 (retoc gràfic de les activitats de Numi Mates i Pro) ===================
+   Mateixa identitat (lila, personatges, emojis, color de cada unitat); més ordre i més vida:
+   la imatge de l'exercici en una «pissarra», les respostes a baix (on hi arriba el polze), fons amb el color de
+   la unitat i la correcció que puja amb animació. Respecta «menys moviment». */
+.lesson{background:radial-gradient(520px 340px at 110% 8%,color-mix(in srgb,var(--uc,#602B7A) 13%,transparent),transparent 70%),radial-gradient(460px 320px at -10% 96%,color-mix(in srgb,var(--uc,#602B7A) 9%,transparent),transparent 70%),linear-gradient(180deg,color-mix(in srgb,var(--uc,#602B7A) 8%,#fff) 0,#fff 240px)}
+.lesson::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at 1px 1px,color-mix(in srgb,var(--uc,#602B7A) 13%,transparent) 1.3px,transparent 1.7px) 0 0/24px 24px;opacity:.7;z-index:0}
+.lesson>*{position:relative;z-index:1}
+.l-body{display:flex;flex-direction:column}
+.l-body>*{flex-shrink:0}
+.l-q{margin:8px 0 14px}
+/* la imatge de l'exercici, en una pissarra amb el color de la unitat */
+.l-vis{margin:auto 0;align-self:stretch;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:18px 14px;border-radius:26px;background:#fff;border:2px solid color-mix(in srgb,var(--uc,#602B7A) 16%,#EEE8F3);box-shadow:0 5px 0 color-mix(in srgb,var(--uc,#602B7A) 14%,#E7DEF0),0 18px 34px -22px color-mix(in srgb,var(--uc,#602B7A) 55%,transparent);min-height:120px}
+.l-vis>:is(.emgrid,.bignum,.colop,.riddle,.seq,.vseq){background:transparent;box-shadow:none}
+.l-vis+.l-ans{margin-top:18px}
+.l-q+.l-ans{margin-top:auto}
+.l-ans{padding-bottom:4px}
+/* opcions: més relleu, el número de tecla més discret i el color de la unitat en triar */
+.opt{border-color:color-mix(in srgb,var(--uc,#602B7A) 12%,#E9E2F0);border-bottom-color:color-mix(in srgb,var(--uc,#602B7A) 22%,#DCD2E6);border-radius:20px;box-shadow:0 10px 18px -16px color-mix(in srgb,var(--uc,#602B7A) 60%,transparent);transition:transform .12s cubic-bezier(.2,.8,.2,1),border-color .15s,background .15s}
+.opt:active:not(:disabled){transform:translateY(3px);border-bottom-width:2px}
+.opt .k{opacity:.55}
+.opt.sel{border-color:var(--uc,#84C9F5);border-bottom-color:color-mix(in srgb,var(--uc,#602B7A) 75%,#000);background:color-mix(in srgb,var(--uc,#602B7A) 10%,#fff);color:color-mix(in srgb,var(--uc,#602B7A) 85%,#000);transform:translateY(-2px)}
+.opt.right{position:relative;border-bottom-color:color-mix(in srgb,var(--ok) 70%,#000)}
+.opt.right::after{content:"✓";position:absolute;top:-10px;right:-8px;width:28px;height:28px;border-radius:50%;background:var(--ok);color:#fff;font:900 16px/28px system-ui,sans-serif;text-align:center;box-shadow:0 3px 8px rgba(0,0,0,.18);animation:lbadge .35s .05s both cubic-bezier(.2,.9,.3,1.5)}
+@keyframes lbadge{from{transform:scale(0)}to{transform:scale(1)}}
+/* teclat i casella de resposta */
+.pad button{border-color:color-mix(in srgb,var(--uc,#602B7A) 12%,#E9E2F0);border-bottom-color:color-mix(in srgb,var(--uc,#602B7A) 22%,#DCD2E6);border-radius:16px;height:60px}
+.inbox{border-color:color-mix(in srgb,var(--uc,#602B7A) 35%,#D7C6E6);background:#fff;box-shadow:0 4px 0 color-mix(in srgb,var(--uc,#602B7A) 18%,#E7DEF0)}
+/* el company reacciona i la bombolla té el color de la unitat */
+.bubble{border-color:color-mix(in srgb,var(--uc,#602B7A) 18%,#EEE8F3);box-shadow:0 4px 0 color-mix(in srgb,var(--uc,#602B7A) 14%,#E7DEF0)}
+.buddy{animation:lbuddy 3.6s ease-in-out infinite}
+@keyframes lbuddy{0%,100%{transform:translateY(0) rotate(0)}40%{transform:translateY(-5px) rotate(-3deg)}70%{transform:translateY(-2px) rotate(2deg)}}
+/* la correcció puja des de baix, amb una icona gran */
+.l-foot.ok,.l-foot.ko{animation:lfoot .32s cubic-bezier(.2,.9,.3,1.2)}
+@keyframes lfoot{from{transform:translateY(40%);opacity:.4}to{transform:none;opacity:1}}
+.l-foot.ko{background:#FFF1EA}.l-foot.ko .fbh{color:#B4502A}
+/* barra de progrés més viva */
+.pbar{height:16px;box-shadow:inset 0 2px 0 rgba(43,26,56,.06)}
+.pfill{background:linear-gradient(90deg,#3FCB72,var(--ok))}
+@media (prefers-reduced-motion:reduce){.buddy,.l-foot.ok,.l-foot.ko,.opt.right::after{animation:none!important}}
