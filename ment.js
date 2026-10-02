@@ -313,7 +313,28 @@ function mPremium(gen) {
     <button class="btn big gold" onclick="closeModal();buyPremium()">${L('Vull Premium', 'Quiero Premium')}</button><button class="btn ghost big" onclick="closeModal()">${(gen ? L('Ara no', 'Ahora no') : L('Demà ho torno a provar', 'Mañana lo vuelvo a probar'))}</button></div>`, true);
 }
 function mGameShell(g, top, body, title) {
-  app.innerHTML = `<div class="mgame d-${MG[g] ? MG[g].cap : 'cal'}"><div class="mgtop"><button class="xbtn" onclick="mQuit()" aria-label="${L('Surt', 'Salir')}">✕</button><b>${title || tx(MG[g].n)}</b><span id="mgstat">${top || ''}</span></div><div class="mgbody" id="mgb">${body}</div></div>`;
+  app.innerHTML = `<div class="mgame d-${MG[g] ? MG[g].cap : 'cal'}"><div class="mgtop"><button class="xbtn" onclick="mQuit()" aria-label="${L('Surt', 'Salir')}">✕</button><b>${title || tx(MG[g].n)}</b><span id="mgstat">${top || ''}</span></div><div class="mgprog" hidden aria-hidden="true"><i></i></div><div class="mgbody" id="mgb">${body}</div></div>`;
+  mGameFx();
+}
+// barra sota el títol a partir del marcador de cada joc: «3/8» = progrés; «44 s» = temps que queda (es compta des del primer valor)
+// i un destell del fons quan una peça es marca com a encert o error. Així els 28 jocs ho tenen sense tocar-los un per un.
+let MFX = null;
+function mGameFx() {
+  if (MFX) { MFX.forEach(o => o.disconnect()); MFX = null; }
+  const st = $('#mgstat'), bar = $('.mgprog'), gm = $('.mgame'), body = $('#mgb'); if (!st || !bar || !gm) return;
+  let tmax = 0;
+  const upd = () => {
+    const t = st.textContent, r = t.match(/(\d+)\s*\/\s*(\d+)/), s = t.match(/(?:(\d+):)?(\d+)\s*s\b/) || t.match(/^(\d+):(\d{2})/);
+    let w = null, low = false;
+    if (r && +r[2] > 0) w = Math.min(1, +r[1] / +r[2]);
+    else if (s) { const sec = (s[1] ? +s[1] * 60 : 0) + +s[2]; if (sec > tmax) tmax = sec; if (tmax >= 10) { w = sec / tmax; low = sec <= 10; } }
+    bar.hidden = w == null; bar.classList.toggle('low', low); if (w != null) bar.firstChild.style.width = (w * 100).toFixed(1) + '%';
+  };
+  const o1 = new MutationObserver(upd); o1.observe(st, { childList: true, characterData: true, subtree: true }); upd();
+  const flash = k => { gm.classList.remove('fx-ok', 'fx-ko'); void gm.offsetWidth; gm.classList.add(k); setTimeout(() => gm.classList.remove(k), 650); };
+  const o2 = new MutationObserver(ms => { for (const m of ms) { const c = m.target.classList; if (!c) continue; if (c.contains('okc') || c.contains('fok') || (c.contains('ok') && m.oldValue && !/\bok\b/.test(m.oldValue))) return flash('fx-ok'); if (c.contains('koc') || c.contains('fko') || (c.contains('ko') && m.oldValue && !/\bko\b/.test(m.oldValue))) return flash('fx-ko'); } });
+  if (body) o2.observe(body, { subtree: true, attributes: true, attributeFilter: ['class'], attributeOldValue: true });
+  MFX = [o1, o2];
 }
 function mQuit() { ask(MGA && MGA.test ? L('Vols deixar el test? Hauràs de tornar a començar.', '¿Quieres dejar el test? Tendrás que volver a empezar.') : L('Vols deixar aquesta partida?', '¿Quieres dejar esta partida?'), L('Surt', 'Salir'), L('Continua', 'Sigue'), () => { mStop(); MT = null; go('home'); }); }
 function mIntro(g, inSes) {
