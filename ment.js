@@ -240,7 +240,7 @@ function mentHome() {
   const hero = `<section class="mhero"><p class="mdate">${(t => t[0].toUpperCase() + t.slice(1))(new Date().toLocaleDateString(mLoc(), { weekday: 'long', day: 'numeric', month: 'long' }))}</p><h1 class="mh1">${mHello()}, ${esc(P.name)}</h1>
     <div class="mherow">${mRing(fets, 3)}<div><h2>${nxt ? L("La sessió d'avui", 'La sesión de hoy') : L('Sessió feta!', '¡Sesión hecha!')}</h2><p>${nxt ? L('3 jocs · uns 10 minuts', '3 juegos · unos 10 minutos') : L('Demà en tindràs una de nova.', 'Mañana tendrás una nueva.')}</p></div></div>
     ${nxt ? `<button class="btn big mbtn" onclick="mPlay('${nxt}',true)">${fets ? L('Continua la sessió', 'Continúa la sesión') : L('Comença la sessió', 'Empieza la sesión')}</button>` : `<button class="btn big mbtn" onclick="mShare()">${mSvg('compartir')} ${L('Comparteix-ho', 'Compártelo')}</button>`}</section>`;
-  const sess = `<section class="mtcard msess mlift"><div class="mgames">${s.map(g => `<button class="mg ${dd.s.includes(g) ? 'done' : ''}" onclick="mPlay('${g}',true)">${mGic(g)}<span><b>${tx(MG[g].n)}</b><span class="mdom d-${MG[g].cap}">${tx(MCAP[MG[g].cap])}</span></span>${dd.s.includes(g) ? `<i class="mok">${mSvg('ok')}</i>` : `<span class="mnext">${mSvg('seg')}</span>`}</button>`).join('')}</div>
+  const sess = `<section class="mtcard msess mlift"><div class="mgames">${s.map(g => `<button class="mg d-${MG[g].cap} ${dd.s.includes(g) ? 'done' : ''}" onclick="mPlay('${g}',true)">${mGic(g)}<span><b>${tx(MG[g].n)}</b><span class="mdom d-${MG[g].cap}">${tx(MCAP[MG[g].cap])}</span></span>${dd.s.includes(g) ? `<i class="mok">${mSvg('ok')}</i>` : `<span class="mnext">${mSvg('seg')}</span>`}</button>`).join('')}</div>
     ${nxt ? '' : `<button class="btn ghost mbtn" style="margin-top:8px" onclick="go('jocs')">${L('Juga una estona més', 'Juega un rato más')}</button>`}</section>`;
   app.innerHTML = mShell('home', `${sess}${mAnamCard()}${mAgeCard()}
     <section class="mtcard"><div class="mthead"><b>${L('Aquesta setmana', 'Esta semana')}</b><span>${P.streak > 1 ? L(`${P.streak} dies seguits`, `${P.streak} días seguidos`) : ''}</span></div><div class="mweek">${week}</div>
@@ -287,7 +287,7 @@ function mAgeCard() {
 function mentJocs() {
   const m = MS(), prem = isPremium(), fr = m.free[today()] || {}, ses = mSession();
   // rajola: icona, nom, nivell (punts de l'1 al 10) i millor resultat
-  const card = g => { const o = MG[g], lv = mLv10(g); return `<button class="mjoc d-${o.cap}" onclick="mPlay('${g}',false)">${o.nou && !m.hist[g] ? `<span class="mnew">${L('Nou', 'Nuevo')}</span>` : ''}${mGic(g)}<b>${tx(o.n)}</b>
+  const card = g => { const o = MG[g], lv = mLv10(g); return `<button class="mjoc d-${o.cap}" onclick="mPlay('${g}',false)"><span class="mjart" aria-hidden="true">${mSvg(g)}</span>${o.nou && !m.hist[g] ? `<span class="mnew">${L('Nou', 'Nuevo')}</span>` : ''}${mGic(g)}<b>${tx(o.n)}</b>
     ${lv ? `<span class="mdots" aria-label="${L('nivell', 'nivel')} ${lv}">${[...Array(10).keys()].map(i => `<i class="${i < lv ? 'on' : ''}"></i>`).join('')}</span>` : ''}
     <span class="mrec">${m.hist[g] ? `${L('Millor', 'Mejor')}: <b>${mNice(g, m.best[g])}</b>` : L('Per estrenar', 'Por estrenar')}${!prem && fr[g] && !ses.includes(g) ? ` · <i>${L('demà més', 'mañana más')}</i>` : ''}</span></button>`; };
   const nj = Object.keys(MG).length;
@@ -348,6 +348,13 @@ function mGameFx() {
     const bub = document.createElement('div'); bub.className = 'mfxb ' + (k === 'fx-ok' ? 'ok' : 'ko'); bub.setAttribute('aria-hidden', 'true');
     bub.innerHTML = `<span>${k === 'fx-ok' ? '✓' : '✗'}</span>${k === 'fx-ok' && run >= 3 && run % 3 === 0 ? `<em>${run} ${L('seguides!', 'seguidas!')}</em>` : ''}`;
     gm.appendChild(bub); setTimeout(() => bub.remove(), 900);
+    // espurnes en encertar
+    if (k === 'fx-ok' && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      const r = bub.getBoundingClientRect(), cx = r.left + r.width / 2, cy = r.top + 34, cols = ['#F3D58C', '#FFFFFF', '#4FD08A', getComputedStyle(gm).getPropertyValue('--dc') || '#9FE3D2'];
+      for (let i = 0; i < 14; i++) { const s = document.createElement('i'), a = Math.PI * 2 * i / 14 + Math.random() * .4, d = 70 + Math.random() * 60;
+        s.className = 'mspark'; s.style.cssText = `left:${cx - 5}px;top:${cy - 5}px;position:fixed;background:${cols[i % 4]};--x:${Math.cos(a) * d}px;--y:${Math.sin(a) * d}px;--r:${Math.random() * 360}deg`;
+        gm.appendChild(s); setTimeout(() => s.remove(), 850); }
+    }
   };
   // un mateix toc pot marcar la resposta bona (okc) i la triada (koc): si n'hi ha cap d'error, mana l'error
   const o2 = new MutationObserver(ms => {
@@ -442,6 +449,7 @@ function mEnd(g, score, up, msg) {
     ${ses ? `<div class="mr-ses">${[0, 1, 2].map(i => `<i class="${i < 3 - left.length ? 'on' : ''}"></i>`).join('')}</div>` : ''}${ses && nx ? `<p class="mmut">${L(`Sessió d'avui: ${3 - left.length} de 3`, `Sesión de hoy: ${3 - left.length} de 3`)}</p><button class="btn big mbtn" onclick="mPlay('${nx}',true)">${L('Següent joc', 'Siguiente juego')}: ${tx(MG[nx].n)}</button>` : ''}
     ${ses && !nx ? `<p class="mtdone">${L('Sessió d\'avui completada!', '¡Sesión de hoy completada!')}</p><button class="btn gold big mbtn mshare" onclick="mShare('ratxa')">${mSvg('compartir')} ${L('Comparteix-ho', 'Compártelo')}</button>` : ''}
     <button class="btn ${ses && nx ? 'ghost' : ''} big mbtn" style="margin-top:10px" onclick="go('home')">${L('Torna a l\'inici', 'Vuelve al inicio')}</button></div></div></div>`;
+  { const sc = $('.mres2 .mscore'), t = sc && sc.textContent.match(/^(\d+)(.*)$/); if (t && +t[1] > 1 && !matchMedia('(prefers-reduced-motion: reduce)').matches) { const to = +t[1], t0 = performance.now(); const st = n => { const k = Math.min(1, (n - t0) / 900); sc.textContent = Math.round(to * (1 - Math.pow(1 - k, 3))) + t[2]; if (k < 1) requestAnimationFrame(st); }; requestAnimationFrame(st); } }
   SFX.win && SFX.win(); if ((rec && was != null || (ses && !nx)) && typeof confetti === 'function') confetti(70);
 }
 const mSet = h => { const e = $('#mgstat'); if (e) e.innerHTML = h; };

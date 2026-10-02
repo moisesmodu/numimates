@@ -714,3 +714,143 @@ div.onnc{cursor:default}.onnc.okc{background:var(--ok-bg);border-color:var(--ok)
   .mgame>.mgtop,.mgame>.mgprog,.mgame>.mgbody{zoom:1.12}
 }
 @media (min-width:700px){.mcapch{flex-wrap:wrap;overflow:visible!important}}
+
+/* =================================================================================================
+   Numi Ment · PREMIUM (v4). Tema verd nit «clar» amb detalls daurats, icones-joia amb relleu i brillantor,
+   rajoles de joc amb el color de la capacitat i una il·lustració de fons, i animacions d'entrada i d'èxit.
+   Referència: Elevate i Peak (un color per àrea, cada joc amb identitat pròpia, animacions de victòria).
+   Les pàgines (.mpage) són fosques; els jocs (.mgame) tenen fons fosc de capacitat i peces clares.
+   ================================================================================================= */
+html[data-v=ment]{--pm-bg:#1D4740;--pm-bg2:#163A34;--pm-card:linear-gradient(160deg,#2D665C 0%,#245349 100%);--pm-card-s:#285C52;--pm-gold:#E9C46F;--pm-gold2:#C9932F;
+  --pm-ink:#F6F1E4;--pm-mut:#B4CCC5;--pm-line:rgba(243,212,142,.2);--pm-sh:inset 0 1px 0 rgba(255,255,255,.09),0 20px 40px -24px rgba(0,0,0,.65)}
+html[data-v=ment] body:has(.mpage){background:var(--pm-bg2)}
+.mpage{--card:var(--pm-card-s);--ink:var(--pm-ink);--mut:var(--pm-mut);--line:rgba(255,255,255,.12);--line2:rgba(255,255,255,.2);--pri-bg:rgba(233,196,111,.14);--pri-d:#9FE3D2;
+  background:radial-gradient(900px 520px at 100% -10%,rgba(233,196,111,.13),transparent 60%),radial-gradient(700px 600px at -10% 40%,rgba(80,170,150,.18),transparent 65%),linear-gradient(180deg,var(--pm-bg) 0,var(--pm-bg2) 100%);color:var(--pm-ink);min-height:100dvh}
+.mpage::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.35;background:radial-gradient(circle at 1px 1px,rgba(255,255,255,.07) 1px,transparent 1.5px) 0 0/22px 22px}
+.mpage>*{position:relative;z-index:1}
+.mpage .mtop{background:transparent;border-bottom-color:transparent}
+/* targetes */
+.mpage :is(.mtcard:not(.mage),.mlnk,.mquick button,.mjoc,.mstats div,.mpr,.mdit,.mdrow){background:var(--pm-card)!important;border:1px solid var(--pm-line)!important;box-shadow:var(--pm-sh)!important;color:var(--pm-ink)}
+.mpage .mtcard,.mpage .mlnk,.mpage .mquick button{border-radius:24px!important}
+.mpage :is(.mthead b,.mlnk b,.mquick b,.mjoc b,.mg b,h1,h2,h3,.mstats b){color:var(--pm-ink)}
+.mpage :is(.mthead span,.mlnk small,.mquick small,.mmut,.mdomd,.mlvnote,.mtcard p,.mstats span,small){color:var(--pm-mut)}
+.mpage .mthead b{font-size:19.5px;letter-spacing:-.01em}
+.mpage .mlvnote{border-left-color:var(--pm-gold)!important}
+.mpage .mreptes{background:linear-gradient(160deg,#5A4A22,#3E3318)!important;border-color:rgba(233,196,111,.45)!important}
+.mpage .mancons,.mpage .mwarn{background:linear-gradient(160deg,#4E4220,#3A3117)!important;border-color:rgba(233,196,111,.35)!important;color:var(--pm-ink)}
+.mpage .mhab{background:radial-gradient(260px 160px at 100% 0,rgba(148,192,82,.3),transparent 70%),linear-gradient(160deg,#355B2C,#244222)!important;border-color:rgba(183,217,138,.35)!important}
+.mpage .mhab h3{color:#C7E59C}.mpage .mhab p{color:var(--pm-ink)}
+.mpage .mhab.on{background:linear-gradient(160deg,#2C6A55,#1F4D3F)!important}
+.mpage .btn.ghost,html[data-v=ment] .mpage .btn.ghost{--c:transparent;background:rgba(255,255,255,.06);color:var(--pm-ink);border:1.5px solid rgba(233,196,111,.35)}
+.mpage .btn:not(.ghost):not(.gold){--c:#2FA58E}
+.mpage .btn.gold,.mpage .mhero .btn{--c:var(--pm-gold);color:#2A1F05;background:linear-gradient(180deg,#F3D58C,#D6A445);box-shadow:inset 0 1px 0 rgba(255,255,255,.5),0 10px 22px -10px rgba(233,196,111,.8)}
+.mpage .link,.mpage a{color:#9FE3D2}
+/* elements petits */
+.mpage :is(.mweek i em,.mcal i,.mseg button,.mdgrid button,.mdseg button,.mdpos,.mchip){background:rgba(255,255,255,.07)!important;border-color:rgba(255,255,255,.14)!important;color:var(--pm-ink)}
+.mpage .mweek i.on em{background:linear-gradient(145deg,#3CC2A6,#1C8A75)!important}
+.mpage .mweek i.today em{box-shadow:0 0 0 2px var(--pm-gold)}
+.mpage .mprg{background:rgba(255,255,255,.1)!important}.mpage .mprg i{background:linear-gradient(90deg,#3CC2A6,var(--pm-gold))}
+.mpage .mdots i{background:rgba(255,255,255,.16)}.mpage .mdots i.on{background:var(--dc)}
+.mpage .mseg button.on,.mpage .mdseg button.on,.mpage .mdgrid button.on{background:rgba(233,196,111,.18)!important;border-color:var(--pm-gold)!important}
+.mpage .mcal i.on{background:linear-gradient(145deg,#3CC2A6,#1C8A75)!important;color:#fff}
+.mpage .mbirth select{background:rgba(255,255,255,.07);color:var(--pm-ink);border-color:rgba(255,255,255,.2)}
+/* capçalera */
+.mpage .mhero,.mpage .msub{background:radial-gradient(520px 280px at 100% 0,rgba(233,196,111,.22),transparent 65%),radial-gradient(420px 300px at 0 100%,rgba(60,194,166,.22),transparent 70%),linear-gradient(160deg,#245F55,#173F38)!important;box-shadow:inset 0 -1px 0 rgba(233,196,111,.25)}
+.mpage .mhero::before{border-color:rgba(243,212,142,.28)}
+/* menú */
+html[data-v=ment] .mpage .nav{background:rgba(22,58,52,.88)!important;border:1px solid var(--pm-line)!important;backdrop-filter:blur(14px) saturate(1.3);box-shadow:0 18px 40px -20px rgba(0,0,0,.8)!important}
+html[data-v=ment] .mpage .nav button,html[data-v=ment] .mpage .nav .navxat{color:var(--pm-mut)}
+html[data-v=ment] .mpage .nav button.on{background:linear-gradient(160deg,#F3D58C,#C9932F)!important;color:#2A1F05!important;box-shadow:0 8px 18px -8px rgba(233,196,111,.7)!important}
+html[data-v=ment] .mpage .nav::before{background-image:url(img/brand/logo-ment-negatiu.svg)!important}
+html[data-v=ment] .mpage .nav .navxat{border-color:rgba(233,196,111,.35)!important}
+
+/* ---- icones-joia (a tot arreu) ---- */
+.mgic{position:relative;overflow:hidden;isolation:isolate;border-radius:30%!important;
+  box-shadow:inset 0 1.5px 0 rgba(255,255,255,.55),inset 0 -6px 12px rgba(0,0,0,.22),0 0 0 1px rgba(255,255,255,.12),0 10px 22px -8px color-mix(in srgb,var(--dc,#177E6E) 75%,transparent)!important}
+.mgic::before{content:"";position:absolute;inset:0 0 48% 0;z-index:-1;background:linear-gradient(180deg,rgba(255,255,255,.38),rgba(255,255,255,0));border-radius:0 0 50% 50%/0 0 30% 30%}
+.mgic::after{content:"";position:absolute;inset:-60%;z-index:1;background:linear-gradient(115deg,transparent 42%,rgba(255,255,255,.5) 50%,transparent 58%);transform:translateX(-70%);animation:mgem 6s ease-in-out infinite;pointer-events:none}
+.mgic svg{filter:drop-shadow(0 2px 2px rgba(0,0,0,.25))}
+@keyframes mgem{0%,72%{transform:translateX(-70%)}100%{transform:translateX(70%)}}
+
+/* ---- rajoles de joc (Entrena) ---- */
+.mpage .mjocs{gap:14px}
+.mpage .mjoc{min-height:168px;padding:16px!important;border-radius:26px!important;overflow:hidden;
+  background:radial-gradient(180px 140px at 100% 0,color-mix(in srgb,var(--dc) 70%,transparent),transparent 72%),radial-gradient(160px 120px at 0 100%,color-mix(in srgb,var(--dc) 30%,transparent),transparent 70%),var(--pm-card)!important;
+  border-color:color-mix(in srgb,var(--dc) 45%,rgba(243,212,142,.2))!important;transition:transform .35s cubic-bezier(.2,.8,.2,1),box-shadow .35s;animation:mtile .55s cubic-bezier(.2,.8,.2,1) both}
+.mpage .mjoc::before{display:none}
+.mjart{position:absolute;right:-18px;bottom:-22px;width:118px;height:118px;color:#fff;opacity:.13;transform:rotate(-14deg);pointer-events:none}
+.mjart svg{width:100%;height:100%;stroke-width:1.6}
+.mpage .mjoc>*:not(.mjart){position:relative;z-index:1}
+.mpage .mjoc .mgic{width:56px!important;height:56px!important}
+.mpage .mjoc b{font-size:18px}
+.mpage .mjoc .mrec b{color:var(--pm-gold)}
+.mpage .mjoc:hover{transform:translateY(-4px);box-shadow:inset 0 1px 0 rgba(255,255,255,.1),0 26px 40px -22px color-mix(in srgb,var(--dc) 70%,#000)!important}
+.mpage .mjoc .mnew{background:linear-gradient(180deg,#F3D58C,#D6A445)!important;color:#2A1F05!important;box-shadow:0 4px 10px -4px rgba(233,196,111,.8)}
+.mpage .mjocs .mjoc:nth-child(2){animation-delay:.05s}.mpage .mjocs .mjoc:nth-child(3){animation-delay:.1s}.mpage .mjocs .mjoc:nth-child(4){animation-delay:.15s}.mpage .mjocs .mjoc:nth-child(5){animation-delay:.2s}.mpage .mjocs .mjoc:nth-child(6){animation-delay:.25s}.mpage .mjocs .mjoc:nth-child(7){animation-delay:.3s}.mpage .mjocs .mjoc:nth-child(8){animation-delay:.35s}
+@keyframes mtile{from{opacity:0;transform:translateY(18px) scale(.97)}to{opacity:1;transform:none}}
+.mpage .mdomh h2{color:var(--pm-ink)!important;font-size:24px}
+.mpage .mdomh i{background:var(--dg)!important;box-shadow:0 0 14px color-mix(in srgb,var(--dc) 70%,transparent)}
+.mpage .mcapch button{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.18)}
+
+/* ---- la sessió d'avui ---- */
+.mpage .msess{background:transparent!important;border:0!important;box-shadow:none!important;padding:0!important}
+.mpage .msess .mgames{gap:12px}.mpage .msess .mgames::before{display:none}
+.mpage .msess .mg{padding:14px 16px!important;border-radius:22px!important;border:1px solid color-mix(in srgb,var(--dc) 45%,rgba(243,212,142,.2))!important;
+  background:radial-gradient(220px 120px at 0 50%,color-mix(in srgb,var(--dc) 55%,transparent),transparent 75%),var(--pm-card)!important;box-shadow:var(--pm-sh)!important;animation:mtile .5s cubic-bezier(.2,.8,.2,1) both}
+.mpage .msess .mg:nth-child(2){animation-delay:.08s}.mpage .msess .mg:nth-child(3){animation-delay:.16s}
+.mpage .msess .mg .mdom{color:color-mix(in srgb,var(--dc) 50%,#fff)!important}
+.mpage .msess .mg.done{opacity:.72}.mpage .msess .mg.done b{text-decoration-color:rgba(255,255,255,.5)}
+.mpage .msess .mg:not(.done):first-of-type,.mpage .msess .mg.done+.mg:not(.done){box-shadow:0 0 0 2px var(--pm-gold),0 0 30px -6px rgba(233,196,111,.55),var(--pm-sh)!important}
+.mpage .msess .mg .mnext{color:var(--pm-gold)}
+.mpage .msess .mg .mgic::after{animation-duration:4s}
+/* anell de la sessió: gira la primera vegada */
+.mring svg circle+circle{animation:mringin 1.2s cubic-bezier(.2,.8,.2,1) both}
+@keyframes mringin{from{stroke-dasharray:0 200}}
+/* fites */
+.mpage .mfita{color:var(--pm-mut)}.mpage .mfita.on{color:var(--pm-ink)}
+.mpage .mfita:not(.on) span{background:repeating-linear-gradient(45deg,rgba(255,255,255,.06) 0 6px,rgba(255,255,255,.03) 6px 12px)!important;color:rgba(255,255,255,.25)!important}
+
+/* =================== jocs: escenari fosc de capacitat i peces clares =================== */
+.mgame{--ink:#17201F;--mut:#55605E;--card:#fff;--line:#E6DECF;--line2:#D6CCBA;
+  background:radial-gradient(130% 70% at 50% -10%,color-mix(in srgb,var(--dc,#177E6E) 75%,#1D4740) 0,color-mix(in srgb,var(--dc,#177E6E) 32%,#163A34) 55%,#122F2A 100%)!important}
+.mgame::before{background:radial-gradient(circle at 1px 1px,rgba(255,255,255,.1) 1.2px,transparent 1.6px) 0 0/24px 24px!important;opacity:.6}
+.mgame .mgtop{background:rgba(8,26,23,.35)!important;border-bottom:1px solid rgba(255,255,255,.1)}
+.mgame .mgtop b{color:#fff}
+.mgame .mgtop .xbtn{background:rgba(255,255,255,.12);color:#fff}
+.mgame #mgstat{background:rgba(255,255,255,.14);color:#fff}
+.mgame .mgprog{background:rgba(255,255,255,.12)}.mgame .mgprog.seg{background:rgba(8,26,23,.25)}
+.mgame .mgprog.seg i{background:rgba(255,255,255,.16)}.mgame .mgprog.seg i.cur{background:rgba(255,255,255,.55)}.mgame .mgprog.seg i.ok{background:#4FD08A}.mgame .mgprog.seg i.ko{background:#FF8A5C}
+.mgame :is(.mtq,.palcat,.calq,.serq:not(.serchips),.onnq,.mstep,.dirsteps+p,.relq){color:#fff!important;text-shadow:0 2px 12px rgba(0,0,0,.35)}
+.mgame .mtq b{color:#FFE7A8}
+.mgame .llibar{background:rgba(255,255,255,.18)}.mgame .llibar i{background:linear-gradient(90deg,#F3D58C,#fff)}
+.mgame .mintro2 .mhow,.mgame .mi-chips span{background:rgba(255,255,255,.95)}
+.mgame .mspeak{background:rgba(255,255,255,.12)!important;color:#fff!important;border-color:rgba(255,255,255,.3)!important}
+.mgame .mi-hero{box-shadow:0 0 0 1px rgba(255,255,255,.18),0 24px 44px -20px rgba(0,0,0,.6)}
+.mgame .mi-hero .mgic{animation:mfloat 3.4s ease-in-out infinite}
+@keyframes mfloat{50%{transform:translateY(-5px) rotate(-3deg)}}
+/* peces amb una mica més de presència sobre fons fosc */
+.mgame{--edge:rgba(0,0,0,.25);--depth:0 5px 0 rgba(0,0,0,.28),0 16px 28px -14px rgba(0,0,0,.6)}
+/* resultat: raigs de llum i comptador */
+.mres2 .mr-hero{overflow:hidden}
+.mres2 .mr-hero::after{content:"";position:absolute;left:50%;top:70px;width:520px;height:520px;margin:-260px 0 0 -260px;z-index:0;background:repeating-conic-gradient(from 0deg,color-mix(in srgb,var(--dc) 14%,transparent) 0 9deg,transparent 9deg 18deg);animation:mrays 18s linear infinite;pointer-events:none}
+.mres2 .mr-hero>*{z-index:1}
+@keyframes mrays{to{transform:rotate(360deg)}}
+.mres2 .mr-sub,.mres2 .mmut,.mres2 .mtdone{color:#E9F2EF!important}
+.mres2 .mr-ses i{background:rgba(255,255,255,.2)}
+/* partícules d'encert */
+.mspark{position:absolute;z-index:6;width:10px;height:10px;border-radius:3px;pointer-events:none;animation:mspark .8s cubic-bezier(.2,.8,.3,1) forwards}
+@keyframes mspark{0%{opacity:1;transform:translate(0,0) rotate(0) scale(1)}100%{opacity:0;transform:translate(var(--x),var(--y)) rotate(var(--r)) scale(.4)}}
+@media (prefers-reduced-motion:reduce){.mgic::after,.mpage .mjoc,.mpage .msess .mg,.mres2 .mr-hero::after,.mgame .mi-hero .mgic,.mring svg circle+circle,.mspark{animation:none!important}}
+/* retocs del tema premium */
+.mpage .mjoc .mnew{position:absolute!important;top:12px;right:12px;left:auto;width:auto}
+.mpage .mradar polygon,.mpage .mradar path{stroke:rgba(255,255,255,.18)}
+.mpage .mradar [fill="#fff"],.mpage .mradar [fill="#FFFFFF"]{fill:rgba(255,255,255,.04)}
+.mpage .mradar text{fill:var(--pm-mut)}
+.mpage .prem-box{background:rgba(255,255,255,.06);border-color:var(--pm-line)}.mpage .prem-box b{color:var(--pm-ink)}.mpage .prem-box span{color:var(--pm-mut)}
+.mpage .prem-box.on{background:linear-gradient(160deg,#5A4A22,#3E3318);border-color:var(--pm-gold)}
+.mpage .langpill{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.14)}.mpage .langpill button{color:var(--pm-mut)}.mpage .langpill button.on{background:var(--pm-gold);color:#2A1F05}
+.mpage .codecard{background:linear-gradient(160deg,#173F38,#0F2C27)!important}
+.mpage .mradar polygon[fill="#FBF8F2"]{fill:rgba(255,255,255,.05)}.mpage .mradar polygon[fill="#fff"]{fill:rgba(255,255,255,.09)}
+.mpage .mradar polygon[stroke="#0E5C50"]{stroke:#F3D58C;stroke-width:2.5}
+.mpage .mradar circle{fill:#F3D58C}
+.mgame .palcat b{color:#FFE7A8!important}
