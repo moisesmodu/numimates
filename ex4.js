@@ -7,9 +7,9 @@ function factor(n) { const f = {}; let d = 2; while (n > 1) { while (n % d === 0
 const poly = (a, b, c) => { const t = []; if (a) t.push((a === 1 ? '' : a === -1 ? '−' : fmt(a)) + 'x²'); if (b) t.push((t.length ? (b < 0 ? ' − ' : ' + ') : (b < 0 ? '−' : '')) + (Math.abs(b) === 1 ? '' : Math.abs(b)) + 'x'); if (c || !t.length) t.push((t.length ? (c < 0 ? ' − ' : ' + ') : (c < 0 ? '−' : '')) + Math.abs(c)); return t.join(''); };
 const lin = (m, n) => poly(0, m, n);
 function rtSVG(a, b, c, la, lb, lc, alpha) {
-  const sc = Math.min(170 / a, 110 / b), W = a * sc, H = b * sc, x = 40, y = 15;
+  const sc = Math.min(160 / a, 110 / b), W = a * sc, H = b * sc, x = 64, y = 15; // x=64: «12 cm» del catet vertical no surt per l'esquerra
   return `<svg viewBox="0 0 260 160" class="vsvg wide"><polygon points="${x},${y + H} ${x + W},${y + H} ${x},${y}" fill="url(#gTeal)" stroke="#12806F" stroke-width="3" stroke-linejoin="round"/><path d="M${x} ${y + H - 12}h12v12" fill="none" stroke="${INK}" stroke-width="1.8"/>
-  <text x="${x + W / 2}" y="${y + H + 20}" text-anchor="middle" font-size="15" ${F} fill="${INK}">${la}</text><text x="${x - 8}" y="${y + H / 2}" text-anchor="end" font-size="15" ${F} fill="${INK}">${lb}</text><text x="${x + W / 2 + 12}" y="${y + H / 2 - 6}" font-size="15" ${F} fill="#12806F">${lc}</text>${alpha ? `<text x="${x + W - 34}" y="${y + H - 6}" font-size="16" ${F} fill="#E24F86">α</text>` : ''}</svg>`;
+  <text x="${x + W / 2}" y="${y + H + 20}" text-anchor="middle" font-size="15" ${F} fill="${INK}">${la}</text><text x="${x - 8}" y="${y + H / 2}" text-anchor="end" font-size="15" ${F} fill="${INK}">${lb}</text><text x="${x + W / 2 + 12}" y="${y + H / 2 - 6}" font-size="15" ${F} fill="#12806F">${lc}</text>${alpha ? `<text x="${x + W + 7}" y="${y + H - 2}" font-size="16" ${F} fill="#E24F86">α</text>` : ''}</svg>`;
 }
 const TRIP = [[3, 4, 5], [5, 12, 13], [8, 15, 17], [7, 24, 25], [6, 8, 10], [9, 12, 15], [12, 16, 20]];
 const listVis = a => `<div class="seq">${a.map((v, i) => `<span style="animation-delay:${i * 60}ms">${fmtD(v)}</span>`).join('')}</div>`;

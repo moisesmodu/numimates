@@ -29,3 +29,8 @@ html[data-v=pro] .lesson.game .pad button{background:rgba(255,255,255,.1);border
 html[data-v=pro] .lesson.game .pad button.pk-ok{background:linear-gradient(180deg,#45D07B,#23A458);border-color:transparent}
 html[data-v=pro] .lesson.game .ring .rfg{stroke:url(#rgrad)}html[data-v=pro] .lesson.game .ring .rfg.low{stroke:#FF5A5F}
 html[data-v=pro] .lesson.game .chainnum{background:#160C2A;color:#fff}
+/* Dibuixos dels exercicis sobre la pissarra fosca: el text i les línies en tinta fosca (INK) i lila no es veien */
+html[data-v=pro] :is(.l-vis,.opt,.lexbox,.lwrap) svg text:is([fill="#2B1A38"],[fill="#602B7A"]){fill:#EEE8F8}
+html[data-v=pro] :is(.l-vis,.opt,.lexbox,.lwrap) svg text:is([fill="#8A7B99"],[fill="#8E829A"]){fill:#B9AECB}
+html[data-v=pro] :is(.l-vis,.opt,.lexbox,.lwrap) svg :is(line,polyline)[stroke="#2B1A38"]{stroke:#CFC5DF}
+html[data-v=pro] :is(.l-vis,.opt,.lexbox,.lwrap) svg :is(line,polyline)[stroke="#602B7A"]{stroke:#C9A6E8}
