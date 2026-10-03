@@ -120,53 +120,165 @@ const BIT_WHY = {
   nopaint: ['El dibuix no és ben bé igual que el model.', 'El dibujo no es igual que el modelo.']
 };
 
-/* ---------- Dibuix ---------- */
+/* ---------- Dibuix: l'illa d'en Bit, en perspectiva 3/4 ----------
+   Terra vist des de dalt i les coses dretes (arbres, roques, cases, en Bit), amb volum, ombres i animacions suaus.
+   L'illa flota sobre el mar (onades animades) i té un penya-segat de terra a sota.
+   Tot el que canvia mentre corre el programa (estrelles, caixes, cases, bandera, pintura) es marca amb classes
+   (data-c="x,y"): així les animacions CSS no es reinicien a cada pas i en Bit llisca d'una casella a l'altra. */
 const BIT_COL = { r: '#EF5A5A', g: '#3CC47C', y: '#FFC531', u: '#3D8BFF', p: '#8B5CF6' };
-// en Bit vist des de dalt, mirant amunt (el grup es gira segons la direcció)
-function bitBot(led, carry) {
-  return `<ellipse cx="0" cy="4" rx="25" ry="23" fill="#0B1838" opacity=".16"/>
-    <rect x="-27" y="-13" width="9" height="27" rx="4" fill="#2A3557"/><rect x="18" y="-13" width="9" height="27" rx="4" fill="#2A3557"/>
-    <path d="M-7 -21L0 -31L7 -21Z" fill="#FFC531" stroke="#20306A" stroke-width="2.5" stroke-linejoin="round"/>
-    <rect x="-20" y="-20" width="40" height="40" rx="11" fill="url(#bitBody)" stroke="#20306A" stroke-width="3"/>
-    <rect x="-15" y="-16" width="30" height="14" rx="6" fill="#20306A"/>
-    <ellipse cx="-7" cy="-9" rx="3.6" ry="4.2" fill="#7DF3FF"/><ellipse cx="7" cy="-9" rx="3.6" ry="4.2" fill="#7DF3FF"/>
-    <circle cy="8" r="5.5" fill="${led ? BIT_COL[led] : '#FFC531'}" stroke="#20306A" stroke-width="2.5"/>
-    ${carry ? `<g transform="translate(0 9)"><rect x="-10" y="-7" width="20" height="16" rx="2.5" fill="#C98A4B" stroke="#7A4A1E" stroke-width="2"/><path d="M0 -7V9" stroke="#F3D9A8" stroke-width="3"/></g>` : ''}`;
+const BW_M = 30, BW_CL = 22, BW_TOP = 18;   // mar al voltant · gruix del penya-segat · marge de dalt per a les coses altes
+// atzar fix per casella (decoració que no canvia entre dibuixos)
+const bwRnd = (x, y, k = 0) => { let h = (x * 374761393 + y * 668265263 + k * 2246822519) >>> 0; h = Math.imul(h ^ (h >>> 13), 1274126177) >>> 0; return ((h ^ (h >>> 16)) >>> 0) / 4294967296; };
+const bitDefs = () => `<defs>
+  <linearGradient id="bwSea" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6FD3F7"/><stop offset="1" stop-color="#2E97DA"/></linearGradient>
+  <linearGradient id="bwGrass" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9EDB73"/><stop offset="1" stop-color="#7CC456"/></linearGradient>
+  <linearGradient id="bwCliff" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#B9814E"/><stop offset=".55" stop-color="#9A6538"/><stop offset="1" stop-color="#7A4C29"/></linearGradient>
+  <linearGradient id="bwSand" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FBE7B7"/><stop offset="1" stop-color="#EFCF8C"/></linearGradient>
+  <linearGradient id="bwPond" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4CB8EE"/><stop offset="1" stop-color="#2A86CF"/></linearGradient>
+  <radialGradient id="bwLeaf" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#7FD45F"/><stop offset=".6" stop-color="#4FA83E"/><stop offset="1" stop-color="#2F7C2C"/></radialGradient>
+  <radialGradient id="bwLeaf2" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#95E06E"/><stop offset="1" stop-color="#4C9E3A"/></radialGradient>
+  <radialGradient id="bwRock" cx=".32" cy=".28" r=".85"><stop offset="0" stop-color="#E3E6EE"/><stop offset=".55" stop-color="#A9B0C0"/><stop offset="1" stop-color="#737B90"/></radialGradient>
+  <linearGradient id="bwBot" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#C5D4F8"/></linearGradient>
+  <linearGradient id="bwBot2" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#D9E4FF"/><stop offset=".5" stop-color="#FFFFFF"/><stop offset="1" stop-color="#C2D1F6"/></linearGradient>
+  <linearGradient id="bwVisor" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2B3F86"/><stop offset="1" stop-color="#16235A"/></linearGradient>
+  <radialGradient id="bwStar" cx=".4" cy=".35" r=".8"><stop offset="0" stop-color="#FFF6C2"/><stop offset=".5" stop-color="#FFD54A"/><stop offset="1" stop-color="#F29A12"/></radialGradient>
+  <radialGradient id="bwGlow"><stop offset="0" stop-color="#FFE680" stop-opacity=".75"/><stop offset="1" stop-color="#FFE680" stop-opacity="0"/></radialGradient>
+  <linearGradient id="bwWood" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#E0A866"/><stop offset="1" stop-color="#B57536"/></linearGradient>
+  <linearGradient id="bwRoof" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F26B5B"/><stop offset="1" stop-color="#C9443A"/></linearGradient>
+  <linearGradient id="bwWall" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFF8E8"/><stop offset="1" stop-color="#F1E2C4"/></linearGradient>
+  <filter id="bwSh" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="0" dy="2.5" stdDeviation="2" flood-color="#0B2A12" flood-opacity=".28"/></filter>
+</defs>`;
+// en Bit dret, en les 4 vistes (0 d'esquena, 1 dreta, 2 de cara, 3 esquerra). L'origen són els peus.
+function bitBot(d = 2, led, carry) {
+  const ledc = led ? BIT_COL[led] : '#FFC531';
+  const wheels = `<rect x="-17" y="-10" width="11" height="11" rx="4" fill="#2A3557"/><rect x="6" y="-10" width="11" height="11" rx="4" fill="#2A3557"/>`;
+  const ant = `<path d="M0 -55V-63" stroke="#20306A" stroke-width="2.6" stroke-linecap="round"/><circle cy="-65" r="4.4" fill="${ledc}" stroke="#20306A" stroke-width="2.2" class="bant"/>`;
+  const box = carry ? `<g class="bcarry" transform="translate(0 -78)"><rect x="-12" y="-10" width="24" height="18" rx="3" fill="url(#bwWood)" stroke="#7A4A1E" stroke-width="2"/><path d="M0 -10V8M-12 -2H12" stroke="#F6DCA8" stroke-width="3"/></g>` : '';
+  let v;
+  if (d === 0) v = `${wheels}<rect x="-16" y="-31" width="32" height="24" rx="8" fill="url(#bwBot)" stroke="#20306A" stroke-width="2.6"/><path d="M-8 -24h16M-8 -19h16M-8 -14h16" stroke="#9FB2E6" stroke-width="2.2" stroke-linecap="round"/>
+      <rect x="-20" y="-55" width="40" height="27" rx="11" fill="url(#bwBot)" stroke="#20306A" stroke-width="2.6"/><circle cx="-8" cy="-42" r="2.2" fill="#9FB2E6"/><circle cx="0" cy="-42" r="2.2" fill="#9FB2E6"/><circle cx="8" cy="-42" r="2.2" fill="#9FB2E6"/>${ant}`;
+  else if (d === 2) v = `${wheels}<path d="M-16 -24l-7 9" stroke="#20306A" stroke-width="4.5" stroke-linecap="round"/><path d="M16 -24l7 9" stroke="#20306A" stroke-width="4.5" stroke-linecap="round"/><circle cx="-23.5" cy="-14.5" r="3.6" fill="#FFC531" stroke="#20306A" stroke-width="2"/><circle cx="23.5" cy="-14.5" r="3.6" fill="#FFC531" stroke="#20306A" stroke-width="2"/>
+      <rect x="-16" y="-31" width="32" height="24" rx="8" fill="url(#bwBot)" stroke="#20306A" stroke-width="2.6"/><circle cy="-19" r="5" fill="${ledc}" stroke="#20306A" stroke-width="2.2" class="bled"/>
+      <rect x="-20" y="-55" width="40" height="27" rx="11" fill="url(#bwBot)" stroke="#20306A" stroke-width="2.6"/><rect x="-15" y="-51" width="30" height="18" rx="7" fill="url(#bwVisor)"/>
+      <g class="beye"><ellipse cx="-6.5" cy="-43" rx="3.4" ry="4.4" fill="#7DF3FF"/><ellipse cx="6.5" cy="-43" rx="3.4" ry="4.4" fill="#7DF3FF"/><circle cx="-5.4" cy="-44.6" r="1.2" fill="#fff"/><circle cx="7.6" cy="-44.6" r="1.2" fill="#fff"/></g>
+      <path d="M-4 -37q4 3 8 0" stroke="#7DF3FF" stroke-width="1.8" fill="none" stroke-linecap="round"/><path d="M-15 -51q15 -6 30 0" stroke="#fff" stroke-width="2" fill="none" opacity=".25"/>${ant}`;
+  else v = `<g transform="scale(${d === 3 ? -1 : 1} 1)"><circle cx="-4" cy="-6" r="7.5" fill="#2A3557"/><circle cx="-4" cy="-6" r="2.6" fill="#8796C4"/>
+      <rect x="-14" y="-31" width="26" height="24" rx="8" fill="url(#bwBot2)" stroke="#20306A" stroke-width="2.6"/><circle cx="7" cy="-19" r="4" fill="${ledc}" stroke="#20306A" stroke-width="2" class="bled"/>
+      <path d="M-2 -24l8 9" stroke="#20306A" stroke-width="4.5" stroke-linecap="round"/><circle cx="6.5" cy="-14.5" r="3.6" fill="#FFC531" stroke="#20306A" stroke-width="2"/>
+      <rect x="-16" y="-55" width="32" height="27" rx="11" fill="url(#bwBot2)" stroke="#20306A" stroke-width="2.6"/><rect x="0" y="-51" width="15" height="18" rx="6" fill="url(#bwVisor)"/>
+      <g class="beye"><ellipse cx="8.5" cy="-43" rx="3" ry="4.4" fill="#7DF3FF"/><circle cx="9.5" cy="-44.6" r="1.1" fill="#fff"/></g>${ant}</g>`;
+  return `<ellipse cx="0" cy="0" rx="20" ry="5.5" fill="#0B2A12" opacity=".25"/><g class="bsp">${v}${box}</g>`;
 }
-const bitDefs = () => `<defs><radialGradient id="bitBody" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#FFFFFF"/><stop offset=".7" stop-color="#DCE7FF"/><stop offset="1" stop-color="#AFC4F2"/></radialGradient>
-  <linearGradient id="bitWater" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5BC0F5"/><stop offset="1" stop-color="#2C8FD6"/></linearGradient>
-  <radialGradient id="bitRock" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#C2C7D3"/><stop offset="1" stop-color="#7C8496"/></radialGradient>
-  <linearGradient id="bitGem" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFE580"/><stop offset="1" stop-color="#F5A623"/></linearGradient></defs>`;
-function bitTile(W, x, y) {
-  const c = bitKey(x, y), X = x * BIT_C, Y = y * BIT_C, odd = (x + y) % 2;
-  let h = `<rect x="${X}" y="${Y}" width="${BIT_C}" height="${BIT_C}" fill="${odd ? '#9BD77A' : '#A8DF86'}"/>`;
-  if (W.water.has(c)) h = `<rect x="${X}" y="${Y}" width="${BIT_C}" height="${BIT_C}" fill="url(#bitWater)"/><path d="M${X + 10} ${Y + 24}q7 -6 14 0t14 0t14 0M${X + 6} ${Y + 42}q7 -6 14 0t14 0t14 0" fill="none" stroke="#BFE9FF" stroke-width="3" stroke-linecap="round" opacity=".8"/>`;
-  else if (W.path.has(c)) h += `<rect x="${X + 3}" y="${Y + 3}" width="${BIT_C - 6}" height="${BIT_C - 6}" rx="10" fill="${W.floor[c] ? BIT_COL[W.floor[c]] : '#F2DDA9'}" ${W.floor[c] ? 'opacity=".85"' : ''}/>`;
-  if (W.rocks.has(c)) h += `<ellipse cx="${X + 30}" cy="${Y + 42}" rx="22" ry="8" fill="#3C5A2A" opacity=".25"/><path d="M${X + 9} ${Y + 42}Q${X + 8} ${Y + 18} ${X + 27} ${Y + 13}Q${X + 47} ${Y + 10} ${X + 51} ${Y + 32}Q${X + 54} ${Y + 46} ${X + 40} ${Y + 47}L${X + 18} ${Y + 48}Q${X + 9} ${Y + 48} ${X + 9} ${Y + 42}Z" fill="url(#bitRock)" stroke="#5B6275" stroke-width="2"/><path d="M${X + 20} ${Y + 22}q6 -5 13 -4" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round" opacity=".6"/>`;
-  if (W.trees.has(c)) h += `<ellipse cx="${X + 32}" cy="${Y + 40}" rx="21" ry="9" fill="#2F5A24" opacity=".28"/><circle cx="${X + 30}" cy="${Y + 30}" r="20" fill="#3E8E3A" stroke="#28632A" stroke-width="2"/><circle cx="${X + 24}" cy="${Y + 25}" r="10" fill="#57AD4C"/><circle cx="${X + 36}" cy="${Y + 33}" r="8" fill="#4A9E42"/><circle cx="${X + 22}" cy="${Y + 22}" r="4" fill="#8FD67F" opacity=".8"/>`;
-  if (W.homes.has(c)) h += `<g transform="translate(${X + 30} ${Y + 32})"><path d="M-17 -2L0 -18L17 -2Z" fill="#E2574C" stroke="#8E2A22" stroke-width="2" stroke-linejoin="round"/><rect x="-13" y="-3" width="26" height="20" rx="2" fill="#FFF4DD" stroke="#8E6A3A" stroke-width="2"/><rect x="-4" y="5" width="8" height="12" fill="#B07A3E"/></g>`;
-  if (W.target && W.target[c]) h += `<rect x="${X + 8}" y="${Y + 8}" width="${BIT_C - 16}" height="${BIT_C - 16}" rx="7" fill="none" stroke="${BIT_COL[W.target[c]]}" stroke-width="3" stroke-dasharray="6 5"/>`;
+// terra de cada casella (sense les coses dretes)
+function bitGround(W, x, y) {
+  const c = bitKey(x, y), X = x * BIT_C, Y = y * BIT_C;
+  if (W.water.has(c)) return `<rect x="${X + 2}" y="${Y + 2}" width="${BIT_C - 4}" height="${BIT_C - 4}" rx="14" fill="url(#bwPond)"/><g class="bwrip"><path d="M${X + 12} ${Y + 26}q6 -5 12 0t12 0t12 0" fill="none" stroke="#BDEBFF" stroke-width="2.6" stroke-linecap="round"/><path d="M${X + 18} ${Y + 42}q6 -5 12 0t12 0" fill="none" stroke="#BDEBFF" stroke-width="2.6" stroke-linecap="round" opacity=".7"/></g>`;
+  let h = (x + y) % 2 ? `<rect x="${X}" y="${Y}" width="${BIT_C}" height="${BIT_C}" fill="#000" opacity=".035"/>` : '';
+  if (W.path.has(c)) {
+    const f = W.floor[c];
+    h += f ? `<rect x="${X + 4}" y="${Y + 4}" width="${BIT_C - 8}" height="${BIT_C - 8}" rx="12" fill="${BIT_COL[f]}" stroke="${exvMixT(BIT_COL[f], -.25)}" stroke-width="2.5"/><rect x="${X + 10}" y="${Y + 9}" width="${BIT_C - 20}" height="9" rx="4.5" fill="#fff" opacity=".35"/>`
+      : `<rect x="${X + 3}" y="${Y + 3}" width="${BIT_C - 6}" height="${BIT_C - 6}" rx="12" fill="url(#bwSand)" stroke="#E2BE76" stroke-width="1.5"/>` + [0, 1, 2].map(k => bwRnd(x, y, k) < .55 ? `<ellipse cx="${X + 12 + bwRnd(x, y, k + 3) * 40}" cy="${Y + 12 + bwRnd(x, y, k + 6) * 40}" rx="${2 + bwRnd(x, y, k + 9) * 2}" ry="1.6" fill="#D9B26A" opacity=".7"/>` : '').join('');
+  } else if (!W.rocks.has(c) && !W.trees.has(c)) {
+    // flors i brins d'herba (sempre els mateixos a cada casella)
+    if (bwRnd(x, y) < .35) { const fx = X + 12 + bwRnd(x, y, 1) * 38, fy = Y + 14 + bwRnd(x, y, 2) * 36, col = ['#FF8FB1', '#FFFFFF', '#FFD54A', '#B79CFF'][Math.floor(bwRnd(x, y, 3) * 4)];
+      h += `<g transform="translate(${fx} ${fy})"><circle r="2.6" cx="-3" fill="${col}"/><circle r="2.6" cx="3" fill="${col}"/><circle r="2.6" cy="-3" fill="${col}"/><circle r="2.6" cy="3" fill="${col}"/><circle r="1.9" fill="#F5A623"/></g>`; }
+    if (bwRnd(x, y, 5) < .6) { const gx = X + 8 + bwRnd(x, y, 6) * 44, gy = Y + 20 + bwRnd(x, y, 7) * 36; h += `<path d="M${gx} ${gy}l-2 -6M${gx + 3} ${gy}l0 -8M${gx + 6} ${gy}l2 -6" stroke="#5FA841" stroke-width="2" stroke-linecap="round"/>`; }
+  }
+  if (W.target && W.target[c]) h += `<rect x="${X + 9}" y="${Y + 9}" width="${BIT_C - 18}" height="${BIT_C - 18}" rx="9" fill="${BIT_COL[W.target[c]]}" fill-opacity=".14" stroke="${BIT_COL[W.target[c]]}" stroke-width="3" stroke-dasharray="7 6"/>`;
   return h;
 }
-// el que canvia mentre corre el programa: estrelles, caixes, cases fetes, pintura, rastre, bandera
-function bitDyn(W, S) {
+const exvMixT = (hex, t) => { const n = parseInt(hex.slice(1), 16), f = v => Math.max(0, Math.min(255, Math.round(t < 0 ? v * (1 + t) : v + (255 - v) * t))); return '#' + [n >> 16, (n >> 8) & 255, n & 255].map(f).map(v => v.toString(16).padStart(2, '0')).join(''); };
+// les coses dretes de cada casella, ancorades a la part de baix
+function bitThing(W, x, y) {
+  const c = bitKey(x, y), cx = x * BIT_C + BIT_C / 2, by = y * BIT_C + BIT_C - 6, k = bwRnd(x, y, 11);
+  if (W.trees.has(c)) {
+    const s = .88 + k * .2;
+    return `<g class="btree" style="--d:${(-k * 3).toFixed(2)}s" transform="translate(${cx} ${by}) scale(${s.toFixed(2)})"><ellipse cx="2" cy="0" rx="20" ry="6" fill="#0B2A12" opacity=".25"/><path d="M-3.5 0V-16h7V0z" fill="#8A5A33"/><g class="bsway">
+      <circle cx="-9" cy="-24" r="13" fill="url(#bwLeaf)"/><circle cx="9" cy="-26" r="13" fill="url(#bwLeaf)"/><circle cx="0" cy="-38" r="15" fill="url(#bwLeaf2)"/><circle cx="-5" cy="-43" r="5" fill="#C9F2A6" opacity=".55"/>
+      ${k < .3 ? `<circle cx="7" cy="-30" r="3" fill="#FF6B5B"/><circle cx="-8" cy="-22" r="3" fill="#FF6B5B"/>` : ''}</g></g>`;
+  }
+  if (W.rocks.has(c)) return `<g transform="translate(${cx} ${by})"><ellipse cx="2" cy="0" rx="22" ry="6" fill="#0B2A12" opacity=".25"/><path d="M-21 -2Q-24 -24 -6 -31Q12 -36 20 -18Q25 -4 16 -1L-14 0Q-20 0 -21 -2Z" fill="url(#bwRock)" stroke="#5E667A" stroke-width="2"/>
+      <path d="M-11 -22q7 -7 15 -5" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round" opacity=".7"/>${k < .5 ? `<path d="M-18 -6q6 -6 14 -3" stroke="#7DBB55" stroke-width="4" fill="none" stroke-linecap="round" opacity=".9"/>` : ''}</g>`;
+  if (W.homes.has(c)) return `<g class="bhome" data-c="${c}" transform="translate(${cx} ${by})"><ellipse cx="2" cy="0" rx="24" ry="6" fill="#0B2A12" opacity=".25"/>
+      <rect x="-19" y="-30" width="38" height="30" rx="3" fill="url(#bwWall)" stroke="#8E6A3A" stroke-width="2"/><path d="M-24 -28L0 -48L24 -28Z" fill="url(#bwRoof)" stroke="#8E2A22" stroke-width="2" stroke-linejoin="round"/>
+      <rect x="9" y="-50" width="6" height="12" fill="#B05A3C"/><g class="bsmoke"><circle cx="12" cy="-56" r="4" fill="#fff" opacity=".8"/><circle cx="15" cy="-63" r="5" fill="#fff" opacity=".6"/></g>
+      <rect x="-5" y="-17" width="10" height="17" rx="2" fill="#B07A3E"/><rect x="-15" y="-24" width="8" height="8" rx="1.5" class="bwin" fill="#9ED3F2" stroke="#8E6A3A" stroke-width="1.5"/><rect x="7" y="-24" width="8" height="8" rx="1.5" class="bwin" fill="#9ED3F2" stroke="#8E6A3A" stroke-width="1.5"/>
+      <g class="bok" transform="translate(16 -52)"><circle r="10" fill="#3CC47C" stroke="#fff" stroke-width="2.5"/><path d="M-5 0l3 4l6 -7" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g></g>`;
+  return '';
+}
+// coses que poden desaparèixer o canviar: estrelles, caixes, bandera
+function bitItems(W) {
   let h = '';
-  if (W.pen || Object.keys(S.paint).length) for (const [c, v] of Object.entries(S.paint)) { const [x, y] = c.split(',').map(Number); h += `<rect x="${x * BIT_C + 6}" y="${y * BIT_C + 6}" width="${BIT_C - 12}" height="${BIT_C - 12}" rx="8" fill="${BIT_COL[v]}" opacity=".9"/>`; }
-  if (W.goal) { const [x, y] = W.goal, X = x * BIT_C, Y = y * BIT_C, ok = S.x === x && S.y === y;
-    h += `<g transform="translate(${X + 22} ${Y + 10})"><rect x="0" y="0" width="4" height="42" rx="2" fill="#5B4636"/><path d="M4 2 L30 9 L4 17Z" fill="${ok ? '#3CC47C' : '#EF5A5A'}" stroke="#8E2A22" stroke-width="1.5" stroke-linejoin="round"/><ellipse cx="2" cy="42" rx="9" ry="3" fill="#3C5A2A" opacity=".3"/></g>`; }
-  for (const c of W.gems) if (!S.gems.has(c)) { const [x, y] = c.split(',').map(Number); h += `<g class="bgem" transform="translate(${x * BIT_C + 30} ${y * BIT_C + 30})"><path d="M0 -17L5 -6L17 -5L8 3L11 15L0 9L-11 15L-8 3L-17 -5L-5 -6Z" fill="url(#bitGem)" stroke="#B9770E" stroke-width="2" stroke-linejoin="round"/></g>`; }
-  for (const c of S.boxes) { const [x, y] = c.split(',').map(Number); h += `<g transform="translate(${x * BIT_C + 30} ${y * BIT_C + 32})"><rect x="-14" y="-12" width="28" height="24" rx="3" fill="#C98A4B" stroke="#7A4A1E" stroke-width="2"/><path d="M0 -12V12M-14 -3H14" stroke="#F3D9A8" stroke-width="3"/></g>`; }
-  for (const c of S.done) { const [x, y] = c.split(',').map(Number); h += `<g transform="translate(${x * BIT_C + 46} ${y * BIT_C + 14})"><circle r="10" fill="#3CC47C" stroke="#fff" stroke-width="2"/><path d="M-5 0l3 4l6 -7" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g>`; }
+  if (W.goal) { const [x, y] = W.goal, cx = x * BIT_C + BIT_C / 2, by = y * BIT_C + BIT_C - 8;
+    h += `<g class="bflag" transform="translate(${cx - 6} ${by})"><ellipse cx="6" cy="1" rx="13" ry="4" fill="#0B2A12" opacity=".25"/><ellipse cx="2" cy="-1" rx="7" ry="3.5" fill="#8C93A6"/><rect x="0" y="-46" width="4" height="46" rx="2" fill="#5B4636"/><circle cx="2" cy="-47" r="3.5" fill="#FFC531"/>
+      <path class="bfl" d="M4 -44 Q16 -48 28 -42 Q20 -36 30 -30 Q16 -34 4 -30Z" fill="#EF5A5A" stroke="#A9302A" stroke-width="1.6" stroke-linejoin="round"/></g>`; }
+  for (const c of W.gems) { const [x, y] = c.split(',').map(Number), cx = x * BIT_C + BIT_C / 2, cy = y * BIT_C + BIT_C / 2;
+    h += `<g class="bgem" data-c="${c}" transform="translate(${cx} ${cy})"><ellipse cy="20" rx="11" ry="3.5" fill="#0B2A12" opacity=".2"/><g class="bgf" style="--d:${(-bwRnd(x, y, 4) * 2).toFixed(2)}s"><circle r="20" fill="url(#bwGlow)"/><g class="bgs"><path d="M0 -16L4.8 -6L16 -4.8L7.6 2.8L10 14L0 8.4L-10 14L-7.6 2.8L-16 -4.8L-4.8 -6Z" fill="url(#bwStar)" stroke="#C9780E" stroke-width="2" stroke-linejoin="round"/><path d="M-3 -6l2.4 -5" stroke="#fff" stroke-width="2.4" stroke-linecap="round" opacity=".8"/></g></g></g>`; }
+  for (const c of W.boxes) { const [x, y] = c.split(',').map(Number), cx = x * BIT_C + BIT_C / 2, by = y * BIT_C + BIT_C - 10;
+    h += `<g class="bbox" data-c="${c}" transform="translate(${cx} ${by})"><ellipse cx="2" cy="1" rx="18" ry="5" fill="#0B2A12" opacity=".25"/><path d="M-15 -26h30l0 26h-30z" fill="url(#bwWood)" stroke="#7A4A1E" stroke-width="2" stroke-linejoin="round"/><path d="M-15 -26l5 -6h30l-5 6z" fill="#EDBB7A" stroke="#7A4A1E" stroke-width="2" stroke-linejoin="round"/><path d="M15 -26l5 -6v26l-5 6z" fill="#A86A33" stroke="#7A4A1E" stroke-width="2" stroke-linejoin="round"/><path d="M0 -26V0M-15 -13H15" stroke="#F6DCA8" stroke-width="3.2"/></g>`; }
   return h;
 }
-const bitXY = S => `translate(${S.x * BIT_C + BIT_C / 2}px,${S.y * BIT_C + BIT_C / 2}px) rotate(${S.ang}deg)`;
-// opts: marks (lletres per triar), pick (es poden tocar les caselles), id
+const bitXY = S => `translate(${S.x * BIT_C + BIT_C / 2}px,${S.y * BIT_C + BIT_C - 7}px)`;
+// opts: marks (lletres per triar), still (sense animacions: miniatures)
 function bitSVG(W, S, o = {}) {
-  let tiles = ''; for (let y = 0; y < W.h; y++) for (let x = 0; x < W.w; x++) tiles += bitTile(W, x, y);
-  const marks = o.marks ? Object.entries(W.marks).map(([k, [x, y]]) => `<g class="bmark" data-m="${k}" transform="translate(${x * BIT_C + 30} ${y * BIT_C + 30})"><circle r="17" fill="#fff" stroke="#20306A" stroke-width="3"/><text y="7" text-anchor="middle" font-size="20" font-weight="800" fill="#20306A">${k}</text></g>`).join('') : '';
-  return `<svg class="bitw" viewBox="-4 -4 ${W.w * BIT_C + 8} ${W.h * BIT_C + 8}" role="img" aria-label="${L('El món d\'en Bit', 'El mundo de Bit')}">${bitDefs()}
-    <clipPath id="bitClip"><rect width="${W.w * BIT_C}" height="${W.h * BIT_C}" rx="10"/></clipPath><rect x="-4" y="-4" width="${W.w * BIT_C + 8}" height="${W.h * BIT_C + 8}" rx="14" fill="#5E9E4A"/><g clip-path="url(#bitClip)">${tiles}</g>
-    <g class="bdyn">${bitDyn(W, S)}</g>${marks}<g class="bbot" style="transform:${bitXY(S)}">${bitBot(S.led, S.carry)}</g></svg>`;
+  const w = W.w * BIT_C, h = W.h * BIT_C;
+  let ground = '', things = '';
+  for (let y = 0; y < W.h; y++) for (let x = 0; x < W.w; x++) { ground += bitGround(W, x, y); things += bitThing(W, x, y); }
+  const waves = [0, 1, 2, 3].map(i => `<path class="bwave" style="--d:${-i * 1.1}s" d="M${-BW_M - 40} ${(i % 2 ? h + BW_CL + 14 : -BW_TOP - 6) + (i > 1 ? 10 : 0)} ${Array.from({ length: Math.ceil((w + 2 * BW_M + 80) / 28) }, () => 'q7 -5 14 0t14 0').join(' ')}" fill="none" stroke="#C9F1FF" stroke-width="2.4" stroke-linecap="round" opacity=".55"/>`).join('');
+  const marks = o.marks ? Object.entries(W.marks).map(([k, [x, y]]) => `<g class="bmark" data-m="${k}" transform="translate(${x * BIT_C + BIT_C / 2} ${y * BIT_C + BIT_C / 2})"><circle r="19" fill="#fff" stroke="#20306A" stroke-width="3.2" filter="url(#bwSh)"/><text y="7.5" text-anchor="middle" font-size="21" font-weight="900" font-family="Lexend,system-ui,sans-serif" fill="#20306A">${k}</text></g>`).join('') : '';
+  // la pintura del llapis (s'hi afegeix mentre corre)
+  const paint = Object.entries(S.paint || {}).map(([c, v]) => bitPaintCell(c, v)).join('');
+  return `<svg class="bitw${o.still ? ' still' : ''}" viewBox="${-BW_M} ${-BW_M - BW_TOP} ${w + 2 * BW_M} ${h + 2 * BW_M + BW_TOP + BW_CL}" role="img" aria-label="${L("El món d'en Bit", 'El mundo de Bit')}">${bitDefs()}
+    <rect x="${-BW_M}" y="${-BW_M - BW_TOP}" width="${w + 2 * BW_M}" height="${h + 2 * BW_M + BW_TOP + BW_CL}" rx="22" fill="url(#bwSea)"/>${waves}
+    <rect x="-6" y="${h - 14}" width="${w + 12}" height="${BW_CL + 26}" rx="20" fill="#0B3A66" opacity=".22"/>
+    <rect x="-3" y="${h - 16}" width="${w + 6}" height="${BW_CL + 18}" rx="18" fill="url(#bwCliff)"/><path d="M8 ${h + 8}h${w - 16}M20 ${h + 15}h${w - 40}" stroke="#6B3F20" stroke-width="2" stroke-dasharray="14 10" opacity=".35"/>
+    <rect x="-4" y="-4" width="${w + 8}" height="${h + 8}" rx="18" fill="#6DB64A"/><rect x="0" y="0" width="${w}" height="${h}" rx="15" fill="url(#bwGrass)"/>
+    <g class="bground">${ground}</g><g class="bpaint">${paint}</g><g class="bthings">${things}</g><g class="bitems">${bitItems(W)}</g><g class="bfx"></g>${marks}
+    <g class="bbot d${S.d}" style="transform:${bitXY(S)}">${bitBot(S.d, S.led, S.carry)}</g></svg>`;
+}
+const bitPaintCell = (c, v) => { const [x, y] = c.split(',').map(Number); return `<rect class="bpc" data-c="${c}" x="${x * BIT_C + 7}" y="${y * BIT_C + 7}" width="${BIT_C - 14}" height="${BIT_C - 14}" rx="10" fill="${BIT_COL[v] || BIT_COL.p}" opacity=".92"/>`; };
+// efecte d'una sola vegada (espurnes, pols, cor…) en una casella
+function bitFx(svg, x, y, kind) {
+  const fx = svg.querySelector('.bfx'); if (!fx || (typeof REDUCED !== 'undefined' && REDUCED)) return;
+  const cx = x * BIT_C + BIT_C / 2, cy = y * BIT_C + BIT_C / 2, g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+  g.setAttribute('transform', `translate(${cx} ${cy})`); g.setAttribute('class', 'bfx-' + kind);
+  const n = kind === 'star' ? 10 : kind === 'dust' ? 7 : 8;
+  g.innerHTML = Array.from({ length: n }, (_, i) => { const a = i / n * Math.PI * 2, r = kind === 'dust' ? 22 : 30;
+    const sh = kind === 'star' ? `<path d="M0 -5L1.5 -1.5L5 0L1.5 1.5L0 5L-1.5 1.5L-5 0L-1.5 -1.5Z" fill="${i % 2 ? '#FFE16B' : '#fff'}"/>` : kind === 'dust' ? `<circle r="${4 + (i % 3)}" fill="#E8E1D2"/>` : kind === 'heart' ? `<path d="M0 3C-6 -2 -4 -7 0 -4C4 -7 6 -2 0 3Z" fill="#FF6B8B"/>` : `<circle r="3.5" fill="${['#FFC531', '#3CC47C', '#3D8BFF', '#EF5A5A'][i % 4]}"/>`;
+    return `<g class="bp" style="--x:${(Math.cos(a) * r).toFixed(1)}px;--y:${(Math.sin(a) * r - (kind === 'heart' ? 18 : 0)).toFixed(1)}px">${sh}</g>`; }).join('') + (kind === 'star' ? `<text class="bplus" y="-26" text-anchor="middle" font-size="16" font-weight="900" font-family="Lexend,system-ui,sans-serif" fill="#fff" stroke="#C9780E" stroke-width="4" paint-order="stroke">+1</text>` : '');
+  fx.appendChild(g); setTimeout(() => g.remove(), 1100);
+}
+// actualitza el món a l'estat actual sense refer-lo (així les transicions i les animacions continuen)
+function bitPaintState(svg, W, S, prev) {
+  svg.querySelectorAll('.bgem').forEach(e => { const got = S.gems.has(e.dataset.c); if (got && !e.classList.contains('got')) { const [x, y] = e.dataset.c.split(',').map(Number); bitFx(svg, x, y, 'star'); bitSnd('coin'); } e.classList.toggle('got', got); });
+  svg.querySelectorAll('.bbox').forEach(e => e.classList.toggle('gone', !S.boxes.has(e.dataset.c)));
+  svg.querySelectorAll('.bhome').forEach(e => { const ok = S.done.has(e.dataset.c); if (ok && !e.classList.contains('done')) { const [x, y] = e.dataset.c.split(',').map(Number); bitFx(svg, x, y, 'heart'); bitSnd('ok'); } e.classList.toggle('done', ok); });
+  const fl = svg.querySelector('.bflag'); if (fl) fl.classList.toggle('ok', !!W.goal && S.x === W.goal[0] && S.y === W.goal[1]);
+  const pl = svg.querySelector('.bpaint'); if (pl) { const have = new Set([...pl.children].map(e => e.dataset.c)); for (const [c, v] of Object.entries(S.paint)) if (!have.has(c)) pl.insertAdjacentHTML('beforeend', bitPaintCell(c, v)); [...pl.children].forEach(e => { if (!S.paint[e.dataset.c]) e.remove(); }); }
+  const g = svg.querySelector('.bbot'); if (!g) return;
+  const turned = !prev || prev.d !== S.d, moved = prev && (prev.x !== S.x || prev.y !== S.y);
+  g.style.transform = bitXY(S);
+  g.setAttribute('class', `bbot d${S.d}`);
+  if (turned || !prev || prev.carry !== S.carry || prev.led !== S.led) g.innerHTML = bitBot(S.d, S.led, S.carry);
+  const sp = g.querySelector('.bsp');
+  if (sp) { sp.classList.remove('walk', 'turn', 'hit', 'yay'); void sp.getBoundingClientRect(); if (moved) sp.classList.add('walk'); else if (turned && prev) sp.classList.add('turn'); }
+}
+
+/* sons del robot (Web Audio, sense fitxers): motor, gir, xoc i notes; els d'encert/premi són els de Numi (SFX) */
+let BSND = null;
+function bitSnd(k, n) {
+  if (typeof P !== 'undefined' && P && P.sound === false) return;
+  if (k === 'coin' || k === 'ok' || k === 'win' || k === 'ko') return SFX[k] && SFX[k]();
+  try {
+    const ctx = BSND = BSND || new (window.AudioContext || window.webkitAudioContext)(); if (ctx.state === 'suspended') ctx.resume();
+    const t = ctx.currentTime, o = ctx.createOscillator(), g = ctx.createGain(); o.connect(g); g.connect(ctx.destination);
+    const env = (a, d, v) => { g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(v, t + a); g.gain.exponentialRampToValueAtTime(.0001, t + a + d); o.start(t); o.stop(t + a + d + .05); };
+    if (k === 'step') { o.type = 'triangle'; o.frequency.setValueAtTime(260, t); o.frequency.exponentialRampToValueAtTime(420, t + .16); env(.01, .18, .07); }
+    else if (k === 'turn') { o.type = 'sine'; o.frequency.setValueAtTime(620, t); o.frequency.setValueAtTime(880, t + .07); env(.005, .14, .06); }
+    else if (k === 'hit') { o.type = 'square'; o.frequency.setValueAtTime(140, t); o.frequency.exponentialRampToValueAtTime(60, t + .25); env(.005, .28, .09); }
+    else if (k === 'act') { o.type = 'sine'; o.frequency.setValueAtTime(520, t); o.frequency.exponentialRampToValueAtTime(1040, t + .12); env(.005, .16, .08); }
+    else if (k === 'note') { const f = { do: 523.3, re: 587.3, mi: 659.3, fa: 698.5, sol: 784, la: 880, si: 987.8 }[n] || 523.3; o.type = 'triangle'; o.frequency.setValueAtTime(f, t); env(.01, .45, .12); }
+  } catch (e) { }
 }
 
 /* ---------- Blocs ---------- */
@@ -288,8 +400,9 @@ function tbDraw() {
 // només el món (durant l'execució no es refà el programa: va més fluid)
 function tbWorld() {
   const w = document.querySelector('#tworld .bitw'); if (!w) return;
-  w.querySelector('.bdyn').innerHTML = bitDyn(TB.W, TB.S);
-  const g = w.querySelector('.bbot'); g.style.transform = bitXY(TB.S); g.innerHTML = bitBot(TB.S.led, TB.S.carry);
+  const S = TB.S, prev = TB.prevS;
+  bitPaintState(w, TB.W, S, prev);
+  TB.prevS = { x: S.x, y: S.y, d: S.d, carry: S.carry, led: S.led };
 }
 function tbSay(t, cls = '') { const e = document.getElementById('tsay'); if (e) { e.className = 'tsay ' + cls; e.innerHTML = t; } }
 
@@ -313,7 +426,7 @@ function tbElse() { const b = TB.sel; b.e = b.e ? null : []; tbFresh(); tbDraw()
 function tbColor() { const b = TB.sel, cs = TB.colors || ['r', 'g', 'y', 'u']; b.c = cs[(cs.indexOf(b.c) + 1) % cs.length]; tbFresh(); tbDraw(); }
 function tbClear() { if (!TB.prog.length) return; TB.prog.splice(0); TB.cur = { l: TB.prog, i: 0 }; TB.sel = null; tbFresh(); tbDraw(); }
 // qualsevol canvi del programa: en Bit torna a la sortida
-function tbFresh() { TB.S = bitSim(TB.W); TB.gen = null; }
+function tbFresh() { TB.S = bitSim(TB.W); TB.gen = null; TB.prevS = null; }
 // ordenar blocs donats (problema de Parsons): tocar els de sota els afegeix al final; tocar-ne un de dalt el torna a sota
 function tbPar(id) {
   if (TB.run) tbStop();
@@ -326,18 +439,19 @@ function tbSpot(id) { if (TB.onSpot) TB.onSpot(id, TB.ids[id] && TB.ids[id].b); 
 // moure en Bit directament: cada botó és una ordre que s'apunta al programa
 function tbHand(k) {
   if (TB.S.crash || TB.solved) return;
-  const b = { k }; TB.prog.push(b); bitDo(TB.W, TB.S, b); tbWorld();
+  const b = { k }; TB.prog.push(b); bitDo(TB.W, TB.S, b); tbWorld(); if (!TB.S.crash) bitSnd(k === 'fwd' ? 'step' : 'turn');
   document.querySelector('.tprog.mini').innerHTML = TB.prog.map(x => `<span class="tchip c-${BIT_CAT[x.k]}">${BIT_ICO[x.k]}</span>`).join('');
-  if (TB.S.crash) { SFX.ko && SFX.ko(); tbSay(tx(BIT_WHY[TB.S.crash].join('|')), 'bad'); setTimeout(() => { TB.prog = []; tbFresh(); tbDraw(); tbSay(L('Tornem-hi des del principi!', '¡Volvamos a empezar!')); }, 1500); return; }
-  SFX.tap && SFX.tap();
-  if (!bitMiss(TB.W, TB.S)) { TB.solved = true; SFX.win && SFX.win(); tbSay(L('Ho has aconseguit!', '¡Lo has conseguido!'), 'ok'); TB.onDone && setTimeout(TB.onDone, 700); }
+  if (TB.S.crash) { bitSnd('hit'); tbBotFx('hit'); tbSay(tx(BIT_WHY[TB.S.crash].join('|')), 'bad'); setTimeout(() => { TB.prog = []; tbFresh(); tbDraw(); tbSay(L('Tornem-hi des del principi!', '¡Volvamos a empezar!')); }, 1500); return; }
+  if (!bitMiss(TB.W, TB.S)) { TB.solved = true; SFX.win && SFX.win(); tbBotFx('yay'); typeof confetti === 'function' && confetti(90); tbSay(L('Ho has aconseguit!', '¡Lo has conseguido!'), 'ok'); TB.onDone && setTimeout(TB.onDone, 700); }
 }
 
 /* ---------- Execució ---------- */
+// el món sencer de nou (quan en Bit torna a la sortida: estrelles i caixes al seu lloc)
+function tbRedrawWorld() { const w = document.querySelector('#tworld .bitw'); if (w) { w.outerHTML = bitSVG(TB.W, TB.S, { marks: TB.marks }); TB.prevS = { x: TB.S.x, y: TB.S.y, d: TB.S.d, carry: 0, led: null }; } }
 function tbGo() {
   if (TB.run) return tbStop();
   if (!TB.prog.length) { tbSay(L('Primer posa algun bloc al programa.', 'Primero pon algún bloque en el programa.')); return; }
-  TB.S = bitSim(TB.W); tbWorld(); TB.sel = null;
+  TB.S = bitSim(TB.W); tbRedrawWorld(); TB.sel = null;
   TB.gen = bitRun(TB.W, TB.S, TB.prog, TB.fns); TB.run = true; TB.tries++;
   const btn = document.getElementById('tbgo'); if (btn) btn.innerHTML = L('Atura', 'Para');
   tbSay(''); document.querySelectorAll('.tb.err').forEach(e => e.classList.remove('err'));
@@ -349,7 +463,7 @@ function tbTick() {
   const r = TB.gen.next();
   if (r.done) return tbEnd();
   tbMark(r.value.b);
-  if (r.value.act) { tbWorld(); if (r.value.b.k === 'note' && typeof SFX.tick === 'function') SFX.tick(); }
+  if (r.value.act) { tbWorld(); const k = r.value.b.k; if (!TB.S.crash) bitSnd(k === 'fwd' ? 'step' : k === 'left' || k === 'right' ? 'turn' : k === 'note' ? 'note' : 'act', r.value.b.n); }
   if (TB.S.crash) return tbEnd(r.value.b);
   TB.t = setTimeout(tbTick, (r.value.act ? 430 : 200) / TB.speed);
 }
@@ -357,24 +471,26 @@ function tbTick() {
 function tbStep() {
   if (TB.run) tbStop();
   if (!TB.prog.length) return tbSay(L('Primer posa algun bloc al programa.', 'Primero pon algún bloque en el programa.'));
-  if (!TB.gen) { TB.S = bitSim(TB.W); tbWorld(); TB.gen = bitRun(TB.W, TB.S, TB.prog, TB.fns); tbSay(''); }
+  if (!TB.gen) { TB.S = bitSim(TB.W); tbRedrawWorld(); TB.gen = bitRun(TB.W, TB.S, TB.prog, TB.fns); tbSay(''); }
   let r; do { r = TB.gen.next(); } while (!r.done && !r.value.act && !TB.S.crash && !r.value.b.k.match(/^(if|until)$/));
   if (r.done) { TB.gen = null; return tbEnd(); }
-  tbMark(r.value.b); tbWorld();
+  tbMark(r.value.b); tbWorld(); if (!TB.S.crash && r.value.act) bitSnd(r.value.b.k === 'fwd' ? 'step' : 'turn');
   if (TB.S.crash) { TB.gen = null; return tbEnd(r.value.b); }
 }
 function tbEnd(last) {
   TB.run = null; clearTimeout(TB.t);
   const btn = document.getElementById('tbgo'); if (btn) btn.innerHTML = `<svg viewBox="0 0 24 24"><path d="M7 4l13 8-13 8z" fill="currentColor"/></svg>${L('Executa', 'Ejecuta')}`;
   const miss = bitMiss(TB.W, TB.S);
-  if (!miss) { document.querySelectorAll('.tb.now').forEach(e => e.classList.remove('now')); TB.solved = true; SFX.win && SFX.win(); tbSay(L('Molt bé! Ho has aconseguit!', '¡Muy bien! ¡Lo has conseguido!'), 'ok'); if (TB.onDone) TB.onDone(); return; }
-  SFX.ko && SFX.ko();
+  if (!miss) { document.querySelectorAll('.tb.now').forEach(e => e.classList.remove('now')); TB.solved = true; SFX.win && SFX.win(); tbBotFx('yay'); typeof confetti === 'function' && confetti(90); tbSay(L('Molt bé! Ho has aconseguit!', '¡Muy bien! ¡Lo has conseguido!'), 'ok'); if (TB.onDone) TB.onDone(); return; }
+  if (TB.S.crash) { bitSnd('hit'); tbBotFx('hit'); const [ax, ay] = bitAhead(TB.S), w = document.querySelector('#tworld .bitw'); if (w) bitFx(w, (TB.S.x + ax) / 2, (TB.S.y + ay) / 2, 'dust'); } else { SFX.ko && SFX.ko(); tbBotFx('sad'); }
   if (TB.S.crash && last && last._id) { const e = document.getElementById('tb' + last._id); if (e) { e.classList.remove('now'); e.classList.add('err'); } }
   else document.querySelectorAll('.tb.now').forEach(e => e.classList.remove('now'));
   tbSay(tx(BIT_WHY[miss].join('|')) + ' ' + L('Canvia el programa i torna-ho a provar.', 'Cambia el programa y vuelve a probar.'), 'bad');
   if (TB.onFail) TB.onFail(miss);
 }
-function tbReset() { if (TB.run) tbStop(); tbFresh(); tbWorld(); tbSay(''); document.querySelectorAll('.tb.err,.tb.now').forEach(e => e.classList.remove('err', 'now')); }
+// animació d'en Bit: salt d'alegria, xoc o tristesa
+function tbBotFx(c) { const sp = document.querySelector('#tworld .bbot .bsp'); if (!sp) return; sp.classList.remove('walk', 'turn', 'hit', 'yay', 'sad'); void sp.getBoundingClientRect(); sp.classList.add(c); }
+function tbReset() { if (TB.run) tbStop(); tbFresh(); tbRedrawWorld(); tbSay(''); document.querySelectorAll('.tb.err,.tb.now').forEach(e => e.classList.remove('err', 'now')); }
 function tbSpeed() { TB.speed = TB.speed === 2 ? 1 : 2; const b = document.querySelector('.trun .ico[aria-label="' + L('Velocitat', 'Velocidad') + '"]'); if (b) b.textContent = TB.speed === 2 ? '×2' : '×1'; }
 // executa sense dibuixar (per saber on acaba un programa, per a les preguntes de «on acabarà?»)
 function bitFinal(spec, prog, fns) { const W = bitWorld(spec), S = bitSim(W); const g = bitRun(W, S, prog, fns); while (!g.next().done); return { W, S }; }

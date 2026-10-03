@@ -7,7 +7,7 @@
 
 const tval = v => typeof v === 'function' ? v() : tx(v);
 const TPH = {
-  recorda: ['Recorda', 'Recuerda'], missio: ['La missió', 'La misión'], mans: ["Mans a l'obra", 'Manos a la obra'], prova: ['Prediu i prova', 'Predice y prueba'],
+  recorda: ['Recorda', 'Recuerda'], missio: ['La missió', 'La misión'], descobreix: ['Descobreix', 'Descubre'], mans: ["Mans a l'obra", 'Manos a la obra'], prova: ['Prediu i prova', 'Predice y prueba'],
   investiga: ['Investiga', 'Investiga'], pausa: ['Pausa activa', 'Pausa activa'], repte: ['Reptes', 'Retos'], crea: ['Crea', 'Crea'], tanca: ['Tancament', 'Cierre']
 };
 const TS_ = () => { const t = P.tech = P.tech || {}; t.s = t.s || {}; t.port = Array.isArray(t.port) ? t.port : []; t.badges = t.badges || {}; t.c = t.c || 'robot'; return t; };
@@ -49,7 +49,7 @@ function techGo(v) {
     return g0(v);
   };
 }
-function tStop() { if (typeof TB !== 'undefined' && TB) { clearTimeout(TB.t); TB.run = null; } clearInterval(TS_T); TS_T = null; }
+function tStop() { if (typeof TB !== 'undefined' && TB) { clearTimeout(TB.t); TB.run = null; } clearInterval(TS_T); TS_T = null; typeof tDemoStop === 'function' && tDemoStop(); }
 
 /* ---------- Aprèn: el curs, unitat per unitat ---------- */
 function techHome() {
@@ -62,15 +62,7 @@ function techHome() {
     <div class="thbot" aria-hidden="true">${bitChar('happy')}</div>
     <div class="thbar"><i style="width:${Math.round(100 * done / all.length)}%"></i></div><small class="thsm">${L(`${done} de ${all.length} sessions`, `${done} de ${all.length} sesiones`)}</small></section>`;
   const courses = `<div class="tcourses">${TECH.map(k => `<button class="tcrs ${k.id === c.id ? 'on' : ''} ${k.soon ? 'soon' : ''}" onclick="${k.soon ? `tSoon('${k.id}')` : `TS_().c='${k.id}';save();techHome()`}" style="--cc:${k.color}"><span class="tcico">${k.ico}</span><b>${tx(k.short)}</b><small>${k.soon ? L('Aviat', 'Pronto') : tx(k.age)}</small></button>`).join('')}</div>`;
-  const units = c.units.map((u, ui) => {
-    const open = tFree(c, ui) || isPremium();
-    return `<section class="tunit" style="--uc:${u.color || c.color}"><div class="tuh"><span class="tun">${ui + 1}</span><div><h2>${tx(u.t)}</h2><p>${tx(u.d)}</p></div></div>
-      <div class="tsl">${u.s.map((s, si) => {
-        const d = tDone(s.id), ready = tReady(s), cur = nxt && nxt.id === s.id, part = t.s[s.id] && t.s[s.id].i && !d;
-        return `<button class="tsc ${d ? 'done' : ''} ${cur ? 'cur' : ''} ${ready ? '' : 'soon'}" onclick="${ready ? (open ? `tOpen('${s.id}')` : 'tPrem()') : `tSoonS()`}">
-          <span class="tsn">${d ? TIC.ok : !open && ready ? TIC.lock : si + 1}</span><span class="tst"><b>${tx(s.t)}</b><small>${s.proj ? `<em>${L('Projecte', 'Proyecto')}</em> · ` : ''}${ready ? `${TIC.rellotge}${s.min || 40} min` : L('En preparació', 'En preparación')}${part ? ` · ${L('a mitges', 'a medias')}` : ''}</small></span></button>`;
-      }).join('')}</div></section>`;
-  }).join('');
+  const units = c.units.map((u, ui) => tIsland(c, u, ui, nxt)).join('<div class="tbridge" aria-hidden="true"></div>');
   app.innerHTML = tShell('home', courses + units, hero);
 }
 function tSoon(id) { const k = tCourse(id); modal(`<div class="sheet card cent"><div class="tsoonico" style="--cc:${k.color}">${k.ico}</div><h3>${tx(k.name)}</h3><p>${tx(k.desc)}</p><p class="mut">${L('Aquest curs arriba aviat.', 'Este curso llega pronto.')}</p><button class="btn big" onclick="closeModal()">${L("D'acord", 'De acuerdo')}</button></div>`, true); }
@@ -80,12 +72,44 @@ function tPrem() {
     <button class="btn big gold" onclick="closeModal();buyPremium()">${needsFam && needsFam() ? L('Demana-ho a la família', 'Pídeselo a tu familia') : L('Vull Premium', 'Quiero Premium')}</button><button class="btn ghost big" onclick="closeModal()">${L('Ara no', 'Ahora no')}</button></div>`, true);
 }
 
+// cada unitat és una illa: un camí amb les 4 sessions, arbres i roques, i en Bit a la sessió que toca
+function tIsland(c, u, ui, nxt) {
+  const t = TS_(), open = tFree(c, ui) || isPremium(), col = u.color || c.color, n = u.s.length;
+  const W = 360, H = 70 + n * 108, xs = [96, 262, 112, 250, 100, 258], P = u.s.map((_, i) => [xs[i % xs.length], 64 + i * 108]);
+  const road = P.reduce((d, [x, y], i) => i ? d + ` C${P[i - 1][0]} ${P[i - 1][1] + 60} ${x} ${y - 60} ${x} ${y}` : `M${x} ${y}`, '');
+  const R = k => bwRnd(ui + 3, k, 7);
+  // decoració: arbres i roques lluny del camí
+  const deco = [];
+  for (let k = 0; k < 14; k++) { const x = 30 + R(k) * 300, y = 30 + R(k + 40) * (H - 70);
+    if (P.some(([px, py]) => Math.hypot(px - x, py - y) < 70)) continue;
+    const near = Math.min(...P.map(([px, py], i) => i ? Math.abs((x - px)) + Math.abs(y - py) : 999)); void near;
+    deco.push(R(k + 80) < .65 ? `<g transform="translate(${x.toFixed(0)} ${y.toFixed(0)}) scale(.8)"><ellipse cx="2" rx="18" ry="5" fill="#0B2A12" opacity=".2"/><path d="M-3 0V-14h6V0z" fill="#8A5A33"/><circle cx="-8" cy="-20" r="11" fill="url(#bwLeaf)"/><circle cx="8" cy="-22" r="11" fill="url(#bwLeaf)"/><circle cy="-32" r="13" fill="url(#bwLeaf2)"/></g>`
+      : `<g transform="translate(${x.toFixed(0)} ${y.toFixed(0)}) scale(.7)"><path d="M-21 -2Q-24 -24 -6 -31Q12 -36 20 -18Q25 -4 16 -1L-14 0Q-20 0 -21 -2Z" fill="url(#bwRock)" stroke="#5E667A" stroke-width="2"/></g>`); }
+  const svg = `<svg class="tisl" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" aria-hidden="true">${bitDefs()}
+    <path d="M24 ${H - 22} Q4 ${H / 2} 30 26 Q180 -6 330 26 Q356 ${H / 2} 336 ${H - 22} Q180 ${H + 8} 24 ${H - 22}Z" fill="#0B3A66" opacity=".18" transform="translate(0 10)"/>
+    <path d="M24 ${H - 22} Q4 ${H / 2} 30 26 Q180 -6 330 26 Q356 ${H / 2} 336 ${H - 22} Q180 ${H + 8} 24 ${H - 22}Z" fill="url(#bwCliff)" transform="translate(0 8)"/>
+    <path d="M24 ${H - 22} Q4 ${H / 2} 30 26 Q180 -6 330 26 Q356 ${H / 2} 336 ${H - 22} Q180 ${H + 8} 24 ${H - 22}Z" fill="url(#bwGrass)" stroke="#6DB64A" stroke-width="3"/>
+    ${deco.join('')}
+    <path d="${road}" fill="none" stroke="#E2BE76" stroke-width="34" stroke-linecap="round"/><path d="${road}" fill="none" stroke="url(#bwSand)" stroke-width="28" stroke-linecap="round"/>
+    <path d="${road}" fill="none" stroke="#fff" stroke-width="3" stroke-dasharray="2 14" stroke-linecap="round" opacity=".7"/></svg>`;
+  const nodes = u.s.map((s, si) => {
+    const [x, y] = P[si], d = tDone(s.id), ready = tReady(s), cur = nxt && nxt.id === s.id, part = t.s[s.id] && t.s[s.id].i && !d, right = x < 180;
+    const ico = d ? TIC.ok : !ready ? '<b>…</b>' : !open ? TIC.lock : s.proj ? '<svg viewBox="0 0 24 24"><path d="M7 3h10v4a5 5 0 0 1-10 0z" fill="currentColor"/><path d="M7 5H4v2a3 3 0 0 0 3 3M17 5h3v2a3 3 0 0 1-3 3M10 13h4v3h-4zM8 19h8v2H8z" fill="currentColor"/></svg>' : `<b>${si + 1}</b>`;
+    return `<button class="tnode ${d ? 'done' : ''} ${cur ? 'cur' : ''} ${ready ? '' : 'soon'} ${!open && ready ? 'lock' : ''} ${s.proj ? 'proj' : ''}" style="left:${(x / W * 100).toFixed(2)}%;top:${(y / H * 100).toFixed(2)}%" onclick="${ready ? (open ? `tOpen('${s.id}')` : 'tPrem()') : 'tSoonS()'}">
+      <span class="tnc">${ico}</span>${cur ? `<span class="tnbit" aria-hidden="true"><svg viewBox="-30 -74 60 80">${bitBot(2)}</svg></span>` : ''}
+      <span class="tnl ${right ? 'r' : 'l'}"><b>${tx(s.t)}</b><small>${s.proj ? `<em>${L('Projecte', 'Proyecto')}</em> ` : ''}${ready ? `${s.min || 40} min` : L('En preparació', 'En preparación')}${part ? ` · ${L('a mitges', 'a medias')}` : ''}</small></span></button>`;
+  }).join('');
+  const nd = u.s.filter(s => tDone(s.id)).length;
+  return `<section class="tunit2 ${u.s.some(tReady) ? '' : 'soon'}" style="--uc:${col}"><header class="tuh2"><span class="tun">${ui + 1}</span><div><h2>${tx(u.t)}</h2><p>${tx(u.d)}</p></div>${nd ? `<span class="tuc">${nd}/${n}</span>` : ''}</header>
+    <div class="tmap" style="aspect-ratio:${W}/${H}">${svg}${nodes}</div></section>`;
+}
+
 /* ---------- Projectes (portafoli) ---------- */
 function techProjectes() {
   const t = TS_();
   const hero = `<section class="thero sub"><div class="thtxt"><h1>${L('Els meus projectes', 'Mis proyectos')}</h1><p>${L('Tot el que crees a les sessions es guarda aquí. Torna-hi quan vulguis i ensenya-ho a casa.', 'Todo lo que creas en las sesiones se guarda aquí. Vuelve cuando quieras y enséñalo en casa.')}</p></div></section>`;
   const list = t.port.length ? `<div class="tports">${t.port.slice().reverse().map(p => { const W = bitWorld(p.w), S = bitSim(W);
-    return `<button class="tport" onclick="tPortOpen('${p.id}')"><span class="tpimg">${bitSVG(W, S)}</span><b>${tx(p.t)}</b><small>${dayShort ? dayShort(p.d) : p.d} · ${bitN(bitCount(p.prog))}</small></button>`; }).join('')}</div>`
+    return `<button class="tport" onclick="tPortOpen('${p.id}')"><span class="tpimg">${bitSVG(W, S, { still: true })}</span><b>${tx(p.t)}</b><small>${dayShort ? dayShort(p.d) : p.d} · ${bitN(bitCount(p.prog))}</small></button>`; }).join('')}</div>`
     : `<div class="tempty2">${bitChar('idle')}<p>${L('Encara no tens cap projecte. A cada sessió en crearàs un!', 'Aún no tienes ningún proyecto. ¡En cada sesión crearás uno!')}</p></div>`;
   app.innerHTML = tShell('projectes', list, hero);
 }
@@ -133,7 +157,7 @@ function tBar() {
   return `<div class="tphases">${phs.map(p => { return `<i style="flex:${p.n}" class="${p.ph === cur ? 'cur' : ''}"><em style="width:${100 * Math.min(p.n, Math.max(0, TSS.i - p.from)) / p.n}%"></em></i>`; }).join('')}</div>`;
 }
 function tStep() {
-  tStop(); TB = null;
+  tStop(); TB = null; typeof tDemoStop === 'function' && tDemoStop();
   const st = TSS.s.steps[TSS.i], ph = tx(TPH[st.ph].join('|'));
   TSS.st = st; TSS.ready = false;
   app.innerHTML = `<div class="tsess k-${st.k}"><div class="tstop"><button class="xbtn" onclick="tQuit()" aria-label="${L('Surt', 'Salir')}">✕</button><div class="tstopm"><b class="tsph">${ph}</b>${tBar()}</div><span class="tsmin">${TSS.i + 1}/${TSS.s.steps.length}</span></div>
@@ -184,7 +208,8 @@ const TSTEP = {
   story(st) {
     const art = st.w ? (() => { const W = bitWorld(st.w); return `<div class="tart">${bitSVG(W, bitSim(W))}</div>`; })() : st.art ? `<div class="tart">${typeof st.art === 'function' ? st.art() : st.art}</div>` : '';
     const blocks = st.blocks ? `<div class="tlegend">${st.blocks.map(k => `<div class="tlg"><span class="tb c-${BIT_CAT[k]} tpb"><span class="tbi">${BIT_ICO[k]}</span><span class="tbl">${bitLabel(bitNew(k))}</span></span><span>${tx(TBLK[k] || '')}</span></div>`).join('')}</div>` : '';
-    $('#tsb').innerHTML = `<div class="tcol">${st.title ? `<h2 class="tsh">${tval(st.title)}</h2>` : ''}${tBubble(st.who, tval(st.t), st.mood)}${art}${blocks}${st.box ? `<div class="tbox">${tval(st.box)}</div>` : ''}</div>`;
+    const top = st.scene && typeof tScene === 'function' ? `${tScene(st.scene, st.who, st.mood)}<div class="bubble big tsbub">${tval(st.t)}</div>` : tBubble(st.who, tval(st.t), st.mood);
+    $('#tsb').innerHTML = `<div class="tcol">${st.title ? `<h2 class="tsh">${tval(st.title)}</h2>` : ''}${top}${art}${blocks}${st.box ? `<div class="tbox">${tval(st.box)}</div>` : ''}</div>`;
     tContinue();
   },
   // pregunta de triar (una de bona). opts poden dur dibuixos (HTML)
