@@ -1469,3 +1469,9 @@ html[data-v=pro] .vpic.bal{background:transparent;border-color:transparent}
 html{touch-action:manipulation}
 button,a,.opt,.bln,.pad button,.chipn{touch-action:manipulation}
 @media (max-width:899px){input,select,textarea{font-size:max(16px,1em)}}
+/* L'encongiment (fit1, fit2, fit4) posava el mateix marge a tot arreu i el número de l'opció (1, 2, 3…) quedava damunt del text.
+   Es manté el marge esquerre reservat per al número mentre es veu (fit3 l'amaga). */
+.lesson:is(.fit1,.fit2):not(.fit3) .opts.list .opt{padding-left:44px}
+.lesson:is(.fit1,.fit2):not(.fit3) .opts:not(.big):not(.list):not(.pics) .opt{padding-left:32px}
+.lesson:is(.fit1,.fit2):not(.fit3) .opts.big .opt{padding-left:30px;padding-right:30px}
+.lesson:is(.fit1,.fit2):not(.fit3) .opts.pics .opt{padding-left:28px}
