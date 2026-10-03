@@ -15,6 +15,11 @@ ${RG('gStarB', '#FFF3B0', '#FFB915')}${RG('gGold', '#FFE680', '#E8A400')}${RG('g
 ${LG('gBlue', '#6CC6F5', '#1E86BE')}${LG('gGreen', '#6EDB94', '#27A55A')}${LG('gOrange', '#FFC07A', '#F07F22')}${LG('gYellow', '#FFE070', '#F5B400', 0, 1)}
 ${LG('gRuler', '#FFF6D2', '#FFE49A')}${LG('gRed', '#FF7A7E', '#E0343B', 1, 0)}${LG('gTeal', '#7FE3D2', '#27B59E')}
 ${LG('gFlame', '#FFD23F', '#FF5A1F')}${RG('gArmor', '#F1F4F7', '#8E99A6')}${LG('gArmorD', '#C9D1D9', '#6E7A87')}${LG('gCapeT', '#2F8FA6', '#155A6E')}${LG('gPlume', '#FF7A8A', '#D9304A')}${RG('gAura1', 'rgba(95,240,208,.55)', 'rgba(95,240,208,0)')}${RG('gAura2', 'rgba(255,201,60,.65)', 'rgba(255,201,60,0)')}${RG('gAura3', 'rgba(255,122,168,.6)', 'rgba(138,79,176,0)')}${LG('gGem', '#8FE3FF', '#1C8FE0')}${LG('gCape', '#FF6B6B', '#C92A3A')}
+
+<!-- Dibuixos dels exercicis (03/10): ombra suau, brillantor i colors amb volum. Es fan servir des de ex*.js amb filter="url(#vsh)" i fill="url(#…)" -->
+<filter id="vsh" x="-25%" y="-25%" width="150%" height="160%" color-interpolation-filters="sRGB"><feDropShadow dx="0" dy="3" stdDeviation="2.4" flood-color="#2B1A38" flood-opacity=".2"/></filter>
+<filter id="vsh2" x="-25%" y="-25%" width="150%" height="160%" color-interpolation-filters="sRGB"><feDropShadow dx="0" dy="6" stdDeviation="5" flood-color="#2B1A38" flood-opacity=".22"/></filter>
+${LG('gShine', 'rgba(255,255,255,.75)', 'rgba(255,255,255,0)')}${LG('gPurple', '#B07BE0', '#6A2F94')}${LG('gPink', '#FF9CC2', '#E24F86')}${LG('gSky', '#EAF6FF', '#CDE8FA')}${LG('gPaper', '#FFFFFF', '#F3EEF8')}${LG('gWood', '#F6D59A', '#D9A35B')}${LG('gGlass', 'rgba(255,255,255,.9)', 'rgba(225,238,248,.75)', 1, 0)}${LG('gLime', '#C8F07A', '#7CC23A')}${LG('gCoral', '#FFB199', '#F26B4E')}
 </defs></svg>`;
 
 function eyes(x1, x2, y, mood, col = INK) {

@@ -419,90 +419,124 @@
   const tt = (x, y, s, o = {}) => `<text x="${r1(x)}" y="${r1(y)}" ${FT} font-size="${o.fs || 14}" font-weight="${o.fw || 700}" fill="${o.col || INK}"${o.a ? ` text-anchor="${o.a}"` : ''}>${s}</text>`;
   const MUT = '#8A7B99', PRI = '#602B7A', GRID = '#EEE6F4';
   const tlen = s => String(s).replace(/<[^>]+>/g, '').length;
-  // Taula en SVG: una fila de capçalera i files de dades; «?» es ressalta
+  // —— Retoc visual 03/10: peces comunes (degradats propis amb id únic, quadrícula translúcida, fletxes, punts brillants).
+  //    Tot ha de llegir-se bé a la pissarra clara (Numi Mates) i a la fosca (Numi Pro): la tinta (INK/PRI/MUT) de text, line i polyline s'aclareix sola a Pro;
+  //    el text que va sobre una forma clara fa servir tons que NO es remapegen (#2B1A39, #5B2A7A, #7A5200).
+  let VID = 0;
+  const vid = p => `${p}${++VID}`;
+  const hx = h => { h = h.replace('#', ''); if (h.length === 3) h = [...h].map(c => c + c).join(''); return [0, 2, 4].map(i => parseInt(h.slice(i, i + 2), 16)); };
+  const mixC = (a, b, k) => { const A = hx(a), B = hx(b); return '#' + A.map((v, i) => Math.round(v + (B[i] - v) * k).toString(16).padStart(2, '0')).join('').toUpperCase(); };
+  const lite = (c, k = .35) => mixC(c, '#FFFFFF', k), dark = (c, k = .3) => mixC(c, '#1A0F26', k);
+  const vgrad = (c, k = .38, k2 = 0) => { const id = vid('vg'); return [`<linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${lite(c, k)}"/><stop offset="1" stop-color="${k2 ? dark(c, k2) : c}"/></linearGradient>`, id]; };
+  const GL = (x1, y1, x2, y2, o = .22, w = 1) => `<line x1="${r1(x1)}" y1="${r1(y1)}" x2="${r1(x2)}" y2="${r1(y2)}" stroke="${MUT}" stroke-opacity="${o}" stroke-width="${w}"/>`;
+  const plotBg = (x, y, w, h) => `<rect x="${r1(x)}" y="${r1(y)}" width="${r1(w)}" height="${r1(h)}" rx="5" fill="${MUT}" fill-opacity=".07"/>`;
+  const AX = (x1, y1, x2, y2, w = 2) => `<line x1="${r1(x1)}" y1="${r1(y1)}" x2="${r1(x2)}" y2="${r1(y2)}" stroke="${INK}" stroke-width="${w}" stroke-linecap="round"/>`;
+  // punta de fletxa oberta: és una polyline perquè a Pro s'aclareixi com els eixos
+  const chev = (x, y, dir, c = INK, k = 1) => { const d = { r: [[-7, -4.5], [0, 0], [-7, 4.5]], l: [[7, -4.5], [0, 0], [7, 4.5]], u: [[-4.5, 7], [0, 0], [4.5, 7]] }[dir];
+    return `<polyline points="${d.map(([a, b]) => `${r1(x + a * k)},${r1(y + b * k)}`).join(' ')}" fill="none" stroke="${c}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>`; };
+  // punt brillant amb anella blanca (el primer element és el cercle principal, amb la classe)
+  const gdot = (cx, cy, r, c, cls, op = 1) => `<circle${cls ? ` class="${cls}"` : ''} cx="${r1(cx)}" cy="${r1(cy)}" r="${r}" fill="${c}"${op < 1 ? ` fill-opacity="${op}"` : ''} stroke="#fff" stroke-width="${r > 4 ? 2 : 1.5}" filter="url(#vsh)"/><circle cx="${r1(cx - r * .3)}" cy="${r1(cy - r * .32)}" r="${r1(r * .34)}" fill="#fff" fill-opacity=".6"/>`;
+  // traç amb halo suau (la «llum» de la corba)
+  const glowP = (d, c, w = 3, cls = '') => `<path d="${d}" fill="none" stroke="${c}" stroke-opacity=".22" stroke-width="${w + 6}" stroke-linejoin="round" stroke-linecap="round"/><path${cls ? ` class="${cls}"` : ''} d="${d}" fill="none" stroke="${c}" stroke-width="${w}" stroke-linejoin="round" stroke-linecap="round"/>`;
+  const badge = (x, y, s) => `<circle cx="${r1(x)}" cy="${r1(y)}" r="9.5" fill="#FFE38A" stroke="#E0A300" stroke-width="1.5" filter="url(#vsh)"/>` + tt(x, y + 4.3, s, { a: 'middle', fs: 12, fw: 800, col: '#6B4600' });
+  // Taula en SVG: targeta blanca amb capçalera de color i files zebrades; «?» es ressalta
   function tabSVG(head, rows, o = {}) {
     const all = [head, ...rows], cw = head.map((_, j) => Math.max(o.minW || 48, ...all.map(r => tlen(r[j]) * 8.4 + 22)));
-    const W = cw.reduce((a, b) => a + b, 0), rh = 30, H = rh * all.length;
-    let s = `<svg viewBox="0 0 ${r1(W + 4)} ${H + 4}" class="vsvg wide" style="width:${Math.round(Math.min(330, (W + 4) * 1.15))}px"><rect x="2" y="2" width="${r1(W)}" height="${H}" rx="6" fill="#fff" stroke="#CFC3DB" stroke-width="2"/><rect x="3" y="3" width="${r1(W - 2)}" height="${rh - 1}" rx="5" fill="#F4EEF9"/>`;
+    const W = cw.reduce((a, b) => a + b, 0), rh = 30, H = rh * all.length, cid = vid('tc'), [gd, gi] = vgrad('#8A4FB0', .22, .12);
+    let s = `<svg viewBox="0 0 ${r1(W + 4)} ${H + 9}" class="vsvg wide" style="width:${Math.round(Math.min(330, (W + 4) * 1.15))}px"><defs>${gd}<clipPath id="${cid}"><rect x="2" y="2" width="${r1(W)}" height="${H}" rx="9"/></clipPath></defs><rect x="2" y="2" width="${r1(W)}" height="${H}" rx="9" fill="#fff" filter="url(#vsh)"/><g clip-path="url(#${cid})"><rect x="2" y="2" width="${r1(W)}" height="${rh}" fill="url(#${gi})"/><rect x="2" y="2" width="${r1(W)}" height="${rh / 2}" fill="#fff" fill-opacity=".12"/>`;
+    all.forEach((r, i) => { if (i && i % 2 === 0) s += `<rect x="2" y="${2 + i * rh}" width="${r1(W)}" height="${rh}" fill="#F5F0FA"/>`; if (o.bold && i && i === all.length - 1) s += `<rect x="2" y="${2 + i * rh}" width="${r1(W)}" height="${rh}" fill="#EDE3F6"/>`; });
+    s += '</g>';
     all.forEach((r, i) => {
       let x = 2;
-      if (i) s += `<line x1="2" y1="${2 + i * rh}" x2="${r1(W + 2)}" y2="${2 + i * rh}" stroke="#E6DCEF" stroke-width="1.5"/>`;
+      if (i > 1) s += `<line x1="2" y1="${2 + i * rh}" x2="${r1(W + 2)}" y2="${2 + i * rh}" stroke="#E9E0F1" stroke-width="1"/>`;
       r.forEach((c, j) => {
         const m = x + cw[j] / 2;
-        if (c === '?') s += `<rect x="${r1(m - 15)}" y="${2 + i * rh + 4}" width="30" height="${rh - 8}" rx="6" fill="#FFE9A8" stroke="#E0A300" stroke-width="1.5"/>`;
-        s += tt(m, 2 + i * rh + rh / 2 + 5, c, { a: 'middle', fs: 14.5, fw: i === 0 || (o.bold && i === all.length - 1) ? 800 : 700, col: i === 0 ? PRI : INK });
+        if (c === '?') s += `<rect x="${r1(m - 15)}" y="${2 + i * rh + 4}" width="30" height="${rh - 8}" rx="7" fill="#FFE38A" stroke="#E0A300" stroke-width="1.5"/>`;
+        s += tt(m, 2 + i * rh + rh / 2 + 5, c, { a: 'middle', fs: 14.5, fw: i === 0 || (o.bold && i === all.length - 1) ? 800 : 700, col: i === 0 ? '#FFFFFF' : c === '?' ? '#7A5200' : '#2B1A39' });
         x += cw[j];
       });
     });
-    let x = 2; for (let j = 0; j < head.length - 1; j++) { x += cw[j]; s += `<line x1="${r1(x)}" y1="2" x2="${r1(x)}" y2="${H + 2}" stroke="#E6DCEF" stroke-width="1.5"/>`; }
-    return s + '</svg>';
+    let x = 2; for (let j = 0; j < head.length - 1; j++) { x += cw[j]; s += `<line x1="${r1(x)}" y1="${2 + rh}" x2="${r1(x)}" y2="${H + 2}" stroke="#E9E0F1" stroke-width="1"/><line x1="${r1(x)}" y1="6" x2="${r1(x)}" y2="${rh - 2}" stroke="#fff" stroke-opacity=".25" stroke-width="1"/>`; }
+    return s + `<rect x="2" y="2" width="${r1(W)}" height="${H}" rx="9" fill="none" stroke="#D6C8E4" stroke-width="1.5"/></svg>`;
   }
-  // Dades soltes en una graella
+  // Dades soltes en una graella de fitxes
   function dataSVG(vals, cols = 5) {
     const w = 50, h = 36, W = cols * w, H = Math.ceil(vals.length / cols) * h;
-    let s = `<svg viewBox="0 0 ${W + 4} ${H + 4}" class="vsvg wide" style="width:${Math.round(Math.min(300, (W + 4) * 1.15))}px">`;
-    vals.forEach((v, i) => { const x = 2 + (i % cols) * w, y = 2 + Math.floor(i / cols) * h; s += `<rect x="${x + 3}" y="${y + 3}" width="${w - 6}" height="${h - 6}" rx="8" fill="#F4EEF9"/>` + tt(x + w / 2, y + h / 2 + 6, fmtD(v), { a: 'middle', fs: 17, fw: 800, col: PRI }); });
+    let s = `<svg viewBox="0 0 ${W + 4} ${H + 7}" class="vsvg wide" style="width:${Math.round(Math.min(300, (W + 4) * 1.15))}px">`;
+    vals.forEach((v, i) => { const x = 2 + (i % cols) * w, y = 2 + Math.floor(i / cols) * h; s += `<rect x="${x + 3}" y="${y + 3}" width="${w - 6}" height="${h - 6}" rx="9" fill="url(#gPaper)" stroke="#D9CBE6" stroke-width="1.2" filter="url(#vsh)"/><rect x="${x + 7}" y="${y + 5}" width="${w - 14}" height="5" rx="2.5" fill="#fff" fill-opacity=".8"/>` + tt(x + w / 2, y + h / 2 + 6, fmtD(v), { a: 'middle', fs: 17, fw: 800, col: '#5B2A7A' }); });
     return s + '</svg>';
   }
   // Gràfic de sectors (amb llegenda opcional)
   function sectSVG(parts, o = {}) {
-    const tot = parts.reduce((a, p) => a + p.v, 0), R = 62, cx = 72, cy = 72;
-    let a0 = -Math.PI / 2, s = '';
+    const tot = parts.reduce((a, p) => a + p.v, 0), R = 62, cx = 72, cy = 72, G = {};
+    let a0 = -Math.PI / 2, s = '', defs = '';
+    const gr = c => { if (!G[c]) { const id = vid('sg'); defs += `<radialGradient id="${id}" cx="${cx}" cy="${cy}" r="${R}" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="${lite(c, .3)}"/><stop offset="1" stop-color="${dark(c, .08)}"/></radialGradient>`; G[c] = id; } return G[c]; };
     parts.forEach(p => {
       const a1 = a0 + 2 * Math.PI * p.v / tot, P = a => `${r1(cx + R * Math.cos(a))} ${r1(cy + R * Math.sin(a))}`;
-      s += `<path class="sct" d="M${cx} ${cy} L${P(a0)} A${R} ${R} 0 ${a1 - a0 > Math.PI + 1e-9 ? 1 : 0} 1 ${P(a1)} Z" fill="${p.col}" stroke="#fff" stroke-width="2.5" stroke-linejoin="round"/>`;
+      s += `<path class="sct" d="M${cx} ${cy} L${P(a0)} A${R} ${R} 0 ${a1 - a0 > Math.PI + 1e-9 ? 1 : 0} 1 ${P(a1)} Z" fill="url(#${gr(p.col)})" stroke="#fff" stroke-width="2.5" stroke-linejoin="round"/>`;
       a0 = a1;
     });
-    if (o.noLegend) return `<svg viewBox="0 0 144 144" class="vsvg">${s}</svg>`;
+    s = `<g filter="url(#vsh2)">${s}</g><ellipse cx="${cx}" cy="${cy - R * .5}" rx="${R * .72}" ry="${R * .42}" fill="url(#gShine)" opacity=".28" pointer-events="none"/><circle cx="${cx}" cy="${cy}" r="${R + 1.2}" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width="2.5"/>`;
+    if (o.noLegend) return `<svg viewBox="0 0 144 150" class="vsvg"><defs>${defs}</defs>${s}</svg>`;
     const lh = 24, top = cy - parts.length * lh / 2, lab = p => p.lab + (p.txt !== undefined ? ': ' + p.txt : '');
-    parts.forEach((p, i) => { const y = top + i * lh; s += `<rect x="152" y="${r1(y + 4)}" width="14" height="14" rx="3" fill="${p.col}"/>` + tt(172, y + 16, lab(p), { fs: 13.5 }); });
-    const W = 178 + Math.max(...parts.map(p => tlen(lab(p)))) * 8;
-    return `<svg viewBox="0 0 ${r1(W)} 144" class="vsvg wide" style="width:${Math.round(Math.min(340, W * 1.05))}px">${s}</svg>`;
+    parts.forEach((p, i) => { const y = top + i * lh; s += `<rect x="152" y="${r1(y + 3.5)}" width="15" height="15" rx="4.5" fill="url(#${gr(p.col)})" stroke="#fff" stroke-width="1.5" filter="url(#vsh)"/>` + tt(174, y + 16, lab(p), { fs: 13.5 }); });
+    const W = 180 + Math.max(...parts.map(p => tlen(lab(p)))) * 8;
+    return `<svg viewBox="0 0 ${r1(W)} 150" class="vsvg wide" style="width:${Math.round(Math.min(340, W * 1.05))}px"><defs>${defs}</defs>${s}</svg>`;
   }
-  // Histograma
+  // Histograma: columnes amb degradat, contigües, amb la vora fosca del mateix color
   function histSVG(ed, fr, o = {}) {
     const k = fr.length, mx = Math.max(...fr), stp = mx > 10 ? 2 : 1, top = Math.ceil((mx + 1) / stp) * stp, x0 = 42, y0 = 168, W = 310, bw = (W - x0 - 14) / k, hh = v => v / top * 140;
-    let s = `<svg viewBox="0 0 ${W} 208" class="vsvg wide" style="width:320px">`;
-    for (let v = 0; v <= top; v += stp) { const y = y0 - hh(v); s += `<line x1="${x0}" y1="${r1(y)}" x2="${W - 8}" y2="${r1(y)}" stroke="${GRID}" stroke-width="1.5"/>` + tt(x0 - 6, y + 4, v, { a: 'end', fs: 11, col: MUT }); }
-    fr.forEach((f, i) => { s += `<rect class="hb" x="${r1(x0 + i * bw)}" y="${r1(y0 - hh(f))}" width="${r1(bw)}" height="${r1(hh(f))}" fill="${COLS[(o.c || 1) % COLS.length]}" stroke="${INK}" stroke-width="1.5"/>`; });
-    ed.forEach((e, i) => { s += tt(x0 + i * bw, y0 + 17, fmt(e), { a: 'middle', fs: 12 }); });
-    s += `<line x1="${x0}" y1="${y0}" x2="${W - 8}" y2="${y0}" stroke="${INK}" stroke-width="2"/><line x1="${x0}" y1="${y0}" x2="${x0}" y2="18" stroke="${INK}" stroke-width="2"/>`;
-    if (o.xl) s += tt((x0 + W) / 2, y0 + 35, o.xl, { a: 'middle', fs: 12.5, col: PRI });
-    if (o.yl) s += tt(8, 12, o.yl, { fs: 11.5, col: PRI });
+    const col = COLS[(o.c || 1) % COLS.length], [gd, gi] = vgrad(col, .3, .1), dk = dark(col, .35);
+    let s = `<svg viewBox="0 0 ${W} 208" class="vsvg wide" style="width:320px"><defs>${gd}</defs>` + plotBg(x0, y0 - 140 - 6, W - 8 - x0, 146);
+    for (let v = 0; v <= top; v += stp) { const y = y0 - hh(v); if (v) s += GL(x0, y, W - 8, y, (v / stp) % 2 ? .16 : .3); s += `<line x1="${x0 - 4}" y1="${r1(y)}" x2="${x0}" y2="${r1(y)}" stroke="${INK}" stroke-width="1.5"/>` + tt(x0 - 8, y + 4, v, { a: 'end', fs: 12, col: MUT }); }
+    let bars = '', shine = '';
+    fr.forEach((f, i) => {
+      const x = x0 + i * bw, h = hh(f), y = y0 - h, rr = Math.min(4, h, bw / 4);
+      if (!h) return;
+      bars += `<path class="hb" d="M${r1(x)} ${y0} V${r1(y + rr)} Q${r1(x)} ${r1(y)} ${r1(x + rr)} ${r1(y)} H${r1(x + bw - rr)} Q${r1(x + bw)} ${r1(y)} ${r1(x + bw)} ${r1(y + rr)} V${y0} Z" fill="url(#${gi})" stroke="${dk}" stroke-width="1.5" stroke-linejoin="round"/>`;
+      if (h > 14 && bw > 14) shine += `<rect x="${r1(x + 4)}" y="${r1(y + 4)}" width="${r1(Math.min(6, bw * .16))}" height="${r1(h - 8)}" rx="3" fill="#fff" fill-opacity=".28"/>`;
+    });
+    s += `<g filter="url(#vsh)">${bars}</g>${shine}`;
+    ed.forEach((e, i) => { s += `<line x1="${r1(x0 + i * bw)}" y1="${y0}" x2="${r1(x0 + i * bw)}" y2="${y0 + 5}" stroke="${INK}" stroke-width="1.5"/>` + tt(x0 + i * bw, y0 + 19, fmt(e), { a: 'middle', fs: 12.5 }); });
+    s += AX(x0, y0, W - 8, y0) + AX(x0, y0, x0, 18);
+    if (o.xl) s += tt((x0 + W) / 2, y0 + 36, o.xl, { a: 'middle', fs: 13, col: PRI });
+    if (o.yl) s += tt(8, 12, o.yl, { fs: 12, col: PRI });
     return s + '</svg>';
   }
   // Diagrama de caixa (un o dos grups) sobre un eix
   function boxSVG(rows, lo, hi, st) {
     const x0 = rows.length > 1 ? 40 : 22, W = 320, x1 = W - 18, X = v => x0 + (v - lo) / (hi - lo) * (x1 - x0), rh = 46, H = rows.length * rh + 40, ay = H - 30, le = (hi - lo) / st > 12 ? 2 : 1;
-    let s = `<svg viewBox="0 0 ${W} ${H}" class="vsvg wide" style="width:320px">`;
-    for (let k = 0, v = lo; v <= hi + 1e-9; k++, v += st) s += `<line x1="${r1(X(v))}" y1="6" x2="${r1(X(v))}" y2="${ay + (k % le ? 3 : 6)}" stroke="${k % le ? '#F4EEF9' : GRID}" stroke-width="1.5"/>` + (k % le ? '' : tt(X(v), H - 12, fmt(v), { a: 'middle', fs: 11.5, col: MUT }));
+    let s = '', defs = '';
+    for (let k = 0, v = lo; v <= hi + 1e-9; k++, v += st) s += GL(X(v), 4, X(v), ay, k % le ? .12 : .26) + `<line x1="${r1(X(v))}" y1="${ay}" x2="${r1(X(v))}" y2="${ay + (k % le ? 3 : 5)}" stroke="${INK}" stroke-width="1.5"/>` + (k % le ? '' : tt(X(v), H - 11, fmt(v), { a: 'middle', fs: 12, col: MUT }));
     rows.forEach((r, i) => {
-      const y = 12 + i * rh, m = y + 14, [a, q1, md, q3, b] = r.v.map(X);
-      s += `<g class="bx"><line x1="${r1(a)}" y1="${m}" x2="${r1(q1)}" y2="${m}" stroke="${INK}" stroke-width="2"/><line x1="${r1(q3)}" y1="${m}" x2="${r1(b)}" y2="${m}" stroke="${INK}" stroke-width="2"/><line x1="${r1(a)}" y1="${m - 8}" x2="${r1(a)}" y2="${m + 8}" stroke="${INK}" stroke-width="2"/><line x1="${r1(b)}" y1="${m - 8}" x2="${r1(b)}" y2="${m + 8}" stroke="${INK}" stroke-width="2"/><rect x="${r1(q1)}" y="${y}" width="${r1(q3 - q1)}" height="28" fill="${r.col}" stroke="${INK}" stroke-width="2"/><line x1="${r1(md)}" y1="${y}" x2="${r1(md)}" y2="${y + 28}" stroke="${INK}" stroke-width="3.5"/></g>`;
+      const y = 12 + i * rh, m = y + 14, [a, q1, md, q3, b] = r.v.map(X), [gd, gi] = vgrad(r.col, .5, .06), dk = dark(r.col, .5);
+      defs += gd;
+      const wl = (p, q) => `<line x1="${r1(p)}" y1="${m}" x2="${r1(q)}" y2="${m}" stroke="${INK}" stroke-width="2.2" stroke-linecap="round"/>`, cap = p => `<line x1="${r1(p)}" y1="${m - 8}" x2="${r1(p)}" y2="${m + 8}" stroke="${INK}" stroke-width="2.4" stroke-linecap="round"/>`;
+      s += `<g class="bx">${wl(a, q1)}${wl(q3, b)}${cap(a)}${cap(b)}<rect x="${r1(q1)}" y="${y}" width="${r1(q3 - q1)}" height="28" rx="5" fill="url(#${gi})" stroke="${dk}" stroke-width="2" filter="url(#vsh)"/>${q3 - q1 > 14 ? `<rect x="${r1(q1 + 4)}" y="${y + 3.5}" width="${r1(q3 - q1 - 8)}" height="7" rx="3.5" fill="#fff" fill-opacity=".45"/>` : ''}<line x1="${r1(md)}" y1="${y + 2}" x2="${r1(md)}" y2="${y + 26}" stroke="#2B1A39" stroke-width="3.5" stroke-linecap="round"/></g>`;
       if (r.lab) s += tt(10, m + 5, r.lab, { fs: 15, fw: 800, col: PRI });
     });
-    return s + `<line x1="${x0}" y1="${ay}" x2="${x1}" y2="${ay}" stroke="${INK}" stroke-width="2"/></svg>`;
+    return `<svg viewBox="0 0 ${W} ${H}" class="vsvg wide" style="width:320px"><defs>${defs}</defs>${s}${AX(x0, ay, x1, ay)}</svg>`;
   }
   // Núvol de punts (eixos a l'esquerra i a baix)
   function scatSVG(pts, [xa, xb, xs], [ya, yb, ys], o = {}) {
     const x0 = 46, y0 = 184, W = 320, x1 = W - 14, y1 = 16, X = v => x0 + (v - xa) / (xb - xa) * (x1 - x0), Y = v => y0 - (v - ya) / (yb - ya) * (y0 - y1);
-    let s = `<svg viewBox="0 0 ${W} 226" class="vsvg wide" style="width:320px">`;
-    for (let v = xa; v <= xb + 1e-9; v += xs) s += `<line x1="${r1(X(v))}" y1="${y1}" x2="${r1(X(v))}" y2="${y0}" stroke="${GRID}" stroke-width="1.2"/>` + tt(X(v), y0 + 16, fmt(v), { a: 'middle', fs: 11, col: MUT });
-    for (let v = ya; v <= yb + 1e-9; v += ys) s += `<line x1="${x0}" y1="${r1(Y(v))}" x2="${x1}" y2="${r1(Y(v))}" stroke="${GRID}" stroke-width="1.2"/>` + tt(x0 - 6, Y(v) + 4, fmt(v), { a: 'end', fs: 11, col: MUT });
-    s += `<line x1="${x0}" y1="${y0}" x2="${x1}" y2="${y0}" stroke="${INK}" stroke-width="2"/><line x1="${x0}" y1="${y0}" x2="${x0}" y2="${y1}" stroke="${INK}" stroke-width="2"/>`;
+    let s = `<svg viewBox="0 0 ${W} 226" class="vsvg wide" style="width:320px">` + plotBg(x0, y1, x1 - x0, y0 - y1);
+    let k = 0; for (let v = xa; v <= xb + 1e-9; v += xs, k++) { if (k) s += GL(X(v), y1, X(v), y0); s += `<line x1="${r1(X(v))}" y1="${y0}" x2="${r1(X(v))}" y2="${y0 + 4}" stroke="${INK}" stroke-width="1.5"/>` + tt(X(v), y0 + 17, fmt(v), { a: 'middle', fs: 11.5, col: MUT }); }
+    k = 0; for (let v = ya; v <= yb + 1e-9; v += ys, k++) { if (k) s += GL(x0, Y(v), x1, Y(v)); s += `<line x1="${x0 - 4}" y1="${r1(Y(v))}" x2="${x0}" y2="${r1(Y(v))}" stroke="${INK}" stroke-width="1.5"/>` + tt(x0 - 7, Y(v) + 4, fmt(v), { a: 'end', fs: 11.5, col: MUT }); }
+    s += AX(x0, y0, x1, y0) + AX(x0, y0, x0, y1);
     if (o.line) {
       const [m, n] = o.line, xsA = [xa, xb, (ya - n) / m, (yb - n) / m].filter(x => x >= xa - 1e-9 && x <= xb + 1e-9 && m * x + n >= ya - 1e-9 && m * x + n <= yb + 1e-9).sort((p, q) => p - q);
-      if (xsA.length >= 2) s += `<line class="rl" x1="${r1(X(xsA[0]))}" y1="${r1(Y(m * xsA[0] + n))}" x2="${r1(X(xsA[xsA.length - 1]))}" y2="${r1(Y(m * xsA[xsA.length - 1] + n))}" stroke="#36A9E1" stroke-width="3" stroke-linecap="round"/>`;
+      if (xsA.length >= 2) s += glowP(`M${r1(X(xsA[0]))} ${r1(Y(m * xsA[0] + n))}L${r1(X(xsA[xsA.length - 1]))} ${r1(Y(m * xsA[xsA.length - 1] + n))}`, '#36A9E1', 3, 'rl');
     }
     if (o.poly) {
-      s += `<polyline class="pl" points="${o.poly.map(([x, y]) => `${r1(X(x))},${r1(Y(y))}`).join(' ')}" fill="none" stroke="#36A9E1" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"/>`;
-      o.poly.forEach(([x, y]) => { s += `<circle cx="${r1(X(x))}" cy="${r1(Y(y))}" r="3.5" fill="#1B6FA3"/>`; });
+      s += glowP('M' + o.poly.map(([x, y]) => `${r1(X(x))} ${r1(Y(y))}`).join('L'), '#36A9E1', 3.5, 'pl');
+      o.poly.forEach(([x, y]) => { s += gdot(X(x), Y(y), 4, '#1B8AD0'); });
       // etiqueta de cada tram, desplaçada en perpendicular perquè no tapi la línia
-      (o.segLab || []).forEach((lb, i) => { const [a, b] = [o.poly[i], o.poly[i + 1]], dx = X(b[0]) - X(a[0]), dy = Y(b[1]) - Y(a[1]), ln = Math.hypot(dx, dy) || 1; let nx = -dy / ln, ny = dx / ln; if (ny > 0) { nx = -nx; ny = -ny; } const cx0 = (X(a[0]) + X(b[0])) / 2 + nx * 15, cy0 = (Y(a[1]) + Y(b[1])) / 2 + ny * 15; s += `<circle cx="${r1(cx0)}" cy="${r1(cy0)}" r="9" fill="#FFE9A8" stroke="#E0A300" stroke-width="1.5"/>` + tt(cx0, cy0 + 4, lb, { a: 'middle', fs: 11.5, fw: 800 }); });
+      (o.segLab || []).forEach((lb, i) => { const [a, b] = [o.poly[i], o.poly[i + 1]], dx = X(b[0]) - X(a[0]), dy = Y(b[1]) - Y(a[1]), ln = Math.hypot(dx, dy) || 1; let nx = -dy / ln, ny = dx / ln; if (ny > 0) { nx = -nx; ny = -ny; } let cx0 = (X(a[0]) + X(b[0])) / 2 + nx * 15, cy0 = (Y(a[1]) + Y(b[1])) / 2 + ny * 15; if (cx0 < x0 + 11 || cy0 < y1 + 9) { cx0 -= 2 * nx * 15; cy0 -= 2 * ny * 15; } s += badge(cx0, cy0, lb); });
     }
-    pts.forEach(([x, y]) => { s += `<circle class="pt" cx="${r1(X(x))}" cy="${r1(Y(y))}" r="4.5" fill="#E24F86" stroke="#fff" stroke-width="1.5"/>`; });
-    if (o.xl) s += tt((x0 + x1) / 2, 221, o.xl, { a: 'middle', fs: 12.5, col: PRI });
-    if (o.yl) s += tt(6, 10, o.yl, { fs: 12, col: PRI });
+    pts.forEach(([x, y]) => { s += `<circle class="pt" cx="${r1(X(x))}" cy="${r1(Y(y))}" r="5" fill="#E24F86" fill-opacity=".8" stroke="#fff" stroke-width="1.6" filter="url(#vsh)"/>`; });
+    if (o.xl) s += tt((x0 + x1) / 2, 221, o.xl, { a: 'middle', fs: 13, col: PRI });
+    if (o.yl) s += tt(6, 10, o.yl, { fs: 12.5, col: PRI });
     return s + '</svg>';
   }
   const sum = a => a.reduce((p, q) => p + q, 0);
@@ -913,17 +947,18 @@
   // Pla cartesià: quadrícula, eixos amb fletxa, números, corbes, segments i punts
   function planeSVG(o) {
     const x0 = o.x0 ?? -6, x1 = o.x1 ?? 6, y0 = o.y0 ?? -6, y1 = o.y1 ?? 6, u = o.u || Math.min(24, 260 / (x1 - x0), 260 / (y1 - y0)), pd = 20;
-    const W = (x1 - x0) * u + 2 * pd, H = (y1 - y0) * u + 2 * pd, X = x => pd + (x - x0) * u, Y = y => pd + (y1 - y) * u, st = o.lab || (x1 - x0 > 12 || y1 - y0 > 12 ? 2 : 1);
-    let s = `<svg viewBox="0 0 ${r1(W)} ${r1(H)}" class="vsvg wide" style="width:${Math.round(Math.min(o.w || 290, W * 1.1))}px">`;
-    for (let x = Math.ceil(x0); x <= x1; x++) s += `<line x1="${r1(X(x))}" y1="${r1(Y(y1))}" x2="${r1(X(x))}" y2="${r1(Y(y0))}" stroke="${GRID}" stroke-width="1"/>`;
-    for (let y = Math.ceil(y0); y <= y1; y++) s += `<line x1="${r1(X(x0))}" y1="${r1(Y(y))}" x2="${r1(X(x1))}" y2="${r1(Y(y))}" stroke="${GRID}" stroke-width="1"/>`;
+    const W = (x1 - x0) * u + 2 * pd, H = (y1 - y0) * u + 2 * pd, X = x => pd + (x - x0) * u, Y = y => pd + (y1 - y) * u, st = o.lab || (o.pic ? 2 : x1 - x0 > 12 || y1 - y0 > 12 ? 2 : 1), fsN = o.pic ? 13 : 11;
+    let s = `<svg viewBox="0 0 ${r1(W)} ${r1(H)}" class="vsvg wide" style="width:${Math.round(Math.min(o.w || 290, W * 1.1))}px">` + plotBg(X(x0), Y(y1), (x1 - x0) * u, (y1 - y0) * u);
+    // quadrícula: cada unitat fina; les línies numerades (cada «st») una mica més marcades
+    for (let x = Math.ceil(x0); x <= x1; x++) s += GL(X(x), Y(y1), X(x), Y(y0), st > 1 && x % st ? .16 : .34);
+    for (let y = Math.ceil(y0); y <= y1; y++) s += GL(X(x0), Y(y), X(x1), Y(y), st > 1 && y % st ? .16 : .34);
     const hasY = x0 <= 0 && x1 >= 0, hasX = y0 <= 0 && y1 >= 0;
-    if (hasX) s += `<line x1="${r1(X(x0) - 4)}" y1="${r1(Y(0))}" x2="${r1(X(x1) + 8)}" y2="${r1(Y(0))}" stroke="${INK}" stroke-width="2"/><path d="M${r1(X(x1) + 14)} ${r1(Y(0))} l-8 -4.5 v9 Z" fill="${INK}"/>` + tt(X(x1) + 6, Y(0) - 8, 'x', { fs: 13, fw: 800, col: PRI });
-    if (hasY) s += `<line x1="${r1(X(0))}" y1="${r1(Y(y0) + 4)}" x2="${r1(X(0))}" y2="${r1(Y(y1) - 8)}" stroke="${INK}" stroke-width="2"/><path d="M${r1(X(0))} ${r1(Y(y1) - 14)} l-4.5 8 h9 Z" fill="${INK}"/>` + tt(X(0) + 8, Y(y1) - 6, 'y', { fs: 13, fw: 800, col: PRI });
+    if (hasX) s += AX(X(x0) - 4, Y(0), X(x1) + 12, Y(0)) + chev(X(x1) + 13, Y(0), 'r') + tt(X(x1) + 6, Y(0) - 9, 'x', { fs: 14, fw: 800, col: PRI });
+    if (hasY) s += AX(X(0), Y(y0) + 4, X(0), Y(y1) - 12) + chev(X(0), Y(y1) - 13, 'u') + tt(X(0) + 9, Y(y1) - 6, 'y', { fs: 14, fw: 800, col: PRI });
     if (!o.noNum) {
-      for (let x = Math.ceil(x0 / st) * st; x <= x1; x += st) if (x) s += tt(X(x), (hasX ? Y(0) : Y(y0)) + 14, fmt(x), { a: 'middle', fs: 10.5, col: MUT });
-      for (let y = Math.ceil(y0 / st) * st; y <= y1; y += st) if (y) s += tt((hasY ? X(0) : X(x0)) - 4, Y(y) + 4, fmt(y), { a: 'end', fs: 10.5, col: MUT });
-      if (hasX && hasY) s += tt(X(0) - 4, Y(0) + 14, '0', { a: 'end', fs: 10.5, col: MUT });
+      for (let x = Math.ceil(x0 / st) * st; x <= x1; x += st) if (x) s += (hasX ? `<line x1="${r1(X(x))}" y1="${r1(Y(0) - 3)}" x2="${r1(X(x))}" y2="${r1(Y(0) + 3)}" stroke="${INK}" stroke-width="1.5"/>` : '') + tt(X(x), (hasX ? Y(0) : Y(y0)) + fsN + 4, fmt(x), { a: 'middle', fs: fsN, col: MUT });
+      for (let y = Math.ceil(y0 / st) * st; y <= y1; y += st) if (y) s += (hasY ? `<line x1="${r1(X(0) - 3)}" y1="${r1(Y(y))}" x2="${r1(X(0) + 3)}" y2="${r1(Y(y))}" stroke="${INK}" stroke-width="1.5"/>` : '') + tt((hasY ? X(0) : X(x0)) - 5, Y(y) + fsN * .36, fmt(y), { a: 'end', fs: fsN, col: MUT });
+      if (hasX && hasY) s += tt(X(0) - 5, Y(0) + fsN + 4, '0', { a: 'end', fs: fsN, col: MUT });
     }
     (o.curves || []).forEach(c => {
       let d = '', pen = false; const N = 300;
@@ -932,10 +967,10 @@
         if ((c.br || []).some(b => Math.abs(x - b) < 1e-9) || !Number.isFinite(y) || y < y0 - 1e-9 || y > y1 + 1e-9) { pen = false; continue; }
         d += `${pen ? 'L' : 'M'}${r1(X(x))} ${r1(Y(y))}`; pen = true;
       }
-      s += `<path class="cv" d="${d}" fill="none" stroke="${c.col || '#36A9E1'}" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>`;
+      s += glowP(d, c.col || '#36A9E1', o.pic ? 3.6 : 3, 'cv');
     });
-    if (o.poly) s += `<polyline class="pl" points="${o.poly.map(([x, y]) => `${r1(X(x))},${r1(Y(y))}`).join(' ')}" fill="none" stroke="#36A9E1" stroke-width="3" stroke-linejoin="round"/>` + o.poly.map(([x, y]) => `<circle cx="${r1(X(x))}" cy="${r1(Y(y))}" r="3" fill="#1B6FA3"/>`).join('');
-    (o.pts || []).forEach(p => { s += `<circle class="cp" cx="${r1(X(p.x))}" cy="${r1(Y(p.y))}" r="5" fill="${p.col || '#E24F86'}" stroke="#fff" stroke-width="1.5"/>`; if (p.lab) s += tt(X(p.x) + (p.x >= x1 - .5 ? -9 : 8), Y(p.y) - 7, p.lab, { fs: 14, fw: 800, col: p.col || '#E24F86', a: p.x >= x1 - .5 ? 'end' : undefined }); });
+    if (o.poly) s += glowP('M' + o.poly.map(([x, y]) => `${r1(X(x))} ${r1(Y(y))}`).join('L'), '#36A9E1', 3, 'pl') + o.poly.map(([x, y]) => gdot(X(x), Y(y), 3.6, '#1B8AD0')).join('');
+    (o.pts || []).forEach(p => { const c = p.col || '#E24F86', tc = c === '#1B6FA3' ? '#2B8FD8' : c; s += gdot(X(p.x), Y(p.y), 5.5, c, 'cp'); if (p.lab) s += tt(X(p.x) + (p.x >= x1 - .5 ? -9 : 8), Y(p.y) - 7, p.lab, { fs: 14, fw: 800, col: tc, a: p.x >= x1 - .5 ? 'end' : undefined }); });
     return s + '</svg>';
   }
   const cxy = (x, y) => `(${fmt(x)}, ${fmt(y)})`;
@@ -975,7 +1010,7 @@
     if (A === 'story') return fnStory(L_);
     if (L_ === 5) {
       const m = pick([-2, -1, 1, 2]), n = ri(-3, 3) || 1, alt = [[-m, n], [m, -n], [n === m ? -m : n, n === m ? -n : m]].filter(([a, b]) => a !== m || b !== n);
-      const mk = (a, b) => planeSVG({ x0: -4, x1: 4, y0: -4, y1: 4, u: 22, curves: [{ f: x => a * x + b }] });
+      const mk = (a, b) => planeSVG({ x0: -4, x1: 4, y0: -4, y1: 4, u: 22, pic: true, curves: [{ f: x => a * x + b }] });
       return mc(L(`Quina gràfica correspon a la recta <b>${lineEq(m, n)}</b>?`, `¿Qué gráfica corresponde a la recta <b>${lineEq(m, n)}</b>?`), mk(m, n), alt.map(([a, b]) => mk(a, b)), { pics: true, ex: L(`Talla l'eix y a ${fmt(n)} (ordenada a l'origen) i el pendent és ${fmt(m)}: ${m > 0 ? 'puja' : 'baixa'} ${Math.abs(m)} ${Math.abs(m) === 1 ? 'quadret' : 'quadrets'} per cada quadret cap a la dreta.`, `Corta el eje y en ${fmt(n)} (ordenada en el origen) y la pendiente es ${fmt(m)}: ${m > 0 ? 'sube' : 'baja'} ${Math.abs(m)} ${Math.abs(m) === 1 ? 'cuadradito' : 'cuadraditos'} por cada cuadradito hacia la derecha.`), chk: { t: 'pick', m, n } });
     }
     if (L_ === 4) {
@@ -1073,7 +1108,7 @@
       return dinp(L(`Un poble té ${fmt(a)} habitants i la població creix un ${p} % cada any. Quants habitants tindrà al cap de ${t} anys?`, `Un pueblo tiene ${fmt(a)} habitantes y la población crece un ${p} % cada año. ¿Cuántos habitantes tendrá al cabo de ${t} años?`), r, { long: true, ex: L(`Cada any es multiplica per ${fmtD(1 + p / 100)}: ${fmt(a)} · ${fmtD(1 + p / 100)}${sup(t)} = ${fmtD(r)}.`, `Cada año se multiplica por ${fmtD(1 + p / 100)}: ${fmt(a)} · ${fmtD(1 + p / 100)}${sup(t)} = ${fmtD(r)}.`), chk: { t: 'grow', a, b: 1 + p / 100, n: t } });
     }
     const G = [[`y = ${bx(2)}`, x => 2 ** x], [`y = (${frac(1, 2)})<sup>x</sup>`, x => .5 ** x], ['y = 2x', x => 2 * x], ['y = x²', x => x * x]], w = ri(0, 1);
-    const mk = f => planeSVG({ x0: -3, x1: 3, y0: -2, y1: 8, u: 20, curves: [{ f }] });
+    const mk = f => planeSVG({ x0: -3, x1: 3, y0: -2, y1: 8, u: 20, pic: true, curves: [{ f }] });
     return mc(L(`Quina gràfica correspon a <b>${G[w][0]}</b>?`, `¿Qué gráfica corresponde a <b>${G[w][0]}</b>?`), mk(G[w][1]), G.filter((_, i) => i !== w).map(g => mk(g[1])), { pics: true, ex: w === 0 ? L('y = 2ˣ passa per (0, 1), creix cada vegada més de pressa cap a la dreta i a l\'esquerra s\'acosta a 0 sense arribar-hi.', 'y = 2ˣ pasa por (0, 1), crece cada vez más deprisa hacia la derecha y a la izquierda se acerca a 0 sin llegar.') : L('y = (1/2)ˣ passa per (0, 1) i decreix: cada pas a la dreta la y es fa la meitat.', 'y = (1/2)ˣ pasa por (0, 1) y decrece: cada paso a la derecha la y se hace la mitad.'), chk: { t: 'pickExp', w } });
   }
 
@@ -1167,11 +1202,11 @@
   // Recta numèrica
   function lineSVG(a, b, step, labs, marks) {
     const W = 320, x0 = 22, x1 = W - 22, X = v => x0 + (v - a) / (b - a) * (x1 - x0), y = 56, n = Math.round((b - a) / step), isInt = v => Math.abs(v - Math.round(v)) < 1e-9;
-    let s = `<svg viewBox="0 0 ${W} 92" class="vsvg wide" style="width:320px"><line x1="${x0 - 12}" y1="${y}" x2="${x1 + 12}" y2="${y}" stroke="${INK}" stroke-width="2.5"/><path d="M${x1 + 18} ${y} l-8 -4.5 v9 Z" fill="${INK}"/><path d="M${x0 - 18} ${y} l8 -4.5 v9 Z" fill="${INK}"/>`;
-    for (let i = 0; i <= n; i++) { const v = a + i * step, big = step < 1 ? isInt(v) : labs.some(w => Math.abs(w - v) < 1e-9); s += `<line x1="${r1(X(v))}" y1="${y - (big ? 9 : 6)}" x2="${r1(X(v))}" y2="${y + (big ? 9 : 6)}" stroke="${INK}" stroke-width="${big ? 2.2 : 1.4}"/>`; }
+    let s = `<line x1="${x0 - 14}" y1="${y}" x2="${x1 + 14}" y2="${y}" stroke="${INK}" stroke-width="2.5" stroke-linecap="round"/>` + chev(x1 + 17, y, 'r') + chev(x0 - 17, y, 'l'), defs = '';
+    for (let i = 0; i <= n; i++) { const v = a + i * step, big = step < 1 ? isInt(v) : labs.some(w => Math.abs(w - v) < 1e-9); s += `<line x1="${r1(X(v))}" y1="${y - (big ? 9 : 6)}" x2="${r1(X(v))}" y2="${y + (big ? 9 : 6)}" stroke="${INK}" stroke-width="${big ? 2.2 : 1.4}" stroke-linecap="round"/>`; }
     labs.forEach(v => { s += tt(X(v), y + 26, fmt(v), { a: 'middle', fs: 13, fw: 800 }); });
-    marks.forEach(m => { s += `<path class="mk" d="M${r1(X(m.v))} ${y - 4} l-7 -13 h14 Z" fill="${m.col || '#E24F86'}"/>` + tt(X(m.v), y - 21, m.lab, { a: 'middle', fs: 14, fw: 800, col: m.col || '#E24F86' }); });
-    return s + '</svg>';
+    marks.forEach(m => { const c = m.col || '#E24F86', [gd, gi] = vgrad(c, .45); defs += gd; s += `<circle cx="${r1(X(m.v))}" cy="${y}" r="3.4" fill="${c}" stroke="#fff" stroke-width="1.3"/><path class="mk" d="M${r1(X(m.v))} ${y - 4} l-7.5 -13.5 h15 Z" fill="url(#${gi})" stroke="#fff" stroke-width="1.5" stroke-linejoin="round" filter="url(#vsh)"/>` + tt(X(m.v), y - 22, m.lab, { a: 'middle', fs: 14, fw: 800, col: c }); });
+    return `<svg viewBox="0 0 ${W} 92" class="vsvg wide" style="width:320px"><defs>${defs}</defs>${s}</svg>`;
   }
   function nLine(L_) {
     if (L_ <= 2) {
@@ -1238,26 +1273,31 @@
   /* ================= 7. Geometria de 1r d'ESO: angles, triangles, quadrilàters i el cercle ================= */
   const HL = '#E24F86', SH = '#36A9E1';
   const pt = (cx, cy, r, deg) => [cx + r * Math.cos(deg * Math.PI / 180), cy - r * Math.sin(deg * Math.PI / 180)];
-  const arc = (cx, cy, r, a0, a1, col) => { const [x0, y0] = pt(cx, cy, r, a0), [x1, y1] = pt(cx, cy, r, a1); return `<path d="M${r1(x0)} ${r1(y0)} A${r} ${r} 0 ${a1 - a0 > 180 ? 1 : 0} 0 ${r1(x1)} ${r1(y1)}" fill="none" stroke="${col}" stroke-width="3"/>`; };
+  // angle: sector ple translúcid + arc marcat
+  const arc = (cx, cy, r, a0, a1, col) => { const [x0, y0] = pt(cx, cy, r, a0), [x1, y1] = pt(cx, cy, r, a1), lg = a1 - a0 > 180 ? 1 : 0; return `<path d="M${r1(cx)} ${r1(cy)} L${r1(x0)} ${r1(y0)} A${r} ${r} 0 ${lg} 0 ${r1(x1)} ${r1(y1)} Z" fill="${col}" fill-opacity=".2"/><path d="M${r1(x0)} ${r1(y0)} A${r} ${r} 0 ${lg} 0 ${r1(x1)} ${r1(y1)}" fill="none" stroke="${col}" stroke-width="3" stroke-linecap="round"/>`; };
+  const vtxDot = (cx, cy) => `<circle cx="${cx}" cy="${cy}" r="4.5" fill="#8A4FB0" stroke="#fff" stroke-width="1.6" filter="url(#vsh)"/>`;
   // Dos angles que sumen 90° o 180°: un rajos des del vèrtex
   function angPairSVG(a, total) {
     const cx = total === 90 ? 70 : 150, cy = 140, R = 110, s = [`<svg viewBox="0 0 300 165" class="vsvg wide" style="width:300px">`];
-    const ray = d => { const [x, y] = pt(cx, cy, R, d); return `<line x1="${cx}" y1="${cy}" x2="${r1(x)}" y2="${r1(y)}" stroke="${INK}" stroke-width="3.5" stroke-linecap="round"/>`; };
-    s.push(ray(0), ray(total), `<line x1="${cx}" y1="${cy}" x2="${r1(pt(cx, cy, R, a)[0])}" y2="${r1(pt(cx, cy, R, a)[1])}" stroke="${PRI}" stroke-width="3.5" stroke-linecap="round"/>`);
-    if (total === 90) s.push(`<path d="M${cx + 16} ${cy} V${cy - 16} H${cx}" fill="none" stroke="${INK}" stroke-width="1.8"/>`);
+    const ray = (d, c = INK) => { const [x, y] = pt(cx, cy, R, d); return `<line x1="${cx}" y1="${cy}" x2="${r1(x)}" y2="${r1(y)}" stroke="${c}" stroke-width="3.5" stroke-linecap="round"/>`; };
     s.push(arc(cx, cy, 34, 0, a, SH), arc(cx, cy, 46, a, total, HL));
-    const [lx, ly] = pt(cx, cy, 58, a / 2), [qx, qy] = pt(cx, cy, 70, (a + total) / 2);
-    s.push(tt(lx + (total === 90 ? 6 : 0), ly + 5, `${a}°`, { a: 'middle', fs: 15, fw: 800, col: '#1B6FA3' }), tt(qx, qy + 5, '?', { a: 'middle', fs: 18, fw: 900, col: HL }));
+    if (total === 90) s.push(`<polyline points="${cx + 16},${cy} ${cx + 16},${cy - 16} ${cx},${cy - 16}" fill="none" stroke="${INK}" stroke-width="1.8" stroke-linejoin="round"/>`);
+    s.push(ray(0), ray(total), ray(a, PRI), vtxDot(cx, cy));
+    let [lx, ly] = pt(cx, cy, 58, a / 2), [qx, qy] = pt(cx, cy, 70, (a + total) / 2);
+    // angles estrets: l'etiqueta no hi cap entre els rajos i trepitjaria la línia; la posem fora (sota la base o al costat del raig)
+    if (a < 26) { lx = cx + 52 - (total === 90 ? 6 : 0); ly = cy + 15; }
+    if (total - a < 26) { if (total === 90) { qx = cx + 14; qy = cy - R + 12; } else { qx = cx - 52; qy = cy + 15; } }
+    s.push(tt(lx + (total === 90 ? 6 : 0), ly + 5, `${a}°`, { a: 'middle', fs: 15, fw: 800, col: '#258ACF' }), tt(qx, qy + 6, '?', { a: 'middle', fs: 19, fw: 900, col: HL }));
     return s.join('') + '</svg>';
   }
   // Dues rectes que es tallen: un angle conegut i un de marcat
   function crossSVG(a, which) {
     const cx = 150, cy = 80, R = 120, s = [`<svg viewBox="0 0 300 160" class="vsvg wide" style="width:300px">`];
     const ln = d => { const [x0, y0] = pt(cx, cy, R, d), [x1, y1] = pt(cx, cy, R, d + 180); return `<line x1="${r1(x0)}" y1="${r1(y0)}" x2="${r1(x1)}" y2="${r1(y1)}" stroke="${INK}" stroke-width="3.5" stroke-linecap="round"/>`; };
-    s.push(ln(0), ln(a), arc(cx, cy, 30, 0, a, SH));
-    const [lx, ly] = pt(cx, cy, 48, a / 2); s.push(tt(lx + 8, ly + 5, `${a}°`, { a: 'middle', fs: 15, fw: 800, col: '#1B6FA3' }));
     const [f, t] = which === 'opp' ? [180, 180 + a] : [a, 180];
-    s.push(arc(cx, cy, 40, f, t, HL)); const [qx, qy] = pt(cx, cy, 58, (f + t) / 2); s.push(tt(qx, qy + 6, '?', { a: 'middle', fs: 18, fw: 900, col: HL }));
+    s.push(arc(cx, cy, 30, 0, a, SH), arc(cx, cy, 40, f, t, HL), ln(0), ln(a), vtxDot(cx, cy));
+    const [lx, ly] = pt(cx, cy, 48, a / 2); s.push(tt(lx + 8, ly + 5, `${a}°`, { a: 'middle', fs: 15, fw: 800, col: '#258ACF' }));
+    const [qx, qy] = pt(cx, cy, 58, (f + t) / 2); s.push(tt(qx, qy + 6, '?', { a: 'middle', fs: 19, fw: 900, col: HL }));
     return s.join('') + '</svg>';
   }
   const NGON = { 3: ['triangle', 'triángulo'], 4: ['quadrilàter', 'cuadrilátero'], 5: ['pentàgon', 'pentágono'], 6: ['hexàgon', 'hexágono'], 7: ['heptàgon', 'heptágono'], 8: ['octàgon', 'octógono'], 9: ['enneàgon', 'eneágono'], 10: ['decàgon', 'decágono'], 12: ['dodecàgon', 'dodecágono'] };
@@ -1289,11 +1329,12 @@
   // Triangles i quadrilàters
   const polySVG7 = (P, o = {}) => {
     const xs = P.map(p => p[0]), ys = P.map(p => p[1]), mx = Math.min(...xs), Mx = Math.max(...xs), my = Math.min(...ys), My = Math.max(...ys);
-    const sc = Math.min(220 / (Mx - mx || 1), 120 / (My - my || 1)), X = x => 40 + (x - mx) * sc, Y = y => 20 + (My - y) * sc, W = (Mx - mx) * sc + 80, H = (My - my) * sc + 40;
-    let s = `<svg viewBox="0 0 ${r1(W)} ${r1(H)}" class="vsvg wide" style="width:${Math.round(Math.min(280, W))}px"><polygon class="pg" points="${P.map(p => `${r1(X(p[0]))},${r1(Y(p[1]))}`).join(' ')}" fill="#E8F5FE" stroke="${SH}" stroke-width="3.5" stroke-linejoin="round"/>`;
+    const sc = Math.min(220 / (Mx - mx || 1), 120 / (My - my || 1)), X = x => 40 + (x - mx) * sc, Y = y => 20 + (My - y) * sc, W = (Mx - mx) * sc + 80, H = (My - my) * sc + 40, gid = vid('pg'), pts = P.map(p => `${r1(X(p[0]))},${r1(Y(p[1]))}`).join(' ');
+    let s = `<svg viewBox="0 0 ${r1(W)} ${r1(H)}" class="vsvg wide" style="width:${Math.round(Math.min(280, W))}px"><defs><linearGradient id="${gid}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${SH}" stop-opacity=".38"/><stop offset="1" stop-color="${SH}" stop-opacity=".16"/></linearGradient></defs><polygon class="pg" points="${pts}" fill="url(#${gid})" stroke="${SH}" stroke-width="3.5" stroke-linejoin="round" filter="url(#vsh)"/>`;
     (o.labs || []).forEach((lb, i) => { if (!lb) return; const a = P[i], b = P[(i + 1) % P.length], mxp = (X(a[0]) + X(b[0])) / 2, myp = (Y(a[1]) + Y(b[1])) / 2, cxp = P.reduce((u, p) => u + X(p[0]), 0) / P.length, cyp = P.reduce((u, p) => u + Y(p[1]), 0) / P.length, dx = mxp - cxp, dy = myp - cyp, dl = Math.hypot(dx, dy) || 1; s += tt(mxp + dx / dl * 16, myp + dy / dl * 16 + 5, lb, { a: 'middle', fs: 14, fw: 800 }); });
     (o.ticks || []).forEach((k, i) => { if (!k) return; const a = P[i], b = P[(i + 1) % P.length], mxp = (X(a[0]) + X(b[0])) / 2, myp = (Y(a[1]) + Y(b[1])) / 2, ang = Math.atan2(Y(b[1]) - Y(a[1]), X(b[0]) - X(a[0])), nx = -Math.sin(ang), ny = Math.cos(ang), tx = Math.cos(ang), ty = Math.sin(ang); for (let j = 0; j < k; j++) { const off = (j - (k - 1) / 2) * 5; s += `<line x1="${r1(mxp + tx * off - nx * 7)}" y1="${r1(myp + ty * off - ny * 7)}" x2="${r1(mxp + tx * off + nx * 7)}" y2="${r1(myp + ty * off + ny * 7)}" stroke="${INK}" stroke-width="2"/>`; } });
-    (o.right || []).forEach(i => { const n = P.length, p = P[i], a = P[(i + n - 1) % n], b = P[(i + 1) % n], u = [X(a[0]) - X(p[0]), Y(a[1]) - Y(p[1])], v = [X(b[0]) - X(p[0]), Y(b[1]) - Y(p[1])], lu = Math.hypot(...u), lv = Math.hypot(...v), q = 13; s += `<path d="M${r1(X(p[0]) + u[0] / lu * q)} ${r1(Y(p[1]) + u[1] / lu * q)} L${r1(X(p[0]) + u[0] / lu * q + v[0] / lv * q)} ${r1(Y(p[1]) + u[1] / lu * q + v[1] / lv * q)} L${r1(X(p[0]) + v[0] / lv * q)} ${r1(Y(p[1]) + v[1] / lv * q)}" fill="none" stroke="${INK}" stroke-width="1.8"/>`; });
+    (o.right || []).forEach(i => { const n = P.length, p = P[i], a = P[(i + n - 1) % n], b = P[(i + 1) % n], u = [X(a[0]) - X(p[0]), Y(a[1]) - Y(p[1])], v = [X(b[0]) - X(p[0]), Y(b[1]) - Y(p[1])], lu = Math.hypot(...u), lv = Math.hypot(...v), q = 13; s += `<polyline points="${r1(X(p[0]) + u[0] / lu * q)},${r1(Y(p[1]) + u[1] / lu * q)} ${r1(X(p[0]) + u[0] / lu * q + v[0] / lv * q)},${r1(Y(p[1]) + u[1] / lu * q + v[1] / lv * q)} ${r1(X(p[0]) + v[0] / lv * q)},${r1(Y(p[1]) + v[1] / lv * q)}" fill="none" stroke="${INK}" stroke-width="1.8" stroke-linejoin="round"/>`; });
+    s += P.map(p => `<circle cx="${r1(X(p[0]))}" cy="${r1(Y(p[1]))}" r="3" fill="#fff" stroke="${SH}" stroke-width="2"/>`).join('');
     return s + '</svg>';
   };
   // triangle a partir dels tres costats (a = base)
@@ -1346,17 +1387,18 @@
   // Elements del cercle
   const CEL = () => ({ radi: L('Radi', 'Radio'), diam: L('Diàmetre', 'Diámetro'), corda: L('Corda', 'Cuerda'), arc: L('Arc', 'Arco'), sect: L('Sector circular', 'Sector circular'), segm: L('Segment circular', 'Segmento circular'), tang: L('Recta tangent', 'Recta tangente'), sec: L('Recta secant', 'Recta secante'), cen: L('Centre', 'Centro') });
   function circSVG(k) {
-    const cx = 110, cy = 80, R = 60, s = [`<svg viewBox="0 0 220 160" class="vsvg wide" style="width:240px"><circle class="cc" cx="${cx}" cy="${cy}" r="${R}" fill="#F4EEF9" stroke="${INK}" stroke-width="2.5"/>`];
-    const a0 = ri(0, 359), a1 = a0 + ri(70, 140), P = d => pt(cx, cy, R, d).map(r1), line = (p, q, cls) => `<line class="${cls}" x1="${p[0]}" y1="${p[1]}" x2="${q[0]}" y2="${q[1]}" stroke="${HL}" stroke-width="4" stroke-linecap="round"/>`;
-    if (k === 'radi') s.push(line([cx, cy], P(a0), 'el'));
-    if (k === 'diam') s.push(line(P(a0), P(a0 + 180), 'el'));
-    if (k === 'corda') s.push(line(P(a0), P(a1), 'el'));
-    if (k === 'arc') s.push(`<path class="el" d="M${P(a0).join(' ')} A${R} ${R} 0 0 0 ${P(a1).join(' ')}" fill="none" stroke="${HL}" stroke-width="6" stroke-linecap="round"/>`);
-    if (k === 'sect') s.push(`<path class="el" d="M${cx} ${cy} L${P(a0).join(' ')} A${R} ${R} 0 0 0 ${P(a1).join(' ')} Z" fill="${HL}" fill-opacity=".55" stroke="${HL}" stroke-width="2.5"/>`);
-    if (k === 'segm') s.push(`<path class="el" d="M${P(a0).join(' ')} A${R} ${R} 0 0 0 ${P(a1).join(' ')} Z" fill="${HL}" fill-opacity=".55" stroke="${HL}" stroke-width="2.5"/>`);
-    if (k === 'tang') { const t = P(a0), dx = -Math.sin(a0 * Math.PI / 180), dy = -Math.cos(a0 * Math.PI / 180); s.push(line([r1(t[0] - 70 * dx), r1(t[1] - 70 * dy)], [r1(t[0] + 70 * dx), r1(t[1] + 70 * dy)], 'el')); }
+    const cx = 110, cy = 80, R = 60, gid = vid('cg'), s = [`<svg viewBox="0 0 220 160" class="vsvg wide" style="width:240px"><defs><radialGradient id="${gid}" cx=".38" cy=".32" r=".75"><stop offset="0" stop-color="#C9A6E8" stop-opacity=".22"/><stop offset="1" stop-color="#8A4FB0" stop-opacity=".34"/></radialGradient></defs><circle class="cc" cx="${cx}" cy="${cy}" r="${R}" fill="url(#${gid})" stroke="#8A4FB0" stroke-width="3" filter="url(#vsh)"/>`];
+    const a0 = ri(0, 359), a1 = a0 + ri(70, 140), P = d => pt(cx, cy, R, d).map(r1), line = (p, q, cls) => `<line x1="${p[0]}" y1="${p[1]}" x2="${q[0]}" y2="${q[1]}" stroke="${HL}" stroke-opacity=".25" stroke-width="10" stroke-linecap="round"/><line class="${cls}" x1="${p[0]}" y1="${p[1]}" x2="${q[0]}" y2="${q[1]}" stroke="${HL}" stroke-width="4" stroke-linecap="round"/>`;
+    const ends = (...q) => q.map(([x, y]) => `<circle cx="${x}" cy="${y}" r="3.6" fill="${HL}" stroke="#fff" stroke-width="1.5"/>`).join('');
+    if (k === 'radi') s.push(line([cx, cy], P(a0), 'el'), ends(P(a0)));
+    if (k === 'diam') s.push(line(P(a0), P(a0 + 180), 'el'), ends(P(a0), P(a0 + 180)));
+    if (k === 'corda') s.push(line(P(a0), P(a1), 'el'), ends(P(a0), P(a1)));
+    if (k === 'arc') s.push(`<path d="M${P(a0).join(' ')} A${R} ${R} 0 0 0 ${P(a1).join(' ')}" fill="none" stroke="${HL}" stroke-opacity=".25" stroke-width="13" stroke-linecap="round"/><path class="el" d="M${P(a0).join(' ')} A${R} ${R} 0 0 0 ${P(a1).join(' ')}" fill="none" stroke="${HL}" stroke-width="6" stroke-linecap="round"/>`);
+    if (k === 'sect') s.push(`<path class="el" d="M${cx} ${cy} L${P(a0).join(' ')} A${R} ${R} 0 0 0 ${P(a1).join(' ')} Z" fill="${HL}" fill-opacity=".55" stroke="${HL}" stroke-width="2.5" stroke-linejoin="round"/>`);
+    if (k === 'segm') s.push(`<path class="el" d="M${P(a0).join(' ')} A${R} ${R} 0 0 0 ${P(a1).join(' ')} Z" fill="${HL}" fill-opacity=".55" stroke="${HL}" stroke-width="2.5" stroke-linejoin="round"/>`);
+    if (k === 'tang') { const t = P(a0), dx = -Math.sin(a0 * Math.PI / 180), dy = -Math.cos(a0 * Math.PI / 180); s.push(line([r1(t[0] - 70 * dx), r1(t[1] - 70 * dy)], [r1(t[0] + 70 * dx), r1(t[1] + 70 * dy)], 'el'), ends(t)); }
     if (k === 'sec') { const m = R * .45, u = a0 * Math.PI / 180, c0 = [cx + m * Math.cos(u), cy - m * Math.sin(u)], dx = -Math.sin(u), dy = -Math.cos(u), h = Math.sqrt(R * R - m * m) + 28; s.push(line([r1(c0[0] - h * dx), r1(c0[1] - h * dy)], [r1(c0[0] + h * dx), r1(c0[1] + h * dy)], 'el')); }
-    s.push(k === 'cen' ? `<circle class="el" cx="${cx}" cy="${cy}" r="6" fill="${HL}"/>` : `<circle cx="${cx}" cy="${cy}" r="3" fill="${INK}"/>`);
+    s.push(k === 'cen' ? `<circle cx="${cx}" cy="${cy}" r="12" fill="${HL}" fill-opacity=".22"/><circle class="el" cx="${cx}" cy="${cy}" r="6" fill="${HL}" stroke="#fff" stroke-width="1.6"/>` : `<circle cx="${cx}" cy="${cy}" r="3.4" fill="#8A4FB0" stroke="#fff" stroke-width="1.2"/>`);
     return s.join('') + '</svg>';
   }
   function eCirc(L_) {
@@ -1460,8 +1502,8 @@
   const arrowPlane = (A, Bp, o = {}) => {
     let s = planeSVG({ x0: -7, x1: 7, y0: -7, y1: 7, pts: [{ x: A[0], y: A[1], lab: 'A', col: '#1B6FA3' }, { x: Bp[0], y: Bp[1], lab: 'B', col: '#E24F86' }], ...o });
     const u = Math.min(24, 260 / 14), pd = 20, X = x => pd + (x + 7) * u, Y = y => pd + (7 - y) * u, ang = Math.atan2(Y(Bp[1]) - Y(A[1]), X(Bp[0]) - X(A[0])), bx = X(Bp[0]) - 8 * Math.cos(ang), by = Y(Bp[1]) - 8 * Math.sin(ang);
-    const head = `<path d="M${r1(X(Bp[0]))} ${r1(Y(Bp[1]))} L${r1(bx - 5 * Math.sin(ang))} ${r1(by + 5 * Math.cos(ang))} L${r1(bx + 5 * Math.sin(ang))} ${r1(by - 5 * Math.cos(ang))} Z" fill="#8A4FB0"/>`;
-    return s.replace(/(<circle class="cp")/, `<line class="vec" x1="${r1(X(A[0]))}" y1="${r1(Y(A[1]))}" x2="${r1(bx)}" y2="${r1(by)}" stroke="#8A4FB0" stroke-width="3"/>${head}$1`);
+    const head = `<path d="M${r1(X(Bp[0]))} ${r1(Y(Bp[1]))} L${r1(bx - 5.5 * Math.sin(ang))} ${r1(by + 5.5 * Math.cos(ang))} L${r1(bx + 5.5 * Math.sin(ang))} ${r1(by - 5.5 * Math.cos(ang))} Z" fill="#8A4FB0" stroke="#8A4FB0" stroke-width="1.5" stroke-linejoin="round"/>`;
+    return s.replace(/(<circle class="cp")/, `<line x1="${r1(X(A[0]))}" y1="${r1(Y(A[1]))}" x2="${r1(bx)}" y2="${r1(by)}" stroke="#B07BE0" stroke-opacity=".3" stroke-width="9" stroke-linecap="round"/><line class="vec" x1="${r1(X(A[0]))}" y1="${r1(Y(A[1]))}" x2="${r1(bx)}" y2="${r1(by)}" stroke="#8A4FB0" stroke-width="3.2" stroke-linecap="round"/>${head}$1`);
   };
   function eVec(L_) {
     if (L_ <= 1) {
@@ -1558,10 +1600,10 @@
   const ivT = (a, b, ca, cb) => `${ca ? '[' : '('}${a === -Infinity ? '−∞' : fmt(a)}, ${b === Infinity ? '+∞' : fmt(b)}${cb ? ']' : ')'}`;
   function ivSVG(a, b, ca, cb) {
     const lo = -8, hi = 8, W = 320, x0 = 22, x1 = W - 22, X = v => x0 + (Math.max(lo - .7, Math.min(hi + .7, v)) - lo) / (hi - lo) * (x1 - x0), y = 40;
-    let s = `<svg viewBox="0 0 ${W} 72" class="vsvg wide" style="width:320px"><line x1="${x0 - 12}" y1="${y}" x2="${x1 + 12}" y2="${y}" stroke="${INK}" stroke-width="2"/>`;
-    for (let v = lo; v <= hi; v++) s += `<line x1="${r1(X(v))}" y1="${y - 5}" x2="${r1(X(v))}" y2="${y + 5}" stroke="${INK}" stroke-width="1.4"/>` + (v % 2 === 0 ? tt(X(v), y + 22, fmt(v), { a: 'middle', fs: 11.5, col: MUT }) : '');
-    s += `<line class="iv" x1="${r1(X(a))}" y1="${y}" x2="${r1(X(b))}" y2="${y}" stroke="${HL}" stroke-width="6" stroke-linecap="round"/>`;
-    [[a, ca], [b, cb]].forEach(([v, c]) => { if (Number.isFinite(v)) s += `<circle class="ep" cx="${r1(X(v))}" cy="${y}" r="6.5" fill="${c ? HL : '#fff'}" stroke="${HL}" stroke-width="3"/>`; });
+    let s = `<svg viewBox="0 0 ${W} 72" class="vsvg wide" style="width:320px"><line x1="${x0 - 14}" y1="${y}" x2="${x1 + 14}" y2="${y}" stroke="${INK}" stroke-width="2" stroke-linecap="round"/>` + chev(x1 + 17, y, 'r') + chev(x0 - 17, y, 'l');
+    for (let v = lo; v <= hi; v++) s += `<line x1="${r1(X(v))}" y1="${y - (v % 2 ? 4 : 6)}" x2="${r1(X(v))}" y2="${y + (v % 2 ? 4 : 6)}" stroke="${INK}" stroke-width="${v % 2 ? 1.2 : 1.6}" stroke-linecap="round"/>` + (v % 2 === 0 ? tt(X(v), y + 23, fmt(v), { a: 'middle', fs: 12.5, col: MUT }) : '');
+    s += `<line x1="${r1(X(a))}" y1="${y}" x2="${r1(X(b))}" y2="${y}" stroke="${HL}" stroke-opacity=".25" stroke-width="13" stroke-linecap="round"/><line class="iv" x1="${r1(X(a))}" y1="${y}" x2="${r1(X(b))}" y2="${y}" stroke="${HL}" stroke-width="6" stroke-linecap="round"/>`;
+    [[a, ca], [b, cb]].forEach(([v, c]) => { if (Number.isFinite(v)) s += `<circle class="ep" cx="${r1(X(v))}" cy="${y}" r="6.5" fill="${c ? HL : '#fff'}" stroke="${HL}" stroke-width="3" filter="url(#vsh)"/>` + (c ? `<circle cx="${r1(X(v) - 2)}" cy="${y - 2.2}" r="2" fill="#fff" fill-opacity=".6"/>` : ''); });
     return s + '</svg>';
   }
   function numInt(L_) {

@@ -721,3 +721,10 @@ html[data-v=pro] .lesson.game .chaindots i,html[data-v=pro] .lesson.game .chaind
 html[data-v=pro] .lesson.game .chaindots .on,html[data-v=pro] .lesson.game .chaindots i.on{background:#FFD35C}
 html[data-v=pro] .lesson.game .chainhint,html[data-v=pro] .lesson.game .l-body>p{color:#C9B8E0}
 @media (min-width:1100px){html[data-v=pro] .nav .navxat{border:2px dashed color-mix(in srgb,var(--pri) 30%,transparent)}}
+html[data-v=pro] .testcard.famask{background:linear-gradient(135deg,#8A55C9,#602B7A);box-shadow:0 5px 0 #40195A}
+html[data-v=pro] .ubanner{background:linear-gradient(135deg,color-mix(in srgb,var(--uc) 78%,#000) 0%,color-mix(in srgb,var(--uc) 70%,#1d0b2e) 100%)}
+html[data-v=pro] .bubble .speak{border:2px solid color-mix(in srgb,var(--uc,#602B7A) 25%,#402D54);background:#1C1927}
+html[data-v=pro] body.pro .l-vis>:is(svg,html[data-v=pro] .vpic,html[data-v=pro] .stack,html[data-v=pro] .pies,html[data-v=pro] .bals,html[data-v=pro] img){box-shadow:none}
+html[data-v=pro] .l-vis{background-color:#1C1927;background-image:radial-gradient(circle at 1px 1px,color-mix(in srgb,var(--uc,#602B7A) 14%,transparent) 1.2px,transparent 1.6px)}
+html[data-v=pro] body.pro .l-vis>*{box-shadow:none}
+html[data-v=pro][data-v=pro] .vpic.bal{background:transparent;border-color:transparent}

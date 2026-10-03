@@ -12,91 +12,125 @@ const HOW = () => L('Quant fa?', '¿Cuánto es?');
 
 /* --- Visuals --- */
 function blocksSVG(n) {
-  const h = Math.floor(n / 100), t = Math.floor(n % 100 / 10), u = n % 10, c = 9, H = 10 * c;
+  // Blocs de base 10 amb volum: cara del davant amb degradat, tapa clara i costat fosc (fondària D)
+  const h = Math.floor(n / 100), t = Math.floor(n % 100 / 10), u = n % 10, c = 10, H = 10 * c, D = 5, Y = 4 + D;
+  const K = { h: ['url(#gBlue)', '#A9E0FB', '#1A72A4', '#15628F'], t: ['url(#gGreen)', '#AEEFC4', '#1F8A48', '#1B7A40'], u: ['url(#gOrange)', '#FFDDB0', '#D4691A', '#B65A14'] };
   let x = 4, s = '', k = 0;
-  const grid = (x0, w, hgt) => { let p = ''; for (let i = 1; i < w / c; i++) p += `M${x0 + i * c} 4v${hgt}`; for (let j = 1; j < hgt / c; j++) p += `M${x0} ${4 + j * c}h${w}`; return p; };
-  const g = inner => `<g class="blk" style="animation-delay:${(k++) * 60}ms">${inner}</g>`;
-  for (let i = 0; i < h; i++) { s += g(`<rect x="${x}" y="4" width="${H}" height="${H}" rx="2" fill="url(#gBlue)" stroke="#1B6FA3" stroke-width="1.5"/><path d="${grid(x, H, H)}" stroke="rgba(255,255,255,.45)" stroke-width="1"/>`); x += H + 10; }
-  for (let i = 0; i < t; i++) { s += g(`<rect x="${x}" y="4" width="${c}" height="${H}" rx="2" fill="url(#gGreen)" stroke="#1F8A48" stroke-width="1.5"/><path d="${grid(x, c, H)}" stroke="rgba(255,255,255,.5)" stroke-width="1"/>`); x += c + 5; }
+  const box = (x0, y0, w, hh, [front, top, side, edge], gx, gy) => {
+    let p = `<polygon points="${x0},${y0} ${x0 + D},${y0 - D} ${x0 + w + D},${y0 - D} ${x0 + w},${y0}" fill="${top}"/>`
+      + `<polygon points="${x0 + w},${y0} ${x0 + w + D},${y0 - D} ${x0 + w + D},${y0 + hh - D} ${x0 + w},${y0 + hh}" fill="${side}"/>`
+      + `<rect x="${x0}" y="${y0}" width="${w}" height="${hh}" fill="${front}"/>`;
+    let gl = '', gs = '';
+    for (let i = 1; i < gx; i++) { gl += `M${x0 + i * c} ${y0}v${hh}`; gs += `M${x0 + i * c} ${y0}l${D} ${-D}`; }
+    for (let j = 1; j < gy; j++) { gl += `M${x0} ${y0 + j * c}h${w}`; gs += `M${x0 + w} ${y0 + j * c}l${D} ${-D}`; }
+    if (gl) p += `<path d="${gl}" stroke="rgba(255,255,255,.55)" stroke-width="1"/><path d="${gs}" stroke="rgba(0,0,0,.18)" stroke-width="1"/>`;
+    p += `<path d="M${x0} ${y0}h${w}l${D} ${-D}h${-w}z M${x0 + w} ${y0}l${D} ${-D}v${hh}l${-D} ${D}z M${x0} ${y0}h${w}v${hh}h${-w}z" fill="none" stroke="${edge}" stroke-width="1.3" stroke-linejoin="round"/>`;
+    return `<g class="blk" style="animation-delay:${(k++) * 60}ms">${p}</g>`;
+  };
+  for (let i = 0; i < h; i++) { s += box(x, Y, H, H, K.h, 10, 10); x += H + D + 9; }
+  for (let i = 0; i < t; i++) { s += box(x, Y, c, H, K.t, 1, 10); x += c + D + 4; }
   if (t && u) x += 6;
-  for (let i = 0; i < u; i++) { const col = Math.floor(i / 5), row = i % 5; s += g(`<rect x="${x + col * (c + 4)}" y="${4 + H - (row + 1) * (c + 3) + 3}" width="${c}" height="${c}" rx="1.5" fill="url(#gOrange)" stroke="#C4661A" stroke-width="1.2"/>`); }
-  if (u) x += Math.ceil(u / 5) * (c + 4);
-  const W = x + 4;
-  return `<svg viewBox="0 0 ${W} ${H + 8}" class="blocks" style="width:${Math.min(W * 2.3, 360)}px">${s}</svg>`;
+  for (let i = 0; i < u; i++) { const col = Math.floor(i / 5), row = i % 5; s += box(x + col * (c + D + 4), Y + H - (row + 1) * (c + D + 2) + D + 2, c, c, K.u, 1, 1); }
+  if (u) x += Math.ceil(u / 5) * (c + D + 4);
+  const W = x + 2;
+  return `<svg viewBox="0 0 ${W} ${H + D + 10}" class="blocks" style="width:${Math.round(Math.min(W * 2.4, 400))}px"><g filter="url(#vsh)">${s}</g></svg>`;
 }
 function rulerSVG(a, b, max) {
-  const px = 22, W = max * px + 40, x0 = 20 + a * px, x1 = 20 + b * px;
-  let s = `<svg viewBox="0 0 ${W} 118" class="ruler" style="width:${Math.min(W * 1.2, 400)}px">`;
-  s += `<line x1="${x0}" y1="42" x2="${x0}" y2="54" stroke="#B9A6CB" stroke-width="2" stroke-dasharray="3 3"/><line x1="${x1}" y1="42" x2="${x1}" y2="54" stroke="#B9A6CB" stroke-width="2" stroke-dasharray="3 3"/>`;
-  s += `<g class="pencil"><rect x="${x0}" y="16" width="${x1 - x0 - 18}" height="22" rx="3" fill="url(#gYellow)"/><rect x="${x0}" y="16" width="${x1 - x0 - 18}" height="6" rx="3" fill="rgba(255,255,255,.35)"/>`;
-  s += `<polygon points="${x1 - 18},16 ${x1},27 ${x1 - 18},38" fill="#F6D7A7"/><polygon points="${x1 - 6},23.5 ${x1},27 ${x1 - 6},30.5" fill="${INK}"/><rect x="${x0}" y="16" width="12" height="22" rx="3" fill="#FF7AA8"/><rect x="${x0 + 12}" y="16" width="5" height="22" fill="#D9D9D9"/></g>`;
-  s += `<rect x="6" y="54" width="${W - 12}" height="56" rx="8" fill="url(#gRuler)" stroke="#D9A93A" stroke-width="2"/>`;
-  for (let i = 0; i <= max * 2; i++) { const x = 20 + i * px / 2, big = i % 2 === 0; s += `<line x1="${x}" y1="54" x2="${x}" y2="${big ? 72 : 64}" stroke="#7A5A10" stroke-width="${big ? 2 : 1.2}"/>`; if (big) s += `<text x="${x}" y="90" text-anchor="middle" font-size="13" ${F} fill="#7A5A10">${i / 2}</text>`; }
-  return s + `<text x="${W - 16}" y="104" text-anchor="end" font-size="11" ${F} fill="#A07B20">cm</text></svg>`;
+  // Regle de plàstic groc amb bisell i un llapis de veritat (goma, virolla, fusta i mina) que va del «a» al «b»
+  const px = 24, W = max * px + 44, X = i => 22 + i * px, x0 = X(a), x1 = X(b), len = x1 - x0, cone = Math.min(18, len * .32), fer = 6, er = Math.min(11, len * .2);
+  const ry = 58, rh = 58;
+  let s = `<svg viewBox="0 0 ${W} 122" class="ruler" style="width:${Math.round(Math.min(W * 1.25, 460))}px">`;
+  s += `<g stroke="#A895BC" stroke-width="2" stroke-dasharray="3 3"><line x1="${x0}" y1="40" x2="${x0}" y2="${ry}"/><line x1="${x1}" y1="40" x2="${x1}" y2="${ry}"/></g>`;
+  // llapis
+  const bx = x0 + er + fer, bw = x1 - cone - bx;
+  s += `<g class="pencil" filter="url(#vsh)">`
+    + `<rect x="${bx}" y="14" width="${bw}" height="9" fill="#FFE27A"/><rect x="${bx}" y="23" width="${bw}" height="8" fill="#FFC93C"/><rect x="${bx}" y="31" width="${bw}" height="9" fill="#E9A600"/>`
+    + `<polygon points="${x1 - cone},14 ${x1},27 ${x1 - cone},40" fill="url(#gWood)"/><polygon points="${x1 - cone * .36},22.4 ${x1},27 ${x1 - cone * .36},31.6" fill="#3A2A4A"/>`
+    + `<path d="M${x0 + er} 14 h${fer} v26 h${-fer} z" fill="#C9CED6"/><path d="M${x0 + er + 2} 14v26 M${x0 + er + 4} 14v26" stroke="#9AA3AF" stroke-width="1"/>`
+    + `<path d="M${x0 + er} 14 h${-er + 4} a4 4 0 0 0 -4 4 v18 a4 4 0 0 0 4 4 h${er - 4} z" fill="#FF7AA8"/>`
+    + `<rect x="${x0}" y="15" width="${len - cone}" height="4" rx="2" fill="#fff" opacity=".45"/></g>`;
+  // regle
+  s += `<g filter="url(#vsh)"><rect x="6" y="${ry}" width="${W - 12}" height="${rh}" rx="9" fill="url(#gRuler)" stroke="#D6A53A" stroke-width="2"/></g>`;
+  s += `<rect x="8" y="${ry + rh - 9}" width="${W - 16}" height="7" rx="4" fill="#F2CC6A" opacity=".55"/><rect x="10" y="${ry + 2.5}" width="${W - 20}" height="4" rx="2" fill="#fff" opacity=".7"/>`;
+  for (let i = 0; i <= max * 2; i++) {
+    const x = 22 + i * px / 2, big = i % 2 === 0;
+    s += `<line x1="${x}" y1="${ry}" x2="${x}" y2="${ry + (big ? 18 : 10)}" stroke="#7A5A10" stroke-width="${big ? 2.2 : 1.3}" stroke-linecap="round"/>`;
+    if (big) s += `<text x="${x}" y="${ry + 37}" text-anchor="middle" font-size="16" ${F} fill="#6B4E0C">${i / 2}</text>`;
+  }
+  return s + `<text x="${W - 15}" y="${ry + rh - 8}" text-anchor="end" font-size="12" ${F} fill="#A07B20">cm</text></svg>`;
 }
 function thermoSVG(t) {
-  const y = v => 16 + (30 - v) * 4;
-  let s = `<svg viewBox="0 0 130 210" class="thermo">`;
-  for (let v = -10; v <= 30; v++) { const big = v % 5 === 0; s += `<line x1="62" y1="${y(v)}" x2="${big ? 76 : 70}" y2="${y(v)}" stroke="${v === 0 ? '#1C84C6' : INK}" stroke-width="${big ? 2 : 1}"/>`; if (big) s += `<text x="80" y="${y(v) + 4}" font-size="12" ${F} fill="${v === 0 ? '#1C84C6' : INK}">${v < 0 ? '−' + (-v) : v}</text>`; }
-  s += `<rect x="38" y="8" width="22" height="${y(-10) - 8 + 14}" rx="11" fill="#fff" stroke="#CFC3DB" stroke-width="3"/>`;
-  s += `<rect class="merc" x="44" y="${y(t)}" width="10" height="${y(-10) - y(t) + 20}" rx="5" fill="url(#gRed)"/>`;
-  s += `<circle cx="49" cy="${y(-10) + 30}" r="17" fill="url(#gRed)" stroke="#CFC3DB" stroke-width="3"/><circle cx="44" cy="${y(-10) + 25}" r="5" fill="rgba(255,255,255,.5)"/>`;
+  // Termòmetre de vidre muntat sobre una placa: escala en tinta fosca (EXV_DK) perquè la placa és clara als dos temes
+  const y = v => 22 + (30 - v) * 4, by = y(-10) + 30;
+  let s = `<svg viewBox="0 0 132 236" class="thermo"><g filter="url(#vsh)"><rect x="16" y="3" width="104" height="229" rx="22" fill="url(#gPaper)" stroke="#DCCFEA" stroke-width="2"/></g>`;
+  for (let v = -10; v <= 30; v++) {
+    const big = v % 5 === 0, z = v === 0, col = z ? '#1C84C6' : EXV_DK;
+    s += `<line x1="66" y1="${y(v)}" x2="${big ? 79 : 72}" y2="${y(v)}" stroke="${col}" stroke-width="${big ? 2.2 : 1.1}" stroke-linecap="round"${big || z ? '' : ' stroke-opacity=".6"'}/>`;
+    if (big) s += `<text x="82" y="${y(v) + 5}" font-size="14" ${F} fill="${col}">${v < 0 ? '−' + (-v) : v}</text>`;
+  }
+  s += `<rect x="38" y="10" width="24" height="${by - 10}" rx="12" fill="url(#gGlass)" stroke="#BDB0D2" stroke-width="2.5"/>`;
+  s += `<rect class="merc" x="44.5" y="${y(t)}" width="11" height="${by - y(t)}" rx="5.5" fill="url(#gRed)"/>`;
+  s += `<circle cx="50" cy="${by}" r="19" fill="url(#gRed)" stroke="#BDB0D2" stroke-width="3"/><circle cx="50" cy="${by}" r="19" fill="none" stroke="#B8262D" stroke-opacity=".35" stroke-width="1.5"/>`;
+  s += `<ellipse cx="43.5" cy="${by - 7}" rx="5.5" ry="4" fill="#fff" opacity=".6"/><rect x="41.5" y="16" width="3.5" height="${by - 40}" rx="1.75" fill="#fff" opacity=".7"/>`;
   return s + '</svg>';
 }
 function barsSVG(labels, vals, title) {
-  const max = Math.max(...vals), top = Math.ceil((max + 1) / 2) * 2, W = 320, H = 210, x0 = 34, y0 = 170, bw = 44, gap = (W - x0 - 10 - labels.length * bw) / labels.length;
-  let s = `<svg viewBox="0 0 ${W} ${H}" class="bars"><text x="${W / 2}" y="16" text-anchor="middle" font-size="13" ${F} fill="${INK}">${title}</text>`;
-  for (let v = 0; v <= top; v++) { const yy = y0 - v / top * 140; s += `<line x1="${x0}" y1="${yy}" x2="${W - 6}" y2="${yy}" stroke="${v % 2 ? '#F4EEF8' : '#E6DCEF'}" stroke-width="1.5"/><text x="${x0 - 6}" y="${yy + 4}" text-anchor="end" font-size="${v % 2 ? 9 : 11}" ${F} fill="#8A7B99">${v}</text>`; }
+  const max = Math.max(...vals), top = Math.ceil((max + 1) / 2) * 2, W = 320, H = 218, x0 = 40, y0 = 174, bh = 140, bw = 44, gap = (W - x0 - 10 - labels.length * bw) / labels.length;
+  const GR = ['gOrange', 'gBlue', 'gGreen', 'gPink', 'gPurple', 'gTeal'];
+  let s = `<svg viewBox="0 0 ${W} ${H}" class="bars"><text x="${W / 2}" y="17" text-anchor="middle" font-size="15" ${F} fill="${INK}">${title}</text>`;
+  for (let v = 0; v <= top; v++) { const yy = y0 - v / top * bh; s += `<line x1="${x0}" y1="${yy}" x2="${W - 6}" y2="${yy}" stroke="rgba(138,79,176,${v % 2 ? .13 : .24})" stroke-width="1.5"/><text x="${x0 - 7}" y="${yy + 4.5}" text-anchor="end" font-size="${v % 2 ? 12 : 14}" ${F} fill="#8A7B99">${v}</text>`; }
   labels.forEach((l, i) => {
-    const x = x0 + gap / 2 + i * (bw + gap), hh = vals[i] / top * 140;
-    s += `<g class="bar" style="animation-delay:${i * 90}ms;transform-origin:${x}px ${y0}px"><rect x="${x}" y="${y0 - hh}" width="${bw}" height="${hh}" rx="6" fill="${COLS[i % COLS.length]}"/><rect x="${x + 5}" y="${y0 - hh + 4}" width="8" height="${Math.max(0, hh - 10)}" rx="4" fill="rgba(255,255,255,.3)"/></g>`;
-    s += `<text x="${x + bw / 2}" y="${y0 + 26}" text-anchor="middle" font-size="${l.length > 3 ? 13 : 22}" ${F} fill="${INK}">${l}</text>`;
+    const x = x0 + gap / 2 + i * (bw + gap), hh = vals[i] / top * bh, r = Math.min(8, hh / 2), yt = y0 - hh;
+    if (hh > 0) s += `<g class="bar" style="animation-delay:${i * 90}ms;transform-origin:${x}px ${y0}px"><g filter="url(#vsh)"><path d="M${x} ${y0}V${yt + r}Q${x} ${yt} ${x + r} ${yt}H${x + bw - r}Q${x + bw} ${yt} ${x + bw} ${yt + r}V${y0}Z" fill="url(#${GR[i % GR.length]})"/></g>`
+      + `<rect x="${x + 6}" y="${yt + 5}" width="7" height="${Math.max(0, hh - 11)}" rx="3.5" fill="#fff" opacity=".35"/></g>`;
+    s += `<text x="${x + bw / 2}" y="${y0 + 28}" text-anchor="middle" font-size="${l.length > 3 ? 14 : 22}" ${F} fill="${INK}">${l}</text>`;
   });
-  return s + `<line x1="${x0}" y1="${y0}" x2="${W - 6}" y2="${y0}" stroke="${INK}" stroke-width="2"/></svg>`;
+  return s + `<line x1="${x0}" y1="${y0}" x2="${W - 6}" y2="${y0}" stroke="${INK}" stroke-width="2.5" stroke-linecap="round"/><line x1="${x0}" y1="${y0}" x2="${x0}" y2="${y0 - bh - 6}" stroke="${INK}" stroke-width="2" stroke-linecap="round" stroke-opacity=".5"/></svg>`;
 }
 function angleSVG(deg) {
-  const vx = deg > 100 ? 140 : 60, vy = 150, r1 = 150, r2 = 130, a = deg * Math.PI / 180;
-  const ex = vx + r2 * Math.cos(a), ey = vy - r2 * Math.sin(a), ar = 34;
-  let s = `<svg viewBox="0 0 260 170" class="vsvg wide">`;
-  if (deg === 90) s += `<path d="M${vx + 26} ${vy} V${vy - 26} H${vx}" fill="rgba(255,154,60,.25)" stroke="#FF9A3C" stroke-width="3"/>`;
-  else s += `<path d="M${vx} ${vy} L${vx + ar} ${vy} A${ar} ${ar} 0 0 0 ${vx + ar * Math.cos(a)} ${vy - ar * Math.sin(a)} Z" fill="rgba(255,154,60,.25)" stroke="#FF9A3C" stroke-width="3"/>`;
-  s += `<line x1="${vx}" y1="${vy}" x2="${Math.min(250, vx + r1)}" y2="${vy}" stroke="${INK}" stroke-width="5" stroke-linecap="round"/>`;
-  s += `<g class="ray" style="transform-origin:${vx}px ${vy}px"><line x1="${vx}" y1="${vy}" x2="${ex}" y2="${ey}" stroke="#602B7A" stroke-width="5" stroke-linecap="round"/></g><circle cx="${vx}" cy="${vy}" r="6" fill="${INK}"/>`;
-  return s + '</svg>';
+  const vx = deg > 100 ? 140 : 60, vy = 148, r1 = 150, r2 = 130, a = deg * Math.PI / 180, f = v => v.toFixed(1);
+  const ex = vx + r2 * Math.cos(a), ey = vy - r2 * Math.sin(a), ar = 40;
+  let s = `<svg viewBox="0 0 260 168" class="vsvg wide">`;
+  if (deg === 90) s += `<path d="M${vx} ${vy} H${vx + 30} V${vy - 30} H${vx} Z" fill="url(#gOrange)" fill-opacity=".42" stroke="#FF9A3C" stroke-width="3" stroke-linejoin="round"/><circle cx="${vx + 15}" cy="${vy - 15}" r="3" fill="#F07F22"/>`;
+  else s += `<path d="M${vx} ${vy} L${vx + ar} ${vy} A${ar} ${ar} 0 0 0 ${f(vx + ar * Math.cos(a))} ${f(vy - ar * Math.sin(a))} Z" fill="url(#gOrange)" fill-opacity=".42"/><path d="M${vx + ar} ${vy} A${ar} ${ar} 0 0 0 ${f(vx + ar * Math.cos(a))} ${f(vy - ar * Math.sin(a))}" fill="none" stroke="#FF9A3C" stroke-width="3.5" stroke-linecap="round"/>`;
+  s += `<g filter="url(#vsh)"><line x1="${vx}" y1="${vy}" x2="${Math.min(250, vx + r1)}" y2="${vy}" stroke="${INK}" stroke-width="6" stroke-linecap="round"/>`;
+  s += `<g class="ray" style="transform-origin:${vx}px ${vy}px"><line x1="${vx}" y1="${vy}" x2="${f(ex)}" y2="${f(ey)}" stroke="#602B7A" stroke-width="6" stroke-linecap="round"/></g></g>`;
+  return s + `<circle cx="${vx}" cy="${vy}" r="7.5" fill="#FF9A3C" stroke="#fff" stroke-width="2.5"/></svg>`;
 }
 function gridSVG(w, h) {
-  const c = 24, W = w * c + 8, H = h * c + 8;
-  let s = `<svg viewBox="0 0 ${W + 60} ${H + 8}" class="vsvg wide"><rect x="4" y="4" width="${W - 8}" height="${H - 8}" fill="url(#gTeal)" rx="3"/>`;
-  for (let i = 0; i <= w; i++) s += `<line x1="${4 + i * c}" y1="4" x2="${4 + i * c}" y2="${H - 4}" stroke="#fff" stroke-width="2"/>`;
-  for (let j = 0; j <= h; j++) s += `<line x1="4" y1="${4 + j * c}" x2="${W - 4}" y2="${4 + j * c}" stroke="#fff" stroke-width="2"/>`;
-  return s + `<rect x="${W + 14}" y="${H / 2 - 12}" width="24" height="24" fill="url(#gTeal)" stroke="#fff" stroke-width="2"/><text x="${W + 26}" y="${H / 2 + 30}" text-anchor="middle" font-size="11" ${F} fill="#8A7B99">= 1</text></svg>`;
+  // Quadrets com a rajoles (amb una junta petita): es compten millor i fan més de «peça»
+  const c = 26, W = w * c, H = h * c, tile = (x, y) => `<rect x="${x + 1.5}" y="${y + 1.5}" width="${c - 3}" height="${c - 3}" rx="4" fill="url(#gTeal)" stroke="#1E9C88" stroke-width="1"/><rect x="${x + 4}" y="${y + 3.5}" width="${c - 8}" height="${(c - 3) * .38}" rx="3" fill="url(#gShine)" opacity=".75"/>`;
+  let s = `<svg viewBox="0 0 ${W + 64} ${H + 8}" class="vsvg wide"><g filter="url(#vsh)">`;
+  for (let j = 0; j < h; j++) for (let i = 0; i < w; i++) s += tile(4 + i * c, 4 + j * c);
+  return s + `</g><g filter="url(#vsh)">${tile(W + 22, H / 2 - c / 2 - 8)}</g><text x="${W + 22 + c / 2}" y="${H / 2 + 28}" text-anchor="middle" font-size="15" ${F} fill="${INK}">= 1</text></svg>`;
 }
 function triSVG(b, h) {
-  const sc = Math.min(180 / b, 110 / h), W = b * sc, H = h * sc, x = 30, y = 20, px = x + W * .35;
-  return `<svg viewBox="0 0 260 170" class="vsvg wide"><polygon points="${x},${y + H} ${x + W},${y + H} ${px},${y}" fill="url(#gTeal)" stroke="#12806F" stroke-width="3" stroke-linejoin="round"/>
-  <line x1="${px}" y1="${y}" x2="${px}" y2="${y + H}" stroke="${INK}" stroke-width="2" stroke-dasharray="5 4"/><path d="M${px} ${y + H - 10}h10v10" fill="none" stroke="${INK}" stroke-width="1.5"/>
-  <text x="${x + W / 2}" y="${y + H + 22}" text-anchor="middle" font-size="15" ${F} fill="${INK}">${b} cm</text><text x="${px + 8}" y="${y + H / 2}" font-size="15" ${F} fill="${INK}">${h} cm</text></svg>`;
+  const sc = Math.min(190 / b, 112 / h), W = b * sc, H = h * sc, x = (260 - W) / 2, y = 14, px = x + W * .35, f = v => v.toFixed(1);
+  return `<svg viewBox="0 0 260 170" class="vsvg wide"><polygon points="${f(x)},${f(y + H)} ${f(x + W)},${f(y + H)} ${f(px)},${y}" fill="url(#gTeal)" stroke="#12806F" stroke-width="3.5" stroke-linejoin="round" filter="url(#vsh)"/>
+  <line x1="${f(px)}" y1="${y}" x2="${f(px)}" y2="${f(y + H)}" stroke="${INK}" stroke-width="2.2" stroke-dasharray="6 5" stroke-linecap="round"/><path d="M${f(px)} ${f(y + H - 11)}h11v11" fill="none" stroke="${EXV_DK}" stroke-width="2" stroke-linejoin="round"/>
+  ${exvPill(x + W / 2, y + H + 19, `${b} cm`, 15)}${exvPill(px, y + H * .58, `${h} cm`, 15)}</svg>`;
 }
 function cubesSVG(a, b, c, labels) {
-  const s = 20, ix = (x, y) => (x - y) * s * .87, iy = (x, y, z) => (x + y) * s * .5 - z * s, cubes = [];
+  const s = 22, ix = (x, y) => (x - y) * s * .87, iy = (x, y, z) => (x + y) * s * .5 - z * s, cubes = [], gt = exvId('ct'), gl = exvId('cl'), gr = exvId('cr');
   for (let z = 0; z < c; z++) for (let y = 0; y < b; y++) for (let x = 0; x < a; x++) cubes.push([x, y, z]);
   cubes.sort((p, q) => (p[0] + p[1]) - (q[0] + q[1]) || p[2] - q[2]);
   const ox = b * s * .87 + 30, oy = c * s + 20;
   const P = (x, y, z) => `${(ox + ix(x, y)).toFixed(1)},${(oy + iy(x, y, z)).toFixed(1)}`;
   let out = '';
   cubes.forEach(([x, y, z], i) => {
-    out += `<g class="cube" style="animation-delay:${i * 35}ms"><polygon points="${P(x, y, z + 1)} ${P(x + 1, y, z + 1)} ${P(x + 1, y + 1, z + 1)} ${P(x, y + 1, z + 1)}" fill="#8FD8FF" stroke="#1B6FA3" stroke-width="1.2"/>`;
-    out += `<polygon points="${P(x, y + 1, z)} ${P(x + 1, y + 1, z)} ${P(x + 1, y + 1, z + 1)} ${P(x, y + 1, z + 1)}" fill="#36A9E1" stroke="#1B6FA3" stroke-width="1.2"/>`;
-    out += `<polygon points="${P(x + 1, y, z)} ${P(x + 1, y + 1, z)} ${P(x + 1, y + 1, z + 1)} ${P(x + 1, y, z + 1)}" fill="#1E86BE" stroke="#1B6FA3" stroke-width="1.2"/></g>`;
+    out += `<g class="cube" style="animation-delay:${i * 35}ms" stroke="#15628F" stroke-width="1.3" stroke-linejoin="round"><polygon points="${P(x, y, z + 1)} ${P(x + 1, y, z + 1)} ${P(x + 1, y + 1, z + 1)} ${P(x, y + 1, z + 1)}" fill="url(#${gt})"/>`;
+    out += `<polygon points="${P(x, y + 1, z)} ${P(x + 1, y + 1, z)} ${P(x + 1, y + 1, z + 1)} ${P(x, y + 1, z + 1)}" fill="url(#${gl})"/>`;
+    out += `<polygon points="${P(x + 1, y, z)} ${P(x + 1, y + 1, z)} ${P(x + 1, y + 1, z + 1)} ${P(x + 1, y, z + 1)}" fill="url(#${gr})"/></g>`;
   });
   const W = ox + a * s * .87 + 40, H = oy + (a + b) * s * .5 + 30;
   let lab = '';
   if (labels) {
     const m = (p, q) => { const [x1, y1] = p.split(',').map(Number), [x2, y2] = q.split(',').map(Number); return [(x1 + x2) / 2, (y1 + y2) / 2]; };
     const [ax, ay] = m(P(0, b, 0), P(a, b, 0)), [bx, by] = m(P(a, 0, 0), P(a, b, 0)), [cx, cy] = m(P(a, 0, 0), P(a, 0, c));
-    lab = `<text x="${ax - 10}" y="${ay + 22}" font-size="14" ${F} fill="${INK}">${a} cm</text><text x="${bx + 8}" y="${by + 16}" font-size="14" ${F} fill="${INK}">${b} cm</text><text x="${cx + 8}" y="${cy}" font-size="14" ${F} fill="${INK}">${c} cm</text>`;
+    lab = exvPill(ax - 14, ay + 22, `${a} cm`, 14) + exvPill(bx + 30, by + 14, `${b} cm`, 14) + exvPill(cx + 32, cy, `${c} cm`, 14);
   }
-  return `<svg viewBox="0 0 ${W + 30} ${H}" class="cubes">${out}${lab}</svg>`;
+  const defs = `<defs><linearGradient id="${gt}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#CDEFFF"/><stop offset="1" stop-color="#8FD6FA"/></linearGradient>${exvGrad(gl, '#3FAEE6', .12, -.05)}${exvGrad(gr, '#1F84BD', .02, -.14)}</defs>`;
+  return `<svg viewBox="0 0 ${W + 30} ${H}" class="cubes">${defs}<g filter="url(#vsh2)">${out}</g>${lab}</svg>`;
 }
 
 /* --- Generadors --- */
@@ -293,7 +327,7 @@ Object.assign(EX, {
   'fr.eq': L_ => {
     let a, b; do { b = ri(2, 6); a = ri(1, b - 1); } while (gcd(a, b) > 1);
     const k = ri(2, L_ >= 4 ? 6 : 4), up = Math.random() < .5, col = pick(COLS);
-    const vis = `<div class="stack">${eqv(`${frac(a, b)} = ${up ? frac(BOX, b * k) : frac(a * k, BOX)}`)}${L_ <= 2 ? `<div class="pies">${barSVG(a, b, col)}</div>` : ''}</div>`;
+    const vis = `<div class="stack">${eqv(`${frac(a, b)} = ${up ? frac(BOX, b * k) : frac(a * k, BOX)}`)}${L_ <= 2 ? `${barSVG(a, b, col)}` : ''}</div>`;
     return inp(L('Completa la fracció equivalent:', 'Completa la fracción equivalente:'), up ? a * k : b * k, { vis, ex: L(`Multipliquem dalt i baix pel mateix número (${k}): ${a}/${b} = ${a * k}/${b * k}.`, `Multiplicamos arriba y abajo por el mismo número (${k}): ${a}/${b} = ${a * k}/${b * k}.`) });
   },
   'fr.addS': L_ => {

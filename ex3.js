@@ -26,13 +26,49 @@ function walk(n, start, len) {
 }
 const SOLIDS = { cub: ['cub', 'cubo', 6, 8, 12], esfera: ['esfera', 'esfera', 0, 0, 0], cilindre: ['cilindre', 'cilindro', 0, 0, 0], con: ['con', 'cono', 0, 1, 0], piramide: ['piràmide', 'pirámide', 5, 5, 8], prisma: ['prisma', 'prisma', 5, 6, 9] };
 function solidSVG(k) {
-  const g = { cub: '<polygon points="40,50 90,50 90,100 40,100" fill="#36A9E1"/><polygon points="40,50 60,32 110,32 90,50" fill="#8FD8FF"/><polygon points="90,50 110,32 110,82 90,100" fill="#1E86BE"/>',
-    esfera: '<circle cx="75" cy="66" r="42" fill="url(#gSph)"/><ellipse cx="75" cy="66" rx="42" ry="12" fill="none" stroke="rgba(255,255,255,.4)" stroke-width="2"/>',
-    cilindre: '<rect x="45" y="38" width="60" height="62" fill="#3CC46A"/><ellipse cx="75" cy="100" rx="30" ry="10" fill="#27A55A"/><ellipse cx="75" cy="38" rx="30" ry="10" fill="#8BE3AA"/>',
-    con: '<polygon points="75,20 45,100 105,100" fill="#FF9A3C"/><ellipse cx="75" cy="100" rx="30" ry="10" fill="#F07F22"/>',
-    piramide: '<polygon points="75,20 40,95 80,108" fill="#FFC93C"/><polygon points="75,20 80,108 112,90" fill="#E8A400"/>',
-    prisma: '<polygon points="60,45 100,30 125,80 85,95" fill="#E24F86"/><polygon points="35,95 60,45 85,95" fill="#FF9EC0"/>' }[k];
-  return `<svg viewBox="0 0 150 125" class="vsvg wide solid"><defs><radialGradient id="gSph" cx=".35" cy=".3"><stop offset="0" stop-color="#E7C8FF"/><stop offset="1" stop-color="#8A4FB0"/></radialGradient></defs><g stroke="#2B1A38" stroke-width="2.5" stroke-linejoin="round">${g}</g></svg>`;
+  // Cossos amb volum: cada cara amb el seu degradat, les arestes amagades amb traç discontinu (ajuden a comptar cares,
+  // vèrtexs i arestes) i una ombra al terra. Els degradats porten id únic: hi pot haver més d'un cos alhora.
+  const id = exvId('so'), G = (n, a, b, x2 = 0, y2 = 1) => `<linearGradient id="${id}${n}" x1="0" y1="0" x2="${x2}" y2="${y2}"><stop offset="0" stop-color="${a}"/><stop offset="1" stop-color="${b}"/></linearGradient>`, U = n => `url(#${id}${n})`;
+  const hid = (d, col) => `<path d="${d}" fill="none" stroke="${col}" stroke-width="2" stroke-dasharray="5 4" stroke-linecap="round" stroke-opacity=".6"/>`;
+  const shadow = (cx, cy, rx) => `<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${rx * .16}" fill="rgba(43,26,56,.14)"/>`;
+  const S = {
+    cub: () => {
+      const e = '#15628F';
+      return `<defs>${G('f', '#6CC6F5', '#1E86BE')}${G('t', '#CDEFFF', '#8FD6FA', 1, 1)}${G('r', '#1F84BD', '#155F8C')}</defs>${shadow(80, 110, 50)}`
+        + `<g stroke="${e}" stroke-width="2.8" stroke-linejoin="round"><polygon points="32,46 92,46 92,106 32,106" fill="${U('f')}"/><polygon points="32,46 56,26 116,26 92,46" fill="${U('t')}"/><polygon points="92,46 116,26 116,86 92,106" fill="${U('r')}"/></g>`
+        + hid('M56 86 L32 106 M56 86 H116 M56 86 V26', e) + `<polygon points="37,51 70,51 37,84" fill="#fff" opacity=".22"/>`;
+    },
+    esfera: () => `<defs><radialGradient id="${id}s" cx=".36" cy=".3" r=".75"><stop offset="0" stop-color="#F1DFFF"/><stop offset=".45" stop-color="#B07BE0"/><stop offset="1" stop-color="#5E2585"/></radialGradient></defs>${shadow(75, 112, 40)}`
+      + `<circle cx="75" cy="62" r="46" fill="url(#${id}s)" stroke="#4E1D68" stroke-width="2.8"/>`
+      + `<path d="M29 62 A46 13 0 0 0 121 62" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width="2.2"/>${hid('M29 62 A46 13 0 0 1 121 62', '#fff')}`
+      + `<ellipse cx="58" cy="40" rx="13" ry="8" transform="rotate(-30 58 40)" fill="#fff" opacity=".55"/>`,
+    cilindre: () => {
+      const e = '#1B7A40';
+      return `<defs><linearGradient id="${id}b" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#2E9E58"/><stop offset=".35" stop-color="#8BE8AE"/><stop offset="1" stop-color="#1E7A43"/></linearGradient>${G('t', '#C9F5D8', '#8BE3AA')}</defs>${shadow(75, 112, 44)}`
+        + `<path d="M39 30 V100 A36 11 0 0 0 111 100 V30 Z" fill="${U('b')}" stroke="${e}" stroke-width="2.8" stroke-linejoin="round"/>`
+        + hid('M39 100 A36 11 0 0 1 111 100', e)
+        + `<ellipse cx="75" cy="30" rx="36" ry="11" fill="${U('t')}" stroke="${e}" stroke-width="2.8"/><rect x="49" y="44" width="7" height="50" rx="3.5" fill="#fff" opacity=".3"/>`;
+    },
+    con: () => {
+      const e = '#B65A14';
+      return `<defs><linearGradient id="${id}b" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#F28A2E"/><stop offset=".38" stop-color="#FFC98A"/><stop offset="1" stop-color="#D9661A"/></linearGradient></defs>${shadow(75, 112, 44)}`
+        + `<path d="M37 98 L75 14 L113 98 A38 12 0 0 1 37 98 Z" fill="${U('b')}" stroke="${e}" stroke-width="2.8" stroke-linejoin="round"/>`
+        + hid('M37 98 A38 12 0 0 1 113 98', e) + `<circle cx="75" cy="14" r="3.5" fill="${e}"/>`;
+    },
+    piramide: () => {
+      const e = '#A87400';
+      return `<defs>${G('f', '#FFE48A', '#F5B400')}${G('r', '#E8A400', '#B98300')}</defs>${shadow(78, 112, 52)}`
+        + `<g stroke="${e}" stroke-width="2.8" stroke-linejoin="round"><polygon points="28,96 88,108 74,14" fill="${U('f')}"/><polygon points="88,108 124,86 74,14" fill="${U('r')}"/></g>`
+        + hid('M28 96 L62 76 L124 86 M62 76 L74 14', e) + `<polygon points="36,94 70,24 56,98" fill="#fff" opacity=".2"/>`;
+    },
+    prisma: () => {
+      const e = '#A3295A';
+      return `<defs>${G('f', '#FFC2D8', '#FF7AA8')}${G('r', '#F05C95', '#B8336B', 1, 1)}</defs>${shadow(75, 110, 54)}`
+        + `<g stroke="${e}" stroke-width="2.8" stroke-linejoin="round"><polygon points="78,104 126,78 98,26 50,52" fill="${U('r')}"/><polygon points="22,104 78,104 50,52" fill="${U('f')}"/></g>`
+        + hid('M22 104 L70 78 L126 78 M70 78 L98 26', e) + `<polygon points="31,99 50,62 56,99" fill="#fff" opacity=".25"/>`;
+    },
+  };
+  return `<svg viewBox="0 0 150 125" class="vsvg wide solid">${S[k]()}</svg>`;
 }
 const BALL = { r: '🔴', b: '🔵', g: '🟢', y: '🟡' };
 const BN = { r: ['vermella', 'roja'], b: ['blava', 'azul'], g: ['verda', 'verde'], y: ['groga', 'amarilla'] };

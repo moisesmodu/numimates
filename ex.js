@@ -51,50 +51,98 @@ const colOp = (a, b, op) => `<div class="colop"><div>${typeof a === 'string' ? a
 const emGrid = (em, n, cols) => `<div class="emgrid" style="grid-template-columns:repeat(${cols},auto)">${Array(n).fill(0).map((_, i) => `<span style="animation-delay:${Math.min(i, 30) * 25}ms">${em}</span>`).join('')}</div>`;
 const COLS = ['#FF9A3C', '#36A9E1', '#3CC46A', '#FF6FA3', '#8A4FB0', '#22B5A0'];
 
+/* Dibuixos amb volum (03/10): degradats, ombra suau (#vsh/#vsh2 dels DEFS de chars.js), brillantor i vores arrodonides.
+   EXV_DK és la tinta per al text i les línies que van SOBRE un objecte clar (esfera del rellotge, regle, plat…): el tema Pro
+   aclareix #2B1A38 i #602B7A perquè es llegeixin sobre la pissarra fosca, i aquest to (pràcticament el mateix) no hi entra,
+   així que es queda fosc als dos temes. El text que va directament sobre la pissarra continua fent servir INK.
+   Els <defs> propis de cada dibuix porten un id únic (exvId): n'hi pot haver molts alhora al document. */
+const EXV_DK = '#2B1A39', EXV_F = 'font-family="Lexend,sans-serif"';
+let exvN = 0;
+const exvId = p => `${p}${++exvN}`;
+const exvMix = (hex, t) => {   // aclareix (t > 0) o enfosqueix (t < 0) un color #rrggbb
+  if (!/^#[0-9a-f]{6}$/i.test(hex)) return hex;
+  const n = parseInt(hex.slice(1), 16), m = t < 0 ? 0 : 255, k = Math.abs(t);
+  return '#' + [n >> 16, n >> 8 & 255, n & 255].map(v => Math.round(v + (m - v) * k).toString(16).padStart(2, '0')).join('');
+};
+const exvGrad = (id, col, a = .32, b = -.12, x2 = 0, y2 = 1) => `<linearGradient id="${id}" x1="0" y1="0" x2="${x2}" y2="${y2}"><stop offset="0" stop-color="${exvMix(col, a)}"/><stop offset="1" stop-color="${exvMix(col, b)}"/></linearGradient>`;
+// Etiqueta en forma de píndola blanca (mesures dels dibuixos): es llegeix igual sobre la pissarra clara i la fosca
+const exvPill = (cx, cy, txt, fs = 16) => {
+  const w = Math.max(fs * 1.9, String(txt).length * fs * .64 + fs * 1.1), h = fs * 1.7, r = v => v.toFixed(1);
+  return `<g filter="url(#vsh)"><rect x="${r(cx - w / 2)}" y="${r(cy - h / 2)}" width="${r(w)}" height="${r(h)}" rx="${r(h / 2)}" fill="#fff" stroke="#E0D3EC" stroke-width="1.5"/></g><text x="${r(cx)}" y="${r(cy + fs * .36)}" text-anchor="middle" font-size="${fs}" font-weight="800" ${EXV_F} fill="${EXV_DK}">${txt}</text>`;
+};
+const exvPillW = (txt, fs = 16) => Math.max(fs * 1.9, String(txt).length * fs * .64 + fs * 1.1);
+
 function pieSVG(n, d, col) {
-  let s = '<svg viewBox="0 0 120 120" class="vsvg">';
-  for (let i = 0; i < d; i++) {
+  const g = exvId('pie'), R = 49, f = v => v.toFixed(1), p = (a, r = R) => `${f(60 + r * Math.cos(a))} ${f(60 + r * Math.sin(a))}`;
+  let s = `<svg viewBox="0 0 120 120" class="vsvg"><defs>${exvGrad(g, col, .3, -.1, .6, 1)}</defs>`;
+  s += `<circle cx="60" cy="60" r="57" fill="url(#gPaper)" stroke="#DCCDEA" stroke-width="2" filter="url(#vsh)"/><circle cx="60" cy="60" r="${R + 3.5}" fill="none" stroke="rgba(43,26,56,.07)" stroke-width="3"/>`;
+  if (d === 1) s += `<circle cx="60" cy="60" r="${R}" fill="${n ? `url(#${g})` : '#fff'}"/>`;
+  else for (let i = 0; i < d; i++) {
     const a0 = -Math.PI / 2 + i * 2 * Math.PI / d, a1 = a0 + 2 * Math.PI / d;
-    const p = (a, r = 52) => `${(60 + r * Math.cos(a)).toFixed(1)} ${(60 + r * Math.sin(a)).toFixed(1)}`;
-    s += `<path d="M60 60 L${p(a0)} A52 52 0 0 1 ${p(a1)} Z" fill="${i < n ? col : '#fff'}" stroke="${INK}" stroke-width="2.5" stroke-linejoin="round"/>`;
+    s += `<path d="M60 60 L${p(a0)} A${R} ${R} 0 0 1 ${p(a1)} Z" fill="${i < n ? `url(#${g})` : '#fff'}" stroke="#3A2A4A" stroke-width="2.4" stroke-linejoin="round"/>`;
   }
+  // vora del plat
+  s += `<circle cx="60" cy="60" r="${R}" fill="none" stroke="#3A2A4A" stroke-width="3"/>`;
   return s + '</svg>';
 }
 function barSVG(n, d, col) {
-  const w = 220 / d;
-  let s = `<svg viewBox="0 0 230 70" class="vsvg wide">`;
-  for (let i = 0; i < d; i++) s += `<rect x="${5 + i * w}" y="8" width="${w}" height="54" fill="${i < n ? col : '#fff'}" stroke="${INK}" stroke-width="2.5"/>`;
-  return s + '</svg>';
+  const g = exvId('fb'), cp = exvId('fbc'), X = 6, Y = 9, W = 228, H = 56, w = W / d, f = v => v.toFixed(1);
+  let s = `<svg viewBox="0 0 240 74" class="vsvg wide"><defs>${exvGrad(g, col, .3, -.12)}<clipPath id="${cp}"><rect x="${X}" y="${Y}" width="${W}" height="${H}" rx="11"/></clipPath></defs>`;
+  s += `<rect x="${X}" y="${Y}" width="${W}" height="${H}" rx="11" fill="#fff" filter="url(#vsh)"/><g clip-path="url(#${cp})">`;
+  for (let i = 0; i < d; i++) s += `<rect x="${f(X + i * w)}" y="${Y}" width="${f(w + .5)}" height="${H}" fill="${i < n ? `url(#${g})` : '#fff'}"/>`;
+  // relleu de «rajola»: brillantor a dalt i una mica d'ombra a baix
+  s += `<rect x="${X}" y="${Y}" width="${W}" height="${H * .42}" fill="url(#gShine)" opacity=".55"/><rect x="${X}" y="${Y + H - 7}" width="${W}" height="7" fill="rgba(43,26,56,.08)"/></g>`;
+  for (let i = 1; i < d; i++) s += `<line x1="${f(X + i * w)}" y1="${Y}" x2="${f(X + i * w)}" y2="${Y + H}" stroke="#3A2A4A" stroke-width="2.5"/>`;
+  return s + `<rect x="${X}" y="${Y}" width="${W}" height="${H}" rx="11" fill="none" stroke="#3A2A4A" stroke-width="3"/></svg>`;
 }
 function clockSVG(h, m) {
-  const ha = ((h % 12) + m / 60) * 30 * Math.PI / 180, ma = m * 6 * Math.PI / 180, f = x => x.toFixed(1);
-  let s = '<svg viewBox="0 0 200 200" class="clock"><circle cx="100" cy="100" r="92" fill="#fff" stroke="#602B7A" stroke-width="8"/>';
+  const ha = ((h % 12) + m / 60) * 30 * Math.PI / 180, ma = m * 6 * Math.PI / 180, f = x => x.toFixed(1), fg = exvId('cf');
+  const pt = (a, r) => `${f(100 + r * Math.sin(a))} ${f(100 - r * Math.cos(a))}`;
+  let s = `<svg viewBox="0 0 200 200" class="clock"><defs><radialGradient id="${fg}" cx=".5" cy=".45" r=".6"><stop offset=".72" stop-color="#fff"/><stop offset="1" stop-color="#ECE3F5"/></radialGradient></defs>`;
+  // bisell lila amb volum + esfera blanca
+  s += `<circle cx="100" cy="100" r="97" fill="url(#gPurple)" filter="url(#vsh2)"/>`;
+  s += `<path d="M${pt(-1.25, 92)} A92 92 0 0 1 ${pt(1.25, 92)}" fill="none" stroke="#fff" stroke-opacity=".35" stroke-width="4" stroke-linecap="round"/>`;
+  s += `<circle cx="100" cy="100" r="86" fill="#4A1F63"/><circle cx="100" cy="101" r="84" fill="url(#${fg})"/>`;
   for (let i = 0; i < 60; i++) {
-    const a = i * 6 * Math.PI / 180, r1 = i % 5 ? 81 : 75;
-    s += `<line x1="${f(100 + 85 * Math.sin(a))}" y1="${f(100 - 85 * Math.cos(a))}" x2="${f(100 + r1 * Math.sin(a))}" y2="${f(100 - r1 * Math.cos(a))}" stroke="${INK}" stroke-width="${i % 5 ? 1.5 : 3.2}"/>`;
+    const a = i * 6 * Math.PI / 180, big = i % 5 === 0, r1 = big ? 70 : 75;
+    s += `<line x1="${f(100 + 80 * Math.sin(a))}" y1="${f(100 - 80 * Math.cos(a))}" x2="${f(100 + r1 * Math.sin(a))}" y2="${f(100 - r1 * Math.cos(a))}" stroke="${EXV_DK}" stroke-width="${big ? 3.4 : 1.5}" stroke-linecap="round"${big ? '' : ' stroke-opacity=".55"'}/>`;
   }
-  for (let i = 1; i <= 12; i++) { const a = i * 30 * Math.PI / 180; s += `<text x="${f(100 + 61 * Math.sin(a))}" y="${f(100 - 61 * Math.cos(a) + 7)}" text-anchor="middle" font-size="20" font-weight="800" fill="${INK}" font-family="Lexend,sans-serif">${i}</text>`; }
-  s += `<g class="hand-h"><line x1="100" y1="100" x2="${f(100 + 42 * Math.sin(ha))}" y2="${f(100 - 42 * Math.cos(ha))}" stroke="${INK}" stroke-width="9" stroke-linecap="round"/></g>`;
-  s += `<g class="hand-m"><line x1="100" y1="100" x2="${f(100 + 70 * Math.sin(ma))}" y2="${f(100 - 70 * Math.cos(ma))}" stroke="#FF5A5F" stroke-width="5" stroke-linecap="round"/></g>`;
-  return s + '<circle cx="100" cy="100" r="7" fill="#602B7A"/></svg>';
+  for (let i = 1; i <= 12; i++) { const a = i * 30 * Math.PI / 180; s += `<text x="${f(100 + 57 * Math.sin(a))}" y="${f(100 - 57 * Math.cos(a) + 7)}" text-anchor="middle" font-size="20" font-weight="800" fill="${EXV_DK}" ${EXV_F}>${i}</text>`; }
+  // agulles afuades (amples a la base, fines a la punta: tapen menys els números) amb una ombra suau
+  const hand = (a, len, w0, w1, col) => {
+    const sx = Math.sin(a), cx = -Math.cos(a), nx = -cx, ny = sx, P = (d, w, dx = 0, dy = 0) => [`${f(100 + sx * d + nx * w / 2 + dx)},${f(100 + cx * d + ny * w / 2 + dy)}`, `${f(100 + sx * d - nx * w / 2 + dx)},${f(100 + cx * d - ny * w / 2 + dy)}`];
+    const poly = (dx, dy) => { const [a1, a2] = P(-6, w0, dx, dy), [b1, b2] = P(len, w1, dx, dy); return `${a1} ${b1} ${b2} ${a2}`; };
+    return `<polygon points="${poly(1.5, 3)}" fill="rgba(43,26,56,.18)" stroke="rgba(43,26,56,.18)" stroke-width="2.5" stroke-linejoin="round"/><polygon points="${poly(0, 0)}" fill="${col}" stroke="${col}" stroke-width="2.5" stroke-linejoin="round"/>`;
+  };
+  s += `<g class="hand-h">${hand(ha, 42, 10, 5.5, EXV_DK)}</g>`;
+  s += `<g class="hand-m">${hand(ma, 68, 6.5, 2.2, '#FF5A5F')}</g>`;
+  return s + '<circle cx="100" cy="100" r="8.5" fill="url(#gPurple)" stroke="#fff" stroke-width="2.5"/><circle cx="98" cy="98" r="2.2" fill="#fff" fill-opacity=".8"/></svg>';
 }
 function shapeSVG(id, sides, col) {
   let body;
-  if (id === 'cercle') body = `<circle cx="80" cy="60" r="48"/>`;
-  else if (id === 'rectangle') body = `<rect x="15" y="22" width="130" height="76" rx="3"/>`;
-  else if (id === 'quadrat') body = `<rect x="32" y="12" width="96" height="96" rx="3"/>`;
+  if (id === 'cercle') body = `<circle cx="80" cy="60" r="50"/>`;
+  else if (id === 'rectangle') body = `<rect x="12" y="20" width="136" height="80" rx="5"/>`;
+  else if (id === 'quadrat') body = `<rect x="30" y="10" width="100" height="100" rx="5"/>`;
   else {
-    const pts = [], off = Math.PI / 2 + (sides % 2 ? 0 : Math.PI / sides);
-    for (let i = 0; i < sides; i++) { const a = off + i * 2 * Math.PI / sides; pts.push(`${(80 + 52 * Math.cos(a)).toFixed(1)},${(62 + 52 * Math.sin(a)).toFixed(1)}`); }
+    // els senars amb la punta amunt (com als llibres) i centrats a l'alçada; els parells amb la base plana
+    const odd = sides % 2, R = sides === 3 ? 60 : 55, off = odd ? -Math.PI / 2 : Math.PI / 2 + Math.PI / sides, cy = odd ? 60 + R * (1 - Math.cos(Math.PI / sides)) / 2 : 60, pts = [];
+    for (let i = 0; i < sides; i++) { const a = off + i * 2 * Math.PI / sides; pts.push(`${(80 + R * Math.cos(a)).toFixed(1)},${(cy + R * Math.sin(a)).toFixed(1)}`); }
     body = `<polygon points="${pts.join(' ')}"/>`;
   }
-  return `<svg viewBox="0 0 160 120" class="vsvg wide pop-in"><g fill="${col}" stroke="${INK}" stroke-width="3" stroke-linejoin="round">${body}</g></svg>`;
+  const g = exvId('sh'), cp = exvId('shc'), edge = exvMix(col, -.42);
+  return `<svg viewBox="0 0 160 120" class="vsvg wide pop-in"><defs>${exvGrad(g, col, .34, -.1, .35, 1)}<clipPath id="${cp}">${body}</clipPath></defs>`
+    + `<g fill="url(#${g})" filter="url(#vsh)">${body}</g>`
+    + `<g clip-path="url(#${cp})"><ellipse cx="66" cy="16" rx="86" ry="40" fill="url(#gShine)" opacity=".6"/></g>`
+    + `<g fill="none" stroke="${edge}" stroke-width="3.5" stroke-linejoin="round">${body}</g></svg>`;
 }
 function rectSVG(w, h, lw, lh) {
-  const sc = Math.min(160 / w, 90 / h), W = w * sc, H = h * sc, x = (230 - W) / 2 - 15, y = (130 - H) / 2;
-  return `<svg viewBox="0 0 230 140" class="vsvg wide"><rect x="${x}" y="${y}" width="${W}" height="${H}" fill="#E8F5FE" stroke="#36A9E1" stroke-width="4" class="draw"/>
-  <text x="${x + W / 2}" y="${y + H + 22}" text-anchor="middle" font-size="17" font-weight="800" fill="${INK}" font-family="Lexend,sans-serif">${lw}</text>
-  <text x="${x + W + 8}" y="${y + H / 2 + 6}" font-size="17" font-weight="800" fill="${INK}" font-family="Lexend,sans-serif">${lh}</text></svg>`;
+  const fs = 16, gap = 15, pr = exvPillW(lh, fs), sc = Math.min(165 / w, 96 / h), W = w * sc, H = h * sc;
+  const x = (240 - (W + gap + pr / 2)) / 2, y = (150 - (H + gap + fs * .9)) / 2, by = y + H + gap, rx = x + W + gap, f = v => v.toFixed(1);
+  const dim = `<g stroke="#A08FB5" stroke-width="2" stroke-linecap="round"><line x1="${f(x)}" y1="${f(by)}" x2="${f(x + W)}" y2="${f(by)}"/><line x1="${f(x)}" y1="${f(by - 5)}" x2="${f(x)}" y2="${f(by + 5)}"/><line x1="${f(x + W)}" y1="${f(by - 5)}" x2="${f(x + W)}" y2="${f(by + 5)}"/>`
+    + `<line x1="${f(rx)}" y1="${f(y)}" x2="${f(rx)}" y2="${f(y + H)}"/><line x1="${f(rx - 5)}" y1="${f(y)}" x2="${f(rx + 5)}" y2="${f(y)}"/><line x1="${f(rx - 5)}" y1="${f(y + H)}" x2="${f(rx + 5)}" y2="${f(y + H)}"/></g>`;
+  return `<svg viewBox="0 0 240 150" class="vsvg wide"><rect x="${f(x)}" y="${f(y)}" width="${f(W)}" height="${f(H)}" rx="5" fill="url(#gSky)" stroke="#2E9BD6" stroke-width="3.5" stroke-linejoin="round" filter="url(#vsh)" class="draw"/>`
+    + `<rect x="${f(x + 5)}" y="${f(y + 5)}" width="${f(Math.max(0, W - 10))}" height="${f(Math.min(14, H / 3))}" rx="4" fill="#fff" opacity=".6"/>`
+    + dim + exvPill(x + W / 2, by, lw, fs) + exvPill(rx, y + H / 2, lh, fs) + '</svg>';
 }
 const moneyVis = cs => `<div class="money">${cs.map((c, i) => c >= 500 ? `<div class="bill b${c / 100}" style="animation-delay:${i * 70}ms">${c / 100} €</div>` : `<div class="coin c${c}" style="animation-delay:${i * 70}ms">${c >= 100 ? c / 100 + ' €' : c + ' c'}</div>`).join('')}</div>`;
 

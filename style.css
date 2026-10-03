@@ -1410,3 +1410,57 @@ body.pro .energy{box-shadow:0 8px 22px rgba(60,30,90,.08)}
 .bubble .speak:active{transform:scale(.92)}
 /* opcions amb dibuix (gràfiques de funcions de Pro, figures): més grans, que al mòbil quedaven en uns 70 px */
 .opts.pics .opt{min-height:140px;padding:8px 8px 8px 26px}.opts.pics .opt svg{max-height:136px;width:100%}
+
+/* =================== Dibuixos dels exercicis (03/10) ===================
+   Sense la «targeta dins de la targeta»: el dibuix va directament sobre la pissarra, que fa de paper quadriculat suau.
+   A l'ordinador els dibuixos creixen (abans es quedaven a 170 px). L'encongiment automàtic (fit1…fit6) continua manant. */
+body.pro .l-vis>:is(svg,.vpic,.stack,.pies,.bals,img){box-shadow:none}
+.l-vis{background-color:#fff;background-image:radial-gradient(circle at 1px 1px,color-mix(in srgb,var(--uc,#602B7A) 14%,transparent) 1.2px,transparent 1.6px);background-size:22px 22px;background-position:center}
+.l-vis svg{overflow:visible}
+@media (min-width:900px){
+  .lesson:not([class*=fit]) .l-vis .vsvg{width:min(100%,250px);height:auto}
+  .lesson:not([class*=fit]) .l-vis .vsvg.wide{width:min(100%,430px)!important;height:auto!important}
+  .lesson:not([class*=fit]) .l-vis .pies .vsvg{width:170px;height:170px}
+  .lesson:not([class*=fit]) .l-vis .vpic{max-height:min(320px,40vh)}
+  .lesson:not([class*=fit]) .l-vis .vpic.iso{max-height:min(300px,38vh)}
+  .lesson:not([class*=fit]) .l-vis>svg:not(.vsvg),.lesson:not([class*=fit]) .l-vis .stack>svg:not(.vsvg){width:min(100%,560px);height:auto;max-height:42vh}
+  .l-vis{padding:26px 22px;min-height:180px}
+}
+/* pantalles grans d'ordinador: la lecció creix (abans es quedava a uns 800 px en una pantalla de 1920) */
+body.pro .l-vis>*{box-shadow:none}
+@media (min-width:1400px) and (min-height:860px){ .lesson>.l-top,.lesson>.l-body,.lesson>.l-foot{zoom:1.25} }
+@media (min-width:1700px) and (min-height:980px){ .lesson>.l-top,.lesson>.l-body,.lesson>.l-foot{zoom:1.3} .lesson .l-body{max-width:760px} }
+@media (min-width:900px){
+  .lesson:is(.fit1,.fit2) .buddy,.lesson:is(.fit1,.fit2) .buddy svg{width:64px;height:64px}
+  .lesson:not([class*=fit]) .l-vis .colop{font-size:50px;padding:16px 30px}
+  .lesson:not([class*=fit]) .l-vis .bignum{font-size:56px}
+  .lesson:not([class*=fit]) .l-vis .emgrid{font-size:36px}
+}
+
+/* =================== Lliçons a l'ordinador en dues columnes (03/10) ===================
+   Amb dibuix: la pregunta a dalt, el dibuix gran a l'esquerra i les respostes a la dreta. Així el dibuix no s'ha
+   d'encongir per cabre en alçada (abans, a 1280×800, quedava a 100-150 px). Sense dibuix, tot continua en una columna. */
+@media (min-width:1100px) and (min-aspect-ratio:5/4){
+  .lesson:not(.game):not(.learn) .l-body:has(> .l-vis){max-width:1080px;display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);column-gap:28px;align-content:center;
+    grid-template-areas:"tag tag" "q q" "vis ans" "more more"}
+  .lesson:not(.game):not(.learn) .l-body:has(> .l-vis)>.retry{grid-area:tag;justify-self:start}
+  .lesson:not(.game):not(.learn) .l-body:has(> .l-vis)>.l-q{grid-area:q}
+  .lesson:not(.game):not(.learn) .l-body:has(> .l-vis)>.l-vis{grid-area:vis;margin:0;align-self:stretch;min-height:300px}
+  .lesson:not(.game):not(.learn) .l-body:has(> .l-vis)>.l-ans{grid-area:ans;margin:0;align-self:center}
+  .lesson:not(.game):not(.learn) .l-body:has(> .l-vis)>.morebtn{grid-area:more}
+  /* el dibuix aprofita la columna sencera */
+  .lesson:not(.game):not(.learn) .l-body:has(> .l-vis) .l-vis .vsvg{width:min(100%,320px)!important;height:auto!important;max-height:52vh}
+  .lesson:not(.game):not(.learn) .l-body:has(> .l-vis) .l-vis .vsvg.wide{width:100%!important}
+  .lesson:not(.game):not(.learn) .l-body:has(> .l-vis) .l-vis .vpic{max-height:52vh;width:auto;max-width:100%}
+  .lesson:not(.game):not(.learn) .l-body:has(> .l-vis) .l-vis>svg:not(.vsvg),.lesson:not(.game):not(.learn) .l-body:has(> .l-vis) .l-vis .stack>svg:not(.vsvg){width:100%;max-height:52vh}
+  .lesson:not(.game):not(.learn) .l-body:has(> .l-vis) .opts{grid-template-columns:1fr 1fr}
+  .lesson:not(.game):not(.learn) .l-body:has(> .l-vis) .opts.list{grid-template-columns:1fr}
+}
+/* peticions dels dibuixos nous: la balança sense la caixa marró a Pro i les fitxes de les sèries més grans */
+html[data-v=pro] .vpic.bal{background:transparent;border-color:transparent}
+@media (min-width:900px){.vseq .vtile{width:56px!important;height:56px!important}.vseq .vq{width:56px;height:56px}}
+@media (min-width:1100px) and (min-aspect-ratio:5/4){
+  .lesson:not(.game):not(.learn):has(.l-body > .l-vis)>.l-top{max-width:1080px}
+  .lesson:not(.game):not(.learn):has(.l-body > .l-vis) .fwrap{max-width:1048px}
+}
+@media (min-width:1100px) and (min-aspect-ratio:5/4){ .lesson:not(.game):not(.learn) .l-body:has(> .l-vis) .l-vis>.stack{width:100%} }

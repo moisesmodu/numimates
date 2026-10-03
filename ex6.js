@@ -7,6 +7,10 @@
 (() => {
   const LET = ['A', 'B', 'C', 'D'], eq = (a, b) => Math.abs(a - b) < 1e-9, pctS = v => fmtD(v) + ' %';
   const SI = () => L('Sí', 'Sí'), NO = () => L('No', 'No');
+  // degradats compartits (chars.js DEFS) per als colors habituals; «gem» = punt rodó amb vora blanca, ombra i reflex
+  const GR6 = { '#36A9E1': 'gBlue', '#3CC46A': 'gGreen', '#FF9A3C': 'gOrange', '#FF6FA3': 'gPink', '#8A4FB0': 'gPurple', '#22B5A0': 'gTeal', '#FF5A5F': 'gRed', '#FFC93C': 'gYellow' };
+  const gf = c => GR6[c] ? `url(#${GR6[c]}) ${c}` : c;
+  const gem = (x, y, r, c, cls = '') => `<circle${cls ? ` class="${cls}"` : ''} cx="${x}" cy="${y}" r="${r}" fill="${gf(c)}" stroke="#fff" stroke-width="2.4" filter="url(#vsh)"/><ellipse cx="${(x - r * .33).toFixed(1)}" cy="${(y - r * .38).toFixed(1)}" rx="${(r * .38).toFixed(1)}" ry="${(r * .24).toFixed(1)}" transform="rotate(-35 ${(x - r * .33).toFixed(1)} ${(y - r * .38).toFixed(1)})" fill="#fff" opacity=".6"/>`;
   // fins a k distractors que no valguin el mateix que el correcte ni entre ells (1/2 i 2/4 compten com el mateix)
   function dis3(cands, v, k = 3, val = x => x) { const out = []; for (const c of shuffle(cands)) if (out.length < k && !eq(val(c), v) && out.every(o => !eq(val(o), val(c)))) out.push(c); return out; }
   // en català s'apostrofa davant de «u» i «onze»: l'1, l'11, de l'1,5…
@@ -15,13 +19,15 @@
 
   /* ---------- 1. La recta numèrica ---------- */
   // n intervals iguals; mk = {marca: rètol}; o.ar = fletxa, o.pts = {marca: lletra}, o.bare = recta buida (només marques amb rètol)
+  // la recta va directament sobre la pissarra: línies i rètols en INK (el tema fosc els aclareix); punts i agulla amb volum
   function lineSVG(n, mk, o = {}) {
     const X = i => +(24 + 292 * i / n).toFixed(1), Y = 58;
-    let s = `<svg viewBox="0 0 340 104" class="vsvg wide" style="width:min(340px,88vw)"><line x1="8" y1="${Y}" x2="332" y2="${Y}" stroke="${INK}" stroke-width="3" stroke-linecap="round"/><path d="M325 ${Y - 7}l8 7-8 7M15 ${Y - 7}l-8 7 8 7" fill="none" stroke="${INK}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>`;
-    for (let i = 0; i <= n; i++) { const b = mk[i] !== undefined; if (o.bare && !b) continue; s += `<line x1="${X(i)}" y1="${Y - (b ? 11 : 7)}" x2="${X(i)}" y2="${Y + (b ? 11 : 7)}" stroke="${INK}" stroke-width="${b ? 3 : 2}"/>`; }
-    for (const i in mk) s += `<text x="${X(+i)}" y="${Y + 34}" text-anchor="middle" font-size="${String(mk[i]).length > 5 ? 13 : 16}" ${F} fill="${INK}">${mk[i]}</text>`;
-    for (const i in o.pts || {}) s += `<circle cx="${X(+i)}" cy="${Y}" r="7" fill="${o.pc || '#36A9E1'}" stroke="${INK}" stroke-width="2"/>${o.pts[i] ? `<text x="${X(+i)}" y="${Y - 17}" text-anchor="middle" font-size="17" ${F} fill="${INK}">${o.pts[i]}</text>` : ''}`;
-    if (o.ar !== undefined) s += `<path d="M${X(o.ar)} ${Y - 6}l-9 -17h18z" fill="#FF5A5F" stroke="${INK}" stroke-width="2" stroke-linejoin="round"/><text x="${X(o.ar)}" y="${Y - 29}" text-anchor="middle" font-size="17" ${F} fill="#FF5A5F">?</text>`;
+    let s = `<svg viewBox="0 0 340 104" class="vsvg wide" style="width:min(340px,88vw)"><rect x="14" y="${Y - 7}" width="312" height="14" rx="7" fill="#8A4FB0" opacity=".1"/><line x1="9" y1="${Y}" x2="331" y2="${Y}" stroke="${INK}" stroke-width="3.5" stroke-linecap="round"/><polyline points="324,${Y - 8} 332,${Y} 324,${Y + 8}" fill="none" stroke="${INK}" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/><polyline points="16,${Y - 8} 8,${Y} 16,${Y + 8}" fill="none" stroke="${INK}" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>`;
+    for (let i = 0; i <= n; i++) { const b = mk[i] !== undefined; if (o.bare && !b) continue; s += `<line x1="${X(i)}" y1="${Y - (b ? 12 : 7)}" x2="${X(i)}" y2="${Y + (b ? 12 : 7)}" stroke="${INK}" stroke-width="${b ? 3.2 : 2.2}" stroke-linecap="round"/>`; }
+    for (const i in mk) s += `<text x="${X(+i)}" y="${Y + 35}" text-anchor="middle" font-size="${String(mk[i]).length > 5 ? 14 : 17}" ${F} fill="${INK}">${mk[i]}</text>`;
+    for (const i in o.pts || {}) s += `${gem(X(+i), Y, 8, o.pc || '#36A9E1')}${o.pts[i] ? `<text x="${X(+i)}" y="${Y - 18}" text-anchor="middle" font-size="18" ${F} fill="${INK}">${o.pts[i]}</text>` : ''}`;
+    // agulla vermella amb l'interrogant a dins
+    if (o.ar !== undefined) { const x = X(o.ar); s += `<path d="M${x} ${Y - 4} L${x - 7.5} ${Y - 20} A11 11 0 1 1 ${x + 7.5} ${Y - 20} Z" fill="url(#gRed)" stroke="#B0262C" stroke-width="1.6" stroke-linejoin="round" filter="url(#vsh)"/><ellipse cx="${x - 4.5}" cy="${Y - 33}" rx="3.6" ry="2.2" transform="rotate(-35 ${x - 4.5} ${Y - 33})" fill="#fff" opacity=".55"/><text x="${x}" y="${Y - 22.5}" text-anchor="middle" font-size="15" ${F} fill="#fff">?</text>`; }
     return s + '</svg>';
   }
   // c = {a: inici, s: pas, n: intervals, lab: cada quantes marques hi ha rètol}
@@ -116,10 +122,15 @@
   const weekList = () => DSEM.map(tx).join(', ');
   // full del calendari: mes m que comença en dia de la setmana w0 (0 = dilluns); hi = dies encerclats
   function calSVG(m, w0, hi = []) {
-    const nd = DM[m], rows = Math.ceil((w0 + nd) / 7), cw = 40, ch = 30, W = cw * 7 + 16, H = 72 + rows * ch;
-    let s = `<svg viewBox="0 0 ${W} ${H}" class="vsvg wide" style="width:min(300px,86vw)"><rect x="4" y="4" width="${W - 8}" height="${H - 8}" rx="14" fill="#fff" stroke="#E6DCEF" stroke-width="3"/><path d="M4 34V18a14 14 0 0 1 14-14h${W - 36}a14 14 0 0 1 14 14v16z" fill="#FF5A5F"/><text x="${W / 2}" y="25" text-anchor="middle" font-size="16" ${F} fill="#fff">${cap(mes(m))}</text>`;
-    for (let i = 0; i < 7; i++) s += `<text x="${8 + cw * i + cw / 2}" y="54" text-anchor="middle" font-size="13" ${F} fill="${i >= 5 ? '#FF5A5F' : '#8A7B99'}">${tx(DAB[i])}</text>`;
-    for (let d = 1; d <= nd; d++) { const p = w0 + d - 1, c = p % 7, x = 8 + cw * c + cw / 2, y = 64 + Math.floor(p / 7) * ch + 19; if (hi.includes(d)) s += `<circle cx="${x}" cy="${y - 5}" r="13" fill="#FFE7A8"/>`; s += `<text class="cd" x="${x}" y="${y}" text-anchor="middle" font-size="15" ${F} fill="${c >= 5 ? '#FF5A5F' : INK}">${d}</text>`; }
+    // full de calendari de paret: anelles, capçalera vermella amb volum, cap de setmana ombrejat i ratlles entre setmanes.
+    // Tot va sobre el paper blanc: tintes fixes que el tema fosc no canvia (#2B1A39, #8A7B9A)
+    const nd = DM[m], rows = Math.ceil((w0 + nd) / 7), cw = 40, ch = 30, W = cw * 7 + 16, T = 10, H = 72 + rows * ch + T + 6, B = H - 8;
+    let s = `<svg viewBox="0 0 ${W} ${H}" class="vsvg wide" style="width:min(300px,86vw)"><rect x="4" y="${T + 2}" width="${W - 8}" height="${B - T - 2}" rx="14" fill="url(#gPaper)" stroke="#E3D8EE" stroke-width="2" filter="url(#vsh)"/><path d="M4 ${T + 34}V${T + 16}a14 14 0 0 1 14-14h${W - 36}a14 14 0 0 1 14 14v18z" fill="url(#gRed)"/><rect x="16" y="${T + 6}" width="${W - 32}" height="6" rx="3" fill="#fff" opacity=".22"/><text x="${W / 2}" y="${T + 25}" text-anchor="middle" font-size="17" ${F} fill="#fff">${cap(mes(m))}</text>`;
+    [W * .22, W * .78].forEach(x => { s += `<circle cx="${x}" cy="${T + 9}" r="4.2" fill="#8E2328"/><rect x="${x - 3}" y="2" width="6" height="${T + 8}" rx="3" fill="#A796BC" stroke="#5E4A75" stroke-width="1.2"/><rect x="${x - 1.4}" y="4" width="1.6" height="${T + 2}" rx=".8" fill="#fff" opacity=".6"/>`; });
+    s += `<rect x="${8 + cw * 5 + 2}" y="${T + 40}" width="${cw * 2 - 4}" height="${rows * ch + 22}" rx="8" fill="#FFEFEF"/>`;
+    for (let r = 1; r < rows; r++) s += `<line x1="14" y1="${T + 64 + r * ch}" x2="${W - 14}" y2="${T + 64 + r * ch}" stroke="#EEE6F5" stroke-width="1.3"/>`;
+    for (let i = 0; i < 7; i++) s += `<text x="${8 + cw * i + cw / 2}" y="${T + 55}" text-anchor="middle" font-size="13" ${F} fill="${i >= 5 ? '#E0343B' : '#8A7B9A'}">${tx(DAB[i])}</text>`;
+    for (let d = 1; d <= nd; d++) { const p = w0 + d - 1, c = p % 7, x = 8 + cw * c + cw / 2, y = T + 64 + Math.floor(p / 7) * ch + 19; if (hi.includes(d)) s += `<circle cx="${x}" cy="${y - 5}" r="13.5" fill="#FFE7A8" stroke="#F5B400" stroke-width="2.2"/>`; s += `<text class="cd" x="${x}" y="${y}" text-anchor="middle" font-size="15" ${F} fill="${c >= 5 ? '#E0343B' : '#2B1A39'}">${d}</text>`; }
     return s + '</svg>';
   }
   const dayMc = (q, i, o = {}) => mc(q, dia(i), shuffle([dia(i - 1), dia(i + 1), dia(i + 2), dia(i - 2), dia(i + 3)]), { list: true, ...o });
@@ -189,12 +200,16 @@
   // polígon amb marques: o.right = vèrtexs amb angle recte, o.ticks = ratlletes de costats iguals, o.sides/o.angles = rètols, o.line = eix
   function figSVG(Q, o = {}) {
     const W = o.W || 260, H = o.H || 170, n = Q.length, C = [Q.reduce((a, p) => a + p[0], 0) / n, Q.reduce((a, p) => a + p[1], 0) / n];
-    let s = `<svg viewBox="0 0 ${W} ${H}" class="vsvg wide"${W < 260 ? ' style="height:104px"' : ''}><polygon points="${Q.map(p => p.map(f1).join(',')).join(' ')}" fill="${o.fill || '#E8F5FE'}" stroke="${o.stroke || '#36A9E1'}" stroke-width="3.5" stroke-linejoin="round"/>`;
-    (o.right || []).forEach(i => { const V = Q[i], a = uv(V, Q[(i + n - 1) % n]), b = uv(V, Q[(i + 1) % n]), k = 11; s += `<path d="M${f1(V[0] + a[0] * k)} ${f1(V[1] + a[1] * k)}L${f1(V[0] + (a[0] + b[0]) * k)} ${f1(V[1] + (a[1] + b[1]) * k)}L${f1(V[0] + b[0] * k)} ${f1(V[1] + b[1] * k)}" fill="none" stroke="${INK}" stroke-width="2"/>`; });
-    (o.ticks || []).forEach((t, i) => { const A = Q[i], B = Q[(i + 1) % n], d = uv(A, B), m = [(A[0] + B[0]) / 2, (A[1] + B[1]) / 2]; for (let j = 0; j < t; j++) { const w = (j - (t - 1) / 2) * 5; s += `<line x1="${f1(m[0] + d[0] * w + d[1] * 7)}" y1="${f1(m[1] + d[1] * w - d[0] * 7)}" x2="${f1(m[0] + d[0] * w - d[1] * 7)}" y2="${f1(m[1] + d[1] * w + d[0] * 7)}" stroke="${INK}" stroke-width="2.2"/>`; } });
+    // figura amb volum: farciment (degradat cel per defecte) amb ombra, reflex de dalt, contorn gruixut i vèrtexs marcats
+    const ps = Q.map(p => p.map(f1).join(',')).join(' '), fl = o.fill || '#E8F5FE', sk = o.stroke || '#36A9E1';
+    let s = `<svg viewBox="0 0 ${W} ${H}" class="vsvg wide"${W < 260 ? ' style="height:104px"' : ''}><polygon points="${ps}" fill="${fl === '#E8F5FE' ? 'url(#gSky)' : fl}" filter="url(#vsh)"/><polygon points="${ps}" fill="url(#gShine)" opacity=".7"/><polygon points="${ps}" fill="none" stroke="${sk}" stroke-width="3.5" stroke-linejoin="round"/>`;
+    (o.right || []).forEach(i => { const V = Q[i], a = uv(V, Q[(i + n - 1) % n]), b = uv(V, Q[(i + 1) % n]), k = 11; s += `<path d="M${f1(V[0] + a[0] * k)} ${f1(V[1] + a[1] * k)}L${f1(V[0] + (a[0] + b[0]) * k)} ${f1(V[1] + (a[1] + b[1]) * k)}L${f1(V[0] + b[0] * k)} ${f1(V[1] + b[1] * k)}" fill="#fff" fill-opacity=".6" stroke="#2B1A39" stroke-width="2" stroke-linejoin="round"/>`; });
+    // ratlletes de costats iguals: tinta fosca fixa amb un halo blanc, així es veuen damunt del contorn en tots dos temes
+    (o.ticks || []).forEach((t, i) => { const A = Q[i], B = Q[(i + 1) % n], d = uv(A, B), m = [(A[0] + B[0]) / 2, (A[1] + B[1]) / 2]; for (let j = 0; j < t; j++) { const w = (j - (t - 1) / 2) * 5.5, c = `x1="${f1(m[0] + d[0] * w + d[1] * 7)}" y1="${f1(m[1] + d[1] * w - d[0] * 7)}" x2="${f1(m[0] + d[0] * w - d[1] * 7)}" y2="${f1(m[1] + d[1] * w + d[0] * 7)}" stroke-linecap="round"`; s += `<line ${c} stroke="#fff" stroke-width="5"/><line ${c} stroke="#2B1A39" stroke-width="2.4"/>`; } });
+    Q.forEach(V => { s += `<circle cx="${f1(V[0])}" cy="${f1(V[1])}" r="3.4" fill="#fff" stroke="${sk}" stroke-width="2.2"/>`; });
     (o.sides || []).forEach((t, i) => { if (t == null) return; const A = Q[i], B = Q[(i + 1) % n], m = [(A[0] + B[0]) / 2, (A[1] + B[1]) / 2], e = uv(A, B); let d = [-e[1], e[0]]; if ((m[0] - C[0]) * d[0] + (m[1] - C[1]) * d[1] < 0) d = [-d[0], -d[1]]; const r = 12 + 18 * Math.abs(d[0]); s += `<text x="${f1(m[0] + d[0] * r)}" y="${f1(m[1] + d[1] * r + 5)}" text-anchor="middle" font-size="14" ${F} fill="${INK}">${t}</text>`; });
-    (o.angles || []).forEach((t, i) => { if (t == null) return; const V = Q[i], a = uv(V, Q[(i + n - 1) % n]), b = uv(V, Q[(i + 1) % n]), bi = uv([0, 0], [a[0] + b[0], a[1] + b[1]]), g = Math.acos(Math.max(-1, Math.min(1, a[0] * b[0] + a[1] * b[1]))), r = Math.min(46, 13 / Math.sin(g / 2)) + 8; s += `<text x="${f1(V[0] + bi[0] * r)}" y="${f1(V[1] + bi[1] * r + 5)}" text-anchor="middle" font-size="13" ${F} fill="#C4661A">${t}</text>`; });
-    if (o.line) s += `<line class="ax" x1="${f1(o.line[0][0])}" y1="${f1(o.line[0][1])}" x2="${f1(o.line[1][0])}" y2="${f1(o.line[1][1])}" stroke="#FF5A5F" stroke-width="3" stroke-dasharray="8 6" stroke-linecap="round"/>`;
+    (o.angles || []).forEach((t, i) => { if (t == null) return; const V = Q[i], a = uv(V, Q[(i + n - 1) % n]), b = uv(V, Q[(i + 1) % n]), bi = uv([0, 0], [a[0] + b[0], a[1] + b[1]]), g = Math.acos(Math.max(-1, Math.min(1, a[0] * b[0] + a[1] * b[1]))), r = Math.min(46, 13 / Math.sin(g / 2)) + 8; s += `<text x="${f1(V[0] + bi[0] * r)}" y="${f1(V[1] + bi[1] * r + 5)}" text-anchor="middle" font-size="14" ${F} fill="#C4661A">${t}</text>`; });
+    if (o.line) s += `<line class="ax" x1="${f1(o.line[0][0])}" y1="${f1(o.line[0][1])}" x2="${f1(o.line[1][0])}" y2="${f1(o.line[1][1])}" stroke="#E0343B" stroke-width="3.4" stroke-dasharray="9 7" stroke-linecap="round"/>`;
     return s + '</svg>';
   }
   const TS = { eq: ['equilàter', 'equilátero'], is: ['isòsceles', 'isósceles'], es: ['escalè', 'escaleno'] }, TA = { ac: ['acutangle', 'acutángulo'], re: ['rectangle', 'rectángulo'], ob: ['obtusangle', 'obtusángulo'] };
@@ -246,8 +261,10 @@
     const W = o.W || 260, H = o.H || 170, c = [W / 2 + ri(-12, 12), H / 2 + ri(-8, 8)], d1 = [Math.cos(rad(th)), Math.sin(rad(th))];
     const ph = kind === 'par' ? 0 : kind === 'perp' ? 90 : pick([ri(30, 60), ri(120, 150)]), d2 = [Math.cos(rad(th + ph)), Math.sin(rad(th + ph))], nr = [-d1[1], d1[0]], off = ri(20, 28) * H / 170;
     const p1 = kind === 'par' ? [c[0] + nr[0] * off, c[1] + nr[1] * off] : c, p2 = kind === 'par' ? [c[0] - nr[0] * off, c[1] - nr[1] * off] : c;
-    let s = `<svg viewBox="0 0 ${W} ${H}" class="vsvg wide"${W < 260 ? ' style="height:104px"' : ''}>` + [[clipL(p1, d1, W, H), '#36A9E1'], [clipL(p2, d2, W, H), '#FF6FA3']].map(([[A, B], col]) => `<line class="ln" x1="${f1(A[0])}" y1="${f1(A[1])}" x2="${f1(B[0])}" y2="${f1(B[1])}" stroke="${col}" stroke-width="5" stroke-linecap="round"/>`).join('');
-    if (kind === 'perp' && o.mark) { const k = 12; s += `<path d="M${f1(c[0] + d1[0] * k)} ${f1(c[1] + d1[1] * k)}L${f1(c[0] + (d1[0] + d2[0]) * k)} ${f1(c[1] + (d1[1] + d2[1]) * k)}L${f1(c[0] + d2[0] * k)} ${f1(c[1] + d2[1] * k)}" fill="none" stroke="${INK}" stroke-width="2"/>`; }
+    // rectes com a tubs de color: vora fosca, cos de color i un fil de llum
+    const tube = ([A, B], col, dk) => { const u = uv(A, B), nn = [-u[1] * 1.3, u[0] * 1.3], a = [A[0] + u[0] * 3 + nn[0], A[1] + u[1] * 3 + nn[1]], b = [B[0] - u[0] * 3 + nn[0], B[1] - u[1] * 3 + nn[1]], xy = (P, Q) => `x1="${f1(P[0])}" y1="${f1(P[1])}" x2="${f1(Q[0])}" y2="${f1(Q[1])}"`; return `<line ${xy(A, B)} stroke="${dk}" stroke-width="7.5" stroke-linecap="round"/><line class="ln" ${xy(A, B)} stroke="${col}" stroke-width="5" stroke-linecap="round"/><line ${xy(a, b)} stroke="#fff" stroke-opacity=".5" stroke-width="1.5" stroke-linecap="round"/>`; };
+    let s = `<svg viewBox="0 0 ${W} ${H}" class="vsvg wide"${W < 260 ? ' style="height:104px"' : ''}>` + tube(clipL(p1, d1, W, H), '#36A9E1', '#1E86BE') + tube(clipL(p2, d2, W, H), '#FF6FA3', '#D94A84');
+    if (kind === 'perp' && o.mark) { const k = 13; s += `<polyline points="${f1(c[0] + d1[0] * k)},${f1(c[1] + d1[1] * k)} ${f1(c[0] + (d1[0] + d2[0]) * k)},${f1(c[1] + (d1[1] + d2[1]) * k)} ${f1(c[0] + d2[0] * k)},${f1(c[1] + d2[1] * k)}" fill="none" stroke="${INK}" stroke-width="2.4" stroke-linejoin="round"/>`; }
     return s + '</svg>';
   }
   const REL = { par: ['Paral·leles', 'Paralelas'], perp: ['Perpendiculars', 'Perpendiculares'], obl: ['Oblíqües', 'Oblicuas'] };
@@ -257,8 +274,10 @@
   function streetsQ() {
     const th = ri(-20, 20), nm = shuffle(CARR).slice(0, 4).map(tx), cols = ['#36A9E1', '#FF6FA3', '#3CC46A', '#FF9A3C'], W = 260, H = 250, dir = g => [Math.cos(rad(g)), Math.sin(rad(g))];
     const L4 = [[[130, 45], dir(th)], [[130, 118], dir(th)], [[70, 82], dir(th + 90)], [[190, 82], dir(th + pick([ri(35, 55), ri(125, 145)]))]].map(([p, d]) => clipL(p, d, W, 158));
-    let s = `<svg viewBox="0 0 ${W} ${H}" class="vsvg wide" style="width:min(300px,86vw)"><rect x="4" y="4" width="${W - 8}" height="158" rx="12" fill="#F4EEF9"/>`;
-    L4.forEach(([A, B], i) => { s += `<g class="st"><line class="ln" x1="${f1(A[0])}" y1="${f1(A[1])}" x2="${f1(B[0])}" y2="${f1(B[1])}" stroke="${cols[i]}" stroke-width="9" stroke-linecap="round"/><line x1="18" y1="${180 + i * 20}" x2="42" y2="${180 + i * 20}" stroke="${cols[i]}" stroke-width="7" stroke-linecap="round"/><text x="52" y="${185 + i * 20}" font-size="14" ${F} fill="${INK}">${nm[i]}</text></g>`; });
+    // plànol de barri: paper amb vora i ombra, carrers amb vorera blanca i línia discontínua al mig; llegenda a sota
+    let s = `<svg viewBox="0 0 ${W} ${H}" class="vsvg wide" style="width:min(300px,86vw)"><rect x="4" y="4" width="${W - 8}" height="158" rx="12" fill="#EEF7E6" stroke="#D4E8C4" stroke-width="2" filter="url(#vsh)"/>`;
+    L4.forEach(([A, B]) => { s += `<line x1="${f1(A[0])}" y1="${f1(A[1])}" x2="${f1(B[0])}" y2="${f1(B[1])}" stroke="#fff" stroke-width="14" stroke-linecap="round"/>`; });
+    L4.forEach(([A, B], i) => { const xy = `x1="${f1(A[0])}" y1="${f1(A[1])}" x2="${f1(B[0])}" y2="${f1(B[1])}"`; s += `<g class="st"><line class="ln" ${xy} stroke="${cols[i]}" stroke-width="9" stroke-linecap="round"/><line ${xy} stroke="#fff" stroke-width="1.4" stroke-dasharray="5 6" stroke-opacity=".9"/><line x1="18" y1="${180 + i * 20}" x2="42" y2="${180 + i * 20}" stroke="${cols[i]}" stroke-width="8" stroke-linecap="round"/><text x="52" y="${185 + i * 20}" font-size="14" ${F} fill="${INK}">${nm[i]}</text></g>`; });
     const want = pick(['par', 'perp']), ans = nm[want === 'par' ? 1 : 2];
     return mc(L(`Quin carrer és <b>${want === 'par' ? 'paral·lel' : 'perpendicular'}</b> al ${nm[0]}?`, `¿Qué calle es <b>${want === 'par' ? 'paralela' : 'perpendicular'}</b> a la ${nm[0]}?`), ans, nm.slice(1).filter(x => x !== ans), { list: true, vis: s + '</svg>', ex: L(`El ${ans} ${tx(RELW[want])} amb el ${nm[0]}.`, `La ${ans} ${tx(RELW[want])} con la ${nm[0]}.`) });
   }
@@ -284,8 +303,10 @@
   const dec3 = x => Math.abs(x * 1000 - Math.round(x * 1000)) < 1e-6;
   const fdpWhy = (p, q) => L(`${p}/${q} = ${p} ÷ ${q} = ${fmtD(p / q)}, i per passar-ho a percentatge multipliquem per 100: ${pctS(p / q * 100)}.`, `${p}/${q} = ${p} ÷ ${q} = ${fmtD(p / q)}, y para pasarlo a porcentaje multiplicamos por 100: ${pctS(p / q * 100)}.`);
   function gridSVG100(k) {
-    let s = '<svg viewBox="0 0 172 172" class="vsvg">';
-    for (let i = 0; i < 100; i++) s += `<rect x="${6 + (i % 10) * 16}" y="${6 + Math.floor(i / 10) * 16}" width="15" height="15" rx="2" fill="${i < k ? '#FF9A3C' : '#fff'}" stroke="#D9CCE6" stroke-width="1"/>`;
+    // plafó de 100: safata lila amb vora i un petit passadís al mig (cada quadrant té 5 × 5, ajuda a comptar)
+    const at = j => 8 + j * 16 + (j >= 5 ? 3 : 0);
+    let s = '<svg viewBox="0 0 178 178" class="vsvg"><rect x="2" y="2" width="174" height="174" rx="11" fill="#F1EAF7" stroke="#DCCFE8" stroke-width="1.5"/>';
+    for (let i = 0; i < 100; i++) s += `<rect x="${at(i % 10)}" y="${at(Math.floor(i / 10))}" width="15" height="15" rx="3" fill="${i < k ? 'url(#gOrange)' : '#fff'}" stroke="${i < k ? '#E07A20' : '#D9CCE6'}" stroke-width="1"/>`;
     return s + '</svg>';
   }
 
@@ -310,15 +331,17 @@
   /* ---------- 8. Coordenades cartesianes (primer quadrant) ---------- */
   const CX = x => 40 + x * 30, CY = y => 215 - y * 30, co = ([x, y]) => `(${x}, ${y})`;
   function cartSVG(pts, seg) {
-    let s = '<svg viewBox="0 0 318 250" class="vsvg wide" style="width:min(318px,88vw)">';
-    for (let i = 0; i <= 8; i++) s += `<line x1="${CX(i)}" y1="${CY(0)}" x2="${CX(i)}" y2="${CY(6)}" stroke="#E6DCEF" stroke-width="1.5"/>`;
-    for (let j = 0; j <= 6; j++) s += `<line x1="${CX(0)}" y1="${CY(j)}" x2="${CX(8)}" y2="${CY(j)}" stroke="#E6DCEF" stroke-width="1.5"/>`;
-    s += `<path d="M${CX(0)} ${CY(0)}H${CX(8) + 16}M${CX(8) + 9} ${CY(0) - 6}l7 6-7 6M${CX(0)} ${CY(0)}V${CY(6) - 16}M${CX(0) - 6} ${CY(6) - 9}l6 -7 6 7" fill="none" stroke="${INK}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>`;
-    for (let i = 0; i <= 8; i++) s += `<text x="${CX(i)}" y="${CY(0) + 20}" text-anchor="middle" font-size="13" ${F} fill="#8A7B99">${i}</text>`;
-    for (let j = 1; j <= 6; j++) s += `<text x="${CX(0) - 12}" y="${CY(j) + 5}" text-anchor="middle" font-size="13" ${F} fill="#8A7B99">${j}</text>`;
-    s += `<text x="${CX(8) + 18}" y="${CY(0) + 20}" font-size="14" ${F} fill="${INK}">x</text><text x="${CX(0) + 10}" y="${CY(6) - 8}" font-size="14" ${F} fill="${INK}">y</text>`;
-    if (seg) s += `<polyline points="${seg.map(([x, y]) => `${CX(x)},${CY(y)}`).join(' ')}" fill="none" stroke="#8A4FB0" stroke-width="3" stroke-dasharray="6 5"/>`;
-    pts.forEach(([x, y, t, c]) => { s += `<circle class="pt" cx="${CX(x)}" cy="${CY(y)}" r="7" fill="${c}" stroke="${INK}" stroke-width="2"/><text x="${CX(x) + 10}" y="${CY(y) - 9}" font-size="16" ${F} fill="${INK}">${t}</text>`; });
+    // full de paper mil·limetrat: tot va sobre el paper, amb tintes fixes que el tema fosc no canvia
+    const PI = '#2B1A39';
+    let s = `<svg viewBox="0 0 318 250" class="vsvg wide" style="width:min(318px,88vw)"><rect x="4" y="3" width="310" height="238" rx="14" fill="url(#gPaper)" stroke="#E3D8EE" stroke-width="2" filter="url(#vsh)"/>`;
+    for (let i = 1; i <= 8; i++) s += `<line x1="${CX(i)}" y1="${CY(0)}" x2="${CX(i)}" y2="${CY(6)}" stroke="#CFE2F4" stroke-width="1.4"/>`;
+    for (let j = 1; j <= 6; j++) s += `<line x1="${CX(0)}" y1="${CY(j)}" x2="${CX(8)}" y2="${CY(j)}" stroke="#CFE2F4" stroke-width="1.4"/>`;
+    s += `<path d="M${CX(0)} ${CY(0)}H${CX(8) + 16}M${CX(8) + 9} ${CY(0) - 6}l7 6-7 6M${CX(0)} ${CY(0)}V${CY(6) - 16}M${CX(0) - 6} ${CY(6) - 9}l6 -7 6 7" fill="none" stroke="${PI}" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>`;
+    for (let i = 0; i <= 8; i++) s += `<line x1="${CX(i)}" y1="${CY(0) - 4}" x2="${CX(i)}" y2="${CY(0) + 4}" stroke="${PI}" stroke-width="2" stroke-linecap="round"/><text x="${CX(i)}" y="${CY(0) + 21}" text-anchor="middle" font-size="14" ${F} fill="#6E5F80">${i}</text>`;
+    for (let j = 1; j <= 6; j++) s += `<line x1="${CX(0) - 4}" y1="${CY(j)}" x2="${CX(0) + 4}" y2="${CY(j)}" stroke="${PI}" stroke-width="2" stroke-linecap="round"/><text x="${CX(0) - 14}" y="${CY(j) + 5}" text-anchor="middle" font-size="14" ${F} fill="#6E5F80">${j}</text>`;
+    s += `<text x="${CX(8) + 18}" y="${CY(0) + 21}" font-size="15" ${F} fill="${PI}">x</text><text x="${CX(0) + 10}" y="${CY(6) - 8}" font-size="15" ${F} fill="${PI}">y</text>`;
+    if (seg) s += `<polyline points="${seg.map(([x, y]) => `${CX(x)},${CY(y)}`).join(' ')}" fill="none" stroke="#8A4FB0" stroke-width="3" stroke-dasharray="7 5" stroke-linecap="round" stroke-linejoin="round"/>`;
+    pts.forEach(([x, y, t, c]) => { s += `${gem(CX(x), CY(y), 8, c, 'pt')}<text x="${CX(x) + 11}" y="${CY(y) - 10}" font-size="17" ${F} fill="${PI}" stroke="#fff" stroke-width="4" stroke-linejoin="round" paint-order="stroke">${t}</text>`; });
     return s + '</svg>';
   }
   const rndPt = (used, xs = [0, 8], ys = [0, 6]) => { let p; do p = [ri(...xs), ri(...ys)]; while (used.some(u => u[0] === p[0] && u[1] === p[1])); used.push(p); return p; };

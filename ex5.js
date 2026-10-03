@@ -4,6 +4,11 @@
    L'argument de cada habilitat és el nivell de l'alumne (1-10): 'v.cubes:4'. */
 const VCOL = ['#FF6FA3', '#36A9E1', '#3CC46A', '#FF9A3C', '#8A4FB0', '#22B5A0'];
 const lvN = a => Math.max(1, Math.min(10, +a || 4));
+// dibuixos amb volum: cada color de VCOL té el seu degradat compartit (chars.js DEFS); ids únics per als degradats propis
+const VGR5 = { '#FF6FA3': 'gPink', '#36A9E1': 'gBlue', '#3CC46A': 'gGreen', '#FF9A3C': 'gOrange', '#8A4FB0': 'gPurple', '#22B5A0': 'gTeal' };
+const vgf5 = c => VGR5[c] ? `url(#${VGR5[c]}) ${c}` : c;   // el color pla queda de reserva (i distingeix les fitxes)
+let vuid5 = 0;
+const vlg5 = (id, a, b, x2 = 0, y2 = 1) => `<linearGradient id="${id}" x1="0" y1="0" x2="${x2}" y2="${y2}"><stop offset="0" stop-color="${a}"/><stop offset="1" stop-color="${b}"/></linearGradient>`;
 
 /* --- Poliominós --- */
 const pnorm = cells => { const mx = Math.min(...cells.map(c => c[0])), my = Math.min(...cells.map(c => c[1])); return cells.map(([x, y]) => [x - mx, y - my]).sort((a, b) => a[1] - b[1] || a[0] - b[0]); };
@@ -25,7 +30,8 @@ function growPoly(n, w, h) {
 function polySVG(cells, color, s = 20) {
   cells = pnorm(cells);
   const W = Math.max(...cells.map(c => c[0])) + 1, H = Math.max(...cells.map(c => c[1])) + 1;
-  return `<svg class="vpic" viewBox="-2 -2 ${W * s + 4} ${H * s + 4}" style="width:${W * s + 4}px">${cells.map(([x, y]) => `<rect x="${x * s}" y="${y * s}" width="${s}" height="${s}" rx="2" fill="${color}" stroke="#2B1A38" stroke-width="1.5"/>`).join('')}</svg>`;
+  // rajoles brillants: degradat del color, contorn net, ombra suau i un reflex a dalt de cada cara
+  return `<svg class="vpic" viewBox="-4 -4 ${W * s + 8} ${H * s + 11}" style="width:${W * s + 8}px"><g filter="url(#vsh)">${cells.map(([x, y]) => `<rect x="${x * s}" y="${y * s}" width="${s}" height="${s}" rx="${(s * .17).toFixed(1)}" fill="${vgf5(color)}" stroke="${INK}" stroke-width="1.6" stroke-linejoin="round"/>`).join('')}</g>${cells.map(([x, y]) => `<rect x="${(x * s + s * .2).toFixed(1)}" y="${(y * s + s * .15).toFixed(1)}" width="${(s * .6).toFixed(1)}" height="${(s * .2).toFixed(1)}" rx="${(s * .1).toFixed(1)}" fill="#fff" opacity=".45"/>`).join('')}</svg>`;
 }
 
 /* --- Desplegament del cub: el pleguem de debò fent rodar un dau --- */
@@ -60,23 +66,32 @@ const csum = h => h.flat().reduce((a, b) => a + b, 0);
 function isoSVG(h, s = 20) {
   const cubes = []; h.forEach((col, x) => col.forEach((hh, y) => { for (let z = 0; z < hh; z++) cubes.push([x, y, z]); }));
   cubes.sort((a, b) => (a[0] + a[1]) - (b[0] + b[1]) || a[2] - b[2]);
-  const P = (x, y, z) => [(x - y) * s * .866, (x + y) * s * .5 - z * s];
-  const pts = []; const poly = (ps, f) => { ps = ps.map(p => P(...p)); pts.push(...ps); return `<polygon points="${ps.map(p => p[0].toFixed(1) + ',' + p[1].toFixed(1)).join(' ')}" fill="${f}" stroke="#2B1A38" stroke-width="1.3" stroke-linejoin="round"/>`; };
-  const body = cubes.map(([x, y, z]) => poly([[x, y, z + 1], [x + 1, y, z + 1], [x + 1, y + 1, z + 1], [x, y + 1, z + 1]], '#FFD66B') + poly([[x + 1, y, z], [x + 1, y + 1, z], [x + 1, y + 1, z + 1], [x + 1, y, z + 1]], '#F29A38') + poly([[x, y + 1, z], [x + 1, y + 1, z], [x + 1, y + 1, z + 1], [x, y + 1, z + 1]], '#D9702A')).join('');
-  const X = pts.map(p => p[0]), Y = pts.map(p => p[1]), x0 = Math.min(...X) - 3, y0 = Math.min(...Y) - 3, w = Math.max(...X) - x0 + 3, hh = Math.max(...Y) - y0 + 3;
-  return `<svg class="vpic iso" viewBox="${x0.toFixed(1)} ${y0.toFixed(1)} ${w.toFixed(1)} ${hh.toFixed(1)}" style="width:${Math.round(Math.min(260, w * 2.2))}px">${body}</svg>`;
+  const P = (x, y, z) => [(x - y) * s * .866, (x + y) * s * .5 - z * s], f1 = p => p[0].toFixed(1) + ',' + p[1].toFixed(1);
+  const id = 'vi5' + (++vuid5), nx = h.length, ny = h[0].length;
+  const pts = []; const poly = (ps, f, st = INK, sw = 1.4) => { ps = ps.map(p => P(...p)); pts.push(...ps); return `<polygon points="${ps.map(f1).join(' ')}" fill="${f}" stroke="${st}" stroke-width="${sw}" stroke-linejoin="round"/>`; };
+  // reflex a les dues arestes del fons de la cara de dalt (una mica cap endins): el cub sembla tallat i brillant
+  const glint = (x, y, z) => { const c = P(x + .5, y + .5, z + 1), q = [[x, y + 1, z + 1], [x, y, z + 1], [x + 1, y, z + 1]].map(p => { const r = P(...p); return [r[0] + (c[0] - r[0]) * .2, r[1] + (c[1] - r[1]) * .2]; }); return `<polyline points="${q.map(f1).join(' ')}" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity=".75"/>`; };
+  // estora del terra: totes les caselles (també les buides) amb un cantell, perquè es vegi on hi ha columnes i on no
+  let mat = poly([[nx, 0, 0], [nx, ny, 0], [nx, ny, -.22], [nx, 0, -.22]], '#B9A6CC', '#9C86B3', 1) + poly([[0, ny, 0], [nx, ny, 0], [nx, ny, -.22], [0, ny, -.22]], '#A48DBB', '#8E77A6', 1);
+  for (let x = 0; x < nx; x++) for (let y = 0; y < ny; y++) mat += poly([[x, y, 0], [x + 1, y, 0], [x + 1, y + 1, 0], [x, y + 1, 0]], '#EFE8F6', '#C9B8DA', 1.1);
+  const body = cubes.map(([x, y, z]) => poly([[x, y, z + 1], [x + 1, y, z + 1], [x + 1, y + 1, z + 1], [x, y + 1, z + 1]], `url(#${id}t)`) + poly([[x + 1, y, z], [x + 1, y + 1, z], [x + 1, y + 1, z + 1], [x + 1, y, z + 1]], `url(#${id}r)`) + poly([[x, y + 1, z], [x + 1, y + 1, z], [x + 1, y + 1, z + 1], [x, y + 1, z + 1]], `url(#${id}l)`) + glint(x, y, z)).join('');
+  const defs = `<defs>${vlg5(id + 't', '#FFF1B8', '#FFD050', 1, 1)}${vlg5(id + 'r', '#FBB25A', '#EC8A2A')}${vlg5(id + 'l', '#E5843A', '#C55E1C')}</defs>`;
+  const X = pts.map(p => p[0]), Y = pts.map(p => p[1]), x0 = Math.min(...X) - 4, y0 = Math.min(...Y) - 4, w = Math.max(...X) - x0 + 4, hh = Math.max(...Y) - y0 + 8;
+  return `<svg class="vpic iso" viewBox="${x0.toFixed(1)} ${y0.toFixed(1)} ${w.toFixed(1)} ${hh.toFixed(1)}" style="width:${Math.round(Math.min(260, w * 2.2))}px">${defs}<g filter="url(#vsh)">${mat}${body}</g></svg>`;
 }
 // Plànol amb números, dibuixat en rombe perquè tingui la mateixa orientació que la construcció
 function planSVG(h, s = 22) {
-  const P = (x, y) => [(x - y) * s * .866, (x + y) * s * .5];
-  let body = '', pts = [];
+  const P = (x, y) => [(x - y) * s * .866, (x + y) * s * .5], f1 = p => p[0].toFixed(1) + ',' + p[1].toFixed(1), nx = h.length, ny = h[0].length, T = 5;
+  // una placa amb gruix (cantells lila) i les caselles a sobre; el número va en tinta fosca fixa (sobre clar en tots dos temes)
+  const dn = p => [p[0], p[1] + T];
+  let body = `<polygon points="${[P(nx, 0), P(nx, ny), dn(P(nx, ny)), dn(P(nx, 0))].map(f1).join(' ')}" fill="#B9A6CC" stroke="#8E77A6" stroke-width="1" stroke-linejoin="round"/><polygon points="${[P(0, ny), P(nx, ny), dn(P(nx, ny)), dn(P(0, ny))].map(f1).join(' ')}" fill="#A48DBB" stroke="#8E77A6" stroke-width="1" stroke-linejoin="round"/>`, pts = [dn(P(nx, ny)), dn(P(nx, 0)), dn(P(0, ny))];
   h.forEach((col, x) => col.forEach((v, y) => {
     const ps = [P(x, y), P(x + 1, y), P(x + 1, y + 1), P(x, y + 1)]; pts.push(...ps);
     const c = P(x + .5, y + .5);
-    body += `<polygon points="${ps.map(p => p.join(',')).join(' ')}" fill="${v ? '#FFF3C4' : '#F1ECF5'}" stroke="#2B1A38" stroke-width="1.2"/>${v ? `<text x="${c[0]}" y="${c[1] + 5}" text-anchor="middle" font-size="14" font-weight="900" fill="#2B1A38">${v}</text>` : ''}`;
+    body += `<polygon points="${ps.map(f1).join(' ')}" fill="${v ? 'url(#gRuler)' : '#F1ECF5'}" stroke="#6B4F85" stroke-width="1.3" stroke-linejoin="round"/>${v ? `<text x="${c[0].toFixed(1)}" y="${(c[1] + 5.5).toFixed(1)}" text-anchor="middle" font-size="15" ${F} fill="#2B1A39">${v}</text>` : ''}`;
   }));
-  const X = pts.map(p => p[0]), Y = pts.map(p => p[1]), x0 = Math.min(...X) - 2, y0 = Math.min(...Y) - 2, w = Math.max(...X) - x0 + 2, hh = Math.max(...Y) - y0 + 2;
-  return `<svg class="vpic" viewBox="${x0} ${y0} ${w} ${hh}" style="width:${Math.round(w * 1.3)}px">${body}</svg>`;
+  const X = pts.map(p => p[0]), Y = pts.map(p => p[1]), x0 = Math.min(...X) - 3, y0 = Math.min(...Y) - 3, w = Math.max(...X) - x0 + 3, hh = Math.max(...Y) - y0 + 6;
+  return `<svg class="vpic" viewBox="${x0.toFixed(1)} ${y0.toFixed(1)} ${w.toFixed(1)} ${hh.toFixed(1)}" style="width:${Math.round(w * 1.55)}px"><g filter="url(#vsh)">${body}</g></svg>`;
 }
 
 /* --- Graella per pintar (tipus d'exercici nou: 'grid') --- */
@@ -98,38 +113,67 @@ function gridTap(i) {
 }
 const gridRight = e => { const s = LS.gsel || new Set(); return e.need ? s.size === e.need : s.size === e.ans.length && e.ans.every(i => s.has(i)); };
 function gridSolSVG(e, s = 14) {
-  return `<svg class="vpic sol" viewBox="0 0 ${e.cols * s} ${e.rows * s}" style="width:${e.cols * s}px">${[...Array(e.rows * e.cols).keys()].map(i => { const x = i % e.cols, y = Math.floor(i / e.cols), on = (e.fixed || []).includes(i) || e.ans.includes(i); return `<rect x="${x * s}" y="${y * s}" width="${s}" height="${s}" fill="${on ? ((e.fixed || []).includes(i) ? '#8A4FB0' : '#3CC46A') : '#fff'}" stroke="#B9A6CC"/>`; }).join('')}${e.axis === 'v' ? `<line x1="${e.cols * s / 2}" y1="0" x2="${e.cols * s / 2}" y2="${e.rows * s}" stroke="#D63C42" stroke-width="2"/>` : e.axis === 'h' ? `<line x1="0" y1="${e.rows * s / 2}" x2="${e.cols * s}" y2="${e.rows * s / 2}" stroke="#D63C42" stroke-width="2"/>` : ''}</svg>`;
+  const W = e.cols * s, H = e.rows * s, fx = new Set(e.fixed || []), an = new Set(e.ans);
+  // quadern: fons lila amb vora, caselles arrodonides amb degradat (lila = ja hi era, verd = les que calia pintar)
+  return `<svg class="vpic sol" viewBox="-4 -4 ${W + 8} ${H + 8}" style="width:${W + 8}px"><rect x="-3" y="-3" width="${W + 6}" height="${H + 6}" rx="5" fill="#EFE7F6" stroke="#CDBEDD" stroke-width="1.2"/>${[...Array(e.rows * e.cols).keys()].map(i => { const x = i % e.cols, y = Math.floor(i / e.cols), on = fx.has(i) || an.has(i); return `<rect x="${x * s + .8}" y="${y * s + .8}" width="${s - 1.6}" height="${s - 1.6}" rx="2.6" fill="${on ? (fx.has(i) ? 'url(#gPurple)' : 'url(#gGreen)') : '#fff'}" stroke="${on ? 'none' : '#D9CCE6'}"/>`; }).join('')}${e.axis === 'v' ? `<line x1="${W / 2}" y1="-2" x2="${W / 2}" y2="${H + 2}" stroke="#E0343B" stroke-width="2.4" stroke-linecap="round"/>` : e.axis === 'h' ? `<line x1="-2" y1="${H / 2}" x2="${W + 2}" y2="${H / 2}" stroke="#E0343B" stroke-width="2.4" stroke-linecap="round"/>` : ''}</svg>`;
 }
 
 /* --- Balances --- */
-const VSHP = { c: (x, y, f) => `<circle cx="${x}" cy="${y - 11}" r="11" fill="${f}" stroke="#2B1A38" stroke-width="1.5"/>`, t: (x, y, f) => `<polygon points="${x - 12},${y} ${x + 12},${y} ${x},${y - 22}" fill="${f}" stroke="#2B1A38" stroke-width="1.5" stroke-linejoin="round"/>`, s: (x, y, f) => `<rect x="${x - 10}" y="${y - 20}" width="20" height="20" rx="3" fill="${f}" stroke="#2B1A38" stroke-width="1.5"/>` };
+// figures amb volum: degradat del color, contorn i un reflex blanc (la forma i el color no canvien)
+const VSHP = {
+  c: (x, y, f) => `<circle cx="${x}" cy="${y - 11}" r="11" fill="${vgf5(f)}" stroke="${INK}" stroke-width="1.6"/><ellipse cx="${x - 4}" cy="${y - 15.5}" rx="4.2" ry="2.6" transform="rotate(-35 ${x - 4} ${y - 15.5})" fill="#fff" opacity=".6"/>`,
+  t: (x, y, f) => `<polygon points="${x - 12},${y} ${x + 12},${y} ${x},${y - 22}" fill="${vgf5(f)}" stroke="${INK}" stroke-width="1.6" stroke-linejoin="round"/><path d="M${x - 2.2} ${y - 16.5} L${x - 6.2} ${y - 9}" stroke="#fff" stroke-width="2.4" stroke-linecap="round" opacity=".6"/>`,
+  s: (x, y, f) => `<rect x="${x - 10}" y="${y - 20}" width="20" height="20" rx="4" fill="${vgf5(f)}" stroke="${INK}" stroke-width="1.6"/><rect x="${x - 6.5}" y="${y - 17.2}" width="13" height="4" rx="2" fill="#fff" opacity=".55"/>`
+};
 const VSHN = { c: ['cercle', 'círculo', '●'], t: ['triangle', 'triángulo', '▲'], s: ['quadrat', 'cuadrado', '■'] };
-function panItems(items, cx, y) {
-  const w = 26, x0 = cx - (items.length - 1) * w / 2;
-  return items.map((it, i) => { const x = x0 + i * w; return it.n != null ? `<rect x="${x - 12}" y="${y - 22}" width="24" height="22" rx="4" fill="#9AA5B1" stroke="#2B1A38" stroke-width="1.5"/><text x="${x}" y="${y - 6}" text-anchor="middle" font-size="12" font-weight="900" fill="#fff">${it.n}</text>` : VSHP[it.s](x, y, it.f); }).join('');
+// pesa de metall amb nansa i el número en blanc
+const vwgt5 = (x, y, n, g) => `<path d="M${x - 6} ${y - 20} Q${x - 6} ${y - 28} ${x} ${y - 28} Q${x + 6} ${y - 28} ${x + 6} ${y - 20}" fill="none" stroke="#5E6B78" stroke-width="3.2" stroke-linecap="round"/><path d="M${x - 15} ${y} L${x + 15} ${y} L${x + 11.5} ${y - 21} L${x - 11.5} ${y - 21} Z" fill="url(#${g})" stroke="#4A5562" stroke-width="1.6" stroke-linejoin="round"/><path d="M${x - 8.5} ${y - 18} L${x + 8.5} ${y - 18}" stroke="#fff" stroke-width="1.8" stroke-linecap="round" opacity=".45"/><text x="${x}" y="${y - 5.5}" text-anchor="middle" font-size="${String(n).length > 1 ? 13.5 : 15}" ${F} fill="#fff">${n}</text>`;
+function panItems(items, cx, y, g) {
+  const k = items.length > 3 ? 1.05 : 1.2, w = 25 * k, x0 = cx - (items.length - 1) * w / 2;
+  return items.map((it, i) => { const x = x0 + i * w; return `<g transform="translate(${x.toFixed(1)} ${y}) scale(${k})">${it.n != null ? vwgt5(0, 0, it.n, g) : VSHP[it.s](0, 0, it.f)}</g>`; }).join('');
 }
 function balanceSVG(left, right) {
-  return `<svg class="vpic bal" viewBox="0 0 240 120" style="width:260px"><polygon points="112,112 128,112 120,40" fill="#B9A6CC"/><rect x="20" y="38" width="200" height="6" rx="3" fill="#6B4F85"/>
-    <path d="M22 44 L10 88 M22 44 L60 88 M218 44 L180 88 M218 44 L230 88" stroke="#6B4F85" stroke-width="1.5"/><rect x="4" y="88" width="62" height="5" rx="2" fill="#6B4F85"/><rect x="174" y="88" width="62" height="5" rx="2" fill="#6B4F85"/>
-    ${panItems(left, 35, 88)}${panItems(right, 205, 88)}<circle cx="120" cy="40" r="5" fill="#FFC93C" stroke="#6B4F85"/></svg>`;
+  const id = 'vb5' + (++vuid5), B = 36, Y = 110, PW = 54;
+  // plat penjat: fils, bol de metall i, a sobre, el que s'hi posa (amb ombra)
+  const pan = (cx, items) => `<path d="M${cx} ${B + 3} L${cx - PW + 5} ${Y} M${cx} ${B + 3} L${cx + PW - 5} ${Y}" stroke="#9C88B5" stroke-width="2.2" stroke-linecap="round" fill="none"/><path d="M${cx - PW} ${Y} Q${cx} ${Y + 28} ${cx + PW} ${Y} Z" fill="url(#${id}p)" stroke="#6B4F85" stroke-width="1.6" stroke-linejoin="round"/><path d="M${cx - PW} ${Y} L${cx + PW} ${Y}" stroke="#5E4A75" stroke-width="3.2" stroke-linecap="round"/><g filter="url(#vsh)">${panItems(items, cx, Y - 1, id + 'm')}</g>`;
+  return `<svg class="vpic bal" viewBox="0 0 280 150" style="width:280px"><defs>${vlg5(id + 'p', '#F6F1FA', '#C3AFD7')}${vlg5(id + 'm', '#B9C3CE', '#6E7A87')}</defs>
+    <ellipse cx="140" cy="145" rx="44" ry="3.6" fill="#2B1A38" opacity=".13"/>
+    <rect x="134.5" y="${B}" width="11" height="100" rx="5" fill="url(#gPurple)" stroke="#4E1D68" stroke-width="1.4"/><rect x="137" y="${B + 8}" width="3" height="84" rx="1.5" fill="#fff" opacity=".35"/>
+    <path d="M112 144 L168 144 Q171 144 169 141 L159 130 Q157 128 153 128 L127 128 Q123 128 121 130 L111 141 Q109 144 112 144 Z" fill="url(#gWood)" stroke="#A87437" stroke-width="1.5" stroke-linejoin="round"/>
+    ${pan(58, left)}${pan(222, right)}
+    <path d="M140 ${B - 4} L140 ${B - 19}" stroke="#5E4A75" stroke-width="3" stroke-linecap="round"/><circle cx="140" cy="${B - 20}" r="3.6" fill="url(#gGold)" stroke="#B07A00" stroke-width="1"/>
+    <rect x="16" y="${B - 5}" width="248" height="10" rx="5" fill="url(#gPurple)" stroke="#4E1D68" stroke-width="1.5"/><rect x="24" y="${B - 3.2}" width="232" height="2.8" rx="1.4" fill="#fff" opacity=".4"/>
+    <circle cx="58" cy="${B}" r="4" fill="url(#gGold)" stroke="#B07A00" stroke-width="1"/><circle cx="222" cy="${B}" r="4" fill="url(#gGold)" stroke="#B07A00" stroke-width="1"/>
+    <circle cx="140" cy="${B}" r="8.5" fill="url(#gGold)" stroke="#B07A00" stroke-width="1.5"/><circle cx="137.4" cy="${B - 2.6}" r="2.6" fill="#fff" opacity=".7"/></svg>`;
 }
 
 /* --- Sèries de figures --- */
 function tileSVG(t, s = 46) {
   const c = s / 2; let inner = '';
-  if (t.k === 'arrow') inner = `<g transform="rotate(${t.r} ${c} ${c})"><path d="M${c} 8 L${s - 12} ${c} L${c + 5} ${c} L${c + 5} ${s - 8} L${c - 5} ${s - 8} L${c - 5} ${c} L12 ${c} Z" fill="${t.f}" stroke="#2B1A38" stroke-width="1.5" stroke-linejoin="round"/></g>`;
-  else if (t.k === 'dots') inner = [...Array(t.n).keys()].map(i => `<circle cx="${9 + (i % 3) * 14}" cy="${9 + Math.floor(i / 3) * 14}" r="5" fill="${t.f}"/>`).join('');
+  if (t.k === 'arrow') inner = `<g transform="rotate(${t.r} ${c} ${c})"><path d="M${c} 8 L${s - 12} ${c} L${c + 5} ${c} L${c + 5} ${s - 8} L${c - 5} ${s - 8} L${c - 5} ${c} L12 ${c} Z" fill="${vgf5(t.f)}" stroke="${INK}" stroke-width="1.6" stroke-linejoin="round"/><path d="M${c - 2} 13 L${c - 7.5} ${c - 3}" stroke="#fff" stroke-width="2" stroke-linecap="round" opacity=".55"/></g>`;
+  else if (t.k === 'dots') inner = [...Array(t.n).keys()].map(i => { const x = 9 + (i % 3) * 14, y = 9 + Math.floor(i / 3) * 14; return `<circle cx="${x}" cy="${y}" r="5.2" fill="${vgf5(t.f)}" stroke="${INK}" stroke-opacity=".35" stroke-width="1"/><circle cx="${x - 1.7}" cy="${y - 1.8}" r="1.6" fill="#fff" opacity=".75"/>`; }).join('');
   else inner = VSHP[t.s](c, c + 11, t.f);
-  return `<svg class="vtile" viewBox="0 0 ${s} ${s}" style="width:${s}px"><rect x="1" y="1" width="${s - 2}" height="${s - 2}" rx="8" fill="#fff" stroke="#D9CCE6" stroke-width="1.5"/>${inner}</svg>`;
+  // fitxa de cartró: cantell lila a sota (com un botó) i cara blanca
+  return `<svg class="vtile" viewBox="0 0 ${s} ${s}" style="width:${s}px"><rect x="1" y="3.5" width="${s - 2}" height="${s - 4.5}" rx="9" fill="#D3C3E3"/><rect x="1" y="1" width="${s - 2}" height="${s - 4.5}" rx="9" fill="url(#gPaper)" stroke="#E0D3EC" stroke-width="1.2"/>${inner}</svg>`;
 }
 const tkey = t => JSON.stringify(t);
 
 /* --- Laberint --- */
-function mazeSVG(w, h, rock, st, go, s = 30) {
-  let b = '';
-  for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) { const i = y * w + x; b += `<rect x="${x * s}" y="${y * s}" width="${s}" height="${s}" fill="${rock.has(i) ? '#8C7A6B' : (x + y) % 2 ? '#EAF7EE' : '#F6FBF7'}" stroke="#CFE3D4"/>${rock.has(i) ? `<circle cx="${x * s + s / 2}" cy="${y * s + s / 2 + 2}" r="${s / 3}" fill="#A8978A"/>` : ''}`; }
-  const em = (i, e) => `<text x="${(i % w) * s + s / 2}" y="${Math.floor(i / w) * s + s / 2 + 7}" text-anchor="middle" font-size="${s * .62}">${e}</text>`;
-  return `<svg class="vpic" viewBox="0 0 ${w * s} ${h * s}" style="width:${w * s}px">${b}${em(st, '🤖')}${em(go, '🚩')}</svg>`;
+function mazeSVG(w, h, rock, st, go, s = 34) {
+  // tauler de joc: marc verd amb cantell, caselles d'herba, roques amb volum, el robot a la sortida i la bandera a l'arribada
+  const id = 'vm5' + (++vuid5), W = w * s, H = h * s, k = (s / 27).toFixed(3);
+  let b = `<defs>${vlg5(id + 'r', '#CFC3B9', '#7F6D60', .5, 1)}${vlg5(id + 'g', '#F3FCEC', '#DDF2CF')}${vlg5(id + 'h', '#E6F7DA', '#CDEBBA')}</defs>`;
+  b += `<g filter="url(#vsh)"><rect x="-7" y="-4" width="${W + 14}" height="${H + 13}" rx="13" fill="#4F8F2C"/><rect x="-7" y="-7" width="${W + 14}" height="${H + 14}" rx="13" fill="url(#gLime)" stroke="#5E9E35" stroke-width="1.5"/></g>`;
+  for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+    const i = y * w + x, X = x * s, Y = y * s, cx = X + s / 2, cy = Y + s / 2;
+    const f = i === st ? '#CFEAFB' : i === go ? '#FFF0B3' : `url(#${id}${(x + y) % 2 ? 'h' : 'g'})`;
+    b += `<rect x="${X + 1.4}" y="${Y + 2.6}" width="${s - 2.8}" height="${s - 2.8}" rx="6" fill="#8CC56A" opacity=".55"/><rect x="${X + 1.4}" y="${Y + 1.4}" width="${s - 2.8}" height="${s - 2.8}" rx="6" fill="${f}"/>`;
+    if (rock.has(i)) b += `<ellipse cx="${cx}" cy="${(cy + s * .3).toFixed(1)}" rx="${(s * .34).toFixed(1)}" ry="${(s * .08).toFixed(1)}" fill="#2B1A38" opacity=".2"/><path d="M${(cx - s * .36).toFixed(1)} ${(cy + s * .26).toFixed(1)} Q${(cx - s * .4).toFixed(1)} ${(cy - s * .12).toFixed(1)} ${(cx - s * .1).toFixed(1)} ${(cy - s * .3).toFixed(1)} Q${(cx + s * .22).toFixed(1)} ${(cy - s * .38).toFixed(1)} ${(cx + s * .36).toFixed(1)} ${(cy - s * .02).toFixed(1)} Q${(cx + s * .42).toFixed(1)} ${(cy + s * .24).toFixed(1)} ${(cx + s * .3).toFixed(1)} ${(cy + s * .28).toFixed(1)} Z" fill="url(#${id}r)" stroke="#5F4F44" stroke-width="1.4" stroke-linejoin="round"/><ellipse cx="${(cx - s * .1).toFixed(1)}" cy="${(cy - s * .12).toFixed(1)}" rx="${(s * .11).toFixed(1)}" ry="${(s * .06).toFixed(1)}" transform="rotate(-25 ${(cx - s * .1).toFixed(1)} ${(cy - s * .12).toFixed(1)})" fill="#fff" opacity=".5"/>`;
+  }
+  const at = i => `translate(${(i % w) * s + s / 2} ${Math.floor(i / w) * s + s / 2}) scale(${k})`;
+  const bot = `<g transform="${at(st)}"><ellipse cx="0" cy="12" rx="9" ry="2.2" fill="#2B1A38" opacity=".2"/><path d="M0 -9 V-12.5" stroke="#5E4A75" stroke-width="1.8" stroke-linecap="round"/><circle cx="0" cy="-13.5" r="2.4" fill="url(#gRed)" stroke="#B0262C" stroke-width=".8"/><rect x="-6.5" y="3" width="13" height="8" rx="2.5" fill="url(#gBlue)" stroke="#2B1A39" stroke-width="1.3"/><rect x="-9.5" y="-9" width="19" height="13.5" rx="4.5" fill="url(#gBlue)" stroke="#2B1A39" stroke-width="1.4"/><rect x="-6.8" y="-6.4" width="13.6" height="8.4" rx="3" fill="#EAF6FF"/><circle cx="-3" cy="-2.4" r="1.7" fill="#2B1A39"/><circle cx="3" cy="-2.4" r="1.7" fill="#2B1A39"/><path d="M-2 .3 Q0 1.6 2 .3" stroke="#2B1A39" stroke-width="1" fill="none" stroke-linecap="round"/></g>`;
+  const flag = `<g transform="${at(go)}"><ellipse cx="-3" cy="11.5" rx="7" ry="2" fill="#2B1A38" opacity=".22"/><path d="M-4 11 V-11" stroke="#5E4A75" stroke-width="2.4" stroke-linecap="round"/><path d="M-3 -11 L10 -6.5 L-3 -2 Z" fill="url(#gRed)" stroke="#B0262C" stroke-width="1.2" stroke-linejoin="round"/><circle cx="-4" cy="-11.8" r="2" fill="url(#gGold)" stroke="#B07A00" stroke-width=".6"/></g>`;
+  return `<svg class="vpic" viewBox="-9 -9 ${W + 18} ${H + 24}" style="width:${W + 18}px">${b}${bot}${flag}</svg>`;
 }
 function bfs(w, h, rock, st) {
   const d = Array(w * h).fill(-1), q = [st]; d[st] = 0;
@@ -158,14 +202,14 @@ Object.assign(EX, {
     const col = pick(VCOL), neg = lvN(a) >= 6 && Math.random() < .4;
     // la resposta es plega si i només si NO és la variant «NO es pot plegar»
     const right = netSet(!neg, 1)[0], wrong = netSet(neg, 3);
-    return mc(neg ? L('Quin d\'aquests desplegaments <b>NO</b> es pot plegar per fer un cub?', '¿Cuál de estos desarrollos <b>NO</b> se puede plegar para hacer un cubo?') : L('Quin d\'aquests desplegaments es pot plegar per fer un <b>cub</b>?', '¿Cuál de estos desarrollos se puede plegar para hacer un <b>cubo</b>?'), polySVG(right, col, 16), wrong.map(p => polySVG(p, col, 16)), { pics: true, vis: `<div class="bigemo">🎲</div>`, ex: L('Imagina que plegues les cares: en un cub cada cara ha de quedar en un lloc diferent. Si dues cares es trepitgen o hi ha un bloc de 2 × 2, no funciona.', 'Imagina que pliegas las caras: en un cubo cada cara tiene que quedar en un sitio diferente. Si dos caras se pisan o hay un bloque de 2 × 2, no funciona.') });
+    return mc(neg ? L('Quin d\'aquests desplegaments <b>NO</b> es pot plegar per fer un cub?', '¿Cuál de estos desarrollos <b>NO</b> se puede plegar para hacer un cubo?') : L('Quin d\'aquests desplegaments es pot plegar per fer un <b>cub</b>?', '¿Cuál de estos desarrollos se puede plegar para hacer un <b>cubo</b>?'), polySVG(right, col, 19), wrong.map(p => polySVG(p, col, 19)), { pics: true, vis: `<div class="bigemo">🎲</div>`, ex: L('Imagina que plegues les cares: en un cub cada cara ha de quedar en un lloc diferent. Si dues cares es trepitgen o hi ha un bloc de 2 × 2, no funciona.', 'Imagina que pliegas las caras: en un cubo cada cara tiene que quedar en un sitio diferente. Si dos caras se pisan o hay un bloque de 2 × 2, no funciona.') });
   },
   'v.rot': (L_, a) => {
     const n = lvN(a), sz = n <= 3 ? 4 : n <= 6 ? 5 : 6, col = pick(VCOL);
     let p; for (let g = 0; g < 200; g++) { p = growPoly(sz, 4, 4); if (canonR(p) !== canonR(pmir(p))) break; }
     const R = rots(p), k = ri(1, 3), right = R[k], mk = new Set([pkey(right)]), wrong = [];
     shuffle(rots(pmir(p))).forEach(m => { const kk = pkey(m); if (!mk.has(kk) && wrong.length < 3) { mk.add(kk); wrong.push(m); } });
-    return mc(L('Quina figura és <b>la mateixa</b>, només girada? (Les altres estan girades com en un mirall.)', '¿Qué figura es <b>la misma</b>, solo girada? (Las otras están giradas como en un espejo.)'), polySVG(right, col, 16), wrong.map(m => polySVG(m, col, 16)), { pics: true, vis: polySVG(p, col, 22), ex: L(`La figura correcta és l'original girada ${k * 90}°. Les altres només surten si la gires del revés, com en un mirall.`, `La figura correcta es la original girada ${k * 90}°. Las otras solo salen si le das la vuelta, como en un espejo.`) });
+    return mc(L('Quina figura és <b>la mateixa</b>, només girada? (Les altres estan girades com en un mirall.)', '¿Qué figura es <b>la misma</b>, solo girada? (Las otras están giradas como en un espejo.)'), polySVG(right, col, 19), wrong.map(m => polySVG(m, col, 19)), { pics: true, vis: polySVG(p, col, 28), ex: L(`La figura correcta és l'original girada ${k * 90}°. Les altres només surten si la gires del revés, com en un mirall.`, `La figura correcta es la original girada ${k * 90}°. Las otras solo salen si le das la vuelta, como en un espejo.`) });
   },
   'v.sym': (L_, a) => {
     const n = lvN(a), horiz = n >= 5 && Math.random() < .4;
