@@ -16,7 +16,8 @@ function remix(e) {
     return { ...e, type: 'choice', tf: true, q: L('És <b>correcte</b>?', '¿Es <b>correcto</b>?'), vis: e.vis.replace(BOX, `<span class="tfv">${fmt(cand)}${unitOf(e)}</span>`),
       opts: [L('✔ Sí', '✔ Sí'), L('✖ No', '✖ No')], ans, ex: (good ? '' : L(`No: la resposta és ${fmt(e.ans)}. `, `No: la respuesta es ${fmt(e.ans)}. `)) + (e.ex || '') };
   }
-  if (r < .30) {
+  // globus només amb números curts: amb 5-6 xifres i distractors de ±1 no es llegia l'última xifra
+  if (r < .30 && fmt(e.ans).length + unitOf(e).length <= 6) {
     const opts = shuffle([e.ans, ...numDis(e.ans)]).map(v => fmt(v) + unitOf(e));
     return { ...e, type: 'choice', balloon: true, opts, ans: opts.indexOf(fmt(e.ans) + unitOf(e)), q: e.q + ` <span class="hint">🎈 ${L('Explota el globus correcte!', '¡Explota el globo correcto!')}</span>` };
   }

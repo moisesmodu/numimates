@@ -1467,7 +1467,7 @@ function teacherTema() {
 }
 function resetP() {
   ask(L(`Segur que vols esborrar tot el progrés de <b>${esc(P.name)}</b>? No es pot desfer.`, `¿Seguro que quieres borrar todo el progreso de <b>${esc(P.name)}</b>? No se puede deshacer.`), L('ESBORRA', 'BORRAR'), L('CANCEL·LA', 'CANCELAR'), async () => {
-    const keep = { id: P.id, code: P.code, username: P.username, name: P.name, lang: P.lang, course: P.course, baseCourse: P.baseCourse, survey: P.survey, goal: P.goal, sound: P.sound, unlockAll: false };
+    const keep = { id: P.id, code: P.code, username: P.username, name: P.name, lang: P.lang, course: P.course, baseCourse: P.baseCourse, survey: P.survey, goal: P.goal, sound: P.sound, classe: P.classe, pla: P.pla, hintAsk: P.hintAsk, unlockAll: false };  // la classe i el Premium no són progrés
     for (const k in P) delete P[k]; Object.assign(P, freshProgress(), keep, { resetPending: true });
     save();   // es queda pendent (i es torna a provar) fins que el servidor confirma l'esborrat
     go('home');
@@ -1695,7 +1695,8 @@ document.addEventListener('keydown', e => {
   if (SP) { if (/^\d$/.test(e.key)) skey(e.key); else if (e.key === 'Backspace') skey('del'); else if (e.key === 'Enter') skey('ok'); return; }
   if (AG) { if (/^\d$/.test(e.key)) akey(e.key); else if (e.key === 'Backspace') akey('del'); else if (e.key === 'Enter') akey('ok'); return; }
   if (!LS || !LS.cur || $('.modal-bg')) return;
-  if (e.key === 'Enter') { e.preventDefault(); return check(); }
+  // Enter sobre un botó amb el focus (una opció, ✕) fa el clic d'aquest botó, no «Comprova»
+  if (e.key === 'Enter') { const f = document.activeElement; if (f && f.tagName === 'BUTTON' && f.id !== 'chk' && LS.state === 'ask' && !f.classList.contains('sel')) return; e.preventDefault(); return check(); }
   if (LS.state !== 'ask') return;
   const t = LS.cur.type;
   if (t === 'input') { if (/^\d$/.test(e.key)) key(e.key); else if (e.key === 'Backspace') key('del'); else if ((e.key === ',' || e.key === '.') && LS.cur.dec) key(','); else if (e.key === '-' && LS.cur.neg) key('−'); }
