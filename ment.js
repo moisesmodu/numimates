@@ -369,13 +369,13 @@ function mGameFx() {
 }
 function mQuit() { ask(MGA && MGA.test ? L('Vols deixar el test? Hauràs de tornar a començar.', '¿Quieres dejar el test? Tendrás que volver a empezar.') : L('Vols deixar aquesta partida?', '¿Quieres dejar esta partida?'), L('Surt', 'Salir'), L('Continua', 'Sigue'), () => { mStop(); MT = null; go('home'); }); }
 // jocs amb il·lustració pròpia a la presentació (img/ment/<joc>.webp, 16:9)
-const MIMG = new Set(['com']);
+const MIMG = new Set(Object.keys(MG));   // il·lustracions vectorials pròpies: scripts/ment-art (node art.mjs)
 function mIntro(g, inSes) {
   MGA = { ses: inSes };
   const m = MS(), best = m.best[g], adapt = !MG[g].span && !MG[g].lvx, lv = mLvl(g);
   const chips = [adapt ? `<span>${mSvg('progres', 'mico')}${L(`Nivell ${lv} de 10`, `Nivel ${lv} de 10`)}</span>` : '',
     best != null ? `<span>${mSvg('copa', 'mico')}${L('Rècord', 'Récord')}: <b>${mNice(g, best)}</b></span>` : `<span>${mSvg('fulla', 'mico')}${L('Primera partida', 'Primera partida')}</span>`].join('');
-  mGameShell(g, '', `<div class="mintro mintro2">${MIMG.has(g) ? `<div class="mi-art"><img src="img/ment/${g}.webp" alt="" width="1200" height="672"></div>` : ''}<div class="mi-hero">${mGic(g)}<div><p class="mi-cap">${tx(MCAP[MG[g].cap])}</p><h2>${tx(MG[g].n)}</h2></div></div>
+  mGameShell(g, '', `<div class="mintro mintro2">${MIMG.has(g) ? `<div class="mi-art"><img src="img/ment/${g}.webp" alt="" width="1200" height="675"></div>` : ''}<div class="mi-hero">${mGic(g)}<div><p class="mi-cap">${tx(MCAP[MG[g].cap])}</p><h2>${tx(MG[g].n)}</h2></div></div>
     <div class="mi-chips">${chips}</div>${mHow(g)}
     <div class="mi-acts">${'speechSynthesis' in window ? `<button class="btn ghost mspeak" onclick="mSpeak('${g}')">${mSvg('so', 'mico')} ${L("Escolta-ho", 'Escúchalo')}</button>` : ''}<button class="btn big mbtn mplay" onclick="mStart('${g}')">${L('Juga', 'Juega')}</button></div></div>`);
 }
