@@ -1707,8 +1707,10 @@ if (P) { pull(); syncNow(); classeRefresh(); }
 go(P ? 'home' : 'onboard');
 
 /* ---------- Pregunta sencera a la pantalla: si l'exercici no hi cap, s'encongeix per passos ---------- */
-// alçada real del contingut (sense comptar les animacions, que amb transform semblen ocupar més)
-const contentH = b => { const kids = [...b.children].filter(c => !c.classList.contains('morebtn')); return Math.max(0, ...kids.map(c => c.offsetTop + c.offsetHeight)) - b.offsetTop + parseFloat(getComputedStyle(b).paddingBottom || 0); };
+// alçada real del contingut (sense comptar les animacions, que amb transform semblen ocupar més).
+// Les mides offset* d'un fill amb «zoom» propi (fit5, fit6) surten en les seves unitats: es passen a les del pare.
+// Si el pare és el seu offsetParent (.lesson>* és position:relative), el seu offsetTop no s'ha de restar.
+const contentH = b => { const kids = [...b.children].filter(c => !c.classList.contains('morebtn')); return Math.max(0, ...kids.map(c => (c.offsetTop + c.offsetHeight) * (parseFloat(getComputedStyle(c).zoom) || 1) - (c.offsetParent === b ? 0 : b.offsetTop))) + parseFloat(getComputedStyle(b).paddingBottom || 0); };
 // també si alguna cosa surt pels costats (una fila d'emojis o dos números llargs a comparar)
 const lessonOver = b => contentH(b) > b.clientHeight + 2 || b.scrollWidth > b.clientWidth + 1;
 function fitLesson() {
@@ -1733,4 +1735,5 @@ function moreHints() {
   });
 }
 new MutationObserver(() => { fitLesson(); clearTimeout(moreHints.t); moreHints.t = setTimeout(moreHints, 350); }).observe(document.getElementById('app'), { childList: true, subtree: true });
-addEventListener('resize', () => setTimeout(() => { fitLesson(); moreHints(); }, 200));
+// en canviar la mida de la finestra es torna a mirar des de zero (abans s'hi quedava encongit per sempre)
+addEventListener('resize', () => { clearTimeout(fitLesson.t); fitLesson.t = setTimeout(() => { const les = document.querySelector('.lesson:not(.learn)'); les && les.classList.remove('fit1', 'fit2', 'fit3', 'fit4', 'fit5', 'fit6'); fitLesson(); moreHints(); }, 200); });

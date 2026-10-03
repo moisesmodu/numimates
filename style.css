@@ -1386,3 +1386,16 @@ body.pro .energy{box-shadow:0 8px 22px rgba(60,30,90,.08)}
   .nav .navxat .ni{width:28px;height:28px}.nav .navxat .ni svg{width:26px;height:26px}
   .lesson .l-body{max-width:720px}
 }
+
+/* =================== Lliçons a l'ordinador (Mates i Pro) ===================
+   Al mòbil les respostes van a baix, on arriba el polze. A l'ordinador això deixava un forat enorme entre la pregunta
+   i les respostes: aquí tot va junt i centrat a l'alçada de la pantalla (si no hi cap, comença a dalt i es desplaça).
+   La barra de desplaçament de Windows (17 px) és fina i té lloc reservat, perquè en aparèixer no torni a encaixar-ho tot. */
+@media (min-width:900px){
+  .lesson .l-body{justify-content:safe center;scrollbar-width:thin;scrollbar-color:color-mix(in srgb,var(--uc,#602B7A) 30%,transparent) transparent;scrollbar-gutter:stable both-edges}
+  .lesson .l-body>.l-vis{margin:0}
+  .lesson .l-body>.l-q+.l-ans,.lesson .l-body>.l-vis+.l-ans{margin-top:22px}
+  .lesson .l-body>.l-q{margin-bottom:18px}
+  .lesson .l-body>.retry{align-self:flex-start}
+  .lesson .l-body>.morebtn{flex:none}
+}
