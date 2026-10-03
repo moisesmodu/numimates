@@ -1257,7 +1257,8 @@ function mAnamSave(list) {
 // consentiment per desar-ho al compte (sí) o només al mòbil (no); en retirar-lo, les respostes tornen al mòbil i surten del compte
 function mAnamSync(yes, back) {
   const m = MS(), list = mAnam();
-  if (yes) { m.anamOk = today(); m.anam = list; try { localStorage.removeItem(mAnKey()); } catch (e) { } toast(L('Desat al teu compte.', 'Guardado en tu cuenta.')); }
+  if (yes) { m.anamOk = today(); m.anamVer = 'v1-2026-10';   // versió del text del consentiment (art. 7.1: poder-lo demostrar)
+    m.anam = list; try { localStorage.removeItem(mAnKey()); } catch (e) { } toast(L('Desat al teu compte.', 'Guardado en tu cuenta.')); }
   else { if (m.anamOk) try { localStorage.setItem(mAnKey(), JSON.stringify(list)); } catch (e) { } m.anamOk = false; delete m.anam; }
   save(); syncNow(); (back || mAnamRes)();
 }
@@ -1614,7 +1615,7 @@ function mentProfile() {
     ${P.code ? `<section class="mtcard"><div class="mthead"><b>${L('El meu compte', 'Mi cuenta')}</b></div>${P.username ? `<p>${L('Usuari', 'Usuario')}: <b>${esc(P.username)}</b></p><p class="mmut">${L('Entra amb el teu usuari i contrasenya des de qualsevol mòbil o ordinador.', 'Entra con tu usuario y contraseña desde cualquier móvil u ordenador.')}</p>` : `<p class="mmut">${L('Encara no tens usuari i contrasenya. Crea-te’ls per poder entrar des de qualsevol mòbil o ordinador.', 'Aún no tienes usuario y contraseña. Créatelos para poder entrar desde cualquier móvil u ordenador.')}</p>`}<p class="mmut" style="font-size:14.5px">${L('Codi del compte', 'Código de la cuenta')}: <b class="mono">${esc(P.code)}</b> · ${L('serveix per recuperar el compte. No el comparteixis.', 'sirve para recuperar la cuenta. No lo compartas.')}</p>${P.username ? '' : `<button class="btn ghost mbtn" onclick="accountModal()">${L('Crea usuari i contrasenya', 'Crea usuario y contraseña')}</button>`}</section>` : ''}
     <section class="mtcard"><div class="mthead"><b>Premium</b></div>${typeof premiumBox === 'function' ? premiumBox() : ''}</section>
     <section class="mtcard"><div class="mthead"><b>${L('So', 'Sonido')}</b></div><button class="btn ghost mbtn" onclick="P.sound=!P.sound;save();mentProfile()">${P.sound ? L('Activat', 'Activado') : L('Desactivat', 'Desactivado')}</button></section>
-    <div class="mprofb"><button class="btn ghost mbtn" onclick="renderProfiles()">${L('Canvia de perfil', 'Cambia de perfil')}</button><button class="link" onclick="mentCiencia()">${L('Com entrenar la ment', 'Cómo entrenar la mente')}</button><a class="link" href="https://numimates.com/privacitat" target="_blank" rel="noopener">${L('Privadesa', 'Privacidad')}</a></div>`, true, hero);
+    <div class="mprofb"><button class="btn ghost mbtn" onclick="renderProfiles()">${L('Canvia de perfil', 'Cambia de perfil')}</button><button class="link" onclick="mentCiencia()">${L('Com entrenar la ment', 'Cómo entrenar la mente')}</button><a class="link" href="https://numimates.com/privacitat" target="_blank" rel="noopener">${L('Privadesa', 'Privacidad')}</a><button class="link" onclick="exportMe()">${L('Descarrega les meves dades', 'Descarga mis datos')}</button><button class="link" onclick="eraseMe()">${L('Esborra el compte', 'Borrar la cuenta')}</button></div>`, true, hero);
 }
 
 /* ---------- Alta: «Altres» a la pantalla de què estudies ---------- */
@@ -1622,12 +1623,24 @@ function onbMent() {
   setVariant('ment');
   app.innerHTML = `<div class="scr varsplash mentsplash"><img class="onb-logo" src="${VAR.logo}" alt="${VAR.name}"><h1>${L('Et donem la benvinguda a Numi Ment', 'Te damos la bienvenida a Numi Ment')}</h1>
     <p class="sub">${L("Deu minuts al dia per mantenir la ment activa: rapidesa, atenció, memòria, càlcul, lògica i llenguatge. Començarem amb un test curt per saber la teva edat de la ment, i la dificultat s'adaptarà a tu.", 'Diez minutos al día para mantener la mente activa: rapidez, atención, memoria, cálculo, lógica y lenguaje. Empezaremos con un test corto para saber la edad de tu mente, y la dificultad se adaptará a ti.')}</p>
+    <label class="lbl" for="mborn" style="margin-top:6px">${L('Any de naixement', 'Año de nacimiento')}</label><input id="mborn" class="nm" type="number" inputmode="numeric" min="1900" max="${new Date().getFullYear()}" placeholder="${L('p. ex. 1958', 'p. ej. 1958')}" style="max-width:220px;margin:0 auto 6px;text-align:center">
+    <p class="err" id="mbornerr"></p>
     <button class="btn big" onclick="onbMentGo()">${L('Comencem', 'Empecemos')}</button><button class="link" onclick="ONB.stage=null;ONB.variant=null;onb(1)">${L('Tornar', 'Volver')}</button></div>`;
 }
+// Numi Ment és per a adults: es demana l'any de naixement (sense dir el límit). Un menor va a Numi Mates o Numi Pro.
 function onbMentGo() {
+  const y = parseInt(($('#mborn') || {}).value, 10), now = new Date().getFullYear();
+  if (!(y >= 1900 && y <= now)) { const e = $('#mbornerr'); if (e) e.textContent = L("Escriu l'any de naixement (4 xifres).", 'Escribe el año de nacimiento (4 cifras).'); return; }
+  const age = now - y;
+  if (age < 18) {
+    app.innerHTML = `<div class="scr varsplash mentsplash"><img class="onb-logo" src="${VAR.logo}" alt="${VAR.name}"><h1>${L('Numi Ment és per a adults', 'Numi Ment es para adultos')}</h1>
+      <p class="sub">${L('Per entrenar amb les mates, tens Numi Mates (primària) i Numi Pro (ESO).', 'Para entrenar con las mates, tienes Numi Mates (primaria) y Numi Pro (ESO).')}</p>
+      <button class="btn big" onclick="ONB.stage=null;ONB.variant=null;onb(1)">${L('TRIA LA TEVA APP', 'ELIGE TU APP')}</button></div>`;
+    return;
+  }
   const id = 'p' + Date.now().toString(36);
   P = { id, name: ONB.name, goal: 20, sound: true, unlockAll: false, lang: LANG, ...freshProgress(), course: 0, baseCourse: 0, maxCourse: 0, holdReg: true, variant: 'ment', ment: {},
-    survey: { curs: 'Numi Ment', age: 'adult', date: today() } };
+    survey: { curs: 'Numi Ment', age, date: today() } };
   DB.profiles[id] = P; DB.current = id; saveLocal(); onbAccount();
 }
 

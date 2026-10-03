@@ -28,7 +28,7 @@ export default async function handler(req, res) {
     let r;
     if (minor) {
       const st = { code, variant, lang: state.lang === 'es' ? 'es' : 'ca', unlockAll: false };
-      r = await sql`INSERT INTO mates.alumnes (code, name, course, survey, state, consent) VALUES (${code}, '', ${summary(state).course}, ${JSON.stringify({ age, variant })}, ${JSON.stringify(st)}, 'pending')
+      r = await sql`INSERT INTO mates.alumnes (code, name, course, survey, state, consent, pending_since) VALUES (${code}, '', ${summary(state).course}, ${JSON.stringify({ age, variant })}, ${JSON.stringify(st)}, 'pending', now())
         ON CONFLICT (code) DO NOTHING RETURNING code`;
     } else {
       state.code = code; state.variant = variant; if (user) state.username = user; state.unlockAll = false;

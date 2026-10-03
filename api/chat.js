@@ -65,7 +65,8 @@ export default async function handler(req, res) {
   if (!(await alumneOk(req, res, code, a.pass_hash))) return;
   if (!(await consentGuard(res, code))) return;   // menors: cal el sí de la família
   // el docent pot apagar l'assistent per a tot el grup (mode escola)
-  if (a.opts && a.opts.xat === false) return ok(res, { error: 'xat-off' }, 403);
+  // a l'escola l'assistent està APAGAT si el docent no l'encén (opts.xat === true)
+  if (a.grup_id ? !(a.opts && a.opts.xat === true) : (a.opts && a.opts.xat === false)) return ok(res, { error: 'xat-off' }, 403);
   const pla = plaOf(a), max = LIMIT[pla] ?? 0;
   if (!max) return ok(res, { error: 'premium' }, 402);
   // fre global: si entre tots ja s'ha arribat al màxim del dia, l'assistent descansa fins demà (limita el cost si algú en fa un mal ús)
@@ -79,6 +80,8 @@ export default async function handler(req, res) {
   const ctx = { course: data(c.course, 60), unit: data(c.unit, 90), lesson: data(c.lesson, 90), question: data(c.question, 300) };
   const result = streamText({
     model: MODEL, instructions: instructions(v, lang, ctx), messages: msgs, maxOutputTokens: 450,
+    // només Anthropic (no Bedrock ni Vertex): és el proveïdor que diu la política de privadesa
+    providerOptions: { gateway: { only: ['anthropic'] } },
     onError: ({ error }) => console.error('xat', error && error.message)
   });
   res.setHeader('Cache-Control', 'no-store');

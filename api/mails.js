@@ -1,5 +1,5 @@
 import { createHmac, timingSafeEqual } from 'crypto';
-import { sql, ok, body, purge } from './_lib.js';
+import { sql, ok, body, purge, revokeOf, withdrawConsent } from './_lib.js';
 import { who } from './_auth.js';
 import { STRIPE_KEY, stripe, ensureHookEvents } from './_stripe.js';
 import { informeTables, informesRun, prefOf, ajust, setAjust, reportMail, periodNow, kidRow, reportExtra } from './_informe.js';
@@ -33,12 +33,12 @@ async function recipients(aud) {
   if (aud.docents) (await sql`SELECT email, nom FROM mates.docents WHERE actiu AND email LIKE '%@%'`).forEach(r => add(r.email, r.nom));
   // famílies: només les que han dit que sí a rebre novetats (casella de la zona de famílies; LSSI art. 21)
   if (aud.families) { try { (await sql`SELECT email, lang FROM mates.families WHERE promo`).forEach(r => add(r.email, '', r.lang)); } catch (e) { } }
-  if (aud.contactes) { try { (await sql`SELECT mail, nom, lang FROM mates.contactes`).forEach(r => add(r.mail, r.nom, r.lang)); } catch (e) { } }
+  // contactes del web: només se'ls respon la sol·licitud (no són destinataris de novetats; LSSI art. 21)
   if (aud.premium && STRIPE_KEY) {
     const cs = await sql`SELECT DISTINCT stripe_customer FROM mates.alumnes WHERE stripe_customer IS NOT NULL AND pla = 'premium'`;
-    for (const c of cs) { try { const s = await stripe('customers/' + encodeURIComponent(c.stripe_customer)); if (s && !s.deleted) add(s.email, s.name, (s.preferred_locales || [])[0]); } catch (e) { } }
+    for (const c of cs) { try { const s = await stripe('customers/' + encodeURIComponent(c.stripe_customer)); if (s && !s.deleted && s.metadata && s.metadata.promo === '1') add(s.email, s.name, (s.preferred_locales || [])[0]); } catch (e) { } }
   }
-  String(aud.extra || '').split(/[\s,;]+/).forEach(e => add(e));
+  // (la llista lliure d'adreces s'ha tret: sense consentiment no s'hi pot enviar publicitat)
   if (aud.lang === 'ca' || aud.lang === 'es') for (const [e, r] of out) if (r.lang && !String(r.lang).startsWith(aud.lang)) out.delete(e);
   const bx = new Set((await sql`SELECT email FROM mates.mail_baixes`).map(r => r.email));
   for (const e of [...out.keys()]) if (bx.has(e)) out.delete(e);
@@ -108,6 +108,15 @@ export default async function handler(req, res) {
     if (req.method !== 'POST') return res.status(200).send(confirmPage('Donar-se de baixa · Darse de baja', `${escH(e)} deixarà de rebre correus de Numi Mates. · dejará de recibir correos de Numi Mates.`, 'Dona\'m de baixa · Darme de baja'));
     await sql`INSERT INTO mates.mail_baixes (email) VALUES (${e}) ON CONFLICT DO NOTHING`;
     return res.status(200).send(page("T'has donat de baixa · Te has dado de baja", `${escH(e)} ja no rebrà més correus de Numi Mates. · ya no recibirá más correos de Numi Mates.`));
+  }
+  // retirar el permís d'un menor des del correu de confirmació (GET mostra la pàgina; POST ho fa)
+  if (q.revoca) {
+    const r = revokeOf(q.revoca);
+    res.setHeader('content-type', 'text/html; charset=utf-8'); res.setHeader('Cache-Control', 'no-store');
+    if (!r) return res.status(400).send(page('Enllaç no vàlid · Enlace no válido', 'Escriu-nos a hola@numimates.com. · Escríbenos a hola@numimates.com.'));
+    if (req.method !== 'POST') return res.status(200).send(confirmPage('Retirar el permís · Retirar el permiso', "El perfil deixarà de desar-se al núvol i, si cap altre adult no ho autoritza en 30 dies, s'esborrarà del servidor. · El perfil dejará de guardarse en la nube y, si ningún otro adulto lo autoriza en 30 días, se borrará del servidor.", 'Retira el permís · Retirar el permiso'));
+    await withdrawConsent(r.fam, r.code);
+    return res.status(200).send(page('Permís retirat · Permiso retirado', "Fet. Si ho vols tornar a autoritzar, demana-ho des de l'app. · Hecho. Si lo quieres volver a autorizar, pídelo desde la app."));
   }
   // informe a les famílies: canviar la freqüència o deixar-lo des del mateix correu (enllaç signat, sense entrar)
   if (q.informe) {

@@ -319,7 +319,8 @@ let MLS = null, MED = null;
 const mapi = async (action, extra = {}) => { const r = await fetch('/api/mails', { method: 'POST', headers: { ...AUTH(), 'content-type': 'application/json' }, body: JSON.stringify({ action, ...extra }) }).catch(() => null); return r ? r.json().catch(() => ({ error: 'xarxa' })) : { error: 'xarxa' }; };
 const MST = { esborrany: ['Esborrany|Borrador', 'none'], programat: ['Programat|Programado', 'purple'], preparant: ['Preparant…|Preparando…', 'gold'], enviant: ['Enviant…|Enviando…', 'gold'], enviat: ['Enviat|Enviado', 'good'] };
 const mkpi = (l, v, m) => `<div class="kpi"><span class="kpi-l">${l}</span><span class="kpi-v">${v}</span><span class="kpi-m">${m}</span></div>`;
-const MAUD = [['docents', 'Docents|Docentes'], ['families', 'Famílies que volen novetats|Familias que quieren novedades'], ['contactes', 'Contactes del web|Contactos de la web'], ['premium', 'Clients de Premium (Stripe)|Clientes de Premium (Stripe)']];
+// destinataris possibles (LSSI art. 21): docents només per a avisos del servei; famílies i clients, només els que han dit que sí a les novetats
+const MAUD = [['docents', 'Docents (només avisos del servei)|Docentes (solo avisos del servicio)'], ['families', 'Famílies que volen novetats|Familias que quieren novedades'], ['premium', 'Clients de Premium que volen novetats|Clientes de Premium que quieren novedades']];
 const fdt = d => { if (!d) return '—'; const x = new Date(d); return `${x.getDate()} ${MES[LANG][x.getMonth()]} ${String(x.getHours()).padStart(2, '0')}:${String(x.getMinutes()).padStart(2, '0')}`; };
 const audTxt = a => [...MAUD.filter(([k]) => a && a[k]).map(([, t]) => tx(t).split(' (')[0]), ...(a && a.extra ? [L('llista', 'lista')] : [])].join(' · ') || '—';
 const MTPL = `<!doctype html>
@@ -406,7 +407,7 @@ async function vCorreu(arg) {
       <section class="c6"><div class="card pad" style="display:grid;gap:14px">
         <label class="field"><span>${L('Assumpte', 'Asunto')}</span><input id="msub" maxlength="200" value="${esc(MED.subject)}" ${ro ? 'disabled' : ''} oninput="MED.subject=this.value"></label>
         <div class="field"><span>${L('A qui', 'A quién')}</span><div style="display:grid;gap:6px;margin-top:4px">${MAUD.map(([k, t]) => `<label style="display:flex;gap:8px;align-items:center"><input type="checkbox" style="width:auto;height:auto" ${a[k] ? 'checked' : ''} ${ro ? 'disabled' : ''} onchange="MED.aud.${k}=this.checked;mCount()"> ${tx(t)}</label>`).join('')}</div></div>
-        <label class="field"><span>${L('Altres correus (separats per comes o línies)', 'Otros correos (separados por comas o líneas)')}</span><textarea id="mext" rows="2" style="height:auto;padding:8px 12px" ${ro ? 'disabled' : ''} oninput="MED.aud.extra=this.value;clearTimeout(window._mct);window._mct=setTimeout(mCount,600)">${esc(a.extra || '')}</textarea></label>
+
         <div style="display:flex;gap:12px;flex-wrap:wrap"><label class="field" style="flex:1;min-width:160px"><span>${L('Idioma dels destinataris', 'Idioma de los destinatarios')}</span><select ${ro ? 'disabled' : ''} onchange="MED.aud.lang=this.value;mCount()">${[['tots', L('Tots', 'Todos')], ['ca', 'Català'], ['es', 'Castellano']].map(([v, t]) => `<option value="${v}" ${(a.lang || 'tots') === v ? 'selected' : ''}>${t}</option>`).join('')}</select></label>
           <label class="field" style="flex:1;min-width:160px"><span>${L('Idioma del peu (baixa)', 'Idioma del pie (baja)')}</span><select ${ro ? 'disabled' : ''} onchange="MED.lang=this.value"><option value="ca" ${MED.lang !== 'es' ? 'selected' : ''}>Català</option><option value="es" ${MED.lang === 'es' ? 'selected' : ''}>Castellano</option></select></label></div>
         <p class="t3" id="mcount" style="margin:0">…</p>
@@ -646,7 +647,7 @@ function grupCard(g) {
     <hr class="gsep">${temaField(g)}
     <details class="more gopts"><summary>${ico('chevron-right')}${L('Mode escola', 'Modo escuela')}<small>${modeSummary(g)}</small></summary>
       <p class="t3" style="margin:8px 0 4px;font-size:12.5px">${L("Tria què poden fer els alumnes d'aquest grup a l'app. Les lliçons, els repassos i la porta sempre hi són.", 'Elige qué pueden hacer los alumnos de este grupo en la app. Las lecciones, los repasos y la puerta siempre están.')}</p>
-      ${[['batalles', L('Batalles entre alumnes', 'Batallas entre alumnos')], ['intercanvis', L('Intercanvi de cartes', 'Intercambio de cartas')], ['xat', L('Assistent amb IA (Numi Pro)', 'Asistente con IA (Numi Pro)')]].map(([k, t]) => `<label class="switch"><input type="checkbox" ${(g.opts || {})[k] !== false ? 'checked' : ''} onchange="grupOpt(${g.id},'${k}',this.checked,this)"><span>${t}</span></label>`).join('')}
+      ${[['batalles', L('Batalles entre alumnes', 'Batallas entre alumnos')], ['intercanvis', L('Intercanvi de cartes', 'Intercambio de cartas')], ['xat', L('Assistent amb IA (Numi Pro) · apagat si no l\'enceneu', 'Asistente con IA (Numi Pro) · apagado si no lo encendéis')]].map(([k, t]) => `<label class="switch"><input type="checkbox" ${(k === 'xat' ? (g.opts || {}).xat === true : (g.opts || {})[k] !== false) ? 'checked' : ''} onchange="grupOpt(${g.id},'${k}',this.checked,this)"><span>${t}</span></label>`).join('')}
     </details></div>`;
 }
 // tema que es treballa a classe: l'app el mostra a la pantalla principal i en fa pràctiques (70 % tema, 30 % repàs)
@@ -657,7 +658,7 @@ function temaField(g) {
     <small>${g.tema ? L(`Marcat el ${fdate(localDay(g.tema_at))} · l'app el posa a la pantalla principal: 70 % del tema i 30 % de repàs.`, `Marcado el ${fdate(localDay(g.tema_at))} · la app lo pone en la pantalla principal: 70 % del tema y 30 % de repaso.`) : L("Si el marqueu, l'app el posarà a la pantalla principal de tots els alumnes del grup.", 'Si lo marcáis, la app lo pondrá en la pantalla principal de todos los alumnos del grupo.')}</small></label>`;
 }
 const localDay = d => { const x = d ? new Date(d) : new Date(); return `${x.getFullYear()}-${String(x.getMonth() + 1).padStart(2, '0')}-${String(x.getDate()).padStart(2, '0')}`; };
-const modeSummary = g => { const o = g.opts || {}, off = ['batalles', 'intercanvis', 'xat'].filter(k => o[k] === false).length; return off ? L(` · ${off} apagat${off > 1 ? 's' : ''}`, ` · ${off} desactivado${off > 1 ? 's' : ''}`) : L(' · tot actiu', ' · todo activo'); };
+const modeSummary = g => { const o = g.opts || {}, off = ['batalles', 'intercanvis', 'xat'].filter(k => k === 'xat' ? o.xat !== true : o[k] === false).length; return off ? L(` · ${off} apagat${off > 1 ? 's' : ''}`, ` · ${off} desactivado${off > 1 ? 's' : ''}`) : L(' · tot actiu', ' · todo activo'); };
 async function grupTema(id, v) {
   const j = await act('grup_tema', { id, tema: v || null }), g = GRUPS.find(x => x.id === id);
   if (!j.ok) return toast(L("No s'ha pogut desar el tema.", 'No se ha podido guardar el tema.'));

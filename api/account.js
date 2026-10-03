@@ -1,4 +1,4 @@
-import { sql, body, cleanCode, cleanUser, validUser, validPass, hashPass, checkPass, ok, blocked, fail, note, tooMany, issueTok, dropToks, alumneStrict, consentOk, consentCols } from './_lib.js';
+import { sql, body, cleanCode, cleanUser, validUser, validPass, hashPass, checkPass, ok, blocked, fail, note, tooMany, issueTok, dropToks, alumneStrict, consentOk, consentCols, eraseStudent, logConsent } from './_lib.js';
 import familia from './_familia.js';
 // Crea o canvia l'usuari i la contrasenya d'un alumne (el codi fa de clau) · o comprova si un usuari està lliure.
 // Si l'alumne ja té contrasenya, per canviar-la cal la contrasenya actual (o que la canviï el docent des del panell).
@@ -7,6 +7,17 @@ export default async function handler(req, res) {
   if (req.query && req.query.f) return familia(req, res);
   if (req.method !== 'POST') return ok(res, { error: 'method' }, 405);
   const b = body(req), user = cleanUser(b.username);
+  // dret de supressió des de l'app: s'esborra el compte del servidor (cal la clau del dispositiu; si té Premium de pagament, primer s'ha de cancel·lar)
+  if (b.action === 'erase') {
+    const code = cleanCode(b.code); if (!code) return ok(res, { error: 'codi' }, 400);
+    if (await blocked(req, 'codi', 40)) return tooMany(res);
+    const a = (await sql`SELECT stripe_sub, pla_fins FROM mates.alumnes WHERE code = ${code}`)[0];
+    if (!a) { await fail(req, 'codi'); return ok(res, { error: 'no trobat' }, 404); }
+    if (!(await alumneStrict(req, res, code))) return;
+    if (a.stripe_sub) return ok(res, { error: 'subscripció' }, 409);
+    await logConsent(code, null, null, 'esborrat'); await eraseStudent(code);
+    return ok(res, { ok: true });
+  }
   // comprovar si un usuari està lliure: amb límit, perquè no serveixi per fer la llista dels usuaris que existeixen
   if (b.check) { if (await blocked(req, 'usuari', 150, 15)) return tooMany(res); await note(req, 'usuari'); return ok(res, { free: validUser(user) && !(await sql`SELECT 1 FROM mates.alumnes WHERE username = ${user}`).length }); }
   const code = cleanCode(b.code);

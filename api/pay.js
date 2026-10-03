@@ -45,6 +45,9 @@ async function hook(req, res) {
       if (old && LIVE.includes(old.status) && !old.cancel_at_period_end) { await refundAndCancel(s, code, 'duplicat'); return ok(res, { ok: true, duplicat: true }); }
     }
     await applySub(s, code);
+    // el sí (o el no) a rebre novetats queda al client de Stripe; els enviaments a «Clients de Premium» només van als que han dit que sí
+    const cus = typeof o.customer === 'string' ? o.customer : o.customer && o.customer.id;
+    if (cus) await stripe('customers/' + cus, { metadata: { promo: (o.metadata && o.metadata.promo) === '1' ? '1' : '0' } }).catch(e => console.error('promo', e.message));
     await confirmMail(o, s, code).catch(e => console.error('confirmació', e.message));
   } else if (ev.type === 'charge.refunded' || ev.type === 'charge.dispute.created') {
     // devolució total o disputa (retrocessió): la subscripció s'acaba ara i Premium es treu
@@ -87,7 +90,7 @@ async function checkout(req, res) {
     mode: 'subscription',
     line_items: { 0: { price: P[pla].id, quantity: 1 } },
     client_reference_id: code,
-    metadata: { code, lang: b.lang === 'es' ? 'es' : 'ca' },
+    metadata: { code, lang: b.lang === 'es' ? 'es' : 'ca', promo: b.promo === true ? '1' : '0' },   // novetats: només amb la casella marcada
     subscription_data: { metadata: { code }, description: APPNAME[(a.state || {}).variant] + ' Premium' },   // sense el nom de l'alumne: a Stripe no li cal
     customer: a.stripe_customer || undefined,
     allow_promotion_codes: 'true',
@@ -136,10 +139,27 @@ async function desistir(req, res) {
   if (!a) { await fail(req, 'pagament'); return ok(res, { error: 'no trobat' }, 404); }
   const fam = famOf(b.tok), okFam = fam && (await sql`SELECT 1 FROM mates.familia_fills WHERE familia_id = ${fam} AND code = ${code}`.catch(() => [])).length;
   if (!okFam) { if (adultOnly(a)) return ok(res, { error: 'adult' }, 403); if (!(await alumneStrict(req, res, code))) return; }
+  const cus = (await sql`SELECT stripe_customer, name, state->>'variant' AS variant FROM mates.alumnes WHERE code = ${code}`)[0] || {};
   const r = await desist(code);
   if (r.error === 'sense subscripció') return ok(res, { error: r.error }, 409);
   if (r.error === 'termini') return ok(res, { error: 'termini' }, 409);
   await note(req, 'pagament');
+  // acusament de recepció del desistiment en un suport durador (art. 106 TRLGDCU)
+  if (MAIL_OK() && cus.stripe_customer) {
+    try {
+      const c = await stripe('customers/' + encodeURIComponent(cus.stripe_customer));
+      if (c && c.email) {
+        const es = b.lang === 'es', app = APPNAME[cus.variant], eur = ((r.refunded || 0) / 100).toFixed(2).replace('.', ',') + ' €';
+        const quan = new Date().toLocaleString(es ? 'es-ES' : 'ca-ES', { timeZone: 'Europe/Madrid', dateStyle: 'long', timeStyle: 'short' }), kid = String(cus.name || '').split(' ')[0].replace(/[<>&"']/g, '');
+        const p1 = es ? `Hemos recibido tu desistimiento de <b>${app} Premium</b>${kid ? ` (${kid})` : ''} el ${quan}. Premium se ha cancelado y te devolvemos <b>${eur}</b> en la misma tarjeta (puede tardar unos días en aparecer).` : `Hem rebut el teu desistiment de <b>${app} Premium</b>${kid ? ` (${kid})` : ''} el ${quan}. Premium s'ha cancel·lat i et tornem <b>${eur}</b> a la mateixa targeta (pot trigar uns dies a aparèixer).`;
+        const p2 = es ? 'No hace falta que hagas nada más. Si tienes cualquier duda, responde a este correo.' : 'No cal que facis res més. Si tens cap dubte, respon aquest correu.';
+        const sign = es ? 'El equipo de Numi Mates' : "L'equip de Numi Mates";
+        await sendMail({ to: c.email, subject: es ? `Desistimiento recibido: ${app} Premium` : `Desistiment rebut: ${app} Premium`,
+          html: `<div style="font-family:Arial,Helvetica,sans-serif;max-width:520px;margin:0 auto;padding:24px;color:#2B1A38"><p style="font-size:22px;font-weight:800;color:#602B7A;margin:0 0 20px">numi mates</p><p style="font-size:16px;line-height:1.5">${p1}</p><p style="font-size:15px;line-height:1.5">${p2}</p><p style="font-size:14px;margin-top:24px">${sign}</p></div>`,
+          text: `${p1.replace(/<[^>]+>/g, '')}\n\n${p2}\n\n${sign}` });
+      }
+    } catch (e) { console.error('desistiment correu', e.message); }
+  }
   return ok(res, { ok: true, refunded: r.refunded });
 }
 

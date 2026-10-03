@@ -7,7 +7,7 @@ export function summary(s) {
   return { xp: s.xp | 0, streak: s.streak | 0, best: s.best | 0, last_day: s.lastDay || null, lessons: st.lessons | 0, answers: st.answers | 0, correct: st.correct | 0, course: s.course | 0 };
 }
 export function ok(res, data, status = 200) { res.setHeader('Cache-Control', 'no-store'); res.status(status).json(data); }
-import { scryptSync, randomBytes, timingSafeEqual, createHash, randomInt } from 'crypto';
+import { scryptSync, randomBytes, timingSafeEqual, createHash, createHmac, randomInt } from 'crypto';
 export const cleanUser = u => String(u || '').trim().toLowerCase();
 export const validUser = u => /^[a-z0-9._-]{3,20}$/.test(u);
 export const validPass = p => typeof p === 'string' && p.length >= 4 && p.length <= 60;
@@ -91,19 +91,19 @@ export async function alumneStrict(req, res, code) {
 // --- Autorització de la família (menors de 14 anys, art. 7 LOPDGDD) ---
 // Columna alumnes.consent: 'pending' (perfil nou d'un menor que espera el sí d'un adult), 'ok' (un adult ho ha autoritzat) o null
 // (no cal: adults, Numi Ment, alumnes d'una escola; o comptes d'abans, que tenen marge fins a CONSENT_LEGACY).
-export const CONSENT_LEGACY = '2026-11-03';
+export const CONSENT_LEGACY = '2026-10-03';   // sense marge: des del 03/10/2026 els comptes antics de menors també necessiten el permís
+export const CONSENT_AGE = 14;                 // art. 7 LOPDGDD (si la llei la puja a 16, només cal canviar-la aquí i a app.js)
 export function isMinor(a) {
   if (!a || a.grup_id || a.pla === 'escola') return false;                       // l'escola en té el permís de les famílies
-  const st = a.state || {}, sv = a.survey || {};
-  if ((st.variant || sv.variant) === 'ment') return false;
-  const age = +(sv.age ?? st.age);
-  return !(age >= 14);                                                           // sense edat coneguda: com a menor
+  const st = a.state || {}, sv = a.survey || {}, age = +(sv.age ?? st.age);
+  if ((st.variant || sv.variant) === 'ment' && !(age < 18)) return false;      // Numi Ment: adults (l'any de naixement el diu)
+  return !(age >= CONSENT_AGE);                                                  // sense edat coneguda: com a menor
 }
 // Contractar (pagar) des de l'app: només adults (Numi Ment o 18 anys o més). Si no, ho fa la família des del correu o la zona de famílies.
 export function adultOnly(a) {
-  const st = a.state || {}, sv = a.survey || {};
-  if ((st.variant || sv.variant) === 'ment') return false;
-  return !(+(sv.age ?? st.age) >= 18);
+  const st = a.state || {}, sv = a.survey || {}, age = +(sv.age ?? st.age);
+  if ((st.variant || sv.variant) === 'ment' && !(age < 18)) return false;
+  return !(age >= 18);
 }
 // true si el compte ja pot desar al núvol i fer servir les funcions en línia
 export function consentOk(a) {
@@ -114,13 +114,41 @@ export function consentOk(a) {
 let CONS = null;
 // columnes noves sense bloquejar la taula a cada arrencada: primer es mira si ja hi són
 export const consentCols = () => CONS || (CONS = (async () => {
-  const have = new Set((await sql`SELECT table_name || '.' || column_name AS c FROM information_schema.columns WHERE table_schema = 'mates' AND table_name IN ('alumnes', 'familia_links', 'families')`).map(r => r.c));
+  const have = new Set((await sql`SELECT table_name || '.' || column_name AS c FROM information_schema.columns WHERE table_schema = 'mates' AND table_name IN ('alumnes', 'familia_links', 'families', 'consent_log')`).map(r => r.c));
   if (!have.has('alumnes.consent')) await sql`ALTER TABLE mates.alumnes ADD COLUMN IF NOT EXISTS consent text, ADD COLUMN IF NOT EXISTS consent_at timestamptz`;
   if (!have.has('alumnes.pla_inici')) await sql`ALTER TABLE mates.alumnes ADD COLUMN IF NOT EXISTS pla_inici date`;   // inici de la subscripció actual (desistiment)
+  if (!have.has('alumnes.pending_since')) {
+    // des de quan espera el permís (els 30 dies per esborrar-lo es compten des d'aquí, no des de l'alta)
+    await sql`ALTER TABLE mates.alumnes ADD COLUMN IF NOT EXISTS pending_since timestamptz`;
+    await sql`UPDATE mates.alumnes SET pending_since = COALESCE(created_at, now()) WHERE consent = 'pending' AND pending_since IS NULL`;
+    // comptes antics de menors sense permís (fora d'escola i de Numi Ment): passen a esperar-lo des d'avui
+    await sql`UPDATE mates.alumnes SET consent = 'pending', pending_since = now() WHERE consent IS NULL AND grup_id IS NULL AND COALESCE(pla, 'free') <> 'escola'
+      AND COALESCE(state->>'variant', survey->>'variant', 'mates') <> 'ment'
+      AND NOT (COALESCE(survey->>'age', '') ~ '^[0-9]{1,3}$' AND (survey->>'age')::int >= ${CONSENT_AGE})`;
+  }
+  if (!have.has('consent_log.code')) await sql`CREATE TABLE IF NOT EXISTS mates.consent_log (id serial PRIMARY KEY, code text NOT NULL, email_hash text, ip text, kind text NOT NULL, at timestamptz NOT NULL DEFAULT now())`;
   if (have.has('familia_links.email') && !have.has('familia_links.created')) await sql`ALTER TABLE mates.familia_links ADD COLUMN IF NOT EXISTS created timestamptz NOT NULL DEFAULT now(), ADD COLUMN IF NOT EXISTS kid text`;
   if (have.has('families.email') && !have.has('families.promo')) await sql`ALTER TABLE mates.families ADD COLUMN IF NOT EXISTS promo boolean NOT NULL DEFAULT false`;
   if (!have.has('familia_links.email') || !have.has('families.email')) CONS = null;   // la zona de famílies encara no té taules: es tornarà a mirar
 })().catch(e => { CONS = null; throw e; }));
+// prova del consentiment (data, IP i un resum del correu): es conserva bloquejada encara que s'esborri el compte
+export async function logConsent(code, email, ip, kind) {
+  await consentCols();
+  try { await sql`INSERT INTO mates.consent_log (code, email_hash, ip, kind) VALUES (${code}, ${email ? createHash('sha256').update(String(email).toLowerCase()).digest('hex').slice(0, 32) : null}, ${ip || null}, ${kind})`; } catch (e) { console.error('consent_log', e.message); }
+}
+// enllaç signat per retirar un permís des del correu de confirmació (família + alumne)
+export const revokeTok = (fam, code) => `${fam}.${code}.` + createHmac('sha256', process.env.SESSION_SECRET || 'x').update(`revoca:${fam}:${code}`).digest('base64url').slice(0, 22);
+export function revokeOf(t) {
+  const [f, c, sg] = String(t || '').split('.'); if (!f || !c || !sg) return null;
+  const ok = revokeTok(+f, c).split('.')[2]; return ok.length === sg.length && timingSafeEqual(Buffer.from(ok), Buffer.from(sg)) ? { fam: +f, code: c } : null;
+}
+// retira el permís d'un adult: si ja no en queda cap, el perfil del menor torna a esperar-ne (i en 30 dies s'esborra)
+export async function withdrawConsent(fam, code) {
+  await sql`DELETE FROM mates.familia_fills WHERE familia_id = ${fam} AND code = ${code}`;
+  if (!(await sql`SELECT 1 FROM mates.familia_fills WHERE code = ${code} LIMIT 1`).length)
+    await sql`UPDATE mates.alumnes SET consent = 'pending', pending_since = now() WHERE code = ${code} AND consent = 'ok' AND grup_id IS NULL`;
+  await logConsent(code, null, null, 'retirat');
+}
 // per als endpoints en línia (batalles, xat, canvis, lliga): 403 { error: 'permis' } si encara falta el sí de la família
 export async function consentGuard(res, code) {
   await consentCols();
@@ -185,9 +213,11 @@ export async function eraseStudent(code) {
 export async function purge() {
   await consentCols();
   const old = await sql`SELECT code FROM mates.alumnes WHERE stripe_sub IS NULL AND grup_id IS NULL AND (
-      (consent = 'pending' AND created_at < now() - interval '30 days') OR updated_at < now() - interval '24 months') LIMIT 100`;
+      (consent = 'pending' AND COALESCE(pending_since, created_at) < now() - interval '30 days') OR updated_at < now() - interval '24 months') LIMIT 100`;
   for (const r of old) await eraseStudent(r.code);
   await sql`DELETE FROM mates.fails WHERE t < now() - interval '1 day'`;
+  // registre de consentiments (prova, bloquejat): 3 anys
+  try { await sql`DELETE FROM mates.consent_log WHERE at < now() - interval '3 years'`; } catch (e) { }
   // altres registres amb data de caducitat (política de privadesa)
   for (const q of [() => sql`DELETE FROM mates.contactes WHERE created_at < now() - interval '12 months'`, () => sql`DELETE FROM mates.informes WHERE sent_at < now() - interval '24 months'`,
     () => sql`DELETE FROM mates.mail_env WHERE sent_at < now() - interval '12 months'`, () => sql`DELETE FROM mates.canvis WHERE created_at < now() - interval '6 months'`,

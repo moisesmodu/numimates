@@ -151,7 +151,24 @@ const infBox = () => `<div class="card infbox"><b>📬 ${L('Informe per correu',
   <label class="ok" style="margin-top:12px"><input type="checkbox" ${D.promo ? 'checked' : ''} onchange="setPromo(this.checked)"> <span>${L("Vull rebre novetats de Numi per correu (poques vegades; me'n puc donar de baixa quan vulgui).", 'Quiero recibir novedades de Numi por correo (pocas veces; me puedo dar de baja cuando quiera).')}</span></label></div>`;
 async function setPromo(v) { const r = await api('cfg', { promo: !!v }); if (r.kids) { D = r; toast(L('Fet!', '¡Hecho!')); } else toast(ERR(r.status)); }
 async function setInf(k) { const r = await api('cfg', { informe: k }); if (r.kids) { D = r; render(); toast(k === 'no' ? L('Fet: no rebràs informes.', 'Hecho: no recibirás informes.') : L('Fet!', '¡Hecho!')); } else toast(ERR(r.status)); }
-const vHome = () => `<h1>${L('Hola!', '¡Hola!')}</h1>${D.kids.map(kidCard).join('')}${infBox()}<button class="add" onclick="VIEW='add';render()">+ ${L('Afegeix un altre fill o filla', 'Añade otro hijo o hija')}</button>`;
+const vHome = () => `<h1>${L('Hola!', '¡Hola!')}</h1>${D.kids.map(kidCard).join('')}${infBox()}<button class="add" onclick="VIEW='add';render()">+ ${L('Afegeix un altre fill o filla', 'Añade otro hijo o hija')}</button>
+  <p class="note" style="margin-top:18px"><button class="link redt" onclick="eraseFamily()">${L('Esborra el compte de família', 'Borrar la cuenta de familia')}</button></p>`;
+// dret de supressió: les dades d'un fill (del servidor) o el compte de la família
+function eraseKid(code) {
+  const k = D.kids.find(x => x.code === code); if (!k) return;
+  modal(`<h3>${L(`Esborrar les dades de ${esc(k.name)}?`, `¿Borrar los datos de ${esc(k.name)}?`)}</h3><p>${L("S'esborra el seu compte del servidor (progrés, informes, lliga). No es pot desfer. Al seu dispositiu el progrés hi pot quedar fins que s'esborri l'app.", 'Se borra su cuenta del servidor (progreso, informes, liga). No se puede deshacer. En su dispositivo el progreso puede quedar hasta que se borre la app.')}</p>
+    <p class="err" id="se"></p><button class="btn red" id="sg" onclick="eraseKidGo('${esc(code)}')">${L('ESBORRA-HO', 'BORRARLO')}</button><button class="btn ghost" onclick="closeModal()">${L('TORNA', 'VOLVER')}</button>`);
+}
+async function eraseKidGo(code) {
+  const r = await api('erase', { code });
+  if (r.kids) { D = r; closeModal(); VIEW = 'home'; render(); return toast(L('Dades esborrades.', 'Datos borrados.')); }
+  $('#se').textContent = r.error === 'subscripció' ? L('Primer cal cancel·lar Premium.', 'Primero hay que cancelar Premium.') : ERR(r.status);
+}
+function eraseFamily() {
+  modal(`<h3>${L('Esborrar el compte de família?', '¿Borrar la cuenta de familia?')}</h3><p>${L("S'esborra el vostre correu i deixareu de rebre informes. Els perfils dels fills menors de 14 anys es queden sense permís (si ningú no l'autoritza en 30 dies, s'esborren del servidor).", 'Se borra vuestro correo y dejaréis de recibir informes. Los perfiles de los hijos menores de 14 años se quedan sin permiso (si nadie lo autoriza en 30 días, se borran del servidor).')}</p>
+    <button class="btn red" onclick="eraseFamilyGo()">${L('ESBORRA EL COMPTE', 'BORRAR LA CUENTA')}</button><button class="btn ghost" onclick="closeModal()">${L('TORNA', 'VOLVER')}</button>`);
+}
+async function eraseFamilyGo() { const r = await api('erase-family', {}); closeModal(); if (r.ok) { logout(true); toast(L('Compte esborrat.', 'Cuenta borrada.')); } else toast(ERR(r.status)); }
 const vAdd = () => `${D.kids.length ? `<button class="back" onclick="VIEW='home';render()">‹ ${L('Tornar', 'Volver')}</button>` : ''}<h1>${D.kids.length ? L('Afegeix un altre fill o filla', 'Añade otro hijo o hija') : L('Afegeix el teu fill o filla', 'Añade a tu hijo o hija')}</h1>${howAdd()}`;
 
 // medalles que dona el docent des del panell (les mateixes que veu l'alumne a l'app)
@@ -172,7 +189,7 @@ function vKid(k) {
     ${k.medals && k.medals.length ? `<h2>🏅 ${L('Medalles de la profe', 'Medallas de la profe')}</h2><div class="card fmeds">${k.medals.map(m => `<div><span>${(FMEDS[m.kind] || ['🏅'])[0]}</span><p><b>${tx((FMEDS[m.kind] || [, 'Medalla|Medalla'])[1])}</b>${m.comment ? `<br>«${esc(m.comment)}»` : ''}<small>${esc(m.docent_nom || '')} · ${new Date(m.created_at).toLocaleDateString(LANG === 'es' ? 'es-ES' : 'ca-ES', { day: 'numeric', month: 'long' })}</small></p></div>`).join('')}</div>` : ''}
     <div class="tip"><img src="img/chars/guida-happy.webp" alt=""><p><b>${L('A casa:', 'En casa:')}</b> ${esc(tip)}</p></div>
     ${planBox(k)}
-    <p class="note"><button class="link" onclick="removeKid('${esc(k.code)}')">${L('Treu aquest perfil de la zona de famílies', 'Quitar este perfil de la zona de familias')}</button></p>`;
+    <p class="note"><button class="link" onclick="removeKid('${esc(k.code)}')">${L('Treu aquest perfil de la zona de famílies', 'Quitar este perfil de la zona de familias')}</button><br><button class="link redt" onclick="eraseKid('${esc(k.code)}')">${L(`Esborra totes les dades de ${esc(k.name)}`, `Borrar todos los datos de ${esc(k.name)}`)}</button></p>`;
 }
 function planBox(k) {
   const S = k.sub;
@@ -197,15 +214,16 @@ async function payCheck() {
 }
 function buy(code, pla) {
   const k = D.kids.find(x => x.code === code); if (!k) return;
-  modal(`<h3>Numi Mates Premium</h3><p>${esc(k.name)} · ${pla === 'any' ? L("Anual · 49 € a l'any", 'Anual · 49 € al año') : L('Mensual · 4,99 € al mes', 'Mensual · 4,99 € al mes')}</p>
+  modal(`<h3>${k.app || 'Numi Mates'} Premium</h3><p>${esc(k.name)} · ${pla === 'any' ? L("Anual · 49 € a l'any", 'Anual · 49 € al año') : L('Mensual · 4,99 € al mes', 'Mensual · 4,99 € al mes')}</p>
     <p style="font-size:13.5px">${L("Es paga amb targeta a la pàgina segura de Stripe. Es renova sol i es cancel·la quan vulgueu.", 'Se paga con tarjeta en la página segura de Stripe. Se renueva solo y se cancela cuando queráis.')}</p>
     <label class="ok" style="text-align:left"><input type="checkbox" onchange="$('#bg').disabled=!this.checked"> <span>${L('Accepto les', 'Acepto las')} <a href="https://numimates.com/condicions?l=${LANG}" target="_blank" rel="noopener">${L('condicions de contractació', 'condiciones de contratación')}</a>.</span></label>
+    <label class="ok" style="text-align:left"><input type="checkbox" id="bpromo"> <span>${L("Vull rebre novetats de Numi Mates per correu (poques vegades; me'n puc donar de baixa quan vulgui).", 'Quiero recibir novedades de Numi Mates por correo (pocas veces; me puedo dar de baja cuando quiera).')}</span></label>
     <p class="err" id="be"></p><button class="btn gold" id="bg" disabled onclick="payGo('${esc(code)}','${pla === 'any' ? 'any' : 'mes'}')">${L('CONTINUA AL PAGAMENT', 'CONTINUAR AL PAGO')}</button><button class="btn ghost" onclick="closeModal()">${L('ARA NO', 'AHORA NO')}</button>`);
 }
 async function payGo(code, pla) {
   const b = $('#bg'), e = $('#be'); b.disabled = true; e.textContent = '';
   try {
-    const r = await fetch('/api/pay?a=checkout', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ code, pla, lang: LANG, prova: payTest(), ret: 'families' }) }).then(x => x.json().then(j => ({ status: x.status, ...j })));
+    const r = await fetch('/api/pay?a=checkout', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ code, pla, lang: LANG, prova: payTest(), ret: 'families', tok: TOK, promo: !!($('#bpromo') && $('#bpromo').checked) }) }).then(x => x.json().then(j => ({ status: x.status, ...j })));
     if (r.url && /^https:\/\/checkout\.stripe\.com\//.test(r.url)) { sess.set('numi-fam-pay', code); location.href = r.url; return; }
     e.textContent = r.error === 'escola' ? L("Aquest perfil és d'una classe: ja té Premium amb l'escola.", 'Este perfil es de una clase: ya tiene Premium con la escuela.') : r.error === 'ja' ? L('Aquest perfil ja té Premium.', 'Este perfil ya tiene Premium.') : r.status === 503 ? L('Encara no es pot pagar des d\'aquí. Escriviu-nos a hola@numimates.com.', 'Todavía no se puede pagar desde aquí. Escribidnos a hola@numimates.com.') : ERR(r.status);
   } catch (x) { e.textContent = ERR(); }
@@ -235,7 +253,7 @@ function desistModal(code) {
 }
 async function desistGo(code) {
   const b = $('#sg'); if (b) b.disabled = true;
-  const r = await fetch('/api/pay?a=desist', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ code, tok: TOK }) }).then(x => x.json().then(j => ({ status: x.status, ...j }))).catch(() => ({ status: 0 }));
+  const r = await fetch('/api/pay?a=desist', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ code, tok: TOK, lang: LANG }) }).then(x => x.json().then(j => ({ status: x.status, ...j }))).catch(() => ({ status: 0 }));
   if (r.ok) { closeModal(); await refresh(); return toast(L(`Fet: Premium cancel·lat i ${((r.refunded || 0) / 100).toFixed(2).replace('.', ',')} € retornats.`, `Hecho: Premium cancelado y ${((r.refunded || 0) / 100).toFixed(2).replace('.', ',')} € devueltos.`)); }
   $('#se').textContent = r.error === 'termini' ? L('Ja han passat els 14 dies. Podeu cancel·lar-lo perquè no es renovi.', 'Ya han pasado los 14 días. Podéis cancelarlo para que no se renueve.') : L("No s'ha pogut fer. Escriviu-nos a hola@numimates.com i ho fem nosaltres.", 'No se ha podido hacer. Escribidnos a hola@numimates.com y lo hacemos nosotros.');
   if (b) b.disabled = false;

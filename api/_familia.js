@@ -4,7 +4,7 @@
    art. 7 LOPDGDD): en queda la data i la IP, i el perfil del menor passa de 'pending' a 'ok' i ja es pot desar al núvol.
    Accions (POST /api/account?f=…): link · enter · data · add · remove */
 import { createHash, randomBytes } from 'crypto';
-import { sql, body, cleanCode, ok, blocked, fail, note, tooMany, ipOf, plaOf, alumneStrict, consentCols } from './_lib.js';
+import { sql, body, cleanCode, ok, blocked, fail, note, tooMany, ipOf, plaOf, alumneStrict, consentCols, logConsent, revokeTok, withdrawConsent, eraseStudent } from './_lib.js';
 import { famToken, famOf, who } from './_auth.js';
 import { subOf } from './_stripe.js';
 import { MAIL_OK, sendMail } from './_mail.js';
@@ -37,14 +37,29 @@ function inviteText(lang, link, kid) {
   const p1 = es ? `${n} ha empezado a practicar matemáticas con Numi Mates y ha escrito tu correo. Si lo autorizas, <b>su progreso se guardará en la nube</b> (podrá seguir en otro dispositivo), podrá usar la liga y las batallas, y tú recibirás un <b>informe semanal</b>: los días que practica, cómo le van los ejercicios y una idea para ayudarle en casa. Mientras no lo autorices, su progreso solo queda en su dispositivo.` : `${n} ha començat a practicar matemàtiques amb Numi Mates i ha escrit el teu correu. Si ho autoritzes, <b>el seu progrés es desarà al núvol</b> (podrà continuar en un altre dispositiu), podrà fer servir la lliga i les batalles, i tu rebràs un <b>informe setmanal</b>: els dies que practica, com li van els exercicis i una idea per ajudar-lo a casa. Mentre no ho autoritzis, el seu progrés només es queda al seu dispositiu.`;
   const p2 = es ? 'En la página que se abre tendrás que confirmar que eres su padre, madre o tutor legal y que lo autorizas (necesario si tiene menos de 14 años). Guardamos el mínimo de datos y no hay publicidad.' : "A la pàgina que s'obre hauràs de confirmar que ets el seu pare, mare o tutor legal i que ho autoritzes (cal si té menys de 14 anys). Guardem el mínim de dades i no hi ha publicitat.";
   const btn = es ? 'Revisar y autorizar' : 'Revisa i autoritza';
-  const p3 = es ? 'El enlace caduca en 7 días. Si no conoces a quien te ha invitado, ignora este correo y no recibirás nada más.' : "L'enllaç caduca d'aquí a 7 dies. Si no coneixes qui t'ha convidat, ignora aquest correu i no rebràs res més.";
+  const p3 = es ? 'El enlace caduca en 7 días. Si no conoces a quien te ha invitado, ignora este correo y no recibirás nada más: si no lo autorizas, borramos tu dirección en 30 días.' : "L'enllaç caduca d'aquí a 7 dies. Si no coneixes qui t'ha convidat, ignora aquest correu i no rebràs res més: si no ho autoritzes, esborrem la teva adreça en 30 dies.";
+  // primera comunicació amb l'adult (RGPD art. 14): qui som, d'on ve el correu i on hi ha la informació
+  const p4 = es ? 'Responsable: Numi Mates (datos en numimates.com/es/aviso-legal), hola@numimates.com. Tu dirección nos la ha dado tu hijo o hija desde la app. Más información: numimates.com/es/privacidad' : "Responsable: Numi Mates (dades a numimates.com/avis-legal), hola@numimates.com. La teva adreça ens l'ha donat el teu fill o filla des de l'app. Més informació: numimates.com/privacitat";
   const sign = es ? 'El equipo de Numi Mates' : "L'equip de Numi Mates";
   const html = `<div style="font-family:Arial,Helvetica,sans-serif;max-width:480px;margin:0 auto;padding:24px;color:#2B1A38">
     <p style="font-size:22px;font-weight:800;color:#602B7A;margin:0 0 20px">numi mates</p>
     <p style="font-size:16px;line-height:1.5">${p1}</p>
     <p style="margin:24px 0"><a href="${link}" style="background:#602B7A;color:#fff;text-decoration:none;font-weight:700;padding:14px 22px;border-radius:12px;display:inline-block">${btn}</a></p>
-    <p style="font-size:13px;line-height:1.5;color:#6A5F78">${p2}</p><p style="font-size:13px;line-height:1.5;color:#6A5F78">${p3}</p><p style="font-size:14px;margin-top:24px">${sign}</p></div>`;
-  return { subject, html, text: `${p1.replace(/<[^>]+>/g, '')}\n\n${link}\n\n${p2}\n\n${p3}\n\n${sign}` };
+    <p style="font-size:13px;line-height:1.5;color:#6A5F78">${p2}</p><p style="font-size:13px;line-height:1.5;color:#6A5F78">${p3}</p><p style="font-size:14px;margin-top:24px">${sign}</p><p style="font-size:11.5px;line-height:1.45;color:#8A7F96;margin-top:18px">${p4}</p></div>`;
+  return { subject, html, text: `${p1.replace(/<[^>]+>/g, '')}\n\n${link}\n\n${p2}\n\n${p3}\n\n${sign}\n\n${p4}` };
+}
+// confirmació després d'autoritzar (amb l'enllaç per retirar-ho si no ha estat aquest adult)
+function okText(lang, kid, revoke) {
+  const es = lang === 'es', n = String(kid || '').replace(/[<>&"']/g, '') || (es ? 'tu hijo o hija' : 'el teu fill o filla');
+  const subject = es ? `Has autorizado a ${n} en Numi Mates` : `Has autoritzat ${n} a Numi Mates`;
+  const p1 = es ? `Hemos registrado tu autorización para que <b>${n}</b> use Numi Mates. A partir de ahora su progreso se guarda en la nube y recibirás el informe en este correo.` : `Hem registrat la teva autorització perquè <b>${n}</b> faci servir Numi Mates. A partir d'ara el seu progrés es desa al núvol i rebràs l'informe en aquest correu.`;
+  const p2 = es ? 'Si no has sido tú, o quieres retirar el permiso, pulsa aquí:' : "Si no has estat tu, o vols retirar el permís, prem aquí:";
+  const btn = es ? 'Retirar el permiso' : 'Retira el permís';
+  const sign = es ? 'El equipo de Numi Mates' : "L'equip de Numi Mates";
+  const html = `<div style="font-family:Arial,Helvetica,sans-serif;max-width:480px;margin:0 auto;padding:24px;color:#2B1A38"><p style="font-size:22px;font-weight:800;color:#602B7A;margin:0 0 20px">numi mates</p>
+    <p style="font-size:16px;line-height:1.5">${p1}</p><p style="font-size:14px;line-height:1.5;color:#6A5F78">${p2}</p>
+    <p style="margin:16px 0"><a href="${revoke}" style="color:#602B7A;font-weight:700">${btn}</a></p><p style="font-size:14px;margin-top:24px">${sign}</p></div>`;
+  return { subject, html, text: `${p1.replace(/<[^>]+>/g, '')}\n\n${p2} ${revoke}\n\n${sign}` };
 }
 function mailText(lang, link) {
   const es = lang === 'es';
@@ -111,7 +126,10 @@ async function enter(req, res, b) {
   if (l.code) {
     await sql`INSERT INTO mates.familia_fills (familia_id, code, consent_ip) VALUES (${f.id}, ${l.code}, ${ipOf(req)}) ON CONFLICT DO NOTHING`;
     // a partir d'ara el perfil del menor es pot desar al núvol i fer servir les funcions en línia
-    await sql`UPDATE mates.alumnes SET consent = 'ok', consent_at = now() WHERE code = ${l.code} AND (consent IS NULL OR consent <> 'ok')`;
+    await sql`UPDATE mates.alumnes SET consent = 'ok', consent_at = now(), pending_since = NULL WHERE code = ${l.code} AND (consent IS NULL OR consent <> 'ok')`;
+    await logConsent(l.code, l.email, ipOf(req), 'autoritzat');
+    // segon correu («correu plus»): confirmació amb un enllaç per retirar-ho si no ha estat aquest adult
+    if (MAIL_OK()) { const k = (await sql`SELECT kid FROM mates.familia_links WHERE token_hash = ${hash(t)}`)[0]; sendMail({ to: l.email, ...okText(l.lang, k && k.kid, `https://app.numimates.com/api/mails?revoca=${encodeURIComponent(revokeTok(f.id, l.code))}`) }).catch(e => console.error('mail ok', e.message)); }
   }
   return ok(res, { ok: true, tok: famToken(f.id), email: l.email });
 }
@@ -121,13 +139,13 @@ async function data(req, res, fam) {
   if (!f) return ok(res, { error: 'sessió' }, 401);
   const rows = await sql`SELECT a.code, a.name, a.course, a.xp, a.streak, a.last_day, a.lessons, a.answers, a.correct, a.pla, a.pla_fins, a.grup_id,
       a.stripe_sub, a.pla_periode, a.pla_cancel, a.stripe_status, a.pla_inici, a.active, g.nom AS grup,
-      a.state->'days' AS days, a.state->'exams' AS exams, a.state->'stats'->'sk' AS sk, a.state->'prog' AS prog, a.state->'companion' AS companion, k.kid
+      a.state->'days' AS days, a.state->'exams' AS exams, a.state->'stats'->'sk' AS sk, a.state->'prog' AS prog, a.state->'companion' AS companion, a.state->>'variant' AS variant, k.kid
     FROM mates.familia_fills ff JOIN mates.alumnes a ON a.code = ff.code LEFT JOIN mates.grups g ON g.id = a.grup_id
       LEFT JOIN LATERAL (SELECT kid FROM mates.familia_links fl WHERE fl.code = a.code AND fl.kid IS NOT NULL ORDER BY fl.created DESC LIMIT 1) k ON true
     WHERE ff.familia_id = ${fam} ORDER BY ff.created_at`;
   const kids = rows.filter(r => r.active).map(r => ({
     code: r.code, name: r.name || r.kid || '·', course: r.course | 0, xp: r.xp | 0, streak: r.streak | 0, last_day: r.last_day, lessons: r.lessons | 0, answers: r.answers | 0, correct: r.correct | 0,
-    pla: plaOf(r), sub: subOf(r), grup: r.grup || null, companion: typeof r.companion === 'string' ? r.companion : 'numi',
+    pla: plaOf(r), sub: subOf(r), app: r.variant === 'pro' ? 'Numi Pro' : r.variant === 'ment' ? 'Numi Ment' : 'Numi Mates', grup: r.grup || null, companion: typeof r.companion === 'string' ? r.companion : 'numi',
     days: Array.isArray(r.days) ? r.days.slice(-60) : [], exams: r.exams && typeof r.exams === 'object' ? r.exams : {}, sk: r.sk && typeof r.sk === 'object' ? r.sk : {}, prog: r.prog && typeof r.prog === 'object' ? r.prog : {}
   }));
   // medalles del docent de cada fill (la taula pot no existir encara si ningú n'ha donat cap)
@@ -152,12 +170,19 @@ export default async function familia(req, res) {
     if (typeof b.promo === 'boolean') await sql`UPDATE mates.families SET promo = ${b.promo} WHERE id = ${fam}`;
     return data(req, res, fam);
   }
-  if (a === 'remove') {
+  if (a === 'remove') { await withdrawConsent(fam, cleanCode(b.code)); return data(req, res, fam); }
+  // dret de supressió des de la zona de famílies: totes les dades d'un fill, o el compte de la família sencer
+  if (a === 'erase') {
     const c = cleanCode(b.code);
-    await sql`DELETE FROM mates.familia_fills WHERE familia_id = ${fam} AND code = ${c}`;
-    // si ja no hi ha cap adult vinculat, el permís es retira: el perfil del menor deixa de desar-se al núvol (fora de l'escola)
-    if (!(await sql`SELECT 1 FROM mates.familia_fills WHERE code = ${c} LIMIT 1`).length) await sql`UPDATE mates.alumnes SET consent = 'pending' WHERE code = ${c} AND consent = 'ok' AND grup_id IS NULL`;
+    if (!(await sql`SELECT 1 FROM mates.familia_fills WHERE familia_id = ${fam} AND code = ${c}`).length) return ok(res, { error: 'no trobat' }, 404);
+    if ((await sql`SELECT stripe_sub FROM mates.alumnes WHERE code = ${c}`)[0]?.stripe_sub) return ok(res, { error: 'subscripció' }, 409);
+    await logConsent(c, null, null, 'esborrat'); await eraseStudent(c);
     return data(req, res, fam);
+  }
+  if (a === 'erase-family') {
+    for (const r of await sql`SELECT code FROM mates.familia_fills WHERE familia_id = ${fam}`) await withdrawConsent(fam, r.code);
+    await sql`DELETE FROM mates.families WHERE id = ${fam}`;
+    return ok(res, { ok: true });
   }
   return ok(res, { error: 'acció' }, 400);
 }
