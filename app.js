@@ -360,7 +360,7 @@ function go(v) {
   if ((v === 'battles' && classOff('batalles'))) { toast(L("El teu docent ha desactivat les batalles per a la classe.", 'Tu docente ha desactivado las batallas para la clase.')); v = 'train'; }
   VIEW = v; if (v === 'home') { setTimeout(credNudge, 1500); setTimeout(medalCheck, 1200); setTimeout(classeBatCheck, 2200); }
   // compte creat pel docent amb «prova de nivell»: primer la prova, després la portada
-  if ((v === 'home' || v === 'place') && P && P.placeAsk && varOf(P) !== 'ment') return placeIntro();
+  if ((v === 'home' || v === 'place') && P && P.placeAsk && varOf(P) !== 'ment' && varOf(P) !== 'tech') return placeIntro();
   if (v !== 'onboard') setVariant(varOf(P));
   ({ home: renderHome, train: renderTrain, album: () => renderAlbum(), shop: renderShop, badges: () => renderAlbum('medals'), profile: renderProfile, profiles: renderProfiles, battles: () => renderBattles(), season: () => renderSeason(), league: () => renderLeague('w'), onboard: () => onb(0) }[v] || renderHome)();
   if (v !== 'home') window.scrollTo(0, 0);
@@ -498,7 +498,7 @@ function premiumBox() {
         : `<button class="btn sm ghost redt" onclick="subCancel(1)">${L('CANCEL·LA LA SUBSCRIPCIÓ', 'CANCELAR LA SUSCRIPCIÓN')}</button>`) : ''}
       ${S && S.desist && adultPay() ? `<button class="link desistl" onclick="desistModal()">${L(`Desisteix i recupera els diners (fins al ${dayLong(S.desist)})`, `Desistir y recuperar el dinero (hasta el ${dayLong(S.desist)})`)}</button>` : ''}</div>`;
   }
-  return `<div class="prem-box"><b>${L('Pla gratuït', 'Plan gratuito')}</b><span>${IS_MENT ? L('La sessió diària completa i una partida de cada joc al dia. Amb Premium, tots els jocs sense límit i reptes amb amics.', 'La sesión diaria completa y una partida de cada juego al día. Con Premium, todos los juegos sin límite y retos con amigos.') : !adultPay() ? L('1 lliçó nova i 3 entrenaments al dia.', '1 lección nueva y 3 entrenamientos al día.') : L('1 lliçó nova i 3 entrenaments al dia. Amb Premium, sense límit, amb batalles i ruta de temporada.', '1 lección nueva y 3 entrenamientos al día. Con Premium, sin límite, con batallas y ruta de temporada.')}</span>
+  return `<div class="prem-box"><b>${L('Pla gratuït', 'Plan gratuito')}</b><span>${IS_TECH ? L('La primera unitat de cada curs. Amb Premium, tots els cursos sencers.', 'La primera unidad de cada curso. Con Premium, todos los cursos completos.') : IS_MENT ? L('La sessió diària completa i una partida de cada joc al dia. Amb Premium, tots els jocs sense límit i reptes amb amics.', 'La sesión diaria completa y una partida de cada juego al día. Con Premium, todos los juegos sin límite y retos con amigos.') : !adultPay() ? L('1 lliçó nova i 3 entrenaments al dia.', '1 lección nueva y 3 entrenamientos al día.') : L('1 lliçó nova i 3 entrenaments al dia. Amb Premium, sense límit, amb batalles i ruta de temporada.', '1 lección nueva y 3 entrenamientos al día. Con Premium, sin límite, con batallas y ruta de temporada.')}</span>
     ${IS_MENT || adultPay() ? `<button class="btn sm gold" onclick="${IS_MENT ? 'mPremium(1)' : 'premiumModal()'}">${L('QUÈ ÉS PREMIUM?', '¿QUÉ ES PREMIUM?')}</button>` : ''}</div>`;
 }
 // Cancel·lar des de l'app, amb doble confirmació: 1) què passarà; 2) confirmació d'adult. Es cancel·la al final del període pagat.
@@ -1688,7 +1688,7 @@ function onb(step) {
   if (step === 0) {
     ONB.stage = null; ONB.variant = null;
     onbShell(0, `<img class="onb-logo" src="${VAR.logo}" alt="${VAR.name}"><div class="onb-char tapme">${charSVG('numi', 'happy')}</div>
-      <div class="bubble big">${IS_MENT ? L("Hola! Soc en <b>Numi</b>. T'acompanyaré cada dia a mantenir la ment activa. <b>Com et dius?</b>", '¡Hola! Soy <b>Numi</b>. Te acompañaré cada día a mantener la mente activa. <b>¿Cómo te llamas?</b>') : IS_PRO ? L("Ei! Soc en <b>Numi</b>. Les mates d'ESO, pas a pas i sense avorrir-te. <b>Com et dius?</b>", '¡Ey! Soy <b>Numi</b>. Las mates de ESO, paso a paso y sin aburrirte. <b>¿Cómo te llamas?</b>') : L("Hola! Soc en <b>Numi</b>. T'acompanyaré pas a pas perquè les mates et surtin rodones. <b>Com et dius?</b>", '¡Hola! Soy <b>Numi</b>. Te acompañaré paso a paso para que las mates te salgan redondas. <b>¿Cómo te llamas?</b>')}</div>
+      <div class="bubble big">${IS_TECH ? L("Hola! Soc en <b>Numi</b>. Aquí aprendràs a programar robots, crear jocs i fer projectes digitals. <b>Com et dius?</b>", '¡Hola! Soy <b>Numi</b>. Aquí aprenderás a programar robots, crear juegos y hacer proyectos digitales. <b>¿Cómo te llamas?</b>') : IS_MENT ? L("Hola! Soc en <b>Numi</b>. T'acompanyaré cada dia a mantenir la ment activa. <b>Com et dius?</b>", '¡Hola! Soy <b>Numi</b>. Te acompañaré cada día a mantener la mente activa. <b>¿Cómo te llamas?</b>') : IS_PRO ? L("Ei! Soc en <b>Numi</b>. Les mates d'ESO, pas a pas i sense avorrir-te. <b>Com et dius?</b>", '¡Ey! Soy <b>Numi</b>. Las mates de ESO, paso a paso y sin aburrirte. <b>¿Cómo te llamas?</b>') : L("Hola! Soc en <b>Numi</b>. T'acompanyaré pas a pas perquè les mates et surtin rodones. <b>Com et dius?</b>", '¡Hola! Soy <b>Numi</b>. Te acompañaré paso a paso para que las mates te salgan redondas. <b>¿Cómo te llamas?</b>')}</div>
       <input id="nm" class="nm" maxlength="16" placeholder="${L('El teu nom', 'Tu nombre')}" autocomplete="off" enterkeyhint="go" value="${esc(ONB.name || '')}">
       <button class="btn big" onclick="onbName()">${L('SEGÜENT', 'SIGUIENTE')}</button>
       <button class="link" onclick="loginModal()">🔑 ${L('Ja tinc compte', 'Ya tengo cuenta')}</button>`);
@@ -1735,7 +1735,7 @@ function onbCourse() {
   onbShell(1, `<div class="onb-char sm tapme">${charSVG('numi', 'idle')}</div><div class="bubble big">${L('<b>Quin curs fas?</b>', '<b>¿Qué curso haces?</b>')}</div>
     <div class="cgrid ages">${idx.map((ci, i) => `<button class="cbtn ${ONB.course === ci ? 'on' : ''}" style="animation-delay:${i * 40}ms" onclick="ONB.course=${ci};onb(2)"><b>${ci - (ONB.stage === 'eso' ? ESO_FROM : 0) + 1}${L(['r', 'n', 'r', 't', 'è', 'è'][ci - (ONB.stage === 'eso' ? ESO_FROM : 0)], '.º')}</b><small>${ONB.stage === 'eso' ? 'ESO' : L('primària', 'primaria')}</small></button>`).join('')}</div>`);
 }
-function onbName() { const n = $('#nm').value.trim(); if (!n) { $('#nm').classList.add('shake'); setTimeout(() => $('#nm').classList.remove('shake'), 500); return; } ONB.name = n; if (HOST_VAR === 'ment') { ONB.stage = 'altres'; ONB.variant = 'ment'; return onbMent(); } onb(1); }
+function onbName() { const n = $('#nm').value.trim(); if (!n) { $('#nm').classList.add('shake'); setTimeout(() => $('#nm').classList.remove('shake'), 500); return; } ONB.name = n; if (HOST_VAR === 'ment') { ONB.stage = 'altres'; ONB.variant = 'ment'; return onbMent(); } if (HOST_VAR === 'tech' || VAR_TEST === 'tech') return onbTech(); onb(1); }
 // prova de nivell per a un compte que ja existeix (alta feta pel docent): es fa sobre el mateix perfil
 function placeIntro() {
   VIEW = 'place';

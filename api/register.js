@@ -12,7 +12,7 @@ export default async function handler(req, res) {
   cleanState(state);
   // l'enquesta inicial és petita (curs, edat, com se sent…): res de guardar objectes grans ni d'altres tipus
   const survey = b.survey && typeof b.survey === 'object' && !Array.isArray(b.survey) && JSON.stringify(b.survey).length <= 2000 ? b.survey : null;
-  const variant = ['mates', 'pro', 'ment'].includes(b.variant) ? b.variant : ['mates', 'pro', 'ment'].includes(state.variant) ? state.variant : 'mates';
+  const variant = ['mates', 'pro', 'ment', 'tech'].includes(b.variant) ? b.variant : ['mates', 'pro', 'ment', 'tech'].includes(state.variant) ? state.variant : 'mates';
   const age = survey && Number.isFinite(+survey.age) ? +survey.age : null;
   const minor = isMinor({ survey: { age, variant }, state: { variant } });
   let user = null, hash = null;
