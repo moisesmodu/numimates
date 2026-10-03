@@ -18,7 +18,7 @@ const VARIANTS = {
     apple: 'img/brand/apple-touch-icon-ment.png', manifest: 'manifest-ment.webmanifest', url: 'https://ment.numimates.com',
     tag: 'Entrena la ment cada dia|Entrena la mente cada día' },
   // programació, robòtica i projectes digitals (pantalles pròpies: tech.js)
-  tech: { id: 'tech', name: 'Numi Tech', logo: 'img/brand/logo-tech.svg', theme: '#1B2B6B', courses: [], chat: false,
+  tech: { id: 'tech', name: 'Numi Tech', logo: 'img/brand/logo-tech.svg', theme: '#1B2B6B', courses: [], chat: true,
     apple: 'img/brand/apple-touch-icon-tech.png', manifest: 'manifest-tech.webmanifest', url: 'https://tech.numimates.com',
     tag: 'Programació i robòtica|Programación y robótica' }
 };
@@ -40,7 +40,8 @@ let VAR = VARIANTS.mates, IS_PRO = false, IS_MENT = false, IS_TECH = false;
 // l'app «natural» d'un perfil: Ment si s'hi va donar d'alta; Pro si és d'ESO o ja hi ha arribat; si no, Mates
 const natOf = p => !p ? 'mates' : p.variant === 'ment' ? 'ment' : p.variant === 'tech' ? 'tech' : (p.variant === 'pro' || (p.maxCourse ?? p.course ?? 0) >= ESO_FROM) ? 'pro' : 'mates';
 const varOf = p => HOST_VAR || VAR_TEST || natOf(p);
-const appMismatch = p => !!(HOST_VAR && p && p.id !== 'tmp' && natOf(p) !== HOST_VAR);
+// un compte pot tenir apps addicionals (state.apps, les dona l'administrador al panell): també hi pot entrar
+const appMismatch = p => !!(HOST_VAR && p && p.id !== 'tmp' && natOf(p) !== HOST_VAR && !(Array.isArray(p.apps) && p.apps.includes(HOST_VAR)));
 function setVariant(id) {
   const o = VARIANTS[HOST_VAR || VAR_TEST || id] || VARIANTS.mates;
   if (o === VAR && document.documentElement.dataset.v === o.id) return false;

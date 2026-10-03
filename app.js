@@ -850,7 +850,7 @@ function check() {
     const pf = $('.pfill'); pf.style.width = (LS.done / LS.total * 100) + '%'; pf.classList.remove('shine'); void pf.offsetWidth; pf.classList.add('shine');
     fb.innerHTML = `<div class="fbh">✔ ${LS.combo >= 3 ? L(`Ratxa de ${LS.combo}! 🔥`, `¡Racha de ${LS.combo}! 🔥`) : pick(PRAISE())}</div>${e.long || e.retry ? `<div class="exp">${e.ex || ''}</div>` : ''}`;
   } else {
-    LS.miss++; LS.combo = 0; SFX.ko(); $('#lbody').classList.add('shake');
+    LS.miss++; LS.combo = 0; SFX.ko(); try { (LS.errs = LS.errs || []).push({ q: xatPlain(e.q).slice(0, 140), a: xatPlain(String(ansText(e))).slice(0, 40) }); if (LS.errs.length > 5) LS.errs.shift(); } catch (x) { } $('#lbody').classList.add('shake');
     if (LS.mode === 'battle' || LS.exam) LS.done++;
     else { const n = genEx(e.sk, e.L, LS.seen, LS.mix); n.retry = true; LS.queue.push(n); }
     fb.innerHTML = `<div class="fbh">✖ ${pick(OOPS())}</div><div class="ans">${L('Resposta correcta', 'Respuesta correcta')}: <b>${ansText(e)}</b></div>${e.ex ? `<div class="exp">💡 ${e.ex}</div>` : ''}`;

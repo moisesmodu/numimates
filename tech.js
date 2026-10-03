@@ -32,7 +32,7 @@ const TIC = {
 };
 function tNav(t) {
   const it = [['home', 'apren', L('Aprèn', 'Aprende')], ['projectes', 'projectes', L('Projectes', 'Proyectos')], ['profile', 'perfil', L('Perfil', 'Perfil')]];
-  return `<nav class="nav tnav">${it.map(([v, i, l]) => `<button class="${v === t ? 'on' : ''}" onclick="go('${v}')"><span class="ni">${TIC[i]}</span><span>${l}</span></button>`).join('')}</nav>`;
+  return `<nav class="nav tnav">${it.map(([v, i, l]) => `<button class="${v === t ? 'on' : ''}" onclick="go('${v}')"><span class="ni">${TIC[i]}</span><span>${l}</span></button>`).join('')}${VAR.chat ? `<button class="navxat" onclick="xatOpen()" aria-label="${L("Pregunta a en Numi (xat d'ajuda)", 'Pregunta a Numi (chat de ayuda)')}"><span class="ni">${charSVG('numi', 'happy')}</span><span>${L('Pregunta', 'Pregunta')}</span></button>` : ''}</nav>`;
 }
 function tShell(t, body, hero = '') {
   return `<div class="tpage tp-${t}"><header class="ttop"><img src="${VAR.logo}" alt="${VAR.name}"><span class="tchip2" title="${L('Dies seguits', 'Días seguidos')}">${TIC.foc} ${P.streak || 0}</span></header>${hero}<main class="tmain">${body}</main>${tNav(t)}</div>`;
@@ -147,6 +147,7 @@ function tOpen(id) {
 }
 function tQuit() {
   if (TSS && TSS.i > 0 && !confirm(L('Vols sortir? La sessió es queda guardada i la podràs continuar on l\'has deixat.', '¿Quieres salir? La sesión se queda guardada y podrás continuarla donde la dejaste.'))) return;
+  if (TSS) { const rec = tTime(); rec.d = rec.d || today(); save(); }
   tStop(); TSS = null; TB = null; go('home');
 }
 // barra de dalt: un tros per fase, amb el nom de la fase actual
@@ -159,7 +160,7 @@ function tBar() {
 function tStep() {
   tStop(); TB = null; typeof tDemoStop === 'function' && tDemoStop();
   const st = TSS.s.steps[TSS.i], ph = tx(TPH[st.ph].join('|'));
-  TSS.st = st; TSS.ready = false;
+  TSS.st = st; TSS.ready = false; TSS.t0 = Date.now();
   app.innerHTML = `<div class="tsess k-${st.k}"><div class="tstop"><button class="xbtn" onclick="tQuit()" aria-label="${L('Surt', 'Salir')}">✕</button><div class="tstopm"><b class="tsph">${ph}</b>${tBar()}</div><span class="tsmin">${TSS.i + 1}/${TSS.s.steps.length}</span></div>
     <div class="tsbody" id="tsb"></div><div class="tsfoot" id="tsf"></div></div>`;
   (TSTEP[st.k] || TSTEP.story)(st);
@@ -171,9 +172,11 @@ function tFoot(label, fn, on = true, extra = '') {
   f.innerHTML = `${extra}<button class="btn big tnext" id="tnext" ${on ? '' : 'disabled'}>${label}</button>`;
   document.getElementById('tnext').onclick = fn;
 }
+// temps de la sessió (per al panell i els informes): cada pas compta fins a 8 minuts com a molt
+function tTime() { const rec = TS_().s[TSS.id] = TS_().s[TSS.id] || {}; if (TSS.t0) rec.ms = (rec.ms || 0) + Math.min(Date.now() - TSS.t0, 8 * 60000); TSS.t0 = Date.now(); return rec; }
 function tNext() {
   TSS.n++;
-  const rec = TS_().s[TSS.id] = TS_().s[TSS.id] || {};
+  const rec = tTime();
   if (TSS.i + 1 >= TSS.s.steps.length) return tFinish();
   TSS.i++;
   if (!rec.done) { rec.i = TSS.i; save(); }
@@ -183,9 +186,9 @@ function tNext() {
 const addXPsafe = n => { if (typeof addXP === 'function' && P.daily) addXP(n); else P.xp = (P.xp || 0) + n; };
 const tContinue = () => tFoot(L('Continua', 'Continúa'), tNext);
 function tFinish() {
-  const t = TS_(), rec = t.s[TSS.id] = t.s[TSS.id] || {}, first = !rec.done;
+  const t = TS_(), rec = tTime(), first = !rec.done;
   rec.done = 1; rec.i = 0; rec.d = today(); rec.n = (rec.n || 0) + 1;
-  if (first) addXPsafe(30);
+  if (first) { addXPsafe(30); P.stats = P.stats || {}; P.stats.lessons = (P.stats.lessons || 0) + 1; }
   const bd = TSS.s.badge && TBADGE[TSS.s.badge], newB = bd && !t.badges[bd.id];
   if (newB) t.badges[bd.id] = today();
   if (typeof touchStreak === 'function') touchStreak();

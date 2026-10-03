@@ -272,7 +272,7 @@ const LLIGA_ANI = [['Guineu', 'Zorro'], ['Llop', 'Lobo'], ['Mussol', 'Búho'], [
   ['Tigre', 'Tigre'], ['Pingüí', 'Pingüino'], ['Koala', 'Koala'], ['Panda', 'Panda'], ['Castor', 'Castor'], ['Llebre', 'Liebre'], ['Garsa', 'Urraca'], ['Gavina', 'Gaviota'], ['Cigne', 'Cisne'], ['Colibrí', 'Colibrí'],
   ['Flamenc', 'Flamenco'], ['Pop', 'Pulpo'], ['Cometa', 'Cometa'], ['Llamp', 'Rayo'], ['Roure', 'Roble'], ['Tauró', 'Tiburón'], ['Rinoceront', 'Rinoceronte'], ['Camell', 'Camello'], ['Foca', 'Foca'], ['Gat', 'Gato']];
 const lligaAlias = a => Array.isArray(a) ? `${tx(LLIGA_ANI[a[0] % LLIGA_ANI.length])} ${a[1]}` : '';
-const LLIGA_NOM = { 'mates-12': ['Lliga de 1r i 2n', 'Liga de 1.º y 2.º'], 'mates-34': ['Lliga de 3r i 4t', 'Liga de 3.º y 4.º'], 'mates-56': ['Lliga de 5è i 6è', 'Liga de 5.º y 6.º'], pro: ["Lliga d'ESO", 'Liga de ESO'], ment: ['Lliga Numi Ment', 'Liga Numi Ment'] };
+const LLIGA_NOM = { 'mates-12': ['Lliga de 1r i 2n', 'Liga de 1.º y 2.º'], 'mates-34': ['Lliga de 3r i 4t', 'Liga de 3.º y 4.º'], 'mates-56': ['Lliga de 5è i 6è', 'Liga de 5.º y 6.º'], pro: ["Lliga d'ESO", 'Liga de ESO'], ment: ['Lliga Numi Ment', 'Liga Numi Ment'], tech: ['Lliga Numi Tech', 'Liga Numi Tech'] };
 const lligaApi = d => api('lliga', { code: P.code, ...d });
 const daysLeftMonth = () => { const d = new Date(), e = new Date(d.getFullYear(), d.getMonth() + 1, 0); return e.getDate() - d.getDate() + 1; };
 async function renderLeague(period) {

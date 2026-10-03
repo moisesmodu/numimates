@@ -9,8 +9,8 @@ import { famOf } from './_auth.js';
 import { STRIPE_KEY as KEY, stripe, stripeMode, applySub, subOf, setCancel, desist, refundAndCancel, subOfCharge, LIVE, DESIST_DAYS } from './_stripe.js';
 import { MAIL_OK, sendMail } from './_mail.js';
 const LOOKUP = { mes: 'numi_premium_mes', any: 'numi_premium_any' };
-const APPNAME = new Proxy({ pro: 'Numi Pro', ment: 'Numi Ment' }, { get: (o, k) => o[k] || 'Numi Mates' });
-const ORIGINS = ['https://app.numimates.com', 'https://pro.numimates.com', 'https://ment.numimates.com', 'https://mates-numi.vercel.app', 'http://localhost:5176', 'http://127.0.0.1:5176']
+const APPNAME = new Proxy({ pro: 'Numi Pro', ment: 'Numi Ment', tech: 'Numi Tech' }, { get: (o, k) => o[k] || 'Numi Mates' });
+const ORIGINS = ['https://app.numimates.com', 'https://pro.numimates.com', 'https://ment.numimates.com', 'https://tech.numimates.com', 'https://mates-numi.vercel.app', 'http://localhost:5176', 'http://127.0.0.1:5176']
   .filter(o => process.env.VERCEL_ENV !== 'production' || !/localhost|127\.0\.0\.1/.test(o));
 
 let PRICES = null, PORTAL = null;

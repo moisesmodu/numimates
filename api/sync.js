@@ -19,6 +19,8 @@ export default async function handler(req, res) {
   if (!b.reset && (state.xp | 0) < cur[0].xp) return ok(res, { ok: false, state: { ...cur[0].state, xp: cur[0].xp } });
   state.code = code;
   state.unlockAll = !!(cur[0].state && cur[0].state.unlockAll);
+  // les apps addicionals les decideix l'administrador al panell: mana el servidor
+  if (cur[0].state && Array.isArray(cur[0].state.apps)) state.apps = cur[0].state.apps; else delete state.apps;
   const s = summary(state);
   // primera pujada després del permís: l'enquesta inicial completa (abans només hi havia l'edat)
   const sv = b.survey && typeof b.survey === 'object' && !Array.isArray(b.survey) && JSON.stringify(b.survey).length <= 2000 && !(cur[0].survey && cur[0].survey.curs) ? b.survey : null;
