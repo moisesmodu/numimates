@@ -67,3 +67,4 @@ h1{font-size:26px;line-height:1.15;margin:6px 0 6px}h2{font-size:17px;margin:22p
 .infbox .seg button.on{background:#602B7A;border-color:#602B7A;color:#fff}
 .steps{margin:0;padding-left:22px;display:grid;gap:8px;line-height:1.45}
 .link.redt{color:var(--ko-d)}
+html{touch-action:manipulation}@media (max-width:899px){input,select,textarea{font-size:max(16px,1em)}}
