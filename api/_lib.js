@@ -31,6 +31,7 @@ const ipKey = req => {
   return [...a, ...Array(Math.max(0, 8 - a.length - z.length)).fill('0'), ...z].slice(0, 4).map(x => x.replace(/^0+(?=.)/, '')).join(':') + '::/64';
 };
 export async function blocked(req, b, max, mins = 15, acct = null, maxAcct = Math.ceil(max / 2)) {
+  if (b === 'codi' && await codesHot()) return true;
   const r = await sql`SELECT count(*) FILTER (WHERE k = ${'ip:' + ipKey(req)})::int AS ip, count(*) FILTER (WHERE k = ${'ac:' + acct})::int AS ac
     FROM mates.fails WHERE b = ${b} AND t > now() - make_interval(mins => ${mins}) AND k IN (${'ip:' + ipKey(req)}, ${'ac:' + acct})`;
   return r[0].ip >= max || (acct != null && r[0].ac >= maxAcct);
@@ -61,14 +62,67 @@ export async function issueTok(res, code) {
 }
 export async function dropToks(code) { await tokTable(); await sql`DELETE FROM mates.alumne_tok WHERE code = ${code}`; }
 // true si la petició pot continuar; si no, ja ha respost 401 { error: 'clau' }
+const hasTok = async (req, code) => { const t = String(req.headers['x-alumne'] || '').slice(0, 100);
+  return !!t && (await sql`UPDATE mates.alumne_tok SET last = now() WHERE hash = ${sha(t)} AND code = ${code} RETURNING 1`).length > 0; };
 export async function alumneOk(req, res, code, passHash) {
-  if (!passHash) return true;
   await tokTable();
-  const t = String(req.headers['x-alumne'] || '').slice(0, 100);
-  if (t && (await sql`UPDATE mates.alumne_tok SET last = now() WHERE hash = ${sha(t)} AND code = ${code} RETURNING 1`).length) return true;
-  // pas a les claus: el primer dispositiu que arriba a un compte que encara no en té cap la rep
-  if (!(await sql`SELECT 1 FROM mates.alumne_tok WHERE code = ${code} LIMIT 1`).length) { await issueTok(res, code); return true; }
+  if (await hasTok(req, code)) return true;
+  if (!passHash) {
+    // sense contrasenya el codi continua obrint el compte (l'aula); si el compte encara no té cap dispositiu amb clau,
+    // el primer que hi arriba la rep (comptes d'abans de les claus). Les accions delicades demanen la clau: alumneStrict.
+    if (!(await sql`SELECT 1 FROM mates.alumne_tok WHERE code = ${code} LIMIT 1`).length) await issueTok(res, code);
+    return true;
+  }
+  // amb contrasenya, la clau només s'obté entrant amb usuari i contrasenya (login) o posant-la (account)
   await fail(req, 'clau', code); ok(res, { error: 'clau' }, 401); return false;
+}
+// Accions delicades (vincular un adult, posar usuari i contrasenya, pagar o cancel·lar): cal la clau del dispositiu.
+// Endevinar un codi ja no n'hi ha prou per quedar-se un compte. Respon 403 { error: 'dispositiu' } si no la té.
+export async function alumneStrict(req, res, code) {
+  await tokTable();
+  if (await hasTok(req, code)) return true;
+  await fail(req, 'clau', code); ok(res, { error: 'dispositiu' }, 403); return false;
+}
+
+// --- Autorització de la família (menors de 14 anys, art. 7 LOPDGDD) ---
+// Columna alumnes.consent: 'pending' (perfil nou d'un menor que espera el sí d'un adult), 'ok' (un adult ho ha autoritzat) o null
+// (no cal: adults, Numi Ment, alumnes d'una escola; o comptes d'abans, que tenen marge fins a CONSENT_LEGACY).
+export const CONSENT_LEGACY = '2026-11-03';
+export function isMinor(a) {
+  if (!a || a.grup_id || a.pla === 'escola') return false;                       // l'escola en té el permís de les famílies
+  const st = a.state || {}, sv = a.survey || {};
+  if ((st.variant || sv.variant) === 'ment') return false;
+  const age = +(sv.age ?? st.age);
+  return !(age >= 14);                                                           // sense edat coneguda: com a menor
+}
+// true si el compte ja pot desar al núvol i fer servir les funcions en línia
+export function consentOk(a) {
+  if (!isMinor(a) || a.consent === 'ok') return true;
+  if (a.consent === 'pending') return false;
+  return new Date() < new Date(CONSENT_LEGACY);                                  // comptes d'abans: marge
+}
+let CONS = null;
+// columnes noves sense bloquejar la taula a cada arrencada: primer es mira si ja hi són
+export const consentCols = () => CONS || (CONS = (async () => {
+  const have = new Set((await sql`SELECT table_name || '.' || column_name AS c FROM information_schema.columns WHERE table_schema = 'mates' AND table_name IN ('alumnes', 'familia_links', 'families')`).map(r => r.c));
+  if (!have.has('alumnes.consent')) await sql`ALTER TABLE mates.alumnes ADD COLUMN IF NOT EXISTS consent text, ADD COLUMN IF NOT EXISTS consent_at timestamptz`;
+  if (have.has('familia_links.email') && !have.has('familia_links.created')) await sql`ALTER TABLE mates.familia_links ADD COLUMN IF NOT EXISTS created timestamptz NOT NULL DEFAULT now(), ADD COLUMN IF NOT EXISTS kid text`;
+  if (have.has('families.email') && !have.has('families.promo')) await sql`ALTER TABLE mates.families ADD COLUMN IF NOT EXISTS promo boolean NOT NULL DEFAULT false`;
+  if (!have.has('familia_links.email') || !have.has('families.email')) CONS = null;   // la zona de famílies encara no té taules: es tornarà a mirar
+})().catch(e => { CONS = null; throw e; }));
+// per als endpoints en línia (batalles, xat, canvis, lliga): 403 { error: 'permis' } si encara falta el sí de la família
+export async function consentGuard(res, code) {
+  await consentCols();
+  const a = (await sql`SELECT consent, grup_id, pla, survey, state->>'variant' AS variant FROM mates.alumnes WHERE code = ${code}`)[0];
+  if (!a || consentOk({ ...a, state: { variant: a.variant } })) return true;
+  ok(res, { error: 'permis' }, 403); return false;
+}
+
+// Fre global: si en 15 minuts hi ha massa codis equivocats entre totes les IP (algú provant-ne molts des de moltes
+// adreces), es frenen les entrades per codi fins que baixi. Una aula normal no hi arriba mai.
+export async function codesHot() {
+  const r = await sql`SELECT count(*)::int AS n FROM mates.fails WHERE b = 'codi' AND t > now() - interval '15 minutes'`;
+  return r[0].n >= 1500;
 }
 // per als endpoints que només tenen el codi: busca la contrasenya i aplica alumneOk
 export async function alumneGuard(req, res, code) {
@@ -100,6 +154,33 @@ export function cleanState(s) {
   return s;
 }
 
+// Supressió de veritat d'un alumne (dret de supressió, fi del contracte amb un centre o caducitat): s'esborra l'alumne
+// i el que el vincula a famílies; a batalles i intercanvis s'hi treu el nom i el codi.
+export async function eraseStudent(code) {
+  try { await sql`DELETE FROM mates.batalla_jug WHERE sid = ${code}`; } catch (e) { }
+  try { await sql`UPDATE mates.canvis SET a_sid = NULL, a_name = '—' WHERE a_sid = ${code}`; await sql`UPDATE mates.canvis SET b_sid = NULL, b_name = '—' WHERE b_sid = ${code}`; } catch (e) { }
+  try { await sql`DELETE FROM mates.medalles WHERE code = ${code}`; } catch (e) { }
+  try { await sql`DELETE FROM mates.familia_fills WHERE code = ${code}`; await sql`DELETE FROM mates.familia_links WHERE code = ${code}`; } catch (e) { }
+  try { await sql`DELETE FROM mates.xat_us WHERE code = ${code}`; await sql`DELETE FROM mates.fails WHERE k = ${'ac:' + code}`; } catch (e) { }
+  try { await sql`UPDATE mates.batalles SET host = NULL WHERE host = ${code}`; } catch (e) { }
+  try { await sql`DELETE FROM mates.alumne_tok WHERE code = ${code}`; } catch (e) { }
+  try { await sql`DELETE FROM mates.lliga WHERE code = ${code}`; await sql`DELETE FROM mates.lliga_premis WHERE code = ${code}`; } catch (e) { }
+  await sql`DELETE FROM mates.alumnes WHERE code = ${code}`;
+}
+
+// Conservació (política de privadesa): sol·licituds de permís sense resposta en 30 dies, comptes sense activitat en 24 mesos
+// (sense subscripció ni escola), enllaços caducats i famílies sense fills ni entrades en 24 mesos. Ho crida el cron.
+export async function purge() {
+  await consentCols();
+  const old = await sql`SELECT code FROM mates.alumnes WHERE stripe_sub IS NULL AND grup_id IS NULL AND (
+      (consent = 'pending' AND created_at < now() - interval '30 days') OR updated_at < now() - interval '24 months') LIMIT 100`;
+  for (const r of old) await eraseStudent(r.code);
+  let links = 0, fams = 0;
+  try { links = (await sql`DELETE FROM mates.familia_links WHERE expires < now() - interval '1 day' RETURNING 1`).length; } catch (e) { }
+  try { fams = (await sql`DELETE FROM mates.families f WHERE COALESCE(f.last_login, f.created_at) < now() - interval '24 months' AND NOT EXISTS (SELECT 1 FROM mates.familia_fills ff WHERE ff.familia_id = f.id) RETURNING 1`).length; } catch (e) { }
+  return { alumnes: old.length, links, fams };
+}
+
 // Pla efectiu de l'alumne: «escola» si és dins d'un grup, «premium» si el té i no ha caducat, si no «free»
 export function plaOf(a) {
   if (a.grup_id || a.pla === 'escola') return 'escola';
@@ -113,4 +194,5 @@ export const WORDS = [
   'CASTELL', 'VOLCA', 'COET', 'GALAXIA', 'CACTUS', 'PIRATA', 'BRUIXOLA', 'FLAMENC', 'ESQUIROL', 'GIRAFA', 'KOALA', 'LLAMA', 'CAMALEO', 'ORCA', 'TAURO', 'COLIBRI',
   'CANGUR', 'ELEFANT', 'ZEBRA', 'MARMOTA', 'CRANC', 'MEDUSA', 'ABELLA', 'FORMIGA', 'TEMPESTA', 'AURORA', 'METEOR', 'SATURN', 'LLUNA', 'ICEBERG', 'OASI', 'SELVA', 'DUNA',
   'CASCADA', 'TRITO', 'SIRENA', 'GEGANT', 'FOLLET', 'LINX', 'CORB', 'GAVINA', 'TAIGA'];
-export const newStudentCode = () => WORDS[randomInt(WORDS.length)] + '-' + randomInt(1000, 10000);
+// PARAULA-0000-0000: 60 × 9.000 × 10.000 ≈ 5.400 milions de codis (abans PARAULA-0000, només 540.000). Els antics continuen valent.
+export const newStudentCode = () => WORDS[randomInt(WORDS.length)] + '-' + randomInt(1000, 10000) + '-' + String(randomInt(0, 10000)).padStart(4, '0');

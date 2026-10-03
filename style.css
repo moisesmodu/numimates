@@ -1399,3 +1399,4 @@ body.pro .energy{box-shadow:0 8px 22px rgba(60,30,90,.08)}
   .lesson .l-body>.retry{align-self:flex-start}
   .lesson .l-body>.morebtn{flex:none}
 }
+.testcard.famask{background:linear-gradient(135deg,#8A55C9,#602B7A);box-shadow:0 5px 0 #40195A;animation:none}

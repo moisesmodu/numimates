@@ -1,9 +1,10 @@
 /* Zona de famílies (app.numimates.com/families). Hi entra un adult amb un enllaç que rep per correu (sense contrasenya)
-   i hi veu el progrés dels fills que ha afegit amb el seu codi. En afegir un fill, l'adult dona l'autorització
-   (obligatòria per a menors de 14 anys, art. 7 LOPDGDD): en queda la data i la IP.
+   i hi veu el progrés dels seus fills. Un fill s'hi afegeix NOMÉS des de la seva app (invitació amb la clau del dispositiu):
+   l'adult rep el correu, marca que n'és el pare, la mare o el tutor i ho autoritza (obligatori per a menors de 14 anys,
+   art. 7 LOPDGDD): en queda la data i la IP, i el perfil del menor passa de 'pending' a 'ok' i ja es pot desar al núvol.
    Accions (POST /api/account?f=…): link · enter · data · add · remove */
 import { createHash, randomBytes } from 'crypto';
-import { sql, body, cleanCode, ok, blocked, fail, note, tooMany, ipOf, plaOf } from './_lib.js';
+import { sql, body, cleanCode, ok, blocked, fail, note, tooMany, ipOf, plaOf, alumneStrict, consentCols } from './_lib.js';
 import { famToken, famOf, who } from './_auth.js';
 import { subOf } from './_stripe.js';
 import { MAIL_OK, sendMail } from './_mail.js';
@@ -16,9 +17,9 @@ const cleanMail = m => String(m || '').trim().toLowerCase().slice(0, 160);
 const validMail = m => /^[^\s@<>"',;]+@[^\s@<>"',;]+\.[a-z]{2,}$/i.test(m);
 
 let ready = null;
-const tables = () => ready || (ready = sql`CREATE TABLE IF NOT EXISTS mates.families (id serial PRIMARY KEY, email text UNIQUE NOT NULL, lang text, created_at timestamptz NOT NULL DEFAULT now(), last_login timestamptz)`
+const tables = () => ready || (ready = sql`CREATE TABLE IF NOT EXISTS mates.families (id serial PRIMARY KEY, email text UNIQUE NOT NULL, lang text, created_at timestamptz NOT NULL DEFAULT now(), last_login timestamptz, promo boolean NOT NULL DEFAULT false)`
   .then(() => sql`CREATE TABLE IF NOT EXISTS mates.familia_fills (familia_id int NOT NULL REFERENCES mates.families(id) ON DELETE CASCADE, code text NOT NULL, consent_at timestamptz NOT NULL DEFAULT now(), consent_ip text, created_at timestamptz NOT NULL DEFAULT now(), PRIMARY KEY (familia_id, code))`)
-  .then(() => sql`CREATE TABLE IF NOT EXISTS mates.familia_links (token_hash text PRIMARY KEY, email text NOT NULL, code text, lang text, consent_ip text, expires timestamptz NOT NULL, used boolean NOT NULL DEFAULT false)`)
+  .then(() => sql`CREATE TABLE IF NOT EXISTS mates.familia_links (token_hash text PRIMARY KEY, email text NOT NULL, code text, lang text, consent_ip text, expires timestamptz NOT NULL, used boolean NOT NULL DEFAULT false, created timestamptz NOT NULL DEFAULT now(), kid text)`)
   .catch(e => { ready = null; throw e; }));
 
 // l'alumne NOMÉS pel codi: el nom d'usuari no és secret (qualsevol el podria endevinar i veure el progrés i el codi del nen)
@@ -32,10 +33,10 @@ async function student(v) {
 // la mare o el tutor i dona l'autorització (en queda la data i la IP del clic, a enter()). I a partir d'aquí rep l'informe.
 function inviteText(lang, link, kid) {
   const es = lang === 'es', n = String(kid || '').split(' ')[0].replace(/[<>&"']/g, '') || (es ? 'Tu hijo o hija' : 'El teu fill o filla');
-  const subject = es ? `${n} quiere que sigas su progreso en Numi Mates` : `${n} vol que segueixis el seu progrés a Numi Mates`;
-  const p1 = es ? `${n} usa Numi Mates para practicar matemáticas y ha escrito tu correo para que recibas un <b>informe semanal</b>: los días que practica, cómo le van los ejercicios, en qué le cuesta más y una idea para ayudarle en casa.` : `${n} fa servir Numi Mates per practicar matemàtiques i ha escrit el teu correu perquè rebis un <b>informe setmanal</b>: els dies que practica, com li van els exercicis, en què li costa més i una idea per ajudar-lo a casa.`;
-  const p2 = es ? 'Al pulsar el botón confirmas que eres su padre, madre o tutor legal y que autorizas que use Numi Mates (necesario si tiene menos de 14 años). Guardamos el mínimo de datos y no hay publicidad.' : 'En prémer el botó confirmes que ets el seu pare, mare o tutor legal i que autoritzes que faci servir Numi Mates (cal si té menys de 14 anys). Guardem el mínim de dades i no hi ha publicitat.';
-  const btn = es ? 'Confirmar y ver su progreso' : 'Confirma i mira el seu progrés';
+  const subject = es ? `${n} te pide permiso para usar Numi Mates` : `${n} et demana permís per fer servir Numi Mates`;
+  const p1 = es ? `${n} ha empezado a practicar matemáticas con Numi Mates y ha escrito tu correo. Si lo autorizas, <b>su progreso se guardará en la nube</b> (podrá seguir en otro dispositivo), podrá usar la liga y las batallas, y tú recibirás un <b>informe semanal</b>: los días que practica, cómo le van los ejercicios y una idea para ayudarle en casa. Mientras no lo autorices, su progreso solo queda en su dispositivo.` : `${n} ha començat a practicar matemàtiques amb Numi Mates i ha escrit el teu correu. Si ho autoritzes, <b>el seu progrés es desarà al núvol</b> (podrà continuar en un altre dispositiu), podrà fer servir la lliga i les batalles, i tu rebràs un <b>informe setmanal</b>: els dies que practica, com li van els exercicis i una idea per ajudar-lo a casa. Mentre no ho autoritzis, el seu progrés només es queda al seu dispositiu.`;
+  const p2 = es ? 'En la página que se abre tendrás que confirmar que eres su padre, madre o tutor legal y que lo autorizas (necesario si tiene menos de 14 años). Guardamos el mínimo de datos y no hay publicidad.' : "A la pàgina que s'obre hauràs de confirmar que ets el seu pare, mare o tutor legal i que ho autoritzes (cal si té menys de 14 anys). Guardem el mínim de dades i no hi ha publicitat.";
+  const btn = es ? 'Revisar y autorizar' : 'Revisa i autoritza';
   const p3 = es ? 'El enlace caduca en 7 días. Si no conoces a quien te ha invitado, ignora este correo y no recibirás nada más.' : "L'enllaç caduca d'aquí a 7 dies. Si no coneixes qui t'ha convidat, ignora aquest correu i no rebràs res més.";
   const sign = es ? 'El equipo de Numi Mates' : "L'equip de Numi Mates";
   const html = `<div style="font-family:Arial,Helvetica,sans-serif;max-width:480px;margin:0 auto;padding:24px;color:#2B1A38">
@@ -65,28 +66,34 @@ async function link(req, res, b) {
   const email = cleanMail(b.email), lang = b.lang === 'es' ? 'es' : 'ca';
   if (!validMail(email)) return ok(res, { error: 'correu' }, 400);
   if (await blocked(req, 'familia-link', 12, 60, email, 5)) return tooMany(res);
-  let code = null;
+  let code = null, kid = null;
   const invite = b.invite === true && !!b.code;
-  if (b.code) {
-    if (b.consent !== true && !invite) return ok(res, { error: 'consentiment' }, 400);
+  // afegir un fill escrivint el seu codi a la zona de famílies ja no es pot (amb un codi endevinat algú s'hi podria vincular):
+  // es fa des de l'app del fill, que té la clau del dispositiu
+  if (b.code && !invite) return ok(res, { error: 'des-de-app' }, 400);
+  if (invite) {
     if (await blocked(req, 'codi', 40)) return tooMany(res);
     const a = await student(b.code);
     if (!a) { await fail(req, 'codi'); return ok(res, { error: 'no trobat' }, 404); }
-    code = a.code;
+    if (!(await alumneStrict(req, res, a.code))) return;
+    code = a.code; kid = String(b.kid || a.name || '').replace(/[<>&"'`\\]/g, '').trim().split(/\s+/)[0].slice(0, 20) || null;
+    // contra el correu brossa: com a molt 3 invitacions per fill i 3 per adreça cada dia, i 400 en total
+    const n = (await sql`SELECT count(*) FILTER (WHERE code = ${code})::int AS c, count(*) FILTER (WHERE email = ${email})::int AS e, count(*)::int AS t
+      FROM mates.familia_links WHERE code IS NOT NULL AND created > now() - interval '1 day'`)[0];
+    if (n.c >= 3 || n.e >= 3 || n.t >= 400) return tooMany(res);
   } else if (!(await sql`SELECT 1 FROM mates.families WHERE email = ${email}`).length) {
     // sense fill i sense compte: no diem si el correu existeix; simplement no s'envia res
     await note(req, 'familia-link'); return ok(res, { ok: true });
   }
   const t = randomBytes(24).toString('base64url'), origin = ORIGINS.includes(req.headers.origin) ? req.headers.origin : ORIGINS[0];
-  await sql`INSERT INTO mates.familia_links (token_hash, email, code, lang, consent_ip, expires) VALUES (${hash(t)}, ${email}, ${code}, ${lang}, ${code && !invite ? ipOf(req) : null}, now() + ${invite ? '7 days' : '30 minutes'}::interval)`;
+  await sql`INSERT INTO mates.familia_links (token_hash, email, code, lang, kid, expires) VALUES (${hash(t)}, ${email}, ${code}, ${lang}, ${kid}, now() + ${invite ? '7 days' : '30 minutes'}::interval)`;
   await note(req, 'familia-link'); await sql`INSERT INTO mates.fails (k, b) VALUES (${'ac:' + email}, 'familia-link')`;
   const url = `${origin}${/localhost|127\.0\.0\.1/.test(origin) ? '/families.html' : '/families'}#t=${t}`;
   // sense Resend configurat, o si ho demana l'administrador (suport a una família), l'enllaç es torna a la resposta
   const adm = req.headers['x-docent'] ? !!(await who(req))?.admin : false;
   if (adm || (!MAIL_OK() && process.env.VERCEL_ENV !== 'production')) return ok(res, { ok: true, dev: url });
   if (!MAIL_OK()) return ok(res, { error: 'correu-off' }, 503);
-  const kidName = invite ? ((await sql`SELECT name FROM mates.alumnes WHERE code = ${code}`)[0] || {}).name : null;
-  try { await sendMail({ to: email, ...(invite ? inviteText(lang, url, kidName) : mailText(lang, url)) }); } catch (e) { console.error('mail', e.message); return ok(res, { error: 'correu-off' }, 502); }
+  try { await sendMail({ to: email, ...(invite ? inviteText(lang, url, kid) : mailText(lang, url)) }); } catch (e) { console.error('mail', e.message); return ok(res, { error: 'correu-off' }, 502); }
   return ok(res, { ok: true });
 }
 
@@ -94,49 +101,57 @@ async function enter(req, res, b) {
   const t = String(b.token || '');
   if (!/^[A-Za-z0-9_-]{20,80}$/.test(t)) return ok(res, { error: 'enllaç' }, 400);
   if (await blocked(req, 'familia-enter', 30)) return tooMany(res);
-  const l = (await sql`UPDATE mates.familia_links SET used = true WHERE token_hash = ${hash(t)} AND NOT used AND expires > now() RETURNING email, code, lang, consent_ip`)[0];
+  // invitació d'un fill: abans de vincular-lo, l'adult ha de confirmar que n'és el pare, la mare o el tutor i que ho autoritza
+  const pre = (await sql`SELECT code, kid, email FROM mates.familia_links WHERE token_hash = ${hash(t)} AND NOT used AND expires > now()`)[0];
+  if (!pre) { await fail(req, 'familia-enter'); return ok(res, { error: 'enllaç' }, 410); }
+  if (pre.code && b.consent !== true) return ok(res, { consent: 'cal', kid: pre.kid || null, email: pre.email });
+  const l = (await sql`UPDATE mates.familia_links SET used = true WHERE token_hash = ${hash(t)} AND NOT used AND expires > now() RETURNING email, code, lang`)[0];
   if (!l) { await fail(req, 'familia-enter'); return ok(res, { error: 'enllaç' }, 410); }
   const f = (await sql`INSERT INTO mates.families (email, lang, last_login) VALUES (${l.email}, ${l.lang}, now()) ON CONFLICT (email) DO UPDATE SET last_login = now() RETURNING id`)[0];
-  if (l.code) await sql`INSERT INTO mates.familia_fills (familia_id, code, consent_ip) VALUES (${f.id}, ${l.code}, ${l.consent_ip || ipOf(req)}) ON CONFLICT DO NOTHING`;
+  if (l.code) {
+    await sql`INSERT INTO mates.familia_fills (familia_id, code, consent_ip) VALUES (${f.id}, ${l.code}, ${ipOf(req)}) ON CONFLICT DO NOTHING`;
+    // a partir d'ara el perfil del menor es pot desar al núvol i fer servir les funcions en línia
+    await sql`UPDATE mates.alumnes SET consent = 'ok', consent_at = now() WHERE code = ${l.code} AND (consent IS NULL OR consent <> 'ok')`;
+  }
   return ok(res, { ok: true, tok: famToken(f.id), email: l.email });
 }
 
 async function data(req, res, fam) {
-  let f; try { f = (await sql`SELECT email, informe FROM mates.families WHERE id = ${fam}`)[0]; } catch (e) { f = (await sql`SELECT email FROM mates.families WHERE id = ${fam}`)[0]; }
+  let f; try { f = (await sql`SELECT email, informe, promo FROM mates.families WHERE id = ${fam}`)[0]; } catch (e) { f = (await sql`SELECT email FROM mates.families WHERE id = ${fam}`)[0]; }
   if (!f) return ok(res, { error: 'sessió' }, 401);
   const rows = await sql`SELECT a.code, a.name, a.course, a.xp, a.streak, a.last_day, a.lessons, a.answers, a.correct, a.pla, a.pla_fins, a.grup_id,
       a.stripe_sub, a.pla_periode, a.pla_cancel, a.stripe_status, a.active, g.nom AS grup,
-      a.state->'days' AS days, a.state->'exams' AS exams, a.state->'stats'->'sk' AS sk, a.state->'prog' AS prog, a.state->'companion' AS companion
+      a.state->'days' AS days, a.state->'exams' AS exams, a.state->'stats'->'sk' AS sk, a.state->'prog' AS prog, a.state->'companion' AS companion, k.kid
     FROM mates.familia_fills ff JOIN mates.alumnes a ON a.code = ff.code LEFT JOIN mates.grups g ON g.id = a.grup_id
+      LEFT JOIN LATERAL (SELECT kid FROM mates.familia_links fl WHERE fl.code = a.code AND fl.kid IS NOT NULL ORDER BY fl.created DESC LIMIT 1) k ON true
     WHERE ff.familia_id = ${fam} ORDER BY ff.created_at`;
   const kids = rows.filter(r => r.active).map(r => ({
-    code: r.code, name: r.name, course: r.course | 0, xp: r.xp | 0, streak: r.streak | 0, last_day: r.last_day, lessons: r.lessons | 0, answers: r.answers | 0, correct: r.correct | 0,
+    code: r.code, name: r.name || r.kid || '·', course: r.course | 0, xp: r.xp | 0, streak: r.streak | 0, last_day: r.last_day, lessons: r.lessons | 0, answers: r.answers | 0, correct: r.correct | 0,
     pla: plaOf(r), sub: subOf(r), grup: r.grup || null, companion: typeof r.companion === 'string' ? r.companion : 'numi',
     days: Array.isArray(r.days) ? r.days.slice(-60) : [], exams: r.exams && typeof r.exams === 'object' ? r.exams : {}, sk: r.sk && typeof r.sk === 'object' ? r.sk : {}, prog: r.prog && typeof r.prog === 'object' ? r.prog : {}
   }));
   // medalles del docent de cada fill (la taula pot no existir encara si ningú n'ha donat cap)
   try { const md = await sql`SELECT code, kind, comment, docent_nom, created_at FROM mates.medalles WHERE code = ANY(${kids.map(k => k.code)}) ORDER BY created_at DESC`; kids.forEach(k => { k.medals = md.filter(m => m.code === k.code).slice(0, 20).map(({ code, ...m }) => m); }); } catch (e) { kids.forEach(k => { k.medals = []; }); }
-  return ok(res, { email: f.email, informe: f.informe || 'setmanal', kids });
+  return ok(res, { email: f.email, informe: f.informe || 'setmanal', promo: !!f.promo, kids });
 }
 
 export default async function familia(req, res) {
   if (req.method !== 'POST') return ok(res, { error: 'method' }, 405);
-  await tables(); await informeTables();
+  await tables(); await informeTables(); await consentCols();
   const b = body(req), a = String(req.query.f);
   if (a === 'link') return link(req, res, b);
   if (a === 'enter') return enter(req, res, b);
   const fam = famOf(b.tok);
   if (!fam) return ok(res, { error: 'sessió' }, 401);
   if (a === 'data') return data(req, res, fam);
-  if (a === 'add') {
-    if (b.consent !== true) return ok(res, { error: 'consentiment' }, 400);
-    if (await blocked(req, 'codi', 40)) return tooMany(res);
-    const s = await student(b.code);
-    if (!s) { await fail(req, 'codi'); return ok(res, { error: 'no trobat' }, 404); }
-    await sql`INSERT INTO mates.familia_fills (familia_id, code, consent_ip) VALUES (${fam}, ${s.code}, ${ipOf(req)}) ON CONFLICT DO NOTHING`;
+  // afegir un fill amb el seu codi ja no es pot des d'aquí: es fa des de l'app del fill (vegeu link)
+  if (a === 'add') return ok(res, { error: 'des-de-app' }, 400);
+  if (a === 'cfg') {
+    if (['setmanal', 'mensual', 'no'].includes(b.informe)) await sql`UPDATE mates.families SET informe = ${b.informe} WHERE id = ${fam}`;
+    // novetats i promocions de Numi: només amb el sí explícit de la família (LSSI art. 21)
+    if (typeof b.promo === 'boolean') await sql`UPDATE mates.families SET promo = ${b.promo} WHERE id = ${fam}`;
     return data(req, res, fam);
   }
-  if (a === 'cfg') { if (['setmanal', 'mensual', 'no'].includes(b.informe)) { await informeTables(); await sql`UPDATE mates.families SET informe = ${b.informe} WHERE id = ${fam}`; } return data(req, res, fam); }
   if (a === 'remove') { await sql`DELETE FROM mates.familia_fills WHERE familia_id = ${fam} AND code = ${cleanCode(b.code)}`; return data(req, res, fam); }
   return ok(res, { error: 'acció' }, 400);
 }

@@ -1,4 +1,4 @@
-import { sql, body, cleanCode, cleanUser, validUser, validPass, hashPass, checkPass, ok, blocked, fail, note, tooMany, issueTok, dropToks } from './_lib.js';
+import { sql, body, cleanCode, cleanUser, validUser, validPass, hashPass, checkPass, ok, blocked, fail, note, tooMany, issueTok, dropToks, alumneStrict, consentOk, consentCols } from './_lib.js';
 import familia from './_familia.js';
 // Crea o canvia l'usuari i la contrasenya d'un alumne (el codi fa de clau) · o comprova si un usuari està lliure.
 // Si l'alumne ja té contrasenya, per canviar-la cal la contrasenya actual (o que la canviï el docent des del panell).
@@ -13,8 +13,12 @@ export default async function handler(req, res) {
   if (!code || !validUser(user)) return ok(res, { error: 'usuari-format' }, 400);
   if (!validPass(b.password)) return ok(res, { error: 'contrasenya-format' }, 400);
   if (await blocked(req, 'codi', 40)) return tooMany(res);
-  const al = (await sql`SELECT code, pass_hash FROM mates.alumnes WHERE code = ${code} AND active`)[0];
+  await consentCols();
+  const al = (await sql`SELECT code, pass_hash, consent, grup_id, pla, survey, state FROM mates.alumnes WHERE code = ${code} AND active`)[0];
   if (!al) { await fail(req, 'codi'); return ok(res, { error: 'no trobat' }, 404); }
+  if (!consentOk(al)) return ok(res, { error: 'permis' }, 403);
+  // sense contrasenya encara: només des d'un dispositiu amb la clau del compte (el codi sol ja no hi basta)
+  if (!al.pass_hash && !(await alumneStrict(req, res, code))) return;
   if (al.pass_hash) {
     if (await blocked(req, 'alumne-pass', 30, 15, code)) return tooMany(res);
     if (!checkPass(String(b.old || ''), al.pass_hash)) { await fail(req, 'alumne-pass', code); return ok(res, { error: 'contrasenya-actual' }, 403); }

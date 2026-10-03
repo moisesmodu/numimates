@@ -1,4 +1,4 @@
-import { sql, body, cleanCode, ok, blocked, fail, tooMany, plaOf, alumneOk } from './_lib.js';
+import { sql, body, cleanCode, ok, blocked, fail, tooMany, plaOf, alumneOk, consentGuard } from './_lib.js';
 import { randomInt } from 'crypto';
 import { batTables, batState } from './_batalla.js';
 // Batalles de mates. Tothom rep les mateixes preguntes (surten de la llavor `seed`).
@@ -23,6 +23,7 @@ export default async function handler(req, res) {
   const me = (await sql`SELECT a.name, a.pla, a.pla_fins, a.grup_id, a.pass_hash, g.opts FROM mates.alumnes a LEFT JOIN mates.grups g ON g.id = a.grup_id AND g.actiu WHERE a.code = ${sid} AND a.active`)[0];
   if (!me) { await fail(req, 'codi'); return ok(res, { error: 'alumne' }, 404); }
   if (!(await alumneOk(req, res, sid, me.pass_hash))) return;
+  if (!(await consentGuard(res, sid))) return;   // menors: cal el sí de la família
   // les batalles són del pla Premium (o de l'escola): el pla gratuït només pot mirar les que ja té
   if (plaOf(me) === 'free' && (act === 'create' || act === 'join')) return ok(res, { error: 'premium' }, 402);
   // «mode escola»: si el docent ha apagat les batalles del grup, tampoc es poden fer saltant-se l'app

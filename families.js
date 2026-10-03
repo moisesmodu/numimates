@@ -71,10 +71,28 @@ const TIPS = {
 };
 
 /* ---------- vistes ---------- */
+let CONS = null;
+const vConsent = () => { const n = esc(CONS.kid || L('El vostre fill o filla', 'Vuestro hijo o hija'));
+  return `<h1>${L(`${n} us demana permís`, `${n} os pide permiso`)}</h1>
+  <p class="sub">${L(`${n} ha començat a practicar matemàtiques amb Numi. Si ho autoritzeu:`, `${n} ha empezado a practicar matemáticas con Numi. Si lo autorizáis:`)}</p>
+  <div class="card"><ul class="steps"><li>${L('El seu progrés es desarà al núvol (podrà continuar en un altre dispositiu).', 'Su progreso se guardará en la nube (podrá seguir en otro dispositivo).')}</li><li>${L('Podrà fer servir la lliga, les batalles i, amb Premium, l\'assistent amb IA.', 'Podrá usar la liga, las batallas y, con Premium, el asistente con IA.')}</li><li>${L(`Rebreu cada setmana un informe a ${esc(CONS.email || '')} (el podeu canviar o apagar).`, `Recibiréis cada semana un informe en ${esc(CONS.email || '')} (lo podéis cambiar o apagar).`)}</li></ul>
+    <p class="note" style="margin:6px 0 12px">${L('Guardem el mínim de dades (nom, curs, edat i progrés) i no hi ha publicitat. Podeu retirar el permís i demanar que s\'esborri tot quan vulgueu.', 'Guardamos el mínimo de datos (nombre, curso, edad y progreso) y no hay publicidad. Podéis retirar el permiso y pedir que se borre todo cuando queráis.')}</p>
+    <label class="ok"><input type="checkbox" id="ck" onchange="$('#cg').disabled=!this.checked"> <span>${L(`Sóc el pare, la mare o el tutor legal de ${n} i autoritzo que faci servir Numi.`, `Soy el padre, la madre o el tutor legal de ${n} y autorizo que use Numi.`)} <a href="https://numimates.com/privacitat?l=${LANG}" target="_blank" rel="noopener">${L('Privadesa', 'Privacidad')}</a></span></label>
+    <p class="err" id="ce"></p><button class="btn" id="cg" disabled onclick="consentGo()">${L('AUTORITZA', 'AUTORIZAR')}</button></div>
+  <p class="note"><button class="link" onclick="CONS=null;VIEW='no';render()">${L('No ho autoritzo', 'No lo autorizo')}</button></p>${foot()}`; };
+async function consentGo() {
+  const g = $('#cg'), e = $('#ce'); g.disabled = true; e.textContent = '';
+  const r = await api('enter', { token: CONS.t, consent: true });
+  if (!r.tok) { g.disabled = false; e.textContent = r.status === 410 ? L("Aquest enllaç ja no serveix (caduca als 7 dies). Demaneu-ne un altre des de l'app.", 'Este enlace ya no sirve (caduca a los 7 días). Pedid otro desde la app.') : ERR(r.status); return; }
+  CONS = null; TOK = r.tok; store.set('numi-fam', TOK); VIEW = 'home';
+  $('#app').innerHTML = `<p class="note">${L('Carregant…', 'Cargando…')}</p>`; await refresh(); toast(L('Gràcies! Ja està autoritzat.', '¡Gracias! Ya está autorizado.'));
+}
 function render() {
+  const app = $('#app');
+  if (CONS) return app.innerHTML = vConsent();
+  if (VIEW === 'no' && !TOK) return app.innerHTML = `<div class="card done"><h1>${L('Entesos', 'Entendido')}</h1><p class="sub">${L("No s'ha autoritzat res. El seu progrés continuarà només al seu dispositiu i la sol·licitud s'esborrarà sola d'aquí a 30 dies.", 'No se ha autorizado nada. Su progreso seguirá solo en su dispositivo y la solicitud se borrará sola en 30 días.')}</p></div>${foot()}`;
   document.querySelectorAll('.lang button').forEach(b => b.classList.toggle('on', b.dataset.l === LANG));
   $('#who').textContent = D && TOK ? D.email : L('Famílies', 'Familias');
-  const app = $('#app');
   if (!TOK || !D) return app.innerHTML = VIEW === 'sent' ? vSent() : vEntry();
   if (VIEW === 'kid' && D.kids.some(k => k.code === KID)) return app.innerHTML = vKid(D.kids.find(k => k.code === KID)) + foot();
   if (VIEW === 'add' || !D.kids.length) return app.innerHTML = vAdd() + foot();
@@ -82,6 +100,8 @@ function render() {
 }
 const foot = () => `<div class="foot">${TOK ? `<button class="link" onclick="logout()">${L('Tanca la sessió', 'Cerrar sesión')}</button>` : ''}<a href="https://numimates.com/privacitat?l=${LANG}" target="_blank" rel="noopener">${L('Privadesa', 'Privacidad')}</a><a href="https://numimates.com/condicions?l=${LANG}" target="_blank" rel="noopener">${L('Condicions', 'Condiciones')}</a></div>`;
 const consentBox = id => `<label class="ok"><input type="checkbox" id="${id}" onchange="formOk()"> <span>${L("Sóc el pare, la mare o el tutor legal i autoritzo que faci servir Numi Mates (cal si té menys de 14 anys).", 'Soy el padre, la madre o el tutor legal y autorizo que use Numi Mates (hace falta si tiene menos de 14 años).')} <a href="https://numimates.com/privacitat?l=${LANG}" target="_blank" rel="noopener">${L('Privadesa', 'Privacidad')}</a></span></label>`;
+const howAdd = () => `<div class="card"><p class="sub" style="margin:0 0 10px">${L("Un fill o filla s'afegeix des de la seva app, perquè ningú s'hi pugui vincular només sabent un codi:", 'Un hijo o hija se añade desde su app, para que nadie pueda vincularse solo sabiendo un código:')}</p>
+  <ol class="steps"><li>${L('Obriu Numi al seu mòbil, tauleta o ordinador.', 'Abrid Numi en su móvil, tablet u ordenador.')}</li><li>${L('Aneu a <b>Perfil</b> → <b>Permís de casa</b> (o <b>Informe per a la família</b>).', 'Id a <b>Perfil</b> → <b>Permiso de casa</b> (o <b>Informe para la familia</b>).')}</li><li>${L("Escriviu-hi el vostre correu. Rebreu un enllaç per autoritzar-ho i entrar aquí.", 'Escribid vuestro correo. Recibiréis un enlace para autorizarlo y entrar aquí.')}</li></ol></div>`;
 let ENTRY = 'new';
 function vEntry() {
   if (ENTRY === 'mail') return `<h1>${L('Entra a la zona de famílies', 'Entra en la zona de familias')}</h1><p class="sub">${L("Escriu el correu amb què vas entrar i t'hi enviarem un enllaç.", 'Escribe el correo con el que entraste y te enviaremos un enlace.')}</p>
@@ -89,12 +109,9 @@ function vEntry() {
     <p class="err" id="fe"></p><button class="btn" id="fg" disabled onclick="sendLink()">${L("ENVIA'M L'ENLLAÇ", 'ENVÍAME EL ENLACE')}</button></div>
     <p class="note"><button class="link" onclick="ENTRY='new';render()">${L('És la primera vegada? Afegeix el teu fill o filla', '¿Es la primera vez? Añade a tu hijo o hija')}</button></p>${foot()}`;
   return `<h1>${L('Segueix com avança a mates', 'Sigue cómo avanza en mates')}</h1>
-    <p class="sub">${L("Afegeix el perfil del teu fill o filla amb el codi que surt a l'app (Perfil → El meu compte).", 'Añade el perfil de tu hijo o hija con el código que sale en la app (Perfil → Mi cuenta).')}</p>
-    <div class="card"><label class="field"><span>${L("Codi del compte de l'alumne (és al Perfil de l'app; p. ex. GUINEU-4827)", 'Código de la cuenta del alumno (está en el Perfil de la app; p. ej. GUINEU-4827)')}</span><input id="fc" class="code" autocomplete="off" autocapitalize="characters" spellcheck="false" oninput="formOk()"></label>
-      <label class="field"><span>${L('El teu correu', 'Tu correo')}</span><input id="fm" type="email" autocomplete="email" inputmode="email" oninput="formOk()"></label>
-      ${consentBox('fk')}<p class="err" id="fe"></p>
-      <button class="btn" id="fg" disabled onclick="sendLink()">${L('AFEGEIX', 'AÑADIR')}</button></div>
-    <p class="note">${L("T'enviarem un enllaç per entrar, sense contrasenya. Només veuràs el progrés: no pots canviar res del seu compte.", 'Te enviaremos un enlace para entrar, sin contraseña. Solo verás el progreso: no puedes cambiar nada de su cuenta.')}<br><br><button class="link" onclick="ENTRY='mail';render()">${L('Ja hi havia entrat: envia-me un enllaç', 'Ya había entrado: envíame un enlace')}</button></p>${foot()}`;
+    <p class="sub">${L('Veureu els dies que practica, com li van els exercicis i una idea per ajudar a casa, i podreu gestionar Premium.', 'Veréis los días que practica, cómo le van los ejercicios y una idea para ayudar en casa, y podréis gestionar Premium.')}</p>
+    ${howAdd()}
+    <p class="note"><button class="link" onclick="ENTRY='mail';render()">${L('Ja hi havia entrat: envia-me un enllaç', 'Ya había entrado: envíame un enlace')}</button></p>${foot()}`;
 }
 function formOk() {
   const m = $('#fm'), c = $('#fc'), k = $('#fk'), g = $('#fg') || $('#ag'), mailOk = !m || /^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i.test(m.value.trim());
@@ -102,9 +119,9 @@ function formOk() {
 }
 let SENT_TO = '', DEV = '';
 async function sendLink() {
-  const g = $('#fg'), e = $('#fe'), email = $('#fm').value.trim(), code = $('#fc') ? $('#fc').value.trim() : '';
+  const g = $('#fg'), e = $('#fe'), email = $('#fm').value.trim();
   g.disabled = true; e.textContent = '';
-  const r = await api('link', code ? { email, code, consent: true } : { email });
+  const r = await api('link', { email });
   if (r.ok) { SENT_TO = email; DEV = r.dev || ''; VIEW = 'sent'; return render(); }
   g.disabled = false;
   e.textContent = r.error === 'no trobat' ? L("No trobem aquest codi. El trobareu a l'app: Perfil → El meu compte.", 'No encontramos este código. Lo encontraréis en la app: Perfil → Mi cuenta.')
@@ -130,19 +147,12 @@ const pill = k => `<span class="pill ${k.pla}">${k.pla === 'premium' ? 'PREMIUM'
 // informe per correu: cada setmana (per defecte), cada mes o cap
 const INF = [['setmanal', 'Cada setmana|Cada semana'], ['mensual', 'Cada mes|Cada mes'], ['no', 'No el vull|No lo quiero']];
 const infBox = () => `<div class="card infbox"><b>📬 ${L('Informe per correu', 'Informe por correo')}</b><p class="sub" style="margin:4px 0 10px">${L(`Un resum amb els dies que practica, com li van els exercicis i una idea per ajudar a casa, a ${esc(D.email)}.`, `Un resumen con los días que practica, cómo le van los ejercicios y una idea para ayudar en casa, a ${esc(D.email)}.`)}</p>
-  <div class="seg">${INF.map(([k, t]) => `<button class="${(D.informe || 'setmanal') === k ? 'on' : ''}" onclick="setInf('${k}')">${tx(t)}</button>`).join('')}</div></div>`;
+  <div class="seg">${INF.map(([k, t]) => `<button class="${(D.informe || 'setmanal') === k ? 'on' : ''}" onclick="setInf('${k}')">${tx(t)}</button>`).join('')}</div>
+  <label class="ok" style="margin-top:12px"><input type="checkbox" ${D.promo ? 'checked' : ''} onchange="setPromo(this.checked)"> <span>${L("Vull rebre novetats de Numi per correu (poques vegades; me'n puc donar de baixa quan vulgui).", 'Quiero recibir novedades de Numi por correo (pocas veces; me puedo dar de baja cuando quiera).')}</span></label></div>`;
+async function setPromo(v) { const r = await api('cfg', { promo: !!v }); if (r.kids) { D = r; toast(L('Fet!', '¡Hecho!')); } else toast(ERR(r.status)); }
 async function setInf(k) { const r = await api('cfg', { informe: k }); if (r.kids) { D = r; render(); toast(k === 'no' ? L('Fet: no rebràs informes.', 'Hecho: no recibirás informes.') : L('Fet!', '¡Hecho!')); } else toast(ERR(r.status)); }
 const vHome = () => `<h1>${L('Hola!', '¡Hola!')}</h1>${D.kids.map(kidCard).join('')}${infBox()}<button class="add" onclick="VIEW='add';render()">+ ${L('Afegeix un altre fill o filla', 'Añade otro hijo o hija')}</button>`;
-const vAdd = () => `${D.kids.length ? `<button class="back" onclick="VIEW='home';render()">‹ ${L('Tornar', 'Volver')}</button>` : ''}<h1>${D.kids.length ? L('Afegeix un altre fill o filla', 'Añade otro hijo o hija') : L('Afegeix el teu fill o filla', 'Añade a tu hijo o hija')}</h1>
-  <p class="sub">${L("Amb el codi que surt a l'app (Perfil → El meu compte).", 'Con el código que sale en la app (Perfil → Mi cuenta).')}</p>
-  <div class="card"><label class="field"><span>${L("Codi del compte de l'alumne (és al Perfil de l'app; p. ex. GUINEU-4827)", 'Código de la cuenta del alumno (está en el Perfil de la app; p. ej. GUINEU-4827)')}</span><input id="fc" class="code" autocomplete="off" autocapitalize="characters" spellcheck="false" oninput="formOk()"></label>
-  ${consentBox('fk')}<p class="err" id="fe"></p><button class="btn" id="ag" disabled onclick="addKid()">${L('AFEGEIX', 'AÑADIR')}</button></div>`;
-async function addKid() {
-  const g = $('#ag'), e = $('#fe'); g.disabled = true; e.textContent = '';
-  const r = await api('add', { code: $('#fc').value.trim(), consent: true });
-  if (r.kids) { D = r; VIEW = 'home'; render(); return toast(L('Perfil afegit.', 'Perfil añadido.')); }
-  g.disabled = false; e.textContent = r.error === 'no trobat' ? L("No trobem aquest codi. El trobareu a l'app: Perfil → El meu compte.", 'No encontramos este código. Lo encontraréis en la app: Perfil → Mi cuenta.') : ERR(r.status);
-}
+const vAdd = () => `${D.kids.length ? `<button class="back" onclick="VIEW='home';render()">‹ ${L('Tornar', 'Volver')}</button>` : ''}<h1>${D.kids.length ? L('Afegeix un altre fill o filla', 'Añade otro hijo o hija') : L('Afegeix el teu fill o filla', 'Añade a tu hijo o hija')}</h1>${howAdd()}`;
 
 // medalles que dona el docent des del panell (les mateixes que veu l'alumne a l'app)
 const FMEDS = { esforc: ['💪', 'Ha treballat de valent|Ha trabajado a fondo'], ajuda: ['🤝', 'Ha ajudat els companys|Ha ayudado a los compañeros'], idees: ['💡', 'Idees originals|Ideas originales'], millora: ['📈', 'Ha millorat molt|Ha mejorado mucho'],
@@ -239,6 +249,8 @@ async function boot() {
   if (t) {
     history.replaceState(null, '', location.pathname);
     const r = await api('enter', { token: t });
+    // invitació d'un fill: primer l'adult confirma que n'és el pare, la mare o el tutor i ho autoritza
+    if (r.consent === 'cal') { CONS = { t, kid: r.kid, email: r.email }; return render(); }
     if (r.tok) { TOK = r.tok; store.set('numi-fam', TOK); }
     else { render(); return toast(L("Aquest enllaç ja no serveix: caduca als 30 minuts i només es pot fer servir una vegada. Demana'n un altre.", 'Este enlace ya no sirve: caduca a los 30 minutos y solo se puede usar una vez. Pide otro.')); }
   }

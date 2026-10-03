@@ -1,4 +1,4 @@
-import { sql, ok, body, cleanCode, validPass, hashPass, dropToks, cleanUser, validUser, newStudentCode } from './_lib.js';
+import { sql, ok, body, cleanCode, validPass, hashPass, dropToks, cleanUser, validUser, newStudentCode, eraseStudent } from './_lib.js';
 import { who, groupsOf } from './_auth.js';
 import { STRIPE_KEY, stripe, stripeMode, setCancel, setupStripe } from './_stripe.js';
 import { batTables, batState, BWORDS, MEDALS } from './_batalla.js';
@@ -191,15 +191,7 @@ export default async function handler(req, res) {
       const a = (await sql`SELECT stripe_sub FROM mates.alumnes WHERE code = ${code}`)[0];
       if (!a) return ok(res, { error: 'no trobat' }, 404);
       if (a.stripe_sub) return ok(res, { error: 'subscripció' }, 409);
-      await sql`DELETE FROM mates.batalla_jug WHERE sid = ${code}`;
-      await sql`UPDATE mates.canvis SET a_sid = NULL, a_name = '—' WHERE a_sid = ${code}`;
-      await sql`UPDATE mates.canvis SET b_sid = NULL, b_name = '—' WHERE b_sid = ${code}`;
-      try { await sql`DELETE FROM mates.familia_fills WHERE code = ${code}`; await sql`DELETE FROM mates.familia_links WHERE code = ${code}`; } catch (e) { }
-      try { await sql`DELETE FROM mates.xat_us WHERE code = ${code}`; await sql`DELETE FROM mates.fails WHERE k = ${'ac:' + code}`; } catch (e) { }
-      try { await sql`UPDATE mates.batalles SET host = NULL WHERE host = ${code}`; } catch (e) { }
-      try { await sql`DELETE FROM mates.alumne_tok WHERE code = ${code}`; } catch (e) { }
-      try { await sql`DELETE FROM mates.lliga WHERE code = ${code}`; await sql`DELETE FROM mates.lliga_premis WHERE code = ${code}`; } catch (e) { }
-      await sql`DELETE FROM mates.alumnes WHERE code = ${code}`;
+      await eraseStudent(code);
       return ok(res, { ok: true });
     }
     // prepara el compte de Stripe (producte, preus, portal i webhook) amb la clau que hi hagi a Vercel

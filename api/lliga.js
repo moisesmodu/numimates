@@ -1,4 +1,4 @@
-import { sql, body, cleanCode, ok, blocked, fail, tooMany, alumneGuard } from './_lib.js';
+import { sql, body, cleanCode, ok, blocked, fail, tooMany, alumneGuard, consentGuard } from './_lib.js';
 import { tables, lligaOf, weekId, monthId, aliasOf, premisMes, LLIGUES, CAP } from './_lliga.js';
 // POST /api/lliga { code, period: 'w'|'m', lliga? } → rànquing (20 primers, amb àlies) i la posició de l'alumne
 //      { code, action: 'medalles' } → medalles guanyades
@@ -13,6 +13,7 @@ export default async function handler(req, res) {
     me = (await sql`SELECT code, state, active FROM mates.alumnes WHERE code = ${code}`)[0];
     if (!me) { await fail(req, 'codi'); return ok(res, { error: 'no trobat' }, 404); }
     if (!(await alumneGuard(req, res, code))) return;
+    if (!(await consentGuard(res, code))) return;   // menors: cal el sí de la família
   }
   if (b.action === 'medalles') {
     if (!me) return ok(res, { list: [] });

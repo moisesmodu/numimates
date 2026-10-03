@@ -1,4 +1,4 @@
-import { sql, body, cleanCode, ok, blocked, fail, tooMany, alumneOk } from './_lib.js';
+import { sql, body, cleanCode, ok, blocked, fail, tooMany, alumneOk, consentGuard } from './_lib.js';
 import { randomInt } from 'crypto';
 // Intercanvi de cartes entre alumnes amb un codi. Només cartes repetides (ho controla l'app) i 1 per 1.
 // Estats: open (A ofereix) → offered (B proposa la seva) → done (A accepta) · reject · cancel · expired.
@@ -21,6 +21,7 @@ export default async function handler(req, res) {
   const me = (await sql`SELECT a.name, a.pass_hash, g.opts FROM mates.alumnes a LEFT JOIN mates.grups g ON g.id = a.grup_id AND g.actiu WHERE a.code = ${sid} AND a.active`)[0];
   if (!me) { await fail(req, 'codi'); return ok(res, { error: 'alumne' }, 404); }
   if (!(await alumneOk(req, res, sid, me.pass_hash))) return;
+  if (!(await consentGuard(res, sid))) return;   // menors: cal el sí de la família
   // «mode escola»: el docent pot apagar els intercanvis del grup (també aquí, no només a l'app)
   if (me.opts && me.opts.intercanvis === false && (act === 'create' || act === 'offer')) return ok(res, { error: 'escola-off' }, 403);
   const name = first(b.name || me.name);

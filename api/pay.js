@@ -3,11 +3,12 @@
    GET  /api/pay?a=info                             → preus i enllaç del portal (la família hi entra amb el seu correu)
    POST /api/pay?a=hook                             → avisos de Stripe. No ens fiem del cos: tornem a demanar l'esdeveniment
                                                       a Stripe amb la clau secreta, així un avís inventat no pot activar res. */
-import { sql, body, cleanCode, ok, blocked, fail, note, tooMany, alumneOk } from './_lib.js';
+import { sql, body, cleanCode, ok, blocked, fail, note, tooMany, alumneStrict, isMinor, consentCols } from './_lib.js';
 
 import { famOf } from './_auth.js';
 import { STRIPE_KEY as KEY, stripe, stripeMode, applySub, subOf, setCancel } from './_stripe.js';
 const LOOKUP = { mes: 'numi_premium_mes', any: 'numi_premium_any' };
+const APPNAME = new Proxy({ pro: 'Numi Pro', ment: 'Numi Ment' }, { get: (o, k) => o[k] || 'Numi Mates' });
 const ORIGINS = ['https://app.numimates.com', 'https://pro.numimates.com', 'https://ment.numimates.com', 'https://mates-numi.vercel.app', 'http://localhost:5176', 'http://127.0.0.1:5176']
   .filter(o => process.env.VERCEL_ENV !== 'production' || !/localhost|127\.0\.0\.1/.test(o));
 
@@ -50,10 +51,18 @@ async function checkout(req, res) {
   const b = body(req), code = cleanCode(b.code), pla = b.pla === 'any' ? 'any' : 'mes';
   if (!code) return ok(res, { error: 'codi' }, 400);
   if (await blocked(req, 'pagament', 20, 60)) return tooMany(res);
-  const a = (await sql`SELECT name, active, grup_id, pla, pla_fins, stripe_customer, stripe_sub FROM mates.alumnes WHERE code = ${code}`)[0];
+  await consentCols();
+  const a = (await sql`SELECT name, active, grup_id, pla, pla_fins, stripe_customer, stripe_sub, consent, survey, state FROM mates.alumnes WHERE code = ${code}`)[0];
   if (!a) { await fail(req, 'pagament'); return ok(res, { error: 'no trobat' }, 404); }
   if (!a.active) return ok(res, { error: 'baixa' }, 410);
   if (a.grup_id) return ok(res, { error: 'escola' }, 409);
+  // qui paga: la família que té aquest fill a la seva zona (enllaç per correu) o, si no és menor, l'app amb la clau del dispositiu.
+  // Un menor de 14 anys no pot contractar res des de l'app: ho ha de fer un adult (art. 30 LCD i capacitat per contractar).
+  const fam = famOf(b.tok), okFam = fam && (await sql`SELECT 1 FROM mates.familia_fills WHERE familia_id = ${fam} AND code = ${code}`.catch(() => [])).length;
+  if (!okFam) {
+    if (isMinor(a)) return ok(res, { error: 'adult' }, 403);
+    if (!(await alumneStrict(req, res, code))) return;
+  }
   // en mode prova només es pot provar a posta (?provapagament): les famílies no han d'arribar a un pagament de prova
   if (stripeMode() !== 'live' && b.prova !== true) return ok(res, { error: 'no configurat' }, 503);
   if (a.stripe_sub && a.pla === 'premium' && a.pla_fins && new Date(a.pla_fins) >= new Date(new Date().toISOString().slice(0, 10))) return ok(res, { error: 'ja' }, 409);
@@ -64,14 +73,14 @@ async function checkout(req, res) {
     line_items: { 0: { price: P[pla].id, quantity: 1 } },
     client_reference_id: code,
     metadata: { code },
-    subscription_data: { metadata: { code }, description: 'Numi Mates Premium · ' + String(a.name || '').slice(0, 60) },
+    subscription_data: { metadata: { code }, description: APPNAME[(a.state || {}).variant] + ' Premium · ' + String(a.name || '').slice(0, 60) },
     customer: a.stripe_customer || undefined,
     allow_promotion_codes: 'true',
     billing_address_collection: 'auto',
     locale: b.lang === 'es' ? 'es' : 'auto',
     custom_text: { submit: { message: b.lang === 'es'
-      ? 'Al confirmar contratas Numi Mates Premium con obligación de pago. Se renueva automáticamente y lo puedes cancelar cuando quieras desde la app. Tienes 14 días para desistir con reembolso íntegro. Condiciones: numimates.com/condicions'
-      : "En confirmar contractes Numi Mates Premium amb obligació de pagament. Es renova automàticament i el pots cancel·lar quan vulguis des de l'app. Tens 14 dies per desistir-ne amb el reemborsament íntegre. Condicions: numimates.com/condicions" } },
+      ? `Al confirmar contratas ${APPNAME[(a.state || {}).variant]} Premium con obligación de pago. Se renueva automáticamente y lo puedes cancelar cuando quieras desde la app. Tienes 14 días para desistir con reembolso íntegro. Condiciones: numimates.com/es/condiciones`
+      : `En confirmar contractes ${APPNAME[(a.state || {}).variant]} Premium amb obligació de pagament. Es renova automàticament i el pots cancel·lar quan vulguis des de l'app. Tens 14 dies per desistir-ne amb el reemborsament íntegre. Condicions: numimates.com/condicions` } },
     success_url: origin + (b.ret === 'families' ? '/families?premium=ok' : '/?premium=ok'),
     cancel_url: origin + (b.ret === 'families' ? '/families?premium=cancel' : '/?premium=cancel')
   };
@@ -88,11 +97,11 @@ async function cancel(req, res, resume) {
   const b = body(req), code = cleanCode(b.code);
   if (!code) return ok(res, { error: 'codi' }, 400);
   if (await blocked(req, 'pagament', 20, 60)) return tooMany(res);
-  const a = (await sql`SELECT pass_hash FROM mates.alumnes WHERE code = ${code} AND active`)[0];
+  const a = (await sql`SELECT 1 FROM mates.alumnes WHERE code = ${code} AND active`)[0];
   if (!a) { await fail(req, 'pagament'); return ok(res, { error: 'no trobat' }, 404); }
-  // ho pot fer la família que té aquest fill a la seva zona, o l'app de l'alumne (amb la clau del dispositiu si té contrasenya)
+  // ho pot fer la família que té aquest fill a la seva zona, o l'app de l'alumne des d'un dispositiu amb la clau del compte
   const fam = famOf(b.tok), okFam = fam && (await sql`SELECT 1 FROM mates.familia_fills WHERE familia_id = ${fam} AND code = ${code}`.catch(() => [])).length;
-  if (!okFam && !(await alumneOk(req, res, code, a.pass_hash))) return;
+  if (!okFam && !(await alumneStrict(req, res, code))) return;
   const c = await setCancel(code, resume);
   if (c.error === 'sense subscripció') return ok(res, { error: c.error }, 409);
   if (c.error) return ok(res, { error: 'stripe' }, 502);

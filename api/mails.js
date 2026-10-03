@@ -1,5 +1,5 @@
 import { createHmac, timingSafeEqual } from 'crypto';
-import { sql, ok, body } from './_lib.js';
+import { sql, ok, body, purge } from './_lib.js';
 import { who } from './_auth.js';
 import { STRIPE_KEY, stripe } from './_stripe.js';
 import { informeTables, informesRun, prefOf, ajust, setAjust, reportMail, periodNow, kidRow, reportExtra } from './_informe.js';
@@ -31,7 +31,8 @@ function baixaOf(t) {
 async function recipients(aud) {
   const out = new Map(), add = (e, nom, lang) => { e = clean(e); if (MAILRE.test(e) && !out.has(e)) out.set(e, { nom: nom || '', lang: lang || null }); };
   if (aud.docents) (await sql`SELECT email, nom FROM mates.docents WHERE actiu AND email LIKE '%@%'`).forEach(r => add(r.email, r.nom));
-  if (aud.families) { try { (await sql`SELECT email, lang FROM mates.families`).forEach(r => add(r.email, '', r.lang)); } catch (e) { } }
+  // famílies: només les que han dit que sí a rebre novetats (casella de la zona de famílies; LSSI art. 21)
+  if (aud.families) { try { (await sql`SELECT email, lang FROM mates.families WHERE promo`).forEach(r => add(r.email, '', r.lang)); } catch (e) { } }
   if (aud.contactes) { try { (await sql`SELECT mail, nom, lang FROM mates.contactes`).forEach(r => add(r.mail, r.nom, r.lang)); } catch (e) { } }
   if (aud.premium && STRIPE_KEY) {
     const cs = await sql`SELECT DISTINCT stripe_customer FROM mates.alumnes WHERE stripe_customer IS NOT NULL AND pla = 'premium'`;
@@ -121,7 +122,10 @@ export default async function handler(req, res) {
     // informes setmanals i mensuals a les famílies (només si l'administrador els ha encès al panell)
     let inf = null;
     if (Date.now() < until) { try { inf = await informesRun(until, items => resendBatch(items.map(i => ({ from: FROM, reply_to: 'hola@numimates.com', ...i })))); } catch (e) { console.error('informes', e.message); } }
-    return ok(res, { ok: true, n: due.length, inf });
+    // neteja de conservació, un cop cada hora (el cron passa cada 10 minuts)
+    let pg = null;
+    if (new Date().getUTCMinutes() < 10 && Date.now() < until) { try { pg = await purge(); } catch (e) { console.error('purge', e.message); } }
+    return ok(res, { ok: true, n: due.length, inf, pg });
   }
   const me = await who(req);
   if (!me || !me.admin) { await new Promise(r => setTimeout(r, 600)); return ok(res, { error: 'permís' }, 403); }

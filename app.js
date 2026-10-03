@@ -75,6 +75,8 @@ function save() { save.n = (save.n || 0) + 1; saveLocal(); if (P && P.id !== 'tm
     const r = await f0(u, o), nt = isApi && r.headers.get('x-alumne-new');
     if (nt) { let c = code; if (!c) { try { c = (await r.clone().json()).code; } catch (e) { } } if (c) { toks[c] = nt; saveLocal(); } }
     if (isApi && r.status === 401 && code && P && P.code === code && !['/api/profe', '/api/docent'].some(x => u.startsWith(x))) askPassAgain();
+    // funció en línia d'un menor sense el permís de casa (lliga, batalles, xat, canvis): s'explica i es pot demanar
+    if (isApi && r.status === 403 && code && P && P.code === code && !u.startsWith('/api/sync')) r.clone().json().then(j => { if (j.error === 'permis') { P.consent = 'pending'; saveLocal(); setTimeout(famModal, 200); } }).catch(() => { });
     return r;
   };
 }
@@ -94,9 +96,13 @@ async function syncNow() {
   try {
     if (!P.code) {
       const r = await api('register', { name: P.name, survey: P.survey || null, state: P, variant: VAR.id });
-      if (r.code) { P.code = r.code; P.pendingReg = false; P.dirty = false; saveLocal(); }
+      if (r.code) { P.code = r.code; P.pendingReg = false; P.consent = r.consent || 'ok'; P.dirty = P.consent === 'pending'; saveLocal(); }
+    } else if (famWait()) {
+      // menor sense el permís d'un adult: el progrés es queda aquí; de tant en tant mirem si ja l'han donat
+      if (Date.now() - (syncNow.chk || 0) > 120000) { syncNow.chk = Date.now(); SYNCING = false; await pull(); return; }
     } else if (P.dirty && !P.gone) {
-      const n0 = save.n, r = await api('sync', { code: P.code, state: P, reset: !!P.resetPending });
+      const n0 = save.n, r = await api('sync', { code: P.code, state: P, survey: P.survey || null, reset: !!P.resetPending });
+      if (r.status === 403 && r.error === 'permis') { P.consent = 'pending'; saveLocal(); SYNCING = false; return; }
       // el perfil ja no existeix al núvol (donat de baixa o esborrat): deixem de provar-ho
       if (r.status === 410 || r.status === 404) { P.gone = true; saveLocal(); SYNCING = false; return; }
       if (r.ok === false && r.state) mergeIn(r.state);
@@ -111,6 +117,11 @@ async function pull() {
   if (!P || !P.code || !navigator.onLine) return;
   if (P.gone) return;
   try { const r = await api('login', { code: P.code }); if (r.status === 410) { P.gone = true; saveLocal(); return; }
+    if (r.consent && r.consent !== P.consent) { const was = P.consent; P.consent = r.consent; saveLocal();
+      // l'adult acaba de donar el permís: es puja tot el progrés que s'havia quedat al dispositiu
+      if (was === 'pending' && r.consent !== 'pending') { P.dirty = true; saveLocal(); setTimeout(syncNow, 300); toast(L('Permís rebut! Ara el teu progrés ja es desa al núvol.', '¡Permiso recibido! Ahora tu progreso ya se guarda en la nube.')); }
+      if (VIEW === 'home') renderHome(); else if (VIEW === 'profile') renderProfile(); }
+    if (r.consent === 'pending') return;
     if (r.pla && r.pla !== P.pla) { P.pla = r.pla; saveLocal(); if (VIEW === 'home') renderHome(); }
     if ('sub' in r && JSON.stringify(r.sub || null) !== JSON.stringify(P.sub || null)) { P.sub = r.sub || null; saveLocal(); if (VIEW === 'profile') renderProfile(); } if (r.state && r.state.xp > P.xp && !P.resetPending) { mergeIn(r.state); if (VIEW === 'home') renderHome(); }
     if (r.state && !!r.state.unlockAll !== !!P.unlockAll) { P.unlockAll = !!r.state.unlockAll; saveLocal(); if (VIEW === 'home') renderHome(); } if (r.username && !P.username) { P.username = r.username; saveLocal(); } } catch (e) { }
@@ -149,7 +160,7 @@ function mergeState(a, b) {
 }
 // incorpora l'estat del núvol al perfil d'aquest dispositiu i, si hi ha res nou d'aquí, el torna a pujar
 function mergeIn(st) {
-  const keep = { id: P.id, code: P.code, classe: P.classe, hintAsk: P.hintAsk, gone: P.gone }, before = JSON.stringify({ ...st, dirty: 0 });
+  const keep = { id: P.id, code: P.code, classe: P.classe, hintAsk: P.hintAsk, gone: P.gone, consent: P.consent }, before = JSON.stringify({ ...st, dirty: 0 });
   Object.assign(P, migrate(mergeState(JSON.parse(JSON.stringify(P)), st)), keep);
   P.dirty = JSON.stringify({ ...P, id: st.id, code: st.code, classe: st.classe, hintAsk: st.hintAsk, gone: st.gone, dirty: 0 }) !== before;
   DB.profiles[P.id] = P; LANG = P.lang; document.documentElement.lang = LANG; saveLocal();
@@ -159,6 +170,21 @@ function mergeIn(st) {
 }
 function adopt(st) { const id = P.id; Object.assign(P, migrate(st), { id, dirty: false }); DB.profiles[id] = P; LANG = P.lang; saveLocal(); }
 const cloudTxt = () => P.gone ? L("Aquest perfil ja no està actiu al núvol. Parla amb el teu docent.", 'Este perfil ya no está activo en la nube. Habla con tu docente.') : !P.code ? L("⏳ Encara no s'ha pogut desar al núvol (es tornarà a provar sol).", '⏳ Aún no se ha podido guardar en la nube (se volverá a intentar solo).') : P.dirty ? L('⏳ Desant els últims canvis…', '⏳ Guardando los últimos cambios…') : L('☁️ Progrés desat al núvol.', '☁️ Progreso guardado en la nube.');
+// Permís de la família (menors de 14 anys a Numi Mates i Pro, fora d'una escola): igual que el servidor (isMinor a api/_lib.js)
+const needsFam = () => !!P && !IS_MENT && P.variant !== 'ment' && !P.classe && !(+(P.survey && P.survey.age) >= 14);
+const famWait = () => needsFam() && P.consent === 'pending';            // encara no: res al núvol
+const famAsk = () => needsFam() && (P.consent === 'pending' || P.consent === 'needed');
+function famCard() {
+  if (!P.code || !famAsk()) return '';
+  return `<button class="testcard famask" onclick="famModal()"><span class="tci">🔒</span><span><b>${L('Demana permís a casa', 'Pide permiso en casa')}</b><small>${famWait() ? L("El teu progrés només es guarda en aquest dispositiu. Amb el sí d'un adult es desarà al núvol i podràs jugar a la lliga i les batalles.", 'Tu progreso solo se guarda en este dispositivo. Con el sí de un adulto se guardará en la nube y podrás jugar a la liga y las batallas.') : L("Aviat caldrà el permís d'un adult de casa per continuar desant el teu progrés al núvol.", 'Pronto hará falta el permiso de un adulto de casa para seguir guardando tu progreso en la nube.')}</small></span><span class="go">›</span></button>`;
+}
+function famModal() {
+  const ask = famAsk();
+  modal(`<div class="sheet card cent"><h3>${ask ? L('Demana permís a casa', 'Pide permiso en casa') : L('Demana-ho a casa', 'Pídelo en casa')}</h3>
+    ${ask ? '' : `<p>${L("Premium el contracta un adult. Si ja rep l'informe de Numi, ho pot fer des de la <b>zona de famílies</b> (app.numimates.com/families). Si no, escriu el seu correu:", 'Premium lo contrata un adulto. Si ya recibe el informe de Numi, puede hacerlo desde la <b>zona de familias</b> (app.numimates.com/families). Si no, escribe su correo:')}</p>`}${famBox(true)}
+    ${!P.classe ? `<p class="prem-school">🏫 ${L(`Si fas servir ${VAR.name} a l'escola, no cal:`, `Si usas ${VAR.name} en el cole, no hace falta:`)} <button class="link" onclick="closeModal();classeModal()">${L('Tinc un codi de classe', 'Tengo un código de clase')} ›</button></p>` : ''}</div>`, true);
+  setTimeout(() => { const i = $('#famMail'); i && i.focus(); }, 60);
+}
 addEventListener('online', syncNow);
 setInterval(() => { if (P && !P.gone && (P.dirty || !P.code)) syncNow(); syncOthers(); }, 30000);
 // tauleta compartida: els altres perfils del dispositiu amb canvis pendents també es pugen (un cada vegada)
@@ -376,11 +402,11 @@ function premiumModal(what) {
       <li><span>⚔️</span><span>${L('<b>Batalles</b> de mates', '<b>Batallas</b> de mates')}</span></li>
       <li><span>🏆</span><span>${L('<b>Ruta de temporada</b> i cartes exclusives', '<b>Ruta de temporada</b> y cartas exclusivas')}</span></li>${VAR.chat ? `<li><span>💬</span><span>${L("<b>Assistent amb IA</b>: pistes quan t'encallis", '<b>Asistente con IA</b>: pistas cuando te atasques')}</span></li>` : ''}</ul>
     <p class="prem-note">${L('Premium el decideix i el contracta un adult.', 'Premium lo decide y lo contrata un adulto.')}</p>
-    <div id="premplans"><button class="btn big gold" onclick="buyPremium()">${L('PER A UN ADULT', 'PARA UN ADULTO')} ›</button></div>
+    <div id="premplans">${needsFam() ? `<button class="btn big gold" onclick="famModal()">${L('DEMANA-HO A CASA', 'PÍDELO EN CASA')} ›</button>` : `<button class="btn big gold" onclick="buyPremium()">${L('PER A UN ADULT', 'PARA UN ADULTO')} ›</button>`}</div>
     ${P && P.code && !P.classe ? `<p class="prem-school">🏫 ${L(`Si la teva escola fa servir ${VAR.name}, ja el tens.`, `Si tu escuela usa ${VAR.name}, ya lo tienes.`)} <button class="link" onclick="closeModal();classeModal()">${L('Tinc un codi de classe', 'Tengo un código de clase')} ›</button></p>` : ''}
     <button class="btn big ghost" onclick="closeModal()">${L('ARA NO', 'AHORA NO')}</button></div>`, true);
   // si encara no es pot pagar des de l'app, en lloc dels plans surt el correu
-  payCheck().then(ok => { const d = $('#premplans'); if (ok !== false || !d) return; d.outerHTML = `<p class="prem-school">${L('Un adult ens pot escriure a <b>hola@numimates.com</b> per activar-lo.', 'Un adulto nos puede escribir a <b>hola@numimates.com</b> para activarlo.')}</p>`; const n = $('#premnote'); if (n) n.remove(); });
+  payCheck().then(ok => { const d = $('#premplans'); if (ok !== false || !d || needsFam()) return; d.outerHTML = `<p class="prem-school">${L('Un adult ens pot escriure a <b>hola@numimates.com</b> per activar-lo.', 'Un adulto nos puede escribir a <b>hola@numimates.com</b> para activarlo.')}</p>`; const n = $('#premnote'); if (n) n.remove(); });
 }
 let PAY_OK;
 // Stripe en mode prova: els botons de pagament només surten si s'entra amb ?provapagament (per provar-ho sense que ho vegin les famílies)
@@ -395,6 +421,8 @@ async function payCheck() {
 const PLA_TXT = { mes: ['Mensual · 4,99 € al mes', 'Mensual · 4,99 € al mes'], any: ['Anual · 49 € a l\'any', 'Anual · 49 € al año'] };
 let PREM_PLA = 'any';
 function buyPremium(pla) {
+  // un menor de 14 anys no contracta res des de l'app: un adult ho fa des del correu o la zona de famílies
+  if (needsFam()) return famModal();
   if (pla) PREM_PLA = pla === 'mes' ? 'mes' : 'any';
   if (!P || !P.code) { syncNow(); return toast(L('Primer cal guardar el perfil al núvol: connecta\'t a internet i torna-ho a provar.', 'Primero hay que guardar el perfil en la nube: conéctate a internet y vuelve a probarlo.')); }
   const pb = (k, t, pr, per, tag) => `<button class="${PREM_PLA === k ? 'sel' : ''} ${k === 'any' ? 'best' : ''}" onclick="buyPremium('${k}')">${tag ? `<i>${tag}</i>` : ''}<b>${t}</b><span>${pr}<small>/${per}</small></span></button>`;
@@ -415,6 +443,8 @@ async function payGo(pla) {
     if (r.url && /^https:\/\/checkout\.stripe\.com\//.test(r.url)) { try { sessionStorage.setItem('numi-pay-code', P.code); } catch (x) { } location.href = r.url; return; }
     e.textContent = r.error === 'escola' ? L('Aquest perfil és d\'una classe: ja té Premium amb l\'escola.', 'Este perfil es de una clase: ya tiene Premium con la escuela.')
       : r.error === 'ja' ? L('Aquest perfil ja té Premium.', 'Este perfil ya tiene Premium.')
+      : r.error === 'adult' ? L('Premium el contracta un adult des del correu que rep o des de la zona de famílies.', 'Premium lo contrata un adulto desde el correo que recibe o desde la zona de familias.')
+      : r.error === 'dispositiu' ? L('Això només es pot fer des del dispositiu on es va crear el perfil.', 'Esto solo se puede hacer desde el dispositivo donde se creó el perfil.')
       : r.status === 429 ? ERR('massa') : r.status === 503 ? L('Encara no es pot pagar des de l\'app. Escriviu-nos a hola@numimates.com.', 'Todavía no se puede pagar desde la app. Escribidnos a hola@numimates.com.') : ERR();
   } catch (x) { e.textContent = ERR(); }
   b.disabled = false; b.textContent = L('CONTINUA AL PAGAMENT', 'CONTINUAR AL PAGO');
@@ -562,7 +592,7 @@ function renderHome() {
   VIEW = 'home';
   const c = CUR();
   app.innerHTML = shell(`<button class="course" onclick="pickCourse()"><span class="cem">${c.emoji}</span><span><small>${L('Estàs fent', 'Estás haciendo')}</small><b>${tx(c.long)}</b></span><span class="cch">${L('Canvia', 'Cambia')} ▾</span></button>
-    ${seasonCard()}${IS_PRO && typeof examCard === 'function' ? examCard() : ''}${testCard()}${reviewCard()}${recoBox()}${schoolCard()}${goalCard()}${missionsCard()}${streakCard()}${UNITS_().map(unitHTML).join('')}
+    ${famCard()}${seasonCard()}${IS_PRO && typeof examCard === 'function' ? examCard() : ''}${testCard()}${reviewCard()}${recoBox()}${schoolCard()}${goalCard()}${missionsCard()}${streakCard()}${UNITS_().map(unitHTML).join('')}
     <div class="theend">${P.course < COURSES.length - 1 ? L(`Quan acabis ${tx(c.long)}, t'espera <b>${tx(COURSES[P.course + 1].long)}</b>! 🚀`, `Cuando acabes ${tx(c.long)}, ¡te espera <b>${tx(COURSES[P.course + 1].long)}</b>! 🚀`) : L('Has arribat a l\'últim nivell! 🎓', '¡Has llegado al último nivel! 🎓')}</div>`, 'home');
   revealNodes(); showGain();
   if (JUST_OPEN) { const t = $('.trail.fresh'); if (t) setTimeout(() => t.scrollIntoView({ block: 'center', behavior: 'smooth' }), 80); JUST_OPEN = null; return; }
@@ -596,6 +626,7 @@ function genEx(sk, lv, seen, mix) {
   return e;
 }
 function startLesson(ui, li) {
+  EN_PEND = false;   // una lliçó del camí no gasta energia (ni la d'un entrenament que s'havia deixat a mitges)
   const u = UNITS_()[ui]; let plan = [];
   if (li === REP(u)) {
     // La porta del Cavaller: examen camuflat amb 8 preguntes del tema i 4 d'activitats visuals, sense segones oportunitats
@@ -790,6 +821,7 @@ function check() {
   saveLocal();
 }
 function quitRun() {
+  EN_PEND = false;
   if (LS && LS.mode === 'battle') return quitBattle();
   if (LS && LS.mode === 'place') return ask(L('Vols saltar-te la prova de nivell? Començaràs pel principi del curs.', '¿Quieres saltarte la prueba de nivel? Empezarás por el principio del curso.'), L('SALTA', 'SALTAR'), L('CONTINUA', 'CONTINÚA'), () => { LS.res = []; finishPlacement(true); });
   ask(L("Segur que vols sortir? Perdràs el progrés d'aquesta activitat.", '¿Seguro que quieres salir? Perderás el progreso de esta actividad.'), L('SURT', 'SALIR'), L('CONTINUA AQUÍ', 'SEGUIR AQUÍ'), () => go('home'));
@@ -826,6 +858,7 @@ const BADGES = [
 ];
 function checkBadges() { const nw = BADGES.filter(b => !P.badges.includes(b[0]) && b[4](P)); nw.forEach(b => { P.badges.push(b[0]); P.gems += 10; }); return nw; }
 function finishRun() {
+  spendEnergy();
   const R = { mode: LS.mode, ui: LS.ui, li: LS.li, acc: LS.exam ? 0 : Math.round(100 * LS.total / (LS.total + LS.miss)), perfect: LS.miss === 0 && !LS.helps, stars: 0, chest: 0 };
   if (R.mode === 'reco') { R.xp = 12 + (R.perfect ? 4 : 0); R.gems = 6; P.stats.trains++; if (R.acc >= 75) { P.reco = null; R.recoDone = true; } }
   else if (R.mode === 'train') { R.xp = 8 + (R.perfect ? 4 : 0); R.gems = 3 + (R.perfect ? 2 : 0); P.stats.trains++; }
@@ -1119,12 +1152,17 @@ function startGame(id) { if (id === 'sprint') return startSprint(); startAgility
    contrarellotge de Pro). No la gasten les lliçons del camí, la teoria, les fitxes ni el pla d'examen. Es recarrega cada dia. */
 const ENERGY_MAX = 3;
 const energyLeft = () => isPremium() ? Infinity : Math.max(0, ENERGY_MAX - (P.energ && P.energ.d === today() ? P.energ.n : 0));
+// L'energia es gasta en ACABAR l'entrenament (finishRun / endGame), no en començar-lo: qui hi entra i en surt no la perd.
+let EN_PEND = false;
 function useEnergy(fn) {
   if (isPremium()) return fn();
-  const left = energyLeft();
-  if (left <= 0) return energyModal();
-  P.energ = { d: today(), n: ENERGY_MAX - left + 1 }; save();
-  fn();
+  if (energyLeft() <= 0) return energyModal();
+  fn(); EN_PEND = true;
+}
+function spendEnergy() {
+  if (!EN_PEND) return; EN_PEND = false;
+  if (isPremium()) return;
+  P.energ = { d: today(), n: Math.min(ENERGY_MAX, ENERGY_MAX - energyLeft() + 1) }; save();
 }
 function energyBar() {
   if (P.classe) return '';
@@ -1135,8 +1173,8 @@ function energyBar() {
 function energyModal() {
   SFX.tap && SFX.tap();
   modal(`<div class="sheet card cent"><div class="en-big">🧠<span>⚡</span></div><h3>${L("Has fet servir l'energia mental d'avui", 'Has usado la energía mental de hoy')}</h3>
-    <p>${L('El cervell també aprèn mentre descansa: demà tindràs 3 entrenaments més. Mentrestant, pots fer la lliçó del camí o repassar la teoria.', 'El cerebro también aprende mientras descansa: mañana tendrás 3 entrenamientos más. Mientras tanto, puedes hacer la lección del camino o repasar la teoría.')}</p>
-    <button class="btn big" onclick="closeModal();go('home')">${L('ANAR AL CAMÍ', 'IR AL CAMINO')}</button>
+    <p>${dayCapped() ? L('El cervell també aprèn mentre descansa: demà tindràs 3 entrenaments més i una lliçó nova. Mentrestant, pots repassar la teoria.', 'El cerebro también aprende mientras descansa: mañana tendrás 3 entrenamientos más y una lección nueva. Mientras tanto, puedes repasar la teoría.') : L('El cervell també aprèn mentre descansa: demà tindràs 3 entrenaments més. Mentrestant, pots fer la lliçó del camí o repassar la teoria.', 'El cerebro también aprende mientras descansa: mañana tendrás 3 entrenamientos más. Mientras tanto, puedes hacer la lección del camino o repasar la teoría.')}</p>
+    <button class="btn big" onclick="closeModal();go('home')">${dayCapped() ? L('TORNA A INICI', 'VOLVER AL INICIO') : L('ANAR AL CAMÍ', 'IR AL CAMINO')}</button>
     <button class="btn big ghost" onclick="closeModal();premiumModal('energia')">${L('QUÈ ÉS PREMIUM?', '¿QUÉ ES PREMIUM?')}</button></div>`, true);
 }
 {
@@ -1146,7 +1184,7 @@ function energyModal() {
   startGame = id => useEnergy(() => sg(id));
 }
 function gameShell(id, extraTop, body) {
-  app.innerHTML = `<div class="lesson game"><div class="l-top"><button class="xbtn" onclick="go('train')" aria-label="${L('Surt', 'Salir')}">✕</button>${extraTop}</div><div class="l-body">${body}</div></div>`;
+  app.innerHTML = `<div class="lesson game"><div class="l-top"><button class="xbtn" onclick="EN_PEND=false;go('train')" aria-label="${L('Surt', 'Salir')}">✕</button>${extraTop}</div><div class="l-body">${body}</div></div>`;
 }
 function startSprint() {
   SP = { t0: Date.now(), dur: 60000, score: 0, input: '', busy: false };
@@ -1167,6 +1205,7 @@ function skey(k) {
 function stopSprint() { if (SP && SP.timer) clearInterval(SP.timer); SP = null; }
 function endSprint() { const score = SP.score; stopSprint(); endGame('sprint', score, L('Temps!|¡Tiempo!', 'Temps!|¡Tiempo!')); }
 function endGame(id, score, title) {
+  spendEnergy();
   const B = P.stats.bests, rec = score > (B[id] || 0); if (rec) B[id] = score;
   if (id === 'sprint') P.stats.sprintBest = B.sprint;
   P.stats.games++; misEvent('game');
@@ -1313,26 +1352,28 @@ const LIKE = { calc: ['🧮 Calcular', '🧮 Calcular'], logic: ['🧩 Enigmes i
 /* ---------- Informe per a la família: l'alumne escriu el correu d'un adult, que rep una invitació per confirmar-ho
    (amb aquell clic dona l'autorització) i, a partir d'aquí, l'informe setmanal. El correu no es desa a l'app. ---------- */
 const maskMail = m => { const [u, d] = String(m).split('@'); return (u.length <= 2 ? u[0] + '*' : u.slice(0, 2) + '***') + '@' + d; };
-function famBox() {
-  if (!P.code) return `<div class="famcard"><p>${L("Quan tinguis usuari i contrasenya, podràs fer que la teva família rebi un informe setmanal del que aprens.", 'Cuando tengas usuario y contraseña, podrás hacer que tu familia reciba un informe semanal de lo que aprendes.')}</p></div>`;
-  const inv = P.famInv;
-  return `<div class="famcard"><p>${L('El teu pare, la teva mare o qui tu vulguis pot rebre <b>cada setmana un correu</b> amb els dies que has practicat, com et van els exercicis i una idea per practicar a casa.', 'Tu padre, tu madre o quien tú quieras puede recibir <b>cada semana un correo</b> con los días que has practicado, cómo te van los ejercicios y una idea para practicar en casa.')}</p>
-    ${inv ? `<p class="faminv">✅ ${L(`Invitació enviada a <b>${esc(inv.m)}</b>. Quan la confirmi, rebrà l'informe.`, `Invitación enviada a <b>${esc(inv.m)}</b>. Cuando la confirme, recibirá el informe.`)}</p>` : ''}
-    <div class="famrow"><input id="famMail" type="email" inputmode="email" autocomplete="off" placeholder="${L('correu@exemple.com', 'correo@ejemplo.com')}" aria-label="${L("Correu d'un adult de la família", 'Correo de un adulto de la familia')}"><button class="btn sm" id="famBtn" onclick="famInvite()">${inv ? L('ENVIA-LA A UN ALTRE', 'ENVIARLA A OTRO') : L('ENVIA LA INVITACIÓ', 'ENVIAR LA INVITACIÓN')}</button></div>
+function famBox(inModal) {
+  if (!P.code) return `<div class="famcard"><p>${L("Quan el teu perfil estigui desat, podràs fer que la teva família rebi un informe setmanal del que aprens.", 'Cuando tu perfil esté guardado, podrás hacer que tu familia reciba un informe semanal de lo que aprendes.')}</p></div>`;
+  const inv = P.famInv, ask = famAsk();
+  return `<div class="famcard">${ask ? `<p>${L("Perquè el teu progrés es desi al núvol i puguis jugar a la lliga i les batalles, cal el <b>permís d'un adult de casa</b>. Escriu el correu del teu pare, la teva mare o el teu tutor: li enviarem un enllaç per autoritzar-ho.", 'Para que tu progreso se guarde en la nube y puedas jugar a la liga y las batallas, hace falta el <b>permiso de un adulto de casa</b>. Escribe el correo de tu padre, tu madre o tu tutor: le enviaremos un enlace para autorizarlo.')}</p>`
+      : `<p>${L('El teu pare, la teva mare o qui tu vulguis pot rebre <b>cada setmana un correu</b> amb els dies que has practicat, com et van els exercicis i una idea per practicar a casa.', 'Tu padre, tu madre o quien tú quieras puede recibir <b>cada semana un correo</b> con los días que has practicado, cómo te van los ejercicios y una idea para practicar en casa.')}</p>`}
+    ${inv ? `<p class="faminv">✅ ${ask ? L(`Hem enviat un correu a <b>${esc(inv.m)}</b>. Quan ho autoritzi, el teu progrés es desarà sol.`, `Hemos enviado un correo a <b>${esc(inv.m)}</b>. Cuando lo autorice, tu progreso se guardará solo.`) : L(`Invitació enviada a <b>${esc(inv.m)}</b>. Quan la confirmi, rebrà l'informe.`, `Invitación enviada a <b>${esc(inv.m)}</b>. Cuando la confirme, recibirá el informe.`)}</p>` : ''}
+    <div class="famrow"><input id="famMail" type="email" inputmode="email" autocomplete="off" placeholder="${L('correu@exemple.com', 'correo@ejemplo.com')}" aria-label="${L("Correu d'un adult de la família", 'Correo de un adulto de la familia')}"><button class="btn sm" id="famBtn" onclick="famInvite(${inModal ? 1 : 0})">${inv ? L('ENVIA-LA A UN ALTRE', 'ENVIARLA A OTRO') : ask ? L('DEMANA PERMÍS', 'PIDE PERMISO') : L('ENVIA LA INVITACIÓ', 'ENVIAR LA INVITACIÓN')}</button></div>
     <p class="famnote" id="famMsg">${L("L'adult haurà de confirmar-ho des del seu correu.", 'El adulto tendrá que confirmarlo desde su correo.')}</p></div>`;
 }
-async function famInvite() {
+async function famInvite(inModal) {
   const m = ($('#famMail').value || '').trim().toLowerCase(), msg = $('#famMsg'), btn = $('#famBtn');
   if (!/^[^\s@<>"',;]+@[^\s@<>"',;]+\.[a-z]{2,}$/i.test(m)) { msg.textContent = L('Revisa el correu: sembla que no està ben escrit.', 'Revisa el correo: parece que no está bien escrito.'); msg.className = 'famnote ko'; return; }
   btn.disabled = true; msg.className = 'famnote'; msg.textContent = L('Enviant…', 'Enviando…');
   try {
-    const r = await fetch('/api/account?f=link', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ email: m, code: P.code, invite: true, lang: LANG }) });
+    const r = await fetch('/api/account?f=link', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ email: m, code: P.code, invite: true, kid: P.name, lang: LANG }) });
     const j = await r.json().catch(() => ({}));
-    if (r.ok && j.ok) { P.famInv = { d: today(), m: maskMail(m) }; save(); SFX.ok(); toast(L('Invitació enviada!', '¡Invitación enviada!')); return go('profile'); }
+    if (r.ok && j.ok) { P.famInv = { d: today(), m: maskMail(m) }; save(); SFX.ok(); toast(L('Correu enviat!', '¡Correo enviado!')); if (inModal) { closeModal(); return VIEW === 'onboard' ? (ONB = {}, go('home')) : go(VIEW || 'home'); } return go('profile'); }
     msg.className = 'famnote ko';
     msg.textContent = r.status === 429 ? L("Massa intents. Torna-ho a provar d'aquí a una estona.", 'Demasiados intentos. Vuelve a probarlo dentro de un rato.')
       : j.error === 'correu-off' ? L("Ara mateix no podem enviar correus. Torna-ho a provar d'aquí a uns dies.", 'Ahora mismo no podemos enviar correos. Vuelve a probarlo dentro de unos días.')
       : j.error === 'no trobat' ? L('Primer cal que el teu progrés estigui desat al núvol. Torna-ho a provar en un moment.', 'Primero tu progreso tiene que estar guardado en la nube. Vuelve a probarlo en un momento.')
+      : j.error === 'dispositiu' ? L('Això només es pot fer des del dispositiu on vas crear el perfil (o amb el teu usuari i contrasenya).', 'Esto solo se puede hacer desde el dispositivo donde creaste el perfil (o con tu usuario y contraseña).')
       : L("No s'ha pogut enviar. Torna-ho a provar.", 'No se ha podido enviar. Vuelve a probarlo.');
   } catch (e) { msg.className = 'famnote ko'; msg.textContent = L('Sense connexió. Torna-ho a provar quan en tinguis.', 'Sin conexión. Vuelve a probarlo cuando tengas.'); }
   btn.disabled = false;
@@ -1372,7 +1413,7 @@ renderProfile.inner = function () {
       <div class="ctip">${P.username ? L('Entra des de qualsevol dispositiu amb el teu usuari i contrasenya.', 'Entra desde cualquier dispositivo con tu usuario y contraseña.') : L('Amb usuari i contrasenya podràs entrar des de qualsevol dispositiu.', 'Con usuario y contraseña podrás entrar desde cualquier dispositivo.')}${P.code ? `<br><small class="codesm">${L('Codi del compte', 'Código de la cuenta')}: <b>${P.code}</b> · ${L('per a la zona de famílies i per recuperar el compte', 'para la zona de familias y para recuperar la cuenta')}</small>` : ''}</div>
       <button class="btn sm gold" onclick="accountModal()">${P.username ? L('CANVIA LA CONTRASENYA', 'CAMBIAR LA CONTRASEÑA') : L('CREA USUARI I CONTRASENYA', 'CREAR USUARIO Y CONTRASEÑA')}</button></div>
     <h2 class="h2">🏫 ${L('La meva classe', 'Mi clase')}</h2>${classeBox()}
-    <h2 class="h2">📬 ${L('Informe per a la família', 'Informe para la familia')}</h2>${famBox()}
+    <h2 class="h2">${famAsk() ? '🔒 ' + L('Permís de casa', 'Permiso de casa') : '📬 ' + L('Informe per a la família', 'Informe para la familia')}</h2>${famBox()}
     ${P.classe ? `<h2 class="h2">🏅 ${L('Medalles de la profe', 'Medallas de la profe')}</h2><div id="pmedals"><p class="empty">…</p></div>` : ''}
     ${P.classe ? '' : `<h2 class="h2">⭐ ${L('El meu pla', 'Mi plan')}</h2>${premiumBox()}`}
     ${sv ? `<h2 class="h2">${L("Prova d'inici", 'Prueba inicial')}</h2><div class="survey"><div><span>${L('Curs', 'Curso')}</span><b>${esc(sv.curs)}</b></div><div><span>${L('Les mates…', 'Las mates…')}</span><b>${FEEL[sv.feel] ? tx(FEEL[sv.feel]) : '—'}</b></div><div><span>${L("M'agrada", 'Me gusta')}</span><b>${LIKE[sv.like] ? tx(LIKE[sv.like]) : '—'}</b></div><div><span>${L('Resultat', 'Resultado')}</span><b>${esc(sv.result)}</b></div></div>` : ''}
@@ -1467,7 +1508,7 @@ function teacherTema() {
 }
 function resetP() {
   ask(L(`Segur que vols esborrar tot el progrés de <b>${esc(P.name)}</b>? No es pot desfer.`, `¿Seguro que quieres borrar todo el progreso de <b>${esc(P.name)}</b>? No se puede deshacer.`), L('ESBORRA', 'BORRAR'), L('CANCEL·LA', 'CANCELAR'), async () => {
-    const keep = { id: P.id, code: P.code, username: P.username, name: P.name, lang: P.lang, course: P.course, baseCourse: P.baseCourse, survey: P.survey, goal: P.goal, sound: P.sound, classe: P.classe, pla: P.pla, hintAsk: P.hintAsk, unlockAll: false };  // la classe i el Premium no són progrés
+    const keep = { id: P.id, code: P.code, username: P.username, name: P.name, lang: P.lang, course: P.course, baseCourse: P.baseCourse, survey: P.survey, goal: P.goal, sound: P.sound, classe: P.classe, pla: P.pla, hintAsk: P.hintAsk, consent: P.consent, unlockAll: false };  // la classe, el Premium i el permís no són progrés
     for (const k in P) delete P[k]; Object.assign(P, freshProgress(), keep, { resetPending: true });
     save();   // es queda pendent (i es torna a provar) fins que el servidor confirma l'esborrat
     go('home');
@@ -1478,6 +1519,7 @@ const ERR = e => ({ 'usuari-ocupat': L('Aquest usuari ja existeix. Prova\'n un a
 const passField = (id, ph) => `<div class="passf"><input id="${id}" class="nm" type="password" maxlength="60" placeholder="${ph}" autocomplete="new-password"><button type="button" class="eye" onclick="const i=document.getElementById('${id}');i.type=i.type==='password'?'text':'password'" aria-label="👁">👁</button></div>`;
 function accountModal(nudge) {
   if (!P.code) return toast(L('Primer cal connexió a internet.', 'Primero hace falta conexión a internet.'));
+  if (famWait()) return famModal();   // un menor pot crear usuari i contrasenya quan un adult ho hagi autoritzat
   const has = !!P.username;
   modal(`<div class="sheet card cent"><h3>${has ? L('Canvia la contrasenya', 'Cambia la contraseña') : L('Crea el teu usuari', 'Crea tu usuario')}</h3>
     ${!has ? `<p style="margin:0 0 10px">${nudge ? L("Ara els comptes es fan amb <b>usuari i contrasenya</b>: és més fàcil de recordar i més segur. El teu progrés no canvia.", 'Ahora las cuentas se hacen con <b>usuario y contraseña</b>: es más fácil de recordar y más seguro. Tu progreso no cambia.') : L('Amb el teu usuari i contrasenya podràs entrar des de qualsevol dispositiu.', 'Con tu usuario y contraseña podrás entrar desde cualquier dispositivo.')}</p>` : ''}
@@ -1488,7 +1530,7 @@ function accountModal(nudge) {
 }
 // comptes antics que només tenen codi: un cop al dia, convida a crear usuari i contrasenya
 function credNudge() {
-  if (!P || P.id === 'tmp' || !P.code || P.username || P.credAsk === today() || $('.modal-bg') || !['home'].includes(VIEW)) return;
+  if (!P || P.id === 'tmp' || !P.code || P.username || P.credAsk === today() || $('.modal-bg') || !['home'].includes(VIEW) || famWait()) return;
   P.credAsk = today(); saveLocal(); accountModal(true);
 }
 async function saveAccount() {
@@ -1522,7 +1564,7 @@ function delP(id) {
 }
 function loginModal(withCode) {
   modal(`<div class="sheet card cent"><h3>${withCode ? L('Recupera el compte', 'Recupera la cuenta') : L('Entra al teu compte', 'Entra en tu cuenta')}</h3>
-    ${withCode ? `<p>${L("Si el teu compte encara no té usuari i contrasenya, escriu el <b>codi del compte</b> (és al Perfil, a «El meu compte»; per exemple, GUINEU-4827). Després en crearàs un.", 'Si tu cuenta aún no tiene usuario y contraseña, escribe el <b>código de la cuenta</b> (está en el Perfil, en «Mi cuenta»; por ejemplo, GUINEU-4827). Después crearás uno.')}</p><input id="cd" class="nm" maxlength="20" placeholder="CODI-0000" autocomplete="off" autocapitalize="characters">`
+    ${withCode ? `<p>${L("Si el teu compte encara no té usuari i contrasenya, escriu el <b>codi del compte</b> (és al Perfil, a «El meu compte»; per exemple, GUINEU-4827-1593). Després en crearàs un.", 'Si tu cuenta aún no tiene usuario y contraseña, escribe el <b>código de la cuenta</b> (está en el Perfil, en «Mi cuenta»; por ejemplo, GUINEU-4827-1593). Después crearás uno.')}</p><input id="cd" class="nm" maxlength="20" placeholder="CODI-0000" autocomplete="off" autocapitalize="characters">`
       : `<input id="lu" class="nm" maxlength="20" placeholder="${L('Usuari', 'Usuario')}" autocomplete="username" autocapitalize="none">${passField('lp', L('Contrasenya', 'Contraseña')).replace('new-password', 'current-password')}`}
     <div id="lerr" class="err"></div>
     <div class="row2"><button class="btn ghost" onclick="${withCode ? 'loginModal()' : 'closeModal()'}">${L('TORNA', 'VOLVER')}</button><button class="btn" onclick="doLogin(${withCode ? 1 : 0})">${L('ENTRA', 'ENTRAR')}</button></div>
@@ -1657,6 +1699,7 @@ function finishPlacement(skipped) {
 }
 function onbAccount() {
   ONB.step = 5;
+  if (needsFam()) return onbFamily();
   const adult = IS_MENT || ONB.variant === 'ment';   // a Numi Ment (adults) sense mascota ni avís de menors
   app.innerHTML = `<div class="page solo onb">${adult ? '' : `<div class="onb-char sm tapme">${charSVG('numi', 'happy')}</div>`}
     <div class="bubble big${adult ? ' notail' : ''}">${L('Últim pas! <b>Crea el teu usuari i contrasenya</b> per guardar el progrés i entrar des de qualsevol ordinador o tauleta.', '¡Último paso! <b>Crea tu usuario y contraseña</b> para guardar tu progreso y entrar desde cualquier ordenador o tablet.')}</div>
@@ -1665,6 +1708,34 @@ function onbAccount() {
     <div id="aerr" class="err"></div>
     <button class="btn big" id="regBtn" onclick="doRegister()">${L('CREA EL COMPTE', 'CREAR LA CUENTA')}</button>
     <p class="legalf">${adult ? L('Guardem el mínim de dades i no hi ha publicitat:', 'Guardamos el mínimo de datos y no hay publicidad:') : L("Si tens menys de 14 anys, fes-ho amb permís de la teva família. Guardem el mínim de dades i no hi ha publicitat:", 'Si tienes menos de 14 años, hazlo con permiso de tu familia. Guardamos el mínimo de datos y no hay publicidad:')} <a href="https://numimates.com/privacitat?l=${LANG}" target="_blank" rel="noopener">${L('política de privadesa', 'política de privacidad')}</a>.</p></div>`;
+}
+// Menors de 14 anys: en lloc d'usuari i contrasenya, el correu d'un adult de casa. Al servidor només hi va un codi intern
+// (sense nom ni progrés) fins que l'adult ho autoritzi; mentrestant tot es queda en aquest dispositiu.
+function onbFamily() {
+  app.innerHTML = `<div class="page solo onb"><div class="onb-char sm tapme">${charSVG('numi', 'happy')}</div>
+    <div class="bubble big">${L("Últim pas! <b>Demana permís a casa.</b> Escriu el correu del teu pare, la teva mare o el teu tutor: li enviarem un enllaç perquè ho autoritzi. Així el teu progrés es desarà al núvol.", '¡Último paso! <b>Pide permiso en casa.</b> Escribe el correo de tu padre, tu madre o tu tutor: le enviaremos un enlace para que lo autorice. Así tu progreso se guardará en la nube.')}</div>
+    <label class="lbl" for="famMail">${L("Correu d'un adult de casa", 'Correo de un adulto de casa')}</label><input id="famMail" class="nm" type="email" inputmode="email" autocomplete="off" placeholder="${L('correu@exemple.com', 'correo@ejemplo.com')}">
+    <div id="famMsg" class="err"></div>
+    <button class="btn big" id="famBtn" onclick="onbFamilyGo()">${L('DEMANA PERMÍS', 'PIDE PERMISO')}</button>
+    <button class="btn ghost big" onclick="onbFamilyGo(true)">${L('ARA NO: JUGA EN AQUEST DISPOSITIU', 'AHORA NO: JUEGA EN ESTE DISPOSITIVO')}</button>
+    <button class="link" style="margin-top:6px" onclick="onbFamilyGo('classe')">🏫 ${L('Tinc un codi de classe', 'Tengo un código de clase')}</button>
+    <p class="legalf">${L('Sense aquest permís, el teu progrés només es guarda en aquest dispositiu. Guardem el mínim de dades i no hi ha publicitat:', 'Sin este permiso, tu progreso solo se guarda en este dispositivo. Guardamos el mínimo de datos y no hay publicidad:')} <a href="https://numimates.com/privacitat?l=${LANG}" target="_blank" rel="noopener">${L('política de privadesa', 'política de privacidad')}</a>.</p></div>`;
+  setTimeout(() => { const i = $('#famMail'); i && i.focus(); i && i.addEventListener('keydown', e => { if (e.key === 'Enter') onbFamilyGo(); }); }, 50);
+}
+async function onbFamilyGo(skip) {
+  const m = skip ? '' : ($('#famMail').value || '').trim().toLowerCase(), msg = $('#famMsg');
+  if (!skip && !/^[^\s@<>"',;]+@[^\s@<>"',;]+\.[a-z]{2,}$/i.test(m)) { msg.textContent = L('Revisa el correu: sembla que no està ben escrit.', 'Revisa el correo: parece que no está bien escrito.'); return; }
+  msg.textContent = '…'; $$('.onb button').forEach(b => b.disabled = true);
+  // el perfil es dona d'alta (el servidor el deixa en espera del permís) per poder enviar el correu o entrar a una classe
+  P.holdReg = false;
+  let r; try { r = await api('register', { name: P.name, survey: P.survey, state: { ...P, holdReg: false }, variant: VAR.id }); } catch (e) { r = { error: 'net' }; }
+  if (r.code) { P.code = r.code; P.consent = r.consent || 'pending'; P.pendingReg = false; P.dirty = true; } else P.pendingReg = true;
+  saveLocal();
+  if (!r.code && !skip) { $$('.onb button').forEach(b => b.disabled = false); msg.textContent = L("No hi ha connexió a internet. Ho podràs demanar més tard des del Perfil.", 'No hay conexión a internet. Lo podrás pedir más tarde desde el Perfil.'); return; }
+  if (skip === 'classe') { ONB = {}; go('home'); return r.code ? setTimeout(classeModal, 300) : toast(ERR('net')); }
+  if (skip) { ONB = {}; return go('home'); }
+  $('#famMail').value = m; await famInvite(true);
+  if (P.famInv) { ONB = {}; go('home'); } else $$('.onb button').forEach(b => b.disabled = false);
 }
 async function doRegister(noUser) {
   const u = noUser ? null : $('#au').value.trim().toLowerCase(), p = noUser ? null : $('#ap').value;

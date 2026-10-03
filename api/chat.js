@@ -2,7 +2,7 @@
    Respon en streaming (text pla). No es guarda cap conversa: només quantes preguntes fa cada alumne al dia (per limitar el cost).
    Model via Vercel AI Gateway (autenticació OIDC del projecte, sense clau). */
 import { streamText, toTextStream, pipeTextStreamToResponse } from 'ai';
-import { sql, body, cleanCode, ok, blocked, note, fail, tooMany, plaOf, alumneOk } from './_lib.js';
+import { sql, body, cleanCode, ok, blocked, note, fail, tooMany, plaOf, alumneOk, consentGuard } from './_lib.js';
 
 const MODEL = 'anthropic/claude-haiku-4.5';
 const LIMIT = { free: 0, premium: 40, escola: 40 };   // el pla gratuït no té assistent
@@ -16,9 +16,14 @@ let ready = null;
 const tables = () => ready || (ready = sql`CREATE TABLE IF NOT EXISTS mates.xat_us (code text NOT NULL, dia date NOT NULL DEFAULT current_date, n int NOT NULL DEFAULT 0, PRIMARY KEY (code, dia))`
   .then(() => sql`DELETE FROM mates.xat_us WHERE dia < current_date - 60`).catch(e => { ready = null; throw e; }));
 
-const SAFETY = `SAFETY RULES (always, above everything else):
+// Normes de seguretat. Els telèfons d'ajuda són diferents per a infants i joves (Numi Pro) i per a adults (Numi Ment).
+const HELP = {
+  pro: 'encourage them to talk to an adult they trust, and give these free helplines in Spain: Fundació ANAR 900 20 20 10 (24 h, for children and teenagers) and 112 for emergencies',
+  ment: 'encourage them to talk to someone close or to their doctor, and give these free helplines in Spain: 024 (suicidal thoughts or emotional crisis, 24 h, free and confidential), Teléfono de la Esperanza 717 003 717 (24 h) and 112 for emergencies'
+};
+const SAFETY = v => `SAFETY RULES (always, above everything else):
 - Never ask for personal data (surname, address, school, phone, e-mail, photos, social networks). If the user shares any, do not repeat it and gently say it is not needed.
-- If the user mentions sadness, bullying, abuse, self-harm, violence at home or feeling unsafe: answer briefly with warmth, encourage them to talk to an adult they trust, and give these free helplines in Spain: Fundació ANAR 900 20 20 10 (24 h, for children and teenagers) and 112 for emergencies. Do not investigate further.
+- If the user mentions sadness, loneliness, bullying, abuse, self-harm, suicidal thoughts, violence at home or feeling unsafe: answer briefly with warmth, ${HELP[v] || HELP.pro}. Do not investigate further.
 - No romantic, sexual, violent or hateful content, no role-play, no links, no opinions on politics or religion.
 - If asked, say clearly that you are an AI assistant, not a person.`;
 
@@ -33,7 +38,7 @@ About the app: a daily session of 3 games (~10 min) from six areas (speed, atten
 Never promise that the games prevent dementia, Alzheimer's or cognitive decline, and never give medical advice or diagnoses. If the user worries about memory loss or health, kindly recommend talking to their doctor.
 ${where ? `The user is now in: ${where}.` : ''}
 ${DATA}
-${SAFETY}`;
+${SAFETY('ment')}`;
   return `You are Numi, the maths tutor inside "Numi Pro", an app for secondary school students (ESO, 12–16 years old) that follows the official maths curriculum of Catalonia.
 Answer in ${L} unless the student writes in another language (then use theirs). Use informal "tu". Tone: friendly, direct, never childish, never condescending.
 Keep answers short (max 120 words), in plain text with short lines. Write maths with plain characters (x², √9, 3·4, 12 ÷ 4, 3/4, ≤, π); never use LaTeX. You may use **bold** for the key idea.
@@ -42,7 +47,7 @@ Teach, do not do the homework: when the student asks for the answer to an exerci
 When they ask for an explanation of a concept, explain it with one short example.
 ${where ? `The student is now working on: ${where}.` : ''}${ctx.question ? `\nCurrent exercise on screen (do NOT reveal its final answer): «${ctx.question}»` : ''}
 ${DATA}
-${SAFETY}`;
+${SAFETY('pro')}`;
 }
 
 export default async function handler(req, res) {
@@ -58,6 +63,7 @@ export default async function handler(req, res) {
   if (!a) { await fail(req, 'codi'); return ok(res, { error: 'no trobat' }, 404); }
   if (!a.active) return ok(res, { error: 'baixa' }, 410);
   if (!(await alumneOk(req, res, code, a.pass_hash))) return;
+  if (!(await consentGuard(res, code))) return;   // menors: cal el sí de la família
   // el docent pot apagar l'assistent per a tot el grup (mode escola)
   if (a.opts && a.opts.xat === false) return ok(res, { error: 'xat-off' }, 403);
   const pla = plaOf(a), max = LIMIT[pla] ?? 0;
