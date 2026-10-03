@@ -172,7 +172,9 @@ function adopt(st) { const id = P.id; Object.assign(P, migrate(st), { id, dirty:
 const cloudTxt = () => P.gone ? L("Aquest perfil ja no està actiu al núvol. Parla amb el teu docent.", 'Este perfil ya no está activo en la nube. Habla con tu docente.') : !P.code ? L("⏳ Encara no s'ha pogut desar al núvol (es tornarà a provar sol).", '⏳ Aún no se ha podido guardar en la nube (se volverá a intentar solo).') : P.dirty ? L('⏳ Desant els últims canvis…', '⏳ Guardando los últimos cambios…') : L('☁️ Progrés desat al núvol.', '☁️ Progreso guardado en la nube.');
 // Permís de la família (menors de 14 anys a Numi Mates i Pro, fora d'una escola): igual que el servidor (isMinor a api/_lib.js)
 const needsFam = () => !!P && !IS_MENT && P.variant !== 'ment' && !P.classe && !(+(P.survey && P.survey.age) >= 14);
-const famWait = () => needsFam() && P.consent === 'pending';            // encara no: res al núvol
+const famWait = () => needsFam() && P.consent === 'pending';
+// pagar des de l'app només un adult: Numi Ment o 18 anys o més (com el servidor, adultOnly)
+const adultPay = () => !!P && (IS_MENT || P.variant === 'ment' || +(P.survey && P.survey.age) >= 18);            // encara no: res al núvol
 const famAsk = () => needsFam() && (P.consent === 'pending' || P.consent === 'needed');
 function famCard() {
   if (!P.code || !famAsk()) return '';
@@ -402,11 +404,11 @@ function premiumModal(what) {
       <li><span>⚔️</span><span>${L('<b>Batalles</b> de mates', '<b>Batallas</b> de mates')}</span></li>
       <li><span>🏆</span><span>${L('<b>Ruta de temporada</b> i cartes exclusives', '<b>Ruta de temporada</b> y cartas exclusivas')}</span></li>${VAR.chat ? `<li><span>💬</span><span>${L("<b>Assistent amb IA</b>: pistes quan t'encallis", '<b>Asistente con IA</b>: pistas cuando te atasques')}</span></li>` : ''}</ul>
     <p class="prem-note">${L('Premium el decideix i el contracta un adult.', 'Premium lo decide y lo contrata un adulto.')}</p>
-    <div id="premplans">${needsFam() ? `<button class="btn big gold" onclick="famModal()">${L('DEMANA-HO A CASA', 'PÍDELO EN CASA')} ›</button>` : `<button class="btn big gold" onclick="buyPremium()">${L('PER A UN ADULT', 'PARA UN ADULTO')} ›</button>`}</div>
+    <div id="premplans">${!adultPay() ? `<button class="btn big gold" onclick="famModal()">${L('DEMANA-HO A CASA', 'PÍDELO EN CASA')} ›</button>` : `<button class="btn big gold" onclick="buyPremium()">${L('PER A UN ADULT', 'PARA UN ADULTO')} ›</button>`}</div>
     ${P && P.code && !P.classe ? `<p class="prem-school">🏫 ${L(`Si la teva escola fa servir ${VAR.name}, ja el tens.`, `Si tu escuela usa ${VAR.name}, ya lo tienes.`)} <button class="link" onclick="closeModal();classeModal()">${L('Tinc un codi de classe', 'Tengo un código de clase')} ›</button></p>` : ''}
     <button class="btn big ghost" onclick="closeModal()">${L('ARA NO', 'AHORA NO')}</button></div>`, true);
   // si encara no es pot pagar des de l'app, en lloc dels plans surt el correu
-  payCheck().then(ok => { const d = $('#premplans'); if (ok !== false || !d || needsFam()) return; d.outerHTML = `<p class="prem-school">${L('Un adult ens pot escriure a <b>hola@numimates.com</b> per activar-lo.', 'Un adulto nos puede escribir a <b>hola@numimates.com</b> para activarlo.')}</p>`; const n = $('#premnote'); if (n) n.remove(); });
+  payCheck().then(ok => { const d = $('#premplans'); if (ok !== false || !d || !adultPay()) return; d.outerHTML = `<p class="prem-school">${L('Un adult ens pot escriure a <b>hola@numimates.com</b> per activar-lo.', 'Un adulto nos puede escribir a <b>hola@numimates.com</b> para activarlo.')}</p>`; const n = $('#premnote'); if (n) n.remove(); });
 }
 let PAY_OK;
 // Stripe en mode prova: els botons de pagament només surten si s'entra amb ?provapagament (per provar-ho sense que ho vegin les famílies)
@@ -422,7 +424,7 @@ const PLA_TXT = { mes: ['Mensual · 4,99 € al mes', 'Mensual · 4,99 € al me
 let PREM_PLA = 'any';
 function buyPremium(pla) {
   // un menor de 14 anys no contracta res des de l'app: un adult ho fa des del correu o la zona de famílies
-  if (needsFam()) return famModal();
+  if (!adultPay()) return famModal();
   if (pla) PREM_PLA = pla === 'mes' ? 'mes' : 'any';
   if (!P || !P.code) { syncNow(); return toast(L('Primer cal guardar el perfil al núvol: connecta\'t a internet i torna-ho a provar.', 'Primero hay que guardar el perfil en la nube: conéctate a internet y vuelve a probarlo.')); }
   const pb = (k, t, pr, per, tag) => `<button class="${PREM_PLA === k ? 'sel' : ''} ${k === 'any' ? 'best' : ''}" onclick="buyPremium('${k}')">${tag ? `<i>${tag}</i>` : ''}<b>${t}</b><span>${pr}<small>/${per}</small></span></button>`;
@@ -482,7 +484,8 @@ function premiumBox() {
       : L(`${per} · es renova el ${dayLong(S.renova)}.`, `${per} · se renueva el ${dayLong(S.renova)}.`);
     return `<div class="prem-box on"><b>⭐ ${VAR.name} Premium</b><span>${estat}</span>
       ${S ? (S.cancel ? `<button class="btn sm gold" onclick="subResume()">${L('REACTIVA LA SUBSCRIPCIÓ', 'REACTIVAR LA SUSCRIPCIÓN')}</button>`
-        : `<button class="btn sm ghost redt" onclick="subCancel(1)">${L('CANCEL·LA LA SUBSCRIPCIÓ', 'CANCELAR LA SUSCRIPCIÓN')}</button>`) : ''}</div>`;
+        : `<button class="btn sm ghost redt" onclick="subCancel(1)">${L('CANCEL·LA LA SUBSCRIPCIÓ', 'CANCELAR LA SUSCRIPCIÓN')}</button>`) : ''}
+      ${S && S.desist && adultPay() ? `<button class="link desistl" onclick="desistModal()">${L(`Desisteix i recupera els diners (fins al ${dayLong(S.desist)})`, `Desistir y recuperar el dinero (hasta el ${dayLong(S.desist)})`)}</button>` : ''}</div>`;
   }
   return `<div class="prem-box"><b>${L('Pla gratuït', 'Plan gratuito')}</b><span>${IS_MENT ? L('La sessió diària completa i una partida de cada joc al dia. Amb Premium, tots els jocs sense límit i reptes amb amics.', 'La sesión diaria completa y una partida de cada juego al día. Con Premium, todos los juegos sin límite y retos con amigos.') : L('1 lliçó nova i 3 entrenaments al dia. Amb Premium, sense límit, amb batalles i ruta de temporada.', '1 lección nueva y 3 entrenamientos al día. Con Premium, sin límite, con batallas y ruta de temporada.')}</span>
     <button class="btn sm gold" onclick="${IS_MENT ? 'mPremium(1)' : 'premiumModal()'}">${L('QUÈ ÉS PREMIUM?', '¿QUÉ ES PREMIUM?')}</button></div>`;
@@ -500,6 +503,25 @@ function subCancel(step) {
     <p class="err" id="suberr"></p>
     <button class="btn big red" id="subgo" disabled onclick="subDo(false)">${L('CANCEL·LA LA SUBSCRIPCIÓ', 'CANCELAR LA SUSCRIPCIÓN')}</button>
     <button class="btn ghost big" onclick="closeModal()">${L('TORNA', 'VOLVER')}</button></div>`, true);
+}
+// Desistiment (14 dies): es cancel·la ara mateix i es torna tot el que s'ha pagat. Per a menors, només des de la zona de famílies.
+function desistModal() {
+  const S = P.sub; if (!S || !S.desist) return;
+  modal(`<div class="sheet card cent prem-sheet"><h3>${L('Desistir de Premium', 'Desistir de Premium')}</h3>
+    <p>${L(`Estàs dins dels 14 dies per desistir (fins al <b>${dayLong(S.desist)}</b>). Premium s'acaba <b>ara mateix</b> i et tornem <b>tot</b> el que has pagat a la mateixa targeta (pot trigar uns dies a aparèixer). No perds cap progrés.`, `Estás dentro de los 14 días para desistir (hasta el <b>${dayLong(S.desist)}</b>). Premium se acaba <b>ahora mismo</b> y te devolvemos <b>todo</b> lo que has pagado en la misma tarjeta (puede tardar unos días en aparecer). No pierdes ningún progreso.`)}</p>
+    <label class="prem-ok"><input type="checkbox" onchange="$('#desgo').disabled=!this.checked"> <span>${IS_MENT ? L('Vull desistir del contracte de Premium.', 'Quiero desistir del contrato de Premium.') : L('Sóc el pare, la mare o el tutor legal i vull desistir del contracte de Premium.', 'Soy el padre, la madre o el tutor legal y quiero desistir del contrato de Premium.')}</span></label>
+    <p class="err" id="deserr"></p>
+    <button class="btn big red" id="desgo" disabled onclick="desistGo()">${L('DESISTEIX I RETORNA ELS DINERS', 'DESISTIR Y DEVOLVER EL DINERO')}</button>
+    <button class="btn ghost big" onclick="closeModal()">${L('TORNA', 'VOLVER')}</button></div>`, true);
+}
+async function desistGo() {
+  const b = $('#desgo'), e = $('#deserr'); if (!b || b.disabled) return; b.disabled = true; b.textContent = L('UN MOMENT…', 'UN MOMENTO…');
+  try {
+    const r = await api('pay?a=desist', { code: P.code });
+    if (r.ok) { P.sub = null; P.pla = 'free'; saveLocal(); closeModal(); renderProfile(); return toast(L(`Fet: Premium cancel·lat i ${((r.refunded || 0) / 100).toFixed(2).replace('.', ',')} € retornats.`, `Hecho: Premium cancelado y ${((r.refunded || 0) / 100).toFixed(2).replace('.', ',')} € devueltos.`)); }
+    e.textContent = r.error === 'termini' ? L('Ja han passat els 14 dies. Pots cancel·lar-lo perquè no es renovi.', 'Ya han pasado los 14 días. Puedes cancelarlo para que no se renueve.') : r.error === 'adult' ? L('Ho ha de fer un adult des de la zona de famílies.', 'Lo tiene que hacer un adulto desde la zona de familias.') : r.error === 'dispositiu' ? L('Això només es pot fer des del dispositiu on es va crear el perfil.', 'Esto solo se puede hacer desde el dispositivo donde se creó el perfil.') : r.status === 429 ? ERR('massa') : L("No s'ha pogut fer. Escriu-nos a hola@numimates.com i ho fem nosaltres.", 'No se ha podido hacer. Escríbenos a hola@numimates.com y lo hacemos nosotros.');
+  } catch (x) { e.textContent = ERR(); }
+  b.disabled = false; b.textContent = L('DESISTEIX I RETORNA ELS DINERS', 'DESISTIR Y DEVOLVER EL DINERO');
 }
 function subResume() { subDo(true); }
 async function subDo(resume) {
@@ -685,13 +707,22 @@ function renderLesson() {
     ${LS.mode === 'battle' ? '<div class="bstrip" id="bstrip"></div>' : ''}${LS.exam ? `<div class="gate"><span class="gt">🏰 ${L('La porta del Cavaller', 'La puerta del Caballero')}</span>${[...Array(LS.total).keys()].map(i => `<i class="${i < LS.eres.length ? (LS.eres[i] ? 'k' : 'x') : ''}">${i < LS.eres.length ? (LS.eres[i] ? '🔑' : '·') : '🔒'}</i>`).join('')}</div>` : ''}
     <div class="l-body" id="lbody">
       ${e.retry ? `<div class="retry">🔁 ${L('Una altra oportunitat', 'Otra oportunidad')}</div>` : ''}${e.gold ? `<div class="retry goldq">⭐ ${L('Pregunta daurada: XP doble!', '¡Pregunta dorada: XP doble!')}</div>` : ''}${e.review ? `<div class="retry rev">🧠 ${L('Repàs sorpresa', 'Repaso sorpresa')}</div>` : ''}${tag ? `<div class="retry place">${tag}</div>` : ''}
-      <div class="l-q ${e.long ? 'long' : ''}"><div class="buddy tapme" id="buddy">${meC('think')}</div><div class="bubble">${e.q}</div></div>
+      <div class="l-q ${e.long ? 'long' : ''}"><div class="buddy tapme" id="buddy">${meC('think')}</div><div class="bubble">${e.q}${canSpeak() ? `<button class="speak" onclick="speakQ()" aria-label="${L('Escolta la pregunta', 'Escucha la pregunta')}" title="${L('Escolta la pregunta', 'Escucha la pregunta')}">🔊</button>` : ''}</div></div>
       ${e.vis ? `<div class="l-vis">${e.vis}</div>` : ''}
       <div class="l-ans">${ansHTML(e)}</div>
     </div>
     <div class="l-foot" id="foot"><div class="fwrap"><div class="fb" id="fb"></div>${quiet ? `<button class="btn ghost skip" onclick="skipPlace()">${L('NO HO SÉ', 'NO LO SÉ')}</button>` : LS.mode === 'battle' || LS.exam ? '' : (LS.helps || 0) >= HINTS && !e.helped ? '' : `<button class="btn hintb ${e.retry ? 'nudge' : ''}" id="hintb" onclick="showHint()" data-n="${HINTS - (LS.helps || 0)}" aria-label="${L('Com es fa?', '¿Cómo se hace?')}" title="${L('Com es fa?', '¿Cómo se hace?')}"><img class="hic" src="img/ic/bulb.webp" alt="" draggable="false"></button>`}<button class="btn check" id="chk" onclick="check()" disabled>${L('COMPROVA', 'COMPRUEBA')}</button></div></div>
   </div>`;
   if (LS.mode === 'battle') { LS.q0 = Date.now(); battleStrip(); }
+}
+// Lectura en veu alta de la pregunta (Numi Mates; sobretot per als de 6-7 anys). Només si el dispositiu té una veu en l'idioma.
+const speakVoice = () => { try { const v = speechSynthesis.getVoices(), p = LANG === 'es' ? 'es' : 'ca'; return v.find(x => x.lang && x.lang.toLowerCase().startsWith(p + '-')) || v.find(x => x.lang && x.lang.toLowerCase().startsWith(p)); } catch (e) { return null; } };
+const canSpeak = () => !IS_PRO && !IS_MENT && 'speechSynthesis' in window && !!speakVoice();
+try { speechSynthesis.getVoices(); speechSynthesis.onvoiceschanged = () => { }; } catch (e) { }
+function speakQ() {
+  const e = LS && LS.cur; if (!e) return;
+  const t = String(e.q).replace(/<span class="hint">.*?<\/span>/g, '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').replace(/[·×]/g, L(' per ', ' por ')).replace(/÷/g, ' entre ').replace(/−/g, L(' menys ', ' menos ')).trim();
+  try { speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(t), v = speakVoice(); if (v) { u.voice = v; u.lang = v.lang; } u.rate = .92; speechSynthesis.speak(u); } catch (x) { }
 }
 function padHTML(fn, extra) {
   const last = extra ? `<button class="pk-x" onclick="${fn}('${extra}')">${extra}</button>` : `<button class="pk-ok" onclick="${fn}('ok')" aria-label="OK">✓</button>`;
@@ -1318,8 +1349,15 @@ function renderShop() {
     <h2 class="h2">${L('Ajudes', 'Ayudas')}</h2><div class="item wide"><div class="ipic big-emoji">🧊</div><div><div class="iname">${L('Protector de ratxa', 'Protector de racha')}</div><div class="idesc">${L(`Si un dia no pots practicar, la ratxa no s'apaga. En tens ${P.freeze} de 2.`, `Si un día no puedes practicar, la racha no se apaga. Tienes ${P.freeze} de 2.`)}</div></div>
     <button class="btn sm gold" ${P.gems < 50 || P.freeze >= 2 ? 'disabled' : ''} onclick="buyFreeze()"><i class="ci">${ICON.gem}</i>50</button></div>`, 'shop');
 }
+// compres de 100 💎 o més: primer es confirma (un toc sense voler no s'ha de menjar els diamants)
+function buyAsk(price, what, fn) {
+  if (price < 100 || buyAsk.ok) { buyAsk.ok = false; return fn(); }
+  ask(L(`Vols gastar <b>${price} 💎</b> en ${what}?`, `¿Quieres gastar <b>${price} 💎</b> en ${what}?`), L('SÍ, COMPRA', 'SÍ, COMPRA'), L('ARA NO', 'AHORA NO'), () => { buyAsk.ok = true; fn(); });
+}
 function buyChar(id) {
   const c = CH[id]; if (c.price == null || P.gems < c.price || P.owned.includes(id)) return;
+  if (!buyAsk.ok && c.price >= 100) return buyAsk(c.price, `<b>${tx(c.name)}</b>`, () => buyChar(id));
+  buyAsk.ok = false;
   P.gems -= c.price; P.owned.push(id); P.companion = id;
   const nb = checkBadges(); save(); SFX.coin(); confetti(100); renderShop();
   modal(`<div class="sheet card cent"><div class="mchar tapme">${charSVG(id, 'happy', P.acc)}</div><h3>${L(`${tx(c.name)} s'uneix a la colla!`, `¡${tx(c.name)} se une a la pandilla!`)}</h3><p>«${tx(c.hello)}»</p><button class="btn big" onclick="closeModal()">${L('GENIAL!', '¡GENIAL!')}</button></div>`, true);
@@ -1328,6 +1366,8 @@ function buyChar(id) {
 function choose(id) { P.companion = id; save(); SFX.tap(); renderShop(); }
 function buyAcc(id) {
   const a = ACC[id]; if (a.price == null || P.gems < a.price || P.accOwned.includes(id)) return;
+  if (!buyAsk.ok && a.price >= 100) return buyAsk(a.price, `<b>${tx(a.name)}</b>`, () => buyAcc(id));
+  buyAsk.ok = false;
   P.gems -= a.price; P.accOwned.push(id); P.acc = { [a.slot]: id };
   const nb = checkBadges(); save(); SFX.coin(); confetti(60); renderShop();
   toast(`${tx(a.name)} ✨`); nb.forEach(b => setTimeout(() => toast(`${b[1]} ${L('Nova medalla', 'Nueva medalla')}: <b>${tx(b[2])}</b> (+10 💎)`), 900));
@@ -1335,7 +1375,7 @@ function buyAcc(id) {
 function toggleAcc(id) { const s = ACC[id].slot; if (P.acc[s] === id) delete P.acc[s]; else P.acc = { [s]: id }; // un accessori a la vegada
   save(); SFX.tap(); renderShop(); }
 const NIKE_PRICE = 250;
-function buyNike() { if (P.gems < NIKE_PRICE) return; P.gems -= NIKE_PRICE; albumFix(); const dup = !!P.album.nike; P.album.nike = (P.album.nike || 0) + 1; save(); SFX.coin(); FLOW = [() => scrPack([{ s: cardById('nike'), dup }])]; FLOW.back = 'shop'; flowNext(); }
+function buyNike() { if (P.gems < NIKE_PRICE) return; if (!buyAsk.ok && NIKE_PRICE >= 100) return buyAsk(NIKE_PRICE, L('la carta de Nike', 'la carta de Nike'), buyNike); buyAsk.ok = false; P.gems -= NIKE_PRICE; albumFix(); const dup = !!P.album.nike; P.album.nike = (P.album.nike || 0) + 1; save(); SFX.coin(); FLOW = [() => scrPack([{ s: cardById('nike'), dup }])]; FLOW.back = 'shop'; flowNext(); }
 function buyFreeze() { if (P.gems < 50 || P.freeze >= 2) return; P.gems -= 50; P.freeze++; save(); SFX.coin(); renderShop(); toast(L('🧊 Protector de ratxa preparat!', '🧊 ¡Protector de racha listo!')); }
 
 /* ---------- Medalles ---------- */
@@ -1352,6 +1392,19 @@ const LIKE = { calc: ['🧮 Calcular', '🧮 Calcular'], logic: ['🧩 Enigmes i
 /* ---------- Informe per a la família: l'alumne escriu el correu d'un adult, que rep una invitació per confirmar-ho
    (amb aquell clic dona l'autorització) i, a partir d'aquí, l'informe setmanal. El correu no es desa a l'app. ---------- */
 const maskMail = m => { const [u, d] = String(m).split('@'); return (u.length <= 2 ? u[0] + '*' : u.slice(0, 2) + '***') + '@' + d; };
+// Instal·lar l'app a la pantalla d'inici (és una web app: sense botiga). Android/Chrome: el botó del sistema; iPhone: Compartir.
+let INSTALL_EV = null;
+addEventListener('beforeinstallprompt', e => { e.preventDefault(); INSTALL_EV = e; });
+const standalone = () => { try { return matchMedia('(display-mode: standalone)').matches || navigator.standalone === true; } catch (e) { return false; } };
+function installBox() {
+  if (standalone()) return '';
+  const ios = /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  return `<h2 class="h2">📲 ${L("Instal·la l'app", 'Instala la app')}</h2><div class="famcard"><p>${INSTALL_EV ? L(`Posa ${VAR.name} a la pantalla d'inici i obre-la com qualsevol altra app.`, `Pon ${VAR.name} en la pantalla de inicio y ábrela como cualquier otra app.`)
+    : ios ? L(`A l'iPhone o l'iPad, amb Safari: toca <b>Compartir</b> (el quadrat amb la fletxa) i després <b>Afegeix a la pantalla d'inici</b>.`, `En el iPhone o el iPad, con Safari: toca <b>Compartir</b> (el cuadrado con la flecha) y después <b>Añadir a la pantalla de inicio</b>.`)
+    : L(`Obre el menú del navegador (⋮) i tria <b>Instal·la l'aplicació</b> o <b>Afegeix a la pantalla d'inici</b>.`, `Abre el menú del navegador (⋮) y elige <b>Instalar aplicación</b> o <b>Añadir a la pantalla de inicio</b>.`)}</p>
+    ${INSTALL_EV ? `<button class="btn sm" onclick="installGo()">${L('INSTAL·LA', 'INSTALAR')}</button>` : ''}</div>`;
+}
+async function installGo() { if (!INSTALL_EV) return; INSTALL_EV.prompt(); try { await INSTALL_EV.userChoice; } catch (e) { } INSTALL_EV = null; if (VIEW === 'profile') renderProfile(); }
 function famBox(inModal) {
   if (!P.code) return `<div class="famcard"><p>${L("Quan el teu perfil estigui desat, podràs fer que la teva família rebi un informe setmanal del que aprens.", 'Cuando tu perfil esté guardado, podrás hacer que tu familia reciba un informe semanal de lo que aprendes.')}</p></div>`;
   const inv = P.famInv, ask = famAsk();
@@ -1413,7 +1466,7 @@ renderProfile.inner = function () {
       <div class="ctip">${P.username ? L('Entra des de qualsevol dispositiu amb el teu usuari i contrasenya.', 'Entra desde cualquier dispositivo con tu usuario y contraseña.') : L('Amb usuari i contrasenya podràs entrar des de qualsevol dispositiu.', 'Con usuario y contraseña podrás entrar desde cualquier dispositivo.')}${P.code ? `<br><small class="codesm">${L('Codi del compte', 'Código de la cuenta')}: <b>${P.code}</b> · ${L('per a la zona de famílies i per recuperar el compte', 'para la zona de familias y para recuperar la cuenta')}</small>` : ''}</div>
       <button class="btn sm gold" onclick="accountModal()">${P.username ? L('CANVIA LA CONTRASENYA', 'CAMBIAR LA CONTRASEÑA') : L('CREA USUARI I CONTRASENYA', 'CREAR USUARIO Y CONTRASEÑA')}</button></div>
     <h2 class="h2">🏫 ${L('La meva classe', 'Mi clase')}</h2>${classeBox()}
-    <h2 class="h2">${famAsk() ? '🔒 ' + L('Permís de casa', 'Permiso de casa') : '📬 ' + L('Informe per a la família', 'Informe para la familia')}</h2>${famBox()}
+    <h2 class="h2">${famAsk() ? '🔒 ' + L('Permís de casa', 'Permiso de casa') : '📬 ' + L('Informe per a la família', 'Informe para la familia')}</h2>${famBox()}${installBox()}
     ${P.classe ? `<h2 class="h2">🏅 ${L('Medalles de la profe', 'Medallas de la profe')}</h2><div id="pmedals"><p class="empty">…</p></div>` : ''}
     ${P.classe ? '' : `<h2 class="h2">⭐ ${L('El meu pla', 'Mi plan')}</h2>${premiumBox()}`}
     ${sv ? `<h2 class="h2">${L("Prova d'inici", 'Prueba inicial')}</h2><div class="survey"><div><span>${L('Curs', 'Curso')}</span><b>${esc(sv.curs)}</b></div><div><span>${L('Les mates…', 'Las mates…')}</span><b>${FEEL[sv.feel] ? tx(FEEL[sv.feel]) : '—'}</b></div><div><span>${L("M'agrada", 'Me gusta')}</span><b>${LIKE[sv.like] ? tx(LIKE[sv.like]) : '—'}</b></div><div><span>${L('Resultat', 'Resultado')}</span><b>${esc(sv.result)}</b></div></div>` : ''}
@@ -1642,8 +1695,14 @@ function onbStage(k) {
 }
 function onbAge(a) {
   ONB.age = a;
+  // l'edat només proposa el curs: a l'inici de curs molts encara no han fet anys, per això es pregunta
   ONB.course = ONB.stage === 'eso' ? Math.min(9, Math.max(ESO_FROM, a - 6)) : Math.min(5, Math.max(0, a - 6));
-  onb(2);
+  onbCourse();
+}
+function onbCourse() {
+  const idx = ONB.stage === 'eso' ? [...Array(Math.min(9, COURSES.length - 1) - ESO_FROM + 1).keys()].map(i => i + ESO_FROM) : [0, 1, 2, 3, 4, 5];
+  onbShell(1, `<div class="onb-char sm tapme">${charSVG('numi', 'idle')}</div><div class="bubble big">${L('<b>Quin curs fas?</b>', '<b>¿Qué curso haces?</b>')}</div>
+    <div class="cgrid ages">${idx.map((ci, i) => `<button class="cbtn ${ONB.course === ci ? 'on' : ''}" style="animation-delay:${i * 40}ms" onclick="ONB.course=${ci};onb(2)"><b>${ci - (ONB.stage === 'eso' ? ESO_FROM : 0) + 1}${L(['r', 'n', 'r', 't', 'è', 'è'][ci - (ONB.stage === 'eso' ? ESO_FROM : 0)], '.º')}</b><small>${ONB.stage === 'eso' ? 'ESO' : L('primària', 'primaria')}</small></button>`).join('')}</div>`);
 }
 function onbName() { const n = $('#nm').value.trim(); if (!n) { $('#nm').classList.add('shake'); setTimeout(() => $('#nm').classList.remove('shake'), 500); return; } ONB.name = n; if (HOST_VAR === 'ment') { ONB.stage = 'altres'; ONB.variant = 'ment'; return onbMent(); } onb(1); }
 // prova de nivell per a un compte que ja existeix (alta feta pel docent): es fa sobre el mateix perfil

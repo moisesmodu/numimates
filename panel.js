@@ -317,7 +317,7 @@ async function medalDel(id, code) { if (!await confirmBox(L('Treure aquesta meda
 /* ---------- Correus (només administració): esborranys HTML, prova, enviament ara o programat ---------- */
 let MLS = null, MED = null;
 const mapi = async (action, extra = {}) => { const r = await fetch('/api/mails', { method: 'POST', headers: { ...AUTH(), 'content-type': 'application/json' }, body: JSON.stringify({ action, ...extra }) }).catch(() => null); return r ? r.json().catch(() => ({ error: 'xarxa' })) : { error: 'xarxa' }; };
-const MST = { esborrany: ['Esborrany|Borrador', 'none'], programat: ['Programat|Programado', 'purple'], enviant: ['Enviant…|Enviando…', 'gold'], enviat: ['Enviat|Enviado', 'good'] };
+const MST = { esborrany: ['Esborrany|Borrador', 'none'], programat: ['Programat|Programado', 'purple'], preparant: ['Preparant…|Preparando…', 'gold'], enviant: ['Enviant…|Enviando…', 'gold'], enviat: ['Enviat|Enviado', 'good'] };
 const mkpi = (l, v, m) => `<div class="kpi"><span class="kpi-l">${l}</span><span class="kpi-v">${v}</span><span class="kpi-m">${m}</span></div>`;
 const MAUD = [['docents', 'Docents|Docentes'], ['families', 'Famílies que volen novetats|Familias que quieren novedades'], ['contactes', 'Contactes del web|Contactos de la web'], ['premium', 'Clients de Premium (Stripe)|Clientes de Premium (Stripe)']];
 const fdt = d => { if (!d) return '—'; const x = new Date(d); return `${x.getDate()} ${MES[LANG][x.getMonth()]} ${String(x.getHours()).padStart(2, '0')}:${String(x.getMinutes()).padStart(2, '0')}`; };

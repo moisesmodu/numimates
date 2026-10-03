@@ -944,3 +944,13 @@ html[data-v=ment] .mpage .nav button.on .ni{animation:mnav .5s cubic-bezier(.2,.
 .mi-art+.mi-hero{margin-top:-46px;margin-inline:12px;position:relative;z-index:2}
 /* la barra de navegació ha de quedar fixa (la regla .mpage>* li treia el position:fixed) */
 .mpage>.nav{position:fixed}
+/* resultat: nota (p. ex. «Amb pistes no compta per al rècord») */
+.mres2 .mr-note{margin:8px auto 0!important;display:table;font-size:15px!important;font-weight:600;color:var(--mut);background:rgba(0,0,0,.05);border-radius:12px;padding:6px 12px}
+/* presentació del joc en pantalles d'ordinador baixes (1280×800, 1366×768…): el botó «Juga» ha de quedar a la vista.
+   La il·lustració s'aprima (es retalla, no es deforma) i «Escolta-ho» va al costat de «Juga». */
+@media (min-width:700px) and (max-height:940px){
+  .mi-art{aspect-ratio:auto;height:clamp(130px,24vh,300px)}
+  .mi-acts{display:flex;align-items:stretch;gap:12px}
+  .mi-acts .mplay{flex:1;width:auto}
+  .mi-acts .mspeak{flex:none}
+}

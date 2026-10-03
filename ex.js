@@ -6,6 +6,31 @@ const fmt = n => (n < 0 ? '−' : '') + String(Math.abs(n)).replace(/\B(?=(\d{3}
 const pad = n => String(n).padStart(2, '0');
 const eur = c => { const e = Math.floor(c / 100), r = c % 100; return (r ? e + ',' + pad(r) : String(e)) + ' €'; };
 const cap = s => s[0].toUpperCase() + s.slice(1);
+// Singular amb 1: nW(1, 'desena|desenes', 'decena|decenas') → «1 desena»; nW(3, …) → «3 desenes»
+const nW = (n, ca, es) => { const [s, p] = L(ca, es).split('|'); return `${n} ${+n === 1 ? s : p}`; };
+const nCen = n => nW(n, 'centena|centenes', 'centena|centenas'), nDes = n => nW(n, 'desena|desenes', 'decena|decenas'), nUni = n => nW(n, 'unitat|unitats', 'unidad|unidades');
+/* Apòstrofs en català (s'aplica a tots els enunciats, opcions i explicacions; vegeu fun.js):
+   «de» s'apostrofa davant de vocal o h + vocal (d'escriure, d'agost, d'hores), i «de», «el», «del», «al» i «pel»
+   també davant de l'1 i l'11, que es llegeixen «u» i «onze» (d'1 m, l'1 %, de l'11 al 15, a l'1, l'11a).
+   No s'apostrofa davant de i/u + vocal (de iogurt, de hiena), ni de «el/els», ni dels ordinals 1r/1a (el primer, la primera),
+   ni de 1.000 (mil). El codi (<code>), els dibuixos (<svg>) i els estils queden intactes. */
+const CA_B = "(^|[^\\p{L}\\p{N}'’·])", CA_T = '((?:<[^>]+>)*)', CA_N = '(11|1(?![ra]\\b|er\\b))(?![\\d:]|\\.\\d)';
+const CA_RX = [
+  [new RegExp(CA_B + '([Dd])e ' + CA_T + "(?!h?[iuIU][aeiouàèéíòóú])(?!els?\\b)(?=[aeiouàèéíòóúAEIOUÀÈÉÍÒÓÚ]|[hH][aeiouàèéíòóú])", 'gu'), "$1$2'$3"],
+  [new RegExp(CA_B + '([Dd])e ' + CA_T + CA_N, 'gu'), "$1$2'$3$4"],
+  [new RegExp(CA_B + '([Ee])l ' + CA_T + CA_N, 'gu'), (m, b, e, t, n) => `${b}${e === 'E' ? 'L' : 'l'}'${t}${n}`],
+  [new RegExp(CA_B + '([Dd])el ' + CA_T + CA_N, 'gu'), "$1$2e l'$3$4"],
+  [new RegExp(CA_B + '([Aa])l ' + CA_T + CA_N, 'gu'), "$1$2 l'$3$4"],
+  [new RegExp(CA_B + '([Pp])el ' + CA_T + CA_N, 'gu'), "$1$2er l'$3$4"],
+  [new RegExp(CA_B + '([Ll])a ' + CA_T + '(11(?:a|ena)\\b)', 'gu'), "$1$2'$3$4"],
+];
+function caApos(s) {
+  if (typeof s !== 'string' || LANG === 'es') return s;
+  const keep = [];
+  s = s.replace(/<(code|svg|style)\b[\s\S]*?<\/\1>/g, m => `\u0001${keep.push(m) - 1}\u0002`);
+  for (const [re, to] of CA_RX) s = s.replace(re, to);
+  return s.replace(/\u0001(\d+)\u0002/g, (_, i) => keep[i]);
+}
 
 function mc(q, correct, dis, o = {}) {
   const c = String(correct), set = [c];
@@ -170,6 +195,8 @@ const FOF = d => L({ 2: 'la meitat', 3: 'un terç', 4: 'un quart', 5: 'un cinqu�
 const HW = ['', 'una', 'dues', 'tres', 'quatre', 'cinc', 'sis', 'set', 'vuit', 'nou', 'deu', 'onze', 'dotze'];
 const HWE = ['', 'una', 'dos', 'tres', 'cuatro', 'cinco', 'seis', 'siete', 'ocho', 'nueve', 'diez', 'once', 'doce'];
 const deH = h => (h === 1 || h === 11) ? `d'${HW[h]}` : `de ${HW[h]}`;
+// «és la 1:15» però «són les 3:15»
+const sonLes = h => h === 1 ? L('és la', 'es la') : L('són les', 'son las');
 const lesH = h => L(h === 1 ? 'la una' : 'les ' + HW[h], h === 1 ? 'la una' : 'las ' + HWE[h]);
 const QN = ['', 'un quart', 'dos quarts', 'tres quarts'];
 function quartName(h, m) {
@@ -453,7 +480,7 @@ const EX = {
     const d = pick(L_ <= 1 ? [2, 4] : L_ <= 4 ? [2, 3, 4, 5, 6, 8] : [3, 4, 5, 6, 8, 10]), n = ri(1, d - 1), col = pick(COLS);
     const vis = (Math.random() < .5 || d > 8) ? barSVG(n, d, col) : pieSVG(n, d, col);
     const dis = [[d - n, d], [n, d - n], [d, n], [n, d + 1]].filter(([a, b]) => a > 0 && b > 0 && !(a === n && b === d));
-    return mc(L('Quina fracció està <b>pintada</b>?', '¿Qué fracción está <b>pintada</b>?'), frac(n, d), dis.map(([a, b]) => frac(a, b)), { vis, big: true, ex: L(`Hi ha ${d} parts iguals i n'hi ha ${n} de pintades: ${n}/${d} (${fracName(n, d)}).`, `Hay ${d} partes iguales y hay ${n} pintadas: ${n}/${d} (${fracName(n, d)}).`) });
+    return mc(L('Quina fracció està <b>pintada</b>?', '¿Qué fracción está <b>pintada</b>?'), frac(n, d), dis.map(([a, b]) => frac(a, b)), { vis, big: true, ex: L(`Hi ha ${d} parts iguals i n'hi ha ${n} de ${n === 1 ? 'pintada' : 'pintades'}: ${n}/${d} (${fracName(n, d)}).`, `Hay ${d} partes iguales y hay ${n} ${n === 1 ? 'pintada' : 'pintadas'}: ${n}/${d} (${fracName(n, d)}).`) });
   },
   'f.read': L_ => {
     const dens = [2, 3, 4, 5, 6, 8, 10], d = pick(dens), n = ri(1, d - 1);
@@ -531,13 +558,13 @@ function clockEx(mode) {
   const h = ri(1, 12), m = mode === 'o' ? 0 : mode === 'h' ? pick([0, 30]) : mode === 'q' ? pick([0, 15, 30, 45]) : mode === 'five' ? ri(0, 11) * 5 : pick([15, 30, 45]);
   const nx = h % 12 + 1, pv = h === 1 ? 12 : h - 1;
   if (mode === 'name') {
-    const ex = L(`«${quartName(h, m)}» vol dir que ja ha passat ${QN[m / 15]} d'hora cap a ${lesH(nx)}: són les ${dig(h, m)}.`, `«${cap(quartName(h, m))}» son las ${dig(h, m)}.`);
+    const ex = L(`«${quartName(h, m)}» vol dir que ja ha passat ${QN[m / 15]} d'hora cap a ${lesH(nx)}: ${sonLes(h)} ${dig(h, m)}.`, `«${cap(quartName(h, m))}» ${sonLes(h)} ${dig(h, m)}.`);
     if (Math.random() < .5) return mc(Q, quartName(h, m), [quartName(nx, m), quartName(h, m === 45 ? 15 : m + 15), quartName(pv, m)], { vis: clockSVG(h, m), list: true, ex });
     return mc(L(`Quina hora és «<b>${quartName(h, m)}</b>»?`, `¿Qué hora es «<b>${quartName(h, m)}</b>»?`), dig(h, m), [dig(nx, m), dig(h, (m + 30) % 60), dig(pv, m)], { ex });
   }
   const dis = [dig(nx, m), dig(h, (m + 30) % 60), dig(pv, m)];
   if (m) dis.unshift(dig(m / 5, (h % 12) * 5));
-  return mc(Q, dig(h, m), dis, { vis: clockSVG(h, m), ex: L(`L'agulla petita marca les hores (${m ? 'ha passat el ' + h : 'és al ' + h}) i la gran, vermella, els minuts (${m}): són les ${dig(h, m)}.`, `La aguja pequeña marca las horas (${m ? 'ha pasado el ' + h : 'está en el ' + h}) y la grande, roja, los minutos (${m}): son las ${dig(h, m)}.`) });
+  return mc(Q, dig(h, m), dis, { vis: clockSVG(h, m), ex: L(`L'agulla petita marca les hores (${m ? 'ha passat ' + (h === 1 || h === 11 ? "l'" : 'el ') + h : 'és ' + (h === 1 || h === 11 ? "a l'" : 'al ') + h}) i la gran, vermella, els minuts (${m}): ${sonLes(h)} ${dig(h, m)}.`, `La aguja pequeña marca las horas (${m ? 'ha pasado el ' + h : 'está en el ' + h}) y la grande, roja, los minutos (${m}): ${sonLes(h)} ${dig(h, m)}.`) });
 }
 function shapeEx(list) {
   const [id, s] = pick(list), col = pick(COLS), v = Math.random(), nm = shn(id);

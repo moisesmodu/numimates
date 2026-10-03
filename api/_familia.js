@@ -120,7 +120,7 @@ async function data(req, res, fam) {
   let f; try { f = (await sql`SELECT email, informe, promo FROM mates.families WHERE id = ${fam}`)[0]; } catch (e) { f = (await sql`SELECT email FROM mates.families WHERE id = ${fam}`)[0]; }
   if (!f) return ok(res, { error: 'sessió' }, 401);
   const rows = await sql`SELECT a.code, a.name, a.course, a.xp, a.streak, a.last_day, a.lessons, a.answers, a.correct, a.pla, a.pla_fins, a.grup_id,
-      a.stripe_sub, a.pla_periode, a.pla_cancel, a.stripe_status, a.active, g.nom AS grup,
+      a.stripe_sub, a.pla_periode, a.pla_cancel, a.stripe_status, a.pla_inici, a.active, g.nom AS grup,
       a.state->'days' AS days, a.state->'exams' AS exams, a.state->'stats'->'sk' AS sk, a.state->'prog' AS prog, a.state->'companion' AS companion, k.kid
     FROM mates.familia_fills ff JOIN mates.alumnes a ON a.code = ff.code LEFT JOIN mates.grups g ON g.id = a.grup_id
       LEFT JOIN LATERAL (SELECT kid FROM mates.familia_links fl WHERE fl.code = a.code AND fl.kid IS NOT NULL ORDER BY fl.created DESC LIMIT 1) k ON true
@@ -152,6 +152,12 @@ export default async function familia(req, res) {
     if (typeof b.promo === 'boolean') await sql`UPDATE mates.families SET promo = ${b.promo} WHERE id = ${fam}`;
     return data(req, res, fam);
   }
-  if (a === 'remove') { await sql`DELETE FROM mates.familia_fills WHERE familia_id = ${fam} AND code = ${cleanCode(b.code)}`; return data(req, res, fam); }
+  if (a === 'remove') {
+    const c = cleanCode(b.code);
+    await sql`DELETE FROM mates.familia_fills WHERE familia_id = ${fam} AND code = ${c}`;
+    // si ja no hi ha cap adult vinculat, el permís es retira: el perfil del menor deixa de desar-se al núvol (fora de l'escola)
+    if (!(await sql`SELECT 1 FROM mates.familia_fills WHERE code = ${c} LIMIT 1`).length) await sql`UPDATE mates.alumnes SET consent = 'pending' WHERE code = ${c} AND consent = 'ok' AND grup_id IS NULL`;
+    return data(req, res, fam);
+  }
   return ok(res, { error: 'acció' }, 400);
 }

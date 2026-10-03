@@ -433,7 +433,7 @@ const THEORY = {
 },
 {
 "t": "Comptem euros|Contamos euros",
-"x": "Hi ha monedes de 1 € i 2 €. Hi ha bitllets de 5 € i 10 €. Cada un val el número que porta. Suma'ls tots, començant pel més gran.|Hay monedas de 1 € y 2 €. Hay billetes de 5 € y 10 €. Cada uno vale el número que lleva. Súmalos todos, empezando por el mayor.",
+"x": "Hi ha monedes d'1 € i 2 €. Hi ha bitllets de 5 € i 10 €. Cada un val el número que porta. Suma'ls tots, començant pel més gran.|Hay monedas de 1 € y 2 €. Hay billetes de 5 € y 10 €. Cada uno vale el número que lleva. Súmalos todos, empezando por el mayor.",
 "ex": [
 "Un bitllet de 10 € i un de 5 €|Un billete de 10 € y uno de 5 €",
 "Dues monedes de 2 €|Dos monedas de 2 €",
@@ -488,7 +488,7 @@ const THEORY = {
 "Mira el número de cada moneda: 2 € + 2 € + 1 € = 5 €.|Mira el número de cada moneda: 2 € + 2 € + 1 € = 5 €."
 ],
 [
-"«El llapis va del 1 al 9: fa 9 cm.»|«El lápiz va del 1 al 9: mide 9 cm.»",
+"«El llapis va de l'1 al 9: fa 9 cm.»|«El lápiz va del 1 al 9: mide 9 cm.»",
 "No comença al 0. Resta: 9 − 1 = 8. Fa 8 cm.|No empieza en el 0. Resta: 9 − 1 = 8. Mide 8 cm."
 ]
 ],
@@ -1156,7 +1156,7 @@ const THEORY = {
 "mistakes": [
 [
 "«En un dau és possible treure un 7.»|«En un dado es posible sacar un 7.»",
-"Un dau només té del 1 al 6. Treure un 7 és impossible.|Un dado solo tiene del 1 al 6. Sacar un 7 es imposible."
+"Un dau només té de l'1 al 6. Treure un 7 és impossible.|Un dado solo tiene del 1 al 6. Sacar un 7 es imposible."
 ],
 [
 "«Un cub i un quadrat són el mateix.»|«Un cubo y un cuadrado son lo mismo.»",
@@ -6350,7 +6350,7 @@ const THEORY = {
 },
 {
 "t": "Laplace i succés contrari|Laplace y suceso contrario",
-"x": "Si tots els resultats són igual de probables, <b>P = casos favorables ÷ casos possibles</b> (regla de Laplace). El <b>succés contrari</b> de A és «no passa A», i P(no A) = 1 − P(A). És molt útil quan et demanen «almenys un»: és més fàcil comptar els casos en què no n'hi ha cap.|Si todos los resultados son igual de probables, <b>P = casos favorables ÷ casos posibles</b> (regla de Laplace). El <b>suceso contrario</b> de A es «no ocurre A», y P(no A) = 1 − P(A). Es muy útil cuando te piden «al menos uno»: es más fácil contar los casos en que no hay ninguno.",
+"x": "Si tots els resultats són igual de probables, <b>P = casos favorables ÷ casos possibles</b> (regla de Laplace). El <b>succés contrari</b> d'A és «no passa A», i P(no A) = 1 − P(A). És molt útil quan et demanen «almenys un»: és més fàcil comptar els casos en què no n'hi ha cap.|Si todos los resultados son igual de probables, <b>P = casos favorables ÷ casos posibles</b> (regla de Laplace). El <b>suceso contrario</b> de A es «no ocurre A», y P(no A) = 1 − P(A). Es muy útil cuando te piden «al menos uno»: es más fácil contar los casos en que no hay ninguno.",
 "ex": [
 "Suma 7: (1,6) (2,5) (3,4) (4,3) (5,2) (6,1)|Suma 7: (1,6) (2,5) (3,4) (4,3) (5,2) (6,1)",
 "P(suma 7) = 6/36 = <span class=\"hl\">1/6</span>|P(suma 7) = 6/36 = <span class=\"hl\">1/6</span>",
@@ -6524,7 +6524,7 @@ const THEORY = {
 },
 {
 "t": "Valors d'una paràbola|Valores de una parábola",
-"x": "Una <b>paràbola</b> és y = ax² + bx + c. Té forma de U oberta cap amunt si a > 0 i cap avall si a &lt; 0. Per trobar un punt, substitueix x pel seu valor, amb els negatius entre parèntesis, i respecta la jerarquia: primer potències, després productes i al final sumes.|Una <b>parábola</b> es y = ax² + bx + c. Tiene forma de U abierta hacia arriba si a > 0 y hacia abajo si a &lt; 0. Para hallar un punto, sustituye x por su valor, con los negativos entre paréntesis, y respeta la jerarquía: primero potencias, después productos y al final sumas.",
+"x": "Una <b>paràbola</b> és y = ax² + bx + c. Té forma d'U oberta cap amunt si a > 0 i cap avall si a &lt; 0. Per trobar un punt, substitueix x pel seu valor, amb els negatius entre parèntesis, i respecta la jerarquia: primer potències, després productes i al final sumes.|Una <b>parábola</b> es y = ax² + bx + c. Tiene forma de U abierta hacia arriba si a > 0 y hacia abajo si a &lt; 0. Para hallar un punto, sustituye x por su valor, con los negativos entre paréntesis, y respeta la jerarquía: primero potencias, después productos y al final sumas.",
 "ex": [
 "f(x) = x² − 2x − 3|f(x) = x² − 2x − 3",
 "f(−2) = (−2)² − 2 × (−2) − 3|f(−2) = (−2)² − 2 × (−2) − 3",
@@ -6543,7 +6543,7 @@ const THEORY = {
 },
 {
 "t": "Talls amb els eixos|Cortes con los ejes",
-"x": "El tall amb l'<b>eix y</b> és sempre a x = 0, així que val f(0) = c: el terme independent. Els talls amb l'<b>eix x</b> són on y = 0, i es troben resolent ax² + bx + c = 0. Amb el vèrtex, els talls i el signe de a ja pots dibuixar la paràbola sencera.|El corte con el <b>eje y</b> es siempre en x = 0, así que vale f(0) = c: el término independiente. Los cortes con el <b>eje x</b> son donde y = 0, y se hallan resolviendo ax² + bx + c = 0. Con el vértice, los cortes y el signo de a ya puedes dibujar la parábola entera.",
+"x": "El tall amb l'<b>eix y</b> és sempre a x = 0, així que val f(0) = c: el terme independent. Els talls amb l'<b>eix x</b> són on y = 0, i es troben resolent ax² + bx + c = 0. Amb el vèrtex, els talls i el signe d'a ja pots dibuixar la paràbola sencera.|El corte con el <b>eje y</b> es siempre en x = 0, así que vale f(0) = c: el término independiente. Los cortes con el <b>eje x</b> son donde y = 0, y se hallan resolviendo ax² + bx + c = 0. Con el vértice, los cortes y el signo de a ya puedes dibujar la parábola entera.",
 "ex": [
 "f(x) = x² − 2x − 3|f(x) = x² − 2x − 3",
 "Eix y: f(0) = −3 → <span class=\"hl\">(0, −3)</span>|Eje y: f(0) = −3 → <span class=\"hl\">(0, −3)</span>",
@@ -6563,7 +6563,7 @@ const THEORY = {
 ],
 [
 "paràbola|parábola",
-"gràfica de y = ax² + bx + c, amb forma de U|gráfica de y = ax² + bx + c, con forma de U"
+"gràfica de y = ax² + bx + c, amb forma d'U|gráfica de y = ax² + bx + c, con forma de U"
 ],
 [
 "vèrtex|vértice",
@@ -6749,7 +6749,7 @@ const THEORY = {
 "mistakes": [
 [
 "«He obtingut sin α = 1,25.»|«Me ha salido sen α = 1,25.»",
-"Impossible: la hipotenusa és el costat més llarg, així que sinus i cosinus mai passen de 1. Segurament has dividit al revés.|Imposible: la hipotenusa es el lado más largo, así que seno y coseno nunca pasan de 1. Seguramente has dividido al revés."
+"Impossible: la hipotenusa és el costat més llarg, així que sinus i cosinus mai passen d'1. Segurament has dividit al revés.|Imposible: la hipotenusa es el lado más largo, así que seno y coseno nunca pasan de 1. Seguramente has dividido al revés."
 ],
 [
 "Confondre el catet oposat amb el contigu.|Confundir el cateto opuesto con el contiguo.",
@@ -6764,7 +6764,7 @@ const THEORY = {
 "sin = oposat ÷ hipotenusa.|sen = opuesto ÷ hipotenusa.",
 "cos = contigu ÷ hipotenusa.|cos = contiguo ÷ hipotenusa.",
 "tan = oposat ÷ contigu = sin ÷ cos.|tan = opuesto ÷ contiguo = sen ÷ cos.",
-"sin² α + cos² α = 1, i sinus i cosinus mai passen de 1.|sen² α + cos² α = 1, y seno y coseno nunca pasan de 1."
+"sin² α + cos² α = 1, i sinus i cosinus mai passen d'1.|sen² α + cos² α = 1, y seno y coseno nunca pasan de 1."
 ],
 "tip": "Recorda SOH-CAH-TOA: Sinus = Oposat/Hipotenusa, Cosinus = Adjacent/Hipotenusa, Tangent = Oposat/Adjacent (adjacent vol dir contigu).|Recuerda SOH-CAH-TOA: Seno = Opuesto/Hipotenusa, Coseno = Adyacente/Hipotenusa, Tangente = Opuesto/Adyacente (adyacente significa contiguo)."
 },

@@ -111,6 +111,7 @@
   const doy = (d, m) => DM.slice(0, m).reduce((a, b) => a + b, 0) + d;
   const fromDoy = n => { n = ((n - 1) % 365 + 365) % 365 + 1; let m = 0; while (n > DM[m]) n -= DM[m++]; return [n, m]; };
   const setm = q => q === 1 ? L('setmana', 'semana') : L('setmanes', 'semanas'), dd = r => r === 1 ? L('dia', 'día') : L('dies', 'días');
+  const pas = k => k === 1 ? L('en passa 1', 'pasa 1') : L(`en passen ${k}`, `pasan ${k}`), qued = k => k === 1 ? L('en queda 1', 'queda 1') : L(`en queden ${k}`, `quedan ${k}`);
   const ORDN = () => L(['primer', 'segon', 'tercer', 'quart'], ['primer', 'segundo', 'tercer', 'cuarto']);
   const weekList = () => DSEM.map(tx).join(', ');
   // full del calendari: mes m que comença en dia de la setmana w0 (0 = dilluns); hi = dies encerclats
@@ -381,11 +382,13 @@
       if (L_ === 2) {
         const n = ri(3, 12), N = doy(d, m) + n, [d2, m2] = fromDoy(N);
         const dis = [fromDoy(N + 1), fromDoy(N - 1), m2 !== m && d2 <= DM[m] ? [d2, m] : fromDoy(N + 2), fromDoy(N + 7)].map(([x, y]) => dataS(x, y));
-        return mc(L(`Avui és ${elN(d)}<b>${dataS(d, m)}</b>. Quina data serà d'aquí a <b>${n} dies</b>?`, `Hoy es <b>${dataS(d, m)}</b>. ¿Qué fecha será dentro de <b>${n} días</b>?`), dataS(d2, m2), dis, { ex: m2 !== m ? L(`${cap(mes(m))} té ${DM[m]} dies: fins al ${DM[m]} en passen ${DM[m] - d} i en queden ${n - DM[m] + d} per al mes següent. Serà ${elN(d2)}${dataS(d2, m2)}.`, `${cap(mes(m))} tiene ${DM[m]} días: hasta el ${DM[m]} pasan ${DM[m] - d} y quedan ${n - DM[m] + d} para el mes siguiente. Será el ${dataS(d2, m2)}.`) : L(`${d} + ${n} = ${d2}: serà ${elN(d2)}${dataS(d2, m2)}.`, `${d} + ${n} = ${d2}: será el ${dataS(d2, m2)}.`) });
+        return mc(L(`Avui és ${elN(d)}<b>${dataS(d, m)}</b>. Quina data serà d'aquí a <b>${n} dies</b>?`, `Hoy es <b>${dataS(d, m)}</b>. ¿Qué fecha será dentro de <b>${n} días</b>?`), dataS(d2, m2), dis, { ex: m2 !== m && d === DM[m] ? L(`Avui és l'últim dia ${deMes(m)}${mes(m)}, així que els ${n} dies són tots del mes següent. Serà ${elN(d2)}${dataS(d2, m2)}.`, `Hoy es el último día de ${mes(m)}, así que los ${n} días son todos del mes siguiente. Será el ${dataS(d2, m2)}.`)
+          : m2 !== m ? L(`${cap(mes(m))} té ${DM[m]} dies: fins al ${DM[m]} ${pas(DM[m] - d)} i ${qued(n - DM[m] + d)} per al mes següent. Serà ${elN(d2)}${dataS(d2, m2)}.`, `${cap(mes(m))} tiene ${DM[m]} días: hasta el ${DM[m]} ${pas(DM[m] - d)} y ${qued(n - DM[m] + d)} para el mes siguiente. Será el ${dataS(d2, m2)}.`) : L(`${d} + ${n} = ${d2}: serà ${elN(d2)}${dataS(d2, m2)}.`, `${d} + ${n} = ${d2}: será el ${dataS(d2, m2)}.`) });
       }
       if (L_ === 3) {
         let n, d2, m2; do { n = ri(5, 40); [d2, m2] = fromDoy(doy(d, m) + n); } while (m2 > m + 1);
-        return inp(L(`Quants dies passen ${delN(d)}${dataS(d, m)} ${alN(d2)}${dataS(d2, m2)}?`, `¿Cuántos días pasan del ${dataS(d, m)} al ${dataS(d2, m2)}?`), n, { ex: m2 === m ? L(`${d2} − ${d} = ${n} dies.`, `${d2} − ${d} = ${n} días.`) : L(`${cap(mes(m))} té ${DM[m]} dies: fins al ${DM[m]} en passen ${DM[m] - d}. Després, ${d2} dies més ${deMes(m2)}${mes(m2)}: ${DM[m] - d} + ${d2} = ${n}.`, `${cap(mes(m))} tiene ${DM[m]} días: hasta el ${DM[m]} pasan ${DM[m] - d}. Después, ${d2} días más de ${mes(m2)}: ${DM[m] - d} + ${d2} = ${n}.`) });
+        return inp(L(`Quants dies passen ${delN(d)}${dataS(d, m)} ${alN(d2)}${dataS(d2, m2)}?`, `¿Cuántos días pasan del ${dataS(d, m)} al ${dataS(d2, m2)}?`), n, { ex: m2 === m ? L(`${d2} − ${d} = ${n} dies.`, `${d2} − ${d} = ${n} días.`) : d === DM[m] ? L(`El ${d} és l'últim dia ${deMes(m)}${mes(m)}: tots els dies que passen són ${deMes(m2)}${mes(m2)}, fins ${alN(d2)}${d2}. En passen ${n}.`, `El ${d} es el último día de ${mes(m)}: todos los días que pasan son de ${mes(m2)}, hasta el ${d2}. Pasan ${n}.`)
+          : L(`${cap(mes(m))} té ${DM[m]} dies: fins al ${DM[m]} ${pas(DM[m] - d)}. Després, ${d2} ${dd(d2)} més ${deMes(m2)}${mes(m2)}: ${DM[m] - d} + ${d2} = ${n}.`, `${cap(mes(m))} tiene ${DM[m]} días: hasta el ${DM[m]} ${pas(DM[m] - d)}. Después, ${d2} ${dd(d2)} más de ${mes(m2)}: ${DM[m] - d} + ${d2} = ${n}.`) });
       }
       const w = ri(0, 6);
       if (L_ === 4) {
@@ -406,7 +409,7 @@
       if (L_ === 2) {
         const H = ri(13, 23), m = pick([0, 15, 30, 45]), h = H - 12, w = x => ((x - 1) % 12 + 12) % 12 + 1;
         const hs = shuffle([...new Set([H - 10, h - 1, h + 1, h + 2, h - 2].map(w))].filter(x => x !== h)).slice(0, 3);
-        return mc(L(`Un rellotge digital marca <b>${H}:${pad(m)}</b>. Quin rellotge de busques marca la mateixa hora?`, `Un reloj digital marca <b>${H}:${pad(m)}</b>. ¿Qué reloj de agujas marca la misma hora?`), clockSVG(h, m), hs.map(x => clockSVG(x, m)), { pics: true, ex: L(`Després de les 12, restem 12: ${H} − 12 = ${h}. L'agulla petita marca les ${h} i la gran, els minuts (${m}).`, `Después de las 12, restamos 12: ${H} − 12 = ${h}. La aguja pequeña marca las ${h} y la grande, los minutos (${m}).`) });
+        return mc(L(`Un rellotge digital marca <b>${H}:${pad(m)}</b>. Quin rellotge de busques marca la mateixa hora?`, `Un reloj digital marca <b>${H}:${pad(m)}</b>. ¿Qué reloj de agujas marca la misma hora?`), clockSVG(h, m), hs.map(x => clockSVG(x, m)), { pics: true, ex: L(`Després de les 12, restem 12: ${H} − 12 = ${h}. L'agulla petita marca ${h === 1 ? 'la una' : 'les ' + h} i la gran, els minuts (${m}).`, `Después de las 12, restamos 12: ${H} − 12 = ${h}. La aguja pequeña marca ${h === 1 ? 'la una' : 'las ' + h} y la grande, los minutos (${m}).`) });
       }
       const c = pick(CTX);
       if (L_ === 3) { const h = ri(8, 19), a = ri(0, 8) * 5, b = ri(a / 5 + 2, 11) * 5; return inp(L(`${c[0]} comença a les <b>${h}:${pad(a)}</b> i acaba a les <b>${h}:${pad(b)}</b>. Quants minuts dura?`, `${c[1]} empieza a las <b>${h}:${pad(a)}</b> y acaba a las <b>${h}:${pad(b)}</b>. ¿Cuántos minutos dura?`), b - a, { unit: 'min', ex: L(`És la mateixa hora: només cal restar els minuts. ${b} − ${a} = ${b - a} minuts.`, `Es la misma hora: solo hay que restar los minutos. ${b} − ${a} = ${b - a} minutos.`) }); }

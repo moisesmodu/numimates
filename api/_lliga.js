@@ -1,5 +1,5 @@
 import { createHash } from 'crypto';
-import { sql } from './_lib.js';
+import { sql, consentCols } from './_lib.js';
 // Lliga Numi: els punts són l'XP que es guanya a l'app, comptats al servidor quan es sincronitza (la diferència
 // entre l'XP que hi havia i el nou). Perquè sigui just: com a molt 400 punts per sincronització i 1.500 al dia.
 // Lligues: Numi Mates per cicles (1r–2n, 3r–4t, 5è–6è), Numi Pro (ESO) i Numi Ment (adults).
@@ -51,12 +51,13 @@ export async function addPunts(code, delta, st) {
 // premis del mes que ha acabat: els 3 primers de cada lliga (amb un mínim de punts). Es calcula una sola vegada.
 // Premi: medalla a l'app i, si el compte és del pla gratuït (no d'escola ni de pagament), un mes de Premium.
 export async function premisMes() {
-  await tables();
+  await tables(); await consentCols();
   const pm = prevMonthId(), P = 'M' + pm;
   if ((await sql`SELECT 1 FROM mates.lliga_premis WHERE periode = ${pm} LIMIT 1`).length) return;
   for (const lg of LLIGUES) {
     const top = await sql`SELECT l.code, l.punts FROM mates.lliga l JOIN mates.alumnes a USING (code)
       WHERE l.periode = ${P} AND l.lliga = ${lg} AND a.active AND COALESCE(a.state->>'lliga', 'true') <> 'false' AND l.punts >= 300
+        AND a.created_at < now() - interval '14 days' AND (a.consent IS NULL OR a.consent = 'ok')   -- comptes nous o pendents de permís: sense premi
       ORDER BY l.punts DESC, l.updated_at ASC LIMIT 3`;
     for (let i = 0; i < top.length; i++) {
       const ins = await sql`INSERT INTO mates.lliga_premis (periode, lliga, pos, code, punts) VALUES (${pm}, ${lg}, ${i + 1}, ${top[i].code}, ${top[i].punts}) ON CONFLICT DO NOTHING RETURNING code`;

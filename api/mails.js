@@ -1,7 +1,7 @@
 import { createHmac, timingSafeEqual } from 'crypto';
 import { sql, ok, body, purge } from './_lib.js';
 import { who } from './_auth.js';
-import { STRIPE_KEY, stripe } from './_stripe.js';
+import { STRIPE_KEY, stripe, ensureHookEvents } from './_stripe.js';
 import { informeTables, informesRun, prefOf, ajust, setAjust, reportMail, periodNow, kidRow, reportExtra } from './_informe.js';
 // Correus des del panell (només l'administrador): esborranys en HTML, prova, enviament ara o programat.
 // Destinataris: docents, famílies (zona de famílies), contactes del web, clients de Premium (correu de Stripe)
@@ -9,7 +9,7 @@ import { informeTables, informesRun, prefOf, ajust, setAjust, reportMail, period
 // Els programats els envia el cron de Vercel (vercel.json → /api/mails?cron=1, cada 10 minuts).
 export const config = { maxDuration: 60 };
 const BASE = 'https://app.numimates.com';
-const FROM = 'Numi <hola@numimates.com>';
+const FROM = 'Numi Mates <hola@numimates.com>';
 let READY = null;
 const tables = () => READY || (READY = sql`CREATE TABLE IF NOT EXISTS mates.mails (id serial PRIMARY KEY, subject text NOT NULL DEFAULT '', html text NOT NULL DEFAULT '', aud jsonb NOT NULL DEFAULT '{}', lang text NOT NULL DEFAULT 'ca', status text NOT NULL DEFAULT 'esborrany', send_at timestamptz, created_at timestamptz NOT NULL DEFAULT now(), updated_at timestamptz NOT NULL DEFAULT now(), sent_at timestamptz, n_total int NOT NULL DEFAULT 0, n_ok int NOT NULL DEFAULT 0, n_ko int NOT NULL DEFAULT 0, err text)`
   .then(() => sql`CREATE TABLE IF NOT EXISTS mates.mail_env (mail_id int NOT NULL REFERENCES mates.mails(id) ON DELETE CASCADE, email text NOT NULL, nom text, status text NOT NULL DEFAULT 'pendent', sent_at timestamptz, PRIMARY KEY (mail_id, email))`)
@@ -49,7 +49,7 @@ async function recipients(aud) {
 function render(m, email, nom, test) {
   const es = m.lang === 'es', link = `${BASE}/api/mails?baixa=${baixaTok(email)}`;
   let html = String(m.html || '').replace(/\{\{\s*nom\s*\}\}/g, escH(nom || ''));
-  const foot = `<div style="margin:28px auto 0;max-width:600px;padding:16px;border-top:1px solid #e5e5e5;font:13px/1.5 Arial,sans-serif;color:#888;text-align:center">${es ? 'Recibes este correo de Numi (numimates.com).' : 'Reps aquest correu de Numi (numimates.com).'} <a href="${link}" style="color:#888">${es ? 'Darme de baja' : "Dona'm de baixa"}</a></div>`;
+  const foot = `<div style="margin:28px auto 0;max-width:600px;padding:16px;border-top:1px solid #e5e5e5;font:13px/1.5 Arial,sans-serif;color:#888;text-align:center">${es ? 'Recibes este correo de Numi Mates (numimates.com).' : 'Reps aquest correu de Numi Mates (numimates.com).'} <a href="${link}" style="color:#888">${es ? 'Darme de baja' : "Dona'm de baixa"}</a></div>`;
   html = /<\/body>/i.test(html) ? html.replace(/<\/body>/i, foot + '</body>') : html + foot;
   const text = html.replace(/<style[\s\S]*?<\/style>/gi, '').replace(/<br\s*\/?>/gi, '\n').replace(/<\/(p|div|h\d|li|tr)>/gi, '\n').replace(/<[^>]+>/g, '').replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&').replace(/\n{3,}/g, '\n\n').trim();
   return { from: FROM, reply_to: 'hola@numimates.com', to: [email], subject: (test ? '[PROVA] ' : '') + m.subject, html, text,
@@ -65,11 +65,13 @@ async function resendBatch(items) {
 // envia el que quedi pendent d'un correu, en lots de 50, fins que s'acaba el temps
 async function work(id, until) {
   const m = (await sql`SELECT * FROM mates.mails WHERE id = ${id}`)[0]; if (!m) return;
-  if (m.status === 'programat') {
-    await sql`UPDATE mates.mails SET status = 'enviant', updated_at = now() WHERE id = ${id} AND status = 'programat'`;
+  // preparació en un pas propi ('preparant'): si la funció es talla mentre es calculen els destinataris, el cron la torna
+  // a començar (els INSERT no dupliquen) en lloc de donar per enviat un correu amb la llista a mitges
+  if (m.status === 'programat' || m.status === 'preparant') {
+    if (!(await sql`UPDATE mates.mails SET status = 'preparant', updated_at = now() WHERE id = ${id} AND (status = 'programat' OR (status = 'preparant' AND updated_at < now() - interval '5 minutes')) RETURNING 1`).length) return;
     const R = await recipients(m.aud || {});
     for (const [e, r] of R) await sql`INSERT INTO mates.mail_env (mail_id, email, nom) VALUES (${id}, ${e}, ${r.nom}) ON CONFLICT DO NOTHING`;
-    await sql`UPDATE mates.mails SET n_total = (SELECT count(*) FROM mates.mail_env WHERE mail_id = ${id}) WHERE id = ${id}`;
+    await sql`UPDATE mates.mails SET n_total = (SELECT count(*) FROM mates.mail_env WHERE mail_id = ${id}), status = 'enviant', updated_at = now() WHERE id = ${id}`;
   }
   // els lots que s'havien quedat reservats (funció tallada) tornen a la cua
   await sql`UPDATE mates.mail_env SET status = 'pendent' WHERE mail_id = ${id} AND status = 'enviant' AND sent_at < now() - interval '10 minutes'`;
@@ -92,6 +94,9 @@ async function work(id, until) {
 
 const page = (t, p) => `<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${t}</title><body style="font:18px/1.5 system-ui,sans-serif;max-width:520px;margin:12vh auto;padding:0 20px;color:#222;text-align:center"><h1 style="font-size:26px">${t}</h1><p>${p}</p><p><a href="https://numimates.com" style="color:#602B7A">numimates.com</a></p></body>`;
 
+// els enllaços dels correus només canvien res amb un POST: el clic de baixa d'un sol pas del client de correu (RFC 8058)
+// o el botó de la pàgina de confirmació. Un GET (l'antivirus del correu que obre els enllaços) només mostra la pàgina.
+const confirmPage = (t, p, btn) => page(t, `${p}</p><form method="post"><button style="font:600 17px system-ui,sans-serif;padding:12px 22px;border:0;border-radius:12px;background:#602B7A;color:#fff;cursor:pointer">${btn}</button></form><p>`);
 export default async function handler(req, res) {
   await tables();
   const q = req.query || {};
@@ -100,8 +105,9 @@ export default async function handler(req, res) {
     const e = baixaOf(q.baixa);
     res.setHeader('content-type', 'text/html; charset=utf-8'); res.setHeader('Cache-Control', 'no-store');
     if (!e) return res.status(400).send(page('Enllaç no vàlid · Enlace no válido', "Escriu-nos a hola@numimates.com i et donarem de baixa. · Escríbenos a hola@numimates.com y te daremos de baja."));
+    if (req.method !== 'POST') return res.status(200).send(confirmPage('Donar-se de baixa · Darse de baja', `${escH(e)} deixarà de rebre correus de Numi Mates. · dejará de recibir correos de Numi Mates.`, 'Dona\'m de baixa · Darme de baja'));
     await sql`INSERT INTO mates.mail_baixes (email) VALUES (${e}) ON CONFLICT DO NOTHING`;
-    return res.status(200).send(page("T'has donat de baixa · Te has dado de baja", `${escH(e)} ja no rebrà més correus de Numi. · ya no recibirá más correos de Numi.`));
+    return res.status(200).send(page("T'has donat de baixa · Te has dado de baja", `${escH(e)} ja no rebrà més correus de Numi Mates. · ya no recibirá más correos de Numi Mates.`));
   }
   // informe a les famílies: canviar la freqüència o deixar-lo des del mateix correu (enllaç signat, sense entrar)
   if (q.informe) {
@@ -109,6 +115,7 @@ export default async function handler(req, res) {
     const fam = prefOf(q.informe), f = ['setmanal', 'mensual', 'no'].includes(q.f) ? q.f : 'no';
     res.setHeader('content-type', 'text/html; charset=utf-8'); res.setHeader('Cache-Control', 'no-store');
     if (!fam) return res.status(400).send(page('Enllaç no vàlid · Enlace no válido', 'Escriu-nos a hola@numimates.com. · Escríbenos a hola@numimates.com.'));
+    if (req.method !== 'POST') return res.status(200).send(confirmPage("Informe de Numi Mates", f === 'no' ? "Deixaràs de rebre l'informe. · Dejarás de recibir el informe." : f === 'mensual' ? "Rebràs l'informe un cop al mes. · Recibirás el informe una vez al mes." : "Rebràs l'informe cada setmana. · Recibirás el informe cada semana.", 'Confirma · Confirmar'));
     await sql`UPDATE mates.families SET informe = ${f} WHERE id = ${fam}`;
     const msg = f === 'no' ? ["Ja no rebràs més informes de Numi Mates.", 'Ya no recibirás más informes de Numi Mates.'] : f === 'mensual' ? ["A partir d'ara rebràs l'informe un cop al mes.", 'A partir de ahora recibirás el informe una vez al mes.'] : ["A partir d'ara rebràs l'informe cada setmana.", 'A partir de ahora recibirás el informe cada semana.'];
     return res.status(200).send(page('Fet · Hecho', `${msg[0]} · ${msg[1]}<br><br><small>Ho pots tornar a canviar a la zona de famílies. · Lo puedes volver a cambiar en la zona de familias.</small>`));
@@ -117,14 +124,14 @@ export default async function handler(req, res) {
   if (q.cron) {
     if (!process.env.CRON_SECRET || req.headers.authorization !== `Bearer ${process.env.CRON_SECRET}`) return ok(res, { error: 'permís' }, 401);
     const until = Date.now() + 45000;
-    const due = await sql`SELECT id FROM mates.mails WHERE (status = 'programat' AND send_at <= now()) OR status = 'enviant' ORDER BY send_at NULLS FIRST, id LIMIT 5`;
+    const due = await sql`SELECT id FROM mates.mails WHERE (status = 'programat' AND send_at <= now()) OR status = 'enviant' OR (status = 'preparant' AND updated_at < now() - interval '5 minutes') ORDER BY send_at NULLS FIRST, id LIMIT 5`;
     for (const d of due) { if (Date.now() > until) break; await work(d.id, until); }
     // informes setmanals i mensuals a les famílies (només si l'administrador els ha encès al panell)
     let inf = null;
     if (Date.now() < until) { try { inf = await informesRun(until, items => resendBatch(items.map(i => ({ from: FROM, reply_to: 'hola@numimates.com', ...i })))); } catch (e) { console.error('informes', e.message); } }
     // neteja de conservació, un cop cada hora (el cron passa cada 10 minuts)
     let pg = null;
-    if (new Date().getUTCMinutes() < 10 && Date.now() < until) { try { pg = await purge(); } catch (e) { console.error('purge', e.message); } }
+    if (new Date().getUTCMinutes() < 10 && Date.now() < until) { try { pg = await purge(); } catch (e) { console.error('purge', e.message); } try { pg = { ...pg, hook: await ensureHookEvents() }; } catch (e) { console.error('hook', e.message); } }
     return ok(res, { ok: true, n: due.length, inf, pg });
   }
   const me = await who(req);

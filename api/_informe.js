@@ -15,7 +15,7 @@ const BASE = 'https://app.numimates.com', WEB = 'https://numimates.com';
 let READY = null;
 export const informeTables = () => READY || (READY = sql`CREATE TABLE IF NOT EXISTS mates.ajustos (k text PRIMARY KEY, v jsonb NOT NULL DEFAULT '{}', updated_at timestamptz NOT NULL DEFAULT now())`
   .then(() => sql`CREATE TABLE IF NOT EXISTS mates.informes (code text NOT NULL, familia_id int NOT NULL, periode text NOT NULL, xp int, lessons int, answers int, correct int, status text NOT NULL DEFAULT 'enviat', sent_at timestamptz NOT NULL DEFAULT now(), PRIMARY KEY (code, familia_id, periode))`)
-  .then(() => sql`ALTER TABLE mates.families ADD COLUMN IF NOT EXISTS informe text NOT NULL DEFAULT 'setmanal'`)
+  .then(async () => { if (!(await sql`SELECT 1 FROM information_schema.columns WHERE table_schema = 'mates' AND table_name = 'families' AND column_name = 'informe'`).length) await sql`ALTER TABLE mates.families ADD COLUMN IF NOT EXISTS informe text NOT NULL DEFAULT 'setmanal'`; })
   .catch(e => { READY = null; throw e; }));
 export async function ajust(k) { await informeTables(); const r = await sql`SELECT v FROM mates.ajustos WHERE k = ${k}`; return r[0] ? r[0].v : null; }
 export async function setAjust(k, v) { await informeTables(); await sql`INSERT INTO mates.ajustos (k, v) VALUES (${k}, ${JSON.stringify(v)}::jsonb) ON CONFLICT (k) DO UPDATE SET v = EXCLUDED.v, updated_at = now()`; }

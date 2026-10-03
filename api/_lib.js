@@ -37,7 +37,11 @@ export async function blocked(req, b, max, mins = 15, acct = null, maxAcct = Mat
   return r[0].ip >= max || (acct != null && r[0].ac >= maxAcct);
 }
 // els registres d'intents (amb la IP) s'esborren sempre al cap d'un dia
-export async function note(req, b) { await sql`INSERT INTO mates.fails (k, b) VALUES (${'ip:' + ipKey(req)}, ${b})`; await sql`DELETE FROM mates.fails WHERE t < now() - interval '1 day'`; }
+export async function note(req, b) {
+  await sql`INSERT INTO mates.fails (k, b) VALUES (${'ip:' + ipKey(req)}, ${b})`;
+  // neteja dels registres de més d'un dia: de tant en tant, no a cada petició
+  if (Math.random() < 0.02) await sql`DELETE FROM mates.fails WHERE t < now() - interval '1 day'`;
+}
 export async function fail(req, b, acct = null) {
   await note(req, b);
   if (acct != null) await sql`INSERT INTO mates.fails (k, b) VALUES (${'ac:' + acct}, ${b})`;
@@ -95,6 +99,12 @@ export function isMinor(a) {
   const age = +(sv.age ?? st.age);
   return !(age >= 14);                                                           // sense edat coneguda: com a menor
 }
+// Contractar (pagar) des de l'app: només adults (Numi Ment o 18 anys o més). Si no, ho fa la família des del correu o la zona de famílies.
+export function adultOnly(a) {
+  const st = a.state || {}, sv = a.survey || {};
+  if ((st.variant || sv.variant) === 'ment') return false;
+  return !(+(sv.age ?? st.age) >= 18);
+}
 // true si el compte ja pot desar al núvol i fer servir les funcions en línia
 export function consentOk(a) {
   if (!isMinor(a) || a.consent === 'ok') return true;
@@ -106,6 +116,7 @@ let CONS = null;
 export const consentCols = () => CONS || (CONS = (async () => {
   const have = new Set((await sql`SELECT table_name || '.' || column_name AS c FROM information_schema.columns WHERE table_schema = 'mates' AND table_name IN ('alumnes', 'familia_links', 'families')`).map(r => r.c));
   if (!have.has('alumnes.consent')) await sql`ALTER TABLE mates.alumnes ADD COLUMN IF NOT EXISTS consent text, ADD COLUMN IF NOT EXISTS consent_at timestamptz`;
+  if (!have.has('alumnes.pla_inici')) await sql`ALTER TABLE mates.alumnes ADD COLUMN IF NOT EXISTS pla_inici date`;   // inici de la subscripció actual (desistiment)
   if (have.has('familia_links.email') && !have.has('familia_links.created')) await sql`ALTER TABLE mates.familia_links ADD COLUMN IF NOT EXISTS created timestamptz NOT NULL DEFAULT now(), ADD COLUMN IF NOT EXISTS kid text`;
   if (have.has('families.email') && !have.has('families.promo')) await sql`ALTER TABLE mates.families ADD COLUMN IF NOT EXISTS promo boolean NOT NULL DEFAULT false`;
   if (!have.has('familia_links.email') || !have.has('families.email')) CONS = null;   // la zona de famílies encara no té taules: es tornarà a mirar
@@ -160,6 +171,7 @@ export async function eraseStudent(code) {
   try { await sql`DELETE FROM mates.batalla_jug WHERE sid = ${code}`; } catch (e) { }
   try { await sql`UPDATE mates.canvis SET a_sid = NULL, a_name = '—' WHERE a_sid = ${code}`; await sql`UPDATE mates.canvis SET b_sid = NULL, b_name = '—' WHERE b_sid = ${code}`; } catch (e) { }
   try { await sql`DELETE FROM mates.medalles WHERE code = ${code}`; } catch (e) { }
+  try { await sql`DELETE FROM mates.informes WHERE code = ${code}`; } catch (e) { }
   try { await sql`DELETE FROM mates.familia_fills WHERE code = ${code}`; await sql`DELETE FROM mates.familia_links WHERE code = ${code}`; } catch (e) { }
   try { await sql`DELETE FROM mates.xat_us WHERE code = ${code}`; await sql`DELETE FROM mates.fails WHERE k = ${'ac:' + code}`; } catch (e) { }
   try { await sql`UPDATE mates.batalles SET host = NULL WHERE host = ${code}`; } catch (e) { }
@@ -175,6 +187,11 @@ export async function purge() {
   const old = await sql`SELECT code FROM mates.alumnes WHERE stripe_sub IS NULL AND grup_id IS NULL AND (
       (consent = 'pending' AND created_at < now() - interval '30 days') OR updated_at < now() - interval '24 months') LIMIT 100`;
   for (const r of old) await eraseStudent(r.code);
+  await sql`DELETE FROM mates.fails WHERE t < now() - interval '1 day'`;
+  // altres registres amb data de caducitat (política de privadesa)
+  for (const q of [() => sql`DELETE FROM mates.contactes WHERE created_at < now() - interval '12 months'`, () => sql`DELETE FROM mates.informes WHERE sent_at < now() - interval '24 months'`,
+    () => sql`DELETE FROM mates.mail_env WHERE sent_at < now() - interval '12 months'`, () => sql`DELETE FROM mates.canvis WHERE created_at < now() - interval '6 months'`,
+    () => sql`DELETE FROM mates.batalla_jug WHERE joined_at < now() - interval '6 months'`, () => sql`DELETE FROM mates.batalles WHERE created_at < now() - interval '6 months'`]) { try { await q(); } catch (e) { } }
   let links = 0, fams = 0;
   try { links = (await sql`DELETE FROM mates.familia_links WHERE expires < now() - interval '1 day' RETURNING 1`).length; } catch (e) { }
   try { fams = (await sql`DELETE FROM mates.families f WHERE COALESCE(f.last_login, f.created_at) < now() - interval '24 months' AND NOT EXISTS (SELECT 1 FROM mates.familia_fills ff WHERE ff.familia_id = f.id) RETURNING 1`).length; } catch (e) { }

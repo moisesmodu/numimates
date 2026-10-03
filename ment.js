@@ -425,15 +425,20 @@ const mHush = () => { try { speechSynthesis.cancel(); } catch (e) { } };
 function mStart(g) { mHush(); SFX.tap && SFX.tap(); ({ vel: velGo, ate: ateGo, mem: memGo, par: parGo, cal: calGo, sud: sudGo, pal: palGo, int: intGo, lli: lliGo, dir: dirGo, com: comGo, ref: refGo, rel: relGo, rfx: rfxGo, sim: simGo, uni: uniGo, atu: atuGo, dig: digGo, nbk: nbkGo, nom: nomGo, cad: cadGo, ser: serGo, sin: sinGo, igu: iguGo, onn: onnGo, est: estGo, ded: dedGo, sob: sobGo })[g](); }
 
 // resultat: guarda, adapta el nivell i marca la sessió
-function mEnd(g, score, up, msg) {
+function mEnd(g, score, up, msg, o) {
+  o = o || {};
   if (MGA && MGA.duel) return mDuelEnd(g);
   if (MGA && MGA.test) return mTestStep(g, score);
   const m = MS(), was = m.best[g], lowB = !!MG[g].low, ses = !!(MGA && MGA.ses);
   mStop();
   if (score == null) return go('home');
-  const rec = was == null || (lowB ? score < was : score > was);
+  // o.noRec: la partida es mostra i queda a l'historial, però no pot ser rècord (p. ex. sudoku amb pistes)
+  const rec = !o.noRec && (was == null || (lowB ? score < was : score > was));
+  // resultat fluix (0 o baixa de nivell): to neutre, res de «Ben fet!»
+  const weak = !(rec && was != null) && ((!lowB && score <= 0) || up < 0);
   if (rec) m.best[g] = score;
-  (m.hist[g] = m.hist[g] || []).push([today(), score]); if (m.hist[g].length > 40) m.hist[g].shift();
+  // la partida queda a l'historial (compta com a jugada), però si no pot ser rècord es marca i no surt a la gràfica
+  (m.hist[g] = m.hist[g] || []).push(o.noRec ? [today(), score, 1] : [today(), score]); if (m.hist[g].length > 40) m.hist[g].shift();
   const lvA = mLvl(g), adapt = !MG[g].span && !MG[g].lvx; if (adapt) m.lvl[g] = Math.max(1, Math.min(10, lvA + (up || 0)));
   const lvB = adapt ? m.lvl[g] : lvA;
   const d = mDay(); if (ses && !d.s.includes(g) && mSession().includes(g)) d.s.push(g);
@@ -441,18 +446,18 @@ function mEnd(g, score, up, msg) {
   P.xp = (P.xp || 0) + 10; if (ses && d.s.length >= 3 && !d.bonus) { d.bonus = 1; P.xp += 20; }
   touchStreak(); save(); syncNow();
   const s = mSession(), left = s.filter(x => !mDay().s.includes(x)), nx = left[0], fita = mFitesNew();
-  const hist = (m.hist[g] || []).slice(-8).map(h => h[1]), hmax = Math.max(...hist, 1), hmin = Math.min(...hist, 0);
+  const hist = (m.hist[g] || []).filter(h => !h[2]).slice(-8).map(h => h[1]), hmax = Math.max(...hist, 1), hmin = Math.min(...hist, 0);
   const spark = hist.length >= 2 ? `<div class="mr-spark" aria-hidden="true">${hist.map((v, i) => { const k = lowB ? (hmax - v) / ((hmax - hmin) || 1) : (v - hmin) / ((hmax - hmin) || 1); return `<i class="${i === hist.length - 1 ? 'now' : ''}" style="height:${Math.round(18 + k * 82)}%"></i>`; }).join('')}</div><p class="mr-sub">${L('Les teves últimes partides', 'Tus últimas partidas')}</p>` : '';
   const prevTxt = was != null && !rec ? `<p class="mr-prev">${L('El teu rècord', 'Tu récord')}: <b>${mNice(g, was)}</b></p>` : '';
-  app.innerHTML = `<div class="mgame ${MG[g] ? 'd-' + MG[g].cap : ''}"><div class="mgbody"><div class="mres mres2"><div class="mr-hero">${rec && was != null ? `<span class="mr-rib">${L('Nou rècord', 'Nuevo récord')}</span>` : ''}${mGic(g)}<h2>${rec && was != null ? L('Nou rècord!', '¡Nuevo récord!') : L('Ben fet!', '¡Bien hecho!')}</h2>
-    <p class="mscore">${mNice(g, score)}</p><p class="mr-msg">${msg || ''}</p>${prevTxt}</div>${spark}
+  app.innerHTML = `<div class="mgame ${MG[g] ? 'd-' + MG[g].cap : ''}"><div class="mgbody"><div class="mres mres2"><div class="mr-hero">${rec && was != null ? `<span class="mr-rib">${L('Nou rècord', 'Nuevo récord')}</span>` : ''}${mGic(g)}<h2>${rec && was != null ? L('Nou rècord!', '¡Nuevo récord!') : weak ? L('Partida acabada', 'Partida terminada') : L('Ben fet!', '¡Bien hecho!')}</h2>
+    <p class="mscore">${mNice(g, score)}</p><p class="mr-msg">${msg || ''}</p>${o.note ? `<p class="mr-note">${o.note}</p>` : ''}${prevTxt}</div>${spark}
     ${adapt ? `<p class="mlvl ${lvB > lvA ? 'up' : ''}">${lvB > lvA ? L(`Puges al nivell ${lvB} de 10!`, `¡Subes al nivel ${lvB} de 10!`) : lvB < lvA ? L(`La propera, nivell ${lvB}: una mica més assequible.`, `La próxima, nivel ${lvB}: algo más asequible.`) : L(`Nivell ${lvB} de 10${lvB < 10 ? ' · si ho fas una mica millor, pujaràs' : ''}`, `Nivel ${lvB} de 10${lvB < 10 ? ' · si lo haces un poco mejor, subirás' : ''}`)}</p>` : ''}${was != null && !rec ? `<p class="mmut">${L('El teu millor resultat', 'Tu mejor resultado')}: ${mNice(g, was)}</p>` : ''}
     ${fita ? `<p class="mtcard" style="display:flex;gap:12px;align-items:center;text-align:left">${mTile('medalla', 'gold')}<span><b>${L('Nova fita', 'Nuevo logro')}</b><br>${tx(fita[1])}</span></p>` : ''}
     ${ses ? `<div class="mr-ses">${[0, 1, 2].map(i => `<i class="${i < 3 - left.length ? 'on' : ''}"></i>`).join('')}</div>` : ''}${ses && nx ? `<p class="mmut">${L(`Sessió d'avui: ${3 - left.length} de 3`, `Sesión de hoy: ${3 - left.length} de 3`)}</p><button class="btn big mbtn" onclick="mPlay('${nx}',true)">${L('Següent joc', 'Siguiente juego')}: ${tx(MG[nx].n)}</button>` : ''}
     ${ses && !nx ? `<p class="mtdone">${L('Sessió d\'avui completada!', '¡Sesión de hoy completada!')}</p><button class="btn gold big mbtn mshare" onclick="mShare('ratxa')">${mSvg('compartir')} ${L('Comparteix-ho', 'Compártelo')}</button>` : ''}
     <button class="btn ${ses && nx ? 'ghost' : ''} big mbtn" style="margin-top:10px" onclick="go('home')">${L('Torna a l\'inici', 'Vuelve al inicio')}</button></div></div></div>`;
   { const sc = $('.mres2 .mscore'), t = sc && sc.textContent.match(/^(\d+)(.*)$/); if (t && +t[1] > 1 && !matchMedia('(prefers-reduced-motion: reduce)').matches) { const to = +t[1], t0 = performance.now(); const st = n => { const k = Math.min(1, (n - t0) / 900); sc.textContent = Math.round(to * (1 - Math.pow(1 - k, 3))) + t[2]; if (k < 1) requestAnimationFrame(st); }; requestAnimationFrame(st); } }
-  SFX.win && SFX.win(); if ((rec && was != null || (ses && !nx)) && typeof confetti === 'function') confetti(70);
+  if (!weak) SFX.win && SFX.win(); if ((rec && was != null || (ses && !nx)) && typeof confetti === 'function') confetti(70);
 }
 const mSet = h => { const e = $('#mgstat'); if (e) e.innerHTML = h; };
 const mSleep = ms => new Promise(r => { MGT = setTimeout(r, ms); });
@@ -497,7 +502,7 @@ function ateA(i) { const A = MGA; if (!A || A.ink == null) return; const b = $$(
 const mFlash = (b, ok) => { if (!b) return; b.classList.remove('fok', 'fko'); void b.offsetWidth; b.classList.add(ok ? 'fok' : 'fko'); clearTimeout(b._f); b._f = setTimeout(() => b.classList.remove('fok', 'fko'), 450); };
 function ateEnd() {
   clearInterval(MGA_TK); const A = MGA, acc = A.ok + A.ko ? A.ok / (A.ok + A.ko) : 0;
-  mEnd('ate', A.ok, acc >= .9 && A.ok >= 20 ? 1 : acc < .7 ? -1 : 0, L(`${A.ok} encerts i ${A.ko} ${A.ko === 1 ? 'error' : 'errors'}. La clau és no deixar-se enganyar per la paraula.`, `${A.ok} aciertos y ${A.ko} ${A.ko === 1 ? 'error' : 'errores'}. La clave es no dejarse engañar por la palabra.`));
+  mEnd('ate', A.ok, acc >= .9 && A.ok >= 20 ? 1 : acc < .7 ? -1 : 0, L(`${A.ok} ${A.ok === 1 ? 'encert' : 'encerts'} i ${A.ko} ${A.ko === 1 ? 'error' : 'errors'}. La clau és no deixar-se enganyar per la paraula.`, `${A.ok} ${A.ok === 1 ? 'acierto' : 'aciertos'} y ${A.ko} ${A.ko === 1 ? 'error' : 'errores'}. La clave es no dejarse engañar por la palabra.`));
 }
 
 /* ---------- 3. Seqüències (memòria de treball visoespacial, tipus Corsi) ---------- */
@@ -573,7 +578,7 @@ function calK(k) {
   if (A.inp === String(A.r)) { A.ok++; SFX.ok && SFX.ok(); el.className = 'calin ok'; A.r = null; setTimeout(() => MGA === A && calNext(), 250); }
   else if (A.inp.length >= String(A.r).length && A.inp !== String(A.r).slice(0, A.inp.length)) { A.ko = (A.ko || 0) + 1; SFX.ko && SFX.ko(); el.className = 'calin ko'; el.textContent = `${A.inp} → ${A.r}`; const r = A.r; A.r = null; setTimeout(() => MGA === A && calNext(), 1100); }
 }
-function calEnd() { clearInterval(MGA_TK); const A = MGA; mEnd('cal', A.ok, A.ok >= 14 ? 1 : A.ok <= 6 ? -1 : 0, L(`${A.ok} comptes en un minut.`, `${A.ok} cuentas en un minuto.`)); }
+function calEnd() { clearInterval(MGA_TK); const A = MGA; mEnd('cal', A.ok, A.ok >= 14 ? 1 : A.ok <= 6 ? -1 : 0, L(`${A.ok} ${A.ok === 1 ? 'compte' : 'comptes'} en un minut.`, `${A.ok} ${A.ok === 1 ? 'cuenta' : 'cuentas'} en un minuto.`)); }
 
 /* ---------- 6. Sudoku (4×4, 6×6 i 9×9) ---------- */
 function sudMake(n, br, bc, holes) {
@@ -614,7 +619,7 @@ function sudHint() {
 function sudCheck() {
   const A = MGA, { sol } = A.S; if (!A.cur.every((row, r) => row.every((v, c) => v === sol[r][c]))) return;
   clearInterval(MGA_TK); const s = Math.round((Date.now() - A.t0) / 1000), n = A.S.n;
-  setTimeout(() => mEnd('sud', s, A.hints === 0 ? 1 : A.hints >= 3 ? -1 : 0, L(`Sudoku ${n}×${n} resolt${A.hints ? ` amb ${A.hints} ${A.hints === 1 ? 'pista' : 'pistes'}` : ' sense pistes'}.`, `Sudoku ${n}×${n} resuelto${A.hints ? ` con ${A.hints} ${A.hints === 1 ? 'pista' : 'pistas'}` : ' sin pistas'}.`)), 500);
+  setTimeout(() => mEnd('sud', s, A.hints === 0 ? 1 : A.hints >= 3 ? -1 : 0, L(`Sudoku ${n}×${n} resolt${A.hints ? ` amb ${A.hints} ${A.hints === 1 ? 'pista' : 'pistes'}` : ' sense pistes'}.`, `Sudoku ${n}×${n} resuelto${A.hints ? ` con ${A.hints} ${A.hints === 1 ? 'pista' : 'pistas'}` : ' sin pistas'}.`), A.hints ? { noRec: true, note: L('Amb pistes no compta per al rècord.', 'Con pistas no cuenta para el récord.') } : null), 500);
 }
 
 /* ---------- 7. Paraules (anagrames amb pista) ---------- */
@@ -673,7 +678,7 @@ function intTap(i) {
   if (i === A.odd) { A.ok++; SFX.ok && SFX.ok(); A.lock = true; c[i].classList.add('ok'); MGT = setTimeout(() => { if (MGA === A) { A.lock = false; intNext(); } }, 280); }
   else { A.ko++; SFX.ko && SFX.ko(); c[i].classList.remove('ko'); void c[i].offsetWidth; c[i].classList.add('ko'); setTimeout(() => c[i] && c[i].classList.remove('ko'), 700); mSet(`${Math.max(0, Math.ceil((A.end - Date.now()) / 1000))} s · ✓ ${A.ok} · ✗ ${A.ko}`); }
 }
-function intEnd() { clearInterval(MGA_TK); const A = MGA; mEnd('int', A.ok, A.ok >= 14 && A.ko <= 2 ? 1 : A.ok <= 6 ? -1 : 0, L(`${A.ok} trobats${A.ko ? ` i ${A.ko} ${A.ko === 1 ? 'error' : 'errors'}` : ''} en 45 segons.`, `${A.ok} encontrados${A.ko ? ` y ${A.ko} ${A.ko === 1 ? 'error' : 'errores'}` : ''} en 45 segundos.`)); }
+function intEnd() { clearInterval(MGA_TK); const A = MGA; mEnd('int', A.ok, A.ok >= 14 && A.ko <= 2 ? 1 : A.ok <= 6 ? -1 : 0, L(`${A.ok} ${A.ok === 1 ? 'trobat' : 'trobats'}${A.ko ? ` i ${A.ko} ${A.ko === 1 ? 'error' : 'errors'}` : ''} en 45 segons.`, `${A.ok} ${A.ok === 1 ? 'encontrado' : 'encontrados'}${A.ko ? ` y ${A.ko} ${A.ko === 1 ? 'error' : 'errores'}` : ''} en 45 segundos.`)); }
 
 /* ---------- 9. Llista de la compra (memòria verbal: reconeixement) ---------- */
 const MPROD = { ca: ['Pa', 'Llet', 'Ous', 'Formatge', 'Tomàquets', 'Pomes', 'Arròs', 'Oli', 'Sucre', 'Cafè', 'Iogurts', 'Pollastre', 'Peix', 'Enciam', 'Cebes', 'Patates', 'Taronges', 'Plàtans', 'Galetes', 'Pernil', 'Mantega', 'Farina', 'Pasta', 'Sal', 'Aigua', 'Suc', 'Xocolata', 'Mongetes', 'Pastanagues', 'Sabó'],
@@ -839,7 +844,7 @@ function simGo() {
 }
 function simNext() { const A = MGA; let c; do c = mri(0, A.k - 1); while (c === A.cur && A.k > 1); A.cur = c; const b = $('#simb'); if (b) { b.innerHTML = mSym(A.key[c]); b.classList.remove('pop'); void b.offsetWidth; b.classList.add('pop'); } }
 function simTap(i) { const A = MGA; if (!A || A.cur < 0) return; const ok = i === A.cur; if (ok) { A.ok++; SFX.tap && SFX.tap(); } else { A.ko++; SFX.ko && SFX.ko(); } mFlash($$('.simpad button')[i], ok); simNext(); }
-function simEnd() { clearInterval(MGA_TK); const A = MGA; A.cur = -1; mEnd('sim', A.ok, A.ok >= 32 && A.ko <= 2 ? 1 : A.ok < 16 ? -1 : 0, L(`${A.ok} encerts${A.ko ? ` i ${A.ko} ${A.ko === 1 ? 'error' : 'errors'}` : ''} en un minut.`, `${A.ok} aciertos${A.ko ? ` y ${A.ko} ${A.ko === 1 ? 'error' : 'errores'}` : ''} en un minuto.`)); }
+function simEnd() { clearInterval(MGA_TK); const A = MGA; A.cur = -1; mEnd('sim', A.ok, A.ok >= 32 && A.ko <= 2 ? 1 : A.ok < 16 ? -1 : 0, L(`${A.ok} ${A.ok === 1 ? 'encert' : 'encerts'}${A.ko ? ` i ${A.ko} ${A.ko === 1 ? 'error' : 'errors'}` : ''} en un minut.`, `${A.ok} ${A.ok === 1 ? 'acierto' : 'aciertos'}${A.ko ? ` y ${A.ko} ${A.ko === 1 ? 'error' : 'errores'}` : ''} en un minuto.`)); }
 
 /* ---------- 16. Uneix els punts (atenció i flexibilitat, com el Trail Making) ---------- */
 function uniGo() {
@@ -859,8 +864,9 @@ function uniTap(i) {
   b.classList.add('done'); SFX.tap && SFX.tap();
   if (i > 0) { const p = A.pts[i - 1], q = A.pts[i]; $('#unil').insertAdjacentHTML('beforeend', `<line x1="${p[0]}" y1="${p[1]}" x2="${q[0]}" y2="${q[1]}" stroke="#177E6E" stroke-width="1.2" stroke-linecap="round" vector-effect="non-scaling-stroke" style="stroke-width:4"/>`); }
   A.next++;
-  if (A.next === A.n) { clearInterval(MGA_TK); const s = Math.round((Date.now() - A.t0) / 1000), per = s / A.n;
-    setTimeout(() => MGA === A && mEnd('uni', s, per < (A.B ? 2.2 : 1.6) && A.err <= 1 ? 1 : per > (A.B ? 4.5 : 3.2) ? -1 : 0, L(`${A.n} punts en ${mTime(s)}${A.err ? ` amb ${A.err} ${A.err === 1 ? 'error' : 'errors'}` : ' sense errors'}.`, `${A.n} puntos en ${mTime(s)}${A.err ? ` con ${A.err} ${A.err === 1 ? 'error' : 'errores'}` : ' sin errores'}.`)), 500); }
+  // cada error suma 2 s al temps que compta (puntuació i rècord): tocar a l'atzar no surt a compte
+  if (A.next === A.n) { clearInterval(MGA_TK); const t = Math.round((Date.now() - A.t0) / 1000), pen = A.err * 2, s = t + pen, per = s / A.n;
+    setTimeout(() => MGA === A && mEnd('uni', s, per < (A.B ? 2.2 : 1.6) && A.err <= 1 ? 1 : per > (A.B ? 4.5 : 3.2) ? -1 : 0, A.err ? L(`${A.n} punts en ${mTime(t)} amb ${A.err} ${A.err === 1 ? 'error' : 'errors'}: +${pen} s de penalització (2 s per error).`, `${A.n} puntos en ${mTime(t)} con ${A.err} ${A.err === 1 ? 'error' : 'errores'}: +${pen} s de penalización (2 s por error).`) : L(`${A.n} punts en ${mTime(t)} sense errors.`, `${A.n} puntos en ${mTime(t)} sin errores.`)), 500); }
 }
 
 /* ---------- 17. Verd sí, vermell no (control de la resposta: go/no-go) ---------- */
@@ -1073,7 +1079,7 @@ function iguNext() {
   [e1, e2].forEach(e => { e.classList.remove('pop'); void e.offsetWidth; e.classList.add('pop'); });
 }
 function iguA(v) { const A = MGA; if (!A || A.same == null) return; const ok = !!v === A.same; ok ? (A.ok++, SFX.tap && SFX.tap()) : (A.ko++, SFX.ko && SFX.ko()); mFlash($$('.copt')[v ? 0 : 1], ok); iguNext(); }
-function iguEnd() { clearInterval(MGA_TK); const A = MGA; A.same = null; mEnd('igu', A.ok, A.ok >= 24 && A.ko <= 2 ? 1 : A.ok <= 11 || A.ko >= 6 ? -1 : 0, L(`${A.ok} encerts${A.ko ? ` i ${A.ko} ${A.ko === 1 ? 'error' : 'errors'}` : ''} en 45 segons.`, `${A.ok} aciertos${A.ko ? ` y ${A.ko} ${A.ko === 1 ? 'error' : 'errores'}` : ''} en 45 segundos.`)); }
+function iguEnd() { clearInterval(MGA_TK); const A = MGA; A.same = null; mEnd('igu', A.ok, A.ok >= 24 && A.ko <= 2 ? 1 : A.ok <= 11 || A.ko >= 6 ? -1 : 0, L(`${A.ok} ${A.ok === 1 ? 'encert' : 'encerts'}${A.ko ? ` i ${A.ko} ${A.ko === 1 ? 'error' : 'errors'}` : ''} en 45 segons.`, `${A.ok} ${A.ok === 1 ? 'acierto' : 'aciertos'}${A.ko ? ` y ${A.ko} ${A.ko === 1 ? 'error' : 'errores'}` : ''} en 45 segundos.`)); }
 
 /* ---------- 25. On era? (memòria d'objectes i llocs) ---------- */
 function onnGo() { MGA = { ...MGA, lv: mLvl('onn'), round: 0, ok: 0, tot: 0 }; onnRound(); }
@@ -1598,7 +1604,7 @@ function mentProfile() {
   const m = MS();
   const ini = (String(P.name || '?').trim()[0] || '?').toUpperCase(), prem = isPremium();
   const hero = `<section class="mhero msub mprof"><span class="mavat">${esc(ini)}</span><div><h1 class="mh1">${esc(P.name)}</h1><p class="msubp">${prem ? 'Numi Ment Premium' : L('Numi Ment · pla gratuït', 'Numi Ment · plan gratuito')}${P.streak > 1 ? ` · ${L(`${P.streak} dies seguits`, `${P.streak} días seguidos`)}` : ''}</p></div></section>`;
-  app.innerHTML = mShell('profile', `<section class="mtcard mlift"><div class="mthead"><b>${L('Dies d\'entrenament a la setmana', 'Días de entrenamiento a la semana')}</b></div><div class="mseg">${[3, 4, 5, 6, 7].map(n => `<button class="${m.goal === n ? 'on' : ''}" onclick="MS().goal=${n};save();mentProfile()">${n}</button>`).join('')}</div><p class="mmut" style="margin:10px 0 0">${L('Recomanem 5 dies: prou per notar-ho i amb marge per descansar.', 'Recomendamos 5 días: suficiente para notarlo y con margen para descansar.')}</p></section>
+  app.innerHTML = mShell('profile', `<section class="mtcard mlift"><div class="mthead"><b>${L('Dies d\'entrenament a la setmana', 'Días de entrenamiento a la semana')}</b></div><div class="mseg">${[3, 4, 5, 6, 7].map(n => `<button class="${m.goal === n ? 'on' : ''}" onclick="MS().goal=${n};save();mentProfile()">${n}</button>`).join('')}</div><p class="mmut" style="margin:10px 0 0">${L('Recomanem 5 dies: prou per agafar l\'hàbit i amb marge per descansar.', 'Recomendamos 5 días: suficiente para coger el hábito y con margen para descansar.')}</p></section>
     <section class="mtcard"><div class="mthead"><b>${L('Recordatori diari', 'Recordatorio diario')}</b><span>${m.rem != null ? `${m.rem}:00` : ''}</span></div><button class="btn ghost mbtn" onclick="mRemind()">${m.rem != null ? L("Canvia l'hora", 'Cambia la hora') : L('Afegeix-lo al calendari', 'Añádelo al calendario')}</button></section>
     <section class="mtcard"><div class="mthead"><b>${L('Idioma', 'Idioma')}</b></div>${langPill()}</section>
     ${mAnam().length ? `<section class="mtcard"><div class="mthead"><b>${L('Punt de partida', 'Punto de partida')}</b><span>${mAnam().length} ${L(mAnam().length === 1 ? 'resposta' : 'respostes', mAnam().length === 1 ? 'respuesta' : 'respuestas')}</span></div>

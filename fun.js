@@ -1,5 +1,11 @@
 /* ===== Mates amb Numi · variació, cromos, missions diàries i lliga (CA/ES) ===== */
 
+/* ---------- 0. Apòstrofs en català a tots els exercicis (d'escriure, l'1 %, de l'11…; vegeu caApos a ex.js) ---------- */
+for (const k of Object.keys(EX)) {
+  const f = EX[k];
+  EX[k] = (...a) => { const e = f(...a); if (e && LANG !== 'es') { e.q = caApos(e.q); e.ex = caApos(e.ex); if (Array.isArray(e.opts)) e.opts = e.opts.map(caApos); } return e; };
+}
+
 /* ---------- 1. Formats variats (remix d'exercicis) ---------- */
 function numDis(a) {
   const s = new Set(), rev = +String(Math.abs(a)).split('').reverse().join('');

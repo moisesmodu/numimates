@@ -178,7 +178,8 @@ function planBox(k) {
   const S = k.sub;
   if (k.pla === 'escola') return `<div class="card plan"><span>${L("Pla d'escola", 'Plan de escuela')}<small>${k.grup ? esc(k.grup) + ' · ' : ''}${L('Premium inclòs', 'Premium incluido')}</small></span></div>`;
   if (k.pla === 'premium' && S) return `<div class="card plan"><span>${S.periode === 'any' ? L('Premium anual', 'Premium anual') : L('Premium mensual', 'Premium mensual')}<small>${S.cancel ? L(`Cancel·lada: Premium fins al ${dayLong(S.renova)}`, `Cancelada: Premium hasta el ${dayLong(S.renova)}`) : S.pendent ? L('No s\'ha pogut cobrar la renovació: revisa la targeta', 'No se ha podido cobrar la renovación: revisa la tarjeta') : L(`Es renova el ${dayLong(S.renova)}`, `Se renueva el ${dayLong(S.renova)}`)}</small></span>
-    ${S.cancel ? `<button class="btn gold sm" onclick="subDo('${esc(k.code)}',true)">${L('REACTIVA', 'REACTIVAR')}</button>` : `<button class="btn ghost sm redt" onclick="subCancel('${esc(k.code)}',1)">${L('CANCEL·LA', 'CANCELAR')}</button>`}</div>`;
+    ${S.cancel ? `<button class="btn gold sm" onclick="subDo('${esc(k.code)}',true)">${L('REACTIVA', 'REACTIVAR')}</button>` : `<button class="btn ghost sm redt" onclick="subCancel('${esc(k.code)}',1)">${L('CANCEL·LA', 'CANCELAR')}</button>`}</div>
+    ${S.desist ? `<p class="note" style="margin:8px 0 0"><button class="link" onclick="desistModal('${esc(k.code)}')">${L(`Desistiu i recupereu els diners (fins al ${dayLong(S.desist)})`, `Desistid y recuperad el dinero (hasta el ${dayLong(S.desist)})`)}</button></p>` : ''}`;
   if (k.pla === 'premium') return `<div class="card plan"><span>Premium<small>${L("Activat per l'equip de Numi Mates", 'Activado por el equipo de Numi Mates')}</small></span></div>`;
   return `<div class="card"><div class="plan"><span>${L('Pla gratuït', 'Plan gratuito')}<small>${L('1 lliçó nova i 3 entrenaments al dia', '1 lección nueva y 3 entrenamientos al día')}</small></span></div>
     <p class="sub" style="margin:10px 0 0">${L('Amb Premium: lliçons sense límit, batalles de mates i la ruta de temporada.', 'Con Premium: lecciones sin límite, batallas de mates y la ruta de temporada.')}</p>
@@ -226,9 +227,22 @@ async function subDo(code, resume) {
   if ($('#se')) $('#se').textContent = m; else toast(m);
   if (b) b.disabled = false;
 }
+// desistiment dins dels 14 dies: Premium s'acaba ara i es torna tot el que s'ha pagat
+function desistModal(code) {
+  const k = D.kids.find(x => x.code === code); if (!k || !k.sub || !k.sub.desist) return;
+  modal(`<h3>${L('Desistir de Premium', 'Desistir de Premium')}</h3><p>${L(`Sou dins dels 14 dies per desistir (fins al <b>${dayLong(k.sub.desist)}</b>). Premium de ${esc(k.name)} s'acaba <b>ara mateix</b> i us tornem <b>tot</b> el que heu pagat a la mateixa targeta (pot trigar uns dies). No es perd cap progrés.`, `Estáis dentro de los 14 días para desistir (hasta el <b>${dayLong(k.sub.desist)}</b>). El Premium de ${esc(k.name)} se acaba <b>ahora mismo</b> y os devolvemos <b>todo</b> lo que habéis pagado en la misma tarjeta (puede tardar unos días). No se pierde ningún progreso.`)}</p>
+    <p class="err" id="se"></p><button class="btn red" id="sg" onclick="desistGo('${esc(code)}')">${L('DESISTEIX I RETORNA ELS DINERS', 'DESISTIR Y DEVOLVER EL DINERO')}</button><button class="btn ghost" onclick="closeModal()">${L('TORNA', 'VOLVER')}</button>`);
+}
+async function desistGo(code) {
+  const b = $('#sg'); if (b) b.disabled = true;
+  const r = await fetch('/api/pay?a=desist', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ code, tok: TOK }) }).then(x => x.json().then(j => ({ status: x.status, ...j }))).catch(() => ({ status: 0 }));
+  if (r.ok) { closeModal(); await refresh(); return toast(L(`Fet: Premium cancel·lat i ${((r.refunded || 0) / 100).toFixed(2).replace('.', ',')} € retornats.`, `Hecho: Premium cancelado y ${((r.refunded || 0) / 100).toFixed(2).replace('.', ',')} € devueltos.`)); }
+  $('#se').textContent = r.error === 'termini' ? L('Ja han passat els 14 dies. Podeu cancel·lar-lo perquè no es renovi.', 'Ya han pasado los 14 días. Podéis cancelarlo para que no se renueve.') : L("No s'ha pogut fer. Escriviu-nos a hola@numimates.com i ho fem nosaltres.", 'No se ha podido hacer. Escribidnos a hola@numimates.com y lo hacemos nosotros.');
+  if (b) b.disabled = false;
+}
 function removeKid(code) {
   const k = D.kids.find(x => x.code === code); if (!k) return;
-  modal(`<h3>${L(`Treure ${esc(k.name)}?`, `¿Quitar a ${esc(k.name)}?`)}</h3><p>${L("Deixareu de veure'n el progrés aquí. El seu compte i el progrés no es toquen, i el podreu tornar a afegir amb el codi.", 'Dejaréis de ver su progreso aquí. Su cuenta y su progreso no se tocan, y lo podréis volver a añadir con el código.')}</p>
+  modal(`<h3>${L(`Treure ${esc(k.name)}?`, `¿Quitar a ${esc(k.name)}?`)}</h3><p>${L("Deixareu de veure'n el progrés aquí. El seu compte i el progrés no es toquen, i el podreu tornar a afegir des de la seva app. Si és menor de 14 anys i cap altre adult no el té afegit, es retira el permís: el seu progrés deixarà de desar-se al núvol.", 'Dejaréis de ver su progreso aquí. Su cuenta y su progreso no se tocan, y lo podréis volver a añadir desde su app. Si es menor de 14 años y ningún otro adulto lo tiene añadido, se retira el permiso: su progreso dejará de guardarse en la nube.')}</p>
     <button class="btn red" onclick="removeGo('${esc(code)}')">${L('TREU EL PERFIL', 'QUITAR EL PERFIL')}</button><button class="btn ghost" onclick="closeModal()">${L('TORNA', 'VOLVER')}</button>`);
 }
 async function removeGo(code) { const r = await api('remove', { code }); closeModal(); if (r.kids) { D = r; VIEW = 'home'; render(); } else toast(ERR(r.status)); }

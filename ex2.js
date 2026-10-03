@@ -102,8 +102,13 @@ function cubesSVG(a, b, c, labels) {
 /* --- Generadors --- */
 Object.assign(EX, {
   'g.count': (L_, A) => {
-    const max = +A || 10, [em, nm] = pickEm(), n = ri(Math.min(3, max), max);
-    return inp(L(`Quantes ${nm} hi ha?`, `¿Cuántas ${nm} hay?`), n, { vis: emGrid(em, n, 5), ex: L(`Compta-les de 5 en 5: 5, 10… N'hi ha ${n}.`, `Cuéntalas de 5 en 5: 5, 10… Hay ${n}.`) });
+    const max = +A || 10, [em, nm] = pickEm(), n = ri(Math.min(3, max), max), r = n % 5;
+    // de 5 en 5 només quan hi ha almenys dues files plenes (la graella és de 5 en 5)
+    const fives = [...Array(Math.floor(n / 5))].map((_, i) => 5 * (i + 1)).join(', '), ones = [...Array(n)].map((_, i) => i + 1).join(', ');
+    const ex = n >= 10 ? L(`Compta-les de 5 en 5 (cada fila en té 5): ${fives}${r ? ` i ${r} més` : ''}. N'hi ha ${n}.`, `Cuéntalas de 5 en 5 (cada fila tiene 5): ${fives}${r ? ` y ${r} más` : ''}. Hay ${n}.`)
+      : n > 5 ? L(`Una fila plena en té 5 i ${r === 1 ? 'en sobra' : 'en sobren'} ${r}: 5 + ${r} = ${n}.`, `Una fila llena tiene 5 y ${r === 1 ? 'sobra' : 'sobran'} ${r}: 5 + ${r} = ${n}.`)
+      : L(`Compta-les d'una en una: ${ones}. N'hi ha ${n}.`, `Cuéntalas de una en una: ${ones}. Hay ${n}.`);
+    return inp(L(`Quantes ${nm} hi ha?`, `¿Cuántas ${nm} hay?`), n, { vis: emGrid(em, n, 5), ex });
   },
   'g.next': (L_, A) => {
     const max = +A || 20, v = L_ >= 3 ? ri(0, 2) : ri(0, 1);
@@ -119,8 +124,8 @@ Object.assign(EX, {
   },
   'g.blocks': (L_, A) => {
     const max = +A || 100, n = ri(max <= 20 ? 10 : max <= 100 ? 11 : 101, max - 1), h = Math.floor(n / 100), t = Math.floor(n % 100 / 10), u = n % 10;
-    const parts = [h && L(`${h} centenes`, `${h} centenas`), t && L(`${t} desenes`, `${t} decenas`), u && L(`${u} unitats`, `${u} unidades`)].filter(Boolean).join(', ');
-    if (L_ >= 3 && max <= 100 && Math.random() < .4) return inp(L(`Quantes <b>desenes</b> té el número ${n}?`, `¿Cuántas <b>decenas</b> tiene el número ${n}?`), t, { vis: blocksSVG(n), ex: L(`${n} té ${t} desenes i ${u} unitats. Cada barra és una desena.`, `${n} tiene ${t} decenas y ${u} unidades. Cada barra es una decena.`) });
+    const parts = [h && nCen(h), t && nDes(t), u && nUni(u)].filter(Boolean).join(', ');
+    if (L_ >= 3 && max <= 100 && Math.random() < .4) return inp(L(`Quantes <b>desenes</b> té el número ${n}?`, `¿Cuántas <b>decenas</b> tiene el número ${n}?`), t, { vis: blocksSVG(n), ex: L(`${n} té ${nDes(t)} i ${nUni(u)}. Cada barra és una desena.`, `${n} tiene ${nDes(t)} y ${nUni(u)}. Cada barra es una decena.`) });
     return inp(L('Quin número formen els blocs?', '¿Qué número forman los bloques?'), n, { vis: `<div class="stack">${blocksSVG(n)}<div class="legend">${max > 100 ? L('Placa = 100 · ', 'Placa = 100 · ') : ''}${L('Barra = 10 · Cub = 1', 'Barra = 10 · Cubo = 1')}</div></div>`, ex: `${parts} → ${fmt(n)}.` });
   },
   'g.words': (L_, A) => {
@@ -141,7 +146,7 @@ Object.assign(EX, {
       x = ri(10, 15); y = ri(1, 19 - x); if (Math.random() < .5) [x, y] = [y, x];
       return inp(HOW(), x + y, { vis: eqv(`${x} + ${y} = ${BOX}`), ex: `${x} + ${y} = ${x + y}.` });
     }
-    if (L_ <= 1) { x = ri(1, 7) * 10; y = ri(1, 9 - x / 10) * 10; return inp(HOW(), x + y, { vis: eqv(`${x} + ${y} = ${BOX}`), ex: L(`${x / 10} desenes + ${y / 10} desenes = ${(x + y) / 10} desenes = ${x + y}.`, `${x / 10} decenas + ${y / 10} decenas = ${(x + y) / 10} decenas = ${x + y}.`) }); }
+    if (L_ <= 1) { x = ri(1, 7) * 10; y = ri(1, 9 - x / 10) * 10; return inp(HOW(), x + y, { vis: eqv(`${x} + ${y} = ${BOX}`), ex: `${nDes(x / 10)} + ${nDes(y / 10)} = ${nDes((x + y) / 10)} = ${x + y}.` }); }
     if (L_ === 3) { x = ri(15, 68); y = ri(12, 100 - x); return inp(HOW(), x + y, { vis: eqv(`${x} + ${y} = ${BOX}`), ex: L(`Primer les desenes i després les unitats: ${x} + ${y} = ${x + y}.`, `Primero las decenas y después las unidades: ${x} + ${y} = ${x + y}.`) }); }   // a 1r, com a molt 100
     if (L_ <= 2) return EX['a.add'](1);
     if (L_ === 4) { x = ri(15, 68); y = ri(12, 99 - x); return inp(L('Fes la suma:', 'Haz la suma:'), x + y, { vis: colOp(x, y, '+'), ex: L(`Suma les unitats i després les desenes (sense oblidar les que et portes): ${x} + ${y} = ${x + y}.`, `Suma las unidades y después las decenas (sin olvidar las que te llevas): ${x} + ${y} = ${x + y}.`) }); }
@@ -159,7 +164,7 @@ Object.assign(EX, {
       if (L_ >= 3) { x = ri(11, 18); y = ri(x - 9, 9); return inp(HOW(), x - y, { vis: eqv(`${x} − ${y} = ${BOX}`), ex: L(`Baixa fins a 10: ${x} − ${x - 10} = 10, i 10 − ${y - (x - 10)} = ${x - y}.`, `Baja hasta 10: ${x} − ${x - 10} = 10, y 10 − ${y - (x - 10)} = ${x - y}.`) }); }
       x = ri(11, 19); y = ri(1, x - 10); return inp(HOW(), x - y, { vis: eqv(`${x} − ${y} = ${BOX}`), ex: `${x} − ${y} = ${x - y}.` });
     }
-    if (L_ <= 1) { x = ri(3, 9) * 10; y = ri(1, x / 10 - 1) * 10; return inp(HOW(), x - y, { vis: eqv(`${x} − ${y} = ${BOX}`), ex: L(`${x / 10} desenes − ${y / 10} desenes = ${(x - y) / 10} desenes = ${x - y}.`, `${x / 10} decenas − ${y / 10} decenas = ${(x - y) / 10} decenas = ${x - y}.`) }); }
+    if (L_ <= 1) { x = ri(3, 9) * 10; y = ri(1, x / 10 - 1) * 10; return inp(HOW(), x - y, { vis: eqv(`${x} − ${y} = ${BOX}`), ex: `${nDes(x / 10)} − ${nDes(y / 10)} = ${nDes((x - y) / 10)} = ${x - y}.` }); }
     if (L_ <= 3) return EX['a.sub'](L_ === 2 ? 1 : 2);
     if (L_ === 4) { x = ri(41, 98); y = ri(12, x - 10); return inp(L('Fes la resta:', 'Haz la resta:'), x - y, { vis: colOp(x, y, '−'), ex: L(`Si a les unitats no en tens prou, demana una desena. Comprova-ho: ${x - y} + ${y} = ${x}.`, `Si en las unidades no tienes bastante, pide una decena. Compruébalo: ${x - y} + ${y} = ${x}.`) }); }
     return EX['a.missing'](1);
@@ -206,17 +211,17 @@ Object.assign(EX, {
     if (A === 'sub') { const x = ri(30, 90), y = ri(10, x - 5); return inp(L(`A l'excursió hi van ${x} nens i nenes. ${y} tornen amb autobús i la resta, caminant. Quants tornen caminant?`, `A la excursión van ${x} niños y niñas. ${y} vuelven en autobús y el resto, andando. ¿Cuántos vuelven andando?`), x - y, { long: true, ex: L(`«La resta» vol dir restar: ${x} − ${y} = ${x - y}.`, `«El resto» quiere decir restar: ${x} − ${y} = ${x - y}.`) }); }
     if (A === 'cmp') { const x = ri(4, lim), y = ri(1, x - 1); return inp(L(`${N.C} té ${x} ${nm} i ${M.c} en té ${y}. ${Q} ${nm} més té ${N.c}?`, `${N.C} tiene ${x} ${nm} y ${M.c} tiene ${y}. ¿${Q} ${nm} más tiene ${N.c}?`), x - y, { long: true, ex: L(`Per saber quantes més, restem: ${x} − ${y} = ${x - y}.`, `Para saber cuántas más, restamos: ${x} − ${y} = ${x - y}.`) }); }
     if (A === 'less') { const x = ri(4, lim), y = ri(1, x - 1); return inp(L(`${N.C} té ${x} ${nm} i en regala ${y}. ${Q} ${nm} li queden?`, `${N.C} tiene ${x} ${nm} y regala ${y}. ¿${Q} ${nm} le quedan?`), x - y, { long: true, vis: lim <= 10 ? emRow(em, x, y) : '', ex: L(`Regalar vol dir treure: ${x} − ${y} = ${x - y}.`, `Regalar quiere decir quitar: ${x} − ${y} = ${x - y}.`) }); }
-    const x = ri(1, lim - 2), y = ri(1, lim - x);
+    const x = ri(2, lim - 2), y = ri(1, lim - x);   // des de 2: «té 1 galetes» no es pot dir
     return inp(L(`${N.C} té ${x} ${nm} i n'hi donen ${y} més. ${Q} ${nm} té ara?`, `${N.C} tiene ${x} ${nm} y le dan ${y} más. ¿${Q} ${nm} tiene ahora?`), x + y, { long: true, vis: lim <= 10 ? `<div class="plus">${emRow(em, x)}<b>+</b>${emRow(em, y)}</div>` : '', ex: L(`Li'n donen més: sumem. ${x} + ${y} = ${x + y}.`, `Le dan más: sumamos. ${x} + ${y} = ${x + y}.`) });
   },
 
   'dec.read': L_ => {
     let i, d1, d2; do { i = ri(1, 9); d1 = ri(0, 9); d2 = ri(1, 9); } while (new Set([i, d1, d2]).size < 3);
     const x = i + d1 / 10 + d2 / 100, s = fmtDf(x, 2), c = d1 * 10 + d2, v = Math.random();
-    const un = n => n === 1 ? L('unitat', 'unidad') : L('unitats', 'unidades'), ce = n => n === 1 ? L('centèsima', 'centésima') : L('centèsimes', 'centésimas'), y_ = L('i', 'y');
-    if (v < .4) { const pl = pick([[L('dècimes', 'décimas'), d1], [L('centèsimes', 'centésimas'), d2], [L('unitats', 'unidades'), i]]); return mc(L(`Quina xifra hi ha a les <b>${pl[0]}</b>?`, `¿Qué cifra hay en las <b>${pl[0]}</b>?`), pl[1], [i, d1, d2], { big: true, vis: bigNum(s), ex: L(`A ${s}: ${i} unitats, ${d1} dècimes i ${d2} centèsimes. Després de la coma, primer van les dècimes.`, `En ${s}: ${i} unidades, ${d1} décimas y ${d2} centésimas. Después de la coma, primero van las décimas.`) }); }
-    if (v < .7 || L_ <= 1) return mc(L('Com es llegeix?', '¿Cómo se lee?'), `${i} ${un(i)} ${y_} ${c} ${ce(c)}`, [`${i} ${un(i)} ${y_} ${d2 * 10 + d1} ${ce(d2 * 10 + d1)}`, `${c} ${un(c)} ${y_} ${i} ${ce(i)}`, `${i} ${un(i)} ${y_} ${d1} ${L('dècimes', 'décimas')}`], { vis: bigNum(s), list: true, ex: L(`${s} = ${i} ${un(i)} i ${c} ${ce(c)} (dues xifres després de la coma → centèsimes).`, `${s} = ${i} ${un(i)} y ${c} ${ce(c)} (dos cifras después de la coma → centésimas).`) });
-    return dinp(L(`Escriu el número: <b>${i} ${un(i)}, ${d1} dècimes i ${d2} centèsimes</b>`, `Escribe el número: <b>${i} ${un(i)}, ${d1} décimas y ${d2} centésimas</b>`), x, { ex: L(`${i} unitats → ${i}; ${d1} dècimes → 0,${d1}; ${d2} centèsimes → 0,0${d2}. Total: ${s}.`, `${i} unidades → ${i}; ${d1} décimas → 0,${d1}; ${d2} centésimas → 0,0${d2}. Total: ${s}.`) });
+    const un = n => n === 1 ? L('unitat', 'unidad') : L('unitats', 'unidades'), dc = n => n === 1 ? L('dècima', 'décima') : L('dècimes', 'décimas'), ce = n => n === 1 ? L('centèsima', 'centésima') : L('centèsimes', 'centésimas'), y_ = L('i', 'y');
+    if (v < .4) { const pl = pick([[L('dècimes', 'décimas'), d1], [L('centèsimes', 'centésimas'), d2], [L('unitats', 'unidades'), i]]); return mc(L(`Quina xifra hi ha a les <b>${pl[0]}</b>?`, `¿Qué cifra hay en las <b>${pl[0]}</b>?`), pl[1], [i, d1, d2], { big: true, vis: bigNum(s), ex: L(`A ${s}: ${i} ${un(i)}, ${d1} ${dc(d1)} i ${d2} ${ce(d2)}. Després de la coma, primer van les dècimes.`, `En ${s}: ${i} ${un(i)}, ${d1} ${dc(d1)} y ${d2} ${ce(d2)}. Después de la coma, primero van las décimas.`) }); }
+    if (v < .7 || L_ <= 1) return mc(L('Com es llegeix?', '¿Cómo se lee?'), `${i} ${un(i)} ${y_} ${c} ${ce(c)}`, [`${i} ${un(i)} ${y_} ${d2 * 10 + d1} ${ce(d2 * 10 + d1)}`, `${c} ${un(c)} ${y_} ${i} ${ce(i)}`, `${i} ${un(i)} ${y_} ${d1} ${dc(d1)}`], { vis: bigNum(s), list: true, ex: L(`${s} = ${i} ${un(i)} i ${c} ${ce(c)} (dues xifres després de la coma → centèsimes).`, `${s} = ${i} ${un(i)} y ${c} ${ce(c)} (dos cifras después de la coma → centésimas).`) });
+    return dinp(L(`Escriu el número: <b>${i} ${un(i)}, ${d1} ${dc(d1)} i ${d2} ${ce(d2)}</b>`, `Escribe el número: <b>${i} ${un(i)}, ${d1} ${dc(d1)} y ${d2} ${ce(d2)}</b>`), x, { ex: L(`${i} ${un(i)} → ${i}; ${d1} ${dc(d1)} → 0,${d1}; ${d2} ${ce(d2)} → 0,0${d2}. Total: ${s}.`, `${i} ${un(i)} → ${i}; ${d1} ${dc(d1)} → 0,${d1}; ${d2} ${ce(d2)} → 0,0${d2}. Total: ${s}.`) });
   },
   'dec.cmp': L_ => {
     const i = ri(0, 9), a = i + ri(1, 9) / 10; let b = Math.random() < .15 ? a : i + ri(1, 99) / 100;
