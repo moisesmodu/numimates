@@ -12,15 +12,31 @@ export function scene(objects, { floor = 0.64, window = true, extra = '' } = {})
   <filter id="soft" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="14"/></filter>
   <linearGradient id="wallg" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="${C.wall}"/><stop offset="1" stop-color="${C.wall2}"/></linearGradient>
   <linearGradient id="floorg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${C.em2}"/><stop offset="1" stop-color="${C.ink}"/></linearGradient>
+  <radialGradient id="pool" cx="0.6" cy="0.42" r="0.5"><stop offset="0" stop-color="#FFF8E8" stop-opacity=".85"/><stop offset=".55" stop-color="#FFF8E8" stop-opacity=".25"/><stop offset="1" stop-color="#FFF8E8" stop-opacity="0"/></radialGradient>
+  <radialGradient id="floorpool" cx="0.6" cy="0.15" r="0.55"><stop offset="0" stop-color="#5FD0B5" stop-opacity=".38"/><stop offset="1" stop-color="#5FD0B5" stop-opacity="0"/></radialGradient>
+  <linearGradient id="floordark" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0B231F" stop-opacity="0"/><stop offset="1" stop-color="#0B231F" stop-opacity=".55"/></linearGradient>
+  <radialGradient id="vign" cx="0.58" cy="0.45" r="0.8"><stop offset=".55" stop-color="#0B231F" stop-opacity="0"/><stop offset="1" stop-color="#0B231F" stop-opacity=".38"/></radialGradient>
+  <linearGradient id="walltop" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9C8A6E" stop-opacity=".28"/><stop offset=".4" stop-color="#9C8A6E" stop-opacity="0"/></linearGradient>
+  <filter id="lift" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="-46" dy="26" stdDeviation="24" flood-color="#0B231F" flood-opacity=".34"/><feDropShadow dx="-4" dy="4" stdDeviation="3" flood-color="#0B231F" flood-opacity=".25"/></filter>
+  <filter id="tow" filterUnits="userSpaceOnUse" x="0" y="0" width="1600" height="900"><feFlood flood-color="#fff"/><feComposite in2="SourceAlpha" operator="in"/></filter>
+  <mask id="objm" maskUnits="userSpaceOnUse" x="0" y="0" width="1600" height="900"><g filter="url(#tow)"><use href="#objs"/></g></mask>
+  <linearGradient id="shade" gradientUnits="userSpaceOnUse" x1="1250" y1="150" x2="700" y2="760"><stop offset="0" stop-color="#FFF6E0" stop-opacity=".30"/><stop offset=".42" stop-color="#FFF6E0" stop-opacity="0"/><stop offset=".55" stop-color="#0B231F" stop-opacity="0"/><stop offset="1" stop-color="#0B231F" stop-opacity=".45"/></linearGradient>
+  <filter id="far" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur stdDeviation="2.4"/></filter>
   <linearGradient id="lightg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".0"/><stop offset=".5" stop-color="#fff" stop-opacity=".18"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
 </defs>
 <rect width="1600" height="900" fill="url(#wallg)"/>
+<rect width="1600" height="${fy}" fill="url(#pool)"/><rect width="1600" height="${fy}" fill="url(#walltop)"/>
 <path d="M0 ${fy - 120} L 1600 ${fy - 340} L 1600 ${fy - 250} L 0 ${fy - 30}Z" fill="url(#lightg)"/>
-${window ? `<rect x="1330" y="0" width="270" height="${fy - 40}" fill="${C.em}" opacity=".22"/><rect x="1330" y="0" width="22" height="${fy - 40}" fill="${C.em2}"/><rect x="1330" y="${fy * .42}" width="270" height="16" fill="${C.em2}"/>${leaves}` : ''}
+${window ? `<g filter="url(#far)"><rect x="1330" y="0" width="270" height="${fy - 40}" fill="${C.em}" opacity=".22"/><rect x="1330" y="0" width="22" height="${fy - 40}" fill="${C.em2}"/><rect x="1330" y="${fy * .42}" width="270" height="16" fill="${C.em2}"/>${leaves}</g><rect x="1320" y="0" width="14" height="${fy - 40}" fill="#0B231F" opacity=".12"/>` : ''}
 <path d="M0 ${fy} L 1600 ${fy - 40} L 1600 900 L 0 900Z" fill="url(#floorg)"/>
-<path d="M0 ${fy} L 1600 ${fy - 40}" stroke="${C.em}" stroke-width="6" opacity=".6"/>
+<path d="M0 ${fy} L 1600 ${fy - 40} L 1600 900 L 0 900Z" fill="url(#floorpool)"/>
+<path d="M0 ${fy} L 1600 ${fy - 40} L 1600 900 L 0 900Z" fill="url(#floordark)"/>
+<path d="M0 ${fy} L 1600 ${fy - 40}" stroke="#7FE0C8" stroke-width="3" opacity=".55"/>
+<path d="M0 ${fy - 2} L 1600 ${fy - 42} L 1600 ${fy - 30} L 0 ${fy + 10}Z" fill="#0B231F" opacity=".18"/>
 ${extra}
-${objects}
+<defs><g id="objs">${objects}</g></defs><g filter="url(#lift)"><use href="#objs"/></g>
+<rect width="1600" height="900" fill="url(#shade)" mask="url(#objm)"/>
+<rect width="1600" height="900" fill="url(#vign)"/>
 <rect width="1600" height="900" filter="url(#grain)" opacity=".9"/>
 </svg>`;
 }
