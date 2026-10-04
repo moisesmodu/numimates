@@ -436,7 +436,8 @@ function sgSound(n) { if (typeof P !== 'undefined' && P && P.sound === false) re
 function sgGo(auto) {
   if (!SG) return; if (SG.run) sgStop();
   const spec = SG.alts[SG.altI], hasIn = !!(spec.input && spec.input.length);
-  SG.W = stgWorld(hasIn && !auto ? { ...spec, input: [], seed: (Math.random() * 2 ** 31) >>> 0 } : spec);   // provant lliurement, l'atzar canvia cada vegada; la comprovació fa servir sempre la mateixa llavor (com el validador) SG.auto = !!auto; SG.judge = !hasIn || !!auto;
+  SG.W = stgWorld(hasIn && !auto ? { ...spec, input: [], seed: (Math.random() * 2 ** 31) >>> 0 } : spec); SG.auto = !!auto; SG.judge = !hasIn || !!auto;
+  // (provant lliurement, l'atzar canvia cada vegada; la comprovació fa servir sempre la mateixa llavor, com el validador)
   SG.M = stgMachine(SG.W, SG.progs); SG.run = true; SG.tries++; SG.sel = null; sgSay(auto ? L('Comprovant: les tecles es premen soles…', 'Comprobando: las teclas se pulsan solas…') : '');
   const lastSay = {}; let last = performance.now(), acc = 0, fr = 0, snd = null;
   SG.M.flag();
