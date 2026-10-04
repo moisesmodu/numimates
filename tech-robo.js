@@ -78,7 +78,7 @@ function roboFloor(W, x, y) {
 function roboSim(W) {
   const [x, y, h] = W.bot;
   return { x, y, h, vl: 0, vr: 0, tl: 0, tr: 0, t: 0, hits: 0, hit: false, car: { L: null, R: null }, under: [null, null, null, null], mx: null, mxT: null, notes: [], vars: {}, patrol: false,
-    trail: [[x, y]], objs: W.objs.map(o => ({ ...o })), lead: W.leader ? { i: 0, x: W.leader.path[0][0], y: W.leader.path[0][1], h: 0 } : null, dark: !!W.dark, lamp: W.lamp ? { ...W.lamp, on: W.lamp.on !== false } : null,
+    trail: [[x, y]], objs: W.objs.map(o => ({ ...o })), lead: W.leader ? { i: 0, x: W.leader.path[0][0], y: W.leader.path[0][1], h: W.leader.path[1] ? (Math.atan2(W.leader.path[1][0] - W.leader.path[0][0], -(W.leader.path[1][1] - W.leader.path[0][1])) * 180 / Math.PI + 360) % 360 : 0 } : null, dark: !!W.dark, lamp: W.lamp ? { ...W.lamp, on: W.lamp.on !== false } : null,
     log: [], cps: 0, cover: new Set(), stopT: 0, out: false, crash: null, ended: false, btn: { A: 0, B: 0 }, sound: null };
 }
 /* ---------- Sensors ---------- */
@@ -345,6 +345,8 @@ function RQ(src) {
 }
 
 /* ---------- Del simulador a MakeCode (JavaScript de l'extensió «Maqueen», V5) ---------- */
+// les variables que fa servir un programa (per ensenyar-les al tauler quan el pas no les diu)
+function roboProgVars(P) { const v = new Set(), w = l => (l || []).forEach(b => { if (typeof b.v === 'string' && ['set', 'change', 'calc'].includes(b.k)) v.add(b.v); w(Array.isArray(b.b) ? b.b : null); w(b.e); }); Object.values(P || {}).forEach(w); return [...v]; }
 function roboMC(prog) {
   const vars = new Set(), walk = l => (l || []).forEach(b => { if (b.v && typeof b.v === 'string') vars.add(b.v); const o = [b.s, b.ms, b.a, b.y, b.n, b.v]; o.forEach(x => x && x.r === 'var' && vars.add(x.v)); const c = x => { if (!x) return; if (x.and || x.or) (x.and || x.or).forEach(c); else [x.a, x.b].forEach(y => y && y.r === 'var' && vars.add(y.v)); }; c(b.c); walk(b.b); walk(b.e); });
   Object.values(prog).forEach(walk);
@@ -455,7 +457,7 @@ function rbMake(st, o = {}) {
   const spec = st.w, alts = roboAlts(spec);
   const scripts = st.scripts || ['start', 'forever'];
   const prog = { start: [], forever: [], A: [], B: [] }; if (o.prog || st.prog) Object.assign(prog, rbClone(RQ(o.prog || st.prog)));
-  RB = { st, spec, alts, altI: 0, altOk: new Set(), W: roboWorld(alts[0]), prog, scripts, pal: st.pal || ['run', 'stop', 'wait'], mode: o.mode || 'edit', ops: st.ops || ['dist'], vars: st.vars || ((st.pal || []).some(k => ['set', 'change', 'calc'].includes(k)) ? ['v'] : []),
+  RB = { st, spec, alts, altI: 0, altOk: new Set(), W: roboWorld(alts[0]), prog, scripts, pal: st.pal || ['run', 'stop', 'wait'], mode: o.mode || 'edit', ops: st.ops || ['dist'], vars: st.vars || ((st.pal || []).some(k => ['set', 'change', 'calc'].includes(k)) ? ['v'] : roboProgVars(prog)),
     cur: null, sel: null, run: false, speed: 1, solved: false, tries: 0, onDone: o.onDone || null, onFail: o.onFail || null, M: null, view: o.view || 'auto', max: st.max || 0, lists: [], ids: {} };
   RB.cur = { l: prog[scripts[scripts.length - 1]] || prog.start, i: 0 };
   RB.cur.i = RB.cur.l.length;
@@ -509,7 +511,7 @@ function rbDashHTML() {
       <span class="rs"><small>${L('Línia', 'Línea')} L·M·R</small><b class="rln">${ln.map((v, i) => `<i class="${v ? 'k' : ''}" title="${'LMR'[i]}">${v}</i>`).join('')}</b></span>
       <span class="rs"><small>${L('Llum', 'Luz')} E·D</small><b class="rlt">${lL}<em>·</em>${lR}</b></span>
       <span class="rs"><small>${L('Motors', 'Motores')}</small><b class="rmot">${bar(S.vl)}${bar(S.vr)}</b></span>
-      ${Object.keys(S.vars).length || (RB.st.vars && RB.st.vars.length) ? `<span class="rs"><small>${RB.vars.map(v => rbVName(v, RB.st)).join(' · ')}</small><b>${RB.vars.map(v => S.vars[v] ?? 0).join(' · ')}</b></span>` : ''}
+      ${Object.keys(S.vars).length || RB.vars.length ? `<span class="rs"><small>${RB.vars.map(v => rbVName(v, RB.st)).join(' · ')}</small><b>${RB.vars.map(v => S.vars[v] ?? 0).join(' · ')}</b></span>` : ''}
       <span class="rs t"><small>${L('Temps', 'Tiempo')}</small><b>${S.t.toFixed(1)}<em>s</em></b></span></div>`;
 }
 function rbHTML(extra = '') {
