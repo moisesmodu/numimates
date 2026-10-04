@@ -192,7 +192,7 @@ COURSE_UNITS[2] = { t: 'Pensar abans de creure|Pensar antes de creer', d: 'Bulos
           bad: "Si la IA m'escriu el treball, l'entrego com si fos meu.|Si la IA me escribe el trabajo, lo entrego como si fuera mío.", good: "La IA em pot donar idees, però la feina la faig jo i dic que m'ha ajudat.|La IA me puede dar ideas, pero el trabajo lo hago yo y digo que me ha ayudado." }
       ] },
       { k: 'dsort', ph: 'mans', q: "Quines d'aquestes màquines <b>aprenen d'exemples</b> (IA) i quines <b>segueixen ordres fixes</b>?|¿Cuáles de estas máquinas <b>aprenden de ejemplos</b> (IA) y cuáles <b>siguen órdenes fijas</b>?",
-        bins: ["Aprèn d'exemples|Aprende de ejemplos", 'Ordres fixes|Órdenes fijas'], binIco: ['🧠', '🔧'],
+        bins: ['És una IA|Es una IA', 'Ordres fixes|Órdenes fijas'], binIco: ['🧠', '🔧'],
         items: [
           { t: 'Un traductor que ha après de milions de frases traduïdes|Un traductor que ha aprendido de millones de frases traducidas', ico: '📖', b: 0, ex: "Ha après de molts exemples de frases: és una IA.|Ha aprendido de muchos ejemplos de frases: es una IA." },
           { t: 'Una calculadora que suma 2 + 2|Una calculadora que suma 2 + 2', ico: '🧮', b: 1, ex: "Sempre fa el mateix càlcul amb les mateixes regles: no aprèn res.|Siempre hace el mismo cálculo con las mismas reglas: no aprende nada." },
@@ -293,7 +293,7 @@ COURSE_UNITS[2] = { t: 'Pensar abans de creure|Pensar antes de creer', d: 'Bulos
           tip: "Si no tens cap adult a prop o et costa parlar-ne, pots trucar al <b>116 111</b>, un telèfon d'ajuda per a infants i adolescents, gratuït i confidencial.|Si no tienes ningún adulto cerca o te cuesta hablar de ello, puedes llamar al <b>116 111</b>, un teléfono de ayuda para niños, niñas y adolescentes, gratuito y confidencial." }
       ] },
       { k: 'dsort', ph: 'mans', q: "Llegeix cada missatge i pensa com se sentiria qui el rep: <b>fa sentir bé</b> o <b>pot fer mal</b>?|Lee cada mensaje y piensa cómo se sentiría quien lo recibe: ¿<b>hace sentir bien</b> o <b>puede hacer daño</b>?",
-        bins: ['Fa sentir bé|Hace sentir bien', 'Pot fer mal|Hace daño'], binIco: ['😍', '😟'], binCol: ['#22A06B', '#E5484D'],
+        bins: ['Amable|Amable', 'Fa mal|Hace daño'], binIco: ['😍', '😟'], binCol: ['#22A06B', '#E5484D'],
         items: [
           { t: 'Quin gol més bo has fet avui!|¡Qué golazo has metido hoy!', ico: '⚽', b: 0, ex: "Un elogi concret alegra el dia a qualsevol.|Un elogio concreto alegra el día a cualquiera." },
           { t: '«Jaja, quina pinta fas» (i reenvia la foto al grup)|«Jaja, qué pinta tienes» (y reenvía la foto al grupo)', ico: '👀', b: 1, ex: "Riure's d'algú i escampar la seva foto fa mal, encara que sigui «de broma».|Reírse de alguien y difundir su foto hace daño, aunque sea «de broma»." },

@@ -84,9 +84,9 @@ Object.assign(TANI, (() => {
             <path d="M-6 -30L-16 -86L16 -86L6 -30Z" fill="#2EE6F0" opacity=".28">${SM('fill', '#2EE6F0;#2EE6F0;#FF9F0A;#FF9F0A;#2EE6F0;#2EE6F0', '0;.4;.41;.7;.71;1', 'calcMode="discrete"')}</path>
             <g transform="scale(.66)">${bot({ car: '#C7CBD6', carAnim: SM('fill', '#C7CBD6;#C7CBD6;#FF3B30;#FF3B30;#C7CBD6', '0;.46;.47;.76;1', 'calcMode="discrete"') })}</g></g></g>
         <g transform="translate(236 34)">
-          <g opacity=".35">${SM('opacity', '1;1;.35;.35', '0;.4;.41;1', 'calcMode="discrete"')}${pill(32, 0, 92, L('1 busca', '1 busca'), '#2F7BFF')}</g>
-          <g opacity=".35" transform="translate(0 40)">${SM('opacity', '.35;.35;1;1;.35;.35', '0;.46;.47;.76;.77;1', 'calcMode="discrete"')}${pill(32, 0, 92, L('2 ataca', '2 ataca'), '#EF5A5A')}</g>
-          <g opacity=".35" transform="translate(0 80)">${SM('opacity', '.35;.35;1;1', '0;.66;.67;1', 'calcMode="discrete"')}${pill(32, 0, 92, L('3 vora?', '3 ¿borde?'), '#F2B21B', 'tat s')}</g>
+          <g opacity=".35">${SM('opacity', '1;1;.35;.35', '0;.4;.41;1', 'calcMode="discrete"')}${pill(32, 0, 92, L('busca', 'busca'), '#2F7BFF')}</g>
+          <g opacity=".35" transform="translate(0 40)">${SM('opacity', '.35;.35;1;1;.35;.35', '0;.46;.47;.76;.77;1', 'calcMode="discrete"')}${pill(32, 0, 92, L('ataca!', '¡ataca!'), '#EF5A5A')}</g>
+          <g opacity=".35" transform="translate(0 80)">${SM('opacity', '.35;.35;1;1', '0;.66;.67;1', 'calcMode="discrete"')}${pill(32, 0, 92, L('vora: enrere', 'borde: atrás'), '#F2B21B', 'tat s')}</g>
         </g>
         <g opacity="0">${SM('opacity', '0;0;1;1', '0;.66;.67;1', 'calcMode="discrete"')}${pill(268, 196, 92, L('FORA!', '¡FUERA!'), '#1FA463', 'tat w')}</g>`);
     },

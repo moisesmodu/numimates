@@ -20,7 +20,9 @@ function digPass(pw, personal = []) {
   const common = DIG_COMMON.find(c => low === c || (c.length >= 4 && low.includes(c)));
   const seq = /(.)\1\1/.test(s) || /(0123|1234|2345|3456|4567|5678|6789|abcd|qwer|asdf)/i.test(s);
   const pers = personal.filter(Boolean).map(x => String(x).toLowerCase()).find(x => x.length >= 3 && low.includes(x));
-  if (common) { score = Math.min(score, 1); why.push(L(`Conté «${esc(common)}», que és de les primeres coses que es proven.`, `Contiene «${esc(common)}», que es de lo primero que se prueba.`)); }
+  const phrase = words.length >= 3 && s.length >= 15;   // en una frase llarga de paraules, una paraula comuna no la fa feble
+  if (/^[A-Za-zÀ-ÿ]{3,}[-_.]?(19|20)\d\d[!.?]*$/.test(s)) { score = Math.min(score, 1); why.push(L('És un nom amb un any (Rufus2015, Marc2014…): és dels primers que es proven.', 'Es un nombre con un año (Rufus2015, Marc2014…): es de lo primero que se prueba.')); }
+  if (common && !phrase) { score = Math.min(score, 1); why.push(L(`Conté «${esc(common)}», que és de les primeres coses que es proven.`, `Contiene «${esc(common)}», que es de lo primero que se prueba.`)); }
   if (seq) { score = Math.max(0, score - 1); why.push(L('Té repeticions o seqüències (aaa, 1234…): són fàcils d\'endevinar.', 'Tiene repeticiones o secuencias (aaa, 1234…): son fáciles de adivinar.')); }
   if (pers) { score = Math.min(score, 1); why.push(L('Conté una dada personal (un nom, el lloc on vius…): qui et coneix la podria endevinar.', 'Contiene un dato personal (un nombre, el sitio donde vives…): quien te conoce podría adivinarla.')); }
   if (s.length < 8) why.push(L('És curta: com més llarga, més difícil d\'endevinar.', 'Es corta: cuanto más larga, más difícil de adivinar.'));

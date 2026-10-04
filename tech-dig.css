@@ -73,3 +73,7 @@
 @media (max-width:560px){.dbins.b3,.dbins.b4{grid-template-columns:1fr}.dbin{min-height:120px}.dcard{font-size:14.5px;padding:10px 12px}}
 @media (prefers-reduced-motion:reduce){.dcard,.dbin,.dsortw .dprog span{transition:none}.dcard.drop,.dcard.shake{animation:none}}
 .dsortw .dhint{margin:0 0 8px;text-align:center;font:600 13.5px/1.35 Lexend,system-ui,sans-serif;color:#5A6488}.dsortw #tfb:empty{display:none}.dsortw #tfb{margin-bottom:12px}
+/* textos llargs sense espais (contrasenyes) i dos calaixos a mòbil */
+.dcard{overflow-wrap:anywhere;min-width:0}
+.dbin .dbh{flex-wrap:wrap}.dbin .dbh b{min-width:0;overflow-wrap:anywhere}
+@media (max-width:520px){.dbins.b2 .dcard.sm .dci{display:none}.dbins.b2 .dcard.sm{padding:8px 10px;font-size:13.5px}.dbins.b2 .dbin .dbl{padding:8px 6px}}
