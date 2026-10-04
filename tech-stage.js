@@ -386,7 +386,7 @@ function sgTools(b) {
 }
 function sgPalette() {
   const full = SG.max && sgUsed() >= SG.max;
-  return `<div class="tpal rpal spal">${SG.pal.filter(k => !['else', 'and', 'cond+'].includes(k)).map(k => `<button class="tb rb sb c-${SG_CAT[k]} tpb" onclick="sgIns('${k}')" ${full ? 'disabled' : ''}><span class="tbi">${sgIco(k)}</span><span class="tbl">${sgLabel(sgNew(k, SG.st, SG.W), undefined, SG.st)}</span></button>`).join('')}</div>`;
+  return `<div class="tpal rpal spal">${SG.pal.filter(k => !['else', 'and', 'cond+', 'not'].includes(k)).map(k => `<button class="tb rb sb c-${SG_CAT[k]} tpb" onclick="sgIns('${k}')" ${full ? 'disabled' : ''}><span class="tbi">${sgIco(k)}</span><span class="tbl">${sgLabel(sgNew(k, SG.st, SG.W), undefined, SG.st)}</span></button>`).join('')}</div>`;
 }
 function sgCode() {
   sgIndex();
