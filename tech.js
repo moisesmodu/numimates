@@ -445,8 +445,8 @@ TSTEP.review = function (st) {
   const qs = st.items || [];
   $('#tsb').innerHTML = `<div class="tcol">${tBubble(st.who || 'numi', tval(st.q))}<div class="trev">${qs.map((it, i) => `<div class="trq"><b>${tval(it.q)}</b><div class="trop">${it.opts.map((o, j) => `<button data-q="${i}" data-o="${j}">${tval(o)}</button>`).join('')}</div></div>`).join('')}</div></div>`;
   document.querySelectorAll('.trop button').forEach(b => b.onclick = () => { const q = +b.dataset.q; ans[q] = +b.dataset.o; document.querySelectorAll(`.trop button[data-q="${q}"]`).forEach(x => x.classList.toggle('on', x === b)); SFX.tap && SFX.tap();
-    if (Object.keys(ans).length === qs.length) tFoot(L('Desa la valoració', 'Guarda la valoración'), () => { const t = TS_(); t.rev = t.rev || {}; t.rev[TSS.id] = { a: qs.map((_, i) => ans[i]), d: today() }; save(); tNext(); }); });
-  tFoot(L('Desa la valoració', 'Guarda la valoración'), () => { }, false);
+    if (Object.keys(ans).length === qs.length) tFoot(st.btn ? tval(st.btn) : L('Desa la valoració', 'Guarda la valoración'), () => { const t = TS_(); t.rev = t.rev || {}; t.rev[TSS.id] = { a: qs.map((_, i) => ans[i]), d: today() }; save(); tNext(); }); });
+  tFoot(st.btn ? tval(st.btn) : L('Desa la valoració', 'Guarda la valoración'), () => { }, false);
 };
 // el diploma del curs: nom, curs, sessions fetes, insígnies i projectes
 TSTEP.diploma = function (st) {

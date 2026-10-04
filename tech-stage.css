@@ -35,3 +35,4 @@
 .sthumbs i{position:absolute;width:24%;transform:translate(-50%,-50%)}.sthumbs i svg,.sthumbs i img{width:100%;height:auto;display:block}
 
 .rhat .rhadd{margin-left:auto;width:30px;height:30px;border-radius:50%;border:0;background:rgba(255,255,255,.25);color:#fff;font:800 20px/1 inherit;cursor:pointer}.rhat .rhadd:hover{background:rgba(255,255,255,.4)}
+.rnum.rrnd{align-items:center}.rnum.rrnd span{font-weight:800;color:var(--ink2,#3A4570)}.rnum.rrnd input{width:84px}
