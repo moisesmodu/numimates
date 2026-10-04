@@ -262,7 +262,8 @@ function roboEval(W, S, final) {
       case 'notes': if (S.notes.join() !== g.n.join()) bad.push(g); break;
       case 'icon': { const last = [...S.log].reverse().find(l => l.k === 'icon'); if (!last || last.ic !== g.ic) bad.push(g); break; }
       case 'stopped': if (S.stopT < .3 || S.patrol) bad.push(g); break;
-      case 'time': if (S.doneT === undefined || S.doneT > g.max) bad.push(g); break;
+      // el temps es compta fins que la resta de la missió es compleix (doneT); si encara no s'ha fixat, mirem si es compleix ara mateix
+      case 'time': { const t = S.doneT ?? (!roboEval({ ...W, goal: W.goal.filter(q => q.k !== 'time') }, S, final).length ? S.t : undefined); if (t === undefined || t > g.max) bad.push(g); break; }
       case 'dist': if (roboRunLen(S) < g.min) bad.push(g); break;
       case 'follow': { const f = S.follow || { ok: 0, n: 0 }; if (!f.n || f.ok / f.n < (g.frac || .85)) bad.push(g); break; }
       case 'var': if ((S.vars[g.v] || 0) !== g.eq) bad.push(g); break;
@@ -282,7 +283,7 @@ function roboSnap(W, S) {
 function roboShouldEnd(M) {
   const { W, S } = M; if (S.crash) return 'crash'; if (S.t >= W.time - 1e-9) return 'time';
   if (W.ring && S.out) return 'out';
-  if (M.idle() && S.t > .3 && !(W.press || []).some(p => !p.done) && !(W.env || []).some(e => e.t > S.t) && !W.goal.some(g => g.k === 'at' && g.t > S.t)) return 'idle';
+  if (M.idle() && S.t > .3 && (S.stopT > .4 || !W.goal.some(g => g.stop || g.k === 'stopped' || g.k === 'near')) && !(W.press || []).some(p => !p.done) && !(W.env || []).some(e => e.t > S.t) && !W.goal.some(g => g.k === 'at' && g.t > S.t)) return 'idle';
   if (W.goal.some(g => !['nohit', 'inring', 'time'].includes(g.k)) && !W.goal.some(g => ['at', 'follow', 'cover', 'dist', 'notes'].includes(g.k)) && S.t > .5 && !roboEval(W, S).length) { S.doneT = S.doneT ?? S.t; if (S.stopT > .4 || !W.goal.some(g => g.stop || g.k === 'stopped' || g.k === 'near')) return 'goal'; }
   return null;
 }
@@ -450,7 +451,7 @@ function rbMake(st, o = {}) {
   const spec = st.w, alts = roboAlts(spec);
   const scripts = st.scripts || ['start', 'forever'];
   const prog = { start: [], forever: [], A: [], B: [] }; if (o.prog || st.prog) Object.assign(prog, rbClone(RQ(o.prog || st.prog)));
-  RB = { st, spec, alts, altI: 0, altOk: new Set(), W: roboWorld(alts[0]), prog, scripts, pal: st.pal || ['run', 'stop', 'wait'], mode: o.mode || 'edit', ops: st.ops || ['dist'], vars: st.vars || ['v'],
+  RB = { st, spec, alts, altI: 0, altOk: new Set(), W: roboWorld(alts[0]), prog, scripts, pal: st.pal || ['run', 'stop', 'wait'], mode: o.mode || 'edit', ops: st.ops || ['dist'], vars: st.vars || ((st.pal || []).some(k => ['set', 'change', 'calc'].includes(k)) ? ['v'] : []),
     cur: null, sel: null, run: false, speed: 1, solved: false, tries: 0, onDone: o.onDone || null, onFail: o.onFail || null, M: null, view: o.view || 'auto', max: st.max || 0, lists: [], ids: {} };
   RB.cur = { l: prog[scripts[scripts.length - 1]] || prog.start, i: 0 };
   RB.cur.i = RB.cur.l.length;
@@ -504,7 +505,7 @@ function rbDashHTML() {
       <span class="rs"><small>${L('Línia', 'Línea')} L·M·R</small><b class="rln">${ln.map((v, i) => `<i class="${v ? 'k' : ''}" title="${'LMR'[i]}">${v}</i>`).join('')}</b></span>
       <span class="rs"><small>${L('Llum', 'Luz')} E·D</small><b class="rlt">${lL}<em>·</em>${lR}</b></span>
       <span class="rs"><small>${L('Motors', 'Motores')}</small><b class="rmot">${bar(S.vl)}${bar(S.vr)}</b></span>
-      ${Object.keys(S.vars).length || RB.st.vars ? `<span class="rs"><small>${RB.vars.map(v => rbVName(v, RB.st)).join(' · ')}</small><b>${RB.vars.map(v => S.vars[v] ?? 0).join(' · ')}</b></span>` : ''}
+      ${Object.keys(S.vars).length || (RB.st.vars && RB.st.vars.length) ? `<span class="rs"><small>${RB.vars.map(v => rbVName(v, RB.st)).join(' · ')}</small><b>${RB.vars.map(v => S.vars[v] ?? 0).join(' · ')}</b></span>` : ''}
       <span class="rs t"><small>${L('Temps', 'Tiempo')}</small><b>${S.t.toFixed(1)}<em>s</em></b></span></div>`;
 }
 function rbHTML(extra = '') {
