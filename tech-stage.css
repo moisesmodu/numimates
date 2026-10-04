@@ -6,7 +6,7 @@
 .ssp{position:absolute;transform:translate(-50%,-50%);cursor:pointer;transition:opacity .15s}
 .sspi svg,.sspi img{display:block;width:100%;height:auto;overflow:visible}
 .sspi{transform-origin:50% 50%;filter:drop-shadow(0 4px 3px rgba(10,20,50,.22))}
-.sbub{position:absolute;left:62%;bottom:88%;min-width:56px;max-width:200px;background:#fff;color:#14204A;border:2.5px solid #14204A;border-radius:16px;padding:5px 10px;font:800 14px/1.25 Lexend,system-ui,sans-serif;white-space:normal;text-align:center;opacity:0;transform:scale(.6);transform-origin:0 100%;transition:opacity .15s,transform .15s;pointer-events:none;z-index:2}
+.sbub{position:absolute;left:62%;bottom:88%;min-width:56px;width:max-content;max-width:200px;background:#fff;color:#14204A;border:2.5px solid #14204A;border-radius:16px;padding:5px 10px;font:800 14px/1.25 Lexend,system-ui,sans-serif;white-space:normal;text-align:center;opacity:0;transform:scale(.6);transform-origin:0 100%;transition:opacity .15s,transform .15s;pointer-events:none;z-index:2}
 .sbub.on{opacity:1;transform:none}
 .sbub::after{content:"";position:absolute;left:12px;bottom:-11px;border:10px solid transparent;border-top-color:#14204A;border-bottom:0}
 .sbub.th{border-style:dashed;border-radius:24px}.sbub.th::after{border:0;width:10px;height:10px;border-radius:50%;background:#fff;border:2.5px solid #14204A;bottom:-16px;left:6px}

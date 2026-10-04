@@ -65,7 +65,7 @@ const STG_ART = {
     <path d="M44 14 L84 14 L94 30 L36 30Z" fill="url(#sgCw)" stroke="#7E1414" stroke-width="2"/><path d="M66 14v16" stroke="#7E1414" stroke-width="2.4"/>
     <rect x="112" y="36" width="10" height="6" rx="2" fill="#FFE27A"/><rect x="8" y="38" width="8" height="6" rx="2" fill="#FFB0A8"/>
     ${[34, 96].map(x => `<g transform="translate(${x} 54) rotate(${i ? 45 : 0})"><circle r="12" fill="#1F2230"/><circle r="5" fill="#C9CFDA"/><path d="M-9 0h18M0 -9v18" stroke="#8C93A6" stroke-width="2"/></g>`).join('')}`) },
-  nau: { name: 'Nau espacial|Nave espacial', n: 2, r: 30, w: 70, svg: i => stgSv('0 0 80 120', `<defs>${stgLg('sgNa', '#F4F7FF', '#B9C6E8', 1, 0)}</defs>
+  nau: { name: 'Nau espacial|Nave espacial', face: 0, n: 2, r: 30, w: 70, svg: i => stgSv('0 0 80 120', `<defs>${stgLg('sgNa', '#F4F7FF', '#B9C6E8', 1, 0)}</defs>
     <path d="M28 92 Q40 ${i ? 122 : 112} 52 92Z" fill="#FFC531"/><path d="M33 92 Q40 ${i ? 112 : 104} 47 92Z" fill="#FF6B1F"/>
     <path d="M16 70 L2 96 L22 88Z M64 70 L78 96 L58 88Z" fill="#EF5A5A" stroke="#8E1E14" stroke-width="2.2" stroke-linejoin="round"/>
     <path d="M40 4 Q66 28 62 80 Q62 92 40 92 Q18 92 18 80 Q14 28 40 4Z" fill="url(#sgNa)" stroke="#20306A" stroke-width="2.6"/>

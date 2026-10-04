@@ -421,7 +421,7 @@ function sgRender() {
     const rot = s.rot || a.rot || (a.numi || ['gat', 'peix', 'ocell', 'drac', 'cranc', 'mascota', 'bit'].includes(s.art) ? 'lr' : 'all');
     const w = (a.w || 80) * s.size / 100 / STG.W * 100;
     e.style.cssText = `left:${(s.x + STG.W / 2) / STG.W * 100}%;top:${(STG.H / 2 - s.y) / STG.H * 100}%;width:${w}%;z-index:${Math.round(s.z * 10) + 10};opacity:${s.hidden ? 0 : 1 - s.ghost / 100}`;
-    im.style.transform = rot === 'all' ? `rotate(${s.dir - 90}deg)` : rot === 'lr' && s.dir < 0 ? 'scaleX(-1)' : 'none';
+    im.style.transform = rot === 'all' ? `rotate(${s.dir - (a.face ?? 90)}deg)` : rot === 'lr' && s.dir < 0 ? 'scaleX(-1)' : 'none';
     const bub = e.lastChild, txt = s.say ? esc(tx(s.say)) : ''; if (bub.dataset.t !== txt + s.think) { bub.dataset.t = txt + s.think; bub.innerHTML = txt; bub.className = 'sbub' + (txt ? ' on' : '') + (s.think ? ' th' : ''); } }
   box.querySelectorAll('.ssp').forEach(e => { if (!live.has(e.dataset.u)) e.remove(); });
   const vs = document.getElementById('svars'); if (vs) vs.innerHTML = Object.entries(S.vars).map(([k, v]) => `<span><small>${esc(SG.st.varNames && SG.st.varNames[k] ? tx(SG.st.varNames[k]) : k)}</small><b>${v}</b></span>`).join('');

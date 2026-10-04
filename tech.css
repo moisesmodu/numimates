@@ -112,7 +112,7 @@ html[data-v=tech] .toast{background:var(--navy)}
 .tsay2 .bubble{width:100%;font-weight:600;font-size:18.5px}
 .tsay2 .bubble b{font-weight:900}
 .tart{margin:0 auto 14px;width:100%;max-width:380px}.tart.sm{max-width:220px}
-.tart svg{width:100%;height:auto;display:block}
+.tart>svg,.tart>.tani{width:100%;height:auto;display:block}
 .tbox{background:#fff;border:2px solid var(--line);border-radius:18px;padding:12px 16px;font-size:17px;line-height:1.5;font-weight:600}
 .tbox ol{margin:0;padding-left:22px}.tbox li{margin:4px 0}
 .tlegend{display:grid;gap:8px}
