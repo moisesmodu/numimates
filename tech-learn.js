@@ -1112,7 +1112,7 @@ if (typeof TSTEP !== 'undefined') TSTEP.learn = function (st) {
     tDemoStop();
     const c = cards[i];
     typeof roboDemoStop === 'function' && roboDemoStop();
-    const media = c.robo && typeof roboDemoHTML === 'function' ? roboDemoHTML(c.robo) : c.media && typeof TMEDIA !== 'undefined' && TMEDIA[c.media.k] ? TMEDIA[c.media.k].html(c.media) : c.demo ? tDemoHTML(c.demo) : c.anim && TANI[c.anim] ? `<div class="tanibox">${TANI[c.anim]()}</div>` : c.w ? (() => { const W = bitWorld(c.w); return `<div class="tart">${bitSVG(W, bitSim(W))}</div>`; })() : '';
+    const media = c.robo && typeof roboDemoHTML === 'function' ? roboDemoHTML(c.robo) : c.media && typeof TMEDIA !== 'undefined' && TMEDIA[c.media.k] ? TMEDIA[c.media.k].html(c.media) : c.demo ? tDemoHTML(c.demo) : c.anim && TANI[c.anim] ? `<div class="tanibox">${TANI[c.anim]()}</div>` : c.pic ? `<div class="tpicbox"><img src="${esc(c.pic)}" alt="" loading="lazy"></div>` : c.w ? (() => { const W = bitWorld(c.w); return `<div class="tart">${bitSVG(W, bitSim(W))}</div>`; })() : '';
     $('#tsb').innerHTML = `<div class="tlearn2 ${dir > 0 ? 'fwd' : dir < 0 ? 'back' : ''}">
       <div class="tldots">${cards.map((_, k) => `<button class="${k === i ? 'on' : k <= seen ? 'seen' : ''}" onclick="TLRN.go(${k})" aria-label="${k + 1}"></button>`).join('')}</div>
       <article class="tlc">${c.k ? `<span class="tlk">${tval(c.k)}</span>` : ''}<h2>${tval(c.t)}</h2>${media}<div class="tlx">${tval(c.x)}</div>

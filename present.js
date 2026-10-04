@@ -44,7 +44,7 @@
     pregunta: s => `<div class="pz-q"><div class="pz-qbot">${bitChar('idle')}</div><div class="pz-qb"><h2>${esc(T(s.t))}</h2>${s.x ? `<p>${T(s.x)}</p>` : ''}${s.punts ? `<ul class="pz-pts">${s.punts.map(p => `<li>${T(p)}</li>`).join('')}</ul>` : ''}${X(s)}</div></div>`,
     repas: s => R.pregunta(s),
     concepte: s => `<div class="pz-two"><div><h2>${esc(T(s.t))}</h2>${s.x ? `<p class="pz-lead">${T(s.x)}</p>` : ''}${s.punts ? `<ul class="pz-pts big">${s.punts.map(p => `<li>${T(p)}</li>`).join('')}</ul>` : ''}${X(s)}</div>
-      <div class="pz-art">${s.anim && TANI[s.anim] ? TANI[s.anim]() : s.demo ? '<div class="pz-3d" id="pzw"></div>' : bitChar('happy')}</div></div>`,
+      <div class="pz-art">${s.anim && TANI[s.anim] ? TANI[s.anim]() : s.demo ? '<div class="pz-3d" id="pzw"></div>' : s.pic ? `<img class="pz-pic" src="${esc(s.pic)}" alt="">` : bitChar('happy')}</div></div>`,
     anim: s => `<div class="pz-anim"><h2>${esc(T(s.t))}</h2><div class="pz-ab">${TANI[s.anim] ? TANI[s.anim]() : ''}</div>${s.x ? `<p class="pz-lead c">${T(s.x)}</p>` : ''}${X(s)}</div>`,
     demo: s => { BIT_FNCTX = s.demo.fnName || null; BIT_VCTX = (s.demo.w && s.demo.w.vname) || null; try { return R._demo(s); } finally { BIT_FNCTX = null; BIT_VCTX = null; } },
     _demo: s => { DN = 0; const p = s._p = progOf(s.demo.prog), fns = s._f = s.demo.fns ? Object.fromEntries(Object.entries(s.demo.fns).map(([f, v]) => [f, progOf(v)])) : null, evs = s._e = s.demo.evs ? Object.fromEntries(Object.entries(s.demo.evs).map(([f, v]) => [f, progOf(v)])) : null;

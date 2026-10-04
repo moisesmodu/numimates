@@ -149,3 +149,4 @@ h2{font-size:64px;line-height:1.08;margin:0 0 20px;font-weight:900;letter-spacin
 img.ic{display:inline-block;width:1.2em;height:1.2em;object-fit:contain;vertical-align:-.22em;margin:0 .02em;pointer-events:none;-webkit-user-drag:none}
 .pz-cover.d1 h1{font-size:72px}.pz-cover.d1 .pz-lead{font-size:27px}.pz-cover.d1 .pz-obj{font-size:21px;padding:16px 24px}.pz-cover.d1 .pz-obj b{font-size:20px}
 .pz-cover.d2 h1{font-size:60px}.pz-cover.d2 .pz-lead{font-size:23px;margin-bottom:12px}.pz-cover.d2 .pz-obj{font-size:18px;padding:14px 20px}.pz-cover.d2 .pz-obj b{font-size:18px}.pz-cover.d2 .pz-obj li{margin:3px 0}
+.pz-pic{width:100%;max-height:620px;object-fit:cover;border-radius:28px;box-shadow:0 18px 50px rgba(0,0,0,.25)}

@@ -563,3 +563,6 @@ span.tb.c-cond{color:#3A2600}
 .tddate{color:var(--mut);font-size:14px;margin:12px 0 0}
 .tdbit{position:absolute;right:-6px;bottom:-14px;opacity:.95}.tdbit svg{width:96px;height:118px}
 @media print{body *{visibility:hidden}.tdip,.tdip *{visibility:visible}.tdip{position:fixed;inset:0;margin:auto;max-width:none;border-radius:0}}
+
+/* il·lustració de Numi en una targeta de teoria (pic: 'img/ment/atu.webp', img/ic/…, img/chars/…) */
+.tpicbox{border-radius:20px;overflow:hidden;margin:10px 0 12px;background:#F6F1E4;box-shadow:0 6px 20px rgba(20,30,70,.12)}.tpicbox img{display:block;width:100%;aspect-ratio:16/9;object-fit:cover}
