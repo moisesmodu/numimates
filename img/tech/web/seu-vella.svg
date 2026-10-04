@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300">
+<defs>
+<linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7C6CF0"/><stop offset=".55" stop-color="#F49AB8"/><stop offset="1" stop-color="#FFD39A"/></linearGradient>
+<linearGradient id="hl" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8CCB5E"/><stop offset="1" stop-color="#3E9A4E"/></linearGradient>
+<linearGradient id="st" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F6DDA6"/><stop offset="1" stop-color="#E2BC78"/></linearGradient>
+<clipPath id="r"><rect width="400" height="300" rx="24"/></clipPath>
+</defs>
+<g clip-path="url(#r)">
+<rect width="400" height="300" fill="url(#sky)"/>
+<circle cx="320" cy="150" r="34" fill="#FFE7A8" opacity=".9"/>
+<circle cx="320" cy="150" r="54" fill="#FFE7A8" opacity=".25"/>
+<path d="M40 60q12-12 26-5 12-9 24 0 12 0 12 9H40zM250 44q10-10 22-4 10-8 20 0 10 0 10 8h-52z" fill="#fff" opacity=".55"/>
+<path d="M-10 300V236q60-34 120-42h210q50 8 90 40v66z" fill="url(#hl)"/>
+<path d="M40 240l30-24 30-12M300 204l40 12 30 22" stroke="#E2BC78" stroke-width="7" fill="none" stroke-linejoin="round"/>
+<g fill="#E2BC78"><rect x="62" y="206" width="14" height="18" rx="2"/><rect x="334" y="206" width="14" height="18" rx="2"/></g>
+<rect x="104" y="188" width="226" height="10" fill="#D6AE68"/>
+<rect x="166" y="140" width="132" height="50" fill="url(#st)"/>
+<path d="M162 142l10-12h120l10 12z" fill="#D6AE68"/>
+<g fill="#C79A52"><rect x="182" y="140" width="6" height="50"/><rect x="208" y="140" width="6" height="50"/><rect x="278" y="140" width="6" height="50"/></g>
+<g fill="#6B4A2A"><path d="M192 176v-16a5 5 0 0 1 10 0v16z"/><path d="M216 176v-16a5 5 0 0 1 10 0v16z"/><path d="M286 176v-16a4 4 0 0 1 8 0v16z"/></g>
+<path d="M296 190v-40a28 26 0 0 1 28 26v14z" fill="#E2BC78"/>
+<path d="M304 176v-10a4 4 0 0 1 8 0v10z" fill="#6B4A2A"/>
+<path d="M232 190v-66l20-18 20 18v66z" fill="url(#st)"/>
+<circle cx="252" cy="140" r="11" fill="#6B4A2A"/>
+<circle cx="252" cy="140" r="6" fill="#F2B21B" opacity=".8"/>
+<path d="M245 176v-18a7 7 0 0 1 14 0v18z" fill="#6B4A2A"/>
+<rect x="240" y="88" width="24" height="28" fill="#EBCB8B"/>
+<rect x="240" y="88" width="6" height="28" fill="#D6AE68"/><rect x="258" y="88" width="6" height="28" fill="#C79A52"/>
+<path d="M238 88l14-16 14 16z" fill="#C79A52"/>
+<path d="M249 108v-10a3 3 0 0 1 6 0v10z" fill="#6B4A2A"/>
+<rect x="114" y="122" width="52" height="70" fill="url(#st)"/>
+<rect x="156" y="122" width="10" height="70" fill="#D6AE68"/>
+<rect x="110" y="116" width="60" height="8" rx="2" fill="#D6AE68"/>
+<rect x="120" y="54" width="40" height="62" fill="#F6DDA6"/>
+<rect x="120" y="54" width="9" height="62" fill="#E2BC78"/><rect x="151" y="54" width="9" height="62" fill="#C79A52"/>
+<rect x="116" y="48" width="48" height="8" rx="2" fill="#D6AE68"/>
+<rect x="124" y="30" width="32" height="18" fill="#F6DDA6"/>
+<rect x="124" y="30" width="7" height="18" fill="#E2BC78"/><rect x="149" y="30" width="7" height="18" fill="#C79A52"/>
+<path d="M122 30l4-10 4 10zM137 30l3-12 3 12zM150 30l4-10 4 10z" fill="#D6AE68"/>
+<g fill="#6B4A2A"><path d="M133 104V76a7 7 0 0 1 14 0v28z"/><path d="M135 46v-8a5 5 0 0 1 10 0v8z"/><path d="M123 100V82a3 3 0 0 1 4 0v18zM153 100V82a3 3 0 0 1 4 0v18z"/><path d="M134 176v-26a6 6 0 0 1 12 0v26z"/></g>
+<path d="M134 90h12" stroke="#F6DDA6" stroke-width="2"/>
+<g fill="#1F6E3A"><path d="M92 196c-8 0-8-46 0-56 8 10 8 56 0 56z"/><path d="M80 204c-7 0-7-40 0-48 7 8 7 48 0 48z"/><path d="M344 202c-8 0-8-46 0-56 8 10 8 56 0 56z"/></g>
+<g fill="#2E8B4A"><circle cx="40" cy="244" r="16"/><circle cx="62" cy="252" r="14"/><circle cx="364" cy="246" r="16"/><circle cx="342" cy="256" r="13"/><circle cx="190" cy="214" r="10"/><circle cx="276" cy="212" r="10"/></g>
+<g fill="#3FA85A"><circle cx="36" cy="240" r="8"/><circle cx="360" cy="242" r="8"/></g>
+<path d="M-10 300v-22h40v-10l14-10 14 10v8h30v-6h40l12 10h40v-8l14-8 14 8v12h40v-6h40l10-8 10 8h30v-10h40v34z" fill="#F3A774"/>
+<path d="M-10 300v-12h420v12z" fill="#D9773F"/>
+</g>
+</svg>
