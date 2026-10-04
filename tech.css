@@ -362,7 +362,7 @@ span.tb.c-cond{color:#3A2600}
 @keyframes tapop{0%{transform:scale(.2);opacity:0}8%{transform:scale(1.08);opacity:1}12%,88%{transform:scale(1);opacity:1}100%{opacity:0}}
 @keyframes tain{0%{transform:translateY(14px);opacity:0}8%,88%{transform:none;opacity:1}100%{opacity:0}}
 @keyframes tafade{0%{opacity:0}8%,88%{opacity:1}100%{opacity:0}}
-@keyframes tadraw{0%{stroke-dashoffset:1}10%,88%{stroke-dashoffset:0}100%{stroke-dashoffset:0;opacity:0}}
+@keyframes tadraw{0%{stroke-dashoffset:1;opacity:1}10%,88%{stroke-dashoffset:0;opacity:1}100%{stroke-dashoffset:0;opacity:0}}
 .tani .ta-wob{animation-name:tawob}@keyframes tawob{0%{transform:scale(.2);opacity:0}8%{opacity:1;transform:scale(1)}12%,20%{transform:rotate(-8deg)}16%,24%{transform:rotate(8deg)}28%,88%{transform:none;opacity:1}100%{opacity:0}}
 .tani .ta-steam{animation:tasteam 2s ease-in-out infinite}@keyframes tasteam{50%{transform:translateY(-4px);opacity:.4}}
 /* gir: les 4 vistes d'en Bit, una darrere l'altra */
