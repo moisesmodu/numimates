@@ -211,8 +211,12 @@ const TFIT = { ro: null, raf: 0 };
 function tFit() {
   const b = document.querySelector('.tsess>.tsbody'); if (!b) return;
   b.style.zoom = ''; const z0 = parseFloat(getComputedStyle(b).zoom) || 1, min = z0 * (innerWidth < 600 ? .72 : .66);
+  const fits = z => { b.style.zoom = z.toFixed(3); return b.scrollHeight <= b.clientHeight + 2; };
   let z = z0;
-  for (let n = 0; n < 4 && b.scrollHeight > b.clientHeight + 2; n++) { z = Math.max(min, z * (b.clientHeight / b.scrollHeight) * .995); b.style.zoom = z.toFixed(3); if (z === min) break; }
+  if (!fits(z0)) {   // el contingut es recol·loca en fer-se més petit: es busca la mida més gran que hi cap
+    let lo = min, hi = z0; if (!fits(lo)) z = lo; else { for (let n = 0; n < 7; n++) { const m = (lo + hi) / 2; if (fits(m)) lo = m; else hi = m; } z = lo; }
+    b.style.zoom = z.toFixed(3);
+  } else b.style.zoom = '';
   b.classList.toggle('fitz', z < z0);
 }
 function tFitWatch() {
@@ -488,12 +492,22 @@ TSTEP.mybuild = function (st) {
 };
 // valoració del repte d'un company/a: tres preguntes ràpides, es desa al perfil
 TSTEP.review = function (st) {
-  const ans = {};
-  const qs = st.items || [];
-  $('#tsb').innerHTML = `<div class="tcol">${tBubble(st.who || 'numi', tval(st.q))}<div class="trev">${qs.map((it, i) => `<div class="trq"><b>${tval(it.q)}</b><div class="trop">${it.opts.map((o, j) => `<button data-q="${i}" data-o="${j}">${tval(o)}</button>`).join('')}</div></div>`).join('')}</div></div>`;
-  document.querySelectorAll('.trop button').forEach(b => b.onclick = () => { const q = +b.dataset.q; ans[q] = +b.dataset.o; document.querySelectorAll(`.trop button[data-q="${q}"]`).forEach(x => x.classList.toggle('on', x === b)); SFX.tap && SFX.tap();
-    if (Object.keys(ans).length === qs.length) tFoot(st.btn ? tval(st.btn) : L('Desa la valoració', 'Guarda la valoración'), () => { const t = TS_(); t.rev = t.rev || {}; t.rev[TSS.id] = { a: qs.map((_, i) => ans[i]), d: today() }; save(); tNext(); }); });
-  tFoot(st.btn ? tval(st.btn) : L('Desa la valoració', 'Guarda la valoración'), () => { }, false);
+  // una pregunta cada vegada (punts a dalt per anar-hi i veure les que falten): sempre cap a la pantalla
+  const ans = {}, qs = st.items || []; let cur = 0;
+  const btn = st.btn ? tval(st.btn) : L('Desa la valoració', 'Guarda la valoración');
+  const draw = () => {
+    const it = qs[cur];
+    $('#tsb').innerHTML = `<div class="tcol">${tBubble(st.who || 'numi', tval(st.q))}<div class="trev pg">
+      <div class="trdots">${qs.map((_, i) => `<button class="${i === cur ? 'on' : ''} ${ans[i] != null ? 'ok' : ''}" data-g="${i}" aria-label="${i + 1}">${i + 1}</button>`).join('')}</div>
+      <div class="trq"><b>${tval(it.q)}</b><div class="trop">${it.opts.map((o, j) => `<button data-o="${j}" class="${ans[cur] === j ? 'on' : ''}">${tval(o)}</button>`).join('')}</div></div></div></div>`;
+    document.querySelectorAll('.trdots button').forEach(b => b.onclick = () => { cur = +b.dataset.g; SFX.tap && SFX.tap(); draw(); });
+    document.querySelectorAll('.trop button').forEach(b => b.onclick = () => { ans[cur] = +b.dataset.o; SFX.tap && SFX.tap(); draw();
+      const next = qs.findIndex((_, i) => ans[i] == null && i > cur) >= 0 ? qs.findIndex((_, i) => ans[i] == null && i > cur) : qs.findIndex((_, i) => ans[i] == null);
+      if (next >= 0) setTimeout(() => { cur = next; draw(); }, 380); });
+    const all = Object.keys(ans).length === qs.length;
+    tFoot(all ? btn : L(`Respon les ${qs.length} preguntes`, `Responde las ${qs.length} preguntas`), () => { if (!all) return; const t = TS_(); t.rev = t.rev || {}; t.rev[TSS.id] = { a: qs.map((_, i) => ans[i]), d: today() }; save(); tNext(); }, all);
+  };
+  draw();
 };
 // el diploma del curs: nom, curs, sessions fetes, insígnies i projectes
 TSTEP.diploma = function (st) {

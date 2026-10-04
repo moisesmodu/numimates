@@ -102,3 +102,11 @@
   .dbins.deckb .dbh b{font-size:13.5px}.dbins.deckb .dbh em{position:absolute;top:6px;right:6px;min-width:22px;height:22px;font-size:12px}
   .dbins.deckb .dbe{font-size:11.5px}
 }
+/* privadesa compacta: cada dada en una fila, amb el selector a la dreta */
+.dprh{flex-wrap:wrap}.dplg{width:100%;font-size:12px;font-weight:700;color:var(--mut)}
+.dpf{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:4px 10px;padding:8px 12px}
+.dpf .dpx{grid-column:1/-1}
+.dpf .dpw{display:flex;gap:4px;margin:0}
+.dpf .dpw button{display:inline-flex;align-items:center;gap:5px;padding:7px 10px;font-size:13px}
+@media (max-width:600px){.dpf .dpw button .dpl{display:none}.dpf .dpw button{padding:6px 9px;font-size:17px}.dpf b{font-size:14px}}
+.dpf .dpw{flex-wrap:nowrap}.dpf .dpw button{flex:none;min-width:0}

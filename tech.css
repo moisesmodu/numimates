@@ -597,3 +597,7 @@ span.tb.c-cond{color:#3A2600}
   .tstop{padding-top:max(7px,env(safe-area-inset-top));padding-bottom:7px}
   .tlc{padding:14px 14px 12px}.tlc h2{font-size:21px;margin-bottom:8px}
 }
+/* valoració: una pregunta cada vegada */
+.trev.pg .trdots{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin:2px 0 12px}
+.trev.pg .trdots button{width:34px;height:34px;border-radius:50%;border:2px solid var(--line);background:#fff;font-weight:900;color:var(--mut)}
+.trev.pg .trdots button.ok{background:#E3F7EC;border-color:#3CC47C;color:#1E8A50}.trev.pg .trdots button.on{border-color:var(--pri);color:var(--pri);box-shadow:0 0 0 3px #DCE5FF}
