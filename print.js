@@ -25,6 +25,7 @@
     let t0 = 0;
     pages.push(`<section class="page guide">${head(L('Guia del professor', 'Guía del profesor'))}
       <h1>${esc(T(F.s.t))}</h1><p class="lead">60 min · ${L('classe guiada', 'clase guiada')}</p>
+      ${G.intro ? `<div class="intro"><p>${T(G.intro)}</p>${G.claus ? `<h3>${L("Idees clau que han d'entendre", 'Ideas clave que deben entender')}</h3>${list(G.claus)}` : ''}${G.prev ? `<h3>${L('Què han de saber abans', 'Qué deben saber antes')}</h3>${list(G.prev)}` : ''}</div>` : ''}
       <div class="cols"><div><h2>${L('Objectius', 'Objetivos')}</h2>${list(G.obj)}</div><div><h2>${L('Competències', 'Competencias')}</h2>${list(G.comp)}</div></div>
       <h2>${L('Materials', 'Materiales')}</h2><div class="cols"><div><h3>${L("A l'aula", 'En el aula')}</h3>${list(G.mat.aula)}</div><div><h3>${L('Abans de la classe', 'Antes de la clase')}</h3>${list(G.mat.prep)}<h3>${L('Per imprimir', 'Para imprimir')}</h3>${list(G.mat.imprimir)}</div></div>
       <h2>${L('Vocabulari', 'Vocabulario')}</h2><dl>${G.vocab.map(([a, b]) => `<dt>${esc(T(a))}</dt><dd>${T(b)}</dd>`).join('')}</dl></section>`);
@@ -36,6 +37,10 @@
       <h2>${L('Avaluació', 'Evaluación')}</h2><h3>${L('Tiquet de sortida', 'Ticket de salida')}</h3>${list(G.aval.ticket)}
       <table><tr><th>${L('Criteri', 'Criterio')}</th><th>${L('Assolit', 'Logrado')}</th><th>${L('En procés', 'En proceso')}</th></tr>${G.aval.rubric.map(r => `<tr>${r.map(v => `<td>${T(v)}</td>`).join('')}</tr>`).join('')}</table>
       <h2>${L('A casa', 'En casa')}</h2><p>${T(G.casa)}</p></section>`);
+    if (G.faq || G.tec || G.seg || G.extra || G.trans) pages.push(`<section class="page guide">${head(L('Preguntes, imprevistos i més', 'Preguntas, imprevistos y más'))}
+      ${G.faq ? `<h2>${L('Preguntes que faran (i com respondre-les)', 'Preguntas que harán (y cómo responderlas)')}</h2><dl>${G.faq.map(([a, b]) => `<dt>${esc(T(a))}</dt><dd>${T(b)}</dd>`).join('')}</dl>` : ''}
+      ${G.tec ? `<h2>${L('Si alguna cosa falla', 'Si algo falla')}</h2><table>${G.tec.map(([a, b]) => `<tr><td>${T(a)}</td><td>${T(b)}</td></tr>`).join('')}</table>` : ''}
+      ${G.seg ? `<h2>${L('Seguretat i benestar', 'Seguridad y bienestar')}</h2>${list(G.seg)}` : ''}${G.extra ? `<h2>${L('Per anar més enllà', 'Para ir más allá')}</h2>${list(G.extra)}` : ''}${G.trans ? `<h2>${L('Connexions', 'Conexiones')}</h2>${list(G.trans)}` : ''}</section>`);
   } else {
     const sols = [];
     for (const pr of G.print) {

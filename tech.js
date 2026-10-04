@@ -273,23 +273,45 @@ const TSTEP = {
   },
   // posar coses en ordre (tocar-les una darrere l'altra)
   seq(st) {
-    const pool = shuffle(st.items.map((_, i) => i)), got = [];
+    // ordenar: totes les targetes en una llista que es reordena arrossegant (o amb ↑ ↓); «Comprova» marca cada lloc
+    let ord = shuffle(st.items.map((_, i) => i)); if (ord.every((v, i) => v === i) && ord.length > 1) ord.reverse();
+    let phase = 'sort'; const first = { v: true };
     const draw = () => {
-      $('#tsb').innerHTML = `<div class="tcol">${st.who ? tBubble(st.who, tval(st.q)) : `<div class="tqh"><span class="tqbit">${bitChar('think')}</span><h2 class="tsq">${tval(st.q)}</h2></div>`}
-        <ol class="tseq">${got.map(i => `<li><button data-i="${i}" class="tsqi in">${tval(st.items[i])}</button></li>`).join('')}${got.length < st.items.length ? `<li class="tsqh">${L('Toca el pas que va ara', 'Toca el paso que va ahora')}</li>` : ''}</ol>
-        <div class="tseqp">${pool.filter(i => !got.includes(i)).map(i => `<button data-i="${i}" class="tsqi">${tval(st.items[i])}</button>`).join('')}</div><div class="tfb" id="tfb"></div></div>`;
-      document.querySelectorAll('.tsqi').forEach(b => b.onclick = () => { if (TSS.ready) return; const i = +b.dataset.i; if (b.classList.contains('in')) got.splice(got.indexOf(i), 1); else got.push(i); SFX.tap && SFX.tap(); draw(); });
-      tFoot(L('Comprova', 'Comprueba'), check, got.length === st.items.length);
+      $('#tsb').innerHTML = `<div class="tcol tseqw">${st.who ? tBubble(st.who, tval(st.q)) : `<div class="tqh"><span class="tqbit">${bitChar('think')}</span><h2 class="tsq">${tval(st.q)}</h2></div>`}
+        <div class="tfb" id="tfb"></div>
+        ${phase === 'sort' ? `<p class="dhint">${L('Arrossega les targetes (o fes servir les fletxes) per posar-les en ordre.', 'Arrastra las tarjetas (o usa las flechas) para ponerlas en orden.')}</p>` : ''}
+        <ol class="tseq2">${ord.map((v, k) => `<li class="tsq2i ${phase !== 'sort' ? (v === k ? 'ok' : 'ko') : ''}" data-k="${k}"><span class="tsqn">${k + 1}</span><span class="tsqt">${tval(st.items[v])}</span>${phase === 'sort' ? `<span class="tsqa"><button data-m="-1" ${k === 0 ? 'disabled' : ''} aria-label="${L('Puja', 'Sube')}">↑</button><button data-m="1" ${k === ord.length - 1 ? 'disabled' : ''} aria-label="${L('Baixa', 'Baja')}">↓</button></span><span class="tsqg" aria-hidden="true">⋮⋮</span>` : phase === 'retry' ? `<i class="dcm">${v === k ? '✓' : '✕'}</i>` : '<i class="dcm">✓</i>'}</li>`).join('')}</ol></div>`;
+      wire();
+      if (phase === 'sort') tFoot(L('Comprova', 'Comprueba'), check, true);
+      else if (phase === 'retry') tFoot(L('Torna-ho a provar', 'Vuelve a intentarlo'), () => { phase = 'sort'; draw(); }, true);
     };
+    const move = (k, d) => { const j = k + d; if (j < 0 || j >= ord.length) return; [ord[k], ord[j]] = [ord[j], ord[k]]; SFX.tap && SFX.tap(); draw(); };
     const check = () => {
-      TSS.ready = true; const ok = got.every((v, i) => v === i);
-      document.querySelectorAll('.tseq .tsqi').forEach((b, k) => { b.disabled = true; b.classList.add(+b.dataset.i === k ? 'ok' : 'ko'); });
-      $('#tfb').innerHTML = `<div class="tfbox ${ok ? 'ok' : 'ko'}"><b>${ok ? L('Perfecte!', '¡Perfecto!') : L("L'ordre bo és:", 'El orden correcto es:')}</b>${ok ? (st.ex ? ' ' + tval(st.ex) : '') : `<ol>${st.items.map(x => `<li>${tval(x)}</li>`).join('')}</ol>`}</div>`;
-      ok ? (SFX.ok && SFX.ok(), TSS.ok++) : SFX.ko && SFX.ko();
-      tContinue();
+      const ok = ord.every((v, i) => v === i);
+      if (ok) { phase = 'done'; if (first.v) TSS.ok++; SFX.ok && SFX.ok(); typeof confetti === 'function' && confetti(50); draw();
+        $('#tfb').innerHTML = `<div class="tfbox ok"><b>${L('Perfecte! Aquest és l\'ordre.', '¡Perfecto! Este es el orden.')}</b>${st.ex ? ' ' + tval(st.ex) : ''}</div>`; TSS.ready = true; tContinue(); return; }
+      first.v = false; phase = 'retry'; SFX.ko && SFX.ko(); const n = ord.filter((v, i) => v === i).length; draw();
+      $('#tfb').innerHTML = `<div class="tfbox ko"><b>${L(`${n} de ${ord.length} al seu lloc.`, `${n} de ${ord.length} en su sitio.`)}</b> ${L('Les marcades amb ✕ no hi van. Pensa què ha de passar abans i què després.', 'Las marcadas con ✕ no van ahí. Piensa qué debe pasar antes y qué después.')}</div>`;
+      document.querySelectorAll('.tsq2i.ko').forEach(e => e.classList.add('shake'));
+    };
+    const wire = () => {
+      const list = document.querySelector('.tseq2'); if (!list || phase !== 'sort') return;
+      list.querySelectorAll('.tsqa button').forEach(b => b.onclick = ev => { ev.stopPropagation(); move(+b.closest('li').dataset.k, +b.dataset.m); });
+      list.querySelectorAll('.tsq2i').forEach(li => li.onpointerdown = ev => {
+        if (ev.target.closest('button')) return; ev.preventDefault(); const k0 = +li.dataset.k, items = [...list.children], r = li.getBoundingClientRect(), y0 = ev.clientY, mids = items.map(x => { const q = x.getBoundingClientRect(); return q.top + q.height / 2; }); let ghost = null, to = k0;
+        const mv = m => { const dy = m.clientY - y0; if (!ghost && Math.abs(dy) < 6) return;
+          if (!ghost) { ghost = li.cloneNode(true); ghost.classList.add('ghost'); ghost.style.cssText = `width:${r.width}px;left:${r.left}px;top:${r.top}px;animation:none`; document.body.appendChild(ghost); li.classList.add('lift'); }
+          ghost.style.top = `${r.top + dy}px`;
+          to = mids.findIndex(y => m.clientY < y); if (to < 0) to = items.length - 1; else if (to > k0) to--;
+          items.forEach((x, n) => x.classList.toggle('gap', n === (to >= k0 ? to + 1 : to) && n !== k0)); };
+        const up = () => { li.removeEventListener('pointermove', mv); li.removeEventListener('pointerup', up); li.removeEventListener('pointercancel', up);
+          if (!ghost) return; ghost.remove(); if (to !== k0) { const [v] = ord.splice(k0, 1); ord.splice(to, 0, v); SFX.tap && SFX.tap(); } draw(); };
+        li.setPointerCapture && li.setPointerCapture(ev.pointerId); li.addEventListener('pointermove', mv); li.addEventListener('pointerup', up); li.addEventListener('pointercancel', up);
+      });
     };
     draw();
   },
+
   // moure en Bit amb botons: el que fas queda apuntat com un programa
   hand(st) {
     tbMake(st.w, { mode: 'hand' });

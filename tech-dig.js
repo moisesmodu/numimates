@@ -67,17 +67,63 @@ if (typeof TSTEP !== 'undefined') {
   };
   // dsort: { q, bins: ['ca|es', …], items: [{ t: 'text|texto', b: 0, ex? , ico? }] } — es toca un element i després el calaix
   TSTEP.dsort = function (st) {
-    const order = shuffle(st.items.map((_, i) => i)), put = {}; let sel = null;
+    // classificar arrossegant (ratolí o dit) les targetes a cada calaix; també es pot tocar la targeta i després el calaix
+    const order = shuffle(st.items.map((_, i) => i)), put = {}, COL = st.binCol || ['#3D7BF4', '#8B5CF6', '#E8812A', '#14A3B8'];
+    let sel = null, phase = 'sort', wrong = [];
+    const icoOf = it => it.ico || ((tval(it.t).match(/^\p{Extended_Pictographic}️?/u) || [])[0] || '');
+    const txtOf = it => { const t = tval(it.t); return it.ico ? t : t.replace(/^\p{Extended_Pictographic}️?\s*/u, ''); };
+    const card = (i, sm) => { const it = st.items[i], ic = icoOf(it), k = put[i], st2 = phase !== 'sort' && k != null ? (it.b === k ? 'ok' : 'ko') : '';
+      return `<div class="dcard ${sm ? 'sm' : ''} ${sel === i ? 'on' : ''} ${st2}" data-i="${i}" role="button" tabindex="0">${ic ? `<span class="dci">${ic}</span>` : ''}<span class="dct">${txtOf(it)}</span>${st2 === 'ok' ? '<i class="dcm">✓</i>' : st2 === 'ko' ? '<i class="dcm">✕</i>' : ''}</div>`; };
     const draw = () => {
-      $('#tsb').innerHTML = `<div class="tcol">${digQ(st)}<div class="dpool">${order.filter(i => put[i] == null).map(i => `<button class="dcard ${sel === i ? 'on' : ''}" data-i="${i}">${st.items[i].ico ? `<span>${st.items[i].ico}</span>` : ''}${tval(st.items[i].t)}</button>`).join('') || `<p class="tempty">${L('Ja els has posat tots!', '¡Ya los has puesto todos!')}</p>`}</div>
-        <div class="dbins b${st.bins.length}">${st.bins.map((b, k) => `<div class="dbin" data-b="${k}"><b>${tval(b)}</b>${order.filter(i => put[i] === k).map(i => `<span class="dcard sm ${TSS.ready ? (st.items[i].b === k ? 'ok' : 'ko') : ''}" data-i="${i}">${tval(st.items[i].t)}</span>`).join('')}</div>`).join('')}</div><div class="tfb" id="tfb"></div></div>`;
-      document.querySelectorAll('.dpool .dcard').forEach(e => e.onclick = () => { if (TSS.ready) return; sel = +e.dataset.i; SFX.tap && SFX.tap(); draw(); });
-      document.querySelectorAll('.dbin').forEach(e => e.onclick = ev => { if (TSS.ready) return; const card = ev.target.closest('.dcard'); if (card && card.dataset.i != null && put[+card.dataset.i] != null) { delete put[+card.dataset.i]; draw(); return; } if (sel == null) return; put[sel] = +e.dataset.b; sel = null; SFX.tap && SFX.tap(); draw(); });
-      const all = Object.keys(put).length === st.items.length;
-      if (TSS.ready) { const bad = st.items.map((it, i) => [it, i]).filter(([it, i]) => put[i] !== it.b); $('#tfb').innerHTML = `<div class="tfbox ${bad.length ? 'ko' : 'ok'}"><b>${bad.length ? L(`${st.items.length - bad.length} de ${st.items.length} ben classificats.`, `${st.items.length - bad.length} de ${st.items.length} bien clasificados.`) : L('Perfecte!', '¡Perfecto!')}</b>${bad.length ? `<ul>${bad.map(([it]) => `<li><b>${tval(it.t)}</b> → ${tval(st.bins[it.b])}${it.ex ? ': ' + tval(it.ex) : ''}</li>`).join('')}</ul>` : (st.ex ? ' ' + tval(st.ex) : '') + (st.items.some(it => it.ex) ? `<ul>${st.items.filter(it => it.ex).map(it => `<li><b>${tval(it.t)}</b> → ${tval(st.bins[it.b])}: ${tval(it.ex)}</li>`).join('')}</ul>` : '')}</div>`; tContinue(); }
-      else tFoot(L('Comprova', 'Comprueba'), () => { TSS.ready = true; const ok = st.items.every((it, i) => put[i] === it.b); ok ? (SFX.ok && SFX.ok(), TSS.ok++) : SFX.ko && SFX.ko(); draw(); }, all);
+      const left = order.filter(i => put[i] == null), done = st.items.length - left.length;
+      $('#tsb').innerHTML = `<div class="tcol dsortw">${digQ(st)}
+        <div class="dprog"><span style="width:${100 * done / st.items.length}%"></span><b>${done} / ${st.items.length}</b></div>
+        <div class="tfb" id="tfb"></div>
+        ${left.length ? `<p class="dhint">${L('Arrossega cada targeta al calaix que toca (o toca-la i després el calaix).', 'Arrastra cada tarjeta a la caja que toca (o tócala y luego la caja).')}</p><div class="dpool">${left.map(i => card(i)).join('')}</div>` : phase === 'sort' ? `<div class="dpool empty"><p class="tempty">${L('Ja els has posat tots! Toca «Comprova».', '¡Ya los has puesto todos! Toca «Comprueba».')}</p></div>` : ''}
+        <div class="dbins b${st.bins.length}">${st.bins.map((b, k) => { const n = order.filter(i => put[i] === k).length;
+          return `<div class="dbin" data-b="${k}" style="--bc:${COL[k % COL.length]}"><div class="dbh">${(st.binIco || [])[k] ? `<span class="dbi">${st.binIco[k]}</span>` : ''}<b>${tval(b)}</b><em>${n}</em></div><div class="dbl">${order.filter(i => put[i] === k).map(i => card(i, true)).join('') || `<p class="dbe">${L('Arrossega-hi targetes', 'Arrastra tarjetas aquí')}</p>`}</div></div>`; }).join('')}</div></div>`;
+      wire();
+      const all = left.length === 0;
+      if (phase === 'sort') tFoot(L('Comprova', 'Comprueba'), check, all);
+      else if (phase === 'retry') tFoot(L('Torna-ho a provar', 'Vuelve a intentarlo'), () => { wrong.forEach(i => delete put[i]); wrong = []; phase = 'sort'; draw(); }, true);
     };
-    draw();
+    const place = (i, k) => { if (k == null) delete put[i]; else put[i] = k; sel = null; SFX.tap && SFX.tap(); draw();
+      const e = document.querySelector(`.dbin[data-b="${k}"] .dcard[data-i="${i}"]`); if (e) { e.classList.add('drop'); setTimeout(() => e.classList.remove('drop'), 400); } };
+    const check = () => {
+      wrong = st.items.map((_, i) => i).filter(i => put[i] !== st.items[i].b);
+      const first = !TSS.tried; TSS.tried = true;
+      if (!wrong.length) { phase = 'done'; if (first) TSS.ok++; SFX.ok && SFX.ok(); typeof confetti === 'function' && confetti(60); draw();
+        $('#tfb').innerHTML = `<div class="tfbox ok"><b>${L('Perfecte! Tot ben classificat.', '¡Perfecto! Todo bien clasificado.')}</b>${st.ex ? ' ' + tval(st.ex) : ''}${st.items.some(it => it.ex) ? `<ul>${st.items.filter(it => it.ex).map(it => `<li><b>${txtOf(it)}</b> → ${tval(st.bins[it.b])}: ${tval(it.ex)}</li>`).join('')}</ul>` : ''}</div>`;
+        TSS.ready = true; tContinue(); return; }
+      phase = 'retry'; SFX.ko && SFX.ko(); draw();
+      $('#tfb').innerHTML = `<div class="tfbox ko"><b>${L(`${st.items.length - wrong.length} de ${st.items.length} ben classificats. Mira per què:`, `${st.items.length - wrong.length} de ${st.items.length} bien clasificados. Mira por qué:`)}</b><ul>${wrong.map(i => { const it = st.items[i]; return `<li><b>${txtOf(it)}</b> ${L('va a', 'va a')} <b>${tval(st.bins[it.b])}</b>${it.ex ? ': ' + tval(it.ex) : ''}</li>`; }).join('')}</ul></div>`;
+      document.querySelectorAll('.dcard.ko').forEach(e => e.classList.add('shake'));
+    };
+    // arrossegar: una còpia de la targeta segueix el dit; el calaix de sota s'il·lumina
+    const wire = () => {
+      const bins = [...document.querySelectorAll('.dbin')];
+      document.querySelectorAll('.dsortw .dcard').forEach(e => {
+        const i = +e.dataset.i;
+        e.onkeydown = ev => { if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); e.click(); } };
+        e.onpointerdown = ev => {
+          if (phase !== 'sort') return; ev.preventDefault(); e.setPointerCapture && e.setPointerCapture(ev.pointerId);
+          const r = e.getBoundingClientRect(), ox = ev.clientX - r.left, oy = ev.clientY - r.top, x0 = ev.clientX, y0 = ev.clientY; let ghost = null, over = null;
+          const move = m => { if (!ghost && Math.hypot(m.clientX - x0, m.clientY - y0) < 6) return;
+            if (!ghost) { ghost = e.cloneNode(true); ghost.classList.add('ghost'); ghost.style.width = r.width + 'px'; document.body.appendChild(ghost); e.classList.add('lift'); }
+            ghost.style.transform = `translate(${m.clientX - ox}px, ${m.clientY - oy}px) rotate(-3deg)`;
+            const b = bins.find(z => { const q = z.getBoundingClientRect(); return m.clientX >= q.left && m.clientX <= q.right && m.clientY >= q.top && m.clientY <= q.bottom; }) || null;
+            if (b !== over) { over && over.classList.remove('over'); over = b; over && over.classList.add('over'); } };
+          const up = () => { e.removeEventListener('pointermove', move); e.removeEventListener('pointerup', up); e.removeEventListener('pointercancel', up);
+            if (ghost) { ghost.remove(); e.classList.remove('lift'); over && over.classList.remove('over');
+              if (over) place(i, +over.dataset.b); else if (put[i] != null && !e.closest('.dbin')) place(i, null); else if (put[i] != null) place(i, null); else draw(); }
+            else { // un toc: selecciona (o treu del calaix)
+              if (put[i] != null) place(i, null); else { sel = sel === i ? null : i; SFX.tap && SFX.tap(); draw(); } } };
+          e.addEventListener('pointermove', move); e.addEventListener('pointerup', up); e.addEventListener('pointercancel', up);
+        };
+      });
+      bins.forEach(b => b.onclick = ev => { if (phase !== 'sort' || ev.target.closest('.dcard') || sel == null) return; place(sel, +b.dataset.b); });
+    };
+    TSS.tried = false; draw();
   };
   // dchat: { q, who: { n: 'Nom|Nombre', av: '🦊' }, nodes: [{ id, msg: ['text|texto', …], opts: [{ t, go, fb?, good? }], end?, fb? }], start }
   TSTEP.dchat = function (st) {
