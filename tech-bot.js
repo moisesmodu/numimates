@@ -325,7 +325,9 @@ const BIT_CNAME = { r: ['vermell', 'rojo'], g: ['verd', 'verde'], y: ['groc', 'a
 const BIT_NOTES = ['do', 're', 'mi', 'fa', 'sol', 'la', 'si'];
 // nom de la variable (el món el pot canviar: «punts», «fruites»…) i nom de cada funció
 const bitVName = () => tx((typeof TB !== 'undefined' && TB && TB.W && TB.W.vname) || 'comptador|contador');
-const bitFName = f => (typeof TB !== 'undefined' && TB && TB.fnName && TB.fnName[f]) ? tx(TB.fnName[f]) : f;
+// noms de les funcions: els de la demo que s'està dibuixant (BIT_FNCTX) o els del repte obert (TB)
+var BIT_FNCTX = null;
+const bitFName = f => { const m = BIT_FNCTX || (typeof TB !== 'undefined' && TB && TB.fnName); return m && m[f] ? tx(m[f]) : f; };
 const bitCondLabel = c => c && c.startsWith('cnt=') ? L(`el ${bitVName()} valgui ${c.slice(4)}`, `el ${bitVName()} valga ${c.slice(4)}`) : tx((BIT_CONDS[c] || BIT_CONDS.wall).join('|'));
 function bitLabel(b) {
   switch (b.k) {

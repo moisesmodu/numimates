@@ -14,7 +14,8 @@ function tDemoChips(list) {
   return (list || []).map(b => { const ch = `<span class="tdb c-${BIT_CAT[b.k]}" data-d="${b._d}"><span class="tbi">${BIT_ICO[b.k]}</span><span>${bitLabel(b)}</span></span>`;
     return b.b ? `<span class="tdc c-${BIT_CAT[b.k]}">${ch}<span class="tdin">${tDemoChips(b.b)}</span>${b.e ? `<span class="tdelse">${L('Si no', 'Si no')}</span><span class="tdin">${tDemoChips(b.e)}</span>` : ''}</span>` : ch; }).join('');
 }
-function tDemoHTML(d) {
+function tDemoHTML(d) { BIT_FNCTX = d.fnName || null; try { return tDemoHTML_(d); } finally { BIT_FNCTX = null; } }
+function tDemoHTML_(d) {
   const W = bitWorld(d.w), S = bitSim(W), P = d._p = tDemoProg(d);
   const extra = [...Object.entries(P.fns || {}).map(([f, l]) => `<span class="tdfn"><b>${BIT_ICO.call}${L('Funció', 'Función')} ${d.fnName && d.fnName[f] ? tx(d.fnName[f]) : f}</b>${tDemoChips(l)}</span>`),
     ...Object.entries(P.evs || {}).map(([e, l]) => `<span class="tdfn ev"><b><span class="tevk sm">${e}</span>${L(`Quan premo ${e}`, `Al pulsar ${e}`)}</b>${tDemoChips(l)}</span>`)].join('');
@@ -48,7 +49,9 @@ function tDemoStart(el, d) {
 
 /* ---------- Animacions de concepte (SVG + CSS, en bucle) ---------- */
 const tA = (t, cls = 'ta-pop') => `class="ta ${cls}" style="--t:${t}s"`;
-const tSvg = (h, body, cls = '') => `<svg class="tani ${cls}" viewBox="0 0 320 ${h}" aria-hidden="true">${typeof bitDefs === 'function' ? bitDefs() : ''}${body}</svg>`;
+// una etiqueta amb dues «class» (p. ex. class="tat s" ${tA(…)}) en fa una de sola: si no, el navegador ignora la segona i no s'anima
+const tCls = b => b.replace(/<([a-zA-Z]+)([^<>]*?)\sclass="([^"]*)"([^<>]*?)\sclass="([^"]*)"/g, '<$1$2 class="$3 $5"$4');
+const tSvg = (h, body, cls = '') => `<svg class="tani ${cls}" viewBox="0 0 320 ${h}" aria-hidden="true">${typeof bitDefs === 'function' ? bitDefs() : ''}${tCls(body)}</svg>`;
 // en Bit en petit (vista de cara o d'esquena…), per posar-lo dins d'una animació
 const tBitMini = (x, y, d = 2, s = 1, extra = '') => `<g transform="translate(${x} ${y}) scale(${s})" ${extra}>${bitBot(d)}</g>`;
 const tCard = (x, y, w, h, n, txt, t, col = '#2F5BEA') => `<g ${tA(t, 'ta-in')}><rect x="${x}" y="${y}" width="${w}" height="${h}" rx="12" fill="#fff" stroke="#DCE4FA" stroke-width="2" filter="url(#bwSh)"/>${n ? `<circle cx="${x + 20}" cy="${y + h / 2}" r="12" fill="${col}"/><text x="${x + 20}" y="${y + h / 2 + 5}" text-anchor="middle" class="tat w">${n}</text>` : ''}<text x="${x + (n ? 40 : 14)}" y="${y + h / 2 + 5}" class="tat">${txt}</text></g>`;
