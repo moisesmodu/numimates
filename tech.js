@@ -210,7 +210,7 @@ function tStep() {
 function tUndoStart() {
   const st = document.querySelector('.tsbody>.tstage'); if (!st || typeof TUNDO === 'undefined') return;
   const ed = st.classList.contains('sstagew') ? 'sg' : st.classList.contains('rstage') ? 'rb' : 'tb', U = TUNDO[ed], S = U.S(); if (!S) return;
-  S._uh = []; S._last = tuSer(U.get(S)); tUndoBtn(ed, S);
+  S._uh = []; S._last = tuSer(U.get(S)); tUndoBtn(ed, S); if (S.mode === 'edit') tCoachStart(ed);
 }
 // tot el pas a la vista, sense haver de baixar: si no hi cap, el contingut es fa més petit (fins a un mínim llegible)
 const TFIT = { ro: null, raf: 0 };
@@ -721,3 +721,26 @@ addEventListener('load', () => {
     };
   }
 });
+
+/* ---------- Ajuda que reacciona al que fa l'alumne/a (editors) ----------
+   Programa buit una estona → la paleta parpelleja; blocs posats però sense executar → «Executa» parpelleja;
+   dos intents que no surten → «Pas a pas» (o la pista) parpelleja. Mai no dona la resposta. */
+const TCOACH = { t: 0, idle: 0, ran: 0, fails: 0, said: {} };
+function tCoachStart(ed) {
+  clearInterval(TCOACH.t); Object.assign(TCOACH, { idle: 0, ran: 0, fails: 0, said: {}, ed });
+  const st = document.querySelector('.tsbody>.tstage'); if (!st || TCOACH.ed == null) return;
+  const say = document.getElementById('tsay');
+  if (say && typeof MutationObserver === 'function') new MutationObserver(() => { if (say.classList.contains('bad')) TCOACH.fails++; if (say.classList.contains('ok')) TCOACH.fails = 0; }).observe(say, { attributes: true, attributeFilter: ['class'] });
+  st.addEventListener('pointerdown', () => { TCOACH.idle = 0; document.querySelectorAll('.tcpulse').forEach(e => e.classList.remove('tcpulse')); const y = document.getElementById('tsay'); if (y && y.classList.contains('coach')) { y.className = 'tsay'; y.innerHTML = ''; } }, true);
+  st.addEventListener('click', e => { if (e.target.closest('#tbgo,#rbgo,#sggo,.sgo')) TCOACH.ran++; }, true);
+  TCOACH.t = setInterval(() => {
+    const s2 = document.querySelector('.tsbody>.tstage'); if (s2 !== st) return clearInterval(TCOACH.t);
+    if (TSS.ready) return; TCOACH.idle++;
+    const U = TUNDO[ed], S = U && U.S(); if (!S || S.mode !== 'edit' || S.run) return;
+    const n = (tuSer(U.get(S)).match(/"k":/g) || []).length;
+    const pulse = (sel, key, msg) => { const e = st.querySelector(sel) || document.querySelector(sel); if (!e || TCOACH.said[key]) return; TCOACH.said[key] = 1; e.classList.add('tcpulse'); if (msg) { const y = document.getElementById('tsay'); if (y && (!y.textContent.trim() || y.classList.contains('coach'))) { y.className = 'tsay coach'; y.innerHTML = msg; } } };
+    if (n === 0 && TCOACH.idle >= 10) pulse('.tpal', 'pal', L('💡 Arrossega un bloc de la paleta al programa (o toca\'l).', '💡 Arrastra un bloque de la paleta al programa (o tócalo).'));
+    else if (n > 0 && !TCOACH.ran && TCOACH.idle >= 15) pulse('#tbgo,#rbgo,#sggo', 'run', ed === 'sg' ? L('💡 Quan vulguis, toca <b>Comença</b> per veure què fan els teus guions.', '💡 Cuando quieras, toca <b>Empieza</b> para ver qué hacen tus guiones.') : L('💡 Quan vulguis, toca <b>Executa</b> per veure què fa el teu programa.', '💡 Cuando quieras, toca <b>Ejecuta</b> para ver qué hace tu programa.'));
+    else if (TCOACH.fails >= 2 && TCOACH.idle >= 4) { const step = [...st.querySelectorAll('.trun .btn.ghost')].find(b => /pas a pas|paso a paso/i.test(b.textContent)); if (step) { if (!TCOACH.said.step) { TCOACH.said.step = 1; step.classList.add('tcpulse'); } } else pulse('#thint', 'hint'); }
+  }, 1000);
+}
