@@ -135,7 +135,7 @@ export function create(el, W, S, opt = {}) {
     // caselles
     for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
       const k = x + ',' + y, p = pos(x, y);
-      if (W0.water.has(k)) { world.add(mesh(g.tile, m.sandSide, { p: [p.x, -.55, p.z], s: [1, .4, 1], recv: true })); const wt = mesh(new THREE.BoxGeometry(.94, .1, .94), m.water, { p: [p.x, -.2, p.z], cast: false, recv: true }); wt.userData.water = rnd(x, y); world.add(wt); continue; }
+      if (W0.water.has(k)) { world.add(mesh(new THREE.BoxGeometry(.96, .04, .96), m.sandSide, { p: [p.x, -.09, p.z], recv: true, cast: false })); const wt = mesh(new THREE.BoxGeometry(.94, .06, .94), m.water, { p: [p.x, -.05, p.z], cast: false, recv: true }); wt.userData.water = rnd(x, y); world.add(wt); continue; }
       const path = W0.path.has(k), fl = W0.floor[k];
       const top = mesh(path ? g.sandTile : g.tile, fl ? new THREE.MeshStandardMaterial({ color: COL[fl], roughness: .5, emissive: COL[fl], emissiveIntensity: .12 }) : path ? m.sand : (x + y) % 2 ? m.grassA : m.grassB, { p: [p.x, path ? -.27 : -.25, p.z], recv: true, cast: false });
       world.add(top);
@@ -294,7 +294,7 @@ export function create(el, W, S, opt = {}) {
     // partícules
     for (let i = fxList.length - 1; i >= 0; i--) { const s = fxList[i], u = s.userData; u.life += dt; s.position.addScaledVector(u.v, dt); u.v.y -= u.g * dt; s.material.opacity = Math.max(0, 1 - u.life / u.max); if (u.life > u.max) { world.remove(s); s.material.dispose(); fxList.splice(i, 1); } }
     // aigua dels estanys
-    world.children.forEach(o => { if (o.userData.water != null) o.position.y = -.2 + Math.sin(bt * 2 + o.userData.water * 6) * .015; });
+    world.children.forEach(o => { if (o.userData.water != null) o.position.y = -.05 + Math.sin(bt * 2 + o.userData.water * 6) * .015; });
     renderer.render(scene, cam);
   }
   function dispose() { alive = false; ro.disconnect(); renderer.dispose(); scene.traverse(o => { if (o.material && o.material.map && !Object.values(TEX).includes(o.material.map)) o.material.map.dispose(); }); }
