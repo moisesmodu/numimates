@@ -776,3 +776,67 @@ function tHandDemo(st) {
   g.animate(kf(-16, -20), o); const an = h.animate(kf(4, 2), o);
   const stop = () => { g.remove(); h.remove(); }; an.onfinish = stop; st.addEventListener('pointerdown', stop, { once: true, capture: true });
 }
+
+/* ---------- Catàleg de tipus d'exercici (per revisar-los un a un): ?tipus=1, només amb tot obert (unlockAll) ----------
+   Obre un exemple real de cada tipus a cada curs; en acabar o sortir torna al catàleg i no desa res. */
+const TKIND = {
+  story: ['Història', 'Historia', 'La missió de la sessió, amb una escena.', 'La misión de la sesión, con una escena.'],
+  learn: ['Teoria en targetes', 'Teoría en tarjetas', 'Targetes amb animació o demostració en directe.', 'Tarjetas con animación o demostración en directo.'],
+  quiz: ['Pregunta', 'Pregunta', 'Tria la resposta; explica el perquè.', 'Elige la respuesta; explica el porqué.'],
+  seq: ['Ordenar', 'Ordenar', 'Arrossega les targetes en ordre.', 'Arrastra las tarjetas en orden.'],
+  dsort: ['Classificar', 'Clasificar', 'Arrossega cada targeta al seu calaix.', 'Arrastra cada tarjeta a su caja.'],
+  hand: ['Mou en Bit amb botons', 'Mueve a Bit con botones', 'Cada toc mou el robot i queda apuntat com a programa.', 'Cada toque mueve el robot y queda apuntado como programa.'],
+  predict: ['Predir (en Bit)', 'Predecir (Bit)', 'On acabarà? Tria i comprova-ho executant.', '¿Dónde acabará? Elige y compruébalo ejecutando.'],
+  build: ['Repte de programar (en Bit)', 'Reto de programar (Bit)', 'Editor de blocs amb objectiu.', 'Editor de bloques con objetivo.'],
+  parsons: ['Blocs barrejats', 'Bloques mezclados', 'Posa en ordre els blocs donats.', 'Ordena los bloques dados.'],
+  spot: ['Troba l\'error (en Bit)', 'Encuentra el error (Bit)', 'Toca el bloc equivocat.', 'Toca el bloque equivocado.'],
+  create: ['Projecte lliure (en Bit)', 'Proyecto libre (Bit)', 'Crea amb criteris d\'èxit.', 'Crea con criterios de éxito.'],
+  design: ['Dissenya un repte', 'Diseña un reto', 'Editor de mapes per a un company/a.', 'Editor de mapas para un compañero/a.'],
+  mybuild: ['Programa el teu repte', 'Programa tu reto', 'Resol el repte que has dissenyat.', 'Resuelve el reto que has diseñado.'],
+  robo: ['Repte Maqueen', 'Reto Maqueen', 'Simulador del robot amb sensors.', 'Simulador del robot con sensores.'],
+  rpredict: ['Predir (Maqueen)', 'Predecir (Maqueen)', 'Què farà el robot?', '¿Qué hará el robot?'],
+  rspot: ['Troba l\'error (Maqueen)', 'Encuentra el error (Maqueen)', 'Toca el bloc que cal canviar.', 'Toca el bloque que hay que cambiar.'],
+  rcreate: ['Projecte lliure (Maqueen)', 'Proyecto libre (Maqueen)', 'Programa amb criteris d\'èxit.', 'Programa con criterios de éxito.'],
+  rdesign: ['Dissenya una missió', 'Diseña una misión', 'Editor de pistes.', 'Editor de pistas.'],
+  rmybuild: ['Programa la teva missió', 'Programa tu misión', 'Resol la missió dissenyada.', 'Resuelve la misión diseñada.'],
+  stage: ['Repte d\'escenari', 'Reto de escenario', 'Guions per a personatges (tipus Scratch).', 'Guiones para personajes (tipo Scratch).'],
+  sfree: ['Mira l\'escenari', 'Mira el escenario', 'Executa i llegeix els guions.', 'Ejecuta y lee los guiones.'],
+  sspot: ['Troba l\'error (escenari)', 'Encuentra el error (escenario)', 'Toca el bloc equivocat.', 'Toca el bloque equivocado.'],
+  screate: ['Projecte lliure (escenari)', 'Proyecto libre (escenario)', 'Anima la teva escena.', 'Anima tu escena.'],
+  dpass: ['Laboratori de contrasenyes', 'Laboratorio de contraseñas', 'Escriu i millora fins a Forta.', 'Escribe y mejora hasta Fuerte.'],
+  dchat: ['Xat amb decisions', 'Chat con decisiones', 'Tria què respons; cada camí té final.', 'Elige qué respondes; cada camino tiene final.'],
+  dspot: ['Troba les pistes', 'Encuentra las pistas', 'Toca les dades o senyals d\'alerta.', 'Toca los datos o señales de alerta.'],
+  dpriv: ['Privadesa del perfil', 'Privacidad del perfil', 'Qui veu cada dada?', '¿Quién ve cada dato?'],
+  dai: ['Entrena la IA', 'Entrena la IA', 'Classifica exemples i prova-la.', 'Clasifica ejemplos y pruébala.'],
+  unplug: ['Sense pantalla', 'Sin pantalla', 'Activitat a l\'aula (amb temporitzador).', 'Actividad en el aula (con temporizador).'],
+  move: ['Pausa activa', 'Pausa activa', 'Moure el cos amb el concepte.', 'Mover el cuerpo con el concepto.'],
+  feel: ['Com et sents?', '¿Cómo te sientes?', 'Valoració ràpida del final.', 'Valoración rápida del final.'],
+  review: ['Valoració', 'Valoración', 'Preguntes d\'una en una.', 'Preguntas de una en una.'],
+  diploma: ['Diploma', 'Diploma', 'Final del curs.', 'Final del curso.']
+};
+function tKindIdx() {
+  const ix = {};
+  for (const C of TECH) for (const u of C.units) for (const s of (u.s || [])) (s.steps || []).forEach((st, i) => { const k = st.k; ((ix[k] ||= {})[C.id] ||= []).push([s.id, i]); });
+  return ix;
+}
+function tTypes() {
+  tStop && tStop(); TSS = null; VIEW = 'ttypes';
+  const ix = tKindIdx(), cs = TECH.filter(c => Object.values(ix).some(v => v[c.id]));
+  const ks = Object.keys(TKIND).filter(k => ix[k]).concat(Object.keys(ix).filter(k => !TKIND[k]));
+  app.innerHTML = `<div class="tpage ttypes"><header class="ttop"><button class="xbtn" onclick="tTypesQuit()" aria-label="${L('Surt', 'Salir')}">✕</button><b>${L('Tipus d\'exercici', 'Tipos de ejercicio')}</b><span class="t3">${ks.length}</span></header>
+    <p class="ttyi">${L('Toca un curs per obrir-ne un exemple real. En acabar el pas (o amb ✕) tornes aquí; no es desa res. «Següent» obre un altre exemple del mateix tipus.', 'Toca un curso para abrir un ejemplo real. Al acabar el paso (o con ✕) vuelves aquí; no se guarda nada. «Siguiente» abre otro ejemplo del mismo tipo.')}</p>
+    <div class="ttyl">${ks.map(k => { const d = TKIND[k] || [k, k, '', ''];
+      return `<div class="ttyc"><div><b>${esc(LANG === 'es' ? d[1] : d[0])}</b><small>${esc(LANG === 'es' ? d[3] : d[2])}</small></div><div class="ttyb">${cs.filter(c => ix[k][c.id]).map(c => `<button onclick="tDemo('${k}','${c.id}',0)">${esc(tx(c.name).replace(/^Tech /, ''))} <em>${ix[k][c.id].length}</em></button>`).join('')}</div></div>`; }).join('')}</div></div>`;
+}
+function tTypesQuit() { VIEW = 'home'; go('home'); }
+function tDemo(k, cid, n) {
+  const ix = tKindIdx(), list = (ix[k] || {})[cid]; if (!list || !list.length) return;
+  const [sid, i] = list[n % list.length], f = tFind(sid); if (!f) return;
+  TSS = { c: f.c, s: f.s, id: sid, i, ok: 0, n: 0, demo: { k, cid, n: n % list.length, of: list.length } }; VIEW = 'tsess'; tStep();
+  const top = document.querySelector('.tstop .tsmin'); if (top) top.innerHTML = `<button class="ttynx" onclick="tDemo('${k}','${cid}',${n + 1})">${L('Següent', 'Siguiente')} ${n % list.length + 1}/${list.length} ›</button>`;
+}
+{ const n0 = tNext, q0 = tQuit, f0 = tFinish;
+  tNext = function () { if (TSS && TSS.demo) return tTypes(); return n0.apply(this, arguments); };
+  tQuit = function () { if (TSS && TSS.demo) { tStop(); TSS = null; return tTypes(); } return q0.apply(this, arguments); };
+  tFinish = function () { if (TSS && TSS.demo) return tTypes(); return f0.apply(this, arguments); }; }
+addEventListener('load', () => setTimeout(() => { try { if (new URLSearchParams(location.search).has('tipus') && typeof P !== 'undefined' && P && P.unlockAll && typeof IS_TECH !== 'undefined' && IS_TECH) tTypes(); } catch (e) { } }, 1200));

@@ -35,6 +35,7 @@ Prova en producció: https://mates-numi.vercel.app/?v=tech (grup 5b amb tot ober
 ## En curs (05/10): «clavar els tipus d'exercici» abans de replicar-los
 Petició del Moisés: cada exercici ha de cabre a la pantalla sense baixar (mòbil i ordinador); editors tipus Scratch millors que la competència (estudi a `NUMI-TECH-COMPETENCIA.md`); solucionari per al professor.
 - Fet: `tFit` (cada pas es redueix fins que hi cap), classificar d'una en una al mòbil, valoració d'una pregunta en una, privadesa compacta; editors en franges fixes (món · programa · paleta), arrossegar i deixar anar, peces que encaixen; solucionari (`tech-sol.js`).
+- **Catàleg de tipus d'exercici** per revisar-los un a un: `?tipus=1` (amb un usuari amb tot obert, o `?v=tech&revisio=1&tipus=1` a la previsualització): cada tipus amb un botó per curs que obre un exemple real; «Següent» en passa a un altre; no desa res.
 - Eines de comprovació (scratchpad de la sessió): `fitscan.mjs <curs> <amplada> <alçada>` diu quins passos no hi caben; `dndtest.mjs` prova arrossegar als tres editors.
 - Següent (de l'estudi de la competència): desfer sempre visible, pressupost de blocs com a forats buits, pistes que reaccionen al programa, tres estrelles (resolt · sense pistes · pocs blocs), «Pas a pas» i velocitats a tots els editors, error que assenyala el bloc i el món s'alenteix quan falla.
 
