@@ -204,7 +204,27 @@ function tStep() {
     <div class="tsbody" id="tsb"></div><div class="tsfoot" id="tsf"></div></div>`;
   (TSTEP[st.k] || TSTEP.story)(st);
   const b = document.querySelector('.tsbody'); if (b) b.scrollTop = 0;
+  tFitWatch();
 }
+// tot el pas a la vista, sense haver de baixar: si no hi cap, el contingut es fa més petit (fins a un mínim llegible)
+const TFIT = { ro: null, raf: 0 };
+function tFit() {
+  const b = document.querySelector('.tsess>.tsbody'); if (!b) return;
+  b.style.zoom = ''; const z0 = parseFloat(getComputedStyle(b).zoom) || 1, min = z0 * (innerWidth < 600 ? .72 : .66);
+  let z = z0;
+  for (let n = 0; n < 4 && b.scrollHeight > b.clientHeight + 2; n++) { z = Math.max(min, z * (b.clientHeight / b.scrollHeight) * .995); b.style.zoom = z.toFixed(3); if (z === min) break; }
+  b.classList.toggle('fitz', z < z0);
+}
+function tFitWatch() {
+  const b = document.querySelector('.tsess>.tsbody'); if (!b) return;
+  const go = () => { cancelAnimationFrame(TFIT.raf); TFIT.raf = requestAnimationFrame(tFit); };
+  const imgs = () => b.querySelectorAll('img').forEach(i => i.complete || i.addEventListener('load', go, { once: true }));
+  if (TFIT.ro) TFIT.ro.disconnect();
+  if (typeof MutationObserver === 'function') { TFIT.ro = new MutationObserver(() => { imgs(); go(); }); TFIT.ro.observe(b, { childList: true, subtree: true, characterData: true }); }
+  imgs();
+  go(); setTimeout(go, 400); setTimeout(go, 1500);
+}
+addEventListener('resize', () => { if (document.querySelector('.tsess')) { cancelAnimationFrame(TFIT.raf); TFIT.raf = requestAnimationFrame(tFit); } });
 // botó de baix: «Continua» (activat quan el pas està fet) o el que demani el pas
 function tFoot(label, fn, on = true, extra = '') {
   const f = document.getElementById('tsf'); if (!f) return;

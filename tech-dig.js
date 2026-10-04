@@ -74,16 +74,20 @@ if (typeof TSTEP !== 'undefined') {
     let sel = null, phase = 'sort', wrong = [];
     const icoOf = it => it.ico || ((tval(it.t).match(/^\p{Extended_Pictographic}️?/u) || [])[0] || '');
     const txtOf = it => { const t = tval(it.t); return it.ico ? t : t.replace(/^\p{Extended_Pictographic}️?\s*/u, ''); };
-    const card = (i, sm) => { const it = st.items[i], ic = icoOf(it), k = put[i], st2 = phase !== 'sort' && k != null ? (it.b === k ? 'ok' : 'ko') : '';
-      return `<div class="dcard ${sm ? 'sm' : ''} ${sel === i ? 'on' : ''} ${st2}" data-i="${i}" role="button" tabindex="0">${ic ? `<span class="dci">${ic}</span>` : ''}<span class="dct">${txtOf(it)}</span>${st2 === 'ok' ? '<i class="dcm">✓</i>' : st2 === 'ko' ? '<i class="dcm">✕</i>' : ''}</div>`; };
+    // al mòbil (o amb moltes targetes llargues) les targetes surten d'una en una, com un munt de cartes: així tot cap a la pantalla
+    const deck = innerWidth < 600 || st.items.length > 8 || st.items.reduce((n, it) => n + txtOf(it).length, 0) > 260;
+    const card = (i, sm, cls = '') => { const it = st.items[i], ic = icoOf(it), k = put[i], st2 = phase !== 'sort' && k != null ? (it.b === k ? 'ok' : 'ko') : '', mini = sm && deck && ic;
+      return `<div class="dcard ${sm ? 'sm' : ''} ${mini ? 'mini' : ''} ${cls} ${sel === i && !deck ? 'on' : ''} ${st2}" data-i="${i}" role="button" tabindex="0" ${mini ? `title="${esc(txtOf(it).replace(/<[^>]+>/g, ''))}"` : ''}>${ic ? `<span class="dci">${ic}</span>` : ''}${mini ? '' : `<span class="dct">${txtOf(it)}</span>`}${st2 === 'ok' ? '<i class="dcm">✓</i>' : st2 === 'ko' ? '<i class="dcm">✕</i>' : ''}</div>`; };
     const draw = () => {
       const left = order.filter(i => put[i] == null), done = st.items.length - left.length;
+      if (deck) sel = left.length && phase === 'sort' ? left[0] : null;
       $('#tsb').innerHTML = `<div class="tcol dsortw">${digQ(st)}
         <div class="dprog"><span style="width:${100 * done / st.items.length}%"></span><b>${done} / ${st.items.length}</b></div>
         <div class="tfb" id="tfb"></div>
-        ${left.length ? `<p class="dhint">${L('Arrossega cada targeta al calaix que toca (o toca-la i després el calaix).', 'Arrastra cada tarjeta a la caja que toca (o tócala y luego la caja).')}</p><div class="dpool">${left.map(i => card(i)).join('')}</div>` : phase === 'sort' ? `<div class="dpool empty"><p class="tempty">${L('Ja els has posat tots! Toca «Comprova».', '¡Ya los has puesto todos! Toca «Comprueba».')}</p></div>` : ''}
-        <div class="dbins b${st.bins.length}">${st.bins.map((b, k) => { const n = order.filter(i => put[i] === k).length;
-          return `<div class="dbin" data-b="${k}" style="--bc:${COL[k % COL.length]}"><div class="dbh">${(st.binIco || [])[k] ? `<span class="dbi">${st.binIco[k]}</span>` : ''}<b>${tval(b)}</b><em>${n}</em></div><div class="dbl">${order.filter(i => put[i] === k).map(i => card(i, true)).join('') || `<p class="dbe">${L('Arrossega-hi targetes', 'Arrastra tarjetas aquí')}</p>`}</div></div>`; }).join('')}</div></div>`;
+        ${left.length && deck ? `<div class="ddeck"><div class="dstk">${left.length > 2 ? '<i class="dsh d2"></i>' : ''}${left.length > 1 ? '<i class="dsh d1"></i>' : ''}${card(left[0], false, 'big')}</div><p class="dhint">${L(`Queden <b>${left.length}</b>. Arrossega la targeta al calaix que toca, o toca el calaix.`, `Quedan <b>${left.length}</b>. Arrastra la tarjeta a la caja que toca, o toca la caja.`)}</p></div>`
+          : left.length ? `<p class="dhint">${L('Arrossega cada targeta al calaix que toca (o toca-la i després el calaix).', 'Arrastra cada tarjeta a la caja que toca (o tócala y luego la caja).')}</p><div class="dpool">${left.map(i => card(i)).join('')}</div>` : phase === 'sort' ? `<div class="dpool empty"><p class="tempty">${L('Ja els has posat tots! Toca «Comprova».', '¡Ya los has puesto todos! Toca «Comprueba».')}</p></div>` : ''}
+        <div class="dbins b${st.bins.length}${deck ? ' deckb' : ''}">${st.bins.map((b, k) => { const n = order.filter(i => put[i] === k).length;
+          return `<div class="dbin" data-b="${k}" style="--bc:${COL[k % COL.length]}"><div class="dbh">${(st.binIco || [])[k] ? `<span class="dbi">${st.binIco[k]}</span>` : ''}<b>${tval(b)}</b><em>${n}</em></div><div class="dbl">${order.filter(i => put[i] === k).map(i => card(i, true)).join('') || `<p class="dbe">${deck ? L('Toca per posar-hi la targeta', 'Toca para poner la tarjeta') : L('Arrossega-hi targetes', 'Arrastra tarjetas aquí')}</p>`}</div></div>`; }).join('')}</div></div>`;
       wire();
       const all = left.length === 0;
       if (phase === 'sort') tFoot(L('Comprova', 'Comprueba'), check, all);

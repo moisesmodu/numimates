@@ -77,3 +77,28 @@
 .dcard{overflow-wrap:anywhere;min-width:0}
 .dbin .dbh{flex-wrap:wrap}.dbin .dbh b{min-width:0;overflow-wrap:anywhere}
 @media (max-width:520px){.dbins.b2 .dcard.sm .dci{display:none}.dbins.b2 .dcard.sm{padding:8px 10px;font-size:13.5px}.dbins.b2 .dbin .dbl{padding:8px 6px}}
+/* classificar d'una en una (munt de cartes): al mòbil sempre, i quan hi ha moltes targetes llargues */
+.ddeck{display:flex;flex-direction:column;align-items:center;gap:8px;margin:4px 0 14px}
+.dstk{position:relative;width:100%;max-width:440px;display:grid}
+.dstk>*{grid-area:1/1}
+.dstk .dsh{display:block;border-radius:18px;background:#fff;border:2px solid #DCE3F7;box-shadow:0 4px 0 #D3DBF3}
+.dstk .dsh.d1{transform:translateY(7px) scale(.96);opacity:.8}.dstk .dsh.d2{transform:translateY(13px) scale(.92);opacity:.55}
+.dcard.big{position:relative;z-index:1;min-height:88px;justify-content:center;text-align:center;flex-direction:column;gap:6px;padding:16px 18px;font-size:17px;line-height:1.35;border-color:#3D5AFE;box-shadow:0 5px 0 #3D5AFE,0 14px 26px rgba(61,90,254,.18);cursor:grab;animation:ddeal .35s cubic-bezier(.2,.9,.3,1)}
+.dcard.big .dci{width:46px;height:46px;font-size:28px}.dcard.big .dci img.ic{width:36px;height:36px}
+@keyframes ddeal{from{opacity:0;transform:translateY(-14px) scale(.96)}}
+.ddeck .dhint{margin:6px 0 0}
+.dbins.deckb .dbin{min-height:96px;cursor:pointer}
+.dbins.deckb .dbin:active{transform:scale(.98)}
+.dbins.deckb .dbl{flex-direction:row;flex-wrap:wrap;align-content:flex-start;gap:6px;padding:8px}
+.dbins.deckb .dcard.sm{width:auto;max-width:100%;padding:6px 10px;font-size:12.5px}
+.dbins.deckb .dcard.sm .dct{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:150px}
+.dcard.mini{width:auto!important;padding:4px!important;gap:2px}.dcard.mini .dci{width:30px;height:30px;font-size:18px;background:transparent}.dcard.mini .dci img.ic{width:24px;height:24px}
+.dcard.mini .dcm{width:18px;height:18px;font-size:11px;margin-left:0}
+@media (prefers-reduced-motion:reduce){.dcard.big{animation:none}}
+.dbins.deckb .dbin{min-height:0}.dbins.deckb .dbl{min-height:44px}
+.dbins.deckb.b3{grid-template-columns:repeat(3,1fr);gap:8px}
+@media (max-width:600px){
+  .dbins.deckb .dbh{flex-direction:column;text-align:center;gap:4px;padding:8px 6px;position:relative}
+  .dbins.deckb .dbh b{font-size:13.5px}.dbins.deckb .dbh em{position:absolute;top:6px;right:6px;min-width:22px;height:22px;font-size:12px}
+  .dbins.deckb .dbe{font-size:11.5px}
+}
