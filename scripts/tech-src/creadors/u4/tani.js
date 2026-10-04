@@ -61,7 +61,7 @@ Object.assign(TANI, (() => {
       return tSvg(214, `${lane(10, '')}${pill(22, 16, 150, L('ves a x: 120 y: 0', 've a x: 120 y: 0'))}
         <g><animate attributeName="opacity" values="1;1;0;0;1" keyTimes="0;.3;.31;.95;1" ${D}/>${spr('numi', 0, 62, 66, 40)}</g>
         <g opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;.33;.34;.95;1" ${D}/>${spr('numi', 1, 252, 66, 40)}<text x="196" y="72" text-anchor="middle" class="tat b" fill="#F08A24">${L('zas!', '¡zas!')}</text></g>
-        ${lane(116, '')}${pill(22, 122, 186, L('llisca en 2 s fins a x: 120', 'desliza en 2 s hasta x: 120'))}
+        ${lane(116, '')}${pill(22, 122, 244, L('llisca en 2 s fins a x: 120 y: 0', 'desliza en 2 s hasta x: 120 y: 0'))}
         <path d="M62 174H252" stroke="#3D7BF4" stroke-width="4" stroke-dasharray="2 9" stroke-linecap="round" pathLength="190" stroke-dashoffset="190"><animate attributeName="stroke-dashoffset" values="190;190;0;0;190" keyTimes="0;.2;.75;.95;1" ${D}/></path>
         <g><animateTransform attributeName="transform" type="translate" values="0 0;0 0;190 0;190 0;0 0" keyTimes="0;.2;.75;.95;1" ${D}/>${spr('numi', 0, 62, 172, 40)}</g>`);
     },
