@@ -23,7 +23,7 @@ function stgWorld(spec) {
   W.regions = (STG_BGREG[spec.bg] || []).concat(spec.regions || []);
   return W;
 }
-function stgSprite(W, d, n) { const a = STG_ART[d.art] || STG_ART.estrella; return { id: d.id, art: d.art, name: d.name || null, x: d.x || 0, y: d.y || 0, dir: d.dir ?? 90, size: d.size || 100, c: d.costume || 0, hidden: !!d.hidden, ghost: 0, say: null, think: false, sayT: 0, z: n, rot: d.rot || 'all', clone: false, dead: false, path: 0, costumeChanges: 0, lastX: d.x || 0, lastY: d.y || 0, r: a.r || 30, ncost: a.n || 1 }; }
+function stgSprite(W, d, n) { const a = STG_ART[d.art] || STG_ART.estrella; return { id: d.id, art: d.art, name: d.name || null, x: d.x || 0, y: d.y || 0, dir: d.dir ?? 90, size: d.size || 100, c: d.costume || 0, hidden: !!d.hidden, ghost: 0, say: null, think: false, sayT: 0, z: n, rot: d.rot || null, clone: false, dead: false, path: 0, costumeChanges: 0, lastX: d.x || 0, lastY: d.y || 0, r: a.r || 30, ncost: a.n || 1 }; }
 function stgSim(W, progs) {
   const S = { t: 0, f: 0, bg: W.bg, bgChanges: 0, vars: Object.fromEntries((W.vars || []).map(v => [v, 0])), sprites: [], threads: [], keys: {}, log: [], msgs: [], touched: new Set(), said: [], clones: 0, stopped: false, crash: null, mx: 0, my: 0, steps: 0 };
   W.sprites.forEach((d, i) => S.sprites.push(stgSprite(W, d, i)));
@@ -160,7 +160,7 @@ function stgMachine(W, progs) {
 }
 /* ---------- Comprovar el repte ----------
    goal: [{ k: 'said', s, t? } (ha dit alguna cosa, o aquest text) · { k: 'at', s, r: [x1, y1, x2, y2] } (acaba dins el rectangle)
-     { k: 'reach', s, r } (hi passa) · { k: 'moved', s, min } · { k: 'dx', s, min } / { k: 'dy', s, min } (s'ha mogut en x / y) · { k: 'costumes', s, min }
+     { k: 'reach', s, r } (hi passa) · { k: 'moved', s, min } · { k: 'dx', s, min } / { k: 'dy', s, min } (s'ha mogut en x / y) · { k: 'costumes', s, min } · { k: 'costume', s, n } (acaba amb el vestit n, des de 1)
      { k: 'touched', a, b } · { k: 'notouch', a, b } · { k: 'var', v, eq?, min?, max? } · { k: 'bg', n } · { k: 'bgs', min } · { k: 'clones', min }
      { k: 'msg', m } · { k: 'hidden', s } · { k: 'shown', s } · { k: 'size', s, min?, max? } · { k: 'dir', s, d } · { k: 'turned', s } · { k: 'sound', n? }
      { k: 'stopped' } (el programa s'atura sol) · { k: 'running', t } (encara funciona al segon t) · { k: 'clicked', s } ] */
@@ -177,6 +177,7 @@ function stgEval(W, S, M0) {
       case 'dx': if ((g.min >= 0 ? s.x - (st0.x || 0) : (st0.x || 0) - s.x) < Math.abs(g.min)) bad.push(g); break;
       case 'dy': if ((g.min >= 0 ? s.y - (st0.y || 0) : (st0.y || 0) - s.y) < Math.abs(g.min)) bad.push(g); break;
       case 'costumes': if ((s.costumeChanges || 0) < g.min) bad.push(g); break;
+      case 'costume': if (s.c + 1 !== g.n) bad.push(g); break;   // acaba amb el vestit número n (des de 1)
       case 'touched': if (![...S.touched].some(x => x === g.a + '>' + g.b || x === g.b + '>' + g.a)) bad.push(g); break;
       case 'notouch': if ([...S.touched].some(x => x === g.a + '>' + g.b || x === g.b + '>' + g.a)) bad.push(g); break;
       case 'var': { const v = S.vars[g.v] ?? 0; if ((g.eq !== undefined && v !== g.eq) || (g.min !== undefined && v < g.min) || (g.max !== undefined && v > g.max)) bad.push(g); break; }
@@ -191,13 +192,15 @@ function stgEval(W, S, M0) {
       case 'turned': if (Math.abs(stgClampDir(s.dir - (st0.dir ?? 90))) < 1) bad.push(g); break;
       case 'sound': if (!S.log.some(l => l.k === 'sound' && (!g.n || l.n === g.n))) bad.push(g); break;
       case 'stopped': if (!S.stopped && S.threads.length) bad.push(g); break;
-      case 'running': if (S.stopped || S.t < g.t) bad.push(g); break;
+      case 'running': if (S.stopped || S.t < g.t || (S.idleT !== undefined && S.idleT <= g.t)) bad.push(g); break;
       case 'clicked': if (!S.log.some(l => l.k === 'click' && l.id === g.s)) bad.push(g); break;
     }
   }
   return bad;
 }
-function stgTrack(W, S) { for (const [i, g] of W.goal.entries()) if (g.k === 'reach') { const s = S.sprites.find(x => x.id === g.s && !x.clone); if (s && s.x >= Math.min(g.r[0], g.r[2]) && s.x <= Math.max(g.r[0], g.r[2]) && s.y >= Math.min(g.r[1], g.r[3]) && s.y <= Math.max(g.r[1], g.r[3])) (S.reach = S.reach || new Set()).add(i); } }
+function stgTrack(W, S) {
+  if (S.threads && !S.threads.length) { if (S.idleT === undefined) S.idleT = S.t; } else S.idleT = undefined;   // des de quan no fa res (per a { k: 'running' })
+  for (const [i, g] of W.goal.entries()) if (g.k === 'reach') { const s = S.sprites.find(x => x.id === g.s && !x.clone); if (s && s.x >= Math.min(g.r[0], g.r[2]) && s.x <= Math.max(g.r[0], g.r[2]) && s.y >= Math.min(g.r[1], g.r[3]) && s.y <= Math.max(g.r[1], g.r[3])) (S.reach = S.reach || new Set()).add(i); } }
 // els guions que ja hi són (spec.prog i el prog de cada personatge) + els de l'alumne (per als personatges que programa)
 function stgProgs(spec, mine) {
   const P = {}; const add = src => { if (!src) return; const q = SQ(src); for (const [id, H] of Object.entries(q)) { P[id] = P[id] || {}; for (const [h, scr] of Object.entries(H)) P[id][h] = (P[id][h] || []).concat(scr); } };
@@ -208,7 +211,7 @@ function stgProgs(spec, mine) {
 function stgHeadless(spec, mine) {
   const W = stgWorld(spec), M = stgMachine(W, stgProgs(spec, mine)); M.flag();
   const N = Math.round(W.time * STG.FPS);
-  for (let i = 0; i < N && !M.S.crash; i++) { M.tick(); stgTrack(W, M.S); if (M.S.stopped && !W.goal.some(g => g.k === 'running')) break; if (M.idle() && !W.input.some(x => x.t + (x.dur || 0) > M.S.t)) break; }
+  for (let i = 0; i < N && !M.S.crash; i++) { M.tick(); stgTrack(W, M.S); if (M.S.stopped && !W.goal.some(g => g.k === 'running')) break; if (M.idle() && !W.input.some(x => x.t + (x.dur || 0) > M.S.t)) { if (M.S.idleT === undefined) M.S.idleT = M.S.t; break; } }
   return { S: M.S, W, bad: M.S.crash ? [{ k: 'crash' }] : stgEval(W, M.S) };
 }
 function stgAlts(spec) { return spec.alts && spec.alts.length ? [spec, ...spec.alts.map(a => ({ ...spec, ...a, alts: null }))] : [spec]; }
@@ -355,9 +358,9 @@ function sgMake(st, o = {}) {
   // cada personatge editable té les seves capçaleres (una llista de blocs per capçalera)
   const hats = st.hats || ['flag'];
   for (const id of edit) { for (const h of hats) progs[id][h] = progs[id][h] && progs[id][h].length ? progs[id][h] : [[]]; }
-  SG = { st, spec, alts, altI: 0, altOk: new Set(), W, progs, edit, hats, sel: null, cur: null, who: edit[0], pal: st.pal || ['move', 'turn', 'wait'], mode: o.mode || 'edit', run: false, solved: false, tries: 0, max: st.max || 0, lists: [], ids: {} };
+  SG = { st, spec, alts, altI: 0, altOk: new Set(), W, progs, edit, hats, sel: null, cur: null, who: edit[0] || (W.sprites.find(d => progs[d.id] && Object.keys(progs[d.id]).length) || W.sprites[0] || {}).id, pal: st.pal || ['move', 'turn', 'wait'], mode: o.mode || 'edit', run: false, solved: false, tries: 0, max: st.max || 0, lists: [], ids: {} };
   SG.M = stgMachine(W, progs);
-  SG.cur = { l: progs[SG.who][hats[0]][0], i: progs[SG.who][hats[0]][0].length };
+  { const P = progs[SG.who] || {}, sc = P[hats[0]] || Object.values(P)[0]; SG.cur = sc && sc[0] ? { l: sc[0], i: sc[0].length } : null; }
   return SG;
 }
 const sgUsed = () => SG.edit.reduce((n, id) => n + Object.values(SG.progs[id]).reduce((a, scr) => a + scr.reduce((b, l) => b + sgCount(l), 0), 0), 0);
@@ -386,7 +389,7 @@ function sgCode() {
   sgIndex();
   const ro = SG.mode !== 'edit', mine = SG.edit.includes(SG.who), P = SG.progs[SG.who] || {};
   const tabs = SG.W.sprites.length > 1 ? `<div class="ssel">${SG.W.sprites.map(d => `<button class="${d.id === SG.who ? 'on' : ''}" onclick="sgWhoSel('${d.id}')"><span class="sthumb">${sgCostume(d.art, d.costume || 0)}</span><b>${esc(tx(d.name || STG_ART[d.art].name))}</b>${SG.edit.includes(d.id) ? '' : `<small>${L('ja programat', 'ya programado')}</small>`}</button>`).join('')}</div>` : '';
-  const scripts = Object.entries(P).filter(([h, l]) => mine ? SG.hats.includes(h) || l.some(x => x.length) : l.some(x => x.length)).map(([h, scr]) => scr.map(l => `<div class="rscript sh-${h.split(':')[0]}"><div class="rhat"><span>${sgIco(h === 'flag' ? 'flag' : h === 'clone' ? 'clone' : h.startsWith('msg') ? 'send' : 'say')}</span><b>${SG_HAT(h)}</b></div><div class="tprog rprog">${sgList(l, ro || !mine) || '<p class="tempty">—</p>'}</div></div>`).join('')).join('');
+  const scripts = Object.entries(P).filter(([h, l]) => mine ? SG.hats.includes(h) || l.some(x => x.length) : l.some(x => x.length)).map(([h, scr]) => scr.map(l => `<div class="rscript sh-${h.split(':')[0]}"><div class="rhat"><span>${sgIco(h === 'flag' ? 'flag' : h === 'clone' ? 'clone' : h.startsWith('msg') ? 'send' : 'say')}</span><b>${SG_HAT(h)}</b>${!ro && mine && l === scr[scr.length - 1] ? `<button class="rhadd" onclick="sgAddScr('${h}')" aria-label="${L('Un altre guió com aquest', 'Otro guion como este')}" title="${L('Un altre guió com aquest', 'Otro guion como este')}">+</button>` : ''}</div><div class="tprog rprog">${sgList(l, ro || !mine) || '<p class="tempty">—</p>'}</div></div>`).join('')).join('');
   return `${tabs}<div class="tphead"><b>${L('Guions', 'Guiones')}</b><span class="tphr">${SG.max ? `<span class="tcount ${sgUsed() >= SG.max ? 'full' : ''}">${sgUsed()}/${SG.max} ${L('blocs', 'bloques')}</span>` : `<span class="tcount">${bitN(sgUsed())}</span>`}</span></div>
     <div class="rscripts" id="sprog">${scripts || `<p class="tempty">${L('Aquest personatge no té guions.', 'Este personaje no tiene guiones.')}</p>`}</div>${!ro && mine ? sgPalette() : ''}`;
 }
@@ -458,6 +461,7 @@ const SG_WHY = g => {
     case 'at': return L(`${who} ha d'acabar a la zona que toca.`, `${who} tiene que terminar en la zona que toca.`);
     case 'reach': return L(`${who} ha d'arribar a la zona que toca.`, `${who} tiene que llegar a la zona que toca.`);
     case 'moved': case 'dx': case 'dy': return L(`${who} s'ha de moure més.`, `${who} tiene que moverse más.`);
+    case 'costume': return L(`${who} ha d'acabar amb el vestit ${g.n}.`, `${who} tiene que acabar con el disfraz ${g.n}.`);
     case 'costumes': return L(`${who} ha de canviar de vestit (per semblar que es mou).`, `${who} tiene que cambiar de disfraz (para que parezca que se mueve).`);
     case 'touched': return L(`${sgWho(g.a)} i ${sgWho(g.b)} s'han de tocar.`, `${sgWho(g.a)} y ${sgWho(g.b)} se tienen que tocar.`);
     case 'notouch': return L(`${sgWho(g.a)} no pot tocar ${sgWho(g.b)}.`, `${sgWho(g.a)} no puede tocar ${sgWho(g.b)}.`);
@@ -502,6 +506,8 @@ function sgMoveB(d) { const b = SG.sel, l = SG.ids[b._id].list, i = l.indexOf(b)
 function sgDel() { const b = SG.sel, l = SG.ids[b._id].list, i = l.indexOf(b); l.splice(i, 1); SG.sel = null; SG.cur = { l, i }; sgFresh(); sgDraw(); }
 function sgElse() { const b = SG.sel; b.e = b.e ? null : []; sgFresh(); sgDraw(); }
 function sgJoin() { const b = SG.sel; b.c = b.c.and || b.c.or ? (b.c.and || b.c.or)[0] : { and: [b.c, { touch: 'edge' }] }; sgFresh(); sgDraw(); }
+// un altre guió amb la mateixa capçalera (p. ex. dos «quan comença» per a dos ritmes diferents)
+function sgAddScr(h) { if (SG.run) sgStop(); const P = SG.progs[SG.who]; if (!P || !P[h] || P[h].length >= 4) return; const l = []; P[h].push(l); SG.cur = { l, i: 0 }; SG.sel = null; sgDraw(); }
 function sgWhoSel(id) { if (SG.run) sgStop(); SG.who = id; SG.sel = null; const P = SG.progs[id], h = Object.keys(P).find(x => SG.hats.includes(x)) || Object.keys(P)[0]; const l = h ? P[h][0] : []; SG.cur = { l, i: l.length }; sgDraw(); }
 function sgFresh() { SG.M = stgMachine(SG.W, SG.progs); SG.solved = false; if (SG.altOk.size) SG.altOk.clear(); const box = document.getElementById('ssp'); if (box) box.innerHTML = ''; sgRender(); }
 function sgField(id, path) {
@@ -559,7 +565,9 @@ if (typeof TSTEP !== 'undefined') {
   };
   TSTEP.sfree = function (st) { sgMake(st, { mode: 'view' }); SG.free = true; SG.onDone = () => tContinue(); sgStage(st); tFoot(L('Continua', 'Continúa'), tNext, true); };
   TSTEP.sspot = function (st) {
-    sgMake({ ...st, edit: [] }, { mode: 'view' }); SG.edit = []; sgStage(st);
+    sgMake({ ...st, edit: [] }, { mode: 'view' }); SG.edit = [];
+    { const has = l => (l || []).some(b => b.x || (Array.isArray(b.b) && has(b.b)) || has(b.e)), w = Object.keys(SG.progs).find(id => Object.values(SG.progs[id]).some(scr => scr.some(has))); if (w) SG.who = w; }
+    sgStage(st);
     const marked = []; Object.values(SG.progs).forEach(P => Object.values(P).forEach(scr => scr.forEach(function w(l) { (l || []).forEach(b => { marked.push(b); if (Array.isArray(b.b)) w(b.b); if (b.e) w(b.e); }); })));
     const wire = () => marked.forEach(b => { const e = document.getElementById('sg' + b._id); if (!e) return; const h = e.querySelector('.tbh'); h.classList.add('rspot'); h.onclick = () => { if (TSS.ready) return; TSS.ready = true; const ok = !!b.x; e.classList.add(ok ? 'good' : 'err'); if (!ok) { const g = marked.find(x => x.x); const ge = g && document.getElementById('sg' + g._id); if (ge) ge.classList.add('good'); }
       sgSay(ok ? L('Molt bé!', '¡Muy bien!') + (st.ex ? ' ' + tval(st.ex) : '') : (st.ex ? tval(st.ex) : L('No és aquest: és el que està marcat en verd.', 'No es este: es el que está marcado en verde.')), ok ? 'ok' : 'bad'); ok ? (SFX.ok && SFX.ok(), TSS.ok++) : SFX.ko && SFX.ko(); tContinue(); }; });

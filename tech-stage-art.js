@@ -143,3 +143,5 @@ const STG_BGREG = {
 };
 const STG_SND = { pop: [880, .08, 'sine'], boing: [220, .25, 'triangle'], moneda: [1320, .12, 'square'], xoc: [110, .2, 'sawtooth'], victoria: [660, .4, 'triangle'], miol: [520, .3, 'sine'], timbre: [990, .3, 'sine'], laser: [1500, .15, 'sawtooth'] };
 const STG_SND_N = { pop: ['pop', 'pop'], boing: ['boing', 'boing'], moneda: ['moneda', 'moneda'], xoc: ['xoc', 'choque'], victoria: ['victòria', 'victoria'], miol: ['miol', 'maullido'], timbre: ['timbre', 'timbre'], laser: ['làser', 'láser'] };
+// el peix i el gat estan dibuixats mirant a l'esquerra: els girem perquè, com tots els altres, mirin cap a la dreta (direcció 90)
+for (const k of ['peix', 'gat']) { const f = STG_ART[k].svg; STG_ART[k].svg = i => f(i).replace(/^(<svg[^>]*viewBox="0 0 (\d+(?:\.\d+)?) [^"]*"[^>]*>)([\s\S]*)(<\/svg>)$/, (m, a, w, body, z) => `${a}<g transform="matrix(-1 0 0 1 ${w} 0)">${body}</g>${z}`); }
