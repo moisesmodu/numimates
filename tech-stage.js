@@ -47,7 +47,7 @@ function stgVal(S, W, s, v) {
   switch (v.r) {
     case 'var': return S.vars[v.v] ?? 0; case 'x': return Math.round(s.x); case 'y': return Math.round(s.y); case 'dir': return Math.round(s.dir); case 'size': return Math.round(s.size);
     case 'costume': return s.c + 1; case 'timer': return Math.round((S.t - (S.timer0 || 0)) * 10) / 10; case 'mx': return Math.round(S.mx); case 'my': return Math.round(S.my);
-    case 'rnd': { const a = stgVal(S, W, s, v.a), b = stgVal(S, W, s, v.b); S.rng = (S.rng * 1103515245 + 12345) & 0x7fffffff; return Math.min(a, b) + (S.rng % (Math.abs(b - a) + 1)); }
+    case 'rnd': { const a = stgVal(S, W, s, v.a), b = stgVal(S, W, s, v.b); S.rng = (Math.imul(S.rng, 1103515245) + 12345) >>> 0; return Math.min(a, b) + ((S.rng >>> 16) % (Math.abs(b - a) + 1)); }   // enters (sense perdre bits) i els bits alts, que són els bons
   }
   return 0;
 }
@@ -133,7 +133,7 @@ function stgClone(S, W, s) {
 }
 // la màquina: comença amb la bandera; cada fotograma avança tots els fils fins que esperen
 function stgMachine(W, progs) {
-  const S = stgSim(W, progs); S.rng = 12345; S.uidN = 0; S.sprites.forEach((s, i) => s.uid = 's' + i);
+  const S = stgSim(W, progs); S.rng = W.seed ?? 12345; S.uidN = 0; S.sprites.forEach((s, i) => s.uid = 's' + i);
   const M = { W, S };
   M.flag = () => { stgEvent(S, W, 'flag'); };
   M.key = (k, down = true) => { if (down) { if (!S.keys[k]) { S.keys[k] = true; S.keyT = S.keyT || {}; S.keyT[k] = S.t; stgEvent(S, W, 'key:' + k); stgEvent(S, W, 'key:any'); } } else S.keys[k] = false; };
@@ -170,7 +170,7 @@ function stgEval(W, S, M0) {
     const s = sp(g.s), st0 = W.sprites.find(d => d.id === g.s) || {};
     const inR = (x, y, r) => x >= Math.min(r[0], r[2]) && x <= Math.max(r[0], r[2]) && y >= Math.min(r[1], r[3]) && y <= Math.max(r[1], r[3]);
     switch (g.k) {
-      case 'said': if (!S.said.some(x => (!g.s || x.id === g.s) && (!g.t || x.t.toLowerCase().includes(String(g.t).toLowerCase())))) bad.push(g); break;
+      case 'said': { const nm = t => String(t).toLowerCase().replace(/(\d),(\d)/g, '$1.$2'); if (!S.said.some(x => (!g.s || x.id === g.s) && (!g.t || nm(x.t).includes(nm(g.t))))) bad.push(g); break; }
       case 'at': if (!inR(s.x, s.y, g.r)) bad.push(g); break;
       case 'reach': if (!S.reach || !S.reach.has(W.goal.indexOf(g))) bad.push(g); break;
       case 'moved': if ((s.path || 0) < g.min) bad.push(g); break;
@@ -435,7 +435,7 @@ function sgSound(n) { if (typeof P !== 'undefined' && P && P.sound === false) re
 function sgGo(auto) {
   if (!SG) return; if (SG.run) sgStop();
   const spec = SG.alts[SG.altI], hasIn = !!(spec.input && spec.input.length);
-  SG.W = stgWorld(hasIn && !auto ? { ...spec, input: [] } : spec); SG.auto = !!auto; SG.judge = !hasIn || !!auto;
+  SG.W = stgWorld(hasIn && !auto ? { ...spec, input: [], seed: (Math.random() * 2 ** 31) >>> 0 } : spec);   // provant lliurement, l'atzar canvia cada vegada; la comprovació fa servir sempre la mateixa llavor (com el validador) SG.auto = !!auto; SG.judge = !hasIn || !!auto;
   SG.M = stgMachine(SG.W, SG.progs); SG.run = true; SG.tries++; SG.sel = null; sgSay(auto ? L('Comprovant: les tecles es premen soles…', 'Comprobando: las teclas se pulsan solas…') : '');
   const lastSay = {}; let last = performance.now(), acc = 0, fr = 0, snd = null;
   SG.M.flag();
@@ -522,7 +522,7 @@ function sgField(id, path) {
     if (field === 'touch' && SG.pal.includes('cond+')) body += `<p class="rpk">${L('o una altra condició:', 'u otra condición:')}</p>` + opt({ color: 'blue' }, L('toca un color', 'toca un color'), false) + opt({ key: (W.keys || ['space'])[0] }, L('una tecla premuda', 'una tecla pulsada'), false) + opt({ a: { r: 'var', v: W.vars[0] || 'punts' }, op: '>', b: 0 }, L('comparar números', 'comparar números'), false); }
   else if (field === 'color') body = [...new Set(W.regions.map(r => r.c))].map(v => opt(v, `<i class="rdot" style="background:${{ red: '#EF5A5A', green: '#3CC47C', blue: '#3D7BF4', yellow: '#FFC531', grey: '#A9B0C0' }[v]}"></i>${tx(SG_CN[v].join('|'))}`, cur === v)).join('') || `<p class="mut">${L('Aquest fons no té zones de color.', 'Este fondo no tiene zonas de color.')}</p>`;
   else if (field === 'key') body = (W.keys.length ? W.keys : ['space']).map(v => opt(v, sgKeyN(v), cur === v)).join('');
-  else if (field === 'op') body = ['<', '>', '=', '≠'].map(v => opt(v, v, cur === v)).join('');
+  else if (field === 'op') body = ['<', '>', '=', '≠', '≤', '≥'].map(v => opt(v, v, cur === v)).join('');
   else if (field === 'v') body = (W.vars.length ? W.vars : ['punts']).map(v => opt(v, sgOpTxt({ r: 'var', v }, SG.st), cur === v)).join('');
   else if (field === 'm') body = (SG.st.msgs || ['comença']).map(v => opt(v, esc(v), cur === v)).join('');
   else if (field === 'n' && b.k === 'bg') body = (W.bgs || [W.bg]).map(v => opt(v, sgBgN(v), cur === v)).join('');
