@@ -93,7 +93,7 @@ function* stgRun(S, W, s, list) {
       case 'point': s.dir = stgClampDir(stgVal(S, W, s, b.n)); break;
       case 'pointto': { const o = b.t === 'mouse' ? { x: S.mx, y: S.my } : stgFind(S, b.t); if (o) s.dir = stgClampDir(Math.atan2(o.x - s.x, o.y - s.y) * 180 / Math.PI); break; }
       case 'bounce': stgBounce(s); break;
-      case 'say': case 'think': { const txt = typeof b.t === 'object' ? String(stgVal(S, W, s, b.t)) : b.t; stgSay(S, s, txt, b.k === 'think');
+      case 'say': case 'think': { const txt = typeof b.t === 'object' ? stgNum(stgVal(S, W, s, b.t)) : b.t; stgSay(S, s, txt, b.k === 'think');
         if (b.s) { const until = S.t + stgVal(S, W, s, b.s); while (S.t < until - 1e-9) { yield { frame: 1 }; if (S.stopped || s.dead) return; } if (s.say === txt) s.say = null; } break; }
       case 'costume': { const c = Math.max(0, Math.min(s.ncost - 1, stgVal(S, W, s, b.n) - 1)); if (c !== s.c) s.costumeChanges++; s.c = c; break; }
       case 'next': s.c = (s.c + 1) % s.ncost; s.costumeChanges++; break;
@@ -222,6 +222,7 @@ function stgSolves(spec, progs) { for (const [i, sp] of stgAlts(spec).entries())
    operands: números · $punts (variable) · x y dir size costume timer mx my · rnd:1:10
    condicions: touch:edge touch:gat touch:mouse color:red key:space $punts>=10 x>200 … · amb && o || · !cond (no)
    un «!» darrere d'un bloc (fora de cometes) el marca per a «Investiga» */
+const stgNum = v => typeof v === 'number' ? String(v).replace('.', ',') : String(v);   // 2,8 (amb coma, en català i en castellà)
 function stgOp(t) { if (/^-?\d+(\.\d+)?$/.test(t)) return +t; if (t[0] === '$') return { r: 'var', v: t.slice(1) }; if (['x', 'y', 'dir', 'size', 'costume', 'timer', 'mx', 'my'].includes(t)) return { r: t }; const m = t.match(/^rnd:(-?[\w$.]+):(-?[\w$.]+)$/); if (m) return { r: 'rnd', a: stgOp(m[1]), b: stgOp(m[2]) }; throw new Error('SQ: operand «' + t + '»'); }
 function stgCondP(t) {
   if (t.includes('&&')) { const [a, ...b] = t.split('&&'); return { and: [stgCondP(a), stgCondP(b.join('&&'))] }; }
@@ -424,7 +425,7 @@ function sgRender() {
     im.style.transform = rot === 'all' ? `rotate(${s.dir - (a.face ?? 90)}deg)` : rot === 'lr' && s.dir < 0 ? 'scaleX(-1)' : 'none';
     const bub = e.lastChild, txt = s.say ? esc(tx(s.say)) : ''; if (bub.dataset.t !== txt + s.think) { bub.dataset.t = txt + s.think; bub.innerHTML = txt; bub.className = 'sbub' + (txt ? ' on' : '') + (s.think ? ' th' : ''); } }
   box.querySelectorAll('.ssp').forEach(e => { if (!live.has(e.dataset.u)) e.remove(); });
-  const vs = document.getElementById('svars'); if (vs) vs.innerHTML = Object.entries(S.vars).map(([k, v]) => `<span><small>${esc(SG.st.varNames && SG.st.varNames[k] ? tx(SG.st.varNames[k]) : k)}</small><b>${v}</b></span>`).join('');
+  const vs = document.getElementById('svars'); if (vs) vs.innerHTML = Object.entries(S.vars).map(([k, v]) => `<span><small>${esc(SG.st.varNames && SG.st.varNames[k] ? tx(SG.st.varNames[k]) : k)}</small><b>${stgNum(v)}</b></span>`).join('');
 }
 function sgMarkNow() { document.querySelectorAll('.sb.now').forEach(e => e.classList.remove('now')); if (!SG || !SG.run) return; for (const th of SG.M.S.threads) if (th.cur && th.cur._id && th.s.id === SG.who) { const e = document.getElementById('sg' + th.cur._id); if (e) e.classList.add('now'); } }
 let SG_AC = null;
@@ -466,7 +467,7 @@ const SG_WHY = g => {
     case 'costumes': return L(`${who} ha de canviar de vestit (per semblar que es mou).`, `${who} tiene que cambiar de disfraz (para que parezca que se mueve).`);
     case 'touched': return L(`${sgWho(g.a)} i ${sgWho(g.b)} s'han de tocar.`, `${sgWho(g.a)} y ${sgWho(g.b)} se tienen que tocar.`);
     case 'notouch': return L(`${sgWho(g.a)} no pot tocar ${sgWho(g.b)}.`, `${sgWho(g.a)} no puede tocar ${sgWho(g.b)}.`);
-    case 'var': return L(`La variable «${g.v}» no té el valor que demana el repte.`, `La variable «${g.v}» no tiene el valor que pide el reto.`);
+    case 'var': { const n = SG && SG.st && SG.st.varNames && SG.st.varNames[g.v] ? tx(SG.st.varNames[g.v]) : g.v; return L(`La variable «${n}» no té el valor que demana el repte.`, `La variable «${n}» no tiene el valor que pide el reto.`); }
     case 'bg': return L(`El fons ha de canviar a ${sgBgN(g.n)}.`, `El fondo tiene que cambiar a ${sgBgN(g.n)}.`);
     case 'bgs': return L('El fons ha de canviar més vegades.', 'El fondo tiene que cambiar más veces.');
     case 'clones': return L(`Calen almenys ${g.min} clons.`, `Hacen falta al menos ${g.min} clones.`);
