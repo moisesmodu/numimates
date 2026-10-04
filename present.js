@@ -35,8 +35,10 @@
   const X = s => `${s.blocks ? `<div class="pz-blocks">${s.blocks.map((b, k) => { const o = typeof b === 'string' ? { t: b } : b; return `<span class="pz-b c-${o.c || BCOL[k % BCOL.length]}">${esc(T(o.t))}</span>`; }).join('')}</div>` : ''}${s.code ? `<pre class="pz-code"><code>${esc(T(s.code))}</code></pre>` : ''}`;
 
   const BIT = F.c.id === 'robot', HERO = `img/tech/scenes/hero-${F.c.id}.webp`;
+  // portada: si el títol, l'entrada i els objectius són llargs, la lletra es fa més petita perquè tot hi càpiga
+  const coverD = s => { const n = T(s.t).length * 3 + (s.x ? T(s.x).length : 0) + G.obj.slice(0, 3).reduce((a, o) => a + T(o).length, 0); return n > 560 ? 'd2' : n > 400 ? 'd1' : ''; };
   const R = {
-    portada: s => `<div class="pz-cover"><div class="pz-cl"><p class="pz-kick">${esc(T(F.c.name))} · ${L('Unitat', 'Unidad')} ${F.ui + 1} · ${L('Sessió', 'Sesión')} ${F.si + 1}</p>
+    portada: s => `<div class="pz-cover ${coverD(s)}"><div class="pz-cl"><p class="pz-kick">${esc(T(F.c.name))} · ${L('Unitat', 'Unidad')} ${F.ui + 1} · ${L('Sessió', 'Sesión')} ${F.si + 1}</p>
         <h1>${esc(T(s.t))}</h1>${s.x ? `<p class="pz-lead">${T(s.x)}</p>` : ''}<div class="pz-obj"><b>${L('Al final de la sessió, cada alumne/a…', 'Al final de la sesión, cada alumno/a…')}</b><ul>${G.obj.slice(0, 3).map(o => `<li>${esc(T(o).replace(/^L'alumne\/a |^El alumno\/a /, ''))}</li>`).join('')}</ul></div></div>
       <div class="pz-cr">${BIT ? '<div class="pz-3d" id="pzw"></div>' : `<div class="pz-hero" style="background-image:url(${HERO})"></div>`}</div></div>`,
     pregunta: s => `<div class="pz-q"><div class="pz-qbot">${bitChar('idle')}</div><div class="pz-qb"><h2>${esc(T(s.t))}</h2>${s.x ? `<p>${T(s.x)}</p>` : ''}${s.punts ? `<ul class="pz-pts">${s.punts.map(p => `<li>${T(p)}</li>`).join('')}</ul>` : ''}${X(s)}</div></div>`,

@@ -145,3 +145,20 @@ const STG_SND = { pop: [880, .08, 'sine'], boing: [220, .25, 'triangle'], moneda
 const STG_SND_N = { pop: ['pop', 'pop'], boing: ['boing', 'boing'], moneda: ['moneda', 'moneda'], xoc: ['xoc', 'choque'], victoria: ['victòria', 'victoria'], miol: ['miol', 'maullido'], timbre: ['timbre', 'timbre'], laser: ['làser', 'láser'] };
 // el peix i el gat estan dibuixats mirant a l'esquerra: els girem perquè, com tots els altres, mirin cap a la dreta (direcció 90)
 for (const k of ['peix', 'gat']) { const f = STG_ART[k].svg; STG_ART[k].svg = i => f(i).replace(/^(<svg[^>]*viewBox="0 0 (\d+(?:\.\d+)?) [^"]*"[^>]*>)([\s\S]*)(<\/svg>)$/, (m, a, w, body, z) => `${a}<g transform="matrix(-1 0 0 1 ${w} 0)">${body}</g>${z}`); }
+// Il·lustracions 3D de Numi (img/ic, les mateixes que fa servir tota l'app): els objectes d'un sol vestit les fan servir
+// en lloc del dibuix pla, i n'hi ha de noves per triar. Mides: w = amplada a l'escenari; r = radi per a «toca».
+// gir per defecte: els animals es giren de costat (lr); la resta d'objectes no giren (none), com una enganxina
+const STG_IC_LR = ['dog', 'fox', 'owl', 'lion', 'rabbit', 'mouse', 'chick', 'crocodile', 'eagle', 'turtle', 'racecar'];
+const STG_IC = (name, ic, r, w) => ({ name, n: 1, r, w, ic, rot: STG_IC_LR.includes(ic) ? 'lr' : 'none', svg: () => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><image href="img/ic/${ic}.webp" x="0" y="0" width="100" height="100"/></svg>` });
+Object.assign(STG_ART, {
+  poma: STG_IC('Poma|Manzana', 'apple', 22, 58), platan: STG_IC('Plàtan|Plátano', 'banana', 22, 62), estrella: STG_IC('Estrella|Estrella', 'star', 24, 60),
+  pilota: STG_IC('Pilota|Pelota', 'football', 22, 54), globus: STG_IC('Globus|Globo', 'balloon', 24, 62), meteorit: STG_IC('Meteorit|Meteorito', 'comet', 26, 76),
+  // personatges i objectes nous
+  gos: STG_IC('Gos|Perro', 'dog', 30, 84), guineu: STG_IC('Guineu|Zorro', 'fox', 30, 84), mussol: STG_IC('Mussol|Búho', 'owl', 30, 80), lleo: STG_IC('Lleó|León', 'lion', 32, 88),
+  conill: STG_IC('Conill|Conejo', 'rabbit', 28, 78), ratoli: STG_IC('Ratolí|Ratón', 'mouse', 24, 66), pollet: STG_IC('Pollet|Pollito', 'chick', 24, 64), cocodril: STG_IC('Cocodril|Cocodrilo', 'crocodile', 30, 86),
+  aguila: STG_IC('Àguila|Águila', 'eagle', 30, 84), tortuga: STG_IC('Tortuga|Tortuga', 'turtle', 28, 80), coet: STG_IC('Coet|Cohete', 'rocket', 30, 80), cotxecursa: STG_IC('Cotxe de curses|Coche de carreras', 'racecar', 30, 90),
+  maduixa: STG_IC('Maduixa|Fresa', 'strawberry', 20, 52), raim: STG_IC('Raïm|Uvas', 'grapes', 22, 56), taronja: STG_IC('Taronja|Naranja', 'orange', 20, 52), pastis: STG_IC('Pastís|Pastel', 'cupcake', 22, 58),
+  galeta: STG_IC('Galeta|Galleta', 'cookie', 20, 52), trofeu: STG_IC('Trofeu|Trofeo', 'trophy', 26, 66), diamant: STG_IC('Diamant|Diamante', 'diamond', 22, 56), clau: STG_IC('Clau|Llave', 'key', 20, 56),
+  cofre: STG_IC('Cofre|Cofre', 'chest', 28, 76), corona: STG_IC('Corona|Corona', 'crown', 22, 60), bombeta: STG_IC('Bombeta|Bombilla', 'bulb', 22, 56), basquet: STG_IC('Pilota de bàsquet|Balón de baloncesto', 'basketball', 22, 54),
+  llamp: STG_IC('Llamp|Rayo', 'bolt', 22, 56), foc: STG_IC('Foc|Fuego', 'fire', 24, 60), sol: STG_IC('Sol|Sol', 'sun', 30, 80), lluna: STG_IC('Lluna|Luna', 'moon', 26, 70), nuvol: STG_IC('Núvol|Nube', 'cloud', 30, 90), floc: STG_IC('Floc de neu|Copo de nieve', 'snowflake', 20, 52)
+});

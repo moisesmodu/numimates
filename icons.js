@@ -12,7 +12,9 @@ const IC = {
   '🏁': 'finish', '🤖': 'robot', '🍓': 'strawberry', '🍌': 'banana', '🍊': 'orange', '🍐': 'pear', '🍇': 'grapes', '🍋': 'lemon', '🧁': 'cupcake', '🍬': 'candy', '🍩': 'donut', '🌰': 'chestnut', '⚽': 'football', '🏀': 'basketball', '🎈': 'balloon', '🌸': 'flower',
   '🐱': 'cat', '🐶': 'dog', '🐭': 'mouse', '🐰': 'rabbit', '🐊': 'crocodile', '🚗': 'car', '🖍': 'crayon', '☀': 'sun', '☁': 'cloud', '🌙': 'moon', '🪞': 'mirror', '🍂': 'leaf', '❄': 'snowflake', '🎭': 'masks', '🎩': 'tophat', '🎧': 'headphones',
   '😍': 'love', '🙂': 'good', '😐': 'meh', '😟': 'worried', '👋': 'wave', '👤': 'person', '👧': 'girl', '👦': 'boy', '🧒': 'child', '🧑': 'adult', '🏊': 'swimmer', '🚴': 'cyclist', '🏋': 'lifter', '🏫': 'school', '🌪': 'tornado', '☄': 'comet',
-  '🐣': 'hatch', '🐥': 'chick', '🦊': 'fox', '🐙': 'octopus', '🐢': 'turtle', '🐉': 'dragon', '🦉': 'owl', '🦅': 'eagle', '🐺': 'wolf', '🦁': 'lion', '🌋': 'volcano', '💫': 'dizzy', '🏎': 'racecar'
+  '🐣': 'hatch', '🐥': 'chick', '🦊': 'fox', '🐙': 'octopus', '🐢': 'turtle', '🐉': 'dragon', '🦉': 'owl', '🦅': 'eagle', '🐺': 'wolf', '🦁': 'lion', '🌋': 'volcano', '💫': 'dizzy', '🏎': 'racecar',
+  // sinònims (el mateix dibuix serveix): els fan servir sobretot els cursos de Numi Tech
+  '🔍': 'magnifier', '🌼': 'flower', '🌷': 'flower', '🌻': 'flower', '🌺': 'flower', '👀': 'eye', '✉': 'envelope', '📝': 'pencil'
 };
 // formes planes dels exercicis: en vector, amb els colors de l'app
 const SHP_IC = (() => {
