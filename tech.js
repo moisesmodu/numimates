@@ -740,6 +740,7 @@ function tCoachStart(ed) {
     const U = TUNDO[ed], S = U && U.S(); if (!S || S.mode !== 'edit' || S.run) return;
     const n = (tuSer(U.get(S)).match(/"k":/g) || []).length;
     const pulse = (sel, key, msg) => { const e = st.querySelector(sel) || document.querySelector(sel); if (!e || TCOACH.said[key]) return; TCOACH.said[key] = 1; e.classList.add('tcpulse'); if (msg) { const y = document.getElementById('tsay'); if (y && (!y.textContent.trim() || y.classList.contains('coach'))) { y.className = 'tsay coach'; y.innerHTML = msg; } } };
+    if (n === 0 && TCOACH.idle >= 10 && !TCOACH.said.pal) tHandDemo(st);
     if (n === 0 && TCOACH.idle >= 10) pulse('.tpal', 'pal', L('💡 Arrossega un bloc de la paleta al programa (o toca\'l).', '💡 Arrastra un bloque de la paleta al programa (o tócalo).'));
     else if (n > 0 && !TCOACH.ran && TCOACH.idle >= 15) pulse('#tbgo,#rbgo,#sggo', 'run', ed === 'sg' ? L('💡 Quan vulguis, toca <b>Comença</b> per veure què fan els teus guions.', '💡 Cuando quieras, toca <b>Empieza</b> para ver qué hacen tus guiones.') : L('💡 Quan vulguis, toca <b>Executa</b> per veure què fa el teu programa.', '💡 Cuando quieras, toca <b>Ejecuta</b> para ver qué hace tu programa.'));
     else if (TCOACH.fails >= 2 && TCOACH.idle >= 4) { const step = [...st.querySelectorAll('.trun .btn.ghost')].find(b => /pas a pas|paso a paso/i.test(b.textContent)); if (step) { if (!TCOACH.said.step) { TCOACH.said.step = 1; step.classList.add('tcpulse'); } } else pulse('#thint', 'hint'); }
@@ -760,4 +761,18 @@ function tStars(ed, say) {
   if (!best || !used) return;
   const s2 = !TCOACH.hint, s3 = used <= best, n = 1 + s2 + s3;
   say.insertAdjacentHTML('beforeend', `<span class="tstars" aria-label="${n} ${L('estrelles', 'estrellas')}">${[1, s2, s3].map(x => `<i class="${x ? 'on' : ''}">★</i>`).join('')}</span>${!s3 ? `<small class="tstm">${L(`Repte extra: ho pots fer amb ${best} blocs? (n'has fet servir ${used})`, `Reto extra: ¿lo puedes hacer con ${best} bloques? (has usado ${used})`)}</small>` : !s2 ? `<small class="tstm">${L('La propera, prova-ho sense pista!', '¡La próxima, pruébalo sin pista!')}</small>` : ''}`);
+}
+
+// una mà que ensenya el gest: agafa el primer bloc de la paleta i el porta al programa (dues vegades)
+function tHandDemo(st) {
+  const from = st.querySelector('.tpal .tpb:not(:disabled)'), to = st.querySelector('.tcode .tslot.on') || st.querySelector('.tcode .tslot'); if (!from || !to || !document.body.animate) return;
+  const a = from.getBoundingClientRect(), c = to.getBoundingClientRect(); if (!a.width || !c.width) return;
+  const g = from.cloneNode(true); g.className = from.className + ' tdghost thandb'; g.removeAttribute('onclick'); g.style.width = Math.min(a.width, 240) + 'px'; const cs = getComputedStyle(from); g.style.background = cs.backgroundColor; g.style.color = cs.color;
+  const h = document.createElement('div'); h.className = 'thand'; h.innerHTML = '<svg viewBox="0 0 48 48"><path d="M18 26V9a4 4 0 0 1 8 0v12l9 1.6a5 5 0 0 1 4 5.6L37.6 38A6 6 0 0 1 31.7 43H22a6 6 0 0 1-4.6-2.2L10 32a3.5 3.5 0 0 1 5-4.9z" fill="#fff" stroke="#1B2B6B" stroke-width="2.6" stroke-linejoin="round"/></svg>';
+  document.body.append(g, h);
+  const x0 = a.left + 16, y0 = a.top + a.height / 2, x1 = c.left + 30, y1 = c.top + c.height / 2;
+  const kf = (dx, dy) => [{ transform: `translate(${x0 + dx}px,${y0 + dy}px)`, opacity: 0, offset: 0 }, { transform: `translate(${x0 + dx}px,${y0 + dy}px)`, opacity: 1, offset: .15 }, { transform: `translate(${x1 + dx}px,${y1 + dy}px)`, opacity: 1, offset: .75 }, { transform: `translate(${x1 + dx}px,${y1 + dy}px)`, opacity: 0, offset: 1 }];
+  const o = { duration: 2200, iterations: 2, easing: 'ease-in-out' };
+  g.animate(kf(-16, -20), o); const an = h.animate(kf(4, 2), o);
+  const stop = () => { g.remove(); h.remove(); }; an.onfinish = stop; st.addEventListener('pointerdown', stop, { once: true, capture: true });
 }
