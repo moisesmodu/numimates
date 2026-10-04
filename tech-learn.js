@@ -554,9 +554,9 @@ const TANI = {
       ${[232, 304].map(x => `<g ${tA(1.9)}><path d="M${x - 7} 100h14l-2 26h-10z" fill="#CFEFFF" stroke="#4B9FD5" stroke-width="2" stroke-linejoin="round"/><path d="M${x - 5} 112h10" stroke="#7CC6F2" stroke-width="3"/></g>`).join('')}
       ${[180, 252].map(x => `<g ${tA(2.4)}><path d="M${x} 110v22M${x - 3} 110v8M${x + 3} 110v8M${x - 3} 118h6" stroke="#7A8299" stroke-width="2.4" stroke-linecap="round"/></g>`).join('')}
       <g ${tA(2.9)}><circle cx="296" cy="72" r="15" fill="#3CC47C"/><path d="M289 72l5 5l9 -10" stroke="#fff" stroke-width="3.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g>
-      <text x="236" y="80" text-anchor="middle" class="tat s" ${tA(2.9, 'ta-fade')}>${L('Fet!', '¡Hecho!')}</text>
-      <text x="242" y="40" text-anchor="middle" class="tat s" ${tA(.3, 'ta-fade')}>${L('Una ordre…', 'Una orden…')}</text>
-      <text x="242" y="208" text-anchor="middle" class="tat s" ${tA(1.2, 'ta-fade')}>${L('…molts passos', '…muchos pasos')}</text>`);
+      <g ${tA(2.9, 'ta-fade')}><text x="236" y="80" text-anchor="middle" class="tat s">${L('Fet!', '¡Hecho!')}</text></g>
+      <g ${tA(.3, 'ta-fade')}><text x="242" y="40" text-anchor="middle" class="tat s">${L('Una ordre…', 'Una orden…')}</text></g>
+      <g ${tA(1.2, 'ta-fade')}><text x="242" y="208" text-anchor="middle" class="tat s">${L('…molts passos', '…muchos pasos')}</text></g>`);
   },
   // posar nom a un grup de blocs: quatre blocs es tanquen dins d'una funció i queden com un sol bloc
   u5pack() {
@@ -567,7 +567,7 @@ const TANI = {
       <g ${tA(1.6)}><rect x="236" y="0" width="68" height="24" rx="12" fill="#8B5CF6"/><text x="270" y="17" text-anchor="middle" class="tat w s">${L('escala', 'escalera')}</text></g>
       <g ${tA(2.1, 'ta-fade')}><path d="M160 94v18" stroke="#8B5CF6" stroke-width="5" stroke-linecap="round"/><path d="M150 106l10 11l10 -11" fill="none" stroke="#8B5CF6" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></g>
       <g ${tA(2.5)}><rect x="58" y="126" width="204" height="48" rx="13" fill="#8B5CF6" filter="url(#bwSh)"/><rect x="58" y="126" width="204" height="10" rx="5" fill="#fff" opacity=".16"/><g transform="translate(72 138)" color="#fff"><svg width="26" height="26" viewBox="0 0 24 24">${BIT_ICO.call.replace(/^<svg[^>]*>|<\/svg>$/g, '')}</svg></g><text x="108" y="157" class="tat w b">${L('Funció escala', 'Función escalera')}</text></g>
-      <text x="160" y="202" text-anchor="middle" class="tat s" ${tA(3, 'ta-fade')}>${L('4 blocs → 1 bloc amb nom', '4 bloques → 1 bloque con nombre')}</text>`);
+      <g ${tA(3, 'ta-fade')}><text x="160" y="202" text-anchor="middle" class="tat s">${L('4 blocs → 1 bloc amb nom', '4 bloques → 1 bloque con nombre')}</text></g>`);
   },
   // cridar una funció: en Bit va a la funció, en fa tots els blocs i torna on era
   u5call() {
@@ -650,7 +650,7 @@ const TANI = {
     return tSvg(220, `${[0, 1, 2].map(row).join('')}
       <path d="M166 12q10 0 10 12v54q0 10 8 10q-8 0 -8 10v54q0 12 -10 12" fill="none" stroke="#8B5CF6" stroke-width="4" stroke-linecap="round" ${tA(1.4, 'ta-fade')}/>
       ${prog.map(([k, t], i) => `<g ${tA(1.9 + i * .3)}><rect x="${k === 'call' ? 190 : 204}" y="${12 + i * 34}" width="${k === 'call' ? 122 : 86}" height="28" rx="9" fill="${k === 'call' ? '#8B5CF6' : '#3D7BF4'}"/><g transform="translate(${k === 'call' ? 196 : 210} ${16 + i * 34})" color="#fff"><svg width="20" height="20" viewBox="0 0 24 24">${BIT_ICO[k].replace(/^<svg[^>]*>|<\/svg>$/g, '')}</svg></g><text x="${k === 'call' ? 222 : 236}" y="${31 + i * 34}" class="tat w s">${t}</text></g>`).join('')}
-      <text x="160" y="212" text-anchor="middle" class="tat s" ${tA(3.4, 'ta-fade')}>${L('Què es repeteix? Posa-hi nom!', '¿Qué se repite? ¡Ponle nombre!')}</text>`);
+      <g ${tA(3.4, 'ta-fade')}><text x="160" y="212" text-anchor="middle" class="tat s">${L('Què es repeteix? Posa-hi nom!', '¿Qué se repite? ¡Ponle nombre!')}</text></g>`);
   },
   // la funció comença on és en Bit: la mateixa «porta-la» cap a la dreta o cap avall
   u5where() {
@@ -666,7 +666,7 @@ const TANI = {
         <text x="${x0 + 75}" y="${gy + 4 * C + 18}" text-anchor="middle" class="tat s">${down ? L('mira avall ↓', 'mira abajo ↓') : L('mira a la dreta →', 'mira a la derecha →')}</text></g>`; };
     return tSvg(230, `${panel(6, false, .2)}${panel(164, true, .8)}
       ${[6, 164].map((x, i) => `<g ${tA(1.5 + i * .4)}><rect x="${x + 14}" y="166" width="122" height="30" rx="10" fill="#8B5CF6"/><g transform="translate(${x + 20} 170)" color="#fff"><svg width="22" height="22" viewBox="0 0 24 24">${BIT_ICO.call.replace(/^<svg[^>]*>|<\/svg>$/g, '')}</svg></g><text x="${x + 48}" y="186" class="tat w s">${L('porta-la', 'llévala')}</text></g>`).join('')}
-      <text x="160" y="224" text-anchor="middle" class="tat s" ${tA(2.4, 'ta-fade')}>${L('Mateixa funció, des d\'on és en Bit', 'Misma función, desde donde está Bit')}</text>`);
+      <g ${tA(2.4, 'ta-fade')}><text x="160" y="224" text-anchor="middle" class="tat s">${L('Mateixa funció, des d\'on és en Bit', 'Misma función, desde donde está Bit')}</text></g>`);
   },
   // ---------- Robot, unitat 6 ----------
   // una variable és una capsa amb nom que recorda un número (i el número canvia: 0, 1, 2, 3)
