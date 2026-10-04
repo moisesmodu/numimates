@@ -673,3 +673,5 @@ span.tb.c-cond{color:#3A2600}
 /* la paleta, amb les mateixes peces */
 .tstage .tcode .tpal button.tb.tpb{clip-path:var(--puz);border-radius:0;box-shadow:inset 0 -8px 0 -3px color-mix(in srgb,var(--bc) 70%,#000);padding-top:10px;padding-bottom:13px}
 .tstage .tcode .tpal button.tb.tpb:active:not(:disabled){transform:translateY(2px)}
+.tclr.tundo:disabled{opacity:.35}.tclr.tundo svg{width:18px;height:18px}
+.tcount.dots{display:inline-flex;align-items:center;gap:6px}.tdots{display:inline-flex;gap:3px}.tdots i{width:9px;height:9px;border-radius:3px;border:2px solid currentColor;opacity:.55}.tdots i.on{background:currentColor;opacity:1}.tcount.dots b{font-size:12px}

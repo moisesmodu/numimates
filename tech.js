@@ -204,7 +204,13 @@ function tStep() {
     <div class="tsbody" id="tsb"></div><div class="tsfoot" id="tsf"></div></div>`;
   (TSTEP[st.k] || TSTEP.story)(st);
   const b = document.querySelector('.tsbody'); if (b) b.scrollTop = 0;
-  tFitWatch();
+  tFitWatch(); tUndoStart();
+}
+// en obrir un editor, el punt de partida per desfer
+function tUndoStart() {
+  const st = document.querySelector('.tsbody>.tstage'); if (!st || typeof TUNDO === 'undefined') return;
+  const ed = st.classList.contains('sstagew') ? 'sg' : st.classList.contains('rstage') ? 'rb' : 'tb', U = TUNDO[ed], S = U.S(); if (!S) return;
+  S._uh = []; S._last = tuSer(U.get(S)); tUndoBtn(ed, S);
 }
 // tot el pas a la vista, sense haver de baixar: si no hi cap, el contingut es fa més petit (fins a un mínim llegible)
 const TFIT = { ro: null, raf: 0 };
@@ -677,3 +683,41 @@ document.addEventListener('pointerdown', ev => {
 }, true);
 // el clic que el navegador envia en deixar anar un arrossegament no ha d'afegir ni seleccionar res
 document.addEventListener('click', e => { if (Date.now() - TDND.at < 350 && e.target.closest('.tstage')) { e.stopPropagation(); e.preventDefault(); } }, true);
+
+/* ---------- Desfer (als tres editors): cada canvi del programa es pot desfer amb un toc ---------- */
+const TUNDO = {
+  tb: { S: () => typeof TB !== 'undefined' && TB, get: S => ({ p: S.prog, f: S.fns, e: S.evs }),
+    set: (S, v) => { S.prog.splice(0, S.prog.length, ...v.p); for (const k of Object.keys(S.fns || {})) S.fns[k].splice(0, S.fns[k].length, ...((v.f || {})[k] || [])); for (const k of Object.keys(S.evs || {})) S.evs[k].splice(0, S.evs[k].length, ...((v.e || {})[k] || [])); S.cur = { l: S.prog, i: S.prog.length }; },
+    fresh: () => { tbFresh(); tbDraw(); }, draw: 'tbDraw' },
+  rb: { S: () => typeof RB !== 'undefined' && RB, get: S => S.prog,
+    set: (S, v) => { for (const s of Object.keys(S.prog)) S.prog[s].splice(0, S.prog[s].length, ...(v[s] || [])); const l = S.prog[S.scripts[0]]; S.cur = { l, i: l.length }; },
+    fresh: () => { rbFresh(); rbDraw(); }, draw: 'rbDraw' },
+  sg: { S: () => typeof SG !== 'undefined' && SG, get: S => S.progs,
+    set: (S, v) => { for (const id of Object.keys(S.progs)) for (const h of Object.keys(S.progs[id])) S.progs[id][h] = (v[id] || {})[h] || [[]]; const P = S.progs[S.who] || {}, h = Object.keys(P)[0], l = h ? P[h][0] : []; S.cur = { l, i: l.length }; },
+    fresh: () => { sgFresh(); sgDraw(); }, draw: 'sgDraw' }
+};
+const tuSer = v => JSON.stringify(v, (k, x) => k === '_id' ? undefined : x);
+function tUndo(ed) {
+  const U = TUNDO[ed], S = U && U.S(); if (!S || !S._uh || !S._uh.length) return;
+  const run = ed === 'tb' ? S.run && tbStop : ed === 'rb' ? S.run && rbStop : S.run && sgStop; run && run();
+  const prev = S._uh.pop(); S._undoing = true; U.set(S, JSON.parse(prev)); S.sel = null; S._last = prev; SFX.tap && SFX.tap(); U.fresh(); S._undoing = false;
+}
+function tUndoBtn(ed, S) {
+  const h = document.querySelector('.tsbody>.tstage .tphead .tphr'); if (!h || S.mode !== 'edit') return;
+  let b = h.querySelector('.tundo');
+  if (!b) { h.insertAdjacentHTML('afterbegin', `<button class="tclr tundo" onclick="tUndo('${ed}')" aria-label="${L('Desfés', 'Deshacer')}" title="${L('Desfés', 'Deshacer')}"><svg viewBox="0 0 24 24"><path d="M9 7H4V2M4 7a9 9 0 1 1-1 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>`); b = h.querySelector('.tundo'); }
+  b.disabled = !(S._uh && S._uh.length);
+  // pressupost de blocs: un punt per bloc (ple = fet servir), com els forats de Lightbot
+  const c = h.querySelector('.tcount'), m = c && c.textContent.match(/^\s*(\d+)\s*\/\s*(\d+)/);
+  if (m && +m[2] <= 12) { const u = +m[1], n = +m[2]; c.classList.add('dots'); c.innerHTML = `<span class="tdots">${Array.from({ length: n }, (_, i) => `<i class="${i < u ? 'on' : ''}"></i>`).join('')}</span><b>${u}/${n}</b>`; c.title = L(`${u} de ${n} blocs`, `${u} de ${n} bloques`); }
+}
+addEventListener('load', () => {
+  for (const [ed, U] of Object.entries(TUNDO)) {
+    const f = window[U.draw]; if (typeof f !== 'function') continue;
+    window[U.draw] = function () {
+      const S = U.S(); let r;
+      if (S && S.mode === 'edit') { const now = tuSer(U.get(S)); if (S._last !== undefined && now !== S._last && !S._undoing) { (S._uh = S._uh || []).push(S._last); if (S._uh.length > 60) S._uh.shift(); } S._last = now; }
+      r = f.apply(this, arguments); if (S) tUndoBtn(ed, S); return r;
+    };
+  }
+});
