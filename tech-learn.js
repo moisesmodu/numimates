@@ -14,7 +14,7 @@ function tDemoChips(list) {
   return (list || []).map(b => { const ch = `<span class="tdb c-${BIT_CAT[b.k]}" data-d="${b._d}"><span class="tbi">${BIT_ICO[b.k]}</span><span>${bitLabel(b)}</span></span>`;
     return b.b ? `<span class="tdc c-${BIT_CAT[b.k]}">${ch}<span class="tdin">${tDemoChips(b.b)}</span>${b.e ? `<span class="tdelse">${L('Si no', 'Si no')}</span><span class="tdin">${tDemoChips(b.e)}</span>` : ''}</span>` : ch; }).join('');
 }
-function tDemoHTML(d) { BIT_FNCTX = d.fnName || null; try { return tDemoHTML_(d); } finally { BIT_FNCTX = null; } }
+function tDemoHTML(d) { BIT_FNCTX = d.fnName || null; BIT_VCTX = (d.w && d.w.vname) || null; try { return tDemoHTML_(d); } finally { BIT_FNCTX = null; BIT_VCTX = null; } }
 function tDemoHTML_(d) {
   const W = bitWorld(d.w), S = bitSim(W), P = d._p = tDemoProg(d);
   const extra = [...Object.entries(P.fns || {}).map(([f, l]) => `<span class="tdfn"><b>${BIT_ICO.call}${L('Funció', 'Función')} ${d.fnName && d.fnName[f] ? tx(d.fnName[f]) : f}</b>${tDemoChips(l)}</span>`),

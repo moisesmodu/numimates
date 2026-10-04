@@ -44,14 +44,14 @@
     concepte: s => `<div class="pz-two"><div><h2>${esc(T(s.t))}</h2>${s.x ? `<p class="pz-lead">${T(s.x)}</p>` : ''}${s.punts ? `<ul class="pz-pts big">${s.punts.map(p => `<li>${T(p)}</li>`).join('')}</ul>` : ''}${X(s)}</div>
       <div class="pz-art">${s.anim && TANI[s.anim] ? TANI[s.anim]() : s.demo ? '<div class="pz-3d" id="pzw"></div>' : bitChar('happy')}</div></div>`,
     anim: s => `<div class="pz-anim"><h2>${esc(T(s.t))}</h2><div class="pz-ab">${TANI[s.anim] ? TANI[s.anim]() : ''}</div>${s.x ? `<p class="pz-lead c">${T(s.x)}</p>` : ''}${X(s)}</div>`,
-    demo: s => { BIT_FNCTX = s.demo.fnName || null; try { return R._demo(s); } finally { BIT_FNCTX = null; } },
+    demo: s => { BIT_FNCTX = s.demo.fnName || null; BIT_VCTX = (s.demo.w && s.demo.w.vname) || null; try { return R._demo(s); } finally { BIT_FNCTX = null; BIT_VCTX = null; } },
     _demo: s => { DN = 0; const p = s._p = progOf(s.demo.prog), fns = s._f = s.demo.fns ? Object.fromEntries(Object.entries(s.demo.fns).map(([f, v]) => [f, progOf(v)])) : null, evs = s._e = s.demo.evs ? Object.fromEntries(Object.entries(s.demo.evs).map(([f, v]) => [f, progOf(v)])) : null;
       return `<div class="pz-demo"><div class="pz-dh"><h2>${esc(T(s.t))}</h2>${s.x ? `<p class="pz-lead">${T(s.x)}</p>` : ''}</div>
       <div class="pz-db"><div class="pz-3d" id="pzw"></div><div class="pz-dp"><b>${evs ? L('Quan comença', 'Al empezar') : L('Programa', 'Programa')}</b><div class="pz-chips">${chips(p)}</div>
         ${Object.entries(fns || {}).map(([f, l]) => `<b>${L('Funció', 'Función')} ${esc(s.demo.fnName && s.demo.fnName[f] ? T(s.demo.fnName[f]) : f)}</b><div class="pz-chips fn">${chips(l)}</div>`).join('')}
         ${Object.entries(evs || {}).map(([e, l]) => `<b>${L(`Quan premo ${e}`, `Al pulsar ${e}`)}</b><div class="pz-chips ev">${chips(l)}</div>`).join('')}${s.demo.press ? `<p class="pz-tip">${L('Botons que premerem', 'Botones que pulsaremos')}: <b>${s.demo.press.split('').join(' → ')}</b></p>` : ''}
         <div class="pz-dbt"><button class="pz-btn go" onclick="PZ.run()">▶ ${L('Executa', 'Ejecuta')}</button><button class="pz-btn" onclick="PZ.step()">${L('Pas a pas', 'Paso a paso')}</button><button class="pz-btn" onclick="PZ.reset()">↺</button></div>
-        <p class="pz-tip">${L('Abans d’executar: on creieu que acabarà en Bit?', 'Antes de ejecutar: ¿dónde creéis que terminará Bit?')}</p></div></div></div>`; },
+        <p class="pz-tip">${s.ask ? T(s.ask) : L('Abans d’executar: on creieu que acabarà en Bit?', 'Antes de ejecutar: ¿dónde creéis que terminará Bit?')}</p></div></div></div>`; },
     activitat: s => `<div class="pz-act"><div><p class="pz-kick">${esc(T((PH[(blockOf(s.id) || {}).fase] || PH.inici).join('|')))}</p><h2>${esc(T(s.t))}</h2>${s.x ? `<p class="pz-lead">${T(s.x)}</p>` : ''}
         ${s.punts ? `<ol class="pz-steps">${s.punts.map(p => `<li>${T(p)}</li>`).join('')}</ol>` : ''}${X(s)}</div>
       <div class="pz-side">${s.timer ? `<button class="pz-timer" id="pzt" onclick="PZ.timer(${s.timer})"><span id="pztv">${s.timer}:00</span><small>${L('Toca per començar', 'Toca para empezar')}</small></button>` : `<div class="pz-art">${bitChar('dance')}</div>`}</div></div>`,

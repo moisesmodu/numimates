@@ -318,22 +318,29 @@ const BIT_ICO = {
   setv: '<svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="4" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M8 10h8M8 14h8" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg>'
 };
 const BIT_CAT = { fwd: 'mov', left: 'mov', right: 'mov', pick: 'act', drop: 'act', rep: 'loop', until: 'loop', if: 'cond', paint: 'art', light: 'art', note: 'snd', call: 'fn', add: 'var', sub: 'var', setv: 'var' };
+// [indicatiu (amb «Si»), subjuntiu (amb «Repeteix fins que»)], cada un "català|castellano"
 const BIT_CONDS = {
-  wall: ["hi ha un obstacle davant", 'hay un obstáculo delante'], free: ['el camí és lliure', 'el camino está libre'], goal: ['arribis a la bandera', 'llegues a la bandera'],
-  gem: ['hi ha una estrella', 'hay una estrella'], box: ['hi ha una caixa', 'hay una caja'],
-  freeL: ["hi ha camí a l'esquerra", 'hay camino a la izquierda'], freeR: ['hi ha camí a la dreta', 'hay camino a la derecha'],
-  'floor:r': ['el terra és vermell', 'el suelo es rojo'], 'floor:g': ['el terra és verd', 'el suelo es verde'], 'floor:y': ['el terra és groc', 'el suelo es amarillo'], 'floor:u': ['el terra és blau', 'el suelo es azul']
+  wall: ['hi ha un obstacle davant|hay un obstáculo delante', 'hi hagi un obstacle davant|haya un obstáculo delante'],
+  free: ['el camí és lliure|el camino está libre', 'el camí sigui lliure|el camino esté libre'],
+  goal: ['és a la bandera|está en la bandera', 'arribis a la bandera|llegues a la bandera'],
+  gem: ['hi ha una estrella|hay una estrella', 'hi hagi una estrella|haya una estrella'],
+  box: ['hi ha una caixa|hay una caja', 'hi hagi una caixa|haya una caja'],
+  freeL: ["hi ha camí a l'esquerra|hay camino a la izquierda", "hi hagi camí a l'esquerra|haya camino a la izquierda"],
+  freeR: ['hi ha camí a la dreta|hay camino a la derecha', 'hi hagi camí a la dreta|haya camino a la derecha'],
+  'floor:r': ['el terra és vermell|el suelo es rojo', 'el terra sigui vermell|el suelo sea rojo'], 'floor:g': ['el terra és verd|el suelo es verde', 'el terra sigui verd|el suelo sea verde'],
+  'floor:y': ['el terra és groc|el suelo es amarillo', 'el terra sigui groc|el suelo sea amarillo'], 'floor:u': ['el terra és blau|el suelo es azul', 'el terra sigui blau|el suelo sea azul']
 };
 const BIT_CNAME = { r: ['vermell', 'rojo'], g: ['verd', 'verde'], y: ['groc', 'amarillo'], u: ['blau', 'azul'] };
 const BIT_NOTES = ['do', 're', 'mi', 'fa', 'sol', 'la', 'si'];
 // nom de la variable (el món el pot canviar: «punts», «fruites»…) i nom de cada funció
 // «al comptador» amb el nom de sempre; amb un nom propi, «a «estrelles»» (així no surt «al estrelles»)
-const bitVA = (art, pre) => (typeof TB !== 'undefined' && TB && TB.W && TB.W.vname) ? `${pre ? pre + ' ' : ''}«${bitVName()}»` : `${art} ${bitVName()}`;
-const bitVName = () => tx((typeof TB !== 'undefined' && TB && TB.W && TB.W.vname) || 'comptador|contador');
+const bitVA = (art, pre) => (BIT_VCTX || (typeof TB !== 'undefined' && TB && TB.W && TB.W.vname)) ? `${pre ? pre + ' ' : ''}«${bitVName()}»` : `${art} ${bitVName()}`;
+var BIT_VCTX = null;   // el nom del comptador de la demo que s'està dibuixant
+const bitVName = () => tx(BIT_VCTX || (typeof TB !== 'undefined' && TB && TB.W && TB.W.vname) || 'comptador|contador');
 // noms de les funcions: els de la demo que s'està dibuixant (BIT_FNCTX) o els del repte obert (TB)
 var BIT_FNCTX = null;
 const bitFName = f => { const m = BIT_FNCTX || (typeof TB !== 'undefined' && TB && TB.fnName); return m && m[f] ? tx(m[f]) : f; };
-const bitCondLabel = c => c && c.startsWith('cnt=') ? L(`el ${bitVName()} valgui ${c.slice(4)}`, `el ${bitVName()} valga ${c.slice(4)}`) : tx((BIT_CONDS[c] || BIT_CONDS.wall).join('|'));
+const bitCondLabel = (c, sub) => c && c.startsWith('cnt=') ? (sub ? L(`${bitVA('el', '')} valgui ${c.slice(4)}`, `${bitVA('el', '')} valga ${c.slice(4)}`) : L(`${bitVA('el', '')} val ${c.slice(4)}`, `${bitVA('el', '')} vale ${c.slice(4)}`)) : tx((BIT_CONDS[c] || BIT_CONDS.wall)[sub ? 1 : 0]);
 function bitLabel(b) {
   switch (b.k) {
     case 'fwd': return L('Endavant', 'Adelante');
@@ -342,7 +349,7 @@ function bitLabel(b) {
     case 'pick': return L('Agafa la caixa', 'Coge la caja');
     case 'drop': return L('Deixa la caixa', 'Deja la caja');
     case 'rep': { const n = b.n || 2; return L(`Repeteix <b class="tnum">${n}</b> ${n === 1 ? 'vegada' : 'vegades'}`, `Repite <b class="tnum">${n}</b> ${n === 1 ? 'vez' : 'veces'}`); }
-    case 'until': return `${L('Repeteix fins que', 'Repite hasta que')} <b>${bitCondLabel(b.c || 'goal')}</b>`;
+    case 'until': return `${L('Repeteix fins que', 'Repite hasta que')} <b>${bitCondLabel(b.c || 'goal', true)}</b>`;
     case 'if': return `${L('Si', 'Si')} <b>${bitCondLabel(b.c || 'wall')}</b>`;
     case 'paint': return `${L('Pinta de', 'Pinta de')} <i class="tdot" style="background:${BIT_COL[b.c || 'r']}"></i>`;
     case 'light': return `${L('Llum', 'Luz')} <i class="tdot" style="background:${BIT_COL[b.c || 'r']}"></i>`;
@@ -466,7 +473,7 @@ function tbPalette() {
   const ks = TB.pal.filter(k => k !== 'else').flatMap(k => k === 'call' ? Object.keys(TB.fns || { A: 1 }).map(f => 'call:' + f) : [k]);
   return `<div class="tpal">${ks.map(k => { const b = k.startsWith('call:') ? { k: 'call', f: k.slice(5) } : bitNew(k), kk = b.k;
     if ((kk === 'if' || kk === 'until') && TB.conds && TB.conds.length) b.c = TB.conds[0];
-    return `<button class="tb c-${BIT_CAT[kk]} tpb" onclick="tbIns('${k}')" ${full ? 'disabled' : ''}><span class="tbi">${BIT_ICO[kk] || ''}</span><span class="tbl">${bitLabel(b).replace(/<b class="tnum">\d+<\/b>/, kk === 'rep' ? 'N' : '<b class="tnum">1</b>')}</span></button>`; }).join('')}</div>`;
+    return `<button class="tb c-${BIT_CAT[kk]} tpb" onclick="tbIns('${k}')" ${full ? 'disabled' : ''}><span class="tbi">${BIT_ICO[kk] || ''}</span><span class="tbl">${bitLabel(b).replace(/<b class="tnum">\d+<\/b>/, kk === 'rep' ? 'N' : kk === 'setv' ? '$&' : '<b class="tnum">1</b>')}</span></button>`; }).join('')}</div>`;
 }
 // les altres llistes de blocs: funcions (es poden editar si el repte ho diu) i esdeveniments (quan premo A…)
 function tbExtraLists() {
