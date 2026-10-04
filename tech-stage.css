@@ -1,0 +1,35 @@
+/* ===== Numi Tech · Creadors: l'escenari ===== */
+.sworld{display:flex;flex-direction:column;gap:8px}
+.sstage{position:relative;width:100%;aspect-ratio:4/3;border-radius:18px;overflow:hidden;background:#fff;box-shadow:inset 0 0 0 2px var(--line);user-select:none;-webkit-user-select:none;touch-action:manipulation}
+.sbg,.sbg svg{position:absolute;inset:0;width:100%;height:100%;display:block}
+.ssprites{position:absolute;inset:0}
+.ssp{position:absolute;transform:translate(-50%,-50%);cursor:pointer;transition:opacity .15s}
+.sspi svg,.sspi img{display:block;width:100%;height:auto;overflow:visible}
+.sspi{transform-origin:50% 50%;filter:drop-shadow(0 4px 3px rgba(10,20,50,.22))}
+.sbub{position:absolute;left:62%;bottom:88%;min-width:56px;max-width:200px;background:#fff;color:#14204A;border:2.5px solid #14204A;border-radius:16px;padding:5px 10px;font:800 14px/1.25 Lexend,system-ui,sans-serif;white-space:normal;text-align:center;opacity:0;transform:scale(.6);transform-origin:0 100%;transition:opacity .15s,transform .15s;pointer-events:none;z-index:2}
+.sbub.on{opacity:1;transform:none}
+.sbub::after{content:"";position:absolute;left:12px;bottom:-11px;border:10px solid transparent;border-top-color:#14204A;border-bottom:0}
+.sbub.th{border-style:dashed;border-radius:24px}.sbub.th::after{border:0;width:10px;height:10px;border-radius:50%;background:#fff;border:2.5px solid #14204A;bottom:-16px;left:6px}
+.svars{position:absolute;left:8px;top:8px;display:flex;gap:6px;flex-wrap:wrap;pointer-events:none;z-index:500}
+.svars span{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.94);border:2px solid #E0533F;border-radius:12px;padding:3px 10px;font-weight:800;color:#14204A;box-shadow:0 3px 10px rgba(20,32,74,.15)}
+.svars small{font-size:12px;color:var(--mut)}.svars b{font-size:18px;color:#E0533F}
+.sctl{position:absolute;right:8px;top:8px;display:flex;gap:6px;z-index:500}
+.sctl button{display:grid;place-items:center;width:40px;height:40px;border-radius:12px;background:rgba(255,255,255,.94);border:2px solid var(--line);box-shadow:0 3px 8px rgba(20,32,74,.15)}
+.sctl .sgo svg{width:24px;height:24px;color:#1FA463}.sctl .sst i{width:16px;height:16px;border-radius:4px;background:#EF5A5A}
+.skeys{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
+.skeys button{min-width:58px;height:52px;padding:0 14px;border-radius:14px;background:#2A2F45;color:#fff;font:900 20px Lexend,system-ui,sans-serif;box-shadow:0 4px 0 #0E1120;touch-action:none}
+.skeys button.on{transform:translateY(3px);box-shadow:0 1px 0 #0E1120;background:#3D7BF4}
+.ssel{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px}
+.ssel button{flex:none;display:flex;flex-direction:column;align-items:center;gap:2px;min-width:86px;padding:6px 8px;border-radius:14px;background:#fff;border:2px solid var(--line);border-bottom-width:4px}
+.ssel button.on{border-color:var(--pri);background:var(--sky)}.ssel b{font-size:13px}.ssel small{font-size:11px;color:var(--mut);font-weight:700}
+.sthumb{display:block;width:46px;height:40px}.sthumb svg,.sthumb img{width:100%;height:100%;object-fit:contain}
+.sb.c-art{--bc:#C447A8}.rdb.c-art{--bc:#C447A8}
+.rscript.sh-click .rhat,.rscript.sh-key .rhat{background:#B07A00}.rscript.sh-msg .rhat{background:#C26F18}.rscript.sh-clone .rhat{background:#1FA463}.rscript.sh-flag .rhat{background:#1E7A42}
+/* demos */
+.sdemo{display:grid;gap:10px;background:linear-gradient(180deg,#F5F8FF,#EAF0FF);border-radius:20px;padding:10px}
+.sstage.mini{border-radius:14px}
+.sdcode{display:flex;flex-direction:column;gap:6px}
+@media (min-width:900px){.sdemo{grid-template-columns:1.2fr 1fr;align-items:start}}
+/* miniatura del portafoli */
+.sthumbw{position:relative;display:block;width:100%;aspect-ratio:4/3;border-radius:10px;overflow:hidden}.sthumbw>svg{position:absolute;inset:0;width:100%;height:100%}
+.sthumbs i{position:absolute;width:24%;transform:translate(-50%,-50%)}.sthumbs i svg,.sthumbs i img{width:100%;height:auto;display:block}

@@ -1,0 +1,45 @@
+/* ===== Numi Tech · Web: l'editor de codi i la vista prèvia ===== */
+.wstage{display:grid;gap:12px}
+.wedit{display:flex;flex-direction:column;gap:8px;min-width:0}
+.wtabs{display:flex;gap:4px;align-items:flex-end}
+.wtabs button{display:flex;flex-direction:column;align-items:flex-start;padding:7px 14px 6px;border-radius:12px 12px 0 0;background:#E3E8F6;color:var(--mut);font-weight:900;font-size:14px;border:2px solid transparent;border-bottom:0}
+.wtabs button small{font-weight:700;font-size:11px;opacity:.75}
+.wtabs button.on{background:#14204A;color:#fff}
+.wlang{margin-left:auto;font-size:12px;font-weight:800;color:var(--mut);text-transform:uppercase;letter-spacing:.06em;padding-bottom:6px}
+.wcode{display:grid;grid-template-columns:auto 1fr;background:#14204A;border-radius:0 14px 14px 14px;overflow:hidden;height:min(34vh,300px);box-shadow:0 8px 24px rgba(20,32,74,.18)}
+.wln{overflow:hidden;padding:12px 8px 12px 10px;background:#0E1736;color:#5A6BA0;font:600 14px/1.55 ui-monospace,Menlo,Consolas,monospace;text-align:right;user-select:none}
+.wln i{display:block;font-style:normal}
+.warea{position:relative;overflow:hidden}
+.whl,.warea textarea{position:absolute;inset:0;margin:0;padding:12px;font:600 14px/1.55 ui-monospace,Menlo,Consolas,monospace;white-space:pre-wrap;word-break:break-word;tab-size:2;overflow:auto;border:0;letter-spacing:0}
+.whl{color:#E8EEFF;pointer-events:none}
+.warea textarea{background:transparent;color:transparent;caret-color:#FFC531;resize:none;outline:none;-webkit-text-fill-color:transparent}
+.warea textarea::selection{background:rgba(255,197,49,.35)}
+.whl i,.wpre i{font-style:normal}.wt{color:#7FB8FF}.wa{color:#FFB86B}.wv{color:#7DE3A6}.wc{color:#6B7AA8}.ws{color:#FF8FB1}.wp{color:#7FD3F7}
+.wsnips{display:flex;flex-wrap:wrap;gap:6px}
+.wsnips button{font:700 13px ui-monospace,Menlo,Consolas,monospace;background:#fff;border:2px solid var(--line);border-bottom-width:3px;border-radius:10px;padding:6px 10px;color:#1C3FB8}
+.werr{margin:0;min-height:20px;font-size:14px;font-weight:700;color:#B4501A}.werr code{background:#FFF1E4;border-radius:5px;padding:0 4px}
+.wview{display:flex;flex-direction:column;gap:8px;min-width:0}
+.wbar{display:flex;align-items:center;gap:8px;background:#E3E8F6;border-radius:14px 14px 0 0;padding:6px 10px}
+.wdots{display:flex;gap:5px}.wdots i{width:10px;height:10px;border-radius:50%;background:#EF5A5A}.wdots i:nth-child(2){background:#FFC531}.wdots i:nth-child(3){background:#3CC47C}
+.wurl{flex:1;background:#fff;border-radius:99px;padding:3px 12px;font-size:12.5px;color:var(--mut);font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.wdev{display:flex;gap:4px}.wdev button{width:34px;height:28px;border-radius:8px;background:#fff;border:2px solid transparent;font-size:15px}.wdev button.on{border-color:var(--pri)}
+.wframe{background:#fff;border:2px solid #E3E8F6;border-top:0;border-radius:0 0 14px 14px;overflow:hidden;display:flex;justify-content:center;height:min(42vh,360px)}
+.wframe.d-mob{background:repeating-linear-gradient(45deg,#F3F6FF,#F3F6FF 8px,#EEF2FD 8px,#EEF2FD 16px)}
+.wframe iframe{border:0;width:100%;height:100%;background:#fff}
+.wframe.d-mob iframe{width:min(100%,375px);box-shadow:0 0 0 1px #DCE4FA}
+.wframe.mini{height:200px;border:2px solid var(--line);border-radius:14px}
+.wchecks{list-style:none;margin:0;padding:0;display:grid;gap:5px}
+.wchecks li{display:flex;align-items:center;gap:8px;background:#fff;border:2px solid var(--line);border-radius:12px;padding:7px 10px;font-weight:700;font-size:14.5px;color:var(--mut)}
+.wchecks li span{display:grid;place-items:center;width:22px;height:22px;flex:none}.wchecks li svg{width:20px;height:20px;color:var(--ok)}
+.wchecks li.ok{color:var(--ink);border-color:#A8E0C0;background:#F2FBF5}.wchecks li.pop{animation:wpop .5s}
+@keyframes wpop{40%{transform:scale(1.04)}}
+.wchecks code,.tcrit code,.tlx code,.tsq code,.tsq2 code{background:#EEF2FD;border-radius:5px;padding:0 4px;font-size:.92em}
+.wpre{margin:0;background:#14204A;color:#E8EEFF;border-radius:14px;padding:12px 14px;font:600 13.5px/1.55 ui-monospace,Menlo,Consolas,monospace;white-space:pre-wrap;word-break:break-word;overflow:auto;max-height:280px}
+.wdemo{display:grid;gap:10px}
+.wspot{display:flex;flex-direction:column;background:#14204A;border-radius:14px;padding:8px 0;margin-bottom:10px}
+.wsl{display:flex;gap:10px;align-items:baseline;text-align:left;padding:3px 12px;color:#E8EEFF;font:600 14px/1.5 ui-monospace,Menlo,Consolas,monospace;border-left:4px solid transparent}
+.wsl i{font-style:normal;color:#5A6BA0;min-width:20px;text-align:right}.wsl code{white-space:pre-wrap;background:none}
+.wsl:hover{background:rgba(255,255,255,.06)}.wsl.ok{background:rgba(60,196,124,.25);border-left-color:var(--ok)}.wsl.ko{background:rgba(239,90,90,.25);border-left-color:var(--ko)}
+.wqo{flex-direction:column;align-items:stretch}.wqo .wframe.mini{height:150px;pointer-events:none}
+.wthumb{display:block;width:100%;aspect-ratio:4/3;overflow:hidden;border-radius:10px;background:#fff}.wthumb iframe{width:200%;height:200%;transform:scale(.5);transform-origin:0 0;border:0;pointer-events:none}
+@media (min-width:900px){.wstage{grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start}.wcode{height:min(56vh,520px)}.wframe{height:min(46vh,440px)}.wdemo{grid-template-columns:1fr 1fr;align-items:start}}
