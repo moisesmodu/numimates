@@ -135,12 +135,23 @@ const vSent = () => `<div class="card done"><img src="${img('envelope')}" alt=""
   <button class="btn ghost" onclick="VIEW='home';render()">${L('TORNA', 'VOLVER')}</button></div>${foot()}`;
 
 function kidCard(k) {
+  if (k.app === 'Numi Tech' && k.tech) return techCard(k);
   const u = curUnit(k), w = week(k);
   return `<div class="card tap" onclick="openKid('${esc(k.code)}')" role="button" tabindex="0">
     <div class="kid"><img class="av" src="${av(k)}" alt=""><div><b>${esc(k.name)} ${pill(k)}</b><small>${tx(COURSE[k.course] || '')} · ${k.last_day ? L('última vegada', 'última vez') + ' ' + ago(k.last_day) : L('encara no ha començat', 'aún no ha empezado')}</small></div></div>
     <div class="row3"><div class="stat"><img src="${img('fire')}" alt=""><b>${k.streak}</b><span>${L('dies seguits', 'días seguidos')}</span></div><div class="stat"><img src="${img('books')}" alt=""><b>${k.lessons}</b><span>${L('lliçons fetes', 'lecciones hechas')}</span></div><div class="stat"><img src="${img('target')}" alt=""><b>${acc(k)}</b><span>${L("d'encerts", 'de aciertos')}</span></div></div>
     <div class="week">${w.map(d => `<i class="${d.on ? 'on' : ''} ${d.today ? 'today' : ''}" title="${d.wd}"></i>`).join('')}</div><div class="wd">${w.map(d => `<span>${d.wd}</span>`).join('')}</div>
     ${u ? `<div class="unit"><span>${L('Unitat', 'Unidad')} ${u.n} · ${esc(u.t)}</span><div class="bar"><i style="width:${u.pct}%"></i></div></div>` : ''}
+    <div class="more">${L('Veure el detall', 'Ver el detalle')} ›</div></div>`;
+}
+// Numi Tech: sessions de programació en lloc de lliçons i unitats de mates
+function techCard(k) {
+  const t = k.tech, w = week(k);
+  return `<div class="card tap" onclick="openKid('${esc(k.code)}')" role="button" tabindex="0">
+    <div class="kid"><img class="av" src="${av(k)}" alt=""><div><b>${esc(k.name)} ${pill(k)}</b><small>Numi Tech · ${esc(tx(t.course))} · ${k.last_day ? L('última vegada', 'última vez') + ' ' + ago(k.last_day) : L('encara no ha començat', 'aún no ha empezado')}</small></div></div>
+    <div class="row3"><div class="stat"><img src="${img('fire')}" alt=""><b>${k.streak}</b><span>${L('dies seguits', 'días seguidos')}</span></div><div class="stat"><img src="${img('books')}" alt=""><b>${t.done}</b><span>${L('sessions fetes', 'sesiones hechas')}</span></div><div class="stat"><b>${t.badges || 0}</b><span>${L('insígnies', 'insignias')}</span></div></div>
+    <div class="week">${w.map(d => `<i class="${d.on ? 'on' : ''} ${d.today ? 'today' : ''}" title="${d.wd}"></i>`).join('')}</div><div class="wd">${w.map(d => `<span>${d.wd}</span>`).join('')}</div>
+    ${t.next ? `<div class="unit"><span>${L('Ara', 'Ahora')}: ${esc(tx(t.next))}</span><div class="bar"><i style="width:${Math.round(100 * t.done / Math.max(1, t.total))}%"></i></div></div>` : ''}
     <div class="more">${L('Veure el detall', 'Ver el detalle')} ›</div></div>`;
 }
 const pill = k => `<span class="pill ${k.pla}">${k.pla === 'premium' ? 'PREMIUM' : k.pla === 'escola' ? L('ESCOLA', 'ESCUELA') : L('GRATUÏT', 'GRATUITO')}</span>`;

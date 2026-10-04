@@ -10,6 +10,7 @@ import { createHmac, timingSafeEqual } from 'crypto';
 import { sql } from './_lib.js';
 import { MAIL_OK } from './_mail.js';
 import { UNIT_T } from './_units.js';
+import { TECH_T } from './_techunits.js';
 
 const BASE = 'https://app.numimates.com', WEB = 'https://numimates.com';
 let READY = null;
@@ -116,6 +117,7 @@ export function reportData(k, prev, per, x = {}) {
 }
 
 export function reportMail(k, prev, per, lang, famId, x = {}) {
+  if (k.variant === 'tech') return reportMailTech(k, prev, per, lang, famId, x);
   const D = reportData(k, prev, per, x), t = s => T(lang, s), name = esc(String(k.name || '').split(' ')[0] || t('el teu fill|tu hijo'));
   const monthly = per.kind === 'mensual', W = monthly ? t('aquest mes|este mes') : t('aquesta setmana|esta semana'), Wprev = monthly ? t('el mes anterior|el mes anterior') : t('la setmana anterior|la semana anterior');
   const when = monthly ? monthName(per.from, lang) : t(`del ${dayLong(per.from, 'ca')} al ${dayLong(per.to, 'ca')}|del ${dayLong(per.from, 'es')} al ${dayLong(per.to, 'es')}`);
@@ -167,7 +169,7 @@ export function reportMail(k, prev, per, lang, famId, x = {}) {
 <tr><td style="background:#602B7A;padding:26px 28px 24px"><img src="${WEB}/img/brand/logo-numi-blanc.png" width="96" alt="Numi" style="display:block;border:0"><p style="margin:18px 0 4px;font:700 13px/1 Arial,sans-serif;letter-spacing:.06em;text-transform:uppercase;color:#E5CFF5">${monthly ? t('Informe mensual|Informe mensual') : t('Informe setmanal|Informe semanal')}</p><p style="margin:0;font:800 24px/1.2 Arial,sans-serif;color:#fff">${t(`Així ha anat ${monthly ? 'el mes' : 'la setmana'} de ${name}|Así ha ido ${monthly ? 'el mes' : 'la semana'} de ${name}`)}</p><p style="margin:6px 0 0;font:400 14px/1.4 Arial,sans-serif;color:#E5CFF5">${esc(when)}</p></td></tr>
 <tr><td style="padding:24px 28px 16px">${p(esc(lead))}${dots}</td></tr>
 <tr><td style="padding:0 28px 18px">${kpis}</td></tr>
-${hiBox}${unit}${areas}${tests}${medals}${nextBox}${idea}
+${hiBox}${unit}${areas}${tests}${medals}${techBox(k, per, lang, box, h, p)}${nextBox}${idea}
 <tr><td style="padding:8px 28px 28px" align="left"><a href="${BASE}/families" style="display:inline-block;background:#602B7A;color:#fff;text-decoration:none;font:700 16px Arial,sans-serif;padding:14px 22px;border-radius:999px">${t('Veure-ho tot a la zona de famílies|Verlo todo en la zona de familias')}</a></td></tr>
 </table>
 <p style="max-width:560px;margin:18px auto 0;font:400 12.5px/1.6 Arial,sans-serif;color:#8A7F96;text-align:center">${t(`Reps aquest informe perquè vas confirmar que vols seguir el progrés de ${name} a Numi Mates. Les dades són les de l'app: dies que ha entrat, lliçons, encerts i proves.|Recibes este informe porque confirmaste que quieres seguir el progreso de ${name} en Numi Mates. Los datos son los de la app: días que ha entrado, lecciones, aciertos y pruebas.`)}<br>
@@ -183,10 +185,80 @@ ${hiBox}${unit}${areas}${tests}${medals}${nextBox}${idea}
   return { subject, html, text, headers: { 'List-Unsubscribe': `<${pref}&f=no>`, 'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click' }, snap: { xp: k.xp | 0, lessons: k.lessons | 0, answers: k.answers | 0, correct: k.correct | 0 } };
 }
 
+/* ---------- Numi Tech ---------- */
+// sessions, temps, insígnies i projectes de Numi Tech dins del període
+export function techData(k, per) {
+  const tt = k.tech && typeof k.tech === 'object' ? k.tech : {}, S = tt.s && typeof tt.s === 'object' ? tt.s : {};
+  const span = [], n = Math.round((per.to - per.from) / 864e5) + 1; for (let i = 0; i < n; i++) span.push(iso(addDays(per.from, i)));
+  const a = span[0], b = span[span.length - 1], inP = d => typeof d === 'string' && d >= a && d <= b;
+  const ids = Object.keys(S).filter(id => TECH_T.s[id]);
+  const done = ids.filter(id => S[id].done && inP(S[id].d)), part = ids.filter(id => !S[id].done && S[id].i);
+  const mins = Math.round(ids.filter(id => inP(S[id].d)).reduce((t, id) => t + (+S[id].ms || 0), 0) / 60000);
+  const hard = done.filter(id => S[id].f >= 2);
+  const badges = Object.entries(tt.badges || {}).filter(([, d]) => inP(d)).map(([id]) => TECH_T.badges[id]).filter(Boolean);
+  const proj = (Array.isArray(k.tech_port) ? k.tech_port : []).filter(p => p && inP(p.d));
+  // la propera sessió del curs que fa (la primera que no ha acabat)
+  const c = TECH_T.courses[tt.c] ? tt.c : 'robot', order = Object.entries(TECH_T.s).filter(([, x]) => x.c === c).map(([id]) => id);
+  const nextId = order.find(id => !(S[id] && S[id].done));
+  const total = { done: ids.filter(id => S[id].done && TECH_T.s[id].c === c).length, of: TECH_T.courses[c].total, course: TECH_T.courses[c].n };
+  return { span, done, part, mins, hard, badges, proj, next: nextId ? { id: nextId, ...TECH_T.s[nextId], partial: !!(S[nextId] && S[nextId].i) } : null, total };
+}
+const techT = (lang, id) => { const x = TECH_T.s[id]; return x ? T(lang, x.t) : id; };
+// quadre de Numi Tech dins de l'informe de mates (comptes que fan totes dues apps)
+function techBox(k, per, lang, box, h, p) {
+  if (k.variant === 'tech' || !k.tech) return '';
+  const D = techData(k, per), t = s => T(lang, s); if (!D.done.length && !D.proj.length) return '';
+  return box(`${h('Numi Tech')}${p(t(`Ha fet ${D.done.length} ${D.done.length === 1 ? 'sessió' : 'sessions'} de programació i robòtica|Ha hecho ${D.done.length} ${D.done.length === 1 ? 'sesión' : 'sesiones'} de programación y robótica`) + (D.done.length ? ': ' + D.done.map(id => '«' + esc(techT(lang, id)) + '»').join(', ') : '') + '.')}`, '#EAF0FF');
+}
+export function reportMailTech(k, prev, per, lang, famId, x = {}) {
+  const D = techData(k, per), t = s => T(lang, s), name = esc(String(k.name || '').split(' ')[0] || t('el teu fill|tu hijo'));
+  const days = new Set(Array.isArray(k.days) ? k.days : []), active = D.span.filter(d => days.has(d)).length;
+  const monthly = per.kind === 'mensual', W = monthly ? t('aquest mes|este mes') : t('aquesta setmana|esta semana');
+  const when = monthly ? monthName(per.from, lang) : t(`del ${dayLong(per.from, 'ca')} al ${dayLong(per.to, 'ca')}|del ${dayLong(per.from, 'es')} al ${dayLong(per.to, 'es')}`);
+  const subject = monthly ? t(`Com li ha anat el mes a ${name} a Numi Tech|Cómo le ha ido el mes a ${name} en Numi Tech`) : t(`La setmana de ${name} a Numi Tech|La semana de ${name} en Numi Tech`);
+  const dur = m => { const hh = String(Math.round(m / 6) / 10).replace('.', ','); return m >= 120 ? t(`unes ${hh} hores|unas ${hh} horas`) : t(`uns ${m} minuts|unos ${m} minutos`); };
+  const lead = !D.done.length && !active
+    ? t(`${monthly ? 'Aquest mes' : 'Aquesta setmana'} ${name} no ha fet cap sessió a Numi Tech. Una sessió dura uns 40 minuts: trieu un moment tranquil de la setmana i feu-la junts.|${monthly ? 'Este mes' : 'Esta semana'} ${name} no ha hecho ninguna sesión en Numi Tech. Una sesión dura unos 40 minutos: elegid un momento tranquilo de la semana y hacedla juntos.`)
+    : D.done.length ? t(`${name} ha acabat ${D.done.length} ${D.done.length === 1 ? 'sessió' : 'sessions'} ${W}${D.mins ? `, ${dur(D.mins)} de programació` : ''}.|${name} ha terminado ${D.done.length} ${D.done.length === 1 ? 'sesión' : 'sesiones'} ${W}${D.mins ? `, ${dur(D.mins)} de programación` : ''}.`)
+      : t(`${name} ha començat una sessió ${W}. Quan la pugui acabar, continuarà on ho va deixar.|${name} ha empezado una sesión ${W}. Cuando pueda terminarla, seguirá donde lo dejó.`);
+  const box = (inner, bg = '#EEF2FD') => `<tr><td style="padding:0 28px 16px"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${bg};border-radius:16px"><tr><td style="padding:18px 20px">${inner}</td></tr></table></td></tr>`;
+  const h = s => `<p style="margin:0 0 10px;font:700 13px/1.3 Arial,sans-serif;letter-spacing:.04em;text-transform:uppercase;color:#2F5BEA">${s}</p>`;
+  const p = s => `<p style="margin:0;font:400 16px/1.5 Arial,sans-serif;color:#14204A">${s}</p>`;
+  const kpi = (v, l) => `<td width="25%" style="padding:0 6px 0 0;vertical-align:top"><div style="background:#EEF2FD;border-radius:14px;padding:14px 8px;text-align:center"><div style="font:800 26px/1 Arial,sans-serif;color:#14204A">${v}</div><div style="font:400 12.5px/1.3 Arial,sans-serif;color:#56628A;margin-top:6px">${l}</div></div></td>`;
+  const kpis = `<table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>${kpi(D.done.length, t(`sessions ${W}|sesiones ${W}`))}${kpi(D.mins ? D.mins : '–', t('minuts|minutos'))}${kpi(D.proj.length, t('projectes nous|proyectos nuevos'))}${kpi(`${D.total.done}<span style="font-size:14px;color:#8E9BC4">/${D.total.of}</span>`, esc(t(D.total.course)))}</tr></table>`;
+  const did = D.done.length ? box(`${h(t(`Sessions acabades ${W}|Sesiones terminadas ${W}`))}${D.done.map(id => p(`✅ ${esc(techT(lang, id))}`)).join('<div style="height:6px"></div>')}`) : '';
+  const hi = [];
+  D.badges.forEach(b => hi.push(`${b.ico} ${t(`Insígnia nova: <b>${esc(t(b.n))}</b>|Insignia nueva: <b>${esc(t(b.n))}</b>`)}`));
+  D.proj.forEach(pj => hi.push(`🧩 ${t(`Ha creat i desat el projecte «${esc(t(pj.t))}»|Ha creado y guardado el proyecto «${esc(t(pj.t))}»`)}`));
+  if ((k.streak | 0) >= 3) hi.push(`🔥 ${t(`Porta ${k.streak | 0} dies seguits amb Numi|Lleva ${k.streak | 0} días seguidos con Numi`)}`);
+  const hiBox = hi.length ? box(`${h(t('El més destacat|Lo más destacado'))}${hi.map(p).join('<div style="height:6px"></div>')}`, '#FFF6DB') : '';
+  const next = D.hard.length ? t(`Ha marcat «${esc(techT(lang, D.hard[0]))}» com a difícil. Pot tornar-la a fer quan vulgui: la segona vegada surt molt millor.|Ha marcado «${esc(techT(lang, D.hard[0]))}» como difícil. Puede volver a hacerla cuando quiera: la segunda vez sale mucho mejor.`)
+    : D.next ? (D.next.partial ? t(`Té a mitges «${esc(techT(lang, D.next.id))}». La pot continuar on la va deixar.|Tiene a medias «${esc(techT(lang, D.next.id))}». Puede continuarla donde la dejó.`) : t(`La propera sessió és «${esc(techT(lang, D.next.id))}» (uns ${D.next.min} minuts).|La próxima sesión es «${esc(techT(lang, D.next.id))}» (unos ${D.next.min} minutos).`))
+      : t("Ha acabat totes les sessions disponibles. Aviat n'hi haurà de noves!|Ha terminado todas las sesiones disponibles. ¡Pronto habrá nuevas!");
+  const idea = t("Demaneu-li que us ensenyi un projecte de «Projectes» i que us expliqui què fa cada bloc. Explicar-ho és la millor manera d'aprendre-ho.|Pedidle que os enseñe un proyecto de «Proyectos» y que os explique qué hace cada bloque. Explicarlo es la mejor manera de aprenderlo.");
+  const pref = `${BASE}/api/mails?informe=${prefTok(famId)}`;
+  const html = `<!doctype html><html><body style="margin:0;padding:0;background:#EEF2FB"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#EEF2FB"><tr><td align="center" style="padding:24px 12px">
+<table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background:#fff;border-radius:22px;overflow:hidden">
+<tr><td style="background:#1B2B6B;padding:26px 28px 24px"><img src="${WEB}/img/brand/logo-numi-blanc.png" width="96" alt="Numi" style="display:block;border:0"><p style="margin:18px 0 4px;font:700 13px/1 Arial,sans-serif;letter-spacing:.06em;text-transform:uppercase;color:#A9C1FF">Numi Tech · ${monthly ? t('Informe mensual|Informe mensual') : t('Informe setmanal|Informe semanal')}</p><p style="margin:0;font:800 24px/1.25 Arial,sans-serif;color:#fff">${name}</p><p style="margin:6px 0 0;font:400 14px Arial,sans-serif;color:#DCE6FF">${when}</p></td></tr>
+<tr><td style="padding:24px 28px 16px">${p(lead)}</td></tr>
+<tr><td style="padding:0 28px 18px">${kpis}</td></tr>
+${hiBox}${did}${box(`${h(t('El proper pas|El siguiente paso'))}${p(next)}`)}${box(`${h(t('Una idea per a casa|Una idea para casa'))}${p(idea)}`, '#EAF5F1')}
+<tr><td style="padding:8px 28px 28px" align="left"><a href="${BASE}/families" style="display:inline-block;background:#2F5BEA;color:#fff;text-decoration:none;font:700 16px Arial,sans-serif;padding:14px 22px;border-radius:999px">${t('Veure-ho tot a la zona de famílies|Verlo todo en la zona de familias')}</a></td></tr>
+</table>
+<p style="max-width:560px;margin:18px auto 0;font:400 12.5px/1.6 Arial,sans-serif;color:#8E9BC4;text-align:center">${t(`Reps aquest informe perquè vas confirmar que vols seguir el progrés de ${name} a Numi.|Recibes este informe porque confirmaste que quieres seguir el progreso de ${name} en Numi.`)}<br>
+<a href="${pref}&f=${monthly ? 'setmanal' : 'mensual'}" style="color:#2F5BEA">${monthly ? t('Prefereixo rebre-ho cada setmana|Prefiero recibirlo cada semana') : t('Prefereixo rebre-ho cada mes|Prefiero recibirlo cada mes')}</a> · <a href="${pref}&f=no" style="color:#2F5BEA">${t('No vull rebre més informes|No quiero recibir más informes')}</a><br>Numi · numimates.com · hola@numimates.com</p>
+</td></tr></table></body></html>`;
+  const strip = v => String(v).replace(/<[^>]+>/g, '').replace(/&laquo;|&raquo;/g, '"');
+  const text = [`Numi Tech · ${monthly ? t('Informe mensual|Informe mensual') : t('Informe setmanal|Informe semanal')} · ${when}`, '', strip(lead), '', ...D.done.map(id => '· ' + techT(lang, id)), '', ...hi.map(x => '· ' + strip(x)), '', `${t('El proper pas|El siguiente paso')}: ${strip(next)}`, '', `${BASE}/families`, '', `${t('Deixar de rebre-ho|Dejar de recibirlo')}: ${pref}&f=no`].join('\n');
+  return { subject, html, text, headers: { 'List-Unsubscribe': `<${pref}&f=no>`, 'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click' }, snap: { xp: k.xp | 0, lessons: k.lessons | 0, answers: k.answers | 0, correct: k.correct | 0 } };
+}
+
 /* ---------- dades d'un alumne ---------- */
 export async function kidRow(code) {
   const r = (await sql`SELECT a.code, a.name, a.course, a.xp, a.streak, a.last_day, a.lessons, a.answers, a.correct, a.active,
-      a.state->'days' AS days, a.state->'stats'->'sk' AS sk, a.state->'prog' AS prog, a.state->'exams' AS exams, (a.state->>'best')::int AS best
+      a.state->'days' AS days, a.state->'stats'->'sk' AS sk, a.state->'prog' AS prog, a.state->'exams' AS exams, (a.state->>'best')::int AS best,
+      a.state->>'variant' AS variant, (a.state->'tech') - 'port' AS tech,
+      (SELECT jsonb_agg(jsonb_build_object('t', p->'t', 'd', p->'d')) FROM jsonb_array_elements(CASE WHEN jsonb_typeof(a.state->'tech'->'port') = 'array' THEN a.state->'tech'->'port' ELSE '[]'::jsonb END) p) AS tech_port
     FROM mates.alumnes a WHERE a.code = ${code}`)[0];
   if (!r) return null;
   try { r.medals = await sql`SELECT kind, comment, docent_nom, created_at FROM mates.medalles WHERE code = ${code} ORDER BY created_at DESC LIMIT 20`; } catch (e) { r.medals = []; }

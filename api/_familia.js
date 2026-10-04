@@ -3,6 +3,7 @@
    l'adult rep el correu, marca que n'és el pare, la mare o el tutor i ho autoritza (obligatori per a menors de 14 anys,
    art. 7 LOPDGDD): en queda la data i la IP, i el perfil del menor passa de 'pending' a 'ok' i ja es pot desar al núvol.
    Accions (POST /api/account?f=…): link · enter · data · add · remove */
+import { TECH_T } from './_techunits.js';
 import { createHash, randomBytes } from 'crypto';
 import { sql, body, cleanCode, ok, blocked, fail, note, tooMany, ipOf, plaOf, alumneStrict, consentCols, logConsent, revokeTok, withdrawConsent, eraseStudent } from './_lib.js';
 import { famToken, famOf, who } from './_auth.js';
@@ -10,7 +11,7 @@ import { subOf } from './_stripe.js';
 import { MAIL_OK, sendMail } from './_mail.js';
 import { informeTables } from './_informe.js';
 
-const ORIGINS = ['https://app.numimates.com', 'https://pro.numimates.com', 'https://ment.numimates.com', 'https://mates-numi.vercel.app', 'http://localhost:5176', 'http://127.0.0.1:5176']
+const ORIGINS = ['https://app.numimates.com', 'https://pro.numimates.com', 'https://ment.numimates.com', 'https://tech.numimates.com', 'https://mates-numi.vercel.app', 'http://localhost:5176', 'http://127.0.0.1:5176']
   .filter(o => process.env.VERCEL_ENV !== 'production' || !/localhost|127\.0\.0\.1/.test(o));   // en producció, els enllaços mai porten a localhost
 const hash = t => createHash('sha256').update(t).digest('hex');
 const cleanMail = m => String(m || '').trim().toLowerCase().slice(0, 160);
@@ -134,18 +135,26 @@ async function enter(req, res, b) {
   return ok(res, { ok: true, tok: famToken(f.id), email: l.email });
 }
 
+// Numi Tech per a la zona de famílies: sessions fetes del curs, la que toca ara i com va
+function techSum(t) {
+  if (!t || typeof t !== 'object' || !t.s || typeof t.s !== 'object') return null;
+  const c = TECH_T.courses[t.c] ? t.c : 'robot', ids = Object.keys(TECH_T.s).filter(id => TECH_T.s[id].c === c);
+  const done = ids.filter(id => t.s[id] && t.s[id].done).length, next = ids.find(id => !(t.s[id] && t.s[id].done));
+  if (!Object.keys(t.s).length) return { course: TECH_T.courses[c].n, done: 0, total: ids.length, next: next ? TECH_T.s[next].t : null };
+  return { course: TECH_T.courses[c].n, done, total: ids.length, next: next ? TECH_T.s[next].t : null, nextU: next ? TECH_T.s[next].u : null, badges: Object.keys(t.badges || {}).length };
+}
 async function data(req, res, fam) {
   let f; try { f = (await sql`SELECT email, informe, promo FROM mates.families WHERE id = ${fam}`)[0]; } catch (e) { f = (await sql`SELECT email FROM mates.families WHERE id = ${fam}`)[0]; }
   if (!f) return ok(res, { error: 'sessió' }, 401);
   const rows = await sql`SELECT a.code, a.name, a.course, a.xp, a.streak, a.last_day, a.lessons, a.answers, a.correct, a.pla, a.pla_fins, a.grup_id,
       a.stripe_sub, a.pla_periode, a.pla_cancel, a.stripe_status, a.pla_inici, a.active, g.nom AS grup,
-      a.state->'days' AS days, a.state->'exams' AS exams, a.state->'stats'->'sk' AS sk, a.state->'prog' AS prog, a.state->'companion' AS companion, a.state->>'variant' AS variant, k.kid
+      a.state->'days' AS days, a.state->'exams' AS exams, a.state->'stats'->'sk' AS sk, a.state->'prog' AS prog, a.state->'companion' AS companion, a.state->>'variant' AS variant, (a.state->'tech') - 'port' AS tech, k.kid
     FROM mates.familia_fills ff JOIN mates.alumnes a ON a.code = ff.code LEFT JOIN mates.grups g ON g.id = a.grup_id
       LEFT JOIN LATERAL (SELECT kid FROM mates.familia_links fl WHERE fl.code = a.code AND fl.kid IS NOT NULL ORDER BY fl.created DESC LIMIT 1) k ON true
     WHERE ff.familia_id = ${fam} ORDER BY ff.created_at`;
   const kids = rows.filter(r => r.active).map(r => ({
     code: r.code, name: r.name || r.kid || '·', course: r.course | 0, xp: r.xp | 0, streak: r.streak | 0, last_day: r.last_day, lessons: r.lessons | 0, answers: r.answers | 0, correct: r.correct | 0,
-    pla: plaOf(r), sub: subOf(r), app: r.variant === 'pro' ? 'Numi Pro' : r.variant === 'ment' ? 'Numi Ment' : 'Numi Mates', grup: r.grup || null, companion: typeof r.companion === 'string' ? r.companion : 'numi',
+    pla: plaOf(r), sub: subOf(r), app: r.variant === 'pro' ? 'Numi Pro' : r.variant === 'ment' ? 'Numi Ment' : r.variant === 'tech' ? 'Numi Tech' : 'Numi Mates', tech: techSum(r.tech), grup: r.grup || null, companion: typeof r.companion === 'string' ? r.companion : 'numi',
     days: Array.isArray(r.days) ? r.days.slice(-60) : [], exams: r.exams && typeof r.exams === 'object' ? r.exams : {}, sk: r.sk && typeof r.sk === 'object' ? r.sk : {}, prog: r.prog && typeof r.prog === 'object' ? r.prog : {}
   }));
   // medalles del docent de cada fill (la taula pot no existir encara si ningú n'ha donat cap)

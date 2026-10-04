@@ -206,6 +206,10 @@ export default async function handler(req, res) {
         exams: { 'c4-1': { d: d(2), last: 83, best: 83, tries: 1 } },
         medals: [{ kind: 'millora', comment: 'Molt bé amb les divisions!', docent_nom: 'Marta', created_at: new Date(per.to).toISOString() }] };
       prev = { xp: 1700, lessons: 52, answers: 440, correct: 378 };
+      // mostra de Numi Tech
+      if (b.app === 'tech') k = { name: 'Pau', variant: 'tech', xp: 640, lessons: 3, answers: 0, correct: 0, days: [d(0), d(2), d(5)], streak: 3, best: 5,
+        tech: { c: 'robot', s: { 'r1-1': { done: 1, d: d(5), ms: 2280000, f: 1 }, 'r1-2': { done: 1, d: d(2), ms: 2460000, f: 0 }, 'r1-3': { i: 6, d: d(0), ms: 900000 } }, badges: { algo: d(5), gir: d(2) } },
+        tech_port: [{ t: 'El meu primer camí|Mi primer camino', d: d(5) }, { t: 'El repartidor de diaris|El repartidor de periódicos', d: d(2) }] };
     }
     const x = b.code ? await reportExtra(k.code, per) : { wxp: 245, wxpPrev: 180, bat: { n: 2, wins: 1 } };
     const m = reportMail(k, prev, per, lang, 0, x);

@@ -3,6 +3,7 @@ import { who, groupsOf } from './_auth.js';
 import { STRIPE_KEY, stripe, stripeMode, setCancel, setupStripe } from './_stripe.js';
 import { batTables, batState, BWORDS, MEDALS } from './_batalla.js';
 import { randomInt } from 'crypto';
+import { TECH_T } from './_techunits.js';
 // Panell /profe.html. L'administrador ho veu tot i gestiona centres, docents, grups i plans.
 // Un docent només veu (i gestiona) els alumnes dels seus grups; l'admin de centre, tots els del seu centre.
 const L = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
@@ -32,9 +33,11 @@ export default async function handler(req, res) {
         if (!validPass(pass)) { out.push({ name, username: user, error: 'contrasenya-format' }); continue; }
         if ((await sql`SELECT 1 FROM mates.alumnes WHERE username = ${user}`).length) { out.push({ name, username: user, error: 'usuari-ocupat' }); continue; }
         const lang = b.lang === 'es' ? 'es' : 'ca', hash = hashPass(pass);
+        const gt = (await sql`SELECT opts FROM mates.grups WHERE id = ${gid}`)[0], tech = gt && gt.opts && gt.opts.app === 'tech';
         let code = null;
         for (let i = 0; i < 8 && !code; i++) {
-          const c = newStudentCode(), st = { name, lang, code: c, username: user, course: cc, baseCourse: cc, maxCourse: cc, holdReg: false, unlockAll: false, ...(b.prova ? { placeAsk: true } : {}) };
+          const c = newStudentCode(), st = { name, lang, code: c, username: user, course: cc, baseCourse: cc, maxCourse: cc, holdReg: false, unlockAll: false, ...(b.prova && !tech ? { placeAsk: true } : {}),
+            ...(tech ? { variant: 'tech', tech: { c: (gt.opts.tech && gt.opts.tech.courses && gt.opts.tech.courses[0]) || 'robot', s: {}, port: [], badges: {} } } : {}) };
           const q = await sql`INSERT INTO mates.alumnes (code, name, course, survey, state, xp, streak, best, last_day, lessons, answers, correct, username, pass_hash, grup_id, pla)
             VALUES (${c}, ${name}, ${cc}, ${JSON.stringify({ curs: 'alta del docent', date: new Date().toISOString().slice(0, 10) })}, ${JSON.stringify(st)}, 0, 0, 0, NULL, 0, 0, 0, ${user}, ${hash}, ${gid}, 'escola')
             ON CONFLICT DO NOTHING RETURNING code`;
@@ -105,8 +108,15 @@ export default async function handler(req, res) {
       }
     }
     // --- accions sobre un alumne (admin o el seu docent) ---
-    if (['setpass', 'unlock', 'off', 'treure'].includes(b.action)) {
+    if (['setpass', 'unlock', 'off', 'treure', 'apps'].includes(b.action)) {
       if (!(await mine(code))) return ok(res, { error: 'permís' }, 403);
+      // a quines apps pot entrar el compte, a més de la seva (p. ex. un alumne de Numi Mates que també fa Numi Tech)
+      if (b.action === 'apps') {
+        if (!me.admin) return ok(res, { error: 'permís' }, 403);
+        const apps = [...new Set((Array.isArray(b.apps) ? b.apps : []).filter(a => ['mates', 'pro', 'ment', 'tech'].includes(a)))];
+        await sql`UPDATE mates.alumnes SET state = jsonb_set(state, '{apps}', ${JSON.stringify(apps)}::jsonb) WHERE code = ${code}`;
+        return ok(res, { ok: true, apps });
+      }
       if (b.action === 'setpass') {
         if (!validPass(b.password)) return ok(res, { error: 'contrasenya-format' }, 400);
         const r = await sql`UPDATE mates.alumnes SET pass_hash = ${hashPass(b.password)} WHERE code = ${code} AND username IS NOT NULL RETURNING code`; if (r.length) await dropToks(code);
@@ -146,6 +156,14 @@ export default async function handler(req, res) {
         return ok(res, { ok: true, tema });
       }
       const o = b.opts || {}, opts = { batalles: o.batalles !== false, intercanvis: o.intercanvis !== false, xat: o.xat === true };   // el xat amb IA només si el docent l'encén expressament
+      // Numi Tech: el professor tria els cursos del grup i fins a quina sessió poden arribar (classe guiada).
+      // Si la petició no diu res de l'app (p. ex. només canvia les batalles), es conserva el que ja tenia el grup.
+      if (o.app === undefined && !b.app_canvi) { const prev = ((await sql`SELECT opts FROM mates.grups WHERE id = ${+b.id}`)[0] || {}).opts || {}; if (prev.app === 'tech') { o.app = 'tech'; o.tech = o.tech || prev.tech; } }
+      if (o.app === 'tech') {
+        const t = o.tech || {}, courses = [...new Set((Array.isArray(t.courses) ? t.courses : []).filter(c => TECH_T.courses[c]))];
+        const fins = {}; for (const [c, id] of Object.entries(t.fins || {})) if (courses.includes(c) && (id === 'tot' || (TECH_T.s[id] && TECH_T.s[id].c === c))) fins[c] = id;
+        Object.assign(opts, { app: 'tech', tech: { courses, fins, casa: t.casa !== false } });
+      }
       await sql`UPDATE mates.grups SET opts = ${JSON.stringify(opts)}::jsonb WHERE id = ${+b.id}`;
       return ok(res, { ok: true, opts });
     }
@@ -214,7 +232,7 @@ export default async function handler(req, res) {
   // --- panell de control de l'administrador: tots els usuaris (també els de baixa), plans i cobraments ---
   if (me.admin && req.query && req.query.v === 'usuaris') {
     const users = await sql`SELECT a.code, a.username, a.name, a.course, a.xp, a.lessons, a.answers, a.correct, a.streak, a.last_day, a.created_at, a.active, a.grup_id,
-      a.pla, a.pla_fins, a.pla_periode, a.stripe_status, a.pla_cancel, a.pla_des, a.stripe_customer, (a.stripe_sub IS NOT NULL) AS stripe, a.survey->>'curs' AS curs, CASE WHEN a.state->>'variant' = 'ment' THEN 'ment' WHEN a.state->>'variant' = 'pro' OR COALESCE((a.state->>'maxCourse')::numeric, a.course, 0) >= 6 THEN 'pro' ELSE 'mates' END AS variant, g.nom AS grup, c.nom AS centre
+      a.pla, a.pla_fins, a.pla_periode, a.stripe_status, a.pla_cancel, a.pla_des, a.stripe_customer, (a.stripe_sub IS NOT NULL) AS stripe, a.survey->>'curs' AS curs, CASE WHEN a.state->>'variant' = 'tech' THEN 'tech' WHEN a.state->>'variant' = 'ment' THEN 'ment' WHEN a.state->>'variant' = 'pro' OR COALESCE((a.state->>'maxCourse')::numeric, a.course, 0) >= 6 THEN 'pro' ELSE 'mates' END AS variant, a.state->'apps' AS apps, g.nom AS grup, c.nom AS centre
       FROM mates.alumnes a LEFT JOIN mates.grups g ON g.id = a.grup_id LEFT JOIN mates.centres c ON c.id = g.centre_id ORDER BY a.created_at DESC`;
     let cobrat = null;
     if (STRIPE_KEY) {
@@ -237,7 +255,9 @@ export default async function handler(req, res) {
   }
   // --- lectura ---
   const rows = await sql`SELECT code, username, name, course, survey, xp, streak, best, last_day, lessons, answers, correct, created_at, updated_at, grup_id, pla, pla_fins,
-    state->'tests' AS tests, state->'lang' AS lang, state->'unlockAll' AS unlock_all, state->'week' AS week, state->'stats'->'sk' AS sk, state->'reco' AS reco, state->'school' AS school, state->'album' AS album, state->'stats'->'bwins' AS bwins, state->'crowns' AS crowns, state->'exams' AS exams, state->'days' AS days
+    state->'tests' AS tests, state->'lang' AS lang, state->'unlockAll' AS unlock_all, state->'week' AS week, state->'stats'->'sk' AS sk, state->'reco' AS reco, state->'school' AS school, state->'album' AS album, state->'stats'->'bwins' AS bwins, state->'crowns' AS crowns, state->'exams' AS exams, state->'days' AS days,
+    state->>'variant' AS variant, state->'apps' AS apps, (state->'tech') - 'port' AS tech, state->'ment' AS ment,
+    (SELECT jsonb_agg(jsonb_build_object('t', p->'t', 'd', p->'d', 'sid', p->'sid')) FROM jsonb_array_elements(CASE WHEN jsonb_typeof(state->'tech'->'port') = 'array' THEN state->'tech'->'port' ELSE '[]'::jsonb END) p) AS tech_port
     FROM mates.alumnes WHERE active AND (${!!me.admin} OR grup_id = ANY(${gids})) ORDER BY streak DESC, xp DESC`;
   if (!me.admin) return ok(res, { me: me.docent, rows, grups: groups });
   const battles = await sql`SELECT b.code, b.kind, b.course, b.status, b.created_at, b.start_at,

@@ -1,0 +1,27 @@
+{
+  "name": "Numi Tech",
+  "short_name": "Numi Tech",
+  "description": "Programació, robòtica i projectes digitals",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F3F6FF",
+  "theme_color": "#1B2B6B",
+  "icons": [
+    {
+      "src": "img/brand/icona-tech-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "img/brand/icona-tech-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "img/brand/icona-tech-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

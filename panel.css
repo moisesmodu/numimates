@@ -341,7 +341,7 @@ details.more[open] summary .i{transform:rotate(90deg)}
 }
 .plist i.fam{background:#3CC46A}.famb{font-size:12px;font-weight:400}
 
-.varb{display:inline-block;font-size:10px;font-weight:800;letter-spacing:.06em;border-radius:6px;padding:1px 5px;vertical-align:2px;background:#1B1730;color:#E6D8FA}.varb.ment{background:#DDF4EF;color:#11705F}
+.varb{display:inline-block;font-size:10px;font-weight:800;letter-spacing:.06em;border-radius:6px;padding:1px 5px;vertical-align:2px;background:#1B1730;color:#E6D8FA}.varb.ment{background:#DDF4EF;color:#11705F}.varb.tech{background:#E3EAFF;color:#1C3FB8}
 .usel{display:inline-flex;align-items:center;padding:4px 10px 4px 0;cursor:pointer}.usel input{width:18px;height:18px;cursor:pointer;accent-color:var(--crit,#C4362F)}
 .tw.us .nm{display:flex;align-items:center}
 .selbar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:12px;position:sticky;top:8px;z-index:5}
@@ -369,3 +369,39 @@ details.more[open] summary .i{transform:rotate(90deg)}
 .bpodium .pd span{line-height:1.15;display:block}.bproj code{white-space:nowrap;font-size:clamp(44px,8vw,96px)}
 .modal.wide{max-width:780px;width:94vw}
 .infcard{margin-bottom:14px}.infcard .chip{font-size:12px;vertical-align:middle}
+
+/* assistent amb IA */
+.pia{display:flex;flex-direction:column;min-height:60vh}
+.pialog{flex:1;display:flex;flex-direction:column;gap:10px;max-height:62vh;overflow-y:auto;padding:4px 2px 12px}
+.pm{max-width:min(720px,92%);padding:10px 14px;border-radius:14px;line-height:1.55;font-size:14.5px}
+.pm.me{align-self:flex-end;background:#2F2448;color:#fff;border-bottom-right-radius:4px}
+.pm.bot{align-self:flex-start;background:#F4F1F8;border:1px solid var(--line);border-bottom-left-radius:4px}
+.pm.typing{color:#857C90}
+.pquick{display:flex;flex-wrap:wrap;gap:8px}.pquick .btn{white-space:normal;text-align:left}
+.piain{display:flex;gap:8px;align-items:flex-end;border-top:1px solid var(--line);padding-top:12px}
+.piain textarea{flex:1;resize:vertical;min-height:52px}
+
+/* grups de Numi Tech */
+.tfield{display:flex;flex-direction:column;gap:10px;margin:4px 0 8px}
+.tfield .flbl{font-weight:600;font-size:13px;color:var(--t2,#574E62)}
+.tcourse{border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+
+/* material del professor (Numi Tech) */
+.mtabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}.mtabs a{padding:7px 12px;border-radius:999px;border:1px solid var(--line);text-decoration:none;color:inherit;font-weight:600;font-size:13.5px;background:#fff}.mtabs a.on{background:#1B2B6B;color:#fff;border-color:#1B2B6B}
+.munit{margin-bottom:12px}.munit h3{margin:0 0 10px}
+.mlist{display:grid;gap:6px}
+.msess{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:12px;border:1px solid var(--line);text-decoration:none;color:inherit}
+.msess:hover{background:#F4F6FF}.msess.off{opacity:.55;cursor:default}
+.msess .mn{flex:none;width:30px;height:30px;border-radius:50%;background:#2F5BEA;color:#fff;display:grid;place-items:center;font-weight:700}
+.msess>span:nth-child(2){flex:1;display:flex;flex-direction:column}.msess small{color:var(--t3,#857C90)}
+.mhead{display:flex;justify-content:space-between;gap:16px;align-items:center;flex-wrap:wrap;margin-bottom:12px}.mhead h2{margin:4px 0 0}
+.macts{display:flex;gap:8px;flex-wrap:wrap}
+.mgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}@media (max-width:900px){.mgrid{grid-template-columns:1fr}}
+.msec{margin-bottom:12px}.msec h3{margin:0 0 10px}
+.mbar{display:flex;height:12px;border-radius:6px;overflow:hidden;gap:2px;margin-bottom:14px}
+.mblk{display:grid;grid-template-columns:90px 1fr;gap:14px;padding:12px 0;border-top:1px solid var(--line)}
+.mblk .mt{display:flex;flex-direction:column;gap:2px;border-left:5px solid var(--fc);padding-left:10px}.mblk .mt span{color:var(--t3,#857C90);font-size:13px}
+.mblk h4{margin:2px 0 6px;font-size:16px}.mblk p{margin:0 0 8px;line-height:1.55}
+.mf{display:inline-block;font-size:11.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--fc)}
+.mdiu{background:#F7F5FB;border-radius:10px;padding:8px 12px;margin-bottom:8px}.mdiu ul{margin:4px 0 0;padding-left:18px}
+.mmeta{display:flex;gap:12px;flex-wrap:wrap;font-size:13px;color:var(--t2,#574E62)}

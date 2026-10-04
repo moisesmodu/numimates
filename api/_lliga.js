@@ -2,12 +2,12 @@ import { createHash } from 'crypto';
 import { sql, consentCols } from './_lib.js';
 // Lliga Numi: els punts són l'XP que es guanya a l'app, comptats al servidor quan es sincronitza (la diferència
 // entre l'XP que hi havia i el nou). Perquè sigui just: com a molt 400 punts per sincronització i 1.500 al dia.
-// Lligues: Numi Mates per cicles (1r–2n, 3r–4t, 5è–6è), Numi Pro (ESO) i Numi Ment (adults).
+// Lligues: Numi Mates per cicles (1r–2n, 3r–4t, 5è–6è), Numi Pro (ESO), Numi Ment (adults) i Numi Tech.
 // Ningú surt amb el seu nom: cada compte té un àlies automàtic (animal + número) que no permet saber qui és.
 export const CAP = { sync: 400, dia: 1500 };
-export const LLIGUES = ['mates-12', 'mates-34', 'mates-56', 'pro', 'ment'];
+export const LLIGUES = ['mates-12', 'mates-34', 'mates-56', 'pro', 'ment', 'tech'];
 export function lligaOf(st) {
-  st = st || {}; if (st.variant === 'ment') return 'ment';
+  st = st || {}; if (st.variant === 'ment') return 'ment'; if (st.variant === 'tech') return 'tech';
   const c = +(st.maxCourse ?? st.course ?? 0) || 0;
   if (st.variant === 'pro' || c >= 6) return 'pro';
   return c <= 1 ? 'mates-12' : c <= 3 ? 'mates-34' : 'mates-56';

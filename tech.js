@@ -1,0 +1,459 @@
+/* ===== Numi Tech · programació, robòtica i projectes digitals =====
+   La quarta app (tech.numimates.com): el mateix compte, servidor i Premium que les altres, amb pantalles pròpies,
+   com Numi Ment. Tot l'estat va a P.tech (el servidor el desa tal qual).
+   · Una SESSIÓ és llarga (30-45 minuts), com una classe: recordar → missió → mans a l'obra → predir i provar →
+     investigar → pausa activa → reptes → crear → tancament. Es pot deixar a mitges i continuar-la un altre dia.
+   · El contingut (cursos, unitats, sessions i passos) és a tech-c*.js; aquí hi ha el motor i les pantalles. */
+
+const tval = v => typeof v === 'function' ? v() : tx(v);
+const TPH = {
+  recorda: ['Recorda', 'Recuerda'], missio: ['La missió', 'La misión'], descobreix: ['Descobreix', 'Descubre'], mans: ["Mans a l'obra", 'Manos a la obra'], prova: ['Prediu i prova', 'Predice y prueba'],
+  investiga: ['Investiga', 'Investiga'], pausa: ['Pausa activa', 'Pausa activa'], repte: ['Reptes', 'Retos'], crea: ['Crea', 'Crea'], tanca: ['Tancament', 'Cierre']
+};
+const TS_ = () => { const t = P.tech = P.tech || {}; t.s = t.s || {}; t.port = Array.isArray(t.port) ? t.port : []; t.badges = t.badges || {}; t.c = t.c || 'robot'; return t; };
+const tCourse = id => TECH.find(c => c.id === id) || TECH[0];
+// totes les sessions d'un curs en ordre, amb la unitat
+const tSessions = c => c.units.flatMap((u, ui) => u.s.map((s, si) => ({ ...s, ui, si, u })));
+const tDone = id => !!(TS_().s[id] && TS_().s[id].done);
+// Accés: Numi Tech es fa servir a les extraescolars amb classe guiada. El professor assigna els cursos al grup (i fins a
+// quina sessió poden arribar) des del panell; l'administrador també pot obrir cursos a un alumne concret. No hi ha Premium.
+function tAccess() {
+  if (P && P.unlockAll) return { courses: new Set(TECH.map(c => c.id)), fins: {} };
+  const o = P && P.classe && P.classe.opts, t = o && o.app === 'tech' && o.tech;
+  if (t) return { courses: new Set(t.courses || []), fins: t.fins || {}, classe: P.classe };
+  if (P && Array.isArray(P.tcursos)) return { courses: new Set(P.tcursos), fins: {} };
+  return { courses: new Set(), fins: {} };
+}
+// una sessió és oberta si el curs és assignat i no passa d'on el professor ha obert (les ja fetes sempre es poden repetir)
+function tSessOpen(c, s) {
+  const a = tAccess(); if (!a.courses.has(c.id)) return false;
+  const f = a.fins[c.id]; if (!f || f === 'tot' || tDone(s.id)) return true;
+  const all = tSessions(c), i = all.findIndex(x => x.id === s.id), j = all.findIndex(x => x.id === f);
+  return j < 0 || i <= j;
+}
+function tLocked(c, s) {
+  const a = tAccess(), mine = a.courses.has(c.id);
+  modal(`<div class="sheet card cent"><div class="tsoonico" style="--cc:${c.color}">${c.ico}</div><h3>${mine ? L('Aquesta sessió encara no és oberta', 'Esta sesión aún no está abierta') : tx(c.name)}</h3>
+    <p>${mine ? L("La farem a classe: el teu professor l'obrirà quan hi arribeu.", 'La haremos en clase: tu profesor la abrirá cuando lleguéis.') : `${tx(c.desc)}</p><p class="mut">${a.classe ? L("Aquest curs te l'ha d'assignar el teu professor.", 'Este curso te lo tiene que asignar tu profesor.') : L('Per començar, entra a la teva classe amb el codi que et dona el professor.', 'Para empezar, entra en tu clase con el código que te da el profesor.')}`}</p>
+    ${!a.classe && !a.courses.size ? `<button class="btn big" onclick="closeModal();classeModal()">${L('TINC UN CODI DE CLASSE', 'TENGO UN CÓDIGO DE CLASE')}</button>` : ''}<button class="btn ghost big" onclick="closeModal()">${L("D'ACORD", 'DE ACUERDO')}</button></div>`, true);
+}
+const tReady = s => !!(s.steps && s.steps.length);
+
+/* ---------- Navegació ---------- */
+const TIC = {
+  apren: '<svg viewBox="0 0 24 24"><path d="M4 5h7a3 3 0 0 1 3 3v12a2 2 0 0 0-2-2H4zM20 5h-4a3 3 0 0 0-3 3" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M20 5v13h-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>',
+  projectes: '<svg viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><rect x="13" y="3" width="8" height="8" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><rect x="3" y="13" width="8" height="8" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M17 13v8M13 17h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>',
+  perfil: '<svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4" fill="none" stroke="currentColor" stroke-width="2"/><path d="M4 21a8 8 0 0 1 16 0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>',
+  foc: '<svg viewBox="0 0 24 24"><path d="M12 2c1 4 5 6 5 11a5 5 0 0 1-10 0c0-2 1-3.5 2-4.5 0 2 1 3 2 3 0-3-1-6 1-9.5z" fill="currentColor"/></svg>',
+  ok: '<svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+  lock: '<svg viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="11" rx="2" fill="currentColor"/><path d="M8 10V7a4 4 0 0 1 8 0v3" fill="none" stroke="currentColor" stroke-width="2.4"/></svg>',
+  play: '<svg viewBox="0 0 24 24"><path d="M7 4l13 8-13 8z" fill="currentColor"/></svg>',
+  rellotge: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 7v5l3 2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>'
+};
+function tNav(t) {
+  const it = [['home', 'apren', L('Aprèn', 'Aprende')], ['projectes', 'projectes', L('Projectes', 'Proyectos')], ['profile', 'perfil', L('Perfil', 'Perfil')]];
+  return `<nav class="nav tnav">${it.map(([v, i, l]) => `<button class="${v === t ? 'on' : ''}" onclick="go('${v}')"><span class="ni">${TIC[i]}</span><span>${l}</span></button>`).join('')}${VAR.chat ? `<button class="navxat" onclick="xatOpen()" aria-label="${L("Pregunta a en Numi (xat d'ajuda)", 'Pregunta a Numi (chat de ayuda)')}"><span class="ni">${charSVG('numi', 'happy')}</span><span>${L('Pregunta', 'Pregunta')}</span></button>` : ''}</nav>`;
+}
+function tShell(t, body, hero = '') {
+  return `<div class="tpage tp-${t}"><header class="ttop"><img src="${VAR.logo}" alt="${VAR.name}"><span class="tchip2" title="${L('Dies seguits', 'Días seguidos')}">${TIC.foc} ${P.streak || 0}</span></header>${hero}<main class="tmain">${body}</main>${tNav(t)}</div>`;
+}
+function techGo(v) {
+  tStop(); VIEW = ['home', 'projectes', 'profile'].includes(v) ? v : 'home';
+  ({ home: techHome, projectes: techProjectes, profile: techProfile })[VIEW]();
+  window.scrollTo(0, 0);
+}
+{
+  const g0 = go;
+  go = function (v) {
+    if (P && P.id !== 'tmp' && varOf(P) === 'tech' && !appMismatch(P) && v !== 'profiles' && v !== 'onboard') { LS = null; closeModal(); setVariant('tech'); return techGo(v); }
+    return g0(v);
+  };
+}
+function tStop() { if (typeof TB !== 'undefined' && TB) { clearTimeout(TB.t); TB.run = null; } clearInterval(TS_T); TS_T = null; typeof tDemoStop === 'function' && tDemoStop(); }
+
+/* ---------- Aprèn: el curs, unitat per unitat ---------- */
+function techHome() {
+  if (P.code && navigator.onLine && !techHome.pulled && typeof classeRefresh === 'function') { techHome.pulled = 1; classeRefresh(); }
+  const t = TS_(), acc = tAccess();
+  if (!acc.courses.size) return techCatalog();
+  if (!acc.courses.has(t.c)) t.c = [...acc.courses].find(id => TECH.some(c => c.id === id)) || t.c;
+  const c = tCourse(t.c), all = tSessions(c), nxt = all.find(s => tReady(s) && !tDone(s.id) && tSessOpen(c, s));
+  const done = all.filter(s => tDone(s.id)).length;
+  const prog = nxt && t.s[nxt.id] && t.s[nxt.id].i ? t.s[nxt.id] : null;
+  const hero = `<section class="thero"><div class="thtxt"><p class="tkick">${tx(c.name)} · ${tx(c.age)}</p><h1>${L(`Hola, ${esc(P.name)}!`, `¡Hola, ${esc(P.name)}!`)}</h1>
+      ${acc.classe ? `<p class="tcls">${esc(acc.classe.nom)}${acc.classe.centre ? ' · ' + esc(acc.classe.centre) : ''}</p>` : ''}${nxt ? `<p>${L('Següent sessió', 'Siguiente sesión')}: <b>${tx(nxt.t)}</b></p><button class="btn big tgo" onclick="tOpen('${nxt.id}')">${TIC.play} ${prog ? L('Continua la sessió', 'Continúa la sesión') : L('Comença la sessió', 'Empieza la sesión')}</button>`
+        : `<p>${L("Has fet totes les sessions obertes. La següent l'obrirà el teu professor a classe.", 'Has hecho todas las sesiones abiertas. La siguiente la abrirá tu profesor en clase.')}</p>`}</div>
+    <div class="thbot" aria-hidden="true">${bitChar('happy')}</div>
+    <div class="thbar"><i style="width:${Math.round(100 * done / all.length)}%"></i></div><small class="thsm">${L(`${done} de ${all.length} sessions`, `${done} de ${all.length} sesiones`)}</small></section>`;
+  const courses = `<div class="tcourses">${TECH.map(k => { const mine = acc.courses.has(k.id);
+    return `<button class="tcrs ${k.id === c.id ? 'on' : ''} ${mine ? '' : 'lock'}" onclick="${mine ? `TS_().c='${k.id}';save();techHome()` : `tLocked(tCourse('${k.id}'))`}" style="--cc:${k.color}"><span class="tcico">${k.ico}</span><b>${tx(k.short)}</b><small>${mine ? tx(k.age) : `${TIC.lock} ${L('No assignat', 'No asignado')}`}</small></button>`; }).join('')}</div>`;
+  const units = c.units.map((u, ui) => tIsland(c, u, ui, nxt)).join('<div class="tbridge" aria-hidden="true"></div>');
+  app.innerHTML = tShell('home', courses + units, hero);
+}
+function tSoon(id) { const k = tCourse(id); modal(`<div class="sheet card cent"><div class="tsoonico" style="--cc:${k.color}">${k.ico}</div><h3>${tx(k.name)}</h3><p>${tx(k.desc)}</p><p class="mut">${L('Aquest curs arriba aviat.', 'Este curso llega pronto.')}</p><button class="btn big" onclick="closeModal()">${L("D'acord", 'De acuerdo')}</button></div>`, true); }
+function tSoonS() { toast(L('Aquesta sessió encara és en preparació.', 'Esta sesión aún está en preparación.')); }
+function tPrem() {
+  modal(`<div class="sheet card cent"><h3>${VAR.name} Premium</h3><p>${L('La primera unitat de cada curs és gratis. Amb Premium tens tots els cursos sencers, amb tots els projectes.', 'La primera unidad de cada curso es gratis. Con Premium tienes todos los cursos completos, con todos los proyectos.')}</p>
+    <button class="btn big gold" onclick="closeModal();buyPremium()">${needsFam && needsFam() ? L('Demana-ho a la família', 'Pídeselo a tu familia') : L('Vull Premium', 'Quiero Premium')}</button><button class="btn ghost big" onclick="closeModal()">${L('Ara no', 'Ahora no')}</button></div>`, true);
+}
+
+// cada unitat és una illa: un camí amb les 4 sessions, arbres i roques, i en Bit a la sessió que toca
+function tIsland(c, u, ui, nxt) {
+  const t = TS_(), col = u.color || c.color, n = u.s.length;
+  const W = 360, H = 70 + n * 108, xs = [96, 262, 112, 250, 100, 258], P = u.s.map((_, i) => [xs[i % xs.length], 64 + i * 108]);
+  const road = P.reduce((d, [x, y], i) => i ? d + ` C${P[i - 1][0]} ${P[i - 1][1] + 60} ${x} ${y - 60} ${x} ${y}` : `M${x} ${y}`, '');
+  const R = k => bwRnd(ui + 3, k, 7);
+  // decoració: arbres i roques lluny del camí
+  const deco = [];
+  for (let k = 0; k < 14; k++) { const x = 30 + R(k) * 300, y = 30 + R(k + 40) * (H - 70);
+    if (P.some(([px, py]) => Math.hypot(px - x, py - y) < 70)) continue;
+    const near = Math.min(...P.map(([px, py], i) => i ? Math.abs((x - px)) + Math.abs(y - py) : 999)); void near;
+    deco.push(R(k + 80) < .65 ? `<g transform="translate(${x.toFixed(0)} ${y.toFixed(0)}) scale(.8)"><ellipse cx="2" rx="18" ry="5" fill="#0B2A12" opacity=".2"/><path d="M-3 0V-14h6V0z" fill="#8A5A33"/><circle cx="-8" cy="-20" r="11" fill="url(#bwLeaf)"/><circle cx="8" cy="-22" r="11" fill="url(#bwLeaf)"/><circle cy="-32" r="13" fill="url(#bwLeaf2)"/></g>`
+      : `<g transform="translate(${x.toFixed(0)} ${y.toFixed(0)}) scale(.7)"><path d="M-21 -2Q-24 -24 -6 -31Q12 -36 20 -18Q25 -4 16 -1L-14 0Q-20 0 -21 -2Z" fill="url(#bwRock)" stroke="#5E667A" stroke-width="2"/></g>`); }
+  const svg = `<svg class="tisl" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" aria-hidden="true">${bitDefs()}
+    <path d="M24 ${H - 22} Q4 ${H / 2} 30 26 Q180 -6 330 26 Q356 ${H / 2} 336 ${H - 22} Q180 ${H + 8} 24 ${H - 22}Z" fill="#0B3A66" opacity=".18" transform="translate(0 10)"/>
+    <path d="M24 ${H - 22} Q4 ${H / 2} 30 26 Q180 -6 330 26 Q356 ${H / 2} 336 ${H - 22} Q180 ${H + 8} 24 ${H - 22}Z" fill="url(#bwCliff)" transform="translate(0 8)"/>
+    <path d="M24 ${H - 22} Q4 ${H / 2} 30 26 Q180 -6 330 26 Q356 ${H / 2} 336 ${H - 22} Q180 ${H + 8} 24 ${H - 22}Z" fill="url(#bwGrass)" stroke="#6DB64A" stroke-width="3"/>
+    ${deco.join('')}
+    <path d="${road}" fill="none" stroke="#E2BE76" stroke-width="34" stroke-linecap="round"/><path d="${road}" fill="none" stroke="url(#bwSand)" stroke-width="28" stroke-linecap="round"/>
+    <path d="${road}" fill="none" stroke="#fff" stroke-width="3" stroke-dasharray="2 14" stroke-linecap="round" opacity=".7"/></svg>`;
+  const nodes = u.s.map((s, si) => {
+    const [x, y] = P[si], d = tDone(s.id), ready = tReady(s), open = tSessOpen(c, s), cur = nxt && nxt.id === s.id, part = t.s[s.id] && t.s[s.id].i && !d, right = x < 180;
+    const ico = d ? TIC.ok : !ready ? '<b>…</b>' : !open ? TIC.lock : s.proj ? '<svg viewBox="0 0 24 24"><path d="M7 3h10v4a5 5 0 0 1-10 0z" fill="currentColor"/><path d="M7 5H4v2a3 3 0 0 0 3 3M17 5h3v2a3 3 0 0 1-3 3M10 13h4v3h-4zM8 19h8v2H8z" fill="currentColor"/></svg>' : `<b>${si + 1}</b>`;
+    return `<button class="tnode ${d ? 'done' : ''} ${cur ? 'cur' : ''} ${ready ? '' : 'soon'} ${!open && ready ? 'lock' : ''} ${s.proj ? 'proj' : ''}" style="left:${(x / W * 100).toFixed(2)}%;top:${(y / H * 100).toFixed(2)}%" onclick="${ready ? (open ? `tOpen('${s.id}')` : `tLocked(tCourse('${c.id}'),1)`) : 'tSoonS()'}">
+      <span class="tnc">${ico}</span>${cur ? `<span class="tnbit" aria-hidden="true"><svg viewBox="-30 -74 60 80">${bitBot(2)}</svg></span>` : ''}
+      <span class="tnl ${right ? 'r' : 'l'}"><b>${tx(s.t)}</b><small>${s.proj ? `<em>${L('Projecte', 'Proyecto')}</em> ` : ''}${ready ? `${s.min || 40} min` : L('En preparació', 'En preparación')}${part ? ` · ${L('a mitges', 'a medias')}` : ''}</small></span></button>`;
+  }).join('');
+  const nd = u.s.filter(s => tDone(s.id)).length;
+  return `<section class="tunit2 ${u.s.some(tReady) ? '' : 'soon'}" style="--uc:${col}"><header class="tuh2"><span class="tun">${ui + 1}</span><div><h2>${tx(u.t)}</h2><p>${tx(u.d)}</p></div>${nd ? `<span class="tuc">${nd}/${n}</span>` : ''}</header>
+    <div class="tmap" style="aspect-ratio:${W}/${H}">${svg}${nodes}</div></section>`;
+}
+
+/* ---------- Projectes (portafoli) ---------- */
+function techProjectes() {
+  const t = TS_();
+  const hero = `<section class="thero sub"><div class="thtxt"><h1>${L('Els meus projectes', 'Mis proyectos')}</h1><p>${L('Tot el que crees a les sessions es guarda aquí. Torna-hi quan vulguis i ensenya-ho a casa.', 'Todo lo que creas en las sesiones se guarda aquí. Vuelve cuando quieras y enséñalo en casa.')}</p></div></section>`;
+  const list = t.port.length ? `<div class="tports">${t.port.slice().reverse().map(p => { const W = bitWorld(p.w), S = bitSim(W);
+    return `<button class="tport" onclick="tPortOpen('${p.id}')"><span class="tpimg">${bitSVG(W, S, { still: true })}</span><b>${tx(p.t)}</b><small>${dayShort ? dayShort(p.d) : p.d} · ${bitN(bitCount(p.prog))}</small></button>`; }).join('')}</div>`
+    : `<div class="tempty2">${bitChar('idle')}<p>${L('Encara no tens cap projecte. A cada sessió en crearàs un!', 'Aún no tienes ningún proyecto. ¡En cada sesión crearás uno!')}</p></div>`;
+  app.innerHTML = tShell('projectes', list, hero);
+}
+function tPortOpen(id) {
+  const p = TS_().port.find(x => x.id === id); if (!p) return;
+  VIEW = 'tport';
+  tbMake(p.w, { prog: p.prog, mode: 'view', fns: p.fns });
+  app.innerHTML = `<div class="tsess"><div class="tstop"><button class="xbtn" onclick="go('projectes')" aria-label="${L('Tanca', 'Cierra')}">✕</button><b class="tsph">${tx(p.t)}</b><span></span></div>
+    <div class="tsbody wide">${tbHTML()}</div><div class="tsfoot"><button class="link" onclick="tPortDel('${p.id}')">${L('Esborra el projecte', 'Borra el proyecto')}</button></div></div>`;
+  tb3dMount();
+}
+function tPortDel(id) { if (!confirm(L('Segur que vols esborrar aquest projecte?', '¿Seguro que quieres borrar este proyecto?'))) return; const t = TS_(); t.port = t.port.filter(x => x.id !== id); save(); go('projectes'); }
+
+/* ---------- Perfil ---------- */
+function techProfile() {
+  const prem = isPremium(), t = TS_(), nb = Object.keys(t.badges).length;
+  const hero = `<section class="thero sub"><div class="thtxt"><h1>${esc(P.name)}</h1><p>${prem ? `${VAR.name} Premium` : L(`${VAR.name} · pla gratuït`, `${VAR.name} · plan gratuito`)}${P.streak > 1 ? ` · ${L(`${P.streak} dies seguits`, `${P.streak} días seguidos`)}` : ''}</p></div></section>`;
+  const badges = Object.values(TBADGE).map(b => `<div class="tbadge ${t.badges[b.id] ? 'on' : ''}" title="${esc(tx(b.d))}"><span>${b.ico}</span><b>${tx(b.n)}</b></div>`).join('');
+  app.innerHTML = tShell('profile', `<section class="tcard"><div class="tch"><b>${L('Insígnies', 'Insignias')}</b><span>${nb}/${Object.keys(TBADGE).length}</span></div><div class="tbadges">${badges}</div></section>
+    <section class="tcard"><div class="tch"><b>${L('Idioma', 'Idioma')}</b></div>${langPill()}</section>
+    ${P.code ? `<section class="tcard"><div class="tch"><b>${L('El meu compte', 'Mi cuenta')}</b></div>${P.username ? `<p>${L('Usuari', 'Usuario')}: <b>${esc(P.username)}</b></p>` : `<p class="mut">${L('Encara no tens usuari i contrasenya.', 'Aún no tienes usuario y contraseña.')}</p><button class="btn ghost" onclick="accountModal()">${L('Crea usuari i contrasenya', 'Crea usuario y contraseña')}</button>`}</section>` : ''}
+    <section class="tcard"><div class="tch"><b>${L('La meva classe', 'Mi clase')}</b></div>${P.classe ? `<p><b>${esc(P.classe.nom)}</b>${P.classe.centre ? ' · ' + esc(P.classe.centre) : ''}</p><p class="mut">${L('El teu professor veu el teu progrés i et va obrint les sessions.', 'Tu profesor ve tu progreso y te va abriendo las sesiones.')}</p>` : `<p class="mut">${L('Encara no ets a cap classe. Demana el codi al teu professor.', 'Aún no estás en ninguna clase. Pide el código a tu profesor.')}</p><button class="btn ghost" onclick="classeModal()">${L('Tinc un codi de classe', 'Tengo un código de clase')}</button>`}</section>
+    <section class="tcard"><div class="tch"><b>${L('So', 'Sonido')}</b></div><button class="btn ghost" onclick="P.sound=!P.sound;save();techProfile()">${P.sound ? L('Activat', 'Activado') : L('Desactivat', 'Desactivado')}</button></section>
+    <div class="tprofb"><button class="btn ghost" onclick="renderProfiles()">${L('Canvia de perfil', 'Cambia de perfil')}</button><a class="link" href="https://numimates.com/privacitat" target="_blank" rel="noopener">${L('Privadesa', 'Privacidad')}</a><button class="link" onclick="exportMe()">${L('Descarrega les meves dades', 'Descarga mis datos')}</button><button class="link" onclick="eraseMe()">${L('Esborra el compte', 'Borrar la cuenta')}</button></div>`, hero);
+}
+
+/* ---------- Una sessió ---------- */
+let TSS = null, TS_T = null;
+function tFind(id) { for (const c of TECH) { const s = tSessions(c).find(x => x.id === id); if (s) return { c, s }; } return null; }
+function tOpen(id) {
+  const f = tFind(id); if (!f || !tReady(f.s)) return;
+  if (!tSessOpen(f.c, f.s)) return tLocked(f.c, f.s);
+  const rec = TS_().s[id] || {}, again = rec.done;
+  TSS = { c: f.c, s: f.s, id, i: again ? 0 : Math.min(rec.i || 0, f.s.steps.length - 1), ok: 0, n: 0, again };
+  VIEW = 'tsess'; tStep();
+}
+function tQuit() {
+  if (TSS && TSS.i > 0 && !confirm(L('Vols sortir? La sessió es queda guardada i la podràs continuar on l\'has deixat.', '¿Quieres salir? La sesión se queda guardada y podrás continuarla donde la dejaste.'))) return;
+  if (TSS) { const rec = tTime(); rec.d = rec.d || today(); save(); }
+  tStop(); TSS = null; TB = null; go('home');
+}
+// barra de dalt: un tros per fase, amb el nom de la fase actual
+function tBar() {
+  const st = TSS.s.steps, phs = [];
+  st.forEach((x, i) => { const last = phs[phs.length - 1]; if (last && last.ph === x.ph) last.n++; else phs.push({ ph: x.ph, n: 1, from: i }); });
+  const cur = st[TSS.i].ph;
+  return `<div class="tphases">${phs.map(p => { return `<i style="flex:${p.n}" class="${p.ph === cur ? 'cur' : ''}"><em style="width:${100 * Math.min(p.n, Math.max(0, TSS.i - p.from)) / p.n}%"></em></i>`; }).join('')}</div>`;
+}
+function tStep() {
+  tStop(); TB = null; typeof tDemoStop === 'function' && tDemoStop();
+  const st = TSS.s.steps[TSS.i], ph = tx(TPH[st.ph].join('|'));
+  TSS.st = st; TSS.ready = false; TSS.t0 = Date.now();
+  app.innerHTML = `<div class="tsess k-${st.k}"><div class="tstop"><button class="xbtn" onclick="tQuit()" aria-label="${L('Surt', 'Salir')}">✕</button><div class="tstopm"><b class="tsph">${ph}</b>${tBar()}</div><span class="tsmin">${TSS.i + 1}/${TSS.s.steps.length}</span></div>
+    <div class="tsbody" id="tsb"></div><div class="tsfoot" id="tsf"></div></div>`;
+  (TSTEP[st.k] || TSTEP.story)(st);
+  const b = document.querySelector('.tsbody'); if (b) b.scrollTop = 0;
+}
+// botó de baix: «Continua» (activat quan el pas està fet) o el que demani el pas
+function tFoot(label, fn, on = true, extra = '') {
+  const f = document.getElementById('tsf'); if (!f) return;
+  f.innerHTML = `${extra}<button class="btn big tnext" id="tnext" ${on ? '' : 'disabled'}>${label}</button>`;
+  document.getElementById('tnext').onclick = fn;
+}
+// temps de la sessió (per al panell i els informes): cada pas compta fins a 8 minuts com a molt
+function tTime() { const rec = TS_().s[TSS.id] = TS_().s[TSS.id] || {}; if (TSS.t0) rec.ms = (rec.ms || 0) + Math.min(Date.now() - TSS.t0, 8 * 60000); TSS.t0 = Date.now(); return rec; }
+function tNext() {
+  TSS.n++;
+  const rec = tTime();
+  if (TSS.i + 1 >= TSS.s.steps.length) return tFinish();
+  TSS.i++;
+  if (!rec.done) { rec.i = TSS.i; save(); }
+  addXPsafe(2);
+  tStep();
+}
+const addXPsafe = n => { if (typeof addXP === 'function' && P.daily) addXP(n); else P.xp = (P.xp || 0) + n; };
+const tContinue = () => tFoot(L('Continua', 'Continúa'), tNext);
+function tFinish() {
+  const t = TS_(), rec = tTime(), first = !rec.done;
+  rec.done = 1; rec.i = 0; rec.d = today(); rec.n = (rec.n || 0) + 1;
+  if (first) { addXPsafe(30); P.stats = P.stats || {}; P.stats.lessons = (P.stats.lessons || 0) + 1; }
+  const bd = TSS.s.badge && TBADGE[TSS.s.badge], newB = bd && !t.badges[bd.id];
+  if (newB) t.badges[bd.id] = today();
+  if (typeof touchStreak === 'function') touchStreak();
+  save(); if (typeof syncNow === 'function') syncNow();
+  const s = TSS.s;
+  app.innerHTML = `<div class="tsess k-end"><div class="tsbody"><div class="tend"><div class="burst"></div><div class="tendbot">${bitChar('win')}</div>
+    <h1>${L('Sessió completada!', '¡Sesión completada!')}</h1><p class="sub">${tx(s.t)}</p>
+    ${s.learn ? `<div class="tlearn"><b>${L('Avui has après…', 'Hoy has aprendido…')}</b><ul>${s.learn.map(x => `<li>${TIC.ok}<span>${tval(x)}</span></li>`).join('')}</ul></div>` : ''}
+    ${newB ? `<div class="tnewb"><span>${bd.ico}</span><div><small>${L('Insígnia nova', 'Insignia nueva')}</small><b>${tx(bd.n)}</b><p>${tx(bd.d)}</p></div></div>` : ''}
+    ${first ? `<p class="txp">+${30 + 2 * (s.steps.length - 1)} XP</p>` : ''}</div></div>
+    <div class="tsfoot"><button class="btn big" onclick="TSS=null;go('home')">${L('Molt bé!', '¡Muy bien!')}</button></div></div>`;
+  SFX.win && SFX.win(); typeof confetti === 'function' && confetti(140);
+}
+
+/* ---------- Tipus de pas ---------- */
+const tWho = (who, mood) => who === 'bit' ? bitChar(mood || 'idle') : charSVG('numi', mood || 'happy');
+const tBubble = (who, html, mood) => `<div class="tsay2 w-${who || 'numi'}"><div class="tsc2">${tWho(who, mood)}</div><div class="bubble big">${html}</div></div>`;
+const TSTEP = {
+  // història o explicació: personatge, bafarada i, si cal, un dibuix o un món d'exemple
+  story(st) {
+    const art = st.w ? (() => { const W = bitWorld(st.w); return `<div class="tart">${bitSVG(W, bitSim(W))}</div>`; })() : st.art ? `<div class="tart">${typeof st.art === 'function' ? st.art() : st.art}</div>` : '';
+    const blocks = st.blocks ? `<div class="tlegend">${st.blocks.map(k => `<div class="tlg"><span class="tb c-${BIT_CAT[k]} tpb"><span class="tbi">${BIT_ICO[k]}</span><span class="tbl">${bitLabel(bitNew(k))}</span></span><span>${tx(TBLK[k] || '')}</span></div>`).join('')}</div>` : '';
+    const top = st.scene && typeof tScene === 'function' ? `${tScene(st.scene, st.who, st.mood)}<div class="bubble big tsbub">${tval(st.t)}</div>` : tBubble(st.who, tval(st.t), st.mood);
+    $('#tsb').innerHTML = `<div class="tcol">${st.title ? `<h2 class="tsh">${tval(st.title)}</h2>` : ''}${top}${art}${blocks}${st.box ? `<div class="tbox">${tval(st.box)}</div>` : ''}</div>`;
+    tContinue();
+  },
+  // pregunta de triar (una de bona). opts poden dur dibuixos (HTML)
+  quiz(st) {
+    const order = st.keep ? st.opts.map((_, i) => i) : shuffle(st.opts.map((_, i) => i));
+    let pick = null;
+    $('#tsb').innerHTML = `<div class="tcol">${st.who ? tBubble(st.who, tval(st.q)) : `<div class="tqh"><span class="tqbit">${bitChar('think')}</span><h2 class="tsq">${tval(st.q)}</h2></div>`}${st.art ? `<div class="tart sm">${typeof st.art === 'function' ? st.art() : st.art}</div>` : ''}${st.w ? (() => { const W = bitWorld(st.w); return `<div class="tart sm">${bitSVG(W, bitSim(W))}</div>`; })() : ''}
+      <div class="topts ${st.grid ? 'grid' : ''}">${order.map((i, k) => `<button class="topt" data-i="${i}"><span class="tol">${'ABCDEF'[k]}</span><span class="tot">${tval(st.opts[i])}</span></button>`).join('')}</div><div class="tfb" id="tfb"></div></div>`;
+    document.querySelectorAll('.topt').forEach(b => b.onclick = () => { if (TSS.ready) return; pick = +b.dataset.i; document.querySelectorAll('.topt').forEach(x => x.classList.toggle('on', x === b)); SFX.tap && SFX.tap(); tFoot(L('Comprova', 'Comprueba'), check); });
+    const check = () => {
+      if (pick === null) return; TSS.ready = true;
+      const ok = pick === st.a;
+      document.querySelectorAll('.topt').forEach(x => { const i = +x.dataset.i; x.disabled = true; if (i === st.a) x.classList.add('ok'); else if (i === pick) x.classList.add('ko'); });
+      $('#tfb').innerHTML = `<div class="tfbox ${ok ? 'ok' : 'ko'}"><b>${ok ? tx(st.yes || "Molt bé!|¡Muy bien!") : L('No ben bé.', 'No exactamente.')}</b>${st.ex ? ` ${tval(st.ex)}` : ''}</div>`;
+      ok ? SFX.ok && SFX.ok() : SFX.ko && SFX.ko(); if (ok) TSS.ok++;
+      tContinue();
+    };
+    tFoot(L('Comprova', 'Comprueba'), check, false);
+  },
+  // posar coses en ordre (tocar-les una darrere l'altra)
+  seq(st) {
+    const pool = shuffle(st.items.map((_, i) => i)), got = [];
+    const draw = () => {
+      $('#tsb').innerHTML = `<div class="tcol">${st.who ? tBubble(st.who, tval(st.q)) : `<div class="tqh"><span class="tqbit">${bitChar('think')}</span><h2 class="tsq">${tval(st.q)}</h2></div>`}
+        <ol class="tseq">${got.map(i => `<li><button data-i="${i}" class="tsqi in">${tval(st.items[i])}</button></li>`).join('')}${got.length < st.items.length ? `<li class="tsqh">${L('Toca el pas que va ara', 'Toca el paso que va ahora')}</li>` : ''}</ol>
+        <div class="tseqp">${pool.filter(i => !got.includes(i)).map(i => `<button data-i="${i}" class="tsqi">${tval(st.items[i])}</button>`).join('')}</div><div class="tfb" id="tfb"></div></div>`;
+      document.querySelectorAll('.tsqi').forEach(b => b.onclick = () => { if (TSS.ready) return; const i = +b.dataset.i; if (b.classList.contains('in')) got.splice(got.indexOf(i), 1); else got.push(i); SFX.tap && SFX.tap(); draw(); });
+      tFoot(L('Comprova', 'Comprueba'), check, got.length === st.items.length);
+    };
+    const check = () => {
+      TSS.ready = true; const ok = got.every((v, i) => v === i);
+      document.querySelectorAll('.tseq .tsqi').forEach((b, k) => { b.disabled = true; b.classList.add(+b.dataset.i === k ? 'ok' : 'ko'); });
+      $('#tfb').innerHTML = `<div class="tfbox ${ok ? 'ok' : 'ko'}"><b>${ok ? L('Perfecte!', '¡Perfecto!') : L("L'ordre bo és:", 'El orden correcto es:')}</b>${ok ? (st.ex ? ' ' + tval(st.ex) : '') : `<ol>${st.items.map(x => `<li>${tval(x)}</li>`).join('')}</ol>`}</div>`;
+      ok ? (SFX.ok && SFX.ok(), TSS.ok++) : SFX.ko && SFX.ko();
+      tContinue();
+    };
+    draw();
+  },
+  // moure en Bit amb botons: el que fas queda apuntat com un programa
+  hand(st) {
+    tbMake(st.w, { mode: 'hand' });
+    TB.onDone = () => { tSayOk(st.done || L('Mira a sota: els moviments que has fet són un <b>programa</b>!', 'Mira abajo: ¡los movimientos que has hecho son un <b>programa</b>!')); tContinue(); };
+    tStage(st);
+    tFoot(L('Continua', 'Continúa'), tNext, false);
+  },
+  // predir: on acabarà en Bit amb aquest programa? (A, B o C) i després es comprova executant-lo
+  predict(st) {
+    tbMake(st.w, { mode: 'view', prog: st.prog, marks: true });
+    let pick = null;
+    const opts = Object.keys(TB.W.marks).sort();
+    TB.extra = `<div class="tpick">${opts.map(k => `<button class="topt sm" data-m="${k}">${k}</button>`).join('')}</div>`;
+    tStage(st);
+    const wire = () => document.querySelectorAll('.tpick .topt').forEach(b => b.onclick = () => { if (TSS.ready) return; pick = b.dataset.m; document.querySelectorAll('.tpick .topt').forEach(x => x.classList.toggle('on', x === b)); document.querySelectorAll('.bmark').forEach(x => x.classList.toggle('on', x.dataset.m === pick)); TB.pick = pick; TB.b3 && TB.b3.marks(true, pick); SFX.tap && SFX.tap(); tFoot(L('Comprova-ho executant el programa', 'Compruébalo ejecutando el programa'), check); });
+    wire();
+    // abans de triar no es pot executar
+    const go0 = document.getElementById('tbgo'); if (go0) go0.disabled = true;
+    const check = () => {
+      if (!pick) return; TSS.ready = true;
+      document.querySelectorAll('.tpick .topt').forEach(b => b.disabled = true);
+      TB.onDone = TB.onFail = null;
+      TB.b3 && TB.b3.marks(false);
+      tbGo();
+      const wait = setInterval(() => { if (TB && TB.run) return; clearInterval(wait); const ok = pick === st.a;
+        document.querySelectorAll('.tpick .topt').forEach(b => b.classList.add(b.dataset.m === st.a ? 'ok' : b.dataset.m === pick ? 'ko' : 'x'));
+        tbSay(ok ? L(`Exacte! Acaba a la <b>${st.a}</b>.`, `¡Exacto! Termina en la <b>${st.a}</b>.`) : L(`Acaba a la <b>${st.a}</b>. ${st.ex ? tval(st.ex) : 'Fixa\'t en cada gir.'}`, `Termina en la <b>${st.a}</b>. ${st.ex ? tval(st.ex) : 'Fíjate en cada giro.'}`), ok ? 'ok' : 'bad');
+        ok ? (SFX.ok && SFX.ok(), TSS.ok++) : SFX.ko && SFX.ko();
+        tContinue(); }, 120);
+    };
+    tFoot(L('Tria una lletra', 'Elige una letra'), check, false);
+  },
+  // investigar: tocar el bloc que… (el bo porta x:1)
+  spot(st) {
+    tbMake(st.w, { mode: 'spot', prog: st.prog });
+    TB.onSpot = (id, b) => {
+      if (TSS.ready) return; TSS.ready = true;
+      const ok = !!(b && b.x);
+      const e = document.getElementById('tb' + id); if (e) e.classList.add(ok ? 'good' : 'err');
+      if (!ok) { const g = Object.values(TB.ids).find(v => v.b.x); if (g) document.getElementById('tb' + g.b._id).classList.add('good'); }
+      tSayOk(ok ? (st.yes ? tval(st.yes) : L('Molt bé!', '¡Muy bien!')) : (st.ex ? tval(st.ex) : L('No és aquest. És el que està marcat en verd.', 'No es este. Es el que está marcado en verde.')), !ok);
+      ok ? (SFX.ok && SFX.ok(), TSS.ok++) : SFX.ko && SFX.ko();
+      tContinue();
+    };
+    tStage(st);
+    tFoot(L('Toca un bloc del programa', 'Toca un bloque del programa'), () => { }, false);
+  },
+  // reptes: construir el programa (o arreglar-ne un: st.prog) amb una paleta i, de vegades, un màxim de blocs
+  build(st) {
+    tbMake(st.w, { prog: st.prog, pal: st.pal, max: st.max, fns: st.fns });
+    TB.conds = st.conds; TB.colors = st.colors;
+    TB.onDone = () => { tContinue(); if (st.after) setTimeout(() => tbSay(tval(st.after), 'ok'), 900); };
+    TB.onFail = () => { if (TB.tries >= 2) tHintBtn(st); };
+    tStage(st);
+    tFoot(L('Continua', 'Continúa'), tNext, false);
+  },
+  // ordenar blocs donats
+  parsons(st) {
+    tbMake(st.w, { mode: 'parsons', pool: shuffle(bitClone(st.pool)) });
+    TB.onDone = () => tContinue();
+    TB.onFail = () => { if (TB.tries >= 2) tHintBtn(st); };
+    tStage(st);
+    tFoot(L('Continua', 'Continúa'), tNext, false);
+  },
+  // projecte lliure: amb uns mínims; quan funciona, es pot desar al portafoli
+  create(st) {
+    TSTEP.build(st);
+    TB.onDone = () => {
+      const bad = st.check && st.check(TB.prog);
+      if (bad) { TB.solved = false; tbSay(tval(bad), 'bad'); return; }
+      tFoot(L('Desa-ho i continua', 'Guárdalo y continúa'), () => { tSaveProj(st); tNext(); }, true, `<button class="btn ghost" onclick="tbReset()">${L('El milloro', 'Lo mejoro')}</button>`);
+    };
+  },
+  // activitat sense pantalla (amb algú de casa); es pot deixar per a més tard
+  unplug(st) {
+    $('#tsb').innerHTML = `<div class="tcol"><div class="tunp"><div class="tunph"><span class="tunpi">${st.ico || '🧍'}</span><div><small>${L('Sense pantalla', 'Sin pantalla')}</small><h2>${tval(st.title)}</h2></div></div>
+      ${tval(st.t)}<ol>${st.steps.map(x => `<li>${tval(x)}</li>`).join('')}</ol>${st.tip ? `<p class="ttip">${tx(st.tip)}</p>` : ''}</div></div>`;
+    tFoot(L('Ho hem fet!', '¡Lo hemos hecho!'), () => { addXPsafe(5); tNext(); }, true, `<button class="btn ghost" onclick="tNext()">${L('Ara no', 'Ahora no')}</button>`);
+  },
+  // pausa activa: moure el cos (amb compte enrere)
+  move(st) {
+    let n = st.secs || 30;
+    $('#tsb').innerHTML = `<div class="tcol"><div class="tmove"><div class="tmvbot">${bitChar('dance')}</div><h2>${tx(st.title || 'Pausa activa!|¡Pausa activa!')}</h2><p>${tval(st.t)}</p><div class="tclock" id="tclock">${n}</div></div></div>`;
+    tFoot(L('Ja està!', '¡Ya está!'), tNext, false);
+    TS_T = setInterval(() => { n--; const c = document.getElementById('tclock'); if (c) c.textContent = Math.max(0, n); if (n <= 0) { clearInterval(TS_T); TS_T = null; SFX.ok && SFX.ok(); const b = document.getElementById('tnext'); if (b) b.disabled = false; } }, 1000);
+    setTimeout(() => { const b = document.getElementById('tnext'); if (b) b.disabled = false; }, Math.min(8000, n * 1000));
+  },
+  // com t'ha anat? (autoavaluació; no compta per a res, ajuda a pensar-hi)
+  feel(st) {
+    $('#tsb').innerHTML = `<div class="tcol">${tBubble('numi', tx(st.q || 'Com t\'ha anat la sessió d\'avui?|¿Cómo te ha ido la sesión de hoy?'))}
+      <div class="tfeel">${[['😎', L('Molt fàcil', 'Muy fácil')], ['🙂', L('Bé', 'Bien')], ['🤔', L("M'ha costat", 'Me ha costado')], ['😵', L('Molt difícil', 'Muy difícil')]].map(([e, t], i) => `<button data-i="${i}"><span>${e}</span>${t}</button>`).join('')}</div></div>`;
+    document.querySelectorAll('.tfeel button').forEach(b => b.onclick = () => { document.querySelectorAll('.tfeel button').forEach(x => x.classList.toggle('on', x === b)); const r = TS_().s[TSS.id] = TS_().s[TSS.id] || {}; r.f = +b.dataset.i; tContinue(); });
+    tFoot(L('Continua', 'Continúa'), tNext, false);
+  }
+};
+// escenari dins la sessió: enunciat + món + programa
+function tStage(st) {
+  const q = st.q ? `<div class="tsq2">${st.who === 'bit' ? `<span class="tsqc">${bitChar('idle')}</span>` : `<span class="tsqc">${charSVG('numi', 'idle')}</span>`}<div><p>${tval(st.q)}</p>${st.crit ? `<ul class="tcrit">${st.crit.map(c => `<li>${tval(c)}</li>`).join('')}</ul>` : ''}</div></div>` : '';
+  $('#tsb').innerHTML = `${q}${tbHTML(TB.extra || '')}`;
+  $('#tsb').classList.add('wide');
+  tb3dMount();
+}
+function tSayOk(html, bad) { tbSay(html, bad ? 'bad' : 'ok'); }
+function tHintBtn(st) {
+  if (document.getElementById('thint') || !(st.hint || st.sol)) return;
+  const f = document.getElementById('tsf'), b = document.createElement('button');
+  b.className = 'btn ghost'; b.id = 'thint'; b.textContent = L('Una pista', 'Una pista');
+  b.onclick = () => {
+    if (st.hint && !b.dataset.k) { b.dataset.k = 1; tbSay(`💡 ${tval(st.hint)}`); b.textContent = st.sol ? L('Mostra una solució', 'Muestra una solución') : L('Una pista', 'Una pista'); if (!st.sol) b.remove(); return; }
+    if (st.sol) { TB.prog.splice(0, TB.prog.length, ...bitClone(st.sol)); TB.cur = { l: TB.prog, i: TB.prog.length }; if (TB.pool) TB.pool.splice(0); tbFresh(); tbDraw(); tbSay(L('Aquí tens una solució. Executa-la i mira què fa cada bloc.', 'Aquí tienes una solución. Ejecútala y mira qué hace cada bloque.')); b.remove(); }
+  };
+  f.insertBefore(b, f.firstChild);
+}
+function tSaveProj(st) {
+  const t = TS_();
+  t.port.push({ id: 'pj' + Date.now().toString(36), sid: TSS.id, t: st.name || TSS.s.t, w: st.w, prog: bitClone(TB.prog), fns: st.fns || null, d: today() });
+  if (t.port.length > 60) t.port.shift();
+  save(); toast(L('Projecte desat a «Projectes»!', '¡Proyecto guardado en «Proyectos»!'));
+}
+
+/* ---------- Catàleg: quan encara no hi ha cap curs assignat ---------- */
+function techCatalog() {
+  const acc = tAccess();
+  const hero = `<section class="thero"><div class="thtxt"><p class="tkick">Numi Tech</p><h1>${L(`Hola, ${esc(P.name)}!`, `¡Hola, ${esc(P.name)}!`)}</h1>
+    <p>${acc.classe ? L("Ja ets a la teva classe. Quan el professor t'assigni un curs, el trobaràs aquí.", 'Ya estás en tu clase. Cuando el profesor te asigne un curso, lo encontrarás aquí.') : L('Per començar, entra a la teva classe amb el codi que et dona el professor.', 'Para empezar, entra en tu clase con el código que te da el profesor.')}</p>
+    ${acc.classe ? '' : `<button class="btn big tgo" onclick="classeModal()">${L('TINC UN CODI DE CLASSE', 'TENGO UN CÓDIGO DE CLASE')}</button>`}</div>
+    <div class="thbot" aria-hidden="true">${bitChar('happy')}</div></section>`;
+  const cards = TECH.map(k => `<button class="tcat" style="--cc:${k.color}" onclick="tLocked(tCourse('${k.id}'))"><span class="tcico">${k.ico}</span><span><b>${tx(k.name)}</b><small>${tx(k.age)} · ${k.units.length} ${L('unitats', 'unidades')}</small><em>${tx(k.desc)}</em></span></button>`).join('');
+  app.innerHTML = tShell('home', `<h2 class="tcath">${L('Els cursos de Numi Tech', 'Los cursos de Numi Tech')}</h2><div class="tcats">${cards}</div>`, hero);
+}
+
+/* ---------- Alta a Numi Tech: amb el codi de classe del professor, o entrant amb l'usuari ---------- */
+function onbTech() {
+  setVariant('tech'); VIEW = 'onboard';
+  let pre = ''; try { pre = sessionStorage.getItem('numi-classe') || ''; } catch (e) { }
+  app.innerHTML = `<div class="page solo onb tonb"><div class="onbtop">${langPill()}</div><img class="onb-logo" src="${VAR.logo}" alt="${VAR.name}"><div class="onb-char tapme">${bitChar('happy')}</div>
+    <div class="bubble big">${L('Hola! Soc en <b>Bit</b>. Aquí aprendràs a programar robots, crear jocs i fer projectes digitals a la teva classe.', '¡Hola! Soy <b>Bit</b>. Aquí aprenderás a programar robots, crear juegos y hacer proyectos digitales en tu clase.')}</div>
+    <button class="btn big" onclick="loginModal()">${L('ENTRA AMB EL TEU USUARI', 'ENTRA CON TU USUARIO')}</button>
+    <button class="btn big ghost" onclick="onbTechCode()">${L('TINC UN CODI DE CLASSE', 'TENGO UN CÓDIGO DE CLASE')}</button>
+    <p class="mut" style="font-size:14px;margin-top:14px">${L("L'usuari i la contrasenya, o el codi de classe, te'ls dona el teu professor.", 'El usuario y la contraseña, o el código de clase, te los da tu profesor.')}</p></div>`;
+  if (pre) onbTechCode();
+}
+function onbTechCode() {
+  let pre = ''; try { pre = sessionStorage.getItem('numi-classe') || ''; } catch (e) { }
+  app.innerHTML = `<div class="page solo onb tonb"><img class="onb-logo" src="${VAR.logo}" alt="${VAR.name}">
+    <h2 class="tonbh">${L('Entra a la teva classe', 'Entra en tu clase')}</h2>
+    <label class="lbl">${L('Codi de classe', 'Código de clase')}</label><input id="tcl" class="nm" maxlength="12" placeholder="AULA-XXXX" autocapitalize="characters" value="${esc(pre)}">
+    <label class="lbl">${L('El teu nom', 'Tu nombre')}</label><input id="tnm" class="nm" maxlength="16" autocomplete="off" placeholder="${L('Només el nom', 'Solo el nombre')}">
+    <label class="lbl">${L('Inventa un usuari', 'Inventa un usuario')}</label><input id="tus" class="nm" maxlength="20" autocomplete="username" autocapitalize="none" placeholder="${L('p. ex. laia.robot', 'p. ej. laia.robot')}">
+    <label class="lbl">${L('Contrasenya (mínim 4)', 'Contraseña (mínimo 4)')}</label>${passField('tpw', '••••')}
+    <div id="terr" class="err"></div>
+    <button class="btn big" id="tgo" onclick="onbTechGo()">${L('CREA EL COMPTE', 'CREA LA CUENTA')}</button>
+    <button class="link" onclick="onbTech()">${L('Tornar', 'Volver')}</button>
+    <p class="legalf">${L('No posis el cognom ni dades personals a l\'usuari. Guardem el mínim de dades:', 'No pongas el apellido ni datos personales en el usuario. Guardamos el mínimo de datos:')} <a href="https://numimates.com/privacitat?l=${LANG}" target="_blank" rel="noopener">${L('política de privadesa', 'política de privacidad')}</a>.</p></div>`;
+  $(pre ? '#tnm' : '#tcl').focus();
+}
+async function onbTechGo() {
+  const classe = $('#tcl').value.trim(), name = $('#tnm').value.trim(), user = $('#tus').value.trim().toLowerCase(), pass = $('#tpw').value, err = $('#terr');
+  if (!/^(AULA-?)?[A-Z0-9]{4}$/i.test(classe)) return err.textContent = L('Escriu el codi de classe (AULA-XXXX).', 'Escribe el código de clase (AULA-XXXX).');
+  if (!name) return err.textContent = L('Escriu el teu nom.', 'Escribe tu nombre.');
+  if (!/^[a-z0-9._-]{3,20}$/.test(user)) return err.textContent = ERR('usuari-format');
+  if (pass.length < 4) return err.textContent = ERR('contrasenya-format');
+  err.textContent = '…'; $('#tgo').disabled = true;
+  const id = 'p' + Date.now().toString(36);
+  const st = { name, goal: 20, sound: true, unlockAll: false, lang: LANG, ...freshProgress(), course: 0, baseCourse: 0, maxCourse: 0, variant: 'tech', tech: { c: 'robot', s: {}, port: [], badges: {} } };
+  let r; try { r = await api('register', { name, survey: { curs: 'Numi Tech', date: today() }, state: st, username: user, password: pass, variant: 'tech', classe }); } catch (e) { r = { error: 'net' }; }
+  $('#tgo').disabled = false;
+  if (!r.code) return err.textContent = r.error === 'codi-classe' ? L('Aquest codi de classe no existeix. Revisa-ho amb el teu professor.', 'Este código de clase no existe. Revísalo con tu profesor.') : r.error === 'ple' ? L('Aquesta classe ja és plena.', 'Esta clase ya está llena.') : ERR(r.error || 'net');
+  try { sessionStorage.removeItem('numi-classe'); } catch (e) { }
+  P = { id, ...st, code: r.code, username: r.username, classe: r.grup || null, holdReg: false, consent: 'ok' };
+  DB.profiles[id] = P; DB.current = id; saveLocal(); save();
+  SFX.win && SFX.win(); go('home');
+  toast(L(`Benvingut/da a ${esc(r.grup ? r.grup.nom : 'Numi Tech')}!`, `¡Bienvenido/a a ${esc(r.grup ? r.grup.nom : 'Numi Tech')}!`));
+}
+
+// en arrencar, app.js ha pintat la primera pantalla abans que existís aquest fitxer: si és de Numi Tech, es torna a pintar
+setTimeout(() => {
+  if (typeof P !== 'undefined' && P && P.id !== 'tmp' && varOf(P) === 'tech' && VIEW !== 'profiles') go(VIEW && VIEW !== 'onboard' ? VIEW : 'home');
+  else if (VIEW === 'onboard' && (HOST_VAR === 'tech' || VAR_TEST === 'tech')) onbTech();
+}, 0);

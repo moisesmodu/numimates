@@ -360,7 +360,7 @@ function go(v) {
   if ((v === 'battles' && classOff('batalles'))) { toast(L("El teu docent ha desactivat les batalles per a la classe.", 'Tu docente ha desactivado las batallas para la clase.')); v = 'train'; }
   VIEW = v; if (v === 'home') { setTimeout(credNudge, 1500); setTimeout(medalCheck, 1200); setTimeout(classeBatCheck, 2200); }
   // compte creat pel docent amb «prova de nivell»: primer la prova, després la portada
-  if ((v === 'home' || v === 'place') && P && P.placeAsk && varOf(P) !== 'ment') return placeIntro();
+  if ((v === 'home' || v === 'place') && P && P.placeAsk && varOf(P) !== 'ment' && varOf(P) !== 'tech') return placeIntro();
   if (v !== 'onboard') setVariant(varOf(P));
   ({ home: renderHome, train: renderTrain, album: () => renderAlbum(), shop: renderShop, badges: () => renderAlbum('medals'), profile: renderProfile, profiles: renderProfiles, battles: () => renderBattles(), season: () => renderSeason(), league: () => renderLeague('w'), onboard: () => onb(0) }[v] || renderHome)();
   if (v !== 'home') window.scrollTo(0, 0);
@@ -476,7 +476,7 @@ async function payReturn() {
   if (P.pla === 'premium') {
     SFX.win(); renderHome();
     modal(`<div class="sheet card cent"><div class="mchar tapme">${meC('happy')}</div><h3>${L(`Ja tens ${VAR.name} Premium!`, `¡Ya tienes ${VAR.name} Premium!`)}</h3>
-      <p>${L('Ara pots fer totes les lliçons que vulguis, jugar batalles de mates i seguir la ruta de temporada.', 'Ahora puedes hacer todas las lecciones que quieras, jugar batallas de mates y seguir la ruta de temporada.')}</p>
+      <p>${L('Ara pots fer totes les lliçons que vulguis, fer batalles de mates i seguir la ruta de temporada.', 'Ahora puedes hacer todas las lecciones que quieras, hacer batallas de mates y seguir la ruta de temporada.')}</p>
       <button class="btn big" onclick="closeModal()">${L('SOM-HI!', '¡VAMOS!')}</button></div>`, true);
   } else {
     modal(`<div class="sheet card cent"><h3>${L('Pagament rebut', 'Pago recibido')}</h3><p>${L('Premium s\'activarà en uns minuts. Si d\'aquí a una estona encara no el teniu, escriviu-nos a <b>hola@numimates.com</b>.', 'Premium se activará en unos minutos. Si dentro de un rato todavía no lo tenéis, escribidnos a <b>hola@numimates.com</b>.')}</p>
@@ -498,7 +498,7 @@ function premiumBox() {
         : `<button class="btn sm ghost redt" onclick="subCancel(1)">${L('CANCEL·LA LA SUBSCRIPCIÓ', 'CANCELAR LA SUSCRIPCIÓN')}</button>`) : ''}
       ${S && S.desist && adultPay() ? `<button class="link desistl" onclick="desistModal()">${L(`Desisteix i recupera els diners (fins al ${dayLong(S.desist)})`, `Desistir y recuperar el dinero (hasta el ${dayLong(S.desist)})`)}</button>` : ''}</div>`;
   }
-  return `<div class="prem-box"><b>${L('Pla gratuït', 'Plan gratuito')}</b><span>${IS_MENT ? L('La sessió diària completa i una partida de cada joc al dia. Amb Premium, tots els jocs sense límit i reptes amb amics.', 'La sesión diaria completa y una partida de cada juego al día. Con Premium, todos los juegos sin límite y retos con amigos.') : !adultPay() ? L('1 lliçó nova i 3 entrenaments al dia.', '1 lección nueva y 3 entrenamientos al día.') : L('1 lliçó nova i 3 entrenaments al dia. Amb Premium, sense límit, amb batalles i ruta de temporada.', '1 lección nueva y 3 entrenamientos al día. Con Premium, sin límite, con batallas y ruta de temporada.')}</span>
+  return `<div class="prem-box"><b>${L('Pla gratuït', 'Plan gratuito')}</b><span>${IS_TECH ? L('La primera unitat de cada curs. Amb Premium, tots els cursos sencers.', 'La primera unidad de cada curso. Con Premium, todos los cursos completos.') : IS_MENT ? L('La sessió diària completa i una partida de cada joc al dia. Amb Premium, tots els jocs sense límit i reptes amb amics.', 'La sesión diaria completa y una partida de cada juego al día. Con Premium, todos los juegos sin límite y retos con amigos.') : !adultPay() ? L('1 lliçó nova i 3 entrenaments al dia.', '1 lección nueva y 3 entrenamientos al día.') : L('1 lliçó nova i 3 entrenaments al dia. Amb Premium, sense límit, amb batalles i ruta de temporada.', '1 lección nueva y 3 entrenamientos al día. Con Premium, sin límite, con batallas y ruta de temporada.')}</span>
     ${IS_MENT || adultPay() ? `<button class="btn sm gold" onclick="${IS_MENT ? 'mPremium(1)' : 'premiumModal()'}">${L('QUÈ ÉS PREMIUM?', '¿QUÉ ES PREMIUM?')}</button>` : ''}</div>`;
 }
 // Cancel·lar des de l'app, amb doble confirmació: 1) què passarà; 2) confirmació d'adult. Es cancel·la al final del període pagat.
@@ -850,7 +850,7 @@ function check() {
     const pf = $('.pfill'); pf.style.width = (LS.done / LS.total * 100) + '%'; pf.classList.remove('shine'); void pf.offsetWidth; pf.classList.add('shine');
     fb.innerHTML = `<div class="fbh">✔ ${LS.combo >= 3 ? L(`Ratxa de ${LS.combo}! 🔥`, `¡Racha de ${LS.combo}! 🔥`) : pick(PRAISE())}</div>${e.long || e.retry ? `<div class="exp">${e.ex || ''}</div>` : ''}`;
   } else {
-    LS.miss++; LS.combo = 0; SFX.ko(); $('#lbody').classList.add('shake');
+    LS.miss++; LS.combo = 0; SFX.ko(); try { (LS.errs = LS.errs || []).push({ q: xatPlain(e.q).slice(0, 140), a: xatPlain(String(ansText(e))).slice(0, 40) }); if (LS.errs.length > 5) LS.errs.shift(); } catch (x) { } $('#lbody').classList.add('shake');
     if (LS.mode === 'battle' || LS.exam) LS.done++;
     else { const n = genEx(e.sk, e.L, LS.seen, LS.mix); n.retry = true; LS.queue.push(n); }
     fb.innerHTML = `<div class="fbh">✖ ${pick(OOPS())}</div><div class="ans">${L('Resposta correcta', 'Respuesta correcta')}: <b>${ansText(e)}</b></div>${e.ex ? `<div class="exp">💡 ${e.ex}</div>` : ''}`;
@@ -1512,7 +1512,7 @@ async function classeJoin() {
   try {
     const r = await api('classe', { code: P.code, classe: v });
     if (!r.grup) { $('#aerr').textContent = r.status === 429 ? ERR('massa') : L('Aquest codi no existeix. Revisa-ho amb el teu docent.', 'Ese código no existe. Revísalo con tu docente.'); return; }
-    P.classe = r.grup; save(); closeModal(); SFX.win(); toast(L(`Ja ets a ${esc(r.grup.nom)}!`, `¡Ya estás en ${esc(r.grup.nom)}!`)); renderProfile();
+    P.classe = r.grup; save(); closeModal(); SFX.win(); toast(L(`Ja ets a ${esc(r.grup.nom)}!`, `¡Ya estás en ${esc(r.grup.nom)}!`)); IS_TECH ? go(VIEW === 'profile' ? 'profile' : 'home') : renderProfile();
   } catch (e) { $('#aerr').textContent = ERR(); }
 }
 // enllaç o QR del docent (?classe=AULA-XXXX): obre el formulari amb el codi ja escrit quan l'alumne ja té compte
@@ -1533,7 +1533,7 @@ function classeLeave() {
 // si el docent tanca el grup o treu l'alumne, l'app se n'assabenta en obrir el perfil
 async function classeRefresh() {
   if (!P || !P.code || !navigator.onLine) return; const was = JSON.stringify(P.classe || null);
-  try { const r = await api('classe', { code: P.code, action: 'info' }); if (r.grup) P.classe = r.grup; else delete P.classe; if (JSON.stringify(P.classe || null) !== was) { saveLocal(); if (VIEW === 'home') renderHome(); } } catch (e) { }
+  try { const r = await api('classe', { code: P.code, action: 'info' }); if (r.grup) P.classe = r.grup; else delete P.classe; if (JSON.stringify(P.classe || null) !== was) { saveLocal(); if (VIEW === 'home') go('home'); } } catch (e) { }
 }
 // Medalles que dona el docent des del panell (amb un comentari). Les noves es mostren en obrir l'app.
 const MEDS = { esforc: ['💪', 'Ha treballat de valent|Ha trabajado a fondo'], ajuda: ['🤝', 'Ha ajudat els companys|Ha ayudado a los compañeros'], idees: ['💡', 'Idees originals|Ideas originales'], millora: ['📈', 'Ha millorat molt|Ha mejorado mucho'],
@@ -1685,10 +1685,11 @@ function onbShell(step, inner, back = true) {
 function onb(step) {
   VIEW = 'onboard';
   setVariant(ONB.variant && (step >= 2 || (step === 1 && ONB.stage)) ? ONB.variant : 'mates');
+  if (step === 0 && (HOST_VAR === 'tech' || VAR_TEST === 'tech') && typeof onbTech === 'function') return onbTech();
   if (step === 0) {
     ONB.stage = null; ONB.variant = null;
     onbShell(0, `<img class="onb-logo" src="${VAR.logo}" alt="${VAR.name}"><div class="onb-char tapme">${charSVG('numi', 'happy')}</div>
-      <div class="bubble big">${IS_MENT ? L("Hola! Soc en <b>Numi</b>. T'acompanyaré cada dia a mantenir la ment activa. <b>Com et dius?</b>", '¡Hola! Soy <b>Numi</b>. Te acompañaré cada día a mantener la mente activa. <b>¿Cómo te llamas?</b>') : IS_PRO ? L("Ei! Soc en <b>Numi</b>. Les mates d'ESO, pas a pas i sense avorrir-te. <b>Com et dius?</b>", '¡Ey! Soy <b>Numi</b>. Las mates de ESO, paso a paso y sin aburrirte. <b>¿Cómo te llamas?</b>') : L("Hola! Soc en <b>Numi</b>. T'acompanyaré pas a pas perquè les mates et surtin rodones. <b>Com et dius?</b>", '¡Hola! Soy <b>Numi</b>. Te acompañaré paso a paso para que las mates te salgan redondas. <b>¿Cómo te llamas?</b>')}</div>
+      <div class="bubble big">${IS_TECH ? L("Hola! Soc en <b>Numi</b>. Aquí aprendràs a programar robots, crear jocs i fer projectes digitals. <b>Com et dius?</b>", '¡Hola! Soy <b>Numi</b>. Aquí aprenderás a programar robots, crear juegos y hacer proyectos digitales. <b>¿Cómo te llamas?</b>') : IS_MENT ? L("Hola! Soc en <b>Numi</b>. T'acompanyaré cada dia a mantenir la ment activa. <b>Com et dius?</b>", '¡Hola! Soy <b>Numi</b>. Te acompañaré cada día a mantener la mente activa. <b>¿Cómo te llamas?</b>') : IS_PRO ? L("Ei! Soc en <b>Numi</b>. Les mates d'ESO, pas a pas i sense avorrir-te. <b>Com et dius?</b>", '¡Ey! Soy <b>Numi</b>. Las mates de ESO, paso a paso y sin aburrirte. <b>¿Cómo te llamas?</b>') : L("Hola! Soc en <b>Numi</b>. T'acompanyaré pas a pas perquè les mates et surtin rodones. <b>Com et dius?</b>", '¡Hola! Soy <b>Numi</b>. Te acompañaré paso a paso para que las mates te salgan redondas. <b>¿Cómo te llamas?</b>')}</div>
       <input id="nm" class="nm" maxlength="16" placeholder="${L('El teu nom', 'Tu nombre')}" autocomplete="off" enterkeyhint="go" value="${esc(ONB.name || '')}">
       <button class="btn big" onclick="onbName()">${L('SEGÜENT', 'SIGUIENTE')}</button>
       <button class="link" onclick="loginModal()">🔑 ${L('Ja tinc compte', 'Ya tengo cuenta')}</button>`);
@@ -1735,7 +1736,7 @@ function onbCourse() {
   onbShell(1, `<div class="onb-char sm tapme">${charSVG('numi', 'idle')}</div><div class="bubble big">${L('<b>Quin curs fas?</b>', '<b>¿Qué curso haces?</b>')}</div>
     <div class="cgrid ages">${idx.map((ci, i) => `<button class="cbtn ${ONB.course === ci ? 'on' : ''}" style="animation-delay:${i * 40}ms" onclick="ONB.course=${ci};onb(2)"><b>${ci - (ONB.stage === 'eso' ? ESO_FROM : 0) + 1}${L(['r', 'n', 'r', 't', 'è', 'è'][ci - (ONB.stage === 'eso' ? ESO_FROM : 0)], '.º')}</b><small>${ONB.stage === 'eso' ? 'ESO' : L('primària', 'primaria')}</small></button>`).join('')}</div>`);
 }
-function onbName() { const n = $('#nm').value.trim(); if (!n) { $('#nm').classList.add('shake'); setTimeout(() => $('#nm').classList.remove('shake'), 500); return; } ONB.name = n; if (HOST_VAR === 'ment') { ONB.stage = 'altres'; ONB.variant = 'ment'; return onbMent(); } onb(1); }
+function onbName() { const n = $('#nm').value.trim(); if (!n) { $('#nm').classList.add('shake'); setTimeout(() => $('#nm').classList.remove('shake'), 500); return; } ONB.name = n; if (HOST_VAR === 'ment') { ONB.stage = 'altres'; ONB.variant = 'ment'; return onbMent(); } if (HOST_VAR === 'tech' || VAR_TEST === 'tech') return onbTech(); onb(1); }
 // prova de nivell per a un compte que ja existeix (alta feta pel docent): es fa sobre el mateix perfil
 function placeIntro() {
   VIEW = 'place';
@@ -1807,7 +1808,7 @@ function onbFamily() {
     <label class="lbl" for="famMail">${L("Correu d'un adult de casa", 'Correo de un adulto de casa')}</label><input id="famMail" class="nm" type="email" inputmode="email" autocomplete="off" placeholder="${L('correu@exemple.com', 'correo@ejemplo.com')}">
     <div id="famMsg" class="err"></div>
     <button class="btn big" id="famBtn" onclick="onbFamilyGo()">${L('DEMANA PERMÍS', 'PIDE PERMISO')}</button>
-    <button class="btn ghost big" onclick="onbFamilyGo(true)">${L('ARA NO: JUGA EN AQUEST DISPOSITIU', 'AHORA NO: JUEGA EN ESTE DISPOSITIVO')}</button>
+    <button class="btn ghost big" onclick="onbFamilyGo(true)">${L('ARA NO: APRÈN EN AQUEST DISPOSITIU', 'AHORA NO: APRENDE EN ESTE DISPOSITIVO')}</button>
     <button class="link" style="margin-top:6px" onclick="onbFamilyGo('classe')">🏫 ${L('Tinc un codi de classe', 'Tengo un código de clase')}</button>
     <p class="legalf">${L('Sense aquest permís, el teu progrés només es guarda en aquest dispositiu. Guardem el mínim de dades i no hi ha publicitat:', 'Sin este permiso, tu progreso solo se guarda en este dispositivo. Guardamos el mínimo de datos y no hay publicidad:')} <a href="https://numimates.com/privacitat?l=${LANG}" target="_blank" rel="noopener">${L('política de privadesa', 'política de privacidad')}</a>.</p></div>`;
   setTimeout(() => { const i = $('#famMail'); i && i.focus(); i && i.addEventListener('keydown', e => { if (e.key === 'Enter') onbFamilyGo(); }); }, 50);

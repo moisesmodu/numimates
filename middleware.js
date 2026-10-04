@@ -6,7 +6,10 @@ const APPS = {
     og: "Les mates d'ESO, pas a pas: exàmens, fitxes i assistent.", img: 'https://numimates.com/img/og/pro-ca.jpg' },
   'ment.numimates.com': { name: 'Numi Ment', title: 'Numi Ment · Entrena la ment cada dia', theme: '#177E6E', manifest: 'manifest-ment.webmanifest', apple: 'img/brand/apple-touch-icon-ment.png',
     desc: "Numi Ment: deu minuts al dia de jocs de memòria, atenció, càlcul i lògica per a adults i gent gran, i un test per conèixer l'edat de la teva ment.",
-    og: "Deu minuts al dia per mantenir la ment activa. Quina edat té la teva ment?", img: 'https://numimates.com/img/og/ment-ca.jpg' }
+    og: "Deu minuts al dia per mantenir la ment activa. Quina edat té la teva ment?", img: 'https://numimates.com/img/og/ment-ca.jpg' },
+  'tech.numimates.com': { name: 'Numi Tech', title: 'Numi Tech · Programació i robòtica', theme: '#1B2B6B', manifest: 'manifest-tech.webmanifest', apple: 'img/brand/apple-touch-icon-tech.png',
+    desc: "Numi Tech: programació, robòtica i projectes digitals per a nens i nenes de 7 a 14 anys, amb sessions com una classe, reptes amb el robot Bit i projectes propis. En català i castellà.",
+    og: 'Programa robots, crea jocs i fes projectes digitals, sessió a sessió.', img: 'https://numimates.com/img/og/mates-ca.jpg' }
 };
 const attr = s => s.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
 
@@ -28,6 +31,7 @@ export default async function middleware(request) {
     set(/<meta property="og:description" content="[^"]*">/, `<meta property="og:description" content="${attr(a.og)}">`);
     set(/<meta property="og:image" content="[^"]*">/, `<meta property="og:image" content="${a.img}">`);
     // Numi Ment: el full d'estil i les fonts des del principi (si no, la primera pantalla canvia de lletra en carregar-se)
+    if (a.name === 'Numi Tech') set(/<\/head>/, '<link rel="stylesheet" href="tech.css" id="th-tech"></head>');
     if (a.name === 'Numi Ment') set(/<\/head>/, '<link rel="preload" href="fonts/SchibstedGrotesk-normal-latin.woff2" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="ment.css" id="th-ment"></head>');
     const hd = new Headers(r.headers); hd.delete('content-length'); hd.delete('content-encoding'); hd.delete('transfer-encoding'); hd.delete('etag'); hd.set('content-type', 'text/html; charset=utf-8');
     return new Response(h, { status: 200, headers: hd });

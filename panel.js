@@ -85,6 +85,16 @@ function norm(r) {
   o.reco = isO(r.reco) ? { items: arr(r.reco.items) } : null;
   o.survey = isO(r.survey) ? { result: typeof r.survey.result === 'string' ? r.survey.result.slice(0, 60) : null, feel: typeof r.survey.feel === 'string' ? r.survey.feel : null } : {};
   o.unlock_all = r.unlock_all === true;
+  o.variant = ['mates', 'pro', 'ment', 'tech'].includes(r.variant) ? r.variant : null;
+  o.apps = arr(r.apps).filter(a => ['mates', 'pro', 'ment', 'tech'].includes(a));
+  // Numi Tech: sessions (fetes, a mitges, dia, minuts, com li ha anat), insígnies i projectes
+  const tt = isO(r.tech) ? r.tech : {};
+  o.tech = { c: typeof tt.c === 'string' ? tt.c.replace(/[^a-z]/g, '') : null,
+    s: isO(tt.s) ? Object.fromEntries(Object.entries(tt.s).filter(([k, v]) => /^[a-z]\d{1,2}-\d{1,2}$/.test(k) && isO(v)).map(([k, v]) => [k, { done: !!v.done, i: n0(v.i), d: dstr(v.d) || '', n: n0(v.n), f: nn(v.f), ms: n0(v.ms) }])) : {},
+    badges: isO(tt.badges) ? Object.fromEntries(Object.entries(tt.badges).filter(([k]) => /^[a-z0-9]{1,12}$/.test(k)).map(([k, v]) => [k, dstr(v) || ''])) : {} };
+  o.tech_port = arr(r.tech_port).filter(isO).map(x => ({ t: typeof x.t === 'string' ? x.t : '', d: dstr(x.d) || '', sid: typeof x.sid === 'string' ? x.sid : '' })).slice(-60);
+  const mm = isO(r.ment) ? r.ment : {};
+  o.ment = { days: isO(mm.days) ? Object.keys(mm.days).filter(dstr).length : 0, tests: arr(mm.tests).filter(isO).map(t => ({ d: dstr(t.d) || '', age: nn(t.age) })).filter(t => t.age != null).slice(-12), lvl: isO(mm.lvl) ? mm.lvl : {} };
   return o;
 }
 function enrich(r) {
@@ -156,8 +166,8 @@ function logout() { sessionStorage.clear(); D = null; ROWS = []; GRUPS = []; ME 
 function setLang(l, onLogin) { LANG = l; store.set('numi-profe-lang', l); document.documentElement.lang = l; if (onLogin && !D) return login(); ROWS = (D?.rows || []).map(enrich); route.last = null; route(); }
 
 /* ---------- carcassa ---------- */
-const NAV = () => [['resum', 'layout-dashboard', L('Resum', 'Resumen')], ['alumnes', 'users', L('Alumnes', 'Alumnos'), scope().length], ['grups', 'school', L('Grups', 'Grupos')], ['batalles', 'swords', L('Batalles', 'Batallas')], ['informes', 'chart-column', L('Informes', 'Informes')]];
-const ADMIN_NAV = () => { const seen = +store.get('numi-profe-sol', 0), nou = (D.contacts || []).filter(c => new Date(c.created_at).getTime() > seen).length; return [['usuaris', 'crown', L('Usuaris i Premium', 'Usuarios y Premium')], ['centres', 'building-2', L('Centres', 'Centros')], ['docents', 'graduation-cap', L('Docents', 'Docentes')], ['totsgrups', 'layout-grid', L('Tots els grups', 'Todos los grupos')], ['sollicituds', 'inbox', L('Sol·licituds', 'Solicitudes'), nou, true], ['activitat', 'activity', L('Activitat', 'Actividad')], ['correus', 'mail', L('Correus', 'Correos')]]; };
+const NAV = () => [['resum', 'layout-dashboard', L('Resum', 'Resumen')], ['material', 'graduation-cap', L('Material Tech', 'Material Tech')], ['alumnes', 'users', L('Alumnes', 'Alumnos'), scope().length], ['grups', 'school', L('Grups', 'Grupos')], ['batalles', 'swords', L('Batalles', 'Batallas')], ['informes', 'chart-column', L('Informes', 'Informes')]];
+const ADMIN_NAV = () => { const seen = +store.get('numi-profe-sol', 0), nou = (D.contacts || []).filter(c => new Date(c.created_at).getTime() > seen).length; return [['ia', 'sparkles', L('Assistent IA', 'Asistente IA')], ['usuaris', 'crown', L('Usuaris i Premium', 'Usuarios y Premium')], ['centres', 'building-2', L('Centres', 'Centros')], ['docents', 'graduation-cap', L('Docents', 'Docentes')], ['totsgrups', 'layout-grid', L('Tots els grups', 'Todos los grupos')], ['sollicituds', 'inbox', L('Sol·licituds', 'Solicitudes'), nou, true], ['activitat', 'activity', L('Activitat', 'Actividad')], ['correus', 'mail', L('Correus', 'Correos')]]; };
 function shell(view, title, body, { acts = '', fluid = false, switcher = true } = {}) {
   const na = ([k, ic, t, n, isNew]) => `<a href="#/${k}" class="${view === k ? 'on' : ''}" title="${esc(t)}">${ico(ic, 'i20')}<span>${esc(t)}</span>${n ? `<i class="badge ${isNew ? 'new' : ''}">${n}</i>` : ''}</a>`;
   const who = ADMIN ? { nom: ME?.nom || L('Administració', 'Administración'), rol: 'Numi Mates' } : { nom: ME.nom, rol: ME.rol === 'admin_centre' ? L('Coordinació de centre', 'Coordinación de centro') : L('Docent', 'Docente') };
@@ -196,8 +206,8 @@ function route() {
   const h = location.hash.replace(/^#\/?/, '').split('?')[0], [v, arg] = h.split('/');
   if (v === 'alumnes' && route.last === 'alumnes' && $('#tbl')) { if (arg) openDrawer(decodeURIComponent(arg), true); else if ($('.drawer')) closeDrawer(true); return; }
   route.last = v;
-  const V = { resum: vResum, alumnes: vAlumnes, grups: vGrups, batalles: vBatalles, informes: vInformes, guia: vGuia, compte: vCompte };
-  if (ADMIN) Object.assign(V, { usuaris: vUsuaris, centres: vCentres, docents: vDocents, totsgrups: vTotsGrups, sollicituds: vSol, activitat: vActivitat, correus: vCorreus });
+  const V = { resum: vResum, alumnes: vAlumnes, grups: vGrups, batalles: vBatalles, informes: vInformes, guia: vGuia, compte: vCompte, material: () => vMaterial(arg ? decodeURIComponent(arg) : 'robot', h.split('/')[2] ? decodeURIComponent(h.split('/')[2]) : '') };
+  if (ADMIN) Object.assign(V, { ia: () => vIA(arg ? decodeURIComponent(arg) : ''), usuaris: vUsuaris, centres: vCentres, docents: vDocents, totsgrups: vTotsGrups, sollicituds: vSol, activitat: vActivitat, correus: vCorreus });
   (V[v] || vResum)(arg);
   if (v === 'alumnes' && arg) openDrawer(decodeURIComponent(arg), true); else if ($('.drawer')) closeDrawer(true);
 }
@@ -337,6 +347,79 @@ const MTPL = `<!doctype html>
 </div>
 </body></html>`;
 
+/* ---------- Material del professor de Numi Tech: guia de cada sessió, presentació i fitxes ---------- */
+const MFASE = { inici: ['Inici', 'Inicio', '#2F5BEA'], teoria: ['Teoria', 'Teoría', '#8B5CF6'], desconnectat: ['Sense pantalla', 'Sin pantalla', '#F08A24'], ordinador: ["A l'ordinador", 'En el ordenador', '#14A3B8'], crea: ['Crea', 'Crea', '#1FA463'], tancament: ['Tancament', 'Cierre', '#E5489A'] };
+const hasGuide = id => typeof TGUIDE !== 'undefined' && !!TGUIDE[id];
+function vMaterial(c, sid) {
+  const T = typeof TECH_T !== 'undefined' ? TECH_T : null; if (!T || !T.courses[c]) return shell('material', L('Material del professor', 'Material del profesor'), `<div class="card pad">${L('No hi ha aquest curs.', 'No existe este curso.')}</div>`, { switcher: false });
+  const C = T.courses[c], sess = Object.entries(T.s).filter(([, x]) => x.c === c);
+  const tabs = `<div class="mtabs">${Object.entries(T.courses).map(([k, x]) => `<a href="#/material/${k}" class="${k === c ? 'on' : ''}">${esc(tx(x.n))}</a>`).join('')}</div>`;
+  if (sid && T.s[sid]) return matSession(c, sid, tabs);
+  const units = {}; sess.forEach(([id, x]) => (units[x.u] ||= []).push([id, x]));
+  const body = `${tabs}<p class="t2" style="margin:4px 0 16px">${esc(tx(C.age))} · ${C.units} ${L('unitats', 'unidades')} · ${C.total} ${L('sessions de 60 minuts', 'sesiones de 60 minutos')}. ${L('Cada sessió té la guia (objectius, pla de la classe, errors típics i avaluació), la presentació per projectar i les fitxes per imprimir.', 'Cada sesión tiene la guía (objetivos, plan de la clase, errores típicos y evaluación), la presentación para proyectar y las fichas para imprimir.')}</p>
+    ${Object.entries(units).map(([u, list]) => `<div class="card pad munit"><h3>${L('Unitat', 'Unidad')} ${u} · ${esc(tx(T.units[c + ':' + u] || ''))}</h3><div class="mlist">${list.map(([id, x]) => { const g = hasGuide(id);
+      return `<a class="msess ${g ? '' : 'off'}" href="${g ? `#/material/${c}/${id}` : 'javascript:void 0'}"><span class="mn">${x.n}</span><span><b>${esc(tx(x.t))}</b><small>${x.proj ? L('Projecte · ', 'Proyecto · ') : ''}${g ? L('Guia, presentació i fitxes', 'Guía, presentación y fichas') : L('En preparació', 'En preparación')}</small></span>${g ? ico('chevron-right') : ''}</a>`; }).join('')}</div></div>`).join('')}`;
+  shell('material', L('Material del professor', 'Material del profesor'), body, { switcher: false });
+}
+function matSession(c, sid, tabs) {
+  const T = TECH_T, x = T.s[sid], G = TGUIDE[sid];
+  if (!G) return shell('material', tx(x.t), `${tabs}<div class="card pad">${L('Aquesta sessió encara no té material.', 'Esta sesión aún no tiene material.')}</div>`, { switcher: false });
+  const list = a => `<ul class="bullets">${(a || []).map(v => `<li>${tx(v)}</li>`).join('')}</ul>`;
+  const sec = (t, b) => `<section class="card pad msec"><h3>${t}</h3>${b}</section>`;
+  let t0 = 0;
+  const plan = G.plan.map(p => { const f = MFASE[p.fase] || MFASE.inici, a = t0; t0 += p.min;
+    return `<div class="mblk" style="--fc:${f[2]}"><div class="mt"><b>${a}′–${t0}′</b><span>${p.min} min</span></div><div class="mb"><span class="mf">${esc(LANG === 'es' ? f[1] : f[0])}</span><h4>${esc(tx(p.t))}</h4><p>${tx(p.fa)}</p>
+      ${p.diu && p.diu.length ? `<div class="mdiu"><b>${L('Què podeu dir', 'Qué podéis decir')}</b><ul>${p.diu.map(d => `<li>«${tx(d)}»</li>`).join('')}</ul></div>` : ''}
+      <div class="mmeta">${p.org ? `<span>👥 ${esc(tx(p.org))}</span>` : ''}${p.app ? `<span>💻 ${tx(p.app)}</span>` : ''}${p.slides && p.slides.length ? `<span>🖥️ ${L('Diapositives', 'Diapositivas')} ${p.slides.map(id => G.slides.findIndex(z => z.id === id) + 1).join(', ')}</span>` : ''}</div></div></div>`; }).join('');
+  const href = n => `presenta.html?s=${sid}&l=${LANG}${n ? '&n=1' : ''}`;
+  const body = `${tabs}<div class="mhead card pad"><div><p class="t3" style="margin:0">${esc(tx(T.courses[c].n))} · ${L('Unitat', 'Unidad')} ${x.u} · ${L('Sessió', 'Sesión')} ${x.n}${x.proj ? ' · ' + L('Projecte', 'Proyecto') : ''} · 60 min</p><h2>${esc(tx(x.t))}</h2></div>
+      <div class="macts"><a class="btn primary" href="${href(0)}" target="_blank" rel="noopener">${ico('maximize-2')}${L('Presenta', 'Presentar')}</a><a class="btn" href="${href(1)}" target="_blank" rel="noopener">${ico('eye')}${L('Presenta amb notes', 'Presentar con notas')}</a><a class="btn" href="imprimeix.html?s=${sid}&l=${LANG}" target="_blank" rel="noopener">${ico('printer')}${L('Fitxes per imprimir', 'Fichas para imprimir')}</a><a class="btn" href="imprimeix.html?s=${sid}&l=${LANG}&g=1" target="_blank" rel="noopener">${ico('download')}${L('Guia en PDF', 'Guía en PDF')}</a></div></div>
+    <div class="mgrid">${sec(L('Objectius', 'Objetivos'), list(G.obj))}${sec(L('Competències i currículum', 'Competencias y currículo'), list(G.comp))}</div>
+    ${sec(L('Pla de la classe (60 minuts)', 'Plan de la clase (60 minutos)'), `<div class="mbar">${G.plan.map(p => `<i style="flex:${p.min};background:${(MFASE[p.fase] || MFASE.inici)[2]}" title="${esc(tx(p.t))} · ${p.min} min"></i>`).join('')}</div>${plan}`)}
+    <div class="mgrid">${sec(L('Materials', 'Materiales'), `<b>${L('A l\'aula', 'En el aula')}</b>${list(G.mat.aula)}<b>${L('Per imprimir', 'Para imprimir')}</b>${list(G.mat.imprimir)}<b>${L('Abans de la classe', 'Antes de la clase')}</b>${list(G.mat.prep)}`)}
+      ${sec(L('Vocabulari', 'Vocabulario'), `<dl class="dl">${G.vocab.map(([a, b]) => `<dt>${esc(tx(a))}</dt><dd>${tx(b)}</dd>`).join('')}</dl>`)}</div>
+    ${sec(L('Errors típics i com ajudar', 'Errores típicos y cómo ayudar'), `<table class="mini-t"><thead><tr><th>${L('Error', 'Error')}</th><th>${L('Com ajudar (sense donar la resposta)', 'Cómo ayudar (sin dar la respuesta)')}</th></tr></thead><tbody>${G.errors.map(([a, b]) => `<tr><td>${tx(a)}</td><td>${tx(b)}</td></tr>`).join('')}</tbody></table>`)}
+    <div class="mgrid">${sec(L('Atenció a la diversitat', 'Atención a la diversidad'), `<p><b>${L('Per als que acaben abans', 'Para los que acaban antes')}:</b> ${tx(G.diff.mes)}</p><p><b>${L('Per als que necessiten suport', 'Para los que necesitan apoyo')}:</b> ${tx(G.diff.menys)}</p>`)}
+      ${sec(L('Avaluació', 'Evaluación'), `<b>${L('Tiquet de sortida', 'Ticket de salida')}</b>${list(G.aval.ticket)}<table class="mini-t"><thead><tr><th>${L('Criteri', 'Criterio')}</th><th>${L('Assolit', 'Logrado')}</th><th>${L('En procés', 'En proceso')}</th></tr></thead><tbody>${G.aval.rubric.map(([a, b, c2]) => `<tr><td>${tx(a)}</td><td>${tx(b)}</td><td>${tx(c2)}</td></tr>`).join('')}</tbody></table>`)}</div>
+    ${sec(L('A casa', 'En casa'), `<p>${tx(G.casa)}</p>`)}`;
+  shell('material', tx(x.t), body, { switcher: false });
+}
+
+/* ---------- Assistent amb IA (només administració): analitza les dades de totes les apps i redacta; no fa cap canvi ---------- */
+const PIA = { msgs: [], code: '', busy: false };
+function vIA(code) {
+  if (code !== PIA.code) { PIA.msgs = []; PIA.code = code; }
+  const r = code ? ROWS.find(x => x.code === code) : null;
+  const quick = code ? [L("Com li va? Fes-me un resum per a la tutoria.", '¿Cómo le va? Hazme un resumen para la tutoría.'), L('Què li costa més i què li proposaries?', '¿Qué le cuesta más y qué le propondrías?'), L('Redacta un missatge per a la família (el revisaré abans d’enviar-lo).', 'Redacta un mensaje para la familia (lo revisaré antes de enviarlo).')]
+    : [L('Com van les apps aquesta setmana?', '¿Cómo van las apps esta semana?'), L('On s’encallen més els alumnes?', '¿Dónde se atascan más los alumnos?'), L('Com va Numi Tech? Quines sessions costen més?', '¿Cómo va Numi Tech? ¿Qué sesiones cuestan más?'), L('Què faries aquest mes per tenir més alumnes actius?', '¿Qué harías este mes para tener más alumnos activos?')];
+  shell('ia', L('Assistent IA', 'Asistente IA'), `<div class="card pad pia">
+    <p class="t3" style="margin:0 0 10px">${code ? L(`Sobre l'alumne <b class="mono">${esc(code)}</b>${r ? ' (' + esc(r.name) + ')' : ''}. A la IA no li arriba el nom: només el codi i les xifres.`, `Sobre el alumno <b class="mono">${esc(code)}</b>${r ? ' (' + esc(r.name) + ')' : ''}. A la IA no le llega el nombre: solo el código y las cifras.`)
+      : L('Té les xifres de totes les apps (comptes, activitat, Premium, famílies, portes, sessions de Numi Tech). No fa cap canvi: et diu què fer i on.', 'Tiene las cifras de todas las apps (cuentas, actividad, Premium, familias, puertas, sesiones de Numi Tech). No hace ningún cambio: te dice qué hacer y dónde.')}
+      ${code ? ` <a href="#/ia">${L('Pregunta sobre tot Numi', 'Pregunta sobre todo Numi')}</a>` : ''}</p>
+    <div class="pialog" id="pialog">${PIA.msgs.map(m => `<div class="pm ${m.role === 'user' ? 'me' : 'bot'}">${m.role === 'user' ? esc(m.content) : piaMd(m.content)}</div>`).join('') || `<div class="pquick">${quick.map(q => `<button class="btn" onclick="piaSend(${js(q)})">${esc(q)}</button>`).join('')}</div>`}</div>
+    <form class="piain" onsubmit="event.preventDefault();piaSend()"><textarea id="piaq" rows="2" placeholder="${L('Pregunta el que vulguis sobre els alumnes i les apps…', 'Pregunta lo que quieras sobre los alumnos y las apps…')}"></textarea><button class="btn primary" id="piago">${ico('send')}${L('Envia', 'Enviar')}</button></form>
+    <p class="t3" style="margin:8px 0 0;font-size:12.5px">${L('Assistent amb IA (Claude): pot equivocar-se. Comprova les xifres al panell abans de decidir res. Les converses no es guarden.', 'Asistente con IA (Claude): puede equivocarse. Comprueba las cifras en el panel antes de decidir nada. Las conversaciones no se guardan.')}</p></div>`, { switcher: false });
+  const q = $('#piaq'); q.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); piaSend(); } });
+}
+const piaMd = t => esc(t).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>').replace(/^#{1,3} (.+)$/gm, '<b>$1</b>').replace(/^[-•] (.+)$/gm, '• $1').replace(/\n/g, '<br>');
+async function piaSend(text) {
+  const q = $('#piaq'); const t = (text ?? (q ? q.value : '')).trim(); if (!t || PIA.busy) return;
+  if (q) q.value = '';
+  PIA.msgs.push({ role: 'user', content: t }); PIA.busy = true;
+  const log = $('#pialog'); if (log.querySelector('.pquick')) log.innerHTML = '';
+  log.insertAdjacentHTML('beforeend', `<div class="pm me">${esc(t)}</div><div class="pm bot typing" id="pianow">…</div>`); log.scrollTop = log.scrollHeight;
+  const out = $('#pianow'); let txt = '';
+  try {
+    const r = await fetch('/api/panelai', { method: 'POST', headers: { ...AUTH(), 'content-type': 'application/json' }, body: JSON.stringify({ messages: PIA.msgs.slice(-12), code: PIA.code, lang: LANG }) });
+    if (!r.ok) { const e = await r.json().catch(() => ({})); PIA.msgs.pop(); out.classList.remove('typing'); out.textContent = e.error === 'limit' ? L("Avui ja s'ha arribat al límit de preguntes de l'assistent.", 'Hoy ya se ha llegado al límite de preguntas del asistente.') : L("L'assistent no respon ara mateix. Torna-ho a provar d'aquí a una estona.", 'El asistente no responde ahora mismo. Vuelve a intentarlo dentro de un rato.'); return; }
+    const rd = r.body.getReader(), dec = new TextDecoder(); out.classList.remove('typing');
+    for (;;) { const { done, value } = await rd.read(); if (done) break; txt += dec.decode(value, { stream: true }); out.innerHTML = piaMd(txt); log.scrollTop = log.scrollHeight; }
+    PIA.msgs.push({ role: 'assistant', content: txt || '…' });
+    if (!txt) out.textContent = L("No s'ha rebut resposta.", 'No se ha recibido respuesta.');
+  } catch (e) { PIA.msgs.pop(); out.textContent = L("No hi ha connexió.", 'No hay conexión.'); }
+  finally { PIA.busy = false; out.removeAttribute('id'); }
+}
+
 /* ---------- Informe setmanal/mensual a les famílies (api/_informe.js). Apagat fins que l'administrador l'encén. ---------- */
 let INF = null;
 async function infLoad() {
@@ -353,14 +436,15 @@ async function infLoad() {
       <button class="btn ${INF.on ? 'danger' : 'primary'}" onclick="infToggle()">${INF.on ? L('Apaga', 'Apagar') : L('Encén', 'Encender')}</button></div></div>`;
 }
 async function infPreview(code) {
-  const kind = $('#infKind') ? $('#infKind').value : 'setmanal', lang = $('#infLang') ? $('#infLang').value : LANG;
+  const kind = $('#infKind') ? $('#infKind').value : 'setmanal', lang = $('#infLang') ? $('#infLang').value : LANG, app = $('#infApp') ? $('#infApp').value : 'mates';
   code = code ?? ($('#infCode') ? $('#infCode').value.trim() : '');
-  const r = await mapi('inf_preview', { code, kind, lang });
+  const r = await mapi('inf_preview', { code, kind, lang, app });
   if (r.error) return toast(r.error === 'alumne' ? L('No hi ha cap alumne amb aquest codi.', 'No hay ningún alumno con este código.') : L("No s'ha pogut fer la mostra.", 'No se ha podido hacer la muestra.'));
   modal(`<h3>${esc(r.subject)}</h3>${r.sample ? `<p class="t3" style="margin:0 0 8px">${L('Mostra amb dades inventades. Per veure la d’un alumne real, escriu-ne el codi.', 'Muestra con datos inventados. Para ver la de un alumno real, escribe su código.')}</p>` : ''}
     <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px"><input id="infCode" placeholder="${L("Codi d'alumne (opcional)", 'Código de alumno (opcional)')}" value="${esc(code || '')}" style="flex:1;min-width:160px">
       <select id="infKind"><option value="setmanal" ${kind === 'setmanal' ? 'selected' : ''}>${L('Setmanal', 'Semanal')}</option><option value="mensual" ${kind === 'mensual' ? 'selected' : ''}>${L('Mensual', 'Mensual')}</option></select>
       <select id="infLang"><option value="ca" ${lang === 'ca' ? 'selected' : ''}>CA</option><option value="es" ${lang === 'es' ? 'selected' : ''}>ES</option></select>
+      <select id="infApp" title="${L('Mostra de quina app', 'Muestra de qué app')}"><option value="mates" ${app === 'mates' ? 'selected' : ''}>Numi Mates</option><option value="tech" ${app === 'tech' ? 'selected' : ''}>Numi Tech</option></select>
       <button class="btn" onclick="infPreview()">${L('Actualitza', 'Actualizar')}</button></div>
     <iframe id="infFrame" title="${L('Mostra de l’informe', 'Muestra del informe')}" style="width:100%;height:62vh;border:1px solid var(--line);border-radius:12px;background:#F3EFF7"></iframe>`, 'wide');
   $('#infFrame').srcdoc = r.html;
@@ -530,7 +614,7 @@ function drawTable() {
     : `<div class="tw al ${AF.compact ? 'compact' : ''}"><table><thead><tr>${th('name', L('Alumne', 'Alumno'), 'stick')}${th('course', L('Nivell', 'Nivel'), 'hide-sm')}${th('last', L('Última activitat', 'Última actividad'), 'r')}${th('act', L('Dies actius (14 d)', 'Días activos (14 d)'), 'hide-md')}${th('les', L('Lliçons', 'Lecciones'), 'r hide-lg')}${th('acc', L('Precisió', 'Precisión'), 'r')}${th('evo', L('Evolució', 'Evolución'), 'r hide-sm')}${th('gate', L('Porta del Cavaller', 'Puerta del Caballero'), 'hide-sm')}<th></th></tr></thead><tbody>
     ${R.map(r => { const x = r.exams[0], b = band(r.acc, r.answers); return `<tr tabindex="0" data-c="${esc(r.code)}" onclick="if(!event.target.closest('.rowmenu'))location.hash='#/alumnes/${encodeURIComponent(r.code)}'" onkeydown="rowKey(event,this)">
       <td class="stick c-name"><div class="nm">${sevDot(r)}${avatar(r)}<div><b>${esc(r.name)}</b><small>${r.username ? '@' + esc(r.username) : L('entra amb codi', 'entra con código')}${!G && r.grup_id ? ' · ' + esc(gName(r.grup_id)) : ''}${q && r.code.toLowerCase().includes(q.toLowerCase()) ? ' · ' + esc(r.code) : ''}</small></div></div></td>
-      <td class="hide-sm">${curs(r.course)}</td><td class="r c-last ${r.idle > 7 || r.idle == null ? 't3' : ''}" data-l="${L('Última activitat', 'Última actividad')}">${ago(r.last_day)}</td>
+      <td class="hide-sm">${cursOf(r)}</td><td class="r c-last ${r.idle > 7 || r.idle == null ? 't3' : ''}" data-l="${L('Última activitat', 'Última actividad')}">${ago(r.last_day)}</td>
       <td class="hide-md c-act" data-l="${L('Dies actius (14 d)', 'Días activos (14 d)')}"><span class="d14">${r.d14.map(o => `<i class="${o ? 'on' : ''}"></i>`).join('')}</span><span class="num">${r.act14}</span></td>
       <td class="r num hide-lg">${r.lessons}</td>
       <td class="r num c-acc" data-l="${L('Precisió', 'Precisión')}" style="color:var(--${b === 'none' ? 'text-3' : b})">${r.answers >= 20 ? r.acc + ' %' : '—'}</td>
@@ -559,15 +643,44 @@ function openDrawer(code, keep) {
   if (!$('.drawer')) closeDrawer.from = document.activeElement; closeDrawer(true);
   const list = $('#tbl') ? filtered() : scope(), i = list.findIndex(x => x.code === code), prev = list[i - 1], next = list[i + 1];
   document.body.insertAdjacentHTML('beforeend', `<div class="scrim" onclick="closeDrawer()"></div><aside class="drawer" role="dialog" aria-modal="true" tabindex="-1" aria-label="${esc(r.name)}">
-    <div class="dr-h">${avatar(r, 'lg')}<div><h2>${esc(r.name)}</h2><small>${[r.grup_id ? gName(r.grup_id) : '', curs(r.course), r.lang === 'es' ? 'Castellano' : 'Català'].filter(Boolean).map(esc).join(' · ')}</small></div>
+    <div class="dr-h">${avatar(r, 'lg')}<div><h2>${esc(r.name)}</h2><small>${[r.grup_id ? gName(r.grup_id) : '', cursOf(r), r.lang === 'es' ? 'Castellano' : 'Català'].filter(Boolean).map(esc).join(' · ')}</small></div>
       <div class="acts"><button class="ib" ${prev ? `onclick="location.hash='#/alumnes/${encodeURIComponent(prev.code)}'"` : 'disabled'} aria-label="${L('Anterior', 'Anterior')}">${ico('chevron-left')}</button><button class="ib" ${next ? `onclick="location.hash='#/alumnes/${encodeURIComponent(next.code)}'"` : 'disabled'} aria-label="${L('Següent', 'Siguiente')}">${ico('chevron-right')}</button>
-      <button class="btn sm" onclick="printReport(${js(r.code)})">${ico('printer')}${L('Imprimeix', 'Imprimir')}</button><button class="ib" onclick="closeDrawer()" aria-label="${L('Tanca', 'Cerrar')}">${ico('x')}</button></div></div>
+      ${ADMIN ? `<button class="btn sm" onclick="closeDrawer(true);location.hash='#/ia/${encodeURIComponent(r.code)}'">${ico('sparkles')}${L('Pregunta a la IA', 'Pregunta a la IA')}</button>` : ''}<button class="btn sm" onclick="printReport(${js(r.code)})">${ico('printer')}${L('Imprimeix', 'Imprimir')}</button><button class="ib" onclick="closeDrawer()" aria-label="${L('Tanca', 'Cerrar')}">${ico('x')}</button></div></div>
     <div class="dr-b">${reportHTML(r, false)}</div></aside>`);
   $$('tbody tr').forEach(t => t.classList.toggle('sel', t.dataset.c === code));
   loadDrawerBat(code);
   requestAnimationFrame(() => { const d = $('.drawer'); if (d && !d.contains(document.activeElement)) d.focus(); });
 }
 function closeDrawer(silent) { const had = $('.drawer'); $$('.drawer,.scrim').forEach(x => x.remove()); $$('tbody tr.sel').forEach(t => t.classList.remove('sel')); if (had && !silent && closeDrawer.from && document.contains(closeDrawer.from)) closeDrawer.from.focus(); if (!silent && /^#\/alumnes\/./.test(location.hash)) history.replaceState(null, '', '#/alumnes'); }
+// Numi Tech a la fitxa: progrés per curs, sessions recents, temps, insígnies i projectes
+const TFEEL = ['😎 Molt fàcil|😎 Muy fácil', '🙂 Bé|🙂 Bien', "🤔 Li ha costat|🤔 Le ha costado", '😵 Molt difícil|😵 Muy difícil'];
+const techName = id => { const T = typeof TECH_T !== 'undefined' ? TECH_T : null, x = T && T.s[id]; return x ? `${tx(T.courses[x.c].n)} · U${x.u}.${x.n} · ${tx(x.t)}` : id; };
+function techSecHTML(r, sec) {
+  const T = typeof TECH_T !== 'undefined' ? TECH_T : null, S = r.tech.s, ids = Object.keys(S);
+  if (!ids.length && r.variant !== 'tech') return '';
+  const done = ids.filter(k => S[k].done), mins = Math.round(ids.reduce((a, k) => a + (S[k].ms || 0), 0) / 60000);
+  const per = T ? Object.entries(T.courses).map(([c, x]) => [c, x, done.filter(k => T.s[k] && T.s[k].c === c).length]).filter(([, , n]) => n || 0) : [];
+  const rec = ids.filter(k => S[k].d).sort((a, b) => S[b].d.localeCompare(S[a].d)).slice(0, 8);
+  const part = ids.filter(k => !S[k].done && S[k].i);
+  const feel = done.map(k => S[k].f).filter(v => v != null), hard = feel.filter(v => v >= 2).length;
+  const bd = Object.entries(r.tech.badges);
+  const body = `<div class="stats4"><div><span>${L('Sessions fetes', 'Sesiones hechas')}</span><b class="num">${done.length}</b></div><div><span>${L('A mitges', 'A medias')}</span><b class="num">${part.length}</b></div><div><span>${L('Temps', 'Tiempo')}</span><b class="num">${mins >= 60 ? `${Math.floor(mins / 60)} h ${mins % 60}` : `${mins} min`}</b></div><div><span>${L('Projectes', 'Proyectos')}</span><b class="num">${r.tech_port.length}</b></div></div>
+    ${per.map(([c, x, n]) => `<div class="snt"><span>${esc(tx(x.n))}</span><div class="bar"><i style="width:${Math.round(100 * n / x.total)}%;background:#2F5BEA"></i></div><span class="p num">${n}/${x.total}</span></div>`).join('')}
+    ${rec.length ? `<table class="mini-t" style="margin-top:10px"><thead><tr><th>${L('Sessió', 'Sesión')}</th><th>${L('Dia', 'Día')}</th><th>${L('Com li ha anat', 'Cómo le ha ido')}</th></tr></thead><tbody>${rec.map(k => `<tr><td>${esc(techName(k))}${S[k].done ? '' : ` <span class="t3">(${L('a mitges', 'a medias')})</span>`}</td><td>${fdate(S[k].d)}</td><td>${S[k].f != null ? esc(tx(TFEEL[S[k].f] || '')) : '—'}</td></tr>`).join('')}</tbody></table>` : `<p class="t3">${L('Encara no ha començat cap sessió.', 'Aún no ha empezado ninguna sesión.')}</p>`}
+    ${hard >= 2 ? `<p class="t2" style="margin-top:8px">${L(`Ha marcat ${hard} sessions com a difícils: potser li convé repetir-ne alguna.`, `Ha marcado ${hard} sesiones como difíciles: quizá le convenga repetir alguna.`)}</p>` : ''}
+    ${bd.length ? `<p style="margin-top:10px">${bd.map(([k, d]) => { const b = T && T.badges[k]; return `<span class="chip" title="${fdate(d)}">${b ? b.ico + ' ' + esc(tx(b.n)) : esc(k)}</span>`; }).join(' ')}</p>` : ''}
+    ${r.tech_port.length ? `<details class="more" style="margin-top:10px"><summary>${ico('chevron-right')}${L('Projectes desats', 'Proyectos guardados')} (${r.tech_port.length})</summary><ul class="bullets">${r.tech_port.slice().reverse().map(p => `<li>${esc(tx(p.t))} · ${fdate(p.d)}</li>`).join('')}</ul></details>` : ''}`;
+  return sec('Numi Tech', body);
+}
+function mentSecHTML(r, sec) {
+  if (r.variant !== 'ment' && !r.ment.days) return '';
+  const t = r.ment.tests, last = t[t.length - 1];
+  return sec('Numi Ment', `<div class="stats4"><div><span>${L('Dies entrenats', 'Días entrenados')}</span><b class="num">${r.ment.days}</b></div><div><span>${L('Tests de la ment', 'Tests de la mente')}</span><b class="num">${t.length}</b></div><div><span>${L('Última edat de la ment', 'Última edad de la mente')}</span><b class="num">${last ? last.age : '—'}</b></div><div><span>${L('Jocs amb nivell', 'Juegos con nivel')}</span><b class="num">${Object.keys(r.ment.lvl).length}</b></div></div>`);
+}
+const APPN = { mates: 'Numi Mates', pro: 'Numi Pro', ment: 'Numi Ment', tech: 'Numi Tech' };
+// el nivell que es mostra: a Numi Tech i Numi Ment no hi ha curs de primària/ESO
+const cursOf = r => r.variant === 'tech' || r.variant === 'ment' ? APPN[r.variant] : curs(r.course);
+async function doApps(code) { const apps = $$('#dapps input:checked').map(i => i.value); const j = await act('apps', { code, apps }); if (j.ok) { toast(L('Apps actualitzades.', 'Apps actualizadas.')); reload(); } else toast(L("No s'ha pogut canviar.", 'No se ha podido cambiar.')); }
 function reportHTML(r, print) {
   const s = r.sent, best = Object.entries(s).filter(([, x]) => x.t >= 20).sort((a, b) => b[1].pct - a[1].pct);
   const pts = [];
@@ -587,14 +700,19 @@ function reportHTML(r, print) {
     return `<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="${L("Proves d'evolució", 'Pruebas de evolución')}"><g stroke="#E4E0EA">${GL.map(v => `<line x1="${P}" x2="${W - P}" y1="${ys(v)}" y2="${ys(v)}"/>`).join('')}</g><g font-size="10" fill="#857C90">${GL.map(v => `<text x="2" y="${ys(v) + 3}">${v}</text>`).join('')}</g>
       <polyline fill="none" stroke="#602B7A" stroke-width="2" points="${tests.map((t, i) => `${xs(i)},${ys(t.pct)}`).join(' ')}"/>${tests.map((t, i) => `<circle cx="${xs(i)}" cy="${ys(t.pct)}" r="4" fill="${t.kind === 'inicial' ? '#fff' : '#602B7A'}" stroke="#602B7A" stroke-width="2"/>`).join('')}</svg>`; })() : '';
   const sec = (t, body, cls = '') => `<section class="dsec ${cls}"><h3>${t}</h3>${body}</section>`;
+  const onlyOther = (r.variant === 'tech' || r.variant === 'ment') && !r.answers && !r.exams.length && !r.tests.length;
   const access = print ? '' : sec(L('Accés', 'Acceso'), `<dl class="dl"><dt>${L("Codi de l'alumne", 'Código del alumno')}</dt><dd><span class="mono">${esc(r.code)}</span> <button class="ib sm" onclick="copyTxt(${js(r.code)})" aria-label="${L('Copia', 'Copiar')}">${ico('copy')}</button></dd>
-      <dt>${L('Usuari', 'Usuario')}</dt><dd>${r.username ? '@' + esc(r.username) : L('Entra amb codi', 'Entra con código')}</dd></dl>
+      <dt>${L('Usuari', 'Usuario')}</dt><dd>${r.username ? '@' + esc(r.username) : L('Entra amb codi', 'Entra con código')}</dd><dt>App</dt><dd>${esc(APPN[r.variant] || 'Numi Mates')}${r.apps.length ? ' + ' + r.apps.map(a => esc(APPN[a])).join(', ') : ''}</dd></dl>
+      ${ADMIN ? `<div id="dapps" style="margin-top:12px"><b style="font-weight:600">${L('Pot entrar també a', 'También puede entrar en')}</b><div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:6px">${Object.entries(APPN).filter(([k]) => k !== (r.variant || 'mates')).map(([k, n]) => `<label class="switch"><input type="checkbox" value="${k}" ${r.apps.includes(k) ? 'checked' : ''} onchange="doApps(${js(r.code)})"><span>${n}</span></label>`).join('')}</div><small class="t3">${L('Amb el mateix usuari i el mateix Premium.', 'Con el mismo usuario y el mismo Premium.')}</small></div>` : ''}
       ${r.username ? `<div style="margin-top:12px"><button class="btn sm" onclick="pwForm(${js(r.code)})">${ico('key-round')}${L('Canvia la contrasenya', 'Cambiar la contraseña')}</button><div id="pwf"></div></div>` : ''}
       <label class="switch" style="margin-top:16px"><input type="checkbox" ${r.unlock_all ? 'checked' : ''} onchange="doUnlock(${js(r.code)},this.checked)"><span><b style="font-weight:600">${L('Mode mestre: obre totes les unitats', 'Modo maestro: abre todas las unidades')}</b><br><small class="t3">${L("L'alumne podrà fer qualsevol unitat sense passar la porta.", 'El alumno podrá hacer cualquier unidad sin pasar la puerta.')}</small></span></label>
       ${ADMIN ? `<div class="inline-form"><label class="field"><span>${L('Pla', 'Plan')}</span><select onchange="doPla(${js(r.code)},this.value)">${[['free', 'Gratuït|Gratuito'], ['premium', 'Premium|Premium'], ['escola', 'Escola|Escuela']].map(([k, t]) => `<option value="${k}" ${r.pla === k ? 'selected' : ''}>${tx(t)}</option>`).join('')}</select></label>${uInfo(r.code)}
         <label class="field"><span>${L('Grup', 'Grupo')}</span><select onchange="doAssign(${js(r.code)},this.value)"><option value="">${L('Sense grup', 'Sin grupo')}</option>${GRUPS.map(g => `<option value="${g.id}" ${g.id === r.grup_id ? 'selected' : ''}>${esc(g.nom)} · ${esc(g.centre)}</option>`).join('')}</select></label>
         <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn danger sm" onclick="doBaixa(${js(r.code)})">${ico('user-minus')}${L('Dona de baixa', 'Dar de baja')}</button><button class="btn danger solid sm" onclick="uErase(${js(r.code)})">${ico('trash-2')}${L('Esborra les dades', 'Borrar los datos')}</button></div></div>` : r.grup_id ? `<button class="btn sm" style="margin-top:12px" onclick="doTreure(${js(r.code)})">${ico('user-minus')}${L('Treu del grup', 'Quitar del grupo')}</button>` : ''}`);
-  return `
+  if (onlyOther) return `${techSecHTML(r, sec)}${mentSecHTML(r, sec)}
+    ${sec(L('Hàbit', 'Hábito'), `<div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap"><div class="cal">${cal.map(o => `<i class="${o ? 'on' : ''}"></i>`).join('')}</div></div>`)}
+    ${access}`;
+  return `${techSecHTML(r, sec)}${mentSecHTML(r, sec)}
     ${sec(L('Resum', 'Resumen'), `<div class="stats4"><div><span>${L('Dies actius (30 d)', 'Días activos (30 d)')}</span><b class="num">${r.act30}</b></div><div><span>${L('Lliçons fetes', 'Lecciones hechas')}</span><b class="num">${r.lessons}</b></div><div><span>${L('Precisió', 'Precisión')}</span><b class="num">${r.acc == null ? '—' : r.acc + ' %'}</b></div><div><span>${L('Ratxa · millor', 'Racha · mejor')}</span><b class="num">${r.idle != null && r.idle <= 1 ? r.streak : 0} · ${r.best} ${L('dies', 'días')}</b></div></div>`)}
     ${sec(L('Sentits del currículum', 'Sentidos del currículo'), Object.keys(SENT).map(k => { const x = s[k], b = band(x.pct, x.t); return `<div class="snt"><span>${tx(SENT[k][0])}</span><div class="bar"><i style="width:${x.pct || 0}%;background:var(--${b === 'none' ? 'none' : b}-fill)"></i></div><span class="p num">${x.pct == null ? '—' : x.pct + ' %'}</span><small class="t3 num">(${x.t} ${L('resp.', 'resp.')})</small><span class="chip ${b}">${tx(BAND[b])}</span></div>`; }).join(''))}
     ${sec(L("Proves d'evolució", 'Pruebas de evolución'), tests.length ? chart + `<p class="t2" style="margin:8px 0 0;font-size:13px">${tests.map((t, i) => `${fdate(t.date)} · ${t.pct} %${t.kind === 'inicial' ? ` (${L('inicial', 'inicial')})` : i ? ` (${t.pct - tests[i - 1].pct >= 0 ? '+' : ''}${t.pct - tests[i - 1].pct})` : ''}`).join(' · ')}</p>` : `<p class="t3" style="margin:0">${L("Encara no ha fet cap prova. La primera surt als 14 dies d'haver començat.", 'Aún no ha hecho ninguna prueba. La primera sale a los 14 días de empezar.')}</p>`)}
@@ -612,7 +730,7 @@ function printReport(code) {
   let p = $('#print'); if (!p) { p = document.createElement('div'); p.id = 'print'; document.body.appendChild(p); }
   const today = new Date().toLocaleDateString(LANG === 'es' ? 'es-ES' : 'ca-ES', { day: 'numeric', month: 'long', year: 'numeric' });
   p.innerHTML = `<div class="ph"><img src="img/brand/logo-horitzontal.svg" alt="Numi Mates"><div>${esc(ADMIN ? '' : ME.centre || '')}${r.grup_id ? ' · ' + esc(gName(r.grup_id)) : ''}<br>${L('Informe de tutoria', 'Informe de tutoría')} · ${today}</div></div>
-    <h1>${esc(r.name)} <span style="font-weight:400;color:#574E62;font-size:12pt">· ${curs(r.course)}</span></h1>${reportHTML(r, true)}
+    <h1>${esc(r.name)} <span style="font-weight:400;color:#574E62;font-size:12pt">· ${cursOf(r)}</span></h1>${reportHTML(r, true)}
     <div class="pf">${L(`Dades des de l'inici fins al ${fdate(TODAY)}`, `Datos desde el inicio hasta el ${fdate(TODAY)}`)} · Numi Mates</div>`;
   if (notes) $('#pnotes', p).innerHTML = `<p style="margin-top:8px;white-space:pre-wrap"><b>${L('Notes', 'Notas')}:</b> ${esc(notes)}</p>`;
   document.body.classList.add('printing'); setTimeout(() => { window.print(); document.body.classList.remove('printing'); }, 50);
@@ -644,11 +762,43 @@ function grupCard(g) {
     <div class="codebox"><code>${esc(g.codi)}</code><button class="ib" title="${L('Copia el codi', 'Copiar el código')}" onclick="copyTxt(${js(g.codi)},L('Codi copiat','Código copiado'))">${ico('copy')}</button><button class="ib" title="${L('Mostra el codi a la pissarra', 'Mostrar el código en la pizarra')}" onclick="projectar(${g.id})">${ico('qr-code')}</button></div>
     <button class="btn full" onclick="copyInstr(${js(g.codi)})">${ico('copy')}${L('Copia les instruccions', 'Copiar las instrucciones')}</button>
     <div class="foot">${L("Els alumnes l'escriuen a Perfil → Tinc un codi de classe", 'Los alumnos lo escriben en Perfil → Tengo un código de clase')}</div>
-    <hr class="gsep">${temaField(g)}
+    <hr class="gsep">${appField(g)}${(g.opts || {}).app === 'tech' ? techField(g) : temaField(g)}
     <details class="more gopts"><summary>${ico('chevron-right')}${L('Mode escola', 'Modo escuela')}<small>${modeSummary(g)}</small></summary>
       <p class="t3" style="margin:8px 0 4px;font-size:12.5px">${L("Tria què poden fer els alumnes d'aquest grup a l'app. Les lliçons, els repassos i la porta sempre hi són.", 'Elige qué pueden hacer los alumnos de este grupo en la app. Las lecciones, los repasos y la puerta siempre están.')}</p>
       ${[['batalles', L('Batalles entre alumnes', 'Batallas entre alumnos')], ['intercanvis', L('Intercanvi de cartes', 'Intercambio de cartas')], ['xat', L('Assistent amb IA (Numi Pro) · apagat si no l\'enceneu', 'Asistente con IA (Numi Pro) · apagado si no lo encendéis')]].map(([k, t]) => `<label class="switch"><input type="checkbox" ${(k === 'xat' ? (g.opts || {}).xat === true : (g.opts || {})[k] !== false) ? 'checked' : ''} onchange="grupOpt(${g.id},'${k}',this.checked,this)"><span>${t}</span></label>`).join('')}
     </details></div>`;
+}
+// app del grup: Numi Mates (per defecte) o Numi Tech (extraescolars de programació i robòtica amb classe guiada)
+function appField(g) {
+  const app = (g.opts || {}).app === 'tech' ? 'tech' : 'mates';
+  return `<label class="field"><span>${L('App del grup', 'App del grupo')}</span><select onchange="grupApp(${g.id},this.value)"><option value="mates" ${app === 'mates' ? 'selected' : ''}>Numi Mates</option><option value="tech" ${app === 'tech' ? 'selected' : ''}>Numi Tech</option></select></label>`;
+}
+// Numi Tech: cursos assignats al grup i fins a quina sessió és obert cada curs (el professor l'avança a cada classe)
+function techField(g) {
+  const T = typeof TECH_T !== 'undefined' ? TECH_T : null; if (!T) return '';
+  const t = (g.opts || {}).tech || {}, cs = t.courses || [], fins = t.fins || {};
+  const sess = c => Object.entries(T.s).filter(([, x]) => x.c === c);
+  return `<div class="tfield"><span class="flbl">${L('Cursos de Numi Tech', 'Cursos de Numi Tech')}</span>
+    ${Object.entries(T.courses).map(([c, x]) => `<div class="tcourse"><label class="switch"><input type="checkbox" ${cs.includes(c) ? 'checked' : ''} onchange="grupTech(${g.id},'course',${js(c)},this.checked)"><span><b style="font-weight:600">${esc(tx(x.n))}</b> <small class="t3">${esc(tx(x.age))} · ${x.ready ? L(`${x.ready} de ${x.total} sessions fetes`, `${x.ready} de ${x.total} sesiones hechas`) : L('en preparació', 'en preparación')}</small></span></label>
+      ${cs.includes(c) ? `<label class="field" style="margin:6px 0 0 44px"><span>${L('Obert fins a', 'Abierto hasta')}</span><select onchange="grupTech(${g.id},'fins',${js(c)},this.value)"><option value="tot" ${!fins[c] || fins[c] === 'tot' ? 'selected' : ''}>${L('Totes les sessions', 'Todas las sesiones')}</option>${sess(c).map(([id, s]) => `<option value="${id}" ${fins[c] === id ? 'selected' : ''}>U${s.u}.${s.n} · ${esc(tx(s.t))}</option>`).join('')}</select><small>${L("Amb classe guiada, obriu la sessió del dia: els alumnes no poden passar d'aquí (les fetes sempre les poden repetir).", 'Con clase guiada, abrid la sesión del día: los alumnos no pueden pasar de aquí (las hechas siempre las pueden repetir).')}</small></label>
+      <div style="margin:6px 0 0 44px"><a class="btn sm" href="#/material/${encodeURIComponent(c)}">${ico('graduation-cap')}${L('Material del professor', 'Material del profesor')}</a></div>` : ''}</div>`).join('')}
+    <small class="t3">${L('Enllaç per als alumnes', 'Enlace para los alumnos')}: <span class="mono">tech.numimates.com/?classe=${esc(g.codi)}</span> <button class="ib sm" onclick="copyTxt(${js('https://tech.numimates.com/?classe=' + g.codi)},L('Enllaç copiat','Enlace copiado'))">${ico('copy')}</button></small></div>`;
+}
+async function grupApp(id, app) {
+  const g = GRUPS.find(x => x.id === id), o = { ...(g.opts || {}) };
+  if (app === 'tech') { o.app = 'tech'; o.tech = o.tech || { courses: ['robot'], fins: {}, casa: true }; } else { delete o.app; delete o.tech; }
+  const j = await act('grup_opts', { id, opts: o, app_canvi: true });
+  if (!j.ok) return toast(L("No s'ha pogut desar.", 'No se ha podido guardar.'));
+  g.opts = j.opts; vGrups(); toast(app === 'tech' ? L('El grup ara és de Numi Tech.', 'El grupo ahora es de Numi Tech.') : L('El grup ara és de Numi Mates.', 'El grupo ahora es de Numi Mates.'));
+}
+async function grupTech(id, what, c, v) {
+  const g = GRUPS.find(x => x.id === id), o = { ...(g.opts || {}) }, t = { courses: [], fins: {}, casa: true, ...(o.tech || {}) };
+  if (what === 'course') t.courses = v ? [...new Set([...t.courses, c])] : t.courses.filter(x => x !== c);
+  if (what === 'fins') t.fins = { ...t.fins, [c]: v };
+  o.app = 'tech'; o.tech = t;
+  const j = await act('grup_opts', { id, opts: o });
+  if (!j.ok) return toast(L("No s'ha pogut desar.", 'No se ha podido guardar.'));
+  g.opts = j.opts; vGrups(); toast(L("Desat. Els alumnes ho veuran en obrir l'app.", 'Guardado. Los alumnos lo verán al abrir la app.'));
 }
 // tema que es treballa a classe: l'app el mostra a la pantalla principal i en fa pràctiques (70 % tema, 30 % repàs)
 function temaField(g) {
@@ -794,7 +944,7 @@ function download(name, head, rows) {
   const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([s], { type: 'text/csv' }));
   const g = G ? gName(+G).replace(/\W+/g, '-').toLowerCase() : 'tots'; a.download = `numi-${g}-${name}-${TODAY}.csv`; a.click();
 }
-function csvResum() { download('resum', [L('Alumne', 'Alumno'), L('Usuari', 'Usuario'), L('Codi', 'Código'), L('Grup', 'Grupo'), L('Nivell', 'Nivel'), L('Última activitat', 'Última actividad'), L('Dies actius (14 d)', 'Días activos (14 d)'), L('Lliçons', 'Lecciones'), L('Precisió %', 'Precisión %'), L('Última prova %', 'Última prueba %'), L('Porta (última)', 'Puerta (última)'), 'XP', L('Ratxa', 'Racha')], filteredOrScope().map(r => [r.name, r.username || '', r.code, gName(r.grup_id), curs(r.course), r.last_day || '', r.act14, r.lessons, r.acc ?? '', r.lt ? r.lt.pct : '', r.exams[0] ? `${r.exams[0].uid} ${to12(r.exams[0].best)}/12` : '', r.xp, r.streak])); }
+function csvResum() { download('resum', [L('Alumne', 'Alumno'), L('Usuari', 'Usuario'), L('Codi', 'Código'), L('Grup', 'Grupo'), L('Nivell', 'Nivel'), L('Última activitat', 'Última actividad'), L('Dies actius (14 d)', 'Días activos (14 d)'), L('Lliçons', 'Lecciones'), L('Precisió %', 'Precisión %'), L('Última prova %', 'Última prueba %'), L('Porta (última)', 'Puerta (última)'), 'XP', L('Ratxa', 'Racha')], filteredOrScope().map(r => [r.name, r.username || '', r.code, gName(r.grup_id), cursOf(r), r.last_day || '', r.act14, r.lessons, r.acc ?? '', r.lt ? r.lt.pct : '', r.exams[0] ? `${r.exams[0].uid} ${to12(r.exams[0].best)}/12` : '', r.xp, r.streak])); }
 function csvSentits() { download('sentits', [L('Alumne', 'Alumno'), ...Object.keys(SENT).flatMap(k => [tx(SENT[k][0]) + ' %', tx(SENT[k][0]) + ' ' + L('respostes', 'respuestas')])], scope().map(r => [r.name, ...Object.keys(SENT).flatMap(k => [r.sent[k].pct ?? '', r.sent[k].t])])); }
 function csvPorta() { download('porta', [L('Alumne', 'Alumno'), L('Unitat', 'Unidad'), L('Millor /12', 'Mejor /12'), L('Última /12', 'Última /12'), L('Intents', 'Intentos'), L('Superada', 'Superada')], scope().flatMap(r => r.exams.map(x => [r.name, unitName(x.uid), to12(x.best), to12(x.last), x.tries || 1, x.best >= 75 ? L('sí', 'sí') : 'no']))); }
 const filteredOrScope = () => $('#tbl') ? filtered() : scope();
@@ -864,7 +1014,7 @@ function uEstat(u) {
   if (u.caducat) return `<span class="t3">${L('Premium caducat el', 'Premium caducado el')} ${fdate(u.pla_fins)}</span>`;
   return '<span class="t3">—</span>';
 }
-const UFILT = () => [['tots', L('Tots', 'Todos')], ['pagament', L('De pagament', 'De pago')], ['manual', L('Manual', 'Manual')], ['free', L('Gratuïts', 'Gratuitos')], ['escola', L('Escola', 'Escuela')], ['nous', L('Nous (7 dies)', 'Nuevos (7 días)')], ['inactius', L('Inactius +30 dies', 'Inactivos +30 días')], ['familia', L('Amb família', 'Con familia')], ['proves', L('Proves', 'Pruebas')], ['pro', 'Numi Pro'], ['ment', 'Numi Ment'], ['baixa', L('Baixa', 'Baja')]];
+const UFILT = () => [['tots', L('Tots', 'Todos')], ['pagament', L('De pagament', 'De pago')], ['manual', L('Manual', 'Manual')], ['free', L('Gratuïts', 'Gratuitos')], ['escola', L('Escola', 'Escuela')], ['nous', L('Nous (7 dies)', 'Nuevos (7 días)')], ['inactius', L('Inactius +30 dies', 'Inactivos +30 días')], ['familia', L('Amb família', 'Con familia')], ['proves', L('Proves', 'Pruebas')], ['pro', 'Numi Pro'], ['ment', 'Numi Ment'], ['tech', 'Numi Tech'], ['baixa', L('Baixa', 'Baja')]];
 // comptes de prova: nom, usuari o codi que comencen (o són) «prova», «test», «zz», «mostra», «demo»…
 const uIsTest = u => [u.name, u.username, u.code].some(x => x && /^(zz|xx|test|prova|prueba|mostra|muestra|demo|asdf|qwe|aaa)|\b(test|prova|prueba|proves|pruebas)\b/i.test(String(x).trim()));
 let USEL = new Set();
@@ -892,7 +1042,7 @@ function uList() {
     if (UF.f === 'nous') return u.cat !== 'baixa' && daysAgo(u.alta) <= 7;
     if (UF.f === 'inactius') return u.cat !== 'baixa' && (u.idle == null || u.idle > 30);
     if (UF.f === 'familia') return u.cat !== 'baixa' && u.fam > 0;
-    if (UF.f === 'pro' || UF.f === 'ment') return u.cat !== 'baixa' && u.variant === UF.f;
+    if (UF.f === 'pro' || UF.f === 'ment' || UF.f === 'tech') return u.cat !== 'baixa' && (u.variant === UF.f || (Array.isArray(u.apps) && u.apps.includes(UF.f)));
     if (UF.f === 'proves') return uIsTest(u);
     return u.cat === UF.f;
   });
@@ -956,7 +1106,7 @@ function uTable() {
   const R = uList(), shown = R.slice(0, UF.n), el = $('#utbl'); if (!el) return;
   const sLink = UD.stripe && UD.stripe.mode === 'live' ? 'https://dashboard.stripe.com' : 'https://dashboard.stripe.com/test';
   el.innerHTML = !R.length ? `<div class="card">${emptyState('users', L('Cap usuari amb aquest filtre', 'Ningún usuario con este filtro'), L('Canvia la cerca o el filtre.', 'Cambia la búsqueda o el filtro.'))}</div>` : `<div class="tw us"><table><thead><tr><th>${L('Usuari', 'Usuario')}</th><th>${L('Pla', 'Plan')}</th><th>${L('Estat', 'Estado')}</th><th>${L('Alta', 'Alta')}</th><th>${L('Última activitat', 'Última actividad')}</th><th class="r">${L('Curs', 'Curso')}</th><th class="r">${L('Lliçons', 'Lecciones')}</th><th class="r">XP</th><th></th></tr></thead><tbody>
-    ${shown.map(u => `<tr onclick="if(!event.target.closest('a,label'))uOpen(${js(u.code)})"><td class="c-n"><div class="nm"><label class="usel" title="${L('Selecciona', 'Selecciona')}"><input type="checkbox" ${USEL.has(u.code) ? 'checked' : ''} onchange="uSel(${js(u.code)},this.checked)"></label><div><b>${esc(u.name)}${u.variant === 'pro' || u.variant === 'ment' ? ` <span class="varb ${u.variant}">${u.variant === 'pro' ? 'PRO' : 'MENT'}</span>` : ''}${u.fam ? ` <span class="famb" title="${L('Té la família vinculada a la zona de famílies', 'Tiene la familia vinculada en la zona de familias')}">👪</span>` : ''}</b><small class="mono">${esc(u.username || u.code)}</small></div></div></td><td class="c-p">${uPla(u)}</td><td class="c-e" data-l="${L('Estat', 'Estado')}">${uEstat(u)}</td>
+    ${shown.map(u => `<tr onclick="if(!event.target.closest('a,label'))uOpen(${js(u.code)})"><td class="c-n"><div class="nm"><label class="usel" title="${L('Selecciona', 'Selecciona')}"><input type="checkbox" ${USEL.has(u.code) ? 'checked' : ''} onchange="uSel(${js(u.code)},this.checked)"></label><div><b>${esc(u.name)}${u.variant === 'pro' || u.variant === 'ment' || u.variant === 'tech' ? ` <span class="varb ${u.variant}">${u.variant.toUpperCase()}</span>` : ''}${u.fam ? ` <span class="famb" title="${L('Té la família vinculada a la zona de famílies', 'Tiene la familia vinculada en la zona de familias')}">👪</span>` : ''}</b><small class="mono">${esc(u.username || u.code)}</small></div></div></td><td class="c-p">${uPla(u)}</td><td class="c-e" data-l="${L('Estat', 'Estado')}">${uEstat(u)}</td>
       <td class="c-a" data-l="${L('Alta', 'Alta')}">${fdate(u.alta)}${u.alta.slice(0, 4) !== TODAY.slice(0, 4) ? ' ' + u.alta.slice(0, 4) : ''}</td><td class="c-u" data-l="${L('Última activitat', 'Última actividad')}">${u.last_day ? ago(u.last_day) : `<span class="t3">${L('mai', 'nunca')}</span>`}</td>
       <td class="r num">${u.course != null ? (u.course | 0) + 1 : '—'}</td><td class="r num">${u.lessons || 0}</td><td class="r num">${(u.xp || 0).toLocaleString(LANG)}</td>
       <td class="r">${u.stripe_customer ? `<a class="ib" href="${sLink}/customers/${encodeURIComponent(u.stripe_customer)}" target="_blank" rel="noopener" title="${L('Obre a Stripe', 'Abrir en Stripe')}">${ico('external-link')}</a>` : ''}</td></tr>`).join('')}</tbody></table></div>
@@ -991,8 +1141,8 @@ async function uSub(code, resume) {
 }
 function uCsv() {
   const q = csvQ;
-  const head = ['codi', 'usuari', 'nom', 'pla', 'periode', 'estat_stripe', 'cancel·la', 'premium_des_de', 'premium_fins', 'alta', 'ultima_activitat', 'curs', 'llicons', 'xp', 'grup', 'centre', 'familia'];
-  const rows = uList().map(u => [u.code, u.username, u.name, tx(CAT[u.cat]), u.pla_periode, u.stripe_status, u.pla_cancel ? 'sí' : '', u.pla_des ? String(u.pla_des).slice(0, 10) : '', u.renova || (u.pla_fins ? String(u.pla_fins).slice(0, 10) : ''), u.alta, u.last_day || '', u.course != null ? (u.course | 0) + 1 : '', u.lessons || 0, u.xp || 0, u.grup, u.centre, u.fam ? 'sí' : ''].map(q).join(';'));
+  const head = ['codi', 'usuari', 'nom', 'app', 'pla', 'periode', 'estat_stripe', 'cancel·la', 'premium_des_de', 'premium_fins', 'alta', 'ultima_activitat', 'curs', 'llicons', 'xp', 'grup', 'centre', 'familia'];
+  const rows = uList().map(u => [u.code, u.username, u.name, APPN[u.variant] || 'Numi Mates', tx(CAT[u.cat]), u.pla_periode, u.stripe_status, u.pla_cancel ? 'sí' : '', u.pla_des ? String(u.pla_des).slice(0, 10) : '', u.renova || (u.pla_fins ? String(u.pla_fins).slice(0, 10) : ''), u.alta, u.last_day || '', u.course != null ? (u.course | 0) + 1 : '', u.lessons || 0, u.xp || 0, u.grup, u.centre, u.fam ? 'sí' : ''].map(q).join(';'));
   const blob = new Blob(['﻿' + [head.join(';'), ...rows].join('\n')], { type: 'text/csv;charset=utf-8' });
   const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `numi-usuaris-${TODAY}.csv`; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 1000);
 }
