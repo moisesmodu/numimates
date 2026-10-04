@@ -86,6 +86,10 @@ function makeBit() {
   const eL = new THREE.Mesh(eyeG, m.eye), eR = new THREE.Mesh(eyeG, m.eye); eL.position.x = -.11; eR.position.x = .11;
   const shine = new THREE.Mesh(g.sph, new THREE.MeshBasicMaterial({ color: '#FFFFFF' })); shine.scale.setScalar(.016); shine.position.set(.015, .03, .045);
   eL.add(shine.clone()); eR.add(shine.clone()); eyes.add(eL, eR); head.add(eyes);
+  // ulls d'alegria (∩) i de tristesa (∪), per als retrats
+  const arcG = new THREE.TorusGeometry(.045, .016, 6, 16, Math.PI), joy = new THREE.Group(), sad = new THREE.Group();
+  [-.11, .11].forEach(x => { const a = new THREE.Mesh(arcG, m.eye); a.position.set(x, .04, .265); joy.add(a); const b = new THREE.Mesh(arcG, m.eye); b.rotation.z = Math.PI; b.position.set(x, .06, .265); sad.add(b); });
+  joy.visible = sad.visible = false; head.add(joy, sad);
   const smile = new THREE.Mesh(new THREE.TorusGeometry(.045, .011, 6, 16, Math.PI), m.eye); smile.rotation.z = Math.PI; smile.position.set(0, -.07, .265); head.add(smile);
   [-1, 1].forEach(s => head.add(mesh(g.cyl, m.bodyB, { p: [s * .305, 0, 0], s: [.08, .04, .08], r: [0, 0, Math.PI / 2] })));
   head.add(mesh(g.cyl, m.arm, { p: [0, .3, 0], s: [.016, .14, .016] }));
@@ -95,7 +99,7 @@ function makeBit() {
   carry.add(mesh(g.box, new THREE.MeshStandardMaterial({ map: texs().crate, roughness: .8 }), { s: .3 })); body.add(carry);
   bit.traverse(o => { if (o.isMesh) o.castShadow = true; });
   bit.scale.setScalar(1.05);
-  return { bit, body, head, eyes, wheels, arms, led, bulb, carry };
+  return { bit, body, head, eyes, joy, sad, smile, wheels, arms, led, bulb, carry };
 }
 /* ---------- L'illa ---------- */
 export function create(el, W, S, opt = {}) {
@@ -304,3 +308,30 @@ export function create(el, W, S, opt = {}) {
 }
 // es pot fer servir WebGL en aquest aparell?
 export function ok() { try { const c = document.createElement('canvas'); return !!(window.WebGLRenderingContext && (c.getContext('webgl2') || c.getContext('webgl'))); } catch (e) { return false; } }
+
+/* ---------- Retrats d'en Bit (imatges per a la resta de l'app i les presentacions) ---------- */
+export function portrait(pose = 'idle', size = 640) {
+  const r = new THREE.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: true });
+  r.setSize(size, size); r.setPixelRatio(1); r.outputColorSpace = THREE.SRGBColorSpace; r.toneMapping = THREE.ACESFilmicToneMapping; r.toneMappingExposure = 1.15;
+  r.shadowMap.enabled = true; r.shadowMap.type = THREE.PCFSoftShadowMap;
+  const sc = new THREE.Scene(), cam = new THREE.PerspectiveCamera(28, 1, .1, 50);
+  sc.add(new THREE.HemisphereLight('#E6F4FF', '#8090B0', 1.3));
+  const key = new THREE.DirectionalLight('#FFF3DC', 2.4); key.position.set(2.5, 4, 3.5); key.castShadow = true; key.shadow.mapSize.set(1024, 1024); sc.add(key);
+  const rim = new THREE.DirectionalLight('#9CC2FF', 1.4); rim.position.set(-3, 2, -2); sc.add(rim);
+  const b = makeBit(); b.bit.scale.setScalar(1); sc.add(b.bit);
+  // ombra rodona a terra
+  const sh = new THREE.Mesh(new THREE.CircleGeometry(.42, 32), new THREE.ShadowMaterial({ opacity: .22 })); sh.rotation.x = -Math.PI / 2; sh.receiveShadow = true; sc.add(sh);
+  const A = b.arms, H = b.head;
+  const up = (a, s, z) => { a.rotation.z = s * z; if (Math.abs(z) > 1.5) { a.scale.set(2, 2, 2); a.rotation.x = 0; } };
+  if (pose === 'happy') { up(A[0], -1, 1.0); up(A[1], 1, 1.0); H.rotation.z = .1; b.eyes.visible = false; b.joy.visible = true; }
+  if (pose === 'win') { up(A[0], -1, 1.95); up(A[1], 1, 1.95); b.body.position.y = .12; b.eyes.visible = false; b.joy.visible = true; }
+  if (pose === 'dance') { up(A[0], -1, 1.95); up(A[1], 1, -.3); b.body.rotation.z = .14; H.rotation.z = -.16; b.eyes.visible = false; b.joy.visible = true; }
+  if (pose === 'wave') { up(A[1], 1, 1.95); A[1].rotation.x = -.2; H.rotation.z = .08; }
+  if (pose === 'think') { A[1].rotation.z = 1.6; A[1].rotation.x = -1.1; H.rotation.z = .18; H.rotation.x = -.06; b.eyes.position.x = .03; b.eyes.position.y = .07; }
+  if (pose === 'sad') { H.rotation.x = .28; up(A[0], -1, -.15); up(A[1], 1, -.15); b.eyes.visible = false; b.sad.visible = true; b.smile.rotation.z = 0; b.smile.position.y = -.1; }
+  b.bit.rotation.y = pose === 'side' ? .9 : -.32;
+  cam.position.set(1.0, 1.05, 2.9); cam.lookAt(0, .62, 0);
+  if (pose === 'win') cam.lookAt(0, .7, 0);
+  r.render(sc, cam);
+  const url = r.domElement.toDataURL('image/png'); r.dispose(); return url;
+}

@@ -166,7 +166,7 @@ function logout() { sessionStorage.clear(); D = null; ROWS = []; GRUPS = []; ME 
 function setLang(l, onLogin) { LANG = l; store.set('numi-profe-lang', l); document.documentElement.lang = l; if (onLogin && !D) return login(); ROWS = (D?.rows || []).map(enrich); route.last = null; route(); }
 
 /* ---------- carcassa ---------- */
-const NAV = () => [['resum', 'layout-dashboard', L('Resum', 'Resumen')], ['alumnes', 'users', L('Alumnes', 'Alumnos'), scope().length], ['grups', 'school', L('Grups', 'Grupos')], ['batalles', 'swords', L('Batalles', 'Batallas')], ['informes', 'chart-column', L('Informes', 'Informes')]];
+const NAV = () => [['resum', 'layout-dashboard', L('Resum', 'Resumen')], ['material', 'graduation-cap', L('Material Tech', 'Material Tech')], ['alumnes', 'users', L('Alumnes', 'Alumnos'), scope().length], ['grups', 'school', L('Grups', 'Grupos')], ['batalles', 'swords', L('Batalles', 'Batallas')], ['informes', 'chart-column', L('Informes', 'Informes')]];
 const ADMIN_NAV = () => { const seen = +store.get('numi-profe-sol', 0), nou = (D.contacts || []).filter(c => new Date(c.created_at).getTime() > seen).length; return [['ia', 'sparkles', L('Assistent IA', 'Asistente IA')], ['usuaris', 'crown', L('Usuaris i Premium', 'Usuarios y Premium')], ['centres', 'building-2', L('Centres', 'Centros')], ['docents', 'graduation-cap', L('Docents', 'Docentes')], ['totsgrups', 'layout-grid', L('Tots els grups', 'Todos los grupos')], ['sollicituds', 'inbox', L('Sol·licituds', 'Solicitudes'), nou, true], ['activitat', 'activity', L('Activitat', 'Actividad')], ['correus', 'mail', L('Correus', 'Correos')]]; };
 function shell(view, title, body, { acts = '', fluid = false, switcher = true } = {}) {
   const na = ([k, ic, t, n, isNew]) => `<a href="#/${k}" class="${view === k ? 'on' : ''}" title="${esc(t)}">${ico(ic, 'i20')}<span>${esc(t)}</span>${n ? `<i class="badge ${isNew ? 'new' : ''}">${n}</i>` : ''}</a>`;
@@ -206,7 +206,7 @@ function route() {
   const h = location.hash.replace(/^#\/?/, '').split('?')[0], [v, arg] = h.split('/');
   if (v === 'alumnes' && route.last === 'alumnes' && $('#tbl')) { if (arg) openDrawer(decodeURIComponent(arg), true); else if ($('.drawer')) closeDrawer(true); return; }
   route.last = v;
-  const V = { resum: vResum, alumnes: vAlumnes, grups: vGrups, batalles: vBatalles, informes: vInformes, guia: vGuia, compte: vCompte };
+  const V = { resum: vResum, alumnes: vAlumnes, grups: vGrups, batalles: vBatalles, informes: vInformes, guia: vGuia, compte: vCompte, material: () => vMaterial(arg ? decodeURIComponent(arg) : 'robot', h.split('/')[2] ? decodeURIComponent(h.split('/')[2]) : '') };
   if (ADMIN) Object.assign(V, { ia: () => vIA(arg ? decodeURIComponent(arg) : ''), usuaris: vUsuaris, centres: vCentres, docents: vDocents, totsgrups: vTotsGrups, sollicituds: vSol, activitat: vActivitat, correus: vCorreus });
   (V[v] || vResum)(arg);
   if (v === 'alumnes' && arg) openDrawer(decodeURIComponent(arg), true); else if ($('.drawer')) closeDrawer(true);
@@ -346,6 +346,44 @@ const MTPL = `<!doctype html>
   </div>
 </div>
 </body></html>`;
+
+/* ---------- Material del professor de Numi Tech: guia de cada sessió, presentació i fitxes ---------- */
+const MFASE = { inici: ['Inici', 'Inicio', '#2F5BEA'], teoria: ['Teoria', 'Teoría', '#8B5CF6'], desconnectat: ['Sense pantalla', 'Sin pantalla', '#F08A24'], ordinador: ["A l'ordinador", 'En el ordenador', '#14A3B8'], crea: ['Crea', 'Crea', '#1FA463'], tancament: ['Tancament', 'Cierre', '#E5489A'] };
+const hasGuide = id => typeof TGUIDE !== 'undefined' && !!TGUIDE[id];
+function vMaterial(c, sid) {
+  const T = typeof TECH_T !== 'undefined' ? TECH_T : null; if (!T || !T.courses[c]) return shell('material', L('Material del professor', 'Material del profesor'), `<div class="card pad">${L('No hi ha aquest curs.', 'No existe este curso.')}</div>`, { switcher: false });
+  const C = T.courses[c], sess = Object.entries(T.s).filter(([, x]) => x.c === c);
+  const tabs = `<div class="mtabs">${Object.entries(T.courses).map(([k, x]) => `<a href="#/material/${k}" class="${k === c ? 'on' : ''}">${esc(tx(x.n))}</a>`).join('')}</div>`;
+  if (sid && T.s[sid]) return matSession(c, sid, tabs);
+  const units = {}; sess.forEach(([id, x]) => (units[x.u] ||= []).push([id, x]));
+  const body = `${tabs}<p class="t2" style="margin:4px 0 16px">${esc(tx(C.age))} · ${C.units} ${L('unitats', 'unidades')} · ${C.total} ${L('sessions de 60 minuts', 'sesiones de 60 minutos')}. ${L('Cada sessió té la guia (objectius, pla de la classe, errors típics i avaluació), la presentació per projectar i les fitxes per imprimir.', 'Cada sesión tiene la guía (objetivos, plan de la clase, errores típicos y evaluación), la presentación para proyectar y las fichas para imprimir.')}</p>
+    ${Object.entries(units).map(([u, list]) => `<div class="card pad munit"><h3>${L('Unitat', 'Unidad')} ${u} · ${esc(tx(T.units[c + ':' + u] || ''))}</h3><div class="mlist">${list.map(([id, x]) => { const g = hasGuide(id);
+      return `<a class="msess ${g ? '' : 'off'}" href="${g ? `#/material/${c}/${id}` : 'javascript:void 0'}"><span class="mn">${x.n}</span><span><b>${esc(tx(x.t))}</b><small>${x.proj ? L('Projecte · ', 'Proyecto · ') : ''}${g ? L('Guia, presentació i fitxes', 'Guía, presentación y fichas') : L('En preparació', 'En preparación')}</small></span>${g ? ico('chevron-right') : ''}</a>`; }).join('')}</div></div>`).join('')}`;
+  shell('material', L('Material del professor', 'Material del profesor'), body, { switcher: false });
+}
+function matSession(c, sid, tabs) {
+  const T = TECH_T, x = T.s[sid], G = TGUIDE[sid];
+  if (!G) return shell('material', tx(x.t), `${tabs}<div class="card pad">${L('Aquesta sessió encara no té material.', 'Esta sesión aún no tiene material.')}</div>`, { switcher: false });
+  const list = a => `<ul class="bullets">${(a || []).map(v => `<li>${tx(v)}</li>`).join('')}</ul>`;
+  const sec = (t, b) => `<section class="card pad msec"><h3>${t}</h3>${b}</section>`;
+  let t0 = 0;
+  const plan = G.plan.map(p => { const f = MFASE[p.fase] || MFASE.inici, a = t0; t0 += p.min;
+    return `<div class="mblk" style="--fc:${f[2]}"><div class="mt"><b>${a}′–${t0}′</b><span>${p.min} min</span></div><div class="mb"><span class="mf">${esc(LANG === 'es' ? f[1] : f[0])}</span><h4>${esc(tx(p.t))}</h4><p>${tx(p.fa)}</p>
+      ${p.diu && p.diu.length ? `<div class="mdiu"><b>${L('Què podeu dir', 'Qué podéis decir')}</b><ul>${p.diu.map(d => `<li>«${tx(d)}»</li>`).join('')}</ul></div>` : ''}
+      <div class="mmeta">${p.org ? `<span>👥 ${esc(tx(p.org))}</span>` : ''}${p.app ? `<span>💻 ${tx(p.app)}</span>` : ''}${p.slides && p.slides.length ? `<span>🖥️ ${L('Diapositives', 'Diapositivas')} ${p.slides.map(id => G.slides.findIndex(z => z.id === id) + 1).join(', ')}</span>` : ''}</div></div></div>`; }).join('');
+  const href = n => `presenta.html?s=${sid}&l=${LANG}${n ? '&n=1' : ''}`;
+  const body = `${tabs}<div class="mhead card pad"><div><p class="t3" style="margin:0">${esc(tx(T.courses[c].n))} · ${L('Unitat', 'Unidad')} ${x.u} · ${L('Sessió', 'Sesión')} ${x.n}${x.proj ? ' · ' + L('Projecte', 'Proyecto') : ''} · 60 min</p><h2>${esc(tx(x.t))}</h2></div>
+      <div class="macts"><a class="btn primary" href="${href(0)}" target="_blank" rel="noopener">${ico('maximize-2')}${L('Presenta', 'Presentar')}</a><a class="btn" href="${href(1)}" target="_blank" rel="noopener">${ico('eye')}${L('Presenta amb notes', 'Presentar con notas')}</a><a class="btn" href="imprimeix.html?s=${sid}&l=${LANG}" target="_blank" rel="noopener">${ico('printer')}${L('Fitxes per imprimir', 'Fichas para imprimir')}</a><a class="btn" href="imprimeix.html?s=${sid}&l=${LANG}&g=1" target="_blank" rel="noopener">${ico('download')}${L('Guia en PDF', 'Guía en PDF')}</a></div></div>
+    <div class="mgrid">${sec(L('Objectius', 'Objetivos'), list(G.obj))}${sec(L('Competències i currículum', 'Competencias y currículo'), list(G.comp))}</div>
+    ${sec(L('Pla de la classe (60 minuts)', 'Plan de la clase (60 minutos)'), `<div class="mbar">${G.plan.map(p => `<i style="flex:${p.min};background:${(MFASE[p.fase] || MFASE.inici)[2]}" title="${esc(tx(p.t))} · ${p.min} min"></i>`).join('')}</div>${plan}`)}
+    <div class="mgrid">${sec(L('Materials', 'Materiales'), `<b>${L('A l\'aula', 'En el aula')}</b>${list(G.mat.aula)}<b>${L('Per imprimir', 'Para imprimir')}</b>${list(G.mat.imprimir)}<b>${L('Abans de la classe', 'Antes de la clase')}</b>${list(G.mat.prep)}`)}
+      ${sec(L('Vocabulari', 'Vocabulario'), `<dl class="dl">${G.vocab.map(([a, b]) => `<dt>${esc(tx(a))}</dt><dd>${tx(b)}</dd>`).join('')}</dl>`)}</div>
+    ${sec(L('Errors típics i com ajudar', 'Errores típicos y cómo ayudar'), `<table class="mini-t"><thead><tr><th>${L('Error', 'Error')}</th><th>${L('Com ajudar (sense donar la resposta)', 'Cómo ayudar (sin dar la respuesta)')}</th></tr></thead><tbody>${G.errors.map(([a, b]) => `<tr><td>${tx(a)}</td><td>${tx(b)}</td></tr>`).join('')}</tbody></table>`)}
+    <div class="mgrid">${sec(L('Atenció a la diversitat', 'Atención a la diversidad'), `<p><b>${L('Per als que acaben abans', 'Para los que acaban antes')}:</b> ${tx(G.diff.mes)}</p><p><b>${L('Per als que necessiten suport', 'Para los que necesitan apoyo')}:</b> ${tx(G.diff.menys)}</p>`)}
+      ${sec(L('Avaluació', 'Evaluación'), `<b>${L('Tiquet de sortida', 'Ticket de salida')}</b>${list(G.aval.ticket)}<table class="mini-t"><thead><tr><th>${L('Criteri', 'Criterio')}</th><th>${L('Assolit', 'Logrado')}</th><th>${L('En procés', 'En proceso')}</th></tr></thead><tbody>${G.aval.rubric.map(([a, b, c2]) => `<tr><td>${tx(a)}</td><td>${tx(b)}</td><td>${tx(c2)}</td></tr>`).join('')}</tbody></table>`)}</div>
+    ${sec(L('A casa', 'En casa'), `<p>${tx(G.casa)}</p>`)}`;
+  shell('material', tx(x.t), body, { switcher: false });
+}
 
 /* ---------- Assistent amb IA (només administració): analitza les dades de totes les apps i redacta; no fa cap canvi ---------- */
 const PIA = { msgs: [], code: '', busy: false };

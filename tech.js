@@ -245,8 +245,8 @@ const TSTEP = {
   quiz(st) {
     const order = st.keep ? st.opts.map((_, i) => i) : shuffle(st.opts.map((_, i) => i));
     let pick = null;
-    $('#tsb').innerHTML = `<div class="tcol">${st.who ? tBubble(st.who, tval(st.q)) : `<h2 class="tsq">${tval(st.q)}</h2>`}${st.art ? `<div class="tart sm">${typeof st.art === 'function' ? st.art() : st.art}</div>` : ''}${st.w ? (() => { const W = bitWorld(st.w); return `<div class="tart sm">${bitSVG(W, bitSim(W))}</div>`; })() : ''}
-      <div class="topts ${st.grid ? 'grid' : ''}">${order.map(i => `<button class="topt" data-i="${i}">${tval(st.opts[i])}</button>`).join('')}</div><div class="tfb" id="tfb"></div></div>`;
+    $('#tsb').innerHTML = `<div class="tcol">${st.who ? tBubble(st.who, tval(st.q)) : `<div class="tqh"><span class="tqbit">${bitChar('think')}</span><h2 class="tsq">${tval(st.q)}</h2></div>`}${st.art ? `<div class="tart sm">${typeof st.art === 'function' ? st.art() : st.art}</div>` : ''}${st.w ? (() => { const W = bitWorld(st.w); return `<div class="tart sm">${bitSVG(W, bitSim(W))}</div>`; })() : ''}
+      <div class="topts ${st.grid ? 'grid' : ''}">${order.map((i, k) => `<button class="topt" data-i="${i}"><span class="tol">${'ABCDEF'[k]}</span><span class="tot">${tval(st.opts[i])}</span></button>`).join('')}</div><div class="tfb" id="tfb"></div></div>`;
     document.querySelectorAll('.topt').forEach(b => b.onclick = () => { if (TSS.ready) return; pick = +b.dataset.i; document.querySelectorAll('.topt').forEach(x => x.classList.toggle('on', x === b)); SFX.tap && SFX.tap(); tFoot(L('Comprova', 'Comprueba'), check); });
     const check = () => {
       if (pick === null) return; TSS.ready = true;
@@ -262,7 +262,7 @@ const TSTEP = {
   seq(st) {
     const pool = shuffle(st.items.map((_, i) => i)), got = [];
     const draw = () => {
-      $('#tsb').innerHTML = `<div class="tcol">${st.who ? tBubble(st.who, tval(st.q)) : `<h2 class="tsq">${tval(st.q)}</h2>`}
+      $('#tsb').innerHTML = `<div class="tcol">${st.who ? tBubble(st.who, tval(st.q)) : `<div class="tqh"><span class="tqbit">${bitChar('think')}</span><h2 class="tsq">${tval(st.q)}</h2></div>`}
         <ol class="tseq">${got.map(i => `<li><button data-i="${i}" class="tsqi in">${tval(st.items[i])}</button></li>`).join('')}${got.length < st.items.length ? `<li class="tsqh">${L('Toca el pas que va ara', 'Toca el paso que va ahora')}</li>` : ''}</ol>
         <div class="tseqp">${pool.filter(i => !got.includes(i)).map(i => `<button data-i="${i}" class="tsqi">${tval(st.items[i])}</button>`).join('')}</div><div class="tfb" id="tfb"></div></div>`;
       document.querySelectorAll('.tsqi').forEach(b => b.onclick = () => { if (TSS.ready) return; const i = +b.dataset.i; if (b.classList.contains('in')) got.splice(got.indexOf(i), 1); else got.push(i); SFX.tap && SFX.tap(); draw(); });
@@ -395,24 +395,6 @@ function tSaveProj(st) {
   t.port.push({ id: 'pj' + Date.now().toString(36), sid: TSS.id, t: st.name || TSS.s.t, w: st.w, prog: bitClone(TB.prog), fns: st.fns || null, d: today() });
   if (t.port.length > 60) t.port.shift();
   save(); toast(L('Projecte desat a «Projectes»!', '¡Proyecto guardado en «Proyectos»!'));
-}
-
-/* ---------- En Bit, de cara (per a les històries) ---------- */
-function bitChar(mood = 'idle') {
-  const eyes = mood === 'win' ? '<path d="M-17 -6q5 -6 10 0M7 -6q5 -6 10 0" stroke="#7DF3FF" stroke-width="4" fill="none" stroke-linecap="round"/>'
-    : mood === 'sad' ? '<path d="M-17 -4q5 4 10 0M7 -4q5 4 10 0" stroke="#7DF3FF" stroke-width="4" fill="none" stroke-linecap="round"/>'
-    : '<rect x="-17" y="-11" width="9" height="12" rx="4.5" fill="#7DF3FF"/><rect x="8" y="-11" width="9" height="12" rx="4.5" fill="#7DF3FF"/>';
-  const mouth = mood === 'sad' ? '<path d="M-7 12q7 -5 14 0" stroke="#7DF3FF" stroke-width="3" fill="none" stroke-linecap="round"/>' : '<path d="M-8 9q8 7 16 0" stroke="#7DF3FF" stroke-width="3" fill="none" stroke-linecap="round"/>';
-  const arms = mood === 'win' || mood === 'dance' ? '<path d="M-38 20 L-52 -2" stroke="#20306A" stroke-width="7" stroke-linecap="round"/><path d="M38 20 L52 -2" stroke="#20306A" stroke-width="7" stroke-linecap="round"/><circle cx="-53" cy="-4" r="6" fill="#FFC531" stroke="#20306A" stroke-width="2.5"/><circle cx="53" cy="-4" r="6" fill="#FFC531" stroke="#20306A" stroke-width="2.5"/>'
-    : '<path d="M-38 22 L-50 40" stroke="#20306A" stroke-width="7" stroke-linecap="round"/><path d="M38 22 L50 40" stroke="#20306A" stroke-width="7" stroke-linecap="round"/><circle cx="-51" cy="42" r="6" fill="#FFC531" stroke="#20306A" stroke-width="2.5"/><circle cx="51" cy="42" r="6" fill="#FFC531" stroke="#20306A" stroke-width="2.5"/>';
-  return `<svg class="bitc m-${mood}" viewBox="-64 -78 128 156" aria-hidden="true"><defs><linearGradient id="bcB" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#BFD0F7"/></linearGradient></defs>
-    <ellipse cx="0" cy="72" rx="34" ry="6" fill="#0B1838" opacity=".15"/>
-    <path d="M0 -44V-62" stroke="#20306A" stroke-width="4"/><circle cy="-66" r="7" fill="#FFC531" stroke="#20306A" stroke-width="3" class="bcant"/>
-    ${arms}
-    <rect x="-30" y="22" width="60" height="40" rx="12" fill="url(#bcB)" stroke="#20306A" stroke-width="3.5"/><circle cy="40" r="7" fill="#3D8BFF" stroke="#20306A" stroke-width="2.5"/>
-    <rect x="-24" y="60" width="14" height="12" rx="4" fill="#2A3557"/><rect x="10" y="60" width="14" height="12" rx="4" fill="#2A3557"/>
-    <rect x="-40" y="-46" width="80" height="66" rx="20" fill="url(#bcB)" stroke="#20306A" stroke-width="3.5"/>
-    <rect x="-30" y="-36" width="60" height="44" rx="13" fill="#20306A"/>${eyes}${mouth}</svg>`;
 }
 
 /* ---------- Catàleg: quan encara no hi ha cap curs assignat ---------- */

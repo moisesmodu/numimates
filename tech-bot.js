@@ -524,3 +524,12 @@ function tbReset() { if (TB.run) tbStop(); tbFresh(); tbRedrawWorld(); tbSay('')
 function tbSpeed() { TB.speed = TB.speed === 2 ? 1 : 2; const b = document.querySelector('.trun .ico[aria-label="' + L('Velocitat', 'Velocidad') + '"]'); if (b) b.textContent = TB.speed === 2 ? '×2' : '×1'; }
 // executa sense dibuixar (per saber on acaba un programa, per a les preguntes de «on acabarà?»)
 function bitFinal(spec, prog, fns) { const W = bitWorld(spec), S = bitSim(W); const g = bitRun(W, S, prog, fns); while (!g.next().done); return { W, S }; }
+
+/* ---------- En Bit, de cara (per a les històries) ---------- */
+// en Bit de cos sencer: un render 3D (img/tech/bit-<posa>.webp, fet amb scripts/3d/portraits.mjs) dins d'un SVG,
+// perquè encaixi a tots els llocs on abans hi havia el dibuix (mides, escenes i animacions)
+const BIT_POSE = { idle: 'idle', happy: 'happy', win: 'win', sad: 'sad', dance: 'dance', think: 'think', wave: 'wave' };
+function bitChar(mood = 'idle') {
+  return `<svg class="bitc m-${mood}" viewBox="-64 -78 128 156" aria-hidden="true"><image href="img/tech/bit-${BIT_POSE[mood] || 'idle'}.webp" x="-64" y="-78" width="128" height="156" preserveAspectRatio="xMidYMax meet"/></svg>`;
+}
+

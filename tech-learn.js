@@ -115,7 +115,7 @@ const TANI = {
 };
 
 /* ---------- Pas «learn»: targetes de teoria ---------- */
-TSTEP.learn = function (st) {
+if (typeof TSTEP !== 'undefined') TSTEP.learn = function (st) {
   let i = 0, seen = 0;
   const cards = st.cards;
   const draw = (dir = 0) => {
