@@ -504,7 +504,7 @@ function tbWorldHTML() {
   const ar = Math.max(.56, Math.min(1.05, (TB.W.h + 1.8) / (TB.W.w + 1.2) * .82));
   const alts = TB.alts ? `<div class="talts">${TB.alts.map((_, i) => `<button class="${i === TB.altI ? 'on' : ''} ${TB.altOk.has(i) ? 'ok' : ''}" onclick="tbAlt(${i})">${TB.altOk.has(i) ? '✓ ' : ''}${L('Illa', 'Isla')} ${i + 1}</button>`).join('')}</div>` : '';
   const evb = TB.evs && TB.mode === 'edit' ? `<div class="tevb">${Object.keys(TB.evs).map(e => `<button class="tevk" id="tev${e}" onclick="tbPress('${e}')" aria-label="${L('Prem el botó', 'Pulsa el botón')} ${e}">${e}</button>`).join('')}${TB.evtest ? `<button class="btn ghost tevt" onclick="tbEvTest()">${L('Comprova', 'Comprueba')}</button>` : ''}</div>` : '';
-  return `<div class="tworld" id="tworld">${alts}<div class="b3d" id="b3d" style="aspect-ratio:${(1 / ar).toFixed(3)}">${bitSVG(TB.W, TB.S, { marks: TB.marks })}<div class="thud" id="thud">${tbHudHTML()}</div></div>${evb}<p class="tsay" id="tsay" aria-live="polite"></p>${TB.runbar || ''}</div>`;
+  return `<div class="tworld" id="tworld">${alts}<div class="b3d" id="b3d" style="aspect-ratio:${(1 / ar).toFixed(3)};--ar:${(1 / ar).toFixed(3)}">${bitSVG(TB.W, TB.S, { marks: TB.marks })}<div class="thud" id="thud">${tbHudHTML()}</div></div>${evb}<p class="tsay" id="tsay" aria-live="polite"></p>${TB.runbar || ''}</div>`;
 }
 // marcador sobre el món: el comptador, la melodia i els llums que demana el repte (i com van)
 function tbHudHTML() {

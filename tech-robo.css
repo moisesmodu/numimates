@@ -74,3 +74,15 @@
 .rdmh{display:block;margin:10px 2px 6px;font-size:14px;text-transform:uppercase;letter-spacing:.05em;color:var(--mut)}
 .rdgoals{display:grid;gap:6px}.rdgoals label{display:flex;gap:8px;align-items:center;font-weight:700;font-size:14.5px;background:#fff;border:2px solid var(--line);border-radius:12px;padding:8px 10px}
 .rdgoals input{width:20px;height:20px;accent-color:var(--pri)}
+/* mòbil: el panell del robot en una sola fila compacta perquè l'arena i el programa hi càpiguen */
+@media (max-width:899px){
+  .tsbody>.tstage .rdash{display:flex;gap:6px;align-items:stretch}
+  .tsbody>.tstage .rmb{grid-template-columns:auto auto auto;grid-template-rows:auto;padding:4px 6px;gap:4px;border-radius:12px}
+  .tsbody>.tstage .rmbm{grid-column:auto;width:38px;height:38px;padding:2px;border-radius:6px}
+  .tsbody>.tstage .rbtn.big{width:28px;height:28px;font-size:12px}
+  .tsbody>.tstage .rsens{display:flex;gap:4px;overflow-x:auto;flex:1;min-width:0;scrollbar-width:none}
+  .tsbody>.tstage .rsens::-webkit-scrollbar{display:none}
+  .tsbody>.tstage .rs{flex:none;padding:2px 7px;border-radius:9px}
+  .tsbody>.tstage .rs small{font-size:9.5px}.tsbody>.tstage .rs b{font-size:13.5px}
+  .tsbody>.tstage .rln i{width:15px;height:15px;font-size:10px}
+}

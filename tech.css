@@ -601,3 +601,75 @@ span.tb.c-cond{color:#3A2600}
 .trev.pg .trdots{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin:2px 0 12px}
 .trev.pg .trdots button{width:34px;height:34px;border-radius:50%;border:2px solid var(--line);background:#fff;font-weight:900;color:var(--mut)}
 .trev.pg .trdots button.ok{background:#E3F7EC;border-color:#3CC47C;color:#1E8A50}.trev.pg .trdots button.on{border-color:var(--pri);color:var(--pri);box-shadow:0 0 0 3px #DCE5FF}
+
+/* ===== Editors de blocs (en Bit, Maqueen, escenari): tot en una pantalla, sense baixar =====
+   Mòbil: enunciat · món + Executa · programa (es desplaça per dins) · paleta en una tira a baix.
+   Ordinador: món i Executa a l'esquerra; programa i paleta a la dreta. */
+.tsbody:has(>.tstage){display:flex;flex-direction:column;overflow:hidden;padding:8px 10px 6px;gap:8px}
+.tsbody:has(>.tstage)>*{width:100%}
+.tsbody:has(>.tstage)>.tsq2{flex:none;margin:0}
+.tsbody>.tstage{flex:1;min-height:0;display:grid;gap:8px;grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(0,1fr);align-items:stretch}
+.tsbody>.tstage>.tworld{min-height:0;display:flex;flex-direction:column;gap:6px;padding:6px}
+.tsbody>.tstage .tworld :is(.b3d,.rarena,.sstage){flex:none;width:min(100%,calc(var(--wh,32vh) * var(--ar,1.6)));max-height:none;margin:0 auto}
+.tsbody>.tstage .rarena{--ar:var(--ar2)}.tsbody>.tstage .rarena.on3d{--ar:var(--ar3)}.tsbody>.tstage .sstage{--ar:1.3333}
+.tsbody>.tstage .tworld .bitw{max-height:none}
+.tsbody>.tstage .tworld .trun{margin-top:0}
+.tsbody>.tstage .tworld .tsay:not(:empty){margin-top:0;padding:6px 10px;font-size:14px}
+.tsbody>.tstage>.tcode{min-height:0;display:flex;flex-direction:column;gap:6px;overflow:hidden}
+.tsbody>.tstage>.tcode>*{flex:none}
+.tsbody>.tstage>.tcode :is(#tprog,#rprog,#sprog,.tprog:not(.mini)){flex:1 1 auto;min-height:56px;max-height:none;overflow-y:auto;overscroll-behavior:contain}
+.tsbody>.tstage>.tcode .tprog2{flex:0 1 auto;min-height:0;overflow:auto}
+.tsbody>.tstage>.tcode .tpal{flex:none;flex-wrap:nowrap;overflow-x:auto;overflow-y:hidden;gap:6px;padding:2px 2px 6px;scroll-snap-type:x proximity;-webkit-overflow-scrolling:touch}
+.tsbody>.tstage>.tcode .tpal .tpb{flex:0 0 auto;min-width:0;max-width:260px;scroll-snap-align:start}
+.tsbody>.tstage>.tcode .tpal button.tb{min-height:44px;font-size:14px}
+.tsq2{display:flex;gap:10px;align-items:flex-start}
+.tsbody:has(>.tstage)>.tsq2 p{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;margin:0;font-size:15.5px;line-height:1.35;cursor:pointer}
+.tsbody:has(>.tstage)>.tsq2.open p{display:block;-webkit-line-clamp:none}
+.tsbody:has(>.tstage)>.tsq2 .tsqc{flex:none;width:40px}.tsbody:has(>.tstage)>.tsq2 .tsqc svg{width:40px;height:48px}
+.tsbody:has(>.tstage)>.tsq2 .tcrit{margin:4px 0 0;font-size:13.5px}
+@media (min-width:900px){
+  .tsbody>.tstage{grid-template-columns:minmax(0,1.15fr) minmax(330px,1fr);grid-template-rows:minmax(0,1fr)}
+  .tsbody>.tstage>.tworld{position:static;overflow:hidden}
+  .tsbody>.tstage>.tcode .tpal{flex-wrap:wrap;overflow:visible;max-height:none}
+  .tsbody>.tstage>.tcode .tpal .tpb{flex:1 1 calc(50% - 6px);max-width:none}
+  .tsbody:has(>.tstage)>.tsq2 p{-webkit-line-clamp:2;font-size:16.5px}
+}
+.tsbody>.tstage>.tcode .tpal .tbl,.tsbody>.tstage>.tcode .tpal .tbl *{white-space:nowrap}
+@media (min-width:900px){.tsbody>.tstage>.tcode .tpal .tbl,.tsbody>.tstage>.tcode .tpal .tbl *{white-space:normal}}
+.tsbody>.tstage>.tcode .tpal .tbl{flex-wrap:nowrap}@media (min-width:900px){.tsbody>.tstage>.tcode .tpal .tbl{flex-wrap:wrap}}
+/* arrossegar blocs */
+.tsbody>.tstage .tpal .tpb{touch-action:pan-x;cursor:grab}
+.tsbody>.tstage .tcode .tprog .tbh{touch-action:none;cursor:grab}
+.tdghost{position:fixed;left:0;top:0;z-index:9999;pointer-events:none;margin:0!important;opacity:.95;box-shadow:0 14px 30px rgba(27,43,107,.35)!important;border-radius:12px;transition:none}
+.tdlift{opacity:.35}
+.tstage.dnd .tslot{height:12px}
+.tstage.dnd .tslot.drop{height:auto;min-height:40px;border:2px dashed var(--pri);background:#E8EEFF;margin:3px 0;border-radius:10px}
+.tstage.dnd .tslot.drop::after{content:"↓";display:block;text-align:center;color:var(--pri);font-weight:900;line-height:36px}
+.tstage.dnd .tslot.on:not(.drop){min-height:12px;height:12px;border:0;background:transparent}.tstage.dnd .tslot.on:not(.drop) span{display:none}
+.tpal.trash{position:relative;outline:3px dashed #E5484D;outline-offset:2px;border-radius:12px;background:#FDEEEE}
+.tpal.trash::after{content:"🗑";position:absolute;inset:0;display:grid;place-items:center;font-size:28px;background:rgba(253,238,238,.85);border-radius:12px}
+.tdin{animation:tdin .45s cubic-bezier(.3,1.6,.5,1)}@keyframes tdin{from{transform:scale(.9)}}
+@media (prefers-reduced-motion:reduce){.tdin{animation:none}}
+.tstage.dnd .tslot span{display:none}.tdghost{display:flex;align-items:center;gap:8px;padding:8px 12px 8px 8px;font-weight:800;font-size:15px}
+/* ===== Peces de trencaclosques (com Scratch): osca a dalt i pestanya a baix; encaixen una amb l'altra ===== */
+.tstage .tcode{--puz:polygon(0 4px,4px 0,40px 0,45px 5px,61px 5px,66px 0,calc(100% - 4px) 0,100% 4px,100% calc(100% - 9px),calc(100% - 4px) calc(100% - 5px),66px calc(100% - 5px),61px 100%,45px 100%,40px calc(100% - 5px),4px calc(100% - 5px),0 calc(100% - 9px));
+  --puztop:polygon(0 4px,4px 0,40px 0,45px 5px,61px 5px,66px 0,calc(100% - 4px) 0,100% 4px,100% 100%,0 100%);
+  --puzbot:polygon(0 0,100% 0,100% calc(100% - 9px),calc(100% - 4px) calc(100% - 5px),66px calc(100% - 5px),61px 100%,45px 100%,40px calc(100% - 5px),4px calc(100% - 5px),0 calc(100% - 9px))}
+.tstage .tcode .tb:not(.cont)>.tbh{clip-path:var(--puz);border-radius:0;box-shadow:none;padding-top:9px;padding-bottom:11px;min-height:46px}
+.tstage .tcode .tb.cont>.tbh{clip-path:var(--puztop);border-radius:0;padding-top:9px}
+.tstage .tcode .tb.cont>.tbend{clip-path:var(--puzbot);height:17px;border-radius:0}
+.tstage .tcode .tb.cont{border-radius:4px;overflow:visible}
+.tstage .tcode .tb:not(.cont){filter:drop-shadow(0 2px 0 color-mix(in srgb,var(--bc) 58%,#000))}
+.tstage .tcode .tb.sel{filter:drop-shadow(3px 0 0 var(--ink)) drop-shadow(-3px 0 0 var(--ink)) drop-shadow(0 3px 0 var(--ink)) drop-shadow(0 -3px 0 var(--ink))}
+.tstage .tcode .tb.now{filter:brightness(1.1) drop-shadow(4px 0 0 #FFC531) drop-shadow(-4px 0 0 #FFC531) drop-shadow(0 4px 0 #FFC531) drop-shadow(0 -4px 0 #FFC531)}
+.tstage .tcode .tb.err{filter:drop-shadow(4px 0 0 var(--ko)) drop-shadow(-4px 0 0 var(--ko)) drop-shadow(0 4px 0 var(--ko)) drop-shadow(0 -4px 0 var(--ko))}
+.tstage .tcode .tb.good{filter:drop-shadow(4px 0 0 var(--ok)) drop-shadow(-4px 0 0 var(--ok)) drop-shadow(0 4px 0 var(--ok)) drop-shadow(0 -4px 0 var(--ok))}
+.tstage .tcode .tb.sel>.tbh,.tstage .tcode .tb.now>.tbh,.tstage .tcode .tb.err>.tbh,.tstage .tcode .tb.good>.tbh{outline:0;box-shadow:none}
+.tstage .tcode .tb{margin:0}
+/* els buits entre peces no deixen espai: la pestanya de la de dalt entra a l'osca de la de sota */
+.tstage .tcode .tslot:not(.on):not(.drop){height:6px;margin:-8px 0 -3px;position:relative;z-index:1}
+.tstage .tcode .tslot.on{margin:2px 0}
+.tstage .tcode .tbin{padding-top:6px;padding-bottom:4px}
+/* la paleta, amb les mateixes peces */
+.tstage .tcode .tpal button.tb.tpb{clip-path:var(--puz);border-radius:0;box-shadow:inset 0 -8px 0 -3px color-mix(in srgb,var(--bc) 70%,#000);padding-top:10px;padding-bottom:13px}
+.tstage .tcode .tpal button.tb.tpb:active:not(:disabled){transform:translateY(2px)}
