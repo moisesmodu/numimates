@@ -59,9 +59,9 @@ if (typeof TSTEP !== 'undefined') {
   TSTEP.dspot = function (st) {
     const found = new Set(), need = st.need || Object.keys(st.clues).length;
     $('#tsb').innerHTML = `<div class="tcol">${digQ(st)}<div class="dart k-${st.kind || 'mail'}">${digFrame(st)}</div><p class="dcnt" id="dcnt"></p><div class="dclues" id="dclues"></div></div>`;
-    const upd = () => { $('#dcnt').innerHTML = L(`Pistes trobades: <b>${found.size}</b> de ${need}`, `Pistas encontradas: <b>${found.size}</b> de ${need}`); tFoot(L('Continua', 'Continúa'), () => { addXPsafe(3); tNext(); }, found.size >= need); };
+    const upd = () => { $('#dcnt').innerHTML = L(`Pistes trobades: <b>${Math.min(found.size, need)}</b> de ${need}`, `Pistas encontradas: <b>${Math.min(found.size, need)}</b> de ${need}`); tFoot(L('Continua', 'Continúa'), () => { addXPsafe(3); tNext(); }, found.size >= need); };
     document.querySelectorAll('.dart [data-clue]').forEach(e => e.onclick = ev => { ev.preventDefault(); ev.stopPropagation(); const k = e.dataset.clue; if (found.has(k)) return; found.add(k); e.classList.add('found'); SFX.ok && SFX.ok();
-      $('#dclues').insertAdjacentHTML('beforeend', `<div class="dclue"><span>🔎</span><div>${tval(st.clues[k])}</div></div>`); upd(); if (found.size >= need && st.ex) $('#dclues').insertAdjacentHTML('beforeend', `<div class="tfbox ok"><b>${L('Molt bé!', '¡Muy bien!')}</b> ${tval(st.ex)}</div>`); });
+      $('#dclues').insertAdjacentHTML('beforeend', `<div class="dclue"><span>🔎</span><div>${tval(st.clues[k])}</div></div>`); upd(); if (found.size === need && st.ex) $('#dclues').insertAdjacentHTML('beforeend', `<div class="tfbox ok"><b>${L('Molt bé!', '¡Muy bien!')}</b> ${tval(st.ex)}</div>`); });
     document.querySelector('.dart').addEventListener('click', e => { if (e.target.closest('[data-clue]')) return; const t = e.target.closest('.dbody, .dmsg, .dweb'); if (t) { t.classList.remove('nope'); void t.offsetWidth; t.classList.add('nope'); } });
     upd();
   };
@@ -116,9 +116,9 @@ if (typeof TSTEP !== 'undefined') {
     const okf = f => Array.isArray(f.ok) ? f.ok.includes(set[f.k]) : set[f.k] === f.ok;
     const draw = (checked) => {
       $('#tsb').innerHTML = `<div class="tcol">${digQ(st)}<div class="dpriv"><div class="dprof"><div class="dprh"><span class="dav">${st.av || '🦉'}</span><b>${tval(st.name || 'El meu perfil|Mi perfil')}</b></div>
-        ${st.fields.map(f => `<div class="dpf ${checked ? (okf(f) ? 'ok' : 'ko') : ''}"><div><small>${tval(f.t)}</small><b>${tval(f.v)}</b></div><div class="dpw">${['me', 'friends', 'all'].map(o => `<button class="${set[f.k] === o ? 'on' : ''}" data-f="${f.k}" data-o="${o}">${{ me: '🔒', friends: '👥', all: '🌍' }[o]} ${lv[o]}</button>`).join('')}</div>${checked && !okf(f) && f.ex ? `<p class="dpx">${tval(f.ex)}</p>` : ''}</div>`).join('')}</div></div></div>`;
+        ${st.fields.map(f => `<div class="dpf ${checked ? (okf(f) ? 'ok' : 'ko') : ''}"><div><small>${tval(f.t)}</small><b>${tval(f.v)}</b></div><div class="dpw">${['me', 'friends', 'all'].map(o => `<button class="${set[f.k] === o ? 'on' : ''}" data-f="${f.k}" data-o="${o}">${{ me: '🔒', friends: '👥', all: '🌍' }[o]} ${lv[o]}</button>`).join('')}</div>${checked && !okf(f) && f.ex ? `<p class="dpx">${tval(f.ex)}</p>` : ''}</div>`).join('')}</div></div><div id="tfb"></div></div>`;
       document.querySelectorAll('.dpw button').forEach(b => b.onclick = () => { set[b.dataset.f] = b.dataset.o; SFX.tap && SFX.tap(); draw(false); });
-      tFoot(L('Comprova', 'Comprueba'), () => { const all = st.fields.every(okf); draw(true); if (all) { SFX.ok && SFX.ok(); TSS.ok++; tFoot(L('Continua', 'Continúa'), tNext, true); } else SFX.ko && SFX.ko(); }, true);
+      tFoot(L('Comprova', 'Comprueba'), () => { const all = st.fields.every(okf); draw(true); if (all) { SFX.ok && SFX.ok(); TSS.ok++; const fb = document.getElementById('tfb'); if (fb) fb.innerHTML = `<div class="tfbox ok"><b>${L('Molt bé!', '¡Muy bien!')}</b> ${st.ex ? tval(st.ex) : L('Has protegit bé el perfil: només comparteixes amb cada persona el que li toca.', 'Has protegido bien el perfil: solo compartes con cada persona lo que le toca.')}</div>`; tFoot(L('Continua', 'Continúa'), tNext, true); } else SFX.ko && SFX.ko(); }, true);
     };
     draw(false);
   };
