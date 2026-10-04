@@ -172,7 +172,7 @@ ROBOTICA_UNITS[8] = { t: 'El meu robot|Mi robot', d: 'Dissenya, programa i prese
     ] },
   /* ---------- Sessió 3 · Del simulador al robot de veritat ---------- */
   { id: 'k8-3', t: 'Del simulador al robot de veritat|Del simulador al robot de verdad', min: 45, badge: 'k_real',
-    learn: ["El botó </> dona el programa en JavaScript per enganxar-lo a MakeCode i descarregar-lo a la micro:bit.|El botón </> da el programa en JavaScript para pegarlo en MakeCode y descargarlo en la micro:bit.",
+    learn: ["El botó &lt;/&gt; dona el programa en JavaScript per enganxar-lo a MakeCode i descarregar-lo a la micro:bit.|El botón &lt;/&gt; da el programa en JavaScript para pegarlo en MakeCode y descargarlo en la micro:bit.",
       "Al món real, les piles, el terra i els motors canvien una mica el que fa el robot: per això es calibra.|En el mundo real, las pilas, el suelo y los motores cambian un poco lo que hace el robot: por eso se calibra.",
       "Calibrar és mesurar, calcular i ajustar; els programes amb sensors s'adapten sols.|Calibrar es medir, calcular y ajustar; los programas con sensores se adaptan solos."],
     steps: [

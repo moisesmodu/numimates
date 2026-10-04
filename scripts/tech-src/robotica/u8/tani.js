@@ -73,7 +73,7 @@ Object.assign(TANI, (() => {
       const st = [[-90, '📝', L('Planifica', 'Planifica'), '#2F5BEA'], [0, '🧩', L('Programa', 'Programa'), '#8B5CF6'], [90, '▶️', L('Prova', 'Prueba'), '#1FA463'], [180, '🔧', L('Millora', 'Mejora'), '#F08A24']];
       const nodes = st.map(([a, ic, t, col], i) => { const [x, y] = P(a); return `<g transform="translate(${x.toFixed(1)} ${y.toFixed(1)})"><circle r="24" fill="#fff" stroke="${col}" stroke-width="4" filter="url(#bwSh)"/><text y="7" text-anchor="middle" style="font-size:19px">${ic}</text>
         <circle r="30" fill="none" stroke="#FFC531" stroke-width="5" opacity="0">${SM('opacity', '0;1;0;0', 5.5, `keyTimes="0;.06;.25;1" begin="${(i * 1.375).toFixed(3)}s"`)}</circle>
-        <text y="${a === 90 ? 44 : a === -90 ? -32 : 44}" text-anchor="middle" class="tat s" style="fill:${col}">${t}</text></g>`; }).join('');
+        <text y="${a === 90 ? 44 : a === -90 ? -32 : 44}" text-anchor="middle" class="tat s" style="fill:${col};paint-order:stroke;stroke:#F3F6FF;stroke-width:5px">${t}</text></g>`; }).join('');
       const arc = (a0, a1) => { const [x0, y0] = P(a0 + 24), [x1, y1] = P(a1 - 24); return `<path d="M${x0.toFixed(1)} ${y0.toFixed(1)}A${R} ${R} 0 0 1 ${x1.toFixed(1)} ${y1.toFixed(1)}" fill="none" stroke="#B8C6F2" stroke-width="4" stroke-linecap="round"/>`; };
       const dot = `<circle r="6" fill="#FFC531" stroke="#B57A00" stroke-width="1.5"><animateMotion dur="5.5s" repeatCount="indefinite" path="M${C[0]} ${C[1] - R}A${R} ${R} 0 1 1 ${C[0] - .01} ${C[1] - R}"/></circle>`;
       const ver = ['v1', 'v2', 'v3'].map((v, i) => `<text x="${C[0]}" y="${C[1] + 8}" text-anchor="middle" class="tat b" style="font-size:24px;fill:#20306A" opacity="0">${v}${SM('opacity', i === 0 ? '1;1;0;0;1' : i === 1 ? '0;0;1;0;0' : '0;0;0;1;0', 16.5, i === 0 ? 'keyTimes="0;.32;.34;.98;1"' : i === 1 ? 'keyTimes="0;.32;.34;.66;1"' : 'keyTimes="0;.32;.66;.68;1"')}</text>`).join('');
@@ -99,7 +99,7 @@ Object.assign(TANI, (() => {
         <g ${tA(1.4, 'ta-in')}><rect x="212" y="138" width="102" height="62" rx="12" fill="#fff" stroke="#DCE4FA" stroke-width="2" filter="url(#bwSh)"/>
           <text x="263" y="160" text-anchor="middle" class="tat s" style="font-size:12px">${L('Els llums', 'Las luces')}</text><text x="263" y="176" text-anchor="middle" class="tat s" style="font-size:12px">${L('diuen què', 'dicen qué')}</text><text x="263" y="192" text-anchor="middle" class="tat s" style="font-size:12px">${L('pensa!', '¡piensa!')}</text></g>`);
     },
-    // del simulador al robot: el botó </> dona el codi, MakeCode el converteix en un fitxer .hex i el cable el porta a la micro:bit
+    // del simulador al robot: el botó &lt;/&gt; dona el codi, MakeCode el converteix en un fitxer .hex i el cable el porta a la micro:bit
     k8export() {
       const cable = 'M226 116C240 116 244 150 262 150';
       const file = `<g opacity="0">${SM('opacity', '0;0;1;1;0;0', 5.5, 'keyTimes="0;.5;.53;.7;.73;1"')}<rect x="-10" y="-12" width="20" height="24" rx="3" fill="#FFC531" stroke="#B57A00" stroke-width="1.5"/><text y="4" text-anchor="middle" style="font:900 7px Lexend,system-ui;fill:#6B4A00">.hex</text>
@@ -147,8 +147,8 @@ Object.assign(TANI, (() => {
     // presentar la missió com un enginyer/a: quatre parts i la demostració
     k8pitch() {
       const parts = [[L('La missió', 'La misión'), '🎯', '#2F5BEA'], [L('Com funciona', 'Cómo funciona'), '📡', '#8B5CF6'], [L('Un problema', 'Un problema'), '🔧', '#F08A24'], [L('La demo!', '¡La demo!'), '🤖', '#1FA463']];
-      const cards = parts.map(([t, ic, col], i) => `<g ${tA(.3 + i * .8, 'ta-in')}><rect x="180" y="${12 + i * 44}" width="136" height="36" rx="10" fill="#fff" stroke="${col}" stroke-width="2.5" filter="url(#bwSh)"/>
-        <circle cx="196" cy="${30 + i * 44}" r="10" fill="${col}"/><text x="196" y="${35 + i * 44}" text-anchor="middle" class="tat w s">${i + 1}</text><text x="211" y="${34.5 + i * 44}" class="tat s" style="font-size:11.5px">${ic} ${t}</text></g>`).join('');
+      const cards = parts.map(([t, ic, col], i) => `<g ${tA(.3 + i * .8, 'ta-in')}><rect x="176" y="${12 + i * 44}" width="141" height="36" rx="10" fill="#fff" stroke="${col}" stroke-width="2.5" filter="url(#bwSh)"/>
+        <circle cx="190" cy="${30 + i * 44}" r="10" fill="${col}"/><text x="190" y="${35 + i * 44}" text-anchor="middle" class="tat w s">${i + 1}</text><text x="203" y="${34.5 + i * 44}" class="tat s" style="font-size:11.5px">${ic} ${t}</text></g>`).join('');
       const heads = [30, 62, 94, 126, 158].map((x, i) => `<g transform="translate(${x} ${188 + (i % 2) * 4})"><circle r="11" fill="${['#F2B880', '#C98A5B', '#F6D2B0', '#8D5A3B', '#E8B48A'][i]}"/><path d="M-14 22a14 12 0 0 1 28 0z" fill="${['#2F5BEA', '#EF5A5A', '#1FA463', '#F08A24', '#8B5CF6'][i]}"/></g>`).join('');
       return tSvg(214, `<rect x="12" y="14" width="160" height="104" rx="8" fill="#20306A"/><rect x="18" y="20" width="148" height="92" rx="4" fill="#F8F7F2"/>
         <path d="M30 96H90Q104 96 104 82V44" fill="none" stroke="#121418" stroke-width="4" stroke-linecap="round"/>${meta(116, 30, 36, 34)}

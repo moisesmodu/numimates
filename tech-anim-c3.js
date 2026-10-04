@@ -374,7 +374,7 @@ Object.assign(TANI, (() => {
         ${bar(62, 56, 86, L('Hola!', '¡Hola!'), .3)}${pass(158, 70, 110, 1.2)}
         ${bar(150, 124, 102, L('Assagem?', '¿Ensayamos?'), 1.7)}${pass(262, 110, 70, 2.6)}
         ${bar(226, 56, 80, L('Som-hi!', '¡Vamos!'), 3.1)}
-        <g ${tA(1.2, 'ta-fade')}><text x="186" y="94" class="tat s" fill="#B46A00">«tuga»</text></g><g ${tA(2.6, 'ta-fade')}><text x="256" y="94" text-anchor="end" class="tat s" fill="#B46A00">«guida»</text></g>
+        <g ${tA(1.2, 'ta-fade')}><text x="150" y="94" text-anchor="end" class="tat s" fill="#B46A00">«tuga»</text></g><g ${tA(2.6, 'ta-fade')}><text x="256" y="94" text-anchor="end" class="tat s" fill="#B46A00">«guida»</text></g>
         <path d="M62 166H302" stroke="#9AA6C8" stroke-width="3" stroke-linecap="round"/><path d="M296 160l8 6l-8 6" fill="none" stroke="#9AA6C8" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><text x="62" y="186" class="tat s" fill="#6A78A8">${L('el temps passa', 'el tiempo pasa')}</text>
         <text x="160" y="206" text-anchor="middle" class="tat b" ${tA(3.4, 'ta-fade')}>${L('Cada missatge passa el torn', 'Cada mensaje pasa el turno')}</text>`);
     },
@@ -471,7 +471,7 @@ Object.assign(TANI, (() => {
       return tSvg(214, `${lane(10, '')}${pill(22, 16, 150, L('ves a x: 120 y: 0', 've a x: 120 y: 0'))}
         <g><animate attributeName="opacity" values="1;1;0;0;1" keyTimes="0;.3;.31;.95;1" ${D}/>${spr('numi', 0, 62, 66, 40)}</g>
         <g opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;.33;.34;.95;1" ${D}/>${spr('numi', 1, 252, 66, 40)}<text x="196" y="72" text-anchor="middle" class="tat b" fill="#F08A24">${L('zas!', '¡zas!')}</text></g>
-        ${lane(116, '')}${pill(22, 122, 186, L('llisca en 2 s fins a x: 120', 'desliza en 2 s hasta x: 120'))}
+        ${lane(116, '')}${pill(22, 122, 244, L('llisca en 2 s fins a x: 120 y: 0', 'desliza en 2 s hasta x: 120 y: 0'))}
         <path d="M62 174H252" stroke="#3D7BF4" stroke-width="4" stroke-dasharray="2 9" stroke-linecap="round" pathLength="190" stroke-dashoffset="190"><animate attributeName="stroke-dashoffset" values="190;190;0;0;190" keyTimes="0;.2;.75;.95;1" ${D}/></path>
         <g><animateTransform attributeName="transform" type="translate" values="0 0;0 0;190 0;190 0;0 0" keyTimes="0;.2;.75;.95;1" ${D}/>${spr('numi', 0, 62, 172, 40)}</g>`);
     },
@@ -791,7 +791,7 @@ Object.assign(TANI, (() => {
     },
     // el cronòmetre compta cap amunt: el cotxe surt, el cronòmetre corre i, a la meta, es guarda el temps
     g6timer() {
-      const ts = [0, .6, 1.2, 1.8, 2.4, 3.0, 3.6], vals = ['0.0', '0.0', '0.6', '1.2', '1.8', '2.4', '3.0'];
+      const ts = [0, .6, 1.2, 1.8, 2.4, 3.0, 3.6], vals = ['0,0', '0,0', '0,6', '1,2', '1,8', '2,4', '3,0'];
       return tSvg(214, `
         <g ${tA(.1, 'ta-in')}><rect x="8" y="8" width="304" height="104" rx="16" fill="#FFE3D0"/><rect x="8" y="78" width="304" height="34" fill="#A9B0C0"/><path d="M8 95h304" stroke="#fff" stroke-width="3" stroke-dasharray="14 12"/>
           <path d="M276 34v44" stroke="#6B4E36" stroke-width="4"/><path d="M278 34q14 -6 26 0v18q-12 -6 -26 0z" fill="#3CC47C" stroke="#1E8A50" stroke-width="2"/></g>
@@ -799,7 +799,7 @@ Object.assign(TANI, (() => {
         <g ${tA(.2, 'ta-in')}><rect x="20" y="124" width="132" height="80" rx="16" fill="#14204A"/><circle cx="86" cy="136" r="6" fill="#FFC531"/><text x="86" y="198" text-anchor="middle" class="tat s w">${L('cronòmetre', 'cronómetro')} ↑</text></g>
         ${sw(vals.map(v => num(86, 178, v, 34, '#FFC531')), ts)}
         <g opacity="0">${vis(.5, 1)}<text x="86" y="114" text-anchor="middle" class="tat s">${L('a zero!', '¡a cero!')}</text></g>
-        <g opacity="0">${vis(3.8)}<rect x="168" y="132" width="140" height="64" rx="16" fill="#fff" stroke="#E0533F" stroke-width="3"/><text x="180" y="156" class="tat s" fill="#6B7590">${L('segons', 'segundos')}</text>${num(238, 186, '3.0', 28)}</g>`);
+        <g opacity="0">${vis(3.8)}<rect x="168" y="132" width="140" height="64" rx="16" fill="#fff" stroke="#E0533F" stroke-width="3"/><text x="180" y="156" class="tat s" fill="#6B7590">${L('segons', 'segundos')}</text>${num(238, 186, '3,0', 28)}</g>`);
     },
     // la mascota virtual: la gana puja sola, la poma la fa baixar i la cara canvia segons la regla
     g6pet() {

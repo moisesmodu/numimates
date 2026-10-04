@@ -9,6 +9,62 @@ Object.assign(TGUIDE, (() => {
   return {
   /* ---------- Sessió 1 · El meu primer personatge ---------- */
   'g1-1': {
+    intro: "Primera sessió del curs: l'alumnat descobreix l'escenari, els personatges i el guió, i fa moure i parlar el seu primer personatge. La idea central és que un personatge només fa el que diuen els seus blocs, un a un i de dalt a baix, quan es toca la bandera verda. També descobreixen que «mou-te» amb un número negatiu fa anar enrere. La classe comença amb demostracions projectades, continua amb l'activitat de director/a i actor/actriu a l'escenari de terra i acaba a l'ordinador amb quatre reptes i una petita creació.|Primera sesión del curso: el alumnado descubre el escenario, los personajes y el guion, y hace mover y hablar a su primer personaje. La idea central es que un personaje solo hace lo que dicen sus bloques, uno a uno y de arriba abajo, cuando se toca la bandera verde. También descubren que «muévete» con un número negativo hace ir hacia atrás. La clase empieza con demostraciones proyectadas, sigue con la actividad de director/a y actor/actriz en el escenario del suelo y termina en el ordenador con cuatro retos y una pequeña creación.",
+    claus: [
+      "Cada personatge té el seu guió i només fa el que diuen els seus blocs.|Cada personaje tiene su guion y solo hace lo que dicen sus bloques.",
+      "La bandera verda fa començar els guions «Quan comença»; els blocs es fan un a un, de dalt a baix.|La bandera verde hace empezar los guiones «Al empezar»; los bloques se hacen uno a uno, de arriba abajo.",
+      "«Mou-te» amb un número positiu avança cap on mira el personatge; amb un de negatiu, va enrere sense girar-se.|«Muévete» con un número positivo avanza hacia donde mira el personaje; con uno negativo, va hacia atrás sin girarse.",
+      "L'escenari fa 480 passos d'ample: per creuar-lo calen centenars de passos, no deu.|El escenario mide 480 pasos de ancho: para cruzarlo hacen falta centenares de pasos, no diez.",
+      "Provar, mirar el resultat i ajustar el número és la manera normal de treballar.|Probar, mirar el resultado y ajustar el número es la manera normal de trabajar."
+    ],
+    prev: [
+      "No cal haver programat mai: n'hi ha prou amb saber tocar o fer clic i llegir frases curtes.|No hace falta haber programado nunca: basta con saber tocar o hacer clic y leer frases cortas.",
+      "Distingir la dreta de l'esquerra i comptar endavant i enrere en una recta de números (matemàtiques de primària).|Distinguir la derecha de la izquierda y contar hacia delante y hacia atrás en una recta de números (matemáticas de primaria).",
+      "Tenir una idea dels números negatius (el termòmetre sota zero); si encara no la tenen, a classe es presenten com «enrere».|Tener una idea de los números negativos (el termómetro bajo cero); si aún no la tienen, en clase se presentan como «hacia atrás»."
+    ],
+    faq: [
+      ["Per què el personatge no es mou si he posat «mou-te 10»?|¿Por qué el personaje no se mueve si he puesto «muévete 10»?",
+        "Sí que es mou, però molt poc: 10 passos és un trosset. L'escenari fa 480 passos d'ample; prova amb 100 o 200 i mira on arriba.|Sí que se mueve, pero muy poco: 10 pasos es un trocito. El escenario mide 480 pasos de ancho; prueba con 100 o 200 y mira dónde llega."],
+      ["Què vol dir un número negatiu?|¿Qué quiere decir un número negativo?",
+        "És un número amb un «-» davant, com -100. Amb «mou-te» vol dir enrere: el personatge recula sense girar-se, com quan fas passes enrere.|Es un número con un «-» delante, como -100. Con «muévete» quiere decir hacia atrás: el personaje retrocede sin girarse, como cuando das pasos hacia atrás."],
+      ["Puc escriure jo la frase del «digues»?|¿Puedo escribir yo la frase del «di»?",
+        "Sí: toca el text del bloc i escriu una frase curta, o tria'n una de les que ofereix l'app.|Sí: toca el texto del bloque y escribe una frase corta, o elige una de las que ofrece la app."],
+      ["Puc triar un altre personatge?|¿Puedo elegir otro personaje?",
+        "Als reptes, cada missió té el seu actor. Al projecte de la sessió 4 podràs triar entre tres, i més endavant en tindràs molts més.|En los retos, cada misión tiene su actor. En el proyecto de la sesión 4 podrás elegir entre tres, y más adelante tendrás muchos más."],
+      ["Per què els blocs van de dalt a baix?|¿Por qué los bloques van de arriba abajo?",
+        "Perquè l'ordinador llegeix el guió com tu llegeixes un text: una línia darrere l'altra. Si canvies l'ordre dels blocs, canvia el que passa.|Porque el ordenador lee el guion como tú lees un texto: una línea detrás de otra. Si cambias el orden de los bloques, cambia lo que pasa."],
+      ["He esborrat un bloc sense voler. Què faig?|He borrado un bloque sin querer. ¿Qué hago?",
+        "Torna'l a afegir des de la paleta. El botó de la fletxa rodona només torna el personatge al lloc del principi: els blocs no s'esborren.|Vuelve a añadirlo desde la paleta. El botón de la flecha redonda solo devuelve al personaje al sitio del principio: los bloques no se borran."]
+    ],
+    tec: [
+      ["Toco la bandera i no passa res.|Toco la bandera y no pasa nada.",
+        "Comproveu que els blocs pengen de la capçalera «Quan comença» i que, a dalt, està seleccionat el personatge que s'ha programat.|Comprobad que los bloques cuelgan de la cabecera «Al empezar» y que, arriba, está seleccionado el personaje que se ha programado."],
+      ["El repte diu que no funciona, però el personatge sembla que arriba a la marca.|El reto dice que no funciona, pero el personaje parece que llega a la marca.",
+        "La zona de la marca és petita: que mirin si s'ha quedat curt o s'ha passat i ajustin el número de 10 en 10.|La zona de la marca es pequeña: que miren si se ha quedado corto o se ha pasado y ajusten el número de 10 en 10."],
+      ["Al mòbil, l'escenari i els blocs no hi caben bé.|En el móvil, el escenario y los bloques no caben bien.",
+        "Gireu el mòbil en horitzontal o feu servir l'ordinador; a l'aula, poseu la finestra del navegador a pantalla completa.|Girad el móvil en horizontal o usad el ordenador; en el aula, poned la ventana del navegador a pantalla completa."],
+      ["No es pot escriure el número del bloc.|No se puede escribir el número del bloque.",
+        "Cal tocar el número del bloc: s'obre una finestra amb un requadre; s'hi escriu el número i es toca OK (o es prem Retorn).|Hay que tocar el número del bloque: se abre una ventana con un recuadro; se escribe el número y se toca OK (o se pulsa Intro)."],
+      ["La demostració de la presentació no es mou.|La demostración de la presentación no se mueve.",
+        "Les demostracions es tornen a fer soles al cap d'uns segons. Si està aturada, recarregueu la pàgina (F5) i torneu a la diapositiva.|Las demostraciones se repiten solas al cabo de unos segundos. Si está parada, recargad la página (F5) y volved a la diapositiva."],
+      ["Un alumne/a veu el nom d'un altre o no troba la sessió.|Un alumno/a ve el nombre de otro o no encuentra la sesión.",
+        "Que surti i torni a entrar amb el seu perfil; comproveu al panell que la sessió és oberta per al grup.|Que salga y vuelva a entrar con su perfil; comprobad en el panel que la sesión está abierta para el grupo."]
+    ],
+    seg: [
+      "Escenari de terra sense motxilles ni cadires a prop; es camina, no es corre, i els passos enrere es fan a poc a poc mirant que no hi hagi ningú darrere.|Escenario del suelo sin mochilas ni sillas cerca; se camina, no se corre, y los pasos hacia atrás se dan despacio mirando que no haya nadie detrás.",
+      "Davant la pantalla: ben asseguts i a un braç de distància; a la pausa activa, que mirin lluny uns segons per descansar la vista.|Delante de la pantalla: bien sentados y a un brazo de distancia; en la pausa activa, que miren lejos unos segundos para descansar la vista.",
+      "Ningú no està obligat a fer d'actor/actriu davant de tothom: el paper de revisor/a també és important.|Nadie está obligado a hacer de actor/actriz delante de todos: el papel de revisor/a también es importante."
+    ],
+    extra: [
+      "Fer que el Cavaller vagi a la dreta, torni enrere i acabi exactament on ha començat: la suma dels números ha de donar 0.|Hacer que el Caballero vaya a la derecha, vuelva hacia atrás y termine exactamente donde ha empezado: la suma de los números tiene que dar 0.",
+      "A l'escenari de terra, el revisor/a escriu on creu que acabarà l'actor/actriu abans que faci les targetes: ho ha encertat?|En el escenario del suelo, el revisor/a escribe dónde cree que terminará el actor/actriz antes de que haga las tarjetas: ¿ha acertado?",
+      "Inventar un diàleg curt de dos actors a l'escenari de terra, cadascun amb el seu guió de targetes.|Inventar un diálogo corto de dos actores en el escenario del suelo, cada uno con su guion de tarjetas."
+    ],
+    trans: [
+      "Matemàtiques: la recta numèrica amb nombres positius i negatius i l'estimació de distàncies.|Matemáticas: la recta numérica con números positivos y negativos y la estimación de distancias.",
+      "Llengua i teatre: el guió, els papers i dir frases curtes i clares al públic.|Lengua y teatro: el guion, los papeles y decir frases cortas y claras al público.",
+      "Sessió següent: els personatges aprendran a girar cap on toca i a dir frases una darrere l'altra.|Sesión siguiente: los personajes aprenderán a girar hacia donde toca y a decir frases una detrás de otra."
+    ],
     obj: [
       "L'alumne/a identifica l'escenari, els personatges i el guió d'un projecte de blocs.|El alumno/a identifica el escenario, los personajes y el guion de un proyecto de bloques.",
       "L'alumne/a explica que la bandera verda fa començar el guió «Quan comença» i que els blocs es fan de dalt a baix.|El alumno/a explica que la bandera verde hace empezar el guion «Al empezar» y que los bloques se hacen de arriba abajo.",
@@ -33,52 +89,54 @@ Object.assign(TGUIDE, (() => {
       aula: [
         "Un ordinador per alumne/a amb Numi Tech obert a la sessió «El meu primer personatge»|Un ordenador por alumno/a con Numi Tech abierto en la sesión «Mi primer personaje»",
         "Projector i la presentació d'aquesta sessió|Proyector y la presentación de esta sesión",
-        "Cinta de pintor per marcar al terra un «escenari» de 3 × 2 metres amb una creu al centre (el 0, 0)|Cinta de pintor para marcar en el suelo un «escenario» de 3 × 2 metros con una cruz en el centro (el 0, 0)",
-        "Un full verd (la bandera) i 3 estrelles de paper (les marques dels actors)|Una hoja verde (la bandera) y 3 estrellas de papel (las marcas de los actores)"
+        "1 rotllo de cinta de pintor per marcar al terra un «escenari» de 3 × 2 metres amb una creu al centre (el 0, 0)|1 rollo de cinta de pintor para marcar en el suelo un «escenario» de 3 × 2 metros con una cruz en el centro (el 0, 0)",
+        "1 full verd (la bandera) per grup i 3 estrelles de paper (les marques dels actors)|1 hoja verde (la bandera) por grupo y 3 estrellas de papel (las marcas de los actores)"
       ],
-      imprimir: ["Targetes de blocs: el guió de l'actor|Tarjetas de bloques: el guion del actor"],
+      imprimir: [
+        "1 paquet de targetes de blocs per grup de 3 (imprimible 1: el guió de l'actor)|1 paquete de tarjetas de bloques por grupo de 3 (imprimible 1: el guion del actor)"
+      ],
       prep: [
-        "Marcar l'escenari de terra amb cinta i una creu al centre; posar les estrelles a diferents distàncies.|Marcar el escenario del suelo con cinta y una cruz en el centro; poner las estrellas a diferentes distancias.",
-        "Imprimir i retallar un paquet de targetes per grup de 3 (si es plastifiquen, serveixen per a tota la unitat).|Imprimir y recortar un paquete de tarjetas por grupo de 3 (si se plastifican, sirven para toda la unidad).",
-        "Provar abans les demostracions de les diapositives 6 i 8 per saber què fa cada personatge.|Probar antes las demostraciones de las diapositivas 6 y 8 para saber qué hace cada personaje.",
-        "Deixar els ordinadors amb Numi Tech obert i la sessió de cada alumne/a iniciada.|Dejar los ordenadores con Numi Tech abierto y la sesión de cada alumno/a iniciada."
+        "El dia abans (15 min): imprimir i retallar un paquet de targetes per grup de 3; si es plastifiquen, serveixen per a tota la unitat.|El día antes (15 min): imprimir y recortar un paquete de tarjetas por grupo de 3; si se plastifican, sirven para toda la unidad.",
+        "Abans de la classe (10 min): marcar l'escenari de terra amb cinta i una creu al centre; posar les 3 estrelles a 2, 3 i 4 passes de la creu.|Antes de la clase (10 min): marcar el escenario del suelo con cinta y una cruz en el centro; poner las 3 estrellas a 2, 3 y 4 zancadas de la cruz.",
+        "Provar abans les demostracions de les diapositives 3, 6 i 8 per saber què fa cada personatge.|Probar antes las demostraciones de las diapositivas 3, 6 y 8 para saber qué hace cada personaje.",
+        "Deixar els ordinadors encesos amb Numi Tech obert i el perfil de cada alumne/a iniciat.|Dejar los ordenadores encendidos con Numi Tech abierto y el perfil de cada alumno/a iniciado."
       ]
     },
     plan: [
       { min: 5, t: "Benvinguda al Teatre de l'illa|Bienvenida al Teatro de la isla", fase: 'inici',
         fa: "Presenta el curs: durant l'any crearan animacions, històries i, al final, el seu propi videojoc. Pregunta qui ha vist mai dibuixos animats o un videojoc i com creuen que els personatges saben què han de fer. Recull respostes sense corregir.|Presenta el curso: durante el año crearán animaciones, historias y, al final, su propio videojuego. Pregunta quién ha visto alguna vez dibujos animados o un videojuego y cómo creen que los personajes saben qué tienen que hacer. Recoge respuestas sin corregir.",
         diu: ["Com sap un personatge de dibuixos què ha de fer?|¿Cómo sabe un personaje de dibujos qué tiene que hacer?",
-          "Avui sereu directors i directores de teatre: els vostres actors seran a l'ordinador.|Hoy seréis directores y directoras de teatro: vuestros actores estarán en el ordenador."],
+          "Avui sereu directors i directores de teatre: els vostres actors seran a l'ordinador.|Hoy seréis directores y directoras de teatro: vuestros actores estarán en el ordenador.", "Qui ha fet mai teatre? Què fa el director/a? (Diu als actors què han de fer.)|¿Quién ha hecho alguna vez teatro? ¿Qué hace el director/a? (Dice a los actores qué tienen que hacer.)", "Al final d'avui, cadascú tindrà un personatge que es mou i parla.|Al final de hoy, cada uno tendrá un personaje que se mueve y habla."],
         slides: ['s1', 's2'], app: "Encara no: pantalles abaixades.|Todavía no: pantallas bajadas.", org: "Tot el grup|Todo el grupo" },
       { min: 10, t: "Escenari, personatges i guió|Escenario, personajes y guion", fase: 'teoria',
         fa: "Explica l'escenari i els personatges amb la demostració del teatre. Mostra que cada personatge té el seu guió i que la bandera verda el fa començar. Presenta «mou-te» amb la recta de números: fes que tothom digui on acabarà en Numi abans de tocar la bandera. Acaba amb el centre (0, 0) i la idea que la dreta és x positiva.|Explica el escenario y los personajes con la demostración del teatro. Muestra que cada personaje tiene su guion y que la bandera verde lo hace empezar. Presenta «muévete» con la recta de números: haz que todos digan dónde terminará Numi antes de tocar la bandera. Termina con el centro (0, 0) y la idea de que la derecha es x positiva.",
         diu: ["Qui fa els blocs: tots alhora o un darrere l'altre?|¿Quién hace los bloques: todos a la vez o uno detrás de otro?",
           "Si poso -100, cap on anirà? Assenyaleu-ho amb el braç.|Si pongo -100, ¿hacia dónde irá? Señaladlo con el brazo.",
-          "Abans de tocar la bandera: on creieu que acabarà?|Antes de tocar la bandera: ¿dónde creéis que terminará?"],
+          "Abans de tocar la bandera: on creieu que acabarà?|Antes de tocar la bandera: ¿dónde creéis que terminará?", "Si en Numi és a -150 i avança 150 passos, on acaba? (Al centre, al 0.)|Si Numi está en -150 y avanza 150 pasos, ¿dónde termina? (En el centro, en el 0.)"],
         slides: ['s3', 's4', 's5', 's6', 's7', 's8'], app: "Encara no: tota l'atenció a la projecció.|Todavía no: toda la atención en la proyección.", org: "Tot el grup|Todo el grupo" },
       { min: 12, t: "Director/a i actor/actriu a l'escenari de terra|Director/a y actor/actriz en el escenario del suelo", fase: 'desconnectat',
         fa: "Grups de 3: director/a, actor/actriu i revisor/a. El director/a posa targetes en fila sota la targeta «Quan comença»; quan aixeca el full verd, l'actor/actriu les fa a l'escenari de terra (cada pas és una passa) i el revisor/a comprova cada targeta. L'objectiu és arribar a una estrella i dir-hi una frase. Després de cada guió, els papers roten.|Grupos de 3: director/a, actor/actriz y revisor/a. El director/a pone tarjetas en fila bajo la tarjeta «Al empezar»; cuando levanta la hoja verde, el actor/actriz las hace en el escenario del suelo (cada paso es una zancada) y el revisor/a comprueba cada tarjeta. El objetivo es llegar a una estrella y decir allí una frase. Después de cada guion, los papeles rotan.",
         diu: ["L'actor/actriu només fa el que diu la targeta, encara que vegi que no arriba.|El actor/actriz solo hace lo que dice la tarjeta, aunque vea que no llega.",
           "Els passos negatius es fan enrere sense girar-se.|Los pasos negativos se hacen hacia atrás sin girarse.",
-          "No heu arribat a l'estrella? Quina targeta canviaríeu?|¿No habéis llegado a la estrella? ¿Qué tarjeta cambiaríais?"],
+          "No heu arribat a l'estrella? Quina targeta canviaríeu?|¿No habéis llegado a la estrella? ¿Qué tarjeta cambiaríais?", "Revisor/a: la targeta diu 3 passos; n'ha fet 3?|Revisor/a: la tarjeta dice 3 pasos; ¿ha dado 3?"],
         slides: ['s9', 's10'], app: "Cap: activitat sense pantalla.|Ninguna: actividad sin pantalla.", org: "Grups de 3 amb papers que roten|Grupos de 3 con papeles que rotan" },
       { min: 15, t: "A l'ordinador: descobreix i investiga|En el ordenador: descubre e investiga", fase: 'ordinador',
         fa: "Cada alumne/a avança al seu ritme fins a la pausa activa. Al pas «Director/a i actor/actriu», que toquin «Ho hem fet!», perquè ja l'han fet a classe. Passeja i, a l'assaig de tres actors, demana que expliquin què fa cada personatge abans de mirar-ne els blocs.|Cada alumno/a avanza a su ritmo hasta la pausa activa. En el paso «Director/a y actor/actriz», que toquen «¡Lo hemos hecho!», porque ya lo han hecho en clase. Pasea y, en el ensayo de tres actores, pide que expliquen qué hace cada personaje antes de mirar sus bloques.",
         diu: ["Toca un personatge de la llista: quin guió té?|Toca un personaje de la lista: ¿qué guion tiene?",
-          "On acabarà la Tuga amb -100? Pensa-ho abans de triar.|¿Dónde terminará Tuga con -100? Piénsalo antes de elegir."],
+          "On acabarà la Tuga amb -100? Pensa-ho abans de triar.|¿Dónde terminará Tuga con -100? Piénsalo antes de elegir.", "Abans de mirar els blocs: què ha fet cada actor? (Una avança, l'altra parla i l'altre va enrere.)|Antes de mirar los bloques: ¿qué ha hecho cada actor? (Una avanza, otra habla y el otro va hacia atrás.)", "Quin número ha fet anar la Guida cap a l'esquerra? (-240, un número negatiu.)|¿Qué número ha hecho ir a Guida hacia la izquierda? (-240, un número negativo.)"],
         slides: ['s11'], app: "De «La missió» fins a «Investiga»: les històries, les 5 targetes de teoria, la bandera verda, ordenar els passos, «Director/a i actor/actriu» (ja fet), l'assaig, la pregunta de la Tuga i la Guida que va enrere.|De «La misión» hasta «Investiga»: las historias, las 5 tarjetas de teoría, la bandera verde, ordenar los pasos, «Director/a y actor/actriz» (ya hecho), el ensayo, la pregunta de Tuga y Guida que va hacia atrás.", org: "Individual|Individual" },
       { min: 10, t: "Reptes: les marques dels actors|Retos: las marcas de los actores", fase: 'ordinador',
         fa: "Feu la pausa activa tots junts. Després resol amb la classe el primer repte (en Numi fins a la marca) provant números en veu alta i deixa'ls fer la resta. Remarca que provar un número, mirar i ajustar-lo és una manera de treballar molt bona.|Haced la pausa activa todos juntos. Después resuelve con la clase el primer reto (Numi hasta la marca) probando números en voz alta y deja que hagan el resto. Remarca que probar un número, mirar y ajustarlo es una manera de trabajar muy buena.",
         diu: ["Massa curt o massa llarg? Quin número provaries ara?|¿Demasiado corto o demasiado largo? ¿Qué número probarías ahora?",
-          "Per què la Guida necessita una frase amb segons quan arriba al regal?|¿Por qué Guida necesita una frase con segundos cuando llega al regalo?"],
+          "Per què la Guida necessita una frase amb segons quan arriba al regal?|¿Por qué Guida necesita una frase con segundos cuando llega al regalo?", "Si la marca és més lluny, el número ha de ser més gran o més petit? (Més gran.)|Si la marca está más lejos, ¿el número tiene que ser mayor o menor? (Mayor.)"],
         slides: ['s12', 's13'], app: "«Pausa activa» i els quatre reptes: en Numi a la marca, en Vuit enrere, la Flama que saluda i la Guida que va i torna.|«Pausa activa» y los cuatro retos: Numi a la marca, Vuit hacia atrás, Flama que saluda y Guida que va y vuelve.", org: "Tot el grup i després individual|Todo el grupo y después individual" },
       { min: 5, t: "Crea: el meu primer personatge|Crea: mi primer personaje", fase: 'crea',
         fa: "Cada alumne/a programa l'entrada del Cavaller com vulgui (moure's i dir alguna cosa) i el desa. Qui acabi ensenya el seu al company/a i li demana que endevini què farà abans de tocar la bandera.|Cada alumno/a programa la entrada del Caballero como quiera (moverse y decir algo) y lo guarda. Quien termine enseña el suyo al compañero/a y le pide que adivine qué hará antes de tocar la bandera.",
-        diu: ["No hi ha una sola resposta bona: cada cavaller pot entrar diferent.|No hay una sola respuesta buena: cada caballero puede entrar diferente."],
+        diu: ["No hi ha una sola resposta bona: cada cavaller pot entrar diferent.|No hay una sola respuesta buena: cada caballero puede entrar diferente.", "Abans de tocar la bandera, explica al company/a què farà el teu cavaller.|Antes de tocar la bandera, explica al compañero/a qué hará tu caballero.", "Es pot llegir la frase? Si desapareix de pressa, posa-hi més segons.|¿Se puede leer la frase? Si desaparece deprisa, ponle más segundos."],
         slides: ['s14'], app: "Pas «Crea»: El meu primer personatge.|Paso «Crea»: Mi primer personaje.", org: "Individual i després per parelles|Individual y después por parejas" },
       { min: 3, t: "Tancament i tiquet de sortida|Cierre y ticket de salida", fase: 'tancament',
         fa: "Repassa les tres idees amb el resum, deixa que facin les preguntes finals de l'app i fes a cada alumne/a una pregunta del tiquet a la porta.|Repasa las tres ideas con el resumen, deja que hagan las preguntas finales de la app y haz a cada alumno/a una pregunta del ticket en la puerta.",
-        diu: ["Què fa la bandera verda?|¿Qué hace la bandera verde?", "Com faig que un personatge vagi enrere?|¿Cómo hago que un personaje vaya hacia atrás?"],
+        diu: ["Què fa la bandera verda?|¿Qué hace la bandera verde?", "Com faig que un personatge vagi enrere?|¿Cómo hago que un personaje vaya hacia atrás?", "Recordeu la pregunta del principi: com sap un personatge què ha de fer? (Segueix el guió que hem programat.)|Recordad la pregunta del principio: ¿cómo sabe un personaje qué tiene que hacer? (Sigue el guion que hemos programado.)"],
         slides: ['s15', 's16'], app: "«Tancament»: les dues preguntes i com m'he sentit.|«Cierre»: las dos preguntas y cómo me he sentido.", org: "Tot el grup|Todo el grupo" }
     ],
     errors: [
@@ -91,7 +149,9 @@ Object.assign(TGUIDE, (() => {
       ["Al repte del regal, la Guida va i torna tan de pressa que no es veu que hi ha arribat.|En el reto del regalo, Guida va y vuelve tan deprisa que no se ve que ha llegado.",
         "Pregunta: com podríem fer que s'hi quedi una estona? Quin bloc fa que el temps passi? (el «digues» amb segons).|Pregunta: ¿cómo podríamos hacer que se quede un rato? ¿Qué bloque hace que pase el tiempo? (el «di» con segundos)."],
       ["Esborra tot el guió quan no arriba a la marca.|Borra todo el guion cuando no llega a la marca.",
-        "Que miri si s'ha quedat curt o s'ha passat i canviï només el número.|Que mire si se ha quedado corto o se ha pasado y cambie solo el número."]
+        "Que miri si s'ha quedat curt o s'ha passat i canviï només el número.|Que mire si se ha quedado corto o se ha pasado y cambie solo el número."],
+      ["Toca els blocs de la paleta sense mirar on van i queden en un lloc estrany del guió.|Toca los bloques de la paleta sin mirar dónde van y quedan en un sitio raro del guion.",
+        "Que busqui la línia «els blocs nous van aquí» i toqui el lloc on vol el bloc abans d'afegir-lo; un bloc posat també es pot moure amb ↑ i ↓.|Que busque la línea «los bloques nuevos van aquí» y toque el sitio donde quiere el bloque antes de añadirlo; un bloque puesto también se puede mover con ↑ y ↓."]
     ],
     diff: {
       mes: "Fer que el Cavaller vagi a la dreta, torni a l'esquerra i torni al mig, dient una frase a cada lloc, i que acabi exactament on ha començat (la suma dels números ha de donar 0).|Hacer que el Caballero vaya a la derecha, vuelva a la izquierda y vuelva al centro, diciendo una frase en cada sitio, y que termine exactamente donde ha empezado (la suma de los números tiene que dar 0).",
@@ -103,14 +163,17 @@ Object.assign(TGUIDE, (() => {
       rubric: [
         ["Escenari i guió|Escenario y guion", "Explica que cada personatge té el seu guió i que es fa de dalt a baix quan es toca la bandera.|Explica que cada personaje tiene su guion y que se hace de arriba abajo cuando se toca la bandera.", "Toca la bandera i mira el resultat, però encara no relaciona els blocs amb el que passa.|Toca la bandera y mira el resultado, pero aún no relaciona los bloques con lo que pasa."],
         ["Endavant i enrere|Adelante y atrás", "Fa servir números positius i negatius per anar on vol i estima la distància.|Usa números positivos y negativos para ir donde quiere y estima la distancia.", "Necessita provar molts números o ajuda per anar enrere.|Necesita probar muchos números o ayuda para ir hacia atrás."],
-        ["Primer personatge|Primer personaje", "El seu personatge es mou i diu una frase que es pot llegir.|Su personaje se mueve y dice una frase que se puede leer.", "Fa moure o fa parlar el personatge, però no totes dues coses.|Hace mover o hace hablar al personaje, pero no las dos cosas."]
+        ["Primer personatge|Primer personaje", "El seu personatge es mou i diu una frase que es pot llegir.|Su personaje se mueve y dice una frase que se puede leer.", "Fa moure o fa parlar el personatge, però no totes dues coses.|Hace mover o hace hablar al personaje, pero no las dos cosas."],
+        ["Provar i ajustar|Probar y ajustar",
+          "Prova el programa, mira si es queda curt o s'ha passat i canvia el número fins que arriba.|Prueba el programa, mira si se queda corto o se ha pasado y cambia el número hasta que llega.",
+          "Esborra i torna a començar, o espera que algú li digui el número.|Borra y vuelve a empezar, o espera a que alguien le diga el número."]
       ]
     },
     casa: "A casa, amb el mòbil, podeu repetir la sessió i fer junts «Director/a i actor/actriu»: una persona escriu tres ordres en un paper i l'altra les fa quan veu la «bandera verda».|En casa, con el móvil, podéis repetir la sesión y hacer juntos «Director/a y actor/actriz»: una persona escribe tres órdenes en un papel y la otra las hace cuando ve la «bandera verde».",
     slides: [
       { id: 's1', k: 'portada', t: "El meu primer personatge|Mi primer personaje", x: "Al Teatre de l'illa, els actors són personatges de l'ordinador… i tu en seràs el director/a.|En el Teatro de la isla, los actores son personajes del ordenador… y tú serás su director/a.",
         nota: "Presenta el curs i l'objectiu d'avui: al final, cada alumne/a tindrà un personatge que es mou i parla.|Presenta el curso y el objetivo de hoy: al final, cada alumno/a tendrá un personaje que se mueve y habla." },
-      { id: 's2', k: 'pregunta', t: "Com sap un personatge què ha de fer?|¿Cómo sabe un personaje qué tiene que hacer?", punts: ["Als dibuixos animats|En los dibujos animados", "Als videojocs|En los videojuegos", "Al teatre|En el teatro"],
+      { id: 's2', k: 'pregunta', t: "Qui diu al personatge què fer?|¿Quién le dice al personaje qué hacer?", punts: ["Als dibuixos animats|En los dibujos animados", "Als videojocs|En los videojuegos", "Al teatre|En el teatro"],
         nota: "Recull idees sense corregir. Hi tornareu al final: el personatge segueix un guió que algú ha programat.|Recoge ideas sin corregir. Volveréis a ello al final: el personaje sigue un guion que alguien ha programado." },
       { id: 's3', k: 'media', t: "L'escenari i els personatges|El escenario y los personajes", x: "Cada personatge fa el que diuen els seus blocs.|Cada personaje hace lo que dicen sus bloques.",
         media: { k: 'stage', w: T([{ id: 'vuit', art: 'vuit', x: -160, y: -95 }, { id: 'numi', art: 'numi', x: -20, y: -95, costume: 1 }, { id: 'guida', art: 'guida', x: 130, y: -95 }]), prog: '@guida flag{ point:-90 } @vuit flag{ think:"Quins nervis!|¡Qué nervios!",3 } @numi flag{ move:20 say:"Benvinguts!|¡Bienvenidos!",3 }', time: 4 },
@@ -164,6 +227,58 @@ Object.assign(TGUIDE, (() => {
 
   /* ---------- Sessió 2 · Moure i parlar ---------- */
   'g1-2': {
+    intro: "En aquesta sessió els personatges aprenen a orientar-se i a dir el seu paper. L'alumnat relaciona les direccions 0, 90, 180 i -90 amb amunt, dreta, avall i esquerra, i descobreix que girar canvia cap on mira el personatge però no el mou. També aprèn a fer servir «digues» i «pensa» amb segons perquè les frases es llegeixin una darrere l'altra. Comencen amb la brúixola del cos (fulls a les parets), fan l'activitat de la brúixola del teatre en grups i acaben a l'ordinador amb camins en forma de L i un petit diàleg.|En esta sesión los personajes aprenden a orientarse y a decir su papel. El alumnado relaciona las direcciones 0, 90, 180 y -90 con arriba, derecha, abajo e izquierda, y descubre que girar cambia hacia dónde mira el personaje pero no lo mueve. También aprende a usar «di» y «piensa» con segundos para que las frases se lean una detrás de otra. Empiezan con la brújula del cuerpo (hojas en las paredes), hacen la actividad de la brújula del teatro en grupos y terminan en el ordenador con caminos en forma de L y un pequeño diálogo.",
+    claus: [
+      "La direcció diu cap on mira el personatge: 90 dreta, 180 avall, -90 esquerra i 0 amunt.|La dirección dice hacia dónde mira el personaje: 90 derecha, 180 abajo, -90 izquierda y 0 arriba.",
+      "«Gira 90 graus» és un quart de volta a la dreta; «gira -90 graus», a l'esquerra.|«Gira 90 grados» es un cuarto de vuelta a la derecha; «gira -90 grados», a la izquierda.",
+      "Girar no mou el personatge de lloc: després d'un gir, gairebé sempre cal un «mou-te».|Girar no mueve al personaje de sitio: después de un giro, casi siempre hace falta un «muévete».",
+      "«Digues» fa una bafarada i «pensa», un núvol; amb segons, les frases es llegeixen una darrere l'altra.|«Di» hace un bocadillo y «piensa», una nube; con segundos, las frases se leen una detrás de otra."
+    ],
+    prev: [
+      "Fer un guió «Quan comença» amb «mou-te» i «digues» i tocar la bandera verda (sessió 1).|Hacer un guion «Al empezar» con «muévete» y «di» y tocar la bandera verde (sesión 1).",
+      "Saber que un número negatiu a «mou-te» fa anar enrere (sessió 1).|Saber que un número negativo en «muévete» hace ir hacia atrás (sesión 1).",
+      "Reconèixer un quart de volta i mitja volta amb el cos (educació física i matemàtiques).|Reconocer un cuarto de vuelta y media vuelta con el cuerpo (educación física y matemáticas)."
+    ],
+    faq: [
+      ["Per què 90 és la dreta i no amunt?|¿Por qué 90 es la derecha y no arriba?",
+        "És com una brúixola: el 0 és a dalt i, girant cap a la dreta, el número creix. Un quart de volta són 90 graus, i per això la dreta és el 90.|Es como una brújula: el 0 está arriba y, girando hacia la derecha, el número crece. Un cuarto de vuelta son 90 grados, y por eso la derecha es el 90."],
+      ["Quina diferència hi ha entre «gira» i «apunta en direcció»?|¿Qué diferencia hay entre «gira» y «apunta en dirección»?",
+        "«Gira» suma un gir a la direcció que ja té; «apunta» el fa mirar directament cap a una direcció, miri on miri abans.|«Gira» suma un giro a la dirección que ya tiene; «apunta» lo hace mirar directamente hacia una dirección, mire donde mire antes."],
+      ["El cotxe gira cap per avall. És normal?|El coche gira boca abajo. ¿Es normal?",
+        "Sí: el cotxe gira tot ell, com si el veiéssim des de dalt. Els personatges de Numi, en canvi, només es giren de costat perquè no surtin cap per avall.|Sí: el coche gira entero, como si lo viéramos desde arriba. Los personajes de Numi, en cambio, solo se giran de lado para que no salgan boca abajo."],
+      ["Per què només es veu la meva última frase?|¿Por qué solo se ve mi última frase?",
+        "Perquè les altres no tenen segons: desapareixen de seguida. Toca cada «digues» i posa-hi «durant 2 s».|Porque las otras no tienen segundos: desaparecen enseguida. Toca cada «di» y ponle «durante 2 s»."],
+      ["Puc fer que dos personatges parlin alhora?|¿Puedo hacer que dos personajes hablen a la vez?",
+        "Sí, però el públic no ho entendria. Per fer torns, un pensa o espera mentre l'altre parla, com a l'assaig d'en Vuit i la Guida.|Sí, pero el público no lo entendería. Para hacer turnos, uno piensa o espera mientras el otro habla, como en el ensayo de Vuit y Guida."],
+      ["Gira 180 graus què fa?|¿Gira 180 grados qué hace?",
+        "Mitja volta: si mirava a la dreta, ara mira a l'esquerra. Quatre girs de 90 fan una volta sencera.|Media vuelta: si miraba a la derecha, ahora mira a la izquierda. Cuatro giros de 90 dan una vuelta entera."]
+    ],
+    tec: [
+      ["El personatge gira però no arriba a la bandera.|El personaje gira pero no llega a la bandera.",
+        "Falta un «mou-te» després del gir, o el número és massa petit. Que mirin cap on mira i quant falta.|Falta un «muévete» después del giro, o el número es demasiado pequeño. Que miren hacia dónde mira y cuánto falta."],
+      ["El cotxe se'n va fora de l'escenari i no es veu.|El coche se sale del escenario y no se ve.",
+        "El número és massa gran o el gir és cap al costat contrari. Toqueu la fletxa rodona per tornar-lo al principi i proveu un número més petit.|El número es demasiado grande o el giro es hacia el lado contrario. Tocad la flecha redonda para devolverlo al principio y probad un número más pequeño."],
+      ["Una frase escrita per l'alumne/a es talla.|Una frase escrita por el alumno/a se corta.",
+        "El requadre admet 40 lletres: que escrigui frases curtes o en faci dues.|El recuadro admite 40 letras: que escriba frases cortas o haga dos."],
+      ["Els fulls de les parets es despengen.|Las hojas de las paredes se despegan.",
+        "Feu servir cinta de pintor i escriviu els números ben grossos; si no hi ha parets lliures, enganxeu-los al terra a cada costat de la creu.|Usad cinta de pintor y escribid los números bien grandes; si no hay paredes libres, pegadlos en el suelo a cada lado de la cruz."],
+      ["El programa no fa res i surt el missatge que un bucle no espera.|El programa no hace nada y sale el mensaje de que un bucle no espera.",
+        "En aquesta sessió no hi ha bucles: segurament s'ha tocat un bloc d'un altre repte. Que torni a obrir el pas.|En esta sesión no hay bucles: seguramente se ha tocado un bloque de otro reto. Que vuelva a abrir el paso."]
+    ],
+    seg: [
+      "A la brúixola del cos, que girin a poc a poc i amb els braços a prop del cos per no tocar ningú.|En la brújula del cuerpo, que giren despacio y con los brazos cerca del cuerpo para no tocar a nadie.",
+      "Si algú es mareja girant, que s'assegui i faci els girs amb la mà.|Si alguien se marea girando, que se siente y haga los giros con la mano."
+    ],
+    extra: [
+      "Fer que el cotxe faci la volta a un quadrat (4 trossos i 4 girs) i torni al lloc d'inici, dient una frase a cada cantonada.|Hacer que el coche dé la vuelta a un cuadrado (4 tramos y 4 giros) y vuelva al sitio de inicio, diciendo una frase en cada esquina.",
+      "Escriure un diàleg de quatre frases entre en Vuit i la Guida en què cadascun pensi mentre l'altre parla.|Escribir un diálogo de cuatro frases entre Vuit y Guida en el que cada uno piense mientras el otro habla.",
+      "Provar girs de 45 graus i descobrir cap on mira el personatge (en diagonal).|Probar giros de 45 grados y descubrir hacia dónde mira el personaje (en diagonal)."
+    ],
+    trans: [
+      "Matemàtiques: angles (quart de volta, mitja volta i volta sencera) i orientació en el pla.|Matemáticas: ángulos (cuarto de vuelta, media vuelta y vuelta entera) y orientación en el plano.",
+      "Llengua: el diàleg, els torns de paraula i la diferència entre dir i pensar (com als còmics).|Lengua: el diálogo, los turnos de palabra y la diferencia entre decir y pensar (como en los cómics).",
+      "Sessió anterior: «mou-te» endavant i enrere. Sessió següent: fons, escenes i personatges que surten de l'escena.|Sesión anterior: «muévete» adelante y atrás. Sesión siguiente: fondos, escenas y personajes que salen de la escena."
+    ],
     obj: [
       "L'alumne/a relaciona les direccions 0, 90, 180 i -90 amb amunt, dreta, avall i esquerra.|El alumno/a relaciona las direcciones 0, 90, 180 y -90 con arriba, derecha, abajo e izquierda.",
       "L'alumne/a explica que girar canvia cap on mira el personatge però no el mou, i combina girs i «mou-te» per fer un camí.|El alumno/a explica que girar cambia hacia dónde mira el personaje pero no lo mueve, y combina giros y «muévete» para hacer un camino.",
@@ -187,47 +302,49 @@ Object.assign(TGUIDE, (() => {
       aula: [
         "Un ordinador per alumne/a amb Numi Tech obert a la sessió «Moure i parlar»|Un ordenador por alumno/a con Numi Tech abierto en la sesión «Mover y hablar»",
         "Projector i la presentació d'aquesta sessió|Proyector y la presentación de esta sesión",
-        "Quatre fulls grans amb els números 0, 90, 180 i -90 per enganxar a les quatre parets de l'aula|Cuatro hojas grandes con los números 0, 90, 180 y -90 para pegar en las cuatro paredes del aula",
-        "L'escenari de terra de la sessió anterior (si encara hi és)|El escenario del suelo de la sesión anterior (si todavía está)"
+        "4 fulls DIN A4 amb els números 0, 90, 180 i -90 ben grossos, per enganxar a les quatre parets de l'aula|4 hojas DIN A4 con los números 0, 90, 180 y -90 bien grandes, para pegar en las cuatro paredes del aula",
+        "L'escenari de terra de la sessió 1 (o 1 rotllo de cinta per tornar-lo a fer) i 1 objecte petit per grup com a meta|El escenario del suelo de la sesión 1 (o 1 rollo de cinta para volver a hacerlo) y 1 objeto pequeño por grupo como meta"
       ],
-      imprimir: ["Targetes de la brúixola i del diàleg|Tarjetas de la brújula y del diálogo"],
+      imprimir: [
+        "1 paquet de targetes de la brúixola i del diàleg per grup de 3, per afegir al de la sessió 1 (imprimible 1)|1 paquete de tarjetas de la brújula y del diálogo por grupo de 3, para añadir al de la sesión 1 (imprimible 1)"
+      ],
       prep: [
-        "Enganxar el 0 a la paret de la pissarra, el 90 a la dreta, el 180 al fons i el -90 a l'esquerra.|Pegar el 0 en la pared de la pizarra, el 90 a la derecha, el 180 al fondo y el -90 a la izquierda.",
-        "Imprimir i retallar un paquet de targetes per grup de 3.|Imprimir y recortar un paquete de tarjetas por grupo de 3.",
-        "Provar les demostracions de les diapositives 5 i 7.|Probar las demostraciones de las diapositivas 5 y 7.",
-        "Deixar els ordinadors amb la sessió iniciada.|Dejar los ordenadores con la sesión iniciada."
+        "El dia abans (15 min): imprimir i retallar un paquet de targetes per grup de 3 i els 4 fulls de les direccions.|El día antes (15 min): imprimir y recortar un paquete de tarjetas por grupo de 3 y las 4 hojas de las direcciones.",
+        "Abans de la classe (5 min): enganxar el 0 a la paret de la pissarra, el 90 a la dreta, el 180 al fons i el -90 a l'esquerra.|Antes de la clase (5 min): pegar el 0 en la pared de la pizarra, el 90 a la derecha, el 180 al fondo y el -90 a la izquierda.",
+        "Provar les demostracions de les diapositives 5, 7 i 11 i aturar la 5 just després del gir.|Probar las demostraciones de las diapositivas 5, 7 y 11 y parar la 5 justo después del giro.",
+        "Deixar els ordinadors amb el perfil de cada alumne/a iniciat.|Dejar los ordenadores con el perfil de cada alumno/a iniciado."
       ]
     },
     plan: [
       { min: 5, t: "Recordem i l'assaig general|Recordamos y el ensayo general", fase: 'inici',
         fa: "Repassa «mou-te» amb un número negatiu fent que dos alumnes ho representin. Explica que avui és l'assaig: els actors han d'aprendre a girar i a dir el seu paper.|Repasa «muévete» con un número negativo haciendo que dos alumnos lo representen. Explica que hoy es el ensayo: los actores tienen que aprender a girar y a decir su papel.",
-        diu: ["Què fa mou-te -100 passos?|¿Qué hace muévete -100 pasos?", "I si l'actor ha de pujar, com ho fem?|¿Y si el actor tiene que subir, cómo lo hacemos?"],
+        diu: ["Què fa mou-te -100 passos?|¿Qué hace muévete -100 pasos?", "I si l'actor ha de pujar, com ho fem?|¿Y si el actor tiene que subir, cómo lo hacemos?", "Avui els actors han d'aprendre a girar sense caminar. Qui m'ho ensenya?|Hoy los actores tienen que aprender a girar sin caminar. ¿Quién me lo enseña?"],
         slides: ['s1', 's2'], app: "Encara no.|Todavía no.", org: "Tot el grup|Todo el grupo" },
       { min: 10, t: "Direcció, girs i frases|Dirección, giros y frases", fase: 'teoria',
         fa: "Presenta la brúixola de les direccions amb els fulls de les parets: tothom es gira cap al 90, cap al 180… Mostra que girar no mou (el cotxe gira i després avança). Explica «digues» i «pensa» i la importància dels segons amb la demostració de la Tuga: compareu-la amb un guió sense segons.|Presenta la brújula de las direcciones con las hojas de las paredes: todos se giran hacia el 90, hacia el 180… Muestra que girar no mueve (el coche gira y después avanza). Explica «di» y «piensa» y la importancia de los segundos con la demostración de Tuga: comparadla con un guion sin segundos.",
         diu: ["Tothom dret: mireu cap al 90. Ara gireu 90 graus. On mireu?|Todos de pie: mirad hacia el 90. Ahora girad 90 grados. ¿Dónde miráis?",
           "El cotxe ha girat: s'ha mogut de lloc?|El coche ha girado: ¿se ha movido de sitio?",
-          "Si no poso segons, quina frase es veurà?|Si no pongo segundos, ¿qué frase se verá?"],
+          "Si no poso segons, quina frase es veurà?|Si no pongo segundos, ¿qué frase se verá?", "Pensa és un núvol i digues, una bafarada. Què pensaria un actor nerviós? (Respostes lliures.)|Piensa es una nube y di, un bocadillo. ¿Qué pensaría un actor nervioso? (Respuestas libres.)"],
         slides: ['s3', 's4', 's5', 's6', 's7'], app: "Encara no.|Todavía no.", org: "Tot el grup, drets|Todo el grupo, de pie" },
       { min: 12, t: "La brúixola del teatre|La brújula del teatro", fase: 'desconnectat',
         fa: "Grups de 3 amb les targetes: el director/a fa un guió per portar l'actor/actriu de la creu del centre fins a un objecte de l'aula, amb girs, passos i una frase (comptant els segons en veu alta). El revisor/a comprova cada targeta. Després de cada guió, roten. Repte final: un diàleg de dues frases entre dos actors, cadascun amb el seu guió.|Grupos de 3 con las tarjetas: el director/a hace un guion para llevar al actor/actriz desde la cruz del centro hasta un objeto del aula, con giros, pasos y una frase (contando los segundos en voz alta). El revisor/a comprueba cada tarjeta. Después de cada guion, rotan. Reto final: un diálogo de dos frases entre dos actores, cada uno con su guion.",
-        diu: ["Girar és un quart de volta, sense caminar.|Girar es un cuarto de vuelta, sin caminar.", "Compteu els segons de la frase abans de la targeta següent.|Contad los segundos de la frase antes de la tarjeta siguiente.", "Cap a quin número de la paret mira ara l'actor?|¿Hacia qué número de la pared mira ahora el actor?"],
+        diu: ["Girar és un quart de volta, sense caminar.|Girar es un cuarto de vuelta, sin caminar.", "Compteu els segons de la frase abans de la targeta següent.|Contad los segundos de la frase antes de la tarjeta siguiente.", "Cap a quin número de la paret mira ara l'actor?|¿Hacia qué número de la pared mira ahora el actor?", "Si l'actor ha de tornar enrere mirant la porta, primer gira o primer camina? (Primer gira.)|Si el actor tiene que volver mirando la puerta, ¿primero gira o primero camina? (Primero gira.)"],
         slides: ['s8', 's9'], app: "Cap: activitat sense pantalla.|Ninguna: actividad sin pantalla.", org: "Grups de 3 amb papers que roten|Grupos de 3 con papeles que rotan" },
       { min: 15, t: "A l'ordinador: descobreix i investiga|En el ordenador: descubre e investiga", fase: 'ordinador',
-        fa: "Avancen fins a la pausa activa. A la pregunta del cotxe, que facin el gir amb el cos abans de triar. A l'assaig d'en Vuit i la Guida, que diguin qui parla primer i per què.|Avanzan hasta la pausa activa. En la pregunta del coche, que hagan el giro con el cuerpo antes de elegir. En el ensayo de Vuit y Guida, que digan quién habla primero y por qué.",
-        diu: ["Fes el gir amb la mà: cap on mira ara el cotxe?|Haz el giro con la mano: ¿hacia dónde mira ahora el coche?", "Per què la Guida pensa mentre en Vuit parla?|¿Por qué Guida piensa mientras Vuit habla?"],
+        fa: "Avancen fins a la pausa activa. Passeja per les taules: a la pregunta del cotxe, demana que facin el gir amb la mà o amb el cos abans de triar. A l'assaig d'en Vuit i la Guida, que diguin qui parla primer i què fa l'altra mentrestant. Al cotxe que baixa, que expliquin l'error amb paraules abans de triar el bloc.|Avanzan hasta la pausa activa. Pasea por las mesas: en la pregunta del coche, pide que hagan el giro con la mano o con el cuerpo antes de elegir. En el ensayo de Vuit y Guida, que digan quién habla primero y qué hace la otra mientras tanto. En el coche que baja, que expliquen el error con palabras antes de elegir el bloque.",
+        diu: ["Fes el gir amb la mà: cap on mira ara el cotxe?|Haz el giro con la mano: ¿hacia dónde mira ahora el coche?", "Per què la Guida pensa mentre en Vuit parla?|¿Por qué Guida piensa mientras Vuit habla?", "El cotxe ha baixat en lloc de pujar: quin bloc ho ha fet? (El gir de 90 graus.)|El coche ha bajado en lugar de subir: ¿qué bloque lo ha hecho? (El giro de 90 grados.)"],
         slides: ['s10'], app: "De «Recorda» fins a «Investiga»: la pregunta de mou-te, l'assaig, les 4 targetes de teoria, el gir del cotxe, ordenar el guió de la Flama, «La brúixola del teatre» (ja fet), el diàleg i el cotxe que baixa.|De «Recuerda» hasta «Investiga»: la pregunta de muévete, el ensayo, las 4 tarjetas de teoría, el giro del coche, ordenar el guion de Flama, «La brújula del teatro» (ya hecho), el diálogo y el coche que baja.", org: "Individual|Individual" },
       { min: 10, t: "Reptes: girar i parlar|Retos: girar y hablar", fase: 'ordinador',
-        fa: "Pausa activa tots junts. Resol amb la classe el camí del cotxe en forma de L (diapositiva 11) i deixa'ls fer els reptes.|Pausa activa todos juntos. Resuelve con la clase el camino del coche en forma de L (diapositiva 11) y deja que hagan los retos.",
-        diu: ["Primer recte, després gir, després recte. Quants passos a cada tros?|Primero recto, después giro, después recto. ¿Cuántos pasos en cada trozo?", "En Vuit ha de tornar mirant a l'esquerra: quin bloc el fa mirar-hi?|Vuit tiene que volver mirando a la izquierda: ¿qué bloque lo hace mirar allí?"],
+        fa: "Feu la pausa activa tots junts. Projecta el camí en forma de L (diapositiva 11) i, abans de mostrar-lo, demana els tres trossos (recte, gir, recte) i escriu-los a la pissarra. Després deixa'ls fer els quatre reptes. Recorda que hi ha dues maneres de mirar amunt: «gira -90 graus» o «apunta en direcció 0».|Haced la pausa activa todos juntos. Proyecta el camino en forma de L (diapositiva 11) y, antes de mostrarlo, pide los tres trozos (recto, giro, recto) y escríbelos en la pizarra. Después deja que hagan los cuatro retos. Recuerda que hay dos maneras de mirar arriba: «gira -90 grados» o «apunta en dirección 0».",
+        diu: ["Primer recte, després gir, després recte. Quants passos a cada tros?|Primero recto, después giro, después recto. ¿Cuántos pasos en cada trozo?", "En Vuit ha de tornar mirant a l'esquerra: quin bloc el fa mirar-hi?|Vuit tiene que volver mirando a la izquierda: ¿qué bloque lo hace mirar allí?", "Per mirar amunt, quin gir cal: 90 o -90? (-90.)|Para mirar arriba, ¿qué giro hace falta: 90 o -90? (-90.)"],
         slides: ['s11', 's12'], app: "«Pausa activa» i els quatre reptes: el cotxe amunt, el cotxe en L, el paper de la Flama i en Vuit que entra i surt.|«Pausa activa» y los cuatro retos: el coche arriba, el coche en L, el papel de Flama y Vuit que entra y sale.", org: "Tot el grup i després individual|Todo el grupo y después individual" },
       { min: 5, t: "Crea: l'assaig del Cavaller|Crea: el ensayo del Caballero", fase: 'crea',
         fa: "Cada alumne/a programa un paper per al Cavaller amb moviment, gir i dues frases. En parelles, un llegeix el guió en veu alta i l'altre el representa.|Cada alumno/a programa un papel para el Caballero con movimiento, giro y dos frases. Por parejas, uno lee el guion en voz alta y el otro lo representa.",
-        diu: ["Es poden llegir les dues frases?|¿Se pueden leer las dos frases?"],
+        diu: ["Es poden llegir les dues frases?|¿Se pueden leer las dos frases?", "On és el gir del teu cavaller? Abans o després del «mou-te»?|¿Dónde está el giro de tu caballero? ¿Antes o después del «muévete»?", "Quina frase diu en veu alta i quina pensa?|¿Qué frase dice en voz alta y cuál piensa?"],
         slides: ['s13'], app: "Pas «Crea»: L'assaig del Cavaller.|Paso «Crea»: El ensayo del Caballero.", org: "Individual i per parelles|Individual y por parejas" },
       { min: 3, t: "Tancament i tiquet|Cierre y ticket", fase: 'tancament',
-        fa: "Resum, preguntes finals de l'app i tiquet a la porta.|Resumen, preguntas finales de la app y ticket en la puerta.",
-        diu: ["Quina direcció és mirar a l'esquerra?|¿Qué dirección es mirar a la izquierda?", "Per què posem segons a les frases?|¿Por qué ponemos segundos en las frases?"],
+        fa: "Repassa les tres idees amb el resum fent una última ronda de brúixola amb tota la classe. Deixa que facin les dues preguntes finals de l'app i com s'han sentit. A la porta, fes a cada alumne/a una de les preguntes del tiquet i anota qui confon 90 i -90.|Repasa las tres ideas con el resumen haciendo una última ronda de brújula con toda la clase. Deja que hagan las dos preguntas finales de la app y cómo se han sentido. En la puerta, haz a cada alumno/a una de las preguntas del ticket y anota quién confunde 90 y -90.",
+        diu: ["Quina direcció és mirar a l'esquerra?|¿Qué dirección es mirar a la izquierda?", "Per què posem segons a les frases?|¿Por qué ponemos segundos en las frases?", "Quatre girs de 90 graus: on acabes mirant? (On miraves al principi.)|Cuatro giros de 90 grados: ¿dónde acabas mirando? (Donde mirabas al principio.)"],
         slides: ['s14', 's15'], app: "«Tancament».|«Cierre».", org: "Tot el grup|Todo el grupo" }
     ],
     errors: [
@@ -240,7 +357,9 @@ Object.assign(TGUIDE, (() => {
       ["Posa dues frases sense segons i només se'n veu una.|Pone dos frases sin segundos y solo se ve una.",
         "Que llegeixi el guió en veu alta comptant els segons: quan desapareix la primera frase?|Que lea el guion en voz alta contando los segundos: ¿cuándo desaparece la primera frase?"],
       ["Gira el cotxe però no l'avança i no arriba a la bandera.|Gira el coche pero no lo avanza y no llega a la bandera.",
-        "Recorda la idea clau: després d'un gir, gairebé sempre cal un «mou-te».|Recuerda la idea clave: después de un giro, casi siempre hace falta un «muévete»."]
+        "Recorda la idea clau: després d'un gir, gairebé sempre cal un «mou-te».|Recuerda la idea clave: después de un giro, casi siempre hace falta un «muévete»."],
+      ["Al repte d'en Vuit, fa servir «gira 90 graus» des de la dreta i en Vuit acaba mirant avall.|En el reto de Vuit, usa «gira 90 grados» desde la derecha y Vuit acaba mirando abajo.",
+        "Que faci el gir amb el cos des de la dreta: quants quarts de volta calen per mirar a l'esquerra? (Dos, o «apunta en direcció -90».)|Que haga el giro con el cuerpo desde la derecha: ¿cuántos cuartos de vuelta hacen falta para mirar a la izquierda? (Dos, o «apunta en dirección -90».)"]
     ],
     diff: {
       mes: "Fer que el cotxe faci la volta a un quadrat (4 trossos rectes i 4 girs) i torni al lloc on ha començat, dient una frase a cada cantonada.|Hacer que el coche dé la vuelta a un cuadrado (4 tramos rectos y 4 giros) y vuelva al sitio donde ha empezado, diciendo una frase en cada esquina.",
@@ -252,7 +371,10 @@ Object.assign(TGUIDE, (() => {
       rubric: [
         ["Direccions|Direcciones", "Relaciona les quatre direccions amb els seus números sense ajuda.|Relaciona las cuatro direcciones con sus números sin ayuda.", "Necessita els fulls de la paret o provar per saber-les.|Necesita las hojas de la pared o probar para saberlas."],
         ["Girar i avançar|Girar y avanzar", "Combina girs i «mou-te» per fer un camí en forma de L.|Combina giros y «muévete» para hacer un camino en forma de L.", "Gira bé, però de vegades oblida el «mou-te» o el sentit del gir.|Gira bien, pero a veces olvida el «muévete» o el sentido del giro."],
-        ["Diàleg amb temps|Diálogo con tiempo", "Les seves frases es llegeixen una darrere l'altra i distingeix dir i pensar.|Sus frases se leen una detrás de otra y distingue decir y pensar.", "Escriu frases però encara no controla els segons.|Escribe frases pero aún no controla los segundos."]
+        ["Diàleg amb temps|Diálogo con tiempo", "Les seves frases es llegeixen una darrere l'altra i distingeix dir i pensar.|Sus frases se leen una detrás de otra y distingue decir y pensar.", "Escriu frases però encara no controla els segons.|Escribe frases pero aún no controla los segundos."],
+        ["Explicar el gir|Explicar el giro",
+          "Explica amb paraules o amb el cos per què un gir de 90 graus fa mirar avall des de la dreta.|Explica con palabras o con el cuerpo por qué un giro de 90 grados hace mirar abajo desde la derecha.",
+          "Encerta el gir provant, però encara no sap explicar per què.|Acierta el giro probando, pero aún no sabe explicar por qué."]
       ]
     },
     casa: "A casa podeu fer «La brúixola del teatre»: trieu la paret 0 i doneu-vos ordres de girar, avançar i dir frases comptant els segons.|En casa podéis hacer «La brújula del teatro»: elegid la pared 0 y daos órdenes de girar, avanzar y decir frases contando los segundos.",
@@ -263,10 +385,10 @@ Object.assign(TGUIDE, (() => {
         nota: "Que dos alumnes ho representin davant de la classe.|Que dos alumnos lo representen delante de la clase." },
       { id: 's3', k: 'anim', t: "Cap on mira?|¿Hacia dónde mira?", anim: 'g1dir', x: "0 amunt · 90 dreta · 180 avall · -90 esquerra|0 arriba · 90 derecha · 180 abajo · -90 izquierda",
         nota: "Tothom dret: mireu el full del 90, ara el del 180… Feu-ho cada vegada més de pressa.|Todos de pie: mirad la hoja del 90, ahora la del 180… Hacedlo cada vez más deprisa." },
-      { id: 's4', k: 'concepte', t: "Girar no mou|Girar no mueve", punts: ["Gira 90 graus: quart de volta a la dreta.|Gira 90 grados: cuarto de vuelta a la derecha.", "Gira -90 graus: quart de volta a l'esquerra.|Gira -90 grados: cuarto de vuelta a la izquierda.", "Després de girar, cal un «mou-te».|Después de girar, hace falta un «muévete»."], anim: 'g1dir',
+      { id: 's4', k: 'concepte', t: "Girar no mou|Girar no mueve", punts: ["Gira 90 graus: quart de volta a la dreta.|Gira 90 grados: cuarto de vuelta a la derecha.", "Gira -90 graus: quart de volta a l'esquerra.|Gira -90 grados: cuarto de vuelta a la izquierda.", "Després de girar, cal un «mou-te».|Después de girar, hace falta un «muévete»."], pic: 'img/ment/dir.webp',
         nota: "Gireu tots sense caminar i comproveu que els peus no s'han mogut de lloc.|Girad todos sin caminar y comprobad que los pies no se han movido de sitio." },
       { id: 's5', k: 'media', t: "El cotxe gira i avança|El coche gira y avanza", x: "Primer recte, després gira, després avall.|Primero recto, después gira, después abajo.",
-        media: { k: 'stage', w: { bg: 'parc', sprites: [{ id: 'cotxe', art: 'cotxe', x: -150, y: 70 }] }, prog: '@cotxe flag{ say:"Recte!|¡Recto!",1 move:140 say:"Giro!|¡Giro!",1 turn:90 say:"Ara miro avall.|Ahora miro abajo.",2 move:110 say:"Arribat!|¡Llegué!",2 }', time: 7 },
+        media: { k: 'stage', w: { bg: 'parc', sprites: [{ id: 'cotxe', art: 'cotxe', x: -150, y: 70 }] }, prog: '@cotxe flag{ say:"Recte!|¡Recto!",1 move:140 say:"Giro!|¡Giro!",1 turn:90 say:"Ara miro avall.|Ahora miro abajo.",2 move:110 say:"Ja hi soc!|¡Ya estoy!",2 }', time: 7 },
         nota: "Atura-la (o mira-la dues vegades) just després del gir: el cotxe encara és al mateix lloc.|Párala (o mírala dos veces) justo después del giro: el coche aún está en el mismo sitio." },
       { id: 's6', k: 'anim', t: "Digues i pensa|Di y piensa", anim: 'g1say', x: "Bafarada: el que diu. Núvol: el que pensa.|Bocadillo: lo que dice. Nube: lo que piensa.",
         nota: "Demana un exemple: què diria i què pensaria un actor nerviós abans de sortir?|Pide un ejemplo: ¿qué diría y qué pensaría un actor nervioso antes de salir?" },
@@ -309,6 +431,58 @@ Object.assign(TGUIDE, (() => {
 
   /* ---------- Sessió 3 · Fons i escenes ---------- */
   'g1-3': {
+    intro: "Les històries comencen a viatjar: l'alumnat canvia el fons de l'escenari amb «canvia el fons a» i amb «fons següent», i fa entrar i sortir personatges amb «mostra't» i «amaga't». La idea central és l'escena: un lloc (el fons), uns personatges i el que fan i diuen. Abans de programar, dibuixen un guió gràfic de tres vinyetes, que després els servirà per al pas «Crea». La classe alterna demostracions, el guió gràfic en paper, reptes a l'ordinador i una història pròpia de dues escenes o més.|Las historias empiezan a viajar: el alumnado cambia el fondo del escenario con «cambia el fondo a» y con «fondo siguiente», y hace entrar y salir personajes con «muéstrate» y «escóndete». La idea central es la escena: un lugar (el fondo), unos personajes y lo que hacen y dicen. Antes de programar, dibujan un guion gráfico de tres viñetas, que después les servirá para el paso «Crea». La clase alterna demostraciones, el guion gráfico en papel, retos en el ordenador y una historia propia de dos escenas o más.",
+    claus: [
+      "El fons és el decorat: quan canvia, els personatges es queden on són.|El fondo es el decorado: cuando cambia, los personajes se quedan donde están.",
+      "«Fons següent» segueix l'ordre de la llista i, després de l'últim, torna al primer.|«Fondo siguiente» sigue el orden de la lista y, después del último, vuelve al primero.",
+      "«Amaga't» fa desaparèixer el personatge sense esborrar-lo; «mostra't» el torna a fer veure.|«Escóndete» hace desaparecer al personaje sin borrarlo; «muéstrate» lo vuelve a hacer visible.",
+      "Una escena és un fons, uns personatges i el que fan i diuen; una història és una sèrie d'escenes en ordre.|Una escena es un fondo, unos personajes y lo que hacen y dicen; una historia es una serie de escenas en orden."
+    ],
+    prev: [
+      "Fer guions amb «digues» i «pensa» amb segons (sessió 2).|Hacer guiones con «di» y «piensa» con segundos (sesión 2).",
+      "Saber que els blocs es fan de dalt a baix i que l'ordre importa (sessió 1).|Saber que los bloques se hacen de arriba abajo y que el orden importa (sesión 1).",
+      "Explicar una història curta amb inici, desenvolupament i final (llengua).|Explicar una historia corta con inicio, desarrollo y final (lengua)."
+    ],
+    faq: [
+      ["On és el personatge quan s'amaga?|¿Dónde está el personaje cuando se esconde?",
+        "Continua al mateix lloc, però no es veu, com un actor darrere el teló. Amb «mostra't» torna a sortir.|Sigue en el mismo sitio, pero no se ve, como un actor detrás del telón. Con «muéstrate» vuelve a salir."],
+      ["Per què «fons següent» torna al bosc?|¿Por qué «fondo siguiente» vuelve al bosque?",
+        "Perquè la llista de fons és com un cercle: després de l'últim, torna a començar pel primer, com els dies de la setmana.|Porque la lista de fondos es como un círculo: después del último, vuelve a empezar por el primero, como los días de la semana."],
+      ["Puc dibuixar el meu propi fons?|¿Puedo dibujar mi propio fondo?",
+        "A l'app, no: hi ha fons preparats. Però al guió gràfic pots dibuixar el que vulguis i després triar el fons que s'hi assembli més.|En la app, no: hay fondos preparados. Pero en el guion gráfico puedes dibujar lo que quieras y después elegir el fondo que más se parezca."],
+      ["Quan torno a tocar la bandera, el personatge amagat torna a sortir. Per què?|Cuando vuelvo a tocar la bandera, el personaje escondido vuelve a salir. ¿Por qué?",
+        "Perquè la bandera fa començar la història des del principi, amb tot com estava al començament.|Porque la bandera hace empezar la historia desde el principio, con todo como estaba al comienzo."],
+      ["Quina diferència hi ha entre «canvia el fons a» i «fons següent»?|¿Qué diferencia hay entre «cambia el fondo a» y «fondo siguiente»?",
+        "«Canvia el fons a» va directament al fons que tries; «fons següent» passa al que ve després a la llista.|«Cambia el fondo a» va directamente al fondo que eliges; «fondo siguiente» pasa al que viene después en la lista."],
+      ["He de dibuixar bé al guió gràfic?|¿Tengo que dibujar bien en el guion gráfico?",
+        "No: valen ninots i paraules. El guió gràfic serveix per pensar l'ordre de les escenes, no per fer un dibuix bonic.|No: valen monigotes y palabras. El guion gráfico sirve para pensar el orden de las escenas, no para hacer un dibujo bonito."]
+    ],
+    tec: [
+      ["El fons no canvia quan toco la bandera.|El fondo no cambia cuando toco la bandera.",
+        "Que comprovi que el bloc de fons és dins el guió «Quan comença» i que el fons triat és diferent del que ja es veu.|Que compruebe que el bloque de fondo está dentro del guion «Al empezar» y que el fondo elegido es diferente del que ya se ve."],
+      ["El fons canvia tan de pressa que no es veu la primera escena.|El fondo cambia tan deprisa que no se ve la primera escena.",
+        "Falta temps entre escenes: que posi segons al «digues» d'abans del canvi de fons.|Falta tiempo entre escenas: que ponga segundos en el «di» de antes del cambio de fondo."],
+      ["Al repte de «fons següent» diu que el fons no és el bo.|En el reto de «fondo siguiente» dice que el fondo no es el bueno.",
+        "Que compti quants «fons següent» hi ha: del bosc a l'espai en calen dos (bosc → platja → espai).|Que cuente cuántos «fondo siguiente» hay: del bosque al espacio hacen falta dos (bosque → playa → espacio)."],
+      ["La fitxa del guió gràfic surt massa petita en imprimir.|La ficha del guion gráfico sale demasiado pequeña al imprimir.",
+        "Imprimiu-la en DIN A4 sense ajustar a la pàgina, o en DIN A3 si teniu impressora gran.|Imprimidla en DIN A4 sin ajustar a la página, o en DIN A3 si tenéis impresora grande."],
+      ["El personatge ha desaparegut i ja no el trobo.|El personaje ha desaparecido y ya no lo encuentro.",
+        "S'ha amagat: toqueu la fletxa rodona o la bandera i tornarà a sortir. Si cal, afegiu «mostra't».|Se ha escondido: tocad la flecha redonda o la bandera y volverá a salir. Si hace falta, añadid «muéstrate»."]
+    ],
+    seg: [
+      "A la pausa activa dels decorats, deixeu espai entre les taules i feu els moviments sense saltar.|En la pausa activa de los decorados, dejad espacio entre las mesas y haced los movimientos sin saltar.",
+      "Si en una història algú explica una situació real que el preocupa, escolta'l amb calma, no en parlis davant del grup i comenta-ho amb la tutoria o l'equip del centre.|Si en una historia alguien explica una situación real que le preocupa, escúchale con calma, no hables de ello delante del grupo y coméntalo con la tutoría o el equipo del centro."
+    ],
+    extra: [
+      "Fer una història de 4 escenes en què el personatge s'amaga en una escena i torna a sortir (mostra't) a la següent.|Hacer una historia de 4 escenas en la que el personaje se esconde en una escena y vuelve a salir (muéstrate) en la siguiente.",
+      "Fer servir «fons següent» per fer passar el temps: dia (parc) i nit, i que el personatge digui «Bon dia!» i «Bona nit!».|Usar «fondo siguiente» para hacer pasar el tiempo: día (parque) y noche, y que el personaje diga «¡Buenos días!» y «¡Buenas noches!».",
+      "Intercanviar el guió gràfic amb un company/a i programar la història de l'altre.|Intercambiar el guion gráfico con un compañero/a y programar la historia del otro."
+    ],
+    trans: [
+      "Llengua: l'estructura d'un relat (inici, desenvolupament i final) i la narració oral.|Lengua: la estructura de un relato (inicio, desarrollo y final) y la narración oral.",
+      "Educació artística: el guió gràfic, les vinyetes del còmic i el decorat del teatre.|Educación artística: el guion gráfico, las viñetas del cómic y el decorado del teatro.",
+      "Sessió següent: el projecte «Presenta't», on el lloc preferit serà un canvi de fons.|Sesión siguiente: el proyecto «Preséntate», donde el sitio favorito será un cambio de fondo."
+    ],
     obj: [
       "L'alumne/a canvia el fons de l'escenari amb «canvia el fons a» i amb «fons següent».|El alumno/a cambia el fondo del escenario con «cambia el fondo a» y con «fondo siguiente».",
       "L'alumne/a explica que «fons següent» segueix l'ordre de la llista i torna al primer després de l'últim.|El alumno/a explica que «fondo siguiente» sigue el orden de la lista y vuelve al primero después del último.",
@@ -332,45 +506,47 @@ Object.assign(TGUIDE, (() => {
       aula: [
         "Un ordinador per alumne/a amb Numi Tech obert a la sessió «Fons i escenes»|Un ordenador por alumno/a con Numi Tech abierto en la sesión «Fondos y escenas»",
         "Projector i la presentació d'aquesta sessió|Proyector y la presentación de esta sesión",
-        "Llapis de colors i la fitxa del guió gràfic (una per alumne/a)|Lápices de colores y la ficha del guion gráfico (una por alumno/a)",
-        "Opcional: tres llençols o cartolines de colors per fer de «decorats» a la pausa activa|Opcional: tres sábanas o cartulinas de colores para hacer de «decorados» en la pausa activa"
+        "1 fitxa del guió gràfic per alumne/a (imprimible 1) i llapis de colors (1 capsa per taula)|1 ficha del guion gráfico por alumno/a (imprimible 1) y lápices de colores (1 caja por mesa)",
+        "Opcional: 3 cartolines de colors (verd, groc i blau fosc) per fer de «decorats» a la pausa activa|Opcional: 3 cartulinas de colores (verde, amarillo y azul oscuro) para hacer de «decorados» en la pausa activa"
       ],
-      imprimir: ["Fitxa: el meu guió gràfic|Ficha: mi guion gráfico"],
+      imprimir: [
+        "1 fitxa «El meu guió gràfic» per alumne/a i 2-3 de recanvi (imprimible 1)|1 ficha «Mi guion gráfico» por alumno/a y 2-3 de recambio (imprimible 1)"
+      ],
       prep: [
-        "Imprimir una fitxa del guió gràfic per alumne/a.|Imprimir una ficha del guion gráfico por alumno/a.",
-        "Provar les demostracions de les diapositives 4, 5 i 7.|Probar las demostraciones de las diapositivas 4, 5 y 7.",
-        "Tenir preparat un exemple propi de guió gràfic de 3 vinyetes per ensenyar.|Tener preparado un ejemplo propio de guion gráfico de 3 viñetas para enseñar.",
-        "Deixar els ordinadors amb la sessió iniciada.|Dejar los ordenadores con la sesión iniciada."
+        "El dia abans (10 min): imprimir una fitxa del guió gràfic per alumne/a i alguna de recanvi.|El día antes (10 min): imprimir una ficha del guion gráfico por alumno/a y alguna de recambio.",
+        "El dia abans (10 min): dibuixar un guió gràfic propi de 3 vinyetes (ninots i paraules) per ensenyar-lo com a exemple.|El día antes (10 min): dibujar un guion gráfico propio de 3 viñetas (monigotes y palabras) para enseñarlo como ejemplo.",
+        "Provar les demostracions de les diapositives 4, 5, 6 i 10.|Probar las demostraciones de las diapositivas 4, 5, 6 y 10.",
+        "Deixar els ordinadors amb el perfil de cada alumne/a iniciat.|Dejar los ordenadores con el perfil de cada alumno/a iniciado."
       ]
     },
     plan: [
       { min: 5, t: "Recordem i el taller de decorats|Recordamos y el taller de decorados", fase: 'inici',
         fa: "Fes una ronda ràpida de brúixola. Després pregunta com canvia de lloc una obra de teatre (es canvia el decorat) i presenta el repte del dia: històries que viatgen.|Haz una ronda rápida de brújula. Después pregunta cómo cambia de sitio una obra de teatro (se cambia el decorado) y presenta el reto del día: historias que viajan.",
-        diu: ["Mira a la dreta i gira -90 graus: on mires?|Mira a la derecha y gira -90 grados: ¿dónde miras?", "Com sabem, al teatre, que l'obra ara passa en un bosc?|¿Cómo sabemos, en el teatro, que la obra ahora pasa en un bosque?"],
+        diu: ["Mira a la dreta i gira -90 graus: on mires?|Mira a la derecha y gira -90 grados: ¿dónde miras?", "Com sabem, al teatre, que l'obra ara passa en un bosc?|¿Cómo sabemos, en el teatro, que la obra ahora pasa en un bosque?", "Al teatre, com sabem que l'obra ha canviat de lloc? (Canvien el decorat.)|En el teatro, ¿cómo sabemos que la obra ha cambiado de sitio? (Cambian el decorado.)", "Avui les vostres històries viatjaran del bosc a la platja, a l'espai…|Hoy vuestras historias viajarán del bosque a la playa, al espacio…"],
         slides: ['s1', 's2'], app: "Encara no.|Todavía no.", org: "Tot el grup|Todo el grupo" },
       { min: 10, t: "Fons, fons següent i amagar-se|Fondos, fondo siguiente y esconderse", fase: 'teoria',
         fa: "Mostra el canvi de fons i fes notar que el personatge es queda on és. Explica «fons següent» amb la demostració i pregunta què passa després de l'últim. Presenta «amaga't» i «mostra't». Acaba amb la idea d'escena i ensenya el teu guió gràfic de 3 vinyetes.|Muestra el cambio de fondo y haz notar que el personaje se queda donde está. Explica «fondo siguiente» con la demostración y pregunta qué pasa después del último. Presenta «escóndete» y «muéstrate». Termina con la idea de escena y enseña tu guion gráfico de 3 viñetas.",
-        diu: ["Quan canvia el fons, en Numi s'ha mogut?|Cuando cambia el fondo, ¿Numi se ha movido?", "Després de l'espai, quin fons vindrà?|Después del espacio, ¿qué fondo vendrá?", "Quines tres coses té cada escena?|¿Qué tres cosas tiene cada escena?"],
+        diu: ["Quan canvia el fons, en Numi s'ha mogut?|Cuando cambia el fondo, ¿Numi se ha movido?", "Després de l'espai, quin fons vindrà?|Después del espacio, ¿qué fondo vendrá?", "Quines tres coses té cada escena?|¿Qué tres cosas tiene cada escena?", "Després de l'espai, quin fons ve amb «fons següent»? (El primer: el bosc.)|Después del espacio, ¿qué fondo viene con «fondo siguiente»? (El primero: el bosque.)"],
         slides: ['s3', 's4', 's5', 's6', 's7'], app: "Encara no.|Todavía no.", org: "Tot el grup|Todo el grupo" },
       { min: 12, t: "El guió gràfic|El guion gráfico", fase: 'desconnectat',
         fa: "Cada alumne/a dibuixa a la fitxa una història de 3 escenes: a cada vinyeta, el fons, el personatge i què diu, i a sota, els blocs que caldrien. Després, en parelles, s'expliquen la història l'un a l'altre. Aquest guió el podran fer servir al pas «Crea».|Cada alumno/a dibuja en la ficha una historia de 3 escenas: en cada viñeta, el fondo, el personaje y qué dice, y debajo, los bloques que harían falta. Después, por parejas, se explican la historia el uno al otro. Este guion lo podrán usar en el paso «Crea».",
-        diu: ["No cal dibuixar bé: n'hi ha prou amb ninots i paraules.|No hace falta dibujar bien: basta con monigotes y palabras.", "Quin bloc farà que passem de la vinyeta 1 a la 2?|¿Qué bloque hará que pasemos de la viñeta 1 a la 2?"],
+        diu: ["No cal dibuixar bé: n'hi ha prou amb ninots i paraules.|No hace falta dibujar bien: basta con monigotes y palabras.", "Quin bloc farà que passem de la vinyeta 1 a la 2?|¿Qué bloque hará que pasemos de la viñeta 1 a la 2?", "A cada vinyeta: on passa, qui hi surt i què diu.|En cada viñeta: dónde pasa, quién sale y qué dice.", "Explica la teva història al company/a: s'entén l'ordre de les escenes?|Explica tu historia al compañero/a: ¿se entiende el orden de las escenas?"],
         slides: ['s8'], app: "Cap: activitat sense pantalla.|Ninguna: actividad sin pantalla.", org: "Individual i després per parelles|Individual y después por parejas" },
       { min: 15, t: "A l'ordinador: descobreix i investiga|En el ordenador: descubre e investiga", fase: 'ordinador',
-        fa: "Avancen fins a la pausa activa. Al pas «El guió gràfic», que toquin «Ho hem fet!». Al viatge de la Tuga, que comptin els fons en veu baixa.|Avanzan hasta la pausa activa. En el paso «El guion gráfico», que toquen «¡Lo hemos hecho!». En el viaje de Tuga, que cuenten los fondos en voz baja.",
-        diu: ["Quants fons has comptat? Quins blocs els canvien?|¿Cuántos fondos has contado? ¿Qué bloques los cambian?", "On acaba la història d'en Numi i per què?|¿Dónde termina la historia de Numi y por qué?"],
+        fa: "Avancen fins a la pausa activa. Al pas «El guió gràfic», que toquin «Ho hem fet!», perquè ja l'han fet en paper. Al viatge de la Tuga, que comptin els fons en veu baixa i després en mirin el guió. A la història d'en Numi que acaba en una platja fosca, que diguin quin bloc està malament abans de triar-lo.|Avanzan hasta la pausa activa. En el paso «El guion gráfico», que toquen «¡Lo hemos hecho!», porque ya lo han hecho en papel. En el viaje de Tuga, que cuenten los fondos en voz baja y después miren su guion. En la historia de Numi que acaba en una playa oscura, que digan qué bloque está mal antes de elegirlo.",
+        diu: ["Quants fons has comptat? Quins blocs els canvien?|¿Cuántos fondos has contado? ¿Qué bloques los cambian?", "On acaba la història d'en Numi i per què?|¿Dónde termina la historia de Numi y por qué?", "Quin bloc fa que la platja surti fosca? (El que canvia el fons a l'espai.)|¿Qué bloque hace que la playa salga oscura? (El que cambia el fondo al espacio.)", "Si una història té tres fons, quants blocs de fons calen? (Normalment, un per escena.)|Si una historia tiene tres fondos, ¿cuántos bloques de fondo hacen falta? (Normalmente, uno por escena.)"],
         slides: ['s9'], app: "De «Recorda» fins a «Investiga»: la pregunta del gir, els decorats, les 5 targetes, «fons següent», ordenar el guió de la Guida, «El guió gràfic» (ja fet), el viatge de la Tuga, quin fons es veu al final i la platja que surt fosca.|De «Recuerda» hasta «Investiga»: la pregunta del giro, los decorados, las 5 tarjetas, «fondo siguiente», ordenar el guion de Guida, «El guion gráfico» (ya hecho), el viaje de Tuga, qué fondo se ve al final y la playa que sale oscura.", org: "Individual|Individual" },
       { min: 10, t: "Reptes: canvis de decorat|Retos: cambios de decorado", fase: 'ordinador',
-        fa: "Feu la pausa activa dels decorats. Després mostra el repte de les escenes en mal ordre (diapositiva 10) i deixa'ls fer els quatre reptes.|Haced la pausa activa de los decorados. Después muestra el reto de las escenas en mal orden (diapositiva 10) y deja que hagan los cuatro retos.",
-        diu: ["Quants «fons següent» calen del bosc a l'espai?|¿Cuántos «fondo siguiente» hacen falta del bosque al espacio?", "Quins dos blocs estan intercanviats?|¿Qué dos bloques están intercambiados?"],
+        fa: "Feu la pausa activa dels decorats tots junts. Després projecta el repte de les escenes en mal ordre (diapositiva 10): que trobin els dos blocs de fons intercanviats, però sense resoldre'l del tot. Deixa'ls fer els quatre reptes i passeja preguntant quin fons hi ha a cada escena.|Haced la pausa activa de los decorados todos juntos. Después proyecta el reto de las escenas en mal orden (diapositiva 10): que encuentren los dos bloques de fondo intercambiados, pero sin resolverlo del todo. Deja que hagan los cuatro retos y pasea preguntando qué fondo hay en cada escena.",
+        diu: ["Quants «fons següent» calen del bosc a l'espai?|¿Cuántos «fondo siguiente» hacen falta del bosque al espacio?", "Quins dos blocs estan intercanviats?|¿Qué dos bloques están intercambiados?", "L'Estel ha de dir «Adéu!» i després amagar-se. Per què en aquest ordre? (Si s'amaga primer, ningú no veu la frase.)|Estel tiene que decir «¡Adiós!» y después esconderse. ¿Por qué en este orden? (Si se esconde primero, nadie ve la frase.)", "En una història desordenada, cal esborrar-ho tot? (No: només canviar els blocs que fallen.)|En una historia desordenada, ¿hay que borrarlo todo? (No: solo cambiar los bloques que fallan.)"],
         slides: ['s10', 's11'], app: "«Pausa activa» i els quatre reptes: la platja, el viatge amb fons següent, el comiat de l'Estel i les escenes en mal ordre.|«Pausa activa» y los cuatro retos: la playa, el viaje con fondo siguiente, la despedida de Estel y las escenas en mal orden.", org: "Tot el grup i després individual|Todo el grupo y después individual" },
       { min: 5, t: "Crea: la meva escena|Crea: mi escena", fase: 'crea',
         fa: "Cada alumne/a programa la història del seu guió gràfic (o una de nova) amb la Flama: almenys dos fons i una frase a cada escena.|Cada alumno/a programa la historia de su guion gráfico (o una nueva) con Flama: al menos dos fondos y una frase en cada escena.",
-        diu: ["Mira la teva fitxa: quin és el primer fons?|Mira tu ficha: ¿cuál es el primer fondo?"],
-        slides: ['s12'], app: "Pas «Crea»: La meva escena.|Paso «Crea»: Mi escena.", org: "Individual|Individual" },
+        diu: ["Mira la teva fitxa: quin és el primer fons?|Mira tu ficha: ¿cuál es el primer fondo?", "Cada escena comença amb el seu fons i després ve la frase.|Cada escena empieza con su fondo y después viene la frase.", "Vols que la Flama surti de l'escena al final? Quin bloc ho fa? («Amaga't».)|¿Quieres que Flama salga de la escena al final? ¿Qué bloque lo hace? («Escóndete».)"],
+        slides: ['s12', 's15'], app: "Pas «Crea»: La meva escena.|Paso «Crea»: Mi escena.", org: "Individual|Individual" },
       { min: 3, t: "Tancament i tiquet|Cierre y ticket", fase: 'tancament',
-        fa: "Resum, preguntes finals de l'app i tiquet a la porta.|Resumen, preguntas finales de la app y ticket en la puerta.",
-        diu: ["Què passa amb els personatges quan canvia el fons?|¿Qué pasa con los personajes cuando cambia el fondo?", "Quin bloc fa sortir un personatge de l'escena?|¿Qué bloque hace salir a un personaje de la escena?"],
+        fa: "Repassa les tres idees amb el resum i pregunta qui ha fet una història de més de dues escenes. Deixa que facin les preguntes finals de l'app i com s'han sentit. A la porta, fes a cada alumne/a una pregunta del tiquet i recull les fitxes del guió gràfic: les poden fer servir d'idea per al projecte.|Repasa las tres ideas con el resumen y pregunta quién ha hecho una historia de más de dos escenas. Deja que hagan las preguntas finales de la app y cómo se han sentido. En la puerta, haz a cada alumno/a una pregunta del ticket y recoge las fichas del guion gráfico: las pueden usar como idea para el proyecto.",
+        diu: ["Què passa amb els personatges quan canvia el fons?|¿Qué pasa con los personajes cuando cambia el fondo?", "Quin bloc fa sortir un personatge de l'escena?|¿Qué bloque hace salir a un personaje de la escena?", "Quines tres coses té una escena? (Fons, personatges i el que fan i diuen.)|¿Qué tres cosas tiene una escena? (Fondo, personajes y lo que hacen y dicen.)"],
         slides: ['s13', 's14'], app: "«Tancament».|«Cierre».", org: "Tot el grup|Todo el grupo" }
     ],
     errors: [
@@ -383,7 +559,9 @@ Object.assign(TGUIDE, (() => {
       ["Creu que el personatge amagat s'ha esborrat i el vol tornar a crear.|Cree que el personaje escondido se ha borrado y lo quiere volver a crear.",
         "Que toqui la bandera una altra vegada: tot torna a començar i el personatge torna a ser-hi.|Que toque la bandera otra vez: todo vuelve a empezar y el personaje vuelve a estar."],
       ["A les escenes en mal ordre, esborra tot el guió.|En las escenas en mal orden, borra todo el guion.",
-        "Que llegeixi el guió en veu alta i trobi on diu «nit» i on diu «bosc»: només cal canviar aquests dos blocs.|Que lea el guion en voz alta y encuentre dónde dice «noche» y dónde dice «bosque»: solo hay que cambiar esos dos bloques."]
+        "Que llegeixi el guió en veu alta i trobi on diu «nit» i on diu «bosc»: només cal canviar aquests dos blocs.|Que lea el guion en voz alta y encuentre dónde dice «noche» y dónde dice «bosque»: solo hay que cambiar esos dos bloques."],
+      ["Posa «fons següent» però el fons que vol no és el següent de la llista.|Pone «fondo siguiente» pero el fondo que quiere no es el siguiente de la lista.",
+        "Que digui la llista de fons en veu alta i assenyali on és ara: si en vol un de concret, és millor «canvia el fons a».|Que diga la lista de fondos en voz alta y señale dónde está ahora: si quiere uno concreto, es mejor «cambia el fondo a»."]
     ],
     diff: {
       mes: "Fer una història de 4 escenes en què el personatge s'amaga en una escena i torna a sortir (mostra't) en la següent, amb un pensament i una frase a cada escena.|Hacer una historia de 4 escenas en la que el personaje se esconde en una escena y vuelve a salir (muéstrate) en la siguiente, con un pensamiento y una frase en cada escena.",
@@ -395,14 +573,17 @@ Object.assign(TGUIDE, (() => {
       rubric: [
         ["Canviar el fons|Cambiar el fondo", "Fa servir «canvia el fons a» i «fons següent» i preveu quin fons es veurà.|Usa «cambia el fondo a» y «fondo siguiente» y prevé qué fondo se verá.", "Canvia el fons però li costa preveure l'ordre de «fons següent».|Cambia el fondo pero le cuesta prever el orden de «fondo siguiente»."],
         ["Escenes|Escenas", "Planifica 3 escenes al guió gràfic amb fons, personatge i frase.|Planifica 3 escenas en el guion gráfico con fondo, personaje y frase.", "Dibuixa les escenes però sense relacionar-les amb els blocs.|Dibuja las escenas pero sin relacionarlas con los bloques."],
-        ["Història programada|Historia programada", "La seva història té almenys dos fons i una frase a cada escena, en l'ordre bo.|Su historia tiene al menos dos fondos y una frase en cada escena, en el orden correcto.", "Té dos fons, però les frases no coincideixen amb l'escena.|Tiene dos fondos, pero las frases no coinciden con la escena."]
+        ["Història programada|Historia programada", "La seva història té almenys dos fons i una frase a cada escena, en l'ordre bo.|Su historia tiene al menos dos fondos y una frase en cada escena, en el orden correcto.", "Té dos fons, però les frases no coincideixen amb l'escena.|Tiene dos fondos, pero las frases no coinciden con la escena."],
+        ["Guió gràfic|Guion gráfico",
+          "Dibuixa tres escenes en ordre amb el fons, el personatge i el que diu a cadascuna.|Dibuja tres escenas en orden con el fondo, el personaje y lo que dice en cada una.",
+          "Dibuixa les escenes, però hi falta el lloc o el que diu el personatge.|Dibuja las escenas, pero falta el lugar o lo que dice el personaje."]
       ]
     },
     casa: "A casa, inventeu junts una història de 3 escenes i expliqueu-la com si fos una obra de teatre, canviant de lloc de la casa a cada escena (la cuina és la platja, el passadís és el bosc…).|En casa, inventad juntos una historia de 3 escenas y explicadla como si fuera una obra de teatro, cambiando de sitio de la casa en cada escena (la cocina es la playa, el pasillo es el bosque…).",
     slides: [
       { id: 's1', k: 'portada', t: "Fons i escenes|Fondos y escenas", x: "Al taller del teatre pintem decorats: avui les històries viatgen.|En el taller del teatro pintamos decorados: hoy las historias viajan.",
         nota: "Explica que avui faran històries amb diversos llocs.|Explica que hoy harán historias con varios lugares." },
-      { id: 's2', k: 'pregunta', t: "Com canvia de lloc una obra de teatre?|¿Cómo cambia de sitio una obra de teatro?", punts: ["Canvia el decorat|Cambia el decorado", "Els actors surten i entren|Los actores salen y entran", "Canvia la llum|Cambia la luz"],
+      { id: 's2', k: 'pregunta', t: "Com canvia de lloc una obra?|¿Cómo cambia de sitio una obra?", punts: ["Canvia el decorat|Cambia el decorado", "Els actors surten i entren|Los actores salen y entran", "Canvia la llum|Cambia la luz"],
         nota: "Relaciona les respostes amb els blocs d'avui: fons, amaga't i mostra't.|Relaciona las respuestas con los bloques de hoy: fondo, escóndete y muéstrate." },
       { id: 's3', k: 'anim', t: "El fons de l'escenari|El fondo del escenario", anim: 'g1bg', x: "El fons canvia; els personatges es queden on són.|El fondo cambia; los personajes se quedan donde están.",
         nota: "Fes notar que en Numi no es mou mentre canvien els fons.|Haz notar que Numi no se mueve mientras cambian los fondos." },
@@ -412,7 +593,8 @@ Object.assign(TGUIDE, (() => {
       { id: 's5', k: 'media', t: "Fons següent|Fondo siguiente", x: "Un darrere l'altre… i després de l'últim, el primer.|Uno detrás de otro… y después del último, el primero.",
         media: { k: 'stage', w: { bg: 'bosc', bgs: ['bosc', 'platja', 'espai'], sprites: [{ id: 'guida', art: 'guida', x: 0, y: -60 }] }, prog: '@guida flag{ say:"1|1",1 nextbg say:"2|2",1 nextbg say:"3|3",1 nextbg say:"I tornem al primer!|¡Y volvemos al primero!",2 }', time: 6 },
         nota: "Abans del tercer canvi, pregunta quin fons vindrà.|Antes del tercer cambio, pregunta qué fondo vendrá." },
-      { id: 's6', k: 'concepte', t: "Amaga't i mostra't|Escóndete y muéstrate", punts: ["Amaga't: el personatge surt de l'escena.|Escóndete: el personaje sale de la escena.", "Mostra't: torna a sortir.|Muéstrate: vuelve a salir.", "Amb la bandera, tot torna a començar.|Con la bandera, todo vuelve a empezar."], blocks: [{ t: "amaga't|escóndete", c: 'art' }, { t: "mostra't|muéstrate", c: 'art' }],
+      { id: 's6', k: 'media', t: "Amaga't i mostra't|Escóndete y muéstrate", x: "L'Estel s'acomiada i s'amaga: continua allà, però no es veu.|Estel se despide y se esconde: sigue allí, pero no se ve.",
+        media: { k: 'stage', w: { bg: 'nit', sprites: [{ id: 'estel', art: 'estel', x: 90, y: -40 }, { id: 'numi', art: 'numi', x: -100, y: -60, costume: 2 }] }, prog: '@estel flag{ say:"Adéu, me\'n vaig!|¡Adiós, me voy!",2 hide } @numi flag{ think:"…|…",2 say:"On és l\'Estel?|¿Dónde está Estel?",3 }', time: 6 },
         nota: "Demana: primer la frase de comiat i després amaga't, o al revés? Per què?|Pide: ¿primero la frase de despedida y después escóndete, o al revés? ¿Por qué?" },
       { id: 's7', k: 'anim', t: "Una història feta d'escenes|Una historia hecha de escenas", anim: 'g1scene', x: "Escena = fons + personatges + el que fan i diuen.|Escena = fondo + personajes + lo que hacen y dicen.",
         nota: "Ensenya el teu guió gràfic d'exemple de 3 vinyetes.|Enseña tu guion gráfico de ejemplo de 3 viñetas." },
@@ -427,6 +609,8 @@ Object.assign(TGUIDE, (() => {
         nota: "Si algú s'encalla, que llegeixi el guió en veu alta, escena a escena.|Si alguien se atasca, que lea el guion en voz alta, escena a escena." },
       { id: 's12', k: 'activitat', t: "Crea: la meva escena|Crea: mi escena", timer: 5, x: "Programa el teu guió gràfic: almenys dos fons i una frase a cada escena.|Programa tu guion gráfico: al menos dos fondos y una frase en cada escena.",
         nota: "Qui acabi pot afegir una escena on el personatge s'amagui.|Quien termine puede añadir una escena donde el personaje se esconda." },
+      { id: 's15', k: 'concepte', t: "Escena a escena|Escena a escena", pic: 'img/ment/cad.webp', punts: ["Primer, canvia el fons.|Primero, cambia el fondo.", "Després, el personatge parla.|Después, el personaje habla.", "Fons nou, frase nova…|Fondo nuevo, frase nueva…"],
+        nota: "Com les fitxes de dòmino: cada escena va darrere l'altra. Demana a dos alumnes que llegeixin en veu alta l'ordre dels blocs del seu guió gràfic.|Como las fichas de dominó: cada escena va detrás de la otra. Pide a dos alumnos que lean en voz alta el orden de los bloques de su guion gráfico." },
       { id: 's13', k: 'resum', t: "Què hem après avui|Qué hemos aprendido hoy", punts: ["El fons és el decorat i es pot canviar.|El fondo es el decorado y se puede cambiar.", "Fons següent segueix la llista i torna al primer.|Fondo siguiente sigue la lista y vuelve al primero.", "Amaga't fa sortir de l'escena.|Escóndete hace salir de la escena."],
         nota: "Pregunta qui ha fet una història de més de dues escenes.|Pregunta quién ha hecho una historia de más de dos escenas." },
       { id: 's14', k: 'tiquet', t: "Tiquet de sortida|Ticket de salida", punts: ["Ara és l'espai (l'últim): què fa «fons següent»?|Ahora es el espacio (el último): ¿qué hace «fondo siguiente»?", "Les tres coses d'una escena.|Las tres cosas de una escena."],
@@ -446,6 +630,59 @@ Object.assign(TGUIDE, (() => {
 
   /* ---------- Sessió 4 · Projecte: presenta't ---------- */
   'g1-4': {
+    intro: "Sessió de projecte que tanca la unitat: cada alumne/a programa un personatge que es presenta parlant d'ell/a (nom de pila, què li agrada fer i lloc preferit). Treballen els quatre passos d'un projecte (pensar el pla, programar, provar i millorar) i construeixen el programa a trossos, provant després de cada tros. També aprenen quines dades es poden compartir i quines són privades. La classe comença amb un exemple, segueix amb el pla en paper, els tres trossos guiats a l'app i la creació lliure, i acaba amb una estrena amb comentaris amables.|Sesión de proyecto que cierra la unidad: cada alumno/a programa un personaje que se presenta hablando de él/ella (nombre de pila, qué le gusta hacer y sitio favorito). Trabajan los cuatro pasos de un proyecto (pensar el plan, programar, probar y mejorar) y construyen el programa a trozos, probando después de cada trozo. También aprenden qué datos se pueden compartir y cuáles son privados. La clase empieza con un ejemplo, sigue con el plan en papel, los tres trozos guiados en la app y la creación libre, y termina con un estreno con comentarios amables.",
+    claus: [
+      "Un projecte es fa en quatre passos: pla, programar, provar i millorar.|Un proyecto se hace en cuatro pasos: plan, programar, probar y mejorar.",
+      "Es construeix a trossos: una part, es prova, i després la següent.|Se construye a trozos: una parte, se prueba, y después la siguiente.",
+      "El nom de pila i els gustos es poden compartir; l'adreça, el telèfon, els cognoms o l'escola, no.|El nombre de pila y los gustos se pueden compartir; la dirección, el teléfono, los apellidos o el colegio, no.",
+      "Provar-ho com si fossis el públic ajuda a trobar errors, com una frase sense segons.|Probarlo como si fueras el público ayuda a encontrar errores, como una frase sin segundos."
+    ],
+    prev: [
+      "Moure, girar i apuntar un personatge (sessions 1 i 2).|Mover, girar y apuntar a un personaje (sesiones 1 y 2).",
+      "Dir i pensar frases amb segons (sessió 2).|Decir y pensar frases con segundos (sesión 2).",
+      "Canviar el fons i amagar un personatge (sessió 3).|Cambiar el fondo y esconder a un personaje (sesión 3)."
+    ],
+    faq: [
+      ["Puc posar el meu cognom?|¿Puedo poner mi apellido?",
+        "Millor que no: en un projecte que veuran altres persones, n'hi ha prou amb el nom de pila. El cognom, l'adreça o el telèfon són dades privades.|Mejor que no: en un proyecto que verán otras personas, basta con el nombre de pila. El apellido, la dirección o el teléfono son datos privados."],
+      ["El meu lloc preferit no és a la llista de fons.|Mi sitio favorito no está en la lista de fondos.",
+        "Tria el fons que s'hi assembli més (el parc per a un camp de futbol, la ciutat per al teu barri) i explica-ho amb una frase.|Elige el fondo que más se parezca (el parque para un campo de fútbol, la ciudad para tu barrio) y explícalo con una frase."],
+      ["Puc programar els tres personatges?|¿Puedo programar a los tres personajes?",
+        "Sí! N'hi ha prou que un es presenti, però en pots fer parlar més d'un. Recorda tocar cada personatge a dalt per veure els seus blocs.|¡Sí! Basta con que uno se presente, pero puedes hacer hablar a más de uno. Recuerda tocar cada personaje arriba para ver sus bloques."],
+      ["L'app diu que funciona però que falta alguna cosa. Què vol dir?|La app dice que funciona pero que falta algo. ¿Qué quiere decir?",
+        "El teu personatge ha de dir almenys tres frases (nom, què t'agrada i lloc preferit) i moure's o girar. Mira la llista de criteris.|Tu personaje tiene que decir al menos tres frases (nombre, lo que te gusta y sitio favorito) y moverse o girar. Mira la lista de criterios."],
+      ["On queda desat el projecte?|¿Dónde queda guardado el proyecto?",
+        "Quan toques «Desa-ho i continua», queda a «Projectes»: el podràs ensenyar a casa des del mòbil.|Cuando tocas «Guárdalo y continúa», queda en «Proyectos»: lo podrás enseñar en casa desde el móvil."],
+      ["I si a algú no li agrada la meva presentació?|¿Y si a alguien no le gusta mi presentación?",
+        "Els comentaris de l'estrena són amables: dues coses bones i una idea per millorar. Les idees serveixen per fer-la encara millor.|Los comentarios del estreno son amables: dos cosas buenas y una idea para mejorar. Las ideas sirven para hacerla todavía mejor."]
+    ],
+    tec: [
+      ["L'alumne/a no troba el projecte desat.|El alumno/a no encuentra el proyecto guardado.",
+        "Ha de tocar «Desa-ho i continua» quan el projecte funciona; després surt a la secció «Projectes» del seu perfil.|Tiene que tocar «Guárdalo y continúa» cuando el proyecto funciona; después sale en la sección «Proyectos» de su perfil."],
+      ["Per ensenyar-ho a la pantalla gran no es veu l'escenari sencer.|Para enseñarlo en la pantalla grande no se ve el escenario entero.",
+        "Feu servir el zoom del navegador (Ctrl i -) fins que l'escenari hi càpiga, o passegeu per les taules.|Usad el zoom del navegador (Ctrl y -) hasta que el escenario quepa, o pasead por las mesas."],
+      ["Ha programat un personatge i n'ha mirat un altre.|Ha programado a un personaje y ha mirado a otro.",
+        "Que toqui el seu personatge a la llista de dalt: cada un té els seus blocs.|Que toque su personaje en la lista de arriba: cada uno tiene sus bloques."],
+      ["La presentació dura tant que la prova s'acaba abans.|La presentación dura tanto que la prueba se acaba antes.",
+        "La prova dura uns 16 segons: que facin frases de 2 segons i no gaires més de sis blocs de frases.|La prueba dura unos 16 segundos: que hagan frases de 2 segundos y no muchos más de seis bloques de frases."],
+      ["Un alumne/a ha escrit una dada privada en una frase.|Un alumno/a ha escrito un dato privado en una frase.",
+        "Que toqui el text del bloc i el canviï abans de desar; parleu-ne en privat, sense posar-lo en evidència.|Que toque el texto del bloque y lo cambie antes de guardar; hablad de ello en privado, sin ponerle en evidencia."]
+    ],
+    seg: [
+      "Dades personals: abans de desar, cada parella revisa que no hi hagi cognoms, adreces, telèfons ni el nom de l'escola.|Datos personales: antes de guardar, cada pareja revisa que no haya apellidos, direcciones, teléfonos ni el nombre del colegio.",
+      "A l'estrena, ningú no està obligat a sortir; es poden ensenyar els projectes passejant per les taules.|En el estreno, nadie está obligado a salir; se pueden enseñar los proyectos paseando por las mesas.",
+      "Si algú comparteix una informació personal delicada (família, salut, un problema), atura-ho amb tacte, parla-hi en privat i comenta-ho amb la tutoria.|Si alguien comparte una información personal delicada (familia, salud, un problema), páralo con tacto, habla con él/ella en privado y coméntalo con la tutoría."
+    ],
+    extra: [
+      "Afegir una segona escena: el personatge s'amaga, canvia el fons a un altre lloc i torna a sortir (mostra't) per explicar-ne alguna cosa.|Añadir una segunda escena: el personaje se esconde, cambia el fondo a otro sitio y vuelve a salir (muéstrate) para explicar algo de él.",
+      "Fer que dos personatges es presentin l'un a l'altre per torns, com un diàleg.|Hacer que dos personajes se presenten el uno al otro por turnos, como un diálogo.",
+      "Gravar una narració oral de la presentació i comparar-la amb la que fa el personatge.|Grabar una narración oral de la presentación y compararla con la que hace el personaje."
+    ],
+    trans: [
+      "Unitat 1 sencera: moure (sessió 1), girar i parlar (sessió 2) i fons i escenes (sessió 3) s'ajunten en un projecte.|Unidad 1 entera: mover (sesión 1), girar y hablar (sesión 2) y fondos y escenas (sesión 3) se juntan en un proyecto.",
+      "Tutoria i ciutadania digital: les dades personals i com donar comentaris amables.|Tutoría y ciudadanía digital: los datos personales y cómo dar comentarios amables.",
+      "Unitat 2: els personatges es mouran sols amb vestits, esperes i bucles.|Unidad 2: los personajes se moverán solos con disfraces, esperas y bucles."
+    ],
     obj: [
       "L'alumne/a planifica una presentació personal (nom, què li agrada i lloc preferit) abans de programar.|El alumno/a planifica una presentación personal (nombre, qué le gusta y sitio favorito) antes de programar.",
       "L'alumne/a construeix un programa a trossos i el prova després de cada tros.|El alumno/a construye un programa a trozos y lo prueba después de cada trozo.",
@@ -469,45 +706,49 @@ Object.assign(TGUIDE, (() => {
       aula: [
         "Un ordinador per alumne/a amb Numi Tech obert a la sessió «Projecte: presenta't»|Un ordenador por alumno/a con Numi Tech abierto en la sesión «Proyecto: preséntate»",
         "Projector i la presentació d'aquesta sessió|Proyector y la presentación de esta sesión",
-        "La fitxa «El meu pla» (una per alumne/a) i llapis|La ficha «Mi plan» (una por alumno/a) y lápices",
-        "Opcional: una «estora vermella» (cinta al terra) per a l'estrena final|Opcional: una «alfombra roja» (cinta en el suelo) para el estreno final"
+        "1 fitxa «El meu pla» per alumne/a (imprimible 1) i 1 llapis|1 ficha «Mi plan» por alumno/a (imprimible 1) y 1 lápiz",
+        "1 tira de 3 targetes «Dues estrelles i un desig» per alumne/a (imprimible 2)|1 tira de 3 tarjetas «Dos estrellas y un deseo» por alumno/a (imprimible 2)",
+        "Opcional: una «estora vermella» (2 metres de cinta al terra) per a l'estrena final|Opcional: una «alfombra roja» (2 metros de cinta en el suelo) para el estreno final"
       ],
-      imprimir: ["Fitxa: el meu pla|Ficha: mi plan", "Targetes: dues estrelles i un desig|Tarjetas: dos estrellas y un deseo"],
+      imprimir: [
+        "1 fitxa «El meu pla» per alumne/a (imprimible 1)|1 ficha «Mi plan» por alumno/a (imprimible 1)",
+        "1 tira de targetes de comentaris per alumne/a (imprimible 2)|1 tira de tarjetas de comentarios por alumno/a (imprimible 2)"
+      ],
       prep: [
-        "Imprimir una fitxa del pla per alumne/a i les targetes de comentaris (una per alumne/a).|Imprimir una ficha del plan por alumno/a y las tarjetas de comentarios (una por alumno/a).",
-        "Provar la presentació de la Tuga (diapositiva 4) i la de la diapositiva 9.|Probar la presentación de Tuga (diapositiva 4) y la de la diapositiva 9.",
-        "Pensar com s'ensenyaran els projectes al final (tots a la pantalla gran o passejant per les taules).|Pensar cómo se enseñarán los proyectos al final (todos en la pantalla grande o paseando por las mesas).",
-        "Deixar els ordinadors amb la sessió iniciada.|Dejar los ordenadores con la sesión iniciada."
+        "El dia abans (15 min): imprimir una fitxa del pla i una tira de targetes de comentaris per alumne/a, i retallar les tires.|El día antes (15 min): imprimir una ficha del plan y una tira de tarjetas de comentarios por alumno/a, y recortar las tiras.",
+        "Provar la presentació de la Tuga (diapositiva 4), la de la diapositiva 6 i la de la 9.|Probar la presentación de Tuga (diapositiva 4), la de la diapositiva 6 y la de la 9.",
+        "Decidir com s'ensenyaran els projectes al final (voluntaris a la pantalla gran o passejant per les taules) i preparar l'ordinador del projector.|Decidir cómo se enseñarán los proyectos al final (voluntarios en la pantalla grande o paseando por las mesas) y preparar el ordenador del proyector.",
+        "Deixar els ordinadors amb el perfil de cada alumne/a iniciat.|Dejar los ordenadores con el perfil de cada alumno/a iniciado."
       ]
     },
     plan: [
       { min: 4, t: "La gran estrena|El gran estreno", fase: 'inici',
         fa: "Explica que avui és l'estrena: cada alumne/a farà un personatge que es presenta parlant d'ell/a. Presenta els quatre passos d'un projecte: pla, programar, provar i millorar.|Explica que hoy es el estreno: cada alumno/a hará un personaje que se presenta hablando de él/ella. Presenta los cuatro pasos de un proyecto: plan, programar, probar y mejorar.",
-        diu: ["Si un personatge parlés de tu, què diria?|Si un personaje hablara de ti, ¿qué diría?", "Avui no improvisarem: primer farem el pla.|Hoy no improvisaremos: primero haremos el plan."],
+        diu: ["Si un personatge parlés de tu, què diria?|Si un personaje hablara de ti, ¿qué diría?", "Avui no improvisarem: primer farem el pla.|Hoy no improvisaremos: primero haremos el plan.", "Quins són els quatre passos? (Pla, programar, provar i millorar.)|¿Cuáles son los cuatro pasos? (Plan, programar, probar y mejorar.)", "Al final farem una estrena amb aplaudiments!|¡Al final haremos un estreno con aplausos!"],
         slides: ['s1', 's2'], app: "Encara no.|Todavía no.", org: "Tot el grup|Todo el grupo" },
       { min: 8, t: "Un exemple i les dades privades|Un ejemplo y los datos privados", fase: 'teoria',
         fa: "Mostra la presentació de la Tuga i descomponeu-la en trossos a la pissarra. Parla de les dades privades: el nom de pila i els gustos es poden dir; l'adreça, el telèfon o l'escola, no. Ensenya un error habitual (una frase sense segons) i com es detecta provant.|Muestra la presentación de Tuga y descomponedla en trozos en la pizarra. Habla de los datos privados: el nombre de pila y los gustos se pueden decir; la dirección, el teléfono o el colegio, no. Enseña un error habitual (una frase sin segundos) y cómo se detecta probando.",
-        diu: ["Quins trossos té la presentació de la Tuga?|¿Qué trozos tiene la presentación de Tuga?", "Per què no posem l'adreça en un projecte que veuran altres persones?|¿Por qué no ponemos la dirección en un proyecto que verán otras personas?"],
+        diu: ["Quins trossos té la presentació de la Tuga?|¿Qué trozos tiene la presentación de Tuga?", "Per què no posem l'adreça en un projecte que veuran altres persones?|¿Por qué no ponemos la dirección en un proyecto que verán otras personas?", "Què pot dir la Tuga de si mateixa i què no hauria de dir mai? (El nom i els gustos sí; l'adreça o el telèfon, no.)|¿Qué puede decir Tuga de sí misma y qué no debería decir nunca? (El nombre y los gustos sí; la dirección o el teléfono, no.)", "La Guida diu «Hola!» però no es veu. Què li falta? (Segons.)|Guida dice «¡Hola!» pero no se ve. ¿Qué le falta? (Segundos.)"],
         slides: ['s3', 's4', 's5', 's6'], app: "Encara no.|Todavía no.", org: "Tot el grup|Todo el grupo" },
       { min: 10, t: "El meu pla|Mi plan", fase: 'desconnectat',
         fa: "Cada alumne/a omple la fitxa «El meu pla»: nom de pila, què li agrada, lloc preferit (un dels fons de l'app), quin personatge triarà i com entrarà i sortirà. En parelles, es llegeixen el pla en veu alta i comproven que no hi ha cap dada privada.|Cada alumno/a rellena la ficha «Mi plan»: nombre de pila, qué le gusta, sitio favorito (uno de los fondos de la app), qué personaje elegirá y cómo entrará y saldrá. Por parejas, se leen el plan en voz alta y comprueban que no hay ningún dato privado.",
-        diu: ["El teu lloc preferit no hi és? Tria el fons que s'hi assembli més.|¿Tu sitio favorito no está? Elige el fondo que se le parezca más.", "Revisa el pla del company/a: hi ha alguna dada privada?|Revisa el plan del compañero/a: ¿hay algún dato privado?"],
+        diu: ["El teu lloc preferit no hi és? Tria el fons que s'hi assembli més.|¿Tu sitio favorito no está? Elige el fondo que se le parezca más.", "Revisa el pla del company/a: hi ha alguna dada privada?|Revisa el plan del compañero/a: ¿hay algún dato privado?", "Revisor/a: al pla del company/a hi ha alguna dada privada?|Revisor/a: ¿en el plan del compañero/a hay algún dato privado?", "Com entrarà el teu personatge? I com se n'anirà?|¿Cómo entrará tu personaje? ¿Y cómo se irá?"],
         slides: ['s7'], app: "Cap: activitat sense pantalla.|Ninguna: actividad sin pantalla.", org: "Individual i després per parelles|Individual y después por parejas" },
       { min: 10, t: "A l'ordinador: investiga i els tres trossos|En el ordenador: investiga y los tres trozos", fase: 'ordinador',
         fa: "Avancen per l'app: la pregunta de les dades privades, en Vuit que no es llegeix, la pausa activa i els tres reptes que construeixen la presentació de la Guida a trossos. Remarca que després de cada tros es prova.|Avanzan por la app: la pregunta de los datos privados, Vuit que no se lee, la pausa activa y los tres retos que construyen la presentación de Guida a trozos. Remarca que después de cada trozo se prueba.",
-        diu: ["Has provat el tros abans d'afegir-ne un altre?|¿Has probado el trozo antes de añadir otro?", "Quin bloc falta perquè la Guida se'n vagi mirant la porta?|¿Qué bloque falta para que Guida se vaya mirando la puerta?"],
+        diu: ["Has provat el tros abans d'afegir-ne un altre?|¿Has probado el trozo antes de añadir otro?", "Quin bloc falta perquè la Guida se'n vagi mirant la porta?|¿Qué bloque falta para que Guida se vaya mirando la puerta?", "Cada repte continua el guió de l'anterior: no esborris el que ja funciona.|Cada reto continúa el guion del anterior: no borres lo que ya funciona.", "En Vuit diu dues frases però només se'n llegeix una. Quin bloc cal arreglar?|Vuit dice dos frases pero solo se lee una. ¿Qué bloque hay que arreglar?"],
         slides: ['s8', 's9', 's10'], app: "De «Recorda» fins als tres reptes de la Guida: «El meu pla» (ja fet), la pregunta de les dades privades, en Vuit, la pausa activa i els trossos 1, 2 i 3.|De «Recuerda» hasta los tres retos de Guida: «Mi plan» (ya hecho), la pregunta de los datos privados, Vuit, la pausa activa y los trozos 1, 2 y 3.", org: "Individual|Individual" },
       { min: 15, t: "Crea: presenta't!|Crea: ¡preséntate!", fase: 'crea',
         fa: "Cada alumne/a tria un personatge i programa la seva presentació seguint el pla. Passeja i pregunta en quin tros són. Quan la tinguin, la desen. Qui acabi abans fa de «provador/a» d'un company/a.|Cada alumno/a elige un personaje y programa su presentación siguiendo el plan. Pasea y pregunta en qué trozo están. Cuando la tengan, la guardan. Quien termine antes hace de «probador/a» de un compañero/a.",
-        diu: ["Mira el pla: quin és el tros següent?|Mira el plan: ¿cuál es el trozo siguiente?", "Prova-ho com si fossis el públic: es llegeix tot?|Pruébalo como si fueras el público: ¿se lee todo?"],
+        diu: ["Mira el pla: quin és el tros següent?|Mira el plan: ¿cuál es el trozo siguiente?", "Prova-ho com si fossis el públic: es llegeix tot?|Pruébalo como si fueras el público: ¿se lee todo?", "Has provat el primer tros? Ara afegeix el segon.|¿Has probado el primer trozo? Ahora añade el segundo.", "Mira els criteris: quin et falta?|Mira los criterios: ¿cuál te falta?", "Si acabes, fes de provador/a d'un company/a: es llegeixen totes les frases?|Si terminas, haz de probador/a de un compañero/a: ¿se leen todas las frases?"],
         slides: ['s11', 's12'], app: "Pas «Crea»: Presenta't (i el missatge per ensenyar-ho a un company/a).|Paso «Crea»: Preséntate (y el mensaje para enseñarlo a un compañero/a).", org: "Individual|Individual" },
       { min: 10, t: "L'estrena: dues estrelles i un desig|El estreno: dos estrellas y un deseo", fase: 'tancament',
         fa: "Feu l'estrena: alguns voluntaris mostren la presentació a la pantalla gran (o es passeja per les taules). Cada alumne/a omple una targeta per a un company/a: dues coses que li han agradat i una millora. Acaba amb les preguntes finals de l'app, el tiquet i un aplaudiment per a tots els creadors.|Haced el estreno: algunos voluntarios muestran la presentación en la pantalla grande (o se pasea por las mesas). Cada alumno/a rellena una tarjeta para un compañero/a: dos cosas que le han gustado y una mejora. Termina con las preguntas finales de la app, el ticket y un aplauso para todos los creadores.",
-        diu: ["Comentaris amables: primer el que t'agrada, després la millora.|Comentarios amables: primero lo que te gusta, después la mejora.", "Quins passos hem seguit per fer el projecte?|¿Qué pasos hemos seguido para hacer el proyecto?"],
+        diu: ["Comentaris amables: primer el que t'agrada, després la millora.|Comentarios amables: primero lo que te gusta, después la mejora.", "Quins passos hem seguit per fer el projecte?|¿Qué pasos hemos seguido para hacer el proyecto?", "Què t'ha agradat de la presentació? Digues-ho amb detall: «m'ha agradat que…».|¿Qué te ha gustado de la presentación? Dilo con detalle: «me ha gustado que…».", "La millora ha de ser una idea, no una crítica: «podries afegir…».|La mejora tiene que ser una idea, no una crítica: «podrías añadir…»."],
         slides: ['s13', 's14', 's15', 's16'], app: "«Tancament»: les dues preguntes i com m'he sentit.|«Cierre»: las dos preguntas y cómo me he sentido.", org: "Tot el grup i per parelles|Todo el grupo y por parejas" },
       { min: 3, t: "Comiat de la unitat|Despedida de la unidad", fase: 'tancament',
-        fa: "Repassa què han après a la unitat (personatges, moure, girar, parlar, fons) i anuncia la unitat 2: personatges que es mouen sols amb vestits i bucles.|Repasa qué han aprendido en la unidad (personajes, mover, girar, hablar, fondos) y anuncia la unidad 2: personajes que se mueven solos con disfraces y bucles.",
-        diu: ["La setmana vinent: animacions que no s'aturen mai!|La semana que viene: ¡animaciones que no se paran nunca!"],
+        fa: "Repassa amb la diapositiva final què han après a la unitat: personatges i guions, moure endavant i enrere, girar, dir i pensar, fons i escenes. Felicita el grup per l'estrena i anuncia la unitat 2: els personatges es mouran sols, amb vestits i bucles. Recorda que poden ensenyar el projecte a casa des de «Projectes».|Repasa con la diapositiva final qué han aprendido en la unidad: personajes y guiones, mover adelante y atrás, girar, decir y pensar, fondos y escenas. Felicita al grupo por el estreno y anuncia la unidad 2: los personajes se moverán solos, con disfraces y bucles. Recuerda que pueden enseñar el proyecto en casa desde «Proyectos».",
+        diu: ["La setmana vinent: animacions que no s'aturen mai!|La semana que viene: ¡animaciones que no se paran nunca!", "Què és el que més us ha agradat de la unitat?|¿Qué es lo que más os ha gustado de la unidad?", "Recordeu: a casa podeu ensenyar el projecte des de «Projectes».|Recordad: en casa podéis enseñar el proyecto desde «Proyectos»."],
         slides: ['s17'], app: "Cap.|Ninguna.", org: "Tot el grup|Todo el grupo" }
     ],
     errors: [
@@ -520,7 +761,9 @@ Object.assign(TGUIDE, (() => {
       ["Canvia el fons al principi i la resta de frases ja passen al lloc preferit.|Cambia el fondo al principio y el resto de frases ya pasan en el sitio favorito.",
         "Pregunta: en quin moment de la presentació parles del lloc preferit? Que hi posi el canvi de fons just abans.|Pregunta: ¿en qué momento de la presentación hablas del sitio favorito? Que ponga el cambio de fondo justo antes."],
       ["S'encalla buscant la frase perfecta i no avança.|Se atasca buscando la frase perfecta y no avanza.",
-        "Que faci servir una frase de les que ofereix l'app i la millori al final, si té temps.|Que use una frase de las que ofrece la app y la mejore al final, si tiene tiempo."]
+        "Que faci servir una frase de les que ofereix l'app i la millori al final, si té temps.|Que use una frase de las que ofrece la app y la mejore al final, si tiene tiempo."],
+      ["Posa totes les frases sense segons i, en provar, només es veu l'última.|Pone todas las frases sin segundos y, al probar, solo se ve la última.",
+        "Que miri la presentació com si fos el públic i compti quantes frases ha pogut llegir; després, que afegeixi «durant 2 s» a cadascuna.|Que mire la presentación como si fuera el público y cuente cuántas frases ha podido leer; después, que añada «durante 2 s» a cada una."]
     ],
     diff: {
       mes: "Afegir una segona escena: el personatge s'amaga, canvia el fons a un altre lloc que li agradi, torna a sortir (mostra't) i explica per què li agrada. O fer que dos personatges es presentin l'un a l'altre per torns.|Añadir una segunda escena: el personaje se esconde, cambia el fondo a otro sitio que le guste, vuelve a salir (muéstrate) y explica por qué le gusta. O hacer que dos personajes se presenten el uno al otro por turnos.",
@@ -532,14 +775,17 @@ Object.assign(TGUIDE, (() => {
       rubric: [
         ["Pla|Plan", "Omple el pla complet i el segueix en programar.|Rellena el plan completo y lo sigue al programar.", "Fa el pla però programa sense mirar-lo.|Hace el plan pero programa sin mirarlo."],
         ["Projecte programat|Proyecto programado", "La presentació té nom, gustos, lloc preferit (fons) i moviment, i es llegeix bé.|La presentación tiene nombre, gustos, sitio favorito (fondo) y movimiento, y se lee bien.", "Té algunes parts, però falta el fons o alguna frase no es llegeix.|Tiene algunas partes, pero falta el fondo o alguna frase no se lee."],
-        ["Dades i comentaris|Datos y comentarios", "No posa dades privades i dona comentaris amables i útils.|No pone datos privados y da comentarios amables y útiles.", "Necessita que li recordin què és privat o dona comentaris poc concrets.|Necesita que le recuerden qué es privado o da comentarios poco concretos."]
+        ["Dades i comentaris|Datos y comentarios", "No posa dades privades i dona comentaris amables i útils.|No pone datos privados y da comentarios amables y útiles.", "Necessita que li recordin què és privat o dona comentaris poc concrets.|Necesita que le recuerden qué es privado o da comentarios poco concretos."],
+        ["Provar i millorar|Probar y mejorar",
+          "Prova el projecte tros a tros i fa almenys una millora a partir del que veu o li diuen.|Prueba el proyecto trozo a trozo y hace al menos una mejora a partir de lo que ve o le dicen.",
+          "Prova el projecte al final, però no canvia res quan alguna cosa no es llegeix bé.|Prueba el proyecto al final, pero no cambia nada cuando algo no se lee bien."]
       ]
     },
     casa: "A casa, ensenyeu la presentació a la família des del mòbil (és a «Projectes»). Demaneu-los dues coses que els hagin agradat i una idea per millorar-la.|En casa, enseñad la presentación a la familia desde el móvil (está en «Proyectos»). Pedidles dos cosas que les hayan gustado y una idea para mejorarla.",
     slides: [
       { id: 's1', k: 'portada', t: "Projecte: presenta't|Proyecto: preséntate", x: "L'estrena del Teatre de l'illa: un personatge que parla de tu.|El estreno del Teatro de la isla: un personaje que habla de ti.",
         nota: "Crea expectació: al final hi haurà una estrena amb aplaudiments.|Crea expectación: al final habrá un estreno con aplausos." },
-      { id: 's2', k: 'concepte', t: "Els passos d'un projecte|Los pasos de un proyecto", punts: ["1. Pensar el pla|1. Pensar el plan", "2. Programar-lo a trossos|2. Programarlo a trozos", "3. Provar-lo|3. Probarlo", "4. Millorar-lo|4. Mejorarlo"],
+      { id: 's2', k: 'concepte', t: "Els passos d'un projecte|Los pasos de un proyecto", punts: ["1. Pensar el pla|1. Pensar el plan", "2. Programar-lo a trossos|2. Programarlo a trozos", "3. Provar-lo|3. Probarlo", "4. Millorar-lo|4. Mejorarlo"], pic: 'img/ment/ser.webp',
         nota: "Deixa-ho escrit a la pissarra: hi tornareu al final.|Déjalo escrito en la pizarra: volveréis a ello al final." },
       { id: 's3', k: 'repas', t: "Què sabem fer?|¿Qué sabemos hacer?", blocks: [{ t: "mou-te|muévete", c: 'mov' }, { t: "gira / apunta|gira / apunta", c: 'mov' }, { t: "digues / pensa|di / piensa", c: 'art' }, { t: "canvia el fons|cambia el fondo", c: 'art' }, { t: "amaga't|escóndete", c: 'art' }],
         nota: "Que diguin per a què serveix cada bloc en una presentació.|Que digan para qué sirve cada bloque en una presentación." },
@@ -562,7 +808,7 @@ Object.assign(TGUIDE, (() => {
         nota: "Si algú s'encalla, que digui en veu alta quin tros li falta.|Si alguien se atasca, que diga en voz alta qué trozo le falta." },
       { id: 's11', k: 'activitat', t: "Crea: presenta't!|Crea: ¡preséntate!", timer: 15, punts: ["Tria el teu personatge a la llista.|Elige tu personaje en la lista.", "Segueix el pla, tros a tros.|Sigue el plan, trozo a trozo.", "Prova-ho després de cada tros.|Pruébalo después de cada trozo.", "Quan funcioni, desa-ho.|Cuando funcione, guárdalo."],
         nota: "Passeja i pregunta: en quin tros del pla ets? Què provaràs ara?|Pasea y pregunta: ¿en qué trozo del plan estás? ¿Qué probarás ahora?" },
-      { id: 's12', k: 'concepte', t: "Els criteris del projecte|Los criterios del proyecto", punts: ["Diu el teu nom (només el de pila).|Dice tu nombre (solo el de pila).", "Diu què t'agrada fer.|Dice lo que te gusta hacer.", "Canvia el fons al teu lloc preferit.|Cambia el fondo a tu sitio favorito.", "Es mou o gira almenys una vegada.|Se mueve o gira al menos una vez."],
+      { id: 's12', k: 'concepte', t: "Els criteris del projecte|Los criterios del proyecto", punts: ["Diu el teu nom (només el de pila).|Dice tu nombre (solo el de pila).", "Diu què t'agrada fer.|Dice lo que te gusta hacer.", "Canvia el fons al teu lloc preferit.|Cambia el fondo a tu sitio favorito.", "Es mou o gira almenys una vegada.|Se mueve o gira al menos una vez."], pic: 'img/ment/lli.webp',
         nota: "Deixa-la projectada durant el «Crea» com a llista de comprovació.|Déjala proyectada durante el «Crea» como lista de comprobación." },
       { id: 's13', k: 'activitat', t: "L'estrena|El estreno", timer: 6, x: "Voluntaris a la pantalla gran. El públic aplaudeix al final!|Voluntarios en la pantalla grande. ¡El público aplaude al final!",
         nota: "Ningú no està obligat a sortir: també es pot passejar per les taules.|Nadie está obligado a salir: también se puede pasear por las mesas." },
@@ -605,6 +851,58 @@ Object.assign(TGUIDE, {
 
   /* ---------- Sessió 1 · Dibuixos que es mouen ---------- */
   'g2-1': {
+    intro: "Primera sessió de la unitat d'animació: l'alumnat descobreix que un dibuix animat són molts dibuixos que canvien de pressa. A l'escenari, cada personatge té diversos vestits (dibuixos) i es canvien amb «vestit següent» o «posa el vestit». La clau és l'«espera»: sense espera, l'ordinador canvia els dibuixos tan de pressa que no es veu res. La classe comença amb un llibret animat de paper, segueix amb l'animació humana en grups de 4 i acaba a l'ordinador amb quatre reptes i la primera animació d'en Numi.|Primera sesión de la unidad de animación: el alumnado descubre que un dibujo animado son muchos dibujos que cambian deprisa. En el escenario, cada personaje tiene varios disfraces (dibujos) y se cambian con «disfraz siguiente» o «pon el disfraz». La clave es la «espera»: sin espera, el ordenador cambia los dibujos tan deprisa que no se ve nada. La clase empieza con una libreta animada de papel, sigue con la animación humana en grupos de 4 y termina en el ordenador con cuatro retos y la primera animación de Numi.",
+    claus: [
+      "Una animació són molts dibuixos gairebé iguals que es mostren un darrere l'altre molt de pressa.|Una animación son muchos dibujos casi iguales que se muestran uno tras otro muy deprisa.",
+      "Cada personatge té vestits numerats; «vestit següent» passa al següent i, després de l'últim, torna al primer.|Cada personaje tiene disfraces numerados; «disfraz siguiente» pasa al siguiente y, después del último, vuelve al primero.",
+      "«Posa el vestit» tria un vestit concret pel seu número; si ja el porta, no canvia res.|«Pon el disfraz» elige un disfraz concreto por su número; si ya lo lleva, no cambia nada.",
+      "L'«espera» dona temps de veure cada dibuix: com més curta, més ràpida és l'animació.|La «espera» da tiempo de ver cada dibujo: cuanto más corta, más rápida es la animación."
+    ],
+    prev: [
+      "Fer un guió «Quan comença» i tocar la bandera verda (unitat 1).|Hacer un guion «Al empezar» y tocar la bandera verde (unidad 1).",
+      "Fer servir «digues» amb segons perquè una frase es llegeixi (unitat 1, sessió 2).|Usar «di» con segundos para que una frase se lea (unidad 1, sesión 2).",
+      "Llegir nombres decimals senzills com 0,5 (mig segon) (matemàtiques).|Leer números decimales sencillos como 0,5 (medio segundo) (matemáticas)."
+    ],
+    faq: [
+      ["Per què el meu peix no mou la cua si he posat «vestit següent»?|¿Por qué mi pez no mueve la cola si he puesto «disfraz siguiente»?",
+        "Segurament no hi ha espera: els canvis són tan ràpids que no els veus. Posa «espera 0,5 segons» entre canvi i canvi.|Seguramente no hay espera: los cambios son tan rápidos que no los ves. Pon «espera 0,5 segundos» entre cambio y cambio."],
+      ["Quants vestits té cada personatge?|¿Cuántos disfraces tiene cada personaje?",
+        "Depèn: el peix, el gat o la papallona en tenen 2; en Numi i la mascota, 4. Si poses un número més gran que el que té, es queda amb l'últim.|Depende: el pez, el gato o la mariposa tienen 2; Numi y la mascota, 4. Si pones un número mayor del que tiene, se queda con el último."],
+      ["Quina diferència hi ha entre «vestit següent» i «posa el vestit»?|¿Qué diferencia hay entre «disfraz siguiente» y «pon el disfraz»?",
+        "«Vestit següent» passa al que ve després, porti el que porti; «posa el vestit 3» posa sempre el 3.|«Disfraz siguiente» pasa al que viene después, lleve el que lleve; «pon el disfraz 3» pone siempre el 3."],
+      ["Puc posar una espera de 0,1 segons?|¿Puedo poner una espera de 0,1 segundos?",
+        "Sí: l'animació anirà molt ràpida. Prova diferents números i tria el que t'agradi més.|Sí: la animación irá muy rápida. Prueba diferentes números y elige el que más te guste."],
+      ["Com es fan els dibuixos animats de veritat?|¿Cómo se hacen los dibujos animados de verdad?",
+        "Amb la mateixa idea: moltíssims dibuixos o imatges que canvien de pressa. Al cinema en passen 24 cada segon.|Con la misma idea: muchísimos dibujos o imágenes que cambian deprisa. En el cine pasan 24 cada segundo."],
+      ["Per què el cotxe necessita tants blocs?|¿Por qué el coche necesita tantos bloques?",
+        "Perquè repetim el mateix tros moltes vegades. La setmana vinent aprendrem un bloc que repeteix per nosaltres: el bucle.|Porque repetimos el mismo trozo muchas veces. La semana que viene aprenderemos un bloque que repite por nosotros: el bucle."]
+    ],
+    tec: [
+      ["L'animació s'acaba abans que es vegi tot.|La animación se acaba antes de que se vea todo.",
+        "La prova dura uns segons: si hi ha esperes molt llargues (3 o 5 segons), que les escurci a 0,5.|La prueba dura unos segundos: si hay esperas muy largas (3 o 5 segundos), que las acorte a 0,5."],
+      ["No es pot escriure 0,5 a l'espera.|No se puede escribir 0,5 en la espera.",
+        "Si amb la coma no s'accepta, que l'escrigui amb punt (0.5 o .5) i toqui OK: l'app el mostrarà com a 0,5.|Si con la coma no se acepta, que lo escriba con punto (0.5 o .5) y toque OK: la app lo mostrará como 0,5."],
+      ["El personatge canvia de vestit però no es mou de lloc.|El personaje cambia de disfraz pero no se mueve de sitio.",
+        "És correcte: canviar de vestit no el mou. Per avançar, cal un «mou-te» (com al repte del cotxe).|Es correcto: cambiar de disfraz no lo mueve. Para avanzar, hace falta un «muévete» (como en el reto del coche)."],
+      ["El llibret animat no funciona: les pàgines s'enganxen.|La libreta animada no funciona: las páginas se pegan.",
+        "Feu servir paper més gruixut o enganxeu els papers només per dalt; dibuixeu prop de la vora per on es passen.|Usad papel más grueso o pegad los papeles solo por arriba; dibujad cerca del borde por donde se pasan."],
+      ["La demo de la presentació va massa ràpida per explicar-la.|La demo de la presentación va demasiado rápida para explicarla.",
+        "Les demos es repeteixen soles: deixa-la passar dues vegades i fes la pregunta abans de la segona.|Las demos se repiten solas: déjala pasar dos veces y haz la pregunta antes de la segunda."]
+    ],
+    seg: [
+      "A l'animació humana, les poses es fan al lloc i sense saltar; deixeu espai entre grups.|En la animación humana, las poses se hacen en el sitio y sin saltar; dejad espacio entre grupos.",
+      "Animacions amb canvis molt ràpids i parpelleigs poden molestar algunes persones: si algú es mareja o li fan mal els ulls, que posi esperes més llargues i descansi la vista.|Las animaciones con cambios muy rápidos y parpadeos pueden molestar a algunas personas: si alguien se marea o le duelen los ojos, que ponga esperas más largas y descanse la vista."
+    ],
+    extra: [
+      "Fer una animació d'en Numi amb els 4 vestits i esperes diferents per explicar una petita història (content, pensant, trist, content).|Hacer una animación de Numi con los 4 disfraces y esperas diferentes para contar una pequeña historia (contento, pensando, triste, contento).",
+      "Buscar l'espera més curta amb què encara es veu cada vestit del peix i explicar-ho a la classe.|Buscar la espera más corta con la que todavía se ve cada disfraz del pez y explicarlo a la clase.",
+      "Fer un llibret animat de 12 pàgines amb un personatge propi que canvia de cara.|Hacer una libreta animada de 12 páginas con un personaje propio que cambia de cara."
+    ],
+    trans: [
+      "Educació artística: el llibret animat, el cinema d'animació i el moviment a la imatge.|Educación artística: la libreta animada, el cine de animación y el movimiento en la imagen.",
+      "Matemàtiques: el temps en segons i els decimals (0,5 és mig segon).|Matemáticas: el tiempo en segundos y los decimales (0,5 es medio segundo).",
+      "Sessió següent: els bucles repetiran els vestits i les esperes per nosaltres.|Sesión siguiente: los bucles repetirán los disfraces y las esperas por nosotros."
+    ],
     obj: [
       "L'alumne/a explica que una animació és una sèrie de dibuixos que canvien de pressa.|El alumno/a explica que una animación es una serie de dibujos que cambian deprisa.",
       "L'alumne/a fa servir «vestit següent» i «posa el vestit» per canviar el dibuix d'un personatge.|El alumno/a usa «disfraz siguiente» y «pon el disfraz» para cambiar el dibujo de un personaje.",
@@ -629,14 +927,17 @@ Object.assign(TGUIDE, {
         "Un ordinador per alumne/a amb Numi Tech obert a la sessió «Dibuixos que es mouen»|Un ordenador por alumno/a con Numi Tech abierto en la sesión «Dibujos que se mueven»",
         "Projector i la presentació d'aquesta sessió|Proyector y la presentación de esta sesión",
         "Un rellotge o cronòmetre visible per a tota la classe (pot ser el del projector)|Un reloj o cronómetro visible para toda la clase (puede ser el del proyector)",
-        "Opcional: un llibret animat de paper fet per tu, per ensenyar-lo al principi|Opcional: una libreta animada de papel hecha por ti, para enseñarla al principio"
+        "1 llibret animat de 8 pàgines fet pel docent (una pilota que bota) per ensenyar-lo al principi|1 libreta animada de 8 páginas hecha por el docente (una pelota que bota) para enseñarla al principio"
       ],
-      imprimir: ["Cartes de l'animació humana|Cartas de la animación humana", "Fitxa: vestits i esperes|Ficha: disfraces y esperas"],
+      imprimir: [
+        "1 paquet de 12 cartes de l'animació humana per grup de 4 (imprimible 1)|1 paquete de 12 cartas de la animación humana por grupo de 4 (imprimible 1)",
+        "1 fitxa «Vestits i esperes» per a qui acabi abans o per a casa (imprimible 2), unes 6 còpies|1 ficha «Disfraces y esperas» para quien termine antes o para casa (imprimible 2), unas 6 copias"
+      ],
       prep: [
-        "Imprimir i retallar un paquet de cartes per grup de 4. Si es plastifiquen, serveixen també per a la sessió 2.|Imprimir y recortar un paquete de cartas por grupo de 4. Si se plastifican, sirven también para la sesión 2.",
-        "Fer un llibret animat de 8 pàgines (una pilota que bota) per ensenyar-lo a la pregunta inicial.|Hacer una libreta animada de 8 páginas (una pelota que bota) para enseñarla en la pregunta inicial.",
-        "Provar abans les demostracions de les diapositives 7, 8 i 13 per saber què es veurà.|Probar antes las demostraciones de las diapositivas 7, 8 y 13 para saber qué se verá.",
-        "Deixar els ordinadors engegats amb la sessió de cada alumne/a iniciada.|Dejar los ordenadores encendidos con la sesión de cada alumno/a iniciada."
+        "El dia abans (15 min): imprimir i retallar un paquet de cartes per grup de 4; si es plastifiquen, serveixen també per a la sessió 2.|El día antes (15 min): imprimir y recortar un paquete de cartas por grupo de 4; si se plastifican, sirven también para la sesión 2.",
+        "El dia abans (15 min): fer un llibret animat de 8 pàgines (una pilota que bota) per ensenyar-lo a la pregunta inicial.|El día antes (15 min): hacer una libreta animada de 8 páginas (una pelota que bota) para enseñarla en la pregunta inicial.",
+        "Provar les demostracions de les diapositives 7, 8 i 13 per saber què es veurà.|Probar las demostraciones de las diapositivas 7, 8 y 13 para saber qué se verá.",
+        "Deixar els ordinadors engegats amb el perfil de cada alumne/a iniciat.|Dejar los ordenadores encendidos con el perfil de cada alumno/a iniciado."
       ]
     },
     plan: [
@@ -644,40 +945,40 @@ Object.assign(TGUIDE, {
         fa: "Presenta la missió de la unitat: l'aquari del moll necessita una pantalla amb animals que es moguin. Ensenya el llibret animat: primer passa les pàgines a poc a poc i després de pressa. Pregunta què ha canviat i recull respostes sense corregir-les.|Presenta la misión de la unidad: el acuario del muelle necesita una pantalla con animales que se muevan. Enseña la libreta animada: primero pasa las páginas despacio y después deprisa. Pregunta qué ha cambiado y recoge respuestas sin corregirlas.",
         diu: ["Aquests dibuixos estan quiets. Com podem fer que es moguin?|Estos dibujos están quietos. ¿Cómo podemos hacer que se muevan?",
           "Mireu el llibret a poc a poc… i ara de pressa. Què veieu ara?|Mirad la libreta despacio… y ahora deprisa. ¿Qué veis ahora?",
-          "Avui aprendrem el secret dels dibuixos animats.|Hoy aprenderemos el secreto de los dibujos animados."],
+          "Avui aprendrem el secret dels dibuixos animats.|Hoy aprenderemos el secreto de los dibujos animados.", "Qui ha vist mai com es fa un dibuix animat? (Respostes lliures.)|¿Quién ha visto alguna vez cómo se hace un dibujo animado? (Respuestas libres.)"],
         slides: ['s1', 's2', 's3', 's4'], app: "Encara no: pantalles abaixades.|Todavía no: pantallas bajadas.", org: "Tot el grup|Todo el grupo" },
       { min: 10, t: "Vestits i esperes|Disfraces y esperas", fase: 'teoria',
         fa: "Explica amb l'animació del llibret que un dibuix animat són molts dibuixos que canvien de pressa. Presenta els vestits d'un personatge i els blocs «vestit següent» i «posa el vestit». Amb la demo de la mascota, demana que diguin el número de vestit abans que canviï. Acaba amb la diapositiva «Compte!»: sense espera no es veu res.|Explica con la animación de la libreta que un dibujo animado son muchos dibujos que cambian deprisa. Presenta los disfraces de un personaje y los bloques «disfraz siguiente» y «pon el disfraz». Con la demo de la mascota, pide que digan el número de disfraz antes de que cambie. Termina con la diapositiva «¡Cuidado!»: sin espera no se ve nada.",
         diu: ["Quants vestits té el peix? I la mascota?|¿Cuántos disfraces tiene el pez? ¿Y la mascota?",
           "Si el peix porta l'últim vestit i fa «vestit següent», quin vestit es posa?|Si el pez lleva el último disfraz y hace «disfraz siguiente», ¿qué disfraz se pone?",
-          "Per què creieu que cal l'espera? Què passaria sense?|¿Por qué creéis que hace falta la espera? ¿Qué pasaría sin ella?"],
+          "Per què creieu que cal l'espera? Què passaria sense?|¿Por qué creéis que hace falta la espera? ¿Qué pasaría sin ella?", "Quin bloc posa la mascota a dormir? (Posa el vestit 3.)|¿Qué bloque pone a dormir a la mascota? (Pon el disfraz 3.)"],
         slides: ['s5', 's6', 's7', 's8', 's9'], app: "Encara no: tota l'atenció a la projecció.|Todavía no: toda la atención en la proyección.", org: "Tot el grup|Todo el grupo" },
       { min: 12, t: "L'animació humana|La animación humana", fase: 'desconnectat',
         fa: "Fes grups de 4 amb quatre papers: actor/actriu (el personatge), programador/a, director/a i revisor/a. L'actor/actriu té les 4 cartes de vestit (poses). El programador/a fa un guió amb les cartes de blocs; el director/a el llegeix en veu alta i compta els segons de cada espera; el revisor/a comprova que la pose és la que toca. Primer, un guió amb esperes. Després, el mateix guió sense cap espera: el director/a ha de llegir-lo tan de pressa com pugui. Roten els papers a cada guió.|Haz grupos de 4 con cuatro papeles: actor/actriz (el personaje), programador/a, director/a y revisor/a. El actor/actriz tiene las 4 cartas de disfraz (poses). El programador/a hace un guion con las cartas de bloques; el director/a lo lee en voz alta y cuenta los segundos de cada espera; el revisor/a comprueba que la pose es la que toca. Primero, un guion con esperas. Después, el mismo guion sin ninguna espera: el director/a tiene que leerlo tan deprisa como pueda. Rotan los papeles en cada guion.",
         diu: ["L'actor/actriu només canvia de pose quan el guió ho diu.|El actor/actriz solo cambia de pose cuando el guion lo dice.",
           "Sense esperes, us ha donat temps de veure cada pose?|Sin esperas, ¿os ha dado tiempo de ver cada pose?",
-          "«Vestit següent» després del vestit 4: quin toca?|«Disfraz siguiente» después del disfraz 4: ¿cuál toca?"],
+          "«Vestit següent» després del vestit 4: quin toca?|«Disfraz siguiente» después del disfraz 4: ¿cuál toca?", "Quina diferència hi ha entre el guió amb esperes i el llegit de pressa? (Sense esperes no es veu cap pose.)|¿Qué diferencia hay entre el guion con esperas y el leído deprisa? (Sin esperas no se ve ninguna pose.)"],
         slides: ['s10', 's11'], app: "Cap: activitat sense pantalla.|Ninguna: actividad sin pantalla.", org: "Grups de 4 amb papers que roten|Grupos de 4 con papeles que rotan" },
       { min: 15, t: "A l'ordinador: descobreix i investiga|En el ordenador: descubre e investiga", fase: 'ordinador',
         fa: "Cada alumne/a obre la sessió i avança al seu ritme fins a la pausa activa. Al pas «El llibret animat», que toquin «Ho hem fet!» si el fan a casa o el deixin per a casa. Passeja i fixa't en la pregunta del gat: si algú respon «vestit 3», demana-li quants vestits té el gat. A «Investiga», que llegeixin els números de cada «posa el vestit» en veu baixa.|Cada alumno/a abre la sesión y avanza a su ritmo hasta la pausa activa. En el paso «La libreta animada», que toquen «¡Lo hemos hecho!» si lo hacen en casa o lo dejen para casa. Pasea y fíjate en la pregunta del gato: si alguien responde «disfraz 3», pregúntale cuántos disfraces tiene el gato. En «Investiga», que lean los números de cada «pon el disfraz» en voz baja.",
         diu: ["Compta amb el dit: 1, 2, 1, 2… On t'atures?|Cuenta con el dedo: 1, 2, 1, 2… ¿Dónde te paras?",
-          "Llegeix els vestits del peix en veu baixa: quin és el que no canvia res?|Lee los disfraces del pez en voz baja: ¿cuál es el que no cambia nada?"],
+          "Llegeix els vestits del peix en veu baixa: quin és el que no canvia res?|Lee los disfraces del pez en voz baja: ¿cuál es el que no cambia nada?", "El gat té 2 vestits: hi ha un vestit 3? (No: torna a l'1.)|El gato tiene 2 disfraces: ¿hay un disfraz 3? (No: vuelve al 1.)", "On és l'error: al número o a l'espera?|¿Dónde está el error: en el número o en la espera?"],
         slides: ['s12'], app: "Recorda, les dues històries de l'aquari, les cinc targetes de «Descobreix», ordenar els blocs de la mascota, «El llibret animat», la pregunta del gat i «Investiga» (el vestit que no canvia).|Recuerda, las dos historias del acuario, las cinco tarjetas de «Descubre», ordenar los bloques de la mascota, «La libreta animada», la pregunta del gato e «Investiga» (el disfraz que no cambia).", org: "Individual|Individual" },
       { min: 10, t: "Reptes: el peix, la mascota, la papallona i el cotxe|Retos: el pez, la mascota, la mariposa y el coche", fase: 'ordinador',
         fa: "Fes la pausa activa tots junts. Després programa amb la classe el peix de la diapositiva 13, demanant un bloc a cada alumne/a. Deixa'ls fer els quatre reptes. Al repte de la papallona, no diguis on és l'error: pregunta quin número té cada «posa el vestit».|Haced la pausa activa todos juntos. Después programa con la clase el pez de la diapositiva 13, pidiendo un bloque a cada alumno/a. Déjalos hacer los cuatro retos. En el reto de la mariposa, no digas dónde está el error: pregunta qué número tiene cada «pon el disfraz».",
         diu: ["Quin bloc va primer? I després, què cal perquè es vegi?|¿Qué bloque va primero? ¿Y después, qué hace falta para que se vea?",
           "Si sempre poses el vestit 1, el dibuix canvia?|Si siempre pones el disfraz 1, ¿el dibujo cambia?",
-          "Al cotxe, quants blocs t'han calgut? La setmana vinent en farem servir molts menys!|En el coche, ¿cuántos bloques te han hecho falta? ¡La semana que viene usaremos muchos menos!"],
+          "Al cotxe, quants blocs t'han calgut? La setmana vinent en farem servir molts menys!|En el coche, ¿cuántos bloques te han hecho falta? ¡La semana que viene usaremos muchos menos!", "Com farem que les rodes del cotxe girin mentre avança? (Vestit següent i mou-te, per parelles.)|¿Cómo haremos que las ruedas del coche giren mientras avanza? (Disfraz siguiente y muévete, por parejas.)"],
         slides: ['s13', 's14'], app: "«Pausa activa» i els quatre «Reptes»: el peix que mou la cua, la mascota que té son, la papallona que no es mou i el cotxe que arrenca.|«Pausa activa» y los cuatro «Retos»: el pez que mueve la cola, la mascota que tiene sueño, la mariposa que no se mueve y el coche que arranca.", org: "Tot el grup i després individual|Todo el grupo y después individual" },
       { min: 5, t: "Crea: la meva primera animació|Crea: mi primera animación", fase: 'crea',
         fa: "Cada alumne/a fa la seva animació d'en Numi al teatre. Quan la tinguin, en parelles s'ensenyen l'animació i el company/a ha d'endevinar quin vestit vindrà després abans de veure'l.|Cada alumno/a hace su animación de Numi en el teatro. Cuando la tengan, por parejas se enseñan la animación y el compañero/a tiene que adivinar qué disfraz vendrá después antes de verlo.",
         diu: ["Inventa una petita història: què diu en Numi i quina cara fa?|Inventa una pequeña historia: ¿qué dice Numi y qué cara pone?",
-          "Endevina quin vestit ve ara!|¡Adivina qué disfraz viene ahora!"],
+          "Endevina quin vestit ve ara!|¡Adivina qué disfraz viene ahora!", "On has posat les esperes? Es veu cada cara d'en Numi?|¿Dónde has puesto las esperas? ¿Se ve cada cara de Numi?", "L'app no deixa desar sense cap espera: per què creus que ho demana?|La app no deja guardar sin ninguna espera: ¿por qué crees que lo pide?"],
         slides: ['s15'], app: "Pas «Crea»: La meva primera animació (es desa al portafoli).|Paso «Crea»: Mi primera animación (se guarda en el portafolio).", org: "Individual i després per parelles|Individual y después por parejas" },
       { min: 3, t: "Tancament i tiquet de sortida|Cierre y ticket de salida", fase: 'tancament',
-        fa: "Repassa les tres idees de la sessió amb el resum. Deixa que responguin les preguntes finals de l'app i, a la porta, fes a cada alumne/a una de les preguntes del tiquet.|Repasa las tres ideas de la sesión con el resumen. Deja que respondan las preguntas finales de la app y, en la puerta, haz a cada alumno/a una de las preguntas del ticket.",
+        fa: "Repassa les tres idees de la sessió amb el resum i torna a la pregunta del principi: com es mou un dibuix? Deixa que responguin les dues preguntes finals de l'app i com s'han sentit. A la porta, fes a cada alumne/a una de les preguntes del tiquet i anota qui encara oblida l'espera.|Repasa las tres ideas de la sesión con el resumen y vuelve a la pregunta del principio: ¿cómo se mueve un dibujo? Deja que respondan las dos preguntas finales de la app y cómo se han sentido. En la puerta, haz a cada alumno/a una de las preguntas del ticket y anota quién todavía olvida la espera.",
         diu: ["Qui em diu el secret dels dibuixos animats?|¿Quién me dice el secreto de los dibujos animados?",
-          "Per què posem una espera entre dos vestits?|¿Por qué ponemos una espera entre dos disfraces?"],
+          "Per què posem una espera entre dos vestits?|¿Por qué ponemos una espera entre dos disfraces?", "I si el peix porta el vestit 2 i fa «vestit següent»? (Torna a l'1.)|¿Y si el pez lleva el disfraz 2 y hace «disfraz siguiente»? (Vuelve al 1.)", "La setmana vinent: com fer-ho amb molts menys blocs!|La semana que viene: ¡cómo hacerlo con muchos menos bloques!"],
         slides: ['s16', 's17'], app: "«Tancament»: les dues preguntes finals i com m'he sentit.|«Cierre»: las dos preguntas finales y cómo me he sentido.", org: "Tot el grup|Todo el grupo" }
     ],
     errors: [
@@ -690,7 +991,9 @@ Object.assign(TGUIDE, {
       ["Posa esperes molt llargues (5 o 10 segons) i la prova s'acaba abans que es vegi l'animació.|Pone esperas muy largas (5 o 10 segundos) y la prueba se acaba antes de que se vea la animación.",
         "Pregunta-li quant dura la prova i quantes esperes té. Que provi amb 0,5 segons i compari.|Pregúntale cuánto dura la prueba y cuántas esperas tiene. Que pruebe con 0,5 segundos y compare."],
       ["Programa el personatge que no toca o no troba on van els blocs nous.|Programa el personaje que no toca o no encuentra dónde van los bloques nuevos.",
-        "Mostra-li la franja «els blocs nous van aquí»: és on s'enganxarà el bloc que toqui a la paleta.|Muéstrale la franja «los bloques nuevos van aquí»: es donde se enganchará el bloque que toque en la paleta."]
+        "Mostra-li la franja «els blocs nous van aquí»: és on s'enganxarà el bloc que toqui a la paleta.|Muéstrale la franja «los bloques nuevos van aquí»: es donde se enganchará el bloque que toque en la paleta."],
+      ["Al repte del cotxe, mou el cotxe però no canvia el vestit (o al revés).|En el reto del coche, mueve el coche pero no cambia el disfraz (o al revés).",
+        "Que llegeixi en veu alta el repte: quines dues coses demana? Que comprovi cada parella: «vestit següent» i «mou-te».|Que lea en voz alta el reto: ¿qué dos cosas pide? Que compruebe cada pareja: «disfraz siguiente» y «muévete»."]
     ],
     diff: {
       mes: "Fer una animació d'en Numi amb els 4 vestits i esperes de llargades diferents per explicar una petita història (content, pensant, trist, content). Després, provar quina és l'espera més curta amb què encara es veu cada vestit.|Hacer una animación de Numi con los 4 disfraces y esperas de duraciones diferentes para contar una pequeña historia (contento, pensando, triste, contento). Después, probar cuál es la espera más corta con la que todavía se ve cada disfraz.",
@@ -702,7 +1005,10 @@ Object.assign(TGUIDE, {
       rubric: [
         ["Concepte d'animació|Concepto de animación", "Explica que són dibuixos que canvien de pressa i en dona un exemple (llibret, dibuixos animats).|Explica que son dibujos que cambian deprisa y da un ejemplo (libreta, dibujos animados).", "Sap que els dibuixos «es mouen», però encara no explica per què.|Sabe que los dibujos «se mueven», pero todavía no explica por qué."],
         ["Vestits|Disfraces", "Fa servir «vestit següent» i «posa el vestit» i preveu quin vestit vindrà després.|Usa «disfraz siguiente» y «pon el disfraz» y prevé qué disfraz vendrá después.", "Canvia vestits, però de vegades repeteix el mateix número o s'oblida que es torna al primer.|Cambia disfraces, pero a veces repite el mismo número o se olvida de que se vuelve al primero."],
-        ["Temps i espera|Tiempo y espera", "Posa esperes entre els canvis i en tria la durada perquè l'animació es vegi bé.|Pone esperas entre los cambios y elige su duración para que la animación se vea bien.", "Necessita l'ajuda de la pista per recordar l'espera.|Necesita la ayuda de la pista para recordar la espera."]
+        ["Temps i espera|Tiempo y espera", "Posa esperes entre els canvis i en tria la durada perquè l'animació es vegi bé.|Pone esperas entre los cambios y elige su duración para que la animación se vea bien.", "Necessita l'ajuda de la pista per recordar l'espera.|Necesita la ayuda de la pista para recordar la espera."],
+        ["Primera animació|Primera animación",
+          "Crea una animació d'en Numi que explica una petita història amb frases, canvis de cara i esperes.|Crea una animación de Numi que cuenta una pequeña historia con frases, cambios de cara y esperas.",
+          "Fa canviar els vestits d'en Numi, però sense història o sense que es vegin tots els canvis.|Hace cambiar los disfraces de Numi, pero sin historia o sin que se vean todos los cambios."]
       ]
     },
     casa: "A casa, amb el mòbil, podeu repetir la sessió i fer junts «El llibret animat»: una pilota que bota en 8 papers petits. Passeu les pàgines a poc a poc i després de pressa, i compteu quants «vestits» té la vostra animació.|En casa, con el móvil, podéis repetir la sesión y hacer juntos «La libreta animada»: una pelota que bota en 8 papeles pequeños. Pasad las páginas despacio y después deprisa, y contad cuántos «disfraces» tiene vuestra animación.",
@@ -713,7 +1019,7 @@ Object.assign(TGUIDE, {
         nota: "Ensenya el llibret animat a poc a poc i de pressa. Recull hipòtesis sense corregir-les: hi tornarem a la diapositiva 5.|Enseña la libreta animada despacio y deprisa. Recoge hipótesis sin corregirlas: volveremos a ello en la diapositiva 5." },
       { id: 's3', k: 'repas', t: "Recordem l'escenari|Recordemos el escenario", punts: ["El (0, 0) és al centre de l'escenari.|El (0, 0) está en el centro del escenario.", "«Quan comença» posa en marxa el guió amb la bandera verda.|«Al empezar» pone en marcha el guion con la bandera verde.", "«Digues» fa parlar un personatge.|«Di» hace hablar a un personaje."],
         nota: "Fes les preguntes en veu alta i demana que responguin amb el dit: on és el centre a la pissarra?|Haz las preguntas en voz alta y pide que respondan con el dedo: ¿dónde está el centro en la pizarra?" },
-      { id: 's4', k: 'concepte', t: "La missió: l'aquari del moll|La misión: el acuario del muelle", punts: ["Al moll obriran un aquari nou.|En el muelle abrirán un acuario nuevo.", "La Marina, la guarda, vol una pantalla amb animals que es moguin.|Marina, la guardiana, quiere una pantalla con animales que se muevan.", "Durant 4 sessions la farem entre tots.|Durante 4 sesiones la haremos entre todos."],
+      { id: 's4', k: 'concepte', t: "La missió: l'aquari del moll|La misión: el acuario del muelle", punts: ["Al moll obriran un aquari nou.|En el muelle abrirán un acuario nuevo.", "La Marina, la guarda, vol una pantalla amb animals que es moguin.|Marina, la guardiana, quiere una pantalla con animales que se muevan.", "Durant 4 sessions la farem entre tots.|Durante 4 sesiones la haremos entre todos."], pic: 'img/tech/scenes/moll.webp',
         nota: "Explica que aquesta és la història de tota la unitat i que a la sessió 4 cadascú farà el seu aquari.|Explica que esta es la historia de toda la unidad y que en la sesión 4 cada uno hará su acuario." },
       { id: 's5', k: 'anim', t: "El secret: molts dibuixos ràpids|El secreto: muchos dibujos rápidos", anim: 'g2flip', x: "Dibuixos gairebé iguals, un darrere l'altre, molt de pressa.|Dibujos casi iguales, uno tras otro, muy deprisa.",
         nota: "Torna a les hipòtesis de la diapositiva 2. Comenta que el cinema mostra 24 imatges cada segon.|Vuelve a las hipótesis de la diapositiva 2. Comenta que el cine muestra 24 imágenes cada segundo." },
@@ -776,6 +1082,58 @@ Object.assign(TGUIDE, {
 
   /* ---------- Sessió 2 · Bucles per sempre ---------- */
   'g2-2': {
+    intro: "La pantalla de l'aquari ha d'estar encesa tot el dia, i repetir blocs a mà no té fi. En aquesta sessió l'alumnat troba el patró que es repeteix en un programa i el posa dins d'un bucle: «repeteix N vegades» compta les voltes i «per sempre» no s'acaba mai. També aprèn que «si toques la vora, rebota» ha d'anar a dins del bucle perquè el personatge no surti de l'escenari, i que els blocs de sota d'un «per sempre» no es fan mai. Comencen amb la pregunta dels mil blocs, fan el ball en bucle en grups i acaben programant una pantalla que no para.|La pantalla del acuario tiene que estar encendida todo el día, y repetir bloques a mano no tiene fin. En esta sesión el alumnado encuentra el patrón que se repite en un programa y lo pone dentro de un bucle: «repite N veces» cuenta las vueltas y «por siempre» no se acaba nunca. También aprende que «si tocas el borde, rebota» tiene que ir dentro del bucle para que el personaje no salga del escenario, y que los bloques de debajo de un «por siempre» no se hacen nunca. Empiezan con la pregunta de los mil bloques, hacen el baile en bucle en grupos y terminan programando una pantalla que no para.",
+    claus: [
+      "Un patró és un tros que es repeteix; dins d'un bucle s'escriu una sola vegada.|Un patrón es un trozo que se repite; dentro de un bucle se escribe una sola vez.",
+      "«Repeteix N vegades» fa N voltes i després el programa continua; «per sempre» no s'acaba mai.|«Repite N veces» da N vueltas y después el programa sigue; «por siempre» no se acaba nunca.",
+      "Els blocs de sota d'un «per sempre» no s'arriben a fer mai.|Los bloques de debajo de un «por siempre» no se llegan a hacer nunca.",
+      "«Si toques la vora, rebota» va a dins del bucle, al costat de «mou-te», perquè es comprovi a cada pas.|«Si tocas el borde, rebota» va dentro del bucle, junto a «muévete», para que se compruebe en cada paso."
+    ],
+    prev: [
+      "Canviar de vestit amb «vestit següent» i posar esperes (sessió 1).|Cambiar de disfraz con «disfraz siguiente» y poner esperas (sesión 1).",
+      "Saber que la direcció 90 és la dreta i -90 l'esquerra (unitat 1, sessió 2).|Saber que la dirección 90 es la derecha y -90 la izquierda (unidad 1, sesión 2).",
+      "Entendre la multiplicació com una suma repetida (4 × 10 = 10 + 10 + 10 + 10).|Entender la multiplicación como una suma repetida (4 × 10 = 10 + 10 + 10 + 10)."
+    ],
+    faq: [
+      ["Com poso blocs a dins del bucle?|¿Cómo pongo bloques dentro del bucle?",
+        "Quan afegeixes el bucle, els blocs nous ja hi van a dins. Si en vols posar un a fora, toca l'espai de sota del bucle abans d'afegir-lo.|Cuando añades el bucle, los bloques nuevos ya van dentro. Si quieres poner uno fuera, toca el espacio de debajo del bucle antes de añadirlo."],
+      ["Com s'atura un «per sempre»?|¿Cómo se para un «por siempre»?",
+        "Amb el botó d'aturar (el quadrat) o tornant a tocar la bandera. A la prova automàtica s'atura sol al cap d'uns segons.|Con el botón de parar (el cuadrado) o volviendo a tocar la bandera. En la prueba automática se para solo al cabo de unos segundos."],
+      ["Per què el meu ocell no diu «Adéu»?|¿Por qué mi pájaro no dice «Adiós»?",
+        "Perquè el «digues» és a sota d'un «per sempre», i el programa no hi arriba mai. Si ha de dir-ho, posa'l abans del bucle.|Porque el «di» está debajo de un «por siempre», y el programa no llega nunca. Si tiene que decirlo, ponlo antes del bucle."],
+      ["El peix rebota però va cap per avall?|¿El pez rebota pero va boca abajo?",
+        "No: els animals de l'aquari només es giren de costat, com un mirall, per mirar cap on van.|No: los animales del acuario solo se giran de lado, como un espejo, para mirar hacia donde van."],
+      ["Quan faig servir «repeteix» i quan «per sempre»?|¿Cuándo uso «repite» y cuándo «por siempre»?",
+        "Si saps quantes vegades s'ha de fer (6 cops de tentacles), «repeteix». Si ha de durar tota l'estona (la pantalla de l'aquari), «per sempre».|Si sabes cuántas veces se tiene que hacer (6 golpes de tentáculos), «repite». Si tiene que durar todo el rato (la pantalla del acuario), «por siempre»."],
+      ["Puc posar un bucle dins d'un altre bucle?|¿Puedo poner un bucle dentro de otro bucle?",
+        "Sí, i funciona: el de dins es fa sencer a cada volta del de fora. Ho farem servir més endavant.|Sí, y funciona: el de dentro se hace entero en cada vuelta del de fuera. Lo usaremos más adelante."]
+    ],
+    tec: [
+      ["Surt el missatge que «un bucle no espera mai».|Sale el mensaje de que «un bucle no espera nunca».",
+        "Dins del bucle no hi ha cap bloc que es vegi (moure, esperar, vestit…). Que n'hi afegeixi un.|Dentro del bucle no hay ningún bloque que se vea (mover, esperar, disfraz…). Que añada uno."],
+      ["Al repte de la medusa no deixa afegir més blocs.|En el reto de la medusa no deja añadir más bloques.",
+        "El repte només admet 3 blocs (el comptador ho mostra). Que esborri els que sobren i faci servir el bucle.|El reto solo admite 3 bloques (el contador lo muestra). Que borre los que sobran y use el bucle."],
+      ["El peix rebota, però la cua no es mou.|El pez rebota, pero la cola no se mueve.",
+        "Dins del bucle hi falta «vestit següent» (amb una espera curta, o en un segon guió). Que repassi els blocs de dins del «per sempre».|Dentro del bucle falta «disfraz siguiente» (con una espera corta, o en un segundo guion). Que repase los bloques de dentro del «por siempre»."],
+      ["Un bloc ha quedat a fora del bucle i no sé com moure'l.|Un bloque se ha quedado fuera del bucle y no sé cómo moverlo.",
+        "Que toqui el bloc i faci servir les fletxes ↑ ↓: el bloc entra i surt dels bucles.|Que toque el bloque y use las flechas ↑ ↓: el bloque entra y sale de los bucles."],
+      ["Al ball en bucle fa massa soroll.|En el baile en bucle hay demasiado ruido.",
+        "Pacteu un senyal d'aturar (la cartolina vermella) i feu els moviments en silenci o xiuxiuejant.|Pactad una señal de parar (la cartulina roja) y haced los movimientos en silencio o susurrando."]
+    ],
+    seg: [
+      "Al ball en bucle i al «robot del passadís», es camina a poc a poc i s'atura abans de la paret; els salts, petits i sense empènyer.|En el baile en bucle y en el «robot del pasillo», se camina despacio y se para antes de la pared; los saltos, pequeños y sin empujar.",
+      "Respecteu qui no vulgui ballar davant de tothom: pot fer de comptador/a de voltes.|Respetad a quien no quiera bailar delante de todos: puede hacer de contador/a de vueltas."
+    ],
+    extra: [
+      "Fer que el cranc camini i digui «Uf!» cada vegada que rebota (amb el «digues» a dins del bucle) i explicar quan es diu.|Hacer que el cangrejo camine y diga «¡Uf!» cada vez que rebota (con el «di» dentro del bucle) y explicar cuándo se dice.",
+      "Provar un gir petit dins del «per sempre» (gira 3 graus) i descriure el camí que fa el personatge.|Probar un giro pequeño dentro del «por siempre» (gira 3 grados) y describir el camino que hace el personaje.",
+      "Inventar un ball en bucle de 3 moviments per a la classe i escriure'l amb cartes.|Inventar un baile en bucle de 3 movimientos para la clase y escribirlo con cartas."
+    ],
+    trans: [
+      "Matemàtiques: patrons i multiplicació com a suma repetida (4 vegades 10 passos són 40).|Matemáticas: patrones y multiplicación como suma repetida (4 veces 10 pasos son 40).",
+      "Educació física i música: seqüències de moviment i ritmes que es repeteixen.|Educación física y música: secuencias de movimiento y ritmos que se repiten.",
+      "Sessió anterior: vestits i esperes. Sessió següent: molts personatges alhora, cadascun amb el seu bucle.|Sesión anterior: disfraces y esperas. Sesión siguiente: muchos personajes a la vez, cada uno con su bucle."
+    ],
     obj: [
       "L'alumne/a troba el patró que es repeteix en un programa i el posa dins d'un bucle «repeteix».|El alumno/a encuentra el patrón que se repite en un programa y lo pone dentro de un bucle «repite».",
       "L'alumne/a distingeix «repeteix N vegades» de «per sempre» i tria el que convé.|El alumno/a distingue «repite N veces» de «por siempre» y elige el que conviene.",
@@ -799,54 +1157,57 @@ Object.assign(TGUIDE, {
       aula: [
         "Un ordinador per alumne/a amb Numi Tech obert a la sessió «Bucles per sempre»|Un ordenador por alumno/a con Numi Tech abierto en la sesión «Bucles para siempre»",
         "Projector i la presentació d'aquesta sessió|Proyector y la presentación de esta sesión",
-        "Un espai lliure a l'aula (o al pati) per a l'activitat del ball en bucle|Un espacio libre en el aula (o en el patio) para la actividad del baile en bucle",
-        "Un objecte que faci de «botó d'aturar» (una cartolina vermella)|Un objeto que haga de «botón de parar» (una cartulina roja)"
+        "Un espai lliure a l'aula o al pati (uns 4 × 4 metres) per al ball en bucle|Un espacio libre en el aula o en el patio (unos 4 × 4 metros) para el baile en bucle",
+        "1 cartolina vermella que faci de «botó d'aturar»|1 cartulina roja que haga de «botón de parar»"
       ],
-      imprimir: ["Cartes del ball en bucle|Cartas del baile en bucle", "Fitxa: troba el patró|Ficha: encuentra el patrón"],
+      imprimir: [
+        "1 paquet de 12 cartes del ball en bucle per grup de 4 (imprimible 1)|1 paquete de 12 cartas del baile en bucle por grupo de 4 (imprimible 1)",
+        "1 fitxa «Troba el patró» per a qui acabi abans o per a casa (imprimible 2), unes 6 còpies|1 ficha «Encuentra el patrón» para quien termine antes o para casa (imprimible 2), unas 6 copias"
+      ],
       prep: [
-        "Imprimir i retallar un paquet de cartes del ball per grup de 4.|Imprimir y recortar un paquete de cartas del baile por grupo de 4.",
-        "Apartar taules o cadires per deixar un passadís on es pugui caminar d'una paret a l'altra (per rebotar).|Apartar mesas o sillas para dejar un pasillo donde se pueda caminar de una pared a la otra (para rebotar).",
+        "El dia abans (15 min): imprimir i retallar un paquet de cartes del ball per grup de 4.|El día antes (15 min): imprimir y recortar un paquete de cartas del baile por grupo de 4.",
+        "Abans de la classe (5 min): apartar taules o reservar el pati per al ball en bucle.|Antes de la clase (5 min): apartar mesas o reservar el patio para el baile en bucle.",
         "Provar les demostracions de les diapositives 5, 6, 8 i 13.|Probar las demostraciones de las diapositivas 5, 6, 8 y 13.",
-        "Tenir a mà el programa llarg del cotxe de la sessió 1 per comparar-lo amb un bucle.|Tener a mano el programa largo del coche de la sesión 1 para compararlo con un bucle."
+        "Deixar els ordinadors engegats amb el perfil de cada alumne/a iniciat.|Dejar los ordenadores encendidos con el perfil de cada alumno/a iniciado."
       ]
     },
     plan: [
       { min: 5, t: "Benvinguda: mil blocs?|Bienvenida: ¿mil bloques?", fase: 'inici',
         fa: "Repassa la sessió 1 amb dues preguntes ràpides. Explica el nou encàrrec de la Marina: la pantalla ha d'estar encesa tot el dia. Pregunta quants blocs caldrien per fer que el peix mogui la cua una hora.|Repasa la sesión 1 con dos preguntas rápidas. Explica el nuevo encargo de Marina: la pantalla tiene que estar encendida todo el día. Pregunta cuántos bloques harían falta para que el pez mueva la cola una hora.",
         diu: ["Recordeu el cotxe? Quants blocs us van caldre?|¿Recordáis el coche? ¿Cuántos bloques os hicieron falta?",
-          "I si el peix ha de moure la cua tot el dia?|¿Y si el pez tiene que mover la cola todo el día?"],
+          "I si el peix ha de moure la cua tot el dia?|¿Y si el pez tiene que mover la cola todo el día?", "Hi ha algun tros que es repeteixi al programa del cotxe? (Sí: vestit següent, mou-te i espera.)|¿Hay algún trozo que se repita en el programa del coche? (Sí: disfraz siguiente, muévete y espera.)", "Avui coneixerem el bloc que repeteix per nosaltres: el bucle.|Hoy conoceremos el bloque que repite por nosotros: el bucle."],
         slides: ['s1', 's2', 's3'], app: "Encara no: pantalles abaixades.|Todavía no: pantallas bajadas.", org: "Tot el grup|Todo el grupo" },
       { min: 10, t: "Patrons i bucles|Patrones y bucles", fase: 'teoria',
         fa: "Mostra el patró que es repeteix i com entra dins d'un «repeteix». Compara «repeteix» i «per sempre» amb les dues demos. Explica «rebota» amb l'animació: fes que un alumne/a camini fins a la paret i doni la volta. Acaba amb «Compte!»: després de «per sempre», res.|Muestra el patrón que se repite y cómo entra dentro de un «repite». Compara «repite» y «por siempre» con las dos demos. Explica «rebota» con la animación: haz que un alumno/a camine hasta la pared y dé la vuelta. Termina con «¡Cuidado!»: después de «por siempre», nada.",
         diu: ["Quin és el tros que es repeteix? Quantes vegades surt?|¿Cuál es el trozo que se repite? ¿Cuántas veces sale?",
           "Quan s'acaba «repeteix 8 vegades»? I «per sempre»?|¿Cuándo se acaba «repite 8 veces»? ¿Y «por siempre»?",
-          "Si l'ocell ha de dir «Adéu» després d'un «per sempre», el dirà algun dia?|Si el pájaro tiene que decir «Adiós» después de un «por siempre», ¿lo dirá algún día?"],
+          "Si l'ocell ha de dir «Adéu» després d'un «per sempre», el dirà algun dia?|Si el pájaro tiene que decir «Adiós» después de un «por siempre», ¿lo dirá algún día?", "Si poso «rebota» a sota del «per sempre», es farà? (No, mai.)|Si pongo «rebota» debajo del «por siempre», ¿se hará? (No, nunca.)"],
         slides: ['s4', 's5', 's6', 's7', 's8', 's9'], app: "Encara no: tota l'atenció a la projecció.|Todavía no: toda la atención en la proyección.", org: "Tot el grup|Todo el grupo" },
       { min: 12, t: "El ball en bucle|El baile en bucle", fase: 'desconnectat',
         fa: "En grups de 4, cada grup inventa un patró de ball de 2 o 3 moviments amb les cartes i l'embolcalla amb una carta «Repeteix N vegades». Un grup el balla i la resta compta les voltes. Després canvien la carta per «Per sempre»: ballen fins que mostres la cartolina vermella d'aturar. Per acabar, un alumne/a fa «per sempre: un pas endavant, si toques la paret, rebota» pel passadís.|En grupos de 4, cada grupo inventa un patrón de baile de 2 o 3 movimientos con las cartas y lo envuelve con una carta «Repite N veces». Un grupo lo baila y el resto cuenta las vueltas. Después cambian la carta por «Por siempre»: bailan hasta que enseñas la cartulina roja de parar. Para terminar, un alumno/a hace «por siempre: un paso adelante, si tocas la pared, rebota» por el pasillo.",
         diu: ["Quin és el vostre patró? Quantes vegades el repetireu?|¿Cuál es vuestro patrón? ¿Cuántas veces lo repetiréis?",
           "Amb «per sempre», quan s'acaba el ball?|Con «por siempre», ¿cuándo se acaba el baile?",
-          "Què faria el robot del passadís sense la carta «rebota»?|¿Qué haría el robot del pasillo sin la carta «rebota»?"],
+          "Què faria el robot del passadís sense la carta «rebota»?|¿Qué haría el robot del pasillo sin la carta «rebota»?", "Quantes voltes ha fet el vostre ball? Coincideix amb la carta?|¿Cuántas vueltas ha dado vuestro baile? ¿Coincide con la carta?"],
         slides: ['s10', 's11'], app: "Cap: activitat sense pantalla.|Ninguna: actividad sin pantalla.", org: "Grups de 4 i després tot el grup|Grupos de 4 y después todo el grupo" },
       { min: 15, t: "A l'ordinador: descobreix i investiga|En el ordenador: descubre e investiga", fase: 'ordinador',
         fa: "Cada alumne/a avança fins a la pausa activa. A «Caçadors de bucles», que toquin «Ho farem a casa». Al pas del peix que neda, deixa'ls mirar una bona estona i pregunta què fa a la vora. A «Investiga», fixa't en qui toca el bucle en comptes del bloc de sota.|Cada alumno/a avanza hasta la pausa activa. En «Cazadores de bucles», que toquen «Lo haremos en casa». En el paso del pez que nada, déjalos mirar un buen rato y pregunta qué hace en el borde. En «Investiga», fíjate en quién toca el bucle en lugar del bloque de debajo.",
         diu: ["Quants passos fa en total? Suma les voltes.|¿Cuántos pasos da en total? Suma las vueltas.",
-          "Aquest bloc, està a dins o a fora del bucle?|Este bloque, ¿está dentro o fuera del bucle?"],
+          "Aquest bloc, està a dins o a fora del bucle?|Este bloque, ¿está dentro o fuera del bucle?", "Repeteix 4 vegades 10 passos: quants passos en total? (40.)|Repite 4 veces 10 pasos: ¿cuántos pasos en total? (40.)", "Què fa el peix quan arriba a la vora? (Rebota i dona la volta.)|¿Qué hace el pez cuando llega al borde? (Rebota y da la vuelta.)"],
         slides: ['s12'], app: "Recorda, les dues històries, les cinc targetes de «Descobreix», la pregunta del patró del gat, «Caçadors de bucles» (per a casa), la pregunta dels 40 passos, el peix que neda per sempre i «Investiga» (l'ocell que no diu adéu).|Recuerda, las dos historias, las cinco tarjetas de «Descubre», la pregunta del patrón del gato, «Cazadores de bucles» (para casa), la pregunta de los 40 pasos, el pez que nada por siempre e «Investiga» (el pájaro que no dice adiós).", org: "Individual|Individual" },
       { min: 10, t: "Reptes amb bucles|Retos con bucles", fase: 'ordinador',
         fa: "Feu la pausa activa junts. Programa amb la classe el cranc de la diapositiva 13 i deixa'ls fer els reptes. Al de la medusa només hi ha 3 blocs: si algú s'encalla, recorda-li que els blocs van a dins del bucle. A l'ocell que se'n va, pregunta on és el bloc «rebota».|Haced la pausa activa juntos. Programa con la clase el cangrejo de la diapositiva 13 y deja que hagan los retos. En el de la medusa solo hay 3 bloques: si alguien se atasca, recuérdale que los bloques van dentro del bucle. En el pájaro que se va, pregunta dónde está el bloque «rebota».",
         diu: ["Toca l'espai buit de dins del bucle abans de triar el bloc.|Toca el espacio vacío de dentro del bucle antes de elegir el bloque.",
-          "On és el «rebota»? Es fa a cada volta?|¿Dónde está el «rebota»? ¿Se hace en cada vuelta?"],
+          "On és el «rebota»? Es fa a cada volta?|¿Dónde está el «rebota»? ¿Se hace en cada vuelta?", "Amb només 3 blocs, com fas que la medusa mogui els tentacles 6 vegades? (Repeteix 6 { vestit següent, espera }.)|Con solo 3 bloques, ¿cómo haces que la medusa mueva los tentáculos 6 veces? (Repite 6 { disfraz siguiente, espera }.)", "Aquest ocell se'n va: on és el bloc que el faria tornar?|Este pájaro se va: ¿dónde está el bloque que lo haría volver?"],
         slides: ['s13', 's14'], app: "«Pausa activa» i els quatre «Reptes»: la medusa amb 3 blocs, el peix que neda sense sortir, el cranc que camina i l'ocell que se'n va.|«Pausa activa» y los cuatro «Retos»: la medusa con 3 bloques, el pez que nada sin salir, el cangrejo que camina y el pájaro que se va.", org: "Tot el grup i després individual|Todo el grupo y después individual" },
       { min: 5, t: "Crea: la pantalla que no para|Crea: la pantalla que no para", fase: 'crea',
         fa: "Cada alumne/a programa en Vuit, el pop, perquè nedi per sempre, reboti i canviï de cara. Que triïn ells els números de velocitat i d'espera. En parelles, comparen: quin pop va més de pressa i per què?|Cada alumno/a programa a Vuit, el pulpo, para que nade por siempre, rebote y cambie de cara. Que elijan ellos los números de velocidad y de espera. Por parejas, comparan: ¿qué pulpo va más deprisa y por qué?",
         diu: ["Quins números has triat? Què passa si els canvies?|¿Qué números has elegido? ¿Qué pasa si los cambias?",
-          "El teu pop surt mai de l'escenari?|¿Tu pulpo sale alguna vez del escenario?"],
+          "El teu pop surt mai de l'escenari?|¿Tu pulpo sale alguna vez del escenario?", "Què passa si l'espera és més curta? I el «mou-te» més gran?|¿Qué pasa si la espera es más corta? ¿Y el «muévete» más grande?"],
         slides: ['s15'], app: "Pas «Crea»: La pantalla que no para (es desa al portafoli).|Paso «Crea»: La pantalla que no para (se guarda en el portafolio).", org: "Individual i després per parelles|Individual y después por parejas" },
       { min: 3, t: "Tancament i tiquet de sortida|Cierre y ticket de salida", fase: 'tancament',
-        fa: "Repassa les tres idees amb el resum, deixa que facin les preguntes finals i fes el tiquet a la porta.|Repasa las tres ideas con el resumen, deja que hagan las preguntas finales y haz el ticket en la puerta.",
+        fa: "Repassa les tres idees amb el resum i torna a la pregunta dels mil blocs: ara n'hi ha prou amb tres. Deixa que facin les preguntes finals de l'app i com s'han sentit. A la porta, fes a cada alumne/a una pregunta del tiquet i anota qui encara posa blocs a fora del bucle.|Repasa las tres ideas con el resumen y vuelve a la pregunta de los mil bloques: ahora basta con tres. Deja que hagan las preguntas finales de la app y cómo se han sentido. En la puerta, haz a cada alumno/a una pregunta del ticket y anota quién todavía pone bloques fuera del bucle.",
         diu: ["Quina diferència hi ha entre «repeteix» i «per sempre»?|¿Qué diferencia hay entre «repite» y «por siempre»?",
-          "On va el bloc «rebota»?|¿Dónde va el bloque «rebota»?"],
+          "On va el bloc «rebota»?|¿Dónde va el bloque «rebota»?", "Digueu una cosa que es repeteixi per sempre a la vida. (El dia i la nit, el semàfor…)|Decid una cosa que se repita por siempre en la vida. (El día y la noche, el semáforo…)", "Quants blocs necessitàvem abans i quants ara?|¿Cuántos bloques necesitábamos antes y cuántos ahora?"],
         slides: ['s16', 's17'], app: "«Tancament»: les dues preguntes finals i com m'he sentit.|«Cierre»: las dos preguntas finales y cómo me he sentido.", org: "Tot el grup|Todo el grupo" }
     ],
     errors: [
@@ -859,7 +1220,9 @@ Object.assign(TGUIDE, {
       ["Fa servir «repeteix» amb un número petit per a una cosa que ha de durar sempre.|Usa «repite» con un número pequeño para algo que tiene que durar siempre.",
         "Que miri l'animació fins al final: què passa quan s'acaben les voltes? Quin bucle no s'acaba?|Que mire la animación hasta el final: ¿qué pasa cuando se acaban las vueltas? ¿Qué bucle no se acaba?"],
       ["Treu l'espera del bucle de vestits i diu que l'animació «s'ha espatllat».|Quita la espera del bucle de disfraces y dice que la animación «se ha estropeado».",
-        "Recorda-li la diapositiva «Compte!» de la sessió 1: sense espera, els canvis no es veuen, tampoc dins d'un bucle.|Recuérdale la diapositiva «¡Cuidado!» de la sesión 1: sin espera, los cambios no se ven, tampoco dentro de un bucle."]
+        "Recorda-li la diapositiva «Compte!» de la sessió 1: sense espera, els canvis no es veuen, tampoc dins d'un bucle.|Recuérdale la diapositiva «¡Cuidado!» de la sesión 1: sin espera, los cambios no se ven, tampoco dentro de un bucle."],
+      ["Al repte del cranc, posa una espera llarga dins del bucle i el cranc va a salts.|En el reto del cangrejo, pone una espera larga dentro del bucle y el cangrejo va a saltos.",
+        "Pregunta: durant l'espera, el cranc es mou? Que provi una espera de 0,1 segons i compari com camina.|Pregunta: durante la espera, ¿el cangrejo se mueve? Que pruebe una espera de 0,1 segundos y compare cómo camina."]
     ],
     diff: {
       mes: "Fer que el cranc camini i, cada vegada que reboti, digui «Uf!» (pista: posar el «digues» a dins del bucle i mirar quan es diu). Després, buscar l'espera més curta amb què encara es veuen les potes.|Hacer que el cangrejo camine y, cada vez que rebote, diga «¡Uf!» (pista: poner el «di» dentro del bucle y mirar cuándo se dice). Después, buscar la espera más corta con la que todavía se ven las patas.",
@@ -871,7 +1234,10 @@ Object.assign(TGUIDE, {
       rubric: [
         ["Patrons i bucles|Patrones y bucles", "Troba el patró i el posa dins d'un bucle amb el número correcte.|Encuentra el patrón y lo pone dentro de un bucle con el número correcto.", "Fa servir el bucle quan se li indica, però li costa trobar el patró sol/a.|Usa el bucle cuando se le indica, pero le cuesta encontrar el patrón solo/a."],
         ["Repeteix o per sempre|Repite o por siempre", "Tria el bucle adequat i explica que els blocs de sota d'un «per sempre» no es fan.|Elige el bucle adecuado y explica que los bloques de debajo de un «por siempre» no se hacen.", "Confon tots dos bucles o espera que es faci un bloc de sota d'un «per sempre».|Confunde los dos bucles o espera que se haga un bloque de debajo de un «por siempre»."],
-        ["Rebotar|Rebotar", "Posa «rebota» dins del bucle i el personatge no surt mai.|Pone «rebota» dentro del bucle y el personaje no sale nunca.", "Posa «rebota», però de vegades fora del bucle.|Pone «rebota», pero a veces fuera del bucle."]
+        ["Rebotar|Rebotar", "Posa «rebota» dins del bucle i el personatge no surt mai.|Pone «rebota» dentro del bucle y el personaje no sale nunca.", "Posa «rebota», però de vegades fora del bucle.|Pone «rebota», pero a veces fuera del bucle."],
+        ["Explicar el «per sempre»|Explicar el «por siempre»",
+          "Explica amb un exemple per què un bloc de sota d'un «per sempre» no es fa mai.|Explica con un ejemplo por qué un bloque de debajo de un «por siempre» no se hace nunca.",
+          "Sap que «per sempre» no para, però encara hi posa blocs a sota esperant que es facin.|Sabe que «por siempre» no para, pero aún pone bloques debajo esperando que se hagan."]
       ]
     },
     casa: "A casa, amb el mòbil, podeu repetir la sessió i fer junts «Caçadors de bucles»: busqueu coses que es repeteixen un nombre de vegades i coses que es repeteixen per sempre, i apunteu-les en dues columnes.|En casa, con el móvil, podéis repetir la sesión y hacer juntos «Cazadores de bucles»: buscad cosas que se repiten un número de veces y cosas que se repiten por siempre, y apuntadlas en dos columnas.",
@@ -946,6 +1312,58 @@ Object.assign(TGUIDE, {
 
   /* ---------- Sessió 3 · Molts personatges alhora ---------- */
   'g2-3': {
+    intro: "Al tanc gran de l'aquari hi ha molts animals i tots s'han de moure alhora. L'alumnat descobreix que cada personatge té els seus propis guions (es trien a la barra de dalt de l'editor) i que, quan es toca la bandera verda, tots els guions «quan comença» comencen al mateix moment. També aprèn a donar un caràcter a cada animal canviant els números de «mou-te» i d'«espera», i a fer servir dos guions en un sol personatge per fer dues coses a ritmes diferents. Comencen amb la imatge de l'orquestra, fan l'aquari humà en grups i acaben programant el seu fons marí.|En el tanque grande del acuario hay muchos animales y todos se tienen que mover a la vez. El alumnado descubre que cada personaje tiene sus propios guiones (se eligen en la barra de arriba del editor) y que, cuando se toca la bandera verde, todos los guiones «al empezar» empiezan en el mismo momento. También aprende a dar un carácter a cada animal cambiando los números de «muévete» y de «espera», y a usar dos guiones en un solo personaje para hacer dos cosas a ritmos diferentes. Empiezan con la imagen de la orquesta, hacen el acuario humano en grupos y terminan programando su fondo marino.",
+    claus: [
+      "Cada personatge té els seus guions: per programar-ne un, primer cal triar-lo a la barra de dalt.|Cada personaje tiene sus guiones: para programar uno, primero hay que elegirlo en la barra de arriba.",
+      "La bandera verda fa començar alhora tots els guions «quan comença», de tots els personatges.|La bandera verde hace empezar a la vez todos los guiones «al empezar», de todos los personajes.",
+      "Un «mou-te» més gran fa anar més de pressa; una espera més curta fa l'animació més ràpida.|Un «muévete» más grande hace ir más deprisa; una espera más corta hace la animación más rápida.",
+      "Amb dos guions, un personatge pot moure's llis i canviar de vestit a poc a poc, tot alhora.|Con dos guiones, un personaje puede moverse suave y cambiar de disfraz despacio, todo a la vez."
+    ],
+    prev: [
+      "Fer bucles «per sempre» amb «mou-te» i «rebota» (sessió 2).|Hacer bucles «por siempre» con «muévete» y «rebota» (sesión 2).",
+      "Animar un personatge amb «vestit següent» i «espera» (sessió 1).|Animar a un personaje con «disfraz siguiente» y «espera» (sesión 1).",
+      "Comparar nombres i durades: quin és més gran, quin és més curt (matemàtiques).|Comparar números y duraciones: cuál es más grande, cuál es más corto (matemáticas)."
+    ],
+    faq: [
+      ["He programat el peix però es mou el cranc. Per què?|He programado el pez pero se mueve el cangrejo. ¿Por qué?",
+        "Segurament a dalt estava triat el cranc. Mira quin personatge està marcat abans d'afegir blocs.|Seguramente arriba estaba elegido el cangrejo. Mira qué personaje está marcado antes de añadir bloques."],
+      ["Importa en quin ordre programo els animals?|¿Importa en qué orden programo los animales?",
+        "No: quan toques la bandera, tots comencen alhora, els hagis programat primer o últim.|No: cuando tocas la bandera, todos empiezan a la vez, los hayas programado primero o último."],
+      ["Com afegeixo blocs al segon guió?|¿Cómo añado bloques al segundo guion?",
+        "Toca l'espai buit del segon guió: hi sortirà «els blocs nous van aquí». Després tria els blocs de la paleta.|Toca el espacio vacío del segundo guion: saldrá «los bloques nuevos van aquí». Después elige los bloques de la paleta."],
+      ["Com faig un segon guió si no n'hi ha?|¿Cómo hago un segundo guion si no lo hay?",
+        "Toca el «+» de la capçalera «Quan comença»: es crea un altre guió amb la mateixa capçalera.|Toca el «+» de la cabecera «Al empezar»: se crea otro guion con la misma cabecera."],
+      ["Per què el meu peix va a salts?|¿Por qué mi pez va a saltos?",
+        "Perquè l'espera també atura el «mou-te». Fes dos guions: un per moure'l sense esperes i un altre per a la cua amb espera.|Porque la espera también para el «muévete». Haz dos guiones: uno para moverlo sin esperas y otro para la cola con espera."],
+      ["Dos animals poden tenir el mateix guió?|¿Dos animales pueden tener el mismo guion?",
+        "Sí, i cadascun el fa pel seu compte. Si canvies un número, cada un tindrà el seu caràcter.|Sí, y cada uno lo hace por su cuenta. Si cambias un número, cada uno tendrá su carácter."]
+    ],
+    tec: [
+      ["No es veu la barra de personatges de dalt.|No se ve la barra de personajes de arriba.",
+        "Al mòbil, que faci lliscar la barra cap als costats; a l'ordinador, que pugi fins a dalt de l'editor.|En el móvil, que deslice la barra hacia los lados; en el ordenador, que suba hasta arriba del editor."],
+      ["Diu que el cranc no s'ha mogut prou.|Dice que el cangrejo no se ha movido bastante.",
+        "El número de «mou-te» és massa petit o hi ha una espera llarga. Que el pugi una mica (3 o 4).|El número de «muévete» es demasiado pequeño o hay una espera larga. Que lo suba un poco (3 o 4)."],
+      ["A la cursa, el peix surt de l'escenari.|En la carrera, el pez sale del escenario.",
+        "El número és massa gran: en 4 segons el peix fa 120 voltes. Que provi 3 i compti on arriba.|El número es demasiado grande: en 4 segundos el pez da 120 vueltas. Que pruebe 3 y cuente dónde llega."],
+      ["Un guió buit fa que no funcioni?|¿Un guion vacío hace que no funcione?",
+        "No: un guió buit no fa res i no molesta. Si sobra, es pot deixar.|No: un guion vacío no hace nada y no molesta. Si sobra, se puede dejar."],
+      ["A l'aquari humà, els grups es barregen.|En el acuario humano, los grupos se mezclan.",
+        "Marqueu amb cinta una zona per a cada grup i feu començar només un grup cada vegada si cal.|Marcad con cinta una zona para cada grupo y haced empezar solo un grupo cada vez si hace falta."]
+    ],
+    seg: [
+      "A l'aquari humà, moviments lents i sense córrer; qui fa de peix «rebota» abans de tocar ningú.|En el acuario humano, movimientos lentos y sin correr; quien hace de pez «rebota» antes de tocar a nadie.",
+      "Recordeu fer pauses de pantalla: a la pausa activa, que s'aixequin i mirin lluny uns segons.|Recordad hacer pausas de pantalla: en la pausa activa, que se levanten y miren lejos unos segundos."
+    ],
+    extra: [
+      "Donar un caràcter diferent a cada animal (nerviós, tranquil, dormilega) només amb els números de «mou-te» i «espera».|Dar un carácter diferente a cada animal (nervioso, tranquilo, dormilón) solo con los números de «muévete» y «espera».",
+      "Afegir una medusa que pugi i baixi (direcció 0) mentre mou els tentacles amb dos guions.|Añadir una medusa que suba y baje (dirección 0) mientras mueve los tentáculos con dos guiones.",
+      "Fer una cursa de tres animals i que la classe endevini qui guanyarà mirant només els números.|Hacer una carrera de tres animales y que la clase adivine quién ganará mirando solo los números."
+    ],
+    trans: [
+      "Música: l'orquestra, on cada músic té la seva partitura i tots comencen alhora.|Música: la orquesta, donde cada músico tiene su partitura y todos empiezan a la vez.",
+      "Matemàtiques: comparar velocitats i durades (passos més llargs, esperes més curtes).|Matemáticas: comparar velocidades y duraciones (pasos más largos, esperas más cortas).",
+      "Sessió següent: el projecte de l'aquari, on farem servir tot el que hem après a la unitat.|Sesión siguiente: el proyecto del acuario, donde usaremos todo lo que hemos aprendido en la unidad."
+    ],
     obj: [
       "L'alumne/a programa diversos personatges triant-los a la barra de dalt de l'editor.|El alumno/a programa varios personajes eligiéndolos en la barra de arriba del editor.",
       "L'alumne/a explica que tots els guions «quan comença» es posen en marxa alhora.|El alumno/a explica que todos los guiones «al empezar» se ponen en marcha a la vez.",
@@ -969,54 +1387,57 @@ Object.assign(TGUIDE, {
       aula: [
         "Un ordinador per alumne/a amb Numi Tech obert a la sessió «Molts personatges alhora»|Un ordenador por alumno/a con Numi Tech abierto en la sesión «Muchos personajes a la vez»",
         "Projector i la presentació d'aquesta sessió|Proyector y la presentación de esta sesión",
-        "Un espai lliure per a l'aquari humà (el centre de l'aula o el pati)|Un espacio libre para el acuario humano (el centro del aula o el patio)",
-        "Una cartolina verda (bandera) i una de vermella (atura)|Una cartulina verde (bandera) y una roja (para)"
+        "Un espai lliure per a l'aquari humà (el centre de l'aula o el pati, uns 5 × 5 metres)|Un espacio libre para el acuario humano (el centro del aula o el patio, unos 5 × 5 metros)",
+        "1 cartolina verda (bandera) i 1 de vermella (atura)|1 cartulina verde (bandera) y 1 roja (para)"
       ],
-      imprimir: ["Cartes de l'aquari humà|Cartas del acuario humano", "Fitxa: qui va més de pressa?|Ficha: ¿quién va más deprisa?"],
+      imprimir: [
+        "1 paquet de cartes de l'aquari humà per grup de 5 (imprimible 1)|1 paquete de cartas del acuario humano por grupo de 5 (imprimible 1)",
+        "1 fitxa «Qui va més de pressa?» per a qui acabi abans o per a casa (imprimible 2), unes 6 còpies|1 ficha «¿Quién va más deprisa?» para quien termine antes o para casa (imprimible 2), unas 6 copias"
+      ],
       prep: [
-        "Imprimir i retallar un paquet de cartes de personatge per grup de 5.|Imprimir y recortar un paquete de cartas de personaje por grupo de 5.",
-        "Marcar al terra (o amb cadires) els límits de l'«aquari» on es mouran els alumnes.|Marcar en el suelo (o con sillas) los límites del «acuario» donde se moverán los alumnos.",
-        "Provar les demostracions de les diapositives 5, 6, 8 i 13.|Probar las demostraciones de las diapositivas 5, 6, 8 y 13.",
-        "Recordar com es canvia de personatge a l'editor (la barra de dalt) per ensenyar-ho al projector.|Recordar cómo se cambia de personaje en el editor (la barra de arriba) para enseñarlo en el proyector."
+        "El dia abans (15 min): imprimir i retallar un paquet de cartes per grup de 5.|El día antes (15 min): imprimir y recortar un paquete de cartas por grupo de 5.",
+        "Abans de la classe (5 min): deixar lliure l'espai de l'aquari humà i tenir a mà les dues cartolines.|Antes de la clase (5 min): dejar libre el espacio del acuario humano y tener a mano las dos cartulinas.",
+        "Provar les demostracions de les diapositives 5 a 9 i la 13 (el peix de dos guions).|Probar las demostraciones de las diapositivas 5 a 9 y la 13 (el pez de dos guiones).",
+        "Deixar els ordinadors engegats amb el perfil de cada alumne/a iniciat.|Dejar los ordenadores encendidos con el perfil de cada alumno/a iniciado."
       ]
     },
     plan: [
       { min: 5, t: "Benvinguda: el tanc gran|Bienvenida: el tanque grande", fase: 'inici',
         fa: "Repassa la sessió 2 i presenta el repte: al tanc gran hi ha molts animals i s'han de moure tots alhora. Pregunta com creuen que ho fa l'ordinador per moure'n molts a la vegada.|Repasa la sesión 2 y presenta el reto: en el tanque grande hay muchos animales y se tienen que mover todos a la vez. Pregunta cómo creen que lo hace el ordenador para mover muchos a la vez.",
         diu: ["Una orquestra té molts músics. Com sap cadascú què ha de tocar?|Una orquesta tiene muchos músicos. ¿Cómo sabe cada uno qué tiene que tocar?",
-          "I com saben quan han de començar?|¿Y cómo saben cuándo tienen que empezar?"],
+          "I com saben quan han de començar?|¿Y cómo saben cuándo tienen que empezar?", "Al vostre parer, l'ordinador mou els animals un darrere l'altre o tots alhora? (Ho descobrirem!)|En vuestra opinión, ¿el ordenador mueve los animales uno detrás de otro o todos a la vez? (¡Lo descubriremos!)", "Avui el tanc s'omplirà d'animals que es mouen tots junts.|Hoy el tanque se llenará de animales que se mueven todos juntos."],
         slides: ['s1', 's2', 's3'], app: "Encara no: pantalles abaixades.|Todavía no: pantallas bajadas.", org: "Tot el grup|Todo el grupo" },
       { min: 10, t: "Cada personatge, els seus guions|Cada personaje, sus guiones", fase: 'teoria',
         fa: "Ensenya al projector la barra de personatges de l'editor i com cadascú té els seus guions. Mostra la cursa del peix i la tortuga: surten alhora, però amb velocitats diferents. Presenta els dos guions en un sol personatge i les dues meduses amb ritmes diferents. Acaba amb «Compte!»: una espera llarga dins del bucle que mou fa anar a salts.|Enseña en el proyector la barra de personajes del editor y cómo cada uno tiene sus guiones. Muestra la carrera del pez y la tortuga: salen a la vez, pero con velocidades diferentes. Presenta los dos guiones en un solo personaje y las dos medusas con ritmos diferentes. Termina con «¡Cuidado!»: una espera larga dentro del bucle que mueve hace ir a saltos.",
         diu: ["Qui arribarà primer, el peix o la tortuga? Per què?|¿Quién llegará primero, el pez o la tortuga? ¿Por qué?",
           "Quina medusa té l'espera més curta?|¿Qué medusa tiene la espera más corta?",
-          "Com podem fer que el peix nedi llis i mogui la cua a poc a poc?|¿Cómo podemos hacer que el pez nade suave y mueva la cola despacio?"],
+          "Com podem fer que el peix nedi llis i mogui la cua a poc a poc?|¿Cómo podemos hacer que el pez nade suave y mueva la cola despacio?", "Si vull que el peix nedi llis i mogui la cua a poc a poc, quants guions li faig? (Dos.)|Si quiero que el pez nade suave y mueva la cola despacio, ¿cuántos guiones le hago? (Dos.)"],
         slides: ['s4', 's5', 's6', 's7', 's8', 's9'], app: "Encara no: tota l'atenció a la projecció.|Todavía no: toda la atención en la proyección.", org: "Tot el grup|Todo el grupo" },
       { min: 12, t: "L'aquari humà|El acuario humano", fase: 'desconnectat',
         fa: "Grups de 5. Cada alumne/a rep una carta de personatge amb el seu guió (peix, cranc, medusa, alga, tortuga). Quan aixeques la cartolina verda, tothom comença el seu guió alhora; amb la vermella, tothom s'atura. Segona ronda: canvia els números (la tortuga encara més lenta, el peix més ràpid). Tercera ronda: qui vulgui prova la carta «dos guions» (camina i, alhora, aplaudeix a poc a poc). La resta del grup observa i comenta.|Grupos de 5. Cada alumno/a recibe una carta de personaje con su guion (pez, cangrejo, medusa, alga, tortuga). Cuando levantas la cartulina verde, todos empiezan su guion a la vez; con la roja, todos se paran. Segunda ronda: cambia los números (la tortuga aún más lenta, el pez más rápido). Tercera ronda: quien quiera prueba la carta «dos guiones» (camina y, a la vez, aplaude despacio). El resto del grupo observa y comenta.",
         diu: ["Algú ha esperat que un altre acabés per començar?|¿Alguien ha esperado a que otro terminara para empezar?",
           "Amb dos guions alhora: és difícil fer dues coses a ritmes diferents?|Con dos guiones a la vez: ¿es difícil hacer dos cosas a ritmos diferentes?",
-          "Si el peix fa 3 passos i la tortuga 1, qui arriba primer a la paret?|Si el pez da 3 pasos y la tortuga 1, ¿quién llega primero a la pared?"],
+          "Si el peix fa 3 passos i la tortuga 1, qui arriba primer a la paret?|Si el pez da 3 pasos y la tortuga 1, ¿quién llega primero a la pared?", "El director/a no diu a cadascú quan començar: tothom comença amb la cartolina verda.|El director/a no dice a cada uno cuándo empezar: todos empiezan con la cartulina verde."],
         slides: ['s10', 's11'], app: "Cap: activitat sense pantalla.|Ninguna: actividad sin pantalla.", org: "Grups de 5|Grupos de 5" },
       { min: 15, t: "A l'ordinador: descobreix i investiga|En el ordenador: descubre e investiga", fase: 'ordinador',
         fa: "Cada alumne/a avança fins a la pausa activa. Al tanc del pas «Prediu i prova», insisteix que toquin cada animal a la barra de dalt per veure'n els guions: la pregunta següent ho necessita. A «Investiga», que comparin els dos guions del peix.|Cada alumno/a avanza hasta la pausa activa. En el tanque del paso «Predice y prueba», insiste en que toquen cada animal en la barra de arriba para ver sus guiones: la pregunta siguiente lo necesita. En «Investiga», que comparen los dos guiones del pez.",
         diu: ["Toca el cranc a dalt: quins blocs té?|Toca el cangrejo arriba: ¿qué bloques tiene?",
-          "Quin dels dos guions del peix fa moure la cua?|¿Cuál de los dos guiones del pez hace mover la cola?"],
+          "Quin dels dos guions del peix fa moure la cua?|¿Cuál de los dos guiones del pez hace mover la cola?", "Qui va més de pressa? Mira el número del «mou-te» de cada animal.|¿Quién va más deprisa? Mira el número del «muévete» de cada animal.", "Quin bloc fa que la cua es mogui tan a poc a poc? (L'espera de 3 segons.)|¿Qué bloque hace que la cola se mueva tan despacio? (La espera de 3 segundos.)"],
         slides: ['s12'], app: "Recorda, les dues històries, les cinc targetes de «Descobreix», «L'orquestra de casa» (per a casa), la pregunta dels 3 guions, el tanc amb tres animals, la pregunta de qui va més de pressa i «Investiga» (la cua lenta).|Recuerda, las dos historias, las cinco tarjetas de «Descubre», «La orquesta de casa» (para casa), la pregunta de los 3 guiones, el tanque con tres animales, la pregunta de quién va más deprisa e «Investiga» (la cola lenta).", org: "Individual|Individual" },
       { min: 10, t: "Reptes: tots alhora|Retos: todos a la vez", fase: 'ordinador',
         fa: "Feu la pausa activa junts. Programa amb la classe el peix de dos guions de la diapositiva 13, ensenyant on es toca per afegir blocs al segon guió. Deixa'ls fer els reptes. A la cursa, pregunta quins números han provat abans de donar cap pista.|Haced la pausa activa juntos. Programa con la clase el pez de dos guiones de la diapositiva 13, enseñando dónde se toca para añadir bloques al segundo guion. Déjalos hacer los retos. En la carrera, pregunta qué números han probado antes de dar ninguna pista.",
         diu: ["Has triat el personatge que toca, a dalt?|¿Has elegido el personaje que toca, arriba?",
-          "Què passa si poses el mateix número al peix i a la tortuga?|¿Qué pasa si pones el mismo número al pez y a la tortuga?"],
+          "Què passa si poses el mateix número al peix i a la tortuga?|¿Qué pasa si pones el mismo número al pez y a la tortuga?", "Al peix petit, quin bloc té de més? (Una espera que l'atura.)|En el pez pequeño, ¿qué bloque tiene de más? (Una espera que lo para.)", "Proveu números: quin guanya, el 3 o l'1?|Probad números: ¿cuál gana, el 3 o el 1?"],
         slides: ['s13', 's14'], app: "«Pausa activa» i els quatre «Reptes»: el peix i el cranc alhora, la medusa de dos guions, la cursa de l'aquari i el peix petit que no es mou.|«Pausa activa» y los cuatro «Retos»: el pez y el cangrejo a la vez, la medusa de dos guiones, la carrera del acuario y el pez pequeño que no se mueve.", org: "Tot el grup i després individual|Todo el grupo y después individual" },
       { min: 5, t: "Crea: el fons marí|Crea: el fondo marino", fase: 'crea',
         fa: "Cada alumne/a programa el seu tanc amb el peix, el cranc i la medusa. Quan acabin, en parelles miren el tanc del company/a i endevinen quin animal té el «mou-te» més gran.|Cada alumno/a programa su tanque con el pez, el cangrejo y la medusa. Cuando terminen, por parejas miran el tanque del compañero/a y adivinan qué animal tiene el «muévete» más grande.",
         diu: ["Quin caràcter té cada animal? Ràpid, tranquil, nerviós?|¿Qué carácter tiene cada animal? ¿Rápido, tranquilo, nervioso?",
-          "Endevina: quin animal té el número més gran?|Adivina: ¿qué animal tiene el número más grande?"],
+          "Endevina: quin animal té el número més gran?|Adivina: ¿qué animal tiene el número más grande?", "Algun animal té dos guions? Què fa cadascun?|¿Algún animal tiene dos guiones? ¿Qué hace cada uno?"],
         slides: ['s15'], app: "Pas «Crea»: El fons marí (es desa al portafoli).|Paso «Crea»: El fondo marino (se guarda en el portafolio).", org: "Individual i després per parelles|Individual y después por parejas" },
       { min: 3, t: "Tancament i tiquet de sortida|Cierre y ticket de salida", fase: 'tancament',
-        fa: "Repassa el resum, deixa que facin les preguntes finals i fes el tiquet a la porta.|Repasa el resumen, deja que hagan las preguntas finales y haz el ticket en la puerta.",
+        fa: "Repassa les tres idees amb el resum: cada personatge té els seus guions, tots comencen alhora i dos guions permeten dos ritmes. Deixa que facin les preguntes finals de l'app i com s'han sentit. A la porta, fes a cada alumne/a una pregunta del tiquet i recorda que la setmana vinent faran el projecte de l'aquari.|Repasa las tres ideas con el resumen: cada personaje tiene sus guiones, todos empiezan a la vez y dos guiones permiten dos ritmos. Deja que hagan las preguntas finales de la app y cómo se han sentido. En la puerta, haz a cada alumno/a una pregunta del ticket y recuerda que la semana que viene harán el proyecto del acuario.",
         diu: ["Quan comencen els guions dels personatges?|¿Cuándo empiezan los guiones de los personajes?",
-          "Per a què serveixen dos guions en un personatge?|¿Para qué sirven dos guiones en un personaje?"],
+          "Per a què serveixen dos guions en un personatge?|¿Para qué sirven dos guiones en un personaje?", "Si programo primer el cranc i després el peix, qui comença abans? (Tots dos alhora.)|Si programo primero el cangrejo y después el pez, ¿quién empieza antes? (Los dos a la vez.)", "La setmana vinent farem el nostre aquari sencer!|¡La semana que viene haremos nuestro acuario entero!"],
         slides: ['s16', 's17'], app: "«Tancament»: les dues preguntes finals i com m'he sentit.|«Cierre»: las dos preguntas finales y cómo me he sentido.", org: "Tot el grup|Todo el grupo" }
     ],
     errors: [
@@ -1029,7 +1450,9 @@ Object.assign(TGUIDE, {
       ["No troba com afegir blocs al segon guió.|No encuentra cómo añadir bloques al segundo guion.",
         "Que toqui l'espai buit «els blocs nous van aquí» del segon guió: el bloc nou s'hi enganxarà.|Que toque el espacio vacío «los bloques nuevos van aquí» del segundo guion: el bloque nuevo se enganchará ahí."],
       ["A la cursa posa números molt grans i el peix surt de l'escenari.|En la carrera pone números muy grandes y el pez sale del escenario.",
-        "Pregunta quants passos fa el peix en 4 segons si en fa 30 per segon. Que provi amb números petits i compari.|Pregunta cuántos pasos da el pez en 4 segundos si da 30 por segundo. Que pruebe con números pequeños y compare."]
+        "Pregunta quants passos fa el peix en 4 segons si en fa 30 per segon. Que provi amb números petits i compari.|Pregunta cuántos pasos da el pez en 4 segundos si da 30 por segundo. Que pruebe con números pequeños y compare."],
+      ["Al fons marí, programa només un animal i espera que els altres també es moguin.|En el fondo marino, programa solo un animal y espera que los otros también se muevan.",
+        "Que toqui cada animal a dalt i miri si té blocs: «Aquest personatge no té guions» vol dir que no farà res.|Que toque cada animal arriba y mire si tiene bloques: «Este personaje no tiene guiones» quiere decir que no hará nada."]
     ],
     diff: {
       mes: "Afegir en Vuit o una segona medusa al fons marí i donar a cada animal un caràcter diferent (ràpid, tranquil, nerviós) només amb els números de «mou-te» i «espera». Després, explicar a un company/a quin número fa cada caràcter.|Añadir a Vuit o una segunda medusa al fondo marino y dar a cada animal un carácter diferente (rápido, tranquilo, nervioso) solo con los números de «muévete» y «espera». Después, explicar a un compañero/a qué número hace cada carácter.",
@@ -1041,7 +1464,10 @@ Object.assign(TGUIDE, {
       rubric: [
         ["Diversos personatges|Varios personajes", "Tria el personatge a la barra de dalt i programa cadascun amb el seu guió.|Elige el personaje en la barra de arriba y programa cada uno con su guion.", "Programa més d'un personatge amb ajuda o barreja els guions.|Programa más de un personaje con ayuda o mezcla los guiones."],
         ["Alhora|A la vez", "Explica que tots els guions «quan comença» arrenquen alhora.|Explica que todos los guiones «al empezar» arrancan a la vez.", "Encara pensa que els guions van per ordre.|Todavía piensa que los guiones van por orden."],
-        ["Velocitat i ritme|Velocidad y ritmo", "Canvia els números de «mou-te» i «espera» per obtenir el que vol i fa servir dos guions quan cal.|Cambia los números de «muévete» y «espera» para conseguir lo que quiere y usa dos guiones cuando hace falta.", "Canvia els números a l'atzar fins que funciona.|Cambia los números al azar hasta que funciona."]
+        ["Velocitat i ritme|Velocidad y ritmo", "Canvia els números de «mou-te» i «espera» per obtenir el que vol i fa servir dos guions quan cal.|Cambia los números de «muévete» y «espera» para conseguir lo que quiere y usa dos guiones cuando hace falta.", "Canvia els números a l'atzar fins que funciona.|Cambia los números al azar hasta que funciona."],
+        ["Dos guions|Dos guiones",
+          "Fa servir dos guions en un personatge i explica què fa cadascun i per què.|Usa dos guiones en un personaje y explica qué hace cada uno y por qué.",
+          "Fa servir dos guions copiant la pista, però encara no sap explicar per a què serveixen.|Usa dos guiones copiando la pista, pero aún no sabe explicar para qué sirven."]
       ]
     },
     casa: "A casa, amb el mòbil, podeu repetir la sessió i fer «L'orquestra de casa»: cadascú té el seu guió (aplaudir, tocar la taula, xiuxiuejar) i tots comenceu alhora. Proveu de canviar els ritmes!|En casa, con el móvil, podéis repetir la sesión y hacer «La orquesta de casa»: cada uno tiene su guion (aplaudir, tocar la mesa, susurrar) y todos empezáis a la vez. ¡Probad a cambiar los ritmos!",
@@ -1052,7 +1478,7 @@ Object.assign(TGUIDE, {
         nota: "Fes les dues preguntes de «Recorda» en veu alta abans d'obrir l'app.|Haz las dos preguntas de «Recuerda» en voz alta antes de abrir la app." },
       { id: 's3', k: 'pregunta', t: "Com ho fa una orquestra?|¿Cómo lo hace una orquesta?", x: "Molts músics, cadascun amb la seva partitura, i tots comencen alhora.|Muchos músicos, cada uno con su partitura, y todos empiezan a la vez.",
         nota: "Fes la comparació: músic = personatge, partitura = guió, director/a = bandera verda.|Haz la comparación: músico = personaje, partitura = guion, director/a = bandera verde." },
-      { id: 's4', k: 'concepte', t: 'Cada personatge, els seus guions|Cada personaje, sus guiones', punts: ["A dalt de l'editor tries el personatge.|Arriba del editor eliges el personaje.", "Cada personatge té els seus propis guions.|Cada personaje tiene sus propios guiones.", "Programar el peix no canvia res del cranc.|Programar el pez no cambia nada del cangrejo."],
+      { id: 's4', k: 'concepte', t: 'Cada personatge, els seus guions|Cada personaje, sus guiones', punts: ["A dalt de l'editor tries el personatge.|Arriba del editor eliges el personaje.", "Cada personatge té els seus propis guions.|Cada personaje tiene sus propios guiones.", "Programar el peix no canvia res del cranc.|Programar el pez no cambia nada del cangrejo."], pic: 'img/ic/masks.webp',
         nota: "Ensenya-ho en directe a l'editor, amb un repte obert al projector.|Enséñalo en directo en el editor, con un reto abierto en el proyector." },
       { id: 's5', k: 'media', t: 'Tres animals, tres guions|Tres animales, tres guiones', x: 'El peix neda, el cranc camina i la medusa mou els tentacles.|El pez nada, el cangrejo camina y la medusa mueve los tentáculos.',
         media: { k: 'stage', w: { bg: 'aquari', sprites: [{ id: 'peix', art: 'peix', x: -80, y: 60, rot: 'lr' }, { id: 'cranc', art: 'cranc', x: 60, y: -130, rot: 'lr' }, { id: 'medusa', art: 'medusa', x: 150, y: 40, rot: 'none' }] }, prog: '@peix flag{ forever{ move:4 bounce } } @cranc flag{ forever{ move:2 bounce } } @medusa flag{ forever{ next wait:0.4 } }', time: 8 },
@@ -1065,7 +1491,7 @@ Object.assign(TGUIDE, {
       { id: 's8', k: 'media', t: 'El ritme de cada animal|El ritmo de cada animal', x: "Espera de 0,15 segons a l'esquerra i de 0,8 a la dreta.|Espera de 0,15 segundos a la izquierda y de 0,8 a la derecha.",
         media: { k: 'stage', w: { bg: 'aquari', sprites: [{ id: 'medusa', art: 'medusa', x: -110, y: 10, size: 130, rot: 'none' }, { id: 'medusa2', art: 'medusa', x: 110, y: 10, size: 130, rot: 'none', name: 'Medusa 2|Medusa 2' }] }, prog: '@medusa flag{ forever{ next wait:0.15 } } @medusa2 flag{ forever{ next wait:0.8 } }', time: 6 },
         nota: "Pregunta quina medusa sembla nerviosa i quina tranquil·la, i quin número ho decideix.|Pregunta qué medusa parece nerviosa y cuál tranquila, y qué número lo decide." },
-      { id: 's9', k: 'media', t: 'Compte! Una espera que fa anar a salts|¡Cuidado! Una espera que hace ir a saltos', x: "Tot en un bucle amb espera de 0,6: el peix avança a salts.|Todo en un bucle con espera de 0,6: el pez avanza a saltos.",
+      { id: 's9', k: 'media', t: 'Compte! Una espera que va a salts|¡Cuidado! Una espera que va a saltos', x: "Tot en un bucle amb espera de 0,6: el peix avança a salts.|Todo en un bucle con espera de 0,6: el pez avanza a saltos.",
         media: { k: 'stage', w: { bg: 'aquari', sprites: [{ id: 'peix', art: 'peix', x: -60, y: 20, size: 110, rot: 'lr' }] }, prog: '@peix flag{ forever{ move:30 next wait:0.6 bounce } }', time: 6 },
         nota: "Compara-ho amb la diapositiva 7: amb dos guions, el peix neda llis.|Compáralo con la diapositiva 7: con dos guiones, el pez nada suave." },
       { id: 's10', k: 'activitat', t: "L'aquari humà|El acuario humano", timer: 12, punts: ["Cadascú té la carta del seu animal.|Cada uno tiene la carta de su animal.", "Cartolina verda: tothom comença alhora.|Cartulina verde: todos empiezan a la vez.", "Cartolina vermella: tothom s'atura.|Cartulina roja: todos se paran.", "Ronda 3: qui s'atreveix amb dos guions?|Ronda 3: ¿quién se atreve con dos guiones?"],
@@ -1074,7 +1500,7 @@ Object.assign(TGUIDE, {
         nota: "Deixa-la projectada perquè tothom recordi el guió del seu animal.|Déjala proyectada para que todos recuerden el guion de su animal." },
       { id: 's12', k: 'activitat', t: "Ara, a l'ordinador|Ahora, al ordenador", timer: 15, punts: ["Obre la sessió «Molts personatges alhora».|Abre la sesión «Muchos personajes a la vez».", "Al tanc, toca cada animal a dalt per veure'n els guions.|En el tanque, toca cada animal arriba para ver sus guiones.", "A «Investiga», compara els dos guions del peix.|En «Investiga», compara los dos guiones del pez.", "Para a la «Pausa activa».|Para en la «Pausa activa»."],
         nota: "«L'orquestra de casa» és per fer a casa.|«La orquesta de casa» es para hacer en casa." },
-      { id: 's13', k: 'media', t: 'Programem junts: el peix de dos guions|Programemos juntos: el pez de dos guiones', x: 'Guió 1: per sempre { mou-te 4, rebota }. Guió 2: per sempre { vestit següent, espera 0,3 }.|Guion 1: por siempre { muévete 4, rebota }. Guion 2: por siempre { disfraz siguiente, espera 0,3 }.',
+      { id: 's13', k: 'media', t: 'Junts: el peix de dos guions|Juntos: el pez de dos guiones', x: 'Guió 1: per sempre { mou-te 4, rebota }. Guió 2: per sempre { vestit següent, espera 0,3 }.|Guion 1: por siempre { muévete 4, rebota }. Guion 2: por siempre { disfraz siguiente, espera 0,3 }.',
         media: { k: 'stage', w: { bg: 'aquari', sprites: [{ id: 'peix', art: 'peix', x: -60, y: 40, size: 110, rot: 'lr' }] }, prog: '@peix flag{ forever{ move:4 bounce } } flag{ forever{ next wait:0.3 } }', time: 8 },
         nota: "Ensenya al projector on es toca per afegir blocs al segon guió.|Enseña en el proyector dónde se toca para añadir bloques al segundo guion." },
       { id: 's14', k: 'repte', t: 'Reptes: tots alhora|Retos: todos a la vez', timer: 10, punts: ["1. El peix i el cranc alhora|1. El pez y el cangrejo a la vez", "2. La medusa de dos guions|2. La medusa de dos guiones", "3. La cursa de l'aquari|3. La carrera del acuario", "4. El peix petit que no es mou: troba l'error|4. El pez pequeño que no se mueve: encuentra el error"],
@@ -1112,6 +1538,58 @@ Object.assign(TGUIDE, {
 
   /* ---------- Sessió 4 · Projecte: l'aquari ---------- */
   'g2-4': {
+    intro: "Sessió de projecte que tanca la unitat: cada alumne/a crea el seu aquari animat per a la pantalla de la Marina. Hi fan servir tot el que han après: vestits i esperes, bucles «per sempre», «rebota» i molts personatges alhora, amb algun personatge que té dos guions. El més important és la manera de treballar: idea, pla en paper, construir a trossos (un animal darrere l'altre), provar cada tros i millorar. La classe comença amb l'aquari de mostra, segueix amb el pla, tres reptes d'entrenament i la creació lliure, i acaba amb una galeria de comentaris amables.|Sesión de proyecto que cierra la unidad: cada alumno/a crea su acuario animado para la pantalla de Marina. Usan todo lo que han aprendido: disfraces y esperas, bucles «por siempre», «rebota» y muchos personajes a la vez, con algún personaje que tiene dos guiones. Lo más importante es la manera de trabajar: idea, plan en papel, construir a trozos (un animal tras otro), probar cada trozo y mejorar. La clase empieza con el acuario de muestra, sigue con el plan, tres retos de entrenamiento y la creación libre, y termina con una galería de comentarios amables.",
+    claus: [
+      "Un projecte gran es fa a trossos: un animal, es prova, i després el següent.|Un proyecto grande se hace a trozos: un animal, se prueba, y después el siguiente.",
+      "El pla en paper ajuda a no perdre's: què fa cada animal i en quin ordre es programa.|El plan en papel ayuda a no perderse: qué hace cada animal y en qué orden se programa.",
+      "El que s'ha de fer una sola vegada (una benvinguda) va abans del bucle; el que dura tota l'estona, a dins.|Lo que se tiene que hacer una sola vez (una bienvenida) va antes del bucle; lo que dura todo el rato, dentro.",
+      "Els comentaris ajuden si són amables i concrets: una cosa que agrada i una idea per millorar.|Los comentarios ayudan si son amables y concretos: una cosa que gusta y una idea para mejorar."
+    ],
+    prev: [
+      "Animar amb vestits i esperes (sessió 1).|Animar con disfraces y esperas (sesión 1).",
+      "Bucles «repeteix» i «per sempre» i el bloc «rebota» (sessió 2).|Bucles «repite» y «por siempre» y el bloque «rebota» (sesión 2).",
+      "Programar diversos personatges i dos guions en un personatge (sessió 3).|Programar varios personajes y dos guiones en un personaje (sesión 3)."
+    ],
+    faq: [
+      ["Quants animals he de posar?|¿Cuántos animales tengo que poner?",
+        "Com a mínim 3 que facin alguna cosa. És millor tenir-ne 3 que funcionin bé que 5 a mitges.|Como mínimo 3 que hagan algo. Es mejor tener 3 que funcionen bien que 5 a medias."],
+      ["Puc afegir animals que no hi són?|¿Puedo añadir animales que no están?",
+        "En aquest projecte hi ha cinc animals preparats. Si en vols més, dona'ls un caràcter diferent a cadascun amb els números.|En este proyecto hay cinco animales preparados. Si quieres más, dale un carácter diferente a cada uno con los números."],
+      ["El cranc no para de dir la benvinguda. Què passa?|El cangrejo no para de decir la bienvenida. ¿Qué pasa?",
+        "El «digues» és a dins del «per sempre». Posa'l abans del bucle perquè es digui una sola vegada.|El «di» está dentro del «por siempre». Ponlo antes del bucle para que se diga una sola vez."],
+      ["L'app diu que funciona però no deixa desar. Per què?|La app dice que funciona pero no deja guardar. ¿Por qué?",
+        "Falta algun criteri: com a mínim 3 animals programats, algun «per sempre» i algun canvi de vestit. Llegeix el missatge.|Falta algún criterio: como mínimo 3 animales programados, algún «por siempre» y algún cambio de disfraz. Lee el mensaje."],
+      ["He de seguir el pla exactament?|¿Tengo que seguir el plan exactamente?",
+        "El pla és una guia: si mentre programes tens una idea millor, la pots canviar. Apunta-la al pla.|El plan es una guía: si mientras programas tienes una idea mejor, la puedes cambiar. Apúntala en el plan."],
+      ["Puc ensenyar l'aquari a casa?|¿Puedo enseñar el acuario en casa?",
+        "Sí: quan el desis, quedarà a «Projectes» i el podràs obrir des del mòbil.|Sí: cuando lo guardes, quedará en «Proyectos» y lo podrás abrir desde el móvil."]
+    ],
+    tec: [
+      ["El projecte desat no surt a «Projectes».|El proyecto guardado no sale en «Proyectos».",
+        "Cal tocar «Desa-ho i continua» quan l'app diu que funciona; si s'ha sortit abans, que ho torni a provar.|Hay que tocar «Guárdalo y continúa» cuando la app dice que funciona; si se ha salido antes, que lo vuelva a probar."],
+      ["Amb cinc animals, costa trobar on falla.|Con cinco animales, cuesta encontrar dónde falla.",
+        "Que miri els animals d'un en un a la barra de dalt i provi cada guió; si cal, que esborri els blocs d'un animal i el torni a fer.|Que mire los animales de uno en uno en la barra de arriba y pruebe cada guion; si hace falta, que borre los bloques de un animal y lo vuelva a hacer."],
+      ["Al projector, l'aquari es veu massa petit.|En el proyector, el acuario se ve demasiado pequeño.",
+        "Feu servir el zoom del navegador o passegeu per les taules en lloc de projectar-ho tot.|Usad el zoom del navegador o pasead por las mesas en lugar de proyectarlo todo."],
+      ["L'animació va lenta en un ordinador antic.|La animación va lenta en un ordenador antiguo.",
+        "Tanqueu les altres pestanyes del navegador; si continua, que faci menys animals o esperes una mica més llargues.|Cerrad las otras pestañas del navegador; si continúa, que haga menos animales o esperas un poco más largas."],
+      ["Un alumne/a ha esborrat tot el projecte sense voler.|Un alumno/a ha borrado todo el proyecto sin querer.",
+        "Que torni a obrir el pas: els guions buits tornen a sortir. Amb el pla en paper, refer-lo és ràpid.|Que vuelva a abrir el paso: los guiones vacíos vuelven a salir. Con el plan en papel, rehacerlo es rápido."]
+    ],
+    seg: [
+      "A la galeria, els comentaris són amables i sobre el projecte, mai sobre la persona; el docent modela un exemple abans.|En la galería, los comentarios son amables y sobre el proyecto, nunca sobre la persona; el docente modela un ejemplo antes.",
+      "Ningú no està obligat a projectar el seu aquari davant de tothom.|Nadie está obligado a proyectar su acuario delante de todos."
+    ],
+    extra: [
+      "Donar a cada animal un caràcter (nerviós, tranquil, curiós) i escriure'l al pla abans de programar-lo.|Dar a cada animal un carácter (nervioso, tranquilo, curioso) y escribirlo en el plan antes de programarlo.",
+      "Fer que en Vuit pensi alguna cosa de tant en tant mentre neda (amb un segon guió).|Hacer que Vuit piense algo de vez en cuando mientras nada (con un segundo guion).",
+      "Preparar una explicació de 30 segons per presentar l'aquari: quins blocs fa servir cada animal.|Preparar una explicación de 30 segundos para presentar el acuario: qué bloques usa cada animal."
+    ],
+    trans: [
+      "Unitat 2 sencera: vestits i esperes (sessió 1), bucles (sessió 2) i molts personatges alhora (sessió 3).|Unidad 2 entera: disfraces y esperas (sesión 1), bucles (sesión 2) y muchos personajes a la vez (sesión 3).",
+      "Ciències naturals: els animals marins i com es mouen (nedar, caminar de costat, gronxar-se).|Ciencias naturales: los animales marinos y cómo se mueven (nadar, caminar de lado, balancearse).",
+      "Unitat 3: els personatges reaccionaran quan els toquem, quan premem una tecla i quan reben missatges.|Unidad 3: los personajes reaccionarán cuando los toquemos, cuando pulsemos una tecla y cuando reciban mensajes."
+    ],
     obj: [
       "L'alumne/a planifica en paper una escena animada amb diversos personatges abans de programar-la.|El alumno/a planifica en papel una escena animada con varios personajes antes de programarla.",
       "L'alumne/a construeix el projecte a trossos, personatge a personatge, i prova cada tros.|El alumno/a construye el proyecto a trozos, personaje a personaje, y prueba cada trozo.",
@@ -1135,27 +1613,30 @@ Object.assign(TGUIDE, {
       aula: [
         "Un ordinador per alumne/a amb Numi Tech obert a la sessió «Projecte: l'aquari»|Un ordenador por alumno/a con Numi Tech abierto en la sesión «Proyecto: el acuario»",
         "Projector i la presentació d'aquesta sessió|Proyector y la presentación de esta sesión",
-        "Llapis i colors per al pla|Lápices y colores para el plan",
-        "Opcional: una pantalla gran o el projector per mostrar alguns aquaris al final|Opcional: una pantalla grande o el proyector para mostrar algunos acuarios al final"
+        "1 fitxa «El pla del meu aquari» per alumne/a (imprimible 1), llapis i colors (1 capsa per taula)|1 ficha «El plan de mi acuario» por alumno/a (imprimible 1), lápices y colores (1 caja por mesa)",
+        "1 tira de targetes de comentaris per alumne/a (imprimible 2)|1 tira de tarjetas de comentarios por alumno/a (imprimible 2)"
       ],
-      imprimir: ["Fitxa: el pla del meu aquari|Ficha: el plan de mi acuario", "Targetes de comentaris per a la galeria|Tarjetas de comentarios para la galería"],
+      imprimir: [
+        "1 fitxa «El pla del meu aquari» per alumne/a (imprimible 1)|1 ficha «El plan de mi acuario» por alumno/a (imprimible 1)",
+        "1 tira de targetes de comentaris per alumne/a (imprimible 2)|1 tira de tarjetas de comentarios por alumno/a (imprimible 2)"
+      ],
       prep: [
-        "Imprimir una fitxa del pla per alumne/a i un paquet de targetes de comentaris per parella.|Imprimir una ficha del plan por alumno/a y un paquete de tarjetas de comentarios por pareja.",
-        "Provar l'aquari de mostra de la diapositiva 6 per poder-ne explicar cada tros.|Probar el acuario de muestra de la diapositiva 6 para poder explicar cada trozo.",
-        "Preparar l'ordre de la galeria final: parelles que es miren el projecte o 3-4 aquaris al projector.|Preparar el orden de la galería final: parejas que se miran el proyecto o 3-4 acuarios en el proyector.",
-        "Revisar al portafoli les creacions de les sessions anteriors per recordar què ha après cadascú.|Revisar en el portafolio las creaciones de las sesiones anteriores para recordar qué ha aprendido cada uno."
+        "El dia abans (15 min): imprimir una fitxa del pla i una tira de targetes de comentaris per alumne/a, i retallar les tires.|El día antes (15 min): imprimir una ficha del plan y una tira de tarjetas de comentarios por alumno/a, y recortar las tiras.",
+        "Provar l'aquari de mostra (diapositiva 6) i la demo de «Prova cada tros».|Probar el acuario de muestra (diapositiva 6) y la demo de «Prueba cada trozo».",
+        "Decidir com es farà la galeria (en parelles a les taules o 3-4 aquaris al projector).|Decidir cómo se hará la galería (por parejas en las mesas o 3-4 acuarios en el proyector).",
+        "Deixar els ordinadors engegats amb el perfil de cada alumne/a iniciat.|Dejar los ordenadores encendidos con el perfil de cada alumno/a iniciado."
       ]
     },
     plan: [
       { min: 5, t: "La gran inauguració|La gran inauguración", fase: 'inici',
         fa: "Explica que avui cadascú farà el seu aquari per a la pantalla de la Marina. Repassa amb les preguntes de «Recorda» els tres grans aprenentatges de la unitat: vestits, bucles i molts personatges alhora.|Explica que hoy cada uno hará su acuario para la pantalla de Marina. Repasa con las preguntas de «Recuerda» los tres grandes aprendizajes de la unidad: disfraces, bucles y muchos personajes a la vez.",
         diu: ["Quines eines tenim ja per fer un aquari viu?|¿Qué herramientas tenemos ya para hacer un acuario vivo?",
-          "Avui sereu els programadors i les programadores de l'aquari.|Hoy seréis los programadores y las programadoras del acuario."],
+          "Avui sereu els programadors i les programadores de l'aquari.|Hoy seréis los programadores y las programadoras del acuario.", "Recordeu el que hem après: vestits, esperes, bucles i molts personatges alhora.|Recordad lo que hemos aprendido: disfraces, esperas, bucles y muchos personajes a la vez.", "Al final farem una galeria per veure els aquaris de tothom.|Al final haremos una galería para ver los acuarios de todos."],
         slides: ['s1', 's2', 's3'], app: "Encara no: pantalles abaixades.|Todavía no: pantallas bajadas.", org: "Tot el grup|Todo el grupo" },
       { min: 5, t: "Com es fa un projecte|Cómo se hace un proyecto", fase: 'teoria',
         fa: "Presenta els cinc passos del projecte i l'aquari de mostra, tros a tros. Acaba amb «Compte!»: provar cada tros abans de passar al següent.|Presenta los cinco pasos del proyecto y el acuario de muestra, trozo a trozo. Termina con «¡Cuidado!»: probar cada trozo antes de pasar al siguiente.",
         diu: ["Quin és el primer tros que programaríeu de l'aquari de mostra?|¿Cuál es el primer trozo que programaríais del acuario de muestra?",
-          "Per què és millor provar cada animal de seguida?|¿Por qué es mejor probar cada animal enseguida?"],
+          "Per què és millor provar cada animal de seguida?|¿Por qué es mejor probar cada animal enseguida?", "Si el peix de dalt se'n va i el de baix torna, què li falta al de dalt? («Rebota».)|Si el pez de arriba se va y el de abajo vuelve, ¿qué le falta al de arriba? («Rebota».)"],
         slides: ['s4', 's5', 's6', 's7'], app: "Encara no: tota l'atenció a la projecció.|Todavía no: toda la atención en la proyección.", org: "Tot el grup|Todo el grupo" },
       { min: 10, t: "El pla del meu aquari|El plan de mi acuario", fase: 'desconnectat',
         fa: "Cada alumne/a omple la fitxa del pla: dibuixa el tanc, tria com a mínim 3 animals i escriu què farà cadascun (moure's, canviar de vestit, parlar, per sempre o unes quantes vegades) i l'ordre en què els programarà. Als darrers 3 minuts, en parelles, s'expliquen el pla i el company/a fa una pregunta.|Cada alumno/a rellena la ficha del plan: dibuja el tanque, elige como mínimo 3 animales y escribe qué hará cada uno (moverse, cambiar de disfraz, hablar, por siempre o unas cuantas veces) y el orden en que los programará. En los últimos 3 minutos, por parejas, se explican el plan y el compañero/a hace una pregunta.",
@@ -1166,19 +1647,19 @@ Object.assign(TGUIDE, {
       { min: 10, t: "A l'ordinador: els trossos|En el ordenador: los trozos", fase: 'ordinador',
         fa: "Cada alumne/a obre la sessió i fa de «Recorda» fins als tres reptes dels trossos (l'alga, el peix de dos guions i el cranc que saluda). Aquests reptes són l'entrenament del projecte: si algú va molt de pressa, que passi directament al seu aquari.|Cada alumno/a abre la sesión y hace de «Recuerda» hasta los tres retos de los trozos (el alga, el pez de dos guiones y el cangrejo que saluda). Estos retos son el entrenamiento del proyecto: si alguien va muy deprisa, que pase directamente a su acuario.",
         diu: ["La benvinguda, va abans o a dins del bucle?|La bienvenida, ¿va antes o dentro del bucle?",
-          "A «Investiga», quin bucle s'acaba massa aviat?|En «Investiga», ¿qué bucle se acaba demasiado pronto?"],
+          "A «Investiga», quin bucle s'acaba massa aviat?|En «Investiga», ¿qué bucle se acaba demasiado pronto?", "El cranc saluda una vegada i després camina: on va el «digues»? (Abans del «per sempre».)|El cangrejo saluda una vez y después camina: ¿dónde va el «di»? (Antes del «por siempre».)", "Si ja ho tens clar, passa directament al teu aquari.|Si ya lo tienes claro, pasa directamente a tu acuario."],
         slides: ['s10', 's11'], app: "Recorda, històries, «Descobreix», ordenar els passos del projecte, el pla (ja fet), l'aquari de mostra, «Investiga» (la medusa que s'atura), la pausa activa i els tres reptes: l'alga, el peix i el cranc.|Recuerda, historias, «Descubre», ordenar los pasos del proyecto, el plan (ya hecho), el acuario de muestra, «Investiga» (la medusa que se para), la pausa activa y los tres retos: el alga, el pez y el cangrejo.", org: "Individual|Individual" },
       { min: 20, t: "Crea: el meu aquari|Crea: mi acuario", fase: 'crea',
         fa: "Cada alumne/a construeix el seu aquari seguint el pla, animal a animal. Passeja i pregunta en quin tros són i si l'han provat. Quan un animal funcioni, que marquin una creu al pla. Qui acabi pot afegir detalls: un animal que pensa, un ritme diferent per a cada animal…|Cada alumno/a construye su acuario siguiendo el plan, animal a animal. Pasea y pregunta en qué trozo están y si lo han probado. Cuando un animal funcione, que marquen una cruz en el plan. Quien termine puede añadir detalles: un animal que piensa, un ritmo diferente para cada animal…",
         diu: ["En quin tros ets? L'has provat ja?|¿En qué trozo estás? ¿Ya lo has probado?",
           "Marca al pla els animals que ja funcionen.|Marca en el plan los animales que ya funcionan.",
-          "Què podries millorar ara que funciona?|¿Qué podrías mejorar ahora que funciona?"],
+          "Què podries millorar ara que funciona?|¿Qué podrías mejorar ahora que funciona?", "Si alguna cosa falla, quin és l'últim tros que has afegit? Comença a mirar per allà.|Si algo falla, ¿cuál es el último trozo que has añadido? Empieza a mirar por ahí."],
         slides: ['s12', 's13'], app: "Pas «Crea»: El meu aquari (es desa al portafoli).|Paso «Crea»: Mi acuario (se guarda en el portafolio).", org: "Individual|Individual" },
       { min: 10, t: "Galeria i tancament|Galería y cierre", fase: 'tancament',
         fa: "Feu una galeria: en parelles, cadascú ensenya el seu aquari i el company/a li dona dues targetes de comentaris (una cosa que li agrada i una idea). Si hi ha temps, mostra 3 o 4 aquaris al projector. Acaba amb el resum, les preguntes finals de l'app i el tiquet.|Haced una galería: por parejas, cada uno enseña su acuario y el compañero/a le da dos tarjetas de comentarios (una cosa que le gusta y una idea). Si hay tiempo, muestra 3 o 4 acuarios en el proyector. Termina con el resumen, las preguntas finales de la app y el ticket.",
         diu: ["Digues una cosa que t'agradi de l'aquari del teu company/a.|Di una cosa que te guste del acuario de tu compañero/a.",
           "Quina idea li donaries per millorar-lo?|¿Qué idea le darías para mejorarlo?",
-          "Què ha estat el més difícil del projecte? Com ho has resolt?|¿Qué ha sido lo más difícil del proyecto? ¿Cómo lo has resuelto?"],
+          "Què ha estat el més difícil del projecte? Com ho has resolt?|¿Qué ha sido lo más difícil del proyecto? ¿Cómo lo has resuelto?", "Recordeu: una cosa concreta que agrada i una idea, no «està bé».|Recordad: una cosa concreta que gusta y una idea, no «está bien»."],
         slides: ['s14', 's15', 's16'], app: "«Tancament»: les dues preguntes finals i com m'he sentit.|«Cierre»: las dos preguntas finales y cómo me he sentido.", org: "Per parelles i després tot el grup|Por parejas y después todo el grupo" }
     ],
     errors: [
@@ -1191,7 +1672,9 @@ Object.assign(TGUIDE, {
       ["Fa servir «repeteix» amb pocs números i l'aquari s'atura al cap d'una estona.|Usa «repite» con números pequeños y el acuario se para al cabo de un rato.",
         "Recorda-li l'encàrrec: la pantalla està encesa tot el dia. Quin bucle no s'acaba?|Recuérdale el encargo: la pantalla está encendida todo el día. ¿Qué bucle no se acaba?"],
       ["Els comentaris de la galeria són «està bé» o «és lleig».|Los comentarios de la galería son «está bien» o «es feo».",
-        "Fes servir les targetes de comentaris: «M'agrada… perquè…» i «Podries provar…». Modela'n un tu primer.|Usa las tarjetas de comentarios: «Me gusta… porque…» y «Podrías probar…». Modela uno tú primero."]
+        "Fes servir les targetes de comentaris: «M'agrada… perquè…» i «Podries provar…». Modela'n un tu primer.|Usa las tarjetas de comentarios: «Me gusta… porque…» y «Podrías probar…». Modela uno tú primero."],
+      ["Programa els cinc animals amb exactament el mateix guió i l'aquari sembla una còpia.|Programa los cinco animales con exactamente el mismo guion y el acuario parece una copia.",
+        "Pregunta quin caràcter té cada animal: quin és el més ràpid? El més tranquil? Que canviï els números de «mou-te» i «espera».|Pregunta qué carácter tiene cada animal: ¿cuál es el más rápido? ¿El más tranquilo? Que cambie los números de «muévete» y «espera»."]
     ],
     diff: {
       mes: "Afegir a l'aquari un animal amb dos guions i ritmes molt diferents, o fer que en Vuit pensi coses amb «pensa» mentre neda. Després, escriure al pla quins canvis han fet respecte del pla inicial.|Añadir al acuario un animal con dos guiones y ritmos muy diferentes, o hacer que Vuit piense cosas con «piensa» mientras nada. Después, escribir en el plan qué cambios han hecho respecto al plan inicial.",
@@ -1203,7 +1686,10 @@ Object.assign(TGUIDE, {
       rubric: [
         ["Pla i construcció a trossos|Plan y construcción a trozos", "Fa un pla clar i el segueix, programant i provant un animal darrere l'altre.|Hace un plan claro y lo sigue, programando y probando un animal tras otro.", "Fa el pla, però programa sense provar fins al final.|Hace el plan, pero programa sin probar hasta el final."],
         ["Blocs de la unitat|Bloques de la unidad", "Combina vestits, esperes, «per sempre», «rebota» i diversos guions sense ajuda.|Combina disfraces, esperas, «por siempre», «rebota» y varios guiones sin ayuda.", "Fa servir alguns dels blocs, però necessita ajuda per combinar-los.|Usa algunos de los bloques, pero necesita ayuda para combinarlos."],
-        ["Presentació i comentaris|Presentación y comentarios", "Explica el seu aquari i fa comentaris amables i concrets al company/a.|Explica su acuario y hace comentarios amables y concretos al compañero/a.", "Ensenya l'aquari, però li costa explicar-lo o fer comentaris concrets.|Enseña el acuario, pero le cuesta explicarlo o hacer comentarios concretos."]
+        ["Presentació i comentaris|Presentación y comentarios", "Explica el seu aquari i fa comentaris amables i concrets al company/a.|Explica su acuario y hace comentarios amables y concretos al compañero/a.", "Ensenya l'aquari, però li costa explicar-lo o fer comentaris concrets.|Enseña el acuario, pero le cuesta explicarlo o hacer comentarios concretos."],
+        ["Pla en paper|Plan en papel",
+          "El pla té com a mínim 3 animals amb el que farà cadascun i l'ordre en què es programaran.|El plan tiene como mínimo 3 animales con lo que hará cada uno y el orden en que se programarán.",
+          "El pla té els animals dibuixats, però no diu què farà cadascun.|El plan tiene los animales dibujados, pero no dice qué hará cada uno."]
       ]
     },
     casa: "A casa, amb el mòbil, podeu obrir el portafoli i ensenyar l'aquari a la família. Expliqueu-los com heu fet moure cada animal i demaneu-los una idea per millorar-lo.|En casa, con el móvil, podéis abrir el portafolio y enseñar el acuario a la familia. Explicadles cómo habéis hecho mover a cada animal y pedidles una idea para mejorarlo.",
@@ -1216,7 +1702,7 @@ Object.assign(TGUIDE, {
         nota: "Recull idees en veu alta. No cal decidir-ho ara: ho faran al pla.|Recoge ideas en voz alta. No hace falta decidirlo ahora: lo harán en el plan." },
       { id: 's4', k: 'anim', t: 'Com es fa un projecte|Cómo se hace un proyecto', anim: 'g2plan', x: 'Idea, pla, construir a trossos, provar i millorar.|Idea, plan, construir a trozos, probar y mejorar.',
         nota: "Fes notar la fletxa entre «Prova-ho» i «Millora-ho»: es fa moltes vegades.|Haz notar la flecha entre «Pruébalo» y «Mejóralo»: se hace muchas veces." },
-      { id: 's5', k: 'concepte', t: 'Construir a trossos|Construir a trozos', punts: ["Un tros = un animal.|Un trozo = un animal.", "Programa'l i prova'l amb la bandera.|Prográmalo y pruébalo con la bandera.", "Quan funciona, passa al següent.|Cuando funciona, pasa al siguiente."],
+      { id: 's5', k: 'concepte', t: 'Construir a trossos|Construir a trozos', punts: ["Un tros = un animal.|Un trozo = un animal.", "Programa'l i prova'l amb la bandera.|Prográmalo y pruébalo con la bandera.", "Quan funciona, passa al següent.|Cuando funciona, pasa al siguiente."], pic: 'img/ment/cor.webp',
         nota: "Compara-ho amb construir una casa: primer els fonaments, després les parets.|Compáralo con construir una casa: primero los cimientos, después las paredes." },
       { id: 's6', k: 'media', t: "L'aquari de mostra|El acuario de muestra", x: "L'alga, el peix (dos guions), la medusa i el cranc que saluda.|El alga, el pez (dos guiones), la medusa y el cangrejo que saluda.",
         media: { k: 'stage', w: { bg: 'aquari', sprites: [{ id: 'alga', art: 'alga', x: -170, y: -110, size: 120, rot: 'none' }, { id: 'peix', art: 'peix', x: -60, y: 70, rot: 'lr' }, { id: 'medusa', art: 'medusa', x: 130, y: 40, rot: 'none', dir: 0 }, { id: 'cranc', art: 'cranc', x: 40, y: -135, size: 80, rot: 'lr' }] },
@@ -1235,7 +1721,7 @@ Object.assign(TGUIDE, {
         nota: "Al tros 3, pregunta si la benvinguda va abans o a dins del bucle.|En el trozo 3, pregunta si la bienvenida va antes o dentro del bucle." },
       { id: 's12', k: 'activitat', t: 'Crea: el meu aquari|Crea: mi acuario', timer: 20, punts: ["Segueix el teu pla, animal a animal.|Sigue tu plan, animal a animal.", "Prova cada animal amb la bandera.|Prueba cada animal con la bandera.", "Marca al pla els que ja funcionen.|Marca en el plan los que ya funcionan.", "Quan acabis, millora'l!|Cuando termines, ¡mejóralo!"],
         nota: "L'app demana com a mínim 3 animals programats, un «per sempre», algun canvi de vestit, una benvinguda i que el peix no surti.|La app pide como mínimo 3 animales programados, un «por siempre», algún cambio de disfraz, una bienvenida y que el pez no salga." },
-      { id: 's13', k: 'concepte', t: 'Els blocs que ja coneixes|Los bloques que ya conoces', punts: ["Animar: per sempre { vestit següent, espera }.|Animar: por siempre { disfraz siguiente, espera }.", "Nedar: per sempre { mou-te, rebota }.|Nadar: por siempre { muévete, rebota }.", "Saludar: digues, abans del bucle.|Saludar: di, antes del bucle.", "Dues coses alhora: dos guions.|Dos cosas a la vez: dos guiones."],
+      { id: 's13', k: 'concepte', t: 'Els blocs que ja coneixes|Los bloques que ya conoces', punts: ["Animar: per sempre { vestit següent, espera }.|Animar: por siempre { disfraz siguiente, espera }.", "Nedar: per sempre { mou-te, rebota }.|Nadar: por siempre { muévete, rebota }.", "Saludar: digues, abans del bucle.|Saludar: di, antes del bucle.", "Dues coses alhora: dos guions.|Dos cosas a la vez: dos guiones."], pic: 'img/ment/onn.webp',
         nota: "Deixa-la projectada durant el «Crea» com a xuleta per a qui la necessiti.|Déjala proyectada durante el «Crea» como chuleta para quien la necesite." },
       { id: 's14', k: 'activitat', t: "La galeria de l'aquari|La galería del acuario", punts: ["Ensenya el teu aquari al company/a.|Enseña tu acuario al compañero/a.", "Rep una targeta «M'agrada…».|Recibe una tarjeta «Me gusta…».", "Rep una targeta «Podries provar…».|Recibe una tarjeta «Podrías probar…»."],
         nota: "Modela tu un comentari amable i concret abans de començar.|Modela tú un comentario amable y concreto antes de empezar." },
@@ -1273,6 +1759,58 @@ Object.assign(TGUIDE, {
 Object.assign(TGUIDE, {
   /* ---------- Sessió 1 · Quan toco el personatge… ---------- */
   'g3-1': {
+    intro: "Comença la unitat de la interacció: fins ara els projectes es miraven; ara qui mira hi participa. L'alumnat descobreix què és un esdeveniment (una cosa que passa i fa començar un guió) i fa servir la capçalera «Quan toco aquest personatge». Aprèn que un personatge pot tenir diversos guions alhora i que cada guió espera el seu esdeveniment. La classe comença amb exemples de la vida diària (el timbre, l'interruptor), segueix amb l'activitat dels personatges amb timbre i acaba a l'ordinador despertant el bosc dels contes.|Empieza la unidad de la interacción: hasta ahora los proyectos se miraban; ahora quien mira participa. El alumnado descubre qué es un evento (algo que pasa y hace empezar un guion) y usa la cabecera «Al tocar este personaje». Aprende que un personaje puede tener varios guiones a la vez y que cada guion espera su evento. La clase empieza con ejemplos de la vida diaria (el timbre, el interruptor), sigue con la actividad de los personajes con timbre y termina en el ordenador despertando el bosque de los cuentos.",
+    claus: [
+      "Un esdeveniment és una cosa que passa mentre el programa funciona i fa començar un guió.|Un evento es algo que pasa mientras el programa funciona y hace empezar un guion.",
+      "Els blocs de sota «Quan toco aquest personatge» només es fan quan algú el toca, i tornen a començar a cada toc.|Los bloques de debajo de «Al tocar este personaje» solo se hacen cuando alguien lo toca, y vuelven a empezar con cada toque.",
+      "Un personatge pot tenir diversos guions: cadascun espera el seu esdeveniment.|Un personaje puede tener varios guiones: cada uno espera su evento.",
+      "Amb «Comença» proves tu; amb «Comprova», la prova toca sola i diu si funciona.|Con «Empieza» pruebas tú; con «Comprueba», la prueba toca sola y dice si funciona."
+    ],
+    prev: [
+      "Fer guions «Quan comença» amb «digues», «mou-te» i canvis de mida (unitat 1).|Hacer guiones «Al empezar» con «di», «muévete» y cambios de tamaño (unidad 1).",
+      "Canviar de vestit i fer bucles «repeteix» (unitat 2).|Cambiar de disfraz y hacer bucles «repite» (unidad 2).",
+      "Triar un personatge a la barra de dalt per programar-lo (unitat 2, sessió 3).|Elegir un personaje en la barra de arriba para programarlo (unidad 2, sesión 3)."
+    ],
+    faq: [
+      ["Toco el gat i no fa res. Per què?|Toco el gato y no hace nada. ¿Por qué?",
+        "Has tocat «Comença»? Els tocs només funcionen amb el programa en marxa. I mira que els blocs siguin sota «Quan toco aquest personatge».|¿Has tocado «Empieza»? Los toques solo funcionan con el programa en marcha. Y mira que los bloques estén bajo «Al tocar este personaje»."],
+      ["Per què he de tocar «Comprova» si ja funciona?|¿Por qué tengo que tocar «Comprueba» si ya funciona?",
+        "Perquè «Comprova» fa la prova sola, sempre igual, i així l'app sap que el repte està resolt.|Porque «Comprueba» hace la prueba sola, siempre igual, y así la app sabe que el reto está resuelto."],
+      ["Si toco el personatge dues vegades molt de pressa, què passa?|Si toco el personaje dos veces muy deprisa, ¿qué pasa?",
+        "El guió torna a començar des del principi a cada toc.|El guion vuelve a empezar desde el principio con cada toque."],
+      ["La roca no fa res quan la toco. Està espatllada?|La roca no hace nada cuando la toco. ¿Está estropeada?",
+        "No: la roca no té cap guió. Un personatge sense guió no respon a cap esdeveniment.|No: la roca no tiene ningún guion. Un personaje sin guion no responde a ningún evento."],
+      ["Al mòbil, com toco un personatge?|En el móvil, ¿cómo toco un personaje?",
+        "Amb el dit, damunt del dibuix, mentre el programa funciona. A l'ordinador, amb un clic del ratolí.|Con el dedo, encima del dibujo, mientras el programa funciona. En el ordenador, con un clic del ratón."],
+      ["Què és un esdeveniment a la vida real?|¿Qué es un evento en la vida real?",
+        "Una cosa que passa i fa que algú reaccioni: sona el timbre i obres la porta; el semàfor es posa verd i passes.|Algo que pasa y hace que alguien reaccione: suena el timbre y abres la puerta; el semáforo se pone verde y pasas."]
+    ],
+    tec: [
+      ["A «Comprova» diu que no ha passat res.|En «Comprueba» dice que no ha pasado nada.",
+        "La prova toca el personatge un moment concret: comproveu que els blocs són sota «Quan toco aquest personatge» del personatge correcte.|La prueba toca el personaje en un momento concreto: comprobad que los bloques están bajo «Al tocar este personaje» del personaje correcto."],
+      ["En tocar el personatge, la pàgina es mou o fa zoom (mòbil).|Al tocar el personaje, la página se mueve o hace zoom (móvil).",
+        "Que toqui amb un sol dit i sense arrossegar; si cal, que giri el mòbil en horitzontal.|Que toque con un solo dedo y sin arrastrar; si hace falta, que gire el móvil en horizontal."],
+      ["El drac falla la prova 2.|El dragón falla la prueba 2.",
+        "A la prova 2 ningú no el toca: el «canvia la mida» ha d'estar només al guió del toc, no al de «Quan comença».|En la prueba 2 nadie lo toca: el «cambia el tamaño» tiene que estar solo en el guion del toque, no en el de «Al empezar»."],
+      ["La Tuga no arriba a la bandera.|Tuga no llega a la bandera.",
+        "La prova la toca 4 vegades: amb «mou-te 40 passos» cada toc, arriba. Que revisi el número.|La prueba la toca 4 veces: con «muévete 40 pasos» cada toque, llega. Que revise el número."],
+      ["Les targetes de l'activitat es barregen entre grups.|Las tarjetas de la actividad se mezclan entre grupos.",
+        "Imprimiu cada paquet en un color de paper diferent o marqueu-les amb el número del grup.|Imprimid cada paquete en un color de papel diferente o marcadlas con el número del grupo."]
+    ],
+    seg: [
+      "A «Personatges amb timbre», els tocs són suaus i a l'espatlla; qui no vulgui que el toquin pot fer servir esdeveniments de so (un picament de mans).|En «Personajes con timbre», los toques son suaves y en el hombro; quien no quiera que le toquen puede usar eventos de sonido (una palmada).",
+      "Recordeu el temps de pantalla: a la pausa activa, que s'aixequin i es moguin.|Recordad el tiempo de pantalla: en la pausa activa, que se levanten y se muevan."
+    ],
+    extra: [
+      "Fer que un personatge reaccioni diferent a cada toc (vestit següent + una frase diferent segons el vestit, més endavant amb condicions).|Hacer que un personaje reaccione diferente con cada toque (disfraz siguiente + una frase diferente según el disfraz, más adelante con condiciones).",
+      "Fer un «instrument» al bosc: cada personatge fa un so diferent quan el toques.|Hacer un «instrumento» en el bosque: cada personaje hace un sonido diferente cuando lo tocas.",
+      "Fer que la Tuga arribi a la bandera amb menys tocs i explicar quin número cal.|Hacer que Tuga llegue a la bandera con menos toques y explicar qué número hace falta."
+    ],
+    trans: [
+      "Vida diària i tecnologia: aparells que responen a esdeveniments (timbre, interruptor, ascensor, pantalla tàctil).|Vida diaria y tecnología: aparatos que responden a eventos (timbre, interruptor, ascensor, pantalla táctil).",
+      "Matemàtiques: sumes repetides (100 + 10 + 10 + 10) i multiplicació (4 tocs × 40 passos).|Matemáticas: sumas repetidas (100 + 10 + 10 + 10) y multiplicación (4 toques × 40 pasos).",
+      "Sessió següent: un altre esdeveniment, prémer les fletxes del teclat.|Sesión siguiente: otro evento, pulsar las flechas del teclado."
+    ],
     obj: [
       "L'alumne/a explica què és un esdeveniment i en dona exemples de la vida diària i de l'escenari.|El alumno/a explica qué es un evento y da ejemplos de la vida diaria y del escenario.",
       "L'alumne/a programa un personatge perquè respongui quan algú el toca, amb la capçalera «Quan toco aquest personatge».|El alumno/a programa un personaje para que responda cuando alguien lo toca, con la cabecera «Al tocar este personaje».",
@@ -1293,42 +1831,49 @@ Object.assign(TGUIDE, {
       ["Animació|Animación", "Un programa que es mira: passa igual encara que no toquis res.|Un programa que se mira: pasa igual aunque no toques nada."]
     ],
     mat: {
-      aula: ["Un ordinador per alumne/a amb Numi Tech obert a la sessió «Quan toco el personatge…»|Un ordenador por alumno/a con Numi Tech abierto en la sesión «Cuando toco el personaje…»",
+      aula: [
+        "Un ordinador per alumne/a amb Numi Tech obert a la sessió «Quan toco el personatge…»|Un ordenador por alumno/a con Numi Tech abierto en la sesión «Cuando toco el personaje…»",
         "Projector i la presentació d'aquesta sessió|Proyector y la presentación de esta sesión",
-        "Les targetes de guions retallades (un paquet d'11 targetes per grup de 4)|Las tarjetas de guiones recortadas (un paquete de 11 tarjetas por grupo de 4)"],
-      imprimir: ["Targetes: personatges amb timbre|Tarjetas: personajes con timbre"],
-      prep: ["Imprimir i retallar les targetes. Cada grup de 4 en necessita un paquet; si es plastifiquen, serveixen per a altres cursos.|Imprimir y recortar las tarjetas. Cada grupo de 4 necesita un paquete; si se plastifican, sirven para otros cursos.",
-        "Provar la diapositiva del drac (s9) per veure quan es toca sol a la demo.|Probar la diapositiva del dragón (s9) para ver cuándo se toca solo en la demo.",
-        "Deixar els ordinadors engegats amb la sessió de cada alumne/a iniciada.|Dejar los ordenadores encendidos con la sesión de cada alumno/a iniciada."]
+        "1 paquet de targetes de guions retallades per grup de 4 (imprimible 1)|1 paquete de tarjetas de guiones recortadas por grupo de 4 (imprimible 1)"
+      ],
+      imprimir: [
+        "1 paquet de targetes «Personatges amb timbre» per grup de 4 (imprimible 1)|1 paquete de tarjetas «Personajes con timbre» por grupo de 4 (imprimible 1)"
+      ],
+      prep: [
+        "El dia abans (15 min): imprimir i retallar un paquet de targetes per grup de 4; si pot ser, cada paquet d'un color.|El día antes (15 min): imprimir y recortar un paquete de tarjetas por grupo de 4; si puede ser, cada paquete de un color.",
+        "Provar les demostracions del gat i del drac (diapositives amb l'escenari) i fixar-se en quin moment se'ls toca.|Probar las demostraciones del gato y del dragón (diapositivas con el escenario) y fijarse en qué momento se les toca.",
+        "Tenir pensats 3 exemples d'esdeveniments de la vida diària per a la benvinguda.|Tener pensados 3 ejemplos de eventos de la vida diaria para la bienvenida.",
+        "Deixar els ordinadors engegats amb el perfil de cada alumne/a iniciat.|Dejar los ordenadores encendidos con el perfil de cada alumno/a iniciado."
+      ]
     },
     plan: [
       { min: 5, t: "Benvinguda: animació o interacció?|Bienvenida: ¿animación o interacción?", fase: 'inici',
         fa: "Recorda l'aquari de la unitat 2: era una animació, es mirava. Pregunta quines coses de casa responen quan les toques (el timbre, l'interruptor, la pantalla del mòbil). Presenta la missió: el bosc dels contes, on els personatges dormen fins que algú els toca.|Recuerda el acuario de la unidad 2: era una animación, se miraba. Pregunta qué cosas de casa responden cuando las tocas (el timbre, el interruptor, la pantalla del móvil). Presenta la misión: el bosque de los cuentos, donde los personajes duermen hasta que alguien los toca.",
-        diu: ["L'aquari el miràvem. I si els peixos responguessin quan els toqueu?|El acuario lo mirábamos. ¿Y si los peces respondieran cuando los tocáis?", "Quines coses de casa fan alguna cosa només quan les toqueu?|¿Qué cosas de casa hacen algo solo cuando las tocáis?"],
+        diu: ["L'aquari el miràvem. I si els peixos responguessin quan els toqueu?|El acuario lo mirábamos. ¿Y si los peces respondieran cuando los tocáis?", "Quines coses de casa fan alguna cosa només quan les toqueu?|¿Qué cosas de casa hacen algo solo cuando las tocáis?", "Un interruptor: què passa quan el toques? (S'encén el llum.) Això és un esdeveniment!|Un interruptor: ¿qué pasa cuando lo tocas? (Se enciende la luz.) ¡Eso es un evento!"],
         slides: ['s1', 's2', 's3'], app: "Encara no: pantalles abaixades.|Todavía no: pantallas bajadas.", org: "Tot el grup|Todo el grupo" },
       { min: 10, t: "Què és un esdeveniment?|¿Qué es un evento?", fase: 'teoria',
         fa: "Explica l'esdeveniment amb el timbre i l'animació del gat. Mostra la capçalera «Quan toco aquest personatge» i la demo del gat: abans que el toquin a la demo, que la classe digui «ara!». Després, la demo del drac amb dos guions i la diapositiva de l'error típic (els blocs sota «Quan comença»).|Explica el evento con el timbre y la animación del gato. Muestra la cabecera «Al tocar este personaje» y la demo del gato: antes de que lo toquen en la demo, que la clase diga «¡ahora!». Después, la demo del dragón con dos guiones y la diapositiva del error típico (los bloques bajo «Al empezar»).",
-        diu: ["El timbre no sona fins que algú el prem. El gat tampoc no mioula fins que algú el toca.|El timbre no suena hasta que alguien lo pulsa. El gato tampoco maúlla hasta que alguien lo toca.", "Quants guions té el drac? Quin esdeveniment espera cadascun?|¿Cuántos guiones tiene el dragón? ¿Qué evento espera cada uno?", "Si poso el «Miau» sota «Quan comença», quan mioularà?|Si pongo el «Miau» bajo «Al empezar», ¿cuándo maullará?"],
+        diu: ["El timbre no sona fins que algú el prem. El gat tampoc no mioula fins que algú el toca.|El timbre no suena hasta que alguien lo pulsa. El gato tampoco maúlla hasta que alguien lo toca.", "Quants guions té el drac? Quin esdeveniment espera cadascun?|¿Cuántos guiones tiene el dragón? ¿Qué evento espera cada uno?", "Si poso el «Miau» sota «Quan comença», quan mioularà?|Si pongo el «Miau» bajo «Al empezar», ¿cuándo maullará?", "La bandera verda també és un esdeveniment? (Sí: «Quan comença».)|¿La bandera verde también es un evento? (Sí: «Al empezar».)"],
         slides: ['s4', 's5', 's6', 's7', 's8', 's9'], app: "Encara no: atenció a la projecció.|Todavía no: atención a la proyección.", org: "Tot el grup|Todo el grupo" },
       { min: 12, t: "Personatges amb timbre|Personajes con timbre", fase: 'desconnectat',
         fa: "Grups de 4. Reparteix les targetes: cada alumne/a en tria dues i les enganxa (o les deixa) davant seu. Tots fan veure que dormen. Per torns, un alumne/a fa d'«usuari» i prova esdeveniments: toca una espatlla, pica de mans, diu «bandera verda»… Els personatges només es mouen si l'esdeveniment és a una de les seves targetes. A la segona ronda, dona a un grup la targeta de l'error: «Quan comença → dic Miau» i pregunta què passa.|Grupos de 4. Reparte las tarjetas: cada alumno/a elige dos y las pone delante. Todos hacen ver que duermen. Por turnos, un alumno/a hace de «usuario» y prueba eventos: toca un hombro, da una palmada, dice «bandera verde»… Los personajes solo se mueven si el evento está en una de sus tarjetas. En la segunda ronda, da a un grupo la tarjeta del error: «Al empezar → digo Miau» y pregunta qué pasa.",
-        diu: ["Només us podeu despertar amb l'esdeveniment de la vostra targeta.|Solo os podéis despertar con el evento de vuestra tarjeta.", "Hi ha hagut un esdeveniment que no ha despertat ningú? Per què?|¿Ha habido algún evento que no ha despertado a nadie? ¿Por qué?", "Qui té «Quan comença»? Llavors, què fa quan dic «bandera verda»?|¿Quién tiene «Al empezar»? Entonces, ¿qué hace cuando digo «bandera verde»?"],
+        diu: ["Només us podeu despertar amb l'esdeveniment de la vostra targeta.|Solo os podéis despertar con el evento de vuestra tarjeta.", "Hi ha hagut un esdeveniment que no ha despertat ningú? Per què?|¿Ha habido algún evento que no ha despertado a nadie? ¿Por qué?", "Qui té «Quan comença»? Llavors, què fa quan dic «bandera verda»?|¿Quién tiene «Al empezar»? Entonces, ¿qué hace cuando digo «bandera verde»?", "Si dic una paraula que no és a cap targeta, qui es desperta? (Ningú.)|Si digo una palabra que no está en ninguna tarjeta, ¿quién se despierta? (Nadie.)"],
         slides: ['s10', 's11'], app: "Cap: activitat sense pantalla.|Ninguna: actividad sin pantalla.", org: "Grups de 4|Grupos de 4" },
       { min: 15, t: "A l'ordinador: descobreix i investiga|En el ordenador: descubre e investiga", fase: 'ordinador',
         fa: "Cada alumne/a avança al seu ritme fins a la pausa activa. Al pas «Personatges amb timbre» poden tocar «Ho hem fet!» perquè ja l'han fet a classe. Al bosc adormit, demana que expliquin què fa cada personatge i per què la roca no fa res (no té cap guió).|Cada alumno/a avanza a su ritmo hasta la pausa activa. En el paso «Personajes con timbre» pueden tocar «¡Lo hemos hecho!» porque ya lo han hecho en clase. En el bosque dormido, pide que expliquen qué hace cada personaje y por qué la roca no hace nada (no tiene ningún guion).",
-        diu: ["Per què la roca no fa res quan la toques?|¿Por qué la roca no hace nada cuando la tocas?", "Toca la pestanya del drac: quin guió té?|Toca la pestaña del dragón: ¿qué guion tiene?"],
+        diu: ["Per què la roca no fa res quan la toques?|¿Por qué la roca no hace nada cuando la tocas?", "Toca la pestanya del drac: quin guió té?|Toca la pestaña del dragón: ¿qué guion tiene?", "El drac comença amb mida 100 i el toco 3 vegades: quina mida té? (130.)|El dragón empieza con tamaño 100 y lo toco 3 veces: ¿qué tamaño tiene? (130.)", "A l'«Investiga», a quin guió ha d'anar el «Miau»?|En el «Investiga», ¿a qué guion tiene que ir el «Miau»?"],
         slides: ['s12'], app: "Del recorda fins a «Investiga»: les preguntes, les dues històries, «Descobreix», ordenar què passa, «Personatges amb timbre» (ja fet), el bosc adormit, la pregunta de la mida del drac i el gat que mioula sol.|Del recuerda hasta «Investiga»: las preguntas, las dos historias, «Descubre», ordenar qué pasa, «Personajes con timbre» (ya hecho), el bosque dormido, la pregunta del tamaño del dragón y el gato que maúlla solo.", org: "Individual|Individual" },
       { min: 10, t: "Reptes: personatges que responen|Retos: personajes que responden", fase: 'ordinador',
         fa: "Feu la pausa activa junts. Recorda com funciona «Comença» (proves tu, tocant) i «Comprova» (la prova toca sola). Deixa'ls fer els quatre reptes. Al del drac, explica que hi ha dues proves: si ningú no el toca, no ha de créixer.|Haced la pausa activa juntos. Recuerda cómo funciona «Empieza» (pruebas tú, tocando) y «Comprueba» (la prueba toca sola). Deja que hagan los cuatro retos. En el del dragón, explica que hay dos pruebas: si nadie lo toca, no tiene que crecer.",
-        diu: ["Primer prova-ho tu amb «Comença» i el dit. Quan funcioni, «Comprova».|Primero pruébalo tú con «Empieza» y el dedo. Cuando funcione, «Comprueba».", "A la prova 2 ningú no toca el drac: per què es fa gran el teu?|En la prueba 2 nadie toca el dragón: ¿por qué se hace grande el tuyo?"],
+        diu: ["Primer prova-ho tu amb «Comença» i el dit. Quan funcioni, «Comprova».|Primero pruébalo tú con «Empieza» y el dedo. Cuando funcione, «Comprueba».", "A la prova 2 ningú no toca el drac: per què es fa gran el teu?|En la prueba 2 nadie toca el dragón: ¿por qué se hace grande el tuyo?", "La Tuga avança 40 passos a cada toc: quants passos en 4 tocs? (160.)|Tuga avanza 40 pasos con cada toque: ¿cuántos pasos en 4 toques? (160.)"],
         slides: ['s13', 's14'], app: "«Pausa activa» i els quatre reptes: el gat dormilega, l'ocell i la papallona, el drac que creix i la Tuga.|«Pausa activa» y los cuatro retos: el gato dormilón, el pájaro y la mariposa, el dragón que crece y Tuga.", org: "Tot el grup i després individual|Todo el grupo y después individual" },
       { min: 5, t: "Crea: el bosc que es desperta|Crea: el bosque que se despierta", fase: 'crea',
         fa: "Cada alumne/a programa almenys tres personatges que responguin de manera diferent. Quan el tinguin, el company/a toca els personatges sense mirar els guions i endevina què hi ha programat.|Cada alumno/a programa al menos tres personajes que respondan de manera diferente. Cuando lo tengan, el compañero/a toca los personajes sin mirar los guiones y adivina qué hay programado.",
-        diu: ["Que cada personatge sorprengui d'una manera diferent!|¡Que cada personaje sorprenda de una manera diferente!", "Endevina els blocs del company/a només mirant què fa.|Adivina los bloques del compañero/a solo mirando qué hace."],
+        diu: ["Que cada personatge sorprengui d'una manera diferent!|¡Que cada personaje sorprenda de una manera diferente!", "Endevina els blocs del company/a només mirant què fa.|Adivina los bloques del compañero/a solo mirando qué hace.", "Hi ha algun personatge que respongui igual que un altre? Canvia-li la resposta!|¿Hay algún personaje que responda igual que otro? ¡Cámbiale la respuesta!"],
         slides: ['s15'], app: "Pas «Crea»: El bosc que es desperta.|Paso «Crea»: El bosque que se despierta.", org: "Individual i per parelles|Individual y por parejas" },
       { min: 3, t: "Tancament i tiquet de sortida|Cierre y ticket de salida", fase: 'tancament',
-        fa: "Repassa les tres idees amb el resum, deixa que facin les preguntes finals i fes el tiquet a la porta.|Repasa las tres ideas con el resumen, deja que hagan las preguntas finales y haz el ticket en la puerta.",
-        diu: ["Digueu-me un esdeveniment de l'escenari i un de la vida real.|Decidme un evento del escenario y uno de la vida real."],
+        fa: "Repassa les tres idees de la sessió amb el resum (esdeveniment, guió del toc i diversos guions). Deixa que facin les dues preguntes finals de l'app i com s'han sentit. A la porta, fes a cada alumne/a una pregunta del tiquet i anota qui encara posa els blocs sota «Quan comença».|Repasa las tres ideas de la sesión con el resumen (evento, guion del toque y varios guiones). Deja que hagan las dos preguntas finales de la app y cómo se han sentido. En la puerta, haz a cada alumno/a una pregunta del ticket y anota quién todavía pone los bloques bajo «Al empezar».",
+        diu: ["Digueu-me un esdeveniment de l'escenari i un de la vida real.|Decidme un evento del escenario y uno de la vida real.", "Quin guió espera que toquin el personatge? («Quan toco aquest personatge».)|¿Qué guion espera que toquen al personaje? («Al tocar este personaje».)", "La setmana vinent el comandament seran les fletxes del teclat!|¡La semana que viene el mando serán las flechas del teclado!"],
         slides: ['s16', 's17'], app: "«Tancament»: les dues preguntes i com m'he sentit.|«Cierre»: las dos preguntas y cómo me he sentido.", org: "Tot el grup|Todo el grupo" }
     ],
     errors: [
@@ -1341,7 +1886,9 @@ Object.assign(TGUIDE, {
       ["Al repte del drac, el fa créixer també quan comença, i falla la prova 2.|En el reto del dragón, lo hace crecer también al empezar, y falla la prueba 2.",
         "Pregunta: a la prova 2 ningú no el toca. Quin guió s'executa? Què hi ha en aquell guió que no hi hauria de ser?|Pregunta: en la prueba 2 nadie lo toca. ¿Qué guion se ejecuta? ¿Qué hay en ese guion que no debería estar?"],
       ["A la Tuga posa «mou-te 10» i no arriba a la bandera.|En Tuga pone «muévete 10» y no llega a la bandera.",
-        "Que llegeixi l'enunciat: quants passos a cada toc? Quantes vegades la tocaran? Que ho calculi abans de provar.|Que lea el enunciado: ¿cuántos pasos en cada toque? ¿Cuántas veces la tocarán? Que lo calcule antes de probar."]
+        "Que llegeixi l'enunciat: quants passos a cada toc? Quantes vegades la tocaran? Que ho calculi abans de provar.|Que lea el enunciado: ¿cuántos pasos en cada toque? ¿Cuántas veces la tocarán? Que lo calcule antes de probar."],
+      ["Toca el personatge abans de tocar «Comença» i creu que el guió no funciona.|Toca el personaje antes de tocar «Empieza» y cree que el guion no funciona.",
+        "Pregunta: el programa està en marxa? Que toqui «Comença» i, després, el personatge.|Pregunta: ¿el programa está en marcha? Que toque «Empieza» y, después, el personaje."]
     ],
     diff: {
       mes: "Afegir a «El bosc que es desperta» un personatge que reaccioni de dues maneres: una quan comença (s'estira) i una altra quan el toquen. O fer que un personatge s'amagui quan el toquen, com si s'espantés.|Añadir a «El bosque que se despierta» un personaje que reaccione de dos maneras: una al empezar (se estira) y otra cuando lo tocan. O hacer que un personaje se esconda cuando lo tocan, como si se asustara.",
@@ -1352,7 +1899,10 @@ Object.assign(TGUIDE, {
       rubric: [
         ["Concepte d'esdeveniment|Concepto de evento", "Explica que un esdeveniment fa començar un guió i en dona exemples propis.|Explica que un evento hace empezar un guion y da ejemplos propios.", "Reconeix el toc com a esdeveniment, però no el relaciona amb la capçalera.|Reconoce el toque como evento, pero no lo relaciona con la cabecera."],
         ["Guions de toc|Guiones de toque", "Posa els blocs a la capçalera correcta i el personatge correcte sense ajuda.|Pone los bloques en la cabecera correcta y el personaje correcto sin ayuda.", "Necessita provar diverses vegades per trobar on van els blocs.|Necesita probar varias veces para encontrar dónde van los bloques."],
-        ["Escena interactiva|Escena interactiva", "Tres o més personatges responen de maneres diferents.|Tres o más personajes responden de maneras diferentes.", "Un o dos personatges responen, o tots fan el mateix.|Uno o dos personajes responden, o todos hacen lo mismo."]
+        ["Escena interactiva|Escena interactiva", "Tres o més personatges responen de maneres diferents.|Tres o más personajes responden de maneras diferentes.", "Un o dos personatges responen, o tots fan el mateix.|Uno o dos personajes responden, o todos hacen lo mismo."],
+        ["Provar i comprovar|Probar y comprobar",
+          "Prova el guió tocant amb «Comença» i, quan funciona, el comprova amb «Comprova».|Prueba el guion tocando con «Empieza» y, cuando funciona, lo comprueba con «Comprueba».",
+          "Toca «Comprova» sense haver provat o no sap què vol dir el missatge.|Toca «Comprueba» sin haber probado o no sabe qué quiere decir el mensaje."]
       ]
     },
     casa: "A casa, amb el mòbil, podeu repetir la sessió i fer l'activitat «Personatges amb timbre»: cadascú escriu dos guions («Quan em toquen l'espatlla → …») i l'altra persona prova els esdeveniments.|En casa, con el móvil, podéis repetir la sesión y hacer la actividad «Personajes con timbre»: cada uno escribe dos guiones («Cuando me tocan el hombro → …») y la otra persona prueba los eventos.",
@@ -1365,7 +1915,7 @@ Object.assign(TGUIDE, {
         nota: "Connecta amb la unitat 2: avui hi afegim qui mira l'escenari.|Conecta con la unidad 2: hoy añadimos a quien mira el escenario." },
       { id: 's4', k: 'anim', t: "Un esdeveniment|Un evento", anim: 'g3event', x: "Passa alguna cosa (un toc) i el programa respon (el guió comença).|Pasa algo (un toque) y el programa responde (el guion empieza).",
         nota: "Compara-ho amb el timbre: no sona fins que algú el prem.|Compáralo con el timbre: no suena hasta que alguien lo pulsa." },
-      { id: 's5', k: 'concepte', t: "Esdeveniments de l'escenari|Eventos del escenario", punts: ["Quan comença (la bandera verda)|Al empezar (la bandera verde)", "Quan toco aquest personatge|Al tocar este personaje", "Quan premo una tecla (la setmana que ve)|Al pulsar una tecla (la semana que viene)"],
+      { id: 's5', k: 'concepte', t: "Esdeveniments de l'escenari|Eventos del escenario", punts: ["Quan comença (la bandera verda)|Al empezar (la bandera verde)", "Quan toco aquest personatge|Al tocar este personaje", "Quan premo una tecla (la setmana que ve)|Al pulsar una tecla (la semana que viene)"], pic: 'img/ment/rfx.webp',
         nota: "La bandera verda ja la coneixen: també és un esdeveniment.|La bandera verde ya la conocen: también es un evento." },
       { id: 's6', k: 'media', t: "El gat que mioula|El gato que maúlla", x: "A la demo, algú toca el gat dues vegades.|En la demo, alguien toca el gato dos veces.",
         media: { k: 'stage', w: { bg: 'bosc', sprites: [{ id: 'gat', art: 'gat', x: 0, y: -50, size: 120 }], input: [{ t: 1, click: 'gat' }, { t: 3.5, click: 'gat' }], time: 6 }, prog: `@gat click{ next say:"Miau!|¡Miau!",1 next }` },
@@ -1375,7 +1925,7 @@ Object.assign(TGUIDE, {
       { id: 's8', k: 'media', t: "Un personatge, dos guions|Un personaje, dos guiones",
         media: { k: 'stage', w: { bg: 'bosc', sprites: [{ id: 'drac', art: 'drac', x: 0, y: -40 }], input: [{ t: 2.5, click: 'drac' }], time: 6 }, prog: `@drac flag{ say:"Toca'm, si goses!|¡Tócame, si te atreves!",2 } click{ chsize:40 say:"Grrr!|¡Grrr!",2 chsize:-40 }` },
         nota: "Assenyala cada guió quan s'il·lumina. Pregunta quin esdeveniment espera cadascun.|Señala cada guion cuando se ilumina. Pregunta qué evento espera cada uno." },
-      { id: 's9', k: 'concepte', t: "Compte!|¡Cuidado!", punts: ["Sota «Quan comença»: passa sol, en començar.|Bajo «Al empezar»: pasa solo, al empezar.", "Sota «Quan toco aquest personatge»: passa quan el toquen.|Bajo «Al tocar este personaje»: pasa cuando lo tocan.", "Abans de posar blocs, mira a quina capçalera vas.|Antes de poner bloques, mira en qué cabecera estás."],
+      { id: 's9', k: 'concepte', t: "Compte!|¡Cuidado!", punts: ["Sota «Quan comença»: passa sol, en començar.|Bajo «Al empezar»: pasa solo, al empezar.", "Sota «Quan toco aquest personatge»: passa quan el toquen.|Bajo «Al tocar este personaje»: pasa cuando lo tocan.", "Abans de posar blocs, mira a quina capçalera vas.|Antes de poner bloques, mira en qué cabecera estás."], anim: 'g3event',
         nota: "Aquest és l'error més freqüent de la sessió: torna-hi quan el vegis a les pantalles.|Este es el error más frecuente de la sesión: vuelve a ello cuando lo veas en las pantallas." },
       { id: 's10', k: 'activitat', t: "Personatges amb timbre|Personajes con timbre", timer: 12, punts: ["Tria dues targetes: són els teus guions.|Elige dos tarjetas: son tus guiones.", "Fes veure que dorms.|Haz ver que duermes.", "Només et mous si passa l'esdeveniment de la teva targeta.|Solo te mueves si pasa el evento de tu tarjeta.", "L'usuari prova esdeveniments, per torns.|El usuario prueba eventos, por turnos."],
         nota: "Tocar l'espatlla amb suavitat. Si algú es mou sense esdeveniment, és un «bug»: el grup el troba.|Tocar el hombro con suavidad. Si alguien se mueve sin evento, es un «bug»: el grupo lo encuentra." },
@@ -1383,7 +1933,7 @@ Object.assign(TGUIDE, {
         nota: "Que descobreixin que el personatge mioula en començar i no quan el toquen: és el mateix error que a l'escenari.|Que descubran que el personaje maúlla al empezar y no cuando lo tocan: es el mismo error que en el escenario." },
       { id: 's12', k: 'activitat', t: "Ara, a l'ordinador|Ahora, al ordenador", timer: 15, punts: ["Obre «Quan toco el personatge…».|Abre «Cuando toco el personaje…».", "Al bosc adormit, toca tots els personatges.|En el bosque dormido, toca todos los personajes.", "Para a la «Pausa activa».|Para en la «Pausa activa»."],
         nota: "Passeja i pregunta per la roca: no té cap guió, per això no fa res.|Pasea y pregunta por la roca: no tiene ningún guion, por eso no hace nada." },
-      { id: 's13', k: 'concepte', t: "Comença o Comprova?|¿Empieza o Comprueba?", punts: ["«Comença»: proves tu, tocant amb el dit o el ratolí.|«Empieza»: pruebas tú, tocando con el dedo o el ratón.", "«Comprova»: la prova toca sola i diu si funciona.|«Comprueba»: la prueba toca sola y dice si funciona.", "Si hi ha «Prova 1» i «Prova 2», han de funcionar totes dues.|Si hay «Prueba 1» y «Prueba 2», tienen que funcionar las dos."],
+      { id: 's13', k: 'concepte', t: "Comença o Comprova?|¿Empieza o Comprueba?", punts: ["«Comença»: proves tu, tocant amb el dit o el ratolí.|«Empieza»: pruebas tú, tocando con el dedo o el ratón.", "«Comprova»: la prova toca sola i diu si funciona.|«Comprueba»: la prueba toca sola y dice si funciona.", "Si hi ha «Prova 1» i «Prova 2», han de funcionar totes dues.|Si hay «Prueba 1» y «Prueba 2», tienen que funcionar las dos."], pic: 'img/ic/check.webp',
         nota: "Explica-ho abans dels reptes: estalvia moltes preguntes.|Explícalo antes de los retos: ahorra muchas preguntas." },
       { id: 's14', k: 'repte', t: "Reptes|Retos", timer: 10, punts: ["1. El gat dormilega|1. El gato dormilón", "2. L'ocell i la papallona|2. El pájaro y la mariposa", "3. El drac que creix (dues proves)|3. El dragón que crece (dos pruebas)", "4. La Tuga, a tocs|4. Tuga, a toques"],
         nota: "Al 3, si falla la prova 2, pregunta què fa el drac quan ningú no el toca.|En el 3, si falla la prueba 2, pregunta qué hace el dragón cuando nadie lo toca." },
@@ -1410,6 +1960,58 @@ Object.assign(TGUIDE, {
 
   /* ---------- Sessió 2 · Les fletxes del teclat ---------- */
   'g3-2': {
+    intro: "Un altre esdeveniment: prémer una tecla. L'alumnat fa un comandament per moure el cavaller amb les fletxes del teclat (al mòbil, els botons de sota l'escenari). Cada fletxa té el seu guió amb dos blocs: «apunta en direcció» (90 dreta, -90 esquerra, 0 amunt, 180 avall) i «mou-te». També descobreix que, si es manté la tecla premuda, el guió es repeteix sol i no cal cap «per sempre». La classe comença amb la brúixola del cos, segueix amb el comandament humà per parelles i acaba programant el comandament complet de la Flama.|Otro evento: pulsar una tecla. El alumnado hace un mando para mover al caballero con las flechas del teclado (en el móvil, los botones de debajo del escenario). Cada flecha tiene su guion con dos bloques: «apunta en dirección» (90 derecha, -90 izquierda, 0 arriba, 180 abajo) y «muévete». También descubre que, si se mantiene la tecla pulsada, el guion se repite solo y no hace falta ningún «por siempre». La clase empieza con la brújula del cuerpo, sigue con el mando humano por parejas y termina programando el mando completo de Flama.",
+    claus: [
+      "Prémer una tecla és un esdeveniment: cada tecla pot tenir el seu guió.|Pulsar una tecla es un evento: cada tecla puede tener su guion.",
+      "«Apunta en direcció» fa mirar cap a un costat, miri on miri abans; «mou-te» avança cap on mira.|«Apunta en dirección» hace mirar hacia un lado, mire donde mire antes; «muévete» avanza hacia donde mira.",
+      "Per moure's en quatre direccions calen quatre guions, un per fletxa.|Para moverse en cuatro direcciones hacen falta cuatro guiones, uno por flecha.",
+      "Mantenir la tecla repeteix el guió: un «per sempre» dins del guió d'una tecla fa que el personatge no s'aturi mai.|Mantener la tecla repite el guion: un «por siempre» dentro del guion de una tecla hace que el personaje no se pare nunca."
+    ],
+    prev: [
+      "Les direccions 0, 90, 180 i -90 (unitat 1, sessió 2).|Las direcciones 0, 90, 180 y -90 (unidad 1, sesión 2).",
+      "Què és un esdeveniment i com funcionen els guions de toc (sessió 1).|Qué es un evento y cómo funcionan los guiones de toque (sesión 1).",
+      "El bucle «per sempre» i per què no s'acaba (unitat 2).|El bucle «por siempre» y por qué no se acaba (unidad 2)."
+    ],
+    faq: [
+      ["Per què el cavaller va d'esquena quan vaig a l'esquerra?|¿Por qué el caballero va de espaldas cuando voy a la izquierda?",
+        "Perquè fas servir «mou-te -10» sense girar-lo. Amb «apunta en direcció -90» i «mou-te 10», mira cap on va.|Porque usas «muévete -10» sin girarlo. Con «apunta en dirección -90» y «muévete 10», mira hacia donde va."],
+      ["Les fletxes del teclat no fan res.|Las flechas del teclado no hacen nada.",
+        "Primer toca «Comença» (o una fletxa en pantalla). Si encara no va, fes un clic a l'escenari perquè la pàgina rebi les tecles.|Primero toca «Empieza» (o una flecha en pantalla). Si aún no va, haz un clic en el escenario para que la página reciba las teclas."],
+      ["Puc fer servir altres tecles?|¿Puedo usar otras teclas?",
+        "En aquests reptes hi ha les fletxes i l'espai. L'espai és perfecte per a una sorpresa o un salt.|En estos retos están las flechas y el espacio. El espacio es perfecto para una sorpresa o un salto."],
+      ["Si mantinc la fletxa, per què al principi fa una pausa?|Si mantengo la flecha, ¿por qué al principio hace una pausa?",
+        "Com quan mantens una lletra al teclat: primer s'escriu una, s'espera un moment i després es repeteix de pressa.|Como cuando mantienes una letra en el teclado: primero se escribe una, se espera un momento y después se repite deprisa."],
+      ["Per què l'ocell no arriba a l'estrella si poso «mou-te 20»?|¿Por qué el pájaro no llega a la estrella si pongo «muévete 20»?",
+        "La prova prem les tecles un temps fix i amb 20 passos es passa o va a parar a un altre lloc. Fes servir «mou-te 10 passos», com diu el repte.|La prueba pulsa las teclas un tiempo fijo y con 20 pasos se pasa o va a parar a otro sitio. Usa «muévete 10 pasos», como dice el reto."],
+      ["Com es mouen els personatges dels videojocs?|¿Cómo se mueven los personajes de los videojuegos?",
+        "Igual que el nostre cavaller: cada tecla o botó és un esdeveniment que fa començar el seu guió.|Igual que nuestro caballero: cada tecla o botón es un evento que hace empezar su guion."]
+    ],
+    tec: [
+      ["Al mòbil no hi ha teclat.|En el móvil no hay teclado.",
+        "Sota l'escenari surten botons de fletxa i d'espai: funcionen igual que les tecles.|Debajo del escenario salen botones de flecha y de espacio: funcionan igual que las teclas."],
+      ["En prémer les fletxes, la pàgina es desplaça amunt i avall.|Al pulsar las flechas, la página se desplaza arriba y abajo.",
+        "Que faci un clic a l'escenari abans de fer servir les fletxes; si continua, que faci servir els botons de pantalla.|Que haga un clic en el escenario antes de usar las flechas; si continúa, que use los botones de pantalla."],
+      ["Teclats sense fletxes o portàtils petits.|Teclados sin flechas o portátiles pequeños.",
+        "Feu servir els botons de pantalla amb el ratolí: la prova «Comprova» prem les tecles sola igualment.|Usad los botones de pantalla con el ratón: la prueba «Comprueba» pulsa las teclas sola igualmente."],
+      ["El cavaller surt de l'escenari i no es veu.|El caballero sale del escenario y no se ve.",
+        "Toqueu la fletxa rodona per tornar-lo al lloc del principi i proveu de nou.|Tocad la flecha redonda para devolverlo al sitio del principio y probad de nuevo."],
+      ["Els fulls de les parets no es veuen des de tot arreu.|Las hojas de las paredes no se ven desde todas partes.",
+        "Escriviu els números ben grossos o poseu-los també a la pissarra amb una brúixola dibuixada.|Escribid los números bien grandes o ponedlos también en la pizarra con una brújula dibujada."]
+    ],
+    seg: [
+      "Al comandament humà, el personatge fa passos curts i el comandament vigila que no xoqui amb taules ni persones.|En el mando humano, el personaje da pasos cortos y el mando vigila que no choque con mesas ni personas.",
+      "Posició davant el teclat: canells relaxats i esquena recta; descans a la pausa activa.|Posición delante del teclado: muñecas relajadas y espalda recta; descanso en la pausa activa."
+    ],
+    extra: [
+      "Fer que el cavaller canviï de vestit a cada pas perquè sembli que camina.|Hacer que el caballero cambie de disfraz con cada paso para que parezca que camina.",
+      "Afegir a l'espai un salt: canvia y en 40, espera i canvia y en -40 (ho veurem a la unitat 4).|Añadir al espacio un salto: cambia y en 40, espera y cambia y en -40 (lo veremos en la unidad 4).",
+      "Dissenyar al paper un petit recorregut per a un company/a i que el faci amb el comandament humà.|Diseñar en papel un pequeño recorrido para un compañero/a y que lo haga con el mando humano."
+    ],
+    trans: [
+      "Matemàtiques: orientació en el pla i angles (quart de volta, mitja volta).|Matemáticas: orientación en el plano y ángulos (cuarto de vuelta, media vuelta).",
+      "Educació física: lateralitat (dreta i esquerra) i desplaçaments.|Educación física: lateralidad (derecha e izquierda) y desplazamientos.",
+      "Sessió següent: els personatges s'avisaran amb missatges per parlar per torns.|Sesión siguiente: los personajes se avisarán con mensajes para hablar por turnos."
+    ],
     obj: [
       "L'alumne/a programa un guió per a cada fletxa del teclat amb la capçalera «Quan premo la tecla».|El alumno/a programa un guion para cada flecha del teclado con la cabecera «Al pulsar la tecla».",
       "L'alumne/a fa servir «apunta en direcció» amb els valors 90, -90, 0 i 180 i explica cap on mira el personatge.|El alumno/a usa «apunta en dirección» con los valores 90, -90, 0 y 180 y explica hacia dónde mira el personaje.",
@@ -1430,41 +2032,50 @@ Object.assign(TGUIDE, {
       ["Mantenir premut|Mantener pulsado", "No deixar anar la tecla: el guió es repeteix sol.|No soltar la tecla: el guion se repite solo."]
     ],
     mat: {
-      aula: ["Un ordinador per alumne/a amb la sessió «Les fletxes del teclat»|Un ordenador por alumno/a con la sesión «Las flechas del teclado»", "Projector i la presentació de la sessió|Proyector y la presentación de la sesión",
-        "Quatre fulls grans amb els números 0, 90, 180 i -90 enganxats a les quatre parets de l'aula|Cuatro hojas grandes con los números 0, 90, 180 y -90 pegadas en las cuatro paredes del aula"],
-      imprimir: ["Targetes: el comandament humà|Tarjetas: el mando humano"],
-      prep: ["Enganxar els números de direcció a les parets: 90 a la dreta de la pissarra, -90 a l'esquerra, 0 a la pissarra i 180 al fons.|Pegar los números de dirección en las paredes: 90 a la derecha de la pizarra, -90 a la izquierda, 0 en la pizarra y 180 al fondo.",
-        "Imprimir i retallar un paquet de targetes per parella.|Imprimir y recortar un paquete de tarjetas por pareja.",
-        "Comprovar que els teclats tenen les fletxes i que el so de l'app està baix.|Comprobar que los teclados tienen las flechas y que el sonido de la app está bajo."]
+      aula: [
+        "Un ordinador per alumne/a amb Numi Tech obert a la sessió «Les fletxes del teclat»|Un ordenador por alumno/a con Numi Tech abierto en la sesión «Las flechas del teclado»",
+        "Projector i la presentació d'aquesta sessió|Proyector y la presentación de esta sesión",
+        "4 fulls DIN A4 amb els números 0, 90, 180 i -90 enganxats a les quatre parets de l'aula|4 hojas DIN A4 con los números 0, 90, 180 y -90 pegadas en las cuatro paredes del aula",
+        "1 paquet de targetes del comandament per parella (imprimible 1) i 1 objecte petit per parella com a meta|1 paquete de tarjetas del mando por pareja (imprimible 1) y 1 objeto pequeño por pareja como meta"
+      ],
+      imprimir: [
+        "1 paquet de targetes «El comandament humà» per parella (imprimible 1)|1 paquete de tarjetas «El mando humano» por pareja (imprimible 1)"
+      ],
+      prep: [
+        "El dia abans (15 min): imprimir i retallar un paquet de targetes per parella i preparar els 4 fulls de les direccions.|El día antes (15 min): imprimir y recortar un paquete de tarjetas por pareja y preparar las 4 hojas de las direcciones.",
+        "Abans de la classe (5 min): enganxar el 0 a la paret de la pissarra, el 90 a la dreta, el 180 al fons i el -90 a l'esquerra.|Antes de la clase (5 min): pegar el 0 en la pared de la pizarra, el 90 a la derecha, el 180 al fondo y el -90 a la izquierda.",
+        "Provar les demos de les quatre fletxes i la del «per sempre» que no para.|Probar las demos de las cuatro flechas y la del «por siempre» que no para.",
+        "Deixar els ordinadors engegats amb el perfil de cada alumne/a iniciat.|Dejar los ordenadores encendidos con el perfil de cada alumno/a iniciado."
+      ]
     },
     plan: [
       { min: 5, t: "Benvinguda: el cavaller i el comandament|Bienvenida: el caballero y el mando", fase: 'inici',
         fa: "Repassa la sessió anterior amb dues preguntes ràpides. Presenta la missió: el cavaller ha de travessar el bosc i el comandament són les fletxes. Pregunta quins aparells es controlen amb fletxes o botons.|Repasa la sesión anterior con dos preguntas rápidas. Presenta la misión: el caballero tiene que cruzar el bosque y el mando son las flechas. Pregunta qué aparatos se controlan con flechas o botones.",
-        diu: ["La setmana passada, quin esdeveniment despertava el gat?|La semana pasada, ¿qué evento despertaba al gato?", "Avui l'esdeveniment serà prémer una tecla.|Hoy el evento será pulsar una tecla."],
+        diu: ["La setmana passada, quin esdeveniment despertava el gat?|La semana pasada, ¿qué evento despertaba al gato?", "Avui l'esdeveniment serà prémer una tecla.|Hoy el evento será pulsar una tecla.", "Quins aparells es controlen amb fletxes o botons? (Comandament de la tele, consola, ascensor…)|¿Qué aparatos se controlan con flechas o botones? (Mando de la tele, consola, ascensor…)"],
         slides: ['s1', 's2', 's3'], app: "Encara no.|Todavía no.", org: "Tot el grup|Todo el grupo" },
       { min: 10, t: "Tecles i direccions|Teclas y direcciones", fase: 'teoria',
         fa: "Mostra l'animació de les tecles i la de les direccions. Tothom dret: quan dius un número, es giren cap a la paret que el porta. Després, la demo de les quatre fletxes i la de l'error del «per sempre».|Muestra la animación de las teclas y la de las direcciones. Todos de pie: cuando dices un número, se giran hacia la pared que lo lleva. Después, la demo de las cuatro flechas y la del error del «por siempre».",
-        diu: ["90! -90! 0! 180! On mireu?|¡90! ¡-90! ¡0! ¡180! ¿Hacia dónde miráis?", "Si mires a la dreta i fas «mou-te», cap on vas?|Si miras a la derecha y haces «muévete», ¿hacia dónde vas?", "He premut la fletxa un moment. Per què el cavaller no para?|He pulsado la flecha un momento. ¿Por qué el caballero no para?"],
+        diu: ["90! -90! 0! 180! On mireu?|¡90! ¡-90! ¡0! ¡180! ¿Hacia dónde miráis?", "Si mires a la dreta i fas «mou-te», cap on vas?|Si miras a la derecha y haces «muévete», ¿hacia dónde vas?", "He premut la fletxa un moment. Per què el cavaller no para?|He pulsado la flecha un momento. ¿Por qué el caballero no para?", "Per anar a l'esquerra, quin número poso a «apunta en direcció»? (-90.)|Para ir a la izquierda, ¿qué número pongo en «apunta en dirección»? (-90.)"],
         slides: ['s4', 's5', 's6', 's7', 's8'], app: "Encara no.|Todavía no.", org: "Tot el grup|Todo el grupo" },
       { min: 12, t: "El comandament humà|El mando humano", fase: 'desconnectat',
         fa: "Per parelles: un és el comandament, amb les targetes de fletxa; l'altre, el personatge. El comandament ensenya una targeta i el personatge primer es gira cap a la paret del número i després fa un pas. Han d'arribar a un objecte de l'aula. Després de dues missions, canvien. A la tercera, el comandament fa servir la targeta de l'error («← apunta a 90»): què passa?|Por parejas: uno es el mando, con las tarjetas de flecha; el otro, el personaje. El mando enseña una tarjeta y el personaje primero se gira hacia la pared del número y después da un paso. Tienen que llegar a un objeto del aula. Después de dos misiones, cambian. En la tercera, el mando usa la tarjeta del error («← apunta a 90»): ¿qué pasa?",
-        diu: ["Primer gira't cap al número i després fes el pas.|Primero gírate hacia el número y después da el paso.", "Fixeu-vos: 90 sempre és la mateixa paret, miris on miris.|Fijaos: 90 siempre es la misma pared, mires donde mires.", "Amb la targeta de l'error, cap on vas quan el comandament diu «esquerra»?|Con la tarjeta del error, ¿hacia dónde vas cuando el mando dice «izquierda»?"],
+        diu: ["Primer gira't cap al número i després fes el pas.|Primero gírate hacia el número y después da el paso.", "Fixeu-vos: 90 sempre és la mateixa paret, miris on miris.|Fijaos: 90 siempre es la misma pared, mires donde mires.", "Amb la targeta de l'error, cap on vas quan el comandament diu «esquerra»?|Con la tarjeta del error, ¿hacia dónde vas cuando el mando dice «izquierda»?", "Comandament: només pots dir fletxes. Personatge: primer gira, després pas.|Mando: solo puedes decir flechas. Personaje: primero gira, después paso."],
         slides: ['s9', 's10'], app: "Cap: activitat sense pantalla.|Ninguna: actividad sin pantalla.", org: "Parelles|Parejas" },
       { min: 13, t: "A l'ordinador: descobreix i prova|En el ordenador: descubre y prueba", fase: 'ordinador',
         fa: "Avancen fins a la pausa activa. Al «Comandament humà» poden tocar «Ho hem fet!». A la prova del comandament, que facin servir el teclat i que mirin com es gira el cavaller amb la fletxa esquerra.|Avanzan hasta la pausa activa. En el «Mando humano» pueden tocar «¡Lo hemos hecho!». En la prueba del mando, que usen el teclado y que miren cómo se gira el caballero con la flecha izquierda.",
-        diu: ["Mantén la fletxa premuda: què passa?|Mantén la flecha pulsada: ¿qué pasa?", "Què fa la tecla espai? Mira el seu guió.|¿Qué hace la tecla espacio? Mira su guion."],
+        diu: ["Mantén la fletxa premuda: què passa?|Mantén la flecha pulsada: ¿qué pasa?", "Què fa la tecla espai? Mira el seu guió.|¿Qué hace la tecla espacio? Mira su guion.", "Per què el cavaller va cap a la dreta encara que premis la fletxa esquerra a la pregunta? (Li falta l'«apunta».)|¿Por qué el caballero va hacia la derecha aunque pulses la flecha izquierda en la pregunta? (Le falta el «apunta».)", "A l'«Investiga», quin bloc no deixa que el cavaller s'aturi? (El «per sempre».)|En el «Investiga», ¿qué bloque no deja que el caballero se pare? (El «por siempre».)"],
         slides: ['s11'], app: "Del recorda fins a «Investiga»: preguntes, història, «Descobreix», ordenar el guió de l'esquerra, «El comandament humà» (ja fet), provar el comandament, la pregunta del cavaller sense «apunta» i el «per sempre» que no para.|Del recuerda hasta «Investiga»: preguntas, historia, «Descubre», ordenar el guion de la izquierda, «El mando humano» (ya hecho), probar el mando, la pregunta del caballero sin «apunta» y el «por siempre» que no para.", org: "Individual|Individual" },
       { min: 12, t: "Reptes: el comandament|Retos: el mando", fase: 'ordinador',
         fa: "Pausa activa junts. Recorda que els reptes es proven amb el teclat i es comproven amb «Comprova» (les tecles es premen soles). Remarca que al repte de l'ocell cal «mou-te 10 passos», perquè la prova prem les tecles un temps concret.|Pausa activa juntos. Recuerda que los retos se prueban con el teclado y se comprueban con «Comprueba» (las teclas se pulsan solas). Remarca que en el reto del pájaro hace falta «muévete 10 pasos», porque la prueba pulsa las teclas un tiempo concreto.",
-        diu: ["Quan va a l'esquerra, el cavaller mira a l'esquerra? Si no, què falta?|Cuando va a la izquierda, ¿el caballero mira a la izquierda? Si no, ¿qué falta?", "Al comandament espatllat, quin número està malament?|En el mando estropeado, ¿qué número está mal?"],
+        diu: ["Quan va a l'esquerra, el cavaller mira a l'esquerra? Si no, què falta?|Cuando va a la izquierda, ¿el caballero mira a la izquierda? Si no, ¿qué falta?", "Al comandament espatllat, quin número està malament?|En el mando estropeado, ¿qué número está mal?", "Amunt és 0 i avall 180: quants guions té el comandament de l'ocell? (Quatre.)|Arriba es 0 y abajo 180: ¿cuántos guiones tiene el mando del pájaro? (Cuatro.)"],
         slides: ['s12', 's13'], app: "«Pausa activa» i els quatre reptes: cap a la bandera, la poma i la cistella, l'ocell missatger i el comandament espatllat.|«Pausa activa» y los cuatro retos: hacia la bandera, la manzana y la cesta, el pájaro mensajero y el mando estropeado.", org: "Tot el grup i individual|Todo el grupo e individual" },
       { min: 5, t: "Crea: el comandament de la Flama|Crea: el mando de Flama", fase: 'crea',
-        fa: "Programen les quatre fletxes i una sorpresa amb l'espai. Després, intercanvien l'ordinador amb el company/a i proven el comandament de l'altre.|Programan las cuatro flechas y una sorpresa con el espacio. Después, intercambian el ordenador con el compañero/a y prueban el mando del otro.",
-        diu: ["Quina sorpresa farà la teva Flama amb l'espai?|¿Qué sorpresa hará tu Flama con el espacio?"],
+        fa: "Cada alumne/a programa les quatre fletxes de la Flama i una sorpresa amb l'espai (parlar, canviar de vestit, fer un so). Quan el tinguin, intercanvien l'ordinador amb el company/a: l'altre prova el comandament sense mirar els guions i diu si totes les fletxes van cap on toca. Qui acabi pot afegir un canvi de vestit a cada pas.|Cada alumno/a programa las cuatro flechas de Flama y una sorpresa con el espacio (hablar, cambiar de disfraz, hacer un sonido). Cuando lo tengan, intercambian el ordenador con el compañero/a: el otro prueba el mando sin mirar los guiones y dice si todas las flechas van hacia donde toca. Quien termine puede añadir un cambio de disfraz en cada paso.",
+        diu: ["Quina sorpresa farà la teva Flama amb l'espai?|¿Qué sorpresa hará tu Flama con el espacio?", "Prova el comandament del company/a: les quatre fletxes van cap on toca?|Prueba el mando del compañero/a: ¿las cuatro flechas van hacia donde toca?", "Què fa la sorpresa de l'espai? Endevina-ho abans de prémer-la.|¿Qué hace la sorpresa del espacio? Adivínalo antes de pulsarla."],
         slides: ['s14'], app: "Pas «Crea»: El meu personatge amb comandament.|Paso «Crea»: Mi personaje con mando.", org: "Individual i parelles|Individual y parejas" },
       { min: 3, t: "Tancament|Cierre", fase: 'tancament',
-        fa: "Resum, preguntes finals i tiquet a la porta.|Resumen, preguntas finales y ticket en la puerta.",
-        diu: ["Quants guions calen per a les quatre fletxes?|¿Cuántos guiones hacen falta para las cuatro flechas?"],
+        fa: "Repassa les tres idees de la sessió amb el resum (tecles, direccions i quatre guions). Deixa que facin les dues preguntes finals de l'app i com s'han sentit. A la porta, fes a cada alumne/a una pregunta del tiquet i anota qui confon 0 i 90.|Repasa las tres ideas de la sesión con el resumen (teclas, direcciones y cuatro guiones). Deja que hagan las dos preguntas finales de la app y cómo se han sentido. En la puerta, haz a cada alumno/a una pregunta del ticket y anota quién confunde 0 y 90.",
+        diu: ["Quants guions calen per a les quatre fletxes?|¿Cuántos guiones hacen falta para las cuatro flechas?", "Per què no cal un «per sempre» dins el guió d'una tecla? (Mantenir la tecla ja el repeteix.)|¿Por qué no hace falta un «por siempre» dentro del guion de una tecla? (Mantener la tecla ya lo repite.)", "La setmana vinent els personatges parlaran per torns amb missatges.|La semana que viene los personajes hablarán por turnos con mensajes."],
         slides: ['s15', 's16'], app: "«Tancament».|«Cierre».", org: "Tot el grup|Todo el grupo" }
     ],
     errors: [
@@ -1477,7 +2088,9 @@ Object.assign(TGUIDE, {
       ["Programa totes les tecles sota la mateixa capçalera.|Programa todas las teclas bajo la misma cabecera.",
         "Cada fletxa té el seu guió: que llegeixi la capçalera de cada guió en veu alta.|Cada flecha tiene su guion: que lea la cabecera de cada guion en voz alta."],
       ["Canvia el número de «mou-te» i després falla «Comprova» a l'ocell.|Cambia el número de «muévete» y después falla «Comprueba» en el pájaro.",
-        "La prova prem cada tecla un temps fix: amb passos més petits no hi arriba. Que torni a «mou-te 10 passos».|La prueba pulsa cada tecla un tiempo fijo: con pasos más pequeños no llega. Que vuelva a «muévete 10 pasos»."]
+        "La prova prem cada tecla un temps fix: amb passos més petits no hi arriba. Que torni a «mou-te 10 passos».|La prueba pulsa cada tecla un tiempo fijo: con pasos más pequeños no llega. Que vuelva a «muévete 10 pasos»."],
+      ["Al comandament espatllat, canvia el guió de la fletxa dreta en lloc del de l'esquerra.|En el mando estropeado, cambia el guion de la flecha derecha en lugar del de la izquierda.",
+        "Que llegeixi en veu alta la capçalera de cada guió: quin guió s'executa quan prems la fletxa esquerra?|Que lea en voz alta la cabecera de cada guion: ¿qué guion se ejecuta cuando pulsas la flecha izquierda?"]
     ],
     diff: {
       mes: "Afegir al comandament de la Flama la tecla espai per fer un «salt»: apunta amunt, avança, espera i torna avall. O canviar de vestit a cada pas perquè sembli que camina.|Añadir al mando de Flama la tecla espacio para hacer un «salto»: apunta arriba, avanza, espera y vuelve abajo. O cambiar de disfraz en cada paso para que parezca que camina.",
@@ -1488,7 +2101,10 @@ Object.assign(TGUIDE, {
       rubric: [
         ["Direccions|Direcciones", "Fa servir 90, -90, 0 i 180 correctament sense ajuda.|Usa 90, -90, 0 y 180 correctamente sin ayuda.", "Necessita la brúixola per triar el número.|Necesita la brújula para elegir el número."],
         ["Guions de tecla|Guiones de tecla", "Fa un guió per tecla amb «apunta» i «mou-te».|Hace un guion por tecla con «apunta» y «muévete».", "Barreja tecles o fa servir «mou-te» negatiu.|Mezcla teclas o usa «muévete» negativo."],
-        ["Depuració|Depuración", "Troba sol/a l'error del comandament espatllat.|Encuentra solo/a el error del mando estropeado.", "El troba amb una pregunta guia.|Lo encuentra con una pregunta guía."]
+        ["Depuració|Depuración", "Troba sol/a l'error del comandament espatllat.|Encuentra solo/a el error del mando estropeado.", "El troba amb una pregunta guia.|Lo encuentra con una pregunta guía."],
+        ["Comandament complet|Mando completo",
+          "Programa les quatre fletxes i una sorpresa amb l'espai, i el company/a les pot fer servir sense ajuda.|Programa las cuatro flechas y una sorpresa con el espacio, y el compañero/a las puede usar sin ayuda.",
+          "Programa algunes fletxes, però alguna va cap al costat equivocat o falta l'espai.|Programa algunas flechas, pero alguna va hacia el lado equivocado o falta el espacio."]
       ]
     },
     casa: "A casa, feu «El comandament humà»: trieu quina paret és cada direcció i porteu el personatge fins a la cuina només amb fletxes.|En casa, haced «El mando humano»: elegid qué pared es cada dirección y llevad al personaje hasta la cocina solo con flechas.",
@@ -1508,7 +2124,7 @@ Object.assign(TGUIDE, {
       { id: 's9', k: 'activitat', t: "El comandament humà|El mando humano", timer: 12, punts: ["Comandament: ensenya una targeta de fletxa.|Mando: enseña una tarjeta de flecha.", "Personatge: gira't cap a la paret del número.|Personaje: gírate hacia la pared del número.", "Després, fes un pas.|Después, da un paso.", "Arribeu a l'objecte i canvieu els papers.|Llegad al objeto y cambiad los papeles."], nota: "Passos curts i a poc a poc. Vigila que primer es girin i després avancin.|Pasos cortos y despacio. Vigila que primero se giren y después avancen." },
       { id: 's10', k: 'activitat', t: "La targeta de l'error|La tarjeta del error", punts: ["La targeta diu «← apunta a 90».|La tarjeta dice «← apunta a 90».", "Què passa quan el comandament prem l'esquerra?|¿Qué pasa cuando el mando pulsa la izquierda?", "Com l'arreglaríeu?|¿Cómo la arreglaríais?"], nota: "És el mateix error que el del repte del comandament espatllat.|Es el mismo error que el del reto del mando estropeado." },
       { id: 's11', k: 'activitat', t: "Ara, a l'ordinador|Ahora, al ordenador", timer: 13, punts: ["Obre «Les fletxes del teclat».|Abre «Las flechas del teclado».", "Prova el comandament amb el teclat.|Prueba el mando con el teclado.", "Para a la «Pausa activa».|Para en la «Pausa activa»."], nota: "Al mòbil o la tauleta hi ha botons de fletxa sota l'escenari.|En el móvil o la tableta hay botones de flecha debajo del escenario." },
-      { id: 's12', k: 'concepte', t: "Provar i comprovar|Probar y comprobar", punts: ["«Comença»: mous tu el personatge amb el teclat.|«Empieza»: mueves tú el personaje con el teclado.", "«Comprova»: les tecles es premen soles.|«Comprueba»: las teclas se pulsan solas.", "Fes servir «mou-te 10 passos».|Usa «muévete 10 pasos»."], nota: "La prova prem cada tecla un temps fix: amb un altre número de passos pot no arribar.|La prueba pulsa cada tecla un tiempo fijo: con otro número de pasos puede no llegar." },
+      { id: 's12', k: 'concepte', t: "Provar i comprovar|Probar y comprobar", punts: ["«Comença»: mous tu el personatge amb el teclat.|«Empieza»: mueves tú el personaje con el teclado.", "«Comprova»: les tecles es premen soles.|«Comprueba»: las teclas se pulsan solas.", "Fes servir «mou-te 10 passos».|Usa «muévete 10 pasos»."], pic: 'img/ic/magnifier.webp', nota: "La prova prem cada tecla un temps fix: amb un altre número de passos pot no arribar.|La prueba pulsa cada tecla un tiempo fijo: con otro número de pasos puede no llegar." },
       { id: 's13', k: 'repte', t: "Reptes|Retos", timer: 12, punts: ["1. Cap a la bandera|1. Hacia la bandera", "2. La poma i la cistella|2. La manzana y la cesta", "3. L'ocell missatger (4 fletxes)|3. El pájaro mensajero (4 flechas)", "4. El comandament espatllat|4. El mando estropeado"], nota: "Al 2, si falla, pregunta cap on mira el cavaller quan arriba a la cistella.|En el 2, si falla, pregunta hacia dónde mira el caballero cuando llega a la cesta." },
       { id: 's14', k: 'activitat', t: "Crea: el comandament de la Flama|Crea: el mando de Flama", timer: 5, x: "Quatre fletxes i una sorpresa amb l'espai. Després, prova el del company/a.|Cuatro flechas y una sorpresa con el espacio. Después, prueba el del compañero/a.", nota: "Que diguin quina sorpresa han triat abans de mostrar-la.|Que digan qué sorpresa han elegido antes de mostrarla." },
       { id: 's15', k: 'resum', t: "Què hem après avui|Qué hemos aprendido hoy", punts: ["Cada tecla pot tenir el seu guió.|Cada tecla puede tener su guion.", "«Apunta» fa mirar; «mou-te» fa avançar.|«Apunta» hace mirar; «muévete» hace avanzar.", "Mantenir la tecla repeteix el guió.|Mantener la tecla repite el guion."], nota: "Anuncia la setmana vinent: personatges que parlen entre ells.|Anuncia la semana que viene: personajes que hablan entre ellos." },
@@ -1530,6 +2146,58 @@ Object.assign(TGUIDE, {
 
   /* ---------- Sessió 3 · Missatges entre personatges ---------- */
   'g3-3': {
+    intro: "Els personatges aprenen a parlar per torns. L'alumnat descobreix el bloc «envia el missatge», que avisa tots els personatges alhora, i la capçalera «Quan rebo el missatge», que fa reaccionar només els que esperen aquell nom. En un diàleg, cada personatge diu la seva frase i, quan acaba, envia un missatge que passa el torn a l'altre. També veuen que un missatge pot fer reaccionar molts personatges alhora i fer aparèixer un personatge amagat. La classe comença fent parlar dos alumnes alhora, segueix amb el teatre dels missatges en grups i acaba amb una conversa programada.|Los personajes aprenden a hablar por turnos. El alumnado descubre el bloque «envía el mensaje», que avisa a todos los personajes a la vez, y la cabecera «Al recibir el mensaje», que hace reaccionar solo a los que esperan ese nombre. En un diálogo, cada personaje dice su frase y, cuando termina, envía un mensaje que pasa el turno al otro. También ven que un mensaje puede hacer reaccionar a muchos personajes a la vez y hacer aparecer a un personaje escondido. La clase empieza haciendo hablar a dos alumnos a la vez, sigue con el teatro de los mensajes en grupos y termina con una conversación programada.",
+    claus: [
+      "«Envia el missatge» el senten tots els personatges; reaccionen els que tenen «Quan rebo» amb aquell nom.|«Envía el mensaje» lo oyen todos los personajes; reaccionan los que tienen «Al recibir» con ese nombre.",
+      "En un diàleg, l'«envia» va després del «digues» amb segons: així l'altre parla quan la frase s'ha acabat.|En un diálogo, el «envía» va después del «di» con segundos: así el otro habla cuando la frase se ha terminado.",
+      "El nom del missatge que s'envia ha de ser exactament el que espera qui el rep.|El nombre del mensaje que se envía tiene que ser exactamente el que espera quien lo recibe.",
+      "Un sol missatge pot fer reaccionar molts personatges alhora; «mostra't» fa aparèixer un personatge amagat.|Un solo mensaje puede hacer reaccionar a muchos personajes a la vez; «muéstrate» hace aparecer a un personaje escondido."
+    ],
+    prev: [
+      "Dir frases amb segons perquè es llegeixin (unitat 1).|Decir frases con segundos para que se lean (unidad 1).",
+      "Els esdeveniments i els guions de toc (sessió 1).|Los eventos y los guiones de toque (sesión 1).",
+      "Amagar i mostrar personatges (unitat 1, sessió 3).|Esconder y mostrar personajes (unidad 1, sesión 3)."
+    ],
+    faq: [
+      ["Puc enviar un missatge a un sol personatge?|¿Puedo enviar un mensaje a un solo personaje?",
+        "Tots el senten, però només hi reacciona qui té «Quan rebo» amb aquell nom. Si només un el té, és com si l'enviessis a ell.|Todos lo oyen, pero solo reacciona quien tiene «Al recibir» con ese nombre. Si solo uno lo tiene, es como si se lo enviaras a él."],
+      ["Per què parlen alhora si ja he posat el missatge?|¿Por qué hablan a la vez si ya he puesto el mensaje?",
+        "Mira l'ordre: l'«envia» ha d'anar després del «digues», i el «digues» ha de tenir segons.|Mira el orden: el «envía» tiene que ir después del «di», y el «di» tiene que tener segundos."],
+      ["Puc inventar el nom del missatge?|¿Puedo inventar el nombre del mensaje?",
+        "En aquests reptes es tria d'una llista. Fes servir noms que s'entenguin, com el nom de qui ha de parlar.|En estos retos se elige de una lista. Usa nombres que se entiendan, como el nombre de quien tiene que hablar."],
+      ["Què passa si envio un missatge que no espera ningú?|¿Qué pasa si envío un mensaje que no espera nadie?",
+        "No passa res: el missatge s'envia, però cap personatge hi reacciona.|No pasa nada: el mensaje se envía, pero ningún personaje reacciona."],
+      ["L'Estel és amagada: com la puc tocar?|Estel está escondida: ¿cómo la puedo tocar?",
+        "No es pot tocar un personatge invisible. Fes-la aparèixer amb «mostra't» quan rebi un missatge.|No se puede tocar a un personaje invisible. Hazla aparecer con «muéstrate» cuando reciba un mensaje."],
+      ["Els missatges són com els missatges del mòbil?|¿Los mensajes son como los mensajes del móvil?",
+        "S'assemblen en el nom, però aquí són senyals entre personatges del mateix programa: no surten de l'escenari ni arriben a ningú de fora.|Se parecen en el nombre, pero aquí son señales entre personajes del mismo programa: no salen del escenario ni llegan a nadie de fuera."]
+    ],
+    tec: [
+      ["No es veu el guió de l'altre personatge.|No se ve el guion del otro personaje.",
+        "Que toqui la pestanya del personatge a la barra de dalt: cada un té els seus guions.|Que toque la pestaña del personaje en la barra de arriba: cada uno tiene sus guiones."],
+      ["No sé com canviar el nom del missatge.|No sé cómo cambiar el nombre del mensaje.",
+        "Toca el nom que hi ha dins del bloc «envia el missatge» i tria'n un altre de la llista.|Toca el nombre que hay dentro del bloque «envía el mensaje» y elige otro de la lista."],
+      ["El diàleg s'acaba abans que es vegin totes les frases.|El diálogo se acaba antes de que se vean todas las frases.",
+        "La prova dura uns segons: que faci frases de 2 segons i no gaires més de quatre o cinc torns.|La prueba dura unos segundos: que haga frases de 2 segundos y no muchos más de cuatro o cinco turnos."],
+      ["Les bafarades es tapen entre elles.|Los bocadillos se tapan entre ellos.",
+        "Els dos personatges parlen alhora: falta un missatge o l'«envia» va abans del «digues».|Los dos personajes hablan a la vez: falta un mensaje o el «envía» va antes del «di»."],
+      ["Al teatre dels missatges, ningú no recorda qui havia de parlar.|En el teatro de los mensajes, nadie recuerda quién tenía que hablar.",
+        "Que cada alumne/a tingui la targeta a la mà i digui el missatge ben fort; podeu escriure l'ordre a la pissarra.|Que cada alumno/a tenga la tarjeta en la mano y diga el mensaje bien fuerte; podéis escribir el orden en la pizarra."]
+    ],
+    seg: [
+      "Al teatre dels missatges, es parla per torns i sense cridar; qui no vulgui llegir en veu alta pot fer de narrador/a amb un company/a.|En el teatro de los mensajes, se habla por turnos y sin gritar; quien no quiera leer en voz alta puede hacer de narrador/a con un compañero/a.",
+      "Aprofiteu per recordar que als missatges reals (mòbil, xats) només s'escriu a persones conegudes i amb respecte; si algú explica una situació preocupant, escolteu-lo i aviseu la tutoria.|Aprovechad para recordar que en los mensajes reales (móvil, chats) solo se escribe a personas conocidas y con respeto; si alguien explica una situación preocupante, escuchadle y avisad a la tutoría."
+    ],
+    extra: [
+      "Afegir un tercer personatge a la conversa (l'ocell) amb el seu propi missatge.|Añadir un tercer personaje a la conversación (el pájaro) con su propio mensaje.",
+      "Fer que, en rebre «final», tots els personatges facin una reverència alhora amb un sol missatge.|Hacer que, al recibir «final», todos los personajes hagan una reverencia a la vez con un solo mensaje.",
+      "Escriure el diàleg primer en paper, com un guió de teatre, i després programar-lo.|Escribir el diálogo primero en papel, como un guion de teatro, y después programarlo."
+    ],
+    trans: [
+      "Llengua: el diàleg, els torns de paraula i el guió teatral.|Lengua: el diálogo, los turnos de palabra y el guion teatral.",
+      "Tutoria: escoltar, esperar el torn i parlar amb respecte.|Tutoría: escuchar, esperar el turno y hablar con respeto.",
+      "Sessió següent: el projecte del conte interactiu, amb escenes, missatges i finals per triar.|Sesión siguiente: el proyecto del cuento interactivo, con escenas, mensajes y finales para elegir."
+    ],
     obj: [
       "L'alumne/a explica què fan «envia el missatge» i «Quan rebo el missatge» i que tots els personatges senten el missatge.|El alumno/a explica qué hacen «envía el mensaje» y «Al recibir el mensaje» y que todos los personajes oyen el mensaje.",
       "L'alumne/a programa un diàleg per torns: cada personatge parla i després envia un missatge.|El alumno/a programa un diálogo por turnos: cada personaje habla y después envía un mensaje.",
@@ -1551,20 +2219,29 @@ Object.assign(TGUIDE, {
       ["Mostrar i amagar|Mostrar y esconder", "Fer aparèixer o desaparèixer un personatge de l'escenari.|Hacer aparecer o desaparecer a un personaje del escenario."]
     ],
     mat: {
-      aula: ["Ordinadors amb la sessió «Missatges entre personatges»|Ordenadores con la sesión «Mensajes entre personajes»", "Projector i la presentació|Proyector y la presentación", "Les targetes del teatre dels missatges (un paquet per grup de 4)|Las tarjetas del teatro de los mensajes (un paquete por grupo de 4)"],
-      imprimir: ["Targetes: el teatre dels missatges|Tarjetas: el teatro de los mensajes"],
-      prep: ["Retallar les targetes i separar-les per personatges (Narrador/a, Guida, Tuga, Ocell).|Recortar las tarjetas y separarlas por personajes (Narrador/a, Guida, Tuga, Pájaro).",
-        "Preparar un espai lliure davant la pissarra per fer de teatre.|Preparar un espacio libre delante de la pizarra para hacer de teatro.",
-        "Provar la demo de la conversa (s6) per saber quan s'il·lumina cada guió.|Probar la demo de la conversación (s6) para saber cuándo se ilumina cada guion."]
+      aula: [
+        "Un ordinador per alumne/a amb Numi Tech obert a la sessió «Missatges entre personatges»|Un ordenador por alumno/a con Numi Tech abierto en la sesión «Mensajes entre personajes»",
+        "Projector i la presentació d'aquesta sessió|Proyector y la presentación de esta sesión",
+        "1 paquet de targetes del teatre dels missatges per grup de 4 (imprimible 1)|1 paquete de tarjetas del teatro de los mensajes por grupo de 4 (imprimible 1)"
+      ],
+      imprimir: [
+        "1 paquet de targetes «El teatre dels missatges» per grup de 4 (imprimible 1)|1 paquete de tarjetas «El teatro de los mensajes» por grupo de 4 (imprimible 1)"
+      ],
+      prep: [
+        "El dia abans (15 min): imprimir i retallar un paquet de targetes per grup de 4 i separar-ne la targeta de l'error per a la tercera ronda.|El día antes (15 min): imprimir y recortar un paquete de tarjetas por grupo de 4 y separar la tarjeta del error para la tercera ronda.",
+        "Provar la demo de la conversa per torns i la de l'error del nom.|Probar la demo de la conversación por turnos y la del error del nombre.",
+        "Escollir dos alumnes per a la benvinguda (parlar alhora) i avisar-los abans.|Elegir dos alumnos para la bienvenida (hablar a la vez) y avisarles antes.",
+        "Deixar els ordinadors engegats amb el perfil de cada alumne/a iniciat.|Dejar los ordenadores encendidos con el perfil de cada alumno/a iniciado."
+      ]
     },
     plan: [
       { min: 5, t: "Benvinguda: parlen alhora!|Bienvenida: ¡hablan a la vez!", fase: 'inici',
         fa: "Repassa les direccions. Fes parlar dos alumnes alhora una frase cadascun: no s'entén res. Pregunta com se sap, en una obra de teatre, quan et toca parlar.|Repasa las direcciones. Haz hablar a dos alumnos a la vez una frase cada uno: no se entiende nada. Pregunta cómo se sabe, en una obra de teatro, cuándo te toca hablar.",
-        diu: ["Al teatre, com sabeu quan us toca parlar?|En el teatro, ¿cómo sabéis cuándo os toca hablar?", "Avui els personatges aprendran a avisar-se.|Hoy los personajes aprenderán a avisarse."],
+        diu: ["Al teatre, com sabeu quan us toca parlar?|En el teatro, ¿cómo sabéis cuándo os toca hablar?", "Avui els personatges aprendran a avisar-se.|Hoy los personajes aprenderán a avisarse.", "Si parlem tots alhora, s'entén res? (No.) Doncs als personatges els passa el mateix.|Si hablamos todos a la vez, ¿se entiende algo? (No.) Pues a los personajes les pasa lo mismo."],
         slides: ['s1', 's2', 's3'], app: "Encara no.|Todavía no.", org: "Tot el grup|Todo el grupo" },
       { min: 10, t: "Enviar i rebre|Enviar y recibir", fase: 'teoria',
         fa: "Explica el missatge amb l'animació: dir un nom en veu alta que tothom sent. Mostra la conversa per torns i la demo. Després, un missatge per a molts (amb mostra't i amaga't) i l'error del nom que no coincideix.|Explica el mensaje con la animación: decir un nombre en voz alta que todos oyen. Muestra la conversación por turnos y la demo. Después, un mensaje para muchos (con muéstrate y escóndete) y el error del nombre que no coincide.",
-        diu: ["Qui sent el missatge? I qui hi reacciona?|¿Quién oye el mensaje? ¿Y quién reacciona?", "Per què la Tuga no respon a la demo de l'error?|¿Por qué Tuga no responde en la demo del error?"],
+        diu: ["Qui sent el missatge? I qui hi reacciona?|¿Quién oye el mensaje? ¿Y quién reacciona?", "Per què la Tuga no respon a la demo de l'error?|¿Por qué Tuga no responde en la demo del error?", "Si la Guida envia «hola» i la Tuga espera «tuga», qui respon? (Ningú.)|Si Guida envía «hola» y Tuga espera «tuga», ¿quién responde? (Nadie.)", "Un sol missatge pot despertar molts personatges? (Sí, tots els que l'esperen.)|¿Un solo mensaje puede despertar a muchos personajes? (Sí, todos los que lo esperan.)"],
         slides: ['s4', 's5', 's6', 's7', 's8', 's9'], app: "Encara no.|Todavía no.", org: "Tot el grup|Todo el grupo" },
       { min: 12, t: "El teatre dels missatges|El teatro de los mensajes", fase: 'desconnectat',
         fa: "Grups de 4, cadascú amb les targetes d'un personatge. Cada targeta diu «Quan rebo X → dic … i envio Y». El narrador/a comença. Ningú no pot parlar si no ha rebut el seu missatge (dit en veu alta per qui l'envia). Representen l'escena dues vegades. A la tercera, canvia una targeta per la de l'error («envio hola» en lloc de «envio tuga»): l'escena s'encalla i el grup ha de trobar per què.|Grupos de 4, cada uno con las tarjetas de un personaje. Cada tarjeta dice «Cuando recibo X → digo … y envío Y». El narrador/a empieza. Nadie puede hablar si no ha recibido su mensaje (dicho en voz alta por quien lo envía). Representan la escena dos veces. En la tercera, cambia una tarjeta por la del error («envío hola» en lugar de «envío tuga»): la escena se atasca y el grupo tiene que encontrar por qué.",
@@ -1572,18 +2249,18 @@ Object.assign(TGUIDE, {
         slides: ['s10', 's11'], app: "Cap: activitat sense pantalla.|Ninguna: actividad sin pantalla.", org: "Grups de 4|Grupos de 4" },
       { min: 13, t: "A l'ordinador: descobreix i investiga|En el ordenador: descubre e investiga", fase: 'ordinador',
         fa: "Avancen fins a la pausa activa. A l'assaig de la Guida i la Tuga, que obrin les pestanyes i expliquin a un company/a qui envia cada missatge.|Avanzan hasta la pausa activa. En el ensayo de Guida y Tuga, que abran las pestañas y expliquen a un compañero/a quién envía cada mensaje.",
-        diu: ["Quin missatge fa que l'ocell es mogui?|¿Qué mensaje hace que el pájaro se mueva?", "Per què parlen alhora a l'«Investiga»?|¿Por qué hablan a la vez en el «Investiga»?"],
+        diu: ["Quin missatge fa que l'ocell es mogui?|¿Qué mensaje hace que el pájaro se mueva?", "Per què parlen alhora a l'«Investiga»?|¿Por qué hablan a la vez en el «Investiga»?", "Qui envia «bravo» i qui el rep? Mira les pestanyes.|¿Quién envía «bravo» y quién lo recibe? Mira las pestañas."],
         slides: ['s12'], app: "Del recorda fins a «Investiga»: preguntes, història, «Descobreix», ordenar la conversa, «La paraula secreta» (per a casa), l'assaig, la pregunta de qui reacciona i l'«envia» massa d'hora.|Del recuerda hasta «Investiga»: preguntas, historia, «Descubre», ordenar la conversación, «La palabra secreta» (para casa), el ensayo, la pregunta de quién reacciona y el «envía» demasiado pronto.", org: "Individual|Individual" },
       { min: 12, t: "Reptes: converses i sorpreses|Retos: conversaciones y sorpresas", fase: 'ordinador',
         fa: "Pausa activa junts. Després, els quatre reptes. Al de la conversa de tres torns, recomana fer primer la Guida i després la Tuga, i comprovar-ho a cada pas.|Pausa activa juntos. Después, los cuatro retos. En el de la conversación de tres turnos, recomienda hacer primero a Guida y después a Tuga, y comprobarlo en cada paso.",
-        diu: ["Quin missatge espera la Tuga? Quin envia la Guida?|¿Qué mensaje espera Tuga? ¿Cuál envía Guida?", "L'Estel és amagada: quin bloc la fa aparèixer?|Estel está escondida: ¿qué bloque la hace aparecer?"],
+        diu: ["Quin missatge espera la Tuga? Quin envia la Guida?|¿Qué mensaje espera Tuga? ¿Cuál envía Guida?", "L'Estel és amagada: quin bloc la fa aparèixer?|Estel está escondida: ¿qué bloque la hace aparecer?", "Programa primer la Guida, prova-ho i després la Tuga.|Programa primero a Guida, pruébalo y después a Tuga.", "Al repte que no respon, quin nom espera la Tuga? («tuga».)|En el reto que no responde, ¿qué nombre espera Tuga? («tuga».)"],
         slides: ['s13'], app: "«Pausa activa» i els reptes: la Tuga saluda, la conversa de tres torns, la sorpresa del regal i el missatge equivocat.|«Pausa activa» y los retos: Tuga saluda, la conversación de tres turnos, la sorpresa del regalo y el mensaje equivocado.", org: "Individual|Individual" },
       { min: 5, t: "Crea: l'assaig de la funció|Crea: el ensayo de la función", fase: 'crea',
-        fa: "Escriuen una conversa de quatre frases o més. Per parelles, un llegeix en veu alta la conversa de l'altre mentre s'executa.|Escriben una conversación de cuatro frases o más. Por parejas, uno lee en voz alta la conversación del otro mientras se ejecuta.",
-        diu: ["Cada frase acaba amb un missatge que passa el torn.|Cada frase termina con un mensaje que pasa el turno."],
+        fa: "Cada alumne/a escriu una conversa de quatre frases o més entre la Guida i la Tuga, amb missatges per passar el torn. Per parelles, un llegeix en veu alta la conversa de l'altre mentre s'executa: si dues frases se superposen, busquen junts quin missatge falta o està mal posat.|Cada alumno/a escribe una conversación de cuatro frases o más entre Guida y Tuga, con mensajes para pasar el turno. Por parejas, uno lee en voz alta la conversación del otro mientras se ejecuta: si dos frases se superponen, buscan juntos qué mensaje falta o está mal puesto.",
+        diu: ["Cada frase acaba amb un missatge que passa el torn.|Cada frase termina con un mensaje que pasa el turno.", "Llegeix la conversa del company/a en veu alta mentre s'executa: van per torns?|Lee la conversación del compañero/a en voz alta mientras se hace: ¿van por turnos?", "Quants missatges fas servir? En cal un a cada canvi de torn.|¿Cuántos mensajes usas? Hace falta uno en cada cambio de turno."],
         slides: ['s14'], app: "Pas «Crea»: L'assaig de la funció.|Paso «Crea»: El ensayo de la función.", org: "Individual i parelles|Individual y parejas" },
-      { min: 3, t: "Tancament|Cierre", fase: 'tancament', fa: "Resum, preguntes finals i tiquet.|Resumen, preguntas finales y ticket.",
-        diu: ["Qui sent un missatge quan l'envio?|¿Quién oye un mensaje cuando lo envío?"], slides: ['s15', 's16'], app: "«Tancament».|«Cierre».", org: "Tot el grup|Todo el grupo" }
+      { min: 3, t: "Tancament|Cierre", fase: 'tancament', fa: "Repassa les tres idees de la sessió amb el resum (enviar i rebre, torns i el mateix nom). Deixa que facin les dues preguntes finals de l'app i com s'han sentit. A la porta, fes a cada alumne/a una pregunta del tiquet i anota qui encara posa l'«envia» abans del «digues».|Repasa las tres ideas de la sesión con el resumen (enviar y recibir, turnos y el mismo nombre). Deja que hagan las dos preguntas finales de la app y cómo se han sentido. En la puerta, haz a cada alumno/a una pregunta del ticket y anota quién todavía pone el «envía» antes del «di».",
+        diu: ["Qui sent un missatge quan l'envio?|¿Quién oye un mensaje cuando lo envío?", "On va l'«envia», abans o després del «digues»? (Després.)|¿Dónde va el «envía», antes o después del «di»? (Después.)", "La setmana vinent farem un conte on el lector tria el final!|¡La semana que viene haremos un cuento donde el lector elige el final!"], slides: ['s15', 's16'], app: "«Tancament».|«Cierre».", org: "Tot el grup|Todo el grupo" }
     ],
     errors: [
       ["Posa l'«envia» abans del «digues» i els personatges parlen alhora.|Pone el «envía» antes del «di» y los personajes hablan a la vez.",
@@ -1592,10 +2269,12 @@ Object.assign(TGUIDE, {
         "Que posi el dit al nom de l'«envia» i al de la capçalera «Quan rebo» de l'altre: són iguals?|Que ponga el dedo en el nombre del «envía» y en el de la cabecera «Al recibir» del otro: ¿son iguales?"],
       ["Fa servir «digues» sense segons i l'«envia» arriba immediatament.|Usa «di» sin segundos y el «envía» llega inmediatamente.",
         "Fes-li notar el «durant 2 s» del bloc «digues»: sense temps, la frase s'acaba de seguida.|Hazle notar el «durante 2 s» del bloque «di»: sin tiempo, la frase se acaba enseguida."],
-      ["Programa la Estel amb «Quan toco aquest personatge», però com que és amagada, ningú no la pot tocar.|Programa a Estel con «Al tocar este personaje», pero como está escondida, nadie la puede tocar.",
+      ["Programa l'Estel amb «Quan toco aquest personatge», però com que és amagada, ningú no la pot tocar.|Programa a Estel con «Al tocar este personaje», pero como está escondida, nadie la puede tocar.",
         "Pregunta: què ha de passar perquè aparegui? Quin esdeveniment és?|Pregunta: ¿qué tiene que pasar para que aparezca? ¿Qué evento es?"],
       ["Creu que el missatge només el sent el personatge del costat.|Cree que el mensaje solo lo oye el personaje de al lado.",
-        "Torna a la demo d'«Un per a tots»: tots el senten, però només reaccionen els que tenen el guió.|Vuelve a la demo de «Uno para todos»: todos lo oyen, pero solo reaccionan los que tienen el guion."]
+        "Torna a la demo d'«Un per a tots»: tots el senten, però només reaccionen els que tenen el guió.|Vuelve a la demo de «Uno para todos»: todos lo oyen, pero solo reaccionan los que tienen el guion."],
+      ["A la sorpresa del regal, posa l'«amaga't» abans de l'«envia» i creu que el missatge ja no s'envia.|En la sorpresa del regalo, pone el «escóndete» antes del «envía» y cree que el mensaje ya no se envía.",
+        "Pregunta: un personatge amagat pot enviar missatges? (Sí, però és més clar enviar-lo primer.) Que provi els dos ordres i compari.|Pregunta: ¿un personaje escondido puede enviar mensajes? (Sí, pero es más claro enviarlo primero.) Que pruebe los dos órdenes y compare."]
     ],
     diff: {
       mes: "Afegir un tercer personatge a l'assaig (l'ocell) que parli quan rep un missatge, i acabar amb un missatge «final» perquè tots facin la reverència alhora.|Añadir un tercer personaje al ensayo (el pájaro) que hable cuando recibe un mensaje, y terminar con un mensaje «final» para que todos hagan la reverencia a la vez.",
@@ -1606,14 +2285,17 @@ Object.assign(TGUIDE, {
       rubric: [
         ["Enviar i rebre|Enviar y recibir", "Fa coincidir els noms dels missatges i explica qui reacciona.|Hace coincidir los nombres de los mensajes y explica quién reacciona.", "Necessita ajuda per relacionar l'«envia» amb el «Quan rebo».|Necesita ayuda para relacionar el «envía» con el «Al recibir»."],
         ["Diàleg per torns|Diálogo por turnos", "Fa una conversa de 4 frases o més sense que se solapin.|Hace una conversación de 4 frases o más sin que se solapen.", "La conversa funciona amb 2 frases o se solapa.|La conversación funciona con 2 frases o se solapa."],
-        ["Depuració de missatges|Depuración de mensajes", "Troba sol/a el nom equivocat i l'«envia» massa d'hora.|Encuentra solo/a el nombre equivocado y el «envía» demasiado pronto.", "Els troba amb preguntes guia.|Los encuentra con preguntas guía."]
+        ["Depuració de missatges|Depuración de mensajes", "Troba sol/a el nom equivocat i l'«envia» massa d'hora.|Encuentra solo/a el nombre equivocado y el «envía» demasiado pronto.", "Els troba amb preguntes guia.|Los encuentra con preguntas guía."],
+        ["Un missatge per a molts|Un mensaje para muchos",
+          "Fa que un sol missatge faci reaccionar diversos personatges (per exemple, l'Estel que apareix).|Hace que un solo mensaje haga reaccionar a varios personajes (por ejemplo, Estel que aparece).",
+          "Fa servir missatges entre dos personatges, però encara no aprofita que els senten tots.|Usa mensajes entre dos personajes, pero aún no aprovecha que los oyen todos."]
       ]
     },
     casa: "A casa, feu «La paraula secreta»: cadascú tria una paraula i una acció, i una persona va «enviant» paraules. Proveu que dues persones tinguin la mateixa paraula.|En casa, haced «La palabra secreta»: cada uno elige una palabra y una acción, y una persona va «enviando» palabras. Probad que dos personas tengan la misma palabra.",
     slides: [
       { id: 's1', k: 'portada', t: "Missatges entre personatges|Mensajes entre personajes", x: "La Guida i la Tuga assagen la funció del bosc.|Guida y Tuga ensayan la función del bosque.", nota: "Objectiu: diàlegs per torns amb missatges.|Objetivo: diálogos por turnos con mensajes." },
       { id: 's2', k: 'repas', t: "Recordem les direccions|Recordemos las direcciones", punts: ["90 dreta, -90 esquerra|90 derecha, -90 izquierda", "0 amunt, 180 avall|0 arriba, 180 abajo"], nota: "Tothom dret, giravolt ràpid amb els números de les parets.|Todos de pie, giro rápido con los números de las paredes." },
-      { id: 's3', k: 'pregunta', t: "Com se sap quan et toca parlar?|¿Cómo se sabe cuándo te toca hablar?", punts: ["Al teatre|En el teatro", "En una conversa per telèfon|En una conversación por teléfono", "A classe|En clase"], nota: "Hi ha un senyal: l'altre acaba la frase, et mira, et diu el nom…|Hay una señal: el otro termina la frase, te mira, te dice el nombre…" },
+      { id: 's3', k: 'pregunta', t: "Quan et toca parlar?|¿Cuándo te toca hablar?", punts: ["Al teatre|En el teatro", "En una conversa per telèfon|En una conversación por teléfono", "A classe|En clase"], nota: "Hi ha un senyal: l'altre acaba la frase, et mira, et diu el nom…|Hay una señal: el otro termina la frase, te mira, te dice el nombre…" },
       { id: 's4', k: 'anim', t: "Enviar i rebre|Enviar y recibir", anim: 'g3msg', nota: "El sobre és el missatge: el sent tothom, però només respon qui té el guió amb aquell nom.|El sobre es el mensaje: lo oye todo el mundo, pero solo responde quien tiene el guion con ese nombre." },
       { id: 's5', k: 'anim', t: "Parlar per torns|Hablar por turnos", anim: 'g3dialog', nota: "Cada frase acaba amb un missatge que passa el torn.|Cada frase termina con un mensaje que pasa el turno." },
       { id: 's6', k: 'media', t: "Una conversa amb missatges|Una conversación con mensajes",
@@ -1648,6 +2330,58 @@ Object.assign(TGUIDE, {
 
   /* ---------- Sessió 4 · Projecte: el conte interactiu ---------- */
   'g3-4': {
+    intro: "Sessió de projecte que tanca la unitat: cada alumne/a crea un conte interactiu amb inici, nus i final, en què qui el mira hi participa (toca un botó per continuar i tria el final). Hi fan servir tot el que han après: guions de toc, missatges per parlar per torns, «mostra't» i «amaga't», canvis de fons i el nou esdeveniment «Quan el fons canvia a…». El treball segueix els passos de sempre: pla en 4 vinyetes, programar escena a escena, provar i millorar. La classe acaba amb presentacions en què la classe fa de lector/a i tria el final.|Sesión de proyecto que cierra la unidad: cada alumno/a crea un cuento interactivo con inicio, nudo y final, en el que quien lo mira participa (toca un botón para continuar y elige el final). Usan todo lo que han aprendido: guiones de toque, mensajes para hablar por turnos, «muéstrate» y «escóndete», cambios de fondo y el nuevo evento «Al cambiar el fondo a…». El trabajo sigue los pasos de siempre: plan en 4 viñetas, programar escena a escena, probar y mejorar. La clase termina con presentaciones en las que la clase hace de lector/a y elige el final.",
+    claus: [
+      "Un conte interactiu té inici, nus i final, i qui el mira hi participa.|Un cuento interactivo tiene inicio, nudo y final, y quien lo mira participa.",
+      "Canviar el fons és un esdeveniment: «Quan el fons canvia a…» fa reaccionar els personatges a l'escena nova.|Cambiar el fondo es un evento: «Al cambiar el fondo a…» hace reaccionar a los personajes en la escena nueva.",
+      "Per triar el final, dos objectes envien missatges diferents i cada missatge fa començar un final.|Para elegir el final, dos objetos envían mensajes diferentes y cada mensaje hace empezar un final.",
+      "El pla en vinyetes ajuda a programar escena a escena i a provar cada part.|El plan en viñetas ayuda a programar escena a escena y a probar cada parte."
+    ],
+    prev: [
+      "Guions de toc (sessió 1) i missatges entre personatges (sessió 3).|Guiones de toque (sesión 1) y mensajes entre personajes (sesión 3).",
+      "Canviar el fons i amagar i mostrar personatges (unitat 1, sessió 3).|Cambiar el fondo y esconder y mostrar personajes (unidad 1, sesión 3).",
+      "L'estructura d'un conte: inici, nus i final (llengua).|La estructura de un cuento: inicio, nudo y final (lengua)."
+    ],
+    faq: [
+      ["El drac no apareix mai. Què li passa?|El dragón no aparece nunca. ¿Qué le pasa?",
+        "Comprova que el fons que posa el botó és el mateix que espera el drac («Quan el fons canvia a nit») i que el drac té «mostra't».|Comprueba que el fondo que pone el botón es el mismo que espera el dragón («Al cambiar el fondo a noche») y que el dragón tiene «muéstrate»."],
+      ["Puc fer més de dos finals?|¿Puedo hacer más de dos finales?",
+        "Sí: cada final necessita un objecte per tocar i un missatge propi. Primer fes que en funcionin dos.|Sí: cada final necesita un objeto para tocar y un mensaje propio. Primero haz que funcionen dos."],
+      ["Com sap qui mira el conte què ha de tocar?|¿Cómo sabe quien mira el cuento qué tiene que tocar?",
+        "Digues-li-ho amb una frase: «Toca el botó per continuar» o «Tria el cor o l'estrella».|Díselo con una frase: «Toca el botón para continuar» o «Elige el corazón o la estrella»."],
+      ["Per què he de fer les vinyetes abans de programar?|¿Por qué tengo que hacer las viñetas antes de programar?",
+        "Perquè així saps què passa a cada escena i quin esdeveniment la fa començar. Programar sense pla fa que t'encallis a mig conte.|Porque así sabes qué pasa en cada escena y qué evento la hace empezar. Programar sin plan hace que te atasques a mitad del cuento."],
+      ["El meu conte és molt llarg i no l'acabo.|Mi cuento es muy largo y no lo acabo.",
+        "Fes primer una versió curta que funcioni de principi a final (amb «Fi del conte!»). Després, si tens temps, l'allargues.|Haz primero una versión corta que funcione de principio a fin (con «¡Fin del cuento!»). Después, si tienes tiempo, la alargas."],
+      ["El puc ensenyar a casa?|¿Lo puedo enseñar en casa?",
+        "Sí: quan el desis, queda a «Projectes» i la família podrà triar el final des del mòbil.|Sí: cuando lo guardes, queda en «Proyectos» y la familia podrá elegir el final desde el móvil."]
+    ],
+    tec: [
+      ["«Comprova» falla tot i que provant-lo funciona.|«Comprueba» falla aunque probándolo funciona.",
+        "La prova toca el botó, el drac i el cavaller en moments concrets: que el conte hi reaccioni i que es digui alguna frase. Llegiu el missatge de l'app.|La prueba toca el botón, el dragón y el caballero en momentos concretos: que el cuento reaccione y que se diga alguna frase. Leed el mensaje de la app."],
+      ["Un personatge amagat no es pot seleccionar per programar-lo.|Un personaje escondido no se puede seleccionar para programarlo.",
+        "Sí que es pot: a la barra de dalt hi surten tots, també els amagats. Només no es veuen a l'escenari.|Sí se puede: en la barra de arriba salen todos, también los escondidos. Solo no se ven en el escenario."],
+      ["Al projector, la classe no veu quin objecte toca el voluntari/ària.|En el proyector, la clase no ve qué objeto toca el voluntario/a.",
+        "Que el voluntari/ària digui en veu alta què toca, o que la classe voti el final i el docent el toqui.|Que el voluntario/a diga en voz alta qué toca, o que la clase vote el final y el docente lo toque."],
+      ["El conte es queda a mitges en desar-lo.|El cuento se queda a medias al guardarlo.",
+        "Es desa quan l'app diu que funciona: si falta algun criteri, el missatge diu quin. Que el completi i torni a provar.|Se guarda cuando la app dice que funciona: si falta algún criterio, el mensaje dice cuál. Que lo complete y vuelva a probar."],
+      ["La fitxa de vinyetes no hi cap tot.|En la ficha de viñetas no cabe todo.",
+        "Que hi escriguin només paraules clau i fletxes; el detall va als guions.|Que escriban solo palabras clave y flechas; el detalle va en los guiones."]
+    ],
+    seg: [
+      "Als contes, cap personatge real ni dades personals; si algú explica una història que reflecteix una situació real preocupant, parla-hi en privat i comenta-ho amb la tutoria.|En los cuentos, ningún personaje real ni datos personales; si alguien explica una historia que refleja una situación real preocupante, habla con él/ella en privado y coméntalo con la tutoría.",
+      "A les presentacions, ningú no està obligat a sortir; els comentaris són amables i concrets.|En las presentaciones, nadie está obligado a salir; los comentarios son amables y concretos."
+    ],
+    extra: [
+      "Afegir un tercer final amb un altre objecte i un altre missatge.|Añadir un tercer final con otro objeto y otro mensaje.",
+      "Fer que el narrador canviï de vestit i de lloc a cada escena.|Hacer que el narrador cambie de disfraz y de sitio en cada escena.",
+      "Escriure el conte en paper com a llibre (amb les vinyetes) i deixar-lo a la biblioteca de l'aula.|Escribir el cuento en papel como libro (con las viñetas) y dejarlo en la biblioteca del aula."
+    ],
+    trans: [
+      "Llengua: l'estructura del conte (inici, nus i final) i la narració.|Lengua: la estructura del cuento (inicio, nudo y final) y la narración.",
+      "Unitat 3 sencera: tocar (sessió 1), tecles (sessió 2) i missatges (sessió 3) en un sol projecte.|Unidad 3 entera: tocar (sesión 1), teclas (sesión 2) y mensajes (sesión 3) en un solo proyecto.",
+      "Unitat 4: les coordenades x i y per moure els personatges exactament on vulguem.|Unidad 4: las coordenadas x e y para mover a los personajes exactamente donde queramos."
+    ],
     obj: [
       "L'alumne/a planifica un conte interactiu en quatre vinyetes (inici, nus, tria i final).|El alumno/a planifica un cuento interactivo en cuatro viñetas (inicio, nudo, elección y final).",
       "L'alumne/a canvia d'escena amb «canvia el fons» i fa reaccionar personatges amb «Quan el fons canvia a…».|El alumno/a cambia de escena con «cambia el fondo» y hace reaccionar a personajes con «Al cambiar el fondo a…».",
@@ -1668,28 +2402,37 @@ Object.assign(TGUIDE, {
       ["Lector/a|Lector/a", "La persona que mira el conte i hi participa.|La persona que mira el cuento y participa."]
     ],
     mat: {
-      aula: ["Ordinadors amb la sessió «Projecte: el conte interactiu»|Ordenadores con la sesión «Proyecto: el cuento interactivo»", "Projector i la presentació|Proyector y la presentación", "Llapis i colors|Lápices y colores"],
-      imprimir: ["Fitxa: el meu conte en 4 vinyetes|Ficha: mi cuento en 4 viñetas"],
-      prep: ["Imprimir una fitxa de vinyetes per alumne/a (i alguna de més per als que vulguin tornar a començar).|Imprimir una ficha de viñetas por alumno/a (y alguna de más para los que quieran volver a empezar).",
-        "Provar el conte d'exemple (s7) amb els dos finals.|Probar el cuento de ejemplo (s7) con los dos finales.",
-        "Preparar l'ordre de les presentacions: 4 o 5 voluntaris i la resta per parelles.|Preparar el orden de las presentaciones: 4 o 5 voluntarios y el resto por parejas."]
+      aula: [
+        "Un ordinador per alumne/a amb Numi Tech obert a la sessió «Projecte: el conte interactiu»|Un ordenador por alumno/a con Numi Tech abierto en la sesión «Proyecto: el cuento interactivo»",
+        "Projector i la presentació d'aquesta sessió|Proyector y la presentación de esta sesión",
+        "1 fitxa «El meu conte en 4 vinyetes» per alumne/a (imprimible 1), llapis i colors (1 capsa per taula)|1 ficha «Mi cuento en 4 viñetas» por alumno/a (imprimible 1), lápices y colores (1 caja por mesa)"
+      ],
+      imprimir: [
+        "1 fitxa «El meu conte en 4 vinyetes» per alumne/a i 2-3 de recanvi (imprimible 1)|1 ficha «Mi cuento en 4 viñetas» por alumno/a y 2-3 de recambio (imprimible 1)"
+      ],
+      prep: [
+        "El dia abans (10 min): imprimir una fitxa de vinyetes per alumne/a i alguna de recanvi.|El día antes (10 min): imprimir una ficha de viñetas por alumno/a y alguna de recambio.",
+        "Provar el conte d'exemple «El cavaller i el drac» amb els dos finals.|Probar el cuento de ejemplo «El caballero y el dragón» con los dos finales.",
+        "Preparar l'ordinador del projector per a les presentacions i decidir l'ordre dels voluntaris.|Preparar el ordenador del proyector para las presentaciones y decidir el orden de los voluntarios.",
+        "Deixar els ordinadors engegats amb el perfil de cada alumne/a iniciat.|Dejar los ordenadores encendidos con el perfil de cada alumno/a iniciado."
+      ]
     },
     plan: [
       { min: 5, t: "Benvinguda: el llibre sense final|Bienvenida: el libro sin final", fase: 'inici',
         fa: "Repassa missatges i mostra't/amaga't. Presenta el repte: un llibre on el lector/a tria el final. Pregunta si han llegit mai un llibre on es pot triar què passa.|Repasa mensajes y muéstrate/escóndete. Presenta el reto: un libro donde el lector/a elige el final. Pregunta si han leído alguna vez un libro donde se puede elegir qué pasa.",
-        diu: ["Si poguéssiu triar el final d'un conte, quin canviaríeu?|Si pudierais elegir el final de un cuento, ¿cuál cambiaríais?"],
+        diu: ["Si poguéssiu triar el final d'un conte, quin canviaríeu?|Si pudierais elegir el final de un cuento, ¿cuál cambiaríais?", "Què hem après a la unitat? (Tocar, tecles i missatges.) Avui ho farem servir tot.|¿Qué hemos aprendido en la unidad? (Tocar, teclas y mensajes.) Hoy lo usaremos todo.", "Al final, la classe farà de lector i triarà el final dels vostres contes.|Al final, la clase hará de lector y elegirá el final de vuestros cuentos."],
         slides: ['s1', 's2', 's3'], app: "Encara no.|Todavía no.", org: "Tot el grup|Todo el grupo" },
       { min: 7, t: "Com es fa un conte interactiu|Cómo se hace un cuento interactivo", fase: 'teoria',
         fa: "Explica inici, nus i final amb l'animació del conte. Mostra la demo de les escenes (el fons que canvia i el drac que hi reacciona) i la dels dos finals. Acaba amb el pla en vinyetes.|Explica inicio, nudo y final con la animación del cuento. Muestra la demo de las escenas (el fondo que cambia y el dragón que reacciona) y la de los dos finales. Termina con el plan en viñetas.",
-        diu: ["Quin esdeveniment fa aparèixer el drac?|¿Qué evento hace aparecer al dragón?", "Si toquen l'estrella en lloc del cor, què canvia?|Si tocan la estrella en lugar del corazón, ¿qué cambia?"],
+        diu: ["Quin esdeveniment fa aparèixer el drac?|¿Qué evento hace aparecer al dragón?", "Si toquen l'estrella en lloc del cor, què canvia?|Si tocan la estrella en lugar del corazón, ¿qué cambia?", "Quins són els tres moments d'un conte? (Inici, nus i final.)|¿Cuáles son los tres momentos de un cuento? (Inicio, nudo y final.)"],
         slides: ['s4', 's5', 's6', 's7'], app: "Encara no.|Todavía no.", org: "Tot el grup|Todo el grupo" },
       { min: 12, t: "El conte en 4 vinyetes|El cuento en 4 viñetas", fase: 'desconnectat',
         fa: "Cada alumne/a omple la fitxa de vinyetes: inici, nus, tria (les dues opcions) i final. Al costat de cada vinyeta, apunta l'esdeveniment o el missatge que la farà començar. Als 8 minuts, cada alumne/a explica el seu pla al company/a en un minut.|Cada alumno/a rellena la ficha de viñetas: inicio, nudo, elección (las dos opciones) y final. Al lado de cada viñeta, apunta el evento o el mensaje que la hará empezar. A los 8 minutos, cada alumno/a explica su plan al compañero/a en un minuto.",
-        diu: ["No cal dibuixar bé: n'hi ha prou amb ninots i fletxes.|No hace falta dibujar bien: basta con muñecos y flechas.", "Què ha de tocar el lector/a? Apunta-ho!|¿Qué tiene que tocar el lector/a? ¡Apúntalo!"],
+        diu: ["No cal dibuixar bé: n'hi ha prou amb ninots i fletxes.|No hace falta dibujar bien: basta con muñecos y flechas.", "Què ha de tocar el lector/a? Apunta-ho!|¿Qué tiene que tocar el lector/a? ¡Apúntalo!", "Quin missatge envia cada objecte de la tria? Apunta-ho al costat.|¿Qué mensaje envía cada objeto de la elección? Apúntalo al lado."],
         slides: ['s8'], app: "Cap: activitat amb la fitxa de paper.|Ninguna: actividad con la ficha de papel.", org: "Individual i parelles|Individual y parejas" },
       { min: 10, t: "A l'ordinador: les escenes del conte|En el ordenador: las escenas del cuento", fase: 'ordinador',
         fa: "Fan la primera part de la sessió fins a la pausa activa: el conte d'exemple i les dues primeres escenes. Que provin els dos finals del conte d'exemple.|Hacen la primera parte de la sesión hasta la pausa activa: el cuento de ejemplo y las dos primeras escenas. Que prueben los dos finales del cuento de ejemplo.",
-        diu: ["Has provat els dos finals?|¿Has probado los dos finales?"],
+        diu: ["Has provat els dos finals?|¿Has probado los dos finales?", "Al botó, quin fons posa? I el drac, quin fons espera? Han de coincidir.|En el botón, ¿qué fondo pone? ¿Y el dragón, qué fondo espera? Tienen que coincidir.", "Toca el botó: el drac apareix? Si no, mira els dos guions.|Toca el botón: ¿el dragón aparece? Si no, mira los dos guiones."],
         slides: ['s9'], app: "Del recorda fins a la «Pausa activa»: preguntes, història, «Descobreix», ordenar els passos, «El conte en 4 vinyetes» (ja fet), el conte d'exemple, l'escena 1 (el botó) i l'escena 2 (el drac de nit).|Del recuerda hasta la «Pausa activa»: preguntas, historia, «Descubre», ordenar los pasos, «El cuento en 4 viñetas» (ya hecho), el cuento de ejemplo, la escena 1 (el botón) y la escena 2 (el dragón de noche).", org: "Individual|Individual" },
       { min: 18, t: "Crea: el meu conte interactiu|Crea: mi cuento interactivo", fase: 'crea',
         fa: "Després de la pausa activa, fan l'escena dels dos finals i l'investiga. Llavors construeixen el seu conte seguint la fitxa. Passeja amb els criteris a la vista. Als 12 minuts, avisa: tothom ha de tenir un final, encara que sigui senzill. Els últims minuts, el company/a prova el conte sense explicacions i diu una cosa que li agrada i una idea per millorar.|Después de la pausa activa, hacen la escena de los dos finales y el investiga. Entonces construyen su cuento siguiendo la ficha. Pasea con los criterios a la vista. A los 12 minutos, avisa: todos tienen que tener un final, aunque sea sencillo. Los últimos minutos, el compañero/a prueba el cuento sin explicaciones y dice una cosa que le gusta y una idea para mejorar.",
@@ -1697,7 +2440,7 @@ Object.assign(TGUIDE, {
         slides: ['s10', 's11', 's12', 's13'], app: "«Pausa activa», l'escena 3 (tria el final), l'investiga del drac que no apareix, «El meu conte interactiu» i «Ensenya el teu conte».|«Pausa activa», la escena 3 (elige el final), el investiga del dragón que no aparece, «Mi cuento interactivo» y «Enseña tu cuento».", org: "Individual i parelles|Individual y parejas" },
       { min: 8, t: "Presentacions i tancament|Presentaciones y cierre", fase: 'tancament',
         fa: "4 o 5 voluntaris presenten el conte al projector: la classe fa de lector/a i tria el final en veu alta. Acaba amb el resum de la unitat, les preguntes finals i el tiquet.|4 o 5 voluntarios presentan el cuento en el proyector: la clase hace de lector/a y elige el final en voz alta. Termina con el resumen de la unidad, las preguntas finales y el ticket.",
-        diu: ["Quin final voleu? Voteu amb la mà!|¿Qué final queréis? ¡Votad con la mano!", "Quina cosa del conte del company/a us ha agradat?|¿Qué cosa del cuento del compañero/a os ha gustado?"],
+        diu: ["Quin final voleu? Voteu amb la mà!|¿Qué final queréis? ¡Votad con la mano!", "Quina cosa del conte del company/a us ha agradat?|¿Qué cosa del cuento del compañero/a os ha gustado?", "Com ha sabut el lector què havia de tocar?|¿Cómo ha sabido el lector qué tenía que tocar?"],
         slides: ['s14', 's15', 's16'], app: "«Tancament»: preguntes i com m'he sentit.|«Cierre»: preguntas y cómo me he sentido.", org: "Tot el grup|Todo el grupo" }
     ],
     errors: [
@@ -1710,7 +2453,9 @@ Object.assign(TGUIDE, {
       ["Els dos finals passen alhora o sempre el mateix.|Los dos finales pasan a la vez o siempre el mismo.",
         "Que miri que cada objecte envia un missatge diferent i que cada final és sota el seu «Quan rebo».|Que mire que cada objeto envía un mensaje diferente y que cada final está bajo su «Al recibir»."],
       ["Vol fer un conte molt llarg i no l'acaba.|Quiere hacer un cuento muy largo y no lo termina.",
-        "Primer una versió de tres escenes que funcioni. Les idees de més, a la llista de millores.|Primero una versión de tres escenas que funcione. Las ideas de más, a la lista de mejoras."]
+        "Primer una versió de tres escenes que funcioni. Les idees de més, a la llista de millores.|Primero una versión de tres escenas que funcione. Las ideas de más, a la lista de mejoras."],
+      ["Al repte dels dos finals, posa «amaga't» als dos guions del drac i falla la prova 1.|En el reto de los dos finales, pone «escóndete» en los dos guiones del dragón y falla la prueba 1.",
+        "Pregunta: en el final de l'amistat, el drac se'n va? Que llegeixi cada guió i decideixi a quin final pertany cada bloc.|Pregunta: en el final de la amistad, ¿el dragón se va? Que lea cada guion y decida a qué final pertenece cada bloque."]
     ],
     diff: {
       mes: "Afegir un tercer camí, una escena amb el cavaller mogut amb les fletxes o un efecte de so a cada escena. Escriure el títol del conte amb el narrador al principi.|Añadir un tercer camino, una escena con el caballero movido con las flechas o un efecto de sonido en cada escena. Escribir el título del cuento con el narrador al principio.",
@@ -1721,7 +2466,10 @@ Object.assign(TGUIDE, {
       rubric: [
         ["Pla i estructura|Plan y estructura", "El conte té inici, nus i final i segueix la fitxa de vinyetes.|El cuento tiene inicio, nudo y final y sigue la ficha de viñetas.", "Hi ha escenes, però falta el final o no segueix el pla.|Hay escenas, pero falta el final o no sigue el plan."],
         ["Interacció|Interacción", "El lector/a toca per continuar i tria entre dos finals.|El lector/a toca para continuar y elige entre dos finales.", "El lector/a toca un sol cop o no té cap tria.|El lector/a toca una sola vez o no tiene ninguna elección."],
-        ["Diàleg i missatges|Diálogo y mensajes", "Els personatges parlen per torns amb missatges, sense solapar-se.|Los personajes hablan por turnos con mensajes, sin solaparse.", "Hi ha frases, però se solapen o no fan servir missatges.|Hay frases, pero se solapan o no usan mensajes."]
+        ["Diàleg i missatges|Diálogo y mensajes", "Els personatges parlen per torns amb missatges, sense solapar-se.|Los personajes hablan por turnos con mensajes, sin solaparse.", "Hi ha frases, però se solapen o no fan servir missatges.|Hay frases, pero se solapan o no usan mensajes."],
+        ["Provar i millorar|Probar y mejorar",
+          "Prova el conte com a lector/a, el deixa provar a un company/a i fa almenys una millora.|Prueba el cuento como lector/a, deja que lo pruebe un compañero/a y hace al menos una mejora.",
+          "Prova el conte, però no el deixa provar a ningú o no canvia res del que li diuen.|Prueba el cuento, pero no deja que lo pruebe nadie o no cambia nada de lo que le dicen."]
       ]
     },
     casa: "A casa, ensenyeu el conte a la família amb el mòbil i deixeu que triïn el final. Després, dibuixeu junts una vinyeta nova per a un tercer final.|En casa, enseñad el cuento a la familia con el móvil y dejad que elijan el final. Después, dibujad juntos una viñeta nueva para un tercer final.",
@@ -1729,7 +2477,7 @@ Object.assign(TGUIDE, {
       { id: 's1', k: 'portada', t: "Projecte: el conte interactiu|Proyecto: el cuento interactivo", x: "Una història amb escenes, diàlegs i un final que tria qui la mira.|Una historia con escenas, diálogos y un final que elige quien la mira.", nota: "Avui tothom acaba un conte: curt, però amb final.|Hoy todos terminan un cuento: corto, pero con final." },
       { id: 's2', k: 'repas', t: "Tot el que sabem fer|Todo lo que sabemos hacer", punts: ["Tocar un personatge|Tocar un personaje", "Les fletxes del teclat|Las flechas del teclado", "Enviar i rebre missatges|Enviar y recibir mensajes", "Mostrar i amagar|Mostrar y esconder"], nota: "Recorda que al conte poden fer servir tot això.|Recuerda que en el cuento pueden usar todo esto." },
       { id: 's3', k: 'pregunta', t: "El llibre sense final|El libro sin final", x: "Si poguéssiu triar el final d'un conte, quin canviaríeu?|Si pudierais elegir el final de un cuento, ¿cuál cambiaríais?", nota: "Recull idees: poden servir de punt de partida.|Recoge ideas: pueden servir de punto de partida." },
-      { id: 's4', k: 'anim', t: "Inici, nus i final… i tu tries|Inicio, nudo y final… y tú eliges", anim: 'g3tale', nota: "Connecta amb el que treballen a llengua: l'estructura del conte.|Conecta con lo que trabajan en lengua: la estructura del cuento." },
+      { id: 's4', k: 'anim', t: "Inici, nus i final|Inicio, nudo y final", x: "I, al final, qui mira el conte tria com acaba.|Y, al final, quien mira el cuento elige cómo termina.", anim: 'g3tale', nota: "Connecta amb el que treballen a llengua: l'estructura del conte.|Conecta con lo que trabajan en lengua: la estructura del cuento." },
       { id: 's5', k: 'media', t: "Escenes: el fons canvia|Escenas: el fondo cambia",
         media: { k: 'stage', w: { bg: 'bosc', bgs: ['bosc', 'nit'], sprites: [{ id: 'boto', art: 'boto', x: 150, y: -130, size: 70 }, { id: 'drac', art: 'drac', x: 0, y: -40, hidden: true }], input: [{ t: 1.5, click: 'boto' }], time: 6 }, prog: `@boto click{ bg:nit hide } @drac bg:nit{ show say:"Qui m'ha despertat?|¿Quién me ha despertado?",2 }` },
         nota: "El canvi de fons també és un esdeveniment: el drac l'espera per aparèixer.|El cambio de fondo también es un evento: el dragón lo espera para aparecer." },
@@ -1740,7 +2488,7 @@ Object.assign(TGUIDE, {
       { id: 's8', k: 'activitat', t: "El conte en 4 vinyetes|El cuento en 4 viñetas", timer: 12, punts: ["1. Inici: on i qui?|1. Inicio: ¿dónde y quién?", "2. Nus: què passa?|2. Nudo: ¿qué pasa?", "3. Tria: què toca el lector/a?|3. Elige: ¿qué toca el lector/a?", "4. Final: com acaba?|4. Final: ¿cómo termina?"], nota: "Als 8 minuts, cada alumne/a explica el pla al company/a.|A los 8 minutos, cada alumno/a explica el plan al compañero/a." },
       { id: 's9', k: 'activitat', t: "Ara, a l'ordinador|Ahora, al ordenador", timer: 10, punts: ["Prova el conte d'exemple amb els dos finals.|Prueba el cuento de ejemplo con los dos finales.", "Escena 1: el botó.|Escena 1: el botón.", "Escena 2: el drac de nit.|Escena 2: el dragón de noche."], nota: "Para a la pausa activa: la farem junts.|Para en la pausa activa: la haremos juntos." },
       { id: 's10', k: 'repte', t: "Escena 3: tria el final|Escena 3: elige el final", timer: 5, punts: ["El cor envia «hola».|El corazón envía «hola».", "L'estrella envia «sorpresa».|La estrella envía «sorpresa».", "Cada final, al seu «Quan rebo».|Cada final, en su «Al recibir»."], nota: "Hi ha dues proves: una toca el cor i l'altra l'estrella.|Hay dos pruebas: una toca el corazón y la otra la estrella." },
-      { id: 's11', k: 'concepte', t: "Criteris del conte|Criterios del cuento", punts: ["Almenys 2 escenes|Al menos 2 escenas", "Un diàleg amb missatges|Un diálogo con mensajes", "El lector/a toca per continuar|El lector/a toca para continuar", "Té un final: «Fi del conte!»|Tiene un final: «¡Fin del cuento!»"], nota: "Deixa aquesta diapositiva projectada mentre treballen.|Deja esta diapositiva proyectada mientras trabajan." },
+      { id: 's11', k: 'concepte', t: "Criteris del conte|Criterios del cuento", punts: ["Almenys 2 escenes|Al menos 2 escenas", "Un diàleg amb missatges|Un diálogo con mensajes", "El lector/a toca per continuar|El lector/a toca para continuar", "Té un final: «Fi del conte!»|Tiene un final: «¡Fin del cuento!»"], pic: 'img/ment/sin.webp', nota: "Deixa aquesta diapositiva projectada mentre treballen.|Deja esta diapositiva proyectada mientras trabajan." },
       { id: 's12', k: 'activitat', t: "Construeix el teu conte|Construye tu cuento", timer: 13, punts: ["Segueix la fitxa, vinyeta a vinyeta.|Sigue la ficha, viñeta a viñeta.", "Prova cada escena abans de fer la següent.|Prueba cada escena antes de hacer la siguiente.", "Primer curt i que funcioni; després, més llarg.|Primero corto y que funcione; después, más largo."], nota: "Als 12 minuts, avisa que tothom ha de tenir un final.|A los 12 minutos, avisa de que todos tienen que tener un final." },
       { id: 's13', k: 'activitat', t: "Prova-ho amb un company/a|Pruébalo con un compañero/a", punts: ["No li expliquis res: mira què toca.|No le expliques nada: mira qué toca.", "Una cosa que t'agrada.|Una cosa que te gusta.", "Una idea per millorar.|Una idea para mejorar."], nota: "Modela un comentari amable i concret abans de començar.|Modela un comentario amable y concreto antes de empezar." },
       { id: 's14', k: 'activitat', t: "Presentacions|Presentaciones", timer: 5, punts: ["Títol del conte|Título del cuento", "La classe tria el final|La clase elige el final", "Què n'estàs més content/a?|¿De qué estás más contento/a?"], nota: "Un minut per conte. La classe vota el final amb la mà.|Un minuto por cuento. La clase vota el final con la mano." },
@@ -1782,6 +2530,58 @@ Object.assign(TGUIDE, (() => {
   return {
     /* ---------- Sessió 1 · x i y: l'escenari és un mapa ---------- */
     'g4-1': {
+    intro: "Comença la unitat de les coordenades: l'escenari es converteix en un mapa en què cada lloc té dos números, la x (esquerra o dreta) i la y (avall o amunt), amb el (0, 0) al centre. L'alumnat aprèn a llegir i a dir coordenades sempre en el mateix ordre (primer la x i després la y) i a portar un personatge a un punt amb «ves a x: y:», «posa x a» i «posa y a». És la base de tota la unitat i connecta directament amb els eixos de coordenades de matemàtiques. La classe comença amb la Nit de les Estrelles, segueix amb la graella del cel amagat per parelles i acaba portant en Numi d'estrella en estrella.|Empieza la unidad de las coordenadas: el escenario se convierte en un mapa en el que cada sitio tiene dos números, la x (izquierda o derecha) y la y (abajo o arriba), con el (0, 0) en el centro. El alumnado aprende a leer y decir coordenadas siempre en el mismo orden (primero la x y después la y) y a llevar un personaje a un punto con «ve a x: y:», «pon x a» y «pon y a». Es la base de toda la unidad y conecta directamente con los ejes de coordenadas de matemáticas. La clase empieza con la Noche de las Estrellas, sigue con la cuadrícula del cielo escondido por parejas y termina llevando a Numi de estrella en estrella.",
+    claus: [
+      "Cada punt de l'escenari té dues coordenades: la x (esquerra-dreta) i la y (avall-amunt).|Cada punto del escenario tiene dos coordenadas: la x (izquierda-derecha) y la y (abajo-arriba).",
+      "El (0, 0) és al centre; cap a la dreta i amunt els números són positius, i cap a l'esquerra i avall, negatius.|El (0, 0) está en el centro; hacia la derecha y arriba los números son positivos, y hacia la izquierda y abajo, negativos.",
+      "Les coordenades es diuen sempre en el mateix ordre: primer la x i després la y.|Las coordenadas se dicen siempre en el mismo orden: primero la x y después la y.",
+      "«Ves a» porta el personatge d'un salt a un punt; «posa x a» i «posa y a» en canvien només un dels dos números.|«Ve a» lleva al personaje de un salto a un punto; «pon x a» y «pon y a» cambian solo uno de los dos números."
+    ],
+    prev: [
+      "Saber que el centre de l'escenari és el (0, 0) i que la dreta és x positiva (unitat 1, sessió 1).|Saber que el centro del escenario es el (0, 0) y que la derecha es x positiva (unidad 1, sesión 1).",
+      "Fer servir «espera» perquè es vegi cada pas (unitat 2).|Usar «espera» para que se vea cada paso (unidad 2).",
+      "Conèixer els nombres negatius en una recta o un termòmetre (matemàtiques).|Conocer los números negativos en una recta o un termómetro (matemáticas)."
+    ],
+    faq: [
+      ["Per què el (0, 0) és al mig i no a la cantonada com al full?|¿Por qué el (0, 0) está en el medio y no en la esquina como en la hoja?",
+        "A l'escenari, el (0, 0) és al centre perquè així es pot anar cap a tots els costats. Per això hi ha números positius i negatius.|En el escenario, el (0, 0) está en el centro para poder ir hacia todos los lados. Por eso hay números positivos y negativos."],
+      ["Fins a quin número arriba la x?|¿Hasta qué número llega la x?",
+        "De -240 (vora esquerra) a 240 (vora dreta). La y va de -180 (a baix) a 180 (a dalt).|De -240 (borde izquierdo) a 240 (borde derecho). La y va de -180 (abajo) a 180 (arriba)."],
+      ["I si poso un número més gran que 240?|¿Y si pongo un número mayor que 240?",
+        "El personatge se'n va fora de l'escenari i no el veus. Torna'l amb un «ves a» amb números més petits.|El personaje se va fuera del escenario y no lo ves. Devuélvelo con un «ve a» con números más pequeños."],
+      ["Com sé on és una estrella?|¿Cómo sé dónde está una estrella?",
+        "Mira si és a la dreta o a l'esquerra del centre (la x) i si és a dalt o a baix (la y). Prova un número i ajusta'l: més a la dreta, més amunt…|Mira si está a la derecha o a la izquierda del centro (la x) y si está arriba o abajo (la y). Prueba un número y ajústalo: más a la derecha, más arriba…"],
+      ["Per què en Numi no passa per les estrelles si poso molts «ves a»?|¿Por qué Numi no pasa por las estrellas si pongo muchos «ve a»?",
+        "Sí que hi passa, però tan de pressa que no es veu. Posa una «espera» després de cada «ves a».|Sí que pasa, pero tan deprisa que no se ve. Pon una «espera» después de cada «ve a»."],
+      ["On es fan servir les coordenades a la vida real?|¿Dónde se usan las coordenadas en la vida real?",
+        "Als mapes, als plànols, als seients del cinema (fila i seient) o als jocs de taula amb graella, com els vaixells.|En los mapas, en los planos, en los asientos del cine (fila y asiento) o en los juegos de mesa con cuadrícula, como los barcos."]
+    ],
+    tec: [
+      ["L'alumne/a no troba on escriure la y al bloc «ves a».|El alumno/a no encuentra dónde escribir la y en el bloque «ve a».",
+        "El bloc té dos números: el primer és la x i el segon, la y. Cal tocar cadascun per canviar-lo.|El bloque tiene dos números: el primero es la x y el segundo, la y. Hay que tocar cada uno para cambiarlo."],
+      ["El signe menys no surt al teclat del mòbil.|El signo menos no sale en el teclado del móvil.",
+        "Al teclat numèric, el «-» sol ser a la tecla de símbols; a l'ordinador, la tecla «-». Si no surt, que facin servir un altre dispositiu.|En el teclado numérico, el «-» suele estar en la tecla de símbolos; en el ordenador, la tecla «-». Si no sale, que usen otro dispositivo."],
+      ["El repte diu que en Numi no és a l'estrella, però sembla que sí.|El reto dice que Numi no está en la estrella, pero parece que sí.",
+        "La zona és petita (uns 15 punts al voltant): que miri les coordenades exactes de l'enunciat.|La zona es pequeña (unos 15 puntos alrededor): que mire las coordenadas exactas del enunciado."],
+      ["La creu de cinta a terra es desenganxa.|La cruz de cinta en el suelo se despega.",
+        "Feu servir cinta de pintor ampla i marqueu el (0, 0) amb un full; si no hi ha espai, dibuixeu els eixos a la pissarra.|Usad cinta de pintor ancha y marcad el (0, 0) con una hoja; si no hay espacio, dibujad los ejes en la pizarra."],
+      ["La graella impresa surt petita.|La cuadrícula impresa sale pequeña.",
+        "Imprimiu-la en DIN A4 sense reduir; per a la demostració, projecteu-la o dibuixeu-la a la pissarra.|Imprimidla en DIN A4 sin reducir; para la demostración, proyectadla o dibujadla en la pizarra."]
+    ],
+    seg: [
+      "A la demostració amb la creu a terra i a la pausa activa, espai lliure i moviments al lloc, sense córrer.|En la demostración con la cruz en el suelo y en la pausa activa, espacio libre y movimientos en el sitio, sin correr.",
+      "Davant la pantalla: descans de la vista a la pausa activa (mirar lluny uns segons).|Delante de la pantalla: descanso de la vista en la pausa activa (mirar lejos unos segundos)."
+    ],
+    extra: [
+      "Dibuixar una constel·lació pròpia a la graella i programar-la a l'escenari amb «ves a» i esperes.|Dibujar una constelación propia en la cuadrícula y programarla en el escenario con «ve a» y esperas.",
+      "Fer que en Numi digui les coordenades de cada estrella quan hi arriba (per exemple, «Soc a 150, 100!»).|Hacer que Numi diga las coordenadas de cada estrella cuando llega (por ejemplo, «¡Estoy en 150, 100!»).",
+      "Endevinar les coordenades de les quatre cantonades de l'escenari i comprovar-ho amb «ves a».|Adivinar las coordenadas de las cuatro esquinas del escenario y comprobarlo con «ve a»."
+    ],
+    trans: [
+      "Matemàtiques: els eixos de coordenades, els nombres negatius i la representació de punts en el pla.|Matemáticas: los ejes de coordenadas, los números negativos y la representación de puntos en el plano.",
+      "Ciències socials: mapes, plànols i quadrícules per situar llocs.|Ciencias sociales: mapas, planos y cuadrículas para situar lugares.",
+      "Sessió següent: els personatges lliscaran a poc a poc i es mouran amb «canvia x» i «canvia y».|Sesión siguiente: los personajes se deslizarán poco a poco y se moverán con «cambia x» y «cambia y»."
+    ],
       obj: [
         "L'alumne/a situa punts a l'escenari amb la x i la y i sap que el (0, 0) és al centre.|El alumno/a sitúa puntos en el escenario con la x y la y y sabe que el (0, 0) está en el centro.",
         "L'alumne/a distingeix la x (esquerra-dreta) de la y (avall-amunt) i interpreta els nombres negatius.|El alumno/a distingue la x (izquierda-derecha) de la y (abajo-arriba) e interpreta los números negativos.",
@@ -1802,20 +2602,23 @@ Object.assign(TGUIDE, (() => {
         ["Nombre negatiu|Número negativo", "Un número més petit que zero, amb el signe menys davant: -100.|Un número más pequeño que cero, con el signo menos delante: -100."]
       ],
       mat: {
-        aula: [
-          "Un ordinador per alumne/a amb Numi Tech obert a la sessió «x i y: l'escenari és un mapa»|Un ordenador por alumno/a con Numi Tech abierto en la sesión «x e y: el escenario es un mapa»",
-          "Projector i la presentació d'aquesta sessió|Proyector y la presentación de esta sesión",
-          "Una còpia de «El cel amagat» per alumne/a i un llapis de color|Una copia de «El cielo escondido» por alumno/a y un lápiz de color",
-          "Opcional: cinta de pintor per marcar a terra una creu gran (els dos eixos) per a la demostració|Opcional: cinta de pintor para marcar en el suelo una cruz grande (los dos ejes) para la demostración"
-        ],
-        imprimir: ["El cel amagat (graella de coordenades)|El cielo escondido (cuadrícula de coordenadas)", "Fitxa: on és cada estrella?|Ficha: ¿dónde está cada estrella?"],
-        prep: [
-          "Imprimir «El cel amagat» (una per alumne/a) i, per als que acabin aviat, la fitxa «On és cada estrella?».|Imprimir «El cielo escondido» (una por alumno/a) y, para los que terminen pronto, la ficha «¿Dónde está cada estrella?».",
-          "Si hi ha espai, marcar a terra una creu de cinta: una ratlla de 3 m (x) i una de 2 m (y), amb el (0, 0) al mig.|Si hay espacio, marcar en el suelo una cruz de cinta: una raya de 3 m (x) y una de 2 m (y), con el (0, 0) en el medio.",
-          "Mirar abans les demostracions de les diapositives 5, 6 i 12 per saber on va en Numi.|Mirar antes las demostraciones de las diapositivas 5, 6 y 12 para saber adónde va Numi.",
-          "Deixar els ordinadors engegats amb Numi Tech obert i la sessió de cada alumne/a iniciada.|Dejar los ordenadores encendidos con Numi Tech abierto y la sesión de cada alumno/a iniciada."
-        ]
-      },
+      aula: [
+        "Un ordinador per alumne/a amb Numi Tech obert a la sessió «x i y: l'escenari és un mapa»|Un ordenador por alumno/a con Numi Tech abierto en la sesión «x e y: el escenario es un mapa»",
+        "Projector i la presentació d'aquesta sessió|Proyector y la presentación de esta sesión",
+        "1 còpia de «El cel amagat» per alumne/a (imprimible 1) i 1 llapis de color|1 copia de «El cielo escondido» por alumno/a (imprimible 1) y 1 lápiz de color",
+        "Opcional: 1 rotllo de cinta de pintor per marcar a terra una creu gran (els dos eixos) per a la demostració|Opcional: 1 rollo de cinta de pintor para marcar en el suelo una cruz grande (los dos ejes) para la demostración"
+      ],
+      imprimir: [
+        "1 «El cel amagat» (graella de coordenades) per alumne/a (imprimible 1)|1 «El cielo escondido» (cuadrícula de coordenadas) por alumno/a (imprimible 1)",
+        "Unes 6 fitxes «On és cada estrella?» per a qui acabi abans o per a casa (imprimible 2)|Unas 6 fichas «¿Dónde está cada estrella?» para quien termine antes o para casa (imprimible 2)"
+      ],
+      prep: [
+        "El dia abans (10 min): imprimir «El cel amagat» (una per alumne/a) i unes quantes fitxes «On és cada estrella?».|El día antes (10 min): imprimir «El cielo escondido» (una por alumno/a) y unas cuantas fichas «¿Dónde está cada estrella?».",
+        "Abans de la classe (5 min), si hi ha espai: marcar a terra una creu de cinta, una ratlla de 3 m (x) i una de 2 m (y), amb el (0, 0) al mig.|Antes de la clase (5 min), si hay espacio: marcar en el suelo una cruz de cinta, una raya de 3 m (x) y una de 2 m (y), con el (0, 0) en el medio.",
+        "Mirar abans les demostracions de les diapositives 5, 6 i 12 per saber on va en Numi.|Mirar antes las demostraciones de las diapositivas 5, 6 y 12 para saber adónde va Numi.",
+        "Deixar els ordinadors engegats amb Numi Tech obert i el perfil de cada alumne/a iniciat.|Dejar los ordenadores encendidos con Numi Tech abierto y el perfil de cada alumno/a iniciado."
+      ]
+    },
       plan: [
         { min: 5, t: "Benvinguda: la Nit de les Estrelles|Bienvenida: la Noche de las Estrellas", fase: 'inici',
           fa: "Presenta la missió: en Numi ha d'anar just on és cada estrella del cel. Pregunta com diríeu a algú on és una cosa sense assenyalar-la i recull respostes («a dalt a la dreta», «al costat de…»). Fes veure que són indicacions poc exactes: avui aprendrem a dir-ho amb dos números.|Presenta la misión: Numi tiene que ir justo donde está cada estrella del cielo. Pregunta cómo diríais a alguien dónde está una cosa sin señalarla y recoge respuestas («arriba a la derecha», «al lado de…»). Haz ver que son indicaciones poco exactas: hoy aprenderemos a decirlo con dos números.",
@@ -1851,12 +2654,12 @@ Object.assign(TGUIDE, (() => {
         { min: 5, t: "Crea: el meu cel d'estrelles|Crea: mi cielo de estrellas", fase: 'crea',
           fa: "Cada alumne/a programa el viatge d'en Numi per les 4 estrelles, en l'ordre que vulgui. Abans de posar blocs, que escriguin (o diguin) les coordenades de cada estrella. Qui acabi, que ensenyi el programa al company/a i li faci endevinar on anirà en Numi primer.|Cada alumno/a programa el viaje de Numi por las 4 estrellas, en el orden que quiera. Antes de poner bloques, que escriban (o digan) las coordenadas de cada estrella. Quien termine, que enseñe el programa al compañero/a y le haga adivinar adónde irá Numi primero.",
           diu: ["Primer les coordenades, després els blocs.|Primero las coordenadas, después los bloques.",
-            "No hi ha un sol ordre bo: el teu viatge pot ser diferent del del company/a.|No hay un solo orden bueno: tu viaje puede ser diferente del del compañero/a."],
+            "No hi ha un sol ordre bo: el teu viatge pot ser diferent del del company/a.|No hay un solo orden bueno: tu viaje puede ser diferente del del compañero/a.", "Quines coordenades té l'estrella de baix a l'esquerra? (Totes dues negatives.)|¿Qué coordenadas tiene la estrella de abajo a la izquierda? (Las dos negativas.)"],
           slides: ['s14'], app: "Pas «Crea»: El meu cel d'estrelles.|Paso «Crea»: Mi cielo de estrellas.", org: "Individual i després per parelles|Individual y después por parejas" },
         { min: 3, t: "Tancament i tiquet de sortida|Cierre y ticket de salida", fase: 'tancament',
-          fa: "Repassa les tres idees amb el resum. Deixa que responguin les preguntes finals de l'app i, a la porta, fes a cada alumne/a una de les preguntes del tiquet.|Repasa las tres ideas con el resumen. Deja que respondan las preguntas finales de la app y, en la puerta, haz a cada alumno/a una de las preguntas del ticket.",
+          fa: "Repassa les tres idees amb el resum (el mapa, la x i la y, i «ves a») fent que la classe assenyali on seria cada punt. Deixa que responguin les preguntes finals de l'app i com s'han sentit. A la porta, fes a cada alumne/a una de les preguntes del tiquet i anota qui encara diu la y abans de la x.|Repasa las tres ideas con el resumen (el mapa, la x y la y, y «ve a») haciendo que la clase señale dónde estaría cada punto. Deja que respondan las preguntas finales de la app y cómo se han sentido. En la puerta, haz a cada alumno/a una de las preguntas del ticket y anota quién todavía dice la y antes de la x.",
           diu: ["Qui em diu on és el (0, 0)?|¿Quién me dice dónde está el (0, 0)?",
-            "Si una estrella és a baix a l'esquerra, com són la x i la y?|Si una estrella está abajo a la izquierda, ¿cómo son la x y la y?"],
+            "Si una estrella és a baix a l'esquerra, com són la x i la y?|Si una estrella está abajo a la izquierda, ¿cómo son la x y la y?", "La setmana vinent els personatges volaran a poc a poc, com globus.|La semana que viene los personajes volarán poco a poco, como globos."],
           slides: ['s15', 's16'], app: "«Tancament»: les dues preguntes finals i com m'he sentit.|«Cierre»: las dos preguntas finales y cómo me he sentido.", org: "Tot el grup|Todo el grupo" }
       ],
       errors: [
@@ -1869,7 +2672,9 @@ Object.assign(TGUIDE, (() => {
         ["Posa diversos «ves a» seguits i diu que en Numi no passa per les estrelles.|Pone varios «ve a» seguidos y dice que Numi no pasa por las estrellas.",
           "Pregunta: quant temps es queda en Numi a cada estrella? Que afegeixi un «espera 1 segon» entre salt i salt i ho torni a provar.|Pregunta: ¿cuánto tiempo se queda Numi en cada estrella? Que añada un «espera 1 segundo» entre salto y salto y lo vuelva a probar."],
         ["Prova números a l'atzar fins que encerta.|Prueba números al azar hasta que acierta.",
-          "Que estimi abans: l'estrella és a la dreta o a l'esquerra? Llavors la x serà positiva o negativa? I aproximadament, a mig camí de la vora?|Que estime antes: ¿la estrella está a la derecha o a la izquierda? Entonces ¿la x será positiva o negativa? ¿Y aproximadamente, a medio camino del borde?"]
+          "Que estimi abans: l'estrella és a la dreta o a l'esquerra? Llavors la x serà positiva o negativa? I aproximadament, a mig camí de la vora?|Que estime antes: ¿la estrella está a la derecha o a la izquierda? Entonces ¿la x será positiva o negativa? ¿Y aproximadamente, a medio camino del borde?"],
+      ["Fa servir «posa x a» quan el repte demana canviar l'alçada.|Usa «pon x a» cuando el reto pide cambiar la altura.",
+        "Pregunta: en Numi ha d'anar cap als costats o amunt i avall? Quina lletra diu amunt i avall? (La y.)|Pregunta: ¿Numi tiene que ir hacia los lados o arriba y abajo? ¿Qué letra dice arriba y abajo? (La y.)"]
       ],
       diff: {
         mes: "Fer la fitxa «On és cada estrella?» i, a l'app, repetir el projecte fent que en Numi digui les coordenades de cada estrella quan hi arriba. Després, inventar una constel·lació i dictar-ne les coordenades al company/a perquè la dibuixi.|Hacer la ficha «¿Dónde está cada estrella?» y, en la app, repetir el proyecto haciendo que Numi diga las coordenadas de cada estrella cuando llega. Después, inventar una constelación y dictar sus coordenadas al compañero/a para que la dibuje.",
@@ -1881,7 +2686,10 @@ Object.assign(TGUIDE, (() => {
         rubric: [
           ["Situar punts|Situar puntos", "Diu on és un punt a partir de la x i la y, també amb nombres negatius.|Dice dónde está un punto a partir de la x y la y, también con números negativos.", "Situa bé els punts positius, però dubta amb els negatius.|Sitúa bien los puntos positivos, pero duda con los negativos."],
           ["L'ordre x, y|El orden x, y", "Escriu sempre primer la x i després la y, i detecta l'error quan estan girades.|Escribe siempre primero la x y después la y, y detecta el error cuando están giradas.", "De vegades gira els dos números.|A veces gira los dos números."],
-          ["Programar un recorregut|Programar un recorrido", "Visita diversos punts en ordre amb «ves a» i esperes, pensant les coordenades abans.|Visita varios puntos en orden con «ve a» y esperas, pensando las coordenadas antes.", "Arriba a un punt, però per fer un recorregut prova números a l'atzar.|Llega a un punto, pero para hacer un recorrido prueba números al azar."]
+          ["Programar un recorregut|Programar un recorrido", "Visita diversos punts en ordre amb «ves a» i esperes, pensant les coordenades abans.|Visita varios puntos en orden con «ve a» y esperas, pensando las coordenadas antes.", "Arriba a un punt, però per fer un recorregut prova números a l'atzar.|Llega a un punto, pero para hacer un recorrido prueba números al azar."],
+        ["Explicar el signe|Explicar el signo",
+          "Explica per què un punt a l'esquerra té la x negativa i un de baix, la y negativa.|Explica por qué un punto a la izquierda tiene la x negativa y uno de abajo, la y negativa.",
+          "Situa bé els punts positius, però s'equivoca amb els negatius.|Sitúa bien los puntos positivos, pero se equivoca con los negativos."]
         ]
       },
       casa: "A casa, amb el mòbil, podeu repetir la sessió i fer junts «El tresor amagat»: dibuixeu una creu en un full, amagueu un tresor en un punt i busqueu-lo dient coordenades.|En casa, con el móvil, podéis repetir la sesión y hacer juntos «El tesoro escondido»: dibujad una cruz en una hoja, esconded un tesoro en un punto y buscadlo diciendo coordenadas.",
@@ -1890,7 +2698,7 @@ Object.assign(TGUIDE, (() => {
           nota: "Presenta l'objectiu: al final de la classe, tothom portarà en Numi a qualsevol estrella del cel.|Presenta el objetivo: al final de la clase, todos llevarán a Numi a cualquier estrella del cielo." },
         { id: 's2', k: 'pregunta', t: 'On és la teva cadira?|¿Dónde está tu silla?', x: "Explica-li a un amic on seus, sense assenyalar.|Explícale a un amigo dónde te sientas, sin señalar.",
           nota: "Recull respostes i fes notar les que són poc exactes («per allà»). Torna-hi quan expliquis les coordenades.|Recoge respuestas y haz notar las que son poco exactas («por allí»). Vuelve a ello cuando expliques las coordenadas." },
-        { id: 's3', k: 'concepte', t: 'La Nit de les Estrelles|La Noche de las Estrellas', punts: ["En Bit ha fet un mapa del cel.|Bit ha hecho un mapa del cielo.", "En Numi ha d'anar just on és cada estrella.|Numi tiene que ir justo donde está cada estrella.", "Per dir on és cada lloc farem servir dos números: la x i la y.|Para decir dónde está cada sitio usaremos dos números: la x y la y."],
+        { id: 's3', k: 'concepte', t: 'La Nit de les Estrelles|La Noche de las Estrellas', punts: ["En Bit ha fet un mapa del cel.|Bit ha hecho un mapa del cielo.", "En Numi ha d'anar just on és cada estrella.|Numi tiene que ir justo donde está cada estrella.", "Per dir on és cada lloc farem servir dos números: la x i la y.|Para decir dónde está cada sitio usaremos dos números: la x y la y."], pic: 'img/tech/scenes/lab.webp',
           nota: "Explica que l'ordinador no entén «una mica més amunt»: necessita números exactes.|Explica que el ordenador no entiende «un poco más arriba»: necesita números exactos." },
         { id: 's4', k: 'anim', t: "L'escenari és un mapa|El escenario es un mapa", anim: 'g4grid', x: "480 punts d'ample, 360 d'alt i el (0, 0) al centre.|480 puntos de ancho, 360 de alto y el (0, 0) en el centro.",
           nota: "Fes notar les dues ratlles: la vermella és la de la x i la verda, la de la y. La línia discontínua mostra com es llegeixen els dos números.|Haz notar las dos rayas: la roja es la de la x y la verde, la de la y. La línea discontinua muestra cómo se leen los dos números." },
@@ -1938,6 +2746,58 @@ Object.assign(TGUIDE, (() => {
     },
     /* ---------- Sessió 2 · Lliscar i canviar x i y ---------- */
     'g4-2': {
+    intro: "Els globus no salten: volen a poc a poc. En aquesta sessió l'alumnat compara «ves a», que porta el personatge d'un salt, amb «llisca», que hi va a poc a poc en els segons que diguis, i construeix camins tram a tram. Després descobreix «canvia x» i «canvia y», que sumen (o resten) a la posició on ja és el personatge, a diferència de «posa x», que el porta sempre al mateix lloc. Ho combinen amb els guions de tecla per pilotar el globus amb les fletxes. La classe comença amb la cursa de globus, segueix amb la cursa de paper en grups de 3 i acaba dissenyant un recorregut propi.|Los globos no saltan: vuelan poco a poco. En esta sesión el alumnado compara «ve a», que lleva al personaje de un salto, con «desliza», que va poco a poco en los segundos que digas, y construye caminos tramo a tramo. Después descubre «cambia x» y «cambia y», que suman (o restan) a la posición donde ya está el personaje, a diferencia de «pon x», que lo lleva siempre al mismo sitio. Lo combinan con los guiones de tecla para pilotar el globo con las flechas. La clase empieza con la carrera de globos, sigue con la carrera de papel en grupos de 3 y termina diseñando un recorrido propio.",
+    claus: [
+      "«Llisca en 2 s fins a x: y:» va a poc a poc fins al punt; «ves a» hi salta de cop.|«Desliza en 2 s hasta x: y:» va poco a poco hasta el punto; «ve a» salta de golpe.",
+      "Un camí es fa amb un «llisca» per a cada tram, un darrere l'altre.|Un camino se hace con un «desliza» para cada tramo, uno detrás de otro.",
+      "«Canvia x en 10» suma 10 a la x on ja és el personatge; amb -10 va cap a l'esquerra.|«Cambia x en 10» suma 10 a la x donde ya está el personaje; con -10 va hacia la izquierda.",
+      "«Posa x a» dins un bucle el deixa sempre al mateix lloc; «canvia x» el fa avançar a cada volta.|«Pon x a» dentro de un bucle lo deja siempre en el mismo sitio; «cambia x» lo hace avanzar en cada vuelta."
+    ],
+    prev: [
+      "Llegir i dir coordenades en l'ordre x, y (sessió 1).|Leer y decir coordenadas en el orden x, y (sesión 1).",
+      "Guions de tecla amb les fletxes (unitat 3, sessió 2).|Guiones de tecla con las flechas (unidad 3, sesión 2).",
+      "Bucles «repeteix» (unitat 2) i sumes i restes amb nombres negatius senzills (matemàtiques).|Bucles «repite» (unidad 2) y sumas y restas con números negativos sencillos (matemáticas)."
+    ],
+    faq: [
+      ["Quin número és el dels segons al bloc «llisca»?|¿Qué número es el de los segundos en el bloque «desliza»?",
+        "El primer: «llisca en 2 s». Després van la x i la y del punt on ha d'arribar.|El primero: «desliza en 2 s». Después van la x y la y del punto adonde tiene que llegar."],
+      ["Per què el globus no es mou si poso «posa x a 10» dins un bucle?|¿Por qué el globo no se mueve si pongo «pon x a 10» dentro de un bucle?",
+        "Perquè «posa x a 10» el porta sempre al 10: la primera volta s'hi mou i les altres ja hi és. Per avançar, «canvia x en 10».|Porque «pon x a 10» lo lleva siempre al 10: en la primera vuelta se mueve y en las demás ya está allí. Para avanzar, «cambia x en 10»."],
+      ["Com faig que el globus vagi en diagonal?|¿Cómo hago que el globo vaya en diagonal?",
+        "Amb «llisca» cap a un punt que tingui la x i la y diferents de les d'ara: hi va en línia recta.|Con «desliza» hacia un punto que tenga la x y la y diferentes de las de ahora: va en línea recta."],
+      ["Per què el globus de les fletxes surt de l'escenari?|¿Por qué el globo de las flechas sale del escenario?",
+        "Perquè si mantens la fletxa, el guió es repeteix i la x o la y continuen creixent. Deixa anar la fletxa abans d'arribar a la vora.|Porque si mantienes la flecha, el guion se repite y la x o la y siguen creciendo. Suelta la flecha antes de llegar al borde."],
+      ["Puc fer que el globus vagi més ràpid en un tram?|¿Puedo hacer que el globo vaya más rápido en un tramo?",
+        "Sí: posa menys segons en aquell «llisca». Amb 1 segon va ràpid; amb 4, molt a poc a poc.|Sí: pon menos segundos en ese «desliza». Con 1 segundo va rápido; con 4, muy despacio."],
+      ["«Canvia x en -20» vol dir anar a -20?|¿«Cambia x en -20» quiere decir ir a -20?",
+        "No: vol dir restar 20 a la x que ja té. Si era a 50, passa a 30.|No: quiere decir restar 20 a la x que ya tiene. Si estaba en 50, pasa a 30."]
+    ],
+    tec: [
+      ["«Comprova» falla al repte de les fletxes.|«Comprueba» falla en el reto de las flechas.",
+        "La prova prem cada fletxa un temps fix: que comprovi que cada guió mou 10 punts cap al seu costat (esquerra i avall, amb -10).|La prueba pulsa cada flecha un tiempo fijo: que compruebe que cada guion mueve 10 puntos hacia su lado (izquierda y abajo, con -10)."],
+      ["Al repte dels 2 blocs no deixa afegir-ne més.|En el reto de los 2 bloques no deja añadir más.",
+        "El comptador limita a 2 blocs: un «repeteix» amb un «canvia y» a dins. Que esborri els que sobren.|El contador limita a 2 bloques: un «repite» con un «cambia y» dentro. Que borre los que sobran."],
+      ["El globus llisca massa ràpid per veure'l.|El globo se desliza demasiado rápido para verlo.",
+        "Que posi més segons al «llisca» (3 o 4) per veure millor el camí.|Que ponga más segundos en el «desliza» (3 o 4) para ver mejor el camino."],
+      ["Les cartes de la cursa es perden o es barregen.|Las cartas de la carrera se pierden o se mezclan.",
+        "Feu un paquet per grup en un sobre amb el número del grup; plastificades, serveixen per a la sessió 4.|Haced un paquete por grupo en un sobre con el número del grupo; plastificadas, sirven para la sesión 4."],
+      ["La moneda de la cursa de paper rodola de la graella.|La moneda de la carrera de papel rueda de la cuadrícula.",
+        "Feu servir una goma, un tap o una fitxa plana en lloc de la moneda.|Usad una goma, un tapón o una ficha plana en lugar de la moneda."]
+    ],
+    seg: [
+      "A la pausa activa, els «saltets» són petits i al lloc, amb espai entre alumnes.|En la pausa activa, los «saltitos» son pequeños y en el sitio, con espacio entre alumnos.",
+      "A la cursa de paper, els papers roten perquè tothom faci de pilot/a, navegant i jutge/ssa; cap paper és més important que un altre.|En la carrera de papel, los papeles rotan para que todos hagan de piloto, navegante y juez/a; ningún papel es más importante que otro."
+    ],
+    extra: [
+      "Fer que el globus llisqui fent un quadrat perfecte i torni al punt d'inici.|Hacer que el globo se deslice haciendo un cuadrado perfecto y vuelva al punto de inicio.",
+      "Fer dos globus que facin la cursa alhora, cadascun amb segons diferents, i predir qui arribarà primer.|Hacer dos globos que hagan la carrera a la vez, cada uno con segundos diferentes, y predecir quién llegará primero.",
+      "Calcular quants segons dura tota la cursa sumant els segons de cada «llisca».|Calcular cuántos segundos dura toda la carrera sumando los segundos de cada «desliza»."
+    ],
+    trans: [
+      "Matemàtiques: sumes i restes amb nombres negatius i multiplicació (10 vegades 5 = 50).|Matemáticas: sumas y restas con números negativos y multiplicación (10 veces 5 = 50).",
+      "Ciències: el temps i la velocitat (més segons per al mateix camí, més lent).|Ciencias: el tiempo y la velocidad (más segundos para el mismo camino, más lento).",
+      "Sessió següent: la direcció, rebotar a les vores i perseguir personatges.|Sesión siguiente: la dirección, rebotar en los bordes y perseguir personajes."
+    ],
       obj: [
         "L'alumne/a distingeix «ves a» (un salt) de «llisca» (un moviment suau que dura uns segons).|El alumno/a distingue «ve a» (un salto) de «desliza» (un movimiento suave que dura unos segundos).",
         "L'alumne/a programa un recorregut de diversos trams amb «llisca».|El alumno/a programa un recorrido de varios tramos con «desliza».",
@@ -1958,24 +2818,27 @@ Object.assign(TGUIDE, (() => {
         ["Esdeveniment|Evento", "Una cosa que passa (prémer una fletxa) i que fa començar un guió.|Algo que pasa (pulsar una flecha) y que hace empezar un guion."]
       ],
       mat: {
-        aula: [
-          "Un ordinador per alumne/a amb Numi Tech obert a la sessió «Lliscar i canviar x i y»|Un ordenador por alumno/a con Numi Tech abierto en la sesión «Deslizar y cambiar x e y»",
-          "Projector i la presentació d'aquesta sessió|Proyector y la presentación de esta sesión",
-          "Per grup de 3: un paquet de cartes de la cursa, la pista de la cursa impresa i una fitxa o moneda (el globus)|Por grupo de 3: un paquete de cartas de la carrera, la pista de la carrera impresa y una ficha o moneda (el globo)"
-        ],
-        imprimir: ["Cartes de la cursa de globus|Cartas de la carrera de globos", "La pista de la cursa (graella)|La pista de la carrera (cuadrícula)"],
-        prep: [
-          "Imprimir i retallar un paquet de cartes per grup; si es plastifiquen, serveixen per a la sessió 4.|Imprimir y recortar un paquete de cartas por grupo; si se plastifican, sirven para la sesión 4.",
-          "Imprimir una pista de la cursa per grup i marcar-hi la sortida a (-3, -2) i la meta a (3, 2).|Imprimir una pista de la carrera por grupo y marcar la salida en (-3, -2) y la meta en (3, 2).",
-          "Mirar abans les demostracions de les diapositives 4, 7 i 11.|Mirar antes las demostraciones de las diapositivas 4, 7 y 11.",
-          "Deixar els ordinadors engegats amb Numi Tech obert i la sessió iniciada.|Dejar los ordenadores encendidos con Numi Tech abierto y la sesión iniciada."
-        ]
-      },
+      aula: [
+        "Un ordinador per alumne/a amb Numi Tech obert a la sessió «Lliscar i canviar x i y»|Un ordenador por alumno/a con Numi Tech abierto en la sesión «Deslizar y cambiar x e y»",
+        "Projector i la presentació d'aquesta sessió|Proyector y la presentación de esta sesión",
+        "Per grup de 3: 1 paquet de cartes de la cursa (imprimible 1), 1 pista de la cursa (imprimible 2) i 1 fitxa plana o moneda (el globus)|Por grupo de 3: 1 paquete de cartas de la carrera (imprimible 1), 1 pista de la carrera (imprimible 2) y 1 ficha plana o moneda (el globo)"
+      ],
+      imprimir: [
+        "1 paquet de cartes de la cursa de globus per grup de 3 (imprimible 1)|1 paquete de cartas de la carrera de globos por grupo de 3 (imprimible 1)",
+        "1 pista de la cursa (graella) per grup de 3 (imprimible 2)|1 pista de la carrera (cuadrícula) por grupo de 3 (imprimible 2)"
+      ],
+      prep: [
+        "El dia abans (15 min): imprimir i retallar un paquet de cartes per grup; si es plastifiquen, serveixen per a la sessió 4.|El día antes (15 min): imprimir y recortar un paquete de cartas por grupo; si se plastifican, sirven para la sesión 4.",
+        "El dia abans (5 min): imprimir una pista per grup i marcar-hi la sortida a (-3, -2) i la meta a (3, 2).|El día antes (5 min): imprimir una pista por grupo y marcar la salida en (-3, -2) y la meta en (3, 2).",
+        "Mirar abans les demostracions de les diapositives 4, 7 i 11.|Mirar antes las demostraciones de las diapositivas 4, 7 y 11.",
+        "Deixar els ordinadors engegats amb Numi Tech obert i el perfil de cada alumne/a iniciat.|Dejar los ordenadores encendidos con Numi Tech abierto y el perfil de cada alumno/a iniciado."
+      ]
+    },
       plan: [
         { min: 5, t: "Benvinguda: la cursa de globus|Bienvenida: la carrera de globos", fase: 'inici',
           fa: "Recorda la sessió anterior amb la pregunta de repàs: un voluntari/a assenyala on és (0, 120). Presenta la missió: els globus no salten, volen a poc a poc. Pregunta com s'hauria de veure un globus que va d'un núvol a l'altre.|Recuerda la sesión anterior con la pregunta de repaso: un voluntario/a señala dónde está (0, 120). Presenta la misión: los globos no saltan, vuelan poco a poco. Pregunta cómo se debería ver un globo que va de una nube a otra.",
           diu: ["On és el punt x: 0, y: 120? I el (-150, -100)?|¿Dónde está el punto x: 0, y: 120? ¿Y el (-150, -100)?",
-            "Un globus que desapareix i apareix a l'altra banda… us sembla real?|Un globo que desaparece y aparece al otro lado… ¿os parece real?"],
+            "Un globus que desapareix i apareix a l'altra banda… us sembla real?|Un globo que desaparece y aparece al otro lado… ¿os parece real?", "Avui el bloc nou té un número més: els segons. Per a què creieu que serveix?|Hoy el bloque nuevo tiene un número más: los segundos. ¿Para qué creéis que sirve?"],
           slides: ['s1', 's2'], app: "Encara no: pantalles apagades o abaixades.|Todavía no: pantallas apagadas o bajadas.", org: "Tot el grup|Todo el grupo" },
         { min: 10, t: "Lliscar i canviar|Deslizar y cambiar", fase: 'teoria',
           fa: "Compara «ves a» i «llisca» amb l'animació i mostra el camí del globus tram a tram. Explica «canvia x en 10» com «un pas més des d'on ets» i fes la pregunta de l'ocell a x: 50 entre tots, amb la recta a la pissarra. Acaba amb la demostració de «posa x» contra «canvia x».|Compara «ve a» y «desliza» con la animación y muestra el camino del globo tramo a tramo. Explica «cambia x en 10» como «un paso más desde donde estás» y haz la pregunta del pájaro en x: 50 entre todos, con la recta en la pizarra. Termina con la demostración de «pon x» contra «cambia x».",
@@ -1992,7 +2855,7 @@ Object.assign(TGUIDE, (() => {
         { min: 15, t: "A l'ordinador: descobreix i investiga|En el ordenador: descubre e investiga", fase: 'ordinador',
           fa: "Cada alumne/a avança al seu ritme fins a la pausa activa. A les preguntes de càlcul, demana que facin la suma en veu alta abans de triar. A «El globus de paper» (activitat de casa), que toquin «Ho hem fet!»: és com la cursa que acabem de fer.|Cada alumno/a avanza a su ritmo hasta la pausa activa. En las preguntas de cálculo, pide que hagan la suma en voz alta antes de elegir. En «El globo de papel» (actividad de casa), que toquen «¡Lo hemos hecho!»: es como la carrera que acabamos de hacer.",
           diu: ["50 menys 20… quant fa? I el signe, què vol dir?|50 menos 20… ¿cuánto da? Y el signo, ¿qué quiere decir?",
-            "10 vegades 5: és una multiplicació amagada dins un bucle!|10 veces 5: ¡es una multiplicación escondida dentro de un bucle!"],
+            "10 vegades 5: és una multiplicació amagada dins un bucle!|10 veces 5: ¡es una multiplicación escondida dentro de un bucle!", "Al globus de les banderes, quants punts puja amb 12 vegades 20? (240.)|En el globo de las banderas, ¿cuántos puntos sube con 12 veces 20? (240.)"],
           slides: ['s10'], app: "De «Recorda» fins a la «Pausa activa»: el punt (0, 120), la història, les targetes de «Descobreix», la diferència entre «ves a» i «llisca», «El globus de paper» (ja fet), les dues preguntes de càlcul i el bloc que fa pujar el globus.|De «Recuerda» hasta la «Pausa activa»: el punto (0, 120), la historia, las tarjetas de «Descubre», la diferencia entre «ve a» y «desliza», «El globo de papel» (ya hecho), las dos preguntas de cálculo y el bloque que hace subir el globo.", org: "Individual|Individual" },
         { min: 10, t: "Reptes: pilots de globus|Retos: pilotos de globos", fase: 'ordinador',
           fa: "Fes la pausa activa tots junts. Després mostra la demostració de les fletxes i explica el botó «Comprova»: les fletxes es premen soles per comprovar el programa. Deixa'ls fer els cinc reptes. Al de l'ocell que no es mou, recorda la demostració de «posa x» i «canvia x».|Haced la pausa activa todos juntos. Después muestra la demostración de las flechas y explica el botón «Comprueba»: las flechas se pulsan solas para comprobar el programa. Deja que hagan los cinco retos. En el del pájaro que no se mueve, recuerda la demostración de «pon x» y «cambia x».",
@@ -2003,12 +2866,12 @@ Object.assign(TGUIDE, (() => {
         { min: 5, t: "Crea: la cursa de globus|Crea: la carrera de globos", fase: 'crea',
           fa: "Cada alumne/a dissenya el recorregut del seu globus per les tres estrelles fins a la bandera. Anima'ls a provar segons diferents: un tram ràpid, un de lent. Qui acabi, que ensenyi la cursa al company/a i compareu quin globus arriba primer.|Cada alumno/a diseña el recorrido de su globo por las tres estrellas hasta la bandera. Anímalos a probar segundos diferentes: un tramo rápido, uno lento. Quien termine, que enseñe la carrera al compañero/a y comparad qué globo llega primero.",
           diu: ["Quin tram vols que sigui el més ràpid? Quants segons hi poses?|¿Qué tramo quieres que sea el más rápido? ¿Cuántos segundos le pones?",
-            "Si sumeu tots els segons, sabreu quant tarda la cursa.|Si sumáis todos los segundos, sabréis cuánto tarda la carrera."],
+            "Si sumeu tots els segons, sabreu quant tarda la cursa.|Si sumáis todos los segundos, sabréis cuánto tarda la carrera.", "Primer pensa l'ordre de les estrelles: quin camí és més curt?|Primero piensa el orden de las estrellas: ¿qué camino es más corto?"],
           slides: ['s13'], app: "Pas «Crea»: La cursa de globus.|Paso «Crea»: La carrera de globos.", org: "Individual i després per parelles|Individual y después por parejas" },
         { min: 3, t: "Tancament i tiquet de sortida|Cierre y ticket de salida", fase: 'tancament',
-          fa: "Repassa les tres idees amb el resum. Deixa que responguin les preguntes finals de l'app i, a la porta, fes a cada alumne/a una pregunta del tiquet.|Repasa las tres ideas con el resumen. Deja que respondan las preguntas finales de la app y, en la puerta, haz a cada alumno/a una pregunta del ticket.",
+          fa: "Repassa les tres idees amb el resum (llisca, canvia x i y i les fletxes). Deixa que responguin les preguntes finals de l'app i com s'han sentit. A la porta, fes a cada alumne/a una pregunta del tiquet i anota qui encara confon «posa x» i «canvia x».|Repasa las tres ideas con el resumen (desliza, cambia x e y y las flechas). Deja que respondan las preguntas finales de la app y cómo se han sentido. En la puerta, haz a cada alumno/a una pregunta del ticket y anota quién todavía confunde «pon x» y «cambia x».",
           diu: ["Quin bloc farieu servir perquè un personatge vagi a poc a poc?|¿Qué bloque usaríais para que un personaje vaya poco a poco?",
-            "Si sóc a x: 20 i faig canvia x en -30, on sóc?|Si estoy en x: 20 y hago cambia x en -30, ¿dónde estoy?"],
+            "Si soc a x: 20 i faig canvia x en -30, on soc?|Si estoy en x: 20 y hago cambia x en -30, ¿dónde estoy?", "«Posa x» o «canvia x»: quin fa avançar dins un bucle? («Canvia x».)|«Pon x» o «cambia x»: ¿cuál hace avanzar dentro de un bucle? («Cambia x».)"],
           slides: ['s14', 's15'], app: "«Tancament»: les dues preguntes finals i com m'he sentit.|«Cierre»: las dos preguntas finales y cómo me he sentido.", org: "Tot el grup|Todo el grupo" }
       ],
       errors: [
@@ -2021,7 +2884,9 @@ Object.assign(TGUIDE, (() => {
         ["Fa un camí d'un sol tram i el globus no toca les estrelles.|Hace un camino de un solo tramo y el globo no toca las estrellas.",
           "Que dibuixi el camí amb el dit a la pantalla, parant a cada estrella: cada parada és un bloc «llisca».|Que dibuje el camino con el dedo en la pantalla, parando en cada estrella: cada parada es un bloque «desliza»."],
         ["Al repte de les fletxes toca «Comença» i espera que es moguin soles.|En el reto de las flechas toca «Empieza» y espera que se muevan solas.",
-          "Explica que amb «Comença» les fletxes les prem ell/a. Quan funcioni, «Comprova» les premerà soles.|Explica que con «Empieza» las flechas las pulsa él/ella. Cuando funcione, «Comprueba» las pulsará solas."]
+          "Explica que amb «Comença» les fletxes les prem ell/a. Quan funcioni, «Comprova» les premerà soles.|Explica que con «Empieza» las flechas las pulsa él/ella. Cuando funcione, «Comprueba» las pulsará solas."],
+      ["Al repte dels 2 blocs, posa «repeteix 150 vegades» amb «canvia y en 10» i el globus surt per dalt.|En el reto de los 2 bloques, pone «repite 150 veces» con «cambia y en 10» y el globo sale por arriba.",
+        "Pregunta: si a cada volta puja 10, quantes voltes calen per pujar 150? Que ho calculi abans de provar (15).|Pregunta: si en cada vuelta sube 10, ¿cuántas vueltas hacen falta para subir 150? Que lo calcule antes de probar (15)."]
       ],
       diff: {
         mes: "Repetir la cursa fent que el globus faci un zig-zag amb un bucle (canvia x i canvia y alternats) i que digui els segons totals de la cursa. A la cursa de paper, inventar cartes noves (canvia x en +3, ves a…).|Repetir la carrera haciendo que el globo haga un zigzag con un bucle (cambia x y cambia y alternados) y que diga los segundos totales de la carrera. En la carrera de papel, inventar cartas nuevas (cambia x en +3, ve a…).",
@@ -2033,7 +2898,10 @@ Object.assign(TGUIDE, (() => {
         rubric: [
           ["Ves a i llisca|Ve a y desliza", "Tria «llisca» quan vol un moviment suau i en controla els segons.|Elige «desliza» cuando quiere un movimiento suave y controla los segundos.", "Fa servir «llisca», però confon on van els segons i les coordenades.|Usa «desliza», pero confunde dónde van los segundos y las coordenadas."],
           ["Canviar x i y|Cambiar x e y", "Calcula on acabarà el personatge, també amb números negatius.|Calcula dónde terminará el personaje, también con números negativos.", "Fa servir «canvia» però s'equivoca amb els signes.|Usa «cambia» pero se equivoca con los signos."],
-          ["Les fletxes|Las flechas", "Programa les quatre fletxes amb el signe bo i les prova abans de comprovar.|Programa las cuatro flechas con el signo correcto y las prueba antes de comprobar.", "Programa algunes fletxes; les altres necessiten ajuda.|Programa algunas flechas; las otras necesitan ayuda."]
+          ["Les fletxes|Las flechas", "Programa les quatre fletxes amb el signe bo i les prova abans de comprovar.|Programa las cuatro flechas con el signo correcto y las prueba antes de comprobar.", "Programa algunes fletxes; les altres necessiten ajuda.|Programa algunas flechas; las otras necesitan ayuda."],
+        ["Calcular la posició|Calcular la posición",
+          "Calcula on acabarà el personatge després de diversos «canvia x» o «canvia y», també amb negatius.|Calcula dónde terminará el personaje después de varios «cambia x» o «cambia y», también con negativos.",
+          "Necessita provar-ho a l'app per saber on acabarà el personatge.|Necesita probarlo en la app para saber dónde terminará el personaje."]
         ]
       },
       casa: "A casa, amb el mòbil, podeu repetir la sessió i fer «El globus de paper»: amb una moneda i el full de la creu, una persona diu «canvia x en 2», «canvia y en -1»… i l'altra mou la moneda i endevina on acabarà.|En casa, con el móvil, podéis repetir la sesión y hacer «El globo de papel»: con una moneda y la hoja de la cruz, una persona dice «cambia x en 2», «cambia y en -1»… y la otra mueve la moneda y adivina dónde terminará.",
@@ -2060,13 +2928,13 @@ Object.assign(TGUIDE, (() => {
           nota: "A les preguntes de càlcul, que facin la suma en veu alta o amb el dit a la recta.|En las preguntas de cálculo, que hagan la suma en voz alta o con el dedo en la recta." },
         { id: 's11', k: 'media', t: 'Les fletxes i les coordenades|Las flechas y las coordenadas', x: "Cada fletxa té el seu guió amb un «canvia».|Cada flecha tiene su guion con un «cambia».", media: D_KEYS,
           nota: "Pregunta quina fletxa porta el número negatiu a la x i quina a la y. Explica el botó «Comprova».|Pregunta qué flecha lleva el número negativo en la x y cuál en la y. Explica el botón «Comprueba»." },
-        { id: 's12', k: 'repte', t: 'Reptes: pilots de globus|Retos: pilotos de globos', timer: 10, punts: ["1. Llisca fins a la bandera|1. Deslízate hasta la bandera", "2. El camí dels núvols|2. El camino de las nubes", "3. Les quatre fletxes|3. Las cuatro flechas", "4. El globus s'enlaira (2 blocs)|4. El globo despega (2 bloques)", "5. L'ocell que no es mou|5. El pájaro que no se mueve"],
+        { id: 's12', k: 'repte', t: 'Reptes: pilots de globus|Retos: pilotos de globos', timer: 10, punts: ["1-2. Llisca: la bandera i el camí dels núvols|1-2. Desliza: la bandera y el camino de las nubes", "3. Les quatre fletxes|3. Las cuatro flechas", "4. El globus s'enlaira (2 blocs)|4. El globo despega (2 bloques)", "5. L'ocell que no es mou|5. El pájaro que no se mueve"],
           nota: "Al repte 4, si algú s'encalla, pregunta quantes vegades cal sumar 10 per fer 150.|En el reto 4, si alguien se atasca, pregunta cuántas veces hay que sumar 10 para hacer 150." },
         { id: 's13', k: 'activitat', t: 'Crea: la cursa de globus|Crea: la carrera de globos', timer: 5, x: "Passa per les 3 estrelles amb «llisca» i acaba a la bandera. Tu tries els segons!|Pasa por las 3 estrellas con «desliza» y termina en la bandera. ¡Tú eliges los segundos!",
           nota: "Si queda temps, compareu dues curses: quina tarda més? Sumeu els segons de cada una.|Si queda tiempo, comparad dos carreras: ¿cuál tarda más? Sumad los segundos de cada una." },
         { id: 's14', k: 'resum', t: 'Què hem après avui|Qué hemos aprendido hoy', punts: ["«Llisca» va a poc a poc fins a un punt, en els segons que diguis.|«Desliza» va poco a poco hasta un punto, en los segundos que digas.", "«Canvia x en 10» suma a la x on ja és; amb -10, va a l'esquerra.|«Cambia x en 10» suma a la x donde ya está; con -10, va a la izquierda.", "Amb les fletxes i «canvia», mous el personatge per tot l'escenari.|Con las flechas y «cambia», mueves al personaje por todo el escenario."],
           nota: "Pregunta qui ha fet servir números negatius avui i per a què.|Pregunta quién ha usado números negativos hoy y para qué." },
-        { id: 's15', k: 'tiquet', t: 'Tiquet de sortida|Ticket de salida', punts: ["Quina diferència hi ha entre «ves a» i «llisca»?|¿Qué diferencia hay entre «ve a» y «desliza»?", "Si sóc a x: 20 i faig «canvia x en -30», on sóc?|Si estoy en x: 20 y hago «cambia x en -30», ¿dónde estoy?"],
+        { id: 's15', k: 'tiquet', t: 'Tiquet de sortida|Ticket de salida', punts: ["Quina diferència hi ha entre «ves a» i «llisca»?|¿Qué diferencia hay entre «ve a» y «desliza»?", "Si soc a x: 20 i faig «canvia x en -30», on soc?|Si estoy en x: 20 y hago «cambia x en -30», ¿dónde estoy?"],
           nota: "Resposta de la segona: x: -10. Anota qui encara dubta amb els negatius.|Respuesta de la segunda: x: -10. Anota quién todavía duda con los negativos." }
       ],
       print: [
@@ -2090,6 +2958,58 @@ Object.assign(TGUIDE, (() => {
     },
     /* ---------- Sessió 3 · Rebotar a les vores ---------- */
     'g4-3': {
+    intro: "A la festa de la platja, a més de saber on és cada personatge, cal saber cap on mira. L'alumnat repassa la direcció en graus (90 dreta, 0 amunt, -90 esquerra, 180 avall), fa rebotar una pilota a les vores amb «si toques la vora, rebota» dins un «per sempre» i descobreix que una direcció entremig (com 45) la fa anar en diagonal. També aprèn «apunta cap a», que fa mirar un personatge cap a un altre: dins un bucle, el cranc persegueix el peix vagi on vagi. La classe comença amb la brúixola humana i el billar de paper i acaba amb la festa de la platja programada.|En la fiesta de la playa, además de saber dónde está cada personaje, hay que saber hacia dónde mira. El alumnado repasa la dirección en grados (90 derecha, 0 arriba, -90 izquierda, 180 abajo), hace rebotar una pelota en los bordes con «si tocas el borde, rebota» dentro de un «por siempre» y descubre que una dirección intermedia (como 45) la hace ir en diagonal. También aprende «apunta hacia», que hace mirar a un personaje hacia otro: dentro de un bucle, el cangrejo persigue al pez vaya donde vaya. La clase empieza con la brújula humana y el billar de papel y termina con la fiesta de la playa programada.",
+    claus: [
+      "La direcció diu cap on mira el personatge; «mou-te» sempre avança cap allà.|La dirección dice hacia dónde mira el personaje; «muévete» siempre avanza hacia allí.",
+      "«Si toques la vora, rebota» va dins el «per sempre», després de «mou-te», perquè es comprovi a cada pas.|«Si tocas el borde, rebota» va dentro del «por siempre», después de «muévete», para que se compruebe en cada paso.",
+      "Una direcció entre 0 i 90 (com 45) fa anar el personatge en diagonal i rebotar per totes les vores.|Una dirección entre 0 y 90 (como 45) hace ir al personaje en diagonal y rebotar por todos los bordes.",
+      "«Apunta cap a» gira el personatge cap a un altre; dins un bucle amb «mou-te», el persegueix.|«Apunta hacia» gira al personaje hacia otro; dentro de un bucle con «muévete», lo persigue."
+    ],
+    prev: [
+      "Direccions i «apunta en direcció» (unitat 1, sessió 2, i unitat 3, sessió 2).|Direcciones y «apunta en dirección» (unidad 1, sesión 2, y unidad 3, sesión 2).",
+      "El bucle «per sempre» i «rebota» (unitat 2, sessió 2).|El bucle «por siempre» y «rebota» (unidad 2, sesión 2).",
+      "Coordenades x i y (sessions 1 i 2).|Coordenadas x e y (sesiones 1 y 2)."
+    ],
+    faq: [
+      ["Per què 0 és amunt i no a la dreta?|¿Por qué 0 es arriba y no a la derecha?",
+        "És com una brúixola: el 0 és el nord, a dalt. Girant cap a la dreta es compta 90, 180…|Es como una brújula: el 0 es el norte, arriba. Girando hacia la derecha se cuenta 90, 180…"],
+      ["Quina direcció faig servir per anar en diagonal?|¿Qué dirección uso para ir en diagonal?",
+        "Una entre 0 i 90, com 45 (amunt a la dreta). També funcionen 135, -45 o -135 per a les altres diagonals.|Una entre 0 y 90, como 45 (arriba a la derecha). También funcionan 135, -45 o -135 para las otras diagonales."],
+      ["Per què la pilota no gira el dibuix quan rebota?|¿Por qué la pelota no gira el dibujo cuando rebota?",
+        "Alguns objectes no giren el dibuix, però la direcció sí que canvia: ho veus perquè canvia de camí.|Algunos objetos no giran el dibujo, pero la dirección sí cambia: lo ves porque cambia de camino."],
+      ["El cranc no atrapa mai el peix. Què passa?|El cangrejo no atrapa nunca al pez. ¿Qué pasa?",
+        "Mira que «apunta cap al peix» sigui dins el «per sempre» i que el cranc vagi una mica més de pressa que el peix.|Mira que «apunta hacia el pez» esté dentro del «por siempre» y que el cangrejo vaya un poco más deprisa que el pez."],
+      ["Per què el repte del cranc té tres proves?|¿Por qué el reto del cangrejo tiene tres pruebas?",
+        "Perquè el peix comença en llocs diferents: així es comprova que el cranc el persegueix de veritat i no va a un punt fix.|Porque el pez empieza en sitios diferentes: así se comprueba que el cangrejo lo persigue de verdad y no va a un punto fijo."],
+      ["Si toca una cantonada, cap on rebota?|Si toca una esquina, ¿hacia dónde rebota?",
+        "Rebota de les dues vores alhora i torna enrere per la mateixa diagonal.|Rebota de los dos bordes a la vez y vuelve atrás por la misma diagonal."]
+    ],
+    tec: [
+      ["La pilota es queda enganxada a la vora.|La pelota se queda pegada al borde.",
+        "Comproveu que el «rebota» és dins el bucle i que el «mou-te» no és massa gran (6 a 8 va bé).|Comprobad que el «rebota» está dentro del bucle y que el «muévete» no es demasiado grande (6 a 8 va bien)."],
+      ["El repte del cranc tarda molt a acabar.|El reto del cangrejo tarda mucho en acabar.",
+        "Són tres proves seguides: deixeu-les acabar totes. Si el cranc és lent, que li posi «mou-te 4».|Son tres pruebas seguidas: dejad que terminen todas. Si el cangrejo es lento, que le ponga «muévete 4»."],
+      ["No es troba «apunta cap a» a la paleta.|No se encuentra «apunta hacia» en la paleta.",
+        "És un bloc de moviment (blau). Un cop posat, toqueu el nom per triar a qui apunta.|Es un bloque de movimiento (azul). Una vez puesto, tocad el nombre para elegir hacia quién apunta."],
+      ["Els fulls de les direccions no coincideixen amb la pissarra.|Las hojas de las direcciones no coinciden con la pizarra.",
+        "Poseu sempre el 0 a la paret de la pissarra, el 90 a la dreta, el 180 al fons i el -90 a l'esquerra.|Poned siempre el 0 en la pared de la pizarra, el 90 a la derecha, el 180 al fondo y el -90 a la izquierda."],
+      ["El billar de paper queda desordenat.|El billar de papel queda desordenado.",
+        "Que facin servir el regle i marquin cada rebot amb un punt abans de continuar la línia.|Que usen la regla y marquen cada rebote con un punto antes de continuar la línea."]
+    ],
+    seg: [
+      "A la brúixola humana i a la pausa activa, es camina a poc a poc i s'atura abans de la paret: no es rebota de veritat!|En la brújula humana y en la pausa activa, se camina despacio y se para antes de la pared: ¡no se rebota de verdad!",
+      "Compte amb els regles al billar de paper: s'utilitzen a la taula, no per assenyalar companys.|Cuidado con las reglas en el billar de papel: se usan en la mesa, no para señalar a compañeros."
+    ],
+    extra: [
+      "Fer que la pilota canviï de mida o digui «Boing!» quan toca la vora (amb un «digues» dins el bucle).|Hacer que la pelota cambie de tamaño o diga «¡Boing!» cuando toca el borde (con un «di» dentro del bucle).",
+      "Fer dos crancs que persegueixen el peix a velocitats diferents i veure qui l'atrapa primer.|Hacer dos cangrejos que persiguen al pez a velocidades diferentes y ver quién lo atrapa primero.",
+      "Dibuixar al billar de paper el camí d'una pilota en direcció 30 i comparar-lo amb el de 45.|Dibujar en el billar de papel el camino de una pelota en dirección 30 y compararlo con el de 45."
+    ],
+    trans: [
+      "Matemàtiques: angles (graus), diagonals i simetria del rebot (com un mirall).|Matemáticas: ángulos (grados), diagonales y simetría del rebote (como un espejo).",
+      "Educació física: el rebot d'una pilota contra la paret i l'orientació amb el cos.|Educación física: el rebote de una pelota contra la pared y la orientación con el cuerpo.",
+      "Sessió següent: el projecte del laberint, amb les fletxes, les coordenades i una regla de paret.|Sesión siguiente: el proyecto del laberinto, con las flechas, las coordenadas y una regla de pared."
+    ],
       obj: [
         "L'alumne/a interpreta la direcció en graus (0 amunt, 90 dreta, 180 avall, -90 esquerra) i la tria amb «apunta en direcció».|El alumno/a interpreta la dirección en grados (0 arriba, 90 derecha, 180 abajo, -90 izquierda) y la elige con «apunta en dirección».",
         "L'alumne/a fa rebotar un personatge posant «si toques la vora, rebota» dins un «per sempre», després de moure's.|El alumno/a hace rebotar a un personaje poniendo «si tocas el borde, rebota» dentro de un «por siempre», después de moverse.",
@@ -2110,25 +3030,28 @@ Object.assign(TGUIDE, (() => {
         ["Perseguir|Perseguir", "Apuntar cap a un altre personatge i avançar, una vegada i una altra.|Apuntar hacia otro personaje y avanzar, una y otra vez."]
       ],
       mat: {
-        aula: [
-          "Un ordinador per alumne/a amb Numi Tech obert a la sessió «Rebotar a les vores»|Un ordenador por alumno/a con Numi Tech abierto en la sesión «Rebotar en los bordes»",
-          "Projector i la presentació d'aquesta sessió|Proyector y la presentación de esta sesión",
-          "Un espai lliure a l'aula per a la brúixola humana i quatre fulls grans amb 0, 90, 180 i -90 per enganxar a les parets|Un espacio libre en el aula para la brújula humana y cuatro hojas grandes con 0, 90, 180 y -90 para pegar en las paredes",
-          "Per alumne/a: «El billar de paper», un regle i un llapis de color|Por alumno/a: «El billar de papel», una regla y un lápiz de color"
-        ],
-        imprimir: ["Cartes de direcció|Cartas de dirección", "El billar de paper (graella)|El billar de papel (cuadrícula)"],
-        prep: [
-          "Enganxar els fulls de 0, 90, 180 i -90 a les quatre parets de l'aula (el 0 a la paret de la pissarra).|Pegar las hojas de 0, 90, 180 y -90 en las cuatro paredes del aula (el 0 en la pared de la pizarra).",
-          "Imprimir un paquet de cartes de direcció per al professor/a i «El billar de paper» per a cada alumne/a.|Imprimir un paquete de cartas de dirección para el profesor/a y «El billar de papel» para cada alumno/a.",
-          "Mirar abans les demostracions de les diapositives 4, 5 i 7.|Mirar antes las demostraciones de las diapositivas 4, 5 y 7.",
-          "Deixar els ordinadors engegats amb Numi Tech obert i la sessió iniciada.|Dejar los ordenadores encendidos con Numi Tech abierto y la sesión iniciada."
-        ]
-      },
+      aula: [
+        "Un ordinador per alumne/a amb Numi Tech obert a la sessió «Rebotar a les vores»|Un ordenador por alumno/a con Numi Tech abierto en la sesión «Rebotar en los bordes»",
+        "Projector i la presentació d'aquesta sessió|Proyector y la presentación de esta sesión",
+        "4 fulls DIN A4 amb 0, 90, 180 i -90 per enganxar a les parets i un espai lliure per a la brúixola humana|4 hojas DIN A4 con 0, 90, 180 y -90 para pegar en las paredes y un espacio libre para la brújula humana",
+        "Per alumne/a: 1 «El billar de paper» (imprimible 2), 1 regle i 1 llapis de color|Por alumno/a: 1 «El billar de papel» (imprimible 2), 1 regla y 1 lápiz de color"
+      ],
+      imprimir: [
+        "1 paquet de cartes de direcció per al docent (imprimible 1)|1 paquete de cartas de dirección para el docente (imprimible 1)",
+        "1 «El billar de paper» per alumne/a (imprimible 2)|1 «El billar de papel» por alumno/a (imprimible 2)"
+      ],
+      prep: [
+        "El dia abans (10 min): imprimir el paquet de cartes de direcció i un «El billar de paper» per alumne/a.|El día antes (10 min): imprimir el paquete de cartas de dirección y un «El billar de papel» por alumno/a.",
+        "Abans de la classe (5 min): enganxar els fulls de 0, 90, 180 i -90 a les quatre parets (el 0 a la paret de la pissarra).|Antes de la clase (5 min): pegar las hojas de 0, 90, 180 y -90 en las cuatro paredes (el 0 en la pared de la pizarra).",
+        "Mirar abans les demostracions de les diapositives 4, 5 i 7.|Mirar antes las demostraciones de las diapositivas 4, 5 y 7.",
+        "Deixar els ordinadors engegats amb Numi Tech obert i el perfil de cada alumne/a iniciat.|Dejar los ordenadores encendidos con Numi Tech abierto y el perfil de cada alumno/a iniciado."
+      ]
+    },
       plan: [
         { min: 5, t: "Benvinguda: festa a la platja|Bienvenida: fiesta en la playa", fase: 'inici',
           fa: "Fes la pregunta de repàs sobre «canvia x». Presenta la festa de la platja: una pilota que rebota, un peix que neda i un cranc que el persegueix. Pregunta què necessitem saber d'un personatge, a més d'on és, per fer-lo moure.|Haz la pregunta de repaso sobre «cambia x». Presenta la fiesta de la playa: una pelota que rebota, un pez que nada y un cangrejo que lo persigue. Pregunta qué necesitamos saber de un personaje, además de dónde está, para hacerlo mover.",
           diu: ["Quin bloc mou 10 cap a la dreta, sigui on sigui el personatge?|¿Qué bloque mueve 10 hacia la derecha, esté donde esté el personaje?",
-            "Sabem on és en Numi. Però cap on mira?|Sabemos dónde está Numi. Pero ¿hacia dónde mira?"],
+            "Sabem on és en Numi. Però cap on mira?|Sabemos dónde está Numi. Pero ¿hacia dónde mira?", "Una pilota contra la paret: cap on surt després de tocar-la?|Una pelota contra la pared: ¿hacia dónde sale después de tocarla?"],
           slides: ['s1', 's2'], app: "Encara no: pantalles apagades o abaixades.|Todavía no: pantallas apagadas o bajadas.", org: "Tot el grup|Todo el grupo" },
         { min: 10, t: "La direcció i el rebot|La dirección y el rebote", fase: 'teoria',
           fa: "Explica la direcció en graus amb l'animació de la brúixola i la fletxa que dibuixa un rectangle. Mostra la pilota que rebota i, amb el «compte!», on va el bloc del rebot. Acaba amb el cranc que persegueix el peix: pregunta per què ha de tornar a apuntar a cada pas.|Explica la dirección en grados con la animación de la brújula y la flecha que dibuja un rectángulo. Muestra la pelota que rebota y, con el «¡cuidado!», dónde va el bloque del rebote. Termina con el cangrejo que persigue al pez: pregunta por qué tiene que volver a apuntar en cada paso.",
@@ -2145,7 +3068,7 @@ Object.assign(TGUIDE, (() => {
         { min: 15, t: "A l'ordinador: descobreix i investiga|En el ordenador: descubre e investiga", fase: 'ordinador',
           fa: "Cada alumne/a avança al seu ritme fins a la pausa activa. A la pregunta de la pilota que mira a la dreta, demana que la facin amb el dit a l'aire abans de triar. A «La brúixola humana» (activitat de casa), que toquin «Ho hem fet!».|Cada alumno/a avanza a su ritmo hasta la pausa activa. En la pregunta de la pelota que mira a la derecha, pide que la hagan con el dedo en el aire antes de elegir. En «La brújula humana» (actividad de casa), que toquen «¡Lo hemos hecho!».",
           diu: ["Fes amb el dit el camí de la pilota: on toca la vora?|Haz con el dedo el camino de la pelota: ¿dónde toca el borde?",
-            "Al programa del cranc, quin bloc el fa girar cap al peix?|En el programa del cangrejo, ¿qué bloque lo hace girar hacia el pez?"],
+            "Al programa del cranc, quin bloc el fa girar cap al peix?|En el programa del cangrejo, ¿qué bloque lo hace girar hacia el pez?", "Si la pilota va en direcció 45, cap on va? (Amunt a la dreta, en diagonal.)|Si la pelota va en dirección 45, ¿hacia dónde va? (Arriba a la derecha, en diagonal.)"],
           slides: ['s10'], app: "De «Recorda» fins a la «Pausa activa»: la pregunta de «canvia x», la història, les targetes de «Descobreix», la direcció 180, «La brúixola humana» (ja fet), la pilota que mira a la dreta i el bloc que fa mirar el cranc cap al peix.|De «Recuerda» hasta la «Pausa activa»: la pregunta de «cambia x», la historia, las tarjetas de «Descubre», la dirección 180, «La brújula humana» (ya hecho), la pelota que mira a la derecha y el bloque que hace mirar al cangrejo hacia el pez.", org: "Individual|Individual" },
         { min: 10, t: "Reptes: pilotes, peixos i crancs|Retos: pelotas, peces y cangrejos", fase: 'ordinador',
           fa: "Fes la pausa activa tots junts. Després fes que la classe predigui què farà la pilota de la diapositiva i deixa'ls fer els cinc reptes. Al del cranc, explica que hi ha tres proves amb el peix en llocs diferents: per això no serveix anar a un punt fix.|Haced la pausa activa todos juntos. Después haz que la clase prediga qué hará la pelota de la diapositiva y deja que hagan los cinco retos. En el del cangrejo, explica que hay tres pruebas con el pez en sitios diferentes: por eso no sirve ir a un punto fijo.",
@@ -2156,12 +3079,12 @@ Object.assign(TGUIDE, (() => {
         { min: 5, t: "Crea: la festa de la platja|Crea: la fiesta de la playa", fase: 'crea',
           fa: "Cada alumne/a programa dos personatges: la pilota que rebota en diagonal i el cranc que la persegueix. Recorda que es tria el personatge a dalt de l'editor. Qui acabi, que hi afegeixi el seu toc i l'ensenyi al company/a.|Cada alumno/a programa dos personajes: la pelota que rebota en diagonal y el cangrejo que la persigue. Recuerda que se elige el personaje arriba del editor. Quien termine, que añada su toque y lo enseñe al compañero/a.",
           diu: ["Tens dos personatges per programar: mira la pestanya de cadascun.|Tienes dos personajes para programar: mira la pestaña de cada uno.",
-            "Què passa si el cranc és més ràpid que la pilota? I si és més lent?|¿Qué pasa si el cangrejo es más rápido que la pelota? ¿Y si es más lento?"],
+            "Què passa si el cranc és més ràpid que la pilota? I si és més lent?|¿Qué pasa si el cangrejo es más rápido que la pelota? ¿Y si es más lento?", "El teu toc: què pot dir el cranc quan atrapa la pilota?|Tu toque: ¿qué puede decir el cangrejo cuando atrapa la pelota?"],
           slides: ['s13'], app: "Pas «Crea»: La festa de la platja.|Paso «Crea»: La fiesta de la playa.", org: "Individual i després per parelles|Individual y después por parejas" },
         { min: 3, t: "Tancament i tiquet de sortida|Cierre y ticket de salida", fase: 'tancament',
-          fa: "Repassa les tres idees amb el resum. Deixa que responguin les preguntes finals de l'app i, a la porta, fes a cada alumne/a una pregunta del tiquet.|Repasa las tres ideas con el resumen. Deja que respondan las preguntas finales de la app y, en la puerta, haz a cada alumno/a una pregunta del ticket.",
+          fa: "Repassa les tres idees amb el resum (direcció, rebot i perseguir) i fes una última ronda de brúixola amb tota la classe. Deixa que responguin les preguntes finals de l'app i com s'han sentit. A la porta, fes a cada alumne/a una pregunta del tiquet i anuncia el projecte del laberint.|Repasa las tres ideas con el resumen (dirección, rebote y perseguir) y haz una última ronda de brújula con toda la clase. Deja que respondan las preguntas finales de la app y cómo se han sentido. En la puerta, haz a cada alumno/a una pregunta del ticket y anuncia el proyecto del laberinto.",
           diu: ["Quina direcció és avall?|¿Qué dirección es abajo?",
-            "On va el bloc del rebot perquè funcioni sempre?|¿Dónde va el bloque del rebote para que funcione siempre?"],
+            "On va el bloc del rebot perquè funcioni sempre?|¿Dónde va el bloque del rebote para que funcione siempre?", "Quin bloc fa que el cranc miri cap al peix? («Apunta cap a».)|¿Qué bloque hace que el cangrejo mire hacia el pez? («Apunta hacia».)", "La setmana vinent: el nostre primer videojoc, un laberint!|La semana que viene: ¡nuestro primer videojuego, un laberinto!"],
           slides: ['s14', 's15'], app: "«Tancament»: les dues preguntes finals i com m'he sentit.|«Cierre»: las dos preguntas finales y cómo me he sentido.", org: "Tot el grup|Todo el grupo" }
       ],
       errors: [
@@ -2174,7 +3097,9 @@ Object.assign(TGUIDE, (() => {
         ["Per fer la diagonal, prova direccions molt grans (300, 1000).|Para hacer la diagonal, prueba direcciones muy grandes (300, 1000).",
           "Recorda la brúixola: entre amunt (0) i la dreta (90) hi ha la diagonal. Quin número hi ha entre 0 i 90?|Recuerda la brújula: entre arriba (0) y la derecha (90) está la diagonal. ¿Qué número hay entre 0 y 90?"],
         ["Al projecte programa només un personatge i no troba on es programa l'altre.|En el proyecto programa solo un personaje y no encuentra dónde se programa el otro.",
-          "Ensenya-li les pestanyes de dalt de l'editor: cada personatge té els seus guions.|Enséñale las pestañas de arriba del editor: cada personaje tiene sus guiones."]
+          "Ensenya-li les pestanyes de dalt de l'editor: cada personatge té els seus guions.|Enséñale las pestañas de arriba del editor: cada personaje tiene sus guiones."],
+      ["Al peix que mou la cua, posa l'espera dins el bucle i el peix va massa lent per arribar a les vores.|En el pez que mueve la cola, pone la espera dentro del bucle y el pez va demasiado lento para llegar a los bordes.",
+        "Pregunta: el repte demana esperar? Que provi sense espera, o amb una de molt curta, i miri quant avança.|Pregunta: ¿el reto pide esperar? Que pruebe sin espera, o con una muy corta, y mire cuánto avanza."]
       ],
       diff: {
         mes: "Afegir a la festa un tercer moviment: un ocell que rebota amunt i avall canviant de vestit. Al billar de paper, provar una direcció diferent (per exemple, sortir de dalt a l'esquerra) i predir en quina cantonada acabarà.|Añadir a la fiesta un tercer movimiento: un pájaro que rebota arriba y abajo cambiando de disfraz. En el billar de papel, probar una dirección diferente (por ejemplo, salir de arriba a la izquierda) y predecir en qué esquina terminará.",
@@ -2186,7 +3111,10 @@ Object.assign(TGUIDE, (() => {
         rubric: [
           ["La direcció|La dirección", "Fa servir 0, 90, 180 i -90 sense dubtar i tria una diagonal entre dues direccions.|Usa 0, 90, 180 y -90 sin dudar y elige una diagonal entre dos direcciones.", "Sap 90 i -90, però dubta amb 0 i 180.|Sabe 90 y -90, pero duda con 0 y 180."],
           ["El rebot|El rebote", "Col·loca el rebot dins el bucle, després de moure's, i explica per què.|Coloca el rebote dentro del bucle, después de moverse, y explica por qué.", "Fa rebotar la pilota després de diverses proves, sense saber explicar-ho.|Hace rebotar la pelota después de varias pruebas, sin saber explicarlo."],
-          ["Perseguir|Perseguir", "Programa una persecució que funciona en totes les proves.|Programa una persecución que funciona en todas las pruebas.", "La persecució funciona en una prova, però no en totes.|La persecución funciona en una prueba, pero no en todas."]
+          ["Perseguir|Perseguir", "Programa una persecució que funciona en totes les proves.|Programa una persecución que funciona en todas las pruebas.", "La persecució funciona en una prova, però no en totes.|La persecución funciona en una prueba, pero no en todas."],
+        ["Diagonal|Diagonal",
+          "Tria una direcció entre 0 i 90 perquè la pilota toqui les quatre vores i explica per què.|Elige una dirección entre 0 y 90 para que la pelota toque los cuatro bordes y explica por qué.",
+          "Troba la diagonal provant números a l'atzar, sense saber explicar-ho.|Encuentra la diagonal probando números al azar, sin saber explicarlo."]
         ]
       },
       casa: "A casa, amb el mòbil, podeu repetir la sessió i fer «La brúixola humana»: decidiu quina paret és el 0 i doneu-vos ordres de direcció i de passos per torns.|En casa, con el móvil, podéis repetir la sesión y hacer «La brújula humana»: decidid qué pared es el 0 y daos órdenes de dirección y de pasos por turnos.",
@@ -2201,7 +3129,7 @@ Object.assign(TGUIDE, (() => {
           nota: "Abans de cada gir, pregunta quin número de direcció vindrà ara.|Antes de cada giro, pregunta qué número de dirección vendrá ahora." },
         { id: 's5', k: 'media', t: 'Si toques la vora, rebota|Si tocas el borde, rebota', x: "La pilota surt en direcció 45 i rebota per sempre.|La pelota sale en dirección 45 y rebota por siempre.", media: D_BALL,
           nota: "Fes notar que, en tocar la vora, la pilota canvia la direcció com un mirall: si pujava, ara baixa.|Haz notar que, al tocar el borde, la pelota cambia la dirección como un espejo: si subía, ahora baja." },
-        { id: 's6', k: 'anim', t: 'Compte! El rebot va dins el bucle|¡Cuidado! El rebote va dentro del bucle', anim: 'g4bounce', x: "Per sempre: mou-te, si toques la vora, rebota.|Por siempre: muévete, si tocas el borde, rebota.",
+        { id: 's6', k: 'anim', t: 'Compte! El rebot, dins el bucle|¡Cuidado! El rebote, dentro del bucle', anim: 'g4bounce', x: "Per sempre: mou-te, si toques la vora, rebota.|Por siempre: muévete, si tocas el borde, rebota.",
           nota: "Escriu a la pissarra les dues versions (rebot fora i dins del bucle) i pregunta quina funciona i per què.|Escribe en la pizarra las dos versiones (rebote fuera y dentro del bucle) y pregunta cuál funciona y por qué." },
         { id: 's7', k: 'media', t: 'El cranc persegueix el peix|El cangrejo persigue al pez', x: "Per sempre: apunta cap al peix, mou-te 3 passos.|Por siempre: apunta hacia el pez, muévete 3 pasos.", media: D_CHASE,
           nota: "Pregunta què passaria si el cranc apuntés el peix només una vegada, al principi.|Pregunta qué pasaría si el cangrejo apuntara al pez solo una vez, al principio." },
@@ -2213,7 +3141,7 @@ Object.assign(TGUIDE, (() => {
           nota: "A la pregunta de la pilota, que facin el camí amb el dit abans de triar.|En la pregunta de la pelota, que hagan el camino con el dedo antes de elegir." },
         { id: 's11', k: 'pregunta', t: 'Què farà la pilota?|¿Qué hará la pelota?', x: "La pilota mira a la dreta (90) i fa: per sempre, mou-te 5 passos, si toques la vora, rebota.|La pelota mira a la derecha (90) y hace: por siempre, muévete 5 pasos, si tocas el borde, rebota.",
           nota: "Resposta: va i torna de dreta a esquerra. Pregunta què hauríem de canviar perquè anés amunt i avall (apuntar a 0).|Respuesta: va y vuelve de derecha a izquierda. Pregunta qué tendríamos que cambiar para que fuera arriba y abajo (apuntar a 0)." },
-        { id: 's12', k: 'repte', t: 'Reptes de la platja|Retos de la playa', timer: 10, punts: ["1. La pilota que va i torna|1. La pelota que va y vuelve", "2. La pilota que s'escapa|2. La pelota que se escapa", "3. Les quatre vores (diagonal)|3. Los cuatro bordes (diagonal)", "4. El cranc i el peix (3 proves)|4. El cangrejo y el pez (3 pruebas)", "5. El peix que mou la cua|5. El pez que mueve la cola"],
+        { id: 's12', k: 'repte', t: 'Reptes de la platja|Retos de la playa', timer: 10, punts: ["1-2. La pilota que va i torna i la que s'escapa|1-2. La pelota que va y vuelve y la que se escapa", "3. Les quatre vores (diagonal)|3. Los cuatro bordes (diagonal)", "4. El cranc i el peix (3 proves)|4. El cangrejo y el pez (3 pruebas)", "5. El peix que mou la cua|5. El pez que mueve la cola"],
           nota: "Al repte 4, recorda que es comprova tres vegades amb el peix en llocs diferents.|En el reto 4, recuerda que se comprueba tres veces con el pez en sitios diferentes." },
         { id: 's13', k: 'activitat', t: 'Crea: la festa de la platja|Crea: la fiesta de la playa', timer: 5, x: "La pilota rebota en diagonal i el cranc la persegueix. Després, hi afegeixes el teu toc.|La pelota rebota en diagonal y el cangrejo la persigue. Después, añades tu toque.",
           nota: "Recorda les pestanyes dels personatges a dalt de l'editor.|Recuerda las pestañas de los personajes arriba del editor." },
@@ -2243,6 +3171,59 @@ Object.assign(TGUIDE, (() => {
     },
     /* ---------- Sessió 4 · Projecte: el laberint ---------- */
     'g4-4': {
+    intro: "Sessió de projecte que tanca la primera meitat del curs: l'alumnat crea el seu primer videojoc, el laberint del far. Hi combina el que ha après: les fletxes amb «canvia x» i «canvia y», les coordenades de l'inici i de la sortida i una regla nova, «espera fins que toca el color blau» dins un «per sempre», que torna en Numi a l'inici quan toca una paret. Treballen com un equip de videojocs: pla en paper, programar el moviment, afegir les regles, provar i demanar a algú que el provi. La classe comença amb què té un videojoc, segueix amb el disseny d'un laberint en paper per parelles i acaba amb el videojoc programat i provat per un company/a.|Sesión de proyecto que cierra la primera mitad del curso: el alumnado crea su primer videojuego, el laberinto del faro. Combina lo que ha aprendido: las flechas con «cambia x» y «cambia y», las coordenadas del inicio y de la salida y una regla nueva, «espera hasta que toca el color azul» dentro de un «por siempre», que devuelve a Numi al inicio cuando toca una pared. Trabajan como un equipo de videojuegos: plan en papel, programar el movimiento, añadir las reglas, probar y pedir a alguien que lo pruebe. La clase empieza con qué tiene un videojuego, sigue con el diseño de un laberinto en papel por parejas y termina con el videojuego programado y probado por un compañero/a.",
+    claus: [
+      "Un videojoc té un personatge, uns controls, unes regles i un objectiu.|Un videojuego tiene un personaje, unos controles, unas reglas y un objetivo.",
+      "Les fletxes mouen en Numi amb «canvia x» i «canvia y» (esquerra i avall, amb números negatius).|Las flechas mueven a Numi con «cambia x» y «cambia y» (izquierda y abajo, con números negativos).",
+      "«Espera fins que toca el color blau» s'atura fins que en Numi toca una paret; després, «ves a» el torna a l'inici.|«Espera hasta que toca el color azul» se para hasta que Numi toca una pared; después, «ve a» lo devuelve al inicio.",
+      "La regla va dins un «per sempre» perquè vigili tota l'estona, no només la primera vegada.|La regla va dentro de un «por siempre» para que vigile todo el rato, no solo la primera vez."
+    ],
+    prev: [
+      "Coordenades i «ves a» (sessió 1) i «canvia x / canvia y» amb les fletxes (sessió 2).|Coordenadas y «ve a» (sesión 1) y «cambia x / cambia y» con las flechas (sesión 2).",
+      "Guions de tecla i «Comprova» (unitat 3).|Guiones de tecla y «Comprueba» (unidad 3).",
+      "El bucle «per sempre» (unitat 2).|El bucle «por siempre» (unidad 2)."
+    ],
+    faq: [
+      ["Per què en Numi torna a l'inici si encara no ha tocat la paret?|¿Por qué Numi vuelve al inicio si aún no ha tocado la pared?",
+        "En Numi té una mida: si una part del dibuix toca el blau, compta com a paret. Fes-lo petit (mida 50) i ves amb compte als passadissos.|Numi tiene un tamaño: si una parte del dibujo toca el azul, cuenta como pared. Hazlo pequeño (tamaño 50) y ve con cuidado por los pasillos."],
+      ["Què passa si toco el vermell?|¿Qué pasa si toco el rojo?",
+        "De moment, res: és una trampa sense regla. Si vols, afegeix-hi una segona regla amb el color vermell.|De momento, nada: es una trampa sin regla. Si quieres, añade una segunda regla con el color rojo."],
+      ["Com sé que he arribat a la sortida?|¿Cómo sé que he llegado a la salida?",
+        "Quan en Numi toca la bandera de la sortida verda, la bandera diu «Has sortit del laberint!».|Cuando Numi toca la bandera de la salida verde, la bandera dice «¡Has salido del laberinto!»."],
+      ["Per què «Comprova» porta en Numi contra la paret?|¿Por qué «Comprueba» lleva a Numi contra la pared?",
+        "Per comprovar la regla: si toca la paret, ha de tornar a l'inici. Després la fletxa avall comprova que es mou bé.|Para comprobar la regla: si toca la pared, tiene que volver al inicio. Después la flecha abajo comprueba que se mueve bien."],
+      ["Puc fer el meu propi laberint a l'app?|¿Puedo hacer mi propio laberinto en la app?",
+        "A l'app el laberint ja està dibuixat, però el teu laberint de paper et serveix de pla per a altres projectes més endavant.|En la app el laberinto ya está dibujado, pero tu laberinto de papel te sirve de plan para otros proyectos más adelante."],
+      ["Ja és un videojoc de veritat?|¿Ya es un videojuego de verdad?",
+        "Sí: té personatge, controls, una regla i un objectiu. Més endavant hi afegirem punts, vides i nivells.|Sí: tiene personaje, controles, una regla y un objetivo. Más adelante añadiremos puntos, vidas y niveles."]
+    ],
+    tec: [
+      ["Les fletxes del teclat fan baixar la pàgina en lloc de moure en Numi.|Las flechas del teclado hacen bajar la página en lugar de mover a Numi.",
+        "Que faci un clic a l'escenari abans de provar-lo, o que faci servir els botons de pantalla.|Que haga un clic en el escenario antes de probarlo; o que use los botones de pantalla."],
+      ["En Numi travessa les parets.|Numi atraviesa las paredes.",
+        "Falta el «ves a x: -175 y: 100» després de l'«espera fins que», o la regla no és dins el «per sempre».|Falta el «ve a x: -175 y: 100» después del «espera hasta que», o la regla no está dentro del «por siempre»."],
+      ["En començar, en Numi ja surt dins una paret.|Al empezar, Numi ya sale dentro de una pared.",
+        "El «ves a» de la regla té coordenades equivocades: l'inici és (-175, 100).|El «ve a» de la regla tiene coordenadas equivocadas: el inicio es (-175, 100)."],
+      ["«Comprova» falla i no se sap per què.|«Comprueba» falla y no se sabe por qué.",
+        "Llegiu el missatge: si diu que en Numi no ha arribat a la zona, revisa la fletxa dreta i la regla; si diu que no acaba a baix, la fletxa avall.|Leed el mensaje: si dice que Numi no ha llegado a la zona, revisa la flecha derecha y la regla; si dice que no acaba abajo, la flecha abajo."],
+      ["Al canvi d'ordinador, algú toca el projecte de l'altre.|En el cambio de ordenador, alguien toca el proyecto del otro.",
+        "Abans de canviar, que tothom desi el projecte; qui prova només fa servir les fletxes i no canvia blocs.|Antes de cambiar, que todos guarden el proyecto; quien prueba solo usa las flechas y no cambia bloques."]
+    ],
+    seg: [
+      "Als comentaris de «Prova i millora», primer dues coses bones i després una idea, sempre sobre el videojoc i no sobre la persona.|En los comentarios de «Prueba y mejora», primero dos cosas buenas y después una idea, siempre sobre el videojuego y no sobre la persona.",
+      "Si un laberint frustra algú, recordeu que equivocar-se i tornar a l'inici és part del videojoc; feu una pausa si cal.|Si un laberinto frustra a alguien, recordad que equivocarse y volver al inicio es parte del videojuego; haced una pausa si hace falta.",
+      "Temps de pantalla: el videojoc es prova a classe uns minuts; a casa, ensenyar-lo a la família una estona.|Tiempo de pantalla: el videojuego se prueba en clase unos minutos; en casa, enseñarlo a la familia un rato."
+    ],
+    extra: [
+      "Afegir una segona regla per a la trampa vermella (per exemple, que en Numi digui «Ai!» i torni a l'inici).|Añadir una segunda regla para la trampa roja (por ejemplo, que Numi diga «¡Ay!» y vuelva al inicio).",
+      "Fer que en Numi canviï de vestit quan toca una paret i torni al vestit normal en començar de nou.|Hacer que Numi cambie de disfraz cuando toca una pared y vuelva al disfraz normal al empezar de nuevo.",
+      "Escriure les instruccions del videojoc en tres frases perquè un company/a el pugui provar sense ajuda.|Escribir las instrucciones del videojuego en tres frases para que un compañero/a lo pueda probar sin ayuda."
+    ],
+    trans: [
+      "Unitats 1-4: personatges, animació, interacció i coordenades s'ajunten en el primer videojoc.|Unidades 1-4: personajes, animación, interacción y coordenadas se juntan en el primer videojuego.",
+      "Matemàtiques: coordenades, recorreguts en una graella i nombres negatius.|Matemáticas: coordenadas, recorridos en una cuadrícula y números negativos.",
+      "Unitat 5: el bloc «si» per prendre decisions (si toca la paret… si no…).|Unidad 5: el bloque «si» para tomar decisiones (si toca la pared… si no…)."
+    ],
       obj: [
         "L'alumne/a planifica un videojoc senzill: personatge, controls, regles i objectiu.|El alumno/a planifica un videojuego sencillo: personaje, controles, reglas y objetivo.",
         "L'alumne/a programa les quatre fletxes amb «canvia x» i «canvia y» i fa servir les coordenades per situar l'inici i la sortida.|El alumno/a programa las cuatro flechas con «cambia x» y «cambia y» y usa las coordenadas para situar el inicio y la salida.",
@@ -2263,25 +3244,28 @@ Object.assign(TGUIDE, (() => {
         ["Provar|Probar", "Fer servir el programa per trobar errors i idees per millorar-lo.|Usar el programa para encontrar errores e ideas para mejorarlo."]
       ],
       mat: {
-        aula: [
-          "Un ordinador per alumne/a amb Numi Tech obert a la sessió «Projecte: el laberint»|Un ordenador por alumno/a con Numi Tech abierto en la sesión «Proyecto: el laberinto»",
-          "Projector i la presentació d'aquesta sessió|Proyector y la presentación de esta sesión",
-          "Per parella: «Dissenya el teu laberint», llapis de colors (blau, verd i vermell) i un llapis normal|Por pareja: «Diseña tu laberinto», lápices de colores (azul, verde y rojo) y un lápiz normal",
-          "Una còpia de «Prova i millora» per alumne/a|Una copia de «Prueba y mejora» por alumno/a"
-        ],
-        imprimir: ["Dissenya el teu laberint (graella)|Diseña tu laberinto (cuadrícula)", "Prova i millora (fitxa de comentaris)|Prueba y mejora (ficha de comentarios)"],
-        prep: [
-          "Imprimir «Dissenya el teu laberint» (una per parella) i «Prova i millora» (una per alumne/a).|Imprimir «Diseña tu laberinto» (una por pareja) y «Prueba y mejora» (una por alumno/a).",
-          "Si es van plastificar, tenir a mà les cartes de la cursa de la sessió 2: serveixen per moure's pel laberint de paper.|Si se plastificaron, tener a mano las cartas de la carrera de la sesión 2: sirven para moverse por el laberinto de papel.",
-          "Provar abans el repte de les fletxes amb el botó «Comprova» per saber què veuran.|Probar antes el reto de las flechas con el botón «Comprueba» para saber qué verán.",
-          "Deixar els ordinadors engegats amb Numi Tech obert i la sessió iniciada.|Dejar los ordenadores encendidos con Numi Tech abierto y la sesión iniciada."
-        ]
-      },
+      aula: [
+        "Un ordinador per alumne/a amb Numi Tech obert a la sessió «Projecte: el laberint»|Un ordenador por alumno/a con Numi Tech abierto en la sesión «Proyecto: el laberinto»",
+        "Projector i la presentació d'aquesta sessió|Proyector y la presentación de esta sesión",
+        "Per parella: 1 «Dissenya el teu laberint» (imprimible 1), llapis de colors (blau, verd i vermell) i 1 llapis normal|Por pareja: 1 «Diseña tu laberinto» (imprimible 1), lápices de colores (azul, verde y rojo) y 1 lápiz normal",
+        "1 fitxa «Prova i millora» per alumne/a (imprimible 2)|1 ficha «Prueba y mejora» por alumno/a (imprimible 2)"
+      ],
+      imprimir: [
+        "1 «Dissenya el teu laberint» (graella) per parella (imprimible 1)|1 «Diseña tu laberinto» (cuadrícula) por pareja (imprimible 1)",
+        "1 fitxa «Prova i millora» per alumne/a (imprimible 2)|1 ficha «Prueba y mejora» por alumno/a (imprimible 2)"
+      ],
+      prep: [
+        "El dia abans (10 min): imprimir «Dissenya el teu laberint» (una per parella) i «Prova i millora» (una per alumne/a).|El día antes (10 min): imprimir «Diseña tu laberinto» (una por pareja) y «Prueba y mejora» (una por alumno/a).",
+        "Si es van plastificar, tenir a mà les cartes de la cursa de la sessió 2: serveixen per moure's pel laberint de paper.|Si se plastificaron, tener a mano las cartas de la carrera de la sesión 2: sirven para moverse por el laberinto de papel.",
+        "Provar abans el repte de les fletxes amb el botó «Comprova» per saber què veuran.|Probar antes el reto de las flechas con el botón «Comprueba» para saber qué verán.",
+        "Deixar els ordinadors engegats amb Numi Tech obert i el perfil de cada alumne/a iniciat.|Dejar los ordenadores encendidos con Numi Tech abierto y el perfil de cada alumno/a iniciado."
+      ]
+    },
       plan: [
         { min: 5, t: "Benvinguda: el laberint del far|Bienvenida: el laberinto del faro", fase: 'inici',
           fa: "Presenta el projecte: avui creareu el vostre primer videojoc. Pregunta què té qualsevol videojoc que coneguin (un personatge, uns controls, unes regles, un objectiu) i apunta-ho a la pissarra en quatre columnes. Ho farem servir per planificar el laberint.|Presenta el proyecto: hoy crearéis vuestro primer videojuego. Pregunta qué tiene cualquier videojuego que conozcan (un personaje, unos controles, unas reglas, un objetivo) y apúntalo en la pizarra en cuatro columnas. Lo usaremos para planificar el laberinto.",
           diu: ["Què té un videojoc? Qui es mou, amb què el movem, què no podem fer i què hem d'aconseguir?|¿Qué tiene un videojuego? ¿Quién se mueve, con qué lo movemos, qué no podemos hacer y qué tenemos que conseguir?",
-            "Avui no farem servir el videojoc d'algú altre: el crearem nosaltres.|Hoy no usaremos el videojuego de otra persona: lo crearemos nosotros."],
+            "Avui no farem servir el videojoc d'algú altre: el crearem nosaltres.|Hoy no usaremos el videojuego de otra persona: lo crearemos nosotros.", "Quin és l'objectiu del nostre laberint? (Arribar a la sortida verda.)|¿Cuál es el objetivo de nuestro laberinto? (Llegar a la salida verde.)"],
           slides: ['s1', 's2'], app: "Encara no: pantalles apagades o abaixades.|Todavía no: pantallas apagadas o bajadas.", org: "Tot el grup|Todo el grupo" },
         { min: 8, t: "El pla i les regles|El plan y las reglas", fase: 'teoria',
           fa: "Mostra el mapa del laberint amb les coordenades de l'inici i la sortida. Explica la regla de la paret amb l'animació i la demostració: en Numi nota el color blau i torna a l'inici. Acaba amb el «compte!»: sense «per sempre», la regla només funciona una vegada.|Muestra el mapa del laberinto con las coordenadas del inicio y la salida. Explica la regla de la pared con la animación y la demostración: Numi nota el color azul y vuelve al inicio. Termina con el «¡cuidado!»: sin «por siempre», la regla solo funciona una vez.",
@@ -2310,7 +3294,7 @@ Object.assign(TGUIDE, (() => {
         { min: 5, t: "Tancament: què hem creat?|Cierre: ¿qué hemos creado?", fase: 'tancament',
           fa: "Repassa el que heu fet a la unitat amb el resum. Deixa que responguin les preguntes finals de l'app. Fes el tiquet de sortida i explica què vindrà a la unitat següent: el bloc «si» per prendre decisions.|Repasa lo que habéis hecho en la unidad con el resumen. Deja que respondan las preguntas finales de la app. Haz el ticket de salida y explica qué vendrá en la unidad siguiente: el bloque «si» para tomar decisiones.",
           diu: ["Què heu après en aquesta unitat que heu fet servir al laberint?|¿Qué habéis aprendido en esta unidad que habéis usado en el laberinto?",
-            "Quin comentari del company/a us ha ajudat més?|¿Qué comentario del compañero/a os ha ayudado más?"],
+            "Quin comentari del company/a us ha ajudat més?|¿Qué comentario del compañero/a os ha ayudado más?", "La setmana vinent: el bloc «si», per prendre decisions!|La semana que viene: ¡el bloque «si», para tomar decisiones!"],
           slides: ['s13', 's14', 's15'], app: "«Tancament»: les dues preguntes finals i com m'he sentit.|«Cierre»: las dos preguntas finales y cómo me he sentido.", org: "Tot el grup|Todo el grupo" }
       ],
       errors: [
@@ -2323,7 +3307,9 @@ Object.assign(TGUIDE, (() => {
         ["Les fletxes amunt i avall mouen en Numi de costat (posa «canvia x» en lloc de «canvia y»).|Las flechas arriba y abajo mueven a Numi de lado (pone «cambia x» en lugar de «cambia y»).",
           "Que premi cada fletxa i digui en veu alta cap on va. Quina coordenada ha de canviar per pujar?|Que pulse cada flecha y diga en voz alta hacia dónde va. ¿Qué coordenada tiene que cambiar para subir?"],
         ["Quan rep un comentari de millora, s'enfada o vol esborrar-ho tot.|Cuando recibe un comentario de mejora, se enfada o quiere borrarlo todo.",
-          "Recorda que tots els videojocs es proven i es milloren moltes vegades. Que triï un sol canvi petit i el provi.|Recuerda que todos los videojuegos se prueban y se mejoran muchas veces. Que elija un solo cambio pequeño y lo pruebe."]
+          "Recorda que tots els videojocs es proven i es milloren moltes vegades. Que triï un sol canvi petit i el provi.|Recuerda que todos los videojuegos se prueban y se mejoran muchas veces. Que elija un solo cambio pequeño y lo pruebe."],
+      ["Al camí automàtic, llisca en diagonal d'un revolt a l'altre i en Numi trepitja una paret.|En el camino automático, se desliza en diagonal de una curva a otra y Numi pisa una pared.",
+        "Que segueixi el camí amb el dit al mapa: als passadissos, cada tram canvia només la x o només la y.|Que siga el camino con el dedo en el mapa: en los pasillos, cada tramo cambia solo la x o solo la y."]
       ],
       diff: {
         mes: "Fer el laberint més difícil: canviar la mida d'en Numi, fer les fletxes més ràpides (canvia en 15) o afegir que en Numi digui una frase quan torna a l'inici. Al laberint de paper, afegir-hi una segona trampa i una regla nova.|Hacer el laberinto más difícil: cambiar el tamaño de Numi, hacer las flechas más rápidas (cambia en 15) o añadir que Numi diga una frase cuando vuelve al inicio. En el laberinto de papel, añadir una segunda trampa y una regla nueva.",
@@ -2335,7 +3321,10 @@ Object.assign(TGUIDE, (() => {
         rubric: [
           ["Planificació|Planificación", "Dibuixa un laberint amb camí, situa l'inici i la sortida amb coordenades i explica les regles.|Dibuja un laberinto con camino, sitúa el inicio y la salida con coordenadas y explica las reglas.", "Dibuixa el laberint, però li costa escriure les coordenades o explicar les regles.|Dibuja el laberinto, pero le cuesta escribir las coordenadas o explicar las reglas."],
           ["Programació del videojoc|Programación del videojuego", "Les quatre fletxes i la regla de la paret funcionen; sap explicar per què cal el «per sempre».|Las cuatro flechas y la regla de la pared funcionan; sabe explicar por qué hace falta el «por siempre».", "Les fletxes funcionen, però la regla de la paret necessita ajuda.|Las flechas funcionan, pero la regla de la pared necesita ayuda."],
-          ["Provar i comentar|Probar y comentar", "Prova el videojoc del company/a i dona comentaris concrets, amables i útils.|Prueba el videojuego del compañero/a y da comentarios concretos, amables y útiles.", "Dona comentaris generals («m'agrada») sense idees concretes.|Da comentarios generales («me gusta») sin ideas concretas."]
+          ["Provar i comentar|Probar y comentar", "Prova el videojoc del company/a i dona comentaris concrets, amables i útils.|Prueba el videojuego del compañero/a y da comentarios concretos, amables y útiles.", "Dona comentaris generals («m'agrada») sense idees concretes.|Da comentarios generales («me gusta») sin ideas concretas."],
+        ["La regla de la paret|La regla de la pared",
+          "Programa la regla amb «per sempre», «espera fins que toca el blau» i «ves a» l'inici, i explica què fa cada bloc.|Programa la regla con «por siempre», «espera hasta que toca el azul» y «ve a» el inicio, y explica qué hace cada bloque.",
+          "Completa la regla amb la pista, però no sap explicar per què va dins el «per sempre».|Completa la regla con la pista, pero no sabe explicar por qué va dentro del «por siempre»."]
         ]
       },
       casa: "A casa, amb el mòbil, podeu obrir el laberint als «Projectes» i ensenyar-lo a la família: que provin d'arribar a la sortida i que us diguin què hi afegirien.|En casa, con el móvil, podéis abrir el laberinto en «Proyectos» y enseñarlo a la familia: que intenten llegar a la salida y que os digan qué añadirían.",
@@ -2395,6 +3384,50 @@ Object.assign(TGUIDE, (() => {
 Object.assign(TGUIDE, {
   /* ---------- Sessió 1 · Si toca… ---------- */
   'g5-1': {
+    intro: "Primera sessió de condicions. L'alumnat descobreix que una condició és una pregunta de sí o no i que el bloc «si» només fa els blocs de dins quan la resposta és sí. Ho aplica a la condició més útil per als videojocs: «toca…» (un altre personatge o la vora). La idea clau és que el «si» ha d'anar dins del «per sempre» per vigilar tota l'estona. La classe va de la vida diària (regles «si…, llavors…») a l'escenari, amb una activitat de targetes sense pantalla al mig.|Primera sesión de condiciones. El alumnado descubre que una condición es una pregunta de sí o no y que el bloque «si» solo hace los bloques de dentro cuando la respuesta es sí. Lo aplica a la condición más útil para los videojuegos: «toca…» (otro personaje o el borde). La idea clave es que el «si» tiene que ir dentro del «por siempre» para vigilar todo el rato. La clase va de la vida diaria (reglas «si…, entonces…») al escenario, con una actividad de tarjetas sin pantalla en medio.",
+    claus: [
+      "Una condició és una pregunta que només es respon amb sí o no.|Una condición es una pregunta que solo se responde con sí o no.",
+      "El «si» fa els blocs del seu forat només amb el sí; amb el no, se'ls salta.|El «si» hace los bloques de su hueco solo con el sí; con el no, se los salta.",
+      "«Toca…» pregunta si el personatge xoca amb un altre personatge, amb la vora o amb el ratolí.|«Toca…» pregunta si el personaje choca con otro personaje, con el borde o con el ratón.",
+      "Un «si» pregunta una sola vegada; dins del «per sempre» torna a preguntar a cada volta.|Un «si» pregunta una sola vez; dentro del «por siempre» vuelve a preguntar en cada vuelta.",
+      "Un programa ha de funcionar a totes les proves: no sap on són les coses, ho ha de preguntar.|Un programa tiene que funcionar en todas las pruebas: no sabe dónde están las cosas, lo tiene que preguntar."
+    ],
+    prev: [
+      "Moure amb «canvia y en…» i saber que la y negativa és a baix (unitat 4).|Mover con «cambia y en…» y saber que la y negativa está abajo (unidad 4).",
+      "El bucle «per sempre» i el bloc «si toques la vora, rebota» (unitats 2 i 4).|El bucle «por siempre» y el bloque «si tocas el borde, rebota» (unidades 2 y 4).",
+      "Els esdeveniments: «quan comença» i «quan premo una tecla» (unitat 3).|Los eventos: «al empezar» y «al pulsar una tecla» (unidad 3)."
+    ],
+    faq: [
+      ["Per què la poma no s'amaga si ja toca la cistella?|¿Por qué la manzana no se esconde si ya toca la cesta?", "Mira on és el «si»: si és fora del «per sempre», només ha preguntat una vegada, al principi, quan la poma encara era a dalt. Posa'l dins del bucle.|Mira dónde está el «si»: si está fuera del «por siempre», solo ha preguntado una vez, al principio, cuando la manzana aún estaba arriba. Ponlo dentro del bucle."],
+      ["Què vol dir «la vora»?|¿Qué quiere decir «el borde»?", "És el marc de l'escenari, les quatre línies que el tanquen. «Toca la vora» és sí quan el personatge arriba a qualsevol costat.|Es el marco del escenario, las cuatro líneas que lo cierran. «Toca el borde» es sí cuando el personaje llega a cualquier lado."],
+      ["Puc posar dos «si» dins del mateix bucle?|¿Puedo poner dos «si» dentro del mismo bucle?", "Sí! Cada «si» fa la seva pregunta, un darrere l'altre, a cada volta. Ho faràs al repte de la poma que torna a dalt.|¡Sí! Cada «si» hace su pregunta, uno detrás del otro, en cada vuelta. Lo harás en el reto de la manzana que vuelve arriba."],
+      ["Per què hi ha una prova 2 si a la prova 1 ja funcionava?|¿Por qué hay una prueba 2 si en la prueba 1 ya funcionaba?", "Perquè a la prova 2 les coses són en un altre lloc. Si el programa funciona a totes dues, vol dir que de veritat pregunta i no que ha tingut sort.|Porque en la prueba 2 las cosas están en otro sitio. Si el programa funciona en las dos, quiere decir que de verdad pregunta y no que ha tenido suerte."],
+      ["El «si» i el «rebota» són el mateix?|¿El «si» y el «rebota» son lo mismo?", "El «si toques la vora, rebota» porta un «si» amagat a dins que sempre fa el mateix: rebotar. Amb el teu «si» tu decideixes què passa.|El «si tocas el borde, rebota» lleva un «si» escondido dentro que siempre hace lo mismo: rebotar. Con tu «si» tú decides qué pasa."],
+      ["Quantes vegades pregunta el «si» dins del «per sempre»?|¿Cuántas veces pregunta el «si» dentro del «por siempre»?", "A cada volta del bucle: unes 30 vegades cada segon. Per això no se li escapa cap xoc.|En cada vuelta del bucle: unas 30 veces cada segundo. Por eso no se le escapa ningún choque."]
+    ],
+    tec: [
+      ["L'escenari no es mou en tocar «Comença».|El escenario no se mueve al tocar «Empieza».", "Comproveu que el programa té blocs sota «Quan comença». Si no, toqueu el botó de tornar a començar (la fletxa rodona) i proveu-ho de nou.|Comprobad que el programa tiene bloques bajo «Al empezar». Si no, tocad el botón de volver a empezar (la flecha redonda) y probadlo de nuevo."],
+      ["Les fletxes del teclat no mouen el personatge.|Las flechas del teclado no mueven al personaje.", "Cal tocar primer l'escenari (perquè la pàgina «escolti» el teclat) o fer servir els botons de fletxes de sota l'escenari, que també funcionen al mòbil.|Hay que tocar primero el escenario (para que la página «escuche» el teclado) o usar los botones de flechas de debajo del escenario, que también funcionan en el móvil."],
+      ["Un alumne/a s'encalla i ha esborrat blocs que no tocava.|Un alumno/a se atasca y ha borrado bloques que no tocaba.", "Després de dos intents apareix el botó «Una pista» i, després, «Mostra una solució». També es pot sortir del pas i tornar-hi: el repte torna a començar.|Después de dos intentos aparece el botón «Una pista» y, después, «Muestra una solución». También se puede salir del paso y volver a entrar: el reto vuelve a empezar."],
+      ["No troben com canviar «la cistella» per «la vora» dins del «si».|No encuentran cómo cambiar «la cesta» por «el borde» dentro del «si».", "Les paraules en negreta dels blocs són botons: en tocar-les surt la llista de personatges, la vora i el ratolí.|Las palabras en negrita de los bloques son botones: al tocarlas sale la lista de personajes, el borde y el ratón."],
+      ["El bloc nou va a parar fora del «per sempre».|El bloque nuevo acaba fuera del «por siempre».", "Els blocs nous van on hi ha la línia «els blocs nous van aquí». Toqueu el forat de dins del bucle abans d'afegir el bloc.|Los bloques nuevos van donde está la línea «los bloques nuevos van aquí». Tocad el hueco de dentro del bucle antes de añadir el bloque."],
+      ["Les targetes impreses surten massa petites.|Las tarjetas impresas salen demasiado pequeñas.", "Imprimiu-les al 100 % (sense «ajusta a la pàgina») i en paper una mica gruixut, o en DIN A3 per a grups grans.|Imprimidlas al 100 % (sin «ajustar a la página») y en papel algo grueso, o en DIN A3 para grupos grandes."]
+    ],
+    seg: [
+      "Pantalles: recorda la pausa activa a mitja sessió i que mirin lluny uns segons quan acabin cada repte.|Pantallas: recuerda la pausa activa a media sesión y que miren a lo lejos unos segundos cuando terminen cada reto.",
+      "Activitat de targetes: les accions són de moure's al lloc. Apartar cadires i motxilles abans de començar.|Actividad de tarjetas: las acciones son de moverse en el sitio. Apartar sillas y mochilas antes de empezar.",
+      "Algunes targetes parlen de la família o de mascotes: ningú no ha d'explicar res que no vulgui; qui no compleix la condició simplement es queda quiet/a.|Algunas tarjetas hablan de la familia o de mascotas: nadie tiene que explicar nada que no quiera; quien no cumple la condición simplemente se queda quieto/a."
+    ],
+    extra: [
+      "Fer que el gat de la demo digui una frase diferent quan toca la vora i quan toca la roca (dos «si» dins del mateix bucle).|Hacer que el gato de la demo diga una frase distinta cuando toca el borde y cuando toca la roca (dos «si» dentro del mismo bucle).",
+      "Afegir a la poma la regla «si toca el ratolí, fes un so» i provar-la passant el ratolí (o el dit) per sobre.|Añadir a la manzana la regla «si toca el ratón, haz un sonido» y probarla pasando el ratón (o el dedo) por encima.",
+      "Escriure tres regles «si…, llavors…» de l'escola (el timbre, la porta automàtica, el llum del lavabo) i dibuixar-les com a blocs.|Escribir tres reglas «si…, entonces…» de la escuela (el timbre, la puerta automática, la luz del baño) y dibujarlas como bloques."
+    ],
+    trans: [
+      "Ve de la unitat 4: el «si toques la vora, rebota» ja era una condició amagada. Ara la poden fer ells mateixos.|Viene de la unidad 4: el «si tocas el borde, rebota» ya era una condición escondida. Ahora la pueden hacer ellos mismos.",
+      "Sessió següent: la condició «toca el color» i el «si… si no».|Sesión siguiente: la condición «toca el color» y el «si… si no».",
+      "Llengua: frases condicionals amb «si…» i la diferència entre una pregunta tancada (sí o no) i una d'oberta.|Lengua: frases condicionales con «si…» y la diferencia entre una pregunta cerrada (sí o no) y una abierta."
+    ],
     obj: [
       "L'alumne/a explica què és una condició: una pregunta que només es pot respondre amb sí o no.|El alumno/a explica qué es una condición: una pregunta que solo se puede responder con sí o no.",
       "L'alumne/a explica que el bloc «si» fa els blocs de dins només quan la resposta és sí.|El alumno/a explica que el bloque «si» hace los bloques de dentro solo cuando la respuesta es sí.",
@@ -2423,40 +3456,74 @@ Object.assign(TGUIDE, {
       ],
       imprimir: ["Targetes «Si… llavors…»|Tarjetas «Si… entonces…»"],
       prep: [
-        "Imprimir i retallar les targetes. Separar-les en dos munts: condicions i accions.|Imprimir y recortar las tarjetas. Separarlas en dos montones: condiciones y acciones.",
-        "Deixar els ordinadors engegats amb la sessió de cada alumne/a iniciada.|Dejar los ordenadores encendidos con la sesión de cada alumno/a iniciada.",
-        "Provar abans la demo de la diapositiva 7 (el gat i la roca) per saber què passarà.|Probar antes la demo de la diapositiva 7 (el gato y la roca) para saber qué pasará.",
-        "Fer el repte «Arregla l'error» per veure com s'esborra un bloc i com es torna a posar dins del bucle.|Hacer el reto «Arregla el error» para ver cómo se borra un bloque y cómo se vuelve a poner dentro del bucle."
+        "El dia abans (15 min): imprimir i retallar les targetes (un paquet per grup de 4) i separar-les en dos munts: condicions i accions.|El día antes (15 min): imprimir y recortar las tarjetas (un paquete por grupo de 4) y separarlas en dos montones: condiciones y acciones.",
+        "El dia abans (10 min): fer tu els quatre reptes, sobretot «Arregla l'error», per veure com s'esborra un bloc i com es torna a posar dins del bucle.|El día antes (10 min): hacer tú los cuatro retos, sobre todo «Arregla el error», para ver cómo se borra un bloque y cómo se vuelve a poner dentro del bucle.",
+        "Abans de classe (5 min): obrir la presentació i provar la demo del gat i la roca (diapositiva 7).|Antes de clase (5 min): abrir la presentación y probar la demo del gato y la roca (diapositiva 7).",
+        "Abans de classe (5 min): deixar els ordinadors engegats amb la sessió de cada alumne/a iniciada.|Antes de clase (5 min): dejar los ordenadores encendidos con la sesión de cada alumno/a iniciada."
       ]
     },
     plan: [
       { min: 5, t: "Inici: la Festa de la Fruita|Inicio: la Fiesta de la Fruta", fase: 'inici',
         fa: "Presenta la missió de la unitat: un videojoc per a la Festa de la Fruita. Fes les preguntes de repàs sobre coordenades i tecles i recull respostes. Planteja el problema: com sap la cistella que una poma l'ha tocada?|Presenta la misión de la unidad: un videojuego para la Fiesta de la Fruta. Haz las preguntas de repaso sobre coordenadas y teclas y recoge respuestas. Plantea el problema: ¿cómo sabe la cesta que una manzana la ha tocado?",
-        diu: ["Quin bloc fa baixar la poma?|¿Qué bloque hace bajar la manzana?", "Com pot saber un personatge que ha xocat amb un altre?|¿Cómo puede saber un personaje que ha chocado con otro?"],
+        diu: [
+          "Recordeu la unitat passada: quin bloc fa baixar la poma? (canvia y en -5)|¿Recordáis la unidad pasada? ¿Qué bloque hace bajar la manzana? (cambia y en -5)",
+          "Quan es fan els blocs de «Quan premo la tecla espai»? (només quan algú prem l'espai)|¿Cuándo se hacen los bloques de «Al pulsar la tecla espacio»? (solo cuando alguien pulsa el espacio)",
+          "Al nostre videojoc cauran fruites i una cistella les atraparà. Com sabrà la cistella que l'ha tocada una poma?|En nuestro videojuego caerán frutas y una cesta las atrapará. ¿Cómo sabrá la cesta que la ha tocado una manzana?",
+          "No cal que ho sapigueu encara: al final de la classe ho sabreu explicar.|No hace falta que lo sepáis todavía: al final de la clase lo sabréis explicar."
+        ],
         slides: ['s1', 's2', 's3'], app: "Encara no: pantalles abaixades.|Todavía no: pantallas bajadas.", org: "Tot el grup|Todo el grupo" },
       { min: 10, t: "Condicions i el bloc «si»|Condiciones y el bloque «si»", fase: 'teoria',
         fa: "Explica què és una condició amb exemples de la vida diària i demana'n més. Mostra l'animació del bloc «si»: amb el no se salta els blocs; amb el sí, els fa. Projecta la demo del gat i la roca i, abans, demana què creuen que passarà. Acaba amb l'error típic: el «si» fora del bucle.|Explica qué es una condición con ejemplos de la vida diaria y pide más. Muestra la animación del bloque «si»: con el no se salta los bloques; con el sí, los hace. Proyecta la demo del gato y la roca y, antes, pregunta qué creen que pasará. Termina con el error típico: el «si» fuera del bucle.",
-        diu: ["Feu-me una pregunta que es pugui respondre només amb sí o no.|Hacedme una pregunta que se pueda responder solo con sí o no.", "Què fa el «si» quan la resposta és no?|¿Qué hace el «si» cuando la respuesta es no?", "Si el «si» és fora del bucle, quantes vegades pregunta?|Si el «si» está fuera del bucle, ¿cuántas veces pregunta?"],
+        diu: [
+          "Feu-me una pregunta que es pugui respondre només amb sí o no. («Plou?», «Tens gana?»)|Hacedme una pregunta que se pueda responder solo con sí o no. («¿Llueve?», «¿Tienes hambre?»)",
+          "«De quin color és la teva motxilla?» És una condició? (no: té moltes respostes)|«¿De qué color es tu mochila?» ¿Es una condición? (no: tiene muchas respuestas)",
+          "Què fa el «si» quan la resposta és no? (se salta els blocs de dins)|¿Qué hace el «si» cuando la respuesta es no? (se salta los bloques de dentro)",
+          "Abans d'engegar la demo: què farà el gat quan toqui la roca? (dirà «Ai!» i girarà)|Antes de poner la demo: ¿qué hará el gato cuando toque la roca? (dirá «¡Ay!» y girará)",
+          "Si el «si» és fora del bucle, quantes vegades pregunta? (una sola vegada, al principi)|Si el «si» está fuera del bucle, ¿cuántas veces pregunta? (una sola vez, al principio)"
+        ],
         slides: ['s4', 's5', 's6', 's7', 's8', 's9'], app: "Encara no: atenció a la projecció.|Todavía no: atención a la proyección.", org: "Tot el grup|Todo el grupo" },
       { min: 11, t: "Desconnectat: «Si… llavors…»|Desconectado: «Si… entonces…»", fase: 'desconnectat',
         fa: "Grups de 4. Una persona treu una targeta de condició i una d'acció i les llegeix com una regla: «Si portes sabatilles, fes un salt». Qui compleix la condició fa l'acció; qui no, es queda quiet. Després de tres rondes, cada grup inventa dues regles noves i les proposa a la classe. Remarca: si la resposta és no, no es fa res.|Grupos de 4. Una persona saca una tarjeta de condición y una de acción y las lee como una regla: «Si llevas zapatillas, da un salto». Quien cumple la condición hace la acción; quien no, se queda quieto. Después de tres rondas, cada grupo inventa dos reglas nuevas y las propone a la clase. Remarca: si la respuesta es no, no se hace nada.",
-        diu: ["Primer la pregunta: et passa a tu? Sí o no?|Primero la pregunta: ¿te pasa a ti? ¿Sí o no?", "Si la resposta és no, què fas? Res! Com el bloc «si».|Si la respuesta es no, ¿qué haces? ¡Nada! Como el bloque «si»."],
+        diu: [
+          "Primer la pregunta: et passa a tu? Sí o no?|Primero la pregunta: ¿te pasa a ti? ¿Sí o no?",
+          "Si la resposta és no, què fas? (res, com el bloc «si»)|Si la respuesta es no, ¿qué haces? (nada, como el bloque «si»)",
+          "Qui ha fet l'acció en aquesta ronda? Per què tu no? (perquè la meva resposta era no)|¿Quién ha hecho la acción en esta ronda? ¿Por qué tú no? (porque mi respuesta era no)",
+          "Inventeu una regla en què la resposta sigui sí per a tothom. I una que sigui no per a tothom!|Inventad una regla en la que la respuesta sea sí para todos. ¡Y una que sea no para todos!"
+        ],
         slides: ['s10', 's11'], app: "Cap: activitat sense pantalla.|Ninguna: actividad sin pantalla.", org: "Grups de 4|Grupos de 4" },
       { min: 13, t: "A l'ordinador: descobreix i prova|En el ordenador: descubre y prueba", fase: 'ordinador',
         fa: "Cada alumne/a fa la missió, les targetes, l'ordenació de la poma i la predicció del cranc. Al pas «Caçadors de condicions», que toquin «Ara no»: és per fer a casa. Abans de tocar «Comença» al cranc, demana que diguin en veu alta què passarà.|Cada alumno/a hace la misión, las tarjetas, la ordenación de la manzana y la predicción del cangrejo. En el paso «Cazadores de condiciones», que toquen «Ahora no»: es para hacer en casa. Antes de tocar «Empieza» en el cangrejo, pide que digan en voz alta qué pasará.",
-        diu: ["Llegeix el programa abans d'executar-lo: què creus que farà?|Lee el programa antes de ejecutarlo: ¿qué crees que hará?", "Quin bloc fa la pregunta?|¿Qué bloque hace la pregunta?"],
+        diu: [
+          "Llegeix el programa del cranc abans d'executar-lo: què creus que farà? (caminarà i saludarà el peix quan el toqui)|Lee el programa del cangrejo antes de ejecutarlo: ¿qué crees que hará? (caminará y saludará al pez cuando lo toque)",
+          "Ho has endevinat? Què ha passat diferent del que pensaves?|¿Lo has adivinado? ¿Qué ha pasado distinto de lo que pensabas?",
+          "Quin bloc fa la pregunta a la pilota? (el «si toca la vora»)|¿Qué bloque hace la pregunta en la pelota? (el «si toca el borde»)",
+          "Ordena la poma: què fa primer, baixar o preguntar? (baixa i després pregunta, i torna a començar)|Ordena la manzana: ¿qué hace primero, bajar o preguntar? (baja y después pregunta, y vuelve a empezar)"
+        ],
         slides: ['s12'], app: "De «La missió» fins a «Investiga»: històries, targetes, ordenar, la predicció i l'escenari del cranc i tocar el bloc que pregunta.|De «La misión» hasta «Investiga»: historias, tarjetas, ordenar, la predicción y el escenario del cangrejo y tocar el bloque que pregunta.", org: "Individual|Individual" },
       { min: 13, t: "Pausa i reptes|Pausa y retos", fase: 'ordinador',
         fa: "Feu la pausa activa junts. Després programa amb la classe el primer repte (la poma que s'amaga) a la pantalla gran i deixa'ls fer la resta. Recorda que hi ha dues proves: el programa ha de funcionar a totes dues. Qui acabi ajuda amb preguntes.|Haced la pausa activa juntos. Después programa con la clase el primer reto (la manzana que se esconde) en la pantalla grande y déjales hacer el resto. Recuerda que hay dos pruebas: el programa tiene que funcionar en las dos. Quien termine ayuda con preguntas.",
-        diu: ["On va el «si»: dins o fora del «per sempre»?|¿Dónde va el «si»: dentro o fuera del «por siempre»?", "Per què a la prova 2 la poma no s'ha d'amagar?|¿Por qué en la prueba 2 la manzana no se tiene que esconder?"],
+        diu: [
+          "On va el «si»: dins o fora del «per sempre»? (dins)|¿Dónde va el «si»: dentro o fuera del «por siempre»? (dentro)",
+          "Per què a la prova 2 la poma no s'ha d'amagar? (perquè no toca la cistella: és en un altre lloc)|¿Por qué en la prueba 2 la manzana no se tiene que esconder? (porque no toca la cesta: está en otro sitio)",
+          "A l'ocell: quina condició fas servir per saber que ha arribat al final? (toca la vora)|En el pájaro: ¿qué condición usas para saber que ha llegado al final? (toca el borde)",
+          "Al repte de l'error: quan pregunta la poma si toca la cistella? (només al principi: per això no funciona)|En el reto del error: ¿cuándo pregunta la manzana si toca la cesta? (solo al principio: por eso no funciona)"
+        ],
         slides: ['s13', 's14'], app: "«Pausa activa» i els quatre reptes: atrapa la poma, l'ocell i la vora, la poma que torna i arregla l'error.|«Pausa activa» y los cuatro retos: atrapa la manzana, el pájaro y el borde, la manzana que vuelve y arregla el error.", org: "Tot el grup i després individual|Todo el grupo y después individual" },
       { min: 5, t: "Crea: la meva primera condició|Crea: mi primera condición", fase: 'crea',
         fa: "Cada alumne/a decideix com reacciona en Numi quan toca el regal. En parelles, s'ensenyen el programa i l'altre/a endevina la reacció abans d'executar-lo.|Cada alumno/a decide cómo reacciona Numi cuando toca el regalo. Por parejas, se enseñan el programa y el otro/a adivina la reacción antes de ejecutarlo.",
-        diu: ["Quina reacció has triat? Ningú no l'ha de fer igual.|¿Qué reacción has elegido? Nadie la tiene que hacer igual."],
+        diu: [
+          "Quina reacció has triat per a en Numi? Ningú no l'ha de fer igual.|¿Qué reacción has elegido para Numi? Nadie la tiene que hacer igual.",
+          "Ensenya el programa al company/a: pot endevinar què passarà abans d'executar-lo?|Enseña el programa al compañero/a: ¿puede adivinar qué pasará antes de ejecutarlo?",
+          "On és el teu «si»: dins del bucle? Si no, en Numi no se n'adonarà!|¿Dónde está tu «si»: dentro del bucle? Si no, ¡Numi no se dará cuenta!"
+        ],
         slides: ['s15'], app: "Pas «Crea»: La meva primera condició.|Paso «Crea»: Mi primera condición.", org: "Individual i en parelles|Individual y por parejas" },
       { min: 3, t: "Tancament|Cierre", fase: 'tancament',
         fa: "Repassa les tres idees amb el resum, deixa que facin les preguntes finals i el «com m'he sentit», i fes el tiquet de sortida a la porta.|Repasa las tres ideas con el resumen, deja que hagan las preguntas finales y el «cómo me he sentido», y haz el ticket de salida en la puerta.",
-        diu: ["Digues una condició que hagis fet servir avui.|Di una condición que hayas usado hoy."],
+        diu: [
+          "Digues una condició que hagis fet servir avui. («toca la cistella», «toca la vora»)|Di una condición que hayas usado hoy. («toca la cesta», «toca el borde»)",
+          "Ara ja ho sabeu: com sap la cistella que l'ha tocada una poma? (la poma pregunta «toco la cistella?» a cada volta)|Ahora ya lo sabéis: ¿cómo sabe la cesta que la ha tocado una manzana? (la manzana pregunta «¿toco la cesta?» en cada vuelta)",
+          "El pròxim dia, els colors del fons també faran preguntes!|¡El próximo día, los colores del fondo también harán preguntas!"
+        ],
         slides: ['s16', 's17'], app: "«Tancament»: les dues preguntes finals i com m'he sentit.|«Cierre»: las dos preguntas finales y cómo me he sentido.", org: "Tot el grup|Todo el grupo" }
     ],
     errors: [
@@ -2464,7 +3531,8 @@ Object.assign(TGUIDE, {
       ["Posa els blocs de la reacció a sota del «si» i no a dins.|Pone los bloques de la reacción debajo del «si» y no dentro.", "Fes-li notar el forat del bloc «si»: el que hi ha dins només passa amb el sí. Que toqui el forat abans d'afegir el bloc.|Hazle notar el hueco del bloque «si»: lo que hay dentro solo pasa con el sí. Que toque el hueco antes de añadir el bloque."],
       ["No sap canviar «toca la cistella» per «toca la vora».|No sabe cambiar «toca la cesta» por «toca el borde».", "Recorda-li que les paraules en negreta dels blocs es poden tocar. Què passa si toques «la cistella»?|Recuérdale que las palabras en negrita de los bloques se pueden tocar. ¿Qué pasa si tocas «la cesta»?"],
       ["Funciona a la prova 1 però no a la 2 i pensa que l'app s'equivoca.|Funciona en la prueba 1 pero no en la 2 y piensa que la app se equivoca.", "Que miri on és la cistella a la prova 2. El programa ha de decidir sol, sense saber on és: per això cal la pregunta.|Que mire dónde está la cesta en la prueba 2. El programa tiene que decidir solo, sin saber dónde está: por eso hace falta la pregunta."],
-      ["Per arreglar l'error, prova de moure el «si» amb les fletxes i no entra al bucle.|Para arreglar el error, intenta mover el «si» con las flechas y no entra en el bucle.", "Les fletxes mouen dins la mateixa llista. Que l'esborri, toqui el forat de dins del «per sempre» i el torni a posar.|Las flechas mueven dentro de la misma lista. Que lo borre, toque el hueco de dentro del «por siempre» y lo vuelva a poner."]
+      ["Per arreglar l'error, prova de moure el «si» amb les fletxes i no entra al bucle.|Para arreglar el error, intenta mover el «si» con las flechas y no entra en el bucle.", "Les fletxes mouen dins la mateixa llista. Que l'esborri, toqui el forat de dins del «per sempre» i el torni a posar.|Las flechas mueven dentro de la misma lista. Que lo borre, toque el hueco de dentro del «por siempre» y lo vuelva a poner."],
+      ["A l'ocell, posa «gira 180 graus» fora del «si» i l'ocell dona voltes sense parar.|En el pájaro, pone «gira 180 grados» fuera del «si» y el pájaro da vueltas sin parar.", "Que miri el bloc que gira: és dins del forat del «si» o a sota? Què vol dir que giri a cada volta, toqui o no toqui la vora?|Que mire el bloque que gira: ¿está dentro del hueco del «si» o debajo? ¿Qué quiere decir que gire en cada vuelta, toque o no toque el borde?"]
     ],
     diff: {
       mes: "Afegir a la poma una tercera regla: si toca el ratolí (o el dit), fa un so. Inventar una reacció diferent per a cada prova del repte de l'ocell.|Añadir a la manzana una tercera regla: si toca el ratón (o el dedo), hace un sonido. Inventar una reacción diferente para cada prueba del reto del pájaro.",
@@ -2475,7 +3543,12 @@ Object.assign(TGUIDE, {
       rubric: [
         ["Concepte de condició|Concepto de condición", "Explica que és una pregunta de sí o no i en dona exemples propis.|Explica que es una pregunta de sí o no y da ejemplos propios.", "Reconeix condicions en exemples, però no les explica.|Reconoce condiciones en ejemplos, pero no las explica."],
         ["Bloc «si»|Bloque «si»", "Posa la reacció dins del «si» i explica què passa amb el no.|Pone la reacción dentro del «si» y explica qué pasa con el no.", "Fa servir el «si», però de vegades posa la reacció a fora.|Usa el «si», pero a veces pone la reacción fuera."],
-        ["El «si» dins del bucle|El «si» dentro del bucle", "Arregla el programa de l'error i explica per què el «si» va dins del «per sempre».|Arregla el programa del error y explica por qué el «si» va dentro del «por siempre».", "Necessita ajuda per veure que fora del bucle només pregunta una vegada.|Necesita ayuda para ver que fuera del bucle solo pregunta una vez."]
+        ["El «si» dins del bucle|El «si» dentro del bucle", "Arregla el programa de l'error i explica per què el «si» va dins del «per sempre».|Arregla el programa del error y explica por qué el «si» va dentro del «por siempre».", "Necessita ajuda per veure que fora del bucle només pregunta una vegada.|Necesita ayuda para ver que fuera del bucle solo pregunta una vez."],
+        [
+          "Llegir i predir|Leer y predecir",
+          "Llegeix el programa del cranc i diu què farà abans d'executar-lo.|Lee el programa del cangrejo y dice qué hará antes de ejecutarlo.",
+          "Necessita executar el programa per saber què fa.|Necesita ejecutar el programa para saber qué hace."
+        ]
       ]
     },
     casa: "A casa, feu junts «Caçadors de condicions»: busqueu tres màquines que decideixen soles (la nevera, la rentadora, el llum de l'escala…) i escriviu-ne la regla «Si…, llavors…».|En casa, haced juntos «Cazadores de condiciones»: buscad tres máquinas que deciden solas (la nevera, la lavadora, la luz de la escalera…) y escribid su regla «Si…, entonces…».",
@@ -2489,7 +3562,7 @@ Object.assign(TGUIDE, {
       { id: 's4', k: 'anim', t: "Una condició és una pregunta de sí o no|Una condición es una pregunta de sí o no", anim: 'g5cond', x: "«Toca la cistella?» Només hi ha dues respostes.|«¿Toca la cesta?» Solo hay dos respuestas.",
         nota: "Demana preguntes de sí o no i d'altres que no ho són («De quin color és?») per veure la diferència.|Pide preguntas de sí o no y otras que no lo son («¿De qué color es?») para ver la diferencia." },
       { id: 's5', k: 'concepte', t: "Condicions de cada dia|Condiciones de cada día", punts: ["Si plou, agafo el paraigua.|Si llueve, cojo el paraguas.", "Si el semàfor és verd, passo.|Si el semáforo está verde, paso.", "Si obro la nevera, s'encén el llum.|Si abro la nevera, se enciende la luz."],
-        nota: "Per a cada frase, que identifiquin la pregunta de sí o no i el que passa amb el sí.|Para cada frase, que identifiquen la pregunta de sí o no y lo que pasa con el sí." },
+        nota: "Per a cada frase, que identifiquin la pregunta de sí o no i el que passa amb el sí.|Para cada frase, que identifiquen la pregunta de sí o no y lo que pasa con el sí.", pic: "img/ment/atu.webp" },
       { id: 's6', k: 'anim', t: "El bloc «si»|El bloque «si»", anim: 'g5if', x: "Amb el sí, fa els blocs de dins. Amb el no, se'ls salta.|Con el sí, hace los bloques de dentro. Con el no, se los salta.",
         nota: "Assenyala el forat del bloc: és on van els blocs que només passen amb el sí.|Señala el hueco del bloque: es donde van los bloques que solo pasan con el sí." },
       { id: 's7', k: 'media', t: "El gat i la roca|El gato y la roca", x: "Què creieu que farà el gat quan toqui la roca?|¿Qué creéis que hará el gato cuando toque la roca?",
@@ -2509,7 +3582,7 @@ Object.assign(TGUIDE, {
       { id: 's13', k: 'repte', t: "Reptes|Retos", timer: 12, punts: ["1. Atrapa la poma|1. Atrapa la manzana", "2. L'ocell i la vora|2. El pájaro y el borde", "3. La poma que torna|3. La manzana que vuelve", "4. Arregla l'error|4. Arregla el error"],
         nota: "Fes el primer junts a la pantalla gran.|Haced el primero juntos en la pantalla grande." },
       { id: 's14', k: 'concepte', t: "Dues proves, un programa|Dos pruebas, un programa", punts: ["A cada prova, la cistella és en un lloc diferent.|En cada prueba, la cesta está en un sitio diferente.", "El programa no sap on és: ho ha de preguntar.|El programa no sabe dónde está: lo tiene que preguntar.", "Per això cal el «si».|Por eso hace falta el «si»."],
-        nota: "Explica-ho quan algú digui que «a la prova 1 ja funcionava».|Explícalo cuando alguien diga que «en la prueba 1 ya funcionaba»." },
+        nota: "Explica-ho quan algú digui que «a la prova 1 ja funcionava».|Explícalo cuando alguien diga que «en la prueba 1 ya funcionaba».", pic: "img/ment/par.webp" },
       { id: 's15', k: 'activitat', t: "Crea: la meva primera condició|Crea: mi primera condición", timer: 5, x: "En Numi toca el regal. Com reacciona? Tu decideixes!|Numi toca el regalo. ¿Cómo reacciona? ¡Tú decides!",
         nota: "Valora les idees diferents: un so, un canvi de vestit, una frase graciosa.|Valora las ideas diferentes: un sonido, un cambio de disfraz, una frase graciosa." },
       { id: 's16', k: 'resum', t: "Què hem après avui|Qué hemos aprendido hoy", punts: ["Una condició és una pregunta de sí o no.|Una condición es una pregunta de sí o no.", "El «si» fa els blocs de dins només amb el sí.|El «si» hace los bloques de dentro solo con el sí.", "El «si» va dins del «per sempre» per vigilar sempre.|El «si» va dentro del «por siempre» para vigilar siempre."],
@@ -2532,6 +3605,49 @@ Object.assign(TGUIDE, {
   },
   /* ---------- Sessió 2 · Colors que avisen ---------- */
   'g5-2': {
+    intro: "Segona sessió de condicions. El fons també pot donar informació: la condició «toca el color» pregunta si el personatge trepitja una zona de color (el blau del mar, el verd de l'herba, les parets del laberint). Després arriba el «si… si no», que dona dues respostes a una sola pregunta i sempre en fa una, mai les dues. La classe comença amb colors que avisen a la vida real (el semàfor) i té una activitat de graella en parelles abans de passar als reptes, que acaben amb el laberint de colors.|Segunda sesión de condiciones. El fondo también puede dar información: la condición «toca el color» pregunta si el personaje pisa una zona de color (el azul del mar, el verde de la hierba, las paredes del laberinto). Después llega el «si… si no», que da dos respuestas a una sola pregunta y siempre hace una, nunca las dos. La clase empieza con colores que avisan en la vida real (el semáforo) y tiene una actividad de cuadrícula por parejas antes de pasar a los retos, que terminan con el laberinto de colores.",
+    claus: [
+      "«Toca el color» pregunta pel fons: si el personatge trepitja una zona d'aquell color.|«Toca el color» pregunta por el fondo: si el personaje pisa una zona de ese color.",
+      "Els colors poden tenir un significat: blau, aigua o paret; verd, herba o sortida; vermell, trampa.|Los colores pueden tener un significado: azul, agua o pared; verde, hierba o salida; rojo, trampa.",
+      "El «si… si no» té dues parts: la de dalt per al sí i la de baix per al no.|El «si… si no» tiene dos partes: la de arriba para el sí y la de abajo para el no.",
+      "Cada vegada que pregunta en fa una de les dues, mai totes dues.|Cada vez que pregunta hace una de las dos, nunca las dos."
+    ],
+    prev: [
+      "El bloc «si» i la condició «toca…» dins del «per sempre» (sessió anterior).|El bloque «si» y la condición «toca…» dentro del «por siempre» (sesión anterior).",
+      "Posar y a un número i canviar y per pujar o baixar (unitat 4).|Poner y a un número y cambiar y para subir o bajar (unidad 4).",
+      "El laberint de la unitat 4: les parets són blaves i la sortida, verda.|El laberinto de la unidad 4: las paredes son azules y la salida, verde."
+    ],
+    faq: [
+      ["Quins colors puc triar a «toca el color»?|¿Qué colores puedo elegir en «toca el color»?", "Els que té el fons de cada repte: a la platja, el blau del mar i el groc de la sorra; al bosc, el verd de l'herba; al laberint, blau, verd i vermell. Si el fons no té zones de color, l'app t'ho diu.|Los que tiene el fondo de cada reto: en la playa, el azul del mar y el amarillo de la arena; en el bosque, el verde de la hierba; en el laberinto, azul, verde y rojo. Si el fondo no tiene zonas de color, la app te lo dice."],
+      ["On és el «si no»? No el trobo a la paleta.|¿Dónde está el «si no»? No lo encuentro en la paleta.", "No és un bloc a part: toca un bloc «si» que ja tinguis i després el botó «Afegeix «si no»». Li surt una segona part a sota.|No es un bloque aparte: toca un bloque «si» que ya tengas y después el botón «Añade «si no»». Le sale una segunda parte debajo."],
+      ["Puc fer el mateix amb dos «si»?|¿Puedo hacer lo mismo con dos «si»?", "De vegades sí, però amb un «si… si no» n'hi ha prou amb una sola pregunta i és impossible que es facin les dues parts alhora.|A veces sí, pero con un «si… si no» basta con una sola pregunta y es imposible que se hagan las dos partes a la vez."],
+      ["Per què en Numi s'enfonsa a l'herba?|¿Por qué Numi se hunde en la hierba?", "Perquè el bloc de caure és a la part del sí. Quan toca el verd ha de caminar; el «canvia y en -5» va a la part «si no».|Porque el bloque de caer está en la parte del sí. Cuando toca el verde tiene que caminar; el «cambia y en -5» va en la parte «si no»."],
+      ["Al laberint, per què l'Estel es mou sol quan toco «Comprova»?|En el laberinto, ¿por qué Estel se mueve solo cuando toco «Comprueba»?", "«Comprova» prem les fletxes per tu, sempre igual, per veure si les teves regles funcionen a les dues proves. Amb «Comença» les prems tu.|«Comprueba» pulsa las flechas por ti, siempre igual, para ver si tus reglas funcionan en las dos pruebas. Con «Empieza» las pulsas tú."],
+      ["Què passa si toca dos colors alhora?|¿Qué pasa si toca dos colores a la vez?", "Les dues preguntes diuen sí i es fan els dos «si», un darrere l'altre. Per això l'ordre dels blocs pot importar.|Las dos preguntas dicen sí y se hacen los dos «si», uno detrás del otro. Por eso el orden de los bloques puede importar."]
+    ],
+    tec: [
+      ["L'escenari no es mou en tocar «Comença».|El escenario no se mueve al tocar «Empieza».", "Comproveu que el programa té blocs sota «Quan comença». Si no, toqueu el botó de tornar a començar (la fletxa rodona) i proveu-ho de nou.|Comprobad que el programa tiene bloques bajo «Al empezar». Si no, tocad el botón de volver a empezar (la flecha redonda) y probadlo de nuevo."],
+      ["Les fletxes del teclat no mouen el personatge.|Las flechas del teclado no mueven al personaje.", "Cal tocar primer l'escenari (perquè la pàgina «escolti» el teclat) o fer servir els botons de fletxes de sota l'escenari, que també funcionen al mòbil.|Hay que tocar primero el escenario (para que la página «escuche» el teclado) o usar los botones de flechas de debajo del escenario, que también funcionan en el móvil."],
+      ["Un alumne/a s'encalla i ha esborrat blocs que no tocava.|Un alumno/a se atasca y ha borrado bloques que no tocaba.", "Després de dos intents apareix el botó «Una pista» i, després, «Mostra una solució». També es pot sortir del pas i tornar-hi: el repte torna a començar.|Después de dos intentos aparece el botón «Una pista» y, después, «Muestra una solución». También se puede salir del paso y volver a entrar: el reto vuelve a empezar."],
+      ["Al laberint, «Comprova» falla tot i que amb les fletxes funciona.|En el laberinto, «Comprueba» falla aunque con las flechas funciona.", "Mireu quina prova falla (Prova 1 o 2, a dalt de l'escenari) i el missatge de sota. Sovint falta «atura tot» després de «He sortit!» o la paret no torna a x: -175, y: 100.|Mirad qué prueba falla (Prueba 1 o 2, encima del escenario) y el mensaje de debajo. A menudo falta «para todo» después de «¡He salido!» o la pared no vuelve a x: -175, y: 100."],
+      ["No apareix el botó «Afegeix «si no»».|No aparece el botón «Añade «si no»».", "Cal tocar la part de dalt del bloc «si» (el nom del bloc, no el forat): s'obren els botons del bloc seleccionat.|Hay que tocar la parte de arriba del bloque «si» (el nombre del bloque, no el hueco): se abren los botones del bloque seleccionado."],
+      ["No queden llapis de colors per a la graella.|No quedan lápices de colores para la cuadrícula.", "Es pot fer amb lletres dins de les caselles: B (blau), V (verd) i R (vermell).|Se puede hacer con letras dentro de las casillas: A (azul), V (verde) y R (rojo)."]
+    ],
+    seg: [
+      "Pantalles: recorda la pausa activa a mitja sessió i que mirin lluny uns segons quan acabin cada repte.|Pantallas: recuerda la pausa activa a media sesión y que miren a lo lejos unos segundos cuando terminen cada reto.",
+      "Semàfor humà: es camina sense moure's del lloc i sense córrer; els colors no s'han de fer servir per triar companys ni per excloure ningú.|Semáforo humano: se camina sin moverse del sitio y sin correr; los colores no se usan para elegir compañeros ni para excluir a nadie.",
+      "Recordeu que a la vida real els semàfors i els senyals es miren sempre amb una persona adulta.|Recordad que en la vida real los semáforos y las señales se miran siempre con una persona adulta."
+    ],
+    extra: [
+      "Al laberint, afegir la regla del vermell (la trampa): si el toca, diu «Ai!» i torna a l'inici.|En el laberinto, añadir la regla del rojo (la trampa): si lo toca, dice «¡Ay!» y vuelve al inicio.",
+      "Fer que la Tuga canviï de vestit quan neda i torni al normal a la sorra, amb un sol «si… si no».|Hacer que Tuga cambie de disfraz cuando nada y vuelva al normal en la arena, con un solo «si… si no».",
+      "Dibuixar un fons propi en paper amb tres zones de colors i escriure'n les regles.|Dibujar un fondo propio en papel con tres zonas de colores y escribir sus reglas."
+    ],
+    trans: [
+      "Ve de la sessió anterior: el mateix «si», ara amb colors i amb dues parts.|Viene de la sesión anterior: el mismo «si», ahora con colores y con dos partes.",
+      "Sessió següent: ajuntar preguntes amb «i» i «o», i girar-les amb «no».|Sesión siguiente: juntar preguntas con «y» y «o», y girarlas con «no».",
+      "Ciències i educació viària: senyals i colors que avisen (semàfors, sortides d'emergència).|Ciencias y educación vial: señales y colores que avisan (semáforos, salidas de emergencia)."
+    ],
     obj: [
       "L'alumne/a fa servir la condició «toca el color» per fer que un personatge reaccioni a una zona del fons.|El alumno/a usa la condición «toca el color» para que un personaje reaccione a una zona del fondo.",
       "L'alumne/a explica que el «si… si no» sempre fa una de les dues parts, mai totes dues.|El alumno/a explica que el «si… si no» siempre hace una de las dos partes, nunca las dos.",
@@ -2560,40 +3676,73 @@ Object.assign(TGUIDE, {
       ],
       imprimir: ["El camí dels colors|El camino de los colores"],
       prep: [
-        "Imprimir una graella per parella.|Imprimir una cuadrícula por pareja.",
-        "Provar el repte del laberint amb les fletxes i amb «Comprova» per saber com funciona.|Probar el reto del laberinto con las flechas y con «Comprueba» para saber cómo funciona.",
-        "Recordar com s'afegeix el «si no»: tocar el bloc «si» i el botó «Afegeix «si no»».|Recordar cómo se añade el «si no»: tocar el bloque «si» y el botón «Añade «si no»».",
-        "Deixar els ordinadors amb la sessió iniciada.|Dejar los ordenadores con la sesión iniciada."
+        "El dia abans (10 min): imprimir una graella «El camí dels colors» per parella i preparar llapis blaus, verds i vermells.|El día antes (10 min): imprimir una cuadrícula «El camino de los colores» por pareja y preparar lápices azules, verdes y rojos.",
+        "El dia abans (10 min): provar el repte del laberint amb les fletxes i amb «Comprova» per saber com funciona.|El día antes (10 min): probar el reto del laberinto con las flechas y con «Comprueba» para saber cómo funciona.",
+        "El dia abans (2 min): recordar com s'afegeix el «si no»: tocar el bloc «si» i el botó «Afegeix «si no»».|El día antes (2 min): recordar cómo se añade el «si no»: tocar el bloque «si» y el botón «Añade «si no»».",
+        "Abans de classe (5 min): deixar els ordinadors amb la sessió iniciada i la presentació oberta.|Antes de clase (5 min): dejar los ordenadores con la sesión iniciada y la presentación abierta."
       ]
     },
     plan: [
       { min: 5, t: "Inici: colors que avisen|Inicio: colores que avisan", fase: 'inici',
-        fa: "Repassa el «si» dins del «per sempre». Pregunta on veuen colors que avisen: el semàfor, les sortides d'emergència, el gas de la cuina… Presenta en Pinces, el cranc que no sap nedar.|Repasa el «si» dentro del «por siempre». Pregunta dónde ven colores que avisan: el semáforo, las salidas de emergencia, el fuego de la cocina… Presenta a Pinzas, el cangrejo que no sabe nadar.",
-        diu: ["On heu vist colors que volen dir alguna cosa?|¿Dónde habéis visto colores que quieren decir algo?", "Què vol dir el verd d'una sortida d'emergència?|¿Qué quiere decir el verde de una salida de emergencia?"],
+        fa: "Repassa el «si» dins del «per sempre» amb les dues preguntes de la diapositiva. Pregunta on veuen colors que avisen: el semàfor, la sortida d'emergència, el llum vermell d'un aparell encès… Apunta les respostes a la pissarra. Presenta en Pinces, el cranc que no sap nedar i necessita que el fons l'avisi.|Repasa el «si» dentro del «por siempre» con las dos preguntas de la diapositiva. Pregunta dónde ven colores que avisan: el semáforo, la salida de emergencia, la luz roja de un aparato encendido… Apunta las respuestas en la pizarra. Presenta a Pinzas, el cangrejo que no sabe nadar y necesita que el fondo le avise.",
+        diu: [
+          "On va el «si toca…» perquè vigili tota l'estona? (dins del «per sempre»)|¿Dónde va el «si toca…» para que vigile todo el rato? (dentro del «por siempre»)",
+          "On heu vist colors que volen dir alguna cosa? (el semàfor, les sortides, els botons…)|¿Dónde habéis visto colores que quieren decir algo? (el semáforo, las salidas, los botones…)",
+          "Què vol dir el verd d'una sortida d'emergència? (per aquí pots sortir)|¿Qué quiere decir el verde de una salida de emergencia? (por aquí puedes salir)",
+          "En Pinces no sap nedar. Com el pot avisar el fons? (amb el blau del mar)|Pinzas no sabe nadar. ¿Cómo le puede avisar el fondo? (con el azul del mar)"
+        ],
         slides: ['s1', 's2', 's3'], app: "Encara no.|Todavía no.", org: "Tot el grup|Todo el grupo" },
       { min: 10, t: "Toca el color i «si… si no»|Toca el color y «si… si no»", fase: 'teoria',
         fa: "Mostra l'animació del cranc i la demo de la platja. Explica el «si… si no» amb el paraigua i la gorra i fes que diguin quina part es fa en cada cas. Projecta la demo d'en Numi que cau i camina, i acaba amb el laberint: un «si» per a cada color.|Muestra la animación del cangrejo y la demo de la playa. Explica el «si… si no» con el paraguas y la gorra y haz que digan qué parte se hace en cada caso. Proyecta la demo de Numi que cae y camina, y termina con el laberinto: un «si» para cada color.",
-        diu: ["Si no plou, què agafo?|Si no llueve, ¿qué cojo?", "Pot fer les dues parts alhora?|¿Puede hacer las dos partes a la vez?", "En Numi és a l'aire: quina part es fa?|Numi está en el aire: ¿qué parte se hace?"],
+        diu: [
+          "El cranc pregunta «toco el blau?». Què fa quan la resposta és sí? (torna a la sorra)|El cangrejo pregunta «¿toco el azul?». ¿Qué hace cuando la respuesta es sí? (vuelve a la arena)",
+          "«Si plou, agafo el paraigua; si no, la gorra.» Avui fa sol: què agafo? (la gorra)|«Si llueve, cojo el paraguas; si no, la gorra.» Hoy hace sol: ¿qué cojo? (la gorra)",
+          "Pot fer les dues parts alhora? (no, mai: una o l'altra)|¿Puede hacer las dos partes a la vez? (no, nunca: una u otra)",
+          "En Numi és a l'aire: quina part es fa? (la del «si no»: cau)|Numi está en el aire: ¿qué parte se hace? (la del «si no»: cae)",
+          "Al laberint, quina regla falta per a les parets? (si toca el blau, torna a l'inici)|En el laberinto, ¿qué regla falta para las paredes? (si toca el azul, vuelve al inicio)"
+        ],
         slides: ['s4', 's5', 's6', 's7', 's8'], app: "Encara no.|Todavía no.", org: "Tot el grup|Todo el grupo" },
       { min: 11, t: "Desconnectat: el camí dels colors|Desconectado: el camino de los colores", fase: 'desconnectat',
         fa: "En parelles, pinten a la graella unes quantes caselles blaves (aigua), vermelles (trampa) i verdes (sortida) i marquen l'inici. Escriuen les regles amb «si… si no». Després intercanvien la graella amb una altra parella: un/a diu fletxes i l'altre/a mou la fitxa i aplica les regles en veu alta a cada casella.|Por parejas, pintan en la cuadrícula unas cuantas casillas azules (agua), rojas (trampa) y verdes (salida) y marcan el inicio. Escriben las reglas con «si… si no». Después intercambian la cuadrícula con otra pareja: uno/a dice flechas y el otro/a mueve la ficha y aplica las reglas en voz alta en cada casilla.",
-        diu: ["A cada casella, pregunteu: de quin color és?|En cada casilla, preguntad: ¿de qué color es?", "Si no és de cap color, què fa la fitxa?|Si no es de ningún color, ¿qué hace la ficha?"],
+        diu: [
+          "A cada casella, pregunteu: de quin color és?|En cada casilla, preguntad: ¿de qué color es?",
+          "Si no és de cap color, què fa la fitxa? (continua: és la part del «si no»)|Si no es de ningún color, ¿qué hace la ficha? (sigue: es la parte del «si no»)",
+          "Les regles de l'altra parella són clares? Les podeu seguir sense preguntar?|¿Las reglas de la otra pareja son claras? ¿Las podéis seguir sin preguntar?",
+          "Heu arribat a la sortida verda? Quantes vegades heu tornat a l'inici?|¿Habéis llegado a la salida verde? ¿Cuántas veces habéis vuelto al inicio?"
+        ],
         slides: ['s9', 's10'], app: "Cap: activitat sense pantalla.|Ninguna: actividad sin pantalla.", org: "Parelles|Parejas" },
       { min: 12, t: "A l'ordinador: descobreix i investiga|En el ordenador: descubre e investiga", fase: 'ordinador',
-        fa: "Fan la missió, les targetes, la pregunta del semàfor, la predicció del cranc i el bloc del «si no». El pas «El semàfor de casa» és per fer a casa.|Hacen la misión, las tarjetas, la pregunta del semáforo, la predicción del cangrejo y el bloque del «si no». El paso «El semáforo de casa» es para hacer en casa.",
-        diu: ["Quina part es fa ara, la de dalt o la del «si no»?|¿Qué parte se hace ahora, la de arriba o la del «si no»?"],
+        fa: "Cada alumne/a fa la missió, les targetes, la pregunta del semàfor, la predicció del cranc a la sorra i el pas de tocar el bloc del «si no». El pas «El semàfor de casa» és per fer a casa: que toquin «Ara no». Passeja i, al pas d'investigar, demana a algú que expliqui en veu alta per què ha triat aquell bloc.|Cada alumno/a hace la misión, las tarjetas, la pregunta del semáforo, la predicción del cangrejo en la arena y el paso de tocar el bloque del «si no». El paso «El semáforo de casa» es para hacer en casa: que toquen «Ahora no». Pasea y, en el paso de investigar, pide a alguien que explique en voz alta por qué ha elegido ese bloque.",
+        diu: [
+          "Quina part es fa ara, la de dalt o la del «si no»? Com ho saps?|¿Qué parte se hace ahora, la de arriba o la del «si no»? ¿Cómo lo sabes?",
+          "En Pinces és a la sorra: toca el groc? Llavors, què fa? (camina)|Pinzas está en la arena: ¿toca el amarillo? Entonces, ¿qué hace? (camina)",
+          "Quin bloc es fa quan el cranc no toca el blau? (canvia y en 3: puja)|¿Qué bloque se hace cuando el cangrejo no toca el azul? (cambia y en 3: sube)"
+        ],
         slides: ['s11'], app: "De «La missió» fins a «Investiga».|De «La misión» hasta «Investiga».", org: "Individual|Individual" },
       { min: 14, t: "Pausa i reptes|Pausa y retos", fase: 'ordinador',
         fa: "Pausa activa del semàfor humà. Després, els quatre reptes. Al laberint, explica que primer es prova amb «Comença» i les fletxes, i després «Comprova» prem les tecles sola a les dues proves.|Pausa activa del semáforo humano. Después, los cuatro retos. En el laberinto, explica que primero se prueba con «Empieza» y las flechas, y después «Comprueba» pulsa las teclas sola en las dos pruebas.",
-        diu: ["Com s'afegeix el «si no»?|¿Cómo se añade el «si no»?", "Al laberint, què ha de passar si toques la paret?|En el laberinto, ¿qué tiene que pasar si tocas la pared?"],
+        diu: [
+          "Com s'afegeix el «si no»? (toques el «si» i després «Afegeix «si no»»)|¿Cómo se añade el «si no»? (tocas el «si» y después «Añade «si no»»)",
+          "En Numi: què va a dalt i què va a baix? (a dalt caminar; al «si no», caure)|Numi: ¿qué va arriba y qué va abajo? (arriba caminar; en el «si no», caer)",
+          "Al laberint, què ha de passar si toques la paret? (tornar a l'inici)|En el laberinto, ¿qué tiene que pasar si tocas la pared? (volver al inicio)",
+          "Has provat amb les fletxes? Ara toca «Comprova»: l'app farà les dues proves.|¿Has probado con las flechas? Ahora toca «Comprueba»: la app hará las dos pruebas."
+        ],
         slides: ['s12', 's13'], app: "«Pausa activa» i els reptes: el cranc, en Numi cau, les respostes canviades i el laberint.|«Pausa activa» y los retos: el cangrejo, Numi cae, las respuestas cambiadas y el laberinto.", org: "Individual|Individual" },
       { min: 5, t: "Crea: el meu avís de colors|Crea: mi aviso de colores", fase: 'crea',
-        fa: "La Tuga passeja per la platja. Cadascú decideix què fa al mar i què fa a la sorra. Ensenyeu-ho al company/a.|Tuga pasea por la playa. Cada uno decide qué hace en el mar y qué hace en la arena. Enseñadlo al compañero/a.",
-        diu: ["Què fa la Tuga al mar? I si no hi és?|¿Qué hace Tuga en el mar? ¿Y si no está?"],
+        fa: "La Tuga passeja per la platja amb les fletxes. Cadascú decideix què fa al mar (part del sí) i què fa a la sorra (part del «si no»): dir coses, canviar de vestit, fer sons… Quan funcioni, toquen «Comprova» i ho desen. En parelles, s'ensenyen el programa i l'altre/a ha d'endevinar què farà la Tuga al mar abans de provar-ho.|Tuga pasea por la playa con las flechas. Cada uno decide qué hace en el mar (parte del sí) y qué hace en la arena (parte del «si no»): decir cosas, cambiar de disfraz, hacer sonidos… Cuando funcione, tocan «Comprueba» y lo guardan. Por parejas, se enseñan el programa y el otro/a tiene que adivinar qué hará Tuga en el mar antes de probarlo.",
+        diu: [
+          "Què fa la Tuga al mar? I si no hi és?|¿Qué hace Tuga en el mar? ¿Y si no está?",
+          "Has posat algun bloc a les dues parts? Si una part és buida, no passa res amb aquella resposta.|¿Has puesto algún bloque en las dos partes? Si una parte está vacía, no pasa nada con esa respuesta.",
+          "El teu company/a ha endevinat què faria la Tuga?|¿Tu compañero/a ha adivinado qué haría Tuga?"
+        ],
         slides: ['s14'], app: "Pas «Crea»: El meu avís de colors.|Paso «Crea»: Mi aviso de colores.", org: "Individual|Individual" },
       { min: 3, t: "Tancament|Cierre", fase: 'tancament',
-        fa: "Resum, preguntes finals i tiquet de sortida.|Resumen, preguntas finales y ticket de salida.",
-        diu: ["Digues un «si… si no» de la vida diària.|Di un «si… si no» de la vida diaria."],
+        fa: "Repassa les tres idees amb el resum i torna a la llista de colors que avisen de la pissarra: ara la poden llegir com a regles «si… si no». Deixa que facin les preguntes finals i el «com m'he sentit», i fes el tiquet de sortida a la porta.|Repasa las tres ideas con el resumen y vuelve a la lista de colores que avisan de la pizarra: ahora la pueden leer como reglas «si… si no». Deja que hagan las preguntas finales y el «cómo me he sentido», y haz el ticket de salida en la puerta.",
+        diu: [
+          "Digues un «si… si no» de la vida diària. («Si fa fred, jaqueta; si no, samarreta»)|Di un «si… si no» de la vida diaria. («Si hace frío, chaqueta; si no, camiseta»)",
+          "Quantes parts fa cada vegada un «si… si no»? (una)|¿Cuántas partes hace cada vez un «si… si no»? (una)",
+          "Llegim un color de la pissarra com a regla: «si el semàfor és verd, passo; si no…» (m'espero)|Leemos un color de la pizarra como regla: «si el semáforo está verde, paso; si no…» (espero)"
+        ],
         slides: ['s15', 's16'], app: "«Tancament».|«Cierre».", org: "Tot el grup|Todo el grupo" }
     ],
     errors: [
@@ -2601,7 +3750,8 @@ Object.assign(TGUIDE, {
       ["En Numi s'enfonsa a l'herba perquè el bloc de caure és fora del «si no».|Numi se hunde en la hierba porque el bloque de caer está fuera del «si no».", "Que llegeixi en veu alta: «si toca el verd, camina; si no, cau». On és el bloc de caure?|Que lea en voz alta: «si toca el verde, camina; si no, cae». ¿Dónde está el bloque de caer?"],
       ["Al laberint, mou l'Estel amb les fletxes però no toca «Comprova».|En el laberinto, mueve a Estel con las flechas pero no toca «Comprueba».", "Recorda: amb «Comença» proves; amb «Comprova», l'app prem les tecles sola i mira si les regles funcionen.|Recuerda: con «Empieza» pruebas; con «Comprueba», la app pulsa las teclas sola y mira si las reglas funcionan."],
       ["Al laberint, posa «digues He sortit!» fora del «si toca el verd».|En el laberinto, pone «di ¡He salido!» fuera del «si toca el verde».", "Pregunta: quan ha de dir «He sortit»? Sempre, o només quan toca el verd?|Pregunta: ¿cuándo tiene que decir «He salido»? ¿Siempre, o solo cuando toca el verde?"],
-      ["Confon el color de la condició (tria el groc en lloc del blau).|Confunde el color de la condición (elige el amarillo en lugar del azul).", "Que toqui el nom del color dins del bloc i triï el que correspon al mar. Quin color té el mar al fons?|Que toque el nombre del color dentro del bloque y elija el que corresponde al mar. ¿Qué color tiene el mar en el fondo?"]
+      ["Confon el color de la condició (tria el groc en lloc del blau).|Confunde el color de la condición (elige el amarillo en lugar del azul).", "Que toqui el nom del color dins del bloc i triï el que correspon al mar. Quin color té el mar al fons?|Que toque el nombre del color dentro del bloque y elija el que corresponde al mar. ¿Qué color tiene el mar en el fondo?"],
+      ["Deixa buida la part del «si no» al projecte de la Tuga i no entén per què l'app li demana més.|Deja vacía la parte del «si no» en el proyecto de Tuga y no entiende por qué la app le pide más.", "Pregunta: què fa la Tuga quan és a la sorra? Si no fa res, la part de baix és buida. Quina cosa podria fer quan no és al mar?|Pregunta: ¿qué hace Tuga cuando está en la arena? Si no hace nada, la parte de abajo está vacía. ¿Qué cosa podría hacer cuando no está en el mar?"]
     ],
     diff: {
       mes: "Al laberint, afegir una regla per al vermell (la trampa): si el toca, torna a l'inici i diu «Ai!». A la Tuga, afegir regles per a les fletxes perquè canviï de vestit quan neda.|En el laberinto, añadir una regla para el rojo (la trampa): si lo toca, vuelve al inicio y dice «¡Ay!». En Tuga, añadir reglas para las flechas para que cambie de disfraz cuando nada.",
@@ -2612,7 +3762,12 @@ Object.assign(TGUIDE, {
       rubric: [
         ["Condició de color|Condición de color", "Tria el color correcte i explica què avisa.|Elige el color correcto y explica qué avisa.", "Fa servir el color amb ajuda.|Usa el color con ayuda."],
         ["«Si… si no»|«Si… si no»", "Posa cada bloc a la part que toca i explica que només se'n fa una.|Pone cada bloque en la parte que toca y explica que solo se hace una.", "Afegeix el «si no», però confon les parts.|Añade el «si no», pero confunde las partes."],
-        ["Regles del laberint|Reglas del laberinto", "Programa una regla per a cada color i la comprova a les dues proves.|Programa una regla para cada color y la comprueba en las dos pruebas.", "Programa una de les regles, però no l'altra.|Programa una de las reglas, pero no la otra."]
+        ["Regles del laberint|Reglas del laberinto", "Programa una regla per a cada color i la comprova a les dues proves.|Programa una regla para cada color y la comprueba en las dos pruebas.", "Programa una de les regles, però no l'altra.|Programa una de las reglas, pero no la otra."],
+        [
+          "Llegir un «si… si no»|Leer un «si… si no»",
+          "Diu quina part es farà en cada situació (cranc a la sorra, Numi a l'aire).|Dice qué parte se hará en cada situación (cangrejo en la arena, Numi en el aire).",
+          "Necessita executar el programa per saber quina part es fa.|Necesita ejecutar el programa para saber qué parte se hace."
+        ]
       ]
     },
     casa: "A casa, feu «El semàfor de casa» amb dos papers de colors: si és verd, camina; si no, atura't. Després inventeu un tercer color amb una regla nova.|En casa, haced «El semáforo de casa» con dos papeles de colores: si es verde, camina; si no, párate. Después inventad un tercer color con una regla nueva.",
@@ -2645,7 +3800,7 @@ Object.assign(TGUIDE, {
       { id: 's12', k: 'repte', t: "Reptes|Retos", timer: 14, punts: ["1. En Pinces no es mulla|1. Pinzas no se moja", "2. En Numi cau del cel|2. Numi cae del cielo", "3. Les respostes canviades|3. Las respuestas cambiadas", "4. El laberint|4. El laberinto"],
         nota: "Al laberint, ensenya com es prova amb les fletxes i després «Comprova».|En el laberinto, enseña cómo se prueba con las flechas y después «Comprueba»." },
       { id: 's13', k: 'concepte', t: "Afegir el «si no»|Añadir el «si no»", punts: ["Toca el bloc «si».|Toca el bloque «si».", "Toca «Afegeix «si no»».|Toca «Añade «si no»».", "Posa els blocs del no a la part de baix.|Pon los bloques del no en la parte de abajo."],
-        nota: "Fes-ho una vegada a la pantalla gran.|Hazlo una vez en la pantalla grande." },
+        nota: "Fes-ho una vegada a la pantalla gran.|Hazlo una vez en la pantalla grande.", pic: "img/ment/rfx.webp" },
       { id: 's14', k: 'activitat', t: "Crea: el meu avís de colors|Crea: mi aviso de colores", timer: 5, x: "Què fa la Tuga al mar? I a la sorra?|¿Qué hace Tuga en el mar? ¿Y en la arena?",
         nota: "Valora que cada part faci una cosa diferent.|Valora que cada parte haga una cosa diferente." },
       { id: 's15', k: 'resum', t: "Què hem après avui|Qué hemos aprendido hoy", punts: ["«Toca el color» pregunta pel fons.|«Toca el color» pregunta por el fondo.", "«Si… si no» té dues parts.|«Si… si no» tiene dos partes.", "Sempre en fa una, mai les dues.|Siempre hace una, nunca las dos."],
@@ -2662,6 +3817,48 @@ Object.assign(TGUIDE, {
   },
   /* ---------- Sessió 3 · I, o, no ---------- */
   'g5-3': {
+    intro: "Tercera sessió de condicions: tres paraules que fan les regles més llestes. Amb «i», la resposta és sí només si les dues preguntes són sí; amb «o», n'hi ha prou amb una; i «no» gira la resposta. L'alumnat ho prova primer amb regles de la fira i amb portes lògiques humanes, i després a l'escenari: un gat que gira si toca la roca o la vora, un regal que només s'obre si hi són en Numi i en Bit, i en Bit que camina mentre no toca la roca. Distingir «i» d'«o» costa: dona temps a les preguntes de la fira.|Tercera sesión de condiciones: tres palabras que hacen las reglas más listas. Con «y», la respuesta es sí solo si las dos preguntas son sí; con «o», basta con una; y «no» gira la respuesta. El alumnado lo prueba primero con reglas de la feria y con puertas lógicas humanas, y después en el escenario: un gato que gira si toca la roca o el borde, un regalo que solo se abre si están Numi y Bit, y Bit que camina mientras no toca la roca. Distinguir «y» de «o» cuesta: da tiempo a las preguntas de la feria.",
+    claus: [
+      "Amb «i», calen les dues condicions alhora.|Con «y», hacen falta las dos condiciones a la vez.",
+      "Amb «o», n'hi ha prou que una de les dues sigui sí.|Con «o», basta con que una de las dos sea sí.",
+      "«No» gira la resposta: el sí es torna no i el no, sí.|«No» gira la respuesta: el sí se vuelve no y el no, sí.",
+      "Una sola paraula pot canviar tota la regla: cal llegir-la en veu alta per comprovar-la.|Una sola palabra puede cambiar toda la regla: hay que leerla en voz alta para comprobarla."
+    ],
+    prev: [
+      "El bloc «si» i el «si… si no» (sessions 1 i 2 d'aquesta unitat).|El bloque «si» y el «si… si no» (sesiones 1 y 2 de esta unidad).",
+      "Les condicions «toca…» i «toca el color» (sessions 1 i 2).|Las condiciones «toca…» y «toca el color» (sesiones 1 y 2).",
+      "Lliscar fins a un punt (unitat 4): els personatges de les proves llisquen sols.|Deslizar hasta un punto (unidad 4): los personajes de las pruebas se deslizan solos."
+    ],
+    faq: [
+      ["Quina diferència hi ha entre «i» i «o»?|¿Qué diferencia hay entre «y» y «o»?", "Amb «i» han de passar les dues coses alhora (entrada i barret). Amb «o» n'hi ha prou amb una (entrada o barret, o les dues).|Con «y» tienen que pasar las dos cosas a la vez (entrada y sombrero). Con «o» basta con una (entrada o sombrero, o las dos)."],
+      ["Si toca la roca i la vora alhora, amb «o» també gira?|Si toca la roca y el borde a la vez, ¿con «o» también gira?", "Sí: amb «o» n'hi ha prou amb una, i si en són dues, encara millor. Només diu no quan no en toca cap.|Sí: con «o» basta con una, y si son las dos, mejor aún. Solo dice no cuando no toca ninguna."],
+      ["Com canvio la «i» per una «o»?|¿Cómo cambio la «y» por una «o»?", "Toca la paraula del mig del bloc «si» (la «i») i tria «o (alguna)».|Toca la palabra del medio del bloque «si» (la «y») y elige «o (alguna)»."],
+      ["On és el bloc «no»?|¿Dónde está el bloque «no»?", "No és un bloc de la paleta: toca el bloc «si» i el botó «Afegeix «no»». Davant de la condició hi apareix «no». Si el tornes a tocar, «Treu el «no»».|No es un bloque de la paleta: toca el bloque «si» y el botón «Añade «no»». Delante de la condición aparece «no». Si lo vuelves a tocar, «Quita el «no»»."],
+      ["Per què el regal no s'obre si en Numi ja hi és?|¿Por qué el regalo no se abre si Numi ya está?", "Perquè la regla diu «Numi i Bit»: falta en Bit. Quan hi arriben tots dos, la resposta és sí.|Porque la regla dice «Numi y Bit»: falta Bit. Cuando llegan los dos, la respuesta es sí."],
+      ["Al repte del gat em falten blocs!|¡En el reto del gato me faltan bloques!", "Amb 4 blocs no caben dos «si». Ajunta les dues preguntes en un sol «si» amb «o».|Con 4 bloques no caben dos «si». Junta las dos preguntas en un solo «si» con «o»."]
+    ],
+    tec: [
+      ["L'escenari no es mou en tocar «Comença».|El escenario no se mueve al tocar «Empieza».", "Comproveu que el programa té blocs sota «Quan comença». Si no, toqueu el botó de tornar a començar (la fletxa rodona) i proveu-ho de nou.|Comprobad que el programa tiene bloques bajo «Al empezar». Si no, tocad el botón de volver a empezar (la flecha redonda) y probadlo de nuevo."],
+      ["Les fletxes del teclat no mouen el personatge.|Las flechas del teclado no mueven al personaje.", "Cal tocar primer l'escenari (perquè la pàgina «escolti» el teclat) o fer servir els botons de fletxes de sota l'escenari, que també funcionen al mòbil.|Hay que tocar primero el escenario (para que la página «escuche» el teclado) o usar los botones de flechas de debajo del escenario, que también funcionan en el móvil."],
+      ["Un alumne/a s'encalla i ha esborrat blocs que no tocava.|Un alumno/a se atasca y ha borrado bloques que no tocaba.", "Després de dos intents apareix el botó «Una pista» i, després, «Mostra una solució». També es pot sortir del pas i tornar-hi: el repte torna a començar.|Después de dos intentos aparece el botón «Una pista» y, después, «Muestra una solución». También se puede salir del paso y volver a entrar: el reto vuelve a empezar."],
+      ["No surt el botó «Afegeix «i / o»» o «Afegeix «no»».|No sale el botón «Añade «y / o»» o «Añade «no»».", "Només surten en tocar el nom d'un bloc «si» i en els reptes que els fan servir. Si el bloc ja té dues condicions, el botó diu «Una sola condició».|Solo salen al tocar el nombre de un bloque «si» y en los retos que los usan. Si el bloque ya tiene dos condiciones, el botón dice «Una sola condición»."],
+      ["En afegir «i / o», la segona condició diu «la vora» i no la volen.|Al añadir «y / o», la segunda condición dice «el borde» y no la quieren.", "És el valor de partida: toqueu «la vora» i trieu el personatge que calgui.|Es el valor de partida: tocad «el borde» y elegid el personaje que haga falta."],
+      ["No hi ha prou targetes per a tots els grups.|No hay suficientes tarjetas para todos los grupos.", "Les targetes SÍ i NO es poden fer amb un full doblegat (SÍ per una cara, NO per l'altra) i les portes, escrites a la pissarra.|Las tarjetas SÍ y NO se pueden hacer con una hoja doblada (SÍ por una cara, NO por la otra) y las puertas, escritas en la pizarra."]
+    ],
+    seg: [
+      "Pantalles: recorda la pausa activa a mitja sessió i que mirin lluny uns segons quan acabin cada repte.|Pantallas: recuerda la pausa activa a media sesión y que miren a lo lejos unos segundos cuando terminen cada reto.",
+      "Portes lògiques humanes i pausa activa: les condicions han de ser neutres (roba, gustos, objectes), mai sobre el cos, la família o els diners.|Puertas lógicas humanas y pausa activa: las condiciones tienen que ser neutras (ropa, gustos, objetos), nunca sobre el cuerpo, la familia o el dinero."
+    ],
+    extra: [
+      "Al regal, afegir una tercera condició (que també hi sigui l'estrella) i explicar com quedaria la regla en paraules.|En el regalo, añadir una tercera condición (que también esté la estrella) y explicar cómo quedaría la regla con palabras.",
+      "Inventar una regla per al tresor amb «no»: «si no toca la roca, camina; si no, digues «Compte!»».|Inventar una regla para el tesoro con «no»: «si no toca la roca, camina; si no, di «¡Cuidado!»».",
+      "Fer una taula de veritat amb dibuixos: per a «i» i per a «o», les quatre combinacions de sí i no i què passa.|Hacer una tabla de verdad con dibujos: para «y» y para «o», las cuatro combinaciones de sí y no y qué pasa."
+    ],
+    trans: [
+      "Ve de les sessions 1 i 2: les mateixes condicions, ara ajuntades i girades.|Viene de las sesiones 1 y 2: las mismas condiciones, ahora juntas y giradas.",
+      "Sessió següent: el projecte «Atrapa la fruita», on cada regla del videojoc és un «si».|Sesión siguiente: el proyecto «Atrapa la fruta», donde cada regla del videojuego es un «si».",
+      "Llengua i matemàtiques: les conjuncions «i», «o» i la negació; classificar objectes segons dues propietats (diagrames).|Lengua y matemáticas: las conjunciones «y», «o» y la negación; clasificar objetos según dos propiedades (diagramas)."
+    ],
     obj: [
       "L'alumne/a explica que amb «i» calen les dues condicions i amb «o» n'hi ha prou amb una.|El alumno/a explica que con «y» hacen falta las dos condiciones y con «o» basta con una.",
       "L'alumne/a explica que «no» gira la resposta d'una condició.|El alumno/a explica que «no» gira la respuesta de una condición.",
@@ -2689,46 +3886,80 @@ Object.assign(TGUIDE, {
       ],
       imprimir: ["Targetes de portes lògiques|Tarjetas de puertas lógicas"],
       prep: [
-        "Imprimir i retallar un paquet de targetes per grup.|Imprimir y recortar un paquete de tarjetas por grupo.",
-        "Provar el repte del gat (màxim 4 blocs) i com es canvia «i» per «o» tocant la paraula del mig.|Probar el reto del gato (máximo 4 bloques) y cómo se cambia «y» por «o» tocando la palabra del medio.",
-        "Deixar els ordinadors amb la sessió iniciada.|Dejar los ordenadores con la sesión iniciada."
+        "El dia abans (15 min): imprimir i retallar un paquet de targetes per grup de 3 (condicions, SÍ/NO i portes).|El día antes (15 min): imprimir y recortar un paquete de tarjetas por grupo de 3 (condiciones, SÍ/NO y puertas).",
+        "El dia abans (10 min): provar el repte del gat (màxim 4 blocs), com es canvia «i» per «o» tocant la paraula del mig i com s'afegeix el «no» al repte d'en Bit.|El día antes (10 min): probar el reto del gato (máximo 4 bloques), cómo se cambia «y» por «o» tocando la palabra del medio y cómo se añade el «no» en el reto de Bit.",
+        "Abans de classe (5 min): deixar els ordinadors amb la sessió iniciada i la presentació oberta.|Antes de clase (5 min): dejar los ordenadores con la sesión iniciada y la presentación abierta."
       ]
     },
     plan: [
       { min: 5, t: "Inici: regles més llestes|Inicio: reglas más listas", fase: 'inici',
-        fa: "Repassa el «si… si no». Llegeix dues regles de la fira, una amb «i» i una amb «o», i pregunta si volen dir el mateix.|Repasa el «si… si no». Lee dos reglas de la feria, una con «y» y una con «o», y pregunta si quieren decir lo mismo.",
-        diu: ["«Entrada i barret» o «entrada o barret»: és el mateix?|«Entrada y sombrero» o «entrada o sombrero»: ¿es lo mismo?"],
+        fa: "Repassa el «si… si no» amb les preguntes de la diapositiva. Llegeix les dues regles de la fira (una amb «i» i una amb «o») i fes sortir quatre voluntaris/es amb entrada o barret imaginaris: amb cada regla, qui pot entrar? Apunta a la pissarra la diferència.|Repasa el «si… si no» con las preguntas de la diapositiva. Lee las dos reglas de la feria (una con «y» y una con «o») y haz salir a cuatro voluntarios/as con entrada o sombrero imaginarios: con cada regla, ¿quién puede entrar? Apunta en la pizarra la diferencia.",
+        diu: [
+          "Quantes parts fa un «si… si no» cada vegada? (una)|¿Cuántas partes hace un «si… si no» cada vez? (una)",
+          "«Entrada i barret» o «entrada o barret»: és el mateix? (no)|«Entrada y sombrero» o «entrada o sombrero»: ¿es lo mismo? (no)",
+          "La Guida porta entrada però no barret. Amb la regla «i», entra? (no) I amb la regla «o»? (sí)|Guida lleva entrada pero no sombrero. Con la regla «y», ¿entra? (no) ¿Y con la regla «o»? (sí)",
+          "Avui aprendrem tres paraules petites que canvien les regles: «i», «o» i «no».|Hoy aprenderemos tres palabras pequeñas que cambian las reglas: «y», «o» y «no»."
+        ],
         slides: ['s1', 's2', 's3'], app: "Encara no.|Todavía no.", org: "Tot el grup|Todo el grupo" },
       { min: 10, t: "I, o, no|Y, o, no", fase: 'teoria',
         fa: "Mostra l'animació del regal i l'estrella: compara «i» i «o» fase a fase. Projecta les demos del regal i del gat. Explica el «no» amb l'animació i la demo d'en Bit que s'atura davant la roca.|Muestra la animación del regalo y la estrella: compara «y» y «o» fase a fase. Proyecta las demos del regalo y del gato. Explica el «no» con la animación y la demo de Bit que se para delante de la roca.",
-        diu: ["Ara només hi ha en Bit: s'obre el regal? I s'encén l'estrella?|Ahora solo está Bit: ¿se abre el regalo? ¿Y se enciende la estrella?", "Què vol dir «si no toca la roca»?|¿Qué quiere decir «si no toca la roca»?"],
+        diu: [
+          "Ara només hi ha en Bit: s'obre el regal? (no, calen els dos) I s'encén l'estrella? (sí, n'hi ha prou amb un)|Ahora solo está Bit: ¿se abre el regalo? (no, hacen falta los dos) ¿Y se enciende la estrella? (sí, basta con uno)",
+          "El gat toca la vora però no la roca. Amb «o», gira? (sí)|El gato toca el borde pero no la roca. Con «o», ¿gira? (sí)",
+          "I si la regla del gat digués «i»? (gairebé no giraria mai)|¿Y si la regla del gato dijera «y»? (casi no giraría nunca)",
+          "Què vol dir «si no toca la roca, camina»? (camina mentre la roca és lluny)|¿Qué quiere decir «si no toca la roca, camina»? (camina mientras la roca está lejos)"
+        ],
         slides: ['s4', 's5', 's6', 's7', 's8'], app: "Encara no.|Todavía no.", org: "Tot el grup|Todo el grupo" },
       { min: 11, t: "Desconnectat: portes lògiques humanes|Desconectado: puertas lógicas humanas", fase: 'desconnectat',
         fa: "Grups de 3: dos sensors i una porta. Cada sensor té una targeta de condició i respon ensenyant SÍ o NO. La porta té la targeta «I», «O» o «NO» i decideix si s'obre (braços amunt) o no. Roteu els papers i les targetes. Al final, cada grup inventa una regla de la classe amb «i» o «o».|Grupos de 3: dos sensores y una puerta. Cada sensor tiene una tarjeta de condición y responde enseñando SÍ o NO. La puerta tiene la tarjeta «Y», «O» o «NO» y decide si se abre (brazos arriba) o no. Rotad los papeles y las tarjetas. Al final, cada grupo inventa una regla de la clase con «y» u «o».",
-        diu: ["Porta «I»: us cal que els dos sensors diguin sí.|Puerta «Y»: os hace falta que los dos sensores digan sí.", "Porta «NO»: feu el contrari del sensor!|Puerta «NO»: ¡haced lo contrario del sensor!"],
+        diu: [
+          "Porta «I»: us cal que els dos sensors diguin sí.|Puerta «Y»: necesitáis que los dos sensores digan sí.",
+          "Porta «O»: n'hi ha prou que un sensor digui sí. I si en diuen sí tots dos? (també s'obre)|Puerta «O»: basta con que un sensor diga sí. ¿Y si dicen sí los dos? (también se abre)",
+          "Porta «NO»: feu el contrari del sensor!|Puerta «NO»: ¡haced lo contrario del sensor!",
+          "Quina porta s'obre més vegades, la «I» o la «O»? (la «O»)|¿Qué puerta se abre más veces, la «Y» o la «O»? (la «O»)"
+        ],
         slides: ['s9', 's10'], app: "Cap: activitat sense pantalla.|Ninguna: actividad sin pantalla.", org: "Grups de 3|Grupos de 3" },
       { min: 12, t: "A l'ordinador: descobreix i investiga|En el ordenador: descubre e investiga", fase: 'ordinador',
         fa: "Fan la missió, les targetes, les preguntes de la fira, l'error de la papallona i la predicció d'en Bit. «Endevina la meva regla» és per a casa.|Hacen la misión, las tarjetas, las preguntas de la feria, el error de la mariposa y la predicción de Bit. «Adivina mi regla» es para casa.",
-        diu: ["Per què la papallona travessa la roca?|¿Por qué la mariposa atraviesa la roca?"],
+        diu: [
+          "Per què la papallona travessa la roca? (el «si» diu «i»: hauria de tocar la vora i la roca alhora)|¿Por qué la mariposa atraviesa la roca? (el «si» dice «y»: tendría que tocar el borde y la roca a la vez)",
+          "En Bit té «si no toca la roca, camina». Quan s'atura? (quan toca la roca)|Bit tiene «si no toca la roca, camina». ¿Cuándo se para? (cuando toca la roca)",
+          "A la fira, quina regla deixa entrar més gent: la de «i» o la de «o»? (la de «o»)|En la feria, ¿qué regla deja entrar a más gente: la de «y» o la de «o»? (la de «o»)"
+        ],
         slides: ['s11'], app: "De «La missió» fins a la predicció d'en Bit.|De «La misión» hasta la predicción de Bit.", org: "Individual|Individual" },
       { min: 14, t: "Pausa i reptes|Pausa y retos", fase: 'ordinador',
-        fa: "Pausa activa de les portes lògiques. Ensenya a la pantalla com s'afegeix «i / o» i com es canvia la paraula del mig. Després, els tres reptes.|Pausa activa de las puertas lógicas. Enseña en la pantalla cómo se añade «y / o» y cómo se cambia la palabra del medio. Después, los tres retos.",
-        diu: ["Amb només 4 blocs, com pots vigilar la roca i la vora?|Con solo 4 bloques, ¿cómo puedes vigilar la roca y el borde?", "A les proves 2 i 3 del regal, per què no s'ha d'obrir?|En las pruebas 2 y 3 del regalo, ¿por qué no se tiene que abrir?"],
+        fa: "Feu la pausa activa de les portes lògiques. Després ensenya a la pantalla gran com s'afegeix «i / o» (tocar el «si», «Afegeix «i / o»», tocar la paraula del mig) i com s'afegeix el «no» (tocar el «si», «Afegeix «no»»). Deixa'ls fer els tres reptes: el gat amb 4 blocs, el regal amb tres proves i en Bit, que no camina fins que hi posen el «no». Qui acabi pot ajudar amb preguntes, sense tocar el ratolí de l'altre/a.|Haced la pausa activa de las puertas lógicas. Después enseña en la pantalla grande cómo se añade «y / o» (tocar el «si», «Añade «y / o»», tocar la palabra del medio) y cómo se añade el «no» (tocar el «si», «Añade «no»»). Déjales hacer los tres retos: el gato con 4 bloques, el regalo con tres pruebas y Bit, que no camina hasta que le ponen el «no». Quien termine puede ayudar con preguntas, sin tocar el ratón del otro/a.",
+        diu: [
+          "Amb només 4 blocs, com pots vigilar la roca i la vora? (un sol «si» amb «o»)|Con solo 4 bloques, ¿cómo puedes vigilar la roca y el borde? (un solo «si» con «o»)",
+          "A les proves 2 i 3 del regal, per què no s'ha d'obrir? (només hi arriba un dels dos)|En las pruebas 2 y 3 del regalo, ¿por qué no se tiene que abrir? (solo llega uno de los dos)",
+          "En Bit no es mou: què diu el seu «si»? (si toca la roca, camina: però al principi no la toca)|Bit no se mueve: ¿qué dice su «si»? (si toca la roca, camina: pero al principio no la toca)",
+          "Què canvia quan afegeixes el «no»? (ara camina mentre no la toca)|¿Qué cambia cuando añades el «no»? (ahora camina mientras no la toca)"
+        ],
         slides: ['s12', 's13'], app: "«Pausa activa» i els reptes del gat, el regal i en Bit.|«Pausa activa» y los retos del gato, el regalo y Bit.", org: "Individual|Individual" },
       { min: 5, t: "Crea: la regla del tresor|Crea: la regla del tesoro", fase: 'crea',
         fa: "Cada alumne/a inventa una regla amb «i» o «o» per als tresors del parc. El company/a ha d'endevinar la regla mirant què passa.|Cada alumno/a inventa una regla con «y» u «o» para los tesoros del parque. El compañero/a tiene que adivinar la regla mirando qué pasa.",
-        diu: ["La teva regla és amb «i» o amb «o»?|¿Tu regla es con «y» o con «o»?"],
+        diu: [
+          "La teva regla és amb «i» o amb «o»? Llegeix-la en veu alta.|¿Tu regla es con «y» o con «o»? Léela en voz alta.",
+          "Company/a: mira què fa en Numi i endevina la regla sense llegir els blocs.|Compañero/a: mira qué hace Numi y adivina la regla sin leer los bloques.",
+          "I si canvies la «o» per una «i», què passarà? Prova-ho!|¿Y si cambias la «o» por una «y», qué pasará? ¡Pruébalo!"
+        ],
         slides: ['s14'], app: "Pas «Crea»: La regla del tresor.|Paso «Crea»: La regla del tesoro.", org: "Individual i en parelles|Individual y por parejas" },
       { min: 3, t: "Tancament|Cierre", fase: 'tancament',
-        fa: "Resum, preguntes finals i tiquet.|Resumen, preguntas finales y ticket.",
-        diu: ["Digues una regla amb «o».|Di una regla con «o»."],
+        fa: "Repassa les tres paraules amb el resum i torna a les regles de la fira del principi: ara les saben explicar. Deixa que facin les preguntes finals i el «com m'he sentit», i fes el tiquet de sortida a la porta.|Repasa las tres palabras con el resumen y vuelve a las reglas de la feria del principio: ahora las saben explicar. Deja que hagan las preguntas finales y el «cómo me he sentido», y haz el ticket de salida en la puerta.",
+        diu: [
+          "Digues una regla amb «o». («Si plou o fa vent, em poso la jaqueta»)|Di una regla con «o». («Si llueve o hace viento, me pongo la chaqueta»)",
+          "I una amb «i». («Si tinc gana i és l'hora, berenaré»)|¿Y una con «y»? («Si tengo hambre y es la hora, merendaré»)",
+          "Què fa el «no»? (gira la resposta)|¿Qué hace el «no»? (gira la respuesta)"
+        ],
         slides: ['s15', 's16'], app: "«Tancament».|«Cierre».", org: "Tot el grup|Todo el grupo" }
     ],
     errors: [
       ["Fa servir «i» quan calia «o» (el gat només gira si toca la roca i la vora alhora).|Usa «y» cuando hacía falta «o» (el gato solo gira si toca la roca y el borde a la vez).", "Pregunta: pot tocar la roca i la vora al mateix temps? Llavors, quina paraula cal?|Pregunta: ¿puede tocar la roca y el borde al mismo tiempo? Entonces, ¿qué palabra hace falta?"],
       ["No sap canviar la segona condició (es queda «la vora»).|No sabe cambiar la segunda condición (se queda «el borde»).", "Recorda que cada paraula en negreta es pot tocar: toca «la vora» i tria en Bit.|Recuerda que cada palabra en negrita se puede tocar: toca «el borde» y elige a Bit."],
       ["Al repte del gat fa dos «si» i supera el màxim de blocs.|En el reto del gato hace dos «si» y supera el máximo de bloques.", "Està bé pensar-ho així! Ara, com podries posar les dues preguntes dins d'un sol «si»?|¡Está bien pensarlo así! Ahora, ¿cómo podrías poner las dos preguntas dentro de un solo «si»?"],
-      ["Creu que «no toca la roca» vol dir que en Bit no es mourà.|Cree que «no toca la roca» quiere decir que Bit no se moverá.", "Llegiu-ho junts com una frase: «Si no toques la roca, camina.» Al principi, la toca? Llavors camina.|Leedlo juntos como una frase: «Si no tocas la roca, camina.» Al principio, ¿la toca? Entonces camina."]
+      ["Creu que «no toca la roca» vol dir que en Bit no es mourà.|Cree que «no toca la roca» quiere decir que Bit no se moverá.", "Llegiu-ho junts com una frase: «Si no toques la roca, camina.» Al principi, la toca? Llavors camina.|Leedlo juntos como una frase: «Si no tocas la roca, camina.» Al principio, ¿la toca? Entonces camina."],
+      ["Al repte d'en Bit, posa el «no» però oblida el segon «si» i en Bit no diu res.|En el reto de Bit, pone el «no» pero olvida el segundo «si» y Bit no dice nada.", "Llegiu la regla junts: «si no toca la roca, camina». I quan la toca, qui li diu que parli? Falta una altra pregunta.|Leed la regla juntos: «si no toca la roca, camina». ¿Y cuando la toca, quién le dice que hable? Falta otra pregunta."],
+      ["Al regal, posa «o» i el regal s'obre a les proves 2 i 3.|En el regalo, pone «o» y el regalo se abre en las pruebas 2 y 3.", "Pregunta: a la prova 2 només hi ha en Numi. La regla diu que n'hi ha prou amb un o que calen tots dos?|Pregunta: en la prueba 2 solo está Numi. ¿La regla dice que basta con uno o que hacen falta los dos?"]
     ],
     diff: {
       mes: "Al repte del regal, afegir una tercera condició (que també hi hagi l'estrella) i explicar com quedaria la regla. Inventar una regla amb «no» per al tresor.|En el reto del regalo, añadir una tercera condición (que también esté la estrella) y explicar cómo quedaría la regla. Inventar una regla con «no» para el tesoro.",
@@ -2739,7 +3970,12 @@ Object.assign(TGUIDE, {
       rubric: [
         ["«I» i «o»|«Y» y «o»", "Tria bé entre «i» i «o» i ho justifica.|Elige bien entre «y» y «o» y lo justifica.", "Les confon de vegades.|Las confunde a veces."],
         ["«No»|«No»", "Prediu correctament què fa un programa amb «no».|Predice correctamente qué hace un programa con «no».", "Necessita llegir la frase en veu alta per entendre-ho.|Necesita leer la frase en voz alta para entenderlo."],
-        ["Programar condicions dobles|Programar condiciones dobles", "Afegeix «i / o» i canvia les dues condicions sense ajuda.|Añade «y / o» y cambia las dos condiciones sin ayuda.", "Ho fa amb ajuda.|Lo hace con ayuda."]
+        ["Programar condicions dobles|Programar condiciones dobles", "Afegeix «i / o» i canvia les dues condicions sense ajuda.|Añade «y / o» y cambia las dos condiciones sin ayuda.", "Ho fa amb ajuda.|Lo hace con ayuda."],
+        [
+          "Explicar una regla amb paraules|Explicar una regla con palabras",
+          "Llegeix en veu alta la regla del seu programa i diu quan és sí i quan és no.|Lee en voz alta la regla de su programa y dice cuándo es sí y cuándo es no.",
+          "Llegeix la regla, però no sap dir quan es complirà.|Lee la regla, pero no sabe decir cuándo se cumplirá."
+        ]
       ]
     },
     casa: "A casa, feu «Endevina la meva regla» amb objectes: una persona pensa una regla amb «i», «o» o «no» i l'altra l'endevina ensenyant objectes.|En casa, haced «Adivina mi regla» con objetos: una persona piensa una regla con «y», «o» o «no» y la otra la adivina enseñando objetos.",
@@ -2762,7 +3998,7 @@ Object.assign(TGUIDE, {
         nota: "Fes el gest de girar una targeta SÍ/NO.|Haz el gesto de girar una tarjeta SÍ/NO." },
       { id: 's8', k: 'media', t: "En Bit para a temps|Bit para a tiempo", x: "Si no toca la roca, camina; si no, ho diu.|Si no toca la roca, camina; si no, lo dice.",
         media: { k: 'stage', w: { bg: 'parc', sprites: [{ id: 'bit', art: 'bit', x: -180, y: -100, size: 90 }, { id: 'roca', art: 'roca', x: 80, y: -110 }] }, prog: '@bit flag{ forever{ if:!touch:roca{ move:3 } else{ say:"Una roca!|¡Una roca!" } } }', time: 6 },
-        nota: "Explica que aquest bloc ja ve fet a l'app: el «no» no es pot posar des de la paleta.|Explica que este bloque ya viene hecho en la app: el «no» no se puede poner desde la paleta." },
+        nota: "Explica que el «no» es posa tocant el bloc «si» i el botó «Afegeix «no»». Al repte d'en Bit el faran ells mateixos.|Explica que el «no» se pone tocando el bloque «si» y el botón «Añade «no»». En el reto de Bit lo harán ellos mismos." },
       { id: 's9', k: 'activitat', t: "Portes lògiques humanes|Puertas lógicas humanas", timer: 11, punts: ["Dos sensors: responeu SÍ o NO.|Dos sensores: responded SÍ o NO.", "La porta mira la seva targeta: I, O o NO.|La puerta mira su tarjeta: Y, O o NO.", "S'obre? Braços amunt!|¿Se abre? ¡Brazos arriba!", "Roteu els papers.|Rotad los papeles."],
         nota: "Comença amb la porta «I», després «O» i al final «NO» (amb un sol sensor).|Empieza con la puerta «Y», después «O» y al final «NO» (con un solo sensor)." },
       { id: 's10', k: 'activitat', t: "Les tres portes|Las tres puertas", punts: ["I: s'obre si els dos diuen sí.|Y: se abre si los dos dicen sí.", "O: s'obre si algun diu sí.|O: se abre si alguno dice sí.", "NO: fa el contrari del sensor.|NO: hace lo contrario del sensor."],
@@ -2771,8 +4007,13 @@ Object.assign(TGUIDE, {
         nota: "Passeja per l'error de la papallona: és el que més costa.|Pasea por el error de la mariposa: es el que más cuesta." },
       { id: 's12', k: 'repte', t: "Reptes|Retos", timer: 14, punts: ["1. El gat: roca o vora (4 blocs)|1. El gato: roca o borde (4 bloques)", "2. El regal: Numi i Bit|2. El regalo: Numi y Bit", "3. En Bit: si no toca la roca|3. Bit: si no toca la roca"],
         nota: "Ensenya una vegada el botó «Afegeix «i / o»».|Enseña una vez el botón «Añade «y / o»»." },
-      { id: 's13', k: 'concepte', t: "Com s'afegeix «i / o»|Cómo se añade «y / o»", punts: ["Toca el bloc «si».|Toca el bloque «si».", "Toca «Afegeix «i / o»».|Toca «Añade «y / o»».", "Toca la paraula del mig per triar «i» o «o».|Toca la palabra del medio para elegir «y» u «o».", "Toca cada condició per canviar-la.|Toca cada condición para cambiarla."],
-        nota: "Fes-ho a poc a poc a la pantalla gran.|Hazlo despacio en la pantalla grande." },
+      { id: 's13', k: 'concepte', t: "Com s'afegeix «i / o»|Cómo se añade «y / o»", punts: [
+        "Toca el bloc «si».|Toca el bloque «si».",
+        "«Afegeix «i / o»»: dues condicions.|«Añade «y / o»»: dos condiciones.",
+        "Toca la paraula del mig: «i» o «o».|Toca la palabra del medio: «y» u «o».",
+        "«Afegeix «no»»: gira la condició.|«Añade «no»»: gira la condición."
+      ],
+        nota: "Fes-ho a poc a poc a la pantalla gran.|Hazlo despacio en la pantalla grande.", pic: "img/ic/link.webp" },
       { id: 's14', k: 'activitat', t: "Crea: la regla del tresor|Crea: la regla del tesoro", timer: 5, x: "Inventa una regla amb «i» o «o». El company/a l'endevina.|Inventa una regla con «y» u «o». El compañero/a la adivina.",
         nota: "Celebra les regles originals.|Celebra las reglas originales." },
       { id: 's15', k: 'resum', t: "Què hem après avui|Qué hemos aprendido hoy", punts: ["«I»: calen les dues.|«Y»: hacen falta las dos.", "«O»: n'hi ha prou amb una.|«O»: basta con una.", "«No»: gira la resposta.|«No»: gira la respuesta."],
@@ -2793,6 +4034,49 @@ Object.assign(TGUIDE, {
   },
   /* ---------- Sessió 4 · Projecte: atrapa la fruita ---------- */
   'g5-4': {
+    intro: "Sessió de projecte. L'alumnat construeix el videojoc «Atrapa la fruita» amb tot el que ha après a la unitat: la cistella es mou amb les fletxes, les fruites cauen i cada regla és un «si» (si toca la cistella, si toca la vora, si la roca toca la cistella…). Primer fan el pla en paper, després construeixen el videojoc a trossos (provant cada tros) i, al final, un company/a fa de tester i proposa una millora. És una sessió per consolidar, no per aprendre blocs nous: valora el procés (pla, prova, millora) tant com el resultat.|Sesión de proyecto. El alumnado construye el videojuego «Atrapa la fruta» con todo lo que ha aprendido en la unidad: la cesta se mueve con las flechas, las frutas caen y cada regla es un «si» (si toca la cesta, si toca el borde, si la roca toca la cesta…). Primero hacen el plan en papel, después construyen el videojuego a trozos (probando cada trozo) y, al final, un compañero/a hace de tester y propone una mejora. Es una sesión para consolidar, no para aprender bloques nuevos: valora el proceso (plan, prueba, mejora) tanto como el resultado.",
+    claus: [
+      "Un videojoc és un conjunt de personatges, cadascun amb els seus guions, que funcionen alhora.|Un videojuego es un conjunto de personajes, cada uno con sus guiones, que funcionan a la vez.",
+      "Cada regla del videojoc és un «si» i va als guions del personatge que reacciona.|Cada regla del videojuego es un «si» y va en los guiones del personaje que reacciona.",
+      "Primer el pla en paper; després es programa i es prova a trossos.|Primero el plan en papel; después se programa y se prueba a trozos.",
+      "Un tester troba errors i idees que l'autor/a no veu: s'escolta i es tria una millora.|Un tester encuentra errores e ideas que el autor/a no ve: se escucha y se elige una mejora."
+    ],
+    prev: [
+      "«Si toca…», «si… si no», «i», «o» i «no» (sessions 1-3 d'aquesta unitat).|«Si toca…», «si… si no», «y», «o» y «no» (sesiones 1-3 de esta unidad).",
+      "Moure un personatge amb les tecles de fletxa (unitat 3).|Mover un personaje con las teclas de flecha (unidad 3).",
+      "Posar y a un número per tornar a dalt i «ves a x, y» (unitat 4).|Poner y a un número para volver arriba y «ve a x, y» (unidad 4)."
+    ],
+    faq: [
+      ["La regla «si toca la cistella» va a la cistella o a la poma?|¿La regla «si toca la cesta» va en la cesta o en la manzana?", "Al personatge que ha de fer alguna cosa: si la poma ha de tornar a dalt, la regla va als guions de la poma.|En el personaje que tiene que hacer algo: si la manzana tiene que volver arriba, la regla va en los guiones de la manzana."],
+      ["Com programo el plàtan? Cal tornar-ho a fer tot?|¿Cómo programo el plátano? ¿Hay que volver a hacerlo todo?", "Tria el plàtan a les pestanyes de dalt i fes-li les mateixes regles que a la poma. Pots canviar-li la velocitat o el so perquè sigui diferent.|Elige el plátano en las pestañas de arriba y hazle las mismas reglas que a la manzana. Puedes cambiarle la velocidad o el sonido para que sea diferente."],
+      ["Puc afegir la roca al videojoc final?|¿Puedo añadir la roca al videojuego final?", "Al projecte hi ha la cistella, la poma i el plàtan. La roca la pots fer al tros 3; al projecte, millora'l amb sons, frases i velocitats.|En el proyecto están la cesta, la manzana y el plátano. La roca la puedes hacer en el trozo 3; en el proyecto, mejóralo con sonidos, frases y velocidades."],
+      ["Per què la poma no torna mai a dalt?|¿Por qué la manzana no vuelve nunca arriba?", "Mira la regla de la vora: ha de posar y a 150 (a dalt). Si posa -150, la deixa a baix.|Mira la regla del borde: tiene que poner y a 150 (arriba). Si pone -150, la deja abajo."],
+      ["El tester m'ha dit que és massa fàcil. Què faig?|El tester me ha dicho que es demasiado fácil. ¿Qué hago?", "Fes caure les fruites més de pressa (canvia y en -6 o -8) o fes la cistella més petita. Prova-ho tu primer!|Haz caer las frutas más deprisa (cambia y en -6 o -8) o haz la cesta más pequeña. ¡Pruébalo tú primero!"],
+      ["On es desa el meu videojoc?|¿Dónde se guarda mi videojuego?", "Quan toques «Desa-ho i continua», queda a «Projectes» i el pots tornar a obrir a casa per ensenyar-lo.|Cuando tocas «Guárdalo y continúa», queda en «Proyectos» y lo puedes volver a abrir en casa para enseñarlo."]
+    ],
+    tec: [
+      ["L'escenari no es mou en tocar «Comença».|El escenario no se mueve al tocar «Empieza».", "Comproveu que el programa té blocs sota «Quan comença». Si no, toqueu el botó de tornar a començar (la fletxa rodona) i proveu-ho de nou.|Comprobad que el programa tiene bloques bajo «Al empezar». Si no, tocad el botón de volver a empezar (la flecha redonda) y probadlo de nuevo."],
+      ["Les fletxes del teclat no mouen el personatge.|Las flechas del teclado no mueven al personaje.", "Cal tocar primer l'escenari (perquè la pàgina «escolti» el teclat) o fer servir els botons de fletxes de sota l'escenari, que també funcionen al mòbil.|Hay que tocar primero el escenario (para que la página «escuche» el teclado) o usar los botones de flechas de debajo del escenario, que también funcionan en el móvil."],
+      ["Un alumne/a s'encalla i ha esborrat blocs que no tocava.|Un alumno/a se atasca y ha borrado bloques que no tocaba.", "Després de dos intents apareix el botó «Una pista» i, després, «Mostra una solució». També es pot sortir del pas i tornar-hi: el repte torna a començar.|Después de dos intentos aparece el botón «Una pista» y, después, «Muestra una solución». También se puede salir del paso y volver a entrar: el reto vuelve a empezar."],
+      ["No troben com programar el plàtan.|No encuentran cómo programar el plátano.", "A dalt dels guions hi ha una pestanya per a cada personatge: toqueu la del plàtan. Els que diuen «ja programat» no es poden editar.|Encima de los guiones hay una pestaña para cada personaje: tocad la del plátano. Los que dicen «ya programado» no se pueden editar."],
+      ["«Comprova» diu que la cistella no toca alguna fruita.|«Comprueba» dice que la cesta no toca alguna fruta.", "La comprovació mou la cistella sola a l'esquerra i a la dreta: les fruites han de caure i tornar a dalt. Reviseu que totes dues tinguin la regla de la vora i la de la cistella.|La comprobación mueve la cesta sola a la izquierda y a la derecha: las frutas tienen que caer y volver arriba. Revisad que las dos tengan la regla del borde y la de la cesta."],
+      ["No s'ha desat el projecte.|No se ha guardado el proyecto.", "Només es desa quan passa la comprovació i es toca «Desa-ho i continua». Si se surt abans, cal tornar a fer «Comprova».|Solo se guarda cuando pasa la comprobación y se toca «Guárdalo y continúa». Si se sale antes, hay que volver a hacer «Comprueba»."]
+    ],
+    seg: [
+      "Pantalles: recorda la pausa activa a mitja sessió i que mirin lluny uns segons quan acabin cada repte.|Pantallas: recuerda la pausa activa a media sesión y que miren a lo lejos unos segundos cuando terminen cada reto.",
+      "Tester: es diu sempre primer una cosa bona i es parla del videojoc, no de la persona. Ningú no toca l'ordinador de l'altre/a sense permís.|Tester: se dice siempre primero una cosa buena y se habla del videojuego, no de la persona. Nadie toca el ordenador del otro/a sin permiso.",
+      "Si algú no ha pogut acabar, no passa res: el projecte es pot acabar la sessió següent o a casa.|Si alguien no ha podido terminar, no pasa nada: el proyecto se puede terminar la sesión siguiente o en casa."
+    ],
+    extra: [
+      "Afegir una tercera fruita que caigui més de pressa i faci un so diferent.|Añadir una tercera fruta que caiga más deprisa y haga un sonido distinto.",
+      "Fer que la cistella digui «Ñam!» o canviï de mida quan atrapa una fruita.|Hacer que la cesta diga «¡Ñam!» o cambie de tamaño cuando atrapa una fruta.",
+      "Dibuixar el cartell del videojoc per a la fira amb les regles explicades amb «si».|Dibujar el cartel del videojuego para la feria con las reglas explicadas con «si»."
+    ],
+    trans: [
+      "Recull tota la unitat 5: «si toca…», colors, «si… si no», «i», «o» i «no».|Recoge toda la unidad 5: «si toca…», colores, «si… si no», «y», «o» y «no».",
+      "Unitat 6: hi afegirem un marcador de punts, vides i un compte enrere amb variables.|Unidad 6: le añadiremos un marcador de puntos, vidas y una cuenta atrás con variables.",
+      "Llengua oral: explicar les regles d'un videojoc i donar i rebre opinions amb respecte.|Lengua oral: explicar las reglas de un videojuego y dar y recibir opiniones con respeto."
+    ],
     obj: [
       "L'alumne/a planifica un videojoc en paper: personatges, moviments i regles.|El alumno/a planifica un videojuego en papel: personajes, movimientos y reglas.",
       "L'alumne/a escriu cada regla del videojoc com un «si» i la programa al personatge que toca.|El alumno/a escribe cada regla del videojuego como un «si» y la programa en el personaje que corresponde.",
@@ -2819,40 +4103,73 @@ Object.assign(TGUIDE, {
       ],
       imprimir: ["El pla del videojoc|El plan del videojuego"],
       prep: [
-        "Imprimir una fitxa per alumne/a.|Imprimir una ficha por alumno/a.",
-        "Provar el videojoc acabat (pas «Prova») amb les fletxes per ensenyar-lo al principi.|Probar el videojuego terminado (paso «Prueba») con las flechas para enseñarlo al principio.",
-        "Fer el projecte final abans per veure com queda amb dues fruites.|Hacer el proyecto final antes para ver cómo queda con dos frutas.",
-        "Deixar els ordinadors amb la sessió iniciada.|Dejar los ordenadores con la sesión iniciada."
+        "El dia abans (5 min): imprimir una fitxa «El pla del videojoc» per alumne/a.|El día antes (5 min): imprimir una ficha «El plan del videojuego» por alumno/a.",
+        "El dia abans (15 min): fer tu el projecte final per veure com queda amb dues fruites i què demana «Comprova».|El día antes (15 min): hacer tú el proyecto final para ver cómo queda con dos frutas y qué pide «Comprueba».",
+        "Abans de classe (5 min): provar el videojoc acabat de la diapositiva 3 i el de l'app (pas «Prova») amb les fletxes.|Antes de clase (5 min): probar el videojuego terminado de la diapositiva 3 y el de la app (paso «Prueba») con las flechas.",
+        "Abans de classe (5 min): deixar els ordinadors amb la sessió iniciada i pensar les parelles de testers.|Antes de clase (5 min): dejar los ordenadores con la sesión iniciada y pensar las parejas de testers."
       ]
     },
     plan: [
       { min: 5, t: "Inici: el gran dia|Inicio: el gran día", fase: 'inici',
-        fa: "Repassa «i», «o» i «no». Projecta el videojoc acabat i demana a un voluntari/a que el provi amb les fletxes. Pregunta quines regles hi veuen.|Repasa «y», «o» y «no». Proyecta el videojuego terminado y pide a un voluntario/a que lo pruebe con las flechas. Pregunta qué reglas ven.",
-        diu: ["Quines regles té aquest videojoc? Digueu-les amb «si».|¿Qué reglas tiene este videojuego? Decidlas con «si»."],
+        fa: "Repassa «i», «o» i «no» amb un exemple de cada. Projecta el videojoc acabat (diapositiva 3) i explica que a l'app el podran provar amb les fletxes. Pregunta quines regles hi veuen i apunta-les a la pissarra començant per «si…»: les faran servir per al pla.|Repasa «y», «o» y «no» con un ejemplo de cada. Proyecta el videojuego terminado (diapositiva 3) y explica que en la app lo podrán probar con las flechas. Pregunta qué reglas ven y apúntalas en la pizarra empezando por «si…»: las usarán para el plan.",
+        diu: [
+          "Digueu una regla amb «o» i una amb «i».|Decid una regla con «o» y una con «y».",
+          "Mireu el videojoc: quines regles té? Digueu-les amb «si». (si la poma toca la cistella, fa pop…)|Mirad el videojuego: ¿qué reglas tiene? Decidlas con «si». (si la manzana toca la cesta, hace pop…)",
+          "Què passa quan una fruita arriba a baix sense que l'atrapis? (torna a dalt)|¿Qué pasa cuando una fruta llega abajo sin que la atrapes? (vuelve arriba)",
+          "I la roca, per a què serveix? (si toca la cistella, s'acaba)|¿Y la roca, para qué sirve? (si toca la cesta, se acaba)"
+        ],
         slides: ['s1', 's2', 's3'], app: "Encara no.|Todavía no.", org: "Tot el grup|Todo el grupo" },
       { min: 8, t: "El pla i els guions|El plan y los guiones", fase: 'teoria',
         fa: "Mostra l'animació del pla: dibuix i regles. Explica que cada personatge té els seus guions i que tots funcionen alhora. Mostra la regla que ho acaba tot (la roca). Insisteix a construir i provar a trossos.|Muestra la animación del plan: dibujo y reglas. Explica que cada personaje tiene sus guiones y que todos funcionan a la vez. Muestra la regla que lo acaba todo (la roca). Insiste en construir y probar a trozos.",
-        diu: ["Qui té la regla «si toca la cistella»: la cistella o la poma?|¿Quién tiene la regla «si toca la cesta»: la cesta o la manzana?", "Per què és millor provar cada tros?|¿Por qué es mejor probar cada trozo?"],
+        diu: [
+          "Qui té la regla «si toca la cistella»: la cistella o la poma? (la poma, perquè és ella qui torna a dalt)|¿Quién tiene la regla «si toca la cesta»: la cesta o la manzana? (la manzana, porque es ella quien vuelve arriba)",
+          "Els guions de la cistella i de la poma funcionen un després de l'altre o alhora? (alhora)|Los guiones de la cesta y de la manzana, ¿funcionan uno después del otro o a la vez? (a la vez)",
+          "Quin bloc atura tot el videojoc? (atura tot)|¿Qué bloque para todo el videojuego? (para todo)",
+          "Per què és millor provar cada tros? (si falla, saps on és l'error)|¿Por qué es mejor probar cada trozo? (si falla, sabes dónde está el error)"
+        ],
         slides: ['s4', 's5', 's6', 's7'], app: "Encara no.|Todavía no.", org: "Tot el grup|Todo el grupo" },
       { min: 10, t: "Desconnectat: el pla en paper|Desconectado: el plan en papel", fase: 'desconnectat',
         fa: "Cada alumne/a omple la fitxa del pla: dibuixa l'escenari, escriu com es mou la cistella i les regles de cada fruita, i hi afegeix una idea pròpia (una fruita nova, un so, una frase). En parelles, es llegeixen el pla i comproven que cada regla comença amb «si».|Cada alumno/a rellena la ficha del plan: dibuja el escenario, escribe cómo se mueve la cesta y las reglas de cada fruta, y añade una idea propia (una fruta nueva, un sonido, una frase). Por parejas, se leen el plan y comprueban que cada regla empieza con «si».",
-        diu: ["Cada regla: si… llavors…|Cada regla: si… entonces…", "Quina millora teva hi afegiràs?|¿Qué mejora tuya añadirás?"],
+        diu: [
+          "Cada regla: si… llavors… Llegiu-la en veu alta.|Cada regla: si… entonces… Leedla en voz alta.",
+          "A quin personatge va cada regla? Escriu-ne el nom al costat.|¿A qué personaje va cada regla? Escribe su nombre al lado.",
+          "Quina millora teva hi afegiràs? (un so, una frase, una fruita més ràpida…)|¿Qué mejora tuya le añadirás? (un sonido, una frase, una fruta más rápida…)",
+          "Company/a: hi ha alguna regla que no s'entengui?|Compañero/a: ¿hay alguna regla que no se entienda?"
+        ],
         slides: ['s8', 's9'], app: "Cap: activitat sense pantalla.|Ninguna: actividad sin pantalla.", org: "Individual i en parelles|Individual y por parejas" },
       { min: 8, t: "A l'ordinador: prova i investiga|En el ordenador: prueba e investiga", fase: 'ordinador',
         fa: "Fan la missió, les targetes, proven el videojoc acabat, ordenen el pla i troben l'error de la poma. «El tester de casa» és per a casa.|Hacen la misión, las tarjetas, prueban el videojuego terminado, ordenan el plan y encuentran el error de la manzana. «El tester de casa» es para casa.",
-        diu: ["Per què la poma no torna a dalt?|¿Por qué la manzana no vuelve arriba?"],
+        diu: [
+          "Prova el videojoc acabat dos minuts: quantes fruites atrapes?|Prueba el videojuego terminado dos minutos: ¿cuántas frutas atrapas?",
+          "Per què la poma no torna a dalt? (la regla de la vora la posa a y = -150, a baix)|¿Por qué la manzana no vuelve arriba? (la regla del borde la pone en y = -150, abajo)",
+          "En quin ordre construirem el videojoc? (primer el que es mou, després les regles i al final provar)|¿En qué orden construiremos el videojuego? (primero lo que se mueve, después las reglas y al final probar)"
+        ],
         slides: ['s10'], app: "De «La missió» fins a «Investiga».|De «La misión» hasta «Investiga».", org: "Individual|Individual" },
       { min: 12, t: "Pausa i els tres trossos|Pausa y los tres trozos", fase: 'ordinador',
         fa: "Pausa activa de la cistella. Després, els tres trossos: la cistella amb les fletxes, la poma i la roca. Cada tros es comprova abans de passar al següent.|Pausa activa de la cesta. Después, los tres trozos: la cesta con las flechas, la manzana y la roca. Cada trozo se comprueba antes de pasar al siguiente.",
-        diu: ["La cistella s'escapa per la vora? Quina regla falta?|¿La cesta se escapa por el borde? ¿Qué regla falta?"],
+        diu: [
+          "La cistella s'escapa per la vora? Quina regla falta? (si toca la vora, torna enrere)|¿La cesta se escapa por el borde? ¿Qué regla falta? (si toca el borde, vuelve atrás)",
+          "Has posat la regla a les dues tecles, la dreta i l'esquerra?|¿Has puesto la regla en las dos teclas, la derecha y la izquierda?",
+          "La poma: on va quan l'atrapes? (a x: 100, y: 150, per caure per un altre lloc)|La manzana: ¿adónde va cuando la atrapas? (a x: 100, y: 150, para caer por otro sitio)",
+          "La roca: quin bloc atura el videojoc? (atura tot)|La roca: ¿qué bloque para el videojuego? (para todo)"
+        ],
         slides: ['s11'], app: "«Pausa activa» i els trossos 1, 2 i 3.|«Pausa activa» y los trozos 1, 2 y 3.", org: "Individual|Individual" },
       { min: 13, t: "Crea i prova amb un company/a|Crea y prueba con un compañero/a", fase: 'crea',
         fa: "Cada alumne/a completa el videojoc sencer seguint el seu pla. Quan funcioni, un company/a fa de tester: el prova sense ajuda i diu una cosa que li agrada i una idea per millorar. L'autor/a en tria una i la programa. Es desa al portafoli.|Cada alumno/a completa el videojuego entero siguiendo su plan. Cuando funcione, un compañero/a hace de tester: lo prueba sin ayuda y dice una cosa que le gusta y una idea para mejorar. El autor/a elige una y la programa. Se guarda en el portafolio.",
-        diu: ["Tester: primer una cosa bona, després una idea.|Tester: primero una cosa buena, después una idea.", "Autor/a: escolta i tria què millores.|Autor/a: escucha y elige qué mejoras."],
+        diu: [
+          "Segueix el teu pla: quina regla programes ara?|Sigue tu plan: ¿qué regla programas ahora?",
+          "Has provat el plàtan sol abans d'afegir la millora?|¿Has probado el plátano solo antes de añadir la mejora?",
+          "Tester: primer una cosa bona, després una idea. Mans fora del ratolí!|Tester: primero una cosa buena, después una idea. ¡Manos fuera del ratón!",
+          "Autor/a: escolta, dona les gràcies i tria què millores.|Autor/a: escucha, da las gracias y elige qué mejoras."
+        ],
         slides: ['s12', 's13'], app: "Pas «Crea»: Atrapa la fruita (es desa als projectes).|Paso «Crea»: Atrapa la fruta (se guarda en los proyectos).", org: "Individual i en parelles|Individual y por parejas" },
       { min: 4, t: "Tancament i celebració|Cierre y celebración", fase: 'tancament',
         fa: "Dos o tres alumnes ensenyen el seu videojoc a la classe. Resum de la unitat, preguntes finals i tiquet.|Dos o tres alumnos enseñan su videojuego a la clase. Resumen de la unidad, preguntas finales y ticket.",
-        diu: ["Quina regla del teu videojoc t'agrada més?|¿Qué regla de tu videojuego te gusta más?"],
+        diu: [
+          "Quina regla del teu videojoc t'agrada més? Digues-la amb «si».|¿Qué regla de tu videojuego te gusta más? Dila con «si».",
+          "Quina idea del teu tester has fet servir?|¿Qué idea de tu tester has usado?",
+          "Què li falta encara al nostre videojoc? (punts, vides… a la unitat 6!)|¿Qué le falta todavía a nuestro videojuego? (puntos, vidas… ¡en la unidad 6!)"
+        ],
         slides: ['s14', 's15', 's16'], app: "«Tancament».|«Cierre».", org: "Tot el grup|Todo el grupo" }
     ],
     errors: [
@@ -2860,10 +4177,11 @@ Object.assign(TGUIDE, {
       ["La fruita torna a y = -150 (a baix) en lloc de y = 150.|La fruta vuelve a y = -150 (abajo) en lugar de y = 150.", "Recorda l'eix: la y gran és a dalt. On vols que torni la poma?|Recuerda el eje: la y grande está arriba. ¿Dónde quieres que vuelva la manzana?"],
       ["La cistella surt de l'escenari perquè no té la regla de la vora a les dues tecles.|La cesta sale del escenario porque no tiene la regla del borde en las dos teclas.", "Que provi primer la dreta i després l'esquerra. Per quin costat s'escapa?|Que pruebe primero la derecha y después la izquierda. ¿Por qué lado se escapa?"],
       ["Ho programa tot de cop i no sap on és l'error.|Lo programa todo de golpe y no sabe dónde está el error.", "Proposa-li treure (o deixar buit) un personatge i provar-ne només un. Funciona? Llavors afegeix el següent.|Proponle quitar (o dejar vacío) un personaje y probar solo uno. ¿Funciona? Entonces añade el siguiente."],
-      ["Com a tester, només diu «està malament» o ho arregla ell/a.|Como tester, solo dice «está mal» o lo arregla él/ella.", "Recorda la regla del tester: una cosa bona, una idea, i les mans fora del ratolí.|Recuerda la regla del tester: una cosa buena, una idea, y las manos fuera del ratón."]
+      ["Com a tester, només diu «està malament» o ho arregla ell/a.|Como tester, solo dice «está mal» o lo arregla él/ella.", "Recorda la regla del tester: una cosa bona, una idea, i les mans fora del ratolí.|Recuerda la regla del tester: una cosa buena, una idea, y las manos fuera del ratón."],
+      ["Al projecte, programa el plàtan dins de la pestanya de la poma.|En el proyecto, programa el plátano dentro de la pestaña de la manzana.", "Que miri quin personatge té triat a les pestanyes de dalt. Qui ha de caure ara? Toca'l i programa'l allà.|Que mire qué personaje tiene elegido en las pestañas de arriba. ¿Quién tiene que caer ahora? Tócalo y prográmalo allí."]
     ],
     diff: {
-      mes: "Afegir la roca al videojoc final (si toca la cistella, atura-ho tot) i una tercera fruita més ràpida. Fer que la cistella canviï de mida quan atrapa una fruita.|Añadir la roca al videojuego final (si toca la cesta, páralo todo) y una tercera fruta más rápida. Hacer que la cesta cambie de tamaño cuando atrapa una fruta.",
+      mes: "Fer que cada fruita torni a dalt per un lloc diferent (ves a x, y) i que el plàtan caigui més de pressa que la poma. Fer que la cistella digui una frase o canviï de mida quan atrapa una fruita.|Hacer que cada fruta vuelva arriba por un sitio diferente (ve a x, y) y que el plátano caiga más deprisa que la manzana. Hacer que la cesta diga una frase o cambie de tamaño cuando atrapa una fruta.",
       menys: "Seguir els trossos 1, 2 i 3 en ordre i, al projecte final, copiar les regles de la poma al plàtan. Tenir la fitxa del pla al costat de l'ordinador.|Seguir los trozos 1, 2 y 3 en orden y, en el proyecto final, copiar las reglas de la manzana al plátano. Tener la ficha del plan al lado del ordenador."
     },
     aval: {
@@ -2871,12 +4189,17 @@ Object.assign(TGUIDE, {
       rubric: [
         ["Pla del videojoc|Plan del videojuego", "El pla té personatges, moviments i regles amb «si».|El plan tiene personajes, movimientos y reglas con «si».", "El pla té el dibuix, però les regles estan incompletes.|El plan tiene el dibujo, pero las reglas están incompletas."],
         ["Regles programades|Reglas programadas", "Les fruites cauen, tornen a dalt i reaccionen a la cistella.|Las frutas caen, vuelven arriba y reaccionan a la cesta.", "Hi ha una regla que falta o és al personatge equivocat.|Hay una regla que falta o está en el personaje equivocado."],
-        ["Provar i millorar|Probar y mejorar", "Prova a trossos, escolta el tester i programa una millora.|Prueba a trozos, escucha al tester y programa una mejora.", "Prova al final i li costa triar una millora.|Prueba al final y le cuesta elegir una mejora."]
+        ["Provar i millorar|Probar y mejorar", "Prova a trossos, escolta el tester i programa una millora.|Prueba a trozos, escucha al tester y programa una mejora.", "Prova al final i li costa triar una millora.|Prueba al final y le cuesta elegir una mejora."],
+        [
+          "Treball en parella (tester)|Trabajo en pareja (tester)",
+          "Prova el videojoc de l'altre/a sense tocar-lo, diu una cosa bona i una idea concreta.|Prueba el videojuego del otro/a sin tocarlo, dice una cosa buena y una idea concreta.",
+          "Dona opinions generals («està bé») o vol arreglar-lo ell/a.|Da opiniones generales («está bien») o quiere arreglarlo él/ella."
+        ]
       ]
     },
     casa: "A casa, ensenyeu el videojoc a algú de la família: feu «El tester de casa», apunteu una millora i programeu-la el pròxim dia.|En casa, enseñad el videojuego a alguien de la familia: haced «El tester de casa», apuntad una mejora y programadla el próximo día.",
     slides: [
-      { id: 's1', k: 'portada', t: "Projecte: atrapa la fruita|Proyecto: atrapa la fruta", x: "Avui construïm el nostre videojoc per a la Festa de la Fruita.|Hoy construimos nuestro videojuego para la Fiesta de la Fruta.",
+      { id: 's1', k: 'portada', t: "Projecte: atrapa la fruita|Proyecto: atrapa la fruta", x: "Avui construïm el videojoc de la fira.|Hoy construimos el videojuego de la feria.",
         nota: "Crea expectació: al final, cadascú en tindrà un de propi al portafoli.|Crea expectación: al final, cada uno tendrá uno propio en el portafolio." },
       { id: 's2', k: 'repas', t: "Recordem|Recordemos", punts: ["«I»: calen les dues.|«Y»: hacen falta las dos.", "«O»: n'hi ha prou amb una.|«O»: basta con una.", "«No»: gira la resposta.|«No»: gira la respuesta."],
         nota: "Pregunta un exemple de cada.|Pide un ejemplo de cada una." },
@@ -2885,13 +4208,12 @@ Object.assign(TGUIDE, {
         nota: "Apunta a la pissarra les regles que diguin, començant per «si».|Apunta en la pizarra las reglas que digan, empezando por «si»." },
       { id: 's4', k: 'anim', t: "Primer, el pla|Primero, el plan", anim: 'g5plan', x: "Dibuix i regles. Cada regla és un «si».|Dibujo y reglas. Cada regla es un «si».",
         nota: "Compara-ho amb fer una maqueta: primer el plànol.|Compáralo con hacer una maqueta: primero el plano." },
-      { id: 's5', k: 'concepte', t: "Cada personatge, els seus guions|Cada personaje, sus guiones", punts: ["Cistella: es mou amb les fletxes.|Cesta: se mueve con las flechas.", "Poma: cau, i si toca la cistella o la vora…|Manzana: cae, y si toca la cesta o el borde…", "Plàtan: el mateix, amb la seva velocitat.|Plátano: lo mismo, con su velocidad."],
-        nota: "Remarca que la regla de la fruita va als guions de la fruita.|Remarca que la regla de la fruta va en los guiones de la fruta." },
+      { id: 's5', k: 'media', t: "Cada personatge, els seus guions|Cada personaje, sus guiones", x: "La cistella es mou; cada fruita cau i fa les seves preguntes.|La cesta se mueve; cada fruta cae y hace sus preguntas.", media: { k: 'stage', w: { bg: "bosc", sprites: [{ id: 'cistella', art: "cistella", x: -120, y: -130 }, { id: 'poma', art: "poma", x: -120, y: 150 }, { id: 'platan', art: "platan", x: 100, y: 150 }] }, prog: "@cistella flag{ forever{ glide:1.2,-120,-130 wait:0.4 glide:1.2,100,-130 wait:0.4 } } @poma flag{ forever{ chy:-4 if:touch:cistella{ sound:pop sety:150 } if:touch:edge{ sety:150 } } } @platan flag{ forever{ chy:-3 if:touch:cistella{ sound:moneda sety:150 } if:touch:edge{ sety:150 } } }", time: 8 }, nota: "Remarca que la regla de la fruita va als guions de la fruita, i que tots els guions funcionen alhora.|Remarca que la regla de la fruta va en los guiones de la fruta, y que todos los guiones funcionan a la vez." },
       { id: 's6', k: 'media', t: "Una regla que ho acaba tot|Una regla que lo acaba todo", x: "Si la roca toca la cistella, atura-ho tot.|Si la roca toca la cesta, páralo todo.",
         media: { k: 'stage', w: { bg: 'bosc', sprites: [{ id: 'cistella', art: 'cistella', x: 40, y: -130 }, { id: 'roca', art: 'roca', x: 40, y: 150, size: 80 }] }, prog: '@roca flag{ forever{ chy:-4 if:touch:cistella{ say:"Pam! S\'ha acabat!|¡Pam! ¡Se acabó!" stop:all } if:touch:edge{ sety:150 } } }', time: 5 },
         nota: "Pregunta quin bloc atura el programa.|Pregunta qué bloque para el programa." },
       { id: 's7', k: 'concepte', t: "Construir a trossos|Construir a trozos", punts: ["Programa un tros.|Programa un trozo.", "Prova'l.|Pruébalo.", "Arregla'l.|Arréglalo.", "Passa al següent.|Pasa al siguiente."],
-        nota: "Ho fan així els equips que creen videojocs de veritat.|Lo hacen así los equipos que crean videojuegos de verdad." },
+        nota: "Ho fan així els equips que creen videojocs de veritat.|Lo hacen así los equipos que crean videojuegos de verdad.", pic: "img/ment/ser.webp" },
       { id: 's8', k: 'activitat', t: "El pla del videojoc|El plan del videojuego", timer: 10, punts: ["Dibuixa l'escenari.|Dibuja el escenario.", "Escriu com es mou la cistella.|Escribe cómo se mueve la cesta.", "Escriu les regles amb «si».|Escribe las reglas con «si».", "Afegeix una idea teva.|Añade una idea tuya."],
         nota: "Passeja i ajuda a escriure regles completes: si… llavors…|Pasea y ayuda a escribir reglas completas: si… entonces…" },
       { id: 's9', k: 'activitat', t: "Revisa el pla amb un company/a|Revisa el plan con un compañero/a", punts: ["Cada regla comença amb «si»?|¿Cada regla empieza con «si»?", "Saps a quin personatge va cada regla?|¿Sabes en qué personaje va cada regla?"],
@@ -2901,7 +4223,7 @@ Object.assign(TGUIDE, {
       { id: 's11', k: 'repte', t: "Els tres trossos|Los tres trozos", timer: 12, punts: ["1. La cistella i les fletxes|1. La cesta y las flechas", "2. La poma|2. La manzana", "3. La roca|3. La roca"],
         nota: "Recorda: «Comença» per provar amb les fletxes, «Comprova» per comprovar-ho.|Recuerda: «Empieza» para probar con las flechas, «Comprueba» para comprobarlo." },
       { id: 's12', k: 'activitat', t: "Crea: el videojoc sencer|Crea: el videojuego entero", timer: 8, x: "Segueix el teu pla: regles de la poma, el plàtan i la teva millora.|Sigue tu plan: reglas de la manzana, el plátano y tu mejora.",
-        nota: "Qui acabi aviat pot afegir la roca.|Quien termine pronto puede añadir la roca." },
+        nota: "Qui acabi aviat pot fer caure les fruites més de pressa, afegir frases a la cistella o fer una fruita que torni a dalt per un altre lloc.|Quien termine pronto puede hacer caer las frutas más deprisa, añadir frases a la cesta o hacer que una fruta vuelva arriba por otro sitio." },
       { id: 's13', k: 'activitat', t: "Fes de tester|Haz de tester", timer: 5, punts: ["Prova'l sense ajuda.|Pruébalo sin ayuda.", "Digues una cosa que t'agrada.|Di una cosa que te gusta.", "Digues una idea per millorar.|Di una idea para mejorar.", "Mans fora del ratolí!|¡Manos fuera del ratón!"],
         nota: "Modela-ho tu primer amb el videojoc d'un voluntari/a.|Modélalo tú primero con el videojuego de un voluntario/a." },
       { id: 's14', k: 'resum', t: "Què hem après en aquesta unitat|Qué hemos aprendido en esta unidad", punts: ["Condicions: «si toca…», «toca el color».|Condiciones: «si toca…», «toca el color».", "«Si… si no», «i», «o», «no».|«Si… si no», «y», «o», «no».", "Un videojoc és un munt de regles amb «si».|Un videojuego es un montón de reglas con «si»."],
@@ -2943,6 +4265,48 @@ Object.assign(TGUIDE, (() => {
 
   /* ---------- Sessió 1 · El marcador ---------- */
   'g6-1': {
+    intro: "Primera sessió de variables. Una variable és una capsa amb nom que guarda un número que pot canviar mentre el programa funciona: el marcador d'un videojoc n'és l'exemple perfecte. L'alumnat aprèn la diferència entre «posa punts a 0» (número nou) i «suma a punts 1» (afegir; amb -1, restar), i fa que un personatge digui el número de la variable. La classe combina la demo de la moneda, un marcador viu amb pissarretes en grups i quatre reptes de punts.|Primera sesión de variables. Una variable es una caja con nombre que guarda un número que puede cambiar mientras el programa funciona: el marcador de un videojuego es el ejemplo perfecto. El alumnado aprende la diferencia entre «pon puntos a 0» (número nuevo) y «suma a puntos 1» (añadir; con -1, restar), y hace que un personaje diga el número de la variable. La clase combina la demo de la moneda, un marcador vivo con pizarritas en grupos y cuatro retos de puntos.",
+    claus: [
+      "Una variable té un nom que no canvia i un número que sí que canvia.|Una variable tiene un nombre que no cambia y un número que sí cambia.",
+      "«Posa» esborra el número i n'escriu un de nou; «suma» n'hi afegeix.|«Pon» borra el número y escribe uno nuevo; «suma» le añade.",
+      "Sumar un número negatiu és restar: «suma a punts -1».|Sumar un número negativo es restar: «suma a puntos -1».",
+      "Al «digues» es pot triar la variable: el personatge diu el número que hi ha a dins.|En el «di» se puede elegir la variable: el personaje dice el número que hay dentro.",
+      "«Posa punts a 0» va al començament, perquè cada partida comenci de zero.|«Pon puntos a 0» va al principio, para que cada partida empiece de cero."
+    ],
+    prev: [
+      "El «si toca…» dins del «per sempre» (unitat 5).|El «si toca…» dentro del «por siempre» (unidad 5).",
+      "Els guions «quan toco aquest personatge» i «quan premo una tecla» (unitat 3).|Los guiones «al tocar este personaje» y «al pulsar una tecla» (unidad 3).",
+      "Sumar i restar números petits i saber que 5 - 1 = 4 (matemàtiques).|Sumar y restar números pequeños y saber que 5 - 1 = 4 (matemáticas)."
+    ],
+    faq: [
+      ["Per què el marcador sempre diu 1?|¿Por qué el marcador siempre dice 1?", "Perquè fas servir «posa punts a 1»: cada vegada hi torna a posar un 1. Per anar sumant, cal «suma a punts 1».|Porque usas «pon puntos a 1»: cada vez vuelve a poner un 1. Para ir sumando, hace falta «suma a puntos 1»."],
+      ["Com resto punts? No hi ha cap bloc «resta».|¿Cómo resto puntos? No hay ningún bloque «resta».", "Amb el mateix «suma», escrivint un número negatiu: «suma a punts -1». Sumar -1 és el mateix que restar 1.|Con el mismo «suma», escribiendo un número negativo: «suma a puntos -1». Sumar -1 es lo mismo que restar 1."],
+      ["Per què en Numi diu «punts» i no el número?|¿Por qué Numi dice «puntos» y no el número?", "Perquè has escrit la paraula. Toca el text del «digues» i tria el botó de la variable: llavors diu el número.|Porque has escrito la palabra. Toca el texto del «di» y elige el botón de la variable: entonces dice el número."],
+      ["Els punts poden ser negatius?|¿Los puntos pueden ser negativos?", "Sí: si restes més del que hi ha, la variable baixa de 0 (-1, -2…). Als videojocs, de vegades es fa i de vegades s'evita.|Sí: si restas más de lo que hay, la variable baja de 0 (-1, -2…). En los videojuegos, a veces se hace y a veces se evita."],
+      ["Per què la poma sumava molts punts de cop?|¿Por qué la manzana sumaba muchos puntos de golpe?", "Mentre toca el gat, el bucle pregunta 30 vegades cada segon i a cada volta suma 1. Per això, en sumar, la tornem a dalt.|Mientras toca al gato, el bucle pregunta 30 veces cada segundo y en cada vuelta suma 1. Por eso, al sumar, la devolvemos arriba."],
+      ["Quan torno a començar, els punts tornen a 0?|¿Cuando vuelvo a empezar, los puntos vuelven a 0?", "Només si el programa té «posa punts a 0» en començar. Per això aquest bloc és tan important.|Solo si el programa tiene «pon puntos a 0» al empezar. Por eso este bloque es tan importante."]
+    ],
+    tec: [
+      ["El marcador de la variable no surt a l'escenari.|El marcador de la variable no sale en el escenario.", "Surt a dalt a l'esquerra quan el repte té variables. Si no es veu, toqueu el botó de tornar a començar (la fletxa rodona) o feu la finestra més gran.|Sale arriba a la izquierda cuando el reto tiene variables. Si no se ve, tocad el botón de volver a empezar (la flecha redonda) o haced la ventana más grande."],
+      ["En tocar el text del «digues» no troben la variable.|Al tocar el texto del «di» no encuentran la variable.", "A la finestra que s'obre, sota el quadre per escriure, hi ha els botons de les variables del repte (punts, vides…). Cal tocar-ne un, no escriure'n el nom.|En la ventana que se abre, debajo del cuadro para escribir, están los botones de las variables del reto (puntos, vidas…). Hay que tocar uno, no escribir su nombre."],
+      ["Per escriure un número negatiu (-1) no troben el signe menys.|Para escribir un número negativo (-1) no encuentran el signo menos.", "A l'ordinador és la tecla del guionet (-), abans del número. Si el teclat de la tauleta o del mòbil no el mostra, feu aquell repte a l'ordinador.|En el ordenador es la tecla del guion (-), antes del número. Si el teclado de la tableta o del móvil no lo muestra, haced ese reto en el ordenador."],
+      ["Un alumne/a s'encalla en un repte.|Un alumno/a se atasca en un reto.", "Després de dos intents apareix «Una pista» i, després, «Mostra una solució». També es pot sortir del pas i tornar-hi: el repte torna a començar.|Después de dos intentos aparece «Una pista» y, después, «Muestra una solución». También se puede salir del paso y volver: el reto vuelve a empezar."],
+      ["Hi ha poques pissarretes per als grups.|Hay pocas pizarritas para los grupos.", "Una funda de plàstic amb un full a dins i un retolador que s'esborri fa el mateix servei; també un full i llapis, ratllant el número vell.|Una funda de plástico con una hoja dentro y un rotulador que se borre hace el mismo servicio; también una hoja y lápiz, tachando el número viejo."]
+    ],
+    seg: [
+      "Pantalles: recorda la pausa activa a mitja sessió i que mirin lluny uns segons quan acabin cada repte.|Pantallas: recuerda la pausa activa a media sesión y que miren a lo lejos unos segundos cuando terminen cada reto.",
+      "Activitat de grups: els papers roten perquè tothom faci de variable; ningú no queda fora ni fa sempre el mateix paper.|Actividad de grupos: los papeles rotan para que todos hagan de variable; nadie queda fuera ni hace siempre el mismo papel."
+    ],
+    extra: [
+      "Afegir a la caseta dels globus un segon objecte que resti 2 punts i fer-ne la prova amb un company/a.|Añadir a la caseta de los globos un segundo objeto que reste 2 puntos y probarlo con un compañero/a.",
+      "Fer que la moneda de la sort es faci més gran a cada punt (canvia la mida en 10).|Hacer que la moneda de la suerte se haga más grande en cada punto (cambia el tamaño en 10).",
+      "Buscar a casa tres «variables» de la vida real (el comptaquilòmetres, el termòmetre, el compte de passos) i apuntar-ne el nom i el número.|Buscar en casa tres «variables» de la vida real (el cuentakilómetros, el termómetro, el contador de pasos) y apuntar su nombre y su número."
+    ],
+    trans: [
+      "Ve de la unitat 5: les regles «si toca…» ara també sumen punts.|Viene de la unidad 5: las reglas «si toca…» ahora también suman puntos.",
+      "Sessió següent: les vides, una variable que baixa, i la fi de la partida.|Sesión siguiente: las vidas, una variable que baja, y el fin de partida.",
+      "Matemàtiques: sumes i restes encadenades, nombres negatius i el càlcul mental.|Matemáticas: sumas y restas encadenadas, números negativos y el cálculo mental."
+    ],
     obj: [
       "L'alumne/a explica què és una variable (un nom i un número que pot canviar) i en dona un exemple d'un videojoc o de la vida diària.|El alumno/a explica qué es una variable (un nombre y un número que puede cambiar) y da un ejemplo de un videojuego o de la vida diaria.",
       "L'alumne/a distingeix «posa punts a…» (substitueix el número) de «suma a punts…» (n'hi afegeix o en treu).|El alumno/a distingue «pon puntos a…» (sustituye el número) de «suma a puntos…» (añade o quita).",
@@ -2970,16 +4334,21 @@ Object.assign(TGUIDE, (() => {
       ],
       imprimir: ["Targetes d'esdeveniments del marcador|Tarjetas de eventos del marcador", "Fitxa: quant val punts?|Ficha: ¿cuánto vale puntos?"],
       prep: [
-        "Imprimir i retallar un paquet de targetes per grup de 4 i barrejar-les.|Imprimir y recortar un paquete de tarjetas por grupo de 4 y barajarlas.",
-        "Escriure «punts» a dalt de cada pissarreta, amb un 0 a sota.|Escribir «puntos» arriba de cada pizarrita, con un 0 debajo.",
-        "Provar abans el repte de la poma: és el primer on els punts es guanyen quan dos personatges es toquen.|Probar antes el reto de la manzana: es el primero en el que los puntos se ganan cuando dos personajes se tocan."
+        "El dia abans (15 min): imprimir i retallar un paquet de targetes per grup de 4, barrejar-les, i imprimir la fitxa «Quant val punts?» (una per parella).|El día antes (15 min): imprimir y recortar un paquete de tarjetas por grupo de 4, barajarlas, e imprimir la ficha «¿Cuánto vale puntos?» (una por pareja).",
+        "El dia abans (5 min): escriure «punts» a dalt de cada pissarreta, amb un 0 a sota.|El día antes (5 min): escribir «puntos» arriba de cada pizarrita, con un 0 debajo.",
+        "El dia abans (10 min): provar el repte de la poma, el primer on els punts es guanyen quan dos personatges es toquen.|El día antes (10 min): probar el reto de la manzana, el primero en el que los puntos se ganan cuando dos personajes se tocan.",
+        "Abans de classe (5 min): obrir la presentació, provar la demo de la moneda i deixar la sessió iniciada als ordinadors.|Antes de clase (5 min): abrir la presentación, probar la demo de la moneda y dejar la sesión iniciada en los ordenadores."
       ]
     },
     plan: [
       { min: 5, t: "Benvinguda: la Fira de Tardor|Bienvenida: la Feria de Otoño", fase: 'inici',
         fa: "Presenta la unitat: la classe prepara la caseta de videojocs de la Fira de Tardor del poble. Pregunta com se sap qui ha guanyat en un videojoc i recull respostes. Repassa amb la poma de la unitat 5 què fa un «si toca» dins d'un «per sempre».|Presenta la unidad: la clase prepara la caseta de videojuegos de la Feria de Otoño del pueblo. Pregunta cómo se sabe quién ha ganado en un videojuego y recoge respuestas. Repasa con la manzana de la unidad 5 qué hace un «si toca» dentro de un «por siempre».",
-        diu: ["Com sabeu, en un videojoc, qui ho ha fet millor?|¿Cómo sabéis, en un videojuego, quién lo ha hecho mejor?",
-          "El programa ha de recordar un número que va canviant. Avui aprendrem com.|El programa tiene que recordar un número que va cambiando. Hoy aprenderemos cómo."],
+        diu: [
+          "Com sabeu, en un videojoc, qui ho ha fet millor? (pels punts)|¿Cómo sabéis, en un videojuego, quién lo ha hecho mejor? (por los puntos)",
+          "On es guarden els punts mentre el videojoc funciona?|¿Dónde se guardan los puntos mientras el videojuego funciona?",
+          "Recordeu la poma: per què el «si toca» va dins del «per sempre»? (perquè pregunti a cada volta)|Recordad la manzana: ¿por qué el «si toca» va dentro del «por siempre»? (para que pregunte en cada vuelta)",
+          "El programa ha de recordar un número que va canviant. Avui aprendrem com.|El programa tiene que recordar un número que va cambiando. Hoy aprenderemos cómo."
+        ],
         slides: ['s1', 's2', 's3'], app: "Encara no: pantalles apagades.|Todavía no: pantallas apagadas.", org: "Tot el grup|Todo el grupo" },
       { min: 10, t: "Què és una variable?|¿Qué es una variable?", fase: 'teoria',
         fa: "Explica la variable com una capsa amb etiqueta: el nom no canvia i el número sí. Demana exemples de la vida diària. Mostra «posa» i «suma» amb l'animació i, abans d'avançar cada bloc, fes que diguin el número nou. Passa les dues demos de l'escenari i acaba amb l'error típic: «posa punts a 1» en lloc de «suma».|Explica la variable como una caja con etiqueta: el nombre no cambia y el número sí. Pide ejemplos de la vida diaria. Muestra «pon» y «suma» con la animación y, antes de avanzar cada bloque, haz que digan el número nuevo. Pasa las dos demos del escenario y termina con el error típico: «pon puntos a 1» en lugar de «suma».",
@@ -2990,29 +4359,45 @@ Object.assign(TGUIDE, (() => {
         slides: ['s4', 's5', 's6', 's7', 's8', 's9'], app: "Encara no: tota l'atenció a la projecció.|Todavía no: toda la atención en la proyección.", org: "Tot el grup|Todo el grupo" },
       { min: 12, t: "El marcador viu|El marcador vivo", fase: 'desconnectat',
         fa: "Grups de 4 amb papers: la «variable» (té la pissarreta), el programador/a (gira les targetes), el comprovador/a i el secretari/ària. Abans que la variable canviï el número, tot el grup diu quin serà. Després de 6 targetes, canvien els papers. Als últims 4 minuts, fan la fitxa «Quant val punts?» per parelles i en comproveu una a la pissarra.|Grupos de 4 con papeles: la «variable» (tiene la pizarrita), el programador/a (gira las tarjetas), el comprobador/a y el secretario/a. Antes de que la variable cambie el número, todo el grupo dice cuál será. Después de 6 tarjetas, cambian los papeles. En los últimos 4 minutos, hacen la ficha «¿Cuánto vale puntos?» por parejas y comprobáis una en la pizarra.",
-        diu: ["La variable no pot canviar el nom de la pissarreta, només el número.|La variable no puede cambiar el nombre de la pizarrita, solo el número.",
-          "Compte amb la targeta «posa»: què passa amb el número d'abans?|Cuidado con la tarjeta «pon»: ¿qué pasa con el número de antes?",
-          "Abans de girar la targeta «digues punts», què dirà la variable?|Antes de girar la tarjeta «di puntos», ¿qué dirá la variable?"],
+        diu: [
+          "La variable no pot canviar el nom de la pissarreta, només el número.|La variable no puede cambiar el nombre de la pizarrita, solo el número.",
+          "Abans d'escriure, tots junts: quin serà el número nou?|Antes de escribir, todos juntos: ¿cuál será el número nuevo?",
+          "Compte amb la targeta «posa»: què passa amb el número d'abans? (s'esborra)|Cuidado con la tarjeta «pon»: ¿qué pasa con el número de antes? (se borra)",
+          "Abans de girar la targeta «digues punts», què dirà la variable? (el número, no la paraula)|Antes de girar la tarjeta «di puntos», ¿qué dirá la variable? (el número, no la palabra)"
+        ],
         slides: ['s10', 's11'], app: "Cap: activitat sense pantalla.|Ninguna: actividad sin pantalla.", org: "Grups de 4 amb papers que roten|Grupos de 4 con papeles que rotan" },
       { min: 15, t: "A l'ordinador: descobreix i investiga|En el ordenador: descubre e investiga", fase: 'ordinador',
         fa: "Cada alumne/a avança al seu ritme fins al pas «Investiga». A «La capsa dels punts», que toquin «Ho hem fet!» si ja han fet el marcador viu. Fixa't en qui respon la pregunta de predir sense calcular: demana-li que ho faci en veu alta, bloc a bloc.|Cada alumno/a avanza a su ritmo hasta el paso «Investiga». En «La caja de los puntos», que toquen «¡Lo hemos hecho!» si ya han hecho el marcador vivo. Fíjate en quién responde la pregunta de predecir sin calcular: pídele que lo haga en voz alta, bloque a bloque.",
-        diu: ["Digues el valor després de cada bloc, com hem fet amb la pissarreta.|Di el valor después de cada bloque, como hemos hecho con la pizarrita.",
-          "Al pas Investiga: quin bloc posa sempre el mateix número?|En el paso Investiga: ¿qué bloque pone siempre el mismo número?"],
+        diu: [
+          "Digues el valor després de cada bloc, com hem fet amb la pissarreta.|Di el valor después de cada bloque, como hemos hecho con la pizarrita.",
+          "Quant val punts al final del guió de la pregunta? (9: el «posa a 10» esborra el 4)|¿Cuánto vale puntos al final del guion de la pregunta? (9: el «pon a 10» borra el 4)",
+          "A Investiga: quin bloc posa sempre el mateix número? (posa punts a 1)|En Investiga: ¿qué bloque pone siempre el mismo número? (pon puntos a 1)"
+        ],
         slides: ['s12'], app: "De «La missió» a «Investiga»: la pregunta de la poma, les dues històries, les targetes de «Descobreix», «La capsa dels punts», ordenar la partida de la moneda, quant val punts, quin bloc diu el número i el marcador que sempre diu 1.|De «La misión» a «Investiga»: la pregunta de la manzana, las dos historias, las tarjetas de «Descubre», «La caja de los puntos», ordenar la partida de la moneda, cuánto vale puntos, qué bloque dice el número y el marcador que siempre dice 1.", org: "Individual|Individual" },
       { min: 10, t: "Reptes: el primer marcador|Retos: el primer marcador", fase: 'ordinador',
         fa: "Feu la pausa activa tots junts. Després, els quatre reptes. Recorda'ls que els reptes amb tocs o tecles es proven lliurement amb «Comença» i es comproven amb «Comprova». Al repte de la poma, si algú fa molts punts de cop, pregunta-li quantes voltes del bucle passa la poma tocant el gat.|Haced la pausa activa todos juntos. Después, los cuatro retos. Recuérdales que los retos con toques o teclas se prueban libremente con «Empieza» y se comprueban con «Comprueba». En el reto de la manzana, si alguien hace muchos puntos de golpe, pregúntale cuántas vueltas del bucle pasa la manzana tocando al gato.",
-        diu: ["Quan toques la moneda, quin guió s'executa?|Cuando tocas la moneda, ¿qué guion se ejecuta?",
-          "Per què la poma ha de tornar a dalt després de sumar?|¿Por qué la manzana tiene que volver arriba después de sumar?",
-          "Com fas que el meteorit resti en lloc de sumar?|¿Cómo haces que el meteorito reste en lugar de sumar?"],
+        diu: [
+          "Quan toques la moneda, quin guió s'executa? (quan toco aquest personatge)|Cuando tocas la moneda, ¿qué guion se ejecuta? (al tocar este personaje)",
+          "Per què la poma ha de tornar a dalt després de sumar? (si no, suma a cada volta mentre toca el gat)|¿Por qué la manzana tiene que volver arriba después de sumar? (si no, suma en cada vuelta mientras toca al gato)",
+          "Com fas que el gat digui els salts i no la paraula «salts»? (triant la variable al «digues»)|¿Cómo haces que el gato diga los saltos y no la palabra «saltos»? (eligiendo la variable en el «di»)",
+          "Com fas que el meteorit resti en lloc de sumar? (suma -1)|¿Cómo haces que el meteorito reste en lugar de sumar? (suma -1)"
+        ],
         slides: ['s13'], app: "«Pausa activa» i els quatre reptes: la moneda de la sort, la poma i el gat, el comptador de salts, i l'estrella i el meteorit.|«Pausa activa» y los cuatro retos: la moneda de la suerte, la manzana y el gato, el contador de saltos, y la estrella y el meteorito.", org: "Tot el grup i després individual|Todo el grupo y después individual" },
       { min: 5, t: "Crea: la caseta dels globus|Crea: la caseta de los globos", fase: 'crea',
         fa: "Cada alumne/a fa la seva caseta amb els tres criteris. Qui acabi, la passa a un company/a perquè hi faci punts i comprovi que en Numi diu el número bo.|Cada alumno/a hace su caseta con los tres criterios. Quien termine, la pasa a un compañero/a para que haga puntos y compruebe que Numi dice el número correcto.",
-        diu: ["On va el «posa punts a 0»? Per què?|¿Dónde va el «pon puntos a 0»? ¿Por qué?",
-          "El teu company/a ha fet 4 punts. Què ha de dir en Numi?|Tu compañero/a ha hecho 4 puntos. ¿Qué tiene que decir Numi?"],
+        diu: [
+          "On va el «posa punts a 0»? Per què? (a «quan comença», perquè cada partida comenci de zero)|¿Dónde va el «pon puntos a 0»? ¿Por qué? (en «al empezar», para que cada partida empiece de cero)",
+          "El teu company/a ha fet 4 punts. Què ha de dir en Numi? (4)|Tu compañero/a ha hecho 4 puntos. ¿Qué tiene que decir Numi? (4)",
+          "Què fa diferent la teva caseta? (un so, una mida, un lloc…)|¿Qué hace diferente tu caseta? (un sonido, un tamaño, un sitio…)"
+        ],
         slides: ['s14'], app: "Pas «Crea»: La caseta dels globus (es desa a «Projectes»).|Paso «Crea»: La caseta de los globos (se guarda en «Proyectos»).", org: "Individual i per parelles|Individual y por parejas" },
       { min: 3, t: "Tancament i tiquet de sortida|Cierre y ticket de salida", fase: 'tancament',
         fa: "Repassa les tres idees amb el resum, deixa que facin les preguntes finals i, a la porta, fes a cada alumne/a una pregunta del tiquet.|Repasa las tres ideas con el resumen, deja que hagan las preguntas finales y, en la puerta, haz a cada alumno/a una pregunta del ticket.",
-        diu: ["Qui em diu una variable que hi hagi a casa o a l'escola?|¿Quién me dice una variable que haya en casa o en el cole?"],
+        diu: [
+          "Qui em diu una variable que hi hagi a casa o a l'escola? (el termòmetre, el marcador del pati…)|¿Quién me dice una variable que haya en casa o en la escuela? (el termómetro, el marcador del patio…)",
+          "«Posa» o «suma»: quin fem servir per començar a 0? (posa)|«Pon» o «suma»: ¿cuál usamos para empezar en 0? (pon)",
+          "I per guanyar un punt? (suma 1)|¿Y para ganar un punto? (suma 1)"
+        ],
         slides: ['s15', 's16'], app: "«Tancament»: les dues preguntes i com m'he sentit.|«Cierre»: las dos preguntas y cómo me he sentido.", org: "Tot el grup|Todo el grupo" }
     ],
     errors: [
@@ -3025,7 +4410,8 @@ Object.assign(TGUIDE, (() => {
       ["Per restar, busca un bloc «resta» que no existeix.|Para restar, busca un bloque «resta» que no existe.",
         "Recorda-li que 5 + (-1) és 4. Que toqui el número del bloc «suma» i hi escrigui un número negatiu.|Recuérdale que 5 + (-1) es 4. Que toque el número del bloque «suma» y escriba un número negativo."],
       ["Programa un personatge però el guió és en un altre (no ha triat el personatge a dalt).|Programa un personaje pero el guion está en otro (no ha elegido el personaje arriba).",
-        "Pregunta-li de qui és el guió que vol fer. Que miri quina pestanya de personatge està marcada.|Pregúntale de quién es el guion que quiere hacer. Que mire qué pestaña de personaje está marcada."]
+        "Pregunta-li de qui és el guió que vol fer. Que miri quina pestanya de personatge està marcada.|Pregúntale de quién es el guion que quiere hacer. Que mire qué pestaña de personaje está marcada."],
+      ["Posa «posa punts a 0» dins del «quan toco» i el marcador es queda a 0 o a 1.|Pone «pon puntos a 0» dentro del «al tocar» y el marcador se queda en 0 o en 1.", "Pregunta: quan vols que els punts tornin a 0, a cada toc o només en començar? Que el passi a un guió «quan comença».|Pregunta: ¿cuándo quieres que los puntos vuelvan a 0, en cada toque o solo al empezar? Que lo pase a un guion «al empezar»."]
     ],
     diff: {
       mes: "Afegir a la caseta dels globus un segon personatge que resti 2 punts, i que en Numi digui «Rècord!» si es toca quan hi ha molts punts (amb un company/a, pensar com es podria fer). Inventar una targeta nova per al marcador viu.|Añadir a la caseta de los globos un segundo personaje que reste 2 puntos, y que Numi diga «¡Récord!» si se le toca cuando hay muchos puntos (con un compañero/a, pensar cómo se podría hacer). Inventar una tarjeta nueva para el marcador vivo.",
@@ -3037,7 +4423,12 @@ Object.assign(TGUIDE, (() => {
       rubric: [
         ["Concepte de variable|Concepto de variable", "Explica que té un nom fix i un número que canvia, i en dona un exemple propi.|Explica que tiene un nombre fijo y un número que cambia, y da un ejemplo propio.", "Reconeix el marcador com a variable però no ho explica amb les seves paraules.|Reconoce el marcador como variable pero no lo explica con sus palabras."],
         ["Posa i suma|Pon y suma", "Tria el bloc que toca i prediu bé el valor després de diversos blocs.|Elige el bloque correcto y predice bien el valor después de varios bloques.", "Confon «posa» i «suma» en algun cas.|Confunde «pon» y «suma» en algún caso."],
-        ["Marcador al programa|Marcador en el programa", "Fa sumar i restar punts amb tocs i xocs i mostra el valor amb «digues».|Hace sumar y restar puntos con toques y choques y muestra el valor con «di».", "Suma punts amb tocs, però necessita ajuda per als xocs o per mostrar el valor.|Suma puntos con toques, pero necesita ayuda para los choques o para mostrar el valor."]
+        ["Marcador al programa|Marcador en el programa", "Fa sumar i restar punts amb tocs i xocs i mostra el valor amb «digues».|Hace sumar y restar puntos con toques y choques y muestra el valor con «di».", "Suma punts amb tocs, però necessita ajuda per als xocs o per mostrar el valor.|Suma puntos con toques, pero necesita ayuda para los choques o para mostrar el valor."],
+        [
+          "Predir el valor|Predecir el valor",
+          "Diu el valor de la variable després de cada bloc d'un guió (posa, suma, suma negativa).|Dice el valor de la variable después de cada bloque de un guion (pon, suma, suma negativa).",
+          "Necessita la pissarreta o executar el programa per saber-ho.|Necesita la pizarrita o ejecutar el programa para saberlo."
+        ]
       ]
     },
     casa: "A casa, amb el mòbil, podeu repetir la sessió i fer «La capsa dels punts»: llanceu boles de paper a una paperera i porteu el marcador en un paper (suma 1, suma -1, posa a 0).|En casa, con el móvil, podéis repetir la sesión y hacer «La caja de los puntos»: lanzad bolas de papel a una papelera y llevad el marcador en un papel (suma 1, suma -1, pon a 0).",
@@ -3051,7 +4442,7 @@ Object.assign(TGUIDE, (() => {
       { id: 's4', k: 'anim', t: "Una capsa amb nom|Una caja con nombre", anim: 'g6box', x: "Una variable té un nom que no canvia i un número que sí que canvia.|Una variable tiene un nombre que no cambia y un número que sí cambia.",
         nota: "Assenyala la capsa i el marcador de l'escenari: són la mateixa variable vista de dues maneres.|Señala la caja y el marcador del escenario: son la misma variable vista de dos maneras." },
       { id: 's5', k: 'concepte', t: "Variables a tot arreu|Variables por todas partes", punts: ["El marcador d'un partit: local 2, visitant 1.|El marcador de un partido: local 2, visitante 1.", "El comptador de passos d'un rellotge.|El contador de pasos de un reloj.", "Els cromos que portes a la col·lecció.|Los cromos que llevas en la colección."],
-        nota: "Per a cada exemple, pregunta quin és el nom i quin és el número, i quan canvia.|Para cada ejemplo, pregunta cuál es el nombre y cuál es el número, y cuándo cambia." },
+        nota: "Per a cada exemple, pregunta quin és el nom i quin és el número, i quan canvia.|Para cada ejemplo, pregunta cuál es el nombre y cuál es el número, y cuándo cambia.", pic: "img/ment/dig.webp" },
       { id: 's6', k: 'anim', t: "Posa i suma|Pon y suma", anim: 'g6setch', x: "«Posa» esborra i escriu un número nou; «suma» n'hi afegeix (o en treu, si és negatiu).|«Pon» borra y escribe un número nuevo; «suma» añade (o quita, si es negativo).",
         nota: "Para l'animació abans de cada bloc i demana el número nou. El darrer bloc és el més important: el 3 s'esborra.|Para la animación antes de cada bloque y pide el número nuevo. El último bloque es el más importante: el 3 se borra." },
       { id: 's7', k: 'media', t: "Cada toc, un punt|Cada toque, un punto", x: "Quan comença, punts a 0. Cada toc a la moneda: suma 1.|Al empezar, puntos a 0. Cada toque a la moneda: suma 1.",
@@ -3102,6 +4493,49 @@ Object.assign(TGUIDE, (() => {
 
   /* ---------- Sessió 2 · Vides i fi de partida ---------- */
   'g6-2': {
+    intro: "Segona sessió de variables: les vides. Són una variable que comença a 3 i baixa 1 a cada xoc; després del xoc, el personatge espera una mica perquè un sol xoc no en tregui moltes. Per saber quan s'acaba la partida, una condició compara la variable amb un número (vides = 0) i, si és sí, «atura tot». L'alumnat també aprèn que el valor inicial va una sola vegada, abans del bucle. La classe alterna demos de la nau, una taula de vides en parella i quatre reptes, i acaba amb un videojoc propi del peix i les meduses.|Segunda sesión de variables: las vidas. Son una variable que empieza en 3 y baja 1 en cada choque; después del choque, el personaje espera un poco para que un solo choque no le quite muchas. Para saber cuándo se acaba la partida, una condición compara la variable con un número (vidas = 0) y, si es sí, «para todo». El alumnado también aprende que el valor inicial va una sola vez, antes del bucle. La clase alterna demos de la nave, una tabla de vidas por parejas y cuatro retos, y termina con un videojuego propio del pez y las medusas.",
+    claus: [
+      "Les vides són una variable: comencen a 3 i baixen 1 a cada xoc.|Las vidas son una variable: empiezan en 3 y bajan 1 en cada choque.",
+      "Després d'un xoc cal esperar una mica: si no, mentre es toquen, en perd moltes.|Después de un choque hay que esperar un poco: si no, mientras se tocan, pierde muchas.",
+      "Una comparació (=, >, <) és una condició: la resposta és sí o no.|Una comparación (=, >, <) es una condición: la respuesta es sí o no.",
+      "«Posa vides a 3» va abans del bucle; dins, es tornaria a posar a cada volta.|«Pon vidas a 3» va antes del bucle; dentro, se volvería a poner en cada vuelta.",
+      "«Atura tot» acaba la partida: para els guions de tots els personatges.|«Para todo» termina la partida: para los guiones de todos los personajes."
+    ],
+    prev: [
+      "«Posa» i «suma» amb variables, i sumar -1 per restar (sessió anterior).|«Pon» y «suma» con variables, y sumar -1 para restar (sesión anterior).",
+      "«Si toca…» dins del «per sempre» i «atura tot» (unitat 5).|«Si toca…» dentro del «por siempre» y «para todo» (unidad 5).",
+      "Els signes =, > i < de matemàtiques.|Los signos =, > y < de matemáticas."
+    ],
+    faq: [
+      ["Per què la nau perd totes les vides en un sol xoc?|¿Por qué la nave pierde todas las vidas en un solo choque?", "Perquè el meteorit la toca durant molts fotogrames i, a cada volta, en resta una. Amb «espera 1 segon» després del xoc, el meteorit ja ha passat.|Porque el meteorito la toca durante muchos fotogramas y, en cada vuelta, resta una. Con «espera 1 segundo» después del choque, el meteorito ya ha pasado."],
+      ["Com sé si és > o <?|¿Cómo sé si es > o <?", "La boca oberta del signe mira sempre el número més gran: 5 > 3 i 3 < 5. Llegeix-ho en veu alta: «5 és més gran que 3».|La boca abierta del signo mira siempre al número más grande: 5 > 3 y 3 < 5. Léelo en voz alta: «5 es mayor que 3»."],
+      ["On trobo la condició «vides = 0»?|¿Dónde encuentro la condición «vidas = 0»?", "En aquests reptes ja ve posada. Si en vols una de nova, toca la condició del «si» i tria «comparar números»; després toca cada part per canviar-la.|En estos retos ya viene puesta. Si quieres una nueva, toca la condición del «si» y elige «comparar números»; después toca cada parte para cambiarla."],
+      ["Per què la partida no s'acaba mai?|¿Por qué la partida no se acaba nunca?", "Mira on és «posa vides a 3»: si és dins del «per sempre», les vides tornen a 3 a cada volta. Ha d'anar abans del bucle.|Mira dónde está «pon vidas a 3»: si está dentro del «por siempre», las vidas vuelven a 3 en cada vuelta. Tiene que ir antes del bucle."],
+      ["Què vol dir «atura tot»?|¿Qué quiere decir «para todo»?", "Para tots els guions de tots els personatges: el meteorit, la nau, tot. És la manera d'acabar la partida.|Para todos los guiones de todos los personajes: el meteorito, la nave, todo. Es la manera de terminar la partida."],
+      ["El cor em dona vides sense parar!|¡El corazón me da vidas sin parar!", "Mentre el toques, suma a cada volta. Fes que s'amagui després de sumar: amagat, ja no el pots tocar.|Mientras lo tocas, suma en cada vuelta. Haz que se esconda después de sumar: escondido, ya no lo puedes tocar."]
+    ],
+    tec: [
+      ["El marcador de la variable no surt a l'escenari.|El marcador de la variable no sale en el escenario.", "Surt a dalt a l'esquerra quan el repte té variables. Si no es veu, toqueu el botó de tornar a començar (la fletxa rodona) o feu la finestra més gran.|Sale arriba a la izquierda cuando el reto tiene variables. Si no se ve, tocad el botón de volver a empezar (la flecha redonda) o haced la ventana más grande."],
+      ["En tocar el text del «digues» no troben la variable.|Al tocar el texto del «di» no encuentran la variable.", "A la finestra que s'obre, sota el quadre per escriure, hi ha els botons de les variables del repte (punts, vides…). Cal tocar-ne un, no escriure'n el nom.|En la ventana que se abre, debajo del cuadro para escribir, están los botones de las variables del reto (puntos, vidas…). Hay que tocar uno, no escribir su nombre."],
+      ["Per escriure un número negatiu (-1) no troben el signe menys.|Para escribir un número negativo (-1) no encuentran el signo menos.", "A l'ordinador és la tecla del guionet (-), abans del número. Si el teclat de la tauleta o del mòbil no el mostra, feu aquell repte a l'ordinador.|En el ordenador es la tecla del guion (-), antes del número. Si el teclado de la tableta o del móvil no lo muestra, haced ese reto en el ordenador."],
+      ["Un alumne/a s'encalla en un repte.|Un alumno/a se atasca en un reto.", "Després de dos intents apareix «Una pista» i, després, «Mostra una solució». També es pot sortir del pas i tornar-hi: el repte torna a començar.|Después de dos intentos aparece «Una pista» y, después, «Muestra una solución». También se puede salir del paso y volver: el reto vuelve a empezar."],
+      ["Al projecte del peix, les fletxes no el mouen.|En el proyecto del pez, las flechas no lo mueven.", "Cal fer els guions «quan premo la fletxa amunt / avall» amb «canvia y en 20 / -20». Amb «Comença» les prems tu; «Comprova» no les prem.|Hay que hacer los guiones «al pulsar la flecha arriba / abajo» con «cambia y en 20 / -20». Con «Empieza» las pulsas tú; «Comprueba» no las pulsa."]
+    ],
+    seg: [
+      "Pantalles: recorda la pausa activa a mitja sessió i que mirin lluny uns segons quan acabin cada repte.|Pantallas: recuerda la pausa activa a media sesión y que miren a lo lejos unos segundos cuando terminen cada reto.",
+      "Pausa activa de la nau: ajupir-se sense empènyer i amb espai al voltant. Qui no es vulgui ajupir pot abaixar el cap.|Pausa activa de la nave: agacharse sin empujar y con espacio alrededor. Quien no se quiera agachar puede bajar la cabeza.",
+      "«Perdre» forma part dels videojocs: si algú es frustra, recorda que es pot tornar a començar i que provar és aprendre.|«Perder» forma parte de los videojuegos: si alguien se frustra, recuerda que se puede volver a empezar y que probar es aprender."
+    ],
+    extra: [
+      "Al videojoc del peix, afegir un cor que doni una vida extra i s'amagui en tocar-lo.|En el videojuego del pez, añadir un corazón que dé una vida extra y se esconda al tocarlo.",
+      "Fer que el peix canviï de vestit quan li queda una sola vida (si vides = 1).|Hacer que el pez cambie de disfraz cuando le queda una sola vida (si vidas = 1).",
+      "Inventar a la fitxa una partida on la nau agafi tants cors que no s'acabi mai, i explicar per què.|Inventar en la ficha una partida donde la nave coja tantos corazones que no se acabe nunca, y explicar por qué."
+    ],
+    trans: [
+      "Ve de la sessió 1: el mateix «suma», ara amb -1 i una condició que compara.|Viene de la sesión 1: el mismo «suma», ahora con -1 y una condición que compara.",
+      "Sessió següent: el temps com a variable, amb un compte enrere i el cronòmetre.|Sesión siguiente: el tiempo como variable, con una cuenta atrás y el cronómetro.",
+      "Matemàtiques: comparar nombres amb =, > i <, i les taules per seguir un procés pas a pas.|Matemáticas: comparar números con =, > y <, y las tablas para seguir un proceso paso a paso."
+    ],
     obj: [
       "L'alumne/a programa una variable de vides que comença a 3 i baixa 1 a cada xoc, amb una espera perquè cada xoc compti una sola vegada.|El alumno/a programa una variable de vidas que empieza en 3 y baja 1 en cada choque, con una espera para que cada choque cuente una sola vez.",
       "L'alumne/a llegeix i fa servir condicions que comparen una variable amb un número (=, > i <).|El alumno/a lee y usa condiciones que comparan una variable con un número (=, > y <).",
@@ -3129,48 +4563,73 @@ Object.assign(TGUIDE, (() => {
       ],
       imprimir: ["Fitxa: la taula de les vides|Ficha: la tabla de las vidas"],
       prep: [
-        "Imprimir una fitxa per parella.|Imprimir una ficha por pareja.",
-        "Dibuixar a la pissarra una taula amb dues columnes: «què passa» i «vides».|Dibujar en la pizarra una tabla con dos columnas: «qué pasa» y «vidas».",
-        "Provar abans el repte de l'error: cal esborrar «posa vides a 3» de dins del bucle i posar-ne un de nou abans.|Probar antes el reto del error: hay que borrar «pon vidas a 3» de dentro del bucle y poner uno nuevo antes."
+        "El dia abans (5 min): imprimir una fitxa «La taula de les vides» per parella.|El día antes (5 min): imprimir una ficha «La tabla de las vidas» por pareja.",
+        "El dia abans (10 min): provar el repte de l'error: cal esborrar «posa vides a 3» de dins del bucle i posar-ne un de nou abans.|El día antes (10 min): probar el reto del error: hay que borrar «pon vidas a 3» de dentro del bucle y poner uno nuevo antes.",
+        "Abans de classe (5 min): dibuixar a la pissarra una taula amb dues columnes: «què passa» i «vides».|Antes de clase (5 min): dibujar en la pizarra una tabla con dos columnas: «qué pasa» y «vidas».",
+        "Abans de classe (5 min): obrir la presentació i deixar la sessió iniciada als ordinadors.|Antes de clase (5 min): abrir la presentación y dejar la sesión iniciada en los ordenadores."
       ]
     },
     plan: [
       { min: 5, t: "Benvinguda: la nau que no es trenca mai|Bienvenida: la nave que no se rompe nunca", fase: 'inici',
         fa: "Repassa «posa» i «suma» amb una pregunta ràpida. Explica la missió: el videojoc de l'espai no té vides i la partida no s'acaba mai. Pregunta quines regles necessita.|Repasa «pon» y «suma» con una pregunta rápida. Explica la misión: el videojuego del espacio no tiene vidas y la partida no se acaba nunca. Pregunta qué reglas necesita.",
-        diu: ["Quin bloc fa que el marcador baixi 1?|¿Qué bloque hace que el marcador baje 1?",
-          "Si la nau no pot perdre mai, té gràcia el videojoc?|Si la nave no puede perder nunca, ¿tiene gracia el videojuego?"],
+        diu: [
+          "Quin bloc fa que el marcador baixi 1? (suma a punts -1)|¿Qué bloque hace que el marcador baje 1? (suma a puntos -1)",
+          "Si la nau no pot perdre mai, té gràcia el videojoc? (no: no hi ha emoció)|Si la nave no puede perder nunca, ¿tiene gracia el videojuego? (no: no hay emoción)",
+          "Quines regles li falten? (tenir vides, perdre'n en xocar, acabar quan no en queden)|¿Qué reglas le faltan? (tener vidas, perder en los choques, terminar cuando no quedan)",
+          "Apunto les vostres regles a la pissarra: les programarem avui.|Apunto vuestras reglas en la pizarra: las programaremos hoy."
+        ],
         slides: ['s1', 's2', 's3'], app: "Encara no: pantalles apagades.|Todavía no: pantallas apagadas.", org: "Tot el grup|Todo el grupo" },
       { min: 10, t: "Vides, comparacions i fi de partida|Vidas, comparaciones y fin de partida", fase: 'teoria',
         fa: "Mostra l'animació dels cors i la demo de la nau. Pregunta per què la nau espera després del xoc. Presenta les comparacions amb exemples de la classe (quants sou? més de 20?) i el truc de la boca. Passa la demo de la fi de partida i acaba amb l'error de «posa vides a 3» dins del bucle.|Muestra la animación de los corazones y la demo de la nave. Pregunta por qué la nave espera después del choque. Presenta las comparaciones con ejemplos de la clase (¿cuántos sois? ¿más de 20?) y el truco de la boca. Pasa la demo del fin de partida y termina con el error de «pon vidas a 3» dentro del bucle.",
-        diu: ["Mentre el meteorit travessa la nau, quantes vegades la toca?|Mientras el meteorito atraviesa la nave, ¿cuántas veces la toca?",
-          "Som 22 a classe. «alumnes > 20» és sí o no?|Somos 22 en clase. «alumnos > 20» ¿es sí o no?",
-          "Per què aquesta partida no s'acaba mai?|¿Por qué esta partida no se acaba nunca?"],
+        diu: [
+          "Mentre el meteorit travessa la nau, quantes vegades la toca? (moltes: un cop a cada fotograma)|Mientras el meteorito atraviesa la nave, ¿cuántas veces la toca? (muchas: una en cada fotograma)",
+          "Som 22 a classe. «alumnes > 20» és sí o no? (sí)|Somos 22 en clase. «alumnos > 20», ¿es sí o no? (sí)",
+          "Quan diu sí la condició «vides = 0»? (quan ja no queden vides)|¿Cuándo dice sí la condición «vidas = 0»? (cuando ya no quedan vidas)",
+          "Quan la nau diu «Fi de la partida!», què fa el meteorit? (també s'atura: atura tot)|Cuando la nave dice «¡Fin de la partida!», ¿qué hace el meteorito? (también se para: para todo)",
+          "Per què aquesta partida no s'acaba mai? (posa vides a 3 és dins del bucle)|¿Por qué esta partida no se acaba nunca? (pon vidas a 3 está dentro del bucle)"
+        ],
         slides: ['s4', 's5', 's6', 's7', 's8', 's9'], app: "Encara no: tota l'atenció a la projecció.|Todavía no: toda la atención en la proyección.", org: "Tot el grup|Todo el grupo" },
       { min: 12, t: "La taula de les vides|La tabla de las vidas", fase: 'desconnectat',
         fa: "Feu junts la primera partida de la fitxa a la pissarra: a cada fila, què passa i quantes vides queden. Després, per parelles, completen les altres partides, encerclen la fila on vides = 0 i responen les comparacions. Als últims minuts, cada parella inventa una partida curta perquè la resolgui la parella del costat.|Haced juntos la primera partida de la ficha en la pizarra: en cada fila, qué pasa y cuántas vidas quedan. Después, por parejas, completan las otras partidas, rodean la fila donde vidas = 0 y responden las comparaciones. En los últimos minutos, cada pareja inventa una partida corta para que la resuelva la pareja de al lado.",
-        diu: ["Després d'aquest xoc, quantes vides queden?|Después de este choque, ¿cuántas vidas quedan?",
-          "En quina fila s'acaba la partida? Per què les files de sota ja no compten?|¿En qué fila se acaba la partida? ¿Por qué las filas de debajo ya no cuentan?",
-          "vides > 0: sí o no? Què vol dir?|vidas > 0: ¿sí o no? ¿Qué quiere decir?"],
+        diu: [
+          "Després d'aquest xoc, quantes vides queden?|Después de este choque, ¿cuántas vidas quedan?",
+          "En quina fila s'acaba la partida? Per què les files de sota ja no compten? (atura tot)|¿En qué fila se acaba la partida? ¿Por qué las filas de debajo ya no cuentan? (para todo)",
+          "vides > 0: sí o no? Què vol dir? (que encara en queden)|vidas > 0: ¿sí o no? ¿Qué quiere decir? (que aún quedan)",
+          "La partida que heu inventat s'acaba? En quina fila?|¿La partida que habéis inventado se acaba? ¿En qué fila?"
+        ],
         slides: ['s10', 's11'], app: "Cap: activitat sense pantalla.|Ninguna: actividad sin pantalla.", org: "Per parelles|Por parejas" },
       { min: 15, t: "A l'ordinador: descobreix i investiga|En el ordenador: descubre e investiga", fase: 'ordinador',
         fa: "Cada alumne/a avança fins al pas «Investiga». Al pas d'ordenar el guió, fixa't que posin «posa vides a 3» abans del «per sempre». A «Les tres vides», que toquin «Ho hem fet!» si ja han fet la taula.|Cada alumno/a avanza hasta el paso «Investiga». En el paso de ordenar el guion, fíjate en que pongan «pon vidas a 3» antes del «por siempre». En «Las tres vidas», que toquen «¡Lo hemos hecho!» si ya han hecho la tabla.",
-        diu: ["Aquest bloc, es fa una vegada o a cada volta?|Este bloque, ¿se hace una vez o en cada vuelta?",
-          "A Investiga: al començament, quant valen les vides? Què diu la condició?|En Investiga: al principio, ¿cuánto valen las vidas? ¿Qué dice la condición?"],
+        diu: [
+          "Aquest bloc, es fa una vegada o a cada volta?|Este bloque, ¿se hace una vez o en cada vuelta?",
+          "3 vides, xoc, cor, xoc, xoc: quantes en queden? (1)|3 vidas, choque, corazón, choque, choque: ¿cuántas quedan? (1)",
+          "A Investiga: al començament, quant valen les vides? Què diu la condició? (3, i «vides = 3» ja és sí)|En Investiga: al principio, ¿cuánto valen las vidas? ¿Qué dice la condición? (3, y «vidas = 3» ya es sí)"
+        ],
         slides: ['s12'], app: "De «La missió» a «Investiga»: les dues preguntes de repàs, la història, les targetes de «Descobreix», «Les tres vides», ordenar el guió de la nau, les dues preguntes de vides i la partida que s'acaba abans de començar.|De «La misión» a «Investiga»: las dos preguntas de repaso, la historia, las tarjetas de «Descubre», «Las tres vidas», ordenar el guion de la nave, las dos preguntas de vidas y la partida que se acaba antes de empezar.", org: "Individual|Individual" },
       { min: 10, t: "Reptes: vides i fi de partida|Retos: vidas y fin de partida", fase: 'ordinador',
         fa: "Feu la pausa activa tots junts i deixa'ls fer els quatre reptes. Explica que el primer repte té dues proves amb temps diferents: el programa ha de funcionar a les dues. Al de la fi de partida, el «si vides = 0» ja hi és: només n'han d'omplir l'interior.|Haced la pausa activa todos juntos y deja que hagan los cuatro retos. Explica que el primer reto tiene dos pruebas con tiempos diferentes: el programa tiene que funcionar en las dos. En el del fin de partida, el «si vidas = 0» ya está: solo tienen que rellenar su interior.",
-        diu: ["Mira el marcador: quantes vides perd la nau en un sol xoc?|Mira el marcador: ¿cuántas vidas pierde la nave en un solo choque?",
-          "Què passa amb el cor quan ja l'has agafat? Per què s'amaga?|¿Qué pasa con el corazón cuando ya lo has cogido? ¿Por qué se esconde?",
-          "On és «posa vides a 3» al programa que no s'acaba mai?|¿Dónde está «pon vidas a 3» en el programa que no se acaba nunca?"],
+        diu: [
+          "Mira el marcador: quantes vides perd la nau en un sol xoc? (una, si hi ha l'espera)|Mira el marcador: ¿cuántas vidas pierde la nave en un solo choque? (una, si está la espera)",
+          "Què va dins del «si vides = 0»? (digues «Fi de la partida!» i atura tot)|¿Qué va dentro del «si vidas = 0»? (di «¡Fin de la partida!» y para todo)",
+          "Què passa amb el cor quan ja l'has agafat? Per què s'amaga? (perquè no doni més vides)|¿Qué pasa con el corazón cuando ya lo has cogido? ¿Por qué se esconde? (para que no dé más vidas)",
+          "On és «posa vides a 3» al programa que no s'acaba mai? (dins del bucle)|¿Dónde está «pon vidas a 3» en el programa que no se acaba nunca? (dentro del bucle)"
+        ],
         slides: ['s13'], app: "«Pausa activa» i els quatre reptes: tres vides, la fi de la partida, la vida extra i la partida que no s'acaba mai.|«Pausa activa» y los cuatro retos: tres vidas, el fin de la partida, la vida extra y la partida que no se acaba nunca.", org: "Tot el grup i després individual|Todo el grupo y después individual" },
       { min: 5, t: "Crea: el peix i les meduses|Crea: el pez y las medusas", fase: 'crea',
         fa: "Cada alumne/a construeix el videojoc amb les vides. Qui acabi, hi afegeix les fletxes ↑ i ↓ i el passa a un company/a perquè intenti esquivar les meduses.|Cada alumno/a construye el videojuego con las vidas. Quien termine, añade las flechas ↑ y ↓ y lo pasa a un compañero/a para que intente esquivar las medusas.",
-        diu: ["Quins tres trossos té el guió del peix?|¿Qué tres trozos tiene el guion del pez?",
-          "El teu company/a ha pogut esquivar la medusa? Quantes vides li han quedat?|¿Tu compañero/a ha podido esquivar la medusa? ¿Cuántas vidas le han quedado?"],
+        diu: [
+          "Quins tres trossos té el guió del peix? (vides a 3, xoc i espera, vides = 0)|¿Qué tres trozos tiene el guion del pez? (vidas a 3, choque y espera, vidas = 0)",
+          "El teu company/a ha pogut esquivar la medusa? Quantes vides li han quedat?|¿Tu compañero/a ha podido esquivar la medusa? ¿Cuántas vidas le han quedado?",
+          "És massa fàcil o massa difícil? Què podries canviar? (la velocitat, les vides inicials…)|¿Es demasiado fácil o demasiado difícil? ¿Qué podrías cambiar? (la velocidad, las vidas iniciales…)"
+        ],
         slides: ['s14'], app: "Pas «Crea»: El peix i les meduses (es desa a «Projectes»).|Paso «Crea»: El pez y las medusas (se guarda en «Proyectos»).", org: "Individual i per parelles|Individual y por parejas" },
       { min: 3, t: "Tancament i tiquet de sortida|Cierre y ticket de salida", fase: 'tancament',
         fa: "Repassa les tres idees, deixa que facin les preguntes finals i fes el tiquet a la porta.|Repasa las tres ideas, deja que hagan las preguntas finales y haz el ticket en la puerta.",
-        diu: ["Per què la nau espera 1 segon després de cada xoc?|¿Por qué la nave espera 1 segundo después de cada choque?"],
+        diu: [
+          "Per què la nau espera 1 segon després de cada xoc? (perquè el meteorit no li tregui més vides)|¿Por qué la nave espera 1 segundo después de cada choque? (para que el meteorito no le quite más vidas)",
+          "On va «posa vides a 3»? (abans del bucle)|¿Dónde va «pon vidas a 3»? (antes del bucle)",
+          "Quines regles de la pissarra ja hem programat?|¿Qué reglas de la pizarra ya hemos programado?"
+        ],
         slides: ['s15', 's16'], app: "«Tancament»: les dues preguntes i com m'he sentit.|«Cierre»: las dos preguntas y cómo me he sentido.", org: "Tot el grup|Todo el grupo" }
     ],
     errors: [
@@ -3183,7 +4642,8 @@ Object.assign(TGUIDE, (() => {
       ["Posa el «digues Fi de la partida!» fora del «si vides = 0», i ho diu de seguida.|Pone el «di ¡Fin de la partida!» fuera del «si vidas = 0», y lo dice enseguida.",
         "Pregunta-li quan ha de passar el missatge: sempre o només quan no queden vides? Que miri on és el bloc respecte del «si».|Pregúntale cuándo tiene que pasar el mensaje: ¿siempre o solo cuando no quedan vidas? Que mire dónde está el bloque respecto del «si»."],
       ["Al repte del cor, el cor dona vides sense parar.|En el reto del corazón, el corazón da vidas sin parar.",
-        "Pregunta: després d'agafar-lo, el cor continua tocant la nau? Què podria fer perquè ja no la toqui?|Pregunta: después de cogerlo, ¿el corazón sigue tocando la nave? ¿Qué podría hacer para que ya no la toque?"]
+        "Pregunta: després d'agafar-lo, el cor continua tocant la nau? Què podria fer perquè ja no la toqui?|Pregunta: después de cogerlo, ¿el corazón sigue tocando la nave? ¿Qué podría hacer para que ya no la toque?"],
+      ["Al peix, posa l'espera fora del «si toca la medusa» i el peix va lent tota l'estona.|En el pez, pone la espera fuera del «si toca la medusa» y el pez va lento todo el rato.", "Pregunta: quan ha d'esperar el peix, sempre o només després d'un xoc? Que posi l'espera dins del «si», just després de restar la vida.|Pregunta: ¿cuándo tiene que esperar el pez, siempre o solo después de un choque? Que ponga la espera dentro del «si», justo después de restar la vida."]
     ],
     diff: {
       mes: "Al videojoc del peix, afegir un cor que doni una vida extra i fer que el peix canviï de vestit quan perd una vida. Inventar a la fitxa una partida on la nau agafi tants cors que no s'acabi mai, i explicar per què.|En el videojuego del pez, añadir un corazón que dé una vida extra y hacer que el pez cambie de disfraz cuando pierde una vida. Inventar en la ficha una partida en la que la nave coja tantos corazones que no se acabe nunca, y explicar por qué.",
@@ -3195,7 +4655,12 @@ Object.assign(TGUIDE, (() => {
       rubric: [
         ["Vides que baixen|Vidas que bajan", "Fa que cada xoc resti una sola vida i explica per què cal l'espera.|Hace que cada choque reste una sola vida y explica por qué hace falta la espera.", "Resta vides, però de vegades en perd més d'una per xoc.|Resta vidas, pero a veces pierde más de una por choque."],
         ["Comparacions|Comparaciones", "Llegeix i respon bé condicions amb =, > i < amb números concrets.|Lee y responde bien condiciones con =, > y < con números concretos.", "Entén el = però confon encara > i <.|Entiende el = pero confunde todavía > y <."],
-        ["Fi de la partida|Fin de la partida", "Programa la fi de la partida i posa el valor inicial fora del bucle.|Programa el fin de la partida y pone el valor inicial fuera del bucle.", "Programa la fi de la partida amb ajuda o amb el valor inicial dins del bucle.|Programa el fin de la partida con ayuda o con el valor inicial dentro del bucle."]
+        ["Fi de la partida|Fin de la partida", "Programa la fi de la partida i posa el valor inicial fora del bucle.|Programa el fin de la partida y pone el valor inicial fuera del bucle.", "Programa la fi de la partida amb ajuda o amb el valor inicial dins del bucle.|Programa el fin de la partida con ayuda o con el valor inicial dentro del bucle."],
+        [
+          "Seguir una partida|Seguir una partida",
+          "Completa la taula de les vides i troba la fila on s'acaba la partida.|Completa la tabla de las vidas y encuentra la fila donde se acaba la partida.",
+          "Calcula les vides, però no sap on s'acaba la partida.|Calcula las vidas, pero no sabe dónde se acaba la partida."
+        ]
       ]
     },
     casa: "A casa podeu fer «Les tres vides»: una persona és la nau amb tres cors de paper i l'altra llança un mitjó enrotllat, a poc a poc. A cada xoc, un cor menys; a 0, «Fi de la partida!».|En casa podéis hacer «Las tres vidas»: una persona es la nave con tres corazones de papel y la otra lanza un calcetín enrollado, despacio. En cada choque, un corazón menos; en 0, «¡Fin de la partida!».",
@@ -3214,7 +4679,7 @@ Object.assign(TGUIDE, (() => {
       { id: 's6', k: 'anim', t: "Comparar|Comparar", anim: 'g6cmp', x: "vides = 0? La resposta és sí o no.|¿vidas = 0? La respuesta es sí o no.",
         nota: "Feu comparacions amb la classe: alumnes > 20? cadires = taules? Truc: la boca del > i del < mira el número més gran.|Haced comparaciones con la clase: ¿alumnos > 20? ¿sillas = mesas? Truco: la boca del > y del < mira al número más grande." },
       { id: 's7', k: 'concepte', t: "Tres maneres de comparar|Tres maneras de comparar", punts: ["vides = 0 → no queden vides|vidas = 0 → no quedan vidas", "punts > 9 → 10 o més punts|puntos > 9 → 10 o más puntos", "temps < 5 → queden menys de 5 segons|tiempo < 5 → quedan menos de 5 segundos"],
-        nota: "Per a cada condició, digueu un valor que la faci certa i un que la faci falsa.|Para cada condición, decid un valor que la haga cierta y uno que la haga falsa." },
+        nota: "Per a cada condició, digueu un valor que la faci certa i un que la faci falsa.|Para cada condición, decid un valor que la haga cierta y uno que la haga falsa.", pic: "img/ment/est.webp" },
       { id: 's8', k: 'media', t: "Fi de la partida|Fin de la partida", x: "Si vides = 0: «Fi de la partida!» i atura tot.|Si vidas = 0: «¡Fin de la partida!» y para todo.",
         media: { k: 'stage', w: W_NAU, prog: `${METEOR} @nau flag{ setv:vides,3 forever{ if:touch:meteorit{ chv:vides,-1 sound:xoc wait:1 } if:$vides=0{ say:"${FI}" stop:all } } }`, varNames: VN, time: 9 },
         nota: "Fes notar que, quan la nau diu el missatge, el meteorit també s'atura: «atura tot» para els guions de tots els personatges.|Haz notar que, cuando la nave dice el mensaje, el meteorito también se para: «para todo» para los guiones de todos los personajes." },
@@ -3251,6 +4716,49 @@ Object.assign(TGUIDE, (() => {
 
   /* ---------- Sessió 3 · Compte enrere ---------- */
   'g6-3': {
+    intro: "Tercera sessió de variables: el temps. Un compte enrere és una variable que comença en un número i un bucle la fa baixar 1 cada segon (espera 1 segon, suma -1); quan arriba a 0, «atura tot» acaba el videojoc. El rellotge té el seu propi guió i funciona alhora que la resta. També coneixen el cronòmetre, que compta cap amunt sol i serveix per saber quant s'ha trigat. La classe té demos d'en Numi, una activitat amb gots i pinces i quatre reptes de rellotges.|Tercera sesión de variables: el tiempo. Una cuenta atrás es una variable que empieza en un número y un bucle la hace bajar 1 cada segundo (espera 1 segundo, suma -1); cuando llega a 0, «para todo» termina el videojuego. El reloj tiene su propio guion y funciona a la vez que el resto. También conocen el cronómetro, que cuenta hacia arriba solo y sirve para saber cuánto se ha tardado. La clase tiene demos de Numi, una actividad con vasos y pinzas y cuatro retos de relojes.",
+    claus: [
+      "Un compte enrere: temps a 10 i, 10 vegades, espera 1 segon i suma -1.|Una cuenta atrás: tiempo a 10 y, 10 veces, espera 1 segundo y suma -1.",
+      "Sense «espera 1 segon», cada volta dura un fotograma i el compte s'acaba en un instant.|Sin «espera 1 segundo», cada vuelta dura un fotograma y la cuenta se acaba en un instante.",
+      "El nombre de voltes ha de coincidir amb el valor inicial perquè arribi a 0.|El número de vueltas tiene que coincidir con el valor inicial para que llegue a 0.",
+      "El rellotge pot ser un guió a part: tots els guions funcionen alhora.|El reloj puede ser un guion aparte: todos los guiones funcionan a la vez.",
+      "El cronòmetre compta cap amunt; es posa a zero just quan comença el que vols mesurar.|El cronómetro cuenta hacia arriba; se pone a cero justo cuando empieza lo que quieres medir."
+    ],
+    prev: [
+      "Variables, «posa» i «suma» (sessions 1 i 2).|Variables, «pon» y «suma» (sesiones 1 y 2).",
+      "El bucle «repeteix … vegades» i el bloc «espera» (unitat 2).|El bucle «repite … veces» y el bloque «espera» (unidad 2).",
+      "«Atura tot» i la fi de la partida (sessió 2).|«Para todo» y el fin de partida (sesión 2)."
+    ],
+    faq: [
+      ["Per què el meu compte enrere s'acaba de cop?|¿Por qué mi cuenta atrás se acaba de golpe?", "Falta «espera 1 segon» dins del bucle. Sense espera, cada volta dura un fotograma (una trentena part de segon).|Falta «espera 1 segundo» dentro del bucle. Sin espera, cada vuelta dura un fotograma (una treintava parte de segundo)."],
+      ["Quantes voltes ha de fer el bucle?|¿Cuántas vueltas tiene que hacer el bucle?", "Tantes com el número inicial: si el temps comença a 10 i cada volta resta 1, calen 10 voltes per arribar a 0.|Tantas como el número inicial: si el tiempo empieza en 10 y cada vuelta resta 1, hacen falta 10 vueltas para llegar a 0."],
+      ["Quina diferència hi ha entre el compte enrere i el cronòmetre?|¿Qué diferencia hay entre la cuenta atrás y el cronómetro?", "El compte enrere el fas tu amb una variable i baixa fins a 0 (límit de temps). El cronòmetre ja hi és, puja sol i diu quant ha passat.|La cuenta atrás la haces tú con una variable y baja hasta 0 (límite de tiempo). El cronómetro ya está, sube solo y dice cuánto ha pasado."],
+      ["Per què el cotxe diu un número amb coma, com 2,8?|¿Por qué el coche dice un número con coma, como 2,8?", "El cronòmetre compta dècimes de segon: 2,8 vol dir 2 segons i 8 dècimes, gairebé 3 segons.|El cronómetro cuenta décimas de segundo: 2,8 quiere decir 2 segundos y 8 décimas, casi 3 segundos."],
+      ["On poso l'«atura tot»?|¿Dónde pongo el «para todo»?", "Després del bucle, quan el temps ja és 0. Si és dins del bucle, la partida s'acaba al primer segon.|Después del bucle, cuando el tiempo ya es 0. Si está dentro del bucle, la partida se acaba en el primer segundo."],
+      ["Puc fer el rellotge a la papallona?|¿Puedo hacer el reloj en la mariposa?", "Millor en un altre personatge (en Numi): si la papallona espera 1 segon al seu guió, deixa de volar mentre espera.|Mejor en otro personaje (Numi): si la mariposa espera 1 segundo en su guion, deja de volar mientras espera."]
+    ],
+    tec: [
+      ["El marcador de la variable no surt a l'escenari.|El marcador de la variable no sale en el escenario.", "Surt a dalt a l'esquerra quan el repte té variables. Si no es veu, toqueu el botó de tornar a començar (la fletxa rodona) o feu la finestra més gran.|Sale arriba a la izquierda cuando el reto tiene variables. Si no se ve, tocad el botón de volver a empezar (la flecha redonda) o haced la ventana más grande."],
+      ["En tocar el text del «digues» no troben la variable.|Al tocar el texto del «di» no encuentran la variable.", "A la finestra que s'obre, sota el quadre per escriure, hi ha els botons de les variables del repte (punts, vides…). Cal tocar-ne un, no escriure'n el nom.|En la ventana que se abre, debajo del cuadro para escribir, están los botones de las variables del reto (puntos, vidas…). Hay que tocar uno, no escribir su nombre."],
+      ["Per escriure un número negatiu (-1) no troben el signe menys.|Para escribir un número negativo (-1) no encuentran el signo menos.", "A l'ordinador és la tecla del guionet (-), abans del número. Si el teclat de la tauleta o del mòbil no el mostra, feu aquell repte a l'ordinador.|En el ordenador es la tecla del guion (-), antes del número. Si el teclado de la tableta o del móvil no lo muestra, haced ese reto en el ordenador."],
+      ["Un alumne/a s'encalla en un repte.|Un alumno/a se atasca en un reto.", "Després de dos intents apareix «Una pista» i, després, «Mostra una solució». També es pot sortir del pas i tornar-hi: el repte torna a començar.|Después de dos intentos aparece «Una pista» y, después, «Muestra una solución». También se puede salir del paso y volver: el reto vuelve a empezar."],
+      ["Al repte del cotxe, en tocar el número de «posa segons a» no surt «cronòmetre».|En el reto del coche, al tocar el número de «pon segundos a» no sale «cronómetro».", "Surt a sota del quadre del número, a «o un valor:». Si no surt, sortiu del repte i torneu-hi a entrar.|Sale debajo del cuadro del número, en «o un valor:». Si no sale, salid del reto y volved a entrar."]
+    ],
+    seg: [
+      "Pantalles: recorda la pausa activa a mitja sessió i que mirin lluny uns segons quan acabin cada repte.|Pantallas: recuerda la pausa activa a media sesión y que miren a lo lejos unos segundos cuando terminen cada reto.",
+      "Activitat de les pinces: pinces de roba de plàstic o taps grans (res petit que es pugui posar a la boca) i sense córrer entre taules.|Actividad de las pinzas: pinzas de ropa de plástico o tapones grandes (nada pequeño que se pueda meter en la boca) y sin correr entre mesas.",
+      "Contrarellotge: si algú es posa nerviós amb el temps, recorda que és un repte per divertir-se i que sempre es pot donar més temps.|Contrarreloj: si alguien se pone nervioso con el tiempo, recuerda que es un reto para divertirse y que siempre se puede dar más tiempo."
+    ],
+    extra: [
+      "Al contrarellotge, fer que en Numi digui els darrers 3 segons en veu alta (si temps < 4).|En el contrarreloj, hacer que Numi diga los últimos 3 segundos en voz alta (si tiempo < 4).",
+      "Mesurar amb el cronòmetre quant triga el cotxe a creuar l'escenari amb «mou-te 4» i amb «mou-te 8». Què passa amb el temps?|Medir con el cronómetro cuánto tarda el coche en cruzar el escenario con «muévete 4» y con «muévete 8». ¿Qué pasa con el tiempo?",
+      "Fer un compte enrere de 10 amb una frase especial a cada número i un so al final.|Hacer una cuenta atrás de 10 con una frase especial en cada número y un sonido al final."
+    ],
+    trans: [
+      "Ve de la sessió 2: el «atura tot» que acabava la partida per les vides ara l'acaba el temps.|Viene de la sesión 2: el «para todo» que terminaba la partida por las vidas ahora lo termina el tiempo.",
+      "Sessió següent: el projecte de la mascota virtual, on la gana puja sola amb el temps.|Sesión siguiente: el proyecto de la mascota virtual, donde el hambre sube sola con el tiempo.",
+      "Matemàtiques i ciències: mesurar el temps, les dècimes de segon i comparar velocitats.|Matemáticas y ciencias: medir el tiempo, las décimas de segundo y comparar velocidades."
+    ],
     obj: [
       "L'alumne/a programa un compte enrere amb una variable que comença en un número i baixa 1 cada segon dins d'un bucle «repeteix».|El alumno/a programa una cuenta atrás con una variable que empieza en un número y baja 1 cada segundo dentro de un bucle «repite».",
       "L'alumne/a fa que el rellotge, amb el seu propi guió, funcioni alhora que la resta del videojoc i l'aturi quan arriba a 0.|El alumno/a hace que el reloj, con su propio guion, funcione a la vez que el resto del videojuego y lo pare cuando llega a 0.",
@@ -3279,48 +4787,73 @@ Object.assign(TGUIDE, (() => {
       ],
       imprimir: ["Targetes: el rellotge, el recol·lector i el marcador|Tarjetas: el reloj, el recolector y el marcador"],
       prep: [
-        "Preparar una bossa amb el got i les pinces per a cada grup.|Preparar una bolsa con el vaso y las pinzas para cada grupo.",
-        "Imprimir i retallar un paquet de targetes per grup.|Imprimir y recortar un paquete de tarjetas por grupo.",
-        "Provar abans el repte del cotxe: el cronòmetre s'ha de posar a zero just després del «3, 2, 1…».|Probar antes el reto del coche: el cronómetro se tiene que poner a cero justo después del «3, 2, 1…»."
+        "El dia abans (15 min): preparar una bossa per grup de 3 amb un got i 15 pinces o taps, i imprimir i retallar les targetes de papers.|El día antes (15 min): preparar una bolsa por grupo de 3 con un vaso y 15 pinzas o tapones, e imprimir y recortar las tarjetas de papeles.",
+        "El dia abans (10 min): provar el repte del cotxe: el cronòmetre s'ha de posar a zero just després del «3, 2, 1…».|El día antes (10 min): probar el reto del coche: el cronómetro se tiene que poner a cero justo después del «3, 2, 1…».",
+        "Abans de classe (5 min): tenir a la vista un rellotge amb segons (el del projector o un de paret).|Antes de clase (5 min): tener a la vista un reloj con segundos (el del proyector o uno de pared).",
+        "Abans de classe (5 min): obrir la presentació i deixar la sessió iniciada als ordinadors.|Antes de clase (5 min): abrir la presentación y dejar la sesión iniciada en los ordenadores."
       ]
     },
     plan: [
       { min: 5, t: "Benvinguda: hi ha cua a la caseta!|Bienvenida: ¡hay cola en la caseta!", fase: 'inici',
         fa: "Repassa la fi de la partida i «atura tot». Explica la missió: cada persona tindrà 10 segons. Pregunta on han vist comptes enrere a la vida real.|Repasa el fin de la partida y «para todo». Explica la misión: cada persona tendrá 10 segundos. Pregunta dónde han visto cuentas atrás en la vida real.",
-        diu: ["Què fa «atura tot»?|¿Qué hace «para todo»?",
-          "On heu vist un compte enrere? Al microones, al semàfor, a cap d'any…|¿Dónde habéis visto una cuenta atrás? En el microondas, en el semáforo, en Nochevieja…"],
+        diu: [
+          "Què fa «atura tot»? (para tots els guions de tots els personatges)|¿Qué hace «para todo»? (para todos los guiones de todos los personajes)",
+          "On heu vist un compte enrere? (al microones, al semàfor, a cap d'any…)|¿Dónde habéis visto una cuenta atrás? (en el microondas, en el semáforo, en Nochevieja…)",
+          "Què passa quan arriba a 0? (s'acaba alguna cosa: el temps, la cocció…)|¿Qué pasa cuando llega a 0? (se acaba algo: el tiempo, la cocción…)",
+          "Avui el temps serà una variable més, com els punts i les vides.|Hoy el tiempo será una variable más, como los puntos y las vidas."
+        ],
         slides: ['s1', 's2', 's3'], app: "Encara no: pantalles apagades.|Todavía no: pantallas apagadas.", org: "Tot el grup|Todo el grupo" },
       { min: 10, t: "Comptar enrere i cronometrar|Contar hacia atrás y cronometrar", fase: 'teoria',
         fa: "Mostra l'animació del compte enrere i la demo d'en Numi: abans de cada volta, que diguin el número que vindrà. Mostra els dos guions alhora (rellotge i poma). Presenta el cronòmetre: compta cap amunt i es posa a zero. Acaba amb la demo de l'error: el compte enrere sense espera.|Muestra la animación de la cuenta atrás y la demo de Numi: antes de cada vuelta, que digan el número que vendrá. Muestra los dos guiones a la vez (reloj y manzana). Presenta el cronómetro: cuenta hacia arriba y se pone a cero. Termina con la demo del error: la cuenta atrás sin espera.",
-        diu: ["Si el temps comença a 5, quantes voltes calen per arribar a 0?|Si el tiempo empieza en 5, ¿cuántas vueltas hacen falta para llegar a 0?",
-          "Mentre en Numi compta, el gat s'atura?|Mientras Numi cuenta, ¿el gato se para?",
-          "Per què aquest compte enrere de 10 segons dura un instant?|¿Por qué esta cuenta atrás de 10 segundos dura un instante?"],
+        diu: [
+          "Si el temps comença a 5, quantes voltes calen per arribar a 0? (5)|Si el tiempo empieza en 5, ¿cuántas vueltas hacen falta para llegar a 0? (5)",
+          "Quin número dirà en Numi ara? (el següent, un menys)|¿Qué número dirá Numi ahora? (el siguiente, uno menos)",
+          "Mentre en Numi compta, el gat s'atura? (no: els guions funcionen alhora)|Mientras Numi cuenta, ¿el gato se para? (no: los guiones funcionan a la vez)",
+          "El cronòmetre, compta cap amunt o cap avall? (cap amunt)|El cronómetro, ¿cuenta hacia arriba o hacia abajo? (hacia arriba)",
+          "Per què aquest compte enrere de 10 segons dura un instant? (falta l'espera)|¿Por qué esta cuenta atrás de 10 segundos dura un instante? (falta la espera)"
+        ],
         slides: ['s4', 's5', 's6', 's7', 's8', 's9'], app: "Encara no: tota l'atenció a la projecció.|Todavía no: toda la atención en la proyección.", org: "Tot el grup|Todo el grupo" },
       { min: 12, t: "El rellotge i el recol·lector|El reloj y el recolector", fase: 'desconnectat',
         fa: "Grups de 3 amb les targetes de papers. Ronda 1 (compte enrere): el rellotge diu 10, 9, 8… picant a la taula cada segon; el recol·lector posa pinces al got d'una en una; a 0, el marcador compta els punts. Canvien els papers fins que tothom hagi fet de tot. Ronda 2 (cronòmetre): el rellotge compta cap amunt i el recol·lector posa 10 pinces tan de pressa com pugui; el marcador apunta quants segons ha trigat.|Grupos de 3 con las tarjetas de papeles. Ronda 1 (cuenta atrás): el reloj dice 10, 9, 8… picando en la mesa cada segundo; el recolector mete pinzas en el vaso de una en una; en 0, el marcador cuenta los puntos. Cambian los papeles hasta que todos hayan hecho de todo. Ronda 2 (cronómetro): el reloj cuenta hacia arriba y el recolector mete 10 pinzas tan rápido como pueda; el marcador apunta cuántos segundos ha tardado.",
-        diu: ["El rellotge i el recol·lector treballen alhora, com dos guions.|El reloj y el recolector trabajan a la vez, como dos guiones.",
-          "A la ronda 1 el temps és fix i compten els punts. I a la ronda 2?|En la ronda 1 el tiempo es fijo y cuentan los puntos. ¿Y en la ronda 2?",
-          "Quan ha de dir «zero» el rellotge del cronòmetre?|¿Cuándo tiene que decir «cero» el reloj del cronómetro?"],
+        diu: [
+          "El rellotge i el recol·lector treballen alhora, com dos guions.|El reloj y el recolector trabajan a la vez, como dos guiones.",
+          "Rellotge: un número cada segon, ni més de pressa ni més a poc a poc. Mireu el rellotge de la paret.|Reloj: un número cada segundo, ni más rápido ni más despacio. Mirad el reloj de la pared.",
+          "A la ronda 1 el temps és fix i compten els punts. I a la ronda 2? (les pinces són fixes i compta el temps)|En la ronda 1 el tiempo es fijo y cuentan los puntos. ¿Y en la ronda 2? (las pinzas son fijas y cuenta el tiempo)",
+          "Quan ha de dir «zero» el rellotge del cronòmetre? (just quan el recol·lector comença)|¿Cuándo tiene que decir «cero» el reloj del cronómetro? (justo cuando el recolector empieza)"
+        ],
         slides: ['s10', 's11'], app: "Cap: activitat sense pantalla.|Ninguna: actividad sin pantalla.", org: "Grups de 3 amb papers que roten|Grupos de 3 con papeles que rotan" },
       { min: 15, t: "A l'ordinador: descobreix i investiga|En el ordenador: descubre e investiga", fase: 'ordinador',
         fa: "Cada alumne/a avança fins al pas «Investiga». A «El repte dels 10 segons», que toquin «Ho hem fet!» si ja l'han fet en grup. Al pas d'ordenar el guió, fixa't en qui posa «posa temps a 10» dins del bucle.|Cada alumno/a avanza hasta el paso «Investiga». En «El reto de los 10 segundos», que toquen «¡Lo hemos hecho!» si ya lo han hecho en grupo. En el paso de ordenar el guion, fíjate en quién pone «pon tiempo a 10» dentro del bucle.",
-        diu: ["Quant dura cada volta del bucle?|¿Cuánto dura cada vuelta del bucle?",
-          "A Investiga: el temps puja o baixa? Quin número ho decideix?|En Investiga: ¿el tiempo sube o baja? ¿Qué número lo decide?"],
+        diu: [
+          "Quant dura cada volta del bucle? (1 segon, per l'espera)|¿Cuánto dura cada vuelta del bucle? (1 segundo, por la espera)",
+          "Quan diu «Ja!» en Numi a la pregunta? (als 3 segons)|¿Cuándo dice «¡Ya!» Numi en la pregunta? (a los 3 segundos)",
+          "A Investiga: el temps puja o baixa? Quin número ho decideix? (puja: el +1 hauria de ser -1)|En Investiga: ¿el tiempo sube o baja? ¿Qué número lo decide? (sube: el +1 tendría que ser -1)"
+        ],
         slides: ['s12'], app: "De «La missió» a «Investiga»: les dues preguntes de repàs, les dues històries, les targetes de «Descobreix», «El repte dels 10 segons», ordenar el guió del rellotge, les dues preguntes de temps i el compte enrere que va cap amunt.|De «La misión» a «Investiga»: las dos preguntas de repaso, las dos historias, las tarjetas de «Descubre», «El reto de los 10 segundos», ordenar el guion del reloj, las dos preguntas de tiempo y la cuenta atrás que va hacia arriba.", org: "Individual|Individual" },
       { min: 10, t: "Reptes: rellotges|Retos: relojes", fase: 'ordinador',
         fa: "Feu la pausa activa i deixa'ls fer els quatre reptes. Al primer hi ha un màxim de 6 blocs: si en necessiten més, és que no fan servir el bucle. Al del cotxe, la variable segons té decimals: és normal.|Haced la pausa activa y deja que hagan los cuatro retos. En el primero hay un máximo de 6 bloques: si necesitan más, es que no usan el bucle. En el del coche, la variable segundos tiene decimales: es normal.",
-        diu: ["Quins blocs van dins del bucle i quins a fora?|¿Qué bloques van dentro del bucle y cuáles fuera?",
-          "On poses «atura tot»: dins o fora del bucle? Per què?|¿Dónde pones «para todo»: dentro o fuera del bucle? ¿Por qué?",
-          "Quan ha de començar a comptar el cronòmetre del cotxe?|¿Cuándo tiene que empezar a contar el cronómetro del coche?"],
+        diu: [
+          "Quins blocs van dins del bucle i quins a fora? (dins: digues, espera, suma -1; fora: posa temps i «Ja!»)|¿Qué bloques van dentro del bucle y cuáles fuera? (dentro: di, espera, suma -1; fuera: pon tiempo y «¡Ya!»)",
+          "On poses «atura tot»: dins o fora del bucle? Per què? (fora, després: quan el temps ja és 0)|¿Dónde pones «para todo»: dentro o fuera del bucle? ¿Por qué? (fuera, después: cuando el tiempo ya es 0)",
+          "Quan ha de començar a comptar el cronòmetre del cotxe? (just quan surt, després del «3, 2, 1…»)|¿Cuándo tiene que empezar a contar el cronómetro del coche? (justo al salir, después del «3, 2, 1…»)",
+          "El rellotge s'atura a 5: quantes voltes fa el bucle? Quantes n'hauria de fer? (5; 10)|El reloj se para en 5: ¿cuántas vueltas hace el bucle? ¿Cuántas debería hacer? (5; 10)"
+        ],
         slides: ['s13'], app: "«Pausa activa» i els quatre reptes: 5, 4, 3, 2, 1, el rellotge del videojoc de la poma, el cronòmetre del cotxe i el rellotge que s'atura a 5.|«Pausa activa» y los cuatro retos: 5, 4, 3, 2, 1, el reloj del videojuego de la manzana, el cronómetro del coche y el reloj que se para en 5.", org: "Tot el grup i després individual|Todo el grupo y después individual" },
       { min: 5, t: "Crea: contrarellotge al bosc|Crea: contrarreloj en el bosque", fase: 'crea',
         fa: "Cada alumne/a fa el seu contrarellotge: tria quant de temps dona i com vola la papallona. Després, el provi un company/a i el marcador diu quants punts ha fet.|Cada alumno/a hace su contrarreloj: elige cuánto tiempo da y cómo vuela la mariposa. Después, que lo pruebe un compañero/a y el marcador dice cuántos puntos ha hecho.",
-        diu: ["Si dones 10 segons, quantes voltes ha de fer el bucle?|Si das 10 segundos, ¿cuántas vueltas tiene que dar el bucle?",
-          "És massa fàcil o massa difícil? Què podries canviar?|¿Es demasiado fácil o demasiado difícil? ¿Qué podrías cambiar?"],
+        diu: [
+          "Si dones 10 segons, quantes voltes ha de fer el bucle? (10)|Si das 10 segundos, ¿cuántas vueltas tiene que hacer el bucle? (10)",
+          "El rellotge és en un guió a part? (sí, a en Numi)|¿El reloj está en un guion aparte? (sí, en Numi)",
+          "És massa fàcil o massa difícil? Què podries canviar? (el temps, la velocitat de la papallona)|¿Es demasiado fácil o demasiado difícil? ¿Qué podrías cambiar? (el tiempo, la velocidad de la mariposa)"
+        ],
         slides: ['s14'], app: "Pas «Crea»: Contrarellotge al bosc (es desa a «Projectes»).|Paso «Crea»: Contrarreloj en el bosque (se guarda en «Proyectos»).", org: "Individual i per parelles|Individual y por parejas" },
       { min: 3, t: "Tancament i tiquet de sortida|Cierre y ticket de salida", fase: 'tancament',
         fa: "Repassa les tres idees, deixa que facin les preguntes finals i fes el tiquet a la porta.|Repasa las tres ideas, deja que hagan las preguntas finales y haz el ticket en la puerta.",
-        diu: ["Quina diferència hi ha entre un compte enrere i un cronòmetre?|¿Qué diferencia hay entre una cuenta atrás y un cronómetro?"],
+        diu: [
+          "Quina diferència hi ha entre un compte enrere i un cronòmetre? (un baixa fins a 0; l'altre puja i diu quant has trigat)|¿Qué diferencia hay entre una cuenta atrás y un cronómetro? (una baja hasta 0; el otro sube y dice cuánto has tardado)",
+          "Què va dins del bucle del compte enrere? (espera 1 segon i suma -1)|¿Qué va dentro del bucle de la cuenta atrás? (espera 1 segundo y suma -1)",
+          "Punts, vides i temps: quina té gairebé cada videojoc que coneixeu?|Puntos, vidas y tiempo: ¿cuál tiene casi cada videojuego que conocéis?"
+        ],
         slides: ['s15', 's16'], app: "«Tancament»: les dues preguntes i com m'he sentit.|«Cierre»: las dos preguntas y cómo me he sentido.", org: "Tot el grup|Todo el grupo" }
     ],
     errors: [
@@ -3333,7 +4866,8 @@ Object.assign(TGUIDE, (() => {
       ["Posa el cronòmetre a zero al començament del guió, abans del «3, 2, 1…», i el temps del cotxe surt massa llarg.|Pone el cronómetro a cero al principio del guion, antes del «3, 2, 1…», y el tiempo del coche sale demasiado largo.",
         "Pregunta-li quan surt el cotxe de veritat. Que recordi la ronda 2 de l'activitat: quan deia «zero» el rellotge?|Pregúntale cuándo sale el coche de verdad. Que recuerde la ronda 2 de la actividad: ¿cuándo decía «cero» el reloj?"],
       ["Escriu el compte enrere al guió de la papallona i aquesta deixa de volar.|Escribe la cuenta atrás en el guion de la mariposa y esta deja de volar.",
-        "Pregunta: un guió pot fer dues coses alhora? Que posi el rellotge en un altre personatge, com en Numi.|Pregunta: ¿un guion puede hacer dos cosas a la vez? Que ponga el reloj en otro personaje, como Numi."]
+        "Pregunta: un guió pot fer dues coses alhora? Que posi el rellotge en un altre personatge, com en Numi.|Pregunta: ¿un guion puede hacer dos cosas a la vez? Que ponga el reloj en otro personaje, como Numi."],
+      ["Al repte del cotxe escriu el número a mà a «posa segons a» en lloc de triar el cronòmetre.|En el reto del coche escribe el número a mano en «pon segundos a» en lugar de elegir el cronómetro.", "Pregunta: saps quant trigarà el cotxe abans que arribi? Qui ho sap de veritat? Que toqui el número i triï «cronòmetre» a «o un valor».|Pregunta: ¿sabes cuánto tardará el coche antes de que llegue? ¿Quién lo sabe de verdad? Que toque el número y elija «cronómetro» en «o un valor»."]
     ],
     diff: {
       mes: "Al contrarellotge, fer que la papallona vagi més de pressa quan queda poc temps (pensar amb un company/a quina condició caldria) o que en Numi digui els darrers 3 segons en veu alta. Mesurar amb el cronòmetre quant triga el gat a creuar l'escenari a velocitats diferents.|En el contrarreloj, hacer que la mariposa vaya más deprisa cuando queda poco tiempo (pensar con un compañero/a qué condición haría falta) o que Numi diga los últimos 3 segundos en voz alta. Medir con el cronómetro cuánto tarda el gato en cruzar el escenario a velocidades diferentes.",
@@ -3345,7 +4879,12 @@ Object.assign(TGUIDE, (() => {
       rubric: [
         ["Compte enrere|Cuenta atrás", "Programa un compte enrere amb valor inicial, espera i -1, i el nombre de voltes correcte.|Programa una cuenta atrás con valor inicial, espera y -1, y el número de vueltas correcto.", "Programa el compte enrere però s'equivoca en l'espera o en el nombre de voltes.|Programa la cuenta atrás pero se equivoca en la espera o en el número de vueltas."],
         ["Guions alhora|Guiones a la vez", "Posa el rellotge en un guió propi i atura el videojoc quan arriba a 0.|Pone el reloj en un guion propio y para el videojuego cuando llega a 0.", "Fa el rellotge, però l'atura en un lloc equivocat o el posa al guió d'un altre personatge.|Hace el reloj, pero lo para en un sitio equivocado o lo pone en el guion de otro personaje."],
-        ["Cronòmetre|Cronómetro", "Posa el cronòmetre a zero en el moment just i en guarda el valor en una variable.|Pone el cronómetro a cero en el momento justo y guarda su valor en una variable.", "Fa servir el cronòmetre, però no sap ben bé quan s'ha de posar a zero.|Usa el cronómetro, pero no sabe bien cuándo se tiene que poner a cero."]
+        ["Cronòmetre|Cronómetro", "Posa el cronòmetre a zero en el moment just i en guarda el valor en una variable.|Pone el cronómetro a cero en el momento justo y guarda su valor en una variable.", "Fa servir el cronòmetre, però no sap ben bé quan s'ha de posar a zero.|Usa el cronómetro, pero no sabe bien cuándo se tiene que poner a cero."],
+        [
+          "Predir el temps|Predecir el tiempo",
+          "Diu quant durarà un compte enrere llegint el valor inicial, les voltes i l'espera.|Dice cuánto durará una cuenta atrás leyendo el valor inicial, las vueltas y la espera.",
+          "Necessita executar el programa per saber quant dura.|Necesita ejecutar el programa para saber cuánto dura."
+        ]
       ]
     },
     casa: "A casa podeu fer «El repte dels 10 segons»: una persona compta enrere de 10 a 0 i l'altra posa objectes petits en un got. Després, amb el cronòmetre d'un mòbil, mireu quant trigueu a posar-ne 10.|En casa podéis hacer «El reto de los 10 segundos»: una persona cuenta hacia atrás de 10 a 0 y la otra mete objetos pequeños en un vaso. Después, con el cronómetro de un móvil, mirad cuánto tardáis en meter 10.",
@@ -3367,7 +4906,7 @@ Object.assign(TGUIDE, (() => {
       { id: 's7', k: 'anim', t: "El cronòmetre|El cronómetro", anim: 'g6timer', x: "Compta cap amunt tot sol. «Posa el cronòmetre a zero» el fa començar de nou.|Cuenta hacia arriba solo. «Pon el cronómetro a cero» lo hace empezar de nuevo.",
         nota: "Pregunta quan s'ha de posar a zero per saber quant triga el cotxe: quan surt, no abans.|Pregunta cuándo se tiene que poner a cero para saber cuánto tarda el coche: cuando sale, no antes." },
       { id: 's8', k: 'concepte', t: "Enrere o endavant?|¿Hacia atrás o hacia delante?", punts: ["Compte enrere: de 10 a 0. Per posar un límit de temps.|Cuenta atrás: de 10 a 0. Para poner un límite de tiempo.", "Cronòmetre: de 0 cap amunt. Per saber quant has trigat.|Cronómetro: de 0 hacia arriba. Para saber cuánto has tardado.", "Tots dos compten segons.|Los dos cuentan segundos."],
-        nota: "Demana un exemple de cada: el temps d'un examen (enrere) i una cursa (endavant).|Pide un ejemplo de cada: el tiempo de un examen (hacia atrás) y una carrera (hacia delante)." },
+        nota: "Demana un exemple de cada: el temps d'un examen (enrere) i una cursa (endavant).|Pide un ejemplo de cada: el tiempo de un examen (hacia atrás) y una carrera (hacia delante).", pic: "img/ment/rel.webp" },
       { id: 's9', k: 'media', t: "Compte: falta l'espera|Cuidado: falta la espera", x: "Sense «espera 1 segon», el compte enrere de 10 segons s'acaba en un instant.|Sin «espera 1 segundo», la cuenta atrás de 10 segundos se acaba en un instante.",
         media: { k: 'stage', w: { bg: 'escenari', sprites: [{ id: 'numi', art: 'numi', x: 0, y: -40, size: 130 }], vars: ['temps'] }, prog: '@numi flag{ setv:temps,10 wait:1 rep:10{ chv:temps,-1 } say:"Ja?|¿Ya?",2 }', varNames: VN, time: 4 },
         nota: "Mireu el marcador: passa de 10 a 0 gairebé de cop. Pregunta quin bloc falta i on va.|Mirad el marcador: pasa de 10 a 0 casi de golpe. Pregunta qué bloque falta y dónde va." },
@@ -3400,6 +4939,48 @@ Object.assign(TGUIDE, (() => {
 
   /* ---------- Sessió 4 · Projecte: la mascota virtual ---------- */
   'g6-4': {
+    intro: "Sessió de projecte. L'alumnat programa una mascota virtual feta de variables: la gana puja sola cada segon, la poma la fa baixar i la mascota canvia de cara amb «si gana > 5… si no…». Qui vulgui hi afegeix una segona variable (l'alegria) amb la pilota. Primer dissenyen la mascota en paper, després la construeixen a trossos (gana, menjar, cara, alegria) i, al final, un company/a la cuida i proposa una millora. Valora el pla i la prova tant com el resultat.|Sesión de proyecto. El alumnado programa una mascota virtual hecha de variables: el hambre sube sola cada segundo, la manzana la hace bajar y la mascota cambia de cara con «si hambre > 5… si no…». Quien quiera le añade una segunda variable (la alegría) con la pelota. Primero diseñan la mascota en papel, después la construyen a trozos (hambre, comida, cara, alegría) y, al final, un compañero/a la cuida y propone una mejora. Valora el plan y la prueba tanto como el resultado.",
+    claus: [
+      "Una variable pot pujar sola amb un guió: per sempre, espera 1 segon i suma 1.|Una variable puede subir sola con un guion: por siempre, espera 1 segundo y suma 1.",
+      "Un botó (un personatge que es toca) pot fer baixar la variable: suma un número negatiu.|Un botón (un personaje que se toca) puede hacer bajar la variable: suma un número negativo.",
+      "Amb «si gana > 5… si no…», el vestit depèn del valor de la variable.|Con «si hambre > 5… si no…», el disfraz depende del valor de la variable.",
+      "Un projecte gran es fa a trossos i cada tros es prova abans del següent.|Un proyecto grande se hace a trozos y cada trozo se prueba antes del siguiente."
+    ],
+    prev: [
+      "Variables, «posa» i «suma», i les comparacions =, > i < (sessions 1 i 2).|Variables, «pon» y «suma», y las comparaciones =, > y < (sesiones 1 y 2).",
+      "Un guió que repeteix amb «espera 1 segon» (sessió 3).|Un guion que repite con «espera 1 segundo» (sesión 3).",
+      "«Si… si no» i canviar de vestit (unitats 2 i 5).|«Si… si no» y cambiar de disfraz (unidades 2 y 5)."
+    ],
+    faq: [
+      ["Per què la gana puja tan de pressa?|¿Por qué el hambre sube tan deprisa?", "Falta «espera 1 segon» dins del «per sempre»: sense espera, suma 1 a cada fotograma, 30 cada segon.|Falta «espera 1 segundo» dentro del «por siempre»: sin espera, suma 1 en cada fotograma, 30 cada segundo."],
+      ["Quin número té cada cara de la mascota?|¿Qué número tiene cada cara de la mascota?", "1 contenta, 2 té gana, 3 dorm i 4 trista. Toca el número del bloc «posa el vestit» per canviar-lo.|1 contenta, 2 tiene hambre, 3 duerme y 4 triste. Toca el número del bloque «pon el disfraz» para cambiarlo."],
+      ["La gana es fa negativa: és un error?|El hambre se hace negativa: ¿es un error?", "No té sentit, però no trenca el programa. Ho pots arreglar amb un «si gana < 0: posa gana a 0».|No tiene sentido, pero no rompe el programa. Lo puedes arreglar con un «si hambre < 0: pon hambre a 0»."],
+      ["Puc canviar el 5 de «gana > 5»?|¿Puedo cambiar el 5 de «hambre > 5»?", "Sí, toca el número. Mira fins on arriba la gana al marcador: si poses un número que no arriba mai, la cara no canviarà.|Sí, toca el número. Mira hasta dónde llega el hambre en el marcador: si pones un número al que no llega nunca, la cara no cambiará."],
+      ["Com afegeixo l'alegria?|¿Cómo añado la alegría?", "Fes un altre guió a la mascota que la faci baixar sola i programa la pilota perquè, en tocar-la, sumi alegria. Després, una cara trista si alegria < 3.|Haz otro guion en la mascota que la haga bajar sola y programa la pelota para que, al tocarla, sume alegría. Después, una cara triste si alegría < 3."],
+      ["On és la mascota que he fet?|¿Dónde está la mascota que he hecho?", "Quan passa la comprovació i toques «Desa-ho i continua», queda a «Projectes» i es pot ensenyar a casa.|Cuando pasa la comprobación y tocas «Guárdalo y continúa», queda en «Proyectos» y se puede enseñar en casa."]
+    ],
+    tec: [
+      ["El marcador de la variable no surt a l'escenari.|El marcador de la variable no sale en el escenario.", "Surt a dalt a l'esquerra quan el repte té variables. Si no es veu, toqueu el botó de tornar a començar (la fletxa rodona) o feu la finestra més gran.|Sale arriba a la izquierda cuando el reto tiene variables. Si no se ve, tocad el botón de volver a empezar (la flecha redonda) o haced la ventana más grande."],
+      ["En tocar el text del «digues» no troben la variable.|Al tocar el texto del «di» no encuentran la variable.", "A la finestra que s'obre, sota el quadre per escriure, hi ha els botons de les variables del repte (punts, vides…). Cal tocar-ne un, no escriure'n el nom.|En la ventana que se abre, debajo del cuadro para escribir, están los botones de las variables del reto (puntos, vidas…). Hay que tocar uno, no escribir su nombre."],
+      ["Per escriure un número negatiu (-1) no troben el signe menys.|Para escribir un número negativo (-1) no encuentran el signo menos.", "A l'ordinador és la tecla del guionet (-), abans del número. Si el teclat de la tauleta o del mòbil no el mostra, feu aquell repte a l'ordinador.|En el ordenador es la tecla del guion (-), antes del número. Si el teclado de la tableta o del móvil no lo muestra, haced ese reto en el ordenador."],
+      ["Un alumne/a s'encalla en un repte.|Un alumno/a se atasca en un reto.", "Després de dos intents apareix «Una pista» i, després, «Mostra una solució». També es pot sortir del pas i tornar-hi: el repte torna a començar.|Después de dos intentos aparece «Una pista» y, después, «Muestra una solución». También se puede salir del paso y volver: el reto vuelve a empezar."],
+      ["No s'ha desat el projecte.|No se ha guardado el proyecto.", "Només es desa quan passa la comprovació i es toca «Desa-ho i continua». Si s'ha sortit abans, cal tornar a fer «Comprova».|Solo se guarda cuando pasa la comprobación y se toca «Guárdalo y continúa». Si se ha salido antes, hay que volver a hacer «Comprueba»."]
+    ],
+    seg: [
+      "Pantalles: recorda la pausa activa a mitja sessió i que mirin lluny uns segons quan acabin cada repte.|Pantallas: recuerda la pausa activa a media sesión y que miren a lo lejos unos segundos cuando terminen cada reto.",
+      "Mascotes: si algú explica que ha perdut una mascota o que una mascota de casa està malalta, escolta'l amb calma i, si cal, parla-ho en privat amb la família.|Mascotas: si alguien explica que ha perdido una mascota o que una mascota de casa está enferma, escúchale con calma y, si hace falta, háblalo en privado con la familia.",
+      "Prova amb el company/a: es comenta la mascota, no la persona, i sempre primer una cosa bona.|Prueba con el compañero/a: se comenta la mascota, no la persona, y siempre primero una cosa buena."
+    ],
+    extra: [
+      "Afegir una tercera variable (son) i un botó que posi la mascota a dormir (vestit 3).|Añadir una tercera variable (sueño) y un botón que ponga la mascota a dormir (disfraz 3).",
+      "Evitar la gana negativa amb un «si gana < 0: posa gana a 0».|Evitar el hambre negativa con un «si hambre < 0: pon hambre a 0».",
+      "Fer que la mascota digui «Tinc molta gana!» quan la gana passa de 8.|Hacer que la mascota diga «¡Tengo mucha hambre!» cuando el hambre pasa de 8."
+    ],
+    trans: [
+      "Recull tota la unitat 6: variables que pugen soles, botons que les fan baixar i comparacions.|Recoge toda la unidad 6: variables que suben solas, botones que las hacen bajar y comparaciones.",
+      "Unitat 7: l'atzar i els clons per fer videojocs que canvien cada vegada.|Unidad 7: el azar y los clones para hacer videojuegos que cambian cada vez.",
+      "Ciències naturals: les necessitats dels éssers vius (menjar, descans, companyia) i la cura dels animals.|Ciencias naturales: las necesidades de los seres vivos (comida, descanso, compañía) y el cuidado de los animales."
+    ],
     obj: [
       "L'alumne/a planifica en paper una mascota virtual: variables, què les fa pujar i baixar, i quan canvia de vestit.|El alumno/a planifica en papel una mascota virtual: variables, qué las hace subir y bajar, y cuándo cambia de disfraz.",
       "L'alumne/a programa una variable que puja sola amb el temps i botons que la fan baixar.|El alumno/a programa una variable que sube sola con el tiempo y botones que la hacen bajar.",
@@ -3427,48 +5008,73 @@ Object.assign(TGUIDE, (() => {
       ],
       imprimir: ["Fitxa de disseny: la meva mascota virtual|Ficha de diseño: mi mascota virtual", "Targetes de prova per al company/a|Tarjetas de prueba para el compañero/a"],
       prep: [
-        "Imprimir una fitxa de disseny per alumne/a i les targetes de prova (una per parella).|Imprimir una ficha de diseño por alumno/a y las tarjetas de prueba (una por pareja).",
-        "Provar abans la mascota de la caseta (pas «Prova-la») per poder-la ensenyar projectada.|Probar antes la mascota de la caseta (paso «Pruébala») para poder enseñarla proyectada.",
-        "Pensar parelles per a la prova final: millor amb algú que no seu al costat.|Pensar parejas para la prueba final: mejor con alguien que no se sienta al lado."
+        "El dia abans (10 min): imprimir una fitxa de disseny per alumne/a i les targetes de prova (una per parella).|El día antes (10 min): imprimir una ficha de diseño por alumno/a y las tarjetas de prueba (una por pareja).",
+        "El dia abans (15 min): fer tu el projecte i provar la mascota de la caseta (pas «Prova-la») per poder-la ensenyar projectada.|El día antes (15 min): hacer tú el proyecto y probar la mascota de la caseta (paso «Pruébala») para poder enseñarla proyectada.",
+        "Abans de classe (5 min): pensar parelles per a la prova final: millor amb algú que no segui al costat.|Antes de clase (5 min): pensar parejas para la prueba final: mejor con alguien que no se siente al lado.",
+        "Abans de classe (5 min): obrir la presentació i deixar la sessió iniciada als ordinadors.|Antes de clase (5 min): abrir la presentación y dejar la sesión iniciada en los ordenadores."
       ]
     },
     plan: [
       { min: 5, t: "Benvinguda: el racó dels petits|Bienvenida: el rincón de los pequeños", fase: 'inici',
         fa: "Repassa les tres variables de la unitat (punts, vides, temps). Presenta el projecte: una mascota virtual per al racó dels petits de la fira. Pregunta què necessita una mascota de veritat i què podria canviar amb el temps.|Repasa las tres variables de la unidad (puntos, vidas, tiempo). Presenta el proyecto: una mascota virtual para el rincón de los pequeños de la feria. Pregunta qué necesita una mascota de verdad y qué podría cambiar con el tiempo.",
-        diu: ["Quina variable puja sola cada segon, en el compte enrere al revés?|¿Qué variable sube sola cada segundo, en la cuenta atrás al revés?",
-          "Si tens un gos, què li passa si no menja? I si no surt a passejar?|Si tienes un perro, ¿qué le pasa si no come? ¿Y si no sale a pasear?"],
+        diu: [
+          "Quines tres variables hem fet servir aquesta unitat? (punts, vides i temps)|¿Qué tres variables hemos usado esta unidad? (puntos, vidas y tiempo)",
+          "Quina baixa sola amb el temps? (el temps del compte enrere) I n'hi podria haver una que pugi sola?|¿Cuál baja sola con el tiempo? (el tiempo de la cuenta atrás) ¿Y podría haber una que suba sola?",
+          "Si tens una mascota, què li passa si no menja? (té gana) I si no surt a passejar? (s'avorreix)|Si tienes una mascota, ¿qué le pasa si no come? (tiene hambre) ¿Y si no sale a pasear? (se aburre)",
+          "Cadascuna d'aquestes coses podria ser una variable de la mascota virtual.|Cada una de estas cosas podría ser una variable de la mascota virtual."
+        ],
         slides: ['s1', 's2', 's3'], app: "Encara no: pantalles apagades.|Todavía no: pantallas apagadas.", org: "Tot el grup|Todo el grupo" },
       { min: 8, t: "Com funciona una mascota virtual|Cómo funciona una mascota virtual", fase: 'teoria',
         fa: "Mostra l'animació de la mascota i les demos tros a tros: la gana que puja sola i la poma que la fa baixar amb el canvi de cara. Llegiu junts la regla «si gana > 3… si no…» amb valors concrets. Acaba amb l'error de la gana negativa i la llista dels vestits.|Muestra la animación de la mascota y las demos trozo a trozo: el hambre que sube sola y la manzana que la hace bajar con el cambio de cara. Leed juntos la regla «si hambre > 3… si no…» con valores concretos. Termina con el error del hambre negativa y la lista de los disfraces.",
-        diu: ["Si la gana val 2, quina cara posa? I si val 5?|Si el hambre vale 2, ¿qué cara pone? ¿Y si vale 5?",
-          "Per què la gana puja tota sola?|¿Por qué el hambre sube sola?",
-          "Té sentit una gana de -6? Com ho evitaríeu?|¿Tiene sentido un hambre de -6? ¿Cómo lo evitaríais?"],
+        diu: [
+          "Per què la gana puja tota sola? (un guió amb «per sempre» i «espera» hi suma 1)|¿Por qué el hambre sube sola? (un guion con «por siempre» y «espera» le suma 1)",
+          "Si la gana val 2, quina cara posa? (contenta) I si val 5? (té gana, perquè 5 > 3)|Si el hambre vale 2, ¿qué cara pone? (contenta) ¿Y si vale 5? (tiene hambre, porque 5 > 3)",
+          "Què passa quan es toca la poma? (la gana baixa 3 i la cara pot canviar)|¿Qué pasa cuando se toca la manzana? (el hambre baja 3 y la cara puede cambiar)",
+          "Té sentit una gana de -6? Com ho evitaríeu? (si gana < 0, posa gana a 0)|¿Tiene sentido un hambre de -6? ¿Cómo lo evitaríais? (si hambre < 0, pon hambre a 0)"
+        ],
         slides: ['s4', 's5', 's6', 's7', 's8'], app: "Encara no: tota l'atenció a la projecció.|Todavía no: toda la atención en la proyección.", org: "Tot el grup|Todo el grupo" },
       { min: 10, t: "El pla de la mascota|El plan de la mascota", fase: 'desconnectat',
         fa: "Cada alumne/a omple la fitxa de disseny: dibuix i nom, dues variables, què les fa pujar soles, quin botó les fa baixar i quina cara posa i quan (amb una comparació). Als últims 3 minuts, en parelles, s'expliquen el pla i el company/a fa una pregunta.|Cada alumno/a rellena la ficha de diseño: dibujo y nombre, dos variables, qué las hace subir solas, qué botón las hace bajar y qué cara pone y cuándo (con una comparación). En los últimos 3 minutos, por parejas, se explican el plan y el compañero/a hace una pregunta.",
-        diu: ["La teva regla de la cara, té un número? Més gran o més petit que quant?|Tu regla de la cara, ¿tiene un número? ¿Mayor o menor que cuánto?",
-          "Cada quant puja la gana? Massa de pressa i els petits no podran cuidar-la!|¿Cada cuánto sube el hambre? ¡Demasiado deprisa y los pequeños no podrán cuidarla!"],
+        diu: [
+          "La teva regla de la cara, té un número? Més gran o més petit que quant?|Tu regla de la cara, ¿tiene un número? ¿Mayor o menor que cuánto?",
+          "Cada quant puja la gana? Massa de pressa i els petits no podran cuidar-la!|¿Cada cuánto sube el hambre? ¡Demasiado deprisa y los pequeños no podrán cuidarla!",
+          "Quin botó fa baixar cada variable?|¿Qué botón hace bajar cada variable?",
+          "Company/a: fes una pregunta sobre el pla que no t'hagi quedat clara.|Compañero/a: haz una pregunta sobre el plan que no te haya quedado clara."
+        ],
         slides: ['s9'], app: "Cap: activitat amb la fitxa de disseny.|Ninguna: actividad con la ficha de diseño.", org: "Individual i per parelles|Individual y por parejas" },
       { min: 10, t: "A l'ordinador: descobreix, prova i investiga|En el ordenador: descubre, prueba e investiga", fase: 'ordinador',
         fa: "Cada alumne/a fa els passos fins a «Investiga». Al pas «El pla de la mascota», que toquin «Ho hem fet!»: ja tenen la fitxa. Al pas de provar la mascota de la caseta, que mirin com canvien les dues variables i la cara.|Cada alumno/a hace los pasos hasta «Investiga». En el paso «El plan de la mascota», que toquen «¡Lo hemos hecho!»: ya tienen la ficha. En el paso de probar la mascota de la caseta, que miren cómo cambian las dos variables y la cara.",
-        diu: ["Quan es posa trista la mascota de la caseta? Quina variable ho decideix?|¿Cuándo se pone triste la mascota de la caseta? ¿Qué variable lo decide?",
-          "A Investiga: la gana arriba mai a 50?|En Investiga: ¿el hambre llega alguna vez a 50?"],
+        diu: [
+          "Quan es posa trista la mascota de la caseta? Quina variable ho decideix? (quan l'alegria és menor que 3)|¿Cuándo se pone triste la mascota de la caseta? ¿Qué variable lo decide? (cuando la alegría es menor que 3)",
+          "Amb gana 6 i «si gana > 5», quin vestit porta? (el 2)|Con hambre 6 y «si hambre > 5», ¿qué disfraz lleva? (el 2)",
+          "A Investiga: la gana arriba mai a 50? (no, per això no canvia mai la cara)|En Investiga: ¿el hambre llega alguna vez a 50? (no, por eso no cambia nunca la cara)"
+        ],
         slides: ['s10'], app: "De «La missió» a «Investiga»: la pregunta de repàs, les dues històries, les targetes de «Descobreix», «El pla de la mascota», ordenar els trossos, provar la mascota de la caseta, la pregunta del vestit i la mascota que mai no té gana.|De «La misión» a «Investiga»: la pregunta de repaso, las dos historias, las tarjetas de «Descubre», «El plan de la mascota», ordenar los trozos, probar la mascota de la caseta, la pregunta del disfraz y la mascota que nunca tiene hambre.", org: "Individual|Individual" },
       { min: 10, t: "Reptes: la mascota, tros a tros|Retos: la mascota, trozo a trozo", fase: 'ordinador',
         fa: "Feu la pausa activa i deixa'ls fer els quatre trossos. Insisteix que cada tros es prova abans de passar al següent. Qui acabi abans, comença el projecte.|Haced la pausa activa y deja que hagan los cuatro trozos. Insiste en que cada trozo se prueba antes de pasar al siguiente. Quien termine antes, empieza el proyecto.",
-        diu: ["El tros 1 funciona? Com ho saps? Mira el marcador.|¿El trozo 1 funciona? ¿Cómo lo sabes? Mira el marcador.",
-          "Al tros 3, quin vestit va al «si» i quin al «si no»?|En el trozo 3, ¿qué disfraz va en el «si» y cuál en el «si no»?"],
+        diu: [
+          "El tros 1 funciona? Com ho saps? (el marcador puja 1 cada segon)|¿El trozo 1 funciona? ¿Cómo lo sabes? (el marcador sube 1 cada segundo)",
+          "A la poma: quin número poses a «suma a gana»? (-3)|En la manzana: ¿qué número pones en «suma a hambre»? (-3)",
+          "Al tros 3, quin vestit va al «si» i quin al «si no»? (2 al si, 1 al si no)|En el trozo 3, ¿qué disfraz va en el «si» y cuál en el «si no»? (2 en el si, 1 en el si no)",
+          "Si un tros no funciona, avancem? (no: primer l'arreglem)|Si un trozo no funciona, ¿avanzamos? (no: primero lo arreglamos)"
+        ],
         slides: ['s11'], app: "«Pausa activa» i els quatre trossos: la gana puja sola, el menjar, la cara i l'alegria.|«Pausa activa» y los cuatro trozos: el hambre sube sola, la comida, la cara y la alegría.", org: "Tot el grup i després individual|Todo el grupo y después individual" },
       { min: 13, t: "Crea: la meva mascota virtual|Crea: mi mascota virtual", fase: 'crea',
         fa: "Cada alumne/a construeix la seva mascota a partir del pla (8 minuts). Després, prova per parelles amb les targetes de prova (5 minuts): el company/a la cuida durant un minut, respon les preguntes de la targeta i diu una cosa que li ha agradat i una idea per millorar-la. L'autor/a fa un canvi i la desa.|Cada alumno/a construye su mascota a partir del plan (8 minutos). Después, prueba por parejas con las tarjetas de prueba (5 minutos): el compañero/a la cuida durante un minuto, responde las preguntas de la tarjeta y dice una cosa que le ha gustado y una idea para mejorarla. El autor/a hace un cambio y la guarda.",
-        diu: ["Segueix el teu pla: quin tros fas primer?|Sigue tu plan: ¿qué trozo haces primero?",
+        diu: [
+          "Segueix el teu pla: quin tros fas primer? (la gana que puja sola)|Sigue tu plan: ¿qué trozo haces primero? (el hambre que sube sola)",
+          "Has provat la cara amb la gana alta i baixa?|¿Has probado la cara con el hambre alta y baja?",
           "Quan proves la mascota d'un company/a: primer una cosa que t'agrada, després una idea.|Cuando pruebas la mascota de un compañero/a: primero una cosa que te gusta, después una idea.",
-          "Quin canvi has fet després de la prova?|¿Qué cambio has hecho después de la prueba?"],
+          "Quin canvi has fet després de la prova?|¿Qué cambio has hecho después de la prueba?"
+        ],
         slides: ['s12', 's13'], app: "Pas «Crea»: La meva mascota virtual (es desa a «Projectes»).|Paso «Crea»: Mi mascota virtual (se guarda en «Proyectos»).", org: "Individual i per parelles|Individual y por parejas" },
       { min: 4, t: "Tancament de la unitat|Cierre de la unidad", fase: 'tancament',
         fa: "Repassa la unitat: punts, vides, temps i mascota. Deixa que facin les preguntes finals. Felicita'ls per la insígnia i fes el tiquet a la porta.|Repasa la unidad: puntos, vidas, tiempo y mascota. Deja que hagan las preguntas finales. Felicítalos por la insignia y haz el ticket en la puerta.",
-        diu: ["Quina variable faries servir per saber quant falta per acabar?|¿Qué variable usarías para saber cuánto falta para terminar?",
-          "Quin canvi has fet a la mascota després de la prova del company/a?|¿Qué cambio has hecho a la mascota después de la prueba del compañero/a?"],
+        diu: [
+          "Quina variable faries servir per saber quant falta per acabar? (temps)|¿Qué variable usarías para saber cuánto falta para terminar? (tiempo)",
+          "Quin canvi has fet a la mascota després de la prova del company/a?|¿Qué cambio has hecho a la mascota después de la prueba del compañero/a?",
+          "Quina variable posaràs al teu videojoc de la unitat 8?|¿Qué variable pondrás en tu videojuego de la unidad 8?"
+        ],
         slides: ['s14', 's15', 's16'], app: "«Tancament»: les dues preguntes i com m'he sentit.|«Cierre»: las dos preguntas y cómo me he sentido.", org: "Tot el grup|Todo el grupo" }
     ],
     errors: [
@@ -3481,7 +5087,8 @@ Object.assign(TGUIDE, (() => {
       ["Programa la poma dins del guió de la mascota en lloc de triar el personatge poma.|Programa la manzana dentro del guion de la mascota en lugar de elegir el personaje manzana.",
         "Pregunta-li qui toquen els petits per donar menjar. Que triï la poma a les pestanyes de dalt.|Pregúntale a quién tocan los pequeños para dar comida. Que elija la manzana en las pestañas de arriba."],
       ["Vol fer-ho tot de cop i, quan no funciona, no sap quin tros falla.|Quiere hacerlo todo de golpe y, cuando no funciona, no sabe qué trozo falla.",
-        "Que torni al pla i provi un sol tros: la gana puja? Quan funcioni, el següent.|Que vuelva al plan y pruebe un solo trozo: ¿el hambre sube? Cuando funcione, el siguiente."]
+        "Que torni al pla i provi un sol tros: la gana puja? Quan funcioni, el següent.|Que vuelva al plan y pruebe un solo trozo: ¿el hambre sube? Cuando funcione, el siguiente."],
+      ["Al projecte, fa baixar la gana amb «posa gana a 0» a la poma i la mascota no té mai gana.|En el proyecto, hace bajar el hambre con «pon hambre a 0» en la manzana y la mascota no tiene nunca hambre.", "Pregunta: què vol dir «posa»? (esborra i escriu) Si la poma només ha de treure una mica de gana, quin bloc cal?|Pregunta: ¿qué quiere decir «pon»? (borra y escribe) Si la manzana solo tiene que quitar un poco de hambre, ¿qué bloque hace falta?"]
     ],
     diff: {
       mes: "Afegir una tercera variable (son) amb un botó que posi el fons de nit i el vestit 3, o fer que la mascota digui «Tinc molta gana!» quan la gana passa de 8. Evitar la gana negativa amb un «si gana < 0: posa gana a 0».|Añadir una tercera variable (sueño) con un botón que ponga el fondo de noche y el disfraz 3, o hacer que la mascota diga «¡Tengo mucha hambre!» cuando el hambre pasa de 8. Evitar el hambre negativa con un «si hambre < 0: pon hambre a 0».",
@@ -3493,7 +5100,12 @@ Object.assign(TGUIDE, (() => {
       rubric: [
         ["Pla i descomposició|Plan y descomposición", "Fa un pla complet i el construeix tros a tros, provant cada part.|Hace un plan completo y lo construye trozo a trozo, probando cada parte.", "Fa el pla, però construeix sense seguir-lo o sense provar cada part.|Hace el plan, pero construye sin seguirlo o sin probar cada parte."],
         ["Variables que canvien|Variables que cambian", "La gana puja sola amb espera i un botó la fa baixar; n'afegeix una altra.|El hambre sube sola con espera y un botón la hace bajar; añade otra.", "Fa pujar o baixar la gana, però necessita ajuda amb l'espera o amb el botó.|Hace subir o bajar el hambre, pero necesita ayuda con la espera o con el botón."],
-        ["Cara segons la variable|Cara según la variable", "Fa servir «si… si no…» amb una comparació que funciona i ho explica.|Usa «si… si no…» con una comparación que funciona y lo explica.", "Posa els vestits, però la comparació no canvia mai o necessita ajuda per triar el número.|Pone los disfraces, pero la comparación no cambia nunca o necesita ayuda para elegir el número."]
+        ["Cara segons la variable|Cara según la variable", "Fa servir «si… si no…» amb una comparació que funciona i ho explica.|Usa «si… si no…» con una comparación que funciona y lo explica.", "Posa els vestits, però la comparació no canvia mai o necessita ajuda per triar el número.|Pone los disfraces, pero la comparación no cambia nunca o necesita ayuda para elegir el número."],
+        [
+          "Provar amb un company/a|Probar con un compañero/a",
+          "Cuida la mascota d'un altre/a, dona una idea concreta i fa un canvi a la seva després de la prova.|Cuida la mascota de otro/a, da una idea concreta y hace un cambio en la suya después de la prueba.",
+          "Fa la prova, però no fa cap canvi o dona opinions generals.|Hace la prueba, pero no hace ningún cambio o da opiniones generales."
+        ]
       ]
     },
     casa: "A casa, ensenyeu la mascota virtual a la família (és a «Projectes») i deixeu-los que la cuidin. Pregunteu-los quina altra variable hi afegirien i apunteu la idea a la fitxa de disseny.|En casa, enseñad la mascota virtual a la familia (está en «Proyectos») y dejad que la cuiden. Preguntadles qué otra variable añadirían y apuntad la idea en la ficha de diseño.",
@@ -3512,8 +5124,7 @@ Object.assign(TGUIDE, (() => {
       { id: 's6', k: 'media', t: "Trossos 2 i 3: la poma i la cara|Trozos 2 y 3: la manzana y la cara", x: "Si gana > 3: vestit 2; si no: vestit 1. La poma resta 3.|Si hambre > 3: disfraz 2; si no: disfraz 1. La manzana resta 3.",
         media: { k: 'stage', w: { bg: 'parc', sprites: PET, vars: ['gana'], input: [{ t: 5.5, click: 'poma' }] }, prog: `${GANA} flag{ forever{ if:$gana>3{ costume:2 } else{ costume:1 } } } @poma click{ chv:gana,-3 sound:pop }`, varNames: VN, time: 8 },
         nota: "Para la demo quan la gana val 4 i pregunta quina cara ha de fer. Després, què passa quan es toca la poma.|Para la demo cuando el hambre vale 4 y pregunta qué cara tiene que hacer. Después, qué pasa cuando se toca la manzana." },
-      { id: 's7', k: 'concepte', t: "Els vestits de la mascota|Los disfraces de la mascota", punts: ["1: contenta|1: contenta", "2: té gana|2: tiene hambre", "3: dorm|3: duerme", "4: trista|4: triste"],
-        nota: "Deixa aquesta diapositiva a la vista durant els reptes i el projecte: hauran de triar el número del vestit.|Deja esta diapositiva a la vista durante los retos y el proyecto: tendrán que elegir el número del disfraz." },
+      { id: 's7', k: 'media', t: "Els vestits de la mascota|Los disfraces de la mascota", x: "1: contenta · 2: té gana · 3: dorm · 4: trista|1: contenta · 2: tiene hambre · 3: duerme · 4: triste", media: { k: 'stage', w: { bg: "parc", sprites: [{ id: 'mascota', art: "mascota", x: 0, y: -30, size: 150 }] }, prog: "@mascota flag{ forever{ costume:1 say:\"1|1\",1.2 costume:2 say:\"2|2\",1.2 costume:3 say:\"3|3\",1.2 costume:4 say:\"4|4\",1.2 } }", time: 5 }, nota: "Deixa aquesta diapositiva a la vista durant els reptes i el projecte: hauran de triar el número del vestit.|Deja esta diapositiva a la vista durante los retos y el proyecto: tendrán que elegir el número del disfraz." },
       { id: 's8', k: 'media', t: "Compte: una gana negativa|Cuidado: un hambre negativa", x: "Si es toca la poma moltes vegades, la gana baixa de 0.|Si se toca la manzana muchas veces, el hambre baja de 0.",
         media: { k: 'stage', w: { bg: 'parc', sprites: PET, vars: ['gana'], input: clicks('poma', [1.5, 2, 2.5, 3]) }, prog: `${GANA} @poma click{ chv:gana,-3 sound:pop }`, varNames: VN, time: 5 },
         nota: "Pregunta com ho arreglarien. Una idea: si gana < 0, posa gana a 0. És un repte extra per a qui vulgui.|Pregunta cómo lo arreglarían. Una idea: si hambre < 0, pon hambre a 0. Es un reto extra para quien quiera." },
@@ -3575,6 +5186,47 @@ Object.assign(TGUIDE, (() => {
 
   /* ---------- Sessió 1 · Nombres a l'atzar ---------- */
   const G1 = {
+    intro: "Primera sessió de la unitat de l'atzar. L'alumnat descobreix que una cosa passa a l'atzar quan ningú no pot saber abans com acabarà, i que els videojocs l'usen perquè cada partida sigui diferent. Aprèn dos blocs: el valor «atzar 1-10» (un número que es tria cada vegada que el programa hi arriba) i «ves a un lloc a l'atzar». La idea clau és que l'atzar va dins del bucle si el vols nou a cada volta, i el truc del meteorit: primer el lloc a l'atzar i després «posa y a 170». La classe té una pluja de meteorits amb daus i quatre reptes.|Primera sesión de la unidad del azar. El alumnado descubre que algo pasa al azar cuando nadie puede saber antes cómo acabará, y que los videojuegos lo usan para que cada partida sea diferente. Aprende dos bloques: el valor «azar 1-10» (un número que se elige cada vez que el programa llega a él) y «ve a un sitio al azar». La idea clave es que el azar va dentro del bucle si lo quieres nuevo en cada vuelta, y el truco del meteorito: primero el sitio al azar y después «pon y a 170». La clase tiene una lluvia de meteoritos con dados y cuatro retos.",
+    claus: [
+      "L'atzar és el que no es pot saber abans: el dau, la moneda, una carta.|El azar es lo que no se puede saber antes: el dado, la moneda, una carta.",
+      "«Atzar 1-10» tria un número de l'1 al 10 (tots dos inclosos) cada vegada que s'hi arriba.|«Azar 1-10» elige un número del 1 al 10 (los dos incluidos) cada vez que se llega a él.",
+      "Si el bloc amb l'atzar és fora del bucle, el número es tria una sola vegada.|Si el bloque con el azar está fuera del bucle, el número se elige una sola vez.",
+      "Per sortir per dalt a l'atzar: «ves a un lloc a l'atzar» i després «posa y a 170».|Para salir por arriba al azar: «ve a un sitio al azar» y después «pon y a 170».",
+      "Repetir un número és normal amb l'atzar: no vol dir que s'equivoqui.|Repetir un número es normal con el azar: no quiere decir que se equivoque."
+    ],
+    prev: [
+      "Variables: «posa», «suma» i dir-les amb «digues» (unitat 6).|Variables: «pon», «suma» y decirlas con «di» (unidad 6).",
+      "Coordenades x i y de l'escenari i «posa y a» (unitat 4).|Coordenadas x e y del escenario y «pon y a» (unidad 4).",
+      "«Si… si no» i comparar números (unitats 5 i 6).|«Si… si no» y comparar números (unidades 5 y 6)."
+    ],
+    faq: [
+      ["L'estrella fa sempre els mateixos salts quan torno a començar. No és a l'atzar?|La estrella hace siempre los mismos saltos cuando vuelvo a empezar. ¿No es al azar?", "Dins d'una partida no pots saber on anirà. Però, perquè la comprovació sigui justa, l'app comença sempre amb la mateixa sèrie; als reptes amb tocs o tecles, quan proves lliurement, canvia cada vegada.|Dentro de una partida no puedes saber adónde irá. Pero, para que la comprobación sea justa, la app empieza siempre con la misma serie; en los retos con toques o teclas, cuando pruebas libremente, cambia cada vez."],
+      ["Pot sortir el 10 amb «atzar 1-10»? I el 0?|¿Puede salir el 10 con «azar 1-10»? ¿Y el 0?", "El 10 sí, i l'1 també. El 0, no: només surten números entre l'1 i el 10.|El 10 sí, y el 1 también. El 0, no: solo salen números entre el 1 y el 10."],
+      ["Puc fer un número a l'atzar del 50 al 100?|¿Puedo hacer un número al azar del 50 al 100?", "Sí: a la finestra del número, a «o un número a l'atzar», escriu 50 i 100 i toca OK.|Sí: en la ventana del número, en «o un número al azar», escribe 50 y 100 y toca OK."],
+      ["Per què el meteorit surt pel mig de l'escenari?|¿Por qué el meteorito sale por el centro del escenario?", "Perquè «ves a un lloc a l'atzar» va després de «posa y a 170» i també canvia la y. Posa'l abans.|Porque «ve a un sitio al azar» va después de «pon y a 170» y también cambia la y. Ponlo antes."],
+      ["Ha sortit el mateix número dues vegades seguides: està espatllat?|Ha salido el mismo número dos veces seguidas: ¿está estropeado?", "No: amb un dau de veritat també passa. L'atzar no recorda què ha sortit abans.|No: con un dado de verdad también pasa. El azar no recuerda qué ha salido antes."],
+      ["Al cara o creu, per què «tirada > 5»?|En el cara o cruz, ¿por qué «tirada > 5»?", "De l'1 al 10 hi ha cinc números més grans que 5 (6, 7, 8, 9, 10) i cinc que no (1 a 5): així cara i creu tenen les mateixes possibilitats.|Del 1 al 10 hay cinco números mayores que 5 (6, 7, 8, 9, 10) y cinco que no (1 a 5): así cara y cruz tienen las mismas posibilidades."]
+    ],
+    tec: [
+      ["L'atzar fa sempre el mateix camí quan toquen «Comença».|El azar hace siempre el mismo camino cuando tocan «Empieza».", "És normal: per comprovar els reptes de manera justa, l'app fa servir sempre la mateixa sèrie d'atzar. Als reptes amb tecles o tocs, quan es prova lliurement amb «Comença», l'atzar canvia cada vegada.|Es normal: para comprobar los retos de forma justa, la app usa siempre la misma serie de azar. En los retos con teclas o toques, cuando se prueba libremente con «Empieza», el azar cambia cada vez."],
+      ["No troben el valor «atzar» en tocar un número.|No encuentran el valor «azar» al tocar un número.", "Surt a la finestra del número, a «o un valor» (atzar 1-10) i a «o un número a l'atzar», on es pot escriure de quin a quin. Només surt als reptes que el fan servir.|Sale en la ventana del número, en «o un valor» (azar 1-10) y en «o un número al azar», donde se puede escribir de cuál a cuál. Solo sale en los retos que lo usan."],
+      ["Un alumne/a s'encalla en un repte.|Un alumno/a se atasca en un reto.", "Després de dos intents apareix «Una pista» i, després, «Mostra una solució». També es pot sortir del pas i tornar-hi: el repte torna a començar.|Después de dos intentos aparece «Una pista» y, después, «Muestra una solución». También se puede salir del paso y volver: el reto vuelve a empezar."],
+      ["No hi ha prou daus per a tots els grups.|No hay suficientes dados para todos los grupos.", "Sis papers numerats doblegats dins d'una bossa fan el mateix servei (cal tornar-los a posar a la bossa després de cada tirada).|Seis papeles numerados doblados dentro de una bolsa hacen el mismo servicio (hay que volver a meterlos en la bolsa después de cada tirada)."]
+    ],
+    seg: [
+      "Pantalles: recorda la pausa activa a mitja sessió i que mirin lluny uns segons quan acabin cada repte.|Pantallas: recuerda la pausa activa a media sesión y que miren a lo lejos unos segundos cuando terminen cada reto.",
+      "Daus: es tiren sobre la taula, no per l'aire. Si l'activitat genera competència, recorda que amb l'atzar ningú no té mèrit ni culpa.|Dados: se tiran sobre la mesa, no por el aire. Si la actividad genera competencia, recuerda que con el azar nadie tiene mérito ni culpa."
+    ],
+    extra: [
+      "Fer un dau digital: en tocar el dau (una moneda o una estrella), posar tirada a atzar 1-6 i dir-la.|Hacer un dado digital: al tocar el dado (una moneda o una estrella), poner tirada a azar 1-6 y decirla.",
+      "Llançar la moneda digital 20 vegades i comptar quantes cares i quantes creus surten. Són iguals?|Lanzar la moneda digital 20 veces y contar cuántas caras y cuántas cruces salen. ¿Son iguales?",
+      "Fer que una nau es mogui amb «mou-te atzar 1-10 passos» i fer una cursa amb la nau d'un company/a.|Hacer que una nave se mueva con «muévete azar 1-10 pasos» y hacer una carrera con la nave de un compañero/a."
+    ],
+    trans: [
+      "Ve de la unitat 6: les variables ara poden guardar un número a l'atzar.|Viene de la unidad 6: las variables ahora pueden guardar un número al azar.",
+      "Sessió següent: els clons, per fer una pluja de molts meteorits amb un sol personatge.|Sesión siguiente: los clones, para hacer una lluvia de muchos meteoritos con un solo personaje.",
+      "Matemàtiques: probabilitat i atzar (segur, possible, impossible) i recompte de dades en una taula.|Matemáticas: probabilidad y azar (seguro, posible, imposible) y recuento de datos en una tabla."
+    ],
     obj: [
       "L'alumne/a explica amb les seves paraules què vol dir que una cosa passi a l'atzar i en dona exemples de la vida diària.|El alumno/a explica con sus palabras qué quiere decir que algo pase al azar y da ejemplos de la vida diaria.",
       "L'alumne/a fa servir el valor «atzar 1-10» per guardar un número en una variable i decidir amb un «si… si no».|El alumno/a usa el valor «azar 1-10» para guardar un número en una variable y decidir con un «si… si no».",
@@ -3612,43 +5264,64 @@ Object.assign(TGUIDE, (() => {
     plan: [
       { min: 5, t: "Benvinguda: la Nit de les Estrelles|Bienvenida: la Noche de las Estrellas", fase: 'inici',
         fa: "Presenta la nova unitat: l'observatori de l'illa ens demana un videojoc per a la Nit de les Estrelles. Pregunta què passaria si els meteorits caiguessin sempre pel mateix lloc i recull respostes. Fes un repàs ràpid de variables i coordenades amb la diapositiva 3.|Presenta la nueva unidad: el observatorio de la isla nos pide un videojuego para la Noche de las Estrellas. Pregunta qué pasaría si los meteoritos cayeran siempre por el mismo sitio y recoge respuestas. Haz un repaso rápido de variables y coordenadas con la diapositiva 3.",
-        diu: ["Si un videojoc fa sempre exactament el mateix, què passa a la tercera partida?|Si un videojuego hace siempre exactamente lo mismo, ¿qué pasa en la tercera partida?",
-          "Qui recorda on és x = 200 a l'escenari?|¿Quién recuerda dónde está x = 200 en el escenario?",
-          "Avui aprendrem a fer que l'ordinador ens sorprengui.|Hoy aprenderemos a hacer que el ordenador nos sorprenda."],
+        diu: [
+          "Si un videojoc fa sempre exactament el mateix, què passa a la tercera partida? (ja te l'aprens i avorreix)|Si un videojuego hace siempre exactamente lo mismo, ¿qué pasa en la tercera partida? (ya te lo aprendes y aburre)",
+          "Qui recorda on és x = 200 a l'escenari? (a prop de la vora dreta)|¿Quién recuerda dónde está x = 200 en el escenario? (cerca del borde derecho)",
+          "Quin bloc fa pujar 1 punt el marcador? (suma a punts 1)|¿Qué bloque hace subir 1 punto el marcador? (suma a puntos 1)",
+          "Avui aprendrem a fer que l'ordinador ens sorprengui.|Hoy aprenderemos a hacer que el ordenador nos sorprenda."
+        ],
         slides: ['s1', 's2', 's3', 's4'], app: "Encara no: pantalles abaixades.|Todavía no: pantallas bajadas.", org: "Tot el grup|Todo el grupo" },
       { min: 10, t: "Què és l'atzar? Dos blocs nous|¿Qué es el azar? Dos bloques nuevos", fase: 'teoria',
         fa: "Tira un dau davant la classe i demana que endevinin el número abans: ningú no pot saber-ho. Explica el valor «atzar 1-10» amb l'animació i després «ves a un lloc a l'atzar» amb la demo de l'estrella. Amb la demo del meteorit, fes notar l'ordre: primer el lloc a l'atzar i després «posa y a 170». Acaba amb el «compte!»: l'atzar dins del bucle.|Tira un dado delante de la clase y pide que adivinen el número antes: nadie puede saberlo. Explica el valor «azar 1-10» con la animación y después «ve a un sitio al azar» con la demo de la estrella. Con la demo del meteorito, haz notar el orden: primero el sitio al azar y después «pon y a 170». Acaba con el «¡cuidado!»: el azar dentro del bucle.",
-        diu: ["Qui sap quin número sortirà? Ningú! Això és l'atzar.|¿Quién sabe qué número saldrá? ¡Nadie! Eso es el azar.",
-          "On sortirà l'estrella la propera vegada? Assenyaleu-ho… i mirem qui l'encerta.|¿Dónde saldrá la estrella la próxima vez? Señaladlo… y miremos quién lo acierta.",
-          "Si «ves a un lloc a l'atzar» anés després de «posa y a 170», on podria sortir el meteorit?|Si «ve a un sitio al azar» fuera después de «pon y a 170», ¿dónde podría salir el meteorito?"],
+        diu: [
+          "Qui sap quin número sortirà? (ningú: això és l'atzar)|¿Quién sabe qué número saldrá? (nadie: eso es el azar)",
+          "Amb «atzar 1-10», pot sortir l'1? I el 10? (sí, tots dos)|Con «azar 1-10», ¿puede salir el 1? ¿Y el 10? (sí, los dos)",
+          "On sortirà l'estrella la propera vegada? Assenyaleu-ho… i mirem qui l'encerta.|¿Dónde saldrá la estrella la próxima vez? Señaladlo… y miremos quién la acierta.",
+          "Si «ves a un lloc a l'atzar» anés després de «posa y a 170», on podria sortir el meteorit? (en qualsevol lloc, també al mig)|Si «ve a un sitio al azar» fuera después de «pon y a 170», ¿dónde podría salir el meteorito? (en cualquier sitio, también en el centro)",
+          "Si tries el número abans del bucle, canvia a cada volta? (no)|Si eliges el número antes del bucle, ¿cambia en cada vuelta? (no)"
+        ],
         slides: ['s5', 's6', 's7', 's8', 's9'], app: "Encara no: tota l'atenció a la projecció.|Todavía no: toda la atención en la proyección.", org: "Tot el grup|Todo el grupo" },
       { min: 12, t: "La pluja de meteorits amb daus|La lluvia de meteoritos con dados", fase: 'desconnectat',
         fa: "Grups de 3 o 4 amb un dau, una fitxa (la nau) i la graella. Papers: el llançador/a fa d'ordinador i tira el dau (el número és la columna on cau el meteorit), el pilot/a posa la nau en una columna abans de cada tirada i l'anotador/a marca una creu a la fila de la ronda. Si el meteorit cau a la columna de la nau, el pilot perd una vida. Després de 8 rondes, roten els papers. Al final, sumeu a la pissarra quantes vegades ha caigut a cada columna entre tots els grups.|Grupos de 3 o 4 con un dado, una ficha (la nave) y la cuadrícula. Papeles: el lanzador/a hace de ordenador y tira el dado (el número es la columna donde cae el meteorito), el piloto/a pone la nave en una columna antes de cada tirada y el anotador/a marca una cruz en la fila de la ronda. Si el meteorito cae en la columna de la nave, el piloto pierde una vida. Después de 8 rondas, rotan los papeles. Al final, sumad en la pizarra cuántas veces ha caído en cada columna entre todos los grupos.",
-        diu: ["El pilot/a pot saber on caurà el proper meteorit? Per què?|¿El piloto/a puede saber dónde caerá el próximo meteorito? ¿Por qué?",
+        diu: [
+          "El pilot/a pot saber on caurà el proper meteorit? Per què? (no: depèn del dau)|¿El piloto/a puede saber dónde caerá el próximo meteorito? ¿Por qué? (no: depende del dado)",
           "Ha caigut alguna vegada dues vegades seguides a la mateixa columna? Pot passar!|¿Ha caído alguna vez dos veces seguidas en la misma columna? ¡Puede pasar!",
-          "Si sumem tots els grups, totes les columnes en tenen uns quants: cap columna no és més «afortunada».|Si sumamos todos los grupos, todas las columnas tienen unos cuantos: ninguna columna es más «afortunada»."],
+          "Si sumem tots els grups, totes les columnes en tenen uns quants: cap columna no és més «afortunada».|Si sumamos todos los grupos, todas las columnas tienen unos cuantos: ninguna columna es más «afortunada».",
+          "El llançador/a és com l'ordinador: tria el número. El pilot/a, com la nau del videojoc.|El lanzador/a es como el ordenador: elige el número. El piloto/a, como la nave del videojuego."
+        ],
         slides: ['s10', 's11'], app: "Cap: activitat sense pantalla.|Ninguna: actividad sin pantalla.", org: "Grups de 3 o 4 amb papers que roten|Grupos de 3 o 4 con papeles que rotan" },
       { min: 15, t: "A l'ordinador: descobreix i investiga|En el ordenador: descubre e investiga", fase: 'ordinador',
         fa: "Cada alumne/a avança al seu ritme fins a la pausa activa. Al pas «El dau dels moviments», que toquin «Ara no» si no hi ha dau a l'aula: el faran a casa. A la cursa de naus, demana que expliquin amb paraules per què la nau de baix va a batzegades.|Cada alumno/a avanza a su ritmo hasta la pausa activa. En el paso «El dado de los movimientos», que toquen «Ahora no» si no hay dado en el aula: lo harán en casa. En la carrera de naves, pide que expliquen con palabras por qué la nave de abajo va a trompicones.",
-        diu: ["L'estrella torna mai al mateix lloc? Com ho sabries?|¿La estrella vuelve alguna vez al mismo sitio? ¿Cómo lo sabrías?",
-          "Quin bloc fa que la nau de baix canviï de velocitat a cada pas?|¿Qué bloque hace que la nave de abajo cambie de velocidad a cada paso?",
-          "Pot sortir un 12 amb «atzar 1-10»? I un 10?|¿Puede salir un 12 con «azar 1-10»? ¿Y un 10?"],
+        diu: [
+          "L'estrella torna mai al mateix lloc? Com ho sabries?|¿La estrella vuelve alguna vez al mismo sitio? ¿Cómo lo sabrías?",
+          "Quin bloc fa que la nau de baix canviï de velocitat a cada pas? (mou-te atzar 1-10 passos)|¿Qué bloque hace que la nave de abajo cambie de velocidad a cada paso? (muévete azar 1-10 pasos)",
+          "Pot sortir un 12 amb «atzar 1-10»? I un 10? (el 12 no; el 10 sí)|¿Puede salir un 12 con «azar 1-10»? ¿Y un 10? (el 12 no; el 10 sí)"
+        ],
         slides: ['s12'], app: "De «Recorda» fins a «Investiga»: les dues preguntes de repàs, la missió, les cinc targetes de «Descobreix», la pregunta del dau, «El dau dels moviments», l'estrella que salta, la cursa de naus i la pregunta del número 12.|De «Recuerda» hasta «Investiga»: las dos preguntas de repaso, la misión, las cinco tarjetas de «Descubre», la pregunta del dado, «El dado de los movimientos», la estrella que salta, la carrera de naves y la pregunta del número 12.", org: "Individual|Individual" },
       { min: 10, t: "Pausa activa i reptes|Pausa activa y retos", fase: 'ordinador',
         fa: "Feu la pausa activa tots junts. Després, els quatre reptes: l'estrella que salta per les quatre parts del cel, el número de la sort d'en Numi, cara o creu i el meteorit que ha de caure per llocs diferents. Als reptes amb tocs, recorda que «Comença» és per provar lliurement i «Comprova» fa els tocs sols.|Haced la pausa activa todos juntos. Después, los cuatro retos: la estrella que salta por las cuatro partes del cielo, el número de la suerte de Numi, cara o cruz y el meteorito que tiene que caer por sitios diferentes. En los retos con toques, recuerda que «Empieza» es para probar libremente y «Comprueba» hace los toques solos.",
-        diu: ["Al cara o creu, quins números fan dir «Cara!»? Compta'ls: n'hi ha tants com de «Creu!»?|En el cara o cruz, ¿qué números hacen decir «¡Cara!»? Cuéntalos: ¿hay tantos como de «¡Cruz!»?",
-          "El meteorit cau sempre pel mig. Quin bloc li falta, i on va?|El meteorito cae siempre por el centro. ¿Qué bloque le falta, y dónde va?",
-          "Si ajudes un company/a, fes-li preguntes: no li toquis el ratolí.|Si ayudas a un compañero/a, hazle preguntas: no le toques el ratón."],
+        diu: [
+          "L'estrella ha de passar per les quatre parts del cel: per què cal un «per sempre»? (perquè salti moltes vegades)|La estrella tiene que pasar por las cuatro partes del cielo: ¿por qué hace falta un «por siempre»? (para que salte muchas veces)",
+          "Al cara o creu, quins números fan dir «Cara!»? Compta'ls: n'hi ha tants com de «Creu!»? (6 a 10 i 1 a 5: cinc i cinc)|En el cara o cruz, ¿qué números hacen decir «¡Cara!»? Cuéntalos: ¿hay tantos como de «¡Cruz!»? (6 a 10 y 1 a 5: cinco y cinco)",
+          "El meteorit cau sempre pel mig. Quin bloc li falta, i on va? (ves a un lloc a l'atzar, abans de posa y a 170)|El meteorito cae siempre por el centro. ¿Qué bloque le falta, y dónde va? (ve a un sitio al azar, antes de pon y a 170)",
+          "Si ajudes un company/a, fes-li preguntes: no li toquis el ratolí.|Si ayudas a un compañero/a, hazle preguntas: no le toques el ratón."
+        ],
         slides: ['s13'], app: "«Pausa activa» i els quatre reptes de «Reptes».|«Pausa activa» y los cuatro retos de «Retos».", org: "Individual|Individual" },
       { min: 5, t: "Crea: la meva nit d'estrelles|Crea: mi noche de estrellas", fase: 'crea',
         fa: "Cada alumne/a crea la seva nit: almenys un personatge amb l'atzar dins d'un bucle. Quan la tinguin, la desen al portafoli i l'ensenyen al company/a del costat, que ha d'endevinar quin personatge fa servir l'atzar.|Cada alumno/a crea su noche: al menos un personaje con el azar dentro de un bucle. Cuando la tengan, la guardan en el portafolio y la enseñan al compañero/a de al lado, que tiene que adivinar qué personaje usa el azar.",
-        diu: ["Quin dels teus personatges és el sorprenent? Per què?|¿Cuál de tus personajes es el sorprendente? ¿Por qué?",
-          "Hi pots afegir un número a l'atzar, a més d'un lloc?|¿Puedes añadir un número al azar, además de un sitio?"],
+        diu: [
+          "Quin dels teus personatges és el sorprenent? Per què?|¿Cuál de tus personajes es el sorprendente? ¿Por qué?",
+          "On és el teu bloc amb l'atzar: dins o fora del bucle? (dins)|¿Dónde está tu bloque con el azar: dentro o fuera del bucle? (dentro)",
+          "Hi pots afegir un número a l'atzar, a més d'un lloc?|¿Puedes añadirle un número al azar, además de un sitio?"
+        ],
         slides: ['s14'], app: "Pas «Crea»: La meva nit d'estrelles (es desa als projectes).|Paso «Crea»: Mi noche de estrellas (se guarda en los proyectos).", org: "Individual i després per parelles|Individual y después por parejas" },
       { min: 3, t: "Tancament i tiquet de sortida|Cierre y ticket de salida", fase: 'tancament',
         fa: "Repassa les tres idees amb el resum. Deixa que responguin les preguntes finals i com s'han sentit, i fes a cada alumne/a una pregunta del tiquet a la porta.|Repasa las tres ideas con el resumen. Deja que respondan las preguntas finales y cómo se han sentido, y haz a cada alumno/a una pregunta del ticket en la puerta.",
-        diu: ["Digues una cosa de la vida que passi a l'atzar.|Di una cosa de la vida que pase al azar.",
-          "On ha d'anar el bloc amb l'atzar perquè canviï a cada volta?|¿Dónde tiene que ir el bloque con el azar para que cambie en cada vuelta?"],
+        diu: [
+          "Digues una cosa de la vida que passi a l'atzar. (el dau, la moneda, el temps que farà…)|Di una cosa de la vida que pase al azar. (el dado, la moneda, el tiempo que hará…)",
+          "On ha d'anar el bloc amb l'atzar perquè canviï a cada volta? (dins del bucle)|¿Dónde tiene que ir el bloque con el azar para que cambie en cada vuelta? (dentro del bucle)",
+          "Quins dos blocs fan sortir el meteorit per dalt a l'atzar? (ves a un lloc a l'atzar i posa y a 170)|¿Qué dos bloques hacen salir el meteorito por arriba al azar? (ve a un sitio al azar y pon y a 170)"
+        ],
         slides: ['s15', 's16'], app: "«Tancament»: les dues preguntes finals i com m'he sentit.|«Cierre»: las dos preguntas finales y cómo me he sentido.", org: "Tot el grup|Todo el grupo" }
     ],
     errors: [
@@ -3661,7 +5334,8 @@ Object.assign(TGUIDE, (() => {
       ["Al cara o creu, posa dos «si» separats i de vegades diu les dues coses o cap.|En el cara o cruz, pone dos «si» separados y a veces dice las dos cosas o ninguna.",
         "Pregunta: hi ha algun número que no sigui ni més gran que 5 ni el contrari? Ensenya-li el botó «Afegeix «si no»» del bloc «si».|Pregunta: ¿hay algún número que no sea ni mayor que 5 ni lo contrario? Enséñale el botón «Añade «si no»» del bloque «si»."],
       ["Creu que l'atzar «s'equivoca» quan surt el mateix número dues vegades seguides.|Cree que el azar «se equivoca» cuando sale el mismo número dos veces seguidas.",
-        "Recorda la pluja de daus: també hi va haver repeticions. Amb l'atzar, repetir és normal; el que no es pot és endevinar-ho.|Recuerda la lluvia de dados: también hubo repeticiones. Con el azar, repetir es normal; lo que no se puede es adivinarlo."]
+        "Recorda la pluja de daus: també hi va haver repeticions. Amb l'atzar, repetir és normal; el que no es pot és endevinar-ho.|Recuerda la lluvia de dados: también hubo repeticiones. Con el azar, repetir es normal; lo que no se puede es adivinarlo."],
+      ["Escriu el número a mà (per exemple, 7) en lloc de triar l'atzar, i en Numi diu sempre el mateix.|Escribe el número a mano (por ejemplo, 7) en lugar de elegir el azar, y Numi dice siempre lo mismo.", "Pregunta: qui ha triat aquest 7, tu o l'ordinador? Que toqui el número i triï «atzar 1-10» a «o un valor».|Pregunta: ¿quién ha elegido este 7, tú o el ordenador? Que toque el número y elija «azar 1-10» en «o un valor»."]
     ],
     diff: {
       mes: "Afegir a la nit d'estrelles un personatge que, en tocar-lo, posi un número a l'atzar i, si és més gran que 7, canviï el fons. Després, comptar en 20 tocs quantes vegades ha canviat i comparar-ho amb el company/a.|Añadir a la noche de estrellas un personaje que, al tocarlo, ponga un número al azar y, si es mayor que 7, cambie el fondo. Después, contar en 20 toques cuántas veces ha cambiado y compararlo con el compañero/a.",
@@ -3673,7 +5347,12 @@ Object.assign(TGUIDE, (() => {
       rubric: [
         ["Concepte d'atzar|Concepto de azar", "Explica que no es pot saber abans i dona exemples propis (dau, moneda…).|Explica que no se puede saber antes y da ejemplos propios (dado, moneda…).", "Reconeix l'atzar en un exemple, però encara no l'explica.|Reconoce el azar en un ejemplo, pero todavía no lo explica."],
         ["Número a l'atzar|Número al azar", "Guarda «atzar 1-10» en una variable, la diu i la fa servir en un «si… si no».|Guarda «azar 1-10» en una variable, la dice y la usa en un «si… si no».", "Posa l'atzar en un bloc, però no el guarda ni el fa servir per decidir.|Pone el azar en un bloque, pero no lo guarda ni lo usa para decidir."],
-        ["Lloc a l'atzar|Sitio al azar", "Fa sortir el meteorit per dalt en una x a l'atzar, amb els blocs en l'ordre bo i dins el bucle.|Hace salir el meteorito por arriba en una x al azar, con los bloques en el orden correcto y dentro del bucle.", "Fa servir «ves a un lloc a l'atzar», però s'equivoca d'ordre o el posa fora del bucle.|Usa «ve a un sitio al azar», pero se equivoca de orden o lo pone fuera del bucle."]
+        ["Lloc a l'atzar|Sitio al azar", "Fa sortir el meteorit per dalt en una x a l'atzar, amb els blocs en l'ordre bo i dins el bucle.|Hace salir el meteorito por arriba en una x al azar, con los bloques en el orden correcto y dentro del bucle.", "Fa servir «ves a un lloc a l'atzar», però s'equivoca d'ordre o el posa fora del bucle.|Usa «ve a un sitio al azar», pero se equivoca de orden o lo pone fuera del bucle."],
+        [
+          "Raonar amb l'atzar|Razonar con el azar",
+          "Explica que no pot endevinar cada tirada, però que amb moltes tirades surten tots els números.|Explica que no puede adivinar cada tirada, pero que con muchas tiradas salen todos los números.",
+          "Creu que hi ha números «de la sort» o que l'atzar s'equivoca quan repeteix.|Cree que hay números «de la suerte» o que el azar se equivoca cuando repite."
+        ]
       ]
     },
     casa: "A casa, amb un dau i algú de la família, feu «El dau dels moviments»: cada número és un moviment del cos. Abans de tirar, intenteu endevinar el número i apunteu quantes vegades l'encerteu.|En casa, con un dado y alguien de la familia, haced «El dado de los movimientos»: cada número es un movimiento del cuerpo. Antes de tirar, intentad adivinar el número y apuntad cuántas veces lo acertáis.",
@@ -3685,7 +5364,7 @@ Object.assign(TGUIDE, (() => {
       { id: 's3', k: 'repas', t: "Recordem|Recordemos", punts: ["Les variables guarden números: punts, vides…|Las variables guardan números: puntos, vidas…", "«Suma a punts 1» afegeix; «posa punts a 0» canvia.|«Suma a puntos 1» añade; «pon puntos a 0» cambia.", "L'escenari: x de -240 a 240, y de -180 a 180.|El escenario: x de -240 a 240, y de -180 a 180."],
         nota: "Dues preguntes ràpides a mà alçada; avui farem servir variables i coordenades.|Dos preguntas rápidas a mano alzada; hoy usaremos variables y coordenadas." },
       { id: 's4', k: 'concepte', t: "La Nit de les Estrelles|La Noche de las Estrellas", punts: ["L'observatori de l'illa fa una festa per mirar el cel.|El observatorio de la isla hace una fiesta para mirar el cielo.", "Ens demanen un videojoc: esquivar meteorits amb una nau.|Nos piden un videojuego: esquivar meteoritos con una nave.", "Aquesta unitat el construirem peça a peça.|En esta unidad lo construiremos pieza a pieza."],
-        nota: "Explica que en quatre sessions faran el videojoc «Esquiva els meteorits»: avui, la peça de l'atzar.|Explica que en cuatro sesiones harán el videojuego «Esquiva los meteoritos»: hoy, la pieza del azar." },
+        nota: "Explica que en quatre sessions faran el videojoc «Esquiva els meteorits»: avui, la peça de l'atzar.|Explica que en cuatro sesiones harán el videojuego «Esquiva los meteoritos»: hoy, la pieza del azar.", pic: "img/ment/vel.webp" },
       { id: 's5', k: 'anim', t: "Què és l'atzar?|¿Qué es el azar?", anim: 'g7dau', x: "Una cosa és a l'atzar quan ningú no pot saber abans com acabarà.|Algo es al azar cuando nadie puede saber antes cómo acabará.",
         nota: "Tira un dau de veritat i fes que endevinin el número abans. Demana més exemples: el sorteig d'un equip, una carta…|Tira un dado de verdad y haz que adivinen el número antes. Pide más ejemplos: el sorteo de un equipo, una carta…" },
       { id: 's6', k: 'anim', t: "El valor «atzar 1-10»|El valor «azar 1-10»", anim: 'g7num', x: "Cada vegada que el programa arriba al bloc, tria un número nou de l'1 al 10.|Cada vez que el programa llega al bloque, elige un número nuevo del 1 al 10.",
@@ -3732,6 +5411,47 @@ Object.assign(TGUIDE, (() => {
 
   /* ---------- Sessió 2 · Clons ---------- */
   const G2 = {
+    intro: "Segona sessió de la unitat: els clons. Un clon és una còpia d'un personatge que el mateix personatge crea mentre el programa funciona. Cada clon fa pel seu compte el guió «quan començo com a clon»: neix on és l'original (i com ell, també amagat), així que s'ha de moure i mostrar. Quan ha acabat, «esborra aquest clon» el treu perquè l'escenari no s'ompli (n'aguanta 40). L'alumnat veu la fàbrica de meteorits, fa de clon en una fàbrica humana i programa quatre reptes i una pluja pròpia.|Segunda sesión de la unidad: los clones. Un clon es una copia de un personaje que el mismo personaje crea mientras el programa funciona. Cada clon hace por su cuenta el guion «al empezar como clon»: nace donde está el original (y como él, también escondido), así que se tiene que mover y mostrar. Cuando ha terminado, «borra este clon» lo quita para que el escenario no se llene (aguanta 40). El alumnado ve la fábrica de meteoritos, hace de clon en una fábrica humana y programa cuatro retos y una lluvia propia.",
+    claus: [
+      "Un clon és una còpia que fa el mateix personatge amb «crea un clon de mi».|Un clon es una copia que hace el mismo personaje con «crea un clon de mí».",
+      "Cada clon fa el guió «quan començo com a clon», pel seu compte.|Cada clon hace el guion «al empezar como clon», por su cuenta.",
+      "Un clon neix on és l'original i com és l'original (també si està amagat).|Un clon nace donde está el original y como es el original (también si está escondido).",
+      "Mateix guió + atzar = clons diferents.|Mismo guion + azar = clones diferentes.",
+      "«Esborra aquest clon» quan ja no serveix, perquè l'escenari no s'ompli.|«Borra este clon» cuando ya no sirve, para que el escenario no se llene."
+    ],
+    prev: [
+      "«Ves a un lloc a l'atzar» i «posa y a 170» (sessió anterior).|«Ve a un sitio al azar» y «pon y a 170» (sesión anterior).",
+      "Els bucles «per sempre», «repeteix» i «repeteix fins que» (unitats 2 i 4).|Los bucles «por siempre», «repite» y «repite hasta que» (unidades 2 y 4).",
+      "Amagar-se i mostrar-se, i el guió «quan toco aquest personatge» (unitats 1 i 3).|Esconderse y mostrarse, y el guion «al tocar este personaje» (unidades 1 y 3)."
+    ],
+    faq: [
+      ["He fet clons i no en veig cap!|¡He hecho clones y no veo ninguno!", "Neixen exactament on és l'original, a sota seu. Mou-los al guió «quan començo com a clon» (per exemple, a un lloc a l'atzar). Si l'original està amagat, cal «mostra't».|Nacen exactamente donde está el original, debajo de él. Muévelos en el guion «al empezar como clon» (por ejemplo, a un sitio al azar). Si el original está escondido, hace falta «muéstrate»."],
+      ["Quants clons puc fer?|¿Cuántos clones puedo hacer?", "Fins a 40 alhora. Si no els esborres, quan n'hi ha 40 ja no en surten més: per això cal «esborra aquest clon».|Hasta 40 a la vez. Si no los borras, cuando hay 40 ya no salen más: por eso hace falta «borra este clon»."],
+      ["Els clons també fan el guió de la bandera verda?|¿Los clones también hacen el guion de la bandera verde?", "No: el de la bandera verda només el fa l'original. Els clons fan «quan començo com a clon» i, si els toques, «quan toco aquest personatge».|No: el de la bandera verde solo lo hace el original. Los clones hacen «al empezar como clon» y, si los tocas, «al tocar este personaje»."],
+      ["Per què la fàbrica s'amaga?|¿Por qué la fábrica se esconde?", "Perquè no volem veure el meteorit original quiet a dalt: només fa clons. Per això cada clon fa «mostra't» quan ja és al seu lloc.|Porque no queremos ver el meteorito original quieto arriba: solo hace clones. Por eso cada clon hace «muéstrate» cuando ya está en su sitio."],
+      ["Quan toco una estrella, qui suma el punt?|Cuando toco una estrella, ¿quién suma el punto?", "El clon que has tocat: fa el guió «quan toco aquest personatge» i després s'esborra ell sol.|El clon que has tocado: hace el guion «al tocar este personaje» y después se borra él solo."],
+      ["Un clon pot fer clons?|¿Un clon puede hacer clones?", "Sí, però llavors se'n fan molts de cop i l'escenari s'omple. Millor que només l'original faci clons.|Sí, pero entonces se hacen muchos de golpe y el escenario se llena. Mejor que solo el original haga clones."]
+    ],
+    tec: [
+      ["L'atzar fa sempre el mateix camí quan toquen «Comença».|El azar hace siempre el mismo camino cuando tocan «Empieza».", "És normal: per comprovar els reptes de manera justa, l'app fa servir sempre la mateixa sèrie d'atzar. Als reptes amb tecles o tocs, quan es prova lliurement amb «Comença», l'atzar canvia cada vegada.|Es normal: para comprobar los retos de forma justa, la app usa siempre la misma serie de azar. En los retos con teclas o toques, cuando se prueba libremente con «Empieza», el azar cambia cada vez."],
+      ["No troben el valor «atzar» en tocar un número.|No encuentran el valor «azar» al tocar un número.", "Surt a la finestra del número, a «o un valor» (atzar 1-10) i a «o un número a l'atzar», on es pot escriure de quin a quin. Només surt als reptes que el fan servir.|Sale en la ventana del número, en «o un valor» (azar 1-10) y en «o un número al azar», donde se puede escribir de cuál a cuál. Solo sale en los retos que lo usan."],
+      ["Un alumne/a s'encalla en un repte.|Un alumno/a se atasca en un reto.", "Després de dos intents apareix «Una pista» i, després, «Mostra una solució». També es pot sortir del pas i tornar-hi: el repte torna a començar.|Después de dos intentos aparece «Una pista» y, después, «Muestra una solución». También se puede salir del paso y volver: el reto vuelve a empezar."],
+      ["No troben el guió «quan començo com a clon».|No encuentran el guion «al empezar como clon».", "Als reptes de clons, cada personatge té les capçaleres «quan comença» i «quan començo com a clon» a la zona de guions: toqueu dins del guió del clon abans d'afegir blocs.|En los retos de clones, cada personaje tiene las cabeceras «al empezar» y «al empezar como clon» en la zona de guiones: tocad dentro del guion del clon antes de añadir bloques."]
+    ],
+    seg: [
+      "Pantalles: recorda la pausa activa a mitja sessió i que mirin lluny uns segons quan acabin cada repte.|Pantallas: recuerda la pausa activa a media sesión y que miren a lo lejos unos segundos cuando terminen cada reto.",
+      "Fàbrica humana: es camina, no es corre; el rectangle de cinta ha de ser en un lloc sense obstacles i ningú no empeny per entrar-hi.|Fábrica humana: se camina, no se corre; el rectángulo de cinta tiene que estar en un sitio sin obstáculos y nadie empuja para entrar."
+    ],
+    extra: [
+      "Fer una pluja amb dos tipus de clons: estrelles que pugen i meteorits que baixen.|Hacer una lluvia con dos tipos de clones: estrellas que suben y meteoritos que bajan.",
+      "Fer que cada clon tingui una mida a l'atzar (mida atzar 50-150) quan neix.|Hacer que cada clon tenga un tamaño al azar (tamaño azar 50-150) cuando nace.",
+      "Calcular quants clons hi ha alhora si la fàbrica en fa 2 per segon i cadascun viu 3 segons (6).|Calcular cuántos clones hay a la vez si la fábrica hace 2 por segundo y cada uno vive 3 segundos (6)."
+    ],
+    trans: [
+      "Ve de la sessió 1: cada clon fa servir l'atzar per anar a un lloc diferent.|Viene de la sesión 1: cada clon usa el azar para ir a un sitio diferente.",
+      "Sessió següent: fer que la pluja sigui cada vegada més difícil amb una variable de velocitat.|Sesión siguiente: hacer que la lluvia sea cada vez más difícil con una variable de velocidad.",
+      "Plàstica: segells, plantilles i patrons repetits; matemàtiques: multiplicar (clons per segon × segons).|Plástica: sellos, plantillas y patrones repetidos; matemáticas: multiplicar (clones por segundo × segundos)."
+    ],
     obj: [
       "L'alumne/a explica què és un clon i per què és útil quan calen molts personatges iguals.|El alumno/a explica qué es un clon y por qué es útil cuando hacen falta muchos personajes iguales.",
       "L'alumne/a fa clons amb «crea un clon de mi» dins d'un bucle i programa el guió «quan començo com a clon».|El alumno/a hace clones con «crea un clon de mí» dentro de un bucle y programa el guion «al empezar como clon».",
@@ -3769,40 +5489,63 @@ Object.assign(TGUIDE, (() => {
     plan: [
       { min: 5, t: "Benvinguda: una pluja de molts meteorits|Bienvenida: una lluvia de muchos meteoritos", fase: 'inici',
         fa: "Recorda el meteorit de la sessió anterior i explica el nou encàrrec: una pluja amb molts meteorits. Pregunta com ho farien i deixa que proposin copiar el personatge vint vegades. Fes el repàs del «Recorda» amb la diapositiva 3.|Recuerda el meteorito de la sesión anterior y explica el nuevo encargo: una lluvia con muchos meteoritos. Pregunta cómo lo harían y deja que propongan copiar el personaje veinte veces. Haz el repaso del «Recuerda» con la diapositiva 3.",
-        diu: ["Si volem vint meteorits, cal programar-ne vint? Quanta feina!|Si queremos veinte meteoritos, ¿hay que programar veinte? ¡Cuánto trabajo!",
-          "I si volguéssim canviar la velocitat de tots? Hauríem de canviar vint programes…|¿Y si quisiéramos cambiar la velocidad de todos? Tendríamos que cambiar veinte programas…",
-          "Avui aprendrem un truc: un sol personatge que en fa molts.|Hoy aprenderemos un truco: un solo personaje que hace muchos."],
+        diu: [
+          "Si volem vint meteorits, cal programar-ne vint? Quanta feina!|Si queremos veinte meteoritos, ¿hay que programar veinte? ¡Cuánto trabajo!",
+          "I si volguéssim canviar la velocitat de tots? (hauríem de canviar vint programes)|¿Y si quisiéramos cambiar la velocidad de todos? (tendríamos que cambiar veinte programas)",
+          "Recordeu: en quin ordre van «ves a un lloc a l'atzar» i «posa y a 170»? (primer el lloc)|Recordad: ¿en qué orden van «ve a un sitio al azar» y «pon y a 170»? (primero el sitio)",
+          "Avui aprendrem un truc: un sol personatge que en fa molts.|Hoy aprenderemos un truco: un solo personaje que hace muchos."
+        ],
         slides: ['s1', 's2', 's3'], app: "Encara no: pantalles abaixades.|Todavía no: pantallas bajadas.", org: "Tot el grup|Todo el grupo" },
       { min: 10, t: "Què és un clon?|¿Qué es un clon?", fase: 'teoria',
         fa: "Explica el clon amb un segell o amb una plantilla: el mateix dibuix, moltes vegades. Ensenya el guió «quan començo com a clon» amb la demo de les estrelles i la fàbrica amb la pluja de meteorits. Atura't al «compte!»: els clons neixen a sota de l'original i, si l'original està amagat, també neixen amagats. Acaba amb «esborra aquest clon».|Explica el clon con un sello o con una plantilla: el mismo dibujo, muchas veces. Enseña el guion «al empezar como clon» con la demo de las estrellas y la fábrica con la lluvia de meteoritos. Párate en el «¡cuidado!»: los clones nacen debajo del original y, si el original está escondido, también nacen escondidos. Acaba con «borra este clon».",
-        diu: ["Quants personatges hi ha programats en aquesta pluja? Mireu els guions: només un!|¿Cuántos personajes hay programados en esta lluvia? Mirad los guiones: ¡solo uno!",
-          "Per què la fàbrica s'amaga? I per què el clon fa «mostra't»?|¿Por qué la fábrica se esconde? ¿Y por qué el clon hace «muéstrate»?",
-          "Què passaria si mai no esborréssim cap clon?|¿Qué pasaría si nunca borráramos ningún clon?"],
+        diu: [
+          "Quants personatges hi ha programats en aquesta pluja? (un: tots els altres són clons)|¿Cuántos personajes hay programados en esta lluvia? (uno: todos los demás son clones)",
+          "On neix un clon? (on és l'original)|¿Dónde nace un clon? (donde está el original)",
+          "Per què la fàbrica s'amaga? I per què el clon fa «mostra't»? (perquè neix amagat com ella)|¿Por qué la fábrica se esconde? ¿Y por qué el clon hace «muéstrate»? (porque nace escondido como ella)",
+          "Què passaria si mai no esborréssim cap clon? (a 40 s'aturaria la pluja)|¿Qué pasaría si nunca borráramos ningún clon? (a los 40 se pararía la lluvia)"
+        ],
         slides: ['s4', 's5', 's6', 's7', 's8', 's9'], app: "Encara no: tota l'atenció a la projecció.|Todavía no: toda la atención en la proyección.", org: "Tot el grup|Todo el grupo" },
       { min: 12, t: "La fàbrica de clons humana|La fábrica de clones humana", fase: 'desconnectat',
         fa: "Tu fas de fàbrica (amagat/ada darrere la taula). Cada pocs segons dius «clon!» i dones una targeta de guió a un alumne/a: aquest clon tira el dau, va al paper del número, s'aixeca (es mostra), camina a poc a poc fins a la pissarra (baixa) i torna a seure (s'esborra). Primera ronda: sense «m'esborro»: els clons s'amunteguen al rectangle de cinta fins que no hi cap ningú més i la fàbrica ha de parar. Segona ronda: amb «m'esborro»: la pluja no s'acaba mai. Si tens temps, fes una ronda en què et «mostres» tu (la fàbrica visible) i comenteu-ho.|Tú haces de fábrica (escondido/a detrás de la mesa). Cada pocos segundos dices «¡clon!» y das una tarjeta de guion a un alumno/a: este clon tira el dado, va al papel del número, se levanta (se muestra), camina despacio hasta la pizarra (baja) y vuelve a sentarse (se borra). Primera ronda: sin «me borro»: los clones se amontonan en el rectángulo de cinta hasta que no cabe nadie más y la fábrica tiene que parar. Segunda ronda: con «me borro»: la lluvia no se acaba nunca. Si tienes tiempo, haz una ronda en la que te «muestras» tú (la fábrica visible) y comentadlo.",
-        diu: ["Tots els clons tenen la mateixa targeta. Fan tots exactament el mateix?|Todos los clones tienen la misma tarjeta. ¿Hacen todos exactamente lo mismo?",
+        diu: [
+          "Tots els clons tenen la mateixa targeta. Fan tots exactament el mateix? (el mateix guió, però el dau els porta a llocs diferents)|Todos los clones tienen la misma tarjeta. ¿Hacen todos exactamente lo mismo? (el mismo guion, pero el dado los lleva a sitios diferentes)",
           "El dau fa que cada clon vagi a un lloc diferent: això és l'atzar que vam veure!|El dado hace que cada clon vaya a un sitio diferente: ¡eso es el azar que vimos!",
-          "Per què s'ha aturat la pluja a la primera ronda?|¿Por qué se ha parado la lluvia en la primera ronda?"],
+          "Per què s'ha aturat la pluja a la primera ronda? (l'escenari era ple: ningú no s'esborrava)|¿Por qué se ha parado la lluvia en la primera ronda? (el escenario estaba lleno: nadie se borraba)",
+          "I a la segona ronda, s'acaba mai? (no, perquè els clons s'esborren)|¿Y en la segunda ronda, se acaba alguna vez? (no, porque los clones se borran)"
+        ],
         slides: ['s10', 's11'], app: "Cap: activitat sense pantalla.|Ninguna: actividad sin pantalla.", org: "Tot el grup (la fàbrica és el professor/a)|Todo el grupo (la fábrica es el profesor/a)" },
       { min: 13, t: "A l'ordinador: descobreix i investiga|En el ordenador: descubre e investiga", fase: 'ordinador',
         fa: "Cada alumne/a fa des del «Recorda» fins a la pausa activa. A «Clons de paper», que toquin «Ho hem fet!» si ho han fet a classe; si no, el poden deixar per a casa. A l'ordenació del guió del clon, demana que expliquin per què «mostra't» va després de «posa y a 170».|Cada alumno/a hace desde el «Recuerda» hasta la pausa activa. En «Clones de papel», que toquen «¡Lo hemos hecho!» si lo han hecho en clase; si no, lo pueden dejar para casa. En la ordenación del guion del clon, pide que expliquen por qué «muéstrate» va después de «pon y a 170».",
-        diu: ["Si el clon es mostrés abans de posar-se a dalt, què veuríem?|Si el clon se mostrara antes de ponerse arriba, ¿qué veríamos?",
-          "Quin bloc fa néixer les estrelles noves? I quin les fa desaparèixer?|¿Qué bloque hace nacer las estrellas nuevas? ¿Y cuál las hace desaparecer?"],
+        diu: [
+          "Si el clon es mostrés abans de posar-se a dalt, què veuríem? (un salt de l'original al lloc nou)|Si el clon se mostrara antes de ponerse arriba, ¿qué veríamos? (un salto del original al sitio nuevo)",
+          "Quin bloc fa néixer les estrelles noves? (crea un clon de mi) I quin les fa desaparèixer? (esborra aquest clon)|¿Qué bloque hace nacer las estrellas nuevas? (crea un clon de mí) ¿Y cuál las hace desaparecer? (borra este clon)",
+          "Sense «mostra't», què es veu? (res: neixen amagats)|Sin «muéstrate», ¿qué se ve? (nada: nacen escondidos)"
+        ],
         slides: ['s12'], app: "De «Recorda» fins a «Investiga»: les preguntes de repàs, la missió, les cinc targetes de «Descobreix», ordenar el guió del clon, «Clons de paper», la pluja de meteorits, el bloc que fa néixer estrelles i la pregunta del «mostra't».|De «Recuerda» hasta «Investiga»: las preguntas de repaso, la misión, las cinco tarjetas de «Descubre», ordenar el guion del clon, «Clones de papel», la lluvia de meteoritos, el bloque que hace nacer estrellas y la pregunta del «muéstrate».", org: "Individual|Individual" },
       { min: 12, t: "Pausa activa i reptes de clons|Pausa activa y retos de clones", fase: 'ordinador',
         fa: "Pausa activa tots junts. Després, els quatre reptes: 8 clons d'estrella, el guió del clon de la pluja (amb el comptador de caiguts), la pluja que s'atura (falta esborrar els clons) i les estrelles per caçar amb el guió de tocar. Al tercer repte, fes que recordin la primera ronda de la fàbrica humana.|Pausa activa todos juntos. Después, los cuatro retos: 8 clones de estrella, el guion del clon de la lluvia (con el contador de caídos), la lluvia que se para (falta borrar los clones) y las estrellas para cazar con el guion de tocar. En el tercer reto, haz que recuerden la primera ronda de la fábrica humana.",
-        diu: ["La pluja s'atura de cop: on s'han quedat tots els clons?|La lluvia se para de golpe: ¿dónde se han quedado todos los clones?",
-          "Quan toques una estrella, qui fa el guió de tocar: l'original o el clon?|Cuando tocas una estrella, ¿quién hace el guion de tocar: el original o el clon?"],
+        diu: [
+          "Per fer 8 clons, quin bucle fas servir? (repeteix 8 vegades)|Para hacer 8 clones, ¿qué bucle usas? (repite 8 veces)",
+          "La pluja s'atura de cop: on s'han quedat tots els clons? (a baix: no s'esborren)|La lluvia se para de golpe: ¿dónde se han quedado todos los clones? (abajo: no se borran)",
+          "Quan toques una estrella, qui fa el guió de tocar: l'original o el clon? (el clon)|Cuando tocas una estrella, ¿quién hace el guion de tocar: el original o el clon? (el clon)",
+          "On va «suma a caiguts 1»: dins o després del bucle de baixar? (després)|¿Dónde va «suma a caídos 1»: dentro o después del bucle de bajar? (después)"
+        ],
         slides: ['s13'], app: "«Pausa activa» i els quatre reptes de «Reptes».|«Pausa activa» y los cuatro retos de «Retos».", org: "Individual|Individual" },
       { min: 5, t: "Crea: la meva pluja de clons|Crea: mi lluvia de clones", fase: 'crea',
         fa: "Cada alumne/a inventa una pluja: bombolles que pugen, estrelles que s'encenen i s'apaguen, meteorits… Ha de tenir almenys 5 clons, un guió del clon i l'atzar. Quan la desen, s'ensenyen les pluges per parelles.|Cada alumno/a inventa una lluvia: burbujas que suben, estrellas que se encienden y se apagan, meteoritos… Tiene que tener al menos 5 clones, un guion del clon y el azar. Cuando la guarden, se enseñan las lluvias por parejas.",
-        diu: ["La teva pluja va cap avall, cap amunt o de costat? Quin bloc ho decideix?|¿Tu lluvia va hacia abajo, hacia arriba o de lado? ¿Qué bloque lo decide?",
-          "Els teus clons s'esborren quan ja no serveixen?|¿Tus clones se borran cuando ya no sirven?"],
+        diu: [
+          "La teva pluja va cap avall, cap amunt o de costat? Quin bloc ho decideix?|¿Tu lluvia va hacia abajo, hacia arriba o de lado? ¿Qué bloque lo decide?",
+          "Els teus clons s'esborren quan ja no serveixen?|¿Tus clones se borran cuando ya no sirven?",
+          "On és l'atzar a la teva pluja?|¿Dónde está el azar en tu lluvia?"
+        ],
         slides: ['s14'], app: "Pas «Crea»: La meva pluja de clons (es desa als projectes).|Paso «Crea»: Mi lluvia de clones (se guarda en los proyectos).", org: "Individual i després per parelles|Individual y después por parejas" },
       { min: 3, t: "Tancament i tiquet de sortida|Cierre y ticket de salida", fase: 'tancament',
         fa: "Repassa el resum, deixa que facin les preguntes finals i fes el tiquet a la porta.|Repasa el resumen, deja que hagan las preguntas finales y haz el ticket en la puerta.",
-        diu: ["Quin guió fa cada clon quan neix?|¿Qué guion hace cada clon cuando nace?", "Per què esborrem els clons?|¿Por qué borramos los clones?"],
+        diu: [
+          "Quin guió fa cada clon quan neix? (quan començo com a clon)|¿Qué guion hace cada clon cuando nace? (al empezar como clon)",
+          "Per què esborrem els clons? (perquè l'escenari no s'ompli)|¿Por qué borramos los clones? (para que el escenario no se llene)",
+          "Amb un sol personatge, quants meteorits podem tenir? (tants com vulguem, fins a 40 alhora)|Con un solo personaje, ¿cuántos meteoritos podemos tener? (tantos como queramos, hasta 40 a la vez)"
+        ],
         slides: ['s15', 's16'], app: "«Tancament»: les dues preguntes finals i com m'he sentit.|«Cierre»: las dos preguntas finales y cómo me he sentido.", org: "Tot el grup|Todo el grupo" }
     ],
     errors: [
@@ -3812,10 +5555,10 @@ Object.assign(TGUIDE, (() => {
         "Recorda la demo: el clon copia com és l'original, també si està amagat. Quin bloc el fa visible, i quan l'hauria de fer?|Recuerda la demo: el clon copia cómo es el original, también si está escondido. ¿Qué bloque lo hace visible, y cuándo lo tendría que hacer?"],
       ["Posa «esborra aquest clon» al principi del guió del clon i els meteorits desapareixen abans de caure.|Pone «borra este clon» al principio del guion del clon y los meteoritos desaparecen antes de caer.",
         "Que llegeixi el guió del clon en veu alta, de dalt a baix, com si fos un clon de la fàbrica humana. Quan es tornava a seure?|Que lea el guion del clon en voz alta, de arriba abajo, como si fuera un clon de la fábrica humana. ¿Cuándo se volvía a sentar?"],
-      ["Posa els blocs de la caiguda al guió de la bandera verda en lloc del guió del clon: només es mou la fàbrica.|Pone los bloques de la caída en el guion de la bandera verde en lugar del guion del clon: solo se mueve la fábrica.",
-        "Pregunta-li quin guió fa cada clon quan neix. Que arrossegui els blocs de la caiguda sota «quan començo com a clon».|Pregúntale qué guion hace cada clon cuando nace. Que lleve los bloques de la caída bajo «al empezar como clon»."],
+      ["Posa els blocs de la caiguda al guió de la bandera verda en lloc del guió del clon: només es mou la fàbrica.|Pone los bloques de la caída en el guion de la bandera verde en lugar del guion del clon: solo se mueve la fábrica.", "Pregunta-li quin guió fa cada clon quan neix. Que esborri aquells blocs i els torni a posar sota «quan començo com a clon».|Pregúntale qué guion hace cada clon cuando nace. Que borre esos bloques y los vuelva a poner bajo «al empezar como clon»."],
       ["Posa «crea un clon de mi» dins del guió del clon i en surten massa de cop.|Pone «crea un clon de mí» dentro del guion del clon y salen demasiados de golpe.",
-        "Explica que cada clon també faria clons, com si a la fàbrica humana cada clon cridés «clon!». Que deixi la creació de clons només a la bandera verda.|Explica que cada clon también haría clones, como si en la fábrica humana cada clon gritara «¡clon!». Que deje la creación de clones solo en la bandera verde."]
+        "Explica que cada clon també faria clons, com si a la fàbrica humana cada clon cridés «clon!». Que deixi la creació de clons només a la bandera verda.|Explica que cada clon también haría clones, como si en la fábrica humana cada clon gritara «¡clon!». Que deje la creación de clones solo en la bandera verde."],
+      ["Fa «crea un clon de mi» una sola vegada i espera una pluja.|Hace «crea un clon de mí» una sola vez y espera una lluvia.", "Pregunta: quants clons fa aquest bloc cada vegada? I quantes vegades s'executa? Que el posi dins d'un bucle amb una espera.|Pregunta: ¿cuántos clones hace este bloque cada vez? ¿Y cuántas veces se ejecuta? Que lo ponga dentro de un bucle con una espera."]
     ],
     diff: {
       mes: "Fer una pluja amb dos tipus de clons: estrelles que pugen i meteorits que baixen, i que cada estrella que toca un meteorit faci un so. Calcular quants clons hi ha alhora si la fàbrica en fa 2 per segon i cada un viu 3 segons.|Hacer una lluvia con dos tipos de clones: estrellas que suben y meteoritos que bajan, y que cada estrella que toque un meteorito haga un sonido. Calcular cuántos clones hay a la vez si la fábrica hace 2 por segundo y cada uno vive 3 segundos.",
@@ -3827,7 +5570,12 @@ Object.assign(TGUIDE, (() => {
       rubric: [
         ["Concepte de clon|Concepto de clon", "Explica que és una còpia que fa el mateix personatge i que cada clon segueix el seu guió.|Explica que es una copia que hace el mismo personaje y que cada clon sigue su guion.", "Sap que és una còpia, però no distingeix el guió de l'original del del clon.|Sabe que es una copia, pero no distingue el guion del original del del clon."],
         ["La fàbrica|La fábrica", "Amaga l'original, fa clons en un bucle i cada clon es col·loca, es mostra i es mou.|Esconde el original, hace clones en un bucle y cada clon se coloca, se muestra y se mueve.", "Fa clons, però s'oblida de moure'ls o de mostrar-los.|Hace clones, pero se olvida de moverlos o de mostrarlos."],
-        ["Esborrar clons|Borrar clones", "Esborra cada clon quan ha acabat i explica per què cal.|Borra cada clon cuando ha terminado y explica por qué hace falta.", "Esborra els clons només quan l'app li ho recorda.|Borra los clones solo cuando la app se lo recuerda."]
+        ["Esborrar clons|Borrar clones", "Esborra cada clon quan ha acabat i explica per què cal.|Borra cada clon cuando ha terminado y explica por qué hace falta.", "Esborra els clons només quan l'app li ho recorda.|Borra los clones solo cuando la app se lo recuerda."],
+        [
+          "Clons i atzar|Clones y azar",
+          "Fa que cada clon sigui diferent (lloc, mida o velocitat a l'atzar) i ho explica.|Hace que cada clon sea diferente (sitio, tamaño o velocidad al azar) y lo explica.",
+          "Els clons fan el mateix i no sap com fer-los diferents.|Los clones hacen lo mismo y no sabe cómo hacerlos diferentes."
+        ]
       ]
     },
     casa: "A casa, feu «Clons de paper»: ressegueix una tapa sis vegades, inventeu una regla per a tots els clons i tireu un dau per decidir què té de diferent cadascun.|En casa, haced «Clones de papel»: repasa una tapa seis veces, inventad una regla para todos los clones y tirad un dado para decidir qué tiene de diferente cada uno.",
@@ -3844,7 +5592,7 @@ Object.assign(TGUIDE, (() => {
         media: { k: 'stage', w: { bg: 'nit', sprites: [EST(0, 0)] }, prog: '@estrella flag{ rep:6{ clone wait:0.4 } } clone{ gotorand }', time: 5 },
         nota: "Compta amb la classe les estrelles que apareixen: 6 clons i l'original, que es queda al mig.|Cuenta con la clase las estrellas que aparecen: 6 clones y el original, que se queda en el centro." },
       { id: 's6', k: 'concepte', t: "Dos guions per a un personatge|Dos guiones para un personaje", punts: ["Quan comença: el que fa l'original (per exemple, fer clons).|Al empezar: lo que hace el original (por ejemplo, hacer clones).", "Quan començo com a clon: el que fa cada clon quan neix.|Al empezar como clon: lo que hace cada clon cuando nace.", "Tots els clons fan el mateix guió, però cadascun pel seu compte.|Todos los clones hacen el mismo guion, pero cada uno por su cuenta."],
-        nota: "Dibuixa a la pissarra els dos guions un al costat de l'altre i fes fletxes de qui fa cada un.|Dibuja en la pizarra los dos guiones uno al lado del otro y haz flechas de quién hace cada uno." },
+        nota: "Dibuixa a la pissarra els dos guions un al costat de l'altre i fes fletxes de qui fa cada un.|Dibuja en la pizarra los dos guiones uno al lado del otro y haz flechas de quién hace cada uno.", pic: "img/ic/masks.webp" },
       { id: 's7', k: 'media', t: "La fàbrica de meteorits|La fábrica de meteoritos", x: "L'original s'amaga i fa clons; cada clon es col·loca, es mostra, baixa i s'esborra.|El original se esconde y hace clones; cada clon se coloca, se muestra, baja y se borra.",
         media: { k: 'stage', w: { bg: 'espai', sprites: [MET()] }, prog: RAIN(0.4, 6), time: 10 },
         nota: "Remarca que només hi ha un personatge programat. Pregunta per què el clon fa «mostra't».|Remarca que solo hay un personaje programado. Pregunta por qué el clon hace «muéstrate»." },
@@ -3893,6 +5641,48 @@ Object.assign(TGUIDE, (() => {
   /* ---------- Sessió 3 · Cada cop més difícil ---------- */
   const ACC = cap => `@meteorit flag{ setv:velocitat,3 point:180 forever{ ${FALL('$velocitat')} ${cap ? `if:$velocitat<${cap}{ chv:velocitat,2 }` : 'chv:velocitat,2'} } }`;
   const G3 = {
+    intro: "Tercera sessió: la dificultat que creix. Un bon videojoc comença fàcil i es fa difícil a poc a poc, perquè ni avorreixi ni faci enfadar. L'alumnat converteix la velocitat en una variable: el meteorit es mou amb «mou-te velocitat passos» i la variable creix a cada caiguda. Per no arribar a l'impossible, es posa un límit amb un «si velocitat < 12». També veuen altres maneres de fer-ho difícil (més petit, més clons, menys temps). La classe té una activitat de passades de pilota que s'acceleren i tres reptes.|Tercera sesión: la dificultad que crece. Un buen videojuego empieza fácil y se hace difícil poco a poco, para que ni aburra ni haga enfadar. El alumnado convierte la velocidad en una variable: el meteorito se mueve con «muévete velocidad pasos» y la variable crece en cada caída. Para no llegar a lo imposible, se pone un límite con un «si velocidad < 12». También ven otras maneras de hacerlo difícil (más pequeño, más clones, menos tiempo). La clase tiene una actividad de pases de pelota que se aceleran y tres retos.",
+    claus: [
+      "Un repte ha de començar fàcil i pujar a poc a poc.|Un reto tiene que empezar fácil y subir poco a poco.",
+      "Si el «mou-te» fa servir la variable velocitat, quan la variable creix el personatge va més de pressa.|Si el «muévete» usa la variable velocidad, cuando la variable crece el personaje va más deprisa.",
+      "La velocitat ha de créixer un cop per volta, no a cada pas.|La velocidad tiene que crecer una vez por vuelta, no en cada paso.",
+      "Un límit («si velocitat < 12») evita que sigui impossible.|Un límite («si velocidad < 12») evita que sea imposible.",
+      "Més difícil també pot ser més petit, més clons o menys temps.|Más difícil también puede ser más pequeño, más clones o menos tiempo."
+    ],
+    prev: [
+      "Variables que creixen amb «suma» i comparar-les (unitat 6).|Variables que crecen con «suma» y compararlas (unidad 6).",
+      "La caiguda del meteorit amb «repeteix fins que y < -160» (sessions 1 i 2).|La caída del meteorito con «repite hasta que y < -160» (sesiones 1 y 2).",
+      "Rebotar a la vora (unitat 4).|Rebotar en el borde (unidad 4)."
+    ],
+    faq: [
+      ["La variable velocitat puja, però el meteorit no va més de pressa. Per què?|La variable velocidad sube, pero el meteorito no va más deprisa. ¿Por qué?", "Perquè el «mou-te» té un número fix. Toca'l i tria la variable velocitat: així es mourà el que valgui la variable.|Porque el «muévete» tiene un número fijo. Tócalo y elige la variable velocidad: así se moverá lo que valga la variable."],
+      ["Per què cal un límit?|¿Por qué hace falta un límite?", "Sense límit, al cap d'una estona va tan de pressa que ningú no el pot esquivar, i ja no és divertit.|Sin límite, al cabo de un rato va tan deprisa que nadie lo puede esquivar, y ya no es divertido."],
+      ["Quin límit és el bo?|¿Qué límite es el bueno?", "El que fa que sigui difícil però possible. Prova'l amb un company/a: si s'enfada, baixa'l; si s'avorreix, puja'l.|El que hace que sea difícil pero posible. Pruébalo con un compañero/a: si se enfada, bájalo; si se aburre, súbelo."],
+      ["La velocitat es dispara de cop. Què passa?|La velocidad se dispara de golpe. ¿Qué pasa?", "Segurament el «suma a velocitat» és dins del bucle de baixar i suma a cada pas. Ha d'anar després, perquè sumi un cop per caiguda.|Seguramente el «suma a velocidad» está dentro del bucle de bajar y suma en cada paso. Tiene que ir después, para que sume una vez por caída."],
+      ["Per què «velocitat < 12» i no «velocitat > 12»?|¿Por qué «velocidad < 12» y no «velocidad > 12»?", "Volem sumar mentre encara és més petita que el límit. Llegeix-ho amb el número d'ara: «si 4 és més petit que 12, suma». Amb «>», no sumaria mai.|Queremos sumar mientras todavía es menor que el límite. Léelo con el número de ahora: «si 4 es menor que 12, suma». Con «>», no sumaría nunca."],
+      ["Al cometa, per què no s'acaba el repte de seguida?|En el cometa, ¿por qué no se acaba el reto enseguida?", "La comprovació espera tota l'estona per veure que la velocitat s'atura exactament a 12 i no la passa.|La comprobación espera todo el rato para ver que la velocidad se para exactamente en 12 y no la pasa."]
+    ],
+    tec: [
+      ["L'atzar fa sempre el mateix camí quan toquen «Comença».|El azar hace siempre el mismo camino cuando tocan «Empieza».", "És normal: per comprovar els reptes de manera justa, l'app fa servir sempre la mateixa sèrie d'atzar. Als reptes amb tecles o tocs, quan es prova lliurement amb «Comença», l'atzar canvia cada vegada.|Es normal: para comprobar los retos de forma justa, la app usa siempre la misma serie de azar. En los retos con teclas o toques, cuando se prueba libremente con «Empieza», el azar cambia cada vez."],
+      ["No troben el valor «atzar» en tocar un número.|No encuentran el valor «azar» al tocar un número.", "Surt a la finestra del número, a «o un valor» (atzar 1-10) i a «o un número a l'atzar», on es pot escriure de quin a quin. Només surt als reptes que el fan servir.|Sale en la ventana del número, en «o un valor» (azar 1-10) y en «o un número al azar», donde se puede escribir de cuál a cuál. Solo sale en los retos que lo usan."],
+      ["Un alumne/a s'encalla en un repte.|Un alumno/a se atasca en un reto.", "Després de dos intents apareix «Una pista» i, després, «Mostra una solució». També es pot sortir del pas i tornar-hi: el repte torna a començar.|Después de dos intentos aparece «Una pista» y, después, «Muestra una solución». También se puede salir del paso y volver: el reto vuelve a empezar."],
+      ["No hi ha espai per fer rotllanes de 4.|No hay espacio para hacer corros de 4.", "Es pot fer asseguts a les taules, passant una goma o un tap de mà en mà, o en parelles una davant de l'altra.|Se puede hacer sentados en las mesas, pasando una goma o un tapón de mano en mano, o por parejas una frente a otra."]
+    ],
+    seg: [
+      "Pantalles: recorda la pausa activa a mitja sessió i que mirin lluny uns segons quan acabin cada repte.|Pantallas: recuerda la pausa activa a media sesión y que miren a lo lejos unos segundos cuando terminen cada reto.",
+      "Activitat de la bola: bola de paper o pilota tova, passades suaus a la mà (no llançaments forts) i sense córrer.|Actividad de la bola: bola de papel o pelota blanda, pases suaves a la mano (no lanzamientos fuertes) y sin correr.",
+      "Parla de la frustració: quan un repte és massa difícil, és normal enfadar-se. Es pot respirar, demanar una pista o tornar-hi més tard.|Habla de la frustración: cuando un reto es demasiado difícil, es normal enfadarse. Se puede respirar, pedir una pista o volver a intentarlo más tarde."
+    ],
+    extra: [
+      "Afegir una variable «nivell» que pugi cada vegada que la velocitat arriba a 6, 9 i 12, i que un personatge la digui.|Añadir una variable «nivel» que suba cada vez que la velocidad llega a 6, 9 y 12, y que un personaje la diga.",
+      "Fer que la fàbrica de clons esperi cada vegada menys (una variable «espera» que baixa, amb un límit).|Hacer que la fábrica de clones espere cada vez menos (una variable «espera» que baja, con un límite).",
+      "Calcular a la fitxa en quina volta s'arriba al límit si es comença a 2 i se suma 3, amb límit 14.|Calcular en la ficha en qué vuelta se llega al límite si se empieza en 2 y se suma 3, con límite 14."
+    ],
+    trans: [
+      "Ve de les sessions 1 i 2: la pluja de clons ara s'accelera.|Viene de las sesiones 1 y 2: la lluvia de clones ahora se acelera.",
+      "Sessió següent: el projecte «Esquiva els meteorits», que ho ajunta tot.|Sesión siguiente: el proyecto «Esquiva los meteoritos», que lo junta todo.",
+      "Matemàtiques i educació física: sèries numèriques (3, 5, 7…) i l'entrenament progressiu (de fàcil a difícil).|Matemáticas y educación física: series numéricas (3, 5, 7…) y el entrenamiento progresivo (de fácil a difícil)."
+    ],
     obj: [
       "L'alumne/a explica per què un bon videojoc comença fàcil i es fa difícil a poc a poc.|El alumno/a explica por qué un buen videojuego empieza fácil y se hace difícil poco a poco.",
       "L'alumne/a fa moure un personatge amb la variable velocitat i la fa créixer amb «suma a velocitat».|El alumno/a hace mover un personaje con la variable velocidad y la hace crecer con «suma a velocidad».",
@@ -3930,39 +5720,63 @@ Object.assign(TGUIDE, (() => {
     plan: [
       { min: 5, t: "Benvinguda: massa fàcil o massa difícil?|Bienvenida: ¿demasiado fácil o demasiado difícil?", fase: 'inici',
         fa: "Explica la història de l'Aina, que s'avorreix, i d'en Pol, que ho troba difícil. Pregunta quin videojoc o esport els va costar al principi i com van millorar. Repàs ràpid dels clons amb la diapositiva 3.|Explica la historia de Aina, que se aburre, y de Pol, que lo encuentra difícil. Pregunta qué videojuego o deporte les costó al principio y cómo mejoraron. Repaso rápido de los clones con la diapositiva 3.",
-        diu: ["Us heu avorrit mai amb un repte massa fàcil? I us heu enfadat amb un de massa difícil?|¿Os habéis aburrido alguna vez con un reto demasiado fácil? ¿Y os habéis enfadado con uno demasiado difícil?",
-          "Com podríem fer un sol videojoc que agradi a l'Aina i a en Pol?|¿Cómo podríamos hacer un solo videojuego que guste a Aina y a Pol?"],
+        diu: [
+          "Us heu avorrit mai amb un repte massa fàcil? I us heu enfadat amb un de massa difícil?|¿Os habéis aburrido alguna vez con un reto demasiado fácil? ¿Y os habéis enfadado con uno demasiado difícil?",
+          "Quin esport o videojoc us va costar al principi? Com vau millorar?|¿Qué deporte o videojuego os costó al principio? ¿Cómo mejorasteis?",
+          "Com podríem fer un sol videojoc que agradi a l'Aina i a en Pol? (començar fàcil i pujar a poc a poc)|¿Cómo podríamos hacer un solo videojuego que guste a Aina y a Pol? (empezar fácil y subir poco a poco)",
+          "Recordeu els clons: on va «esborra aquest clon»? (al final del guió del clon)|Recordad los clones: ¿dónde va «borra este clon»? (al final del guion del clon)"
+        ],
         slides: ['s1', 's2', 's3'], app: "Encara no: pantalles abaixades.|Todavía no: pantallas bajadas.", org: "Tot el grup|Todo el grupo" },
       { min: 10, t: "La dificultat que creix|La dificultad que crece", fase: 'teoria',
         fa: "Mostra la corba de la dificultat: començar fàcil i pujar a poc a poc. Explica la variable velocitat i com «mou-te velocitat passos» va més de pressa quan la variable creix. Amb la demo, fes que diguin el número de velocitat en veu alta a cada volta. Ensenya altres maneres (més petit, més clons, menys temps) i acaba amb el límit.|Muestra la curva de la dificultad: empezar fácil y subir poco a poco. Explica la variable velocidad y cómo «muévete velocidad pasos» va más deprisa cuando la variable crece. Con la demo, haz que digan el número de velocidad en voz alta en cada vuelta. Enseña otras maneras (más pequeño, más clones, menos tiempo) y acaba con el límite.",
-        diu: ["Velocitat 3, 5, 7… quin número ve després? I després?|Velocidad 3, 5, 7… ¿qué número viene después? ¿Y después?",
-          "Si el meteorit fa «mou-te 5 passos», anirà més de pressa quan la variable creixi?|Si el meteorito hace «muévete 5 pasos», ¿irá más deprisa cuando la variable crezca?",
-          "Què passaria al cap de deu minuts si la velocitat no tingués límit?|¿Qué pasaría al cabo de diez minutos si la velocidad no tuviera límite?"],
+        diu: [
+          "Velocitat 3, 5, 7… quin número ve després? (9) I després? (11)|Velocidad 3, 5, 7… ¿qué número viene después? (9) ¿Y después? (11)",
+          "Si el meteorit fa «mou-te 5 passos», anirà més de pressa quan la variable creixi? (no: el 5 no canvia)|Si el meteorito hace «muévete 5 pasos», ¿irá más deprisa cuando la variable crezca? (no: el 5 no cambia)",
+          "Quines altres maneres hi ha de fer-ho més difícil? (més petit, més clons, menys temps)|¿Qué otras maneras hay de hacerlo más difícil? (más pequeño, más clones, menos tiempo)",
+          "Què passaria al cap de deu minuts si la velocitat no tingués límit? (impossible d'esquivar)|¿Qué pasaría a los diez minutos si la velocidad no tuviera límite? (imposible de esquivar)"
+        ],
         slides: ['s4', 's5', 's6', 's7', 's8', 's9'], app: "Encara no: tota l'atenció a la projecció.|Todavía no: toda la atención en la proyección.", org: "Tot el grup|Todo el grupo" },
       { min: 12, t: "La bola que s'accelera|La bola que se acelera", fase: 'desconnectat',
         fa: "Grups de 4 en rotllana amb una bola. A cada ronda de 10 segons, el grup ha de fer tantes passades com diu la VELOCITAT de la pissarra. Comenceu amb velocitat 3 i, després de cada ronda, sumeu 2 (com al programa). El LÍMIT és 11: quan hi arribeu, ja no puja. Cada grup apunta a la fitxa si ho ha aconseguit i si li ha semblat avorrit, just o massa difícil. Feu 6 rondes.|Grupos de 4 en corro con una bola. En cada ronda de 10 segundos, el grupo tiene que hacer tantos pases como dice la VELOCIDAD de la pizarra. Empezad con velocidad 3 y, después de cada ronda, sumad 2 (como en el programa). El LÍMITE es 11: cuando lleguéis, ya no sube. Cada grupo apunta en la ficha si lo ha conseguido y si le ha parecido aburrido, justo o demasiado difícil. Haced 6 rondas.",
-        diu: ["Velocitat 3, sumem 2: quina velocitat toca ara?|Velocidad 3, sumamos 2: ¿qué velocidad toca ahora?",
+        diu: [
+          "Velocitat 3, sumem 2: quina velocitat toca ara? (5)|Velocidad 3, sumamos 2: ¿qué velocidad toca ahora? (5)",
           "A quina ronda us ha semblat més divertit? Per què?|¿En qué ronda os ha parecido más divertido? ¿Por qué?",
-          "I si no hi hagués límit: amb velocitat 25, ho aconseguiríeu?|¿Y si no hubiera límite: con velocidad 25, lo conseguiríais?"],
+          "Hem arribat al límit, l'11: sumem 2 més? (no: ja no puja)|Hemos llegado al límite, el 11: ¿sumamos 2 más? (no: ya no sube)",
+          "I si no hi hagués límit: amb velocitat 25, ho aconseguiríeu? (segurament no)|¿Y si no hubiera límite: con velocidad 25, lo conseguiríais? (seguramente no)"
+        ],
         slides: ['s10', 's11'], app: "Cap: activitat sense pantalla.|Ninguna: actividad sin pantalla.", org: "Grups de 4|Grupos de 4" },
       { min: 13, t: "A l'ordinador: descobreix i investiga|En el ordenador: descubre e investiga", fase: 'ordinador',
         fa: "Cada alumne/a avança fins a la pausa activa. A la pregunta de les 4 voltes, demana que ho calculin amb els dits o a la fitxa. A l'escenari per mirar, que diguin quan deixa de créixer la velocitat i per què.|Cada alumno/a avanza hasta la pausa activa. En la pregunta de las 4 vueltas, pide que lo calculen con los dedos o en la ficha. En el escenario para mirar, que digan cuándo deja de crecer la velocidad y por qué.",
-        diu: ["Quan s'atura de créixer la velocitat? Quin bloc ho fa?|¿Cuándo deja de crecer la velocidad? ¿Qué bloque lo hace?",
-          "La variable creix, però el meteorit no s'accelera: què li falta al «mou-te»?|La variable crece, pero el meteorito no se acelera: ¿qué le falta al «muévete»?"],
+        diu: [
+          "3 + 2 + 2 + 2 + 2: quant val després de 4 voltes? (11)|3 + 2 + 2 + 2 + 2: ¿cuánto vale después de 4 vueltas? (11)",
+          "Quan s'atura de créixer la velocitat? Quin bloc ho fa? (el «si» del límit)|¿Cuándo deja de crecer la velocidad? ¿Qué bloque lo hace? (el «si» del límite)",
+          "La variable creix, però el meteorit no s'accelera: què li falta al «mou-te»? (la variable velocitat)|La variable crece, pero el meteorito no se acelera: ¿qué le falta al «muévete»? (la variable velocidad)"
+        ],
         slides: ['s12'], app: "De «Recorda» fins a «Investiga»: les preguntes de repàs, la missió, les cinc targetes de «Descobreix», la pregunta de les 4 voltes, «Cada cop més lluny», el meteorit que s'accelera, el bloc que fa créixer la velocitat i la pregunta del «mou-te 5 passos».|De «Recuerda» hasta «Investiga»: las preguntas de repaso, la misión, las cinco tarjetas de «Descubre», la pregunta de las 4 vueltas, «Cada vez más lejos», el meteorito que se acelera, el bloque que hace crecer la velocidad y la pregunta del «muévete 5 pasos».", org: "Individual|Individual" },
       { min: 12, t: "Pausa activa i reptes de dificultat|Pausa activa y retos de dificultad", fase: 'ordinador',
         fa: "Pausa activa tots junts. Després, els tres reptes: el meteorit que no s'accelerava (posar la variable al «mou-te»), el cometa sense límit (afegir el «si velocitat < 12») i l'estrella que s'encongeix quan la toques.|Pausa activa todos juntos. Después, los tres retos: el meteorito que no se aceleraba (poner la variable en el «muévete»), el cometa sin límite (añadir el «si velocidad < 12») y la estrella que se encoge cuando la tocas.",
-        diu: ["Al cometa, on va el «si»: abans de tocar la vora o dins?|En el cometa, ¿dónde va el «si»: antes de tocar el borde o dentro?",
-          "L'estrella que s'encongeix: després de 5 tocs, quina mida té?|La estrella que se encoge: después de 5 toques, ¿qué tamaño tiene?"],
+        diu: [
+          "Al primer repte, què toques per posar-hi la variable? (el 4 del «mou-te»)|En el primer reto, ¿qué tocas para ponerle la variable? (el 4 del «muévete»)",
+          "Al cometa, on va el «si velocitat < 12»: abans de tocar la vora o dins? (dins del «si toca la vora»)|En el cometa, ¿dónde va el «si velocidad < 12»: antes de tocar el borde o dentro? (dentro del «si toca el borde»)",
+          "L'estrella que s'encongeix: després de 5 tocs, quina mida té? (50)|La estrella que se encoge: después de 5 toques, ¿qué tamaño tiene? (50)",
+          "Quin dels tres reptes fa el videojoc més difícil sense anar més de pressa? (l'estrella)|¿Cuál de los tres retos hace el videojuego más difícil sin ir más deprisa? (la estrella)"
+        ],
         slides: ['s13'], app: "«Pausa activa» i els tres reptes de «Reptes».|«Pausa activa» y los tres retos de «Retos».", org: "Individual|Individual" },
       { min: 5, t: "Crea: el meu repte que s'accelera|Crea: mi reto que se acelera", fase: 'crea',
         fa: "Cada alumne/a fa el seu repte amb la variable velocitat, que creix i té un límit. Quan el desin, el prova el company/a i diu si el límit és massa baix, massa alt o just.|Cada alumno/a hace su reto con la variable velocidad, que crece y tiene un límite. Cuando lo guarden, lo prueba el compañero/a y dice si el límite es demasiado bajo, demasiado alto o justo.",
-        diu: ["A quina velocitat comença el teu repte? I quin és el límit?|¿A qué velocidad empieza tu reto? ¿Y cuál es el límite?",
-          "El company/a s'ha avorrit o s'ha enfadat? Què canviaries?|¿El compañero/a se ha aburrido o se ha enfadado? ¿Qué cambiarías?"],
+        diu: [
+          "A quina velocitat comença el teu repte? I quin és el límit?|¿A qué velocidad empieza tu reto? ¿Y cuál es el límite?",
+          "On és el teu «suma a velocitat»: un cop per volta o a cada pas?|¿Dónde está tu «suma a velocidad»: una vez por vuelta o en cada paso?",
+          "El company/a s'ha avorrit o s'ha enfadat? Què canviaries? (el límit o la velocitat inicial)|¿El compañero/a se ha aburrido o se ha enfadado? ¿Qué cambiarías? (el límite o la velocidad inicial)"
+        ],
         slides: ['s14'], app: "Pas «Crea»: El meu repte que s'accelera (es desa als projectes).|Paso «Crea»: Mi reto que se acelera (se guarda en los proyectos).", org: "Individual i després per parelles|Individual y después por parejas" },
       { min: 3, t: "Tancament i tiquet de sortida|Cierre y ticket de salida", fase: 'tancament',
         fa: "Repassa el resum, deixa que facin les preguntes finals i fes el tiquet a la porta.|Repasa el resumen, deja que hagan las preguntas finales y haz el ticket en la puerta.",
-        diu: ["Què ha de passar perquè el meteorit vagi cada vegada més ràpid?|¿Qué tiene que pasar para que el meteorito vaya cada vez más rápido?", "Per què hi posem un límit?|¿Por qué le ponemos un límite?"],
+        diu: [
+          "Què ha de passar perquè el meteorit vagi cada vegada més ràpid? (que es mogui amb la variable i que la variable creixi)|¿Qué tiene que pasar para que el meteorito vaya cada vez más rápido? (que se mueva con la variable y que la variable crezca)",
+          "Per què hi posem un límit? (perquè no sigui impossible)|¿Por qué le ponemos un límite? (para que no sea imposible)",
+          "Ara el videojoc pot agradar a l'Aina i a en Pol? Per què?|¿Ahora el videojuego puede gustar a Aina y a Pol? ¿Por qué?"
+        ],
         slides: ['s15', 's16'], app: "«Tancament»: les dues preguntes finals i com m'he sentit.|«Cierre»: las dos preguntas finales y cómo me he sentido.", org: "Tot el grup|Todo el grupo" }
     ],
     errors: [
@@ -3975,7 +5789,8 @@ Object.assign(TGUIDE, (() => {
       ["S'oblida de posar la velocitat a 3 al principi i, en tornar a començar, el meteorit ja va molt de pressa (o no es mou, perquè val 0).|Se olvida de poner la velocidad a 3 al principio y, al volver a empezar, el meteorito ya va muy deprisa (o no se mueve, porque vale 0).",
         "Pregunta quant val la variable just quan toques la bandera verda. Quin bloc li dona el valor de començar?|Pregunta cuánto vale la variable justo cuando tocas la bandera verde. ¿Qué bloque le da el valor de empezar?"],
       ["Creu que «més difícil» només vol dir «més ràpid».|Cree que «más difícil» solo quiere decir «más rápido».",
-        "Recorda la demo de l'estrella que s'encongeix i pregunta per altres maneres: més clons, menys temps, menys vides…|Recuerda la demo de la estrella que se encoge y pregunta por otras maneras: más clones, menos tiempo, menos vidas…"]
+        "Recorda la demo de l'estrella que s'encongeix i pregunta per altres maneres: més clons, menys temps, menys vides…|Recuerda la demo de la estrella que se encoge y pregunta por otras maneras: más clones, menos tiempo, menos vidas…"],
+      ["Al cometa, posa el «si velocitat < 12» fora del «si toca la vora» i la velocitat arriba a 12 en un moment.|En el cometa, pone el «si velocidad < 12» fuera del «si toca el borde» y la velocidad llega a 12 en un momento.", "Pregunta: quan ha de pujar la velocitat, a cada pas o només quan toca la vora? Que posi el «si» del límit dins del «si toca la vora».|Pregunta: ¿cuándo tiene que subir la velocidad, en cada paso o solo cuando toca el borde? Que ponga el «si» del límite dentro del «si toca el borde»."]
     ],
     diff: {
       mes: "Afegir nivells: una variable «nivell» que puja cada vegada que la velocitat arriba a un múltiple de 4, i un personatge que diu el nivell. Calcular a la fitxa en quina volta s'arriba al límit si es comença a 2 i se suma 3.|Añadir niveles: una variable «nivel» que sube cada vez que la velocidad llega a un múltiplo de 4, y un personaje que dice el nivel. Calcular en la ficha en qué vuelta se llega al límite si se empieza en 2 y se suma 3.",
@@ -3987,7 +5802,16 @@ Object.assign(TGUIDE, (() => {
       rubric: [
         ["Idea de dificultat|Idea de dificultad", "Explica per què cal començar fàcil i pujar a poc a poc, amb exemples.|Explica por qué hay que empezar fácil y subir poco a poco, con ejemplos.", "Diu que ha de ser difícil, però no veu per què ha de començar fàcil.|Dice que tiene que ser difícil, pero no ve por qué tiene que empezar fácil."],
         ["Velocitat variable|Velocidad variable", "Fa moure el personatge amb la variable i la fa créixer al lloc adequat del programa.|Hace mover el personaje con la variable y la hace crecer en el lugar adecuado del programa.", "Fa créixer la variable, però el moviment no la fa servir o creix massa de pressa.|Hace crecer la variable, pero el movimiento no la usa o crece demasiado deprisa."],
-        ["Límit|Límite", "Posa un «si» amb la comparació correcta i explica què passa quan s'arriba al límit.|Pone un «si» con la comparación correcta y explica qué pasa cuando se llega al límite.", "Posa el «si», però s'equivoca amb el signo o el número.|Pone el «si», pero se equivoca con el signo o el número."]
+        [
+          "Límit|Límite",
+          "Posa un «si» amb la comparació correcta i explica què passa quan s'arriba al límit.|Pone un «si» con la comparación correcta y explica qué pasa cuando se llega al límite.",
+          "Posa el «si», però s'equivoca amb el signe o el número.|Pone el «si», pero se equivoca con el signo o el número."
+        ],
+        [
+          "Provar la dificultat|Probar la dificultad",
+          "Fa provar el seu repte a un company/a i ajusta la velocitat o el límit segons el que veu.|Hace probar su reto a un compañero/a y ajusta la velocidad o el límite según lo que ve.",
+          "Prova el repte només ell/a i no hi canvia res.|Prueba el reto solo él/ella y no cambia nada."
+        ]
       ]
     },
     casa: "A casa, feu «Cada cop més lluny» amb una bola de mitjons: un pas enrere a cada atrapada i un límit de 6 passos. Parleu de quin nivell era el més divertit.|En casa, haced «Cada vez más lejos» con una bola de calcetines: un paso atrás en cada atrapada y un límite de 6 pasos. Hablad de qué nivel era el más divertido.",
@@ -4003,7 +5827,7 @@ Object.assign(TGUIDE, (() => {
       { id: 's5', k: 'anim', t: "La velocitat és una variable|La velocidad es una variable", anim: 'g7vel', x: "«Mou-te velocitat passos»: quan la variable creix, va més de pressa.|«Muévete velocidad pasos»: cuando la variable crece, va más deprisa.",
         nota: "Remarca que el «mou-te» ha de tenir la variable, no un número.|Remarca que el «muévete» tiene que tener la variable, no un número." },
       { id: 's6', k: 'concepte', t: "Tres blocs per a la dificultat|Tres bloques para la dificultad", punts: ["Al principi: posa velocitat a 3.|Al principio: pon velocidad a 3.", "Per moure's: mou-te velocitat passos.|Para moverse: muévete velocidad pasos.", "A cada volta: suma a velocitat 2.|En cada vuelta: suma a velocidad 2."],
-        nota: "Escriu els tres blocs a la pissarra i deixa'ls tota la sessió.|Escribe los tres bloques en la pizarra y déjalos toda la sesión." },
+        nota: "Escriu els tres blocs a la pissarra i deixa'ls tota la sessió.|Escribe los tres bloques en la pizarra y déjalos toda la sesión.", pic: "img/ic/racecar.webp" },
       { id: 's7', k: 'media', t: "Cada volta, una mica més|Cada vuelta, un poco más", x: "Mireu el número de velocitat: 3, 5, 7, 9…|Mirad el número de velocidad: 3, 5, 7, 9…",
         media: { k: 'stage', w: { bg: 'espai', sprites: [MET()], vars: ['velocitat'] }, prog: ACC(0), varNames: VN, time: 9 },
         nota: "Que diguin en veu alta el número de cada volta abans que surti.|Que digan en voz alta el número de cada vuelta antes de que salga." },
@@ -4043,6 +5867,49 @@ Object.assign(TGUIDE, (() => {
 
   /* ---------- Sessió 4 · Projecte: esquiva els meteorits ---------- */
   const G4 = {
+    intro: "Sessió de projecte: el videojoc «Esquiva els meteorits» per a la Nit de les Estrelles. Ajunta tota la unitat (atzar, clons, dificultat) amb les vides i els punts de la unitat 6. Primer es fa el pla en paper, després es construeix peça a peça (nau, fàbrica, xocs) i, al pas «Crea», cadascú afegeix la velocitat variable, el límit i la fi de partida, i hi posa el seu toc. Al final, una prova creuada amb un company/a i un canvi a partir del que diu. És una sessió llarga d'ordinador: vigila el temps de cada bloc.|Sesión de proyecto: el videojuego «Esquiva los meteoritos» para la Noche de las Estrellas. Junta toda la unidad (azar, clones, dificultad) con las vidas y los puntos de la unidad 6. Primero se hace el plan en papel, después se construye pieza a pieza (nave, fábrica, choques) y, en el paso «Crea», cada uno añade la velocidad variable, el límite y el fin de partida, y le pone su toque. Al final, una prueba cruzada con un compañero/a y un cambio a partir de lo que dice. Es una sesión larga de ordenador: vigila el tiempo de cada bloque.",
+    claus: [
+      "Un videojoc gran es fa peça a peça, i cada peça es prova abans de la següent.|Un videojuego grande se hace pieza a pieza, y cada pieza se prueba antes de la siguiente.",
+      "El clon que toca la nau resta una vida i s'esborra de seguida.|El clon que toca la nave resta una vida y se borra enseguida.",
+      "Un meteorit que arriba a baix sense tocar la nau suma un punt.|Un meteorito que llega abajo sin tocar la nave suma un punto.",
+      "La velocitat creix amb un límit i la partida s'acaba quan no queden vides.|La velocidad crece con un límite y la partida se acaba cuando no quedan vidas.",
+      "La prova d'un company/a mostra el que tu no veus: es mira sense ajudar.|La prueba de un compañero/a muestra lo que tú no ves: se mira sin ayudar."
+    ],
+    prev: [
+      "Atzar, clons i velocitat amb límit (sessions 1-3 d'aquesta unitat).|Azar, clones y velocidad con límite (sesiones 1-3 de esta unidad).",
+      "Vides, punts i fi de partida amb «atura tot» (unitat 6).|Vidas, puntos y fin de partida con «para todo» (unidad 6).",
+      "Moure un personatge amb les fletxes (unitat 3).|Mover un personaje con las flechas (unidad 3)."
+    ],
+    faq: [
+      ["Perdo totes les vides en un sol xoc!|¡Pierdo todas las vidas en un solo choque!", "El clon continua baixant i tocant la nau. Dins del «si toca la nau», després de restar la vida, posa «esborra aquest clon».|El clon sigue bajando y tocando la nave. Dentro del «si toca la nave», después de restar la vida, pon «borra este clon»."],
+      ["La partida s'acaba només començar.|La partida se acaba nada más empezar.", "Mira on poses vides a 3: ha d'anar abans del bucle que pregunta «si vides < 1», al mateix guió de la nau.|Mira dónde pones vidas a 3: tiene que ir antes del bucle que pregunta «si vidas < 1», en el mismo guion de la nave."],
+      ["La nau surt de l'escenari.|La nave sale del escenario.", "A cada fletxa, afegeix un «si x > 220, posa x a 220» (i a l'esquerra, «si x < -220, posa x a -220»).|En cada flecha, añade un «si x > 220, pon x a 220» (y en la izquierda, «si x < -220, pon x a -220»)."],
+      ["Puc canviar el fons i els sons?|¿Puedo cambiar el fondo y los sonidos?", "Sí! Quan ja funcioni el que demana l'app, personalitza'l: fons, sons, frases, vides inicials, velocitat i límit.|¡Sí! Cuando ya funcione lo que pide la app, personalízalo: fondo, sonidos, frases, vidas iniciales, velocidad y límite."],
+      ["Per què «Comprova» mou la nau sola?|¿Por qué «Comprueba» mueve la nave sola?", "Prem les fletxes per tu, sempre igual, per comprovar que el videojoc funciona. Per jutjar si és divertit, cal que el provi una persona.|Pulsa las flechas por ti, siempre igual, para comprobar que el videojuego funciona. Para juzgar si es divertido, hace falta que lo pruebe una persona."],
+      ["El meu company/a diu que és massa difícil. L'he de canviar?|Mi compañero/a dice que es demasiado difícil. ¿Lo tengo que cambiar?", "Escolta per què ho diu i tria un canvi petit: més vides, una velocitat inicial més baixa o un límit més baix. Després, torna-ho a provar.|Escucha por qué lo dice y elige un cambio pequeño: más vidas, una velocidad inicial más baja o un límite más bajo. Después, vuelve a probarlo."]
+    ],
+    tec: [
+      ["L'atzar fa sempre el mateix camí quan toquen «Comença».|El azar hace siempre el mismo camino cuando tocan «Empieza».", "És normal: per comprovar els reptes de manera justa, l'app fa servir sempre la mateixa sèrie d'atzar. Als reptes amb tecles o tocs, quan es prova lliurement amb «Comença», l'atzar canvia cada vegada.|Es normal: para comprobar los retos de forma justa, la app usa siempre la misma serie de azar. En los retos con teclas o toques, cuando se prueba libremente con «Empieza», el azar cambia cada vez."],
+      ["No troben el valor «atzar» en tocar un número.|No encuentran el valor «azar» al tocar un número.", "Surt a la finestra del número, a «o un valor» (atzar 1-10) i a «o un número a l'atzar», on es pot escriure de quin a quin. Només surt als reptes que el fan servir.|Sale en la ventana del número, en «o un valor» (azar 1-10) y en «o un número al azar», donde se puede escribir de cuál a cuál. Solo sale en los retos que lo usan."],
+      ["Un alumne/a s'encalla en un repte.|Un alumno/a se atasca en un reto.", "Després de dos intents apareix «Una pista» i, després, «Mostra una solució». També es pot sortir del pas i tornar-hi: el repte torna a començar.|Después de dos intentos aparece «Una pista» y, después, «Muestra una solución». También se puede salir del paso y volver: el reto vuelve a empezar."],
+      ["No s'ha desat el videojoc.|No se ha guardado el videojuego.", "Només es desa quan passa la comprovació i es toca «Desa-ho i continua». Si se surt abans, cal tornar a fer «Comprova».|Solo se guarda cuando pasa la comprobación y se toca «Guárdalo y continúa». Si se sale antes, hay que volver a hacer «Comprueba»."],
+      ["A la prova creuada, el company/a no troba el videojoc.|En la prueba cruzada, el compañero/a no encuentra el videojuego.", "Es prova a l'ordinador de l'autor/a: canvieu de cadira, no d'usuari. El videojoc també queda a «Projectes».|Se prueba en el ordenador del autor/a: cambiad de silla, no de usuario. El videojuego también queda en «Proyectos»."]
+    ],
+    seg: [
+      "Pantalles: recorda la pausa activa a mitja sessió i que mirin lluny uns segons quan acabin cada repte.|Pantallas: recuerda la pausa activa a media sesión y que miren a lo lejos unos segundos cuando terminen cada reto.",
+      "Prova creuada: es comenta el videojoc, no la persona; primer una cosa bona, després una idea amb el perquè.|Prueba cruzada: se comenta el videojuego, no la persona; primero una cosa buena, después una idea con el porqué.",
+      "Pausa activa de la nau: esquivar amb passos curts, sense salts ni empentes.|Pausa activa de la nave: esquivar con pasos cortos, sin saltos ni empujones."
+    ],
+    extra: [
+      "Afegir una segona fàbrica: estrelles que, si la nau les toca, sumen una vida (com a molt 5).|Añadir una segunda fábrica: estrellas que, si la nave las toca, suman una vida (como mucho 5).",
+      "Fer que la nau digui «Nivell 2!» quan la velocitat arriba al límit.|Hacer que la nave diga «¡Nivel 2!» cuando la velocidad llega al límite.",
+      "Demanar a dues persones que el provin i comparar-ne les respostes: coincideixen?|Pedir a dos personas que lo prueben y comparar sus respuestas: ¿coinciden?"
+    ],
+    trans: [
+      "Recull les unitats 3, 6 i 7: fletxes, vides, punts, atzar, clons i dificultat.|Recoge las unidades 3, 6 y 7: flechas, vidas, puntos, azar, clones y dificultad.",
+      "Unitat 8: cadascú inventarà el seu videojoc des de zero, amb un pla i una prova com avui.|Unidad 8: cada uno inventará su videojuego desde cero, con un plan y una prueba como hoy.",
+      "Llengua oral: donar i rebre una opinió útil i amable (què m'agrada, què milloraria i per què).|Lengua oral: dar y recibir una opinión útil y amable (qué me gusta, qué mejoraría y por qué)."
+    ],
     obj: [
       "L'alumne/a planifica un videojoc en peces (nau, fàbrica, xocs, punts, dificultat, fi) abans de programar-lo.|El alumno/a planifica un videojuego en piezas (nave, fábrica, choques, puntos, dificultad, fin) antes de programarlo.",
       "L'alumne/a programa i prova cada peça per separat abans de passar a la següent.|El alumno/a programa y prueba cada pieza por separado antes de pasar a la siguiente.",
@@ -4071,44 +5938,65 @@ Object.assign(TGUIDE, (() => {
       ],
       imprimir: ["Fitxa: el pla del meu videojoc (una per alumne/a)|Ficha: el plan de mi videojuego (una por alumno/a)", "Targetes del provador/a (una tira per parella)|Tarjetas del probador/a (una tira por pareja)"],
       prep: [
-        "Imprimir la fitxa del pla i retallar les targetes del provador/a.|Imprimir la ficha del plan y recortar las tarjetas del probador/a.",
-        "Decidir les parelles de prova creuada (millor que no siguin companys/es de taula).|Decidir las parejas de prueba cruzada (mejor que no sean compañeros/as de mesa).",
-        "Provar el videojoc sencer de la diapositiva 6 i el pas «Crea» per saber quins blocs falten al programa de partida.|Probar el videojuego entero de la diapositiva 6 y el paso «Crea» para saber qué bloques faltan en el programa de partida.",
-        "Preparar dos o tres ordinadors per ensenyar videojocs al final (o el projector connectat).|Preparar dos o tres ordenadores para enseñar videojuegos al final (o el proyector conectado)."
+        "El dia abans (10 min): imprimir una fitxa del pla per alumne/a i retallar les targetes del provador/a (una tira per parella).|El día antes (10 min): imprimir una ficha del plan por alumno/a y recortar las tarjetas del probador/a (una tira por pareja).",
+        "El dia abans (5 min): decidir les parelles de prova creuada (millor que no siguin companys/es de taula).|El día antes (5 min): decidir las parejas de prueba cruzada (mejor que no sean compañeros/as de mesa).",
+        "El dia abans (15 min): provar el videojoc sencer de la diapositiva 6 i el pas «Crea» per saber quins blocs falten al programa de partida.|El día antes (15 min): probar el videojuego entero de la diapositiva 6 y el paso «Crea» para saber qué bloques faltan en el programa de partida.",
+        "Abans de classe (5 min): preparar dos o tres ordinadors per ensenyar videojocs al final (o el projector connectat).|Antes de clase (5 min): preparar dos o tres ordenadores para enseñar videojuegos al final (o el proyector conectado)."
       ]
     },
     plan: [
       { min: 5, t: "Benvinguda: demà és la Nit de les Estrelles|Bienvenida: mañana es la Noche de las Estrellas", fase: 'inici',
         fa: "Explica que avui acabaran el videojoc per a l'observatori. Fes el repàs de dificultat i clons amb la diapositiva 3 i ensenya el videojoc sencer en marxa perquè vegin on han d'arribar.|Explica que hoy acabarán el videojuego para el observatorio. Haz el repaso de dificultad y clones con la diapositiva 3 y enseña el videojuego entero en marcha para que vean adónde tienen que llegar.",
-        diu: ["Quines peces del videojoc ja sabem fer? Quines ens falten?|¿Qué piezas del videojuego ya sabemos hacer? ¿Cuáles nos faltan?",
-          "Avui ens ajudarem com un equip de programadors de videojocs: uns fan, uns altres proven.|Hoy nos ayudaremos como un equipo de programadores de videojuegos: unos hacen, otros prueban."],
+        diu: [
+          "Quines peces del videojoc ja sabem fer? (moure amb fletxes, clons, vides, punts, velocitat) Quines ens falten?|¿Qué piezas del videojuego ya sabemos hacer? (mover con flechas, clones, vidas, puntos, velocidad) ¿Cuáles nos faltan?",
+          "Velocitat 4, suma 1, límit 12: després de 20 meteorits, quant val? (12)|Velocidad 4, suma 1, límite 12: después de 20 meteoritos, ¿cuánto vale? (12)",
+          "Mireu el videojoc sencer: quan creieu que s'acabarà? (quan no quedin vides)|Mirad el videojuego entero: ¿cuándo creéis que se acabará? (cuando no queden vidas)",
+          "Avui treballarem com un equip de programadors de videojocs: uns fan, uns altres proven.|Hoy trabajaremos como un equipo de programadores de videojuegos: unos hacen, otros prueban."
+        ],
         slides: ['s1', 's2', 's3'], app: "Encara no: pantalles abaixades.|Todavía no: pantallas bajadas.", org: "Tot el grup|Todo el grupo" },
       { min: 7, t: "Les peces del videojoc|Las piezas del videojuego", fase: 'teoria',
         fa: "Presenta les sis peces amb l'animació i el videojoc sencer amb la demo. Atura't als xocs: el clon que toca la nau resta una vida i s'esborra. Explica la fi de partida i la idea de construir i provar tros a tros.|Presenta las seis piezas con la animación y el videojuego entero con la demo. Párate en los choques: el clon que toca la nave resta una vida y se borra. Explica el fin de partida y la idea de construir y probar trozo a trozo.",
-        diu: ["Si el clon no s'esborra després de tocar la nau, quantes vides treu?|Si el clon no se borra después de tocar la nave, ¿cuántas vidas quita?",
-          "Per què és millor provar cada peça abans de fer la següent?|¿Por qué es mejor probar cada pieza antes de hacer la siguiente?"],
+        diu: [
+          "Quantes peces té el videojoc? Digueu-les en ordre.|¿Cuántas piezas tiene el videojuego? Decidlas en orden.",
+          "Si el clon no s'esborra després de tocar la nau, quantes vides treu? (una a cada pas: totes)|Si el clon no se borra después de tocar la nave, ¿cuántas vidas quita? (una en cada paso: todas)",
+          "Quan suma un punt el meteorit? (quan arriba a baix sense tocar la nau)|¿Cuándo suma un punto el meteorito? (cuando llega abajo sin tocar la nave)",
+          "Per què és millor provar cada peça abans de fer la següent? (si falla, saps on és l'error)|¿Por qué es mejor probar cada pieza antes de hacer la siguiente? (si falla, sabes dónde está el error)"
+        ],
         slides: ['s4', 's5', 's6', 's7'], app: "Encara no: tota l'atenció a la projecció.|Todavía no: toda la atención en la proyección.", org: "Tot el grup|Todo el grupo" },
       { min: 10, t: "El pla en paper|El plan en papel", fase: 'desconnectat',
         fa: "Cada alumne/a omple la fitxa del pla: dibuix de l'escenari, regles de punts i vides, velocitat inicial, quant puja i límit, i un toc personal (fons, so, frase final). Als 6 minuts, per parelles, cadascú explica el seu pla i el company/a fa una pregunta de les targetes del provador/a.|Cada alumno/a rellena la ficha del plan: dibujo del escenario, reglas de puntos y vidas, velocidad inicial, cuánto sube y límite, y un toque personal (fondo, sonido, frase final). A los 6 minutos, por parejas, cada uno explica su plan y el compañero/a hace una pregunta de las tarjetas del probador/a.",
-        diu: ["Amb quantes vides comença el teu videojoc? Per què aquest número?|¿Con cuántas vidas empieza tu videojuego? ¿Por qué este número?",
-          "Quin és el teu límit de velocitat? El provaràs i el podràs canviar.|¿Cuál es tu límite de velocidad? Lo probarás y lo podrás cambiar."],
+        diu: [
+          "Amb quantes vides comença el teu videojoc? Per què aquest número?|¿Con cuántas vidas empieza tu videojuego? ¿Por qué este número?",
+          "Quin és el teu límit de velocitat? El provaràs i el podràs canviar.|¿Cuál es tu límite de velocidad? Lo probarás y lo podrás cambiar.",
+          "Què farà el teu videojoc diferent dels altres?|¿Qué hará tu videojuego diferente de los demás?",
+          "Company/a: fes-li una pregunta de les targetes del provador/a.|Compañero/a: hazle una pregunta de las tarjetas del probador/a."
+        ],
         slides: ['s8', 's9'], app: "Cap: activitat sense pantalla.|Ninguna: actividad sin pantalla.", org: "Individual i després per parelles|Individual y después por parejas" },
       { min: 18, t: "A l'ordinador: peça a peça|En el ordenador: pieza a pieza", fase: 'ordinador',
         fa: "Cada alumne/a fa el «Recorda», la teoria i les tres peces: la nau amb les fletxes, la fàbrica de meteorits i els xocs amb vides. Fes la pausa activa tots junts quan la majoria hi arribi. Després, el bloc que acaba la partida i la pregunta del clon que no s'esborra. Passeja i pregunta a cada alumne/a quina peça està fent i si l'ha provada.|Cada alumno/a hace el «Recuerda», la teoría y las tres piezas: la nave con las flechas, la fábrica de meteoritos y los choques con vidas. Haced la pausa activa todos juntos cuando la mayoría llegue. Después, el bloque que acaba la partida y la pregunta del clon que no se borra. Pasea y pregunta a cada alumno/a qué pieza está haciendo y si la ha probado.",
-        diu: ["Quina peça estàs fent? Ja l'has provada amb «Comença»?|¿Qué pieza estás haciendo? ¿Ya la has probado con «Empieza»?",
-          "Als xocs: on va el «si toca la nau», dins o fora del bucle de baixar?|En los choques: ¿dónde va el «si toca la nave», dentro o fuera del bucle de bajar?",
-          "Recorda: «Comença» per provar amb les fletxes, «Comprova» perquè les tecles es premin soles.|Recuerda: «Empieza» para probar con las flechas, «Comprueba» para que las teclas se pulsen solas."],
+        diu: [
+          "Quina peça estàs fent? Ja l'has provada amb «Comença»?|¿Qué pieza estás haciendo? ¿Ya la has probado con «Empieza»?",
+          "Als xocs: on va el «si toca la nau», dins o fora del bucle de baixar? (dins, perquè ho miri a cada pas)|En los choques: ¿dónde va el «si toca la nave», dentro o fuera del bucle de bajar? (dentro, para que lo mire en cada paso)",
+          "Recorda: «Comença» per provar amb les fletxes, «Comprova» perquè les tecles es premin soles.|Recuerda: «Empieza» para probar con las flechas, «Comprueba» para que las teclas se pulsen solas.",
+          "Quin bloc acaba la partida? (atura tot)|¿Qué bloque acaba la partida? (para todo)"
+        ],
         slides: ['s10', 's11'], app: "De «Recorda» fins a «Investiga»: les preguntes de repàs, la missió, les quatre targetes de «Descobreix», ordenar les peces, «El pla en paper» (ja fet: «Ho hem fet!»), les peces 1 a 3, la pausa activa, el bloc que acaba la partida i la pregunta del clon que no s'esborra.|De «Recuerda» hasta «Investiga»: las preguntas de repaso, la misión, las cuatro tarjetas de «Descubre», ordenar las piezas, «El plan en papel» (ya hecho: «¡Lo hemos hecho!»), las piezas 1 a 3, la pausa activa, el bloque que acaba la partida y la pregunta del clon que no se borra.", org: "Individual|Individual" },
       { min: 12, t: "Crea i prova creuada|Crea y prueba cruzada", fase: 'crea',
         fa: "Cada alumne/a completa el seu videojoc al pas «Crea»: velocitat variable, límit i fi de partida, i hi posa el seu toc personal. Quan l'app el dona per bo, el desa. Després, les parelles canvien d'ordinador: cadascú prova el videojoc de l'altre dues vegades, sense ajuda, i respon la valoració. Torneu al lloc i que cadascú faci un canvi a partir del que li han dit.|Cada alumno/a completa su videojuego en el paso «Crea»: velocidad variable, límite y fin de partida, y le pone su toque personal. Cuando la app lo da por bueno, lo guarda. Después, las parejas cambian de ordenador: cada uno prueba el videojuego del otro dos veces, sin ayuda, y responde la valoración. Volved al sitio y que cada uno haga un cambio a partir de lo que le han dicho.",
-        diu: ["Quan provis el videojoc del company/a, l'autor/a mira i no diu res: és la prova de veritat.|Cuando pruebes el videojuego del compañero/a, el autor/a mira y no dice nada: es la prueba de verdad.",
-          "Digues una cosa que t'ha agradat i una que milloraries.|Di una cosa que te ha gustado y una que mejorarías.",
-          "Què canviaràs del teu videojoc amb el que t'han dit?|¿Qué cambiarás de tu videojuego con lo que te han dicho?"],
+        diu: [
+          "Què falta encara al programa de partida? (velocitat variable, límit i fi de partida)|¿Qué falta todavía en el programa de partida? (velocidad variable, límite y fin de partida)",
+          "Quan provis el videojoc del company/a, l'autor/a mira i no diu res: és la prova de veritat.|Cuando pruebes el videojuego del compañero/a, el autor/a mira y no dice nada: es la prueba de verdad.",
+          "Digues una cosa que t'ha agradat i una que milloraries, amb el perquè.|Di una cosa que te ha gustado y una que mejorarías, con el porqué.",
+          "Què canviaràs del teu videojoc amb el que t'han dit?|¿Qué cambiarás de tu videojuego con lo que te han dicho?"
+        ],
         slides: ['s12', 's13'], app: "Passos «Crea» (Esquiva els meteorits, es desa als projectes) i la valoració del videojoc del company/a.|Pasos «Crea» (Esquiva los meteoritos, se guarda en los proyectos) y la valoración del videojuego del compañero/a.", org: "Individual i després per parelles creuades|Individual y después por parejas cruzadas" },
       { min: 8, t: "Mostra, tancament i tiquet|Muestra, cierre y ticket", fase: 'tancament',
         fa: "Projecta dos o tres videojocs voluntaris: l'autor/a explica una peça i un canvi que ha fet després de la prova. Repassa el resum, deixa que facin les preguntes finals i fes el tiquet a la porta.|Proyecta dos o tres videojuegos voluntarios: el autor/a explica una pieza y un cambio que ha hecho después de la prueba. Repasa el resumen, deja que hagan las preguntas finales y haz el ticket en la puerta.",
-        diu: ["Quin canvi has fet després que el provés el company/a?|¿Qué cambio has hecho después de que lo probara el compañero/a?",
-          "Quina part de la unitat t'ha costat més: l'atzar, els clons o la dificultat?|¿Qué parte de la unidad te ha costado más: el azar, los clones o la dificultad?"],
+        diu: [
+          "Quin canvi has fet després que el provés el company/a?|¿Qué cambio has hecho después de que lo probara el compañero/a?",
+          "Quina part de la unitat t'ha costat més: l'atzar, els clons o la dificultat?|¿Qué parte de la unidad te ha costado más: el azar, los clones o la dificultad?",
+          "Què vol dir que un videojoc és «difícil però possible»?|¿Qué quiere decir que un videojuego es «difícil pero posible»?"
+        ],
         slides: ['s14', 's15', 's16'], app: "«Tancament»: les dues preguntes finals i com m'he sentit.|«Cierre»: las dos preguntas finales y cómo me he sentido.", org: "Tot el grup|Todo el grupo" }
     ],
     errors: [
@@ -4121,7 +6009,8 @@ Object.assign(TGUIDE, (() => {
       ["La nau surt de l'escenari per un costat i es perd.|La nave sale del escenario por un lado y se pierde.",
         "Fes-li pensar a quina x és la vora (240). Pot afegir a cada fletxa un «si x > 220, posa x a 220» o tornar-la al mig amb la bandera verda.|Hazle pensar en qué x está el borde (240). Puede añadir en cada flecha un «si x > 220, pon x a 220» o devolverla al centro con la bandera verde."],
       ["Com a provador/a, diu només «m'agrada» o «és dolent».|Como probador/a, dice solo «me gusta» o «es malo».",
-        "Dona-li les targetes del provador/a: què has fet primer? On t'has encallat? Què canviaries? Recorda que una opinió útil diu el perquè.|Dale las tarjetas del probador/a: ¿qué has hecho primero? ¿Dónde te has atascado? ¿Qué cambiarías? Recuerda que una opinión útil dice el porqué."]
+        "Dona-li les targetes del provador/a: què has fet primer? On t'has encallat? Què canviaries? Recorda que una opinió útil diu el perquè.|Dale las tarjetas del probador/a: ¿qué has hecho primero? ¿Dónde te has atascado? ¿Qué cambiarías? Recuerda que una opinión útil dice el porqué."],
+      ["Al pas «Crea», canvia el «mou-te 4» del clon per la variable però s'oblida de fer créixer la velocitat.|En el paso «Crea», cambia el «muévete 4» del clon por la variable pero se olvida de hacer crecer la velocidad.", "Que miri el número de velocitat a l'escenari mentre funciona: canvia? Quin bloc el faria créixer, i on (a la fàbrica, després de cada clon)?|Que mire el número de velocidad en el escenario mientras funciona: ¿cambia? ¿Qué bloque lo haría crecer, y dónde (en la fábrica, después de cada clon)?"]
     ],
     diff: {
       mes: "Afegir una segona fàbrica de clons: estrelles que cauen més a poc a poc i, si la nau les toca, sumen una vida (com a molt 5). O un missatge de «Nivell 2!» quan la velocitat arriba al límit. Després, demanar a dues persones que el provin i comparar-ne les respostes.|Añadir una segunda fábrica de clones: estrellas que caen más despacio y, si la nave las toca, suman una vida (como mucho 5). O un mensaje de «¡Nivel 2!» cuando la velocidad llega al límite. Después, pedir a dos personas que lo prueben y comparar sus respuestas.",
@@ -4133,7 +6022,12 @@ Object.assign(TGUIDE, (() => {
       rubric: [
         ["El videojoc funciona|El videojuego funciona", "Nau, meteorits a l'atzar, xocs amb vides, punts, velocitat amb límit i fi de partida funcionen junts.|Nave, meteoritos al azar, choques con vidas, puntos, velocidad con límite y fin de partida funcionan juntos.", "Funcionen la nau i els meteorits, però falta o falla alguna regla (vides, límit o fi).|Funcionan la nave y los meteoritos, pero falta o falla alguna regla (vidas, límite o fin)."],
         ["Construir tros a tros|Construir trozo a trozo", "Prova cada peça abans de la següent i troba ell/a mateix/a on és un error.|Prueba cada pieza antes de la siguiente y encuentra él/ella mismo/a dónde está un error.", "Programa diverses peces de cop i necessita ajuda per trobar on falla.|Programa varias piezas de golpe y necesita ayuda para encontrar dónde falla."],
-        ["Provar i millorar|Probar y mejorar", "Dona una valoració amable i amb el perquè, i fa un canvi al seu videojoc a partir de la que rep.|Da una valoración amable y con el porqué, y hace un cambio en su videojuego a partir de la que recibe.", "Prova el videojoc del company/a, però la valoració és molt general o no canvia res del seu.|Prueba el videojuego del compañero/a, pero la valoración es muy general o no cambia nada del suyo."]
+        ["Provar i millorar|Probar y mejorar", "Dona una valoració amable i amb el perquè, i fa un canvi al seu videojoc a partir de la que rep.|Da una valoración amable y con el porqué, y hace un cambio en su videojuego a partir de la que recibe.", "Prova el videojoc del company/a, però la valoració és molt general o no canvia res del seu.|Prueba el videojuego del compañero/a, pero la valoración es muy general o no cambia nada del suyo."],
+        [
+          "El pla en paper|El plan en papel",
+          "El pla té escenari, regles de punts i vides, dificultat (inici, pujada i límit) i un toc propi.|El plan tiene escenario, reglas de puntos y vidas, dificultad (inicio, subida y límite) y un toque propio.",
+          "El pla té el dibuix, però li falten regles o la dificultat.|El plan tiene el dibujo, pero le faltan reglas o la dificultad."
+        ]
       ]
     },
     casa: "A casa, ensenyeu el videojoc a algú de la família (és als projectes de l'app). Mireu-lo provar sense ajudar-lo i pregunteu-li què ha estat massa fàcil o massa difícil. Si voleu, canvieu el límit de velocitat o les vides.|En casa, enseñad el videojuego a alguien de la familia (está en los proyectos de la app). Miradlo probar sin ayudarle y preguntadle qué ha sido demasiado fácil o demasiado difícil. Si queréis, cambiad el límite de velocidad o las vidas.",
@@ -4147,12 +6041,11 @@ Object.assign(TGUIDE, (() => {
       { id: 's4', k: 'anim', t: "Les peces del videojoc|Las piezas del videojuego", anim: 'g7pla', x: "Fes una peça, prova-la… i la següent!|Haz una pieza, pruébala… ¡y la siguiente!",
         nota: "Escriu les sis peces a la pissarra; durant la sessió, demana a qui vagi acabant que les vagi marcant a la seva fitxa.|Escribe las seis piezas en la pizarra; durante la sesión, pide a quien vaya acabando que las vaya marcando en su ficha." },
       { id: 's5', k: 'concepte', t: "Les regles del videojoc|Las reglas del videojuego", punts: ["Fletxes: la nau es mou a l'esquerra i a la dreta.|Flechas: la nave se mueve a la izquierda y a la derecha.", "Meteorit esquivat (arriba a baix): +1 punt.|Meteorito esquivado (llega abajo): +1 punto.", "Meteorit que toca la nau: −1 vida.|Meteorito que toca la nave: −1 vida.", "Sense vides: «Fi!» i s'atura tot.|Sin vidas: «¡Fin!» y se para todo."],
-        nota: "Deixa-la projectada mentre omplen el pla en paper.|Déjala proyectada mientras rellenan el plan en papel." },
+        nota: "Deixa-la projectada mentre omplen el pla en paper.|Déjala proyectada mientras rellenan el plan en papel.", pic: "img/ment/lli.webp" },
       { id: 's6', k: 'media', t: "Així queda el videojoc|Así queda el videojuego", x: "Aquí la nau es mou sola; al vostre, amb les fletxes.|Aquí la nave se mueve sola; en el vuestro, con las flechas.",
         media: { k: 'stage', w: GW, prog: GAME, varNames: VN, time: 14 },
         nota: "Fes notar els números de punts, vides i velocitat. Pregunta quan creuen que s'acabarà.|Haz notar los números de puntos, vidas y velocidad. Pregunta cuándo creen que se acabará." },
-      { id: 's7', k: 'concepte', t: "Compte amb els xocs!|¡Cuidado con los choques!", punts: ["El «si toca la nau» va dins del bucle de baixar.|El «si toca la nave» va dentro del bucle de bajar.", "Si la toca: vides −1, so i esborra aquest clon.|Si la toca: vidas −1, sonido y borra este clon.", "Si no s'esborra, treu una vida a cada pas!|Si no se borra, ¡quita una vida a cada paso!"],
-        nota: "Simula-ho: camina tocant una cadira i resta una vida a cada pas en veu alta. Riuran, i no se n'oblidaran.|Simúlalo: camina tocando una silla y resta una vida a cada paso en voz alta. Se reirán, y no se les olvidará." },
+      { id: 's7', k: 'media', t: "Compte amb els xocs!|¡Cuidado con los choques!", x: "Si el clon toca la nau: vides −1, so i esborra aquest clon.|Si el clon toca la nave: vidas −1, sonido y borra este clon.", media: { k: 'stage', w: { bg: "espai", sprites: [{ id: 'nau', art: "nau", x: 0, y: -140, rot: "none" }, { id: 'meteorit', art: "meteorit", x: 0, y: 170, rot: "none" }], vars: ["punts", "vides"] }, prog: "@meteorit flag{ hide setv:vides,3 setv:punts,0 point:180 setx:0 sety:170 clone wait:1.5 setx:150 clone wait:1.5 setx:-20 clone } clone{ show until:y<-160{ move:6 if:touch:nau{ chv:vides,-1 sound:xoc delclone } } chv:punts,1 delclone }", varNames: { punts: "punts|puntos", vides: "vides|vidas" }, time: 7 }, nota: "Simula-ho: camina tocant una cadira i resta una vida a cada pas en veu alta. Riuran, i no se n'oblidaran. Després, mireu la demo: cada xoc treu una sola vida.|Simúlalo: camina tocando una silla y resta una vida en cada paso en voz alta. Se reirán, y no lo olvidarán. Después, mirad la demo: cada choque quita una sola vida." },
       { id: 's8', k: 'activitat', t: "El pla en paper|El plan en papel", timer: 10, punts: ["Dibuixa l'escenari: la nau i per on cauen els meteorits.|Dibuja el escenario: la nave y por dónde caen los meteoritos.", "Regles: punts, vides i fi.|Reglas: puntos, vidas y fin.", "Dificultat: velocitat inicial, quant puja i límit.|Dificultad: velocidad inicial, cuánto sube y límite.", "El teu toc: fons, so, frase final…|Tu toque: fondo, sonido, frase final…"],
         nota: "Als 6 minuts, que expliquin el pla per parelles amb una pregunta de les targetes del provador/a.|A los 6 minutos, que expliquen el plan por parejas con una pregunta de las tarjetas del probador/a." },
       { id: 's9', k: 'pregunta', t: "Preguntes per al pla|Preguntas para el plan", punts: ["Amb quantes vides comença? Per què?|¿Con cuántas vidas empieza? ¿Por qué?", "Quin límit de velocitat posaràs?|¿Qué límite de velocidad pondrás?", "Què el farà diferent dels altres?|¿Qué lo hará diferente de los demás?"],
@@ -4218,6 +6111,48 @@ Object.assign(TGUIDE, (() => {
   return {
     /* ---------- Sessió 1 · La idea i el pla ---------- */
     'g8-1': {
+      intro: "Primera sessió del projecte final del curs. Cada alumne/a pensa el seu propi videojoc: aprèn les quatre peces que el formen (protagonista, objectiu, obstacle i regles), que cada regla és un «si…» amb una variable i que un videojoc s'acaba guanyant o perdent. Fa el pla en paper, el prova amb un company/a com un videojoc de paper, practica a l'app les tres regles més habituals (recollir, perdre una vida, guanyar) i, al final, tria les seves peces i desa la versió 1. Aquesta versió és el punt de partida de les tres sessions següents: comprova que tothom la desa.|Primera sesión del proyecto final del curso. Cada alumno/a piensa su propio videojuego: aprende las cuatro piezas que lo forman (protagonista, objetivo, obstáculo y reglas), que cada regla es un «si…» con una variable y que un videojuego se acaba ganando o perdiendo. Hace el plan en papel, lo prueba con un compañero/a como un videojuego de papel, practica en la app las tres reglas más habituales (recoger, perder una vida, ganar) y, al final, elige sus piezas y guarda la versión 1. Esta versión es el punto de partida de las tres sesiones siguientes: comprueba que todo el mundo la guarda.",
+      claus: [
+        "Un videojoc té quatre peces: protagonista, objectiu, obstacle i regles.|Un videojuego tiene cuatro piezas: protagonista, objetivo, obstáculo y reglas.",
+        "Una regla diu quan passa alguna cosa i què passa: «si… → …».|Una regla dice cuándo pasa algo y qué pasa: «si… → …».",
+        "Un bon videojoc diu com guanyes i com perds, i «atura tot» l'acaba.|Un buen videojuego dice cómo ganas y cómo pierdes, y «para todo» lo termina.",
+        "Primer el pla en paper; després una versió 1 petita que funcioni.|Primero el plan en papel; después una versión 1 pequeña que funcione."
+      ],
+      prev: [
+        "Condicions «si…» i comparar variables (unitats 5 i 6).|Condiciones «si…» y comparar variables (unidades 5 y 6).",
+        "Punts i vides amb variables, i l'espera després d'un xoc (unitat 6).|Puntos y vidas con variables, y la espera después de un choque (unidad 6).",
+        "Moure amb les fletxes i l'atzar (unitats 3 i 7).|Mover con las flechas y el azar (unidades 3 y 7)."
+      ],
+      faq: [
+        ["Puc fer qualsevol videojoc que vulgui?|¿Puedo hacer cualquier videojuego que quiera?", "Sí, sempre que tingui les quatre peces i el puguis fer amb els blocs que coneixes. Comença per una versió petita i després la fas créixer.|Sí, siempre que tenga las cuatro piezas y lo puedas hacer con los bloques que conoces. Empieza por una versión pequeña y después la haces crecer."],
+        ["Puc canviar les peces que he triat?|¿Puedo cambiar las piezas que he elegido?", "Les peces de l'app es trien avui i les faràs servir les quatre setmanes. Si de debò vols canviar-les, parla-ho amb el professor/a abans de començar la versió 2.|Las piezas de la app se eligen hoy y las usarás las cuatro semanas. Si de verdad quieres cambiarlas, háblalo con el profesor/a antes de empezar la versión 2."],
+        ["Per què els punts pugen sense parar?|¿Por qué los puntos suben sin parar?", "Perquè el premi no se'n va després de sumar: continua tocant el protagonista i suma a cada volta. Fes-lo anar a un lloc a l'atzar.|Porque el premio no se va después de sumar: sigue tocando al protagonista y suma en cada vuelta. Haz que vaya a un sitio al azar."],
+        ["Com faig que es guanyi amb 5 punts?|¿Cómo hago que se gane con 5 puntos?", "Amb un «si» que compari: punts > 4, o punts ≥ 5. A dins, «digues Has guanyat!» i «atura tot».|Con un «si» que compare: puntos > 4, o puntos ≥ 5. Dentro, «di ¡Has ganado!» y «para todo»."],
+        ["Què és una «versió 1»?|¿Qué es una «versión 1»?", "La primera versió petita que funciona: avui, el protagonista que es mou amb les fletxes i diu el nom del videojoc. Les peces arribaran a les versions següents.|La primera versión pequeña que funciona: hoy, el protagonista que se mueve con las flechas y dice el nombre del videojuego. Las piezas llegarán en las versiones siguientes."],
+        ["No se m'acut cap idea.|No se me ocurre ninguna idea.", "Parteix d'un videojoc de la unitat (recollir i esquivar) i canvia'n els personatges, el lloc i una regla. Una bona idea pot ser petita!|Parte de un videojuego de la unidad (recoger y esquivar) y cambia sus personajes, el lugar y una regla. ¡Una buena idea puede ser pequeña!"]
+      ],
+      tec: [
+        ["Les fletxes del teclat no mouen el protagonista.|Las flechas del teclado no mueven al protagonista.", "Cal tocar primer l'escenari perquè la pàgina «escolti» el teclat, o fer servir els botons de fletxes de sota l'escenari (també al mòbil).|Hay que tocar primero el escenario para que la página «escuche» el teclado, o usar los botones de flechas de debajo del escenario (también en el móvil)."],
+        ["No s'ha desat el videojoc.|No se ha guardado el videojuego.", "Només es desa quan passa la comprovació i es toca «Desa-ho i continua». Si se surt abans, cal tornar a fer «Comprova».|Solo se guarda cuando pasa la comprobación y se toca «Guárdalo y continúa». Si se sale antes, hay que volver a hacer «Comprueba»."],
+        ["Un alumne/a s'encalla en un repte.|Un alumno/a se atasca en un reto.", "Després de dos intents apareix «Una pista» i, després, «Mostra una solució». També es pot sortir del pas i tornar-hi: el repte torna a començar.|Después de dos intentos aparece «Una pista» y, después, «Muestra una solución». También se puede salir del paso y volver: el reto vuelve a empezar."],
+        ["Les miniatures per triar les peces no surten.|Las miniaturas para elegir las piezas no salen.", "Torneu a carregar la pàgina i entreu de nou a la sessió: la tria es fa al pas «Ara, el teu videojoc!».|Volved a cargar la página y entrad de nuevo en la sesión: la elección se hace en el paso «¡Ahora, tu videojuego!»."],
+        ["La graella del pla surt massa petita.|La cuadrícula del plan sale demasiado pequeña.", "Imprimiu-la al 100 % o en DIN A3; cada quadre equival a 60 punts de l'escenari.|Imprimidla al 100 % o en DIN A3; cada cuadro equivale a 60 puntos del escenario."]
+      ],
+      seg: [
+        "Pantalles: recorda la pausa activa a mitja sessió i que mirin lluny uns segons quan acabin cada repte.|Pantallas: recuerda la pausa activa a media sesión y que miren a lo lejos unos segundos cuando terminen cada reto.",
+        "Idees de videojoc: res de violència, por o burles cap a persones reals; els enemics són objectes o animals de l'escenari.|Ideas de videojuego: nada de violencia, miedo o burlas hacia personas reales; los enemigos son objetos o animales del escenario.",
+        "Si algú parla d'un videojoc de casa que no és per a la seva edat, no el jutgis davant del grup; si et preocupa, parla-ho amb la família.|Si alguien habla de un videojuego de casa que no es para su edad, no lo juzgues delante del grupo; si te preocupa, háblalo con la familia."
+      ],
+      extra: [
+        "Afegir al pla un segon nivell: què canvia quan arribes a 5 punts?|Añadir al plan un segundo nivel: ¿qué cambia cuando llegas a 5 puntos?",
+        "Posar a la versió 1 la regla de recollir el premi (si toca → punts +1 i a l'atzar).|Poner en la versión 1 la regla de recoger el premio (si toca → puntos +1 y al azar).",
+        "Dissenyar el cartell del videojoc per a la fira: títol, dibuix i una frase d'instruccions.|Diseñar el cartel del videojuego para la feria: título, dibujo y una frase de instrucciones."
+      ],
+      trans: [
+        "Recull tot el curs: personatges, bucles, tecles, coordenades, condicions, variables, atzar i clons.|Recoge todo el curso: personajes, bucles, teclas, coordenadas, condiciones, variables, azar y clones.",
+        "Sessió següent: construir el videojoc peça a peça a partir de la versió 1.|Sesión siguiente: construir el videojuego pieza a pieza a partir de la versión 1.",
+        "Llengua i plàstica: escriure regles clares i dibuixar un esbós amb llegenda.|Lengua y plástica: escribir reglas claras y dibujar un boceto con leyenda."
+      ],
       obj: [
         "L'alumne/a identifica les quatre peces d'un videojoc (protagonista, objectiu, obstacle i regles) en exemples i en el seu propi projecte.|El alumno/a identifica las cuatro piezas de un videojuego (protagonista, objetivo, obstáculo y reglas) en ejemplos y en su propio proyecto.",
         "L'alumne/a escriu les regles del seu videojoc amb la forma «si… → …» i les relaciona amb blocs de condició i de variables.|El alumno/a escribe las reglas de su videojuego con la forma «si… → …» y las relaciona con bloques de condición y de variables.",
@@ -4255,39 +6190,63 @@ Object.assign(TGUIDE, (() => {
       plan: [
         { min: 5, t: "Benvinguda: la Fira de Videojocs|Bienvenida: la Feria de Videojuegos", fase: 'inici',
           fa: "Anuncia el projecte final: en quatre setmanes cada alumne/a crearà i presentarà un videojoc propi a la Fira de Videojocs. Explica el calendari de la unitat i pregunta quins videojocs coneixen i què tenen en comú, sense jutjar-ne cap.|Anuncia el proyecto final: en cuatro semanas cada alumno/a creará y presentará un videojuego propio en la Feria de Videojuegos. Explica el calendario de la unidad y pregunta qué videojuegos conocen y qué tienen en común, sin juzgar ninguno.",
-          diu: ["Aquest cop no farem els reptes d'un altre: inventareu el vostre videojoc!|Esta vez no haremos los retos de otro: ¡inventaréis vuestro videojuego!",
-            "Penseu en un videojoc que conegueu: qui és el protagonista? Què ha d'aconseguir?|Pensad en un videojuego que conozcáis: ¿quién es el protagonista? ¿Qué tiene que conseguir?"],
+          diu: [
+            "Aquest cop no farem els reptes d'un altre: inventareu el vostre videojoc!|Esta vez no haremos los retos de otro: ¡inventaréis vuestro videojuego!",
+            "Penseu en un videojoc que conegueu: qui és el protagonista? (un personatge que controles) Què ha d'aconseguir?|Pensad en un videojuego que conozcáis: ¿quién es el protagonista? (un personaje que controlas) ¿Qué tiene que conseguir?",
+            "Què el fa difícil? (enemics, temps, obstacles)|¿Qué lo hace difícil? (enemigos, tiempo, obstáculos)",
+            "En quatre setmanes: idea, construcció, prova i estrena a la fira.|En cuatro semanas: idea, construcción, prueba y estreno en la feria."
+          ],
           slides: ['s1', 's2', 's3'], app: "Encara no: pantalles abaixades.|Todavía no: pantallas bajadas.", org: "Tot el grup|Todo el grupo" },
         { min: 12, t: "Les peces i les regles d'un videojoc|Las piezas y las reglas de un videojuego", fase: 'teoria',
           fa: "Presenta les quatre peces amb l'animació i busqueu-les entre tots en la demo del gat i la moneda. Fes que diguin la regla de la demo amb la forma «si… → …» i escriu-la a la pissarra al costat dels blocs que la fan. Explica com s'acaba un videojoc (guanyar i perdre), com es fa el pla en paper i per què cal començar per una versió petita.|Presenta las cuatro piezas con la animación y buscadlas entre todos en la demo del gato y la moneda. Haz que digan la regla de la demo con la forma «si… → …» y escríbela en la pizarra al lado de los bloques que la hacen. Explica cómo se termina un videojuego (ganar y perder), cómo se hace el plan en papel y por qué hay que empezar por una versión pequeña.",
-          diu: ["Quina és la regla d'aquest videojoc? Digueu-la començant per «si…».|¿Cuál es la regla de este videojuego? Decidla empezando por «si…».",
-            "Com sabem que hem guanyat? I que hem perdut?|¿Cómo sabemos que hemos ganado? ¿Y que hemos perdido?",
-            "Primer una versió 1 que funcioni. Les idees grans, per a després!|Primero una versión 1 que funcione. ¡Las ideas grandes, para después!"],
+          diu: [
+            "Quina és la regla d'aquest videojoc? Digueu-la començant per «si…». (si el gat toca la moneda, punts +1)|¿Cuál es la regla de este videojuego? Decidla empezando por «si…». (si el gato toca la moneda, puntos +1)",
+            "On són les quatre peces a la demo? (gat, moneda, punts… i falta l'obstacle!)|¿Dónde están las cuatro piezas en la demo? (gato, moneda, puntos… ¡y falta el obstáculo!)",
+            "Com sabem que hem guanyat? I que hem perdut? (punts = 10; vides = 0)|¿Cómo sabemos que hemos ganado? ¿Y que hemos perdido? (puntos = 10; vidas = 0)",
+            "Primer una versió 1 que funcioni. Les idees grans, per a després!|Primero una versión 1 que funcione. ¡Las ideas grandes, para después!"
+          ],
           slides: ['s4', 's5', 's6', 's7', 's8', 's9'], app: "Encara no: tota l'atenció a la projecció.|Todavía no: toda la atención en la proyección.", org: "Tot el grup|Todo el grupo" },
         { min: 12, t: "Desconnectat: el videojoc de paper|Desconectado: el videojuego de papel", fase: 'desconnectat',
           fa: "Cada alumne/a dibuixa a la graella el pla del seu videojoc: l'escenari, on comença cada personatge i les regles (pot fer servir les targetes de regles o escriure'n de pròpies). Després, en parelles, el company/a «prova» el prototip de paper: mou el protagonista amb el dit mentre l'autor/a mou l'enemic i apunta punts i vides. Si una regla no s'entén, l'autor/a la reescriu.|Cada alumno/a dibuja en la cuadrícula el plan de su videojuego: el escenario, dónde empieza cada personaje y las reglas (puede usar las tarjetas de reglas o escribir unas propias). Después, por parejas, el compañero/a «prueba» el prototipo de papel: mueve el protagonista con el dedo mientras el autor/a mueve el enemigo y apunta puntos y vidas. Si una regla no se entiende, el autor/a la reescribe.",
-          diu: ["Cada quadre de la graella fa 60 punts de l'escenari: on comença el vostre protagonista?|Cada cuadro de la cuadrícula mide 60 puntos del escenario: ¿dónde empieza vuestro protagonista?",
+          diu: [
+            "Cada quadre de la graella fa 60 punts de l'escenari: on comença el vostre protagonista?|Cada cuadro de la cuadrícula mide 60 puntos del escenario: ¿dónde empieza vuestro protagonista?",
+            "Cada regla, amb «si… → …». «Ha de ser divertit» és una regla? (no: no diu quan ni què passa)|Cada regla, con «si… → …». «Tiene que ser divertido», ¿es una regla? (no: no dice cuándo ni qué pasa)",
             "Si el company/a no entén una regla, no és culpa seva: l'heu d'escriure més clara.|Si el compañero/a no entiende una regla, no es culpa suya: la tenéis que escribir más clara.",
-            "Hi ha una manera de guanyar i una de perdre?|¿Hay una manera de ganar y una de perder?"],
+            "Hi ha una manera de guanyar i una de perdre?|¿Hay una manera de ganar y una de perder?"
+          ],
           slides: ['s10', 's11'], app: "Cap: activitat sense pantalla. El pla es guarda a la carpeta per a les setmanes vinents.|Ninguna: actividad sin pantalla. El plan se guarda en la carpeta para las próximas semanas.", org: "Individual i després per parelles|Individual y después por parejas" },
         { min: 13, t: "A l'ordinador: descobreix i investiga|En el ordenador: descubre e investiga", fase: 'ordinador',
           fa: "Cada alumne/a avança al seu ritme fins a la pausa activa. Al pas «Un videojoc de paper» poden tocar «Ho hem fet!», perquè ja l'han fet a classe. Al videojoc d'en Vuit, deixa que el provin una estona abans de respondre què hi falta. Fes la pausa activa tots junts.|Cada alumno/a avanza a su ritmo hasta la pausa activa. En el paso «Un videojuego de papel» pueden tocar «¡Lo hemos hecho!», porque ya lo han hecho en clase. En el videojuego de Vuit, deja que lo prueben un rato antes de responder qué le falta. Haced la pausa activa todos juntos.",
-          diu: ["Al videojoc de la Numi, quin bloc fa que es pugui perdre? Busqueu el «si».|En el videojuego de Numi, ¿qué bloque hace que se pueda perder? Buscad el «si».",
-            "El videojoc d'en Vuit s'acaba algun dia? Què li posaríeu?|¿El videojuego de Vuit se termina algún día? ¿Qué le pondríais?"],
+          diu: [
+            "Al videojoc d'en Numi i la roca, quin bloc fa que es pugui perdre? Busqueu el «si». (si vides < 1)|En el videojuego de Numi y la roca, ¿qué bloque hace que se pueda perder? Buscad el «si». (si vidas < 1)",
+            "El videojoc d'en Vuit s'acaba algun dia? Què li posaríeu? (un enemic i un final)|¿El videojuego de Vuit se acaba algún día? ¿Qué le pondríais? (un enemigo y un final)",
+            "Quina d'aquestes frases es pot programar? Per què?|¿Cuál de estas frases se puede programar? ¿Por qué?"
+          ],
           slides: ['s12', 's13'], app: "Dels dos «Recorda» fins a la «Pausa activa»: les històries, les targetes de «Descobreix», la regla bona, ordenar els passos, el videojoc de paper (ja fet), el bloc per perdre, el videojoc d'en Vuit i què li falta.|De los dos «Recuerda» hasta la «Pausa activa»: las historias, las tarjetas de «Descubre», la regla buena, ordenar los pasos, el videojuego de papel (ya hecho), el bloque para perder, el videojuego de Vuit y qué le falta.", org: "Individual|Individual" },
         { min: 10, t: "Reptes: les tres regles|Retos: las tres reglas", fase: 'ordinador',
           fa: "Els tres reptes són les regles que tindran gairebé tots els videojocs: recollir, perdre una vida i guanyar. Si veus que algú no posa «espera» després de perdre una vida, deixa que vegi com les vides baixen de cop i pregunta-li per què.|Los tres retos son las reglas que tendrán casi todos los videojuegos: recoger, perder una vida y ganar. Si ves que alguien no pone «espera» después de perder una vida, deja que vea cómo las vidas bajan de golpe y pregúntale por qué.",
-          diu: ["Per què els punts pugen sense parar si l'estrella no se'n va?|¿Por qué los puntos suben sin parar si la estrella no se va?",
-            "Quantes vegades es comprova un «si» que és dins d'un «per sempre»?|¿Cuántas veces se comprueba un «si» que está dentro de un «por siempre»?"],
+          diu: [
+            "Per què els punts pugen sense parar si l'estrella no se'n va? (es continuen tocant)|¿Por qué los puntos suben sin parar si la estrella no se va? (se siguen tocando)",
+            "Quantes vegades es comprova un «si» que és dins d'un «per sempre»? (a cada volta)|¿Cuántas veces se comprueba un «si» que está dentro de un «por siempre»? (en cada vuelta)",
+            "Per què la tortuga espera després de perdre una vida? (perquè un xoc no en tregui moltes)|¿Por qué la tortuga espera después de perder una vida? (para que un choque no le quite muchas)",
+            "Punts > 4: amb quants punts guanyes? (5)|Puntos > 4: ¿con cuántos puntos ganas? (5)"
+          ],
           slides: ['s14'], app: "Els tres reptes de «Reptes»: la regla de recollir, la de perdre una vida i la de guanyar.|Los tres retos de «Retos»: la regla de recoger, la de perder una vida y la de ganar.", org: "Individual|Individual" },
         { min: 6, t: "Crea: les peces i la versió 1|Crea: las piezas y la versión 1", fase: 'crea',
           fa: "Amb el pla de paper al costat, cada alumne/a tria a l'app el protagonista, el premi, l'enemic i el fons, i desa la tria. Després programa la versió 1: el protagonista es mou amb les fletxes i diu el nom del videojoc. Recorda'ls que l'han de desar: la setmana vinent continuaran des d'aquí.|Con el plan de papel al lado, cada alumno/a elige en la app el protagonista, el premio, el enemigo y el fondo, y guarda la elección. Después programa la versión 1: el protagonista se mueve con las flechas y dice el nombre del videojuego. Recuérdales que la tienen que guardar: la semana que viene continuarán desde aquí.",
-          diu: ["Trieu les peces que heu dibuixat al pla.|Elegid las piezas que habéis dibujado en el plan.",
-            "Quan funcioni, toqueu Comprova i desa-ho: és la versió 1!|Cuando funcione, tocad Comprueba y guardadlo: ¡es la versión 1!"],
+          diu: [
+            "Trieu les peces que heu dibuixat al pla.|Elegid las piezas que habéis dibujado en el plan.",
+            "Amb quins guions es mou el protagonista? (quan premo la tecla…)|¿Con qué guiones se mueve el protagonista? (al pulsar la tecla…)",
+            "Quan funcioni, toqueu Comprova i deseu-lo: és la versió 1!|Cuando funcione, tocad Comprueba y guardadlo: ¡es la versión 1!"
+          ],
           slides: ['s15'], app: "Pas «Tria les peces del teu videojoc» i pas «Crea»: el meu videojoc, versió 1.|Paso «Elige las piezas de tu videojuego» y paso «Crea»: mi videojuego, versión 1.", org: "Individual|Individual" },
         { min: 2, t: "Tancament i tiquet de sortida|Cierre y ticket de salida", fase: 'tancament',
           fa: "Repassa les idees de la sessió amb el resum i, a la porta, fes a cada alumne/a una pregunta del tiquet. Recull els plans de paper a les carpetes.|Repasa las ideas de la sesión con el resumen y, en la puerta, haz a cada alumno/a una pregunta del ticket. Recoge los planes de papel en las carpetas.",
-          diu: ["Digueu-me una regla del vostre videojoc començant per «si…».|Decidme una regla de vuestro videojuego empezando por «si…»."],
+          diu: [
+            "Digueu-me una regla del vostre videojoc començant per «si…».|Decidme una regla de vuestro videojuego empezando por «si…».",
+            "Quines són les quatre peces d'un videojoc? (protagonista, objectiu, obstacle i regles)|¿Cuáles son las cuatro piezas de un videojuego? (protagonista, objetivo, obstáculo y reglas)",
+            "Teniu la versió 1 desada? La setmana vinent continuarem des d'aquí.|¿Tenéis la versión 1 guardada? La semana que viene seguiremos desde aquí."
+          ],
           slides: ['s16', 's17'], app: "«Tancament»: les dues preguntes finals i com m'he sentit.|«Cierre»: las dos preguntas finales y cómo me he sentido.", org: "Tot el grup|Todo el grupo" }
       ],
       errors: [
@@ -4300,7 +6259,8 @@ Object.assign(TGUIDE, (() => {
         ["Les vides baixen totes de cop (o queden en negatiu).|Las vidas bajan todas de golpe (o quedan en negativo).",
           "Que miri quant de temps es toquen la tortuga i la medusa. Cada volta del «per sempre» compta com un xoc: com pot fer que en compti només un?|Que mire cuánto tiempo se tocan la tortuga y la medusa. Cada vuelta del «por siempre» cuenta como un choque: ¿cómo puede hacer que cuente solo uno?"],
         ["A la versió 1 posa la regla de la fletxa al guió de la bandera i no respon a les tecles.|En la versión 1 pone la regla de la flecha en el guion de la bandera y no responde a las teclas.",
-          "Recorda-li els guions «Quan premo la tecla…» de la unitat 3, o un «si tecla premuda» dins d'un «per sempre». Que en provi un i després copiï la idea per a les altres fletxes.|Recuérdale los guiones «Al pulsar la tecla…» de la unidad 3, o un «si tecla pulsada» dentro de un «por siempre». Que pruebe uno y después copie la idea para las otras flechas."]
+          "Recorda-li els guions «Quan premo la tecla…» de la unitat 3, o un «si tecla premuda» dins d'un «per sempre». Que en provi un i després copiï la idea per a les altres fletxes.|Recuérdale los guiones «Al pulsar la tecla…» de la unidad 3, o un «si tecla pulsada» dentro de un «por siempre». Que pruebe uno y después copie la idea para las otras flechas."],
+        ["No desa la versió 1 i la setmana vinent no la troba.|No guarda la versión 1 y la semana que viene no la encuentra.", "Abans de tancar, passa per les taules: ha sortit «Projecte desat»? Si no, que torni a fer «Comprova» i «Desa-ho i continua».|Antes de cerrar, pasa por las mesas: ¿ha salido «Proyecto guardado»? Si no, que vuelva a hacer «Comprueba» y «Guárdalo y continúa»."]
       ],
       diff: {
         mes: "Afegir al pla un segon nivell (què canvia quan arribes a 5 punts?) i escriure'n les regles. A la versió 1, posar-hi ja la regla de recollir el premi.|Añadir al plan un segundo nivel (¿qué cambia cuando llegas a 5 puntos?) y escribir sus reglas. En la versión 1, poner ya la regla de recoger el premio.",
@@ -4312,7 +6272,12 @@ Object.assign(TGUIDE, (() => {
         rubric: [
           ["Peces del videojoc|Piezas del videojuego", "El seu pla té protagonista, objectiu, obstacle i regles, i sap dir-los.|Su plan tiene protagonista, objetivo, obstáculo y reglas, y sabe decirlos.", "Al pla hi falta alguna peça (sovint l'obstacle o el final).|Al plan le falta alguna pieza (a menudo el obstáculo o el final)."],
           ["Regles|Reglas", "Escriu regles amb «si… → …» i les relaciona amb un bloc «si» i una variable.|Escribe reglas con «si… → …» y las relaciona con un bloque «si» y una variable.", "Descriu el videojoc, però encara no en separa les regles.|Describe el videojuego, pero todavía no separa sus reglas."],
-          ["Versió 1|Versión 1", "El protagonista es mou amb les fletxes i el projecte queda desat.|El protagonista se mueve con las flechas y el proyecto queda guardado.", "Necessita ajuda per fer servir els guions de les tecles.|Necesita ayuda para usar los guiones de las teclas."]
+          ["Versió 1|Versión 1", "El protagonista es mou amb les fletxes i el projecte queda desat.|El protagonista se mueve con las flechas y el proyecto queda guardado.", "Necessita ajuda per fer servir els guions de les tecles.|Necesita ayuda para usar los guiones de las teclas."],
+          [
+            "El videojoc de paper|El videojuego de papel",
+            "Prova el pla amb un company/a i reescriu les regles que no s'entenen.|Prueba el plan con un compañero/a y reescribe las reglas que no se entienden.",
+            "Fa el pla, però no el prova o no hi canvia res.|Hace el plan, pero no lo prueba o no cambia nada."
+          ]
         ]
       },
       casa: "A casa, feu el videojoc de paper amb algú de la família (pas «Un videojoc de paper» de l'app): l'alumne/a explica les regles i l'altra persona el prova movent les peces. Si cal, milloreu el pla abans de la setmana vinent.|En casa, haced el videojuego de papel con alguien de la familia (paso «Un videojuego de papel» de la app): el alumno/a explica las reglas y la otra persona lo prueba moviendo las piezas. Si hace falta, mejorad el plan antes de la semana que viene.",
@@ -4322,7 +6287,7 @@ Object.assign(TGUIDE, (() => {
         { id: 's2', k: 'pregunta', t: 'Què té un videojoc?|¿Qué tiene un videojuego?', x: "Pensa en un videojoc que coneguis: qui és el protagonista i què ha d'aconseguir?|Piensa en un videojuego que conozcas: ¿quién es el protagonista y qué tiene que conseguir?",
           nota: "Recull respostes sense jutjar cap videojoc. Anota a la pissarra paraules com «personatge», «punts», «vides», «enemics».|Recoge respuestas sin juzgar ningún videojuego. Anota en la pizarra palabras como «personaje», «puntos», «vidas», «enemigos»." },
         { id: 's3', k: 'concepte', t: 'El pla de les quatre setmanes|El plan de las cuatro semanas', punts: ['1. La idea i el pla|1. La idea y el plan', '2. Construir-lo peça a peça|2. Construirlo pieza a pieza', '3. Provar-lo amb un company/a i millorar-lo|3. Probarlo con un compañero/a y mejorarlo', '4. Presentar-lo a la Fira de Videojocs|4. Presentarlo en la Feria de Videojuegos'],
-          nota: "Deixa clar que l'app desa cada versió i que cada setmana continuaran des d'on ho van deixar.|Deja claro que la app guarda cada versión y que cada semana continuarán desde donde lo dejaron." },
+          nota: "Deixa clar que l'app desa cada versió i que cada setmana continuaran des d'on ho van deixar.|Deja claro que la app guarda cada versión y que cada semana continuarán desde donde lo dejaron.", pic: "img/ic/calendar.webp" },
         { id: 's4', k: 'anim', t: "Les quatre peces d'un videojoc|Las cuatro piezas de un videojuego", anim: 'g8parts', x: 'Protagonista, objectiu, obstacle i regles.|Protagonista, objetivo, obstáculo y reglas.',
           nota: "Pregunta què passaria si en faltés una: sense obstacle, és massa fàcil; sense objectiu, no se sap què fer.|Pregunta qué pasaría si faltara una: sin obstáculo, es demasiado fácil; sin objetivo, no se sabe qué hacer." },
         { id: 's5', k: 'pregunta', t: 'Troba les peces|Encuentra las piezas', punts: ["Un peix que menja bombolles i esquiva crancs|Un pez que come burbujas y esquiva cangrejos", "Una nau que recull estrelles mentre cauen meteorits|Una nave que recoge estrellas mientras caen meteoritos", "Un gat que surt d'un laberint abans que s'acabi el temps|Un gato que sale de un laberinto antes de que se acabe el tiempo"],
@@ -4377,6 +6342,44 @@ Object.assign(TGUIDE, (() => {
 
     /* ---------- Sessió 2 · Construeix-lo peça a peça ---------- */
     'g8-2': {
+      intro: "Segona sessió del projecte: la versió 1 es fa gran. L'alumnat aprèn tres idees per construir bé: cada personatge té els seus guions (i tots comencen alhora), el guió de la bandera ho posa tot a lloc abans del bucle (punts a 0, vides a 3, posició de sortida) i un videojoc es construeix peça a peça, provant cada peça. També veu peces que pot reutilitzar: un nivell 2, una velocitat que creix i una pluja de clons. La part central és el pas «Crea»: cadascú afegeix al seu videojoc les peces del pla fins que té variable, regla i dos personatges programats, i el desa com a versió 2.|Segunda sesión del proyecto: la versión 1 se hace grande. El alumnado aprende tres ideas para construir bien: cada personaje tiene sus guiones (y todos empiezan a la vez), el guion de la bandera lo pone todo en su sitio antes del bucle (puntos a 0, vidas a 3, posición de salida) y un videojuego se construye pieza a pieza, probando cada pieza. También ve piezas que puede reutilizar: un nivel 2, una velocidad que crece y una lluvia de clones. La parte central es el paso «Crea»: cada uno añade a su videojuego las piezas del plan hasta que tiene variable, regla y dos personajes programados, y lo guarda como versión 2.",
+      claus: [
+        "Cada personatge s'encarrega de les seves regles, i tots els guions funcionen alhora.|Cada personaje se encarga de sus reglas, y todos los guiones funcionan a la vez.",
+        "En començar, tot a lloc: punts a 0, vides a 3, posició de sortida, i abans del bucle.|Al empezar, todo en su sitio: puntos a 0, vidas a 3, posición de salida, y antes del bucle.",
+        "Una peça, la provo; una altra peça, la provo.|Una pieza, la pruebo; otra pieza, la pruebo.",
+        "Un número (la velocitat) pot canviar la dificultat; els clons fan molts enemics amb un guió.|Un número (la velocidad) puede cambiar la dificultad; los clones hacen muchos enemigos con un guion."
+      ],
+      prev: [
+        "El pla en paper i la versió 1 desada (sessió anterior).|El plan en papel y la versión 1 guardada (sesión anterior).",
+        "Variables, condicions i «comparar números» (unitats 5 i 6).|Variables, condiciones y «comparar números» (unidades 5 y 6).",
+        "Clons i velocitat que creix (unitat 7).|Clones y velocidad que crece (unidad 7)."
+      ],
+      faq: [
+        ["On poso la regla de sumar punts: al protagonista o al premi?|¿Dónde pongo la regla de sumar puntos: en el protagonista o en el premio?", "Pot anar a qualsevol dels dos, però sol ser més clar al premi: és ell qui sap quan el toquen i qui ha de saltar a un altre lloc.|Puede ir en cualquiera de los dos, pero suele ser más claro en el premio: es él quien sabe cuándo lo tocan y quien tiene que saltar a otro sitio."],
+        ["Els punts no pugen mai. Què passa?|Los puntos no suben nunca. ¿Qué pasa?", "Mira si «posa punts a 0» és dins del «per sempre»: llavors els torna a 0 a cada volta. Ha d'anar abans del bucle.|Mira si «pon puntos a 0» está dentro del «por siempre»: entonces los vuelve a 0 en cada vuelta. Tiene que ir antes del bucle."],
+        ["Puc copiar les peces dels reptes al meu videojoc?|¿Puedo copiar las piezas de los retos en mi videojuego?", "Sí! Els reptes d'avui són peces per reutilitzar. Torna-les a fer al teu videojoc, adaptades als teus personatges.|¡Sí! Los retos de hoy son piezas para reutilizar. Vuelve a hacerlas en tu videojuego, adaptadas a tus personajes."],
+        ["L'enemic m'atrapa de seguida.|El enemigo me atrapa enseguida.", "Fes-lo més lent (un número més petit a «mou-te») o fes-lo començar més lluny. La setmana vinent ajustarem la dificultat amb el provador/a.|Hazlo más lento (un número más pequeño en «muévete») o haz que empiece más lejos. La semana que viene ajustaremos la dificultad con el probador/a."],
+        ["Per què l'app em diu que encara falta alguna cosa?|¿Por qué la app me dice que todavía falta algo?", "Per desar la versió 2 cal una variable, una regla amb «si…» i almenys dos personatges programats. El missatge et diu què falta.|Para guardar la versión 2 hace falta una variable, una regla con «si…» y al menos dos personajes programados. El mensaje te dice qué falta."],
+        ["El videojoc va cada vegada més lent.|El videojuego va cada vez más lento.", "Segurament els clons no s'esborren. Afegeix «esborra aquest clon» quan surten de l'escenari (si y < -170).|Seguramente los clones no se borran. Añade «borra este clon» cuando salen del escenario (si y < -170)."]
+      ],
+      tec: [
+        ["No es troba la versió anterior del videojoc.|No se encuentra la versión anterior del videojuego.", "Cada sessió obre l'última versió desada al portafoli (a «Projectes») amb el mateix perfil. Si no n'hi ha cap, l'app comença amb les peces de mostra: es pot tornar al pas «Tria les peces» de la sessió 1 i desar-les.|Cada sesión abre la última versión guardada en el portafolio (en «Proyectos») con el mismo perfil. Si no hay ninguna, la app empieza con las piezas de muestra: se puede volver al paso «Elige las piezas» de la sesión 1 y guardarlas."],
+        ["No s'ha desat el videojoc.|No se ha guardado el videojuego.", "Només es desa quan passa la comprovació i es toca «Desa-ho i continua». Si se surt abans, cal tornar a fer «Comprova».|Solo se guarda cuando pasa la comprobación y se toca «Guárdalo y continúa». Si se sale antes, hay que volver a hacer «Comprueba»."],
+        ["Les fletxes del teclat no mouen el protagonista.|Las flechas del teclado no mueven al protagonista.", "Cal tocar primer l'escenari perquè la pàgina «escolti» el teclat, o fer servir els botons de fletxes de sota l'escenari (també al mòbil).|Hay que tocar primero el escenario para que la página «escuche» el teclado, o usar los botones de flechas de debajo del escenario (también en el móvil)."],
+        ["Un alumne/a s'encalla en un repte.|Un alumno/a se atasca en un reto.", "Després de dos intents apareix «Una pista» i, després, «Mostra una solució». També es pot sortir del pas i tornar-hi: el repte torna a començar.|Después de dos intentos aparece «Una pista» y, después, «Muestra una solución». También se puede salir del paso y volver: el reto vuelve a empezar."],
+        ["Un guió molt llarg no hi cap a la pantalla.|Un guion muy largo no cabe en la pantalla.", "La zona de guions es pot desplaçar avall. També ajuda repartir les regles entre els personatges.|La zona de guiones se puede desplazar hacia abajo. También ayuda repartir las reglas entre los personajes."]
+      ],
+      seg: ["Pantalles: recorda la pausa activa a mitja sessió i que mirin lluny uns segons quan acabin cada repte.|Pantallas: recuerda la pausa activa a media sesión y que miren a lo lejos unos segundos cuando terminen cada reto.", "Videojoc humà: es camina a poc a poc dins del rectangle, sense empentes; l'enemic «atrapa» tocant l'espatlla suaument.|Videojuego humano: se camina despacio dentro del rectángulo, sin empujones; el enemigo «atrapa» tocando el hombro suavemente."],
+      extra: [
+        "Afegir un nivell 2 amb un altre fons i un enemic més ràpid.|Añadir un nivel 2 con otro fondo y un enemigo más rápido.",
+        "Fer una pluja de premis amb clons que caiguin a l'atzar.|Hacer una lluvia de premios con clones que caigan al azar.",
+        "Acabar el videojoc quan el cronòmetre arriba a 30 (si cronòmetre > 30 → «S'ha acabat el temps!»).|Terminar el videojuego cuando el cronómetro llega a 30 (si cronómetro > 30 → «¡Se acabó el tiempo!»)."
+      ],
+      trans: [
+        "Ve de la sessió 1: la versió 1 i el pla en paper.|Viene de la sesión 1: la versión 1 y el plan en papel.",
+        "Sessió següent: un company/a provarà el videojoc i el millorarem amb els seus comentaris.|Sesión siguiente: un compañero/a probará el videojuego y lo mejoraremos con sus comentarios.",
+        "Tecnologia: construir un projecte per parts i provar cada part (com un enginyer/a).|Tecnología: construir un proyecto por partes y probar cada parte (como un ingeniero/a)."
+      ],
       obj: [
         "L'alumne/a reparteix les regles del seu videojoc entre els personatges i programa cada personatge amb els seus guions.|El alumno/a reparte las reglas de su videojuego entre los personajes y programa cada personaje con sus guiones.",
         "L'alumne/a inicialitza el videojoc al guió de la bandera (variables, posicions i visibilitat) i explica per què cal fer-ho abans del bucle.|El alumno/a inicializa el videojuego en el guion de la bandera (variables, posiciones y visibilidad) y explica por qué hay que hacerlo antes del bucle.",
@@ -4414,38 +6417,63 @@ Object.assign(TGUIDE, (() => {
       plan: [
         { min: 5, t: "Repàs: les peces i el pla|Repaso: las piezas y el plan", fase: 'inici',
           fa: "Cada alumne/a obre la carpeta i llegeix el seu pla. Pregunta a dos o tres alumnes les quatre peces del seu videojoc i presenta el repte del dia: fer créixer la versió 1 peça a peça.|Cada alumno/a abre la carpeta y lee su plan. Pregunta a dos o tres alumnos las cuatro piezas de su videojuego y presenta el reto del día: hacer crecer la versión 1 pieza a pieza.",
-          diu: ["Quina és la peça següent del vostre pla, després que el protagonista es mogui?|¿Cuál es la pieza siguiente de vuestro plan, después de que el protagonista se mueva?"],
+          diu: [
+            "Obriu el pla: quines són les quatre peces del vostre videojoc?|Abrid el plan: ¿cuáles son las cuatro piezas de vuestro videojuego?",
+            "Quina és la peça següent del vostre pla, després que el protagonista es mogui? (el premi, l'enemic…)|¿Cuál es la pieza siguiente de vuestro plan, después de que el protagonista se mueva? (el premio, el enemigo…)",
+            "Encercleu-la: és la primera que fareu avui.|Rodeadla: es la primera que haréis hoy."
+          ],
           slides: ['s1', 's2', 's3'], app: "Encara no.|Todavía no.", org: "Tot el grup|Todo el grupo" },
         { min: 10, t: "Guions, inicialitzar, nivells i clons|Guiones, inicializar, niveles y clones", fase: 'teoria',
           fa: "Mostra que cada personatge té els seus guions i que tots comencen alhora. Amb la demo del cotxe, explica per què el guió de la bandera ho posa tot a lloc abans del «per sempre». Ensenya com un nivell canvia el fons i un número (la velocitat) i com un sol meteorit amb clons fa una pluja sencera.|Muestra que cada personaje tiene sus guiones y que todos empiezan a la vez. Con la demo del coche, explica por qué el guion de la bandera lo pone todo en su sitio antes del «por siempre». Enseña cómo un nivel cambia el fondo y un número (la velocidad) y cómo un solo meteorito con clones hace una lluvia entera.",
-          diu: ["Què passaria si no poséssim els punts a 0 en començar?|¿Qué pasaría si no pusiéramos los puntos a 0 al empezar?",
-            "Quin número fa que el gat corri més al nivell 2?|¿Qué número hace que el gato corra más en el nivel 2?",
-            "Quants meteorits hem dibuixat? I quants en veiem?|¿Cuántos meteoritos hemos dibujado? ¿Y cuántos vemos?"],
+          diu: [
+            "Quan toco la bandera, quins guions comencen? (tots alhora)|Cuando toco la bandera, ¿qué guiones empiezan? (todos a la vez)",
+            "Què passaria si no poséssim els punts a 0 en començar? (començarien amb els de la partida anterior)|¿Qué pasaría si no pusiéramos los puntos a 0 al empezar? (empezarían con los de la partida anterior)",
+            "Quin número fa que el gat corri més al nivell 2? (la velocitat: de 3 a 8)|¿Qué número hace que el gato corra más en el nivel 2? (la velocidad: de 3 a 8)",
+            "Quants meteorits hem dibuixat? (un) I quants en veiem? (molts: són clons)|¿Cuántos meteoritos hemos dibujado? (uno) ¿Y cuántos vemos? (muchos: son clones)"
+          ],
           slides: ['s4', 's5', 's6', 's7', 's8'], app: "Encara no.|Todavía no.", org: "Tot el grup|Todo el grupo" },
         { min: 10, t: "Desconnectat: el videojoc humà|Desconectado: el videojuego humano", fase: 'desconnectat',
           fa: "En grups de 4, cada alumne/a rep una targeta amb un paper (protagonista, moneda, enemic, marcador) i el seu guió. A la teva senyal («bandera verda!»), tots fan el seu guió alhora dins del rectangle de terra: el protagonista camina, l'enemic el segueix a poc a poc i el marcador apunta punts i vides. Primer ho feu sense la targeta d'inicialitzar (el marcador comença amb els números de l'anterior) i després amb ella. Comenteu què ha canviat. Al final, cadascú omple la fitxa de les regles.|En grupos de 4, cada alumno/a recibe una tarjeta con un papel (protagonista, moneda, enemigo, marcador) y su guion. A tu señal («¡bandera verde!»), todos hacen su guion a la vez dentro del rectángulo del suelo: el protagonista camina, el enemigo lo sigue despacio y el marcador apunta puntos y vidas. Primero lo hacéis sin la tarjeta de inicializar (el marcador empieza con los números del anterior) y después con ella. Comentad qué ha cambiado. Al final, cada uno rellena la ficha de las reglas.",
-          diu: ["Tothom comença alhora quan dic «bandera verda»: com a l'escenari!|Todo el mundo empieza a la vez cuando digo «bandera verde»: ¡como en el escenario!",
-            "Marcador, amb quants punts comences? Per què?|Marcador, ¿con cuántos puntos empiezas? ¿Por qué?",
-            "L'enemic camina sempre a poc a poc: si anés corrent, seria just?|El enemigo camina siempre despacio: si fuera corriendo, ¿sería justo?"],
+          diu: [
+            "Tothom comença alhora quan dic «bandera verda»: com a l'escenari!|Todo el mundo empieza a la vez cuando digo «bandera verde»: ¡como en el escenario!",
+            "Marcador, amb quants punts comences? Per què? (amb 0: és la inicialització)|Marcador, ¿con cuántos puntos empiezas? ¿Por qué? (con 0: es la inicialización)",
+            "Què ha canviat quan hem fet servir la targeta d'inicialitzar? (cada partida comença igual)|¿Qué ha cambiado cuando hemos usado la tarjeta de inicializar? (cada partida empieza igual)",
+            "L'enemic camina sempre a poc a poc: si anés corrent, seria just?|El enemigo camina siempre despacio: si fuera corriendo, ¿sería justo?"
+          ],
           slides: ['s9', 's10'], app: "Cap: activitat sense pantalla.|Ninguna: actividad sin pantalla.", org: "Grups de 4 amb papers|Grupos de 4 con papeles" },
         { min: 10, t: "A l'ordinador: descobreix i arregla|En el ordenador: descubre y arregla", fase: 'ordinador',
           fa: "Cada alumne/a fa els passos fins a la pausa activa. Al bug del marcador que sempre marca 0, deixa que el provin abans de tocar el bloc. Al meteorit que només cau una vegada, recorda'ls la condició «comparar números» de la unitat 5.|Cada alumno/a hace los pasos hasta la pausa activa. En el bug del marcador que siempre marca 0, deja que lo prueben antes de tocar el bloque. En el meteorito que solo cae una vez, recuérdales la condición «comparar números» de la unidad 5.",
-          diu: ["Llegiu el «per sempre» en veu alta: què fa a cada volta?|Leed el «por siempre» en voz alta: ¿qué hace en cada vuelta?",
-            "On és el meteorit quan ja no el veiem? Quina y té?|¿Dónde está el meteorito cuando ya no lo vemos? ¿Qué y tiene?"],
+          diu: [
+            "Llegiu el «per sempre» en veu alta: què fa a cada volta? (torna els punts a 0)|Leed el «por siempre» en voz alta: ¿qué hace en cada vuelta? (vuelve los puntos a 0)",
+            "On és el meteorit quan ja no el veiem? Quina y té? (sota de -170)|¿Dónde está el meteorito cuando ya no lo vemos? ¿Qué y tiene? (debajo de -170)",
+            "Quins dos blocs el tornen a dalt en un lloc a l'atzar? (ves a un lloc a l'atzar i posa y a 170)|¿Qué dos bloques lo devuelven arriba en un sitio al azar? (ve a un sitio al azar y pon y a 170)"
+          ],
           slides: ['s11'], app: "Dels «Recorda» fins a la «Pausa activa»: la història, les targetes de «Descobreix», ordenar el guió, on va «posa punts a 0», el marcador que sempre marca 0 i el meteorit que només cau una vegada.|De los «Recuerda» hasta la «Pausa activa»: la historia, las tarjetas de «Descubre», ordenar el guion, dónde va «pon puntos a 0», el marcador que siempre marca 0 y el meteorito que solo cae una vez.", org: "Individual|Individual" },
         { min: 8, t: "Reptes: tres peces noves|Retos: tres piezas nuevas", fase: 'ordinador',
           fa: "Feu la pausa activa i deixa'ls fer els tres reptes: el nivell 2, la velocitat que creix i la pluja d'estrelles. Explica que són peces que poden copiar després al seu videojoc si encaixen amb el seu pla.|Haced la pausa activa y deja que hagan los tres retos: el nivel 2, la velocidad que crece y la lluvia de estrellas. Explica que son piezas que pueden copiar después en su videojuego si encajan con su plan.",
-          diu: ["Aquesta peça la necessita el vostre videojoc? Si sí, recordeu com l'heu feta.|¿Esta pieza la necesita vuestro videojuego? Si sí, recordad cómo la habéis hecho."],
+          diu: [
+            "Aquesta peça la necessita el vostre videojoc? Si sí, recordeu com l'heu feta.|¿Esta pieza la necesita vuestro videojuego? Si sí, recordad cómo la habéis hecho.",
+            "Nivell 2: amb quina condició canvia el fons? (punts > 2)|Nivel 2: ¿con qué condición cambia el fondo? (puntos > 2)",
+            "La velocitat creix: quan sumes 1? (quan el meteorit torna a dalt)|La velocidad crece: ¿cuándo sumas 1? (cuando el meteorito vuelve arriba)",
+            "Pluja d'estrelles: on va «esborra aquest clon»? (quan arriba a baix)|Lluvia de estrellas: ¿dónde va «borra este clon»? (cuando llega abajo)"
+          ],
           slides: ['s12', 's13'], app: "«Pausa activa» i els tres reptes: el nivell 2, cada cop més de pressa i la pluja d'estrelles.|«Pausa activa» y los tres retos: el nivel 2, cada vez más deprisa y la lluvia de estrellas.", org: "Individual|Individual" },
         { min: 15, t: "Crea: el meu videojoc, peça a peça|Crea: mi videojuego, pieza a pieza", fase: 'crea',
           fa: "És el moment central de la sessió. Cada alumne/a obre la seva versió 1 i hi afegeix les peces del pla en ordre, provant-les una a una amb Comença. Deixa projectada la llista de peces. Quan el videojoc tingui una variable, una regla amb «si» i almenys dos personatges programats, el poden comprovar i desar. Qui acabi pot afegir-hi extres (sons, nivells, clons).|Es el momento central de la sesión. Cada alumno/a abre su versión 1 y le añade las piezas del plan en orden, probándolas una a una con Empieza. Deja proyectada la lista de piezas. Cuando el videojuego tenga una variable, una regla con «si» y al menos dos personajes programados, lo pueden comprobar y guardar. Quien acabe puede añadir extras (sonidos, niveles, clones).",
-          diu: ["Una peça, la provo. Una altra peça, la provo.|Una pieza, la pruebo. Otra pieza, la pruebo.",
+          diu: [
+            "Una peça, la provo. Una altra peça, la provo.|Una pieza, la pruebo. Otra pieza, la pruebo.",
             "Quin personatge ha de tenir aquesta regla?|¿Qué personaje tiene que tener esta regla?",
-            "Abans de sortir, desa'l: la setmana vinent el provarà un company/a.|Antes de salir, guárdalo: la semana que viene lo probará un compañero/a."],
+            "Ja es pot guanyar o perdre? Com?|¿Ya se puede ganar o perder? ¿Cómo?",
+            "Abans de sortir, deseu-lo: la setmana vinent el provarà un company/a.|Antes de salir, guardadlo: la semana que viene lo probará un compañero/a."
+          ],
           slides: ['s14', 's15'], app: "Pas «Ara, el teu videojoc!» i pas «Crea»: el meu videojoc, versió 2.|Paso «¡Ahora, tu videojuego!» y paso «Crea»: mi videojuego, versión 2.", org: "Individual|Individual" },
         { min: 2, t: "Tancament|Cierre", fase: 'tancament',
           fa: "Repassa les idees de la sessió i fes les preguntes del tiquet. Assegura't que tothom ha desat la versió 2.|Repasa las ideas de la sesión y haz las preguntas del ticket. Asegúrate de que todo el mundo ha guardado la versión 2.",
-          diu: ["Quina peça us ha costat més? Com l'heu arreglada?|¿Qué pieza os ha costado más? ¿Cómo la habéis arreglado?"],
+          diu: [
+            "Quina peça us ha costat més? Com l'heu arreglada?|¿Qué pieza os ha costado más? ¿Cómo la habéis arreglado?",
+            "Per què «posa punts a 0» va abans del «per sempre»? (perquè passi una sola vegada)|¿Por qué «pon puntos a 0» va antes del «por siempre»? (para que pase una sola vez)",
+            "Teniu la versió 2 desada?|¿Tenéis la versión 2 guardada?"
+          ],
           slides: ['s16'], app: "«Tancament»: les preguntes finals i com m'he sentit.|«Cierre»: las preguntas finales y cómo me he sentido.", org: "Tot el grup|Todo el grupo" }
       ],
       errors: [
@@ -4453,12 +6481,12 @@ Object.assign(TGUIDE, (() => {
           "Que llegeixi el bucle en veu alta i compti què passa a la segona volta. On hauria d'anar el bloc perquè passi una sola vegada?|Que lea el bucle en voz alta y cuente qué pasa en la segunda vuelta. ¿Dónde debería ir el bloque para que pase una sola vez?"],
         ["Ho posa tot al protagonista, amb un guió llarguíssim que costa de llegir.|Lo pone todo en el protagonista, con un guion larguísimo que cuesta de leer.",
           "Pregunta-li de qui és cada regla: qui sap quan l'han tocat, la moneda o el protagonista? Que en passi una al personatge que toca.|Pregúntale de quién es cada regla: ¿quién sabe cuándo lo han tocado, la moneda o el protagonista? Que pase una al personaje que toca."],
-        ["Afegeix moltes peces de cop i, quan falla, no sap quina és la culpable.|Añade muchas piezas de golpe y, cuando falla, no sabe cuál es la culpable."
-          , "Que tregui l'última peça (o la desconnecti) i provi si tot torna a funcionar. Després, que la torni a posar a poc a poc.|Que quite la última pieza (o la desconecte) y pruebe si todo vuelve a funcionar. Después, que la vuelva a poner poco a poco."],
+        ["Afegeix moltes peces de cop i, quan falla, no sap quina és la culpable.|Añade muchas piezas de golpe y, cuando falla, no sabe cuál es la culpable.", "Que esborri l'última peça i provi si tot torna a funcionar. Després, que la torni a posar a poc a poc, provant després de cada bloc.|Que borre la última pieza y pruebe si todo vuelve a funcionar. Después, que la vuelva a poner poco a poco, probando después de cada bloque."],
         ["Els clons s'acumulen a baix de l'escenari i el videojoc va cada vegada més lent.|Los clones se acumulan abajo del escenario y el videojuego va cada vez más lento.",
           "Pregunta: què fa un clon quan arriba a baix? Recorda-li «esborra aquest clon» dins d'un «si y < −170».|Pregunta: ¿qué hace un clon cuando llega abajo? Recuérdale «borra este clon» dentro de un «si y < −170»."],
         ["L'enemic atrapa el protagonista abans que es pugui moure.|El enemigo atrapa al protagonista antes de que se pueda mover.",
-          "Que provi números més petits a «mou-te» de l'enemic o que el faci començar més lluny. La setmana vinent treballarem la dificultat.|Que pruebe números más pequeños en «muévete» del enemigo o que lo haga empezar más lejos. La semana que viene trabajaremos la dificultad."]
+          "Que provi números més petits a «mou-te» de l'enemic o que el faci començar més lluny. La setmana vinent treballarem la dificultat.|Que pruebe números más pequeños en «muévete» del enemigo o que lo haga empezar más lejos. La semana que viene trabajaremos la dificultad."],
+        ["El premi no torna a aparèixer després d'agafar-lo perquè fa «amaga't» i no «ves a un lloc a l'atzar».|El premio no vuelve a aparecer después de cogerlo porque hace «escóndete» y no «ve a un sitio al azar».", "Pregunta: vols un sol premi o que n'aparegui un altre? Si vols que torni, què el pot portar a un lloc nou?|Pregunta: ¿quieres un solo premio o que aparezca otro? Si quieres que vuelva, ¿qué lo puede llevar a un sitio nuevo?"]
       ],
       diff: {
         mes: "Afegir un nivell 2 amb un altre fons i un enemic més ràpid, o una pluja de premis amb clons. Fer servir el cronòmetre per acabar el videojoc al cap de 30 segons.|Añadir un nivel 2 con otro fondo y un enemigo más rápido, o una lluvia de premios con clones. Usar el cronómetro para terminar el videojuego al cabo de 30 segundos.",
@@ -4470,7 +6498,12 @@ Object.assign(TGUIDE, (() => {
         rubric: [
           ["Inicialitzar|Inicializar", "El guió de la bandera posa variables i posicions a lloc abans del bucle.|El guion de la bandera pone variables y posiciones en su sitio antes del bucle.", "Oblida inicialitzar alguna variable o la posa dins del bucle.|Olvida inicializar alguna variable o la pone dentro del bucle."],
           ["Regles al seu lloc|Reglas en su sitio", "Reparteix les regles entre els personatges i fa servir variables i condicions.|Reparte las reglas entre los personajes y usa variables y condiciones.", "Ho posa tot en un sol personatge o necessita ajuda amb les condicions.|Lo pone todo en un solo personaje o necesita ayuda con las condiciones."],
-          ["Construir peça a peça|Construir pieza a pieza", "Prova cada peça abans d'afegir-ne una altra i troba on falla.|Prueba cada pieza antes de añadir otra y encuentra dónde falla.", "Afegeix moltes peces de cop i li costa trobar l'error.|Añade muchas piezas de golpe y le cuesta encontrar el error."]
+          ["Construir peça a peça|Construir pieza a pieza", "Prova cada peça abans d'afegir-ne una altra i troba on falla.|Prueba cada pieza antes de añadir otra y encuentra dónde falla.", "Afegeix moltes peces de cop i li costa trobar l'error.|Añade muchas piezas de golpe y le cuesta encontrar el error."],
+          [
+            "Versió 2 desada|Versión 2 guardada",
+            "El videojoc té variable, regla i dos personatges programats, i el desa.|El videojuego tiene variable, regla y dos personajes programados, y lo guarda.",
+            "Al videojoc encara li falta alguna d'aquestes peces o no l'ha desat.|Al videojuego todavía le falta alguna de estas piezas o no lo ha guardado."
+          ]
         ]
       },
       casa: "A casa, ensenyeu el videojoc a algú de la família (és a «Projectes») i expliqueu-li quin personatge té cada regla. Si voleu, apunteu al pla les idees per a la setmana vinent.|En casa, enseñad el videojuego a alguien de la familia (está en «Proyectos») y explicadle qué personaje tiene cada regla. Si queréis, apuntad en el plan las ideas para la semana que viene.",
@@ -4486,7 +6519,7 @@ Object.assign(TGUIDE, (() => {
         { id: 's5', k: 'media', t: 'Tot a lloc en començar|Todo en su sitio al empezar', x: 'Punts a 0, vides a 3, a la sortida i visible.|Puntos a 0, vidas a 3, en la salida y visible.', media: { k: 'stage', w: { bg: 'ciutat', vars: ['punts', 'vides'], time: 5, sprites: [{ id: 'cotxe', art: 'cotxe', x: 60, y: 40, size: 70 }, { id: 'moneda', art: 'moneda', x: 140, y: -120 }] }, prog: '@cotxe flag{ setv:punts,0 setv:vides,3 goto:-160,-120 show say:"Som-hi!|¡Vamos!",1 forever{ chx:4 if:touch:moneda{ chv:punts,1 } } } @moneda flag{ forever{ next wait:0.1 } }', varNames: { punts: 'punts|puntos', vides: 'vides|vidas' } },
           nota: "Fes notar que el cotxe no comença on està dibuixat: «ves a» el porta a la sortida cada vegada.|Haz notar que el coche no empieza donde está dibujado: «ve a» lo lleva a la salida cada vez." },
         { id: 's6', k: 'concepte', t: 'El guió de la bandera del protagonista|El guion de la bandera del protagonista', punts: ['1. Posa punts a 0 i vides a 3|1. Pon puntos a 0 y vidas a 3', '2. Ves a la sortida i digues el nom|2. Ve a la salida y di el nombre', '3. Per sempre: les regles|3. Por siempre: las reglas'],
-          nota: "Primer el que passa una sola vegada; després, el bucle amb el que es comprova tota l'estona.|Primero lo que pasa una sola vez; después, el bucle con lo que se comprueba todo el rato." },
+          nota: "Primer el que passa una sola vegada; després, el bucle amb el que es comprova tota l'estona.|Primero lo que pasa una sola vez; después, el bucle con lo que se comprueba todo el rato.", pic: "img/ment/lli.webp" },
         { id: 's7', k: 'media', t: 'Un nivell nou|Un nivel nuevo', x: 'Si punts > 2 → fons de nit i velocitat 8.|Si puntos > 2 → fondo de noche y velocidad 8.', media: { k: 'stage', w: W_LVL, prog: P_LVL, varNames: { punts: 'punts|puntos', velocitat: 'velocitat|velocidad' } },
           nota: "Fixeu-vos en la variable velocitat: el gat es mou «velocitat» passos. Canviar un número canvia la dificultat.|Fijaos en la variable velocidad: el gato se mueve «velocidad» pasos. Cambiar un número cambia la dificultad." },
         { id: 's8', k: 'media', t: 'Una pluja amb clons|Una lluvia con clones', x: 'Un sol meteorit amagat crea clons que cauen.|Un solo meteorito escondido crea clones que caen.', media: { k: 'stage', w: W_RAIN, prog: P_RAIN },
@@ -4504,7 +6537,7 @@ Object.assign(TGUIDE, (() => {
         { id: 's14', k: 'activitat', t: 'El meu videojoc, peça a peça|Mi videojuego, pieza a pieza', timer: 15, punts: ['1. El protagonista es mou (ja ho tens!)|1. El protagonista se mueve (¡ya lo tienes!)', '2. El premi: si el toques, punts +1|2. El premio: si lo tocas, puntos +1', "3. L'enemic: si et toca, vides −1|3. El enemigo: si te toca, vidas −1", '4. Com guanyes i com perds|4. Cómo ganas y cómo pierdes', '5. Extres: sons, nivells, clons…|5. Extras: sonidos, niveles, clones…'],
           nota: "Deixa aquesta llista projectada. Després de cada peça, que toquin Comença i ho provin.|Deja esta lista proyectada. Después de cada pieza, que toquen Empieza y lo prueben." },
         { id: 's15', k: 'concepte', t: 'Abans de desar|Antes de guardar', punts: ['Té una variable (punts o vides).|Tiene una variable (puntos o vidas).', 'Té una regla amb «si…».|Tiene una regla con «si…».', 'Hi ha almenys dos personatges programats.|Hay al menos dos personajes programados.', "Toca Comprova i desa'l.|Toca Comprueba y guárdalo."],
-          nota: "L'app ho comprova sola i els avisa si falta alguna cosa. Assegura't que tothom desa abans de sortir.|La app lo comprueba sola y les avisa si falta algo. Asegúrate de que todo el mundo guarda antes de salir." },
+          nota: "L'app ho comprova sola i els avisa si falta alguna cosa. Assegura't que tothom desa abans de sortir.|La app lo comprueba sola y les avisa si falta algo. Asegúrate de que todo el mundo guarda antes de salir.", pic: "img/ic/check.webp" },
         { id: 's16', k: 'resum', t: 'Què hem après avui|Qué hemos aprendido hoy', punts: ['Cada personatge té els seus guions.|Cada personaje tiene sus guiones.', 'En començar, tot a lloc.|Al empezar, todo en su sitio.', 'Una peça, la provo; una altra peça…|Una pieza, la pruebo; otra pieza…'],
           nota: "Fes les preguntes del tiquet i anota qui no ha pogut desar la versió 2.|Haz las preguntas del ticket y anota quién no ha podido guardar la versión 2." }
       ],
@@ -4537,6 +6570,48 @@ Object.assign(TGUIDE, (() => {
 
     /* ---------- Sessió 3 · Provar-lo i millorar-lo ---------- */
     'g8-3': {
+      intro: "Tercera sessió del projecte: la sala de proves. L'alumnat aprèn que una persona nova troba bugs (errors) que l'autor/a no veu, que la dificultat s'ajusta canviant un número (velocitat, vides, punts per guanyar) i que un bon comentari té dues parts: una cosa que m'ha agradat i una idea per millorar. Practica amb informes de provadors en paper i amb tres bugs típics a l'app (enemic massa ràpid, cotxe que surt de l'escenari, sense instruccions). Després, les parelles canvien d'ordinador, es proven els videojocs i cadascú fa la versió 3 amb els canvis que decideix.|Tercera sesión del proyecto: la sala de pruebas. El alumnado aprende que una persona nueva encuentra bugs (errores) que el autor/a no ve, que la dificultad se ajusta cambiando un número (velocidad, vidas, puntos para ganar) y que un buen comentario tiene dos partes: algo que me ha gustado y una idea para mejorar. Practica con informes de probadores en papel y con tres bugs típicos en la app (enemigo demasiado rápido, coche que sale del escenario, sin instrucciones). Después, las parejas cambian de ordenador, se prueban los videojuegos y cada uno hace la versión 3 con los cambios que decide.",
+      claus: [
+        "Una persona nova prova el videojoc diferent i troba bugs que l'autor/a no veu.|Una persona nueva prueba el videojuego distinto y encuentra bugs que el autor/a no ve.",
+        "La dificultat s'ajusta canviant un número: velocitat, vides o punts per guanyar.|La dificultad se ajusta cambiando un número: velocidad, vidas o puntos para ganar.",
+        "Un bon comentari: una cosa que m'ha agradat + una idea concreta per millorar.|Un buen comentario: algo que me ha gustado + una idea concreta para mejorar.",
+        "L'autor/a escolta i decideix què canvia: primer els bugs, després la dificultat.|El autor/a escucha y decide qué cambia: primero los bugs, después la dificultad."
+      ],
+      prev: [
+        "La versió 2 del videojoc desada (sessió anterior).|La versión 2 del videojuego guardada (sesión anterior).",
+        "Comparar la posició x amb un número i «posa x a» (unitat 4 i 5).|Comparar la posición x con un número y «pon x a» (unidades 4 y 5).",
+        "Enviar i rebre missatges (unitat 3).|Enviar y recibir mensajes (unidad 3)."
+      ],
+      faq: [
+        ["Què és un bug?|¿Qué es un bug?", "Un error del programa: una cosa que passa i no volies, com un cotxe que surt de l'escenari i no torna. La paraula ve de l'anglès i vol dir «bestiola».|Un error del programa: algo que pasa y no querías, como un coche que sale del escenario y no vuelve. La palabra viene del inglés y quiere decir «bicho»."],
+        ["He de fer tot el que em diu el provador/a?|¿Tengo que hacer todo lo que me dice el probador/a?", "No. Escolta-ho tot, dona les gràcies i decideix tu: primer arregla els bugs i després tria la idea que millor encaixi amb el teu videojoc.|No. Escúchalo todo, da las gracias y decide tú: primero arregla los bugs y después elige la idea que mejor encaje con tu videojuego."],
+        ["Per què no puc ajudar el provador/a?|¿Por qué no puedo ayudar al probador/a?", "Perquè la gent que el provarà a la fira no et tindrà al costat. Si s'encalla, és una pista del que has de millorar: apunta-ho!|Porque la gente que lo probará en la feria no te tendrá al lado. Si se atasca, es una pista de lo que tienes que mejorar: ¡apúntalo!"],
+        ["El provador/a diu que és massa difícil. Què canvio?|El probador/a dice que es demasiado difícil. ¿Qué cambio?", "Un sol número: l'enemic més lent, més vides al principi o menys punts per guanyar. Prova-ho tu després del canvi.|Un solo número: el enemigo más lento, más vidas al principio o menos puntos para ganar. Pruébalo tú después del cambio."],
+        ["L'app diu que el videojoc és igual que abans.|La app dice que el videojuego es igual que antes.", "Per desar la versió 3 cal fer-hi almenys un canvi. Tria'n un del full del provador/a.|Para guardar la versión 3 hay que hacerle al menos un cambio. Elige uno de la hoja del probador/a."],
+        ["Com sé quina x té la vora?|¿Cómo sé qué x tiene el borde?", "L'escenari va de x = -240 a x = 240. Per no sortir, posa el límit una mica abans: 200 i -200.|El escenario va de x = -240 a x = 240. Para no salir, pon el límite un poco antes: 200 y -200."]
+      ],
+      tec: [
+        ["No es troba la versió anterior del videojoc.|No se encuentra la versión anterior del videojuego.", "Cada sessió obre l'última versió desada al portafoli (a «Projectes») amb el mateix perfil. Si no n'hi ha cap, l'app comença amb les peces de mostra: es pot tornar al pas «Tria les peces» de la sessió 1 i desar-les.|Cada sesión abre la última versión guardada en el portafolio (en «Proyectos») con el mismo perfil. Si no hay ninguna, la app empieza con las piezas de muestra: se puede volver al paso «Elige las piezas» de la sesión 1 y guardarlas."],
+        ["No s'ha desat el videojoc.|No se ha guardado el videojuego.", "Només es desa quan passa la comprovació i es toca «Desa-ho i continua». Si se surt abans, cal tornar a fer «Comprova».|Solo se guarda cuando pasa la comprobación y se toca «Guárdalo y continúa». Si se sale antes, hay que volver a hacer «Comprueba»."],
+        ["Les fletxes del teclat no mouen el protagonista.|Las flechas del teclado no mueven al protagonista.", "Cal tocar primer l'escenari perquè la pàgina «escolti» el teclat, o fer servir els botons de fletxes de sota l'escenari (també al mòbil).|Hay que tocar primero el escenario para que la página «escuche» el teclado, o usar los botones de flechas de debajo del escenario (también en el móvil)."],
+        ["Al canvi de lloc, el provador/a veu el seu propi videojoc.|En el cambio de sitio, el probador/a ve su propio videojuego.", "Es prova a l'ordinador de l'autor/a, amb la sessió de l'autor/a oberta: canvieu de cadira, no de perfil.|Se prueba en el ordenador del autor/a, con la sesión del autor/a abierta: cambiad de silla, no de perfil."],
+        ["Alguna parella no pot canviar de lloc (algú ha faltat).|Alguna pareja no puede cambiar de sitio (alguien ha faltado).", "Fes un trio o fes tu de provador/a. També pot provar-lo algú de casa (pas «Canvi de lloc!»).|Haced un trío o haz tú de probador/a. También puede probarlo alguien de casa (paso «¡Cambio de sitio!»)."]
+      ],
+      seg: [
+        "Pantalles: recorda la pausa activa a mitja sessió i que mirin lluny uns segons quan acabin cada repte.|Pantallas: recuerda la pausa activa a media sesión y que miren a lo lejos unos segundos cuando terminen cada reto.",
+        "Comentaris: es parla del videojoc, no de la persona; cap comentari de rialla o de burla. Si un alumne/a es posa trist/a, acompanya'l a trobar una cosa bona del seu treball.|Comentarios: se habla del videojuego, no de la persona; ningún comentario de risa o de burla. Si un alumno/a se pone triste, acompáñale a encontrar algo bueno de su trabajo.",
+        "Canvi de lloc: es fa caminant, amb una senyal clara, i cadascú deixa la cadira neta per al company/a.|Cambio de sitio: se hace caminando, con una señal clara, y cada uno deja la silla limpia para el compañero/a."
+      ],
+      extra: [
+        "Fer de provador/a d'un segon videojoc i deixar-hi un altre full.|Hacer de probador/a de un segundo videojuego y dejarle otra hoja.",
+        "Afegir al propi videojoc una pantalla d'instruccions amb un missatge que el posa en marxa.|Añadir al propio videojuego una pantalla de instrucciones con un mensaje que lo pone en marcha.",
+        "Fer una llista dels bugs trobats a la classe i classificar-los: falta un bloc o cal canviar un número?|Hacer una lista de los bugs encontrados en la clase y clasificarlos: ¿falta un bloque o hay que cambiar un número?"
+      ],
+      trans: [
+        "Ve de la sessió 2: la versió 2 del videojoc.|Viene de la sesión 2: la versión 2 del videojuego.",
+        "Sessió següent: últims retocs, títol i instruccions i l'estrena a la Fira de Videojocs.|Sesión siguiente: últimos retoques, título e instrucciones y el estreno en la Feria de Videojuegos.",
+        "Educació en valors: donar i rebre crítiques amb respecte; llengua: escriure un informe breu i concret.|Educación en valores: dar y recibir críticas con respeto; lengua: escribir un informe breve y concreto."
+      ],
       obj: [
         "L'alumne/a prova el videojoc d'un company/a sense ajuda i en detecta bugs i problemes de dificultat.|El alumno/a prueba el videojuego de un compañero/a sin ayuda y detecta bugs y problemas de dificultad.",
         "L'alumne/a dona un comentari amable i útil (una cosa que li ha agradat i una idea per millorar) i rep els comentaris sobre el seu.|El alumno/a da un comentario amable y útil (algo que le ha gustado y una idea para mejorar) y recibe los comentarios sobre el suyo.",
@@ -4574,32 +6649,54 @@ Object.assign(TGUIDE, (() => {
       plan: [
         { min: 4, t: "Benvinguda: la sala de proves|Bienvenida: la sala de pruebas", fase: 'inici',
           fa: "Explica que abans de l'estrena tots els videojocs passen per la sala de proves i que avui seran provadors/es. Pregunta per què creuen que els creadors fan provar els seus videojocs a altres persones.|Explica que antes del estreno todos los videojuegos pasan por la sala de pruebas y que hoy serán probadores/as. Pregunta por qué creen que los creadores hacen probar sus videojuegos a otras personas.",
-          diu: ["Qui coneix millor el vostre videojoc? I qui hi trobarà coses noves?|¿Quién conoce mejor vuestro videojuego? ¿Y quién encontrará cosas nuevas?"],
+          diu: [
+            "Qui coneix millor el vostre videojoc? (jo) I qui hi trobarà coses noves? (algú que no l'ha vist mai)|¿Quién conoce mejor vuestro videojuego? (yo) ¿Y quién le encontrará cosas nuevas? (alguien que no lo ha visto nunca)",
+            "Per què els creadors fan provar els seus videojocs a altres persones?|¿Por qué los creadores hacen probar sus videojuegos a otras personas?",
+            "Avui tots sereu autors/es i provadors/es.|Hoy todos seréis autores/as y probadores/as."
+          ],
           slides: ['s1', 's2'], app: "Encara no.|Todavía no.", org: "Tot el grup|Todo el grupo" },
         { min: 8, t: "Ulls nous, dificultat i comentaris|Ojos nuevos, dificultad y comentarios", fase: 'teoria',
           fa: "Amb la demo del cotxe, mostra un bug que l'autor/a no veu perquè sempre prova igual. Explica com s'ajusta la dificultat canviant un número i com es fa un bon comentari en dues parts. Ensenya el truc d'espiar una variable amb «digues».|Con la demo del coche, muestra un bug que el autor/a no ve porque siempre prueba igual. Explica cómo se ajusta la dificultad cambiando un número y cómo se hace un buen comentario en dos partes. Enseña el truco de espiar una variable con «di».",
-          diu: ["El cotxe se'n va i no torna: és un bug o és el que volíem?|El coche se va y no vuelve: ¿es un bug o es lo que queríamos?",
-            "«És avorrit» ajuda l'autor/a? Com ho podríem dir perquè l'ajudi?|«Es aburrido», ¿ayuda al autor/a? ¿Cómo lo podríamos decir para que le ayude?"],
+          diu: [
+            "El cotxe se'n va i no torna: és un bug o és el que volíem? (un bug)|El coche se va y no vuelve: ¿es un bug o es lo que queríamos? (un bug)",
+            "Quins números podem canviar per fer-lo més fàcil? (velocitat, vides, punts per guanyar)|¿Qué números podemos cambiar para hacerlo más fácil? (velocidad, vidas, puntos para ganar)",
+            "«És avorrit» ajuda l'autor/a? Com ho podríem dir perquè l'ajudi? («M'agrada… I si…?»)|«Es aburrido», ¿ayuda al autor/a? ¿Cómo lo podríamos decir para que le ayude? («Me gusta… ¿Y si…?»)",
+            "Per què el gat diu els punts tota l'estona? (per veure la variable i trobar el bug)|¿Por qué el gato dice los puntos todo el rato? (para ver la variable y encontrar el bug)"
+          ],
           slides: ['s3', 's4', 's5', 's6', 's7'], app: "Encara no.|Todavía no.", org: "Tot el grup|Todo el grupo" },
         { min: 10, t: "Desconnectat: detectius de bugs|Desconectado: detectives de bugs", fase: 'desconnectat',
           fa: "En parelles, llegiu els informes dels provadors de la fitxa. Per a cada un, la parella decideix si és un bug o un problema de dificultat, marca en vermell el bloc o el número culpable i escriu en verd l'arreglo. Comenteu-ne dos en veu alta.|Por parejas, leed los informes de los probadores de la ficha. Para cada uno, la pareja decide si es un bug o un problema de dificultad, marca en rojo el bloque o el número culpable y escribe en verde el arreglo. Comentad dos en voz alta.",
-          diu: ["Què diu exactament el provador/a? On pot ser el problema?|¿Qué dice exactamente el probador/a? ¿Dónde puede estar el problema?",
-            "Per arreglar-ho, cal un bloc nou o només canviar un número?|Para arreglarlo, ¿hace falta un bloque nuevo o solo cambiar un número?"],
+          diu: [
+            "Què diu exactament el provador/a? On pot ser el problema?|¿Qué dice exactamente el probador/a? ¿Dónde puede estar el problema?",
+            "És un bug o és la dificultat?|¿Es un bug o es la dificultad?",
+            "Per arreglar-ho, cal un bloc nou o només canviar un número?|Para arreglarlo, ¿hace falta un bloque nuevo o solo cambiar un número?",
+            "Quin informe us ha costat més? Per què?|¿Qué informe os ha costado más? ¿Por qué?"
+          ],
           slides: ['s8', 's9'], app: "Cap: activitat sense pantalla.|Ninguna: actividad sin pantalla.", org: "Per parelles|Por parejas" },
         { min: 15, t: "A l'ordinador: proves i bugs|En el ordenador: pruebas y bugs", fase: 'ordinador',
           fa: "Cada alumne/a fa els passos fins als dos reptes de bugs, inclosa la pausa activa. A «Pluja de meteorits», deixa que el provin unes quantes vegades abans de respondre. Al cranc, insisteix que canviïn només un número.|Cada alumno/a hace los pasos hasta los dos retos de bugs, incluida la pausa activa. En «Lluvia de meteoritos», deja que lo prueben unas cuantas veces antes de responder. En el cangrejo, insiste en que cambien solo un número.",
-          diu: ["Quin número fa que el cranc vagi tan de pressa?|¿Qué número hace que el cangrejo vaya tan deprisa?",
-            "Quina x té el cotxe quan arriba a la vora? I a l'altra vora?|¿Qué x tiene el coche cuando llega al borde? ¿Y en el otro borde?"],
+          diu: [
+            "Quin número fa que el cranc vagi tan de pressa? (el 9 del «mou-te»)|¿Qué número hace que el cangrejo vaya tan deprisa? (el 9 del «muévete»)",
+            "Quina x té el cotxe quan arriba a la vora? I a l'altra vora? (uns 200 i -200)|¿Qué x tiene el coche cuando llega al borde? ¿Y en el otro borde? (unos 200 y -200)",
+            "Quin bloc posa en marxa la pilota després de les instruccions? (envia el missatge som-hi)|¿Qué bloque pone en marcha la pelota después de las instrucciones? (envía el mensaje som-hi)"
+          ],
           slides: ['s10', 's11'], app: "Dels «Recorda» fins als dos reptes: la història, «Descobreix», el millor comentari, el bon provador/a, «Pluja de meteorits», com fer-lo més just, el cranc massa ràpid, la pausa activa, el cotxe que surt de l'escenari i les instruccions.|De los «Recuerda» hasta los dos retos: la historia, «Descubre», el mejor comentario, el buen probador/a, «Lluvia de meteoritos», cómo hacerlo más justo, el cangrejo demasiado rápido, la pausa activa, el coche que sale del escenario y las instrucciones.", org: "Individual|Individual" },
         { min: 20, t: "Crea: canvi de lloc, valoració i millora|Crea: cambio de sitio, valoración y mejora", fase: 'crea',
           fa: "Quan tothom arribi al pas «Canvi de lloc!», fes la senyal: cada provador/a seu a l'ordinador del seu company/a. L'autor/a explica només les instruccions i calla. El provador/a prova el videojoc almenys tres vegades, omple la valoració de l'app i el full del provador/a, i explica de paraula una cosa que li ha agradat i una idea. Torneu al vostre lloc i cada autor/a fa la versió 3 amb els canvis que decideixi. Si un videojoc té un bug greu, ajuda l'autor/a a trobar-lo amb preguntes.|Cuando todo el mundo llegue al paso «¡Cambio de sitio!», haz la señal: cada probador/a se sienta en el ordenador de su compañero/a. El autor/a explica solo las instrucciones y calla. El probador/a prueba el videojuego al menos tres veces, rellena la valoración de la app y la hoja del probador/a, y explica de palabra algo que le ha gustado y una idea. Volved a vuestro sitio y cada autor/a hace la versión 3 con los cambios que decida. Si un videojuego tiene un bug grave, ayuda al autor/a a encontrarlo con preguntas.",
-          diu: ["Autors/es: mireu i calleu. Apunteu què costa!|Autores/as: mirad y callad. ¡Apuntad qué cuesta!",
-            "Provadors/es: primer una cosa que us agradi, després una idea.|Probadores/as: primero algo que os guste, después una idea.",
-            "No cal fer tot el que us diuen: vosaltres decidiu què el fa millor.|No hace falta hacer todo lo que os dicen: vosotros decidís qué lo hace mejor."],
+          diu: [
+            "Autors/es: mireu i calleu. Apunteu què costa!|Autores/as: mirad y callad. ¡Apuntad qué cuesta!",
+            "Provadors/es: proveu-lo almenys tres vegades abans d'opinar.|Probadores/as: probadlo al menos tres veces antes de opinar.",
+            "Primer una cosa que us agradi, després una idea concreta.|Primero algo que os guste, después una idea concreta.",
+            "No cal fer tot el que us diuen: vosaltres decidiu què el fa millor.|No hace falta hacer todo lo que os dicen: vosotros decidís qué lo hace mejor."
+          ],
           slides: ['s12', 's13', 's14', 's15'], app: "«Canvi de lloc!», el videojoc del company/a (pas per al provador/a), la valoració, «Torneu al vostre lloc» i el pas «Crea»: el meu videojoc, versió 3.|«¡Cambio de sitio!», el videojuego del compañero/a (paso para el probador/a), la valoración, «Volved a vuestro sitio» y el paso «Crea»: mi videojuego, versión 3.", org: "Per parelles i després individual|Por parejas y después individual" },
         { min: 3, t: "Tancament|Cierre", fase: 'tancament',
           fa: "Pregunta quin canvi ha fet cadascú a partir dels comentaris i recull els fulls del provador/a a les carpetes.|Pregunta qué cambio ha hecho cada uno a partir de los comentarios y recoge las hojas del probador/a en las carpetas.",
-          diu: ["Quin comentari us ha ajudat més? Per què?|¿Qué comentario os ha ayudado más? ¿Por qué?"],
+          diu: [
+            "Quin comentari us ha ajudat més? Per què?|¿Qué comentario os ha ayudado más? ¿Por qué?",
+            "Quin canvi heu fet a la versió 3?|¿Qué cambio habéis hecho en la versión 3?",
+            "La setmana vinent és l'estrena: què us falta per tenir-lo a punt?|La semana que viene es el estreno: ¿qué os falta para tenerlo a punto?"
+          ],
           slides: ['s16'], app: "«Tancament»: les preguntes finals i com m'he sentit.|«Cierre»: las preguntas finales y cómo me he sentido.", org: "Tot el grup|Todo el grupo" }
       ],
       errors: [
@@ -4612,7 +6709,8 @@ Object.assign(TGUIDE, (() => {
         ["Per fer-lo més fàcil, treu l'enemic o el fa quiet.|Para hacerlo más fácil, quita el enemigo o lo deja quieto.",
           "Sense obstacle no és un videojoc. Que provi de canviar un número: més lent, més vides o menys punts per guanyar.|Sin obstáculo no es un videojuego. Que pruebe a cambiar un número: más lento, más vidas o menos puntos para ganar."],
         ["Al repte del cotxe, només arregla una vora.|En el reto del coche, solo arregla un borde.",
-          "Que toqui Comprova i miri què passa quan el cotxe va cap a l'esquerra. Quin número té la x a l'altra vora?|Que toque Comprueba y mire qué pasa cuando el coche va hacia la izquierda. ¿Qué número tiene la x en el otro borde?"]
+          "Que toqui Comprova i miri què passa quan el cotxe va cap a l'esquerra. Quin número té la x a l'altra vora?|Que toque Comprueba y mire qué pasa cuando el coche va hacia la izquierda. ¿Qué número tiene la x en el otro borde?"],
+        ["Com a provador/a, només diu el que li agrada i no gosa dir cap idea.|Como probador/a, solo dice lo que le gusta y no se atreve a decir ninguna idea.", "Recorda-li que una idea és un regal per a l'autor/a. Pregunta-li: on t'has encallat? Què hauria fet que fos més divertit?|Recuérdale que una idea es un regalo para el autor/a. Pregúntale: ¿dónde te has atascado? ¿Qué lo habría hecho más divertido?"]
       ],
       diff: {
         mes: "Fer de provador/a d'un segon videojoc i deixar-hi un altre full. Afegir al propi videojoc una pantalla d'instruccions amb un missatge que el posa en marxa.|Hacer de probador/a de un segundo videojuego y dejarle otra hoja. Añadir al propio videojuego una pantalla de instrucciones con un mensaje que lo pone en marcha.",
@@ -4624,7 +6722,12 @@ Object.assign(TGUIDE, (() => {
         rubric: [
           ["Provar|Probar", "Prova el videojoc sense ajuda i descriu bugs o problemes concrets.|Prueba el videojuego sin ayuda y describe bugs o problemas concretos.", "Prova el videojoc però li costa dir què falla.|Prueba el videojuego pero le cuesta decir qué falla."],
           ["Comentaris|Comentarios", "Dona comentaris en dues parts, concrets i amables, i escolta els que rep.|Da comentarios en dos partes, concretos y amables, y escucha los que recibe.", "Els seus comentaris són vagues o només diu una part.|Sus comentarios son vagos o solo dice una parte."],
-          ["Millorar|Mejorar", "Fa almenys un canvi justificat a partir dels comentaris i el videojoc continua funcionant.|Hace al menos un cambio justificado a partir de los comentarios y el videojuego sigue funcionando.", "Fa canvis sense relació amb els comentaris o necessita ajuda per fer-los.|Hace cambios sin relación con los comentarios o necesita ayuda para hacerlos."]
+          ["Millorar|Mejorar", "Fa almenys un canvi justificat a partir dels comentaris i el videojoc continua funcionant.|Hace al menos un cambio justificado a partir de los comentarios y el videojuego sigue funcionando.", "Fa canvis sense relació amb els comentaris o necessita ajuda per fer-los.|Hace cambios sin relación con los comentarios o necesita ayuda para hacerlos."],
+          [
+            "Escoltar els comentaris|Escuchar los comentarios",
+            "Escolta sense justificar-se, dona les gràcies i explica quin canvi farà.|Escucha sin justificarse, da las gracias y explica qué cambio hará.",
+            "Discuteix els comentaris o no en fa servir cap.|Discute los comentarios o no usa ninguno."
+          ]
         ]
       },
       casa: "A casa, demaneu a algú de la família que provi el videojoc sense explicar-li res més que les instruccions. Mireu on s'encalla i apunteu-ho al pla per als últims retocs de la setmana vinent.|En casa, pedid a alguien de la familia que pruebe el videojuego sin explicarle nada más que las instrucciones. Mirad dónde se atasca y apuntadlo en el plan para los últimos retoques de la semana que viene.",
@@ -4642,7 +6745,7 @@ Object.assign(TGUIDE, (() => {
         { id: 's6', k: 'media', t: 'Espia una variable|Espía una variable', x: 'El gat diu els punts tota l\'estona.|El gato dice los puntos todo el rato.', media: { k: 'stage', w: W_DEMO, prog: '@gat flag{ setv:punts,0 forever{ pointto:moneda move:4 say:$punts } } @moneda flag{ forever{ if:touch:gat{ chv:punts,1 sound:moneda gotorand } } }', varNames: { punts: 'punts|puntos' } },
           nota: "És un truc de depuració: quan ja s'ha trobat el bug, es treu el bloc.|Es un truco de depuración: cuando ya se ha encontrado el bug, se quita el bloque." },
         { id: 's7', k: 'concepte', t: 'Les regles del provador/a|Las reglas del probador/a', punts: ["L'autor/a explica només les instruccions.|El autor/a explica solo las instrucciones.", 'El provador/a ho prova sol/a, almenys tres vegades.|El probador/a lo prueba solo/a, al menos tres veces.', "Després: una cosa que m'ha agradat i una idea.|Después: algo que me ha gustado y una idea.", "Parlem del videojoc, no de la persona.|Hablamos del videojuego, no de la persona."],
-          nota: "Deixa clar el pacte abans de començar: tothom serà autor/a i provador/a.|Deja claro el pacto antes de empezar: todo el mundo será autor/a y probador/a." },
+          nota: "Deixa clar el pacte abans de començar: tothom serà autor/a i provador/a.|Deja claro el pacto antes de empezar: todo el mundo será autor/a y probador/a.", pic: "img/ic/good.webp" },
         { id: 's8', k: 'activitat', t: 'Detectius de bugs|Detectives de bugs', timer: 10, punts: ["Llegiu l'informe del provador/a.|Leed el informe del probador/a.", 'És un bug o és la dificultat?|¿Es un bug o es la dificultad?', 'En vermell: el bloc o el número culpable.|En rojo: el bloque o el número culpable.', "En verd: l'arreglo.|En verde: el arreglo."],
           nota: "Si una parella acaba aviat, que inventi un informe nou per a la parella del costat.|Si una pareja acaba pronto, que invente un informe nuevo para la pareja de al lado." },
         { id: 's9', k: 'pregunta', t: 'Un bloc nou o un número?|¿Un bloque nuevo o un número?', x: 'Quins informes s\'arreglaven canviant només un número?|¿Qué informes se arreglaban cambiando solo un número?',
@@ -4656,7 +6759,7 @@ Object.assign(TGUIDE, (() => {
         { id: 's13', k: 'activitat', t: 'El comentari en veu alta|El comentario en voz alta', punts: ["Provador/a: «M'ha agradat…»|Probador/a: «Me ha gustado…»", 'Provador/a: «I si…?»|Probador/a: «¿Y si…?»', "Autor/a: «Gràcies!»|Autor/a: «¡Gracias!»"],
           nota: "Que el comentari es digui mirant-se a la cara. L'autor/a no s'ha de justificar: només escolta i dona les gràcies.|Que el comentario se diga mirándose a la cara. El autor/a no se tiene que justificar: solo escucha y da las gracias." },
         { id: 's14', k: 'concepte', t: 'Tu decideixes què canvies|Tú decides qué cambias', punts: ['Arregla primer els bugs.|Arregla primero los bugs.', 'Després, ajusta la dificultat amb un número.|Después, ajusta la dificultad con un número.', "Si tens temps, afegeix-hi una idea que t'agradi.|Si tienes tiempo, añade una idea que te guste."],
-          nota: "No cal fer-ho tot: és millor un canvi ben fet que molts a mitges.|No hace falta hacerlo todo: es mejor un cambio bien hecho que muchos a medias." },
+          nota: "No cal fer-ho tot: és millor un canvi ben fet que molts a mitges.|No hace falta hacerlo todo: es mejor un cambio bien hecho que muchos a medias.", pic: "img/ic/wrench.webp" },
         { id: 's15', k: 'activitat', t: 'La versió 3|La versión 3', timer: 10, punts: ['Torna al teu lloc.|Vuelve a tu sitio.', 'Llegeix el full del provador/a.|Lee la hoja del probador/a.', "Fes els canvis i prova'ls.|Haz los cambios y pruébalos.", "Comprova i desa la versió 3.|Comprueba y guarda la versión 3."],
           nota: "L'app avisa si el videojoc és igual que la versió anterior: cal fer-hi almenys un canvi.|La app avisa si el videojuego es igual que la versión anterior: hay que hacerle al menos un cambio." },
         { id: 's16', k: 'tiquet', t: 'Tiquet de sortida|Ticket de salida', punts: ['Un comentari amable i útil que has fet.|Un comentario amable y útil que has hecho.', 'Un canvi que has fet al teu videojoc.|Un cambio que has hecho en tu videojuego.'],
@@ -4692,6 +6795,48 @@ Object.assign(TGUIDE, (() => {
 
     /* ---------- Sessió 4 · Presentació i diploma ---------- */
     'g8-4': {
+      intro: "Última sessió del curs: l'estrena a la Fira de Videojocs. L'alumnat repassa el camí del curs, posa títol i instruccions al seu videojoc i aprèn a presentar-lo amb tres preguntes: què he fet, com funciona (un guió i una regla) i què m'ha costat. Assaja en trios, fa uns reptes de repàs (missatges i animació) i, al gran moment, presenta el videojoc al projector perquè algú del públic el provi. Acaba amb els diplomes. Prioritza que tothom presenti, encara que sigui en grups petits, i celebra el procés més que el resultat.|Última sesión del curso: el estreno en la Feria de Videojuegos. El alumnado repasa el camino del curso, pone título e instrucciones a su videojuego y aprende a presentarlo con tres preguntas: qué he hecho, cómo funciona (un guion y una regla) y qué me ha costado. Ensaya en tríos, hace unos retos de repaso (mensajes y animación) y, en el gran momento, presenta el videojuego en el proyector para que alguien del público lo pruebe. Termina con los diplomas. Prioriza que todo el mundo presente, aunque sea en grupos pequeños, y celebra el proceso más que el resultado.",
+      claus: [
+        "Un videojoc necessita títol i instruccions: què has de fer i amb quines tecles.|Un videojuego necesita título e instrucciones: qué tienes que hacer y con qué teclas.",
+        "Presentar és respondre: què he fet, com funciona i què m'ha costat.|Presentar es responder: qué he hecho, cómo funciona y qué me ha costado.",
+        "Explicar una regla amb paraules mostra que entens el teu programa.|Explicar una regla con palabras muestra que entiendes tu programa.",
+        "Crear és un cicle: pensar, planificar, programar, provar, millorar i presentar.|Crear es un ciclo: pensar, planificar, programar, probar, mejorar y presentar."
+      ],
+      prev: [
+        "La versió 3 del videojoc, millorada amb els comentaris (sessió anterior).|La versión 3 del videojuego, mejorada con los comentarios (sesión anterior).",
+        "Enviar i rebre missatges i animar amb vestits (unitats 2 i 3).|Enviar y recibir mensajes y animar con disfraces (unidades 2 y 3).",
+        "El pla i el full del provador/a, a la carpeta.|El plan y la hoja del probador/a, en la carpeta."
+      ],
+      faq: [
+        ["I si el meu videojoc falla durant la presentació?|¿Y si mi videojuego falla durante la presentación?", "No passa res: explica què hauria de passar i com ho arreglaràs. Saber explicar un bug també és saber programar.|No pasa nada: explica qué tendría que pasar y cómo lo arreglarás. Saber explicar un bug también es saber programar."],
+        ["He de presentar davant de tothom?|¿Tengo que presentar delante de todo el mundo?", "Si et fa molta vergonya, pots fer-ho en un grup petit, amb el guió a la mà o amb un company/a que toqui les tecles.|Si te da mucha vergüenza, puedes hacerlo en un grupo pequeño, con el guion en la mano o con un compañero/a que toque las teclas."],
+        ["Quant ha de durar la presentació?|¿Cuánto tiene que durar la presentación?", "Uns 2 minuts: les tres preguntes i que algú del públic el provi.|Unos 2 minutos: las tres preguntas y que alguien del público lo pruebe."],
+        ["On és el meu videojoc i el meu diploma després del curs?|¿Dónde está mi videojuego y mi diploma después del curso?", "El videojoc queda a «Projectes» i el diploma, a l'app: els podràs obrir a casa i ensenyar-los a la família.|El videojuego queda en «Proyectos» y el diploma, en la app: los podrás abrir en casa y enseñarlos a la familia."],
+        ["Puc continuar fent videojocs a casa?|¿Puedo seguir haciendo videojuegos en casa?", "Sí! Pots obrir el teu projecte i continuar-lo, o tornar a fer reptes del curs per practicar.|¡Sí! Puedes abrir tu proyecto y continuarlo, o volver a hacer retos del curso para practicar."],
+        ["Les instruccions han de ser llargues?|¿Las instrucciones tienen que ser largas?", "No: una frase curta amb què has de fer i amb quines tecles. Si són llargues, ningú no les llegeix.|No: una frase corta con qué tienes que hacer y con qué teclas. Si son largas, nadie las lee."]
+      ],
+      tec: [
+        ["No es troba la versió anterior del videojoc.|No se encuentra la versión anterior del videojuego.", "Cada sessió obre l'última versió desada al portafoli (a «Projectes») amb el mateix perfil. Si no n'hi ha cap, l'app comença amb les peces de mostra: es pot tornar al pas «Tria les peces» de la sessió 1 i desar-les.|Cada sesión abre la última versión guardada en el portafolio (en «Proyectos») con el mismo perfil. Si no hay ninguna, la app empieza con las piezas de muestra: se puede volver al paso «Elige las piezas» de la sesión 1 y guardarlas."],
+        ["El projector no mostra bé l'escenari o les tecles de la pantalla.|El proyector no muestra bien el escenario o las teclas de la pantalla.", "Proveu-ho abans de classe. Si cal, feu la finestra més gran o presenteu des de l'ordinador de cada alumne/a en grups petits.|Probadlo antes de clase. Si hace falta, haced la ventana más grande o presentad desde el ordenador de cada alumno/a en grupos pequeños."],
+        ["No hi ha temps perquè tothom presenti.|No hay tiempo para que todo el mundo presente.", "Feu les presentacions en grups de 5 o 6 amb un ordinador per grup, o acabeu-les a l'inici de la classe següent.|Haced las presentaciones en grupos de 5 o 6 con un ordenador por grupo, o terminadlas al inicio de la clase siguiente."],
+        ["El diploma de l'app no surt.|El diploma de la app no sale.", "Surt al pas «Diploma» del final de la sessió. Si no hi arriben, el poden obrir a casa; el de paper el lliures tu.|Sale en el paso «Diploma» del final de la sesión. Si no llegan, lo pueden abrir en casa; el de papel lo entregas tú."],
+        ["No s'ha desat el videojoc.|No se ha guardado el videojuego.", "Només es desa quan passa la comprovació i es toca «Desa-ho i continua». Si se surt abans, cal tornar a fer «Comprova».|Solo se guarda cuando pasa la comprobación y se toca «Guárdalo y continúa». Si se sale antes, hay que volver a hacer «Comprueba»."]
+      ],
+      seg: [
+        "Pantalles: recorda la pausa activa a mitja sessió i que mirin lluny uns segons quan acabin cada repte.|Pantallas: recuerda la pausa activa a media sesión y que miren a lo lejos unos segundos cuando terminen cada reto.",
+        "Fotos i vídeos de l'estrena: només amb el consentiment de les famílies i sense publicar cares ni noms de l'alumnat sense permís.|Fotos y vídeos del estreno: solo con el consentimiento de las familias y sin publicar caras ni nombres del alumnado sin permiso.",
+        "Presentar fa nervis: ningú no ha de sortir obligat davant de tothom; ofereix alternatives (grup petit, en parella) i celebra cada intent.|Presentar da nervios: nadie tiene que salir obligado delante de todo el mundo; ofrece alternativas (grupo pequeño, en pareja) y celebra cada intento."
+      ],
+      extra: [
+        "Afegir una pantalla de títol amb un fons diferent i un missatge que posa en marxa el videojoc.|Añadir una pantalla de título con un fondo diferente y un mensaje que pone en marcha el videojuego.",
+        "Fer de presentador/a de la fira i preparar una pregunta per a cada company/a.|Hacer de presentador/a de la feria y preparar una pregunta para cada compañero/a.",
+        "Escriure el «manual» del videojoc: títol, objectiu, tecles i com es guanya.|Escribir el «manual» del videojuego: título, objetivo, teclas y cómo se gana."
+      ],
+      trans: [
+        "Tanca el curs Tech Creadors: totes les unitats en un videojoc propi.|Cierra el curso Tech Creadores: todas las unidades en un videojuego propio.",
+        "Ve de la sessió 3: la versió millorada amb el provador/a.|Viene de la sesión 3: la versión mejorada con el probador/a.",
+        "Llengua oral: fer una presentació breu i ordenada davant d'un públic i respondre preguntes.|Lengua oral: hacer una presentación breve y ordenada delante de un público y responder preguntas."
+      ],
       obj: [
         "L'alumne/a presenta el seu videojoc explicant què ha fet, com funciona (un guió i una regla) i què li ha costat.|El alumno/a presenta su videojuego explicando qué ha hecho, cómo funciona (un guion y una regla) y qué le ha costado.",
         "L'alumne/a afegeix un títol i unes instruccions al començament del seu videojoc perquè qualsevol persona el pugui fer servir.|El alumno/a añade un título y unas instrucciones al principio de su videojuego para que cualquier persona lo pueda usar.",
@@ -4728,31 +6873,55 @@ Object.assign(TGUIDE, (() => {
       plan: [
         { min: 4, t: "Benvinguda: el gran dia|Bienvenida: el gran día", fase: 'inici',
           fa: "Dona la benvinguda a l'estrena de la Fira de Videojocs i explica com anirà la classe: últims retocs, assaig, presentacions i diplomes. Repassa les normes del públic: escoltar, aplaudir i fer preguntes amables.|Da la bienvenida al estreno de la Feria de Videojuegos y explica cómo irá la clase: últimos retoques, ensayo, presentaciones y diplomas. Repasa las normas del público: escuchar, aplaudir y hacer preguntas amables.",
-          diu: ["Avui sou creadors/es de videojocs i també públic: les dues coses són importants.|Hoy sois creadores/as de videojuegos y también público: las dos cosas son importantes."],
+          diu: [
+            "Avui sou creadors/es de videojocs i també públic: les dues coses són importants.|Hoy sois creadores/as de videojuegos y también público: las dos cosas son importantes.",
+            "Què fa un bon públic? (escolta, aplaudeix i fa preguntes amables)|¿Qué hace un buen público? (escucha, aplaude y hace preguntas amables)",
+            "Com anirà la classe? (assaig, retocs, estrena i diplomes)|¿Cómo irá la clase? (ensayo, retoques, estreno y diplomas)"
+          ],
           slides: ['s1', 's2'], app: "Encara no.|Todavía no.", org: "Tot el grup|Todo el grupo" },
         { min: 6, t: "El viatge i com presentar|El viaje y cómo presentar", fase: 'teoria',
           fa: "Recorda el camí del curs amb l'animació de les vuit illes. Explica les tres preguntes per presentar i mostra amb la demo per què un videojoc necessita títol i instruccions.|Recuerda el camino del curso con la animación de las ocho islas. Explica las tres preguntas para presentar y muestra con la demo por qué un videojuego necesita título e instrucciones.",
-          diu: ["Quina unitat us ha agradat més? Què hi vau aprendre?|¿Qué unidad os ha gustado más? ¿Qué aprendisteis?",
-            "Si algú no ha vist mai el vostre videojoc, com sap què ha de fer?|Si alguien no ha visto nunca vuestro videojuego, ¿cómo sabe qué tiene que hacer?"],
+          diu: [
+            "Quina unitat us ha agradat més? Què hi vau aprendre?|¿Qué unidad os ha gustado más? ¿Qué aprendisteis?",
+            "Quines són les tres preguntes per presentar? (què he fet, com funciona, què m'ha costat)|¿Cuáles son las tres preguntas para presentar? (qué he hecho, cómo funciona, qué me ha costado)",
+            "Si algú no ha vist mai el vostre videojoc, com sap què ha de fer? (amb un títol i unes instruccions)|Si alguien no ha visto nunca vuestro videojuego, ¿cómo sabe qué tiene que hacer? (con un título y unas instrucciones)",
+            "A la demo, què posa el videojoc en marxa després de les instruccions? (un missatge)|En la demo, ¿qué pone el videojuego en marcha después de las instrucciones? (un mensaje)"
+          ],
           slides: ['s3', 's4', 's5', 's6'], app: "Encara no.|Todavía no.", org: "Tot el grup|Todo el grupo" },
         { min: 10, t: "Desconnectat: assaig de presentació|Desconectado: ensayo de presentación", fase: 'desconnectat',
           fa: "Cada alumne/a omple el guió de la presentació (pot fer servir el pla i el full del provador/a). Després, en grups de 3, cadascú assaja la seva presentació: un fa de públic i fa una pregunta, i l'altre controla el temps (2 minuts). Roteu els papers.|Cada alumno/a rellena el guion de la presentación (puede usar el plan y la hoja del probador/a). Después, en grupos de 3, cada uno ensaya su presentación: uno hace de público y hace una pregunta, y el otro controla el tiempo (2 minutos). Rotad los papeles.",
-          diu: ["No cal aprendre-ho de memòria: unes paraules al guió us ajudaran a recordar-ho.|No hace falta aprenderlo de memoria: unas palabras en el guion os ayudarán a recordarlo.",
-            "Públic: feu una pregunta sobre com està fet el videojoc.|Público: haced una pregunta sobre cómo está hecho el videojuego."],
+          diu: [
+            "No cal aprendre-ho de memòria: unes paraules al guió us ajudaran a recordar-ho.|No hace falta aprenderlo de memoria: unas palabras en el guion os ayudarán a recordarlo.",
+            "Què us ha costat? Mireu el full del provador/a per recordar-ho.|¿Qué os ha costado? Mirad la hoja del probador/a para recordarlo.",
+            "Públic: feu una pregunta sobre com està fet el videojoc.|Público: haced una pregunta sobre cómo está hecho el videojuego.",
+            "Temps: 2 minuts. Avisa quan en quedi mig!|Tiempo: 2 minutos. ¡Avisa cuando quede medio!"
+          ],
           slides: ['s7', 's8'], app: "Cap: activitat sense pantalla.|Ninguna: actividad sin pantalla.", org: "Individual i després en grups de 3|Individual y después en grupos de 3" },
         { min: 10, t: "A l'ordinador: repàs i últims retocs|En el ordenador: repaso y últimos retoques", fase: 'ordinador',
           fa: "Cada alumne/a fa el repàs del curs, la pausa activa i els dos reptes de la fira, i arriba als últims retocs: posa un títol i unes instruccions al seu videojoc i el desa. Qui vagi de pressa pot afegir-hi un so o un final més bonic.|Cada alumno/a hace el repaso del curso, la pausa activa y los dos retos de la feria, y llega a los últimos retoques: pone un título y unas instrucciones a su videojuego y lo guarda. Quien vaya deprisa puede añadir un sonido o un final más bonito.",
-          diu: ["Les instruccions han de ser curtes: què has de fer i amb quines tecles.|Las instrucciones tienen que ser cortas: qué tienes que hacer y con qué teclas."],
+          diu: [
+            "Les instruccions han de ser curtes: què has de fer i amb quines tecles.|Las instrucciones tienen que ser cortas: qué tienes que hacer y con qué teclas.",
+            "Quin guió fa el cotxe quan rep «som-hi»? (quan rebo el missatge som-hi)|¿Qué guion hace el coche cuando recibe «som-hi»? (al recibir el mensaje som-hi)",
+            "Avui només retocs: res de canvis grans que puguin espatllar el videojoc.|Hoy solo retoques: nada de cambios grandes que puedan estropear el videojuego.",
+            "Heu desat la versió final?|¿Habéis guardado la versión final?"
+          ],
           slides: ['s9', 's10'], app: "Dels «Recorda» fins a «Últims retocs»: la història, «Descobreix», ordenar la presentació, el repàs del curs, la pausa activa, la cursa, la papallona i la versió final del videojoc.|De los «Recuerda» hasta «Últimos retoques»: la historia, «Descubre», ordenar la presentación, el repaso del curso, la pausa activa, la carrera, la mariposa y la versión final del videojuego.", org: "Individual|Individual" },
         { min: 22, t: "Crea: l'estrena|Crea: el estreno", fase: 'crea',
           fa: "Cada alumne/a obre el pas «És la teva estrena!» i, quan li toca, presenta el seu videojoc al projector: respon les tres preguntes, ensenya un guió i deixa que algú del públic el provi. Després de cada presentació, el públic aplaudeix i fa una pregunta o un comentari amable. Si el grup és gran, feu les presentacions en grups de 5 o 6 amb un ordinador cada grup.|Cada alumno/a abre el paso «¡Es tu estreno!» y, cuando le toca, presenta su videojuego en el proyector: responde las tres preguntas, enseña un guion y deja que alguien del público lo pruebe. Después de cada presentación, el público aplaude y hace una pregunta o un comentario amable. Si el grupo es grande, haced las presentaciones en grupos de 5 o 6 con un ordenador cada grupo.",
-          diu: ["Què has fet? Com funciona? Què t'ha costat?|¿Qué has hecho? ¿Cómo funciona? ¿Qué te ha costado?",
+          diu: [
+            "Què has fet? Com funciona? Què t'ha costat?|¿Qué has hecho? ¿Cómo funciona? ¿Qué te ha costado?",
+            "Ensenya un guió i llegeix-ne una regla: «si… → …».|Enseña un guion y lee una regla: «si… → …».",
             "Qui del públic el vol provar?|¿Quién del público lo quiere probar?",
-            "Una pregunta o un comentari amable per a l'autor/a!|¡Una pregunta o un comentario amable para el autor/a!"],
+            "Una pregunta o un comentari amable per a l'autor/a!|¡Una pregunta o un comentario amable para el autor/a!"
+          ],
           slides: ['s11', 's12', 's13'], app: "Pas «És la teva estrena!»: el videojoc de cadascú, a punt per presentar.|Paso «¡Es tu estreno!»: el videojuego de cada uno, a punto para presentar.", org: "Tot el grup (o grups de 5-6)|Todo el grupo (o grupos de 5-6)" },
         { min: 8, t: "Tancament: diplomes|Cierre: diplomas", fase: 'tancament',
           fa: "Cada alumne/a obre el diploma de l'app. Lliura els diplomes de paper un per un, dient a cada alumne/a una cosa concreta que ha fet bé durant el curs. Acabeu amb el resum, les preguntes finals de l'app i una foto de grup si les famílies hi estan d'acord.|Cada alumno/a abre el diploma de la app. Entrega los diplomas de papel uno por uno, diciendo a cada alumno/a algo concreto que ha hecho bien durante el curso. Terminad con el resumen, las preguntas finales de la app y una foto de grupo si las familias están de acuerdo.",
-          diu: ["Heu començat movent un personatge i acabeu creant videojocs. Enhorabona!|Habéis empezado moviendo un personaje y termináis creando videojuegos. ¡Enhorabuena!"],
+          diu: [
+            "Heu començat movent un personatge i acabeu creant videojocs. Enhorabona!|Habéis empezado moviendo un personaje y termináis creando videojuegos. ¡Enhorabuena!",
+            "Què és el que més us ha agradat aprendre aquest curs?|¿Qué es lo que más os ha gustado aprender este curso?",
+            "Quin projecte us agradaria fer ara, amb tot el que sabeu?|¿Qué proyecto os gustaría hacer ahora, con todo lo que sabéis?"
+          ],
           slides: ['s14', 's15', 's16'], app: "Diploma, el missatge final d'en Bit, la pregunta final i com m'he sentit.|Diploma, el mensaje final de Bit, la pregunta final y cómo me he sentido.", org: "Tot el grup|Todo el grupo" }
       ],
       errors: [
@@ -4763,7 +6932,9 @@ Object.assign(TGUIDE, (() => {
         ["El videojoc falla durant la presentació.|El videojuego falla durante la presentación.",
           "Normalitza-ho: també passa als creadors professionals. Que expliqui què hauria de passar i com ho arreglarà; és una part molt bona de la presentació.|Normalízalo: también pasa a los creadores profesionales. Que explique qué tendría que pasar y cómo lo arreglará; es una parte muy buena de la presentación."],
         ["Posa unes instruccions molt llargues que no hi ha temps de llegir.|Pone unas instrucciones muy largas que no hay tiempo de leer.",
-          "Que les escurci a una sola frase: què has de fer i amb quines tecles. Que les provi amb un company/a.|Que las acorte a una sola frase: qué tienes que hacer y con qué teclas. Que las pruebe con un compañero/a."]
+          "Que les escurci a una sola frase: què has de fer i amb quines tecles. Que les provi amb un company/a.|Que las acorte a una sola frase: qué tienes que hacer y con qué teclas. Que las pruebe con un compañero/a."],
+        ["Vol fer canvis grans abans de presentar i el videojoc deixa de funcionar.|Quiere hacer cambios grandes antes de presentar y el videojuego deja de funcionar.", "Recorda-li que avui només són retocs. Si s'ha espatllat, pot tornar a obrir la versió desada i afegir només el títol i les instruccions.|Recuérdale que hoy solo son retoques. Si se ha estropeado, puede volver a abrir la versión guardada y añadir solo el título y las instrucciones."],
+        ["Durant les presentacions, el públic es distreu o fa comentaris poc amables.|Durante las presentaciones, el público se distrae o hace comentarios poco amables.", "Projecta les normes del públic, dona a cada alumne/a una pregunta per fer i recorda que tothom presentarà i voldrà ser escoltat.|Proyecta las normas del público, da a cada alumno/a una pregunta para hacer y recuerda que todo el mundo presentará y querrá ser escuchado."]
       ],
       diff: {
         mes: "Afegir una pantalla de títol amb un fons diferent i un missatge que posa en marxa el videojoc. Durant les presentacions, fer de presentador/a de la fira i fer preguntes als companys.|Añadir una pantalla de título con un fondo diferente y un mensaje que pone en marcha el videojuego. Durante las presentaciones, hacer de presentador/a de la feria y hacer preguntas a los compañeros.",
@@ -4775,7 +6946,12 @@ Object.assign(TGUIDE, (() => {
         rubric: [
           ["Presentació|Presentación", "Explica què ha fet, com funciona i què li ha costat, en ordre.|Explica qué ha hecho, cómo funciona y qué le ha costado, en orden.", "Ensenya el videojoc, però necessita preguntes per explicar-lo.|Enseña el videojuego, pero necesita preguntas para explicarlo."],
           ["Videojoc final|Videojuego final", "Té títol, instruccions, una manera de guanyar o perdre i funciona.|Tiene título, instrucciones, una manera de ganar o perder y funciona.", "Funciona, però hi falta el títol, les instruccions o el final.|Funciona, pero le falta el título, las instrucciones o el final."],
-          ["Públic|Público", "Escolta, aplaudeix i fa preguntes o comentaris amables.|Escucha, aplaude y hace preguntas o comentarios amables.", "Escolta, però encara no participa amb preguntes.|Escucha, pero todavía no participa con preguntas."]
+          ["Públic|Público", "Escolta, aplaudeix i fa preguntes o comentaris amables.|Escucha, aplaude y hace preguntas o comentarios amables.", "Escolta, però encara no participa amb preguntes.|Escucha, pero todavía no participa con preguntas."],
+          [
+            "El camí del curs|El camino del curso",
+            "Explica què ha après al curs i com ho ha fet servir al seu videojoc.|Explica qué ha aprendido en el curso y cómo lo ha usado en su videojuego.",
+            "Recorda alguns blocs, però no els relaciona amb el seu videojoc.|Recuerda algunos bloques, pero no los relaciona con su videojuego."
+          ]
         ]
       },
       casa: "A casa, feu una «estrena familiar»: l'alumne/a presenta el seu videojoc (és a «Projectes») amb les tres preguntes i la família el prova. Podeu imprimir el diploma de l'app i penjar-lo!|En casa, haced un «estreno familiar»: el alumno/a presenta su videojuego (está en «Proyectos») con las tres preguntas y la familia lo prueba. ¡Podéis imprimir el diploma de la app y colgarlo!",
@@ -4783,7 +6959,7 @@ Object.assign(TGUIDE, (() => {
         { id: 's1', k: 'portada', t: 'Presentació i diploma|Presentación y diploma', x: "S'obre la Fira de Videojocs!|¡Se abre la Feria de Videojuegos!",
           nota: "Crea ambient de festa: és l'estrena dels seus videojocs i el final del curs.|Crea ambiente de fiesta: es el estreno de sus videojuegos y el final del curso." },
         { id: 's2', k: 'concepte', t: 'Com anirà avui|Cómo irá hoy', punts: ['Assaig de la presentació|Ensayo de la presentación', 'Últims retocs a l\'ordinador|Últimos retoques en el ordenador', "L'estrena: cada creador/a presenta el seu videojoc|El estreno: cada creador/a presenta su videojuego", 'Diplomes!|¡Diplomas!'],
-          nota: "Explica també les normes del públic: escoltar, aplaudir i fer preguntes amables.|Explica también las normas del público: escuchar, aplaudir y hacer preguntas amables." },
+          nota: "Explica també les normes del públic: escoltar, aplaudir i fer preguntes amables.|Explica también las normas del público: escuchar, aplaudir y hacer preguntas amables.", pic: "img/ic/party.webp" },
         { id: 's3', k: 'anim', t: 'El viatge del curs|El viaje del curso', anim: 'g8journey', x: 'Vuit unitats, de primers passos fins al teu videojoc.|Ocho unidades, de primeros pasos hasta tu videojuego.',
           nota: "Pregunta què recorden de cada illa: personatges, animació, tecles, coordenades, condicions, variables, atzar i clons.|Pregunta qué recuerdan de cada isla: personajes, animación, teclas, coordenadas, condiciones, variables, azar y clones." },
         { id: 's4', k: 'media', t: 'Tres preguntes per presentar|Tres preguntas para presentar', x: "Què he fet? Com funciona? Què m'ha costat?|¿Qué he hecho? ¿Cómo funciona? ¿Qué me ha costado?", media: { k: 'stage', w: W_DEMO, prog: P_DEMO, varNames: { punts: 'punts|puntos' } },
@@ -4795,7 +6971,7 @@ Object.assign(TGUIDE, (() => {
         { id: 's7', k: 'activitat', t: 'Assaig en trios|Ensayo en tríos', timer: 10, punts: ['Omple el guió de la presentació.|Rellena el guion de la presentación.', 'Un presenta, un fa de públic, un controla el temps.|Uno presenta, uno hace de público, uno controla el tiempo.', '2 minuts per presentació.|2 minutos por presentación.', 'Canvieu els papers.|Cambiad los papeles.'],
           nota: "Passa pels grups i ajuda a qui no sàpiga què respondre a «què m'ha costat»: el full del provador/a hi pot ajudar.|Pasa por los grupos y ayuda a quien no sepa qué responder a «qué me ha costado»: la hoja del probador/a puede ayudar." },
         { id: 's8', k: 'concepte', t: 'Consells per presentar|Consejos para presentar', punts: ['Parla a poc a poc i mira el públic.|Habla despacio y mira al público.', "Si alguna cosa falla, explica què hauria de passar.|Si algo falla, explica qué tendría que pasar.", 'Respira fondo: tothom està de la teva part.|Respira hondo: todo el mundo está de tu parte.'],
-          nota: "Deixa aquests consells projectats durant l'assaig.|Deja estos consejos proyectados durante el ensayo." },
+          nota: "Deixa aquests consells projectats durant l'assaig.|Deja estos consejos proyectados durante el ensayo.", pic: "img/chars/numi-happy.webp" },
         { id: 's9', k: 'activitat', t: 'Últims retocs|Últimos retoques', timer: 10, punts: ['Obre «Presentació i diploma».|Abre «Presentación y diploma».', 'Fes el repàs del curs i els dos reptes de la fira.|Haz el repaso del curso y los dos retos de la feria.', 'Posa títol i instruccions al teu videojoc.|Pon título e instrucciones a tu videojuego.', 'Desa la versió final!|¡Guarda la versión final!'],
           nota: "Que ningú no comenci canvis grans: avui només retocs. El que no funcioni es pot explicar a la presentació.|Que nadie empiece cambios grandes: hoy solo retoques. Lo que no funcione se puede explicar en la presentación." },
         { id: 's10', k: 'repte', t: 'Els reptes de la fira|Los retos de la feria', punts: ['La cursa: el cotxe surt quan rep «som-hi».|La carrera: el coche sale cuando recibe «som-hi».', 'La papallona: rebota i bat les ales.|La mariposa: rebota y bate las alas.'],
@@ -4803,7 +6979,7 @@ Object.assign(TGUIDE, (() => {
         { id: 's11', k: 'activitat', t: "L'estrena|El estreno", timer: 22, punts: ['1. Què he fet?|1. ¿Qué he hecho?', '2. Com funciona? (un guió i una regla)|2. ¿Cómo funciona? (un guion y una regla)', "3. Què m'ha costat?|3. ¿Qué me ha costado?", 'Algú del públic el prova!|¡Alguien del público lo prueba!'],
           nota: "Controla el temps (uns 2 minuts per alumne/a) i que cada presentació acabi amb un aplaudiment.|Controla el tiempo (unos 2 minutos por alumno/a) y que cada presentación termine con un aplauso." },
         { id: 's12', k: 'concepte', t: 'Les normes del públic|Las normas del público', punts: ['Escolto fins al final.|Escucho hasta el final.', 'Aplaudeixo cada presentació.|Aplaudo cada presentación.', 'Faig una pregunta o un comentari amable.|Hago una pregunta o un comentario amable.'],
-          nota: "Pots projectar-la entre presentació i presentació.|Puedes proyectarla entre presentación y presentación." },
+          nota: "Pots projectar-la entre presentació i presentació.|Puedes proyectarla entre presentación y presentación.", pic: "img/ic/handshake.webp" },
         { id: 's13', k: 'pregunta', t: 'Preguntes per a l\'autor/a|Preguntas para el autor/a', punts: ['Quin personatge té aquesta regla?|¿Qué personaje tiene esta regla?', "Quin bug t'ha costat més d'arreglar?|¿Qué bug te ha costado más de arreglar?", 'Què hi afegiries si tinguessis més temps?|¿Qué añadirías si tuvieras más tiempo?'],
           nota: "Si el públic no s'anima, fes tu una d'aquestes preguntes.|Si el público no se anima, haz tú una de estas preguntas." },
         { id: 's14', k: 'resum', t: 'Ja ets creador/a!|¡Ya eres creador/a!', punts: ['Penses una idea i en fas un pla.|Piensas una idea y haces un plan.', 'La programes peça a peça.|La programas pieza a pieza.', 'La proves, la millores i la presentes.|La pruebas, la mejoras y la presentas.'],
