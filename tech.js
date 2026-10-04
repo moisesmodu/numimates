@@ -19,7 +19,7 @@ const tDone = id => !!(TS_().s[id] && TS_().s[id].done);
 // quina sessió poden arribar) des del panell; l'administrador també pot obrir cursos a un alumne concret. No hi ha Premium.
 function tAccess() {
   if (P && P.unlockAll) return { courses: new Set(TECH.map(c => c.id)), fins: {} };
-  const o = P && P.classe && P.classe.opts, t = o && o.app === 'tech' && o.tech;
+  const o = P && P.classe && P.classe.opts, t = o && (o.app === 'tech' || o.app === 'both') && o.tech;
   if (t) return { courses: new Set(t.courses || []), fins: t.fins || {}, classe: P.classe };
   if (P && Array.isArray(P.tcursos)) return { courses: new Set(P.tcursos), fins: {} };
   return { courses: new Set(), fins: {} };

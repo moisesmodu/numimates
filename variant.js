@@ -41,7 +41,8 @@ let VAR = VARIANTS.mates, IS_PRO = false, IS_MENT = false, IS_TECH = false;
 const natOf = p => !p ? 'mates' : p.variant === 'ment' ? 'ment' : p.variant === 'tech' ? 'tech' : (p.variant === 'pro' || (p.maxCourse ?? p.course ?? 0) >= ESO_FROM) ? 'pro' : 'mates';
 const varOf = p => HOST_VAR || VAR_TEST || natOf(p);
 // un compte pot tenir apps addicionals (state.apps, les dona l'administrador al panell): també hi pot entrar
-const appMismatch = p => !!(HOST_VAR && p && p.id !== 'tmp' && natOf(p) !== HOST_VAR && !(Array.isArray(p.apps) && p.apps.includes(HOST_VAR)));
+const appMismatch = p => !!(HOST_VAR && p && p.id !== 'tmp' && natOf(p) !== HOST_VAR && !(Array.isArray(p.apps) && p.apps.includes(HOST_VAR))
+  && !(HOST_VAR === 'tech' && p.classe && p.classe.opts && ['tech', 'both'].includes(p.classe.opts.app)));   // un grup amb Numi Tech també hi dona accés
 function setVariant(id) {
   const o = VARIANTS[HOST_VAR || VAR_TEST || id] || VARIANTS.mates;
   if (o === VAR && document.documentElement.dataset.v === o.id) return false;

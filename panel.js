@@ -762,7 +762,7 @@ function grupCard(g) {
     <div class="codebox"><code>${esc(g.codi)}</code><button class="ib" title="${L('Copia el codi', 'Copiar el código')}" onclick="copyTxt(${js(g.codi)},L('Codi copiat','Código copiado'))">${ico('copy')}</button><button class="ib" title="${L('Mostra el codi a la pissarra', 'Mostrar el código en la pizarra')}" onclick="projectar(${g.id})">${ico('qr-code')}</button></div>
     <button class="btn full" onclick="copyInstr(${js(g.codi)})">${ico('copy')}${L('Copia les instruccions', 'Copiar las instrucciones')}</button>
     <div class="foot">${L("Els alumnes l'escriuen a Perfil → Tinc un codi de classe", 'Los alumnos lo escriben en Perfil → Tengo un código de clase')}</div>
-    <hr class="gsep">${appField(g)}${(g.opts || {}).app === 'tech' ? techField(g) : temaField(g)}
+    <hr class="gsep">${appField(g)}${(g.opts || {}).app === 'tech' ? '' : temaField(g)}${hasTech(g) ? techField(g) : ''}
     <details class="more gopts"><summary>${ico('chevron-right')}${L('Mode escola', 'Modo escuela')}<small>${modeSummary(g)}</small></summary>
       <p class="t3" style="margin:8px 0 4px;font-size:12.5px">${L("Tria què poden fer els alumnes d'aquest grup a l'app. Les lliçons, els repassos i la porta sempre hi són.", 'Elige qué pueden hacer los alumnos de este grupo en la app. Las lecciones, los repasos y la puerta siempre están.')}</p>
       ${[['batalles', L('Batalles entre alumnes', 'Batallas entre alumnos')], ['intercanvis', L('Intercanvi de cartes', 'Intercambio de cartas')], ['xat', L('Assistent amb IA (Numi Pro) · apagat si no l\'enceneu', 'Asistente con IA (Numi Pro) · apagado si no lo encendéis')]].map(([k, t]) => `<label class="switch"><input type="checkbox" ${(k === 'xat' ? (g.opts || {}).xat === true : (g.opts || {})[k] !== false) ? 'checked' : ''} onchange="grupOpt(${g.id},'${k}',this.checked,this)"><span>${t}</span></label>`).join('')}
@@ -770,32 +770,42 @@ function grupCard(g) {
 }
 // app del grup: Numi Mates (per defecte) o Numi Tech (extraescolars de programació i robòtica amb classe guiada)
 function appField(g) {
-  const app = (g.opts || {}).app === 'tech' ? 'tech' : 'mates';
-  return `<label class="field"><span>${L('App del grup', 'App del grupo')}</span><select onchange="grupApp(${g.id},this.value)"><option value="mates" ${app === 'mates' ? 'selected' : ''}>Numi Mates</option><option value="tech" ${app === 'tech' ? 'selected' : ''}>Numi Tech</option></select></label>`;
+  const app = ['tech', 'both'].includes((g.opts || {}).app) ? g.opts.app : 'mates';
+  return `<label class="field"><span>${L('Apps del grup', 'Apps del grupo')}</span><select onchange="grupApp(${g.id},this.value)"><option value="mates" ${app === 'mates' ? 'selected' : ''}>Numi Mates</option><option value="tech" ${app === 'tech' ? 'selected' : ''}>Numi Tech</option><option value="both" ${app === 'both' ? 'selected' : ''}>Numi Mates + Numi Tech</option></select></label>`;
 }
+const hasTech = g => ['tech', 'both'].includes((g.opts || {}).app);
 // Numi Tech: cursos assignats al grup i fins a quina sessió és obert cada curs (el professor l'avança a cada classe)
 function techField(g) {
   const T = typeof TECH_T !== 'undefined' ? TECH_T : null; if (!T) return '';
   const t = (g.opts || {}).tech || {}, cs = t.courses || [], fins = t.fins || {};
   const sess = c => Object.entries(T.s).filter(([, x]) => x.c === c);
-  return `<div class="tfield"><span class="flbl">${L('Cursos de Numi Tech', 'Cursos de Numi Tech')}</span>
+  const all = Object.keys(T.courses).every(c => cs.includes(c)) && Object.keys(T.courses).every(c => !fins[c] || fins[c] === 'tot');
+  return `<div class="tfield"><div class="tfh"><span class="flbl">${L('Cursos de Numi Tech', 'Cursos de Numi Tech')}</span>${all ? `<span class="chip good">${L('Tot obert', 'Todo abierto')}</span>` : `<button class="btn sm primary" onclick="grupTechAll(${g.id})">${L('Obre-ho tot', 'Ábrelo todo')}</button>`}</div>
     ${Object.entries(T.courses).map(([c, x]) => `<div class="tcourse"><label class="switch"><input type="checkbox" ${cs.includes(c) ? 'checked' : ''} onchange="grupTech(${g.id},'course',${js(c)},this.checked)"><span><b style="font-weight:600">${esc(tx(x.n))}</b> <small class="t3">${esc(tx(x.age))} · ${x.ready ? L(`${x.ready} de ${x.total} sessions fetes`, `${x.ready} de ${x.total} sesiones hechas`) : L('en preparació', 'en preparación')}</small></span></label>
       ${cs.includes(c) ? `<label class="field" style="margin:6px 0 0 44px"><span>${L('Obert fins a', 'Abierto hasta')}</span><select onchange="grupTech(${g.id},'fins',${js(c)},this.value)"><option value="tot" ${!fins[c] || fins[c] === 'tot' ? 'selected' : ''}>${L('Totes les sessions', 'Todas las sesiones')}</option>${sess(c).map(([id, s]) => `<option value="${id}" ${fins[c] === id ? 'selected' : ''}>U${s.u}.${s.n} · ${esc(tx(s.t))}</option>`).join('')}</select><small>${L("Amb classe guiada, obriu la sessió del dia: els alumnes no poden passar d'aquí (les fetes sempre les poden repetir).", 'Con clase guiada, abrid la sesión del día: los alumnos no pueden pasar de aquí (las hechas siempre las pueden repetir).')}</small></label>
       <div style="margin:6px 0 0 44px"><a class="btn sm" href="#/material/${encodeURIComponent(c)}">${ico('graduation-cap')}${L('Material del professor', 'Material del profesor')}</a></div>` : ''}</div>`).join('')}
     <small class="t3">${L('Enllaç per als alumnes', 'Enlace para los alumnos')}: <span class="mono">tech.numimates.com/?classe=${esc(g.codi)}</span> <button class="ib sm" onclick="copyTxt(${js('https://tech.numimates.com/?classe=' + g.codi)},L('Enllaç copiat','Enlace copiado'))">${ico('copy')}</button></small></div>`;
 }
-async function grupApp(id, app) {
-  const g = GRUPS.find(x => x.id === id), o = { ...(g.opts || {}) };
-  if (app === 'tech') { o.app = 'tech'; o.tech = o.tech || { courses: ['robot'], fins: {}, casa: true }; } else { delete o.app; delete o.tech; }
+// obre tots els cursos i totes les sessions de Numi Tech al grup (per provar-ho o si el grup va per lliure)
+async function grupTechAll(id) {
+  const g = GRUPS.find(x => x.id === id), o = { ...(g.opts || {}) }, T = TECH_T;
+  o.app = o.app === 'tech' ? 'tech' : 'both'; o.tech = { courses: Object.keys(T.courses), fins: Object.fromEntries(Object.keys(T.courses).map(c => [c, 'tot'])), casa: true };
   const j = await act('grup_opts', { id, opts: o, app_canvi: true });
   if (!j.ok) return toast(L("No s'ha pogut desar.", 'No se ha podido guardar.'));
-  g.opts = j.opts; vGrups(); toast(app === 'tech' ? L('El grup ara és de Numi Tech.', 'El grupo ahora es de Numi Tech.') : L('El grup ara és de Numi Mates.', 'El grupo ahora es de Numi Mates.'));
+  g.opts = j.opts; vGrups(); toast(L('Tot Numi Tech obert per a aquest grup.', 'Todo Numi Tech abierto para este grupo.'));
+}
+async function grupApp(id, app) {
+  const g = GRUPS.find(x => x.id === id), o = { ...(g.opts || {}) };
+  if (app === 'tech' || app === 'both') { o.app = app; o.tech = o.tech || { courses: ['robot'], fins: {}, casa: true }; } else { delete o.app; delete o.tech; }
+  const j = await act('grup_opts', { id, opts: o, app_canvi: true });
+  if (!j.ok) return toast(L("No s'ha pogut desar.", 'No se ha podido guardar.'));
+  g.opts = j.opts; vGrups(); toast(app === 'tech' ? L('El grup ara és de Numi Tech.', 'El grupo ahora es de Numi Tech.') : app === 'both' ? L('El grup ara té Numi Mates i Numi Tech.', 'El grupo ahora tiene Numi Mates y Numi Tech.') : L('El grup ara és de Numi Mates.', 'El grupo ahora es de Numi Mates.'));
 }
 async function grupTech(id, what, c, v) {
   const g = GRUPS.find(x => x.id === id), o = { ...(g.opts || {}) }, t = { courses: [], fins: {}, casa: true, ...(o.tech || {}) };
   if (what === 'course') t.courses = v ? [...new Set([...t.courses, c])] : t.courses.filter(x => x !== c);
   if (what === 'fins') t.fins = { ...t.fins, [c]: v };
-  o.app = 'tech'; o.tech = t;
+  o.app = o.app === 'both' ? 'both' : 'tech'; o.tech = t;
   const j = await act('grup_opts', { id, opts: o });
   if (!j.ok) return toast(L("No s'ha pogut desar.", 'No se ha podido guardar.'));
   g.opts = j.opts; vGrups(); toast(L("Desat. Els alumnes ho veuran en obrir l'app.", 'Guardado. Los alumnos lo verán al abrir la app.'));

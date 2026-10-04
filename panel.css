@@ -436,3 +436,5 @@ details.more[open] summary .i{transform:rotate(90deg)}
 .chk input[type=checkbox]{width:18px;height:18px;flex:none;margin:0;accent-color:var(--accent)}
 .chk small{margin-left:auto}
 .modal{max-height:calc(100vh - 32px);overflow-y:auto}
+
+.tfh{display:flex;justify-content:space-between;align-items:center;gap:8px}
