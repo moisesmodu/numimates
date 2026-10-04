@@ -633,8 +633,8 @@ Object.assign(TANI, (() => {
         <circle cx="160" cy="108" r="50" fill="#FF3B30" opacity=".18"><animate attributeName="fill" values="#FF3B30;#2F7BFF;#FF3B30" keyTimes="0;.5;1" calcMode="discrete" dur="${D}s" repeatCount="indefinite"/></circle>
         ${k5Top(160, 112, 0, 1.35, { mx: '0101000000001000101000100', inner: `<circle cx="-12" cy="-22" r="6" fill="#FF3B30" opacity=".85">${blink('#FF3B30', '#2F7BFF')}</circle><circle cx="12" cy="-22" r="6" fill="#2F7BFF" opacity=".85">${blink('#2F7BFF', '#FF3B30')}</circle>` })}
         <g transform="translate(206 108)">${[0, 1, 2].map(wave).join('')}</g>
-        ${tCard(4, 8, 154, 34, '', L('🚨 llums del cotxe', '🚨 luces del coche'), .2, '#EF5A5A')}${tCard(162, 8, 154, 34, '', L('🔊 brunzidor', '🔊 zumbador'), .9)}
-        ${tCard(4, 172, 154, 34, '', L('😮 matriu de LEDs', '😮 matriz de LEDs'), 1.6)}${tCard(162, 172, 154, 34, '', L('💡 llums de sota', '💡 luces de abajo'), 2.3)}`);
+        ${tCard(2, 8, 172, 34, '', L('🚨 llums del cotxe', '🚨 luces del coche'), .2, '#EF5A5A')}${tCard(180, 8, 138, 34, '', L('🔊 brunzidor', '🔊 zumbador'), .9)}
+        ${tCard(2, 172, 156, 34, '', L('😮 matriu de LEDs', '😮 matriz de LEDs'), 1.6)}${tCard(162, 172, 156, 34, '', L('💡 llums de sota', '💡 luces de abajo'), 2.3)}`);
     },
     // les notes tarden: una línia de temps amb notes de durades diferents i un capçal que avança
     k5beat() {
@@ -642,7 +642,7 @@ Object.assign(TANI, (() => {
       const blk = (s, d, lab, col, row) => `<g><rect x="${x0 + s * px}" y="${row}" width="${d * px - 4}" height="34" rx="9" fill="${col}"/><text x="${x0 + s * px + (d * px - 4) / 2}" y="${row + 22}" text-anchor="middle" class="tat s w">${lab}</text></g>`;
       return tSvg(214, `<rect x="0" y="0" width="320" height="214" rx="16" fill="#F3F6FF"/>
         <text x="160" y="28" text-anchor="middle" class="tat b">${L('1 temps = 0,5 s', '1 tiempo = 0,5 s')}</text>
-        ${blk(0, .5, L('do · 1', 'do · 1'), '#8B5CF6', 48)}${blk(.5, .25, '½', '#2F7BFF', 48)}${blk(.75, 1, L('sol · 2 temps', 'sol · 2 tiempos'), '#3CC47C', 48)}${blk(1.75, .75, L('mi · 1½', 'mi · 1½'), '#F08A24', 48)}
+        ${blk(0, .5, L('do · 1', 'do · 1'), '#8B5CF6', 48)}${blk(.5, .25, '½', '#2F7BFF', 48)}${blk(.75, 1, L('sol · 2 temps', 'sol · 2 tiempos'), '#3CC47C', 48)}${blk(1.75, .5, L('mi · 1', 'mi · 1'), '#F08A24', 48)}
         ${blk(0, .4, '😊', '#EF5A5A', 96)}${blk(.4, .4, '♥', '#EF5A5A', 96)}<text x="${x0 + .8 * px + 8}" y="118" class="tat s">${L('← cada icona, 0,4 s', '← cada icono, 0,4 s')}</text>
         <path d="M${x0} 150H${x0 + 2.6 * px}" stroke="#14204A" stroke-width="2.5"/>${[0, 1, 2].map(s => `<path d="M${x0 + s * px} 144v12" stroke="#14204A" stroke-width="2.5"/><text x="${x0 + s * px}" y="174" text-anchor="middle" class="tat s">${s} s</text>`).join('')}
         <g><path d="M0 40V156" stroke="#FF3B30" stroke-width="3"/><circle cy="40" r="5" fill="#FF3B30"/><animateTransform attributeName="transform" type="translate" values="${x0} 0;${x0 + 2.5 * px} 0;${x0 + 2.5 * px} 0" keyTimes="0;.85;1" dur="5.5s" repeatCount="indefinite"/></g>
@@ -778,11 +778,11 @@ Object.assign(TANI, (() => {
           <text x="46" y="122" class="tat s" style="fill:#5A6890">${L('velocitat', 'velocidad')}</text>
           <text x="300" y="194" text-anchor="end" class="tat s" style="fill:#5A6890">${L('distància', 'distancia')} →</text>
           <path d="M70 200L290 126" stroke="#E2574C" stroke-width="4" stroke-linecap="round" pathLength="1" ${tA(.6, 'ta-draw')}/>
-          <text x="62" y="214" class="tat s" style="fill:#E2574C">10 cm</text>
+          <text x="80" y="213" class="tat s" style="fill:#E2574C">10 cm</text>
           <circle r="7" fill="#FFC531" stroke="#14204A" stroke-width="2"><animateMotion dur="${D}s" repeatCount="indefinite" path="M290 126L70 200" ${sp}/></circle>
         </g>
         <text x="304" y="116" text-anchor="end" class="tat b" ${tA(1.2, 'ta-fade')}>${L('lluny: de pressa', 'lejos: deprisa')}</text>
-        <text x="96" y="146" class="tat b" ${tA(2.4, 'ta-fade')}>${L('a prop: suau', 'cerca: suave')}</text>`);
+        <text x="50" y="168" class="tat b" ${tA(2.4, 'ta-fade')}>${L('a prop: suau', 'cerca: suave')}</text>`);
     },
     // el guany k: petit (frena massa aviat i para lluny) o gran (arriba ràpid i a prop)
     k6gain() {
@@ -935,9 +935,9 @@ Object.assign(TANI, (() => {
             <path d="M-6 -30L-16 -86L16 -86L6 -30Z" fill="#2EE6F0" opacity=".28">${SM('fill', '#2EE6F0;#2EE6F0;#FF9F0A;#FF9F0A;#2EE6F0;#2EE6F0', '0;.4;.41;.7;.71;1', 'calcMode="discrete"')}</path>
             <g transform="scale(.66)">${bot({ car: '#C7CBD6', carAnim: SM('fill', '#C7CBD6;#C7CBD6;#FF3B30;#FF3B30;#C7CBD6', '0;.46;.47;.76;1', 'calcMode="discrete"') })}</g></g></g>
         <g transform="translate(236 34)">
-          <g opacity=".35">${SM('opacity', '1;1;.35;.35', '0;.4;.41;1', 'calcMode="discrete"')}${pill(32, 0, 92, L('1 busca', '1 busca'), '#2F7BFF')}</g>
-          <g opacity=".35" transform="translate(0 40)">${SM('opacity', '.35;.35;1;1;.35;.35', '0;.46;.47;.76;.77;1', 'calcMode="discrete"')}${pill(32, 0, 92, L('2 ataca', '2 ataca'), '#EF5A5A')}</g>
-          <g opacity=".35" transform="translate(0 80)">${SM('opacity', '.35;.35;1;1', '0;.66;.67;1', 'calcMode="discrete"')}${pill(32, 0, 92, L('3 vora?', '3 ¿borde?'), '#F2B21B', 'tat s')}</g>
+          <g opacity=".35">${SM('opacity', '1;1;.35;.35', '0;.4;.41;1', 'calcMode="discrete"')}${pill(32, 0, 92, L('busca', 'busca'), '#2F7BFF')}</g>
+          <g opacity=".35" transform="translate(0 40)">${SM('opacity', '.35;.35;1;1;.35;.35', '0;.46;.47;.76;.77;1', 'calcMode="discrete"')}${pill(32, 0, 92, L('ataca!', '¡ataca!'), '#EF5A5A')}</g>
+          <g opacity=".35" transform="translate(0 80)">${SM('opacity', '.35;.35;1;1', '0;.66;.67;1', 'calcMode="discrete"')}${pill(32, 0, 92, L('vora: enrere', 'borde: atrás'), '#F2B21B', 'tat s')}</g>
         </g>
         <g opacity="0">${SM('opacity', '0;0;1;1', '0;.66;.67;1', 'calcMode="discrete"')}${pill(268, 196, 92, L('FORA!', '¡FUERA!'), '#1FA463', 'tat w')}</g>`);
     },
@@ -1062,7 +1062,7 @@ Object.assign(TANI, (() => {
       const st = [[-90, '📝', L('Planifica', 'Planifica'), '#2F5BEA'], [0, '🧩', L('Programa', 'Programa'), '#8B5CF6'], [90, '▶️', L('Prova', 'Prueba'), '#1FA463'], [180, '🔧', L('Millora', 'Mejora'), '#F08A24']];
       const nodes = st.map(([a, ic, t, col], i) => { const [x, y] = P(a); return `<g transform="translate(${x.toFixed(1)} ${y.toFixed(1)})"><circle r="24" fill="#fff" stroke="${col}" stroke-width="4" filter="url(#bwSh)"/><text y="7" text-anchor="middle" style="font-size:19px">${ic}</text>
         <circle r="30" fill="none" stroke="#FFC531" stroke-width="5" opacity="0">${SM('opacity', '0;1;0;0', 5.5, `keyTimes="0;.06;.25;1" begin="${(i * 1.375).toFixed(3)}s"`)}</circle>
-        <text y="${a === 90 ? 44 : a === -90 ? -32 : 44}" text-anchor="middle" class="tat s" style="fill:${col}">${t}</text></g>`; }).join('');
+        <text y="${a === 90 ? 44 : a === -90 ? -32 : 44}" text-anchor="middle" class="tat s" style="fill:${col};paint-order:stroke;stroke:#F3F6FF;stroke-width:5px">${t}</text></g>`; }).join('');
       const arc = (a0, a1) => { const [x0, y0] = P(a0 + 24), [x1, y1] = P(a1 - 24); return `<path d="M${x0.toFixed(1)} ${y0.toFixed(1)}A${R} ${R} 0 0 1 ${x1.toFixed(1)} ${y1.toFixed(1)}" fill="none" stroke="#B8C6F2" stroke-width="4" stroke-linecap="round"/>`; };
       const dot = `<circle r="6" fill="#FFC531" stroke="#B57A00" stroke-width="1.5"><animateMotion dur="5.5s" repeatCount="indefinite" path="M${C[0]} ${C[1] - R}A${R} ${R} 0 1 1 ${C[0] - .01} ${C[1] - R}"/></circle>`;
       const ver = ['v1', 'v2', 'v3'].map((v, i) => `<text x="${C[0]}" y="${C[1] + 8}" text-anchor="middle" class="tat b" style="font-size:24px;fill:#20306A" opacity="0">${v}${SM('opacity', i === 0 ? '1;1;0;0;1' : i === 1 ? '0;0;1;0;0' : '0;0;0;1;0', 16.5, i === 0 ? 'keyTimes="0;.32;.34;.98;1"' : i === 1 ? 'keyTimes="0;.32;.34;.66;1"' : 'keyTimes="0;.32;.66;.68;1"')}</text>`).join('');
@@ -1088,7 +1088,7 @@ Object.assign(TANI, (() => {
         <g ${tA(1.4, 'ta-in')}><rect x="212" y="138" width="102" height="62" rx="12" fill="#fff" stroke="#DCE4FA" stroke-width="2" filter="url(#bwSh)"/>
           <text x="263" y="160" text-anchor="middle" class="tat s" style="font-size:12px">${L('Els llums', 'Las luces')}</text><text x="263" y="176" text-anchor="middle" class="tat s" style="font-size:12px">${L('diuen què', 'dicen qué')}</text><text x="263" y="192" text-anchor="middle" class="tat s" style="font-size:12px">${L('pensa!', '¡piensa!')}</text></g>`);
     },
-    // del simulador al robot: el botó </> dona el codi, MakeCode el converteix en un fitxer .hex i el cable el porta a la micro:bit
+    // del simulador al robot: el botó &lt;/&gt; dona el codi, MakeCode el converteix en un fitxer .hex i el cable el porta a la micro:bit
     k8export() {
       const cable = 'M226 116C240 116 244 150 262 150';
       const file = `<g opacity="0">${SM('opacity', '0;0;1;1;0;0', 5.5, 'keyTimes="0;.5;.53;.7;.73;1"')}<rect x="-10" y="-12" width="20" height="24" rx="3" fill="#FFC531" stroke="#B57A00" stroke-width="1.5"/><text y="4" text-anchor="middle" style="font:900 7px Lexend,system-ui;fill:#6B4A00">.hex</text>
@@ -1136,8 +1136,8 @@ Object.assign(TANI, (() => {
     // presentar la missió com un enginyer/a: quatre parts i la demostració
     k8pitch() {
       const parts = [[L('La missió', 'La misión'), '🎯', '#2F5BEA'], [L('Com funciona', 'Cómo funciona'), '📡', '#8B5CF6'], [L('Un problema', 'Un problema'), '🔧', '#F08A24'], [L('La demo!', '¡La demo!'), '🤖', '#1FA463']];
-      const cards = parts.map(([t, ic, col], i) => `<g ${tA(.3 + i * .8, 'ta-in')}><rect x="180" y="${12 + i * 44}" width="136" height="36" rx="10" fill="#fff" stroke="${col}" stroke-width="2.5" filter="url(#bwSh)"/>
-        <circle cx="196" cy="${30 + i * 44}" r="10" fill="${col}"/><text x="196" y="${35 + i * 44}" text-anchor="middle" class="tat w s">${i + 1}</text><text x="211" y="${34.5 + i * 44}" class="tat s" style="font-size:11.5px">${ic} ${t}</text></g>`).join('');
+      const cards = parts.map(([t, ic, col], i) => `<g ${tA(.3 + i * .8, 'ta-in')}><rect x="176" y="${12 + i * 44}" width="141" height="36" rx="10" fill="#fff" stroke="${col}" stroke-width="2.5" filter="url(#bwSh)"/>
+        <circle cx="190" cy="${30 + i * 44}" r="10" fill="${col}"/><text x="190" y="${35 + i * 44}" text-anchor="middle" class="tat w s">${i + 1}</text><text x="203" y="${34.5 + i * 44}" class="tat s" style="font-size:11.5px">${ic} ${t}</text></g>`).join('');
       const heads = [30, 62, 94, 126, 158].map((x, i) => `<g transform="translate(${x} ${188 + (i % 2) * 4})"><circle r="11" fill="${['#F2B880', '#C98A5B', '#F6D2B0', '#8D5A3B', '#E8B48A'][i]}"/><path d="M-14 22a14 12 0 0 1 28 0z" fill="${['#2F5BEA', '#EF5A5A', '#1FA463', '#F08A24', '#8B5CF6'][i]}"/></g>`).join('');
       return tSvg(214, `<rect x="12" y="14" width="160" height="104" rx="8" fill="#20306A"/><rect x="18" y="20" width="148" height="92" rx="4" fill="#F8F7F2"/>
         <path d="M30 96H90Q104 96 104 82V44" fill="none" stroke="#121418" stroke-width="4" stroke-linecap="round"/>${meta(116, 30, 36, 34)}

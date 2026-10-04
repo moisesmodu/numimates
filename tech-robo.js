@@ -359,7 +359,7 @@ function roboMC(prog) {
   let strip = false;
   const L1 = (l, ind) => (l || []).map(b => ind + line(b, ind)).join('\n');
   const line = (b, ind) => { switch (b.k) {
-    case 'run': return `Maqueen_V5.motorRun(Maqueen_V5.Motors.${M[b.m]}, Maqueen_V5.Dir.${b.d === 'back' ? 'CCW' : 'CW'}, ${op(b.s)})`;
+    case 'run': return `Maqueen_V5.motorRun(Maqueen_V5.Motors.${M[b.m]}, Maqueen_V5.Dir.${b.d === 'back' ? 'CCW' : 'CW'}, ${typeof b.s === 'number' ? op(b.s) : `Math.constrain(${op(b.s)}, 0, 255)`})`;   // el robot de veritat no limita la velocitat: una calculada es fixa entre 0 i 255, com al simulador
     case 'stop': return `Maqueen_V5.motorStop(Maqueen_V5.Motors.${M[b.m]})`;
     case 'wait': return `basic.pause(${op(b.ms)})`;
     case 'car': return b.c === 'black' ? `Maqueen_V5.setRgbOff(Maqueen_V5.DirectionType.${SIDE[b.side]})` : `Maqueen_V5.setRgblLed(Maqueen_V5.DirectionType.${SIDE[b.side]}, Maqueen_V5.CarLightColors.${cap(b.c)})`;
