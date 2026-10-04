@@ -43,3 +43,5 @@
 .wqo{flex-direction:column;align-items:stretch}.wqo .wframe.mini{height:150px;pointer-events:none}
 .wthumb{display:block;width:100%;aspect-ratio:4/3;overflow:hidden;border-radius:10px;background:#fff}.wthumb iframe{width:200%;height:200%;transform:scale(.5);transform-origin:0 0;border:0;pointer-events:none}
 @media (min-width:900px){.wstage{grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start}.wcode{height:min(56vh,520px)}.wframe{height:min(46vh,440px)}.wdemo{grid-template-columns:1fr 1fr;align-items:start}}
+/* les vistes prèvies petites de les opcions (wquiz) es veuen sencereres: la pàgina es dibuixa més gran i es redueix */
+.wqo .wframe.mini iframe{width:166.67%;height:166.67%;transform:scale(.6);transform-origin:0 0;flex:none}

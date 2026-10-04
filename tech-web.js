@@ -43,7 +43,7 @@ function webCSS(src) {
       const body = s.slice(o + 1, d ? s.length : j - 1);
       if (head.startsWith('@media')) parse(body, head.slice(6).trim());
       else if (head.startsWith('@')) { /* @font-face, @keyframes… */ rules.push({ at: head, body }); }
-      else { const decls = {}; body.split(';').forEach(x => { const c = x.indexOf(':'); if (c < 0) { if (x.trim()) errs.push({ k: 'decl', sel: head, d: x.trim() }); return; } const p = x.slice(0, c).trim().toLowerCase(), v = x.slice(c + 1).trim(); if (p && v) decls[p] = v; else if (p) errs.push({ k: 'decl', sel: head, d: x.trim() }); });
+      else { const decls = {}; body.split(';').forEach(x => { const c = x.indexOf(':'); if (c < 0) { if (x.trim()) errs.push({ k: 'decl', sel: head, d: x.trim() }); return; } if (/[\s\n][a-z-]+\s*:/i.test(x.slice(c + 1)) && !/url\(|https?:/i.test(x)) errs.push({ k: 'semi', sel: head, d: x.trim() }); const p = x.slice(0, c).trim().toLowerCase(), v = x.slice(c + 1).trim(); if (p && v) decls[p] = v; else if (p) errs.push({ k: 'decl', sel: head, d: x.trim() }); });
         rules.push({ sel: head.split(',').map(z => z.trim().replace(/\s+/g, ' ')).filter(Boolean), decls, media: media || null }); }
       i = j; } };
   parse(src); return { rules, errs };
@@ -73,6 +73,7 @@ const webEq = (got, v) => { if (v == null) return got != null && String(got).tri
 function webCheck(doc, c) {
   const E = doc.els, of = t => E.filter(e => e.t === t);
   switch (c.k) {
+    case 'notext': return !(c.t ? of(c.t) : E).some(e => webTxt(e).toLowerCase().includes(String(c.text).toLowerCase()));
     case 'tag': { const l = of(c.t).filter(e => !c.text || webTxt(e).toLowerCase().includes(c.text.toLowerCase())); return l.length >= (c.min ?? 1) && (c.max == null || l.length <= c.max); }
     case 'in': return of(c.t).filter(e => { let p = e.parent; while (p && p.t !== c.p) p = p.parent; return !!p; }).length >= (c.min ?? 1);
     case 'attr': return of(c.t).filter(e => webEq(e.attrs[c.a], c.v)).length >= (c.min ?? 1);
@@ -98,6 +99,7 @@ function webCheck(doc, c) {
 function webCheckTxt(c) {
   const tag = t => `<code>&lt;${t}&gt;</code>`;
   switch (c.k) {
+    case 'notext': return L(`Ja no queda «${esc(c.text)}» (l'has canviat pel teu text)`, `Ya no queda «${esc(c.text)}» (lo has cambiado por tu texto)`);
     case 'tag': return (c.min ?? 1) > 1 ? L(`Hi ha almenys ${c.min} ${tag(c.t)}`, `Hay al menos ${c.min} ${tag(c.t)}`) : c.text ? L(`Hi ha un ${tag(c.t)} amb «${esc(c.text)}»`, `Hay un ${tag(c.t)} con «${esc(c.text)}»`) : L(`Hi ha un ${tag(c.t)}`, `Hay un ${tag(c.t)}`);
     case 'in': return L(`Hi ha ${c.min > 1 ? c.min + ' ' : ''}${tag(c.t)} dins de ${tag(c.p)}`, `Hay ${c.min > 1 ? c.min + ' ' : ''}${tag(c.t)} dentro de ${tag(c.p)}`);
     case 'attr': return L(`${tag(c.t)} té l'atribut <code>${c.a}</code>`, `${tag(c.t)} tiene el atributo <code>${c.a}</code>`);
@@ -161,7 +163,7 @@ function wbHTML() {
   const snips = (WB.st.snips || []).filter(x => typeof x === 'string' ? WB.tab === 'html' || x.includes('{') || x.includes(':') : (x.tab || 'html') === WB.tab);
   return `<div class="tstage wstage"><div class="wedit"><div class="wtabs">${tabs.map(t => `<button class="${t === WB.tab ? 'on' : ''}" onclick="wbTab('${t}')">${t === 'html' ? 'HTML' : 'CSS'}<small>${t === 'html' ? 'index.html' : 'estil.css'}</small></button>`).join('')}<span class="wlang">${L('codi', 'código')}</span></div>
       <div class="wcode"><div class="wln" id="wln"></div><div class="warea"><pre class="whl" id="whl" aria-hidden="true"></pre><textarea id="wta" spellcheck="false" autocapitalize="off" autocomplete="off" ${ro ? 'readonly' : ''}></textarea></div></div>
-      ${snips.length && !ro ? `<div class="wsnips">${snips.map((x, i) => { const t = typeof x === 'string' ? x : x.t; return `<button onclick="wbSnip(${(WB.st.snips || []).indexOf(x)})">${esc(t.length > 26 ? t.slice(0, 24) + '…' : t)}</button>`; }).join('')}</div>` : ''}
+      ${snips.length && !ro ? `<div class="wsnips">${snips.map((x, i) => { const t = (typeof x === 'string' ? x : x.t).replace('|', ''); return `<button onclick="wbSnip(${(WB.st.snips || []).indexOf(x)})">${esc(t.length > 26 ? t.slice(0, 24) + '…' : t)}</button>`; }).join('')}</div>` : ''}
       <p class="werr" id="werr"></p></div>
     <div class="wview"><div class="wbar"><span class="wdots"><i></i><i></i><i></i></span><span class="wurl">${esc(WB.st.url || 'la-meva-web.numi')}</span><span class="wdev"><button class="${WB.dev === 'mob' ? 'on' : ''}" onclick="wbDev('mob')" aria-label="${L('Mòbil', 'Móvil')}">📱</button><button class="${WB.dev === 'pc' ? 'on' : ''}" onclick="wbDev('pc')" aria-label="${L('Ordinador', 'Ordenador')}">💻</button></span></div>
       <div class="wframe d-${WB.dev}"><iframe id="wfr" sandbox="" title="${L('Vista prèvia', 'Vista previa')}"></iframe></div>
@@ -207,21 +209,29 @@ function wbHintBtn(st) {
     if (st.sol) { WB.html = st.sol.html ?? WB.html; WB.css = st.sol.css ?? WB.css; wbRedraw(); if (s) { s.className = 'tsay'; s.innerHTML = L('Aquí tens una solució. Llegeix-la línia a línia i compara-la amb la teva.', 'Aquí tienes una solución. Léela línea a línea y compárala con la tuya.'); } wbUpdate(); b.remove(); } };
   f.insertBefore(b, f.firstChild);
 }
+// codi bilingüe: html, css i la solució poden ser { ca: '…', es: '…' } (la pàgina d'exemple en la llengua de l'alumne/a)
+const webL = (v, lang) => v && typeof v === 'object' && ('ca' in v || 'es' in v) ? ((lang || (typeof LANG !== 'undefined' ? LANG : 'ca')) === 'es' ? v.es ?? v.ca : v.ca ?? v.es) : v;
+function webLoc(st, lang) {
+  const o = { ...st }; for (const k of ['html', 'css', 'page']) if (k in o) o[k] = webL(o[k], lang);
+  if (o.sol) o.sol = { html: webL(o.sol.html, lang), css: webL(o.sol.css, lang) }; if (o.code) o.code = { html: webL(o.code.html, lang), css: webL(o.code.css, lang) };
+  if (o.opts) o.opts = o.opts.map(x => x && typeof x === 'object' && !Array.isArray(x) ? { html: webL(x.html, lang), css: webL(x.css, lang) } : x); return o;
+}
 if (typeof TSTEP !== 'undefined') {
-  TSTEP.web = function (st) { wbMake(st); WB.onDone = () => tContinue(); wbStage(st); tFoot(L('Continua', 'Continúa'), tNext, false); setTimeout(() => wbHintBtn(st), 90000); const ta = document.getElementById('wta'); if (ta) ta.addEventListener('input', () => { WB.tries++; if (WB.tries === 40) wbHintBtn(st); }); };
+  TSTEP.web = function (st) { st = webLoc(st); wbMake(st); WB.onDone = () => tContinue(); wbStage(st); tFoot(L('Continua', 'Continúa'), tNext, false); setTimeout(() => wbHintBtn(st), 90000); const ta = document.getElementById('wta'); if (ta) ta.addEventListener('input', () => { WB.tries++; if (WB.tries === 40) wbHintBtn(st); }); };
   TSTEP.wcreate = function (st) {
-    TSTEP.web(st);
+    st = webLoc(st); TSTEP.web(st);
     WB.onDone = () => tFoot(L('Desa-ho i continua', 'Guárdalo y continúa'), () => { const t = TS_(); t.port.push({ id: 'pj' + Date.now().toString(36), kind: 'web', sid: TSS.id, t: st.name || TSS.s.t, html: WB.html, css: WB.css, d: today() }); if (t.port.length > 60) t.port.shift(); save(); toast(L('Pàgina desada a «Projectes»!', '¡Página guardada en «Proyectos»!')); tNext(); }, true);
   };
   TSTEP.wspot = function (st) {
-    const code = st.html ?? st.css, lang = st.html != null ? 'html' : 'css';
+    st = webLoc(st); const code = st.html ?? st.css, lang = st.html != null ? 'html' : 'css';   // amb css i `page` (html de la pàgina), la vista prèvia ensenya l'efecte
     $('#tsb').innerHTML = `<div class="tcol"><div class="tqh"><span class="tqbit">${bitChar('think')}</span><h2 class="tsq">${tval(st.q)}</h2></div><div class="wspot">${code.split('\n').map((l, i) => `<button class="wsl" data-i="${i + 1}"><i>${i + 1}</i><code>${webHL(l, lang) || ' '}</code></button>`).join('')}</div>
-      ${st.preview !== false ? `<div class="wframe mini"><iframe sandbox="" srcdoc="${esc(webPage(st.html || '', st.css || (lang === 'css' ? code : '')))}"></iframe></div>` : ''}<div class="tfb" id="tfb"></div></div>`;
+      ${st.preview !== false ? `<div class="wframe mini"><iframe sandbox="" srcdoc="${esc(webPage(st.html || st.page || '', st.css || (lang === 'css' ? code : '')))}"></iframe></div>` : ''}<div class="tfb" id="tfb"></div></div>`;
     document.querySelectorAll('.wsl').forEach(b => b.onclick = () => { if (TSS.ready) return; TSS.ready = true; const ok = +b.dataset.i === st.bad; b.classList.add(ok ? 'ok' : 'ko'); if (!ok) document.querySelector(`.wsl[data-i="${st.bad}"]`).classList.add('ok');
       $('#tfb').innerHTML = `<div class="tfbox ${ok ? 'ok' : 'ko'}"><b>${ok ? L('Molt bé!', '¡Muy bien!') : L('No és aquesta línia.', 'No es esta línea.')}</b> ${st.ex ? tval(st.ex) : ''}</div>`; ok ? (SFX.ok && SFX.ok(), TSS.ok++) : SFX.ko && SFX.ko(); tContinue(); });
     tFoot(L('Toca la línia', 'Toca la línea'), () => { }, false);
   };
   TSTEP.wquiz = function (st) {
+    st = webLoc(st);
     const order = shuffle(st.opts.map((_, i) => i)); let pick = null;
     $('#tsb').innerHTML = `<div class="tcol"><div class="tqh"><span class="tqbit">${bitChar('think')}</span><h2 class="tsq">${tval(st.q)}</h2></div>
       ${st.code ? `<pre class="wpre">${st.code.html != null ? webHL(st.code.html, 'html') : ''}${st.code.css ? (st.code.html ? '\n\n' : '') + webHL(st.code.css, 'css') : ''}</pre>` : ''}
@@ -235,7 +245,7 @@ if (typeof TSTEP !== 'undefined') {
 /* ---------- Demos (targetes de teoria i diapositives): el codi i el resultat, un al costat de l'altre ---------- */
 var TMEDIA = typeof TMEDIA !== 'undefined' ? TMEDIA : {};
 TMEDIA.web = {
-  html: m => `<div class="wdemo"><pre class="wpre">${m.html != null ? webHL(m.html, 'html') : ''}${m.css ? (m.html ? '\n\n' : '') + webHL(m.css, 'css') : ''}</pre><div class="wframe mini"><iframe sandbox="" srcdoc="${esc(webPage(m.html || '', m.css || ''))}"></iframe></div></div>`,
+  html: m => (m = webLoc(m), `<div class="wdemo"><pre class="wpre">${m.html != null ? webHL(m.html, 'html') : ''}${m.css ? (m.html ? '\n\n' : '') + webHL(m.css, 'css') : ''}</pre><div class="wframe mini"><iframe sandbox="" srcdoc="${esc(webPage(m.html || '', m.css || ''))}"></iframe></div></div>`),
   slide: m => TMEDIA.web.html(m)
 };
 if (typeof TPORT !== 'undefined') TPORT.web = {
@@ -252,3 +262,6 @@ TVALID.web = TVALID.wcreate = st => { const out = []; if (!st.checks || !st.chec
 TVALID.wspot = st => { const code = st.html ?? st.css; if (code == null) return ['falta el codi']; const n = code.split('\n').length; return st.bad >= 1 && st.bad <= n ? [] : [`bad (${st.bad}) fora de rang (1-${n})`]; };
 TVALID.wquiz = st => (!st.opts || st.opts.length < 2 || !(st.a >= 0 && st.a < st.opts.length)) ? ['opcions o resposta incorrectes'] : [];
 TVALID['media:web'] = m => (m.html == null && m.css == null) ? ['la demo web no té codi'] : [];
+
+// el codi pot ser bilingüe: es comprova en català i en castellà
+for (const k of ['web', 'wcreate', 'wspot', 'wquiz']) if (TVALID[k]) { const f = TVALID[k]; TVALID[k] = st => { const a = [].concat(f(webLoc(st, 'ca')) || []), b = [].concat(f(webLoc(st, 'es')) || []).filter(m => !a.includes(m)).map(m => '(es) ' + m); return a.concat(b); }; }
