@@ -15,7 +15,7 @@
 <main id="doc"></main>
 <script src="chars.js"></script>
 <script src="chars-img.js"></script>
-<script>var SFX = {}; function toast() {}</script>
+<script>var SFX = {}; function toast() {} var tval = v => typeof v === "function" ? v() : tx(v); var esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]);</script>
 <script src="tech-bot.js"></script>
 <script src="tech-c1.js"></script>
 <script src="tech-robo.js"></script>

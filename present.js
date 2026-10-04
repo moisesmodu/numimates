@@ -11,6 +11,11 @@
   const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
   const T = v => tx(v || '');
   const S = G.slides, PH = { inici: ['Inici', 'Inicio'], teoria: ['Teoria', 'Teoría'], desconnectat: ['Sense pantalla', 'Sin pantalla'], robot: ['Robot de veritat', 'Robot de verdad'], ordinador: ["A l'ordinador", 'En el ordenador'], crea: ['Crea', 'Crea'], tancament: ['Tancament', 'Cierre'] };
+  // icones de cada fase (traç blanc dins d'un cercle del color de la fase)
+  const PHI = { inici: '<path d="M12 3c3 2 5 5 5 9l-2 4H9l-2-4c0-4 2-7 5-9z"/><circle cx="12" cy="10" r="1.6"/><path d="M9 16l-2 4M15 16l2 4"/>', teoria: '<path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z"/>', desconnectat: '<path d="M7 4h4v4a2 2 0 1 0 2 0V4h4v6h-3a2 2 0 1 0 0 4h3v6H7v-6h3a2 2 0 1 0 0-4H7z"/>', robot: '<rect x="5" y="8" width="14" height="10" rx="3"/><path d="M12 8V4"/><circle cx="12" cy="3.5" r="1"/><circle cx="9.5" cy="13" r="1.2"/><circle cx="14.5" cy="13" r="1.2"/>', ordinador: '<rect x="4" y="5" width="16" height="11" rx="2"/><path d="M2 19h20"/>', crea: '<path d="M4 20l4-1 11-11-3-3L5 16z"/><path d="M14 6l3 3"/>', tancament: '<path d="M6 21V4"/><path d="M6 4h11l-2 4 2 4H6"/>' };
+  const phIco = ph => `<i class="pz-phi"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${PHI[ph] || PHI.inici}</svg></i>`;
+  // formes de fons: tres composicions que es van alternant perquè cada diapositiva no sigui igual que l'anterior
+  const deco = k => `<div class="pz-deco v${k % 3}" aria-hidden="true"><i class="d-blob"></i><i class="d-ring"></i><i class="d-dots"></i><i class="d-sq"></i><svg class="d-wave" viewBox="0 0 200 40"><path d="M2 20 Q 27 2 52 20 T 102 20 T 152 20 T 202 20" fill="none" stroke-width="7" stroke-linecap="round"/></svg></div>`;
   const blockOf = id => G.plan.find(p => (p.slides || []).includes(id)) || null;
   let i = Math.max(0, Math.min(S.length - 1, (+q.get('i') || 1) - 1)), notes = q.get('n') === '1', timer = null, demo = null, b3 = null, B3M = null;
   const load3d = () => B3M ? Promise.resolve(B3M) : import('./tech-3d.js').then(m => (B3M = m.ok() ? m : null)).catch(() => null);
@@ -40,7 +45,7 @@
   const R = {
     portada: s => `<div class="pz-cover ${coverD(s)}"><div class="pz-cl"><p class="pz-kick">${esc(T(F.c.name))} · ${L('Unitat', 'Unidad')} ${F.ui + 1} · ${L('Sessió', 'Sesión')} ${F.si + 1}</p>
         <h1>${esc(T(s.t))}</h1>${s.x ? `<p class="pz-lead">${T(s.x)}</p>` : ''}<div class="pz-obj"><b>${L('Al final de la sessió, cada alumne/a…', 'Al final de la sesión, cada alumno/a…')}</b><ul>${G.obj.slice(0, 3).map(o => `<li>${esc(T(o).replace(/^L'alumne\/a |^El alumno\/a /, ''))}</li>`).join('')}</ul></div></div>
-      <div class="pz-cr">${BIT ? '<div class="pz-3d" id="pzw"></div>' : `<div class="pz-hero" style="background-image:url(${HERO})"></div>`}</div></div>`,
+      <div class="pz-cr"><div class="pz-frame">${BIT ? '<div class="pz-3d" id="pzw"></div>' : `<div class="pz-hero" style="background-image:url(${HERO})"></div>`}</div><span class="pz-badge"><small>${L('Unitat', 'Unidad')}</small>${F.ui + 1}</span></div></div>`,
     pregunta: s => `<div class="pz-q"><div class="pz-qbot">${bitChar('idle')}</div><div class="pz-qb"><h2>${esc(T(s.t))}</h2>${s.x ? `<p>${T(s.x)}</p>` : ''}${s.punts ? `<ul class="pz-pts">${s.punts.map(p => `<li>${T(p)}</li>`).join('')}</ul>` : ''}${X(s)}</div></div>`,
     repas: s => R.pregunta(s),
     concepte: s => `<div class="pz-two"><div><h2>${esc(T(s.t))}</h2>${s.x ? `<p class="pz-lead">${T(s.x)}</p>` : ''}${s.punts ? `<ul class="pz-pts big">${s.punts.map(p => `<li>${T(p)}</li>`).join('')}</ul>` : ''}${X(s)}</div>
@@ -68,15 +73,15 @@
     // material d'un altre motor (escenari, web, digital): el dibuixa el seu fitxer
     media: s => `<div class="pz-demo"><div class="pz-dh"><h2>${esc(T(s.t))}</h2>${s.x ? `<p class="pz-lead">${T(s.x)}</p>` : ''}</div><div class="pz-media" id="pzm">${typeof TMEDIA !== 'undefined' && TMEDIA[s.media.k] && TMEDIA[s.media.k].slide ? TMEDIA[s.media.k].slide(s.media) : ''}</div>${X(s)}</div>`,
     resum: s => `<div class="pz-sum"><h2>${esc(T(s.t))}</h2><ul class="pz-checks">${(s.punts || [s.x]).filter(Boolean).map(p => `<li><span>✓</span>${T(p)}</li>`).join('')}</ul><div class="pz-sumbot">${bitChar('win')}</div></div>`,
-    tiquet: s => `<div class="pz-sum"><p class="pz-kick">${L('Tiquet de sortida', 'Ticket de salida')}</p><h2>${esc(T(s.t))}</h2><ol class="pz-tq">${(s.punts || G.aval.ticket).map(p => `<li>${T(p)}</li>`).join('')}</ol></div>`
+    tiquet: s => `<div class="pz-tick"><div class="pz-tkl">${/^(tiquet de sortida|ticket de salida)/i.test(T(s.t)) ? '' : `<p class="pz-kick">${L('Tiquet de sortida', 'Ticket de salida')}</p>`}<h2>${esc(T(s.t))}</h2><ol class="pz-tq">${(s.punts || G.aval.ticket).map(p => `<li>${T(p)}</li>`).join('')}</ol></div><div class="pz-tkr"><b>${F.ui + 1}·${F.si + 1}</b><span>${L('Abans de marxar', 'Antes de irte')}</span></div></div>`
   };
   const DEFW = { map: ['.....', '>##..', '..#..', '..##F'] };   // l'illa de la portada i dels reptes
 
   function draw() {
     stopAll();
     const s = S[i], bl = blockOf(s.id), ph = bl ? bl.fase : 'inici';
-    deck.innerHTML = `<div class="pz-stage f-${ph} k-${s.k}" id="pzs"><div class="pz-inner">${(R[s.k] || R.concepte)(s)}</div>
-      <div class="pz-foot"><img src="img/brand/logo-tech-negatiu.svg" alt="Numi Tech"><span class="pz-ph">${esc(T((PH[ph] || PH.inici).join('|')))}${bl ? ` · ${bl.min} min` : ''}</span>
+    deck.innerHTML = `<div class="pz-stage c-${F.c.id} f-${ph} k-${s.k}" id="pzs">${deco(i)}<div class="pz-inner">${(R[s.k] || R.concepte)(s)}</div>
+      <div class="pz-foot"><img src="img/brand/logo-tech-negatiu.svg" alt="Numi Tech"><span class="pz-ph">${phIco(ph)}${esc(T((PH[ph] || PH.inici).join('|')))}${bl ? ` <em>${bl.min} min</em>` : ''}</span>
         <div class="pz-dots">${S.map((_, k) => `<i class="${k === i ? 'on' : k < i ? 'done' : ''}"></i>`).join('')}</div><span class="pz-n">${i + 1}/${S.length}</span></div></div>
       <nav class="pz-ctl"><button onclick="PZ.go(-1)" aria-label="${L('Anterior', 'Anterior')}">‹</button><button onclick="PZ.go(1)" aria-label="${L('Següent', 'Siguiente')}">›</button>
         <button onclick="PZ.notes()" class="${notes ? 'on' : ''}" title="N">${L('Notes', 'Notas')}</button><button onclick="PZ.full()" title="F">⛶</button><button onclick="PZ.lang()">${LANG === 'es' ? 'CA' : 'ES'}</button></nav>
@@ -86,6 +91,8 @@
     const w = document.getElementById('pzw');
     if (s.k === 'robo' || s.robo) roboSlide(s);
     if (s.k === 'media' && typeof TMEDIA !== 'undefined' && TMEDIA[s.media.k] && TMEDIA[s.media.k].slideStart) TMEDIA[s.media.k].slideStart(document.getElementById('pzm'), s.media);
+    const dart = document.querySelector('#pzm > .dart');   // el material digital s'amplia tant com hi càpiga
+    if (dart) { const box = dart.parentElement; dart.style.zoom = 1; const z = Math.min(1.8, (box.clientWidth - 40) / dart.offsetWidth, (box.clientHeight - 30) / dart.offsetHeight); dart.style.zoom = Math.max(.6, z).toFixed(3); }
     if (w) { const spec = s.demo ? s.demo.w : DEFW; demo = world(w, spec, s.demo ? s._p : []); if (s.demo) { demo.fns = s._f; demo.evs = s._e; demo.press = s.demo.press; } }
     try { history.replaceState(null, '', `?s=${SID}&l=${LANG}&i=${i + 1}${notes ? '&n=1' : ''}`); } catch (e) { }
   }
@@ -129,7 +136,8 @@
     rrun() { if (RS) RS.run(); }, rreset() { if (RS) RS.reset(); },
     reset() { if (!demo) return; clearTimeout(demo.t); demo.gen = null; demo.S = bitSim(demo.W); if (demo.b3) demo.b3.reset(demo.W, demo.S); else { const svg = document.querySelector('#pzw .bitw'); if (svg) svg.outerHTML = bitSVG(demo.W, demo.S, { marks: true }); } const hud = document.getElementById('pzhud'); if (hud) hud.innerHTML = bitHudHTML(demo.W, demo.S, false); document.querySelectorAll('.pz-b').forEach(c => c.classList.remove('did', 'now')); },
     timer(min) { const el = document.getElementById('pztv'); if (!el) return; if (timer) { clearInterval(timer); timer = null; return; } let left = el.dataset.left ? +el.dataset.left : min * 60;
-      timer = setInterval(() => { left--; el.dataset.left = left; el.textContent = `${Math.floor(left / 60)}:${String(Math.max(0, left % 60)).padStart(2, '0')}`; if (left <= 0) { clearInterval(timer); timer = null; document.getElementById('pzt').classList.add('end'); } }, 1000); }
+      const ring = document.getElementById('pzt'); ring.classList.add('run');
+      timer = setInterval(() => { left--; el.dataset.left = left; ring.style.setProperty('--p', Math.max(0, left / (min * 60)).toFixed(4)); el.textContent = `${Math.floor(left / 60)}:${String(Math.max(0, left % 60)).padStart(2, '0')}`; if (left <= 0) { clearInterval(timer); timer = null; document.getElementById('pzt').classList.add('end'); } }, 1000); }
   };
   addEventListener('keydown', e => {
     if (['ArrowRight', 'PageDown', ' ', 'Enter'].includes(e.key)) { e.preventDefault(); PZ.go(1); }

@@ -256,10 +256,15 @@ const TSTEP = {
   },
   // pregunta de triar (una de bona). opts poden dur dibuixos (HTML)
   quiz(st) {
+    // una resposta que cita un bloc entre «» es veu com la peça de colors de l'editor
+    const QB = [[/^(mou-te|muévete|gira|ves a|ve a|llisca|desliza|apunta|posa [xy]|pon [xy]|canvia [xy]|cambia [xy]|rebota|endavant|enrere|avança|avanza|adelante|atrás|motor|atura|para el motor|segueix la línia|seguir la línea|seguir la línia)/i, 'mov'],
+      [/^(repeteix|repite|per sempre|para siempre|espera)/i, 'loop'], [/^(si |quan |en iniciar|al iniciar|en prémer|al empezar|al pulsar|al tocar|al cambiar)/i, 'cond'],
+      [/^(digues|di |di ¡|pensa|piensa|vestit|disfraz|mostra|muestra|amaga|escón|esborra|borra|canvia el vestit|cambia el disfraz)/i, 'art'], [/^(toca la nota|toca el so|reprodueix|so |sonido)/i, 'snd'], [/^(suma|posa punts|pon puntos|canvia punts|cambia puntos)/i, 'var']];
+    const blk = h => h.replace(/«([^«»<]{2,60})»/g, (m, t) => { const c = (QB.find(([r]) => r.test(t)) || [])[1]; return c ? `<span class="tqb c-${c}">${t}</span>` : m; });
     const order = st.keep ? st.opts.map((_, i) => i) : shuffle(st.opts.map((_, i) => i));
     let pick = null;
     $('#tsb').innerHTML = `<div class="tcol">${st.who ? tBubble(st.who, tval(st.q)) : `<div class="tqh"><span class="tqbit">${bitChar('think')}</span><h2 class="tsq">${tval(st.q)}</h2></div>`}${st.art ? `<div class="tart sm">${typeof st.art === 'function' ? st.art() : st.art}</div>` : ''}${st.w ? (() => { const W = bitWorld(st.w); return `<div class="tart sm">${bitSVG(W, bitSim(W))}</div>`; })() : ''}
-      <div class="topts ${st.grid ? 'grid' : ''}">${order.map((i, k) => `<button class="topt" data-i="${i}"><span class="tol">${'ABCDEF'[k]}</span><span class="tot">${tval(st.opts[i])}</span></button>`).join('')}</div><div class="tfb" id="tfb"></div></div>`;
+      <div class="topts ${st.grid ? 'grid' : ''}">${order.map((i, k) => `<button class="topt" data-i="${i}"><span class="tol">${'ABCDEF'[k]}</span><span class="tot">${blk(tval(st.opts[i]))}</span></button>`).join('')}</div><div class="tfb" id="tfb"></div></div>`;
     document.querySelectorAll('.topt').forEach(b => b.onclick = () => { if (TSS.ready) return; pick = +b.dataset.i; document.querySelectorAll('.topt').forEach(x => x.classList.toggle('on', x === b)); SFX.tap && SFX.tap(); tFoot(L('Comprova', 'Comprueba'), check); });
     const check = () => {
       if (pick === null) return; TSS.ready = true;
