@@ -434,7 +434,10 @@ function tDesIco(k) {
 TSTEP.mybuild = function (st) {
   const m = tMyMap(st.slot);
   if (!m) { $('#tsb').innerHTML = `<div class="tcol">${tBubble('numi', L('Encara no has desat cap repte. Torna a la sessió «Dissenya el teu repte» i desa\'n un: aquí el podràs programar.', 'Aún no has guardado ningún reto. Vuelve a la sesión «Diseña tu reto» y guarda uno: aquí podrás programarlo.'))}</div>`; return tContinue(); }
-  TSTEP.create({ ...st, w: { map: m.map }, name: m.name, q: tval(st.q).replace('{nom}', esc(m.name)) });
+  const cst = { ...st, w: { map: m.map }, name: m.name, q: tval(st.q).replace('{nom}', esc(m.name)) };
+  TSTEP.create(cst);
+  // és el repte de l'alumne/a: si després de tres intents encara no surt, el pot desar tal com està (i el revisa amb el professor/a)
+  const f0 = TB.onFail; TB.onFail = m => { if (f0) f0(m); if (TB.tries >= 3 && !TB.solved) tFoot(L("Desa'l tal com està i continua", 'Guárdalo tal como está y continúa'), () => { tSaveProj(cst); tNext(); }, true); };
 };
 // valoració del repte d'un company/a: tres preguntes ràpides, es desa al perfil
 TSTEP.review = function (st) {

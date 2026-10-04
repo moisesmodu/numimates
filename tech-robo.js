@@ -225,7 +225,9 @@ function roboMachine(W, prog) {
       if (S.crash) break;
     }
     if (M.foreverPending && M.startF.done) { M.foreverPending = false; M.fibers.push({ id: 'forever', gen: roboForever(W, S, prog.forever), until: now, done: false }); }
-    if (W.press) for (const p of W.press) if (!p.done && S.t >= p.t) { p.done = true; M.press(p.b); }
+    // els botons de la prova: una còpia per execució (si no, en tornar a executar ja estarien «premuts»)
+    if (!M.pq) M.pq = (W.press || []).map(p => ({ ...p }));
+    for (const p of M.pq) if (!p.done && S.t >= p.t) { p.done = true; M.press(p.b); }
     if (S.btn.A && S.t - S.btnT > .15) S.btn.A = 0; if (S.btn.B && S.t - S.btnT > .15) S.btn.B = 0;
     roboPhys(W, S, ROBO.DT); S.t += ROBO.DT;
   };
@@ -284,7 +286,7 @@ function roboShouldEnd(M) {
   const { W, S } = M; if (S.crash) return 'crash'; if (S.t >= W.time - 1e-9) return 'time';
   if (W.ring && S.out) return 'out';
   { const tg = W.goal.find(g => g.k === 'time'); if (tg && S.doneT === undefined && S.t > tg.max + .5) return 'late'; }   // ja ha passat el temps de la contrarellotge
-  if (M.idle() && S.t > .3 && (S.stopT > .4 || !W.goal.some(g => g.stop || g.k === 'stopped' || g.k === 'near')) && !(W.press || []).some(p => !p.done) && !(W.env || []).some(e => e.t > S.t) && !W.goal.some(g => g.k === 'at' && g.t > S.t)) return 'idle';
+  if (M.idle() && S.t > .3 && (S.stopT > .4 || !W.goal.some(g => g.stop || g.k === 'stopped' || g.k === 'near')) && !(M.pq || W.press || []).some(p => !p.done) && !(W.env || []).some(e => e.t > S.t) && !W.goal.some(g => g.k === 'at' && g.t > S.t)) return 'idle';
   if (W.goal.some(g => !['nohit', 'inring', 'time'].includes(g.k)) && !W.goal.some(g => ['at', 'follow', 'cover', 'dist', 'notes'].includes(g.k)) && S.t > .5 && !roboEval(W, S).length) { S.doneT = S.doneT ?? S.t; if (S.stopT > .4 || !W.goal.some(g => g.stop || g.k === 'stopped' || g.k === 'near')) return 'goal'; }
   return null;
 }
@@ -838,10 +840,21 @@ if (typeof TPORT !== 'undefined') TPORT.robo = {
    robot i la cinta negra (caselles tocades en ordre). Es desa a P.tech.rmaps[slot] amb la missió triada. */
 const RDES_TOOLS = [['wall', 'Paret|Pared'], ['line', 'Cinta negra|Cinta negra'], ['goal', 'Meta|Meta'], ['can', 'Llauna|Lata'], ['lamp', 'Focus de llum|Foco de luz'], ['bot', 'El robot|El robot'], ['erase', 'Esborra|Borra']];
 const RDES_GOALS = [['zone', "Arribar a la meta i aturar-s'hi|Llegar a la meta y pararse"], ['nohit', 'Sense xocar|Sin chocar'], ['push', 'Portar la llauna a la meta|Llevar la lata a la meta'], ['time', 'En menys de 20 segons|En menos de 20 segundos'], ['cps', 'Seguir la cinta fins al final|Seguir la cinta hasta el final']];
+// arrodoneix els vèrtexs d'una línia (radi r cm): la cinta de l'editor fa cantonades suaus, com quan es posa a terra
+function roboRound(p, r) {
+  if (p.length < 3) return p; const o = [p[0]];
+  for (let i = 1; i < p.length - 1; i++) {
+    const [ax, ay] = p[i - 1], [bx, by] = p[i], [cx, cy] = p[i + 1], l1 = Math.hypot(bx - ax, by - ay), l2 = Math.hypot(cx - bx, cy - by);
+    const k = Math.min(r, l1 / 2, l2 / 2); if (!k) { o.push(p[i]); continue; }
+    const s = [bx - (bx - ax) / l1 * k, by - (by - ay) / l1 * k], e = [bx + (cx - bx) / l2 * k, by + (cy - by) / l2 * k];
+    for (let t = 0; t <= 1.0001; t += .25) o.push([(1 - t) * (1 - t) * s[0] + 2 * (1 - t) * t * bx + t * t * e[0], (1 - t) * (1 - t) * s[1] + 2 * (1 - t) * t * by + t * t * e[1]]);
+  }
+  o.push(p[p.length - 1]); return o;
+}
 function roboDesSpec(D) {
   const C = 10, spec = { w: D.cw * C, h: D.ch * C, bot: [D.bot[0] * C + 5, D.bot[1] * C + 5, D.bot[2]], walls: D.walls.map(([x, y]) => [x * C + .5, y * C + .5, C - 1, C - 1]), zones: [], objs: D.cans.map(([x, y]) => ({ x: x * C + 5, y: y * C + 5, r: 3, kind: 'can' })), goal: [], time: 30 };
   if (D.goal) spec.zones.push({ id: 'meta', r: [D.goal[0] * C, D.goal[1] * C, 2 * C, 2 * C], col: 'green', label: 'META|META' });
-  if (D.line.length > 1) spec.lines = [{ p: D.line.map(([x, y]) => [x * C + 5, y * C + 5]) }];
+  if (D.line.length > 1) spec.lines = [{ p: roboRound(D.line.map(([x, y]) => [x * C + 5, y * C + 5]), 5) }];
   if (D.lamp) spec.lamp = { x: D.lamp[0] * C + 5, y: D.lamp[1] * C + 5 };
   for (const g of D.goals) { if (g === 'zone' && D.goal) spec.goal.push({ k: 'zone', id: 'meta', stop: true }); if (g === 'nohit') spec.goal.push({ k: 'nohit' }); if (g === 'push' && D.goal && D.cans.length) spec.goal.push({ k: 'push', obj: 0, id: 'meta' }); if (g === 'time') spec.goal.push({ k: 'time', max: 20 }); if (g === 'cps' && D.line.length > 1) { const p = spec.lines[0].p; spec.goal.push({ k: 'cps', pts: [p[Math.floor(p.length / 2)], p[p.length - 1]], r: 7 }); } }
   return spec;
@@ -885,5 +898,7 @@ if (typeof TSTEP !== 'undefined') {
     const m = rdMine(st.slot);
     if (!m) { $('#tsb').innerHTML = `<div class="tcol">${tBubble('numi', L('Encara no has desat cap missió. Torna a la sessió «Dissenya la missió» i desa\'n una: aquí la podràs programar.', 'Aún no has guardado ninguna misión. Vuelve a la sesión «Diseña la misión» y guarda una: aquí podrás programarla.'))}</div>`; return tContinue(); }
     TSTEP.rcreate({ ...st, w: m.spec, name: m.name, q: tval(st.q).replace('{nom}', esc(m.name)) });
+    // és la missió de l'alumne/a: si després de tres intents encara no surt, la pot desar tal com està (i la revisa amb el professor/a)
+    let tries = 0; const f0 = RB.onFail; RB.onFail = bad => { if (f0) f0(bad); if (++tries >= 3 && !RB.solved) tFoot(L('Desa-la tal com està i continua', 'Guárdala tal como está y continúa'), () => { const t = TS_(); t.port.push({ id: 'pj' + Date.now().toString(36), kind: 'robo', sid: TSS.id, t: m.name || TSS.s.t, w: m.spec, prog: rbClone(RB.prog), st: { scripts: st.scripts, vars: st.vars, varNames: st.varNames }, d: today() }); if (t.port.length > 60) t.port.shift(); save(); toast(L('Projecte desat a «Projectes»!', '¡Proyecto guardado en «Proyectos»!')); tNext(); }, true); };
   };
 }
