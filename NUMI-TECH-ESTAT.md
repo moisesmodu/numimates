@@ -35,7 +35,7 @@ Prova en producció: https://mates-numi.vercel.app/?v=tech (grup 5b amb tot ober
 1. **Revisar** Robot, Robòtica, Creadors i Digital (Moisés).
 2. **Web**: acabar i revisar els esborranys de `scripts/tech-src/web/` quan es reprengui.
 3. Retrats d'en Bit (`img/tech/bit-*.webp`) amb el plàstic brillant de les capçaleres.
-4. Política de privacitat (Tech, consentiment a la inscripció, IA del panell) i domini tech.numimates.com (només amb l'OK del Moisés).
+4. Política de privacitat (Tech, consentiment a la inscripció, IA del panell). Domini tech.numimates.com: aprovat el 04/10; l'app ja el reconeix (`variant.js`), falta afegir-lo al projecte de Vercel i al DNS.
 5. Canviar la contrasenya feble de l'usuari admin `mmora`.
 
 ## Desplegament
