@@ -20,7 +20,16 @@ const TBLK = {
   right: "Gira cap a la seva dreta, sense moure's de casella.|Gira hacia su derecha, sin moverse de casilla.",
   pick: "Agafa la caixa de la casella on és.|Coge la caja de la casilla donde está.",
   drop: "Deixa la caixa a la casa on és.|Deja la caja en la casa donde está.",
-  rep: "Repeteix els blocs de dins tantes vegades com diu el número.|Repite los bloques de dentro tantas veces como dice el número."
+  rep: "Repeteix els blocs de dins tantes vegades com diu el número.|Repite los bloques de dentro tantas veces como dice el número.",
+  until: "Repeteix els blocs de dins fins que passa el que diu la condició.|Repite los bloques de dentro hasta que pasa lo que dice la condición.",
+  if: "Si la condició es compleix, fa els blocs de dins; si no, se'ls salta (o fa els de «si no»).|Si la condición se cumple, hace los bloques de dentro; si no, se los salta (o hace los de «si no»).",
+  paint: "Pinta del color triat la casella on és en Bit.|Pinta del color elegido la casilla donde está Bit.",
+  light: "Encén el llum d'en Bit del color triat. No el mou de casella.|Enciende la luz de Bit del color elegido. No lo mueve de casilla.",
+  note: "En Bit fa sonar la nota triada (do, re, mi…). No el mou de casella.|Bit hace sonar la nota elegida (do, re, mi…). No lo mueve de casilla.",
+  call: "Fa tots els blocs de la funció, com si fos una sola ordre.|Hace todos los bloques de la función, como si fuera una sola orden.",
+  add: "Suma el número al comptador.|Suma el número al contador.",
+  sub: "Resta el número al comptador.|Resta el número al contador.",
+  setv: "Posa el comptador al número triat.|Pone el contador en el número elegido."
 };
 const TBADGE = {
   algo: { id: 'algo', ico: '🧩', n: 'Primer algorisme|Primer algoritmo', d: 'Has escrit el teu primer programa.|Has escrito tu primer programa.' },

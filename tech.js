@@ -358,7 +358,7 @@ const TSTEP = {
   create(st) {
     TSTEP.build(st);
     TB.onDone = () => {
-      const bad = st.check && st.check(TB.prog);
+      const bad = st.check && st.check(TB.prog, TB);
       if (bad) { TB.solved = false; tbSay(tval(bad), 'bad'); return; }
       tFoot(L('Desa-ho i continua', 'Guárdalo y continúa'), () => { tSaveProj(st); tNext(); }, true, `<button class="btn ghost" onclick="tbReset()">${L('El milloro', 'Lo mejoro')}</button>`);
     };
