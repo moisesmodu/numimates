@@ -262,3 +262,4 @@ img.ic{display:inline-block;width:1.2em;height:1.2em;object-fit:contain;vertical
 .pz-code.side::after{content:"";position:absolute;left:0;right:0;bottom:0;height:60px;background:linear-gradient(transparent,#14204A);pointer-events:none}
 .pz-ctag{position:absolute;left:18px;top:12px;font:900 13px/1 Lexend,system-ui,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:#14204A;background:var(--ac2);border-radius:8px;padding:5px 10px}
 .pz-side:has(.pz-code.side){align-self:stretch;justify-content:center}
+.pz-apts{display:flex;flex-wrap:wrap;justify-content:center;gap:6px 34px;margin-top:16px;font-size:28px}
