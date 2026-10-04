@@ -219,7 +219,8 @@ export function create(el, W, S, opt = {}) {
     for (const k of st.W.boxes) { const o = st.items['b' + k]; if (!S.boxes.has(k) && !o.userData.gone) o.userData.gone = performance.now(); }
     for (const [k, h] of Object.entries(st.homes)) if (S.done.has(k) && !h.done) { h.done = performance.now(); h.wins.forEach(w => w.material = m.winOn); const [x, y] = k.split(',').map(Number); fx('heart', x, y); }
     if (st.flag) st.flag.cloth.material = st.W.goal && S.x === st.W.goal[0] && S.y === st.W.goal[1] ? m.flagOk : m.flag;
-    for (const [k, v] of Object.entries(S.paint || {})) if (!st.paint[k]) { const [x, y] = k.split(',').map(Number), p = pos(x, y); const c = mesh(new RoundedBoxGeometry(.8, .04, .8, 2, .02), new THREE.MeshStandardMaterial({ color: COL[v] || COL.p, roughness: .5 }), { p: [p.x, .02, p.z], cast: false, recv: true }); st.paint[k] = c; world.add(c); }
+    for (const [k, c] of Object.entries(st.paint)) if (!S.paint || S.paint[k] !== c.userData.v) { world.remove(c); delete st.paint[k]; }
+    for (const [k, v] of Object.entries(S.paint || {})) if (!st.paint[k]) { const [x, y] = k.split(',').map(Number), p = pos(x, y); const c = mesh(new RoundedBoxGeometry(.8, .04, .8, 2, .02), new THREE.MeshStandardMaterial({ color: COL[v] || COL.p, roughness: .5 }), { p: [p.x, .02, p.z], cast: false, recv: true }); c.userData.v = v; st.paint[k] = c; world.add(c); }
     bitR.carry.visible = !!S.carry; setLed(S.led);
   }
   // un pas: en Bit llisca d'una casella a l'altra (amb un petit salt) o gira

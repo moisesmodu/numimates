@@ -251,7 +251,7 @@ function bitSVG(W, S, o = {}) {
     <g class="bground">${ground}</g><g class="bpaint">${paint}</g><g class="bthings">${things}</g><g class="bitems">${bitItems(W)}</g><g class="bfx"></g>${marks}
     <g class="bbot d${S.d}" style="transform:${bitXY(S)}">${bitBot(S.d, S.led, S.carry)}</g></svg>`;
 }
-const bitPaintCell = (c, v) => { const [x, y] = c.split(',').map(Number); return `<rect class="bpc" data-c="${c}" x="${x * BIT_C + 7}" y="${y * BIT_C + 7}" width="${BIT_C - 14}" height="${BIT_C - 14}" rx="10" fill="${BIT_COL[v] || BIT_COL.p}" opacity=".92"/>`; };
+const bitPaintCell = (c, v) => { const [x, y] = c.split(',').map(Number); return `<rect class="bpc" data-c="${c}" data-v="${v}" x="${x * BIT_C + 7}" y="${y * BIT_C + 7}" width="${BIT_C - 14}" height="${BIT_C - 14}" rx="10" fill="${BIT_COL[v] || BIT_COL.p}" opacity=".92"/>`; };
 // efecte d'una sola vegada (espurnes, pols, cor…) en una casella
 function bitFx(svg, x, y, kind) {
   const fx = svg.querySelector('.bfx'); if (!fx || (typeof REDUCED !== 'undefined' && REDUCED)) return;
@@ -269,7 +269,7 @@ function bitPaintState(svg, W, S, prev) {
   svg.querySelectorAll('.bbox').forEach(e => e.classList.toggle('gone', !S.boxes.has(e.dataset.c)));
   svg.querySelectorAll('.bhome').forEach(e => { const ok = S.done.has(e.dataset.c); if (ok && !e.classList.contains('done')) { const [x, y] = e.dataset.c.split(',').map(Number); bitFx(svg, x, y, 'heart'); bitSnd('ok'); } e.classList.toggle('done', ok); });
   const fl = svg.querySelector('.bflag'); if (fl) fl.classList.toggle('ok', !!W.goal && S.x === W.goal[0] && S.y === W.goal[1]);
-  const pl = svg.querySelector('.bpaint'); if (pl) { const have = new Set([...pl.children].map(e => e.dataset.c)); for (const [c, v] of Object.entries(S.paint)) if (!have.has(c)) pl.insertAdjacentHTML('beforeend', bitPaintCell(c, v)); [...pl.children].forEach(e => { if (!S.paint[e.dataset.c]) e.remove(); }); }
+  const pl = svg.querySelector('.bpaint'); if (pl) { [...pl.children].forEach(e => { if (S.paint[e.dataset.c] !== e.dataset.v) e.remove(); }); const have = new Set([...pl.children].map(e => e.dataset.c)); for (const [c, v] of Object.entries(S.paint)) if (!have.has(c)) pl.insertAdjacentHTML('beforeend', bitPaintCell(c, v)); }
   const g = svg.querySelector('.bbot'); if (!g) return;
   const turned = !prev || prev.d !== S.d, moved = prev && (prev.x !== S.x || prev.y !== S.y);
   g.style.transform = bitXY(S);
@@ -336,7 +336,7 @@ function bitLabel(b) {
     case 'right': return L('Gira a la dreta', 'Gira a la derecha');
     case 'pick': return L('Agafa la caixa', 'Coge la caja');
     case 'drop': return L('Deixa la caixa', 'Deja la caja');
-    case 'rep': return L(`Repeteix <b class="tnum">${b.n || 2}</b> vegades`, `Repite <b class="tnum">${b.n || 2}</b> veces`);
+    case 'rep': { const n = b.n || 2; return L(`Repeteix <b class="tnum">${n}</b> ${n === 1 ? 'vegada' : 'vegades'}`, `Repite <b class="tnum">${n}</b> ${n === 1 ? 'vez' : 'veces'}`); }
     case 'until': return `${L('Repeteix fins que', 'Repite hasta que')} <b>${bitCondLabel(b.c || 'goal')}</b>`;
     case 'if': return `${L('Si', 'Si')} <b>${bitCondLabel(b.c || 'wall')}</b>`;
     case 'paint': return `${L('Pinta de', 'Pinta de')} <i class="tdot" style="background:${BIT_COL[b.c || 'r']}"></i>`;
@@ -447,7 +447,7 @@ function tbList(list, ro) {
 function tbTools(b) {
   const ix = TB.ids[b._id], i = ix.list.indexOf(b);
   return `<div class="tbtools">
-    <button onclick="tbMove(-1)" ${i === 0 ? 'disabled' : ''} aria-label="${L('Puja', 'Sube')}">↑</button><button onclick="tbMove(1)" ${i === ix.list.length - 1 ? 'disabled' : ''} aria-label="${L('Baixa', 'Baja')}">↓</button>
+    <button onclick="tbMove(-1)" ${!tbMoveTo(b, -1) ? 'disabled' : ''} aria-label="${L('Puja', 'Sube')}">↑</button><button onclick="tbMove(1)" ${!tbMoveTo(b, 1) ? 'disabled' : ''} aria-label="${L('Baixa', 'Baja')}">↓</button>
     ${['rep', 'add', 'sub', 'setv'].includes(b.k) ? `<button onclick="tbNum(-1)" aria-label="${L('Menys', 'Menos')}">−</button><b>${b.n ?? 1}</b><button onclick="tbNum(1)" aria-label="${L('Més', 'Más')}">+</button>` : ''}
     ${b.k === 'note' ? `<button class="wide" onclick="tbNote()">${L('Canvia la nota', 'Cambia la nota')}</button>` : ''}
     ${b.k === 'call' && TB.fns && Object.keys(TB.fns).length > 1 ? `<button class="wide" onclick="tbFn()">${L('Canvia la funció', 'Cambia la función')}</button>` : ''}
@@ -560,7 +560,19 @@ function tbIns(k) {
 }
 function tbCur(li, i) { if (TB.run) tbStop(); TB.cur = { l: TB.lists[li], i }; TB.sel = null; tbDraw(); }
 function tbSel(id) { if (TB.run) tbStop(); const ix = TB.ids[id]; if (!ix) return; TB.sel = TB.sel === ix.b ? null : ix.b; TB.cur = { l: ix.list, i: ix.list.indexOf(ix.b) + 1 }; tbDraw(); }
-function tbMove(d) { const b = TB.sel, l = TB.ids[b._id].list, i = l.indexOf(b), j = i + d; if (j < 0 || j >= l.length) return; l.splice(i, 1); l.splice(j, 0, b); TB.cur = { l, i: j + 1 }; tbFresh(); tbDraw(); }
+// ↑ / ↓: el bloc passa per sobre del veí; si el veí és un bucle o un «si», hi entra, i a la vora d'un bucle en surt
+const BIT_CONT = k => k === 'rep' || k === 'until' || k === 'if';
+function tbParent(l) { for (const ix of Object.values(TB.ids)) if (ix.b.b === l || ix.b.e === l) return ix; return null; }
+function tbMoveTo(b, d) {
+  const l = TB.ids[b._id].list, i = l.indexOf(b), nb = l[i + d];
+  if (nb && BIT_CONT(nb.k)) { const into = d > 0 ? nb.b : (nb.e || nb.b); return into ? { l: into, i: d > 0 ? 0 : into.length } : null; }
+  if (nb) return { l, i: d > 0 ? i + 1 : i - 1 };
+  const par = tbParent(l); if (!par) return null;
+  if (par.b.e === l && d < 0) return { l: par.b.b, i: par.b.b.length };   // de «si no» a «si»
+  if (par.b.e && par.b.b === l && d > 0) return { l: par.b.e, i: 0 };      // de «si» a «si no»
+  const j = par.list.indexOf(par.b); return { l: par.list, i: d > 0 ? j + 1 : j };
+}
+function tbMove(d) { const b = TB.sel, l = TB.ids[b._id].list, to = tbMoveTo(b, d); if (!to) return; l.splice(l.indexOf(b), 1); to.l.splice(to.i, 0, b); TB.cur = { l: to.l, i: to.i + 1 }; tbFresh(); tbDraw(); }
 function tbDel() { const b = TB.sel, l = TB.ids[b._id].list, i = l.indexOf(b); l.splice(i, 1); TB.sel = null; TB.cur = { l, i }; tbFresh(); tbDraw(); }
 function tbNum(d) { const b = TB.sel, lo = b.k === 'setv' ? 0 : 1, hi = b.k === 'rep' ? 12 : 20; b.n = Math.max(lo, Math.min(hi, (b.n ?? (b.k === 'rep' ? 2 : 1)) + d)); tbFresh(); tbDraw(); }
 function tbNote() { const b = TB.sel, ns = TB.notes || BIT_NOTES; b.n = ns[(ns.indexOf(b.n) + 1) % ns.length]; bitSnd('note', b.n); tbFresh(); tbDraw(); }
