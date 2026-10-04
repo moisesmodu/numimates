@@ -29,7 +29,7 @@
 
   const R = {
     portada: s => `<div class="pz-cover"><div class="pz-cl"><p class="pz-kick">${esc(T(F.c.name))} · ${L('Unitat', 'Unidad')} ${F.ui + 1} · ${L('Sessió', 'Sesión')} ${F.si + 1}</p>
-        <h1>${esc(T(s.t))}</h1>${s.x ? `<p class="pz-lead">${T(s.x)}</p>` : ''}<div class="pz-obj"><b>${L('Avui aprendrem a…', 'Hoy aprenderemos a…')}</b><ul>${G.obj.slice(0, 3).map(o => `<li>${esc(T(o).replace(/^L'alumne\/a |^El alumno\/a /, ''))}</li>`).join('')}</ul></div></div>
+        <h1>${esc(T(s.t))}</h1>${s.x ? `<p class="pz-lead">${T(s.x)}</p>` : ''}<div class="pz-obj"><b>${L('Al final de la sessió, cada alumne/a…', 'Al final de la sesión, cada alumno/a…')}</b><ul>${G.obj.slice(0, 3).map(o => `<li>${esc(T(o).replace(/^L'alumne\/a |^El alumno\/a /, ''))}</li>`).join('')}</ul></div></div>
       <div class="pz-cr"><div class="pz-3d" id="pzw"></div></div></div>`,
     pregunta: s => `<div class="pz-q"><div class="pz-qbot">${bitChar('idle')}</div><div class="pz-qb"><h2>${esc(T(s.t))}</h2>${s.x ? `<p>${T(s.x)}</p>` : ''}${s.punts ? `<ul class="pz-pts">${s.punts.map(p => `<li>${T(p)}</li>`).join('')}</ul>` : ''}</div></div>`,
     repas: s => R.pregunta(s),
