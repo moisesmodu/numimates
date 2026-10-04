@@ -256,3 +256,9 @@ img.ic{display:inline-block;width:1.2em;height:1.2em;object-fit:contain;vertical
 .pz-media:has(>.dart){display:grid;place-items:center;background:radial-gradient(closest-side,color-mix(in srgb,var(--ph) 12%,transparent),transparent);box-shadow:none;overflow:visible}
 .pz-media>.dart.big{max-width:760px;width:100%;box-shadow:0 18px 40px rgba(20,32,74,.18)}
 .pz-media>.dart.big.k-chat,.pz-media>.dart.big.k-sms{max-width:440px}
+/* codi de MakeCode a la columna de la dreta de les activitats */
+.pz-act>div{min-width:0}
+.pz-code.side{position:relative;margin:0;width:100%;max-height:540px;overflow:hidden;font-size:17px;line-height:1.5;padding:44px 22px 20px;border-radius:24px}
+.pz-code.side::after{content:"";position:absolute;left:0;right:0;bottom:0;height:60px;background:linear-gradient(transparent,#14204A);pointer-events:none}
+.pz-ctag{position:absolute;left:18px;top:12px;font:900 13px/1 Lexend,system-ui,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:#14204A;background:var(--ac2);border-radius:8px;padding:5px 10px}
+.pz-side:has(.pz-code.side){align-self:stretch;justify-content:center}
