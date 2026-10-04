@@ -76,8 +76,8 @@
         <circle cx="160" cy="108" r="50" fill="#FF3B30" opacity=".18"><animate attributeName="fill" values="#FF3B30;#2F7BFF;#FF3B30" keyTimes="0;.5;1" calcMode="discrete" dur="${D}s" repeatCount="indefinite"/></circle>
         ${k5Top(160, 112, 0, 1.35, { mx: '0101000000001000101000100', inner: `<circle cx="-12" cy="-22" r="6" fill="#FF3B30" opacity=".85">${blink('#FF3B30', '#2F7BFF')}</circle><circle cx="12" cy="-22" r="6" fill="#2F7BFF" opacity=".85">${blink('#2F7BFF', '#FF3B30')}</circle>` })}
         <g transform="translate(206 108)">${[0, 1, 2].map(wave).join('')}</g>
-        ${tCard(4, 8, 154, 34, '', L('🚨 llums del cotxe', '🚨 luces del coche'), .2, '#EF5A5A')}${tCard(162, 8, 154, 34, '', L('🔊 brunzidor', '🔊 zumbador'), .9)}
-        ${tCard(4, 172, 154, 34, '', L('😮 matriu de LEDs', '😮 matriz de LEDs'), 1.6)}${tCard(162, 172, 154, 34, '', L('💡 llums de sota', '💡 luces de abajo'), 2.3)}`);
+        ${tCard(2, 8, 172, 34, '', L('🚨 llums del cotxe', '🚨 luces del coche'), .2, '#EF5A5A')}${tCard(180, 8, 138, 34, '', L('🔊 brunzidor', '🔊 zumbador'), .9)}
+        ${tCard(2, 172, 156, 34, '', L('😮 matriu de LEDs', '😮 matriz de LEDs'), 1.6)}${tCard(162, 172, 156, 34, '', L('💡 llums de sota', '💡 luces de abajo'), 2.3)}`);
     },
     // les notes tarden: una línia de temps amb notes de durades diferents i un capçal que avança
     k5beat() {
@@ -85,7 +85,7 @@
       const blk = (s, d, lab, col, row) => `<g><rect x="${x0 + s * px}" y="${row}" width="${d * px - 4}" height="34" rx="9" fill="${col}"/><text x="${x0 + s * px + (d * px - 4) / 2}" y="${row + 22}" text-anchor="middle" class="tat s w">${lab}</text></g>`;
       return tSvg(214, `<rect x="0" y="0" width="320" height="214" rx="16" fill="#F3F6FF"/>
         <text x="160" y="28" text-anchor="middle" class="tat b">${L('1 temps = 0,5 s', '1 tiempo = 0,5 s')}</text>
-        ${blk(0, .5, L('do · 1', 'do · 1'), '#8B5CF6', 48)}${blk(.5, .25, '½', '#2F7BFF', 48)}${blk(.75, 1, L('sol · 2 temps', 'sol · 2 tiempos'), '#3CC47C', 48)}${blk(1.75, .75, L('mi · 1½', 'mi · 1½'), '#F08A24', 48)}
+        ${blk(0, .5, L('do · 1', 'do · 1'), '#8B5CF6', 48)}${blk(.5, .25, '½', '#2F7BFF', 48)}${blk(.75, 1, L('sol · 2 temps', 'sol · 2 tiempos'), '#3CC47C', 48)}${blk(1.75, .5, L('mi · 1', 'mi · 1'), '#F08A24', 48)}
         ${blk(0, .4, '😊', '#EF5A5A', 96)}${blk(.4, .4, '♥', '#EF5A5A', 96)}<text x="${x0 + .8 * px + 8}" y="118" class="tat s">${L('← cada icona, 0,4 s', '← cada icono, 0,4 s')}</text>
         <path d="M${x0} 150H${x0 + 2.6 * px}" stroke="#14204A" stroke-width="2.5"/>${[0, 1, 2].map(s => `<path d="M${x0 + s * px} 144v12" stroke="#14204A" stroke-width="2.5"/><text x="${x0 + s * px}" y="174" text-anchor="middle" class="tat s">${s} s</text>`).join('')}
         <g><path d="M0 40V156" stroke="#FF3B30" stroke-width="3"/><circle cy="40" r="5" fill="#FF3B30"/><animateTransform attributeName="transform" type="translate" values="${x0} 0;${x0 + 2.5 * px} 0;${x0 + 2.5 * px} 0" keyTimes="0;.85;1" dur="5.5s" repeatCount="indefinite"/></g>

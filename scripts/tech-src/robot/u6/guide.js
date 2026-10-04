@@ -1,6 +1,48 @@
 Object.assign(TGUIDE, {
   /* ---------- Sessió 1 · El comptador d'en Bit ---------- */
   'r6-1': {
+    intro: "Primera sessió de variables. L'alumnat coneix el <b>comptador</b> d'en Bit, una capsa amb nom que recorda un número, i els tres blocs nous: <b>Suma</b>, <b>Resta</b> i <b>Posa el comptador a…</b>. Aprèn a predir el valor llegint els blocs d'un en un i a <b>inicialitzar</b> la variable (posar-la a 0) quan porta un número d'abans. És la base de tot el que vindrà: punts, recomptes i condicions sobre números. La classe fa teoria amb una capsa real i taps, el «comptador humà» a la quadrícula i reptes a l'ordinador.|Primera sesión de variables. El alumnado conoce el <b>contador</b> de Bit, una caja con nombre que recuerda un número, y los tres bloques nuevos: <b>Suma</b>, <b>Resta</b> y <b>Pon el contador a…</b>. Aprende a predecir el valor leyendo los bloques de uno en uno y a <b>inicializar</b> la variable (ponerla a 0) cuando trae un número de antes. Es la base de todo lo que vendrá: puntos, recuentos y condiciones sobre números. La clase hace teoría con una caja real y tapones, el «contador humano» en la cuadrícula y retos en el ordenador.",
+    claus: [
+      "Una variable és una capsa amb un nom a fora i un número a dins que pot canviar.|Una variable es una caja con un nombre fuera y un número dentro que puede cambiar.",
+      "«Suma» i «Resta» canvien el número a partir del que ja hi havia.|«Suma» y «Resta» cambian el número a partir del que ya había.",
+      "«Posa el comptador a…» esborra el número d'abans i hi posa el nou.|«Pon el contador a…» borra el número de antes y pone el nuevo.",
+      "Els blocs Endavant i els girs no canvien el comptador.|Los bloques Adelante y los giros no cambian el contador.",
+      "Abans de comptar, es posa el comptador a 0 (inicialitzar).|Antes de contar, se pone el contador a 0 (inicializar)."
+    ],
+    prev: [
+      "Seqüències, girs i bucles «Repeteix N vegades» (unitats 1 i 2).|Secuencias, giros y bucles «Repite N veces» (unidades 1 y 2).",
+      "Sumar i restar mentalment fins a 20.|Sumar y restar mentalmente hasta 20.",
+      "Què és una funció, per recordar que també es pot posar nom a les coses (unitat 5).|Qué es una función, para recordar que también se puede poner nombre a las cosas (unidad 5)."
+    ],
+    faq: [
+      ["Per què el comptador no puja quan en Bit avança?|¿Por qué el contador no sube cuando Bit avanza?", "Perquè només el canvien els blocs vermells del comptador. Si vols comptar passes, posa un «Suma 1» després de cada Endavant.|Porque solo lo cambian los bloques rojos del contador. Si quieres contar pasos, pon un «Suma 1» después de cada Adelante."],
+      ["Quina diferència hi ha entre «Suma 1» i «Posa el comptador a 1»?|¿Qué diferencia hay entre «Suma 1» y «Pon el contador a 1»?", "«Suma 1» hi afegeix 1 al que ja hi havia; «Posa a 1» ho esborra tot i hi deixa un 1. Amb 4 taps: en poso un més (5) o els trec tots i en poso un (1).|«Suma 1» añade 1 a lo que ya había; «Pon a 1» lo borra todo y deja un 1. Con 4 tapones: pongo uno más (5) o los quito todos y pongo uno (1)."],
+      ["El comptador pot ser negatiu?|¿El contador puede ser negativo?", "Sí, si restes més del que hi ha, baixa de 0 (−1, −2…). Als reptes d'avui no cal, però és un número com qualsevol altre.|Sí, si restas más de lo que hay, baja de 0 (−1, −2…). En los retos de hoy no hace falta, pero es un número como cualquier otro."],
+      ["Per què s'ha de posar a 0 si ja comença a 0?|¿Por qué hay que ponerlo a 0 si ya empieza en 0?", "Normalment comença a 0, però de vegades porta un número d'abans (com el 7 del repte dels girs). Posar-lo a 0 al principi assegura que el compte comença net.|Normalmente empieza en 0, pero a veces trae un número de antes (como el 7 del reto de los giros). Ponerlo a 0 al principio asegura que la cuenta empieza limpia."],
+      ["Per què es diu variable?|¿Por qué se llama variable?", "Perquè el número que guarda pot variar, és a dir, canviar mentre el programa funciona.|Porque el número que guarda puede variar, es decir, cambiar mientras el programa funciona."],
+      ["Com canvio el número d'un «Suma»?|¿Cómo cambio el número de un «Suma»?", "Toca el bloc que ja has posat al programa: surten els botons − i + per triar el número.|Toca el bloque que ya has puesto en el programa: salen los botones − y + para elegir el número."]
+    ],
+    tec: [
+      ["No es veu el marcador damunt del món.|No se ve el marcador encima del mundo.", "El marcador surt als reptes que fan servir el comptador. Si la pantalla és petita, que faci lliscar cap amunt: és damunt del món.|El marcador sale en los retos que usan el contador. Si la pantalla es pequeña, que deslice hacia arriba: está encima del mundo."],
+      ["En Bit arriba a la bandera però el repte no se supera.|Bit llega a la bandera pero el reto no se supera.", "Cal que el comptador valgui exactament el número del marcador. Que compari els dos números del marcador i miri on se n'ha descomptat amb «Pas a pas».|Hace falta que el contador valga exactamente el número del marcador. Que compare los dos números del marcador y mire dónde se ha descontado con «Paso a paso»."],
+      ["No troba com triar el número de «Suma» o «Posa a».|No encuentra cómo elegir el número de «Suma» o «Pon a».", "Primer cal posar el bloc al programa i després tocar-lo; apareixen els botons − i +.|Primero hay que poner el bloque en el programa y después tocarlo; aparecen los botones − y +."],
+      ["A la quadrícula del terra, la pissarreta no s'esborra bé.|En la cuadrícula del suelo, la pizarrita no se borra bien.", "Feu servir un full plastificat amb retolador de pissarra o, simplement, un paper on es ratlla el número i s'escriu el nou.|Usad una hoja plastificada con rotulador de pizarra o, simplemente, un papel donde se tacha el número y se escribe el nuevo."],
+      ["Un alumne/a ha sortit de la sessió sense voler.|Un alumno/a ha salido de la sesión sin querer.", "Que la torni a obrir: queda guardada i continua on l'havia deixat.|Que la vuelva a abrir: queda guardada y continúa donde la había dejado."]
+    ],
+    seg: [
+      "A la pausa activa dels salts, que cadascú salti al seu lloc i amb espai al voltant.|En la pausa activa de los saltos, que cada uno salte en su sitio y con espacio alrededor.",
+      "Els taps o boletes de la demostració són petits: guardeu-los a la capsa i que no se'ls posin a la boca.|Los tapones o bolitas de la demostración son pequeños: guardadlos en la caja y que no se los metan en la boca."
+    ],
+    extra: [
+      "Comptador de classe: durant la setmana, una capsa amb nom compta una cosa de l'aula (els dies que fa sol, els llibres llegits…). Cada dia algú diu «Suma 1».|Contador de clase: durante la semana, una caja con nombre cuenta una cosa del aula (los días que hace sol, los libros leídos…). Cada día alguien dice «Suma 1».",
+      "Programes misteriosos: escriviu a la pissarra una fila de blocs «Suma», «Resta» i «Posa a» i que la classe digui el número final sense calcular-lo en veu alta.|Programas misteriosos: escribid en la pizarra una fila de bloques «Suma», «Resta» y «Pon a» y que la clase diga el número final sin calcularlo en voz alta.",
+      "Al repte del projecte, buscar el camí per les 3 estrelles amb menys passes i comparar-lo amb el d'un company/a.|En el reto del proyecto, buscar el camino por las 3 estrellas con menos pasos y compararlo con el de un compañero/a."
+    ],
+    trans: [
+      "Unitat 5: la funció posa nom a uns blocs; la variable posa nom a un número.|Unidad 5: la función pone nombre a unos bloques; la variable pone nombre a un número.",
+      "Matemàtiques: càlcul mental de sumes i restes, la recta numèrica i el compte enrere.|Matemáticas: cálculo mental de sumas y restas, la recta numérica y la cuenta atrás.",
+      "Sessió següent: el comptador i el «Si» de la unitat 4 junts per comptar estrelles en illes diferents.|Sesión siguiente: el contador y el «Si» de la unidad 4 juntos para contar estrellas en islas diferentes."
+    ],
     obj: [
       "L'alumne/a explica amb les seves paraules què és una variable (una capsa amb nom que recorda un número) i en dona un exemple de la vida diària.|El alumno/a explica con sus palabras qué es una variable (una caja con nombre que recuerda un número) y da un ejemplo de la vida diaria.",
       "L'alumne/a prediu el valor final del comptador després d'una seqüència de blocs «Suma», «Resta» i «Posa el comptador a…».|El alumno/a predice el valor final del contador después de una secuencia de bloques «Suma», «Resta» y «Pon el contador a…».",
@@ -41,7 +83,8 @@ Object.assign(TGUIDE, {
       { min: 5, t: "Benvinguda: com recordem un número?|Bienvenida: ¿cómo recordamos un número?", fase: 'inici',
         fa: "Fes la pregunta de repàs de les funcions. Explica la missió: diumenge hi ha la cursa del far i en Bit ha de comptar les passes dels corredors. Pregunta com podem recordar un número que canvia tota l'estona i recull dues o tres idees (els dits, apuntar-lo, el marcador…).|Haz la pregunta de repaso de las funciones. Explica la misión: el domingo es la carrera del faro y Bit tiene que contar los pasos de los corredores. Pregunta cómo podemos recordar un número que cambia todo el rato y recoge dos o tres ideas (los dedos, apuntarlo, el marcador…).",
         diu: ["Recordeu què és una funció? Avui posarem nom a una altra cosa: a un número.|¿Recordáis qué es una función? Hoy pondremos nombre a otra cosa: a un número.",
-          "Si cada passa d'un corredor és un número més, com ho fem per no perdre el compte?|Si cada paso de un corredor es un número más, ¿cómo lo hacemos para no perder la cuenta?"],
+          "Si cada passa d'un corredor és un número més, com ho fem per no perdre el compte?|Si cada paso de un corredor es un número más, ¿cómo lo hacemos para no perder la cuenta?",
+          "Quines coses de casa o del carrer recorden un número que canvia? (El marcador d'un partit, el rellotge, el comptador de l'ascensor…)|¿Qué cosas de casa o de la calle recuerdan un número que cambia? (El marcador de un partido, el reloj, el contador del ascensor…)"],
         slides: ['s1', 's2', 's3'], app: "Encara no: pantalles abaixades.|Todavía no: pantallas bajadas.", org: "Tot el grup|Todo el grupo" },
       { min: 10, t: "Què és una variable?|¿Qué es una variable?", fase: 'teoria',
         fa: "Ensenya la capsa amb l'etiqueta «comptador»: a fora hi ha el nom, a dins un número. Fes-hi entrar i sortir taps mentre la classe diu el número en veu alta. Mostra els exemples (marcador, comptador de passes) i els tres blocs nous. A la demostració, la classe prediu quant valdrà el comptador abans d'executar. Acaba amb el «compte!»: sumar no és posar.|Enseña la caja con la etiqueta «contador»: fuera está el nombre, dentro un número. Mete y saca tapones mientras la clase dice el número en voz alta. Muestra los ejemplos (marcador, contador de pasos) y los tres bloques nuevos. En la demostración, la clase predice cuánto valdrá el contador antes de ejecutar. Termina con el «¡cuidado!»: sumar no es poner.",
@@ -59,22 +102,26 @@ Object.assign(TGUIDE, {
       { min: 15, t: "A l'ordinador: descobreix i prediu|En el ordenador: descubre y predice", fase: 'ordinador',
         fa: "Cada alumne/a obre la sessió i avança fins a la pausa activa. Passeja per l'aula i, a les preguntes «Prediu!», demana que diguin el número en veu alta abans de tocar cap opció. A «La capsa dels números», que toquin «Ara no»: és per fer-la a casa.|Cada alumno/a abre la sesión y avanza hasta la pausa activa. Pasea por el aula y, en las preguntas «¡Predice!», pide que digan el número en voz alta antes de tocar ninguna opción. En «La caja de los números», que toquen «Ahora no»: es para hacerla en casa.",
         diu: ["Llegeix els blocs d'un en un i digues el número després de cada bloc.|Lee los bloques de uno en uno y di el número después de cada bloque.",
-          "Al pas «Investiga», executa'l i mira el marcador: on comença a anar malament?|En el paso «Investiga», ejecútalo y mira el marcador: ¿dónde empieza a ir mal?"],
+          "Al pas «Investiga», executa'l i mira el marcador: on comença a anar malament?|En el paso «Investiga», ejecútalo y mira el marcador: ¿dónde empieza a ir mal?",
+          "Posa a 2, suma 3, resta 1: quant val? Digues el número després de cada bloc. (2, 5, 4.)|Pon a 2, suma 3, resta 1: ¿cuánto vale? Di el número después de cada bloque. (2, 5, 4.)"],
         slides: ['s11'], app: "La pregunta de «Recorda», les dues històries de la cursa, les targetes de «Descobreix», la pregunta del marcador de bàsquet, «La capsa dels números» (per a casa), les dues preguntes «Prediu!» i l'«Investiga» del bloc equivocat.|La pregunta de «Recuerda», las dos historias de la carrera, las tarjetas de «Descubre», la pregunta del marcador de baloncesto, «La caja de los números» (para casa), las dos preguntas «¡Predice!» y el «Investiga» del bloque equivocado.", org: "Individual|Individual" },
       { min: 10, t: "Reptes: comptar passes i girs|Retos: contar pasos y giros", fase: 'ordinador',
         fa: "Fes la pausa activa tots junts. Després programeu entre tots el compte enrere de la diapositiva 12 i deixa'ls fer els quatre reptes. Al repte dels girs, fixa't en qui no posa el comptador a 0: pregunta-li quant valia al principi.|Haced la pausa activa todos juntos. Después programad entre todos la cuenta atrás de la diapositiva 12 y deja que hagan los cuatro retos. En el reto de los giros, fíjate en quién no pone el contador a 0: pregúntale cuánto valía al principio.",
         diu: ["Quant val el comptador abans de començar? Mira el marcador.|¿Cuánto vale el contador antes de empezar? Mira el marcador.",
-          "Al repte del bug: què fa l'últim bloc al número que ja havíeu comptat?|En el reto del bug: ¿qué hace el último bloque al número que ya habíais contado?"],
+          "Al repte del bug: què fa l'últim bloc al número que ja havíeu comptat?|En el reto del bug: ¿qué hace el último bloque al número que ya habíais contado?",
+          "Al compte enrere, el comptador comença a 4: quin bloc posem a cada passa? (Resta 1.)|En la cuenta atrás, el contador empieza en 4: ¿qué bloque ponemos en cada paso? (Resta 1.)"],
         slides: ['s12', 's13'], app: "«Pausa activa» i els quatre reptes: comptar les passes, el compte enrere, comptar els girs i el programa que esborra el compte.|«Pausa activa» y los cuatro retos: contar los pasos, la cuenta atrás, contar los giros y el programa que borra la cuenta.", org: "Tot el grup i després individual|Todo el grupo y después individual" },
       { min: 5, t: "Crea: el meu comptador de passes|Crea: mi contador de pasos", fase: 'crea',
         fa: "Cada alumne/a inventa un camí per les 3 estrelles fins a la bandera i fa que el comptador digui quantes passes ha fet. En parelles: abans d'executar el programa del company/a, l'altre/a endevina el número final.|Cada alumno/a inventa un camino por las 3 estrellas hasta la bandera y hace que el contador diga cuántos pasos ha dado. Por parejas: antes de ejecutar el programa del compañero/a, el otro/a adivina el número final.",
         diu: ["Quantes passes creus que farà en Bit pel teu camí?|¿Cuántos pasos crees que dará Bit por tu camino?",
-          "Qui ha trobat un camí més curt? Com ho sabeu? Mireu el comptador!|¿Quién ha encontrado un camino más corto? ¿Cómo lo sabéis? ¡Mirad el contador!"],
+          "Qui ha trobat un camí més curt? Com ho sabeu? Mireu el comptador!|¿Quién ha encontrado un camino más corto? ¿Cómo lo sabéis? ¡Mirad el contador!",
+          "Si el comptador no val el mateix que les passes, on falta un «Suma 1»?|Si el contador no vale lo mismo que los pasos, ¿dónde falta un «Suma 1»?"],
         slides: ['s14'], app: "Pas «Crea»: El meu comptador de passes.|Paso «Crea»: Mi contador de pasos.", org: "Individual i després per parelles|Individual y después por parejas" },
       { min: 3, t: "Tancament i tiquet de sortida|Cierre y ticket de salida", fase: 'tancament',
         fa: "Repassa les tres idees de la sessió amb el resum, deixa que responguin les preguntes finals de l'app i fes el tiquet de sortida a la porta.|Repasa las tres ideas de la sesión con el resumen, deja que respondan las preguntas finales de la app y haz el ticket de salida en la puerta.",
         diu: ["Qui em diu una variable que hagi vist avui fora de l'escola?|¿Quién me dice una variable que haya visto hoy fuera del cole?",
-          "Quin bloc faríeu servir per tornar a començar a comptar?|¿Qué bloque usaríais para volver a empezar a contar?"],
+          "Quin bloc faríeu servir per tornar a començar a comptar?|¿Qué bloque usaríais para volver a empezar a contar?",
+          "El comptador val 4: quant val després de «Posa a 1»? I després de «Suma 1»? (1; 5.)|El contador vale 4: ¿cuánto vale después de «Pon a 1»? ¿Y después de «Suma 1»? (1; 5.)"],
         slides: ['s15', 's16'], app: "«Tancament»: les dues preguntes finals i com m'he sentit.|«Cierre»: las dos preguntas finales y cómo me he sentido.", org: "Tot el grup|Todo el grupo" }
     ],
     errors: [
@@ -99,7 +146,8 @@ Object.assign(TGUIDE, {
       rubric: [
         ["Concepte de variable|Concepto de variable", "L'explica com un nom que recorda un número que canvia i en dona un exemple propi.|La explica como un nombre que recuerda un número que cambia y da un ejemplo propio.", "Reconeix el comptador a l'app, però encara no el relaciona amb exemples de fora.|Reconoce el contador en la app, pero todavía no lo relaciona con ejemplos de fuera."],
         ["Predir el valor|Predecir el valor", "Llegeix els blocs d'un en un i encerta el valor final, també amb «Posa a…».|Lee los bloques de uno en uno y acierta el valor final, también con «Pon a…».", "Encerta les sumes, però s'equivoca quan hi ha «Posa a…» o «Resta».|Acierta las sumas, pero se equivoca cuando hay «Pon a…» o «Resta»."],
-        ["Programar amb el comptador|Programar con el contador", "Resol els reptes de passes, compte enrere i girs, i inicialitza el comptador quan cal.|Resuelve los retos de pasos, cuenta atrás y giros, e inicializa el contador cuando hace falta.", "Resol el repte de les passes, però als altres necessita la pista.|Resuelve el reto de los pasos, pero en los otros necesita la pista."]
+        ["Programar amb el comptador|Programar con el contador", "Resol els reptes de passes, compte enrere i girs, i inicialitza el comptador quan cal.|Resuelve los retos de pasos, cuenta atrás y giros, e inicializa el contador cuando hace falta.", "Resol el repte de les passes, però als altres necessita la pista.|Resuelve el reto de los pasos, pero en los otros necesita la pista."],
+        ["Inicialitzar|Inicializar", "Mira el marcador abans de començar i posa el comptador a 0 quan porta un número d'abans.|Mira el marcador antes de empezar y pone el contador a 0 cuando trae un número de antes.", "Oblida inicialitzar el comptador o posa «Posa a 0» al lloc equivocat.|Olvida inicializar el contador o pone «Pon a 0» en el lugar equivocado."]
       ]
     },
     casa: "A casa, amb el mòbil, podeu repetir la sessió i fer junts «La capsa dels números»: una persona dona ordres (suma 2, resta 1, posa a 0) i l'altra posa o treu botons d'una capsa. Abans d'obrir-la, endevineu quants n'hi ha!|En casa, con el móvil, podéis repetir la sesión y hacer juntos «La caja de los números»: una persona da órdenes (suma 2, resta 1, pon a 0) y la otra pone o quita botones de una caja. Antes de abrirla, ¡adivinad cuántos hay!",
@@ -112,7 +160,7 @@ Object.assign(TGUIDE, {
         nota: "Recull idees sense corregir: amb els dits, apuntant-ho, amb un marcador… Totes guarden un número que canvia.|Recoge ideas sin corregir: con los dedos, apuntándolo, con un marcador… Todas guardan un número que cambia." },
       { id: 's4', k: 'anim', t: "Una capsa amb nom|Una caja con nombre", anim: 'u6box', x: "Una variable té un nom a fora i un número a dins, que pot canviar.|Una variable tiene un nombre fuera y un número dentro, que puede cambiar.",
         nota: "Fes la demostració amb la capsa i els taps mentre l'animació corre. Que la classe digui el número en veu alta a cada tap.|Haz la demostración con la caja y los tapones mientras la animación corre. Que la clase diga el número en voz alta en cada tapón." },
-      { id: 's5', k: 'concepte', t: "Variables de cada dia|Variables de cada día", punts: ["El marcador d'un partit|El marcador de un partido", "El comptador de passes d'un rellotge|El contador de pasos de un reloj", "Els punts d'un repte|Los puntos de un reto", "La temperatura del termòmetre|La temperatura del termómetro"],
+      { id: 's5', k: 'concepte', pic: 'img/ment/dig.webp', t: "Variables de cada dia|Variables de cada día", punts: ["El marcador d'un partit|El marcador de un partido", "El comptador de passes d'un rellotge|El contador de pasos de un reloj", "Els punts d'un repte|Los puntos de un reto", "La temperatura del termòmetre|La temperatura del termómetro"],
         nota: "Per a cadascuna, pregunta: com es diu? Quin número té ara? Quan canvia?|Para cada una, pregunta: ¿cómo se llama? ¿Qué número tiene ahora? ¿Cuándo cambia?" },
       { id: 's6', k: 'demo', t: "Quant valdrà el comptador?|¿Cuánto valdrá el contador?", x: "Abans d'executar: quant valdrà el comptador quan en Bit arribi a la bandera?|Antes de ejecutar: ¿cuánto valdrá el contador cuando Bit llegue a la bandera?",
         demo: { w: { map: ['.....', '>###F', '.....'], vname: 'comptador|contador' }, prog: 'f add:1 f add:1 f f add:1' },
@@ -123,7 +171,7 @@ Object.assign(TGUIDE, {
         nota: "Fes-ho amb la capsa: amb 4 taps, «suma 1» (en poso un) i «posa a 1» (els trec tots i en poso un).|Hazlo con la caja: con 4 tapones, «suma 1» (pongo uno) y «pon a 1» (los saco todos y pongo uno)." },
       { id: 's9', k: 'activitat', t: "El comptador humà|El contador humano", timer: 12, punts: ["Programador/a: posa les targetes en fila.|Programador/a: pone las tarjetas en fila.", "Robot: camina per la quadrícula.|Robot: camina por la cuadrícula.", "Comptador/a: canvia el número de la pissarreta només amb les targetes de comptador.|Contador/a: cambia el número de la pizarrita solo con las tarjetas de contador.", "Abans de cada missió, predim el número final.|Antes de cada misión, predecimos el número final."],
         nota: "Les missions són a la fitxa de la quadrícula. Roteu els papers a cada missió.|Las misiones están en la ficha de la cuadrícula. Rotad los papeles en cada misión." },
-      { id: 's10', k: 'concepte', t: "Les regles del comptador|Las reglas del contador", punts: ["El comptador comença a 0, si la missió no diu el contrari.|El contador empieza en 0, si la misión no dice lo contrario.", "Endavant i els girs no el canvien.|Adelante y los giros no lo cambian.", "«Posa a…» esborra el número d'abans.|«Pon a…» borra el número de antes."],
+      { id: 's10', k: 'concepte', pic: 'img/ment/cal.webp', t: "Les regles del comptador|Las reglas del contador", punts: ["El comptador comença a 0, si la missió no diu el contrari.|El contador empieza en 0, si la misión no dice lo contrario.", "Endavant i els girs no el canvien.|Adelante y los giros no lo cambian.", "«Posa a…» esborra el número d'abans.|«Pon a…» borra el número de antes."],
         nota: "Deixa aquesta diapositiva projectada durant l'activitat del terra.|Deja esta diapositiva proyectada durante la actividad del suelo." },
       { id: 's11', k: 'activitat', t: "Ara, a l'ordinador|Ahora, al ordenador", timer: 15, punts: ["Obre la sessió «El comptador d'en Bit».|Abre la sesión «El contador de Bit».", "A «Prediu!», digues el número abans de triar.|En «¡Predice!», di el número antes de elegir.", "Para quan arribis a la «Pausa activa».|Para cuando llegues a la «Pausa activa»."],
         nota: "A «La capsa dels números», que toquin «Ara no»: és l'activitat per fer a casa.|En «La caja de los números», que toquen «Ahora no»: es la actividad para hacer en casa." },
@@ -164,6 +212,45 @@ Object.assign(TGUIDE, {
 
   /* ---------- Sessió 2 · Recollir i comptar ---------- */
   'r6-2': {
+    intro: "Sessió de recompte: el comptador s'uneix al «Si» de la unitat 4. L'alumnat aprèn el patró <b>«Si hi ha una estrella, suma 1»</b> dins d'un bucle, que compta coses mentre en Bit camina sense saber quantes n'hi ha. Ho comprova amb <b>illes alternatives</b>: el mateix programa ha de donar el número correcte a platges amb estrelles diferents. L'error típic és deixar el «Suma 1» a fora del «Si». La classe fa demos, prova el programa de targetes a dues platges del terra i resol reptes a l'ordinador.|Sesión de recuento: el contador se une al «Si» de la unidad 4. El alumnado aprende el patrón <b>«Si hay una estrella, suma 1»</b> dentro de un bucle, que cuenta cosas mientras Bit camina sin saber cuántas hay. Lo comprueba con <b>islas alternativas</b>: el mismo programa tiene que dar el número correcto en playas con estrellas diferentes. El error típico es dejar el «Suma 1» fuera del «Si». La clase hace demos, prueba el programa de tarjetas en dos playas del suelo y resuelve retos en el ordenador.",
+    claus: [
+      "Per comptar mentre en Bit camina: a cada casella, «Si hi ha una estrella, suma 1».|Para contar mientras Bit camina: en cada casilla, «Si hay una estrella, suma 1».",
+      "El programa no sap quantes estrelles hi ha: les descobreix comptant, i per això serveix per a totes les illes.|El programa no sabe cuántas estrellas hay: las descubre contando, y por eso sirve para todas las islas.",
+      "El «Suma 1» va a dins del «Si»; a fora compta totes les passes.|El «Suma 1» va dentro del «Si»; fuera cuenta todos los pasos.",
+      "Primer en Bit arriba a la casella, després mira i després decideix.|Primero Bit llega a la casilla, después mira y después decide."
+    ],
+    prev: [
+      "El comptador i els blocs «Suma», «Resta» i «Posa a» (sessió 1).|El contador y los bloques «Suma», «Resta» y «Pon a» (sesión 1).",
+      "El bloc «Si…» i les illes alternatives amb el mateix programa (unitat 4).|El bloque «Si…» y las islas alternativas con el mismo programa (unidad 4).",
+      "Funcions: escriure-les i cridar-les (unitat 5).|Funciones: escribirlas y llamarlas (unidad 5)."
+    ],
+    faq: [
+      ["Per què no puc posar «Suma 3» si ja sé que hi ha 3 estrelles?|¿Por qué no puedo poner «Suma 3» si ya sé que hay 3 estrellas?", "A aquesta platja funcionaria, però a les altres illes hi ha un altre nombre d'estrelles. Amb el «Si», en Bit les compta sol a qualsevol platja.|En esta playa funcionaría, pero en las otras islas hay otro número de estrellas. Con el «Si», Bit las cuenta solo en cualquier playa."],
+      ["En Bit recull l'estrella encara que no la compti?|¿Bit recoge la estrella aunque no la cuente?", "Sí: recollir passa sol quan hi passa per sobre. Comptar és una feina diferent, que fa el comptador amb el «Suma 1».|Sí: recoger pasa solo cuando pasa por encima. Contar es un trabajo distinto, que hace el contador con el «Suma 1»."],
+      ["Com poso el «Suma 1» a dins del «Si»?|¿Cómo pongo el «Suma 1» dentro del «Si»?", "Toca l'espai buit de dins del «Si» i després tria el bloc «Suma». Si ha quedat a fora, esborra'l i torna-ho a fer.|Toca el espacio vacío de dentro del «Si» y después elige el bloque «Suma». Si ha quedado fuera, bórralo y vuelve a hacerlo."],
+      ["Per què canvien les pestanyes «Illa 1», «Illa 2»…?|¿Por qué cambian las pestañas «Isla 1», «Isla 2»…?", "L'app prova el teu programa a totes les illes, una darrere l'altra. Només se supera si funciona a totes.|La app prueba tu programa en todas las islas, una detrás de otra. Solo se supera si funciona en todas."],
+      ["Es poden comptar altres coses, no només estrelles?|¿Se pueden contar otras cosas, no solo estrellas?", "Sí: caixes amb «Si hi ha una caixa», passes amb un «Suma 1» a cada Endavant, girs… El comptador compta el que tu li diguis.|Sí: cajas con «Si hay una caja», pasos con un «Suma 1» en cada Adelante, giros… El contador cuenta lo que tú le digas."]
+    ],
+    tec: [
+      ["El «Suma 1» queda a sota del «Si» i no a dins.|El «Suma 1» queda debajo del «Si» y no dentro.", "Esborreu-lo i, abans de triar-lo de nou, toqueu l'espai buit de dins del «Si». Amb «Pas a pas» es veu si el marcador puja a cada passa.|Borradlo y, antes de elegirlo de nuevo, tocad el espacio vacío de dentro del «Si». Con «Paso a paso» se ve si el marcador sube en cada paso."],
+      ["El «Si» pregunta per un obstacle i no per una estrella.|El «Si» pregunta por un obstáculo y no por una estrella.", "Toqueu el «Si» i canvieu-ne la condició fins que digui «hi ha una estrella».|Tocad el «Si» y cambiad su condición hasta que diga «hay una estrella»."],
+      ["Funciona a l'illa 1 però no a la 2.|Funciona en la isla 1 pero no en la 2.", "És el que ha de passar si el programa té un número fix. Que miri l'illa 2 i es pregunti què ha de fer en Bit a cada casella.|Es lo que tiene que pasar si el programa tiene un número fijo. Que mire la isla 2 y se pregunte qué tiene que hacer Bit en cada casilla."],
+      ["Les estrelles de paper es mouen o es perden a la quadrícula.|Las estrellas de papel se mueven o se pierden en la cuadrícula.", "Enganxeu-les amb una mica de cinta de pintor, que es treu fàcilment per canviar de platja.|Pegadlas con un poco de cinta de pintor, que se quita fácilmente para cambiar de playa."]
+    ],
+    seg: [
+      "A la pausa de les estrelles de mar, caminar sense córrer i deixar espai entre companys i companyes.|En la pausa de las estrellas de mar, caminar sin correr y dejar espacio entre compañeros y compañeras.",
+      "Si l'activitat de casa fa servir gots de vidre, millor canviar-los per gots de plàstic o tasses.|Si la actividad de casa usa vasos de cristal, mejor cambiarlos por vasos de plástico o tazas."
+    ],
+    extra: [
+      "Comptar el contrari: un programa que compti les caselles <b>sense</b> estrella amb un «si no».|Contar lo contrario: un programa que cuente las casillas <b>sin</b> estrella con un «si no».",
+      "Recompte de l'aula: per parelles, feu un «programa» per comptar quantes cadires tenen jaqueta, passant cadira a cadira i sumant si n'hi ha.|Recuento del aula: por parejas, haced un «programa» para contar cuántas sillas tienen chaqueta, pasando silla a silla y sumando si la hay.",
+      "Fer el repte de les tres platges amb la funció «passa i compta» i el mínim de blocs.|Hacer el reto de las tres playas con la función «pasa y cuenta» y el mínimo de bloques."
+    ],
+    trans: [
+      "Unitat 4: el «Si» mirava el món per decidir; avui decideix quan s'ha de sumar.|Unidad 4: el «Si» miraba el mundo para decidir; hoy decide cuándo hay que sumar.",
+      "Matemàtiques: recomptes i taules de dades (quantes estrelles a cada platja).|Matemáticas: recuentos y tablas de datos (cuántas estrellas en cada playa).",
+      "Sessió següent: cada cosa valdrà punts diferents i en Bit reaccionarà quan el comptador arribi a un número.|Sesión siguiente: cada cosa valdrá puntos diferentes y Bit reaccionará cuando el contador llegue a un número."
+    ],
     obj: [
       "L'alumne/a fa servir «Si hi ha una estrella» amb «Suma 1» a dins per comptar coses mentre en Bit camina.|El alumno/a usa «Si hay una estrella» con «Suma 1» dentro para contar cosas mientras Bit camina.",
       "L'alumne/a explica per què un programa que compta funciona a illes amb un nombre diferent d'estrelles i un número fix no.|El alumno/a explica por qué un programa que cuenta funciona en islas con un número diferente de estrellas y un número fijo no.",
@@ -202,7 +289,8 @@ Object.assign(TGUIDE, {
       { min: 5, t: "Recordem i la pluja d'estrelles|Recordamos y la lluvia de estrellas", fase: 'inici',
         fa: "Fes la pregunta de repàs (posa a 0 i suma 2). Explica la missió: ha plogut estrelles a les platges i en Numi vol saber quantes n'hi ha a cada platja. Planteja el problema: el programa no sap quantes estrelles trobarà.|Haz la pregunta de repaso (pon a 0 y suma 2). Explica la misión: han llovido estrellas en las playas y Numi quiere saber cuántas hay en cada playa. Plantea el problema: el programa no sabe cuántas estrellas encontrará.",
         diu: ["El comptador val 5, fem «Posa a 0» i «Suma 2». Quant val?|El contador vale 5, hacemos «Pon a 0» y «Suma 2». ¿Cuánto vale?",
-          "Si no sabem quantes estrelles hi ha, quin número posem al «Suma»?|Si no sabemos cuántas estrellas hay, ¿qué número ponemos en el «Suma»?"],
+          "Si no sabem quantes estrelles hi ha, quin número posem al «Suma»?|Si no sabemos cuántas estrellas hay, ¿qué número ponemos en el «Suma»?",
+          "Si a cada platja hi ha un nombre diferent d'estrelles, podem escriure el número abans de començar? (No: el programa les ha de comptar.)|Si en cada playa hay un número diferente de estrellas, ¿podemos escribir el número antes de empezar? (No: el programa las tiene que contar.)"],
         slides: ['s1', 's2', 's3'], app: "Encara no.|Todavía no.", org: "Tot el grup|Todo el grupo" },
       { min: 10, t: "Si hi ha una estrella, suma 1|Si hay una estrella, suma 1", fase: 'teoria',
         fa: "Primer mostra la manera manual (un «Suma 1» després de cada estrella) i després la manera que compta sola, amb el «Si». A la segona demostració, la classe prediu el número abans d'executar. Explica amb l'animació per què el «Si» serveix per a totes les platges i acaba amb el «compte!»: «Suma 1» a dins del «Si».|Primero muestra la manera manual (un «Suma 1» después de cada estrella) y después la manera que cuenta sola, con el «Si». En la segunda demostración, la clase predice el número antes de ejecutar. Explica con la animación por qué el «Si» sirve para todas las playas y termina con el «¡cuidado!»: «Suma 1» dentro del «Si».",
@@ -213,12 +301,14 @@ Object.assign(TGUIDE, {
       { min: 12, t: "Estrelles al terra: dues platges|Estrellas en el suelo: dos playas", fase: 'desconnectat',
         fa: "Cada grup de 3 copia amb targetes el programa de la diapositiva 10. El robot el fa a la platja 1 i el comptador/a suma a la pissarreta només quan el robot trepitja una estrella. Després, el revisor/a canvia les estrelles de lloc segons la platja 2 i tornen a executar el mateix programa sense tocar cap targeta. Comparen els dos números.|Cada grupo de 3 copia con tarjetas el programa de la diapositiva 10. El robot lo hace en la playa 1 y el contador/a suma en la pizarrita solo cuando el robot pisa una estrella. Después, el revisor/a cambia las estrellas de sitio según la playa 2 y vuelven a ejecutar el mismo programa sin tocar ninguna tarjeta. Comparan los dos números.",
         diu: ["Hi ha estrella en aquesta casella? Llavors, què fa el comptador?|¿Hay estrella en esta casilla? Entonces, ¿qué hace el contador?",
-          "Heu canviat alguna targeta per a la platja 2? I el número ha canviat?|¿Habéis cambiado alguna tarjeta para la playa 2? ¿Y el número ha cambiado?"],
+          "Heu canviat alguna targeta per a la platja 2? I el número ha canviat?|¿Habéis cambiado alguna tarjeta para la playa 2? ¿Y el número ha cambiado?",
+          "Comptador/a: quan has de sumar, quan el robot arriba o abans que hi arribi? (Quan hi arriba.)|Contador/a: ¿cuándo tienes que sumar, cuando el robot llega o antes de que llegue? (Cuando llega.)"],
         slides: ['s9', 's10'], app: "Cap: activitat sense pantalla.|Ninguna: actividad sin pantalla.", org: "Grups de 3 amb papers que roten|Grupos de 3 con papeles que rotan" },
       { min: 15, t: "A l'ordinador: descobreix i investiga|En el ordenador: descubre e investiga", fase: 'ordinador',
         fa: "Cada alumne/a fa la sessió fins a la pausa activa. A la pregunta «Prediu!», que comptin les estrelles amb el dit damunt de la pantalla. A «Compta sense saber-ho», que toquin «Ara no» (és per a casa).|Cada alumno/a hace la sesión hasta la pausa activa. En la pregunta «¡Predice!», que cuenten las estrellas con el dedo sobre la pantalla. En «Cuenta sin saberlo», que toquen «Ahora no» (es para casa).",
         diu: ["Quantes caselles avança? I quantes tenen estrella?|¿Cuántas casillas avanza? ¿Y cuántas tienen estrella?",
-          "A l'«Investiga», per què el comptador val el doble?|En el «Investiga», ¿por qué el contador vale el doble?"],
+          "A l'«Investiga», per què el comptador val el doble?|En el «Investiga», ¿por qué el contador vale el doble?",
+          "Al pas d'ordenar: què va primer, mirar si hi ha una estrella o avançar? (Avançar.)|En el paso de ordenar: ¿qué va primero, mirar si hay una estrella o avanzar? (Avanzar.)"],
         slides: ['s11'], app: "Les dues preguntes de «Recorda», la pluja d'estrelles, les targetes de «Descobreix», «Prediu!», ordenar com compta en Bit, «Compta sense saber-ho» (per a casa) i l'«Investiga» del «Suma 2».|Las dos preguntas de «Recuerda», la lluvia de estrellas, las tarjetas de «Descubre», «¡Predice!», ordenar cómo cuenta Bit, «Cuenta sin saberlo» (para casa) y el «Investiga» del «Suma 2».", org: "Individual|Individual" },
       { min: 10, t: "Reptes: moltes platges, un programa|Retos: muchas playas, un programa", fase: 'ordinador',
         fa: "Fes la pausa activa de les estrelles de mar. Programeu junts el repte de la diapositiva 12 i deixa'ls fer els quatre reptes. Als reptes amb illes, recorda'ls que el programa s'executa a totes les illes, una darrere l'altra, i que no han de canviar res entre illa i illa.|Haced la pausa activa de las estrellas de mar. Programad juntos el reto de la diapositiva 12 y deja que hagan los cuatro retos. En los retos con islas, recuérdales que el programa se ejecuta en todas las islas, una detrás de otra, y que no tienen que cambiar nada entre isla e isla.",
@@ -228,12 +318,15 @@ Object.assign(TGUIDE, {
         slides: ['s12', 's13'], app: "«Pausa activa» i els quatre reptes: la platja amb revolt, les tres platges, la funció «passa i compta» i el programa de les caixes que compta passes.|«Pausa activa» y los cuatro retos: la playa con curva, las tres playas, la función «pasa y cuenta» y el programa de las cajas que cuenta pasos.", org: "Tot el grup i després individual|Todo el grupo y después individual" },
       { min: 5, t: "Crea: la platja de les estrelles|Crea: la playa de las estrellas", fase: 'crea',
         fa: "Cada alumne/a tria un camí per recollir les 4 estrelles i les compta amb «Si hi ha una estrella». En parelles, comparen els camins: tots dos comptadors haurien de valer 4.|Cada alumno/a elige un camino para recoger las 4 estrellas y las cuenta con «Si hay una estrella». Por parejas, comparan los caminos: los dos contadores deberían valer 4.",
-        diu: ["El teu camí i el del company/a són diferents. Per què el comptador val el mateix?|Tu camino y el del compañero/a son diferentes. ¿Por qué el contador vale lo mismo?"],
+        diu: ["El teu camí i el del company/a són diferents. Per què el comptador val el mateix?|Tu camino y el del compañero/a son diferentes. ¿Por qué el contador vale lo mismo?",
+          "Abans d'executar: quin camí faràs per les 4 estrelles? Assenyala'l amb el dit.|Antes de ejecutar: ¿qué camino harás por las 4 estrellas? Señálalo con el dedo.",
+          "Has fet servir «Si hi ha una estrella»? Així el programa serviria per a qualsevol platja.|¿Has usado «Si hay una estrella»? Así el programa serviría para cualquier playa."],
         slides: ['s14'], app: "Pas «Crea»: La platja de les estrelles.|Paso «Crea»: La playa de las estrellas.", org: "Individual i després per parelles|Individual y después por parejas" },
       { min: 3, t: "Tancament i tiquet de sortida|Cierre y ticket de salida", fase: 'tancament',
         fa: "Repassa les tres idees amb el resum, deixa que responguin les preguntes finals i fes el tiquet de sortida.|Repasa las tres ideas con el resumen, deja que respondan las preguntas finales y haz el ticket de salida.",
         diu: ["On va el «Suma 1» per comptar només les estrelles?|¿Dónde va el «Suma 1» para contar solo las estrellas?",
-          "Per què és millor comptar que posar el número directament?|¿Por qué es mejor contar que poner el número directamente?"],
+          "Per què és millor comptar que posar el número directament?|¿Por qué es mejor contar que poner el número directamente?",
+          "Si el «Suma 1» és a fora del «Si», què compta en Bit? (Totes les passes.)|Si el «Suma 1» está fuera del «Si», ¿qué cuenta Bit? (Todos los pasos.)"],
         slides: ['s15', 's16'], app: "«Tancament»: les dues preguntes finals i com m'he sentit.|«Cierre»: las dos preguntas finales y cómo me he sentido.", org: "Tot el grup|Todo el grupo" }
     ],
     errors: [
@@ -258,7 +351,8 @@ Object.assign(TGUIDE, {
       rubric: [
         ["Comptar amb condicions|Contar con condiciones", "Posa «Suma 1» a dins del «Si» i explica què passaria a fora.|Pone «Suma 1» dentro del «Si» y explica qué pasaría fuera.", "Fa servir el «Si», però de vegades deixa el «Suma 1» a fora.|Usa el «Si», pero a veces deja el «Suma 1» fuera."],
         ["Generalitzar|Generalizar", "Resol els reptes de diverses illes amb un sol programa i explica per què funciona.|Resuelve los retos de varias islas con un solo programa y explica por qué funciona.", "Resol una illa i necessita ajuda per fer que el programa serveixi per a totes.|Resuelve una isla y necesita ayuda para que el programa sirva para todas."],
-        ["Bucles i funcions amb comptador|Bucles y funciones con contador", "Escriu la funció «passa i compta» i la fa servir dins de bucles.|Escribe la función «pasa y cuenta» y la usa dentro de bucles.", "Compta bé en camins rectes, però s'embolica en combinar-ho amb funcions.|Cuenta bien en caminos rectos, pero se lía al combinarlo con funciones."]
+        ["Bucles i funcions amb comptador|Bucles y funciones con contador", "Escriu la funció «passa i compta» i la fa servir dins de bucles.|Escribe la función «pasa y cuenta» y la usa dentro de bucles.", "Compta bé en camins rectes, però s'embolica en combinar-ho amb funcions.|Cuenta bien en caminos rectos, pero se lía al combinarlo con funciones."],
+        ["Predir el recompte|Predecir el recuento", "Compta les caselles i les estrelles per separat i encerta el valor final del comptador.|Cuenta las casillas y las estrellas por separado y acierta el valor final del contador.", "Confon el nombre de passes amb el nombre d'estrelles quan prediu.|Confunde el número de pasos con el número de estrellas cuando predice."]
       ]
     },
     casa: "A casa, amb el mòbil, podeu fer «Compta sense saber-ho»: una persona amaga culleres sota uns gots i l'altra fa de Bit, got a got: si hi ha cullera, suma 1. Torneu-ho a fer amagant-ne un altre nombre: el «programa» és el mateix, però el número canvia!|En casa, con el móvil, podéis hacer «Cuenta sin saberlo»: una persona esconde cucharas bajo unos vasos y la otra hace de Bit, vaso a vaso: si hay cuchara, suma 1. Volved a hacerlo escondiendo otro número: el «programa» es el mismo, ¡pero el número cambia!",
@@ -275,15 +369,15 @@ Object.assign(TGUIDE, {
       { id: 's5', k: 'demo', t: "Si hi ha una estrella, suma 1|Si hay una estrella, suma 1", x: "Abans d'executar: quant valdrà el comptador al final?|Antes de ejecutar: ¿cuánto valdrá el contador al final?",
         demo: { w: { map: ['.....', '>*#**', '.....'], vname: 'comptador|contador' }, prog: '4{ f if:gem{ add:1 } }' },
         nota: "Avança 4 caselles i 3 tenen estrella: el comptador acaba a 3. Fes notar que el marcador només puja a les estrelles.|Avanza 4 casillas y 3 tienen estrella: el contador termina en 3. Haz notar que el marcador solo sube en las estrellas." },
-      { id: 's6', k: 'anim', t: "Un programa per a totes les platges|Un programa para todas las playas", anim: 'u6islands', x: "El número fix només serveix per a una platja. El «Si» compta a totes.|El número fijo solo sirve para una playa. El «Si» cuenta en todas.",
+      { id: 's6', k: 'anim', t: "Un programa, totes les platges|Un programa, todas las playas", anim: 'u6islands', x: "El número fix només serveix per a una platja. El «Si» compta a totes.|El número fijo solo sirve para una playa. El «Si» cuenta en todas.",
         nota: "Explica que als reptes amb pestanyes «Illa», el mateix programa s'executa a totes les illes.|Explica que en los retos con pestañas «Isla», el mismo programa se ejecuta en todas las islas." },
       { id: 's7', k: 'anim', t: "Compte! A dins, no a fora|¡Cuidado! Dentro, no fuera", anim: 'u6inside', x: "«Suma 1» a fora del «Si» compta totes les passes.|«Suma 1» fuera del «Si» cuenta todos los pasos.",
         nota: "Pregunta quantes passes i quantes estrelles hi ha a la tira de caselles, i compara-ho amb els dos números.|Pregunta cuántos pasos y cuántas estrellas hay en la tira de casillas, y compáralo con los dos números." },
-      { id: 's8', k: 'concepte', t: "Què més pot comptar en Bit?|¿Qué más puede contar Bit?", punts: ["Estrelles: «Si hi ha una estrella»|Estrellas: «Si hay una estrella»", "Caixes: «Si hi ha una caixa»|Cajas: «Si hay una caja»", "Passes: «Suma 1» a cada Endavant|Pasos: «Suma 1» en cada Adelante", "Girs: «Suma 1» a cada gir|Giros: «Suma 1» en cada giro"],
+      { id: 's8', k: 'concepte', pic: 'img/ment/onn.webp', t: "Què més pot comptar en Bit?|¿Qué más puede contar Bit?", punts: ["Estrelles: «Si hi ha una estrella»|Estrellas: «Si hay una estrella»", "Caixes: «Si hi ha una caixa»|Cajas: «Si hay una caja»", "Passes: «Suma 1» a cada Endavant|Pasos: «Suma 1» en cada Adelante", "Girs: «Suma 1» a cada gir|Giros: «Suma 1» en cada giro"],
         nota: "Pregunta què comptarien ells a l'escola: llibres, finestres, alumnes que porten jaqueta…|Pregunta qué contarían ellos en el cole: libros, ventanas, alumnos que llevan chaqueta…" },
       { id: 's9', k: 'activitat', t: "Estrelles al terra: dues platges|Estrellas en el suelo: dos playas", timer: 12, punts: ["Copieu el programa de targetes de la pissarra.|Copiad el programa de tarjetas de la pizarra.", "Executeu-lo a la platja 1: el comptador/a suma a cada estrella.|Ejecutadlo en la playa 1: el contador/a suma en cada estrella.", "Canvieu les estrelles a la platja 2. No toqueu cap targeta!|Cambiad las estrellas a la playa 2. ¡No toquéis ninguna tarjeta!", "Torneu-lo a executar i compareu els números.|Volved a ejecutarlo y comparad los números."],
         nota: "Les dues platges són a la fitxa de la quadrícula. El camí és el mateix; només canvien les estrelles.|Las dos playas están en la ficha de la cuadrícula. El camino es el mismo; solo cambian las estrellas." },
-      { id: 's10', k: 'concepte', t: "El programa de targetes|El programa de tarjetas", blocks: ["Repeteix 4 vegades|Repite 4 veces", "Endavant|Adelante", "Si hi ha una estrella|Si hay una estrella", "Suma 1 al comptador|Suma 1 al contador"], x: "Dins del Repeteix: Endavant i, a sota, el «Si» amb el «Suma 1» a dins.|Dentro del Repite: Adelante y, debajo, el «Si» con el «Suma 1» dentro.",
+      { id: 's10', k: 'concepte', pic: 'img/ment/par.webp', t: "El programa de targetes|El programa de tarjetas", blocks: ["Repeteix 4 vegades|Repite 4 veces", "Endavant|Adelante", "Si hi ha una estrella|Si hay una estrella", "Suma 1 al comptador|Suma 1 al contador"], x: "Dins del Repeteix: Endavant i, a sota, el «Si» amb el «Suma 1» a dins.|Dentro del Repite: Adelante y, debajo, el «Si» con el «Suma 1» dentro.",
         nota: "Deixa-ho projectat durant l'activitat: és el programa que han de copiar amb targetes.|Déjalo proyectado durante la actividad: es el programa que tienen que copiar con tarjetas." },
       { id: 's11', k: 'activitat', t: "Ara, a l'ordinador|Ahora, al ordenador", timer: 15, punts: ["Obre la sessió «Recollir i comptar».|Abre la sesión «Recoger y contar».", "A «Prediu!», compta les estrelles amb el dit.|En «¡Predice!», cuenta las estrellas con el dedo.", "Para quan arribis a la «Pausa activa».|Para cuando llegues a la «Pausa activa»."],
         nota: "A «Compta sense saber-ho», que toquin «Ara no»: és per a casa.|En «Cuenta sin saberlo», que toquen «Ahora no»: es para casa." },
@@ -323,6 +417,45 @@ Object.assign(TGUIDE, {
 
   /* ---------- Sessió 3 · Punts i rècords ---------- */
   'r6-3': {
+    intro: "Sessió de punts: cada cosa val un nombre diferent de punts (estrella +2, caixa +5, bassal −1) i la variable es diu <b>marcador</b>. L'alumnat descobreix la condició nova <b>«el comptador valgui N»</b>, amb què en Bit pot reaccionar (encendre un llum, fer sonar una nota) quan arriba a un número. La idea clau és que la condició és certa només quan val <b>exactament</b> aquest número: si el marcador salta de 2 en 2, no passa mai pel 3. La classe fa teoria, una gimcana de targetes a la quadrícula i reptes a l'ordinador.|Sesión de puntos: cada cosa vale un número diferente de puntos (estrella +2, caja +5, charco −1) y la variable se llama <b>marcador</b>. El alumnado descubre la condición nueva <b>«el contador valga N»</b>, con la que Bit puede reaccionar (encender una luz, hacer sonar una nota) cuando llega a un número. La idea clave es que la condición es cierta solo cuando vale <b>exactamente</b> ese número: si el marcador salta de 2 en 2, nunca pasa por el 3. La clase hace teoría, una gincana de tarjetas en la cuadrícula y retos en el ordenador.",
+    claus: [
+      "El número d'un «Suma» o d'un «Resta» es pot canviar: cada cosa pot valer punts diferents.|El número de un «Suma» o de un «Resta» se puede cambiar: cada cosa puede valer puntos diferentes.",
+      "Un programa pot tenir dos «Si», un per a cada cosa que suma o resta.|Un programa puede tener dos «Si», uno para cada cosa que suma o resta.",
+      "«El comptador valgui 3» és cert només quan val exactament 3.|«El contador valga 3» es cierto solo cuando vale exactamente 3.",
+      "Si el comptador continua valent el mateix, el «Si» torna a ser cert: cal pensar on es posa.|Si el contador sigue valiendo lo mismo, el «Si» vuelve a ser cierto: hay que pensar dónde se pone."
+    ],
+    prev: [
+      "El comptador, «Suma», «Resta» i «Posa a», i inicialitzar a 0 (sessió 1).|El contador, «Suma», «Resta» y «Pon a», e inicializar a 0 (sesión 1).",
+      "«Si hi ha una estrella, suma 1» dins d'un bucle (sessió 2).|«Si hay una estrella, suma 1» dentro de un bucle (sesión 2).",
+      "Els blocs «Llum» i «Nota» i el «Si… si no…» (unitats 3 i 4).|Los bloques «Luz» y «Nota» y el «Si… si no…» (unidades 3 y 4)."
+    ],
+    faq: [
+      ["Per què el llum no s'encén si el marcador ja ha passat del 3?|¿Por qué la luz no se enciende si el marcador ya ha pasado del 3?", "Perquè la condició vol dir exactament 3. Si el marcador fa 2, 4, 6…, no val mai 3 i el «Si» no fa res.|Porque la condición quiere decir exactamente 3. Si el marcador hace 2, 4, 6…, nunca vale 3 y el «Si» no hace nada."],
+      ["Per què «sol» sona més d'una vegada al repte del rècord?|¿Por qué «sol» suena más de una vez en el reto del récord?", "Perquè després d'arribar a 3, el comptador continua valent 3 a les passes sense estrella i el «Si» torna a ser cert. Cal mirar-lo només just després de sumar.|Porque después de llegar a 3, el contador sigue valiendo 3 en los pasos sin estrella y el «Si» vuelve a ser cierto. Hay que mirarlo solo justo después de sumar."],
+      ["El marcador pot baixar de 0?|¿El marcador puede bajar de 0?", "Sí, si restes més punts dels que tens. És un número negatiu, com el termòmetre quan fa molt de fred.|Sí, si restas más puntos de los que tienes. Es un número negativo, como el termómetro cuando hace mucho frío."],
+      ["Per què es diu «marcador» i no «comptador»?|¿Por qué se llama «marcador» y no «contador»?", "És la mateixa capsa amb un altre nom. El nom diu què recorda la variable: avui, els punts de la gimcana.|Es la misma caja con otro nombre. El nombre dice qué recuerda la variable: hoy, los puntos de la gincana."],
+      ["Com faig que el «Si» tingui «si no»?|¿Cómo hago que el «Si» tenga «si no»?", "Toca el «Si» i fes servir «Afegeix «si no»». Apareix un segon espai per als blocs que es fan quan la condició no és certa.|Toca el «Si» y usa «Añade «si no»». Aparece un segundo espacio para los bloques que se hacen cuando la condición no es cierta."]
+    ],
+    tec: [
+      ["No troba la condició «el marcador valgui…» al «Si».|No encuentra la condición «el marcador valga…» en el «Si».", "Toqueu el «Si» i aneu canviant la condició; només surten les que el repte permet (estrella, terra vermell, el marcador valgui…).|Tocad el «Si» e id cambiando la condición; solo salen las que el reto permite (estrella, suelo rojo, el marcador valga…)."],
+      ["Al repte del rècord no se sent la melodia.|En el reto del récord no se oye la melodía.", "Comproveu que el so de l'app i de l'ordinador estigui activat. Si a l'aula no es pot fer soroll, feu servir auriculars o abaixeu el volum: el repte es comprova igualment.|Comprobad que el sonido de la app y del ordenador esté activado. Si en el aula no se puede hacer ruido, usad auriculares o bajad el volumen: el reto se comprueba igualmente."],
+      ["El projecte no se supera tot i que el llum verd s'encén.|El proyecto no se supera aunque la luz verde se enciende.", "Cal recollir les 3 estrelles, arribar a la bandera i que el llum s'encengui amb un «Si» que miri si el marcador val 10.|Hay que recoger las 3 estrellas, llegar a la bandera y que la luz se encienda con un «Si» que mire si el marcador vale 10."],
+      ["No hi ha llanterna per a la gimcana del terra.|No hay linterna para la gincana del suelo.", "Una cartolina verda que el revisor/a aixeca fa la mateixa feina.|Una cartulina verde que el revisor/a levanta hace el mismo trabajo."]
+    ],
+    seg: [
+      "A la pausa activa, les «passes de gegant» es fan al lloc o en un espai lliure, sense córrer.|En la pausa activa, los «pasos de gigante» se hacen en el sitio o en un espacio libre, sin correr.",
+      "La gimcana és un repte de comptar, no una competició: celebreu els marcadors ben comptats, no els més alts.|La gincana es un reto de contar, no una competición: celebrad los marcadores bien contados, no los más altos."
+    ],
+    extra: [
+      "Regles noves: afegiu al projecte que el bassal resti punts i torneu a ajustar els valors perquè el marcador encara arribi a 10.|Reglas nuevas: añadid al proyecto que el charco reste puntos y volved a ajustar los valores para que el marcador todavía llegue a 10.",
+      "Saltar per la recta numèrica: a terra, una recta del 0 al 12; feu salts de 2, de 3 i de 5 i descobriu quins números trepitja cada salt.|Saltar por la recta numérica: en el suelo, una recta del 0 al 12; haced saltos de 2, de 3 y de 5 y descubrid qué números pisa cada salto.",
+      "Inventeu una gimcana per a una altra classe amb tres regles de punts i un premi quan el marcador valgui un número.|Inventad una gincana para otra clase con tres reglas de puntos y un premio cuando el marcador valga un número."
+    ],
+    trans: [
+      "Matemàtiques: sèries de 2 en 2 i de 5 en 5, sumes i restes repetides i la igualtat.|Matemáticas: series de 2 en 2 y de 5 en 5, sumas y restas repetidas y la igualdad.",
+      "Educació física: els marcadors i les regles de punts dels esports.|Educación física: los marcadores y las reglas de puntos de los deportes.",
+      "Sessió següent: el projecte del mercat, on la mateixa variable sumarà coses que valen diferent.|Sesión siguiente: el proyecto del mercado, donde la misma variable sumará cosas que valen diferente."
+    ],
     obj: [
       "L'alumne/a fa servir «Suma» i «Resta» amb números diferents perquè cada cosa valgui els punts que toca.|El alumno/a usa «Suma» y «Resta» con números diferentes para que cada cosa valga los puntos que toca.",
       "L'alumne/a fa servir la condició «el comptador valgui N» perquè en Bit faci alguna cosa quan arriba a un número.|El alumno/a usa la condición «el contador valga N» para que Bit haga algo cuando llega a un número.",
@@ -362,7 +495,8 @@ Object.assign(TGUIDE, {
       { min: 5, t: "Recordem i la gimcana|Recordamos y la gincana", fase: 'inici',
         fa: "Fes la pregunta de repàs (on va el «Suma 1»). Explica la missió: a la gimcana de la festa major cada cosa dona punts diferents. Pregunta quants punts val una cistella de bàsquet i fes veure que no sempre se suma 1.|Haz la pregunta de repaso (dónde va el «Suma 1»). Explica la misión: en la gincana de la fiesta mayor cada cosa da puntos diferentes. Pregunta cuántos puntos vale una canasta de baloncesto y haz ver que no siempre se suma 1.",
         diu: ["Al bàsquet, quant val una cistella normal? I un triple? I un tir lliure?|En el baloncesto, ¿cuánto vale una canasta normal? ¿Y un triple? ¿Y un tiro libre?",
-          "Si una estrella val 2 punts, quin bloc posarem?|Si una estrella vale 2 puntos, ¿qué bloque pondremos?"],
+          "Si una estrella val 2 punts, quin bloc posarem?|Si una estrella vale 2 puntos, ¿qué bloque pondremos?",
+          "Si una estrella val 2 i una caixa 5, quants punts són una estrella i una caixa? (7.)|Si una estrella vale 2 y una caja 5, ¿cuántos puntos son una estrella y una caja? (7.)"],
         slides: ['s1', 's2', 's3'], app: "Encara no.|Todavía no.", org: "Tot el grup|Todo el grupo" },
       { min: 10, t: "Punts i el «Si» del comptador|Puntos y el «Si» del contador", fase: 'teoria',
         fa: "Mostra l'animació dels punts i la demostració de restar als bassals. Explica que la variable es pot dir marcador. Després presenta la condició nova: «el comptador valgui 3». A la demostració, la classe diu en quina passa s'encendrà el llum. Acaba amb el «compte!»: de 2 en 2 mai no s'arriba a 3.|Muestra la animación de los puntos y la demostración de restar en los charcos. Explica que la variable se puede llamar marcador. Después presenta la condición nueva: «el contador valga 3». En la demostración, la clase dice en qué paso se encenderá la luz. Termina con el «¡cuidado!»: de 2 en 2 nunca se llega a 3.",
@@ -379,7 +513,8 @@ Object.assign(TGUIDE, {
       { min: 15, t: "A l'ordinador: prediu i investiga|En el ordenador: predice e investiga", fase: 'ordinador',
         fa: "Cada alumne/a fa la sessió fins a la pausa activa. A «On acabarà?», demana que segueixin el comptador amb els dits mentre llegeixen el programa. A «El marcador de mitjons», que toquin «Ara no» (és per a casa).|Cada alumno/a hace la sesión hasta la pausa activa. En «¿Dónde terminará?», pide que sigan el contador con los dedos mientras leen el programa. En «El marcador de calcetines», que toquen «Ahora no» (es para casa).",
         diu: ["Després de cada passa, quant val el comptador? Quan gira?|Después de cada paso, ¿cuánto vale el contador? ¿Cuándo gira?",
-          "Per què el llum no s'encén mai? Digues els números del comptador un per un.|¿Por qué la luz no se enciende nunca? Di los números del contador uno por uno."],
+          "Per què el llum no s'encén mai? Digues els números del comptador un per un.|¿Por qué la luz no se enciende nunca? Di los números del contador uno por uno.",
+          "Posa a 0, suma 5, resta 1, suma 2: quant val? (6.)|Pon a 0, suma 5, resta 1, suma 2: ¿cuánto vale? (6.)"],
         slides: ['s11'], app: "La pregunta de «Recorda», la gimcana, les targetes de «Descobreix», la pregunta de les estrelles de 2 punts, «El marcador de mitjons» (per a casa), «Prediu!», «On acabarà?» i l'«Investiga» del llum que no s'encén.|La pregunta de «Recuerda», la gincana, las tarjetas de «Descubre», la pregunta de las estrellas de 2 puntos, «El marcador de calcetines» (para casa), «¡Predice!», «¿Dónde terminará?» y el «Investiga» de la luz que no se enciende.", org: "Individual|Individual" },
       { min: 10, t: "Reptes de la gimcana|Retos de la gincana", fase: 'ordinador',
         fa: "Fes la pausa activa de punts. Després deixa'ls fer els quatre reptes. El quart és el més difícil: si s'encallen, mostra la diapositiva 12 i pregunta quant val el comptador a les passes sense estrella.|Haced la pausa activa de puntos. Después deja que hagan los cuatro retos. El cuarto es el más difícil: si se atascan, muestra la diapositiva 12 y pregunta cuánto vale el contador en los pasos sin estrella.",
@@ -390,12 +525,14 @@ Object.assign(TGUIDE, {
       { min: 5, t: "Crea: la meva gimcana de punts|Crea: mi gincana de puntos", fase: 'crea',
         fa: "Cada alumne/a decideix quants punts val cada cosa i els ajusta perquè el marcador arribi exactament a 10 i s'encengui el llum verd. Abans d'executar, que apunti al full de punts les seves regles.|Cada alumno/a decide cuántos puntos vale cada cosa y los ajusta para que el marcador llegue exactamente a 10 y se encienda la luz verde. Antes de ejecutar, que apunte en la hoja de puntos sus reglas.",
         diu: ["Quines són les teves regles? Quant val una estrella? I la caixa?|¿Cuáles son tus reglas? ¿Cuánto vale una estrella? ¿Y la caja?",
-          "El marcador passa exactament pel 10? Si no, quin número canviaries?|¿El marcador pasa exactamente por el 10? Si no, ¿qué número cambiarías?"],
+          "El marcador passa exactament pel 10? Si no, quin número canviaries?|¿El marcador pasa exactamente por el 10? Si no, ¿qué número cambiarías?",
+          "Escriu el marcador després de cada cosa: 3, 4, 7, 10… On és el 10?|Escribe el marcador después de cada cosa: 3, 4, 7, 10… ¿Dónde está el 10?"],
         slides: ['s14'], app: "Pas «Crea»: La meva gimcana de punts.|Paso «Crea»: Mi gincana de puntos.", org: "Individual|Individual" },
       { min: 3, t: "Tancament i tiquet de sortida|Cierre y ticket de salida", fase: 'tancament',
         fa: "Repassa les tres idees amb el resum, deixa que responguin les preguntes finals i fes el tiquet de sortida. Reconeix la insígnia «Rècord de punts».|Repasa las tres ideas con el resumen, deja que respondan las preguntas finales y haz el ticket de salida. Reconoce la insignia «Récord de puntos».",
         diu: ["Quan és certa la condició «el marcador valgui 5»?|¿Cuándo es cierta la condición «el marcador valga 5»?",
-          "Quin bloc fas servir per perdre un punt?|¿Qué bloque usas para perder un punto?"],
+          "Quin bloc fas servir per perdre un punt?|¿Qué bloque usas para perder un punto?",
+          "El marcador fa 0, 2, 4, 6… Serà mai cert «el marcador valgui 5»? (No: se salta el 5.)|El marcador hace 0, 2, 4, 6… ¿Será alguna vez cierto «el marcador valga 5»? (No: se salta el 5.)"],
         slides: ['s15', 's16'], app: "«Tancament»: les dues preguntes finals i com m'he sentit.|«Cierre»: las dos preguntas finales y cómo me he sentido.", org: "Tot el grup|Todo el grupo" }
     ],
     errors: [
@@ -420,7 +557,8 @@ Object.assign(TGUIDE, {
       rubric: [
         ["Punts de valors diferents|Puntos de valores diferentes", "Ajusta el número de «Suma» i «Resta» al valor de cada cosa i calcula el total.|Ajusta el número de «Suma» y «Resta» al valor de cada cosa y calcula el total.", "Fa servir «Suma 1» repetit o s'equivoca en el total.|Usa «Suma 1» repetido o se equivoca en el total."],
         ["Condició sobre el comptador|Condición sobre el contador", "Fa servir «el comptador valgui N» al lloc correcte i explica per què de 2 en 2 no s'arriba a 3.|Usa «el contador valga N» en el lugar correcto y explica por qué de 2 en 2 no se llega a 3.", "Fa servir la condició amb ajuda o creu que vol dir «N o més».|Usa la condición con ayuda o cree que quiere decir «N o más»."],
-        ["Depurar amb el marcador|Depurar con el marcador", "Troba els bugs mirant el marcador pas a pas.|Encuentra los bugs mirando el marcador paso a paso.", "Prova canvis a l'atzar fins que el número surt bé.|Prueba cambios al azar hasta que el número sale bien."]
+        ["Depurar amb el marcador|Depurar con el marcador", "Troba els bugs mirant el marcador pas a pas.|Encuentra los bugs mirando el marcador paso a paso.", "Prova canvis a l'atzar fins que el número surt bé.|Prueba cambios al azar hasta que el número sale bien."],
+        ["Regles del projecte|Reglas del proyecto", "Tria valors per a cada cosa, escriu el marcador pas a pas i arriba exactament a 10.|Elige valores para cada cosa, escribe el marcador paso a paso y llega exactamente a 10.", "Prova valors a l'atzar fins que surt o necessita ajuda per arribar a 10.|Prueba valores al azar hasta que sale o necesita ayuda para llegar a 10."]
       ]
     },
     casa: "A casa, amb el mòbil, podeu fer «El marcador de mitjons»: poseu el marcador a 0, llanceu mitjons a una cistella (si entra, suma 2; si cau, resta 1) i crideu «Rècord!» quan valgui exactament 6.|En casa, con el móvil, podéis hacer «El marcador de calcetines»: poned el marcador a 0, lanzad calcetines a una cesta (si entra, suma 2; si cae, resta 1) y gritad «¡Récord!» cuando valga exactamente 6.",
@@ -445,7 +583,7 @@ Object.assign(TGUIDE, {
         nota: "Feu salts de 2 en 2 a la recta numèrica de la pissarra: el 3 no el trepitgem mai.|Haced saltos de 2 en 2 en la recta numérica de la pizarra: el 3 no lo pisamos nunca." },
       { id: 's9', k: 'activitat', t: "La gimcana de targetes|La gincana de tarjetas", timer: 12, punts: ["Poseu el marcador a 0.|Poned el marcador a 0.", "Estrella +2 · Caixa +5 · Bassal −1.|Estrella +2 · Caja +5 · Charco −1.", "Quan el marcador val exactament 6: llum!|Cuando el marcador vale exactamente 6: ¡luz!", "Després, el full de punts per parelles.|Después, la hoja de puntos por parejas."],
         nota: "Roteu els papers a cada volta del recorregut. Si el marcador se salta el 6, no s'encén el llum: comenteu-ho!|Rotad los papeles en cada vuelta del recorrido. Si el marcador se salta el 6, no se enciende la luz: ¡comentadlo!" },
-      { id: 's10', k: 'concepte', t: "Les regles de la gimcana|Las reglas de la gincana", blocks: ["Suma 2 ⭐|Suma 2 ⭐", "Suma 5 📦|Suma 5 📦", "Resta 1 🟥|Resta 1 🟥", "Si el marcador val 6 💡|Si el marcador vale 6 💡"],
+      { id: 's10', k: 'concepte', pic: 'img/ment/cor.webp', t: "Les regles de la gimcana|Las reglas de la gincana", blocks: ["Suma 2 ⭐|Suma 2 ⭐", "Suma 5 📦|Suma 5 📦", "Resta 1 🟥|Resta 1 🟥", "Si el marcador val 6 💡|Si el marcador vale 6 💡"],
         nota: "Deixa-ho projectat durant l'activitat del terra.|Déjalo proyectado durante la actividad del suelo." },
       { id: 's11', k: 'activitat', t: "Ara, a l'ordinador|Ahora, al ordenador", timer: 15, punts: ["Obre la sessió «Punts i rècords».|Abre la sesión «Puntos y récords».", "A «On acabarà?», segueix el comptador amb els dits.|En «¿Dónde terminará?», sigue el contador con los dedos.", "Para quan arribis a la «Pausa activa».|Para cuando llegues a la «Pausa activa»."],
         nota: "A «El marcador de mitjons», que toquin «Ara no»: és per a casa.|En «El marcador de calcetines», que toquen «Ahora no»: es para casa." },
@@ -490,6 +628,47 @@ Object.assign(TGUIDE, {
 
   /* ---------- Sessió 4 · Projecte: el recol·lector de fruita ---------- */
   'r6-4': {
+    intro: "Projecte final de la unitat: el recol·lector de fruita del mercat. L'alumnat <b>planifica</b> amb quatre preguntes (què compto, amb quin número comença, quan suma i quant, quant ha de valer al final) i fa servir una sola variable per sumar coses que valen diferent: cada fruita +1 i cada caixa deixada a la parada +5. Combina variables, bucles, condicions i funcions, i comprova el resultat pas a pas. La classe fa el pla, l'executa al mercat del terra, programa el projecte i el presenta.|Proyecto final de la unidad: el recolector de fruta del mercado. El alumnado <b>planifica</b> con cuatro preguntas (qué cuento, con qué número empieza, cuándo suma y cuánto, cuánto tiene que valer al final) y usa una sola variable para sumar cosas que valen diferente: cada fruta +1 y cada caja dejada en el puesto +5. Combina variables, bucles, condiciones y funciones, y comprueba el resultado paso a paso. La clase hace el plan, lo ejecuta en el mercado del suelo, programa el proyecto y lo presenta.",
+    claus: [
+      "Abans de programar amb una variable: què compto, amb quin número comença, quan suma i quant ha de valer al final.|Antes de programar con una variable: qué cuento, con qué número empieza, cuándo suma y cuánto tiene que valer al final.",
+      "Una mateixa variable pot sumar coses que valen diferent (+1 i +5).|Una misma variable puede sumar cosas que valen diferente (+1 y +5).",
+      "«Posa a 0» va al principi; al mig del programa, esborra el compte.|«Pon a 0» va al principio; en medio del programa, borra la cuenta.",
+      "Es comprova el comptador tros a tros: després de cada caixa, ha de valer el que esperàvem.|Se comprueba el contador trozo a trozo: después de cada caja, tiene que valer lo que esperábamos."
+    ],
+    prev: [
+      "Comptar amb «Si hi ha una estrella, suma 1» i fer-ho en illes diferents (sessió 2).|Contar con «Si hay una estrella, suma 1» y hacerlo en islas diferentes (sesión 2).",
+      "Sumar punts diferents i la condició «el comptador valgui N» (sessió 3).|Sumar puntos diferentes y la condición «el contador valga N» (sesión 3).",
+      "Agafa i Deixa la caixa (unitat 1) i funcions (unitat 5).|Coge y Deja la caja (unidad 1) y funciones (unidad 5)."
+    ],
+    faq: [
+      ["Per què se suma 5 quan deixo la caixa i no quan l'agafo?|¿Por qué se suma 5 cuando dejo la caja y no cuando la cojo?", "Perquè comptem la fruita que arriba al mercat. Fins que la caixa no és a la parada, aquelles fruites encara no hi han arribat.|Porque contamos la fruta que llega al mercado. Hasta que la caja no está en el puesto, esas frutas todavía no han llegado."],
+      ["Les estrelles són fruites?|¿Las estrellas son frutas?", "En aquest projecte, sí: és la regla del mercat d'en Bit. Cada estrella que cull és una fruita i val +1.|En este proyecto, sí: es la regla del mercado de Bit. Cada estrella que recoge es una fruta y vale +1."],
+      ["Puc fer el projecte en un altre ordre?|¿Puedo hacer el proyecto en otro orden?", "Sí. Hi ha molts camins bons; el comptador ha d'acabar a 14 igualment. Escriu el teu ordre al full de pla.|Sí. Hay muchos caminos buenos; el contador tiene que acabar en 14 igualmente. Escribe tu orden en la hoja de plan."],
+      ["Per què el comptador comença a 3?|¿Por qué el contador empieza en 3?", "Porta les fruites d'ahir. Per això el primer bloc ha de ser «Posa el comptador a 0».|Trae las frutas de ayer. Por eso el primer bloque tiene que ser «Pon el contador a 0»."],
+      ["Puc passar per sobre d'una caixa si ja en porto una?|¿Puedo pasar por encima de una caja si ya llevo una?", "Pots passar-hi, però no la pots agafar fins que hagis deixat la que portes: en Bit només porta una caixa cada vegada.|Puedes pasar, pero no la puedes coger hasta que hayas dejado la que llevas: Bit solo lleva una caja cada vez."],
+      ["Com presento el projecte?|¿Cómo presento el proyecto?", "Explica el pla, digues quant valdrà el comptador després de cada caixa i després executa'l. Si surt un bug, explica com l'has arreglat.|Explica el plan, di cuánto valdrá el contador después de cada caja y después ejecútalo. Si sale un bug, explica cómo lo has arreglado."]
+    ],
+    tec: [
+      ["El projecte és llarg i l'alumne/a es perd entre els blocs.|El proyecto es largo y el alumno/a se pierde entre los bloques.", "Que programi tros a tros i executi després de cada tros; amb «Pas a pas» pot aturar-se just després de cada caixa i mirar el marcador.|Que programe trozo a trozo y ejecute después de cada trozo; con «Paso a paso» puede pararse justo después de cada caja y mirar el marcador."],
+      ["En Bit no agafa la segona caixa.|Bit no coge la segunda caja.", "Encara porta la primera: primer l'ha de deixar a una parada.|Todavía lleva la primera: primero la tiene que dejar en un puesto."],
+      ["El marcador acaba a 17.|El marcador termina en 17.", "Falta «Posa el comptador a 0» al principi: els 3 de més són les fruites d'ahir.|Falta «Pon el contador a 0» al principio: los 3 de más son las frutas de ayer."],
+      ["Per presentar, no es pot connectar cada ordinador al projector.|Para presentar, no se puede conectar cada ordenador al proyector.", "Feu una volta per l'aula: la classe s'acosta a la pantalla del voluntari/ària, o el voluntari/ària explica el pla a la pissarra.|Haced una vuelta por el aula: la clase se acerca a la pantalla del voluntario/a, o el voluntario/a explica el plan en la pizarra."],
+      ["Falten fruites de joguina per al mercat del terra.|Faltan frutas de juguete para el mercado del suelo.", "Feu servir les targetes «Fruita» imprimibles o boles de paper de colors.|Usad las tarjetas «Fruta» imprimibles o bolas de papel de colores."]
+    ],
+    seg: [
+      "Durant les presentacions: s'escolta, s'aplaudeix i es comenta amb amabilitat.|Durante las presentaciones: se escucha, se aplaude y se comenta con amabilidad.",
+      "Si feu servir fruita de veritat a la classe o a casa, rentar-se les mans abans i tenir en compte les al·lèrgies.|Si usáis fruta de verdad en clase o en casa, lavarse las manos antes y tener en cuenta las alergias."
+    ],
+    extra: [
+      "Fer el projecte en un altre ordre (primer les caixes i després les fruites) i comparar quin programa té menys blocs.|Hacer el proyecto en otro orden (primero las cajas y después las frutas) y comparar qué programa tiene menos bloques.",
+      "Afegir un «Si» que faci sonar una nota quan el comptador valgui 10.|Añadir un «Si» que haga sonar una nota cuando el contador valga 10.",
+      "Mercat de classe: amb fruita de paper, feu parades i compteu-ho tot amb una pissarreta seguint les regles +1 i +5.|Mercado de clase: con fruta de papel, haced puestos y contadlo todo con una pizarrita siguiendo las reglas +1 y +5."
+    ],
+    trans: [
+      "Repàs de tota la unitat 6: variables, recomptes amb «Si», punts i condicions sobre el comptador.|Repaso de toda la unidad 6: variables, recuentos con «Si», puntos y condiciones sobre el contador.",
+      "Matemàtiques: sumes amb sumands diferents (4 + 5 + 5) i la multiplicació com a suma repetida.|Matemáticas: sumas con sumandos diferentes (4 + 5 + 5) y la multiplicación como suma repetida.",
+      "Unitat 7: «Repeteix fins que…», un bucle que s'atura quan passa alguna cosa.|Unidad 7: «Repite hasta que…», un bucle que se para cuando pasa algo."
+    ],
     obj: [
       "L'alumne/a planifica un programa amb una variable responent quatre preguntes: què compta, amb quin número comença, quan canvia i quant ha de valer al final.|El alumno/a planifica un programa con una variable respondiendo cuatro preguntas: qué cuenta, con qué número empieza, cuándo cambia y cuánto tiene que valer al final.",
       "L'alumne/a fa servir una mateixa variable per sumar coses que valen diferent (fruita +1, caixa +5) mentre reparteix caixes.|El alumno/a usa una misma variable para sumar cosas que valen diferente (fruta +1, caja +5) mientras reparte cajas.",
@@ -528,7 +707,8 @@ Object.assign(TGUIDE, {
       { min: 5, t: "Recordem i el mercat de l'illa|Recordamos y el mercado de la isla", fase: 'inici',
         fa: "Fes les preguntes de repàs (la condició exacta i com es compten fruites d'illes diferents). Explica la missió: dissabte hi ha mercat i en Bit ha de collir fruita, portar caixes a les parades i comptar-ho tot. Avui és el projecte final de la unitat.|Haz las preguntas de repaso (la condición exacta y cómo se cuentan frutas de islas diferentes). Explica la misión: el sábado hay mercado y Bit tiene que recoger fruta, llevar cajas a los puestos y contarlo todo. Hoy es el proyecto final de la unidad.",
         diu: ["Quan és certa la condició «el comptador valgui 3»?|¿Cuándo es cierta la condición «el contador valga 3»?",
-          "Avui farem servir tot el que hem après: comptar, sumar punts diferents i el «Si».|Hoy usaremos todo lo que hemos aprendido: contar, sumar puntos diferentes y el «Si»."],
+          "Avui farem servir tot el que hem après: comptar, sumar punts diferents i el «Si».|Hoy usaremos todo lo que hemos aprendido: contar, sumar puntos diferentes y el «Si».",
+          "Si a cada illa hi ha un nombre diferent de fruites, com les comptem? (Amb «Si hi ha una estrella» i «Suma 1» a dins.)|Si en cada isla hay un número diferente de frutas, ¿cómo las contamos? (Con «Si hay una estrella» y «Suma 1» dentro.)"],
         slides: ['s1', 's2', 's3'], app: "Encara no.|Todavía no.", org: "Tot el grup|Todo el grupo" },
       { min: 8, t: "El pla del recol·lector|El plan del recolector", fase: 'teoria',
         fa: "Explica les quatre preguntes del pla amb l'animació. A les dues demostracions, la classe prediu el valor final abans d'executar. Repassa les regles del mercat: fruita +1, caixa a la parada +5, una sola caixa cada vegada, el comptador a 0 al principi.|Explica las cuatro preguntas del plan con la animación. En las dos demostraciones, la clase predice el valor final antes de ejecutar. Repasa las reglas del mercado: fruta +1, caja en el puesto +5, una sola caja cada vez, el contador a 0 al principio.",
@@ -539,12 +719,14 @@ Object.assign(TGUIDE, {
       { min: 12, t: "El mercat al terra|El mercado en el suelo", fase: 'desconnectat',
         fa: "Per parelles, omplen l'exercici 1 del full de pla (les quatre preguntes) i l'exercici 2 (l'ordre de la feina). Després, en grups de 3 (robot, comptador/a i revisor/a), executen el pla a la quadrícula del terra: el robot cull les fruites i porta les caixes una a una, el comptador/a suma a la pissarreta i el revisor/a comprova que al final val 14.|Por parejas, rellenan el ejercicio 1 de la hoja de plan (las cuatro preguntas) y el ejercicio 2 (el orden del trabajo). Después, en grupos de 3 (robot, contador/a y revisor/a), ejecutan el plan en la cuadrícula del suelo: el robot recoge las frutas y lleva las cajas una a una, el contador/a suma en la pizarrita y el revisor/a comprueba que al final vale 14.",
         diu: ["Primer el pla. Quin és el primer bloc del vostre programa?|Primero el plan. ¿Cuál es el primer bloque de vuestro programa?",
-          "El comptador val 14 al final? Si no, en quina fruita o caixa us heu descomptat?|¿El contador vale 14 al final? Si no, ¿en qué fruta o caja os habéis descontado?"],
+          "El comptador val 14 al final? Si no, en quina fruita o caixa us heu descomptat?|¿El contador vale 14 al final? Si no, ¿en qué fruta o caja os habéis descontado?",
+          "Revisor/a: després de la primera caixa, quant ha de valer la pissarreta segons el pla?|Revisor/a: después de la primera caja, ¿cuánto tiene que valer la pizarrita según el plan?"],
         slides: ['s8', 's9'], app: "Cap: activitat sense pantalla.|Ninguna: actividad sin pantalla.", org: "Per parelles i després grups de 3|Por parejas y después grupos de 3" },
       { min: 12, t: "A l'ordinador: les primeres feines|En el ordenador: los primeros trabajos", fase: 'ordinador',
         fa: "Cada alumne/a fa la sessió fins a l'«Investiga» del comptador que s'esborra. Recorda'ls que diguin el valor final esperat abans d'executar cada repte. Fixa't en qui suma les caixes abans de deixar-les.|Cada alumno/a hace la sesión hasta el «Investiga» del contador que se borra. Recuérdales que digan el valor final esperado antes de ejecutar cada reto. Fíjate en quién suma las cajas antes de dejarlas.",
         diu: ["Quant ha de valer el comptador al final d'aquest repte? Com ho saps?|¿Cuánto tiene que valer el contador al final de este reto? ¿Cómo lo sabes?",
-          "A la funció «cull», què fa en Bit a cada casella?|En la función «recoge», ¿qué hace Bit en cada casilla?"],
+          "A la funció «cull», què fa en Bit a cada casella?|En la función «recoge», ¿qué hace Bit en cada casilla?",
+          "Al repte de les dues caixes: 1 + 5 + 1 + 5, quant fa? (12.)|En el reto de las dos cajas: 1 + 5 + 1 + 5, ¿cuánto es? (12.)"],
         slides: ['s10'], app: "Les dues preguntes de «Recorda», el mercat de l'illa, les targetes de «Descobreix», les regles d'en Bit, ordenar el pla, la primera feina (ordenar blocs), els camps en U, la «Pausa activa», les dues caixes i l'«Investiga» del «Posa a 0» al mig.|Las dos preguntas de «Recuerda», el mercado de la isla, las tarjetas de «Descubre», las reglas de Bit, ordenar el plan, el primer trabajo (ordenar bloques), los campos en U, la «Pausa activa», las dos cajas y el «Investiga» del «Pon a 0» en medio.", org: "Individual|Individual" },
       { min: 15, t: "Projecte: el recol·lector de fruita|Proyecto: el recolector de fruta", fase: 'crea',
         fa: "Primer, el repte dels tres camins de fruiters. Després, abans del projecte final, cada alumne/a revisa el seu full de pla: per on començarà i en quin ordre farà la feina. Quan el tingui, programa tros a tros i comprova el comptador després de cada caixa.|Primero, el reto de los tres caminos de frutales. Después, antes del proyecto final, cada alumno/a revisa su hoja de plan: por dónde empezará y en qué orden hará el trabajo. Cuando lo tenga, programa trozo a trozo y comprueba el contador después de cada caja.",
@@ -561,7 +743,8 @@ Object.assign(TGUIDE, {
       { min: 3, t: "Tancament de la unitat|Cierre de la unidad", fase: 'tancament',
         fa: "Repassa les idees de la unitat amb el resum, deixa que responguin les preguntes finals de l'app i fes el tiquet de sortida. Reconeix la feina de tothom amb la insígnia de recol·lector/a.|Repasa las ideas de la unidad con el resumen, deja que respondan las preguntas finales de la app y haz el ticket de salida. Reconoce el trabajo de todos con la insignia de recolector/a.",
         diu: ["Quines quatre preguntes et fas abans de programar amb una variable?|¿Qué cuatro preguntas te haces antes de programar con una variable?",
-          "On heu vist variables aquesta setmana fora de l'escola?|¿Dónde habéis visto variables esta semana fuera del cole?"],
+          "On heu vist variables aquesta setmana fora de l'escola?|¿Dónde habéis visto variables esta semana fuera del cole?",
+          "3 fruites (+1) i 2 caixes (+5): quant val el comptador si començava a 0? (13.)|3 frutas (+1) y 2 cajas (+5): ¿cuánto vale el contador si empezaba en 0? (13.)"],
         slides: ['s15', 's16'], app: "«Tancament»: les dues preguntes finals i com m'he sentit.|«Cierre»: las dos preguntas finales y cómo me he sentido.", org: "Tot el grup|Todo el grupo" }
     ],
     errors: [
@@ -586,7 +769,8 @@ Object.assign(TGUIDE, {
       rubric: [
         ["Planificació amb variables|Planificación con variables", "Respon les quatre preguntes del pla i el segueix en programar.|Responde las cuatro preguntas del plan y lo sigue al programar.", "Fa el pla quan l'hi demanen, però programa sense seguir-lo.|Hace el plan cuando se lo piden, pero programa sin seguirlo."],
         ["Variable amb valors diferents|Variable con valores diferentes", "Inicialitza el comptador i suma +1 i +5 al moment correcte.|Inicializa el contador y suma +1 y +5 en el momento correcto.", "Fa servir el comptador, però oblida inicialitzar-lo o suma en un moment equivocat.|Usa el contador, pero olvida inicializarlo o suma en un momento equivocado."],
-        ["Projecte final|Proyecto final", "Cull les 4 fruites, reparteix les 2 caixes, el comptador val 14 i explica com ho ha comprovat.|Recoge las 4 frutas, reparte las 2 cajas, el contador vale 14 y explica cómo lo ha comprobado.", "Completa una part del projecte o el completa amb ajuda.|Completa una parte del proyecto o lo completa con ayuda."]
+        ["Projecte final|Proyecto final", "Cull les 4 fruites, reparteix les 2 caixes, el comptador val 14 i explica com ho ha comprovat.|Recoge las 4 frutas, reparte las 2 cajas, el contador vale 14 y explica cómo lo ha comprobado.", "Completa una part del projecte o el completa amb ajuda.|Completa una parte del proyecto o lo completa con ayuda."],
+        ["Comprovar i presentar|Comprobar y presentar", "Diu el valor esperat del comptador després de cada caixa i explica un bug que ha arreglat.|Dice el valor esperado del contador después de cada caja y explica un bug que ha arreglado.", "Executa el projecte però no sap explicar com ha comprovat el resultat.|Ejecuta el proyecto pero no sabe explicar cómo ha comprobado el resultado."]
       ]
     },
     casa: "A casa, amb el mòbil, el vostre fill o filla us pot ensenyar el projecte «El recol·lector de fruita» i explicar-vos com ha comptat la fruita. Podeu fer de mercat amb fruita de veritat: compteu les peces soltes (+1) i les bosses de 5 (+5).|En casa, con el móvil, vuestro hijo o hija os puede enseñar el proyecto «El recolector de fruta» y explicaros cómo ha contado la fruta. Podéis hacer de mercado con fruta de verdad: contad las piezas sueltas (+1) y las bolsas de 5 (+5).",
@@ -595,7 +779,7 @@ Object.assign(TGUIDE, {
         nota: "Explica que avui faran servir tot el que han après a les tres sessions de la unitat.|Explica que hoy usarán todo lo que han aprendido en las tres sesiones de la unidad." },
       { id: 's2', k: 'repas', t: "Recordes?|¿Recuerdas?", x: "Quan és certa la condició «el comptador valgui 3»? I com comptem fruites d'illes diferents?|¿Cuándo es cierta la condición «el contador valga 3»? ¿Y cómo contamos frutas de islas diferentes?",
         nota: "Respostes: només quan val exactament 3; amb «Si hi ha una estrella» i «Suma 1» a dins.|Respuestas: solo cuando vale exactamente 3; con «Si hay una estrella» y «Suma 1» dentro." },
-      { id: 's3', k: 'concepte', t: "El mercat de l'illa|El mercado de la isla", punts: ["Cada fruita (estrella) val +1.|Cada fruta (estrella) vale +1.", "Cada caixa deixada a una parada val +5.|Cada caja dejada en un puesto vale +5.", "Al final, el comptador diu quantes fruites hi ha al mercat.|Al final, el contador dice cuántas frutas hay en el mercado."],
+      { id: 's3', k: 'concepte', pic: 'img/tech/scenes/poble.webp', t: "El mercat de l'illa|El mercado de la isla", punts: ["Cada fruita (estrella) val +1.|Cada fruta (estrella) vale +1.", "Cada caixa deixada a una parada val +5.|Cada caja dejada en un puesto vale +5.", "Al final, el comptador diu quantes fruites hi ha al mercat.|Al final, el contador dice cuántas frutas hay en el mercado."],
         nota: "Pregunta per què una caixa val 5: perquè porta 5 fruites a dins.|Pregunta por qué una caja vale 5: porque lleva 5 frutas dentro." },
       { id: 's4', k: 'anim', t: "Quatre preguntes abans de començar|Cuatro preguntas antes de empezar", anim: 'u6plan', punts: ["Què vull comptar?|¿Qué quiero contar?", "Amb quin número comença?|¿Con qué número empieza?", "Quan suma? Quant?|¿Cuándo suma? ¿Cuánto?", "Quant ha de valer al final?|¿Cuánto tiene que valer al final?"],
         nota: "Escriu les quatre preguntes a la pissarra: les faran servir al full de pla.|Escribe las cuatro preguntas en la pizarra: las usarán en la hoja de plan." },
@@ -609,13 +793,13 @@ Object.assign(TGUIDE, {
         nota: "Deixa aquestes regles a la vista durant l'activitat del terra i el projecte.|Deja estas reglas a la vista durante la actividad del suelo y el proyecto." },
       { id: 's8', k: 'activitat', t: "El mercat al terra|El mercado en el suelo", timer: 12, punts: ["Per parelles: responeu les quatre preguntes al full de pla.|Por parejas: responded las cuatro preguntas en la hoja de plan.", "Ordeneu la feina: fruites, caixes, parades.|Ordenad el trabajo: frutas, cajas, puestos.", "En grups de 3, executeu-ho a la quadrícula.|En grupos de 3, ejecutadlo en la cuadrícula.", "El comptador val 14 al final?|¿El contador vale 14 al final?"],
         nota: "El mapa de la quadrícula és el del projecte. Roteu els papers a cada caixa.|El mapa de la cuadrícula es el del proyecto. Rotad los papeles en cada caja." },
-      { id: 's9', k: 'concepte', t: "El full de pla|La hoja de plan", punts: ["1. Les quatre preguntes|1. Las cuatro preguntas", "2. L'ordre de la feina|2. El orden del trabajo", "3. Els trossos del camí|3. Los trozos del camino", "4. El comptador després de cada caixa|4. El contador después de cada caja"],
+      { id: 's9', k: 'concepte', pic: 'img/ment/lli.webp', t: "El full de pla|La hoja de plan", punts: ["1. Les quatre preguntes|1. Las cuatro preguntas", "2. L'ordre de la feina|2. El orden del trabajo", "3. Els trossos del camí|3. Los trozos del camino", "4. El comptador després de cada caixa|4. El contador después de cada caja"],
         nota: "Fes notar que cada tros comença on acaba l'anterior, com a la unitat 1.|Haz notar que cada trozo empieza donde termina el anterior, como en la unidad 1." },
       { id: 's10', k: 'activitat', t: "Ara, a l'ordinador|Ahora, al ordenador", timer: 12, punts: ["Obre la sessió «Projecte: el recol·lector de fruita».|Abre la sesión «Proyecto: el recolector de fruta».", "Abans de cada repte, digues quant ha de valer el comptador.|Antes de cada reto, di cuánto tiene que valer el contador.", "Para quan arribis als tres camins de fruiters.|Para cuando llegues a los tres caminos de frutales."],
         nota: "Comprova que ningú suma la caixa abans de deixar-la.|Comprueba que nadie suma la caja antes de dejarla." },
       { id: 's11', k: 'repte', t: "Tres camins de fruiters|Tres caminos de frutales", timer: 4, x: "Un sol programa per a tres camins amb fruita diferent: agafa la caixa, cull i deixa-ho tot a la parada.|Un solo programa para tres caminos con fruta diferente: coge la caja, recoge y déjalo todo en el puesto.",
         nota: "Pista: dins del Repeteix, Endavant i «Si hi ha una estrella, suma 1».|Pista: dentro del Repite, Adelante y «Si hay una estrella, suma 1»." },
-      { id: 's12', k: 'concepte', t: "El projecte: fes el pla|El proyecto: haz el plan", punts: ["El comptador comença a 3: primer, posa'l a 0.|El contador empieza en 3: primero, ponlo a 0.", "Per quina fruita o caixa començaràs?|¿Por qué fruta o caja empezarás?", "A quina parada portaràs cada caixa?|¿A qué puesto llevarás cada caja?", "Al final ha de valer 14: 4 + 5 + 5.|Al final tiene que valer 14: 4 + 5 + 5."],
+      { id: 's12', k: 'concepte', pic: 'img/ment/com.webp', t: "El projecte: fes el pla|El proyecto: haz el plan", punts: ["El comptador comença a 3: primer, posa'l a 0.|El contador empieza en 3: primero, ponlo a 0.", "Per quina fruita o caixa començaràs?|¿Por qué fruta o caja empezarás?", "A quina parada portaràs cada caixa?|¿A qué puesto llevarás cada caja?", "Al final ha de valer 14: 4 + 5 + 5.|Al final tiene que valer 14: 4 + 5 + 5."],
         nota: "No deixis començar a programar fins que cada alumne/a tingui el pla escrit o dit.|No dejes empezar a programar hasta que cada alumno/a tenga el plan escrito o dicho." },
       { id: 's13', k: 'activitat', t: "Projecte: el recol·lector de fruita|Proyecto: el recolector de fruta", timer: 11, x: "Cull les 4 fruites, reparteix les 2 caixes i fes que el comptador digui quantes fruites hi ha al mercat.|Recoge las 4 frutas, reparte las 2 cajas y haz que el contador diga cuántas frutas hay en el mercado.",
         nota: "Qui acabi pot buscar un programa amb menys blocs o ajudar un company/a amb preguntes.|Quien termine puede buscar un programa con menos bloques o ayudar a un compañero/a con preguntas." },

@@ -111,7 +111,7 @@ Object.assign(TANI, (() => {
         ${bar(62, 56, 86, L('Hola!', '¡Hola!'), .3)}${pass(158, 70, 110, 1.2)}
         ${bar(150, 124, 102, L('Assagem?', '¿Ensayamos?'), 1.7)}${pass(262, 110, 70, 2.6)}
         ${bar(226, 56, 80, L('Som-hi!', '¡Vamos!'), 3.1)}
-        <g ${tA(1.2, 'ta-fade')}><text x="186" y="94" class="tat s" fill="#B46A00">«tuga»</text></g><g ${tA(2.6, 'ta-fade')}><text x="256" y="94" text-anchor="end" class="tat s" fill="#B46A00">«guida»</text></g>
+        <g ${tA(1.2, 'ta-fade')}><text x="150" y="94" text-anchor="end" class="tat s" fill="#B46A00">«tuga»</text></g><g ${tA(2.6, 'ta-fade')}><text x="256" y="94" text-anchor="end" class="tat s" fill="#B46A00">«guida»</text></g>
         <path d="M62 166H302" stroke="#9AA6C8" stroke-width="3" stroke-linecap="round"/><path d="M296 160l8 6l-8 6" fill="none" stroke="#9AA6C8" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><text x="62" y="186" class="tat s" fill="#6A78A8">${L('el temps passa', 'el tiempo pasa')}</text>
         <text x="160" y="206" text-anchor="middle" class="tat b" ${tA(3.4, 'ta-fade')}>${L('Cada missatge passa el torn', 'Cada mensaje pasa el turno')}</text>`);
     },

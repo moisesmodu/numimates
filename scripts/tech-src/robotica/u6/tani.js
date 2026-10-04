@@ -87,11 +87,11 @@ Object.assign(TANI, (() => {
           <text x="46" y="122" class="tat s" style="fill:#5A6890">${L('velocitat', 'velocidad')}</text>
           <text x="300" y="194" text-anchor="end" class="tat s" style="fill:#5A6890">${L('distància', 'distancia')} →</text>
           <path d="M70 200L290 126" stroke="#E2574C" stroke-width="4" stroke-linecap="round" pathLength="1" ${tA(.6, 'ta-draw')}/>
-          <text x="62" y="214" class="tat s" style="fill:#E2574C">10 cm</text>
+          <text x="80" y="213" class="tat s" style="fill:#E2574C">10 cm</text>
           <circle r="7" fill="#FFC531" stroke="#14204A" stroke-width="2"><animateMotion dur="${D}s" repeatCount="indefinite" path="M290 126L70 200" ${sp}/></circle>
         </g>
         <text x="304" y="116" text-anchor="end" class="tat b" ${tA(1.2, 'ta-fade')}>${L('lluny: de pressa', 'lejos: deprisa')}</text>
-        <text x="96" y="146" class="tat b" ${tA(2.4, 'ta-fade')}>${L('a prop: suau', 'cerca: suave')}</text>`);
+        <text x="50" y="168" class="tat b" ${tA(2.4, 'ta-fade')}>${L('a prop: suau', 'cerca: suave')}</text>`);
     },
     // el guany k: petit (frena massa aviat i para lluny) o gran (arriba ràpid i a prop)
     k6gain() {

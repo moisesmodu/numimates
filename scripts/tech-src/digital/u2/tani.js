@@ -1,6 +1,7 @@
 /* Tech Digital · unitat 2 «Pensar abans de creure» · animacions de teoria (TANI)
    Dibuixos propis de Numi: mòbils, notícies, hams, la IA que aprèn d'exemples, el biaix, l'espectador/a actiu/va,
-   els passos per demanar ajuda i les tres parts d'una campanya. Cap marca ni cap app reals. */
+   els passos per demanar ajuda i les tres parts d'una campanya; d2repe (ciberassetjament: es repeteix) i d2noes (què no és una IA).
+   Cap marca ni cap app reals. */
 {
   // un emoji sol dins d'un <text>: a l'app es converteix en la icona 3D de Numi (si és al mapa)
   const d2e = (x, y, e, s = 24) => `<text x="${x}" y="${y}" font-size="${s}" text-anchor="middle">${e}</text>`;
@@ -124,6 +125,25 @@
           ${[0, 1, 2].map(i => `<rect x="244" y="${48 + i * 40}" width="20" height="20" rx="5" fill="#E7F7EE" stroke="#3CC47C" stroke-width="2"/><rect x="270" y="${54 + i * 40}" width="32" height="8" rx="4" fill="#DCE4FA"/>
             <path d="M248 ${58 + i * 40}l5 5 9-10" fill="none" stroke="#1E8A50" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" pathLength="1" ${tA(2.9 + i * .45, 'ta-draw')}/>`).join('')}</g>${lab(272, L('Pla', 'Plan'), 2.7)}
         ${[[110, 160, 4.1], [222, 150, 4.3], [160, 30, 4.5]].map(([x, y, t]) => `<g ${tA(t, 'ta-pop')}>${d2e(x, y, '⭐', 18)}</g>`).join('')}`);
+    },
+    // ciberassetjament vs discussió: els missatges que fan mal tornen dia rere dia; una discussió s'acaba fent les paus
+    d2repe() {
+      const days = [L('Dilluns', 'Lunes'), L('Dimarts', 'Martes'), L('Dimecres', 'Miércoles')];
+      const bad = [L('Ets un pesat', 'Eres un pesado'), L('Ningú et vol', 'Nadie te quiere'), L('😂😂 mireu-lo', '😂😂 miradlo')];
+      return tSvg(226, `<text x="80" y="20" text-anchor="middle" class="tat b" style="fill:#C94A4A">${L('Es repeteix', 'Se repite')}</text><text x="244" y="20" text-anchor="middle" class="tat b" style="fill:#1E8A50">${L('Un sol dia', 'Un solo día')}</text>
+        <path d="M160 30v158" stroke="#DCE4FA" stroke-width="3" stroke-dasharray="6 6"/>
+        ${days.map((d, i) => { const y = 32 + i * 52; return `<g ${tA(.3 + i * .7, 'ta-in')}><text x="14" y="${y + 15}" class="tat s" style="fill:#5A6480">${d}</text><rect x="14" y="${y + 21}" width="136" height="26" rx="10" fill="#FDEBEB" stroke="#EF5A5A" stroke-width="2"/><text x="24" y="${y + 39}" class="tat s" style="fill:#8A2B2B">${bad[i]}</text></g>`; }).join('')}
+        <g ${tA(1, 'ta-in')}><rect x="172" y="52" width="136" height="26" rx="10" fill="#FFF3D6" stroke="#F2B21B" stroke-width="2"/><text x="182" y="70" class="tat s">${L('Quina sèrie? 😤', '¿Qué serie? 😤')}</text></g>
+        <g ${tA(1.6, 'ta-in')}><rect x="172" y="86" width="136" height="26" rx="10" fill="#FFF3D6" stroke="#F2B21B" stroke-width="2"/><text x="182" y="104" class="tat s">${L('La meva guanya!', '¡La mía gana!')}</text></g>
+        <g ${tA(2.4, 'ta-pop')}><rect x="172" y="124" width="136" height="44" rx="12" fill="#E7F7EE" stroke="#3CC47C" stroke-width="2.5"/>${d2e(190, 154, '🤝', 20)}<text x="206" y="143" class="tat s" style="font-weight:800">${L('Fem les paus', 'Hacemos las paces')}</text><text x="206" y="160" class="tat s">${L('i ja està', 'y ya está')}</text></g>
+        <g ${tA(3.3, 'ta-pop')}><rect x="10" y="192" width="300" height="28" rx="14" fill="#14204A"/><text x="160" y="211" text-anchor="middle" class="tat w s">${L('Mai no és culpa de qui ho pateix', 'Nunca es culpa de quien lo sufre')}</text></g>`);
+    },
+    // què NO és una IA: no pensa, no sent, es pot equivocar i la fan persones amb exemples
+    d2noes() {
+      const items = [['🧠', L('No pensa com tu', 'No piensa como tú'), '#8B5CF6'], ['😍', L('No sent res', 'No siente nada'), '#EF5A5A'], ['🔎', L('Es pot equivocar', 'Se puede equivocar'), '#F08A24'], ['🧑', L('La fan persones', 'La hacen personas'), '#1E8A50']];
+      return tSvg(226, `<g ${tA(.1, 'ta-pop')}><circle cx="62" cy="100" r="50" fill="#EEF1F8"/>${tBitMini(62, 138, 2, 1)}<text x="62" y="186" text-anchor="middle" class="tat b">${L('Una IA', 'Una IA')}</text></g>
+        ${items.map(([e, t, col], i) => { const y = 14 + i * 50; return `<g ${tA(.7 + i * .6, 'ta-in')}><rect x="124" y="${y}" width="186" height="42" rx="13" fill="#fff" stroke="${col}" stroke-width="2.5" filter="url(#bwSh)"/>${d2e(148, y + 30, e, 22)}<text x="170" y="${y + 26}" class="tat s" style="font-weight:800">${t}</text>${i < 2 ? `<path d="M134 ${y + 8}l28 26M162 ${y + 8}l-28 26" stroke="#EF5A5A" stroke-width="3" stroke-linecap="round" opacity=".85"/>` : ''}</g>`; }).join('')}
+        <g ${tA(3.4, 'ta-fade')}><text x="160" y="220" text-anchor="middle" class="tat s">${L('Aprèn d\'exemples: no és màgia', 'Aprende de ejemplos: no es magia')}</text></g>`);
     }
   });
 }
