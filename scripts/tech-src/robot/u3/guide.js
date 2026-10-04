@@ -1,0 +1,674 @@
+/* Tech Robot · unitat 3 «Llums, sons i botons» · guia del professorat (r3-1 … r3-4) */
+Object.assign(TGUIDE, {
+  /* ---------- Sessió 1 · Llums de colors ---------- */
+  'r3-1': {
+    obj: [
+      "L'alumne/a fa servir el bloc Llum per encendre el llum d'en Bit del color que demana el repte.|El alumno/a usa el bloque Luz para encender la luz de Bit del color que pide el reto.",
+      "L'alumne/a programa una seqüència de llums en l'ordre correcte i explica que, si canvia l'ordre, canvia el missatge (semàfor, far).|El alumno/a programa una secuencia de luces en el orden correcto y explica que, si cambia el orden, cambia el mensaje (semáforo, faro).",
+      "L'alumne/a combina moviments i llums perquè el llum s'encengui just quan en Bit arriba a una casella.|El alumno/a combina movimientos y luces para que la luz se encienda justo cuando Bit llega a una casilla.",
+      "L'alumne/a fa pampallugues posant dos llums diferents dins d'un bucle «Repeteix».|El alumno/a hace parpadeos poniendo dos luces diferentes dentro de un bucle «Repite»."
+    ],
+    comp: [
+      "Competència digital (CD5): resoldre problemes senzills amb programació per blocs, fent servir sortides del robot (llums)|Competencia digital (CD5): resolver problemas sencillos con programación por bloques, usando salidas del robot (luces)",
+      "Pensament computacional: seqüència d'accions, ordre i bucles amb patrons que es repeteixen|Pensamiento computacional: secuencia de acciones, orden y bucles con patrones que se repiten",
+      "Matemàtiques: patrons de repetició (AB AB AB) i comptatge de repeticions|Matemáticas: patrones de repetición (AB AB AB) y conteo de repeticiones",
+      "Coneixement del medi: senyals lluminosos de la vida diària (semàfors, fars) i educació viària|Conocimiento del medio: señales luminosas de la vida diaria (semáforos, faros) y educación vial"
+    ],
+    vocab: [
+      ["Llum|Luz", "Una sortida d'en Bit: s'encén del color que diu el bloc i es queda encesa fins que un altre bloc la canvia.|Una salida de Bit: se enciende del color que dice el bloque y se queda encendida hasta que otro bloque la cambia."],
+      ["Seqüència de llums|Secuencia de luces", "Diversos llums que s'encenen un darrere l'altre, en un ordre concret.|Varias luces que se encienden una detrás de otra, en un orden concreto."],
+      ["Senyal|Señal", "Un missatge que es dona amb llums, sons o gestos, com el del semàfor o el del far.|Un mensaje que se da con luces, sonidos o gestos, como el del semáforo o el del faro."],
+      ["Pampallugues|Parpadeos", "Quan un llum canvia molt de pressa entre dos colors (o entre encès i apagat).|Cuando una luz cambia muy deprisa entre dos colores (o entre encendida y apagada)."],
+      ["Bucle|Bucle", "El bloc «Repeteix»: fa diverses vegades els blocs que té a dins (repàs de la unitat 2).|El bloque «Repite»: hace varias veces los bloques que tiene dentro (repaso de la unidad 2)."]
+    ],
+    mat: {
+      aula: [
+        "Un ordinador per alumne/a amb Numi Tech obert a la sessió «Llums de colors»|Un ordenador por alumno/a con Numi Tech abierto en la sesión «Luces de colores»",
+        "Projector i la presentació d'aquesta sessió|Proyector y la presentación de esta sesión",
+        "Per a cada grup de 3: quatre fulls de colors (verd, groc, vermell i blau) o les targetes de llums impreses|Para cada grupo de 3: cuatro hojas de colores (verde, amarillo, rojo y azul) o las tarjetas de luces impresas",
+        "Opcional: una llanterna per fer de far a la pausa activa|Opcional: una linterna para hacer de faro en la pausa activa"
+      ],
+      imprimir: ["Targetes de llums|Tarjetas de luces", "Fitxa: llums i senyals|Ficha: luces y señales"],
+      prep: [
+        "Imprimir i retallar un paquet de targetes de llums per grup de 3. Si les plastifiqueu, les fareu servir a tota la unitat.|Imprimir y recortar un paquete de tarjetas de luces por grupo de 3. Si las plastificáis, las usaréis en toda la unidad.",
+        "Escriure a la pissarra el «codi del far» de la diapositiva 10 (o deixar-la projectada durant l'activitat).|Escribir en la pizarra el «código del faro» de la diapositiva 10 (o dejarla proyectada durante la actividad).",
+        "Deixar els ordinadors engegats amb Numi Tech obert i la sessió de cada alumne/a iniciada.|Dejar los ordenadores encendidos con Numi Tech abierto y la sesión de cada alumno/a iniciada.",
+        "Provar abans la demostració de la diapositiva 7 per saber en quines caselles s'encenen els llums.|Probar antes la demostración de la diapositiva 7 para saber en qué casillas se encienden las luces."
+      ]
+    },
+    plan: [
+      { min: 5, t: "Recordem i la festa major|Recordamos y la fiesta mayor", fase: 'inici',
+        fa: "Fes la pregunta de repàs sobre els bucles i recull dues o tres respostes. Explica la història de la unitat: s'acosta la festa major de l'illa i el far del port s'ha espatllat. Pregunta on veuen llums que donen missatges i apunta les respostes a la pissarra.|Haz la pregunta de repaso sobre los bucles y recoge dos o tres respuestas. Explica la historia de la unidad: se acerca la fiesta mayor de la isla y el faro del puerto se ha estropeado. Pregunta dónde ven luces que dan mensajes y apunta las respuestas en la pizarra.",
+        diu: ["Quin programa fa avançar en Bit 4 caselles amb menys blocs?|¿Qué programa hace avanzar a Bit 4 casillas con menos bloques?",
+          "On veieu llums que us diuen alguna cosa? Al carrer, a casa, al cotxe…|¿Dónde veis luces que os dicen algo? En la calle, en casa, en el coche…",
+          "Avui en Bit aprendrà a encendre el seu llum i a fer senyals.|Hoy Bit aprenderá a encender su luz y a hacer señales."],
+        slides: ['s1', 's2', 's3'], app: "Encara no: pantalles apagades o abaixades.|Todavía no: pantallas apagadas o bajadas.", org: "Tot el grup|Todo el grupo" },
+      { min: 10, t: "El bloc Llum i les seqüències|El bloque Luz y las secuencias", fase: 'teoria',
+        fa: "Presenta el bloc Llum amb l'animació i remarca que no mou en Bit. Fes la demostració de la seqüència i pregunta quin llum s'encendrà primer. Relaciona-ho amb el semàfor i el far. A la demostració del camí, la classe assenyala on creu que s'encendrà cada llum abans d'executar-la. Acaba amb les pampallugues: per què un sol llum dins d'un bucle no parpelleja?|Presenta el bloque Luz con la animación y remarca que no mueve a Bit. Haz la demostración de la secuencia y pregunta qué luz se encenderá primero. Relaciónalo con el semáforo y el faro. En la demostración del camino, la clase señala dónde cree que se encenderá cada luz antes de ejecutarla. Termina con los parpadeos: ¿por qué una sola luz dentro de un bucle no parpadea?",
+        diu: ["El bloc Llum mou en Bit? Què fa, doncs?|¿El bloque Luz mueve a Bit? ¿Qué hace, entonces?",
+          "Si el semàfor fes vermell, groc i verd, què pensarien els cotxes?|Si el semáforo hiciera rojo, amarillo y verde, ¿qué pensarían los coches?",
+          "En quina casella s'encendrà el llum groc? Assenyaleu-la abans d'executar.|¿En qué casilla se encenderá la luz amarilla? Señaladla antes de ejecutar.",
+          "Si poso només un llum groc dins del bucle, parpellejarà?|Si pongo solo una luz amarilla dentro del bucle, ¿parpadeará?"],
+        slides: ['s4', 's5', 's6', 's7', 's8'], app: "Encara no: tota l'atenció a la projecció.|Todavía no: toda la atención en la proyección.", org: "Tot el grup|Todo el grupo" },
+      { min: 12, t: "Fars i vaixells|Faros y barcos", fase: 'desconnectat',
+        fa: "Fes grups de 3 amb tres papers: programador/a, far i vaixell. El programador/a posa en fila les targetes de llums (i, si vol, una targeta «Repeteix») sense que el vaixell les vegi. El far aixeca els fulls de colors exactament en aquell ordre. El vaixell mira el senyal, el busca al codi del far de la pissarra i diu què vol dir. Si el vaixell l'endevina, el programa era bo; si no, el grup busca el bug. Després de cada senyal, els papers roten.|Haz grupos de 3 con tres papeles: programador/a, faro y barco. El programador/a pone en fila las tarjetas de luces (y, si quiere, una tarjeta «Repite») sin que el barco las vea. El faro levanta las hojas de colores exactamente en ese orden. El barco mira la señal, la busca en el código del faro de la pizarra y dice qué quiere decir. Si el barco la adivina, el programa era bueno; si no, el grupo busca el bug. Después de cada señal, los papeles rotan.",
+        diu: ["El far només aixeca el color que diu la targeta, en ordre.|El faro solo levanta el color que dice la tarjeta, en orden.",
+          "Amb una targeta «Repeteix 3 vegades», quants colors ha d'aixecar el far?|Con una tarjeta «Repite 3 veces», ¿cuántos colores tiene que levantar el faro?",
+          "El vaixell no ho ha entès? Busqueu on és el bug: a les targetes o al far?|¿El barco no lo ha entendido? Buscad dónde está el bug: ¿en las tarjetas o en el faro?"],
+        slides: ['s9', 's10'], app: "Cap: activitat sense pantalla.|Ninguna: actividad sin pantalla.", org: "Grups de 3 amb papers que roten|Grupos de 3 con papeles que rotan" },
+      { min: 15, t: "A l'ordinador: descobreix i prova|En el ordenador: descubre y prueba", fase: 'ordinador',
+        fa: "Cada alumne/a obre la sessió i avança al seu ritme fins a l'«Investiga». Passeja per l'aula i fixa't en qui posa els blocs Llum abans dels Endavant: demana-li que segueixi en Bit amb el dit i digui on és quan s'encén el llum. Al pas «El semàfor de casa», que toquin «Ara no» i el facin a casa.|Cada alumno/a abre la sesión y avanza a su ritmo hasta el «Investiga». Pasea por el aula y fíjate en quién pone los bloques Luz antes de los Adelante: pídele que siga a Bit con el dedo y diga dónde está cuando se enciende la luz. En el paso «El semáforo de casa», que toquen «Ahora no» y lo hagan en casa.",
+        diu: ["On és en Bit quan s'executa aquest bloc Llum? Segueix-lo amb el dit.|¿Dónde está Bit cuando se ejecuta este bloque Luz? Síguelo con el dedo.",
+          "Mira els llums de dalt del món: quins ja estan bé i quin falla?|Mira las luces de arriba del mundo: ¿cuáles ya están bien y cuál falla?",
+          "A la pregunta «On acabarà?», compta quantes vegades es repeteix el bucle.|En la pregunta «¿Dónde terminará?», cuenta cuántas veces se repite el bucle."],
+        slides: ['s11'], app: "Del «Recorda» a l'«Investiga»: la pregunta dels bucles, les dues històries del far, les targetes de «Descobreix», ordenar el semàfor, «El semàfor de casa» (per a casa), el color final, «On acabarà?» i el bloc fora de lloc.|Del «Recuerda» al «Investiga»: la pregunta de los bucles, las dos historias del faro, las tarjetas de «Descubre», ordenar el semáforo, «El semáforo de casa» (para casa), el color final, «¿Dónde terminará?» y el bloque fuera de lugar.", org: "Individual|Individual" },
+      { min: 10, t: "Reptes de llums|Retos de luces", fase: 'ordinador',
+        fa: "Feu la pausa activa del semàfor tots junts. Després programa amb la classe la demostració de la diapositiva 12: un senyal de far amb un bucle. Deixa'ls fer els cinc reptes. En el del far, si algú posa sis blocs, recorda-li que només en pot fer servir tres: quin tros es repeteix?|Haced la pausa activa del semáforo todos juntos. Después programa con la clase la demostración de la diapositiva 12: una señal de faro con un bucle. Deja que hagan los cinco retos. En el del faro, si alguien pone seis bloques, recuérdale que solo puede usar tres: ¿qué trozo se repite?",
+        diu: ["Quin tros del senyal es repeteix? Quantes vegades?|¿Qué trozo de la señal se repite? ¿Cuántas veces?",
+          "Fes-ho a trossos: primer arriba a la casella i després encén el llum.|Hazlo a trozos: primero llega a la casilla y después enciende la luz.",
+          "En el repte del bug, executa pas a pas i mira quin llum surt malament.|En el reto del bug, ejecuta paso a paso y mira qué luz sale mal."],
+        slides: ['s12', 's13'], app: "«Pausa activa» i els cinc reptes: el semàfor, el far del moll, les caselles de colors, ordenar els blocs i el bug dels llums del moll.|«Pausa activa» y los cinco retos: el semáforo, el faro del muelle, las casillas de colores, ordenar los bloques y el bug de las luces del muelle.", org: "Tot el grup i després individual|Todo el grupo y después individual" },
+      { min: 5, t: "Crea: el far de la festa|Crea: el faro de la fiesta", fase: 'crea',
+        fa: "Cada alumne/a porta en Bit fins al far i inventa un espectacle de llums amb almenys tres blocs Llum i un bucle. En parelles, abans d'executar, el company/a diu quins colors creu que veurà.|Cada alumno/a lleva a Bit hasta el faro e inventa un espectáculo de luces con al menos tres bloques Luz y un bucle. Por parejas, antes de ejecutar, el compañero/a dice qué colores cree que verá.",
+        diu: ["Quin senyal farà el teu far? Explica'l amb paraules.|¿Qué señal hará tu faro? Explícala con palabras.",
+          "Abans d'executar el programa del company/a, digues quins colors veuràs.|Antes de ejecutar el programa del compañero/a, di qué colores verás."],
+        slides: ['s14'], app: "Pas «Crea»: El far de la festa.|Paso «Crea»: El faro de la fiesta.", org: "Individual i després per parelles|Individual y después por parejas" },
+      { min: 3, t: "Tancament i tiquet de sortida|Cierre y ticket de salida", fase: 'tancament',
+        fa: "Repassa les tres idees de la sessió amb el resum. Deixa que responguin les preguntes finals de l'app i, a la porta, fes a cada alumne/a una pregunta del tiquet.|Repasa las tres ideas de la sesión con el resumen. Deja que respondan las preguntas finales de la app y, en la puerta, haz a cada alumno/a una pregunta del ticket.",
+        diu: ["Què fa el bloc Llum? I què no fa?|¿Qué hace el bloque Luz? ¿Y qué no hace?",
+          "Com es fan pampallugues amb pocs blocs?|¿Cómo se hacen parpadeos con pocos bloques?"],
+        slides: ['s15', 's16'], app: "«Tancament»: les dues preguntes finals i com m'he sentit.|«Cierre»: las dos preguntas finales y cómo me he sentido.", org: "Tot el grup|Todo el grupo" }
+    ],
+    errors: [
+      ["Posa el bloc Llum abans dels Endavant i el llum s'encén abans d'arribar a la casella.|Pone el bloque Luz antes de los Adelante y la luz se enciende antes de llegar a la casilla.",
+        "Demana-li que executi pas a pas i digui on és en Bit quan s'encén el llum. Que trobi ell/a mateix/a on ha d'anar el bloc.|Pídele que ejecute paso a paso y diga dónde está Bit cuando se enciende la luz. Que encuentre él/ella mismo/a dónde tiene que ir el bloque."],
+      ["Creu que el bloc Llum fa moure en Bit, o espera que en Bit avanci.|Cree que el bloque Luz hace mover a Bit, o espera que Bit avance.",
+        "Que executi un programa amb un sol bloc Llum i miri si en Bit canvia de casella. Recorda-li que Llum és una acció, com Agafa i Deixa.|Que ejecute un programa con un solo bloque Luz y mire si Bit cambia de casilla. Recuérdale que Luz es una acción, como Coge y Deja."],
+      ["Per fer pampallugues posa un sol llum dins del bucle.|Para hacer parpadeos pone una sola luz dentro del bucle.",
+        "Pregunta: de quin color és el llum la primera vegada? I la segona? Si sempre és el mateix, sembla que parpellegi?|Pregunta: ¿de qué color es la luz la primera vez? ¿Y la segunda? Si siempre es la misma, ¿parece que parpadee?"],
+      ["Al repte del far posa sis blocs Llum i es queda sense blocs.|En el reto del faro pone seis bloques Luz y se queda sin bloques.",
+        "Que digui el senyal en veu alta i escolti què es repeteix: «groc, blau… groc, blau…». Aquest tros va dins del bucle.|Que diga la señal en voz alta y escuche qué se repite: «amarillo, azul… amarillo, azul…». Ese trozo va dentro del bucle."],
+      ["No troba com canviar el color i deixa tots els llums vermells.|No encuentra cómo cambiar el color y deja todas las luces rojas.",
+        "Ensenya-li a tocar el bloc: apareix el botó «Canvia el color». Cada toc passa al color següent.|Enséñale a tocar el bloque: aparece el botón «Cambia el color». Cada toque pasa al color siguiente."]
+    ],
+    diff: {
+      mes: "Inventar un senyal de far amb dos bucles seguits (per exemple, groc-blau tres vegades i després vermell-verd dues vegades) i explicar-lo a un company/a perquè l'endevini. Al projecte, fer que en Bit encengui un llum a cada casella del camí.|Inventar una señal de faro con dos bucles seguidos (por ejemplo, amarillo-azul tres veces y después rojo-verde dos veces) y explicársela a un compañero/a para que la adivine. En el proyecto, hacer que Bit encienda una luz en cada casilla del camino.",
+      menys: "Tenir les targetes de llums a la taula: primer col·loca les targetes en ordre i després les copia com a blocs. Començar pel repte del semàfor i deixar el bucle per al final, amb ajuda.|Tener las tarjetas de luces en la mesa: primero coloca las tarjetas en orden y después las copia como bloques. Empezar por el reto del semáforo y dejar el bucle para el final, con ayuda."
+    },
+    aval: {
+      ticket: ["Què fa el bloc Llum? Mou en Bit?|¿Qué hace el bloque Luz? ¿Mueve a Bit?",
+        "Com faries que el llum fes pampallugues groc i blau amb pocs blocs?|¿Cómo harías que la luz hiciera parpadeos amarillo y azul con pocos bloques?"],
+      rubric: [
+        ["Bloc Llum i colors|Bloque Luz y colores", "Encén els llums que demana el repte i en canvia el color sense ajuda.|Enciende las luces que pide el reto y cambia su color sin ayuda.", "Posa blocs Llum, però necessita ajuda per triar el color o l'ordre.|Pone bloques Luz, pero necesita ayuda para elegir el color o el orden."],
+        ["Llums i moviment|Luces y movimiento", "Col·loca cada bloc Llum just quan en Bit arriba a la casella.|Coloca cada bloque Luz justo cuando Bit llega a la casilla.", "Encén els llums correctes, però de vegades abans d'arribar a la casella.|Enciende las luces correctas, pero a veces antes de llegar a la casilla."],
+        ["Pampallugues amb bucles|Parpadeos con bucles", "Fa servir un bucle amb dos llums diferents i tria bé el nombre de repeticions.|Usa un bucle con dos luces diferentes y elige bien el número de repeticiones.", "Fa el senyal amb molts blocs seguits o amb un sol llum dins del bucle.|Hace la señal con muchos bloques seguidos o con una sola luz dentro del bucle."]
+      ]
+    },
+    casa: "A casa, amb el mòbil, podeu repetir la sessió i fer junts «El semàfor de casa»: una persona ensenya colors i l'altra hi reacciona caminant, anant a poc a poc o parant. Després podeu inventar un senyal de far amb palmades.|En casa, con el móvil, podéis repetir la sesión y hacer juntos «El semáforo de casa»: una persona enseña colores y la otra reacciona caminando, yendo despacio o parando. Después podéis inventar una señal de faro con palmadas.",
+    slides: [
+      { id: 's1', k: 'portada', t: "Llums de colors|Luces de colores", x: "Avui en Bit aprendrà a encendre el seu llum i a fer senyals per a la festa major.|Hoy Bit aprenderá a encender su luz y a hacer señales para la fiesta mayor.",
+        nota: "Presenta la nova unitat: llums, sons i botons. Avui comencem pels llums.|Presenta la nueva unidad: luces, sonidos y botones. Hoy empezamos por las luces." },
+      { id: 's2', k: 'repas', t: "Recordes?|¿Recuerdas?", x: "Quin programa fa avançar en Bit 4 caselles amb menys blocs?|¿Qué programa hace avanzar a Bit 4 casillas con menos bloques?", blocks: ['Repeteix 4 vegades|Repite 4 veces', 'Endavant|Adelante'],
+        nota: "Resposta: «Repeteix 4 vegades» amb un Endavant a dins. Avui farem servir els bucles amb llums.|Respuesta: «Repite 4 veces» con un Adelante dentro. Hoy usaremos los bucles con luces." },
+      { id: 's3', k: 'concepte', t: "S'acosta la festa major|Se acerca la fiesta mayor", punts: ["El far del port s'ha espatllat.|El faro del puerto se ha estropeado.", "En Bit té un llum a l'antena i un altre al pit.|Bit tiene una luz en la antena y otra en el pecho.", "Avui el programarem per fer senyals.|Hoy lo programaremos para hacer señales."],
+        nota: "Pregunta on veuen llums que donen missatges: semàfors, fars, l'ambulància, el llum del forn… Apunta-ho a la pissarra.|Pregunta dónde ven luces que dan mensajes: semáforos, faros, la ambulancia, la luz del horno… Apúntalo en la pizarra." },
+      { id: 's4', k: 'anim', t: "El bloc Llum|El bloque Luz", anim: 'u3light', x: "Un bloc Llum encén un color. El llum es queda encès fins que un altre bloc el canvia.|Un bloque Luz enciende un color. La luz se queda encendida hasta que otro bloque la cambia.",
+        nota: "Remarca que el bloc Llum no mou en Bit: és una acció, com Agafa i Deixa de la unitat 1.|Remarca que el bloque Luz no mueve a Bit: es una acción, como Coge y Deja de la unidad 1." },
+      { id: 's5', k: 'demo', t: "Llums en ordre|Luces en orden", x: "Quin llum s'encendrà primer? I l'últim?|¿Qué luz se encenderá primero? ¿Y la última?",
+        demo: { w: { map: ['...', '.v.', '...'], lights: ['g', 'y', 'r'] }, prog: 'light:g light:y light:r' },
+        nota: "Abans d'executar, que diguin els colors en veu alta. Fes notar els llums de dalt del món: es van posant de color quan surten bé.|Antes de ejecutar, que digan los colores en voz alta. Haz notar las luces de arriba del mundo: se van poniendo de color cuando salen bien." },
+      { id: 's6', k: 'anim', t: "Llums que donen missatges|Luces que dan mensajes", anim: 'u3traffic', x: "El semàfor i el far parlen amb llums. Cada color, i cada ordre, vol dir una cosa.|El semáforo y el faro hablan con luces. Cada color, y cada orden, quiere decir una cosa.",
+        nota: "Pregunta què passaria si el semàfor canviés l'ordre dels colors. Aprofita per recordar com es creua el carrer amb seguretat.|Pregunta qué pasaría si el semáforo cambiara el orden de los colores. Aprovecha para recordar cómo se cruza la calle con seguridad." },
+      { id: 's7', k: 'demo', t: "Pensa abans d'executar|Piensa antes de ejecutar", x: "En quina casella s'encendrà el llum groc? I el blau?|¿En qué casilla se encenderá la luz amarilla? ¿Y la azul?",
+        demo: { w: { map: ['>#y#.', '...#u'], lights: ['y', 'u'] }, prog: 'f f light:y f r f l f light:u' },
+        nota: "Que tothom assenyali les caselles abans d'executar. Resposta: el groc a la casella groga i el blau a la blava, perquè cada Llum va just després dels Endavant que hi porten.|Que todos señalen las casillas antes de ejecutar. Respuesta: la amarilla en la casilla amarilla y la azul en la azul, porque cada Luz va justo después de los Adelante que llevan allí." },
+      { id: 's8', k: 'anim', t: "Pampallugues amb un bucle|Parpadeos con un bucle", anim: 'u3blink', x: "Dos llums diferents dins d'un Repeteix fan pampallugues.|Dos luces diferentes dentro de un Repite hacen parpadeos.", blocks: ['Repeteix 3 vegades|Repite 3 veces', 'Llum groc|Luz amarilla', 'Llum blau|Luz azul'],
+        nota: "Pregunta: si dins del bucle només hi poso Llum groc, parpellejarà? No: es queda sempre groc. Calen dos colors que s'alternin.|Pregunta: si dentro del bucle solo pongo Luz amarilla, ¿parpadeará? No: se queda siempre amarilla. Hacen falta dos colores que se alternen." },
+      { id: 's9', k: 'activitat', t: "Fars i vaixells|Faros y barcos", timer: 12, punts: ["Programador/a: posa les targetes de llums en fila, d'amagat.|Programador/a: pone las tarjetas de luces en fila, a escondidas.", "Far: aixeca els fulls de colors en aquell ordre exacte.|Faro: levanta las hojas de colores en ese orden exacto.", "Vaixell: busca el senyal al codi del far i diu què vol dir.|Barco: busca la señal en el código del faro y dice qué quiere decir.", "Després de cada senyal, canvieu els papers.|Después de cada señal, cambiad los papeles."],
+        nota: "Si un grup acaba de pressa, que faci un senyal amb una targeta «Repeteix» i el vaixell compti quants colors veu.|Si un grupo termina deprisa, que haga una señal con una tarjeta «Repite» y el barco cuente cuántos colores ve." },
+      { id: 's10', k: 'concepte', t: "El codi del far|El código del faro", punts: ["Groc, groc → «Port obert: podeu entrar»|Amarillo, amarillo → «Puerto abierto: podéis entrar»", "Vermell, vermell → «Espereu, hi ha un altre vaixell»|Rojo, rojo → «Esperad, hay otro barco»", "Groc, blau, groc, blau → «Veniu a la festa!»|Amarillo, azul, amarillo, azul → «¡Venid a la fiesta!»", "Verd → «Bon viatge!»|Verde → «¡Buen viaje!»"],
+        nota: "És un codi inventat per a l'activitat. Deixa'l projectat; els grups poden inventar senyals nous i afegir-los a la pissarra.|Es un código inventado para la actividad. Déjalo proyectado; los grupos pueden inventar señales nuevas y añadirlas a la pizarra." },
+      { id: 's11', k: 'activitat', t: "Ara, a l'ordinador|Ahora, al ordenador", timer: 15, punts: ["Obre la sessió «Llums de colors».|Abre la sesión «Luces de colores».", "Fes la missió, «Descobreix» i «Mans a l'obra».|Haz la misión, «Descubre» y «Manos a la obra».", "Abans d'executar, pensa on serà en Bit quan s'encengui cada llum.|Antes de ejecutar, piensa dónde estará Bit cuando se encienda cada luz.", "Para quan arribis a la «Pausa activa».|Para cuando llegues a la «Pausa activa»."],
+        nota: "Al pas «El semàfor de casa», que toquin «Ara no»: és per fer-lo a casa amb la família.|En el paso «El semáforo de casa», que toquen «Ahora no»: es para hacerlo en casa con la familia." },
+      { id: 's12', k: 'demo', t: "Programem junts|Programemos juntos", x: "Senyal: vermell, blau, vermell, blau. Com el fem amb només 3 blocs?|Señal: rojo, azul, rojo, azul. ¿Cómo la hacemos con solo 3 bloques?",
+        demo: { w: { map: ['~~~~~', '###>~', '~~~~~'], lights: ['r', 'u', 'r', 'u'] }, prog: '2{ light:r light:u }' },
+        nota: "Primer escriviu-lo a la pissarra amb quatre blocs. Després pregunta quin tros es repeteix i substituïu-lo per un bucle.|Primero escribidlo en la pizarra con cuatro bloques. Después pregunta qué trozo se repite y sustituidlo por un bucle." },
+      { id: 's13', k: 'repte', t: "Reptes de llums|Retos de luces", timer: 10, punts: ["1. El semàfor de la plaça|1. El semáforo de la plaza", "2. El far del moll (3 blocs!)|2. El faro del muelle (¡3 bloques!)", "3. Les caselles de colors|3. Las casillas de colores", "4. Ordena els blocs|4. Ordena los bloques", "5. El bug dels llums del moll|5. El bug de las luces del muelle"],
+        nota: "Si algú s'encalla, pregunta: on és en Bit quan s'encén aquest llum? Quin tros es repeteix?|Si alguien se atasca, pregunta: ¿dónde está Bit cuando se enciende esta luz? ¿Qué trozo se repite?" },
+      { id: 's14', k: 'activitat', t: "Crea: el far de la festa|Crea: el faro de la fiesta", timer: 5, x: "Porta en Bit fins al far i fes un espectacle amb almenys 3 llums i un bucle.|Lleva a Bit hasta el faro y haz un espectáculo con al menos 3 luces y un bucle.",
+        nota: "Celebra que cada far fa un senyal diferent. Abans d'executar, el company/a endevina els colors.|Celebra que cada faro hace una señal diferente. Antes de ejecutar, el compañero/a adivina los colores." },
+      { id: 's15', k: 'resum', t: "Què hem après avui|Qué hemos aprendido hoy", punts: ["El bloc Llum encén un color i no mou en Bit.|El bloque Luz enciende un color y no mueve a Bit.", "Els llums s'encenen en ordre: l'ordre canvia el missatge.|Las luces se encienden en orden: el orden cambia el mensaje.", "Dos llums dins d'un bucle fan pampallugues.|Dos luces dentro de un bucle hacen parpadeos."],
+        nota: "Avança que a la propera sessió en Bit farà música per a la banda de la festa.|Avanza que en la próxima sesión Bit hará música para la banda de la fiesta." },
+      { id: 's16', k: 'tiquet', t: "Tiquet de sortida|Ticket de salida", punts: ["Què fa el bloc Llum? Mou en Bit?|¿Qué hace el bloque Luz? ¿Mueve a Bit?", "Com faries pampallugues groc i blau amb pocs blocs?|¿Cómo harías parpadeos amarillo y azul con pocos bloques?"],
+        nota: "Respostes: encén el llum del color triat i no el mou; dos llums (groc i blau) dins d'un «Repeteix».|Respuestas: enciende la luz del color elegido y no lo mueve; dos luces (amarilla y azul) dentro de un «Repite»." }
+    ],
+    print: [
+      { id: 'p1', t: "Targetes de llums|Tarjetas de luces", k: 'targetes',
+        intro: "Un paquet per grup de 3. Retalleu-les i, si podeu, plastifiqueu-les: les farem servir a tota la unitat. Les de «Repeteix» van davant dels llums que es repeteixen.|Un paquete por grupo de 3. Recortadlas y, si podéis, plastificadlas: las usaremos en toda la unidad. Las de «Repite» van delante de las luces que se repiten.",
+        items: [
+          { t: "Llum verd 🟢|Luz verde 🟢", n: 3 },
+          { t: "Llum groc 🟡|Luz amarilla 🟡", n: 3 },
+          { t: "Llum vermell 🔴|Luz roja 🔴", n: 3 },
+          { t: "Llum blau 🔵|Luz azul 🔵", n: 3 },
+          { t: "Repeteix 2 vegades 🔁|Repite 2 veces 🔁", n: 1 },
+          { t: "Repeteix 3 vegades 🔁|Repite 3 veces 🔁", n: 1 }
+        ] },
+      { id: 'p2', t: "Fitxa: llums i senyals|Ficha: luces y señales", k: 'fitxa',
+        intro: "Llegeix cada programa amb calma i pensa què farà en Bit abans de respondre.|Lee cada programa con calma y piensa qué hará Bit antes de responder.",
+        items: [
+          { q: "Quins llums s'encenen, en ordre? Pinta'ls o escriu-los.|¿Qué luces se encienden, en orden? Píntalas o escríbelas.", prog: '2{ light:y light:u } light:r',
+            sol: "Groc, blau, groc, blau i vermell.|Amarillo, azul, amarillo, azul y rojo." },
+          { q: "De quin color es queda el llum quan s'acaba el programa?|¿De qué color se queda la luz cuando termina el programa?", prog: '3{ light:r light:g }',
+            sol: "Verd: és l'últim bloc que s'executa.|Verde: es el último bloque que se ejecuta." },
+          { q: "En Bit mira a la dreta. Escriu un programa perquè encengui el llum blau a la casella blava, el groc a la groga i acabi a la bandera.|Bit mira a la derecha. Escribe un programa para que encienda la luz azul en la casilla azul, la amarilla en la amarilla y termine en la bandera.",
+            w: { map: ['>#u.', '..#.', '..yF'], lights: ['u', 'y'] }, solProg: 'f f light:u r f f light:y l f',
+            sol: "Una solució: Endavant ×2, Llum blau, Gira a la dreta, Endavant ×2, Llum groc, Gira a l'esquerra, Endavant.|Una solución: Adelante ×2, Luz azul, Gira a la derecha, Adelante ×2, Luz amarilla, Gira a la izquierda, Adelante." },
+          { q: "Inventa el senyal del teu far: escriu una seqüència de llums i després fes-la més curta amb un «Repeteix».|Inventa la señal de tu faro: escribe una secuencia de luces y después hazla más corta con un «Repite».",
+            sol: "Resposta oberta. Comproveu que dins del bucle hi ha el tros que es repeteix i que el nombre de vegades és el correcte.|Respuesta abierta. Comprobad que dentro del bucle está el trozo que se repite y que el número de veces es el correcto." }
+        ] }
+    ]
+  },
+
+  /* ---------- Sessió 2 · Música amb en Bit ---------- */
+  'r3-2': {
+    obj: [
+      "L'alumne/a fa sonar notes amb el bloc Nota i diu quina nota és més greu o més aguda (de do a si).|El alumno/a hace sonar notas con el bloque Nota y dice qué nota es más grave o más aguda (de do a si).",
+      "L'alumne/a programa una melodia donada en l'ordre correcte i explica que, si canvia l'ordre, la melodia canvia.|El alumno/a programa una melodía dada en el orden correcto y explica que, si cambia el orden, la melodía cambia.",
+      "L'alumne/a fa servir un bucle per repetir un ritme o una tornada amb pocs blocs.|El alumno/a usa un bucle para repetir un ritmo o un estribillo con pocos bloques.",
+      "L'alumne/a combina moviment i notes perquè cada nota soni a la casella que toca.|El alumno/a combina movimiento y notas para que cada nota suene en la casilla que toca."
+    ],
+    comp: [
+      "Competència digital (CD5): crear seqüències sonores amb programació per blocs|Competencia digital (CD5): crear secuencias sonoras con programación por bloques",
+      "Pensament computacional: seqüència, patrons i bucles aplicats a la música|Pensamiento computacional: secuencia, patrones y bucles aplicados a la música",
+      "Educació artística (música): les notes de l'escala, agut i greu, ritme i repetició|Educación artística (música): las notas de la escala, agudo y grave, ritmo y repetición",
+      "Matemàtiques: patrons que es repeteixen i comptatge de repeticions|Matemáticas: patrones que se repiten y conteo de repeticiones"
+    ],
+    vocab: [
+      ["Nota|Nota", "Un so musical. N'hi ha set: do, re, mi, fa, sol, la i si.|Un sonido musical. Hay siete: do, re, mi, fa, sol, la y si."],
+      ["Melodia|Melodía", "Una seqüència de notes, una darrere l'altra, en un ordre concret.|Una secuencia de notas, una detrás de otra, en un orden concreto."],
+      ["Greu i agut|Grave y agudo", "Greu és un so baix (com un tambor gran); agut és un so alt (com el xiulet d'un ocell).|Grave es un sonido bajo (como un tambor grande); agudo es un sonido alto (como el silbido de un pájaro)."],
+      ["Ritme|Ritmo", "Un grup de sons que es repeteix, com quan piquem de mans seguint una cançó.|Un grupo de sonidos que se repite, como cuando damos palmadas siguiendo una canción."],
+      ["Tornada|Estribillo", "El tros d'una cançó que torna a sonar diverses vegades.|El trozo de una canción que vuelve a sonar varias veces."]
+    ],
+    mat: {
+      aula: [
+        "Un ordinador per alumne/a amb Numi Tech obert a la sessió «Música amb en Bit» i, si pot ser, auriculars|Un ordenador por alumno/a con Numi Tech abierto en la sesión «Música con Bit» y, si puede ser, auriculares",
+        "Projector, altaveus i la presentació d'aquesta sessió|Proyector, altavoces y la presentación de esta sesión",
+        "Les targetes de notes impreses (un conjunt de set notes per grup) i les targetes «Repeteix» de la sessió anterior|Las tarjetas de notas impresas (un conjunto de siete notas por grupo) y las tarjetas «Repite» de la sesión anterior",
+        "Opcional: un instrument de l'aula (xilòfon, metal·lòfon o teclat) per fer sonar les notes|Opcional: un instrumento del aula (xilófono, metalófono o teclado) para hacer sonar las notas"
+      ],
+      imprimir: ["Targetes de notes|Tarjetas de notas", "Fitxa: melodies d'en Bit|Ficha: melodías de Bit"],
+      prep: [
+        "Imprimir i retallar les targetes de notes: un conjunt de set notes (do… si) per grup, més targetes repetides per fer melodies.|Imprimir y recortar las tarjetas de notas: un conjunto de siete notas (do… si) por grupo, más tarjetas repetidas para hacer melodías.",
+        "Comprovar que els ordinadors tenen el so activat (i els auriculars connectats) abans de la classe.|Comprobar que los ordenadores tienen el sonido activado (y los auriculares conectados) antes de la clase.",
+        "Si hi ha un instrument a l'aula, provar abans les notes do, re, mi, fa, sol, la i si.|Si hay un instrumento en el aula, probar antes las notas do, re, mi, fa, sol, la y si.",
+        "Preparar l'espai per a dues files de set alumnes (el xilòfon humà) davant de la pissarra.|Preparar el espacio para dos filas de siete alumnos (el xilófono humano) delante de la pizarra."
+      ]
+    },
+    plan: [
+      { min: 5, t: "Recordem i la banda de la festa|Recordamos y la banda de la fiesta", fase: 'inici',
+        fa: "Fes la pregunta de repàs dels llums dins d'un bucle. Explica la història: a la banda de la festa li falta un músic i en Bit s'ofereix a tocar. Pregunta quines cançons de la festa major coneixen i si tenen algun tros que es repeteixi.|Haz la pregunta de repaso de las luces dentro de un bucle. Explica la historia: a la banda de la fiesta le falta un músico y Bit se ofrece a tocar. Pregunta qué canciones de la fiesta mayor conocen y si tienen algún trozo que se repita.",
+        diu: ["Repeteix 2 vegades: vermell, verd. Quins llums s'encenen?|Repite 2 veces: rojo, verde. ¿Qué luces se encienden?",
+          "Coneixeu alguna cançó amb un tros que torna a sonar? Com es diu aquest tros?|¿Conocéis alguna canción con un trozo que vuelve a sonar? ¿Cómo se llama ese trozo?"],
+        slides: ['s1', 's2', 's3'], app: "Encara no.|Todavía no.", org: "Tot el grup|Todo el grupo" },
+      { min: 10, t: "Notes, melodies i ritmes|Notas, melodías y ritmos", fase: 'teoria',
+        fa: "Presenta les set notes amb l'animació del xilòfon i canteu-les junts pujant i baixant. Fes la pregunta de sons greus i aguts de la vida diària. Executa la melodia i compara do-mi-sol amb sol-mi-do: quina puja i quina baixa? Mostra el ritme amb bucle i, a la demostració del camí, que la classe digui a quina estrella sonarà cada nota abans d'executar.|Presenta las siete notas con la animación del xilófono y cantadlas juntos subiendo y bajando. Haz la pregunta de sonidos graves y agudos de la vida diaria. Ejecuta la melodía y compara do-mi-sol con sol-mi-do: ¿cuál sube y cuál baja? Muestra el ritmo con bucle y, en la demostración del camino, que la clase diga en qué estrella sonará cada nota antes de ejecutar.",
+        diu: ["Quin so és més agut, un ocell o un camió?|¿Qué sonido es más agudo, un pájaro o un camión?",
+          "Do, mi, sol i sol, mi, do són les mateixes notes. Sonen igual?|Do, mi, sol y sol, mi, do son las mismas notas. ¿Suenan igual?",
+          "Quantes vegades sona el do en aquest ritme? Compteu-ho amb els dits.|¿Cuántas veces suena el do en este ritmo? Contadlo con los dedos."],
+        slides: ['s4', 's5', 's6', 's7', 's8', 's9'], app: "Encara no.|Todavía no.", org: "Tot el grup|Todo el grupo" },
+      { min: 12, t: "El xilòfon humà|El xilófono humano", fase: 'desconnectat',
+        fa: "Set alumnes fan de xilòfon: es posen en fila, de més greu (do) a més aguda (si), cadascun amb la seva targeta de nota. Un alumne/a fa de programador/a: posa targetes de notes en fila a la taula (i, si vol, una targeta «Repeteix»). Un altre fa de director/a i toca l'espatlla de cada nota en l'ordre del programa; la nota tocada canta el seu nom. La resta de la classe escolta i diu si la melodia ha pujat o baixat. Canvieu els papers cada dues melodies. Si hi ha més de 14 alumnes, feu dos xilòfons.|Siete alumnos hacen de xilófono: se ponen en fila, de más grave (do) a más aguda (si), cada uno con su tarjeta de nota. Un alumno/a hace de programador/a: pone tarjetas de notas en fila en la mesa (y, si quiere, una tarjeta «Repite»). Otro hace de director/a y toca el hombro de cada nota en el orden del programa; la nota tocada canta su nombre. El resto de la clase escucha y dice si la melodía ha subido o bajado. Cambiad los papeles cada dos melodías. Si hay más de 14 alumnos, haced dos xilófonos.",
+        diu: ["El director/a toca les notes en l'ordre exacte del programa, com en Bit.|El director/a toca las notas en el orden exacto del programa, como Bit.",
+          "Aquesta melodia puja o baixa? Per què?|¿Esta melodía sube o baja? ¿Por qué?",
+          "Si poso la targeta «Repeteix 2 vegades», quantes notes sonaran?|Si pongo la tarjeta «Repite 2 veces», ¿cuántas notas sonarán?"],
+        slides: ['s10', 's11'], app: "Cap: activitat sense pantalla.|Ninguna: actividad sin pantalla.", org: "Grups de 9: set notes, programador/a i director/a|Grupos de 9: siete notas, programador/a y director/a" },
+      { min: 15, t: "A l'ordinador: descobreix i prova|En el ordenador: descubre y prueba", fase: 'ordinador',
+        fa: "Cada alumne/a obre la sessió i avança fins a l'«Investiga». Si no hi ha auriculars, demana que baixin el volum. Fixa't en qui posa les notes abans d'arribar a les estrelles i en qui confon l'ordre de les notes. Al pas «Música amb el cos», que toquin «Ara no» i el facin a casa.|Cada alumno/a abre la sesión y avanza hasta el «Investiga». Si no hay auriculares, pide que bajen el volumen. Fíjate en quién pone las notas antes de llegar a las estrellas y en quién confunde el orden de las notas. En el paso «Música con el cuerpo», que toquen «Ahora no» y lo hagan en casa.",
+        diu: ["Escolta la melodia: quina nota sona diferent del que demana el repte?|Escucha la melodía: ¿qué nota suena diferente de lo que pide el reto?",
+          "On és en Bit quan sona aquesta nota? Ja ha arribat a l'estrella?|¿Dónde está Bit cuando suena esta nota? ¿Ya ha llegado a la estrella?"],
+        slides: ['s12'], app: "Del «Recorda» a l'«Investiga»: la pregunta dels llums, les dues històries de la banda, les targetes de «Descobreix», ordenar les notes, «Música amb el cos» (per a casa), la melodia amb bucle, «On acabarà?» i la nota equivocada.|Del «Recuerda» al «Investiga»: la pregunta de las luces, las dos historias de la banda, las tarjetas de «Descubre», ordenar las notas, «Música con el cuerpo» (para casa), la melodía con bucle, «¿Dónde terminará?» y la nota equivocada.", org: "Individual|Individual" },
+      { min: 10, t: "Reptes musicals|Retos musicales", fase: 'ordinador',
+        fa: "Feu tots junts la pausa activa de l'escala amb el cos, cantant les notes. Després deixa'ls fer els cinc reptes. Als reptes amb bucle, demana que diguin en veu alta el tros que es repeteix abans de programar-lo.|Haced todos juntos la pausa activa de la escala con el cuerpo, cantando las notas. Después deja que hagan los cinco retos. En los retos con bucle, pide que digan en voz alta el trozo que se repite antes de programarlo.",
+        diu: ["Canta el ritme dels gegants: do, sol, do, sol… Quin tros es repeteix?|Canta el ritmo de los gigantes: do, sol, do, sol… ¿Qué trozo se repite?",
+          "A la tornada hi ha dues notes canviades de lloc. Quines són?|En el estribillo hay dos notas cambiadas de sitio. ¿Cuáles son?"],
+        slides: ['s13'], app: "«Pausa activa» i els cinc reptes: la crida de la festa, el ritme dels gegants, els tres músics, la tornada amb bug i ordenar els blocs.|«Pausa activa» y los cinco retos: la llamada de la fiesta, el ritmo de los gigantes, los tres músicos, el estribillo con bug y ordenar los bloques.", org: "Tot el grup i després individual|Todo el grupo y después individual" },
+      { min: 5, t: "Crea: la cançó de la festa|Crea: la canción de la fiesta", fase: 'crea',
+        fa: "Cada alumne/a compon la seva melodia: almenys quatre blocs Nota i un tros que es repeteixi, i en Bit acaba a l'escenari. Quan la tinguin, la fan sonar al company/a, que ha de dir quin tros es repeteix.|Cada alumno/a compone su melodía: al menos cuatro bloques Nota y un trozo que se repita, y Bit termina en el escenario. Cuando la tengan, la hacen sonar al compañero/a, que tiene que decir qué trozo se repite.",
+        diu: ["La teva melodia puja, baixa o fa ziga-zaga?|¿Tu melodía sube, baja o hace zigzag?",
+          "Escolta la del company/a: quin tros es repeteix?|Escucha la del compañero/a: ¿qué trozo se repite?"],
+        slides: ['s14'], app: "Pas «Crea»: La cançó de la festa.|Paso «Crea»: La canción de la fiesta.", org: "Individual i després per parelles|Individual y después por parejas" },
+      { min: 3, t: "Tancament i tiquet de sortida|Cierre y ticket de salida", fase: 'tancament',
+        fa: "Repassa les tres idees de la sessió amb el resum, deixa que responguin les preguntes finals de l'app i fes el tiquet de sortida a la porta.|Repasa las tres ideas de la sesión con el resumen, deja que respondan las preguntas finales de la app y haz el ticket de salida en la puerta.",
+        diu: ["Què és una melodia?|¿Qué es una melodía?", "Quina és la nota més greu? I la més aguda?|¿Cuál es la nota más grave? ¿Y la más aguda?"],
+        slides: ['s15', 's16'], app: "«Tancament»: les dues preguntes finals i com m'he sentit.|«Cierre»: las dos preguntas finales y cómo me he sentido.", org: "Tot el grup|Todo el grupo" }
+    ],
+    errors: [
+      ["Posa les notes en un ordre diferent del que demana el repte i no ho sent.|Pone las notas en un orden diferente del que pide el reto y no lo oye.",
+        "Que miri la melodia de dalt del món: cada nota encertada es posa de color i la primera que falla es marca. Que canviï només aquella.|Que mire la melodía de arriba del mundo: cada nota acertada se pone de color y la primera que falla se marca. Que cambie solo esa."],
+      ["Fa sonar la nota abans d'arribar a l'estrella.|Hace sonar la nota antes de llegar a la estrella.",
+        "Pas a pas: on és en Bit quan sona la nota? Que compti els Endavant que falten abans de la Nota.|Paso a paso: ¿dónde está Bit cuando suena la nota? Que cuente los Adelante que faltan antes de la Nota."],
+      ["Al ritme dels gegants posa la Nota do i la Nota sol en bucles separats.|En el ritmo de los gigantes pone la Nota do y la Nota sol en bucles separados.",
+        "Que canti el que ha programat: «do, do, do, do, sol, sol…». Sona igual que «do, sol, do, sol»? Els dos blocs han d'anar junts dins del mateix bucle.|Que cante lo que ha programado: «do, do, do, do, sol, sol…». ¿Suena igual que «do, sol, do, sol»? Los dos bloques tienen que ir juntos dentro del mismo bucle."],
+      ["Confon greu i agut, o creu que «agut» vol dir «fort».|Confunde grave y agudo, o cree que «agudo» quiere decir «fuerte».",
+        "Fes sonar un do i un si amb el mateix volum. Agut és més alt, com un ocell; fort és més volum. Que ho comprovi a l'app amb «Canvia la nota».|Haz sonar un do y un si con el mismo volumen. Agudo es más alto, como un pájaro; fuerte es más volumen. Que lo compruebe en la app con «Cambia la nota»."],
+      ["No sent res i pensa que el programa no funciona.|No oye nada y piensa que el programa no funciona.",
+        "Comprova el volum i els auriculars. Si cal, al perfil de l'app hi ha l'opció «So». La melodia de dalt del món també mostra les notes que han sonat.|Comprueba el volumen y los auriculares. Si hace falta, en el perfil de la app está la opción «Sonido». La melodía de arriba del mundo también muestra las notas que han sonado."]
+    ],
+    diff: {
+      mes: "Compondre una melodia amb dos bucles diferents (per exemple, la tornada dues vegades i un final que baixa) i escriure-la a la fitxa perquè un company/a la toqui al xilòfon humà. Intentar fer la cançó del projecte amb el mínim de blocs.|Componer una melodía con dos bucles diferentes (por ejemplo, el estribillo dos veces y un final que baja) y escribirla en la ficha para que un compañero/a la toque en el xilófono humano. Intentar hacer la canción del proyecto con el mínimo de bloques.",
+      menys: "Tenir les targetes de notes a la taula, en l'ordre de la melodia que demana el repte, i copiar-les com a blocs una a una. Fer servir només tres notes (do, mi i sol) fins que se senti segur/a.|Tener las tarjetas de notas en la mesa, en el orden de la melodía que pide el reto, y copiarlas como bloques una a una. Usar solo tres notas (do, mi y sol) hasta que se sienta seguro/a."
+    },
+    aval: {
+      ticket: ["Què és una melodia? Posa'n un exemple amb tres notes.|¿Qué es una melodía? Pon un ejemplo con tres notas.",
+        "Com faries sonar «do, sol» quatre vegades amb pocs blocs?|¿Cómo harías sonar «do, sol» cuatro veces con pocos bloques?"],
+      rubric: [
+        ["Notes i melodies|Notas y melodías", "Programa la melodia que demana el repte en l'ordre correcte i sap dir quina nota és més aguda.|Programa la melodía que pide el reto en el orden correcto y sabe decir qué nota es más aguda.", "Fa sonar notes, però s'equivoca en l'ordre o necessita ajuda per triar-les.|Hace sonar notas, pero se equivoca en el orden o necesita ayuda para elegirlas."],
+        ["Ritmes amb bucles|Ritmos con bucles", "Troba el tros que es repeteix i el posa dins d'un bucle amb el nombre de vegades correcte.|Encuentra el trozo que se repite y lo pone dentro de un bucle con el número de veces correcto.", "Fa el ritme amb molts blocs seguits o separa el patró en bucles diferents.|Hace el ritmo con muchos bloques seguidos o separa el patrón en bucles diferentes."],
+        ["Notes i moviment|Notas y movimiento", "Fa sonar cada nota just quan en Bit arriba a l'estrella.|Hace sonar cada nota justo cuando Bit llega a la estrella.", "Encerta les notes, però de vegades sonen abans d'arribar a l'estrella.|Acierta las notas, pero a veces suenan antes de llegar a la estrella."]
+      ]
+    },
+    casa: "A casa, amb el mòbil, podeu repetir la sessió i fer «Música amb el cos»: una persona escriu un ritme amb palmades, cops a les cames i cops de peu, i l'altra el toca com un robot. Proveu d'afegir-hi un «Repeteix»!|En casa, con el móvil, podéis repetir la sesión y hacer «Música con el cuerpo»: una persona escribe un ritmo con palmadas, golpes en las piernas y golpes de pie, y la otra lo toca como un robot. ¡Probad a añadir un «Repite»!",
+    slides: [
+      { id: 's1', k: 'portada', t: "Música amb en Bit|Música con Bit", x: "Avui en Bit farà música per a la banda de la festa major.|Hoy Bit hará música para la banda de la fiesta mayor.",
+        nota: "Comprova que el so del projector funciona abans de començar.|Comprueba que el sonido del proyector funciona antes de empezar." },
+      { id: 's2', k: 'repas', t: "Recordes?|¿Recuerdas?", x: "Repeteix 2 vegades: Llum vermell, Llum verd. Quins llums s'encenen, en ordre?|Repite 2 veces: Luz roja, Luz verde. ¿Qué luces se encienden, en orden?", blocks: ['Repeteix 2 vegades|Repite 2 veces', 'Llum vermell|Luz roja', 'Llum verd|Luz verde'],
+        nota: "Resposta: vermell, verd, vermell, verd. El bucle repeteix tot el que té a dins, en ordre.|Respuesta: rojo, verde, rojo, verde. El bucle repite todo lo que tiene dentro, en orden." },
+      { id: 's3', k: 'concepte', t: "La banda de la festa|La banda de la fiesta", punts: ["A la banda li falta un músic.|A la banda le falta un músico.", "En Bit té un altaveu i sap fer notes.|Bit tiene un altavoz y sabe hacer notas.", "Avui li ensenyarem a tocar melodies.|Hoy le enseñaremos a tocar melodías."],
+        nota: "Pregunta quines cançons de festa coneixen i si tenen un tros que torna a sonar: és la tornada.|Pregunta qué canciones de fiesta conocen y si tienen un trozo que vuelve a sonar: es el estribillo." },
+      { id: 's4', k: 'anim', t: "Les set notes|Las siete notas", anim: 'u3notes', x: "Do, re, mi, fa, sol, la, si: de la més greu a la més aguda.|Do, re, mi, fa, sol, la, si: de la más grave a la más aguda.",
+        nota: "Canteu les notes junts pujant i baixant. Si teniu un instrument a l'aula, toqueu-les a la vegada que l'animació.|Cantad las notas juntos subiendo y bajando. Si tenéis un instrumento en el aula, tocadlas a la vez que la animación." },
+      { id: 's5', k: 'pregunta', t: "Agut o greu?|¿Agudo o grave?", punts: ["El xiulet d'un ocell|El silbido de un pájaro", "Un camió que passa pel carrer|Un camión que pasa por la calle", "El timbre de la bicicleta|El timbre de la bicicleta", "Un tambor gran|Un tambor grande"],
+        nota: "Que responguin amb el cos: braços amunt si és agut, ajupits si és greu. Ocell i timbre, aguts; camió i tambor, greus.|Que respondan con el cuerpo: brazos arriba si es agudo, agachados si es grave. Pájaro y timbre, agudos; camión y tambor, graves." },
+      { id: 's6', k: 'demo', t: "Una melodia|Una melodía", x: "Quantes notes sonaran? Pugen o baixen?|¿Cuántas notas sonarán? ¿Suben o bajan?",
+        demo: { w: { map: ['...', '.v.', '...'], melody: ['do', 're', 'mi', 'fa', 'sol'] }, prog: 'note:do note:re note:mi note:fa note:sol' },
+        nota: "Fes notar la melodia de dalt del món: cada nota que sona bé es posa de color.|Haz notar la melodía de arriba del mundo: cada nota que suena bien se pone de color." },
+      { id: 's7', k: 'anim', t: "Un altre ordre, una altra melodia|Otro orden, otra melodía", anim: 'u3melody', x: "Mateixes notes, un altre ordre: una melodia diferent.|Mismas notas, otro orden: una melodía diferente.",
+        nota: "Canteu do-mi-sol i després sol-mi-do. Pregunta quina sembla que pugi una escala i quina que la baixi.|Cantad do-mi-sol y después sol-mi-do. Pregunta cuál parece que sube una escalera y cuál que la baja." },
+      { id: 's8', k: 'demo', t: "Un ritme que es repeteix|Un ritmo que se repite", x: "Quantes vegades sonarà el do?|¿Cuántas veces sonará el do?",
+        demo: { w: { map: ['...', '.v.', '...'], melody: ['do', 'sol', 'do', 'sol', 'do', 'sol'] }, prog: '3{ note:do note:sol }' },
+        nota: "Resposta: 3 vegades. Piqueu de mans el ritme mentre sona i compareu-ho amb els patrons de la unitat 2.|Respuesta: 3 veces. Dad palmadas al ritmo mientras suena y comparadlo con los patrones de la unidad 2." },
+      { id: 's9', k: 'demo', t: "Pensa abans d'executar|Piensa antes de ejecutar", x: "A quina estrella sonarà el do? I el mi?|¿En qué estrella sonará el do? ¿Y el mi?",
+        demo: { w: { map: ['>#*#*'], melody: ['do', 'mi'] }, prog: 'f f note:do f f note:mi' },
+        nota: "Que assenyalin les estrelles abans d'executar. Recorda la regla: primer arribar a l'estrella, després la nota.|Que señalen las estrellas antes de ejecutar. Recuerda la regla: primero llegar a la estrella, después la nota." },
+      { id: 's10', k: 'activitat', t: "El xilòfon humà|El xilófono humano", timer: 12, punts: ["Set alumnes en fila: do, re, mi, fa, sol, la, si.|Siete alumnos en fila: do, re, mi, fa, sol, la, si.", "Programador/a: posa targetes de notes en fila.|Programador/a: pone tarjetas de notas en fila.", "Director/a: toca les notes en aquell ordre; cada nota canta el seu nom.|Director/a: toca las notas en ese orden; cada nota canta su nombre.", "La classe escolta: la melodia puja o baixa?|La clase escucha: ¿la melodía sube o baja?"],
+        nota: "Canvieu els papers cada dues melodies perquè tothom faci de nota, de programador/a i de director/a.|Cambiad los papeles cada dos melodías para que todos hagan de nota, de programador/a y de director/a." },
+      { id: 's11', k: 'concepte', t: "Com es programa el xilòfon|Cómo se programa el xilófono", punts: ["Una targeta = una nota.|Una tarjeta = una nota.", "La targeta «Repeteix» va davant de les notes que es repeteixen.|La tarjeta «Repite» va delante de las notas que se repiten.", "El director/a no es salta cap targeta.|El director/a no se salta ninguna tarjeta.", "Si sona malament, busqueu el bug a les targetes.|Si suena mal, buscad el bug en las tarjetas."],
+        nota: "Deixa aquesta diapositiva projectada mentre fan l'activitat.|Deja esta diapositiva proyectada mientras hacen la actividad." },
+      { id: 's12', k: 'activitat', t: "Ara, a l'ordinador|Ahora, al ordenador", timer: 15, punts: ["Obre la sessió «Música amb en Bit».|Abre la sesión «Música con Bit».", "Posa't els auriculars o abaixa el volum.|Ponte los auriculares o baja el volumen.", "Escolta cada melodia i mira la línia de notes de dalt del món.|Escucha cada melodía y mira la línea de notas de arriba del mundo.", "Para quan arribis a la «Pausa activa».|Para cuando llegues a la «Pausa activa»."],
+        nota: "Al pas «Música amb el cos», que toquin «Ara no»: és per fer-lo a casa.|En el paso «Música con el cuerpo», que toquen «Ahora no»: es para hacerlo en casa." },
+      { id: 's13', k: 'repte', t: "Reptes musicals|Retos musicales", timer: 10, punts: ["1. La crida de la festa|1. La llamada de la fiesta", "2. El ritme dels gegants (3 blocs!)|2. El ritmo de los gigantes (¡3 bloques!)", "3. Els tres músics|3. Los tres músicos", "4. La tornada amb un bug|4. El estribillo con un bug", "5. Ordena els blocs|5. Ordena los bloques"],
+        nota: "Si algú s'encalla, que canti la melodia que demana el repte i després la que sona.|Si alguien se atasca, que cante la melodía que pide el reto y después la que suena." },
+      { id: 's14', k: 'activitat', t: "Crea: la cançó de la festa|Crea: la canción de la fiesta", timer: 5, x: "Compon una melodia amb almenys 4 notes i un tros que es repeteixi, i porta en Bit a l'escenari.|Compón una melodía con al menos 4 notas y un trozo que se repita, y lleva a Bit al escenario.",
+        nota: "Si queda temps, dos o tres voluntaris fan sonar la seva cançó al projector.|Si queda tiempo, dos o tres voluntarios hacen sonar su canción en el proyector." },
+      { id: 's15', k: 'resum', t: "Què hem après avui|Qué hemos aprendido hoy", punts: ["El bloc Nota fa sonar do, re, mi, fa, sol, la o si.|El bloque Nota hace sonar do, re, mi, fa, sol, la o si.", "Una melodia és una seqüència de notes: l'ordre importa.|Una melodía es una secuencia de notas: el orden importa.", "Un ritme que es repeteix es fa amb un bucle.|Un ritmo que se repite se hace con un bucle."],
+        nota: "Avança que la propera sessió en Bit tindrà un comandament amb botons.|Avanza que en la próxima sesión Bit tendrá un mando con botones." },
+      { id: 's16', k: 'tiquet', t: "Tiquet de sortida|Ticket de salida", punts: ["Què és una melodia?|¿Qué es una melodía?", "Com faries sonar «do, sol» 4 vegades amb pocs blocs?|¿Cómo harías sonar «do, sol» 4 veces con pocos bloques?"],
+        nota: "Respostes: una seqüència de notes en ordre; «Repeteix 4 vegades» amb les notes do i sol a dins.|Respuestas: una secuencia de notas en orden; «Repite 4 veces» con las notas do y sol dentro." }
+    ],
+    print: [
+      { id: 'p1', t: "Targetes de notes|Tarjetas de notas", k: 'targetes',
+        intro: "Un conjunt de set notes per al xilòfon humà i notes de més per programar melodies. Cada nota té el seu color.|Un conjunto de siete notas para el xilófono humano y notas de más para programar melodías. Cada nota tiene su color.",
+        items: [
+          { t: "Nota do 🔴|Nota do 🔴", n: 2 },
+          { t: "Nota re 🟠|Nota re 🟠", n: 2 },
+          { t: "Nota mi 🟡|Nota mi 🟡", n: 2 },
+          { t: "Nota fa 🟢|Nota fa 🟢", n: 2 },
+          { t: "Nota sol 🔵|Nota sol 🔵", n: 2 },
+          { t: "Nota la 🟣|Nota la 🟣", n: 1 },
+          { t: "Nota si 🟤|Nota si 🟤", n: 1 }
+        ] },
+      { id: 'p2', t: "Fitxa: melodies d'en Bit|Ficha: melodías de Bit", k: 'fitxa',
+        intro: "Llegeix cada programa i escriu les notes que sonaran, en ordre. Si vols, canta-les fluixet.|Lee cada programa y escribe las notas que sonarán, en orden. Si quieres, cántalas bajito.",
+        items: [
+          { q: "Quina melodia sona? Escriu les notes en ordre.|¿Qué melodía suena? Escribe las notas en orden.", prog: '2{ note:do note:mi } note:sol',
+            sol: "do, mi, do, mi, sol.|do, mi, do, mi, sol." },
+          { q: "Escriu un programa més curt, amb un bucle, per a aquesta melodia: re, fa, re, fa, re, fa.|Escribe un programa más corto, con un bucle, para esta melodía: re, fa, re, fa, re, fa.",
+            sol: "Repeteix 3 vegades: Nota re, Nota fa.|Repite 3 veces: Nota re, Nota fa." },
+          { q: "En Bit mira a la dreta. Escriu el programa perquè soni un do a la primera estrella, un re a la segona i un mi a la tercera.|Bit mira a la derecha. Escribe el programa para que suene un do en la primera estrella, un re en la segunda y un mi en la tercera.",
+            w: { map: ['>#*', '..#', '*#*'], melody: ['do', 're', 'mi'] }, solProg: 'f f note:do r f f note:re r f f note:mi',
+            sol: "Endavant ×2, Nota do, Gira a la dreta, Endavant ×2, Nota re, Gira a la dreta, Endavant ×2, Nota mi.|Adelante ×2, Nota do, Gira a la derecha, Adelante ×2, Nota re, Gira a la derecha, Adelante ×2, Nota mi." },
+          { q: "Compon la teva tornada: escriu 3 o 4 notes i quantes vegades es repeteixen. Puja, baixa o fa ziga-zaga?|Compón tu estribillo: escribe 3 o 4 notas y cuántas veces se repiten. ¿Sube, baja o hace zigzag?",
+            sol: "Resposta oberta. Comproveu que les notes estan en ordre i que el bucle repeteix tota la tornada.|Respuesta abierta. Comprobad que las notas están en orden y que el bucle repite todo el estribillo." }
+        ] }
+    ]
+  },
+
+  /* ---------- Sessió 3 · Quan premo el botó… ---------- */
+  'r3-3': {
+    obj: [
+      "L'alumne/a explica què és un esdeveniment amb exemples de la vida diària (timbre, interruptor, polsador del semàfor).|El alumno/a explica qué es un evento con ejemplos de la vida diaria (timbre, interruptor, pulsador del semáforo).",
+      "L'alumne/a distingeix els blocs de «Quan comença» dels de «Quan premo A / B» i diu quan s'executa cadascun.|El alumno/a distingue los bloques de «Al empezar» de los de «Al pulsar A / B» y dice cuándo se ejecuta cada uno.",
+      "L'alumne/a programa els botons A i B com un comandament a distància i guia en Bit fins a la bandera.|El alumno/a programa los botones A y B como un mando a distancia y guía a Bit hasta la bandera.",
+      "L'alumne/a programa botons que encenen llums i fan sonar notes i ho comprova amb «Comprova».|El alumno/a programa botones que encienden luces y hacen sonar notas y lo comprueba con «Comprueba»."
+    ],
+    comp: [
+      "Competència digital (CD5): programar un sistema que respon a les accions de l'usuari|Competencia digital (CD5): programar un sistema que responde a las acciones del usuario",
+      "Pensament computacional: esdeveniments, causa i efecte, i programes que esperen una acció|Pensamiento computacional: eventos, causa y efecto, y programas que esperan una acción",
+      "Coneixement del medi i tecnologia: màquines quotidianes que reaccionen a botons i sensors (ascensor, timbre, semàfor)|Conocimiento del medio y tecnología: máquinas cotidianas que reaccionan a botones y sensores (ascensor, timbre, semáforo)",
+      "Comunicació oral: explicar què fa cada botó i donar instruccions a un company/a|Comunicación oral: explicar qué hace cada botón y dar instrucciones a un compañero/a"
+    ],
+    vocab: [
+      ["Esdeveniment|Evento", "Una cosa que passa (prémer un botó, tocar un interruptor) i que fa que un programa reaccioni.|Algo que pasa (pulsar un botón, tocar un interruptor) y que hace que un programa reaccione."],
+      ["Reaccionar|Reaccionar", "Fer una cosa just després que passi un esdeveniment.|Hacer algo justo después de que pase un evento."],
+      ["Quan comença|Al empezar", "Els blocs que s'executen sols, una vegada, quan toques Executa.|Los bloques que se ejecutan solos, una vez, cuando tocas Ejecuta."],
+      ["Quan premo A|Al pulsar A", "Els blocs que s'executen cada vegada que algú prem el botó A.|Los bloques que se ejecutan cada vez que alguien pulsa el botón A."],
+      ["Comandament a distància|Mando a distancia", "Uns botons que fan moure o funcionar una màquina des de lluny.|Unos botones que hacen mover o funcionar una máquina desde lejos."]
+    ],
+    mat: {
+      aula: [
+        "Un ordinador per alumne/a amb Numi Tech obert a la sessió «Quan premo el botó…»|Un ordenador por alumno/a con Numi Tech abierto en la sesión «Cuando pulso el botón…»",
+        "Projector i la presentació d'aquesta sessió|Proyector y la presentación de esta sesión",
+        "Les targetes d'esdeveniments i d'accions impreses (un paquet per grup de 3 o 4)|Las tarjetas de eventos y de acciones impresas (un paquete por grupo de 3 o 4)",
+        "La quadrícula del terra de la unitat 1 (o en A3) i dos fulls grans amb una A i una B|La cuadrícula del suelo de la unidad 1 (o en A3) y dos hojas grandes con una A y una B"
+      ],
+      imprimir: ["Targetes d'esdeveniments i accions|Tarjetas de eventos y acciones", "Quadrícula: missions del comandament|Cuadrícula: misiones del mando"],
+      prep: [
+        "Imprimir i retallar un paquet de targetes per grup i preparar dos fulls grans amb una A i una B per fer de botons.|Imprimir y recortar un paquete de tarjetas por grupo y preparar dos hojas grandes con una A y una B para hacer de botones.",
+        "Marcar o recuperar la quadrícula del terra de 5 × 5 i muntar-hi la missió 3 (amb roques) de la fitxa de la quadrícula.|Marcar o recuperar la cuadrícula del suelo de 5 × 5 y montar en ella la misión 3 (con rocas) de la ficha de la cuadrícula.",
+        "Provar abans un repte amb «Comprova» per saber com es veuen les proves dels botons.|Probar antes un reto con «Comprueba» para saber cómo se ven las pruebas de los botones.",
+        "Deixar els ordinadors engegats amb Numi Tech obert i la sessió de cada alumne/a iniciada.|Dejar los ordenadores encendidos con Numi Tech abierto y la sesión de cada alumno/a iniciada."
+      ]
+    },
+    plan: [
+      { min: 5, t: "Recordem i el comandament d'en Bit|Recordamos y el mando de Bit", fase: 'inici',
+        fa: "Fes la pregunta de repàs del bloc Nota. Explica la història: en Numi ha construït un comandament amb dos botons perquè el públic de la festa pugui fer reaccionar en Bit. Pregunta quines màquines de casa o del carrer fan alguna cosa quan prems un botó.|Haz la pregunta de repaso del bloque Nota. Explica la historia: Numi ha construido un mando con dos botones para que el público de la fiesta pueda hacer reaccionar a Bit. Pregunta qué máquinas de casa o de la calle hacen algo cuando pulsas un botón.",
+        diu: ["Quin bloc fa sonar una nota?|¿Qué bloque hace sonar una nota?",
+          "Quines màquines fan alguna cosa quan prems un botó?|¿Qué máquinas hacen algo cuando pulsas un botón?"],
+        slides: ['s1', 's2', 's3'], app: "Encara no.|Todavía no.", org: "Tot el grup|Todo el grupo" },
+      { min: 10, t: "Què és un esdeveniment?|¿Qué es un evento?", fase: 'teoria',
+        fa: "Parteix dels exemples de la classe i mostra l'animació: passa una cosa i el programa reacciona. Presenta els botons A i B i la diferència entre «Quan comença» i «Quan premo A». A les demostracions, abans d'executar, la classe prediu què passarà quan toquis Executa i què passarà cada vegada que premis un botó. Remarca que cada botó només fa els seus blocs.|Parte de los ejemplos de la clase y muestra la animación: pasa algo y el programa reacciona. Presenta los botones A y B y la diferencia entre «Al empezar» y «Al pulsar A». En las demostraciones, antes de ejecutar, la clase predice qué pasará cuando toques Ejecuta y qué pasará cada vez que pulses un botón. Remarca que cada botón solo hace sus bloques.",
+        diu: ["Quan prems el timbre, què passa? I si ningú no el prem?|Cuando pulsas el timbre, ¿qué pasa? ¿Y si nadie lo pulsa?",
+          "Quan toco Executa, quins blocs es fan? I quan premo A?|Cuando toco Ejecuta, ¿qué bloques se hacen? ¿Y cuando pulso A?",
+          "Si premo B, s'executen els blocs del botó A?|Si pulso B, ¿se ejecutan los bloques del botón A?"],
+        slides: ['s4', 's5', 's6', 's7', 's8', 's9'], app: "Encara no.|Todavía no.", org: "Tot el grup|Todo el grupo" },
+      { min: 12, t: "Reaccions de robot i comandament al terra|Reacciones de robot y mando en el suelo", fase: 'desconnectat',
+        fa: "Primera part (6 minuts): cada grup rep les targetes «Quan comença», «Quan veus A» i «Quan veus B» i hi posa a sota targetes d'acció (aplaudeix, digues BIP, gira…). Quan tots els grups tenen el programa, tu fas de públic: aixeques el full A o el full B i cada grup reacciona segons el seu programa. Segona part (6 minuts): a la quadrícula del terra, un alumne/a fa de robot i un altre té els fulls A (un pas endavant) i B (gira a la dreta); ha de portar el robot a la bandera de la missió 3 de la fitxa. La resta escriu la seqüència de botons.|Primera parte (6 minutos): cada grupo recibe las tarjetas «Al empezar», «Cuando veas A» y «Cuando veas B» y pone debajo tarjetas de acción (aplaude, di BIP, gira…). Cuando todos los grupos tienen el programa, tú haces de público: levantas la hoja A o la hoja B y cada grupo reacciona según su programa. Segunda parte (6 minutos): en la cuadrícula del suelo, un alumno/a hace de robot y otro tiene las hojas A (un paso adelante) y B (gira a la derecha); tiene que llevar al robot a la bandera de la misión 3 de la ficha. El resto escribe la secuencia de botones.",
+        diu: ["Encara no he aixecat cap full: què ha de fer el vostre robot? Esperar!|Todavía no he levantado ninguna hoja: ¿qué tiene que hacer vuestro robot? ¡Esperar!",
+          "He aixecat la B: fa també el que hi ha sota la A?|He levantado la B: ¿hace también lo que hay debajo de la A?",
+          "Amb només A i B, com fa el robot per girar a l'esquerra?|Con solo A y B, ¿cómo hace el robot para girar a la izquierda?"],
+        slides: ['s10', 's11'], app: "Cap: activitat sense pantalla.|Ninguna: actividad sin pantalla.", org: "Grups de 3 o 4 i després tot el grup a la quadrícula|Grupos de 3 o 4 y después todo el grupo en la cuadrícula" },
+      { min: 15, t: "A l'ordinador: descobreix i prova|En el ordenador: descubre y prueba", fase: 'ordinador',
+        fa: "Cada alumne/a avança fins a la història de «Com es proven els botons». Projecta la diapositiva 13 i explica com es fa: Executa per a «Quan comença», els botons de sota el món per provar i «Comprova» per acabar. Al pas «El robot teledirigit», que toquin «Ara no» i el facin a casa.|Cada alumno/a avanza hasta la historia de «Cómo se prueban los botones». Proyecta la diapositiva 13 y explica cómo se hace: Ejecuta para «Al empezar», los botones de debajo del mundo para probar y «Comprueba» para terminar. En el paso «El robot teledirigido», que toquen «Ahora no» y lo hagan en casa.",
+        diu: ["A la pregunta del comandament, segueix en Bit amb el dit a cada botó.|En la pregunta del mando, sigue a Bit con el dedo en cada botón.",
+          "On has de posar els blocs perquè es facin quan prems A?|¿Dónde tienes que poner los bloques para que se hagan cuando pulsas A?"],
+        slides: ['s12', 's13'], app: "Del «Recorda» a la història de «Com es proven els botons»: la pregunta de la nota, les dues històries del comandament, les targetes de «Descobreix», l'esdeveniment de l'ascensor, ordenar el timbre, «El robot teledirigit» (per a casa) i els botons fins a la bandera.|Del «Recuerda» a la historia de «Cómo se prueban los botones»: la pregunta de la nota, las dos historias del mando, las tarjetas de «Descubre», el evento del ascensor, ordenar el timbre, «El robot teledirigido» (para casa) y los botones hasta la bandera.", org: "Individual|Individual" },
+      { min: 10, t: "Reptes amb botons|Retos con botones", fase: 'ordinador',
+        fa: "Feu tots junts la pausa activa dels botons: tu dius «A!» o «B!» i la classe reacciona. Després deixa'ls fer els cinc reptes. Passeja i fixa't en qui posa els blocs a «Quan comença» en lloc del botó: pregunta-li quan s'han d'executar.|Haced todos juntos la pausa activa de los botones: tú dices «¡A!» o «¡B!» y la clase reacciona. Después deja que hagan los cinco retos. Pasea y fíjate en quién pone los bloques en «Al empezar» en lugar de en el botón: pregúntale cuándo se tienen que ejecutar.",
+        diu: ["Aquests blocs s'han de fer sols al principi o quan algú prem el botó?|¿Estos bloques se tienen que hacer solos al principio o cuando alguien pulsa el botón?",
+          "Abans de prémer els botons del comandament, compta les caselles del camí.|Antes de pulsar los botones del mando, cuenta las casillas del camino.",
+          "Al comandament amb bug, en quin moment en Bit se'n va del camí?|En el mando con bug, ¿en qué momento Bit se sale del camino?"],
+        slides: ['s14'], app: "«Pausa activa» i els cinc reptes: el timbre, el semàfor dels vianants, el comandament a distància, els botons musicals i el comandament amb bug.|«Pausa activa» y los cinco retos: el timbre, el semáforo de los peatones, el mando a distancia, los botones musicales y el mando con bug.", org: "Tot el grup i després individual|Todo el grupo y después individual" },
+      { min: 5, t: "Crea: el meu comandament|Crea: mi mando", fase: 'crea',
+        fa: "Cada alumne/a decideix què fan els botons A i B, amb moviment i amb llum o música, i porta en Bit a la bandera prement-los. En parelles, un explica què fa cada botó i l'altre prova de portar en Bit a la bandera amb aquell comandament.|Cada alumno/a decide qué hacen los botones A y B, con movimiento y con luz o música, y lleva a Bit a la bandera pulsándolos. Por parejas, uno explica qué hace cada botón y el otro intenta llevar a Bit a la bandera con ese mando.",
+        diu: ["Què fa el teu botó A? I el B?|¿Qué hace tu botón A? ¿Y el B?",
+          "Amb el comandament del company/a, quins botons prémer per arribar a la bandera?|Con el mando del compañero/a, ¿qué botones hay que pulsar para llegar a la bandera?"],
+        slides: ['s15'], app: "Pas «Crea»: El meu comandament.|Paso «Crea»: Mi mando.", org: "Individual i després per parelles|Individual y después por parejas" },
+      { min: 3, t: "Tancament i tiquet de sortida|Cierre y ticket de salida", fase: 'tancament',
+        fa: "Repassa les idees de la sessió amb el resum, deixa que responguin les preguntes finals i fes el tiquet de sortida.|Repasa las ideas de la sesión con el resumen, deja que respondan las preguntas finales y haz el ticket de salida.",
+        diu: ["Digues un esdeveniment de casa i com hi reacciona la màquina.|Di un evento de casa y cómo reacciona la máquina.",
+          "Quan s'executen els blocs de «Quan premo A»?|¿Cuándo se ejecutan los bloques de «Al pulsar A»?"],
+        slides: ['s16', 's17'], app: "«Tancament»: les dues preguntes finals i com m'he sentit.|«Cierre»: las dos preguntas finales y cómo me he sentido.", org: "Tot el grup|Todo el grupo" }
+    ],
+    errors: [
+      ["Posa els blocs a «Quan comença» quan haurien d'anar al botó, i en Bit ho fa tot de cop.|Pone los bloques en «Al empezar» cuando tendrían que ir en el botón, y Bit lo hace todo de golpe.",
+        "Pregunta: quan vols que passi això, al principi o quan algú prem A? Que toqui l'espai de sota «Quan premo A» abans de posar els blocs.|Pregunta: ¿cuándo quieres que pase esto, al principio o cuando alguien pulsa A? Que toque el espacio de debajo de «Al pulsar A» antes de poner los bloques."],
+      ["Creu que els blocs dels botons s'executen sols quan toca Executa.|Cree que los bloques de los botones se ejecutan solos cuando toca Ejecuta.",
+        "Que toqui Executa i miri què passa: només es fan els de «Quan comença». Després, que premi A i observi. Recorda el timbre: si ningú no el prem, no sona.|Que toque Ejecuta y mire qué pasa: solo se hacen los de «Al empezar». Después, que pulse A y observe. Recuerda el timbre: si nadie lo pulsa, no suena."],
+      ["Al comandament posa molts Endavant al botó A i en Bit se'n va del camí.|En el mando pone muchos Adelante en el botón A y Bit se sale del camino.",
+        "Recorda-li que pot prémer A tantes vegades com vulgui: cada vegada, un pas. Així controla exactament on s'atura.|Recuérdale que puede pulsar A tantas veces como quiera: cada vez, un paso. Así controla exactamente dónde se para."],
+      ["No sap girar a l'esquerra quan B només fa girar a la dreta.|No sabe girar a la izquierda cuando B solo hace girar a la derecha.",
+        "Que es posi dret/a i faci tres girs a la dreta: cap on mira? És el mateix que un gir a l'esquerra!|Que se ponga de pie y haga tres giros a la derecha: ¿hacia dónde mira? ¡Es lo mismo que un giro a la izquierda!"],
+      ["Prem «Comprova» abans de provar els botons i no entén què falla.|Pulsa «Comprueba» antes de probar los botones y no entiende qué falla.",
+        "Que llegeixi el missatge de la prova que falla (diu quins botons s'han premut). Després, que premi ell/a mateix/a aquells botons i miri què fa en Bit.|Que lea el mensaje de la prueba que falla (dice qué botones se han pulsado). Después, que pulse él/ella mismo/a esos botones y mire qué hace Bit."]
+    ],
+    diff: {
+      mes: "Fer un comandament amb B = gira a l'esquerra i resoldre el mateix camí: calen menys pulsacions? Al projecte, fer que cada botó encengui un llum diferent per saber quin s'ha premut. Inventar una missió nova per a la quadrícula del terra i escriure'n la seqüència de botons.|Hacer un mando con B = gira a la izquierda y resolver el mismo camino: ¿hacen falta menos pulsaciones? En el proyecto, hacer que cada botón encienda una luz diferente para saber cuál se ha pulsado. Inventar una misión nueva para la cuadrícula del suelo y escribir su secuencia de botones.",
+      menys: "Fer primer el repte del timbre amb ajuda: assenyalar on van els blocs abans de posar-los. Al comandament, apuntar en un paper cada botó que prem (A, A, B…) i comptar les caselles amb el dit abans de prémer.|Hacer primero el reto del timbre con ayuda: señalar dónde van los bloques antes de ponerlos. En el mando, apuntar en un papel cada botón que pulsa (A, A, B…) y contar las casillas con el dedo antes de pulsar."
+    },
+    aval: {
+      ticket: ["Digues un esdeveniment de la vida diària i com hi reacciona la màquina.|Di un evento de la vida diaria y cómo reacciona la máquina.",
+        "Quina diferència hi ha entre «Quan comença» i «Quan premo A»?|¿Qué diferencia hay entre «Al empezar» y «Al pulsar A»?"],
+      rubric: [
+        ["Concepte d'esdeveniment|Concepto de evento", "Explica què és un esdeveniment amb un exemple propi (passa una cosa → la màquina reacciona).|Explica qué es un evento con un ejemplo propio (pasa algo → la máquina reacciona).", "Reconeix un esdeveniment en un exemple donat, però no l'explica amb les seves paraules.|Reconoce un evento en un ejemplo dado, pero no lo explica con sus palabras."],
+        ["Quan comença i quan premo|Al empezar y al pulsar", "Posa cada bloc a la llista correcta i sap quan s'executarà.|Pone cada bloque en la lista correcta y sabe cuándo se ejecutará.", "Barreja els blocs de «Quan comença» i dels botons, i ho arregla amb ajuda.|Mezcla los bloques de «Al empezar» y de los botones, y lo arregla con ayuda."],
+        ["Comandament i proves|Mando y pruebas", "Programa A i B, guia en Bit fins a la bandera i fa servir «Comprova» per verificar els botons.|Programa A y B, guía a Bit hasta la bandera y usa «Comprueba» para verificar los botones.", "Programa els botons, però necessita ajuda per triar la seqüència o per entendre una prova que falla.|Programa los botones, pero necesita ayuda para elegir la secuencia o para entender una prueba que falla."]
+      ]
+    },
+    casa: "A casa, amb el mòbil, podeu repetir la sessió i fer «El robot teledirigit»: una persona fa de robot i només es mou quan l'altra li ensenya el paper A o el paper B. També podeu buscar junts esdeveniments de casa: el timbre, el microones, l'interruptor…|En casa, con el móvil, podéis repetir la sesión y hacer «El robot teledirigido»: una persona hace de robot y solo se mueve cuando la otra le enseña el papel A o el papel B. También podéis buscar juntos eventos de casa: el timbre, el microondas, el interruptor…",
+    slides: [
+      { id: 's1', k: 'portada', t: "Quan premo el botó…|Cuando pulso el botón…", x: "Avui en Bit tindrà un comandament amb dos botons, A i B.|Hoy Bit tendrá un mando con dos botones, A y B.",
+        nota: "Explica que avui aprendrem una idea molt important de la programació: els esdeveniments.|Explica que hoy aprenderemos una idea muy importante de la programación: los eventos." },
+      { id: 's2', k: 'repas', t: "Recordes?|¿Recuerdas?", x: "Quin bloc fa sonar una nota? I quin encén un llum?|¿Qué bloque hace sonar una nota? ¿Y cuál enciende una luz?", blocks: ['Nota|Nota', 'Llum|Luz'],
+        nota: "Avui farem que les notes sonin i els llums s'encenguin només quan algú premi un botó.|Hoy haremos que las notas y las luces suenen y se enciendan solo cuando alguien pulse un botón." },
+      { id: 's3', k: 'concepte', t: "Un comandament per a en Bit|Un mando para Bit", punts: ["En Numi ha fet un comandament amb dos botons: A i B.|Numi ha hecho un mando con dos botones: A y B.", "Durant la festa, el públic els podrà prémer.|Durante la fiesta, el público los podrá pulsar.", "En Bit ha de saber què fer quan premin cada botó.|Bit tiene que saber qué hacer cuando pulsen cada botón."],
+        nota: "Pregunta: fins ara, quan s'acabava el programa d'en Bit? Ara aprendrà a esperar.|Pregunta: hasta ahora, ¿cuándo se acababa el programa de Bit? Ahora aprenderá a esperar." },
+      { id: 's4', k: 'pregunta', t: "Què passa quan…?|¿Qué pasa cuando…?", punts: ["…prems el timbre de casa?|…pulsas el timbre de casa?", "…toques l'interruptor de la llum?|…tocas el interruptor de la luz?", "…prems el botó de l'ascensor?|…pulsas el botón del ascensor?"],
+        nota: "Recull les respostes: sempre passa una cosa i la màquina hi reacciona. Escriu a la pissarra «passa… → reacciona…».|Recoge las respuestas: siempre pasa algo y la máquina reacciona. Escribe en la pizarra «pasa… → reacciona…»." },
+      { id: 's5', k: 'anim', t: "Passa una cosa… i el programa reacciona|Pasa algo… y el programa reacciona", anim: 'u3event', x: "Això es diu un esdeveniment.|Esto se llama un evento.",
+        nota: "Fes notar que, si ningú no prem res, la màquina no fa res: espera l'esdeveniment.|Haz notar que, si nadie pulsa nada, la máquina no hace nada: espera el evento." },
+      { id: 's6', k: 'anim', t: "Cada botó, els seus blocs|Cada botón, sus bloques", anim: 'u3buttons', x: "Els blocs de «Quan premo A» es fan cada vegada que es prem A.|Los bloques de «Al pulsar A» se hacen cada vez que se pulsa A.",
+        nota: "Pregunta: si premo A dues vegades, quantes caselles avançarà en Bit?|Pregunta: si pulso A dos veces, ¿cuántas casillas avanzará Bit?" },
+      { id: 's7', k: 'demo', t: "Quan comença i quan premo A|Al empezar y al pulsar A", x: "Què passarà quan toqui Executa? I cada vegada que premi A?|¿Qué pasará cuando toque Ejecuta? ¿Y cada vez que pulse A?",
+        demo: { w: { map: ['>###F'] }, prog: 'light:r', evs: { A: 'f note:mi' }, press: 'AAAA' },
+        nota: "Primer s'encén el llum vermell (Quan comença). Després, a cada A, un pas i un mi. Quantes A calen per arribar a la bandera? Quatre.|Primero se enciende la luz roja (Al empezar). Después, en cada A, un paso y un mi. ¿Cuántas A hacen falta para llegar a la bandera? Cuatro." },
+      { id: 's8', k: 'demo', t: "El comandament a distància|El mando a distancia", x: "A = Endavant, B = Gira a la dreta. Quins botons premeríeu?|A = Adelante, B = Gira a la derecha. ¿Qué botones pulsaríais?",
+        demo: { w: { map: ['>##.', '..#.', '..F.'] }, prog: 'light:g', evs: { A: 'f', B: 'r' }, press: 'AABAA' },
+        nota: "Que la classe digui la seqüència abans d'executar. Resposta: A, A, B, A, A.|Que la clase diga la secuencia antes de ejecutar. Respuesta: A, A, B, A, A." },
+      { id: 's9', k: 'concepte', t: "Compte! Cada botó fa només el seu|¡Cuidado! Cada botón hace solo lo suyo", punts: ["«Quan comença» es fa sol, una vegada.|«Al empezar» se hace solo, una vez.", "«Quan premo A» es fa només quan prems A.|«Al pulsar A» se hace solo cuando pulsas A.", "Prémer B no fa els blocs d'A.|Pulsar B no hace los bloques de A.", "Si prems dues vegades, es fa dues vegades.|Si pulsas dos veces, se hace dos veces."],
+        nota: "Aquest és l'error més habitual de la sessió. Torna-hi quan vegis algú que posa els blocs del botó a «Quan comença».|Este es el error más habitual de la sesión. Vuelve a ello cuando veas a alguien que pone los bloques del botón en «Al empezar»." },
+      { id: 's10', k: 'activitat', t: "Reaccions de robot|Reacciones de robot", timer: 6, punts: ["Poseu targetes d'acció sota «Quan comença», «Quan veus A» i «Quan veus B».|Poned tarjetas de acción debajo de «Al empezar», «Cuando veas A» y «Cuando veas B».", "Quan dic «comença», feu les accions de «Quan comença».|Cuando digo «empieza», haced las acciones de «Al empezar».", "Quan aixeco un full, feu només les accions d'aquell botó.|Cuando levanto una hoja, haced solo las acciones de ese botón.", "Si no aixeco res… espereu!|Si no levanto nada… ¡esperad!"],
+        nota: "Alterna A i B, repeteix-ne algun i fes alguna pausa llarga per comprovar que els grups esperen.|Alterna A y B, repite alguno y haz alguna pausa larga para comprobar que los grupos esperan." },
+      { id: 's11', k: 'activitat', t: "El comandament al terra|El mando en el suelo", timer: 6, punts: ["Robot: a la quadrícula, només es mou quan veu un full.|Robot: en la cuadrícula, solo se mueve cuando ve una hoja.", "A = un pas endavant · B = gira a la dreta.|A = un paso adelante · B = gira a la derecha.", "La resta de la classe apunta la seqüència de botons.|El resto de la clase apunta la secuencia de botones.", "Per girar a l'esquerra… B, B, B!|Para girar a la izquierda… ¡B, B, B!"],
+        nota: "Feu la missió 3 de la fitxa de la quadrícula. Compareu després les seqüències que ha apuntat la classe.|Haced la misión 3 de la ficha de la cuadrícula. Comparad después las secuencias que ha apuntado la clase." },
+      { id: 's12', k: 'activitat', t: "Ara, a l'ordinador|Ahora, al ordenador", timer: 15, punts: ["Obre la sessió «Quan premo el botó…».|Abre la sesión «Cuando pulso el botón…».", "Fes la missió, «Descobreix» i «Mans a l'obra».|Haz la misión, «Descubre» y «Manos a la obra».", "Para quan arribis a la «Pausa activa».|Para cuando llegues a la «Pausa activa»."],
+        nota: "Al pas «El robot teledirigit», que toquin «Ara no»: ja l'hem fet al terra i el poden repetir a casa.|En el paso «El robot teledirigido», que toquen «Ahora no»: ya lo hemos hecho en el suelo y lo pueden repetir en casa." },
+      { id: 's13', k: 'concepte', t: "Com es proven els botons|Cómo se prueban los botones", punts: ["1. Executa: es fan els blocs de «Quan comença».|1. Ejecuta: se hacen los bloques de «Al empezar».", "2. Prem A i B sota el món i mira què passa.|2. Pulsa A y B debajo del mundo y mira qué pasa.", "3. Comprova: l'app fa unes quantes proves amb els botons.|3. Comprueba: la app hace unas cuantas pruebas con los botones.", "Si una prova falla, llegeix quins botons s'han premut.|Si una prueba falla, lee qué botones se han pulsado."],
+        nota: "Fes una demostració al projector amb el primer repte (el timbre) abans que comencin els reptes.|Haz una demostración en el proyector con el primer reto (el timbre) antes de que empiecen los retos." },
+      { id: 's14', k: 'repte', t: "Reptes amb botons|Retos con botones", timer: 10, punts: ["1. El timbre|1. El timbre", "2. El semàfor dels vianants|2. El semáforo de los peatones", "3. El comandament a distància (2 blocs!)|3. El mando a distancia (¡2 bloques!)", "4. Botons musicals|4. Botones musicales", "5. El comandament amb un bug|5. El mando con un bug"],
+        nota: "Al semàfor dels vianants, explica que molts semàfors fan sons perquè les persones cegues sàpiguen quan poden passar.|En el semáforo de los peatones, explica que muchos semáforos hacen sonidos para que las personas ciegas sepan cuándo pueden pasar." },
+      { id: 's15', k: 'activitat', t: "Crea: el meu comandament|Crea: mi mando", timer: 5, x: "Decideix què fan A i B (moviment i llum o música) i porta en Bit a la bandera prement-los.|Decide qué hacen A y B (movimiento y luz o música) y lleva a Bit a la bandera pulsándolos.",
+        nota: "En parelles, que provin el comandament del company/a sense mirar-ne els blocs: només amb l'explicació.|Por parejas, que prueben el mando del compañero/a sin mirar sus bloques: solo con la explicación." },
+      { id: 's16', k: 'resum', t: "Què hem après avui|Qué hemos aprendido hoy", punts: ["Un esdeveniment: passa una cosa i el programa reacciona.|Un evento: pasa algo y el programa reacciona.", "«Quan comença» es fa sol; «Quan premo A», quan prems A.|«Al empezar» se hace solo; «Al pulsar A», cuando pulsas A.", "Amb dos botons es pot fer un comandament a distància.|Con dos botones se puede hacer un mando a distancia."],
+        nota: "Avança que la propera sessió és el projecte de la unitat: la coreografia de la festa major.|Avanza que la próxima sesión es el proyecto de la unidad: la coreografía de la fiesta mayor." },
+      { id: 's17', k: 'tiquet', t: "Tiquet de sortida|Ticket de salida", punts: ["Digues un esdeveniment i com hi reacciona la màquina.|Di un evento y cómo reacciona la máquina.", "Quina diferència hi ha entre «Quan comença» i «Quan premo A»?|¿Qué diferencia hay entre «Al empezar» y «Al pulsar A»?"],
+        nota: "Exemple de resposta: prems l'interruptor (esdeveniment) i s'encén el llum (reacció). «Quan comença» es fa sol al principi; «Quan premo A», cada vegada que prems A.|Ejemplo de respuesta: pulsas el interruptor (evento) y se enciende la luz (reacción). «Al empezar» se hace solo al principio; «Al pulsar A», cada vez que pulsas A." }
+    ],
+    print: [
+      { id: 'p1', t: "Targetes d'esdeveniments i accions|Tarjetas de eventos y acciones", k: 'targetes',
+        intro: "Un paquet per grup. Les targetes d'esdeveniment («Quan comença», «Quan veus A», «Quan veus B») encapçalen cada columna; les d'acció es posen a sota. Els fulls A i B grans són per al professor/a.|Un paquete por grupo. Las tarjetas de evento («Al empezar», «Cuando veas A», «Cuando veas B») encabezan cada columna; las de acción se ponen debajo. Las hojas A y B grandes son para el profesor/a.",
+        items: [
+          { t: "Quan comença 🚩|Al empezar 🚩", n: 1 },
+          { t: "Quan veus A 🅰️|Cuando veas A 🅰️", n: 1 },
+          { t: "Quan veus B 🅱️|Cuando veas B 🅱️", n: 1 },
+          { t: "Aplaudeix 👏|Aplaude 👏", n: 2 },
+          { t: "Digues BIP 🤖|Di BIP 🤖", n: 2 },
+          { t: "Gira ↷|Gira ↷", n: 2 },
+          { t: "Aixeca't ⬆|Levántate ⬆", n: 1 },
+          { t: "Seu ⬇|Siéntate ⬇", n: 1 },
+          { t: "Pica de peus 🦶|Golpea con los pies 🦶", n: 1 }
+        ] },
+      { id: 'p2', t: "Quadrícula: missions del comandament|Cuadrícula: misiones del mando", k: 'quadricula',
+        intro: "A la quadrícula del terra, el robot només es mou quan veu un botó: A = un pas endavant, B = gira a la dreta. Apunteu la seqüència de botons que el porta a la bandera.|En la cuadrícula del suelo, el robot solo se mueve cuando ve un botón: A = un paso adelante, B = gira a la derecha. Apuntad la secuencia de botones que lo lleva a la bandera.",
+        items: [
+          { t: "Missió 1: la recta|Misión 1: la recta", w: 5, h: 5, cells: ['.....', '.....', '>...F', '.....', '.....'],
+            instructions: "Quantes vegades cal prémer A?|¿Cuántas veces hay que pulsar A?", sol: "Botons: A, A, A, A.|Botones: A, A, A, A." },
+          { t: "Missió 2: la cantonada|Misión 2: la esquina", w: 5, h: 5, cells: ['>....', '.....', '.....', '.....', '....F'],
+            instructions: "En Bit ha d'anar fins a la cantonada de baix. Quan has de prémer B?|Bit tiene que ir hasta la esquina de abajo. ¿Cuándo tienes que pulsar B?", sol: "Botons: A, A, A, A, B, A, A, A, A.|Botones: A, A, A, A, B, A, A, A, A." },
+          { t: "Missió 3: les roques|Misión 3: las rocas", w: 5, h: 5, cells: ['>..R.', '...R.', '.....', '..R..', '....F'],
+            instructions: "Les roques no es poden travessar. Amb aquests botons, per girar a l'esquerra cal prémer B tres vegades!|Las rocas no se pueden atravesar. ¡Con estos botones, para girar a la izquierda hay que pulsar B tres veces!",
+            sol: "Una solució: A, A, B, A, A, B, B, B, A, A, B, A, A.|Una solución: A, A, B, A, A, B, B, B, A, A, B, A, A." }
+        ] }
+    ]
+  },
+
+  /* ---------- Sessió 4 · Projecte: la coreografia ---------- */
+  'r3-4': {
+    obj: [
+      "L'alumne/a planifica una coreografia en trossos (entrada, pas que es repeteix, botons i final) abans de programar-la.|El alumno/a planifica una coreografía en trozos (entrada, paso que se repite, botones y final) antes de programarla.",
+      "L'alumne/a combina moviments, llums, notes, bucles i botons en un mateix programa.|El alumno/a combina movimientos, luces, notas, bucles y botones en un mismo programa.",
+      "L'alumne/a troba i arregla errors en una coreografia: el nombre de repeticions i l'ordre dels llums.|El alumno/a encuentra y arregla errores en una coreografía: el número de repeticiones y el orden de las luces.",
+      "L'alumne/a presenta el seu projecte i explica quin pas es repeteix i què fan els botons.|El alumno/a presenta su proyecto y explica qué paso se repite y qué hacen los botones."
+    ],
+    comp: [
+      "Competència digital (CD5): crear un programa propi que combina sortides (moviment, llum, so) i esdeveniments|Competencia digital (CD5): crear un programa propio que combina salidas (movimiento, luz, sonido) y eventos",
+      "Pensament computacional: descomposició, patrons, bucles, esdeveniments i depuració|Pensamiento computacional: descomposición, patrones, bucles, eventos y depuración",
+      "Educació artística (música i dansa): coreografia, ritme i moviment expressiu|Educación artística (música y danza): coreografía, ritmo y movimiento expresivo",
+      "Comunicació oral: presentar un projecte al grup i valorar el dels companys|Comunicación oral: presentar un proyecto al grupo y valorar el de los compañeros"
+    ],
+    vocab: [
+      ["Coreografia|Coreografía", "Un ball pensat i escrit pas a pas, en ordre.|Un baile pensado y escrito paso a paso, en orden."],
+      ["Pas de ball|Paso de baile", "Un grup de moviments que es pot repetir, com un patró.|Un grupo de movimientos que se puede repetir, como un patrón."],
+      ["Patró|Patrón", "Una cosa que es repeteix sempre igual: es programa amb un bucle.|Algo que se repite siempre igual: se programa con un bucle."],
+      ["Espectacle|Espectáculo", "Una actuació per a un públic, com el ball de la festa major.|Una actuación para un público, como el baile de la fiesta mayor."],
+      ["Projecte|Proyecto", "Un repte més gran on fem servir tot el que hem après a la unitat.|Un reto más grande donde usamos todo lo que hemos aprendido en la unidad."]
+    ],
+    mat: {
+      aula: [
+        "Un ordinador per alumne/a amb Numi Tech obert a la sessió «Projecte: la coreografia»|Un ordenador por alumno/a con Numi Tech abierto en la sesión «Proyecto: la coreografía»",
+        "Projector, altaveus i la presentació d'aquesta sessió|Proyector, altavoces y la presentación de esta sesión",
+        "Les targetes de les sessions anteriors (moviment, llums, notes, Repeteix i esdeveniments) i les targetes de ball noves|Las tarjetas de las sesiones anteriores (movimiento, luces, notas, Repite y eventos) y las tarjetas de baile nuevas",
+        "Un espai lliure a l'aula per ballar i un full de pla de la coreografia per alumne/a|Un espacio libre en el aula para bailar y una hoja de plan de la coreografía por alumno/a"
+      ],
+      imprimir: ["Targetes de ball|Tarjetas de baile", "Full de pla de la coreografia|Hoja de plan de la coreografía"],
+      prep: [
+        "Imprimir les targetes de ball (un paquet per grup) i un full de pla per alumne/a.|Imprimir las tarjetas de baile (un paquete por grupo) y una hoja de plan por alumno/a.",
+        "Deixar un espai lliure perquè els grups puguin ballar la coreografia sense xocar.|Dejar un espacio libre para que los grupos puedan bailar la coreografía sin chocar.",
+        "Decidir com es presentaran els projectes: 3 o 4 voluntaris al projector, amb la classe fent de públic que prem els botons.|Decidir cómo se presentarán los proyectos: 3 o 4 voluntarios en el proyector, con la clase haciendo de público que pulsa los botones.",
+        "Tenir preparades les insígnies o un reconeixement senzill per al final de la unitat.|Tener preparadas las insignias o un reconocimiento sencillo para el final de la unidad."
+      ]
+    },
+    plan: [
+      { min: 5, t: "Recordem i la festa major|Recordamos y la fiesta mayor", fase: 'inici',
+        fa: "Fes la pregunta de repàs dels botons. Explica la missió: avui és la festa major i en Bit farà un ball a l'escenari; és el projecte final de la unitat. Escriu a la pissarra tot el que poden fer servir: moviments, llums, notes, bucles i botons.|Haz la pregunta de repaso de los botones. Explica la misión: hoy es la fiesta mayor y Bit hará un baile en el escenario; es el proyecto final de la unidad. Escribe en la pizarra todo lo que pueden usar: movimientos, luces, notas, bucles y botones.",
+        diu: ["Si A fa Endavant i premo A tres vegades, què fa en Bit?|Si A hace Adelante y pulso A tres veces, ¿qué hace Bit?",
+          "Avui farem servir tot el que hem après a la unitat: llums, música i botons.|Hoy usaremos todo lo que hemos aprendido en la unidad: luces, música y botones."],
+        slides: ['s1', 's2', 's3'], app: "Encara no.|Todavía no.", org: "Tot el grup|Todo el grupo" },
+      { min: 8, t: "Què és una coreografia?|¿Qué es una coreografía?", fase: 'teoria',
+        fa: "Explica què és una coreografia amb l'animació i mostra el pas de ball amb gir, llum i nota dins d'un bucle. Mostra com els botons deixen que el públic hi participi. Presenta el pla en quatre trossos. A la darrera demostració, la classe prediu on acabarà en Bit abans d'executar.|Explica qué es una coreografía con la animación y muestra el paso de baile con giro, luz y nota dentro de un bucle. Muestra cómo los botones dejan que el público participe. Presenta el plan en cuatro trozos. En la última demostración, la clase predice dónde terminará Bit antes de ejecutar.",
+        diu: ["Coneixeu algun ball que tingui un pas que es repeteix?|¿Conocéis algún baile que tenga un paso que se repite?",
+          "Quants girs calen perquè en Bit faci una volta sencera?|¿Cuántos giros hacen falta para que Bit dé una vuelta entera?",
+          "Què podria fer el botó A durant el ball? I el B?|¿Qué podría hacer el botón A durante el baile? ¿Y el B?"],
+        slides: ['s4', 's5', 's6', 's7', 's8'], app: "Encara no.|Todavía no.", org: "Tot el grup|Todo el grupo" },
+      { min: 12, t: "La coreografia en grup|La coreografía en grupo", fase: 'desconnectat',
+        fa: "En grups de 3 o 4, cada grup escriu una coreografia curta amb targetes: un pas de ball de 3 o 4 targetes (moviments, un llum que es fa aixecant un full de color i una nota que es canta), una targeta «Repeteix» i una reacció per a «Quan veus A». Després, un altre grup la balla exactament com diu el programa i el grup autor comprova si és el que volia. Si no, busquen el bug junts. Al final, tu aixeques el full A i tots els grups fan la seva reacció alhora.|En grupos de 3 o 4, cada grupo escribe una coreografía corta con tarjetas: un paso de baile de 3 o 4 tarjetas (movimientos, una luz que se hace levantando una hoja de color y una nota que se canta), una tarjeta «Repite» y una reacción para «Cuando veas A». Después, otro grupo la baila exactamente como dice el programa y el grupo autor comprueba si es lo que quería. Si no, buscan el bug juntos. Al final, tú levantas la hoja A y todos los grupos hacen su reacción a la vez.",
+        diu: ["Quin és el vostre pas de ball? Quantes vegades es repeteix?|¿Cuál es vuestro paso de baile? ¿Cuántas veces se repite?",
+          "El grup que balla fa exactament el que diuen les targetes?|¿El grupo que baila hace exactamente lo que dicen las tarjetas?",
+          "Ha sortit diferent? On és el bug: a les targetes o al ball?|¿Ha salido diferente? ¿Dónde está el bug: en las tarjetas o en el baile?"],
+        slides: ['s9', 's10'], app: "Cap: activitat sense pantalla.|Ninguna: actividad sin pantalla.", org: "Grups de 3 o 4|Grupos de 3 o 4" },
+      { min: 12, t: "A l'ordinador: assaig del ball|En el ordenador: ensayo del baile", fase: 'ordinador',
+        fa: "Cada alumne/a fa la sessió fins al repte dels botons del públic. Fixa't en qui oblida comptar els girs i en qui posa les accions dels botons a «Quan comença». Recorda'ls que provin cada tros abans de continuar.|Cada alumno/a hace la sesión hasta el reto de los botones del público. Fíjate en quién olvida contar los giros y en quién pone las acciones de los botones en «Al empezar». Recuérdales que prueben cada trozo antes de seguir.",
+        diu: ["Quants girs té el teu pas de ball? Acaba mirant on mirava?|¿Cuántos giros tiene tu paso de baile? ¿Acaba mirando donde miraba?",
+          "Quin tros es repeteix? Posa'l dins d'un bucle.|¿Qué trozo se repite? Ponlo dentro de un bucle."],
+        slides: ['s11'], app: "Del «Recorda» al repte «Els botons del públic»: la pregunta dels botons, les històries de la festa, les targetes de «Descobreix», ordenar les parts del ball, «La coreografia de casa» (per a casa), la volta a la font, el bucle de la volta sencera, la «Pausa activa», el primer pas de ball, la cercavila i els botons del públic.|Del «Recuerda» al reto «Los botones del público»: la pregunta de los botones, las historias de la fiesta, las tarjetas de «Descubre», ordenar las partes del baile, «La coreografía de casa» (para casa), la vuelta a la fuente, el bucle de la vuelta entera, la «Pausa activa», el primer paso de baile, el pasacalles y los botones del público.", org: "Individual|Individual" },
+      { min: 15, t: "Projecte: la coreografia de la festa major|Proyecto: la coreografía de la fiesta mayor", fase: 'crea',
+        fa: "Primer, el repte del final amb el bug dels colors. Després, cada alumne/a omple el full de pla (entrada, pas que es repeteix, botons i final) i el passa a blocs tros a tros. Quan funcioni, el desa al portafoli. Qui acabi, prova el projecte d'un company/a prement els botons.|Primero, el reto del final con el bug de los colores. Después, cada alumno/a rellena la hoja de plan (entrada, paso que se repite, botones y final) y la pasa a bloques trozo a trozo. Cuando funcione, la guarda en el portafolio. Quien termine, prueba el proyecto de un compañero/a pulsando los botones.",
+        diu: ["Ensenya'm el teu pla: quin és el primer tros?|Enséñame tu plan: ¿cuál es el primer trozo?",
+          "Prova cada tros abans de continuar: així, si hi ha un bug, saps on és.|Prueba cada trozo antes de seguir: así, si hay un bug, sabes dónde está.",
+          "La teva coreografia té llums, notes i un bucle? Arriba a l'escenari?|¿Tu coreografía tiene luces, notas y un bucle? ¿Llega al escenario?"],
+        slides: ['s12', 's13', 's14'], app: "El repte del final amb bug, el pla del gran ball i el projecte de «Crea»: La coreografia de la festa major.|El reto del final con bug, el plan del gran baile y el proyecto de «Crea»: La coreografía de la fiesta mayor.", org: "Individual|Individual" },
+      { min: 5, t: "L'espectacle de la festa major|El espectáculo de la fiesta mayor", fase: 'tancament',
+        fa: "Tres o quatre voluntaris projecten la seva coreografia. Abans d'executar-la, expliquen el pla i quin pas es repeteix. Mentre balla en Bit, un company/a fa de públic i prem els botons A i B. Després, l'autor/a explica un bug que hagi trobat i com l'ha arreglat.|Tres o cuatro voluntarios proyectan su coreografía. Antes de ejecutarla, explican el plan y qué paso se repite. Mientras baila Bit, un compañero/a hace de público y pulsa los botones A y B. Después, el autor/a explica un bug que haya encontrado y cómo lo ha arreglado.",
+        diu: ["Quin pas de ball es repeteix? Quantes vegades?|¿Qué paso de baile se repite? ¿Cuántas veces?",
+          "Què fan els teus botons?|¿Qué hacen tus botones?",
+          "Què t'ha agradat de la coreografia del company/a?|¿Qué te ha gustado de la coreografía del compañero/a?"],
+        slides: ['s15'], app: "El projecte desat a «Crea», projectat des de l'ordinador de cada voluntari/ària.|El proyecto guardado en «Crea», proyectado desde el ordenador de cada voluntario/a.", org: "Tot el grup|Todo el grupo" },
+      { min: 3, t: "Tancament de la unitat|Cierre de la unidad", fase: 'tancament',
+        fa: "Repassa les idees de la unitat amb el resum i deixa que responguin les preguntes finals. Fes el tiquet de sortida i reconeix la feina de tothom amb la insígnia de coreògraf/a.|Repasa las ideas de la unidad con el resumen y deja que respondan las preguntas finales. Haz el ticket de salida y reconoce el trabajo de todos con la insignia de coreógrafo/a.",
+        diu: ["Què és un esdeveniment? Digueu-ne un del ball.|¿Qué es un evento? Decid uno del baile.",
+          "Quina sessió de la unitat us ha agradat més: llums, música o botons?|¿Qué sesión de la unidad os ha gustado más: luces, música o botones?"],
+        slides: ['s16', 's17'], app: "«Tancament»: les dues preguntes finals i com m'he sentit.|«Cierre»: las dos preguntas finales y cómo me he sentido.", org: "Tot el grup|Todo el grupo" }
+    ],
+    errors: [
+      ["Fa la volta sencera amb 3 girs (o 5) i en Bit acaba mirant cap a un altre costat.|Hace la vuelta entera con 3 giros (o 5) y Bit acaba mirando hacia otro lado.",
+        "Que es posi dret/a i faci els girs del seu programa comptant-los. Quants n'hi calen per tornar a mirar la pissarra?|Que se ponga de pie y haga los giros de su programa contándolos. ¿Cuántos hacen falta para volver a mirar la pizarra?"],
+      ["Programa tot el ball sense provar-lo i al final no sap on és el bug.|Programa todo el baile sin probarlo y al final no sabe dónde está el bug.",
+        "Proposa-li provar cada tros del pla quan l'acabi. Si ja ho té tot, que faci servir «Pas a pas» fins al primer moment en què el ball no fa el que volia.|Proponle probar cada trozo del plan cuando lo termine. Si ya lo tiene todo, que use «Paso a paso» hasta el primer momento en que el baile no hace lo que quería."],
+      ["Posa el pas de ball fora del bucle i el bucle queda buit (o amb només una part del pas).|Pone el paso de baile fuera del bucle y el bucle queda vacío (o con solo una parte del paso).",
+        "Que digui el pas en veu alta: «gira, llum, nota». Tots aquests blocs han d'anar dins del Repeteix. Recorda que, en tocar el bucle, els blocs nous hi van a dins.|Que diga el paso en voz alta: «gira, luz, nota». Todos esos bloques tienen que ir dentro del Repite. Recuerda que, al tocar el bucle, los bloques nuevos van dentro."],
+      ["Posa tot el ball als botons i en tocar Executa no passa res.|Pone todo el baile en los botones y al tocar Ejecuta no pasa nada.",
+        "Recorda-li la sessió anterior: «Quan comença» es fa sol; els botons només quan algú els prem. Quin tros vol que es faci sol?|Recuérdale la sesión anterior: «Al empezar» se hace solo; los botones solo cuando alguien los pulsa. ¿Qué trozo quiere que se haga solo?"],
+      ["Vol fer una coreografia molt llarga i no arriba a acabar el projecte.|Quiere hacer una coreografía muy larga y no llega a terminar el proyecto.",
+        "Ajuda'l/la a triar: primer una versió curta que compleixi els criteris (llum, nota, bucle i escenari). Quan funcioni i estigui desada, la pot millorar.|Ayúdale a elegir: primero una versión corta que cumpla los criterios (luz, nota, bucle y escenario). Cuando funcione y esté guardada, la puede mejorar."]
+    ],
+    diff: {
+      mes: "Fer que cada botó tingui un pas de ball diferent amb el seu propi bucle i que la coreografia funcioni prement-los en qualsevol ordre. Escriure al full de pla la coreografia d'un company/a només mirant-la ballar.|Hacer que cada botón tenga un paso de baile diferente con su propio bucle y que la coreografía funcione pulsándolos en cualquier orden. Escribir en la hoja de plan la coreografía de un compañero/a solo mirándola bailar.",
+      menys: "Fer el pla amb targetes de paper damunt la taula i passar-lo a blocs tros a tros. Al projecte, començar per un pas de ball curt (un gir, un llum i una nota) dins d'un bucle i, després, afegir-hi el camí fins a l'escenari. Els botons són opcionals.|Hacer el plan con tarjetas de papel sobre la mesa y pasarlo a bloques trozo a trozo. En el proyecto, empezar por un paso de baile corto (un giro, una luz y una nota) dentro de un bucle y, después, añadir el camino hasta el escenario. Los botones son opcionales."
+    },
+    aval: {
+      ticket: ["Què és una coreografia? Com la programaries amb en Bit?|¿Qué es una coreografía? ¿Cómo la programarías con Bit?",
+        "Què fan els botons durant el ball? Quan s'executen?|¿Qué hacen los botones durante el baile? ¿Cuándo se ejecutan?"],
+      rubric: [
+        ["Planificació|Planificación", "Escriu el pla en trossos (entrada, pas que es repeteix, botons, final) i el segueix en programar.|Escribe el plan en trozos (entrada, paso que se repite, botones, final) y lo sigue al programar.", "Fa el pla quan l'hi demanen, però programa sense seguir-lo.|Hace el plan cuando se lo piden, pero programa sin seguirlo."],
+        ["Combinar blocs|Combinar bloques", "La coreografia fa servir moviment, llums, notes i un bucle, i acaba a l'escenari; si vol, hi afegeix botons.|La coreografía usa movimiento, luces, notas y un bucle, y termina en el escenario; si quiere, añade botones.", "La coreografia funciona però li falta algun element (llum, nota o bucle), o l'acaba amb ajuda.|La coreografía funciona pero le falta algún elemento (luz, nota o bucle), o la termina con ayuda."],
+        ["Depurar i presentar|Depurar y presentar", "Troba i arregla errors de repeticions o d'ordre i explica al grup un bug que ha resolt.|Encuentra y arregla errores de repeticiones o de orden y explica al grupo un bug que ha resuelto.", "Arregla els errors amb ajuda i li costa explicar què ha canviat.|Arregla los errores con ayuda y le cuesta explicar qué ha cambiado."]
+      ]
+    },
+    casa: "A casa, amb el mòbil, el vostre fill o filla pot ensenyar-vos la coreografia de la festa major i deixar-vos prémer els botons A i B. Podeu fer també «La coreografia de casa»: inventeu junts un pas de ball, escriviu-lo amb un «Repeteix» i balleu-lo com dos robots.|En casa, con el móvil, vuestro hijo o hija puede enseñaros la coreografía de la fiesta mayor y dejaros pulsar los botones A y B. También podéis hacer «La coreografía de casa»: inventad juntos un paso de baile, escribidlo con un «Repite» y bailadlo como dos robots.",
+    slides: [
+      { id: 's1', k: 'portada', t: "Projecte: la coreografia|Proyecto: la coreografía", x: "Avui és la festa major: en Bit farà un ball amb llums, música i botons.|Hoy es la fiesta mayor: Bit hará un baile con luces, música y botones.",
+        nota: "Explica que és el projecte final de la unitat i que faran servir tot el que han après en les tres sessions anteriors.|Explica que es el proyecto final de la unidad y que usarán todo lo que han aprendido en las tres sesiones anteriores." },
+      { id: 's2', k: 'repas', t: "Recordes?|¿Recuerdas?", x: "Al comandament, A fa Endavant. Si prems A tres vegades, què fa en Bit?|En el mando, A hace Adelante. Si pulsas A tres veces, ¿qué hace Bit?",
+        nota: "Resposta: avança tres caselles. Cada vegada que passa l'esdeveniment, es fan els blocs del botó.|Respuesta: avanza tres casillas. Cada vez que pasa el evento, se hacen los bloques del botón." },
+      { id: 's3', k: 'concepte', t: "Avui és la festa major!|¡Hoy es la fiesta mayor!", punts: ["La plaça és plena de gent.|La plaza está llena de gente.", "Hi ha un escenari per a l'espectacle.|Hay un escenario para el espectáculo.", "En Bit hi farà un ball… i el programareu vosaltres!|Bit hará allí un baile… ¡y lo programaréis vosotros!"],
+        nota: "Escriu a la pissarra: moviments · llums · notes · bucles · botons. Són els ingredients de la coreografia.|Escribe en la pizarra: movimientos · luces · notas · bucles · botones. Son los ingredientes de la coreografía." },
+      { id: 's4', k: 'anim', t: "Un ball escrit pas a pas|Un baile escrito paso a paso", anim: 'u3dance', x: "Una coreografia té un pas de ball que es repeteix: un patró!|Una coreografía tiene un paso de baile que se repite: ¡un patrón!",
+        nota: "Pregunta per balls que coneguin amb un pas que es repeteix: sardanes, balls de la festa, cançons de l'escola…|Pregunta por bailes que conozcan con un paso que se repite: sardanas, bailes de la fiesta, canciones del cole…" },
+      { id: 's5', k: 'demo', t: "Moviment, llum i nota|Movimiento, luz y nota", x: "Quants girs farà en Bit? Acabarà mirant on mirava?|¿Cuántos giros hará Bit? ¿Terminará mirando donde miraba?",
+        demo: { w: { map: ['...', '.^.', '...'] }, prog: '2{ r light:r note:do r light:u note:mi }' },
+        nota: "Resposta: 4 girs (2 per volta del bucle): fa la volta sencera i acaba mirant amunt, com al principi.|Respuesta: 4 giros (2 por vuelta del bucle): da la vuelta entera y termina mirando arriba, como al principio." },
+      { id: 's6', k: 'demo', t: "El públic prem els botons|El público pulsa los botones", x: "A: avança amb llum i música. B: gira sobre si mateix. Què passarà amb A, B, A, A?|A: avanza con luz y música. B: gira sobre sí mismo. ¿Qué pasará con A, B, A, A?",
+        demo: { w: { map: ['>##F'] }, prog: '2{ light:y note:sol }', evs: { A: 'f light:g note:mi', B: '4{ r }' }, press: 'ABAA' },
+        nota: "Fes notar que el ball de «Quan comença» es fa sol i que els botons hi afegeixen sorpreses quan el públic els prem.|Haz notar que el baile de «Al empezar» se hace solo y que los botones añaden sorpresas cuando el público los pulsa." },
+      { id: 's7', k: 'anim', t: "Primer, el pla del ball|Primero, el plan del baile", anim: 'plan', punts: ["Entrada: com arribo a prop de l'escenari?|Entrada: ¿cómo llego cerca del escenario?", "Pas de ball: què repeteixo i quantes vegades?|Paso de baile: ¿qué repito y cuántas veces?", "Botons: què faran A i B?|Botones: ¿qué harán A y B?", "Final: com pujo a l'escenari?|Final: ¿cómo subo al escenario?"],
+        nota: "Recorda el repartidor de la unitat 1: descompondre un problema gran en trossos petits.|Recuerda el repartidor de la unidad 1: descomponer un problema grande en trozos pequeños." },
+      { id: 's8', k: 'demo', t: "Pensa abans d'executar|Piensa antes de ejecutar", x: "En Bit fa la volta a la font. On acabarà: A, B o C?|Bit da la vuelta a la fuente. ¿Dónde terminará: A, B o C?",
+        demo: { w: { map: ['>#C', '#~#', 'B#A'] }, prog: '2{ f f r light:g note:sol }' },
+        nota: "Que tothom assenyali abans d'executar. Resposta: A, després de dues voltes del bucle.|Que todos señalen antes de ejecutar. Respuesta: A, después de dos vueltas del bucle." },
+      { id: 's9', k: 'activitat', t: "La coreografia en grup|La coreografía en grupo", timer: 12, punts: ["Escriviu un pas de ball amb 3 o 4 targetes i una targeta «Repeteix».|Escribid un paso de baile con 3 o 4 tarjetas y una tarjeta «Repite».", "Afegiu-hi un llum (aixecar un full de color) i una nota (cantar).|Añadid una luz (levantar una hoja de color) y una nota (cantar).", "Un altre grup el balla exactament com diu el programa.|Otro grupo lo baila exactamente como dice el programa.", "Al final, «Quan veus A»: tots reaccionen alhora!|Al final, «Cuando veas A»: ¡todos reaccionan a la vez!"],
+        nota: "Si un ball no surt com volien, que busquin el bug a les targetes, com fan a l'app.|Si un baile no sale como querían, que busquen el bug en las tarjetas, como hacen en la app." },
+      { id: 's10', k: 'concepte', t: "Com s'escriu un ball|Cómo se escribe un baile", punts: ["Una targeta = un moviment, un llum o una nota.|Una tarjeta = un movimiento, una luz o una nota.", "El pas que es repeteix va dins del «Repeteix».|El paso que se repite va dentro del «Repite».", "«Quan veus A»: el que passa quan el públic prem A.|«Cuando veas A»: lo que pasa cuando el público pulsa A.", "Qui balla no s'inventa res: segueix el programa.|Quien baila no se inventa nada: sigue el programa."],
+        nota: "Deixa aquesta diapositiva projectada mentre els grups escriuen i ballen.|Deja esta diapositiva proyectada mientras los grupos escriben y bailan." },
+      { id: 's11', k: 'activitat', t: "Ara, a l'ordinador|Ahora, al ordenador", timer: 12, punts: ["Obre la sessió «Projecte: la coreografia».|Abre la sesión «Proyecto: la coreografía».", "Compta els girs de cada pas de ball.|Cuenta los giros de cada paso de baile.", "Para quan acabis el repte dels botons del públic.|Para cuando termines el reto de los botones del público."],
+        nota: "Comprova que ningú posa els blocs dels botons a «Quan comença».|Comprueba que nadie pone los bloques de los botones en «Al empezar»." },
+      { id: 's12', k: 'repte', t: "El final amb un bug|El final con un bug", timer: 3, x: "Els colors surten al revés: vermell i blau s'han de canviar de lloc.|Los colores salen al revés: rojo y azul tienen que cambiarse de sitio.",
+        nota: "Pista: mireu els llums de dalt del món i toqueu cada llum del bucle per canviar-ne el color.|Pista: mirad las luces de arriba del mundo y tocad cada luz del bucle para cambiar su color." },
+      { id: 's13', k: 'concepte', t: "El gran ball: fes el pla|El gran baile: haz el plan", punts: ["Escriu els quatre trossos al full de pla.|Escribe los cuatro trozos en la hoja de plan.", "Programa un tros i prova'l.|Programa un trozo y pruébalo.", "Criteris: llums, notes, un bucle i acabar a l'escenari.|Criterios: luces, notas, un bucle y terminar en el escenario.", "Els botons són un extra per al públic.|Los botones son un extra para el público."],
+        nota: "No deixis començar a programar fins que cada alumne/a tingui el pla escrit o dit en veu alta.|No dejes empezar a programar hasta que cada alumno/a tenga el plan escrito o dicho en voz alta." },
+      { id: 's14', k: 'activitat', t: "Projecte: la coreografia de la festa major|Proyecto: la coreografía de la fiesta mayor", timer: 10, x: "Fes ballar en Bit per la plaça amb llums i música i acaba a l'escenari. Si vols, programa els botons A i B.|Haz bailar a Bit por la plaza con luces y música y termina en el escenario. Si quieres, programa los botones A y B.",
+        nota: "Qui acabi pot provar el projecte d'un company/a fent de públic, o afegir un pas de ball diferent a cada botó.|Quien termine puede probar el proyecto de un compañero/a haciendo de público, o añadir un paso de baile diferente a cada botón." },
+      { id: 's15', k: 'activitat', t: "L'espectacle de la festa major|El espectáculo de la fiesta mayor", timer: 5, punts: ["Explica el teu pla abans d'executar.|Explica tu plan antes de ejecutar.", "Quin pas de ball es repeteix?|¿Qué paso de baile se repite?", "Un company/a fa de públic i prem els botons.|Un compañero/a hace de público y pulsa los botones.", "Quin bug has trobat i com l'has arreglat?|¿Qué bug has encontrado y cómo lo has arreglado?"],
+        nota: "Fes que la classe aplaudeixi cada espectacle: és la festa major!|Haz que la clase aplauda cada espectáculo: ¡es la fiesta mayor!" },
+      { id: 's16', k: 'resum', t: "Què hem après en aquesta unitat|Qué hemos aprendido en esta unidad", punts: ["El bloc Llum fa senyals i, amb un bucle, pampallugues.|El bloque Luz hace señales y, con un bucle, parpadeos.", "Una melodia és una seqüència de notes: l'ordre importa.|Una melodía es una secuencia de notas: el orden importa.", "Un esdeveniment fa que el programa reaccioni: els botons A i B.|Un evento hace que el programa reaccione: los botones A y B.", "Una coreografia combina tot això amb un pla.|Una coreografía combina todo esto con un plan."],
+        nota: "Felicita la classe pel projecte. Avança que a la unitat següent en Bit aprendrà a mirar el món i a prendre decisions.|Felicita a la clase por el proyecto. Avanza que en la unidad siguiente Bit aprenderá a mirar el mundo y a tomar decisiones." },
+      { id: 's17', k: 'tiquet', t: "Tiquet de sortida|Ticket de salida", punts: ["Què és una coreografia?|¿Qué es una coreografía?", "Què fan els botons durant el ball i quan s'executen?|¿Qué hacen los botones durante el baile y cuándo se ejecutan?"],
+        nota: "Respostes: un ball escrit pas a pas, amb un pas que es repeteix; els blocs dels botons s'executen cada vegada que el públic prem el botó.|Respuestas: un baile escrito paso a paso, con un paso que se repite; los bloques de los botones se ejecutan cada vez que el público pulsa el botón." }
+    ],
+    print: [
+      { id: 'p1', t: "Targetes de ball|Tarjetas de baile", k: 'targetes',
+        intro: "Afegiu aquestes targetes a les de les sessions anteriors (girs, llums, notes, Repeteix i esdeveniments). Amb totes juntes, cada grup escriu la seva coreografia.|Añadid estas tarjetas a las de las sesiones anteriores (giros, luces, notas, Repite y eventos). Con todas juntas, cada grupo escribe su coreografía.",
+        items: [
+          { t: "Salta ⬆|Salta ⬆", n: 2 },
+          { t: "Aplaudeix 👏|Aplaude 👏", n: 2 },
+          { t: "Canta «la!» 🎵|Canta «¡la!» 🎵", n: 2 },
+          { t: "Mans amunt 🙌|Manos arriba 🙌", n: 2 },
+          { t: "Aixeca el full groc 🟡|Levanta la hoja amarilla 🟡", n: 1 },
+          { t: "Aixeca el full blau 🔵|Levanta la hoja azul 🔵", n: 1 },
+          { t: "Repeteix 4 vegades 🔁|Repite 4 veces 🔁", n: 1 },
+          { t: "Quan veus A 🅰️|Cuando veas A 🅰️", n: 1 }
+        ] },
+      { id: 'p2', t: "Full de pla de la coreografia|Hoja de plan de la coreografía", k: 'fitxa',
+        intro: "Primer penseu el ball a trossos i després passeu-lo a blocs. Prova cada tros abans de continuar!|Primero pensad el baile a trozos y después pasadlo a bloques. ¡Prueba cada trozo antes de seguir!",
+        items: [
+          { q: "El pas de ball: en Bit fa aquest programa. Quantes vegades gira? Acaba mirant on mirava al principi?|El paso de baile: Bit hace este programa. ¿Cuántas veces gira? ¿Termina mirando donde miraba al principio?", prog: '4{ r light:u note:mi }',
+            sol: "Gira 4 vegades: fa la volta sencera i acaba mirant com al principi. Sonen 4 mi.|Gira 4 veces: da la vuelta entera y termina mirando como al principio. Suenan 4 mi." },
+          { q: "On acabarà en Bit? Encercla la lletra.|¿Dónde terminará Bit? Rodea la letra.", w: { map: ['>#C', '#~#', 'B#A'] }, prog: '2{ f f r light:g note:sol }', a: 'A',
+            sol: "A la A: cada volta del bucle avança dues caselles i gira a la dreta.|En la A: cada vuelta del bucle avanza dos casillas y gira a la derecha." },
+          { q: "El pla de la teva coreografia. Entrada: … · Pas que es repeteix (quantes vegades?): … · Botó A: … · Botó B: … · Final: …|El plan de tu coreografía. Entrada: … · Paso que se repite (¿cuántas veces?): … · Botón A: … · Botón B: … · Final: …",
+            sol: "Resposta oberta. Comproveu que el pla té llums, notes i un pas dins d'un bucle, i que acaba a l'escenari.|Respuesta abierta. Comprobad que el plan tiene luces, notas y un paso dentro de un bucle, y que termina en el escenario." },
+          { q: "Quin bug has trobat en el teu projecte i com l'has arreglat?|¿Qué bug has encontrado en tu proyecto y cómo lo has arreglado?",
+            sol: "Resposta oberta. Valoreu que expliqui on fallava (per exemple, un gir de més) i quin bloc ha canviat.|Respuesta abierta. Valorad que explique dónde fallaba (por ejemplo, un giro de más) y qué bloque ha cambiado." }
+        ] }
+    ]
+  }
+});
