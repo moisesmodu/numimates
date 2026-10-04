@@ -90,7 +90,10 @@ function* bitRun(W, S, list, fns, depth = 0) {
     }
     if (b.k === 'until') {
       let g = 0;
-      while (!bitCond(W, S, b.c)) { if (++g > 80) { S.crash = 'loop'; return; } yield { b }; yield* bitRun(W, S, b.b, fns, depth); if (S.crash) return; }
+      // si una volta sencera no canvia res, la condició no es complirà mai: bucle infinit (sense esperar 80 voltes)
+      const key = () => [S.x, S.y, S.d, S.v, S.carry, S.gems.size, S.boxes.size, S.done.size, Object.keys(S.paint).length, S.led].join();
+      let same = 0;
+      while (!bitCond(W, S, b.c)) { if (++g > 80 || same >= 3) { S.crash = 'loop'; return; } const k0 = key(); yield { b }; yield* bitRun(W, S, b.b, fns, depth); if (S.crash) return; same = key() === k0 ? same + 1 : 0; }
       yield { b }; continue;
     }
     if (b.k === 'if') { yield { b }; yield* bitRun(W, S, bitCond(W, S, b.c) ? b.b : b.e, fns, depth); continue; }
@@ -324,6 +327,8 @@ const BIT_CONDS = {
 const BIT_CNAME = { r: ['vermell', 'rojo'], g: ['verd', 'verde'], y: ['groc', 'amarillo'], u: ['blau', 'azul'] };
 const BIT_NOTES = ['do', 're', 'mi', 'fa', 'sol', 'la', 'si'];
 // nom de la variable (el món el pot canviar: «punts», «fruites»…) i nom de cada funció
+// «al comptador» amb el nom de sempre; amb un nom propi, «a «estrelles»» (així no surt «al estrelles»)
+const bitVA = (art, pre) => (typeof TB !== 'undefined' && TB && TB.W && TB.W.vname) ? `${pre ? pre + ' ' : ''}«${bitVName()}»` : `${art} ${bitVName()}`;
 const bitVName = () => tx((typeof TB !== 'undefined' && TB && TB.W && TB.W.vname) || 'comptador|contador');
 // noms de les funcions: els de la demo que s'està dibuixant (BIT_FNCTX) o els del repte obert (TB)
 var BIT_FNCTX = null;
@@ -343,9 +348,9 @@ function bitLabel(b) {
     case 'light': return `${L('Llum', 'Luz')} <i class="tdot" style="background:${BIT_COL[b.c || 'r']}"></i>`;
     case 'note': return `${L('Nota', 'Nota')} <b>${b.n || 'do'}</b>`;
     case 'call': return `${L('Funció', 'Función')} <b>${bitFName(b.f || 'A')}</b>`;
-    case 'add': return L(`Suma <b class="tnum">${b.n ?? 1}</b> al ${bitVName()}`, `Suma <b class="tnum">${b.n ?? 1}</b> al ${bitVName()}`);
-    case 'sub': return L(`Resta <b class="tnum">${b.n ?? 1}</b> al ${bitVName()}`, `Resta <b class="tnum">${b.n ?? 1}</b> al ${bitVName()}`);
-    case 'setv': return L(`Posa el ${bitVName()} a <b class="tnum">${b.n || 0}</b>`, `Pon el ${bitVName()} a <b class="tnum">${b.n || 0}</b>`);
+    case 'add': return L(`Suma <b class="tnum">${b.n ?? 1}</b> ${bitVA('al', 'a')}`, `Suma <b class="tnum">${b.n ?? 1}</b> ${bitVA('al', 'a')}`);
+    case 'sub': return L(`Resta <b class="tnum">${b.n ?? 1}</b> ${bitVA('al', 'a')}`, `Resta <b class="tnum">${b.n ?? 1}</b> ${bitVA('al', 'a')}`);
+    case 'setv': return L(`Posa ${bitVA('el', '')} a <b class="tnum">${b.n || 0}</b>`, `Pon ${bitVA('el', '')} a <b class="tnum">${b.n || 0}</b>`);
   }
   return b.k;
 }
