@@ -145,7 +145,7 @@ export function create(el, W, S, opt = {}) {
     ['L', 'R'].forEach((k, i) => { const c = S.car && S.car[k], H = R.heads[i]; H.mat.color.set(c ? COL[c] : '#C7CBD6'); H.mat.emissive.set(c ? COL[c] : '#000000'); H.mat.emissiveIntensity = c ? 1.4 : 0; H.gl.material.color.set(c ? COL[c] : '#fff'); H.gl.material.opacity = c ? .95 : 0; });
     const u = (S.under || []).find(c => c); R.underM.color.set(u ? COL[u] : '#fff'); R.underM.opacity = u ? .85 : 0;
     if (typeof roboLine === 'function') ['L', 'M', 'R'].forEach((k, i) => { R.lineDots[i].material.opacity = roboLine(st.W, S, k).black ? .95 : 0; });
-    S.objs.forEach((o, i) => { const g = st.objs[i]; if (!g) return; const q = P(o.x, o.y); g.position.set(q.x, o.out ? -3 : 0, q.z); g.visible = !o.gone; });
+    S.objs.forEach((o, i) => { const g = st.objs[i]; if (!g) return; const q = P(o.x, o.y); g.position.set(q.x, o.out ? -3 : 0, q.z); g.visible = !o.gone || o.out; });
     if (lead && S.lead) { const q = P(S.lead.x, S.lead.y); lead.bot.position.set(q.x, 0, q.z); lead.bot.rotation.y = -S.lead.h * Math.PI / 180; }
     if (st.lamp && S.lamp) { const on = S.lamp.on; st.lamp.bulbM.emissiveIntensity = on ? 1.5 : 0; st.lamp.pl.intensity = on ? 900 : 0; st.lamp.gl.visible = on; }
     if (st.dark !== S.dark) { st.dark = S.dark; hemi.intensity = S.dark ? .18 : 1.0; sun.intensity = S.dark ? .25 : 2.0; renderer.toneMappingExposure = S.dark ? .8 : 1.05; }

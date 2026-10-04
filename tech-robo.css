@@ -26,7 +26,7 @@
 .rmot i{position:relative;flex:1;height:10px;border-radius:5px;background:#EEF1F8;overflow:hidden}.rmot i::after{content:"";position:absolute;left:0;top:0;bottom:0;width:var(--v);background:var(--ok);border-radius:5px}.rmot i.neg::after{background:#F08A24}
 /* programa: guions amb el seu barret */
 .rscripts{display:flex;flex-direction:column;gap:10px;max-height:46vh;overflow-y:auto;padding-right:2px}
-.rscript{border-radius:18px;background:#fff;border:2px solid var(--line);overflow:hidden}
+.rscript{border-radius:18px;background:#fff;border:2px solid var(--line);overflow:hidden;flex-shrink:0}
 .rhat{display:flex;align-items:center;gap:8px;padding:8px 12px;background:#1B2B6B;color:#fff;font-size:14.5px}
 .rhat span{display:grid;place-items:center;width:24px;height:24px}.rhat svg{width:20px;height:20px}
 .rscript.h-forever .rhat{background:#1FA463}.rscript.h-A .rhat,.rscript.h-B .rhat{background:#3A3F50}

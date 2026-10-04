@@ -1,0 +1,4858 @@
+/* Numi Tech · Tech Robòtica · guies del professor. Contingut propi de Numi (vegeu scripts/TECH-CONTRACTE.md). */
+
+/* ── unitat 1 ── */
+/* Tech Robòtica · unitat 1 «Què és un robot?» · guia del professor (k1-1 … k1-4)
+   Material propi de Numi. Classe de 60 minuts; mateix esquema que TGUIDE['r1-1']. Fase «robot»: activitat amb el
+   Maqueen Lite V5 de veritat (grups de 3-4 per kit). */
+Object.assign(TGUIDE, {
+  /* ---------- Sessió 1 · Robots al nostre voltant ---------- */
+  'k1-1': {
+    obj: [
+      "L'alumne/a explica què és un robot amb el cicle sentir → pensar → actuar i en dona exemples de la vida diària.|El alumno/a explica qué es un robot con el ciclo sentir → pensar → actuar y da ejemplos de la vida diaria.",
+      "L'alumne/a identifica les parts del Maqueen Lite (ultrasons, sensors de línia, micro:bit, motors i llums) i distingeix els sensors dels actuadors.|El alumno/a identifica las partes del Maqueen Lite (ultrasonidos, sensores de línea, micro:bit, motores y luces) y distingue los sensores de los actuadores.",
+      "L'alumne/a escriu dins d'«en iniciar» un programa amb motor, espera i atura que porta el robot fins a una zona.|El alumno/a escribe dentro de «al iniciar» un programa con motor, espera y para que lleva el robot hasta una zona.",
+      "L'alumne/a descarrega el seu primer programa al Maqueen de veritat i compara on s'atura amb el que fa el simulador.|El alumno/a descarga su primer programa en el Maqueen de verdad y compara dónde se para con lo que hace el simulador."
+    ],
+    comp: [
+      "Competència digital (CD5): programar un robot per resoldre una tasca senzilla|Competencia digital (CD5): programar un robot para resolver una tarea sencilla",
+      "Competència STEM (STEM2): observar, predir i comprovar el comportament d'una màquina|Competencia STEM (STEM2): observar, predecir y comprobar el comportamiento de una máquina",
+      "Matemàtiques: magnituds i mesura (centímetres, segons i mil·lisegons)|Matemáticas: magnitudes y medida (centímetros, segundos y milisegundos)",
+      "Ciències i tecnologia: màquines que perceben l'entorn i hi actuen|Ciencias y tecnología: máquinas que perciben el entorno y actúan sobre él"
+    ],
+    vocab: [
+      ["Robot|Robot", "Màquina que sent amb sensors, decideix amb un programa i actua amb motors, llums o so.|Máquina que siente con sensores, decide con un programa y actúa con motores, luces o sonido."],
+      ["Sensor|Sensor", "Part que recull informació de l'entorn (distància, llum, línia…).|Parte que recoge información del entorno (distancia, luz, línea…)."],
+      ["Actuador|Actuador", "Part que fa alguna cosa: els motors, els llums, el brunzidor.|Parte que hace algo: los motores, las luces, el zumbador."],
+      ["micro:bit|micro:bit", "L'ordinador petit que fa de cervell del Maqueen: hi guardem el programa.|El ordenador pequeño que hace de cerebro del Maqueen: allí guardamos el programa."],
+      ["En iniciar|Al iniciar", "El guió que s'executa una vegada quan s'encén el robot, de dalt a baix.|El guion que se ejecuta una vez cuando se enciende el robot, de arriba abajo."],
+      ["Mil·lisegon (ms)|Milisegundo (ms)", "La mil·lèsima part d'un segon: 1000 ms són 1 segon.|La milésima parte de un segundo: 1000 ms son 1 segundo."]
+    ],
+    mat: {
+      aula: [
+        "Un ordinador per alumne/a amb Numi Tech obert a la sessió «Robots al nostre voltant»|Un ordenador por alumno/a con Numi Tech abierto en la sesión «Robots a nuestro alrededor»",
+        "Projector i la presentació d'aquesta sessió|Proyector y la presentación de esta sesión",
+        "Un kit per grup de 3-4: Maqueen Lite V5 amb micro:bit V2, cable USB i piles carregades|Un kit por grupo de 3-4: Maqueen Lite V5 con micro:bit V2, cable USB y pilas cargadas",
+        "Cinta de pintor, un metre o una cinta mètrica i una caixa de sabates per grup|Cinta de pintor, un metro o una cinta métrica y una caja de zapatos por grupo"
+      ],
+      imprimir: ["Targetes: el robot de tres persones|Tarjetas: el robot de tres personas", "Codi: el primer programa al Maqueen|Código: el primer programa en el Maqueen"],
+      prep: [
+        "Provar un kit abans de la classe: descarregar el codi de la diapositiva 13 i comprovar que el robot avança i s'atura.|Probar un kit antes de la clase: descargar el código de la diapositiva 13 y comprobar que el robot avanza y se para.",
+        "Marcar a terra, per a cada grup, una línia de sortida i una zona de meta de 25 × 25 cm a uns 45 cm de distància, amb cinta de pintor.|Marcar en el suelo, para cada grupo, una línea de salida y una zona de meta de 25 × 25 cm a unos 45 cm de distancia, con cinta de pintor.",
+        "Imprimir i retallar un paquet de targetes per grup de 3.|Imprimir y recortar un paquete de tarjetas por grupo de 3.",
+        "Deixar els ordinadors amb Numi Tech obert i MakeCode (makecode.microbit.org) en una altra pestanya.|Dejar los ordenadores con Numi Tech abierto y MakeCode (makecode.microbit.org) en otra pestaña."
+      ]
+    },
+    plan: [
+      { min: 4, t: "Benvinguda al taller de robòtica|Bienvenida al taller de robótica", fase: 'inici',
+        fa: "Presenta el curs i ensenya la caixa dels robots Maqueen, encara apagats. Projecta la llista de la diapositiva 2 i feu-ne una votació a mà alçada: és un robot o no? Recull les raons sense donar la resposta: hi tornareu d'aquí a uns minuts.|Presenta el curso y enseña la caja de los robots Maqueen, todavía apagados. Proyecta la lista de la diapositiva 2 y haced una votación a mano alzada: ¿es un robot o no? Recoge las razones sin dar la respuesta: volveréis a ello en unos minutos.",
+        diu: ["Què fa que una màquina sigui un robot?|¿Qué hace que una máquina sea un robot?",
+          "Una torradora és un robot? I un robot aspirador? Per què?|¿Una tostadora es un robot? ¿Y un robot aspirador? ¿Por qué?",
+          "Avui farem que aquests robots facin el seu primer passeig.|Hoy haremos que estos robots den su primer paseo."],
+        slides: ['s1', 's2'], app: "Encara no: pantalles apagades.|Todavía no: pantallas apagadas.", org: "Tot el grup|Todo el grupo" },
+      { min: 8, t: "Sentir, pensar i actuar|Sentir, pensar y actuar", fase: 'teoria',
+        fa: "Explica el cicle amb l'animació i torneu a la llista de la diapositiva 2 amb un criteri clar: té sensors?, decideix amb un programa?, actua? Presenta les parts del Maqueen amb un robot de veritat a la mà al costat de l'animació. Executa la demo del robot que s'atura sol davant la caixa: és el cicle en directe. Acaba amb els tres blocs de moviment i, abans d'executar les dues últimes demos, demana a tothom on creu que s'aturarà el robot.|Explica el ciclo con la animación y volved a la lista de la diapositiva 2 con un criterio claro: ¿tiene sensores?, ¿decide con un programa?, ¿actúa? Presenta las partes del Maqueen con un robot de verdad en la mano al lado de la animación. Ejecuta la demo del robot que se para solo delante de la caja: es el ciclo en directo. Termina con los tres bloques de movimiento y, antes de ejecutar las dos últimas demos, pide a todos dónde creen que se parará el robot.",
+        diu: ["Quins sensors té el robot aspirador? I quin és el seu actuador?|¿Qué sensores tiene el robot aspirador? ¿Y cuál es su actuador?",
+          "Quina part del Maqueen fa de cervell?|¿Qué parte del Maqueen hace de cerebro?",
+          "Abans d'executar-ho: el robot s'aturarà abans, dins o després de la meta?|Antes de ejecutarlo: ¿el robot se parará antes, dentro o después de la meta?",
+          "Si el programa s'acaba sense «atura», qui diu als motors que parin?|Si el programa se termina sin «para», ¿quién les dice a los motores que paren?"],
+        slides: ['s3', 's4', 's5', 's6', 's7', 's8', 's9'], app: "Encara no: tota l'atenció a la projecció.|Todavía no: toda la atención en la proyección.", org: "Tot el grup|Todo el grupo" },
+      { min: 9, t: "El robot de tres persones|El robot de tres personas", fase: 'desconnectat',
+        fa: "Grups de 3 amb les targetes de rol. <b>Sensors</b> mira i explica què veu, però no es mou ni dona ordres. <b>Cervell</b> escolta els sensors i mostra una targeta d'ordre. <b>Motors</b> té els ulls tancats i només fa el que diu la targeta, a poc a poc. La missió: arribar fins a la caixa de sabates i aturar-se a un pam sense tocar-la. Després de cada intent, els papers roten. Al final, pregunta quin paper era el més difícil.|Grupos de 3 con las tarjetas de rol. <b>Sensores</b> mira y explica lo que ve, pero no se mueve ni da órdenes. <b>Cerebro</b> escucha a los sensores y muestra una tarjeta de orden. <b>Motores</b> tiene los ojos cerrados y solo hace lo que dice la tarjeta, despacio. La misión: llegar hasta la caja de zapatos y pararse a un palmo sin tocarla. Después de cada intento, los papeles rotan. Al final, pregunta qué papel era el más difícil.",
+        diu: ["Els motors no veuen res: només obeeixen el cervell.|Los motores no ven nada: solo obedecen al cerebro.",
+          "Sensors, només podeu explicar què veieu: qui decideix és el cervell.|Sensores, solo podéis explicar lo que veis: quien decide es el cerebro.",
+          "Si el robot ha tocat la caixa, quina part del robot ha fallat?|Si el robot ha tocado la caja, ¿qué parte del robot ha fallado?"],
+        slides: ['s10'], app: "Cap: activitat sense pantalla.|Ninguna: actividad sin pantalla.", org: "Grups de 3 amb papers que roten|Grupos de 3 con papeles que rotan" },
+      { min: 11, t: "A l'ordinador: descobreix i prova|En el ordenador: descubre y prueba", fase: 'ordinador',
+        fa: "Cada alumne/a obre la sessió i avança fins a la pausa activa. Al pas «El robot de dues persones», que toquin «Ho hem fet!»: és el que acabem de fer. Al pas «On acabarà?», que triïn la lletra abans d'executar el programa i que diguin per què.|Cada alumno/a abre la sesión y avanza hasta la pausa activa. En el paso «El robot de dos personas», que toquen «¡Lo hemos hecho!»: es lo que acabamos de hacer. En el paso «¿Dónde terminará?», que elijan la letra antes de ejecutar el programa y que digan por qué.",
+        diu: ["Les targetes de «Descobreix» tenen demos: mira-les executar-se un parell de vegades.|Las tarjetas de «Descubre» tienen demos: míralas ejecutarse un par de veces.",
+          "Primer tria la lletra; després comprova-ho.|Primero elige la letra; después compruébalo."],
+        slides: ['s11'], app: "De «La missió» fins a «Investiga»: les dues històries, les cinc targetes de «Descobreix», les preguntes del cervell i del sensor, ordenar el cicle de l'aspirador, «El robot de dues persones» (ja fet), la targeta dels tres blocs, «On acabarà?» i el bloc que cal canviar.|De «La misión» hasta «Investiga»: las dos historias, las cinco tarjetas de «Descubre», las preguntas del cerebro y del sensor, ordenar el ciclo del aspirador, «El robot de dos personas» (ya hecho), la tarjeta de los tres bloques, «¿Dónde terminará?» y el bloque que hay que cambiar.", org: "Individual|Individual" },
+      { min: 8, t: "Reptes: el primer programa|Retos: el primer programa", fase: 'ordinador',
+        fa: "Feu la pausa activa tots junts, drets al costat de la taula. Després, deixa'ls fer els tres reptes. Al primer, insisteix que és normal no encertar l'espera a la primera: es prova, es mira i s'ajusta. Al segon, que llegeixin el programa en veu alta abans de tocar res.|Haced la pausa activa todos juntos, de pie al lado de la mesa. Después, deja que hagan los tres retos. En el primero, insiste en que es normal no acertar la espera a la primera: se prueba, se mira y se ajusta. En el segundo, que lean el programa en voz alta antes de tocar nada.",
+        diu: ["S'ha quedat curt o s'ha passat? Per poc o per molt?|¿Se ha quedado corto o se ha pasado? ¿Por poco o por mucho?",
+          "Llegeix el programa de dalt a baix: què li falta?|Lee el programa de arriba abajo: ¿qué le falta?",
+          "Si en 4 segons fa uns 60 cm, quant temps li cal per fer-ne 100?|Si en 4 segundos hace unos 60 cm, ¿cuánto tiempo necesita para hacer 100?"],
+        slides: ['s12'], app: "«Pausa activa» i els tres reptes: la primera meta, el robot que no s'atura i la meta llunyana.|«Pausa activa» y los tres retos: la primera meta, el robot que no se para y la meta lejana.", org: "Tot el grup i després individual|Todo el grupo y después individual" },
+      { min: 12, t: "El primer programa al Maqueen de veritat|El primer programa en el Maqueen de verdad", fase: 'robot',
+        fa: "Grups de 3-4 per kit, amb papers: programador/a (MakeCode), pilot (encén, apaga i agafa el robot), mesurador/a (metre) i secretari/ària (apunta). A MakeCode: nou projecte, «Extensions», busqueu «maqueen», passeu a JavaScript, enganxeu el codi de la diapositiva 13 (o de l'imprimible) i descarregueu-lo a la micro:bit. Desconnecteu el cable, poseu el robot a terra darrere la línia de sortida i encengueu-lo. Marqueu amb cinta on s'atura i mesureu-ho: al simulador, a 150 durant 3 segons, fa uns 46 cm. Si queda temps, canvieu l'espera perquè s'aturi dins la zona de meta.|Grupos de 3-4 por kit, con papeles: programador/a (MakeCode), piloto (enciende, apaga y coge el robot), medidor/a (metro) y secretario/a (apunta). En MakeCode: nuevo proyecto, «Extensiones», buscad «maqueen», pasad a JavaScript, pegad el código de la diapositiva 13 (o del imprimible) y descargadlo en la micro:bit. Desconectad el cable, poned el robot en el suelo detrás de la línea de salida y encendedlo. Marcad con cinta dónde se para y medidlo: en el simulador, a 150 durante 3 segundos, hace unos 46 cm. Si queda tiempo, cambiad la espera para que se pare dentro de la zona de meta.",
+        diu: ["Cable fora i robot a terra abans d'encendre'l.|Cable fuera y robot en el suelo antes de encenderlo.",
+          "On s'ha aturat el vostre? Més a prop o més lluny que al simulador?|¿Dónde se ha parado el vuestro? ¿Más cerca o más lejos que en el simulador?",
+          "Si s'ha quedat curt, quin número canviaríeu? Cap a on?|Si se ha quedado corto, ¿qué número cambiaríais? ¿Hacia dónde?"],
+        slides: ['s13', 's14'], app: "Cap: MakeCode i el robot de veritat.|Ninguna: MakeCode y el robot de verdad.", org: "Grups de 3-4 per kit amb papers|Grupos de 3-4 por kit con papeles" },
+      { min: 5, t: "Crea: el bus del taller|Crea: el autobús del taller", fase: 'crea',
+        fa: "De tornada a l'ordinador, cada alumne/a fa el projecte del bus: una parada a la zona groga i el final a la verda. Quan funcioni, que el desin. Qui acabi pot ajudar un company/a amb preguntes, sense tocar-li el ratolí.|De vuelta al ordenador, cada alumno/a hace el proyecto del autobús: una parada en la zona amarilla y el final en la verde. Cuando funcione, que lo guarden. Quien termine puede ayudar a un compañero/a con preguntas, sin tocarle el ratón.",
+        diu: ["Quants blocs «atura» necessita el bus?|¿Cuántos bloques «para» necesita el autobús?",
+          "Hi ha moltes solucions bones: la teva pot ser diferent de la del company/a.|Hay muchas soluciones buenas: la tuya puede ser diferente de la del compañero/a."],
+        slides: ['s15'], app: "Pas «Crea»: El bus del taller.|Paso «Crea»: El autobús del taller.", org: "Individual|Individual" },
+      { min: 3, t: "Tancament i tiquet de sortida|Cierre y ticket de salida", fase: 'tancament',
+        fa: "Repassa les tres idees amb el resum i deixa que responguin les preguntes finals de l'app. A la porta, fes a cada alumne/a una de les preguntes del tiquet.|Repasa las tres ideas con el resumen y deja que respondan las preguntas finales de la app. En la puerta, haz a cada alumno/a una de las preguntas del ticket.",
+        diu: ["Qui em diu un robot de cada dia i quin sensor té?|¿Quién me dice un robot de cada día y qué sensor tiene?",
+          "Què fa el bloc «espera»? I què passa si falta «atura»?|¿Qué hace el bloque «espera»? ¿Y qué pasa si falta «para»?"],
+        slides: ['s16', 's17'], app: "«Tancament»: les dues preguntes finals i com m'he sentit.|«Cierre»: las dos preguntas finales y cómo me he sentido.", org: "Tot el grup|Todo el grupo" }
+    ],
+    errors: [
+      ["Creu que «espera» para el robot.|Cree que «espera» para el robot.",
+        "Que miri la demo sense «atura» i expliqui què passa quan s'acaba el programa. Pregunta: qui ha dit als motors que parin?|Que mire la demo sin «para» y explique qué pasa cuando se termina el programa. Pregunta: ¿quién les ha dicho a los motores que paren?"],
+      ["Posa els blocs en un ordre estrany (l'«atura» abans de l'«espera») o fora d'«en iniciar».|Pone los bloques en un orden extraño (el «para» antes de la «espera») o fuera de «al iniciar».",
+        "Llegiu el programa en veu alta de dalt a baix: «engega, espera, atura». Quin ordre té sentit?|Leed el programa en voz alta de arriba abajo: «enciende, espera, para». ¿Qué orden tiene sentido?"],
+      ["Canvia l'espera a l'atzar i amb salts molt grans (de 1000 a 9000 ms).|Cambia la espera al azar y con saltos muy grandes (de 1000 a 9000 ms).",
+        "Pregunta: s'ha quedat curt o s'ha passat, i per poc o per molt? Que canviï l'espera de 500 en 500 ms.|Pregunta: ¿se ha quedado corto o se ha pasado, y por poco o por mucho? Que cambie la espera de 500 en 500 ms."],
+      ["Confon sensors i actuadors (diu que els motors són un sensor).|Confunde sensores y actuadores (dice que los motores son un sensor).",
+        "Fes la pregunta clau: recull informació o fa alguna cosa? Els ultrasons «escolten»; els motors «fan».|Haz la pregunta clave: ¿recoge información o hace algo? Los ultrasonidos «escuchan»; los motores «hacen»."],
+      ["Al robot de veritat no s'atura on deia el simulador i pensa que ho ha fet malament.|En el robot de verdad no se para donde decía el simulador y piensa que lo ha hecho mal.",
+        "És normal: les piles i el terra canvien una mica la velocitat. Que mesuri la diferència i ajusti l'espera: és el que fan els enginyers.|Es normal: las pilas y el suelo cambian un poco la velocidad. Que mida la diferencia y ajuste la espera: es lo que hacen los ingenieros."]
+    ],
+    diff: {
+      mes: "Fer el bus amb dues parades i una velocitat diferent a cada tram. Al robot de veritat, ajustar l'espera fins que s'aturi a menys de 5 cm d'una marca de cinta.|Hacer el autobús con dos paradas y una velocidad diferente en cada tramo. En el robot de verdad, ajustar la espera hasta que se pare a menos de 5 cm de una marca de cinta.",
+      menys: "Començar pel repte de la primera meta dient el programa en veu alta («engega, espera, atura») amb les targetes d'ordre a la taula. Fer servir el pas «On acabarà?» per entendre què fa l'espera.|Empezar por el reto de la primera meta diciendo el programa en voz alta («enciende, espera, para») con las tarjetas de orden en la mesa. Usar el paso «¿Dónde terminará?» para entender qué hace la espera."
+    },
+    aval: {
+      ticket: ["Digues les tres coses que fa un robot i un exemple de sensor.|Di las tres cosas que hace un robot y un ejemplo de sensor.",
+        "Què passa si un programa no té el bloc «atura»?|¿Qué pasa si un programa no tiene el bloque «para»?"],
+      rubric: [
+        ["Concepte de robot|Concepto de robot", "Explica el cicle sentir, pensar i actuar i classifica aparells amb aquest criteri.|Explica el ciclo sentir, pensar y actuar y clasifica aparatos con este criterio.", "Reconeix robots coneguts, però encara no explica per què ho són.|Reconoce robots conocidos, pero todavía no explica por qué lo son."],
+        ["Parts del Maqueen|Partes del Maqueen", "Identifica al robot de veritat els sensors, el cervell i els actuadors.|Identifica en el robot de verdad los sensores, el cerebro y los actuadores.", "Anomena algunes parts, però confon sensors i actuadors.|Nombra algunas partes, pero confunde sensores y actuadores."],
+        ["Primer programa|Primer programa", "Programa motor, espera i atura en ordre i ajusta l'espera segons el resultat.|Programa motor, espera y para en orden y ajusta la espera según el resultado.", "Fa el programa amb ajuda o canvia l'espera a l'atzar.|Hace el programa con ayuda o cambia la espera al azar."]
+      ]
+    },
+    casa: "A casa, amb el mòbil, podeu repetir la sessió i fer «El robot de dues persones»: una persona fa de motors (ulls tancats) i l'altra de sensors i cervell. Busqueu també tres màquines de casa o del carrer que tinguin sensors i digueu si són robots.|En casa, con el móvil, podéis repetir la sesión y hacer «El robot de dos personas»: una persona hace de motores (ojos cerrados) y la otra de sensores y cerebro. Buscad también tres máquinas de casa o de la calle que tengan sensores y decid si son robots.",
+    slides: [
+      { id: 's1', k: 'portada', t: "Robots al nostre voltant|Robots a nuestro alrededor", x: "Avui coneixerem el Maqueen i li farem fer el primer passeig.|Hoy conoceremos el Maqueen y le haremos dar su primer paseo.",
+        nota: "Presenta l'objectiu: al final de la classe, cada grup haurà fet moure un robot de veritat amb el seu programa.|Presenta el objetivo: al final de la clase, cada grupo habrá hecho mover un robot de verdad con su programa." },
+      { id: 's2', k: 'pregunta', t: "És un robot?|¿Es un robot?", punts: ["Un robot aspirador|Un robot aspirador", "Una bicicleta|Una bicicleta", "Un braç que munta cotxes a la fàbrica|Un brazo que monta coches en la fábrica", "Una torradora|Una tostadora", "Un vehicle que explora Mart|Un vehículo que explora Marte"],
+        nota: "Voteu cada aparell a mà alçada i apunta els resultats. No donis la resposta: després de la diapositiva 3, torneu-hi amb el criteri «sent, pensa i actua».|Votad cada aparato a mano alzada y apunta los resultados. No des la respuesta: después de la diapositiva 3, volved con el criterio «siente, piensa y actúa»." },
+      { id: 's3', k: 'anim', t: "Sent, pensa i actua|Siente, piensa y actúa", anim: 'k1cycle', x: "Un robot sent amb els sensors, pensa amb el programa i actua amb els motors, una vegada i una altra.|Un robot siente con los sensores, piensa con el programa y actúa con los motores, una y otra vez.",
+        nota: "Torna a la llista: la bicicleta no sent ni decideix; la torradora només compta el temps. El robot aspirador i el vehicle de Mart fan les tres coses.|Vuelve a la lista: la bicicleta no siente ni decide; la tostadora solo cuenta el tiempo. El robot aspirador y el vehículo de Marte hacen las tres cosas." },
+      { id: 's4', k: 'anim', t: "Robots de cada dia|Robots de cada día", anim: 'k1life', x: "Aspiradors, braços de fàbrica i vehicles que exploren altres planetes.|Aspiradores, brazos de fábrica y vehículos que exploran otros planetas.",
+        nota: "Per a cada robot, demana quin sensor té i quin actuador. Deixa que en proposin d'altres que coneguin.|Para cada robot, pide qué sensor tiene y qué actuador. Deja que propongan otros que conozcan." },
+      { id: 's5', k: 'anim', t: "Coneix el Maqueen Lite|Conoce el Maqueen Lite", anim: 'k1parts', x: "Ultrasons, llums, micro:bit, dos motors amb rodes i, a sota, tres sensors de línia.|Ultrasonidos, luces, micro:bit, dos motores con ruedas y, debajo, tres sensores de línea.",
+        nota: "Ensenya un Maqueen de veritat al costat de la projecció i gira'l per mostrar els sensors de línia de sota. Pregunta quines parts són sensors i quines actuadors.|Enseña un Maqueen de verdad al lado de la proyección y gíralo para mostrar los sensores de línea de debajo. Pregunta qué partes son sensores y cuáles actuadores." },
+      { id: 's6', k: 'robo', t: "Un robot que sent|Un robot que siente", x: "Aquest programa mira amb els ultrasons i para el robot davant la caixa.|Este programa mira con los ultrasonidos y para el robot delante de la caja.",
+        robo: { w: { w: 120, h: 50, bot: [15, 25, 90], walls: [[96, 8, 8, 34]] }, prog: 'forever{ if:dist<12{ stop:all } else{ run:all,fwd,150 } }' }, tip: "Abans d'executar-lo: xocarà o s'aturarà?|Antes de ejecutarlo: ¿chocará o se parará?",
+        nota: "És el cicle en directe: els ultrasons senten, el programa decideix i els motors actuen. No cal explicar els blocs «per sempre» i «si»: els aprendran a la unitat 3.|Es el ciclo en directo: los ultrasonidos sienten, el programa decide y los motores actúan. No hace falta explicar los bloques «para siempre» y «si»: los aprenderán en la unidad 3." },
+      { id: 's7', k: 'concepte', t: "Tres blocs per començar|Tres bloques para empezar", punts: ["Motor: engega els motors a una velocitat.|Motor: enciende los motores a una velocidad.", "Espera: deixa passar el temps (el robot continua fent el que feia).|Espera: deja pasar el tiempo (el robot sigue haciendo lo que hacía).", "Atura: para els motors.|Para: detiene los motores."],
+        blocks: ["en iniciar|al iniciar", "motor els dos endavant a velocitat 150|motor los dos adelante a velocidad 150", "espera 3000 ms|espera 3000 ms", "atura el motor els dos|para el motor los dos"],
+        nota: "Remarca que tot va dins d'«en iniciar» i que el robot ho fa de dalt a baix, una sola vegada. Recorda que 1000 ms són 1 segon.|Remarca que todo va dentro de «al iniciar» y que el robot lo hace de arriba abajo, una sola vez. Recuerda que 1000 ms son 1 segundo." },
+      { id: 's8', k: 'robo', t: "On s'aturarà?|¿Dónde se parará?", x: "Endavant a velocitat 150 durant 4 segons, i atura. Arribarà a la meta?|Adelante a velocidad 150 durante 4 segundos, y para. ¿Llegará a la meta?",
+        robo: { w: { w: 120, h: 50, bot: [15, 25, 90], zones: [{ id: 'm', r: [66, 13, 24, 24], col: 'green', label: 'META|META' }] }, prog: 'start{ run:all,fwd,150 wait:4000 stop:all }' },
+        nota: "Que tothom assenyali amb el dit on creu que s'aturarà abans d'executar. S'atura dins la meta: en 4 segons fa uns 62 cm.|Que todos señalen con el dedo dónde creen que se parará antes de ejecutar. Se para dentro de la meta: en 4 segundos hace unos 62 cm." },
+      { id: 's9', k: 'robo', t: "Esperar no vol dir parar|Esperar no quiere decir parar", x: "Aquest programa no té cap «atura». Què passarà quan s'acabi?|Este programa no tiene ningún «para». ¿Qué pasará cuando se termine?",
+        robo: { w: { w: 120, h: 50, bot: [15, 25, 90], walls: [[104, 8, 8, 34]], time: 7 }, prog: 'start{ run:all,fwd,150 wait:2000 }' },
+        nota: "Molts diran que el robot s'atura sol al cap de 2 segons. Executa-ho: els motors continuen fins a la caixa. És l'error més habitual de la unitat.|Muchos dirán que el robot se para solo a los 2 segundos. Ejecútalo: los motores siguen hasta la caja. Es el error más habitual de la unidad." },
+      { id: 's10', k: 'activitat', t: "El robot de tres persones|El robot de tres personas", timer: 9, punts: ["Sensors: mira i explica què veu.|Sensores: mira y explica lo que ve.", "Cervell: decideix i ensenya una targeta d'ordre.|Cerebro: decide y enseña una tarjeta de orden.", "Motors: ulls tancats, fa només el que diu la targeta.|Motores: ojos cerrados, hace solo lo que dice la tarjeta.", "Missió: aturar-se a un pam de la caixa. Després, canvieu els papers.|Misión: pararse a un palmo de la caja. Después, cambiad los papeles."],
+        nota: "Els motors caminen a poc a poc amb les mans una mica endavant. Si toca la caixa no passa res: és un error del robot, i el revisarem.|Los motores caminan despacio con las manos un poco hacia delante. Si toca la caja no pasa nada: es un error del robot, y lo revisaremos." },
+      { id: 's11', k: 'activitat', t: "Ara, a l'ordinador|Ahora, al ordenador", timer: 11, punts: ["Obre la sessió «Robots al nostre voltant».|Abre la sesión «Robots a nuestro alrededor».", "Mira les demos de «Descobreix».|Mira las demos de «Descubre».", "A «On acabarà?», tria abans d'executar.|En «¿Dónde terminará?», elige antes de ejecutar.", "Para a la «Pausa activa».|Para en la «Pausa activa»."],
+        nota: "Al pas «El robot de dues persones», que toquin «Ho hem fet!»: ja l'hem fet a classe.|En el paso «El robot de dos personas», que toquen «¡Lo hemos hecho!»: ya lo hemos hecho en clase." },
+      { id: 's12', k: 'repte', t: "Reptes: el primer programa|Retos: el primer programa", timer: 8, punts: ["1. La primera meta|1. La primera meta", "2. El robot que no s'atura|2. El robot que no se para", "3. La meta llunyana|3. La meta lejana"],
+        nota: "Si algú s'encalla, pregunta: s'ha quedat curt o s'ha passat? El número que cal canviar gairebé sempre és l'espera.|Si alguien se atasca, pregunta: ¿se ha quedado corto o se ha pasado? El número que hay que cambiar casi siempre es la espera." },
+      { id: 's13', k: 'activitat', t: "Al Maqueen de veritat|Al Maqueen de verdad", timer: 12, punts: ["MakeCode: nou projecte → Extensions → «maqueen».|MakeCode: nuevo proyecto → Extensiones → «maqueen».", "JavaScript → enganxa el codi → Descarrega.|JavaScript → pega el código → Descarga.", "Cable fora, robot a terra i encén-lo.|Cable fuera, robot en el suelo y enciéndelo.", "Marca on s'atura i mesura-ho.|Marca dónde se para y mídelo."],
+        code: "Maqueen_V5.I2CInit()\nMaqueen_V5.motorRun(Maqueen_V5.Motors.All, Maqueen_V5.Dir.CW, 150)\nbasic.pause(3000)\nMaqueen_V5.motorStop(Maqueen_V5.Motors.All)",
+        nota: "Al simulador, aquest programa fa uns 46 cm. Apunteu a la pissarra el resultat de cada grup: veureu que tots els robots no fan exactament el mateix.|En el simulador, este programa hace unos 46 cm. Apuntad en la pizarra el resultado de cada grupo: veréis que no todos los robots hacen exactamente lo mismo." },
+      { id: 's14', k: 'concepte', t: "Seguretat amb el robot|Seguridad con el robot", punts: ["El robot sempre a terra (o en una taula amb vora).|El robot siempre en el suelo (o en una mesa con borde).", "Desconnecta el cable USB abans d'encendre'l.|Desconecta el cable USB antes de encenderlo.", "Apaga'l per agafar-lo; mans lluny de les rodes.|Apágalo para cogerlo; manos lejos de las ruedas.", "El pilot és l'únic que l'encén i l'apaga.|El piloto es el único que lo enciende y lo apaga."],
+        nota: "Deixa aquesta diapositiva projectada durant tota l'activitat amb el robot. Si un robot cau d'una taula sense vora, es pot trencar la micro:bit.|Deja esta diapositiva proyectada durante toda la actividad con el robot. Si un robot cae de una mesa sin borde, se puede romper la micro:bit." },
+      { id: 's15', k: 'activitat', t: "Crea: el bus del taller|Crea: el autobús del taller", timer: 5, x: "Una parada a la zona groga i el final a la verda. Tu tries les velocitats i els temps.|Una parada en la zona amarilla y el final en la verde. Tú eliges las velocidades y los tiempos.",
+        nota: "Celebra que hi hagi programes diferents que funcionen: un problema pot tenir moltes solucions bones.|Celebra que haya programas diferentes que funcionan: un problema puede tener muchas soluciones buenas." },
+      { id: 's16', k: 'resum', t: "Què hem après avui|Qué hemos aprendido hoy", punts: ["Un robot sent, pensa i actua.|Un robot siente, piensa y actúa.", "El cervell del Maqueen és la micro:bit.|El cerebro del Maqueen es la micro:bit.", "Motor, espera i atura: sense «atura», no para.|Motor, espera y para: sin «para», no se detiene."],
+        nota: "Torna a la votació del principi: algú canviaria el seu vot? Per què?|Vuelve a la votación del principio: ¿alguien cambiaría su voto? ¿Por qué?" },
+      { id: 's17', k: 'tiquet', t: "Tiquet de sortida|Ticket de salida", punts: ["Les tres coses que fa un robot i un sensor.|Las tres cosas que hace un robot y un sensor.", "Què passa si falta el bloc «atura»?|¿Qué pasa si falta el bloque «para»?"],
+        nota: "Fes una pregunta a cada alumne/a a la porta i anota qui necessita més suport amb l'espera i l'atura.|Haz una pregunta a cada alumno/a en la puerta y anota quién necesita más apoyo con la espera y el para." }
+    ],
+    print: [
+      { id: 'p1', t: "El robot de tres persones|El robot de tres personas", k: 'targetes',
+        intro: "Un paquet per grup de 3. Les tres primeres són els rols; la resta, les ordres que mostra el cervell.|Un paquete por grupo de 3. Las tres primeras son los roles; el resto, las órdenes que muestra el cerebro.",
+        items: [
+          { t: "Sensors 👀|Sensores 👀", n: 1 },
+          { t: "Cervell 🧠|Cerebro 🧠", n: 1 },
+          { t: "Motors ⚙️|Motores ⚙️", n: 1 },
+          { t: "Endavant ⬆|Adelante ⬆", n: 3 },
+          { t: "Atura't ✋|Para ✋", n: 3 },
+          { t: "Gira ↻|Gira ↻", n: 2 }
+        ] },
+      { id: 'p2', t: "El primer programa al Maqueen|El primer programa en el Maqueen", k: 'codi',
+        intro: "A makecode.microbit.org: nou projecte → Extensions → busca «maqueen» → JavaScript → enganxa el codi → Descarrega. Després, cable fora i robot a terra!|En makecode.microbit.org: nuevo proyecto → Extensiones → busca «maqueen» → JavaScript → pega el código → Descarga. Después, ¡cable fuera y robot en el suelo!",
+        items: [
+          { t: "Endavant 3 segons i atura|Adelante 3 segundos y para", prog: 'start{ run:all,fwd,150 wait:3000 stop:all }' },
+          { t: "Fins a la meta (ajusteu l'espera al vostre robot)|Hasta la meta (ajustad la espera a vuestro robot)", prog: 'start{ run:all,fwd,150 wait:4300 stop:all }' }
+        ] }
+    ]
+  },
+
+  /* ---------- Sessió 2 · Motors i velocitat ---------- */
+  'k1-2': {
+    obj: [
+      "L'alumne/a explica que la velocitat del motor va de 0 a 255 i relaciona un número més gran amb més centímetres cada segon.|El alumno/a explica que la velocidad del motor va de 0 a 255 y relaciona un número más grande con más centímetros cada segundo.",
+      "L'alumne/a descobreix la zona morta (per sota de 30 el motor no es mou) al simulador i la busca al robot de veritat.|El alumno/a descubre la zona muerta (por debajo de 30 el motor no se mueve) en el simulador y la busca en el robot de verdad.",
+      "L'alumne/a fa anar el robot endavant i enrere i canvia la velocitat enmig d'un camí.|El alumno/a hace ir el robot adelante y atrás y cambia la velocidad en medio de un camino.",
+      "L'alumne/a mesura quant avança el Maqueen real en 2 segons a diferents velocitats i ho compara amb el simulador.|El alumno/a mide cuánto avanza el Maqueen real en 2 segundos a diferentes velocidades y lo compara con el simulador."
+    ],
+    comp: [
+      "Competència digital (CD5): programar moviments canviant els valors dels blocs|Competencia digital (CD5): programar movimientos cambiando los valores de los bloques",
+      "Competència STEM (STEM2): fer una prova justa, canviant una sola cosa cada vegada, i mesurar-ne el resultat|Competencia STEM (STEM2): hacer una prueba justa, cambiando una sola cosa cada vez, y medir su resultado",
+      "Matemàtiques: mesura, taules de dades i comparació de números|Matemáticas: medida, tablas de datos y comparación de números",
+      "Ciències: força, fregament i inèrcia en les màquines|Ciencias: fuerza, rozamiento e inercia en las máquinas"
+    ],
+    vocab: [
+      ["Velocitat del motor|Velocidad del motor", "El número de 0 a 255 que diu com de pressa gira el motor.|El número de 0 a 255 que dice lo deprisa que gira el motor."],
+      ["Zona morta|Zona muerta", "Les velocitats massa baixes (per sota de 30) amb què el motor no té prou força per moure el robot.|Las velocidades demasiado bajas (por debajo de 30) con las que el motor no tiene fuerza suficiente para mover el robot."],
+      ["Fregament|Rozamiento", "La força que frena les rodes i els engranatges quan es mouen.|La fuerza que frena las ruedas y los engranajes cuando se mueven."],
+      ["Inèrcia|Inercia", "Un objecte tarda una mica a arrencar i a parar: no canvia de velocitat de cop.|Un objeto tarda un poco en arrancar y en parar: no cambia de velocidad de golpe."],
+      ["Prova justa|Prueba justa", "Una prova en què canviem una sola cosa i deixem igual tota la resta.|Una prueba en la que cambiamos una sola cosa y dejamos igual todo lo demás."]
+    ],
+    mat: {
+      aula: [
+        "Un ordinador per alumne/a amb Numi Tech obert a la sessió «Motors i velocitat»|Un ordenador por alumno/a con Numi Tech abierto en la sesión «Motores y velocidad»",
+        "Projector i la presentació d'aquesta sessió|Proyector y la presentación de esta sesión",
+        "Un kit Maqueen per grup de 3-4, amb cable USB i piles carregades|Un kit Maqueen por grupo de 3-4, con cable USB y pilas cargadas",
+        "Una cinta mètrica i cinta de pintor per grup, i un cronòmetre (pot ser un mòbil)|Una cinta métrica y cinta de pintor por grupo, y un cronómetro (puede ser un móvil)"
+      ],
+      imprimir: ["Fitxa: el banc de proves|Ficha: el banco de pruebas", "Codi: zona morta i velocitat|Código: zona muerta y velocidad"],
+      prep: [
+        "Provar abans amb un kit a partir de quina velocitat es mou el vostre robot: així tindreu una referència (al simulador és 30; als robots reals canvia una mica).|Probar antes con un kit a partir de qué velocidad se mueve vuestro robot: así tendréis una referencia (en el simulador es 30; en los robots reales cambia un poco).",
+        "Preparar un passadís lliure per al banc de proves humà, amb una línia de sortida de cinta.|Preparar un pasillo libre para el banco de pruebas humano, con una línea de salida de cinta.",
+        "Marcar per a cada grup una línia de sortida a terra amb un metre enganxat al costat.|Marcar para cada grupo una línea de salida en el suelo con un metro pegado al lado.",
+        "Imprimir una fitxa per grup i el codi per a cada kit.|Imprimir una ficha por grupo y el código para cada kit."
+      ]
+    },
+    plan: [
+      { min: 4, t: "Repàs i pregunta del dia|Repaso y pregunta del día", fase: 'inici',
+        fa: "Recordeu la sessió anterior amb la diapositiva de repàs: què fa l'espera i què passa sense «atura». Després, llança la pregunta del dia: què vol dir exactament «velocitat 150»? Recull hipòtesis sense corregir-les.|Recordad la sesión anterior con la diapositiva de repaso: qué hace la espera y qué pasa sin «para». Después, lanza la pregunta del día: ¿qué quiere decir exactamente «velocidad 150»? Recoge hipótesis sin corregirlas.",
+        diu: ["Qui recorda per què el robot xocava amb la caixa?|¿Quién recuerda por qué el robot chocaba con la caja?",
+          "Velocitat 150: són quilòmetres per hora? Centímetres? Una altra cosa?|Velocidad 150: ¿son kilómetros por hora? ¿Centímetros? ¿Otra cosa?"],
+        slides: ['s1', 's2'], app: "Encara no: pantalles apagades.|Todavía no: pantallas apagadas.", org: "Tot el grup|Todo el grupo" },
+      { min: 9, t: "La velocitat i la zona morta|La velocidad y la zona muerta", fase: 'teoria',
+        fa: "Explica la gràfica de velocitats: el número no són centímetres, però com més gran, més centímetres cada segon. Presenta la zona morta i, si pots, fes sentir el brunzit d'un Maqueen real a velocitat 20 sense que es mogui. Executa les demos d'endavant i enrere i dels canvis de marxa, i acaba amb la predicció de la diapositiva 7.|Explica la gráfica de velocidades: el número no son centímetros, pero cuanto más grande, más centímetros cada segundo. Presenta la zona muerta y, si puedes, haz oír el zumbido de un Maqueen real a velocidad 20 sin que se mueva. Ejecuta las demos de adelante y atrás y de los cambios de marcha, y termina con la predicción de la diapositiva 7.",
+        diu: ["A 255, quants centímetres fa cada segon? I a 100?|A 255, ¿cuántos centímetros hace cada segundo? ¿Y a 100?",
+          "Sentiu el motor? Rep corrent, però no té prou força per moure el robot.|¿Oís el motor? Recibe corriente, pero no tiene fuerza suficiente para mover el robot.",
+          "Si torna enrere el mateix temps, on acabarà?|Si vuelve atrás el mismo tiempo, ¿dónde terminará?"],
+        slides: ['s3', 's4', 's5', 's6', 's7'], app: "Encara no: tota l'atenció a la projecció.|Todavía no: toda la atención en la proyección.", org: "Tot el grup|Todo el grupo" },
+      { min: 9, t: "El banc de proves humà|El banco de pruebas humano", fase: 'desconnectat',
+        fa: "Grups de 3 al passadís: robot, cronometrador/a i mesurador/a. El robot camina 5 segons a «velocitat» 60 (passos de formiga), 150 (caminar normal) i 255 (caminar molt de pressa, sense córrer), sempre des de la mateixa línia. El mesurador/a marca on arriba i ho apunten a la fitxa. Al final proven la velocitat 20: el robot no es mou. Pregunta què han canviat i què han deixat igual (el temps): és una prova justa.|Grupos de 3 en el pasillo: robot, cronometrador/a y medidor/a. El robot camina 5 segundos a «velocidad» 60 (pasos de hormiga), 150 (caminar normal) y 255 (caminar muy deprisa, sin correr), siempre desde la misma línea. El medidor/a marca dónde llega y lo apuntan en la ficha. Al final prueban la velocidad 20: el robot no se mueve. Pregunta qué han cambiado y qué han dejado igual (el tiempo): es una prueba justa.",
+        diu: ["Sempre 5 segons: només canvia la velocitat.|Siempre 5 segundos: solo cambia la velocidad.",
+          "Caminar de pressa, no córrer: un robot no fa salts!|Caminar deprisa, no correr: ¡un robot no da saltos!",
+          "Amb més velocitat i el mateix temps, què passa amb la distància?|Con más velocidad y el mismo tiempo, ¿qué pasa con la distancia?"],
+        slides: ['s8'], app: "Cap: activitat sense pantalla.|Ninguna: actividad sin pantalla.", org: "Grups de 3 amb papers que roten|Grupos de 3 con papeles que rotan" },
+      { min: 11, t: "A l'ordinador: descobreix i prova|En el ordenador: descubre y prueba", fase: 'ordinador',
+        fa: "Cada alumne/a avança fins a la pausa activa. Al pas «El banc de proves humà», que toquin «Ho hem fet!». A les dues preguntes «On acabarà?», que pensin abans de triar.|Cada alumno/a avanza hasta la pausa activa. En el paso «El banco de pruebas humano», que toquen «¡Lo hemos hecho!». En las dos preguntas «¿Dónde terminará?», que piensen antes de elegir.",
+        diu: ["Endavant 3 segons i enrere 1,5: quina part del camí desfà?|Adelante 3 segundos y atrás 1,5: ¿qué parte del camino deshace?",
+          "Per què el programa de la Laia no es mou?|¿Por qué el programa de Laia no se mueve?"],
+        slides: ['s9'], app: "De «Recorda» fins a «Investiga»: la pregunta de l'espera, la història del laboratori, les quatre targetes de «Descobreix», ordenar les velocitats, el banc de proves (ja fet), els dos «On acabarà?», la pregunta de la velocitat 20 i el bloc que falla.|De «Recuerda» hasta «Investiga»: la pregunta de la espera, la historia del laboratorio, las cuatro tarjetas de «Descubre», ordenar las velocidades, el banco de pruebas (ya hecho), los dos «¿Dónde terminará?», la pregunta de la velocidad 20 y el bloque que falla.", org: "Individual|Individual" },
+      { min: 12, t: "La zona morta i la velocitat del nostre Maqueen|La zona muerta y la velocidad de nuestro Maqueen", fase: 'robot',
+        fa: "Grups de 3-4 per kit, amb el codi imprès. Primer, la zona morta: descarreguen el programa a velocitat 30 i, si el robot no es mou, proven 35, 40, 45… fins que arrenca; apunten el número a la fitxa. Després, la velocitat: amb el robot a la línia de sortida i el metre al costat, proven 2 segons a 100, a 150 i a 255 i mesuren on s'atura. Comparen amb el simulador (uns 18, 31 i 58 cm). Recorda les normes: cable fora, robot a terra, el pilot l'encén i l'apaga.|Grupos de 3-4 por kit, con el código impreso. Primero, la zona muerta: descargan el programa a velocidad 30 y, si el robot no se mueve, prueban 35, 40, 45… hasta que arranca; apuntan el número en la ficha. Después, la velocidad: con el robot en la línea de salida y el metro al lado, prueban 2 segundos a 100, a 150 y a 255 y miden dónde se para. Comparan con el simulador (unos 18, 31 y 58 cm). Recuerda las normas: cable fuera, robot en el suelo, el piloto lo enciende y lo apaga.",
+        diu: ["A partir de quin número es mou el vostre robot? És el mateix que el del grup del costat?|¿A partir de qué número se mueve vuestro robot? ¿Es el mismo que el del grupo de al lado?",
+          "Canvieu només la velocitat: l'espera sempre de 2000 ms.|Cambiad solo la velocidad: la espera siempre de 2000 ms.",
+          "El vostre robot va més ràpid o més lent que el del simulador?|¿Vuestro robot va más rápido o más lento que el del simulador?"],
+        slides: ['s10', 's11'], app: "Cap: MakeCode i el robot de veritat.|Ninguna: MakeCode y el robot de verdad.", org: "Grups de 3-4 per kit amb papers|Grupos de 3-4 por kit con papeles" },
+      { min: 9, t: "Reptes: velocitat i direcció|Retos: velocidad y dirección", fase: 'ordinador',
+        fa: "Feu la pausa activa i deixa'ls fer els quatre reptes. Al de la contrarellotge, pregunta quina és la velocitat màxima abans que la busquin. Al del cargol, és una petita investigació: que provin números i apuntin quin és el més petit que fa moure el robot.|Haced la pausa activa y deja que hagan los cuatro retos. En el de la contrarreloj, pregunta cuál es la velocidad máxima antes de que la busquen. En el del caracol, es una pequeña investigación: que prueben números y apunten cuál es el más pequeño que hace mover el robot.",
+        diu: ["Al repte d'anar i tornar no cal girar: mira la direcció del bloc.|En el reto de ir y volver no hace falta girar: mira la dirección del bloque.",
+          "Quin és el número més gran que pots posar a la velocitat?|¿Cuál es el número más grande que puedes poner en la velocidad?",
+          "El cargol: quin és el número més petit que el fa moure? Coincideix amb el del vostre robot?|El caracol: ¿cuál es el número más pequeño que lo hace mover? ¿Coincide con el de vuestro robot?"],
+        slides: ['s12'], app: "«Pausa activa» i els quatre reptes: massa lent, anar i tornar, la contrarellotge i el cargol.|«Pausa activa» y los cuatro retos: demasiado lento, ir y volver, la contrarreloj y el caracol.", org: "Individual|Individual" },
+      { min: 4, t: "Crea: el carrer de l'escola|Crea: la calle del colegio", fase: 'crea',
+        fa: "Cada alumne/a programa el carrer de l'escola: a poc a poc davant l'escola i de pressa després. Quan funcioni, que el desin. Comenta que és el que fan els cotxes de veritat a les zones escolars.|Cada alumno/a programa la calle del colegio: despacio delante del colegio y deprisa después. Cuando funcione, que lo guarden. Comenta que es lo que hacen los coches de verdad en las zonas escolares.",
+        diu: ["Quants blocs de motor necessites? Per què?|¿Cuántos bloques de motor necesitas? ¿Por qué?",
+          "On ha de començar el tram ràpid?|¿Dónde tiene que empezar el tramo rápido?"],
+        slides: ['s13'], app: "Pas «Crea»: El carrer de l'escola.|Paso «Crea»: La calle del colegio.", org: "Individual|Individual" },
+      { min: 2, t: "Tancament i tiquet de sortida|Cierre y ticket de salida", fase: 'tancament',
+        fa: "Repassa el resum i fes les preguntes del tiquet a la porta.|Repasa el resumen y haz las preguntas del ticket en la puerta.",
+        diu: ["Velocitat 255: què vol dir? I velocitat 20?|Velocidad 255: ¿qué quiere decir? ¿Y velocidad 20?"],
+        slides: ['s14', 's15'], app: "«Tancament»: les dues preguntes finals i com m'he sentit.|«Cierre»: las dos preguntas finales y cómo me he sentido.", org: "Tot el grup|Todo el grupo" }
+    ],
+    errors: [
+      ["Posa velocitats més grans de 255 (300, 1000) pensant que anirà més ràpid.|Pone velocidades mayores de 255 (300, 1000) pensando que irá más rápido.",
+        "El bloc no deixa passar de 255: és el màxim del motor. Pregunta: com faries que arribés més lluny sense passar de 255?|El bloque no deja pasar de 255: es el máximo del motor. Pregunta: ¿cómo harías que llegara más lejos sin pasar de 255?"],
+      ["Creu que velocitat 20 és «molt lent» i espera que el robot es mogui.|Cree que velocidad 20 es «muy lento» y espera que el robot se mueva.",
+        "Que ho provi al robot de veritat i escolti el brunzit: el motor rep corrent, però no té prou força. Que busqui el número mínim que el fa moure.|Que lo pruebe en el robot de verdad y escuche el zumbido: el motor recibe corriente, pero no tiene fuerza suficiente. Que busque el número mínimo que lo hace mover."],
+      ["Al repte d'anar i tornar, intenta girar el robot en lloc de fer-lo anar enrere.|En el reto de ir y volver, intenta girar el robot en lugar de hacerlo ir hacia atrás.",
+        "Recorda-li el camp de direcció del bloc del motor: endavant o enrere. En aquest repte no cal girar.|Recuérdale el campo de dirección del bloque del motor: adelante o atrás. En este reto no hace falta girar."],
+      ["Canvia l'espera i la velocitat alhora i no sap quin canvi ha fet efecte.|Cambia la espera y la velocidad a la vez y no sabe qué cambio ha hecho efecto.",
+        "Prova justa: una sola cosa cada vegada. Que apunti què ha canviat i què ha passat.|Prueba justa: una sola cosa cada vez. Que apunte qué ha cambiado y qué ha pasado."],
+      ["Al robot de veritat, les distàncies no coincideixen amb les del simulador.|En el robot de verdad, las distancias no coinciden con las del simulador.",
+        "És normal: depèn de les piles i del terra. Que apuntin la diferència: la farem servir per calibrar a la unitat 2.|Es normal: depende de las pilas y del suelo. Que apunten la diferencia: la usaremos para calibrar en la unidad 2."]
+    ],
+    diff: {
+      mes: "Fer a la fitxa una gràfica amb les distàncies del robot real (la velocitat a baix i els centímetres a l'esquerra) i comparar-la amb la del simulador. Trobar la velocitat exacta en què arrenca el seu robot, de 2 en 2.|Hacer en la ficha una gráfica con las distancias del robot real (la velocidad abajo y los centímetros a la izquierda) y compararla con la del simulador. Encontrar la velocidad exacta en la que arranca su robot, de 2 en 2.",
+      menys: "Treballar només dues velocitats (100 i 255) i fer el repte «Massa lent» dient el número en veu alta. Tenir a la vista la gràfica de velocitats de la diapositiva 3.|Trabajar solo dos velocidades (100 y 255) y hacer el reto «Demasiado lento» diciendo el número en voz alta. Tener a la vista la gráfica de velocidades de la diapositiva 3."
+    },
+    aval: {
+      ticket: ["Què vol dir velocitat 255? I velocitat 20?|¿Qué quiere decir velocidad 255? ¿Y velocidad 20?",
+        "Com fas que el robot torni enrere fins al lloc d'on ha sortit?|¿Cómo haces que el robot vuelva atrás hasta el sitio del que ha salido?"],
+      rubric: [
+        ["Velocitat de 0 a 255|Velocidad de 0 a 255", "Relaciona el número amb els centímetres per segon i tria la velocitat segons el repte.|Relaciona el número con los centímetros por segundo y elige la velocidad según el reto.", "Sap que més gran és més ràpid, però tria els números a l'atzar.|Sabe que más grande es más rápido, pero elige los números al azar."],
+        ["Zona morta|Zona muerta", "Explica per què el robot no es mou per sota de 30 i ho comprova al robot de veritat.|Explica por qué el robot no se mueve por debajo de 30 y lo comprueba en el robot de verdad.", "Observa que no es mou, però encara no ho explica.|Observa que no se mueve, pero todavía no lo explica."],
+        ["Mesurar i comparar|Medir y comparar", "Mesura amb el metre, fa una prova justa i compara les dades amb el simulador.|Mide con el metro, hace una prueba justa y compara los datos con el simulador.", "Mesura amb ajuda, però no compara els resultats.|Mide con ayuda, pero no compara los resultados."]
+      ]
+    },
+    casa: "A casa, feu el banc de proves humà amb tres mitjons i el mòbil com a cronòmetre. Proveu també d'empènyer una capsa de llibres amb molt poca força: no es mou! S'assembla a la zona morta.|En casa, haced el banco de pruebas humano con tres calcetines y el móvil como cronómetro. Probad también a empujar una caja de libros con muy poca fuerza: ¡no se mueve! Se parece a la zona muerta.",
+    slides: [
+      { id: 's1', k: 'portada', t: "Motors i velocitat|Motores y velocidad", x: "Què vol dir «velocitat 150»? I per què, de vegades, el robot no es mou?|¿Qué quiere decir «velocidad 150»? ¿Y por qué, a veces, el robot no se mueve?",
+        nota: "Presenta l'objectiu: avui mesurarem la velocitat dels robots de veritat.|Presenta el objetivo: hoy mediremos la velocidad de los robots de verdad." },
+      { id: 's2', k: 'repas', t: "Recordes?|¿Recuerdas?", punts: ["Què fa el bloc «espera»?|¿Qué hace el bloque «espera»?", "Què passa si falta «atura»?|¿Qué pasa si falta «para»?", "On s'aturava el vostre robot de veritat?|¿Dónde se paraba vuestro robot de verdad?"],
+        nota: "Recupera els resultats de la sessió anterior (els centímetres de cada grup) si els vau apuntar.|Recupera los resultados de la sesión anterior (los centímetros de cada grupo) si los apuntasteis." },
+      { id: 's3', k: 'anim', t: "Un número de 0 a 255|Un número de 0 a 255", anim: 'k1speed', x: "A 255, uns 29 cm cada segon; a 150, uns 15; a 100, uns 9.|A 255, unos 29 cm cada segundo; a 150, unos 15; a 100, unos 9.",
+        nota: "Si pregunten per què 255: la velocitat viatja fins al xip dels motors en un byte, 8 bits, que compten de 0 a 255.|Si preguntan por qué 255: la velocidad viaja hasta el chip de los motores en un byte, 8 bits, que cuentan de 0 a 255." },
+      { id: 's4', k: 'anim', t: "La zona morta|La zona muerta", anim: 'k1dead', x: "Per sota de 30, el motor no té prou força per vèncer el fregament.|Por debajo de 30, el motor no tiene fuerza suficiente para vencer el rozamiento.",
+        nota: "Si tens un Maqueen a mà, programa'l a velocitat 20: se sent el brunzit, però no es mou. És una bona manera de fer-ho creïble.|Si tienes un Maqueen a mano, prográmalo a velocidad 20: se oye el zumbido, pero no se mueve. Es una buena manera de hacerlo creíble." },
+      { id: 's5', k: 'robo', t: "Endavant i enrere|Adelante y atrás", x: "3 segons endavant i 3 segons enrere a la mateixa velocitat.|3 segundos adelante y 3 segundos atrás a la misma velocidad.",
+        robo: { w: { w: 120, h: 50, bot: [20, 25, 90], zones: [{ id: 'b', r: [8, 13, 24, 24], col: 'blue', label: 'BASE|BASE' }] }, prog: 'start{ run:all,fwd,150 wait:3000 stop:all wait:500 run:all,back,150 wait:3000 stop:all }' },
+        nota: "Abans d'executar, pregunta on acabarà. Torna a la base: el camí d'anada i el de tornada són iguals.|Antes de ejecutar, pregunta dónde terminará. Vuelve a la base: el camino de ida y el de vuelta son iguales." },
+      { id: 's6', k: 'robo', t: "Canvis de marxa|Cambios de marcha", x: "Velocitat 60 per la zona groga i, després, 255.|Velocidad 60 por la zona amarilla y, después, 255.",
+        robo: { w: { w: 140, h: 50, bot: [15, 25, 90], zones: [{ id: 'e', r: [28, 9, 30, 32], col: 'yellow', label: 'LENT|LENTO' }] }, prog: 'start{ run:all,fwd,60 wait:3500 run:all,fwd,255 wait:2500 stop:all }' },
+        nota: "Fixeu-vos que el robot no s'atura entre els dos blocs de motor: només accelera. També tarda una mica a frenar: és la inèrcia.|Fijaos en que el robot no se para entre los dos bloques de motor: solo acelera. También tarda un poco en frenar: es la inercia." },
+      { id: 's7', k: 'robo', t: "Prediu: 2 segons a 255|Predice: 2 segundos a 255", x: "On s'aturarà: a la A, a la B o a la C?|¿Dónde se parará: en la A, en la B o en la C?",
+        robo: { w: { w: 120, h: 60, bot: [15, 30, 90], marks: { A: [33, 30], B: [52, 30], C: [74, 30] } }, prog: 'start{ run:all,fwd,255 wait:2000 stop:all }' },
+        nota: "Resposta: C, a uns 58 cm. Pregunta com ho han pensat: «29 cm cada segon, dos segons…».|Respuesta: C, a unos 58 cm. Pregunta cómo lo han pensado: «29 cm cada segundo, dos segundos…»." },
+      { id: 's8', k: 'activitat', t: "El banc de proves humà|El banco de pruebas humano", timer: 9, punts: ["Robot, cronometrador/a i mesurador/a.|Robot, cronometrador/a y medidor/a.", "5 segons a velocitat 60, 150 i 255.|5 segundos a velocidad 60, 150 y 255.", "Sempre des de la mateixa línia.|Siempre desde la misma línea.", "Apunteu les distàncies a la fitxa.|Apuntad las distancias en la ficha."],
+        nota: "Velocitat 255 vol dir caminar molt de pressa, mai córrer. Al final, proveu velocitat 20: el robot es queda quiet.|Velocidad 255 quiere decir caminar muy deprisa, nunca correr. Al final, probad velocidad 20: el robot se queda quieto." },
+      { id: 's9', k: 'activitat', t: "Ara, a l'ordinador|Ahora, al ordenador", timer: 11, punts: ["Obre la sessió «Motors i velocitat».|Abre la sesión «Motores y velocidad».", "Mira les demos de «Descobreix».|Mira las demos de «Descubre».", "Pensa abans de triar a «On acabarà?».|Piensa antes de elegir en «¿Dónde terminará?».", "Para a la «Pausa activa».|Para en la «Pausa activa»."],
+        nota: "Al pas «El banc de proves humà», que toquin «Ho hem fet!».|En el paso «El banco de pruebas humano», que toquen «¡Lo hemos hecho!»." },
+      { id: 's10', k: 'activitat', t: "La zona morta del nostre robot|La zona muerta de nuestro robot", timer: 12, punts: ["Velocitat 30 durant 2 segons: es mou?|Velocidad 30 durante 2 segundos: ¿se mueve?", "Si no, 35, 40, 45… fins que arrenqui.|Si no, 35, 40, 45… hasta que arranque.", "Després, 2 segons a 100, 150 i 255.|Después, 2 segundos a 100, 150 y 255.", "Mesureu i apunteu-ho a la fitxa.|Medid y apuntadlo en la ficha."],
+        code: "Maqueen_V5.I2CInit()\nMaqueen_V5.motorRun(Maqueen_V5.Motors.All, Maqueen_V5.Dir.CW, 30)\nbasic.pause(2000)\nMaqueen_V5.motorStop(Maqueen_V5.Motors.All)",
+        nota: "Només cal canviar el número 30 del codi. Cable fora, robot a terra i el pilot l'encén. Si un robot arrenca amb 30, que provin 25 i 20.|Solo hay que cambiar el número 30 del código. Cable fuera, robot en el suelo y el piloto lo enciende. Si un robot arranca con 30, que prueben 25 y 20." },
+      { id: 's11', k: 'concepte', t: "Simulador i robot de veritat|Simulador y robot de verdad", punts: ["2 segons a 100: uns 18 cm.|2 segundos a 100: unos 18 cm.", "2 segons a 150: uns 31 cm.|2 segundos a 150: unos 31 cm.", "2 segons a 255: uns 58 cm.|2 segundos a 255: unos 58 cm.", "Zona morta al simulador: per sota de 30.|Zona muerta en el simulador: por debajo de 30."],
+        nota: "Són les dades del simulador. Apunteu al costat les del vostre robot: la diferència és normal i a la unitat 2 aprendrem a calibrar-la.|Son los datos del simulador. Apuntad al lado los de vuestro robot: la diferencia es normal y en la unidad 2 aprenderemos a calibrarla." },
+      { id: 's12', k: 'repte', t: "Reptes: velocitat i direcció|Retos: velocidad y dirección", timer: 9, punts: ["1. Massa lent!|1. ¡Demasiado lento!", "2. Anar i tornar|2. Ir y volver", "3. Contrarellotge|3. Contrarreloj", "4. El repte del cargol|4. El reto del caracol"],
+        nota: "Al repte del cargol, la resposta és la zona morta: per sota de 30 no es mou, i per sobre de 65 surt de la zona.|En el reto del caracol, la respuesta es la zona muerta: por debajo de 30 no se mueve, y por encima de 65 sale de la zona." },
+      { id: 's13', k: 'activitat', t: "Crea: el carrer de l'escola|Crea: la calle del colegio", timer: 4, x: "A 100 o menys davant de l'escola i a 200 o més després, fins a la meta.|A 100 o menos delante del colegio y a 200 o más después, hasta la meta.",
+        nota: "Hi ha moltes solucions: pot fer tot el tram lent a 60 o a 100, i el ràpid a 200 o a 255.|Hay muchas soluciones: puede hacer todo el tramo lento a 60 o a 100, y el rápido a 200 o a 255." },
+      { id: 's14', k: 'resum', t: "Què hem après avui|Qué hemos aprendido hoy", punts: ["La velocitat va de 0 a 255.|La velocidad va de 0 a 255.", "Per sota de 30, zona morta: no es mou.|Por debajo de 30, zona muerta: no se mueve.", "Endavant i enrere, i canvis de velocitat pel camí.|Adelante y atrás, y cambios de velocidad por el camino."],
+        nota: "Recorda que la diferència entre el simulador i el robot real ens servirà a la unitat 2.|Recuerda que la diferencia entre el simulador y el robot real nos servirá en la unidad 2." },
+      { id: 's15', k: 'tiquet', t: "Tiquet de sortida|Ticket de salida", punts: ["Què vol dir velocitat 255? I 20?|¿Qué quiere decir velocidad 255? ¿Y 20?", "Com fas que el robot torni al lloc d'on ha sortit?|¿Cómo haces que el robot vuelva al sitio del que ha salido?"],
+        nota: "Anota qui encara confon la velocitat amb la distància: ho treballarem a la unitat 2.|Anota quién todavía confunde la velocidad con la distancia: lo trabajaremos en la unidad 2." }
+    ],
+    print: [
+      { id: 'p1', t: "Fitxa: el banc de proves|Ficha: el banco de pruebas", k: 'fitxa',
+        intro: "Apunteu els resultats del banc de proves humà (5 segons) i del Maqueen de veritat (2 segons).|Apuntad los resultados del banco de pruebas humano (5 segundos) y del Maqueen de verdad (2 segundos).",
+        items: [
+          { q: "Banc humà: on heu arribat en 5 segons a velocitat 60, 150 i 255? (passos o cm)|Banco humano: ¿dónde habéis llegado en 5 segundos a velocidad 60, 150 y 255? (pasos o cm)", sol: "Resposta lliure: a 60 la distància més curta i a 255 la més llarga.|Respuesta libre: a 60 la distancia más corta y a 255 la más larga." },
+          { q: "Què passa amb la distància quan augmenta la velocitat i el temps no canvia?|¿Qué pasa con la distancia cuando aumenta la velocidad y el tiempo no cambia?", sol: "Amb més velocitat i el mateix temps, la distància és més gran.|Con más velocidad y el mismo tiempo, la distancia es mayor." },
+          { q: "Maqueen: velocitat més petita amb què es mou el vostre robot: ______|Maqueen: velocidad más pequeña con la que se mueve vuestro robot: ______", sol: "Depèn del robot i de les piles. Al simulador, a partir de 30.|Depende del robot y de las pilas. En el simulador, a partir de 30." },
+          { q: "Maqueen, 2 segons: a 100 ____ cm · a 150 ____ cm · a 255 ____ cm|Maqueen, 2 segundos: a 100 ____ cm · a 150 ____ cm · a 255 ____ cm", sol: "Al simulador, uns 18 cm, 31 cm i 58 cm. Al robot real, una mica diferent.|En el simulador, unos 18 cm, 31 cm y 58 cm. En el robot real, un poco diferente." }
+        ] },
+      { id: 'p2', t: "Codi: zona morta i velocitat|Código: zona muerta y velocidad", k: 'codi',
+        intro: "A MakeCode, amb l'extensió «maqueen». Canvieu només el número de la velocitat i deixeu l'espera igual: és una prova justa.|En MakeCode, con la extensión «maqueen». Cambiad solo el número de la velocidad y dejad la espera igual: es una prueba justa.",
+        items: [
+          { t: "Zona morta: proveu velocitats baixes|Zona muerta: probad velocidades bajas", prog: 'start{ run:all,fwd,30 wait:2000 stop:all }' },
+          { t: "Velocitat: 2 segons i mesureu|Velocidad: 2 segundos y medid", prog: 'start{ run:all,fwd,150 wait:2000 stop:all }' },
+          { t: "Endavant i enrere|Adelante y atrás", prog: 'start{ run:all,fwd,150 wait:2000 stop:all wait:500 run:all,back,150 wait:2000 stop:all }' }
+        ] }
+    ]
+  },
+
+  /* ---------- Sessió 3 · Girar sobre si mateix ---------- */
+  'k1-3': {
+    obj: [
+      "L'alumne/a explica que un robot de dues rodes gira quan les rodes van a velocitats diferents, cap al costat de la roda més lenta.|El alumno/a explica que un robot de dos ruedas gira cuando las ruedas van a velocidades diferentes, hacia el lado de la rueda más lenta.",
+      "L'alumne/a programa un gir sobre si mateix (una roda endavant i l'altra enrere) i un gir en arc (amb una sola roda).|El alumno/a programa un giro sobre sí mismo (una rueda adelante y la otra atrás) y un giro en arco (con una sola rueda).",
+      "L'alumne/a calcula l'espera per a 90° i 180° a velocitat 100 i combina trams i girs en una ruta.|El alumno/a calcula la espera para 90° y 180° a velocidad 100 y combina tramos y giros en una ruta.",
+      "L'alumne/a calibra el gir de 90° del Maqueen de veritat i apunta l'espera que funciona amb el seu robot.|El alumno/a calibra el giro de 90° del Maqueen de verdad y apunta la espera que funciona con su robot."
+    ],
+    comp: [
+      "Competència digital (CD5): programar girs i rutes amb diversos motors|Competencia digital (CD5): programar giros y rutas con varios motores",
+      "Competència STEM (STEM2): calibrar un sistema provant, mesurant i ajustant|Competencia STEM (STEM2): calibrar un sistema probando, midiendo y ajustando",
+      "Matemàtiques: angles (90°, 180°, 360°), mesura amb el transportador i proporcionalitat|Matemáticas: ángulos (90°, 180°, 360°), medida con el transportador y proporcionalidad",
+      "Comunicació oral: descriure un gir des del punt de vista del robot|Comunicación oral: describir un giro desde el punto de vista del robot"
+    ],
+    vocab: [
+      ["Tracció diferencial|Tracción diferencial", "Manera de girar fent anar les rodes a velocitats diferents, sense volant.|Manera de girar haciendo ir las ruedas a velocidades diferentes, sin volante."],
+      ["Gir sobre si mateix|Giro sobre sí mismo", "Una roda endavant i l'altra enrere: el robot gira sense moure's del lloc.|Una rueda adelante y la otra atrás: el robot gira sin moverse del sitio."],
+      ["Gir en arc|Giro en arco", "Només gira una roda: el robot fa una corba al voltant de la roda aturada.|Solo gira una rueda: el robot hace una curva alrededor de la rueda parada."],
+      ["Angle|Ángulo", "Quant gira el robot, en graus: un quart de volta són 90°.|Cuánto gira el robot, en grados: un cuarto de vuelta son 90°."],
+      ["Calibrar|Calibrar", "Provar, mesurar i ajustar els números fins que el robot fa el que volem.|Probar, medir y ajustar los números hasta que el robot hace lo que queremos."]
+    ],
+    mat: {
+      aula: [
+        "Un ordinador per alumne/a amb Numi Tech obert a la sessió «Girar sobre si mateix»|Un ordenador por alumno/a con Numi Tech abierto en la sesión «Girar sobre sí mismo»",
+        "Projector i la presentació d'aquesta sessió|Proyector y la presentación de esta sesión",
+        "Un kit Maqueen per grup de 3-4, amb cable USB i piles carregades|Un kit Maqueen por grupo de 3-4, con cable USB y pilas cargadas",
+        "Cinta aïllant negra o cinta de pintor i un transportador per grup|Cinta aislante negra o cinta de pintor y un transportador por grupo"
+      ],
+      imprimir: ["Targetes: fes de rodes|Tarjetas: haz de ruedas", "Pista: la creu de calibratge|Pista: la cruz de calibración"],
+      prep: [
+        "Enganxar a terra, per a cada grup, una creu de cinta (dues tires de 40 cm que es creuen a 90°), o imprimir la pista de calibratge en A3.|Pegar en el suelo, para cada grupo, una cruz de cinta (dos tiras de 40 cm que se cruzan a 90°), o imprimir la pista de calibración en A3.",
+        "Provar abans amb un kit el gir de la diapositiva 10 (590 ms a velocitat 100) per saber quant gira el vostre robot.|Probar antes con un kit el giro de la diapositiva 10 (590 ms a velocidad 100) para saber cuánto gira vuestro robot.",
+        "Imprimir i retallar un paquet de targetes de rodes per grup de 3.|Imprimir y recortar un paquete de tarjetas de ruedas por grupo de 3."
+      ]
+    },
+    plan: [
+      { min: 4, t: "Repàs i pregunta del dia|Repaso y pregunta del día", fase: 'inici',
+        fa: "Repasseu la zona morta i les velocitats amb la diapositiva 2. Després pregunta com gira un cotxe (amb el volant) i com ho deu fer el Maqueen, que no en té. Recull idees.|Repasad la zona muerta y las velocidades con la diapositiva 2. Después pregunta cómo gira un coche (con el volante) y cómo debe de hacerlo el Maqueen, que no tiene. Recoge ideas.",
+        diu: ["Per sota de quina velocitat el motor no es mou?|¿Por debajo de qué velocidad el motor no se mueve?",
+          "El Maqueen no té volant. Com creieu que gira?|El Maqueen no tiene volante. ¿Cómo creéis que gira?"],
+        slides: ['s1', 's2'], app: "Encara no: pantalles apagades.|Todavía no: pantallas apagadas.", org: "Tot el grup|Todo el grupo" },
+      { min: 9, t: "Com gira un robot sense volant|Cómo gira un robot sin volante", fase: 'teoria',
+        fa: "Explica la tracció diferencial amb l'animació: les fletxes verdes són endavant i les taronges, enrere. Executa la demo dels quatre quarts de volta i la del gir en arc, i compara'n el temps. Presenta el calibratge amb l'animació del transportador. Acaba amb la predicció de la diapositiva 7: abans d'executar, tothom assenyala amb el braç cap on mirarà el robot.|Explica la tracción diferencial con la animación: las flechas verdes son adelante y las naranjas, atrás. Ejecuta la demo de los cuatro cuartos de vuelta y la del giro en arco, y compara su tiempo. Presenta la calibración con la animación del transportador. Termina con la predicción de la diapositiva 7: antes de ejecutar, todos señalan con el brazo hacia dónde mirará el robot.",
+        diu: ["Si l'esquerra va endavant i la dreta enrere, cap on gira?|Si la izquierda va adelante y la derecha atrás, ¿hacia dónde gira?",
+          "Quin gir és més ràpid: sobre si mateix o en arc?|¿Qué giro es más rápido: sobre sí mismo o en arco?",
+          "El robot mira a la dreta de la pantalla i gira a la seva dreta. Cap on mirarà?|El robot mira a la derecha de la pantalla y gira a su derecha. ¿Hacia dónde mirará?"],
+        slides: ['s3', 's4', 's5', 's6', 's7'], app: "Encara no: tota l'atenció a la projecció.|Todavía no: toda la atención en la proyección.", org: "Tot el grup|Todo el grupo" },
+      { min: 9, t: "Fes de rodes|Haz de ruedas", fase: 'desconnectat',
+        fa: "Grups de 3: dues persones són les rodes (una al costat de l'altra, agafades del braç) i la tercera és el cervell, que ensenya una targeta per a cada roda. Missions en ordre: anar recte, girar sobre el lloc a la dreta, girar sobre el lloc a l'esquerra i fer un arc al voltant de la roda aturada. Al final, damunt la creu de cinta, han de fer un quart de volta exacte. Roteu els papers.|Grupos de 3: dos personas son las ruedas (una al lado de la otra, cogidas del brazo) y la tercera es el cerebro, que enseña una tarjeta para cada rueda. Misiones en orden: ir recto, girar sobre el sitio a la derecha, girar sobre el sitio a la izquierda y hacer un arco alrededor de la rueda parada. Al final, sobre la cruz de cinta, tienen que dar un cuarto de vuelta exacto. Rotad los papeles.",
+        diu: ["Passets petits i sense estirar: les rodes van al mateix ritme.|Pasitos pequeños y sin tirar: las ruedas van al mismo ritmo.",
+          "Quin gir ocupa menys espai?|¿Qué giro ocupa menos espacio?",
+          "Cervell, quines dues targetes ensenyes per girar a l'esquerra?|Cerebro, ¿qué dos tarjetas enseñas para girar a la izquierda?"],
+        slides: ['s8'], app: "Cap: activitat sense pantalla.|Ninguna: actividad sin pantalla.", org: "Grups de 3 amb papers que roten|Grupos de 3 con papeles que rotan" },
+      { min: 11, t: "A l'ordinador: descobreix i prova|En el ordenador: descubre y prueba", fase: 'ordinador',
+        fa: "Cada alumne/a avança fins a la pausa activa. Al pas «Fes de rodes», que toquin «Ho hem fet!». Als dos «On acabarà?», si algú dubta, que giri el cos com el robot de la pantalla.|Cada alumno/a avanza hasta la pausa activa. En el paso «Haz de ruedas», que toquen «¡Lo hemos hecho!». En los dos «¿Dónde terminará?», si alguien duda, que gire el cuerpo como el robot de la pantalla.",
+        diu: ["Posa't al lloc del robot: cap on tens la mà dreta?|Ponte en el lugar del robot: ¿hacia dónde tienes la mano derecha?",
+          "Si només va la roda dreta, al voltant de quina roda gira?|Si solo va la rueda derecha, ¿alrededor de qué rueda gira?"],
+        slides: ['s9'], app: "De «Recorda» fins a «Investiga»: la zona morta, la història del port, les quatre targetes de «Descobreix», la pregunta del costat, «Fes de rodes» (ja fet), ordenar el calibratge, els dos «On acabarà?» i el gir que es passa.|De «Recuerda» hasta «Investiga»: la zona muerta, la historia del puerto, las cuatro tarjetas de «Descubre», la pregunta del lado, «Haz de ruedas» (ya hecho), ordenar la calibración, los dos «¿Dónde terminará?» y el giro que se pasa.", org: "Individual|Individual" },
+      { min: 13, t: "Calibrem el gir del nostre Maqueen|Calibramos el giro de nuestro Maqueen", fase: 'robot',
+        fa: "Grups de 3-4 per kit. Descarreguen el gir de 90° (590 ms a velocitat 100) i posen el robot amb el centre de les rodes damunt el creuament de la creu, mirant cap a una tira. Després del gir, el robot hauria de mirar l'altra tira: el mesurador/a ho comprova amb el transportador. Si s'ha passat, escurcen l'espera; si no hi arriba, l'allarguen (de 20 en 20 ms). Quan surti 90°, apunten l'espera a la fitxa de la pista: <b>la faran servir al projecte de la sessió 4</b>. Si queda temps, calibren el gir de 180°.|Grupos de 3-4 por kit. Descargan el giro de 90° (590 ms a velocidad 100) y ponen el robot con el centro de las ruedas sobre el cruce de la cruz, mirando hacia una tira. Después del giro, el robot debería mirar la otra tira: el medidor/a lo comprueba con el transportador. Si se ha pasado, acortan la espera; si no llega, la alargan (de 20 en 20 ms). Cuando salga 90°, apuntan la espera en la ficha de la pista: <b>la usarán en el proyecto de la sesión 4</b>. Si queda tiempo, calibran el giro de 180°.",
+        diu: ["S'ha passat o s'ha quedat curt? Quants graus?|¿Se ha pasado o se ha quedado corto? ¿Cuántos grados?",
+          "Canvieu només l'espera, de 20 en 20.|Cambiad solo la espera, de 20 en 20.",
+          "Apunteu el número bo: és el del vostre robot!|Apuntad el número bueno: ¡es el de vuestro robot!"],
+        slides: ['s10', 's11'], app: "Cap: MakeCode i el robot de veritat.|Ninguna: MakeCode y el robot de verdad.", org: "Grups de 3-4 per kit amb papers|Grupos de 3-4 por kit con papeles" },
+      { min: 9, t: "Reptes: girs i rutes|Retos: giros y rutas", fase: 'ordinador',
+        fa: "Feu la pausa activa i deixa'ls fer els quatre reptes. Recomana fer-los a trossos: programar un tram, provar-lo, afegir el gir, provar-lo… Al passadís de caixes, que diguin el pla en veu alta abans de posar cap bloc.|Haced la pausa activa y deja que hagan los cuatro retos. Recomienda hacerlos a trozos: programar un tramo, probarlo, añadir el giro, probarlo… En el pasillo de cajas, que digan el plan en voz alta antes de poner ningún bloque.",
+        diu: ["Mitja volta: quant ha de durar l'espera?|Media vuelta: ¿cuánto tiene que durar la espera?",
+          "Prova cada tros abans d'afegir-ne un altre.|Prueba cada trozo antes de añadir otro."],
+        slides: ['s12'], app: "«Pausa activa» i els quatre reptes: quart de volta, el moll B, mitja volta i el passadís de caixes.|«Pausa activa» y los cuatro retos: cuarto de vuelta, el muelle B, media vuelta y el pasillo de cajas.", org: "Individual|Individual" },
+      { min: 3, t: "Crea: la ruta del port|Crea: la ruta del puerto", fase: 'crea',
+        fa: "Cada alumne/a dissenya la seva ruta pels dos vaixells fins al garatge i la desa. Qui vulgui, que provi algun gir en arc.|Cada alumno/a diseña su ruta por los dos barcos hasta el garaje y la guarda. Quien quiera, que pruebe algún giro en arco.",
+        diu: ["Quants girs necessita la teva ruta? Cap a quin costat?|¿Cuántos giros necesita tu ruta? ¿Hacia qué lado?"],
+        slides: ['s13'], app: "Pas «Crea»: La ruta del port.|Paso «Crea»: La ruta del puerto.", org: "Individual|Individual" },
+      { min: 2, t: "Tancament i tiquet de sortida|Cierre y ticket de salida", fase: 'tancament',
+        fa: "Repassa el resum i fes les preguntes del tiquet a la porta. Recull les fitxes amb l'espera calibrada de cada grup per a la propera sessió.|Repasa el resumen y haz las preguntas del ticket en la puerta. Recoge las fichas con la espera calibrada de cada grupo para la próxima sesión.",
+        diu: ["Com han d'anar les rodes per girar a l'esquerra sobre si mateix?|¿Cómo tienen que ir las ruedas para girar a la izquierda sobre sí mismo?"],
+        slides: ['s14', 's15'], app: "«Tancament»: les dues preguntes finals i com m'he sentit.|«Cierre»: las dos preguntas finales y cómo me he sentido.", org: "Tot el grup|Todo el grupo" }
+    ],
+    errors: [
+      ["Confon la dreta del robot amb la dreta de la pantalla quan el robot no mira amunt.|Confunde la derecha del robot con la derecha de la pantalla cuando el robot no mira hacia arriba.",
+        "Que es posi al lloc del robot (girant el cos o la pantalla) o que posi el Maqueen real a la taula mirant com el de la pantalla.|Que se ponga en el lugar del robot (girando el cuerpo o la pantalla) o que ponga el Maqueen real en la mesa mirando como el de la pantalla."],
+      ["Per girar, posa els dos motors en la mateixa direcció i el robot continua recte.|Para girar, pone los dos motores en la misma dirección y el robot sigue recto.",
+        "Pregunta: si les dues rodes fan el mateix, què fa el robot? Recorda les fletxes de l'animació: per girar sobre si mateix, una endavant i l'altra enrere.|Pregunta: si las dos ruedas hacen lo mismo, ¿qué hace el robot? Recuerda las flechas de la animación: para girar sobre sí mismo, una adelante y la otra atrás."],
+      ["Gira a velocitat 150 amb l'espera de 590 ms i s'hi passa.|Gira a velocidad 150 con la espera de 590 ms y se pasa.",
+        "Els 590 ms són per a velocitat 100. Si canvia la velocitat, canvia el temps del gir: que torni a 100 o que torni a calibrar.|Los 590 ms son para velocidad 100. Si cambia la velocidad, cambia el tiempo del giro: que vuelva a 100 o que vuelva a calibrar."],
+      ["Quan un gir falla, esborra el programa sencer.|Cuando un giro falla, borra el programa entero.",
+        "Que executi el programa i miri on es desvia per primera vegada: només cal canviar aquella espera.|Que ejecute el programa y mire dónde se desvía por primera vez: solo hay que cambiar esa espera."],
+      ["Al robot real el gir surt de 70° o de 110° i creu que el robot està espatllat.|En el robot real el giro sale de 70° o de 110° y cree que el robot está estropeado.",
+        "És normal: cada motor és una mica diferent. Calibreu-lo i apunteu l'espera bona per a la propera sessió.|Es normal: cada motor es un poco diferente. Calibradlo y apuntad la espera buena para la próxima sesión."]
+    ],
+    diff: {
+      mes: "Calibrar també el gir de 180° i el gir en arc del seu robot. Al simulador, programar un quadrat (quatre trams i quatre girs) i comprovar si el robot torna exactament al punt de sortida.|Calibrar también el giro de 180° y el giro en arco de su robot. En el simulador, programar un cuadrado (cuatro tramos y cuatro giros) y comprobar si el robot vuelve exactamente al punto de salida.",
+      menys: "Fer només girs de 90° a velocitat 100 amb 590 ms, i decidir només el costat amb les targetes de rodes a la taula: «l'esquerre enrere, gira a l'esquerra».|Hacer solo giros de 90° a velocidad 100 con 590 ms, y decidir solo el lado con las tarjetas de ruedas en la mesa: «el izquierdo atrás, gira a la izquierda»."
+    },
+    aval: {
+      ticket: ["Com han d'anar les rodes per girar a la dreta sobre si mateix?|¿Cómo tienen que ir las ruedas para girar a la derecha sobre sí mismo?",
+        "Quina espera us ha funcionat per a 90° al vostre robot?|¿Qué espera os ha funcionado para 90° en vuestro robot?"],
+      rubric: [
+        ["Com gira un robot|Cómo gira un robot", "Explica el gir per la diferència de velocitat de les rodes i prediu-ne el costat.|Explica el giro por la diferencia de velocidad de las ruedas y predice su lado.", "Fa girs que funcionen, però s'equivoca de costat quan el robot no mira amunt.|Hace giros que funcionan, pero se equivoca de lado cuando el robot no mira hacia arriba."],
+        ["Tipus de gir|Tipos de giro", "Distingeix el gir sobre si mateix del gir en arc i tria el que convé.|Distingue el giro sobre sí mismo del giro en arco y elige el que conviene.", "Fa girs sobre si mateix, però encara no en sap fer en arc.|Hace giros sobre sí mismo, pero todavía no sabe hacerlos en arco."],
+        ["Calibrar|Calibrar", "Prova, mesura i ajusta l'espera del gir fins que surt 90° al robot real.|Prueba, mide y ajusta la espera del giro hasta que sale 90° en el robot real.", "Prova el gir, però canvia l'espera sense mesurar.|Prueba el giro, pero cambia la espera sin medir."]
+      ]
+    },
+    casa: "A casa, feu «Fes de rodes» amb algú: recte, gir sobre el lloc i arc. Busqueu també altres màquines que girin sense volant, com una excavadora o una cadira de rodes, i observeu com mouen les rodes.|En casa, haced «Haz de ruedas» con alguien: recto, giro sobre el sitio y arco. Buscad también otras máquinas que giren sin volante, como una excavadora o una silla de ruedas, y observad cómo mueven las ruedas.",
+    slides: [
+      { id: 's1', k: 'portada', t: "Girar sobre si mateix|Girar sobre sí mismo", x: "Com gira un robot que no té volant?|¿Cómo gira un robot que no tiene volante?",
+        nota: "Presenta l'objectiu: avui cada grup trobarà l'espera exacta perquè el seu robot giri 90°.|Presenta el objetivo: hoy cada grupo encontrará la espera exacta para que su robot gire 90°." },
+      { id: 's2', k: 'repas', t: "Recordes?|¿Recuerdas?", punts: ["La velocitat va de 0 a 255.|La velocidad va de 0 a 255.", "Per sota de 30, zona morta.|Por debajo de 30, zona muerta.", "Endavant i enrere amb el mateix temps: torna al lloc.|Adelante y atrás con el mismo tiempo: vuelve al sitio."],
+        nota: "Pregunta a quin número arrencava el robot de cada grup.|Pregunta a qué número arrancaba el robot de cada grupo." },
+      { id: 's3', k: 'anim', t: "Sense volant|Sin volante", anim: 'k1spin', x: "Fletxa verda: endavant. Fletxa taronja: enrere.|Flecha verde: adelante. Flecha naranja: atrás.",
+        nota: "Regla per recordar: el robot gira cap al costat de la roda que va enrere (o més a poc a poc).|Regla para recordar: el robot gira hacia el lado de la rueda que va hacia atrás (o más despacio)." },
+      { id: 's4', k: 'robo', t: "Quatre quarts de volta|Cuatro cuartos de vuelta", x: "L'esquerre endavant i el dret enrere, a 100, durant 590 ms. Quatre vegades.|El izquierdo adelante y el derecho atrás, a 100, durante 590 ms. Cuatro veces.",
+        robo: { w: { w: 100, h: 60, bot: [50, 30, 90] }, prog: 'start{ run:L,fwd,100 run:R,back,100 wait:590 stop:all wait:700 run:L,fwd,100 run:R,back,100 wait:590 stop:all wait:700 run:L,fwd,100 run:R,back,100 wait:590 stop:all wait:700 run:L,fwd,100 run:R,back,100 wait:590 stop:all }' },
+        nota: "Que comptin en veu alta els quarts de volta. Al final, mira on mirava al principi: 4 × 90° = 360°.|Que cuenten en voz alta los cuartos de vuelta. Al final, mira donde miraba al principio: 4 × 90° = 360°." },
+      { id: 's5', k: 'robo', t: "Girar en arc|Girar en arco", x: "Només la roda esquerra, a 100, durant 1180 ms.|Solo la rueda izquierda, a 100, durante 1180 ms.",
+        robo: { w: { w: 100, h: 60, bot: [30, 42, 90] }, prog: 'start{ run:L,fwd,100 wait:1180 stop:all wait:700 run:all,fwd,120 wait:2500 stop:all }' },
+        nota: "Compara: el mateix quart de volta tarda el doble que sobre si mateix, però és més suau. Al voltant de quina roda gira?|Compara: el mismo cuarto de vuelta tarda el doble que sobre sí mismo, pero es más suave. ¿Alrededor de qué rueda gira?" },
+      { id: 's6', k: 'anim', t: "Calibrar|Calibrar", anim: 'k1calib', x: "Provar, mesurar, ajustar i tornar a provar.|Probar, medir, ajustar y volver a probar.",
+        nota: "Explica-ho amb l'exemple de l'animació: si amb 590 ms gira 80°, cal una mica més de temps (uns 660 ms).|Explícalo con el ejemplo de la animación: si con 590 ms gira 80°, hace falta un poco más de tiempo (unos 660 ms)." },
+      { id: 's7', k: 'robo', t: "Prediu: cap on mirarà?|Predice: ¿hacia dónde mirará?", x: "Gira amb l'esquerre endavant i el dret enrere, i després avança. A, B o C?|Gira con el izquierdo adelante y el derecho atrás, y después avanza. ¿A, B o C?",
+        robo: { w: { w: 120, h: 80, bot: [30, 40, 90], marks: { A: [30, 10], B: [30, 71], C: [61, 40] } }, prog: 'start{ run:L,fwd,100 run:R,back,100 wait:590 stop:all wait:300 run:all,fwd,150 wait:2000 stop:all }' },
+        nota: "Resposta: B. Gira a la seva dreta: si mirava a la dreta de la pantalla, ara mira avall. Qui ha dit A, que es posi al lloc del robot.|Respuesta: B. Gira a su derecha: si miraba a la derecha de la pantalla, ahora mira hacia abajo. Quien haya dicho A, que se ponga en el lugar del robot." },
+      { id: 's8', k: 'activitat', t: "Fes de rodes|Haz de ruedas", timer: 9, punts: ["Dues rodes agafades del braç i un cervell.|Dos ruedas cogidas del brazo y un cerebro.", "El cervell ensenya una targeta per a cada roda.|El cerebro enseña una tarjeta para cada rueda.", "Recte, gir a la dreta, gir a l'esquerra i arc.|Recto, giro a la derecha, giro a la izquierda y arco.", "Final: un quart de volta exacte a la creu.|Final: un cuarto de vuelta exacto en la cruz."],
+        nota: "Passets curts i sense estirar. Si les rodes no es coordinen, que comptin en veu alta «un, dos» a cada pas.|Pasitos cortos y sin tirar. Si las ruedas no se coordinan, que cuenten en voz alta «uno, dos» a cada paso." },
+      { id: 's9', k: 'activitat', t: "Ara, a l'ordinador|Ahora, al ordenador", timer: 11, punts: ["Obre la sessió «Girar sobre si mateix».|Abre la sesión «Girar sobre sí mismo».", "Mira les tres demos de «Descobreix».|Mira las tres demos de «Descubre».", "A «On acabarà?», posa't al lloc del robot.|En «¿Dónde terminará?», ponte en el lugar del robot.", "Para a la «Pausa activa».|Para en la «Pausa activa»."],
+        nota: "Al pas «Fes de rodes», que toquin «Ho hem fet!».|En el paso «Haz de ruedas», que toquen «¡Lo hemos hecho!»." },
+      { id: 's10', k: 'activitat', t: "Calibrem el gir|Calibramos el giro", timer: 13, punts: ["Robot al creuament, mirant cap a una tira.|Robot en el cruce, mirando hacia una tira.", "Gir de 90° amb 590 ms a velocitat 100.|Giro de 90° con 590 ms a velocidad 100.", "Mesureu l'angle amb el transportador.|Medid el ángulo con el transportador.", "Ajusteu l'espera de 20 en 20 ms i apunteu-la.|Ajustad la espera de 20 en 20 ms y apuntadla."],
+        code: "Maqueen_V5.I2CInit()\nMaqueen_V5.motorRun(Maqueen_V5.Motors.M1, Maqueen_V5.Dir.CW, 100)\nMaqueen_V5.motorRun(Maqueen_V5.Motors.M2, Maqueen_V5.Dir.CCW, 100)\nbasic.pause(590)\nMaqueen_V5.motorStop(Maqueen_V5.Motors.All)",
+        nota: "M1 és el motor esquerre i M2, el dret. CW vol dir endavant i CCW, enrere. Que canviïn només el número de basic.pause.|M1 es el motor izquierdo y M2, el derecho. CW quiere decir adelante y CCW, atrás. Que cambien solo el número de basic.pause." },
+      { id: 's11', k: 'concepte', t: "Apunteu el vostre número|Apuntad vuestro número", punts: ["Gir de 90°: ______ ms|Giro de 90°: ______ ms", "Gir de 180°: ______ ms|Giro de 180°: ______ ms", "Al simulador: 590 ms i 1180 ms.|En el simulador: 590 ms y 1180 ms."],
+        nota: "Aquest número és important: el faran servir al passeig del projecte de la sessió 4. Que l'escriguin també al full de la pista.|Este número es importante: lo usarán en el paseo del proyecto de la sesión 4. Que lo escriban también en la hoja de la pista." },
+      { id: 's12', k: 'repte', t: "Reptes: girs i rutes|Retos: giros y rutas", timer: 9, punts: ["1. Quart de volta|1. Cuarto de vuelta", "2. El moll B|2. El muelle B", "3. Mitja volta|3. Media vuelta", "4. El passadís de caixes|4. El pasillo de cajas"],
+        nota: "Recomana provar el programa cada vegada que afegeixen un tram o un gir: així el problema sempre és a l'últim tros.|Recomienda probar el programa cada vez que añaden un tramo o un giro: así el problema siempre está en el último trozo." },
+      { id: 's13', k: 'activitat', t: "Crea: la ruta del port|Crea: la ruta del puerto", timer: 3, x: "Pels dos vaixells i fins al garatge, sense tocar el magatzem.|Por los dos barcos y hasta el garaje, sin tocar el almacén.",
+        nota: "Si no hi ha temps d'acabar-la, la poden enllestir a casa: el projecte es desa quan funciona.|Si no hay tiempo de terminarla, la pueden acabar en casa: el proyecto se guarda cuando funciona." },
+      { id: 's14', k: 'resum', t: "Què hem après avui|Qué hemos aprendido hoy", punts: ["El robot gira cap a la roda més lenta.|El robot gira hacia la rueda más lenta.", "Una endavant i l'altra enrere: sobre si mateix. Una sola: en arc.|Una adelante y la otra atrás: sobre sí mismo. Una sola: en arco.", "Calibrar: provar, mesurar i ajustar.|Calibrar: probar, medir y ajustar."],
+        nota: "Pregunta quina diferència hi havia entre l'espera calibrada de cada grup.|Pregunta qué diferencia había entre la espera calibrada de cada grupo." },
+      { id: 's15', k: 'tiquet', t: "Tiquet de sortida|Ticket de salida", punts: ["Com van les rodes per girar a la dreta sobre si mateix?|¿Cómo van las ruedas para girar a la derecha sobre sí mismo?", "Quina espera us ha funcionat per a 90°?|¿Qué espera os ha funcionado para 90°?"],
+        nota: "Guarda les fitxes amb l'espera de cada grup: les necessitaran per al projecte.|Guarda las fichas con la espera de cada grupo: las necesitarán para el proyecto." }
+    ],
+    print: [
+      { id: 'p1', t: "Fes de rodes|Haz de ruedas", k: 'targetes',
+        intro: "Un paquet per grup de 3. El cervell ensenya una targeta de la roda esquerra i una de la dreta alhora.|Un paquete por grupo de 3. El cerebro enseña una tarjeta de la rueda izquierda y una de la derecha a la vez.",
+        items: [
+          { t: "Esquerra: endavant ⬆|Izquierda: adelante ⬆", n: 2 },
+          { t: "Esquerra: enrere ⬇|Izquierda: atrás ⬇", n: 2 },
+          { t: "Dreta: endavant ⬆|Derecha: adelante ⬆", n: 2 },
+          { t: "Dreta: enrere ⬇|Derecha: atrás ⬇", n: 2 },
+          { t: "Roda aturada ✋|Rueda parada ✋", n: 2 }
+        ] },
+      { id: 'p2', t: "La creu de calibratge|La cruz de calibración", k: 'pista',
+        intro: "Enganxeu dues tires de cinta que es creuin a 90°. Poseu el centre de les rodes del robot al creuament, mirant cap a una tira: després del gir de 90°, ha de quedar mirant l'altra.|Pegad dos tiras de cinta que se crucen a 90°. Poned el centro de las ruedas del robot en el cruce, mirando hacia una tira: después del giro de 90°, tiene que quedar mirando la otra.",
+        w: { w: 60, h: 60, bot: [30, 30, 0], lines: [{ p: [[30, 6], [30, 54]] }, { p: [[6, 30], [54, 30]] }] },
+        items: [
+          { q: "Gir de 90° a velocitat 100. Espera que funciona al nostre robot: ______ ms|Giro de 90° a velocidad 100. Espera que funciona en nuestro robot: ______ ms" },
+          { q: "Gir de 180°: ______ ms. És el doble que el de 90°?|Giro de 180°: ______ ms. ¿Es el doble que el de 90°?" },
+          { q: "Gir en arc de 90° (una sola roda): ______ ms|Giro en arco de 90° (una sola rueda): ______ ms" }
+        ] }
+    ]
+  },
+
+  /* ---------- Sessió 4 · Projecte: el passeig de la fira ---------- */
+  'k1-4': {
+    obj: [
+      "L'alumne/a descompon una ruta en trams rectes i girs i n'estima les esperes abans de programar-la.|El alumno/a descompone una ruta en tramos rectos y giros y estima sus esperas antes de programarla.",
+      "L'alumne/a programa i depura un passeig complet que passa per tres punts en ordre i acaba aturat a la sortida.|El alumno/a programa y depura un paseo completo que pasa por tres puntos en orden y termina parado en la salida.",
+      "L'alumne/a passa el programa al Maqueen de veritat amb MakeCode i el calibra tram a tram.|El alumno/a pasa el programa al Maqueen de verdad con MakeCode y lo calibra tramo a tramo.",
+      "L'alumne/a presenta el projecte i explica què ha canviat entre el simulador i el robot de veritat.|El alumno/a presenta el proyecto y explica qué ha cambiado entre el simulador y el robot de verdad."
+    ],
+    comp: [
+      "Competència digital (CD5): crear i depurar un programa complet per a un robot|Competencia digital (CD5): crear y depurar un programa completo para un robot",
+      "Competència STEM (STEM3): fer un projecte tecnològic: planificar, construir, provar i millorar|Competencia STEM (STEM3): hacer un proyecto tecnológico: planificar, construir, probar y mejorar",
+      "Matemàtiques: mesures en un plànol a escala, angles i temps|Matemáticas: medidas en un plano a escala, ángulos y tiempo",
+      "Comunicació oral: presentar un projecte i explicar-ne les decisions|Comunicación oral: presentar un proyecto y explicar sus decisiones"
+    ],
+    vocab: [
+      ["Descompondre|Descomponer", "Partir un problema gran en problemes petits que es poden resoldre un a un.|Partir un problema grande en problemas pequeños que se pueden resolver uno a uno."],
+      ["Tram|Tramo", "Un tros recte de la ruta: motor els dos, espera i atura.|Un trozo recto de la ruta: motor los dos, espera y para."],
+      ["Ruta|Ruta", "El camí complet del robot: una sèrie de trams i girs en ordre.|El camino completo del robot: una serie de tramos y giros en orden."],
+      ["Depurar|Depurar", "Trobar l'error d'un programa i canviar només el que falla.|Encontrar el error de un programa y cambiar solo lo que falla."],
+      ["MakeCode|MakeCode", "L'editor on es programa la micro:bit i des d'on es descarrega el programa al robot.|El editor donde se programa la micro:bit y desde donde se descarga el programa al robot."]
+    ],
+    mat: {
+      aula: [
+        "Un ordinador per alumne/a amb Numi Tech obert a la sessió «Projecte: el passeig de la fira»|Un ordenador por alumno/a con Numi Tech abierto en la sesión «Proyecto: el paseo de la feria»",
+        "Projector i la presentació d'aquesta sessió|Proyector y la presentación de esta sesión",
+        "Un kit Maqueen per grup de 3-4, amb cable USB i piles carregades|Un kit Maqueen por grupo de 3-4, con cable USB y pilas cargadas",
+        "La pista de la fira a terra (140 × 90 cm): cinta de pintor, caixes de sabates per a les parades i una caixa més gran per a la font|La pista de la feria en el suelo (140 × 90 cm): cinta de pintor, cajas de zapatos para los puestos y una caja más grande para la fuente"
+      ],
+      imprimir: ["Pista: el passeig de la fira|Pista: el paseo de la feria", "Codi: els patrons del tram i del gir|Código: los patrones del tramo y del giro"],
+      prep: [
+        "Construir a terra la pista de la fira amb les mides de l'imprimible. Si no hi ha espai per a tots els grups, feu-ne una o dues i organitzeu torns de 3 minuts.|Construir en el suelo la pista de la feria con las medidas del imprimible. Si no hay espacio para todos los grupos, haced una o dos y organizad turnos de 3 minutos.",
+        "Tornar a cada grup la fitxa de la sessió 3 amb l'espera calibrada del gir de 90°.|Devolver a cada grupo la ficha de la sesión 3 con la espera calibrada del giro de 90°.",
+        "Comprovar que els ordinadors poden descarregar a la micro:bit (cable USB o connexió directa des del navegador).|Comprobar que los ordenadores pueden descargar en la micro:bit (cable USB o conexión directa desde el navegador)."
+      ]
+    },
+    plan: [
+      { min: 4, t: "El projecte: la fira de robòtica|El proyecto: la feria de robótica", fase: 'inici',
+        fa: "Presenta el projecte: el Maqueen farà de guia a la fira de la plaça. Ensenya la pista construïda a terra i explica què ha de fer el robot: passar per les tres parades en ordre i acabar aturat a la sortida. Repasseu els girs amb la diapositiva 2.|Presenta el proyecto: el Maqueen hará de guía en la feria de la plaza. Enseña la pista construida en el suelo y explica qué tiene que hacer el robot: pasar por los tres puestos en orden y terminar parado en la salida. Repasad los giros con la diapositiva 2.",
+        diu: ["Avui el vostre robot farà el seu primer passeig complet.|Hoy vuestro robot hará su primer paseo completo.",
+          "Qui recorda l'espera que va calibrar per al gir de 90°?|¿Quién recuerda la espera que calibró para el giro de 90°?"],
+        slides: ['s1', 's2'], app: "Encara no: pantalles apagades.|Todavía no: pantallas apagadas.", org: "Tot el grup|Todo el grupo" },
+      { min: 7, t: "Planificar, programar i passar al robot|Planificar, programar y pasar al robot", fase: 'teoria',
+        fa: "Explica la descomposició amb la demo de la ruta a trossos i els dos patrons (tram i gir). Mostra com es passa el programa del simulador a la micro:bit amb el botó </> i recorda que al robot de veritat cal calibrar tram a tram.|Explica la descomposición con la demo de la ruta a trozos y los dos patrones (tramo y giro). Muestra cómo se pasa el programa del simulador a la micro:bit con el botón </> y recuerda que en el robot de verdad hay que calibrar tramo a tramo.",
+        diu: ["Quants trams i quants girs té aquesta ruta?|¿Cuántos tramos y cuántos giros tiene esta ruta?",
+          "Si un tram falla, quin número canviaríeu?|Si un tramo falla, ¿qué número cambiaríais?"],
+        slides: ['s3', 's4', 's5', 's6'], app: "Encara no: tota l'atenció a la projecció.|Todavía no: toda la atención en la proyección.", org: "Tot el grup|Todo el grupo" },
+      { min: 8, t: "El pla del passeig|El plan del paseo", fase: 'desconnectat',
+        fa: "Grups de 3-4 amb la pista impresa. Dibuixen la ruta amb llapis, la parteixen en trams i girs i mesuren cada tram a l'escala del dibuix (cada quadre són 10 cm). Amb la taula de velocitats (a 150, uns 15,5 cm cada segon) estimen l'espera de cada tram, i per als girs fan servir l'espera calibrada a la sessió 3. Ho apunten al full.|Grupos de 3-4 con la pista impresa. Dibujan la ruta con lápiz, la parten en tramos y giros y miden cada tramo a la escala del dibujo (cada cuadro son 10 cm). Con la tabla de velocidades (a 150, unos 15,5 cm cada segundo) estiman la espera de cada tramo, y para los giros usan la espera calibrada en la sesión 3. Lo apuntan en la hoja.",
+        diu: ["Primer el pla, després els blocs.|Primero el plan, después los bloques.",
+          "Si un tram fa 100 cm i el robot en fa uns 15 cada segon, quants segons necessita?|Si un tramo mide 100 cm y el robot hace unos 15 cada segundo, ¿cuántos segundos necesita?",
+          "No cal que el pla sigui perfecte: després el provarem i l'ajustarem.|No hace falta que el plan sea perfecto: después lo probaremos y lo ajustaremos."],
+        slides: ['s7'], app: "Cap: activitat sense pantalla.|Ninguna: actividad sin pantalla.", org: "Grups de 3-4|Grupos de 3-4" },
+      { min: 14, t: "A l'ordinador: descobreix, prova i reptes|En el ordenador: descubre, prueba y retos", fase: 'ordinador',
+        fa: "Cada alumne/a fa la sessió fins als reptes: les targetes, el pla curt, les prediccions, el bloc que fa xocar el robot, la pausa i els tres reptes. Al passeig exprés, que pensin que a 255 el robot va gairebé el doble de ràpid.|Cada alumno/a hace la sesión hasta los retos: las tarjetas, el plan corto, las predicciones, el bloque que hace chocar al robot, la pausa y los tres retos. En el paseo exprés, que piensen que a 255 el robot va casi el doble de rápido.",
+        diu: ["Prova el programa després de cada tros.|Prueba el programa después de cada trozo.",
+          "En Pau ja té el tram 1: què li falta?|Pau ya tiene el tramo 1: ¿qué le falta?",
+          "Al passeig exprés, el gir també ha de ser més ràpid?|En el paseo exprés, ¿el giro también tiene que ser más rápido?"],
+        slides: ['s8', 's9'], app: "De «Recorda» fins als reptes: les tres targetes, ordenar el pla, «El mapa del passeig» (ara no; és per a casa), «On acabarà?», el bloc que fa xocar el robot, la pregunta dels tres blocs, la pausa i els tres reptes (acaba el passeig, la volta a les flors i el passeig exprés).|De «Recuerda» hasta los retos: las tres tarjetas, ordenar el plan, «El mapa del paseo» (ahora no; es para casa), «¿Dónde terminará?», el bloque que hace chocar al robot, la pregunta de los tres bloques, la pausa y los tres retos (acaba el paseo, la vuelta a las flores y el paseo exprés).", org: "Individual|Individual" },
+      { min: 8, t: "Crea: el passeig de la fira|Crea: el paseo de la feria", fase: 'crea',
+        fa: "Cada grup tria el programa d'un dels seus membres com a base, o el fan junts, seguint el pla de paper. Al simulador, el passeig ha de passar pels tres punts i acabar a la sortida. Quan funcioni, que el desin i obrin el codi per a MakeCode amb el botó </>.|Cada grupo elige el programa de uno de sus miembros como base, o lo hacen juntos, siguiendo el plan de papel. En el simulador, el paseo tiene que pasar por los tres puntos y terminar en la salida. Cuando funcione, que lo guarden y abran el código para MakeCode con el botón </>.",
+        diu: ["Seguiu el pla: tram 1, gir 1, tram 2…|Seguid el plan: tramo 1, giro 1, tramo 2…",
+          "Si falla, on es desvia per primera vegada?|Si falla, ¿dónde se desvía por primera vez?"],
+        slides: ['s10'], app: "Pas «Crea»: El passeig de la fira, i la història del robot de veritat.|Paso «Crea»: El paseo de la feria, y la historia del robot de verdad.", org: "Individual i després per grups|Individual y después por grupos" },
+      { min: 15, t: "El passeig amb el Maqueen de veritat|El paseo con el Maqueen de verdad", fase: 'robot',
+        fa: "Cada grup copia a MakeCode el codi del passeig, el descarrega i el prova a la pista de terra. Calibren en aquest ordre: primer els girs (amb l'espera de la sessió 3), després els trams, de l'inici cap al final i canviant un sol número cada vegada. Quan el robot passi per les tres parades, fan la prova final davant la classe: tothom mira si toca alguna parada i on s'atura. Organitza torns si només hi ha una pista.|Cada grupo copia en MakeCode el código del paseo, lo descarga y lo prueba en la pista del suelo. Calibran en este orden: primero los giros (con la espera de la sesión 3), después los tramos, del inicio hacia el final y cambiando un solo número cada vez. Cuando el robot pase por los tres puestos, hacen la prueba final delante de la clase: todos miran si toca algún puesto y dónde se para. Organiza turnos si solo hay una pista.",
+        diu: ["Un sol número cada vegada: si no, no sabreu quin canvi ha funcionat.|Un solo número cada vez: si no, no sabréis qué cambio ha funcionado.",
+          "On es desvia el robot per primera vegada? Aquell és el tram que heu de calibrar.|¿Dónde se desvía el robot por primera vez? Ese es el tramo que tenéis que calibrar.",
+          "Cable fora, robot a la línia de sortida i el pilot preparat per aturar-lo.|Cable fuera, robot en la línea de salida y el piloto preparado para pararlo."],
+        slides: ['s11', 's12'], app: "Cap: MakeCode i el robot de veritat.|Ninguna: MakeCode y el robot de verdad.", org: "Grups de 3-4 per kit amb papers; torns a la pista|Grupos de 3-4 por kit con papeles; turnos en la pista" },
+      { min: 4, t: "Presentació, tancament i tiquet|Presentación, cierre y ticket", fase: 'tancament',
+        fa: "Cada grup diu en una frase què han hagut de canviar perquè el passeig funcionés al robot de veritat. Repassa el resum de la unitat i fes les preguntes del tiquet a la porta. Dona la insígnia de la unitat a qui hagi acabat el projecte a l'app.|Cada grupo dice en una frase qué han tenido que cambiar para que el paseo funcionara en el robot de verdad. Repasa el resumen de la unidad y haz las preguntas del ticket en la puerta. Da la insignia de la unidad a quien haya terminado el proyecto en la app.",
+        diu: ["Què ha estat més difícil: el simulador o el robot de veritat? Per què?|¿Qué ha sido más difícil: el simulador o el robot de verdad? ¿Por qué?",
+          "Quin número heu hagut de canviar més?|¿Qué número habéis tenido que cambiar más?"],
+        slides: ['s13', 's14', 's15'], app: "«Tancament»: les dues preguntes finals i com m'he sentit.|«Cierre»: las dos preguntas finales y cómo me he sentido.", org: "Tot el grup|Todo el grupo" }
+    ],
+    errors: [
+      ["Comença a posar blocs sense pla i es perd a mig camí.|Empieza a poner bloques sin plan y se pierde a mitad del camino.",
+        "Que torni al pla de paper: en quin tram és? Que programi i provi un sol tram cada vegada.|Que vuelva al plan de papel: ¿en qué tramo está? Que programe y pruebe un solo tramo cada vez."],
+      ["Quan el passeig falla, canvia moltes esperes alhora.|Cuando el paseo falla, cambia muchas esperas a la vez.",
+        "Un sol número cada vegada: executa, mira el primer lloc on es desvia i ajusta només aquell tram o gir.|Un solo número cada vez: ejecuta, mira el primer sitio donde se desvía y ajusta solo ese tramo o giro."],
+      ["Copia el codi a MakeCode, però s'oblida d'afegir l'extensió del Maqueen i surten errors.|Copia el código en MakeCode, pero se olvida de añadir la extensión del Maqueen y salen errores.",
+        "Primer «Extensions» i «maqueen», després JavaScript i enganxar. Si surten línies vermelles, és que falta l'extensió.|Primero «Extensiones» y «maqueen», después JavaScript y pegar. Si salen líneas rojas, es que falta la extensión."],
+      ["El robot real es desvia una mica a cada tram i al final no arriba a la sortida.|El robot real se desvía un poco en cada tramo y al final no llega a la salida.",
+        "És normal: els errors petits se sumen. Calibreu primer els girs i després els trams, de l'inici cap al final.|Es normal: los errores pequeños se suman. Calibrad primero los giros y después los tramos, del inicio hacia el final."],
+      ["Engega el robot amb el cable USB connectat o damunt d'una taula sense vora.|Enciende el robot con el cable USB conectado o encima de una mesa sin borde.",
+        "Recorda les normes: cable fora, robot a terra a la línia de sortida i el pilot preparat per aturar-lo.|Recuerda las normas: cable fuera, robot en el suelo en la línea de salida y el piloto preparado para pararlo."]
+    ],
+    diff: {
+      mes: "Afegir una parada de 2 segons a cada parada de la fira i fer l'últim tram a velocitat 255 recalculant l'espera. Al robot real, aconseguir que acabi dins la sortida dues vegades seguides.|Añadir una parada de 2 segundos en cada puesto de la feria y hacer el último tramo a velocidad 255 recalculando la espera. En el robot real, conseguir que termine dentro de la salida dos veces seguidas.",
+      menys: "Fer el passeig curt del pas «Ordena els trossos» (tram, gir i tram) amb el patró imprès, i al robot real calibrar només el primer gir.|Hacer el paseo corto del paso «Ordena los trozos» (tramo, giro y tramo) con el patrón impreso, y en el robot real calibrar solo el primer giro."
+    },
+    aval: {
+      ticket: ["Explica el teu pla: quants trams i quants girs té el passeig?|Explica tu plan: ¿cuántos tramos y cuántos giros tiene el paseo?",
+        "Què heu hagut de canviar perquè funcionés al robot de veritat?|¿Qué habéis tenido que cambiar para que funcionara en el robot de verdad?"],
+      rubric: [
+        ["Planificar|Planificar", "Descompon la ruta en trams i girs i n'estima les esperes abans de programar.|Descompone la ruta en tramos y giros y estima sus esperas antes de programar.", "Programa a prova i error, sense pla.|Programa a prueba y error, sin plan."],
+        ["Programar i depurar|Programar y depurar", "El passeig passa pels tres punts i acaba a la sortida; quan falla, troba el tram que cal canviar.|El paseo pasa por los tres puntos y termina en la salida; cuando falla, encuentra el tramo que hay que cambiar.", "El passeig funciona en part; per arreglar-lo canvia molts números alhora.|El paseo funciona en parte; para arreglarlo cambia muchos números a la vez."],
+        ["Del simulador al robot|Del simulador al robot", "Passa el programa al Maqueen, el calibra i explica les diferències amb el simulador.|Pasa el programa al Maqueen, lo calibra y explica las diferencias con el simulador.", "El passa al robot amb ajuda, però encara no el calibra.|Lo pasa al robot con ayuda, pero todavía no lo calibra."]
+      ]
+    },
+    casa: "A casa, ensenyeu el projecte des de «Projectes» i expliqueu el pla del passeig. Feu també «El mapa del passeig»: dibuixeu una habitació, escriviu una ruta en trams i girs i que algú la segueixi sense mirar el plànol.|En casa, enseñad el proyecto desde «Proyectos» y explicad el plan del paseo. Haced también «El mapa del paseo»: dibujad una habitación, escribid una ruta en tramos y giros y que alguien la siga sin mirar el plano.",
+    slides: [
+      { id: 's1', k: 'portada', t: "Projecte: el passeig de la fira|Proyecto: el paseo de la feria", x: "El Maqueen farà de guia: tres parades i tornada a la sortida.|El Maqueen hará de guía: tres puestos y vuelta a la salida.",
+        nota: "Ensenya la pista de terra i un robot. Explica que avui acaba la unitat i que el projecte es fa primer al simulador i després al robot de veritat.|Enseña la pista del suelo y un robot. Explica que hoy termina la unidad y que el proyecto se hace primero en el simulador y después en el robot de verdad." },
+      { id: 's2', k: 'repas', t: "Recordes?|¿Recuerdas?", punts: ["Un tram: motor els dos, espera i atura.|Un tramo: motor los dos, espera y para.", "Gir a l'esquerra: l'esquerre enrere i el dret endavant.|Giro a la izquierda: el izquierdo atrás y el derecho adelante.", "90° a velocitat 100: uns 590 ms (o el vostre número calibrat).|90° a velocidad 100: unos 590 ms (o vuestro número calibrado)."],
+        nota: "Que cada grup digui la seva espera calibrada de la sessió 3 i l'apunti al pla.|Que cada grupo diga su espera calibrada de la sesión 3 y la apunte en el plan." },
+      { id: 's3', k: 'robo', t: "La ruta, a trossos|La ruta, a trozos", x: "Tram 1, gir a l'esquerra i tram 2. Cada tros és un problema petit.|Tramo 1, giro a la izquierda y tramo 2. Cada trozo es un problema pequeño.",
+        robo: { w: { w: 120, h: 70, bot: [15, 55, 90], zones: [{ id: 'f', r: [62, 6, 26, 22], col: 'green', label: 'FINAL|FINAL' }], goal: [{ k: 'cps', pts: [[75, 55], [75, 17]], r: 6 }] }, prog: 'start{ run:all,fwd,150 wait:3900 stop:all run:L,back,100 run:R,fwd,100 wait:590 stop:all run:all,fwd,150 wait:2400 stop:all }' },
+        nota: "Mentre s'executa, assenyala quins blocs del programa fan cada tros. Pregunta quants trams i girs tindrà el passeig de la fira (tres trams i dos girs).|Mientras se ejecuta, señala qué bloques del programa hacen cada trozo. Pregunta cuántos tramos y giros tendrá el paseo de la feria (tres tramos y dos giros)." },
+      { id: 's4', k: 'concepte', t: "Dos patrons|Dos patrones", punts: ["Tram: motor els dos endavant, espera, atura.|Tramo: motor los dos adelante, espera, para.", "Gir: els dos motors en direccions contràries, espera, atura.|Giro: los dos motores en direcciones contrarias, espera, para.", "El passeig: tram, gir, tram, gir, tram.|El paseo: tramo, giro, tramo, giro, tramo."],
+        blocks: ["motor els dos endavant a velocitat 150|motor los dos adelante a velocidad 150", "espera ____ ms|espera ____ ms", "atura el motor els dos|para el motor los dos", "motor esquerre enrere a velocitat 100|motor izquierdo atrás a velocidad 100", "motor dret endavant a velocitat 100|motor derecho adelante a velocidad 100"],
+        nota: "Si el programa és llarg, que el llegeixin per patrons: «això és un tram, això és un gir». Així és més fàcil trobar on falla.|Si el programa es largo, que lo lean por patrones: «esto es un tramo, esto es un giro». Así es más fácil encontrar dónde falla." },
+      { id: 's5', k: 'anim', t: "Del simulador a la micro:bit|Del simulador a la micro:bit", anim: 'k1usb', x: "El botó </> dona el codi per a MakeCode; després, cable USB i a la pista.|El botón </> da el código para MakeCode; después, cable USB y a la pista.",
+        nota: "Fes-ho en directe una vegada amb el projector: botó </>, copiar, MakeCode amb l'extensió «maqueen», JavaScript, enganxar i descarregar.|Hazlo en directo una vez con el proyector: botón </>, copiar, MakeCode con la extensión «maqueen», JavaScript, pegar y descargar." },
+      { id: 's6', k: 'anim', t: "Prova, mesura i ajusta|Prueba, mide y ajusta", anim: 'k1calib', x: "Primer els girs, després els trams, i un sol número cada vegada.|Primero los giros, después los tramos, y un solo número cada vez.",
+        nota: "Recorda que els errors petits se sumen: un gir de 85° al principi fa que l'últim tram acabi molt desviat.|Recuerda que los errores pequeños se suman: un giro de 85° al principio hace que el último tramo termine muy desviado." },
+      { id: 's7', k: 'activitat', t: "El pla del passeig|El plan del paseo", timer: 8, punts: ["Dibuixeu la ruta a la pista impresa.|Dibujad la ruta en la pista impresa.", "Parteix-la en trams i girs.|Pártela en tramos y giros.", "Mesureu cada tram (cada quadre, 10 cm).|Medid cada tramo (cada cuadro, 10 cm).", "Estimeu les esperes i apunteu-les.|Estimad las esperas y apuntadlas."],
+        nota: "A velocitat 150, el robot fa uns 15,5 cm cada segon: un tram de 100 cm són uns 6400 ms. Per als girs, l'espera calibrada de cada grup.|A velocidad 150, el robot hace unos 15,5 cm cada segundo: un tramo de 100 cm son unos 6400 ms. Para los giros, la espera calibrada de cada grupo." },
+      { id: 's8', k: 'activitat', t: "Ara, a l'ordinador|Ahora, al ordenador", timer: 14, punts: ["Obre la sessió del projecte.|Abre la sesión del proyecto.", "Fes les prediccions abans d'executar.|Haz las predicciones antes de ejecutar.", "«El mapa del passeig» és per a casa: toca «Ara no».|«El mapa del paseo» es para casa: toca «Ahora no».", "Fes els tres reptes.|Haz los tres retos."],
+        nota: "Recorda que poden provar el programa tantes vegades com vulguin: provar no és fer trampa, és treballar com un enginyer.|Recuerda que pueden probar el programa tantas veces como quieran: probar no es hacer trampa, es trabajar como un ingeniero." },
+      { id: 's9', k: 'repte', t: "Reptes del passeig|Retos del paseo", punts: ["1. Acaba el passeig d'en Pau|1. Acaba el paseo de Pau", "2. La volta a les flors|2. La vuelta a las flores", "3. Passeig exprés (menys de 6 segons)|3. Paseo exprés (menos de 6 segundos)"],
+        nota: "Al passeig exprés, el gir es pot deixar igual: només cal fer els trams més ràpids i escurçar-ne les esperes.|En el paseo exprés, el giro se puede dejar igual: solo hay que hacer los tramos más rápidos y acortar sus esperas." },
+      { id: 's10', k: 'activitat', t: "Crea: el passeig de la fira|Crea: el paseo de la feria", timer: 8, x: "Tres parades en ordre i aturat a la sortida, sense tocar res. Seguiu el vostre pla!|Tres puestos en orden y parado en la salida, sin tocar nada. ¡Seguid vuestro plan!",
+        nota: "Quan funcioni, que el desin i obrin el codi amb el botó </>: el necessitaran per al robot de veritat.|Cuando funcione, que lo guarden y abran el código con el botón </>: lo necesitarán para el robot de verdad." },
+      { id: 's11', k: 'activitat', t: "El passeig de veritat|El paseo de verdad", timer: 15, punts: ["Copieu el codi a MakeCode i descarregueu-lo.|Copiad el código en MakeCode y descargadlo.", "Proveu el passeig a la pista de terra.|Probad el paseo en la pista del suelo.", "Calibreu: primer els girs, després els trams.|Calibrad: primero los giros, después los tramos.", "Prova final davant la classe.|Prueba final delante de la clase."],
+        code: "Maqueen_V5.I2CInit()\nMaqueen_V5.motorRun(Maqueen_V5.Motors.All, Maqueen_V5.Dir.CW, 150)\nbasic.pause(3000)\nMaqueen_V5.motorStop(Maqueen_V5.Motors.All)\nMaqueen_V5.motorRun(Maqueen_V5.Motors.M1, Maqueen_V5.Dir.CCW, 100)\nMaqueen_V5.motorRun(Maqueen_V5.Motors.M2, Maqueen_V5.Dir.CW, 100)\nbasic.pause(590)\nMaqueen_V5.motorStop(Maqueen_V5.Motors.All)",
+        nota: "El codi de la diapositiva és només el patró d'un tram i un gir a l'esquerra, perquè vegin com es llegeix a MakeCode. Cada grup fa servir el codi del seu projecte.|El código de la diapositiva es solo el patrón de un tramo y un giro a la izquierda, para que vean cómo se lee en MakeCode. Cada grupo usa el código de su proyecto." },
+      { id: 's12', k: 'concepte', t: "La prova final|La prueba final", punts: ["Passa per les tres parades en ordre?|¿Pasa por los tres puestos en orden?", "Acaba aturat a la sortida?|¿Termina parado en la salida?", "Toca alguna parada o la font?|¿Toca algún puesto o la fuente?", "Seguretat: cable fora i el pilot a punt.|Seguridad: cable fuera y el piloto a punto."],
+        nota: "Valora el procés tant com el resultat: un grup que ha calibrat bé dos girs i ha entès per què es desvia ha après molt, encara que no arribi a la sortida.|Valora el proceso tanto como el resultado: un grupo que ha calibrado bien dos giros y ha entendido por qué se desvía ha aprendido mucho, aunque no llegue a la salida." },
+      { id: 's13', k: 'pregunta', t: "Simulador o robot de veritat?|¿Simulador o robot de verdad?", x: "Què heu hagut de canviar perquè el passeig funcionés a la pista de terra?|¿Qué habéis tenido que cambiar para que el paseo funcionara en la pista del suelo?",
+        nota: "Recull una frase de cada grup. Fes notar que tots han hagut de calibrar alguna cosa: és el que passa sempre amb els robots reals.|Recoge una frase de cada grupo. Haz notar que todos han tenido que calibrar algo: es lo que pasa siempre con los robots reales." },
+      { id: 's14', k: 'resum', t: "Què hem après a la unitat 1|Qué hemos aprendido en la unidad 1", punts: ["Un robot sent, pensa i actua.|Un robot siente, piensa y actúa.", "Motors: velocitat de 0 a 255, endavant i enrere, i zona morta.|Motores: velocidad de 0 a 255, adelante y atrás, y zona muerta.", "Girs sobre si mateix i en arc; calibrar.|Giros sobre sí mismo y en arco; calibrar.", "Una ruta es descompon en trams i girs.|Una ruta se descompone en tramos y giros."],
+        nota: "Avança què ve a la unitat 2: mesurarem amb precisió (distància = velocitat × temps) i el robot dibuixarà figures.|Adelanta lo que viene en la unidad 2: mediremos con precisión (distancia = velocidad × tiempo) y el robot dibujará figuras." },
+      { id: 's15', k: 'tiquet', t: "Tiquet de sortida|Ticket de salida", punts: ["Quants trams i quants girs té el vostre passeig?|¿Cuántos tramos y cuántos giros tiene vuestro paseo?", "Què heu canviat per al robot de veritat?|¿Qué habéis cambiado para el robot de verdad?"],
+        nota: "Anota quins grups han fet funcionar el passeig al robot real i quins necessitaran reforç amb el calibratge a la unitat 2.|Anota qué grupos han hecho funcionar el paseo en el robot real y cuáles necesitarán refuerzo con la calibración en la unidad 2." }
+    ],
+    print: [
+      { id: 'p1', t: "Pista: el passeig de la fira|Pista: el paseo de la feria", k: 'pista',
+        intro: "Construïu la pista a terra a mida real. Les caixes són les parades i la font; els punts 1, 2 i 3 són on ha de passar el robot. Dibuixeu-hi la ruta amb llapis i apunteu el pla.|Construid la pista en el suelo a tamaño real. Las cajas son los puestos y la fuente; los puntos 1, 2 y 3 son por donde tiene que pasar el robot. Dibujad la ruta con lápiz y apuntad el plan.",
+        w: { w: 140, h: 90, bot: [15, 75, 90], walls: [[52, 84, 26, 6], [126, 32, 10, 26], [57, 2, 26, 8], [40, 38, 56, 22]], zones: [{ id: 's', r: [16, 8, 28, 24], col: 'green', label: 'SORTIDA|SALIDA' }], goal: [{ k: 'cps', pts: [[65, 75], [115, 45], [70, 20]], r: 9 }] },
+        items: [
+          { q: "Tram 1 (fins a la primera cantonada): ____ cm → espera ____ ms|Tramo 1 (hasta la primera esquina): ____ cm → espera ____ ms" },
+          { q: "Gir 1 (90° a l'esquerra): espera ____ ms (la del vostre robot)|Giro 1 (90° a la izquierda): espera ____ ms (la de vuestro robot)" },
+          { q: "Tram 2: ____ cm → ____ ms · Gir 2: ____ ms · Tram 3: ____ cm → ____ ms|Tramo 2: ____ cm → ____ ms · Giro 2: ____ ms · Tramo 3: ____ cm → ____ ms" },
+          { q: "Què heu hagut de canviar al robot de veritat?|¿Qué habéis tenido que cambiar en el robot de verdad?" }
+        ] },
+      { id: 'p2', t: "Patrons: un tram i un gir|Patrones: un tramo y un giro", k: 'codi',
+        intro: "Els dos trossos amb què es construeix tot el passeig. Copieu-los i canvieu-ne les esperes amb els números del vostre pla.|Los dos trozos con los que se construye todo el paseo. Copiadlos y cambiad sus esperas con los números de vuestro plan.",
+        items: [
+          { t: "Un tram recte (velocitat 150)|Un tramo recto (velocidad 150)", prog: 'start{ run:all,fwd,150 wait:3000 stop:all }' },
+          { t: "Un gir de 90° a l'esquerra (velocitat 100)|Un giro de 90° a la izquierda (velocidad 100)", prog: 'start{ run:L,back,100 run:R,fwd,100 wait:590 stop:all }' }
+        ] }
+    ]
+  }
+});
+
+/* ── unitat 2 ── */
+/* Tech Robòtica · unitat 2 «Moviment precís» · guia del professorat (k2-1 … k2-4)
+   Material propi de Numi. Classe de 60 minuts; mateix esquema que TGUIDE['r1-1'] i la fase «robot» (Maqueen de veritat). */
+Object.assign(TGUIDE, {
+  /* ---------- Sessió 1 · Velocitat × temps ---------- */
+  'k2-1': {
+    obj: [
+      "L'alumne/a calcula la distància que recorre el robot a partir de la velocitat en cm/s i del temps (distància = velocitat × temps).|El alumno/a calcula la distancia que recorre el robot a partir de la velocidad en cm/s y del tiempo (distancia = velocidad × tiempo).",
+      "L'alumne/a calcula el temps d'espera que cal per recórrer una distància donada i el passa a mil·lisegons.|El alumno/a calcula el tiempo de espera necesario para recorrer una distancia dada y lo pasa a milisegundos.",
+      "L'alumne/a explica que el número de velocitat del bloc (0-255) no són centímetres per segon i que cal mesurar-ho.|El alumno/a explica que el número de velocidad del bloque (0-255) no son centímetros por segundo y que hay que medirlo.",
+      "L'alumne/a calibra el Maqueen de veritat: fa una prova, la mesura, calcula la velocitat real i ajusta el temps.|El alumno/a calibra el Maqueen de verdad: hace una prueba, la mide, calcula la velocidad real y ajusta el tiempo."
+    ],
+    comp: [
+      "Competència matemàtica: proporcionalitat, multiplicació i divisió amb decimals i unitats de temps i longitud (s, ms, cm)|Competencia matemática: proporcionalidad, multiplicación y división con decimales y unidades de tiempo y longitud (s, ms, cm)",
+      "Competència digital (CD5): programar un robot per resoldre un problema i depurar-ne el programa|Competencia digital (CD5): programar un robot para resolver un problema y depurar su programa",
+      "Competència científica i tecnològica: mesurar, repetir una prova i ajustar un sistema (calibrar)|Competencia científica y tecnológica: medir, repetir una prueba y ajustar un sistema (calibrar)",
+      "Competència personal i social: treballar en equip amb rols i entendre l'error com a part del procés|Competencia personal y social: trabajar en equipo con roles y entender el error como parte del proceso"
+    ],
+    vocab: [
+      ["Velocitat (cm/s)|Velocidad (cm/s)", "Els centímetres que recorre el robot cada segon.|Los centímetros que recorre el robot cada segundo."],
+      ["Mil·lisegon (ms)|Milisegundo (ms)", "La mil·lèsima part d'un segon: 1000 ms = 1 s.|La milésima parte de un segundo: 1000 ms = 1 s."],
+      ["Distància = velocitat × temps|Distancia = velocidad × tiempo", "La fórmula per saber quant avança el robot.|La fórmula para saber cuánto avanza el robot."],
+      ["Calibrar|Calibrar", "Fer una prova, mesurar-la i ajustar el programa perquè el robot de veritat sigui precís.|Hacer una prueba, medirla y ajustar el programa para que el robot de verdad sea preciso."],
+      ["Inèrcia|Inercia", "El robot tarda una mica a agafar velocitat i a parar.|El robot tarda un poco en coger velocidad y en pararse."]
+    ],
+    mat: {
+      aula: [
+        "Un ordinador per alumne/a amb Numi Tech obert a la sessió «Velocitat × temps»|Un ordenador por alumno/a con Numi Tech abierto en la sesión «Velocidad × tiempo»",
+        "Projector i la presentació d'aquesta sessió|Proyector y la presentación de esta sesión",
+        "Un kit Maqueen Lite V5 + micro:bit V2 per grup de 3-4, amb piles carregades i cable USB|Un kit Maqueen Lite V5 + micro:bit V2 por grupo de 3-4, con pilas cargadas y cable USB",
+        "Per grup: cinta de pintor, una cinta mètrica (o un regle d'1 m) i un cartró taronja de 20 × 20 cm (el FORN)|Por grupo: cinta de pintor, una cinta métrica (o una regla de 1 m) y un cartón naranja de 20 × 20 cm (el HORNO)",
+        "Un cronòmetre per grup per a l'activitat sense pantalla (pot ser un rellotge de paret amb agulla de segons)|Un cronómetro por grupo para la actividad sin pantalla (puede ser un reloj de pared con aguja de segundos)"
+      ],
+      imprimir: ["Fitxa: el robot humà i la taula de calibratge|Ficha: el robot humano y la tabla de calibración", "Pista del mercat (a escala)|Pista del mercado (a escala)"],
+      prep: [
+        "Marcar a terra, per a cada grup, una recta de cinta de pintor d'1,4 m amb una marca cada 10 cm, com a la pista imprimible. Si el terra rellisca, feu-la sobre cartró o una estora.|Marcar en el suelo, para cada grupo, una recta de cinta de pintor de 1,4 m con una marca cada 10 cm, como en la pista imprimible. Si el suelo resbala, hacedla sobre cartón o una esterilla.",
+        "Deixar a punt a MakeCode el programa de calibratge (velocitat 150 durant 2000 ms) i comprovar que totes les piles funcionen.|Dejar listo en MakeCode el programa de calibración (velocidad 150 durante 2000 ms) y comprobar que todas las pilas funcionan.",
+        "Provar abans la demostració de la diapositiva 5 i la predicció de la 13 per saber què passarà.|Probar antes la demostración de la diapositiva 5 y la predicción de la 13 para saber qué pasará.",
+        "Dibuixar a la pissarra una taula amb tres columnes: grup · cm en 2 s · cm/s.|Dibujar en la pizarra una tabla con tres columnas: grupo · cm en 2 s · cm/s."
+      ]
+    },
+    plan: [
+      { min: 4, t: "Benvinguda: la Plaça Pintada|Bienvenida: la Plaza Pintada", fase: 'inici',
+        fa: "Presenta la unitat: el poble prepara la Festa de la Plaça Pintada i el robot del taller ha de dibuixar figures gegants a terra. Pregunta com pot saber un robot quant ha avançat si no porta regle i recull idees sense corregir-les.|Presenta la unidad: el pueblo prepara la Fiesta de la Plaza Pintada y el robot del taller tiene que dibujar figuras gigantes en el suelo. Pregunta cómo puede saber un robot cuánto ha avanzado si no lleva regla y recoge ideas sin corregirlas.",
+        diu: ["Si el robot ha de dibuixar un quadrat de 30 cm, com sap quan ha fet 30 cm?|Si el robot tiene que dibujar un cuadrado de 30 cm, ¿cómo sabe cuándo ha hecho 30 cm?", "Avui descobrirem un truc que fan servir molts robots: comptar el temps.|Hoy descubriremos un truco que usan muchos robots: contar el tiempo."],
+        slides: ['s1', 's2'], app: "Encara no: pantalles abaixades.|Todavía no: pantallas bajadas.", org: "Tot el grup|Todo el grupo" },
+      { min: 8, t: "Distància = velocitat × temps|Distancia = velocidad × tiempo", fase: 'teoria',
+        fa: "Repassa la unitat 1 amb la diapositiva 3. Explica la fórmula amb l'animació i executa la demostració: abans de cada tram, que la classe digui fins on arribarà. Desfés l'error més habitual (pensar que velocitat 150 vol dir 150 cm/s) amb la taula mesurada al simulador i acaba amb la gràfica: l'àrea del rectangle és la distància.|Repasa la unidad 1 con la diapositiva 3. Explica la fórmula con la animación y ejecuta la demostración: antes de cada tramo, que la clase diga hasta dónde llegará. Deshaz el error más habitual (pensar que velocidad 150 quiere decir 150 cm/s) con la tabla medida en el simulador y termina con la gráfica: el área del rectángulo es la distancia.",
+        diu: ["Si en 1 segon fa 15,6 cm, quant farà en 2 segons? I en 3?|Si en 1 segundo hace 15,6 cm, ¿cuánto hará en 2 segundos? ¿Y en 3?", "Velocitat 150 vol dir 150 cm cada segon? Mirem-ho!|¿Velocidad 150 quiere decir 150 cm cada segundo? ¡Mirémoslo!", "Més alt o més ample el rectangle: més distància.|Más alto o más ancho el rectángulo: más distancia."],
+        slides: ['s3', 's4', 's5', 's6', 's7'], app: "Encara no: tota l'atenció a la projecció.|Todavía no: toda la atención en la proyección.", org: "Tot el grup|Todo el grupo" },
+      { min: 10, t: "El robot humà calibrat|El robot humano calibrado", fase: 'desconnectat',
+        fa: "Grups de 3 amb tres papers: robot (camina a ritme constant, sense córrer), cronometrador/a (compta 5 segons i diu «Para!») i mesurador/a (mesura amb la cinta els centímetres fets). Calculen la velocitat del robot humà en cm/s, prediuen quants centímetres farà en 8 segons i ho comproven. Ho anoten a la fitxa i canvien els papers.|Grupos de 3 con tres papeles: robot (camina a ritmo constante, sin correr), cronometrador/a (cuenta 5 segundos y dice «¡Para!») y medidor/a (mide con la cinta los centímetros hechos). Calculan la velocidad del robot humano en cm/s, predicen cuántos centímetros hará en 8 segundos y lo comprueban. Lo anotan en la ficha y cambian los papeles.",
+        diu: ["El robot ha de caminar sempre igual: si accelera, la mesura no serveix.|El robot tiene que caminar siempre igual: si acelera, la medida no sirve.", "Quants cm feu en 1 segon? Aquesta és la vostra velocitat.|¿Cuántos cm hacéis en 1 segundo? Esta es vuestra velocidad.", "La predicció no ha sortit exacta? Molt bé: per això els robots es calibren.|¿La predicción no ha salido exacta? Muy bien: por eso los robots se calibran."],
+        slides: ['s8', 's9'], app: "Cap: activitat sense pantalla.|Ninguna: actividad sin pantalla.", org: "Grups de 3 amb papers que roten|Grupos de 3 con papeles que rotan" },
+      { min: 12, t: "Calibrem el Maqueen de veritat|Calibramos el Maqueen de verdad", fase: 'robot',
+        fa: "Cada grup té un Maqueen i la seva pista de cinta a terra (recta d'1,4 m amb marques cada 10 cm i el cartró taronja del FORN entre 37 i 57 cm). Posen el centre de les rodes a la sortida, executen el programa de calibratge (velocitat 150, 2000 ms) i mesuren fins al centre de les rodes tres vegades. Fan la mitjana, calculen la velocitat real (cm ÷ 2) i l'escriuen a la taula de la pissarra. Després calculen el temps per aturar-se al FORN (47 cm), canvien l'espera a MakeCode, el descarreguen a la micro:bit i ho proven. Seguretat: el robot sempre a terra, l'interruptor apagat mentre es connecta el cable, i els dits lluny de les rodes.|Cada grupo tiene un Maqueen y su pista de cinta en el suelo (recta de 1,4 m con marcas cada 10 cm y el cartón naranja del HORNO entre 37 y 57 cm). Ponen el centro de las ruedas en la salida, ejecutan el programa de calibración (velocidad 150, 2000 ms) y miden hasta el centro de las ruedas tres veces. Hacen la media, calculan la velocidad real (cm ÷ 2) y la escriben en la tabla de la pizarra. Después calculan el tiempo para pararse en el HORNO (47 cm), cambian la espera en MakeCode, lo descargan en la micro:bit y lo prueban. Seguridad: el robot siempre en el suelo, el interruptor apagado mientras se conecta el cable, y los dedos lejos de las ruedas.",
+        diu: ["Mesureu sempre des del mateix punt del robot: el centre de les rodes.|Medid siempre desde el mismo punto del robot: el centro de las ruedas.", "El vostre robot va més lent o més ràpid que el simulador? Per què pot ser?|¿Vuestro robot va más lento o más rápido que el simulador? ¿Por qué puede ser?", "Feu servir la velocitat del VOSTRE robot per calcular el temps del FORN.|Usad la velocidad de VUESTRO robot para calcular el tiempo del HORNO."],
+        slides: ['s10', 's11'], app: "MakeCode (makecode.microbit.org) amb l'extensió «Maqueen», o el botó </> de l'app per copiar el codi.|MakeCode (makecode.microbit.org) con la extensión «Maqueen», o el botón </> de la app para copiar el código.", org: "Grups de 3-4 per kit|Grupos de 3-4 por kit" },
+      { min: 18, t: "A l'ordinador: prediu, investiga i reptes|En el ordenador: predice, investiga y retos", fase: 'ordinador',
+        fa: "Cada alumne/a avança al seu ritme fins a «Crea». Fes la predicció de la diapositiva 13 tots junts abans de deixar-los sols. Passeja i demana que escriguin el càlcul en un paper abans de canviar cap número: qui prova números a l'atzar, que digui la fórmula en veu alta.|Cada alumno/a avanza a su ritmo hasta «Crea». Haced la predicción de la diapositiva 13 todos juntos antes de dejarlos solos. Pasea y pide que escriban el cálculo en un papel antes de cambiar ningún número: quien pruebe números al azar, que diga la fórmula en voz alta.",
+        diu: ["Abans de tocar el número: quants cm hi ha? I quants cm fa cada segon?|Antes de tocar el número: ¿cuántos cm hay? ¿Y cuántos cm hace cada segundo?", "Al repte de la foto, fes un pla: quan arriba, quant s'espera i quan torna a sortir.|En el reto de la foto, haz un plan: cuándo llega, cuánto espera y cuándo vuelve a salir.", "Si ajudes un company/a, fes-li preguntes: no li diguis el número.|Si ayudas a un compañero/a, hazle preguntas: no le digas el número."],
+        slides: ['s12', 's13', 's14'], app: "Des de «Recorda» fins als cinc reptes: les preguntes de repàs, les dues històries, «Descobreix», els càlculs, ordenar el calibratge, «On s'aturarà?», el bloc que cal canviar, la pausa i els reptes del forn, la fruita, el pastís urgent, anar i tornar i la foto del segon 4.|Desde «Recuerda» hasta los cinco retos: las preguntas de repaso, las dos historias, «Descubre», los cálculos, ordenar la calibración, «¿Dónde se parará?», el bloque que hay que cambiar, la pausa y los retos del horno, la fruta, el pastel urgente, ir y volver y la foto del segundo 4.", org: "Individual|Individual" },
+      { min: 5, t: "Crea: el recorregut del mercat|Crea: el recorrido del mercado", fase: 'crea',
+        fa: "Cada alumne/a planifica el recorregut sencer: tres parades, una espera a cadascuna, un gir i la meta. Qui acabi, que el compari amb el d'un company/a: hi ha més d'una solució bona.|Cada alumno/a planifica el recorrido entero: tres paradas, una espera en cada una, un giro y la meta. Quien termine, que lo compare con el de un compañero/a: hay más de una solución buena.",
+        diu: ["Escriu primer els trams: de la sortida a la parada 1, de la 1 a la 2…|Escribe primero los tramos: de la salida al puesto 1, del 1 al 2…", "Recordes quant tarda un gir de 90°? Ho vam fer a la unitat 1.|¿Recuerdas cuánto tarda un giro de 90°? Lo hicimos en la unidad 1."],
+        slides: ['s15'], app: "Pas «Crea»: el recorregut del mercat.|Paso «Crea»: el recorrido del mercado.", org: "Individual i després per parelles|Individual y después por parejas" },
+      { min: 3, t: "Tancament i tiquet de sortida|Cierre y ticket de salida", fase: 'tancament',
+        fa: "Repassa les tres idees amb el resum, mira la taula de velocitats dels grups (totes una mica diferents!) i fes a cada alumne/a una pregunta del tiquet a la porta.|Repasa las tres ideas con el resumen, mira la tabla de velocidades de los grupos (¡todas un poco diferentes!) y haz a cada alumno/a una pregunta del ticket en la puerta.",
+        diu: ["Per què els nostres robots no van tots igual?|¿Por qué nuestros robots no van todos igual?", "Quina és la fórmula que hem fet servir avui?|¿Cuál es la fórmula que hemos usado hoy?"],
+        slides: ['s16', 's17'], app: "«Tancament»: les dues preguntes finals i com m'he sentit.|«Cierre»: las dos preguntas finales y cómo me he sentido.", org: "Tot el grup|Todo el grupo" }
+    ],
+    errors: [
+      ["Multiplica el número del bloc pel temps: «150 × 2 = 300 cm».|Multiplica el número del bloque por el tiempo: «150 × 2 = 300 cm».",
+        "Pregunta-li quants cm fa el robot en 1 segon i que ho comprovi amb la demo o amb el regle. El número del bloc és la força del motor, no cm/s.|Pregúntale cuántos cm hace el robot en 1 segundo y que lo compruebe con la demo o con la regla. El número del bloque es la fuerza del motor, no cm/s."],
+      ["Confon segons i mil·lisegons: posa «espera 3» en lloc de «espera 3000».|Confunde segundos y milisegundos: pone «espera 3» en lugar de «espera 3000».",
+        "Fes-li llegir el bloc en veu alta: «espera 3 mil·lisegons». Quant és això? Que tingui escrit al costat: 1 s = 1000 ms.|Hazle leer el bloque en voz alta: «espera 3 milisegundos». ¿Cuánto es eso? Que tenga escrito al lado: 1 s = 1000 ms."],
+      ["Al repte d'anar i tornar, posa un temps diferent a la tornada.|En el reto de ir y volver, pone un tiempo diferente a la vuelta.",
+        "Pregunta: la tornada és més llarga o més curta que l'anada? I la velocitat és la mateixa? Llavors, el temps…|Pregunta: ¿la vuelta es más larga o más corta que la ida? ¿Y la velocidad es la misma? Entonces, el tiempo…"],
+      ["Amb el robot real, mesura cada vegada des d'un punt diferent (el davant, el darrere…).|Con el robot real, mide cada vez desde un punto diferente (la parte delantera, la trasera…).",
+        "Acordeu un sol punt de referència, el centre de les rodes, i marqueu-lo amb un tros de cinta al robot.|Acordad un solo punto de referencia, el centro de las ruedas, y marcadlo con un trozo de cinta en el robot."],
+      ["Es frustra perquè el Maqueen de veritat no fa exactament el mateix que el simulador.|Se frustra porque el Maqueen de verdad no hace exactamente lo mismo que el simulador.",
+        "Recorda-li que és normal i que per això es calibra: la diferència és una dada que fem servir, no un error seu.|Recuérdale que es normal y que por eso se calibra: la diferencia es un dato que usamos, no un error suyo."]
+    ],
+    diff: {
+      mes: "Mesurar al robot real la velocitat a 100 i a 200 i comprovar que no és proporcional; després, inventar un recorregut amb tres parades a distàncies diferents perquè el resolgui un company/a.|Medir en el robot real la velocidad a 100 y a 200 y comprobar que no es proporcional; después, inventar un recorrido con tres paradas a distancias diferentes para que lo resuelva un compañero/a.",
+      menys: "Treballar sempre a velocitat 150 amb la taula de la fitxa al costat (1 s → 15,6 cm, 2 s → 31 cm, 3 s → 47 cm) i resoldre els reptes sumant segons sencers.|Trabajar siempre a velocidad 150 con la tabla de la ficha al lado (1 s → 15,6 cm, 2 s → 31 cm, 3 s → 47 cm) y resolver los retos sumando segundos enteros."
+    },
+    aval: {
+      ticket: ["A velocitat 150 (15,6 cm/s), quant avança el robot en 4 segons?|A velocidad 150 (15,6 cm/s), ¿cuánto avanza el robot en 4 segundos?",
+        "Per què el teu Maqueen no fa exactament el mateix que el simulador i què fas per solucionar-ho?|¿Por qué tu Maqueen no hace exactamente lo mismo que el simulador y qué haces para solucionarlo?"],
+      rubric: [
+        ["Distància i temps|Distancia y tiempo", "Calcula la distància o el temps amb la fórmula i passa els segons a ms sense errors.|Calcula la distancia o el tiempo con la fórmula y pasa los segundos a ms sin errores.", "Ho calcula amb l'ajuda de la taula o confon segons i mil·lisegons.|Lo calcula con la ayuda de la tabla o confunde segundos y milisegundos."],
+        ["Velocitat del bloc|Velocidad del bloque", "Explica que el número 0-255 no són cm/s i fa servir la velocitat mesurada.|Explica que el número 0-255 no son cm/s y usa la velocidad medida.", "Encara multiplica el número del bloc pel temps.|Todavía multiplica el número del bloque por el tiempo."],
+        ["Calibratge|Calibración", "Mesura amb cura, calcula la velocitat real i ajusta el temps fins a encertar la marca.|Mide con cuidado, calcula la velocidad real y ajusta el tiempo hasta acertar la marca.", "Mesura, però canvia el temps a l'atzar en lloc de calcular-lo.|Mide, pero cambia el tiempo al azar en lugar de calcularlo."]
+      ]
+    },
+    casa: "A casa, amb el mòbil, podeu repetir els reptes i fer junts el robot humà: cronometreu 5 segons caminant a pas de tortuga i a pas de conill, mesureu la distància i calculeu les vostres dues velocitats.|En casa, con el móvil, podéis repetir los retos y hacer juntos el robot humano: cronometrad 5 segundos caminando a paso de tortuga y a paso de conejo, medid la distancia y calculad vuestras dos velocidades.",
+    slides: [
+      { id: 's1', k: 'portada', t: "Velocitat × temps|Velocidad × tiempo", x: "El robot no porta regle… però pot ser molt precís!|El robot no lleva regla… ¡pero puede ser muy preciso!",
+        nota: "Presenta la unitat 2: el robot del taller ha de dibuixar figures gegants a la plaça del poble, i per això ha de moure's amb precisió.|Presenta la unidad 2: el robot del taller tiene que dibujar figuras gigantes en la plaza del pueblo, y para eso tiene que moverse con precisión." },
+      { id: 's2', k: 'pregunta', t: "Com sap el robot quant ha avançat?|¿Cómo sabe el robot cuánto ha avanzado?", x: "No té regle ni ulls que mesurin el terra. Què creieu que pot fer servir?|No tiene regla ni ojos que midan el suelo. ¿Qué creéis que puede usar?",
+        nota: "Recull idees: comptar voltes de les rodes, el temps, un sensor… Totes són bones. Avui farem servir el temps.|Recoge ideas: contar vueltas de las ruedas, el tiempo, un sensor… Todas son buenas. Hoy usaremos el tiempo." },
+      { id: 's3', k: 'repas', t: "Recordem la unitat 1|Recordemos la unidad 1", punts: ["Velocitat de 0 a 255; per sota de ~30 no es mou (zona morta).|Velocidad de 0 a 255; por debajo de ~30 no se mueve (zona muerta).", "Girar sobre si mateix: un motor endavant i l'altre enrere.|Girar sobre sí mismo: un motor adelante y el otro atrás.", "«En iniciar»: el programa comença quan s'engega la micro:bit.|«Al iniciar»: el programa empieza cuando se enciende la micro:bit."],
+        nota: "Pregunta-ho en forma d'endevinalla abans de mostrar cada punt.|Pregúntalo en forma de adivinanza antes de mostrar cada punto." },
+      { id: 's4', k: 'anim', t: "Distància = velocitat × temps|Distancia = velocidad × tiempo", anim: 'k2dvt', x: "15,6 cm/s × 2 s ≈ 31 cm|15,6 cm/s × 2 s ≈ 31 cm",
+        nota: "Fes notar que el temps el decideix el bloc «espera»: mentre el robot espera, els motors continuen engegats.|Haz notar que el tiempo lo decide el bloque «espera»: mientras el robot espera, los motores siguen encendidos." },
+      { id: 's5', k: 'robo', t: "Cada segon, el mateix tros|Cada segundo, el mismo trozo", x: "Velocitat 150: un segon, para; un segon, para… On serà després de 3 segons?|Velocidad 150: un segundo, para; un segundo, para… ¿Dónde estará después de 3 segundos?",
+        robo: { w: { w: 120, h: 40, bot: [15, 20, 90], marks: { '1s': [30.6, 20], '2s': [46.2, 20], '3s': [61.8, 20] } }, prog: 'start{ run:all,fwd,150 wait:1000 stop:all wait:700 run:all,fwd,150 wait:1000 stop:all wait:700 run:all,fwd,150 wait:1000 stop:all }' },
+        nota: "Abans d'executar, que cada grup digui una distància. Resposta: uns 47 cm (3 × 15,6). Cada tram és igual de llarg.|Antes de ejecutar, que cada grupo diga una distancia. Respuesta: unos 47 cm (3 × 15,6). Cada tramo es igual de largo." },
+      { id: 's6', k: 'concepte', t: "El número del bloc no són cm/s|El número del bloque no son cm/s", punts: ["Velocitat 60 → ~3,9 cm/s|Velocidad 60 → ~3,9 cm/s", "Velocitat 100 → ~9 cm/s|Velocidad 100 → ~9 cm/s", "Velocitat 150 → ~15,6 cm/s|Velocidad 150 → ~15,6 cm/s", "Velocitat 255 → ~29 cm/s|Velocidad 255 → ~29 cm/s"],
+        nota: "Són les xifres del simulador. Fes-los notar que no és proporcional: a 200 va a 22 cm/s, més del doble que a 100, perquè els primers ~30 no mouen la roda.|Son las cifras del simulador. Hazles notar que no es proporcional: a 200 va a 22 cm/s, más del doble que a 100, porque los primeros ~30 no mueven la rueda." },
+      { id: 's7', k: 'anim', t: "L'àrea és la distància|El área es la distancia", anim: 'k2graf', x: "La velocitat al llarg del temps fa un rectangle: base (temps) × alçada (velocitat).|La velocidad a lo largo del tiempo hace un rectángulo: base (tiempo) × altura (velocidad).",
+        nota: "Amb els de 5è i 6è, relaciona-ho amb l'àrea del rectangle. Amb els més petits, n'hi ha prou amb: més alt o més ample, més distància. La corba de les vores és la inèrcia.|Con los de 5.º y 6.º, relaciónalo con el área del rectángulo. Con los más pequeños, basta con: más alto o más ancho, más distancia. La curva de los bordes es la inercia." },
+      { id: 's8', k: 'activitat', t: "El robot humà calibrat|El robot humano calibrado", timer: 10, punts: ["Robot: camina a ritme constant, sense córrer.|Robot: camina a ritmo constante, sin correr.", "Cronometrador/a: compta 5 segons i diu «Para!».|Cronometrador/a: cuenta 5 segundos y dice «¡Para!».", "Mesurador/a: mesura amb la cinta els cm fets.|Medidor/a: mide con la cinta los cm hechos.", "Calculeu els cm/s, prediu 8 segons i comproveu-ho!|¡Calculad los cm/s, predecid 8 segundos y comprobadlo!"],
+        nota: "Feu-ho al passadís o al pati, amb la cinta mètrica a terra. Recorda que caminen a poc a poc: ningú no corre.|Hacedlo en el pasillo o en el patio, con la cinta métrica en el suelo. Recuerda que caminan despacio: nadie corre." },
+      { id: 's9', k: 'concepte', t: "Les dues fórmules|Las dos fórmulas", punts: ["distància = velocitat × temps|distancia = velocidad × tiempo", "temps = distància ÷ velocitat|tiempo = distancia ÷ velocidad", "1 segon = 1000 mil·lisegons|1 segundo = 1000 milisegundos"],
+        nota: "Deixa-la projectada durant la resta de la classe: la necessitaran al robot i a l'app.|Déjala proyectada durante el resto de la clase: la necesitarán en el robot y en la app." },
+      { id: 's10', k: 'activitat', t: "Calibrem el Maqueen|Calibramos el Maqueen", timer: 12, punts: ["1. Centre de les rodes a la sortida, mirant la cinta.|1. Centro de las ruedas en la salida, mirando la cinta.", "2. Velocitat 150 durant 2000 ms: mesureu-ho 3 vegades.|2. Velocidad 150 durante 2000 ms: medidlo 3 veces.", "3. Mitjana ÷ 2 = la velocitat del vostre robot.|3. Media ÷ 2 = la velocidad de vuestro robot.", "4. Calculeu el temps per parar al FORN (47 cm) i proveu-ho.|4. Calculad el tiempo para parar en el HORNO (47 cm) y probadlo."],
+        nota: "Seguretat: el robot a terra, l'interruptor apagat mentre es connecta el cable i els dits lluny de les rodes. Apunteu la velocitat de cada grup a la pissarra.|Seguridad: el robot en el suelo, el interruptor apagado mientras se conecta el cable y los dedos lejos de las ruedas. Apuntad la velocidad de cada grupo en la pizarra." },
+      { id: 's11', k: 'concepte', t: "El programa de calibratge|El programa de calibración", x: "A MakeCode, amb l'extensió «Maqueen»:|En MakeCode, con la extensión «Maqueen»:",
+        blocks: ["en iniciar|al iniciar", "motor els dos endavant a velocitat 150|motor los dos adelante a velocidad 150", "espera 2000 ms|espera 2000 ms", "atura el motor els dos|para el motor los dos"],
+        code: "Maqueen_V5.I2CInit()\nMaqueen_V5.motorRun(Maqueen_V5.Motors.All, Maqueen_V5.Dir.CW, 150)\nbasic.pause(2000)\nMaqueen_V5.motorStop(Maqueen_V5.Motors.All)",
+        nota: "És el mateix programa que surt amb el botó </> de l'app. Per parar al FORN només cal canviar el 2000.|Es el mismo programa que sale con el botón </> de la app. Para parar en el HORNO solo hay que cambiar el 2000." },
+      { id: 's12', k: 'activitat', t: "Ara, a l'app|Ahora, en la app", timer: 18, punts: ["Fes la missió i «Descobreix».|Haz la misión y «Descubre».", "Calcula abans de tocar res: fes servir la fórmula.|Calcula antes de tocar nada: usa la fórmula.", "Als reptes, escriu el càlcul en un paper.|En los retos, escribe el cálculo en un papel.", "Para quan arribis a «Crea».|Para cuando llegues a «Crea»."],
+        nota: "Al pas d'ordenar el calibratge, recorda'ls que és exactament el que acaben de fer amb el robot.|En el paso de ordenar la calibración, recuérdales que es exactamente lo que acaban de hacer con el robot." },
+      { id: 's13', k: 'robo', t: "On s'aturarà?|¿Dónde se parará?", x: "Velocitat 150 durant 3000 ms. A, B o C?|Velocidad 150 durante 3000 ms. ¿A, B o C?",
+        robo: { w: { w: 120, h: 40, bot: [15, 20, 90], marks: { A: [38.4, 20], B: [61.8, 20], C: [100, 20] } }, prog: 'start{ run:all,fwd,150 wait:3000 stop:all }' },
+        nota: "Que voti tothom abans d'executar. Resposta: B, a uns 47 cm (15,6 × 3). Qui ha dit C potser ha multiplicat 150 × 3.|Que vote todo el mundo antes de ejecutar. Respuesta: B, a unos 47 cm (15,6 × 3). Quien ha dicho C quizá ha multiplicado 150 × 3." },
+      { id: 's14', k: 'repte', t: "Els reptes del mercat|Los retos del mercado", punts: ["1. El forn: 47 cm a velocitat 150|1. El horno: 47 cm a velocidad 150", "2. La fruita: 36 cm a velocitat 100|2. La fruta: 36 cm a velocidad 100", "3. El pastís urgent: 80 cm en 3,5 s|3. El pastel urgente: 80 cm en 3,5 s", "4. Anar i tornar: arregla el programa|4. Ir y volver: arregla el programa", "5. La foto del segon 4|5. La foto del segundo 4"],
+        nota: "Al repte 3 cal pensar al revés: no hi ha prou temps a 150, cal triar més velocitat (255).|En el reto 3 hay que pensar al revés: no hay tiempo suficiente a 150, hay que elegir más velocidad (255)." },
+      { id: 's15', k: 'activitat', t: "Crea: el recorregut del mercat|Crea: el recorrido del mercado", timer: 5, x: "Tres parades en ordre, una espera a cadascuna, un gir i la meta. Planifica cada tram: cm i ms.|Tres paradas en orden, una espera en cada una, un giro y la meta. Planifica cada tramo: cm y ms.",
+        nota: "Celebra que hi hagi solucions diferents: uns van més ràpid, altres s'esperen més… totes valen si compleixen la missió.|Celebra que haya soluciones diferentes: unos van más rápido, otros esperan más… todas valen si cumplen la misión." },
+      { id: 's16', k: 'resum', t: "Què hem après avui|Qué hemos aprendido hoy", punts: ["Distància = velocitat × temps.|Distancia = velocidad × tiempo.", "El número 0-255 no són cm/s: cal mesurar.|El número 0-255 no son cm/s: hay que medir.", "Calibrar: provar, mesurar i ajustar.|Calibrar: probar, medir y ajustar."],
+        nota: "Torna a la pregunta del principi: ara saben que el robot «mesura» amb el temps.|Vuelve a la pregunta del principio: ahora saben que el robot «mide» con el tiempo." },
+      { id: 's17', k: 'tiquet', t: "Tiquet de sortida|Ticket de salida", punts: ["Velocitat 150 durant 4 s: quants cm?|Velocidad 150 durante 4 s: ¿cuántos cm?", "Per què cal calibrar el robot de veritat?|¿Por qué hay que calibrar el robot de verdad?"],
+        nota: "Resposta de la primera: uns 62 cm. Anota qui encara multiplica el número del bloc.|Respuesta de la primera: unos 62 cm. Anota quién todavía multiplica el número del bloque." }
+    ],
+    print: [
+      { id: 'p1', t: "El robot humà i la taula de calibratge|El robot humano y la tabla de calibración", k: 'fitxa',
+        intro: "Una fitxa per alumne/a. La part 1 és per a l'activitat sense pantalla i la part 2, per al Maqueen de veritat.|Una ficha por alumno/a. La parte 1 es para la actividad sin pantalla y la parte 2, para el Maqueen de verdad.",
+        items: [
+          { q: "Robot humà: en 5 segons heu fet ____ cm. La vostra velocitat és ____ cm ÷ 5 s = ____ cm/s.|Robot humano: en 5 segundos habéis hecho ____ cm. Vuestra velocidad es ____ cm ÷ 5 s = ____ cm/s.", sol: "Depèn del grup. Per exemple: 250 cm ÷ 5 s = 50 cm/s.|Depende del grupo. Por ejemplo: 250 cm ÷ 5 s = 50 cm/s." },
+          { q: "Prediu: en 8 segons fareu ____ cm. Comproveu-ho: n'heu fet ____. Per què no surt exacte?|Predecid: en 8 segundos haréis ____ cm. Comprobadlo: habéis hecho ____. ¿Por qué no sale exacto?", sol: "La velocitat × 8. No surt exacte perquè les persones no caminem sempre igual: per això cal calibrar.|La velocidad × 8. No sale exacto porque las personas no caminamos siempre igual: por eso hay que calibrar." },
+          { q: "Maqueen a velocitat 150 durant 2 s. Mesura 1: ___ cm · Mesura 2: ___ cm · Mesura 3: ___ cm. Mitjana: ___ cm. Velocitat: ___ cm/s.|Maqueen a velocidad 150 durante 2 s. Medida 1: ___ cm · Medida 2: ___ cm · Medida 3: ___ cm. Media: ___ cm. Velocidad: ___ cm/s.", sol: "Al simulador surten 31 cm i 15,6 cm/s. Al robot real sol sortir una mica diferent; cada grup fa servir la seva xifra.|En el simulador salen 31 cm y 15,6 cm/s. En el robot real suele salir un poco diferente; cada grupo usa su cifra." },
+          { q: "El FORN és a 47 cm. Temps = 47 ÷ ____ cm/s = ____ s = ____ ms.|El HORNO está a 47 cm. Tiempo = 47 ÷ ____ cm/s = ____ s = ____ ms.", sol: "Amb 15,6 cm/s: 3 s = 3000 ms. Cada grup ho calcula amb la velocitat del seu robot.|Con 15,6 cm/s: 3 s = 3000 ms. Cada grupo lo calcula con la velocidad de su robot." },
+          { q: "Quants centímetres avança el robot del simulador amb aquest programa?|¿Cuántos centímetros avanza el robot del simulador con este programa?", rprog: 'start{ run:all,fwd,150 wait:2500 stop:all }', sol: "15,6 × 2,5 ≈ 39 cm.|15,6 × 2,5 ≈ 39 cm." }
+        ] },
+      { id: 'p2', t: "La pista del mercat|La pista del mercado", k: 'pista',
+        intro: "Una pista per grup, a terra. Feu una recta de cinta de pintor d'1,4 m i marqueu-hi una ratlla cada 10 cm. El cartró taronja (20 × 20 cm) és el FORN: el seu centre és a 47 cm de la sortida.|Una pista por grupo, en el suelo. Haced una recta de cinta de pintor de 1,4 m y marcad una raya cada 10 cm. El cartón naranja (20 × 20 cm) es el HORNO: su centro está a 47 cm de la salida.",
+        w: { w: 140, h: 40, bot: [15, 20, 90], zones: [{ id: 'forn', r: [52, 10, 20, 20], col: 'orange', label: 'FORN|HORNO' }], marks: { '0': [15, 20], '1s': [30.6, 20], '2s': [46.2, 20], '3s': [61.8, 20] } },
+        items: [
+          { q: "Poseu el centre de les rodes del robot just a la sortida (marca 0) i mesureu sempre fins al centre de les rodes.|Poned el centro de las ruedas del robot justo en la salida (marca 0) y medid siempre hasta el centro de las ruedas.", big: false },
+          { q: "Les marques 1s, 2s i 3s són on arriba el robot del simulador a velocitat 150. El vostre, on arriba?|Las marcas 1s, 2s y 3s son donde llega el robot del simulador a velocidad 150. El vuestro, ¿dónde llega?" }
+        ] }
+    ]
+  },
+  /* ---------- Sessió 2 · Polígons ---------- */
+  'k2-2': {
+    obj: [
+      "L'alumne/a programa un gir d'un angle donat calculant el temps (a velocitat 100, uns 6,5 ms per grau).|El alumno/a programa un giro de un ángulo dado calculando el tiempo (a velocidad 100, unos 6,5 ms por grado).",
+      "L'alumne/a dedueix que en un polígon tancat el robot gira 360° en total i calcula cada gir com 360° ÷ costats.|El alumno/a deduce que en un polígono cerrado el robot gira 360° en total y calcula cada giro como 360° ÷ lados.",
+      "L'alumne/a distingeix l'angle de dins d'un polígon de l'angle que gira el robot.|El alumno/a distingue el ángulo de dentro de un polígono del ángulo que gira el robot.",
+      "L'alumne/a fa servir el bloc «repeteix» per dibuixar polígons amb el mínim de blocs.|El alumno/a usa el bloque «repite» para dibujar polígonos con el mínimo de bloques."
+    ],
+    comp: [
+      "Competència matemàtica (sentit espacial i de la mesura): angles, polígons regulars i volta sencera de 360°|Competencia matemática (sentido espacial y de la medida): ángulos, polígonos regulares y vuelta entera de 360°",
+      "Pensament computacional: patrons i bucles (repetició)|Pensamiento computacional: patrones y bucles (repetición)",
+      "Competència digital (CD5): programar, provar i depurar un robot|Competencia digital (CD5): programar, probar y depurar un robot",
+      "Competència personal i social: cooperar en grup i explicar el raonament|Competencia personal y social: cooperar en grupo y explicar el razonamiento"
+    ],
+    vocab: [
+      ["Angle|Ángulo", "Quant gira el robot, en graus. Una volta sencera són 360°.|Cuánto gira el robot, en grados. Una vuelta entera son 360°."],
+      ["Polígon regular|Polígono regular", "Figura de costats rectes i iguals: triangle, quadrat, pentàgon, hexàgon…|Figura de lados rectos e iguales: triángulo, cuadrado, pentágono, hexágono…"],
+      ["Angle de gir|Ángulo de giro", "El que canvia de direcció el robot a cada cantonada: 360° ÷ costats.|Lo que cambia de dirección el robot en cada esquina: 360° ÷ lados."],
+      ["Bucle «repeteix»|Bucle «repite»", "Bloc que fa els blocs de dins les vegades que diu el número.|Bloque que hace los bloques de dentro las veces que dice el número."],
+      ["Patró|Patrón", "Un tros que es repeteix sempre igual.|Un trozo que se repite siempre igual."]
+    ],
+    mat: {
+      aula: [
+        "Un ordinador per alumne/a amb Numi Tech obert a la sessió «Polígons»|Un ordenador por alumno/a con Numi Tech abierto en la sesión «Polígonos»",
+        "Projector i la presentació d'aquesta sessió|Proyector y la presentación de esta sesión",
+        "Un kit Maqueen Lite V5 + micro:bit V2 per grup de 3-4, amb piles carregades i cable USB|Un kit Maqueen Lite V5 + micro:bit V2 por grupo de 3-4, con pilas cargadas y cable USB",
+        "Cinta de pintor, guix o gomets per marcar a terra i un transportador gran de cartró per grup|Cinta de pintor, tiza o gomets para marcar en el suelo y un transportador grande de cartón por grupo"
+      ],
+      imprimir: ["Fitxa: la taula dels polígons|Ficha: la tabla de los polígonos", "Codi per al Maqueen: girs i quadrat|Código para el Maqueen: giros y cuadrado"],
+      prep: [
+        "Retallar un transportador gran de cartró per grup (o imprimir-ne un en A4) per comprovar els girs a terra.|Recortar un transportador grande de cartón por grupo (o imprimir uno en A4) para comprobar los giros en el suelo.",
+        "Marcar a terra, per a cada grup, un quadrat de 31 × 31 cm amb gomets o cinta a les cantonades.|Marcar en el suelo, para cada grupo, un cuadrado de 31 × 31 cm con gomets o cinta en las esquinas.",
+        "Preparar a MakeCode el programa del gir de 90° (velocitat 100, 590 ms) per començar el calibratge ràpid.|Preparar en MakeCode el programa del giro de 90° (velocidad 100, 590 ms) para empezar la calibración rápido.",
+        "Provar abans les demostracions de les diapositives 4 i 6, i la predicció de la 12.|Probar antes las demostraciones de las diapositivas 4 y 6, y la predicción de la 12."
+      ]
+    },
+    plan: [
+      { min: 4, t: "Benvinguda: l'escenari de la festa|Bienvenida: el escenario de la fiesta", fase: 'inici',
+        fa: "Recorda la fórmula de la sessió anterior amb una pregunta ràpida i presenta la nova feina: dibuixar l'escenari quadrat, les banderoles triangulars i el quiosc de sis costats. Pregunta què li falta al robot per fer-ho.|Recuerda la fórmula de la sesión anterior con una pregunta rápida y presenta el nuevo trabajo: dibujar el escenario cuadrado, los banderines triangulares y el quiosco de seis lados. Pregunta qué le falta al robot para hacerlo.",
+        diu: ["Velocitat 150 durant 2 segons: quants centímetres?|Velocidad 150 durante 2 segundos: ¿cuántos centímetros?", "Ja sabem fer trams rectes exactes. Què ens falta per fer un quadrat?|Ya sabemos hacer tramos rectos exactos. ¿Qué nos falta para hacer un cuadrado?"],
+        slides: ['s1', 's2'], app: "Encara no: pantalles abaixades.|Todavía no: pantallas bajadas.", org: "Tot el grup|Todo el grupo" },
+      { min: 9, t: "Angles, bucles i la regla dels 360°|Ángulos, bucles y la regla de los 360°", fase: 'teoria',
+        fa: "Explica que el gir també es controla amb el temps (90° en 590 ms a velocitat 100). Executa el quadrat amb el bloc «repeteix» i compta amb la classe quants blocs ens estalviem. Amb l'animació dels polígons, que descobreixin la regla: el robot sempre dona una volta sencera. Acaba amb el triangle: per què 120° i no 60°?|Explica que el giro también se controla con el tiempo (90° en 590 ms a velocidad 100). Ejecuta el cuadrado con el bloque «repite» y cuenta con la clase cuántos bloques nos ahorramos. Con la animación de los polígonos, que descubran la regla: el robot siempre da una vuelta entera. Termina con el triángulo: ¿por qué 120° y no 60°?",
+        diu: ["Si 90° són 590 ms, quant seran 45°? I 180°?|Si 90° son 590 ms, ¿cuánto serán 45°? ¿Y 180°?", "Sumeu tots els girs del quadrat. I els del triangle. Què passa?|Sumad todos los giros del cuadrado. Y los del triángulo. ¿Qué pasa?", "Poseu-vos drets i gireu 60°: a on mireu? És un triangle això?|Poneos de pie y girad 60°: ¿hacia dónde miráis? ¿Es eso un triángulo?"],
+        slides: ['s3', 's4', 's5', 's6'], app: "Encara no: tota l'atenció a la projecció.|Todavía no: toda la atención en la proyección.", org: "Tot el grup|Todo el grupo" },
+      { min: 10, t: "Polígons a terra amb el cos|Polígonos en el suelo con el cuerpo", fase: 'desconnectat',
+        fa: "Grups de 3: un fa de robot (camina i gira), un dona les ordres llegint-les de la fitxa («4 passes», «gira 120°») i un comprova cada gir amb el transportador de cartró. Fan el quadrat, el triangle i l'hexàgon a terra, deixant un gomet a cada cantonada, i omplen la taula dels polígons: costats, gir, suma dels girs i temps de gir del robot.|Grupos de 3: uno hace de robot (camina y gira), uno da las órdenes leyéndolas de la ficha («4 pasos», «gira 120°») y uno comprueba cada giro con el transportador de cartón. Hacen el cuadrado, el triángulo y el hexágono en el suelo, dejando un gomet en cada esquina, y rellenan la tabla de los polígonos: lados, giro, suma de los giros y tiempo de giro del robot.",
+        diu: ["Si torneu al primer gomet mirant on miràveu, quant heu girat en total?|Si volvéis al primer gomet mirando donde mirabais, ¿cuánto habéis girado en total?", "El transportador mesura el gir del robot, no l'angle de dins de la figura.|El transportador mide el giro del robot, no el ángulo de dentro de la figura.", "Quin és el patró que es repeteix?|¿Cuál es el patrón que se repite?"],
+        slides: ['s7', 's8'], app: "Cap: activitat sense pantalla.|Ninguna: actividad sin pantalla.", org: "Grups de 3 amb papers que roten|Grupos de 3 con papeles que rotan" },
+      { min: 12, t: "Calibrem el gir de 90°|Calibramos el giro de 90°", fase: 'robot',
+        fa: "Cada grup posa el Maqueen a la cantonada del quadrat de 31 cm marcat a terra, amb una tira de cinta enganxada al robot que faci d'agulla. Executen el gir de 90° (velocitat 100, 590 ms) i el comproven amb el transportador: si gira de més o de menys, ajusten el temps de 20 en 20 ms fins que surti recte. Després carreguen el programa del quadrat amb «repeteix 4» i miren si torna a la cantonada de sortida. Seguretat: el robot a terra, fora del pas de la gent, i l'interruptor apagat mentre es connecta el cable.|Cada grupo pone el Maqueen en la esquina del cuadrado de 31 cm marcado en el suelo, con una tira de cinta pegada al robot que haga de aguja. Ejecutan el giro de 90° (velocidad 100, 590 ms) y lo comprueban con el transportador: si gira de más o de menos, ajustan el tiempo de 20 en 20 ms hasta que salga recto. Después cargan el programa del cuadrado con «repite 4» y miran si vuelve a la esquina de salida. Seguridad: el robot en el suelo, fuera del paso de la gente, y el interruptor apagado mientras se conecta el cable.",
+        diu: ["El vostre robot gira de més o de menys? Quants mil·lisegons canviareu?|¿Vuestro robot gira de más o de menos? ¿Cuántos milisegundos cambiaréis?", "Si cada gir s'equivoca una mica, al final del quadrat l'error se suma. Ho veieu?|Si cada giro se equivoca un poco, al final del cuadrado el error se suma. ¿Lo veis?", "Apunteu el vostre temps de 90°: el farem servir a la propera sessió.|Apuntad vuestro tiempo de 90°: lo usaremos en la próxima sesión."],
+        slides: ['s9', 's10'], app: "MakeCode amb l'extensió «Maqueen», o el botó </> de l'app per copiar el codi.|MakeCode con la extensión «Maqueen», o el botón </> de la app para copiar el código.", org: "Grups de 3-4 per kit|Grupos de 3-4 por kit" },
+      { min: 17, t: "A l'ordinador: prediu, investiga i reptes|En el ordenador: predice, investiga y retos", fase: 'ordinador',
+        fa: "Feu junts la predicció de la diapositiva 12 i deixa'ls avançar fins a «Crea». Als reptes amb màxim de blocs, si algú no hi arriba, pregunta-li quin tros es repeteix. A l'estrella, deixa que ho provin: és el repte més difícil i pot quedar per a casa.|Haced juntos la predicción de la diapositiva 12 y déjalos avanzar hasta «Crea». En los retos con máximo de bloques, si alguien no llega, pregúntale qué trozo se repite. En la estrella, deja que lo prueben: es el reto más difícil y puede quedar para casa.",
+        diu: ["Quants costats té? Doncs, quants graus a cada gir?|¿Cuántos lados tiene? Entonces, ¿cuántos grados en cada giro?", "I ara passa els graus a mil·lisegons: graus × 6,55.|Y ahora pasa los grados a milisegundos: grados × 6,55.", "Al pentàgon, quin número està malament: el de les vegades o el del gir?|En el pentágono, ¿qué número está mal: el de las veces o el del giro?"],
+        slides: ['s11', 's12', 's13'], app: "Des de «Recorda» fins als reptes: la pregunta de repàs, les històries, «Descobreix», els dos càlculs, «Polígons amb el cos» (fet a classe), «On acabarà?», el quadrat torçat, la pausa i els reptes del quadrat, la banderola, el quiosc, el pentàgon i l'estrella.|Desde «Recuerda» hasta los retos: la pregunta de repaso, las historias, «Descubre», los dos cálculos, «Polígonos con el cuerpo» (hecho en clase), «¿Dónde terminará?», el cuadrado torcido, la pausa y los retos del cuadrado, el banderín, el quiosco, el pentágono y la estrella.", org: "Individual|Individual" },
+      { min: 5, t: "Crea: el meu polígon|Crea: mi polígono", fase: 'crea',
+        fa: "Cada alumne/a tria un polígon i el dibuixa amb un «repeteix», tornant a la CASA i mirant cap a la dreta. Proposa als ràpids un octàgon (45°) o un polígon gran.|Cada alumno/a elige un polígono y lo dibuja con un «repite», volviendo a CASA y mirando hacia la derecha. Propón a los rápidos un octógono (45°) o un polígono grande.",
+        diu: ["Quin polígon has triat? Digues-me el càlcul del gir.|¿Qué polígono has elegido? Dime el cálculo del giro.", "Si no torna mirant a la dreta, la suma dels girs no fa 360°.|Si no vuelve mirando a la derecha, la suma de los giros no da 360°."],
+        slides: ['s14'], app: "Pas «Crea»: el meu polígon.|Paso «Crea»: mi polígono.", org: "Individual|Individual" },
+      { min: 3, t: "Tancament i tiquet de sortida|Cierre y ticket de salida", fase: 'tancament',
+        fa: "Repassa la regla dels 360° amb el resum i fes a cada alumne/a una pregunta del tiquet a la porta.|Repasa la regla de los 360° con el resumen y haz a cada alumno/a una pregunta del ticket en la puerta.",
+        diu: ["Quants graus gira el robot en un octàgon?|¿Cuántos grados gira el robot en un octógono?", "Per què fem servir el «repeteix»?|¿Por qué usamos el «repite»?"],
+        slides: ['s15', 's16'], app: "«Tancament»: les dues preguntes finals i com m'he sentit.|«Cierre»: las dos preguntas finales y cómo me he sentido.", org: "Tot el grup|Todo el grupo" }
+    ],
+    errors: [
+      ["Al triangle, gira 60° (l'angle de dins) i surt un hexàgon a mitges.|En el triángulo, gira 60° (el ángulo de dentro) y sale medio hexágono.",
+        "Que es posi dret i camini el triangle a terra amb el transportador: quant ha de girar per anar cap a la cantonada següent? Que compari 3 × 60° amb 360°.|Que se ponga de pie y camine el triángulo en el suelo con el transportador: ¿cuánto tiene que girar para ir hacia la esquina siguiente? Que compare 3 × 60° con 360°."],
+      ["Posa el número de costats a l'espera del gir (per exemple, espera 6 per a l'hexàgon).|Pone el número de lados en la espera del giro (por ejemplo, espera 6 para el hexágono).",
+        "Pregunta-li què vol dir el número de l'espera: graus, costats o mil·lisegons? Que escrigui els dos passos: 360 ÷ costats = graus; graus × 6,55 = ms.|Pregúntale qué quiere decir el número de la espera: ¿grados, lados o milisegundos? Que escriba los dos pasos: 360 ÷ lados = grados; grados × 6,55 = ms."],
+      ["Posa dins del «repeteix» només el tram, i el gir a fora.|Pone dentro del «repite» solo el tramo, y el giro fuera.",
+        "Que digui en veu alta el patró: «tram i gir, tram i gir…». Tot el que es repeteix ha d'anar dins.|Que diga en voz alta el patrón: «tramo y giro, tramo y giro…». Todo lo que se repite tiene que ir dentro."],
+      ["Gira cap a l'altre costat i el polígon surt fora de la pista.|Gira hacia el otro lado y el polígono sale fuera de la pista.",
+        "Recorda-li la unitat 1: per girar a l'esquerra, motor esquerre enrere i dret endavant. Que ho provi amb un sol gir abans de posar-lo al bucle.|Recuérdale la unidad 1: para girar a la izquierda, motor izquierdo atrás y derecho adelante. Que lo pruebe con un solo giro antes de ponerlo en el bucle."],
+      ["Al robot real, el quadrat no es tanca i pensa que el programa està malament.|En el robot real, el cuadrado no se cierra y piensa que el programa está mal.",
+        "El programa pot estar bé: cal calibrar el gir. Que ajusti el temps de 20 en 20 ms i ho comprovi amb el transportador.|El programa puede estar bien: hay que calibrar el giro. Que ajuste el tiempo de 20 en 20 ms y lo compruebe con el transportador."]
+    ],
+    diff: {
+      mes: "Dibuixar un octàgon (45°) i un dodecàgon (30°), i explicar què passa quan el nombre de costats és molt gran (s'assembla a un cercle). Després, provar l'estrella al Maqueen de veritat.|Dibujar un octógono (45°) y un dodecágono (30°), y explicar qué pasa cuando el número de lados es muy grande (se parece a un círculo). Después, probar la estrella en el Maqueen de verdad.",
+      menys: "Tenir la taula dels polígons de la fitxa ja omplerta per al quadrat i el triangle, i començar pel quadrat sense màxim de blocs. Si el càlcul de ms costa, fer servir la taula de l'animació (30° 197, 60° 393, 90° 590, 120° 787).|Tener la tabla de los polígonos de la ficha ya rellenada para el cuadrado y el triángulo, y empezar por el cuadrado sin máximo de bloques. Si el cálculo de ms cuesta, usar la tabla de la animación (30° 197, 60° 393, 90° 590, 120° 787)."
+    },
+    aval: {
+      ticket: ["Quants graus ha de girar el robot a cada cantonada d'un octàgon (8 costats)?|¿Cuántos grados tiene que girar el robot en cada esquina de un octógono (8 lados)?",
+        "Per què el robot gira 120° per fer un triangle, si els angles de dins fan 60°?|¿Por qué el robot gira 120° para hacer un triángulo, si los ángulos de dentro miden 60°?"],
+      rubric: [
+        ["Regla dels 360°|Regla de los 360°", "Calcula el gir de qualsevol polígon regular amb 360° ÷ costats i l'explica.|Calcula el giro de cualquier polígono regular con 360° ÷ lados y lo explica.", "Encerta el quadrat, però als altres polígons fa servir l'angle de dins o prova a l'atzar.|Acierta el cuadrado, pero en los otros polígonos usa el ángulo de dentro o prueba al azar."],
+        ["Temps del gir|Tiempo del giro", "Passa els graus a mil·lisegons i ajusta el temps quan el robot gira de més o de menys.|Pasa los grados a milisegundos y ajusta el tiempo cuando el robot gira de más o de menos.", "Necessita la taula per saber el temps i no sap com corregir-lo.|Necesita la tabla para saber el tiempo y no sabe cómo corregirlo."],
+        ["Bucle «repeteix»|Bucle «repite»", "Troba el patró i resol els reptes dins del màxim de blocs.|Encuentra el patrón y resuelve los retos dentro del máximo de bloques.", "Fa servir el «repeteix», però deixa blocs del patró a fora.|Usa el «repite», pero deja bloques del patrón fuera."]
+      ]
+    },
+    casa: "A casa, amb el mòbil, podeu repetir els reptes i fer junts «Polígons amb el cos»: amb un rellotge de paret, comproveu que un terç de volta és com l'agulla quan va de les 12 a les 4.|En casa, con el móvil, podéis repetir los retos y hacer juntos «Polígonos con el cuerpo»: con un reloj de pared, comprobad que un tercio de vuelta es como la aguja cuando va de las 12 a las 4.",
+    slides: [
+      { id: 's1', k: 'portada', t: "Polígons|Polígonos", x: "L'escenari, les banderoles i el quiosc de la festa: tram + gir, tram + gir…|El escenario, los banderines y el quiosco de la fiesta: tramo + giro, tramo + giro…",
+        nota: "Presenta la feina del dia: dibuixar figures de costats rectes amb girs d'angle exacte.|Presenta el trabajo del día: dibujar figuras de lados rectos con giros de ángulo exacto." },
+      { id: 's2', k: 'repas', t: "Recordem|Recordemos", punts: ["Distància = velocitat × temps.|Distancia = velocidad × tiempo.", "Velocitat 150 → ~15,6 cm/s: 2000 ms fan 31 cm.|Velocidad 150 → ~15,6 cm/s: 2000 ms hacen 31 cm.", "Girar sobre si mateix: un motor endavant i l'altre enrere.|Girar sobre sí mismo: un motor adelante y el otro atrás."],
+        nota: "Avui els trams sempre seran de 2000 ms (31 cm) o 1500 ms (23 cm): la novetat són els girs.|Hoy los tramos siempre serán de 2000 ms (31 cm) o 1500 ms (23 cm): la novedad son los giros." },
+      { id: 's3', k: 'anim', t: "Girar un angle exacte|Girar un ángulo exacto", anim: 'k2ang', x: "A velocitat 100: 90° en 590 ms, uns 6,5 ms per grau.|A velocidad 100: 90° en 590 ms, unos 6,5 ms por grado.",
+        nota: "Pregunta abans de mostrar la taula: si 90° són 590 ms, quant són 180°? I 45°? El temps i l'angle són proporcionals.|Pregunta antes de mostrar la tabla: si 90° son 590 ms, ¿cuánto son 180°? ¿Y 45°? El tiempo y el ángulo son proporcionales." },
+      { id: 's4', k: 'robo', t: "El quadrat amb «repeteix»|El cuadrado con «repite»", x: "Tram de 2000 ms i gir de 590 ms, 4 vegades.|Tramo de 2000 ms y giro de 590 ms, 4 veces.",
+        robo: { w: { w: 110, h: 80, bot: [40, 66, 0] }, prog: 'start{ rep:4{ run:all,fwd,150 wait:2000 run:L,fwd,100 run:R,back,100 wait:590 } stop:all }' },
+        nota: "Compteu els blocs: 6 amb el bucle, 20 sense. Pregunta què caldria canviar per fer un quadrat més gran (només l'espera del tram).|Contad los bloques: 6 con el bucle, 20 sin él. Pregunta qué habría que cambiar para hacer un cuadrado más grande (solo la espera del tramo)." },
+      { id: 's5', k: 'anim', t: "La regla dels 360°|La regla de los 360°", anim: 'k2poly', x: "Cada gir = 360° ÷ costats.|Cada giro = 360° ÷ lados.",
+        nota: "Deixa que la descobreixin ells: sumeu els girs de cada figura. Sempre 360°, perquè el robot torna mirant on mirava.|Deja que la descubran ellos: sumad los giros de cada figura. Siempre 360°, porque el robot vuelve mirando donde miraba." },
+      { id: 's6', k: 'robo', t: "Compte amb el triangle!|¡Cuidado con el triángulo!", x: "Gira 120° (787 ms), no 60°: el robot gira el que canvia de direcció.|Gira 120° (787 ms), no 60°: el robot gira lo que cambia de dirección.",
+        robo: { w: { w: 110, h: 80, bot: [38, 68, 90] }, prog: 'start{ rep:3{ run:all,fwd,150 wait:2000 run:L,back,100 run:R,fwd,100 wait:787 } stop:all }' },
+        nota: "Abans d'executar-la, pregunta qui creu que el gir és de 60°. Feu-ho amb el cos: girar 60° no et deixa mirant cap a la cantonada següent.|Antes de ejecutarla, pregunta quién cree que el giro es de 60°. Hacedlo con el cuerpo: girar 60° no te deja mirando hacia la esquina siguiente." },
+      { id: 's7', k: 'activitat', t: "Polígons a terra amb el cos|Polígonos en el suelo con el cuerpo", timer: 10, punts: ["Robot: camina les passes i gira.|Robot: camina los pasos y gira.", "Programador/a: llegeix les ordres de la fitxa.|Programador/a: lee las órdenes de la ficha.", "Revisor/a: comprova el gir amb el transportador.|Revisor/a: comprueba el giro con el transportador.", "Quadrat, triangle i hexàgon: un gomet a cada cantonada.|Cuadrado, triángulo y hexágono: un gomet en cada esquina."],
+        nota: "Que caminin a poc a poc i que el transportador es posi als peus del robot, mirant cap on mira.|Que caminen despacio y que el transportador se ponga a los pies del robot, mirando hacia donde mira." },
+      { id: 's8', k: 'concepte', t: "La taula dels polígons|La tabla de los polígonos", punts: ["Triangle: 3 × 120° = 360° · 787 ms|Triángulo: 3 × 120° = 360° · 787 ms", "Quadrat: 4 × 90° = 360° · 590 ms|Cuadrado: 4 × 90° = 360° · 590 ms", "Pentàgon: 5 × 72° = 360° · 472 ms|Pentágono: 5 × 72° = 360° · 472 ms", "Hexàgon: 6 × 60° = 360° · 393 ms|Hexágono: 6 × 60° = 360° · 393 ms"],
+        nota: "Completeu-la junts al final de l'activitat i deixeu-la projectada per als reptes.|Completadla juntos al final de la actividad y dejadla proyectada para los retos." },
+      { id: 's9', k: 'activitat', t: "Calibrem el gir de 90°|Calibramos el giro de 90°", timer: 12, punts: ["1. Robot a la cantonada, amb una agulla de cinta.|1. Robot en la esquina, con una aguja de cinta.", "2. Gir de 90°: velocitat 100, 590 ms.|2. Giro de 90°: velocidad 100, 590 ms.", "3. Comproveu-lo amb el transportador i ajusteu de 20 en 20 ms.|3. Comprobadlo con el transportador y ajustad de 20 en 20 ms.", "4. El quadrat amb «repeteix 4»: torna a la sortida?|4. El cuadrado con «repite 4»: ¿vuelve a la salida?"],
+        nota: "Seguretat: el robot a terra, fora del pas, i l'interruptor apagat mentre es connecta el cable. Apunteu el temps de 90° de cada robot a la pissarra.|Seguridad: el robot en el suelo, fuera del paso, y el interruptor apagado mientras se conecta el cable. Apuntad el tiempo de 90° de cada robot en la pizarra." },
+      { id: 's10', k: 'concepte', t: "El quadrat a MakeCode|El cuadrado en MakeCode", x: "El bloc «repeteix» de MakeCode és a «Bucles».|El bloque «repite» de MakeCode está en «Bucles».",
+        blocks: ["repeteix 4 vegades|repite 4 veces", "motor els dos endavant a velocitat 150|motor los dos adelante a velocidad 150", "espera 2000 ms|espera 2000 ms", "motor M1 endavant 100 · motor M2 enrere 100|motor M1 adelante 100 · motor M2 atrás 100", "espera 590 ms|espera 590 ms"],
+        code: "Maqueen_V5.I2CInit()\nfor (let index = 0; index < 4; index++) {\n    Maqueen_V5.motorRun(Maqueen_V5.Motors.All, Maqueen_V5.Dir.CW, 150)\n    basic.pause(2000)\n    Maqueen_V5.motorRun(Maqueen_V5.Motors.M1, Maqueen_V5.Dir.CW, 100)\n    Maqueen_V5.motorRun(Maqueen_V5.Motors.M2, Maqueen_V5.Dir.CCW, 100)\n    basic.pause(590)\n}\nMaqueen_V5.motorStop(Maqueen_V5.Motors.All)",
+        nota: "A MakeCode, M1 és el motor esquerre i M2 el dret; CW és endavant i CCW, enrere.|En MakeCode, M1 es el motor izquierdo y M2 el derecho; CW es adelante y CCW, atrás." },
+      { id: 's11', k: 'activitat', t: "Ara, a l'app|Ahora, en la app", timer: 17, punts: ["Fes «Descobreix» i els càlculs.|Haz «Descubre» y los cálculos.", "Abans de cada repte: costats → graus → ms.|Antes de cada reto: lados → grados → ms.", "Troba el patró i posa'l dins del «repeteix».|Encuentra el patrón y ponlo dentro del «repite».", "Para quan arribis a «Crea».|Para cuando llegues a «Crea»."],
+        nota: "Al pas «Polígons amb el cos», que toquin «Ho hem fet!»: ja l'han fet a terra.|En el paso «Polígonos con el cuerpo», que toquen «¡Lo hemos hecho!»: ya lo han hecho en el suelo." },
+      { id: 's12', k: 'robo', t: "On acabarà?|¿Dónde terminará?", x: "3 vegades: tram de 31 cm i gir de 90° a la dreta. Comença a la D mirant amunt.|3 veces: tramo de 31 cm y giro de 90° a la derecha. Empieza en la D mirando arriba.",
+        robo: { w: { w: 110, h: 80, bot: [35, 65, 0], marks: { A: [35, 34], B: [66, 34], C: [66, 65], D: [35, 65] } }, prog: 'start{ rep:3{ run:all,fwd,150 wait:2000 run:L,fwd,100 run:R,back,100 wait:590 } stop:all }' },
+        nota: "Resposta: C. Qui ha dit D ha pensat en un quadrat sencer: falta la quarta vegada.|Respuesta: C. Quien ha dicho D ha pensado en un cuadrado entero: falta la cuarta vez." },
+      { id: 's13', k: 'repte', t: "Els reptes de la festa|Los retos de la fiesta", punts: ["1. L'escenari quadrat|1. El escenario cuadrado", "2. La banderola: un triangle (màx. 7 blocs)|2. El banderín: un triángulo (máx. 7 bloques)", "3. El quiosc: un hexàgon (màx. 7 blocs)|3. El quiosco: un hexágono (máx. 7 bloques)", "4. La font: arregla el pentàgon|4. La fuente: arregla el pentágono", "5. Repte d'artista: l'estrella (144°)|5. Reto de artista: la estrella (144°)"],
+        nota: "L'estrella és un repte extra: el robot dona dues voltes (5 × 144° = 720°). No cal que tothom hi arribi.|La estrella es un reto extra: el robot da dos vueltas (5 × 144° = 720°). No hace falta que todo el mundo llegue." },
+      { id: 's14', k: 'activitat', t: "Crea: el meu polígon|Crea: mi polígono", timer: 5, x: "Tria un polígon, calcula el gir i dibuixa'l amb un «repeteix». Ha de tornar a la CASA mirant a la dreta.|Elige un polígono, calcula el giro y dibújalo con un «repite». Tiene que volver a CASA mirando a la derecha.",
+        nota: "Qui acabi, que provi un octàgon (8 × 45°) o un polígon de 10 costats (36°).|Quien termine, que pruebe un octógono (8 × 45°) o un polígono de 10 lados (36°)." },
+      { id: 's15', k: 'resum', t: "Què hem après avui|Qué hemos aprendido hoy", punts: ["El gir es controla amb el temps: 90° ≈ 590 ms.|El giro se controla con el tiempo: 90° ≈ 590 ms.", "Polígon tancat: 360° en total; cada gir, 360° ÷ costats.|Polígono cerrado: 360° en total; cada giro, 360° ÷ lados.", "El «repeteix» fa el patró tantes vegades com calgui.|El «repite» hace el patrón tantas veces como haga falta."],
+        nota: "Recorda que la propera sessió farem corbes i cercles: que portin apuntat el temps de 90° del seu robot.|Recuerda que la próxima sesión haremos curvas y círculos: que traigan apuntado el tiempo de 90° de su robot." },
+      { id: 's16', k: 'tiquet', t: "Tiquet de sortida|Ticket de salida", punts: ["Octàgon: quants graus a cada gir?|Octógono: ¿cuántos grados en cada giro?", "Per què el triangle gira 120° i no 60°?|¿Por qué el triángulo gira 120° y no 60°?"],
+        nota: "Resposta de la primera: 45°. Anota qui encara fa servir l'angle de dins.|Respuesta de la primera: 45°. Anota quién todavía usa el ángulo de dentro." }
+    ],
+    print: [
+      { id: 'p1', t: "La taula dels polígons|La tabla de los polígonos", k: 'fitxa',
+        intro: "Una fitxa per grup per a l'activitat a terra i els reptes. A velocitat 100, el robot gira uns 6,55 ms per grau.|Una ficha por grupo para la actividad en el suelo y los retos. A velocidad 100, el robot gira unos 6,55 ms por grado.",
+        items: [
+          { q: "Quadrat: 4 costats. Gir = 360° ÷ 4 = ____°. Temps del gir = ____ ms. Suma dels girs = ____°.|Cuadrado: 4 lados. Giro = 360° ÷ 4 = ____°. Tiempo del giro = ____ ms. Suma de los giros = ____°.", sol: "90° · 590 ms · 360°|90° · 590 ms · 360°" },
+          { q: "Triangle equilàter: gir = ____°. Temps = ____ ms. Per què no és 60°?|Triángulo equilátero: giro = ____°. Tiempo = ____ ms. ¿Por qué no es 60°?", sol: "120° · ~787 ms. 60° és l'angle de dins; el robot gira el que canvia de direcció (180° − 60°).|120° · ~787 ms. 60° es el ángulo de dentro; el robot gira lo que cambia de dirección (180° − 60°)." },
+          { q: "Hexàgon: gir = ____°. Temps = ____ ms.|Hexágono: giro = ____°. Tiempo = ____ ms.", sol: "60° · ~393 ms|60° · ~393 ms" },
+          { q: "Pentàgon: gir = ____°. Temps = ____ ms.|Pentágono: giro = ____°. Tiempo = ____ ms.", sol: "72° · ~472 ms|72° · ~472 ms" },
+          { q: "Quina figura dibuixa aquest programa? Quant gira en total?|¿Qué figura dibuja este programa? ¿Cuánto gira en total?", rprog: 'start{ rep:6{ run:all,fwd,150 wait:1500 run:L,back,100 run:R,fwd,100 wait:393 } stop:all }', sol: "Un hexàgon de 23 cm de costat. Gira 6 × 60° = 360°.|Un hexágono de 23 cm de lado. Gira 6 × 60° = 360°." },
+          { q: "El nostre Maqueen gira 90° en ____ ms (calibrat). Llavors, 120° seran ____ ms.|Nuestro Maqueen gira 90° en ____ ms (calibrado). Entonces, 120° serán ____ ms.", sol: "Depèn de cada robot: el temps de 90° × 120 ÷ 90 (o × 4 ÷ 3).|Depende de cada robot: el tiempo de 90° × 120 ÷ 90 (o × 4 ÷ 3)." }
+        ] },
+      { id: 'p2', t: "Codi per al Maqueen: girs i quadrat|Código para el Maqueen: giros y cuadrado", k: 'codi',
+        intro: "Programes per a l'activitat amb el robot de veritat. A makecode.microbit.org: nou projecte → Extensions → «maqueen» → JavaScript → enganxeu-hi el codi.|Programas para la actividad con el robot de verdad. En makecode.microbit.org: nuevo proyecto → Extensiones → «maqueen» → JavaScript → pegad el código.",
+        items: [
+          { t: "1. Gir de 90° (per calibrar)|1. Giro de 90° (para calibrar)", prog: 'start{ run:L,fwd,100 run:R,back,100 wait:590 stop:all }' },
+          { t: "2. El quadrat de 31 cm|2. El cuadrado de 31 cm", prog: 'start{ rep:4{ run:all,fwd,150 wait:2000 run:L,fwd,100 run:R,back,100 wait:590 } stop:all }' },
+          { t: "3. El triangle (gir a l'esquerra de 120°)|3. El triángulo (giro a la izquierda de 120°)", prog: 'start{ rep:3{ run:all,fwd,150 wait:2000 run:L,back,100 run:R,fwd,100 wait:787 } stop:all }' }
+        ] }
+    ]
+  },
+  /* ---------- Sessió 3 · Cercles i corbes ---------- */
+  'k2-3': {
+    obj: [
+      "L'alumne/a explica que el robot fa una corba cap al costat de la roda més lenta quan les rodes van a velocitats diferents.|El alumno/a explica que el robot hace una curva hacia el lado de la rueda más lenta cuando las ruedas van a velocidades diferentes.",
+      "L'alumne/a relaciona la mida del cercle amb la diferència de velocitats: com més semblants, més gran.|El alumno/a relaciona el tamaño del círculo con la diferencia de velocidades: cuanto más parecidas, más grande.",
+      "L'alumne/a controla quin tros de cercle fa el robot (sencer, mig, un quart) amb el temps.|El alumno/a controla qué trozo de círculo hace el robot (entero, medio, un cuarto) con el tiempo.",
+      "L'alumne/a encadena corbes i trams rectes per seguir un camí i esquivar obstacles.|El alumno/a encadena curvas y tramos rectos para seguir un camino y esquivar obstáculos."
+    ],
+    comp: [
+      "Competència matemàtica (sentit espacial i de la mesura): cercle, diàmetre, fraccions de volta|Competencia matemática (sentido espacial y de la medida): círculo, diámetro, fracciones de vuelta",
+      "Competència científica i tecnològica: com es mou un vehicle de dues rodes (tracció diferencial)|Competencia científica y tecnológica: cómo se mueve un vehículo de dos ruedas (tracción diferencial)",
+      "Competència digital (CD5): programar, provar i depurar trajectòries d'un robot|Competencia digital (CD5): programar, probar y depurar trayectorias de un robot",
+      "Competència personal i social: col·laborar i comunicar-se per coordinar moviments en grup|Competencia personal y social: colaborar y comunicarse para coordinar movimientos en grupo"
+    ],
+    vocab: [
+      ["Corba|Curva", "Camí que va canviant de direcció a poc a poc, sense cantonades.|Camino que va cambiando de dirección poco a poco, sin esquinas."],
+      ["Diàmetre|Diámetro", "L'amplada del cercle, d'una banda a l'altra passant pel centre.|La anchura del círculo, de un lado al otro pasando por el centro."],
+      ["Tracció diferencial|Tracción diferencial", "Girar fent anar les dues rodes a velocitats diferents, com el Maqueen.|Girar haciendo ir las dos ruedas a velocidades diferentes, como el Maqueen."],
+      ["Roda de dins i de fora|Rueda de dentro y de fuera", "En una corba, la de fora fa més camí i va més de pressa.|En una curva, la de fuera hace más camino y va más deprisa."],
+      ["Mitja volta, quart de volta|Media vuelta, cuarto de vuelta", "Trossos de cercle: la meitat o la quarta part del temps de la volta sencera.|Trozos de círculo: la mitad o la cuarta parte del tiempo de la vuelta entera."]
+    ],
+    mat: {
+      aula: [
+        "Un ordinador per alumne/a amb Numi Tech obert a la sessió «Cercles i corbes»|Un ordenador por alumno/a con Numi Tech abierto en la sesión «Círculos y curvas»",
+        "Projector i la presentació d'aquesta sessió|Proyector y la presentación de esta sesión",
+        "Un kit Maqueen Lite V5 + micro:bit V2 per grup de 3-4, amb piles carregades i cable USB|Un kit Maqueen Lite V5 + micro:bit V2 por grupo de 3-4, con pilas cargadas y cable USB",
+        "Per grup: un got de plàstic o una llauna buida (la font), cinta de pintor, una cinta mètrica i una corda o un pal d'escombra d'uns 70 cm|Por grupo: un vaso de plástico o una lata vacía (la fuente), cinta de pintor, una cinta métrica y una cuerda o un palo de escoba de unos 70 cm"
+      ],
+      imprimir: ["Fitxa: prediu la corba|Ficha: predice la curva", "Codi per al Maqueen: cercles i corbes|Código para el Maqueen: círculos y curvas"],
+      prep: [
+        "Deixar un espai lliure a terra d'1 × 1 m per grup, amb el got al mig, per als cercles del robot.|Dejar un espacio libre en el suelo de 1 × 1 m por grupo, con el vaso en el medio, para los círculos del robot.",
+        "Preparar el pati o un espai ample per a l'activitat de les rodes de corda.|Preparar el patio o un espacio amplio para la actividad de las ruedas de cuerda.",
+        "Tenir a punt a MakeCode el programa del cercle (150 i 100, 6600 ms).|Tener listo en MakeCode el programa del círculo (150 y 100, 6600 ms).",
+        "Provar abans les demostracions de les diapositives 4 i 6 i la predicció de la 12.|Probar antes las demostraciones de las diapositivas 4 y 6 y la predicción de la 12."
+      ]
+    },
+    plan: [
+      { min: 4, t: "Benvinguda: la rotonda de la font|Bienvenida: la rotonda de la fuente", fase: 'inici',
+        fa: "Repassa la regla dels 360° amb una pregunta i presenta el problema: la festa vol cercles al voltant de la font, però amb trams i girs només surten cantonades. Pregunta com gira un cotxe en una rotonda.|Repasa la regla de los 360° con una pregunta y presenta el problema: la fiesta quiere círculos alrededor de la fuente, pero con tramos y giros solo salen esquinas. Pregunta cómo gira un coche en una rotonda.",
+        diu: ["Un hexàgon gira 60° a cada cantonada. I un polígon de 100 costats? A què s'assembla?|Un hexágono gira 60° en cada esquina. ¿Y un polígono de 100 lados? ¿A qué se parece?", "Un cotxe a la rotonda no s'atura a girar. Com ho fa?|Un coche en la rotonda no se para a girar. ¿Cómo lo hace?"],
+        slides: ['s1', 's2'], app: "Encara no: pantalles abaixades.|Todavía no: pantallas bajadas.", org: "Tot el grup|Todo el grupo" },
+      { min: 9, t: "Dues rodes, dues velocitats|Dos ruedas, dos velocidades", fase: 'teoria',
+        fa: "Amb l'animació, explica que la roda de fora fa més camí i que el robot gira cap a la roda lenta. Executa el cercle de 150 i 100 i cronometreu la volta (6,6 s). Mostra la mida dels cercles segons les velocitats i acaba amb l'error típic: per girar a l'esquerra, el motor esquerre ha d'anar més lent.|Con la animación, explica que la rueda de fuera hace más camino y que el robot gira hacia la rueda lenta. Ejecuta el círculo de 150 y 100 y cronometrad la vuelta (6,6 s). Muestra el tamaño de los círculos según las velocidades y termina con el error típico: para girar a la izquierda, el motor izquierdo tiene que ir más lento.",
+        diu: ["Quina roda fa més camí en una corba a la dreta?|¿Qué rueda hace más camino en una curva a la derecha?", "Si vull mig cercle, quant de temps he d'esperar?|Si quiero medio círculo, ¿cuánto tiempo tengo que esperar?", "Si les dues velocitats s'assemblen molt, el cercle serà gran o petit?|Si las dos velocidades se parecen mucho, ¿el círculo será grande o pequeño?"],
+        slides: ['s3', 's4', 's5', 's6'], app: "Encara no: tota l'atenció a la projecció.|Todavía no: toda la atención en la proyección.", org: "Tot el grup|Todo el grupo" },
+      { min: 10, t: "Les rodes de corda|Las ruedas de cuerda", fase: 'desconnectat',
+        fa: "Grups de 3 al pati o en un espai ample: dos alumnes són les rodes i agafen cadascun una punta del pal o de la corda (sense deixar-la anar); el tercer és el «programador/a» i diu les ordres: «les dues igual», «esquerra ràpid, dreta lent», «dreta quieta». Comproven cap on giren i si el cercle és gran o petit, i anoten a la fitxa què ha passat. Després canvien els papers.|Grupos de 3 en el patio o en un espacio amplio: dos alumnos son las ruedas y cogen cada uno una punta del palo o de la cuerda (sin soltarla); el tercero es el «programador/a» y dice las órdenes: «las dos igual», «izquierda rápido, derecha lento», «derecha quieta». Comprueban hacia dónde giran y si el círculo es grande o pequeño, y anotan en la ficha qué ha pasado. Después cambian los papeles.",
+        diu: ["Qui fa més passes, la roda de dins o la de fora?|¿Quién da más pasos, la rueda de dentro o la de fuera?", "Si la roda de dins es queda quieta, què passa?|Si la rueda de dentro se queda quieta, ¿qué pasa?", "Caminem a poc a poc: les rodes no corren!|Caminamos despacio: ¡las ruedas no corren!"],
+        slides: ['s7', 's8'], app: "Cap: activitat sense pantalla.|Ninguna: actividad sin pantalla.", org: "Grups de 3 amb papers que roten|Grupos de 3 con papeles que rotan" },
+      { min: 12, t: "El cercle del Maqueen|El círculo del Maqueen", fase: 'robot',
+        fa: "Cada grup posa el got al mig del seu espai i el Maqueen a uns 13 cm a l'esquerra del got, mirant endavant. Executen el cercle (esquerre 150, dret 100, 6600 ms) i marquen amb cinta el punt més llunyà de la volta per mesurar-ne el diàmetre. Comparen amb el simulador (~26 cm) i ajusten el temps si la volta no es tanca. Si hi ha temps, proven 200 i 150 i comproven que el cercle és més gran. Seguretat: el robot a terra i ningú a dins del cercle mentre gira.|Cada grupo pone el vaso en medio de su espacio y el Maqueen a unos 13 cm a la izquierda del vaso, mirando adelante. Ejecutan el círculo (izquierdo 150, derecho 100, 6600 ms) y marcan con cinta el punto más lejano de la vuelta para medir su diámetro. Comparan con el simulador (~26 cm) y ajustan el tiempo si la vuelta no se cierra. Si hay tiempo, prueban 200 y 150 y comprueban que el círculo es más grande. Seguridad: el robot en el suelo y nadie dentro del círculo mientras gira.",
+        diu: ["El vostre cercle és més gran o més petit que el del simulador?|¿Vuestro círculo es más grande o más pequeño que el del simulador?", "Si la volta no es tanca, heu d'esperar més o menys?|Si la vuelta no se cierra, ¿tenéis que esperar más o menos?", "Amb 200 i 150, la volta tarda més o el mateix?|Con 200 y 150, ¿la vuelta tarda más o lo mismo?"],
+        slides: ['s9', 's10'], app: "MakeCode amb l'extensió «Maqueen», o el botó </> de l'app per copiar el codi.|MakeCode con la extensión «Maqueen», o el botón </> de la app para copiar el código.", org: "Grups de 3-4 per kit|Grupos de 3-4 por kit" },
+      { min: 17, t: "A l'ordinador: prediu, investiga i reptes|En el ordenador: predice, investiga y retos", fase: 'ordinador',
+        fa: "Feu junts la predicció de la diapositiva 12 i deixa'ls avançar fins a «Crea». Al repte del banc, suggereix que dibuixin el camí al paper abans de programar: quart, mig, quart. Al de la font gran, que consultin la taula de mides.|Haced juntos la predicción de la diapositiva 12 y déjalos avanzar hasta «Crea». En el reto del banco, sugiere que dibujen el camino en el papel antes de programar: cuarto, medio, cuarto. En el de la fuente grande, que consulten la tabla de tamaños.",
+        diu: ["Cap on ha de girar? Doncs, quina roda va més lenta?|¿Hacia dónde tiene que girar? Entonces, ¿qué rueda va más lenta?", "Quin tros de cercle és? Sencer, mig o un quart?|¿Qué trozo de círculo es? ¿Entero, medio o un cuarto?", "A la cantonada que xoca: fa un quart de volta o mig cercle?|En la esquina que choca: ¿hace un cuarto de vuelta o medio círculo?"],
+        slides: ['s11', 's12', 's13'], app: "Des de «Recorda» fins als reptes: la pregunta de repàs, les històries, «Descobreix», les dues preguntes, «Les rodes de corda» (fet a classe), «On acabarà?», el robot que no va recte, la pausa i els reptes de la rotonda, el banc, el 8, la font gran i la cantonada.|Desde «Recuerda» hasta los retos: la pregunta de repaso, las historias, «Descubre», las dos preguntas, «Las ruedas de cuerda» (hecho en clase), «¿Dónde terminará?», el robot que no va recto, la pausa y los retos de la rotonda, el banco, el 8, la fuente grande y la esquina.", org: "Individual|Individual" },
+      { min: 5, t: "Crea: el meu camí de corbes|Crea: mi camino de curvas", fase: 'crea',
+        fa: "Cada alumne/a inventa un camí per a la cercavila amb almenys una corba. En parelles, s'ensenyen el programa i l'altre/a prediu el dibuix abans d'executar-lo.|Cada alumno/a inventa un camino para el pasacalles con al menos una curva. Por parejas, se enseñan el programa y el otro/a predice el dibujo antes de ejecutarlo.",
+        diu: ["Abans d'executar el del company/a, dibuixa amb el dit què creus que farà.|Antes de ejecutar el del compañero/a, dibuja con el dedo qué crees que hará.", "Pots fer una S, un 8, una espiral de trams…|Puedes hacer una S, un 8, una espiral de tramos…"],
+        slides: ['s14'], app: "Pas «Crea»: el meu camí de corbes.|Paso «Crea»: mi camino de curvas.", org: "Individual i després per parelles|Individual y después por parejas" },
+      { min: 3, t: "Tancament i tiquet de sortida|Cierre y ticket de salida", fase: 'tancament',
+        fa: "Repassa les tres idees amb el resum i fes a cada alumne/a una pregunta del tiquet a la porta.|Repasa las tres ideas con el resumen y haz a cada alumno/a una pregunta del ticket en la puerta.",
+        diu: ["Cap on gira el robot si la roda dreta va més lenta?|¿Hacia dónde gira el robot si la rueda derecha va más lenta?", "Com faig un cercle més gran?|¿Cómo hago un círculo más grande?"],
+        slides: ['s15', 's16'], app: "«Tancament»: les dues preguntes finals i com m'he sentit.|«Cierre»: las dos preguntas finales y cómo me he sentido.", org: "Tot el grup|Todo el grupo" }
+    ],
+    errors: [
+      ["Per girar cap a un costat, posa més velocitat a la roda d'aquell costat.|Para girar hacia un lado, pone más velocidad en la rueda de ese lado.",
+        "Recorda l'activitat de la corda: cap a qui gireu, cap al que va ràpid o cap al que va lent? Que ho provi amb un mig cercle.|Recuerda la actividad de la cuerda: ¿hacia quién giráis, hacia el que va rápido o hacia el que va lento? Que lo pruebe con medio círculo."],
+      ["Per fer un cercle més gran, espera més estona.|Para hacer un círculo más grande, espera más rato.",
+        "Que executi el seu programa i compti les voltes: esperar més només fa més voltes al mateix cercle. La mida la decideixen les velocitats.|Que ejecute su programa y cuente las vueltas: esperar más solo da más vueltas al mismo círculo. El tamaño lo deciden las velocidades."],
+      ["Fa servir velocitats per sota de 30 per a la roda lenta i el robot fa un gir estrany.|Usa velocidades por debajo de 30 para la rueda lenta y el robot hace un giro extraño.",
+        "Recorda la zona morta: per sota de ~30 la roda no es mou i el robot gira sobre aquesta roda. Que triï velocitats de 60 o més.|Recuerda la zona muerta: por debajo de ~30 la rueda no se mueve y el robot gira sobre esa rueda. Que elija velocidades de 60 o más."],
+      ["Al repte del banc, posa els tres trossos de corba cap al mateix costat.|En el reto del banco, pone los tres trozos de curva hacia el mismo lado.",
+        "Que dibuixi el camí a paper i escrigui al costat de cada tros «esquerra» o «dreta» abans de programar-lo.|Que dibuje el camino en papel y escriba al lado de cada trozo «izquierda» o «derecha» antes de programarlo."],
+      ["Al robot real, el cercle no es tanca i creu que s'ha equivocat.|En el robot real, el círculo no se cierra y cree que se ha equivocado.",
+        "És una qüestió de calibratge: que mesuri quant li falta i ajusti el temps de 100 en 100 ms.|Es una cuestión de calibración: que mida cuánto le falta y ajuste el tiempo de 100 en 100 ms."]
+    ],
+    diff: {
+      mes: "Fer una espiral (cercles cada vegada més grans canviant les velocitats en cada volta) i descobrir que dues parelles amb la mateixa diferència (150 · 100 i 200 · 150) tarden el mateix a fer la volta.|Hacer una espiral (círculos cada vez más grandes cambiando las velocidades en cada vuelta) y descubrir que dos parejas con la misma diferencia (150 · 100 y 200 · 150) tardan lo mismo en dar la vuelta.",
+      menys: "Treballar només amb la parella 150 · 100 i la taula de temps: volta sencera 6,6 s, mitja 3,3 s, un quart 1,65 s. Per girar a l'altre costat, intercanviar els dos números.|Trabajar solo con la pareja 150 · 100 y la tabla de tiempos: vuelta entera 6,6 s, media 3,3 s, un cuarto 1,65 s. Para girar al otro lado, intercambiar los dos números."
+    },
+    aval: {
+      ticket: ["Motor esquerre a 200 i dret a 120: cap on gira el robot?|Motor izquierdo a 200 y derecho a 120: ¿hacia dónde gira el robot?",
+        "Com faries que el robot dibuixés un cercle més gran?|¿Cómo harías que el robot dibujara un círculo más grande?"],
+      rubric: [
+        ["Direcció de la corba|Dirección de la curva", "Prediu sempre cap on gira el robot a partir de les dues velocitats.|Predice siempre hacia dónde gira el robot a partir de las dos velocidades.", "Encara confon el costat i ho ha de provar per saber-ho.|Todavía confunde el lado y tiene que probarlo para saberlo."],
+        ["Mida del cercle|Tamaño del círculo", "Tria velocitats més o menys semblants per fer el cercle gran o petit que vol.|Elige velocidades más o menos parecidas para hacer el círculo grande o pequeño que quiere.", "Intenta canviar la mida del cercle amb el temps d'espera.|Intenta cambiar el tamaño del círculo con el tiempo de espera."],
+        ["Trossos de cercle|Trozos de círculo", "Calcula el temps de mitja volta i d'un quart i els encadena per seguir un camí.|Calcula el tiempo de media vuelta y de un cuarto y los encadena para seguir un camino.", "Fa cercles sencers, però li costa encadenar trossos de corba.|Hace círculos enteros, pero le cuesta encadenar trozos de curva."]
+      ]
+    },
+    casa: "A casa, amb el mòbil, podeu repetir els reptes i fer junts «Les rodes de corda» amb una bufanda: proveu de girar cap a cada costat i de fer el cercle més petit possible.|En casa, con el móvil, podéis repetir los retos y hacer juntos «Las ruedas de cuerda» con una bufanda: probad a girar hacia cada lado y a hacer el círculo más pequeño posible.",
+    slides: [
+      { id: 's1', k: 'portada', t: "Cercles i corbes|Círculos y curvas", x: "La rotonda de la font: girar sense cantonades.|La rotonda de la fuente: girar sin esquinas.",
+        nota: "Presenta el repte del dia: fer cercles i camins corbs, com un cotxe a la rotonda.|Presenta el reto del día: hacer círculos y caminos curvos, como un coche en la rotonda." },
+      { id: 's2', k: 'pregunta', t: "Com gira un cotxe a la rotonda?|¿Cómo gira un coche en la rotonda?", x: "No s'atura a cada cantonada… i les rodes de dins i de fora no fan el mateix camí.|No se para en cada esquina… y las ruedas de dentro y de fuera no hacen el mismo camino.",
+        nota: "Recull idees. Si cal, dibuixa a la pissarra dos cercles concèntrics: quin és més llarg?|Recoge ideas. Si hace falta, dibuja en la pizarra dos círculos concéntricos: ¿cuál es más largo?" },
+      { id: 's3', k: 'anim', t: "Dues rodes, dues velocitats|Dos ruedas, dos velocidades", anim: 'k2arc', x: "El robot gira cap al costat de la roda més lenta.|El robot gira hacia el lado de la rueda más lenta.",
+        nota: "Remarca la frase clau i fes que la repeteixin: «gira cap a la roda lenta».|Remarca la frase clave y haz que la repitan: «gira hacia la rueda lenta»." },
+      { id: 's4', k: 'robo', t: "Un cercle sencer|Un círculo entero", x: "Esquerre 150, dret 100, 6600 ms. Cronometreu la volta!|Izquierdo 150, derecho 100, 6600 ms. ¡Cronometrad la vuelta!",
+        robo: { w: { w: 100, h: 70, bot: [38, 35, 0] }, prog: 'start{ run:L,fwd,150 run:R,fwd,100 wait:6600 stop:all }' },
+        nota: "Pregunta: cap on gira? Quina mida farà? Després: amb la meitat del temps, què dibuixarà?|Pregunta: ¿hacia dónde gira? ¿Qué tamaño tendrá? Después: con la mitad del tiempo, ¿qué dibujará?" },
+      { id: 's5', k: 'anim', t: "Cercles petits i grans|Círculos pequeños y grandes", anim: 'k2rad', x: "Velocitats més semblants → cercle més gran. Iguals → recte!|Velocidades más parecidas → círculo más grande. Iguales → ¡recto!",
+        nota: "Són mesures del simulador. Pregunta què passaria amb 100 i 100 (va recte) i amb 150 i 0 (gira sobre la roda aturada).|Son medidas del simulador. Pregunta qué pasaría con 100 y 100 (va recto) y con 150 y 0 (gira sobre la rueda parada)." },
+      { id: 's6', k: 'robo', t: "Cap a on gira?|¿Hacia dónde gira?", x: "Esquerre 100, dret 150 durant 3300 ms: mig cercle cap a…?|Izquierdo 100, derecho 150 durante 3300 ms: medio círculo hacia…?",
+        robo: { w: { w: 100, h: 70, bot: [62, 50, 0] }, prog: 'start{ run:L,fwd,100 run:R,fwd,150 wait:3300 stop:all }' },
+        nota: "Que assenyalin amb el braç abans d'executar. Gira a l'esquerra: la roda lenta és l'esquerra.|Que señalen con el brazo antes de ejecutar. Gira a la izquierda: la rueda lenta es la izquierda." },
+      { id: 's7', k: 'activitat', t: "Les rodes de corda|Las ruedas de cuerda", timer: 10, punts: ["Dues rodes: agafeu el pal per les puntes, sense deixar-lo anar.|Dos ruedas: coged el palo por las puntas, sin soltarlo.", "Programador/a: «igual», «esquerra ràpid», «dreta quieta»…|Programador/a: «igual», «izquierda rápido», «derecha quieta»…", "Mireu cap on gireu i si el cercle és gran o petit.|Mirad hacia dónde giráis y si el círculo es grande o pequeño.", "Apunteu-ho a la fitxa i canvieu els papers.|Apuntadlo en la ficha y cambiad los papeles."],
+        nota: "Caminen a poc a poc i en un espai ample. Si el pal fa por, feu servir una corda: ha d'anar tibant.|Caminan despacio y en un espacio amplio. Si el palo da miedo, usad una cuerda: tiene que ir tensa." },
+      { id: 's8', k: 'concepte', t: "Trossos de cercle (150 i 100)|Trozos de círculo (150 y 100)", punts: ["Volta sencera: ~6600 ms|Vuelta entera: ~6600 ms", "Mig cercle: ~3300 ms|Medio círculo: ~3300 ms", "Un quart de volta: ~1650 ms|Un cuarto de vuelta: ~1650 ms", "Per girar a l'altre costat: intercanvia les velocitats.|Para girar al otro lado: intercambia las velocidades."],
+        nota: "Deixa-la projectada per als reptes. És la mateixa idea de les fraccions: la meitat del temps, la meitat del cercle.|Déjala proyectada para los retos. Es la misma idea de las fracciones: la mitad del tiempo, la mitad del círculo." },
+      { id: 's9', k: 'activitat', t: "El cercle del Maqueen|El círculo del Maqueen", timer: 12, punts: ["1. Got al mig; robot a 13 cm a l'esquerra, mirant endavant.|1. Vaso en el medio; robot a 13 cm a la izquierda, mirando adelante.", "2. Esquerre 150, dret 100, 6600 ms.|2. Izquierdo 150, derecho 100, 6600 ms.", "3. Marqueu el punt més llunyà i mesureu el diàmetre.|3. Marcad el punto más lejano y medid el diámetro.", "4. Proveu 200 i 150: és més gran?|4. Probad 200 y 150: ¿es más grande?"],
+        nota: "Seguretat: el robot a terra i ningú a dins del cercle mentre gira. Apunteu el diàmetre de cada grup: segur que no surten iguals!|Seguridad: el robot en el suelo y nadie dentro del círculo mientras gira. Apuntad el diámetro de cada grupo: ¡seguro que no salen iguales!" },
+      { id: 's10', k: 'concepte', t: "El cercle a MakeCode|El círculo en MakeCode", x: "Dos blocs de motor, un per a cada roda, i una espera.|Dos bloques de motor, uno para cada rueda, y una espera.",
+        blocks: ["motor M1 (esquerre) endavant a 150|motor M1 (izquierdo) adelante a 150", "motor M2 (dret) endavant a 100|motor M2 (derecho) adelante a 100", "espera 6600 ms|espera 6600 ms", "atura el motor els dos|para el motor los dos"],
+        code: "Maqueen_V5.I2CInit()\nMaqueen_V5.motorRun(Maqueen_V5.Motors.M1, Maqueen_V5.Dir.CW, 150)\nMaqueen_V5.motorRun(Maqueen_V5.Motors.M2, Maqueen_V5.Dir.CW, 100)\nbasic.pause(6600)\nMaqueen_V5.motorStop(Maqueen_V5.Motors.All)",
+        nota: "Si el cercle no es tanca, ajusteu l'espera de 100 en 100 ms.|Si el círculo no se cierra, ajustad la espera de 100 en 100 ms." },
+      { id: 's11', k: 'activitat', t: "Ara, a l'app|Ahora, en la app", timer: 17, punts: ["Fes «Descobreix» i les preguntes.|Haz «Descubre» y las preguntas.", "Abans de cada repte: cap on gira i quin tros de cercle.|Antes de cada reto: hacia dónde gira y qué trozo de círculo.", "Dibuixa el camí al paper si et perds.|Dibuja el camino en el papel si te pierdes.", "Para quan arribis a «Crea».|Para cuando llegues a «Crea»."],
+        nota: "Al pas «Les rodes de corda», que toquin «Ho hem fet!»: ja l'han fet a classe.|En el paso «Las ruedas de cuerda», que toquen «¡Lo hemos hecho!»: ya lo han hecho en clase." },
+      { id: 's12', k: 'robo', t: "On acabarà?|¿Dónde terminará?", x: "Esquerre 100 i dret 150 durant 3300 ms. A, B o C?|Izquierdo 100 y derecho 150 durante 3300 ms. ¿A, B o C?",
+        robo: { w: { w: 100, h: 70, bot: [60, 52, 0], marks: { A: [34, 52], B: [86, 52], C: [60, 14] } }, prog: 'start{ run:L,fwd,100 run:R,fwd,150 wait:3300 stop:all }' },
+        nota: "Resposta: A. Mig cercle cap a l'esquerra: acaba al costat, mirant avall.|Respuesta: A. Medio círculo hacia la izquierda: termina al lado, mirando abajo." },
+      { id: 's13', k: 'repte', t: "Els reptes de la rotonda|Los retos de la rotonda", punts: ["1. La rotonda: una volta a la font|1. La rotonda: una vuelta a la fuente", "2. El banc: quart, mig i quart de cercle|2. El banco: cuarto, medio y cuarto de círculo", "3. El 8 gegant|3. El 8 gigante", "4. La font gran: un cercle de ~40 cm|4. La fuente grande: un círculo de ~40 cm", "5. La cantonada: arregla la corba|5. La esquina: arregla la curva"],
+        nota: "Al repte del banc, els tres trossos: esquerra, dreta, esquerra. Que ho dibuixin abans.|En el reto del banco, los tres trozos: izquierda, derecha, izquierda. Que lo dibujen antes." },
+      { id: 's14', k: 'activitat', t: "Crea: el meu camí de corbes|Crea: mi camino de curvas", timer: 5, x: "Inventa el camí de la cercavila: com a mínim una corba i 100 cm de recorregut.|Inventa el camino del pasacalles: como mínimo una curva y 100 cm de recorrido.",
+        nota: "En parelles: abans d'executar el programa del company/a, cal dibuixar amb el dit què farà.|Por parejas: antes de ejecutar el programa del compañero/a, hay que dibujar con el dedo qué hará." },
+      { id: 's15', k: 'resum', t: "Què hem après avui|Qué hemos aprendido hoy", punts: ["Rodes a velocitats diferents → corba cap a la roda lenta.|Ruedas a velocidades diferentes → curva hacia la rueda lenta.", "Velocitats més semblants → cercle més gran.|Velocidades más parecidas → círculo más grande.", "El temps decideix el tros: sencer, mig o un quart.|El tiempo decide el trozo: entero, medio o un cuarto."],
+        nota: "Anuncia el projecte de la propera sessió: el robot artista. Que pensin quin dibuix volen fer.|Anuncia el proyecto de la próxima sesión: el robot artista. Que piensen qué dibujo quieren hacer." },
+      { id: 's16', k: 'tiquet', t: "Tiquet de sortida|Ticket de salida", punts: ["Esquerre 200 i dret 120: cap on gira?|Izquierdo 200 y derecho 120: ¿hacia dónde gira?", "Com faries un cercle més gran?|¿Cómo harías un círculo más grande?"],
+        nota: "Resposta de la primera: cap a la dreta. Anota qui encara gira cap a la roda ràpida.|Respuesta de la primera: hacia la derecha. Anota quién todavía gira hacia la rueda rápida." }
+    ],
+    print: [
+      { id: 'p1', t: "Prediu la corba|Predice la curva", k: 'fitxa',
+        intro: "Una fitxa per grup. La primera part és per a les rodes de corda; la segona, per pensar els programes abans d'executar-los.|Una ficha por grupo. La primera parte es para las ruedas de cuerda; la segunda, para pensar los programas antes de ejecutarlos.",
+        items: [
+          { q: "Rodes de corda: «les dues igual». Què passa?|Ruedas de cuerda: «las dos igual». ¿Qué pasa?", sol: "Aneu rectes.|Vais rectos." },
+          { q: "Rodes de corda: «esquerra ràpid, dreta lent». Cap on gireu? I si la dreta es queda quieta?|Ruedas de cuerda: «izquierda rápido, derecha lento». ¿Hacia dónde giráis? ¿Y si la derecha se queda quieta?", sol: "Cap a la dreta. Si la dreta és quieta, gireu al seu voltant: el cercle més petit.|Hacia la derecha. Si la derecha está quieta, giráis a su alrededor: el círculo más pequeño." },
+          { q: "Cap on gira i quin tros de cercle fa?|¿Hacia dónde gira y qué trozo de círculo hace?", rprog: 'start{ run:L,fwd,150 run:R,fwd,100 wait:3300 stop:all }', sol: "Cap a la dreta, mig cercle.|Hacia la derecha, medio círculo." },
+          { q: "Cap on gira i quin tros de cercle fa?|¿Hacia dónde gira y qué trozo de círculo hace?", rprog: 'start{ run:L,fwd,100 run:R,fwd,150 wait:1650 stop:all }', sol: "Cap a l'esquerra, un quart de volta.|Hacia la izquierda, un cuarto de vuelta." },
+          { q: "Ordena de més petit a més gran els cercles de: 120 · 100, 200 · 100 i 150 · 100.|Ordena de más pequeño a más grande los círculos de: 120 · 100, 200 · 100 y 150 · 100.", sol: "200 · 100 (~16 cm), 150 · 100 (~26 cm), 120 · 100 (~54 cm).|200 · 100 (~16 cm), 150 · 100 (~26 cm), 120 · 100 (~54 cm)." },
+          { q: "El cercle del nostre Maqueen (150 i 100) fa ____ cm de diàmetre i tarda ____ ms a fer la volta.|El círculo de nuestro Maqueen (150 y 100) mide ____ cm de diámetro y tarda ____ ms en dar la vuelta.", sol: "Al simulador: ~26 cm i ~6600 ms. Al robot real, cada grup apunta la seva mesura.|En el simulador: ~26 cm y ~6600 ms. En el robot real, cada grupo apunta su medida." }
+        ] },
+      { id: 'p2', t: "Codi per al Maqueen: cercles i corbes|Código para el Maqueen: círculos y curvas", k: 'codi',
+        intro: "Programes per a l'activitat amb el robot de veritat. A makecode.microbit.org: nou projecte → Extensions → «maqueen» → JavaScript → enganxeu-hi el codi.|Programas para la actividad con el robot de verdad. En makecode.microbit.org: nuevo proyecto → Extensiones → «maqueen» → JavaScript → pegad el código.",
+        items: [
+          { t: "1. El cercle de 150 i 100|1. El círculo de 150 y 100", prog: 'start{ run:L,fwd,150 run:R,fwd,100 wait:6600 stop:all }' },
+          { t: "2. El cercle gran de 200 i 150|2. El círculo grande de 200 y 150", prog: 'start{ run:L,fwd,200 run:R,fwd,150 wait:6600 stop:all }' },
+          { t: "3. La S: mig cercle a cada costat|3. La S: medio círculo a cada lado", prog: 'start{ run:L,fwd,150 run:R,fwd,100 wait:3300 run:L,fwd,100 run:R,fwd,150 wait:3300 stop:all }' }
+        ] }
+    ]
+  },
+  /* ---------- Sessió 4 · Projecte: el robot artista ---------- */
+  'k2-4': {
+    obj: [
+      "L'alumne/a descompon un dibuix en trams, girs i corbes i en fa un pla amb el temps de cada tros.|El alumno/a descompone un dibujo en tramos, giros y curvas y hace un plan con el tiempo de cada trozo.",
+      "L'alumne/a troba les parts que es repeteixen d'un dibuix i les programa amb un «repeteix».|El alumno/a encuentra las partes que se repiten de un dibujo y las programa con un «repite».",
+      "L'alumne/a programa, prova i millora la seva pròpia obra fent servir tot el que ha après a la unitat.|El alumno/a programa, prueba y mejora su propia obra usando todo lo que ha aprendido en la unidad.",
+      "L'alumne/a passa el programa al Maqueen de veritat i l'ajusta (calibra) perquè el dibuix surti bé.|El alumno/a pasa el programa al Maqueen de verdad y lo ajusta (calibra) para que el dibujo salga bien."
+    ],
+    comp: [
+      "Pensament computacional: descomposició, patrons i bucles, depuració|Pensamiento computacional: descomposición, patrones y bucles, depuración",
+      "Competència matemàtica: mesura, angles, cercles i càlcul de temps|Competencia matemática: medida, ángulos, círculos y cálculo de tiempos",
+      "Competència en consciència i expressió culturals: crear una obra artística amb tecnologia|Competencia en conciencia y expresión culturales: crear una obra artística con tecnología",
+      "Competència personal i social: planificar un projecte, presentar-lo i valorar el dels altres amb respecte|Competencia personal y social: planificar un proyecto, presentarlo y valorar el de los demás con respeto"
+    ],
+    vocab: [
+      ["Descompondre|Descomponer", "Partir un problema gran (un dibuix) en trossos petits (trams, girs, corbes).|Partir un problema grande (un dibujo) en trozos pequeños (tramos, giros, curvas)."],
+      ["Pla|Plan", "La taula que diu, tros a tros, què ha de fer el robot i quant de temps.|La tabla que dice, trozo a trozo, qué tiene que hacer el robot y cuánto tiempo."],
+      ["Rastre|Rastro", "La línia que deixa el robot per on passa, com un llapis.|La línea que deja el robot por donde pasa, como un lápiz."],
+      ["Patró|Patrón", "Un tros del dibuix que es repeteix igual: pètals, puntes, ones.|Un trozo del dibujo que se repite igual: pétalos, puntas, ondas."],
+      ["Iterar|Iterar", "Provar, mirar què falla, millorar i tornar a provar.|Probar, mirar qué falla, mejorar y volver a probar."]
+    ],
+    mat: {
+      aula: [
+        "Un ordinador per alumne/a amb Numi Tech obert a la sessió «Projecte: el robot artista»|Un ordenador por alumno/a con Numi Tech abierto en la sesión «Proyecto: el robot artista»",
+        "Projector i la presentació d'aquesta sessió|Proyector y la presentación de esta sesión",
+        "Un kit Maqueen Lite V5 + micro:bit V2 per grup de 3-4, amb piles carregades i cable USB|Un kit Maqueen Lite V5 + micro:bit V2 por grupo de 3-4, con pilas cargadas y cable USB",
+        "Per grup: un tros de paper d'embalar d'1,5 × 1 m, cinta de pintor, un retolador gruixut rentable i gomets de colors|Por grupo: un trozo de papel de embalar de 1,5 × 1 m, cinta de pintor, un rotulador grueso lavable y gomets de colores",
+        "Llapis i colors per dissenyar l'obra a la graella|Lápices y colores para diseñar la obra en la cuadrícula"
+      ],
+      imprimir: ["Graella: el pla de la meva obra|Cuadrícula: el plan de mi obra", "Codi per al Maqueen: la casa i la flor|Código para el Maqueen: la casa y la flor"],
+      prep: [
+        "Enganxar a terra, amb cinta, un paper d'embalar per grup en un lloc on el robot no molesti.|Pegar en el suelo, con cinta, un papel de embalar por grupo en un sitio donde el robot no moleste.",
+        "Si voleu que el robot dibuixi de veritat, subjectar un retolador rentable amb cinta i una goma a la part del darrere del robot, tocant suaument el paper. Si no, el grup posa un gomet a cada lloc on canvia de direcció.|Si queréis que el robot dibuje de verdad, sujetar un rotulador lavable con cinta y una goma en la parte trasera del robot, tocando suavemente el papel. Si no, el grupo pone un gomet en cada sitio donde cambia de dirección.",
+        "Tenir a punt a MakeCode els programes de la casa i de la flor (imprimible de codi).|Tener listos en MakeCode los programas de la casa y de la flor (imprimible de código).",
+        "Recordar a l'alumnat que porti apuntats els temps calibrats del seu robot (tram de 31 cm i gir de 90°).|Recordar al alumnado que traiga apuntados los tiempos calibrados de su robot (tramo de 31 cm y giro de 90°)."
+      ]
+    },
+    plan: [
+      { min: 4, t: "Benvinguda: el gran dia de la festa|Bienvenida: el gran día de la fiesta", fase: 'inici',
+        fa: "Presenta el projecte: avui el robot fa les obres de la Plaça Pintada i cada alumne/a crearà la seva. Repassa amb una pregunta ràpida les tres eines de la unitat: trams, girs i corbes.|Presenta el proyecto: hoy el robot hace las obras de la Plaza Pintada y cada alumno/a creará la suya. Repasa con una pregunta rápida las tres herramientas de la unidad: tramos, giros y curvas.",
+        diu: ["Quines tres coses sap fer ara el robot amb precisió?|¿Qué tres cosas sabe hacer ahora el robot con precisión?", "Avui sereu artistes… però artistes amb un pla!|Hoy seréis artistas… ¡pero artistas con un plan!"],
+        slides: ['s1', 's2'], app: "Encara no: pantalles abaixades.|Todavía no: pantallas bajadas.", org: "Tot el grup|Todo el grupo" },
+      { min: 6, t: "Com treballa un/a artista de robots|Cómo trabaja un/a artista de robots", fase: 'teoria',
+        fa: "Executa la casa d'un sol traç i pregunta com està feta. Amb l'animació, mostra com es converteix el dibuix en una taula de trams i girs. Acaba amb la flor: el tros que es repeteix va dins d'un «repeteix».|Ejecuta la casa de un solo trazo y pregunta cómo está hecha. Con la animación, muestra cómo se convierte el dibujo en una tabla de tramos y giros. Termina con la flor: el trozo que se repite va dentro de un «repite».",
+        diu: ["Quants trams té la casa? I quants girs?|¿Cuántos tramos tiene la casa? ¿Y cuántos giros?", "Què es repeteix a la flor?|¿Qué se repite en la flor?"],
+        slides: ['s3', 's4', 's5', 's6'], app: "Encara no: tota l'atenció a la projecció.|Todavía no: toda la atención en la proyección.", org: "Tot el grup|Todo el grupo" },
+      { min: 10, t: "Dissenya l'obra a paper|Diseña la obra en papel", fase: 'desconnectat',
+        fa: "Cada alumne/a dibuixa la seva obra d'un sol traç a la graella (cada quadre, 10 cm), numera els trossos i escriu al costat el temps de cada un amb les xifres de la unitat. Encercla el que es repeteix. Després, en parelles, el company/a «fa de robot» amb el llapis seguint només el pla: si el dibuix no surt igual, cal arreglar el pla.|Cada alumno/a dibuja su obra de un solo trazo en la cuadrícula (cada cuadro, 10 cm), numera los trozos y escribe al lado el tiempo de cada uno con las cifras de la unidad. Rodea lo que se repite. Después, por parejas, el compañero/a «hace de robot» con el lápiz siguiendo solo el plan: si el dibujo no sale igual, hay que arreglar el plan.",
+        diu: ["Comença per un dibuix senzill: després el pots complicar.|Empieza por un dibujo sencillo: después lo puedes complicar.", "El robot de paper només fa el que diu el pla. Ha sortit igual?|El robot de papel solo hace lo que dice el plan. ¿Ha salido igual?"],
+        slides: ['s7', 's8'], app: "Cap: activitat sense pantalla.|Ninguna: actividad sin pantalla.", org: "Individual i després per parelles|Individual y después por parejas" },
+      { min: 15, t: "A l'ordinador: les obres de la festa|En el ordenador: las obras de la fiesta", fase: 'ordinador',
+        fa: "Deixa'ls avançar des del repàs fins a la flor. Fes junts la predicció de l'escala. Passeja i, quan algú s'encalli, pregunta-li per la taula: quin tros falla, el tram o el gir?|Déjalos avanzar desde el repaso hasta la flor. Haced juntos la predicción de la escalera. Pasea y, cuando alguien se atasque, pregúntale por la tabla: ¿qué trozo falla, el tramo o el giro?",
+        diu: ["On comença a anar malament el dibuix? Aquest és el tros que cal canviar.|¿Dónde empieza a ir mal el dibujo? Ese es el trozo que hay que cambiar.", "A la serp, què es repeteix: un mig cercle o dos?|En la serpiente, ¿qué se repite: un medio círculo o dos?"],
+        slides: ['s9', 's10', 's11'], app: "Des de «Recorda» fins a la flor: la pregunta de repàs, les històries, «Descobreix», ordenar el pla de la casa, «Dissenya l'obra a paper» (fet a classe), «On acaba?», la flor torta, la pausa i les obres de la casa, la serp i la flor.|Desde «Recuerda» hasta la flor: la pregunta de repaso, las historias, «Descubre», ordenar el plan de la casa, «Diseña la obra en papel» (hecho en clase), «¿Dónde termina?», la flor torcida, la pausa y las obras de la casa, la serpiente y la flor.", org: "Individual|Individual" },
+      { min: 15, t: "L'obra en gran amb el Maqueen|La obra en grande con el Maqueen", fase: 'robot',
+        fa: "Cada grup tria una obra (la casa, la flor o la d'un membre del grup), la passa a MakeCode amb el botó </> o l'imprimible de codi i la prova damunt del paper d'embalar. Si porten el retolador al darrere, veuran el traç (a les cantonades sortiran petits arcs perquè el retolador no és al centre: és normal); si no, posen un gomet a cada lloc on el robot canvia de direcció. Ajusten els temps amb les seves dades de calibratge fins que l'obra s'assembli al pla. Seguretat: el robot a terra, el retolador ben subjectat i l'interruptor apagat mentre es connecta el cable.|Cada grupo elige una obra (la casa, la flor o la de un miembro del grupo), la pasa a MakeCode con el botón </> o el imprimible de código y la prueba sobre el papel de embalar. Si llevan el rotulador detrás, verán el trazo (en las esquinas saldrán pequeños arcos porque el rotulador no está en el centro: es normal); si no, ponen un gomet en cada sitio donde el robot cambia de dirección. Ajustan los tiempos con sus datos de calibración hasta que la obra se parezca al plan. Seguridad: el robot en el suelo, el rotulador bien sujeto y el interruptor apagado mientras se conecta el cable.",
+        diu: ["Feu servir els vostres temps calibrats, no els del simulador.|Usad vuestros tiempos calibrados, no los del simulador.", "Quin tros de l'obra surt més diferent? Canvieu només aquell.|¿Qué trozo de la obra sale más diferente? Cambiad solo ese.", "Feu una foto de l'obra per al portafoli!|¡Haced una foto de la obra para el portafolio!"],
+        slides: ['s12', 's13'], app: "MakeCode amb l'extensió «Maqueen», o el botó </> de l'app per copiar el codi.|MakeCode con la extensión «Maqueen», o el botón </> de la app para copiar el código.", org: "Grups de 3-4 per kit|Grupos de 3-4 por kit" },
+      { min: 7, t: "Crea: la meva obra d'art|Crea: mi obra de arte", fase: 'crea',
+        fa: "Cada alumne/a programa a l'app l'obra que ha dissenyat a paper i la desa al portafoli. Als darrers dos minuts, una galeria ràpida: dos o tres voluntaris projecten la seva obra i expliquen quin tros es repeteix.|Cada alumno/a programa en la app la obra que ha diseñado en papel y la guarda en el portafolio. En los últimos dos minutos, una galería rápida: dos o tres voluntarios proyectan su obra y explican qué trozo se repite.",
+        diu: ["Segueix el teu pla: tros a tros, i prova sovint.|Sigue tu plan: trozo a trozo, y prueba a menudo.", "Digues una cosa que t'agrada de l'obra del company/a i una idea per millorar-la.|Di una cosa que te gusta de la obra del compañero/a y una idea para mejorarla."],
+        slides: ['s14'], app: "Els passos finals: la història del botó </> i «Crea»: la meva obra d'art.|Los pasos finales: la historia del botón </> y «Crea»: mi obra de arte.", org: "Individual i galeria amb tot el grup|Individual y galería con todo el grupo" },
+      { min: 3, t: "Tancament de la unitat|Cierre de la unidad", fase: 'tancament',
+        fa: "Repassa el que han après a tota la unitat amb el resum, celebra les obres i fes el tiquet de sortida a la porta.|Repasa lo que han aprendido en toda la unidad con el resumen, celebra las obras y haz el ticket de salida en la puerta.",
+        diu: ["Quina part de la unitat us ha costat més? I quina us ha agradat més?|¿Qué parte de la unidad os ha costado más? ¿Y cuál os ha gustado más?", "A la propera unitat, el robot tindrà «ulls»: el sensor de distància!|En la próxima unidad, el robot tendrá «ojos»: ¡el sensor de distancia!"],
+        slides: ['s15', 's16'], app: "«Tancament»: les dues preguntes finals i com m'he sentit.|«Cierre»: las dos preguntas finales y cómo me he sentido.", org: "Tot el grup|Todo el grupo" }
+    ],
+    errors: [
+      ["Comença a programar sense pla i es perd a la meitat del dibuix.|Empieza a programar sin plan y se pierde a mitad del dibujo.",
+        "Que torni a la graella i escrigui els tres primers trossos; que programi només aquests i els provi abans de seguir.|Que vuelva a la cuadrícula y escriba los tres primeros trozos; que programe solo esos y los pruebe antes de seguir."],
+      ["L'obra surt torta a partir d'un punt i ho esborra tot.|La obra sale torcida a partir de un punto y lo borra todo.",
+        "Pregunta-li fins on va bé. El tros que falla és just després: que canviï només aquell número.|Pregúntale hasta dónde va bien. El trozo que falla es justo después: que cambie solo ese número."],
+      ["Posa dins del «repeteix» trossos que no es repeteixen (per exemple, el primer tram).|Pone dentro del «repite» trozos que no se repiten (por ejemplo, el primer tramo).",
+        "Que encercli a la graella només el que surt igual cada vegada i que deixi la resta fora del bucle.|Que rodee en la cuadrícula solo lo que sale igual cada vez y que deje el resto fuera del bucle."],
+      ["Fa un dibuix tan gran que el robot surt de la plaça i xoca amb la vora.|Hace un dibujo tan grande que el robot sale de la plaza y choca con el borde.",
+        "Que compti els quadres de la graella: la plaça fa 150 × 100 cm. Que redueixi els trams (menys temps) o canviï el punt de sortida del dibuix.|Que cuente los cuadros de la cuadrícula: la plaza mide 150 × 100 cm. Que reduzca los tramos (menos tiempo) o cambie el punto de salida del dibujo."],
+      ["Al Maqueen de veritat, l'obra no s'assembla a la del simulador i es desanima.|En el Maqueen de verdad, la obra no se parece a la del simulador y se desanima.",
+        "Recorda-li les dades de calibratge: el seu robot va a una altra velocitat i gira diferent. Ajustant els temps, s'hi acostarà.|Recuérdale los datos de calibración: su robot va a otra velocidad y gira diferente. Ajustando los tiempos, se acercará."]
+    ],
+    diff: {
+      mes: "Fer una obra amb dos «repeteix» (per exemple, una flor de pètals i una tija amb fulles) o amb un «repeteix» dins d'un altre, i calcular quant de temps tardarà el robot a dibuixar-la abans d'executar-la.|Hacer una obra con dos «repite» (por ejemplo, una flor de pétalos y un tallo con hojas) o con un «repite» dentro de otro, y calcular cuánto tiempo tardará el robot en dibujarla antes de ejecutarla.",
+      menys: "Partir d'una obra feta (la casa o la flor) i modificar-la: canviar la mida dels trams, el nombre de pètals o afegir-hi un tros. La taula de xifres de la unitat al costat.|Partir de una obra hecha (la casa o la flor) y modificarla: cambiar el tamaño de los tramos, el número de pétalos o añadir un trozo. La tabla de cifras de la unidad al lado."
+    },
+    aval: {
+      ticket: ["Quin és el primer que fas abans de programar un dibuix complicat?|¿Qué es lo primero que haces antes de programar un dibujo complicado?",
+        "Quina part de la teva obra es repeteix i com l'has programada?|¿Qué parte de tu obra se repite y cómo la has programado?"],
+      rubric: [
+        ["Pla i descomposició|Plan y descomposición", "Fa un pla complet amb els trossos i el temps de cada un i el segueix per programar.|Hace un plan completo con los trozos y el tiempo de cada uno y lo sigue para programar.", "Dibuixa l'obra, però el pla és incomplet o no el fa servir.|Dibuja la obra, pero el plan está incompleto o no lo usa."],
+        ["Patrons i bucles|Patrones y bucles", "Troba el que es repeteix i ho programa amb un «repeteix» ben construït.|Encuentra lo que se repite y lo programa con un «repite» bien construido.", "Fa servir el «repeteix» amb ajuda o hi deixa blocs que no hi van.|Usa el «repite» con ayuda o deja dentro bloques que no van."],
+        ["Provar i millorar|Probar y mejorar", "Prova sovint, troba el tros que falla i l'ajusta, també al robot de veritat.|Prueba a menudo, encuentra el trozo que falla y lo ajusta, también en el robot de verdad.", "Quan falla, canvia números a l'atzar o torna a començar.|Cuando falla, cambia números al azar o vuelve a empezar."]
+      ]
+    },
+    casa: "A casa, amb el mòbil, podeu ensenyar l'obra a la família i fer junts el «robot de paper»: una persona dicta el pla i l'altra dibuixa seguint només les instruccions. Surt igual?|En casa, con el móvil, podéis enseñar la obra a la familia y hacer juntos el «robot de papel»: una persona dicta el plan y la otra dibuja siguiendo solo las instrucciones. ¿Sale igual?",
+    slides: [
+      { id: 's1', k: 'portada', t: "Projecte: el robot artista|Proyecto: el robot artista", x: "La Festa de la Plaça Pintada: avui l'obra la fas tu.|La Fiesta de la Plaza Pintada: hoy la obra la haces tú.",
+        nota: "Explica que és la sessió de projecte: hi ha tres obres per escalfar i una de pròpia que es desa al portafoli.|Explica que es la sesión de proyecto: hay tres obras para calentar y una propia que se guarda en el portafolio." },
+      { id: 's2', k: 'repas', t: "Les eines de l'artista|Las herramientas del artista", punts: ["Trams: 15,6 cm/s a velocitat 150.|Tramos: 15,6 cm/s a velocidad 150.", "Girs: 90° en 590 ms; cada gir d'un polígon, 360° ÷ costats.|Giros: 90° en 590 ms; cada giro de un polígono, 360° ÷ lados.", "Corbes: velocitats diferents; 150 i 100 fan un cercle de 26 cm en 6,6 s.|Curvas: velocidades diferentes; 150 y 100 hacen un círculo de 26 cm en 6,6 s."],
+        nota: "Deixa-la projectada o escrita a la pissarra durant tota la sessió: són les xifres màgiques.|Déjala proyectada o escrita en la pizarra durante toda la sesión: son las cifras mágicas." },
+      { id: 's3', k: 'robo', t: "Una casa d'un sol traç|Una casa de un solo trazo", x: "Com ho fa? Compteu els trams i els girs.|¿Cómo lo hace? Contad los tramos y los giros.",
+        robo: { w: { w: 120, h: 85, bot: [45, 75, 0] }, prog: 'start{ run:all,fwd,150 wait:2000 run:L,fwd,100 run:R,back,100 wait:197 run:all,fwd,150 wait:2000 run:L,fwd,100 run:R,back,100 wait:787 run:all,fwd,150 wait:2000 run:L,fwd,100 run:R,back,100 wait:197 run:all,fwd,150 wait:2000 run:L,fwd,100 run:R,back,100 wait:590 run:all,fwd,150 wait:2000 stop:all }' },
+        nota: "5 trams i 4 girs (30°, 120°, 30° i 90°). Pregunta per què el gir de dalt és de 120°: és la punta d'un triangle equilàter.|5 tramos y 4 giros (30°, 120°, 30° y 90°). Pregunta por qué el giro de arriba es de 120°: es la punta de un triángulo equilátero." },
+      { id: 's4', k: 'anim', t: "El dibuix, a trossos|El dibujo, a trozos", anim: 'k2art', x: "Cada fila del pla és un tram, un gir o una corba, amb el seu temps.|Cada fila del plan es un tramo, un giro o una curva, con su tiempo.",
+        nota: "Relaciona-ho amb descompondre: un problema gran es resol a trossos petits.|Relaciónalo con descomponer: un problema grande se resuelve a trozos pequeños." },
+      { id: 's5', k: 'robo', t: "Repeteix el que es repeteix|Repite lo que se repite", x: "Cercle petit + gir de 90°, 4 vegades: una flor.|Círculo pequeño + giro de 90°, 4 veces: una flor.",
+        robo: { w: { w: 120, h: 85, bot: [60, 45, 0] }, prog: 'start{ rep:4{ run:L,fwd,200 run:R,fwd,100 wait:3290 run:L,fwd,100 run:R,back,100 wait:590 } stop:all }' },
+        nota: "Pregunta: i si volguéssim 6 pètals? (repeteix 6 i gir de 60°, uns 393 ms).|Pregunta: ¿y si quisiéramos 6 pétalos? (repite 6 y giro de 60°, unos 393 ms)." },
+      { id: 's6', k: 'concepte', t: "Els 4 passos de l'artista de robots|Los 4 pasos del artista de robots", punts: ["1. Dibuixa l'obra a paper.|1. Dibuja la obra en papel.", "2. Parteix-la en trams, girs i corbes.|2. Pártela en tramos, giros y curvas.", "3. Calcula el temps de cada tros.|3. Calcula el tiempo de cada trozo.", "4. Programa, prova i ajusta.|4. Programa, prueba y ajusta."],
+        nota: "Insisteix en el pas 4: cap artista encerta a la primera. Provar i millorar és part de la feina.|Insiste en el paso 4: ningún artista acierta a la primera. Probar y mejorar es parte del trabajo." },
+      { id: 's7', k: 'activitat', t: "Dissenya l'obra a paper|Diseña la obra en papel", timer: 10, punts: ["Dibuixa l'obra d'un sol traç a la graella (1 quadre = 10 cm).|Dibuja la obra de un solo trazo en la cuadrícula (1 cuadro = 10 cm).", "Numera els trossos i escriu-ne el temps.|Numera los trozos y escribe su tiempo.", "Encercla el que es repeteix.|Rodea lo que se repite.", "El company/a fa de robot de paper amb el teu pla.|El compañero/a hace de robot de papel con tu plan."],
+        nota: "Si algú no sap què dibuixar, proposa-li una lletra del seu nom, un vaixell o un sol amb raigs.|Si alguien no sabe qué dibujar, propónle una letra de su nombre, un barco o un sol con rayos." },
+      { id: 's8', k: 'concepte', t: "Idees d'obres|Ideas de obras", punts: ["Una lletra del teu nom (L, T, E, M…)|Una letra de tu nombre (L, T, E, M…)", "Un sol: cercle + raigs amb «repeteix»|Un sol: círculo + rayos con «repite»", "Un vaixell: casc, pal i vela triangular|Un barco: casco, mástil y vela triangular", "Una estrella, una espiral, un robot…|Una estrella, una espiral, un robot…"],
+        nota: "Recorda la mida de la plaça a l'app: 150 × 100 cm. El dibuix ha de cabre-hi!|Recuerda el tamaño de la plaza en la app: 150 × 100 cm. ¡El dibujo tiene que caber!" },
+      { id: 's9', k: 'activitat', t: "Ara, a l'app|Ahora, en la app", timer: 15, punts: ["Fes «Descobreix» i ordena el pla de la casa.|Haz «Descubre» y ordena el plan de la casa.", "Les tres obres: la casa, la serp i la flor.|Las tres obras: la casa, la serpiente y la flor.", "Si falla, troba el tros que falla i canvia només aquell.|Si falla, encuentra el trozo que falla y cambia solo ese.", "Para quan arribis a la història del botó </>.|Para cuando llegues a la historia del botón </>."],
+        nota: "Al pas «Dissenya l'obra a paper», que toquin «Ho hem fet!»: ja tenen el pla a la graella.|En el paso «Diseña la obra en papel», que toquen «¡Lo hemos hecho!»: ya tienen el plan en la cuadrícula." },
+      { id: 's10', k: 'robo', t: "Quin dibuix fa?|¿Qué dibujo hace?", x: "2 vegades: tram, gir a l'esquerra, tram, gir a la dreta. On acaba: A, B o C?|2 veces: tramo, giro a la izquierda, tramo, giro a la derecha. ¿Dónde termina: A, B o C?",
+        robo: { w: { w: 110, h: 80, bot: [25, 65, 90], marks: { A: [95, 65], B: [72, 18], C: [48, 42] } }, prog: 'start{ rep:2{ run:all,fwd,150 wait:1500 run:L,back,100 run:R,fwd,100 wait:590 run:all,fwd,150 wait:1500 run:L,fwd,100 run:R,back,100 wait:590 } stop:all }' },
+        nota: "Resposta: B. Dibuixa una escala de dos graons. Qui ha dit C ha comptat només una vegada.|Respuesta: B. Dibuja una escalera de dos peldaños. Quien ha dicho C ha contado solo una vez." },
+      { id: 's11', k: 'repte', t: "Les obres de la festa|Las obras de la fiesta", punts: ["1. La casa: 5 trams i girs de 30°, 120° i 90°|1. La casa: 5 tramos y giros de 30°, 120° y 90°", "2. La serp: mitjos cercles alternats (màx. 8 blocs)|2. La serpiente: medios círculos alternados (máx. 8 bloques)", "3. La flor: 4 pètals en creu (màx. 8 blocs)|3. La flor: 4 pétalos en cruz (máx. 8 bloques)"],
+        nota: "A la serp, el que es repeteix és la parella de mitjos cercles (dreta i esquerra): per això és «repeteix 2».|En la serpiente, lo que se repite es la pareja de medios círculos (derecha e izquierda): por eso es «repite 2»." },
+      { id: 's12', k: 'activitat', t: "L'obra en gran amb el Maqueen|La obra en grande con el Maqueen", timer: 15, punts: ["1. Trieu una obra del grup i passeu-la a MakeCode.|1. Elegid una obra del grupo y pasadla a MakeCode.", "2. Proveu-la damunt del paper d'embalar.|2. Probadla sobre el papel de embalar.", "3. Retolador al darrere o un gomet a cada canvi de direcció.|3. Rotulador detrás o un gomet en cada cambio de dirección.", "4. Ajusteu els temps amb el vostre calibratge.|4. Ajustad los tiempos con vuestra calibración."],
+        nota: "Seguretat: robot a terra, retolador ben subjectat i interruptor apagat en connectar el cable. Feu una foto de cada obra per al portafoli.|Seguridad: robot en el suelo, rotulador bien sujeto e interruptor apagado al conectar el cable. Haced una foto de cada obra para el portafolio." },
+      { id: 's13', k: 'concepte', t: "La flor a MakeCode|La flor en MakeCode", x: "El «repeteix» de MakeCode és a «Bucles». M1 és el motor esquerre i M2 el dret.|El «repite» de MakeCode está en «Bucles». M1 es el motor izquierdo y M2 el derecho.",
+        code: "Maqueen_V5.I2CInit()\nfor (let index = 0; index < 4; index++) {\n    Maqueen_V5.motorRun(Maqueen_V5.Motors.M1, Maqueen_V5.Dir.CW, 200)\n    Maqueen_V5.motorRun(Maqueen_V5.Motors.M2, Maqueen_V5.Dir.CW, 100)\n    basic.pause(3290)\n    Maqueen_V5.motorRun(Maqueen_V5.Motors.M1, Maqueen_V5.Dir.CW, 100)\n    Maqueen_V5.motorRun(Maqueen_V5.Motors.M2, Maqueen_V5.Dir.CCW, 100)\n    basic.pause(590)\n}\nMaqueen_V5.motorStop(Maqueen_V5.Motors.All)",
+        nota: "Si els pètals no queden en creu, cal calibrar el gir de 90°; si no es tanquen, el temps del cercle.|Si los pétalos no quedan en cruz, hay que calibrar el giro de 90°; si no se cierran, el tiempo del círculo." },
+      { id: 's14', k: 'activitat', t: "Crea: la meva obra d'art|Crea: mi obra de arte", timer: 7, x: "Programa l'obra del teu pla, amb almenys un «repeteix» i 150 cm de traç. Desa-la al portafoli!|Programa la obra de tu plan, con al menos un «repite» y 150 cm de trazo. ¡Guárdala en el portafolio!",
+        nota: "Als darrers minuts, galeria: dos o tres voluntaris projecten l'obra i expliquen quin tros es repeteix. Els altres diuen una cosa que els agrada i una idea.|En los últimos minutos, galería: dos o tres voluntarios proyectan la obra y explican qué trozo se repite. Los demás dicen una cosa que les gusta y una idea." },
+      { id: 's15', k: 'resum', t: "Què hem après en aquesta unitat|Qué hemos aprendido en esta unidad", punts: ["Distància = velocitat × temps, i cal calibrar.|Distancia = velocidad × tiempo, y hay que calibrar.", "Girs exactes i polígons amb la regla dels 360°.|Giros exactos y polígonos con la regla de los 360°.", "Corbes i cercles amb rodes a velocitats diferents.|Curvas y círculos con ruedas a velocidades diferentes.", "Un dibuix gran es fa amb un pla, a trossos.|Un dibujo grande se hace con un plan, a trozos."],
+        nota: "Celebra les obres i explica que a la propera unitat el robot farà servir el sensor de distància per no haver de comptar el temps.|Celebra las obras y explica que en la próxima unidad el robot usará el sensor de distancia para no tener que contar el tiempo." },
+      { id: 's16', k: 'tiquet', t: "Tiquet de sortida|Ticket de salida", punts: ["Què fas abans de programar un dibuix complicat?|¿Qué haces antes de programar un dibujo complicado?", "Quina part de la teva obra es repeteix?|¿Qué parte de tu obra se repite?"],
+        nota: "Anota qui ha fet un pla complet i qui ha programat a l'atzar: et servirà per a la unitat 8, el projecte final.|Anota quién ha hecho un plan completo y quién ha programado al azar: te servirá para la unidad 8, el proyecto final." }
+    ],
+    print: [
+      { id: 'p1', t: "El pla de la meva obra|El plan de mi obra", k: 'graella', w: 15, h: 10,
+        intro: "Cada quadre fa 10 × 10 cm, com la plaça de l'app (150 × 100 cm). Dibuixa l'obra d'un sol traç, marca on comença el robot i cap on mira, i numera els trossos.|Cada cuadro mide 10 × 10 cm, como la plaza de la app (150 × 100 cm). Dibuja la obra de un solo trazo, marca dónde empieza el robot y hacia dónde mira, y numera los trozos.",
+        legend: [['🤖', "Sortida del robot (dibuixa una fletxa cap on mira)|Salida del robot (dibuja una flecha hacia donde mira)"], ['📏', 'Tram recte: cm i ms|Tramo recto: cm y ms'], ['↻', 'Gir: graus i ms|Giro: grados y ms'], ['🌀', 'Corba: velocitats i ms|Curva: velocidades y ms'], ['🔁', 'Tros que es repeteix|Trozo que se repite']],
+        items: [
+          { q: "El meu pla (tros · què fa · temps):|Mi plan (trozo · qué hace · tiempo):", big: true },
+          { q: "El tros que es repeteix és… i es repeteix ____ vegades.|El trozo que se repite es… y se repite ____ veces." }
+        ] },
+      { id: 'p2', t: "Codi per al Maqueen: la casa i la flor|Código para el Maqueen: la casa y la flor", k: 'codi',
+        intro: "Programes per a l'obra en gran amb el robot de veritat. A makecode.microbit.org: nou projecte → Extensions → «maqueen» → JavaScript → enganxeu-hi el codi. Canvieu els temps amb el vostre calibratge.|Programas para la obra en grande con el robot de verdad. En makecode.microbit.org: nuevo proyecto → Extensiones → «maqueen» → JavaScript → pegad el código. Cambiad los tiempos con vuestra calibración.",
+        items: [
+          { t: "1. La casa d'un sol traç|1. La casa de un solo trazo", prog: 'start{ run:all,fwd,150 wait:2000 run:L,fwd,100 run:R,back,100 wait:197 run:all,fwd,150 wait:2000 run:L,fwd,100 run:R,back,100 wait:787 run:all,fwd,150 wait:2000 run:L,fwd,100 run:R,back,100 wait:197 run:all,fwd,150 wait:2000 run:L,fwd,100 run:R,back,100 wait:590 run:all,fwd,150 wait:2000 stop:all }' },
+          { t: "2. La flor de 4 pètals|2. La flor de 4 pétalos", prog: 'start{ rep:4{ run:L,fwd,200 run:R,fwd,100 wait:3290 run:L,fwd,100 run:R,back,100 wait:590 } stop:all }' }
+        ] }
+    ]
+  }
+});
+
+/* ── unitat 3 ── */
+/* Tech Robòtica · unitat 3 «Sensor de distància» · guia del professorat (k3-1 … k3-4)
+   Material propi de Numi. Classe de 60 minuts; mateix esquema que TGUIDE['r1-1'], amb la fase «robot» (Maqueen de veritat). */
+Object.assign(TGUIDE, {
+  /* ---------- Sessió 1 · Com mesura un robot? ---------- */
+  'k3-1': {
+    obj: [
+      "L'alumne/a explica amb les seves paraules com mesura el sensor d'ultrasons: xiulet, eco i temps.|El alumno/a explica con sus palabras cómo mide el sensor de ultrasonidos: silbido, eco y tiempo.",
+      "L'alumne/a calcula una distància a partir del temps de l'eco (34 cm per ms, i dividit entre 2).|El alumno/a calcula una distancia a partir del tiempo del eco (34 cm por ms, y dividido entre 2).",
+      "L'alumne/a interpreta les lectures del sensor, també el 500 (no veu res), i en coneix els límits (con estret, 2-400 cm).|El alumno/a interpreta las lecturas del sensor, también el 500 (no ve nada), y conoce sus límites (cono estrecho, 2-400 cm).",
+      "L'alumne/a distingeix «en iniciar» de «per sempre» i fa servir «per sempre» per tenir la mesura sempre al dia.|El alumno/a distingue «al iniciar» de «para siempre» y usa «para siempre» para tener la medida siempre al día."
+    ],
+    comp: [
+      "Competència digital: programar un robot amb blocs i llegir les dades d'un sensor|Competencia digital: programar un robot con bloques y leer los datos de un sensor",
+      "Pensament computacional: bucle infinit («per sempre») i diferència entre fer una cosa un cop o repetir-la|Pensamiento computacional: bucle infinito («para siempre») y diferencia entre hacer algo una vez o repetirlo",
+      "Competència STEM: el so, l'eco i la velocitat del so; mesurar amb el regle i comparar mesures|Competencia STEM: el sonido, el eco y la velocidad del sonido; medir con la regla y comparar medidas",
+      "Matemàtiques: proporcionalitat (distància = velocitat × temps), multiplicar i dividir amb decimals|Matemáticas: proporcionalidad (distancia = velocidad × tiempo), multiplicar y dividir con decimales"
+    ],
+    vocab: [
+      ["Sensor|Sensor", "La part del robot que nota alguna cosa del món (distància, llum, línia…) i la converteix en un número.|La parte del robot que nota algo del mundo (distancia, luz, línea…) y lo convierte en un número."],
+      ["Ultrasons|Ultrasonidos", "Sons tan aguts que les persones no els sentim. El sensor del Maqueen en fa servir.|Sonidos tan agudos que las personas no los oímos. El sensor del Maqueen los usa."],
+      ["Eco|Eco", "El so que torna després de rebotar en una superfície.|El sonido que vuelve después de rebotar en una superficie."],
+      ["Distància (cm)|Distancia (cm)", "El valor que dona el sensor: els centímetres fins a l'obstacle del davant (500 si no veu res).|El valor que da el sensor: los centímetros hasta el obstáculo de delante (500 si no ve nada)."],
+      ["Per sempre|Para siempre", "Guió que repeteix els seus blocs sense parar mentre el robot està encès.|Guion que repite sus bloques sin parar mientras el robot está encendido."],
+      ["Valor|Valor", "Un número que va dins d'un altre bloc, com «distància», en lloc d'una ordre.|Un número que va dentro de otro bloque, como «distancia», en lugar de una orden."]
+    ],
+    mat: {
+      aula: [
+        "Un ordinador per alumne/a amb Numi Tech obert a la sessió «Com mesura un robot?»|Un ordenador por alumno/a con Numi Tech abierto en la sesión «¿Cómo mide un robot?»",
+        "Projector i la presentació d'aquesta sessió|Proyector y la presentación de esta sesión",
+        "Un kit Maqueen Lite V5 amb micro:bit V2, piles i cable USB per cada grup de 3-4|Un kit Maqueen Lite V5 con micro:bit V2, pilas y cable USB por cada grupo de 3-4",
+        "Per grup: un regle o una cinta mètrica, una capsa de cartró o un llibre gruixut i un jersei o un coixí|Por grupo: una regla o una cinta métrica, una caja de cartón o un libro grueso y un jersey o un cojín"
+      ],
+      imprimir: ["Targetes: parelles de l'eco|Tarjetas: parejas del eco", "Fitxa: calibrem el sensor|Ficha: calibramos el sensor"],
+      prep: [
+        "Imprimir i retallar un paquet de targetes de l'eco per grup.|Imprimir y recortar un paquete de tarjetas del eco por grupo.",
+        "Preparar a MakeCode un projecte amb l'extensió del Maqueen i el programa «per sempre: mostra el número distància» (el botó </> del simulador dona el codi).|Preparar en MakeCode un proyecto con la extensión del Maqueen y el programa «para siempre: muestra el número distancia» (el botón </> del simulador da el código).",
+        "Comprovar que les piles dels robots estan carregades i que cada micro:bit es pot connectar per USB.|Comprobar que las pilas de los robots están cargadas y que cada micro:bit se puede conectar por USB.",
+        "Provar abans les demos de les diapositives 4 i 10 per saber què passa.|Probar antes las demos de las diapositivas 4 y 10 para saber qué pasa."
+      ]
+    },
+    plan: [
+      { min: 4, t: "Benvinguda: el robot a cegues|Bienvenida: el robot a ciegas", fase: 'inici',
+        fa: "Presenta la unitat: el port de l'illa, on les caixes canvien de lloc cada nit. Pregunta com sap un ratpenat on és la paret a les fosques i recull respostes sense corregir. Recorda amb la diapositiva de repàs que, fins ara, el robot només sabia comptar temps.|Presenta la unidad: el puerto de la isla, donde las cajas cambian de sitio cada noche. Pregunta cómo sabe un murciélago dónde está la pared a oscuras y recoge respuestas sin corregir. Recuerda con la diapositiva de repaso que, hasta ahora, el robot solo sabía contar tiempo.",
+        diu: ["Com pot saber un ratpenat on és la paret si no hi veu?|¿Cómo puede saber un murciélago dónde está la pared si no ve?",
+          "Fins ara, el nostre robot sabia on era la caixa? O només comptava segons?|Hasta ahora, ¿nuestro robot sabía dónde estaba la caja? ¿O solo contaba segundos?"],
+        slides: ['s1', 's2', 's3'], app: "Encara no: pantalles abaixades.|Todavía no: pantallas bajadas.", org: "Tot el grup|Todo el grupo" },
+      { min: 10, t: "Com funciona el sensor d'ultrasons|Cómo funciona el sensor de ultrasonidos", fase: 'teoria',
+        fa: "Executa la demo del robot a cegues i deixa que la classe expliqui per què xoca. Explica l'eco amb l'animació i fes el càlcul a la pissarra: 2 ms × 34 cm = 68 cm, i com que va i torna, 34 cm. Mostra el con estret i el 500. Acaba amb «en iniciar» i «per sempre»: abans d'executar la demo, que la classe digui si el número de la pantalla canviarà.|Ejecuta la demo del robot a ciegas y deja que la clase explique por qué choca. Explica el eco con la animación y haz el cálculo en la pizarra: 2 ms × 34 cm = 68 cm, y como va y vuelve, 34 cm. Muestra el cono estrecho y el 500. Acaba con «al iniciar» y «para siempre»: antes de ejecutar la demo, que la clase diga si el número de la pantalla cambiará.",
+        diu: ["Per què xoca, si el programa és el mateix que ahir?|¿Por qué choca, si el programa es el mismo que ayer?",
+          "Si l'eco tarda 4 ms, a quina distància és la caixa?|Si el eco tarda 4 ms, ¿a qué distancia está la caja?",
+          "500 vol dir que hi ha una caixa a 5 metres? Què vol dir, doncs?|¿500 quiere decir que hay una caja a 5 metros? ¿Qué quiere decir, entonces?",
+          "Abans d'executar-ho: el número canviarà o es quedarà quiet?|Antes de ejecutarlo: ¿el número cambiará o se quedará quieto?"],
+        slides: ['s4', 's5', 's6', 's7', 's8', 's9', 's10'], app: "Encara no: tota l'atenció a la projecció.|Todavía no: toda la atención en la proyección.", org: "Tot el grup|Todo el grupo" },
+      { min: 8, t: "Parelles de l'eco|Parejas del eco", fase: 'desconnectat',
+        fa: "En grups de 3, repartiu les targetes boca per avall: unes diuen quant tarda l'eco i les altres, una distància. Per torns, cada alumne/a gira dues targetes i diu si fan parella (temps × 34 ÷ 2). El grup ho comprova amb paper i llapis. La targeta «No torna cap eco» fa parella amb «500». Guanya punts el grup que explica bé el càlcul, no el que va més de pressa.|En grupos de 3, repartid las tarjetas boca abajo: unas dicen cuánto tarda el eco y las otras, una distancia. Por turnos, cada alumno/a gira dos tarjetas y dice si hacen pareja (tiempo × 34 ÷ 2). El grupo lo comprueba con papel y lápiz. La tarjeta «No vuelve ningún eco» hace pareja con «500». Gana puntos el grupo que explica bien el cálculo, no el que va más deprisa.",
+        diu: ["Primer multipliqueu per 34 i després dividiu entre 2: per què entre 2?|Primero multiplicad por 34 y después dividid entre 2: ¿por qué entre 2?",
+          "Quina targeta no té cap temps? Amb quina va?|¿Qué tarjeta no tiene ningún tiempo? ¿Con cuál va?"],
+        slides: ['s11'], app: "Cap: activitat sense pantalla. A l'app, el pas «La pilota eco» queda per fer a casa (toqueu «Ara no»).|Ninguna: actividad sin pantalla. En la app, el paso «La pelota eco» queda para hacer en casa (tocad «Ahora no»).", org: "Grups de 3|Grupos de 3" },
+      { min: 15, t: "A l'ordinador: descobreix i mesura|En el ordenador: descubre y mide", fase: 'ordinador',
+        fa: "Cada alumne/a avança al seu ritme fins al repte del racó. Passeja i fixa't en qui posa temps a l'atzar al primer repte: demana-li que llegeixi la distància al tauler i que faci el càlcul en un paper abans de tocar res.|Cada alumno/a avanza a su ritmo hasta el reto del rincón. Pasea y fíjate en quién pone tiempos al azar en el primer reto: pídele que lea la distancia en el tablero y que haga el cálculo en un papel antes de tocar nada.",
+        diu: ["Quina distància marca el tauler abans d'executar? Quant ha d'avançar per quedar a 10 cm?|¿Qué distancia marca el tablero antes de ejecutar? ¿Cuánto tiene que avanzar para quedarse a 10 cm?",
+          "Al racó, prova primer només la meitat del programa i mira què mesura després de girar.|En el rincón, prueba primero solo la mitad del programa y mira qué mide después de girar."],
+        slides: ['s12'], app: "De «Recorda» fins al repte «El racó del magatzem»: les targetes de «Descobreix», el 500, ordenar la mesura, «Mostra el número», «Investiga» i els dos primers reptes.|Desde «Recuerda» hasta el reto «El rincón del almacén»: las tarjetas de «Descubre», el 500, ordenar la medida, «Muestra el número», «Investiga» y los dos primeros retos.", org: "Individual|Individual" },
+      { min: 12, t: "Robot de veritat: calibrem el sensor|Robot de verdad: calibramos el sensor", fase: 'robot',
+        fa: "En grups de 3-4 per kit: obriu el projecte de MakeCode preparat (per sempre: mostra el número distància), descarregueu-lo a la micro:bit i poseu-la al Maqueen. Aquest programa no mou els motors: el robot es queda quiet a la taula, lluny de la vora. Poseu la capsa a 10, 20 i 40 cm del sensor (mesurant amb el regle des dels «ulls») i apunteu què marca la micro:bit a la fitxa. Després proveu el jersei, la capsa inclinada i apuntar a l'aire. Un alumne/a mesura, un altre llegeix la pantalla, un altre apunta i un altre posa la capsa; canvieu els papers. En acabar, apagueu el robot.|En grupos de 3-4 por kit: abrid el proyecto de MakeCode preparado (para siempre: muestra el número distancia), descargadlo en la micro:bit y ponedla en el Maqueen. Este programa no mueve los motores: el robot se queda quieto en la mesa, lejos del borde. Poned la caja a 10, 20 y 40 cm del sensor (midiendo con la regla desde los «ojos») y apuntad qué marca la micro:bit en la ficha. Después probad el jersey, la caja inclinada y apuntar al aire. Un alumno/a mide, otro lee la pantalla, otro apunta y otro pone la caja; cambiad los papeles. Al terminar, apagad el robot.",
+        diu: ["Mesureu des dels «ulls» del sensor, no des de les rodes.|Medid desde los «ojos» del sensor, no desde las ruedas.",
+          "El robot de veritat marca exactament el mateix que el regle? Quanta diferència hi ha?|¿El robot de verdad marca exactamente lo mismo que la regla? ¿Cuánta diferencia hay?",
+          "Què passa amb el jersei? Per què creieu que costa més de mesurar?|¿Qué pasa con el jersey? ¿Por qué creéis que cuesta más de medir?"],
+        slides: ['s13', 's14'], app: "Cap: MakeCode i el robot de veritat.|Ninguna: MakeCode y el robot de verdad.", org: "Grups de 3-4 per kit amb papers que roten|Grupos de 3-4 por kit con papeles que rotan" },
+      { min: 8, t: "Reptes i crea: la ronda i el radar|Retos y crea: la ronda y el radar", fase: 'crea',
+        fa: "Torneu als ordinadors per fer la ronda del vigilant (amb només 5 blocs, cal «per sempre») i el radar del far. Qui acabi, que compari els números del radar amb les mesures del robot de veritat.|Volved a los ordenadores para hacer la ronda del vigilante (con solo 5 bloques, hace falta «para siempre») y el radar del faro. Quien termine, que compare los números del radar con las medidas del robot de verdad.",
+        diu: ["Amb 5 blocs no hi cap la ronda sencera: qui la pot repetir per vosaltres?|Con 5 bloques no cabe la ronda entera: ¿quién la puede repetir por vosotros?",
+          "Al radar, quin número surt quan mira cap a la paret del fons?|En el radar, ¿qué número sale cuando mira hacia la pared del fondo?"],
+        slides: ['s15'], app: "«Pausa activa», el repte «La ronda del vigilant» i el projecte «El radar del far» (es desa a Projectes).|«Pausa activa», el reto «La ronda del vigilante» y el proyecto «El radar del faro» (se guarda en Proyectos).", org: "Individual|Individual" },
+      { min: 3, t: "Tancament i tiquet de sortida|Cierre y ticket de salida", fase: 'tancament',
+        fa: "Repassa les tres idees amb el resum, deixa que facin les preguntes finals de l'app i fes a cada alumne/a una pregunta del tiquet a la porta.|Repasa las tres ideas con el resumen, deja que hagan las preguntas finales de la app y haz a cada alumno/a una pregunta del ticket en la puerta.",
+        diu: ["Qui m'explica en tres passos com mesura el sensor?|¿Quién me explica en tres pasos cómo mide el sensor?",
+          "On posaries un bloc perquè es repeteixi sense parar?|¿Dónde pondrías un bloque para que se repita sin parar?"],
+        slides: ['s16', 's17'], app: "«Tancament»: les dues preguntes finals i com m'he sentit.|«Cierre»: las dos preguntas finales y cómo me he sentido.", org: "Tot el grup|Todo el grupo" }
+    ],
+    errors: [
+      ["Creu que 500 vol dir que hi ha un obstacle a 5 metres.|Cree que 500 quiere decir que hay un obstáculo a 5 metros.",
+        "Pregunta-li fins a quants centímetres mesura el sensor (400). Si el número és més gran, què ha passat amb l'eco? Que ho comprovi apuntant el robot de veritat a l'aire.|Pregúntale hasta cuántos centímetros mide el sensor (400). Si el número es más grande, ¿qué ha pasado con el eco? Que lo compruebe apuntando el robot de verdad al aire."],
+      ["Calcula el temps amb tota la distància (66 cm) i el robot xoca.|Calcula el tiempo con toda la distancia (66 cm) y el robot choca.",
+        "Que dibuixi una línia del robot a la caixa i hi marqui on s'ha d'aturar: quin tros ha de recórrer de veritat?|Que dibuje una línea del robot a la caja y marque dónde tiene que pararse: ¿qué trozo tiene que recorrer de verdad?"],
+      ["Posa «mostra el número» a «en iniciar» i no entén per què el número no canvia.|Pone «muestra el número» en «al iniciar» y no entiende por qué el número no cambia.",
+        "Pregunta quantes vegades es fan els blocs d'«en iniciar». Que miri l'animació de les dues columnes i ho provi a «per sempre».|Pregunta cuántas veces se hacen los bloques de «al iniciar». Que mire la animación de las dos columnas y lo pruebe en «para siempre»."],
+      ["A la ronda posa una espera llarga a «en iniciar» i «per sempre» no comença.|En la ronda pone una espera larga en «al iniciar» y «para siempre» no empieza.",
+        "Recorda-li la targeta «Per sempre espera el seu torn»: què fa «per sempre» mentre «en iniciar» encara no ha acabat?|Recuérdale la tarjeta «Para siempre espera su turno»: ¿qué hace «para siempre» mientras «al iniciar» todavía no ha terminado?"],
+      ["Al robot de veritat mesura des de les rodes o des del darrere i les dades no quadren.|En el robot de verdad mide desde las ruedas o desde atrás y los datos no cuadran.",
+        "Que toqui amb el dit els dos «ulls» del sensor: d'aquí surt el so i d'aquí s'ha de mesurar.|Que toque con el dedo los dos «ojos» del sensor: de aquí sale el sonido y desde aquí hay que medir."]
+    ],
+    diff: {
+      mes: "Calcular quant tarda l'eco per a una paret a 1 metre (200 cm d'anada i tornada ÷ 34 ≈ 6 ms) i fer el radar amb girs més petits per mesurar més direccions. Proposar com es podria fer un mapa del magatzem amb les mesures del radar.|Calcular cuánto tarda el eco para una pared a 1 metro (200 cm de ida y vuelta ÷ 34 ≈ 6 ms) y hacer el radar con giros más pequeños para medir más direcciones. Proponer cómo se podría hacer un mapa del almacén con las medidas del radar.",
+      menys: "Fer les parelles de l'eco amb una calculadora i una taula ja començada (1 ms → 17 cm). Al primer repte, donar-li el càlcul a mitges: «ha d'avançar 56 cm; quants segons a 15,6 cm/s?».|Hacer las parejas del eco con una calculadora y una tabla ya empezada (1 ms → 17 cm). En el primer reto, darle el cálculo a medias: «tiene que avanzar 56 cm; ¿cuántos segundos a 15,6 cm/s?»."
+    },
+    aval: {
+      ticket: ["Explica en tres passos com mesura el sensor d'ultrasons.|Explica en tres pasos cómo mide el sensor de ultrasonidos.",
+        "Què vol dir que el sensor doni 500? I on poses un bloc perquè es repeteixi sense parar?|¿Qué quiere decir que el sensor dé 500? ¿Y dónde pones un bloque para que se repita sin parar?"],
+      rubric: [
+        ["Funcionament del sensor|Funcionamiento del sensor", "Explica el xiulet, l'eco i el temps, i calcula una distància dividint entre 2.|Explica el silbido, el eco y el tiempo, y calcula una distancia dividiendo entre 2.", "Sap que el sensor fa servir el so, però no relaciona el temps amb la distància.|Sabe que el sensor usa el sonido, pero no relaciona el tiempo con la distancia."],
+        ["Lectures i límits|Lecturas y límites", "Interpreta el 500 i explica per què una superfície tova o inclinada dona mesures dolentes.|Interpreta el 500 y explica por qué una superficie blanda o inclinada da medidas malas.", "Llegeix la distància, però creu que el 500 és una distància de veritat.|Lee la distancia, pero cree que el 500 es una distancia de verdad."],
+        ["En iniciar i per sempre|Al iniciar y para siempre", "Tria bé on va cada bloc i resol la ronda amb 5 blocs dins de «per sempre».|Elige bien dónde va cada bloque y resuelve la ronda con 5 bloques dentro de «para siempre».", "Necessita provar els dos guions per saber quin repeteix els blocs.|Necesita probar los dos guiones para saber cuál repite los bloques."]
+      ]
+    },
+    casa: "A casa, amb el mòbil, podeu repetir la sessió i fer l'activitat «La pilota eco»: feu rodolar una pilota cap a una paret des de 2 i des de 4 passos i compteu quant tarda a tornar.|En casa, con el móvil, podéis repetir la sesión y hacer la actividad «La pelota eco»: haced rodar una pelota hacia una pared desde 2 y desde 4 pasos y contad cuánto tarda en volver.",
+    slides: [
+      { id: 's1', k: 'portada', t: "Com mesura un robot?|¿Cómo mide un robot?", x: "Unitat 3 · El sensor de distància: el Maqueen aprèn a «veure» amb el so.|Unidad 3 · El sensor de distancia: el Maqueen aprende a «ver» con el sonido.",
+        nota: "Presenta l'objectiu: avui el robot deixarà d'anar a cegues.|Presenta el objetivo: hoy el robot dejará de ir a ciegas." },
+      { id: 's2', k: 'pregunta', t: "Com ho fa un ratpenat?|¿Cómo lo hace un murciélago?", x: "Vola a les fosques sense xocar amb les parets. Com sap on són?|Vuela a oscuras sin chocar con las paredes. ¿Cómo sabe dónde están?",
+        nota: "Recull idees sense corregir. Hi tornareu en explicar l'eco.|Recoge ideas sin corregir. Volveréis a ello al explicar el eco." },
+      { id: 's3', k: 'repas', t: "Fins ara: motors i temps|Hasta ahora: motores y tiempo", punts: ["Distància = velocitat × temps (a 150, uns 15,6 cm cada segon).|Distancia = velocidad × tiempo (a 150, unos 15,6 cm cada segundo).", "Girar 90° sobre si mateix: uns 590 ms a velocitat 100.|Girar 90° sobre sí mismo: unos 590 ms a velocidad 100.", "Però el robot no sap on són les coses: va a cegues.|Pero el robot no sabe dónde están las cosas: va a ciegas."],
+        nota: "Connecta amb la unitat 2: els programes de temps fix funcionen només si res no canvia de lloc.|Conecta con la unidad 2: los programas de tiempo fijo solo funcionan si nada cambia de sitio." },
+      { id: 's4', k: 'robo', t: "Un robot a cegues|Un robot a ciegas", x: "Ahir la caixa era més lluny. Avui la grua l'ha deixada aquí. Què passarà?|Ayer la caja estaba más lejos. Hoy la grúa la ha dejado aquí. ¿Qué pasará?",
+        robo: { w: { w: 120, h: 80, bot: [15, 40, 90], walls: [[70, 22, 10, 36]], time: 6 }, prog: 'start{ run:all,fwd,150 wait:4500 stop:all }' },
+        nota: "Que la classe ho predigui abans d'executar. Xoca perquè el programa només compta temps.|Que la clase lo prediga antes de ejecutar. Choca porque el programa solo cuenta tiempo." },
+      { id: 's5', k: 'anim', t: "L'eco|El eco", anim: 'k3echo', x: "Xiulet → rebota → torna l'eco. Com més lluny, més tarda.|Silbido → rebota → vuelve el eco. Cuanto más lejos, más tarda.",
+        nota: "El xiulet és de 40.000 vibracions per segon: massa agut per a les nostres orelles. Els ratpenats i els dofins fan servir l'eco igual.|El silbido es de 40.000 vibraciones por segundo: demasiado agudo para nuestras orejas. Los murciélagos y los delfines usan el eco igual." },
+      { id: 's6', k: 'anim', t: "Del temps als centímetres|Del tiempo a los centímetros", anim: 'k3math', x: "El so fa uns 34 cm cada mil·lèsima de segon. Va i torna: dividim entre 2.|El sonido hace unos 34 cm cada milésima de segundo. Va y vuelve: dividimos entre 2.",
+        nota: "Fes a la pissarra un altre exemple: eco de 4 ms → 4 × 34 = 136 → 136 ÷ 2 = 68 cm.|Haz en la pizarra otro ejemplo: eco de 4 ms → 4 × 34 = 136 → 136 ÷ 2 = 68 cm." },
+      { id: 's7', k: 'anim', t: "Un con estret|Un cono estrecho", anim: 'k3cone', x: "Veu el que té just al davant, de 2 a 400 cm. Si no torna cap eco: 500.|Ve lo que tiene justo delante, de 2 a 400 cm. Si no vuelve ningún eco: 500.",
+        nota: "Insisteix: 500 no és una distància, és el codi de «no veig res».|Insiste: 500 no es una distancia, es el código de «no veo nada»." },
+      { id: 's8', k: 'concepte', t: "El bloc distància|El bloque distancia", punts: ["És un valor: un número que va dins d'altres blocs.|Es un valor: un número que va dentro de otros bloques.", "«Mostra el número distància» l'escriu a la pantalla de la micro:bit.|«Muestra el número distancia» lo escribe en la pantalla de la micro:bit.", "Un número de dues xifres tarda gairebé un segon a passar per la pantalla.|Un número de dos cifras tarda casi un segundo en pasar por la pantalla."],
+        blocks: ["mostra el número distància (cm)|muestra el número distancia (cm)"],
+        nota: "Ensenya que la distància també es veu al tauler del simulador, sense cap bloc.|Enseña que la distancia también se ve en el tablero del simulador, sin ningún bloque." },
+      { id: 's9', k: 'anim', t: "«En iniciar» o «per sempre»?|¿«Al iniciar» o «para siempre»?", anim: 'k3loop', x: "Un cop, o sense parar?|¿Una vez, o sin parar?",
+        nota: "Remarca també que «per sempre» no comença fins que «en iniciar» ha acabat.|Remarca también que «para siempre» no empieza hasta que «al iniciar» ha terminado." },
+      { id: 's10', k: 'robo', t: "La distància, sempre al dia|La distancia, siempre al día", x: "El robot avança a poc a poc i la micro:bit mostra la distància per sempre. Què veurem?|El robot avanza despacio y la micro:bit muestra la distancia para siempre. ¿Qué veremos?",
+        robo: { w: { w: 120, h: 80, bot: [15, 40, 90], walls: [[95, 22, 10, 36]], time: 6 }, prog: 'start{ run:all,fwd,100 } forever{ num:dist }' },
+        nota: "El número baixa a mesura que s'acosta. Compara-ho amb el número del tauler.|El número baja a medida que se acerca. Compáralo con el número del tablero." },
+      { id: 's11', k: 'activitat', t: "Parelles de l'eco|Parejas del eco", timer: 8, punts: ["Gireu dues targetes: un temps i una distància.|Girad dos tarjetas: un tiempo y una distancia.", "Temps × 34 ÷ 2: fan parella?|Tiempo × 34 ÷ 2: ¿hacen pareja?", "Expliqueu el càlcul en veu alta abans de quedar-vos-les.|Explicad el cálculo en voz alta antes de quedároslas."],
+        nota: "Passa pels grups i demana a cada alumne/a que justifiqui una parella. La targeta «No torna cap eco» va amb «500».|Pasa por los grupos y pide a cada alumno/a que justifique una pareja. La tarjeta «No vuelve ningún eco» va con «500»." },
+      { id: 's12', k: 'activitat', t: "Ara, a l'ordinador|Ahora, al ordenador", timer: 15, punts: ["Obre la sessió «Com mesura un robot?».|Abre la sesión «¿Cómo mide un robot?».", "Al primer repte, llegeix la distància i calcula abans d'executar.|En el primer reto, lee la distancia y calcula antes de ejecutar.", "Para quan acabis «El racó del magatzem».|Para cuando acabes «El rincón del almacén»."],
+        nota: "«La pilota eco» queda per a casa: que toquin «Ara no».|«La pelota eco» queda para casa: que toquen «Ahora no»." },
+      { id: 's13', k: 'activitat', t: "Calibrem el sensor de veritat|Calibramos el sensor de verdad", timer: 12, punts: ["Descarregueu el programa a la micro:bit i poseu-la al Maqueen.|Descargad el programa en la micro:bit y ponedla en el Maqueen.", "Capsa a 10, 20 i 40 cm dels «ulls»: apunteu què marca.|Caja a 10, 20 y 40 cm de los «ojos»: apuntad qué marca.", "Proveu el jersei, la capsa inclinada i l'aire.|Probad el jersey, la caja inclinada y el aire.", "Canvieu els papers a cada mesura.|Cambiad los papeles en cada medida."],
+        code: "Maqueen_V5.I2CInit()\nbasic.forever(function () {\n    basic.showNumber(Maqueen_V5.Ultrasonic())\n})",
+        nota: "Aquest programa no mou els motors, però el robot ha d'estar lluny de la vora de la taula. En acabar, apagueu l'interruptor.|Este programa no mueve los motores, pero el robot tiene que estar lejos del borde de la mesa. Al terminar, apagad el interruptor." },
+      { id: 's14', k: 'concepte', t: "El sensor de veritat|El sensor de verdad", punts: ["Pot marcar 1 o 2 cm diferent del regle: per això calibrem.|Puede marcar 1 o 2 cm diferente de la regla: por eso calibramos.", "Les superfícies toves (roba, escuma) s'empassen el so.|Las superficies blandas (ropa, espuma) se tragan el sonido.", "Una superfície inclinada fa rebotar el so cap a un altre costat.|Una superficie inclinada hace rebotar el sonido hacia otro lado."],
+        nota: "Posa en comú les fitxes: quin grup ha trobat més diferència i per què?|Poned en común las fichas: ¿qué grupo ha encontrado más diferencia y por qué?" },
+      { id: 's15', k: 'repte', t: "La ronda i el radar|La ronda y el radar", timer: 8, punts: ["La ronda del vigilant: només 5 blocs, amb «per sempre».|La ronda del vigilante: solo 5 bloques, con «para siempre».", "El radar del far: gira a trossos i mostra la distància.|El radar del faro: gira a trozos y muestra la distancia."],
+        nota: "Si algú s'encalla a la ronda, pregunta-li què ha de fer el robot una sola vegada i què s'ha de repetir.|Si alguien se atasca en la ronda, pregúntale qué tiene que hacer el robot una sola vez y qué se tiene que repetir." },
+      { id: 's16', k: 'resum', t: "Què hem après avui|Qué hemos aprendido hoy", punts: ["El sensor envia un xiulet i escolta l'eco: el temps diu la distància.|El sensor envía un silbido y escucha el eco: el tiempo dice la distancia.", "Mesura de 2 a 400 cm, just al davant; 500 vol dir que no veu res.|Mide de 2 a 400 cm, justo delante; 500 quiere decir que no ve nada.", "«Per sempre» repeteix sense parar: la mesura sempre al dia.|«Para siempre» repite sin parar: la medida siempre al día."],
+        nota: "Torna a la pregunta del ratpenat: ara sabeu que fa servir l'eco, com el Maqueen.|Vuelve a la pregunta del murciélago: ahora sabéis que usa el eco, como el Maqueen." },
+      { id: 's17', k: 'tiquet', t: "Tiquet de sortida|Ticket de salida", punts: ["Com mesura el sensor, en tres passos?|¿Cómo mide el sensor, en tres pasos?", "Què vol dir 500? On poses un bloc perquè es repeteixi?|¿Qué quiere decir 500? ¿Dónde pones un bloque para que se repita?"],
+        nota: "Anota qui confon «en iniciar» i «per sempre»: a la sessió 2 és clau.|Anota quién confunde «al iniciar» y «para siempre»: en la sesión 2 es clave." }
+    ],
+    print: [
+      { id: 'p1', t: "Targetes: parelles de l'eco|Tarjetas: parejas del eco", k: 'targetes',
+        intro: "Un paquet per grup de 3. Cada targeta de temps fa parella amb una de distància: temps × 34 ÷ 2 (el so fa uns 34 cm cada ms i va i torna).|Un paquete por grupo de 3. Cada tarjeta de tiempo hace pareja con una de distancia: tiempo × 34 ÷ 2 (el sonido hace unos 34 cm cada ms y va y vuelve).",
+        items: [
+          { t: "Eco: 1 ms ⏱️|Eco: 1 ms ⏱️", n: 1 }, { t: "17 cm 📏|17 cm 📏", n: 1 },
+          { t: "Eco: 2 ms ⏱️|Eco: 2 ms ⏱️", n: 1 }, { t: "34 cm 📏|34 cm 📏", n: 1 },
+          { t: "Eco: 3 ms ⏱️|Eco: 3 ms ⏱️", n: 1 }, { t: "51 cm 📏|51 cm 📏", n: 1 },
+          { t: "Eco: 4 ms ⏱️|Eco: 4 ms ⏱️", n: 1 }, { t: "68 cm 📏|68 cm 📏", n: 1 },
+          { t: "Eco: 6 ms ⏱️|Eco: 6 ms ⏱️", n: 1 }, { t: "102 cm 📏|102 cm 📏", n: 1 },
+          { t: "No torna cap eco 🔇|No vuelve ningún eco 🔇", n: 1 }, { t: "500 🚫|500 🚫", n: 1 }
+        ] },
+      { id: 'p2', t: "Fitxa: calibrem el sensor|Ficha: calibramos el sensor", k: 'fitxa',
+        intro: "Robot quiet a la taula, lluny de la vora, amb aquest programa a la micro:bit. Mesureu sempre des dels «ulls» del sensor.|Robot quieto en la mesa, lejos del borde, con este programa en la micro:bit. Medid siempre desde los «ojos» del sensor.",
+        items: [
+          { q: "Capsa a 10 cm (amb el regle). Què marca la micro:bit?|Caja a 10 cm (con la regla). ¿Qué marca la micro:bit?", rprog: 'forever{ num:dist }', sol: "Un número proper a 10 (per exemple, entre 9 i 12).|Un número cercano a 10 (por ejemplo, entre 9 y 12)." },
+          { q: "Capsa a 20 cm. Què marca?|Caja a 20 cm. ¿Qué marca?", sol: "Un número proper a 20.|Un número cercano a 20." },
+          { q: "Capsa a 40 cm. Què marca? La diferència amb el regle és més gran o més petita que a 10 cm?|Caja a 40 cm. ¿Qué marca? ¿La diferencia con la regla es más grande o más pequeña que a 10 cm?", sol: "Un número proper a 40; la diferència sol ser d'1 o 2 cm.|Un número cercano a 40; la diferencia suele ser de 1 o 2 cm." },
+          { q: "Ara poseu un jersei o un coixí a 20 cm. Què passa amb la mesura?|Ahora poned un jersey o un cojín a 20 cm. ¿Qué pasa con la medida?", sol: "Pot ser inestable o massa gran: la roba s'empassa part del so.|Puede ser inestable o demasiado grande: la ropa se traga parte del sonido." },
+          { q: "Inclineu la capsa (com una rampa) a 20 cm. I apunteu el robot cap a l'aire. Què marca?|Inclinad la caja (como una rampa) a 20 cm. Y apuntad el robot hacia el aire. ¿Qué marca?", sol: "Amb la capsa inclinada, el so rebota cap a un altre costat i la mesura falla; cap a l'aire, un número molt gran o 500.|Con la caja inclinada, el sonido rebota hacia otro lado y la medida falla; hacia el aire, un número muy grande o 500." },
+          { q: "Conclusió del grup: el sensor de veritat és fiable? Quan cal anar amb compte?|Conclusión del grupo: ¿el sensor de verdad es fiable? ¿Cuándo hay que ir con cuidado?", sol: "És fiable amb superfícies dures i de cara; cal compte amb la roba, les superfícies inclinades i les coses de costat.|Es fiable con superficies duras y de cara; hay que ir con cuidado con la ropa, las superficies inclinadas y las cosas de lado." }
+        ] }
+    ]
+  },
+
+  /* ---------- Sessió 2 · Para abans del mur ---------- */
+  'k3-2': {
+    obj: [
+      "L'alumne/a fa servir «si… si no» amb una condició sobre la distància (menor que / major que).|El alumno/a usa «si… si no» con una condición sobre la distancia (menor que / mayor que).",
+      "L'alumne/a explica per què el «si» ha d'anar dins de «per sempre» per reaccionar a temps.|El alumno/a explica por qué el «si» tiene que ir dentro de «para siempre» para reaccionar a tiempo.",
+      "L'alumne/a programa un robot que s'atura sol davant d'un obstacle, sigui on sigui, i ho comprova a diverses pistes.|El alumno/a programa un robot que se para solo delante de un obstáculo, esté donde esté, y lo comprueba en varias pistas.",
+      "L'alumne/a relaciona la velocitat amb la distància de frenada i ajusta la distància límit.|El alumno/a relaciona la velocidad con la distancia de frenada y ajusta la distancia límite."
+    ],
+    comp: [
+      "Competència digital: programar decisions amb sensors i depurar programes|Competencia digital: programar decisiones con sensores y depurar programas",
+      "Pensament computacional: condicionals, bucles i el bucle de control sensor-decisió-motor|Pensamiento computacional: condicionales, bucles y el bucle de control sensor-decisión-motor",
+      "Competència STEM: inèrcia i distància de frenada; fer proves i mesurar|Competencia STEM: inercia y distancia de frenada; hacer pruebas y medir",
+      "Matemàtiques: comparar nombres amb < i >, i interpretar una taula de mesures|Matemáticas: comparar números con < y >, e interpretar una tabla de medidas"
+    ],
+    vocab: [
+      ["Condició|Condición", "Una pregunta que només es respon amb sí o no, com «distància < 15?».|Una pregunta que solo se responde con sí o no, como «¿distancia < 15?»."],
+      ["Si… si no|Si… si no", "Bloc que fa uns blocs si la condició és certa i uns altres si no ho és.|Bloque que hace unos bloques si la condición es cierta y otros si no lo es."],
+      ["Menor que (<) / major que (>)|Menor que (<) / mayor que (>)", "Signes per comparar dos números: 8 < 15 i 20 > 15.|Signos para comparar dos números: 8 < 15 y 20 > 15."],
+      ["Llindar|Umbral", "El número de la condició a partir del qual el robot canvia el que fa (per exemple, 12 cm).|El número de la condición a partir del cual el robot cambia lo que hace (por ejemplo, 12 cm)."],
+      ["Inèrcia|Inercia", "El robot continua movent-se una mica després d'aturar els motors.|El robot sigue moviéndose un poco después de parar los motores."]
+    ],
+    mat: {
+      aula: [
+        "Un ordinador per alumne/a amb Numi Tech obert a la sessió «Para abans del mur»|Un ordenador por alumno/a con Numi Tech abierto en la sesión «Para antes del muro»",
+        "Projector i la presentació d'aquesta sessió|Proyector y la presentación de esta sesión",
+        "Un kit Maqueen Lite V5 amb micro:bit V2 per grup de 3-4, amb piles carregades|Un kit Maqueen Lite V5 con micro:bit V2 por grupo de 3-4, con pilas cargadas",
+        "Per grup: una capsa de cartró rígida (el «mur»), un regle, cinta de pintor i un espai de terra d'1 metre|Por grupo: una caja de cartón rígida (el «muro»), una regla, cinta de pintor y un espacio de suelo de 1 metro"
+      ],
+      imprimir: ["Fitxa: què fa el robot?|Ficha: ¿qué hace el robot?", "Codi: para abans del mur|Código: para antes del muro"],
+      prep: [
+        "Marcar a terra, per a cada grup, una línia de sortida i marques a 40, 60 i 80 cm on posar la capsa.|Marcar en el suelo, para cada grupo, una línea de salida y marcas a 40, 60 y 80 cm donde poner la caja.",
+        "Preparar a MakeCode el programa «para abans del mur» (diapositiva 12) amb l'extensió del Maqueen.|Preparar en MakeCode el programa «para antes del muro» (diapositiva 12) con la extensión del Maqueen.",
+        "Imprimir una fitxa per alumne/a i un full de codi per grup.|Imprimir una ficha por alumno/a y una hoja de código por grupo.",
+        "Provar les demos de les diapositives 5, 6 i 8 per saber on acaba el robot.|Probar las demos de las diapositivas 5, 6 y 8 para saber dónde acaba el robot."
+      ]
+    },
+    plan: [
+      { min: 4, t: "Benvinguda: el contenidor que es mou|Bienvenida: el contenedor que se mueve", fase: 'inici',
+        fa: "Repassa el sensor i «per sempre» amb la diapositiva de repàs. Planteja el problema: la grua deixa el contenidor cada nit en un lloc diferent. Com ho farem perquè el robot s'aturi a 10 cm, sigui on sigui?|Repasa el sensor y «para siempre» con la diapositiva de repaso. Plantea el problema: la grúa deja el contenedor cada noche en un sitio diferente. ¿Cómo lo haremos para que el robot se pare a 10 cm, esté donde esté?",
+        diu: ["Si el contenidor canvia de lloc cada nit, serveix un programa amb espera?|Si el contenedor cambia de sitio cada noche, ¿sirve un programa con espera?",
+          "Què hauria de pensar el robot mentre avança?|¿Qué debería pensar el robot mientras avanza?"],
+        slides: ['s1', 's2', 's3'], app: "Encara no.|Todavía no.", org: "Tot el grup|Todo el grupo" },
+      { min: 10, t: "«Si… si no» dins de «per sempre»|«Si… si no» dentro de «para siempre»", fase: 'teoria',
+        fa: "Explica el «si… si no» amb l'animació i escriu a la pissarra la condició «distància < 15». Executa la demo que s'atura. Després, sense executar-la, ensenya la demo amb el «si» a «en iniciar» i fes que tothom predigui on acabarà (xoca). Acaba amb la frenada i amb l'error del número dins del bucle.|Explica el «si… si no» con la animación y escribe en la pizarra la condición «distancia < 15». Ejecuta la demo que se para. Después, sin ejecutarla, enseña la demo con el «si» en «al iniciar» y haz que todos predigan dónde acabará (choca). Acaba con la frenada y con el error del número dentro del bucle.",
+        diu: ["8 és menor que 15? I 40? Què farà el robot a cada cas?|¿8 es menor que 15? ¿Y 40? ¿Qué hará el robot en cada caso?",
+          "Si el «si» és a «en iniciar», quantes vegades pregunta?|Si el «si» está en «al iniciar», ¿cuántas veces pregunta?",
+          "Per què el robot ràpid s'acosta més a la caixa?|¿Por qué el robot rápido se acerca más a la caja?"],
+        slides: ['s4', 's5', 's6', 's7', 's8', 's9'], app: "Encara no.|Todavía no.", org: "Tot el grup|Todo el grupo" },
+      { min: 8, t: "Què fa el robot?|¿Qué hace el robot?", fase: 'desconnectat',
+        fa: "Cada alumne/a fa la fitxa: hi ha llistes de lectures del sensor i cal escriure què fa el robot a cada lectura amb diferents regles (una de bona, una amb el signe girat i una amb el sensor «adormit»). En parelles, compareu les respostes i expliqueu per què el robot de la regla girada no es mou.|Cada alumno/a hace la ficha: hay listas de lecturas del sensor y hay que escribir qué hace el robot en cada lectura con diferentes reglas (una buena, una con el signo girado y una con el sensor «dormido»). Por parejas, comparad las respuestas y explicad por qué el robot de la regla girada no se mueve.",
+        diu: ["Llegiu la regla en veu alta amb cada número.|Leed la regla en voz alta con cada número.",
+          "Si el sensor només llegeix un cop cada tres passos, què pot passar?|Si el sensor solo lee una vez cada tres pasos, ¿qué puede pasar?"],
+        slides: ['s10'], app: "Cap. A l'app, l'activitat «El robot i el sensor humans» queda per a casa.|Ninguna. En la app, la actividad «El robot y el sensor humanos» queda para casa.", org: "Individual i després per parelles|Individual y después por parejas" },
+      { min: 15, t: "A l'ordinador: el robot decideix|En el ordenador: el robot decide", fase: 'ordinador',
+        fa: "Avancen fins al repte de les 3 pistes. A «On s'aturarà?», que pensin abans de tocar. Si algú resol la primera pista amb esperes, deixa que la segona pista li mostri el problema i pregunta-li qui hauria de decidir quan s'atura.|Avanzan hasta el reto de las 3 pistas. En «¿Dónde se parará?», que piensen antes de tocar. Si alguien resuelve la primera pista con esperas, deja que la segunda pista le muestre el problema y pregúntale quién debería decidir cuándo se para.",
+        diu: ["Per afegir el «si no», toca el bloc «si».|Para añadir el «si no», toca el bloque «si».",
+          "Funciona a la pista 1… i a la 2? Qui decideix quan s'atura, l'espera o el sensor?|Funciona en la pista 1… ¿y en la 2? ¿Quién decide cuándo se para, la espera o el sensor?"],
+        slides: ['s11'], app: "De «Recorda» fins al repte «La grua ha mogut el contenidor» (3 pistes).|Desde «Recuerda» hasta el reto «La grúa ha movido el contenedor» (3 pistas).", org: "Individual|Individual" },
+      { min: 12, t: "Robot de veritat: para abans del mur|Robot de verdad: para antes del muro", fase: 'robot',
+        fa: "Cada grup descarrega el programa a la micro:bit. Robot a terra (no a la taula: ara es mou!), a la línia de sortida, i la capsa a 40 cm. Un alumne/a encén el robot, un altre mesura amb el regle on s'ha aturat, un altre apunta i un altre està preparat per agafar el robot si cal. Proveu la capsa a 40, 60 i 80 cm sense canviar el programa. Després canvieu la velocitat a 255 i torneu a mesurar: s'atura més a prop? Ajusteu el llindar fins que s'aturi a uns 10 cm.|Cada grupo descarga el programa en la micro:bit. Robot en el suelo (no en la mesa: ¡ahora se mueve!), en la línea de salida, y la caja a 40 cm. Un alumno/a enciende el robot, otro mide con la regla dónde se ha parado, otro apunta y otro está preparado para coger el robot si hace falta. Probad la caja a 40, 60 y 80 cm sin cambiar el programa. Después cambiad la velocidad a 255 y volved a medir: ¿se para más cerca? Ajustad el umbral hasta que se pare a unos 10 cm.",
+        diu: ["El mateix programa ha funcionat a les tres distàncies? Per què?|¿El mismo programa ha funcionado en las tres distancias? ¿Por qué?",
+          "A 255, quants centímetres més llisca que a 150?|A 255, ¿cuántos centímetros más se desliza que a 150?",
+          "Si la capsa és tova o està inclinada, el robot la veu bé?|Si la caja es blanda o está inclinada, ¿el robot la ve bien?"],
+        slides: ['s12', 's13'], app: "Cap: MakeCode i el robot de veritat.|Ninguna: MakeCode y el robot de verdad.", org: "Grups de 3-4 per kit amb papers que roten|Grupos de 3-4 por kit con papeles que rotan" },
+      { min: 8, t: "Reptes i crea: el robot del moll|Retos y crea: el robot del muelle", fase: 'crea',
+        fa: "A l'ordinador, el repte de l'error (el signe girat), el repte ràpid a 255 i el projecte «El robot del moll», que mostra la distància quan s'atura. Comparen el llindar que han triat al simulador amb el del robot de veritat.|En el ordenador, el reto del error (el signo girado), el reto rápido a 255 y el proyecto «El robot del muelle», que muestra la distancia cuando se para. Comparan el umbral que han elegido en el simulador con el del robot de verdad.",
+        diu: ["Llegeix la condició en veu alta: té sentit?|Lee la condición en voz alta: ¿tiene sentido?",
+          "On has de posar «mostra el número» perquè no distregui el robot mentre avança?|¿Dónde tienes que poner «muestra el número» para que no distraiga al robot mientras avanza?"],
+        slides: ['s14'], app: "«Pausa activa», els reptes «Ui! no es mou» i «Ràpid però segur», i el projecte «El robot del moll».|«Pausa activa», los retos «¡Uy! no se mueve» y «Rápido pero seguro», y el proyecto «El robot del muelle».", org: "Individual|Individual" },
+      { min: 3, t: "Tancament i tiquet|Cierre y ticket", fase: 'tancament',
+        fa: "Resum de les tres idees, preguntes finals de l'app i tiquet a la porta.|Resumen de las tres ideas, preguntas finales de la app y ticket en la puerta.",
+        diu: ["Per què el «si» va dins de «per sempre»?|¿Por qué el «si» va dentro de «para siempre»?"],
+        slides: ['s15', 's16'], app: "«Tancament».|«Cierre».", org: "Tot el grup|Todo el grupo" }
+    ],
+    errors: [
+      ["Posa el «si» a «en iniciar» i el robot xoca.|Pone el «si» en «al iniciar» y el robot choca.",
+        "Pregunta quantes vegades es fa la pregunta. Que recordi la predicció de la diapositiva 6.|Pregunta cuántas veces se hace la pregunta. Que recuerde la predicción de la diapositiva 6."],
+      ["Gira el signe (> en lloc de <) i el robot no es mou o no s'atura mai.|Gira el signo (> en lugar de <) y el robot no se mueve o no se para nunca.",
+        "Que llegeixi la condició amb un número real: «60 és major que 12? Sí → atura». Té sentit al principi del camí?|Que lea la condición con un número real: «¿60 es mayor que 12? Sí → para». ¿Tiene sentido al principio del camino?"],
+      ["Oblida el «si no» i el robot no arrenca.|Olvida el «si no» y el robot no arranca.",
+        "Pregunta-li: si la caixa és lluny, quin bloc fa avançar el robot? Recorda que el «si no» s'afegeix tocant el bloc «si».|Pregúntale: si la caja está lejos, ¿qué bloque hace avanzar el robot? Recuerda que el «si no» se añade tocando el bloque «si»."],
+      ["Posa «mostra el número» o una espera llarga dins del bucle i el robot frena tard.|Pone «muestra el número» o una espera larga dentro del bucle y el robot frena tarde.",
+        "Que miri la demo de la diapositiva 8 i pensi què fa el robot mentre la pantalla escriu el número.|Que mire la demo de la diapositiva 8 y piense qué hace el robot mientras la pantalla escribe el número."],
+      ["Al robot real, el llindar del simulador no dona exactament la mateixa distància.|En el robot real, el umbral del simulador no da exactamente la misma distancia.",
+        "És normal: el terra, les piles i el sensor canvien. Que ho mesuri i ajusti el número, com un enginyer/a.|Es normal: el suelo, las pilas y el sensor cambian. Que lo mida y ajuste el número, como un ingeniero/a."]
+    ],
+    diff: {
+      mes: "Fer una taula de velocitats (100, 150, 200, 255) i llindars i trobar, per a cada velocitat, el llindar que deixa el robot a 10 cm. Hi ha alguna regla? Proposar un robot que vagi ràpid lluny i lent a prop (ho farem a la sessió 4).|Hacer una tabla de velocidades (100, 150, 200, 255) y umbrales y encontrar, para cada velocidad, el umbral que deja el robot a 10 cm. ¿Hay alguna regla? Proponer un robot que vaya rápido lejos y lento cerca (lo haremos en la sesión 4).",
+      menys: "Treballar amb la regla escrita en una tira de paper («si distància < 12 → atura; si no → endavant») al costat de l'ordinador i començar pel repte d'una sola pista. A la fitxa, fer només la primera regla.|Trabajar con la regla escrita en una tira de papel («si distancia < 12 → para; si no → adelante») al lado del ordenador y empezar por el reto de una sola pista. En la ficha, hacer solo la primera regla."
+    },
+    aval: {
+      ticket: ["Escriu el programa per aturar-se a 10 cm d'una caixa, sigui on sigui.|Escribe el programa para pararse a 10 cm de una caja, esté donde esté.",
+        "Si el robot va més de pressa, el llindar ha de ser més gran o més petit? Per què?|Si el robot va más deprisa, ¿el umbral tiene que ser más grande o más pequeño? ¿Por qué?"],
+      rubric: [
+        ["Condicional|Condicional", "Escriu la condició correcta (distància < llindar) i omple bé el «si» i el «si no».|Escribe la condición correcta (distancia < umbral) y rellena bien el «si» y el «si no».", "Fa servir el «si», però confon el signe o oblida el «si no».|Usa el «si», pero confunde el signo u olvida el «si no»."],
+        ["Bucle de control|Bucle de control", "Explica que el «si» va dins de «per sempre» perquè es pregunti moltes vegades.|Explica que el «si» va dentro de «para siempre» para que se pregunte muchas veces.", "Posa el «si» a «per sempre» perquè ho ha vist, però no ho sap explicar.|Pone el «si» en «para siempre» porque lo ha visto, pero no lo sabe explicar."],
+        ["Prova i ajust|Prueba y ajuste", "Comprova el programa a diverses pistes i ajusta el llindar segons la velocitat, també al robot real.|Comprueba el programa en varias pistas y ajusta el umbral según la velocidad, también en el robot real.", "Prova una sola pista i canvia els números a l'atzar.|Prueba una sola pista y cambia los números al azar."]
+      ]
+    },
+    casa: "A casa, amb el mòbil, podeu repetir la sessió i fer «El robot i el sensor humans»: una persona camina cap a una paret i l'altra li diu quants peus falten; el robot segueix la regla «si menys de 3, atura't».|En casa, con el móvil, podéis repetir la sesión y hacer «El robot y el sensor humanos»: una persona camina hacia una pared y la otra le dice cuántos pies faltan; el robot sigue la regla «si menos de 3, párate».",
+    slides: [
+      { id: 's1', k: 'portada', t: "Para abans del mur|Para antes del muro", x: "El robot aprèn a decidir: «si… si no».|El robot aprende a decidir: «si… si no».",
+        nota: "Objectiu: al final, el robot s'aturarà sol sigui on sigui el contenidor.|Objetivo: al final, el robot se parará solo esté donde esté el contenedor." },
+      { id: 's2', k: 'repas', t: "Recordem|Recordemos", punts: ["El sensor mesura la distància amb l'eco (cm).|El sensor mide la distancia con el eco (cm).", "500 = no veu res.|500 = no ve nada.", "«Per sempre» repeteix els blocs sense parar.|«Para siempre» repite los bloques sin parar."],
+        nota: "Pregunta a qui va confondre «en iniciar» i «per sempre» al tiquet anterior.|Pregunta a quien confundió «al iniciar» y «para siempre» en el ticket anterior." },
+      { id: 's3', k: 'pregunta', t: "El contenidor ballarí|El contenedor bailarín", x: "Cada nit és en un lloc diferent. Com sabrà el robot quan s'ha d'aturar?|Cada noche está en un sitio diferente. ¿Cómo sabrá el robot cuándo tiene que pararse?",
+        nota: "Busca la idea: «quan el sensor digui que és a prop». Escriu-la a la pissarra amb les seves paraules.|Busca la idea: «cuando el sensor diga que está cerca». Escríbela en la pizarra con sus palabras." },
+      { id: 's4', k: 'anim', t: "«Si… si no»|«Si… si no»", anim: 'k3if', x: "Una pregunta de sí o no: si és sí, atura; si no, endavant.|Una pregunta de sí o no: si es sí, para; si no, adelante.",
+        blocks: ["si distància (cm) < 15|si distancia (cm) < 15", "atura el motor els dos|para el motor los dos", "si no|si no", "motor els dos endavant a velocitat 150|motor los dos adelante a velocidad 150"],
+        nota: "Practica el signe <: digues números i la classe respon «sí» o «no».|Practica el signo <: di números y la clase responde «sí» o «no»." },
+      { id: 's5', k: 'robo', t: "Para abans del mur|Para antes del muro", x: "Sense cap espera. On s'aturarà?|Sin ninguna espera. ¿Dónde se parará?",
+        robo: { w: { w: 120, h: 80, bot: [15, 40, 90], walls: [[90, 15, 8, 50]], time: 7 }, prog: 'forever{ if:dist<15{ stop:all } else{ run:all,fwd,150 } }' },
+        nota: "Mira amb la classe el tauler: quan la distància baixa de 15, s'atura.|Mira con la clase el tablero: cuando la distancia baja de 15, se para." },
+      { id: 's6', k: 'robo', t: "I si el «si» és a «en iniciar»?|¿Y si el «si» está en «al iniciar»?", x: "Prediu abans d'executar: s'aturarà?|Predice antes de ejecutar: ¿se parará?",
+        robo: { w: { w: 120, h: 80, bot: [15, 40, 90], walls: [[95, 15, 8, 50]], time: 8 }, prog: 'start{ if:dist<20{ stop:all } else{ run:all,fwd,150 } }' },
+        nota: "Xoca: pregunta una sola vegada, al principi, quan la caixa és lluny.|Choca: pregunta una sola vez, al principio, cuando la caja está lejos." },
+      { id: 's7', k: 'anim', t: "La frenada|La frenada", anim: 'k3brake', x: "Com més de pressa, més llisca: cal decidir abans.|Cuanto más deprisa, más se desliza: hay que decidir antes.",
+        nota: "Exemple: una bicicleta ràpida necessita més espai per frenar que una de lenta.|Ejemplo: una bicicleta rápida necesita más espacio para frenar que una lenta." },
+      { id: 's8', k: 'robo', t: "Un número que distreu|Un número que distrae", x: "Hem posat «mostra el número» dins del bucle. Què passarà?|Hemos puesto «muestra el número» dentro del bucle. ¿Qué pasará?",
+        robo: { w: { w: 120, h: 80, bot: [15, 40, 90], walls: [[90, 15, 8, 50]], time: 6 }, prog: 'forever{ num:dist if:dist<15{ stop:all } else{ run:all,fwd,200 } }' },
+        nota: "Mentre escriu el número, no torna a preguntar i arriba tard.|Mientras escribe el número, no vuelve a preguntar y llega tarde." },
+      { id: 's9', k: 'concepte', t: "Comparar números|Comparar números", punts: ["< vol dir «menor que»: 8 < 15.|< quiere decir «menor que»: 8 < 15.", "> vol dir «major que»: 40 > 15.|> quiere decir «mayor que»: 40 > 15.", "La boca del signe s'obre cap al més gran.|La boca del signo se abre hacia el más grande."],
+        nota: "Molts errors d'avui seran el signe girat. Deixa aquesta diapositiva a mà.|Muchos errores de hoy serán el signo girado. Deja esta diapositiva a mano." },
+      { id: 's10', k: 'activitat', t: "Què fa el robot?|¿Qué hace el robot?", timer: 8, punts: ["Llegiu cada lectura del sensor.|Leed cada lectura del sensor.", "Apliqueu la regla: atura o endavant?|Aplicad la regla: ¿para o adelante?", "Compareu en parelles.|Comparad por parejas."],
+        nota: "Fixa't en la regla girada (dist > 12): hi ha alumnes que diran que funciona.|Fíjate en la regla girada (dist > 12): hay alumnos que dirán que funciona." },
+      { id: 's11', k: 'activitat', t: "Ara, a l'ordinador|Ahora, al ordenador", timer: 15, punts: ["Obre la sessió «Para abans del mur».|Abre la sesión «Para antes del muro».", "A «On s'aturarà?», pensa abans de tocar.|En «¿Dónde se parará?», piensa antes de tocar.", "Para quan acabis el repte de les 3 pistes.|Para cuando acabes el reto de las 3 pistas."],
+        nota: "Si algú fa servir esperes, deixa que la pista 2 li mostri el problema.|Si alguien usa esperas, deja que la pista 2 le muestre el problema." },
+      { id: 's12', k: 'activitat', t: "El robot de veritat s'atura sol|El robot de verdad se para solo", timer: 12, punts: ["Robot a terra, a la línia de sortida.|Robot en el suelo, en la línea de salida.", "Capsa a 40, 60 i 80 cm: mateix programa.|Caja a 40, 60 y 80 cm: mismo programa.", "Mesureu on s'atura amb el regle.|Medid dónde se para con la regla.", "Proveu a 255: s'atura més a prop?|Probad a 255: ¿se para más cerca?"],
+        code: "Maqueen_V5.I2CInit()\nbasic.forever(function () {\n    if (Maqueen_V5.Ultrasonic() < 12) {\n        Maqueen_V5.motorStop(Maqueen_V5.Motors.All)\n    } else {\n        Maqueen_V5.motorRun(Maqueen_V5.Motors.All, Maqueen_V5.Dir.CW, 150)\n    }\n})",
+        nota: "Seguretat: el robot sempre a terra, i algú preparat per agafar-lo. Si la capsa és massa tova, el sensor no la veu bé: feu servir cartró rígid.|Seguridad: el robot siempre en el suelo, y alguien preparado para cogerlo. Si la caja es demasiado blanda, el sensor no la ve bien: usad cartón rígido." },
+      { id: 's13', k: 'repte', t: "Repte: la frenada de veritat|Reto: la frenada de verdad", punts: ["Velocitat 150, llindar 12: a quants cm s'atura?|Velocidad 150, umbral 12: ¿a cuántos cm se para?", "Velocitat 255, llindar 12: i ara?|Velocidad 255, umbral 12: ¿y ahora?", "Quin llindar el deixa a 10 cm a 255?|¿Qué umbral lo deja a 10 cm a 255?"],
+        nota: "Apunteu els resultats de tots els grups a la pissarra i busqueu la tendència.|Apuntad los resultados de todos los grupos en la pizarra y buscad la tendencia." },
+      { id: 's14', k: 'repte', t: "Reptes i crea|Retos y crea", timer: 8, punts: ["L'error: el robot no es mou.|El error: el robot no se mueve.", "Ràpid però segur: a 255 en menys de 4 segons.|Rápido pero seguro: a 255 en menos de 4 segundos.", "El robot del moll: s'atura i mostra la distància.|El robot del muelle: se para y muestra la distancia."],
+        nota: "Al projecte, el número va dins del «si», on ja està aturat.|En el proyecto, el número va dentro del «si», donde ya está parado." },
+      { id: 's15', k: 'resum', t: "Què hem après avui|Qué hemos aprendido hoy", punts: ["«Si… si no»: una pregunta, dos camins.|«Si… si no»: una pregunta, dos caminos.", "Dins de «per sempre», el robot pregunta moltes vegades i s'atura a temps.|Dentro de «para siempre», el robot pregunta muchas veces y se para a tiempo.", "Més velocitat → frenar abans.|Más velocidad → frenar antes."],
+        nota: "Connecta amb la propera sessió: i si en lloc d'aturar-se, gira?|Conecta con la próxima sesión: ¿y si en lugar de pararse, gira?" },
+      { id: 's16', k: 'tiquet', t: "Tiquet de sortida|Ticket de salida", punts: ["Escriu el programa per aturar-se a 10 cm.|Escribe el programa para pararse a 10 cm.", "Més velocitat: llindar més gran o més petit?|Más velocidad: ¿umbral más grande o más pequeño?"],
+        nota: "Anota qui gira el signe: repassa-ho a l'inici de la sessió 3.|Anota quién gira el signo: repásalo al inicio de la sesión 3." }
+    ],
+    print: [
+      { id: 'p1', t: "Fitxa: què fa el robot?|Ficha: ¿qué hace el robot?", k: 'fitxa',
+        intro: "Per a cada regla, escriu què fa el robot amb cada lectura del sensor: ATURA o ENDAVANT.|Para cada regla, escribe qué hace el robot con cada lectura del sensor: PARA o ADELANTE.",
+        items: [
+          { q: "Regla A: si distància < 12 → atura; si no → endavant. Lectures: 60, 35, 18, 11, 7.|Regla A: si distancia < 12 → para; si no → adelante. Lecturas: 60, 35, 18, 11, 7.", rprog: 'forever{ if:dist<12{ stop:all } else{ run:all,fwd,150 } }', sol: "Endavant, endavant, endavant, atura, atura.|Adelante, adelante, adelante, para, para." },
+          { q: "Regla B: si distància > 12 → atura; si no → endavant. Lectures: 60, 35, 18. Què li passa a aquest robot?|Regla B: si distancia > 12 → para; si no → adelante. Lecturas: 60, 35, 18. ¿Qué le pasa a este robot?", sol: "Atura, atura, atura: no es mou mai perquè la caixa és lluny. El signe està girat.|Para, para, para: no se mueve nunca porque la caja está lejos. El signo está girado." },
+          { q: "Regla A, però el sensor només llegeix un cop cada 3 passos (el robot avança 10 cm per pas). La caixa és a 35 cm. Pot xocar?|Regla A, pero el sensor solo lee una vez cada 3 pasos (el robot avanza 10 cm por paso). La caja está a 35 cm. ¿Puede chocar?", sol: "Sí: llegeix 35 (endavant), fa 3 passos sense mirar (30 cm) i quan torna a llegir ja és a 5 cm o xoca.|Sí: lee 35 (adelante), da 3 pasos sin mirar (30 cm) y cuando vuelve a leer ya está a 5 cm o choca." },
+          { q: "Regla C: si distància < 500 → atura; si no → endavant. On hi ha el problema?|Regla C: si distancia < 500 → para; si no → adelante. ¿Dónde está el problema?", sol: "Si hi ha qualsevol cosa a menys de 4 metres, s'atura de seguida; només avança quan no veu res.|Si hay cualquier cosa a menos de 4 metros, se para enseguida; solo avanza cuando no ve nada." },
+          { q: "Inventa la teva regla perquè el robot s'aturi a uns 20 cm i prova-la amb les lectures 50, 30, 21, 19.|Inventa tu regla para que el robot se pare a unos 20 cm y pruébala con las lecturas 50, 30, 21, 19.", sol: "Per exemple: si distància < 20 → atura; si no → endavant: endavant, endavant, endavant, atura.|Por ejemplo: si distancia < 20 → para; si no → adelante: adelante, adelante, adelante, para." }
+        ] },
+      { id: 'p2', t: "Codi: para abans del mur|Código: para antes del muro", k: 'codi',
+        intro: "El programa en blocs i en JavaScript de MakeCode (extensió del Maqueen). El segon mostra la distància quan ja s'ha aturat, per mesurar la frenada.|El programa en bloques y en JavaScript de MakeCode (extensión del Maqueen). El segundo muestra la distancia cuando ya se ha parado, para medir la frenada.",
+        items: [
+          { t: "Para abans del mur|Para antes del muro", prog: 'forever{ if:dist<12{ stop:all } else{ run:all,fwd,150 } }' },
+          { t: "Para i mostra la distància|Para y muestra la distancia", prog: 'forever{ if:dist<12{ stop:all num:dist } else{ run:all,fwd,255 } }' }
+        ] }
+    ]
+  },
+
+  /* ---------- Sessió 3 · Esquiva obstacles ---------- */
+  'k3-3': {
+    obj: [
+      "L'alumne/a programa un robot que, quan veu un obstacle a prop, gira en lloc d'aturar-se.|El alumno/a programa un robot que, cuando ve un obstáculo cerca, gira en lugar de pararse.",
+      "L'alumne/a posa una seqüència de blocs (girar, apartar-se, tornar a girar) dins del «si» per esquivar una caixa.|El alumno/a pone una secuencia de bloques (girar, apartarse, volver a girar) dentro del «si» para esquivar una caja.",
+      "L'alumne/a comprova que el mateix programa funciona en pistes diferents i explica per què els temps fixos no hi funcionen.|El alumno/a comprueba que el mismo programa funciona en pistas diferentes y explica por qué los tiempos fijos no funcionan.",
+      "L'alumne/a troba i corregeix errors típics: girar cap al costat equivocat o una espera que deixa el robot a cegues.|El alumno/a encuentra y corrige errores típicos: girar hacia el lado equivocado o una espera que deja el robot a ciegas."
+    ],
+    comp: [
+      "Competència digital: programar comportaments autònoms i depurar-los|Competencia digital: programar comportamientos autónomos y depurarlos",
+      "Pensament computacional: seqüències dins de condicionals i regles generals que funcionen en molts casos|Pensamiento computacional: secuencias dentro de condicionales y reglas generales que funcionan en muchos casos",
+      "Competència STEM: orientació (90°, esquerra i dreta) i calibratge d'un gir al robot real|Competencia STEM: orientación (90°, izquierda y derecha) y calibración de un giro en el robot real",
+      "Competència personal i social: treball en equip amb papers i seguretat a l'aula|Competencia personal y social: trabajo en equipo con papeles y seguridad en el aula"
+    ],
+    vocab: [
+      ["Esquivar|Esquivar", "Evitar un obstacle sense aturar-se: girar, apartar-se i continuar.|Evitar un obstáculo sin pararse: girar, apartarse y seguir."],
+      ["Maniobra|Maniobra", "Una seqüència de moviments que es fa sempre igual (per exemple, gir, avanç, gir).|Una secuencia de movimientos que se hace siempre igual (por ejemplo, giro, avance, giro)."],
+      ["Regla|Regla", "Una instrucció general que el robot aplica a cada moment: «si hi ha paret, gira».|Una instrucción general que el robot aplica en cada momento: «si hay pared, gira»."],
+      ["Pista alternativa|Pista alternativa", "Una altra versió del repte, amb les caixes en un altre lloc, per comprovar que el programa és general.|Otra versión del reto, con las cajas en otro sitio, para comprobar que el programa es general."],
+      ["Calibrar|Calibrar", "Ajustar un número del programa (com el temps d'un gir) perquè el robot real faci el que volem.|Ajustar un número del programa (como el tiempo de un giro) para que el robot real haga lo que queremos."]
+    ],
+    mat: {
+      aula: [
+        "Un ordinador per alumne/a amb Numi Tech obert a la sessió «Esquiva obstacles»|Un ordenador por alumno/a con Numi Tech abierto en la sesión «Esquiva obstáculos»",
+        "Projector i la presentació d'aquesta sessió|Proyector y la presentación de esta sesión",
+        "Un kit Maqueen Lite V5 amb micro:bit V2 per grup de 3-4|Un kit Maqueen Lite V5 con micro:bit V2 por grupo de 3-4",
+        "Capses de cartró rígides, llibres gruixuts i cinta de pintor per fer el passadís a terra|Cajas de cartón rígidas, libros gruesos y cinta de pintor para hacer el pasillo en el suelo"
+      ],
+      imprimir: ["Pista: el passadís del magatzem|Pista: el pasillo del almacén", "Codi: esquiva obstacles|Código: esquiva obstáculos"],
+      prep: [
+        "Muntar a terra un o dos passadissos com el de la pista impresa (amb capses o llibres de canto), d'uns 30 cm d'amplada.|Montar en el suelo uno o dos pasillos como el de la pista impresa (con cajas o libros de canto), de unos 30 cm de ancho.",
+        "Preparar a MakeCode el programa d'esquivar (diapositiva 11).|Preparar en MakeCode el programa de esquivar (diapositiva 11).",
+        "Imprimir una pista per parella i un full de codi per grup.|Imprimir una pista por pareja y una hoja de código por grupo.",
+        "Provar les demos de les diapositives 4, 6 i 8.|Probar las demos de las diapositivas 4, 6 y 8."
+      ]
+    },
+    plan: [
+      { min: 4, t: "Benvinguda: el magatzem ple|Bienvenida: el almacén lleno", fase: 'inici',
+        fa: "Repassa el gir de 90° i el programa d'aturar-se. Planteja el problema: si el robot s'atura davant de cada caixa, no arribarà mai a l'altra punta.|Repasa el giro de 90° y el programa de pararse. Plantea el problema: si el robot se para delante de cada caja, no llegará nunca a la otra punta.",
+        diu: ["Què fa una persona que camina i troba una cadira al davant?|¿Qué hace una persona que camina y encuentra una silla delante?",
+          "Quin bloc del programa d'aturar-se hauríem de canviar?|¿Qué bloque del programa de pararse deberíamos cambiar?"],
+        slides: ['s1', 's2', 's3'], app: "Encara no.|Todavía no.", org: "Tot el grup|Todo el grupo" },
+      { min: 10, t: "Si hi ha una caixa, gira|Si hay una caja, gira", fase: 'teoria',
+        fa: "Executa la demo de la regla «si paret, gira a l'esquerra» i fes que la classe digui on anirà després de cada gir. Explica l'esquiva amb l'animació i executa la maniobra completa. Remarca el límit del con (els costats) i acaba amb la predicció de la diapositiva 8.|Ejecuta la demo de la regla «si pared, gira a la izquierda» y haz que la clase diga adónde irá después de cada giro. Explica la esquiva con la animación y ejecuta la maniobra completa. Remarca el límite del cono (los lados) y acaba con la predicción de la diapositiva 8.",
+        diu: ["Quin motor va enrere? Doncs cap a on gira?|¿Qué motor va atrás? Pues ¿hacia dónde gira?",
+          "Mentre fa la maniobra, el robot mira el sensor?|Mientras hace la maniobra, ¿el robot mira el sensor?",
+          "Per què el robot pot tocar una caixa amb la cantonada?|¿Por qué el robot puede tocar una caja con la esquina?"],
+        slides: ['s4', 's5', 's6', 's7', 's8'], app: "Encara no.|Todavía no.", org: "Tot el grup|Todo el grupo" },
+      { min: 8, t: "Traça el camí|Traza el camino", fase: 'desconnectat',
+        fa: "Per parelles, amb la pista impresa i un llapis: un alumne/a llegeix la regla en veu alta i l'altre dibuixa el camí del robot sobre el passadís (cada quadre fa 10 cm). Després ho fan amb la regla «gira a la dreta» i comparen on arriba cada robot. Es poden fer servir tires de paper de 15 cm per saber quan el robot «veu» la paret.|Por parejas, con la pista impresa y un lápiz: un alumno/a lee la regla en voz alta y el otro dibuja el camino del robot sobre el pasillo (cada cuadro mide 10 cm). Después lo hacen con la regla «gira a la derecha» y comparan adónde llega cada robot. Se pueden usar tiras de papel de 15 cm para saber cuándo el robot «ve» la pared.",
+        diu: ["On és el robot quan la paret queda a 15 cm? Poseu-hi la tira de paper.|¿Dónde está el robot cuando la pared queda a 15 cm? Poned la tira de papel.",
+          "Amb la regla de la dreta, arriba a la meta? Per què?|Con la regla de la derecha, ¿llega a la meta? ¿Por qué?"],
+        slides: ['s9'], app: "Cap. A l'app, «El laberint de coixins» queda per a casa.|Ninguna. En la app, «El laberinto de cojines» queda para casa.", org: "Parelles|Parejas" },
+      { min: 15, t: "A l'ordinador: gira i esquiva|En el ordenador: gira y esquiva", fase: 'ordinador',
+        fa: "Avancen fins al passadís de dues corbes. Si algú fa el passadís amb temps fixos, deixa que les pistes 2 i 3 li mostrin el problema. Recorda que poden copiar el gir dels reptes de la unitat 1.|Avanzan hasta el pasillo de dos curvas. Si alguien hace el pasillo con tiempos fijos, deja que las pistas 2 y 3 le muestren el problema. Recuerda que pueden copiar el giro de los retos de la unidad 1.",
+        diu: ["Cap a on giren totes les corbes del passadís?|¿Hacia dónde giran todas las curvas del pasillo?",
+          "Al repte del racó, el programa d'una pista funciona a les altres? Qui decideix quan gira?|En el reto del rincón, ¿el programa de una pista funciona en las otras? ¿Quién decide cuándo gira?"],
+        slides: ['s10'], app: "De «Recorda» fins al repte «El passadís del magatzem».|Desde «Recuerda» hasta el reto «El pasillo del almacén».", org: "Individual|Individual" },
+      { min: 12, t: "Robot de veritat: el passadís|Robot de verdad: el pasillo", fase: 'robot',
+        fa: "Primer, cada grup calibra el gir: amb el robot a terra, programen només el gir a l'esquerra i ajusten els 590 ms fins que fa un quart de volta en aquell terra. Després descarreguen el programa d'esquivar amb el seu temps i el proven al passadís de capses. Un alumne/a encén el robot, un altre vigila i l'agafa si es queda encallat, un altre canvia el passadís de lloc i un altre apunta què passa.|Primero, cada grupo calibra el giro: con el robot en el suelo, programan solo el giro a la izquierda y ajustan los 590 ms hasta que hace un cuarto de vuelta en ese suelo. Después descargan el programa de esquivar con su tiempo y lo prueban en el pasillo de cajas. Un alumno/a enciende el robot, otro vigila y lo coge si se queda atascado, otro cambia el pasillo de sitio y otro apunta qué pasa.",
+        diu: ["El vostre robot fa 90° amb 590 ms? Quant heu hagut de posar?|¿Vuestro robot hace 90° con 590 ms? ¿Cuánto habéis tenido que poner?",
+          "Si toca la paret amb la cantonada, què canviaríeu: el llindar o el temps del gir?|Si toca la pared con la esquina, ¿qué cambiaríais: el umbral o el tiempo del giro?"],
+        slides: ['s11', 's12'], app: "Cap: MakeCode i el robot de veritat.|Ninguna: MakeCode y el robot de verdad.", org: "Grups de 3-4 per kit amb papers que roten|Grupos de 3-4 por kit con papeles que rotan" },
+      { min: 8, t: "Reptes i crea: l'explorador|Retos y crea: el explorador", fase: 'crea',
+        fa: "Tornen a l'app per esquivar la caixa del mig, arreglar el programa de l'espera i crear l'explorador del magatzem. Que provin diferents llindars i girs i en triïn el millor.|Vuelven a la app para esquivar la caja del medio, arreglar el programa de la espera y crear el explorador del almacén. Que prueben diferentes umbrales y giros y elijan el mejor.",
+        diu: ["Mentre el robot espera 2 segons, què veu?|Mientras el robot espera 2 segundos, ¿qué ve?",
+          "Quina idea ha recorregut més centímetres sense xocar?|¿Qué idea ha recorrido más centímetros sin chocar?"],
+        slides: ['s13'], app: "«Pausa activa», els reptes «Esquiva la caixa» i «El robot xoca» i el projecte «L'explorador del magatzem».|«Pausa activa», los retos «Esquiva la caja» y «El robot choca» y el proyecto «El explorador del almacén».", org: "Individual|Individual" },
+      { min: 3, t: "Tancament i tiquet|Cierre y ticket", fase: 'tancament',
+        fa: "Resum, preguntes finals de l'app i tiquet a la porta.|Resumen, preguntas finales de la app y ticket en la puerta.",
+        diu: ["Quina és l'única diferència entre aturar-se i esquivar?|¿Cuál es la única diferencia entre pararse y esquivar?"],
+        slides: ['s14', 's15'], app: "«Tancament».|«Cierre».", org: "Tot el grup|Todo el grupo" }
+    ],
+    errors: [
+      ["Gira cap al costat equivocat (confon quin motor va enrere).|Gira hacia el lado equivocado (confunde qué motor va atrás).",
+        "Que posi les mans com si fossin les rodes: si la dreta va endavant i l'esquerra enrere, cap on gira el cos?|Que ponga las manos como si fueran las ruedas: si la derecha va adelante y la izquierda atrás, ¿hacia dónde gira el cuerpo?"],
+      ["Posa una espera llarga al «si no» i el robot xoca.|Pone una espera larga en el «si no» y el robot choca.",
+        "Pregunta-li què fa el sensor durant aquella espera. Que compari amb la regla: «a cada moment, mira i decideix».|Pregúntale qué hace el sensor durante esa espera. Que compare con la regla: «en cada momento, mira y decide»."],
+      ["A la maniobra d'esquivar, oblida el segon gir i el robot se'n va de costat.|En la maniobra de esquivar, olvida el segundo giro y el robot se va de lado.",
+        "Que faci la maniobra amb el cos (pausa activa): després d'apartar-se, cap on mira? Cap on ha de mirar per anar a la meta?|Que haga la maniobra con el cuerpo (pausa activa): después de apartarse, ¿hacia dónde mira? ¿Hacia dónde tiene que mirar para ir a la meta?"],
+      ["Resol el passadís amb temps fixos i no entén per què falla a les altres pistes.|Resuelve el pasillo con tiempos fijos y no entiende por qué falla en las otras pistas.",
+        "Mira amb ell/a la pista 2: el passadís és més llarg. Qui pot saber on és la paret, l'espera o el sensor?|Mira con él/ella la pista 2: el pasillo es más largo. ¿Quién puede saber dónde está la pared, la espera o el sensor?"],
+      ["Al robot real, el gir de 590 ms no fa exactament 90°.|En el robot real, el giro de 590 ms no hace exactamente 90°.",
+        "És normal: depèn del terra i de les piles. Que el calibri provant 500, 600, 700 ms i triï el que s'hi acosta més.|Es normal: depende del suelo y de las pilas. Que lo calibre probando 500, 600, 700 ms y elija el que más se acerca."]
+    ],
+    diff: {
+      mes: "Fer un explorador que giri un angle diferent cada vegada (per exemple, 400 ms) i comparar quin recorre més. Pensar una regla per sortir d'un racó sense quedar encallat i provar-la al passadís real.|Hacer un explorador que gire un ángulo diferente cada vez (por ejemplo, 400 ms) y comparar cuál recorre más. Pensar una regla para salir de un rincón sin quedarse atascado y probarla en el pasillo real.",
+      menys: "Donar-li els blocs del gir a l'esquerra ja escrits en una tira de paper i començar pel repte d'una sola paret. A la pista impresa, traçar només el primer tram.|Darle los bloques del giro a la izquierda ya escritos en una tira de papel y empezar por el reto de una sola pared. En la pista impresa, trazar solo el primer tramo."
+    },
+    aval: {
+      ticket: ["Escriu la regla per recórrer un passadís on totes les corbes són a l'esquerra.|Escribe la regla para recorrer un pasillo donde todas las curvas son a la izquierda.",
+        "Per què una espera llarga al «si no» pot fer xocar el robot?|¿Por qué una espera larga en el «si no» puede hacer chocar el robot?"],
+      rubric: [
+        ["Gir com a reacció|Giro como reacción", "Posa el gir correcte dins del «si» i el robot recorre el passadís a totes les pistes.|Pone el giro correcto dentro del «si» y el robot recorre el pasillo en todas las pistas.", "Fa girar el robot, però s'equivoca de costat o només funciona a una pista.|Hace girar el robot, pero se equivoca de lado o solo funciona en una pista."],
+        ["Maniobra d'esquiva|Maniobra de esquiva", "Construeix la seqüència gir-avanç-gir i explica què fa cada part.|Construye la secuencia giro-avance-giro y explica qué hace cada parte.", "Necessita la pista per ordenar la seqüència.|Necesita la pista para ordenar la secuencia."],
+        ["Depuració i calibratge|Depuración y calibración", "Troba l'espera que deixa el robot a cegues i calibra el gir al robot real.|Encuentra la espera que deja el robot a ciegas y calibra el giro en el robot real.", "Arregla l'error provant canvis a l'atzar.|Arregla el error probando cambios al azar."]
+      ]
+    },
+    casa: "A casa, amb el mòbil, podeu repetir la sessió i fer «El laberint de coixins»: un passadís de coixins i una persona que camina a poc a poc amb la regla «si toques alguna cosa, gira a l'esquerra».|En casa, con el móvil, podéis repetir la sesión y hacer «El laberinto de cojines»: un pasillo de cojines y una persona que camina despacio con la regla «si tocas algo, gira a la izquierda».",
+    slides: [
+      { id: 's1', k: 'portada', t: "Esquiva obstacles|Esquiva obstáculos", x: "El robot ja no s'atura: gira, s'aparta i continua.|El robot ya no se para: gira, se aparta y sigue.",
+        nota: "Objectiu: portar el paquet d'una punta a l'altra del magatzem sense xocar.|Objetivo: llevar el paquete de una punta a otra del almacén sin chocar." },
+      { id: 's2', k: 'repas', t: "Recordem|Recordemos", punts: ["Gir a l'esquerra: motor esquerre enrere, dret endavant, 590 ms a 100.|Giro a la izquierda: motor izquierdo atrás, derecho adelante, 590 ms a 100.", "Per sempre: si distància < 12 → atura; si no → endavant.|Para siempre: si distancia < 12 → para; si no → adelante."],
+        nota: "Fes que algú expliqui amb les mans com gira el robot.|Haz que alguien explique con las manos cómo gira el robot." },
+      { id: 's3', k: 'pregunta', t: "Una cadira al mig|Una silla en medio", x: "Camines pel passadís i hi ha una cadira. T'atures per sempre?|Caminas por el pasillo y hay una silla. ¿Te paras para siempre?",
+        nota: "Busca la idea de «girar i continuar». Escriu la regla a la pissarra.|Busca la idea de «girar y continuar». Escribe la regla en la pizarra." },
+      { id: 's4', k: 'robo', t: "Si hi ha paret, gira|Si hay pared, gira", x: "La mateixa pregunta d'ahir, però dins del «si» hi ha un gir. Cap on anirà?|La misma pregunta de ayer, pero dentro del «si» hay un giro. ¿Hacia dónde irá?",
+        robo: { w: { w: 120, h: 80, bot: [15, 62, 90], time: 14 }, prog: 'forever{ if:dist<15{ run:L,back,100 run:R,fwd,100 wait:590 } else{ run:all,fwd,150 } }' },
+        nota: "Atura la demo després del primer gir i pregunta on anirà ara.|Para la demo después del primer giro y pregunta adónde irá ahora." },
+      { id: 's5', k: 'anim', t: "Esquivar: gira, aparta't i continua|Esquivar: gira, apártate y sigue", anim: 'k3dodge', x: "Dins del «si» hi pot haver una seqüència sencera.|Dentro del «si» puede haber una secuencia entera.",
+        nota: "Fes la maniobra amb el cos: quart de volta, dos passos, quart de volta.|Haz la maniobra con el cuerpo: cuarto de vuelta, dos pasos, cuarto de vuelta." },
+      { id: 's6', k: 'robo', t: "La maniobra completa|La maniobra completa", x: "Gir a la dreta, endavant 1,2 s, gir a l'esquerra. Passarà pel costat de la caixa?|Giro a la derecha, adelante 1,2 s, giro a la izquierda. ¿Pasará por el lado de la caja?",
+        robo: { w: { w: 130, h: 80, bot: [12, 34, 90], walls: [[55, 28, 10, 12]], zones: [{ id: 'meta', r: [108, 4, 22, 72], col: 'green', label: 'META|META' }], time: 10 }, prog: 'forever{ if:dist<15{ run:L,fwd,100 run:R,back,100 wait:590 run:all,fwd,150 wait:1200 run:L,back,100 run:R,fwd,100 wait:590 } else{ run:all,fwd,150 } }' },
+        nota: "Fes notar que s'aparta uns 19 cm: prou per passar amb els 8,5 cm d'amplada del robot.|Haz notar que se aparta unos 19 cm: suficiente para pasar con los 8,5 cm de ancho del robot." },
+      { id: 's7', k: 'anim', t: "Compte amb els costats|Cuidado con los lados", anim: 'k3cone', x: "El sensor només mira al davant: les cantonades del robot poden tocar.|El sensor solo mira delante: las esquinas del robot pueden tocar.",
+        nota: "Solució: girar una mica abans i apartar-se prou.|Solución: girar un poco antes y apartarse lo suficiente." },
+      { id: 's8', k: 'robo', t: "Prediu: on serà?|Predice: ¿dónde estará?", x: "Regla: si paret a menys de 15 cm, gira a l'esquerra. On serà al cap de 10 segons?|Regla: si pared a menos de 15 cm, gira a la izquierda. ¿Dónde estará al cabo de 10 segundos?",
+        robo: { w: { w: 120, h: 80, bot: [15, 62, 90], time: 10, marks: { A: [104, 62], B: [101, 72], C: [101, 24] } }, prog: 'forever{ if:dist<15{ run:L,back,100 run:R,fwd,100 wait:590 } else{ run:all,fwd,150 } }' },
+        nota: "Resposta: C. Qui diu A pensa que el «si» atura; qui diu B s'ha equivocat de costat.|Respuesta: C. Quien dice A piensa que el «si» para; quien dice B se ha equivocado de lado." },
+      { id: 's9', k: 'activitat', t: "Traça el camí|Traza el camino", timer: 8, punts: ["Un llegeix la regla, l'altre dibuixa el camí.|Uno lee la regla, el otro dibuja el camino.", "Tira de 15 cm: quan toca la paret, gir!|Tira de 15 cm: cuando toca la pared, ¡giro!", "Repetiu-ho amb la regla de la dreta.|Repetidlo con la regla de la derecha."],
+        nota: "Amb la regla de la dreta, el robot dona voltes al primer tram i no arriba a la meta.|Con la regla de la derecha, el robot da vueltas en el primer tramo y no llega a la meta." },
+      { id: 's10', k: 'activitat', t: "Ara, a l'ordinador|Ahora, al ordenador", timer: 15, punts: ["Obre la sessió «Esquiva obstacles».|Abre la sesión «Esquiva obstáculos».", "Para quan acabis «El passadís del magatzem».|Para cuando acabes «El pasillo del almacén»."],
+        nota: "«El laberint de coixins» queda per a casa.|«El laberinto de cojines» queda para casa." },
+      { id: 's11', k: 'activitat', t: "Robot de veritat: calibra i esquiva|Robot de verdad: calibra y esquiva", timer: 12, punts: ["Calibreu el gir de 90° al vostre terra.|Calibrad el giro de 90° en vuestro suelo.", "Descarregueu el programa amb el vostre temps de gir.|Descargad el programa con vuestro tiempo de giro.", "Proveu-lo al passadís de capses i canvieu-lo de lloc.|Probadlo en el pasillo de cajas y cambiadlo de sitio."],
+        code: "Maqueen_V5.I2CInit()\nbasic.forever(function () {\n    if (Maqueen_V5.Ultrasonic() < 15) {\n        Maqueen_V5.motorRun(Maqueen_V5.Motors.M1, Maqueen_V5.Dir.CCW, 100)\n        Maqueen_V5.motorRun(Maqueen_V5.Motors.M2, Maqueen_V5.Dir.CW, 100)\n        basic.pause(590)\n    } else {\n        Maqueen_V5.motorRun(Maqueen_V5.Motors.All, Maqueen_V5.Dir.CW, 150)\n    }\n})",
+        nota: "Les parets del passadís han de ser rígides i prou altes perquè el sensor les vegi (més de 8 cm).|Las paredes del pasillo tienen que ser rígidas y lo bastante altas para que el sensor las vea (más de 8 cm)." },
+      { id: 's12', k: 'concepte', t: "Seguretat i calibratge|Seguridad y calibración", punts: ["El robot sempre a terra, i algú preparat per agafar-lo.|El robot siempre en el suelo, y alguien preparado para cogerlo.", "Sense peus ni mans dins del passadís mentre es mou.|Sin pies ni manos dentro del pasillo mientras se mueve.", "Cada terra és diferent: ajusteu el temps del gir.|Cada suelo es diferente: ajustad el tiempo del giro.", "En acabar, apagueu l'interruptor per estalviar piles.|Al terminar, apagad el interruptor para ahorrar pilas."],
+        nota: "Comproveu que cada grup apunta el temps de gir que li ha funcionat: el faran servir al projecte.|Comprobad que cada grupo apunta el tiempo de giro que le ha funcionado: lo usarán en el proyecto." },
+      { id: 's13', k: 'repte', t: "Reptes i crea|Retos y crea", timer: 8, punts: ["Esquiva la caixa del mig (3 pistes).|Esquiva la caja del medio (3 pistas).", "Arregla el robot que xoca per culpa d'una espera.|Arregla el robot que choca por culpa de una espera.", "L'explorador: 160 cm sense xocar.|El explorador: 160 cm sin chocar."],
+        nota: "A l'explorador, celebra que hi hagi solucions diferents que funcionen.|En el explorador, celebra que haya soluciones diferentes que funcionan." },
+      { id: 's14', k: 'resum', t: "Què hem après avui|Qué hemos aprendido hoy", punts: ["Esquivar: si hi ha caixa, gira; si no, endavant.|Esquivar: si hay caja, gira; si no, adelante.", "Dins del «si» hi pot haver una maniobra sencera.|Dentro del «si» puede haber una maniobra entera.", "Una bona regla funciona a totes les pistes.|Una buena regla funciona en todas las pistas."],
+        nota: "Anuncia el projecte: la setmana vinent, l'aparcament automàtic.|Anuncia el proyecto: la semana que viene, el aparcamiento automático." },
+      { id: 's15', k: 'tiquet', t: "Tiquet de sortida|Ticket de salida", punts: ["La regla del passadís de corbes a l'esquerra.|La regla del pasillo de curvas a la izquierda.", "Per què una espera llarga pot fer xocar?|¿Por qué una espera larga puede hacer chocar?"],
+        nota: "Anota qui encara confon el costat del gir.|Anota quién todavía confunde el lado del giro." }
+    ],
+    print: [
+      { id: 'p1', t: "Pista: el passadís del magatzem|Pista: el pasillo del almacén", k: 'pista',
+        intro: "El passadís dels reptes, a escala. Feu-lo servir per traçar el camí del robot amb llapis i per muntar-lo a terra amb capses o llibres de canto per al robot de veritat. El robot surt de baix a l'esquerra, mirant a la dreta.|El pasillo de los retos, a escala. Usadlo para trazar el camino del robot con lápiz y para montarlo en el suelo con cajas o libros de canto para el robot de verdad. El robot sale de abajo a la izquierda, mirando a la derecha.",
+        w: { w: 120, h: 80, bot: [15, 64, 90], walls: [[0, 44, 88, 5]], zones: [{ id: 'meta', r: [0, 0, 24, 44], col: 'green', label: 'META|META' }] },
+        items: [
+          { q: "Traça el camí amb la regla «si hi ha paret a menys de 15 cm, gira 90° a l'esquerra; si no, endavant». Arriba a la META?|Traza el camino con la regla «si hay pared a menos de 15 cm, gira 90° a la izquierda; si no, adelante». ¿Llega a la META?" },
+          { q: "Ara traça'l amb la regla «gira 90° a la dreta». Què passa?|Ahora trázalo con la regla «gira 90° a la derecha». ¿Qué pasa?" },
+          { q: "Si el passadís fos 20 cm més llarg, hauries de canviar la regla? Per què?|Si el pasillo fuera 20 cm más largo, ¿tendrías que cambiar la regla? ¿Por qué?" }
+        ] },
+      { id: 'p2', t: "Codi: esquiva obstacles|Código: esquiva obstáculos", k: 'codi',
+        intro: "Els dos programes en blocs i en JavaScript de MakeCode. Abans de provar-los, calibreu el temps del gir (590 ms) al vostre terra.|Los dos programas en bloques y en JavaScript de MakeCode. Antes de probarlos, calibrad el tiempo del giro (590 ms) en vuestro suelo.",
+        items: [
+          { t: "Recórrer el passadís (gira a l'esquerra)|Recorrer el pasillo (gira a la izquierda)", prog: 'forever{ if:dist<15{ run:L,back,100 run:R,fwd,100 wait:590 } else{ run:all,fwd,150 } }' },
+          { t: "Esquivar una caixa (gir, avanç, gir)|Esquivar una caja (giro, avance, giro)", prog: 'forever{ if:dist<15{ run:L,fwd,100 run:R,back,100 wait:590 run:all,fwd,150 wait:1200 run:L,back,100 run:R,fwd,100 wait:590 } else{ run:all,fwd,150 } }' }
+        ] }
+    ]
+  },
+
+  /* ---------- Sessió 4 · Projecte: aparcament automàtic ---------- */
+  'k3-4': {
+    obj: [
+      "L'alumne/a planifica un comportament amb tres casos (lluny, a prop, molt a prop) abans de programar-lo.|El alumno/a planifica un comportamiento con tres casos (lejos, cerca, muy cerca) antes de programarlo.",
+      "L'alumne/a programa un «si» dins d'un altre «si» i explica per què el cas més urgent va primer.|El alumno/a programa un «si» dentro de otro «si» y explica por qué el caso más urgente va primero.",
+      "L'alumne/a prova el projecte a diverses pistes i al robot de veritat i el millora a partir dels resultats.|El alumno/a prueba el proyecto en varias pistas y en el robot de verdad y lo mejora a partir de los resultados.",
+      "L'alumne/a presenta el seu aparcament automàtic i explica les decisions que ha pres.|El alumno/a presenta su aparcamiento automático y explica las decisiones que ha tomado."
+    ],
+    comp: [
+      "Competència digital: crear un projecte de programació complet amb sensors i passar-lo a un robot real|Competencia digital: crear un proyecto de programación completo con sensores y pasarlo a un robot real",
+      "Pensament computacional: condicionals niats, ordre de les condicions i disseny iteratiu|Pensamiento computacional: condicionales anidados, orden de las condiciones y diseño iterativo",
+      "Competència STEM: procés d'enginyeria (planificar, construir, provar, millorar) i mesura de precisió|Competencia STEM: proceso de ingeniería (planificar, construir, probar, mejorar) y medida de precisión",
+      "Competència personal, social i d'aprendre a aprendre: treball en equip i comunicació del projecte|Competencia personal, social y de aprender a aprender: trabajo en equipo y comunicación del proyecto"
+    ],
+    vocab: [
+      ["«Si» niat|«Si» anidado", "Un «si» posat dins d'un altre «si» (normalment a la part «si no») per tenir més de dos casos.|Un «si» puesto dentro de otro «si» (normalmente en la parte «si no») para tener más de dos casos."],
+      ["Ordre de les condicions|Orden de las condiciones", "El robot pregunta de dalt a baix i fa la primera que és certa.|El robot pregunta de arriba abajo y hace la primera que es cierta."],
+      ["Planificar|Planificar", "Decidir què ha de fer el robot a cada cas abans d'escriure el programa.|Decidir qué tiene que hacer el robot en cada caso antes de escribir el programa."],
+      ["Iterar|Iterar", "Provar, mirar què falla, canviar una cosa i tornar a provar.|Probar, mirar qué falla, cambiar una cosa y volver a probar."],
+      ["MakeCode|MakeCode", "L'editor de programes de la micro:bit, on enganxem el codi del simulador per passar-lo al robot real.|El editor de programas de la micro:bit, donde pegamos el código del simulador para pasarlo al robot real."]
+    ],
+    mat: {
+      aula: [
+        "Un ordinador per alumne/a amb Numi Tech obert a la sessió «Projecte: aparcament automàtic»|Un ordenador por alumno/a con Numi Tech abierto en la sesión «Proyecto: aparcamiento automático»",
+        "Projector i la presentació d'aquesta sessió|Proyector y la presentación de esta sesión",
+        "Un kit Maqueen Lite V5 amb micro:bit V2 per grup de 3-4|Un kit Maqueen Lite V5 con micro:bit V2 por grupo de 3-4",
+        "Per grup: llibres o capses per fer la plaça d'aparcament, cinta de pintor, un regle i colors (verd, groc i vermell)|Por grupo: libros o cajas para hacer la plaza de aparcamiento, cinta de pintor, una regla y colores (verde, amarillo y rojo)"
+      ],
+      imprimir: ["Fitxa: el pla de l'aparcament|Ficha: el plan del aparcamiento", "Pista: l'aparcament del port|Pista: el aparcamiento del puerto"],
+      prep: [
+        "Marcar a terra una plaça per grup amb cinta (uns 26 cm d'amplada) i una paret al fons feta amb llibres o una capsa rígida.|Marcar en el suelo una plaza por grupo con cinta (unos 26 cm de ancho) y una pared al fondo hecha con libros o una caja rígida.",
+        "Marcar tres posicions de la paret del fons (a 80, 95 i 110 cm de la línia de sortida) per provar les tres llargades.|Marcar tres posiciones de la pared del fondo (a 80, 95 y 110 cm de la línea de salida) para probar las tres longitudes.",
+        "Imprimir una fitxa del pla per alumne/a i una pista per grup.|Imprimir una ficha del plan por alumno/a y una pista por grupo.",
+        "Tenir obert MakeCode amb l'extensió del Maqueen per enganxar-hi el codi del botó </> de cada alumne/a.|Tener abierto MakeCode con la extensión del Maqueen para pegar el código del botón </> de cada alumno/a."
+      ]
+    },
+    plan: [
+      { min: 4, t: "Benvinguda: el repte d'enginyeria|Bienvenida: el reto de ingeniería", fase: 'inici',
+        fa: "Presenta el projecte de la capitana del port i pregunta qui ha sentit mai el «bip-bip» d'un cotxe que aparca. Repassa les tres sessions: mesurar, aturar-se i esquivar.|Presenta el proyecto de la capitana del puerto y pregunta quién ha oído alguna vez el «bip-bip» de un coche que aparca. Repasa las tres sesiones: medir, pararse y esquivar.",
+        diu: ["Per què el «bip-bip» del cotxe va més de pressa quan s'acosta a la paret?|¿Por qué el «bip-bip» del coche va más deprisa cuando se acerca a la pared?",
+          "Què ha de fer el carretó quan és lluny? I quan és a prop?|¿Qué tiene que hacer la carretilla cuando está lejos? ¿Y cuando está cerca?"],
+        slides: ['s1', 's2', 's3'], app: "Encara no.|Todavía no.", org: "Tot el grup|Todo el grupo" },
+      { min: 8, t: "Tres casos: un «si» dins d'un altre|Tres casos: un «si» dentro de otro", fase: 'teoria',
+        fa: "Explica el sensor d'aparcament amb l'animació. Executa la demo de tres casos i fes-ne la traça a la pissarra amb tres números (50, 20 i 5 cm). Mostra l'error de l'ordre de les preguntes: abans d'executar la demo, que tothom predigui on acabarà.|Explica el sensor de aparcamiento con la animación. Ejecuta la demo de tres casos y haz su traza en la pizarra con tres números (50, 20 y 5 cm). Muestra el error del orden de las preguntas: antes de ejecutar la demo, que todos predigan dónde acabará.",
+        diu: ["Amb 20 cm, quina pregunta diu sí primer?|Con 20 cm, ¿qué pregunta dice sí primero?",
+          "I si a dalt hi ha «distància < 30»? Què passa a 5 cm?|¿Y si arriba está «distancia < 30»? ¿Qué pasa a 5 cm?"],
+        slides: ['s4', 's5', 's6', 's7'], app: "Encara no.|Todavía no.", org: "Tot el grup|Todo el grupo" },
+      { min: 8, t: "El pla en paper|El plan en papel", fase: 'desconnectat',
+        fa: "Cada alumne/a omple la fitxa del pla: dibuixa la plaça amb les tres franges, tria les velocitats i els llindars i escriu el programa amb paraules. En grups, cadascú explica el seu pla i el grup tria quin provarà primer al robot de veritat.|Cada alumno/a rellena la ficha del plan: dibuja la plaza con las tres franjas, elige las velocidades y los umbrales y escribe el programa con palabras. En grupos, cada uno explica su plan y el grupo elige cuál probará primero en el robot de verdad.",
+        diu: ["Quina pregunta escriureu primer? Per què?|¿Qué pregunta escribiréis primero? ¿Por qué?",
+          "Si el carretó va a 200 lluny, quan ha de començar a frenar?|Si la carretilla va a 200 lejos, ¿cuándo tiene que empezar a frenar?"],
+        slides: ['s8'], app: "Cap. A l'app, el pas «El pla en paper» ja està fet: toqueu «Ho hem fet!».|Ninguna. En la app, el paso «El plan en papel» ya está hecho: tocad «¡Lo hemos hecho!».", org: "Individual i després en grups|Individual y después en grupos" },
+      { min: 15, t: "A l'ordinador: proves i errors|En el ordenador: pruebas y errores", fase: 'ordinador',
+        fa: "Avancen fins a la zona de seguretat: la primera prova d'aparcar, la predicció de l'ordre, l'error de l'ordre i el carretó que ha d'anar enrere. Ajuda amb preguntes a qui no troba l'error de l'ordre: que faci la traça amb un número petit.|Avanzan hasta la zona de seguridad: la primera prueba de aparcar, la predicción del orden, el error del orden y la carretilla que tiene que ir atrás. Ayuda con preguntas a quien no encuentra el error del orden: que haga la traza con un número pequeño.",
+        diu: ["Fes la traça amb 5 cm: quina pregunta diu sí primer?|Haz la traza con 5 cm: ¿qué pregunta dice sí primero?",
+          "A la zona de seguretat, què ha de fer el carretó si comença gairebé tocant?|En la zona de seguridad, ¿qué tiene que hacer la carretilla si empieza casi tocando?"],
+        slides: ['s9', 's10'], app: "De «Recorda» fins al repte «La zona de seguretat».|Desde «Recuerda» hasta el reto «La zona de seguridad».", org: "Individual|Individual" },
+      { min: 14, t: "Robot de veritat: aparca a la plaça|Robot de verdad: aparca en la plaza", fase: 'robot',
+        fa: "Cada grup passa el pla triat al robot: copien el codi amb el botó </> del simulador, l'enganxen a MakeCode i el descarreguen. Proven la plaça amb la paret a 80, 95 i 110 cm i mesuren amb el regle a quants centímetres s'atura. Després, concurs de precisió: guanya el grup que aparca més a prop de 5 cm a les tres llargades, sense tocar. Si cal, ajusten un número i tornen a provar.|Cada grupo pasa el plan elegido al robot: copian el código con el botón </> del simulador, lo pegan en MakeCode y lo descargan. Prueban la plaza con la pared a 80, 95 y 110 cm y miden con la regla a cuántos centímetros se para. Después, concurso de precisión: gana el grupo que aparca más cerca de 5 cm en las tres longitudes, sin tocar. Si hace falta, ajustan un número y vuelven a probar.",
+        diu: ["Heu canviat un sol número abans de tornar a provar? Quin?|¿Habéis cambiado un solo número antes de volver a probar? ¿Cuál?",
+          "El robot real frena igual que el del simulador?|¿El robot real frena igual que el del simulador?"],
+        slides: ['s11', 's12'], app: "Botó </> del programa per copiar el codi a MakeCode.|Botón </> del programa para copiar el código en MakeCode.", org: "Grups de 3-4 per kit amb papers que roten|Grupos de 3-4 por kit con papeles que rotan" },
+      { min: 8, t: "Crea: el meu aparcament automàtic|Crea: mi aparcamiento automático", fase: 'crea',
+        fa: "Cada alumne/a programa el seu projecte a l'app (tres casos, tres places) i el desa. Dos o tres alumnes presenten el seu en un minut: quines velocitats i quins llindars han triat i per què.|Cada alumno/a programa su proyecto en la app (tres casos, tres plazas) y lo guarda. Dos o tres alumnos presentan el suyo en un minuto: qué velocidades y qué umbrales han elegido y por qué.",
+        diu: ["Què has millorat des de la primera prova?|¿Qué has mejorado desde la primera prueba?",
+          "Què faries diferent al robot de veritat?|¿Qué harías diferente en el robot de verdad?"],
+        slides: ['s13', 's14'], app: "«Pausa activa» i el projecte «El meu aparcament automàtic» (es desa a Projectes).|«Pausa activa» y el proyecto «Mi aparcamiento automático» (se guarda en Proyectos).", org: "Individual i presentació a tot el grup|Individual y presentación a todo el grupo" },
+      { min: 3, t: "Tancament de la unitat|Cierre de la unidad", fase: 'tancament',
+        fa: "Resum de la unitat sencera, preguntes finals de l'app i tiquet a la porta.|Resumen de la unidad entera, preguntas finales de la app y ticket en la puerta.",
+        diu: ["Què sap fer ara el Maqueen que no sabia fer fa quatre setmanes?|¿Qué sabe hacer ahora el Maqueen que no sabía hacer hace cuatro semanas?"],
+        slides: ['s15', 's16'], app: "«Del simulador al robot de veritat», les dues preguntes finals i com m'he sentit.|«Del simulador al robot de verdad», las dos preguntas finales y cómo me he sentido.", org: "Tot el grup|Todo el grupo" }
+    ],
+    errors: [
+      ["Posa primer «distància < 30» i el robot no s'atura mai.|Pone primero «distancia < 30» y el robot no se para nunca.",
+        "Que faci la traça del programa amb el número 5: quina pregunta diu sí primer? Arriba mai a la d'aturar-se?|Que haga la traza del programa con el número 5: ¿qué pregunta dice sí primero? ¿Llega alguna vez a la de pararse?"],
+      ["Posa el segon «si» a fora del primer, un darrere l'altre, i els motors es contradiuen.|Pone el segundo «si» fuera del primero, uno detrás de otro, y los motores se contradicen.",
+        "Recorda-li que el segon «si» va a dins de la part «si no»: només es pregunta quan la primera resposta és no.|Recuérdale que el segundo «si» va dentro de la parte «si no»: solo se pregunta cuando la primera respuesta es no."],
+      ["A la zona de seguretat, oblida el cas d'anar enrere i a la pista 2 el carretó es queda massa a prop.|En la zona de seguridad, olvida el caso de ir atrás y en la pista 2 la carretilla se queda demasiado cerca.",
+        "Que miri la pista 2 abans d'executar: on comença el carretó? Què hauria de fer primer?|Que mire la pista 2 antes de ejecutar: ¿dónde empieza la carretilla? ¿Qué debería hacer primero?"],
+      ["Canvia molts números alhora i no sap què ha millorat el resultat.|Cambia muchos números a la vez y no sabe qué ha mejorado el resultado.",
+        "Proposa la regla dels enginyers: canviar un sol número cada vegada, provar i apuntar.|Propone la regla de los ingenieros: cambiar un solo número cada vez, probar y apuntar."],
+      ["Al robot real s'atura més a prop o més lluny que al simulador i es desanima.|En el robot real se para más cerca o más lejos que en el simulador y se desanima.",
+        "Explica que és el que passa sempre amb els robots de veritat: el terra, les piles i el sensor canvien. Calibrar és part de la feina.|Explica que es lo que pasa siempre con los robots de verdad: el suelo, las pilas y el sensor cambian. Calibrar es parte del trabajo."]
+    ],
+    diff: {
+      mes: "Afegir un quart cas (per exemple, entre 30 i 50 cm, velocitat mitjana) i mostrar la distància quan aparca. Comparar el temps que tarda a aparcar amb el d'un company/a sense perdre precisió.|Añadir un cuarto caso (por ejemplo, entre 30 y 50 cm, velocidad media) y mostrar la distancia cuando aparca. Comparar el tiempo que tarda en aparcar con el de un compañero/a sin perder precisión.",
+      menys: "Començar pel programa d'un sol «si» de la primera prova i afegir el segon «si» amb la fitxa del pla al costat. Donar-li l'ordre de les preguntes escrit en una tira de paper.|Empezar por el programa de un solo «si» de la primera prueba y añadir el segundo «si» con la ficha del plan al lado. Darle el orden de las preguntas escrito en una tira de papel."
+    },
+    aval: {
+      ticket: ["Escriu amb paraules el teu programa d'aparcament amb els tres casos.|Escribe con palabras tu programa de aparcamiento con los tres casos.",
+        "Per què la pregunta «distància < 8?» ha d'anar abans que «distància < 30?»?|¿Por qué la pregunta «¿distancia < 8?» tiene que ir antes que «¿distancia < 30?»?"],
+      rubric: [
+        ["Planificació|Planificación", "El pla té els tres casos amb velocitats i llindars coherents i el segueix en programar.|El plan tiene los tres casos con velocidades y umbrales coherentes y lo sigue al programar.", "Fa el pla, però el programa no hi correspon o hi falta un cas.|Hace el plan, pero el programa no corresponde o falta un caso."],
+        ["Condicionals niats|Condicionales anidados", "Programa el «si» dins del «si no» en l'ordre correcte i explica per què.|Programa el «si» dentro del «si no» en el orden correcto y explica por qué.", "Arriba a l'ordre correcte provant, però no ho sap explicar.|Llega al orden correcto probando, pero no lo sabe explicar."],
+        ["Prova i millora|Prueba y mejora", "Prova a les tres places i al robot real, canvia un número cada vegada i explica les millores.|Prueba en las tres plazas y en el robot real, cambia un número cada vez y explica las mejoras.", "Prova una sola plaça o canvia molts números alhora.|Prueba una sola plaza o cambia muchos números a la vez."]
+      ]
+    },
+    casa: "A casa, amb el mòbil, podeu repetir el projecte i ensenyar-lo a la família. Proveu l'«aparcament humà»: lluny, passes llargues; a prop, passes petites; molt a prop, atura't. Fixeu-vos en el sensor d'aparcament d'un cotxe si en teniu l'oportunitat.|En casa, con el móvil, podéis repetir el proyecto y enseñarlo a la familia. Probad el «aparcamiento humano»: lejos, pasos largos; cerca, pasos pequeños; muy cerca, párate. Fijaos en el sensor de aparcamiento de un coche si tenéis la oportunidad.",
+    slides: [
+      { id: 's1', k: 'portada', t: "Projecte: aparcament automàtic|Proyecto: aparcamiento automático", x: "El carretó del port aparca sol: lluny, ràpid; a prop, a poc a poc; molt a prop, s'atura.|La carretilla del puerto aparca sola: lejos, rápido; cerca, despacio; muy cerca, se para.",
+        nota: "Explica que avui és dia de projecte: planificar, programar, provar i presentar.|Explica que hoy es día de proyecto: planificar, programar, probar y presentar." },
+      { id: 's2', k: 'pregunta', t: "Bip… bip… bip-bip-bip!|¡Bip… bip… bip-bip-bip!", x: "Per què el sensor d'aparcament d'un cotxe sona més de pressa com més a prop és la paret?|¿Por qué el sensor de aparcamiento de un coche suena más deprisa cuanto más cerca está la pared?",
+        nota: "Molts cotxes porten sensors d'ultrasons al para-xocs, com el del Maqueen.|Muchos coches llevan sensores de ultrasonidos en el parachoques, como el del Maqueen." },
+      { id: 's3', k: 'repas', t: "La unitat fins ara|La unidad hasta ahora", punts: ["Mesurar: l'eco i el bloc distància.|Medir: el eco y el bloque distancia.", "Aturar-se: per sempre + si… si no.|Pararse: para siempre + si… si no.", "Esquivar: una maniobra dins del «si».|Esquivar: una maniobra dentro del «si»."],
+        nota: "Avui ho ajuntem tot en un projecte.|Hoy lo juntamos todo en un proyecto." },
+      { id: 's4', k: 'anim', t: "Tres franges|Tres franjas", anim: 'k3park', x: "Lluny: 200 · A prop: 70 · Molt a prop: atura.|Lejos: 200 · Cerca: 70 · Muy cerca: para.",
+        nota: "Les velocitats són un exemple: cada grup triarà les seves.|Las velocidades son un ejemplo: cada grupo elegirá las suyas." },
+      { id: 's5', k: 'robo', t: "Un «si» dins d'un altre «si»|Un «si» dentro de otro «si»", x: "Mira com frena en entrar a la plaça.|Mira cómo frena al entrar en la plaza.",
+        robo: { w: { w: 120, h: 80, bot: [12, 40, 90], walls: [[95, 26, 6, 28], [62, 24, 39, 3], [62, 53, 39, 3]], zones: [{ id: 'p', r: [66, 27, 29, 26], col: 'blue', label: 'P|P' }], time: 9 }, prog: 'forever{ if:dist<8{ stop:all } else{ if:dist<30{ run:all,fwd,70 } else{ run:all,fwd,200 } } }' },
+        blocks: ["si distància < 8 → atura|si distancia < 8 → para", "si no, si distància < 30 → 70|si no, si distancia < 30 → 70", "si no → 200|si no → 200"],
+        nota: "Fes la traça a la pissarra amb 50, 20 i 5 cm.|Haz la traza en la pizarra con 50, 20 y 5 cm." },
+      { id: 's6', k: 'concepte', t: "L'ordre de les preguntes|El orden de las preguntas", punts: ["El robot pregunta de dalt a baix.|El robot pregunta de arriba abajo.", "Fa la primera que diu sí i se salta les altres.|Hace la primera que dice sí y se salta las demás.", "Primer, el cas més urgent: molt a prop.|Primero, el caso más urgente: muy cerca."],
+        nota: "Exemple de la vida: primer mires si el semàfor és vermell, i després si hi ha cotxes.|Ejemplo de la vida: primero miras si el semáforo está rojo, y después si hay coches." },
+      { id: 's7', k: 'robo', t: "Prediu: i amb l'ordre canviat?|Predice: ¿y con el orden cambiado?", x: "A dalt hi ha «distància < 30». S'aturarà a la plaça?|Arriba está «distancia < 30». ¿Se parará en la plaza?",
+        robo: { w: { w: 120, h: 80, bot: [12, 40, 90], walls: [[95, 26, 6, 28], [62, 24, 39, 3], [62, 53, 39, 3]], zones: [{ id: 'p', r: [66, 27, 29, 26], col: 'blue', label: 'P|P' }], time: 12 }, prog: 'forever{ if:dist<30{ run:all,fwd,70 } else{ if:dist<8{ stop:all } else{ run:all,fwd,200 } } }' },
+        nota: "Acaba tocant la paret: la pregunta d'aturar-se no s'arriba a fer mai.|Acaba tocando la pared: la pregunta de pararse no se llega a hacer nunca." },
+      { id: 's8', k: 'activitat', t: "El pla en paper|El plan en papel", timer: 8, punts: ["Dibuixa la plaça i les tres franges.|Dibuja la plaza y las tres franjas.", "Tria velocitats i llindars.|Elige velocidades y umbrales.", "Escriu el programa amb paraules.|Escribe el programa con palabras.", "Explica-ho al grup i trieu un pla.|Explícalo al grupo y elegid un plan."],
+        nota: "Comprova que tots els plans tenen el cas «molt a prop» primer.|Comprueba que todos los planes tienen el caso «muy cerca» primero." },
+      { id: 's9', k: 'activitat', t: "Ara, a l'ordinador|Ahora, al ordenador", timer: 15, punts: ["Obre la sessió del projecte.|Abre la sesión del proyecto.", "Fes la primera prova i la predicció.|Haz la primera prueba y la predicción.", "Arregla l'ordre de les preguntes.|Arregla el orden de las preguntas."],
+        nota: "«El pla en paper» de l'app ja està fet a classe.|«El plan en papel» de la app ya está hecho en clase." },
+      { id: 's10', k: 'repte', t: "La zona de seguretat|La zona de seguridad", punts: ["Massa a prop → enrere.|Demasiado cerca → atrás.", "Massa lluny → endavant.|Demasiado lejos → adelante.", "Al mig → quiet.|En medio → quieto."],
+        nota: "A la pista 2 el carretó comença gairebé tocant: un sol «si» no n'hi ha prou.|En la pista 2 la carretilla empieza casi tocando: un solo «si» no basta." },
+      { id: 's11', k: 'activitat', t: "Al robot de veritat|En el robot de verdad", timer: 14, punts: ["Copieu el codi amb el botó </> i enganxeu-lo a MakeCode.|Copiad el código con el botón </> y pegadlo en MakeCode.", "Proveu la paret a 80, 95 i 110 cm.|Probad la pared a 80, 95 y 110 cm.", "Mesureu on s'atura i canvieu un sol número cada vegada.|Medid dónde se para y cambiad un solo número cada vez."],
+        code: "Maqueen_V5.I2CInit()\nbasic.forever(function () {\n    if (Maqueen_V5.Ultrasonic() < 8) {\n        Maqueen_V5.motorStop(Maqueen_V5.Motors.All)\n        basic.showNumber(Maqueen_V5.Ultrasonic())\n    } else {\n        if (Maqueen_V5.Ultrasonic() < 30) {\n            Maqueen_V5.motorRun(Maqueen_V5.Motors.All, Maqueen_V5.Dir.CW, 70)\n        } else {\n            Maqueen_V5.motorRun(Maqueen_V5.Motors.All, Maqueen_V5.Dir.CW, 200)\n        }\n    }\n})",
+        nota: "Robot a terra i algú preparat per agafar-lo. La paret del fons ha de ser rígida: amb roba el sensor no la veu bé.|Robot en el suelo y alguien preparado para cogerlo. La pared del fondo tiene que ser rígida: con ropa el sensor no la ve bien." },
+      { id: 's12', k: 'repte', t: "Concurs de precisió|Concurso de precisión", punts: ["Objectiu: aparcar a 5 cm de la paret.|Objetivo: aparcar a 5 cm de la pared.", "Tres llargades, sense tocar.|Tres longitudes, sin tocar.", "Suma els centímetres d'error: guanya qui en tingui menys.|Suma los centímetros de error: gana quien tenga menos."],
+        nota: "Apunta els resultats a la pissarra i pregunta als millors què han ajustat.|Apunta los resultados en la pizarra y pregunta a los mejores qué han ajustado." },
+      { id: 's13', k: 'activitat', t: "Crea: el meu aparcament|Crea: mi aparcamiento", timer: 8, punts: ["Tres casos amb un «si» dins d'un altre.|Tres casos con un «si» dentro de otro.", "Atura't entre 3 i 10 cm a les tres places.|Párate entre 3 y 10 cm en las tres plazas.", "Desa'l a Projectes.|Guárdalo en Proyectos."],
+        nota: "Tria dos o tres alumnes amb solucions diferents per presentar.|Elige dos o tres alumnos con soluciones diferentes para presentar." },
+      { id: 's14', k: 'concepte', t: "Presenta el teu projecte|Presenta tu proyecto", punts: ["Quines velocitats i quins llindars has triat?|¿Qué velocidades y qué umbrales has elegido?", "Què va fallar a la primera prova?|¿Qué falló en la primera prueba?", "Què has millorat?|¿Qué has mejorado?"],
+        nota: "Un minut per alumne/a. La resta dona un comentari amable i útil.|Un minuto por alumno/a. El resto da un comentario amable y útil." },
+      { id: 's15', k: 'resum', t: "Què hem après en aquesta unitat|Qué hemos aprendido en esta unidad", punts: ["El sensor d'ultrasons mesura amb l'eco.|El sensor de ultrasonidos mide con el eco.", "«Per sempre» + «si» fa que el robot decideixi sol.|«Para siempre» + «si» hace que el robot decida solo.", "Amb «si» niats hi ha més casos, i l'ordre importa.|Con «si» anidados hay más casos, y el orden importa."],
+        nota: "Anuncia la unitat següent: el robot aprendrà a seguir una línia amb els sensors de sota.|Anuncia la unidad siguiente: el robot aprenderá a seguir una línea con los sensores de abajo." },
+      { id: 's16', k: 'tiquet', t: "Tiquet de sortida|Ticket de salida", punts: ["El teu programa d'aparcament amb paraules.|Tu programa de aparcamiento con palabras.", "Per què «< 8» va abans que «< 30»?|¿Por qué «< 8» va antes que «< 30»?"],
+        nota: "Felicita el grup pel primer projecte amb sensors.|Felicita al grupo por el primer proyecto con sensores." }
+    ],
+    print: [
+      { id: 'p1', t: "Fitxa: el pla de l'aparcament|Ficha: el plan del aparcamiento", k: 'fitxa',
+        intro: "Abans de programar, planifica. Omple cada pregunta i ensenya el pla al teu grup.|Antes de programar, planifica. Rellena cada pregunta y enseña el plan a tu grupo.",
+        items: [
+          { q: "Dibuixa la plaça vista des de dalt, amb la paret del fons, i pinta les tres franges: verd (lluny), groc (a prop) i vermell (molt a prop).|Dibuja la plaza vista desde arriba, con la pared del fondo, y pinta las tres franjas: verde (lejos), amarillo (cerca) y rojo (muy cerca).", big: true, sol: "Un dibuix amb la franja vermella tocant la paret, la groga al mig i la verda a l'entrada.|Un dibujo con la franja roja tocando la pared, la amarilla en medio y la verde en la entrada." },
+          { q: "A quina distància comença cada franja? (llindar groc i llindar vermell)|¿A qué distancia empieza cada franja? (umbral amarillo y umbral rojo)", sol: "Per exemple: groc a menys de 30 cm i vermell a menys de 8 cm.|Por ejemplo: amarillo a menos de 30 cm y rojo a menos de 8 cm." },
+          { q: "Quina velocitat tria el carretó a la franja verda? I a la groga?|¿Qué velocidad elige la carretilla en la franja verde? ¿Y en la amarilla?", sol: "Per exemple: 200 a la verda i 70 a la groga (més de 30 per vèncer la zona morta).|Por ejemplo: 200 en la verde y 70 en la amarilla (más de 30 para vencer la zona muerta)." },
+          { q: "Escriu el programa amb paraules: «per sempre: si… → …; si no, si… → …; si no → …».|Escribe el programa con palabras: «para siempre: si… → …; si no, si… → …; si no → …».", big: true, rprog: 'forever{ if:dist<8{ stop:all } else{ if:dist<30{ run:all,fwd,70 } else{ run:all,fwd,200 } } }', sol: "Per sempre: si distància < 8 → atura; si no, si distància < 30 → endavant a 70; si no → endavant a 200.|Para siempre: si distancia < 8 → para; si no, si distancia < 30 → adelante a 70; si no → adelante a 200." },
+          { q: "Després de provar-lo al robot de veritat: on s'ha aturat a cada llargada? Quin número canviaràs?|Después de probarlo en el robot de verdad: ¿dónde se ha parado en cada longitud? ¿Qué número cambiarás?", sol: "Resposta oberta: les mesures del grup i un sol canvi justificat.|Respuesta abierta: las medidas del grupo y un solo cambio justificado." }
+        ] },
+      { id: 'p2', t: "Pista: l'aparcament del port|Pista: el aparcamiento del puerto", k: 'pista',
+        intro: "La plaça d'aparcament dels reptes, a escala. Munteu-la a terra amb cinta i llibres o capses rígides. Proveu també la paret del fons 15 cm més a prop i 15 cm més lluny.|La plaza de aparcamiento de los retos, a escala. Montadla en el suelo con cinta y libros o cajas rígidas. Probad también la pared del fondo 15 cm más cerca y 15 cm más lejos.",
+        w: { w: 120, h: 80, bot: [12, 40, 90], walls: [[95, 26, 6, 28], [62, 24, 39, 3], [62, 53, 39, 3]], zones: [{ id: 'p', r: [66, 27, 29, 26], col: 'blue', label: 'P|P' }] },
+        items: [
+          { q: "Llargada 1 (paret a 95 cm): a quants cm de la paret s'ha aturat?|Longitud 1 (pared a 95 cm): ¿a cuántos cm de la pared se ha parado?" },
+          { q: "Llargada 2 (paret a 80 cm): a quants cm s'ha aturat?|Longitud 2 (pared a 80 cm): ¿a cuántos cm se ha parado?" },
+          { q: "Llargada 3 (paret a 110 cm): a quants cm s'ha aturat? El mateix programa ha funcionat a les tres?|Longitud 3 (pared a 110 cm): ¿a cuántos cm se ha parado? ¿El mismo programa ha funcionado en las tres?" }
+        ] }
+    ]
+  }
+});
+
+/* ── unitat 4 ── */
+/* Tech Robòtica · guia del professorat · unitat 4 «Seguir la línia» (k4-1…k4-4). Material propi de Numi.
+   Classe de 60 minuts; mateix esquema que TGUIDE['r1-1'], amb la fase «robot» (el Maqueen de veritat a l'aula). */
+Object.assign(TGUIDE, (() => {
+  const ln = (x, y0 = 12, y1 = 68) => ({ p: [[x, y0], [x, y1]] });
+  const OVAL = [[92, 14], [95.8, 14.8], [99.1, 16.9], [101.2, 20.2], [102, 24], [102, 56], [101.2, 59.8], [99.1, 63.1], [95.8, 65.2], [92, 66], [28, 66], [24.2, 65.2], [20.9, 63.1], [18.8, 59.8], [18, 56], [18, 24], [18.8, 20.2], [20.9, 16.9], [24.2, 14.8], [28, 14]];
+  const OVAL6 = [[96, 14], [99, 14.8], [101.2, 17], [102, 20], [102, 60], [101.2, 63], [99, 65.2], [96, 66], [24, 66], [21, 65.2], [18.8, 63], [18, 60], [18, 20], [18.8, 17], [21, 14.8], [24, 14]];
+  const LONG1 = [[98, 18], [102.6, 18.9], [106.5, 21.5], [109.1, 25.4], [110, 30], [110, 50], [109.1, 54.6], [106.5, 58.5], [102.6, 61.1], [98, 62], [22, 62], [17.4, 61.1], [13.5, 58.5], [10.9, 54.6], [10, 50], [10, 30], [10.9, 25.4], [13.5, 21.5], [17.4, 18.9], [22, 18]];
+  const S1 = [[12, 44], [18, 51.7], [24, 58.1], [30, 62.5], [36, 64], [42, 62.5], [48, 58.1], [54, 51.7], [60, 44], [66, 36.3], [72, 29.9], [78, 25.5], [84, 24], [90, 25.5], [96, 29.9], [102, 36.3], [108, 44]];
+  const ST1 = [[12, 40], [17.5, 48.4], [23, 55.6], [28.5, 60.3], [34, 62], [39.5, 60.3], [45, 55.6], [50.5, 48.4], [56, 40], [61.5, 31.6], [67, 24.4], [72.5, 19.7], [78, 18], [83.5, 19.7], [89, 24.4], [94.5, 31.6], [100, 40]];
+  const STEP_A = [[8, 60], [40, 60], [40, 25], [80, 25], [80, 55], [112, 55]];
+  const RA = [[8, 62], [50, 62], [58, 60], [64, 55], [68, 48], [70, 40], [72, 32], [77, 25], [84, 21], [92, 20], [104, 20]];
+  const RC = [[8, 66], [60, 66], [70, 64], [76, 58], [78, 50], [76, 43], [70, 38], [60, 36], [40, 36], [30, 34], [25, 28], [24, 22], [28, 16], [36, 13], [50, 12], [104, 12]];
+  const TERM = r => ({ id: 'tz', r, col: 'blue', label: 'TERMINAL|TERMINAL' });
+  const STOP_M = 'forever{ if:M=1{ stop:all } else{ run:all,fwd,120 } }';
+  const ONE = (a, b) => `forever{ if:M=1{ run:L,fwd,${a} run:R,fwd,${b} } else{ run:L,fwd,${b} run:R,fwd,${a} } }`;
+  const TWO = (a, b) => `forever{ if:L=1{ run:L,fwd,${b} run:R,fwd,${a} } else{ if:R=1{ run:L,fwd,${a} run:R,fwd,${b} } else{ run:all,fwd,${a} } } }`;
+  const TWOX = (a, b, x) => `forever{ if:L=1&&R=1{ ${x} } else{ if:L=1{ run:L,fwd,${b} run:R,fwd,${a} } else{ if:R=1{ run:L,fwd,${a} run:R,fwd,${b} } else{ run:all,fwd,${a} } } } }`;
+  const THREE = (a, b) => `forever{ if:L=1{ run:L,fwd,${b} run:R,fwd,${a} } else{ if:R=1{ run:L,fwd,${a} run:R,fwd,${b} } else{ if:M=1{ run:all,fwd,${a} } } } }`;
+  const PATROL_ST = 'start{ patrol:on } forever{ if:L=1&&R=1{ patrol:off note:C5,1 wait:1500 run:all,fwd,120 wait:500 patrol:on } if:aM>200&&aM<600{ patrol:off } }';
+  const TRAIN = 'start{ patrol:on } forever{ if:L=1&&R=1{ patrol:off car:all,yellow note:C5,1 wait:1500 car:all,black run:all,fwd,120 wait:500 patrol:on } if:aM>200&&aM<600{ patrol:off car:all,green icon:happy } }';
+  const ROUTE_A = { w: 120, h: 80, bot: [10, 62, 90], lines: [{ p: RA }, ln(34, 54, 70)], zones: [TERM([92, 9, 26, 22])], time: 30 };
+  const ROUTE_C = { w: 120, h: 80, bot: [10, 66, 90], lines: [{ p: RC }, ln(36, 58, 74), ln(50, 28, 44)], zones: [TERM([92, 1, 26, 22])], time: 45 };
+  const SAFE = "Seguretat: el robot sempre a terra o en una taula amb vora; si el robot cau, es pot trencar. Piles ben posades (mireu el + i el −) i interruptor apagat mentre es munta.|Seguridad: el robot siempre en el suelo o en una mesa con borde; si el robot se cae, se puede romper. Pilas bien puestas (mirad el + y el −) e interruptor apagado mientras se monta.";
+  return {
+    /* ---------- k4-1 · Blanc o negre? ---------- */
+    'k4-1': {
+      obj: [
+        "L'alumne/a explica que el sensor de línia envia llum a terra i mesura quanta en torna: el blanc en torna molta (0) i el negre, poca (1).|El alumno/a explica que el sensor de línea envía luz al suelo y mide cuánta vuelve: el blanco devuelve mucha (0) y el negro, poca (1).",
+        "L'alumne/a llegeix els valors L, M i R i el valor ADC (≈90 blanc, ≈360 color, ≈900 negre) i els relaciona amb el que hi ha a terra.|El alumno/a lee los valores L, M y R y el valor ADC (≈90 blanco, ≈360 color, ≈900 negro) y los relaciona con lo que hay en el suelo.",
+        "L'alumne/a programa amb «per sempre» i «si… si no» un robot que s'atura a la cinta, a la vora de la taula o a una zona de color.|El alumno/a programa con «para siempre» y «si… si no» un robot que se para en la cinta, en el borde de la mesa o en una zona de color.",
+        "L'alumne/a comprova al Maqueen de veritat els valors dels sensors i com la velocitat afecta la frenada.|El alumno/a comprueba en el Maqueen de verdad los valores de los sensores y cómo la velocidad afecta a la frenada."
+      ],
+      comp: [
+        "Competència digital: programar un sistema que respon a un sensor|Competencia digital: programar un sistema que responde a un sensor",
+        "Pensament computacional: condicions (si… si no) dins d'un bucle infinit|Pensamiento computacional: condiciones (si… si no) dentro de un bucle infinito",
+        "Ciències: la llum es reflecteix en les superfícies clares i s'absorbeix en les fosques|Ciencias: la luz se refleja en las superficies claras y se absorbe en las oscuras",
+        "Matemàtiques: mesurar, recollir dades en una taula i comparar valors|Matemáticas: medir, recoger datos en una tabla y comparar valores"
+      ],
+      vocab: [
+        ["Sensor de línia|Sensor de línea", "Sensor que mira a terra i diu si a sota hi ha blanc o negre.|Sensor que mira al suelo y dice si debajo hay blanco o negro."],
+        ["Llum reflectida|Luz reflejada", "La llum que torna després de rebotar en una superfície.|La luz que vuelve después de rebotar en una superficie."],
+        ["Infraroig|Infrarrojo", "Una llum que els nostres ulls no veuen i que fan servir molts sensors.|Una luz que nuestros ojos no ven y que usan muchos sensores."],
+        ["Valor digital (0/1)|Valor digital (0/1)", "Només dues respostes: blanc (0) o negre (1).|Solo dos respuestas: blanco (0) o negro (1)."],
+        ["Valor analògic (ADC)|Valor analógico (ADC)", "Un número de 0 a 1023 que diu quanta llum torna: permet distingir colors.|Un número de 0 a 1023 que dice cuánta luz vuelve: permite distinguir colores."],
+        ["Inèrcia|Inercia", "El robot no s'atura en sec: continua una mica després de frenar.|El robot no se para en seco: sigue un poco después de frenar."]
+      ],
+      mat: {
+        aula: [
+          "Un ordinador per alumne/a amb Numi Tech obert a la sessió «Blanc o negre?»|Un ordenador por alumno/a con Numi Tech abierto en la sesión «¿Blanco o negro?»",
+          "Projector i la presentació d'aquesta sessió|Proyector y la presentación de esta sesión",
+          "Un kit per grup de 3-4: Maqueen Lite V5 amb micro:bit V2, cable USB i piles carregades|Un kit por grupo de 3-4: Maqueen Lite V5 con micro:bit V2, cable USB y pilas cargadas",
+          "Cinta aïllant negra (d'uns 2 cm d'amplada), paper blanc gran o cartolines blanques i fulls de colors (blau, verd, groc)|Cinta aislante negra (de unos 2 cm de ancho), papel blanco grande o cartulinas blancas y hojas de colores (azul, verde, amarillo)",
+          "Una llanterna o el llum d'un mòbil per a la demostració de la llum que rebota|Una linterna o la luz de un móvil para la demostración de la luz que rebota"
+        ],
+        imprimir: ["Targetes dels tres ulls (0, 1 i colors)|Tarjetas de los tres ojos (0, 1 y colores)", "Fitxa: mesurem el terra amb el Maqueen|Ficha: medimos el suelo con el Maqueen"],
+        prep: [
+          "Per a cada grup, una pista senzilla: un full blanc gran (o dues cartolines) amb una tira de cinta negra enganxada de banda a banda i un full de color al costat.|Para cada grupo, una pista sencilla: una hoja blanca grande (o dos cartulinas) con una tira de cinta negra pegada de lado a lado y una hoja de color al lado.",
+          "Carregar les piles dels robots i comprovar que les micro:bit funcionen amb un programa qualsevol.|Cargar las pilas de los robots y comprobar que las micro:bit funcionan con un programa cualquiera.",
+          "Tenir preparats a MakeCode (makecode.microbit.org, extensió «maqueen») els dos programes de l'imprimible de la fitxa: el de mesurar i el d'aturar-se a la cinta.|Tener preparados en MakeCode (makecode.microbit.org, extensión «maqueen») los dos programas del imprimible de la ficha: el de medir y el de pararse en la cinta.",
+          "Imprimir i retallar un paquet de targetes per grup de 3.|Imprimir y recortar un paquete de tarjetas por grupo de 3."
+        ]
+      },
+      plan: [
+        { min: 5, t: 'Benvinguda: robots que segueixen línies|Bienvenida: robots que siguen líneas', fase: 'inici',
+          fa: "Presenta la missió de la unitat: el moll de mercaderies del port, on els robots porten caixes seguint cinta negra. Pregunta com pot saber un robot on és la cinta si no té ulls com els nostres i recull idees sense corregir.|Presenta la misión de la unidad: el muelle de mercancías del puerto, donde los robots llevan cajas siguiendo cinta negra. Pregunta cómo puede saber un robot dónde está la cinta si no tiene ojos como los nuestros y recoge ideas sin corregir.",
+          diu: ["Heu vist mai un robot o un vehicle que segueixi una ratlla a terra?|¿Habéis visto alguna vez un robot o un vehículo que siga una raya en el suelo?", "Com sabria el Maqueen on és la cinta negra?|¿Cómo sabría el Maqueen dónde está la cinta negra?"],
+          slides: ['s1', 's2', 's3'], app: "Encara no: pantalles abaixades.|Todavía no: pantallas bajadas.", org: 'Tot el grup|Todo el grupo' },
+        { min: 12, t: 'Com veu el negre un sensor?|¿Cómo ve el negro un sensor?', fase: 'teoria',
+          fa: "Explica amb l'animació la llum que rebota i fes la demostració amb la llanterna sobre un full blanc i un de negre. Presenta L, M i R i el valor ADC. Abans d'executar cada simulació projectada, demana que tothom predigui què farà el robot (aixecant el dit: s'atura o continua?).|Explica con la animación la luz que rebota y haz la demostración con la linterna sobre una hoja blanca y una negra. Presenta L, M y R y el valor ADC. Antes de ejecutar cada simulación proyectada, pide que todos predigan qué hará el robot (levantando el dedo: ¿se para o sigue?).",
+          diu: ["Mireu la paret: on torna més llum, quan apunto al blanc o al negre?|Mirad la pared: ¿dónde vuelve más luz, cuando apunto al blanco o al negro?", "Si el sensor diu 1, segur que hi ha cinta? I si el robot és a la vora de la taula?|Si el sensor dice 1, ¿seguro que hay cinta? ¿Y si el robot está en el borde de la mesa?", "Per què creieu que el robot de 255 no s'atura?|¿Por qué creéis que el robot de 255 no se para?"],
+          slides: ['s4', 's5', 's6', 's7', 's8', 's9'], app: "Encara no: tota l'atenció a la projecció.|Todavía no: toda la atención en la proyección.", org: 'Tot el grup|Todo el grupo' },
+        { min: 10, t: 'Els tres ulls|Los tres ojos', fase: 'desconnectat',
+          fa: "Grups de 3: cada alumne/a és un sensor (L, M o R) i té les targetes 0 i 1. Posa a terra tires de paper negre, blau i blanc (o fes-ho a la taula, amb cartolines sota les mans). Els tres «sensors» es posen en fila i avancen un pas cada vegada que dius «llegiu!»: cadascú aixeca el 0 o l'1 segons el que té sota el peu. Quan el M aixeca l'1, el grup s'atura. Amb la tira blava, la targeta 0/1 diu 0… però la targeta ADC diu ≈360.|Grupos de 3: cada alumno/a es un sensor (L, M o R) y tiene las tarjetas 0 y 1. Pon en el suelo tiras de papel negro, azul y blanco (o hazlo en la mesa, con cartulinas bajo las manos). Los tres «sensores» se ponen en fila y avanzan un paso cada vez que dices «¡leed!»: cada uno levanta el 0 o el 1 según lo que tiene bajo el pie. Cuando el M levanta el 1, el grupo se para. Con la tira azul, la tarjeta 0/1 dice 0… pero la tarjeta ADC dice ≈360.",
+          diu: ["Què heu llegit? Digueu-ho en ordre: L, M, R.|¿Qué habéis leído? Decidlo en orden: L, M, R.", "La tira blava és negra o blanca per al 0/1? I per a l'ADC?|¿La tira azul es negra o blanca para el 0/1? ¿Y para el ADC?"],
+          slides: ['s10'], app: "Cap: activitat sense pantalla.|Ninguna: actividad sin pantalla.", org: 'Grups de 3|Grupos de 3' },
+        { min: 13, t: 'El Maqueen de veritat: mesurem el terra|El Maqueen de verdad: medimos el suelo', fase: 'robot',
+          fa: "Cada grup carrega a la micro:bit el programa de mesurar (mostra el valor ADC del sensor M) i omple la fitxa: valor sobre el blanc, la cinta negra, el full de color i a l'aire (aixecant el robot amb la mà un parell de centímetres). Després carreguen el programa d'aturar-se a la cinta i el proven a velocitat 120 i a 255. Que comparin els números amb els del simulador: no seran iguals, i és normal (llum de l'aula, piles, paper).|Cada grupo carga en la micro:bit el programa de medir (muestra el valor ADC del sensor M) y rellena la ficha: valor sobre el blanco, la cinta negra, la hoja de color y en el aire (levantando el robot con la mano un par de centímetros). Después cargan el programa de pararse en la cinta y lo prueban a velocidad 120 y a 255. Que comparen los números con los del simulador: no serán iguales, y es normal (luz del aula, pilas, papel).",
+          diu: ["Quin número surt sobre la cinta? I sobre el blanc?|¿Qué número sale sobre la cinta? ¿Y sobre el blanco?", "Ningú no posa el robot a la vora d'una taula de veritat: l'aire el provem aixecant-lo amb la mà.|Nadie pone el robot en el borde de una mesa de verdad: el aire lo probamos levantándolo con la mano.", "A 255 s'atura a la cinta? Per què?|¿A 255 se para en la cinta? ¿Por qué?"],
+          slides: ['s11', 's12'], app: "Cap: es treballa amb MakeCode i el robot.|Ninguna: se trabaja con MakeCode y el robot.", org: 'Grups de 3-4 per kit|Grupos de 3-4 por kit' },
+        { min: 15, t: "A l'ordinador: reptes del moll|En el ordenador: retos del muelle", fase: 'ordinador',
+          fa: "Cada alumne/a fa la sessió al seu ritme. «La prova de la llanterna» ja s'ha fet a classe: que toquin «Ho hem fet!». Passeja i, a cada repte, pregunta què ha de passar quan el sensor veu negre i què quan veu blanc abans que posin blocs. Qui acabi pot fer el projecte del robot del moll amb el seu estil.|Cada alumno/a hace la sesión a su ritmo. «La prueba de la linterna» ya se ha hecho en clase: que toquen «¡Lo hemos hecho!». Pasea y, en cada reto, pregunta qué tiene que pasar cuando el sensor ve negro y qué cuando ve blanco antes de que pongan bloques. Quien termine puede hacer el proyecto del robot del muelle con su estilo.",
+          diu: ["Què ha de fer el robot SI veu negre? I SI NO?|¿Qué tiene que hacer el robot SI ve negro? ¿Y SI NO?", "Funciona a les 3 pistes? Un programa amb temps fix no hi funcionaria mai.|¿Funciona en las 3 pistas? Un programa con tiempo fijo no funcionaría nunca.", "A la zona blava: on és el sensor quan el robot s'atura?|En la zona azul: ¿dónde está el sensor cuando el robot se para?"],
+          slides: ['s13', 's14'], app: "De «Recorda» fins al projecte «El robot del moll»: les preguntes, «Descobreix», «On s'aturarà?», «Toca el bloc», la pausa i els quatre reptes (línia de càrrega, massa de pressa, vora de la taula i zona blava).|De «Recuerda» hasta el proyecto «El robot del muelle»: las preguntas, «Descubre», «¿Dónde se parará?», «Toca el bloque», la pausa y los cuatro retos (línea de carga, demasiado deprisa, borde de la mesa y zona azul).", org: 'Individual|Individual' },
+        { min: 5, t: 'Tancament i tiquet de sortida|Cierre y ticket de salida', fase: 'tancament',
+          fa: "Repassa les tres idees amb el resum i deixa que responguin les preguntes finals de l'app. A la porta, una pregunta del tiquet a cada alumne/a. Guardeu els robots amb l'interruptor apagat.|Repasa las tres ideas con el resumen y deja que respondan las preguntas finales de la app. En la puerta, una pregunta del ticket a cada alumno/a. Guardad los robots con el interruptor apagado.",
+          diu: ["Què vol dir un 1 al sensor de línia?|¿Qué quiere decir un 1 en el sensor de línea?", "Com distingiríeu una zona verda del blanc?|¿Cómo distinguiríais una zona verde del blanco?"],
+          slides: ['s15', 's16'], app: "Les dues preguntes finals i «Com m'he sentit».|Las dos preguntas finales y «Cómo me he sentido».", org: 'Tot el grup|Todo el grupo' }
+      ],
+      errors: [
+        ["Creu que el sensor «veu» colors com una càmera.|Cree que el sensor «ve» colores como una cámara.", "Torna a la llanterna: el sensor només mesura quanta llum torna. Pregunta-li quin color torna més llum i quin menys.|Vuelve a la linterna: el sensor solo mide cuánta luz vuelve. Pregúntale qué color devuelve más luz y cuál menos."],
+        ["Posa el «si» a «en iniciar» i el robot no s'atura mai.|Pone el «si» en «al iniciar» y el robot no se para nunca.", "Pregunta: quantes vegades mira el sensor el teu programa? Que compari «en iniciar» (una vegada) amb «per sempre».|Pregunta: ¿cuántas veces mira el sensor tu programa? Que compare «al iniciar» (una vez) con «para siempre»."],
+        ["Fa servir velocitats molt altes i el robot es passa la cinta.|Usa velocidades muy altas y el robot se pasa la cinta.", "Que miri el robot a càmera lenta (botó ×1) i observi on és el sensor quan frena. Què passaria amb una velocitat més baixa?|Que mire el robot a cámara lenta (botón ×1) y observe dónde está el sensor cuando frena. ¿Qué pasaría con una velocidad más baja?"],
+        ["A la zona blava fa servir M = 1 i el robot no s'atura.|En la zona azul usa M = 1 y el robot no se para.", "Que miri el tauler quan el robot passa pel blau: què diu la línia L·M·R? Quin altre valor podria ajudar?|Que mire el panel cuando el robot pasa por el azul: ¿qué dice la línea L·M·R? ¿Qué otro valor podría ayudar?"],
+        ["Esborra tot el programa quan falla en una de les pistes.|Borra todo el programa cuando falla en una de las pistas.", "Pregunta: a quina pista falla i on s'atura? Normalment només cal canviar un número.|Pregunta: ¿en qué pista falla y dónde se para? Normalmente solo hace falta cambiar un número."]
+      ],
+      diff: {
+        mes: "Fer que el robot avanci, s'aturi a la cinta, esperi 2 segons i continuï fins a la segona cinta. Al robot real: provar diferents colors de paper i ordenar-los pel valor ADC.|Hacer que el robot avance, se pare en la cinta, espere 2 segundos y siga hasta la segunda cinta. En el robot real: probar diferentes colores de papel y ordenarlos por el valor ADC.",
+        menys: "Començar amb el programa de la demostració projectat i canviar-hi només la velocitat. A la fitxa del robot, omplir només el blanc i el negre.|Empezar con el programa de la demostración proyectado y cambiar solo la velocidad. En la ficha del robot, rellenar solo el blanco y el negro."
+      },
+      aval: {
+        ticket: ["Què fa el sensor de línia per saber si a sota hi ha negre?|¿Qué hace el sensor de línea para saber si debajo hay negro?", "Per què el robot de 255 no s'aturava a la cinta?|¿Por qué el robot de 255 no se paraba en la cinta?"],
+        rubric: [
+          ["Funcionament del sensor|Funcionamiento del sensor", "Explica la llum que rebota i per què el blanc dona 0 i el negre 1 (i l'aire, 1).|Explica la luz que rebota y por qué el blanco da 0 y el negro 1 (y el aire, 1).", "Sap que el negre dona 1, però no sap explicar per què.|Sabe que el negro da 1, pero no sabe explicar por qué."],
+          ["Programa amb sensor|Programa con sensor", "Fa «per sempre» + «si… si no» i el programa funciona a totes les pistes.|Hace «para siempre» + «si… si no» y el programa funciona en todas las pistas.", "Necessita ajuda per triar on va cada bloc o prova amb temps fixos.|Necesita ayuda para elegir dónde va cada bloque o prueba con tiempos fijos."],
+          ["Dades del robot real|Datos del robot real", "Mesura i anota els valors ADC i els compara amb el simulador.|Mide y anota los valores ADC y los compara con el simulador.", "Mesura alguns valors, però no els relaciona amb el que hi ha a terra.|Mide algunos valores, pero no los relaciona con lo que hay en el suelo."]
+        ]
+      },
+      casa: "A casa, amb el mòbil, podeu repetir la sessió i fer la prova de la llanterna amb un full blanc, un de negre i un de color: quin torna més llum?|En casa, con el móvil, podéis repetir la sesión y hacer la prueba de la linterna con una hoja blanca, una negra y una de color: ¿cuál devuelve más luz?",
+      slides: [
+        { id: 's1', k: 'portada', t: 'Blanc o negre?|¿Blanco o negro?', x: "Unitat 4 · Seguir la línia. Avui: com «veu» el Maqueen la cinta negra.|Unidad 4 · Seguir la línea. Hoy: cómo «ve» el Maqueen la cinta negra.", nota: "Presenta la unitat: en quatre sessions farem un tren de mercaderies que segueix una via de cinta.|Presenta la unidad: en cuatro sesiones haremos un tren de mercancías que sigue una vía de cinta." },
+        { id: 's2', k: 'pregunta', t: 'Com sap el robot on és la cinta?|¿Cómo sabe el robot dónde está la cinta?', x: "No té ulls com nosaltres. Què podria fer servir?|No tiene ojos como nosotros. ¿Qué podría usar?", nota: "Recull idees (càmera, tacte, llum…). Al final de la teoria, torna-hi.|Recoge ideas (cámara, tacto, luz…). Al final de la teoría, vuelve a ello." },
+        { id: 's3', k: 'concepte', t: 'La missió: el moll de mercaderies|La misión: el muelle de mercancías', punts: ["Els robots porten caixes per camins de cinta negra.|Los robots llevan cajas por caminos de cinta negra.", "Avui: aturar-se a la cinta, a la vora i a una zona de color.|Hoy: pararse en la cinta, en el borde y en una zona de color.", "Al final de la unitat: el tren de mercaderies.|Al final de la unidad: el tren de mercancías."], nota: "Ensenya un Maqueen girat per mostrar els tres sensors de sota, al davant.|Enseña un Maqueen girado para mostrar los tres sensores de abajo, delante." },
+        { id: 's4', k: 'anim', t: 'Llum que rebota|Luz que rebota', anim: 'k4ir', x: "Blanc: torna molta llum (0). Negre: en torna poca (1).|Blanco: vuelve mucha luz (0). Negro: vuelve poca (1).", nota: "Fes ara la demostració de la llanterna: apunta a un full blanc i a un de negre i fes mirar la llum a la paret.|Haz ahora la demostración de la linterna: apunta a una hoja blanca y a una negra y haz mirar la luz en la pared." },
+        { id: 's5', k: 'anim', t: 'L, M i R|L, M y R', anim: 'k4lmr', x: "Tres sensors en fila, uns 3,6 cm per davant del centre del robot.|Tres sensores en fila, unos 3,6 cm por delante del centro del robot.", nota: "Pregunta: si el robot és ben centrat a la cinta, quins sensors veuen negre? (Només el M.)|Pregunta: si el robot está bien centrado en la cinta, ¿qué sensores ven negro? (Solo el M.)" },
+        { id: 's6', k: 'robo', t: 'Para quan vegis negre|Para cuando veas negro', x: "Si M = 1, para; si no, endavant. On s'aturarà?|Si M = 1, para; si no, adelante. ¿Dónde se parará?", robo: { w: { w: 120, h: 80, bot: [14, 40, 90], lines: [ln(80)], time: 9 }, prog: STOP_M }, nota: "Que prediguin abans d'executar. Fes notar que s'atura amb el centre una mica abans de la cinta: el sensor va davant.|Que predigan antes de ejecutar. Haz notar que se para con el centro un poco antes de la cinta: el sensor va delante." },
+        { id: 's7', k: 'anim', t: 'El valor ADC|El valor ADC', anim: 'k4adc', x: "Un número de 0 a 1023: blanc ≈90, color ≈360, negre ≈900.|Un número de 0 a 1023: blanco ≈90, color ≈360, negro ≈900.", nota: "Remarca que amb el 0/1 un full de color sembla blanc; amb l'ADC, no.|Remarca que con el 0/1 una hoja de color parece blanca; con el ADC, no." },
+        { id: 's8', k: 'anim', t: "Compte: l'aire també és «negre»|Cuidado: el aire también es «negro»", anim: 'k4air', x: "Sense terra a sota, no torna llum: el sensor diu 1.|Sin suelo debajo, no vuelve luz: el sensor dice 1.", nota: "Explica que així es fan robots que no cauen de la taula, però que a l'aula ho provarem aixecant el robot amb la mà, mai a la vora d'una taula de veritat.|Explica que así se hacen robots que no se caen de la mesa, pero que en el aula lo probaremos levantando el robot con la mano, nunca en el borde de una mesa de verdad." },
+        { id: 's9', k: 'robo', t: 'I a velocitat 255?|¿Y a velocidad 255?', x: "El mateix programa, però a 255. S'aturarà?|El mismo programa, pero a 255. ¿Se parará?", robo: { w: { w: 120, h: 80, bot: [14, 40, 90], lines: [ln(70)], time: 8 }, prog: 'forever{ if:M=1{ stop:all } else{ run:all,fwd,255 } }' }, nota: "No s'atura: frena tard, el sensor passa la cinta (2 cm), torna a veure blanc i el «si no» l'engega. És la inèrcia.|No se para: frena tarde, el sensor pasa la cinta (2 cm), vuelve a ver blanco y el «si no» lo pone en marcha. Es la inercia." },
+        { id: 's10', k: 'activitat', t: 'Els tres ulls|Los tres ojos', timer: 10, punts: ["Grups de 3: L, M i R, amb les targetes 0 i 1.|Grupos de 3: L, M y R, con las tarjetas 0 y 1.", "«Llegiu!»: un pas endavant i cadascú aixeca el seu número.|«¡Leed!»: un paso adelante y cada uno levanta su número.", "Quan el M aixeca l'1, el grup s'atura.|Cuando el M levanta el 1, el grupo se para.", "Amb la tira blava: què diu el 0/1? I l'ADC?|Con la tira azul: ¿qué dice el 0/1? ¿Y el ADC?"], nota: "Si no hi ha espai a terra, feu-ho a la taula: les mans dels tres alumnes/es fan de sensors sobre cartolines.|Si no hay espacio en el suelo, hacedlo en la mesa: las manos de los tres alumnos/as hacen de sensores sobre cartulinas." },
+        { id: 's11', k: 'activitat', t: 'Maqueen: mesurem el terra|Maqueen: medimos el suelo', timer: 13, punts: ["Carregueu el programa de mesurar i apunteu els valors a la fitxa.|Cargad el programa de medir y apuntad los valores en la ficha.", "Blanc, cinta negra, full de color i a l'aire (aixecant-lo amb la mà).|Blanco, cinta negra, hoja de color y en el aire (levantándolo con la mano).", "Després: el programa d'aturar-se a 120 i a 255.|Después: el programa de pararse a 120 y a 255."],
+          code: "basic.forever(function () {\n    basic.showNumber(Maqueen_V5.readPatrolData(Maqueen_V5.Patrol.M))\n})", nota: "Recorda que el número es desplaça per la pantalla de la micro:bit: cal esperar que acabi per llegir-lo sencer.|Recuerda que el número se desplaza por la pantalla de la micro:bit: hay que esperar a que termine para leerlo entero." },
+        { id: 's12', k: 'concepte', t: 'Muntatge i seguretat|Montaje y seguridad', punts: ["Pista: full blanc gran amb una tira de cinta negra i un full de color.|Pista: hoja blanca grande con una tira de cinta negra y una hoja de color.", "El robot sempre a terra o en una taula amb vora.|El robot siempre en el suelo o en una mesa con borde.", "Piles ben posades i interruptor apagat mentre es munta.|Pilas bien puestas e interruptor apagado mientras se monta.", "Un/a alumne/a vigila el robot, un/a altre/a l'ordinador i un/a altre/a apunta.|Un/a alumno/a vigila el robot, otro/a el ordenador y otro/a apunta."], nota: SAFE },
+        { id: 's13', k: 'activitat', t: "Ara, a l'ordinador|Ahora, al ordenador", timer: 15, punts: ["Obre la sessió «Blanc o negre?».|Abre la sesión «¿Blanco o negro?».", "«La prova de la llanterna» ja l'hem fet: toca «Ho hem fet!».|«La prueba de la linterna» ya la hemos hecho: toca «¡Lo hemos hecho!».", "Abans de cada repte: què fa si veu negre? I si no?|Antes de cada reto: ¿qué hace si ve negro? ¿Y si no?"], nota: "Si algú s'encalla, que miri el tauler «Línia L·M·R» mentre el robot avança.|Si alguien se atasca, que mire el panel «Línea L·M·R» mientras el robot avanza." },
+        { id: 's14', k: 'repte', t: 'Els reptes del moll|Los retos del muelle', punts: ["1. Para a la línia de càrrega (3 pistes)|1. Para en la línea de carga (3 pistas)", "2. Massa de pressa: arregla la velocitat|2. Demasiado deprisa: arregla la velocidad", "3. La taula sense vora i els llums vermells|3. La mesa sin borde y las luces rojas", "4. La zona blava: fes servir l'ADC|4. La zona azul: usa el ADC"], nota: "Al repte 4, si s'aturen just abans del blau, pregunta on és el sensor i on és el centre del robot.|En el reto 4, si se paran justo antes del azul, pregunta dónde está el sensor y dónde está el centro del robot." },
+        { id: 's15', k: 'resum', t: 'Què hem après avui|Qué hemos aprendido hoy', punts: ["Blanc → torna molta llum → 0. Negre (o aire) → poca → 1.|Blanco → vuelve mucha luz → 0. Negro (o aire) → poca → 1.", "L'ADC distingeix blanc (≈90), colors (≈360) i negre (≈900).|El ADC distingue blanco (≈90), colores (≈360) y negro (≈900).", "Per aturar-se a la cinta, a poc a poc: el robot té inèrcia.|Para pararse en la cinta, despacio: el robot tiene inercia."], nota: "Torna a la pregunta del principi: com sap el robot on és la cinta?|Vuelve a la pregunta del principio: ¿cómo sabe el robot dónde está la cinta?" },
+        { id: 's16', k: 'tiquet', t: 'Tiquet de sortida|Ticket de salida', punts: ["Què fa el sensor per saber si hi ha negre?|¿Qué hace el sensor para saber si hay negro?", "Per què el robot de 255 no s'aturava?|¿Por qué el robot de 255 no se paraba?"], nota: "Anota qui confon el 0/1 amb l'ADC: ho repassarem a la sessió 2.|Anota quién confunde el 0/1 con el ADC: lo repasaremos en la sesión 2." }
+      ],
+      print: [
+        { id: 'p1', t: 'Targetes dels tres ulls|Tarjetas de los tres ojos', k: 'targetes', intro: "Un paquet per grup de 3: cada «sensor» té un 0 i un 1. Les targetes de colors fan de tires de terra (o feu servir paper de veritat).|Un paquete por grupo de 3: cada «sensor» tiene un 0 y un 1. Las tarjetas de colores hacen de tiras de suelo (o usad papel de verdad).",
+          items: [{ t: 'Blanc: 0 ⚪|Blanco: 0 ⚪', n: 3 }, { t: 'Negre: 1 ⚫|Negro: 1 ⚫', n: 3 }, { t: 'Sensor L ⬅️|Sensor L ⬅️', n: 1 }, { t: 'Sensor M ⬆️|Sensor M ⬆️', n: 1 }, { t: 'Sensor R ➡️|Sensor R ➡️', n: 1 }, { t: 'ADC ≈360 🟦|ADC ≈360 🟦', n: 1 }, { t: 'ADC ≈900 ⬛|ADC ≈900 ⬛', n: 1 }, { t: 'ADC ≈90 ⬜|ADC ≈90 ⬜', n: 1 }] },
+        { id: 'p2', t: 'Fitxa: mesurem el terra amb el Maqueen|Ficha: medimos el suelo con el Maqueen', k: 'fitxa', intro: "Carregueu a la micro:bit el programa de mesurar (mostra el valor ADC del sensor M). Poseu el robot a sobre de cada cosa i apunteu el número.|Cargad en la micro:bit el programa de medir (muestra el valor ADC del sensor M). Poned el robot encima de cada cosa y apuntad el número.",
+          items: [
+            { q: "Programa de mesurar: copieu-lo a MakeCode.|Programa de medir: copiadlo en MakeCode.", rprog: 'forever{ num:aM }', sol: "El número canvia quan moveu el robot.|El número cambia cuando movéis el robot." },
+            { q: "Valor sobre el paper blanc: ______|Valor sobre el papel blanco: ______", sol: "Un número baix (al simulador, ≈90).|Un número bajo (en el simulador, ≈90)." },
+            { q: "Valor sobre la cinta negra: ______|Valor sobre la cinta negra: ______", sol: "Un número alt (al simulador, ≈900).|Un número alto (en el simulador, ≈900)." },
+            { q: "Valor sobre el full de color: ______ Color: ______|Valor sobre la hoja de color: ______ Color: ______", sol: "Entre el blanc i el negre (al simulador, ≈360).|Entre el blanco y el negro (en el simulador, ≈360)." },
+            { q: "Valor a l'aire (aixequeu el robot 2 cm amb la mà): ______|Valor en el aire (levantad el robot 2 cm con la mano): ______", sol: "Alt, com el negre: no torna llum.|Alto, como el negro: no vuelve luz." },
+            { q: "Programa d'aturar-se a la cinta. S'atura a 120? I a 255? Per què?|Programa de pararse en la cinta. ¿Se para a 120? ¿Y a 255? ¿Por qué?", rprog: STOP_M, sol: "A 120 sí; a 255 frena tard i passa la cinta (inèrcia).|A 120 sí; a 255 frena tarde y pasa la cinta (inercia)." }
+          ] }
+      ]
+    },
+    /* ---------- k4-2 · La vora de la línia ---------- */
+    'k4-2': {
+      obj: [
+        "L'alumne/a explica que amb un sol sensor el robot segueix la vora de la línia, girant cap a un costat amb el negre i cap a l'altre amb el blanc.|El alumno/a explica que con un solo sensor el robot sigue el borde de la línea, girando hacia un lado con el negro y hacia el otro con el blanco.",
+        "L'alumne/a programa un seguidor de línia d'un sensor amb «per sempre» i «si… si no» i motors a velocitats diferents.|El alumno/a programa un seguidor de línea de un sensor con «para siempre» y «si… si no» y motores a velocidades diferentes.",
+        "L'alumne/a relaciona la diferència de velocitat entre els motors amb com de tancat és el gir i ajusta les velocitats perquè el robot no perdi la línia.|El alumno/a relaciona la diferencia de velocidad entre los motores con lo cerrado que es el giro y ajusta las velocidades para que el robot no pierda la línea.",
+        "L'alumne/a prova el seguidor al Maqueen de veritat en una pista de cinta i el millora.|El alumno/a prueba el seguidor en el Maqueen de verdad en una pista de cinta y lo mejora."
+      ],
+      comp: [
+        "Competència digital: programar i depurar un sistema automàtic|Competencia digital: programar y depurar un sistema automático",
+        "Pensament computacional: algorisme que es repeteix i decideix a cada volta (control amb realimentació)|Pensamiento computacional: algoritmo que se repite y decide en cada vuelta (control con realimentación)",
+        "Matemàtiques: relació entre velocitats, corbes i radis|Matemáticas: relación entre velocidades, curvas y radios",
+        "Treball en equip: provar, mesurar i millorar en grup|Trabajo en equipo: probar, medir y mejorar en grupo"
+      ],
+      vocab: [
+        ["Vora|Borde", "La ratlla on s'acaba el negre de la cinta i comença el blanc.|La raya donde termina el negro de la cinta y empieza el blanco."],
+        ["Seguidor de línia|Seguidor de línea", "Un robot que segueix una línia a terra amb els sensors.|Un robot que sigue una línea en el suelo con los sensores."],
+        ["Ziga-zaga|Zigzag", "El moviment d'anar d'un costat a l'altre de la vora.|El movimiento de ir de un lado a otro del borde."],
+        ["Gir suau|Giro suave", "Quan un motor va més lent que l'altre, el robot fa una corba.|Cuando un motor va más lento que el otro, el robot hace una curva."],
+        ["Corba tancada|Curva cerrada", "Una corba que gira molt en poc espai.|Una curva que gira mucho en poco espacio."]
+      ],
+      mat: {
+        aula: [
+          "Un ordinador per alumne/a amb Numi Tech obert a la sessió «La vora de la línia»|Un ordenador por alumno/a con Numi Tech abierto en la sesión «El borde de la línea»",
+          "Projector i la presentació d'aquesta sessió|Proyector y la presentación de esta sesión",
+          "Un kit Maqueen Lite V5 + micro:bit per grup de 3-4, amb piles carregades|Un kit Maqueen Lite V5 + micro:bit por grupo de 3-4, con pilas cargadas",
+          "Cinta aïllant negra, paper blanc gran (o 4 cartolines A2 enganxades) i tisores|Cinta aislante negra, papel blanco grande (o 4 cartulinas A2 pegadas) y tijeras",
+          "Llapis i una moneda per alumne/a per a l'activitat de la fitxa|Lápiz y una moneda por alumno/a para la actividad de la ficha"
+        ],
+        imprimir: ["Fitxa: la ziga-zaga de la vora|Ficha: el zigzag del borde", "Pista: el circuit del magatzem|Pista: el circuito del almacén"],
+        prep: [
+          "Construir abans de classe (o amb l'alumnat al principi del bloc «robot») el circuit de la pista imprimible: un oval de 84 × 52 cm amb cinta negra sobre paper blanc. Les corbes s'han de fer amb trossets curts de cinta.|Construir antes de clase (o con el alumnado al principio del bloque «robot») el circuito de la pista imprimible: un óvalo de 84 × 52 cm con cinta negra sobre papel blanco. Las curvas se tienen que hacer con trocitos cortos de cinta.",
+          "Si hi ha prou paper, un circuit per a cada dos grups; si no, un de sol i els grups hi passen per torns.|Si hay suficiente papel, un circuito para cada dos grupos; si no, uno solo y los grupos pasan por turnos.",
+          "Preparar a MakeCode el seguidor d'un sensor de la diapositiva del robot.|Preparar en MakeCode el seguidor de un sensor de la diapositiva del robot."
+        ]
+      },
+      plan: [
+        { min: 5, t: 'Repàs: blanc, negre i colors|Repaso: blanco, negro y colores', fase: 'inici',
+          fa: "Repassa amb dues preguntes la sessió anterior (què diu M sobre negre, com es distingeix un color) i planteja el problema: el camí del magatzem té corbes. Com podria seguir-lo el robot amb un sol sensor?|Repasa con dos preguntas la sesión anterior (qué dice M sobre negro, cómo se distingue un color) y plantea el problema: el camino del almacén tiene curvas. ¿Cómo podría seguirlo el robot con un solo sensor?",
+          diu: ["Si el robot s'atura a la cinta, ja la segueix?|Si el robot se para en la cinta, ¿ya la sigue?", "Amb un sol ull, com sabríeu si us heu desviat cap a la dreta o cap a l'esquerra?|Con un solo ojo, ¿cómo sabríais si os habéis desviado hacia la derecha o hacia la izquierda?"],
+          slides: ['s1', 's2'], app: "Encara no.|Todavía no.", org: 'Tot el grup|Todo el grupo' },
+        { min: 10, t: 'Seguir la vora|Seguir el borde', fase: 'teoria',
+          fa: "Explica la idea de la vora amb l'animació i mostra el programa en directe. Després canvia els girs de lloc (l'altra vora) i, finalment, la demostració de la corba tancada amb 200 i 150. Abans de cada execució, que la classe digui què creu que passarà.|Explica la idea del borde con la animación y muestra el programa en directo. Después cambia los giros de sitio (el otro borde) y, finalmente, la demostración de la curva cerrada con 200 y 150. Antes de cada ejecución, que la clase diga qué cree que pasará.",
+          diu: ["Fixeu-vos en el rastre: el robot va pel mig de la cinta o per la vora?|Fijaos en el rastro: ¿el robot va por el medio de la cinta o por el borde?", "Què passarà si canvio els girs de lloc?|¿Qué pasará si cambio los giros de sitio?", "Per què es perd a la corba? Què canviaríeu?|¿Por qué se pierde en la curva? ¿Qué cambiaríais?"],
+          slides: ['s3', 's4', 's5', 's6', 's7'], app: "Encara no.|Todavía no.", org: 'Tot el grup|Todo el grupo' },
+        { min: 10, t: 'La ziga-zaga amb la moneda|El zigzag con la moneda', fase: 'desconnectat',
+          fa: "Per parelles, amb la fitxa. Un/a alumne/a mou una moneda (el robot) a petits passos sobre la corba dibuixada; l'altre/a fa de sensor i diu «negre» o «blanc» segons on és la moneda. Si és negre, la moneda fa un pas en diagonal cap a la dreta; si és blanc, cap a l'esquerra. Dibuixen el camí amb llapis. Després canvien els papers i proven la regla al revés.|Por parejas, con la ficha. Un/a alumno/a mueve una moneda (el robot) a pequeños pasos sobre la curva dibujada; el otro/a hace de sensor y dice «negro» o «blanco» según dónde está la moneda. Si es negro, la moneda da un paso en diagonal hacia la derecha; si es blanco, hacia la izquierda. Dibujan el camino con lápiz. Después cambian los papeles y prueban la regla al revés.",
+          diu: ["Per on passa el vostre camí: pel mig de la línia o per la vora?|¿Por dónde pasa vuestro camino: por el medio de la línea o por el borde?", "Què passa a la corba si els passos són molt llargs?|¿Qué pasa en la curva si los pasos son muy largos?"],
+          slides: ['s8'], app: "Cap: activitat sense pantalla.|Ninguna: actividad sin pantalla.", org: 'Per parelles|Por parejas' },
+        { min: 13, t: 'El Maqueen segueix el circuit|El Maqueen sigue el circuito', fase: 'robot',
+          fa: "Els grups carreguen el seguidor d'un sensor i el posen a la vora de la cinta del circuit. Primer amb 150 i 50; després proven de pujar la velocitat fins que el robot es perdi, i anoten la velocitat més alta que funciona. Compareu-ho amb el simulador: al robot real, la llum de l'aula i el paper poden canviar el resultat.|Los grupos cargan el seguidor de un sensor y lo ponen en el borde de la cinta del circuito. Primero con 150 y 50; después prueban a subir la velocidad hasta que el robot se pierda, y anotan la velocidad más alta que funciona. Comparadlo con el simulador: en el robot real, la luz del aula y el papel pueden cambiar el resultado.",
+          diu: ["Poseu el sensor M just a la vora de la cinta abans d'engegar.|Poned el sensor M justo en el borde de la cinta antes de arrancar.", "Quina és la velocitat més alta que fa la volta sencera?|¿Cuál es la velocidad más alta que da la vuelta entera?", "Si el robot es perd, agafeu-lo amb la mà abans que xoqui.|Si el robot se pierde, cogedlo con la mano antes de que choque."],
+          slides: ['s9', 's10'], app: "Cap: MakeCode i el robot.|Ninguna: MakeCode y el robot.", org: 'Grups de 3-4 per kit|Grupos de 3-4 por kit' },
+        { min: 17, t: "A l'ordinador: les rutes del magatzem|En el ordenador: las rutas del almacén", fase: 'ordinador',
+          fa: "Cada alumne/a fa la sessió al seu ritme fins al projecte. Al repte de la corba tancada, deixa que provin velocitats i que expliquin per què han triat els números. Al repte de l'estació blava, recorda els tres valors de l'ADC.|Cada alumno/a hace la sesión a su ritmo hasta el proyecto. En el reto de la curva cerrada, deja que prueben velocidades y que expliquen por qué han elegido los números. En el reto de la estación azul, recuerda los tres valores del ADC.",
+          diu: ["Quin motor ha d'anar més ràpid per girar a l'esquerra?|¿Qué motor tiene que ir más rápido para girar a la izquierda?", "Funciona igual al circuit que va en sentit contrari? Per què?|¿Funciona igual en el circuito que va en sentido contrario? ¿Por qué?", "Al blau, quin número dona l'ADC?|En el azul, ¿qué número da el ADC?"],
+          slides: ['s11', 's12', 's13'], app: "De «Recorda» fins al projecte «La ruta de les caixes»: «Descobreix», ordenar la ziga-zaga, les preguntes, «Toca el bloc», la pausa i els quatre reptes (corbes suaus, corba tancada, volta al magatzem i estació blava).|De «Recuerda» hasta el proyecto «La ruta de las cajas»: «Descubre», ordenar el zigzag, las preguntas, «Toca el bloque», la pausa y los cuatro retos (curvas suaves, curva cerrada, vuelta al almacén y estación azul).", org: 'Individual|Individual' },
+        { min: 5, t: 'Tancament i tiquet|Cierre y ticket', fase: 'tancament',
+          fa: "Resum de la sessió, preguntes finals de l'app i tiquet a la porta. Deixeu el circuit muntat si es pot: el farem servir a la sessió 3.|Resumen de la sesión, preguntas finales de la app y ticket en la puerta. Dejad el circuito montado si se puede: lo usaremos en la sesión 3.",
+          diu: ["Amb un sol sensor, què segueix el robot?|Con un solo sensor, ¿qué sigue el robot?", "Què feu si el robot es perd a les corbes?|¿Qué hacéis si el robot se pierde en las curvas?"],
+          slides: ['s14', 's15'], app: "Preguntes finals i «Com m'he sentit».|Preguntas finales y «Cómo me he sentido».", org: 'Tot el grup|Todo el grupo' }
+      ],
+      errors: [
+        ["Posa els dos motors a la mateixa velocitat a les dues branques.|Pone los dos motores a la misma velocidad en las dos ramas.", "Pregunta: com gira un robot? Recorda la unitat 2: un motor més ràpid que l'altre.|Pregunta: ¿cómo gira un robot? Recuerda la unidad 2: un motor más rápido que el otro."],
+        ["Gira cap al mateix costat amb el negre i amb el blanc: el robot fa cercles.|Gira hacia el mismo lado con el negro y con el blanco: el robot hace círculos.", "Que digui en veu alta què fa a cada branca. Si veu negre, cap on ha d'anar? I si veu blanc?|Que diga en voz alta qué hace en cada rama. Si ve negro, ¿hacia dónde tiene que ir? ¿Y si ve blanco?"],
+        ["Fa servir velocitats per sota de 30 per al motor lent i no entén per què s'atura una roda.|Usa velocidades por debajo de 30 para el motor lento y no entiende por qué se para una rueda.", "Recorda la zona morta: per sota de 30 el motor no té prou força. Això també passa al robot de veritat.|Recuerda la zona muerta: por debajo de 30 el motor no tiene suficiente fuerza. Esto también pasa en el robot de verdad."],
+        ["Al robot real el posa en mig del blanc i fa cercles.|En el robot real lo pone en medio del blanco y hace círculos.", "Pregunta què veu el sensor quan engega. On l'hauria de posar perquè trobi la vora?|Pregunta qué ve el sensor cuando arranca. ¿Dónde lo tendría que poner para que encuentre el borde?"],
+        ["A l'estació blava no sap com fer tres casos.|En la estación azul no sabe cómo hacer tres casos.", "Que escrigui en un paper: negre → …, blau → …, blanc → … Després, un «si» dins del «si no».|Que escriba en un papel: negro → …, azul → …, blanco → … Después, un «si» dentro del «si no»."]
+      ],
+      diff: {
+        mes: "Trobar la combinació de velocitats que fa la volta més ràpida sense perdre la línia i comparar el temps amb el d'altres companys/es. Al robot real, provar l'altra vora.|Encontrar la combinación de velocidades que da la vuelta más rápida sin perder la línea y comparar el tiempo con el de otros compañeros/as. En el robot real, probar el otro borde.",
+        menys: "Començar pel programa de la demostració (180 i 50) i canviar-hi només un número cada vegada. Fer la fitxa de la moneda amb la regla escrita al costat.|Empezar por el programa de la demostración (180 y 50) y cambiar solo un número cada vez. Hacer la ficha de la moneda con la regla escrita al lado."
+      },
+      aval: {
+        ticket: ["Explica la regla del seguidor d'un sensor: què fa amb negre i què amb blanc?|Explica la regla del seguidor de un sensor: ¿qué hace con negro y qué con blanco?", "Què canviaries si el robot es perd en una corba tancada?|¿Qué cambiarías si el robot se pierde en una curva cerrada?"],
+        rubric: [
+          ["Idea de la vora|Idea del borde", "Explica per què el robot fa ziga-zaga per la vora i que hi ha dues vores possibles.|Explica por qué el robot hace zigzag por el borde y que hay dos bordes posibles.", "Sap la regla, però creu que el robot va pel mig de la cinta.|Sabe la regla, pero cree que el robot va por el medio de la cinta."],
+          ["Programa del seguidor|Programa del seguidor", "Programa el seguidor sol i funciona als circuits diferents.|Programa el seguidor solo y funciona en los circuitos diferentes.", "Necessita el model per saber quin motor ha d'anar més ràpid.|Necesita el modelo para saber qué motor tiene que ir más rápido."],
+          ["Ajustar velocitats|Ajustar velocidades", "Canvia les velocitats amb criteri (més diferència o menys velocitat) i ho explica.|Cambia las velocidades con criterio (más diferencia o menos velocidad) y lo explica.", "Prova números a l'atzar fins que funciona.|Prueba números al azar hasta que funciona."]
+        ]
+      },
+      casa: "A casa, amb el mòbil, podeu repetir la sessió i fer el seguidor de vores caminant: una ratlla imaginària a terra, un pas a la dreta quan dius «negre» i un a l'esquerra quan dius «blanc».|En casa, con el móvil, podéis repetir la sesión y hacer el seguidor de bordes caminando: una raya imaginaria en el suelo, un paso a la derecha cuando dices «negro» y uno a la izquierda cuando dices «blanco».",
+      slides: [
+        { id: 's1', k: 'portada', t: 'La vora de la línia|El borde de la línea', x: "Avui el robot no s'atura a la cinta: la segueix!|Hoy el robot no se para en la cinta: ¡la sigue!", nota: "Recorda la missió del moll: ara les caixes van pel camí de corbes fins al magatzem.|Recuerda la misión del muelle: ahora las cajas van por el camino de curvas hasta el almacén." },
+        { id: 's2', k: 'repas', t: 'Recordem|Recordemos', punts: ["Sobre la cinta negra, el sensor M diu… 1.|Sobre la cinta negra, el sensor M dice… 1.", "Sobre el blanc, diu… 0.|Sobre el blanco, dice… 0.", "Un color es distingeix amb… l'ADC (≈360).|Un color se distingue con… el ADC (≈360)."], nota: "Fes les preguntes una a una i deixa que responguin abans de mostrar la resposta.|Haz las preguntas una a una y deja que respondan antes de mostrar la respuesta." },
+        { id: 's3', k: 'anim', t: 'Seguir la vora|Seguir el borde', anim: 'k4edge', x: "Negre → gira a la dreta. Blanc → gira a l'esquerra.|Negro → gira a la derecha. Blanco → gira a la izquierda.", nota: "Fes notar el camí blau de punts: el robot no va mai pel mig de la cinta, sinó per la vora.|Haz notar el camino azul de puntos: el robot nunca va por el medio de la cinta, sino por el borde." },
+        { id: 's4', k: 'robo', t: 'El seguidor d\'un sensor|El seguidor de un sensor', x: "Si M = 1: esquerre 180, dret 50. Si no: esquerre 50, dret 180.|Si M = 1: izquierdo 180, derecho 50. Si no: izquierdo 50, derecho 180.", robo: { w: { w: 120, h: 80, bot: [40, 66, 90], lines: [{ p: OVAL, closed: true }], time: 24 }, prog: ONE(180, 50) }, nota: "Executa-ho i fes mirar el tauler: la línia M canvia de 0 a 1 contínuament.|Ejecútalo y haz mirar el panel: la línea M cambia de 0 a 1 continuamente." },
+        { id: 's5', k: 'robo', t: "L'altra vora|El otro borde", x: "Canviem els girs de lloc. Què farà?|Cambiamos los giros de sitio. ¿Qué hará?", robo: { w: { w: 120, h: 80, bot: [40, 66, 90], lines: [{ p: OVAL, closed: true }], time: 24 }, prog: 'forever{ if:M=1{ run:L,fwd,50 run:R,fwd,180 } else{ run:L,fwd,180 run:R,fwd,50 } }' }, nota: "Segueix l'altra vora de la cinta. Les dues regles funcionen.|Sigue el otro borde de la cinta. Las dos reglas funcionan." },
+        { id: 's6', k: 'robo', t: 'Una corba tancada|Una curva cerrada', x: "Motors a 200 i 150. Farà la volta?|Motores a 200 y 150. ¿Dará la vuelta?", robo: { w: { w: 120, h: 80, bot: [40, 66, 90], lines: [{ p: OVAL6, closed: true }], time: 12 }, prog: ONE(200, 150) }, nota: "Es perd a la primera corba: gira massa poc. Pregunta com ho arreglarien.|Se pierde en la primera curva: gira demasiado poco. Pregunta cómo lo arreglarían." },
+        { id: 's7', k: 'concepte', t: 'Com més diferència, més gira|Cuanta más diferencia, más gira', punts: ["180 i 50: gira molt (corbes tancades).|180 y 50: gira mucho (curvas cerradas).", "200 i 150: gira poc (només corbes suaus).|200 y 150: gira poco (solo curvas suaves).", "Per sota de 30, el motor no es mou (zona morta).|Por debajo de 30, el motor no se mueve (zona muerta)."], nota: "Relaciona-ho amb les corbes de la unitat 2: és la mateixa física.|Relaciónalo con las curvas de la unidad 2: es la misma física." },
+        { id: 's8', k: 'activitat', t: 'La ziga-zaga amb la moneda|El zigzag con la moneda', timer: 10, punts: ["Un/a mou la moneda; l'altre/a diu «negre» o «blanc».|Uno/a mueve la moneda; el otro/a dice «negro» o «blanco».", "Negre: pas en diagonal a la dreta. Blanc: a l'esquerra.|Negro: paso en diagonal a la derecha. Blanco: a la izquierda.", "Dibuixeu el camí amb llapis.|Dibujad el camino con lápiz.", "Després, canvieu de papers i la regla al revés.|Después, cambiad los papeles y la regla al revés."], nota: "Passa per les taules i pregunta per on va el camí: per la vora o pel mig?|Pasa por las mesas y pregunta por dónde va el camino: ¿por el borde o por el medio?" },
+        { id: 's9', k: 'activitat', t: 'Maqueen: el circuit del magatzem|Maqueen: el circuito del almacén', timer: 13, punts: ["Carregueu el seguidor d'un sensor (150 i 50).|Cargad el seguidor de un sensor (150 y 50).", "Poseu el sensor M a la vora de la cinta.|Poned el sensor M en el borde de la cinta.", "Pugeu la velocitat: quina és la més alta que funciona?|Subid la velocidad: ¿cuál es la más alta que funciona?"],
+          code: "basic.forever(function () {\n    if (Maqueen_V5.readPatrol(Maqueen_V5.Patrol.M) == 1) {\n        Maqueen_V5.motorRun(Maqueen_V5.Motors.M1, Maqueen_V5.Dir.CW, 150)\n        Maqueen_V5.motorRun(Maqueen_V5.Motors.M2, Maqueen_V5.Dir.CW, 50)\n    } else {\n        Maqueen_V5.motorRun(Maqueen_V5.Motors.M1, Maqueen_V5.Dir.CW, 50)\n        Maqueen_V5.motorRun(Maqueen_V5.Motors.M2, Maqueen_V5.Dir.CW, 150)\n    }\n})", nota: "M1 és el motor esquerre i M2 el dret, com al simulador.|M1 es el motor izquierdo y M2 el derecho, como en el simulador." },
+        { id: 's10', k: 'concepte', t: 'Muntatge i seguretat|Montaje y seguridad', punts: ["Circuit: oval de 84 × 52 cm amb cinta negra sobre paper blanc.|Circuito: óvalo de 84 × 52 cm con cinta negra sobre papel blanco.", "Les corbes, amb trossets curts de cinta.|Las curvas, con trocitos cortos de cinta.", "Una persona vigila el robot i l'agafa si es perd.|Una persona vigila el robot y lo coge si se pierde."], nota: SAFE },
+        { id: 's11', k: 'activitat', t: "Ara, a l'ordinador|Ahora, al ordenador", timer: 17, punts: ["Obre la sessió «La vora de la línia».|Abre la sesión «El borde de la línea».", "Fes els reptes en ordre i, al final, el projecte.|Haz los retos en orden y, al final, el proyecto.", "Abans de canviar números, pensa: més gir o menys?|Antes de cambiar números, piensa: ¿más giro o menos?"], nota: "Ajuda amb preguntes; no donis les velocitats.|Ayuda con preguntas; no des las velocidades." },
+        { id: 's12', k: 'repte', t: 'Les rutes del magatzem|Las rutas del almacén', punts: ["1. Corbes suaus (3 camins)|1. Curvas suaves (3 caminos)", "2. La corba tancada: canvia les velocitats|2. La curva cerrada: cambia las velocidades", "3. La volta al magatzem (3 circuits)|3. La vuelta al almacén (3 circuitos)", "4. L'estació blava: tres casos amb l'ADC|4. La estación azul: tres casos con el ADC"], nota: "El repte 4 és difícil: és normal que no tothom l'acabi avui.|El reto 4 es difícil: es normal que no todos lo terminen hoy." },
+        { id: 's13', k: 'robo', t: "L'estació blava|La estación azul", x: "Negre → dreta · blau → para · blanc → esquerra.|Negro → derecha · azul → para · blanco → izquierda.", robo: { w: { w: 120, h: 80, bot: [12, 44, 142], lines: [{ p: S1.slice(0, 15) }], zones: [{ id: 'e', r: [96, 30, 20, 24], col: 'blue', label: 'ESTACIÓ|ESTACIÓN' }], time: 20 }, prog: 'forever{ if:aM>600{ run:L,fwd,150 run:R,fwd,40 } else{ if:aM>200{ stop:all } else{ run:L,fwd,40 run:R,fwd,150 } } }' }, nota: "Projecta-ho només quan la majoria hagi provat el repte 4, per comentar la solució.|Proyéctalo solo cuando la mayoría haya probado el reto 4, para comentar la solución." },
+        { id: 's14', k: 'resum', t: 'Què hem après avui|Qué hemos aprendido hoy', punts: ["Amb un sensor, el robot segueix la vora fent ziga-zaga.|Con un sensor, el robot sigue el borde haciendo zigzag.", "Un motor més ràpid que l'altre = gir.|Un motor más rápido que el otro = giro.", "Corba tancada: més diferència o menys velocitat.|Curva cerrada: más diferencia o menos velocidad."], nota: "Pregunta quina velocitat màxima ha trobat cada grup amb el robot real.|Pregunta qué velocidad máxima ha encontrado cada grupo con el robot real." },
+        { id: 's15', k: 'tiquet', t: 'Tiquet de sortida|Ticket de salida', punts: ["Què fa el seguidor amb negre? I amb blanc?|¿Qué hace el seguidor con negro? ¿Y con blanco?", "Què canviaries si es perd a la corba?|¿Qué cambiarías si se pierde en la curva?"], nota: "Anota qui encara no relaciona velocitats i girs.|Anota quién todavía no relaciona velocidades y giros." }
+      ],
+      print: [
+        { id: 'p1', t: 'Fitxa: la ziga-zaga de la vora|Ficha: el zigzag del borde', k: 'fitxa', intro: "Per parelles. La moneda és el robot i el seu sensor és la vora de davant de la moneda. Feu passos petits: negre → pas en diagonal a la dreta; blanc → pas en diagonal a l'esquerra. Dibuixeu el camí amb llapis.|Por parejas. La moneda es el robot y su sensor es el borde de delante de la moneda. Dad pasos pequeños: negro → paso en diagonal a la derecha; blanco → paso en diagonal a la izquierda. Dibujad el camino con lápiz.",
+          items: [
+            { q: "Corba suau: comenceu a l'esquerra, a la vora de la cinta, i dibuixeu el camí fins al final.|Curva suave: empezad a la izquierda, en el borde de la cinta, y dibujad el camino hasta el final.", w: { w: 120, h: 80, bot: [12, 44, 142], lines: [{ p: S1 }] }, sol: "Una ziga-zaga que va per la vora de la cinta, sense deixar-la.|Un zigzag que va por el borde de la cinta, sin dejarla." },
+            { q: "Ara amb la regla al revés (negre → esquerra, blanc → dreta). Per quina vora passa el camí?|Ahora con la regla al revés (negro → izquierda, blanco → derecha). ¿Por qué borde pasa el camino?", w: { w: 120, h: 80, bot: [12, 44, 142], lines: [{ p: S1 }] }, sol: "Per l'altra vora de la cinta.|Por el otro borde de la cinta." },
+            { q: "Què passa si feu passos molt llargs a la corba? Per què?|¿Qué pasa si dais pasos muy largos en la curva? ¿Por qué?", sol: "La moneda surt de la cinta i es perd: com el robot quan va massa de pressa.|La moneda sale de la cinta y se pierde: como el robot cuando va demasiado deprisa." }
+          ] },
+        { id: 'p2', t: 'Pista: el circuit del magatzem|Pista: el circuito del almacén', k: 'pista', intro: "Construïu aquest circuit amb cinta aïllant negra sobre paper blanc. El robot comença a la recta de baix, mirant a la dreta, amb el sensor M a la vora de la cinta.|Construid este circuito con cinta aislante negra sobre papel blanco. El robot empieza en la recta de abajo, mirando a la derecha, con el sensor M en el borde de la cinta.",
+          w: { w: 120, h: 80, bot: [40, 66, 90], lines: [{ p: OVAL, closed: true }] },
+          items: [{ q: "Velocitat més alta amb què el robot fa la volta sencera: ______|Velocidad más alta con la que el robot da la vuelta entera: ______" }, { q: "Temps d'una volta (amb el rellotge): ______ segons|Tiempo de una vuelta (con el reloj): ______ segundos" }] }
+      ]
+    },
+    /* ---------- k4-3 · Dos sensors i cruïlles ---------- */
+    'k4-3': {
+      obj: [
+        "L'alumne/a programa un seguidor amb dos sensors (L i R) que va recte quan la cinta és al mig i gira quan un sensor veu negre.|El alumno/a programa un seguidor con dos sensores (L y R) que va recto cuando la cinta está en medio y gira cuando un sensor ve negro.",
+        "L'alumne/a fa servir una condició doble («L = 1 i R = 1») per detectar cruïlles i estacions i entén per què ha d'anar primer.|El alumno/a usa una condición doble («L = 1 y R = 1») para detectar cruces y estaciones y entiende por qué tiene que ir primero.",
+        "L'alumne/a interpreta les combinacions dels tres sensors i fa que el robot no es perdi als revolts de 90°.|El alumno/a interpreta las combinaciones de los tres sensores y hace que el robot no se pierda en las curvas de 90°.",
+        "L'alumne/a prova al Maqueen de veritat un seguidor de dos sensors que s'atura a una estació.|El alumno/a prueba en el Maqueen de verdad un seguidor de dos sensores que se para en una estación."
+      ],
+      comp: [
+        "Competència digital: programar decisions amb diversos sensors|Competencia digital: programar decisiones con varios sensores",
+        "Pensament computacional: condicions compostes («i») i ordre de les condicions|Pensamiento computacional: condiciones compuestas («y») y orden de las condiciones",
+        "Matemàtiques: combinacions i taules (els 8 casos de tres sensors)|Matemáticas: combinaciones y tablas (los 8 casos de tres sensores)",
+        "Comunicació: explicar per què un programa funciona o falla|Comunicación: explicar por qué un programa funciona o falla"
+      ],
+      vocab: [
+        ["Cruïlla|Cruce", "Lloc on dues cintes es creuen.|Lugar donde dos cintas se cruzan."],
+        ["Estació|Estación", "Una ratlla travessera que marca on s'ha d'aturar el robot.|Una raya transversal que marca dónde se tiene que parar el robot."],
+        ["Condició amb «i»|Condición con «y»", "Una condició que només és certa si les dues parts ho són alhora.|Una condición que solo es cierta si las dos partes lo son a la vez."],
+        ["Combinació|Combinación", "Els valors de L, M i R junts, per exemple 1 1 1.|Los valores de L, M y R juntos, por ejemplo 1 1 1."],
+        ["Revolt de 90°|Curva de 90°", "Un gir en angle recte, com una cantonada.|Un giro en ángulo recto, como una esquina."]
+      ],
+      mat: {
+        aula: [
+          "Un ordinador per alumne/a amb Numi Tech obert a la sessió «Dos sensors i cruïlles»|Un ordenador por alumno/a con Numi Tech abierto en la sesión «Dos sensores y cruces»",
+          "Projector i la presentació d'aquesta sessió|Proyector y la presentación de esta sesión",
+          "Un kit Maqueen Lite V5 + micro:bit per grup de 3-4, amb piles carregades|Un kit Maqueen Lite V5 + micro:bit por grupo de 3-4, con pilas cargadas",
+          "Cinta aïllant negra, paper blanc gran i el circuit de la sessió anterior (si es va guardar)|Cinta aislante negra, papel blanco grande y el circuito de la sesión anterior (si se guardó)",
+          "Una corda o cinta de pintor per marcar un camí a terra per a l'activitat dels dos peus|Una cuerda o cinta de pintor para marcar un camino en el suelo para la actividad de los dos pies"
+        ],
+        imprimir: ["Fitxa: què fa el robot?|Ficha: ¿qué hace el robot?", "Pista: el camí amb cruïlla i estació|Pista: el camino con cruce y estación"],
+        prep: [
+          "Marcar a terra, amb cinta de pintor, un camí d'uns 4 metres amb una corba suau, una cruïlla i una ratlla travessera al final (l'estació).|Marcar en el suelo, con cinta de pintor, un camino de unos 4 metros con una curva suave, un cruce y una raya transversal al final (la estación).",
+          "Construir la pista imprimible (camí amb cruïlla i estació) amb cinta negra sobre paper blanc, una per cada dos grups.|Construir la pista imprimible (camino con cruce y estación) con cinta negra sobre papel blanco, una para cada dos grupos.",
+          "Preparar a MakeCode el seguidor de dos sensors amb parada a l'estació.|Preparar en MakeCode el seguidor de dos sensores con parada en la estación."
+        ]
+      },
+      plan: [
+        { min: 5, t: 'Repàs i repte: més ràpid i amb cruïlles|Repaso y reto: más rápido y con cruces', fase: 'inici',
+          fa: "Repassa el seguidor d'un sensor (fa ziga-zaga, és lent) i planteja dos problemes nous: anar més recte i saber quan s'arriba a una estació o a una cruïlla.|Repasa el seguidor de un sensor (hace zigzag, es lento) y plantea dos problemas nuevos: ir más recto y saber cuándo se llega a una estación o a un cruce.",
+          diu: ["Per què el robot d'un sensor fa ziga-zaga fins i tot a les rectes?|¿Por qué el robot de un sensor hace zigzag incluso en las rectas?", "Com sabria el robot que ha arribat a una estació?|¿Cómo sabría el robot que ha llegado a una estación?"],
+          slides: ['s1', 's2'], app: "Encara no.|Todavía no.", org: 'Tot el grup|Todo el grupo' },
+        { min: 12, t: 'Dos i tres sensors|Dos y tres sensores', fase: 'teoria',
+          fa: "Explica els dos sensors amb l'animació i la demostració. Presenta la taula de les combinacions dels tres sensors. Fes predir la cruïlla (on anirà?) abans d'executar-la i, després, la parada a l'estació amb la condició «i».|Explica los dos sensores con la animación y la demostración. Presenta la tabla de las combinaciones de los tres sensores. Haz predecir el cruce (¿adónde irá?) antes de ejecutarlo y, después, la parada en la estación con la condición «y».",
+          diu: ["Si L veu negre, cap on s'ha mogut la cinta?|Si L ve negro, ¿hacia dónde se ha movido la cinta?", "Què vol dir 1 1 1? I 0 0 0?|¿Qué quiere decir 1 1 1? ¿Y 0 0 0?", "Per què ha girat a la cruïlla? Quin «si» ha mirat primer?|¿Por qué ha girado en el cruce? ¿Qué «si» ha mirado primero?"],
+          slides: ['s3', 's4', 's5', 's6', 's7', 's8'], app: "Encara no.|Todavía no.", org: 'Tot el grup|Todo el grupo' },
+        { min: 10, t: 'El robot de dos peus|El robot de dos pies', fase: 'desconnectat',
+          fa: "Per parelles al camí marcat a terra: un/a camina amb un peu a cada costat de la cinta (els peus són L i R), sense trepitjar-la; l'altre/a vigila i diu el que «llegeixen» els sensors. A la cruïlla han de decidir: recte. A la ratlla del final, s'aturen. Mentre esperen torn, omplen la fitxa de les combinacions.|Por parejas en el camino marcado en el suelo: uno/a camina con un pie a cada lado de la cinta (los pies son L y R), sin pisarla; el otro/a vigila y dice lo que «leen» los sensores. En el cruce tienen que decidir: recto. En la raya del final, se paran. Mientras esperan turno, rellenan la ficha de las combinaciones.",
+          diu: ["Quan has tocat la cinta amb el peu esquerre, cap on has girat?|Cuando has tocado la cinta con el pie izquierdo, ¿hacia dónde has girado?", "A la cruïlla, els dos peus toquen la cinta: què fas?|En el cruce, los dos pies tocan la cinta: ¿qué haces?"],
+          slides: ['s9'], app: "Cap: activitat sense pantalla.|Ninguna: actividad sin pantalla.", org: 'Per parelles|Por parejas' },
+        { min: 13, t: "El Maqueen s'atura a l'estació|El Maqueen se para en la estación", fase: 'robot',
+          fa: "Els grups carreguen el seguidor de dos sensors amb la parada «L = 1 i R = 1» i el proven a la pista amb cruïlla i estació. Primer sense la parada (què passa a la cruïlla?) i després amb la parada. Si va massa de pressa i es passa la ratlla, que baixin la velocitat.|Los grupos cargan el seguidor de dos sensores con la parada «L = 1 y R = 1» y lo prueban en la pista con cruce y estación. Primero sin la parada (¿qué pasa en el cruce?) y después con la parada. Si va demasiado deprisa y se pasa la raya, que bajen la velocidad.",
+          diu: ["Què fa el robot a la cruïlla sense la condició «i»?|¿Qué hace el robot en el cruce sin la condición «y»?", "S'atura exactament a la ratlla? Què hi influeix?|¿Se para exactamente en la raya? ¿Qué influye?"],
+          slides: ['s10', 's11'], app: "Cap: MakeCode i el robot.|Ninguna: MakeCode y el robot.", org: 'Grups de 3-4 per kit|Grupos de 3-4 por kit' },
+        { min: 15, t: "A l'ordinador: cruïlles i revolts|En el ordenador: cruces y curvas", fase: 'ordinador',
+          fa: "Cada alumne/a fa la sessió fins al projecte dels intermitents. «El robot de dos peus» ja s'ha fet: toquin «Ho hem fet!». Al repte dels revolts de 90°, ajuda'ls a veure què passa quan el robot no veu res (0 0 0).|Cada alumno/a hace la sesión hasta el proyecto de los intermitentes. «El robot de dos pies» ya se ha hecho: toquen «¡Lo hemos hecho!». En el reto de las curvas de 90°, ayúdales a ver qué pasa cuando el robot no ve nada (0 0 0).",
+          diu: ["Quina condició ha d'anar primer i per què?|¿Qué condición tiene que ir primero y por qué?", "Al revolt de 90°, què veuen els sensors just quan es perd?|En la curva de 90°, ¿qué ven los sensores justo cuando se pierde?"],
+          slides: ['s12', 's13'], app: "De «Recorda» fins al projecte «El robot amb intermitents»: «Descobreix», les preguntes, «Cap on anirà?», «El robot de dos peus» (ja fet), la pausa i els quatre reptes (dos ulls, estació, cruïlles i revolts de 90°).|De «Recuerda» hasta el proyecto «El robot con intermitentes»: «Descubre», las preguntas, «¿Hacia dónde irá?», «El robot de dos pies» (ya hecho), la pausa y los cuatro retos (dos ojos, estación, cruces y curvas de 90°).", org: 'Individual|Individual' },
+        { min: 5, t: 'Tancament i tiquet|Cierre y ticket', fase: 'tancament',
+          fa: "Resum, preguntes finals de l'app i tiquet a la porta. Anuncia el projecte de la sessió vinent: el tren de mercaderies.|Resumen, preguntas finales de la app y ticket en la puerta. Anuncia el proyecto de la sesión siguiente: el tren de mercancías.",
+          diu: ["Què vol dir 1 1 1?|¿Qué quiere decir 1 1 1?", "Què fa el robot de tres sensors quan no veu la cinta?|¿Qué hace el robot de tres sensores cuando no ve la cinta?"],
+          slides: ['s14', 's15'], app: "Preguntes finals i «Com m'he sentit».|Preguntas finales y «Cómo me he sentido».", org: 'Tot el grup|Todo el grupo' }
+      ],
+      errors: [
+        ["Posa la condició «L = 1 i R = 1» després de «si L = 1» i no funciona mai.|Pone la condición «L = 1 y R = 1» después de «si L = 1» y no funciona nunca.", "Que segueixi el programa amb el dit amb L = 1 i R = 1: quin «si» és cert primer? Hi arriba mai, al segon?|Que siga el programa con el dedo con L = 1 y R = 1: ¿qué «si» es cierto primero? ¿Llega alguna vez al segundo?"],
+        ["Confon quin motor ha d'anar més ràpid quan L veu negre.|Confunde qué motor tiene que ir más rápido cuando L ve negro.", "Si la cinta és a l'esquerra, cap on ha de girar el robot? Quin motor ha d'anar lent per girar a l'esquerra?|Si la cinta está a la izquierda, ¿hacia dónde tiene que girar el robot? ¿Qué motor tiene que ir lento para girar a la izquierda?"],
+        ["Fa servir «o» en comptes d'«i» per a l'estació.|Usa «o» en lugar de «y» para la estación.", "Pregunta: «L = 1 o R = 1» és cert a la cruïlla… i també quan? (A cada gir!)|Pregunta: «L = 1 o R = 1» es cierto en el cruce… ¿y también cuándo? (¡En cada giro!)"],
+        ["Al revolt de 90° posa un «si no: para» i el robot s'atura.|En la curva de 90° pone un «si no: para» y el robot se para.", "Que miri què veuen els sensors al revolt (0 0 0). Si no canvia res, què continuen fent els motors?|Que mire qué ven los sensores en la curva (0 0 0). Si no cambia nada, ¿qué siguen haciendo los motores?"],
+        ["Al robot real s'atura abans de l'estació, a les corbes.|En el robot real se para antes de la estación, en las curvas.", "A les corbes molt tancades, els dos sensors poden tocar la cinta alhora. Proveu de fer la corba més suau o baixar la velocitat.|En las curvas muy cerradas, los dos sensores pueden tocar la cinta a la vez. Probad a hacer la curva más suave o bajar la velocidad."]
+      ],
+      diff: {
+        mes: "Fer que a l'estació el robot s'aturi, esperi 2 segons i continuï (cal avançar una mica per sortir de la ratlla). Pensar els 8 casos dels tres sensors i quin moviment fa cadascun.|Hacer que en la estación el robot se pare, espere 2 segundos y siga (hay que avanzar un poco para salir de la raya). Pensar los 8 casos de los tres sensores y qué movimiento hace cada uno.",
+        menys: "Començar pel programa de la demostració projectat i afegir-hi només la parada a l'estació. A la fitxa, fer només els casos de dos sensors.|Empezar por el programa de la demostración proyectado y añadir solo la parada en la estación. En la ficha, hacer solo los casos de dos sensores."
+      },
+      aval: {
+        ticket: ["Què vol dir 1 1 1 i què ha de fer el robot?|¿Qué quiere decir 1 1 1 y qué tiene que hacer el robot?", "Per què la condició «L = 1 i R = 1» va la primera?|¿Por qué la condición «L = 1 y R = 1» va la primera?"],
+        rubric: [
+          ["Seguidor de dos sensors|Seguidor de dos sensores", "Programa el seguidor amb els tres casos i el motor correcte a cada gir.|Programa el seguidor con los tres casos y el motor correcto en cada giro.", "Necessita ajuda per decidir quin motor va lent.|Necesita ayuda para decidir qué motor va lento."],
+          ["Condicions i ordre|Condiciones y orden", "Fa servir «i» per a l'estació i la cruïlla i explica per què va primer.|Usa «y» para la estación y el cruce y explica por qué va primero.", "Fa la condició doble, però la posa en un ordre que no funciona.|Hace la condición doble, pero la pone en un orden que no funciona."],
+          ["Tres sensors|Tres sensores", "Interpreta les combinacions i resol els revolts de 90°.|Interpreta las combinaciones y resuelve las curvas de 90°.", "Coneix 0 1 0 i 1 1 1, però no sap què fer amb 0 0 0.|Conoce 0 1 0 y 1 1 1, pero no sabe qué hacer con 0 0 0."]
+        ]
+      },
+      casa: "A casa, amb el mòbil, podeu repetir la sessió i fer «El robot de dos peus» amb una corda o una tira de paper i una ratlla d'estació al final.|En casa, con el móvil, podéis repetir la sesión y hacer «El robot de dos pies» con una cuerda o una tira de papel y una raya de estación al final.",
+      slides: [
+        { id: 's1', k: 'portada', t: 'Dos sensors i cruïlles|Dos sensores y cruces', x: "Més recte, més ràpid i sabent on som.|Más recto, más rápido y sabiendo dónde estamos.", nota: "El magatzem del port ha crescut: ara hi ha cruïlles i estacions.|El almacén del puerto ha crecido: ahora hay cruces y estaciones." },
+        { id: 's2', k: 'pregunta', t: 'Com sap el robot que és a una estació?|¿Cómo sabe el robot que está en una estación?', x: "L'estació és una ratlla travessera de cinta.|La estación es una raya transversal de cinta.", nota: "Recull idees. Algú pot proposar «quan tots els sensors veuen negre»: guarda-ho per a més tard.|Recoge ideas. Alguien puede proponer «cuando todos los sensores ven negro»: guárdalo para más tarde." },
+        { id: 's3', k: 'anim', t: 'Dos sensors, la cinta al mig|Dos sensores, la cinta en medio', anim: 'k4two', x: "0 0 recte · 1 0 esquerra · 0 1 dreta.|0 0 recto · 1 0 izquierda · 0 1 derecha.", nota: "Remarca: si L veu negre, la cinta s'ha mogut cap a l'esquerra; el robot l'ha d'anar a buscar.|Remarca: si L ve negro, la cinta se ha movido hacia la izquierda; el robot tiene que ir a buscarla." },
+        { id: 's4', k: 'robo', t: 'El seguidor de dos sensors|El seguidor de dos sensores', x: "Mireu les rectes: fa ziga-zaga?|Mirad las rectas: ¿hace zigzag?", robo: { w: { w: 120, h: 80, bot: [40, 62, 90], lines: [{ p: LONG1, closed: true }], time: 16 }, prog: TWO(200, 30) }, nota: "Va recte a les rectes i és més ràpid que el d'un sensor.|Va recto en las rectas y es más rápido que el de un sensor." },
+        { id: 's5', k: 'anim', t: 'Les combinacions de L, M i R|Las combinaciones de L, M y R', anim: 'k4cross', x: "1 1 1: cruïlla o estació. 0 0 0: no canviïs res.|1 1 1: cruce o estación. 0 0 0: no cambies nada.", nota: "Pregunta quantes combinacions hi ha en total (8) i quines no surten a la taula.|Pregunta cuántas combinaciones hay en total (8) y cuáles no salen en la tabla." },
+        { id: 's6', k: 'robo', t: 'Cap on anirà a la cruïlla?|¿Hacia dónde irá en el cruce?', x: "Seguidor de dos sensors (primer mira L). A, B o C?|Seguidor de dos sensores (primero mira L). ¿A, B o C?", robo: { w: { w: 120, h: 80, bot: [12, 40, 90], lines: [{ p: [[10, 40], [110, 40]] }, { p: [[60, 14], [60, 66]] }], marks: { A: [60, 12], B: [104, 40], C: [60, 68] }, time: 7 }, prog: TWO(150, 30) }, nota: "Gira cap amunt (A): a la cruïlla L = 1 i el primer «si» diu «gira a l'esquerra».|Gira hacia arriba (A): en el cruce L = 1 y el primer «si» dice «gira a la izquierda»." },
+        { id: 's7', k: 'robo', t: "Atura't a l'estació|Párate en la estación", x: "Primer: si L = 1 i R = 1, para.|Primero: si L = 1 y R = 1, para.", robo: { w: { w: 120, h: 80, bot: [12, 40, 147], lines: [{ p: ST1 }, { p: [[93.3, 44.4], [106.7, 35.6]] }], time: 12 }, prog: TWOX(150, 30, 'stop:all') }, nota: "Explica la condició «i»: només és certa si les dues parts ho són alhora.|Explica la condición «y»: solo es cierta si las dos partes lo son a la vez." },
+        { id: 's8', k: 'robo', t: 'Revolts de 90°|Curvas de 90°', x: "Tres sensors: si no veu res, continua girant.|Tres sensores: si no ve nada, sigue girando.", robo: { w: { w: 120, h: 80, bot: [10, 60, 90], lines: [{ p: STEP_A }], time: 14 }, prog: THREE(150, 0) }, nota: "No hi ha cap «si no» al final: quan veu 0 0 0, els motors continuen fent el que feien.|No hay ningún «si no» al final: cuando ve 0 0 0, los motores siguen haciendo lo que hacían." },
+        { id: 's9', k: 'activitat', t: 'El robot de dos peus|El robot de dos pies', timer: 10, punts: ["Un peu a cada costat de la cinta: són L i R.|Un pie a cada lado de la cinta: son L y R.", "Peu esquerre toca la cinta → gira a l'esquerra.|Pie izquierdo toca la cinta → gira a la izquierda.", "A la cruïlla: recte. A la ratlla del final: atura't.|En el cruce: recto. En la raya del final: párate.", "Mentre espereu, ompliu la fitxa.|Mientras esperáis, rellenad la ficha."], nota: "Caminar a poc a poc, sense córrer ni empènyer.|Caminar despacio, sin correr ni empujar." },
+        { id: 's10', k: 'activitat', t: "Maqueen: para a l'estació|Maqueen: para en la estación", timer: 13, punts: ["Primer, el seguidor de dos sensors sense parada.|Primero, el seguidor de dos sensores sin parada.", "Què fa a la cruïlla?|¿Qué hace en el cruce?", "Després, afegiu la parada «L = 1 i R = 1».|Después, añadid la parada «L = 1 y R = 1»."],
+          code: "basic.forever(function () {\n    if (Maqueen_V5.readPatrol(Maqueen_V5.Patrol.L) == 1 && Maqueen_V5.readPatrol(Maqueen_V5.Patrol.R) == 1) {\n        Maqueen_V5.motorStop(Maqueen_V5.Motors.All)\n    } else if (Maqueen_V5.readPatrol(Maqueen_V5.Patrol.L) == 1) {\n        Maqueen_V5.motorRun(Maqueen_V5.Motors.M1, Maqueen_V5.Dir.CW, 30)\n        Maqueen_V5.motorRun(Maqueen_V5.Motors.M2, Maqueen_V5.Dir.CW, 150)\n    } else if (Maqueen_V5.readPatrol(Maqueen_V5.Patrol.R) == 1) {\n        Maqueen_V5.motorRun(Maqueen_V5.Motors.M1, Maqueen_V5.Dir.CW, 150)\n        Maqueen_V5.motorRun(Maqueen_V5.Motors.M2, Maqueen_V5.Dir.CW, 30)\n    } else {\n        Maqueen_V5.motorRun(Maqueen_V5.Motors.All, Maqueen_V5.Dir.CW, 150)\n    }\n})", nota: "Aquest codi és el mateix que dona el botó </> del simulador (amb «si no, si» agrupats).|Este código es el mismo que da el botón </> del simulador (con «si no, si» agrupados)." },
+        { id: 's11', k: 'concepte', t: 'Muntatge i seguretat|Montaje y seguridad', punts: ["Pista: camí amb una cruïlla (+) i una ratlla d'estació al final.|Pista: camino con un cruce (+) y una raya de estación al final.", "La ratlla de l'estació, ben perpendicular al camí.|La raya de la estación, bien perpendicular al camino.", "El robot sempre a terra i vigilat.|El robot siempre en el suelo y vigilado."], nota: SAFE },
+        { id: 's12', k: 'activitat', t: "Ara, a l'ordinador|Ahora, al ordenador", timer: 15, punts: ["Obre la sessió «Dos sensors i cruïlles».|Abre la sesión «Dos sensores y cruces».", "«El robot de dos peus» ja l'hem fet.|«El robot de dos pies» ya lo hemos hecho.", "Al final, el projecte dels intermitents.|Al final, el proyecto de los intermitentes."], nota: "Qui acabi aviat pot ajudar amb preguntes, sense tocar el ratolí del company/a.|Quien termine pronto puede ayudar con preguntas, sin tocar el ratón del compañero/a." },
+        { id: 's13', k: 'repte', t: 'Els reptes de les cruïlles|Los retos de los cruces', punts: ["1. Dos ulls: el circuit amb L i R|1. Dos ojos: el circuito con L y R", "2. Para a l'estació (3 pistes)|2. Para en la estación (3 pistas)", "3. Creua recte les cruïlles|3. Cruza recto los cruces", "4. Revolts de 90° amb tres sensors|4. Curvas de 90° con tres sensores"], nota: "Al repte 3, el programa de partida ja segueix la cinta: només cal afegir el cas de la cruïlla al principi.|En el reto 3, el programa de partida ya sigue la cinta: solo hay que añadir el caso del cruce al principio." },
+        { id: 's14', k: 'resum', t: 'Què hem après avui|Qué hemos aprendido hoy', punts: ["Dos sensors: la cinta al mig, recte; si un veu negre, gira cap allà.|Dos sensores: la cinta en medio, recto; si uno ve negro, gira hacia allí.", "L = 1 i R = 1: cruïlla o estació. Va primer!|L = 1 y R = 1: cruce o estación. ¡Va primero!", "0 0 0: no canviïs res i continua girant.|0 0 0: no cambies nada y sigue girando."], nota: "Connecta-ho amb el projecte: el tren s'haurà d'aturar a les estacions.|Conéctalo con el proyecto: el tren tendrá que pararse en las estaciones." },
+        { id: 's15', k: 'tiquet', t: 'Tiquet de sortida|Ticket de salida', punts: ["Què vol dir 1 1 1 i què fa el robot?|¿Qué quiere decir 1 1 1 y qué hace el robot?", "Per què «L = 1 i R = 1» va primer?|¿Por qué «L = 1 y R = 1» va primero?"], nota: "Anota qui confon «i» i «o».|Anota quién confunde «y» y «o»." }
+      ],
+      print: [
+        { id: 'p1', t: 'Fitxa: què fa el robot?|Ficha: ¿qué hace el robot?', k: 'fitxa', intro: "Per a cada combinació dels sensors, escriviu què ha de fer el robot: recte, esquerra, dreta, atura't o «no canviïs res».|Para cada combinación de los sensores, escribid qué tiene que hacer el robot: recto, izquierda, derecha, párate o «no cambies nada».",
+          items: [
+            { q: 'L 0 · M 1 · R 0 → què fa? ______|L 0 · M 1 · R 0 → ¿qué hace? ______', sol: 'Recte.|Recto.' }, { q: 'L 1 · M 0 · R 0 → què fa? ______|L 1 · M 0 · R 0 → ¿qué hace? ______', sol: "Gira a l'esquerra.|Gira a la izquierda." }, { q: 'L 0 · M 0 · R 1 → què fa? ______|L 0 · M 0 · R 1 → ¿qué hace? ______', sol: 'Gira a la dreta.|Gira a la derecha.' },
+            { q: "L 1 · M 1 · R 1 → ______ (a l'estació)|L 1 · M 1 · R 1 → ______ (en la estación)", sol: "Atura't (o recte, si és una cruïlla).|Párate (o recto, si es un cruce)." },
+            { q: 'L 0 · M 0 · R 0 → què fa? ______|L 0 · M 0 · R 0 → ¿qué hace? ______', sol: 'No canviïs res: continua girant com abans.|No cambies nada: sigue girando como antes.' },
+            { q: "Aquest programa gira a la cruïlla. Què hi afegiries i on?|Este programa gira en el cruce. ¿Qué añadirías y dónde?", rprog: TWO(150, 30), sol: "Al principi: si L = 1 i R = 1, endavant recte.|Al principio: si L = 1 y R = 1, adelante recto." }
+          ] },
+        { id: 'p2', t: 'Pista: el camí amb cruïlla i estació|Pista: el camino con cruce y estación', k: 'pista', intro: "Construïu-la amb cinta negra sobre paper blanc. El robot surt per l'esquerra, mirant a la dreta. La ratlla vertical és la cruïlla; la curta del final, l'estació.|Construidla con cinta negra sobre papel blanco. El robot sale por la izquierda, mirando a la derecha. La raya vertical es el cruce; la corta del final, la estación.",
+          w: { w: 120, h: 80, bot: [10, 40, 90], lines: [{ p: [[8, 40], [60, 40], [75, 30], [100, 30]] }, { p: [[40, 14], [40, 66]] }, { p: [[100, 22], [100, 38]] }] },
+          items: [{ q: "Sense la condició «i», què fa el robot a la cruïlla? ______|Sin la condición «y», ¿qué hace el robot en el cruce? ______" }, { q: "Amb la parada, a quants cm de la ratlla s'atura? ______|Con la parada, ¿a cuántos cm de la raya se para? ______" }] }
+      ]
+    },
+    /* ---------- k4-4 · Projecte: el tren de mercaderies ---------- */
+    'k4-4': {
+      obj: [
+        "L'alumne/a fa servir el seguiment de línia del xip i entén que el programa ha de decidir on s'atura el robot.|El alumno/a usa el seguimiento de línea del chip y entiende que el programa tiene que decidir dónde se para el robot.",
+        "L'alumne/a programa un tren que s'atura a cada estació (L = 1 i R = 1), xiula, espera, surt de la ratlla i continua fins a la terminal blava (ADC).|El alumno/a programa un tren que se para en cada estación (L = 1 y R = 1), silba, espera, sale de la raya y sigue hasta la terminal azul (ADC).",
+        "L'alumne/a planifica el projecte a trossos i prova cada part en diferents vies abans d'afegir-ne una altra.|El alumno/a planifica el proyecto a trozos y prueba cada parte en diferentes vías antes de añadir otra.",
+        "L'alumne/a fa funcionar el tren al Maqueen de veritat i explica què ha canviat respecte del simulador.|El alumno/a hace funcionar el tren en el Maqueen de verdad y explica qué ha cambiado respecto al simulador."
+      ],
+      comp: [
+        "Competència digital: dissenyar, programar i provar un projecte amb sensors|Competencia digital: diseñar, programar y probar un proyecto con sensores",
+        "Pensament computacional: descomposició, condicions compostes i depuració|Pensamiento computacional: descomposición, condiciones compuestas y depuración",
+        "Tecnologia: sistemes automàtics de transport (trens, magatzems)|Tecnología: sistemas automáticos de transporte (trenes, almacenes)",
+        "Emprenedoria i treball en equip: planificar, repartir tasques i presentar el resultat|Emprendimiento y trabajo en equipo: planificar, repartir tareas y presentar el resultado"
+      ],
+      vocab: [
+        ["Seguiment de línia del xip|Seguimiento de línea del chip", "El Maqueen segueix la línia sol, sense que programis els motors.|El Maqueen sigue la línea solo, sin que programes los motores."],
+        ["Terminal|Terminal", "L'estació final del tren, marcada amb una zona blava.|La estación final del tren, marcada con una zona azul."],
+        ["Descompondre|Descomponer", "Dividir un projecte gran en parts petites.|Dividir un proyecto grande en partes pequeñas."],
+        ["Provar|Probar", "Executar el programa en diferents casos per veure si funciona.|Ejecutar el programa en diferentes casos para ver si funciona."],
+        ["Millorar|Mejorar", "Canviar una part del programa després de provar-lo.|Cambiar una parte del programa después de probarlo."]
+      ],
+      mat: {
+        aula: [
+          "Un ordinador per alumne/a amb Numi Tech obert a la sessió «Projecte: el tren de mercaderies»|Un ordenador por alumno/a con Numi Tech abierto en la sesión «Proyecto: el tren de mercancías»",
+          "Projector i la presentació d'aquesta sessió|Proyector y la presentación de esta sesión",
+          "Un kit Maqueen Lite V5 + micro:bit per grup de 3-4, amb piles carregades|Un kit Maqueen Lite V5 + micro:bit por grupo de 3-4, con pilas cargadas",
+          "La via del tren muntada amb cinta negra sobre paper blanc, amb dues estacions i una terminal de paper blau|La vía del tren montada con cinta negra sobre papel blanco, con dos estaciones y una terminal de papel azul",
+          "Opcional: una capsa petita de cartró com a vagó (buida i lleugera), lligada amb un cordill|Opcional: una caja pequeña de cartón como vagón (vacía y ligera), atada con un cordel"
+        ],
+        imprimir: ["Pista: la via del tren de mercaderies|Pista: la vía del tren de mercancías", "Fitxa: el pla del meu tren|Ficha: el plan de mi tren"],
+        prep: [
+          "Muntar la via de la pista imprimible (la més llarga, amb dues estacions) amb cinta negra i un full A4 blau al final com a terminal. Si es pot, una via per cada dos grups.|Montar la vía de la pista imprimible (la más larga, con dos estaciones) con cinta negra y una hoja A4 azul al final como terminal. Si se puede, una vía para cada dos grupos.",
+          "Comprovar amb un Maqueen que el seguiment de línia del xip funciona a la via (corbes suaus) i que la terminal blava dona un valor ADC diferent del blanc i del negre.|Comprobar con un Maqueen que el seguimiento de línea del chip funciona en la vía (curvas suaves) y que la terminal azul da un valor ADC diferente del blanco y del negro.",
+          "Preparar els diplomes o adhesius de la unitat per a qui acabi el projecte, si en feu servir.|Preparar los diplomas o pegatinas de la unidad para quien termine el proyecto, si los usáis."
+        ]
+      },
+      plan: [
+        { min: 5, t: 'El repte del port|El reto del puerto', fase: 'inici',
+          fa: "Presenta el projecte: el tren de mercaderies ha d'anar del moll a la terminal blava, aturant-se a les estacions. Mostra la via muntada a l'aula i explica que avui treballarem com a enginyers/es: a trossos.|Presenta el proyecto: el tren de mercancías tiene que ir del muelle a la terminal azul, parándose en las estaciones. Muestra la vía montada en el aula y explica que hoy trabajaremos como ingenieros/as: a trozos.",
+          diu: ["Què ha de saber fer el tren? Fem una llista.|¿Qué tiene que saber hacer el tren? Hagamos una lista.", "Quins sensors farem servir per a cada cosa?|¿Qué sensores usaremos para cada cosa?"],
+          slides: ['s1', 's2'], app: "Encara no.|Todavía no.", org: 'Tot el grup|Todo el grupo' },
+        { min: 8, t: 'El xip i les estacions|El chip y las estaciones', fase: 'teoria',
+          fa: "Mostra el seguiment de línia del xip i fes predir què passa quan s'acaba la cinta. Després, la demostració de l'estació: per què el tren avança mig segon abans de tornar a activar el seguiment? Acaba amb els passos d'un projecte.|Muestra el seguimiento de línea del chip y haz predecir qué pasa cuando se acaba la cinta. Después, la demostración de la estación: ¿por qué el tren avanza medio segundo antes de volver a activar el seguimiento? Termina con los pasos de un proyecto.",
+          diu: ["El xip sap on és la terminal?|¿El chip sabe dónde está la terminal?", "Què passaria si no avancés per sortir de la ratlla?|¿Qué pasaría si no avanzara para salir de la raya?"],
+          slides: ['s3', 's4', 's5', 's6'], app: "Encara no.|Todavía no.", org: 'Tot el grup|Todo el grupo' },
+        { min: 7, t: 'El pla del tren|El plan del tren', fase: 'desconnectat',
+          fa: "En grups, amb la fitxa del pla: marquen a la via dibuixada on són les estacions i la terminal, escriuen què ha de fer el tren a cada lloc i amb quin sensor ho sabrà, i reparteixen els papers per al bloc del robot (programador/a, provador/a, cronometrador/a, cap de seguretat).|En grupos, con la ficha del plan: marcan en la vía dibujada dónde están las estaciones y la terminal, escriben qué tiene que hacer el tren en cada sitio y con qué sensor lo sabrá, y reparten los papeles para el bloque del robot (programador/a, probador/a, cronometrador/a, jefe/a de seguridad).",
+          diu: ["Quina part programareu primer?|¿Qué parte programaréis primero?", "Com sabrà el tren que és a la terminal?|¿Cómo sabrá el tren que está en la terminal?"],
+          slides: ['s7'], app: "Cap: activitat sense pantalla.|Ninguna: actividad sin pantalla.", org: 'Grups de 3-4|Grupos de 3-4' },
+        { min: 15, t: "A l'ordinador: parts 1 i 2|En el ordenador: partes 1 y 2", fase: 'ordinador',
+          fa: "Cada alumne/a fa la sessió fins a la part 2 (o fins al projecte, si va de pressa). Insisteix que provin cada part a les dues vies abans de continuar.|Cada alumno/a hace la sesión hasta la parte 2 (o hasta el proyecto, si va deprisa). Insiste en que prueben cada parte en las dos vías antes de continuar.",
+          diu: ["Funciona a les dues vies? Primer això, després les estacions.|¿Funciona en las dos vías? Primero eso, después las estaciones.", "A la via 2 hi ha dues estacions: cal canviar el programa?|En la vía 2 hay dos estaciones: ¿hay que cambiar el programa?"],
+          slides: ['s8', 's9'], app: "De «Recorda» fins a la «Part 2»: les històries, «Descobreix», «Què passarà?», la pregunta de la ratlla, ordenar el pla, la pausa i les parts 1 i 2 del tren.|De «Recuerda» hasta la «Parte 2»: las historias, «Descubre», «¿Qué pasará?», la pregunta de la raya, ordenar el plan, la pausa y las partes 1 y 2 del tren.", org: 'Individual|Individual' },
+        { min: 15, t: 'El tren de veritat|El tren de verdad', fase: 'robot',
+          fa: "Cada grup passa el programa del tren a MakeCode (botó </> del simulador o el codi de la diapositiva), el carrega i el prova a la via de l'aula. Segons els papers: un/a programa, un/a posa el robot a la sortida, un/a cronometra i un/a vigila la seguretat. Si porten vagó, que sigui una capsa buida i lleugera. Anoten a la fitxa què han hagut de canviar respecte del simulador.|Cada grupo pasa el programa del tren a MakeCode (botón </> del simulador o el código de la diapositiva), lo carga y lo prueba en la vía del aula. Según los papeles: uno/a programa, uno/a pone el robot en la salida, uno/a cronometra y uno/a vigila la seguridad. Si llevan vagón, que sea una caja vacía y ligera. Anotan en la ficha qué han tenido que cambiar respecto al simulador.",
+          diu: ["S'atura a les dues estacions? I a la terminal?|¿Se para en las dos estaciones? ¿Y en la terminal?", "Què heu hagut de canviar respecte del simulador?|¿Qué habéis tenido que cambiar respecto al simulador?"],
+          slides: ['s10', 's11', 's12'], app: "Cap: MakeCode i el robot.|Ninguna: MakeCode y el robot.", org: 'Grups de 3-4 per kit, amb papers|Grupos de 3-4 por kit, con papeles' },
+        { min: 6, t: 'Crea: el meu tren|Crea: mi tren', fase: 'crea',
+          fa: "Tornen a l'app per fer la part 3, el seu tren amb llums, xiulet i icona a la terminal, i el desen al portafoli. Qui l'hagi acabat ensenya el seu tren a un altre grup.|Vuelven a la app para hacer la parte 3, su tren con luces, silbido e icono en la terminal, y lo guardan en el portafolio. Quien lo haya terminado enseña su tren a otro grupo.",
+          diu: ["Quin estil té el teu tren? Colors, sons, icones…|¿Qué estilo tiene tu tren? Colores, sonidos, iconos…"],
+          slides: ['s13'], app: "Pas «Crea»: El meu tren de mercaderies.|Paso «Crea»: Mi tren de mercancías.", org: 'Individual|Individual' },
+        { min: 4, t: 'Tancament de la unitat|Cierre de la unidad', fase: 'tancament',
+          fa: "Repassa la unitat sencera: sensors de línia, seguir la vora, dos i tres sensors, el xip. Preguntes finals de l'app i tiquet. Recolliu els robots amb l'interruptor apagat i les vies, si cal.|Repasa la unidad entera: sensores de línea, seguir el borde, dos y tres sensores, el chip. Preguntas finales de la app y ticket. Recoged los robots con el interruptor apagado y las vías, si hace falta.",
+          diu: ["Què és el que més us ha costat del tren? Com ho heu resolt?|¿Qué es lo que más os ha costado del tren? ¿Cómo lo habéis resuelto?"],
+          slides: ['s14', 's15'], app: "Preguntes finals i «Com m'he sentit».|Preguntas finales y «Cómo me he sentido».", org: 'Tot el grup|Todo el grupo' }
+      ],
+      errors: [
+        ["Activa el seguiment del xip i espera que el tren s'aturi sol a la terminal.|Activa el seguimiento del chip y espera que el tren se pare solo en la terminal.", "Pregunta: on diu el programa que s'ha d'aturar? Que miri què llegeix l'ADC a la terminal.|Pregunta: ¿dónde dice el programa que se tiene que parar? Que mire qué lee el ADC en la terminal."],
+        ["A l'estació el tren s'atura i ja no torna a arrencar.|En la estación el tren se para y ya no vuelve a arrancar.", "Que miri els sensors després de l'espera: encara veuen 1 1 1? Què podria fer el tren per sortir de la ratlla?|Que mire los sensores después de la espera: ¿todavía ven 1 1 1? ¿Qué podría hacer el tren para salir de la raya?"],
+        ["Fa servir «aM > 200» per a la terminal i el tren s'atura a la primera cinta negra.|Usa «aM > 200» para la terminal y el tren se para en la primera cinta negra.", "Quin valor dona el negre? I el blau? Com pots dir «entre 200 i 600»?|¿Qué valor da el negro? ¿Y el azul? ¿Cómo puedes decir «entre 200 y 600»?"],
+        ["Vol programar-ho tot de cop i, quan falla, no sap on és l'error.|Quiere programarlo todo de golpe y, cuando falla, no sabe dónde está el error.", "Torna al pla: quina part funcionava? Que tregui l'última part i la torni a afegir provant-la.|Vuelve al plan: ¿qué parte funcionaba? Que quite la última parte y la vuelva a añadir probándola."],
+        ["Al robot real, el tren no s'atura a la terminal blava.|En el robot real, el tren no se para en la terminal azul.", "Que mesurin el valor ADC del paper blau amb el programa de mesurar de la sessió 1 i ajustin els números 200 i 600.|Que midan el valor ADC del papel azul con el programa de medir de la sesión 1 y ajusten los números 200 y 600."]
+      ],
+      diff: {
+        mes: "Fer que el tren faci dues vegades una via tancada, o que a cada estació encengui un color diferent dels llums de sota. Cronometrar el recorregut i millorar-lo amb el seguidor propi de dos sensors (més ràpid que el xip).|Hacer que el tren dé dos veces una vía cerrada, o que en cada estación encienda un color diferente de las luces de abajo. Cronometrar el recorrido y mejorarlo con el seguidor propio de dos sensores (más rápido que el chip).",
+        menys: "Fer només les parts 1 i 2 amb el programa de la demostració com a model. Al robot real, provar només la part 1 (seguir la via i parar a la terminal).|Hacer solo las partes 1 y 2 con el programa de la demostración como modelo. En el robot real, probar solo la parte 1 (seguir la vía y parar en la terminal)."
+      },
+      aval: {
+        ticket: ["Què fa el teu tren a cada estació i com ho sap?|¿Qué hace tu tren en cada estación y cómo lo sabe?", "Què has hagut de canviar del simulador al robot de veritat?|¿Qué has tenido que cambiar del simulador al robot de verdad?"],
+        rubric: [
+          ["El programa del tren|El programa del tren", "El tren segueix la via, para a totes les estacions i a la terminal, a totes les vies.|El tren sigue la vía, para en todas las estaciones y en la terminal, en todas las vías.", "El tren segueix la via, però falla a les estacions o a la terminal.|El tren sigue la vía, pero falla en las estaciones o en la terminal."],
+          ["Treball a trossos|Trabajo a trozos", "Planifica, prova cada part abans d'afegir-ne una altra i explica com ha resolt els errors.|Planifica, prueba cada parte antes de añadir otra y explica cómo ha resuelto los errores.", "Ho programa tot de cop i li costa trobar els errors.|Lo programa todo de golpe y le cuesta encontrar los errores."],
+          ["Del simulador al robot|Del simulador al robot", "Fa funcionar el tren al Maqueen i explica les diferències (velocitat, valors ADC, llum).|Hace funcionar el tren en el Maqueen y explica las diferencias (velocidad, valores ADC, luz).", "Prova el programa al robot amb ajuda, però no sap explicar què canvia.|Prueba el programa en el robot con ayuda, pero no sabe explicar qué cambia."]
+        ]
+      },
+      casa: "A casa, amb el mòbil, podeu mirar el vostre tren al portafoli i explicar a la família com sap on són les estacions. Podeu dibuixar una via nova per a la propera classe.|En casa, con el móvil, podéis mirar vuestro tren en el portafolio y explicar a la familia cómo sabe dónde están las estaciones. Podéis dibujar una vía nueva para la próxima clase.",
+      slides: [
+        { id: 's1', k: 'portada', t: 'Projecte: el tren de mercaderies|Proyecto: el tren de mercancías', x: "Del moll a la terminal blava, aturant-se a cada estació.|Del muelle a la terminal azul, parándose en cada estación.", nota: "Ensenya la via muntada i un Maqueen preparat. Avui sereu enginyers/es del port.|Enseña la vía montada y un Maqueen preparado. Hoy seréis ingenieros/as del puerto." },
+        { id: 's2', k: 'pregunta', t: 'Què ha de saber fer el tren?|¿Qué tiene que saber hacer el tren?', punts: ["Seguir la via…|Seguir la vía…", "Parar a les estacions…|Parar en las estaciones…", "Parar a la terminal…|Parar en la terminal…"], nota: "Escriu la llista a la pissarra i, al costat de cada cosa, quin sensor ho detecta.|Escribe la lista en la pizarra y, al lado de cada cosa, qué sensor lo detecta." },
+        { id: 's3', k: 'robo', t: 'El seguiment del xip|El seguimiento del chip', x: "Un sol bloc: seguiment de línia activat.|Un solo bloque: seguimiento de línea activado.", robo: { w: { w: 120, h: 80, bot: [40, 66, 90], lines: [{ p: OVAL, closed: true }], time: 20 }, prog: 'start{ patrol:on }' }, nota: "Fes notar que va més lent que els seguidors que han programat i que no cal programar motors.|Haz notar que va más lento que los seguidores que han programado y que no hace falta programar motores." },
+        { id: 's4', k: 'robo', t: "Què passa quan s'acaba la cinta?|¿Qué pasa cuando se acaba la cinta?", x: "Predieu-ho abans d'executar.|Predecidlo antes de ejecutar.", robo: { w: { w: 120, h: 80, bot: [12, 40, 90], lines: [{ p: [[10, 40], [60, 40]] }], time: 14 }, prog: 'start{ patrol:on }' }, nota: "Continua endavant! El xip no sap on parar: ho ha de dir el programa.|¡Sigue adelante! El chip no sabe dónde parar: lo tiene que decir el programa." },
+        { id: 's5', k: 'robo', t: "L'estació i la terminal|La estación y la terminal", x: "Ratlla: para, xiula, espera, surt de la ratlla. Blau: para.|Raya: para, silba, espera, sale de la raya. Azul: para.", robo: { w: ROUTE_A, prog: PATROL_ST }, nota: "Pregunta per què avança mig segon abans de tornar a activar el seguiment.|Pregunta por qué avanza medio segundo antes de volver a activar el seguimiento." },
+        { id: 's6', k: 'anim', t: 'Com es fa un projecte|Cómo se hace un proyecto', anim: 'k4plan', x: "Entén, dibuixa, programa a trossos, prova i millora.|Entiende, dibuja, programa a trozos, prueba y mejora.", nota: "Explica que provar a les dues vies és com fan els enginyers: un programa ha de funcionar en més d'un cas.|Explica que probar en las dos vías es como hacen los ingenieros: un programa tiene que funcionar en más de un caso." },
+        { id: 's7', k: 'activitat', t: 'El pla del tren|El plan del tren', timer: 7, punts: ["Marqueu les estacions i la terminal a la via.|Marcad las estaciones y la terminal en la vía.", "Què fa el tren a cada lloc? Amb quin sensor ho sap?|¿Qué hace el tren en cada sitio? ¿Con qué sensor lo sabe?", "Repartiu els papers del grup.|Repartid los papeles del grupo."], nota: "Papers: programador/a, provador/a, cronometrador/a i cap de seguretat. Al bloc del robot, que roten.|Papeles: programador/a, probador/a, cronometrador/a y jefe/a de seguridad. En el bloque del robot, que roten." },
+        { id: 's8', k: 'activitat', t: "Ara, a l'ordinador|Ahora, al ordenador", timer: 15, punts: ["Obre la sessió del tren de mercaderies.|Abre la sesión del tren de mercancías.", "Part 1: seguir la via i parar a la terminal.|Parte 1: seguir la vía y parar en la terminal.", "Part 2: les estacions (a la via 2 n'hi ha dues!).|Parte 2: las estaciones (¡en la vía 2 hay dos!)."], nota: "Si algú es bloqueja a la part 2, que torni a la diapositiva de l'estació.|Si alguien se bloquea en la parte 2, que vuelva a la diapositiva de la estación." },
+        { id: 's9', k: 'repte', t: 'Les tres parts del tren|Las tres partes del tren', punts: ["1. Seguir la via fins a la terminal blava|1. Seguir la vía hasta la terminal azul", "2. Parar i xiular a cada estació|2. Parar y silbar en cada estación", "3. El meu tren: llums, sons i icona|3. Mi tren: luces, sonidos e icono"], nota: "El mateix programa funciona amb una, dues o tres estacions: és dins de «per sempre».|El mismo programa funciona con una, dos o tres estaciones: está dentro de «para siempre»." },
+        { id: 's10', k: 'activitat', t: 'El tren de veritat|El tren de verdad', timer: 15, punts: ["Passeu el programa a MakeCode (botó </>).|Pasad el programa a MakeCode (botón </>).", "Proveu-lo a la via de l'aula.|Probadlo en la vía del aula.", "Anoteu què heu hagut de canviar.|Anotad qué habéis tenido que cambiar."],
+          code: "Maqueen_V5.I2CInit()\nMaqueen_V5.patrolling(Maqueen_V5.Patrolling.ON)\nbasic.forever(function () {\n    if (Maqueen_V5.readPatrol(Maqueen_V5.Patrol.L) == 1 && Maqueen_V5.readPatrol(Maqueen_V5.Patrol.R) == 1) {\n        Maqueen_V5.patrolling(Maqueen_V5.Patrolling.OFF)\n        music.playTone(Note.C5, music.beat(BeatFraction.Whole))\n        basic.pause(1500)\n        Maqueen_V5.motorRun(Maqueen_V5.Motors.All, Maqueen_V5.Dir.CW, 120)\n        basic.pause(500)\n        Maqueen_V5.patrolling(Maqueen_V5.Patrolling.ON)\n    }\n    if (Maqueen_V5.readPatrolData(Maqueen_V5.Patrol.M) > 200 && Maqueen_V5.readPatrolData(Maqueen_V5.Patrol.M) < 600) {\n        Maqueen_V5.patrolling(Maqueen_V5.Patrolling.OFF)\n    }\n})", nota: "És el codi de la part 2. Si la terminal no funciona, mesureu el blau amb el programa de la sessió 1.|Es el código de la parte 2. Si la terminal no funciona, medid el azul con el programa de la sesión 1." },
+        { id: 's11', k: 'concepte', t: 'Muntatge i seguretat|Montaje y seguridad', punts: ["Via amb corbes suaus: el xip es pot perdre als revolts de 90°.|Vía con curvas suaves: el chip se puede perder en las curvas de 90°.", "Estacions: ratlles travesseres ben perpendiculars.|Estaciones: rayas transversales bien perpendiculares.", "Terminal: un full blau al final de la via.|Terminal: una hoja azul al final de la vía.", "Vagó opcional: capsa buida i lleugera.|Vagón opcional: caja vacía y ligera."], nota: SAFE },
+        { id: 's12', k: 'robo', t: 'La via llarga|La vía larga', x: "Dues estacions, llums i icona a la terminal.|Dos estaciones, luces e icono en la terminal.", robo: { w: ROUTE_C, prog: TRAIN }, nota: "Projecta-la mentre els grups proven els robots: és la via de la pista imprimible.|Proyéctala mientras los grupos prueban los robots: es la vía de la pista imprimible." },
+        { id: 's13', k: 'activitat', t: 'Crea: el meu tren|Crea: mi tren', timer: 6, punts: ["Llums a les estacions.|Luces en las estaciones.", "Un xiulet amb la nota que vulguis.|Un silbido con la nota que quieras.", "Una icona a la terminal.|Un icono en la terminal.", "Desa'l al portafoli!|¡Guárdalo en el portafolio!"], nota: "Celebra els estils diferents: el programa és el mateix, però cada tren és únic.|Celebra los estilos diferentes: el programa es el mismo, pero cada tren es único." },
+        { id: 's14', k: 'resum', t: 'Què hem après a la unitat|Qué hemos aprendido en la unidad', punts: ["Sensors de línia: 0/1 i l'ADC.|Sensores de línea: 0/1 y el ADC.", "Seguir la vora amb un sensor; recte amb dos; cruïlles amb «i».|Seguir el borde con un sensor; recto con dos; cruces con «y».", "El xip segueix la línia; el programa decideix on parar.|El chip sigue la línea; el programa decide dónde parar.", "Els projectes es fan a trossos.|Los proyectos se hacen a trozos."], nota: "Pregunta quina part de la unitat els ha agradat més i per què.|Pregunta qué parte de la unidad les ha gustado más y por qué." },
+        { id: 's15', k: 'tiquet', t: 'Tiquet de sortida|Ticket de salida', punts: ["Què fa el teu tren a cada estació i com ho sap?|¿Qué hace tu tren en cada estación y cómo lo sabe?", "Què has canviat del simulador al robot?|¿Qué has cambiado del simulador al robot?"], nota: "Recull les fitxes del pla: serveixen per avaluar el treball a trossos.|Recoge las fichas del plan: sirven para evaluar el trabajo a trozos." }
+      ],
+      print: [
+        { id: 'p1', t: 'Pista: la via del tren de mercaderies|Pista: la vía del tren de mercancías', k: 'pista', intro: "Construïu la via amb cinta negra sobre paper blanc. Les dues ratlles curtes travesseres són les estacions. La zona blava del final és la terminal: un full blau, amb la cinta acabant a sobre.|Construid la vía con cinta negra sobre papel blanco. Las dos rayas cortas transversales son las estaciones. La zona azul del final es la terminal: una hoja azul, con la cinta terminando encima.",
+          w: ROUTE_C, items: [{ q: "Temps del recorregut sencer: ______ segons|Tiempo del recorrido entero: ______ segundos" }, { q: "S'atura a les dues estacions? I a la terminal? ______|¿Se para en las dos estaciones? ¿Y en la terminal? ______" }] },
+        { id: 'p2', t: 'Fitxa: el pla del meu tren|Ficha: el plan de mi tren', k: 'fitxa', intro: "Ompliu-la en grup abans de programar. Feu servir el dibuix de la via.|Rellenadla en grupo antes de programar. Usad el dibujo de la vía.",
+          items: [
+            { q: "Marqueu a la via les dues estacions (E1, E2) i la terminal (T).|Marcad en la vía las dos estaciones (E1, E2) y la terminal (T).", w: ROUTE_C, sol: "Les ratlles travesseres són les estacions; la zona blava, la terminal.|Las rayas transversales son las estaciones; la zona azul, la terminal." },
+            { q: "Com sap el tren que és a una estació? I a la terminal?|¿Cómo sabe el tren que está en una estación? ¿Y en la terminal?", sol: "Estació: L = 1 i R = 1. Terminal: ADC entre 200 i 600 (blau).|Estación: L = 1 y R = 1. Terminal: ADC entre 200 y 600 (azul)." },
+            { q: "Què farà el tren a cada estació? Escriviu els passos en ordre.|¿Qué hará el tren en cada estación? Escribid los pasos en orden.", rprog: PATROL_ST, sol: "Parar, xiular, esperar, avançar per sortir de la ratlla i tornar a seguir la via.|Parar, silbar, esperar, avanzar para salir de la raya y volver a seguir la vía." },
+            { q: "Papers del grup: programador/a ______ · provador/a ______ · cronometrador/a ______ · seguretat ______|Papeles del grupo: programador/a ______ · probador/a ______ · cronometrador/a ______ · seguridad ______", sol: "Els papers roten a cada prova.|Los papeles rotan en cada prueba." },
+            { q: "Què heu hagut de canviar al robot de veritat?|¿Qué habéis tenido que cambiar en el robot de verdad?", sol: "Per exemple: els números de l'ADC del blau, la velocitat o la posició de sortida.|Por ejemplo: los números del ADC del azul, la velocidad o la posición de salida." }
+          ] }
+      ]
+    }
+  };
+})());
+
+/* ── unitat 5 ── */
+/* Tech Robòtica · unitat 5 «Llum, so i LED» · guia del professorat (k5-1…k5-4)
+   Classe de 60 minuts; mateix esquema que TGUIDE['r1-1']. Fase «robot»: activitat amb el Maqueen Lite V5 de veritat.
+   Material propi de Numi. */
+Object.assign(TGUIDE, {
+  /* ---------- Sessió 1 · El robot papallona ---------- */
+  'k5-1': {
+    obj: [
+      "L'alumne/a explica que el Maqueen té dos sensors de llum que donen un número de 0 a 1023 i diu quins valors hi ha a les fosques, de dia i a prop d'un focus.|El alumno/a explica que el Maqueen tiene dos sensores de luz que dan un número de 0 a 1023 y dice qué valores hay a oscuras, de día y cerca de un foco.",
+      "L'alumne/a tria un llindar mesurant els valors reals i el fa servir en un «si» per aturar el robot quan hi ha molta llum.|El alumno/a elige un umbral midiendo los valores reales y lo usa en un «si» para parar el robot cuando hay mucha luz.",
+      "L'alumne/a compara la llum esquerra i la dreta per decidir cap on gira el robot i programa una papallona que troba el focus a diverses pistes.|El alumno/a compara la luz izquierda y la derecha para decidir hacia dónde gira el robot y programa una mariposa que encuentra el foco en varias pistas.",
+      "L'alumne/a mesura la llum amb el Maqueen de veritat i compara els números amb els del simulador.|El alumno/a mide la luz con el Maqueen de verdad y compara los números con los del simulador."
+    ],
+    comp: [
+      "Competència digital (CD5): programar un robot que reacciona a un sensor|Competencia digital (CD5): programar un robot que reacciona a un sensor",
+      "Pensament computacional: condicions amb comparacions (>, <), llindars i bucles|Pensamiento computacional: condiciones con comparaciones (>, <), umbrales y bucles",
+      "Ciències: la llum, la distància a la font i la direcció; comportament dels animals (fototaxi)|Ciencias: la luz, la distancia a la fuente y la dirección; comportamiento de los animales (fototaxis)",
+      "Matemàtiques: comparar i ordenar nombres fins a 1023; mesurar i registrar dades|Matemáticas: comparar y ordenar números hasta 1023; medir y registrar datos"
+    ],
+    vocab: [
+      ["Sensor de llum|Sensor de luz", "Part del robot que mesura quanta llum li arriba i la converteix en un número de 0 a 1023.|Parte del robot que mide cuánta luz le llega y la convierte en un número de 0 a 1023."],
+      ["Llindar|Umbral", "El número que fa de frontera: per sobre, «molta llum»; per sota, «poca».|El número que hace de frontera: por encima, «mucha luz»; por debajo, «poca»."],
+      ["Comparar|Comparar", "Mirar quin de dos números és més gran (llum esquerra > llum dreta).|Mirar cuál de dos números es mayor (luz izquierda > luz derecha)."],
+      ["Calibrar|Calibrar", "Mesurar al robot de veritat per triar bé els números del programa.|Medir en el robot de verdad para elegir bien los números del programa."],
+      ["Fototaxi|Fototaxis", "Moure's cap a la llum (o fugir-ne), com fan moltes papallones de nit.|Moverse hacia la luz (o huir de ella), como hacen muchas mariposas nocturnas."]
+    ],
+    mat: {
+      aula: [
+        "Un ordinador per alumne/a amb Numi Tech obert a la sessió «El robot papallona»|Un ordenador por alumno/a con Numi Tech abierto en la sesión «El robot mariposa»",
+        "Projector i la presentació d'aquesta sessió|Proyector y la presentación de esta sesión",
+        "Un kit per grup de 3-4: Maqueen Lite V5 amb micro:bit V2, piles carregades i cable USB|Un kit por grupo de 3-4: Maqueen Lite V5 con micro:bit V2, pilas cargadas y cable USB",
+        "Una llanterna (o el llum d'un mòbil) per grup i un racó de l'aula que es pugui enfosquir (persianes o una caixa gran de cartró)|Una linterna (o la luz de un móvil) por grupo y un rincón del aula que se pueda oscurecer (persianas o una caja grande de cartón)"
+      ],
+      imprimir: ["Targetes de la papallona humana|Tarjetas de la mariposa humana", "Codi MakeCode: mesurar la llum i la papallona|Código MakeCode: medir la luz y la mariposa"],
+      prep: [
+        "Imprimir i retallar un paquet de targetes de la papallona per grup.|Imprimir y recortar un paquete de tarjetas de la mariposa por grupo.",
+        "Comprovar que les llanternes funcionen i preparar el racó fosc on provar la papallona real (una zona de terra de 1 × 1 m com a mínim).|Comprobar que las linternas funcionan y preparar el rincón oscuro donde probar la mariposa real (una zona de suelo de 1 × 1 m como mínimo).",
+        "Tenir el codi de «mesurar la llum» preparat a MakeCode en un ordinador, per projectar-lo.|Tener el código de «medir la luz» preparado en MakeCode en un ordenador, para proyectarlo.",
+        "Provar abans les demos de les diapositives 6, 8 i 9 per saber què faran.|Probar antes las demos de las diapositivas 6, 8 y 9 para saber qué harán."
+      ]
+    },
+    plan: [
+      { min: 4, t: "Benvinguda: la Nit de les Llanternes|Bienvenida: la Noche de los Farolillos", fase: 'inici',
+        fa: "Presenta el context de la unitat: el poble prepara una festa de nit i ens fa quatre encàrrecs. Pregunta com creuen que una papallona de nit sap on és el fanal i recull idees sense corregir-les. Recorda breument el «per sempre» + «si» de les unitats 3 i 4.|Presenta el contexto de la unidad: el pueblo prepara una fiesta de noche y nos hace cuatro encargos. Pregunta cómo creen que una mariposa nocturna sabe dónde está la farola y recoge ideas sin corregirlas. Recuerda brevemente el «para siempre» + «si» de las unidades 3 y 4.",
+        diu: ["Com sap una papallona on és la llum, si no té mapa?|¿Cómo sabe una mariposa dónde está la luz, si no tiene mapa?", "Fins ara el robot sentia distàncies i línies. Avui sentirà la llum.|Hasta ahora el robot sentía distancias y líneas. Hoy sentirá la luz."],
+        slides: ['s1', 's2', 's3'], app: "Encara no: pantalles abaixades.|Todavía no: pantallas bajadas.", org: "Tot el grup|Todo el grupo" },
+      { min: 10, t: "Els sensors de llum i el llindar|Los sensores de luz y el umbral", fase: 'teoria',
+        fa: "Ensenya on són els dos sensors de llum (a les cantonades del davant) amb un robot a la mà. Explica l'escala 0-1023 i els valors típics. Executa la demo del llindar: abans, la classe prediu on s'aturarà. Després mostra la comparació esquerra-dreta i la demo de la papallona, i acaba amb el «compte!» del llindar massa alt (la classe ha de dir per què no para).|Enseña dónde están los dos sensores de luz (en las esquinas de delante) con un robot en la mano. Explica la escala 0-1023 y los valores típicos. Ejecuta la demo del umbral: antes, la clase predice dónde se parará. Después muestra la comparación izquierda-derecha y la demo de la mariposa, y acaba con el «¡cuidado!» del umbral demasiado alto (la clase tiene que decir por qué no para).",
+        diu: ["Si tapo el sensor amb el dit, el número puja o baixa?|Si tapo el sensor con el dedo, ¿el número sube o baja?", "El focus és a l'esquerra: quin sensor marcarà més?|El foco está a la izquierda: ¿qué sensor marcará más?", "Per què aquest robot no para mai? Quin número canviaríeu?|¿Por qué este robot no para nunca? ¿Qué número cambiaríais?"],
+        slides: ['s4', 's5', 's6', 's7', 's8', 's9'], app: "Encara no: tota l'atenció a la projecció.|Todavía no: toda la atención en la proyección.", org: "Tot el grup|Todo el grupo" },
+      { min: 10, t: "La papallona humana|La mariposa humana", fase: 'desconnectat',
+        fa: "Grups de 4: una papallona, dos sensors (esquerre i dret) i un focus. El focus es col·loca en un lloc de l'aula amb la llanterna apagada (o un full groc). Els sensors, a banda i banda de la papallona, aixequen una targeta de número segons com de prop i de cara tenen el focus. La papallona aplica la regla de la diapositiva: si algun número passa de 600, para; si l'esquerre és més gran, gira a l'esquerra; si no, a la dreta. Fa un pas petit i tornen a mesurar. Després de cada arribada, roten els papers. Al final, ordenen les targetes de decisió amb la regla.|Grupos de 4: una mariposa, dos sensores (izquierdo y derecho) y un foco. El foco se coloca en un sitio del aula con la linterna apagada (o una hoja amarilla). Los sensores, a ambos lados de la mariposa, levantan una tarjeta de número según lo cerca y de cara que tienen el foco. La mariposa aplica la regla de la diapositiva: si algún número pasa de 600, para; si el izquierdo es mayor, gira a la izquierda; si no, a la derecha. Da un paso pequeño y vuelven a medir. Después de cada llegada, rotan los papeles. Al final, ordenan las tarjetas de decisión con la regla.",
+        diu: ["Papallona, un sol pas cada vegada: primer mesurem, després ens movem.|Mariposa, un solo paso cada vez: primero medimos, después nos movemos.", "Sensors, si el focus és darrere vostre, quin número aixequeu?|Sensores, si el foco está detrás vuestro, ¿qué número levantáis?", "Heu arribat? Quin número ha fet parar la papallona?|¿Habéis llegado? ¿Qué número ha hecho parar a la mariposa?"],
+        slides: ['s10'], app: "Cap: activitat sense pantalla.|Ninguna: actividad sin pantalla.", org: "Grups de 4 amb papers que roten|Grupos de 4 con papeles que rotan" },
+      { min: 10, t: "A l'ordinador: descobreix i prova|En el ordenador: descubre y prueba", fase: 'ordinador',
+        fa: "Cada alumne/a avança al seu ritme fins a la pausa activa. A «Detectiu/a de la llum» poden tocar «Ho he fet» i deixar-lo per a casa. Al pas de predir, demana que expliquin la tria a un company/a abans de comprovar-la.|Cada alumno/a avanza a su ritmo hasta la pausa activa. En «Detective de la luz» pueden tocar «Lo he hecho» y dejarlo para casa. En el paso de predecir, pide que expliquen la elección a un compañero/a antes de comprobarla.",
+        diu: ["Abans de triar A, B o C, digues-me per què.|Antes de elegir A, B o C, dime por qué.", "Quin bloc fa parar la papallona? Per què només de vegades?|¿Qué bloque hace parar a la mariposa? ¿Por qué solo a veces?"],
+        slides: ['s11'], app: "Del «Recorda» a la «Pausa activa»: preguntes de repàs, la missió, les 5 targetes de «Descobreix», la pregunta del 25, ordenar la papallona, «Detectiu/a de la llum», «On acabarà?» i «Toca el bloc».|Del «Recuerda» a la «Pausa activa»: preguntas de repaso, la misión, las 5 tarjetas de «Descubre», la pregunta del 25, ordenar la mariposa, «Detective de la luz», «¿Dónde terminará?» y «Toca el bloque».", org: "Individual|Individual" },
+      { min: 12, t: "Mesurem la llum amb el Maqueen|Medimos la luz con el Maqueen", fase: 'robot',
+        fa: "Grups de 3-4 per kit, amb papers: programador/a (MakeCode), pilot (encén i agafa el robot), mesurador/a (llanterna i regle) i secretari/ària (apunta). A MakeCode, carregueu el codi «mesurar la llum» de l'imprimible: el botó A mostra la llum esquerra i el B, la dreta. Mesureu i apunteu: de dia a la taula, amb la mà fent ombra, amb la llanterna a 30 cm i a 10 cm, de cara i de costat. Trieu el vostre llindar (més alt que la llum de l'aula, més baix que la llanterna a 10 cm). Si queda temps, carregueu la papallona amb el vostre llindar i proveu-la al racó fosc: robot a terra, llanterna fixa en un lloc i ningú no la mou mentre el robot avança. Seguretat: robot sempre a terra, no enlluerneu ningú amb la llanterna.|Grupos de 3-4 por kit, con papeles: programador/a (MakeCode), piloto (enciende y coge el robot), medidor/a (linterna y regla) y secretario/a (apunta). En MakeCode, cargad el código «medir la luz» del imprimible: el botón A muestra la luz izquierda y el B, la derecha. Medid y apuntad: de día en la mesa, con la mano haciendo sombra, con la linterna a 30 cm y a 10 cm, de cara y de lado. Elegid vuestro umbral (más alto que la luz del aula, más bajo que la linterna a 10 cm). Si queda tiempo, cargad la mariposa con vuestro umbral y probadla en el rincón oscuro: robot en el suelo, linterna fija en un sitio y nadie la mueve mientras el robot avanza. Seguridad: robot siempre en el suelo, no deslumbréis a nadie con la linterna.",
+        diu: ["Els vostres números són iguals que els del simulador? Per què creieu que canvien?|¿Vuestros números son iguales que los del simulador? ¿Por qué creéis que cambian?", "Quin llindar heu triat? Expliqueu-me per què aquest i no un altre.|¿Qué umbral habéis elegido? Explicadme por qué este y no otro.", "Llanterna quieta: si la moveu, el robot no pot arribar mai.|Linterna quieta: si la movéis, el robot no puede llegar nunca."],
+        slides: ['s12', 's13'], app: "Cap: MakeCode i el robot de veritat.|Ninguna: MakeCode y el robot de verdad.", org: "Grups de 3-4 per kit amb papers|Grupos de 3-4 por kit con papeles" },
+      { min: 8, t: "Reptes de la papallona|Retos de la mariposa", fase: 'ordinador',
+        fa: "De tornada a l'ordinador, fan la pausa activa i els quatre reptes. Al repte 2, que llegeixin el programa en veu alta abans de canviar res: «si l'esquerra té més llum, el motor esquerre va…». Recorda que el programa ha de funcionar a totes les pistes.|De vuelta al ordenador, hacen la pausa activa y los cuatro retos. En el reto 2, que lean el programa en voz alta antes de cambiar nada: «si la izquierda tiene más luz, el motor izquierdo va…». Recuerda que el programa tiene que funcionar en todas las pistas.",
+        diu: ["Per girar a l'esquerra, quin motor ha d'anar més lent?|Para girar a la izquierda, ¿qué motor tiene que ir más lento?", "Funciona a la pista 1 però no a la 3? Mira el tauler: quant marca la llum quan s'hi acosta?|¿Funciona en la pista 1 pero no en la 3? Mira el panel: ¿cuánto marca la luz cuando se acerca?"],
+        slides: ['s14'], app: "«Pausa activa» i els reptes 1 a 4: fins a la flor, la papallona despistada, la papallona de la cercavila i l'arribada amb festa.|«Pausa activa» y los retos 1 a 4: hasta la flor, la mariposa despistada, la mariposa del pasacalles y la llegada con fiesta.", org: "Individual|Individual" },
+      { min: 3, t: "Crea: la meva papallona|Crea: mi mariposa", fase: 'crea',
+        fa: "Cada alumne/a personalitza la seva papallona (velocitats, llindar, celebració) i la desa. Qui no hi arribi la pot acabar a casa.|Cada alumno/a personaliza su mariposa (velocidades, umbral, celebración) y la guarda. Quien no llegue la puede terminar en casa.",
+        diu: ["Com celebra la teva papallona que ha trobat la llum?|¿Cómo celebra tu mariposa que ha encontrado la luz?"],
+        slides: ['s15'], app: "Pas «Crea»: La meva papallona.|Paso «Crea»: Mi mariposa.", org: "Individual|Individual" },
+      { min: 3, t: "Tancament i tiquet de sortida|Cierre y ticket de salida", fase: 'tancament',
+        fa: "Repassa les tres idees amb el resum. Deixa que responguin les preguntes finals de l'app i fes una pregunta del tiquet a cada alumne/a a la porta.|Repasa las tres ideas con el resumen. Deja que respondan las preguntas finales de la app y haz una pregunta del ticket a cada alumno/a en la puerta.",
+        diu: ["Qui em diu un bon llindar per a una sala fosca amb un focus?|¿Quién me dice un buen umbral para una sala oscura con un foco?", "Si llum esquerra és més gran, cap a on gira la papallona?|Si luz izquierda es mayor, ¿hacia dónde gira la mariposa?"],
+        slides: ['s16', 's17'], app: "«Tancament»: les dues preguntes finals i com m'he sentit.|«Cierre»: las dos preguntas finales y cómo me he sentido.", org: "Tot el grup|Todo el grupo" }
+    ],
+    errors: [
+      ["Posa un llindar molt alt (900 o 1000) «per assegurar-se» i el robot no para mai.|Pone un umbral muy alto (900 o 1000) «para asegurarse» y el robot no para nunca.",
+        "Que executi el programa i miri el tauler: quin és el número més gran que arriba a marcar a prop del focus? Que triï un llindar una mica més baix.|Que ejecute el programa y mire el panel: ¿cuál es el número más grande que llega a marcar cerca del foco? Que elija un umbral un poco más bajo."],
+      ["Confon cap on ha de girar: quan l'esquerra té més llum, fa anar més ràpid el motor esquerre.|Confunde hacia dónde tiene que girar: cuando la izquierda tiene más luz, hace ir más rápido el motor izquierdo.",
+        "Demana-li que es posi dret/a i camini fent un arc cap a l'esquerra: quin peu fa passes més llargues? El de fora, el dret.|Pídele que se ponga de pie y camine haciendo un arco hacia la izquierda: ¿qué pie da pasos más largos? El de fuera, el derecho."],
+      ["Fa servir «llum esquerra > 600» sol i la papallona fa voltes sobre el focus sense parar.|Usa «luz izquierda > 600» solo y la mariposa da vueltas sobre el foco sin parar.",
+        "Pregunta: si el focus queda just a la dreta, el sensor esquerre el veu? Que afegeixi «o llum dreta > 600».|Pregunta: si el foco queda justo a la derecha, ¿el sensor izquierdo lo ve? Que añada «o luz derecha > 600»."],
+      ["Programa la papallona amb temps fixos per a una pista i no entén per què falla a les altres.|Programa la mariposa con tiempos fijos para una pista y no entiende por qué falla en las otras.",
+        "Que miri les pistes una a una: el focus és al mateix lloc? Què pot saber el robot del focus que no depengui del temps?|Que mire las pistas una a una: ¿el foco está en el mismo sitio? ¿Qué puede saber el robot del foco que no dependa del tiempo?"],
+      ["Al robot real, la papallona no troba la llanterna perquè l'aula és massa clara.|En el robot real, la mariposa no encuentra la linterna porque el aula es demasiado clara.",
+        "Que torni a mesurar la llum de l'aula i la de la llanterna: hi ha prou diferència? Enfosquiu el racó o acosteu la llanterna.|Que vuelva a medir la luz del aula y la de la linterna: ¿hay suficiente diferencia? Oscureced el rincón o acercad la linterna."]
+    ],
+    diff: {
+      mes: "Fer una papallona «tímida» que s'acosta al focus però para abans (llindar més baix) i una d'«atrevida» que hi arriba; comparar on paren. Al robot real, provar dues llanternes i explicar cap a quina va i per què.|Hacer una mariposa «tímida» que se acerca al foco pero para antes (umbral más bajo) y una «atrevida» que llega; comparar dónde paran. En el robot real, probar dos linternas y explicar hacia cuál va y por qué.",
+      menys: "Fer primer el repte 1 amb el tauler a la vista i anotar en un paper la llum a diferents distàncies. Al repte 3, partir del programa arreglat del repte 2 (és el mateix).|Hacer primero el reto 1 con el panel a la vista y anotar en un papel la luz a diferentes distancias. En el reto 3, partir del programa arreglado del reto 2 (es el mismo)."
+    },
+    aval: {
+      ticket: ["Quin número dona el sensor de llum a les fosques i quin a prop d'un focus?|¿Qué número da el sensor de luz a oscuras y cuál cerca de un foco?",
+        "Llum esquerra 500, llum dreta 200: cap a on gira la papallona i quin motor va més lent?|Luz izquierda 500, luz derecha 200: ¿hacia dónde gira la mariposa y qué motor va más lento?"],
+      rubric: [
+        ["Valors de llum i llindar|Valores de luz y umbral", "Tria un llindar entre la llum normal i la del focus i explica per què.|Elige un umbral entre la luz normal y la del foco y explica por qué.", "Fa servir un llindar, però l'escull a l'atzar i el canvia fins que funciona.|Usa un umbral, pero lo elige al azar y lo cambia hasta que funciona."],
+        ["Comparar esquerra i dreta|Comparar izquierda y derecha", "Relaciona «esquerra > dreta» amb girar a l'esquerra i ajusta els motors correctament.|Relaciona «izquierda > derecha» con girar a la izquierda y ajusta los motores correctamente.", "Sap que cal comparar, però confon quin motor ha d'anar més lent.|Sabe que hay que comparar, pero confunde qué motor tiene que ir más lento."],
+        ["Robot de veritat|Robot de verdad", "Mesura i apunta valors reals i els compara amb el simulador.|Mide y apunta valores reales y los compara con el simulador.", "Fa les mesures amb ajuda, però encara no les fa servir per triar el llindar.|Hace las medidas con ayuda, pero todavía no las usa para elegir el umbral."]
+      ]
+    },
+    casa: "A casa, amb el mòbil, podeu repetir els reptes i fer «Detectiu/a de la llum»: un mapa de la llum de casa amb notes de fosc, normal i molta llum, a dues hores diferents del dia.|En casa, con el móvil, podéis repetir los retos y hacer «Detective de la luz»: un mapa de la luz de casa con notas de oscuro, normal y mucha luz, a dos horas diferentes del día.",
+    slides: [
+      { id: 's1', k: 'portada', t: "El robot papallona|El robot mariposa", x: "Unitat 5 · Llum, so i LED. Avui el Maqueen aprendrà a notar la llum i a anar-hi tot sol.|Unidad 5 · Luz, sonido y LED. Hoy el Maqueen aprenderá a notar la luz y a ir hacia ella él solo.",
+        nota: "Presenta l'objectiu: al final de la classe tindreu una papallona que troba el focus, encara que el canviem de lloc.|Presenta el objetivo: al final de la clase tendréis una mariposa que encuentra el foco, aunque lo cambiemos de sitio." },
+      { id: 's2', k: 'pregunta', t: "Com sap la papallona on és la llum?|¿Cómo sabe la mariposa dónde está la luz?", x: "Moltes papallones de nit volen cap als fanals. No tenen mapa: què deuen fer?|Muchas mariposas nocturnas vuelan hacia las farolas. No tienen mapa: ¿qué deben de hacer?",
+        nota: "Recull idees sense corregir. Torna-hi després de la diapositiva 7: comparen la llum de cada costat i giren.|Recoge ideas sin corregir. Vuelve a ello después de la diapositiva 7: comparan la luz de cada lado y giran." },
+      { id: 's3', k: 'repas', t: "Recordem: «per sempre» + «si»|Recordemos: «para siempre» + «si»", punts: ["El sensor de línia dona 0 (blanc) o 1 (negre).|El sensor de línea da 0 (blanco) o 1 (negro).", "Els ultrasons donen centímetres; 500 si no veuen res.|Los ultrasonidos dan centímetros; 500 si no ven nada.", "El «si» dins del «per sempre» pregunta al sensor una vegada i una altra.|El «si» dentro del «para siempre» pregunta al sensor una y otra vez."],
+        nota: "Pregunta què tenen en comú els tres sensors: tots donen un número que el programa compara.|Pregunta qué tienen en común los tres sensores: todos dan un número que el programa compara." },
+      { id: 's4', k: 'anim', t: "Dos ulls per a la llum|Dos ojos para la luz", anim: 'k5eyes', x: "Llum esquerra i llum dreta: de 0 (fosc) a 1023 (molta llum).|Luz izquierda y luz derecha: de 0 (oscuro) a 1023 (mucha luz).",
+        nota: "Assenyala els sensors en un robot real: són a les cantonades del davant. Fes notar que el focus fa pujar més el sensor del costat on és.|Señala los sensores en un robot real: están en las esquinas de delante. Haz notar que el foco hace subir más el sensor del lado donde está." },
+      { id: 's5', k: 'anim', t: "Quanta llum?|¿Cuánta luz?", anim: 'k5meter', x: "A les fosques, uns 25; de dia, uns 260; amb un focus a prop, molt més.|A oscuras, unos 25; de día, unos 260; con un foco cerca, mucho más.",
+        nota: "Aclareix que són els valors del simulador: al robot real canviaran una mica segons l'aula. Per això avui mesurarem.|Aclara que son los valores del simulador: en el robot real cambiarán un poco según el aula. Por eso hoy mediremos." },
+      { id: 's6', k: 'robo', t: "El llindar: arribar a la flor|El umbral: llegar a la flor", x: "Si llum esquerra > 400, atura; si no, endavant. On s'aturarà?|Si luz izquierda > 400, para; si no, adelante. ¿Dónde se parará?",
+        robo: { w: { w: 120, h: 50, dark: true, bot: [15, 25, 90], lamp: { x: 100, y: 25 }, walls: [[103, 17, 6, 16]], zones: [{ id: 'f', r: [68, 13, 24, 24], col: 'yellow', label: 'FLOR|FLOR' }], time: 12 }, prog: 'forever{ if:lL>400{ stop:all } else{ run:all,fwd,120 } }' },
+        tip: "Mireu el tauler: la llum puja a mesura que s'acosta.|Mirad el panel: la luz sube a medida que se acerca.", nota: "Que prediguin amb el dit on s'aturarà. Després de l'execució, pregunta què passaria amb un llindar de 300 (para abans) i de 450 (més a prop).|Que predigan con el dedo dónde se parará. Después de la ejecución, pregunta qué pasaría con un umbral de 300 (para antes) y de 450 (más cerca)." },
+      { id: 's7', k: 'anim', t: "Comparar esquerra i dreta|Comparar izquierda y derecha", anim: 'k5two', x: "Si llum esquerra > llum dreta, el focus és a l'esquerra: gira a l'esquerra.|Si luz izquierda > luz derecha, el foco está a la izquierda: gira a la izquierda.",
+        nota: "Torna a la pregunta de la diapositiva 2. Recorda com es gira amb els motors (unitat 1): per girar a l'esquerra, el motor esquerre més lent.|Vuelve a la pregunta de la diapositiva 2. Recuerda cómo se gira con los motores (unidad 1): para girar a la izquierda, el motor izquierdo más lento." },
+      { id: 's8', k: 'robo', t: "La papallona en directe|La mariposa en directo", x: "Compara els dos sensors a cada volta i para quan la llum passa de 600.|Compara los dos sensores en cada vuelta y para cuando la luz pasa de 600.",
+        robo: { w: { w: 120, h: 80, dark: true, bot: [18, 58, 90], lamp: { x: 98, y: 16 }, zones: [{ id: 'f', c: [98, 16, 22], col: 'yellow', label: 'LLUM|LUZ' }], time: 20 }, prog: 'forever{ if:lL>600||lR>600{ stop:all } else{ if:lL>lR{ run:L,fwd,50 run:R,fwd,130 } else{ run:L,fwd,130 run:R,fwd,50 } } }' },
+        blocks: ["per sempre|para siempre", "si llum esquerra > 600 o llum dreta > 600 → atura|si luz izquierda > 600 o luz derecha > 600 → para", "si no, si llum esquerra > llum dreta → gira a l'esquerra|si no, si luz izquierda > luz derecha → gira a la izquierda", "si no → gira a la dreta|si no → gira a la derecha"],
+        nota: "Fes notar el camí en zig-zag: el robot corregeix a cada volta, com la papallona humana que farem després.|Haz notar el camino en zigzag: el robot corrige en cada vuelta, como la mariposa humana que haremos después." },
+      { id: 's9', k: 'robo', t: "Compte: un llindar massa alt|Cuidado: un umbral demasiado alto", x: "Llindar 900. S'aturarà a la flor?|Umbral 900. ¿Se parará en la flor?",
+        robo: { w: { w: 120, h: 50, dark: true, bot: [15, 25, 90], lamp: { x: 100, y: 25 }, walls: [[103, 17, 6, 16]], zones: [{ id: 'f', r: [68, 13, 24, 24], col: 'yellow', label: 'FLOR|FLOR' }], time: 9 }, prog: 'forever{ if:lL>900{ stop:all } else{ run:all,fwd,120 } }' },
+        nota: "No para: aquest focus no passa de 450. Conclusió: el llindar es tria mesurant, no endevinant.|No para: este foco no pasa de 450. Conclusión: el umbral se elige midiendo, no adivinando." },
+      { id: 's10', k: 'activitat', t: "La papallona humana|La mariposa humana", timer: 10, punts: ["Papallona, sensor esquerre, sensor dret i focus.|Mariposa, sensor izquierdo, sensor derecho y foco.", "Els sensors aixequen una targeta de número.|Los sensores levantan una tarjeta de número.", "Algun > 600 → para. Esquerre més gran → gira a l'esquerra. Si no → a la dreta.|Alguno > 600 → para. Izquierdo mayor → gira a la izquierda. Si no → a la derecha.", "Un pas i tornem a mesurar. Després, canvieu els papers.|Un paso y volvemos a medir. Después, cambiad los papeles."],
+        nota: "Deixa la regla projectada. Si un sensor té el focus darrere, ha d'aixecar el número baix: els sensors miren endavant.|Deja la regla proyectada. Si un sensor tiene el foco detrás, tiene que levantar el número bajo: los sensores miran hacia delante." },
+      { id: 's11', k: 'activitat', t: "Ara, a l'ordinador|Ahora, al ordenador", timer: 10, punts: ["Obre «El robot papallona».|Abre «El robot mariposa».", "Fes fins a «Toca el bloc».|Haz hasta «Toca el bloque».", "Para a la «Pausa activa»: anirem als robots.|Para en la «Pausa activa»: iremos a los robots."],
+        nota: "Passeja i pregunta pels números de la llum: què marcava a la sala fosca?|Pasea y pregunta por los números de la luz: ¿qué marcaba en la sala oscura?" },
+      { id: 's12', k: 'activitat', t: "Mesurem la llum de veritat|Medimos la luz de verdad", timer: 12, punts: ["Carregueu el codi: A = llum esquerra, B = llum dreta.|Cargad el código: A = luz izquierda, B = luz derecha.", "Mesureu: aula, ombra, llanterna a 30 cm i a 10 cm.|Medid: aula, sombra, linterna a 30 cm y a 10 cm.", "Trieu el vostre llindar i apunteu-lo.|Elegid vuestro umbral y apuntadlo.", "Robot a terra; no enlluerneu ningú.|Robot en el suelo; no deslumbréis a nadie."],
+        blocks: ["en prémer el botó A → mostra el número llum esquerra|al pulsar el botón A → muestra el número luz izquierda", "en prémer el botó B → mostra el número llum dreta|al pulsar el botón B → muestra el número luz derecha"],
+        nota: "Escriu a la pissarra una taula amb les mesures de cada grup: es veurà que els números canvien d'un robot a l'altre. Per això cal calibrar.|Escribe en la pizarra una tabla con las medidas de cada grupo: se verá que los números cambian de un robot a otro. Por eso hay que calibrar." },
+      { id: 's13', k: 'robo', t: "La papallona al robot real|La mariposa en el robot real", x: "Canvieu el 600 pel vostre llindar abans de descarregar-la.|Cambiad el 600 por vuestro umbral antes de descargarla.",
+        robo: { w: { w: 120, h: 80, dark: true, bot: [18, 58, 90], lamp: { x: 98, y: 16 }, zones: [{ id: 'f', c: [98, 16, 22], col: 'yellow', label: 'LLUM|LUZ' }], time: 20 }, prog: 'forever{ if:lL>600||lR>600{ stop:all } else{ if:lL>lR{ run:L,fwd,50 run:R,fwd,130 } else{ run:L,fwd,130 run:R,fwd,50 } } }' },
+        nota: "Racó fosc, llanterna fixa a terra o en una cadira, de cara al robot. Si el robot gira sempre cap al mateix costat, que comprovin quin motor és M1 (esquerre) i M2 (dret).|Rincón oscuro, linterna fija en el suelo o en una silla, de cara al robot. Si el robot gira siempre hacia el mismo lado, que comprueben qué motor es M1 (izquierdo) y M2 (derecho)." },
+      { id: 's14', k: 'repte', t: "Reptes de la papallona|Retos de la mariposa", timer: 8, punts: ["1. Fins a la flor|1. Hasta la flor", "2. La papallona despistada|2. La mariposa despistada", "3. La papallona de la cercavila (4 pistes)|3. La mariposa del pasacalles (4 pistas)", "4. Arribada amb festa|4. Llegada con fiesta"],
+        nota: "Al repte 2, l'error és que els motors giren al revés: fuig de la llum. Pregunta: cap a on gira quan l'esquerra té més llum?|En el reto 2, el error es que los motores giran al revés: huye de la luz. Pregunta: ¿hacia dónde gira cuando la izquierda tiene más luz?" },
+      { id: 's15', k: 'activitat', t: "Crea: la meva papallona|Crea: mi mariposa", timer: 3, x: "Tria velocitats, llindar i una celebració pròpia.|Elige velocidades, umbral y una celebración propia.",
+        nota: "Que l'ensenyin a un company/a: la seva celebració és diferent?|Que se la enseñen a un compañero/a: ¿su celebración es diferente?" },
+      { id: 's16', k: 'resum', t: "Què hem après avui|Qué hemos aprendido hoy", punts: ["Els sensors de llum donen de 0 a 1023.|Los sensores de luz dan de 0 a 1023.", "El llindar separa poca llum de molta, i es tria mesurant.|El umbral separa poca luz de mucha, y se elige midiendo.", "Comparant esquerra i dreta, el robot gira cap a la llum.|Comparando izquierda y derecha, el robot gira hacia la luz."],
+        nota: "Anuncia la propera sessió: farem alarmes per al museu amb so, llums i botons.|Anuncia la próxima sesión: haremos alarmas para el museo con sonido, luces y botones." },
+      { id: 's17', k: 'tiquet', t: "Tiquet de sortida|Ticket de salida", punts: ["Quant marca el sensor a les fosques? I a prop del focus?|¿Cuánto marca el sensor a oscuras? ¿Y cerca del foco?", "Esquerra 500, dreta 200: cap a on gira?|Izquierda 500, derecha 200: ¿hacia dónde gira?"],
+        nota: "Anota qui confon el sentit del gir: a la sessió 2 hi tornarem amb l'alarma.|Anota quién confunde el sentido del giro: en la sesión 2 volveremos a ello con la alarma." }
+    ],
+    print: [
+      { id: 'p1', t: "Targetes de la papallona humana|Tarjetas de la mariposa humana", k: 'targetes',
+        intro: "Un paquet per grup de 4. Els dos sensors en tenen un cadascun: aixequen el número que s'assembla més a la llum que reben (focus darrere = 25; lluny de cara = 260; a prop = 700; tocant = 900). Les targetes de decisió són per a la papallona.|Un paquete por grupo de 4. Los dos sensores tienen uno cada uno: levantan el número que se parece más a la luz que reciben (foco detrás = 25; lejos de cara = 260; cerca = 700; tocando = 900). Las tarjetas de decisión son para la mariposa.",
+        items: [
+          { t: "25 🌙 fosc|25 🌙 oscuro", n: 2 }, { t: "260 ☁️ normal|260 ☁️ normal", n: 2 }, { t: "700 🔆 molt a prop|700 🔆 muy cerca", n: 2 }, { t: "900 ☀️ tocant|900 ☀️ tocando", n: 2 },
+          { t: "Gira a l'esquerra ↰|Gira a la izquierda ↰", n: 1 }, { t: "Gira a la dreta ↱|Gira a la derecha ↱", n: 1 }, { t: "Para: he arribat! 🦋|Para: ¡he llegado! 🦋", n: 1 }
+        ] },
+      { id: 'p2', t: "Codi MakeCode: la llum i la papallona|Código MakeCode: la luz y la mariposa", k: 'codi',
+        intro: "A makecode.microbit.org: nou projecte → Extensions → «maqueen» → JavaScript → enganxeu el codi → Descarrega. Apunteu les vostres mesures al costat.|En makecode.microbit.org: nuevo proyecto → Extensiones → «maqueen» → JavaScript → pegad el código → Descarga. Apuntad vuestras medidas al lado.",
+        items: [
+          { t: "Mesurar la llum (A = esquerra, B = dreta)|Medir la luz (A = izquierda, B = derecha)", prog: 'A{ num:lL } B{ num:lR }' },
+          { t: "La papallona (canvieu el 600 pel vostre llindar)|La mariposa (cambiad el 600 por vuestro umbral)", prog: 'forever{ if:lL>600||lR>600{ stop:all } else{ if:lL>lR{ run:L,fwd,50 run:R,fwd,130 } else{ run:L,fwd,130 run:R,fwd,50 } } }' }
+        ] }
+    ]
+  },
+
+  /* ---------- Sessió 2 · Alarmes ---------- */
+  'k5-2': {
+    obj: [
+      "L'alumne/a identifica els actuadors que fan servir les alarmes del Maqueen (brunzidor, llums del cotxe, llums de sota i matriu) i els combina.|El alumno/a identifica los actuadores que usan las alarmas del Maqueen (zumbador, luces del coche, luces de abajo y matriz) y los combina.",
+      "L'alumne/a calcula quant tarden les notes (1 temps = 0,5 s) i les icones (0,4 s) i ho té en compte en un programa.|El alumno/a calcula cuánto tardan las notas (1 tiempo = 0,5 s) y los iconos (0,4 s) y lo tiene en cuenta en un programa.",
+      "L'alumne/a programa una alarma amb un sensor, una condició i avisos, que torna a la calma amb el «si no».|El alumno/a programa una alarma con un sensor, una condición y avisos, que vuelve a la calma con el «si no».",
+      "L'alumne/a fa servir el guió «en prémer el botó A» perquè una persona doni ordres al robot.|El alumno/a usa el guion «al pulsar el botón A» para que una persona dé órdenes al robot."
+    ],
+    comp: [
+      "Competència digital (CD5): programar respostes a esdeveniments i a sensors|Competencia digital (CD5): programar respuestas a eventos y a sensores",
+      "Pensament computacional: esdeveniments, bucles amb repeteix i condicions amb «si… si no»|Pensamiento computacional: eventos, bucles con repite y condiciones con «si… si no»",
+      "Educació musical: notes, agut i greu, durada en temps|Educación musical: notas, agudo y grave, duración en tiempos",
+      "Ciutadania: senyals d'avís i seguretat (sirenes, alarmes accessibles amb so i llum)|Ciudadanía: señales de aviso y seguridad (sirenas, alarmas accesibles con sonido y luz)"
+    ],
+    vocab: [
+      ["Actuador|Actuador", "Part del robot que fa alguna cosa: motors, llums, brunzidor, pantalla.|Parte del robot que hace algo: motores, luces, zumbador, pantalla."],
+      ["Brunzidor|Zumbador", "Altaveu petit del Maqueen que fa notes.|Altavoz pequeño del Maqueen que hace notas."],
+      ["Temps (de nota)|Tiempo (de nota)", "Durada d'una nota: 1 temps = 0,5 segons.|Duración de una nota: 1 tiempo = 0,5 segundos."],
+      ["Esdeveniment|Evento", "Una cosa que passa (prémer el botó A) i que posa en marxa un guió.|Algo que pasa (pulsar el botón A) y que pone en marcha un guion."],
+      ["Alarma|Alarma", "Programa que vigila un sensor i avisa quan passa alguna cosa.|Programa que vigila un sensor y avisa cuando pasa algo."]
+    ],
+    mat: {
+      aula: [
+        "Un ordinador per alumne/a amb Numi Tech obert a la sessió «Alarmes»|Un ordenador por alumno/a con Numi Tech abierto en la sesión «Alarmas»",
+        "Projector i la presentació d'aquesta sessió|Proyector y la presentación de esta sesión",
+        "Un kit Maqueen per grup de 3-4 amb piles carregades i cable USB|Un kit Maqueen por grupo de 3-4 con pilas cargadas y cable USB",
+        "Una «obra d'art» per grup (un got, una figureta o una llanterna de paper) i un llibre que faci de visitant|Una «obra de arte» por grupo (un vaso, una figurita o un farolillo de papel) y un libro que haga de visitante"
+      ],
+      imprimir: ["Fitxa: partitures d'alarma|Ficha: partituras de alarma", "Codi MakeCode: timbre i alarma del museu|Código MakeCode: timbre y alarma del museo"],
+      prep: [
+        "Imprimir una fitxa de partitures per parella.|Imprimir una ficha de partituras por pareja.",
+        "Comprovar que el so de les micro:bit V2 funciona (el brunzidor és a la placa del Maqueen) i acordar un volum raonable.|Comprobar que el sonido de las micro:bit V2 funciona (el zumbador está en la placa del Maqueen) y acordar un volumen razonable.",
+        "Preparar a cada taula de robots un espai de 60 cm: el robot mira cap a on arribarà el visitant (el llibre).|Preparar en cada mesa de robots un espacio de 60 cm: el robot mira hacia donde llegará el visitante (el libro).",
+        "Provar abans les demos de les diapositives 6, 7 i 8.|Probar antes las demos de las diapositivas 6, 7 y 8."
+      ]
+    },
+    plan: [
+      { min: 4, t: "Benvinguda: el museu obre de nit|Bienvenida: el museo abre de noche", fase: 'inici',
+        fa: "Presenta l'encàrrec del museu. Pregunta quins avisos coneixen (sirenes, el timbre de l'escola, l'alarma d'un cotxe) i què tenen en comú. Repassa la papallona amb la pregunta de la diapositiva 3.|Presenta el encargo del museo. Pregunta qué avisos conocen (sirenas, el timbre del cole, la alarma de un coche) y qué tienen en común. Repasa la mariposa con la pregunta de la diapositiva 3.",
+        diu: ["Quins avisos sentiu o veieu cada dia?|¿Qué avisos oís o veis cada día?", "Per què les ambulàncies porten sirena i llums alhora?|¿Por qué las ambulancias llevan sirena y luces a la vez?"],
+        slides: ['s1', 's2', 's3'], app: "Encara no.|Todavía no.", org: "Tot el grup|Todo el grupo" },
+      { min: 10, t: "Actuadors, notes, botons i alarmes|Actuadores, notas, botones y alarmas", fase: 'teoria',
+        fa: "Presenta els quatre actuadors que avisen. Explica les notes i la durada en temps amb la línia de temps i fes que piquin de mans 1 temps (0,5 s) i 2 temps (1 s). Executa la sirena i la demo dels botons. Acaba amb l'alarma de la vitrina: abans d'executar-la, que diguin què passarà quan el visitant se'n vagi.|Presenta los cuatro actuadores que avisan. Explica las notas y la duración en tiempos con la línea de tiempo y haz que den palmas de 1 tiempo (0,5 s) y 2 tiempos (1 s). Ejecuta la sirena y la demo de los botones. Acaba con la alarma de la vitrina: antes de ejecutarla, que digan qué pasará cuando el visitante se vaya.",
+        diu: ["Piquem: un temps, un temps, dos temps… Quant dura cada cop?|Palmeamos: un tiempo, un tiempo, dos tiempos… ¿Cuánto dura cada golpe?", "El guió del botó A espera que acabi el «per sempre»? No: funcionen alhora.|¿El guion del botón A espera a que acabe el «para siempre»? No: funcionan a la vez.", "Quina part del programa posa el verd quan el visitant marxa?|¿Qué parte del programa pone el verde cuando el visitante se va?"],
+        slides: ['s4', 's5', 's6', 's7', 's8'], app: "Encara no.|Todavía no.", org: "Tot el grup|Todo el grupo" },
+      { min: 10, t: "Partitures d'alarma|Partituras de alarma", fase: 'desconnectat',
+        fa: "Per parelles, amb la fitxa: llegeixen cada partitura d'alarma (notes amb durades i colors de llum), calculen quant dura i la «interpreten»: un/a fa les notes (agut = «niii», greu = «nooo») i l'altre/a aixeca la targeta del color. Al final, cada parella inventa la seva alarma de 2 segons exactes i la presenta a la parella del costat, que n'ha de calcular la durada.|Por parejas, con la ficha: leen cada partitura de alarma (notas con duraciones y colores de luz), calculan cuánto dura y la «interpretan»: uno/a hace las notas (agudo = «niii», grave = «nooo») y el otro/a levanta la tarjeta del color. Al final, cada pareja inventa su alarma de 2 segundos exactos y la presenta a la pareja de al lado, que tiene que calcular su duración.",
+        diu: ["Si la nota és de 1/2 temps, quant dura en segons?|Si la nota es de 1/2 tiempo, ¿cuánto dura en segundos?", "La vostra alarma dura exactament 2 segons? Sumeu-ho.|¿Vuestra alarma dura exactamente 2 segundos? Sumadlo."],
+        slides: ['s9'], app: "Cap: activitat sense pantalla.|Ninguna: actividad sin pantalla.", org: "Parelles|Parejas" },
+      { min: 10, t: "A l'ordinador: descobreix i prova|En el ordenador: descubre y prueba", fase: 'ordinador',
+        fa: "Avancen fins a la pausa activa. A «On s'aturarà?», demana que calculin els segons abans de triar. El pas «Dissenya el codi d'avisos» és per a casa: poden tocar «Ho he fet».|Avanzan hasta la pausa activa. En «¿Dónde se parará?», pide que calculen los segundos antes de elegir. El paso «Diseña el código de avisos» es para casa: pueden tocar «Lo he hecho».",
+        diu: ["Quant tarden 4 notes d'1 temps? I quants centímetres fa el robot mentrestant?|¿Cuánto tardan 4 notas de 1 tiempo? ¿Y cuántos centímetros hace el robot mientras tanto?"],
+        slides: ['s10'], app: "Del «Recorda» a la «Pausa activa»: repàs, la missió, «Descobreix», la nota de 2 temps, «On s'aturarà?», ordenar l'alarma, el codi d'avisos (casa) i «Toca el bloc».|Del «Recuerda» a la «Pausa activa»: repaso, la misión, «Descubre», la nota de 2 tiempos, «¿Dónde se parará?», ordenar la alarma, el código de avisos (casa) y «Toca el bloque».", org: "Individual|Individual" },
+      { min: 12, t: "El timbre i la vitrina al Maqueen|El timbre y la vitrina en el Maqueen", fase: 'robot',
+        fa: "Grups de 3-4 per kit (programador/a, pilot, visitant, secretari/ària). Primer, el timbre: carregueu el codi de l'imprimible i comproveu que en prémer A sona el «ding-dong» i surt la casa. Després, l'alarma de la vitrina: robot a la taula, lluny de la vora, mirant cap a l'obra d'art; el visitant hi acosta un llibre a poc a poc. Mesureu amb un regle a quina distància salta l'alarma i ajusteu el número del «si» perquè salti a uns 10 cm. Proveu també què passa si el visitant arriba de costat (els ultrasons miren endavant!). Seguretat: el robot quiet al centre de la taula; volum moderat.|Grupos de 3-4 por kit (programador/a, piloto, visitante, secretario/a). Primero, el timbre: cargad el código del imprimible y comprobad que al pulsar A suena el «ding-dong» y sale la casa. Después, la alarma de la vitrina: robot en la mesa, lejos del borde, mirando hacia la obra de arte; el visitante acerca un libro despacio. Medid con una regla a qué distancia salta la alarma y ajustad el número del «si» para que salte a unos 10 cm. Probad también qué pasa si el visitante llega de lado (¡los ultrasonidos miran hacia delante!). Seguridad: el robot quieto en el centro de la mesa; volumen moderado.",
+        diu: ["A quina distància salta la vostra alarma? És la que diu el programa?|¿A qué distancia salta vuestra alarma? ¿Es la que dice el programa?", "Si el visitant arriba de costat, el robot el veu? Com ho arreglaríeu?|Si el visitante llega de lado, ¿el robot lo ve? ¿Cómo lo arreglaríais?"],
+        slides: ['s11', 's12'], app: "Cap: MakeCode i el robot de veritat.|Ninguna: MakeCode y el robot de verdad.", org: "Grups de 3-4 per kit amb papers|Grupos de 3-4 por kit con papeles" },
+      { min: 8, t: "Reptes de les alarmes|Retos de las alarmas", fase: 'ordinador',
+        fa: "Pausa activa tots junts i, després, els quatre reptes. Al repte 2 (5 blocs), recorda el «repeteix» de la unitat 2. Al 4, que llegeixin el tauler: quant marca la llum dins la caixa i quan s'obre?|Pausa activa todos juntos y, después, los cuatro retos. En el reto 2 (5 bloques), recuerda el «repite» de la unidad 2. En el 4, que lean el panel: ¿cuánto marca la luz dentro de la caja y cuando se abre?",
+        diu: ["Si només pots fer servir 5 blocs, quin bloc repeteix els altres?|Si solo puedes usar 5 bloques, ¿qué bloque repite los otros?", "Dins la caixa la llum és 25 i oberta, 260. Quin llindar triaries?|Dentro de la caja la luz es 25 y abierta, 260. ¿Qué umbral elegirías?"],
+        slides: ['s13'], app: "«Pausa activa» i els reptes 1 a 4: el timbre, la sirena, la vitrina i la caixa forta.|«Pausa activa» y los retos 1 a 4: el timbre, la sirena, la vitrina y la caja fuerte.", org: "Individual|Individual" },
+      { min: 3, t: "Crea: la meva alarma|Crea: mi alarma", fase: 'crea',
+        fa: "Cada alumne/a inventa la seva alarma per a la sala de les llanternes i la desa.|Cada alumno/a inventa su alarma para la sala de los farolillos y la guarda.",
+        diu: ["La teva alarma es veu i se sent? Torna a la calma?|¿Tu alarma se ve y se oye? ¿Vuelve a la calma?"],
+        slides: ['s14'], app: "Pas «Crea»: La meva alarma.|Paso «Crea»: Mi alarma.", org: "Individual|Individual" },
+      { min: 3, t: "Tancament i tiquet de sortida|Cierre y ticket de salida", fase: 'tancament',
+        fa: "Resum de la sessió, preguntes finals de l'app i tiquet a la porta.|Resumen de la sesión, preguntas finales de la app y ticket en la puerta.",
+        diu: ["Quant dura una nota de 2 temps?|¿Cuánto dura una nota de 2 tiempos?", "Quan s'executa el guió del botó A?|¿Cuándo se ejecuta el guion del botón A?"],
+        slides: ['s15', 's16'], app: "«Tancament».|«Cierre».", org: "Tot el grup|Todo el grupo" }
+    ],
+    errors: [
+      ["Posa el vermell al «si», però no posa res al «si no» i l'alarma es queda vermella per sempre.|Pone el rojo en el «si», pero no pone nada en el «si no» y la alarma se queda roja para siempre.",
+        "Pregunta: què vols que facin els llums quan NO hi ha ningú? On ho has escrit?|Pregunta: ¿qué quieres que hagan las luces cuando NO hay nadie? ¿Dónde lo has escrito?"],
+      ["Creu que les notes no tarden i no entén per què el robot va més lluny (o més tard) del que esperava.|Cree que las notas no tardan y no entiende por qué el robot va más lejos (o más tarde) de lo que esperaba.",
+        "Que compti en veu alta els temps del programa: quants segons passen entre l'«engega» i l'«atura»?|Que cuente en voz alta los tiempos del programa: ¿cuántos segundos pasan entre el «arranca» y el «para»?"],
+      ["Posa el timbre a «en iniciar» amb un «espera» i funciona a una pista però no a l'altra.|Pone el timbre en «al iniciar» con un «espera» y funciona en una pista pero no en la otra.",
+        "Pregunta: qui decideix quan sona el timbre, el rellotge o la persona? Quin guió espera la persona?|Pregunta: ¿quién decide cuándo suena el timbre, el reloj o la persona? ¿Qué guion espera a la persona?"],
+      ["A la sirena, fa servir més de 5 blocs copiant la seqüència tres vegades.|En la sirena, usa más de 5 bloques copiando la secuencia tres veces.",
+        "Que encerclï en el paper la part que es repeteix. Quin bloc de la unitat 2 la fa repetir?|Que rodee en el papel la parte que se repite. ¿Qué bloque de la unidad 2 la hace repetir?"],
+      ["Al robot real, l'alarma no salta quan el visitant s'acosta de costat.|En el robot real, la alarma no salta cuando el visitante se acerca de lado.",
+        "Recorda el con estret dels ultrasons (unitat 3): què veu el robot i què no? On posaries el robot?|Recuerda el cono estrecho de los ultrasonidos (unidad 3): ¿qué ve el robot y qué no? ¿Dónde pondrías el robot?"]
+    ],
+    diff: {
+      mes: "Fer una alarma de dos nivells: a menys de 40 cm, avís groc i una nota suau; a menys de 20, vermell i sirena. Al robot real, provar-la i mesurar on canvia cada nivell.|Hacer una alarma de dos niveles: a menos de 40 cm, aviso amarillo y una nota suave; a menos de 20, rojo y sirena. En el robot real, probarla y medir dónde cambia cada nivel.",
+      menys: "Començar pel repte del timbre i la sirena, que no tenen sensors. A la vitrina, partir del programa de la demo i canviar només els colors.|Empezar por el reto del timbre y la sirena, que no tienen sensores. En la vitrina, partir del programa de la demo y cambiar solo los colores."
+    },
+    aval: {
+      ticket: ["Quant dura una nota de 2 temps? I 4 notes d'1/2 temps?|¿Cuánto dura una nota de 2 tiempos? ¿Y 4 notas de 1/2 tiempo?",
+        "Explica per què l'alarma de la vitrina necessita la part «si no».|Explica por qué la alarma de la vitrina necesita la parte «si no»."],
+      rubric: [
+        ["Actuadors i durades|Actuadores y duraciones", "Combina so i llum i calcula quant tarda una seqüència de notes i icones.|Combina sonido y luz y calcula cuánto tarda una secuencia de notas e iconos.", "Fa servir els actuadors, però encara no té en compte que les notes tarden.|Usa los actuadores, pero todavía no tiene en cuenta que las notas tardan."],
+        ["Alarma amb sensor|Alarma con sensor", "Programa sensor + condició + avisos i fa tornar la calma amb el «si no».|Programa sensor + condición + avisos y hace volver la calma con el «si no».", "L'alarma salta, però no torna a la calma sense ajuda.|La alarma salta, pero no vuelve a la calma sin ayuda."],
+        ["Botons|Botones", "Fa servir el guió del botó A per a una acció que decideix una persona.|Usa el guion del botón A para una acción que decide una persona.", "Programa el botó, però barreja el guió del botó amb «en iniciar».|Programa el botón, pero mezcla el guion del botón con «al iniciar»."]
+      ]
+    },
+    casa: "A casa, podeu repetir els reptes i fer «Dissenya el codi d'avisos» amb algú de la família: tres missatges amb sons i llums, sense paraules.|En casa, podéis repetir los retos y hacer «Diseña el código de avisos» con alguien de la familia: tres mensajes con sonidos y luces, sin palabras.",
+    slides: [
+      { id: 's1', k: 'portada', t: "Alarmes|Alarmas", x: "El museu del poble obre de nit i necessita robots vigilants que avisin amb so i llum.|El museo del pueblo abre de noche y necesita robots vigilantes que avisen con sonido y luz.",
+        nota: "Objectiu: al final tindreu un timbre, una sirena i una alarma que vigila la vitrina.|Objetivo: al final tendréis un timbre, una sirena y una alarma que vigila la vitrina." },
+      { id: 's2', k: 'pregunta', t: "Quins avisos coneixes?|¿Qué avisos conoces?", x: "Sirenes, timbres, alarmes de cotxe, el microones… Com ens avisen?|Sirenas, timbres, alarmas de coche, el microondas… ¿Cómo nos avisan?",
+        nota: "Classifica a la pissarra: avisos de so, de llum i de tots dos. Els més importants solen fer servir tots dos.|Clasifica en la pizarra: avisos de sonido, de luz y de los dos. Los más importantes suelen usar los dos." },
+      { id: 's3', k: 'repas', t: "Recordem la papallona|Recordemos la mariposa", punts: ["Llum esquerra 90, llum dreta 410: cap a on gira?|Luz izquierda 90, luz derecha 410: ¿hacia dónde gira?", "Quin llindar posaries en una sala fosca amb un focus?|¿Qué umbral pondrías en una sala oscura con un foco?"],
+        nota: "Respostes: a la dreta; un número entre 25 i el que marca a prop del focus (per exemple 400-600).|Respuestas: a la derecha; un número entre 25 y lo que marca cerca del foco (por ejemplo 400-600)." },
+      { id: 's4', k: 'anim', t: "Quatre maneres d'avisar|Cuatro maneras de avisar", anim: 'k5alarm', x: "Brunzidor, llums del cotxe, llums de sota i matriu de LEDs.|Zumbador, luces del coche, luces de abajo y matriz de LEDs.",
+        nota: "Ensenya cada actuador en un robot real. Recorda la paraula «actuador» de la unitat 1.|Enseña cada actuador en un robot real. Recuerda la palabra «actuador» de la unidad 1." },
+      { id: 's5', k: 'anim', t: "Les notes també tarden|Las notas también tardan", anim: 'k5beat', x: "1 temps = 0,5 s · 1/2 temps = 0,25 s · 2 temps = 1 s · icona = 0,4 s|1 tiempo = 0,5 s · 1/2 tiempo = 0,25 s · 2 tiempos = 1 s · icono = 0,4 s",
+        nota: "Feu picar de mans tots junts: un temps, un temps, dos temps. El programa no passa al bloc següent fins que s'acaba la nota.|Haced palmas todos juntos: un tiempo, un tiempo, dos tiempos. El programa no pasa al bloque siguiente hasta que se acaba la nota." },
+      { id: 's6', k: 'robo', t: "La sirena|La sirena", x: "3 vegades: vermell + do′, blau + sol. Quant durarà en total?|3 veces: rojo + do′, azul + sol. ¿Cuánto durará en total?",
+        robo: { w: { w: 100, h: 50, bot: [50, 25, 90], time: 5 }, prog: 'start{ rep:3{ car:all,red note:C5,1/2 car:all,blue note:G4,1/2 } car:all,black }' },
+        nota: "6 notes de 1/2 temps = 6 × 0,25 s = 1,5 s. Fes notar el «repeteix»: 4 blocs fan tota la sirena.|6 notas de 1/2 tiempo = 6 × 0,25 s = 1,5 s. Haz notar el «repite»: 4 bloques hacen toda la sirena." },
+      { id: 's7', k: 'robo', t: "Els botons A i B|Los botones A y B", x: "En prémer A: casa i «ding-dong». En prémer B: «no».|Al pulsar A: casa y «ding-dong». Al pulsar B: «no».",
+        robo: { w: { w: 100, h: 50, bot: [50, 25, 90], press: [{ t: 1.5, b: 'A' }, { t: 4, b: 'B' }], time: 6 }, prog: 'start{ icon:asleep } A{ icon:house note:E5,1/2 note:C5,1 } B{ icon:no }' },
+        nota: "A la demo els botons es premen sols; al simulador de l'app, els alumnes poden prémer A i B del tauler. Remarca que el guió del botó s'executa cada vegada que es prem.|En la demo los botones se pulsan solos; en el simulador de la app, los alumnos pueden pulsar A y B del panel. Remarca que el guion del botón se ejecuta cada vez que se pulsa." },
+      { id: 's8', k: 'robo', t: "L'alarma de la vitrina|La alarma de la vitrina", x: "Si distància < 25: vermell, sorpresa i nota. Si no: verd. Què passarà quan el visitant marxi?|Si distancia < 25: rojo, sorpresa y nota. Si no: verde. ¿Qué pasará cuando el visitante se vaya?",
+        robo: { w: { w: 120, h: 60, bot: [18, 30, 90], walls: [[4, 18, 4, 24]], zones: [{ id: 'o', r: [4, 16, 8, 28], col: 'purple' }], leader: { path: [[112, 30], [44, 30], [50, 30], [44, 30], [50, 30], [44, 30], [112, 30]], speed: 10, wait: 1 }, time: 16 }, prog: 'forever{ if:dist<25{ car:all,red icon:surprised note:C5,1/2 } else{ car:all,green clear } }' },
+        blocks: ["sensor: distància|sensor: distancia", "condició: < 25|condición: < 25", "avisos: vermell + icona + nota|avisos: rojo + icono + nota", "si no: verd|si no: verde"],
+        nota: "Sensor + condició + avisos. Sense el «si no», l'alarma quedaria vermella per sempre.|Sensor + condición + avisos. Sin el «si no», la alarma quedaría roja para siempre." },
+      { id: 's9', k: 'activitat', t: "Partitures d'alarma|Partituras de alarma", timer: 10, punts: ["Llegiu la partitura i calculeu quant dura.|Leed la partitura y calculad cuánto dura.", "Un/a fa les notes, l'altre/a els colors.|Uno/a hace las notas, el otro/a los colores.", "Inventeu una alarma de 2 segons exactes.|Inventad una alarma de 2 segundos exactos.", "La parella del costat en calcula la durada.|La pareja de al lado calcula su duración."],
+        nota: "Recorda la regla: 1 temps = 0,5 s. Agut = do′, re′… sol′; greu = do, re, mi.|Recuerda la regla: 1 tiempo = 0,5 s. Agudo = do′, re′… sol′; grave = do, re, mi." },
+      { id: 's10', k: 'activitat', t: "Ara, a l'ordinador|Ahora, al ordenador", timer: 10, punts: ["Obre «Alarmes».|Abre «Alarmas».", "A «On s'aturarà?», calcula els segons abans de triar.|En «¿Dónde se parará?», calcula los segundos antes de elegir.", "Para a la «Pausa activa».|Para en la «Pausa activa»."],
+        nota: "Resposta de «On s'aturarà?»: B (4 notes = 2 s, uns 31 cm).|Respuesta de «¿Dónde se parará?»: B (4 notas = 2 s, unos 31 cm)." },
+      { id: 's11', k: 'activitat', t: "El timbre i la vitrina de veritat|El timbre y la vitrina de verdad", timer: 12, punts: ["Carregueu el timbre i proveu el botó A.|Cargad el timbre y probad el botón A.", "Carregueu l'alarma: robot al centre, mirant l'obra.|Cargad la alarma: robot en el centro, mirando la obra.", "Acosteu el llibre a poc a poc i mesureu on salta.|Acercad el libro despacio y medid dónde salta.", "Ajusteu el número perquè salti a uns 10 cm.|Ajustad el número para que salte a unos 10 cm."],
+        nota: "Al robot real, l'alarma es pot provar a la taula perquè el robot no es mou. Volum moderat: si n'hi ha massa, que facin notes curtes (1/4).|En el robot real, la alarma se puede probar en la mesa porque el robot no se mueve. Volumen moderado: si hay demasiado, que hagan notas cortas (1/4)." },
+      { id: 's12', k: 'robo', t: "El codi de la vitrina|El código de la vitrina", x: "Mateix programa que al simulador, amb el llindar de 10 cm per a la taula.|Mismo programa que en el simulador, con el umbral de 10 cm para la mesa.",
+        robo: { w: { w: 120, h: 60, bot: [18, 30, 90], walls: [[4, 18, 4, 24]], leader: { path: [[112, 30], [36, 30], [112, 30]], speed: 10, wait: 1 }, time: 18 }, prog: 'forever{ if:dist<10{ car:all,red icon:surprised note:C5,1/2 } else{ car:all,green clear } }' },
+        nota: "Projecta el codi JavaScript de l'imprimible si cal. Que comparin: el visitant s'atura a la mateixa distància al simulador i a la taula?|Proyecta el código JavaScript del imprimible si hace falta. Que comparen: ¿el visitante se para a la misma distancia en el simulador y en la mesa?" },
+      { id: 's13', k: 'repte', t: "Reptes de les alarmes|Retos de las alarmas", timer: 8, punts: ["1. El timbre del museu (botó A)|1. El timbre del museo (botón A)", "2. La sirena (5 blocs)|2. La sirena (5 bloques)", "3. La vitrina (distància)|3. La vitrina (distancia)", "4. La caixa forta (llum)|4. La caja fuerte (luz)"],
+        nota: "La caixa forta fa servir el sensor de llum de la sessió 1: dins, 25; oberta, 260.|La caja fuerte usa el sensor de luz de la sesión 1: dentro, 25; abierta, 260." },
+      { id: 's14', k: 'activitat', t: "Crea: la meva alarma|Crea: mi alarma", timer: 3, x: "Tria sensor, llindar i avisos. Ha d'avisar i tornar a la calma.|Elige sensor, umbral y avisos. Tiene que avisar y volver a la calma.",
+        nota: "Valora que facin servir so i llum alhora i que el «si no» torni a la calma.|Valora que usen sonido y luz a la vez y que el «si no» vuelva a la calma." },
+      { id: 's15', k: 'resum', t: "Què hem après avui|Qué hemos aprendido hoy", punts: ["Brunzidor, llums i matriu: quatre maneres d'avisar.|Zumbador, luces y matriz: cuatro maneras de avisar.", "1 temps = 0,5 s: les notes i les icones tarden.|1 tiempo = 0,5 s: las notas y los iconos tardan.", "Alarma = sensor + condició + avisos; el botó A espera una persona.|Alarma = sensor + condición + avisos; el botón A espera a una persona."],
+        nota: "Propera sessió: el fanal automàtic, que s'encén quan es fa fosc.|Próxima sesión: la farola automática, que se enciende cuando oscurece." },
+      { id: 's16', k: 'tiquet', t: "Tiquet de sortida|Ticket de salida", punts: ["Quant duren 4 notes de 1/2 temps?|¿Cuánto duran 4 notas de 1/2 tiempo?", "Per què l'alarma necessita el «si no»?|¿Por qué la alarma necesita el «si no»?"],
+        nota: "Resposta: 1 segon. Anota qui encara confon temps i segons.|Respuesta: 1 segundo. Anota quién todavía confunde tiempos y segundos." }
+    ],
+    print: [
+      { id: 'p1', t: "Fitxa: partitures d'alarma|Ficha: partituras de alarma", k: 'fitxa',
+        intro: "Recordeu: 1 temps = 0,5 s · 1/2 temps = 0,25 s · 2 temps = 1 s. Una icona tarda 0,4 s.|Recordad: 1 tiempo = 0,5 s · 1/2 tiempo = 0,25 s · 2 tiempos = 1 s. Un icono tarda 0,4 s.",
+        items: [
+          { q: "Sirena: 3 vegades (vermell + do′ 1/2 temps, blau + sol 1/2 temps). Quant dura?|Sirena: 3 veces (rojo + do′ 1/2 tiempo, azul + sol 1/2 tiempo). ¿Cuánto dura?", rprog: 'start{ rep:3{ car:all,red note:C5,1/2 car:all,blue note:G4,1/2 } }', sol: "6 notes × 0,25 s = 1,5 segons.|6 notas × 0,25 s = 1,5 segundos." },
+          { q: "Timbre: icona casa, mi′ 1/2 temps i do′ 1 temps. Quant dura des que premen A?|Timbre: icono casa, mi′ 1/2 tiempo y do′ 1 tiempo. ¿Cuánto dura desde que pulsan A?", rprog: 'A{ icon:house note:E5,1/2 note:C5,1 }', sol: "0,4 + 0,25 + 0,5 = 1,15 segons.|0,4 + 0,25 + 0,5 = 1,15 segundos." },
+          { q: "El robot avança a 150 mentre sonen 4 notes d'1 temps i després para. Quants segons avança? Uns quants centímetres?|El robot avanza a 150 mientras suenan 4 notas de 1 tiempo y después para. ¿Cuántos segundos avanza? ¿Unos cuántos centímetros?", rprog: 'start{ run:all,fwd,150 rep:4{ note:C5,1 } stop:all }', sol: "2 segons; a uns 15,6 cm/s, uns 31 cm.|2 segundos; a unos 15,6 cm/s, unos 31 cm." },
+          { q: "Inventeu la vostra alarma de 2 segons exactes. Escriviu les notes, les durades i els colors.|Inventad vuestra alarma de 2 segundos exactos. Escribid las notas, las duraciones y los colores.", sol: "Hi ha moltes respostes. Per exemple: 4 notes d'1 temps, o 8 notes de 1/2 temps, alternant vermell i blau.|Hay muchas respuestas. Por ejemplo: 4 notas de 1 tiempo, u 8 notas de 1/2 tiempo, alternando rojo y azul." }
+        ] },
+      { id: 'p2', t: "Codi MakeCode: timbre i alarma del museu|Código MakeCode: timbre y alarma del museo", k: 'codi',
+        intro: "A makecode.microbit.org: nou projecte → Extensions → «maqueen» → JavaScript → enganxeu el codi → Descarrega.|En makecode.microbit.org: nuevo proyecto → Extensiones → «maqueen» → JavaScript → pegad el código → Descarga.",
+        items: [
+          { t: "El timbre (botó A)|El timbre (botón A)", prog: 'start{ icon:asleep } A{ icon:house note:E5,1/2 note:C5,1 }' },
+          { t: "L'alarma de la vitrina (ajusteu el 10)|La alarma de la vitrina (ajustad el 10)", prog: 'forever{ if:dist<10{ car:all,red icon:surprised note:C5,1/2 } else{ car:all,green clear } }' }
+        ] }
+    ]
+  },
+
+  /* ---------- Sessió 3 · El fanal automàtic ---------- */
+  'k5-3': {
+    obj: [
+      "L'alumne/a programa un fanal que s'encén quan la llum és menor que un llindar i s'apaga quan torna la llum.|El alumno/a programa una farola que se enciende cuando la luz es menor que un umbral y se apaga cuando vuelve la luz.",
+      "L'alumne/a explica per què cal la part «si no» perquè el fanal s'apagui de dia.|El alumno/a explica por qué hace falta la parte «si no» para que la farola se apague de día.",
+      "L'alumne/a fa servir les 4 llums de sota (totes o una a una) i les combina amb els llums del cotxe.|El alumno/a usa las 4 luces de abajo (todas o una a una) y las combina con las luces del coche.",
+      "L'alumne/a combina dos «si» independents en un mateix «per sempre» (llums amb la llum i motors amb la distància).|El alumno/a combina dos «si» independientes en un mismo «para siempre» (luces con la luz y motores con la distancia)."
+    ],
+    comp: [
+      "Competència digital (CD5): automatitzar un objecte quotidià amb un sensor|Competencia digital (CD5): automatizar un objeto cotidiano con un sensor",
+      "Pensament computacional: condicions amb «si… si no» i diverses decisions dins d'un bucle|Pensamiento computacional: condiciones con «si… si no» y varias decisiones dentro de un bucle",
+      "Ciències: el dia i la nit, la llum natural i artificial; estalvi d'energia|Ciencias: el día y la noche, la luz natural y artificial; ahorro de energía",
+      "Matemàtiques: llegir una gràfica d'un valor que canvia amb el temps|Matemáticas: leer una gráfica de un valor que cambia con el tiempo"
+    ],
+    vocab: [
+      ["Fanal automàtic|Farola automática", "Llum que s'encén i s'apaga sola segons la llum que hi ha.|Luz que se enciende y se apaga sola según la luz que hay."],
+      ["Llindar|Umbral", "Número que separa el dia de la nit al programa (per exemple, 100).|Número que separa el día de la noche en el programa (por ejemplo, 100)."],
+      ["Llums de sota (RGB)|Luces de abajo (RGB)", "Les 4 llums de colors de sota del Maqueen, numerades de l'1 al 4.|Las 4 luces de colores de debajo del Maqueen, numeradas del 1 al 4."],
+      ["Si no|Si no", "La part del «si» que es fa quan la condició no es compleix.|La parte del «si» que se hace cuando la condición no se cumple."],
+      ["Automatitzar|Automatizar", "Fer que una màquina faci una feina sola, sense que ningú l'hi digui cada vegada.|Hacer que una máquina haga un trabajo sola, sin que nadie se lo diga cada vez."]
+    ],
+    mat: {
+      aula: [
+        "Un ordinador per alumne/a amb Numi Tech obert a la sessió «El fanal automàtic»|Un ordenador por alumno/a con Numi Tech abierto en la sesión «La farola automática»",
+        "Projector i la presentació d'aquesta sessió|Proyector y la presentación de esta sesión",
+        "Un kit Maqueen per grup de 3-4 i una caixa de sabates per grup (amb un forat a cada costat curt, prou gran perquè hi passi el robot)|Un kit Maqueen por grupo de 3-4 y una caja de zapatos por grupo (con un agujero en cada lado corto, lo bastante grande para que pase el robot)",
+        "Cinta aïllant negra per fer el carrer i un llibre o una caixa que faci de paret final|Cinta aislante negra para hacer la calle y un libro o una caja que haga de pared final"
+      ],
+      imprimir: ["Targetes del carrer de fanals|Tarjetas de la calle de farolas", "Pista: el carrer amb el túnel|Pista: la calle con el túnel"],
+      prep: [
+        "Imprimir i retallar les targetes (un paquet per a tota la classe).|Imprimir y recortar las tarjetas (un paquete para toda la clase).",
+        "Preparar les caixes-túnel: obrir un forat a cada costat curt (uns 12 × 8 cm).|Preparar las cajas-túnel: abrir un agujero en cada lado corto (unos 12 × 8 cm).",
+        "Marcar a terra un carrer d'1 m amb la pista de l'imprimible (dues tires de cinta i la paret final).|Marcar en el suelo una calle de 1 m con la pista del imprimible (dos tiras de cinta y la pared final).",
+        "Provar les demos de les diapositives 6, 7 i 8.|Probar las demos de las diapositivas 6, 7 y 8."
+      ]
+    },
+    plan: [
+      { min: 4, t: "Benvinguda: els fanals de la plaça|Bienvenida: las farolas de la plaza", fase: 'inici',
+        fa: "Presenta l'encàrrec de l'electricista. Pregunta qui encén els fanals del seu carrer i a quina hora. Recull respostes i deixa la pregunta oberta fins a la diapositiva 4.|Presenta el encargo del electricista. Pregunta quién enciende las farolas de su calle y a qué hora. Recoge respuestas y deja la pregunta abierta hasta la diapositiva 4.",
+        diu: ["Algú encén els fanals un a un cada vespre?|¿Alguien enciende las farolas una a una cada tarde?", "A l'estiu i a l'hivern s'encenen a la mateixa hora?|¿En verano y en invierno se encienden a la misma hora?"],
+        slides: ['s1', 's2', 's3'], app: "Encara no.|Todavía no.", org: "Tot el grup|Todo el grupo" },
+      { min: 10, t: "El fanal: llindar, llums de sota i «si no»|La farola: umbral, luces de abajo y «si no»", fase: 'teoria',
+        fa: "Explica la gràfica de la llum d'un dia amb el llindar. Ensenya les 4 llums de sota en un robot real. Executa el fanal complet i, després, el que no té «si no»: que la classe digui què falla abans que torni la llum. Acaba amb el cotxe de la cercavila: dos «si» seguits dins el «per sempre».|Explica la gráfica de la luz de un día con el umbral. Enseña las 4 luces de abajo en un robot real. Ejecuta la farola completa y, después, la que no tiene «si no»: que la clase diga qué falla antes de que vuelva la luz. Acaba con el coche del pasacalles: dos «si» seguidos dentro del «para siempre».",
+        diu: ["On creua la línia vermella la gràfica? Què fa el fanal en aquell moment?|¿Dónde cruza la línea roja la gráfica? ¿Qué hace la farola en ese momento?", "Aquest fanal s'apagarà quan torni la llum? Per què?|¿Esta farola se apagará cuando vuelva la luz? ¿Por qué?"],
+        slides: ['s4', 's5', 's6', 's7', 's8'], app: "Encara no.|Todavía no.", org: "Tot el grup|Todo el grupo" },
+      { min: 10, t: "El carrer de fanals|La calle de farolas", fase: 'desconnectat',
+        fa: "La classe fa un carrer: 6-8 alumnes drets en fila són fanals i cadascú rep una targeta de llindar (50, 100, 150, 200). El professor/a fa de «cel» i va ensenyant targetes de llum que baixen (260, 200, 120, 25) i després pugen. Cada fanal aixeca els braços (encès) quan la llum és menor que el seu llindar i els abaixa quan no. Pregunteu: qui s'encén primer? Qui s'apaga l'últim? Quin llindar estalvia més llum? Torneu-ho a fer amb un fanal sense «si no» (un cop aixeca els braços, ja no els pot abaixar).|La clase hace una calle: 6-8 alumnos de pie en fila son farolas y cada uno recibe una tarjeta de umbral (50, 100, 150, 200). El profesor/a hace de «cielo» y va enseñando tarjetas de luz que bajan (260, 200, 120, 25) y después suben. Cada farola levanta los brazos (encendida) cuando la luz es menor que su umbral y los baja cuando no. Preguntad: ¿quién se enciende primero? ¿Quién se apaga el último? ¿Qué umbral ahorra más luz? Volvedlo a hacer con una farola sin «si no» (una vez levanta los brazos, ya no los puede bajar).",
+        diu: ["Llum 120: quins fanals estan encesos?|Luz 120: ¿qué farolas están encendidas?", "Quin és el fanal que gasta menys? I el que s'encén massa d'hora?|¿Cuál es la farola que gasta menos? ¿Y la que se enciende demasiado pronto?"],
+        slides: ['s9'], app: "Cap: activitat sense pantalla.|Ninguna: actividad sin pantalla.", org: "Tot el grup: 6-8 fanals i la resta d'observadors, que després canvien|Todo el grupo: 6-8 farolas y el resto de observadores, que después cambian" },
+      { min: 10, t: "A l'ordinador: descobreix i prova|En el ordenador: descubre y prueba", fase: 'ordinador',
+        fa: "Avancen fins a la pausa activa. A «On acabarà?», que expliquin quan és fosc i quan no. «Fanals del meu carrer» és per a casa.|Avanzan hasta la pausa activa. En «¿Dónde terminará?», que expliquen cuándo está oscuro y cuándo no. «Farolas de mi calle» es para casa.",
+        diu: ["Quants segons és fosc a la prova? Quants centímetres fa el robot?|¿Cuántos segundos está oscuro en la prueba? ¿Cuántos centímetros hace el robot?"],
+        slides: ['s10'], app: "Del «Recorda» a la «Pausa activa»: repàs, la missió, «Descobreix», la condició de nit, «On acabarà?», ordenar el dia del fanal, «Fanals del meu carrer» (casa) i «Toca el bloc».|Del «Recuerda» a la «Pausa activa»: repaso, la misión, «Descubre», la condición de noche, «¿Dónde terminará?», ordenar el día de la farola, «Farolas de mi calle» (casa) y «Toca el bloque».", org: "Individual|Individual" },
+      { min: 13, t: "El túnel del carrer|El túnel de la calle", fase: 'robot',
+        fa: "Grups de 3-4 per kit. Primer, el fanal: carregueu el codi del fanal i poseu la caixa de sabates damunt el robot: les llums de sota s'han d'encendre; traieu la caixa i s'han d'apagar. Si no funciona, mesureu la llum amb el codi de la sessió 1 (dins la caixa i fora) i canvieu el 100. Després, el cotxe de la cercavila: carrer de cinta d'1 m, la caixa fa de túnel a la meitat i un llibre fa de paret al final. Carregueu el programa del cotxe: ha d'encendre els llums del cotxe dins el túnel, apagar-los en sortir i parar davant la paret. Seguretat: carrer a terra, el pilot recull el robot si es desvia.|Grupos de 3-4 por kit. Primero, la farola: cargad el código de la farola y poned la caja de zapatos encima del robot: las luces de abajo se tienen que encender; quitad la caja y se tienen que apagar. Si no funciona, medid la luz con el código de la sesión 1 (dentro de la caja y fuera) y cambiad el 100. Después, el coche del pasacalles: calle de cinta de 1 m, la caja hace de túnel en el medio y un libro hace de pared al final. Cargad el programa del coche: tiene que encender las luces del coche dentro del túnel, apagarlas al salir y parar delante de la pared. Seguridad: calle en el suelo, el piloto recoge el robot si se desvía.",
+        diu: ["Quant marca la llum dins la caixa? I a fora? On posaríeu el llindar?|¿Cuánto marca la luz dentro de la caja? ¿Y fuera? ¿Dónde pondríais el umbral?", "Dins el túnel s'encenen els llums? I en sortir, s'apaguen? Quina part del programa ho fa?|¿Dentro del túnel se encienden las luces? ¿Y al salir, se apagan? ¿Qué parte del programa lo hace?"],
+        slides: ['s11', 's12'], app: "Cap: MakeCode i el robot de veritat.|Ninguna: MakeCode y el robot de verdad.", org: "Grups de 3-4 per kit amb papers|Grupos de 3-4 por kit con papeles" },
+      { min: 7, t: "Reptes del fanal|Retos de la farola", fase: 'ordinador',
+        fa: "Pausa activa i els quatre reptes. Al repte 1 (5 blocs), el «repeteix». Al 3, han de veure que sense «si no» falla al matí. Al 4, que comparin amb el túnel que acaben de provar.|Pausa activa y los cuatro retos. En el reto 1 (5 bloques), el «repite». En el 3, tienen que ver que sin «si no» falla por la mañana. En el 4, que comparen con el túnel que acaban de probar.",
+        diu: ["Per què el fanal del repte 2 funciona sense «si no» i el del 3, no?|¿Por qué la farola del reto 2 funciona sin «si no» y la del 3, no?"],
+        slides: ['s13'], app: "«Pausa activa» i els reptes 1 a 4: el llum intermitent, el fanal de la plaça, de la nit al dia i el cotxe de la cercavila.|«Pausa activa» y los retos 1 a 4: la luz intermitente, la farola de la plaza, de la noche al día y el coche del pasacalles.", org: "Individual|Individual" },
+      { min: 3, t: "Crea: el meu fanal de festa|Crea: mi farola de fiesta", fase: 'crea',
+        fa: "Cada alumne/a dissenya el seu fanal de festa i el desa.|Cada alumno/a diseña su farola de fiesta y la guarda.",
+        diu: ["Quins colors tindrà el teu fanal? Fa alguna cosa amb el botó A?|¿Qué colores tendrá tu farola? ¿Hace algo con el botón A?"],
+        slides: ['s14'], app: "Pas «Crea»: El meu fanal de festa.|Paso «Crea»: Mi farola de fiesta.", org: "Individual|Individual" },
+      { min: 3, t: "Tancament i tiquet de sortida|Cierre y ticket de salida", fase: 'tancament',
+        fa: "Resum, preguntes finals de l'app i tiquet a la porta.|Resumen, preguntas finales de la app y ticket en la puerta.",
+        diu: ["Què li falta a un fanal que no s'apaga mai?|¿Qué le falta a una farola que no se apaga nunca?"],
+        slides: ['s15', 's16'], app: "«Tancament».|«Cierre».", org: "Tot el grup|Todo el grupo" }
+    ],
+    errors: [
+      ["Fa servir «llum > 100» i el fanal s'encén de dia.|Usa «luz > 100» y la farola se enciende de día.",
+        "Pregunta: de nit, la llum és un número gran o petit? Llavors, quin signe vols?|Pregunta: de noche, ¿la luz es un número grande o pequeño? Entonces, ¿qué signo quieres?"],
+      ["No posa «si no» i el fanal es queda encès quan torna la llum.|No pone «si no» y la farola se queda encendida cuando vuelve la luz.",
+        "Que miri el tauler quan torna el dia: quin bloc s'executa ara? N'hi ha cap que apagui?|Que mire el panel cuando vuelve el día: ¿qué bloque se ejecuta ahora? ¿Hay alguno que apague?"],
+      ["Al cotxe de la cercavila, posa el «si» de la distància dins del «si» de la llum, i el robot només es mou de nit.|En el coche del pasacalles, pone el «si» de la distancia dentro del «si» de la luz, y el robot solo se mueve de noche.",
+        "Que digui en veu alta les dues preguntes: depenen l'una de l'altra? Que posi els dos «si» un darrere l'altre.|Que diga en voz alta las dos preguntas: ¿dependen la una de la otra? Que ponga los dos «si» uno detrás del otro."],
+      ["Programa el fanal amb un «espera» fins a la nit i a la segona pista falla.|Programa la farola con un «espera» hasta la noche y en la segunda pista falla.",
+        "Pregunta: el fanal de veritat sap a quina hora es farà fosc demà? Què pot mirar en lloc del rellotge?|Pregunta: ¿la farola de verdad sabe a qué hora oscurecerá mañana? ¿Qué puede mirar en lugar del reloj?"],
+      ["Al robot real, el fanal no s'encén dins la caixa perquè hi entra massa llum.|En el robot real, la farola no se enciende dentro de la caja porque entra demasiada luz.",
+        "Que mesuri dins i fora amb el codi de la sessió 1 i triï un llindar entre els dos números.|Que mida dentro y fuera con el código de la sesión 1 y elija un umbral entre los dos números."]
+    ],
+    diff: {
+      mes: "Fer un fanal de tres nivells: llum > 200 apagat; entre 100 i 200, una sola llum de sota (posta de sol); menys de 100, totes. Al robot real, fer que dins el túnel també soni un avís curt.|Hacer una farola de tres niveles: luz > 200 apagada; entre 100 y 200, una sola luz de abajo (puesta de sol); menos de 100, todas. En el robot real, hacer que dentro del túnel también suene un aviso corto.",
+      menys: "Començar pel fanal del repte 2 (només encendre) i afegir el «si no» amb la pista del repte 3. Al robot real, provar només el fanal amb la caixa.|Empezar por la farola del reto 2 (solo encender) y añadir el «si no» con la pista del reto 3. En el robot real, probar solo la farola con la caja."
+    },
+    aval: {
+      ticket: ["Escriu la condició que diu «és de nit» amb un llindar de 100.|Escribe la condición que dice «es de noche» con un umbral de 100.",
+        "Per què el fanal necessita el «si no»?|¿Por qué la farola necesita el «si no»?"],
+      rubric: [
+        ["Condició de nit|Condición de noche", "Escriu «llum < llindar» i tria el llindar entre els valors de dia i de nit.|Escribe «luz < umbral» y elige el umbral entre los valores de día y de noche.", "Fa servir la llum, però confon el signe o tria el llindar a l'atzar.|Usa la luz, pero confunde el signo o elige el umbral al azar."],
+        ["Encendre i apagar|Encender y apagar", "Fa servir el «si no» perquè el fanal s'apagui quan torna la llum.|Usa el «si no» para que la farola se apague cuando vuelve la luz.", "El fanal s'encén, però necessita ajuda per apagar-lo.|La farola se enciende, pero necesita ayuda para apagarla."],
+        ["Diverses decisions|Varias decisiones", "Combina dos «si» independents (llums i motors) al mateix «per sempre».|Combina dos «si» independientes (luces y motores) en el mismo «para siempre».", "Programa cada decisió per separat, però encara no les sap ajuntar.|Programa cada decisión por separado, pero todavía no las sabe juntar."]
+      ]
+    },
+    casa: "A casa, feu «Fanals del meu carrer»: mireu a quina hora s'encenen els fanals dos dies diferents i busqueu altres llums automàtics. Quin sensor deuen tenir?|En casa, haced «Farolas de mi calle»: mirad a qué hora se encienden las farolas dos días diferentes y buscad otras luces automáticas. ¿Qué sensor deben de tener?",
+    slides: [
+      { id: 's1', k: 'portada', t: "El fanal automàtic|La farola automática", x: "Fanals que s'encenen sols quan es fa fosc… i que s'apaguen sols al matí.|Farolas que se encienden solas cuando oscurece… y que se apagan solas por la mañana.",
+        nota: "Objectiu: un fanal automàtic al simulador i un cotxe que encén els llums dins un túnel de veritat.|Objetivo: una farola automática en el simulador y un coche que enciende las luces dentro de un túnel de verdad." },
+      { id: 's2', k: 'pregunta', t: "Qui encén els fanals?|¿Quién enciende las farolas?", x: "Algú passa cada vespre a encendre'ls? Com saben quan s'han d'encendre?|¿Alguien pasa cada tarde a encenderlas? ¿Cómo saben cuándo se tienen que encender?",
+        nota: "Molts fanals tenen un sensor de llum (fotocèl·lula) o un rellotge programat. Avui farem servir el sensor.|Muchas farolas tienen un sensor de luz (fotocélula) o un reloj programado. Hoy usaremos el sensor." },
+      { id: 's3', k: 'repas', t: "Recordem les alarmes|Recordemos las alarmas", punts: ["Quant dura una nota d'1 temps?|¿Cuánto dura una nota de 1 tiempo?", "Què passava si l'alarma no tenia «si no»?|¿Qué pasaba si la alarma no tenía «si no»?"],
+        nota: "Respostes: 0,5 s; es quedava vermella per sempre. Avui el «si no» tornarà a ser clau.|Respuestas: 0,5 s; se quedaba roja para siempre. Hoy el «si no» volverá a ser clave." },
+      { id: 's4', k: 'anim', t: "La llum d'un dia i el llindar|La luz de un día y el umbral", anim: 'k5lamp', x: "Quan la llum baixa de 100, el fanal s'encén; quan torna a pujar, s'apaga.|Cuando la luz baja de 100, la farola se enciende; cuando vuelve a subir, se apaga.",
+        nota: "Assenyala els dos punts on la corba creua el llindar: al vespre (s'encén) i al matí (s'apaga).|Señala los dos puntos donde la curva cruza el umbral: por la tarde (se enciende) y por la mañana (se apaga)." },
+      { id: 's5', k: 'concepte', t: "Les 4 llums de sota|Las 4 luces de abajo", punts: ["Numerades de l'1 al 4.|Numeradas del 1 al 4.", "Totes alhora o una a una.|Todas a la vez o una a una.", "Vermell, taronja, groc, verd, blau, porpra, blanc o apagat.|Rojo, naranja, amarillo, verde, azul, púrpura, blanco o apagado.", "RGB: barreja de vermell, verd i blau.|RGB: mezcla de rojo, verde y azul."],
+        nota: "Ensenya-les en un robot real amb un programa de colors. Al MakeCode real fan servir l'extensió «neopixel», que el codi de l'imprimible ja inclou.|Enséñalas en un robot real con un programa de colores. En el MakeCode real usan la extensión «neopixel», que el código del imprimible ya incluye." },
+      { id: 's6', k: 'robo', t: "El fanal complet|La farola completa", x: "Als 2 s es fa fosc i als 5 torna la llum. Què faran les llums de sota?|A los 2 s oscurece y a los 5 vuelve la luz. ¿Qué harán las luces de abajo?",
+        robo: { w: { w: 100, h: 50, bot: [50, 25, 90], env: [{ t: 2, dark: true }, { t: 5, dark: false }], time: 7 }, prog: 'forever{ if:lL<100{ under:all,white } else{ under:all,black } }' },
+        nota: "Que mirin el tauler: la llum passa de 260 a 25 i torna a 260.|Que miren el panel: la luz pasa de 260 a 25 y vuelve a 260." },
+      { id: 's7', k: 'robo', t: "Compte: sense «si no»|Cuidado: sin «si no»", x: "Mateixa prova, sense «si no». S'apagarà a l'últim segon?|Misma prueba, sin «si no». ¿Se apagará en el último segundo?",
+        robo: { w: { w: 100, h: 50, bot: [50, 25, 90], env: [{ t: 2, dark: true }, { t: 5, dark: false }], time: 7 }, prog: 'forever{ if:lL<100{ under:all,white } }' },
+        nota: "No s'apaga: els llums es queden com estan fins que un bloc els canvia. Relaciona-ho amb l'alarma de la sessió 2.|No se apaga: las luces se quedan como están hasta que un bloque las cambia. Relaciónalo con la alarma de la sesión 2." },
+      { id: 's8', k: 'robo', t: "El cotxe de la cercavila|El coche del pasacalles", x: "Dos «si» seguits: un per als llums (llum) i un per als motors (distància).|Dos «si» seguidos: uno para las luces (luz) y uno para los motores (distancia).",
+        robo: { w: { w: 120, h: 50, bot: [12, 25, 90], walls: [[104, 8, 6, 34]], env: [{ t: 2.5, dark: true }], time: 11 }, prog: 'forever{ if:lL<100{ car:all,white } else{ car:all,black } if:dist<10{ stop:all } else{ run:all,fwd,120 } }' },
+        blocks: ["si llum < 100 → llums blancs; si no → apagats|si luz < 100 → luces blancas; si no → apagadas", "si distància < 10 → atura; si no → endavant|si distancia < 10 → para; si no → adelante"],
+        nota: "Les dues decisions no depenen l'una de l'altra: per això van una darrere l'altra, no una dins l'altra.|Las dos decisiones no dependen la una de la otra: por eso van una detrás de la otra, no una dentro de la otra." },
+      { id: 's9', k: 'activitat', t: "El carrer de fanals|La calle de farolas", timer: 10, punts: ["Cada fanal té un llindar (50, 100, 150 o 200).|Cada farola tiene un umbral (50, 100, 150 o 200).", "Llum menor que el teu llindar → braços amunt.|Luz menor que tu umbral → brazos arriba.", "Si no → braços avall.|Si no → brazos abajo.", "Ronda 2: un fanal sense «si no».|Ronda 2: una farola sin «si no»."],
+        nota: "Ves ensenyant targetes de llum a poc a poc. Pregunta qui s'encén primer (el llindar més alt) i quin estalvia més (el més baix).|Ve enseñando tarjetas de luz despacio. Pregunta quién se enciende primero (el umbral más alto) y cuál ahorra más (el más bajo)." },
+      { id: 's10', k: 'activitat', t: "Ara, a l'ordinador|Ahora, al ordenador", timer: 10, punts: ["Obre «El fanal automàtic».|Abre «La farola automática».", "Fes fins a «Toca el bloc».|Haz hasta «Toca el bloque».", "Para a la «Pausa activa».|Para en la «Pausa activa»."],
+        nota: "Resposta de «On acabarà?»: A (només avança els 2 s de foscor, uns 23 cm).|Respuesta de «¿Dónde terminará?»: A (solo avanza los 2 s de oscuridad, unos 23 cm)." },
+      { id: 's11', k: 'activitat', t: "El túnel del carrer|El túnel de la calle", timer: 13, punts: ["Fanal: caixa damunt → llums encesos; sense caixa → apagats.|Farola: caja encima → luces encendidas; sin caja → apagadas.", "Si no va, mesureu la llum i canvieu el 100.|Si no va, medid la luz y cambiad el 100.", "Cotxe: carrer amb túnel i paret final.|Coche: calle con túnel y pared final.", "Llums dins el túnel, apagats a fora, para a la paret.|Luces dentro del túnel, apagadas fuera, para en la pared."],
+        nota: "La caixa ha de tapar bé el sensor: si hi entra massa llum, que hi posin un drap a sobre.|La caja tiene que tapar bien el sensor: si entra demasiada luz, que pongan un trapo encima." },
+      { id: 's12', k: 'robo', t: "El cotxe i el túnel|El coche y el túnel", x: "Al simulador es fa fosc amb el temps; a l'aula, la caixa fa la foscor.|En el simulador oscurece con el tiempo; en el aula, la caja hace la oscuridad.",
+        robo: { w: { w: 120, h: 50, bot: [12, 25, 90], walls: [[104, 8, 6, 34]], env: [{ t: 2.5, dark: true }, { t: 5.5, dark: false }], time: 11 }, prog: 'forever{ if:lL<100{ car:all,white } else{ car:all,black } if:dist<10{ stop:all } else{ run:all,fwd,120 } }' },
+        nota: "Aquí la foscor dura de 2,5 a 5,5 s, com si el robot travessés el túnel. Al robot real passa el mateix quan entra i surt de la caixa.|Aquí la oscuridad dura de 2,5 a 5,5 s, como si el robot atravesara el túnel. En el robot real pasa lo mismo cuando entra y sale de la caja." },
+      { id: 's13', k: 'repte', t: "Reptes del fanal|Retos de la farola", timer: 7, punts: ["1. El llum intermitent (5 blocs)|1. La luz intermitente (5 bloques)", "2. El fanal de la plaça|2. La farola de la plaza", "3. De la nit al dia|3. De la noche al día", "4. El cotxe de la cercavila|4. El coche del pasacalles"],
+        nota: "Al 3, el programa de partida ja encén el fanal: només cal afegir el «si no».|En el 3, el programa de partida ya enciende la farola: solo hay que añadir el «si no»." },
+      { id: 's14', k: 'activitat', t: "Crea: el meu fanal de festa|Crea: mi farola de fiesta", timer: 3, x: "S'encén de nit com tu vulguis i s'apaga de dia. I el botó A?|Se enciende de noche como tú quieras y se apaga de día. ¿Y el botón A?",
+        nota: "Anima'ls a fer servir les llums de sota una a una, de colors diferents.|Anímalos a usar las luces de abajo una a una, de colores diferentes." },
+      { id: 's15', k: 'resum', t: "Què hem après avui|Qué hemos aprendido hoy", punts: ["Fanal: si llum < llindar, encès; si no, apagat.|Farola: si luz < umbral, encendida; si no, apagada.", "Sense «si no», no s'apaga mai.|Sin «si no», no se apaga nunca.", "Dos «si» seguits fan dues feines alhora.|Dos «si» seguidos hacen dos trabajos a la vez."],
+        nota: "Propera sessió: el projecte de la casa intel·ligent, que ho junta tot.|Próxima sesión: el proyecto de la casa inteligente, que lo junta todo." },
+      { id: 's16', k: 'tiquet', t: "Tiquet de sortida|Ticket de salida", punts: ["Escriu la condició «és de nit».|Escribe la condición «es de noche».", "Per què cal el «si no»?|¿Por qué hace falta el «si no»?"],
+        nota: "Respostes: llum < 100; perquè s'apagui quan torna la llum.|Respuestas: luz < 100; para que se apague cuando vuelve la luz." }
+    ],
+    print: [
+      { id: 'p1', t: "Targetes del carrer de fanals|Tarjetas de la calle de farolas", k: 'targetes',
+        intro: "Targetes de llindar per als fanals (una per alumne/a que fa de fanal) i targetes de llum per al professor/a, que fa de cel.|Tarjetas de umbral para las farolas (una por alumno/a que hace de farola) y tarjetas de luz para el profesor/a, que hace de cielo.",
+        items: [
+          { t: "Llindar 50 🏮|Umbral 50 🏮", n: 2 }, { t: "Llindar 100 🏮|Umbral 100 🏮", n: 2 }, { t: "Llindar 150 🏮|Umbral 150 🏮", n: 2 }, { t: "Llindar 200 🏮|Umbral 200 🏮", n: 2 },
+          { t: "Llum 260 ☀️|Luz 260 ☀️", n: 1 }, { t: "Llum 200 🌤️|Luz 200 🌤️", n: 1 }, { t: "Llum 120 🌇|Luz 120 🌇", n: 1 }, { t: "Llum 25 🌙|Luz 25 🌙", n: 1 }
+        ] },
+      { id: 'p2', t: "Pista: el carrer amb el túnel|Pista: la calle con el túnel", k: 'pista',
+        intro: "Carrer d'1 m: dues tires de cinta negra separades 20 cm, la caixa de sabates a la meitat fent de túnel i un llibre dret al final fent de paret. El robot surt de l'esquerra.|Calle de 1 m: dos tiras de cinta negra separadas 20 cm, la caja de zapatos en el medio haciendo de túnel y un libro de pie al final haciendo de pared. El robot sale de la izquierda.",
+        w: { w: 100, h: 30, bot: [8, 15, 90], lines: [{ p: [[2, 5], [98, 5]] }, { p: [[2, 25], [98, 25]] }], zones: [{ id: 't', r: [38, 6, 24, 18], col: 'grey', label: 'TÚNEL|TÚNEL' }], walls: [[92, 7, 4, 16]] },
+        items: [
+          { q: "Llum fora del túnel: ______ · dins del túnel: ______ · el nostre llindar: ______|Luz fuera del túnel: ______ · dentro del túnel: ______ · nuestro umbral: ______" },
+          { q: "S'encenen els llums dins el túnel? S'apaguen en sortir?|¿Se encienden las luces dentro del túnel? ¿Se apagan al salir?" },
+          { q: "A quina distància de la paret s'ha aturat? ______ cm|¿A qué distancia de la pared se ha parado? ______ cm" }
+        ] }
+    ]
+  },
+
+  /* ---------- Sessió 4 · Projecte: la casa intel·ligent ---------- */
+  'k5-4': {
+    obj: [
+      "L'alumne/a planifica un projecte amb una taula de funcions (sensor o botó, condició i acció) abans de programar-lo.|El alumno/a planifica un proyecto con una tabla de funciones (sensor o botón, condición y acción) antes de programarlo.",
+      "L'alumne/a fa servir diversos guions alhora («en iniciar», «per sempre», «en prémer A / B») i evita que dos guions manin el mateix actuador.|El alumno/a usa varios guiones a la vez («al iniciar», «para siempre», «al pulsar A / B») y evita que dos guiones manden el mismo actuador.",
+      "L'alumne/a fa servir condicions dobles amb «i» per combinar la llum i la distància.|El alumno/a usa condiciones dobles con «y» para combinar la luz y la distancia.",
+      "L'alumne/a programa, prova i presenta una casa intel·ligent amb llum de nit, timbre i vigilant, al simulador i al robot real.|El alumno/a programa, prueba y presenta una casa inteligente con luz de noche, timbre y vigilante, en el simulador y en el robot real."
+    ],
+    comp: [
+      "Competència digital (CD5): dissenyar i depurar un sistema automàtic per parts|Competencia digital (CD5): diseñar y depurar un sistema automático por partes",
+      "Pensament computacional: descomposició, esdeveniments en paral·lel i condicions compostes|Pensamiento computacional: descomposición, eventos en paralelo y condiciones compuestas",
+      "Tecnologia: la domòtica i l'estalvi d'energia a casa|Tecnología: la domótica y el ahorro de energía en casa",
+      "Comunicació oral: presentar un projecte i explicar com funciona|Comunicación oral: presentar un proyecto y explicar cómo funciona"
+    ],
+    vocab: [
+      ["Domòtica|Domótica", "Tecnologia que fa que una casa faci coses sola (llums, persianes, alarmes).|Tecnología que hace que una casa haga cosas sola (luces, persianas, alarmas)."],
+      ["Planificar|Planificar", "Decidir què farà el projecte i com, abans de programar-lo.|Decidir qué hará el proyecto y cómo, antes de programarlo."],
+      ["Guions en paral·lel|Guiones en paralelo", "Diversos guions que funcionen alhora, cadascun amb la seva feina.|Varios guiones que funcionan a la vez, cada uno con su trabajo."],
+      ["Condició doble («i»)|Condición doble («y»)", "Una pregunta que només és certa si ho són les dues parts.|Una pregunta que solo es cierta si lo son las dos partes."],
+      ["Provar per parts|Probar por partes", "Programar una funció, comprovar-la i, després, afegir-ne una altra.|Programar una función, comprobarla y, después, añadir otra."]
+    ],
+    mat: {
+      aula: [
+        "Un ordinador per alumne/a amb Numi Tech obert a «Projecte: la casa intel·ligent»|Un ordenador por alumno/a con Numi Tech abierto en «Proyecto: la casa inteligente»",
+        "Projector i la presentació d'aquesta sessió|Proyector y la presentación de esta sesión",
+        "Un kit Maqueen per grup de 3-4 i una caixa de cartró gran per grup per fer la casa (amb una porta retallada)|Un kit Maqueen por grupo de 3-4 y una caja de cartón grande por grupo para hacer la casa (con una puerta recortada)",
+        "Una llanterna per grup, un llibre que faci de visitant i retoladors per decorar la casa|Una linterna por grupo, un libro que haga de visitante y rotuladores para decorar la casa"
+      ],
+      imprimir: ["Fitxa: el plànol i la taula del projecte|Ficha: el plano y la tabla del proyecto", "Codi MakeCode: la casa intel·ligent|Código MakeCode: la casa inteligente"],
+      prep: [
+        "Imprimir una fitxa del projecte per alumne/a.|Imprimir una ficha del proyecto por alumno/a.",
+        "Retallar una porta a cada caixa (uns 15 × 10 cm) perquè el robot pugui vigilar l'entrada des de dins.|Recortar una puerta en cada caja (unos 15 × 10 cm) para que el robot pueda vigilar la entrada desde dentro.",
+        "Preparar un racó per a la presentació final, amb un robot muntat a dins d'una casa de prova.|Preparar un rincón para la presentación final, con un robot montado dentro de una casa de prueba.",
+        "Provar les demos de les diapositives 6 i 8.|Probar las demos de las diapositivas 6 y 8."
+      ]
+    },
+    plan: [
+      { min: 4, t: "Benvinguda: la casa d'exposició|Bienvenida: la casa de exposición", fase: 'inici',
+        fa: "Presenta el projecte final de la unitat. Pregunta què fa una casa intel·ligent i recull idees. Repassa el fanal i el timbre amb les preguntes de la diapositiva 3.|Presenta el proyecto final de la unidad. Pregunta qué hace una casa inteligente y recoge ideas. Repasa la farola y el timbre con las preguntas de la diapositiva 3.",
+        diu: ["Quines coses podria fer sola una casa?|¿Qué cosas podría hacer sola una casa?", "Quins sensors i quins avisos ja sabem fer servir?|¿Qué sensores y qué avisos ya sabemos usar?"],
+        slides: ['s1', 's2', 's3'], app: "Encara no.|Todavía no.", org: "Tot el grup|Todo el grupo" },
+      { min: 8, t: "Planificar, guions alhora i «i»|Planificar, guiones a la vez e «y»", fase: 'teoria',
+        fa: "Mostra la taula del projecte i omple'n una fila amb la classe. Executa la demo dels guions alhora i la dels guions que es barallen: que la classe expliqui per què el vermell no es veu. Explica la condició doble amb «i» amb els quatre casos.|Muestra la tabla del proyecto y rellena una fila con la clase. Ejecuta la demo de los guiones a la vez y la de los guiones que se pelean: que la clase explique por qué el rojo no se ve. Explica la condición doble con «y» con los cuatro casos.",
+        diu: ["Per a la llum de nit: quin sensor, quina condició, què fa?|Para la luz de noche: ¿qué sensor, qué condición, qué hace?", "Per què el botó A no aconsegueix posar el vermell?|¿Por qué el botón A no consigue poner el rojo?", "De dia i amb algú a prop: sona l'alarma?|De día y con alguien cerca: ¿suena la alarma?"],
+        slides: ['s4', 's5', 's6', 's7', 's8'], app: "Encara no.|Todavía no.", org: "Tot el grup|Todo el grupo" },
+      { min: 10, t: "El plànol de la casa|El plano de la casa", fase: 'desconnectat',
+        fa: "Cada alumne/a omple la fitxa: dibuixa el plànol (rebedor, porta, on és el robot) i completa la taula amb tres funcions com a mínim. Després, per parelles, intercanvien la fitxa i el company/a busca dos problemes: un actuador manat per dos guions o una funció sense sensor. Corregeixen la seva taula.|Cada alumno/a rellena la ficha: dibuja el plano (recibidor, puerta, dónde está el robot) y completa la tabla con tres funciones como mínimo. Después, por parejas, intercambian la ficha y el compañero/a busca dos problemas: un actuador mandado por dos guiones o una función sin sensor. Corrigen su tabla.",
+        diu: ["Cada funció té el seu sensor o botó?|¿Cada función tiene su sensor o botón?", "Hi ha algun llum que el manin dos guions?|¿Hay alguna luz que la manden dos guiones?"],
+        slides: ['s9'], app: "Cap: activitat sense pantalla (la fitxa servirà per al projecte).|Ninguna: actividad sin pantalla (la ficha servirá para el proyecto).", org: "Individual i després per parelles|Individual y después por parejas" },
+      { min: 12, t: "A l'ordinador: les tres parts|En el ordenador: las tres partes", fase: 'ordinador',
+        fa: "Fan el principi de la sessió (repàs, missió, «Descobreix», ordenar els passos, «Toca el bloc» i la pausa) i les tres parts: la porta amb dos botons, benvinguda o alarma, i el majordom. El pas «El plànol de la meva casa» ja l'han fet en paper: poden tocar «Ho he fet».|Hacen el principio de la sesión (repaso, misión, «Descubre», ordenar los pasos, «Toca el bloque» y la pausa) y las tres partes: la puerta con dos botones, bienvenida o alarma, y el mayordomo. El paso «El plano de mi casa» ya lo han hecho en papel: pueden tocar «Lo he hecho».",
+        diu: ["A la part 2, quina pregunta va primer, la doble o la simple? Per què?|En la parte 2, ¿qué pregunta va primero, la doble o la simple? ¿Por qué?", "Al majordom, qui engega els motors i qui els atura?|En el mayordomo, ¿quién arranca los motores y quién los para?"],
+        slides: ['s10', 's11'], app: "Del «Recorda» a la part 3: repàs, la missió, «Descobreix», ordenar els passos, el plànol (ja fet), «Toca el bloc», la pausa i les parts 1, 2 i 3.|Del «Recuerda» a la parte 3: repaso, la misión, «Descubre», ordenar los pasos, el plano (ya hecho), «Toca el bloque», la pausa y las partes 1, 2 y 3.", org: "Individual|Individual" },
+      { min: 14, t: "La casa de cartró amb el Maqueen|La casa de cartón con el Maqueen", fase: 'robot',
+        fa: "Grups de 3-4 per kit. Munten la casa amb la caixa: el robot a dins, mirant la porta. Carreguen el codi de la casa de l'imprimible (o el que hagin fet, passant-lo amb el botó del codi MakeCode del simulador) i proven les tres funcions una a una: tapar la casa (o apagar el llum del racó) per a la llum de nit; prémer A per al timbre; acostar el llibre a la porta per al vigilant. El secretari/ària apunta a la fitxa què funciona i què han hagut de canviar (llindars, distàncies). Seguretat: la casa a terra o al centre de la taula; el robot no es mou en aquesta prova.|Grupos de 3-4 por kit. Montan la casa con la caja: el robot dentro, mirando la puerta. Cargan el código de la casa del imprimible (o el que hayan hecho, pasándolo con el botón del código MakeCode del simulador) y prueban las tres funciones una a una: tapar la casa (o apagar la luz del rincón) para la luz de noche; pulsar A para el timbre; acercar el libro a la puerta para el vigilante. El secretario/a apunta en la ficha qué funciona y qué han tenido que cambiar (umbrales, distancias). Seguridad: la casa en el suelo o en el centro de la mesa; el robot no se mueve en esta prueba.",
+        diu: ["Proveu una funció cada vegada: quina falla? Quin número hi canviaríeu?|Probad una función cada vez: ¿cuál falla? ¿Qué número cambiaríais?", "Funciona igual que al simulador? Què ha canviat?|¿Funciona igual que en el simulador? ¿Qué ha cambiado?"],
+        slides: ['s12', 's13'], app: "Cap: MakeCode i el robot de veritat.|Ninguna: MakeCode y el robot de verdad.", org: "Grups de 3-4 per kit amb papers|Grupos de 3-4 por kit con papeles" },
+      { min: 8, t: "Crea: la meva casa intel·ligent|Crea: mi casa inteligente", fase: 'crea',
+        fa: "Cada alumne/a programa al simulador la casa del seu plànol (llum de nit, timbre i vigilant com a mínim) i la desa. Qui acabi, hi afegeix una funció extra (botó B, colors, melodia).|Cada alumno/a programa en el simulador la casa de su plano (luz de noche, timbre y vigilante como mínimo) y la guarda. Quien termine, añade una función extra (botón B, colores, melodía).",
+        diu: ["Comprova cada criteri: la llum de nit, el timbre, el vigilant.|Comprueba cada criterio: la luz de noche, el timbre, el vigilante.", "Quina funció extra hi has afegit?|¿Qué función extra has añadido?"],
+        slides: ['s14'], app: "Pas «Crea»: La meva casa intel·ligent.|Paso «Crea»: Mi casa inteligente.", org: "Individual|Individual" },
+      { min: 4, t: "Presentacions i tiquet|Presentaciones y ticket", fase: 'tancament',
+        fa: "Dos o tres grups presenten la seva casa de cartró en un minut: quines funcions té i què van haver de canviar. Repassa el resum, deixa fer les preguntes finals de l'app i fes el tiquet a la porta.|Dos o tres grupos presentan su casa de cartón en un minuto: qué funciones tiene y qué tuvieron que cambiar. Repasa el resumen, deja hacer las preguntas finales de la app y haz el ticket en la puerta.",
+        diu: ["Quina funció us ha costat més? Com l'heu arreglada?|¿Qué función os ha costado más? ¿Cómo la habéis arreglado?"],
+        slides: ['s15', 's16'], app: "«Tancament».|«Cierre».", org: "Tot el grup|Todo el grupo" }
+    ],
+    errors: [
+      ["Ho programa tot de cop i, quan falla, no sap quina part és.|Lo programa todo de golpe y, cuando falla, no sabe qué parte es.",
+        "Que esborri (o desactivi) totes les funcions menys una i la provi sola. Funciona? Llavors, la següent.|Que borre (o desactive) todas las funciones menos una y la pruebe sola. ¿Funciona? Entonces, la siguiente."],
+      ["Posa el mateix llum al botó A i al «per sempre», i el botó sembla que no faci res.|Pone la misma luz en el botón A y en el «para siempre», y parece que el botón no hace nada.",
+        "Recorda la demo dels guions que es barallen: qui guanya? Que el botó faci servir un altre actuador (una nota, una icona).|Recuerda la demo de los guiones que se pelean: ¿quién gana? Que el botón use otro actuador (una nota, un icono)."],
+      ["A «benvinguda o alarma», posa primer el «si distància < 25» i l'alarma de nit no surt mai.|En «bienvenida o alarma», pone primero el «si distancia < 25» y la alarma de noche no sale nunca.",
+        "Pregunta: de nit i amb algú a prop, quina pregunta respon sí primer? Que posi la pregunta doble al davant.|Pregunta: de noche y con alguien cerca, ¿qué pregunta responde sí primero? Que ponga la pregunta doble delante."],
+      ["Al majordom, posa un «espera» per arribar a la porta i a l'altra pista xoca.|En el mayordomo, pone un «espera» para llegar a la puerta y en la otra pista choca.",
+        "Pregunta: el robot sap a quina distància és la porta? Quin sensor li ho pot dir mentre avança?|Pregunta: ¿el robot sabe a qué distancia está la puerta? ¿Qué sensor se lo puede decir mientras avanza?"],
+      ["Al robot real, la llum de nit no s'encén perquè la caixa deixa entrar llum per la porta.|En el robot real, la luz de noche no se enciende porque la caja deja entrar luz por la puerta.",
+        "Que mesuri la llum dins la casa (codi de la sessió 1) i ajusti el llindar, o que enfosqueixi el racó.|Que mida la luz dentro de la casa (código de la sesión 1) y ajuste el umbral, o que oscurezca el rincón."]
+    ],
+    diff: {
+      mes: "Afegir un mode festa amb el botó B (colors de sota diferents i una melodia) i una alarma de dos nivells; presentar-ho explicant quin guió fa cada feina.|Añadir un modo fiesta con el botón B (colores de abajo diferentes y una melodía) y una alarma de dos niveles; presentarlo explicando qué guion hace cada trabajo.",
+      menys: "Fer el projecte amb dues funcions (llum de nit i timbre) i afegir el vigilant amb el programa de la vitrina de la sessió 2 com a model.|Hacer el proyecto con dos funciones (luz de noche y timbre) y añadir el vigilante con el programa de la vitrina de la sesión 2 como modelo."
+    },
+    aval: {
+      ticket: ["Digues una funció de la teva casa amb el seu sensor, la condició i el que fa.|Di una función de tu casa con su sensor, la condición y lo que hace.",
+        "Quan és certa la condició «llum < 100 i distància < 25»?|¿Cuándo es cierta la condición «luz < 100 y distancia < 25»?"],
+      rubric: [
+        ["Planificació|Planificación", "Omple la taula amb tres funcions completes i detecta actuadors repetits.|Rellena la tabla con tres funciones completas y detecta actuadores repetidos.", "Fa la llista de funcions, però li falten sensors o condicions.|Hace la lista de funciones, pero le faltan sensores o condiciones."],
+        ["Guions i condicions|Guiones y condiciones", "Reparteix les feines en guions diferents i fa servir «i» quan cal.|Reparte los trabajos en guiones diferentes y usa «y» cuando hace falta.", "Ho posa gairebé tot en un sol guió i necessita ajuda amb la condició doble.|Lo pone casi todo en un solo guion y necesita ayuda con la condición doble."],
+        ["Provar i presentar|Probar y presentar", "Prova per parts al simulador i al robot real i explica què ha canviat.|Prueba por partes en el simulador y en el robot real y explica qué ha cambiado.", "Prova el projecte sencer al final i costa saber què falla.|Prueba el proyecto entero al final y cuesta saber qué falla."]
+      ]
+    },
+    casa: "A casa, ensenyeu el projecte a la família i busqueu a casa coses que podrien ser intel·ligents: quin sensor farien servir i què farien? Feu-ne la taula com a classe.|En casa, enseñad el proyecto a la familia y buscad en casa cosas que podrían ser inteligentes: ¿qué sensor usarían y qué harían? Haced la tabla como en clase.",
+    slides: [
+      { id: 's1', k: 'portada', t: "Projecte: la casa intel·ligent|Proyecto: la casa inteligente", x: "El Maqueen serà el cervell d'una casa: llum de nit, timbre, vigilant i majordom.|El Maqueen será el cerebro de una casa: luz de noche, timbre, vigilante y mayordomo.",
+        nota: "Explica que avui es planifica, es programa per parts, es prova al robot real i es presenta.|Explica que hoy se planifica, se programa por partes, se prueba en el robot real y se presenta." },
+      { id: 's2', k: 'pregunta', t: "Què fa una casa intel·ligent?|¿Qué hace una casa inteligente?", x: "Llums que s'encenen soles, persianes que baixen, alarmes… Quins sensors necessiten?|Luces que se encienden solas, persianas que bajan, alarmas… ¿Qué sensores necesitan?",
+        nota: "Apunta les idees a la pissarra i encercla les que podem fer amb el Maqueen.|Apunta las ideas en la pizarra y rodea las que podemos hacer con el Maqueen." },
+      { id: 's3', k: 'repas', t: "Recordem|Recordemos", punts: ["Quina part apaga el fanal quan torna la llum?|¿Qué parte apaga la farola cuando vuelve la luz?", "Quin guió fas servir per al timbre?|¿Qué guion usas para el timbre?", "Alarma = sensor + … + …|Alarma = sensor + … + …"],
+        nota: "Respostes: el «si no»; «en prémer el botó A»; condició i avisos.|Respuestas: el «si no»; «al pulsar el botón A»; condición y avisos." },
+      { id: 's4', k: 'anim', t: "La taula del projecte|La tabla del proyecto", anim: 'k5plan', x: "Funció · sensor o botó · condició · què fa.|Función · sensor o botón · condición · qué hace.",
+        nota: "Omple'n una fila nova amb la classe, per exemple «persiana: llum > 600 → icona fletxa avall».|Rellena una fila nueva con la clase, por ejemplo «persiana: luz > 600 → icono flecha abajo»." },
+      { id: 's5', k: 'concepte', t: "Provar per parts|Probar por partes", punts: ["1. Fes la llista del que ha de fer.|1. Haz la lista de lo que tiene que hacer.", "2. Programa una sola funció.|2. Programa una sola función.", "3. Prova-la fins que funcioni.|3. Pruébala hasta que funcione.", "4. Afegeix la següent i torna-ho a provar tot.|4. Añade la siguiente y vuelve a probarlo todo."],
+        nota: "Així treballen els enginyers: si falla, saps que és l'última cosa que has afegit.|Así trabajan los ingenieros: si falla, sabes que es lo último que has añadido." },
+      { id: 's6', k: 'robo', t: "Tres guions alhora|Tres guiones a la vez", x: "En iniciar: casa. En prémer A: timbre i endavant. Per sempre: para a la porta.|Al iniciar: casa. Al pulsar A: timbre y adelante. Para siempre: para en la puerta.",
+        robo: { w: { w: 120, h: 80, bot: [24, 40, 90], walls: [[4, 6, 58, 3], [4, 71, 58, 3], [4, 6, 3, 68], [59, 6, 3, 22], [59, 52, 3, 22]], zones: [{ id: 'r', r: [8, 10, 50, 60], col: 'grey' }, { id: 'p', r: [62, 28, 16, 24], col: 'orange', label: 'PORTA|PUERTA' }], press: [{ t: 2, b: 'A' }], time: 8 }, prog: 'start{ icon:house } forever{ if:dist<12{ stop:all icon:happy } } A{ note:E5,1/2 note:C5,1 run:all,fwd,110 }' },
+        nota: "Remarca que cap guió espera els altres: el «per sempre» vigila mentre el botó engega els motors.|Remarca que ningún guion espera a los otros: el «para siempre» vigila mientras el botón arranca los motores." },
+      { id: 's7', k: 'robo', t: "Compte: guions que es barallen|Cuidado: guiones que se pelean", x: "El botó A posa vermell; el «per sempre» posa verd. Quin color veurem?|El botón A pone rojo; el «para siempre» pone verde. ¿Qué color veremos?",
+        robo: { w: { w: 100, h: 50, bot: [50, 25, 90], press: [{ t: 1.5, b: 'A' }], time: 5 }, prog: 'forever{ car:all,green } A{ car:all,red note:C5,2 }' },
+        nota: "Gairebé sempre verd: el «per sempre» el torna a posar cada 20 ms. Solució: un actuador, un sol guió.|Casi siempre verde: el «para siempre» lo vuelve a poner cada 20 ms. Solución: un actuador, un solo guion." },
+      { id: 's8', k: 'anim', t: "Dues condicions amb «i»|Dos condiciones con «y»", anim: 'k5and', x: "L'alarma només sona si és de nit I hi ha algú a prop.|La alarma solo suena si es de noche Y hay alguien cerca.",
+        nota: "Feu els quatre casos amb els braços: un braç per condició; l'alarma només si els dos són amunt.|Haced los cuatro casos con los brazos: un brazo por condición; la alarma solo si los dos están arriba." },
+      { id: 's9', k: 'activitat', t: "El plànol de la casa|El plano de la casa", timer: 10, punts: ["Dibuixa el plànol: rebedor, porta i robot.|Dibuja el plano: recibidor, puerta y robot.", "Omple la taula amb tres funcions.|Rellena la tabla con tres funciones.", "Intercanvia la fitxa: el company/a busca problemes.|Intercambia la ficha: el compañero/a busca problemas.", "Corregeix la teva taula.|Corrige tu tabla."],
+        nota: "Problemes típics: un llum manat per dos guions, una funció sense sensor, condicions que no es poden complir.|Problemas típicos: una luz mandada por dos guiones, una función sin sensor, condiciones que no se pueden cumplir." },
+      { id: 's10', k: 'activitat', t: "Ara, a l'ordinador|Ahora, al ordenador", timer: 12, punts: ["Obre «Projecte: la casa intel·ligent».|Abre «Proyecto: la casa inteligente».", "Fes les parts 1, 2 i 3, una a una.|Haz las partes 1, 2 y 3, una a una.", "Prova cada part abans de passar a la següent.|Prueba cada parte antes de pasar a la siguiente."],
+        nota: "Si algú s'encalla a la part 2, recorda l'ordre: primer la pregunta doble, després la simple.|Si alguien se atasca en la parte 2, recuerda el orden: primero la pregunta doble, después la simple." },
+      { id: 's11', k: 'repte', t: "Les tres parts|Las tres partes", punts: ["1. La porta amb dos botons (A i B)|1. La puerta con dos botones (A y B)", "2. Benvinguda o alarma (llum i distància)|2. Bienvenida o alarma (luz y distancia)", "3. El majordom (botó A + distància)|3. El mayordomo (botón A + distancia)"],
+        nota: "Cada part és una funció de la casa: al projecte final les ajuntaran.|Cada parte es una función de la casa: en el proyecto final las juntarán." },
+      { id: 's12', k: 'activitat', t: "La casa de cartró|La casa de cartón", timer: 14, punts: ["Robot dins la casa, mirant la porta.|Robot dentro de la casa, mirando la puerta.", "Carregueu el codi i proveu una funció cada vegada.|Cargad el código y probad una función cada vez.", "Llum de nit: tapeu la casa. Timbre: A. Vigilant: el llibre a la porta.|Luz de noche: tapad la casa. Timbre: A. Vigilante: el libro en la puerta.", "Apunteu què heu canviat.|Apuntad qué habéis cambiado."],
+        nota: "Passa per les cases preguntant quina funció estan provant. Si en proven dues alhora, que tornin a una.|Pasa por las casas preguntando qué función están probando. Si prueban dos a la vez, que vuelvan a una." },
+      { id: 's13', k: 'robo', t: "El codi de la casa|El código de la casa", x: "Llum de nit, vigilant i timbre: tres funcions, tres feines diferents.|Luz de noche, vigilante y timbre: tres funciones, tres trabajos diferentes.",
+        robo: { w: { w: 120, h: 80, bot: [24, 40, 90], walls: [[4, 6, 58, 3], [4, 71, 58, 3], [4, 6, 3, 68], [59, 6, 3, 22], [59, 52, 3, 22]], zones: [{ id: 'r', r: [8, 10, 50, 60], col: 'grey' }], leader: { path: [[112, 40], [64, 40], [64, 40], [112, 40]], speed: 9, wait: 3 }, env: [{ t: 6, dark: true }], press: [{ t: 2, b: 'A' }], time: 16 }, prog: 'start{ icon:house } forever{ if:lL<100{ under:all,white } else{ under:all,black } if:dist<25{ car:all,red } else{ car:all,green } } A{ note:E5,1/2 note:C5,1 note:G4,1/2 }' },
+        blocks: ["llums de sota ← llum|luces de abajo ← luz", "llums del cotxe ← distància|luces del coche ← distancia", "brunzidor ← botó A|zumbador ← botón A"],
+        nota: "Fes notar que cada actuador el mana un sol guió: no es barallen.|Haz notar que cada actuador lo manda un solo guion: no se pelean." },
+      { id: 's14', k: 'activitat', t: "Crea: la meva casa intel·ligent|Crea: mi casa inteligente", timer: 8, x: "Programa la casa del teu plànol: llum de nit, timbre i vigilant. I una funció extra?|Programa la casa de tu plano: luz de noche, timbre y vigilante. ¿Y una función extra?",
+        nota: "L'app comprova que hi hagi el sensor de llum, el timbre amb el botó A i la distància. La funció extra és lliure.|La app comprueba que estén el sensor de luz, el timbre con el botón A y la distancia. La función extra es libre." },
+      { id: 's15', k: 'resum', t: "Què hem après en aquesta unitat|Qué hemos aprendido en esta unidad", punts: ["Sensors de llum, llindar i comparar esquerra i dreta.|Sensores de luz, umbral y comparar izquierda y derecha.", "Avisos amb so, llums i icones; botons A i B.|Avisos con sonido, luces e iconos; botones A y B.", "Fanals amb «si no» i projectes planificats per parts.|Farolas con «si no» y proyectos planificados por partes."],
+        nota: "Felicita la classe: han fet la papallona, les alarmes, el fanal i la casa. A la unitat 6 aprendran les variables i el control intel·ligent.|Felicita a la clase: han hecho la mariposa, las alarmas, la farola y la casa. En la unidad 6 aprenderán las variables y el control inteligente." },
+      { id: 's16', k: 'tiquet', t: "Tiquet de sortida|Ticket de salida", punts: ["Una funció de la teva casa: sensor, condició i acció.|Una función de tu casa: sensor, condición y acción.", "Quan és certa «llum < 100 i distància < 25»?|¿Cuándo es cierta «luz < 100 y distancia < 25»?"],
+        nota: "Recull les fitxes del projecte: serveixen per avaluar la planificació.|Recoge las fichas del proyecto: sirven para evaluar la planificación." }
+    ],
+    print: [
+      { id: 'p1', t: "Fitxa: el plànol i la taula del projecte|Ficha: el plano y la tabla del proyecto", k: 'fitxa',
+        intro: "Dibuixa la teva casa i omple la taula abans de programar. Després apunta què has provat al robot de veritat.|Dibuja tu casa y rellena la tabla antes de programar. Después apunta qué has probado en el robot de verdad.",
+        items: [
+          { q: "Dibuixa el plànol: el rebedor, la porta i on serà el robot (mirant cap a la porta).|Dibuja el plano: el recibidor, la puerta y dónde estará el robot (mirando hacia la puerta).", sol: "Lliure. Comproveu que els ultrasons del robot miren cap a la porta.|Libre. Comprobad que los ultrasonidos del robot miran hacia la puerta." },
+          { q: "Funció 1 · Llum de nit: sensor ______ · condició ______ · fa ______|Función 1 · Luz de noche: sensor ______ · condición ______ · hace ______", sol: "Sensor de llum · llum < 100 · llums de sota blanques (i, si no, apagades).|Sensor de luz · luz < 100 · luces de abajo blancas (y, si no, apagadas)." },
+          { q: "Funció 2 · Timbre: botó ______ · fa ______|Función 2 · Timbre: botón ______ · hace ______", rprog: 'A{ note:E5,1/2 note:C5,1 }', sol: "Botó A · una melodia (per exemple mi′ i do′).|Botón A · una melodía (por ejemplo mi′ y do′)." },
+          { q: "Funció 3 · Vigilant: sensor ______ · condició ______ · fa ______|Función 3 · Vigilante: sensor ______ · condición ______ · hace ______", sol: "Ultrasons · distància < 25 · llums del cotxe vermells (i, si no, verds).|Ultrasonidos · distancia < 25 · luces del coche rojas (y, si no, verdes)." },
+          { q: "Hi ha algun actuador que el manin dos guions? Quin? Com ho arreglaràs?|¿Hay algún actuador que lo manden dos guiones? ¿Cuál? ¿Cómo lo arreglarás?", sol: "Cada actuador ha de dependre d'un sol guió; si no, es barallen.|Cada actuador tiene que depender de un solo guion; si no, se pelean." },
+          { q: "Al robot de veritat: què funciona? Quins números heu hagut de canviar?|En el robot de verdad: ¿qué funciona? ¿Qué números habéis tenido que cambiar?", sol: "Respostes de cada grup (llindar de llum, distància del vigilant…).|Respuestas de cada grupo (umbral de luz, distancia del vigilante…)." }
+        ] },
+      { id: 'p2', t: "Codi MakeCode: la casa intel·ligent|Código MakeCode: la casa inteligente", k: 'codi',
+        intro: "Codi de partida per a la casa de cartró. Canvieu el 100 (llum) i el 25 (distància) segons les vostres mesures.|Código de partida para la casa de cartón. Cambiad el 100 (luz) y el 25 (distancia) según vuestras medidas.",
+        items: [
+          { t: "La casa: llum de nit, vigilant i timbre|La casa: luz de noche, vigilante y timbre", prog: 'start{ icon:house } forever{ if:lL<100{ under:all,white } else{ under:all,black } if:dist<25{ car:all,red } else{ car:all,green } } A{ note:E5,1/2 note:C5,1 note:G4,1/2 }' }
+        ] }
+    ]
+  }
+});
+
+/* ── unitat 6 ── */
+/* Tech Robòtica · unitat 6 «Control intel·ligent» · guia del professorat (k6-1 … k6-4)
+   Material propi de Numi. Classe de 60 minuts; mateix esquema que TGUIDE['r1-1'] i la fase «robot» (Maqueen de veritat). */
+Object.assign(TGUIDE, {
+  /* ---------- Sessió 1 · Velocitat que canvia ---------- */
+  'k6-1': {
+    obj: [
+      "L'alumne/a explica què és una variable (una capsa amb nom que guarda un número) i en distingeix els blocs «posa» i «canvia en».|El alumno/a explica qué es una variable (una caja con nombre que guarda un número) y distingue sus bloques «pon» y «cambia en».",
+      "L'alumne/a fa servir una variable com a velocitat dels motors per programar una arrencada suau que accelera de mica en mica.|El alumno/a usa una variable como velocidad de los motores para programar un arranque suave que acelera poco a poco.",
+      "L'alumne/a programa un comptador que suma 1 cada vegada que el robot troba una línia, només una vegada per línia, i el mostra a la micro:bit.|El alumno/a programa un contador que suma 1 cada vez que el robot encuentra una línea, solo una vez por línea, y lo muestra en la micro:bit.",
+      "L'alumne/a comprova al Maqueen de veritat la diferència entre arrencar de cop i arrencar amb una rampa de velocitat.|El alumno/a comprueba en el Maqueen de verdad la diferencia entre arrancar de golpe y arrancar con una rampa de velocidad."
+    ],
+    comp: [
+      "Pensament computacional: variables, inicialització, actualització i comptadors|Pensamiento computacional: variables, inicialización, actualización y contadores",
+      "Competència matemàtica: seqüències numèriques (sumar sempre el mateix) i taules de valors|Competencia matemática: secuencias numéricas (sumar siempre lo mismo) y tablas de valores",
+      "Competència digital (CD5): programar un robot real i depurar el programa a partir del que fa|Competencia digital (CD5): programar un robot real y depurar el programa a partir de lo que hace",
+      "Competència personal i social: treball en equip amb rols i comunicació precisa|Competencia personal y social: trabajo en equipo con roles y comunicación precisa"
+    ],
+    vocab: [
+      ["Variable|Variable", "Una capsa amb nom on el programa guarda un número que pot canviar.|Una caja con nombre donde el programa guarda un número que puede cambiar."],
+      ["Posa … a …|Pon … a …", "Bloc que substitueix el número de la variable per un altre.|Bloque que sustituye el número de la variable por otro."],
+      ["Canvia … en …|Cambia … en …", "Bloc que suma (o resta, si és negatiu) un número a la variable.|Bloque que suma (o resta, si es negativo) un número a la variable."],
+      ["Comptador|Contador", "Variable que comença a 0 i suma 1 cada vegada que passa una cosa.|Variable que empieza en 0 y suma 1 cada vez que pasa algo."],
+      ["Rampa d'acceleració|Rampa de aceleración", "Pujar la velocitat de mica en mica en lloc de fer-ho de cop.|Subir la velocidad poco a poco en lugar de hacerlo de golpe."]
+    ],
+    mat: {
+      aula: [
+        "Un ordinador per alumne/a amb Numi Tech obert a la sessió «Velocitat que canvia»|Un ordenador por alumno/a con Numi Tech abierto en la sesión «Velocidad que cambia»",
+        "Projector i la presentació d'aquesta sessió|Proyector y la presentación de esta sesión",
+        "Un kit Maqueen Lite V5 + micro:bit V2 per grup de 3-4, amb piles carregades i cable USB|Un kit Maqueen Lite V5 + micro:bit V2 por grupo de 3-4, con pilas cargadas y cable USB",
+        "Per grup: un got de paper, una pilota de ping-pong (fa d'«ou»), cinta adhesiva i cinta aïllant negra|Por grupo: un vaso de papel, una pelota de ping-pong (hace de «huevo»), cinta adhesiva y cinta aislante negra",
+        "Per a l'activitat sense pantalla: una pissarreta o un full plastificat i un retolador per grup (la «capsa» de la variable)|Para la actividad sin pantalla: una pizarrita o una hoja plastificada y un rotulador por grupo (la «caja» de la variable)"
+      ],
+      imprimir: ["Fitxa: la capsa de la variable|Ficha: la caja de la variable", "Codi per al Maqueen: rampa i comptador|Código para el Maqueen: rampa y contador"],
+      prep: [
+        "Enganxar a terra, per a cada grup, tres tires de cinta aïllant negra de 30 cm, perpendiculars al camí del robot i separades uns 20 cm.|Pegar en el suelo, para cada grupo, tres tiras de cinta aislante negra de 30 cm, perpendiculares al camino del robot y separadas unos 20 cm.",
+        "Enganxar el got de paper damunt de cada Maqueen amb una mica de cinta (al darrere de la micro:bit, sense tapar-la).|Pegar el vaso de papel encima de cada Maqueen con un poco de cinta (detrás de la micro:bit, sin taparla).",
+        "Tenir a punt a MakeCode els dos programes de l'imprimible «Codi» (rampa i comptador) i comprovar-los amb un robot.|Tener listos en MakeCode los dos programas del imprimible «Código» (rampa y contador) y comprobarlos con un robot.",
+        "Provar abans les demostracions de les diapositives 6, 8 i 10 per saber què passarà.|Probar antes las demostraciones de las diapositivas 6, 8 y 10 para saber qué pasará."
+      ]
+    },
+    plan: [
+      { min: 4, t: "Benvinguda: els ous voladors|Bienvenida: los huevos voladores", fase: 'inici',
+        fa: "Presenta la unitat: el Lab de Mobilitat de l'illa fa vehicles que es condueixen sols, i la primera feina és portar ous sense trencar-los. Pregunta per què un robot que arrenca de cop a 255 faria caure els ous i com ho faria una persona que condueix amb compte.|Presenta la unidad: el Lab de Movilidad de la isla hace vehículos que se conducen solos, y el primer trabajo es llevar huevos sin romperlos. Pregunta por qué un robot que arranca de golpe a 255 haría caer los huevos y cómo lo haría una persona que conduce con cuidado.",
+        diu: ["Quan un autobús arrenca de cop, què us passa si aneu drets?|Cuando un autobús arranca de golpe, ¿qué os pasa si vais de pie?", "Avui el robot aprendrà a recordar un número que canvia: la seva velocitat.|Hoy el robot aprenderá a recordar un número que cambia: su velocidad."],
+        slides: ['s1', 's2'], app: "Encara no: pantalles abaixades.|Todavía no: pantallas bajadas.", org: "Tot el grup|Todo el grupo" },
+      { min: 9, t: "Variables: la capsa amb nom|Variables: la caja con nombre", fase: 'teoria',
+        fa: "Repassa la zona morta (diapositiva 3). Explica la variable amb l'animació de la capsa i una capsa de veritat amb un paper a dins. Executa la rampa (diapositiva 6) demanant abans com serà el rastre. Després mostra l'error de posar el «posa» dins del bucle i, per acabar, el comptador de passos de vianants: abans d'executar, que diguin a quina línia pararà.|Repasa la zona muerta (diapositiva 3). Explica la variable con la animación de la caja y una caja de verdad con un papel dentro. Ejecuta la rampa (diapositiva 6) preguntando antes cómo será el rastro. Después muestra el error de poner el «pon» dentro del bucle y, para terminar, el contador de pasos de cebra: antes de ejecutar, que digan en qué línea parará.",
+        diu: ["A la capsa hi diu «velocitat» i a dins hi ha un 40. Si hi sumo 30, què hi haurà?|En la caja pone «velocidad» y dentro hay un 40. Si le sumo 30, ¿qué habrá?", "Per què el rastre fa trossos cada cop més llargs?|¿Por qué el rastro hace trozos cada vez más largos?", "Com sap el robot que ja ha passat tres línies?|¿Cómo sabe el robot que ya ha pasado tres líneas?"],
+        slides: ['s3', 's4', 's5', 's6', 's7', 's8'], app: "Encara no: tota l'atenció a la projecció.|Todavía no: toda la atención en la proyección.", org: "Tot el grup|Todo el grupo" },
+      { min: 10, t: "La capsa de la variable (sense pantalla)|La caja de la variable (sin pantalla)", fase: 'desconnectat',
+        fa: "Grups de 3: el programador/a llegeix els blocs de la fitxa un a un, el guardià/ana de la variable porta la pissarreta (la capsa) i hi esborra i escriu el número, i el robot camina fent tantes passes com digui la capsa ÷ 20 (40 → 2 passes, 100 → 5…). A la part 2, el robot camina per sobre de tres tires de cinta i el guardià/ana fa de comptador. Tots tres omplen la taula de la fitxa i després canvien els papers.|Grupos de 3: el programador/a lee los bloques de la ficha uno a uno, el guardián/a de la variable lleva la pizarrita (la caja) y borra y escribe el número, y el robot camina dando tantos pasos como diga la caja ÷ 20 (40 → 2 pasos, 100 → 5…). En la parte 2, el robot camina por encima de tres tiras de cinta y el guardián/a hace de contador. Los tres rellenan la tabla de la ficha y después cambian los papeles.",
+        diu: ["«Posa» vol dir esborrar i escriure; «canvia en» vol dir sumar.|«Pon» quiere decir borrar y escribir; «cambia en» quiere decir sumar.", "Comptador: un sol +1 per línia, encara que hi estigueu una estona a sobre!|Contador: un solo +1 por línea, ¡aunque estéis un rato encima!", "Quin número hi ha a la capsa al final? Comproveu-ho amb la taula.|¿Qué número hay en la caja al final? Comprobadlo con la tabla."],
+        slides: ['s9'], app: "Cap: activitat sense pantalla.|Ninguna: actividad sin pantalla.", org: "Grups de 3 amb papers que roten|Grupos de 3 con papeles que rotan" },
+      { min: 12, t: "Al Maqueen de veritat: l'ou no cau|En el Maqueen de verdad: el huevo no se cae", fase: 'robot',
+        fa: "Cada grup posa la pilota de ping-pong dins del got enganxat al robot, al terra (mai a la vora de la taula). Primer descarreguen el programa d'arrencada de cop (255 durant 1 s) i observen si la pilota salta; després el de la rampa (de 40 a 220) de l'imprimible «Codi» i comparen. Al final, el programa del comptador sobre les tres tires de cinta: la micro:bit ha de mostrar 1, 2, 3 i parar. Si el robot real no veu la cinta, que comprovin que és ben negra i enganxada sense arrugues.|Cada grupo pone la pelota de ping-pong dentro del vaso pegado al robot, en el suelo (nunca en el borde de la mesa). Primero descargan el programa de arranque de golpe (255 durante 1 s) y observan si la pelota salta; después el de la rampa (de 40 a 220) del imprimible «Código» y comparan. Al final, el programa del contador sobre las tres tiras de cinta: la micro:bit tiene que mostrar 1, 2, 3 y parar. Si el robot real no ve la cinta, que comprueben que es bien negra y pegada sin arrugas.",
+        diu: ["Robot a terra i mans fora de les rodes mentre es descarrega el programa.|Robot en el suelo y manos fuera de las ruedas mientras se descarga el programa.", "Quina arrencada fa saltar l'ou? Per què?|¿Qué arranque hace saltar el huevo? ¿Por qué?", "El vostre robot compta igual que el del simulador?|¿Vuestro robot cuenta igual que el del simulador?"],
+        slides: ['s10', 's11'], app: "Cap: MakeCode i el robot.|Ninguna: MakeCode y el robot.", org: "Grups de 3-4 per kit|Grupos de 3-4 por kit" },
+      { min: 18, t: "A l'ordinador: descobreix, prova i reptes|En el ordenador: descubre, prueba y retos", fase: 'ordinador',
+        fa: "Cada alumne/a avança al seu ritme. Atura la classe un moment quan la majoria arribi al repte del comptador i projecta la diapositiva 13: per què un comptador sense «fins que M = 0» compta centenars? Passeja i, a qui s'encalli, demana-li que digui en veu alta què hi ha a la capsa després de cada bloc.|Cada alumno/a avanza a su ritmo. Para la clase un momento cuando la mayoría llegue al reto del contador y proyecta la diapositiva 13: ¿por qué un contador sin «hasta que M = 0» cuenta cientos? Pasea y, a quien se atasque, pídele que diga en voz alta qué hay en la caja después de cada bloque.",
+        diu: ["Què hi ha a la capsa ara? I després d'aquest bloc?|¿Qué hay en la caja ahora? ¿Y después de este bloque?", "Has canviat un número o tres? Amb una variable, n'hi ha prou amb un.|¿Has cambiado un número o tres? Con una variable, basta con uno.", "Si el comptador puja massa, què li falta?|Si el contador sube demasiado, ¿qué le falta?"],
+        slides: ['s12', 's13'], app: "De «Recorda» fins a l'últim repte: les preguntes, «Descobreix», el càlcul de la variable, ordenar el comptador, «On s'aturarà?», el bloc que falla, el comptador de 561, la pausa activa i els quatre reptes (arrencada suau, la ruta del repartiment, la tercera línia i la inspecció del carrer).|De «Recuerda» hasta el último reto: las preguntas, «Descubre», el cálculo de la variable, ordenar el contador, «¿Dónde se parará?», el bloque que falla, el contador de 561, la pausa activa y los cuatro retos (arranque suave, la ruta del reparto, la tercera línea y la inspección de la calle).", org: "Individual|Individual" },
+      { min: 4, t: "Crea: el repartidor d'ous|Crea: el repartidor de huevos", fase: 'crea',
+        fa: "Cada alumne/a programa el seu repartidor: velocitat que creix i comptador de passos fins al forn. En parelles, abans d'executar el programa de l'altre/a, diuen quant valdrà la velocitat al final.|Cada alumno/a programa su repartidor: velocidad que crece y contador de pasos hasta el horno. Por parejas, antes de ejecutar el programa del otro/a, dicen cuánto valdrá la velocidad al final.",
+        diu: ["Hi ha moltes maneres d'accelerar: a cada línia, a cada volta… Tria la teva.|Hay muchas maneras de acelerar: en cada línea, en cada vuelta… Elige la tuya."],
+        slides: ['s14'], app: "Pas «Crea»: El repartidor d'ous.|Paso «Crea»: El repartidor de huevos.", org: "Individual i després per parelles|Individual y después por parejas" },
+      { min: 3, t: "Tancament i tiquet de sortida|Cierre y ticket de salida", fase: 'tancament',
+        fa: "Repassa les tres idees amb el resum, deixa que responguin les preguntes finals de l'app i fes el tiquet a la porta.|Repasa las tres ideas con el resumen, deja que respondan las preguntas finales de la app y haz el ticket en la puerta.",
+        diu: ["Quina diferència hi ha entre «posa» i «canvia en»?|¿Qué diferencia hay entre «pon» y «cambia en»?"],
+        slides: ['s15', 's16'], app: "«Tancament»: dues preguntes i com m'he sentit.|«Cierre»: dos preguntas y cómo me he sentido.", org: "Tot el grup|Todo el grupo" }
+    ],
+    errors: [
+      ["Fa servir «posa velocitat a 30» esperant que sumi 30.|Usa «pon velocidad a 30» esperando que sume 30.", "Que faci de guardià/ana amb la pissarreta: «posa» és esborrar i escriure. Què hi ha a la capsa després?|Que haga de guardián/a con la pizarrita: «pon» es borrar y escribir. ¿Qué hay en la caja después?"],
+      ["Posa el «posa velocitat a 40» dins del «repeteix» i el robot no accelera mai.|Pone el «pon velocidad a 40» dentro del «repite» y el robot nunca acelera.", "Demana-li que llegeixi el programa volta a volta: a la segona volta, què passa amb la capsa?|Pídele que lea el programa vuelta a vuelta: en la segunda vuelta, ¿qué pasa con la caja?"],
+      ["Deixa el número 150 al motor en lloc de triar la variable.|Deja el número 150 en el motor en lugar de elegir la variable.", "Pregunta: el motor sap que existeix la capsa? Que toqui el camp de velocitat i busqui la variable a la llista.|Pregunta: ¿el motor sabe que existe la caja? Que toque el campo de velocidad y busque la variable en la lista."],
+      ["El comptador suma centenars perquè no espera a sortir de la línia.|El contador suma cientos porque no espera a salir de la línea.", "Que camini per sobre d'una tira de cinta comptant «un» a cada pas que hi fa a sobre. Quants n'hi diu? Què hauria de fer per dir-ne només un?|Que camine por encima de una tira de cinta contando «uno» en cada paso que da encima. ¿Cuántos dice? ¿Qué tendría que hacer para decir solo uno?"],
+      ["Oblida posar el comptador a 0 al principi.|Olvida poner el contador a 0 al principio.", "Al simulador potser funciona, però pregunta: si el programa es torna a executar, amb quin número comença?|En el simulador quizá funciona, pero pregunta: si el programa se vuelve a ejecutar, ¿con qué número empieza?"]
+    ],
+    diff: {
+      mes: "Fer que el robot també freni de mica en mica abans del forn (una rampa de baixada amb «canvia velocitat en −30») i que toqui una nota diferent a cada línia que compta.|Hacer que el robot también frene poco a poco antes del horno (una rampa de bajada con «cambia velocidad en −30») y que toque una nota diferente en cada línea que cuenta.",
+      menys: "Treballar primer només la rampa amb la fitxa i la pissarreta, i fer el repte de la ruta del repartiment abans del comptador. Per al comptador, partir del programa de l'exemple de «Descobreix».|Trabajar primero solo la rampa con la ficha y la pizarrita, y hacer el reto de la ruta del reparto antes del contador. Para el contador, partir del programa del ejemplo de «Descubre»."
+    },
+    aval: {
+      ticket: ["La velocitat val 60 i fem dues vegades «canvia velocitat en 20». Quant val?|La velocidad vale 60 y hacemos dos veces «cambia velocidad en 20». ¿Cuánto vale?",
+        "Per què un comptador de línies ha d'esperar «fins que M = 0»?|¿Por qué un contador de líneas tiene que esperar «hasta que M = 0»?"],
+      rubric: [
+        ["Concepte de variable|Concepto de variable", "Explica què és i distingeix «posa» de «canvia en» amb un exemple.|Explica qué es y distingue «pon» de «cambia en» con un ejemplo.", "Fa servir la variable però confon encara «posa» i «canvia en».|Usa la variable pero todavía confunde «pon» y «cambia en»."],
+        ["Velocitat variable|Velocidad variable", "Programa la rampa i la ruta canviant un sol número.|Programa la rampa y la ruta cambiando un solo número.", "Necessita l'exemple per posar la variable al motor.|Necesita el ejemplo para poner la variable en el motor."],
+        ["Comptador|Contador", "Compta cada línia una vegada i fa servir el comptador per decidir quan parar.|Cuenta cada línea una vez y usa el contador para decidir cuándo parar.", "Compta, però de vegades suma més d'un cop per línia.|Cuenta, pero a veces suma más de una vez por línea."]
+      ]
+    },
+    casa: "A casa, amb el mòbil, podeu repetir la sessió. Proposta: feu de comptadors humans pel carrer (quants passos de vianants creueu fins a l'escola?) i apunteu la variable en un paper.|En casa, con el móvil, podéis repetir la sesión. Propuesta: haced de contadores humanos por la calle (¿cuántos pasos de cebra cruzáis hasta el cole?) y apuntad la variable en un papel.",
+    slides: [
+      { id: 's1', k: 'portada', t: "Velocitat que canvia|Velocidad que cambia", x: "Unitat 6 · Control intel·ligent. Avui: variables i comptadors.|Unidad 6 · Control inteligente. Hoy: variables y contadores.",
+        nota: "Presenta el Lab de Mobilitat i el problema dels ous voladors.|Presenta el Lab de Movilidad y el problema de los huevos voladores." },
+      { id: 's2', k: 'pregunta', t: "Per què van sortir volant els ous?|¿Por qué salieron volando los huevos?", x: "El robot va arrencar de cop a velocitat 255. Com ho hauria de fer?|El robot arrancó de golpe a velocidad 255. ¿Cómo lo tendría que hacer?",
+        nota: "Recull idees: «a poc a poc», «accelerant». Apunta la paraula «accelerar» a la pissarra.|Recoge ideas: «poco a poco», «acelerando». Apunta la palabra «acelerar» en la pizarra." },
+      { id: 's3', k: 'repas', t: "Recordem: la zona morta|Recordemos: la zona muerta", punts: ["Velocitat de 0 a 255.|Velocidad de 0 a 255.", "Per sota de ~30 el motor no es mou.|Por debajo de ~30 el motor no se mueve.", "A 255 va a uns 29 cm/s.|A 255 va a unos 29 cm/s."],
+        nota: "Hi tornarem a la sessió 2: la zona morta serà important per al control proporcional.|Volveremos a ello en la sesión 2: la zona muerta será importante para el control proporcional." },
+      { id: 's4', k: 'anim', t: "Una variable és una capsa amb nom|Una variable es una caja con nombre", anim: 'k6var', x: "«Posa» omple la capsa; «canvia en» hi suma.|«Pon» llena la caja; «cambia en» le suma.",
+        nota: "Si pots, porta una capsa de veritat amb un paper: escriu-hi 40, després 70… Que vegin que la capsa és la mateixa i el número canvia.|Si puedes, trae una caja de verdad con un papel: escribe 40, después 70… Que vean que la caja es la misma y el número cambia." },
+      { id: 's5', k: 'concepte', t: "Els blocs de variable|Los bloques de variable", blocks: ["posa velocitat a 40|pon velocidad a 40", "canvia velocitat en 30|cambia velocidad en 30", "motor els dos endavant a velocitat|motor los dos adelante a velocidad", "mostra el número velocitat|muestra el número velocidad"],
+        punts: ["La variable pot anar on hi hauria un número.|La variable puede ir donde habría un número.", "Primer es posa, després es fa servir i es canvia.|Primero se pone, después se usa y se cambia."],
+        nota: "Remarca que el motor no «sap» que hi ha una variable si no la triem al seu camp de velocitat.|Remarca que el motor no «sabe» que hay una variable si no la elegimos en su campo de velocidad." },
+      { id: 's6', k: 'robo', t: "L'arrencada suau|El arranque suave", x: "Velocitat 40, 70, 100… Com serà el rastre?|Velocidad 40, 70, 100… ¿Cómo será el rastro?",
+        robo: { w: { w: 130, h: 40, bot: [12, 20, 90] }, prog: 'start{ set:vel,40 rep:6{ run:all,fwd,$vel wait:500 change:vel,30 } stop:all }', varNames: { vel: 'velocitat|velocidad' } },
+        nota: "Abans d'executar, que diguin si els trossos seran iguals. Resposta: cada tros és més llarg que l'anterior.|Antes de ejecutar, que digan si los trozos serán iguales. Respuesta: cada trozo es más largo que el anterior." },
+      { id: 's7', k: 'robo', t: "Compte: el «posa» dins del bucle|Cuidado: el «pon» dentro del bucle", x: "Aquest robot no accelera. Per què?|Este robot no acelera. ¿Por qué?",
+        robo: { w: { w: 130, h: 40, bot: [12, 20, 90] }, prog: 'start{ rep:6{ set:vel,40 run:all,fwd,$vel wait:500 change:vel,30 } stop:all }', varNames: { vel: 'velocitat|velocidad' } },
+        nota: "A cada volta la capsa torna a 40. Demana a un alumne/a que ho expliqui fent de guardià/ana amb la pissarreta.|En cada vuelta la caja vuelve a 40. Pide a un alumno/a que lo explique haciendo de guardián/a con la pizarrita." },
+      { id: 's8', k: 'robo', t: "El comptador de passos de vianants|El contador de pasos de cebra", x: "On pararà: a la línia 2, a la 3 o a la 4?|¿Dónde parará: en la línea 2, en la 3 o en la 4?",
+        robo: { w: { w: 150, h: 40, bot: [12, 20, 90], lines: [{ p: [[35, 6], [35, 34]] }, { p: [[60, 6], [60, 34]] }, { p: [[90, 6], [90, 34]] }, { p: [[120, 6], [120, 34]] }], zones: [{ id: 'f', r: [84, 4, 22, 32], col: 'yellow', label: 'FORN|HORNO' }] },
+          prog: 'start{ set:n,0 while:$n<3{ until:M=1{ run:all,fwd,120 } change:n,1 num:$n until:M=0{ run:all,fwd,120 } } stop:all }', varNames: { n: 'comptador|contador' } },
+        nota: "Para just després de la tercera, al forn. Fes notar el «fins que M = 0»: sense ell, comptaria moltes vegades la mateixa línia.|Para justo después de la tercera, en el horno. Haz notar el «hasta que M = 0»: sin él, contaría muchas veces la misma línea." },
+      { id: 's9', k: 'activitat', t: "La capsa de la variable|La caja de la variable", timer: 10, punts: ["Programador/a: llegeix els blocs de la fitxa.|Programador/a: lee los bloques de la ficha.", "Guardià/ana: esborra i escriu a la pissarreta.|Guardián/a: borra y escribe en la pizarrita.", "Robot: tantes passes com la capsa ÷ 20.|Robot: tantos pasos como la caja ÷ 20.", "Part 2: el comptador de cintes.|Parte 2: el contador de cintas."],
+        nota: "Comprova que el guardià/ana esborra amb «posa» i suma amb «canvia en». Que cada grup acabi amb la taula plena.|Comprueba que el guardián/a borra con «pon» y suma con «cambia en». Que cada grupo termine con la tabla llena." },
+      { id: 's10', k: 'activitat', t: "Al Maqueen: l'ou no cau|En el Maqueen: el huevo no se cae", timer: 12, punts: ["Pilota dins del got, robot a terra.|Pelota dentro del vaso, robot en el suelo.", "1. Arrencada de cop (255).|1. Arranque de golpe (255).", "2. Rampa de 40 a 220.|2. Rampa de 40 a 220.", "3. El comptador de cintes.|3. El contador de cintas."],
+        nota: "Seguretat: mai a la taula sense vora, mans fora de les rodes, i apagar l'interruptor del robot per descarregar el programa si cal.|Seguridad: nunca en la mesa sin borde, manos fuera de las ruedas, y apagar el interruptor del robot para descargar el programa si hace falta." },
+      { id: 's11', k: 'concepte', t: "El codi a MakeCode|El código en MakeCode", code: "let vel = 0\nvel = 40\nfor (let index = 0; index < 6; index++) {\n    Maqueen_V5.motorRun(Maqueen_V5.Motors.All, Maqueen_V5.Dir.CW, vel)\n    basic.pause(500)\n    vel += 30\n}\nMaqueen_V5.motorStop(Maqueen_V5.Motors.All)",
+        punts: ["A MakeCode, les variables es creen a «Variables» → «Crea una variable».|En MakeCode, las variables se crean en «Variables» → «Crear una variable».", "«vel += 30» és el bloc «canvia vel en 30».|«vel += 30» es el bloque «cambia vel en 30»."],
+        nota: "Ensenya que el botó </> del simulador dona aquest mateix codi per enganxar.|Enseña que el botón </> del simulador da este mismo código para pegar." },
+      { id: 's12', k: 'activitat', t: "A l'ordinador|En el ordenador", timer: 18, punts: ["Obre la sessió «Velocitat que canvia».|Abre la sesión «Velocidad que cambia».", "Descobreix, prova i investiga.|Descubre, prueba e investiga.", "Quatre reptes: rampa, ruta, tercera línia i inspecció.|Cuatro retos: rampa, ruta, tercera línea e inspección."],
+        nota: "Qui acabi abans, que ajudi amb preguntes, sense tocar el ratolí de l'altre/a.|Quien termine antes, que ayude con preguntas, sin tocar el ratón del otro/a." },
+      { id: 's13', k: 'repte', t: "El comptador de 561|El contador de 561", x: "Mentre el sensor és damunt de la línia, el bucle hi passa moltes vegades.|Mientras el sensor está encima de la línea, el bucle pasa muchas veces.", punts: ["Si M = 1: suma 1…|Si M = 1: suma 1…", "… i espera fins que M = 0.|… y espera hasta que M = 0."],
+        nota: "Fes l'experiment: camina damunt d'una tira de cinta dient «un» a cada passa. Quants «uns»? Així s'entén per què cal esperar.|Haz el experimento: camina encima de una tira de cinta diciendo «uno» en cada paso. ¿Cuántos «unos»? Así se entiende por qué hay que esperar." },
+      { id: 's14', k: 'activitat', t: "Crea: el repartidor d'ous|Crea: el repartidor de huevos", timer: 4, x: "Velocitat que creix + comptador de 4 passos + parar al forn.|Velocidad que crece + contador de 4 pasos + parar en el horno.",
+        nota: "Celebra les maneres diferents d'accelerar. Que el company/a predigui la velocitat final abans d'executar.|Celebra las maneras diferentes de acelerar. Que el compañero/a prediga la velocidad final antes de ejecutar." },
+      { id: 's15', k: 'resum', t: "Què hem après avui|Qué hemos aprendido hoy", punts: ["Una variable és una capsa amb nom que guarda un número.|Una variable es una caja con nombre que guarda un número.", "«Posa» substitueix; «canvia en» suma.|«Pon» sustituye; «cambia en» suma.", "Un comptador suma 1 cada vegada, només una vegada per cosa.|Un contador suma 1 cada vez, solo una vez por cosa."],
+        nota: "Torna als ous: amb una variable de velocitat, el robot ja pot arrencar suau.|Vuelve a los huevos: con una variable de velocidad, el robot ya puede arrancar suave." },
+      { id: 's16', k: 'tiquet', t: "Tiquet de sortida|Ticket de salida", punts: ["60 i dues vegades «canvia en 20»: quant val?|60 y dos veces «cambia en 20»: ¿cuánto vale?", "Per què cal «fins que M = 0» al comptador?|¿Por qué hace falta «hasta que M = 0» en el contador?"],
+        nota: "Una pregunta per alumne/a a la porta. Anota qui confon «posa» i «canvia en».|Una pregunta por alumno/a en la puerta. Anota quién confunde «pon» y «cambia en»." }
+    ],
+    print: [
+      { id: 'p1', t: "La capsa de la variable|La caja de la variable", k: 'fitxa',
+        intro: "Una fitxa per grup. Llegiu els blocs un a un i apunteu què hi ha a la capsa després de cada bloc.|Una ficha por grupo. Leed los bloques uno a uno y apuntad qué hay en la caja después de cada bloque.",
+        items: [
+          { q: "Posa velocitat a 40 → ___ · Canvia velocitat en 30 → ___ · Canvia velocitat en 30 → ___ · Posa velocitat a 50 → ___|Pon velocidad a 40 → ___ · Cambia velocidad en 30 → ___ · Cambia velocidad en 30 → ___ · Pon velocidad a 50 → ___", sol: "40 · 70 · 100 · 50 (el «posa» esborra el 100).|40 · 70 · 100 · 50 (el «pon» borra el 100)." },
+          { q: "Robot humà: quantes passes fa a cada volta si fa velocitat ÷ 20 passes? Volta 1 (40): ___ · Volta 2 (70): ___ · Volta 3 (100): ___|Robot humano: ¿cuántos pasos da en cada vuelta si da velocidad ÷ 20 pasos? Vuelta 1 (40): ___ · Vuelta 2 (70): ___ · Vuelta 3 (100): ___", sol: "2 · 3 i mitja · 5: cada volta, més llarga (accelera).|2 · 3 y media · 5: cada vuelta, más larga (acelera)." },
+          { q: "Quants metres en total, si cada passa fa uns 50 cm? Si sempre anés a 40, en faria ___. Quina diferència hi ha?|¿Cuántos metros en total, si cada paso mide unos 50 cm? Si siempre fuera a 40, haría ___. ¿Qué diferencia hay?", sol: "10 passes i mitja ≈ 5,25 m. Sempre a 40: 6 passes = 3 m.|10 pasos y medio ≈ 5,25 m. Siempre a 40: 6 pasos = 3 m." },
+          { q: "Part 2 · Comptador: el robot humà creua 3 cintes. Quin número ha de quedar a la capsa? I si el guardià/ana sumés 1 a cada passa damunt de la cinta?|Parte 2 · Contador: el robot humano cruza 3 cintas. ¿Qué número tiene que quedar en la caja? ¿Y si el guardián/a sumara 1 en cada paso encima de la cinta?", sol: "3. Si sumés a cada passa, en sortirien més (per exemple 6 o 9): per això cal esperar a sortir de la cinta.|3. Si sumara en cada paso, saldrían más (por ejemplo 6 o 9): por eso hay que esperar a salir de la cinta." },
+          { q: "Quant val la variable al final d'aquest programa?|¿Cuánto vale la variable al final de este programa?", rprog: 'start{ set:vel,60 rep:3{ run:all,fwd,$vel wait:1000 change:vel,60 } stop:all }', sol: "60 + 60 + 60 + 60 = 240 (el «canvia» es fa 3 vegades).|60 + 60 + 60 + 60 = 240 (el «cambia» se hace 3 veces)." }
+        ] },
+      { id: 'p2', t: "Codi per al Maqueen: rampa i comptador|Código para el Maqueen: rampa y contador", k: 'codi',
+        intro: "Programes per a l'activitat amb el robot de veritat. A makecode.microbit.org: nou projecte → Extensions → «maqueen» → JavaScript → enganxeu-hi el codi.|Programas para la actividad con el robot de verdad. En makecode.microbit.org: nuevo proyecto → Extensiones → «maqueen» → JavaScript → pegad el código.",
+        items: [
+          { t: "1. Arrencada de cop (per comparar)|1. Arranque de golpe (para comparar)", prog: 'start{ run:all,fwd,255 wait:1000 stop:all }' },
+          { t: "2. Arrencada suau: rampa de 40 a 220|2. Arranque suave: rampa de 40 a 220", prog: 'start{ set:vel,40 rep:6{ run:all,fwd,$vel wait:500 change:vel,30 } stop:all }' },
+          { t: "3. Comptador de 3 cintes|3. Contador de 3 cintas", prog: 'start{ set:n,0 while:$n<3{ until:M=1{ run:all,fwd,120 } change:n,1 num:$n until:M=0{ run:all,fwd,120 } } stop:all }' }
+        ] }
+    ]
+  },
+
+  /* ---------- Sessió 2 · Com més lluny, més de pressa ---------- */
+  'k6-2': {
+    obj: [
+      "L'alumne/a fa servir el bloc «calcula» per obtenir una velocitat a partir de la distància que mesura l'ultrasò.|El alumno/a usa el bloque «calcula» para obtener una velocidad a partir de la distancia que mide el ultrasonido.",
+      "L'alumne/a explica el control proporcional: error = distància − objectiu i velocitat = error × k.|El alumno/a explica el control proporcional: error = distancia − objetivo y velocidad = error × k.",
+      "L'alumne/a relaciona el guany k amb el comportament del robot (lent i lluny / ràpid i a prop) i amb la zona morta dels motors.|El alumno/a relaciona la ganancia k con el comportamiento del robot (lento y lejos / rápido y cerca) y con la zona muerta de los motores.",
+      "L'alumne/a mesura al Maqueen real on s'atura amb diferents k i ho compara amb el simulador.|El alumno/a mide en el Maqueen real dónde se para con diferentes k y lo compara con el simulador."
+    ],
+    comp: [
+      "Competència matemàtica: proporcionalitat directa, restes i multiplicacions, nombres negatius i taules|Competencia matemática: proporcionalidad directa, restas y multiplicaciones, números negativos y tablas",
+      "Pensament computacional: bucle de control (mesurar, calcular, actuar) i expressions amb variables|Pensamiento computacional: bucle de control (medir, calcular, actuar) y expresiones con variables",
+      "Competència científica i tecnològica: sistemes amb realimentació i ajust de paràmetres|Competencia científica y tecnológica: sistemas con realimentación y ajuste de parámetros",
+      "Competència digital (CD5): programar i ajustar un robot real|Competencia digital (CD5): programar y ajustar un robot real"
+    ],
+    vocab: [
+      ["Calcula (posa … a … × …)|Calcula (pon … a … × …)", "Bloc que fa una operació (+, −, ×, ÷) i guarda el resultat en una variable.|Bloque que hace una operación (+, −, ×, ÷) y guarda el resultado en una variable."],
+      ["Error|Error", "El que falta per arribar: distància − distància que vull.|Lo que falta para llegar: distancia − distancia que quiero."],
+      ["Control proporcional|Control proporcional", "La velocitat és proporcional a l'error: com més lluny, més de pressa.|La velocidad es proporcional al error: cuanto más lejos, más deprisa."],
+      ["Guany k|Ganancia k", "El número que multiplica l'error: diu com de «valent» és el robot.|El número que multiplica el error: dice lo «valiente» que es el robot."],
+      ["Tot o res|Todo o nada", "Control que només fa dues coses: endavant o aturat.|Control que solo hace dos cosas: adelante o parado."]
+    ],
+    mat: {
+      aula: [
+        "Un ordinador per alumne/a amb Numi Tech obert a la sessió «Com més lluny, més de pressa»|Un ordenador por alumno/a con Numi Tech abierto en la sesión «Cuanto más lejos, más deprisa»",
+        "Projector i la presentació d'aquesta sessió|Proyector y la presentación de esta sesión",
+        "Un kit Maqueen Lite V5 + micro:bit V2 per grup de 3-4|Un kit Maqueen Lite V5 + micro:bit V2 por grupo de 3-4",
+        "Per grup: una caixa de cartró rígida (el carregador), una cinta mètrica i cinta de pintor per marcar la sortida|Por grupo: una caja de cartón rígida (el cargador), una cinta métrica y cinta de pintor para marcar la salida",
+        "Per a l'activitat sense pantalla: la fitxa «La taula del robot proporcional» i una calculadora per grup (opcional)|Para la actividad sin pantalla: la ficha «La tabla del robot proporcional» y una calculadora por grupo (opcional)"
+      ],
+      imprimir: ["Fitxa: la taula del robot proporcional|Ficha: la tabla del robot proporcional", "Codi per al Maqueen: el carregador amb k = 2, 10 i 30|Código para el Maqueen: el cargador con k = 2, 10 y 30"],
+      prep: [
+        "Per a cada grup, posar la caixa contra una paret i marcar la sortida del robot a 80 cm de la caixa.|Para cada grupo, poner la caja contra una pared y marcar la salida del robot a 80 cm de la caja.",
+        "Tenir a punt a MakeCode els tres programes de l'imprimible «Codi» i comprovar-ne un amb un robot.|Tener listos en MakeCode los tres programas del imprimible «Código» y comprobar uno con un robot.",
+        "Provar abans les demostracions de les diapositives 5, 7 i 9.|Probar antes las demostraciones de las diapositivas 5, 7 y 9.",
+        "Dibuixar a la pissarra una taula: grup · k · distància final (simulador) · distància final (robot).|Dibujar en la pizarra una tabla: grupo · k · distancia final (simulador) · distancia final (robot)."
+      ]
+    },
+    plan: [
+      { min: 4, t: "Benvinguda: l'estació de càrrega|Bienvenida: la estación de carga", fase: 'inici',
+        fa: "Presenta el problema: el robot s'ha d'acostar al carregador sense xocar i sense quedar-se lluny. Pregunta com frenen quan van en bicicleta cap a un semàfor i recull respostes.|Presenta el problema: el robot se tiene que acercar al cargador sin chocar y sin quedarse lejos. Pregunta cómo frenan cuando van en bicicleta hacia un semáforo y recoge respuestas.",
+        diu: ["Frenes de cop just al semàfor o vas frenant abans?|¿Frenas de golpe justo en el semáforo o vas frenando antes?", "Avui el robot frenarà com una persona que condueix bé.|Hoy el robot frenará como una persona que conduce bien."],
+        slides: ['s1', 's2'], app: "Encara no: pantalles abaixades.|Todavía no: pantallas bajadas.", org: "Tot el grup|Todo el grupo" },
+      { min: 10, t: "Control proporcional|Control proporcional", fase: 'teoria',
+        fa: "Repassa el «tot o res» de la unitat 3. Explica la idea amb l'animació, presenta el bloc «calcula» i executa la demo de distància × 3. Després escriu a la pissarra error = distància − 10 i velocitat = error × k i calculeu junts tres casos (50, 30 i 12 cm). Acaba amb el guany k i la zona morta, i amb la predicció de la diapositiva 9.|Repasa el «todo o nada» de la unidad 3. Explica la idea con la animación, presenta el bloque «calcula» y ejecuta la demo de distancia × 3. Después escribe en la pizarra error = distancia − 10 y velocidad = error × k y calculad juntos tres casos (50, 30 y 12 cm). Termina con la ganancia k y la zona muerta, y con la predicción de la diapositiva 9.",
+        diu: ["A 50 cm, quin és l'error? I la velocitat amb k = 5?|A 50 cm, ¿cuál es el error? ¿Y la velocidad con k = 5?", "I a 12 cm? Es mourà el motor?|¿Y a 12 cm? ¿Se moverá el motor?", "Si el robot es queda lluny, el k és massa gran o massa petit?|Si el robot se queda lejos, ¿el k es demasiado grande o demasiado pequeño?"],
+        slides: ['s3', 's4', 's5', 's6', 's7', 's8', 's9'], app: "Encara no: tota l'atenció a la projecció.|Todavía no: toda la atención en la proyección.", org: "Tot el grup|Todo el grupo" },
+      { min: 10, t: "La taula del robot proporcional (sense pantalla)|La tabla del robot proporcional (sin pantalla)", fase: 'desconnectat',
+        fa: "En parelles, omplen la taula de la fitxa: per a cada distància calculen l'error i la velocitat amb k = 2 i amb k = 10, i marquen de vermell les velocitats per sota de 30 (el robot no es mou). Després responen on s'aturarà amb cada k. Per acabar, dos voluntaris/es fan de robot cap a la paret: cada «tic» del professor/a, fan una passa de llargada proporcional a la distància que falta.|Por parejas, rellenan la tabla de la ficha: para cada distancia calculan el error y la velocidad con k = 2 y con k = 10, y marcan en rojo las velocidades por debajo de 30 (el robot no se mueve). Después responden dónde se parará con cada k. Para terminar, dos voluntarios/as hacen de robot hacia la pared: en cada «tic» del profesor/a, dan un paso de longitud proporcional a la distancia que falta.",
+        diu: ["Marqueu en vermell on el motor ja no té força.|Marcad en rojo donde el motor ya no tiene fuerza.", "Amb quin k s'atura més a prop dels 10 cm?|¿Con qué k se para más cerca de los 10 cm?", "Fixeu-vos: com més a prop, passes més petites.|Fijaos: cuanto más cerca, pasos más pequeños."],
+        slides: ['s10'], app: "Cap: activitat sense pantalla.|Ninguna: actividad sin pantalla.", org: "Parelles i dos voluntaris/es|Parejas y dos voluntarios/as" },
+      { min: 12, t: "Al Maqueen de veritat: el carregador|En el Maqueen de verdad: el cargador", fase: 'robot',
+        fa: "Cada grup posa el robot a la marca de sortida (80 cm de la caixa) i prova els tres programes de l'imprimible: k = 2, k = 10 i k = 30. Després de cada prova, mesuren amb la cinta la distància entre el davant del robot i la caixa i l'apunten a la taula de la pissarra. Comparen amb el simulador: el robot real pot aturar-se una mica més lluny o més a prop, perquè la zona morta de cada motor és diferent. Si un robot gira en lloc d'anar recte, que mirin si una roda frega.|Cada grupo pone el robot en la marca de salida (80 cm de la caja) y prueba los tres programas del imprimible: k = 2, k = 10 y k = 30. Después de cada prueba, miden con la cinta la distancia entre la parte delantera del robot y la caja y la apuntan en la tabla de la pizarra. Comparan con el simulador: el robot real puede pararse un poco más lejos o más cerca, porque la zona muerta de cada motor es diferente. Si un robot gira en lugar de ir recto, que miren si una rueda roza.",
+        diu: ["Robot a terra, caixa ben ferma contra la paret.|Robot en el suelo, caja bien firme contra la pared.", "Amb quin k ha arribat més a prop? I quin ha frenat més suau?|¿Con qué k ha llegado más cerca? ¿Y cuál ha frenado más suave?", "El vostre robot s'atura igual que el del simulador? Per què pot canviar?|¿Vuestro robot se para igual que el del simulador? ¿Por qué puede cambiar?"],
+        slides: ['s11', 's12'], app: "Cap: MakeCode i el robot.|Ninguna: MakeCode y el robot.", org: "Grups de 3-4 per kit|Grupos de 3-4 por kit" },
+      { min: 17, t: "A l'ordinador: prova i reptes|En el ordenador: prueba y retos", fase: 'ordinador',
+        fa: "Cada alumne/a avança al seu ritme. Remarca que en els reptes no hi ha bloc «si»: la velocitat s'ha de calcular. Quan la majoria arribi al repte urgent (segon 5), projecta la diapositiva 13 i pregunta què passa si el k és molt gran. El repte de recular és opcional per a qui vagi de pressa.|Cada alumno/a avanza a su ritmo. Remarca que en los retos no hay bloque «si»: la velocidad se tiene que calcular. Cuando la mayoría llegue al reto urgente (segundo 5), proyecta la diapositiva 13 y pregunta qué pasa si el k es muy grande. El reto de retroceder es opcional para quien vaya deprisa.",
+        diu: ["Quina velocitat calcula el robot ara mateix? Mira el tauler.|¿Qué velocidad calcula el robot ahora mismo? Mira el panel.", "S'atura massa lluny? Prova un k més gran.|¿Se para demasiado lejos? Prueba un k más grande.", "Un número negatiu per un altre de negatiu, què dona?|Un número negativo por otro negativo, ¿qué da?"],
+        slides: ['s13'], app: "De «Recorda» fins a l'últim repte: preguntes, «Descobreix», el càlcul de l'error, el bucle de control, «On es quedarà?», el k massa petit, la pausa activa i els reptes (distància × 3, parar a 10 cm, arribar abans del segon 5 i recular).|De «Recuerda» hasta el último reto: preguntas, «Descubre», el cálculo del error, el bucle de control, «¿Dónde se quedará?», el k demasiado pequeño, la pausa activa y los retos (distancia × 3, parar a 10 cm, llegar antes del segundo 5 y retroceder).", org: "Individual|Individual" },
+      { min: 4, t: "Crea: l'estació de càrrega|Crea: la estación de carga", fase: 'crea',
+        fa: "Cada alumne/a programa la seva estació de càrrega: control proporcional i llums verds en arribar. En parelles es diuen quin k han triat i per què.|Cada alumno/a programa su estación de carga: control proporcional y luces verdes al llegar. Por parejas se dicen qué k han elegido y por qué.",
+        diu: ["Quin k has triat? Què passaria amb la meitat?|¿Qué k has elegido? ¿Qué pasaría con la mitad?"],
+        slides: ['s14'], app: "Pas «Crea»: L'estació de càrrega.|Paso «Crea»: La estación de carga.", org: "Individual i després per parelles|Individual y después por parejas" },
+      { min: 3, t: "Tancament i tiquet de sortida|Cierre y ticket de salida", fase: 'tancament',
+        fa: "Repassa les idees amb el resum i fes el tiquet a la porta.|Repasa las ideas con el resumen y haz el ticket en la puerta.",
+        diu: ["Qui em diu en una frase què és el control proporcional?|¿Quién me dice en una frase qué es el control proporcional?"],
+        slides: ['s15', 's16'], app: "«Tancament»: dues preguntes i com m'he sentit.|«Cierre»: dos preguntas y cómo me he sentido.", org: "Tot el grup|Todo el grupo" }
+    ],
+    errors: [
+      ["Calcula la velocitat però el motor continua a un número fix.|Calcula la velocidad pero el motor sigue en un número fijo.", "Pregunta: qui fa servir la variable que has calculat? Que segueixi el camí del número fins al motor.|Pregunta: ¿quién usa la variable que has calculado? Que siga el camino del número hasta el motor."],
+      ["Posa els blocs de calcular a «en iniciar» i la velocitat no canvia mai.|Pone los bloques de calcular en «al iniciar» y la velocidad nunca cambia.", "Que miri el tauler mentre s'executa: la velocitat canvia? Quantes vegades es fa «en iniciar»?|Que mire el panel mientras se ejecuta: ¿la velocidad cambia? ¿Cuántas veces se hace «al iniciar»?"],
+      ["Fa la resta al revés (10 − distància) i el robot no es mou.|Hace la resta al revés (10 − distancia) y el robot no se mueve.", "Que calculi l'error amb un exemple: a 50 cm, què li falta? Ha de sortir positiu quan és lluny.|Que calcule el error con un ejemplo: a 50 cm, ¿qué le falta? Tiene que salir positivo cuando está lejos."],
+      ["Pensa que el robot s'aturarà exactament a 10 cm i no entén per què para abans.|Piensa que el robot se parará exactamente a 10 cm y no entiende por qué para antes.", "Que calculi la velocitat a 14 cm amb el seu k. És més de 30? Recorda la zona morta.|Que calcule la velocidad a 14 cm con su k. ¿Es más de 30? Recuerda la zona muerta."],
+      ["Prova números de k a l'atzar sense mirar què passa.|Prueba números de k al azar sin mirar qué pasa.", "Demana-li que apunti per a cada k on s'atura i quant tarda. Quina tendència veu?|Pídele que apunte para cada k dónde se para y cuánto tarda. ¿Qué tendencia ve?"]
+    ],
+    diff: {
+      mes: "Afegir una «velocitat mínima»: velocitat = error × k + 30, perquè el robot no s'aturi abans d'hora per la zona morta, i comparar on s'atura. També: mostrar l'error a la pantalla quan el robot ja s'ha aturat.|Añadir una «velocidad mínima»: velocidad = error × k + 30, para que el robot no se pare antes de tiempo por la zona muerta, y comparar dónde se para. También: mostrar el error en la pantalla cuando el robot ya se ha parado.",
+      menys: "Treballar només distància × 3 (sense error) i omplir la taula de la fitxa amb la calculadora. Per als reptes, partir del programa de la demo «L'error» i canviar només el k.|Trabajar solo distancia × 3 (sin error) y rellenar la tabla de la ficha con la calculadora. Para los retos, partir del programa de la demo «El error» y cambiar solo el k."
+    },
+    aval: {
+      ticket: ["Error = distància − 10 i velocitat = error × 4. A 40 cm, a quina velocitat va?|Error = distancia − 10 y velocidad = error × 4. A 40 cm, ¿a qué velocidad va?",
+        "El robot s'atura massa lluny. Faries el k més gran o més petit? Per què?|El robot se para demasiado lejos. ¿Harías el k más grande o más pequeño? ¿Por qué?"],
+      rubric: [
+        ["Bloc calcula|Bloque calcula", "Calcula l'error i la velocitat i la fa servir al motor dins de «per sempre».|Calcula el error y la velocidad y la usa en el motor dentro de «para siempre».", "Fa servir el bloc amb ajuda o oblida posar la variable al motor.|Usa el bloque con ayuda u olvida poner la variable en el motor."],
+        ["Control proporcional|Control proporcional", "Explica per què el robot frena sol a mesura que s'acosta.|Explica por qué el robot frena solo a medida que se acerca.", "Veu que frena però no ho relaciona amb l'error.|Ve que frena pero no lo relaciona con el error."],
+        ["Guany i zona morta|Ganancia y zona muerta", "Tria el k raonant on s'atura i quant tarda.|Elige el k razonando dónde se para y cuánto tarda.", "Troba un k que funciona provant, sense explicar-ne el perquè.|Encuentra un k que funciona probando, sin explicar el porqué."]
+      ]
+    },
+    casa: "A casa, amb el mòbil, podeu repetir la sessió. Proposta: quan aneu en cotxe o en bicicleta, fixeu-vos com es frena abans d'un semàfor i expliqueu-ho a algú de casa amb les paraules «error» i «velocitat».|En casa, con el móvil, podéis repetir la sesión. Propuesta: cuando vayáis en coche o en bicicleta, fijaos en cómo se frena antes de un semáforo y explicádselo a alguien de casa con las palabras «error» y «velocidad».",
+    slides: [
+      { id: 's1', k: 'portada', t: "Com més lluny, més de pressa|Cuanto más lejos, más deprisa", x: "Avui: el bloc calcula i el control proporcional.|Hoy: el bloque calcula y el control proporcional.",
+        nota: "Presenta l'estació de càrrega del taller.|Presenta la estación de carga del taller." },
+      { id: 's2', k: 'pregunta', t: "Com frenes en bicicleta?|¿Cómo frenas en bicicleta?", x: "Arribes a un semàfor vermell. Frenes de cop o a poc a poc?|Llegas a un semáforo rojo. ¿Frenas de golpe o poco a poco?",
+        nota: "Recull la idea: com més a prop, més a poc a poc. És el que farà el robot.|Recoge la idea: cuanto más cerca, más despacio. Es lo que hará el robot." },
+      { id: 's3', k: 'robo', t: "Recordem: el «tot o res»|Recordemos: el «todo o nada»", x: "Si distància < 15: atura't; si no, endavant a 200.|Si distancia < 15: párate; si no, adelante a 200.",
+        robo: { w: { w: 130, h: 40, bot: [12, 20, 90], walls: [[112, 4, 6, 32]] }, prog: 'forever{ if:dist<15{ stop:all } else{ run:all,fwd,200 } }' },
+        nota: "Que observin la velocitat: és la mateixa fins al final i para de cop. Funciona, però els ous patirien!|Que observen la velocidad: es la misma hasta el final y para de golpe. Funciona, ¡pero los huevos sufrirían!" },
+      { id: 's4', k: 'anim', t: "Com més lluny, més de pressa|Cuanto más lejos, más deprisa", anim: 'k6prop', x: "La velocitat depèn de la distància.|La velocidad depende de la distancia.",
+        nota: "Fes notar la gràfica: és una línia recta. Si la distància que falta es fa la meitat, la velocitat també.|Haz notar la gráfica: es una línea recta. Si la distancia que falta se hace la mitad, la velocidad también." },
+      { id: 's5', k: 'robo', t: "El bloc calcula: distància × 3|El bloque calcula: distancia × 3", x: "A 80 cm: 240. A 30 cm: 90. A 10 cm: 30.|A 80 cm: 240. A 30 cm: 90. A 10 cm: 30.",
+        robo: { w: { w: 130, h: 40, bot: [12, 20, 90], walls: [[112, 4, 6, 32]] }, prog: 'forever{ calc:v,dist,*,3 run:all,fwd,$v }', varNames: { v: 'velocitat|velocidad' } },
+        nota: "Compara amb la diapositiva 3: ara frena de mica en mica, sense cap «si».|Compara con la diapositiva 3: ahora frena poco a poco, sin ningún «si»." },
+      { id: 's6', k: 'concepte', t: "L'error i el guany|El error y la ganancia", punts: ["error = distància − 10 (el que falta)|error = distancia − 10 (lo que falta)", "velocitat = error × k|velocidad = error × k", "A 50 cm amb k = 5: 40 × 5 = 200|A 50 cm con k = 5: 40 × 5 = 200"],
+        blocks: ["posa error a distància − 10|pon error a distancia − 10", "posa velocitat a error × 10|pon velocidad a error × 10", "motor els dos endavant a velocitat|motor los dos adelante a velocidad"],
+        nota: "Calculeu junts a la pissarra 50, 30 i 12 cm. Pregunta què passa a 12 cm amb k = 5 (velocitat 10: no es mou).|Calculad juntos en la pizarra 50, 30 y 12 cm. Pregunta qué pasa a 12 cm con k = 5 (velocidad 10: no se mueve)." },
+      { id: 's7', k: 'robo', t: "Parar a 10 cm|Parar a 10 cm", x: "Error × 10: on s'aturarà?|Error × 10: ¿dónde se parará?",
+        robo: { w: { w: 130, h: 40, bot: [12, 20, 90], walls: [[112, 4, 6, 32]] }, prog: 'forever{ calc:e,dist,-,10 calc:v,$e,*,10 run:all,fwd,$v }', varNames: { e: 'error|error', v: 'velocitat|velocidad' } },
+        nota: "S'atura a uns 13 cm: amb error 3, la velocitat és 30 i el motor ja no es mou.|Se para a unos 13 cm: con error 3, la velocidad es 30 y el motor ya no se mueve." },
+      { id: 's8', k: 'anim', t: "El guany k|La ganancia k", anim: 'k6gain', x: "k petit: lent i lluny. k gran: ràpid i a prop.|k pequeño: lento y lejos. k grande: rápido y cerca.",
+        nota: "Pregunta què passaria amb un k gegant (1000): seria com el «tot o res».|Pregunta qué pasaría con un k gigante (1000): sería como el «todo o nada»." },
+      { id: 's9', k: 'robo', t: "On es quedarà?|¿Dónde se quedará?", x: "Velocitat = distància × 2. A, B o C?|Velocidad = distancia × 2. ¿A, B o C?",
+        robo: { w: { w: 130, h: 40, bot: [12, 20, 90], walls: [[110, 4, 6, 32]], marks: { A: [100, 20], B: [89, 20], C: [70, 20] }, time: 18 }, prog: 'forever{ calc:v,dist,*,2 run:all,fwd,$v }', varNames: { v: 'velocitat|velocidad' } },
+        nota: "Que votin abans d'executar. Resposta: B (s'atura a uns 15 cm, quan 15 × 2 = 30). Enllaça-ho amb l'animació de la zona morta de l'app.|Que voten antes de ejecutar. Respuesta: B (se para a unos 15 cm, cuando 15 × 2 = 30). Enlázalo con la animación de la zona muerta de la app." },
+      { id: 's10', k: 'activitat', t: "La taula del robot proporcional|La tabla del robot proporcional", timer: 10, punts: ["Calculeu error i velocitat amb k = 2 i k = 10.|Calculad error y velocidad con k = 2 y k = 10.", "En vermell, les velocitats per sota de 30.|En rojo, las velocidades por debajo de 30.", "On s'atura cada robot?|¿Dónde se para cada robot?"],
+        nota: "Al final, dos voluntaris/es fan de robot proporcional cap a la paret.|Al final, dos voluntarios/as hacen de robot proporcional hacia la pared." },
+      { id: 's11', k: 'activitat', t: "Al Maqueen: el carregador|En el Maqueen: el cargador", timer: 12, punts: ["Sortida a 80 cm de la caixa.|Salida a 80 cm de la caja.", "Proveu k = 2, k = 10 i k = 30.|Probad k = 2, k = 10 y k = 30.", "Mesureu on s'atura i apunteu-ho.|Medid dónde se para y apuntadlo.", "Compareu-ho amb el simulador.|Comparadlo con el simulador."],
+        nota: "Seguretat: robot sempre a terra i caixa ferma. Si un robot no es mou amb k = 2, és la zona morta: bona ocasió per comentar-ho.|Seguridad: robot siempre en el suelo y caja firme. Si un robot no se mueve con k = 2, es la zona muerta: buena ocasión para comentarlo." },
+      { id: 's12', k: 'concepte', t: "El codi a MakeCode|El código en MakeCode", code: "let e = 0\nlet v = 0\nbasic.forever(function () {\n    e = Maqueen_V5.Ultrasonic() - 10\n    v = e * 10\n    Maqueen_V5.motorRun(Maqueen_V5.Motors.All, Maqueen_V5.Dir.CW, v)\n})",
+        punts: ["Els blocs de calcular són a «Matemàtiques».|Los bloques de calcular están en «Matemáticas».", "Si v passa de 255, el motor va a 255.|Si v pasa de 255, el motor va a 255."],
+        nota: "Al robot de veritat, l'ultrasò de vegades dona una lectura estranya: el control proporcional ho corregeix a la volta següent.|En el robot de verdad, el ultrasonido a veces da una lectura extraña: el control proporcional lo corrige en la vuelta siguiente." },
+      { id: 's13', k: 'repte', t: "Repte urgent: abans del segon 5|Reto urgente: antes del segundo 5", x: "Amb k = 10 arriba tard a la pista llarga. Quin k cal?|Con k = 10 llega tarde a la pista larga. ¿Qué k hace falta?", punts: ["k més gran → va més estona a tota velocitat.|k más grande → va más rato a toda velocidad.", "Però continua frenant al final!|¡Pero sigue frenando al final!"],
+        nota: "Pregunta: on és el límit? Amb k molt gran torna a ser un «tot o res».|Pregunta: ¿dónde está el límite? Con k muy grande vuelve a ser un «todo o nada»." },
+      { id: 's14', k: 'activitat', t: "Crea: l'estació de càrrega|Crea: la estación de carga", timer: 4, x: "Control proporcional + llums verds quan arriba.|Control proporcional + luces verdes cuando llega.",
+        nota: "Pista per a qui s'encalli: «si velocitat < 40, llums verds; si no, grocs».|Pista para quien se atasque: «si velocidad < 40, luces verdes; si no, amarillas»." },
+      { id: 's15', k: 'resum', t: "Què hem après avui|Qué hemos aprendido hoy", punts: ["El bloc calcula fa operacions amb sensors i variables.|El bloque calcula hace operaciones con sensores y variables.", "Velocitat = error × k: com més lluny, més de pressa.|Velocidad = error × k: cuanto más lejos, más deprisa.", "k petit: para lluny (zona morta). k gran: arriba ràpid i a prop.|k pequeño: para lejos (zona muerta). k grande: llega rápido y cerca."],
+        nota: "Anuncia la propera sessió: i si el «mur» es mogués?|Anuncia la próxima sesión: ¿y si el «muro» se moviera?" },
+      { id: 's16', k: 'tiquet', t: "Tiquet de sortida|Ticket de salida", punts: ["A 40 cm amb error × 4: quina velocitat?|A 40 cm con error × 4: ¿qué velocidad?", "Para massa lluny: k més gran o més petit?|Para demasiado lejos: ¿k más grande o más pequeño?"],
+        nota: "Respostes: 120 · més gran. Anota qui encara fa la resta al revés.|Respuestas: 120 · más grande. Anota quién todavía hace la resta al revés." }
+    ],
+    print: [
+      { id: 'p1', t: "La taula del robot proporcional|La tabla del robot proporcional", k: 'fitxa',
+        intro: "Una fitxa per parella. Error = distància − 10. Velocitat = error × k. Recordeu: per sota de 30 el motor no es mou.|Una ficha por pareja. Error = distancia − 10. Velocidad = error × k. Recordad: por debajo de 30 el motor no se mueve.",
+        items: [
+          { q: "Distància 60 cm → error ___ · velocitat amb k = 2: ___ · amb k = 10: ___|Distancia 60 cm → error ___ · velocidad con k = 2: ___ · con k = 10: ___", sol: "50 · 100 · 500 (el motor va a 255, el màxim).|50 · 100 · 500 (el motor va a 255, el máximo)." },
+          { q: "Distància 30 cm → error ___ · k = 2: ___ · k = 10: ___|Distancia 30 cm → error ___ · k = 2: ___ · k = 10: ___", sol: "20 · 40 · 200.|20 · 40 · 200." },
+          { q: "Distància 20 cm → error ___ · k = 2: ___ · k = 10: ___ (Es mou el motor amb k = 2?)|Distancia 20 cm → error ___ · k = 2: ___ · k = 10: ___ (¿Se mueve el motor con k = 2?)", sol: "10 · 20 (no es mou: és menys de 30) · 100.|10 · 20 (no se mueve: es menos de 30) · 100." },
+          { q: "Distància 13 cm → error ___ · k = 10: ___. On s'atura més o menys el robot amb k = 2? I amb k = 10?|Distancia 13 cm → error ___ · k = 10: ___. ¿Dónde se para más o menos el robot con k = 2? ¿Y con k = 10?", sol: "3 · 30. Amb k = 2 s'atura a uns 25 cm (quan l'error és 15); amb k = 10, a uns 13 cm.|3 · 30. Con k = 2 se para a unos 25 cm (cuando el error es 15); con k = 10, a unos 13 cm." },
+          { q: "On es quedarà aquest robot? Explica-ho amb la zona morta.|¿Dónde se quedará este robot? Explícalo con la zona muerta.", rprog: 'forever{ calc:v,dist,*,2 run:all,fwd,$v }', sol: "A uns 15 cm del mur: allà la velocitat és 15 × 2 = 30 i el motor ja no es mou.|A unos 15 cm del muro: allí la velocidad es 15 × 2 = 30 y el motor ya no se mueve." }
+        ] },
+      { id: 'p2', t: "Codi per al Maqueen: el carregador|Código para el Maqueen: el cargador", k: 'codi',
+        intro: "Tres programes iguals amb un guany k diferent. Sortida a 80 cm de la caixa; després de cada prova, mesureu la distància final.|Tres programas iguales con una ganancia k diferente. Salida a 80 cm de la caja; después de cada prueba, medid la distancia final.",
+        items: [
+          { t: "1. k = 2 (prudent)|1. k = 2 (prudente)", prog: 'forever{ calc:e,dist,-,10 calc:v,$e,*,2 run:all,fwd,$v }' },
+          { t: "2. k = 10|2. k = 10", prog: 'forever{ calc:e,dist,-,10 calc:v,$e,*,10 run:all,fwd,$v }' },
+          { t: "3. k = 30 (valent)|3. k = 30 (valiente)", prog: 'forever{ calc:e,dist,-,10 calc:v,$e,*,30 run:all,fwd,$v }' }
+        ] }
+    ]
+  },
+
+  /* ---------- Sessió 3 · Segueix el líder ---------- */
+  'k6-3': {
+    obj: [
+      "L'alumne/a programa un robot que segueix un altre robot amb control proporcional, sense xocar i sense quedar-se enrere.|El alumno/a programa un robot que sigue a otro robot con control proporcional, sin chocar y sin quedarse atrás.",
+      "L'alumne/a explica per què el seguidor va més lluny com més de pressa va el líder i com hi influeix el guany k.|El alumno/a explica por qué el seguidor va más lejos cuanto más deprisa va el líder y cómo influye la ganancia k.",
+      "L'alumne/a fa que el robot reculi quan l'error és negatiu i que avisi amb llums quan frena.|El alumno/a hace que el robot retroceda cuando el error es negativo y que avise con luces cuando frena.",
+      "L'alumne/a simula a mà el bucle de control en una taula i veu com la distància s'estabilitza.|El alumno/a simula a mano el bucle de control en una tabla y ve cómo la distancia se estabiliza."
+    ],
+    comp: [
+      "Competència matemàtica: taules de valors, operacions amb nombres negatius i regularitats|Competencia matemática: tablas de valores, operaciones con números negativos y regularidades",
+      "Pensament computacional: realimentació, condicions amb variables i depuració|Pensamiento computacional: realimentación, condiciones con variables y depuración",
+      "Competència científica i tecnològica: vehicles que circulen en comboi i seguretat viària|Competencia científica y tecnológica: vehículos que circulan en convoy y seguridad vial",
+      "Competència personal i social: cooperació entre grups (un fa el líder i l'altre el segueix)|Competencia personal y social: cooperación entre grupos (uno hace de líder y el otro lo sigue)"
+    ],
+    vocab: [
+      ["Líder|Líder", "El robot que va al davant i obre el camí.|El robot que va delante y abre el camino."],
+      ["Seguidor/a|Seguidor/a", "El robot que mira el líder i guarda la distància.|El robot que mira al líder y guarda la distancia."],
+      ["Comboi|Convoy", "Un grup de vehicles que circulen en fila, un darrere l'altre.|Un grupo de vehículos que circulan en fila, uno detrás de otro."],
+      ["Realimentació|Realimentación", "Tornar a mesurar després d'actuar per corregir el que es fa.|Volver a medir después de actuar para corregir lo que se hace."],
+      ["Error negatiu|Error negativo", "Quan el robot és més a prop del que vol: ha de recular.|Cuando el robot está más cerca de lo que quiere: tiene que retroceder."]
+    ],
+    mat: {
+      aula: [
+        "Un ordinador per alumne/a amb Numi Tech obert a la sessió «Segueix el líder»|Un ordenador por alumno/a con Numi Tech abierto en la sesión «Sigue al líder»",
+        "Projector i la presentació d'aquesta sessió|Proyector y la presentación de esta sesión",
+        "Un kit Maqueen Lite V5 + micro:bit V2 per grup de 3-4|Un kit Maqueen Lite V5 + micro:bit V2 por grupo de 3-4",
+        "Per cada dos grups: una caixa de sabates amb un cordill (el «líder» que s'arrossega) i cinta de pintor per marcar un carrer recte de 1,5 m|Por cada dos grupos: una caja de zapatos con un cordel (el «líder» que se arrastra) y cinta de pintor para marcar una calle recta de 1,5 m",
+        "Per a l'activitat sense pantalla: la fitxa «La taula del seguidor» i un regle d'1 m o una cinta mètrica per parella|Para la actividad sin pantalla: la ficha «La tabla del seguidor» y una regla de 1 m o una cinta métrica por pareja"
+      ],
+      imprimir: ["Fitxa: la taula del seguidor|Ficha: la tabla del seguidor", "Codi per al Maqueen: el seguidor|Código para el Maqueen: el seguidor"],
+      prep: [
+        "Marcar a terra dos carrers rectes de 1,5 m amb cinta de pintor, separats per poder treballar dos grups alhora a cadascun.|Marcar en el suelo dos calles rectas de 1,5 m con cinta de pintor, separadas para poder trabajar dos grupos a la vez en cada una.",
+        "Lligar el cordill a la caixa de sabates: la caixa ha de ser prou alta (més de 6 cm) perquè l'ultrasò la vegi bé.|Atar el cordel a la caja de zapatos: la caja tiene que ser suficientemente alta (más de 6 cm) para que el ultrasonido la vea bien.",
+        "Tenir a punt a MakeCode els programes de l'imprimible «Codi».|Tener listos en MakeCode los programas del imprimible «Código».",
+        "Provar abans les demostracions de les diapositives 5, 6 i 8.|Probar antes las demostraciones de las diapositivas 5, 6 y 8."
+      ]
+    },
+    plan: [
+      { min: 4, t: "Benvinguda: el comboi del mercat|Bienvenida: el convoy del mercado", fase: 'inici',
+        fa: "Presenta el comboi: un robot líder i els altres el segueixen en fila sense cap enganxall. Pregunta què ha de fer el segon robot si el primer frena i què passaria si no frenés.|Presenta el convoy: un robot líder y los demás lo siguen en fila sin ningún enganche. Pregunta qué tiene que hacer el segundo robot si el primero frena y qué pasaría si no frenara.",
+        diu: ["Si el cotxe del davant frena, què fa el vostre familiar que condueix?|Si el coche de delante frena, ¿qué hace vuestro familiar que conduce?", "Avui el «mur» de la sessió passada es mou!|¡Hoy el «muro» de la sesión pasada se mueve!"],
+        slides: ['s1', 's2'], app: "Encara no: pantalles abaixades.|Todavía no: pantallas bajadas.", org: "Tot el grup|Todo el grupo" },
+      { min: 9, t: "Seguir un objectiu que es mou|Seguir un objetivo que se mueve", fase: 'teoria',
+        fa: "Repassa el control proporcional amb la diapositiva 3. Mostra l'animació del líder i executa la demo del semàfor: que prediguin què farà el seguidor quan el líder pari. Després la demo del líder ràpid: per què ara el segueix més lluny? Fes el càlcul a la pissarra (90 ÷ 10 = 9 cm d'error). Acaba amb la demo del líder que torna enrere i el «si error < 0, recula».|Repasa el control proporcional con la diapositiva 3. Muestra la animación del líder y ejecuta la demo del semáforo: que predigan qué hará el seguidor cuando el líder pare. Después la demo del líder rápido: ¿por qué ahora lo sigue más lejos? Haz el cálculo en la pizarra (90 ÷ 10 = 9 cm de error). Termina con la demo del líder que vuelve atrás y el «si error < 0, retrocede».",
+        diu: ["El seguidor sap que el líder s'ha aturat? Com ho «nota»?|¿El seguidor sabe que el líder se ha parado? ¿Cómo lo «nota»?", "Per anar a 8 cm/s cal velocitat 90. Amb k = 10, quin error cal?|Para ir a 8 cm/s hace falta velocidad 90. Con k = 10, ¿qué error hace falta?", "Si el líder ve cap a nosaltres, l'error és positiu o negatiu?|Si el líder viene hacia nosotros, ¿el error es positivo o negativo?"],
+        slides: ['s3', 's4', 's5', 's6', 's7', 's8'], app: "Encara no: tota l'atenció a la projecció.|Todavía no: toda la atención en la proyección.", org: "Tot el grup|Todo el grupo" },
+      { min: 10, t: "La taula del seguidor (sense pantalla)|La tabla del seguidor (sin pantalla)", fase: 'desconnectat',
+        fa: "En parelles, amb un regle a la taula i dues gomes (líder i seguidor), simulen el bucle de control ronda a ronda seguint la fitxa: mesuren la distància, calculen l'error (distància − 10), el seguidor avança la meitat de l'error i després el líder avança 8 cm. Apunten cada ronda a la taula. A partir de la ronda 4 el líder s'atura: què passa amb la distància?|Por parejas, con una regla en la mesa y dos gomas (líder y seguidor), simulan el bucle de control ronda a ronda siguiendo la ficha: miden la distancia, calculan el error (distancia − 10), el seguidor avanza la mitad del error y después el líder avanza 8 cm. Apuntan cada ronda en la tabla. A partir de la ronda 4 el líder se para: ¿qué pasa con la distancia?",
+        diu: ["Mentre el líder es mou, la distància es queda a uns 27 cm. Per què no baixa fins a 10?|Mientras el líder se mueve, la distancia se queda en unos 27 cm. ¿Por qué no baja hasta 10?", "Quan el líder para, el seguidor s'hi acosta a passes cada cop més petites.|Cuando el líder para, el seguidor se acerca con pasos cada vez más pequeños."],
+        slides: ['s9'], app: "Cap: activitat sense pantalla.|Ninguna: actividad sin pantalla.", org: "Parelles|Parejas" },
+      { min: 12, t: "Al Maqueen de veritat: segueix la caixa|En el Maqueen de verdad: sigue la caja", fase: 'robot',
+        fa: "Dos grups per carrer. Un grup descarrega el programa del seguidor; l'altre arrossega la caixa de sabates amb el cordill davant del robot: a poc a poc, més de pressa, s'atura… i al final l'acosta una mica cap al robot (amb el programa 2, el robot ha de recular). Després canvien. Han d'observar a quina distància el segueix quan la caixa va lenta i quan va ràpida, i comparar-ho amb el simulador.|Dos grupos por calle. Un grupo descarga el programa del seguidor; el otro arrastra la caja de zapatos con el cordel delante del robot: despacio, más deprisa, se para… y al final la acerca un poco hacia el robot (con el programa 2, el robot tiene que retroceder). Después cambian. Tienen que observar a qué distancia la sigue cuando la caja va lenta y cuando va rápida, y compararlo con el simulador.",
+        diu: ["Arrossegueu la caixa recta i sense estirades fortes: el robot no és un gos!|Arrastrad la caja recta y sin tirones fuertes: ¡el robot no es un perro!", "Quan la caixa va ràpida, el robot s'hi queda més lluny o més a prop?|Cuando la caja va rápida, ¿el robot se queda más lejos o más cerca?", "Amb el programa 2, què fa el robot quan apropeu la caixa?|Con el programa 2, ¿qué hace el robot cuando acercáis la caja?"],
+        slides: ['s10', 's11'], app: "Cap: MakeCode i el robot.|Ninguna: MakeCode y el robot.", org: "Dos grups per carrer|Dos grupos por calle" },
+      { min: 18, t: "A l'ordinador: prova i reptes|En el ordenador: prueba y retos", fase: 'ordinador',
+        fa: "Cada alumne/a avança al seu ritme. Quan la majoria hagi fet el repte del semàfor, projecta la diapositiva 13 per comentar per què a la pista 2 calia un k més gran. Recorda que el repte dels llums de fre fa servir la mateixa velocitat calculada per decidir el color.|Cada alumno/a avanza a su ritmo. Cuando la mayoría haya hecho el reto del semáforo, proyecta la diapositiva 13 para comentar por qué en la pista 2 hacía falta un k más grande. Recuerda que el reto de las luces de freno usa la misma velocidad calculada para decidir el color.",
+        diu: ["A quina pista falla? Què té de diferent?|¿En qué pista falla? ¿Qué tiene de diferente?", "L'error és negatiu: cap on ha d'anar el robot?|El error es negativo: ¿hacia dónde tiene que ir el robot?", "Quina variable et diu si estàs frenant?|¿Qué variable te dice si estás frenando?"],
+        slides: ['s12', 's13'], app: "De «Recorda» fins a l'últim repte: preguntes, «Descobreix», què fa quan el líder para, el càlcul de l'error, «On es quedarà?», el motor que no fa servir la velocitat, la pausa activa i els quatre reptes (seguir en recta, el semàfor, recular i els llums de fre).|De «Recuerda» hasta el último reto: preguntas, «Descubre», qué hace cuando el líder para, el cálculo del error, «¿Dónde se quedará?», el motor que no usa la velocidad, la pausa activa y los cuatro retos (seguir en recta, el semáforo, retroceder y las luces de freno).", org: "Individual|Individual" },
+      { min: 4, t: "Crea: el meu comboi|Crea: mi convoy", fase: 'crea',
+        fa: "Cada alumne/a programa el seu robot del comboi amb avís de frenada. En parelles s'expliquen com avisa el seu robot.|Cada alumno/a programa su robot del convoy con aviso de frenada. Por parejas se explican cómo avisa su robot.",
+        diu: ["Com sabrien els robots de darrere que frenes?|¿Cómo sabrían los robots de detrás que frenas?"],
+        slides: ['s14'], app: "Pas «Crea»: El meu comboi.|Paso «Crea»: Mi convoy.", org: "Individual i després per parelles|Individual y después por parejas" },
+      { min: 3, t: "Tancament i tiquet de sortida|Cierre y ticket de salida", fase: 'tancament',
+        fa: "Repassa les idees amb el resum i fes el tiquet a la porta.|Repasa las ideas con el resumen y haz el ticket en la puerta.",
+        diu: ["Què fa el seguidor quan el líder s'atura? I quan torna enrere?|¿Qué hace el seguidor cuando el líder se para? ¿Y cuando vuelve atrás?"],
+        slides: ['s15', 's16'], app: "«Tancament»: dues preguntes i com m'he sentit.|«Cierre»: dos preguntas y cómo me he sentido.", org: "Tot el grup|Todo el grupo" }
+    ],
+    errors: [
+      ["El motor va a un número fix i el seguidor xoca amb el líder.|El motor va a un número fijo y el seguidor choca con el líder.", "Que executi mirant el tauler: la velocitat calculada canvia, però el motor la fa servir?|Que ejecute mirando el panel: la velocidad calculada cambia, pero ¿el motor la usa?"],
+      ["Espera que el seguidor vagi just a 10 cm i pensa que el programa està malament.|Espera que el seguidor vaya justo a 10 cm y piensa que el programa está mal.", "Pregunta: si l'error fos 0, quina velocitat tindria? Es podria moure? Torneu a la taula de la fitxa.|Pregunta: si el error fuera 0, ¿qué velocidad tendría? ¿Se podría mover? Volved a la tabla de la ficha."],
+      ["Per recular fa «error × 15» i posa el motor enrere amb una velocitat negativa.|Para retroceder hace «error × 15» y pone el motor atrás con una velocidad negativa.", "Que calculi un exemple: error −5 × 15 = −75. El motor entén −75? Què cal multiplicar per obtenir 75?|Que calcule un ejemplo: error −5 × 15 = −75. ¿El motor entiende −75? ¿Por qué hay que multiplicar para obtener 75?"],
+      ["Posa els llums de fre amb la condició al revés.|Pone las luces de freno con la condición al revés.", "Que digui en veu alta: quan va lent, la velocitat és gran o petita? Llavors, quin signe cal?|Que diga en voz alta: cuando va lento, ¿la velocidad es grande o pequeña? Entonces, ¿qué signo hace falta?"],
+      ["Al robot real, el seguidor perd la caixa i accelera.|En el robot real, el seguidor pierde la caja y acelera.", "Si la caixa no queda davant de l'ultrasò, mesura 500 cm. Arrossegueu-la ben recta i comproveu que és prou alta.|Si la caja no queda delante del ultrasonido, mide 500 cm. Arrastradla bien recta y comprobad que es suficientemente alta."]
+    ],
+    diff: {
+      mes: "Fer que el seguidor mostri a la pantalla l'error quan el líder s'atura, i provar quin k fa que segueixi el líder ràpid a menys de 15 cm sense xocar. Al robot real: un comboi de tres robots!|Hacer que el seguidor muestre en la pantalla el error cuando el líder se para, y probar qué k hace que siga al líder rápido a menos de 15 cm sin chocar. En el robot real: ¡un convoy de tres robots!",
+      menys: "Fer els reptes de seguir en recta i del semàfor partint del programa de l'estació de càrrega. Per a la taula de la fitxa, fer només les quatre primeres rondes amb el professor/a.|Hacer los retos de seguir en recta y del semáforo partiendo del programa de la estación de carga. Para la tabla de la ficha, hacer solo las cuatro primeras rondas con el profesor/a."
+    },
+    aval: {
+      ticket: ["Què fa el seguidor quan el líder s'atura? Per què no xoca?|¿Qué hace el seguidor cuando el líder se para? ¿Por qué no choca?",
+        "El líder va molt de pressa i el seguidor es queda enrere. Què canviaries?|El líder va muy deprisa y el seguidor se queda atrás. ¿Qué cambiarías?"],
+      rubric: [
+        ["Seguir el líder|Seguir al líder", "Programa el seguidor amb control proporcional i funciona a totes les pistes.|Programa el seguidor con control proporcional y funciona en todas las pistas.", "Segueix el líder en recta però falla quan el líder canvia de velocitat.|Sigue al líder en recta pero falla cuando el líder cambia de velocidad."],
+        ["Entendre la distància|Entender la distancia", "Explica per què el segueix més lluny quan el líder corre i què fa el k.|Explica por qué lo sigue más lejos cuando el líder corre y qué hace el k.", "Observa la diferència però no l'explica.|Observa la diferencia pero no la explica."],
+        ["Recular i avisar|Retroceder y avisar", "Fa que el robot reculi amb error negatiu i encén els llums de fre amb la velocitat.|Hace que el robot retroceda con error negativo y enciende las luces de freno con la velocidad.", "Necessita ajuda per al «si error < 0» o per a la condició dels llums.|Necesita ayuda para el «si error < 0» o para la condición de las luces."]
+      ]
+    },
+    casa: "A casa, amb el mòbil, podeu repetir la sessió. Proposta: feu el «comboi humà» amb algú de casa pel passadís (un fa de líder, l'altre el segueix amb el braç estirat) i expliqueu-li per què, si el líder corre, el seguidor es queda més lluny.|En casa, con el móvil, podéis repetir la sesión. Propuesta: haced el «convoy humano» con alguien de casa por el pasillo (uno hace de líder, el otro lo sigue con el brazo estirado) y explicadle por qué, si el líder corre, el seguidor se queda más lejos.",
+    slides: [
+      { id: 's1', k: 'portada', t: "Segueix el líder|Sigue al líder", x: "Avui: un robot que en segueix un altre, el comboi del mercat.|Hoy: un robot que sigue a otro, el convoy del mercado.",
+        nota: "Presenta el mercat del poble i la idea del comboi sense enganxalls.|Presenta el mercado del pueblo y la idea del convoy sin enganches." },
+      { id: 's2', k: 'pregunta', t: "Un tren sense enganxalls?|¿Un tren sin enganches?", x: "Com pot un robot anar darrere d'un altre sense tocar-lo mai?|¿Cómo puede un robot ir detrás de otro sin tocarlo nunca?",
+        nota: "Busca la resposta: mirant-lo (sensor) i ajustant la velocitat (programa).|Busca la respuesta: mirándolo (sensor) y ajustando la velocidad (programa)." },
+      { id: 's3', k: 'repas', t: "Recordem: el control proporcional|Recordemos: el control proporcional", punts: ["error = distància − 10|error = distancia − 10", "velocitat = error × k|velocidad = error × k", "k petit para lluny; k gran arriba ràpid.|k pequeño para lejos; k grande llega rápido."],
+        nota: "Pregunta un càlcul ràpid: a 30 cm amb k = 5, quina velocitat? (100)|Pregunta un cálculo rápido: a 30 cm con k = 5, ¿qué velocidad? (100)" },
+      { id: 's4', k: 'anim', t: "Un objectiu que es mou|Un objetivo que se mueve", anim: 'k6lead', x: "Si el líder s'allunya, accelera; si s'acosta, frena.|Si el líder se aleja, acelera; si se acerca, frena.",
+        nota: "Fixeu-vos en els llums de sota del seguidor: es posen vermells quan frena.|Fijaos en las luces de abajo del seguidor: se ponen rojas cuando frena." },
+      { id: 's5', k: 'robo', t: "El semàfor|El semáforo", x: "El líder s'atura al segon 9. Què farà el seguidor?|El líder se para en el segundo 9. ¿Qué hará el seguidor?",
+        robo: { w: { w: 170, h: 40, bot: [15, 20, 90], leader: { path: [[42, 20], [165, 20]], speed: 8, stopAt: 9 }, time: 13 }, prog: 'forever{ calc:e,dist,-,10 calc:v,$e,*,10 run:all,fwd,$v }', varNames: { e: 'error|error', v: 'velocitat|velocidad' } },
+        nota: "Para a uns 13 cm, sense saber que el líder ha parat: només nota que la distància baixa.|Para a unos 13 cm, sin saber que el líder ha parado: solo nota que la distancia baja." },
+      { id: 's6', k: 'robo', t: "El líder ràpid|El líder rápido", x: "Ara el líder va a 14 cm/s. A quina distància el segueix?|Ahora el líder va a 14 cm/s. ¿A qué distancia lo sigue?",
+        robo: { w: { w: 170, h: 40, bot: [15, 20, 90], leader: { path: [[42, 20], [165, 20]], speed: 14 }, time: 9 }, prog: 'forever{ calc:e,dist,-,10 calc:v,$e,*,10 run:all,fwd,$v }', varNames: { e: 'error|error', v: 'velocitat|velocidad' } },
+        nota: "A uns 24 cm. Per anar tan de pressa cal velocitat ~140, és a dir, error 14 amb k = 10.|A unos 24 cm. Para ir tan deprisa hace falta velocidad ~140, es decir, error 14 con k = 10." },
+      { id: 's7', k: 'concepte', t: "Per què el segueix més lluny?|¿Por qué lo sigue más lejos?", punts: ["Per moure's, el seguidor necessita velocitat.|Para moverse, el seguidor necesita velocidad.", "Velocitat = error × k: sense error, no hi ha velocitat.|Velocidad = error × k: sin error, no hay velocidad.", "Líder ràpid → més error → més lluny. k més gran → més a prop.|Líder rápido → más error → más lejos. k más grande → más cerca."],
+        nota: "És una propietat real dels controls proporcionals; els enginyers/es hi afegeixen altres trucs, però la idea bàsica és aquesta.|Es una propiedad real de los controles proporcionales; los ingenieros/as añaden otros trucos, pero la idea básica es esta." },
+      { id: 's8', k: 'robo', t: "Recula!|¡Retrocede!", x: "El líder torna enrere. Si l'error és negatiu, el seguidor recula.|El líder vuelve atrás. Si el error es negativo, el seguidor retrocede.",
+        robo: { w: { w: 160, h: 40, bot: [30, 20, 90], leader: { path: [[60, 20], [130, 20], [70, 20]], speed: 8 }, time: 18 }, prog: 'forever{ calc:e,dist,-,15 if:$e<0{ calc:v,$e,*,-15 run:all,back,$v } else{ calc:v,$e,*,15 run:all,fwd,$v } }', varNames: { e: 'error|error', v: 'velocitat|velocidad' } },
+        nota: "Explica el «× −15»: un negatiu per un negatiu dona positiu, que és el que entén el motor.|Explica el «× −15»: un negativo por un negativo da positivo, que es lo que entiende el motor." },
+      { id: 's9', k: 'activitat', t: "La taula del seguidor|La tabla del seguidor", timer: 10, punts: ["Mesureu la distància entre les dues gomes.|Medid la distancia entre las dos gomas.", "Error = distància − 10.|Error = distancia − 10.", "El seguidor avança la meitat de l'error.|El seguidor avanza la mitad del error.", "El líder avança 8 cm (fins a la ronda 4).|El líder avanza 8 cm (hasta la ronda 4)."],
+        nota: "Que vegin que, amb el líder en marxa, la distància s'estabilitza a uns 27 cm, i que quan el líder para, el seguidor s'atura a uns 11 cm.|Que vean que, con el líder en marcha, la distancia se estabiliza en unos 27 cm, y que cuando el líder para, el seguidor se para a unos 11 cm." },
+      { id: 's10', k: 'activitat', t: "Al Maqueen: segueix la caixa|En el Maqueen: sigue la caja", timer: 12, punts: ["Un grup programa, l'altre arrossega la caixa.|Un grupo programa, el otro arrastra la caja.", "Lenta, ràpida, aturada… i una mica enrere.|Lenta, rápida, parada… y un poco atrás.", "A quina distància la segueix?|¿A qué distancia la sigue?", "Després canvieu els papers.|Después cambiad los papeles."],
+        nota: "La caixa ha de ser alta i anar recta. Amb el programa 1 el robot no recula: és normal, que provin el programa 2.|La caja tiene que ser alta e ir recta. Con el programa 1 el robot no retrocede: es normal, que prueben el programa 2." },
+      { id: 's11', k: 'concepte', t: "El codi a MakeCode|El código en MakeCode", code: "let e = 0\nlet v = 0\nbasic.forever(function () {\n    e = Maqueen_V5.Ultrasonic() - 15\n    if (e < 0) {\n        v = e * -15\n        Maqueen_V5.motorRun(Maqueen_V5.Motors.All, Maqueen_V5.Dir.CCW, v)\n    } else {\n        v = e * 15\n        Maqueen_V5.motorRun(Maqueen_V5.Motors.All, Maqueen_V5.Dir.CW, v)\n    }\n})",
+        punts: ["CW = endavant, CCW = enrere.|CW = adelante, CCW = atrás.", "És el programa 2 de l'imprimible.|Es el programa 2 del imprimible."],
+        nota: "Si el robot real tremola endavant i enrere davant de la caixa aturada, provin un k una mica més petit.|Si el robot real tiembla adelante y atrás delante de la caja parada, que prueben un k un poco más pequeño." },
+      { id: 's12', k: 'activitat', t: "A l'ordinador|En el ordenador", timer: 18, punts: ["Obre la sessió «Segueix el líder».|Abre la sesión «Sigue al líder».", "Descobreix, prova i investiga.|Descubre, prueba e investiga.", "Reptes: recta, semàfor, recular i llums de fre.|Retos: recta, semáforo, retroceder y luces de freno."],
+        nota: "Recorda que poden mirar la variable velocitat al tauler mentre el robot es mou.|Recuerda que pueden mirar la variable velocidad en el panel mientras el robot se mueve." },
+      { id: 's13', k: 'repte', t: "El semàfor a tres velocitats|El semáforo a tres velocidades", x: "Amb k = 5, a la pista 2 (líder ràpid) es queda enrere.|Con k = 5, en la pista 2 (líder rápido) se queda atrás.", punts: ["Quanta velocitat necessita a la pista 2?|¿Cuánta velocidad necesita en la pista 2?", "Amb k = 10, quin error li cal?|Con k = 10, ¿qué error necesita?"],
+        nota: "A 12 cm/s cal velocitat ~120: amb k = 5 serien 24 cm d'error (34 cm, massa lluny); amb k = 10, 12 cm (22 cm).|A 12 cm/s hace falta velocidad ~120: con k = 5 serían 24 cm de error (34 cm, demasiado lejos); con k = 10, 12 cm (22 cm)." },
+      { id: 's14', k: 'activitat', t: "Crea: el meu comboi|Crea: mi convoy", timer: 4, x: "Segueix, recula i avisa quan frenes.|Sigue, retrocede y avisa cuando frenes.",
+        nota: "Valora la creativitat dels avisos (llums, icones, sons), però que el seguiment funcioni a les dues pistes.|Valora la creatividad de los avisos (luces, iconos, sonidos), pero que el seguimiento funcione en las dos pistas." },
+      { id: 's15', k: 'resum', t: "Què hem après avui|Qué hemos aprendido hoy", punts: ["El control proporcional serveix per seguir un objectiu que es mou.|El control proporcional sirve para seguir un objetivo que se mueve.", "Líder ràpid → el segueix més lluny; k més gran → més a prop.|Líder rápido → lo sigue más lejos; k más grande → más cerca.", "Error negatiu → recula. La velocitat decideix els llums de fre.|Error negativo → retrocede. La velocidad decide las luces de freno."],
+        nota: "Anuncia el projecte: la setmana que ve, el cotxe autònom!|Anuncia el proyecto: la semana que viene, ¡el coche autónomo!" },
+      { id: 's16', k: 'tiquet', t: "Tiquet de sortida|Ticket de salida", punts: ["Què fa el seguidor quan el líder para?|¿Qué hace el seguidor cuando el líder para?", "El líder corre i el seguidor es queda enrere: què canvies?|El líder corre y el seguidor se queda atrás: ¿qué cambias?"],
+        nota: "Respostes: frena sol perquè la distància baixa · el k, més gran.|Respuestas: frena solo porque la distancia baja · el k, más grande." }
+    ],
+    print: [
+      { id: 'p1', t: "La taula del seguidor|La tabla del seguidor", k: 'fitxa',
+        intro: "Una fitxa per parella. Poseu el regle a la taula: el seguidor comença a 0 cm i el líder a 30 cm. A cada ronda: 1) distància = líder − seguidor, 2) error = distància − 10, 3) el seguidor avança la meitat de l'error (arrodonint cap avall), 4) el líder avança 8 cm (a partir de la ronda 4, el líder s'atura).|Una ficha por pareja. Poned la regla en la mesa: el seguidor empieza en 0 cm y el líder en 30 cm. En cada ronda: 1) distancia = líder − seguidor, 2) error = distancia − 10, 3) el seguidor avanza la mitad del error (redondeando hacia abajo), 4) el líder avanza 8 cm (a partir de la ronda 4, el líder se para).",
+        items: [
+          { q: "Ronda 0: distància ___ · error ___ · el seguidor avança ___ i queda a ___ · el líder passa a ___|Ronda 0: distancia ___ · error ___ · el seguidor avanza ___ y queda en ___ · el líder pasa a ___", sol: "30 · 20 · 10 · 10 · 38.|30 · 20 · 10 · 10 · 38." },
+          { q: "Rondes 1, 2 i 3: apunteu la distància de cada ronda: ___, ___, ___. Què observeu?|Rondas 1, 2 y 3: apuntad la distancia de cada ronda: ___, ___, ___. ¿Qué observáis?", sol: "28, 27, 27. La distància es queda a uns 27 cm: per avançar 8 cm, el seguidor necessita un error de 16-17 cm.|28, 27, 27. La distancia se queda en unos 27 cm: para avanzar 8 cm, el seguidor necesita un error de 16-17 cm." },
+          { q: "A partir de la ronda 4 el líder s'atura (a 62 cm). Distàncies de les rondes 4 a 9: ___, ___, ___, ___, ___, ___|A partir de la ronda 4 el líder se para (en 62 cm). Distancias de las rondas 4 a 9: ___, ___, ___, ___, ___, ___", sol: "27, 19, 15, 13, 12, 11: el seguidor s'acosta a passes cada cop més petites i s'atura a 11 cm.|27, 19, 15, 13, 12, 11: el seguidor se acerca con pasos cada vez más pequeños y se para a 11 cm." },
+          { q: "I si el seguidor avancés tot l'error (no la meitat), seguiria el líder més a prop o més lluny?|¿Y si el seguidor avanzara todo el error (no la mitad), seguiría al líder más cerca o más lejos?", sol: "Més a prop (a uns 18 cm): és com tenir un k més gran.|Más cerca (a unos 18 cm): es como tener un k más grande." },
+          { q: "Què fa aquest programa si el líder s'acosta al robot?|¿Qué hace este programa si el líder se acerca al robot?", rprog: 'forever{ calc:e,dist,-,15 if:$e<0{ calc:v,$e,*,-15 run:all,back,$v } else{ calc:v,$e,*,15 run:all,fwd,$v } }', sol: "Si és a menys de 15 cm, l'error és negatiu i el robot recula; si no, va endavant.|Si está a menos de 15 cm, el error es negativo y el robot retrocede; si no, va adelante." }
+        ] },
+      { id: 'p2', t: "Codi per al Maqueen: el seguidor|Código para el Maqueen: el seguidor", k: 'codi',
+        intro: "Programes per seguir la caixa de sabates. A makecode.microbit.org: nou projecte → Extensions → «maqueen» → JavaScript → enganxeu-hi el codi.|Programas para seguir la caja de zapatos. En makecode.microbit.org: nuevo proyecto → Extensiones → «maqueen» → JavaScript → pegad el código.",
+        items: [
+          { t: "1. El seguidor (només endavant)|1. El seguidor (solo adelante)", prog: 'forever{ calc:e,dist,-,10 calc:v,$e,*,10 run:all,fwd,$v }' },
+          { t: "2. El seguidor que recula|2. El seguidor que retrocede", prog: 'forever{ calc:e,dist,-,15 if:$e<0{ calc:v,$e,*,-15 run:all,back,$v } else{ calc:v,$e,*,15 run:all,fwd,$v } }' },
+          { t: "3. Amb llums de fre|3. Con luces de freno", prog: 'forever{ calc:e,dist,-,10 calc:v,$e,*,10 run:all,fwd,$v if:$v<60{ under:all,red } else{ under:all,green } }' }
+        ] }
+    ]
+  },
+
+  /* ---------- Sessió 4 · Projecte: el cotxe autònom ---------- */
+  'k6-4': {
+    obj: [
+      "L'alumne/a planifica un programa gran a trossos i prova cada tros abans d'afegir el següent.|El alumno/a planifica un programa grande a trozos y prueba cada trozo antes de añadir el siguiente.",
+      "L'alumne/a combina el seguiment de línia amb una velocitat calculada amb la distància al vehicle del davant.|El alumno/a combina el seguimiento de línea con una velocidad calculada con la distancia al vehículo de delante.",
+      "L'alumne/a afegeix decisions amb la velocitat (llums de fre) i amb el sensor de llum (fars de nit).|El alumno/a añade decisiones con la velocidad (luces de freno) y con el sensor de luz (faros de noche).",
+      "L'alumne/a prova el cotxe autònom al Maqueen real en un circuit de cinta i explica què podria fallar i per què cal provar molt.|El alumno/a prueba el coche autónomo en el Maqueen real en un circuito de cinta y explica qué podría fallar y por qué hay que probar mucho."
+    ],
+    comp: [
+      "Pensament computacional: descomposició d'un problema, integració de parts i depuració|Pensamiento computacional: descomposición de un problema, integración de partes y depuración",
+      "Competència digital (CD5): crear un projecte de programació complet i passar-lo a un robot real|Competencia digital (CD5): crear un proyecto de programación completo y pasarlo a un robot real",
+      "Competència ciutadana: seguretat viària i reflexió sobre els vehicles autònoms|Competencia ciudadana: seguridad vial y reflexión sobre los vehículos autónomos",
+      "Competència personal i social: treball en equip d'enginyeria amb rols i presentació del resultat|Competencia personal y social: trabajo en equipo de ingeniería con roles y presentación del resultado"
+    ],
+    vocab: [
+      ["Cotxe autònom|Coche autónomo", "Vehicle que es condueix sol amb sensors i un programa.|Vehículo que se conduce solo con sensores y un programa."],
+      ["Descompondre|Descomponer", "Dividir un problema gran en trossos petits.|Dividir un problema grande en trozos pequeños."],
+      ["Integrar|Integrar", "Ajuntar els trossos d'un programa perquè funcionin junts.|Juntar los trozos de un programa para que funcionen juntos."],
+      ["Llums de fre|Luces de freno", "Llums que avisen els de darrere que el vehicle frena.|Luces que avisan a los de detrás de que el vehículo frena."],
+      ["Fars|Faros", "Els llums del davant que s'encenen de nit.|Las luces de delante que se encienden de noche."]
+    ],
+    mat: {
+      aula: [
+        "Un ordinador per alumne/a amb Numi Tech obert a la sessió «Projecte: el cotxe autònom»|Un ordenador por alumno/a con Numi Tech abierto en la sesión «Proyecto: el coche autónomo»",
+        "Projector i la presentació d'aquesta sessió|Proyector y la presentación de esta sesión",
+        "Un kit Maqueen Lite V5 + micro:bit V2 per grup de 3-4|Un kit Maqueen Lite V5 + micro:bit V2 por grupo de 3-4",
+        "Cinta aïllant negra de 2 cm per fer un circuit oval a terra (o sobre cartolines blanques grans) per cada dos grups|Cinta aislante negra de 2 cm para hacer un circuito oval en el suelo (o sobre cartulinas blancas grandes) por cada dos grupos",
+        "Les targetes del cotxe autònom retallades (un paquet per grup) i una llanterna per simular la nit (opcional)|Las tarjetas del coche autónomo recortadas (un paquete por grupo) y una linterna para simular la noche (opcional)"
+      ],
+      imprimir: ["Targetes del cotxe autònom|Tarjetas del coche autónomo", "Pista: el circuit del carnet (a escala)|Pista: el circuito del carnet (a escala)"],
+      prep: [
+        "Fer el circuit oval amb cinta negra seguint l'imprimible «Pista» (uns 140 × 90 cm). Les corbes han de ser suaus, sense angles.|Hacer el circuito oval con cinta negra siguiendo el imprimible «Pista» (unos 140 × 90 cm). Las curvas tienen que ser suaves, sin ángulos.",
+        "Preparar un robot «líder» per circuit amb el seguiment de línia del xip activat (bloc de la unitat 4) i una caixeta alta enganxada al darrere perquè l'ultrasò del seguidor el vegi bé.|Preparar un robot «líder» por circuito con el seguimiento de línea del chip activado (bloque de la unidad 4) y una cajita alta pegada detrás para que el ultrasonido del seguidor lo vea bien.",
+        "Imprimir i retallar un paquet de targetes per grup.|Imprimir y recortar un paquete de tarjetas por grupo.",
+        "Provar abans les demostracions de les diapositives 5 i 6.|Probar antes las demostraciones de las diapositivas 5 y 6."
+      ]
+    },
+    plan: [
+      { min: 4, t: "Benvinguda: la prova del carnet|Bienvenida: la prueba del carnet", fase: 'inici',
+        fa: "Presenta el projecte: el Lab fa la prova del carnet de conduir dels robots al circuit, amb un cotxe al davant, un semàfor i la nit. Pregunta quines coses fa una persona quan condueix i quins sentits fa servir per a cadascuna.|Presenta el proyecto: el Lab hace la prueba del carnet de conducir de los robots en el circuito, con un coche delante, un semáforo y la noche. Pregunta qué cosas hace una persona cuando conduce y qué sentidos usa para cada una.",
+        diu: ["Què ha de fer bé un cotxe per aprovar el carnet?|¿Qué tiene que hacer bien un coche para aprobar el carnet?", "Avui ajuntareu tot el que heu après en un sol programa.|Hoy juntaréis todo lo que habéis aprendido en un solo programa."],
+        slides: ['s1', 's2'], app: "Encara no: pantalles abaixades.|Todavía no: pantallas bajadas.", org: "Tot el grup|Todo el grupo" },
+      { min: 8, t: "Un cotxe autònom, a trossos|Un coche autónomo, a trozos", fase: 'teoria',
+        fa: "Mostra l'animació del cotxe autònom i relaciona cada sensor amb una feina. Executa la demo de la carretera amb velocitat variable i després la de carretera + distància; fes notar què passa a les corbes. Explica la idea d'enginyeria de fer-ho a trossos i provar cada tros. Acaba amb els dos «si» dels llums.|Muestra la animación del coche autónomo y relaciona cada sensor con un trabajo. Ejecuta la demo de la carretera con velocidad variable y después la de carretera + distancia; haz notar qué pasa en las curvas. Explica la idea de ingeniería de hacerlo a trozos y probar cada trozo. Termina con los dos «si» de las luces.",
+        diu: ["Quin sensor fa servir per seguir la carretera? I per al cotxe del davant?|¿Qué sensor usa para seguir la carretera? ¿Y para el coche de delante?", "Per què a la corba accelera de cop?|¿Por qué en la curva acelera de golpe?", "Si ho programem tot de cop i falla, on busquem l'error?|Si lo programamos todo de golpe y falla, ¿dónde buscamos el error?"],
+        slides: ['s3', 's4', 's5', 's6', 's7'], app: "Encara no: tota l'atenció a la projecció.|Todavía no: toda la atención en la proyección.", org: "Tot el grup|Todo el grupo" },
+      { min: 10, t: "El pla de l'equip d'enginyeria (sense pantalla)|El plan del equipo de ingeniería (sin pantalla)", fase: 'desconnectat',
+        fa: "Grups de 3-4 amb el paquet de targetes: cada targeta és un tros del programa (mesurar, calcular, seguir la línia, llums de fre, fars…). Han de construir a la taula el «per sempre» complet, en ordre, i decidir l'ordre de treball (quin tros primer). Després, cada grup explica el seu pla a un altre grup, que hi busca un error o un tros que falti.|Grupos de 3-4 con el paquete de tarjetas: cada tarjeta es un trozo del programa (medir, calcular, seguir la línea, luces de freno, faros…). Tienen que construir en la mesa el «para siempre» completo, en orden, y decidir el orden de trabajo (qué trozo primero). Después, cada grupo explica su plan a otro grupo, que busca un error o un trozo que falte.",
+        diu: ["Què ha d'anar primer: calcular la velocitat o fer-la servir?|¿Qué tiene que ir primero: calcular la velocidad o usarla?", "Hi ha alguna targeta que no fa falta? Hi falta res?|¿Hay alguna tarjeta que no hace falta? ¿Falta algo?", "Quin tros provareu primer al simulador?|¿Qué trozo probaréis primero en el simulador?"],
+        slides: ['s8'], app: "Cap: activitat sense pantalla.|Ninguna: actividad sin pantalla.", org: "Grups de 3-4|Grupos de 3-4" },
+      { min: 20, t: "A l'ordinador: els trossos i la prova final|En el ordenador: los trozos y la prueba final", fase: 'ordinador',
+        fa: "Cada alumne/a fa els passos de l'app fins als tres trossos (carretera, distància i semàfor) i comença la prova final. Quan un tros no surti, recorda-li que torni a l'últim que funcionava. Projecta la diapositiva 10 quan la majoria sigui al tros 3.|Cada alumno/a hace los pasos de la app hasta los tres trozos (carretera, distancia y semáforo) y empieza la prueba final. Cuando un trozo no salga, recuérdale que vuelva al último que funcionaba. Proyecta la diapositiva 10 cuando la mayoría esté en el trozo 3.",
+        diu: ["Quin és l'últim tros que funcionava? Què hi has afegit després?|¿Cuál es el último trozo que funcionaba? ¿Qué has añadido después?", "Mira el tauler: quina velocitat calcula a la corba?|Mira el panel: ¿qué velocidad calcula en la curva?", "Els llums de fre, dins o fora del seguidor de línia?|Las luces de freno, ¿dentro o fuera del seguidor de línea?"],
+        slides: ['s9', 's10'], app: "De «Recorda» fins al tros 3: preguntes, «Descobreix», el pla de treball, quin sensor per a cada feina, els llums al revés, l'ultrasò a les corbes, la pausa activa i els trossos 1 (carretera), 2 (distància) i 3 (semàfor).|De «Recuerda» hasta el trozo 3: preguntas, «Descubre», el plan de trabajo, qué sensor para cada trabajo, las luces al revés, el ultrasonido en las curvas, la pausa activa y los trozos 1 (carretera), 2 (distancia) y 3 (semáforo).", org: "Individual|Individual" },
+      { min: 12, t: "Al Maqueen de veritat i la prova del carnet|En el Maqueen de verdad y la prueba del carnet", fase: 'robot',
+        fa: "Cada grup passa el programa del cotxe (imprimible de la pista o botó </>) al Maqueen i el prova al circuit de cinta darrere del robot líder, que segueix la línia sol amb el seguiment del xip. Proveu: segueix la línia? Guarda la distància? Si pareu el líder amb la mà (el «semàfor»), el seguidor s'atura i encén els llums vermells? I si tapeu els sensors de llum amb la mà (la «nit»), s'encenen els fars? Mentrestant, la resta de l'equip acaba la prova final a l'app.|Cada grupo pasa el programa del coche (imprimible de la pista o botón </>) al Maqueen y lo prueba en el circuito de cinta detrás del robot líder, que sigue la línea solo con el seguimiento del chip. Probad: ¿sigue la línea? ¿Guarda la distancia? Si paráis el líder con la mano (el «semáforo»), ¿el seguidor se para y enciende las luces rojas? Y si tapáis los sensores de luz con la mano (la «noche»), ¿se encienden los faros? Mientras, el resto del equipo termina la prueba final en la app.",
+        diu: ["Pareu el líder amb compte, sense aixecar-lo de la pista.|Parad el líder con cuidado, sin levantarlo de la pista.", "Què fa el vostre cotxe a les corbes? Passa com al simulador?|¿Qué hace vuestro coche en las curvas? ¿Pasa como en el simulador?", "Si perd la línia, proveu un k més petit: anirà més a poc a poc.|Si pierde la línea, probad un k más pequeño: irá más despacio."],
+        slides: ['s11', 's12', 's13'], app: "Pas «Crea»: El meu cotxe autònom (la prova del carnet).|Paso «Crea»: Mi coche autónomo (la prueba del carnet).", org: "Grups de 3-4 per kit, dos grups per circuit|Grupos de 3-4 por kit, dos grupos por circuito" },
+      { min: 3, t: "Presentació ràpida|Presentación rápida", fase: 'crea',
+        fa: "Dos o tres grups ensenyen el seu cotxe a la classe (al simulador projectat o al circuit) i expliquen quin tros els ha costat més i com l'han arreglat.|Dos o tres grupos enseñan su coche a la clase (en el simulador proyectado o en el circuito) y explican qué trozo les ha costado más y cómo lo han arreglado.",
+        diu: ["Quin tros us ha costat més? Com l'heu arreglat?|¿Qué trozo os ha costado más? ¿Cómo lo habéis arreglado?"],
+        slides: ['s14'], app: "Projecte desat a «Projectes».|Proyecto guardado en «Proyectos».", org: "Tot el grup|Todo el grupo" },
+      { min: 3, t: "Tancament: el carnet de la unitat|Cierre: el carnet de la unidad", fase: 'tancament',
+        fa: "Repassa la unitat sencera amb el resum (variables, control proporcional, seguir el líder, el cotxe autònom). Deixa que responguin les preguntes finals i fes el tiquet.|Repasa la unidad entera con el resumen (variables, control proporcional, seguir al líder, el coche autónomo). Deja que respondan las preguntas finales y haz el ticket.",
+        diu: ["Què és el més important que ha de tenir un cotxe autònom de veritat?|¿Qué es lo más importante que tiene que tener un coche autónomo de verdad?"],
+        slides: ['s15', 's16'], app: "«Tancament»: dues preguntes i com m'he sentit.|«Cierre»: dos preguntas y cómo me he sentido.", org: "Tot el grup|Todo el grupo" }
+    ],
+    errors: [
+      ["Ho programa tot de cop i, quan falla, no sap on és l'error.|Lo programa todo de golpe y, cuando falla, no sabe dónde está el error.", "Que tregui l'últim tros i comprovi que el d'abans funciona; després l'hi torni a afegir mirant-lo bé.|Que quite el último trozo y compruebe que el de antes funciona; después que lo vuelva a añadir mirándolo bien."],
+      ["Posa els llums de fre dins d'una branca del seguidor de línia i només funcionen quan va recte.|Pone las luces de freno dentro de una rama del seguidor de línea y solo funcionan cuando va recto.", "Que miri on és el «si» dels llums: es fa a cada volta o només quan no veu la línia?|Que mire dónde está el «si» de las luces: ¿se hace en cada vuelta o solo cuando no ve la línea?"],
+      ["A les corbes el cotxe perd la línia perquè va massa de pressa.|En las curvas el coche pierde la línea porque va demasiado deprisa.", "Pregunta: què passa amb la velocitat quan l'ultrasò no veu el cotxe del davant? Que provi un k més petit.|Pregunta: ¿qué pasa con la velocidad cuando el ultrasonido no ve el coche de delante? Que pruebe un k más pequeño."],
+      ["Per als fars fa servir el sensor de distància o una espera de temps.|Para los faros usa el sensor de distancia o una espera de tiempo.", "Que pensi com sap el robot que és de nit: quin sensor canvia quan es fa fosc? Que miri el tauler quan arriba la nit.|Que piense cómo sabe el robot que es de noche: ¿qué sensor cambia cuando oscurece? Que mire el panel cuando llega la noche."],
+      ["Al robot real el cotxe s'acosta massa al líder i el toca.|En el robot real el coche se acerca demasiado al líder y lo toca.", "Comproveu que la caixeta del líder és prou alta per a l'ultrasò i proveu una distància objectiu més gran (15 en lloc de 10).|Comprobad que la cajita del líder es suficientemente alta para el ultrasonido y probad una distancia objetivo mayor (15 en lugar de 10)."]
+    ],
+    diff: {
+      mes: "Afegir un comptador de voltes (per exemple, comptant les vegades que el cotxe frena), un so quan s'encenen els fars o un intermitent amb els llums de sota abans de les corbes. Al robot real: un comboi de tres cotxes al circuit.|Añadir un contador de vueltas (por ejemplo, contando las veces que el coche frena), un sonido cuando se encienden los faros o un intermitente con las luces de abajo antes de las curvas. En el robot real: un convoy de tres coches en el circuito.",
+      menys: "Fer els trossos 1 i 2 amb el programa de la demo de «Descobreix» com a punt de partida, i a la prova final afegir només els llums de fre i els fars amb les targetes al costat.|Hacer los trozos 1 y 2 con el programa de la demo de «Descubre» como punto de partida, y en la prueba final añadir solo las luces de freno y los faros con las tarjetas al lado."
+    },
+    aval: {
+      ticket: ["Digues els tres sensors del teu cotxe i per a què serveix cadascun.|Di los tres sensores de tu coche y para qué sirve cada uno.",
+        "Per què és bona idea programar a trossos?|¿Por qué es buena idea programar a trozos?"],
+      rubric: [
+        ["Planificació i trossos|Planificación y trozos", "Segueix un pla, prova cada tros i, quan falla, troba el tros que ho causa.|Sigue un plan, prueba cada trozo y, cuando falla, encuentra el trozo que lo causa.", "Programa tot de cop i necessita ajuda per trobar els errors.|Programa todo de golpe y necesita ayuda para encontrar los errores."],
+        ["Integració|Integración", "El cotxe segueix la carretera i guarda la distància amb la velocitat calculada a les dues pistes.|El coche sigue la carretera y guarda la distancia con la velocidad calculada en las dos pistas.", "Funcionen els trossos per separat, però costa que funcionin junts.|Funcionan los trozos por separado, pero cuesta que funcionen juntos."],
+        ["Llums i robot real|Luces y robot real", "Llums de fre i fars correctes, i explica què passa diferent al Maqueen real.|Luces de freno y faros correctos, y explica qué pasa diferente en el Maqueen real.", "Fa una de les dues decisions de llums, o no relaciona el simulador amb el robot real.|Hace una de las dos decisiones de luces, o no relaciona el simulador con el robot real."]
+      ]
+    },
+    casa: "A casa, amb el mòbil, podeu ensenyar el vostre cotxe autònom des de «Projectes». Proposta: pregunteu a algú de casa quines ajudes té el seu cotxe (sensors d'aparcament, frenada automàtica…) i penseu quins sensors fan servir.|En casa, con el móvil, podéis enseñar vuestro coche autónomo desde «Proyectos». Propuesta: preguntad a alguien de casa qué ayudas tiene su coche (sensores de aparcamiento, frenada automática…) y pensad qué sensores usan.",
+    slides: [
+      { id: 's1', k: 'portada', t: "Projecte: el cotxe autònom|Proyecto: el coche autónomo", x: "La prova del carnet de conduir dels robots.|La prueba del carnet de conducir de los robots.",
+        nota: "Presenta el repte final de la unitat i el circuit que hi ha muntat a l'aula.|Presenta el reto final de la unidad y el circuito que hay montado en el aula." },
+      { id: 's2', k: 'pregunta', t: "Què fa qui condueix?|¿Qué hace quien conduce?", x: "Fa moltes coses alhora. Quines? Amb quin sentit?|Hace muchas cosas a la vez. ¿Cuáles? ¿Con qué sentido?",
+        nota: "Apunta les respostes a la pissarra: mirar la carretera, guardar la distància, frenar, encendre els llums… Després hi posarem un sensor a cadascuna.|Apunta las respuestas en la pizarra: mirar la carretera, guardar la distancia, frenar, encender las luces… Después le pondremos un sensor a cada una." },
+      { id: 's3', k: 'repas', t: "El que ja sabem fer|Lo que ya sabemos hacer", punts: ["Seguir una línia amb dos sensors (unitat 4).|Seguir una línea con dos sensores (unidad 4).", "Encendre llums segons la llum (unitat 5).|Encender luces según la luz (unidad 5).", "Calcular la velocitat amb la distància (unitat 6).|Calcular la velocidad con la distancia (unidad 6)."],
+        nota: "Remarca que no hi ha res nou: el repte és ajuntar-ho.|Remarca que no hay nada nuevo: el reto es juntarlo." },
+      { id: 's4', k: 'anim', t: "Molts sensors, un sol cervell|Muchos sensores, un solo cerebro", anim: 'k6car', x: "Línia → carretera · ultrasò → distància · llum → nit.|Línea → carretera · ultrasonido → distancia · luz → noche.",
+        nota: "Relaciona cada sensor amb les respostes de la diapositiva 2.|Relaciona cada sensor con las respuestas de la diapositiva 2." },
+      { id: 's5', k: 'robo', t: "Tros 1: la carretera|Trozo 1: la carretera", x: "El seguidor de línia, amb la variable velocitat.|El seguidor de línea, con la variable velocidad.",
+        robo: { w: { w: 140, h: 90, bot: [50, 73, 90], lines: [{ p: [[100, 73], [110.7, 70.9], [119.8, 64.8], [125.9, 55.7], [128, 45], [125.9, 34.3], [119.8, 25.2], [110.7, 19.1], [100, 17], [40, 17], [29.3, 19.1], [20.2, 25.2], [14.1, 34.3], [12, 45], [14.1, 55.7], [20.2, 64.8], [29.3, 70.9], [40, 73]], closed: true }], time: 22 },
+          prog: 'start{ set:vel,150 } forever{ if:L=1{ stop:L run:R,fwd,$vel } else{ if:R=1{ run:L,fwd,$vel stop:R } else{ run:all,fwd,$vel } } }', varNames: { vel: 'velocitat|velocidad' } },
+        nota: "Pregunta per què fem servir una variable si ara sempre val 150: perquè després la calcularem.|Pregunta por qué usamos una variable si ahora siempre vale 150: porque después la calcularemos." },
+      { id: 's6', k: 'robo', t: "Tros 2: carretera + distància|Trozo 2: carretera + distancia", x: "La velocitat es calcula amb el cotxe del davant. Mireu les corbes!|La velocidad se calcula con el coche de delante. ¡Mirad las curvas!",
+        robo: { w: { w: 140, h: 90, bot: [50, 73, 90], lines: [{ p: [[100, 73], [110.7, 70.9], [119.8, 64.8], [125.9, 55.7], [128, 45], [125.9, 34.3], [119.8, 25.2], [110.7, 19.1], [100, 17], [40, 17], [29.3, 19.1], [20.2, 25.2], [14.1, 34.3], [12, 45], [14.1, 55.7], [20.2, 64.8], [29.3, 70.9], [40, 73]], closed: true }], leader: { path: [[72, 73], [100, 73], [110.7, 70.9], [119.8, 64.8], [125.9, 55.7], [128, 45], [125.9, 34.3], [119.8, 25.2], [110.7, 19.1], [100, 17], [40, 17], [29.3, 19.1], [20.2, 25.2], [14.1, 34.3], [12, 45], [14.1, 55.7], [20.2, 64.8], [29.3, 70.9], [40, 73]], speed: 9, loop: true }, time: 24 },
+          prog: 'forever{ calc:e,dist,-,10 calc:v,$e,*,10 if:L=1{ stop:L run:R,fwd,$v } else{ if:R=1{ run:L,fwd,$v stop:R } else{ run:all,fwd,$v } } }', varNames: { e: 'error|error', v: 'velocitat|velocidad' } },
+        nota: "A les corbes, l'ultrasò de vegades no veu el líder (marca 500) i el cotxe accelera. Al robot real passa el mateix: per això cal provar-ho molt.|En las curvas, el ultrasonido a veces no ve al líder (marca 500) y el coche acelera. En el robot real pasa lo mismo: por eso hay que probarlo mucho." },
+      { id: 's7', k: 'concepte', t: "Trossos 3 i 4: els llums|Trozos 3 y 4: las luces", blocks: ["si velocitat < 60 → llums de sota vermells|si velocidad < 60 → luces de abajo rojas", "si no → llums de sota verds|si no → luces de abajo verdes", "si llum esquerra < 100 → llums del cotxe blancs|si luz izquierda < 100 → luces del coche blancas", "si no → llums del cotxe apagats|si no → luces del coche apagadas"],
+        punts: ["Van al final del «per sempre», fora del seguidor de línia.|Van al final del «para siempre», fuera del seguidor de línea.", "De dia la llum marca ~260; de nit, ~25.|De día la luz marca ~260; de noche, ~25."],
+        nota: "Recorda que els llums de fre del Maqueen són els 4 llums de sota i els fars, els 2 llums del davant.|Recuerda que las luces de freno del Maqueen son las 4 luces de abajo y los faros, las 2 luces de delante." },
+      { id: 's8', k: 'activitat', t: "El pla de l'equip d'enginyeria|El plan del equipo de ingeniería", timer: 10, punts: ["Ordeneu les targetes dins del «per sempre».|Ordenad las tarjetas dentro del «para siempre».", "Decidiu l'ordre de treball.|Decidid el orden de trabajo.", "Expliqueu el pla a un altre grup.|Explicad el plan a otro grupo.", "L'altre grup hi busca errors.|El otro grupo busca errores."],
+        nota: "Entre les targetes n'hi ha una de trampa («espera 5000 ms»): un cotxe que s'espera 5 segons sense mirar és perillós!|Entre las tarjetas hay una trampa («espera 5000 ms»): ¡un coche que espera 5 segundos sin mirar es peligroso!" },
+      { id: 's9', k: 'activitat', t: "A l'ordinador: els trossos|En el ordenador: los trozos", timer: 20, punts: ["Tros 1: la carretera.|Trozo 1: la carretera.", "Tros 2: guarda la distància.|Trozo 2: guarda la distancia.", "Tros 3: el semàfor i els llums de fre.|Trozo 3: el semáforo y las luces de freno.", "Després: la prova del carnet!|Después: ¡la prueba del carnet!"],
+        nota: "Que no esborrin el tros anterior quan en comencen un altre: cada repte parteix de l'anterior.|Que no borren el trozo anterior cuando empiezan otro: cada reto parte del anterior." },
+      { id: 's10', k: 'repte', t: "Si falla, torna enrere|Si falla, vuelve atrás", punts: ["Quin és l'últim tros que funcionava?|¿Cuál es el último trozo que funcionaba?", "Què hi has afegit després?|¿Qué has añadido después?", "Mira el tauler: quina velocitat calcula?|Mira el panel: ¿qué velocidad calcula?"],
+        nota: "És la manera de treballar dels equips d'enginyeria: canvis petits i proves sovint.|Es la manera de trabajar de los equipos de ingeniería: cambios pequeños y pruebas a menudo." },
+      { id: 's11', k: 'activitat', t: "Al circuit de veritat|En el circuito de verdad", timer: 12, punts: ["Líder: seguiment de línia del xip.|Líder: seguimiento de línea del chip.", "El vostre cotxe darrere, a uns 30 cm.|Vuestro coche detrás, a unos 30 cm.", "Semàfor: pareu el líder amb la mà.|Semáforo: parad el líder con la mano.", "Nit: tapeu els sensors de llum.|Noche: tapad los sensores de luz."],
+        nota: "Seguretat: circuit a terra, cables lluny i el robot líder amb la caixeta ben enganxada. Dos grups per circuit, per torns.|Seguridad: circuito en el suelo, cables lejos y el robot líder con la cajita bien pegada. Dos grupos por circuito, por turnos." },
+      { id: 's12', k: 'concepte', t: "El programa del líder|El programa del líder", code: "Maqueen_V5.I2CInit()\nMaqueen_V5.patrolling(Maqueen_V5.Patrolling.ON)",
+        punts: ["El líder fa servir el seguiment de línia del xip (unitat 4).|El líder usa el seguimiento de línea del chip (unidad 4).", "Va sempre a la mateixa velocitat, com el líder del simulador.|Va siempre a la misma velocidad, como el líder del simulador."],
+        nota: "Prepara'l abans de classe. Si no tens prou robots, el líder pot ser una caixa arrossegada amb un cordill per la pista.|Prepáralo antes de clase. Si no tienes suficientes robots, el líder puede ser una caja arrastrada con un cordel por la pista." },
+      { id: 's13', k: 'robo', t: "La prova del carnet|La prueba del carnet", x: "Carretera, distància, semàfor i nit. Ho supera?|Carretera, distancia, semáforo y noche. ¿Lo supera?",
+        robo: { w: { w: 140, h: 90, bot: [50, 73, 90], lines: [{ p: [[100, 73], [110.7, 70.9], [119.8, 64.8], [125.9, 55.7], [128, 45], [125.9, 34.3], [119.8, 25.2], [110.7, 19.1], [100, 17], [40, 17], [29.3, 19.1], [20.2, 25.2], [14.1, 34.3], [12, 45], [14.1, 55.7], [20.2, 64.8], [29.3, 70.9], [40, 73]], closed: true }], leader: { path: [[72, 73], [100, 73], [110.7, 70.9], [119.8, 64.8], [125.9, 55.7], [128, 45], [125.9, 34.3], [119.8, 25.2], [110.7, 19.1], [100, 17], [40, 17], [29.3, 19.1], [20.2, 25.2], [14.1, 34.3], [12, 45], [14.1, 55.7], [20.2, 64.8], [29.3, 70.9], [40, 73]], speed: 9, loop: true, stopAt: 16 }, env: [{ t: 8, dark: true }], time: 22 },
+          prog: 'forever{ calc:e,dist,-,10 calc:v,$e,*,10 if:L=1{ stop:L run:R,fwd,$v } else{ if:R=1{ run:L,fwd,$v stop:R } else{ run:all,fwd,$v } } if:$v<60{ under:all,red } else{ under:all,green } if:lL<100{ car:all,white } else{ car:all,black } }', varNames: { e: 'error|error', v: 'velocitat|velocidad' } },
+        nota: "Projecta-la per als grups que esperen torn al circuit: que diguin en quin moment s'encendran els fars i els llums vermells.|Proyéctala para los grupos que esperan turno en el circuito: que digan en qué momento se encenderán los faros y las luces rojas." },
+      { id: 's14', k: 'activitat', t: "Presentació ràpida|Presentación rápida", timer: 3, x: "Quin tros us ha costat més? Com l'heu arreglat?|¿Qué trozo os ha costado más? ¿Cómo lo habéis arreglado?",
+        nota: "Valora el procés (com han trobat i arreglat els errors), no només que funcioni.|Valora el proceso (cómo han encontrado y arreglado los errores), no solo que funcione." },
+      { id: 's15', k: 'resum', t: "La unitat 6 en quatre idees|La unidad 6 en cuatro ideas", punts: ["Variables: la velocitat i els comptadors.|Variables: la velocidad y los contadores.", "Control proporcional: velocitat = error × k.|Control proporcional: velocidad = error × k.", "Seguir el líder: el «mur» que es mou.|Seguir al líder: el «muro» que se mueve.", "El cotxe autònom: a trossos i provant molt.|El coche autónomo: a trozos y probando mucho."],
+        nota: "Anuncia la unitat 7: missions de robòtica (aspirador, sumo, rescat i contrarellotge).|Anuncia la unidad 7: misiones de robótica (aspirador, sumo, rescate y contrarreloj)." },
+      { id: 's16', k: 'tiquet', t: "Tiquet de sortida|Ticket de salida", punts: ["Els tres sensors del teu cotxe i per a què serveixen.|Los tres sensores de tu coche y para qué sirven.", "Per què programem a trossos?|¿Por qué programamos a trozos?"],
+        nota: "Anota qui ha integrat els quatre trossos i qui s'ha quedat al tros 2 o 3.|Anota quién ha integrado los cuatro trozos y quién se ha quedado en el trozo 2 o 3." }
+    ],
+    print: [
+      { id: 'p1', t: "Targetes del cotxe autònom|Tarjetas del coche autónomo", k: 'targetes',
+        intro: "Un paquet per grup. Ordeneu les targetes dins del «per sempre» per fer el programa del cotxe autònom. Compte: n'hi ha una que no s'ha de fer servir!|Un paquete por grupo. Ordenad las tarjetas dentro del «para siempre» para hacer el programa del coche autónomo. Cuidado: ¡hay una que no se tiene que usar!",
+        items: [
+          { t: "🔁 Per sempre|🔁 Para siempre", n: 1 },
+          { t: "📏 Posa error a distància − 10|📏 Pon error a distancia − 10", n: 1 },
+          { t: "✖️ Posa velocitat a error × 10|✖️ Pon velocidad a error × 10", n: 1 },
+          { t: "⬅️ Si L = 1: atura el motor esquerre, el dret a velocitat|⬅️ Si L = 1: para el motor izquierdo, el derecho a velocidad", n: 1 },
+          { t: "➡️ Si R = 1: l'esquerre a velocitat, atura el dret|➡️ Si R = 1: el izquierdo a velocidad, para el derecho", n: 1 },
+          { t: "⬆️ Si no: tots dos a velocitat|⬆️ Si no: los dos a velocidad", n: 1 },
+          { t: "🔴 Si velocitat < 60: llums de sota vermells; si no, verds|🔴 Si velocidad < 60: luces de abajo rojas; si no, verdes", n: 1 },
+          { t: "🌙 Si llum < 100: fars blancs; si no, apagats|🌙 Si luz < 100: faros blancos; si no, apagados", n: 1 },
+          { t: "⏳ Espera 5000 ms (trampa!)|⏳ Espera 5000 ms (¡trampa!)", n: 1 }
+        ] },
+      { id: 'p2', t: "Pista: el circuit del carnet|Pista: el circuito del carnet", k: 'pista',
+        intro: "Un circuit per cada dos grups, a terra o sobre cartolines blanques. Feu l'oval amb cinta negra de 2 cm: dues rectes de 60 cm (de x = 40 a x = 100) unides per dues semicircumferències de 28 cm de radi. El robot surt a la recta de baix, mirant a la dreta, amb el líder uns 22 cm més endavant.|Un circuito por cada dos grupos, en el suelo o sobre cartulinas blancas. Haced el oval con cinta negra de 2 cm: dos rectas de 60 cm (de x = 40 a x = 100) unidas por dos semicircunferencias de 28 cm de radio. El robot sale en la recta de abajo, mirando a la derecha, con el líder unos 22 cm más adelante.",
+        w: { w: 140, h: 90, bot: [50, 73, 90], lines: [{ p: [[100, 73], [110.7, 70.9], [119.8, 64.8], [125.9, 55.7], [128, 45], [125.9, 34.3], [119.8, 25.2], [110.7, 19.1], [100, 17], [40, 17], [29.3, 19.1], [20.2, 25.2], [14.1, 34.3], [12, 45], [14.1, 55.7], [20.2, 64.8], [29.3, 70.9], [40, 73]], closed: true }], marks: { S: [50, 73], P: [72, 73] } },
+        items: [
+          { q: "S és la sortida del vostre cotxe (centre de les rodes) i P, on comença el líder. Quina distància hi ha entre els dos?|S es la salida de vuestro coche (centro de las ruedas) y P, donde empieza el líder. ¿Qué distancia hay entre los dos?" },
+          { q: "Feu les corbes amb trossos curts de cinta, sense angles: el sensor de línia del robot perd els angles tancats.|Haced las curvas con trozos cortos de cinta, sin ángulos: el sensor de línea del robot pierde los ángulos cerrados." },
+          { q: "Apunteu: el vostre cotxe segueix la línia? Guarda la distància? Frena al «semàfor»? Encén els fars de «nit»?|Apuntad: ¿vuestro coche sigue la línea? ¿Guarda la distancia? ¿Frena en el «semáforo»? ¿Enciende los faros de «noche»?" }
+        ] }
+    ]
+  }
+});
+
+/* ── unitat 7 ── */
+/* Tech Robòtica · unitat 7 «Missions» · guia del professor (k7-1 … k7-4)
+   Material propi de Numi. Classe de 60 minuts; mateix esquema que TGUIDE['r1-1']. Fase «robot»: activitat amb el
+   Maqueen Lite V5 de veritat (grups de 3-4 per kit). */
+Object.assign(TGUIDE, (() => {
+  const f1 = v => +v.toFixed(1);
+  const rrect = (x0, y0, x1, y1, r, n) => { const p = [], c = [[x1 - r, y0 + r, -90], [x1 - r, y1 - r, 0], [x0 + r, y1 - r, 90], [x0 + r, y0 + r, 180]];
+    for (const [cx, cy, a0] of c) for (let i = 0; i <= n; i++) { const a = (a0 + 90 * i / n) * Math.PI / 180; p.push([f1(cx + r * Math.cos(a)), f1(cy + r * Math.sin(a))]); } return p; };
+  const CA = { w: 140, h: 80, lines: [{ p: rrect(9, 14, 131, 66, 26, 8), closed: true, w: 2 }, { p: [[40, 9], [40, 19]], w: 2 }], bot: [48, 14, 90], zones: [{ id: 'meta', r: [24, 4, 22, 20], col: 'yellow', label: 'META|META' }] };
+  const CA_GOAL = [{ k: 'cps', pts: [[105, 14], [131, 40], [70, 66], [9, 40], [35, 14]], r: 7 }];
+  const CURSA = (s, lo, hi) => `start{ until:L=1&&R=1{ if:L=1{ run:L,fwd,${lo} run:R,fwd,${hi} } else{ if:R=1{ run:L,fwd,${hi} run:R,fwd,${lo} } else{ run:all,fwd,${s} } } } stop:all }`;
+  const REBOT = (t, s) => `forever{ if:dist<10{ run:L,fwd,100 run:R,back,100 wait:${t} } else{ run:all,fwd,${s} } }`;
+  const ZIGZAG = 'start{ set:d,0 } forever{ if:dist<8{ if:$d=0{ run:L,fwd,100 run:R,back,100 wait:590 run:all,fwd,150 wait:450 run:L,fwd,100 run:R,back,100 wait:590 set:d,1 } else{ run:L,back,100 run:R,fwd,100 wait:590 run:all,fwd,150 wait:450 run:L,back,100 run:R,fwd,100 wait:590 set:d,0 } } else{ run:all,fwd,200 } }';
+  const SUMO = 'forever{ if:L=1||R=1{ run:all,back,150 wait:200 run:L,fwd,100 run:R,back,100 wait:200 } else{ if:dist<60{ run:all,fwd,255 } else{ run:L,fwd,90 run:R,back,90 } } }';
+  const DOHYO = { w: 100, h: 90, ring: { x: 50, y: 45, r: 38 }, border: false };
+  const at = (a, r) => [f1(50 + r * Math.sin(a * Math.PI / 180)), f1(40 - r * Math.cos(a * Math.PI / 180))];
+  const COVA = a => ({ w: 100, h: 80, bot: [50, 40, 0], objs: [{ x: at(a, 20)[0], y: at(a, 20)[1], r: 3, kind: 'ball' }], zones: [{ id: 'base', c: [...at(a, 33), 11], col: 'blue', label: 'BASE|BASE' }] });
+  const BUSCA = 'start{ run:L,fwd,60 run:R,back,60 until:dist<25{ wait:10 } run:all,fwd,120 until:aM>200{ wait:10 } wait:300 stop:all car:all,green icon:yes }';
+  const TUNEL = { w: 140, h: 50, bot: [14, 25, 90], objs: [{ x: 32, y: 25, r: 3, kind: 'ball' }], zones: [{ id: 'base', r: [70, 12, 22, 26], col: 'blue', label: 'BASE|BASE' }] };
+  const SEG = ["El robot, sempre a terra: res de taules sense vora.|El robot, siempre en el suelo: nada de mesas sin borde.", "Cable USB fora abans d'encendre'l.|Cable USB fuera antes de encenderlo.", "Apaga'l per agafar-lo; mans lluny de les rodes.|Apágalo para cogerlo; manos lejos de las ruedas.", "Només el pilot l'encén i l'apaga.|Solo el piloto lo enciende y lo apaga."];
+
+  return {
+  /* ---------- Sessió 1 · El robot aspirador ---------- */
+  'k7-1': {
+    obj: [
+      "L'alumne/a descompon una missió en passos: entendre l'objectiu, triar sensors, pensar una estratègia i provar-la a diverses pistes.|El alumno/a descompone una misión en pasos: entender el objetivo, elegir sensores, pensar una estrategia y probarla en varias pistas.",
+      "L'alumne/a programa un aspirador que rebota amb els ultrasons i explica per què cobreix el terra a l'atzar.|El alumno/a programa un aspirador que rebota con los ultrasonidos y explica por qué cubre el suelo al azar.",
+      "L'alumne/a fa servir una variable per recordar el costat del gir i programar un recorregut en zig-zag.|El alumno/a usa una variable para recordar el lado del giro y programar un recorrido en zigzag.",
+      "L'alumne/a calcula i compara el percentatge de terra net de dues estratègies, al paper i al simulador.|El alumno/a calcula y compara el porcentaje de suelo limpio de dos estrategias, en el papel y en el simulador."
+    ],
+    comp: [
+      "Competència digital (CD5): dissenyar algorismes amb condicions, bucles i variables per resoldre un problema real|Competencia digital (CD5): diseñar algoritmos con condiciones, bucles y variables para resolver un problema real",
+      "Competència STEM (STEM2): formular una estratègia, provar-la i comparar-ne els resultats|Competencia STEM (STEM2): formular una estrategia, probarla y comparar sus resultados",
+      "Matemàtiques: superfície amb quadrícules i percentatges|Matemáticas: superficie con cuadrículas y porcentajes",
+      "Ciències i tecnologia: robots de servei de la vida diària|Ciencias y tecnología: robots de servicio de la vida diaria"
+    ],
+    vocab: [
+      ["Missió|Misión", "Problema gran amb un objectiu clar que es comprova a diverses pistes.|Problema grande con un objetivo claro que se comprueba en varias pistas."],
+      ["Estratègia|Estrategia", "Les regles que segueix el robot per complir la missió.|Las reglas que sigue el robot para cumplir la misión."],
+      ["Rebotar|Rebotar", "Avançar fins a la paret i girar per anar cap a un lloc nou.|Avanzar hasta la pared y girar para ir hacia un sitio nuevo."],
+      ["Zig-zag|Zigzag", "Recórrer el terra fila per fila, girant cada vegada cap a un costat diferent.|Recorrer el suelo fila por fila, girando cada vez hacia un lado diferente."],
+      ["Percentatge|Porcentaje", "Quantes parts de cada 100: la meitat és el 50 %.|Cuántas partes de cada 100: la mitad es el 50 %."],
+      ["Variable|Variable", "Capsa amb nom que guarda un número; aquí, el costat del gir.|Caja con nombre que guarda un número; aquí, el lado del giro."]
+    ],
+    mat: {
+      aula: [
+        "Un ordinador per alumne/a amb Numi Tech obert a la sessió «El robot aspirador»|Un ordenador por alumno/a con Numi Tech abierto en la sesión «El robot aspirador»",
+        "Projector i la presentació d'aquesta sessió|Proyector y la presentación de esta sesión",
+        "Un kit per grup de 3-4: Maqueen Lite V5 amb micro:bit V2, cable USB i piles carregades|Un kit por grupo de 3-4: Maqueen Lite V5 con micro:bit V2, cable USB y pilas cargadas",
+        "Per grup: 4-6 llibres grossos o caixes per fer les parets d'una «sala» d'uns 80 × 60 cm, un full de paper i un cronòmetre (o un mòbil)|Por grupo: 4-6 libros grandes o cajas para hacer las paredes de una «sala» de unos 80 × 60 cm, una hoja de papel y un cronómetro (o un móvil)",
+        "Llapis de colors|Lápices de colores"
+      ],
+      imprimir: ["Graella: l'aspirador de llapis (dues per parella)|Cuadrícula: el aspirador de lápiz (dos por pareja)", "Codi: l'aspirador al Maqueen|Código: el aspirador en el Maqueen"],
+      prep: [
+        "Provar el codi de rebotar amb un kit: el robot ha de girar abans de tocar els llibres. Si toca, augmenteu la distància (de 10 a 15 cm).|Probar el código de rebotar con un kit: el robot tiene que girar antes de tocar los libros. Si toca, aumentad la distancia (de 10 a 15 cm).",
+        "Preparar un racó de terra lliure per grup per muntar-hi la sala amb llibres.|Preparar un rincón de suelo libre por grupo para montar la sala con libros.",
+        "Imprimir dues graelles per parella i el codi per grup.|Imprimir dos cuadrículas por pareja y el código por grupo.",
+        "Deixar MakeCode obert (makecode.microbit.org) en una pestanya de cada ordinador.|Dejar MakeCode abierto (makecode.microbit.org) en una pestaña de cada ordenador."
+      ]
+    },
+    plan: [
+      { min: 4, t: "La Setmana de les Missions|La Semana de las Misiones", fase: 'inici',
+        fa: "Presenta la unitat: quatre missions, una per sessió, que fan servir tot el que han après. Llança la pregunta de la diapositiva 2 i recull idees sense corregir-les.|Presenta la unidad: cuatro misiones, una por sesión, que usan todo lo que han aprendido. Lanza la pregunta de la diapositiva 2 y recoge ideas sin corregirlas.",
+        diu: ["Algú té un robot aspirador a casa? Com sap per on ha passat?|¿Alguien tiene un robot aspirador en casa? ¿Cómo sabe por dónde ha pasado?", "Avui farem el nostre: quins sensors creieu que necessitarà?|Hoy haremos el nuestro: ¿qué sensores creéis que necesitará?"],
+        slides: ['s1', 's2'], app: "Encara no: pantalles apagades.|Todavía no: pantallas apagadas.", org: "Tot el grup|Todo el grupo" },
+      { min: 9, t: "Dues estratègies per netejar|Dos estrategias para limpiar", fase: 'teoria',
+        fa: "Presenta els quatre passos d'una missió. Amb les animacions, explica com es mesura la neteja (quadrets de 5 cm i percentatge). Executa les demos de rebotar i de zig-zag i demana abans quina netejarà més. Acaba amb la demo de la mitja volta exacta: per què queda tan brut?|Presenta los cuatro pasos de una misión. Con las animaciones, explica cómo se mide la limpieza (cuadraditos de 5 cm y porcentaje). Ejecuta las demos de rebotar y de zigzag y pregunta antes cuál limpiará más. Termina con la demo de la media vuelta exacta: ¿por qué queda tan sucio?",
+        diu: ["Si el terra té 240 quadrets i en netegem 120, quin percentatge és?|Si el suelo tiene 240 cuadraditos y limpiamos 120, ¿qué porcentaje es?", "Per què el zig-zag necessita recordar alguna cosa?|¿Por qué el zigzag necesita recordar algo?", "Què passa si el robot gira exactament 180° cada vegada?|¿Qué pasa si el robot gira exactamente 180° cada vez?"],
+        slides: ['s3', 's4', 's5', 's6', 's7', 's8'], app: "Encara no: tota l'atenció a la projecció.|Todavía no: toda la atención en la proyección.", org: "Tot el grup|Todo el grupo" },
+      { min: 10, t: "L'aspirador de llapis|El aspirador de lápiz", fase: 'desconnectat',
+        fa: "Per parelles, amb dues graelles. A la primera, un fa de robot que rebota (diagonal i canvi de direcció a cada paret) i l'altre compta els passos; a la segona, zig-zag fila per fila. Paren als 40 passos, compten els quadrets pintats i calculen el percentatge. Poseu els resultats en comú a la pissarra.|Por parejas, con dos cuadrículas. En la primera, uno hace de robot que rebota (diagonal y cambio de dirección en cada pared) y el otro cuenta los pasos; en la segunda, zigzag fila por fila. Paran a los 40 pasos, cuentan los cuadraditos pintados y calculan el porcentaje. Poned los resultados en común en la pizarra.",
+        diu: ["Un pas és passar d'un quadret al del costat (o al de la diagonal).|Un paso es pasar de un cuadradito al de al lado (o al de la diagonal).", "On us heu deixat més quadrets bruts?|¿Dónde os habéis dejado más cuadraditos sucios?", "Quantes vegades heu passat pel mateix quadret?|¿Cuántas veces habéis pasado por el mismo cuadradito?"],
+        slides: ['s9'], app: "Cap: activitat sense pantalla.|Ninguna: actividad sin pantalla.", org: "Parelles|Parejas" },
+      { min: 10, t: "A l'ordinador: descobreix i prova|En el ordenador: descubre y prueba", fase: 'ordinador',
+        fa: "Cada alumne/a obre la sessió i avança fins a la pausa activa. Al pas «L'aspirador de llapis», que toquin «Ho hem fet!». Al pas «On acabarà?», que triïn abans d'executar.|Cada alumno/a abre la sesión y avanza hasta la pausa activa. En el paso «El aspirador de lápiz», que toquen «¡Lo hemos hecho!». En el paso «¿Dónde terminará?», que elijan antes de ejecutar.",
+        diu: ["Al pas del bloc que cal tocar: quin bloc fa de memòria del robot?|En el paso del bloque que hay que tocar: ¿qué bloque hace de memoria del robot?", "Primer tria la lletra; després comprova-ho.|Primero elige la letra; después compruébalo."],
+        slides: ['s10'], app: "De «Recorda» fins a «Investiga»: les dues preguntes, la missió, les cinc targetes, ordenar el zig-zag, l'aspirador de llapis (ja fet), «On acabarà?» i el bloc de la memòria.|De «Recuerda» hasta «Investiga»: las dos preguntas, la misión, las cinco tarjetas, ordenar el zigzag, el aspirador de lápiz (ya hecho), «¿Dónde terminará?» y el bloque de la memoria.", org: "Individual|Individual" },
+      { min: 8, t: "Reptes: rebotar i zig-zag|Retos: rebotar y zigzag", fase: 'ordinador',
+        fa: "Pausa activa tots junts i, després, els tres reptes. Al de rebotar, que provin diferents temps de gir i comparin el percentatge. Al de zig-zag, que llegeixin la branca que ja funciona abans de completar l'altra.|Pausa activa todos juntos y, después, los tres retos. En el de rebotar, que prueben diferentes tiempos de giro y comparen el porcentaje. En el de zigzag, que lean la rama que ya funciona antes de completar la otra.",
+        diu: ["Quin percentatge us ha sortit? I si gireu 200 ms més?|¿Qué porcentaje os ha salido? ¿Y si giráis 200 ms más?", "La branca «si no» ha de fer el mateix que la de dalt, però cap a l'altre costat.|La rama «si no» tiene que hacer lo mismo que la de arriba, pero hacia el otro lado."],
+        slides: ['s11'], app: "«Pausa activa» i els reptes: primer aspirador, els mobles i el zig-zag amb memòria.|«Pausa activa» y los retos: primer aspirador, los muebles y el zigzag con memoria.", org: "Tot el grup i després individual|Todo el grupo y después individual" },
+      { min: 12, t: "L'aspirador de veritat|El aspirador de verdad", fase: 'robot',
+        fa: "Grups de 3-4 per kit amb papers: programador/a, pilot, cronometrador/a i secretari/ària. Munteu a terra una sala de llibres o caixes d'uns 80 × 60 cm. Descarregueu el programa de rebotar (diapositiva 12) a la micro:bit i deixeu el robot 60 segons dins la sala. El secretari/ària dibuixa al full, de manera aproximada, per on passa. Després proveu un altre temps de gir i compareu els dibuixos. Si queda temps, proveu el zig-zag: al robot de veritat, els girs de 590 ms potser no fan 90° i caldrà calibrar-los.|Grupos de 3-4 por kit con papeles: programador/a, piloto, cronometrador/a y secretario/a. Montad en el suelo una sala de libros o cajas de unos 80 × 60 cm. Descargad el programa de rebotar (diapositiva 12) en la micro:bit y dejad el robot 60 segundos dentro de la sala. El secretario/a dibuja en la hoja, de manera aproximada, por dónde pasa. Después probad otro tiempo de giro y comparad los dibujos. Si queda tiempo, probad el zigzag: en el robot de verdad, los giros de 590 ms quizá no hacen 90° y habrá que calibrarlos.",
+        diu: ["El robot gira abans de tocar els llibres? Si no, quin número canviaríeu?|¿El robot gira antes de tocar los libros? Si no, ¿qué número cambiaríais?", "Hi ha algun racó on no arriba mai? Per què?|¿Hay algún rincón donde no llega nunca? ¿Por qué?", "El zig-zag del robot de veritat fa els carrils rectes? Què cal calibrar?|¿El zigzag del robot de verdad hace los carriles rectos? ¿Qué hay que calibrar?"],
+        slides: ['s12', 's13'], app: "Cap: MakeCode i el robot de veritat.|Ninguna: MakeCode y el robot de verdad.", org: "Grups de 3-4 per kit amb papers|Grupos de 3-4 por kit con papeles" },
+      { min: 4, t: "Crea: l'aspirador de l'hostal|Crea: el aspirador del hostal", fase: 'crea',
+        fa: "De tornada a l'ordinador, el projecte: dues sales amb un sofà, el 40 % net i els llums de sota encesos. Cadascú tria la seva estratègia; que el desin quan funcioni a les dues sales.|De vuelta al ordenador, el proyecto: dos salas con un sofá, el 40 % limpio y las luces de abajo encendidas. Cada uno elige su estrategia; que lo guarden cuando funcione en las dos salas.",
+        diu: ["Quina estratègia has triat? Per què?|¿Qué estrategia has elegido? ¿Por qué?"],
+        slides: ['s14'], app: "Pas «Crea»: L'aspirador de l'hostal.|Paso «Crea»: El aspirador del hostal.", org: "Individual|Individual" },
+      { min: 3, t: "Tancament i tiquet de sortida|Cierre y ticket de salida", fase: 'tancament',
+        fa: "Repassa les tres idees del resum i deixa que responguin les preguntes finals. A la porta, una pregunta del tiquet a cada alumne/a.|Repasa las tres ideas del resumen y deja que respondan las preguntas finales. En la puerta, una pregunta del ticket a cada alumno/a.",
+        diu: ["Quina estratègia neteja més en el mateix temps? Per què?|¿Qué estrategia limpia más en el mismo tiempo? ¿Por qué?", "Què guarda la variable costat?|¿Qué guarda la variable lado?"],
+        slides: ['s15', 's16'], app: "«Tancament»: les dues preguntes i com m'he sentit.|«Cierre»: las dos preguntas y cómo me he sentido.", org: "Tot el grup|Todo el grupo" }
+    ],
+    errors: [
+      ["El robot gira tan poc (menys de 400 ms) que torna a veure la paret i fa voltes al mateix racó.|El robot gira tan poco (menos de 400 ms) que vuelve a ver la pared y da vueltas en el mismo rincón.",
+        "Que miri la demo i compti quants graus gira. Pregunta: quan acaba el gir, cap on mira? Encara veu la paret?|Que mire la demo y cuente cuántos grados gira. Pregunta: cuando termina el giro, ¿hacia dónde mira? ¿Todavía ve la pared?"],
+      ["Al zig-zag, copia la branca de dalt tal qual i el robot gira sempre a la dreta.|En el zigzag, copia la rama de arriba tal cual y el robot gira siempre a la derecha.",
+        "Feu el moviment amb el cos: per girar a l'esquerra, quina roda va enrere? I quin valor ha de tenir costat al final?|Haced el movimiento con el cuerpo: para girar a la izquierda, ¿qué rueda va atrás? ¿Y qué valor tiene que tener lado al final?"],
+      ["Oblida «posa costat a 0» a «en iniciar» o el posa dins de «per sempre».|Olvida «pon lado a 0» en «al iniciar» o lo pone dentro de «para siempre».",
+        "Pregunta: si cada volta de «per sempre» torna a posar costat a 0, quan valdrà 1? Llegiu-ho junts.|Pregunta: si cada vuelta de «para siempre» vuelve a poner lado a 0, ¿cuándo valdrá 1? Leedlo juntos."],
+      ["Pensa que passar dues vegades pel mateix lloc compta el doble.|Piensa que pasar dos veces por el mismo sitio cuenta el doble.",
+        "Torna a la graella: un quadret ja pintat, es pot pintar més? El percentatge compta quadrets diferents.|Vuelve a la cuadrícula: un cuadradito ya pintado, ¿se puede pintar más? El porcentaje cuenta cuadraditos diferentes."],
+      ["Al robot de veritat, el robot xoca amb els llibres i creu que el programa està malament.|En el robot de verdad, el robot choca con los libros y cree que el programa está mal.",
+        "Al robot real, l'ultrasò veu pitjor les superfícies de biaix o molt toves. Que proveu de reaccionar abans (15 cm) i amb parets llises.|En el robot real, el ultrasonido ve peor las superficies inclinadas o muy blandas. Que prueben a reaccionar antes (15 cm) y con paredes lisas."]
+    ],
+    diff: {
+      mes: "Inventar una tercera estratègia (per exemple, una espiral amb una variable que fa la corba cada cop més oberta) i comparar el percentatge amb les altres dues. Al robot real, calibrar els girs del zig-zag fins que els carrils quedin rectes.|Inventar una tercera estrategia (por ejemplo, una espiral con una variable que hace la curva cada vez más abierta) y comparar el porcentaje con las otras dos. En el robot real, calibrar los giros del zigzag hasta que los carriles queden rectos.",
+      menys: "Fer només rebotar, amb el programa dit en veu alta («si veus la paret, gira; si no, endavant»). Al zig-zag, fer servir la pista per completar la branca de l'esquerra pas a pas.|Hacer solo rebotar, con el programa dicho en voz alta («si ves la pared, gira; si no, adelante»). En el zigzag, usar la pista para completar la rama de la izquierda paso a paso."
+    },
+    aval: {
+      ticket: ["Explica una estratègia d'aspirador i un avantatge que té.|Explica una estrategia de aspirador y una ventaja que tiene.",
+        "Si el robot neteja 60 quadrets d'un terra de 120, quin percentatge ha netejat?|Si el robot limpia 60 cuadraditos de un suelo de 120, ¿qué porcentaje ha limpiado?"],
+      rubric: [
+        ["Estratègia de rebotar|Estrategia de rebotar", "Programa el rebot amb «si … si no» i ajusta el gir comparant el percentatge.|Programa el rebote con «si … si no» y ajusta el giro comparando el porcentaje.", "Fa el rebot amb ajuda o no sap explicar per què gira.|Hace el rebote con ayuda o no sabe explicar por qué gira."],
+        ["Variable de memòria|Variable de memoria", "Completa el zig-zag i explica què guarda la variable costat.|Completa el zigzag y explica qué guarda la variable lado.", "Completa la branca amb la pista però no explica el paper de la variable.|Completa la rama con la pista pero no explica el papel de la variable."],
+        ["Mesura i comparació|Medida y comparación", "Calcula percentatges i compara dues estratègies amb dades.|Calcula porcentajes y compara dos estrategias con datos.", "Compta quadrets però s'embolica amb el percentatge.|Cuenta cuadraditos pero se lía con el porcentaje."]
+      ]
+    },
+    casa: "A casa, amb el mòbil, podeu repetir la sessió i fer «L'aspirador de llapis» amb algú de la família. Si teniu (o coneixeu) un robot aspirador, observeu-lo cinc minuts: rebota, fa zig-zag o fa una altra cosa?|En casa, con el móvil, podéis repetir la sesión y hacer «El aspirador de lápiz» con alguien de la familia. Si tenéis (o conocéis) un robot aspirador, observadlo cinco minutos: ¿rebota, hace zigzag o hace otra cosa?",
+    slides: [
+      { id: 's1', k: 'portada', t: "El robot aspirador|El robot aspirador", x: "Missió 1 de la Setmana de les Missions: netejar el menjador de l'hostal.|Misión 1 de la Semana de las Misiones: limpiar el comedor del hostal.",
+        nota: "Explica que aquesta unitat no introdueix blocs nous: combina tots els que ja saben per resoldre missions grans.|Explica que esta unidad no introduce bloques nuevos: combina todos los que ya saben para resolver misiones grandes." },
+      { id: 's2', k: 'pregunta', t: "Com sap un aspirador per on ha passat?|¿Cómo sabe un aspirador por dónde ha pasado?", punts: ["Té un mapa?|¿Tiene un mapa?", "Quins sensors fa servir?|¿Qué sensores usa?", "Com decideix cap on gira?|¿Cómo decide hacia dónde gira?"],
+        nota: "Recull les idees. Molts diran que «ho sap»: la majoria d'aspiradors senzills no ho saben, segueixen unes regles. Hi tornareu en acabar la teoria.|Recoge las ideas. Muchos dirán que «lo sabe»: la mayoría de aspiradores sencillos no lo saben, siguen unas reglas. Volveréis a ello al terminar la teoría." },
+      { id: 's3', k: 'concepte', t: "Com s'enfoca una missió|Cómo se enfoca una misión", punts: ["1. Entén la missió: què vol dir «ho he aconseguit»?|1. Entiende la misión: ¿qué quiere decir «lo he conseguido»?", "2. Tria els sensors que t'ajuden.|2. Elige los sensores que te ayudan.", "3. Pensa una estratègia i escriu-la en blocs.|3. Piensa una estrategia y escríbela en bloques.", "4. Prova-la a totes les pistes i millora-la.|4. Pruébala en todas las pistas y mejórala."],
+        nota: "Aquests quatre passos tornaran a cada missió de la unitat. Deixa'ls escrits en un racó de la pissarra.|Estos cuatro pasos volverán en cada misión de la unidad. Déjalos escritos en un rincón de la pizarra." },
+      { id: 's4', k: 'anim', t: "Dues estratègies|Dos estrategias", anim: 'k7cover', x: "Rebotar cobreix el terra a l'atzar; el zig-zag, fila per fila.|Rebotar cubre el suelo al azar; el zigzag, fila por fila.",
+        nota: "Pregunta quina creuen que serà més ràpida i per què. Fixeu-vos en les zones que el rebot deixa sense netejar.|Pregunta cuál creen que será más rápida y por qué. Fijaos en las zonas que el rebote deja sin limpiar." },
+      { id: 's5', k: 'anim', t: "Quant ha netejat?|¿Cuánto ha limpiado?", anim: 'k7grid', x: "Terra en quadrets de 5 × 5 cm: net quan el centre del robot hi passa.|Suelo en cuadraditos de 5 × 5 cm: limpio cuando el centro del robot pasa por encima.",
+        nota: "Fes un parell de càlculs a la pissarra: 25 de 50 és el 50 %; 30 de 120 és el 25 %. És exactament el que mesura el simulador.|Haz un par de cálculos en la pizarra: 25 de 50 es el 50 %; 30 de 120 es el 25 %. Es exactamente lo que mide el simulador." },
+      { id: 's6', k: 'robo', t: "Estratègia 1: rebotar|Estrategia 1: rebotar", x: "Si veu la paret a menys de 10 cm, gira 800 ms; si no, endavant.|Si ve la pared a menos de 10 cm, gira 800 ms; si no, adelante.",
+        robo: { w: { w: 100, h: 60, bot: [15, 30, 90], time: 30 }, prog: REBOT(800, 200) }, tip: "Abans d'executar-ho: arribarà a tots els racons?|Antes de ejecutarlo: ¿llegará a todos los rincones?",
+        nota: "Deixa-la córrer 30 segons. Fes notar que passa moltes vegades pel mig i poc pels racons.|Déjala correr 30 segundos. Haz notar que pasa muchas veces por el medio y poco por los rincones." },
+      { id: 's7', k: 'robo', t: "Estratègia 2: zig-zag amb memòria|Estrategia 2: zigzag con memoria", x: "La variable costat diu si toca girar a la dreta (0) o a l'esquerra (1).|La variable lado dice si toca girar a la derecha (0) o a la izquierda (1).",
+        robo: { w: { w: 100, h: 60, bot: [10, 8, 90], time: 45 }, prog: ZIGZAG, varNames: { d: 'costat|lado' } },
+        blocks: ["en iniciar: posa costat a 0|al iniciar: pon lado a 0", "si distància < 8|si distancia < 8", "si costat = 0 → gira a la dreta, baixa, gira a la dreta, posa costat a 1|si lado = 0 → gira a la derecha, baja, gira a la derecha, pon lado a 1", "si no → el mateix a l'esquerra, posa costat a 0|si no → lo mismo a la izquierda, pon lado a 0"],
+        nota: "Atura la demo a la segona paret i pregunta: com sap ara que ha de girar a l'esquerra? La resposta és la variable.|Para la demo en la segunda pared y pregunta: ¿cómo sabe ahora que tiene que girar a la izquierda? La respuesta es la variable." },
+      { id: 's8', k: 'robo', t: "Compte: mitja volta exacta|Cuidado: media vuelta exacta", x: "Gira 1180 ms (180°) cada vegada que veu la paret.|Gira 1180 ms (180°) cada vez que ve la pared.",
+        robo: { w: { w: 100, h: 60, bot: [15, 30, 90], time: 20 }, prog: REBOT(1180, 150) },
+        nota: "Que predigui on anirà abans d'executar. Va i ve per la mateixa ratlla: girar més no vol dir netejar millor.|Que predigan adónde irá antes de ejecutar. Va y viene por la misma raya: girar más no quiere decir limpiar mejor." },
+      { id: 's9', k: 'activitat', t: "L'aspirador de llapis|El aspirador de lápiz", timer: 10, punts: ["Graella 1: rebota en diagonal i canvia de direcció a cada paret.|Cuadrícula 1: rebota en diagonal y cambia de dirección en cada pared.", "Graella 2: zig-zag, fila per fila.|Cuadrícula 2: zigzag, fila por fila.", "Pareu als 40 passos i compteu els quadrets pintats.|Parad a los 40 pasos y contad los cuadraditos pintados.", "Calculeu el percentatge i compareu.|Calculad el porcentaje y comparad."],
+        nota: "El menjador fa 12 × 8 = 96 quadrets, menys els 4 de la taula: 92. Escriu a la pissarra els percentatges de cada parella.|El comedor tiene 12 × 8 = 96 cuadraditos, menos los 4 de la mesa: 92. Escribe en la pizarra los porcentajes de cada pareja." },
+      { id: 's10', k: 'activitat', t: "Ara, a l'ordinador|Ahora, al ordenador", timer: 10, punts: ["Obre la sessió «El robot aspirador».|Abre la sesión «El robot aspirador».", "Mira les demos de «Descobreix».|Mira las demos de «Descubre».", "A «On acabarà?», tria abans d'executar.|En «¿Dónde terminará?», elige antes de ejecutar.", "Para a la «Pausa activa».|Para en la «Pausa activa»."],
+        nota: "Al pas de l'aspirador de llapis, que toquin «Ho hem fet!»: ja l'han fet a classe.|En el paso del aspirador de lápiz, que toquen «¡Lo hemos hecho!»: ya lo han hecho en clase." },
+      { id: 's11', k: 'repte', t: "Reptes de l'aspirador|Retos del aspirador", timer: 8, punts: ["1. Primer aspirador: rebota (20 %)|1. Primer aspirador: rebota (20 %)", "2. Els mobles canvien de lloc (3 pistes)|2. Los muebles cambian de sitio (3 pistas)", "3. Zig-zag amb memòria (58 %, sense xocar)|3. Zigzag con memoria (58 %, sin chocar)"],
+        nota: "Al segon repte, el programa del primer ja funciona: és la gràcia dels sensors. Al tercer, la branca buida és la clau.|En el segundo reto, el programa del primero ya funciona: es la gracia de los sensores. En el tercero, la rama vacía es la clave." },
+      { id: 's12', k: 'activitat', t: "L'aspirador de veritat|El aspirador de verdad", timer: 12, punts: ["Munteu la sala amb llibres (80 × 60 cm).|Montad la sala con libros (80 × 60 cm).", "Descarregueu el rebot i deixeu-lo 60 segons.|Descargad el rebote y dejadlo 60 segundos.", "Dibuixeu per on passa.|Dibujad por dónde pasa.", "Canvieu el temps del gir i compareu.|Cambiad el tiempo del giro y comparad."],
+        code: "Maqueen_V5.I2CInit()\nbasic.forever(function () {\n    if (Maqueen_V5.Ultrasonic() < 10) {\n        Maqueen_V5.motorRun(Maqueen_V5.Motors.M1, Maqueen_V5.Dir.CW, 100)\n        Maqueen_V5.motorRun(Maqueen_V5.Motors.M2, Maqueen_V5.Dir.CCW, 100)\n        basic.pause(800)\n    } else {\n        Maqueen_V5.motorRun(Maqueen_V5.Motors.All, Maqueen_V5.Dir.CW, 200)\n    }\n})",
+        nota: "Si el robot no veu bé els llibres, que reaccioni abans: canvieu el 10 per un 15. Recorda que cada grup tindrà un dibuix diferent: és normal, el rebot és a l'atzar.|Si el robot no ve bien los libros, que reaccione antes: cambiad el 10 por un 15. Recuerda que cada grupo tendrá un dibujo diferente: es normal, el rebote es al azar." },
+      { id: 's13', k: 'concepte', t: "Seguretat amb el robot|Seguridad con el robot", punts: SEG,
+        nota: "Deixa-la projectada mentre treballen amb els robots. Els llibres han de fer parets estables: si cauen, el robot pot quedar atrapat.|Déjala proyectada mientras trabajan con los robots. Los libros tienen que hacer paredes estables: si caen, el robot puede quedar atrapado." },
+      { id: 's14', k: 'activitat', t: "Crea: l'aspirador de l'hostal|Crea: el aspirador del hostal", timer: 4, x: "Dues sales, el 40 % net i els llums de sota encesos. L'estratègia la tries tu.|Dos salas, el 40 % limpio y las luces de abajo encendidas. La estrategia la eliges tú.",
+        nota: "Valora que hi hagi alumnes que triïn estratègies diferents i que sàpiguen explicar-ne el perquè.|Valora que haya alumnos que elijan estrategias diferentes y que sepan explicar el porqué." },
+      { id: 's15', k: 'resum', t: "Què hem après avui|Qué hemos aprendido hoy", punts: ["Una missió: objectiu, sensors, estratègia i proves a diverses pistes.|Una misión: objetivo, sensores, estrategia y pruebas en varias pistas.", "Rebotar és senzill; el zig-zag neteja més en el mateix temps.|Rebotar es sencillo; el zigzag limpia más en el mismo tiempo.", "Una variable pot recordar una decisió.|Una variable puede recordar una decisión."],
+        nota: "Torna a la pregunta del principi: ara ja saben que l'aspirador no necessita saber on és, si té una bona estratègia.|Vuelve a la pregunta del principio: ahora ya saben que el aspirador no necesita saber dónde está, si tiene una buena estrategia." },
+      { id: 's16', k: 'tiquet', t: "Tiquet de sortida|Ticket de salida", punts: ["Una estratègia d'aspirador i un avantatge.|Una estrategia de aspirador y una ventaja.", "60 quadrets nets de 120: quin percentatge?|60 cuadraditos limpios de 120: ¿qué porcentaje?"],
+        nota: "Anota qui encara no relaciona la variable amb el costat del gir: hi tornareu a la sessió del sumo.|Anota quién todavía no relaciona la variable con el lado del giro: volveréis a ello en la sesión del sumo." }
+    ],
+    print: [
+      { id: 'p1', t: "L'aspirador de llapis|El aspirador de lápiz", k: 'graella', w: 12, h: 8,
+        intro: "Una graella per a cada estratègia. Pinteu de negre els 4 quadrets de la taula (2 × 2, al mig). Comenceu a la cantonada de dalt a l'esquerra i pinteu cada quadret per on passeu. Pareu als 40 passos.|Una cuadrícula para cada estrategia. Pintad de negro los 4 cuadraditos de la mesa (2 × 2, en el medio). Empezad en la esquina de arriba a la izquierda y pintad cada cuadradito por donde paséis. Parad a los 40 pasos.",
+        legend: [['⬛', 'Taula: no s\'hi pot passar|Mesa: no se puede pasar'], ['↗', 'Rebotar: en diagonal, canvia a cada paret|Rebotar: en diagonal, cambia en cada pared'], ['↔', 'Zig-zag: fila per fila|Zigzag: fila por fila']],
+        items: [
+          { q: "Estratègia: ________ · Quadrets nets: ____ de 92 · Percentatge: ____ %|Estrategia: ________ · Cuadraditos limpios: ____ de 92 · Porcentaje: ____ %" },
+          { q: "Quina estratègia ha netejat més? On han quedat més quadrets bruts?|¿Qué estrategia ha limpiado más? ¿Dónde han quedado más cuadraditos sucios?", big: true }
+        ] },
+      { id: 'p2', t: "L'aspirador al Maqueen|El aspirador en el Maqueen", k: 'codi',
+        intro: "A makecode.microbit.org: nou projecte → Extensions → «maqueen» → JavaScript → enganxeu-hi el codi → Descarrega. Després, cable fora i robot a terra, dins la sala de llibres.|En makecode.microbit.org: nuevo proyecto → Extensiones → «maqueen» → JavaScript → pegad el código → Descarga. Después, cable fuera y robot en el suelo, dentro de la sala de libros.",
+        items: [
+          { t: "1. Rebotar (canvieu el 800 per provar altres girs)|1. Rebotar (cambiad el 800 para probar otros giros)", prog: REBOT(800, 200) },
+          { t: "2. Zig-zag amb memòria (calibreu el 590 perquè giri 90°)|2. Zigzag con memoria (calibrad el 590 para que gire 90°)", prog: ZIGZAG }
+        ] }
+    ]
+  },
+
+  /* ---------- Sessió 2 · Sumo ---------- */
+  'k7-2': {
+    obj: [
+      "L'alumne/a fa servir els sensors de línia per detectar la vora del dohyo (negre o buit = 1) i evitar sortir-ne.|El alumno/a usa los sensores de línea para detectar el borde del dohyo (negro o vacío = 1) y evitar salir.",
+      "L'alumne/a programa una cerca del rival amb els ultrasons: girar mentre no veu res i atacar quan el veu.|El alumno/a programa una búsqueda del rival con los ultrasonidos: girar mientras no ve nada y atacar cuando lo ve.",
+      "L'alumne/a ordena les condicions segons la prioritat (seguretat, atac, cerca) i explica per què l'ordre importa.|El alumno/a ordena las condiciones según la prioridad (seguridad, ataque, búsqueda) y explica por qué el orden importa.",
+      "L'alumne/a participa en una competició de sumo amb el Maqueen de veritat respectant les regles i el treball en equip.|El alumno/a participa en una competición de sumo con el Maqueen de verdad respetando las reglas y el trabajo en equipo."
+    ],
+    comp: [
+      "Competència digital (CD5): algorismes amb condicions niades i prioritats|Competencia digital (CD5): algoritmos con condiciones anidadas y prioridades",
+      "Competència STEM (STEM2): fer servir sensors per prendre decisions en temps real|Competencia STEM (STEM2): usar sensores para tomar decisiones en tiempo real",
+      "Matemàtiques: el cercle (radi, diàmetre) i les distàncies|Matemáticas: el círculo (radio, diámetro) y las distancias",
+      "Competència personal i social: competir amb respecte i acceptar el resultat|Competencia personal y social: competir con respeto y aceptar el resultado"
+    ],
+    vocab: [
+      ["Dohyo|Dohyo", "El cercle de la competició de sumo: blanc amb la vora negra.|El círculo de la competición de sumo: blanco con el borde negro."],
+      ["Vora|Borde", "La ratlla negra del dohyo: els sensors de línia hi donen 1.|La raya negra del dohyo: los sensores de línea dan 1 en ella."],
+      ["Prioritat|Prioridad", "El que es comprova primer perquè és més important.|Lo que se comprueba primero porque es más importante."],
+      ["Condició «o»|Condición «o»", "Es compleix si en passa almenys una: L = 1 o R = 1.|Se cumple si pasa al menos una: L = 1 o R = 1."],
+      ["Competició|Competición", "Prova amb regles iguals per a tothom; guanya la millor estratègia.|Prueba con reglas iguales para todos; gana la mejor estrategia."]
+    ],
+    mat: {
+      aula: [
+        "Un ordinador per alumne/a amb Numi Tech obert a la sessió «Sumo»|Un ordenador por alumno/a con Numi Tech abierto en la sesión «Sumo»",
+        "Projector i la presentació d'aquesta sessió|Proyector y la presentación de esta sesión",
+        "Un kit per grup de 3-4: Maqueen Lite V5 amb micro:bit V2, cable USB i piles carregades|Un kit por grupo de 3-4: Maqueen Lite V5 con micro:bit V2, cable USB y pilas cargadas",
+        "Per al dohyo: un cartró o paper blanc gran (uns 80 × 80 cm) i cinta aïllant negra de 2 cm; 2-3 llaunes buides o una capsa petita per grup|Para el dohyo: un cartón o papel blanco grande (unos 80 × 80 cm) y cinta aislante negra de 2 cm; 2-3 latas vacías o una caja pequeña por grupo",
+        "Una corda o unes quantes bufandes i coixins per a l'activitat sense pantalla|Una cuerda o unas cuantas bufandas y cojines para la actividad sin pantalla"
+      ],
+      imprimir: ["Targetes d'estratègia del sumo (una tira per grup)|Tarjetas de estrategia del sumo (una tira por grupo)", "Pista: el dohyo a escala|Pista: el dohyo a escala"],
+      prep: [
+        "Fer un o dos dohyos amb cinta negra sobre cartró blanc, a terra: un cercle de 76 cm de diàmetre (radi 38 cm). Mai sobre una taula.|Hacer uno o dos dohyos con cinta negra sobre cartón blanco, en el suelo: un círculo de 76 cm de diámetro (radio 38 cm). Nunca sobre una mesa.",
+        "Provar el programa SUMO amb un kit: a la vora negra, el robot ha de recular. Si se'n surt, el sensor potser necessita més temps: proveu una espera de 300 ms.|Probar el programa SUMO con un kit: en el borde negro, el robot tiene que recular. Si se sale, el sensor quizá necesita más tiempo: probad una espera de 300 ms.",
+        "Marcar a terra amb una corda un cercle d'uns 2 m per a l'activitat sense pantalla.|Marcar en el suelo con una cuerda un círculo de unos 2 m para la actividad sin pantalla.",
+        "Imprimir i retallar les targetes d'estratègia.|Imprimir y recortar las tarjetas de estrategia."
+      ]
+    },
+    plan: [
+      { min: 4, t: "La competició de sumo|La competición de sumo", fase: 'inici',
+        fa: "Explica les regles del sumo de robots: dos robots en un cercle, guanya qui treu l'altre sense sortir. Llança la pregunta de la diapositiva 2.|Explica las reglas del sumo de robots: dos robots en un círculo, gana quien saca al otro sin salir. Lanza la pregunta de la diapositiva 2.",
+        diu: ["Com pot saber el robot que és a punt de caure?|¿Cómo puede saber el robot que está a punto de caer?", "I com troba el rival si no té ulls?|¿Y cómo encuentra al rival si no tiene ojos?"],
+        slides: ['s1', 's2'], app: "Encara no: pantalles apagades.|Todavía no: pantallas apagadas.", org: "Tot el grup|Todo el grupo" },
+      { min: 10, t: "Vora, rival i prioritats|Borde, rival y prioridades", fase: 'teoria',
+        fa: "Amb l'animació del dohyo, recorda que els sensors de línia donen 1 al negre i a l'aire. Executa la demo de la vora. Després, l'animació de la cerca i la demo de l'atac contra el ninot. Acaba amb la demo de l'ordre equivocat: demana abans què passarà.|Con la animación del dohyo, recuerda que los sensores de línea dan 1 en el negro y en el aire. Ejecuta la demo del borde. Después, la animación de la búsqueda y la demo del ataque contra el muñeco. Termina con la demo del orden equivocado: pregunta antes qué pasará.",
+        diu: ["Si el dohyo fa 76 cm d'ample, per què diem «si distància < 60»?|Si el dohyo mide 76 cm de ancho, ¿por qué decimos «si distancia < 60»?", "Quin «si» manaríeu primer: el de la vora o el del rival?|¿Qué «si» pondríais primero: el del borde o el del rival?", "Per què l'ha seguit fins a fora?|¿Por qué lo ha seguido hasta fuera?"],
+        slides: ['s3', 's4', 's5', 's6', 's7', 's8'], app: "Encara no: tota l'atenció a la projecció.|Todavía no: toda la atención en la proyección.", org: "Tot el grup|Todo el grupo" },
+      { min: 10, t: "El dohyo de corda|El dohyo de cuerda", fase: 'desconnectat',
+        fa: "Grups de 4: <b>robot</b> (ulls tancats, braços endavant, camina a poc a poc), <b>sensor de línia</b> (diu «vora!» si un peu toca la corda), <b>ultrasò</b> (diu «rival!» si el coixí és davant) i <b>cervell</b> (ensenya la targeta d'estratègia que toca). La missió: treure el coixí del cercle sense sortir. Després de cada intent, rotació de papers. A la segona ronda, el cervell ha de seguir l'ordre de les targetes: vora primer.|Grupos de 4: <b>robot</b> (ojos cerrados, brazos adelante, camina despacio), <b>sensor de línea</b> (dice «¡borde!» si un pie toca la cuerda), <b>ultrasonido</b> (dice «¡rival!» si el cojín está delante) y <b>cerebro</b> (enseña la tarjeta de estrategia que toca). La misión: sacar el cojín del círculo sin salir. Después de cada intento, rotación de papeles. En la segunda ronda, el cerebro tiene que seguir el orden de las tarjetas: borde primero.",
+        diu: ["Robot, a poc a poc: aquí no guanya qui corre, sinó qui no cau.|Robot, despacio: aquí no gana quien corre, sino quien no cae.", "Què ha passat quan «vora!» i «rival!» han sonat alhora? Quina ordre heu seguit?|¿Qué ha pasado cuando «¡borde!» y «¡rival!» han sonado a la vez? ¿Qué orden habéis seguido?"],
+        slides: ['s9'], app: "Cap: activitat sense pantalla.|Ninguna: actividad sin pantalla.", org: "Grups de 4 amb papers que roten|Grupos de 4 con papeles que rotan" },
+      { min: 10, t: "A l'ordinador: descobreix i prova|En el ordenador: descubre y prueba", fase: 'ordinador',
+        fa: "Cada alumne/a avança fins a la pausa activa. Al pas del dohyo de corda, «Ho hem fet!». A «On s'aturarà?», que triïn abans d'executar.|Cada alumno/a avanza hasta la pausa activa. En el paso del dohyo de cuerda, «¡Lo hemos hecho!». En «¿Dónde se parará?», que elijan antes de ejecutar.",
+        diu: ["Quin bloc salva el robot de caure?|¿Qué bloque salva al robot de caer?"],
+        slides: ['s10'], app: "De «Recorda» fins a «Investiga»: les preguntes, la missió, les cinc targetes, la pregunta de l'ordre, el dohyo de corda (ja fet), «On s'aturarà?» i el bloc que salva el robot.|De «Recuerda» hasta «Investiga»: las preguntas, la misión, las cinco tarjetas, la pregunta del orden, el dohyo de cuerda (ya hecho), «¿Dónde se parará?» y el bloque que salva al robot.", org: "Individual|Individual" },
+      { min: 8, t: "Reptes d'entrenament|Retos de entrenamiento", fase: 'ordinador',
+        fa: "Pausa activa amb la postura de sumo i, després, els quatre entrenaments. Recorda que per fer «L = 1 o R = 1» cal el botó «Afegeix i / o».|Pausa activa con la postura de sumo y, después, los cuatro entrenamientos. Recuerda que para hacer «L = 1 o R = 1» hace falta el botón «Añade y / o».",
+        diu: ["Al ninot, si l'empenta no el treu, què fa el vostre robot?|Con el muñeco, si el empujón no lo saca, ¿qué hace vuestro robot?", "Retrocedir molt o poc: quin funciona millor? Per què?|Retroceder mucho o poco: ¿cuál funciona mejor? ¿Por qué?"],
+        slides: ['s11'], app: "«Pausa activa» i els entrenaments 1, 2 i 3 i «Neteja el dohyo».|«Pausa activa» y los entrenamientos 1, 2 y 3 y «Limpia el dohyo».", org: "Tot el grup i després individual|Todo el grupo y después individual" },
+      { min: 13, t: "La competició amb el Maqueen|La competición con el Maqueen", fase: 'robot',
+        fa: "Grups de 3-4 per kit: programador/a, pilot, àrbitre i secretari/ària. Primer, cada grup descarrega el programa SUMO i el prova sol al dohyo amb una llauna (3 minuts): no ha de sortir mai. Després, competició per parelles de grups: els dos robots es posen d'esquena l'un a l'altre al mig del dohyo i els pilots els encenen alhora. Cada combat dura 1 minut com a molt; perd qui surt del cercle. L'àrbitre controla el temps i el secretari/ària apunta els resultats. Entre combat i combat, poden canviar un sol número del programa.|Grupos de 3-4 por kit: programador/a, piloto, árbitro y secretario/a. Primero, cada grupo descarga el programa SUMO y lo prueba solo en el dohyo con una lata (3 minutos): no tiene que salir nunca. Después, competición por parejas de grupos: los dos robots se ponen de espaldas el uno al otro en el medio del dohyo y los pilotos los encienden a la vez. Cada combate dura 1 minuto como mucho; pierde quien sale del círculo. El árbitro controla el tiempo y el secretario/a apunta los resultados. Entre combate y combate, pueden cambiar un solo número del programa.",
+        diu: ["Els robots, sempre a terra. Si un robot surt, el pilot l'apaga i l'agafa.|Los robots, siempre en el suelo. Si un robot sale, el piloto lo apaga y lo coge.", "Quin número canvieu per al proper combat? Per què?|¿Qué número cambiáis para el próximo combate? ¿Por qué?", "Felicitem tots els equips: avui hem après de cada combat.|Felicitamos a todos los equipos: hoy hemos aprendido de cada combate."],
+        slides: ['s12', 's13'], app: "Cap: MakeCode i el robot de veritat.|Ninguna: MakeCode y el robot de verdad.", org: "Grups de 3-4 per kit, combats entre dos grups|Grupos de 3-4 por kit, combates entre dos grupos" },
+      { min: 3, t: "Crea: el meu campió|Crea: mi campeón", fase: 'crea',
+        fa: "A l'ordinador, el projecte: guanyar al ninot a les tres pistes amb llums vermells quan ataca. Que el desin quan funcioni.|En el ordenador, el proyecto: ganar al muñeco en las tres pistas con luces rojas cuando ataca. Que lo guarden cuando funcione.",
+        diu: ["On va el bloc dels llums vermells: a la branca de la vora, de l'atac o de la cerca?|¿Dónde va el bloque de las luces rojas: en la rama del borde, del ataque o de la búsqueda?"],
+        slides: ['s14'], app: "Pas «Crea»: El meu campió de sumo.|Paso «Crea»: Mi campeón de sumo.", org: "Individual|Individual" },
+      { min: 2, t: "Tancament|Cierre", fase: 'tancament',
+        fa: "Resum ràpid i tiquet de sortida a la porta.|Resumen rápido y ticket de salida en la puerta.",
+        diu: ["Quin «si» va primer i per què?|¿Qué «si» va primero y por qué?"],
+        slides: ['s15', 's16'], app: "«Tancament»: les dues preguntes i com m'he sentit.|«Cierre»: las dos preguntas y cómo me he sentido.", org: "Tot el grup|Todo el grupo" }
+    ],
+    errors: [
+      ["Fa la condició amb «i» (L = 1 i R = 1) i el robot cau quan arriba a la vora de biaix.|Hace la condición con «y» (L = 1 y R = 1) y el robot cae cuando llega al borde de lado.",
+        "Pregunta: si només un sensor veu la vora, el robot és en perill? Que provin d'arribar a la vora inclinats a la demo.|Pregunta: si solo un sensor ve el borde, ¿el robot está en peligro? Que prueben a llegar al borde inclinados en la demo."],
+      ["Posa el «si distància < 60» abans que el de la vora.|Pone el «si distancia < 60» antes que el del borde.",
+        "Torneu a la demo de l'ordre equivocat i a les targetes: quina era la primera?|Volved a la demo del orden equivocado y a las tarjetas: ¿cuál era la primera?"],
+      ["Fa que el robot retrocedeixi molt i giri molt: no torna mai a trobar el ninot.|Hace que el robot retroceda mucho y gire mucho: no vuelve nunca a encontrar al muñeco.",
+        "Que compari 200 ms amb 800 ms d'espera: amb quin queda més a prop del rival per tornar a atacar?|Que compare 200 ms con 800 ms de espera: ¿con cuál queda más cerca del rival para volver a atacar?"],
+      ["Posa un llindar de distància massa gran (500) i el robot ataca sempre, encara que no hi hagi res.|Pone un umbral de distancia demasiado grande (500) y el robot ataca siempre, aunque no haya nada.",
+        "Recorda que 500 vol dir «no veig res». Quina mida té el dohyo? Quin número té sentit?|Recuerda que 500 quiere decir «no veo nada». ¿Qué tamaño tiene el dohyo? ¿Qué número tiene sentido?"],
+      ["Es frustra quan el seu robot perd un combat.|Se frustra cuando su robot pierde un combate.",
+        "Recorda que cada combat dona informació: què ha fet el robot guanyador que el vostre no fa? Quin número canviareu?|Recuerda que cada combate da información: ¿qué ha hecho el robot ganador que el vuestro no hace? ¿Qué número cambiaréis?"]
+    ],
+    diff: {
+      mes: "Fer que el robot alterni el sentit de la cerca (una variable que canvia cada vegada que toca la vora) o que ataqui més fluix quan el rival és lluny i a 255 quan és a prop. Al robot real, provar estratègies diferents en combats.|Hacer que el robot alterne el sentido de la búsqueda (una variable que cambia cada vez que toca el borde) o que ataque más flojo cuando el rival está lejos y a 255 cuando está cerca. En el robot real, probar estrategias diferentes en combates.",
+      menys: "Començar només amb la regla de la vora (entrenament 1) i les targetes damunt la taula. Per al ninot, partir de la solució de la pista i canviar un sol número cada vegada.|Empezar solo con la regla del borde (entrenamiento 1) y las tarjetas encima de la mesa. Para el muñeco, partir de la solución de la pista y cambiar un solo número cada vez."
+    },
+    aval: {
+      ticket: ["Quin valor donen els sensors de línia a la vora negra i fora del dohyo?|¿Qué valor dan los sensores de línea en el borde negro y fuera del dohyo?",
+        "Digues els tres «si» del sumo en ordre.|Di los tres «si» del sumo en orden."],
+      rubric: [
+        ["Detectar la vora|Detectar el borde", "Programa la vora amb «L = 1 o R = 1» i el robot no surt mai.|Programa el borde con «L = 1 o R = 1» y el robot no sale nunca.", "Detecta la vora amb un sol sensor o el robot surt de biaix.|Detecta el borde con un solo sensor o el robot sale de lado."],
+        ["Cercar i atacar|Buscar y atacar", "Combina la cerca girant i l'atac amb l'ultrasò amb un llindar raonable.|Combina la búsqueda girando y el ataque con el ultrasonido con un umbral razonable.", "Ataca però no busca, o fa servir un llindar que no té sentit.|Ataca pero no busca, o usa un umbral que no tiene sentido."],
+        ["Prioritats i competició|Prioridades y competición", "Explica per què la vora va primer i millora el programa entre combats.|Explica por qué el borde va primero y mejora el programa entre combates.", "Ordena els «si» amb ajuda i canvia coses a l'atzar.|Ordena los «si» con ayuda y cambia cosas al azar."]
+      ]
+    },
+    casa: "A casa, amb el mòbil, podeu repetir els entrenaments i fer «El dohyo de corda» amb la família (a poc a poc i en un espai lliure). Penseu quina estratègia faríeu servir si el rival també busqués: giraríeu cap a la dreta o cap a l'esquerra?|En casa, con el móvil, podéis repetir los entrenamientos y hacer «El dohyo de cuerda» con la familia (despacio y en un espacio libre). Pensad qué estrategia usaríais si el rival también buscara: ¿giraríais hacia la derecha o hacia la izquierda?",
+    slides: [
+      { id: 's1', k: 'portada', t: "Sumo|Sumo", x: "Missió 2: la competició de sumo de robots.|Misión 2: la competición de sumo de robots.",
+        nota: "Presenta el sumo com una competició amb regles: guanya la millor estratègia, no el robot més fort. Ningú no toca els robots durant un combat.|Presenta el sumo como una competición con reglas: gana la mejor estrategia, no el robot más fuerte. Nadie toca los robots durante un combate." },
+      { id: 's2', k: 'pregunta', t: "Com guanya un robot sense ulls?|¿Cómo gana un robot sin ojos?", punts: ["Com sap que és a la vora?|¿Cómo sabe que está en el borde?", "Com troba el rival?|¿Cómo encuentra al rival?", "Què és més important: atacar o no caure?|¿Qué es más importante: atacar o no caer?"],
+        nota: "Deixa les tres preguntes obertes: les respondreu una per una a la teoria.|Deja las tres preguntas abiertas: las responderéis una por una en la teoría." },
+      { id: 's3', k: 'anim', t: "El dohyo|El dohyo", anim: 'k7ring', x: "Blanc → 0; vora negra i buit → 1. Si L o R valen 1: enrere!|Blanco → 0; borde negro y vacío → 1. Si L o R valen 1: ¡atrás!",
+        nota: "Recorda la unitat 4: el sensor envia llum avall. Al negre i a l'aire no torna: per això tots dos donen 1.|Recuerda la unidad 4: el sensor envía luz abajo. En el negro y en el aire no vuelve: por eso los dos dan 1." },
+      { id: 's4', k: 'robo', t: "No surtis mai|No salgas nunca", x: "Si L = 1 o R = 1, enrere i gira; si no, endavant.|Si L = 1 o R = 1, atrás y gira; si no, adelante.",
+        robo: { w: { ...DOHYO, bot: [50, 45, 30], time: 20 }, prog: 'forever{ if:L=1||R=1{ run:all,back,150 wait:500 run:L,fwd,100 run:R,back,100 wait:800 } else{ run:all,fwd,150 } }' },
+        nota: "Que la classe compti quantes vegades rebota a la vora en 20 segons. Fes notar la «o»: n'hi ha prou que un sensor vegi negre.|Que la clase cuente cuántas veces rebota en el borde en 20 segundos. Haz notar la «o»: basta con que un sensor vea negro." },
+      { id: 's5', k: 'anim', t: "Busca i ataca|Busca y ataca", anim: 'k7sumo', x: "Gira com un far fins que l'ultrasò veu alguna cosa a menys de 60 cm.|Gira como un faro hasta que el ultrasonido ve algo a menos de 60 cm.",
+        nota: "Pregunta per què 60: el dohyo fa 76 cm, així que una cosa a menys de 60 cm segur que és a dins (o just a la vora).|Pregunta por qué 60: el dohyo mide 76 cm, así que algo a menos de 60 cm seguro que está dentro (o justo en el borde)." },
+      { id: 's6', k: 'robo', t: "Contra el ninot|Contra el muñeco", x: "Vora primer, després l'atac i, si no veu res, busca.|Borde primero, después el ataque y, si no ve nada, busca.",
+        robo: { w: { ...DOHYO, bot: [50, 45, 0], objs: [{ x: 70, y: 60, r: 4, kind: 'box' }], time: 15 }, prog: SUMO }, tip: "Quant tardarà a trobar-lo?|¿Cuánto tardará en encontrarlo?",
+        blocks: ["si L = 1 o R = 1 → enrere 200 ms, gira 200 ms|si L = 1 o R = 1 → atrás 200 ms, gira 200 ms", "si no, si distància < 60 → endavant a 255|si no, si distancia < 60 → adelante a 255", "si no → gira sobre si mateix a 90|si no → gira sobre sí mismo a 90"],
+        nota: "Remarca que retrocedeix poc: així torna a atacar de seguida si la primera empenta no l'ha tret.|Remarca que retrocede poco: así vuelve a atacar enseguida si el primer empujón no lo ha sacado." },
+      { id: 's7', k: 'robo', t: "Compte: l'ordre equivocat|Cuidado: el orden equivocado", x: "Aquí l'atac va primer i la vora, després.|Aquí el ataque va primero y el borde, después.",
+        robo: { w: { ...DOHYO, bot: [50, 45, 0], objs: [{ x: 50, y: 25, r: 3, kind: 'can' }], time: 10 }, prog: 'forever{ if:dist<60{ run:all,fwd,255 } else{ if:L=1||R=1{ run:all,back,150 wait:300 } else{ run:L,fwd,90 run:R,back,90 } } }' },
+        nota: "Abans d'executar, que votin: caurà o no? Cau perquè mentre veu la llauna no arriba mai a mirar la vora.|Antes de ejecutar, que voten: ¿caerá o no? Cae porque mientras ve la lata no llega nunca a mirar el borde." },
+      { id: 's8', k: 'concepte', t: "L'ordre dels «si» és la prioritat|El orden de los «si» es la prioridad", punts: ["1. Seguretat: la vora.|1. Seguridad: el borde.", "2. Atac: el rival al davant.|2. Ataque: el rival delante.", "3. Cerca: girar quan no veu res.|3. Búsqueda: girar cuando no ve nada."],
+        nota: "Compara-ho amb la vida diària: abans de creuar el carrer per anar a saludar algú, mires si ve un cotxe.|Compáralo con la vida diaria: antes de cruzar la calle para ir a saludar a alguien, miras si viene un coche." },
+      { id: 's9', k: 'activitat', t: "El dohyo de corda|El dohyo de cuerda", timer: 10, punts: ["Robot: ulls tancats, a poc a poc.|Robot: ojos cerrados, despacio.", "Sensor de línia: «vora!». Ultrasò: «rival!».|Sensor de línea: «¡borde!». Ultrasonido: «¡rival!».", "Cervell: ensenya la targeta que toca.|Cerebro: enseña la tarjeta que toca.", "Treieu el coixí sense sortir. Rotació de papers!|Sacad el cojín sin salir. ¡Rotación de papeles!"],
+        nota: "Vigila que el robot camini a poc a poc i amb els braços endavant. A la segona ronda, digues «vora!» i «rival!» alhora i mira quina targeta tria el cervell.|Vigila que el robot camine despacio y con los brazos adelante. En la segunda ronda, di «¡borde!» y «¡rival!» a la vez y mira qué tarjeta elige el cerebro." },
+      { id: 's10', k: 'activitat', t: "Ara, a l'ordinador|Ahora, al ordenador", timer: 10, punts: ["Obre la sessió «Sumo».|Abre la sesión «Sumo».", "Mira les demos de «Descobreix».|Mira las demos de «Descubre».", "A «On s'aturarà?», tria abans d'executar.|En «¿Dónde se parará?», elige antes de ejecutar.", "Para a la «Pausa activa».|Para en la «Pausa activa»."],
+        nota: "Al pas del dohyo de corda, que toquin «Ho hem fet!».|En el paso del dohyo de cuerda, que toquen «¡Lo hemos hecho!»." },
+      { id: 's11', k: 'repte', t: "Entrenaments|Entrenamientos", timer: 8, punts: ["1. No surtis! (20 s)|1. ¡No salgas! (20 s)", "2. Fora la llauna (3 pistes)|2. Fuera la lata (3 pistas)", "3. Busca el ninot (4 pistes)|3. Busca el muñeco (4 pistas)", "4. Neteja el dohyo (3 llaunes)|4. Limpia el dohyo (3 latas)"],
+        nota: "L'entrenament 2 es fa amb «en iniciar» i «repeteix fins que»; el 3 i el 4, amb «per sempre» i tres «si».|El entrenamiento 2 se hace con «al iniciar» y «repite hasta que»; el 3 y el 4, con «para siempre» y tres «si»." },
+      { id: 's12', k: 'activitat', t: "Competició amb el Maqueen|Competición con el Maqueen", timer: 13, punts: ["Proveu el robot sol amb una llauna: no ha de sortir.|Probad el robot solo con una lata: no tiene que salir.", "Combat: robots d'esquena al mig, s'encenen alhora.|Combate: robots de espaldas en el medio, se encienden a la vez.", "1 minut com a molt; perd qui surt.|1 minuto como mucho; pierde quien sale.", "Entre combats: canvieu un sol número.|Entre combates: cambiad un solo número."],
+        code: "Maqueen_V5.I2CInit()\nbasic.forever(function () {\n    if (Maqueen_V5.readPatrol(Maqueen_V5.Patrol.L) == 1 || Maqueen_V5.readPatrol(Maqueen_V5.Patrol.R) == 1) {\n        Maqueen_V5.motorRun(Maqueen_V5.Motors.All, Maqueen_V5.Dir.CCW, 150)\n        basic.pause(200)\n        Maqueen_V5.motorRun(Maqueen_V5.Motors.M1, Maqueen_V5.Dir.CW, 100)\n        Maqueen_V5.motorRun(Maqueen_V5.Motors.M2, Maqueen_V5.Dir.CCW, 100)\n        basic.pause(200)\n    } else if (Maqueen_V5.Ultrasonic() < 60) {\n        Maqueen_V5.motorRun(Maqueen_V5.Motors.All, Maqueen_V5.Dir.CW, 255)\n    } else {\n        Maqueen_V5.motorRun(Maqueen_V5.Motors.M1, Maqueen_V5.Dir.CW, 90)\n        Maqueen_V5.motorRun(Maqueen_V5.Motors.M2, Maqueen_V5.Dir.CCW, 90)\n    }\n})",
+        nota: "Al robot real, la cinta aïllant és brillant: si el robot no la veu bé, proveu cinta de pintor negra o un retolador gruixut. Feu una taula de combats a la pissarra.|En el robot real, la cinta aislante es brillante: si el robot no la ve bien, probad cinta de pintor negra o un rotulador grueso. Haced una tabla de combates en la pizarra." },
+      { id: 's13', k: 'concepte', t: "Regles i seguretat de la competició|Reglas y seguridad de la competición", punts: ["El dohyo, sempre a terra. Mai sobre una taula.|El dohyo, siempre en el suelo. Nunca sobre una mesa.", "Ningú no toca els robots durant el combat.|Nadie toca los robots durante el combate.", "Si un robot surt, el pilot l'apaga i l'agafa.|Si un robot sale, el piloto lo apaga y lo coge.", "Felicitem el rival en acabar.|Felicitamos al rival al terminar."],
+        nota: "Si dos robots s'encallen empenyent-se més de 15 segons, l'àrbitre atura el combat i es torna a començar.|Si dos robots se atascan empujándose más de 15 segundos, el árbitro para el combate y se vuelve a empezar." },
+      { id: 's14', k: 'activitat', t: "Crea: el meu campió|Crea: mi campeón", timer: 3, x: "Guanya al ninot a les tres pistes i posa els llums vermells quan ataca.|Gana al muñeco en las tres pistas y pon las luces rojas cuando ataca.",
+        nota: "Qui acabi pot afegir una icona o una nota quan el ninot surt.|Quien termine puede añadir un icono o una nota cuando el muñeco sale." },
+      { id: 's15', k: 'resum', t: "Què hem après avui|Qué hemos aprendido hoy", punts: ["Vora negra i buit → 1: enrere!|Borde negro y vacío → 1: ¡atrás!", "Ultrasons: girar per buscar i atacar quan el veus.|Ultrasonidos: girar para buscar y atacar cuando lo ves.", "L'ordre dels «si» és la prioritat: seguretat primer.|El orden de los «si» es la prioridad: seguridad primero."],
+        nota: "Pregunta quin canvi ha fet guanyar més combats a la classe.|Pregunta qué cambio ha hecho ganar más combates en la clase." },
+      { id: 's16', k: 'tiquet', t: "Tiquet de sortida|Ticket de salida", punts: ["Què donen els sensors de línia a la vora i fora?|¿Qué dan los sensores de línea en el borde y fuera?", "Els tres «si» del sumo, en ordre.|Los tres «si» del sumo, en orden."],
+        nota: "Anota qui confon «i» amb «o» a les condicions.|Anota quién confunde «y» con «o» en las condiciones." }
+    ],
+    print: [
+      { id: 'p1', t: "Targetes d'estratègia del sumo|Tarjetas de estrategia del sumo", k: 'targetes',
+        intro: "Una tira per grup. El cervell les té en aquest ordre i mira sempre la primera que es compleix.|Una tira por grupo. El cerebro las tiene en este orden y mira siempre la primera que se cumple.",
+        items: [
+          { t: "1. Vora! → 2 passos enrere i un quart de volta ⚠️|1. ¡Borde! → 2 pasos atrás y un cuarto de vuelta ⚠️", n: 1 },
+          { t: "2. Rival al davant! → endavant fins a empènyer 💥|2. ¡Rival delante! → adelante hasta empujar 💥", n: 1 },
+          { t: "3. No noto res → gira a poc a poc sobre el lloc 🔄|3. No noto nada → gira despacio sobre el sitio 🔄", n: 1 },
+          { t: "Robot 🤖|Robot 🤖", n: 1 }, { t: "Sensor de línia 👣|Sensor de línea 👣", n: 1 }, { t: "Ultrasò 👂|Ultrasonido 👂", n: 1 }, { t: "Cervell 🧠|Cerebro 🧠", n: 1 }
+        ] },
+      { id: 'p2', t: "El dohyo a escala|El dohyo a escala", k: 'pista',
+        intro: "A terra, sobre un cartró o paper blanc d'uns 80 × 80 cm. Marqueu el centre i, amb un cordill de 38 cm i un llapis, dibuixeu el cercle. Enganxeu-hi la cinta negra (2 cm) per dins de la línia.|En el suelo, sobre un cartón o papel blanco de unos 80 × 80 cm. Marcad el centro y, con un cordel de 38 cm y un lápiz, dibujad el círculo. Pegad la cinta negra (2 cm) por dentro de la línea.",
+        w: { ...DOHYO, bot: [50, 45, 0], objs: [{ x: 50, y: 25, r: 3, kind: 'can' }, { x: 70, y: 55, r: 3, kind: 'can' }] },
+        items: [
+          { q: "Radi: 38 cm · diàmetre: 76 cm · vora negra: 2 cm d'ample.|Radio: 38 cm · diámetro: 76 cm · borde negro: 2 cm de ancho." },
+          { q: "El robot comença al centre. Les llaunes, buides i a més de 15 cm del robot.|El robot empieza en el centro. Las latas, vacías y a más de 15 cm del robot." }
+        ] }
+    ]
+  },
+
+  /* ---------- Sessió 3 · Rescat a la cova ---------- */
+  'k7-3': {
+    obj: [
+      "L'alumne/a explica per què un robot sense pinça ha d'empènyer els objectes en línia recta i de cara.|El alumno/a explica por qué un robot sin pinza tiene que empujar los objetos en línea recta y de cara.",
+      "L'alumne/a fa servir el valor analògic (ADC) del sensor de línia per detectar una zona de color i aturar-s'hi.|El alumno/a usa el valor analógico (ADC) del sensor de línea para detectar una zona de color y pararse en ella.",
+      "L'alumne/a divideix una missió en fases (buscar, empènyer, deixar, avisar) i les programa una darrere l'altra amb «repeteix fins que».|El alumno/a divide una misión en fases (buscar, empujar, dejar, avisar) y las programa una detrás de otra con «repite hasta que».",
+      "L'alumne/a calibra el llindar del sensor al robot de veritat mesurant el blanc i el color de la base.|El alumno/a calibra el umbral del sensor en el robot de verdad midiendo el blanco y el color de la base."
+    ],
+    comp: [
+      "Competència digital (CD5): descompondre un problema en fases i programar-les en seqüència|Competencia digital (CD5): descomponer un problema en fases y programarlas en secuencia",
+      "Competència STEM (STEM2): forces i moviment en empènyer objectes; mesurar i calibrar un sensor|Competencia STEM (STEM2): fuerzas y movimiento al empujar objetos; medir y calibrar un sensor",
+      "Matemàtiques: llindars i comparacions (més gran que, més petit que)|Matemáticas: umbrales y comparaciones (mayor que, menor que)",
+      "Ciutadania: robots que ajuden en situacions de risc|Ciudadanía: robots que ayudan en situaciones de riesgo"
+    ],
+    vocab: [
+      ["Rescat|Rescate", "Missió per trobar i portar alguna cosa a un lloc segur.|Misión para encontrar y llevar algo a un sitio seguro."],
+      ["Balisa|Baliza", "Objecte de senyal que marca un lloc; aquí, la bola que cal portar a la base.|Objeto de señal que marca un sitio; aquí, la bola que hay que llevar a la base."],
+      ["Fase|Fase", "Cada tros d'una missió, que comença quan s'acaba l'anterior.|Cada trozo de una misión, que empieza cuando termina el anterior."],
+      ["Llindar|Umbral", "El número que separa dos casos: per sobre de 200, color; per sota, blanc.|El número que separa dos casos: por encima de 200, color; por debajo, blanco."],
+      ["ADC|ADC", "El valor analògic del sensor de línia: blanc ~90, color ~360, negre ~900.|El valor analógico del sensor de línea: blanco ~90, color ~360, negro ~900."]
+    ],
+    mat: {
+      aula: [
+        "Un ordinador per alumne/a amb Numi Tech obert a la sessió «Rescat a la cova»|Un ordenador por alumno/a con Numi Tech abierto en la sesión «Rescate en la cueva»",
+        "Projector i la presentació d'aquesta sessió|Proyector y la presentación de esta sesión",
+        "Un kit per grup de 3-4: Maqueen Lite V5 amb micro:bit V2, cable USB i piles carregades|Un kit por grupo de 3-4: Maqueen Lite V5 con micro:bit V2, cable USB y pilas cargadas",
+        "Per grup: una pilota de ping-pong o de paper, un full de cartolina de color (blau o verd) per fer la base, llibres per fer un túnel i una capsa de sabates|Por grupo: una pelota de ping-pong o de papel, una hoja de cartulina de color (azul o verde) para hacer la base, libros para hacer un túnel y una caja de zapatos"
+      ],
+      imprimir: ["Targetes de les fases del rescat (un paquet de cinc per grup)|Tarjetas de las fases del rescate (un paquete de cinco por grupo)", "Codi: el rescat al Maqueen|Código: el rescate en el Maqueen"],
+      prep: [
+        "Comprovar amb un kit quin valor ADC dona la cartolina de la base (programa «mesura», a l'imprimible). Si no queda clarament per sobre del blanc, canvieu de color.|Comprobar con un kit qué valor ADC da la cartulina de la base (programa «mide», en el imprimible). Si no queda claramente por encima del blanco, cambiad de color.",
+        "Preparar per grup un tros de terra blanc (o paper blanc) amb la base de cartolina al fons.|Preparar por grupo un trozo de suelo blanco (o papel blanco) con la base de cartulina al fondo.",
+        "Imprimir i retallar les targetes de les fases.|Imprimir y recortar las tarjetas de las fases.",
+        "Deixar MakeCode obert a cada ordinador.|Dejar MakeCode abierto en cada ordenador."
+      ]
+    },
+    plan: [
+      { min: 4, t: "Alerta a la cova|Alerta en la cueva", fase: 'inici',
+        fa: "Explica la història del rescat i llança la pregunta de la diapositiva 2. Ensenya la pilota i un Maqueen: on la podria agafar?|Explica la historia del rescate y lanza la pregunta de la diapositiva 2. Enseña la pelota y un Maqueen: ¿por dónde la podría coger?",
+        diu: ["El Maqueen no té mans ni pinça. Com portarà la balisa?|El Maqueen no tiene manos ni pinza. ¿Cómo llevará la baliza?", "Com sabrà que ja és a la base?|¿Cómo sabrá que ya está en la base?"],
+        slides: ['s1', 's2'], app: "Encara no: pantalles apagades.|Todavía no: pantallas apagadas.", org: "Tot el grup|Todo el grupo" },
+      { min: 9, t: "Empènyer, trobar la base i fer fases|Empujar, encontrar la base y hacer fases", fase: 'teoria',
+        fa: "Amb l'animació, compara empènyer de cara i de costat. Executa la demo de la base (aM > 200) i la de la cerca a la cova. Presenta les fases amb l'animació. Acaba amb la demo del revolt: per què s'ha quedat enrere la llauna?|Con la animación, compara empujar de cara y de lado. Ejecuta la demo de la base (aM > 200) y la de la búsqueda en la cueva. Presenta las fases con la animación. Termina con la demo de la curva: ¿por qué se ha quedado atrás la lata?",
+        diu: ["Al blanc dona uns 90 i al blau uns 360. Quin número posaríeu al mig?|En el blanco da unos 90 y en el azul unos 360. ¿Qué número pondríais en el medio?", "Per què el robot de la cova busca «distància < 25» i no «< 60»?|¿Por qué el robot de la cueva busca «distancia < 25» y no «< 60»?", "Quina fase ve després d'empènyer?|¿Qué fase viene después de empujar?"],
+        slides: ['s3', 's4', 's5', 's6', 's7'], app: "Encara no: tota l'atenció a la projecció.|Todavía no: toda la atención en la proyección.", org: "Tot el grup|Todo el grupo" },
+      { min: 10, t: "Empènyer sense pinça|Empujar sin pinza", fase: 'desconnectat',
+        fa: "Grups de 3-4 amb una capsa de sabates, una pilota i un full de color com a base. Primer, que empenyin la pilota en recta amb el costat obert de la capsa; després, només amb una cantonada; i després, que intentin girar empenyent. Tanqueu amb les targetes de fases: cada grup les ordena i explica què fa el robot a cada una.|Grupos de 3-4 con una caja de zapatos, una pelota y una hoja de color como base. Primero, que empujen la pelota en recta con el lado abierto de la caja; después, solo con una esquina; y después, que intenten girar empujando. Cerrad con las tarjetas de fases: cada grupo las ordena y explica qué hace el robot en cada una.",
+        diu: ["Quan se us escapa la pilota? I quan no?|¿Cuándo se os escapa la pelota? ¿Y cuándo no?", "Quin bloc faríeu servir per a cada fase?|¿Qué bloque usaríais para cada fase?"],
+        slides: ['s8'], app: "Cap: activitat sense pantalla.|Ninguna: actividad sin pantalla.", org: "Grups de 3-4|Grupos de 3-4" },
+      { min: 10, t: "A l'ordinador: descobreix i prova|En el ordenador: descubre y prueba", fase: 'ordinador',
+        fa: "Cada alumne/a avança fins a la pausa activa. A «On s'aturarà?», que pensin on són els sensors del robot.|Cada alumno/a avanza hasta la pausa activa. En «¿Dónde se parará?», que piensen dónde están los sensores del robot.",
+        diu: ["Els sensors són al davant: el robot veu la base abans d'entrar-hi.|Los sensores están delante: el robot ve la base antes de entrar."],
+        slides: ['s9'], app: "De «Recorda» fins a «Investiga»: les preguntes, la missió, les cinc targetes, ordenar les fases, «Empènyer sense pinça» (ja fet), «On s'aturarà?» i el bloc de la fase buscar.|De «Recuerda» hasta «Investiga»: las preguntas, la misión, las cinco tarjetas, ordenar las fases, «Empujar sin pinza» (ya hecho), «¿Dónde se parará?» y el bloque de la fase buscar.", org: "Individual|Individual" },
+      { min: 8, t: "Reptes de rescat|Retos de rescate", fase: 'ordinador',
+        fa: "Pausa activa i els quatre reptes. Al primer n'hi ha prou amb el temps; al segon, la base es mou i cal el sensor. Al tercer, que separin les fases en veu alta abans de programar.|Pausa activa y los cuatro retos. En el primero basta con el tiempo; en el segundo, la base se mueve y hace falta el sensor. En el tercero, que separen las fases en voz alta antes de programar.",
+        diu: ["Per què el programa amb temps funciona a la primera pista i no a les altres?|¿Por qué el programa con tiempo funciona en la primera pista y no en las otras?", "Quantes fases té el repte de la cova?|¿Cuántas fases tiene el reto de la cueva?"],
+        slides: ['s10'], app: "«Pausa activa» i els reptes: la primera balisa, on és la base, busca a la cova i rescat amb avís.|«Pausa activa» y los retos: la primera baliza, dónde está la base, busca en la cueva y rescate con aviso.", org: "Tot el grup i després individual|Todo el grupo y después individual" },
+      { min: 12, t: "El rescat de veritat|El rescate de verdad", fase: 'robot',
+        fa: "Grups de 3-4 per kit. Pas 1 (calibrar, 4 min): descarregueu el programa «mesura» i apunteu el número que surt a la pantalla al blanc i sobre la base de color; trieu el llindar al mig. Pas 2 (rescat, 8 min): munteu un túnel de llibres d'uns 25 cm d'ample amb la base al fons, poseu la pilota a uns 15 cm davant del robot i descarregueu el programa del túnel amb el vostre llindar. Mesureu si la pilota queda dins la base. Si va bé, proveu la cerca girant (programa de la cova).|Grupos de 3-4 por kit. Paso 1 (calibrar, 4 min): descargad el programa «mide» y apuntad el número que sale en la pantalla en el blanco y sobre la base de color; elegid el umbral en el medio. Paso 2 (rescate, 8 min): montad un túnel de libros de unos 25 cm de ancho con la base al fondo, poned la pelota a unos 15 cm delante del robot y descargad el programa del túnel con vuestro umbral. Medid si la pelota queda dentro de la base. Si va bien, probad la búsqueda girando (programa de la cueva).",
+        diu: ["Quin número dona el vostre blanc? I la vostra base?|¿Qué número da vuestro blanco? ¿Y vuestra base?", "La pilota de ping-pong rodola molt: com ho podríeu millorar?|La pelota de ping-pong rueda mucho: ¿cómo lo podríais mejorar?", "Robot a terra i cable fora abans d'encendre'l.|Robot en el suelo y cable fuera antes de encenderlo."],
+        slides: ['s11', 's12'], app: "Cap: MakeCode i el robot de veritat.|Ninguna: MakeCode y el robot de verdad.", org: "Grups de 3-4 per kit|Grupos de 3-4 por kit" },
+      { min: 4, t: "Crea: operació balisa|Crea: operación baliza", fase: 'crea',
+        fa: "El projecte de la sessió: la missió sencera a la cova, amb un avís inventat per cadascú. Que el desin quan funcioni a les tres pistes.|El proyecto de la sesión: la misión entera en la cueva, con un aviso inventado por cada uno. Que lo guarden cuando funcione en las tres pistas.",
+        diu: ["Com avisarà el teu robot? Llums, icona, so…?|¿Cómo avisará tu robot? ¿Luces, icono, sonido…?"],
+        slides: ['s13'], app: "Pas «Crea»: Operació balisa.|Paso «Crea»: Operación baliza.", org: "Individual|Individual" },
+      { min: 3, t: "Tancament i tiquet de sortida|Cierre y ticket de salida", fase: 'tancament',
+        fa: "Resum de les tres idees i tiquet de sortida.|Resumen de las tres ideas y ticket de salida.",
+        diu: ["Quines són les fases d'un rescat?|¿Cuáles son las fases de un rescate?"],
+        slides: ['s14', 's15'], app: "«Tancament»: les dues preguntes i com m'he sentit.|«Cierre»: las dos preguntas y cómo me he sentido.", org: "Tot el grup|Todo el grupo" }
+    ],
+    errors: [
+      ["Fa servir «línia M = 1» per trobar la base i el robot no s'atura (la base de color no és negra).|Usa «línea M = 1» para encontrar la base y el robot no se para (la base de color no es negra).",
+        "Que miri el tauler de sensors sobre la base: quant val M? I M (ADC)? Quina de les dues canvia?|Que mire el panel de sensores sobre la base: ¿cuánto vale M? ¿Y M (ADC)? ¿Cuál de las dos cambia?"],
+      ["Posa el llindar massa a prop del blanc (100) i el robot s'atura en qualsevol taca.|Pone el umbral demasiado cerca del blanco (100) y el robot se para en cualquier mancha.",
+        "Pregunta: quin número dona el blanc? I el color? El llindar ha de quedar ben bé al mig.|Pregunta: ¿qué número da el blanco? ¿Y el color? El umbral tiene que quedar justo en el medio."],
+      ["A la cova, busca amb «distància < 60» i el robot ataca la paret.|En la cueva, busca con «distancia < 60» y el robot ataca la pared.",
+        "Que miri a quina distància són les parets des del centre. Quin número només veu la balisa?|Que mire a qué distancia están las paredes desde el centro. ¿Qué número solo ve la baliza?"],
+      ["Posa tots els blocs dins de «per sempre» i el robot torna a començar la missió en acabar.|Pone todos los bloques dentro de «para siempre» y el robot vuelve a empezar la misión al terminar.",
+        "Torneu a les targetes de fases: la missió es fa una sola vegada. Quin guió fa les coses una vegada?|Volved a las tarjetas de fases: la misión se hace una sola vez. ¿Qué guion hace las cosas una vez?"],
+      ["Al robot real, la pilota rodola i s'escapa encara que vagi recte.|En el robot real, la pelota rueda y se escapa aunque vaya recto.",
+        "És normal: una pilota lleugera rebota. Que provin a 100 de velocitat o amb una pilota de paper arrugat, que rodola menys.|Es normal: una pelota ligera rebota. Que prueben a 100 de velocidad o con una pelota de papel arrugado, que rueda menos."]
+    ],
+    diff: {
+      mes: "Afegir una fase «tornar»: després de deixar la balisa, el robot recula fins a la zona de sortida. Al robot real, mesurar a quina velocitat la pilota s'escapa menys.|Añadir una fase «volver»: después de dejar la baliza, el robot recula hasta la zona de salida. En el robot real, medir a qué velocidad la pelota se escapa menos.",
+      menys: "Fer els reptes 1 i 2 amb les targetes de fases a la taula. Al repte de la cova, partir de la pista i canviar només la velocitat de la cerca.|Hacer los retos 1 y 2 con las tarjetas de fases en la mesa. En el reto de la cueva, partir de la pista y cambiar solo la velocidad de la búsqueda."
+    },
+    aval: {
+      ticket: ["Per què el Maqueen ha d'empènyer la balisa en línia recta?|¿Por qué el Maqueen tiene que empujar la baliza en línea recta?",
+        "Si el blanc dona 90 i la base 360, quin llindar triaries? Per què?|Si el blanco da 90 y la base 360, ¿qué umbral elegirías? ¿Por qué?"],
+      rubric: [
+        ["Empènyer amb control|Empujar con control", "Empeny la balisa de cara i en recta, i explica per què als revolts s'escapa.|Empuja la baliza de cara y en recta, y explica por qué en las curvas se escapa.", "Empeny la balisa però no sap explicar per què de vegades se li escapa.|Empuja la baliza pero no sabe explicar por qué a veces se le escapa."],
+        ["Sensor i llindar|Sensor y umbral", "Fa servir el valor ADC amb un llindar ben triat i el calibra al robot real.|Usa el valor ADC con un umbral bien elegido y lo calibra en el robot real.", "Fa servir el sensor amb ajuda o copia el llindar sense entendre'l.|Usa el sensor con ayuda o copia el umbral sin entenderlo."],
+        ["Missió per fases|Misión por fases", "Programa les fases en ordre amb «repeteix fins que» i avisa en acabar.|Programa las fases en orden con «repite hasta que» y avisa al terminar.", "Té les fases barrejades o se'n salta alguna.|Tiene las fases mezcladas o se salta alguna."]
+      ]
+    },
+    casa: "A casa, amb el mòbil, podeu repetir els reptes i provar «Empènyer sense pinça» amb una capsa i una taronja. Busqueu informació (amb un adult) sobre algun robot que ajudi en rescats o en llocs perillosos: quins sensors creieu que porta?|En casa, con el móvil, podéis repetir los retos y probar «Empujar sin pinza» con una caja y una naranja. Buscad información (con un adulto) sobre algún robot que ayude en rescates o en sitios peligrosos: ¿qué sensores creéis que lleva?",
+    slides: [
+      { id: 's1', k: 'portada', t: "Rescat a la cova|Rescate en la cueva", x: "Missió 3: portar les balises fins a la base.|Misión 3: llevar las balizas hasta la base.",
+        nota: "Explica que hi ha robots de veritat que entren a llocs on les persones no poden: túnels, edificis després d'un terratrèmol, el fons del mar.|Explica que hay robots de verdad que entran en sitios donde las personas no pueden: túneles, edificios después de un terremoto, el fondo del mar." },
+      { id: 's2', k: 'pregunta', t: "Com ho portaríeu sense mans?|¿Cómo lo llevaríais sin manos?", punts: ["El Maqueen no té pinça. Què pot fer?|El Maqueen no tiene pinza. ¿Qué puede hacer?", "Com sap que ja és a la base?|¿Cómo sabe que ya está en la base?", "I si no sap on és la balisa?|¿Y si no sabe dónde está la baliza?"],
+        nota: "Escriu les respostes en tres columnes: empènyer, base, buscar. Les completareu a la teoria.|Escribe las respuestas en tres columnas: empujar, base, buscar. Las completaréis en la teoría." },
+      { id: 's3', k: 'anim', t: "De cara o de costat|De cara o de lado", anim: 'k7push', x: "De cara, la balisa va recta; de costat, rellisca i s'escapa.|De cara, la baliza va recta; de lado, resbala y se escapa.",
+        nota: "Demostra-ho amb un llibre i una pilota damunt la taula abans de mirar l'animació.|Demuéstralo con un libro y una pelota encima de la mesa antes de mirar la animación." },
+      { id: 's4', k: 'robo', t: "Com sap que és a la base?|¿Cómo sabe que está en la base?", x: "Empeny fins que línia M (ADC) > 200 i s'atura.|Empuja hasta que línea M (ADC) > 200 y se para.",
+        robo: { w: TUNEL, prog: 'start{ run:all,fwd,150 until:aM>200{ wait:10 } wait:300 stop:all }' }, tip: "Mireu el valor del sensor al tauler quan entra a la base.|Mirad el valor del sensor en el panel cuando entra en la base.",
+        nota: "Fes notar que els sensors de línia van al davant: el robot veu la base abans que el seu centre hi entri. Per això la balisa queda a dins.|Haz notar que los sensores de línea van delante: el robot ve la base antes de que su centro entre. Por eso la baliza queda dentro." },
+      { id: 's5', k: 'robo', t: "Buscar a la cova|Buscar en la cueva", x: "Gira fins que distància < 25, empeny fins a la base i avisa.|Gira hasta que distancia < 25, empuja hasta la base y avisa.",
+        robo: { w: COVA(150), prog: BUSCA }, blocks: ["gira: esquerre endavant, dret enrere|gira: izquierdo adelante, derecho atrás", "repeteix fins que distància < 25|repite hasta que distancia < 25", "endavant · repeteix fins que línia M (ADC) > 200|adelante · repite hasta que línea M (ADC) > 200", "atura · llums verds · icona «sí»|para · luces verdes · icono «sí»"],
+        nota: "Pregunta per què 25 i no 60: des del centre de la cova, les parets són a més de 30 cm; la balisa, a uns 13.|Pregunta por qué 25 y no 60: desde el centro de la cueva, las paredes están a más de 30 cm; la baliza, a unos 13." },
+      { id: 's6', k: 'anim', t: "La missió per fases|La misión por fases", anim: 'k7plan', x: "Busca, empeny, deixa i avisa: cada fase espera que acabi l'anterior.|Busca, empuja, deja y avisa: cada fase espera a que termine la anterior.",
+        nota: "Relaciona cada fase amb un bloc: «repeteix fins que» per a les fases que esperen un sensor; «atura» i els llums per a les últimes.|Relaciona cada fase con un bloque: «repite hasta que» para las fases que esperan un sensor; «para» y las luces para las últimas." },
+      { id: 's7', k: 'robo', t: "Compte: el revolt|Cuidado: la curva", x: "Segueix la línia empenyent una llauna. Arribarà amb ella?|Sigue la línea empujando una lata. ¿Llegará con ella?",
+        robo: { w: { w: 150, h: 80, bot: [14, 60, 90], lines: [{ p: [[12, 60], [50, 60], [70, 40], [110, 40], [128, 22]], w: 2 }], objs: [{ x: 30, y: 60, r: 3, kind: 'can' }], time: 14 }, prog: 'forever{ if:L=1&&R=0{ run:L,fwd,40 run:R,fwd,140 } else{ if:R=1&&L=0{ run:L,fwd,140 run:R,fwd,40 } else{ run:all,fwd,120 } } }' },
+        nota: "Que votin abans. La llauna continua recta al primer revolt: el robot no té pinça. Per això a la cova primer apuntem i després empenyem recte.|Que voten antes. La lata sigue recta en la primera curva: el robot no tiene pinza. Por eso en la cueva primero apuntamos y después empujamos recto." },
+      { id: 's8', k: 'activitat', t: "Empènyer sense pinça|Empujar sin pinza", timer: 10, punts: ["Empenyeu la pilota en recta amb la capsa.|Empujad la pelota en recta con la caja.", "Ara només amb una cantonada.|Ahora solo con una esquina.", "Ara girant mentre empenyeu.|Ahora girando mientras empujáis.", "Ordeneu les targetes de les fases.|Ordenad las tarjetas de las fases."],
+        nota: "Les capses amb el costat obert funcionen com una pala: és una millora que fan alguns robots de rescat.|Las cajas con el lado abierto funcionan como una pala: es una mejora que hacen algunos robots de rescate." },
+      { id: 's9', k: 'activitat', t: "Ara, a l'ordinador|Ahora, al ordenador", timer: 10, punts: ["Obre la sessió «Rescat a la cova».|Abre la sesión «Rescate en la cueva».", "Mira les demos de «Descobreix».|Mira las demos de «Descubre».", "A «On s'aturarà?», pensa on són els sensors.|En «¿Dónde se parará?», piensa dónde están los sensores.", "Para a la «Pausa activa».|Para en la «Pausa activa»."],
+        nota: "Al pas «Empènyer sense pinça», que toquin «Ho hem fet!».|En el paso «Empujar sin pinza», que toquen «¡Lo hemos hecho!»." },
+      { id: 's10', k: 'repte', t: "Reptes de rescat|Retos de rescate", timer: 8, punts: ["1. La primera balisa (amb temps)|1. La primera baliza (con tiempo)", "2. On és la base? (sensor ADC)|2. ¿Dónde está la base? (sensor ADC)", "3. Busca a la cova (4 pistes)|3. Busca en la cueva (4 pistas)", "4. Rescat amb avís|4. Rescate con aviso"],
+        nota: "El segon repte comença amb el programa del primer: que vegin per què el temps fix falla quan la base es mou.|El segundo reto empieza con el programa del primero: que vean por qué el tiempo fijo falla cuando la base se mueve." },
+      { id: 's11', k: 'activitat', t: "Calibra i rescata|Calibra y rescata", timer: 12, punts: ["Programa «mesura»: apunteu el blanc i la base.|Programa «mide»: apuntad el blanco y la base.", "Llindar = al mig dels dos números.|Umbral = en el medio de los dos números.", "Túnel de llibres, pilota a 15 cm, base al fons.|Túnel de libros, pelota a 15 cm, base al fondo.", "La pilota queda dins la base?|¿La pelota queda dentro de la base?"],
+        code: "Maqueen_V5.I2CInit()\nMaqueen_V5.motorRun(Maqueen_V5.Motors.All, Maqueen_V5.Dir.CW, 150)\nwhile (!(Maqueen_V5.readPatrolData(Maqueen_V5.Patrol.M) > 200)) {\n    basic.pause(10)\n}\nbasic.pause(300)\nMaqueen_V5.motorStop(Maqueen_V5.Motors.All)\nMaqueen_V5.setRgblLed(Maqueen_V5.DirectionType.All, Maqueen_V5.CarLightColors.Green)\nbasic.showIcon(IconNames.Yes)",
+        nota: "Canvieu el 200 pel llindar del vostre grup. Si la cartolina dona gairebé el mateix que el blanc, proveu un color més fosc.|Cambiad el 200 por el umbral de vuestro grupo. Si la cartulina da casi lo mismo que el blanco, probad un color más oscuro." },
+      { id: 's12', k: 'concepte', t: "Calibrar el llindar|Calibrar el umbral", punts: ["Mesura el blanc: per exemple, 90.|Mide el blanco: por ejemplo, 90.", "Mesura la base: per exemple, 360.|Mide la base: por ejemplo, 360.", "Llindar al mig: (90 + 360) ÷ 2 ≈ 225.|Umbral en el medio: (90 + 360) ÷ 2 ≈ 225.", "Cada terra i cada cartolina són diferents: mesura sempre!|Cada suelo y cada cartulina son diferentes: ¡mide siempre!"],
+        nota: "El programa «mesura» de l'imprimible mostra el valor a la pantalla de la micro:bit: només cal posar el robot (apagat de motors) sobre cada superfície.|El programa «mide» del imprimible muestra el valor en la pantalla de la micro:bit: solo hay que poner el robot (con los motores parados) sobre cada superficie." },
+      { id: 's13', k: 'activitat', t: "Crea: operació balisa|Crea: operación baliza", timer: 4, x: "Busca, empeny, atura't i avisa a les tres pistes. L'avís el tries tu.|Busca, empuja, párate y avisa en las tres pistas. El aviso lo eliges tú.",
+        nota: "Valora que l'avís sigui clar: algú de lluny ha de saber que el rescat s'ha acabat.|Valora que el aviso sea claro: alguien de lejos tiene que saber que el rescate ha terminado." },
+      { id: 's14', k: 'resum', t: "Què hem après avui|Qué hemos aprendido hoy", punts: ["Sense pinça: empènyer de cara i en recta.|Sin pinza: empujar de cara y en recta.", "Valor ADC: blanc ~90, color ~360; llindar al mig.|Valor ADC: blanco ~90, color ~360; umbral en el medio.", "Una missió llarga es fa per fases.|Una misión larga se hace por fases."],
+        nota: "Torna a les tres columnes de la diapositiva 2 i completeu-les.|Vuelve a las tres columnas de la diapositiva 2 y completadlas." },
+      { id: 's15', k: 'tiquet', t: "Tiquet de sortida|Ticket de salida", punts: ["Per què cal empènyer en línia recta?|¿Por qué hay que empujar en línea recta?", "Blanc 90 i base 360: quin llindar?|Blanco 90 y base 360: ¿qué umbral?"],
+        nota: "Anota qui encara confon el valor 0/1 de la línia amb el valor ADC.|Anota quién todavía confunde el valor 0/1 de la línea con el valor ADC." }
+    ],
+    print: [
+      { id: 'p1', t: "Les fases del rescat|Las fases del rescate", k: 'targetes',
+        intro: "Un paquet per grup. Barregeu-les i ordeneu-les; a la part de darrere, escriviu el bloc que fa cada fase.|Un paquete por grupo. Mezcladlas y ordenadlas; en la parte de detrás, escribid el bloque que hace cada fase.",
+        items: [
+          { t: "Buscar 🔍|Buscar 🔍", n: 1 }, { t: "Empènyer ➡️|Empujar ➡️", n: 1 }, { t: "Arribar a la base 🟦|Llegar a la base 🟦", n: 1 }, { t: "Deixar ✋|Dejar ✋", n: 1 }, { t: "Avisar 🟢|Avisar 🟢", n: 1 }
+        ] },
+      { id: 'p2', t: "El rescat al Maqueen|El rescate en el Maqueen", k: 'codi',
+        intro: "A makecode.microbit.org: nou projecte → Extensions → «maqueen» → JavaScript → enganxeu-hi el codi → Descarrega. Primer el programa «mesura» per triar el vostre llindar.|En makecode.microbit.org: nuevo proyecto → Extensiones → «maqueen» → JavaScript → pegad el código → Descarga. Primero el programa «mide» para elegir vuestro umbral.",
+        items: [
+          { t: "1. Mesura: mostra el valor ADC del sensor del mig|1. Mide: muestra el valor ADC del sensor del medio", prog: 'forever{ num:aM wait:500 }' },
+          { t: "2. El túnel: empeny fins a la base (canvieu el 200 pel vostre llindar)|2. El túnel: empuja hasta la base (cambiad el 200 por vuestro umbral)", prog: 'start{ run:all,fwd,150 until:aM>200{ wait:10 } wait:300 stop:all car:all,green icon:yes }' },
+          { t: "3. La cova: busca girant, empeny i avisa|3. La cueva: busca girando, empuja y avisa", prog: BUSCA }
+        ] }
+    ]
+  },
+
+  /* ---------- Sessió 4 · Projecte: la cursa contrarellotge ---------- */
+  'k7-4': {
+    obj: [
+      "L'alumne/a programa un seguidor de línia amb dos sensors que s'atura a la ratlla de meta amb «repeteix fins que L = 1 i R = 1».|El alumno/a programa un seguidor de línea con dos sensores que se para en la raya de meta con «repite hasta que L = 1 y R = 1».",
+      "L'alumne/a relaciona la velocitat amb el temps de volta i amb la fiabilitat, i explica l'efecte de la inèrcia en frenar.|El alumno/a relaciona la velocidad con el tiempo de vuelta y con la fiabilidad, y explica el efecto de la inercia al frenar.",
+      "L'alumne/a aplica el cicle de millora: canviar una sola cosa, provar, mesurar el temps i comparar.|El alumno/a aplica el ciclo de mejora: cambiar una sola cosa, probar, medir el tiempo y comparar.",
+      "L'alumne/a fa servir el temps de la micro:bit i una variable per mostrar el temps de volta a la pantalla.|El alumno/a usa el tiempo de la micro:bit y una variable para mostrar el tiempo de vuelta en la pantalla."
+    ],
+    comp: [
+      "Competència digital (CD5): crear, depurar i optimitzar un programa per complir uns requisits|Competencia digital (CD5): crear, depurar y optimizar un programa para cumplir unos requisitos",
+      "Competència STEM (STEM2): mesurar temps, recollir dades i treure'n conclusions|Competencia STEM (STEM2): medir tiempos, recoger datos y sacar conclusiones",
+      "Matemàtiques: velocitat, temps i unitats (ms i s); taules de dades|Matemáticas: velocidad, tiempo y unidades (ms y s); tablas de datos",
+      "Competència emprenedora: planificar un projecte i millorar-lo per iteracions|Competencia emprendedora: planificar un proyecto y mejorarlo por iteraciones"
+    ],
+    vocab: [
+      ["Contrarellotge|Contrarreloj", "Cursa en què cada robot surt sol i guanya qui tarda menys.|Carrera en la que cada robot sale solo y gana quien tarda menos."],
+      ["Punt de control|Punto de control", "Lloc del circuit per on s'ha de passar, en ordre.|Sitio del circuito por donde hay que pasar, en orden."],
+      ["Inèrcia|Inercia", "El robot no s'atura en sec: continua uns centímetres després d'«atura».|El robot no se para en seco: sigue unos centímetros después de «para»."],
+      ["Iteració|Iteración", "Cada volta del cicle de millora: canvia, prova, mesura i compara.|Cada vuelta del ciclo de mejora: cambia, prueba, mide y compara."],
+      ["Temps (ms)|Tiempo (ms)", "Els mil·lisegons que compta la micro:bit des que s'encén.|Los milisegundos que cuenta la micro:bit desde que se enciende."]
+    ],
+    mat: {
+      aula: [
+        "Un ordinador per alumne/a amb Numi Tech obert a la sessió «Projecte: la cursa contrarellotge»|Un ordenador por alumno/a con Numi Tech abierto en la sesión «Proyecto: la carrera contrarreloj»",
+        "Projector i la presentació d'aquesta sessió|Proyector y la presentación de esta sesión",
+        "Un kit per grup de 3-4: Maqueen Lite V5 amb micro:bit V2, cable USB i piles ben carregades|Un kit por grupo de 3-4: Maqueen Lite V5 con micro:bit V2, cable USB y pilas bien cargadas",
+        "Un o dos circuits de cinta negra (2 cm) sobre paper o terra blanc, d'uns 140 × 80 cm, amb la ratlla de meta; cronòmetres o mòbils|Uno o dos circuitos de cinta negra (2 cm) sobre papel o suelo blanco, de unos 140 × 80 cm, con la raya de meta; cronómetros o móviles",
+        "Un full, un retolador gruixut i un llapis per alumne/a|Una hoja, un rotulador grueso y un lápiz por alumno/a"
+      ],
+      imprimir: ["Fitxa: el circuit de llapis i la taula de temps (una per alumne/a)|Ficha: el circuito de lápiz y la tabla de tiempos (una por alumno/a)", "Pista: el circuit del moll a escala|Pista: el circuito del muelle a escala"],
+      prep: [
+        "Muntar el circuit del moll amb cinta negra seguint l'imprimible: un rectangle de 122 × 52 cm amb les cantonades arrodonides (radi 26 cm) i una ratlla de meta de 10 cm que travessa la recta de dalt.|Montar el circuito del muelle con cinta negra siguiendo el imprimible: un rectángulo de 122 × 52 cm con las esquinas redondeadas (radio 26 cm) y una raya de meta de 10 cm que atraviesa la recta de arriba.",
+        "Provar el codi de la cursa amb un kit a velocitat 150: ha de fer la volta i aturar-se a la meta. Si confon un revolt amb la meta, feu les corbes més obertes.|Probar el código de la carrera con un kit a velocidad 150: tiene que dar la vuelta y pararse en la meta. Si confunde una curva con la meta, haced las curvas más abiertas.",
+        "Preparar una taula de temps a la pissarra (grup, velocitat, temps, ha acabat?).|Preparar una tabla de tiempos en la pizarra (grupo, velocidad, tiempo, ¿ha terminado?).",
+        "Carregar les piles: la velocitat del robot real depèn molt de la bateria.|Cargar las pilas: la velocidad del robot real depende mucho de la batería."
+      ]
+    },
+    plan: [
+      { min: 4, t: "La gran cursa del port|La gran carrera del puerto", fase: 'inici',
+        fa: "Presenta el projecte de la unitat i les regles de la contrarellotge: una volta, tots els punts de control i aturat a la meta. Llança la pregunta de la diapositiva 2.|Presenta el proyecto de la unidad y las reglas de la contrarreloj: una vuelta, todos los puntos de control y parado en la meta. Lanza la pregunta de la diapositiva 2.",
+        diu: ["Què guanya una cursa: anar al màxim o no equivocar-se mai?|¿Qué gana una carrera: ir al máximo o no equivocarse nunca?", "Com sabrà el robot que ha arribat a la meta?|¿Cómo sabrá el robot que ha llegado a la meta?"],
+        slides: ['s1', 's2'], app: "Encara no: pantalles apagades.|Todavía no: pantallas apagadas.", org: "Tot el grup|Todo el grupo" },
+      { min: 8, t: "Velocitat, meta i inèrcia|Velocidad, meta e inercia", fase: 'teoria',
+        fa: "Amb l'animació, comenta les dades del circuit del port. Executa la demo de la ratlla de meta i la del seguiment del xip, i compara els temps al tauler. Abans de la demo de «per sempre», demana què passarà a la meta. Acaba amb el cronòmetre a la pantalla.|Con la animación, comenta los datos del circuito del puerto. Ejecuta la demo de la raya de meta y la del seguimiento del chip, y compara los tiempos en el panel. Antes de la demo de «para siempre», pregunta qué pasará en la meta. Termina con el cronómetro en la pantalla.",
+        diu: ["Per què L i R només són negres alhora a la ratlla de meta?|¿Por qué L y R solo son negros a la vez en la raya de meta?", "Per què el robot de «per sempre» torna a arrencar?|¿Por qué el robot de «para siempre» vuelve a arrancar?", "Temps ÷ 1000: per què dividim?|Tiempo ÷ 1000: ¿por qué dividimos?"],
+        slides: ['s3', 's4', 's5', 's6', 's7'], app: "Encara no: tota l'atenció a la projecció.|Todavía no: toda la atención en la proyección.", org: "Tot el grup|Todo el grupo" },
+      { min: 8, t: "El circuit de llapis|El circuito de lápiz", fase: 'desconnectat',
+        fa: "Cada alumne/a, amb la fitxa: repassa el circuit amb el llapis tres vegades (a poc a poc, normal i molt de pressa) mentre un company/a cronometra i compta les sortides. Omplen la taula i decideixen quina és la millor velocitat de cursa. Poseu en comú dues o tres conclusions.|Cada alumno/a, con la ficha: repasa el circuito con el lápiz tres veces (despacio, normal y muy deprisa) mientras un compañero/a cronometra y cuenta las salidas. Rellenan la tabla y deciden cuál es la mejor velocidad de carrera. Poned en común dos o tres conclusiones.",
+        diu: ["On us heu sortit més?|¿Dónde os habéis salido más?", "Si cada sortida costés 3 segons de penalització, quina velocitat guanyaria?|Si cada salida costara 3 segundos de penalización, ¿qué velocidad ganaría?"],
+        slides: ['s8'], app: "Cap: activitat sense pantalla.|Ninguna: actividad sin pantalla.", org: "Parelles|Parejas" },
+      { min: 10, t: "A l'ordinador: prova i primera volta|En el ordenador: prueba y primera vuelta", fase: 'ordinador',
+        fa: "Cada alumne/a avança fins a la volta de reconeixement (inclosa). Al cicle de millora, que expliquin per què només es canvia una cosa cada vegada.|Cada alumno/a avanza hasta la vuelta de reconocimiento (incluida). En el ciclo de mejora, que expliquen por qué solo se cambia una cosa cada vez.",
+        diu: ["Primer segur, després ràpid: la volta de reconeixement no té límit de temps.|Primero seguro, después rápido: la vuelta de reconocimiento no tiene límite de tiempo."],
+        slides: ['s9'], app: "De «Recorda» fins a «Volta de reconeixement»: preguntes, missió, targetes, cicle de millora, circuit de llapis (ja fet), la pregunta del bucle, el bloc que atura, la pausa i la primera volta.|De «Recuerda» hasta «Vuelta de reconocimiento»: preguntas, misión, tarjetas, ciclo de mejora, circuito de lápiz (ya hecho), la pregunta del bucle, el bloque que para, la pausa y la primera vuelta.", org: "Individual|Individual" },
+      { min: 6, t: "Contra el rellotge|Contra el reloj", fase: 'ordinador',
+        fa: "Els reptes de 18 i de 13 segons. Que apuntin a la fitxa la velocitat i el temps de cada intent.|Los retos de 18 y de 13 segundos. Que apunten en la ficha la velocidad y el tiempo de cada intento.",
+        diu: ["Quant has guanyat pujant de 150 a 200?|¿Cuánto has ganado subiendo de 150 a 200?", "A 255, funciona als dos circuits?|A 255, ¿funciona en los dos circuitos?"],
+        slides: ['s10'], app: "Reptes «Contra el rellotge!» i «Bat el rècord!».|Retos «¡Contra el reloj!» y «¡Bate el récord!».", org: "Individual|Individual" },
+      { min: 15, t: "La cursa contrarellotge de veritat|La carrera contrarreloj de verdad", fase: 'robot',
+        fa: "Grups de 3-4 per kit: programador/a, pilot, cronometrador/a i secretari/ària. Cada grup descarrega el programa de la cursa a velocitat 150 i fa una volta de prova. Després, tres intents oficials: abans de cada un poden canviar una sola cosa. El robot surt just darrere la ratlla de meta, el pilot l'encén i el cronometrador/a compta fins que s'atura a la ratlla; la pantalla també mostra els segons. Si el robot surt de la línia, l'intent no compta. Apunteu a la pissarra el millor temps de cada grup.|Grupos de 3-4 por kit: programador/a, piloto, cronometrador/a y secretario/a. Cada grupo descarga el programa de la carrera a velocidad 150 y hace una vuelta de prueba. Después, tres intentos oficiales: antes de cada uno pueden cambiar una sola cosa. El robot sale justo detrás de la raya de meta, el piloto lo enciende y el cronometrador/a cuenta hasta que se para en la raya; la pantalla también muestra los segundos. Si el robot se sale de la línea, el intento no cuenta. Apuntad en la pizarra el mejor tiempo de cada grupo.",
+        diu: ["Quina cosa canvieu en aquest intent? Què espereu que passi?|¿Qué cosa cambiáis en este intento? ¿Qué esperáis que pase?", "El temps del simulador i el del robot són iguals? Per què no?|¿El tiempo del simulador y el del robot son iguales? ¿Por qué no?", "Robot a terra, cable fora; mans fora del circuit durant la volta.|Robot en el suelo, cable fuera; manos fuera del circuito durante la vuelta."],
+        slides: ['s11', 's12'], app: "Cap: MakeCode i el robot de veritat.|Ninguna: MakeCode y el robot de verdad.", org: "Grups de 3-4 per kit, per torns al circuit|Grupos de 3-4 por kit, por turnos en el circuito" },
+      { min: 6, t: "Crea: la cursa del port|Crea: la carrera del puerto", fase: 'crea',
+        fa: "El projecte final a l'app: el circuit del port amb la xicana, menys de 20 segons i el temps a la pantalla. Que el desin i, si queda temps, que intentin baixar el seu rècord.|El proyecto final en la app: el circuito del puerto con la chicane, menos de 20 segundos y el tiempo en la pantalla. Que lo guarden y, si queda tiempo, que intenten bajar su récord.",
+        diu: ["A la xicana, a quina velocitat encara funciona?|En la chicane, ¿a qué velocidad todavía funciona?"],
+        slides: ['s13'], app: "Pas «El teu projecte» i «Crea»: La cursa contrarellotge del port.|Paso «Tu proyecto» y «Crea»: La carrera contrarreloj del puerto.", org: "Individual|Individual" },
+      { min: 3, t: "Podi i tancament de la unitat|Podio y cierre de la unidad", fase: 'tancament',
+        fa: "Felicita tots els equips amb la taula de temps i repassa les quatre missions de la unitat. Tiquet de sortida.|Felicita a todos los equipos con la tabla de tiempos y repasa las cuatro misiones de la unidad. Ticket de salida.",
+        diu: ["Quina missió de la setmana us ha agradat més? Per què?|¿Qué misión de la semana os ha gustado más? ¿Por qué?", "Quina millora us ha fet guanyar més temps?|¿Qué mejora os ha hecho ganar más tiempo?"],
+        slides: ['s14', 's15'], app: "«Tancament»: la pregunta, la història final i com m'he sentit.|«Cierre»: la pregunta, la historia final y cómo me he sentido.", org: "Tot el grup|Todo el grupo" }
+    ],
+    errors: [
+      ["Fa servir «per sempre» amb «si L = 1 i R = 1, atura» i el robot torna a arrencar després de la meta.|Usa «para siempre» con «si L = 1 y R = 1, para» y el robot vuelve a arrancar después de la meta.",
+        "Que miri la demo de la inèrcia: on és el robot just després d'«atura»? Encara és sobre la ratlla?|Que mire la demo de la inercia: ¿dónde está el robot justo después de «para»? ¿Todavía está sobre la raya?"],
+      ["Puja totes les velocitats a 255 alhora i el robot perd la línia.|Sube todas las velocidades a 255 a la vez y el robot pierde la línea.",
+        "Torneu al cicle de millora: canvia un sol número, prova i mira el temps. Quin canvi ha fet que es perdés?|Volved al ciclo de mejora: cambia un solo número, prueba y mira el tiempo. ¿Qué cambio ha hecho que se pierda?"],
+      ["Fa la condició amb «o» (L = 1 o R = 1) i el robot s'atura al primer revolt.|Hace la condición con «o» (L = 1 o R = 1) y el robot se para en la primera curva.",
+        "Pregunta: en un revolt, quants sensors veuen negre? I a la ratlla de meta? Quina paraula ho distingeix?|Pregunta: en una curva, ¿cuántos sensores ven negro? ¿Y en la raya de meta? ¿Qué palabra lo distingue?"],
+      ["Mostra el temps sense dividir i la pantalla passa un número molt llarg.|Muestra el tiempo sin dividir y la pantalla pasa un número muy largo.",
+        "Quants mil·lisegons té un segon? Què cal fer per passar de 15340 ms a segons?|¿Cuántos milisegundos tiene un segundo? ¿Qué hay que hacer para pasar de 15340 ms a segundos?"],
+      ["Al robot real, el temps és diferent del simulador i pensa que ha fet trampa o que s'ha equivocat.|En el robot real, el tiempo es diferente del simulador y piensa que ha hecho trampa o que se ha equivocado.",
+        "És normal: les piles, les rodes i el terra canvien la velocitat. El que importa és comparar els intents al mateix circuit.|Es normal: las pilas, las ruedas y el suelo cambian la velocidad. Lo que importa es comparar los intentos en el mismo circuito."]
+    ],
+    diff: {
+      mes: "Fer una zona de frenada: abans de la meta, una zona de color que el robot detecta amb el valor ADC per anar més a poc a poc i aturar-se just a la ratlla. O provar el control proporcional de la unitat 6 per corregir amb més suavitat.|Hacer una zona de frenada: antes de la meta, una zona de color que el robot detecta con el valor ADC para ir más despacio y pararse justo en la raya. O probar el control proporcional de la unidad 6 para corregir con más suavidad.",
+      menys: "Fer la volta de reconeixement amb la solució de la pista i, després, canviar només la velocitat de les rectes. Al robot real, fer de cronometrador/a i de secretari/ària abans de programar.|Hacer la vuelta de reconocimiento con la solución de la pista y, después, cambiar solo la velocidad de las rectas. En el robot real, hacer de cronometrador/a y de secretario/a antes de programar."
+    },
+    aval: {
+      ticket: ["Per què el robot s'atura amb «L = 1 i R = 1» i no amb «L = 1 o R = 1»?|¿Por qué el robot se para con «L = 1 y R = 1» y no con «L = 1 o R = 1»?",
+        "Digues una millora que has provat i què ha passat amb el temps.|Di una mejora que has probado y qué ha pasado con el tiempo."],
+      rubric: [
+        ["Seguidor amb meta|Seguidor con meta", "Programa el seguidor dins de «repeteix fins que» i el robot s'atura a la meta als dos circuits.|Programa el seguidor dentro de «repite hasta que» y el robot se para en la meta en los dos circuitos.", "Segueix la línia però no s'atura bé a la meta.|Sigue la línea pero no se para bien en la meta."],
+        ["Optimització|Optimización", "Millora el temps canviant una cosa cada vegada i apunta els resultats.|Mejora el tiempo cambiando una cosa cada vez y apunta los resultados.", "Canvia diverses coses alhora i no sap quina ha millorat.|Cambia varias cosas a la vez y no sabe cuál ha mejorado."],
+        ["Projecte i dades|Proyecto y datos", "Completa la cursa del port, mostra el temps i compara el simulador amb el robot real.|Completa la carrera del puerto, muestra el tiempo y compara el simulador con el robot real.", "Completa la cursa amb ajuda o no mostra el temps.|Completa la carrera con ayuda o no muestra el tiempo."]
+      ]
+    },
+    casa: "A casa, amb el mòbil, podeu tornar a la cursa del port i intentar baixar el vostre rècord. Expliqueu a algú de la família les quatre missions de la setmana i quin robot de veritat fa una feina semblant a cada una.|En casa, con el móvil, podéis volver a la carrera del puerto e intentar bajar vuestro récord. Explicad a alguien de la familia las cuatro misiones de la semana y qué robot de verdad hace un trabajo parecido a cada una.",
+    slides: [
+      { id: 's1', k: 'portada', t: "Projecte: la cursa contrarellotge|Proyecto: la carrera contrarreloj", x: "Missió 4: una volta al circuit, tots els punts de control i aturat a la meta.|Misión 4: una vuelta al circuito, todos los puntos de control y parado en la meta.",
+        nota: "Presenta-ho com el projecte de la unitat: en acabar, cada grup tindrà el seu temps al robot de veritat.|Preséntalo como el proyecto de la unidad: al terminar, cada grupo tendrá su tiempo en el robot de verdad." },
+      { id: 's2', k: 'pregunta', t: "Velocitat o precisió?|¿Velocidad o precisión?", punts: ["Què guanya una cursa: anar al màxim o no equivocar-se?|¿Qué gana una carrera: ir al máximo o no equivocarse?", "Com sap el robot que és a la meta?|¿Cómo sabe el robot que está en la meta?", "S'atura en sec?|¿Se para en seco?"],
+        nota: "Recull opinions i deixa-les a la vista: les comprovareu amb dades.|Recoge opiniones y déjalas a la vista: las comprobaréis con datos." },
+      { id: 's3', k: 'anim', t: "Més ràpid… fins que es perd|Más rápido… hasta que se pierde", anim: 'k7trial', x: "Al circuit del port: a 150 uns 24 s, a 200 uns 17 s; a 255 (amb la roda de dins a 60) es confon a la xicana.|En el circuito del puerto: a 150 unos 24 s, a 200 unos 17 s; a 255 (con la rueda de dentro a 60) se confunde en la chicane.",
+        nota: "Són dades del simulador. Pregunta quina velocitat triarien i per què: la millor és la més ràpida que sempre funciona.|Son datos del simulador. Pregunta qué velocidad elegirían y por qué: la mejor es la más rápida que siempre funciona." },
+      { id: 's4', k: 'robo', t: "La ratlla de meta|La raya de meta", x: "Segueix la línia fins que L = 1 i R = 1; després, atura.|Sigue la línea hasta que L = 1 y R = 1; después, para.",
+        robo: { w: { ...CA, goal: CA_GOAL, time: 18 }, prog: CURSA(200, 40, 200) }, tip: "Mireu com es tornen verds els punts de control.|Mirad cómo se vuelven verdes los puntos de control.",
+        blocks: ["repeteix fins que L = 1 i R = 1|repite hasta que L = 1 y R = 1", "si L = 1 → esquerre 40, dret 200|si L = 1 → izquierdo 40, derecho 200", "si no, si R = 1 → esquerre 200, dret 40|si no, si R = 1 → izquierdo 200, derecho 40", "si no → els dos a 200 · i al final: atura|si no → los dos a 200 · y al final: para"],
+        nota: "Fes notar el temps al tauler quan s'atura: uns 15 segons.|Haz notar el tiempo en el panel cuando se para: unos 15 segundos." },
+      { id: 's5', k: 'robo', t: "El seguiment del xip|El seguimiento del chip", x: "Segur, però lent… i no s'atura a la meta.|Seguro, pero lento… y no se para en la meta.",
+        robo: { w: { ...CA, goal: CA_GOAL, time: 18 }, prog: 'start{ patrol:on }' },
+        nota: "En 18 segons no arriba ni a la meitat del circuit. Per a una cursa, el nostre programa és molt millor.|En 18 segundos no llega ni a la mitad del circuito. Para una carrera, nuestro programa es mucho mejor." },
+      { id: 's6', k: 'robo', t: "Compte: frenar no és instantani|Cuidado: frenar no es instantáneo", x: "Amb «per sempre», el robot atura a la ratlla… i torna a arrencar.|Con «para siempre», el robot para en la raya… y vuelve a arrancar.",
+        robo: { w: { ...CA, goal: CA_GOAL, time: 22 }, prog: 'forever{ if:L=1&&R=1{ stop:all } else{ if:L=1{ run:L,fwd,40 run:R,fwd,200 } else{ if:R=1{ run:L,fwd,200 run:R,fwd,40 } else{ run:all,fwd,200 } } } }' },
+        nota: "Demana una predicció abans. Per la inèrcia, llisca un parell de centímetres i deixa de veure la ratlla: el «per sempre» torna a seguir la línia.|Pide una predicción antes. Por la inercia, se desliza un par de centímetros y deja de ver la raya: el «para siempre» vuelve a seguir la línea." },
+      { id: 's7', k: 'robo', t: "El temps a la pantalla|El tiempo en la pantalla", x: "En arribar: segons = temps ÷ 1000 i mostra el número.|Al llegar: segundos = tiempo ÷ 1000 y muestra el número.",
+        robo: { w: { ...CA, goal: CA_GOAL, time: 20 }, prog: CURSA(200, 40, 200).replace('stop:all }', 'stop:all calc:s,t,/,1000 num:$s }'), varNames: { s: 'segons|segundos' } },
+        code: "let segons = Math.idiv(input.runningTime(), 1000)\nbasic.showNumber(segons)",
+        nota: "Explica que la micro:bit compta mil·lisegons des que s'encén. Al robot real, si l'encenen just a la sortida, el número és el temps de la volta.|Explica que la micro:bit cuenta milisegundos desde que se enciende. En el robot real, si lo encienden justo en la salida, el número es el tiempo de la vuelta." },
+      { id: 's8', k: 'activitat', t: "El circuit de llapis|El circuito de lápiz", timer: 8, punts: ["Repassa el circuit a poc a poc, normal i molt de pressa.|Repasa el circuito despacio, normal y muy deprisa.", "El company/a cronometra i compta les sortides.|El compañero/a cronometra y cuenta las salidas.", "Omple la taula.|Rellena la tabla.", "Quina és la millor velocitat de cursa?|¿Cuál es la mejor velocidad de carrera?"],
+        nota: "Proposa la regla de la penalització (3 segons per sortida): sovint guanya la velocitat normal, no la màxima.|Propón la regla de la penalización (3 segundos por salida): a menudo gana la velocidad normal, no la máxima." },
+      { id: 's9', k: 'activitat', t: "Ara, a l'ordinador|Ahora, al ordenador", timer: 10, punts: ["Obre la sessió «Projecte: la cursa contrarellotge».|Abre la sesión «Proyecto: la carrera contrarreloj».", "Mira les demos de «Descobreix».|Mira las demos de «Descubre».", "Fes la volta de reconeixement: primer segur!|Haz la vuelta de reconocimiento: ¡primero seguro!"],
+        nota: "Al pas del circuit de llapis, que toquin «Ho hem fet!».|En el paso del circuito de lápiz, que toquen «¡Lo hemos hecho!»." },
+      { id: 's10', k: 'repte', t: "Contra el rellotge|Contra el reloj", timer: 6, punts: ["Menys de 18 s, als dos circuits|Menos de 18 s, en los dos circuitos", "Bat el rècord: menys de 13 s al moll|Bate el récord: menos de 13 s en el muelle"],
+        nota: "Que apuntin cada intent a la fitxa: velocitat de les rectes, velocitat de la roda de dins i temps.|Que apunten cada intento en la ficha: velocidad de las rectas, velocidad de la rueda de dentro y tiempo." },
+      { id: 's11', k: 'activitat', t: "La cursa de veritat|La carrera de verdad", timer: 15, punts: ["Volta de prova a velocitat 150.|Vuelta de prueba a velocidad 150.", "Tres intents oficials; abans de cada un, un sol canvi.|Tres intentos oficiales; antes de cada uno, un solo cambio.", "Si surt de la línia, l'intent no compta.|Si se sale de la línea, el intento no cuenta.", "Apunteu el millor temps a la pissarra.|Apuntad el mejor tiempo en la pizarra."],
+        code: "Maqueen_V5.I2CInit()\nlet segons = 0\nwhile (!(Maqueen_V5.readPatrol(Maqueen_V5.Patrol.L) == 1 && Maqueen_V5.readPatrol(Maqueen_V5.Patrol.R) == 1)) {\n    if (Maqueen_V5.readPatrol(Maqueen_V5.Patrol.L) == 1) {\n        Maqueen_V5.motorRun(Maqueen_V5.Motors.M1, Maqueen_V5.Dir.CW, 40)\n        Maqueen_V5.motorRun(Maqueen_V5.Motors.M2, Maqueen_V5.Dir.CW, 150)\n    } else if (Maqueen_V5.readPatrol(Maqueen_V5.Patrol.R) == 1) {\n        Maqueen_V5.motorRun(Maqueen_V5.Motors.M1, Maqueen_V5.Dir.CW, 150)\n        Maqueen_V5.motorRun(Maqueen_V5.Motors.M2, Maqueen_V5.Dir.CW, 40)\n    } else {\n        Maqueen_V5.motorRun(Maqueen_V5.Motors.All, Maqueen_V5.Dir.CW, 150)\n    }\n}\nMaqueen_V5.motorStop(Maqueen_V5.Motors.All)\nsegons = Math.idiv(input.runningTime(), 1000)\nbasic.showNumber(segons)",
+        nota: "El robot surt just després de la ratlla de meta, perquè no s'aturi en arrencar. Encendre'l a la sortida fa que el número de la pantalla sigui el temps de la volta.|El robot sale justo después de la raya de meta, para que no se pare al arrancar. Encenderlo en la salida hace que el número de la pantalla sea el tiempo de la vuelta." },
+      { id: 's12', k: 'concepte', t: "El circuit i la seguretat|El circuito y la seguridad", punts: ["Cinta negra de 2 cm sobre fons blanc, corbes de 26 cm de radi.|Cinta negra de 2 cm sobre fondo blanco, curvas de 26 cm de radio.", "Ratlla de meta de 10 cm que travessa la línia.|Raya de meta de 10 cm que atraviesa la línea.", "El circuit, a terra; mans fora durant la volta.|El circuito, en el suelo; manos fuera durante la vuelta.", "Només el pilot encén i agafa el robot.|Solo el piloto enciende y coge el robot."],
+        nota: "Si el robot confon un revolt amb la meta, les corbes són massa tancades o la cinta fa angles: allisa-les.|Si el robot confunde una curva con la meta, las curvas son demasiado cerradas o la cinta hace ángulos: alísalas." },
+      { id: 's13', k: 'activitat', t: "Crea: la cursa del port|Crea: la carrera del puerto", timer: 6, x: "5 punts de control, aturat a la meta en menys de 20 s i el temps a la pantalla.|5 puntos de control, parado en la meta en menos de 20 s y el tiempo en la pantalla.",
+        nota: "Qui acabi pot afegir llums o una melodia de victòria, i intentar baixar el seu rècord amb el cicle de millora.|Quien termine puede añadir luces o una melodía de victoria, e intentar bajar su récord con el ciclo de mejora." },
+      { id: 's14', k: 'resum', t: "La Setmana de les Missions|La Semana de las Misiones", punts: ["Aspirador: estratègia i variable de memòria.|Aspirador: estrategia y variable de memoria.", "Sumo: la vora primer, després el rival.|Sumo: el borde primero, después el rival.", "Rescat: empènyer recte i treballar per fases.|Rescate: empujar recto y trabajar por fases.", "Cursa: seguir fins a la meta i millorar amb dades.|Carrera: seguir hasta la meta y mejorar con datos."],
+        nota: "Anuncia la unitat 8: cada alumne/a dissenyarà la seva pròpia missió.|Anuncia la unidad 8: cada alumno/a diseñará su propia misión." },
+      { id: 's15', k: 'tiquet', t: "Tiquet de sortida|Ticket de salida", punts: ["Per què «L = 1 i R = 1» i no «o»?|¿Por qué «L = 1 y R = 1» y no «o»?", "Una millora que has provat i què ha passat.|Una mejora que has probado y qué ha pasado."],
+        nota: "Felicita tots els equips: el millor temps és important, però encara més haver-lo millorat amb dades.|Felicita a todos los equipos: el mejor tiempo es importante, pero todavía más haberlo mejorado con datos." }
+    ],
+    print: [
+      { id: 'p1', t: "El circuit de llapis i la taula de temps|El circuito de lápiz y la tabla de tiempos", k: 'fitxa',
+        intro: "Dibuixa amb retolador un circuit tancat amb dues corbes tancades i una de suau. Repassa'l amb el llapis tres vegades mentre un company/a cronometra.|Dibuja con rotulador un circuito cerrado con dos curvas cerradas y una suave. Repásalo con el lápiz tres veces mientras un compañero/a cronometra.",
+        items: [
+          { q: "A poc a poc: temps ____ s · sortides ____ · A velocitat normal: temps ____ s · sortides ____ · Molt de pressa: temps ____ s · sortides ____|Despacio: tiempo ____ s · salidas ____ · A velocidad normal: tiempo ____ s · salidas ____ · Muy deprisa: tiempo ____ s · salidas ____", sol: "Normalment, com més de pressa, menys temps però més sortides.|Normalmente, cuanto más deprisa, menos tiempo pero más salidas." },
+          { q: "Si cada sortida suma 3 segons, quina velocitat guanya?|Si cada salida suma 3 segundos, ¿qué velocidad gana?", sol: "Sovint la normal: és ràpida i gairebé no surt.|A menudo la normal: es rápida y casi no se sale." },
+          { q: "Al simulador i al robot: velocitat ____ → temps ____ s · velocitat ____ → temps ____ s · velocitat ____ → temps ____ s|En el simulador y en el robot: velocidad ____ → tiempo ____ s · velocidad ____ → tiempo ____ s · velocidad ____ → tiempo ____ s", sol: "Al circuit del moll del simulador: 150 → uns 21 s, 200 → uns 15 s, 255 → uns 11 s.|En el circuito del muelle del simulador: 150 → unos 21 s, 200 → unos 15 s, 255 → unos 11 s." }
+        ] },
+      { id: 'p2', t: "El circuit del moll a escala|El circuito del muelle a escala", k: 'pista',
+        intro: "A terra o sobre paper blanc d'uns 140 × 80 cm. Enganxeu la cinta negra (2 cm) seguint el rectangle de cantonades arrodonides i la ratlla de meta. Els cercles numerats són els punts de control.|En el suelo o sobre papel blanco de unos 140 × 80 cm. Pegad la cinta negra (2 cm) siguiendo el rectángulo de esquinas redondeadas y la raya de meta. Los círculos numerados son los puntos de control.",
+        w: { ...CA, goal: CA_GOAL },
+        items: [
+          { q: "Rectangle de 122 × 52 cm; cantonades amb un radi de 26 cm (feu servir un cordill de 26 cm).|Rectángulo de 122 × 52 cm; esquinas con un radio de 26 cm (usad un cordel de 26 cm)." },
+          { q: "Ratlla de meta: 10 cm, travessant la recta de dalt a 31 cm de la cantonada esquerra. El robot surt just a la dreta de la ratlla.|Raya de meta: 10 cm, atravesando la recta de arriba a 31 cm de la esquina izquierda. El robot sale justo a la derecha de la raya." }
+        ] }
+    ]
+  }
+  };
+})());
+
+/* ── unitat 8 ── */
+/* Tech Robòtica · unitat 8 «El meu robot» · guia del professor (k8-1 … k8-4)
+   Material propi de Numi. Classe de 60 minuts; mateix esquema que TGUIDE['r1-1']. Fase «robot»: activitat amb el
+   Maqueen Lite V5 de veritat (grups de 3-4 per kit). */
+Object.assign(TGUIDE, {
+  /* ---------- Sessió 1 · Dissenya la missió ---------- */
+  'k8-1': {
+    obj: [
+      "L'alumne/a explica què fa bona una missió de robot: objectiu clar, obstacles, un sensor necessari i comprovacions.|El alumno/a explica qué hace buena una misión de robot: objetivo claro, obstáculos, un sensor necesario y comprobaciones.",
+      "L'alumne/a dibuixa la seva pista a escala en una quadrícula de 12 × 8 caselles de 10 cm.|El alumno/a dibuja su pista a escala en una cuadrícula de 12 × 8 casillas de 10 cm.",
+      "L'alumne/a passa el disseny a l'editor de missions, tria les comprovacions i el desa amb nom.|El alumno/a pasa el diseño al editor de misiones, elige las comprobaciones y lo guarda con nombre.",
+      "L'alumne/a repassa les eines del curs (temps, ultrasons, línia, empènyer) amb quatre missions curtes i prova el sensor d'ultrasons al robot real.|El alumno/a repasa las herramientas del curso (tiempo, ultrasonidos, línea, empujar) con cuatro misiones cortas y prueba el sensor de ultrasonidos en el robot real."
+    ],
+    comp: [
+      "Competència digital (CD5): dissenyar i programar una solució tecnològica pròpia|Competencia digital (CD5): diseñar y programar una solución tecnológica propia",
+      "Competència STEM (STEM3): plantejar un projecte amb requisits i criteris d'èxit|Competencia STEM (STEM3): plantear un proyecto con requisitos y criterios de éxito",
+      "Matemàtiques: escala, quadrícules i mesura en centímetres|Matemáticas: escala, cuadrículas y medida en centímetros",
+      "Competència personal i d'aprendre a aprendre: prendre decisions creatives i justificar-les|Competencia personal y de aprender a aprender: tomar decisiones creativas y justificarlas"
+    ],
+    vocab: [
+      ["Missió|Misión", "El que ha d'aconseguir el robot, amb unes condicions que es poden comprovar.|Lo que tiene que conseguir el robot, con unas condiciones que se pueden comprobar."],
+      ["Requisit|Requisito", "Una condició que ha de complir el projecte (p. ex. «sense xocar»).|Una condición que tiene que cumplir el proyecto (p. ej. «sin chocar»)."],
+      ["Comprovació|Comprobación", "La regla amb què l'app decideix si la missió s'ha complert.|La regla con la que la app decide si la misión se ha cumplido."],
+      ["Esbós|Boceto", "Dibuix ràpid per pensar una idea abans de construir-la.|Dibujo rápido para pensar una idea antes de construirla."],
+      ["Escala|Escala", "Relació entre el dibuix i la realitat: aquí, 1 casella = 10 cm.|Relación entre el dibujo y la realidad: aquí, 1 casilla = 10 cm."]
+    ],
+    mat: {
+      aula: [
+        "Un ordinador per alumne/a amb Numi Tech obert a la sessió «Dissenya la missió»|Un ordenador por alumno/a con Numi Tech abierto en la sesión «Diseña la misión»",
+        "Projector i la presentació d'aquesta sessió|Proyector y la presentación de esta sesión",
+        "Un kit per grup de 3-4: Maqueen Lite V5 amb micro:bit V2, cable USB i piles carregades|Un kit por grupo de 3-4: Maqueen Lite V5 con micro:bit V2, cable USB y pilas cargadas",
+        "Cinta de pintor, un metre i una caixa de sabates per grup; llapis de colors|Cinta de pintor, un metro y una caja de zapatos por grupo; lápices de colores"
+      ],
+      imprimir: ["Full de disseny de la missió (un per alumne/a)|Hoja de diseño de la misión (una por alumno/a)", "Codi: la vitrina de veritat|Código: la vitrina de verdad"],
+      prep: [
+        "Provar l'editor de missions (pas «Crea») per poder-lo ensenyar al projector.|Probar el editor de misiones (paso «Crea») para poder enseñarlo en el proyector.",
+        "Descarregar el codi de l'imprimible a un kit i comprovar que el robot s'atura davant la caixa.|Descargar el código del imprimible en un kit y comprobar que el robot se para delante de la caja.",
+        "Marcar a terra, per a cada grup, una línia de sortida i tres marques a 40, 60 i 80 cm on posaran la caixa.|Marcar en el suelo, para cada grupo, una línea de salida y tres marcas a 40, 60 y 80 cm donde pondrán la caja.",
+        "Imprimir un full de disseny per alumne/a i uns quants de recanvi.|Imprimir una hoja de diseño por alumno/a y algunas de recambio."
+      ]
+    },
+    plan: [
+      { min: 4, t: "Benvinguda a la Mostra de Robots|Bienvenida a la Muestra de Robots", fase: 'inici',
+        fa: "Explica el projecte final: durant quatre sessions, cada alumne/a inventarà una missió, la programarà, la passarà al Maqueen i la presentarà a la Mostra de Robots. Fes la pregunta de la diapositiva 2 i apunta a la pissarra les idees de missió que surtin.|Explica el proyecto final: durante cuatro sesiones, cada alumno/a inventará una misión, la programará, la pasará al Maqueen y la presentará en la Muestra de Robots. Haz la pregunta de la diapositiva 2 y apunta en la pizarra las ideas de misión que salgan.",
+        diu: ["Aquest cop no us dono jo la missió: la inventeu vosaltres.|Esta vez no os doy yo la misión: la inventáis vosotros.", "Quina missió us agradaria veure fer a un robot?|¿Qué misión os gustaría ver hacer a un robot?"],
+        slides: ['s1', 's2'], app: "Encara no: pantalles apagades.|Todavía no: pantallas apagadas.", org: "Tot el grup|Todo el grupo" },
+      { min: 8, t: "Què fa bona una missió?|¿Qué hace buena una misión?", fase: 'teoria',
+        fa: "Presenta les quatre parts d'una bona missió amb l'animació. Executa les tres demos: la llauna que es rescata (comprovacions), la vitrina (sensor) i la meta massa a prop (massa fàcil). Abans de cada demo, demana què passarà. Acaba ensenyant l'esbós a escala i les eines de l'editor.|Presenta las cuatro partes de una buena misión con la animación. Ejecuta las tres demos: la lata que se rescata (comprobaciones), la vitrina (sensor) y la meta demasiado cerca (demasiado fácil). Antes de cada demo, pide qué pasará. Termina enseñando el boceto a escala y las herramientas del editor.",
+        diu: ["Com sabrà l'app que la llauna ha arribat a la meta?|¿Cómo sabrá la app que la lata ha llegado a la meta?", "Aquesta missió necessita algun sensor? I si movem la caixa?|¿Esta misión necesita algún sensor? ¿Y si movemos la caja?", "Si una casella fa 10 cm, quant fa la pista de 12 caselles?|Si una casilla mide 10 cm, ¿cuánto mide la pista de 12 casillas?"],
+        slides: ['s3', 's4', 's5', 's6', 's7', 's8'], app: "Encara no: tota l'atenció a la projecció.|Todavía no: toda la atención en la proyección.", org: "Tot el grup|Todo el grupo" },
+      { min: 10, t: "L'estudi de disseny|El estudio de diseño", fase: 'desconnectat',
+        fa: "Cada alumne/a dibuixa la seva missió al full de disseny: robot (amb una fletxa cap on mira), caixes, cinta, llaunes, meta i focus. A sota, apunta l'objectiu, el sensor que caldrà i les comprovacions. Als 6 minuts, intercanvien el full amb el company/a: l'altre/a «fa de robot» amb el dit i diu si la missió es pot fer i si és massa fàcil. Tornen el full amb un consell.|Cada alumno/a dibuja su misión en la hoja de diseño: robot (con una flecha hacia donde mira), cajas, cinta, latas, meta y foco. Debajo, apunta el objetivo, el sensor que hará falta y las comprobaciones. A los 6 minutos, intercambian la hoja con el compañero/a: el otro/a «hace de robot» con el dedo y dice si la misión se puede hacer y si es demasiado fácil. Devuelven la hoja con un consejo.",
+        diu: ["Cada casella són 10 cm: el robot n'ocupa gairebé una sencera.|Cada casilla son 10 cm: el robot ocupa casi una entera.", "Quin sensor farà servir el robot a la teva missió?|¿Qué sensor usará el robot en tu misión?", "Hi ha prou espai entre les caixes perquè hi passi el robot?|¿Hay espacio suficiente entre las cajas para que pase el robot?"],
+        slides: ['s9'], app: "Cap: activitat sense pantalla.|Ninguna: actividad sin pantalla.", org: "Individual i després per parelles|Individual y después por parejas" },
+      { min: 8, t: "A l'ordinador: descobreix i prova|En el ordenador: descubre y prueba", fase: 'ordinador',
+        fa: "Cada alumne/a obre la sessió i avança fins a la pausa activa. Al pas «La pista del menjador», que toquin «Ho hem fet!»: és l'activitat per a casa. A «On acabarà?», que expliquin la lletra comptant caselles.|Cada alumno/a abre la sesión y avanza hasta la pausa activa. En el paso «La pista del comedor», que toquen «¡Lo hemos hecho!»: es la actividad para casa. En «¿Dónde terminará?», que expliquen la letra contando casillas.",
+        diu: ["Compta caselles: 3 caselles són 30 cm.|Cuenta casillas: 3 casillas son 30 cm.", "Quines comprovacions triaria la Rita?|¿Qué comprobaciones elegiría Rita?"],
+        slides: ['s10'], app: "De «La missió» fins a «Prova»: les històries, les cinc targetes, la missió ben pensada, ordenar el disseny, la pista del menjador, les comprovacions de la Rita i «On acabarà?».|De «La misión» hasta «Prueba»: las historias, las cinco tarjetas, la misión bien pensada, ordenar el diseño, la pista del comedor, las comprobaciones de Rita y «¿Dónde terminará?».", org: "Individual|Individual" },
+      { min: 8, t: "Escalfem motors: quatre missions|Calentamos motores: cuatro misiones", fase: 'ordinador',
+        fa: "Feu la pausa activa junts. Després, les quatre missions de prova: motors i temps, ultrasons (3 pistes), línia i empènyer la llauna. Si algú s'encalla més de 3 minuts en una, que passi a la següent: són per recordar, no per examinar.|Haced la pausa activa juntos. Después, las cuatro misiones de prueba: motores y tiempo, ultrasonidos (3 pistas), línea y empujar la lata. Si alguien se atasca más de 3 minutos en una, que pase a la siguiente: son para recordar, no para examinar.",
+        diu: ["Quina eina del curs fa servir aquesta missió?|¿Qué herramienta del curso usa esta misión?", "Per què el programa de la vitrina ha de funcionar a les tres pistes?|¿Por qué el programa de la vitrina tiene que funcionar en las tres pistas?"],
+        slides: ['s11'], app: "«Pausa activa» i les quatre missions d'escalfament.|«Pausa activa» y las cuatro misiones de calentamiento.", org: "Tot el grup i després individual|Todo el grupo y después individual" },
+      { min: 10, t: "La vitrina de veritat|La vitrina de verdad", fase: 'robot',
+        fa: "Grups de 3-4 per kit amb papers: programador/a, pilot, mesurador/a i secretari/ària. A MakeCode (nou projecte → Extensions → «maqueen» → JavaScript), enganxen el codi de l'imprimible i el descarreguen. Posen la caixa de sabates a la marca de 40 cm, robot darrere la línia de sortida, cable fora i a terra. Mesuren a quants cm de la caixa s'atura. Repeteixen amb la caixa a 60 i a 80 cm: el mateix programa ha de funcionar a les tres, com al simulador.|Grupos de 3-4 por kit con papeles: programador/a, piloto, medidor/a y secretario/a. En MakeCode (nuevo proyecto → Extensiones → «maqueen» → JavaScript), pegan el código del imprimible y lo descargan. Ponen la caja de zapatos en la marca de 40 cm, robot detrás de la línea de salida, cable fuera y en el suelo. Miden a cuántos cm de la caja se para. Repiten con la caja a 60 y a 80 cm: el mismo programa tiene que funcionar en las tres, como en el simulador.",
+        diu: ["Cable fora i robot a terra abans d'encendre'l.|Cable fuera y robot en el suelo antes de encenderlo.", "S'atura a la mateixa distància de la caixa encara que la mogueu? Per què?|¿Se para a la misma distancia de la caja aunque la mováis? ¿Por qué?", "Aquest sensor us servirà per a la vostra missió?|¿Este sensor os servirá para vuestra misión?"],
+        slides: ['s12', 's13'], app: "Cap: MakeCode i el robot de veritat.|Ninguna: MakeCode y el robot de verdad.", org: "Grups de 3-4 per kit amb papers|Grupos de 3-4 por kit con papeles" },
+      { min: 9, t: "Crea: la teva missió a l'editor|Crea: tu misión en el editor", fase: 'crea',
+        fa: "De tornada a l'ordinador, cada alumne/a passa el full de disseny a l'editor: primer la meta i el robot, després les caixes i la cinta, i al final les comprovacions i el nom. Ensenya al projector com es fa la cinta (tocar caselles en ordre) i com es gira el robot (tocar-lo dues vegades). Quan les tres comprovacions de sota estiguin en verd, que la desin.|De vuelta al ordenador, cada alumno/a pasa la hoja de diseño al editor: primero la meta y el robot, después las cajas y la cinta, y al final las comprobaciones y el nombre. Enseña en el proyector cómo se hace la cinta (tocar casillas en orden) y cómo se gira el robot (tocarlo dos veces). Cuando las tres comprobaciones de abajo estén en verde, que la guarden.",
+        diu: ["La teva missió necessita un sensor? Quin?|¿Tu misión necesita un sensor? ¿Cuál?", "Les comprovacions diuen exactament el que vols que faci el robot?|¿Las comprobaciones dicen exactamente lo que quieres que haga el robot?"],
+        slides: ['s14'], app: "Pas «Crea»: l'editor de missions (es desa per a les sessions següents).|Paso «Crea»: el editor de misiones (se guarda para las sesiones siguientes).", org: "Individual|Individual" },
+      { min: 3, t: "Tancament i tiquet de sortida|Cierre y ticket de salida", fase: 'tancament',
+        fa: "Repassa les tres idees amb el resum i deixa que responguin les preguntes finals de l'app. Recull els fulls de disseny per tornar-los la sessió que ve. A la porta, fes a cada alumne/a una pregunta del tiquet.|Repasa las tres ideas con el resumen y deja que respondan las preguntas finales de la app. Recoge las hojas de diseño para devolverlas la próxima sesión. En la puerta, haz a cada alumno/a una pregunta del ticket.",
+        diu: ["Qui em diu una missió massa fàcil? I una d'impossible?|¿Quién me dice una misión demasiado fácil? ¿Y una imposible?", "Quin sensor farà servir el teu robot?|¿Qué sensor usará tu robot?"],
+        slides: ['s15', 's16'], app: "«Tancament»: les dues preguntes finals i com m'he sentit.|«Cierre»: las dos preguntas finales y cómo me he sentido.", org: "Tot el grup|Todo el grupo" }
+    ],
+    errors: [
+      ["Dissenya una missió impossible (meta tancada entre caixes) o massa fàcil (meta al davant).|Diseña una misión imposible (meta encerrada entre cajas) o demasiado fácil (meta delante).",
+        "Que el company/a faci de robot amb el dit al full. Pregunta: per on passaria? Quant temps duraria la missió?|Que el compañero/a haga de robot con el dedo en la hoja. Pregunta: ¿por dónde pasaría? ¿Cuánto duraría la misión?"],
+      ["Posa caixes en caselles enganxades i no deixa espai perquè hi passi el robot.|Pone cajas en casillas pegadas y no deja espacio para que pase el robot.",
+        "Recorda que el robot fa gairebé 9 cm: necessita un passadís d'almenys una casella lliure, millor dues.|Recuerda que el robot mide casi 9 cm: necesita un pasillo de al menos una casilla libre, mejor dos."],
+      ["Tria comprovacions que no lliguen amb la missió (p. ex. «seguir la cinta» sense cap cinta).|Elige comprobaciones que no encajan con la misión (p. ej. «seguir la cinta» sin ninguna cinta).",
+        "Que llegeixi en veu alta l'objectiu del full i després les comprovacions: diuen el mateix?|Que lea en voz alta el objetivo de la hoja y después las comprobaciones: ¿dicen lo mismo?"],
+      ["Dibuixa la cinta amb molts revolts de 90° seguits.|Dibuja la cinta con muchas curvas de 90° seguidas.",
+        "No és un error, però avisa que les cantonades de 90° són difícils de seguir: la sessió que ve aprendrem a girar-hi sobre si mateix. Proposa alguna diagonal.|No es un error, pero avisa de que las esquinas de 90° son difíciles de seguir: la próxima sesión aprenderemos a girar sobre sí mismo. Propón alguna diagonal."],
+      ["Al robot real, el robot s'atura una mica més a prop o més lluny que al simulador.|En el robot real, el robot se para un poco más cerca o más lejos que en el simulador.",
+        "És normal: el sensor i el terra no són perfectes. Que apuntin la diferència: la sessió 3 la farem servir per calibrar.|Es normal: el sensor y el suelo no son perfectos. Que apunten la diferencia: en la sesión 3 la usaremos para calibrar."]
+    ],
+    diff: {
+      mes: "Afegir a la missió una segona dificultat (una llauna i una cinta, o un focus de llum) i escriure al full el pla del programa per trams.|Añadir a la misión una segunda dificultad (una lata y una cinta, o un foco de luz) y escribir en la hoja el plan del programa por tramos.",
+      menys: "Partir d'una de les quatre missions d'escalfament i canviar-ne només una cosa (moure la meta o afegir una caixa). Dibuixar només la meta, el robot i un obstacle.|Partir de una de las cuatro misiones de calentamiento y cambiar solo una cosa (mover la meta o añadir una caja). Dibujar solo la meta, el robot y un obstáculo."
+    },
+    aval: {
+      ticket: ["Digues les quatre parts d'una bona missió.|Di las cuatro partes de una buena misión.", "Quin sensor farà servir el teu robot i per a què?|¿Qué sensor usará tu robot y para qué?"],
+      rubric: [
+        ["Disseny de la missió|Diseño de la misión", "La missió té objectiu, obstacles, un sensor necessari i solució.|La misión tiene objetivo, obstáculos, un sensor necesario y solución.", "La missió és massa fàcil, impossible o no necessita cap sensor.|La misión es demasiado fácil, imposible o no necesita ningún sensor."],
+        ["Esbós a escala|Boceto a escala", "Dibuixa la pista a la quadrícula amb mides coherents (passadissos d'almenys 10 cm).|Dibuja la pista en la cuadrícula con medidas coherentes (pasillos de al menos 10 cm).", "Dibuixa la idea, però sense tenir en compte la mida del robot.|Dibuja la idea, pero sin tener en cuenta el tamaño del robot."],
+        ["Comprovacions|Comprobaciones", "Tria les comprovacions que corresponen exactament a l'objectiu.|Elige las comprobaciones que corresponden exactamente al objetivo.", "Tria comprovacions a l'atzar o que no lliguen amb la missió.|Elige comprobaciones al azar o que no encajan con la misión."]
+      ]
+    },
+    casa: "A casa, amb el mòbil, podeu repetir la sessió i fer «La pista del menjador»: una missió amb sortida, meta, un obstacle i un camí de cordill, i algú que fa de robot amb els ulls tancats. Apunteu quines idees voleu afegir a la vostra missió.|En casa, con el móvil, podéis repetir la sesión y hacer «La pista del comedor»: una misión con salida, meta, un obstáculo y un camino de cordel, y alguien que hace de robot con los ojos cerrados. Apuntad qué ideas queréis añadir a vuestra misión.",
+    slides: [
+      { id: 's1', k: 'portada', t: "Dissenya la missió|Diseña la misión", x: "Comença el projecte final: la teva missió per a la Mostra de Robots.|Empieza el proyecto final: tu misión para la Muestra de Robots.",
+        nota: "Explica el calendari: avui dissenyar, la setmana que ve programar i provar, després passar-ho al robot real i, a l'última, presentar-ho.|Explica el calendario: hoy diseñar, la semana que viene programar y probar, después pasarlo al robot real y, en la última, presentarlo." },
+      { id: 's2', k: 'pregunta', t: "Quina missió t'agradaria veure?|¿Qué misión te gustaría ver?", punts: ["Un robot que rescata una llauna|Un robot que rescata una lata", "Un robot que segueix un circuit|Un robot que sigue un circuito", "Un robot que esquiva caixes fins a la meta|Un robot que esquiva cajas hasta la meta", "La teva idea…|Tu idea…"],
+        nota: "Apunta les idees a la pissarra. No les jutgis encara: després de la teoria, revisarem quines tenen les quatre parts d'una bona missió.|Apunta las ideas en la pizarra. No las juzgues todavía: después de la teoría, revisaremos cuáles tienen las cuatro partes de una buena misión." },
+      { id: 's3', k: 'anim', t: "Una bona missió|Una buena misión", anim: 'k8good', x: "Objectiu clar, obstacles, un sensor que calgui i una manera de comprovar-la.|Objetivo claro, obstáculos, un sensor que haga falta y una manera de comprobarla.",
+        nota: "Torna a les idees de la pissarra i comproveu-les amb aquestes quatre parts. Quina en té més? A quina li falta un sensor?|Vuelve a las ideas de la pizarra y comprobadlas con estas cuatro partes. ¿Cuál tiene más? ¿A cuál le falta un sensor?" },
+      { id: 's4', k: 'robo', t: "Com es comprova?|¿Cómo se comprueba?", x: "La missió: portar la llauna a la meta sense xocar.|La misión: llevar la lata a la meta sin chocar.",
+        robo: { w: { w: 120, h: 80, bot: [15, 45, 90], walls: [[50.5, .5, 9, 9], [50.5, 10.5, 9, 9], [50.5, 60.5, 9, 9], [50.5, 70.5, 9, 9]], objs: [{ x: 45, y: 45, r: 3, kind: 'can' }], zones: [{ id: 'meta', r: [90, 30, 20, 20], col: 'green', label: 'META|META' }] }, prog: 'start{ run:all,fwd,150 wait:5000 stop:all }' },
+        tip: "Abans d'executar: la llauna arribarà a la meta?|Antes de ejecutar: ¿la lata llegará a la meta?",
+        nota: "Explica que l'editor té cinc comprovacions: meta i aturar-s'hi, sense xocar, llauna a la meta, menys de 20 segons i seguir la cinta. L'app les revisa totes cada vegada.|Explica que el editor tiene cinco comprobaciones: meta y pararse, sin chocar, lata a la meta, menos de 20 segundos y seguir la cinta. La app las revisa todas cada vez." },
+      { id: 's5', k: 'robo', t: "Missions que necessiten sentir|Misiones que necesitan sentir", x: "El robot para sol a 10 cm de la vitrina, sigui on sigui.|El robot para solo a 10 cm de la vitrina, esté donde esté.",
+        robo: { w: { w: 120, h: 60, bot: [15, 30, 90], walls: [[80.5, 10.5, 9, 39]] }, prog: 'forever{ if:dist<10{ stop:all car:all,red } else{ run:all,fwd,150 car:all,green } }' },
+        nota: "Pregunta: si movem la vitrina 20 cm, aquest programa continuarà funcionant? I un programa de «endavant 4 segons»? Les missions amb sensor són més interessants i més fiables.|Pregunta: si movemos la vitrina 20 cm, ¿este programa seguirá funcionando? ¿Y un programa de «adelante 4 segundos»? Las misiones con sensor son más interesantes y más fiables." },
+      { id: 's6', k: 'robo', t: "Massa fàcil!|¡Demasiado fácil!", x: "La meta és tan a prop que la missió dura un segon.|La meta está tan cerca que la misión dura un segundo.",
+        robo: { w: { w: 120, h: 60, bot: [15, 30, 90], zones: [{ id: 'meta', r: [24, 20, 20, 20], col: 'green', label: 'META|META' }] }, prog: 'start{ run:all,fwd,150 wait:700 stop:all }' },
+        nota: "Demana com la farien més interessant sense fer-la impossible: allunyar la meta, posar-hi una caixa pel mig, una cinta amb revolts…|Pide cómo la harían más interesante sin hacerla imposible: alejar la meta, poner una caja en medio, una cinta con curvas…" },
+      { id: 's7', k: 'anim', t: "Primer, en paper|Primero, en papel", anim: 'k8sketch', x: "Quadrícula de 12 × 8 caselles: cada casella fa 10 × 10 cm.|Cuadrícula de 12 × 8 casillas: cada casilla mide 10 × 10 cm.",
+        nota: "Remarca que l'esbós és a escala: tot el que dibuixin es podrà construir a terra amb cinta. El robot ocupa gairebé una casella.|Remarca que el boceto está a escala: todo lo que dibujen se podrá construir en el suelo con cinta. El robot ocupa casi una casilla." },
+      { id: 's8', k: 'concepte', t: "Les eines de l'editor|Las herramientas del editor", punts: ["🧱 Paret i 🥫 llauna: toca una casella per posar-la o treure-la.|🧱 Pared y 🥫 lata: toca una casilla para ponerla o quitarla.", "〰️ Cinta negra: toca les caselles en ordre.|〰️ Cinta negra: toca las casillas en orden.", "🏁 Meta (2 × 2 caselles) i 🤖 robot (toca'l dues vegades per girar-lo).|🏁 Meta (2 × 2 casillas) y 🤖 robot (tócalo dos veces para girarlo).", "La missió: tria les comprovacions i posa-li nom.|La misión: elige las comprobaciones y ponle nombre."],
+        nota: "Si pots, obre el pas «Crea» al projector i fes una missió d'exemple en 1 minut. No la desis: és només per ensenyar les eines.|Si puedes, abre el paso «Crea» en el proyector y haz una misión de ejemplo en 1 minuto. No la guardes: es solo para enseñar las herramientas." },
+      { id: 's9', k: 'activitat', t: "L'estudi de disseny|El estudio de diseño", timer: 10, punts: ["Dibuixa la teva missió al full de disseny.|Dibuja tu misión en la hoja de diseño.", "Apunta l'objectiu, el sensor i les comprovacions.|Apunta el objetivo, el sensor y las comprobaciones.", "Intercanvia el full: el company/a fa de robot amb el dit.|Intercambia la hoja: el compañero/a hace de robot con el dedo.", "Torna-li el full amb un consell.|Devuélvele la hoja con un consejo."],
+        nota: "Passa per les taules i pregunta per l'espai: hi cap el robot entre aquestes dues caixes? Els que acabin aviat poden dibuixar una segona versió més difícil.|Pasa por las mesas y pregunta por el espacio: ¿cabe el robot entre estas dos cajas? Los que terminen pronto pueden dibujar una segunda versión más difícil." },
+      { id: 's10', k: 'activitat', t: "Ara, a l'ordinador|Ahora, al ordenador", timer: 8, punts: ["Obre la sessió «Dissenya la missió».|Abre la sesión «Diseña la misión».", "Mira les demos de «Descobreix».|Mira las demos de «Descubre».", "A «On acabarà?», compta caselles.|En «¿Dónde terminará?», cuenta casillas.", "Para a la «Pausa activa».|Para en la «Pausa activa»."],
+        nota: "Al pas «La pista del menjador», que toquin «Ho hem fet!»: és per fer a casa.|En el paso «La pista del comedor», que toquen «¡Lo hemos hecho!»: es para hacer en casa." },
+      { id: 's11', k: 'repte', t: "Escalfem motors|Calentamos motores", timer: 8, punts: ["1. Motors i temps|1. Motores y tiempo", "2. Ultrasons: la vitrina (3 pistes)|2. Ultrasonidos: la vitrina (3 pistas)", "3. Línia: segueix la cinta|3. Línea: sigue la cinta", "4. Empènyer: rescata la llauna|4. Empujar: rescata la lata"],
+        nota: "Són missions fetes amb el mateix editor que faran servir: fes-los-ho notar (parets de casella en casella, meta de 2 × 2). Cada una recorda una eina del curs.|Son misiones hechas con el mismo editor que usarán: házselo notar (paredes de casilla en casilla, meta de 2 × 2). Cada una recuerda una herramienta del curso." },
+      { id: 's12', k: 'activitat', t: "La vitrina de veritat|La vitrina de verdad", timer: 10, punts: ["MakeCode → Extensions → «maqueen» → JavaScript.|MakeCode → Extensiones → «maqueen» → JavaScript.", "Enganxa el codi i descarrega'l.|Pega el código y descárgalo.", "Caixa a 40 cm: on s'atura? I a 60? I a 80?|Caja a 40 cm: ¿dónde se para? ¿Y a 60? ¿Y a 80?", "Apunteu la distància a la caixa cada vegada.|Apuntad la distancia a la caja cada vez."],
+        code: "Maqueen_V5.I2CInit()\nbasic.forever(function () {\n    if (Maqueen_V5.Ultrasonic() < 10) {\n        Maqueen_V5.motorStop(Maqueen_V5.Motors.All)\n        Maqueen_V5.setRgblLed(Maqueen_V5.DirectionType.All, Maqueen_V5.CarLightColors.Red)\n    } else {\n        Maqueen_V5.motorRun(Maqueen_V5.Motors.All, Maqueen_V5.Dir.CW, 150)\n        Maqueen_V5.setRgblLed(Maqueen_V5.DirectionType.All, Maqueen_V5.CarLightColors.Green)\n    }\n})",
+        nota: "La caixa ha de ser prou alta i ampla perquè els ultrasons la vegin (una caixa de sabates va bé). Si el robot no s'atura, comproveu que la caixa estigui recta davant del sensor.|La caja tiene que ser lo bastante alta y ancha para que los ultrasonidos la vean (una caja de zapatos va bien). Si el robot no se para, comprobad que la caja esté recta delante del sensor." },
+      { id: 's13', k: 'concepte', t: "Seguretat amb el robot|Seguridad con el robot", punts: ["El robot sempre a terra (o en una taula amb vora).|El robot siempre en el suelo (o en una mesa con borde).", "Desconnecta el cable USB abans d'encendre'l.|Desconecta el cable USB antes de encenderlo.", "Apaga'l per agafar-lo; mans lluny de les rodes.|Apágalo para cogerlo; manos lejos de las ruedas.", "Només el pilot l'encén i l'apaga.|Solo el piloto lo enciende y lo apaga."],
+        nota: "Deixa aquesta diapositiva projectada mentre treballen amb els robots.|Deja esta diapositiva proyectada mientras trabajan con los robots." },
+      { id: 's14', k: 'activitat', t: "Crea: la teva missió a l'editor|Crea: tu misión en el editor", timer: 9, punts: ["Primer la meta i el robot.|Primero la meta y el robot.", "Després caixes, cinta i llaunes.|Después cajas, cinta y latas.", "Tria les comprovacions i posa-li nom.|Elige las comprobaciones y ponle nombre.", "Desa la missió.|Guarda la misión."],
+        nota: "La missió queda desada al perfil de cada alumne/a i la faran servir les tres sessions següents. Si algú no l'acaba, la podrà acabar al començament de la sessió que ve.|La misión queda guardada en el perfil de cada alumno/a y la usarán las tres sesiones siguientes. Si alguien no la termina, podrá terminarla al principio de la próxima sesión." },
+      { id: 's15', k: 'resum', t: "Què hem après avui|Qué hemos aprendido hoy", punts: ["Una bona missió: objectiu, obstacles, sensor i comprovacions.|Una buena misión: objetivo, obstáculos, sensor y comprobaciones.", "Ni massa fàcil ni impossible.|Ni demasiado fácil ni imposible.", "Primer en paper, a escala: 1 casella = 10 cm.|Primero en papel, a escala: 1 casilla = 10 cm."],
+        nota: "Pregunta qui ha canviat alguna cosa del seu disseny gràcies al consell del company/a.|Pregunta quién ha cambiado algo de su diseño gracias al consejo del compañero/a." },
+      { id: 's16', k: 'tiquet', t: "Tiquet de sortida|Ticket de salida", punts: ["Les quatre parts d'una bona missió.|Las cuatro partes de una buena misión.", "Quin sensor farà servir el teu robot?|¿Qué sensor usará tu robot?"],
+        nota: "Anota qui encara no té clar quin sensor necessitarà: és el primer que revisarem la setmana que ve.|Anota quién todavía no tiene claro qué sensor necesitará: es lo primero que revisaremos la semana que viene." }
+    ],
+    print: [
+      { id: 'p1', t: "Full de disseny de la missió|Hoja de diseño de la misión", k: 'graella', w: 12, h: 8,
+        intro: "Cada casella fa 10 × 10 cm: la pista sencera fa 120 × 80 cm. Dibuixa-hi el robot (amb una fletxa cap on mira), les caixes, la cinta, les llaunes i la meta (2 × 2 caselles).|Cada casilla mide 10 × 10 cm: la pista entera mide 120 × 80 cm. Dibuja el robot (con una flecha hacia donde mira), las cajas, la cinta, las latas y la meta (2 × 2 casillas).",
+        legend: [['🤖', 'El robot (i una fletxa)|El robot (y una flecha)'], ['🧱', 'Caixa o paret|Caja o pared'], ['〰️', 'Cinta negra|Cinta negra'], ['🏁', 'Meta (2 × 2)|Meta (2 × 2)'], ['🥫', 'Llauna|Lata'], ['💡', 'Focus de llum|Foco de luz']],
+        items: [
+          { q: "Nom de la missió i objectiu: què ha d'aconseguir el robot?|Nombre de la misión y objetivo: ¿qué tiene que conseguir el robot?" },
+          { q: "Quin sensor farà servir el robot? Per a què?|¿Qué sensor usará el robot? ¿Para qué?" },
+          { q: "Comprovacions: ☐ meta i aturar-s'hi ☐ sense xocar ☐ llauna a la meta ☐ menys de 20 s ☐ seguir la cinta|Comprobaciones: ☐ meta y pararse ☐ sin chocar ☐ lata a la meta ☐ menos de 20 s ☐ seguir la cinta", big: false },
+          { q: "Consell del company/a provador:|Consejo del compañero/a probador:" }
+        ] },
+      { id: 'p2', t: "Codi: la vitrina de veritat|Código: la vitrina de verdad", k: 'codi',
+        intro: "A makecode.microbit.org: nou projecte → Extensions → busca «maqueen» → JavaScript → enganxa el codi → Descarrega. Cable fora i robot a terra! Proveu la caixa a 40, 60 i 80 cm.|En makecode.microbit.org: nuevo proyecto → Extensiones → busca «maqueen» → JavaScript → pega el código → Descarga. ¡Cable fuera y robot en el suelo! Probad la caja a 40, 60 y 80 cm.",
+        items: [
+          { t: "Para davant la vitrina amb llums de colors|Para delante de la vitrina con luces de colores", prog: 'forever{ if:dist<10{ stop:all car:all,red } else{ run:all,fwd,150 car:all,green } }' }
+        ] }
+    ]
+  },
+
+  /* ---------- Sessió 2 · Programa i prova ---------- */
+  'k8-2': {
+    obj: [
+      "L'alumne/a fa servir el cicle planifica → programa → prova → millora per construir la seva missió en versions.|El alumno/a usa el ciclo planifica → programa → prueba → mejora para construir su misión en versiones.",
+      "L'alumne/a divideix una missió llarga en trams i els programa i prova d'un en un.|El alumno/a divide una misión larga en tramos y los programa y prueba de uno en uno.",
+      "L'alumne/a depura amb llums del cotxe i amb el número de la distància a la pantalla.|El alumno/a depura con luces del coche y con el número de la distancia en la pantalla.",
+      "L'alumne/a comprova al robot real els valors del sensor d'ultrasons i el compara amb el metre.|El alumno/a comprueba en el robot real los valores del sensor de ultrasonidos y los compara con el metro."
+    ],
+    comp: [
+      "Competència digital (CD5): depurar i millorar un programa propi|Competencia digital (CD5): depurar y mejorar un programa propio",
+      "Competència STEM (STEM2): provar una hipòtesi canviant una sola variable cada vegada|Competencia STEM (STEM2): probar una hipótesis cambiando una sola variable cada vez",
+      "Matemàtiques: mesura i comparació de distàncies|Matemáticas: medida y comparación de distancias",
+      "Competència personal i d'aprendre a aprendre: perseverar davant l'error|Competencia personal y de aprender a aprender: perseverar ante el error"
+    ],
+    vocab: [
+      ["Cicle de disseny|Ciclo de diseño", "Planificar, programar, provar i millorar, una vegada i una altra.|Planificar, programar, probar y mejorar, una y otra vez."],
+      ["Versió|Versión", "Cada volta del cicle: v1, v2, v3…|Cada vuelta del ciclo: v1, v2, v3…"],
+      ["Tram|Tramo", "Un tros de la missió que es pot programar i provar sol.|Un trozo de la misión que se puede programar y probar solo."],
+      ["Depurar|Depurar", "Buscar i arreglar els errors (bugs) d'un programa.|Buscar y arreglar los errores (bugs) de un programa."],
+      ["Llums de depuració|Luces de depuración", "Llums que s'encenen en una part del programa per saber què fa el robot.|Luces que se encienden en una parte del programa para saber qué hace el robot."]
+    ],
+    mat: {
+      aula: [
+        "Un ordinador per alumne/a amb Numi Tech obert a la sessió «Programa i prova»|Un ordenador por alumno/a con Numi Tech abierto en la sesión «Programa y prueba»",
+        "Projector i la presentació d'aquesta sessió|Proyector y la presentación de esta sesión",
+        "Un kit per grup de 3-4: Maqueen Lite V5 amb micro:bit V2, cable USB i piles carregades|Un kit por grupo de 3-4: Maqueen Lite V5 con micro:bit V2, cable USB y pilas cargadas",
+        "Un metre i una caixa de sabates per grup; els fulls de disseny de la sessió anterior|Un metro y una caja de zapatos por grupo; las hojas de diseño de la sesión anterior"
+      ],
+      imprimir: ["Fitxa: depuradors de paper (una per parella)|Ficha: depuradores de papel (una por pareja)", "Codi: llums i números al robot real|Código: luces y números en el robot real"],
+      prep: [
+        "Tornar els fulls de disseny a cada alumne/a.|Devolver las hojas de diseño a cada alumno/a.",
+        "Descarregar els dos programes de l'imprimible a un kit i comprovar que la pantalla mostra la distància.|Descargar los dos programas del imprimible en un kit y comprobar que la pantalla muestra la distancia.",
+        "Imprimir una fitxa de depuradors per parella.|Imprimir una ficha de depuradores por pareja.",
+        "Pensar dues o tres missions dels alumnes que puguin servir d'exemple al projector.|Pensar dos o tres misiones de los alumnos que puedan servir de ejemplo en el proyector."
+      ]
+    },
+    plan: [
+      { min: 4, t: "Recordem i el banc de proves|Recordamos y el banco de pruebas", fase: 'inici',
+        fa: "Repassa què té una bona missió i presenta el repte d'avui: que la missió de cada alumne/a funcioni de veritat. Explica que els enginyers proven cada robot moltes vegades.|Repasa qué tiene una buena misión y presenta el reto de hoy: que la misión de cada alumno/a funcione de verdad. Explica que los ingenieros prueban cada robot muchas veces.",
+        diu: ["Qui recorda les quatre parts d'una bona missió?|¿Quién recuerda las cuatro partes de una buena misión?", "Creieu que el programa us funcionarà a la primera?|¿Creéis que el programa os funcionará a la primera?"],
+        slides: ['s1', 's2'], app: "Encara no: pantalles apagades.|Todavía no: pantallas apagadas.", org: "Tot el grup|Todo el grupo" },
+      { min: 8, t: "Cicle, trams i depuració|Ciclo, tramos y depuración", fase: 'teoria',
+        fa: "Explica el cicle amb l'animació. Executa la demo dels trams i fes notar que primer va el seguidor i després la parada. Ensenya els llums de depuració i les cantonades de 90° (pregunta abans per què el robot hi gira sobre si mateix). Acaba amb la demo que xoca: una prova no és prou.|Explica el ciclo con la animación. Ejecuta la demo de los tramos y haz notar que primero va el seguidor y después la parada. Enseña las luces de depuración y las esquinas de 90° (pregunta antes por qué el robot gira sobre sí mismo). Termina con la demo que choca: una prueba no es suficiente.",
+        diu: ["Quins trams té aquesta missió?|¿Qué tramos tiene esta misión?", "Si els llums es posen vermells però el robot no para, on és el bug?|Si las luces se ponen rojas pero el robot no para, ¿dónde está el bug?", "Per què aquest programa funcionava ahir i avui xoca?|¿Por qué este programa funcionaba ayer y hoy choca?"],
+        slides: ['s3', 's4', 's5', 's6', 's7', 's8'], app: "Encara no: tota l'atenció a la projecció.|Todavía no: toda la atención en la proyección.", org: "Tot el grup|Todo el grupo" },
+      { min: 10, t: "Depuradors de paper|Depuradores de papel", fase: 'desconnectat',
+        fa: "Per parelles amb la fitxa. Cada exercici té una pista dibuixada i un programa amb un bug. Un fa de robot (mou el dit per la pista llegint el programa) i l'altre fa de depurador/a: on falla?, quin bloc cal canviar? Canvien els papers a cada exercici. A l'últim exercici, cadascú escriu els trams de la seva pròpia missió.|Por parejas con la ficha. Cada ejercicio tiene una pista dibujada y un programa con un bug. Uno hace de robot (mueve el dedo por la pista leyendo el programa) y el otro hace de depurador/a: ¿dónde falla?, ¿qué bloque hay que cambiar? Cambian los papeles en cada ejercicio. En el último ejercicio, cada uno escribe los tramos de su propia misión.",
+        diu: ["Llegiu el programa bloc a bloc, sense saltar-vos-en cap.|Leed el programa bloque a bloque, sin saltaros ninguno.", "No us dic on és el bug: busqueu el moment en què el robot fa una cosa diferent de la que volíeu.|No os digo dónde está el bug: buscad el momento en el que el robot hace algo diferente de lo que queríais."],
+        slides: ['s9'], app: "Cap: activitat sense pantalla.|Ninguna: actividad sin pantalla.", org: "Per parelles|Por parejas" },
+      { min: 12, t: "A l'ordinador: la versió 1|En el ordenador: la versión 1", fase: 'ordinador',
+        fa: "Cada alumne/a obre la sessió, mira les targetes i arriba al seu editor: revisa la missió, la desa i la programa (versió 1) amb el pla de trams de la fitxa. Després, les preguntes i el bloc equivocat. Si algú no té missió, la dissenya ara (l'editor ho permet al pas anterior).|Cada alumno/a abre la sesión, mira las tarjetas y llega a su editor: revisa la misión, la guarda y la programa (versión 1) con el plan de tramos de la ficha. Después, las preguntas y el bloque equivocado. Si alguien no tiene misión, la diseña ahora (el editor lo permite en el paso anterior).",
+        diu: ["Comença pel primer tram i prova'l abans d'afegir-ne un altre.|Empieza por el primer tramo y pruébalo antes de añadir otro.", "Què et diuen els llums? Quina branca del «si» s'està fent?|¿Qué te dicen las luces? ¿Qué rama del «si» se está haciendo?"],
+        slides: ['s10'], app: "De «La missió» fins a «Investiga»: targetes, revisa la missió, versió 1, preguntes i el bloc equivocat.|De «La misión» hasta «Investiga»: tarjetas, revisa la misión, versión 1, preguntas y el bloque equivocado.", org: "Individual|Individual" },
+      { min: 8, t: "Reptes del banc de proves|Retos del banco de pruebas", fase: 'ordinador',
+        fa: "Pausa activa junts. Després, tres reptes: arreglar el seguidor de les cantonades de 90°, els llums de depuració (3 pistes) i la missió a trams (3 pistes). Recorda que el repte de les cantonades els anirà bé per a la seva pròpia cinta.|Pausa activa juntos. Después, tres retos: arreglar el seguidor de las esquinas de 90°, las luces de depuración (3 pistas) y la misión por tramos (3 pistas). Recuerda que el reto de las esquinas les irá bien para su propia cinta.",
+        diu: ["Quina roda és la de dins del revolt?|¿Qué rueda es la de dentro de la curva?", "El vostre programa funciona a les tres pistes o només a una?|¿Vuestro programa funciona en las tres pistas o solo en una?"],
+        slides: ['s11'], app: "«Pausa activa», les cantonades de 90°, els llums de depuració i la missió a trams.|«Pausa activa», las esquinas de 90°, las luces de depuración y la misión por tramos.", org: "Tot el grup i després individual|Todo el grupo y después individual" },
+      { min: 10, t: "Llums i números al robot real|Luces y números en el robot real", fase: 'robot',
+        fa: "Grups de 3-4 per kit. Primer descarreguen el programa «Mostra la distància» de l'imprimible: el pilot aguanta el robot a terra (motors aturats) i el mesurador/a posa la caixa a 10, 20 i 30 cm amb el metre. Apunten el número de la pantalla al costat de la mesura del metre: coincideixen? Després, el programa dels llums de depuració: verd mentre avança, vermell quan para davant la caixa.|Grupos de 3-4 por kit. Primero descargan el programa «Muestra la distancia» del imprimible: el piloto aguanta el robot en el suelo (motores parados) y el medidor/a pone la caja a 10, 20 y 30 cm con el metro. Apuntan el número de la pantalla al lado de la medida del metro: ¿coinciden? Después, el programa de las luces de depuración: verde mientras avanza, rojo cuando para delante de la caja.",
+        diu: ["La pantalla diu el mateix que el metre? Per quants centímetres es diferencia?|¿La pantalla dice lo mismo que el metro? ¿Por cuántos centímetros se diferencia?", "Si poseu la caixa de biaix, què passa amb el número?|Si ponéis la caja de lado, ¿qué pasa con el número?"],
+        slides: ['s12', 's13'], app: "Cap: MakeCode i el robot de veritat.|Ninguna: MakeCode y el robot de verdad.", org: "Grups de 3-4 per kit amb papers|Grupos de 3-4 por kit con papeles" },
+      { min: 5, t: "Crea: la versió 2|Crea: la versión 2", fase: 'crea',
+        fa: "De tornada a l'ordinador, cada alumne/a millora la missió (versió 2) i la torna a programar. Qui no acabi, ho farà a l'inici de la sessió que ve.|De vuelta al ordenador, cada alumno/a mejora la misión (versión 2) y la vuelve a programar. Quien no termine, lo hará al principio de la próxima sesión.",
+        diu: ["Quina millora has fet? Continua tenint solució?|¿Qué mejora has hecho? ¿Sigue teniendo solución?"],
+        slides: ['s14'], app: "Pas «Crea»: millora la missió i la versió 2 del programa.|Paso «Crea»: mejora la misión y la versión 2 del programa.", org: "Individual|Individual" },
+      { min: 3, t: "Tancament i tiquet de sortida|Cierre y ticket de salida", fase: 'tancament',
+        fa: "Repassa les tres idees amb el resum i les preguntes finals de l'app. A la porta, una pregunta del tiquet a cada alumne/a.|Repasa las tres ideas con el resumen y las preguntas finales de la app. En la puerta, una pregunta del ticket a cada alumno/a.",
+        diu: ["Qui ha trobat un bug avui? Com l'heu trobat?|¿Quién ha encontrado un bug hoy? ¿Cómo lo habéis encontrado?"],
+        slides: ['s15', 's16'], app: "«Tancament»: les dues preguntes finals i com m'he sentit.|«Cierre»: las dos preguntas finales y cómo me he sentido.", org: "Tot el grup|Todo el grupo" }
+    ],
+    errors: [
+      ["Programa tota la missió de cop i, quan falla, no sap on és l'error.|Programa toda la misión de golpe y, cuando falla, no sabe dónde está el error.",
+        "Que esborri (o tregui) tot menys el primer tram i el provi sol. Quan funcioni, que n'afegeixi un altre.|Que borre (o saque) todo menos el primer tramo y lo pruebe solo. Cuando funcione, que añada otro."],
+      ["Canvia molts números alhora i no sap quin canvi ha servit.|Cambia muchos números a la vez y no sabe qué cambio ha servido.",
+        "Proposa la regla de l'enginyer/a: un sol canvi per prova. Que apunti a la fitxa què ha canviat i què ha passat.|Propón la regla del ingeniero/a: un solo cambio por prueba. Que apunte en la ficha qué ha cambiado y qué ha pasado."],
+      ["El robot es surt de la cinta a les cantonades de 90°.|El robot se sale de la cinta en las esquinas de 90°.",
+        "Pregunta quina roda és la de dins del revolt i què passaria si anés enrere. Que miri el repte de les cantonades.|Pregunta qué rueda es la de dentro de la curva y qué pasaría si fuera hacia atrás. Que mire el reto de las esquinas."],
+      ["Posa la condició al revés (distància &gt; 10 en lloc de &lt; 10) i el robot no arrenca.|Pone la condición al revés (distancia &gt; 10 en lugar de &lt; 10) y el robot no arranca.",
+        "Que hi posi llums de depuració: quina branca s'està fent quan el robot és lluny? Llegiu la condició en veu alta.|Que ponga luces de depuración: ¿qué rama se está haciendo cuando el robot está lejos? Leed la condición en voz alta."],
+      ["Treu els obstacles de la missió perquè no se'n surt.|Quita los obstáculos de la misión porque no se sale.",
+        "Valora l'esforç i proposa que primer facin funcionar la missió simplificada i després hi tornin a posar un obstacle (versió 3).|Valora el esfuerzo y propón que primero hagan funcionar la misión simplificada y después vuelvan a poner un obstáculo (versión 3)."]
+    ],
+    diff: {
+      mes: "Fer servir una variable per a la velocitat i canviar-la en un sol lloc. Provar el programa a la missió d'un company/a: funciona també allà?|Usar una variable para la velocidad y cambiarla en un solo sitio. Probar el programa en la misión de un compañero/a: ¿funciona también allí?",
+      menys: "Programar només el primer tram de la missió amb ajuda dels reptes de la sessió (copiar el seguidor o la parada i adaptar-los). Fer servir la pista del pas a pas: llums de colors a cada branca.|Programar solo el primer tramo de la misión con ayuda de los retos de la sesión (copiar el seguidor o la parada y adaptarlos). Usar la pista del paso a paso: luces de colores en cada rama."
+    },
+    aval: {
+      ticket: ["Quins són els quatre passos del cicle de l'enginyer/a?|¿Cuáles son los cuatro pasos del ciclo del ingeniero/a?", "Com t'ajuden els llums de depuració a trobar un bug?|¿Cómo te ayudan las luces de depuración a encontrar un bug?"],
+      rubric: [
+        ["Programació a trams|Programación por tramos", "Divideix la missió en trams i els prova d'un en un.|Divide la misión en tramos y los prueba de uno en uno.", "Ho programa tot de cop i li costa saber on falla.|Lo programa todo de golpe y le cuesta saber dónde falla."],
+        ["Depuració|Depuración", "Fa servir llums o números per entendre què fa el robot i canvia una sola cosa cada vegada.|Usa luces o números para entender qué hace el robot y cambia una sola cosa cada vez.", "Canvia blocs a l'atzar fins que funciona.|Cambia bloques al azar hasta que funciona."],
+        ["Millora|Mejora", "Fa una versió 2 de la missió i del programa, i el prova en situacions diferents.|Hace una versión 2 de la misión y del programa, y lo prueba en situaciones diferentes.", "Deixa la primera versió que funciona una vegada.|Deja la primera versión que funciona una vez."]
+      ]
+    },
+    casa: "A casa, amb el mòbil, podeu repetir els reptes de la sessió i continuar la versió 2 de la vostra missió. Expliqueu a algú de casa el cicle de l'enginyer/a amb un exemple de la vida diària: una recepta que surt millor cada vegada, un avió de paper…|En casa, con el móvil, podéis repetir los retos de la sesión y continuar la versión 2 de vuestra misión. Explicad a alguien de casa el ciclo del ingeniero/a con un ejemplo de la vida diaria: una receta que sale mejor cada vez, un avión de papel…",
+    slides: [
+      { id: 's1', k: 'portada', t: "Programa i prova|Programa y prueba", x: "Avui la teva missió cobra vida al banc de proves.|Hoy tu misión cobra vida en el banco de pruebas.",
+        nota: "Recorda que els errors són part de la feina: avui comptarem bugs trobats, no programes perfectes.|Recuerda que los errores son parte del trabajo: hoy contaremos bugs encontrados, no programas perfectos." },
+      { id: 's2', k: 'repas', t: "Què té una bona missió?|¿Qué tiene una buena misión?", punts: ["Un objectiu clar|Un objetivo claro", "Obstacles que fan pensar|Obstáculos que hacen pensar", "Un sensor necessari|Un sensor necesario", "Comprovacions|Comprobaciones"],
+        nota: "Demana a dos o tres alumnes que expliquin la seva missió en una frase.|Pide a dos o tres alumnos que expliquen su misión en una frase." },
+      { id: 's3', k: 'anim', t: "El cicle de l'enginyer/a|El ciclo del ingeniero/a", anim: 'k8cycle', x: "Planifica, programa, prova i millora… i torna-hi.|Planifica, programa, prueba y mejora… y otra vez.",
+        nota: "Posa exemples fora de la robòtica: un avió de paper, una recepta. A cada volta surt una versió millor.|Pon ejemplos fuera de la robótica: un avión de papel, una receta. En cada vuelta sale una versión mejor." },
+      { id: 's4', k: 'robo', t: "Dos trams|Dos tramos", x: "Tram 1: seguir la cinta. Tram 2: parar davant la caixa.|Tramo 1: seguir la cinta. Tramo 2: parar delante de la caja.",
+        robo: { w: { w: 120, h: 80, bot: [15, 65, 90], lines: [{ p: [[15, 65], [45, 65], [55, 55], [55, 35], [65, 25], [115, 25]] }], walls: [[90.5, 20.5, 9, 9]] }, prog: 'forever{ if:dist<10{ stop:all } else{ if:L=1&&R=0{ run:L,fwd,40 run:R,fwd,140 } else{ if:R=1&&L=0{ run:L,fwd,140 run:R,fwd,40 } else{ run:all,fwd,120 } } } }' },
+        nota: "Assenyala on és cada tram dins del programa: la parada és el «si» de fora; el seguidor, dins del «si no».|Señala dónde está cada tramo dentro del programa: la parada es el «si» de fuera; el seguidor, dentro del «si no»." },
+      { id: 's5', k: 'anim', t: "Llums que expliquen|Luces que explican", anim: 'k8debug', x: "La pantalla mostra la distància i els llums diuen quina branca s'està fent.|La pantalla muestra la distancia y las luces dicen qué rama se está haciendo.",
+        nota: "Explica que un llum en cada branca del «si» és com preguntar al robot «què estàs pensant?».|Explica que una luz en cada rama del «si» es como preguntar al robot «¿qué estás pensando?»." },
+      { id: 's6', k: 'robo', t: "Llums de depuració|Luces de depuración", x: "Verd: endavant. Vermell: atura't.|Verde: adelante. Rojo: párate.",
+        robo: { w: { w: 120, h: 60, bot: [15, 30, 90], walls: [[90.5, 10.5, 9, 39]] }, prog: 'forever{ if:dist<10{ stop:all car:all,red } else{ run:all,fwd,150 car:all,green } }' },
+        nota: "Pregunta: si els llums es posessin vermells però el robot continués, on seria el bug? (Als motors, no a la condició.) És el pas «Investiga» de l'app.|Pregunta: si las luces se pusieran rojas pero el robot siguiera, ¿dónde estaría el bug? (En los motores, no en la condición.) Es el paso «Investiga» de la app." },
+      { id: 's7', k: 'robo', t: "Cantonades de 90°|Esquinas de 90°", x: "A la cantonada, la roda de dins va enrere: el robot gira sobre si mateix.|En la esquina, la rueda de dentro va hacia atrás: el robot gira sobre sí mismo.",
+        robo: { w: { w: 120, h: 80, bot: [15, 65, 90], lines: [{ p: [[15, 65], [55, 65], [55, 25], [105, 25], [105, 65]] }] }, prog: 'forever{ if:L=1&&R=0{ run:L,back,100 run:R,fwd,140 } else{ if:R=1&&L=0{ run:L,fwd,140 run:R,back,100 } else{ run:all,fwd,120 } } }' },
+        tip: "Abans d'executar: se sortirà al primer revolt?|Antes de ejecutar: ¿se saldrá en la primera curva?",
+        nota: "L'editor fa la cinta de casella en casella, amb cantonades de 90°. Amb el seguidor en arc de la unitat 4, el robot se'n surt; amb la roda de dins enrere, no.|El editor hace la cinta de casilla en casilla, con esquinas de 90°. Con el seguidor en arco de la unidad 4, el robot se sale; con la rueda de dentro hacia atrás, no." },
+      { id: 's8', k: 'robo', t: "Una prova no és prou|Una prueba no es suficiente", x: "Algú ha mogut la caixa: el programa de temps fixos hi xoca.|Alguien ha movido la caja: el programa de tiempos fijos choca.",
+        robo: { w: { w: 120, h: 60, bot: [15, 30, 90], walls: [[60.5, 10.5, 9, 39]], time: 6 }, prog: 'start{ run:all,fwd,150 wait:4000 stop:all }' },
+        nota: "Lliga-ho amb les pistes alternatives dels reptes: el mateix programa ha de funcionar en situacions diferents.|Relaciónalo con las pistas alternativas de los retos: el mismo programa tiene que funcionar en situaciones diferentes." },
+      { id: 's9', k: 'activitat', t: "Depuradors de paper|Depuradores de papel", timer: 10, punts: ["Un fa de robot amb el dit; l'altre, de depurador/a.|Uno hace de robot con el dedo; el otro, de depurador/a.", "On falla? Quin bloc cal canviar?|¿Dónde falla? ¿Qué bloque hay que cambiar?", "Canvieu els papers a cada exercici.|Cambiad los papeles en cada ejercicio.", "Al final: escriu els trams de la teva missió.|Al final: escribe los tramos de tu misión."],
+        nota: "Les solucions són al solucionari de la fitxa. No les donis: pregunta què fa el robot just abans de fallar.|Las soluciones están en el solucionario de la ficha. No las des: pregunta qué hace el robot justo antes de fallar." },
+      { id: 's10', k: 'activitat', t: "La versió 1 de la teva missió|La versión 1 de tu misión", timer: 12, punts: ["Revisa la missió i desa-la.|Revisa la misión y guárdala.", "Programa el primer tram i prova'l.|Programa el primer tramo y pruébalo.", "Afegeix els altres trams d'un en un.|Añade los otros tramos de uno en uno.", "Llums de depuració si alguna cosa falla.|Luces de depuración si algo falla."],
+        nota: "Passa per les taules amb la pregunta clau: en quin tram ets? Funciona el tram anterior?|Pasa por las mesas con la pregunta clave: ¿en qué tramo estás? ¿Funciona el tramo anterior?" },
+      { id: 's11', k: 'repte', t: "Reptes del banc de proves|Retos del banco de pruebas", timer: 8, punts: ["1. Les cantonades de 90°|1. Las esquinas de 90°", "2. Llums de depuració (3 pistes)|2. Luces de depuración (3 pistas)", "3. A trams (3 pistes)|3. Por tramos (3 pistas)"],
+        nota: "Qui acabi pot aplicar el seguidor de cantonades a la seva pròpia missió.|Quien termine puede aplicar el seguidor de esquinas a su propia misión." },
+      { id: 's12', k: 'activitat', t: "Llums i números al robot real|Luces y números en el robot real", timer: 10, punts: ["Programa 1: la pantalla mostra la distància.|Programa 1: la pantalla muestra la distancia.", "Caixa a 10, 20 i 30 cm: què diu la pantalla?|Caja a 10, 20 y 30 cm: ¿qué dice la pantalla?", "Programa 2: verd endavant, vermell atura't.|Programa 2: verde adelante, rojo párate.", "Apunteu les diferències amb el metre.|Apuntad las diferencias con el metro."],
+        code: "Maqueen_V5.I2CInit()\nbasic.forever(function () {\n    basic.showNumber(Maqueen_V5.Ultrasonic())\n})",
+        nota: "Amb el programa 1 el robot no es mou: el pilot el pot aguantar a terra. Els números de més d'una xifra passen per la pantalla, com al simulador.|Con el programa 1 el robot no se mueve: el piloto lo puede aguantar en el suelo. Los números de más de una cifra pasan por la pantalla, como en el simulador." },
+      { id: 's13', k: 'concepte', t: "Depurar al robot real|Depurar en el robot real", punts: ["Mostra la distància a la pantalla per saber què veu.|Muestra la distancia en la pantalla para saber qué ve.", "Un color de llum per a cada branca del «si».|Un color de luz para cada rama del «si».", "Un sol canvi per prova, i apunta'l.|Un solo cambio por prueba, y apúntalo.", "Cable fora i robot a terra a cada prova.|Cable fuera y robot en el suelo en cada prueba."],
+        nota: "Remarca que aquestes tècniques serveixen exactament igual al simulador i al robot real.|Remarca que estas técnicas sirven exactamente igual en el simulador y en el robot real." },
+      { id: 's14', k: 'activitat', t: "Crea: la versió 2|Crea: la versión 2", timer: 5, punts: ["Millora la missió: un revolt, una caixa, una llauna…|Mejora la misión: una curva, una caja, una lata…", "Programa la versió 2.|Programa la versión 2.", "Comprova que continua tenint solució.|Comprueba que sigue teniendo solución."],
+        nota: "Si no hi ha temps per acabar-la, la versió 2 es pot fer a l'inici de la sessió que ve o a casa.|Si no hay tiempo para terminarla, la versión 2 se puede hacer al principio de la próxima sesión o en casa." },
+      { id: 's15', k: 'resum', t: "Què hem après avui|Qué hemos aprendido hoy", punts: ["Planifica, programa, prova i millora.|Planifica, programa, prueba y mejora.", "Les missions llargues, a trams.|Las misiones largas, por tramos.", "Els llums i la pantalla ajuden a depurar.|Las luces y la pantalla ayudan a depurar."],
+        nota: "Pregunta quants bugs ha trobat cada alumne/a avui i celebra els que més n'han trobat.|Pregunta cuántos bugs ha encontrado cada alumno/a hoy y celebra a los que más han encontrado." },
+      { id: 's16', k: 'tiquet', t: "Tiquet de sortida|Ticket de salida", punts: ["Els quatre passos del cicle de l'enginyer/a.|Los cuatro pasos del ciclo del ingeniero/a.", "Com t'ajuden els llums de depuració?|¿Cómo te ayudan las luces de depuración?"],
+        nota: "Anota qui encara no té la versió 1 funcionant: comença per ells la sessió que ve.|Anota quién todavía no tiene la versión 1 funcionando: empieza por ellos la próxima sesión." }
+    ],
+    print: [
+      { id: 'p1', t: "Fitxa: depuradors de paper|Ficha: depuradores de papel", k: 'fitxa',
+        intro: "Un/a de vosaltres fa de robot i mou el dit per la pista llegint el programa. L'altre/a fa de depurador/a. Cada quadre de la pista fa 10 cm.|Uno/a de vosotros hace de robot y mueve el dedo por la pista leyendo el programa. El otro/a hace de depurador/a. Cada cuadro de la pista mide 10 cm.",
+        items: [
+          { q: "Aquest robot hauria de parar davant la caixa, però hi xoca. Quin bloc està malament?|Este robot debería pararse delante de la caja, pero choca. ¿Qué bloque está mal?", w: { w: 120, h: 60, bot: [15, 30, 90], walls: [[80.5, 10.5, 9, 39]] }, rprog: 'forever{ if:dist>10{ stop:all } else{ run:all,fwd,150 } }',
+            sol: "La condició està al revés: ha de ser «distància &lt; 10». Ara el robot s'atura quan és lluny i avança quan és a prop.|La condición está al revés: tiene que ser «distancia &lt; 10». Ahora el robot se para cuando está lejos y avanza cuando está cerca." },
+          { q: "Hauria d'arribar a la meta, girar a l'esquerra i entrar a la zona de dalt. Gira cap a l'altre costat. Per què?|Debería llegar a la meta, girar a la izquierda y entrar en la zona de arriba. Gira hacia el otro lado. ¿Por qué?", w: { w: 120, h: 80, bot: [15, 65, 90], zones: [{ id: 'm', r: [50, 0, 20, 20], col: 'green', label: 'META|META' }] }, rprog: 'start{ run:all,fwd,150 wait:2800 stop:all run:L,fwd,100 run:R,back,100 wait:590 stop:all run:all,fwd,150 wait:3300 stop:all }',
+            sol: "Per girar a l'esquerra, el motor esquerre ha d'anar enrere i el dret endavant. Estan canviats.|Para girar a la izquierda, el motor izquierdo tiene que ir hacia atrás y el derecho hacia delante. Están cambiados." },
+          { q: "Els llums es posen vermells davant la caixa, però el robot no para del tot i gira. Quin bloc cal canviar?|Las luces se ponen rojas delante de la caja, pero el robot no para del todo y gira. ¿Qué bloque hay que cambiar?", rprog: 'forever{ if:dist<10{ car:all,red stop:L } else{ car:all,green run:all,fwd,150 } }',
+            sol: "«Atura el motor esquerre» només para una roda. Ha de ser «atura els dos».|«Para el motor izquierdo» solo para una rueda. Tiene que ser «para los dos»." },
+          { q: "La teva missió: escriu-ne els trams en ordre (Tram 1…, Tram 2…, Tram 3…) i quin sensor fa servir cada un.|Tu misión: escribe sus tramos en orden (Tramo 1…, Tramo 2…, Tramo 3…) y qué sensor usa cada uno.", big: true,
+            sol: "Resposta oberta. Exemple: tram 1, seguir la cinta (sensors de línia); tram 2, parar davant la caixa (ultrasons).|Respuesta abierta. Ejemplo: tramo 1, seguir la cinta (sensores de línea); tramo 2, parar delante de la caja (ultrasonidos)." }
+        ] },
+      { id: 'p2', t: "Codi: llums i números al robot real|Código: luces y números en el robot real", k: 'codi',
+        intro: "A makecode.microbit.org: nou projecte → Extensions → «maqueen» → JavaScript → enganxa el codi → Descarrega. Amb el primer programa el robot no es mou: aguanteu-lo a terra i moveu la caixa.|En makecode.microbit.org: nuevo proyecto → Extensiones → «maqueen» → JavaScript → pega el código → Descarga. Con el primer programa el robot no se mueve: aguantadlo en el suelo y moved la caja.",
+        items: [
+          { t: "1. Mostra la distància|1. Muestra la distancia", prog: 'forever{ num:dist }' },
+          { t: "2. Llums de depuració|2. Luces de depuración", prog: 'forever{ if:dist<10{ stop:all car:all,red } else{ run:all,fwd,150 car:all,green } }' }
+        ] }
+    ]
+  },
+
+  /* ---------- Sessió 3 · Del simulador al robot de veritat ---------- */
+  'k8-3': {
+    obj: [
+      "L'alumne/a passa un programa del simulador a MakeCode amb el botó &lt;/&gt; i el descarrega a la micro:bit del Maqueen.|El alumno/a pasa un programa del simulador a MakeCode con el botón &lt;/&gt; y lo descarga en la micro:bit del Maqueen.",
+      "L'alumne/a relaciona els blocs amb les línies de JavaScript de l'extensió «Maqueen».|El alumno/a relaciona los bloques con las líneas de JavaScript de la extensión «Maqueen».",
+      "L'alumne/a calibra la velocitat i el gir del seu robot: mesura, calcula i ajusta.|El alumno/a calibra la velocidad y el giro de su robot: mide, calcula y ajusta.",
+      "L'alumne/a explica per què els programes amb sensors són més fiables al món real que els de temps fixos.|El alumno/a explica por qué los programas con sensores son más fiables en el mundo real que los de tiempos fijos."
+    ],
+    comp: [
+      "Competència digital (CD5): transferir un programa entre entorns i llenguatges|Competencia digital (CD5): transferir un programa entre entornos y lenguajes",
+      "Competència STEM (STEM2): mesurar, calcular i ajustar un sistema real (calibratge)|Competencia STEM (STEM2): medir, calcular y ajustar un sistema real (calibración)",
+      "Matemàtiques: velocitat = distància ÷ temps; proporcionalitat|Matemáticas: velocidad = distancia ÷ tiempo; proporcionalidad",
+      "Ciències i tecnologia: diferències entre un model (simulador) i la realitat|Ciencias y tecnología: diferencias entre un modelo (simulador) y la realidad"
+    ],
+    vocab: [
+      ["MakeCode|MakeCode", "L'editor de programes de la micro:bit, amb blocs i JavaScript.|El editor de programas de la micro:bit, con bloques y JavaScript."],
+      ["JavaScript|JavaScript", "Un llenguatge de programació escrit amb text; fa el mateix que els blocs.|Un lenguaje de programación escrito con texto; hace lo mismo que los bloques."],
+      ["Fitxer .hex|Archivo .hex", "El programa preparat per a la micro:bit; es copia a la unitat MICROBIT.|El programa preparado para la micro:bit; se copia en la unidad MICROBIT."],
+      ["Calibrar|Calibrar", "Mesurar el que fa el robot de veritat i ajustar els números del programa.|Medir lo que hace el robot de verdad y ajustar los números del programa."],
+      ["Simulador|Simulador", "Un model a l'ordinador que es comporta com el robot real.|Un modelo en el ordenador que se comporta como el robot real."],
+      ["Fiable|Fiable", "Que funciona bé moltes vegades i en situacions diferents.|Que funciona bien muchas veces y en situaciones diferentes."]
+    ],
+    mat: {
+      aula: [
+        "Un ordinador per alumne/a amb Numi Tech obert a la sessió «Del simulador al robot de veritat» i MakeCode en una altra pestanya|Un ordenador por alumno/a con Numi Tech abierto en la sesión «Del simulador al robot de verdad» y MakeCode en otra pestaña",
+        "Projector i la presentació d'aquesta sessió|Proyector y la presentación de esta sesión",
+        "Un kit per grup de 3-4: Maqueen Lite V5 amb micro:bit V2, cable USB i piles carregades|Un kit por grupo de 3-4: Maqueen Lite V5 con micro:bit V2, cable USB y pilas cargadas",
+        "Per grup: cinta aïllant negra de 2 cm, cinta de pintor, un metre, un cronòmetre (o el del mòbil del professor/a) i una caixa de sabates|Por grupo: cinta aislante negra de 2 cm, cinta de pintor, un metro, un cronómetro (o el del móvil del profesor/a) y una caja de zapatos"
+      ],
+      imprimir: ["Pista: la pista de l'aula (una per grup)|Pista: la pista del aula (una por grupo)", "Codi: calibra el teu Maqueen|Código: calibra tu Maqueen"],
+      prep: [
+        "Reservar a terra, per a cada grup, un espai d'uns 130 × 90 cm llis (no catifa) per construir la pista.|Reservar en el suelo, para cada grupo, un espacio de unos 130 × 90 cm liso (no alfombra) para construir la pista.",
+        "Provar abans de classe el camí complet: botó &lt;/&gt; → MakeCode → Descarrega → micro:bit, en un dels ordinadors de l'aula.|Probar antes de clase el camino completo: botón &lt;/&gt; → MakeCode → Descarga → micro:bit, en uno de los ordenadores del aula.",
+        "Comprovar les piles: per a la calibració, que totes estiguin carregades de manera semblant.|Comprobar las pilas: para la calibración, que todas estén cargadas de manera parecida.",
+        "Imprimir la pista i el codi per grup.|Imprimir la pista y el código por grupo."
+      ]
+    },
+    plan: [
+      { min: 4, t: "Els robots de veritat|Los robots de verdad", fase: 'inici',
+        fa: "Mostra els kits i planteja la pregunta de la diapositiva 2. Recull hipòtesis i apunta-les a la pissarra: les revisareu al final de l'activitat amb el robot.|Muestra los kits y plantea la pregunta de la diapositiva 2. Recoge hipótesis y apúntalas en la pizarra: las revisaréis al final de la actividad con el robot.",
+        diu: ["El robot de veritat farà exactament el mateix que el del simulador?|¿El robot de verdad hará exactamente lo mismo que el del simulador?", "Què pot ser diferent al món real?|¿Qué puede ser diferente en el mundo real?"],
+        slides: ['s1', 's2'], app: "Encara no: pantalles apagades.|Todavía no: pantallas apagadas.", org: "Tot el grup|Todo el grupo" },
+      { min: 8, t: "De la pantalla al robot|De la pantalla al robot", fase: 'teoria',
+        fa: "Ensenya el camí del programa amb l'animació i, si pots, fes-lo en directe: un repte qualsevol → &lt;/&gt; → MakeCode → «Blocs». Compara una línia de JavaScript amb el seu bloc. Explica les diferències del món real, el calibratge amb números (52 cm en 4 s) i acaba amb la demo del robot que para a la cinta.|Enseña el camino del programa con la animación y, si puedes, hazlo en directo: un reto cualquiera → &lt;/&gt; → MakeCode → «Bloques». Compara una línea de JavaScript con su bloque. Explica las diferencias del mundo real, la calibración con números (52 cm en 4 s) y termina con la demo del robot que para en la cinta.",
+        diu: ["Quin bloc és <code>motorStop</code>?|¿Qué bloque es <code>motorStop</code>?", "Si el robot fa 52 cm en 4 segons, quants en fa en un segon?|Si el robot hace 52 cm en 4 segundos, ¿cuántos hace en un segundo?", "Aquest robot sap quants segons ha d'anar?|¿Este robot sabe cuántos segundos tiene que ir?"],
+        slides: ['s3', 's4', 's5', 's6', 's7'], app: "Encara no: tota l'atenció a la projecció.|Todavía no: toda la atención en la proyección.", org: "Tot el grup|Todo el grupo" },
+      { min: 10, t: "Construïm la pista de l'aula|Construimos la pista del aula", fase: 'desconnectat',
+        fa: "Grups de 3-4 amb l'imprimible de la pista. Dibuix a escala: cada quadre són 10 cm. Marquen els quatre cantons del tapet (120 × 80 cm) amb cinta de pintor i, mesurant amb el metre, enganxen la cinta negra seguint el dibuix (els revolts, amb trossos curts). Posen la caixa al lloc marcat i la sortida. Un/a membre del grup revisa les mides abans de donar-la per bona.|Grupos de 3-4 con el imprimible de la pista. Dibujo a escala: cada cuadro son 10 cm. Marcan las cuatro esquinas del tapete (120 × 80 cm) con cinta de pintor y, midiendo con el metro, pegan la cinta negra siguiendo el dibujo (las curvas, con trozos cortos). Ponen la caja en el sitio marcado y la salida. Un/a miembro del grupo revisa las medidas antes de darla por buena.",
+        diu: ["Si al dibuix són 6 quadres, quants centímetres són a terra?|Si en el dibujo son 6 cuadros, ¿cuántos centímetros son en el suelo?", "Els revolts suaus són més fàcils de seguir que les cantonades: feu-los amb trossos curts.|Las curvas suaves son más fáciles de seguir que las esquinas: hacedlas con trozos cortos."],
+        slides: ['s8'], app: "Cap: activitat sense pantalla.|Ninguna: actividad sin pantalla.", org: "Grups de 3-4 per kit|Grupos de 3-4 por kit" },
+      { min: 10, t: "A l'ordinador: MakeCode i calibrar|En el ordenador: MakeCode y calibrar", fase: 'ordinador',
+        fa: "Cada alumne/a obre la sessió i avança fins a la pausa activa: targetes, llegir JavaScript, ordenar els passos, el càlcul del calibratge, «On acabarà?», calibrar el gir i el bloc que depèn de les piles. Al pas «Calibra les teves passes», que toquin «Ho hem fet!»: és per a casa.|Cada alumno/a abre la sesión y avanza hasta la pausa activa: tarjetas, leer JavaScript, ordenar los pasos, el cálculo de la calibración, «¿Dónde terminará?», calibrar el giro y el bloque que depende de las pilas. En el paso «Calibra tus pasos», que toquen «¡Lo hemos hecho!»: es para casa.",
+        diu: ["Toca el botó &lt;/&gt; de qualsevol repte: reconeixes els blocs?|Toca el botón &lt;/&gt; de cualquier reto: ¿reconoces los bloques?", "Si el gir es queda curt, l'espera ha de ser més llarga o més curta?|Si el giro se queda corto, ¿la espera tiene que ser más larga o más corta?"],
+        slides: ['s9'], app: "De «La missió» fins a «Investiga».|De «La misión» hasta «Investiga».", org: "Individual|Individual" },
+      { min: 14, t: "Calibra el teu Maqueen|Calibra tu Maqueen", fase: 'robot',
+        fa: "Grups de 3-4 a la seva pista, amb papers (programador/a, pilot, mesurador/a, secretari/ària). <b>1)</b> Descarreguen «Endavant 4 segons»: mesuren la distància i calculen els cm per segon del seu robot. <b>2)</b> Descarreguen el gir de 590 ms damunt d'una creu de cinta: gira massa o massa poc? Ajusten l'espera de 20 en 20 ms fins que quedi a 90°. <b>3)</b> Descarreguen «La pista de l'aula» (seguir la cinta i parar a la caixa) i el proven dues vegades, amb la caixa a les dues posicions. Apunten tots els números a l'imprimible.|Grupos de 3-4 en su pista, con papeles (programador/a, piloto, medidor/a, secretario/a). <b>1)</b> Descargan «Adelante 4 segundos»: miden la distancia y calculan los cm por segundo de su robot. <b>2)</b> Descargan el giro de 590 ms encima de una cruz de cinta: ¿gira demasiado o demasiado poco? Ajustan la espera de 20 en 20 ms hasta que quede a 90°. <b>3)</b> Descargan «La pista del aula» (seguir la cinta y parar en la caja) y lo prueban dos veces, con la caja en las dos posiciones. Apuntan todos los números en el imprimible.",
+        diu: ["Quants cm per segon fa el vostre robot? I el del grup del costat?|¿Cuántos cm por segundo hace vuestro robot? ¿Y el del grupo de al lado?", "Per què el programa de la cinta no s'ha hagut de calibrar?|¿Por qué el programa de la cinta no se ha tenido que calibrar?", "Torneu a les hipòtesis de la pissarra: qui tenia raó?|Volved a las hipótesis de la pizarra: ¿quién tenía razón?"],
+        slides: ['s10', 's11', 's12'], app: "Cap: MakeCode i el robot de veritat.|Ninguna: MakeCode y el robot de verdad.", org: "Grups de 3-4 per kit amb papers|Grupos de 3-4 por kit con papeles" },
+      { min: 7, t: "Reptes a prova de piles|Retos a prueba de pilas", fase: 'ordinador',
+        fa: "Pausa activa junts i, a l'ordinador, els dos reptes: parar a la cinta a les 3 pistes i la pista de l'aula al simulador. Fes-los notar que és el mateix programa que acaben de provar al robot.|Pausa activa juntos y, en el ordenador, los dos retos: parar en la cinta en las 3 pistas y la pista del aula en el simulador. Hazles notar que es el mismo programa que acaban de probar en el robot.",
+        diu: ["Per què «repeteix fins que» funciona a les tres pistes i «espera» no?|¿Por qué «repite hasta que» funciona en las tres pistas y «espera» no?"],
+        slides: ['s13'], app: "«Pausa activa» i els reptes «A prova de piles» i «La pista de l'aula».|«Pausa activa» y los retos «A prueba de pilas» y «La pista del aula».", org: "Tot el grup i després individual|Todo el grupo y después individual" },
+      { min: 4, t: "Crea: la versió per al robot real|Crea: la versión para el robot real", fase: 'crea',
+        fa: "Cada alumne/a adapta la seva missió perquè es pugui construir a l'aula i en comença la versió per al robot real, amb almenys un sensor. Si no hi ha temps, la poden acabar a casa: la sessió que ve la portaran preparada.|Cada alumno/a adapta su misión para que se pueda construir en el aula y empieza la versión para el robot real, con al menos un sensor. Si no hay tiempo, la pueden terminar en casa: la próxima sesión la traerán preparada.",
+        diu: ["Quina espera del teu programa podries canviar per un sensor?|¿Qué espera de tu programa podrías cambiar por un sensor?"],
+        slides: ['s14'], app: "Pas «Crea»: adapta la missió i la versió per al robot real.|Paso «Crea»: adapta la misión y la versión para el robot real.", org: "Individual|Individual" },
+      { min: 3, t: "Tancament i tiquet de sortida|Cierre y ticket de salida", fase: 'tancament',
+        fa: "Repassa les tres idees i les preguntes finals de l'app. Recolliu els kits i deixeu enganxades les pistes si és possible: les farem servir a la Mostra.|Repasa las tres ideas y las preguntas finales de la app. Recoged los kits y dejad pegadas las pistas si es posible: las usaremos en la Muestra.",
+        diu: ["Qui em diu els tres passos del calibratge?|¿Quién me dice los tres pasos de la calibración?"],
+        slides: ['s15', 's16'], app: "«Tancament»: les dues preguntes finals i com m'he sentit.|«Cierre»: las dos preguntas finales y cómo me he sentido.", org: "Tot el grup|Todo el grupo" }
+    ],
+    errors: [
+      ["MakeCode no reconeix les ordres (surten en vermell) en enganxar el codi.|MakeCode no reconoce las órdenes (salen en rojo) al pegar el código.",
+        "Falta afegir l'extensió «maqueen» (Extensions → busca «maqueen»). Després, torneu a enganxar el codi.|Falta añadir la extensión «maqueen» (Extensiones → busca «maqueen»). Después, volved a pegar el código."],
+      ["El robot no fa res després de descarregar.|El robot no hace nada después de descargar.",
+        "Comproveu que l'interruptor del Maqueen està encès, les piles carregades i que el fitxer .hex s'ha copiat a la unitat MICROBIT (el llum de la micro:bit parpelleja mentre es copia).|Comprobad que el interruptor del Maqueen está encendido, las pilas cargadas y que el archivo .hex se ha copiado en la unidad MICROBIT (la luz de la micro:bit parpadea mientras se copia)."],
+      ["Divideix al revés per calcular la velocitat (4 ÷ 52).|Divide al revés para calcular la velocidad (4 ÷ 52).",
+        "Pregunta: quants centímetres fa en un segon? Si en 4 segons en fa 52, en un segon en farà menys de 52, però molts més que 1.|Pregunta: ¿cuántos centímetros hace en un segundo? Si en 4 segundos hace 52, en un segundo hará menos de 52, pero muchos más que 1."],
+      ["El robot real es desvia cap a un costat quan va recte.|El robot real se desvía hacia un lado cuando va recto.",
+        "És normal: els dos motors no són idèntics. Que provin de baixar una mica la velocitat de la roda que va més ràpida (p. ex. 150 i 142) o, millor, que facin servir la cinta.|Es normal: los dos motores no son idénticos. Que prueben a bajar un poco la velocidad de la rueda que va más rápida (p. ej. 150 y 142) o, mejor, que usen la cinta."],
+      ["Pensa que si el robot real no fa el mateix que el simulador és que s'ha equivocat.|Piensa que si el robot real no hace lo mismo que el simulador es que se ha equivocado.",
+        "Explica que el simulador és un model: s'hi assembla molt, però el món real té piles, terra i motors diferents. Calibrar és la feina normal dels enginyers.|Explica que el simulador es un modelo: se parece mucho, pero el mundo real tiene pilas, suelo y motores diferentes. Calibrar es el trabajo normal de los ingenieros."]
+    ],
+    diff: {
+      mes: "Calibrar també la velocitat 100 i comparar: és la meitat de ràpid que a 200? Fer una taula velocitat → cm/s i dibuixar-ne la gràfica. Provar la seva pròpia missió al robot real.|Calibrar también la velocidad 100 y comparar: ¿es la mitad de rápido que a 200? Hacer una tabla velocidad → cm/s y dibujar su gráfica. Probar su propia misión en el robot real.",
+      menys: "Fer només el primer pas del calibratge (endavant 4 segons i mesurar) amb la calculadora. Al simulador, fer el repte «A prova de piles» amb la pista de «repeteix fins que».|Hacer solo el primer paso de la calibración (adelante 4 segundos y medir) con la calculadora. En el simulador, hacer el reto «A prueba de pilas» con la pista de «repite hasta que»."
+    },
+    aval: {
+      ticket: ["Explica com es passa un programa del simulador al Maqueen.|Explica cómo se pasa un programa del simulador al Maqueen.", "Per què un programa amb sensors és més fiable al robot real?|¿Por qué un programa con sensores es más fiable en el robot real?"],
+      rubric: [
+        ["Del simulador a MakeCode|Del simulador a MakeCode", "Passa el programa amb &lt;/&gt;, afegeix l'extensió i el descarrega sense ajuda.|Pasa el programa con &lt;/&gt;, añade la extensión y lo descarga sin ayuda.", "Ho fa seguint els passos amb ajuda del grup o del professor/a.|Lo hace siguiendo los pasos con ayuda del grupo o del profesor/a."],
+        ["Calibratge|Calibración", "Mesura, calcula la velocitat (cm/s) i ajusta l'espera o el gir amb sentit.|Mide, calcula la velocidad (cm/s) y ajusta la espera o el giro con sentido.", "Mesura, però canvia els números a l'atzar.|Mide, pero cambia los números al azar."],
+        ["Programes fiables|Programas fiables", "Canvia esperes llargues per sensors i explica per què.|Cambia esperas largas por sensores y explica por qué.", "Fa servir sobretot temps fixos.|Usa sobre todo tiempos fijos."]
+      ]
+    },
+    casa: "A casa, amb el mòbil, podeu repetir la sessió i fer «Calibra les teves passes»: mesureu 10 passes, calculeu quant fa una passa i feu servir el número per arribar a un objecte. Acabeu, si cal, la versió per al robot real de la vostra missió.|En casa, con el móvil, podéis repetir la sesión y hacer «Calibra tus pasos»: medid 10 pasos, calculad cuánto mide un paso y usad el número para llegar a un objeto. Terminad, si hace falta, la versión para el robot real de vuestra misión.",
+    slides: [
+      { id: 's1', k: 'portada', t: "Del simulador al robot de veritat|Del simulador al robot de verdad", x: "Avui el teu programa surt de la pantalla i fa moure un robot de veritat.|Hoy tu programa sale de la pantalla y hace mover un robot de verdad.",
+        nota: "Ensenya un Maqueen a la mà mentre presentes la sessió.|Enseña un Maqueen en la mano mientras presentas la sesión." },
+      { id: 's2', k: 'pregunta', t: "Farà el mateix?|¿Hará lo mismo?", punts: ["El simulador diu: 62 cm en 4 segons.|El simulador dice: 62 cm en 4 segundos.", "El robot de veritat en farà 62? Més? Menys?|¿El robot de verdad hará 62? ¿Más? ¿Menos?", "Què hi pot influir?|¿Qué puede influir?"],
+        nota: "Apunta les hipòtesis (piles, terra, rodes…) a la pissarra i torna-hi al final de l'activitat amb el robot.|Apunta las hipótesis (pilas, suelo, ruedas…) en la pizarra y vuelve a ellas al final de la actividad con el robot." },
+      { id: 's3', k: 'anim', t: "El camí del programa|El camino del programa", anim: 'k8export', x: "&lt;/&gt; → MakeCode (extensió «maqueen») → Descarrega → micro:bit.|&lt;/&gt; → MakeCode (extensión «maqueen») → Descarga → micro:bit.",
+        nota: "Si pots, fes-ho en directe al projector amb un repte de la sessió anterior i ensenya que, en tornar a «Blocs», MakeCode mostra els mateixos blocs.|Si puedes, hazlo en directo en el proyector con un reto de la sesión anterior y enseña que, al volver a «Bloques», MakeCode muestra los mismos bloques." },
+      { id: 's4', k: 'concepte', t: "Blocs i JavaScript|Bloques y JavaScript", punts: ["«per sempre» → basic.forever|«para siempre» → basic.forever", "«si distància &lt; 10» → if (Maqueen_V5.Ultrasonic() &lt; 10)|«si distancia &lt; 10» → if (Maqueen_V5.Ultrasonic() &lt; 10)", "«atura els dos» → Maqueen_V5.motorStop(…All)|«para los dos» → Maqueen_V5.motorStop(…All)"],
+        blocks: ["per sempre|para siempre", "si distància < 10|si distancia < 10", "atura el motor els dos|para el motor los dos", "motor els dos endavant a velocitat 150|motor los dos adelante a velocidad 150"],
+        code: "basic.forever(function () {\n    if (Maqueen_V5.Ultrasonic() < 10) {\n        Maqueen_V5.motorStop(Maqueen_V5.Motors.All)\n    } else {\n        Maqueen_V5.motorRun(Maqueen_V5.Motors.All, Maqueen_V5.Dir.CW, 150)\n    }\n})",
+        nota: "Llegiu el codi en veu alta línia a línia i que la classe digui el bloc. CW vol dir endavant; CCW, enrere.|Leed el código en voz alta línea a línea y que la clase diga el bloque. CW quiere decir adelante; CCW, atrás." },
+      { id: 's5', k: 'anim', t: "El món real no és perfecte|El mundo real no es perfecto", anim: 'k8drift', x: "Piles, terra i motors canvien una mica el que fa el robot.|Pilas, suelo y motores cambian un poco lo que hace el robot.",
+        nota: "Compara-ho amb la vida diària: una bicicleta amb les rodes desinflades va més lenta encara que pedalis igual.|Compáralo con la vida diaria: una bicicleta con las ruedas desinfladas va más lenta aunque pedalees igual." },
+      { id: 's6', k: 'anim', t: "Calibrar|Calibrar", anim: 'k8calib', x: "Mesura → calcula → ajusta.|Mide → calcula → ajusta.",
+        nota: "Fes el càlcul a la pissarra pas a pas: velocitat = distància ÷ temps; temps = distància ÷ velocitat.|Haz el cálculo en la pizarra paso a paso: velocidad = distancia ÷ tiempo; tiempo = distancia ÷ velocidad." },
+      { id: 's7', k: 'robo', t: "Temps o sensor?|¿Tiempo o sensor?", x: "Aquest robot avança fins que el sensor del mig troba la cinta.|Este robot avanza hasta que el sensor del medio encuentra la cinta.",
+        robo: { w: { w: 120, h: 60, bot: [15, 30, 90], lines: [{ p: [[80, 8], [80, 52]] }], zones: [{ id: 'm', r: [62, 15, 24, 30], col: 'yellow', label: 'META|META' }] }, prog: 'forever{ if:M=1{ stop:all car:all,green } else{ run:all,fwd,120 } }' },
+        nota: "Pregunta: si les piles estiguessin gastades, aquest robot s'aturaria igualment a la cinta? I un robot amb «espera 5000 ms»?|Pregunta: si las pilas estuvieran gastadas, ¿este robot se pararía igualmente en la cinta? ¿Y un robot con «espera 5000 ms»?" },
+      { id: 's8', k: 'activitat', t: "Construïm la pista de l'aula|Construimos la pista del aula", timer: 10, punts: ["Marqueu el tapet: 120 × 80 cm.|Marcad el tapete: 120 × 80 cm.", "Cinta negra seguint el dibuix (1 quadre = 10 cm).|Cinta negra siguiendo el dibujo (1 cuadro = 10 cm).", "Revolts suaus, amb trossos curts.|Curvas suaves, con trozos cortos.", "Caixa i sortida al seu lloc.|Caja y salida en su sitio."],
+        nota: "La cinta ha de ser ben enganxada i sense arrugues: els sensors de línia són a pocs mil·límetres del terra.|La cinta tiene que estar bien pegada y sin arrugas: los sensores de línea están a pocos milímetros del suelo." },
+      { id: 's9', k: 'activitat', t: "A l'ordinador: MakeCode i calibrar|En el ordenador: MakeCode y calibrar", timer: 10, punts: ["Llegeix el JavaScript i ordena els passos.|Lee el JavaScript y ordena los pasos.", "Calcula l'espera per a 78 cm.|Calcula la espera para 78 cm.", "Calibra el gir al simulador.|Calibra el giro en el simulador.", "Para a la «Pausa activa».|Para en la «Pausa activa»."],
+        nota: "Al pas «Calibra les teves passes», que toquin «Ho hem fet!»: és per a casa.|En el paso «Calibra tus pasos», que toquen «¡Lo hemos hecho!»: es para casa." },
+      { id: 's10', k: 'activitat', t: "Calibra el teu Maqueen|Calibra tu Maqueen", timer: 14, punts: ["1. Endavant 4 segons: mesureu i calculeu els cm/s.|1. Adelante 4 segundos: medid y calculad los cm/s.", "2. Gir de 590 ms: ajusteu-lo fins a 90°.|2. Giro de 590 ms: ajustadlo hasta 90°.", "3. La pista de l'aula: segueix la cinta i para a la caixa.|3. La pista del aula: sigue la cinta y para en la caja.", "Apunteu tots els números.|Apuntad todos los números."],
+        code: "Maqueen_V5.I2CInit()\nMaqueen_V5.motorRun(Maqueen_V5.Motors.All, Maqueen_V5.Dir.CW, 150)\nbasic.pause(4000)\nMaqueen_V5.motorStop(Maqueen_V5.Motors.All)",
+        nota: "Feu una taula a la pissarra amb els cm/s de cada grup: veureu que cada robot és una mica diferent. Al simulador, a 150, fa uns 15,6 cm/s (uns 62 cm en 4 s).|Haced una tabla en la pizarra con los cm/s de cada grupo: veréis que cada robot es un poco diferente. En el simulador, a 150, hace unos 15,6 cm/s (unos 62 cm en 4 s)." },
+      { id: 's11', k: 'concepte', t: "Full de calibratge|Hoja de calibración", punts: ["Velocitat = distància ÷ temps (cm/s)|Velocidad = distancia ÷ tiempo (cm/s)", "Temps = distància ÷ velocitat (s × 1000 = ms)|Tiempo = distancia ÷ velocidad (s × 1000 = ms)", "Gir: si gira massa, menys ms; si gira poc, més ms.|Giro: si gira demasiado, menos ms; si gira poco, más ms."],
+        nota: "Deixa-la projectada durant l'activitat perquè la puguin consultar.|Déjala proyectada durante la actividad para que la puedan consultar." },
+      { id: 's12', k: 'concepte', t: "Seguretat amb el robot|Seguridad con el robot", punts: ["El robot sempre a terra (o en una taula amb vora).|El robot siempre en el suelo (o en una mesa con borde).", "Desconnecta el cable USB abans d'encendre'l.|Desconecta el cable USB antes de encenderlo.", "Apaga'l per agafar-lo; mans lluny de les rodes.|Apágalo para cogerlo; manos lejos de las ruedas.", "Només el pilot l'encén i l'apaga.|Solo el piloto lo enciende y lo apaga."],
+        nota: "Recorda que la micro:bit es fa malbé si el robot cau d'una taula sense vora.|Recuerda que la micro:bit se estropea si el robot cae de una mesa sin borde." },
+      { id: 's13', k: 'repte', t: "Reptes a prova de piles|Retos a prueba de pilas", timer: 7, punts: ["1. Para a la cinta (3 pistes)|1. Para en la cinta (3 pistas)", "2. La pista de l'aula (2 posicions de la caixa)|2. La pista del aula (2 posiciones de la caja)"],
+        nota: "Fes-los notar que el repte 2 és la pista que tenen enganxada a terra.|Hazles notar que el reto 2 es la pista que tienen pegada en el suelo." },
+      { id: 's14', k: 'activitat', t: "Crea: la versió per al robot real|Crea: la versión para el robot real", timer: 4, punts: ["Adapta la missió perquè es pugui construir.|Adapta la misión para que se pueda construir.", "Canvia les esperes llargues per sensors.|Cambia las esperas largas por sensores.", "Toca &lt;/&gt; i copia el codi.|Toca &lt;/&gt; y copia el código."],
+        nota: "L'app no deixa desar la versió real si el programa no fa servir cap sensor: explica-ho abans perquè no es frustrin.|La app no deja guardar la versión real si el programa no usa ningún sensor: explícalo antes para que no se frustren." },
+      { id: 's15', k: 'resum', t: "Què hem après avui|Qué hemos aprendido hoy", punts: ["&lt;/&gt; → MakeCode → micro:bit.|&lt;/&gt; → MakeCode → micro:bit.", "El món real canvia una mica el que fa el robot.|El mundo real cambia un poco lo que hace el robot.", "Calibrar: mesura, calcula, ajusta. I millor amb sensors!|Calibrar: mide, calcula, ajusta. ¡Y mejor con sensores!"],
+        nota: "Torna a les hipòtesis de la diapositiva 2: quines s'han confirmat?|Vuelve a las hipótesis de la diapositiva 2: ¿cuáles se han confirmado?" },
+      { id: 's16', k: 'tiquet', t: "Tiquet de sortida|Ticket de salida", punts: ["Com es passa un programa al Maqueen?|¿Cómo se pasa un programa al Maqueen?", "Per què els sensors fan el programa més fiable?|¿Por qué los sensores hacen el programa más fiable?"],
+        nota: "Anota quins grups no han pogut acabar el calibratge: a l'inici de la sessió que ve poden fer-lo mentre els altres preparen la presentació.|Anota qué grupos no han podido terminar la calibración: al principio de la próxima sesión pueden hacerla mientras los demás preparan la presentación." }
+    ],
+    print: [
+      { id: 'p1', t: "Pista: la pista de l'aula|Pista: la pista del aula", k: 'pista',
+        intro: "Construïu la pista a terra a mida real (120 × 80 cm). La cinta negra comença a la sortida, puja en diagonal i va fins a la caixa. La caixa pot anar a 100 cm o a 90 cm de l'esquerra.|Construid la pista en el suelo a tamaño real (120 × 80 cm). La cinta negra empieza en la salida, sube en diagonal y va hasta la caja. La caja puede ir a 100 cm o a 90 cm de la izquierda.",
+        w: { w: 120, h: 80, bot: [15, 60, 90], lines: [{ p: [[15, 60], [50, 60], [60, 50], [60, 30], [70, 20], [115, 20]] }], walls: [[100.5, 10.5, 9, 9]] },
+        items: [
+          { q: "1. Endavant 4 segons a velocitat 150: el nostre robot fa ______ cm → ______ cm/s (al simulador, uns 15,6)|1. Adelante 4 segundos a velocidad 150: nuestro robot hace ______ cm → ______ cm/s (en el simulador, unos 15,6)" },
+          { q: "2. Gir de 90° a velocitat 100: amb 590 ms gira ______°. L'espera que funciona: ______ ms|2. Giro de 90° a velocidad 100: con 590 ms gira ______°. La espera que funciona: ______ ms" },
+          { q: "3. La pista de l'aula: s'atura a ______ cm de la caixa (posició 1) i a ______ cm (posició 2). Ha calgut calibrar res? Per què?|3. La pista del aula: se para a ______ cm de la caja (posición 1) y a ______ cm (posición 2). ¿Ha hecho falta calibrar algo? ¿Por qué?" }
+        ] },
+      { id: 'p2', t: "Codi: calibra el teu Maqueen|Código: calibra tu Maqueen", k: 'codi',
+        intro: "A makecode.microbit.org: nou projecte → Extensions → «maqueen» → JavaScript → enganxa el codi → Descarrega. Cable fora i robot a terra!|En makecode.microbit.org: nuevo proyecto → Extensiones → «maqueen» → JavaScript → pega el código → Descarga. ¡Cable fuera y robot en el suelo!",
+        items: [
+          { t: "1. Endavant 4 segons (mesureu la distància)|1. Adelante 4 segundos (medid la distancia)", prog: 'start{ run:all,fwd,150 wait:4000 stop:all }' },
+          { t: "2. Gir de 90° a la dreta (ajusteu l'espera)|2. Giro de 90° a la derecha (ajustad la espera)", prog: 'start{ run:L,fwd,100 run:R,back,100 wait:590 stop:all }' },
+          { t: "3. La pista de l'aula|3. La pista del aula", prog: 'forever{ if:dist<10{ stop:all icon:happy } else{ if:L=1&&R=0{ run:L,fwd,40 run:R,fwd,140 } else{ if:R=1&&L=0{ run:L,fwd,140 run:R,fwd,40 } else{ run:all,fwd,120 } } } }' }
+        ] }
+    ]
+  },
+
+  /* ---------- Sessió 4 · Presentació i diploma ---------- */
+  'k8-4': {
+    obj: [
+      "L'alumne/a presenta la seva missió amb quatre parts: la missió, com funciona, un problema resolt i la demostració.|El alumno/a presenta su misión con cuatro partes: la misión, cómo funciona, un problema resuelto y la demostración.",
+      "L'alumne/a explica el funcionament del seu robot amb el cicle sent, pensa i actua.|El alumno/a explica el funcionamiento de su robot con el ciclo siente, piensa y actúa.",
+      "L'alumne/a prova la missió d'un company/a i li fa un comentari amable i útil.|El alumno/a prueba la misión de un compañero/a y le hace un comentario amable y útil.",
+      "L'alumne/a demostra la seva missió (o la del grup) amb el Maqueen de veritat a la Mostra de Robots.|El alumno/a demuestra su misión (o la del grupo) con el Maqueen de verdad en la Muestra de Robots."
+    ],
+    comp: [
+      "Competència en comunicació lingüística: exposar oralment un projecte tècnic|Competencia en comunicación lingüística: exponer oralmente un proyecto técnico",
+      "Competència digital (CD5): demostrar i explicar una solució tecnològica pròpia|Competencia digital (CD5): demostrar y explicar una solución tecnológica propia",
+      "Competència ciutadana: donar i rebre comentaris amb respecte|Competencia ciudadana: dar y recibir comentarios con respeto",
+      "Competència personal i d'aprendre a aprendre: reflexionar sobre el propi aprenentatge|Competencia personal y de aprender a aprender: reflexionar sobre el propio aprendizaje"
+    ],
+    vocab: [
+      ["Presentació|Presentación", "Explicar un projecte al públic de manera clara i ordenada.|Explicar un proyecto al público de manera clara y ordenada."],
+      ["Demostració (demo)|Demostración (demo)", "Ensenyar en directe que el projecte funciona.|Enseñar en directo que el proyecto funciona."],
+      ["Provador/a|Probador/a", "Qui prova el projecte d'un altre per ajudar-lo a millorar.|Quien prueba el proyecto de otro para ayudarlo a mejorar."],
+      ["Comentari constructiu|Comentario constructivo", "Una cosa que agrada i una idea per millorar, dita amb respecte.|Algo que gusta y una idea para mejorar, dicha con respeto."],
+      ["Enginyer/a|Ingeniero/a", "Persona que dissenya, construeix i prova solucions tècniques.|Persona que diseña, construye y prueba soluciones técnicas."]
+    ],
+    mat: {
+      aula: [
+        "Un ordinador per alumne/a amb Numi Tech obert a la sessió «Presentació i diploma»|Un ordenador por alumno/a con Numi Tech abierto en la sesión «Presentación y diploma»",
+        "Projector i la presentació d'aquesta sessió|Proyector y la presentación de esta sesión",
+        "Un kit per grup de 3-4 i les pistes de cinta de la sessió anterior (o espai i cinta per fer-ne)|Un kit por grupo de 3-4 y las pistas de cinta de la sesión anterior (o espacio y cinta para hacerlas)",
+        "Els diplomes impresos i signats; si és possible, famílies o un altre grup convidats|Los diplomas impresos y firmados; si es posible, familias u otro grupo invitados"
+      ],
+      imprimir: ["Fitxa: el guió de la presentació (una per alumne/a)|Ficha: el guion de la presentación (una por alumno/a)", "Diploma del curs (un per alumne/a)|Diploma del curso (uno por alumno/a)"],
+      prep: [
+        "Imprimir i signar els diplomes, amb el nom de cada alumne/a escrit a mà.|Imprimir y firmar los diplomas, con el nombre de cada alumno/a escrito a mano.",
+        "Organitzar l'aula en estacions: una per kit, amb la pista a terra i un ordinador a prop.|Organizar el aula en estaciones: una por kit, con la pista en el suelo y un ordenador cerca.",
+        "Fer les parelles de provadors (alumnes de grups diferents).|Hacer las parejas de probadores (alumnos de grupos diferentes).",
+        "Carregar totes les piles.|Cargar todas las pilas."
+      ]
+    },
+    plan: [
+      { min: 5, t: "El gran dia de la Mostra|El gran día de la Muestra", fase: 'inici',
+        fa: "Dona la benvinguda a la Mostra de Robots i repassa el viatge del curs amb la diapositiva 2: una unitat per línia, i que la classe digui una cosa que recordi de cada una. Explica l'ordre de la sessió: guió, provadors, Mostra i diplomes.|Da la bienvenida a la Muestra de Robots y repasa el viaje del curso con la diapositiva 2: una unidad por línea, y que la clase diga algo que recuerde de cada una. Explica el orden de la sesión: guion, probadores, Muestra y diplomas.",
+        diu: ["Quina és la missió que més us va agradar del curs?|¿Cuál es la misión que más os gustó del curso?", "Avui no cal que tot surti perfecte: expliqueu com ho heu pensat.|Hoy no hace falta que todo salga perfecto: explicad cómo lo habéis pensado."],
+        slides: ['s1', 's2'], app: "Encara no: pantalles apagades.|Todavía no: pantallas apagadas.", org: "Tot el grup|Todo el grupo" },
+      { min: 6, t: "Com es presenta un projecte|Cómo se presenta un proyecto", fase: 'teoria',
+        fa: "Explica les quatre parts de la presentació amb l'animació. Executa la demo i fes-ne tu una explicació model amb «sent, pensa i actua». Acaba amb els comentaris que ajuden: posa un exemple bo i un de dolent, i que la classe els distingeixi.|Explica las cuatro partes de la presentación con la animación. Ejecuta la demo y haz tú una explicación modelo con «siente, piensa y actúa». Termina con los comentarios que ayudan: pon un ejemplo bueno y uno malo, y que la clase los distinga.",
+        diu: ["Què sent aquest robot? Què pensa? Com actua?|¿Qué siente este robot? ¿Qué piensa? ¿Cómo actúa?", "Aquest comentari ajuda? Per què?|¿Este comentario ayuda? ¿Por qué?"],
+        slides: ['s3', 's4', 's5'], app: "Encara no: tota l'atenció a la projecció.|Todavía no: toda la atención en la proyección.", org: "Tot el grup|Todo el grupo" },
+      { min: 10, t: "El guió i l'assaig|El guion y el ensayo", fase: 'desconnectat',
+        fa: "Cada alumne/a omple la fitxa del guió: una frase per a cada part. Després, per parelles, assagen: un presenta en dos minuts (cronometrats) i l'altre escolta i diu una cosa que li ha agradat i una idea per millorar. Canvien.|Cada alumno/a rellena la ficha del guion: una frase para cada parte. Después, por parejas, ensayan: uno presenta en dos minutos (cronometrados) y el otro escucha y dice algo que le ha gustado y una idea para mejorar. Cambian.",
+        diu: ["Una frase per part: no cal escriure-ho tot.|Una frase por parte: no hace falta escribirlo todo.", "Quin problema vas tenir? Com el vas resoldre?|¿Qué problema tuviste? ¿Cómo lo resolviste?"],
+        slides: ['s6'], app: "Cap: activitat sense pantalla.|Ninguna: actividad sin pantalla.", org: "Individual i després per parelles|Individual y después por parejas" },
+      { min: 8, t: "A l'ordinador: assaig general i retocs|En el ordenador: ensayo general y retoques", fase: 'ordinador',
+        fa: "Cada alumne/a obre la sessió: targetes, ordenar la presentació, el comentari que ajuda, el repte de l'assaig general (projecta'l si vols com a exemple de demostració) i els últims retocs de la missió. S'aturen al pas «Canvi de lloc!».|Cada alumno/a abre la sesión: tarjetas, ordenar la presentación, el comentario que ayuda, el reto del ensayo general (proyéctalo si quieres como ejemplo de demostración) y los últimos retoques de la misión. Se paran en el paso «¡Cambio de sitio!».",
+        diu: ["Para al pas «Canvi de lloc!» i espera el senyal.|Para en el paso «¡Cambio de sitio!» y espera la señal."],
+        slides: ['s7', 's12'], app: "De «La missió» fins a «Últims retocs».|De «La misión» hasta «Últimos retoques».", org: "Individual|Individual" },
+      { min: 12, t: "Canvi de lloc: els provadors|Cambio de sitio: los probadores", fase: 'crea',
+        fa: "A la teva senyal, les parelles de provadors canvien d'ordinador. El provador/a programa la missió del company/a (l'autor/a mira, però no toca) i, en acabar, respon la valoració. Torna al seu lloc i explica de paraula el comentari. L'autor/a aplica el que vulgui a la missió.|A tu señal, las parejas de probadores cambian de ordenador. El probador/a programa la misión del compañero/a (el autor/a mira, pero no toca) y, al terminar, responde la valoración. Vuelve a su sitio y explica de palabra el comentario. El autor/a aplica lo que quiera a la misión.",
+        diu: ["Autors i autores: mans a la butxaca!|Autores y autoras: ¡manos en el bolsillo!", "Primer una cosa que t'ha agradat; després, una idea.|Primero algo que te ha gustado; después, una idea."],
+        slides: ['s8', 's9'], app: "Del «Canvi de lloc!» fins a «Aplica un comentari»: la missió del company/a, la valoració, tornar al lloc, la pausa i millorar la pròpia missió.|Del «¡Cambio de sitio!» hasta «Aplica un comentario»: la misión del compañero/a, la valoración, volver al sitio, la pausa y mejorar la propia misión.", org: "Per parelles de grups diferents|Por parejas de grupos diferentes" },
+      { min: 13, t: "La Mostra de Robots|La Muestra de Robots", fase: 'robot',
+        fa: "Mostra en estacions. Cada grup tria una de les seves missions (o la pista de l'aula, si no hi ha temps de construir-ne una de nova), la descarrega al Maqueen i la deixa a punt a la pista de terra. Meitat dels grups presenten (2 minuts per alumne/a, amb el robot de veritat i l'app a l'ordinador amb el pas «Presenta») i l'altra meitat visita i fa preguntes; als 6 minuts, canvien. Si hi ha famílies o un altre grup, ells són el públic.|Muestra en estaciones. Cada grupo elige una de sus misiones (o la pista del aula, si no hay tiempo de construir una nueva), la descarga en el Maqueen y la deja lista en la pista del suelo. La mitad de los grupos presentan (2 minutos por alumno/a, con el robot de verdad y la app en el ordenador con el paso «Presenta») y la otra mitad visita y hace preguntas; a los 6 minutos, cambian. Si hay familias u otro grupo, ellos son el público.",
+        diu: ["Expliqueu les quatre parts abans de la demo.|Explicad las cuatro partes antes de la demo.", "Visitants: feu una pregunta a cada estació.|Visitantes: haced una pregunta en cada estación.", "Si el robot falla, expliqueu què creieu que ha passat: això també és ser enginyer/a!|Si el robot falla, explicad qué creéis que ha pasado: ¡eso también es ser ingeniero/a!"],
+        slides: ['s10', 's11'], app: "Pas «Presenta la teva missió» a l'ordinador de l'estació, al costat del robot de veritat.|Paso «Presenta tu misión» en el ordenador de la estación, al lado del robot de verdad.", org: "Grups de 3-4 per kit en estacions|Grupos de 3-4 por kit en estaciones" },
+      { min: 6, t: "Diplomes i comiat|Diplomas y despedida", fase: 'tancament',
+        fa: "Torneu als ordinadors: cadascú obre el seu diploma a l'app. Repassa el resum, fes el tiquet en veu alta i lliura el diploma imprès a cada alumne/a dient-ne el nom i una cosa que ha fet bé durant el curs. Acaba amb un aplaudiment per a tots els enginyers i enginyeres.|Volved a los ordenadores: cada uno abre su diploma en la app. Repasa el resumen, haz el ticket en voz alta y entrega el diploma impreso a cada alumno/a diciendo su nombre y algo que ha hecho bien durante el curso. Termina con un aplauso para todos los ingenieros e ingenieras.",
+        diu: ["Què és el que més us ha agradat aprendre?|¿Qué es lo que más os ha gustado aprender?", "Quin robot us agradaria programar d'aquí a uns anys?|¿Qué robot os gustaría programar dentro de unos años?"],
+        slides: ['s13', 's14', 's15'], app: "El diploma, la història final, l'última pregunta i com m'he sentit.|El diploma, la historia final, la última pregunta y cómo me he sentido.", org: "Tot el grup|Todo el grupo" }
+    ],
+    errors: [
+      ["Durant la presentació, només llegeix el programa bloc a bloc.|Durante la presentación, solo lee el programa bloque a bloque.",
+        "Proposa la frase «El meu robot sent…, pensa… i actua…»: el públic entén millor el que fa que no pas cada bloc.|Propón la frase «Mi robot siente…, piensa… y actúa…»: el público entiende mejor lo que hace que cada bloque."],
+      ["Com a provador/a, diu només «està bé» o fa un comentari que fa mal.|Como probador/a, dice solo «está bien» o hace un comentario que hace daño.",
+        "Recorda la fórmula: «M'agrada… i potser podries…». Que posi un exemple concret de la missió.|Recuerda la fórmula: «Me gusta… y quizá podrías…». Que ponga un ejemplo concreto de la misión."],
+      ["L'autor/a no deixa que el provador/a s'equivoqui i li diu la solució.|El autor/a no deja que el probador/a se equivoque y le dice la solución.",
+        "Explica que els errors del provador/a són informació valuosa: on s'encalla, allà la missió és difícil o poc clara.|Explica que los errores del probador/a son información valiosa: donde se atasca, ahí la misión es difícil o poco clara."],
+      ["El robot de veritat falla durant la demo i l'alumne/a es bloqueja.|El robot de verdad falla durante la demo y el alumno/a se bloquea.",
+        "Valora que expliqui per què creu que ha fallat (piles, cinta, calibratge) i que ho torni a provar: és part de la presentació d'un enginyer/a.|Valora que explique por qué cree que ha fallado (pilas, cinta, calibración) y que lo vuelva a probar: es parte de la presentación de un ingeniero/a."],
+      ["Té vergonya de parlar davant del grup.|Le da vergüenza hablar delante del grupo.",
+        "Que presenti en parella amb un company/a del grup (un explica i l'altre fa la demo) o només a la seva estació, davant de pocs visitants.|Que presente en pareja con un compañero/a del grupo (uno explica y el otro hace la demo) o solo en su estación, delante de pocos visitantes."]
+    ],
+    diff: {
+      mes: "Afegir a la presentació la comparació entre el simulador i el robot real (què va caldre calibrar) i ensenyar el codi JavaScript de la missió. Respondre preguntes del públic.|Añadir a la presentación la comparación entre el simulador y el robot real (qué hizo falta calibrar) y enseñar el código JavaScript de la misión. Responder preguntas del público.",
+      menys: "Presentar només dues parts (la missió i la demo) amb el guió a la mà. Fer la demo amb la pista de l'aula, ja provada a la sessió anterior.|Presentar solo dos partes (la misión y la demo) con el guion en la mano. Hacer la demo con la pista del aula, ya probada en la sesión anterior."
+    },
+    aval: {
+      ticket: ["Quines són les quatre parts d'una bona presentació?|¿Cuáles son las cuatro partes de una buena presentación?", "Quina és la cosa més important que has après en aquest curs?|¿Cuál es la cosa más importante que has aprendido en este curso?"],
+      rubric: [
+        ["Presentació|Presentación", "Explica la missió, com funciona, un problema resolt i fa la demo.|Explica la misión, cómo funciona, un problema resuelto y hace la demo.", "Fa la demo, però li costa explicar com funciona el robot.|Hace la demo, pero le cuesta explicar cómo funciona el robot."],
+        ["Comentaris|Comentarios", "Fa comentaris amables i concrets i aplica algun comentari rebut.|Hace comentarios amables y concretos y aplica algún comentario recibido.", "Fa comentaris generals («està bé») o no en té en compte cap.|Hace comentarios generales («está bien») o no tiene en cuenta ninguno."],
+        ["Projecte final|Proyecto final", "La missió funciona al simulador i al robot real, amb almenys un sensor.|La misión funciona en el simulador y en el robot real, con al menos un sensor.", "La missió funciona al simulador, però no s'ha pogut provar o ajustar al robot real.|La misión funciona en el simulador, pero no se ha podido probar o ajustar en el robot real."]
+      ]
+    },
+    casa: "A casa, ensenyeu el diploma i expliqueu a la família la vostra missió amb el mòbil: com és la pista, què ha de fer el robot i com ho fa (sent, pensa i actua). Busqueu tres robots de la vida real i digueu quins sensors deuen fer servir.|En casa, enseñad el diploma y explicad a la familia vuestra misión con el móvil: cómo es la pista, qué tiene que hacer el robot y cómo lo hace (siente, piensa y actúa). Buscad tres robots de la vida real y decid qué sensores deben usar.",
+    slides: [
+      { id: 's1', k: 'portada', t: "La Mostra de Robots|La Muestra de Robots", x: "Presentació i diploma: el gran dia dels enginyers i enginyeres.|Presentación y diploma: el gran día de los ingenieros e ingenieras.",
+        nota: "Si hi ha públic convidat, presenta'ls el projecte: cada alumne/a ha inventat i programat una missió per a un robot de veritat.|Si hay público invitado, preséntales el proyecto: cada alumno/a ha inventado y programado una misión para un robot de verdad." },
+      { id: 's2', k: 'repas', t: "El viatge del curs|El viaje del curso", punts: ["1-2. Robots, motors, distàncies i girs|1-2. Robots, motores, distancias y giros", "3-4. Ultrasons i sensors de línia|3-4. Ultrasonidos y sensores de línea", "5-6. Llum, so, botons, variables i control intel·ligent|5-6. Luz, sonido, botones, variables y control inteligente", "7-8. Missions i el meu robot|7-8. Misiones y mi robot"],
+        nota: "Per a cada línia, que algú digui una cosa que recordi o una missió que li va agradar.|Para cada línea, que alguien diga algo que recuerde o una misión que le gustó." },
+      { id: 's3', k: 'anim', t: "Quatre parts i una demo|Cuatro partes y una demo", anim: 'k8pitch', x: "La missió, com funciona, un problema resolt i la demostració.|La misión, cómo funciona, un problema resuelto y la demostración.",
+        nota: "Remarca la tercera part: explicar un problema i com es va resoldre és el que més interessa al públic.|Remarca la tercera parte: explicar un problema y cómo se resolvió es lo que más interesa al público." },
+      { id: 's4', k: 'robo', t: "Sent, pensa i actua|Siente, piensa y actúa", x: "Explica'm aquest robot en tres frases.|Explícame este robot en tres frases.",
+        robo: { w: { w: 120, h: 80, bot: [15, 60, 90], lines: [{ p: [[15, 60], [50, 60], [60, 50], [60, 30], [70, 20], [115, 20]] }], walls: [[100.5, 10.5, 9, 9]] }, prog: 'start{ icon:heart } forever{ if:dist<10{ stop:all car:all,green } else{ if:L=1&&R=0{ run:L,fwd,40 run:R,fwd,140 } else{ if:R=1&&L=0{ run:L,fwd,140 run:R,fwd,40 } else{ run:all,fwd,120 } } } }' },
+        nota: "Fes tu l'explicació model: «Sent la cinta amb els sensors de línia i la caixa amb els ultrasons; pensa: si la caixa és a menys de 10 cm, para; actua: mou les rodes i encén els llums verds».|Haz tú la explicación modelo: «Siente la cinta con los sensores de línea y la caja con los ultrasonidos; piensa: si la caja está a menos de 10 cm, para; actúa: mueve las ruedas y enciende las luces verdes»." },
+      { id: 's5', k: 'concepte', t: "Comentaris que ajuden|Comentarios que ayudan", punts: ["Una cosa que t'ha agradat.|Algo que te ha gustado.", "Una idea per millorar.|Una idea para mejorar.", "Concret i amable: «M'agrada… i potser podries…».|Concreto y amable: «Me gusta… y quizá podrías…»."],
+        nota: "Digues dos comentaris en veu alta («Està bé» i «M'agraden els llums; potser la meta podria ser més lluny») i que la classe voti quin ajuda més.|Di dos comentarios en voz alta («Está bien» y «Me gustan las luces; quizá la meta podría estar más lejos») y que la clase vote cuál ayuda más." },
+      { id: 's6', k: 'activitat', t: "El guió i l'assaig|El guion y el ensayo", timer: 10, punts: ["Omple el guió: una frase per part.|Rellena el guion: una frase por parte.", "Per parelles: presenta en 2 minuts.|Por parejas: presenta en 2 minutos.", "El company/a: una cosa que agrada i una idea.|El compañero/a: algo que gusta y una idea.", "Canvieu.|Cambiad."],
+        nota: "Cronometra els dos minuts en veu alta per a tota la classe: així tothom canvia alhora.|Cronometra los dos minutos en voz alta para toda la clase: así todo el mundo cambia a la vez." },
+      { id: 's7', k: 'activitat', t: "Assaig general i retocs|Ensayo general y retoques", timer: 8, punts: ["Mira les targetes de «Descobreix».|Mira las tarjetas de «Descubre».", "Fes el repte de l'assaig general.|Haz el reto del ensayo general.", "Últims retocs de la teva missió.|Últimos retoques de tu misión.", "Para a «Canvi de lloc!».|Para en «¡Cambio de sitio!»."],
+        nota: "Comprova que tothom té una missió desada abans del canvi de lloc: qui no en tingui, que en desi una de senzilla als últims retocs.|Comprueba que todos tienen una misión guardada antes del cambio de sitio: quien no tenga, que guarde una sencilla en los últimos retoques." },
+      { id: 's8', k: 'activitat', t: "Canvi de lloc: els provadors|Cambio de sitio: los probadores", timer: 12, punts: ["Canvieu d'ordinador amb la vostra parella.|Cambiad de ordenador con vuestra pareja.", "Provador/a: programa la missió del company/a.|Probador/a: programa la misión del compañero/a.", "Respon la valoració i torna al teu lloc.|Responde la valoración y vuelve a tu sitio.", "Autor/a: aplica el comentari que t'agradi.|Autor/a: aplica el comentario que te guste."],
+        nota: "Fes les parelles amb alumnes de grups de kit diferents: així veuen missions noves.|Haz las parejas con alumnos de grupos de kit diferentes: así ven misiones nuevas." },
+      { id: 's9', k: 'concepte', t: "Les normes del provador/a|Las normas del probador/a", punts: ["L'autor/a mira, però no toca ni dona la solució.|El autor/a mira, pero no toca ni da la solución.", "Si t'encalles, digues on i per què.|Si te atascas, di dónde y por qué.", "La valoració, sincera i amable.|La valoración, sincera y amable."],
+        nota: "Deixa-la projectada durant el canvi de lloc.|Déjala proyectada durante el cambio de sitio." },
+      { id: 's10', k: 'activitat', t: "La Mostra de Robots|La Muestra de Robots", timer: 13, punts: ["Cada grup, a la seva estació amb el robot i la pista.|Cada grupo, en su estación con el robot y la pista.", "Meitat presenten, meitat visiten; als 6 minuts, canvi.|Mitad presentan, mitad visitan; a los 6 minutos, cambio.", "2 minuts per alumne/a: quatre parts i la demo.|2 minutos por alumno/a: cuatro partes y la demo.", "Visitants: una pregunta a cada estació.|Visitantes: una pregunta en cada estación."],
+        nota: "Si una missió no es pot construir a temps, el grup pot fer la demo a la pista de l'aula i ensenyar la seva missió al simulador.|Si una misión no se puede construir a tiempo, el grupo puede hacer la demo en la pista del aula y enseñar su misión en el simulador." },
+      { id: 's11', k: 'concepte', t: "Muntatge i seguretat|Montaje y seguridad", punts: ["Pista a terra, ben enganxada, lluny del pas.|Pista en el suelo, bien pegada, lejos del paso.", "Programa descarregat i cable fora.|Programa descargado y cable fuera.", "Només el pilot encén i apaga el robot.|Solo el piloto enciende y apaga el robot.", "Piles de recanvi a la taula del professor/a.|Pilas de recambio en la mesa del profesor/a."],
+        nota: "Prepara una estació de reserva amb la pista de l'aula i un robot carregat per si en falla algun.|Prepara una estación de reserva con la pista del aula y un robot cargado por si falla alguno." },
+      { id: 's12', k: 'robo', t: "L'assaig general|El ensayo general", x: "Benvinguda amb un cor i tres notes; després, la cinta i la caixa.|Bienvenida con un corazón y tres notas; después, la cinta y la caja.",
+        robo: { w: { w: 120, h: 80, bot: [15, 60, 90], lines: [{ p: [[15, 60], [50, 60], [60, 50], [60, 30], [70, 20], [115, 20]] }], walls: [[100.5, 10.5, 9, 9]] }, prog: 'start{ icon:heart note:C4,1/2 note:E4,1/2 note:G4,1/2 } forever{ if:dist<10{ stop:all car:all,green } else{ if:L=1&&R=0{ run:L,fwd,40 run:R,fwd,140 } else{ if:R=1&&L=0{ run:L,fwd,140 run:R,fwd,40 } else{ run:all,fwd,120 } } } }' },
+        nota: "És la solució del repte «L'assaig general»: ensenya-la a qui s'hi encalli, o projecta-la com a exemple de demo amb inici sonor.|Es la solución del reto «El ensayo general»: enséñala a quien se atasque, o proyéctala como ejemplo de demo con inicio sonoro." },
+      { id: 's13', k: 'resum', t: "Què hem après en aquest curs|Qué hemos aprendido en este curso", punts: ["Un robot sent, pensa i actua.|Un robot siente, piensa y actúa.", "Planifica, programa, prova i millora.|Planifica, programa, prueba y mejora.", "Del simulador al robot real: calibrar i fer servir sensors.|Del simulador al robot real: calibrar y usar sensores."],
+        nota: "Felicita el grup per tot el camí: de no saber què era un robot a inventar-ne missions pròpies.|Felicita al grupo por todo el camino: de no saber qué era un robot a inventar misiones propias." },
+      { id: 's14', k: 'tiquet', t: "Tiquet de sortida|Ticket de salida", punts: ["Les quatre parts d'una presentació.|Las cuatro partes de una presentación.", "La cosa més important que has après.|La cosa más importante que has aprendido."],
+        nota: "Fes-lo en rotllana i en veu alta: és l'últim dia i val la pena escoltar-se.|Hazlo en corro y en voz alta: es el último día y vale la pena escucharse." },
+      { id: 's15', k: 'activitat', t: "Els diplomes|Los diplomas", timer: 3, punts: ["Obre el teu diploma a l'app.|Abre tu diploma en la app.", "Rep el diploma imprès.|Recibe el diploma impreso.", "Un aplaudiment per a tots els enginyers i enginyeres!|¡Un aplauso para todos los ingenieros e ingenieras!"],
+        nota: "Lliura cada diploma dient el nom de l'alumne/a i una cosa concreta que ha fet bé durant el curs.|Entrega cada diploma diciendo el nombre del alumno/a y algo concreto que ha hecho bien durante el curso." }
+    ],
+    print: [
+      { id: 'p1', t: "Fitxa: el guió de la presentació|Ficha: el guion de la presentación", k: 'fitxa',
+        intro: "Escriu una o dues frases per a cada part. Tens 2 minuts per presentar: no cal llegir-ho, només és per recordar-ho.|Escribe una o dos frases para cada parte. Tienes 2 minutos para presentar: no hace falta leerlo, solo es para recordarlo.",
+        items: [
+          { q: "1. La missió: «La meva missió es diu… i el robot ha de…»|1. La misión: «Mi misión se llama… y el robot tiene que…»", sol: "Diu el nom i l'objectiu de la missió.|Dice el nombre y el objetivo de la misión." },
+          { q: "2. Com funciona: «El meu robot sent… amb…, pensa… i actua…»|2. Cómo funciona: «Mi robot siente… con…, piensa… y actúa…»", sol: "Nomena el sensor, la decisió del programa i el que fan els motors o els llums.|Nombra el sensor, la decisión del programa y lo que hacen los motores o las luces." },
+          { q: "3. Un problema: «Al principi… i ho vaig arreglar…»|3. Un problema: «Al principio… y lo arreglé…»", sol: "Explica un error real i com el va resoldre (depurar, calibrar, canviar un tram…).|Explica un error real y cómo lo resolvió (depurar, calibrar, cambiar un tramo…)." },
+          { q: "4. La demo: què ha de mirar el públic?|4. La demo: ¿qué tiene que mirar el público?", sol: "Avisa el públic del moment important (on para, què s'encén…) abans d'engegar el robot.|Avisa al público del momento importante (dónde para, qué se enciende…) antes de encender el robot." },
+          { q: "Comentari del meu company/a: una cosa que li ha agradat i una idea.|Comentario de mi compañero/a: algo que le ha gustado y una idea.", sol: "Resposta oberta.|Respuesta abierta." }
+        ] },
+      { id: 'p2', t: "Diploma del curs|Diploma del curso", k: 'diploma',
+        intro: "ha completat el curs Tech Robòtica de Numi Tech: ha dissenyat, programat, calibrat i presentat la seva pròpia missió amb el robot Maqueen.|ha completado el curso Tech Robótica de Numi Tech: ha diseñado, programado, calibrado y presentado su propia misión con el robot Maqueen.",
+        items: [
+          "Ha programat motors, distàncies i girs amb precisió.|Ha programado motores, distancias y giros con precisión.",
+          "Ha fet servir sensors d'ultrasons, de línia i de llum.|Ha usado sensores de ultrasonidos, de línea y de luz.",
+          "Ha programat decisions, variables i control intel·ligent.|Ha programado decisiones, variables y control inteligente.",
+          "Ha resolt missions de rescat, sumo, neteja i velocitat.|Ha resuelto misiones de rescate, sumo, limpieza y velocidad.",
+          "Ha passat els seus programes al robot de veritat i els ha calibrat.|Ha pasado sus programas al robot de verdad y los ha calibrado."
+        ] }
+    ]
+  }
+});

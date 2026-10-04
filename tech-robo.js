@@ -52,7 +52,7 @@ const RBEATS = { '1/4': 125, '1/2': 250, '1': 500, '2': 1000, '4': 2000 };
      env: [{ t: 3, dark: true }, …] (canvis amb el temps), press: [{ t: 1, b: 'A' }] (botons en les proves),
      goal: [ comprovacions ], time: segons màxims, alts: [ arenes alternatives (mateixos camps) ] } */
 function roboWorld(spec) {
-  const W = { ...spec, w: spec.w || 120, h: spec.h || 80, border: spec.border !== false };
+  const W = { ...spec, w: spec.w || 120, h: spec.h || 80, border: spec.border !== undefined ? spec.border !== false : !spec.ring };   // amb dohyo, per defecte sense parets (fora és l'aire)
   W.bot = spec.bot || [20, W.h / 2, 90];
   W.lines = (spec.lines || []).map(l => Array.isArray(l) ? { p: l, w: 2 } : { w: 2, ...l });
   W.walls = (spec.walls || []).map(r => r.slice());
@@ -167,7 +167,7 @@ function roboPhys(W, S, dt) {
   const last = S.trail[S.trail.length - 1]; if (Math.hypot(S.x - last[0], S.y - last[1]) > 1.5) S.trail.push([S.x, S.y]);
   S.cover.add(Math.floor(S.x / 5) + ',' + Math.floor(S.y / 5));
   if (W.ring && Math.hypot(S.x - W.ring.x, S.y - W.ring.y) > W.ring.r) S.out = true;
-  for (const o of S.objs) if (W.ring && !o.out && Math.hypot(o.x - W.ring.x, o.y - W.ring.y) > W.ring.r + o.r * .3) { o.out = true; S.log.push({ t: S.t, k: 'out' }); }
+  for (const o of S.objs) if (W.ring && !o.out && Math.hypot(o.x - W.ring.x, o.y - W.ring.y) > W.ring.r + o.r * .3) { o.out = true; o.gone = true; S.log.push({ t: S.t, k: 'out' }); }   // ha caigut del dohyo: ja no hi és
   // punts de control d'un circuit (en ordre)
   const cps = (W.goal.find(g => g.k === 'cps') || {}).pts; if (cps && S.cps < cps.length && Math.hypot(S.x - cps[S.cps][0], S.y - cps[S.cps][1]) < ((W.goal.find(g => g.k === 'cps') || {}).r || 7)) { S.cps++; S.log.push({ t: S.t, k: 'cp', n: S.cps }); }
   if (Math.abs(S.vl) < .3 && Math.abs(S.vr) < .3) S.stopT += dt; else S.stopT = 0;
