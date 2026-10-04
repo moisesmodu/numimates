@@ -262,7 +262,7 @@ function SQ(src) {
         case 'gotorand': case 'bounce': case 'next': case 'show': case 'hide': case 'front': case 'clone': case 'delclone': case 'nextbg': case 'timer0': b = { k }; break;
         default: throw new Error('SQ: bloc desconegut «' + t + '»');
       }
-      if (x) b.x = 1; out.push(b); }
+      if (x) b.mk = 1; out.push(b); }   // marca «!» del pas sspot (no x: goto i glide ja fan servir b.x)
     return out; };
   const P = {}; let cur = null;
   while (i < tok.length) {
@@ -384,7 +384,7 @@ function sgTools(b) {
 }
 function sgPalette() {
   const full = SG.max && sgUsed() >= SG.max;
-  return `<div class="tpal rpal spal">${SG.pal.filter(k => !['else', 'and'].includes(k)).map(k => `<button class="tb rb sb c-${SG_CAT[k]} tpb" onclick="sgIns('${k}')" ${full ? 'disabled' : ''}><span class="tbi">${sgIco(k)}</span><span class="tbl">${sgLabel(sgNew(k, SG.st, SG.W), undefined, SG.st)}</span></button>`).join('')}</div>`;
+  return `<div class="tpal rpal spal">${SG.pal.filter(k => !['else', 'and', 'cond+'].includes(k)).map(k => `<button class="tb rb sb c-${SG_CAT[k]} tpb" onclick="sgIns('${k}')" ${full ? 'disabled' : ''}><span class="tbi">${sgIco(k)}</span><span class="tbl">${sgLabel(sgNew(k, SG.st, SG.W), undefined, SG.st)}</span></button>`).join('')}</div>`;
 }
 function sgCode() {
   sgIndex();
@@ -542,6 +542,10 @@ if (typeof window !== 'undefined' && typeof document !== 'undefined' && document
   const KM = { ArrowLeft: 'left', ArrowRight: 'right', ArrowUp: 'up', ArrowDown: 'down', ' ': 'space', a: 'a', b: 'b' };
   document.addEventListener('keydown', e => { if (!SG || !document.getElementById('sstage') || ['INPUT', 'TEXTAREA'].includes((e.target || {}).tagName)) return; const k = KM[e.key]; if (!k || !(SG.W.keys || []).includes(k)) return; e.preventDefault(); sgKey(k, true); });
   document.addEventListener('keyup', e => { if (!SG) return; const k = KM[e.key]; if (k) sgKey(k, false); });
+  // el ratolí (o el dit) damunt de l'escenari: «apunta cap al ratolí» i «toca el ratolí» quan l'alumne/a prova el programa
+  const mouse = e => { const st = e.target && e.target.closest && e.target.closest('#sstage'); if (!st || !SG || !SG.M || SG.auto) return; const r = st.getBoundingClientRect();
+    SG.M.S.mx = Math.max(-240, Math.min(240, (e.clientX - r.left) / r.width * 480 - 240)); SG.M.S.my = Math.max(-180, Math.min(180, 180 - (e.clientY - r.top) / r.height * 360)); };
+  document.addEventListener('pointermove', mouse); document.addEventListener('pointerdown', mouse);
 }
 /* ---------- Tipus de pas de Creadors ----------
    stage: repte { q, w, edit?, hats, pal, ops?, texts?, msgs?, varNames?, sol (SQ), prog?, max?, hint } · screate: projecte lliure { …, name, crit, check? }
@@ -567,10 +571,10 @@ if (typeof TSTEP !== 'undefined') {
   TSTEP.sfree = function (st) { sgMake(st, { mode: 'view' }); SG.free = true; SG.onDone = () => tContinue(); sgStage(st); tFoot(L('Continua', 'Continúa'), tNext, true); };
   TSTEP.sspot = function (st) {
     sgMake({ ...st, edit: [] }, { mode: 'view' }); SG.edit = [];
-    { const has = l => (l || []).some(b => b.x || (Array.isArray(b.b) && has(b.b)) || has(b.e)), w = Object.keys(SG.progs).find(id => Object.values(SG.progs[id]).some(scr => scr.some(has))); if (w) SG.who = w; }
+    { const has = l => (l || []).some(b => b.mk || (Array.isArray(b.b) && has(b.b)) || has(b.e)), w = Object.keys(SG.progs).find(id => Object.values(SG.progs[id]).some(scr => scr.some(has))); if (w) SG.who = w; }
     sgStage(st);
     const marked = []; Object.values(SG.progs).forEach(P => Object.values(P).forEach(scr => scr.forEach(function w(l) { (l || []).forEach(b => { marked.push(b); if (Array.isArray(b.b)) w(b.b); if (b.e) w(b.e); }); })));
-    const wire = () => marked.forEach(b => { const e = document.getElementById('sg' + b._id); if (!e) return; const h = e.querySelector('.tbh'); h.classList.add('rspot'); h.onclick = () => { if (TSS.ready) return; TSS.ready = true; const ok = !!b.x; e.classList.add(ok ? 'good' : 'err'); if (!ok) { const g = marked.find(x => x.x); const ge = g && document.getElementById('sg' + g._id); if (ge) ge.classList.add('good'); }
+    const wire = () => marked.forEach(b => { const e = document.getElementById('sg' + b._id); if (!e) return; const h = e.querySelector('.tbh'); h.classList.add('rspot'); h.onclick = () => { if (TSS.ready) return; TSS.ready = true; const ok = !!b.mk; e.classList.add(ok ? 'good' : 'err'); if (!ok) { const g = marked.find(x => x.x); const ge = g && document.getElementById('sg' + g._id); if (ge) ge.classList.add('good'); }
       sgSay(ok ? L('Molt bé!', '¡Muy bien!') + (st.ex ? ' ' + tval(st.ex) : '') : (st.ex ? tval(st.ex) : L('No és aquest: és el que està marcat en verd.', 'No es este: es el que está marcado en verde.')), ok ? 'ok' : 'bad'); ok ? (SFX.ok && SFX.ok(), TSS.ok++) : SFX.ko && SFX.ko(); tContinue(); }; });
     // el bloc marcat pot ser d'un altre personatge: en canviar de pestanya, es tornen a connectar els tocs
     const w0 = sgWhoSel; window.sgWhoSel = id => { w0(id); wire(); }; wire();
@@ -617,6 +621,6 @@ TVALID.stage = TVALID.screate = st => { if (!st.sol) return 'falta la solució (
   if (st.check) { try { const m = st.check(stgProgs(st.w, P)); if (m) out.push('la solució no passa la comprovació (check): ' + tx(m)); } catch (e) { out.push('check: ' + e.message); } }
   for (const d of st.w.sprites) if (!STG_ART[d.art]) out.push(`personatge desconegut «${d.art}»`); if (!STG_BG[st.w.bg]) out.push(`fons desconegut «${st.w.bg}»`);
   return out; };
-TVALID.sspot = st => { try { const P = SQ(st.prog); let n = 0; Object.values(P).forEach(H => Object.values(H).forEach(scr => scr.forEach(function w(l) { (l || []).forEach(b => { if (b.x) n++; if (Array.isArray(b.b)) w(b.b); if (b.e) w(b.e); }); }))); return n === 1 ? [] : [`cal exactament 1 bloc marcat amb ! (n'hi ha ${n})`]; } catch (e) { return [e.message]; } };
+TVALID.sspot = st => { try { const P = SQ(st.prog); let n = 0; Object.values(P).forEach(H => Object.values(H).forEach(scr => scr.forEach(function w(l) { (l || []).forEach(b => { if (b.mk) n++; if (Array.isArray(b.b)) w(b.b); if (b.e) w(b.e); }); }))); return n === 1 ? [] : [`cal exactament 1 bloc marcat amb ! (n'hi ha ${n})`]; } catch (e) { return [e.message]; } };
 TVALID.sfree = st => { try { SQ(st.prog || '@x flag{ }'); return STG_BG[st.w.bg] ? [] : ['fons desconegut']; } catch (e) { return [e.message]; } };
 TVALID['media:stage'] = m => { try { SQ(m.prog); return STG_BG[m.w.bg] ? [] : ['fons desconegut']; } catch (e) { return [e.message]; } };
