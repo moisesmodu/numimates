@@ -44,7 +44,13 @@ const MG = {
   pal: { cap: 'llg', n: 'Paraules|Palabras', d: 'Ordena les lletres i troba la paraula.|Ordena las letras y encuentra la palabra.' },
   sin: { cap: 'llg', n: 'Sinònims i contraris|Sinónimos y contrarios', d: 'Tria la paraula que vol dir el mateix, o el contrari.|Elige la palabra que significa lo mismo, o lo contrario.', nou: true },
   ref: { cap: 'llg', n: 'Refranys|Refranes', d: 'Completa el refrany.|Completa el refrán.' },
-  sob: { cap: 'llg', n: 'La que sobra|La que sobra', d: 'Troba la paraula que no és del mateix grup.|Encuentra la palabra que no es del mismo grupo.', nou: true }
+  sob: { cap: 'llg', n: 'La que sobra|La que sobra', d: 'Troba la paraula que no és del mateix grup.|Encuentra la palabra que no es del mismo grupo.', nou: true },
+  kil: { cap: 'cal', n: 'Sudoku de sumes|Sudoku de sumas', d: 'Cada gàbia de color ha de sumar el número de la cantonada, sense repetir xifres.|Cada jaula de color debe sumar el número de la esquina, sin repetir cifras.', unit: 's', low: true, nou: true },
+  ken: { cap: 'cal', n: 'Sumes i restes|Sumas y restas', d: 'Sense repetir a cap fila ni columna, i cada gàbia ha de donar el seu resultat.|Sin repetir en ninguna fila ni columna, y cada jaula debe dar su resultado.', unit: 's', low: true, nou: true },
+  sol: { cap: 'log', n: 'Sol i lluna|Sol y luna', d: 'Tants sols com llunes a cada fila i columna, i mai tres iguals seguits.|Tantos soles como lunas en cada fila y columna, y nunca tres iguales seguidos.', unit: 's', low: true, nou: true },
+  cor: { cap: 'log', n: 'Corones|Coronas', d: 'Una corona per fila, per columna i per color, i que no es toquin.|Una corona por fila, por columna y por color, y que no se toquen.', unit: 's', low: true, nou: true },
+  grp: { cap: 'llg', n: 'Quatre grups|Cuatro grupos', d: 'Setze paraules, quatre grups de quatre: descobreix què les uneix.|Dieciséis palabras, cuatro grupos de cuatro: descubre qué las une.', unit: '%', nou: true },
+  wrd: { cap: 'llg', n: 'Paraula amagada|Palabra escondida', d: 'Endevina la paraula en sis intents: els colors et diuen si vas bé.|Adivina la palabra en seis intentos: los colores te dicen si vas bien.', low: true, nou: true }
 };
 // fora de la pantalla: activitats físiques o socials, senzilles i factibles. Cada persona les rep en un ordre propi
 // i no se'n repeteix cap fins que no han sortit totes (vegeu mHabIdx)
@@ -136,6 +142,12 @@ const MICO = {
   sin: '<path d="M4 9c2.5-2 5.5 2 8 0s5.5-2 8 0M4 15c2.5-2 5.5 2 8 0s5.5-2 8 0"/>',
   ref: '<path d="M4 11.5h4.5V17H4v-4c0-3 1.3-5 4-6M14 11.5h4.5V17H14v-4c0-3 1.3-5 4-6"/>',
   sob: '<circle cx="7" cy="7" r="3.3"/><circle cx="17" cy="7" r="3.3"/><circle cx="7" cy="17" r="3.3"/><rect x="13.7" y="13.7" width="6.6" height="6.6" rx="1.2"/>',
+  kil: '<rect x="3" y="3" width="18" height="18" rx="2.5"/><path d="M5.8 5.8h7v6h-7z" stroke-dasharray="1.8 1.6"/><path d="M17 6.3v4M15 8.3h4"/>',
+  ken: '<rect x="3" y="3" width="18" height="18" rx="2.5"/><path d="M12 3v18M3 12h18"/><path d="M5.5 7.5h3.4M7.2 5.8v3.4M15 7.5h3.4"/>',
+  sol: '<circle cx="8" cy="9" r="3"/><path d="M8 3.6v1.2M8 13.2v1.2M2.6 9h1.2M12.2 9h1.2M4.2 5.2l.8.8M11 12l.8.8"/><path d="M18 12.5a4.6 4.6 0 1 0 2.8 8.3 3.7 3.7 0 0 1-2.8-8.3z"/>',
+  cor: '<path d="M4 16.5 3 7.5l4.8 3.8L12 5l4.2 6.3L21 7.5l-1 9z"/><path d="M4.5 20h15"/>',
+  grp: '<rect x="3" y="3.5" width="18" height="4.5" rx="1.5" fill="currentColor"/><rect x="3" y="11" width="4.5" height="4" rx="1"/><rect x="9.75" y="11" width="4.5" height="4" rx="1"/><rect x="16.5" y="11" width="4.5" height="4" rx="1"/><rect x="3" y="17" width="4.5" height="4" rx="1"/><rect x="9.75" y="17" width="4.5" height="4" rx="1"/><rect x="16.5" y="17" width="4.5" height="4" rx="1"/>',
+  wrd: '<rect x="2.5" y="7.5" width="5.5" height="7" rx="1.3"/><rect x="9.25" y="7.5" width="5.5" height="7" rx="1.3" fill="currentColor"/><rect x="16" y="7.5" width="5.5" height="7" rx="1.3"/><path d="M5 18.5h14"/>',
   // interfície
   avui: '<rect x="3" y="5" width="18" height="16" rx="2.5"/><path d="M3 10h18M8 3v4M16 3v4"/><path d="m9 15 2 2 4-4"/>',
   jocs: '<rect x="3" y="3" width="7.5" height="7.5" rx="2"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="2"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="2"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="2"/>',
@@ -176,7 +188,7 @@ const mLoc = () => LANG === 'es' ? 'es-ES' : 'ca-ES';
 // sessió del dia: un joc de cada grup. No repeteix cap joc de les sessions d'ahir i d'abans d'ahir; després tria el
 // que fa més dies que no es juga (la capacitat a reforçar compta com 3 dies més) i, en empat, a l'atzar però fix per a
 // cada persona i dia. El tercer grup, a més, canvia de capacitat respecte d'ahir (càlcul → lògica → llenguatge…).
-const MSLOT = [['vel', 'rfx', 'sim', 'igu', 'ate', 'int', 'uni', 'atu'], ['mem', 'dig', 'par', 'lli', 'nom', 'nbk', 'dir', 'onn'], ['cal', 'cad', 'com', 'est', 'sud', 'ser', 'rel', 'ded', 'pal', 'sin', 'ref', 'sob']];
+const MSLOT = [['vel', 'rfx', 'sim', 'igu', 'ate', 'int', 'uni', 'atu'], ['mem', 'dig', 'par', 'lli', 'nom', 'nbk', 'dir', 'onn'], ['cal', 'cad', 'com', 'est', 'kil', 'ken', 'sud', 'ser', 'rel', 'ded', 'sol', 'cor', 'pal', 'sin', 'ref', 'sob', 'grp', 'wrd']];
 const mHash = s => { let h = 2166136261; for (let i = 0; i < s.length; i++) h = Math.imul(h ^ s.charCodeAt(i), 16777619); return h >>> 0; };
 const mDayBefore = (d, k) => { const x = new Date(d + 'T12:00'); x.setDate(x.getDate() - k); return mKey(x); };
 function mSession(d = today()) {
@@ -318,7 +330,7 @@ function mGameShell(g, top, body, title) {
   mGameFx();
 }
 // barra sota el títol a partir del marcador de cada joc: «3/8» = progrés; «44 s» = temps que queda (es compta des del primer valor)
-// i un destell del fons quan una peça es marca com a encert o error. Així els 28 jocs ho tenen sense tocar-los un per un.
+// i un destell del fons quan una peça es marca com a encert o error. Així els 34 jocs ho tenen sense tocar-los un per un.
 let MFX = null;
 function mGameFx() {
   if (MFX) { MFX.forEach(o => o.disconnect()); MFX = null; }
@@ -408,7 +420,13 @@ function mHow(g) {
     pal: L('Toca les lletres en ordre per formar la paraula. La pista et diu de què va.', 'Toca las letras en orden para formar la palabra. La pista te dice de qué va.'),
     sin: L('Vuit paraules. Tria la que vol dir el mateix (sinònim) o el contrari, segons el que et demanem.', 'Ocho palabras. Elige la que significa lo mismo (sinónimo) o lo contrario, según lo que te pidamos.'),
     ref: L('Vuit refranys de sempre. Tria com acaba cadascun.', 'Ocho refranes de siempre. Elige cómo acaba cada uno.'),
-    sob: L('Surten unes quantes paraules: totes són del mateix grup menys una. Toca la que sobra. Vuit rondes.', 'Salen unas cuantas palabras: todas son del mismo grupo menos una. Toca la que sobra. Ocho rondas.')
+    sob: L('Surten unes quantes paraules: totes són del mateix grup menys una. Toca la que sobra. Vuit rondes.', 'Salen unas cuantas palabras: todas son del mismo grupo menos una. Toca la que sobra. Ocho rondas.'),
+    kil: L("Toca una casella i després el número. Com en el sudoku, cada número una sola vegada per fila, columna i quadre. A més, cada <b>gàbia de color</b> ha de sumar el número petit de la cantonada, i dins d'una gàbia no es pot repetir cap xifra.", 'Toca una casilla y después el número. Como en el sudoku, cada número una sola vez por fila, columna y cuadro. Además, cada <b>jaula de color</b> debe sumar el número pequeño de la esquina, y dentro de una jaula no se puede repetir ninguna cifra.'),
+    ken: L('Cada número una sola vegada per fila i per columna. El número petit de cada gàbia és el resultat: <b>«7+»</b> vol dir que les caselles sumen 7, i <b>«2−»</b>, que la diferència entre les dues és 2.', 'Cada número una sola vez por fila y por columna. El número pequeño de cada jaula es el resultado: <b>«7+»</b> quiere decir que las casillas suman 7, y <b>«2−»</b>, que la diferencia entre las dos es 2.'),
+    sol: L('Toca una casella per posar-hi un sol; torna-la a tocar per a una lluna. Cada fila i cada columna tenen <b>tants sols com llunes</b>, i mai n\'hi pot haver <b>tres d\'iguals seguits</b>. Entre dues caselles, <b>«=»</b> vol dir que són iguals i <b>«×»</b>, que són diferents.', 'Toca una casilla para poner un sol; vuelve a tocarla para una luna. Cada fila y cada columna tienen <b>tantos soles como lunas</b>, y nunca puede haber <b>tres iguales seguidos</b>. Entre dos casillas, <b>«=»</b> quiere decir que son iguales y <b>«×»</b>, que son diferentes.'),
+    cor: L('Posa <b>una corona a cada fila, a cada columna i a cada zona de color</b>. Dues corones no es poden tocar, ni tan sols en diagonal. Un toc marca una creu (aquí segur que no n\'hi va) i dos tocs hi posen la corona.', 'Pon <b>una corona en cada fila, en cada columna y en cada zona de color</b>. Dos coronas no se pueden tocar, ni siquiera en diagonal. Un toque marca una cruz (aquí seguro que no va) y dos toques ponen la corona.'),
+    grp: L('Hi ha setze paraules que formen <b>quatre grups de quatre</b>. Toca les quatre que creguis que van juntes i prem «Comprova». Tens quatre errors de marge.', 'Hay dieciséis palabras que forman <b>cuatro grupos de cuatro</b>. Toca las cuatro que creas que van juntas y pulsa «Comprueba». Tienes cuatro errores de margen.'),
+    wrd: L('Endevina la paraula amagada en <b>sis intents</b>. Després de cada intent, les lletres es pinten: <b>verd</b>, és al seu lloc; <b>daurat</b>, és a la paraula però en un altre lloc; <b>gris</b>, no hi és. Els accents no compten.', 'Adivina la palabra escondida en <b>seis intentos</b>. Después de cada intento, las letras se pintan: <b>verde</b>, está en su sitio; <b>dorado</b>, está en la palabra pero en otro sitio; <b>gris</b>, no está. Los acentos no cuentan.')
   }[g];
   return `<p class="mhow">${h}</p>`;
 }
@@ -422,7 +440,7 @@ function mSpeak(g) {
   } catch (e) { }
 }
 const mHush = () => { try { speechSynthesis.cancel(); } catch (e) { } };
-function mStart(g) { mHush(); SFX.tap && SFX.tap(); ({ vel: velGo, ate: ateGo, mem: memGo, par: parGo, cal: calGo, sud: sudGo, pal: palGo, int: intGo, lli: lliGo, dir: dirGo, com: comGo, ref: refGo, rel: relGo, rfx: rfxGo, sim: simGo, uni: uniGo, atu: atuGo, dig: digGo, nbk: nbkGo, nom: nomGo, cad: cadGo, ser: serGo, sin: sinGo, igu: iguGo, onn: onnGo, est: estGo, ded: dedGo, sob: sobGo })[g](); }
+function mStart(g) { mHush(); SFX.tap && SFX.tap(); ({ vel: velGo, ate: ateGo, mem: memGo, par: parGo, cal: calGo, sud: sudGo, pal: palGo, int: intGo, lli: lliGo, dir: dirGo, com: comGo, ref: refGo, rel: relGo, rfx: rfxGo, sim: simGo, uni: uniGo, atu: atuGo, dig: digGo, nbk: nbkGo, nom: nomGo, cad: cadGo, ser: serGo, sin: sinGo, igu: iguGo, onn: onnGo, est: estGo, ded: dedGo, sob: sobGo, kil: kilGo, ken: kenGo, sol: solGo, cor: corGo, grp: grpGo, wrd: wrdGo })[g](); }
 
 // resultat: guarda, adapta el nivell i marca la sessió
 function mEnd(g, score, up, msg, o) {
@@ -1212,6 +1230,447 @@ async function sobTap(i) {
   b[A.cur.ans].classList.add('okc'); if (!ok) b[i].classList.add('koc'); ok ? (A.ok++, SFX.ok && SFX.ok()) : SFX.ko && SFX.ko();
   const w = $('#sobw'); if (w) w.textContent = L(`Sobra «${A.cur.opts[A.cur.ans]}»: les altres són ${A.cur.cat}.`, `Sobra «${A.cur.opts[A.cur.ans]}»: las otras son ${A.cur.cat}.`);
   await mSleep(ok ? 1500 : 2400); if (MGA === A) sobNext();
+}
+
+/* ---------- 29-34. Jocs nous (oct. 2026): sudoku de sumes, sumes i restes, sol i lluna, corones, quatre grups, paraula amagada ----------
+   Mecàniques de trencaclosques actuals (killer sudoku, KenKen, Tango, Queens, Connections, Wordle) fetes de nou, amb contingut propi. */
+
+// --- graelles amb gàbies: sudoku de sumes (killer) i sumes i restes (tipus KenKen) ---
+const MCG_TINT = ['#E2F1EA', '#FBEFD0', '#F8E0D8', '#E7E3F6', '#DCEAF6'];
+function mcgCages(n, sol, sizes, distinct) {
+  // parteix la graella en gàbies connexes; distinct: sense xifres repetides dins la gàbia
+  const id = Array(n * n).fill(-1), cages = [], nbs = k => { const r = Math.floor(k / n), c = k % n; return [[r - 1, c], [r + 1, c], [r, c - 1], [r, c + 1]].filter(([a, b]) => a >= 0 && b >= 0 && a < n && b < n).map(([a, b]) => a * n + b); };
+  for (const s of shuffle([...Array(n * n).keys()])) {
+    if (id[s] >= 0) continue;
+    const want = pick(sizes), cg = [s]; id[s] = cages.length;
+    while (cg.length < want) {
+      const nb = shuffle(cg.flatMap(nbs)).filter(k => id[k] < 0 && (!distinct || !cg.some(j => sol[j] === sol[k])));
+      if (!nb.length) break; id[nb[0]] = cages.length; cg.push(nb[0]);
+    }
+    cages.push({ cells: cg.sort((a, b) => a - b) });
+  }
+  return { id, cages };
+}
+// resol (fins a `lim` solucions) una graella llatina amb quadres opcionals i gàbies
+function mcgSolve(P, lim = 2) {
+  const { n, br, bc, id, cages, giv } = P, g = Array(n * n).fill(0), out = [];
+  for (const [k, v] of giv) g[k] = v;
+  const okCage = (cg, k, v) => {
+    let sum = 0; const vals = [];
+    for (const j of cg.cells) { const x = j === k ? v : g[j]; if (x) { sum += x; vals.push(x); } }
+    const left = cg.cells.length - vals.length;
+    if (cg.op === '=') return v === cg.t;
+    if (cg.op === '−') return left ? (vals[0] + cg.t <= n || vals[0] - cg.t >= 1) : Math.abs(vals[0] - vals[1]) === cg.t;
+    if (cg.distinct && new Set(vals).size < vals.length) return false;
+    if (!left) return sum === cg.t;
+    return sum + left <= cg.t && sum + left * n >= cg.t;
+  };
+  const can = (k, v) => {
+    const r = Math.floor(k / n), c = k % n;
+    for (let i = 0; i < n; i++) if (g[r * n + i] === v || g[i * n + c] === v) return false;
+    if (br) { const r0 = r - r % br, c0 = c - c % bc; for (let i = 0; i < br; i++) for (let j = 0; j < bc; j++) if (g[(r0 + i) * n + c0 + j] === v) return false; }
+    return okCage(cages[id[k]], k, v);
+  };
+  const rec = () => {
+    if (out.length >= lim) return;
+    let best = -1, bl = null;
+    for (let k = 0; k < n * n; k++) if (!g[k]) {
+      const l = []; for (let v = 1; v <= n; v++) if (can(k, v)) l.push(v);
+      if (!l.length) return;
+      if (!bl || l.length < bl.length) { best = k; bl = l; if (l.length === 1) break; }
+    }
+    if (best < 0) { out.push(g.slice()); return; }
+    for (const v of bl) { g[best] = v; rec(); g[best] = 0; if (out.length >= lim) return; }
+  };
+  rec(); return out;
+}
+function mcgMake(kind, lv) {
+  let last = null;
+  for (let t = 0; t < 40; t++) {
+    let n, br = 0, bc = 0, sizes;
+    if (kind === 'kil') { [n, br, bc] = lv <= 4 ? [4, 2, 2] : [6, 2, 3]; sizes = lv <= 2 ? [1, 2, 2] : lv <= 4 ? [2, 2, 3] : lv <= 7 ? [2, 2, 3, 3] : [2, 3, 3, 4]; }
+    else { n = lv <= 2 ? 3 : lv <= 5 ? 4 : lv <= 8 ? 5 : 6; sizes = lv <= 2 ? [1, 2, 2] : lv <= 5 ? [1, 2, 2, 3] : [2, 2, 2, 3]; }
+    const sol2 = sudMake(n, br || 1, bc || n, 0).sol, sol = sol2.flat();
+    const { id, cages } = mcgCages(n, sol, sizes, kind === 'kil');
+    cages.forEach(cg => {
+      const v = cg.cells.map(k => sol[k]); cg.distinct = kind === 'kil';
+      if (v.length === 1) { cg.op = '='; cg.t = v[0]; }
+      else if (kind === 'ken' && lv >= 3 && v.length === 2 && Math.random() < .5) { cg.op = '−'; cg.t = Math.abs(v[0] - v[1]); }
+      else { cg.op = '+'; cg.t = v.reduce((a, b) => a + b, 0); }
+    });
+    const giv = [], P = { n, br, bc, id, cages, giv };
+    let s = mcgSolve(P), guard = 0;
+    while (s.length > 1 && guard++ < n * n) { const diff = [...Array(n * n).keys()].filter(k => s[0][k] !== s[1][k]); const k = pick(diff); giv.push([k, sol[k]]); s = mcgSolve(P); }
+    if (s.length !== 1) continue;
+    last = { ...P, sol };
+    if (giv.length > Math.ceil(n * n / 6)) continue;   // massa ajudes: busca'n una de més neta
+    const extra = kind === 'kil' ? [4, 2, 0, 0, 4, 2, 1, 0, 0, 0][lv - 1] : [0, 0, 1, 0, 0, 1, 0, 0, 1, 0][lv - 1];
+    for (const k of shuffle([...Array(n * n).keys()]).filter(k => !giv.some(x => x[0] === k) && cages[id[k]].op !== '=').slice(0, extra)) giv.push([k, sol[k]]);
+    return last;
+  }
+  return last;
+}
+function kilGo() { mcgGo('kil'); }
+function kenGo() { mcgGo('ken'); }
+function mcgGo(kind) {
+  const Z = mcgMake(kind, mLvl(kind)), n = Z.n;
+  const cur = Array(n * n).fill(0), fix = Array(n * n).fill(false); Z.giv.forEach(([k, v]) => { cur[k] = v; fix[k] = true; });
+  // gàbies veïnes amb tons diferents
+  const col = [];
+  Z.cages.forEach((cg, i) => {
+    const nb = new Set(); cg.cells.forEach(k => { const r = Math.floor(k / n), c = k % n; [[r - 1, c], [r + 1, c], [r, c - 1], [r, c + 1]].forEach(([a, b]) => { if (a >= 0 && b >= 0 && a < n && b < n) { const j = Z.id[a * n + b]; if (j !== i && col[j] != null) nb.add(col[j]); } }); });
+    col[i] = [0, 1, 2, 3, 4].find(x => !nb.has(x)) ?? 0;
+  });
+  MGA = { ...MGA, kind, Z, cur, fix, col, sel: null, hints: 0, t0: Date.now() };
+  mcgDraw(); MGA_TK = setInterval(() => { if (MGA) mSet(mTime(Math.floor((Date.now() - MGA.t0) / 1000))); }, 1000);
+}
+function mcgBad(A) {
+  const Z = A.Z, n = Z.n, cur = A.cur, bad = new Set();
+  for (let k = 0; k < n * n; k++) {
+    const v = cur[k]; if (!v) continue; const r = Math.floor(k / n), c = k % n;
+    for (let i = 0; i < n; i++) { if (i !== c && cur[r * n + i] === v) bad.add(k); if (i !== r && cur[i * n + c] === v) bad.add(k); }
+    if (Z.br) { const r0 = r - r % Z.br, c0 = c - c % Z.bc; for (let i = 0; i < Z.br; i++) for (let j = 0; j < Z.bc; j++) { const q = (r0 + i) * n + c0 + j; if (q !== k && cur[q] === v) bad.add(k); } }
+  }
+  Z.cages.forEach(cg => {
+    const v = cg.cells.map(k => cur[k]); if (!v.every(x => x)) return;
+    const ok = cg.op === '=' ? v[0] === cg.t : cg.op === '−' ? Math.abs(v[0] - v[1]) === cg.t : v.reduce((a, b) => a + b, 0) === cg.t && (!cg.distinct || new Set(v).size === v.length);
+    if (!ok) cg.cells.forEach(k => bad.add(k));
+  });
+  return bad;
+}
+function mcgDraw() {
+  const A = MGA, Z = A.Z, n = Z.n, cur = A.cur, sel = A.sel ?? -1, sv = sel >= 0 ? cur[sel] : 0, bad = mcgBad(A);
+  const lab = cg => cg.op === '=' ? cg.t : `${cg.t}${A.kind === 'ken' ? cg.op : ''}`;
+  $('#mgb').innerHTML = `<div class="mcg ${A.kind}" style="--n:${n}">${cur.map((v, k) => {
+    const r = Math.floor(k / n), c = k % n, cg = Z.cages[Z.id[k]];
+    const cls = [A.fix[k] && 'fix', k === sel && 'sel', sv && v === sv && k !== sel && 'same', bad.has(k) && 'bad', c < n - 1 && Z.id[k] !== Z.id[k + 1] && 'er', r < n - 1 && Z.id[k] !== Z.id[k + n] && 'eb',
+      Z.br && (c + 1) % Z.bc === 0 && c < n - 1 && 'xr', Z.br && (r + 1) % Z.br === 0 && r < n - 1 && 'xb'].filter(Boolean).join(' ');
+    return `<button class="mcg-c ${cls}" style="--t:${MCG_TINT[A.col[Z.id[k]]]}" onclick="mcgSel(${k})" aria-label="${L('Fila', 'Fila')} ${r + 1}, ${L('columna', 'columna')} ${c + 1}">${k === cg.cells[0] ? `<i class="mcg-l">${lab(cg)}</i>` : ''}<b>${v || ''}</b></button>`;
+  }).join('')}</div>
+    <div class="sudpad" style="--n:${Math.min(n, 5)}">${[...Array(n).keys()].map(i => `<button onclick="mcgK(${i + 1})">${i + 1}</button>`).join('')}<button class="sud0" onclick="mcgK(0)">⌫</button><button class="sudh" onclick="mcgHint()">💡 ${L('Pista', 'Pista')}</button></div>`;
+}
+function mcgSel(k) { if (!MGA) return; MGA.sel = k; SFX.tap && SFX.tap(); mcgDraw(); }
+function mcgK(v) {
+  const A = MGA; if (!A) return;
+  if (A.sel == null) return toast(L('Primer toca una casella buida.', 'Primero toca una casilla vacía.'));
+  if (A.fix[A.sel]) return; A.cur[A.sel] = v; mcgDraw(); mcgCheck();
+}
+function mcgHint() {
+  const A = MGA, s = A.Z.sol; let k = A.sel != null && !A.fix[A.sel] && A.cur[A.sel] !== s[A.sel] ? A.sel : null;
+  if (k == null) { const e = A.cur.map((v, i) => v !== s[i] ? i : -1).filter(i => i >= 0); k = e.length ? pick(e) : null; }
+  if (k == null) return;
+  A.hints++; A.cur[k] = s[k]; A.fix[k] = true; A.sel = k; mcgDraw(); mcgCheck();
+}
+function mcgCheck() {
+  const A = MGA; if (!A.cur.every((v, i) => v === A.Z.sol[i])) return;
+  clearInterval(MGA_TK); const s = Math.round((Date.now() - A.t0) / 1000), n = A.Z.n, g = A.kind, nm = tx(MG[g].n);
+  setTimeout(() => mEnd(g, s, A.hints === 0 ? 1 : A.hints >= 3 ? -1 : 0,
+    L(`${nm} ${n}×${n} resolt${A.hints ? ` amb ${A.hints} ${A.hints === 1 ? 'pista' : 'pistes'}` : ' sense pistes'}.`, `${nm} ${n}×${n} resuelto${A.hints ? ` con ${A.hints} ${A.hints === 1 ? 'pista' : 'pistas'}` : ' sin pistas'}.`),
+    A.hints ? { noRec: true, note: L('Amb pistes no compta per al rècord.', 'Con pistas no cuenta para el récord.') } : null), 500);
+}
+
+// --- Sol i lluna: meitat i meitat a cada fila i columna, mai tres iguals seguits, «=» iguals i «×» diferents ---
+const MSL_IC = {
+  1: '<svg viewBox="0 0 24 24" aria-hidden="true"><g stroke="#E2A92F" stroke-width="2.2" stroke-linecap="round"><path d="M12 1.8v2.8M12 19.4v2.8M1.8 12h2.8M19.4 12h2.8M4.8 4.8l2 2M17.2 17.2l2 2M4.8 19.2l2-2M17.2 6.8l2-2"/></g><circle cx="12" cy="12" r="5.6" fill="#F2BE45"/><circle cx="10.4" cy="10.4" r="1.8" fill="#fff" opacity=".45"/></svg>',
+  2: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15.2 2.6A9.6 9.6 0 1 0 21.4 17 7.8 7.8 0 0 1 15.2 2.6z" fill="#2F6F8F"/><path d="M8.5 6.5a6 6 0 0 0-1.6 6" stroke="#fff" stroke-width="1.6" stroke-linecap="round" fill="none" opacity=".4"/></svg>'
+};
+function mslValid(G, n, sg) {
+  const h = n / 2;
+  for (let i = 0; i < n; i++) {
+    const a = [0, 0, 0], b = [0, 0, 0];
+    for (let j = 0; j < n; j++) {
+      a[G[i * n + j]]++; b[G[j * n + i]]++;
+      if (j >= 2) { const x = G[i * n + j]; if (x && x === G[i * n + j - 1] && x === G[i * n + j - 2]) return false; const y = G[j * n + i]; if (y && y === G[(j - 1) * n + i] && y === G[(j - 2) * n + i]) return false; }
+    }
+    if (a[1] > h || a[2] > h || b[1] > h || b[2] > h) return false;
+  }
+  for (const [p, q, t] of sg) if (G[p] && G[q] && ((t === '=') !== (G[p] === G[q]))) return false;
+  return true;
+}
+function mslSolve(n, giv, sg, lim = 2, rnd = false) {
+  const G = Array(n * n).fill(0), out = []; giv.forEach(([k, v]) => G[k] = v);
+  const rec = k => {
+    if (out.length >= lim) return; while (k < n * n && G[k]) k++;
+    if (k === n * n) { out.push(G.slice()); return; }
+    for (const v of rnd && Math.random() < .5 ? [2, 1] : [1, 2]) { G[k] = v; if (mslValid(G, n, sg)) rec(k + 1); G[k] = 0; if (out.length >= lim) return; }
+  };
+  rec(0); return out;
+}
+function mslMake(lv) {
+  const n = lv <= 3 ? 4 : 6, sol = mslSolve(n, [], [], 1, true)[0];
+  const signs = []; for (let r = 0; r < n; r++) for (let c = 0; c < n; c++) { const k = r * n + c; if (c < n - 1) signs.push([k, k + 1, sol[k] === sol[k + 1] ? '=' : 'x']); if (r < n - 1) signs.push([k, k + n, sol[k] === sol[k + n] ? '=' : 'x']); }
+  // pistes: totes les caselles i tots els signes; se'n treuen a l'atzar mentre la solució continuï sent única
+  let clues = [...sol.map((v, k) => ['c', k, v]), ...signs.map(s => ['s', s])];
+  const removed = [];
+  for (const cl of shuffle(clues.slice())) {
+    const rest = clues.filter(x => x !== cl);
+    if (mslSolve(n, rest.filter(x => x[0] === 'c').map(x => [x[1], x[2]]), rest.filter(x => x[0] === 's').map(x => x[1])).length === 1) { clues = rest; removed.push(cl); }
+  }
+  // als nivells baixos se'n tornen a posar unes quantes perquè sigui més planer
+  const extra = [6, 4, 2, 10, 8, 6, 4, 3, 1, 0][lv - 1];
+  clues.push(...shuffle(removed).slice(0, extra));
+  return { n, sol, giv: clues.filter(x => x[0] === 'c').map(x => [x[1], x[2]]), sg: clues.filter(x => x[0] === 's').map(x => x[1]) };
+}
+function solGo() {
+  const Z = mslMake(mLvl('sol')), n = Z.n, cur = Array(n * n).fill(0), fix = Array(n * n).fill(false);
+  Z.giv.forEach(([k, v]) => { cur[k] = v; fix[k] = true; });
+  MGA = { ...MGA, Z, cur, fix, hints: 0, t0: Date.now() };
+  mslDraw(); MGA_TK = setInterval(() => { if (MGA) mSet(mTime(Math.floor((Date.now() - MGA.t0) / 1000))); }, 1000);
+}
+function mslDraw() {
+  const A = MGA, { n, sg } = A.Z, G = A.cur, h = n / 2, bad = new Set(), bs = new Set();
+  for (let i = 0; i < n; i++) {
+    for (const v of [1, 2]) { if (G.filter((x, k) => Math.floor(k / n) === i && x === v).length > h) for (let j = 0; j < n; j++) if (G[i * n + j] === v) bad.add(i * n + j);
+      if (G.filter((x, k) => k % n === i && x === v).length > h) for (let j = 0; j < n; j++) if (G[j * n + i] === v) bad.add(j * n + i); }
+    for (let j = 2; j < n; j++) {
+      const x = G[i * n + j]; if (x && x === G[i * n + j - 1] && x === G[i * n + j - 2]) [0, 1, 2].forEach(d => bad.add(i * n + j - d));
+      const y = G[j * n + i]; if (y && y === G[(j - 1) * n + i] && y === G[(j - 2) * n + i]) [0, 1, 2].forEach(d => bad.add((j - d) * n + i));
+    }
+  }
+  sg.forEach((s, i) => { const [p, q, t] = s; if (G[p] && G[q] && ((t === '=') !== (G[p] === G[q]))) bs.add(i); });
+  const pos = (p, q) => { const r = Math.floor(p / n), c = p % n; return q === p + 1 ? `left:calc(6px + (100% - 12px) * ${(c + 1) / n});top:calc(6px + (100% - 12px) * ${(r + .5) / n})` : `left:calc(6px + (100% - 12px) * ${(c + .5) / n});top:calc(6px + (100% - 12px) * ${(r + 1) / n})`; };
+  $('#mgb').innerHTML = `<div class="msl" style="--n:${n}">${G.map((v, k) => `<button class="msl-c ${A.fix[k] ? 'fix' : ''} ${bad.has(k) ? 'bad' : ''}" onclick="mslTap(${k})" aria-label="${v === 1 ? L('Sol', 'Sol') : v === 2 ? L('Lluna', 'Luna') : L('Buida', 'Vacía')}"><span>${v ? MSL_IC[v] : ''}</span></button>`).join('')}
+    ${sg.map(([p, q, t], i) => `<span class="msl-s ${bs.has(i) ? 'bad' : ''}" style="${pos(p, q)}">${t === '=' ? '=' : '×'}</span>`).join('')}</div>
+    <div class="msl-act"><button class="btn ghost" onclick="mslClr()">${L('Esborra-ho', 'Bórralo')}</button><button class="btn ghost" onclick="mslHint()">💡 ${L('Pista', 'Pista')}</button></div>`;
+}
+function mslTap(k) { const A = MGA; if (!A || A.fix[k]) return; A.cur[k] = (A.cur[k] + 1) % 3; SFX.tap && SFX.tap(); mslDraw(); mslCheck(); }
+function mslClr() { const A = MGA; A.cur = A.cur.map((v, k) => A.fix[k] ? v : 0); mslDraw(); }
+function mslHint() {
+  const A = MGA, s = A.Z.sol, e = A.cur.map((v, i) => v !== s[i] ? i : -1).filter(i => i >= 0); if (!e.length) return;
+  const k = pick(e); A.hints++; A.cur[k] = s[k]; A.fix[k] = true; mslDraw(); mslCheck();
+}
+function mslCheck() {
+  const A = MGA; if (!A.cur.every((v, i) => v === A.Z.sol[i])) return;
+  clearInterval(MGA_TK); const s = Math.round((Date.now() - A.t0) / 1000), n = A.Z.n;
+  setTimeout(() => mEnd('sol', s, A.hints === 0 ? 1 : A.hints >= 3 ? -1 : 0,
+    L(`Graella ${n}×${n} resolta${A.hints ? ` amb ${A.hints} ${A.hints === 1 ? 'pista' : 'pistes'}` : ' sense pistes'}.`, `Cuadrícula ${n}×${n} resuelta${A.hints ? ` con ${A.hints} ${A.hints === 1 ? 'pista' : 'pistas'}` : ' sin pistas'}.`),
+    A.hints ? { noRec: true, note: L('Amb pistes no compta per al rècord.', 'Con pistas no cuenta para el récord.') } : null), 500);
+}
+
+// --- Corones: una per fila, columna i zona de color, i que no es toquin ---
+const MCR_TINT = ['#BFE3D5', '#F6D9A6', '#F2C4B5', '#D5CCF0', '#BFD9EE', '#E6DDBF', '#CDE6B8', '#F0C9DD'];
+const MCR_IC = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.6 17.6 2.4 7.4l5.2 4.2L12 4.8l4.4 6.8 5.2-4.2-1.2 10.2z" fill="#F2BE45" stroke="#A8740F" stroke-width="1.3" stroke-linejoin="round"/><rect x="3.6" y="18.4" width="16.8" height="2.6" rx="1.1" fill="#C98F22"/><circle cx="12" cy="13.2" r="1.5" fill="#fff" opacity=".6"/></svg>';
+function mcrSolve(n, reg, lim = 2) {
+  let cnt = 0; const usedC = new Set(), usedR = new Set(), q = [];
+  const rec = r => {
+    if (cnt >= lim) return; if (r === n) { cnt++; return; }
+    for (let c = 0; c < n; c++) {
+      if (usedC.has(c) || (r && Math.abs(c - q[r - 1]) <= 1)) continue; const g = reg[r * n + c]; if (usedR.has(g)) continue;
+      usedC.add(c); usedR.add(g); q.push(c); rec(r + 1); q.pop(); usedC.delete(c); usedR.delete(g); if (cnt >= lim) return;
+    }
+  };
+  rec(0); return cnt;
+}
+function mcrMake(lv) {
+  const n = lv <= 2 ? 5 : lv <= 5 ? 6 : lv <= 8 ? 7 : 8;
+  for (let t = 0; t < 2000; t++) {
+    const p = [], place = r => { if (r === n) return true; for (const c of shuffle([...Array(n).keys()])) if (!p.includes(c) && (r === 0 || Math.abs(c - p[r - 1]) > 1)) { p.push(c); if (place(r + 1)) return true; p.pop(); } return false; };
+    if (!place(0)) continue;
+    // zones que creixen des de cada corona a ritmes diferents: unes de petites (que obliguen) i d'altres de grans
+    const reg = Array(n * n).fill(-1), w = p.map(() => .15 + Math.random() * 2.6), tot = w.reduce((a, b) => a + b, 0);
+    p.forEach((c, r) => reg[r * n + c] = r);
+    let left = n * n - n, guard = 0;
+    while (left && guard++ < 20000) {
+      let x = Math.random() * tot, r = 0; while (x > w[r]) { x -= w[r]; r++; } r = Math.min(r, n - 1);
+      const fr = []; reg.forEach((g, k) => { if (g !== r) return; const a = Math.floor(k / n), b = k % n; [[a - 1, b], [a + 1, b], [a, b - 1], [a, b + 1]].forEach(([y, z]) => { if (y >= 0 && z >= 0 && y < n && z < n && reg[y * n + z] < 0) fr.push(y * n + z); }); });
+      if (!fr.length) continue; reg[pick(fr)] = r; left--;
+    }
+    if (left) continue;
+    if (mcrSolve(n, reg) === 1) return { n, reg, sol: p };
+  }
+  return null;
+}
+function corGo() {
+  let Z = null; for (let lv = mLvl('cor'); !Z && lv >= 1; lv -= 3) Z = mcrMake(lv);
+  MGA = { ...MGA, Z, cur: Array(Z.n * Z.n).fill(0), hints: 0, t0: Date.now() };
+  mcrDraw(); MGA_TK = setInterval(() => { if (MGA) mSet(mTime(Math.floor((Date.now() - MGA.t0) / 1000))); }, 1000);
+}
+function mcrBad(A) {
+  const { n, reg } = A.Z, cr = A.cur.map((v, k) => v === 2 ? k : -1).filter(k => k >= 0), bad = new Set();
+  for (const a of cr) for (const b of cr) { if (a >= b) continue; const ra = Math.floor(a / n), ca = a % n, rb = Math.floor(b / n), cb = b % n;
+    if (ra === rb || ca === cb || reg[a] === reg[b] || (Math.abs(ra - rb) <= 1 && Math.abs(ca - cb) <= 1)) { bad.add(a); bad.add(b); } }
+  return bad;
+}
+function mcrDraw() {
+  const A = MGA, { n, reg } = A.Z, bad = mcrBad(A), nc = A.cur.filter(v => v === 2).length;
+  $('#mgb').innerHTML = `<p class="mcr-n">${L(`Corones: <b>${nc}</b> de ${n}`, `Coronas: <b>${nc}</b> de ${n}`)}</p><div class="mcr" style="--n:${n}">${A.cur.map((v, k) => {
+    const r = Math.floor(k / n), c = k % n;
+    return `<button class="mcr-c ${bad.has(k) ? 'bad' : ''} ${c < n - 1 && reg[k] !== reg[k + 1] ? 'er' : ''} ${r < n - 1 && reg[k] !== reg[k + n] ? 'eb' : ''}" style="--t:${MCR_TINT[reg[k] % MCR_TINT.length]}" onclick="mcrTap(${k})" aria-label="${L('Fila', 'Fila')} ${r + 1}, ${L('columna', 'columna')} ${c + 1}">${v === 2 ? MCR_IC : v === 1 ? '<i class="x">×</i>' : ''}</button>`;
+  }).join('')}</div>
+    <p class="mmut mcr-tip">${L('Un toc: creu (aquí no hi va). Dos tocs: corona.', 'Un toque: cruz (aquí no va). Dos toques: corona.')}</p>
+    <div class="msl-act"><button class="btn ghost" onclick="mcrClr()">${L('Esborra-ho', 'Bórralo')}</button><button class="btn ghost" onclick="mcrHint()">💡 ${L('Pista', 'Pista')}</button></div>`;
+}
+function mcrTap(k) { const A = MGA; if (!A) return; A.cur[k] = (A.cur[k] + 1) % 3; SFX.tap && SFX.tap(); mcrDraw(); mcrCheck(); }
+function mcrClr() { MGA.cur = MGA.cur.map(() => 0); mcrDraw(); }
+function mcrHint() {
+  const A = MGA, { n, sol } = A.Z, rows = [...Array(n).keys()].filter(r => A.cur[r * n + sol[r]] !== 2); if (!rows.length) return;
+  const r = pick(rows); for (let c = 0; c < n; c++) if (A.cur[r * n + c] === 2) A.cur[r * n + c] = 0;
+  A.cur[r * n + sol[r]] = 2; A.hints++; mcrDraw(); mcrCheck();
+}
+function mcrCheck() {
+  const A = MGA, { n, sol } = A.Z; if (!sol.every((c, r) => A.cur[r * n + c] === 2) || A.cur.filter(v => v === 2).length !== n) return;
+  clearInterval(MGA_TK); const s = Math.round((Date.now() - A.t0) / 1000);
+  setTimeout(() => mEnd('cor', s, A.hints === 0 ? 1 : A.hints >= 2 ? -1 : 0,
+    L(`${n} corones ben posades${A.hints ? ` amb ${A.hints} ${A.hints === 1 ? 'pista' : 'pistes'}` : ' sense pistes'}.`, `${n} coronas bien puestas${A.hints ? ` con ${A.hints} ${A.hints === 1 ? 'pista' : 'pistas'}` : ' sin pistas'}.`),
+    A.hints ? { noRec: true, note: L('Amb pistes no compta per al rècord.', 'Con pistas no cuenta para el récord.') } : null), 500);
+}
+
+// --- banc de paraules per categories (Quatre grups i Paraula amagada) ---
+// f: família (a partir del nivell 5, dos grups de la mateixa família, que s'assemblen); d: dificultat; np: noms propis (no van a Paraula amagada)
+const MBANK = {
+  ca: [
+    { c: 'Fruites', f: 'menjar', d: 1, w: ['poma', 'pera', 'figa', 'raïm', 'kiwi', 'meló', 'mango', 'pruna', 'llima', 'coco', 'dàtil', 'cirera', 'préssec', 'maduixa'] },
+    { c: 'Plats i menjars', f: 'menjar', d: 1, w: ['sopa', 'pasta', 'arròs', 'pizza', 'salsa', 'crema', 'xurro', 'truita', 'formatge', 'galeta', 'croqueta', 'canelons'] },
+    { c: 'Verdures', f: 'menjar', d: 2, w: ['ceba', 'porro', 'enciam', 'pastanaga', 'carbassa', 'pebrot', 'api', 'nap', 'albergínia', 'mongeta', 'carxofa', 'espinacs'] },
+    { c: 'Animals', f: 'natura', d: 1, w: ['vaca', 'porc', 'ànec', 'cabra', 'tigre', 'zebra', 'panda', 'mico', 'llop', 'lleó', 'rata', 'foca', 'cigne', 'talp', 'camell', 'ovella', 'conill'] },
+    { c: 'Insectes', f: 'natura', d: 2, w: ['mosca', 'abella', 'formiga', 'papallona', 'marieta', 'grill', 'vespa', 'mosquit', 'escarabat', 'cuca de llum'] },
+    { c: 'Paisatge', f: 'natura', d: 1, w: ['bosc', 'roca', 'platja', 'núvol', 'pluja', 'vent', 'herba', 'illa', 'camp', 'costa', 'riu', 'mar', 'llac', 'vall'] },
+    { c: 'Arbres', f: 'natura', d: 2, w: ['pi', 'roure', 'alzina', 'olivera', 'faig', 'pollancre', 'avet', 'xiprer', 'castanyer', 'ametller'] },
+    { c: 'Flors', f: 'natura', d: 2, w: ['margarida', 'gerani', 'clavell', 'tulipa', 'lliri', 'gessamí', 'orquídia', 'gira-sol'] },
+    { c: 'A casa', f: 'casa', d: 1, w: ['llit', 'taula', 'sofà', 'cuina', 'dutxa', 'porta', 'olla', 'forn', 'tassa', 'plat', 'catifa', 'cadira', 'nevera', 'mirall'] },
+    { c: 'Eines', f: 'casa', d: 2, w: ['martell', 'serra', 'tornavís', 'alicates', 'pala', 'rascle', 'destral', 'cisell', 'trepant', 'ribot'] },
+    { c: 'Objectes', f: 'casa', d: 1, w: ['llibre', 'llapis', 'regle', 'corda', 'ploma', 'bossa', 'maleta', 'paper', 'sobre', 'mapa', 'rellotge', 'paraigua', 'espelma'] },
+    { c: 'El cos', f: 'cos', d: 1, w: ['boca', 'cama', 'coll', 'dent', 'front', 'cella', 'panxa', 'genoll', 'ungla', 'llavi', 'nas', 'dit', 'colze', 'orella'] },
+    { c: 'Roba', f: 'cos', d: 1, w: ['camisa', 'jersei', 'gorra', 'barret', 'bota', 'mitjó', 'guant', 'abric', 'vestit', 'faldilla', 'bufanda', 'jaqueta', 'pijama'] },
+    { c: 'Oficis', f: 'gent', d: 1, w: ['metge', 'pagès', 'cuiner', 'pilot', 'jutge', 'mestre', 'fuster', 'actor', 'poeta', 'forner', 'pastor', 'bomber', 'dentista'] },
+    { c: 'Transport', f: 'ciutat', d: 1, w: ['tren', 'moto', 'taxi', 'cotxe', 'barca', 'avió', 'camió', 'metro', 'bici', 'vaixell', 'tramvia', 'autobús'] },
+    { c: 'Instruments', f: 'cultura', d: 2, w: ['piano', 'violí', 'flauta', 'arpa', 'gralla', 'tambor', 'banjo', 'orgue', 'guitarra', 'trompeta', 'acordió', 'saxo'] },
+    { c: 'Colors', f: 'cultura', d: 1, w: ['verd', 'blau', 'groc', 'gris', 'negre', 'blanc', 'lila', 'rosa', 'marró', 'vermell', 'taronja', 'ocre'] },
+    { c: 'Esports', f: 'cultura', d: 2, w: ['futbol', 'tennis', 'golf', 'rem', 'judo', 'esquí', 'rugbi', 'hoquei', 'bàsquet', 'natació', 'ciclisme', 'handbol', 'pàdel'] },
+    { c: 'Jocs de taula', f: 'cultura', d: 2, w: ['escacs', 'parxís', 'dòmino', 'dames', 'bingo', 'monopoli', 'trencaclosques'] },
+    { c: 'Pintors', f: 'art', d: 3, np: 1, w: ['Dalí', 'Miró', 'Goya', 'Picasso', 'Velázquez', 'Tàpies', 'Sorolla', 'Rusiñol', 'Fortuny', 'Monet'] },
+    { c: 'Planetes', f: 'art', d: 3, np: 1, w: ['Mart', 'Venus', 'Júpiter', 'Saturn', 'Urà', 'Neptú', 'Mercuri'] },
+    { c: 'Ciutats catalanes', f: 'lloc', d: 3, np: 1, w: ['Lleida', 'Girona', 'Tarragona', 'Reus', 'Vic', 'Manresa', 'Igualada', 'Figueres', 'Tàrrega', 'Balaguer', 'Olot', 'Tortosa'] },
+    { c: "Capitals d'Europa", f: 'lloc', d: 3, np: 1, w: ['Roma', 'París', 'Berlín', 'Lisboa', 'Atenes', 'Dublín', 'Oslo', 'Viena', 'Praga', 'Varsòvia', 'Budapest'] },
+    { c: "Mesos de l'any", f: 'temps', d: 2, np: 1, w: ['gener', 'febrer', 'març', 'abril', 'maig', 'juny', 'juliol', 'agost', 'setembre', 'octubre', 'novembre', 'desembre'] }
+  ],
+  es: [
+    { c: 'Frutas', f: 'menjar', d: 1, w: ['pera', 'piña', 'kiwi', 'lima', 'coco', 'uva', 'mango', 'fresa', 'melón', 'limón', 'higo', 'cereza', 'sandía', 'dátil', 'ciruela'] },
+    { c: 'Platos y comidas', f: 'menjar', d: 1, w: ['sopa', 'pasta', 'arroz', 'pizza', 'salsa', 'crema', 'churro', 'tarta', 'queso', 'galleta', 'croqueta', 'tortilla', 'paella'] },
+    { c: 'Verduras', f: 'menjar', d: 2, w: ['cebolla', 'ajo', 'puerro', 'lechuga', 'zanahoria', 'calabaza', 'pimiento', 'apio', 'nabo', 'berenjena', 'alcachofa', 'espinaca'] },
+    { c: 'Animales', f: 'natura', d: 1, w: ['gato', 'perro', 'vaca', 'cerdo', 'pato', 'cabra', 'tigre', 'cebra', 'panda', 'oveja', 'mono', 'lobo', 'león', 'rata', 'foca', 'cisne', 'toro', 'burro', 'zorro', 'topo', 'camello', 'conejo'] },
+    { c: 'Insectos', f: 'natura', d: 2, w: ['mosca', 'abeja', 'hormiga', 'mariposa', 'mariquita', 'grillo', 'avispa', 'mosquito', 'escarabajo', 'luciérnaga'] },
+    { c: 'Paisaje', f: 'natura', d: 1, w: ['río', 'mar', 'roca', 'playa', 'nube', 'lluvia', 'nieve', 'viento', 'hierba', 'isla', 'campo', 'costa', 'monte', 'valle', 'lago', 'selva'] },
+    { c: 'Árboles', f: 'natura', d: 2, w: ['pino', 'roble', 'encina', 'olivo', 'haya', 'chopo', 'abeto', 'ciprés', 'castaño', 'almendro'] },
+    { c: 'Flores', f: 'natura', d: 2, w: ['margarita', 'geranio', 'clavel', 'tulipán', 'lirio', 'jazmín', 'orquídea', 'girasol'] },
+    { c: 'En casa', f: 'casa', d: 1, w: ['cama', 'mesa', 'sofá', 'silla', 'horno', 'plato', 'vaso', 'taza', 'olla', 'puerta', 'mueble', 'cocina', 'ducha', 'nevera', 'espejo', 'alfombra'] },
+    { c: 'Herramientas', f: 'casa', d: 2, w: ['martillo', 'sierra', 'tijeras', 'alicates', 'pala', 'rastrillo', 'hacha', 'destornillador', 'cincel', 'taladro'] },
+    { c: 'Objetos', f: 'casa', d: 1, w: ['libro', 'lápiz', 'regla', 'cuerda', 'pluma', 'bolso', 'maleta', 'papel', 'sobre', 'mapa', 'reloj', 'peine', 'vela', 'paraguas', 'llave'] },
+    { c: 'El cuerpo', f: 'cos', d: 1, w: ['mano', 'dedo', 'boca', 'nariz', 'oreja', 'codo', 'pelo', 'diente', 'cuello', 'frente', 'ceja', 'labio', 'pecho', 'brazo', 'rodilla', 'hombro'] },
+    { c: 'Ropa', f: 'cos', d: 1, w: ['gorra', 'bata', 'bota', 'falda', 'guante', 'abrigo', 'camisa', 'traje', 'chal', 'bufanda', 'chaqueta', 'pijama', 'jersey'] },
+    { c: 'Oficios', f: 'gent', d: 1, w: ['médico', 'juez', 'pintor', 'actor', 'poeta', 'piloto', 'sastre', 'cartero', 'panadero', 'pastor', 'bombero', 'dentista', 'cocinero'] },
+    { c: 'Transporte', f: 'ciutat', d: 1, w: ['tren', 'moto', 'taxi', 'coche', 'barca', 'avión', 'metro', 'bici', 'yate', 'barco', 'globo', 'tranvía', 'autobús', 'camión'] },
+    { c: 'Instrumentos', f: 'cultura', d: 2, w: ['piano', 'violín', 'flauta', 'arpa', 'tambor', 'banjo', 'órgano', 'gaita', 'oboe', 'guitarra', 'trompeta', 'acordeón', 'saxo'] },
+    { c: 'Colores', f: 'cultura', d: 1, w: ['verde', 'azul', 'gris', 'negro', 'blanco', 'lila', 'rosa', 'rojo', 'ocre', 'beige', 'malva', 'naranja', 'marrón'] },
+    { c: 'Deportes', f: 'cultura', d: 2, w: ['fútbol', 'tenis', 'golf', 'remo', 'judo', 'esquí', 'rugby', 'hockey', 'baloncesto', 'natación', 'ciclismo', 'balonmano', 'pádel'] },
+    { c: 'Juegos de mesa', f: 'cultura', d: 2, w: ['ajedrez', 'parchís', 'dominó', 'damas', 'bingo', 'monopoly', 'rompecabezas'] },
+    { c: 'Pintores', f: 'art', d: 3, np: 1, w: ['Dalí', 'Miró', 'Goya', 'Picasso', 'Velázquez', 'Sorolla', 'Murillo', 'Zurbarán', 'Tàpies', 'Monet'] },
+    { c: 'Planetas', f: 'art', d: 3, np: 1, w: ['Marte', 'Venus', 'Júpiter', 'Saturno', 'Urano', 'Neptuno', 'Mercurio'] },
+    { c: 'Ciudades españolas', f: 'lloc', d: 3, np: 1, w: ['Sevilla', 'Bilbao', 'Valencia', 'Zaragoza', 'Málaga', 'Murcia', 'Granada', 'Vigo', 'Lleida', 'Toledo', 'Cádiz', 'Burgos'] },
+    { c: 'Capitales de Europa', f: 'lloc', d: 3, np: 1, w: ['Roma', 'París', 'Berlín', 'Lisboa', 'Atenas', 'Dublín', 'Oslo', 'Viena', 'Praga', 'Varsovia', 'Budapest'] },
+    { c: 'Meses del año', f: 'temps', d: 2, np: 1, w: ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'] }
+  ]
+};
+const mBank = () => MBANK[LANG === 'es' ? 'es' : 'ca'];
+const mCap1 = w => w.charAt(0).toUpperCase() + w.slice(1);
+
+// --- Quatre grups: setze paraules, quatre grups de quatre ---
+const M4G_COL = ['#F4D77E', '#A9DCC7', '#AFCFEA', '#CFC3F0'];
+function m4gMake(lv) {
+  const B = mBank(), maxD = lv <= 3 ? 1 : lv <= 6 ? 2 : 3;
+  for (let t = 0; t < 300; t++) {
+    const pool = B.filter(x => x.d <= maxD); let cats = [];
+    if (lv >= 5) { const fams = [...new Set(pool.map(x => x.f))].filter(f => pool.filter(x => x.f === f).length >= 2); if (fams.length) cats = shuffle(pool.filter(x => x.f === pick(fams))).slice(0, 2); }
+    if (lv >= 8) { const hard = shuffle(pool.filter(x => x.d === 3 && !cats.includes(x)))[0]; if (hard) cats.push(hard); }
+    for (const x of shuffle(pool)) { if (cats.length >= 4) break; if (!cats.includes(x) && !cats.some(y => y.f === x.f && lv < 5)) cats.push(x); }
+    if (cats.length < 4) continue;
+    const groups = [];
+    for (const x of cats) { const ws = shuffle(x.w.filter(w => !cats.some(y => y !== x && y.w.some(v => v.toLowerCase() === w.toLowerCase())))).slice(0, 4); if (ws.length < 4) break; groups.push({ c: x.c, w: ws }); }
+    if (groups.length === 4) return groups;
+  }
+}
+function grpGo() {
+  const G = m4gMake(mLvl('grp'));
+  MGA = { ...MGA, G, tiles: shuffle(G.flatMap((g, i) => g.w.map(w => ({ w, g: i })))), found: [], sel: [], mist: 0, msg: '' };
+  mSet('0/4'); m4gDraw();
+}
+function m4gDraw(shake) {
+  const A = MGA, left = 4 - A.mist;
+  $('#mgb').innerHTML = `<div class="m4g"><div class="m4g-found">${A.found.map((gi, i) => `<div class="m4g-g" style="background:${M4G_COL[i]}"><b>${A.G[gi].c}</b><span>${A.G[gi].w.map(mCap1).join(' · ')}</span></div>`).join('')}</div>
+    <div class="m4g-grid ${shake ? 'shake' : ''}">${A.tiles.map((t, i) => `<button class="m4g-t ${A.sel.includes(i) ? 'on' : ''}" onclick="m4gTap(${i})">${mCap1(t.w)}</button>`).join('')}</div>
+    <p class="m4g-msg">${A.msg}</p>
+    <p class="m4g-mis">${L('Errors de marge', 'Errores de margen')}: ${[0, 1, 2, 3].map(i => `<i class="${i < left ? '' : 'off'}"></i>`).join('')}</p>
+    <div class="m4g-act"><button class="btn ghost" onclick="m4gShuf()">${L('Barreja', 'Mezcla')}</button><button class="btn ghost" onclick="m4gClr()" ${A.sel.length ? '' : 'disabled'}>${L('Desmarca', 'Desmarca')}</button><button class="btn" onclick="m4gTry()" ${A.sel.length === 4 ? '' : 'disabled'}>${L('Comprova', 'Comprueba')}</button></div></div>`;
+}
+function m4gTap(i) { const A = MGA; if (!A || A.lock) return; const s = A.sel; if (s.includes(i)) s.splice(s.indexOf(i), 1); else if (s.length < 4) s.push(i); A.msg = ''; SFX.tap && SFX.tap(); m4gDraw(); }
+function m4gShuf() { const A = MGA; const keep = A.sel.map(i => A.tiles[i]); A.tiles = shuffle(A.tiles); A.sel = keep.map(t => A.tiles.indexOf(t)); m4gDraw(); }
+function m4gClr() { MGA.sel = []; m4gDraw(); }
+async function m4gTry() {
+  const A = MGA; if (!A || A.sel.length !== 4 || A.lock) return;
+  const gs = A.sel.map(i => A.tiles[i].g), cnt = {}; gs.forEach(g => cnt[g] = (cnt[g] || 0) + 1); const top = Math.max(...Object.values(cnt));
+  if (top === 4) {
+    SFX.ok && SFX.ok(); A.found.push(gs[0]); A.tiles = A.tiles.filter(t => t.g !== gs[0]); A.sel = []; A.msg = ''; mSet(`${A.found.length}/4`); m4gDraw();
+    if (A.found.length === 4) { A.lock = true; await mSleep(900); return MGA === A && m4gEnd(); }
+    return;
+  }
+  SFX.ko && SFX.ko(); A.mist++; A.msg = top === 3 ? L('Gairebé! Només te\'n falla una.', '¡Casi! Solo te falla una.') : L('No és un grup. Torna-ho a provar.', 'No es un grupo. Vuelve a probarlo.');
+  m4gDraw(true);
+  if (A.mist >= 4) {
+    A.lock = true; A.okN = A.found.length; await mSleep(1200); if (MGA !== A) return;
+    for (const g of [0, 1, 2, 3].filter(g => !A.found.includes(g))) { A.found.push(g); A.tiles = A.tiles.filter(t => t.g !== g); }
+    A.sel = []; A.msg = L('Aquests eren els grups.', 'Estos eran los grupos.'); m4gDraw();
+    await mSleep(3200); if (MGA === A) m4gEnd();
+  }
+}
+function m4gEnd() {
+  const A = MGA;
+  const fnd = A.mist >= 4 ? A.okN : 4, sc = Math.max(0, fnd * 25 - A.mist * 5);
+  mEnd('grp', sc, fnd === 4 && A.mist <= 1 ? 1 : fnd <= 2 ? -1 : 0,
+    fnd === 4 ? L(`Els quatre grups${A.mist ? `, amb ${A.mist} ${A.mist === 1 ? 'error' : 'errors'}` : ' sense cap error'}.`, `Los cuatro grupos${A.mist ? `, con ${A.mist} ${A.mist === 1 ? 'error' : 'errores'}` : ' sin ningún error'}.`)
+      : L(`Has trobat ${fnd} de 4 grups.`, `Has encontrado ${fnd} de 4 grupos.`));
+}
+
+// --- Paraula amagada: sis intents i colors que t'orienten ---
+const mwN = w => [...w.toUpperCase()].map(ch => 'ÑÇ'.includes(ch) ? ch : ch.normalize('NFD').replace(/[̀-ͯ]/g, '')).join('').replace(/[^A-ZÑÇ]/g, '');
+function wrdGo() {
+  const lv = mLvl('wrd'), len = lv <= 3 ? 4 : 5, m = MS(), used = new Set(m.wrdUsed || []);
+  let c = mBank().filter(x => !x.np).flatMap(x => x.w.filter(w => !/[\s·-]/.test(w) && mwN(w).length === len).map(w => ({ w, c: x.c })));
+  const fresh = c.filter(x => !used.has(mwN(x.w))); if (fresh.length) c = fresh;
+  const t = pick(c); m.wrdUsed = [...(m.wrdUsed || []), mwN(t.w)].slice(-60);
+  MGA = { ...MGA, ans: mwN(t.w), word: t.w, cat: lv <= 7 ? t.c : '', len, rows: [], cur: '', keys: {}, done: false };
+  mSet(`1/6`); mwdDraw();
+  if (!window.__mwdK) { window.__mwdK = 1; document.addEventListener('keydown', e => { if (MGCUR !== 'wrd' || !MGA || MGA.ans == null || e.metaKey || e.ctrlKey) return; const k = e.key.toUpperCase(); if (k === 'ENTER') mwdK('⏎'); else if (k === 'BACKSPACE') mwdK('⌫'); else if (/^[A-ZÑÇ]$/.test(k)) mwdK(k); }); }
+}
+function mwdEval(g, a) {
+  const res = Array(g.length).fill('n'), rest = {};
+  [...a].forEach((ch, i) => { if (g[i] === ch) res[i] = 'g'; else rest[ch] = (rest[ch] || 0) + 1; });
+  [...g].forEach((ch, i) => { if (res[i] !== 'g' && rest[ch]) { res[i] = 'y'; rest[ch]--; } });
+  return res;
+}
+function mwdDraw(shake) {
+  const A = MGA, L0 = A.len, rows = [];
+  for (let r = 0; r < 6; r++) {
+    const done = A.rows[r], txt = done ? done.g : r === A.rows.length ? A.cur : '';
+    rows.push(`<div class="mwd-r ${shake && r === A.rows.length ? 'shake' : ''}" style="--L:${L0}">${[...Array(L0).keys()].map(i => `<i class="${done ? done.e[i] : txt[i] ? 'f' : ''}">${txt[i] || ''}</i>`).join('')}</div>`);
+  }
+  const kb = (LANG === 'es' ? ['QWERTYUIOP', 'ASDFGHJKLÑ', '⏎ZXCVBNM⌫'] : ['QWERTYUIOP', 'ASDFGHJKLÇ', '⏎ZXCVBNM⌫']);
+  $('#mgb').innerHTML = `<div class="mwd">${A.cat ? `<p class="mwd-hint">${L('Pista', 'Pista')}: <b>${A.cat.toLowerCase()}</b></p>` : ''}<div class="mwd-b">${rows.join('')}</div>
+    <div class="mwd-k">${kb.map(row => `<div>${[...row].map(k => `<button class="${k === '⏎' || k === '⌫' ? 'w' : A.keys[k] || ''}" onclick="mwdK('${k}')" aria-label="${k === '⏎' ? L('Envia', 'Envía') : k === '⌫' ? L('Esborra', 'Borra') : k}">${k === '⏎' ? L('Envia', 'Envía') : k}</button>`).join('')}</div>`).join('')}</div></div>`;
+}
+async function mwdK(k) {
+  const A = MGA; if (!A || A.done) return;
+  if (k === '⌫') { A.cur = A.cur.slice(0, -1); return mwdDraw(); }
+  if (k !== '⏎') { if (A.cur.length < A.len) { A.cur += k; SFX.tap && SFX.tap(); } return mwdDraw(); }
+  if (A.cur.length < A.len) { toast(L(`Calen ${A.len} lletres.`, `Hacen falta ${A.len} letras.`)); return mwdDraw(true); }
+  const e = mwdEval(A.cur, A.ans); A.rows.push({ g: A.cur, e });
+  [...A.cur].forEach((ch, i) => { const o = A.keys[ch], v = e[i]; if (v === 'g' || (v === 'y' && o !== 'g') || (!o && v === 'n')) A.keys[ch] = v; });
+  const win = A.cur === A.ans; A.cur = ''; mwdDraw(); win ? SFX.ok && SFX.ok() : 0;
+  if (win || A.rows.length >= 6) {
+    A.done = true; const n = A.rows.length; await mSleep(win ? 900 : 600); if (MGA !== A) return;
+    if (win) return mEnd('wrd', n, n <= 3 ? 1 : n >= 6 ? -1 : 0, L(`Era «${A.word}»: l'has encertada al ${n}${n === 1 ? 'r' : n === 2 ? 'n' : n === 3 ? 'r' : n === 4 ? 't' : 'è'} intent.`, `Era «${A.word}»: la has acertado en el ${n}.º intento.`));
+    return mEnd('wrd', 7, -1, L(`Era «${A.word}». La propera serà una mica més assequible.`, `Era «${A.word}». La próxima será algo más asequible.`), { noRec: true, note: L('Sense encertar no compta per al rècord.', 'Sin acertar no cuenta para el récord.') });
+  }
+  mSet(`${A.rows.length + 1}/6`);
 }
 
 /* ---------- Punt de partida: 10 preguntes d'hàbits i de com et notes (cada mes, per veure l'evolució) ----------
