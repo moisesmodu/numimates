@@ -3,3 +3,6 @@ node_modules
 .vercel
 .claude/
 .env*
+_scenes-bundle.js
+_dio.js
+_probe.js
