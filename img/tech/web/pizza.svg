@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300">
+<defs>
+<linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFD9A8"/><stop offset="1" stop-color="#F7A65A"/></linearGradient>
+<radialGradient id="ch" cx=".45" cy=".4" r=".6"><stop offset="0" stop-color="#FFE27A"/><stop offset="1" stop-color="#F7BE3A"/></radialGradient>
+<radialGradient id="pp" cx=".4" cy=".35" r=".7"><stop offset="0" stop-color="#F0584A"/><stop offset="1" stop-color="#B8242A"/></radialGradient>
+<linearGradient id="cr" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F2B66A"/><stop offset="1" stop-color="#C9822E"/></linearGradient>
+<pattern id="chk" width="50" height="50" patternUnits="userSpaceOnUse"><rect width="25" height="25" fill="#fff" opacity=".3"/><rect x="25" y="25" width="25" height="25" fill="#fff" opacity=".3"/></pattern>
+</defs>
+<rect width="400" height="300" rx="24" fill="url(#bg)"/>
+<rect width="400" height="300" rx="24" fill="url(#chk)"/>
+<g transform="translate(10 0)">
+<ellipse cx="196" cy="160" rx="128" ry="128" fill="#8A4B0F" opacity=".22"/>
+<circle cx="190" cy="150" r="124" fill="#F4F0EA"/>
+<circle cx="190" cy="150" r="112" fill="url(#cr)"/>
+<circle cx="190" cy="150" r="96" fill="#D9452E"/>
+<path d="M190 60c40 0 92 28 92 84 0 22-6 34-14 48-14 26-48 50-80 50-48 0-90-36-90-92 0-50 44-90 92-90z" fill="url(#ch)"/>
+<path d="M150 150q10 20 30 10M220 110q14 10 30 0M210 200q10-10 26 0" stroke="#FFF2B8" stroke-width="5" fill="none" stroke-linecap="round"/>
+<g fill="url(#pp)"><circle cx="160" cy="108" r="17"/><circle cx="232" cy="96" r="15"/><circle cx="138" cy="172" r="16"/><circle cx="196" cy="150" r="17"/><circle cx="250" cy="164" r="16"/><circle cx="194" cy="212" r="15"/></g>
+<g fill="#fff" opacity=".35"><circle cx="155" cy="103" r="4"/><circle cx="228" cy="92" r="4"/><circle cx="133" cy="167" r="4"/><circle cx="191" cy="145" r="4"/><circle cx="245" cy="159" r="4"/><circle cx="189" cy="207" r="4"/></g>
+<g fill="#2C2C34"><circle cx="196" cy="94" r="7"/><circle cx="160" cy="210" r="7"/><circle cx="262" cy="126" r="7"/></g>
+<g fill="#F7BE3A"><circle cx="196" cy="94" r="3"/><circle cx="160" cy="210" r="3"/><circle cx="262" cy="126" r="3"/></g>
+<g fill="#1FA463"><path d="M118 130q8-16 24-12-6 16-24 12z"/><path d="M222 130q14-10 26 0-14 10-26 0z"/><path d="M226 202q4-16 20-16-2 16-20 16z"/><path d="M168 176q10-12 22-6-8 12-22 6z"/></g>
+</g>
+<g fill="#1FA463"><path d="M44 230q10-20 30-14-8 20-30 14z"/><path d="M60 250q16-8 26 4-16 8-26-4z"/></g>
+<circle cx="350" cy="64" r="14" fill="#E5302E"/><circle cx="346" cy="60" r="4" fill="#fff" opacity=".4"/><path d="M350 50l-4-6m4 6 5-5" stroke="#1FA463" stroke-width="3" stroke-linecap="round"/>
+</svg>
