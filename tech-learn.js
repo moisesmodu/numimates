@@ -142,6 +142,7 @@ if (typeof TSTEP !== 'undefined') TSTEP.learn = function (st) {
 };
 
 /* ---------- Escenes il·lustrades per a les històries ---------- */
+const TSCENE3 = { illa: 1, poble: 1, taller: 1, moll: 1, lab: 1 };
 function tScene(kind, who, mood) {
   const sky = kind === 'taller' ? ['#FFE9C7', '#FFD0A1'] : ['#9FDBFF', '#D9F2FF'];
   const clouds = kind === 'taller' ? '' : [[60, 40, 1], [250, 28, .8], [170, 60, .6]].map(([x, y, s], i) => `<g class="tcloud" style="--d:${-i * 7}s"><g transform="translate(${x} ${y}) scale(${s})"><ellipse rx="26" ry="11" fill="#fff"/><ellipse cx="-14" cy="-6" rx="14" ry="11" fill="#fff"/><ellipse cx="10" cy="-9" rx="16" ry="13" fill="#fff"/></g></g>`).join('');
@@ -157,6 +158,8 @@ function tScene(kind, who, mood) {
       ${kind === 'poble' ? [70, 108].map((x, k) => `<g transform="translate(${x} 138)"><rect x="-13" y="-20" width="26" height="20" fill="url(#bwWall)" stroke="#8E6A3A" stroke-width="1.5"/><path d="M-17 -18L0 -32L17 -18Z" fill="url(#bwRoof)" stroke="#8E2A22" stroke-width="1.5"/><rect x="-3" y="-11" width="6" height="11" fill="#B07A3E"/></g>`).join('') : ''}`;
   const numi = who !== 'bit' ? `<svg x="${who === 'both' ? 40 : 98}" y="56" width="100" height="100" viewBox="0 0 120 120">${charSVG('numi', mood || 'happy').replace(/^<svg[^>]*>|<\/svg>$/g, '')}</svg>` : '';
   const bit = who === 'bit' || who === 'both' ? `<svg x="${who === 'both' ? 170 : 116}" y="${who === 'both' ? 62 : 50}" width="${who === 'both' ? 78 : 92}" height="${who === 'both' ? 96 : 112}" viewBox="-64 -78 128 156">${bitChar(mood || 'happy').replace(/^<svg[^>]*>|<\/svg>$/g, '')}</svg>` : '';
+  // fons en 3D (renderitzat) per a les escenes que en tenen; en Bit i en Numi a sobre, amb la cara que toca
+  if (TSCENE3[kind]) return `<div class="tscene t3 k-${kind}"><img src="img/tech/scenes/${kind}.webp" alt="" width="1600" height="900" decoding="async"><svg class="tsact" viewBox="0 0 320 180" aria-hidden="true">${bitDefs()}<g class="tactors">${numi}${bit}</g></svg></div>`;
   return `<div class="tscene k-${kind}"><svg viewBox="0 0 320 180" aria-hidden="true">${bitDefs()}<defs><linearGradient id="tsky-${kind}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${sky[0]}"/><stop offset="1" stop-color="${sky[1]}"/></linearGradient></defs>
     <rect width="320" height="180" fill="url(#tsky-${kind})"/>${sun}${clouds}${land}<g class="tactors">${numi}${bit}</g></svg></div>`;
 }

@@ -467,3 +467,13 @@ span.tb.c-cond{color:#3A2600}
 .topt:nth-child(2) .tol{background:#F08A24;box-shadow:0 3px 0 #B4601A}.topt:nth-child(3) .tol{background:#1FA463;box-shadow:0 3px 0 #157A49}.topt:nth-child(4) .tol{background:#8B5CF6;box-shadow:0 3px 0 #6436D0}
 .topt.on{transform:translateY(-2px)}.topt.ok .tol{background:var(--ok)}.topt.ko .tol{background:var(--ko)}
 .topt .tot{flex:1}
+
+/* illes i escenes en 3D (imatges renderitzades amb scripts/3d/render-scenes.mjs) */
+.tmap.t3{aspect-ratio:900/1125;max-width:560px}
+.tisl3{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;-webkit-mask-image:radial-gradient(ellipse 72% 62% at 50% 50%,#000 72%,transparent 100%);mask-image:radial-gradient(ellipse 72% 62% at 50% 50%,#000 72%,transparent 100%);pointer-events:none;user-select:none}
+.tunit2.soon .tisl3{filter:saturate(.5) brightness(1.06)}
+.tmap.t3 .tnode{width:15%;height:auto;aspect-ratio:1;max-width:72px;min-width:54px}
+.tmap.t3 .tnc{width:100%;height:100%}
+.tscene.t3{position:relative;aspect-ratio:16/9;background:#9FDBFF}
+.tscene.t3>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.tscene.t3 .tsact{position:absolute;inset:0;width:100%;height:100%}

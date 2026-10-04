@@ -103,6 +103,8 @@ function tIsland(c, u, ui, nxt) {
   const W = 360, H = 70 + n * 108, xs = [96, 262, 112, 250, 100, 258], P = u.s.map((_, i) => [xs[i % xs.length], 64 + i * 108]);
   const road = P.reduce((d, [x, y], i) => i ? d + ` C${P[i - 1][0]} ${P[i - 1][1] + 60} ${x} ${y - 60} ${x} ${y}` : `M${x} ${y}`, '');
   const R = k => bwRnd(ui + 3, k, 7);
+  // illa en 3D (imatge renderitzada) si n'hi ha una amb les mateixes parades
+  const I3 = typeof TECH_ISLES !== 'undefined' && TECH_ISLES[`${c.id}-${ui + 1}`], use3 = !!(I3 && I3.length === n);
   // decoració: arbres i roques lluny del camí
   const deco = [];
   for (let k = 0; k < 14; k++) { const x = 30 + R(k) * 300, y = 30 + R(k + 40) * (H - 70);
@@ -118,15 +120,15 @@ function tIsland(c, u, ui, nxt) {
     <path d="${road}" fill="none" stroke="#E2BE76" stroke-width="34" stroke-linecap="round"/><path d="${road}" fill="none" stroke="url(#bwSand)" stroke-width="28" stroke-linecap="round"/>
     <path d="${road}" fill="none" stroke="#fff" stroke-width="3" stroke-dasharray="2 14" stroke-linecap="round" opacity=".7"/></svg>`;
   const nodes = u.s.map((s, si) => {
-    const [x, y] = P[si], d = tDone(s.id), ready = tReady(s), open = tSessOpen(c, s), cur = nxt && nxt.id === s.id, part = t.s[s.id] && t.s[s.id].i && !d, right = x < 180;
+    const [x, y] = P[si], pos = use3 ? I3[si] : [x / W * 100, y / H * 100], d = tDone(s.id), ready = tReady(s), open = tSessOpen(c, s), cur = nxt && nxt.id === s.id, part = t.s[s.id] && t.s[s.id].i && !d, right = pos[0] < 50;
     const ico = d ? TIC.ok : !ready ? '<b>…</b>' : !open ? TIC.lock : s.proj ? '<svg viewBox="0 0 24 24"><path d="M7 3h10v4a5 5 0 0 1-10 0z" fill="currentColor"/><path d="M7 5H4v2a3 3 0 0 0 3 3M17 5h3v2a3 3 0 0 1-3 3M10 13h4v3h-4zM8 19h8v2H8z" fill="currentColor"/></svg>' : `<b>${si + 1}</b>`;
-    return `<button class="tnode ${d ? 'done' : ''} ${cur ? 'cur' : ''} ${ready ? '' : 'soon'} ${!open && ready ? 'lock' : ''} ${s.proj ? 'proj' : ''}" style="left:${(x / W * 100).toFixed(2)}%;top:${(y / H * 100).toFixed(2)}%" onclick="${ready ? (open ? `tOpen('${s.id}')` : `tLocked(tCourse('${c.id}'),1)`) : 'tSoonS()'}">
+    return `<button class="tnode ${d ? 'done' : ''} ${cur ? 'cur' : ''} ${ready ? '' : 'soon'} ${!open && ready ? 'lock' : ''} ${s.proj ? 'proj' : ''}" style="left:${pos[0].toFixed(2)}%;top:${pos[1].toFixed(2)}%" onclick="${ready ? (open ? `tOpen('${s.id}')` : `tLocked(tCourse('${c.id}'),1)`) : 'tSoonS()'}">
       <span class="tnc">${ico}</span>${cur ? `<span class="tnbit" aria-hidden="true"><svg viewBox="-30 -74 60 80">${bitBot(2)}</svg></span>` : ''}
       <span class="tnl ${right ? 'r' : 'l'}"><b>${tx(s.t)}</b><small>${s.proj ? `<em>${L('Projecte', 'Proyecto')}</em> ` : ''}${ready ? `${s.min || 40} min` : L('En preparació', 'En preparación')}${part ? ` · ${L('a mitges', 'a medias')}` : ''}</small></span></button>`;
   }).join('');
   const nd = u.s.filter(s => tDone(s.id)).length;
   return `<section class="tunit2 ${u.s.some(tReady) ? '' : 'soon'}" style="--uc:${col}"><header class="tuh2"><span class="tun">${ui + 1}</span><div><h2>${tx(u.t)}</h2><p>${tx(u.d)}</p></div>${nd ? `<span class="tuc">${nd}/${n}</span>` : ''}</header>
-    <div class="tmap" style="aspect-ratio:${W}/${H}">${svg}${nodes}</div></section>`;
+    ${use3 ? `<div class="tmap t3"><img class="tisl3" src="img/tech/isles/${c.id}-${ui + 1}.webp" alt="" width="900" height="1125" loading="${ui ? 'lazy' : 'eager'}" decoding="async">${nodes}</div>` : `<div class="tmap" style="aspect-ratio:${W}/${H}">${svg}${nodes}</div>`}</section>`;
 }
 
 /* ---------- Projectes (portafoli) ---------- */
