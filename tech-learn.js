@@ -130,6 +130,20 @@ const TANI = {
     return tSvg(214, `<rect x="40" y="8" width="240" height="198" rx="18" fill="#FFF8E6" stroke="#F1D9A4" stroke-width="2"/><rect x="132" y="0" width="56" height="18" rx="6" fill="#C98A4B"/>
       ${it.map((t, i) => `<g transform="translate(62 ${40 + i * 42})"><rect width="24" height="24" rx="6" fill="#fff" stroke="#C9B48A" stroke-width="2"/><path ${tA(.5 + i * .7, 'ta-draw')} pathLength="1" d="M5 12l5 5l9 -11" stroke="#3CC47C" stroke-width="3.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/><text x="36" y="18" class="tat s">${t}</text></g>`).join('')}`);
   },
+  // les tres ordres d'en Bit: només Endavant el canvia de casella
+  cmds() {
+    const D = 5.5, f = t => (t / D).toFixed(3);
+    const swap = (a, b, t) => `<g><animate attributeName="opacity" values="1;0;1" keyTimes="0;${f(t)};.97" dur="${D}s" calcMode="discrete" repeatCount="indefinite"/>${a}</g><g opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;${f(t)};.97" dur="${D}s" calcMode="discrete" repeatCount="indefinite"/>${b}</g>`;
+    const row = (k, i) => { const y = 8 + i * 66, t = 1 + i * 1.3, tile = x => `<rect x="${x}" y="${y + 6}" width="52" height="52" rx="12" fill="url(#bwSand)" stroke="#E2BE76" stroke-width="1.6"/>`;
+      const chip = `<g ${tA(.2 + i * .3, 'ta-in')}><rect x="8" y="${y + 15}" width="168" height="34" rx="9" fill="#3D7BF4"/><g transform="translate(14 ${y + 20})" color="#fff">${BIT_ICO[k].replace(/^<svg[^>]*>|<\/svg>$/g, '')}</g><text x="44" y="${y + 37}" class="tat w s">${bitLabel({ k })}</text></g>`;
+      const bot = d => tBitMini(0, 0, d, .6);
+      let act;
+      if (k === 'fwd') act = `${tile(196)}${tile(254)}<g transform="translate(222 ${y + 50})"><g><animateTransform attributeName="transform" type="translate" values="0 0;0 0;58 0;58 0" keyTimes="0;${f(t)};${f(t + .6)};1" dur="${D}s" repeatCount="indefinite"/>${bot(1)}</g></g>`;
+      else act = `${tile(225)}<g transform="translate(251 ${y + 50})">${swap(bot(1), bot(k === 'left' ? 0 : 2), t)}</g>
+        <path d="M${k === 'left' ? '214 ' + (y + 46) + ' q-8 -20 10 -30' : '214 ' + (y + 18) + ' q-8 20 10 30'}" fill="none" stroke="#3D7BF4" stroke-width="3.5" stroke-dasharray="5 5" stroke-linecap="round" ${tA(t, 'ta-fade')}/>`;
+      return chip + `<path d="M182 ${y + 32}h8" stroke="#9FB2E6" stroke-width="4" stroke-linecap="round"/>` + act; };
+    return tSvg(232, ['fwd', 'left', 'right'].map(row).join('') + `<text x="160" y="224" text-anchor="middle" class="tat s" ${tA(4.4, 'ta-fade')}>${L('Només «Endavant» el canvia de casella', 'Solo «Adelante» lo cambia de casilla')}</text>`);
+  },
   // ---------- Robot, unitat 2 ----------
   // repeticions de cada dia: aplaudir, pujar escales, la tornada d'una cançó
   u2life() {
