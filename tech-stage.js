@@ -223,7 +223,7 @@ function stgSolves(spec, progs) { for (const [i, sp] of stgAlts(spec).entries())
    condicions: touch:edge touch:gat touch:mouse color:red key:space $punts>=10 x>200 … · amb && o || · !cond (no)
    un «!» darrere d'un bloc (fora de cometes) el marca per a «Investiga» */
 const stgNum = v => typeof v === 'number' ? String(v).replace('.', ',') : String(v);   // 2,8 (amb coma, en català i en castellà)
-function stgOp(t) { if (/^-?\d+(\.\d+)?$/.test(t)) return +t; if (t[0] === '$') return { r: 'var', v: t.slice(1) }; if (['x', 'y', 'dir', 'size', 'costume', 'timer', 'mx', 'my'].includes(t)) return { r: t }; const m = t.match(/^rnd:(-?[\w$.]+):(-?[\w$.]+)$/); if (m) return { r: 'rnd', a: stgOp(m[1]), b: stgOp(m[2]) }; throw new Error('SQ: operand «' + t + '»'); }
+function stgOp(t) { if (/^-?(\d+(\.\d+)?|\.\d+)$/.test(t)) return +t; if (t[0] === '$') return { r: 'var', v: t.slice(1) }; if (['x', 'y', 'dir', 'size', 'costume', 'timer', 'mx', 'my'].includes(t)) return { r: t }; const m = t.match(/^rnd:(-?[\w$.]+):(-?[\w$.]+)$/); if (m) return { r: 'rnd', a: stgOp(m[1]), b: stgOp(m[2]) }; throw new Error('SQ: operand «' + t + '»'); }
 function stgCondP(t) {
   if (t.includes('&&')) { const [a, ...b] = t.split('&&'); return { and: [stgCondP(a), stgCondP(b.join('&&'))] }; }
   if (t.includes('||')) { const [a, ...b] = t.split('||'); return { or: [stgCondP(a), stgCondP(b.join('||'))] }; }
@@ -378,8 +378,9 @@ function sgSlot(l, i) { const on = SG.cur && SG.cur.l === l && SG.cur.i === i; r
 function sgList(list, ro) { if (ro) return list.map(b => sgBlock(b, true)).join(''); return list.map((b, i) => sgSlot(list, i) + sgBlock(b)).join('') + sgSlot(list, list.length); }
 function sgTools(b) {
   const ix = SG.ids[b._id], i = ix.list.indexOf(b);
-  return `<div class="tbtools"><button onclick="sgMoveB(-1)" ${i === 0 ? 'disabled' : ''}>↑</button><button onclick="sgMoveB(1)" ${i === ix.list.length - 1 ? 'disabled' : ''}>↓</button>
+  return `<div class="tbtools"><button onclick="sgMoveB(-1)" ${!sgMoveTo(b, -1) ? 'disabled' : ''} aria-label="${L('Puja', 'Sube')}">↑</button><button onclick="sgMoveB(1)" ${!sgMoveTo(b, 1) ? 'disabled' : ''} aria-label="${L('Baixa', 'Baja')}">↓</button>
     ${b.k === 'if' && SG.pal.includes('else') ? `<button class="wide" onclick="sgElse()">${b.e ? L('Treu «si no»', 'Quita «si no»') : L('Afegeix «si no»', 'Añade «si no»')}</button>` : ''}
+    ${['if', 'until', 'waitu'].includes(b.k) && SG.pal.includes('not') ? `<button class="wide" onclick="sgNot()">${b.c && b.c.not ? L('Treu el «no»', 'Quita el «no»') : L('Afegeix «no»', 'Añade «no»')}</button>` : ''}
     ${['if', 'until', 'waitu'].includes(b.k) && SG.pal.includes('and') ? `<button class="wide" onclick="sgJoin()">${b.c.and || b.c.or ? L('Una sola condició', 'Una sola condición') : L('Afegeix «i / o»', 'Añade «y / o»')}</button>` : ''}
     <button class="del" onclick="sgDel()">${L('Esborra', 'Borra')}</button></div>`;
 }
@@ -504,7 +505,21 @@ function sgIns(k) {
 }
 function sgCurAt(li, i) { if (SG.run) sgStop(); SG.cur = { l: SG.lists[li], i }; SG.sel = null; sgDraw(); }
 function sgSel(id) { if (SG.run) sgStop(); const ix = SG.ids[id]; if (!ix) return; SG.sel = SG.sel === ix.b ? null : ix.b; SG.cur = { l: ix.list, i: ix.list.indexOf(ix.b) + 1 }; sgDraw(); }
-function sgMoveB(d) { const b = SG.sel, l = SG.ids[b._id].list, i = l.indexOf(b), j = i + d; if (j < 0 || j >= l.length) return; l.splice(i, 1); l.splice(j, 0, b); SG.cur = { l, i: j + 1 }; sgFresh(); sgDraw(); }
+// ↑ / ↓: el bloc passa per sobre del veí; entra als bucles i als «si», en surt per la vora i passa d'un guió a l'altre del mateix personatge
+const SG_CONT = k => ['rep', 'forever', 'until', 'if'].includes(k);
+function sgParent(l) { for (const ix of Object.values(SG.ids)) if (ix.b.b === l || ix.b.e === l) return ix; return null; }
+function sgMoveTo(b, d) {
+  const l = SG.ids[b._id].list, i = l.indexOf(b), nb = l[i + d];
+  if (nb && SG_CONT(nb.k)) { const into = d > 0 ? nb.b : (nb.e || nb.b); return into ? { l: into, i: d > 0 ? 0 : into.length } : null; }
+  if (nb) return { l, i: i + d };
+  const par = sgParent(l);
+  if (!par) { const all = Object.values(SG.progs[SG.who] || {}).flat(), k = all.indexOf(l), o = all[k + d]; return o ? { l: o, i: d > 0 ? 0 : o.length } : null; }
+  if (par.b.e === l && d < 0) return { l: par.b.b, i: par.b.b.length };
+  if (par.b.e && par.b.b === l && d > 0) return { l: par.b.e, i: 0 };
+  const j = par.list.indexOf(par.b); return { l: par.list, i: d > 0 ? j + 1 : j };
+}
+function sgMoveB(d) { const b = SG.sel, l = SG.ids[b._id].list, to = sgMoveTo(b, d); if (!to) return; l.splice(l.indexOf(b), 1); to.l.splice(to.i, 0, b); SG.cur = { l: to.l, i: to.i + 1 }; sgFresh(); sgDraw(); }
+function sgNot() { const b = SG.sel; b.c = b.c.not ? b.c.not : { not: b.c }; sgFresh(); sgDraw(); }
 function sgDel() { const b = SG.sel, l = SG.ids[b._id].list, i = l.indexOf(b); l.splice(i, 1); SG.sel = null; SG.cur = { l, i }; sgFresh(); sgDraw(); }
 function sgElse() { const b = SG.sel; b.e = b.e ? null : []; sgFresh(); sgDraw(); }
 function sgJoin() { const b = SG.sel; b.c = b.c.and || b.c.or ? (b.c.and || b.c.or)[0] : { and: [b.c, { touch: 'edge' }] }; sgFresh(); sgDraw(); }
