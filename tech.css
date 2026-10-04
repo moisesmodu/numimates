@@ -2,7 +2,7 @@
    de blocs (moviment, accions, bucles, condicions…). La mateixa lletra (Lexend) i els mateixos botons «amb gruix» que
    Numi Mates, perquè és per a la mateixa edat. Només s'aplica amb html[data-v=tech]. */
 html[data-v=tech]{--bg:#F3F6FF;--card:#fff;--ink:#14204A;--mut:#56628A;--line:#DCE4FA;--pri:#2F5BEA;--pri-d:#1C3FB8;--navy:#1B2B6B;--navy2:#24398C;--sky:#E8EEFF;
-  --b-mov:#3D7BF4;--b-act:#F08A24;--b-loop:#1FA463;--b-cond:#F2B21B;--b-art:#E5489A;--b-snd:#14A3B8;--b-fn:#8B5CF6;background:var(--bg)}
+  --b-mov:#3D7BF4;--b-act:#F08A24;--b-loop:#1FA463;--b-cond:#F2B21B;--b-art:#E5489A;--b-snd:#14A3B8;--b-fn:#8B5CF6;--b-var:#E0533F;background:var(--bg)}
 html[data-v=tech] body{background:var(--bg);color:var(--ink)}
 html[data-v=tech] .btn{--c:var(--pri);--cd:var(--pri-d)}
 html[data-v=tech] .btn.ghost{--c:#fff;--cd:var(--line);color:var(--pri-d)}
@@ -245,7 +245,7 @@ html[data-v=tech] .toast{background:var(--navy)}
 .tempty{margin:10px 6px;color:var(--mut);font-size:14.5px;font-weight:600;text-align:center}
 /* un bloc */
 .tb{--bc:var(--b-mov);position:relative;margin:3px 0}
-.tb.c-mov{--bc:var(--b-mov)}.tb.c-act{--bc:var(--b-act)}.tb.c-loop{--bc:var(--b-loop)}.tb.c-cond{--bc:var(--b-cond)}.tb.c-art{--bc:var(--b-art)}.tb.c-snd{--bc:var(--b-snd)}.tb.c-fn{--bc:var(--b-fn)}
+.tb.c-mov{--bc:var(--b-mov)}.tb.c-act{--bc:var(--b-act)}.tb.c-loop{--bc:var(--b-loop)}.tb.c-cond{--bc:var(--b-cond)}.tb.c-art{--bc:var(--b-art)}.tb.c-snd{--bc:var(--b-snd)}.tb.c-fn{--bc:var(--b-fn)}.tb.c-var{--bc:var(--b-var)}
 .tbh{display:flex;align-items:center;gap:8px;width:100%;min-height:40px;padding:6px 12px 6px 6px;border-radius:12px;background:var(--bc);color:#fff;font-size:15.5px;font-weight:800;text-align:left;box-shadow:0 3px 0 color-mix(in srgb,var(--bc) 65%,#000);transition:transform .12s,box-shadow .12s,filter .12s}
 .tb.c-cond>.tbh{color:#3A2600}
 .tbi{flex:none;width:28px;height:28px;border-radius:8px;background:rgba(255,255,255,.22);display:grid;place-items:center}
@@ -495,3 +495,71 @@ span.tb.c-cond{color:#3A2600}
 .thero.img .thtxt{max-width:min(56%,520px);text-shadow:0 2px 10px rgba(5,12,50,.45)}
 @media (max-width:600px){.thero.img{padding-top:150px;background:linear-gradient(180deg,rgba(27,43,107,0) 96px,#1B2B6B 176px),var(--hb) 80% 0/auto 180px no-repeat,#1B2B6B}.thero.img .thtxt{max-width:none}.thero.img h1{font-size:25px}}
 @media (min-width:1180px){.thero.img{min-height:270px;padding:30px 32px 22px}.thero.img h1{font-size:34px}}
+
+/* ---------- Bit: funcions, botons, illes alternatives i marcador ---------- */
+.tprog2{border-radius:18px;background:color-mix(in srgb,var(--b-fn) 7%,#fff);border:2px solid color-mix(in srgb,var(--b-fn) 30%,#fff);padding:6px}
+.tprog2.ev{background:#F1F4FB;border-color:var(--line)}
+.tprog2 .tprog{border:0;background:transparent;padding:2px;min-height:44px}
+.tp2h{display:flex;align-items:center;gap:8px;padding:4px 6px 2px;font-size:14px;color:var(--ink)}
+.tp2h>svg{width:20px;height:20px;color:var(--b-fn)}.tp2h small{margin-left:auto;font-size:12px;font-weight:800;color:var(--mut);background:#fff;border-radius:99px;padding:2px 8px}
+.tevb{display:flex;gap:12px;align-items:center;justify-content:center;margin:8px 0 2px}
+.tevk{position:relative;display:grid;place-items:center;width:58px;height:58px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#4A4F63,#16192A);color:#fff;font-size:22px;font-weight:900;font-family:Lexend,system-ui,sans-serif;
+  box-shadow:0 5px 0 #0A0C16,0 0 0 6px #D9DEEA,0 0 0 8px #A9B2C8;transition:transform .1s}
+.tevk:active,.tevk.hit{transform:translateY(4px);box-shadow:0 1px 0 #0A0C16,0 0 0 6px #D9DEEA,0 0 0 8px #A9B2C8}
+.tevk.glow{animation:tevglow 1.4s ease-out 2}
+@keyframes tevglow{50%{box-shadow:0 5px 0 #0A0C16,0 0 0 6px #FFE16B,0 0 0 12px rgba(255,197,49,.45)}}
+.tevk.sm{width:26px;height:26px;font-size:13px;box-shadow:0 2px 0 #0A0C16;flex:none}
+.tevb .tevt{margin-left:6px}
+.talts{display:flex;gap:6px;margin:0 0 6px;overflow-x:auto}
+.talts button{flex:none;padding:6px 12px;border-radius:99px;font-size:13.5px;font-weight:800;background:#fff;border:2px solid var(--line);color:var(--mut)}
+.talts button.on{border-color:var(--pri);color:var(--pri-d);background:var(--sky)}
+.talts button.ok{border-color:var(--ok);color:#0E6B3A;background:#E7F7EE}
+.b3d{position:relative}
+.thud{position:absolute;left:8px;top:8px;display:flex;flex-direction:column;gap:6px;align-items:flex-start;pointer-events:none;z-index:2}
+.thud>span{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.94);border:2px solid var(--line);border-radius:14px;padding:4px 10px;box-shadow:0 3px 10px rgba(20,32,74,.12);font-weight:800;color:var(--ink)}
+.thud svg{width:18px;height:18px;color:var(--b-snd)}
+.thv small{font-size:11.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--mut)}.thv b{font-size:22px;color:var(--b-var);min-width:22px;text-align:center}.thv i{font-style:normal;color:var(--mut);font-size:14px}
+.thm i{font-style:normal;font-size:13px;padding:1px 6px;border-radius:7px;background:#EEF2FD;color:var(--mut)}.thm i.ok{background:var(--b-snd);color:#fff}.thm i.ko{background:var(--ko);color:#fff}
+.thl svg{color:#F2B21B}.thl i{width:16px;height:16px;border-radius:50%;background:color-mix(in srgb,var(--c) 30%,#fff);border:2px solid var(--c)}.thl i.ok{background:var(--c);box-shadow:0 0 8px var(--c)}.thl i.ko{outline:2px solid var(--ko);outline-offset:1px}
+.tdw{position:relative}
+.tdc{display:inline-flex;flex-direction:column;align-items:flex-start;gap:4px;padding:4px 6px 6px 4px;border-radius:12px;background:color-mix(in srgb,var(--bc,var(--b-loop)) 12%,#fff);border:2px solid color-mix(in srgb,var(--bc,var(--b-loop)) 40%,#fff)}
+.tdc.c-loop{--bc:var(--b-loop)}.tdc.c-cond{--bc:var(--b-cond)}
+.tdin{display:flex;flex-wrap:wrap;gap:5px;padding-left:12px;border-left:5px solid var(--bc,var(--b-loop));margin-left:6px}
+.tdelse{font-size:12px;font-weight:900;color:#3A2600;background:var(--b-cond);border-radius:6px;padding:1px 8px;margin-left:6px}
+.tdb.c-art{--bc:var(--b-art)}.tdb.c-snd{--bc:var(--b-snd)}.tdb.c-fn{--bc:var(--b-fn)}.tdb.c-var{--bc:var(--b-var)}
+.tdfn{display:flex;flex-wrap:wrap;gap:5px;align-items:center;padding:6px;border-radius:12px;background:color-mix(in srgb,var(--b-fn) 8%,#fff);border:2px dashed color-mix(in srgb,var(--b-fn) 40%,#fff)}
+.tdfn.ev{background:#F1F4FB;border-color:var(--line)}
+.tdfn>b{display:flex;align-items:center;gap:6px;width:100%;font-size:13px}.tdfn>b svg{width:16px;height:16px;color:var(--b-fn)}
+.tdfn .tevk.hit{box-shadow:0 0 0 4px #FFC531}
+/* ---------- Dissenyar un repte ---------- */
+.tdes{display:flex;flex-direction:column;gap:12px}
+.tdesg{display:grid;gap:14px}
+.tdesw{position:relative;background:#fff;border:2px solid var(--line);border-radius:20px;padding:8px}
+.tdesw .bitw{width:100%;height:auto;display:block;max-height:52vh}
+.tdesc{position:absolute;inset:8px}
+.tdesc button{position:absolute;border-radius:10px}
+.tdesc button:hover{background:rgba(47,91,234,.14);outline:2px dashed rgba(47,91,234,.55)}
+.tdtools{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:8px}
+.tdtools button{display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 4px;border-radius:14px;background:#fff;border:2px solid var(--line);border-bottom-width:4px;font-size:13px;font-weight:800;color:var(--ink)}
+.tdtools button.on{border-color:var(--pri);background:var(--sky);color:var(--pri-d)}
+.tdti svg{width:44px;height:44px;display:block}
+.tdhelp{font-size:14px;color:var(--mut);margin:8px 2px}
+.tdck{list-style:none;margin:10px 0 0;padding:0;display:grid;gap:4px}
+.tdck li{display:flex;align-items:center;gap:8px;font-size:14.5px;font-weight:700;color:var(--mut)}
+.tdck li svg{width:18px;height:18px;color:var(--ok)}.tdck li.ok{color:var(--ink)}
+@media (min-width:900px){.tdesg{grid-template-columns:minmax(0,1.2fr) minmax(300px,1fr);align-items:start}}
+/* valorar el repte d'un company/a */
+.trev{display:grid;gap:14px}
+.trq b{display:block;font-size:16px;margin-bottom:8px}
+.trop{display:flex;flex-wrap:wrap;gap:8px}
+.trop button{flex:1 1 140px;padding:12px;border-radius:14px;background:#fff;border:2px solid var(--line);border-bottom-width:4px;font-weight:800;font-size:15px;color:var(--ink)}
+.trop button.on{border-color:var(--pri);background:var(--sky);color:var(--pri-d)}
+/* diploma */
+.tdip{position:relative;margin:4px auto;max-width:640px;width:100%;text-align:center;background:radial-gradient(circle at 50% 0,#EEF2FF,#fff 65%);border:6px double var(--pri);border-radius:24px;padding:26px 18px 30px;overflow:hidden}
+.tdlogo{height:30px}.tdk{letter-spacing:.32em;text-transform:uppercase;font-weight:800;color:var(--mut);margin:14px 0 4px;font-size:13px}
+.tdip h1{font-size:clamp(28px,7vw,44px);color:var(--navy);margin:2px 0 6px}
+.tdstats{display:flex;justify-content:center;gap:10px;margin:16px 0}.tdstats span{display:flex;flex-direction:column;background:#fff;border:2px solid var(--line);border-radius:16px;padding:8px 14px;font-size:12.5px;font-weight:800;color:var(--mut)}.tdstats b{font-size:24px;color:var(--pri-d)}
+.tdsk{list-style:none;padding:0;margin:8px auto;display:inline-grid;gap:6px;text-align:left}.tdsk li{display:flex;gap:8px;align-items:flex-start;font-weight:700}.tdsk svg{width:18px;height:18px;flex:none;color:var(--ok);margin-top:2px}
+.tddate{color:var(--mut);font-size:14px;margin:12px 0 0}
+.tdbit{position:absolute;right:-6px;bottom:-14px;opacity:.95}.tdbit svg{width:96px;height:118px}
+@media print{body *{visibility:hidden}.tdip,.tdip *{visibility:visible}.tdip{position:fixed;inset:0;margin:auto;max-width:none;border-radius:0}}

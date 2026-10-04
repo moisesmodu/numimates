@@ -15,7 +15,8 @@ const bitKey = (x, y) => x + ',' + y;
    A B C    marques per a «on acabarà?» (sobre camí) */
 function bitWorld(spec) {
   const rows = spec.map, W = { w: rows[0].length, h: rows.length, trees: new Set(), rocks: new Set(), water: new Set(), gems: new Set(), boxes: new Set(), homes: new Set(),
-    path: new Set(), floor: {}, marks: {}, goal: null, bot: [0, 0, 1], target: spec.target || null, need: spec.need || null, pen: !!spec.pen, max: spec.max || 0 };
+    path: new Set(), floor: {}, marks: {}, goal: null, bot: [0, 0, 1], target: spec.target || null, need: spec.need || null, pen: spec.pen ? (typeof spec.pen === 'string' ? spec.pen : 'p') : null, max: spec.max || 0,
+    lights: spec.lights || null, melody: spec.melody || null, count: spec.count ?? null, v0: spec.v0 || 0, vname: spec.vname || null };
   rows.forEach((r, y) => [...r].forEach((ch, x) => {
     const c = bitKey(x, y);
     if (ch === 'R') W.rocks.add(c); else if (ch === '~') W.water.add(c);
@@ -27,13 +28,15 @@ function bitWorld(spec) {
     else if ('ABC'.includes(ch)) { W.marks[ch] = [x, y]; W.path.add(c); }
   }));
   if (spec.goal) W.goal = spec.goal;
+  // el dibuix que demana el repte també es pot escriure com un mapa: r g y u p = color de la casella, . = res
+  if (Array.isArray(spec.target)) { W.target = {}; spec.target.forEach((r, y) => [...r].forEach((ch, x) => { if ('rgyup'.includes(ch)) W.target[bitKey(x, y)] = ch; })); }
   // si el mapa dibuixa un camí, cal anar-hi per dins: la resta són arbres (spec.paths:false ho desactiva)
   if (spec.paths !== false && rows.some(r => r.includes('#'))) rows.forEach((r, y) => [...r].forEach((ch, x) => { if (ch === '.') W.trees.add(bitKey(x, y)); }));
   return W;
 }
 function bitSim(W) {
   const [x, y, d] = W.bot;
-  return { x, y, d, ang: d * 90, carry: 0, gems: new Set(), boxes: new Set(W.boxes), done: new Set(), paint: {}, led: null, notes: [], n: 0, crash: null, trail: [bitKey(x, y)] };
+  return { x, y, d, ang: d * 90, carry: 0, gems: new Set(), boxes: new Set(W.boxes), done: new Set(), paint: {}, led: null, leds: [], notes: [], v: W.v0 || 0, n: 0, crash: null, trail: [bitKey(x, y)] };
 }
 const bitAhead = (S) => [S.x + BIT_DX[S.d], S.y + BIT_DY[S.d]];
 const bitBlocked = (W, x, y) => x < 0 || y < 0 || x >= W.w || y >= W.h || W.rocks.has(bitKey(x, y)) || W.water.has(bitKey(x, y)) || W.trees.has(bitKey(x, y));
@@ -49,7 +52,7 @@ function bitDo(W, S, b) {
       if (W.water.has(c)) { S.crash = 'water'; return; }
       S.x = nx; S.y = ny; S.trail.push(c);
       if (W.gems.has(c)) S.gems.add(c);
-      if (W.pen) S.paint[c] = S.paint[c] || 'p';
+      if (W.pen) S.paint[c] = S.paint[c] || W.pen;
       return;
     }
     case 'left': S.d = (S.d + 3) % 4; S.ang -= 90; return;
@@ -57,14 +60,19 @@ function bitDo(W, S, b) {
     case 'pick': if (S.carry) { S.crash = 'full'; return; } if (!S.boxes.has(here)) { S.crash = 'nobox'; return; } S.boxes.delete(here); S.carry = 1; return;
     case 'drop': if (!S.carry) { S.crash = 'empty'; return; } if (!W.homes.has(here) || S.done.has(here)) { S.crash = 'nohome'; return; } S.done.add(here); S.carry = 0; return;
     case 'paint': S.paint[here] = b.c || 'r'; return;
-    case 'light': S.led = b.c || 'r'; return;
+    case 'light': S.led = b.c || 'r'; S.leds.push(S.led); return;
     case 'note': S.notes.push(b.n || 'do'); return;
+    case 'add': S.v += b.n ?? 1; return;
+    case 'sub': S.v -= b.n ?? 1; return;
+    case 'setv': S.v = b.n || 0; return;
   }
 }
 function bitCond(W, S, c) {
   const [nx, ny] = bitAhead(S), here = bitKey(S.x, S.y);
   if (c === 'wall') return bitBlocked(W, nx, ny);
   if (c === 'free') return !bitBlocked(W, nx, ny);
+  if (c === 'freeL' || c === 'freeR') { const d = (S.d + (c === 'freeL' ? 3 : 1)) % 4; return !bitBlocked(W, S.x + BIT_DX[d], S.y + BIT_DY[d]); }
+  if (c.startsWith('cnt=')) return S.v === +c.slice(4);
   if (c === 'goal') return !!W.goal && S.x === W.goal[0] && S.y === W.goal[1];
   if (c === 'gem') return W.gems.has(here) ;
   if (c === 'box') return S.boxes.has(here);
@@ -91,7 +99,7 @@ function* bitRun(W, S, list, fns, depth = 0) {
   }
 }
 // què demana el repte: arribar a la bandera, totes les estrelles, totes les caixes a casa, el dibuix…
-function bitNeeds(W) { return W.need || ['goal', 'gems', 'deliver', 'paint'].filter(n => n === 'goal' ? W.goal : n === 'gems' ? W.gems.size : n === 'deliver' ? W.homes.size : W.target); }
+function bitNeeds(W) { return W.need || ['goal', 'gems', 'deliver', 'paint', 'lights', 'melody', 'count'].filter(n => n === 'goal' ? W.goal : n === 'gems' ? W.gems.size : n === 'deliver' ? W.homes.size : n === 'paint' ? W.target : n === 'count' ? W.count !== null : W[n]); }
 function bitMiss(W, S) {
   if (S.crash) return S.crash;
   for (const n of bitNeeds(W)) {
@@ -99,6 +107,9 @@ function bitMiss(W, S) {
     if (n === 'gems' && S.gems.size < W.gems.size) return 'nogems';
     if (n === 'deliver' && S.done.size < W.homes.size) return 'nodeliver';
     if (n === 'paint' && W.target && (!Object.entries(W.target).every(([c, v]) => S.paint[c] === v) || Object.keys(S.paint).some(c => !W.target[c]))) return 'nopaint';
+    if (n === 'lights' && W.lights && W.lights.join() !== S.leds.join()) return 'nolights';
+    if (n === 'melody' && W.melody && W.melody.join() !== S.notes.join()) return 'nomelody';
+    if (n === 'count' && W.count !== null && S.v !== W.count) return 'nocount';
   }
   return null;
 }
@@ -117,7 +128,11 @@ const BIT_WHY = {
   nogoal: ["El programa s'ha acabat, però no he arribat a la bandera.", 'El programa ha terminado, pero no he llegado a la bandera.'],
   nogems: ['Encara queden estrelles per recollir.', 'Aún quedan estrellas por recoger.'],
   nodeliver: ['Encara queden caixes per repartir.', 'Aún quedan cajas por repartir.'],
-  nopaint: ['El dibuix no és ben bé igual que el model.', 'El dibujo no es igual que el modelo.']
+  nopaint: ['El dibuix no és ben bé igual que el model.', 'El dibujo no es igual que el modelo.'],
+  nolights: ["Els llums no s'han encès en l'ordre del model.", 'Las luces no se han encendido en el orden del modelo.'],
+  nomelody: ['La melodia no sona igual que la del model.', 'La melodía no suena igual que la del modelo.'],
+  nocount: ['El comptador no té el número que demana el repte.', 'El contador no tiene el número que pide el reto.'],
+  noev: ['Els botons encara no fan el que demana el repte.', 'Los botones aún no hacen lo que pide el reto.']
 };
 
 /* ---------- Dibuix: l'illa d'en Bit, en perspectiva 3/4 ----------
@@ -294,15 +309,24 @@ const BIT_ICO = {
   paint: '<svg viewBox="0 0 24 24"><path d="M14 3l7 7-8 8-7-7z" fill="currentColor"/><path d="M6 13c-3 1-3 5-4 8 3-1 7-1 8-4" fill="currentColor" opacity=".6"/></svg>',
   light: '<svg viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 0-4 12.7V18h8v-3.3A7 7 0 0 0 12 2z" fill="currentColor"/><path d="M9 20h6v2H9z" fill="currentColor"/></svg>',
   note: '<svg viewBox="0 0 24 24"><path d="M9 3v12.3A3.5 3.5 0 1 0 11 18V8h8V3z" fill="currentColor"/></svg>',
-  call: '<svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="3" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M8 10h8M8 14h5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>'
+  call: '<svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="3" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M8 10h8M8 14h5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>',
+  add: '<svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="4" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M12 8v8M8 12h8" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg>',
+  sub: '<svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="4" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M8 12h8" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg>',
+  setv: '<svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="4" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M8 10h8M8 14h8" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg>'
 };
-const BIT_CAT = { fwd: 'mov', left: 'mov', right: 'mov', pick: 'act', drop: 'act', rep: 'loop', until: 'loop', if: 'cond', paint: 'art', light: 'art', note: 'snd', call: 'fn' };
+const BIT_CAT = { fwd: 'mov', left: 'mov', right: 'mov', pick: 'act', drop: 'act', rep: 'loop', until: 'loop', if: 'cond', paint: 'art', light: 'art', note: 'snd', call: 'fn', add: 'var', sub: 'var', setv: 'var' };
 const BIT_CONDS = {
   wall: ["hi ha un obstacle davant", 'hay un obstáculo delante'], free: ['el camí és lliure', 'el camino está libre'], goal: ['arribis a la bandera', 'llegues a la bandera'],
   gem: ['hi ha una estrella', 'hay una estrella'], box: ['hi ha una caixa', 'hay una caja'],
+  freeL: ["hi ha camí a l'esquerra", 'hay camino a la izquierda'], freeR: ['hi ha camí a la dreta', 'hay camino a la derecha'],
   'floor:r': ['el terra és vermell', 'el suelo es rojo'], 'floor:g': ['el terra és verd', 'el suelo es verde'], 'floor:y': ['el terra és groc', 'el suelo es amarillo'], 'floor:u': ['el terra és blau', 'el suelo es azul']
 };
 const BIT_CNAME = { r: ['vermell', 'rojo'], g: ['verd', 'verde'], y: ['groc', 'amarillo'], u: ['blau', 'azul'] };
+const BIT_NOTES = ['do', 're', 'mi', 'fa', 'sol', 'la', 'si'];
+// nom de la variable (el món el pot canviar: «punts», «fruites»…) i nom de cada funció
+const bitVName = () => tx((typeof TB !== 'undefined' && TB && TB.W && TB.W.vname) || 'comptador|contador');
+const bitFName = f => (typeof TB !== 'undefined' && TB && TB.fnName && TB.fnName[f]) ? tx(TB.fnName[f]) : f;
+const bitCondLabel = c => c && c.startsWith('cnt=') ? L(`el ${bitVName()} valgui ${c.slice(4)}`, `el ${bitVName()} valga ${c.slice(4)}`) : tx((BIT_CONDS[c] || BIT_CONDS.wall).join('|'));
 function bitLabel(b) {
   switch (b.k) {
     case 'fwd': return L('Endavant', 'Adelante');
@@ -311,16 +335,68 @@ function bitLabel(b) {
     case 'pick': return L('Agafa la caixa', 'Coge la caja');
     case 'drop': return L('Deixa la caixa', 'Deja la caja');
     case 'rep': return L(`Repeteix <b class="tnum">${b.n || 2}</b> vegades`, `Repite <b class="tnum">${b.n || 2}</b> veces`);
-    case 'until': return `${L('Repeteix fins que', 'Repite hasta que')} <b>${tx(BIT_CONDS[b.c || 'goal'].join('|'))}</b>`;
-    case 'if': return `${L('Si', 'Si')} <b>${tx(BIT_CONDS[b.c || 'wall'].join('|'))}</b>`;
+    case 'until': return `${L('Repeteix fins que', 'Repite hasta que')} <b>${bitCondLabel(b.c || 'goal')}</b>`;
+    case 'if': return `${L('Si', 'Si')} <b>${bitCondLabel(b.c || 'wall')}</b>`;
     case 'paint': return `${L('Pinta de', 'Pinta de')} <i class="tdot" style="background:${BIT_COL[b.c || 'r']}"></i>`;
     case 'light': return `${L('Llum', 'Luz')} <i class="tdot" style="background:${BIT_COL[b.c || 'r']}"></i>`;
     case 'note': return `${L('Nota', 'Nota')} <b>${b.n || 'do'}</b>`;
-    case 'call': return `${L('Funció', 'Función')} <b>${b.f || 'A'}</b>`;
+    case 'call': return `${L('Funció', 'Función')} <b>${bitFName(b.f || 'A')}</b>`;
+    case 'add': return L(`Suma <b class="tnum">${b.n ?? 1}</b> al ${bitVName()}`, `Suma <b class="tnum">${b.n ?? 1}</b> al ${bitVName()}`);
+    case 'sub': return L(`Resta <b class="tnum">${b.n ?? 1}</b> al ${bitVName()}`, `Resta <b class="tnum">${b.n ?? 1}</b> al ${bitVName()}`);
+    case 'setv': return L(`Posa el ${bitVName()} a <b class="tnum">${b.n || 0}</b>`, `Pon el ${bitVName()} a <b class="tnum">${b.n || 0}</b>`);
   }
   return b.k;
 }
-const bitNew = k => ({ k, ...(k === 'rep' ? { n: 2, b: [] } : k === 'until' ? { c: 'goal', b: [] } : k === 'if' ? { c: 'wall', b: [], e: null } : k === 'paint' || k === 'light' ? { c: 'r' } : k === 'note' ? { n: 'do' } : k === 'call' ? { f: 'A' } : {}) });
+const bitNew = k => ({ k, ...(k === 'rep' ? { n: 2, b: [] } : k === 'until' ? { c: 'goal', b: [] } : k === 'if' ? { c: 'wall', b: [], e: null } : k === 'paint' || k === 'light' ? { c: 'r' } : k === 'note' ? { n: 'do' } : k === 'call' ? { f: 'A' } : k === 'add' || k === 'sub' ? { n: 1 } : k === 'setv' ? { n: 0 } : {}) });
+/* Programes escrits en text (per als reptes, les solucions i les diapositives):
+   f l r p d · N{ … } repeteix · until:cond{ … } · if:cond{ … } else{ … } · A B (funcions) · paint:r light:g note:mi
+   add:1 sub:1 setv:0 · un «!» al final marca el bloc per a «Investiga» (f! 3!{ … }).  Exemple: TQ('3{ f f r } if:wall{ l } else{ f }') */
+function TQ(src) {
+  if (Array.isArray(src)) return bitClone(src);
+  const tok = String(src).match(/[{}]|[^\s{}]+/g) || []; let i = 0;
+  const SIMPLE = { f: 'fwd', l: 'left', r: 'right', p: 'pick', d: 'drop' };
+  const list = () => { const out = [];
+    while (i < tok.length && tok[i] !== '}') {
+      let t = tok[i++]; const x = t.endsWith('!') && t.length > 1; if (x) t = t.slice(0, -1);
+      let b;
+      if (SIMPLE[t]) b = { k: SIMPLE[t] };
+      else if (/^[A-E]$/.test(t)) b = { k: 'call', f: t };
+      else if (/^\d+$/.test(t)) { b = { k: 'rep', n: +t, b: body() }; }
+      else { const j = t.indexOf(':'), k = j < 0 ? t : t.slice(0, j), a = j < 0 ? '' : t.slice(j + 1);
+        if (k === 'until') b = { k: 'until', c: a || 'goal', b: body() };
+        else if (k === 'if') { b = { k: 'if', c: a || 'wall', b: body(), e: null }; if (tok[i] === 'else') { i++; b.e = body(); } }
+        else if (k === 'paint' || k === 'light') b = { k, c: a || 'r' };
+        else if (k === 'note') b = { k, n: a || 'do' };
+        else if (k === 'add' || k === 'sub') b = { k, n: a === '' ? 1 : +a };
+        else if (k === 'setv') b = { k, n: +a || 0 };
+        else throw new Error('TQ: bloc desconegut «' + t + '»'); }
+      if (x) b.x = 1; out.push(b); }
+    return out; };
+  const body = () => { if (tok[i] !== '{') throw new Error('TQ: falta «{» a ' + src); i++; const l = list(); if (tok[i] !== '}') throw new Error('TQ: falta «}» a ' + src); i++; return l; };
+  const r = list(); if (i < tok.length) throw new Error('TQ: «}» de més a ' + src); return r;
+}
+// funcions escrites en text: { A: 'f f r' } → { A: [...] }
+const TQF = o => o ? Object.fromEntries(Object.entries(o).map(([k, v]) => [k, TQ(v)])) : null;
+const bitCountAll = (prog, fns, evs) => bitCount(prog) + Object.values(fns || {}).reduce((n, l) => n + bitCount(l), 0) + Object.values(evs || {}).reduce((n, l) => n + bitCount(l), 0);
+// programa amb esdeveniments: «quan comença» (prog) i després els botons premuts, en ordre (presses: 'ABA')
+function bitEvRun(W, prog, fns, evs, presses) {
+  const S = bitSim(W); let g = bitRun(W, S, prog, fns); while (!g.next().done);
+  for (const e of presses || '') { if (S.crash) break; g = bitRun(W, S, (evs || {})[e] || [], fns); while (!g.next().done); }
+  return S;
+}
+// les proves d'un repte amb botons: [{ p: 'A', led: 'r', notes: ['do'], goal: true, at: [x, y], v: 3 }]
+function bitEvCheck(spec, prog, fns, evs) {
+  for (const t of spec.evtest || []) {
+    const W = bitWorld(spec), S = bitEvRun(W, prog, fns, evs, t.p);
+    if (S.crash) return { ok: false, t, S, why: S.crash };
+    if (t.led !== undefined && S.led !== t.led) return { ok: false, t, S };
+    if (t.notes && t.notes.join() !== S.notes.join()) return { ok: false, t, S };
+    if (t.goal && !bitCond(W, S, 'goal')) return { ok: false, t, S };
+    if (t.at && (S.x !== t.at[0] || S.y !== t.at[1])) return { ok: false, t, S };
+    if (t.v !== undefined && S.v !== t.v) return { ok: false, t, S };
+  }
+  return { ok: true };
+}
 const bitClone = p => JSON.parse(JSON.stringify(p, (k, v) => k === '_id' ? undefined : v));
 const bitCount = list => (list || []).reduce((n, b) => n + 1 + bitCount(b.b) + bitCount(b.e), 0);
 // paraula «blocs» amb el nombre
@@ -331,17 +407,23 @@ const bitN = n => `${n} ${n === 1 ? L('bloc', 'bloque') : L('blocs', 'bloques')}
    'spot' (tocar un bloc), 'parsons' (ordenar blocs donats), 'hand' (moure en Bit amb botons). */
 let TB = null, TB_ID = 0;
 function tbMake(spec, o = {}) {
+  // illes alternatives (spec.alts): el mateix programa ha de funcionar a totes
+  const alts = spec.alts && spec.alts.length ? [spec, ...spec.alts.map(a => Array.isArray(a) ? { ...spec, map: a, alts: null } : { ...spec, ...a, alts: null })] : null;
   const W = bitWorld(spec);
-  TB = { spec, W, S: bitSim(W), prog: o.prog ? bitClone(o.prog) : [], fns: o.fns || null, pal: o.pal || ['fwd', 'left', 'right'], max: o.max || W.max || 0, mode: o.mode || 'edit',
+  const fns = o.fns || o.fnEdit ? Object.fromEntries([...new Set([...Object.keys(o.fns || {}), ...(o.fnEdit || [])])].map(f => [f, o.fns && o.fns[f] ? bitClone(o.fns[f]) : []])) : null;
+  TB = { spec, W, S: bitSim(W), prog: o.prog ? bitClone(o.prog) : [], fns, fnEdit: o.fnEdit || null, fnName: o.fnName || null, pal: o.pal || ['fwd', 'left', 'right'], max: o.max || W.max || 0, mode: o.mode || 'edit',
+    evs: o.ev ? Object.fromEntries(o.ev.map(e => [e, o.evs && o.evs[e] ? bitClone(o.evs[e]) : []])) : null, evtest: spec.evtest || null, alts, altI: 0, altOk: new Set(),
     cur: null, sel: null, run: null, speed: 1, onDone: o.onDone || null, onFail: o.onFail || null, lists: [], ids: {}, pool: o.pool ? bitClone(o.pool) : null, lock: !!o.lock, marks: !!o.marks, solved: false, tries: 0 };
   TB.cur = { l: TB.prog, i: TB.prog.length };
   return TB;
 }
+const tbFnEditable = f => !!(TB.fnEdit && TB.fnEdit.includes(f));
+const tbUsed = () => bitCountAll(TB.prog, TB.fnEdit ? Object.fromEntries(TB.fnEdit.map(f => [f, TB.fns[f]])) : null, TB.evs);
 // ids per als blocs i les llistes (es refan a cada dibuix)
 function tbIndex() {
   TB.lists = []; TB.ids = {};
   const walk = list => { TB.lists.push(list); for (const b of list) { if (!b._id) b._id = ++TB_ID; TB.ids[b._id] = { b, list }; if (b.b) walk(b.b); if (b.e) walk(b.e); } };
-  walk(TB.prog); if (TB.pool) walk(TB.pool);
+  walk(TB.prog); if (TB.fns) Object.values(TB.fns).forEach(walk); if (TB.evs) Object.values(TB.evs).forEach(walk); if (TB.pool) walk(TB.pool);
 }
 const tbLid = l => TB.lists.indexOf(l);
 function tbBlock(b, ro) {
@@ -364,25 +446,37 @@ function tbTools(b) {
   const ix = TB.ids[b._id], i = ix.list.indexOf(b);
   return `<div class="tbtools">
     <button onclick="tbMove(-1)" ${i === 0 ? 'disabled' : ''} aria-label="${L('Puja', 'Sube')}">↑</button><button onclick="tbMove(1)" ${i === ix.list.length - 1 ? 'disabled' : ''} aria-label="${L('Baixa', 'Baja')}">↓</button>
-    ${b.k === 'rep' ? `<button onclick="tbNum(-1)" aria-label="${L('Menys', 'Menos')}">−</button><b>${b.n}</b><button onclick="tbNum(1)" aria-label="${L('Més', 'Más')}">+</button>` : ''}
+    ${['rep', 'add', 'sub', 'setv'].includes(b.k) ? `<button onclick="tbNum(-1)" aria-label="${L('Menys', 'Menos')}">−</button><b>${b.n ?? 1}</b><button onclick="tbNum(1)" aria-label="${L('Més', 'Más')}">+</button>` : ''}
+    ${b.k === 'note' ? `<button class="wide" onclick="tbNote()">${L('Canvia la nota', 'Cambia la nota')}</button>` : ''}
+    ${b.k === 'call' && TB.fns && Object.keys(TB.fns).length > 1 ? `<button class="wide" onclick="tbFn()">${L('Canvia la funció', 'Cambia la función')}</button>` : ''}
     ${(b.k === 'if' || b.k === 'until') && (TB.conds || []).length > 1 ? `<button class="wide" onclick="tbCond()">${L('Canvia la condició', 'Cambia la condición')}</button>` : ''}
     ${b.k === 'if' && TB.pal.includes('else') ? `<button class="wide" onclick="tbElse()">${b.e ? L('Treu «si no»', 'Quita «si no»') : L('Afegeix «si no»', 'Añade «si no»')}</button>` : ''}
     ${(b.k === 'paint' || b.k === 'light') ? `<button class="wide" onclick="tbColor()">${L('Canvia el color', 'Cambia el color')}</button>` : ''}
     <button class="del" onclick="tbDel()" aria-label="${L('Esborra', 'Borra')}">${L('Esborra', 'Borra')}</button></div>`;
 }
 function tbPalette() {
-  const used = bitCount(TB.prog), full = TB.max && used >= TB.max;
-  return `<div class="tpal">${TB.pal.filter(k => k !== 'else').map(k => `<button class="tb c-${BIT_CAT[k]} tpb" onclick="tbIns('${k}')" ${full ? 'disabled' : ''}><span class="tbi">${BIT_ICO[k] || ''}</span><span class="tbl">${bitLabel(bitNew(k)).replace(/<b class="tnum">\d+<\/b>/, 'N')}</span></button>`).join('')}</div>`;
+  const used = tbUsed(), full = TB.max && used >= TB.max;
+  const ks = TB.pal.filter(k => k !== 'else').flatMap(k => k === 'call' ? Object.keys(TB.fns || { A: 1 }).map(f => 'call:' + f) : [k]);
+  return `<div class="tpal">${ks.map(k => { const b = k.startsWith('call:') ? { k: 'call', f: k.slice(5) } : bitNew(k), kk = b.k;
+    if ((kk === 'if' || kk === 'until') && TB.conds && TB.conds.length) b.c = TB.conds[0];
+    return `<button class="tb c-${BIT_CAT[kk]} tpb" onclick="tbIns('${k}')" ${full ? 'disabled' : ''}><span class="tbi">${BIT_ICO[kk] || ''}</span><span class="tbl">${bitLabel(b).replace(/<b class="tnum">\d+<\/b>/, kk === 'rep' ? 'N' : '<b class="tnum">1</b>')}</span></button>`; }).join('')}</div>`;
+}
+// les altres llistes de blocs: funcions (es poden editar si el repte ho diu) i esdeveniments (quan premo A…)
+function tbExtraLists() {
+  const card = (cls, title, list, ro) => `<div class="tprog2 ${cls}"><div class="tp2h">${title}</div><div class="tprog">${tbList(list, ro || TB.mode !== 'edit')}</div></div>`;
+  const fns = TB.fns ? Object.entries(TB.fns).map(([f, l]) => card('fn', `${BIT_ICO.call}<b>${L('Funció', 'Función')} ${bitFName(f)}</b>${tbFnEditable(f) ? '' : `<small>${L('ja feta', 'ya hecha')}</small>`}`, l, !tbFnEditable(f))).join('') : '';
+  const evs = TB.evs ? Object.entries(TB.evs).map(([e, l]) => card('ev', `<span class="tevk sm">${e}</span><b>${L(`Quan premo ${e}`, `Al pulsar ${e}`)}</b>`, l)).join('') : '';
+  return fns + evs;
 }
 // tot l'escenari: món a dalt (o a l'esquerra a l'ordinador) i programa + paleta a sota
 function tbHTML(extra = '') {
   tbIndex();
-  const used = bitCount(TB.prog);
+  const used = TB.mode === 'edit' ? tbUsed() : bitCount(TB.prog);
   const clr = TB.mode === 'edit' && !TB.lock && used ? `<button class="tclr" onclick="tbClear()" aria-label="${L('Buida el programa', 'Vacía el programa')}"><svg viewBox="0 0 24 24"><path d="M6 7h12l-1 14H7zM9 3h6l1 2h4v2H4V5h4z" fill="currentColor"/></svg></button>` : '';
-  const head = TB.mode === 'hand' ? '' : `<div class="tphead"><b>${TB.mode === 'parsons' ? L('El teu programa', 'Tu programa') : L('Programa', 'Programa')}</b><span class="tphr">${TB.max ? `<span class="tcount ${used >= TB.max ? 'full' : ''}">${used}/${TB.max} ${L('blocs', 'bloques')}</span>` : `<span class="tcount">${bitN(used)}</span>`}${clr}</span></div>`;
+  const head = TB.mode === 'hand' ? '' : `<div class="tphead"><b>${TB.mode === 'parsons' ? L('El teu programa', 'Tu programa') : TB.evs ? L('Quan comença', 'Al empezar') : L('Programa', 'Programa')}</b><span class="tphr">${TB.max ? `<span class="tcount ${used >= TB.max ? 'full' : ''}">${used}/${TB.max} ${L('blocs', 'bloques')}</span>` : `<span class="tcount">${bitN(used)}</span>`}${clr}</span></div>`;
   const prog = TB.mode === 'hand' ? `<div class="thand"><button onclick="tbHand('left')" aria-label="${bitLabel({ k: 'left' })}">${BIT_ICO.left}</button><button class="big" onclick="tbHand('fwd')" aria-label="${bitLabel({ k: 'fwd' })}">${BIT_ICO.fwd}</button><button onclick="tbHand('right')" aria-label="${bitLabel({ k: 'right' })}">${BIT_ICO.right}</button></div>
       <div class="tprog mini">${TB.prog.length ? TB.prog.map(b => `<span class="tchip c-${BIT_CAT[b.k]}">${BIT_ICO[b.k]}</span>`).join('') : `<p class="tempty">${L('Els teus moviments apareixeran aquí', 'Tus movimientos aparecerán aquí')}</p>`}</div>`
-    : `${head}<div class="tprog" id="tprog">${tbList(TB.prog, TB.mode === 'view' || TB.mode === 'spot')}</div>${TB.mode === 'edit' ? tbPalette() : ''}${TB.mode === 'parsons' ? `<div class="tpool"><small>${L('Blocs disponibles', 'Bloques disponibles')}</small><div>${TB.pool.map(b => tbBlock(b)).join('') || `<p class="tempty">${L('Ja els has posat tots', 'Ya los has puesto todos')}</p>`}</div></div>` : ''}`;
+    : `${head}<div class="tprog" id="tprog">${tbList(TB.prog, TB.mode === 'view' || TB.mode === 'spot')}</div>${tbExtraLists()}${TB.mode === 'edit' ? tbPalette() : ''}${TB.mode === 'parsons' ? `<div class="tpool"><small>${L('Blocs disponibles', 'Bloques disponibles')}</small><div>${TB.pool.map(b => tbBlock(b)).join('') || `<p class="tempty">${L('Ja els has posat tots', 'Ya los has puesto todos')}</p>`}</div></div>` : ''}`;
   const runbar = TB.mode !== 'hand' ? `<div class="trun">
       <button class="btn big trgo" onclick="tbGo()" id="tbgo">${TB.run ? L('Atura', 'Para') : `<svg viewBox="0 0 24 24"><path d="M7 4l13 8-13 8z" fill="currentColor"/></svg>${L('Executa', 'Ejecuta')}`}</button>
       ${TB.mode === 'edit' || TB.mode === 'parsons' ? `<button class="btn ghost" onclick="tbStep()" title="${L('Executa un sol bloc', 'Ejecuta un solo bloque')}">${L('Pas a pas', 'Paso a paso')}</button>` : ''}
@@ -394,15 +488,33 @@ function tbHTML(extra = '') {
 // el món: en 3D si l'aparell ho permet (tech-3d.js); mentrestant, i si no hi ha WebGL, el dibuix 2D
 function tbWorldHTML() {
   const ar = Math.max(.56, Math.min(1.05, (TB.W.h + 1.8) / (TB.W.w + 1.2) * .82));
-  return `<div class="tworld" id="tworld"><div class="b3d" id="b3d" style="aspect-ratio:${(1 / ar).toFixed(3)}">${bitSVG(TB.W, TB.S, { marks: TB.marks })}</div><p class="tsay" id="tsay" aria-live="polite"></p>${TB.runbar || ''}</div>`;
+  const alts = TB.alts ? `<div class="talts">${TB.alts.map((_, i) => `<button class="${i === TB.altI ? 'on' : ''} ${TB.altOk.has(i) ? 'ok' : ''}" onclick="tbAlt(${i})">${TB.altOk.has(i) ? '✓ ' : ''}${L('Illa', 'Isla')} ${i + 1}</button>`).join('')}</div>` : '';
+  const evb = TB.evs && TB.mode === 'edit' ? `<div class="tevb">${Object.keys(TB.evs).map(e => `<button class="tevk" id="tev${e}" onclick="tbPress('${e}')" aria-label="${L('Prem el botó', 'Pulsa el botón')} ${e}">${e}</button>`).join('')}${TB.evtest ? `<button class="btn ghost tevt" onclick="tbEvTest()">${L('Comprova', 'Comprueba')}</button>` : ''}</div>` : '';
+  return `<div class="tworld" id="tworld">${alts}<div class="b3d" id="b3d" style="aspect-ratio:${(1 / ar).toFixed(3)}">${bitSVG(TB.W, TB.S, { marks: TB.marks })}<div class="thud" id="thud">${tbHudHTML()}</div></div>${evb}<p class="tsay" id="tsay" aria-live="polite"></p>${TB.runbar || ''}</div>`;
 }
+// marcador sobre el món: el comptador, la melodia i els llums que demana el repte (i com van)
+function tbHudHTML() {
+  if (!TB) return '';
+  return bitHudHTML(TB.W, TB.S, [TB.prog, ...Object.values(TB.fns || {}), ...Object.values(TB.evs || {})].some(l => bitCountK(l, ['add', 'sub', 'setv'])));
+}
+function bitHudHTML(W, S, usesV) {
+  const h = [];
+  if (usesV || W.count !== null || W.vname) h.push(`<span class="thv"><small>${bitVName()}</small><b>${S.v}</b>${W.count !== null ? `<i>/ ${W.count}</i>` : ''}</span>`);
+  if (W.melody) h.push(`<span class="thm">${BIT_ICO.note}${W.melody.map((n, i) => `<i class="${S.notes[i] === n ? 'ok' : S.notes[i] ? 'ko' : ''}">${n}</i>`).join('')}</span>`);
+  else if (S.notes.length) h.push(`<span class="thm">${BIT_ICO.note}${S.notes.slice(-6).map(n => `<i class="ok">${n}</i>`).join('')}</span>`);
+  if (W.lights) h.push(`<span class="thl">${BIT_ICO.light}${W.lights.map((c, i) => `<i style="--c:${BIT_COL[c]}" class="${S.leds[i] === c ? 'ok' : S.leds[i] ? 'ko' : ''}"></i>`).join('')}</span>`);
+  else if (S.led) h.push(`<span class="thl now">${BIT_ICO.light}<i style="--c:${BIT_COL[S.led]}" class="ok"></i></span>`);
+  return h.join('');
+}
+const bitCountK = (list, ks) => (list || []).reduce((n, b) => n + (ks.includes(b.k) ? 1 : 0) + bitCountK(b.b, ks) + bitCountK(b.e, ks), 0);
+const tbHud = () => { const e = document.getElementById('thud'); if (e) e.innerHTML = tbHudHTML(); };
 // la part del programa (es refà a cada canvi sense tocar el món 3D)
 function tbCodeHTML() { const h = tbHTML(TB.extra || ''); const d = document.createElement('div'); d.innerHTML = h; const c = d.querySelector('.tcode'); return c ? c.innerHTML : ''; }
 function tbDraw() {
   const st = document.querySelector('.tstage'); if (!st) return;
   const sc = document.getElementById('tprog'), top = sc ? sc.scrollTop : 0;
   const code = st.querySelector('.tcode'), w = st.querySelector('#tworld');
-  if (code && w) { code.innerHTML = tbCodeHTML(); const rb = w.querySelector('.trun'); if (rb && TB.runbar) rb.outerHTML = TB.runbar; if (TB.dirtyWorld) tbRedrawWorld(); }
+  if (code && w) { code.innerHTML = tbCodeHTML(); const rb = w.querySelector('.trun'); if (rb && TB.runbar) rb.outerHTML = TB.runbar; if (TB.dirtyWorld) tbRedrawWorld(); else tbHud(); if (TB.dirtyAlts) tbAltTabs(); }
   else { st.outerHTML = tbHTML(TB.extra || ''); tb3dMount(); }
   TB.dirtyWorld = false;
   const sc2 = document.getElementById('tprog'); if (sc2) sc2.scrollTop = top;
@@ -427,16 +539,18 @@ function tb3dMount() {
 function tbWorld() {
   const S = TB.S, prev = TB.prevS;
   if (TB.b3) TB.b3.step(S, prev);
-  else { const w = document.querySelector('#tworld .bitw'); if (!w) return; bitPaintState(w, TB.W, S, prev); }
+  else { const w = document.querySelector('#tworld .bitw'); if (w) bitPaintState(w, TB.W, S, prev); }
   TB.prevS = { x: S.x, y: S.y, d: S.d, ang: S.ang, carry: S.carry, led: S.led };
+  tbHud();
 }
 function tbSay(t, cls = '') { const e = document.getElementById('tsay'); if (e) { e.className = 'tsay ' + cls; e.innerHTML = t; } }
 
 /* ---------- Editor ---------- */
 function tbIns(k) {
   if (TB.run) tbStop();
-  if (TB.max && bitCount(TB.prog) >= TB.max) return toast(L(`Només pots fer servir ${TB.max} blocs.`, `Solo puedes usar ${TB.max} bloques.`));
-  const b = bitNew(k); if (k === 'if' || k === 'until') b.c = (TB.conds || [b.c])[0];
+  if (TB.max && tbUsed() >= TB.max) return toast(L(`Només pots fer servir ${TB.max} blocs.`, `Solo puedes usar ${TB.max} bloques.`));
+  const b = k.startsWith('call:') ? { k: 'call', f: k.slice(5) } : bitNew(k); if (k === 'if' || k === 'until') b.c = (TB.conds || [b.c])[0];
+  if (b.k === 'note' && TB.notes) b.n = TB.notes[0];
   const { l, i } = TB.cur; l.splice(i, 0, b);
   // dins d'un bucle o d'un «si» nou, el cursor hi entra (és el que gairebé sempre es vol fer després)
   TB.cur = b.b ? { l: b.b, i: 0 } : { l, i: i + 1 };
@@ -446,13 +560,22 @@ function tbCur(li, i) { if (TB.run) tbStop(); TB.cur = { l: TB.lists[li], i }; T
 function tbSel(id) { if (TB.run) tbStop(); const ix = TB.ids[id]; if (!ix) return; TB.sel = TB.sel === ix.b ? null : ix.b; TB.cur = { l: ix.list, i: ix.list.indexOf(ix.b) + 1 }; tbDraw(); }
 function tbMove(d) { const b = TB.sel, l = TB.ids[b._id].list, i = l.indexOf(b), j = i + d; if (j < 0 || j >= l.length) return; l.splice(i, 1); l.splice(j, 0, b); TB.cur = { l, i: j + 1 }; tbFresh(); tbDraw(); }
 function tbDel() { const b = TB.sel, l = TB.ids[b._id].list, i = l.indexOf(b); l.splice(i, 1); TB.sel = null; TB.cur = { l, i }; tbFresh(); tbDraw(); }
-function tbNum(d) { const b = TB.sel; b.n = Math.max(1, Math.min(12, (b.n || 2) + d)); tbFresh(); tbDraw(); }
+function tbNum(d) { const b = TB.sel, lo = b.k === 'setv' ? 0 : 1, hi = b.k === 'rep' ? 12 : 20; b.n = Math.max(lo, Math.min(hi, (b.n ?? (b.k === 'rep' ? 2 : 1)) + d)); tbFresh(); tbDraw(); }
+function tbNote() { const b = TB.sel, ns = TB.notes || BIT_NOTES; b.n = ns[(ns.indexOf(b.n) + 1) % ns.length]; bitSnd('note', b.n); tbFresh(); tbDraw(); }
+function tbFn() { const b = TB.sel, fs = Object.keys(TB.fns || {}); b.f = fs[(fs.indexOf(b.f) + 1) % fs.length]; tbFresh(); tbDraw(); }
 function tbCond() { const b = TB.sel, cs = TB.conds || ['wall']; b.c = cs[(cs.indexOf(b.c) + 1) % cs.length]; tbFresh(); tbDraw(); }
 function tbElse() { const b = TB.sel; b.e = b.e ? null : []; tbFresh(); tbDraw(); }
 function tbColor() { const b = TB.sel, cs = TB.colors || ['r', 'g', 'y', 'u']; b.c = cs[(cs.indexOf(b.c) + 1) % cs.length]; tbFresh(); tbDraw(); }
 function tbClear() { if (!TB.prog.length) return; TB.prog.splice(0); TB.cur = { l: TB.prog, i: 0 }; TB.sel = null; tbFresh(); tbDraw(); }
 // qualsevol canvi del programa: en Bit torna a la sortida
-function tbFresh() { const moved = TB.S && (TB.S.n || TB.S.trail.length > 1 || TB.S.d !== TB.W.bot[2]); TB.S = bitSim(TB.W); TB.gen = null; if (moved) TB.dirtyWorld = true; }
+function tbFresh() { const moved = TB.S && (TB.S.n || TB.S.trail.length > 1 || TB.S.d !== TB.W.bot[2] || TB.S.led || TB.S.v !== (TB.W.v0 || 0)); TB.S = bitSim(TB.W); TB.gen = null; TB.testing = null; if (TB.altOk.size) { TB.altOk.clear(); TB.dirtyAlts = true; } if (moved) TB.dirtyWorld = true; }
+// canviar d'illa (reptes amb illes alternatives)
+function tbAlt(i) {
+  if (!TB.alts || i < 0 || i >= TB.alts.length) return; if (TB.run) tbStop();
+  TB.altI = i; TB.W = bitWorld(TB.alts[i]); TB.S = bitSim(TB.W); TB.gen = null;
+  tbRedrawWorld(); tbAltTabs(); tbSay('');
+}
+function tbAltTabs() { const e = document.querySelector('#tworld .talts'); if (e && TB.alts) e.innerHTML = TB.alts.map((_, i) => `<button class="${i === TB.altI ? 'on' : ''} ${TB.altOk.has(i) ? 'ok' : ''}" onclick="tbAlt(${i})">${TB.altOk.has(i) ? '✓ ' : ''}${L('Illa', 'Isla')} ${i + 1}</button>`).join(''); TB.dirtyAlts = false; }
 // ordenar blocs donats (problema de Parsons): tocar els de sota els afegeix al final; tocar-ne un de dalt el torna a sota
 function tbPar(id) {
   if (TB.run) tbStop();
@@ -477,12 +600,13 @@ function tbRedrawWorld() {
   if (TB.b3) TB.b3.reset(TB.W, TB.S);
   else { const w = document.querySelector('#tworld .bitw'); if (w) w.outerHTML = bitSVG(TB.W, TB.S, { marks: TB.marks }); }
   TB.prevS = { x: TB.S.x, y: TB.S.y, d: TB.S.d, ang: TB.S.ang, carry: 0, led: null };
+  tbHud();
 }
 function tbGo() {
   if (TB.run) return tbStop();
-  if (!TB.prog.length) { tbSay(L('Primer posa algun bloc al programa.', 'Primero pon algún bloque en el programa.')); return; }
-  TB.S = bitSim(TB.W); tbRedrawWorld(); TB.sel = null;
-  TB.gen = bitRun(TB.W, TB.S, TB.prog, TB.fns); TB.run = true; TB.tries++;
+  if (!TB.prog.length && !TB.evs) { tbSay(L('Primer posa algun bloc al programa.', 'Primero pon algún bloque en el programa.')); return; }
+  TB.S = bitSim(TB.W); tbRedrawWorld(); TB.sel = null; TB.testing = null;
+  TB.gen = bitRun(TB.W, TB.S, TB.prog, TB.fns); TB.run = true; TB.tries++; TB.phase = 'start';
   const btn = document.getElementById('tbgo'); if (btn) btn.innerHTML = L('Atura', 'Para');
   tbSay(''); document.querySelectorAll('.tb.err').forEach(e => e.classList.remove('err'));
   tbTick();
@@ -492,6 +616,7 @@ function tbMark(b) { document.querySelectorAll('.tb.now').forEach(e => e.classLi
 function tbTick() {
   const r = TB.gen.next();
   if (r.done) return tbEnd();
+  if (r.value.press) { const e = document.getElementById('tev' + r.value.press); if (e) { e.classList.remove('hit'); void e.offsetWidth; e.classList.add('hit'); } tbSay(L(`Premo el botó <b>${r.value.press}</b>…`, `Pulso el botón <b>${r.value.press}</b>…`)); bitSnd('act'); TB.t = setTimeout(tbTick, 650 / TB.speed); return; }
   tbMark(r.value.b);
   if (r.value.act) { tbWorld(); const k = r.value.b.k; if (!TB.S.crash) bitSnd(k === 'fwd' ? 'step' : k === 'left' || k === 'right' ? 'turn' : k === 'note' ? 'note' : 'act', r.value.b.n); }
   if (TB.S.crash) return tbEnd(r.value.b);
@@ -501,8 +626,9 @@ function tbTick() {
 function tbStep() {
   if (TB.run) tbStop();
   if (!TB.prog.length) return tbSay(L('Primer posa algun bloc al programa.', 'Primero pon algún bloque en el programa.'));
-  if (!TB.gen) { TB.S = bitSim(TB.W); tbRedrawWorld(); TB.gen = bitRun(TB.W, TB.S, TB.prog, TB.fns); tbSay(''); }
-  let r; do { r = TB.gen.next(); } while (!r.done && !r.value.act && !TB.S.crash && !r.value.b.k.match(/^(if|until)$/));
+  if (!TB.gen) { TB.S = bitSim(TB.W); tbRedrawWorld(); TB.gen = bitRun(TB.W, TB.S, TB.prog, TB.fns); TB.phase = 'start'; tbSay(''); }
+  let r; do { r = TB.gen.next(); } while (!r.done && !r.value.press && !r.value.act && !TB.S.crash && !r.value.b.k.match(/^(if|until)$/));
+  if (!r.done && r.value.press) return;
   if (r.done) { TB.gen = null; return tbEnd(); }
   tbMark(r.value.b); tbWorld(); if (!TB.S.crash && r.value.act) bitSnd(r.value.b.k === 'fwd' ? 'step' : 'turn');
   if (TB.S.crash) { TB.gen = null; return tbEnd(r.value.b); }
@@ -510,13 +636,66 @@ function tbStep() {
 function tbEnd(last) {
   TB.run = null; clearTimeout(TB.t);
   const btn = document.getElementById('tbgo'); if (btn) btn.innerHTML = `<svg viewBox="0 0 24 24"><path d="M7 4l13 8-13 8z" fill="currentColor"/></svg>${L('Executa', 'Ejecuta')}`;
+  if (TB.testing) return tbEvTestEnd(last);
   const miss = bitMiss(TB.W, TB.S);
-  if (!miss) { document.querySelectorAll('.tb.now').forEach(e => e.classList.remove('now')); TB.solved = true; SFX.win && SFX.win(); tbBotFx('yay'); typeof confetti === 'function' && confetti(90); tbSay(L('Molt bé! Ho has aconseguit!', '¡Muy bien! ¡Lo has conseguido!'), 'ok'); if (TB.onDone) TB.onDone(); return; }
+  // amb botons: el programa d'inici només prepara; el repte es resol prement els botons (o amb «Comprova»)
+  if (TB.evs && !TB.S.crash && (miss || TB.evtest)) {
+    document.querySelectorAll('.tb.now').forEach(e => e.classList.remove('now')); tbGlowEv();
+    if (TB.evtest) tbSay(L('Prem els botons per provar què fan. Quan ho tinguis, toca <b>Comprova</b>.', 'Pulsa los botones para probar qué hacen. Cuando lo tengas, toca <b>Comprueba</b>.'));
+    else tbSay(L('Ara prem els botons per guiar en Bit!', '¡Ahora pulsa los botones para guiar a Bit!'));
+    return;
+  }
+  if (!miss) {
+    document.querySelectorAll('.tb.now').forEach(e => e.classList.remove('now'));
+    if (TB.alts) { TB.altOk.add(TB.altI); tbAltTabs(); const nx = TB.alts.findIndex((_, i) => !TB.altOk.has(i));
+      if (nx >= 0) { bitSnd('ok'); tbBotFx('yay'); tbSay(L(`Funciona a l'illa ${TB.altI + 1}! Ara el mateix programa a l'illa ${nx + 1}…`, `¡Funciona en la isla ${TB.altI + 1}! Ahora el mismo programa en la isla ${nx + 1}…`), 'ok');
+        TB.t = setTimeout(() => { if (!TB || TB.run) return; tbAlt(nx); tbGo(); }, 1500); return; } }
+    return tbWin(TB.alts ? L(`Molt bé! El programa funciona a les ${TB.alts.length} illes!`, `¡Muy bien! ¡El programa funciona en las ${TB.alts.length} islas!`) : null);
+  }
   if (TB.S.crash) { bitSnd('hit'); tbBotFx('hit'); const [ax, ay] = bitAhead(TB.S), w = document.querySelector('#tworld .bitw'); if (TB.b3) TB.b3.fx('dust', (TB.S.x + ax) / 2, (TB.S.y + ay) / 2); else if (w) bitFx(w, (TB.S.x + ax) / 2, (TB.S.y + ay) / 2, 'dust'); } else { SFX.ko && SFX.ko(); tbBotFx('sad'); }
   if (TB.S.crash && last && last._id) { const e = document.getElementById('tb' + last._id); if (e) { e.classList.remove('now'); e.classList.add('err'); } }
   else document.querySelectorAll('.tb.now').forEach(e => e.classList.remove('now'));
-  tbSay(tx(BIT_WHY[miss].join('|')) + ' ' + L('Canvia el programa i torna-ho a provar.', 'Cambia el programa y vuelve a probar.'), 'bad');
+  tbSay((TB.alts ? L(`A l'illa ${TB.altI + 1}: `, `En la isla ${TB.altI + 1}: `) : '') + tx(BIT_WHY[miss].join('|')) + ' ' + L('Canvia el programa i torna-ho a provar.', 'Cambia el programa y vuelve a probar.'), 'bad');
   if (TB.onFail) TB.onFail(miss);
+}
+function tbWin(msg) {
+  document.querySelectorAll('.tb.now').forEach(e => e.classList.remove('now'));
+  TB.solved = true; SFX.win && SFX.win(); tbBotFx('yay'); typeof confetti === 'function' && confetti(90);
+  tbSay(msg || L('Molt bé! Ho has aconseguit!', '¡Muy bien! ¡Lo has conseguido!'), 'ok'); if (TB.onDone) TB.onDone();
+}
+const tbGlowEv = () => document.querySelectorAll('.tevk').forEach(e => { e.classList.remove('glow'); void e.offsetWidth; e.classList.add('glow'); });
+// prémer un botó: en Bit fa el programa d'aquell botó des d'on és
+function tbPress(e) {
+  if (!TB || !TB.evs || TB.run || TB.testing) return;
+  if (TB.S.crash) { TB.S = bitSim(TB.W); tbRedrawWorld(); }
+  TB.sel = null; document.querySelectorAll('.tb.err').forEach(x => x.classList.remove('err'));
+  const b = document.getElementById('tev' + e); if (b) { b.classList.remove('hit'); void b.offsetWidth; b.classList.add('hit'); }
+  if (!TB.evs[e].length) return tbSay(L(`El botó <b>${e}</b> encara no té cap bloc.`, `El botón <b>${e}</b> aún no tiene ningún bloque.`));
+  TB.phase = 'ev'; TB.gen = bitRun(TB.W, TB.S, TB.evs[e], TB.fns); TB.run = true; TB.tries++; tbSay(''); tbTick();
+}
+// «Comprova»: proves automàtiques (cada prova comença de nou i prem els botons en ordre)
+function* bitEvGen(W, S, prog, fns, evs, presses) { yield* bitRun(W, S, prog, fns); for (const e of presses || '') { if (S.crash) return; yield { press: e }; yield* bitRun(W, S, (evs || {})[e] || [], fns); } }
+function tbEvTest() { if (!TB || !TB.evtest || TB.run) return; TB.testing = { i: 0 }; TB.tries++; tbEvTestRun(); }
+function tbEvTestRun() {
+  const t = TB.evtest[TB.testing.i]; TB.S = bitSim(TB.W); tbRedrawWorld();
+  tbSay(L(`Prova ${TB.testing.i + 1} de ${TB.evtest.length}…`, `Prueba ${TB.testing.i + 1} de ${TB.evtest.length}…`));
+  TB.gen = bitEvGen(TB.W, TB.S, TB.prog, TB.fns, TB.evs, t.p); TB.run = true; TB.t = setTimeout(tbTick, 500);
+}
+function tbEvTestEnd(last) {
+  const t = TB.evtest[TB.testing.i], S = TB.S, W = TB.W;
+  const bad = S.crash ? tx(BIT_WHY[S.crash].join('|')) : t.led !== undefined && S.led !== t.led ? L(`el llum havia de quedar ${tx(BIT_CNAME[t.led].join('|'))}`, `la luz tenía que quedar ${tx(BIT_CNAME[t.led].join('|'))}`)
+    : t.notes && t.notes.join() !== S.notes.join() ? L(`havia de sonar: ${t.notes.join(', ')}`, `tenía que sonar: ${t.notes.join(', ')}`)
+    : t.goal && !bitCond(W, S, 'goal') ? L("en Bit havia d'arribar a la bandera", 'Bit tenía que llegar a la bandera')
+    : t.at && (S.x !== t.at[0] || S.y !== t.at[1]) ? L("en Bit no ha acabat a la casella que tocava", 'Bit no ha terminado en la casilla que tocaba')
+    : t.v !== undefined && S.v !== t.v ? L(`el ${bitVName()} havia de valer ${t.v}`, `el ${bitVName()} tenía que valer ${t.v}`) : null;
+  if (bad) { TB.testing = null; SFX.ko && SFX.ko(); tbBotFx(S.crash ? 'hit' : 'sad');
+    if (last && last._id && S.crash) { const e = document.getElementById('tb' + last._id); if (e) e.classList.add('err'); }
+    const pr = (t.p || '').split('').join(L(' i després ', ' y después '));
+    tbSay(L(`Prova ${TB.evtest.indexOf(t) + 1}${pr ? ` (premo ${pr})` : ''}: ${bad}. Canvia els blocs i torna a comprovar.`, `Prueba ${TB.evtest.indexOf(t) + 1}${pr ? ` (pulso ${pr})` : ''}: ${bad}. Cambia los bloques y vuelve a comprobar.`), 'bad');
+    if (TB.onFail) TB.onFail('noev'); return; }
+  bitSnd('ok');
+  if (++TB.testing.i < TB.evtest.length) { TB.t = setTimeout(() => TB && TB.testing && tbEvTestRun(), 700); return; }
+  TB.testing = null; tbWin(L('Totes les proves funcionen. Els botons fan el que havien de fer!', 'Todas las pruebas funcionan. ¡Los botones hacen lo que tenían que hacer!'));
 }
 // animació d'en Bit: salt d'alegria, xoc o tristesa
 function tbBotFx(c) { if (TB && TB.b3) return TB.b3.react(c); const sp = document.querySelector('#tworld .bbot .bsp'); if (!sp) return; sp.classList.remove('walk', 'turn', 'hit', 'yay', 'sad'); void sp.getBoundingClientRect(); sp.classList.add(c); }
@@ -524,6 +703,13 @@ function tbReset() { if (TB.run) tbStop(); tbFresh(); tbRedrawWorld(); tbSay('')
 function tbSpeed() { TB.speed = TB.speed === 2 ? 1 : 2; const b = document.querySelector('.trun .ico[aria-label="' + L('Velocitat', 'Velocidad') + '"]'); if (b) b.textContent = TB.speed === 2 ? '×2' : '×1'; }
 // executa sense dibuixar (per saber on acaba un programa, per a les preguntes de «on acabarà?»)
 function bitFinal(spec, prog, fns) { const W = bitWorld(spec), S = bitSim(W); const g = bitRun(W, S, prog, fns); while (!g.next().done); return { W, S }; }
+// el repte es resol? (totes les illes, les proves dels botons…) → null si sí, o el motiu
+function bitSolves(spec, prog, fns, evs, presses) {
+  if (spec.evtest) { const r = bitEvCheck(spec, prog, fns, evs); return r.ok ? null : 'noev:' + JSON.stringify(r.t) + ' ' + (r.why || ''); }
+  const all = spec.alts ? [spec, ...spec.alts.map(a => Array.isArray(a) ? { ...spec, map: a, alts: null } : { ...spec, ...a, alts: null })] : [spec];
+  for (const [i, sp] of all.entries()) { const W = bitWorld(sp), S = evs ? bitEvRun(W, prog, fns, evs, presses) : bitFinal(sp, prog, fns).S; const m = bitMiss(W, S); if (m) return (all.length > 1 ? `alt${i}:` : '') + m; }
+  return null;
+}
 
 /* ---------- En Bit, de cara (per a les històries) ---------- */
 // en Bit de cos sencer: un render 3D (img/tech/bit-<posa>.webp, fet amb scripts/3d/portraits.mjs) dins d'un SVG,

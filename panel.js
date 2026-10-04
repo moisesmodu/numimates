@@ -348,7 +348,7 @@ const MTPL = `<!doctype html>
 </body></html>`;
 
 /* ---------- Material del professor de Numi Tech: guia de cada sessió, presentació i fitxes ---------- */
-const MFASE = { inici: ['Inici', 'Inicio', '#2F5BEA'], teoria: ['Teoria', 'Teoría', '#8B5CF6'], desconnectat: ['Sense pantalla', 'Sin pantalla', '#F08A24'], ordinador: ["A l'ordinador", 'En el ordenador', '#14A3B8'], crea: ['Crea', 'Crea', '#1FA463'], tancament: ['Tancament', 'Cierre', '#E5489A'] };
+const MFASE = { inici: ['Inici', 'Inicio', '#2F5BEA'], teoria: ['Teoria', 'Teoría', '#8B5CF6'], desconnectat: ['Sense pantalla', 'Sin pantalla', '#F08A24'], robot: ['Robot de veritat', 'Robot de verdad', '#E2574C'], ordinador: ["A l'ordinador", 'En el ordenador', '#14A3B8'], crea: ['Crea', 'Crea', '#1FA463'], tancament: ['Tancament', 'Cierre', '#E5489A'] };
 const hasGuide = id => typeof TGUIDE !== 'undefined' && !!TGUIDE[id];
 function vMaterial(c, sid) {
   const T = typeof TECH_T !== 'undefined' ? TECH_T : null; if (!T || !T.courses[c]) return shell('material', L('Material del professor', 'Material del profesor'), `<div class="card pad">${L('No hi ha aquest curs.', 'No existe este curso.')}</div>`, { switcher: false });

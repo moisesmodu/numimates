@@ -83,3 +83,30 @@ Hay un servidor estático de `~/mates-numi` en http://127.0.0.1:5190. Para proba
 4. Tus archivos todavía no están en `index.html`: para probar, cárgalos con un script inyectado (`page.addScriptTag`).
 
 Puppeteer está en `/private/tmp/claude-501/-Users-moisesmora/391d7d52-d6fb-463f-a637-bcf20cd39079/scratchpad/pp/node_modules/puppeteer-core/lib/puppeteer/puppeteer-core.js` y Brave en `/Applications/Brave Browser.app/Contents/MacOS/Brave Browser` (headless 'new'). Haz capturas y míralas: el resultado tiene que ser bonito de verdad, en móvil (390 px) y en ordenador (1440 px).
+
+## Ampliació d'octubre de 2026: motors de tots els cursos
+El que hi ha ara (llegeix el codi de cada fitxer: la capçalera de cada un explica el format):
+- **`tech-bot.js` (en Bit, curs Robot):** programes en text amb `TQ('3{ f r } if:wall{ l } else{ f } until:goal{ f }')` (TP i TPX
+  són el mateix); funcions editables (`fnEdit`, `fnName`, `solFns`), botons A/B (`ev`, `solEv`, `solPress`, proves `w.evtest`),
+  illes alternatives (`w.alts`: el mateix programa ha de funcionar a totes), comptador (`add sub setv`, `w.count`, `w.vname`,
+  condició `cnt=N`), llums i melodies que demana el repte (`w.lights`, `w.melody`), sensors laterals (`freeL`, `freeR`),
+  llapis amb color (`w.pen: 'u'`) i dibuix model com a mapa (`w.target: ['.pp.', …]`). Passos nous a `tech.js`: `design`,
+  `mybuild`, `review`, `diploma`. `bitSolves(spec, prog, fns, evs, presses)` diu si un programa resol un repte.
+- **`tech-robo.js` + `tech-robo.css` + `tech-robo3d.js` (Robòtica):** simulador del Maqueen Lite V5 amb micro:bit V2 (mides i
+  sensors reals, blocs com l'extensió «Maqueen» de MakeCode i exportació a JavaScript de MakeCode amb el botó `</>`).
+  Programes en text `RQ('start{ … } forever{ … } A{ … }')`, missions `w.goal`, pistes alternatives `w.alts`. Passos `robo`,
+  `rcreate`, `rpredict`, `rspot`, `rdesign`, `rmybuild`; targetes `learn` amb `robo: { w, prog }`; diapositives `k: 'robo'`;
+  imprimibles `pista` (a escala) i `codi` (MakeCode). El 3D: `scripts/3d/robo3d.mjs` → `node scripts/3d/build-robo.mjs`.
+  Fase nova del pla de la guia: `robot` (activitat amb el robot de veritat).
+- **`tech-stage.js` + `tech-stage-art.js` + `tech-stage.css` (Creadors):** escenari 480 × 360 amb personatges (SVG propis i els
+  de Numi), fons, guions per esdeveniments, clons, missatges i variables. Programes `SQ('@peix flag{ forever{ move:5 } }')`.
+  Passos `stage`, `screate`, `sspot`, `sfree`; demos `media: { k: 'stage', w, prog }`.
+- **`tech-web.js` + `tech-web.css` (Web):** editor d'HTML i CSS amb colors, vista prèvia aïllada (mòbil / ordinador) i
+  comprovacions en directe (`checks`). Passos `web`, `wcreate`, `wspot`, `wquiz`; demos `media: { k: 'web', html, css }`.
+  Imatges pròpies a `img/tech/web/`.
+- **`tech-dig.js` + `tech-dig.css` (Digital):** `dpass` (contrasenyes, no es desa res), `dspot` (pistes en missatges i webs
+  falsos), `dsort`, `dchat`, `dai` (entrenar una IA senzilla), `dpriv` (privadesa); demos `media: { k: 'dig', … }`.
+- Registres comuns: `TPORT[kind]` (portafoli de cada tipus de projecte), `TMEDIA[k]` (demos a les targetes i a les
+  diapositives `k: 'media'`), `TVALID[tipus]` (validació sense navegador de cada tipus de pas).
+- Ordre de càrrega a `index.html`: tech-bot, tech-c1, tech-isles, tech, tech-learn, motors (robo, stage-art, stage, web,
+  dig) i després el contingut tech-c2…c5. Els fulls d'estil de Tech els carrega `variant.js` (i `middleware.js`).

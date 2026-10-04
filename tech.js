@@ -10,7 +10,7 @@ const TPH = {
   recorda: ['Recorda', 'Recuerda'], missio: ['La missió', 'La misión'], descobreix: ['Descobreix', 'Descubre'], mans: ["Mans a l'obra", 'Manos a la obra'], prova: ['Prediu i prova', 'Predice y prueba'],
   investiga: ['Investiga', 'Investiga'], pausa: ['Pausa activa', 'Pausa activa'], repte: ['Reptes', 'Retos'], crea: ['Crea', 'Crea'], tanca: ['Tancament', 'Cierre']
 };
-const TS_ = () => { const t = P.tech = P.tech || {}; t.s = t.s || {}; t.port = Array.isArray(t.port) ? t.port : []; t.badges = t.badges || {}; t.c = t.c || 'robot'; return t; };
+const TS_ = () => { const t = P.tech = P.tech || {}; t.s = t.s || {}; t.port = Array.isArray(t.port) ? t.port : []; t.badges = t.badges || {}; t.c = t.c || 'robot'; t.maps = t.maps || {}; return t; };
 const tCourse = id => TECH.find(c => c.id === id) || TECH[0];
 // totes les sessions d'un curs en ordre, amb la unitat
 const tSessions = c => c.units.flatMap((u, ui) => u.s.map((s, si) => ({ ...s, ui, si, u })));
@@ -69,7 +69,7 @@ function techGo(v) {
     return g0(v);
   };
 }
-function tStop() { if (typeof TB !== 'undefined' && TB) { clearTimeout(TB.t); TB.run = null; } clearInterval(TS_T); TS_T = null; typeof tDemoStop === 'function' && tDemoStop(); }
+function tStop() { if (typeof TB !== 'undefined' && TB) { clearTimeout(TB.t); TB.run = null; } clearInterval(TS_T); TS_T = null; typeof tDemoStop === 'function' && tDemoStop(); typeof rbStop === 'function' && rbStop(); typeof roboDemoStop === 'function' && roboDemoStop(); (window.TSTOPS || []).forEach(f => f()); }
 
 /* ---------- Aprèn: el curs, unitat per unitat ---------- */
 function techHome() {
@@ -131,19 +131,30 @@ function tIsland(c, u, ui, nxt) {
     ${use3 ? `<div class="tmap t3"><img class="tisl3" src="img/tech/isles/${c.id}-${ui + 1}.webp" alt="" width="900" height="1125" loading="${ui ? 'lazy' : 'eager'}" decoding="async">${nodes}</div>` : `<div class="tmap" style="aspect-ratio:${W}/${H}">${svg}${nodes}</div>`}</section>`;
 }
 
-/* ---------- Projectes (portafoli) ---------- */
+/* ---------- Projectes (portafoli) ----------
+   Els projectes del món d'en Bit es dibuixen aquí; els dels altres cursos (robòtica, escenari, web…) es registren a
+   TPORT[kind] = { thumb(p) → HTML, after(p, el)?, open(p) → HTML, mount()? } des del seu fitxer. */
+const TPORT = {};
 function techProjectes() {
   const t = TS_();
   const hero = `<section class="thero sub"><div class="thtxt"><h1>${L('Els meus projectes', 'Mis proyectos')}</h1><p>${L('Tot el que crees a les sessions es guarda aquí. Torna-hi quan vulguis i ensenya-ho a casa.', 'Todo lo que creas en las sesiones se guarda aquí. Vuelve cuando quieras y enséñalo en casa.')}</p></div></section>`;
-  const list = t.port.length ? `<div class="tports">${t.port.slice().reverse().map(p => { const W = bitWorld(p.w), S = bitSim(W);
+  const list = t.port.length ? `<div class="tports">${t.port.slice().reverse().map(p => { const K = p.kind && TPORT[p.kind];
+    if (K) return `<button class="tport k-${p.kind}" onclick="tPortOpen('${p.id}')"><span class="tpimg">${K.thumb(p)}</span><b>${tx(p.t)}</b><small>${dayShort ? dayShort(p.d) : p.d}</small></button>`;
+    if (p.kind) return '';
+    const W = bitWorld(p.w), S = bitSim(W);
     return `<button class="tport" onclick="tPortOpen('${p.id}')"><span class="tpimg">${bitSVG(W, S, { still: true })}</span><b>${tx(p.t)}</b><small>${dayShort ? dayShort(p.d) : p.d} · ${bitN(bitCount(p.prog))}</small></button>`; }).join('')}</div>`
     : `<div class="tempty2">${bitChar('idle')}<p>${L('Encara no tens cap projecte. A cada sessió en crearàs un!', 'Aún no tienes ningún proyecto. ¡En cada sesión crearás uno!')}</p></div>`;
   app.innerHTML = tShell('projectes', list, hero);
+  t.port.forEach(p => { const K = p.kind && TPORT[p.kind]; if (K && K.after) K.after(p, app); });
 }
 function tPortOpen(id) {
   const p = TS_().port.find(x => x.id === id); if (!p) return;
   VIEW = 'tport';
-  tbMake(p.w, { prog: p.prog, mode: 'view', fns: p.fns });
+  const K = p.kind && TPORT[p.kind];
+  if (K) { app.innerHTML = `<div class="tsess"><div class="tstop"><button class="xbtn" onclick="go('projectes')" aria-label="${L('Tanca', 'Cierra')}">✕</button><b class="tsph">${tx(p.t)}</b><span></span></div>
+    ${K.open(p)}<div class="tsfoot"><button class="link" onclick="tPortDel('${p.id}')">${L('Esborra el projecte', 'Borra el proyecto')}</button></div></div>`; K.mount && K.mount(p); return; }
+  tbMake(p.w, { prog: p.prog, mode: p.evs ? 'edit' : 'view', fns: p.fns, fnName: p.fnName, ev: p.evs ? Object.keys(p.evs) : null, evs: p.evs, pal: [] });
+  if (p.evs) TB.lock = true;
   app.innerHTML = `<div class="tsess"><div class="tstop"><button class="xbtn" onclick="go('projectes')" aria-label="${L('Tanca', 'Cierra')}">✕</button><b class="tsph">${tx(p.t)}</b><span></span></div>
     <div class="tsbody wide">${tbHTML()}</div><div class="tsfoot"><button class="link" onclick="tPortDel('${p.id}')">${L('Esborra el projecte', 'Borra el proyecto')}</button></div></div>`;
   tb3dMount();
@@ -288,7 +299,7 @@ const TSTEP = {
   },
   // predir: on acabarà en Bit amb aquest programa? (A, B o C) i després es comprova executant-lo
   predict(st) {
-    tbMake(st.w, { mode: 'view', prog: st.prog, marks: true });
+    tbMake(st.w, { mode: 'view', prog: st.prog, marks: true, fns: st.fns, fnName: st.fnName });
     let pick = null;
     const opts = Object.keys(TB.W.marks).sort();
     TB.extra = `<div class="tpick">${opts.map(k => `<button class="topt sm" data-m="${k}">${k}</button>`).join('')}</div>`;
@@ -313,7 +324,7 @@ const TSTEP = {
   },
   // investigar: tocar el bloc que… (el bo porta x:1)
   spot(st) {
-    tbMake(st.w, { mode: 'spot', prog: st.prog });
+    tbMake(st.w, { mode: 'spot', prog: st.prog, fns: st.fns, fnName: st.fnName });
     TB.onSpot = (id, b) => {
       if (TSS.ready) return; TSS.ready = true;
       const ok = !!(b && b.x);
@@ -328,8 +339,8 @@ const TSTEP = {
   },
   // reptes: construir el programa (o arreglar-ne un: st.prog) amb una paleta i, de vegades, un màxim de blocs
   build(st) {
-    tbMake(st.w, { prog: st.prog, pal: st.pal, max: st.max, fns: st.fns });
-    TB.conds = st.conds; TB.colors = st.colors;
+    tbMake(st.w, { prog: st.prog, pal: st.pal, max: st.max, fns: st.fns, fnEdit: st.fnEdit, fnName: st.fnName, ev: st.ev, evs: st.evs });
+    TB.conds = st.conds; TB.colors = st.colors; TB.notes = st.notes;
     TB.onDone = () => { tContinue(); if (st.after) setTimeout(() => tbSay(tval(st.after), 'ok'), 900); };
     TB.onFail = () => { if (TB.tries >= 2) tHintBtn(st); };
     tStage(st);
@@ -337,7 +348,7 @@ const TSTEP = {
   },
   // ordenar blocs donats
   parsons(st) {
-    tbMake(st.w, { mode: 'parsons', pool: shuffle(bitClone(st.pool)) });
+    tbMake(st.w, { mode: 'parsons', pool: shuffle(bitClone(st.pool)), fns: st.fns, fnName: st.fnName });
     TB.onDone = () => tContinue();
     TB.onFail = () => { if (TB.tries >= 2) tHintBtn(st); };
     tStage(st);
@@ -374,6 +385,76 @@ const TSTEP = {
     tFoot(L('Continua', 'Continúa'), tNext, false);
   }
 };
+/* ---------- Unitat 8: el meu propi repte (dissenyar el mapa, resoldre'l, que el provi algú altre) i el diploma ---------- */
+// mapa dissenyat per l'alumne (P.tech.maps[slot]) o, si encara no n'hi ha, el de partida del pas
+const tMyMap = slot => { const m = TS_().maps[slot || 'r8']; return m && m.map ? m : null; };
+// es pot arribar a tot? (camí obert des d'en Bit fins a la bandera, les estrelles, les caixes i les cases)
+function tMapCheck(rows) {
+  const spec = { map: rows }, W = bitWorld(spec), bots = rows.join('').replace(/[^\^>v<]/g, '').length;
+  const seen = new Set([bitKey(W.bot[0], W.bot[1])]), q = [[W.bot[0], W.bot[1]]];
+  while (q.length) { const [x, y] = q.shift(); for (let d = 0; d < 4; d++) { const nx = x + BIT_DX[d], ny = y + BIT_DY[d], k = bitKey(nx, ny); if (!seen.has(k) && !bitBlocked(W, nx, ny)) { seen.add(k); q.push([nx, ny]); } } }
+  const things = [...W.gems, ...W.boxes, ...W.homes, ...(W.goal ? [bitKey(...W.goal)] : [])];
+  return { bot: bots === 1, aim: !!(W.goal || W.gems.size || W.homes.size), boxes: W.boxes.size >= W.homes.size, reach: bots === 1 && things.every(k => seen.has(k)), W };
+}
+const TDES_TOOLS = [['#', "Camí|Camino"], ['.', 'Herba|Hierba'], ['R', 'Roca|Roca'], ['~', 'Aigua|Agua'], ['*', 'Estrella|Estrella'], ['F', 'Bandera|Bandera'], ['b', 'Caixa|Caja'], ['H', 'Casa|Casa'], ['bot', 'En Bit|Bit']];
+TSTEP.design = function (st) {
+  const old = tMyMap(st.slot), w = (st.size || [7, 6])[0], h = (st.size || [7, 6])[1];
+  let rows = old ? old.map.slice() : (st.w ? st.w.map.slice() : [ '>' + '.'.repeat(w - 1), ...Array.from({ length: h - 1 }, () => '.'.repeat(w)) ]);
+  let tool = '#', name = old ? old.name : '';
+  const tools = (st.tools || TDES_TOOLS.map(t => t[0])).map(k => TDES_TOOLS.find(t => t[0] === k)).filter(Boolean);
+  const put = (x, y) => {
+    const r = rows.map(l => [...l]), c = r[y][x];
+    if (tool === 'bot') { const dirs = '^>v<'; if (dirs.includes(c)) r[y][x] = dirs[(dirs.indexOf(c) + 1) % 4]; else { r.forEach(l => l.forEach((ch, i) => { if (dirs.includes(ch)) l[i] = '#'; })); r[y][x] = '>'; } }
+    else { if ('^>v<'.includes(c) && tool !== '#') return; if (tool === 'F') r.forEach(l => l.forEach((ch, i) => { if (ch === 'F') l[i] = '#'; })); r[y][x] = '^>v<'.includes(c) ? c : tool; }
+    rows = r.map(l => l.join('')); SFX.tap && SFX.tap(); draw();
+  };
+  const draw = () => {
+    const ck = tMapCheck(rows), W = ck.W, ok = ck.bot && ck.aim && ck.reach && ck.boxes && name.trim().length > 1;
+    const vb = [w * BIT_C + 2 * BW_M, h * BIT_C + 2 * BW_M + BW_TOP + BW_CL];
+    const cells = rows.flatMap((l, y) => [...l].map((_, x) => `<button style="left:${((BW_M + x * BIT_C) / vb[0] * 100).toFixed(3)}%;top:${((BW_M + BW_TOP + y * BIT_C) / vb[1] * 100).toFixed(3)}%;width:${(BIT_C / vb[0] * 100).toFixed(3)}%;height:${(BIT_C / vb[1] * 100).toFixed(3)}%" onclick="TDES.put(${x},${y})" aria-label="${x + 1},${y + 1}"></button>`)).join('');
+    const crit = [[ck.bot, L('Hi ha en Bit (un de sol)', 'Está Bit (solo uno)')], [ck.aim, L('Hi ha una bandera, estrelles o cases', 'Hay una bandera, estrellas o casas')], [ck.reach, L('En Bit pot arribar a tot', 'Bit puede llegar a todo')], [ck.boxes, L('Hi ha prou caixes per a les cases', 'Hay cajas suficientes para las casas')], [name.trim().length > 1, L('El repte té nom', 'El reto tiene nombre')]];
+    $('#tsb').innerHTML = `<div class="tdes"><div class="tsq2"><span class="tsqc">${bitChar('idle')}</span><div><p>${tval(st.q)}</p>${st.crit ? `<ul class="tcrit">${st.crit.map(c => `<li>${tval(c)}</li>`).join('')}</ul>` : ''}</div></div>
+      <div class="tdesg"><div class="tdesw">${bitSVG(W, bitSim(W), { still: true })}<div class="tdesc">${cells}</div></div>
+      <div class="tdesp"><div class="tdtools">${tools.map(([k, t]) => `<button class="${k === tool ? 'on' : ''}" onclick="TDES.tool('${k}')"><span class="tdti">${tDesIco(k)}</span>${tx(t)}</button>`).join('')}</div>
+        <p class="tdhelp">${tool === 'bot' ? L('Toca una casella per posar-hi en Bit. Torna-la a tocar per canviar cap on mira.', 'Toca una casilla para poner a Bit. Vuelve a tocarla para cambiar hacia dónde mira.') : tool === '#' ? L('Si dibuixes un camí, la resta de l\'illa es converteix en bosc: en Bit només podrà anar pel camí.', 'Si dibujas un camino, el resto de la isla se convierte en bosque: Bit solo podrá ir por el camino.') : L('Toca les caselles per posar-hi el que has triat.', 'Toca las casillas para poner lo que has elegido.')}</p>
+        <label class="lbl">${L('Nom del teu repte', 'Nombre de tu reto')}</label><input id="tdname" class="nm" maxlength="28" value="${esc(name)}" placeholder="${L('p. ex. El laberint del pirata', 'p. ej. El laberinto del pirata')}">
+        <ul class="tdck">${crit.map(([o, t]) => `<li class="${o ? 'ok' : ''}">${o ? TIC.ok : '○'} ${t}</li>`).join('')}</ul></div></div></div>`;
+    $('#tdname').oninput = e => { name = e.target.value; const lis = document.querySelectorAll('.tdck li'); const okN = name.trim().length > 1; lis[4].className = okN ? 'ok' : ''; lis[4].innerHTML = `${okN ? TIC.ok : '○'} ${crit[4][1]}`; const all = ck.bot && ck.aim && ck.reach && ck.boxes && okN; const b = document.getElementById('tnext'); if (b) b.disabled = !all; };
+    $('#tsb').classList.add('wide');
+    tFoot(L('Desa el repte', 'Guarda el reto'), () => { TS_().maps[st.slot || 'r8'] = { map: rows.slice(), name: name.trim(), d: today() }; save(); addXPsafe(5); toast(L('Repte desat!', '¡Reto guardado!')); tNext(); }, ok);
+  };
+  window.TDES = { put, tool(k) { tool = k; draw(); } };
+  draw();
+};
+function tDesIco(k) {
+  const W = bitWorld({ map: [k === 'bot' ? '>' : k], paths: false });
+  return `<svg viewBox="${-BW_M / 2} ${-BW_M / 2 - BW_TOP} ${BIT_C + BW_M} ${BIT_C + BW_M + BW_TOP}">${bitDefs()}${k === '~' ? bitGround(W, 0, 0) : k === '#' || k === 'bot' || 'F*b'.includes(k) ? `<rect x="3" y="3" width="54" height="54" rx="12" fill="url(#bwSand)" stroke="#E2BE76" stroke-width="1.5"/>` : `<rect x="0" y="0" width="60" height="60" rx="12" fill="url(#bwGrass)"/>`}${k === 'R' ? bitThing({ ...W, rocks: new Set(['0,0']) }, 0, 0) : k === 'H' ? bitThing(W, 0, 0) : k === '.' ? '' : bitItems(W)}${k === 'bot' ? `<g transform="translate(30 54)">${bitBot(1)}</g>` : ''}</svg>`;
+}
+// resoldre un repte dissenyat: el meu (r8-2) o el d'un company/a, que s'asseu al meu ordinador (r8-3)
+TSTEP.mybuild = function (st) {
+  const m = tMyMap(st.slot);
+  if (!m) { $('#tsb').innerHTML = `<div class="tcol">${tBubble('numi', L('Encara no has desat cap repte. Torna a la sessió «Dissenya el teu repte» i desa\'n un: aquí el podràs programar.', 'Aún no has guardado ningún reto. Vuelve a la sesión «Diseña tu reto» y guarda uno: aquí podrás programarlo.'))}</div>`; return tContinue(); }
+  TSTEP.create({ ...st, w: { map: m.map }, name: m.name, q: tval(st.q).replace('{nom}', esc(m.name)) });
+};
+// valoració del repte d'un company/a: tres preguntes ràpides, es desa al perfil
+TSTEP.review = function (st) {
+  const ans = {};
+  const qs = st.items || [];
+  $('#tsb').innerHTML = `<div class="tcol">${tBubble(st.who || 'numi', tval(st.q))}<div class="trev">${qs.map((it, i) => `<div class="trq"><b>${tval(it.q)}</b><div class="trop">${it.opts.map((o, j) => `<button data-q="${i}" data-o="${j}">${tval(o)}</button>`).join('')}</div></div>`).join('')}</div></div>`;
+  document.querySelectorAll('.trop button').forEach(b => b.onclick = () => { const q = +b.dataset.q; ans[q] = +b.dataset.o; document.querySelectorAll(`.trop button[data-q="${q}"]`).forEach(x => x.classList.toggle('on', x === b)); SFX.tap && SFX.tap();
+    if (Object.keys(ans).length === qs.length) tFoot(L('Desa la valoració', 'Guarda la valoración'), () => { const t = TS_(); t.rev = t.rev || {}; t.rev[TSS.id] = { a: qs.map((_, i) => ans[i]), d: today() }; save(); tNext(); }); });
+  tFoot(L('Desa la valoració', 'Guarda la valoración'), () => { }, false);
+};
+// el diploma del curs: nom, curs, sessions fetes, insígnies i projectes
+TSTEP.diploma = function (st) {
+  const t = TS_(), c = TSS.c, all = tSessions(c), done = all.filter(s => tDone(s.id) || s.id === TSS.id).length, nb = Object.keys(t.badges).length, np = t.port.length;
+  $('#tsb').innerHTML = `<div class="tcol"><div class="tdip" id="tdip"><img class="tdlogo" src="${VAR.logo}" alt="${VAR.name}"><p class="tdk">${L('Diploma', 'Diploma')}</p><h1>${esc(P.name)}</h1>
+    <p>${tval(st.t || (L(`ha completat el curs <b>${tx(c.name)}</b>.`, `ha completado el curso <b>${tx(c.name)}</b>.`)))}</p>
+    <div class="tdstats"><span><b>${done}</b>${L('sessions', 'sesiones')}</span><span><b>${nb}</b>${L('insígnies', 'insignias')}</span><span><b>${np}</b>${L('projectes', 'proyectos')}</span></div>
+    ${st.skills ? `<ul class="tdsk">${st.skills.map(k => `<li>${TIC.ok}${tval(k)}</li>`).join('')}</ul>` : ''}<p class="tddate">${new Date().toLocaleDateString(LANG === 'es' ? 'es-ES' : 'ca-ES', { day: 'numeric', month: 'long', year: 'numeric' })}</p><div class="tdbit">${bitChar('win')}</div></div></div>`;
+  SFX.win && SFX.win(); typeof confetti === 'function' && confetti(160);
+  tFoot(L('Continua', 'Continúa'), tNext, true, `<button class="btn ghost" onclick="window.print()">${L('Imprimeix', 'Imprimir')}</button>`);
+};
 // escenari dins la sessió: enunciat + món + programa
 function tStage(st) {
   const q = st.q ? `<div class="tsq2">${st.who === 'bit' ? `<span class="tsqc">${bitChar('idle')}</span>` : `<span class="tsqc">${charSVG('numi', 'idle')}</span>`}<div><p>${tval(st.q)}</p>${st.crit ? `<ul class="tcrit">${st.crit.map(c => `<li>${tval(c)}</li>`).join('')}</ul>` : ''}</div></div>` : '';
@@ -388,13 +469,16 @@ function tHintBtn(st) {
   b.className = 'btn ghost'; b.id = 'thint'; b.textContent = L('Una pista', 'Una pista');
   b.onclick = () => {
     if (st.hint && !b.dataset.k) { b.dataset.k = 1; tbSay(`💡 ${tval(st.hint)}`); b.textContent = st.sol ? L('Mostra una solució', 'Muestra una solución') : L('Una pista', 'Una pista'); if (!st.sol) b.remove(); return; }
-    if (st.sol) { TB.prog.splice(0, TB.prog.length, ...bitClone(st.sol)); TB.cur = { l: TB.prog, i: TB.prog.length }; if (TB.pool) TB.pool.splice(0); tbFresh(); tbDraw(); tbSay(L('Aquí tens una solució. Executa-la i mira què fa cada bloc.', 'Aquí tienes una solución. Ejecútala y mira qué hace cada bloque.')); b.remove(); }
+    if (st.sol) { TB.prog.splice(0, TB.prog.length, ...bitClone(st.sol)); TB.cur = { l: TB.prog, i: TB.prog.length }; if (TB.pool) TB.pool.splice(0);
+      if (st.solFns && TB.fns) for (const [f, l] of Object.entries(st.solFns)) if (TB.fns[f]) TB.fns[f].splice(0, TB.fns[f].length, ...bitClone(l));
+      if (st.solEv && TB.evs) for (const [e, l] of Object.entries(st.solEv)) if (TB.evs[e]) TB.evs[e].splice(0, TB.evs[e].length, ...bitClone(l));
+      tbFresh(); tbDraw(); tbSay(L('Aquí tens una solució. Executa-la i mira què fa cada bloc.', 'Aquí tienes una solución. Ejecútala y mira qué hace cada bloque.')); b.remove(); }
   };
   f.insertBefore(b, f.firstChild);
 }
 function tSaveProj(st) {
   const t = TS_();
-  t.port.push({ id: 'pj' + Date.now().toString(36), sid: TSS.id, t: st.name || TSS.s.t, w: st.w, prog: bitClone(TB.prog), fns: st.fns || null, d: today() });
+  t.port.push({ id: 'pj' + Date.now().toString(36), sid: TSS.id, t: st.name || TSS.s.t, w: st.w, prog: bitClone(TB.prog), fns: TB.fns ? bitClone(TB.fns) : null, fnName: st.fnName || null, evs: TB.evs ? bitClone(TB.evs) : null, d: today() });
   if (t.port.length > 60) t.port.shift();
   save(); toast(L('Projecte desat a «Projectes»!', '¡Proyecto guardado en «Proyectos»!'));
 }
