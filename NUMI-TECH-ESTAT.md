@@ -32,6 +32,12 @@ Prova en producció: https://mates-numi.vercel.app/?v=tech (grup 5b amb tot ober
 - **Il·lustracions de Numi reaprofitades**: icones 3D (`img/ic`, via `icons.js`) i personatges (`img/chars`, via `pro.js` / `chars-img.js`) també a la presentació i els imprimibles; il·lustracions de Numi Ment (`img/ment`) amb el camp `pic` a targetes i diapositives; animals i objectes 3D nous a l'escenari.
 - **Com es generen els cursos 2-5**: cada unitat es redacta a `scripts/tech-src/<curs>/uN/{unit,tani,guide}.js` i s'empaqueta amb `node scripts/tech-build-course.mjs <curs> <cN> "<títol>"` (p. ex. `robotica c2 "Tech Robòtica"`). Robot es fusiona a `tech-c1.js`.
 
+## En curs (05/10): «clavar els tipus d'exercici» abans de replicar-los
+Petició del Moisés: cada exercici ha de cabre a la pantalla sense baixar (mòbil i ordinador); editors tipus Scratch millors que la competència (estudi a `NUMI-TECH-COMPETENCIA.md`); solucionari per al professor.
+- Fet: `tFit` (cada pas es redueix fins que hi cap), classificar d'una en una al mòbil, valoració d'una pregunta en una, privadesa compacta; editors en franges fixes (món · programa · paleta), arrossegar i deixar anar, peces que encaixen; solucionari (`tech-sol.js`).
+- Eines de comprovació (scratchpad de la sessió): `fitscan.mjs <curs> <amplada> <alçada>` diu quins passos no hi caben; `dndtest.mjs` prova arrossegar als tres editors.
+- Següent (de l'estudi de la competència): desfer sempre visible, pressupost de blocs com a forats buits, pistes que reaccionen al programa, tres estrelles (resolt · sense pistes · pocs blocs), «Pas a pas» i velocitats a tots els editors, error que assenyala el bloc i el món s'alenteix quan falla.
+
 ## Pendent
 1. **Revisar** Robot, Robòtica, Creadors i Digital (Moisés).
 2. **Web**: acabar i revisar els esborranys de `scripts/tech-src/web/` quan es reprengui.
