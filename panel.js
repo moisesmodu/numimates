@@ -170,9 +170,9 @@ const NAV = () => [['resum', 'layout-dashboard', L('Resum', 'Resumen')], ['mater
 const ADMIN_NAV = () => { const seen = +store.get('numi-profe-sol', 0), nou = (D.contacts || []).filter(c => new Date(c.created_at).getTime() > seen).length; return [['ia', 'sparkles', L('Assistent IA', 'Asistente IA')], ['usuaris', 'crown', L('Usuaris i Premium', 'Usuarios y Premium')], ['centres', 'building-2', L('Centres', 'Centros')], ['docents', 'graduation-cap', L('Docents', 'Docentes')], ['totsgrups', 'layout-grid', L('Tots els grups', 'Todos los grupos')], ['sollicituds', 'inbox', L('Sol·licituds', 'Solicitudes'), nou, true], ['activitat', 'activity', L('Activitat', 'Actividad')], ['correus', 'mail', L('Correus', 'Correos')]]; };
 function shell(view, title, body, { acts = '', fluid = false, switcher = true } = {}) {
   const na = ([k, ic, t, n, isNew]) => `<a href="#/${k}" class="${view === k ? 'on' : ''}" title="${esc(t)}">${ico(ic, 'i20')}<span>${esc(t)}</span>${n ? `<i class="badge ${isNew ? 'new' : ''}">${n}</i>` : ''}</a>`;
-  const who = ADMIN ? { nom: ME?.nom || L('Administració', 'Administración'), rol: 'Numi Mates' } : { nom: ME.nom, rol: ME.rol === 'admin_centre' ? L('Coordinació de centre', 'Coordinación de centro') : L('Docent', 'Docente') };
+  const who = ADMIN ? { nom: ME?.nom || L('Administració', 'Administración'), rol: 'Numi Mates · Pro · Ment · Tech' } : { nom: ME.nom, rol: ME.rol === 'admin_centre' ? L('Coordinació de centre', 'Coordinación de centro') : L('Docent', 'Docente') };
   root.innerHTML = `<div class="app" id="app"><aside class="side">
-      <div class="brand"><img src="img/brand/logo-horitzontal.svg" alt="Numi Mates"><span>${esc(ADMIN ? L('Tots els centres', 'Todos los centros') : ME.centre || '')}</span></div>
+      <div class="brand"><img src="img/brand/icona.svg" alt=""><div><b>Numi</b><span>${esc(ADMIN ? L('Panell · tots els centres', 'Panel · todos los centros') : ME.centre || L('Panell', 'Panel'))}</span></div></div>
       <nav class="nav">${NAV().map(na).join('')}<hr>${na(['guia', 'circle-help', L("Com funciona l'app", 'Cómo funciona la app')])}
         ${ADMIN ? `<div class="lbl">${L('Administració', 'Administración')}</div>${ADMIN_NAV().map(na).join('')}` : ''}</nav>
       <div class="me"><div class="who"><b>${esc(who.nom)}</b><small>${esc(who.rol)}</small></div>
@@ -182,8 +182,8 @@ function shell(view, title, body, { acts = '', fluid = false, switcher = true } 
       ${switcher ? switcherHTML() + '<span class="sep"></span>' : ''}<h1>${esc(title)}</h1><div class="acts">${acts}</div></header>
       <div class="content ${fluid ? 'fluid' : ''}">${body}</div></main>
     <div class="side-scrim" onclick="$('#app').classList.remove('open')"></div>
-    <nav class="tabbar" aria-label="${L('Navegació', 'Navegación')}">${NAV().map(([k, ic, t]) => `<a href="#/${k}" class="${view === k ? 'on' : ''}">${ico(ic, 'i20')}<span>${esc(t)}</span></a>`).join('')}<button class="${!NAV().some(n => n[0] === view) ? 'on' : ''}" onclick="$('#app').classList.add('open')">${ico('menu', 'i20')}<span>${L('Més', 'Más')}</span></button></nav></div>`;
-  document.title = `${title} · Numi Mates`;
+    <nav class="tabbar" aria-label="${L('Navegació', 'Navegación')}">${NAV().filter(n => ['resum', 'alumnes', 'grups', 'material'].includes(n[0])).map(([k, ic, t]) => `<a href="#/${k}" class="${view === k ? 'on' : ''}">${ico(ic, 'i20')}<span>${esc(t)}</span></a>`).join('')}<button class="${!NAV().some(n => n[0] === view) ? 'on' : ''}" onclick="$('#app').classList.add('open')">${ico('menu', 'i20')}<span>${L('Més', 'Más')}</span></button></nav></div>`;
+  document.title = `${title} · Numi`;
 }
 function switcherHTML() {
   const cur = G ? gName(+G) : (ADMIN ? L('Tots els grups', 'Todos los grupos') : ME?.rol === 'admin_centre' ? L('Tots els grups del centre', 'Todos los grupos del centro') : L('Tots els meus grups', 'Todos mis grupos'));
@@ -832,66 +832,119 @@ function grupMenu(e, id) {
 function grupModal(id) {
   closePops(); const g = GRUPS.find(x => x.id === id) || {};
   const docs = (D.docents || []).filter(d => ADMIN || d.centre_id === ME?.centre_id);
+  const T = typeof TECH_T !== 'undefined' ? TECH_T : null;
   modal(`<h3>${id ? L('Edita el grup', 'Editar el grupo') : L('Nou grup', 'Nuevo grupo')}</h3>
-    <label class="field"><span>${L('Nom del grup', 'Nombre del grupo')}</span><input id="g_nom" value="${esc(g.nom || '')}" placeholder="${L('p. ex. 4t A', 'p. ej. 4.º A')}"></label>
-    <label class="field"><span>${L('Nivell', 'Nivel')}</span><select id="g_curs"><option value="">—</option>${CURS.map((c, i) => `<option value="${i}" ${g.curs === i ? 'selected' : ''}>${tx(c)}</option>`).join('')}</select></label>
-    ${id ? '' : `<label class="field"><span>${L('Com comencen els alumnes', 'Cómo empiezan los alumnos')}</span><select id="al_prova"><option value="1" selected>🧭 ${L('Fent la prova de nivell, a partir del nivell del grup (recomanat)', 'Haciendo la prueba de nivel, a partir del nivel del grupo (recomendado)')}</option><option value="">${L('Directament al nivell del grup', 'Directamente en el nivel del grupo')}</option></select></label>
-    <label class="field"><span>${L('Alumnes (opcional): nom, usuari i contrasenya, un per línia', 'Alumnos (opcional): nombre, usuario y contraseña, uno por línea')}</span><textarea id="al_txt" rows="5" style="height:auto;padding:8px 12px;font:13px/1.5 ui-monospace,Menlo,monospace" placeholder="Martí Andorrà Velasco&#9;martiav&#9;0756" oninput="altaParse()"></textarea></label><div id="al_prev"></div>`}
-    ${ADMIN && !id ? `<label class="field"><span>${L('Centre', 'Centro')}</span><select id="g_centre">${(D.centres || []).map(c => `<option value="${c.id}">${esc(c.nom)}</option>`).join('')}</select></label>` : ''}
+    <label class="field"><span>${L('Nom del grup', 'Nombre del grupo')}</span><input id="g_nom" value="${esc(g.nom || '')}" placeholder="${L('p. ex. Robòtica dimarts', 'p. ej. Robótica martes')}"></label>
+    ${id ? '' : `<div class="field"><span>${L('App', 'App')}</span><div class="seg2"><label><input type="radio" name="g_app" value="tech" checked onchange="grupAppUI()"><b>Numi Tech</b><small>${L('Programació i robòtica (extraescolars)', 'Programación y robótica (extraescolares)')}</small></label><label><input type="radio" name="g_app" value="mates" onchange="grupAppUI()"><b>Numi Mates</b><small>${L('Matemàtiques de primària', 'Matemáticas de primaria')}</small></label></div></div>
+      ${T ? `<div class="field" id="g_techw"><span>${L('Cursos del grup', 'Cursos del grupo')}</span><div class="chk">${Object.entries(T.courses).map(([c, x], i) => `<label><input type="checkbox" value="${c}" ${i === 0 ? 'checked' : ''}> ${esc(tx(x.n))} <small class="t3">${esc(tx(x.age))}</small></label>`).join('')}</div></div>` : ''}`}
+    <label class="field" id="g_cursw" ${id || (g.opts || {}).app === 'tech' ? '' : 'style="display:none"'}><span>${L('Nivell (Numi Mates)', 'Nivel (Numi Mates)')}</span><select id="g_curs"><option value="">—</option>${CURS.map((c, i) => `<option value="${i}" ${g.curs === i ? 'selected' : ''}>${tx(c)}</option>`).join('')}</select></label>
+    ${ADMIN && !id ? `<label class="field"><span>${L('Centre', 'Centro')}</span><select id="g_centre">${(D.centres || []).map(c => `<option value="${c.id}">${esc(c.nom)}</option>`).join('')}</select>${(D.centres || []).length ? '' : `<small>${L('Encara no hi ha cap centre: primer crea\'n un a «Centres».', 'Aún no hay ningún centro: primero crea uno en «Centros».')}</small>`}</label>` : ''}
     ${ADMIN || ME?.rol === 'admin_centre' ? `<label class="field"><span>${L('Docent', 'Docente')}</span><select id="g_doc"><option value="">${L('Sense docent', 'Sin docente')}</option>${docs.map(d => `<option value="${d.id}" ${g.docent_id === d.id ? 'selected' : ''}>${esc(d.nom)}</option>`).join('')}</select></label>` : ''}
     <div class="err-msg" id="g_err"></div>
-    <div class="acts"><button class="btn" onclick="closeModal()">${L('Cancel·la', 'Cancelar')}</button><button class="btn primary" onclick="grupSave(${id || 0})">${id ? L('Desa els canvis', 'Guardar los cambios') : L('Crea el grup', 'Crear el grupo')}</button></div>`, 'w480');
+    <div class="acts"><button class="btn" onclick="closeModal()">${L('Cancel·la', 'Cancelar')}</button><button class="btn primary" onclick="grupSave(${id || 0})">${id ? L('Desa els canvis', 'Guardar los cambios') : L('Crea el grup i afegeix alumnes', 'Crear el grupo y añadir alumnos')}</button></div>`, 'w560');
   $('#g_nom').focus();
 }
-// alta d'alumnes en bloc: s'enganxa la taula (nom, usuari, contrasenya) i es creen els comptes ja dins del grup
+function grupAppUI() { const t = ($('input[name=g_app]:checked') || {}).value === 'tech'; const a = $('#g_techw'), b = $('#g_cursw'); if (a) a.style.display = t ? '' : 'none'; if (b) b.style.display = t ? 'none' : ''; }
+// alta d'alumnes: una fila per alumne (nom, usuari, contrasenya), amb usuari i contrasenya proposats automàticament.
+// També es pot enganxar una llista (d'un full de càlcul o escrita: «Nom Cognom usuari contrasenya»). Es creen ja dins del grup.
 let ALTA = [];
-function altaParse() {
-  const t = ($('#al_txt')?.value || '').split(/\r?\n/).map(l => l.trim()).filter(Boolean);
-  ALTA = t.map(l => l.includes('\t') ? l.split('\t') : l.split(/\s*[;,]\s*|\s{2,}/)).map(c => c.map(x => x.trim()).filter(Boolean))
-    .filter(c => c.length >= 3 && !/^(alumn|nom|nombre|name)/i.test(c[0]) && !/^(usuari|usuario|user)/i.test(c[1]))
-    .map(c => ({ name: c[0], username: c[1].toLowerCase(), password: c[2] }));
-  const bad = r => !/^[a-z0-9._-]{3,20}$/.test(r.username) ? L('usuari no vàlid', 'usuario no válido') : r.password.length < 4 ? L('contrasenya curta', 'contraseña corta') : '';
-  $('#al_prev').innerHTML = ALTA.length ? `<div class="tw" style="max-height:260px"><table><thead><tr><th>${L('Alumne', 'Alumno')}</th><th>${L('Usuari', 'Usuario')}</th><th>${L('Contrasenya', 'Contraseña')}</th><th></th></tr></thead><tbody>${ALTA.map(r => `<tr style="cursor:default"><td>${esc(r.name)}</td><td class="mono">${esc(r.username)}</td><td class="mono">${esc(r.password)}</td><td style="color:var(--crit)">${bad(r)}</td></tr>`).join('')}</tbody></table></div>` : `<p class="t3" style="margin:0">${L('Enganxa la taula: una fila per alumne amb nom, usuari i contrasenya (separats per tabulació, punt i coma o coma).', 'Pega la tabla: una fila por alumno con nombre, usuario y contraseña (separados por tabulación, punto y coma o coma).')}</p>`;
-  ALTA.bad = ALTA.some(bad); if (!$('#al_go')) return;
-  $('#al_go').disabled = !ALTA.length || ALTA.bad; $('#al_go').textContent = ALTA.length ? L(`Crea ${ALTA.length} alumnes`, `Crear ${ALTA.length} alumnos`) : L('Crea els alumnes', 'Crear los alumnos');
+const ALW = ['sol', 'lluna', 'mar', 'riu', 'estel', 'bosc', 'cel', 'roca', 'vent', 'pluja', 'neu', 'flor', 'llum', 'ona', 'niu', 'pi', 'gat', 'drac', 'robot', 'bit'];
+const altaPass = () => ALW[Math.floor(Math.random() * ALW.length)] + (10 + Math.floor(Math.random() * 90));
+const altaUser = n => { const p = String(n || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9 ]/g, '').trim().split(/\s+/).filter(Boolean); return p.length ? (p[0] + (p[1] ? '.' + p[1][0] : '')).slice(0, 15) + (10 + Math.floor(Math.random() * 90)) : ''; };
+const altaBad = r => !r.name ? L('falta el nom', 'falta el nombre') : !/^[a-z0-9._-]{3,20}$/.test(r.username) ? L('usuari: 3-20 lletres sense accents, números, punt o guió', 'usuario: 3-20 letras sin acentos, números, punto o guion') : r.password.length < 4 ? L('contrasenya: mínim 4 caràcters', 'contraseña: mínimo 4 caracteres') : '';
+const isTechG = g => !!(g && g.opts && g.opts.app === 'tech');
+function altaRow(r, i) {
+  return `<div class="arow" data-i="${i}"><input class="an" placeholder="${L('Nom i cognom', 'Nombre y apellido')}" value="${esc(r.name)}" oninput="altaEdit(${i},'name',this.value)" onblur="altaAuto(${i})">
+    <input class="au mono" placeholder="${L('usuari', 'usuario')}" value="${esc(r.username)}" autocapitalize="none" oninput="altaEdit(${i},'username',this.value.toLowerCase())">
+    <input class="ap mono" placeholder="${L('contrasenya', 'contraseña')}" value="${esc(r.password)}" oninput="altaEdit(${i},'password',this.value)">
+    <button class="ib" onclick="altaDel(${i})" aria-label="${L('Treu', 'Quitar')}" ${ALTA.length < 2 ? 'disabled' : ''}>${ico('x')}</button>
+    <small class="aerr" id="ae${i}"></small></div>`;
+}
+function altaDraw() {
+  const el = $('#al_rows'); if (!el) return;
+  el.innerHTML = ALTA.map(altaRow).join(''); altaCheck();
+}
+function altaCheck() {
+  let n = 0; ALTA.forEach((r, i) => { const e = $('#ae' + i), bad = (r.name || r.username || r.password) ? altaBad(r) : ''; if (e) e.textContent = bad; if (r.name && !bad) n++; });
+  const go = $('#al_go'), bad = ALTA.some(r => (r.name || r.username) && altaBad(r));
+  if (go) { go.disabled = !n || bad; go.textContent = n ? L(`Crea ${n} ${n === 1 ? 'alumne' : 'alumnes'}`, `Crear ${n} ${n === 1 ? 'alumno' : 'alumnos'}`) : L('Crea els alumnes', 'Crear los alumnos'); }
+}
+function altaEdit(i, k, v) { ALTA[i][k] = v.trim ? (k === 'name' ? v : v.trim()) : v; altaCheck(); }
+function altaAuto(i) { const r = ALTA[i]; if (r.name && !r.username) { r.username = altaUser(r.name); if (!r.password) r.password = altaPass(); altaDraw(); const n = $(`.arow[data-i="${i + 1}"] .an`); n && n.focus(); } }
+function altaAdd() { ALTA.push({ name: '', username: '', password: '' }); altaDraw(); const r = $$('.arow .an'); r[r.length - 1].focus(); }
+function altaDel(i) { ALTA.splice(i, 1); if (!ALTA.length) ALTA.push({ name: '', username: '', password: '' }); altaDraw(); }
+// enganxar una llista: tabulacions, punt i coma, comes o espais (les dues últimes paraules són usuari i contrasenya)
+function altaPaste() {
+  const t = ($('#al_txt').value || '').split(/\r?\n/).map(l => l.trim()).filter(Boolean), out = [];
+  for (const l of t) {
+    let c = l.includes('\t') ? l.split('\t') : /[;,]/.test(l) ? l.split(/\s*[;,]\s*/) : l.split(/\s+/);
+    c = c.map(x => x.trim()).filter(Boolean); if (!c.length || /^(alumn|nom|nombre|name)$/i.test(c[0])) continue;
+    if (c.length >= 3 && /^[a-z0-9._-]{3,20}$/i.test(c[c.length - 2])) out.push({ name: c.slice(0, -2).join(' '), username: c[c.length - 2].toLowerCase(), password: c[c.length - 1] });
+    else { const name = c.join(' '); out.push({ name, username: altaUser(name), password: altaPass() }); }
+  }
+  ALTA = [...ALTA.filter(r => r.name), ...out]; if (!ALTA.length) ALTA.push({ name: '', username: '', password: '' });
+  $('#al_txt').value = ''; $('#al_pastebox').hidden = true; altaDraw();
 }
 function altaModal(id) {
-  closePops(); const g = GRUPS.find(x => x.id === id); if (!g) return;
+  closePops(); const g = GRUPS.find(x => x.id === id); if (!g) return; const tech = isTechG(g);
+  ALTA = [{ name: '', username: '', password: '' }];
   modal(`<h3>${L('Afegeix alumnes a', 'Añadir alumnos a')} ${esc(g.nom)}</h3>
-    <label class="field"><span>${L('Alumnes', 'Alumnos')}</span><textarea id="al_txt" rows="7" style="height:auto;padding:8px 12px;font:13px/1.5 ui-monospace,Menlo,monospace" placeholder="Martí Andorrà Velasco&#9;martiav&#9;0756" oninput="altaParse()"></textarea></label>
-    <div style="display:flex;gap:12px;flex-wrap:wrap"><label class="field" style="flex:1;min-width:200px"><span>${L('Curs on comencen', 'Curso en el que empiezan')}</span><select id="al_mode" onchange="$('#al_refw').style.display=this.value==='prova'?'':'none'"><option value="prova" selected>🧭 ${L('Ho decideix la prova de nivell', 'Lo decide la prueba de nivel')}</option>${CURS.map((c, i) => `<option value="${i}">${tx(c)}</option>`).join('')}</select></label>
-      <label class="field" id="al_refw" style="flex:1;min-width:200px"><span>${L('La prova parteix de', 'La prueba parte de')}</span><select id="al_curs">${CURS.map((c, i) => `<option value="${i}" ${(g.curs ?? 3) === i ? 'selected' : ''}>${tx(c)}</option>`).join('')}</select></label>
-      <label class="field" style="flex:1;min-width:140px"><span>${L("Idioma de l'app", 'Idioma de la app')}</span><select id="al_lang"><option value="ca">Català</option><option value="es">Castellano</option></select></label></div>
-    <p class="t3" style="font-size:13px;margin:0 0 10px">${L("Amb la prova (uns 3 minuts, en entrar per primer cop), l'app col·loca cada alumne: pot baixar un curs o obrir-li unitats més avançades.", 'Con la prueba (unos 3 minutos, al entrar por primera vez), la app coloca a cada alumno: puede bajar un curso o abrirle unidades más avanzadas.')}</p>
-    <div id="al_prev"></div><div class="err-msg" id="al_err"></div>
-    <div class="acts"><button class="btn" onclick="closeModal()">${L('Cancel·la', 'Cancelar')}</button><button class="btn primary" id="al_go" disabled onclick="altaGo(${id})">${L('Crea els alumnes', 'Crear los alumnos')}</button></div>`, 'w640');
-  altaParse(); $('#al_txt').focus();
+    <p class="t3" style="margin:-6px 0 12px">${tech ? 'Numi Tech' : 'Numi Mates'} · ${L("Escriu el nom: l'usuari i la contrasenya es proposen sols (els pots canviar).", 'Escribe el nombre: el usuario y la contraseña se proponen solos (los puedes cambiar).')}</p>
+    <div class="ahead"><span>${L('Nom', 'Nombre')}</span><span>${L('Usuari', 'Usuario')}</span><span>${L('Contrasenya', 'Contraseña')}</span><span></span></div>
+    <div id="al_rows" class="arows"></div>
+    <div class="aacts"><button class="btn" onclick="altaAdd()">${ico('plus')}${L('Afegeix un altre alumne', 'Añadir otro alumno')}</button><button class="btn ghost" onclick="$('#al_pastebox').hidden=false;$('#al_txt').focus()">${ico('copy')}${L('Enganxa una llista', 'Pegar una lista')}</button></div>
+    <div id="al_pastebox" hidden><label class="field"><span>${L('Una línia per alumne. Pot ser només el nom, o «nom usuari contrasenya».', 'Una línea por alumno. Puede ser solo el nombre, o «nombre usuario contraseña».')}</span><textarea id="al_txt" rows="5" style="height:auto;padding:8px 12px;font:13px/1.5 ui-monospace,Menlo,monospace" placeholder="Laia Puig&#10;Pau Serra pau.s 1234"></textarea></label><button class="btn primary sm" onclick="altaPaste()">${L('Afegeix-los', 'Añadirlos')}</button></div>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:12px">
+      ${tech ? '' : `<label class="field" style="flex:1;min-width:200px"><span>${L('Curs on comencen', 'Curso en el que empiezan')}</span><select id="al_mode" onchange="$('#al_refw').style.display=this.value==='prova'?'':'none'"><option value="prova" selected>🧭 ${L('Ho decideix la prova de nivell', 'Lo decide la prueba de nivel')}</option>${CURS.map((c, i) => `<option value="${i}">${tx(c)}</option>`).join('')}</select></label>
+      <label class="field" id="al_refw" style="flex:1;min-width:200px"><span>${L('La prova parteix de', 'La prueba parte de')}</span><select id="al_curs">${CURS.map((c, i) => `<option value="${i}" ${(g.curs ?? 3) === i ? 'selected' : ''}>${tx(c)}</option>`).join('')}</select></label>`}
+      <label class="field" style="flex:1;min-width:140px"><span>${L("Idioma de l'app", 'Idioma de la app')}</span><select id="al_lang"><option value="ca" ${LANG === 'ca' ? 'selected' : ''}>Català</option><option value="es" ${LANG === 'es' ? 'selected' : ''}>Castellano</option></select></label></div>
+    <div class="err-msg" id="al_err"></div>
+    <div class="acts"><button class="btn" onclick="closeModal()">${L('Cancel·la', 'Cancelar')}</button><button class="btn primary" id="al_go" disabled onclick="altaGo(${id})">${L('Crea els alumnes', 'Crear los alumnos')}</button></div>`, 'w720');
+  altaDraw(); $('.arow .an').focus();
 }
 async function altaGo(id) {
-  $('#al_go').disabled = true; $('#al_go').textContent = L('Creant…', 'Creando…');
-  const pv = $('#al_mode').value === 'prova', j = await act('alta', { grup: id, rows: ALTA, curs: pv ? +$('#al_curs').value : +$('#al_mode').value, lang: $('#al_lang').value, prova: pv });
-  if (!j.ok) { $('#al_err').textContent = j.error === 'permís' ? L('No tens permís en aquest grup.', 'No tienes permiso en este grupo.') : L("No s'ha pogut fer. Torna-ho a provar.", 'No se ha podido hacer. Vuelve a intentarlo.'); $('#al_go').disabled = false; return; }
-  altaShow(j);
+  const rows = ALTA.filter(r => r.name && !altaBad(r)); if (!rows.length) return;
+  $('#al_go').disabled = true; $('#al_go').textContent = L('Creant…', 'Creando…'); $('#al_err').textContent = '';
+  const g = GRUPS.find(x => x.id === id), tech = isTechG(g), pv = !tech && $('#al_mode').value === 'prova';
+  const j = await act('alta', { grup: id, rows, curs: tech ? 0 : pv ? +$('#al_curs').value : +$('#al_mode').value, lang: $('#al_lang').value, prova: pv });
+  if (!j.ok) { $('#al_err').textContent = j.error === 'permís' ? L('No tens permís en aquest grup.', 'No tienes permiso en este grupo.') : L("No s'ha pogut fer. Torna-ho a provar.", 'No se ha podido hacer. Vuelve a intentarlo.'); altaCheck(); return; }
+  j.rows.forEach(r => { const o = rows.find(x => x.username === r.username); if (o) r.password = o.password; });
+  altaShow(j, g);
 }
-function altaShow(j) {
-  const E = { 'usuari-ocupat': L('aquest usuari ja existeix', 'este usuario ya existe'), 'usuari-format': L('usuari no vàlid', 'usuario no válido'), 'contrasenya-format': L('contrasenya no vàlida', 'contraseña no válida'), nom: L('falta el nom', 'falta el nombre') };
-  const okN = j.rows.filter(r => r.ok).length;
-  modal(`<h3>${L(`${okN} de ${j.rows.length} alumnes creats`, `${okN} de ${j.rows.length} alumnos creados`)}</h3>
-    <div class="tw" style="max-height:340px"><table><thead><tr><th>${L('Alumne', 'Alumno')}</th><th>${L('Usuari', 'Usuario')}</th><th></th></tr></thead><tbody>${j.rows.map(r => `<tr style="cursor:default"><td>${esc(r.name || '')}</td><td class="mono">${esc(r.username || '')}</td><td>${r.ok ? `<span class="chip good">${L('Creat', 'Creado')}</span>` : `<span class="chip crit">${esc(E[r.error] || r.error)}</span>`}</td></tr>`).join('')}</tbody></table></div>
-    <p class="t3">${L("Entren a app.numimates.com amb el seu usuari i contrasenya. Ja són dins del grup.", 'Entran en app.numimates.com con su usuario y contraseña. Ya están dentro del grupo.')}</p>
-    <div class="acts"><button class="btn primary" onclick="closeModal();reload()">${L('Fet', 'Hecho')}</button></div>`, 'w640');
+// resultat: qui s'ha creat i qui no (i per què), i les targetes d'accés per imprimir i repartir
+const APPURL = g => isTechG(g) ? 'https://mates-numi.vercel.app/?v=tech' : 'https://app.numimates.com';
+function altaShow(j, g) {
+  const E = { 'usuari-ocupat': L('aquest usuari ja existeix: canvia-li el nom', 'este usuario ya existe: cámbiale el nombre'), 'usuari-format': L('usuari no vàlid', 'usuario no válido'), 'contrasenya-format': L('contrasenya no vàlida', 'contraseña no válida'), nom: L('falta el nom', 'falta el nombre') };
+  const okR = j.rows.filter(r => r.ok), koR = j.rows.filter(r => !r.ok);
+  ALTA = koR.map(r => ({ name: r.name || '', username: r.username || '', password: r.password || altaPass() }));
+  ALTA.last = { rows: okR, g };
+  modal(`<h3>${L(`${okR.length} de ${j.rows.length} alumnes creats`, `${okR.length} de ${j.rows.length} alumnos creados`)}</h3>
+    ${okR.length ? `<div class="tw" style="max-height:300px"><table><thead><tr><th>${L('Alumne', 'Alumno')}</th><th>${L('Usuari', 'Usuario')}</th><th>${L('Contrasenya', 'Contraseña')}</th></tr></thead><tbody>${okR.map(r => `<tr style="cursor:default"><td>${esc(r.name)}</td><td class="mono">${esc(r.username)}</td><td class="mono">${esc(r.password || '')}</td></tr>`).join('')}</tbody></table></div>
+      <p class="t3">${L(`Entren a ${esc(APPURL(g))} amb el seu usuari i contrasenya. Ja són dins del grup. Apunta't les contrasenyes o imprimeix les targetes ara: després no es tornen a mostrar.`, `Entran en ${esc(APPURL(g))} con su usuario y contraseña. Ya están dentro del grupo. Apúntate las contraseñas o imprime las tarjetas ahora: después no se vuelven a mostrar.`)}</p>` : ''}
+    ${koR.length ? `<div class="err-box"><b>${L('No creats', 'No creados')}</b><ul>${koR.map(r => `<li>${esc(r.name || '')} (${esc(r.username || '')}): ${E[r.error] || r.error}</li>`).join('')}</ul></div>` : ''}
+    <div class="acts">${koR.length ? `<button class="btn" onclick="altaRetry(${g.id})">${L('Corregeix els que falten', 'Corregir los que faltan')}</button>` : ''}${okR.length ? `<button class="btn" onclick="altaCards()">${ico('printer')}${L("Imprimeix les targetes d'accés", 'Imprimir las tarjetas de acceso')}</button>` : ''}<button class="btn primary" onclick="closeModal();reload()">${L('Fet', 'Hecho')}</button></div>`, 'w720');
+}
+function altaRetry(id) { const keep = ALTA.slice(); altaModal(id); ALTA = keep.length ? keep : ALTA; altaDraw(); }
+function altaCards() {
+  const { rows, g } = ALTA.last || {}; if (!rows) return;
+  const w = window.open('', '_blank'); if (!w) return toast(L("El navegador ha bloquejat la finestra. Permet les finestres emergents d'aquest web.", 'El navegador ha bloqueado la ventana. Permite las ventanas emergentes de esta web.'));
+  w.document.write(`<!doctype html><meta charset="utf-8"><title>${L("Targetes d'accés", 'Tarjetas de acceso')} · ${esc(g.nom)}</title><style>body{font:14px system-ui,sans-serif;margin:0;padding:10mm}.g{display:grid;grid-template-columns:1fr 1fr;gap:6mm}.c{border:1.5px dashed #999;border-radius:10px;padding:6mm;break-inside:avoid}.c b{font-size:18px}.c dl{display:grid;grid-template-columns:auto 1fr;gap:2mm 4mm;margin:4mm 0 0}.c dt{color:#666}.c dd{margin:0;font:600 16px ui-monospace,Menlo,monospace}.c small{color:#666}@page{size:A4;margin:10mm}</style>
+    <div class="g">${rows.map(r => `<div class="c"><b>${esc(r.name)}</b><br><small>${esc(g.nom)} · ${isTechG(g) ? 'Numi Tech' : 'Numi Mates'}</small><dl><dt>${L('Web', 'Web')}</dt><dd style="font-size:12px">${esc(APPURL(g).replace('https://', ''))}</dd><dt>${L('Usuari', 'Usuario')}</dt><dd>${esc(r.username)}</dd><dt>${L('Contrasenya', 'Contraseña')}</dt><dd>${esc(r.password || '')}</dd></dl></div>`).join('')}</div><script>print()<\/script>`);
+  w.document.close();
 }
 async function grupSave(id) {
-  if (ADMIN && !id && !(D.centres || []).length) return $('#g_err').textContent = L('Primer crea un centre.', 'Primero crea un centro.');
-  if (!id && ($('#al_txt')?.value || '').trim()) { altaParse(); if (!ALTA.length || ALTA.bad) return $('#g_err').textContent = L('Revisa la llista d\'alumnes: cada línia ha de tenir nom, usuari (3-20 lletres, números, punt o guió) i contrasenya (mínim 4).', 'Revisa la lista de alumnos: cada línea debe tener nombre, usuario (3-20 letras, números, punto o guion) y contraseña (mínimo 4).'); }
-  const j = await act('grup_save', { id: id || undefined, nom: $('#g_nom').value, curs: $('#g_curs').value, centre_id: $('#g_centre')?.value, docent_id: $('#g_doc')?.value });
-  if (!j.ok) return $('#g_err').textContent = j.error === 'nom' ? L('Posa un nom al grup.', 'Pon un nombre al grupo.') : j.error === 'centre' ? L('Tria el centre del grup.', 'Elige el centro del grupo.') : j.error === 'permís' ? L("No tens permís per editar aquest grup.", 'No tienes permiso para editar este grupo.') : L("No s'ha pogut desar. Torna-ho a provar.", 'No se ha podido guardar. Vuelve a intentarlo.');
-  if (!id && ALTA.length && ($('#al_txt')?.value || '').trim()) {
-    const cc = $('#g_curs').value, a = await act('alta', { grup: j.grup.id, rows: ALTA, curs: cc === '' ? undefined : +cc, lang: LANG, prova: !!$('#al_prova').value });
-    ALTA = []; if (a.ok) { toast(L(`Grup creat. Codi: ${j.grup.codi}`, `Grupo creado. Código: ${j.grup.codi}`)); return altaShow(a); }
-    closeModal(); toast(L("Grup creat, però no s'han pogut crear els alumnes: torna-ho a provar des del menú del grup.", 'Grupo creado, pero no se han podido crear los alumnos: vuelve a intentarlo desde el menú del grupo.')); return reload();
-  }
-  closeModal(); toast(id ? L('Grup desat.', 'Grupo guardado.') : L(`Grup creat. Codi: ${j.grup.codi}`, `Grupo creado. Código: ${j.grup.codi}`)); reload();
+  if (ADMIN && !id && !(D.centres || []).length) return $('#g_err').textContent = L('Primer crea un centre (menú «Centres»).', 'Primero crea un centro (menú «Centros»).');
+  const app = id ? null : ($('input[name=g_app]:checked') || {}).value || 'mates';
+  const courses = $$('#g_techw input:checked').map(i => i.value);
+  if (app === 'tech' && !courses.length) return $('#g_err').textContent = L('Tria almenys un curs.', 'Elige al menos un curso.');
+  const j = await act('grup_save', { id: id || undefined, nom: $('#g_nom').value, curs: app === 'tech' ? '' : $('#g_curs').value, centre_id: $('#g_centre')?.value, docent_id: $('#g_doc')?.value });
+  if (!j.ok) return $('#g_err').textContent = j.error === 'nom' ? L('Posa un nom al grup.', 'Pon un nombre al grupo.') : j.error === 'centre' ? L('Tria el centre del grup.', 'Elige el centro del grupo.') : j.error === 'permís' ? L("No tens permís per editar aquest grup.", 'No tienes permiso para editar este grupo.') : L("No s'ha pogut desar.", 'No se ha podido guardar.');
+  if (id) { closeModal(); toast(L('Grup desat.', 'Grupo guardado.')); return reload(); }
+  let gid = j.grup && j.grup.id;
+  if (app === 'tech' && gid) { const o = await act('grup_opts', { id: gid, opts: { app: 'tech', tech: { courses, fins: {}, casa: true } }, app_canvi: true }); if (o.ok) j.grup.opts = o.opts; }
+  closeModal(); toast(L(`Grup creat. Codi: ${j.grup.codi}`, `Grupo creado. Código: ${j.grup.codi}`));
+  await reload();
+  if (gid && GRUPS.some(x => x.id === gid)) altaModal(gid);
 }
 async function grupCodi(id) { closePops(); if (!await confirmBox(L('Generar un codi nou?', '¿Generar un código nuevo?'), L("L'actual deixarà de funcionar. Els alumnes que ja són dins no en sortiran.", 'El actual dejará de funcionar. Los alumnos que ya están dentro no saldrán.'), L("Genera'n un de nou", 'Generar uno nuevo'), false)) return; const j = await act('grup_codi', { id }); toast(L(`Codi nou: ${j.codi}`, `Código nuevo: ${j.codi}`)); reload(); }
 async function grupOff(id) { closePops(); const g = GRUPS.find(x => x.id === id); if (!await confirmBox(L(`Tancar el grup ${g.nom}?`, `¿Cerrar el grupo ${g.nom}?`), L('Els alumnes en sortiran i tornaran al pla gratuït.', 'Los alumnos saldrán y volverán al plan gratuito.'), L('Tanca el grup', 'Cerrar el grupo'))) return; await act('grup_off', { id }); toast(L('Grup tancat.', 'Grupo cerrado.')); reload(); }
