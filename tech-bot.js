@@ -388,21 +388,47 @@ function tbHTML(extra = '') {
       ${TB.mode === 'edit' || TB.mode === 'parsons' ? `<button class="btn ghost" onclick="tbStep()" title="${L('Executa un sol bloc', 'Ejecuta un solo bloque')}">${L('Pas a pas', 'Paso a paso')}</button>` : ''}
       <button class="btn ghost ico" onclick="tbReset()" aria-label="${L('Torna en Bit al principi', 'Vuelve a poner a Bit al principio')}"><svg viewBox="0 0 24 24"><path d="M12 5V2L7 6l5 4V7a6 6 0 1 1-6 6H4a8 8 0 1 0 8-8z" fill="currentColor"/></svg></button>
       <button class="btn ghost ico" onclick="tbSpeed()" aria-label="${L('Velocitat', 'Velocidad')}" title="${L('Velocitat', 'Velocidad')}">${TB.speed === 2 ? '×2' : '×1'}</button></div>` : '';
-  return `<div class="tstage m-${TB.mode}"><div class="tworld" id="tworld">${bitSVG(TB.W, TB.S, { marks: TB.marks })}<p class="tsay" id="tsay" aria-live="polite"></p>${runbar}</div>
-    <div class="tcode">${extra}${prog}</div></div>`;
+  TB.runbar = runbar;
+  return `<div class="tstage m-${TB.mode}">${tbWorldHTML()}<div class="tcode">${extra}${prog}</div></div>`;
 }
+// el món: en 3D si l'aparell ho permet (tech-3d.js); mentrestant, i si no hi ha WebGL, el dibuix 2D
+function tbWorldHTML() {
+  const ar = Math.max(.56, Math.min(1.05, (TB.W.h + 1.8) / (TB.W.w + 1.2) * .82));
+  return `<div class="tworld" id="tworld"><div class="b3d" id="b3d" style="aspect-ratio:${(1 / ar).toFixed(3)}">${bitSVG(TB.W, TB.S, { marks: TB.marks })}</div><p class="tsay" id="tsay" aria-live="polite"></p>${TB.runbar || ''}</div>`;
+}
+// la part del programa (es refà a cada canvi sense tocar el món 3D)
+function tbCodeHTML() { const h = tbHTML(TB.extra || ''); const d = document.createElement('div'); d.innerHTML = h; const c = d.querySelector('.tcode'); return c ? c.innerHTML : ''; }
 function tbDraw() {
   const st = document.querySelector('.tstage'); if (!st) return;
   const sc = document.getElementById('tprog'), top = sc ? sc.scrollTop : 0;
-  st.outerHTML = tbHTML(TB.extra || '');
+  const code = st.querySelector('.tcode'), w = st.querySelector('#tworld');
+  if (code && w) { code.innerHTML = tbCodeHTML(); const rb = w.querySelector('.trun'); if (rb && TB.runbar) rb.outerHTML = TB.runbar; if (TB.dirtyWorld) tbRedrawWorld(); }
+  else { st.outerHTML = tbHTML(TB.extra || ''); tb3dMount(); }
+  TB.dirtyWorld = false;
   const sc2 = document.getElementById('tprog'); if (sc2) sc2.scrollTop = top;
+}
+/* ---------- 3D ---------- */
+let BIT3D = null, BIT3D_P = null;
+const bit3dLoad = () => BIT3D_P || (BIT3D_P = import('./tech-3d.js').then(m => (BIT3D = m.ok() ? m : null)).catch(() => (BIT3D = null)));
+function tb3dMount() {
+  if (!TB || (typeof REDUCED !== 'undefined' && REDUCED === 'force2d')) return;
+  const me = TB;
+  bit3dLoad().then(M => {
+    const box = document.getElementById('b3d'); if (!M || TB !== me || !box || box.querySelector('canvas')) return;
+    try {
+      me.b3 = M.create(box, me.W, me.S, { shot: !!window.__shot });
+      box.classList.add('on');
+      if (me.marks) me.b3.marks(true, me.pick);
+      me.prevS = { x: me.S.x, y: me.S.y, d: me.S.d, ang: me.S.ang, carry: me.S.carry, led: me.S.led };
+    } catch (e) { me.b3 = null; }
+  });
 }
 // només el món (durant l'execució no es refà el programa: va més fluid)
 function tbWorld() {
-  const w = document.querySelector('#tworld .bitw'); if (!w) return;
   const S = TB.S, prev = TB.prevS;
-  bitPaintState(w, TB.W, S, prev);
-  TB.prevS = { x: S.x, y: S.y, d: S.d, carry: S.carry, led: S.led };
+  if (TB.b3) TB.b3.step(S, prev);
+  else { const w = document.querySelector('#tworld .bitw'); if (!w) return; bitPaintState(w, TB.W, S, prev); }
+  TB.prevS = { x: S.x, y: S.y, d: S.d, ang: S.ang, carry: S.carry, led: S.led };
 }
 function tbSay(t, cls = '') { const e = document.getElementById('tsay'); if (e) { e.className = 'tsay ' + cls; e.innerHTML = t; } }
 
@@ -426,7 +452,7 @@ function tbElse() { const b = TB.sel; b.e = b.e ? null : []; tbFresh(); tbDraw()
 function tbColor() { const b = TB.sel, cs = TB.colors || ['r', 'g', 'y', 'u']; b.c = cs[(cs.indexOf(b.c) + 1) % cs.length]; tbFresh(); tbDraw(); }
 function tbClear() { if (!TB.prog.length) return; TB.prog.splice(0); TB.cur = { l: TB.prog, i: 0 }; TB.sel = null; tbFresh(); tbDraw(); }
 // qualsevol canvi del programa: en Bit torna a la sortida
-function tbFresh() { TB.S = bitSim(TB.W); TB.gen = null; TB.prevS = null; }
+function tbFresh() { const moved = TB.S && (TB.S.n || TB.S.trail.length > 1 || TB.S.d !== TB.W.bot[2]); TB.S = bitSim(TB.W); TB.gen = null; if (moved) TB.dirtyWorld = true; }
 // ordenar blocs donats (problema de Parsons): tocar els de sota els afegeix al final; tocar-ne un de dalt el torna a sota
 function tbPar(id) {
   if (TB.run) tbStop();
@@ -447,7 +473,11 @@ function tbHand(k) {
 
 /* ---------- Execució ---------- */
 // el món sencer de nou (quan en Bit torna a la sortida: estrelles i caixes al seu lloc)
-function tbRedrawWorld() { const w = document.querySelector('#tworld .bitw'); if (w) { w.outerHTML = bitSVG(TB.W, TB.S, { marks: TB.marks }); TB.prevS = { x: TB.S.x, y: TB.S.y, d: TB.S.d, carry: 0, led: null }; } }
+function tbRedrawWorld() {
+  if (TB.b3) TB.b3.reset(TB.W, TB.S);
+  else { const w = document.querySelector('#tworld .bitw'); if (w) w.outerHTML = bitSVG(TB.W, TB.S, { marks: TB.marks }); }
+  TB.prevS = { x: TB.S.x, y: TB.S.y, d: TB.S.d, ang: TB.S.ang, carry: 0, led: null };
+}
 function tbGo() {
   if (TB.run) return tbStop();
   if (!TB.prog.length) { tbSay(L('Primer posa algun bloc al programa.', 'Primero pon algún bloque en el programa.')); return; }
@@ -482,14 +512,14 @@ function tbEnd(last) {
   const btn = document.getElementById('tbgo'); if (btn) btn.innerHTML = `<svg viewBox="0 0 24 24"><path d="M7 4l13 8-13 8z" fill="currentColor"/></svg>${L('Executa', 'Ejecuta')}`;
   const miss = bitMiss(TB.W, TB.S);
   if (!miss) { document.querySelectorAll('.tb.now').forEach(e => e.classList.remove('now')); TB.solved = true; SFX.win && SFX.win(); tbBotFx('yay'); typeof confetti === 'function' && confetti(90); tbSay(L('Molt bé! Ho has aconseguit!', '¡Muy bien! ¡Lo has conseguido!'), 'ok'); if (TB.onDone) TB.onDone(); return; }
-  if (TB.S.crash) { bitSnd('hit'); tbBotFx('hit'); const [ax, ay] = bitAhead(TB.S), w = document.querySelector('#tworld .bitw'); if (w) bitFx(w, (TB.S.x + ax) / 2, (TB.S.y + ay) / 2, 'dust'); } else { SFX.ko && SFX.ko(); tbBotFx('sad'); }
+  if (TB.S.crash) { bitSnd('hit'); tbBotFx('hit'); const [ax, ay] = bitAhead(TB.S), w = document.querySelector('#tworld .bitw'); if (TB.b3) TB.b3.fx('dust', (TB.S.x + ax) / 2, (TB.S.y + ay) / 2); else if (w) bitFx(w, (TB.S.x + ax) / 2, (TB.S.y + ay) / 2, 'dust'); } else { SFX.ko && SFX.ko(); tbBotFx('sad'); }
   if (TB.S.crash && last && last._id) { const e = document.getElementById('tb' + last._id); if (e) { e.classList.remove('now'); e.classList.add('err'); } }
   else document.querySelectorAll('.tb.now').forEach(e => e.classList.remove('now'));
   tbSay(tx(BIT_WHY[miss].join('|')) + ' ' + L('Canvia el programa i torna-ho a provar.', 'Cambia el programa y vuelve a probar.'), 'bad');
   if (TB.onFail) TB.onFail(miss);
 }
 // animació d'en Bit: salt d'alegria, xoc o tristesa
-function tbBotFx(c) { const sp = document.querySelector('#tworld .bbot .bsp'); if (!sp) return; sp.classList.remove('walk', 'turn', 'hit', 'yay', 'sad'); void sp.getBoundingClientRect(); sp.classList.add(c); }
+function tbBotFx(c) { if (TB && TB.b3) return TB.b3.react(c); const sp = document.querySelector('#tworld .bbot .bsp'); if (!sp) return; sp.classList.remove('walk', 'turn', 'hit', 'yay', 'sad'); void sp.getBoundingClientRect(); sp.classList.add(c); }
 function tbReset() { if (TB.run) tbStop(); tbFresh(); tbRedrawWorld(); tbSay(''); document.querySelectorAll('.tb.err,.tb.now').forEach(e => e.classList.remove('err', 'now')); }
 function tbSpeed() { TB.speed = TB.speed === 2 ? 1 : 2; const b = document.querySelector('.trun .ico[aria-label="' + L('Velocitat', 'Velocidad') + '"]'); if (b) b.textContent = TB.speed === 2 ? '×2' : '×1'; }
 // executa sense dibuixar (per saber on acaba un programa, per a les preguntes de «on acabarà?»)

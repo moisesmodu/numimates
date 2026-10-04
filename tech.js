@@ -15,8 +15,28 @@ const tCourse = id => TECH.find(c => c.id === id) || TECH[0];
 // totes les sessions d'un curs en ordre, amb la unitat
 const tSessions = c => c.units.flatMap((u, ui) => u.s.map((s, si) => ({ ...s, ui, si, u })));
 const tDone = id => !!(TS_().s[id] && TS_().s[id].done);
-// gratis: la primera unitat de cada curs; la resta, Premium
-const tFree = (c, ui) => ui === 0;
+// Accés: Numi Tech es fa servir a les extraescolars amb classe guiada. El professor assigna els cursos al grup (i fins a
+// quina sessió poden arribar) des del panell; l'administrador també pot obrir cursos a un alumne concret. No hi ha Premium.
+function tAccess() {
+  if (P && P.unlockAll) return { courses: new Set(TECH.map(c => c.id)), fins: {} };
+  const o = P && P.classe && P.classe.opts, t = o && o.app === 'tech' && o.tech;
+  if (t) return { courses: new Set(t.courses || []), fins: t.fins || {}, classe: P.classe };
+  if (P && Array.isArray(P.tcursos)) return { courses: new Set(P.tcursos), fins: {} };
+  return { courses: new Set(), fins: {} };
+}
+// una sessió és oberta si el curs és assignat i no passa d'on el professor ha obert (les ja fetes sempre es poden repetir)
+function tSessOpen(c, s) {
+  const a = tAccess(); if (!a.courses.has(c.id)) return false;
+  const f = a.fins[c.id]; if (!f || f === 'tot' || tDone(s.id)) return true;
+  const all = tSessions(c), i = all.findIndex(x => x.id === s.id), j = all.findIndex(x => x.id === f);
+  return j < 0 || i <= j;
+}
+function tLocked(c, s) {
+  const a = tAccess(), mine = a.courses.has(c.id);
+  modal(`<div class="sheet card cent"><div class="tsoonico" style="--cc:${c.color}">${c.ico}</div><h3>${mine ? L('Aquesta sessió encara no és oberta', 'Esta sesión aún no está abierta') : tx(c.name)}</h3>
+    <p>${mine ? L("La farem a classe: el teu professor l'obrirà quan hi arribeu.", 'La haremos en clase: tu profesor la abrirá cuando lleguéis.') : `${tx(c.desc)}</p><p class="mut">${a.classe ? L("Aquest curs te l'ha d'assignar el teu professor.", 'Este curso te lo tiene que asignar tu profesor.') : L('Per començar, entra a la teva classe amb el codi que et dona el professor.', 'Para empezar, entra en tu clase con el código que te da el profesor.')}`}</p>
+    ${!a.classe && !a.courses.size ? `<button class="btn big" onclick="closeModal();classeModal()">${L('TINC UN CODI DE CLASSE', 'TENGO UN CÓDIGO DE CLASE')}</button>` : ''}<button class="btn ghost big" onclick="closeModal()">${L("D'ACORD", 'DE ACUERDO')}</button></div>`, true);
+}
 const tReady = s => !!(s.steps && s.steps.length);
 
 /* ---------- Navegació ---------- */
@@ -53,15 +73,20 @@ function tStop() { if (typeof TB !== 'undefined' && TB) { clearTimeout(TB.t); TB
 
 /* ---------- Aprèn: el curs, unitat per unitat ---------- */
 function techHome() {
-  const t = TS_(), c = tCourse(t.c), all = tSessions(c), nxt = all.find(s => tReady(s) && !tDone(s.id));
+  if (P.code && navigator.onLine && !techHome.pulled && typeof classeRefresh === 'function') { techHome.pulled = 1; classeRefresh(); }
+  const t = TS_(), acc = tAccess();
+  if (!acc.courses.size) return techCatalog();
+  if (!acc.courses.has(t.c)) t.c = [...acc.courses].find(id => TECH.some(c => c.id === id)) || t.c;
+  const c = tCourse(t.c), all = tSessions(c), nxt = all.find(s => tReady(s) && !tDone(s.id) && tSessOpen(c, s));
   const done = all.filter(s => tDone(s.id)).length;
   const prog = nxt && t.s[nxt.id] && t.s[nxt.id].i ? t.s[nxt.id] : null;
   const hero = `<section class="thero"><div class="thtxt"><p class="tkick">${tx(c.name)} · ${tx(c.age)}</p><h1>${L(`Hola, ${esc(P.name)}!`, `¡Hola, ${esc(P.name)}!`)}</h1>
-      ${nxt ? `<p>${L('Següent sessió', 'Siguiente sesión')}: <b>${tx(nxt.t)}</b></p><button class="btn big tgo" onclick="tOpen('${nxt.id}')">${TIC.play} ${prog ? L('Continua la sessió', 'Continúa la sesión') : L('Comença la sessió', 'Empieza la sesión')}</button>`
-        : `<p>${L('Has fet totes les sessions que hi ha de moment. Aviat n\'hi haurà més!', 'Has hecho todas las sesiones que hay de momento. ¡Pronto habrá más!')}</p>`}</div>
+      ${acc.classe ? `<p class="tcls">${esc(acc.classe.nom)}${acc.classe.centre ? ' · ' + esc(acc.classe.centre) : ''}</p>` : ''}${nxt ? `<p>${L('Següent sessió', 'Siguiente sesión')}: <b>${tx(nxt.t)}</b></p><button class="btn big tgo" onclick="tOpen('${nxt.id}')">${TIC.play} ${prog ? L('Continua la sessió', 'Continúa la sesión') : L('Comença la sessió', 'Empieza la sesión')}</button>`
+        : `<p>${L("Has fet totes les sessions obertes. La següent l'obrirà el teu professor a classe.", 'Has hecho todas las sesiones abiertas. La siguiente la abrirá tu profesor en clase.')}</p>`}</div>
     <div class="thbot" aria-hidden="true">${bitChar('happy')}</div>
     <div class="thbar"><i style="width:${Math.round(100 * done / all.length)}%"></i></div><small class="thsm">${L(`${done} de ${all.length} sessions`, `${done} de ${all.length} sesiones`)}</small></section>`;
-  const courses = `<div class="tcourses">${TECH.map(k => `<button class="tcrs ${k.id === c.id ? 'on' : ''} ${k.soon ? 'soon' : ''}" onclick="${k.soon ? `tSoon('${k.id}')` : `TS_().c='${k.id}';save();techHome()`}" style="--cc:${k.color}"><span class="tcico">${k.ico}</span><b>${tx(k.short)}</b><small>${k.soon ? L('Aviat', 'Pronto') : tx(k.age)}</small></button>`).join('')}</div>`;
+  const courses = `<div class="tcourses">${TECH.map(k => { const mine = acc.courses.has(k.id);
+    return `<button class="tcrs ${k.id === c.id ? 'on' : ''} ${mine ? '' : 'lock'}" onclick="${mine ? `TS_().c='${k.id}';save();techHome()` : `tLocked(tCourse('${k.id}'))`}" style="--cc:${k.color}"><span class="tcico">${k.ico}</span><b>${tx(k.short)}</b><small>${mine ? tx(k.age) : `${TIC.lock} ${L('No assignat', 'No asignado')}`}</small></button>`; }).join('')}</div>`;
   const units = c.units.map((u, ui) => tIsland(c, u, ui, nxt)).join('<div class="tbridge" aria-hidden="true"></div>');
   app.innerHTML = tShell('home', courses + units, hero);
 }
@@ -74,7 +99,7 @@ function tPrem() {
 
 // cada unitat és una illa: un camí amb les 4 sessions, arbres i roques, i en Bit a la sessió que toca
 function tIsland(c, u, ui, nxt) {
-  const t = TS_(), open = tFree(c, ui) || isPremium(), col = u.color || c.color, n = u.s.length;
+  const t = TS_(), col = u.color || c.color, n = u.s.length;
   const W = 360, H = 70 + n * 108, xs = [96, 262, 112, 250, 100, 258], P = u.s.map((_, i) => [xs[i % xs.length], 64 + i * 108]);
   const road = P.reduce((d, [x, y], i) => i ? d + ` C${P[i - 1][0]} ${P[i - 1][1] + 60} ${x} ${y - 60} ${x} ${y}` : `M${x} ${y}`, '');
   const R = k => bwRnd(ui + 3, k, 7);
@@ -93,9 +118,9 @@ function tIsland(c, u, ui, nxt) {
     <path d="${road}" fill="none" stroke="#E2BE76" stroke-width="34" stroke-linecap="round"/><path d="${road}" fill="none" stroke="url(#bwSand)" stroke-width="28" stroke-linecap="round"/>
     <path d="${road}" fill="none" stroke="#fff" stroke-width="3" stroke-dasharray="2 14" stroke-linecap="round" opacity=".7"/></svg>`;
   const nodes = u.s.map((s, si) => {
-    const [x, y] = P[si], d = tDone(s.id), ready = tReady(s), cur = nxt && nxt.id === s.id, part = t.s[s.id] && t.s[s.id].i && !d, right = x < 180;
+    const [x, y] = P[si], d = tDone(s.id), ready = tReady(s), open = tSessOpen(c, s), cur = nxt && nxt.id === s.id, part = t.s[s.id] && t.s[s.id].i && !d, right = x < 180;
     const ico = d ? TIC.ok : !ready ? '<b>…</b>' : !open ? TIC.lock : s.proj ? '<svg viewBox="0 0 24 24"><path d="M7 3h10v4a5 5 0 0 1-10 0z" fill="currentColor"/><path d="M7 5H4v2a3 3 0 0 0 3 3M17 5h3v2a3 3 0 0 1-3 3M10 13h4v3h-4zM8 19h8v2H8z" fill="currentColor"/></svg>' : `<b>${si + 1}</b>`;
-    return `<button class="tnode ${d ? 'done' : ''} ${cur ? 'cur' : ''} ${ready ? '' : 'soon'} ${!open && ready ? 'lock' : ''} ${s.proj ? 'proj' : ''}" style="left:${(x / W * 100).toFixed(2)}%;top:${(y / H * 100).toFixed(2)}%" onclick="${ready ? (open ? `tOpen('${s.id}')` : 'tPrem()') : 'tSoonS()'}">
+    return `<button class="tnode ${d ? 'done' : ''} ${cur ? 'cur' : ''} ${ready ? '' : 'soon'} ${!open && ready ? 'lock' : ''} ${s.proj ? 'proj' : ''}" style="left:${(x / W * 100).toFixed(2)}%;top:${(y / H * 100).toFixed(2)}%" onclick="${ready ? (open ? `tOpen('${s.id}')` : `tLocked(tCourse('${c.id}'),1)`) : 'tSoonS()'}">
       <span class="tnc">${ico}</span>${cur ? `<span class="tnbit" aria-hidden="true"><svg viewBox="-30 -74 60 80">${bitBot(2)}</svg></span>` : ''}
       <span class="tnl ${right ? 'r' : 'l'}"><b>${tx(s.t)}</b><small>${s.proj ? `<em>${L('Projecte', 'Proyecto')}</em> ` : ''}${ready ? `${s.min || 40} min` : L('En preparació', 'En preparación')}${part ? ` · ${L('a mitges', 'a medias')}` : ''}</small></span></button>`;
   }).join('');
@@ -119,6 +144,7 @@ function tPortOpen(id) {
   tbMake(p.w, { prog: p.prog, mode: 'view', fns: p.fns });
   app.innerHTML = `<div class="tsess"><div class="tstop"><button class="xbtn" onclick="go('projectes')" aria-label="${L('Tanca', 'Cierra')}">✕</button><b class="tsph">${tx(p.t)}</b><span></span></div>
     <div class="tsbody wide">${tbHTML()}</div><div class="tsfoot"><button class="link" onclick="tPortDel('${p.id}')">${L('Esborra el projecte', 'Borra el proyecto')}</button></div></div>`;
+  tb3dMount();
 }
 function tPortDel(id) { if (!confirm(L('Segur que vols esborrar aquest projecte?', '¿Seguro que quieres borrar este proyecto?'))) return; const t = TS_(); t.port = t.port.filter(x => x.id !== id); save(); go('projectes'); }
 
@@ -130,7 +156,7 @@ function techProfile() {
   app.innerHTML = tShell('profile', `<section class="tcard"><div class="tch"><b>${L('Insígnies', 'Insignias')}</b><span>${nb}/${Object.keys(TBADGE).length}</span></div><div class="tbadges">${badges}</div></section>
     <section class="tcard"><div class="tch"><b>${L('Idioma', 'Idioma')}</b></div>${langPill()}</section>
     ${P.code ? `<section class="tcard"><div class="tch"><b>${L('El meu compte', 'Mi cuenta')}</b></div>${P.username ? `<p>${L('Usuari', 'Usuario')}: <b>${esc(P.username)}</b></p>` : `<p class="mut">${L('Encara no tens usuari i contrasenya.', 'Aún no tienes usuario y contraseña.')}</p><button class="btn ghost" onclick="accountModal()">${L('Crea usuari i contrasenya', 'Crea usuario y contraseña')}</button>`}</section>` : ''}
-    <section class="tcard"><div class="tch"><b>Premium</b></div>${typeof premiumBox === 'function' ? premiumBox() : ''}</section>
+    <section class="tcard"><div class="tch"><b>${L('La meva classe', 'Mi clase')}</b></div>${P.classe ? `<p><b>${esc(P.classe.nom)}</b>${P.classe.centre ? ' · ' + esc(P.classe.centre) : ''}</p><p class="mut">${L('El teu professor veu el teu progrés i et va obrint les sessions.', 'Tu profesor ve tu progreso y te va abriendo las sesiones.')}</p>` : `<p class="mut">${L('Encara no ets a cap classe. Demana el codi al teu professor.', 'Aún no estás en ninguna clase. Pide el código a tu profesor.')}</p><button class="btn ghost" onclick="classeModal()">${L('Tinc un codi de classe', 'Tengo un código de clase')}</button>`}</section>
     <section class="tcard"><div class="tch"><b>${L('So', 'Sonido')}</b></div><button class="btn ghost" onclick="P.sound=!P.sound;save();techProfile()">${P.sound ? L('Activat', 'Activado') : L('Desactivat', 'Desactivado')}</button></section>
     <div class="tprofb"><button class="btn ghost" onclick="renderProfiles()">${L('Canvia de perfil', 'Cambia de perfil')}</button><a class="link" href="https://numimates.com/privacitat" target="_blank" rel="noopener">${L('Privadesa', 'Privacidad')}</a><button class="link" onclick="exportMe()">${L('Descarrega les meves dades', 'Descarga mis datos')}</button><button class="link" onclick="eraseMe()">${L('Esborra el compte', 'Borrar la cuenta')}</button></div>`, hero);
 }
@@ -140,7 +166,7 @@ let TSS = null, TS_T = null;
 function tFind(id) { for (const c of TECH) { const s = tSessions(c).find(x => x.id === id); if (s) return { c, s }; } return null; }
 function tOpen(id) {
   const f = tFind(id); if (!f || !tReady(f.s)) return;
-  if (!tFree(f.c, f.s.ui) && !isPremium()) return tPrem();
+  if (!tSessOpen(f.c, f.s)) return tLocked(f.c, f.s);
   const rec = TS_().s[id] || {}, again = rec.done;
   TSS = { c: f.c, s: f.s, id, i: again ? 0 : Math.min(rec.i || 0, f.s.steps.length - 1), ok: 0, n: 0, again };
   VIEW = 'tsess'; tStep();
@@ -265,7 +291,7 @@ const TSTEP = {
     const opts = Object.keys(TB.W.marks).sort();
     TB.extra = `<div class="tpick">${opts.map(k => `<button class="topt sm" data-m="${k}">${k}</button>`).join('')}</div>`;
     tStage(st);
-    const wire = () => document.querySelectorAll('.tpick .topt').forEach(b => b.onclick = () => { if (TSS.ready) return; pick = b.dataset.m; document.querySelectorAll('.tpick .topt').forEach(x => x.classList.toggle('on', x === b)); document.querySelectorAll('.bmark').forEach(x => x.classList.toggle('on', x.dataset.m === pick)); SFX.tap && SFX.tap(); tFoot(L('Comprova-ho executant el programa', 'Compruébalo ejecutando el programa'), check); });
+    const wire = () => document.querySelectorAll('.tpick .topt').forEach(b => b.onclick = () => { if (TSS.ready) return; pick = b.dataset.m; document.querySelectorAll('.tpick .topt').forEach(x => x.classList.toggle('on', x === b)); document.querySelectorAll('.bmark').forEach(x => x.classList.toggle('on', x.dataset.m === pick)); TB.pick = pick; TB.b3 && TB.b3.marks(true, pick); SFX.tap && SFX.tap(); tFoot(L('Comprova-ho executant el programa', 'Compruébalo ejecutando el programa'), check); });
     wire();
     // abans de triar no es pot executar
     const go0 = document.getElementById('tbgo'); if (go0) go0.disabled = true;
@@ -273,6 +299,7 @@ const TSTEP = {
       if (!pick) return; TSS.ready = true;
       document.querySelectorAll('.tpick .topt').forEach(b => b.disabled = true);
       TB.onDone = TB.onFail = null;
+      TB.b3 && TB.b3.marks(false);
       tbGo();
       const wait = setInterval(() => { if (TB && TB.run) return; clearInterval(wait); const ok = pick === st.a;
         document.querySelectorAll('.tpick .topt').forEach(b => b.classList.add(b.dataset.m === st.a ? 'ok' : b.dataset.m === pick ? 'ko' : 'x'));
@@ -350,6 +377,7 @@ function tStage(st) {
   const q = st.q ? `<div class="tsq2">${st.who === 'bit' ? `<span class="tsqc">${bitChar('idle')}</span>` : `<span class="tsqc">${charSVG('numi', 'idle')}</span>`}<div><p>${tval(st.q)}</p>${st.crit ? `<ul class="tcrit">${st.crit.map(c => `<li>${tval(c)}</li>`).join('')}</ul>` : ''}</div></div>` : '';
   $('#tsb').innerHTML = `${q}${tbHTML(TB.extra || '')}`;
   $('#tsb').classList.add('wide');
+  tb3dMount();
 }
 function tSayOk(html, bad) { tbSay(html, bad ? 'bad' : 'ok'); }
 function tHintBtn(st) {
@@ -387,18 +415,63 @@ function bitChar(mood = 'idle') {
     <rect x="-30" y="-36" width="60" height="44" rx="13" fill="#20306A"/>${eyes}${mouth}</svg>`;
 }
 
-/* ---------- Alta a Numi Tech ---------- */
+/* ---------- Catàleg: quan encara no hi ha cap curs assignat ---------- */
+function techCatalog() {
+  const acc = tAccess();
+  const hero = `<section class="thero"><div class="thtxt"><p class="tkick">Numi Tech</p><h1>${L(`Hola, ${esc(P.name)}!`, `¡Hola, ${esc(P.name)}!`)}</h1>
+    <p>${acc.classe ? L("Ja ets a la teva classe. Quan el professor t'assigni un curs, el trobaràs aquí.", 'Ya estás en tu clase. Cuando el profesor te asigne un curso, lo encontrarás aquí.') : L('Per començar, entra a la teva classe amb el codi que et dona el professor.', 'Para empezar, entra en tu clase con el código que te da el profesor.')}</p>
+    ${acc.classe ? '' : `<button class="btn big tgo" onclick="classeModal()">${L('TINC UN CODI DE CLASSE', 'TENGO UN CÓDIGO DE CLASE')}</button>`}</div>
+    <div class="thbot" aria-hidden="true">${bitChar('happy')}</div></section>`;
+  const cards = TECH.map(k => `<button class="tcat" style="--cc:${k.color}" onclick="tLocked(tCourse('${k.id}'))"><span class="tcico">${k.ico}</span><span><b>${tx(k.name)}</b><small>${tx(k.age)} · ${k.units.length} ${L('unitats', 'unidades')}</small><em>${tx(k.desc)}</em></span></button>`).join('');
+  app.innerHTML = tShell('home', `<h2 class="tcath">${L('Els cursos de Numi Tech', 'Los cursos de Numi Tech')}</h2><div class="tcats">${cards}</div>`, hero);
+}
+
+/* ---------- Alta a Numi Tech: amb el codi de classe del professor, o entrant amb l'usuari ---------- */
 function onbTech() {
-  setVariant('tech');
-  app.innerHTML = `<div class="page solo onb tonb"><img class="onb-logo" src="${VAR.logo}" alt="${VAR.name}"><div class="onb-char tapme">${bitChar('happy')}</div>
-    <div class="bubble big">${L(`Hola, <b>${esc(ONB.name)}</b>! Soc en <b>Bit</b>, un robot que només fa el que li programes. <b>Quants anys tens?</b>`, `¡Hola, <b>${esc(ONB.name)}</b>! Soy <b>Bit</b>, un robot que solo hace lo que le programas. <b>¿Cuántos años tienes?</b>`)}</div>
-    <div class="cgrid ages">${[6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16].map((a, i) => `<button class="cbtn" style="animation-delay:${i * 35}ms" onclick="onbTechGo(${a})"><b>${a}${a === 16 ? '+' : ''}</b><small>${L('anys', 'años')}</small></button>`).join('')}</div>
-    <button class="link" onclick="onb(0)">${L('Tornar', 'Volver')}</button></div>`;
+  setVariant('tech'); VIEW = 'onboard';
+  let pre = ''; try { pre = sessionStorage.getItem('numi-classe') || ''; } catch (e) { }
+  app.innerHTML = `<div class="page solo onb tonb"><div class="onbtop">${langPill()}</div><img class="onb-logo" src="${VAR.logo}" alt="${VAR.name}"><div class="onb-char tapme">${bitChar('happy')}</div>
+    <div class="bubble big">${L('Hola! Soc en <b>Bit</b>. Aquí aprendràs a programar robots, crear jocs i fer projectes digitals a la teva classe.', '¡Hola! Soy <b>Bit</b>. Aquí aprenderás a programar robots, crear juegos y hacer proyectos digitales en tu clase.')}</div>
+    <button class="btn big" onclick="loginModal()">${L('ENTRA AMB EL TEU USUARI', 'ENTRA CON TU USUARIO')}</button>
+    <button class="btn big ghost" onclick="onbTechCode()">${L('TINC UN CODI DE CLASSE', 'TENGO UN CÓDIGO DE CLASE')}</button>
+    <p class="mut" style="font-size:14px;margin-top:14px">${L("L'usuari i la contrasenya, o el codi de classe, te'ls dona el teu professor.", 'El usuario y la contraseña, o el código de clase, te los da tu profesor.')}</p></div>`;
+  if (pre) onbTechCode();
 }
-function onbTechGo(age) {
-  ONB.age = age; ONB.variant = 'tech';
+function onbTechCode() {
+  let pre = ''; try { pre = sessionStorage.getItem('numi-classe') || ''; } catch (e) { }
+  app.innerHTML = `<div class="page solo onb tonb"><img class="onb-logo" src="${VAR.logo}" alt="${VAR.name}">
+    <h2 class="tonbh">${L('Entra a la teva classe', 'Entra en tu clase')}</h2>
+    <label class="lbl">${L('Codi de classe', 'Código de clase')}</label><input id="tcl" class="nm" maxlength="12" placeholder="AULA-XXXX" autocapitalize="characters" value="${esc(pre)}">
+    <label class="lbl">${L('El teu nom', 'Tu nombre')}</label><input id="tnm" class="nm" maxlength="16" autocomplete="off" placeholder="${L('Només el nom', 'Solo el nombre')}">
+    <label class="lbl">${L('Inventa un usuari', 'Inventa un usuario')}</label><input id="tus" class="nm" maxlength="20" autocomplete="username" autocapitalize="none" placeholder="${L('p. ex. laia.robot', 'p. ej. laia.robot')}">
+    <label class="lbl">${L('Contrasenya (mínim 4)', 'Contraseña (mínimo 4)')}</label>${passField('tpw', '••••')}
+    <div id="terr" class="err"></div>
+    <button class="btn big" id="tgo" onclick="onbTechGo()">${L('CREA EL COMPTE', 'CREA LA CUENTA')}</button>
+    <button class="link" onclick="onbTech()">${L('Tornar', 'Volver')}</button>
+    <p class="legalf">${L('No posis el cognom ni dades personals a l\'usuari. Guardem el mínim de dades:', 'No pongas el apellido ni datos personales en el usuario. Guardamos el mínimo de datos:')} <a href="https://numimates.com/privacitat?l=${LANG}" target="_blank" rel="noopener">${L('política de privadesa', 'política de privacidad')}</a>.</p></div>`;
+  $(pre ? '#tnm' : '#tcl').focus();
+}
+async function onbTechGo() {
+  const classe = $('#tcl').value.trim(), name = $('#tnm').value.trim(), user = $('#tus').value.trim().toLowerCase(), pass = $('#tpw').value, err = $('#terr');
+  if (!/^(AULA-?)?[A-Z0-9]{4}$/i.test(classe)) return err.textContent = L('Escriu el codi de classe (AULA-XXXX).', 'Escribe el código de clase (AULA-XXXX).');
+  if (!name) return err.textContent = L('Escriu el teu nom.', 'Escribe tu nombre.');
+  if (!/^[a-z0-9._-]{3,20}$/.test(user)) return err.textContent = ERR('usuari-format');
+  if (pass.length < 4) return err.textContent = ERR('contrasenya-format');
+  err.textContent = '…'; $('#tgo').disabled = true;
   const id = 'p' + Date.now().toString(36);
-  P = { id, name: ONB.name, goal: 20, sound: true, unlockAll: false, lang: LANG, ...freshProgress(), course: 0, baseCourse: 0, maxCourse: 0, holdReg: true, variant: 'tech',
-    tech: { c: 'robot', s: {}, port: [], badges: {} }, survey: { curs: 'Numi Tech', age, date: today() } };
-  DB.profiles[id] = P; DB.current = id; saveLocal(); onbAccount();
+  const st = { name, goal: 20, sound: true, unlockAll: false, lang: LANG, ...freshProgress(), course: 0, baseCourse: 0, maxCourse: 0, variant: 'tech', tech: { c: 'robot', s: {}, port: [], badges: {} } };
+  let r; try { r = await api('register', { name, survey: { curs: 'Numi Tech', date: today() }, state: st, username: user, password: pass, variant: 'tech', classe }); } catch (e) { r = { error: 'net' }; }
+  $('#tgo').disabled = false;
+  if (!r.code) return err.textContent = r.error === 'codi-classe' ? L('Aquest codi de classe no existeix. Revisa-ho amb el teu professor.', 'Este código de clase no existe. Revísalo con tu profesor.') : r.error === 'ple' ? L('Aquesta classe ja és plena.', 'Esta clase ya está llena.') : ERR(r.error || 'net');
+  try { sessionStorage.removeItem('numi-classe'); } catch (e) { }
+  P = { id, ...st, code: r.code, username: r.username, classe: r.grup || null, holdReg: false, consent: 'ok' };
+  DB.profiles[id] = P; DB.current = id; saveLocal(); save();
+  SFX.win && SFX.win(); go('home');
+  toast(L(`Benvingut/da a ${esc(r.grup ? r.grup.nom : 'Numi Tech')}!`, `¡Bienvenido/a a ${esc(r.grup ? r.grup.nom : 'Numi Tech')}!`));
 }
+
+// en arrencar, app.js ha pintat la primera pantalla abans que existís aquest fitxer: si és de Numi Tech, es torna a pintar
+setTimeout(() => {
+  if (typeof P !== 'undefined' && P && P.id !== 'tmp' && varOf(P) === 'tech' && VIEW !== 'profiles') go(VIEW && VIEW !== 'onboard' ? VIEW : 'home');
+  else if (VIEW === 'onboard' && (HOST_VAR === 'tech' || VAR_TEST === 'tech')) onbTech();
+}, 0);

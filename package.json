@@ -5,5 +5,9 @@
   "dependencies": {
     "@neondatabase/serverless": "^0.10.4",
     "ai": "^7.0.122"
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.2",
+    "three": "^0.186.1"
   }
 }

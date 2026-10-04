@@ -476,7 +476,7 @@ async function payReturn() {
   if (P.pla === 'premium') {
     SFX.win(); renderHome();
     modal(`<div class="sheet card cent"><div class="mchar tapme">${meC('happy')}</div><h3>${L(`Ja tens ${VAR.name} Premium!`, `¡Ya tienes ${VAR.name} Premium!`)}</h3>
-      <p>${L('Ara pots fer totes les lliçons que vulguis, jugar batalles de mates i seguir la ruta de temporada.', 'Ahora puedes hacer todas las lecciones que quieras, jugar batallas de mates y seguir la ruta de temporada.')}</p>
+      <p>${L('Ara pots fer totes les lliçons que vulguis, fer batalles de mates i seguir la ruta de temporada.', 'Ahora puedes hacer todas las lecciones que quieras, hacer batallas de mates y seguir la ruta de temporada.')}</p>
       <button class="btn big" onclick="closeModal()">${L('SOM-HI!', '¡VAMOS!')}</button></div>`, true);
   } else {
     modal(`<div class="sheet card cent"><h3>${L('Pagament rebut', 'Pago recibido')}</h3><p>${L('Premium s\'activarà en uns minuts. Si d\'aquí a una estona encara no el teniu, escriviu-nos a <b>hola@numimates.com</b>.', 'Premium se activará en unos minutos. Si dentro de un rato todavía no lo tenéis, escribidnos a <b>hola@numimates.com</b>.')}</p>
@@ -1512,7 +1512,7 @@ async function classeJoin() {
   try {
     const r = await api('classe', { code: P.code, classe: v });
     if (!r.grup) { $('#aerr').textContent = r.status === 429 ? ERR('massa') : L('Aquest codi no existeix. Revisa-ho amb el teu docent.', 'Ese código no existe. Revísalo con tu docente.'); return; }
-    P.classe = r.grup; save(); closeModal(); SFX.win(); toast(L(`Ja ets a ${esc(r.grup.nom)}!`, `¡Ya estás en ${esc(r.grup.nom)}!`)); renderProfile();
+    P.classe = r.grup; save(); closeModal(); SFX.win(); toast(L(`Ja ets a ${esc(r.grup.nom)}!`, `¡Ya estás en ${esc(r.grup.nom)}!`)); IS_TECH ? go(VIEW === 'profile' ? 'profile' : 'home') : renderProfile();
   } catch (e) { $('#aerr').textContent = ERR(); }
 }
 // enllaç o QR del docent (?classe=AULA-XXXX): obre el formulari amb el codi ja escrit quan l'alumne ja té compte
@@ -1533,7 +1533,7 @@ function classeLeave() {
 // si el docent tanca el grup o treu l'alumne, l'app se n'assabenta en obrir el perfil
 async function classeRefresh() {
   if (!P || !P.code || !navigator.onLine) return; const was = JSON.stringify(P.classe || null);
-  try { const r = await api('classe', { code: P.code, action: 'info' }); if (r.grup) P.classe = r.grup; else delete P.classe; if (JSON.stringify(P.classe || null) !== was) { saveLocal(); if (VIEW === 'home') renderHome(); } } catch (e) { }
+  try { const r = await api('classe', { code: P.code, action: 'info' }); if (r.grup) P.classe = r.grup; else delete P.classe; if (JSON.stringify(P.classe || null) !== was) { saveLocal(); if (VIEW === 'home') go('home'); } } catch (e) { }
 }
 // Medalles que dona el docent des del panell (amb un comentari). Les noves es mostren en obrir l'app.
 const MEDS = { esforc: ['💪', 'Ha treballat de valent|Ha trabajado a fondo'], ajuda: ['🤝', 'Ha ajudat els companys|Ha ayudado a los compañeros'], idees: ['💡', 'Idees originals|Ideas originales'], millora: ['📈', 'Ha millorat molt|Ha mejorado mucho'],
@@ -1685,6 +1685,7 @@ function onbShell(step, inner, back = true) {
 function onb(step) {
   VIEW = 'onboard';
   setVariant(ONB.variant && (step >= 2 || (step === 1 && ONB.stage)) ? ONB.variant : 'mates');
+  if (step === 0 && (HOST_VAR === 'tech' || VAR_TEST === 'tech') && typeof onbTech === 'function') return onbTech();
   if (step === 0) {
     ONB.stage = null; ONB.variant = null;
     onbShell(0, `<img class="onb-logo" src="${VAR.logo}" alt="${VAR.name}"><div class="onb-char tapme">${charSVG('numi', 'happy')}</div>
@@ -1807,7 +1808,7 @@ function onbFamily() {
     <label class="lbl" for="famMail">${L("Correu d'un adult de casa", 'Correo de un adulto de casa')}</label><input id="famMail" class="nm" type="email" inputmode="email" autocomplete="off" placeholder="${L('correu@exemple.com', 'correo@ejemplo.com')}">
     <div id="famMsg" class="err"></div>
     <button class="btn big" id="famBtn" onclick="onbFamilyGo()">${L('DEMANA PERMÍS', 'PIDE PERMISO')}</button>
-    <button class="btn ghost big" onclick="onbFamilyGo(true)">${L('ARA NO: JUGA EN AQUEST DISPOSITIU', 'AHORA NO: JUEGA EN ESTE DISPOSITIVO')}</button>
+    <button class="btn ghost big" onclick="onbFamilyGo(true)">${L('ARA NO: APRÈN EN AQUEST DISPOSITIU', 'AHORA NO: APRENDE EN ESTE DISPOSITIVO')}</button>
     <button class="link" style="margin-top:6px" onclick="onbFamilyGo('classe')">🏫 ${L('Tinc un codi de classe', 'Tengo un código de clase')}</button>
     <p class="legalf">${L('Sense aquest permís, el teu progrés només es guarda en aquest dispositiu. Guardem el mínim de dades i no hi ha publicitat:', 'Sin este permiso, tu progreso solo se guarda en este dispositivo. Guardamos el mínimo de datos y no hay publicidad:')} <a href="https://numimates.com/privacitat?l=${LANG}" target="_blank" rel="noopener">${L('política de privadesa', 'política de privacidad')}</a>.</p></div>`;
   setTimeout(() => { const i = $('#famMail'); i && i.focus(); i && i.addEventListener('keydown', e => { if (e.key === 'Enter') onbFamilyGo(); }); }, 50);

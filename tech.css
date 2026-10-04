@@ -434,3 +434,26 @@ span.tb.c-cond{color:#3A2600}
 .tbridge{height:0}
 @media (min-width:700px){.tunit2{margin:6px 0 0;border-radius:0}.tunit2:first-of-type{border-radius:26px 26px 0 0}.tunit2:last-of-type{border-radius:0 0 26px 26px}.tnl{max-width:200px}.tnl b{font-size:14.5px}}
 @media (prefers-reduced-motion:reduce){.tnode.cur .tnc::after,.tnbit{animation:none}}
+
+/* món 3D: el dibuix 2D fa de reserva mentre es carrega (o si l'aparell no té WebGL) */
+.b3d{position:relative;width:100%;max-height:44vh;margin:0 auto;border-radius:16px;overflow:hidden;background:linear-gradient(180deg,#A7DCFF 0%,#D8F1FF 60%,#BFE6FF 100%)}
+.b3d>.bitw{width:100%;height:100%;object-fit:contain}
+.b3d.on>.bitw{display:none}
+.b3d .b3c{position:absolute;inset:0;width:100%!important;height:100%!important;display:block;touch-action:pan-y;cursor:grab}
+.b3d .b3c:active{cursor:grabbing}
+@media (min-width:900px){.b3d{max-height:62vh}}
+
+/* catàleg de cursos (quan encara no n'hi ha cap d'assignat) i cursos no assignats */
+.tcath{font-size:20px;margin:18px 2px 10px}
+.tcats{display:grid;gap:12px}
+@media (min-width:700px){.tcats{grid-template-columns:1fr 1fr}}
+.tcat{display:flex;gap:14px;align-items:flex-start;text-align:left;background:#fff;border:2px solid var(--line);border-bottom-width:4px;border-radius:20px;padding:16px;position:relative;overflow:hidden}
+.tcat::before{content:"";position:absolute;inset:0 auto 0 0;width:6px;background:var(--cc)}
+.tcat .tcico{flex:none;width:52px;height:52px;border-radius:16px;display:grid;place-items:center;color:#fff;background:var(--cc)}
+.tcat .tcico svg{width:34px;height:34px;color:#fff}
+.tcat b{display:block;font-size:17px}.tcat small{display:block;color:var(--mut);font-size:13px;font-weight:700;margin:2px 0 6px}
+.tcat em{font-style:normal;font-size:14px;line-height:1.4;font-weight:500;color:var(--ink)}
+.tcrs.lock{opacity:.7}.tcrs.lock small{display:flex;align-items:center;gap:3px}.tcrs.lock small svg{width:12px;height:12px}
+.thero .tcls{margin:-4px 0 10px;font-size:14px;font-weight:800;color:#A9C1FF}
+.tonbh{font-size:24px;margin:6px 0 10px}
+.tonb .lbl{display:block;text-align:left;font-weight:800;font-size:14px;margin:10px 2px 4px;color:var(--mut)}

@@ -380,3 +380,8 @@ details.more[open] summary .i{transform:rotate(90deg)}
 .pquick{display:flex;flex-wrap:wrap;gap:8px}.pquick .btn{white-space:normal;text-align:left}
 .piain{display:flex;gap:8px;align-items:flex-end;border-top:1px solid var(--line);padding-top:12px}
 .piain textarea{flex:1;resize:vertical;min-height:52px}
+
+/* grups de Numi Tech */
+.tfield{display:flex;flex-direction:column;gap:10px;margin:4px 0 8px}
+.tfield .flbl{font-weight:600;font-size:13px;color:var(--t2,#574E62)}
+.tcourse{border:1px solid var(--line);border-radius:12px;padding:10px 12px}

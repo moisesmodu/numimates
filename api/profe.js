@@ -3,6 +3,7 @@ import { who, groupsOf } from './_auth.js';
 import { STRIPE_KEY, stripe, stripeMode, setCancel, setupStripe } from './_stripe.js';
 import { batTables, batState, BWORDS, MEDALS } from './_batalla.js';
 import { randomInt } from 'crypto';
+import { TECH_T } from './_techunits.js';
 // Panell /profe.html. L'administrador ho veu tot i gestiona centres, docents, grups i plans.
 // Un docent només veu (i gestiona) els alumnes dels seus grups; l'admin de centre, tots els del seu centre.
 const L = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
@@ -32,9 +33,11 @@ export default async function handler(req, res) {
         if (!validPass(pass)) { out.push({ name, username: user, error: 'contrasenya-format' }); continue; }
         if ((await sql`SELECT 1 FROM mates.alumnes WHERE username = ${user}`).length) { out.push({ name, username: user, error: 'usuari-ocupat' }); continue; }
         const lang = b.lang === 'es' ? 'es' : 'ca', hash = hashPass(pass);
+        const gt = (await sql`SELECT opts FROM mates.grups WHERE id = ${gid}`)[0], tech = gt && gt.opts && gt.opts.app === 'tech';
         let code = null;
         for (let i = 0; i < 8 && !code; i++) {
-          const c = newStudentCode(), st = { name, lang, code: c, username: user, course: cc, baseCourse: cc, maxCourse: cc, holdReg: false, unlockAll: false, ...(b.prova ? { placeAsk: true } : {}) };
+          const c = newStudentCode(), st = { name, lang, code: c, username: user, course: cc, baseCourse: cc, maxCourse: cc, holdReg: false, unlockAll: false, ...(b.prova && !tech ? { placeAsk: true } : {}),
+            ...(tech ? { variant: 'tech', tech: { c: (gt.opts.tech && gt.opts.tech.courses && gt.opts.tech.courses[0]) || 'robot', s: {}, port: [], badges: {} } } : {}) };
           const q = await sql`INSERT INTO mates.alumnes (code, name, course, survey, state, xp, streak, best, last_day, lessons, answers, correct, username, pass_hash, grup_id, pla)
             VALUES (${c}, ${name}, ${cc}, ${JSON.stringify({ curs: 'alta del docent', date: new Date().toISOString().slice(0, 10) })}, ${JSON.stringify(st)}, 0, 0, 0, NULL, 0, 0, 0, ${user}, ${hash}, ${gid}, 'escola')
             ON CONFLICT DO NOTHING RETURNING code`;
@@ -153,6 +156,14 @@ export default async function handler(req, res) {
         return ok(res, { ok: true, tema });
       }
       const o = b.opts || {}, opts = { batalles: o.batalles !== false, intercanvis: o.intercanvis !== false, xat: o.xat === true };   // el xat amb IA només si el docent l'encén expressament
+      // Numi Tech: el professor tria els cursos del grup i fins a quina sessió poden arribar (classe guiada).
+      // Si la petició no diu res de l'app (p. ex. només canvia les batalles), es conserva el que ja tenia el grup.
+      if (o.app === undefined && !b.app_canvi) { const prev = ((await sql`SELECT opts FROM mates.grups WHERE id = ${+b.id}`)[0] || {}).opts || {}; if (prev.app === 'tech') { o.app = 'tech'; o.tech = o.tech || prev.tech; } }
+      if (o.app === 'tech') {
+        const t = o.tech || {}, courses = [...new Set((Array.isArray(t.courses) ? t.courses : []).filter(c => TECH_T.courses[c]))];
+        const fins = {}; for (const [c, id] of Object.entries(t.fins || {})) if (courses.includes(c) && (id === 'tot' || (TECH_T.s[id] && TECH_T.s[id].c === c))) fins[c] = id;
+        Object.assign(opts, { app: 'tech', tech: { courses, fins, casa: t.casa !== false } });
+      }
       await sql`UPDATE mates.grups SET opts = ${JSON.stringify(opts)}::jsonb WHERE id = ${+b.id}`;
       return ok(res, { ok: true, opts });
     }
