@@ -438,3 +438,19 @@ details.more[open] summary .i{transform:rotate(90deg)}
 .modal{max-height:calc(100vh - 32px);overflow-y:auto}
 
 .tfh{display:flex;justify-content:space-between;align-items:center;gap:8px}
+/* solucionari de Numi Tech */
+.msol summary{display:flex;align-items:baseline;gap:12px;cursor:pointer;list-style:none}.msol summary::-webkit-details-marker{display:none}
+.msol summary h3{margin:0}.msol summary::after{content:"▾";margin-left:auto;color:#8E9BC4}.msol[open] summary::after{content:"▴"}
+.sorow{display:grid;grid-template-columns:78px 1fr;gap:12px;padding:12px 0;border-top:1px solid #E6EBF7}
+.son{display:flex;flex-direction:column;gap:2px}.son b{width:30px;height:30px;border-radius:50%;background:#2F5BEA;color:#fff;display:grid;place-items:center;font-size:14px}.son small{font-size:11.5px;color:#56628A;font-weight:700}
+.soq{margin:0 0 6px;color:#56628A;font-size:13.5px}.soa{margin:0 0 4px}.soex{margin:4px 0 0;font-size:13.5px}.soop{margin:4px 0;font-size:13px;color:#56628A;font-style:italic}
+.sorow ul,.sorow ol{margin:4px 0;padding-left:20px}
+.sobins{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}.sobins>div{background:#F5F7FD;border-radius:10px;padding:8px 10px}
+.soprog{display:flex;flex-direction:column;gap:8px}.soh,.soprog .rdh{display:flex;flex-wrap:wrap;gap:6px;align-items:center;background:#F5F7FD;border-radius:10px;padding:8px}
+.soh>b,.soprog .rdh>b{width:100%;font-size:11.5px;text-transform:uppercase;letter-spacing:.04em;color:#56628A}
+.sob,.soprog .rdb{--bc:#3D7BF4;display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:8px;background:var(--bc);color:#fff;font-size:13px;font-weight:700}
+.sob b,.soprog .rdb b{background:rgba(255,255,255,.92);color:#14204A;border-radius:5px;padding:0 5px}
+.sorow .c-loop{--bc:#1FA463}.sorow .c-cond{--bc:#F2B21B}.sorow .sob.c-cond,.sorow .rdb.c-cond{color:#3A2600}.sorow .c-act{--bc:#F08A24}.sorow .c-art{--bc:#C447A8}.sorow .c-snd{--bc:#14A3B8}.sorow .c-fn{--bc:#8B5CF6}.sorow .c-var{--bc:#E0533F}
+.soin,.soprog .rdin{display:flex;flex-wrap:wrap;gap:6px;width:100%;padding-left:12px;border-left:5px solid #1FA463;margin-left:6px}
+.soelse,.soprog .rdelse{font-size:12px;font-weight:800;background:#F2B21B;color:#3A2600;border-radius:6px;padding:1px 8px}
+.sorow{--b-mov:#3D7BF4;--b-loop:#1FA463;--b-cond:#F2B21B;--b-art:#C447A8;--b-snd:#14A3B8;--b-var:#E0533F;--b-fn:#8B5CF6;--b-act:#F08A24}

@@ -385,8 +385,13 @@ function matSession(c, sid, tabs) {
     ${G.faq ? sec(L('Preguntes que faran (i com respondre-les)', 'Preguntas que harán (y cómo responderlas)'), `<dl class="dl">${G.faq.map(([a, b]) => `<dt>${esc(tx(a))}</dt><dd>${tx(b)}</dd>`).join('')}</dl>`) : ''}
     ${G.tec ? sec(L('Si alguna cosa falla', 'Si algo falla'), `<table class="mini-t"><thead><tr><th>${L('Problema', 'Problema')}</th><th>${L('Què fer', 'Qué hacer')}</th></tr></thead><tbody>${G.tec.map(([a, b]) => `<tr><td>${tx(a)}</td><td>${tx(b)}</td></tr>`).join('')}</tbody></table>`) : ''}
     ${G.seg || G.extra || G.trans ? `<div class="mgrid">${G.seg ? sec(L('Seguretat i benestar', 'Seguridad y bienestar'), list(G.seg)) : ''}${G.extra ? sec(L('Per anar més enllà', 'Para ir más allá'), list(G.extra)) : ''}${G.trans ? sec(L('Connexions', 'Conexiones'), list(G.trans)) : ''}</div>` : ''}
-    ${sec(L('A casa', 'En casa'), `<p>${tx(G.casa)}</p>`)}`;
+    ${sec(L('A casa', 'En casa'), `<p>${tx(G.casa)}</p>`)}
+    ${typeof TSOL !== 'undefined' && TSOL[sid] ? `<details class="card pad msec msol"><summary><h3>${L('Solucionari', 'Solucionario')}</h3><span class="t3">${L(`${TSOL[sid].length} respostes · toca per obrir`, `${TSOL[sid].length} respuestas · toca para abrir`)}</span></summary>
+      <p class="t3">${L('La resposta de cada pas de l\'app, en ordre. Als reptes de programar és una solució possible: n\'hi pot haver d\'altres que també funcionin.', 'La respuesta de cada paso de la app, en orden. En los retos de programar es una solución posible: puede haber otras que también funcionen.')}</p>
+      ${TSOL[sid].map(r => `<div class="sorow"><div class="son"><b>${r.n}</b><small>${esc(r.k[LANG === 'es' ? 1 : 0])}</small></div><div><p class="soq">${esc(r.q[LANG === 'es' ? 1 : 0])}</p>${r.a[LANG === 'es' ? 1 : 0]}</div></div>`).join('')}</details>`
+      : typeof TSOL === 'undefined' ? `<section class="card pad msec"><h3>${L('Solucionari', 'Solucionario')}</h3><p class="t3">${L('Carregant…', 'Cargando…')}</p></section>` : ''}`;
   shell('material', tx(x.t), body, { switcher: false });
+  if (typeof TSOL === 'undefined' && !matSession.loading) { matSession.loading = true; const sc = document.createElement('script'); sc.src = 'tech-sol.js?v=1'; sc.onload = () => { if (location.hash.includes(sid)) matSession(c, sid, tabs); }; document.head.appendChild(sc); }
 }
 
 /* ---------- Assistent amb IA (només administració): analitza les dades de totes les apps i redacta; no fa cap canvi ---------- */

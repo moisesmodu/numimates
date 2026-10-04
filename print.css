@@ -60,3 +60,17 @@ table{width:100%;border-collapse:collapse;margin:6px 0}td,th{border:1px solid #D
 /* emojis convertits en les il·lustracions de Numi (icons.js) */
 img.ic{display:inline-block;width:1.2em;height:1.2em;object-fit:contain;vertical-align:-.22em;margin:0 .02em;pointer-events:none;-webkit-user-drag:none}
 .guide .intro{background:#F3F5FF;border-left:4px solid #3D5AFE;border-radius:8px;padding:8px 14px;margin:6px 0 10px}.guide .intro p{margin:4px 0}
+/* solucionari */
+.sorow{display:grid;grid-template-columns:60px 1fr;gap:10px;padding:7px 0;border-top:1px solid #E1E6F2;break-inside:avoid}
+.son b{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;background:#2F5BEA;color:#fff;font-size:12px}.son small{display:block;font-size:9.5px;color:#56628A;font-weight:700;margin-top:2px}
+.soq{margin:0 0 3px;color:#56628A;font-size:10.5px}.soa,.soex{margin:2px 0;font-size:11px}.soop{margin:2px 0;font-size:10.5px;color:#56628A;font-style:italic}
+.sorow ul,.sorow ol{margin:2px 0;padding-left:16px;font-size:11px}
+.sobins{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.sobins>div{background:#F5F7FD;border-radius:6px;padding:4px 6px}
+.soprog{display:flex;flex-direction:column;gap:4px}.soh,.soprog .rdh{display:flex;flex-wrap:wrap;gap:4px;align-items:center;background:#F5F7FD;border-radius:6px;padding:4px}
+.soh>b,.soprog .rdh>b{width:100%;font-size:9px;text-transform:uppercase;color:#56628A}
+.sob,.soprog .rdb{--bc:#3D7BF4;display:inline-flex;gap:3px;padding:1px 6px;border-radius:5px;background:var(--bc);color:#fff;font-size:10px;font-weight:700;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.sob b,.soprog .rdb b{background:#fff;color:#14204A;border-radius:3px;padding:0 3px}
+.sol .c-loop{--bc:#1FA463}.sol .c-cond{--bc:#F2B21B;color:#3A2600}.sol .c-art{--bc:#C447A8}.sol .c-snd{--bc:#14A3B8}.sol .c-fn{--bc:#8B5CF6}.sol .c-var{--bc:#E0533F}.sol .c-act{--bc:#F08A24}
+.soin,.soprog .rdin{display:flex;flex-wrap:wrap;gap:4px;width:100%;padding-left:8px;border-left:3px solid #1FA463;margin-left:4px}
+.soelse,.soprog .rdelse{font-size:9px;font-weight:800;background:#F2B21B;border-radius:4px;padding:0 5px}
+:root{--b-mov:#3D7BF4;--b-loop:#1FA463;--b-cond:#F2B21B;--b-art:#C447A8;--b-snd:#14A3B8;--b-var:#E0533F;--b-fn:#8B5CF6;--b-act:#F08A24}

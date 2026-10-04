@@ -41,6 +41,10 @@
       ${G.faq ? `<h2>${L('Preguntes que faran (i com respondre-les)', 'Preguntas que harán (y cómo responderlas)')}</h2><dl>${G.faq.map(([a, b]) => `<dt>${esc(T(a))}</dt><dd>${T(b)}</dd>`).join('')}</dl>` : ''}
       ${G.tec ? `<h2>${L('Si alguna cosa falla', 'Si algo falla')}</h2><table>${G.tec.map(([a, b]) => `<tr><td>${T(a)}</td><td>${T(b)}</td></tr>`).join('')}</table>` : ''}
       ${G.seg ? `<h2>${L('Seguretat i benestar', 'Seguridad y bienestar')}</h2>${list(G.seg)}` : ''}${G.extra ? `<h2>${L('Per anar més enllà', 'Para ir más allá')}</h2>${list(G.extra)}` : ''}${G.trans ? `<h2>${L('Connexions', 'Conexiones')}</h2>${list(G.trans)}` : ''}</section>`);
+    const SO = typeof TSOL !== 'undefined' && TSOL[SID], li = LANG === 'es' ? 1 : 0;
+    if (SO) pages.push(`<section class="page guide sol">${head(L('Solucionari', 'Solucionario'))}<h2>${L('Solucionari de la sessió', 'Solucionario de la sesión')}</h2>
+      <p class="intro">${L('La resposta de cada pas de l\'app, en ordre. Als reptes de programar és una solució possible: n\'hi pot haver d\'altres que també funcionin.', 'La respuesta de cada paso de la app, en orden. En los retos de programar es una solución posible: puede haber otras que también funcionen.')}</p>
+      ${SO.map(r => `<div class="sorow"><div class="son"><b>${r.n}</b><small>${esc(r.k[li])}</small></div><div><p class="soq">${esc(r.q[li])}</p>${r.a[li]}</div></div>`).join('')}</section>`);
   } else {
     const sols = [];
     for (const pr of G.print) {
