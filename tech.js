@@ -840,3 +840,5 @@ function tDemo(k, cid, n) {
   tQuit = function () { if (TSS && TSS.demo) { tStop(); TSS = null; return tTypes(); } return q0.apply(this, arguments); };
   tFinish = function () { if (TSS && TSS.demo) return tTypes(); return f0.apply(this, arguments); }; }
 addEventListener('load', () => setTimeout(() => { try { if (new URLSearchParams(location.search).has('tipus') && typeof P !== 'undefined' && P && P.unlockAll && typeof IS_TECH !== 'undefined' && IS_TECH) tTypes(); } catch (e) { } }, 1200));
+// l'enunciat dels editors es veu retallat (2-3 línies): un toc l'obre sencer i un altre el torna a plegar
+document.addEventListener('click', e => { const q = e.target.closest('.tsbody>.tsq2, .tdes>.tsq2'); if (q && !e.target.closest('a,button')) { q.classList.toggle('open'); typeof tFit === 'function' && requestAnimationFrame(tFit); } });

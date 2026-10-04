@@ -686,3 +686,25 @@ span.tb.c-cond{color:#3A2600}
 .ttyc>div:first-child{display:flex;flex-direction:column;min-width:200px;flex:1}.ttyc small{color:var(--mut);font-size:13px}
 .ttyb{display:flex;flex-wrap:wrap;gap:6px}.ttyb button{border:2px solid var(--line);background:#F3F6FF;border-radius:10px;padding:6px 10px;font-weight:800;font-size:13px;color:var(--pri)}.ttyb em{font-style:normal;color:var(--mut);font-weight:700}
 .ttynx{border:0;background:var(--sky);color:var(--pri);font-weight:900;font-size:12.5px;border-radius:10px;padding:5px 9px;white-space:nowrap}
+/* mòbil: dissenyar un repte/missió cap a la pantalla (mapa a la mida de l'alçada, eines en una tira) */
+@media (max-width:899px){
+  .tdesg{gap:8px}
+  .tdesw{width:fit-content;max-width:100%;margin:0 auto;padding:4px}
+  .tdesw .bitw{width:auto;max-width:100%;height:min(34vh,330px);max-height:none}
+  .rdesw canvas{width:auto!important;max-width:100%;height:min(30vh,300px)!important}
+  .tdtools{display:grid;grid-auto-flow:column;grid-auto-columns:72px;grid-template-columns:none;overflow-x:auto;gap:6px;padding-bottom:4px}
+  .tdtools button{padding:5px 2px;font-size:11.5px}.tdti svg{width:30px;height:30px}
+  .tdhelp{margin:4px 2px;font-size:13px}.tdck{margin-top:4px}.tdck li{font-size:13px}
+}
+/* targetes de teoria amb demostració: el programa es desplaça per dins */
+.tlc .rdemo .rdp{max-height:30vh;overflow-y:auto;overscroll-behavior:contain}
+.tlc .rdemo .rdw canvas{max-height:30vh;width:auto;max-width:100%;margin:0 auto;display:block}
+@media (max-width:899px){.tdesg{grid-template-columns:minmax(0,1fr)}.tdesg>*{min-width:0}.tdes input,.tdesg input{max-width:100%;box-sizing:border-box}}
+@media (max-width:899px){
+  .tdes>.tsq2{margin-bottom:6px}
+  .tdes>.tsq2 p{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin:0;font-size:15px;cursor:pointer}
+  .tdes>.tsq2 .tsqc{width:36px}.tdes>.tsq2 .tsqc svg{width:36px;height:44px}
+  .tdes>.tsq2:not(.open) .tcrit{display:none}
+  .tdes>.tsq2.open p{display:block}
+}
+.tsbody>.tsq2:not(.open) p::after,.tdes>.tsq2:not(.open) p::after{content:""}
