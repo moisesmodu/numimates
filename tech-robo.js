@@ -283,6 +283,7 @@ function roboSnap(W, S) {
 function roboShouldEnd(M) {
   const { W, S } = M; if (S.crash) return 'crash'; if (S.t >= W.time - 1e-9) return 'time';
   if (W.ring && S.out) return 'out';
+  { const tg = W.goal.find(g => g.k === 'time'); if (tg && S.doneT === undefined && S.t > tg.max + .5) return 'late'; }   // ja ha passat el temps de la contrarellotge
   if (M.idle() && S.t > .3 && (S.stopT > .4 || !W.goal.some(g => g.stop || g.k === 'stopped' || g.k === 'near')) && !(W.press || []).some(p => !p.done) && !(W.env || []).some(e => e.t > S.t) && !W.goal.some(g => g.k === 'at' && g.t > S.t)) return 'idle';
   if (W.goal.some(g => !['nohit', 'inring', 'time'].includes(g.k)) && !W.goal.some(g => ['at', 'follow', 'cover', 'dist', 'notes'].includes(g.k)) && S.t > .5 && !roboEval(W, S).length) { S.doneT = S.doneT ?? S.t; if (S.stopT > .4 || !W.goal.some(g => g.stop || g.k === 'stopped' || g.k === 'near')) return 'goal'; }
   return null;
@@ -303,8 +304,9 @@ function roboSolves(spec, prog) { for (const [i, sp] of roboAlts(spec).entries()
    condicions: a<b a>b a=b a!=b a<=b a>=b, i també a<b&&c=1 o a<b||c=1 */
 function roboOp(t) { if (/^-?\d+(\.\d+)?$/.test(t)) return +t; if (t === 'dist') return { r: 'dist' }; if (['L', 'M', 'R', 'aL', 'aM', 'aR', 'lL', 'lR', 'A', 'B'].includes(t)) return { r: t }; if (t === 't') return { r: 'time' }; if (t[0] === '$') return { r: 'var', v: t.slice(1) }; throw new Error('RQ: operand desconegut «' + t + '»'); }
 function roboCondP(t) {
-  if (t.includes('&&')) { const [a, b] = t.split('&&'); return { and: [roboCondP(a), roboCondP(b)] }; }
-  if (t.includes('||')) { const [a, b] = t.split('||'); return { or: [roboCondP(a), roboCondP(b)] }; }
+  // «o» lliga menys que «i» (com a MakeCode): L=1||M=1&&R=1 és L=1 || (M=1 && R=1); més de dues parts s'encadenen
+  const i = t.indexOf('||'); if (i >= 0) return { or: [roboCondP(t.slice(0, i)), roboCondP(t.slice(i + 2))] };
+  const j = t.indexOf('&&'); if (j >= 0) return { and: [roboCondP(t.slice(0, j)), roboCondP(t.slice(j + 2))] };
   const m = t.match(/^(.+?)(<=|>=|!=|<|>|=)(.+)$/); if (!m) throw new Error('RQ: condició «' + t + '»');
   return { a: roboOp(m[1]), op: { '<=': '≤', '>=': '≥', '!=': '≠' }[m[2]] || m[2], b: roboOp(m[3]) };
 }
@@ -470,7 +472,7 @@ function rbSlot(l, i) { const on = RB.cur && RB.cur.l === l && RB.cur.i === i; r
 function rbList(list, ro) { if (ro || RB.mode !== 'edit') return list.map(b => rbBlock(b, true)).join(''); return list.map((b, i) => rbSlot(list, i) + rbBlock(b)).join('') + rbSlot(list, list.length); }
 function rbTools(b) {
   const ix = RB.ids[b._id], i = ix.list.indexOf(b);
-  return `<div class="tbtools"><button onclick="rbMove(-1)" ${i === 0 ? 'disabled' : ''} aria-label="${L('Puja', 'Sube')}">↑</button><button onclick="rbMove(1)" ${i === ix.list.length - 1 ? 'disabled' : ''} aria-label="${L('Baixa', 'Baja')}">↓</button>
+  return `<div class="tbtools"><button onclick="rbMove(-1)" ${!rbMoveTo(b, -1) ? 'disabled' : ''} aria-label="${L('Puja', 'Sube')}">↑</button><button onclick="rbMove(1)" ${!rbMoveTo(b, 1) ? 'disabled' : ''} aria-label="${L('Baixa', 'Baja')}">↓</button>
     ${b.k === 'if' && RB.pal.includes('else') ? `<button class="wide" onclick="rbElse()">${b.e ? L('Treu «si no»', 'Quita «si no»') : L('Afegeix «si no»', 'Añade «si no»')}</button>` : ''}
     ${(b.k === 'if' || b.k === 'while' || b.k === 'until') && RB.pal.includes('and') ? `<button class="wide" onclick="rbJoin()">${b.c.and || b.c.or ? L('Una sola condició', 'Una sola condición') : L('Afegeix «i / o»', 'Añade «y / o»')}</button>` : ''}
     <button class="del" onclick="rbDel()">${L('Esborra', 'Borra')}</button></div>`;
@@ -524,7 +526,20 @@ function rbIns(k) {
 }
 function rbCur(li, i) { if (RB.run) rbStop(); RB.cur = { l: RB.lists[li], i }; RB.sel = null; rbDraw(); }
 function rbSel(id) { if (RB.run) rbStop(); const ix = RB.ids[id]; if (!ix) return; RB.sel = RB.sel === ix.b ? null : ix.b; RB.cur = { l: ix.list, i: ix.list.indexOf(ix.b) + 1 }; rbDraw(); }
-function rbMove(d) { const b = RB.sel, l = RB.ids[b._id].list, i = l.indexOf(b), j = i + d; if (j < 0 || j >= l.length) return; l.splice(i, 1); l.splice(j, 0, b); RB.cur = { l, i: j + 1 }; rbFresh(); rbDraw(); }
+// ↑ / ↓: el bloc passa per sobre del veí; entra als bucles i als «si», en surt per la vora i passa d'un guió a l'altre
+const RB_CONT = k => k === 'rep' || k === 'while' || k === 'until' || k === 'if';
+function rbParent(l) { for (const ix of Object.values(RB.ids)) if (ix.b.b === l || ix.b.e === l) return ix; return null; }
+function rbMoveTo(b, d) {
+  const l = RB.ids[b._id].list, i = l.indexOf(b), nb = l[i + d];
+  if (nb && RB_CONT(nb.k)) { const into = d > 0 ? nb.b : (nb.e || nb.b); return into ? { l: into, i: d > 0 ? 0 : into.length } : null; }
+  if (nb) return { l, i: i + d };
+  const par = rbParent(l);
+  if (!par) { const sc = RB.scripts, k = sc.findIndex(x => RB.prog[x] === l), o = sc[k + d]; return o && RB.prog[o] ? { l: RB.prog[o], i: d > 0 ? 0 : RB.prog[o].length } : null; }
+  if (par.b.e === l && d < 0) return { l: par.b.b, i: par.b.b.length };
+  if (par.b.e && par.b.b === l && d > 0) return { l: par.b.e, i: 0 };
+  const j = par.list.indexOf(par.b); return { l: par.list, i: d > 0 ? j + 1 : j };
+}
+function rbMove(d) { const b = RB.sel, l = RB.ids[b._id].list, to = rbMoveTo(b, d); if (!to) return; l.splice(l.indexOf(b), 1); to.l.splice(to.i, 0, b); RB.cur = { l: to.l, i: to.i + 1 }; rbFresh(); rbDraw(); }
 function rbDel() { const b = RB.sel, l = RB.ids[b._id].list, i = l.indexOf(b); l.splice(i, 1); RB.sel = null; RB.cur = { l, i }; rbFresh(); rbDraw(); }
 function rbElse() { const b = RB.sel; b.e = b.e ? null : []; rbFresh(); rbDraw(); }
 function rbJoin() { const b = RB.sel; b.c = b.c.and || b.c.or ? (b.c.and || b.c.or)[0] : { and: [b.c, { a: { r: 'dist' }, op: '>', b: 10 }] }; rbFresh(); rbDraw(); }

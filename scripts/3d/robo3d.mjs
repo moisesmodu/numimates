@@ -91,7 +91,7 @@ export function create(el, W, S, opt = {}) {
     world = new THREE.Group(); scene.add(world); st = { W: W0, objs: [], cps: -1, dark: null };
     const { w, h } = W0;
     // taula i tapet
-    const tw = w + 26, th = h + 26; woodTex.repeat.set(tw / 60, th / 60);
+    const pad = W0.border || W0.ring ? 26 : 1, tw = w + pad, th = h + pad; woodTex.repeat.set(tw / 60, th / 60);   // sense vora, la taula s'acaba on s'acaba el tapet (més enllà, l'aire)
     world.add(mesh(new RoundedBoxGeometry(tw, 4, th, 3, 1.5), std('#C99560', { map: woodTex, roughness: .75 }), { p: [0, -2.05, 0], recv: true, cast: false }));
     const k = Math.min(10, 2048 / Math.max(w, h)), mc = document.createElement('canvas'); mc.width = Math.round(w * k); mc.height = Math.round(h * k);
     st.mat = { c: mc, k, tex: new THREE.CanvasTexture(mc) }; st.mat.tex.colorSpace = THREE.SRGBColorSpace; st.mat.tex.anisotropy = 8;
