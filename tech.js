@@ -730,7 +730,8 @@ function tCoachStart(ed) {
   clearInterval(TCOACH.t); Object.assign(TCOACH, { idle: 0, ran: 0, fails: 0, said: {}, ed });
   const st = document.querySelector('.tsbody>.tstage'); if (!st || TCOACH.ed == null) return;
   const say = document.getElementById('tsay');
-  if (say && typeof MutationObserver === 'function') new MutationObserver(() => { if (say.classList.contains('bad')) TCOACH.fails++; if (say.classList.contains('ok')) TCOACH.fails = 0; }).observe(say, { attributes: true, attributeFilter: ['class'] });
+  if (say && typeof MutationObserver === 'function') new MutationObserver(() => { if (say.classList.contains('bad')) TCOACH.fails++; if (say.classList.contains('ok')) { TCOACH.fails = 0; tStars(ed, say); } }).observe(say, { attributes: true, attributeFilter: ['class'] });
+  st.addEventListener('click', e => { if (e.target.closest('#thint')) TCOACH.hint = true; }, true); TCOACH.hint = false;
   st.addEventListener('pointerdown', () => { TCOACH.idle = 0; document.querySelectorAll('.tcpulse').forEach(e => e.classList.remove('tcpulse')); const y = document.getElementById('tsay'); if (y && y.classList.contains('coach')) { y.className = 'tsay'; y.innerHTML = ''; } }, true);
   st.addEventListener('click', e => { if (e.target.closest('#tbgo,#rbgo,#sggo,.sgo')) TCOACH.ran++; }, true);
   TCOACH.t = setInterval(() => {
@@ -743,4 +744,20 @@ function tCoachStart(ed) {
     else if (n > 0 && !TCOACH.ran && TCOACH.idle >= 15) pulse('#tbgo,#rbgo,#sggo', 'run', ed === 'sg' ? L('💡 Quan vulguis, toca <b>Comença</b> per veure què fan els teus guions.', '💡 Cuando quieras, toca <b>Empieza</b> para ver qué hacen tus guiones.') : L('💡 Quan vulguis, toca <b>Executa</b> per veure què fa el teu programa.', '💡 Cuando quieras, toca <b>Ejecuta</b> para ver qué hace tu programa.'));
     else if (TCOACH.fails >= 2 && TCOACH.idle >= 4) { const step = [...st.querySelectorAll('.trun .btn.ghost')].find(b => /pas a pas|paso a paso/i.test(b.textContent)); if (step) { if (!TCOACH.said.step) { TCOACH.said.step = 1; step.classList.add('tcpulse'); } } else pulse('#thint', 'hint'); }
   }, 1000);
+}
+
+// tres estrelles quan es resol un repte: resolt · sense pistes · amb els blocs justos (els de la solució de referència)
+function tStars(ed, say) {
+  const st = TSS.st; if (!st || !st.sol || !TSS.ready && !say.classList.contains('ok') || say.querySelector('.tstars')) return;
+  const U = TUNDO[ed], S = U && U.S(); if (!S) return;
+  const cnt = v => (tuSer(v).match(/"k":/g) || []).length;
+  let best = 0, used = 0;
+  try {
+    if (ed === 'tb') { best = cnt([typeof st.sol === 'string' ? TQ(st.sol) : st.sol, st.solFns || {}, st.solEv || {}]); used = cnt([S.prog, Object.fromEntries((S.fnEdit || []).map(f => [f, S.fns[f]])), S.evs || {}]); }
+    else if (ed === 'rb') { best = cnt(RQ(st.sol)); used = cnt(S.prog); }
+    else { const P = SQ(st.sol); best = cnt(P); used = cnt(Object.keys(P).map(id => S.progs[id])); }
+  } catch (e) { return; }
+  if (!best || !used) return;
+  const s2 = !TCOACH.hint, s3 = used <= best, n = 1 + s2 + s3;
+  say.insertAdjacentHTML('beforeend', `<span class="tstars" aria-label="${n} ${L('estrelles', 'estrellas')}">${[1, s2, s3].map(x => `<i class="${x ? 'on' : ''}">★</i>`).join('')}</span>${!s3 ? `<small class="tstm">${L(`Repte extra: ho pots fer amb ${best} blocs? (n'has fet servir ${used})`, `Reto extra: ¿lo puedes hacer con ${best} bloques? (has usado ${used})`)}</small>` : !s2 ? `<small class="tstm">${L('La propera, prova-ho sense pista!', '¡La próxima, pruébalo sin pista!')}</small>` : ''}`);
 }
