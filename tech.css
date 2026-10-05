@@ -889,3 +889,98 @@ span.tb.c-cond{color:#3A2600}
 .tdocno>div{max-width:440px;padding:28px;border-radius:22px;background:#fff;color:#14204A;text-align:center;font-weight:600;box-shadow:0 20px 60px rgba(0,0,0,.25)}
 .tdocno b{font-size:22px}
 .tdocno a{display:inline-block;margin-top:6px;padding:12px 20px;border-radius:14px;background:#2F5BEA;color:#fff;text-decoration:none;font-weight:800}
+/* ===================== Mapa de les illes: parades 3D, en Bit en 3D, fitxa en tocar i ambient ===================== */
+.tside>*{flex-shrink:0}
+.tunit2.i3.seaok{background:linear-gradient(180deg,var(--sea1) 0%,var(--sea2) 55%,var(--sea3) 100%)}
+.tunit2.i3::before{opacity:.35}
+.tmap.t3{overflow:visible}
+.tmf{position:absolute;inset:0;animation:tfloat 7s ease-in-out infinite}
+@keyframes tfloat{50%{transform:translateY(-5px)}}
+/* parades: monedes amb relleu */
+.tmap.t3 .tnode{--nd:color-mix(in srgb,var(--uc) 58%,#0B1230);background:none;border:0;padding:0;cursor:pointer;z-index:2;-webkit-tap-highlight-color:transparent}
+.tmap.t3 .tnode::before{content:"";position:absolute;left:4%;right:4%;bottom:-20%;height:34%;border-radius:50%;background:radial-gradient(closest-side,rgba(6,18,38,.5),transparent);z-index:0}
+.tmap.t3 .tnc{border:3.5px solid #fff;color:var(--uc);font-size:clamp(20px,5.4vw,27px);transition:transform .18s cubic-bezier(.3,1.6,.5,1);
+  background:radial-gradient(90% 90% at 32% 22%,#fff 0%,#F2F5FF 46%,#D5DEF3 100%);
+  box-shadow:inset 0 -5px 0 rgba(27,43,107,.1),inset 0 3px 0 #fff,0 5px 0 #B4C2E2,0 7px 0 #93A3CC,0 13px 18px rgba(6,18,38,.38)}
+.tmap.t3 .tnc::before{content:"";position:absolute;left:17%;top:8%;width:46%;height:26%;border-radius:50%;background:linear-gradient(180deg,rgba(255,255,255,.9),rgba(255,255,255,0));pointer-events:none}
+.tmap.t3 .tnc b{position:relative;text-shadow:0 2px 0 rgba(255,255,255,.9)}
+.tmap.t3 .tnc svg{position:relative;width:46%;height:46%}
+.tmap.t3 .tnode:hover .tnc{transform:translateY(-2px)}
+.tmap.t3 .tnode:active .tnc{transform:translateY(4px)}
+.tmap.t3 .tnode.done .tnc{color:#fff;background:radial-gradient(90% 90% at 32% 22%,#FFF6C4 0%,#FFCB3D 42%,#EE9800 100%);box-shadow:inset 0 -5px 0 rgba(160,85,0,.35),inset 0 3px 0 rgba(255,255,255,.7),0 5px 0 #C27400,0 7px 0 #9C5C00,0 13px 18px rgba(6,18,38,.38)}
+.tmap.t3 .tnode.done .tnc svg{filter:drop-shadow(0 2px 0 rgba(150,80,0,.55))}
+.tmap.t3 .tnode.proj .tnc{border-radius:32%;color:#FFD34D;background:radial-gradient(90% 90% at 32% 22%,#C4A2FF 0%,#8355FF 48%,#4A1FB8 100%);box-shadow:inset 0 -5px 0 rgba(0,0,0,.25),inset 0 3px 0 rgba(255,255,255,.35),0 5px 0 #3A178F,0 7px 0 #2A0F6B,0 13px 18px rgba(6,18,38,.4)}
+.tmap.t3 .tnode.proj .tnc svg{filter:drop-shadow(0 2px 0 rgba(0,0,0,.35))}
+.tmap.t3 .tnode.proj.done .tnc{color:#fff;background:radial-gradient(90% 90% at 32% 22%,#FFF6C4 0%,#FFCB3D 42%,#EE9800 100%);box-shadow:inset 0 -5px 0 rgba(160,85,0,.35),inset 0 3px 0 rgba(255,255,255,.7),0 5px 0 #C27400,0 7px 0 #9C5C00,0 13px 18px rgba(6,18,38,.38)}
+.tmap.t3 .tnode.lock .tnc,.tmap.t3 .tnode.soon .tnc{color:#7D88A2;background:radial-gradient(90% 90% at 32% 22%,#F7F8FB 0%,#DCE1EB 55%,#BCC4D4 100%);box-shadow:inset 0 -5px 0 rgba(0,0,0,.08),inset 0 3px 0 #fff,0 5px 0 #97A2BA,0 7px 0 #7C88A2,0 12px 16px rgba(6,18,38,.32)}
+.tmap.t3 .tnode.cur{z-index:4}
+.tmap.t3 .tnode.cur .tnc{color:#fff;transform:scale(1.16);background:radial-gradient(90% 90% at 32% 22%,color-mix(in srgb,var(--uc) 40%,#fff) 0%,var(--uc) 52%,color-mix(in srgb,var(--uc) 62%,#000) 100%);
+  box-shadow:inset 0 -5px 0 rgba(0,0,0,.2),inset 0 3px 0 rgba(255,255,255,.45),0 5px 0 var(--nd),0 7px 0 color-mix(in srgb,var(--nd) 75%,#000),0 13px 22px rgba(6,18,38,.42),0 0 30px 8px color-mix(in srgb,var(--uc) 55%,transparent)}
+.tmap.t3 .tnode.cur:active .tnc{transform:scale(1.16) translateY(4px)}
+.tmap.t3 .tnode.cur .tnc b{text-shadow:0 2px 0 rgba(0,0,0,.25)}
+.tmap.t3 .tnode.cur .tnc::after{inset:-13px;border:3px solid rgba(255,255,255,.95)}
+.tmap.t3 .tnode.sel .tnc{outline:4px solid rgba(255,255,255,.75);outline-offset:4px}
+/* estrelles de les sessions fetes */
+.tnst{position:absolute;left:50%;bottom:-27%;transform:translateX(-50%);display:flex;gap:1px;z-index:3;filter:drop-shadow(0 2px 1px rgba(6,18,38,.45))}
+.tnst i,.tpst i{display:block;width:15px;height:15px;background:rgba(255,255,255,.7);clip-path:polygon(50% 0,63% 34%,100% 36%,71% 59%,81% 96%,50% 75%,19% 96%,29% 59%,0 36%,37% 34%)}
+.tnst i:nth-child(2){transform:translateY(3px)}
+.tnst i.on,.tpst i.on{background:linear-gradient(180deg,#FFF1A6,#FFC531 55%,#F29A00)}
+/* en Bit (3D) al costat de la parada on toca anar */
+.tnbit3{position:absolute;z-index:5;bottom:6%;width:100%;min-width:54px;pointer-events:none;animation:tnbob 2.4s ease-in-out infinite;filter:drop-shadow(0 10px 6px rgba(6,18,38,.38))}
+.tnode.lf .tnbit3{right:88%}.tnode.rt .tnbit3{left:88%}
+.tnode.rt .tnbit3 img{transform:scaleX(-1)}
+.tnbit3 img{width:100%;height:auto;display:block}
+@keyframes tnbob{50%{transform:translateY(-7px)}}
+.tntag{position:absolute;left:50%;bottom:calc(100% + 16px);transform:translateX(-50%);z-index:6;background:#fff;color:var(--uc);font-weight:900;font-size:12px;letter-spacing:.07em;text-transform:uppercase;padding:6px 11px;border-radius:11px;white-space:nowrap;box-shadow:0 4px 0 rgba(6,18,38,.2),0 8px 16px rgba(6,18,38,.2);animation:tntag 1.8s ease-in-out infinite}
+.tntag::after{content:"";position:absolute;left:50%;bottom:-5px;width:11px;height:11px;margin-left:-5.5px;background:#fff;transform:rotate(45deg);border-radius:2px}
+@keyframes tntag{50%{transform:translateX(-50%) translateY(-4px)}}
+/* fitxa de la parada */
+.tpop{--nd2:color-mix(in srgb,var(--uc) 58%,#0B1230);position:absolute;z-index:20;width:min(236px,72%);background:#fff;border-radius:18px;padding:12px 14px 14px;display:flex;flex-direction:column;gap:4px;text-align:left;
+  box-shadow:0 20px 44px rgba(6,18,38,.38),0 0 0 1px rgba(27,43,107,.06);animation:tpop .24s cubic-bezier(.2,.9,.3,1.3) both}
+.tpop.up{transform-origin:var(--ax) 100%}.tpop.dn{transform-origin:var(--ax) 0}
+.tpop::after{content:"";position:absolute;left:calc(var(--ax) - 9px);width:18px;height:18px;background:#fff;transform:rotate(45deg);border-radius:3px}
+.tpop.up::after{bottom:-7px}.tpop.dn::after{top:-7px}
+@keyframes tpop{from{opacity:0;transform:scale(.85)}}
+.tpk{font-size:11.5px;font-weight:900;letter-spacing:.07em;text-transform:uppercase;color:var(--uc)}.tpk em{font-style:normal;color:#6B3DF0}
+.tpop>b{font-size:17px;line-height:1.22;color:var(--ink)}
+.tpm{font-size:13px;color:var(--mut);font-weight:700}
+.tpst{display:flex;align-items:center;gap:2px}.tpst i{background:#DCE3F2}.tpst small{margin-left:6px;font-weight:800;color:#C27400;font-size:12.5px}
+.tpgo{position:relative;z-index:1;margin-top:8px;display:flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:14px;padding:11px 14px;font:inherit;font-weight:900;font-size:15px;letter-spacing:.05em;text-transform:uppercase;color:#fff;cursor:pointer;
+  background:linear-gradient(180deg,color-mix(in srgb,var(--uc) 78%,#fff),var(--uc));box-shadow:0 4px 0 var(--nd2)}
+.tpgo:active{transform:translateY(3px);box-shadow:0 1px 0 var(--nd2)}
+.tpgo svg{width:16px;height:16px}
+.tpgo.lock{background:#EEF1F8;color:#7D88A2;box-shadow:0 4px 0 #C9D0DE}
+/* ambient: ombres de núvols, espurnes a l'aigua i gavines */
+.tfx{position:absolute;pointer-events:none}
+.tfcl{inset:0;z-index:1;background:radial-gradient(26% 15% at 25% 50%,rgba(6,22,48,.2),transparent 70%),radial-gradient(20% 12% at 75% 50%,rgba(6,22,48,.15),transparent 70%);background-size:120% 60%;background-repeat:repeat;mix-blend-mode:multiply;animation:tfcl 46s linear infinite;
+  -webkit-mask-image:radial-gradient(ellipse 58% 52% at 50% 50%,#000 62%,transparent 82%);mask-image:radial-gradient(ellipse 58% 52% at 50% 50%,#000 62%,transparent 82%)}
+@keyframes tfcl{from{background-position:0 0}to{background-position:-120% 60%}}
+.tfgl{inset:0;z-index:1;background-image:radial-gradient(circle,rgba(255,255,255,.95) 0 1.2px,transparent 1.8px),radial-gradient(circle,rgba(255,255,255,.7) 0 1px,transparent 1.5px);background-size:52px 40px,37px 29px;background-position:0 0,18px 11px;animation:tfgl 5s ease-in-out infinite alternate;
+  -webkit-mask-image:radial-gradient(ellipse 66% 58% at 50% 52%,transparent 70%,#000 88%);mask-image:radial-gradient(ellipse 66% 58% at 50% 52%,transparent 70%,#000 88%)}
+@keyframes tfgl{from{opacity:.25;background-position:0 0,18px 11px}to{opacity:.85;background-position:8px 3px,10px 16px}}
+.tfbd{z-index:3;top:5%;left:0;width:34%;overflow:visible;fill:none;stroke:#1E3350;stroke-width:1.3;stroke-linecap:round;opacity:.75;animation:tbird 30s linear infinite}
+.tfbd .tbd1{transform:translate(10px,10px);animation:tflap .7s ease-in-out infinite alternate;transform-box:fill-box;transform-origin:center}
+.tfbd .tbd2{transform:translate(30px,20px);animation:tflap .6s ease-in-out infinite alternate-reverse;transform-box:fill-box;transform-origin:center}
+@keyframes tbird{from{transform:translateX(-40%)}to{transform:translateX(330%)}}
+@keyframes tflap{to{scale:1 .45}}
+@media (prefers-reduced-motion:reduce){.tmf,.tfcl,.tfgl,.tfbd,.tfbd g,.tnbit3,.tntag{animation:none}}
+.tmap.t3 .tisl3{-webkit-mask-image:radial-gradient(ellipse 50% 50% at 50% 50%,#000 76%,transparent 100%);mask-image:radial-gradient(ellipse 50% 50% at 50% 50%,#000 76%,transparent 100%)}
+.tunit2.i3::before{display:none}
+.tfgl{background-image:radial-gradient(ellipse 5px 1.4px,rgba(255,255,255,.95),transparent),radial-gradient(ellipse 3.5px 1.1px,rgba(255,255,255,.8),transparent),radial-gradient(ellipse 4px 1.2px,rgba(255,255,255,.7),transparent);background-size:113px 71px,67px 97px,151px 53px;background-position:0 0,31px 17px,73px 41px;
+  -webkit-mask-image:radial-gradient(ellipse 50% 50% at 50% 50%,transparent 62%,#000 78%,transparent 98%);mask-image:radial-gradient(ellipse 50% 50% at 50% 50%,transparent 62%,#000 78%,transparent 98%)}
+@keyframes tfgl{from{opacity:.2;background-position:0 0,31px 17px,73px 41px}to{opacity:.9;background-position:9px 2px,22px 21px,80px 38px}}
+.tunit2.i3.seaok{background:linear-gradient(180deg,var(--sea1) 0%,color-mix(in srgb,var(--sea1),var(--sea3)) 55%,var(--sea3) 100%)}
+.tmap.t3 .tmf{inset:-6%}
+/* targetes dels cursos: cada curs amb el seu color, relleu i la icona 3D */
+.tcrs{position:relative;overflow:hidden;border:0;border-radius:20px;min-width:124px;padding:13px 15px 12px;background:linear-gradient(160deg,#fff 0%,color-mix(in srgb,var(--cc) 9%,#fff) 100%);
+  box-shadow:inset 0 0 0 2px color-mix(in srgb,var(--cc) 16%,#E6ECFA),0 4px 0 color-mix(in srgb,var(--cc) 26%,#D3DCF0),0 12px 22px rgba(27,43,107,.08);transition:transform .15s}
+.tcrs::after{content:"";position:absolute;right:-26px;bottom:-30px;width:86px;height:86px;border-radius:50%;background:radial-gradient(circle,color-mix(in srgb,var(--cc) 22%,transparent),transparent 70%);pointer-events:none}
+.tcrs>*{position:relative;z-index:1}
+.tcrs:hover{transform:translateY(-2px)}.tcrs:active{transform:translateY(2px)}
+.tcrs .tcico{width:44px;height:44px;display:grid;place-items:center;border-radius:14px;background:radial-gradient(90% 90% at 30% 25%,#fff,color-mix(in srgb,var(--cc) 16%,#fff));box-shadow:inset 0 -3px 0 color-mix(in srgb,var(--cc) 18%,transparent),0 3px 8px rgba(27,43,107,.1)}
+.tcrs .tcico .tci3{font-size:30px;filter:drop-shadow(0 3px 2px rgba(27,43,107,.2))}
+.tcrs.on{color:#fff;background:linear-gradient(155deg,color-mix(in srgb,var(--cc) 82%,#fff) 0%,var(--cc) 45%,color-mix(in srgb,var(--cc) 62%,#14204A) 100%);
+  box-shadow:0 5px 0 color-mix(in srgb,var(--cc) 52%,#000),0 14px 28px color-mix(in srgb,var(--cc) 38%,transparent)}
+.tcrs.on b{color:#fff}.tcrs.on small{color:rgba(255,255,255,.88)}
+.tcrs.on::after{background:radial-gradient(circle,rgba(255,255,255,.28),transparent 70%)}
+.tcrs.on .tcico{background:rgba(255,255,255,.22);box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.35)}

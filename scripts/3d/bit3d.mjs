@@ -62,7 +62,7 @@ function texs() {
 const markTex = (k, on) => canvasTex(96, 96, (g) => { g.fillStyle = on ? '#FFC531' : '#FFFFFF'; g.beginPath(); g.arc(48, 48, 42, 0, 7); g.fill(); g.lineWidth = 7; g.strokeStyle = '#20306A'; g.stroke(); g.fillStyle = '#20306A'; g.font = '900 52px Lexend, system-ui, sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(k, 48, 52); });
 
 /* ---------- En Bit ---------- */
-function makeBit() {
+export function makeBit() {
   const m = mats(), g = geos(), bit = new THREE.Group(), body = new THREE.Group(); bit.add(body);
   // cos arrodonit amb una franja i el llum del pit
   body.add(mesh(new RoundedBoxGeometry(.46, .3, .4, 4, .12), m.body, { p: [0, .32, 0] }));
