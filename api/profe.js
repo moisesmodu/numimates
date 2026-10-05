@@ -1,4 +1,6 @@
-import { sql, ok, body, cleanCode, validPass, hashPass, dropToks, cleanUser, validUser, newStudentCode, eraseStudent } from './_lib.js';
+import { sql, ok, body, cleanCode, validPass, hashPass, dropToks, cleanUser, validUser, newStudentCode, eraseStudent, sealTmp, openTmp } from './_lib.js';
+let tmpCol = false;
+const ensureTmp = async () => { if (!tmpCol) { await sql`ALTER TABLE mates.docents ADD COLUMN IF NOT EXISTS pass_tmp text`; tmpCol = true; } };
 import { who, groupsOf } from './_auth.js';
 import { STRIPE_KEY, stripe, stripeMode, setCancel, setupStripe } from './_stripe.js';
 import { batTables, batState, BWORDS, MEDALS } from './_batalla.js';
@@ -183,6 +185,7 @@ export default async function handler(req, res) {
       return ok(res, { ok: true });
     }
     if (b.action === 'docent_save') {
+      await ensureTmp();
       const nom = String(b.nom || '').trim().slice(0, 80), email = String(b.email || '').trim().toLowerCase(), rol = b.rol === 'admin_centre' ? 'admin_centre' : 'docent', centre = int(b.centre_id);
       // nom d'usuari: el que posi l'admin o, si no, la part del correu abans de l'arrova
       const usuari = (String(b.usuari || '').trim().toLowerCase() || email.split('@')[0]).replace(/[^a-z0-9._-]/g, '').slice(0, 30) || null;
@@ -191,11 +194,13 @@ export default async function handler(req, res) {
         // el rol «admin» no es pot posar ni treure des del panell (i un administrador no es pot desactivar)
         if (b.id) { await sql`UPDATE mates.docents SET nom = ${nom}, email = ${email}, usuari = ${usuari}, rol = CASE WHEN rol = 'admin' THEN 'admin' ELSE ${rol} END, centre_id = ${centre}, actiu = (rol = 'admin' OR ${b.actiu !== false}) WHERE id = ${+b.id}`; return ok(res, { ok: true }); }
         const p = tmpPass();
-        const r = await sql`INSERT INTO mates.docents (nom, email, usuari, rol, centre_id, pass_hash) VALUES (${nom}, ${email}, ${usuari}, ${rol}, ${centre}, ${hashPass(p)}) ON CONFLICT (email) DO NOTHING RETURNING id, usuari`;
+        const r = await sql`INSERT INTO mates.docents (nom, email, usuari, rol, centre_id, pass_hash, pass_tmp) VALUES (${nom}, ${email}, ${usuari}, ${rol}, ${centre}, ${hashPass(p)}, ${sealTmp(p)}) ON CONFLICT (email) DO NOTHING RETURNING id, usuari`;
         return r.length ? ok(res, { ok: true, password: p, usuari: r[0].usuari }) : ok(res, { error: 'ja existeix' }, 409);
       } catch (e) { return ok(res, { error: 'usuari ocupat' }, 409); }
     }
-    if (b.action === 'docent_pass') { const p = tmpPass(); await sql`UPDATE mates.docents SET pass_hash = ${hashPass(p)} WHERE id = ${+b.id}`; return ok(res, { ok: true, password: p }); }
+    if (b.action === 'docent_pass') { await ensureTmp(); const p = tmpPass(); await sql`UPDATE mates.docents SET pass_hash = ${hashPass(p)}, pass_tmp = ${sealTmp(p)} WHERE id = ${+b.id}`; return ok(res, { ok: true, password: p }); }
+    // tornar a veure la contrasenya provisional (només si el docent encara no l'ha canviada)
+    if (b.action === 'docent_veure') { await ensureTmp(); const d = (await sql`SELECT pass_tmp FROM mates.docents WHERE id = ${+b.id}`)[0]; const p = d && d.pass_tmp ? openTmp(d.pass_tmp) : null; return p ? ok(res, { ok: true, password: p }) : ok(res, { error: 'canviada' }, 404); }
     // subscripció de Stripe d'un alumne: cancel·lar al final del període o desfer-ho (només l'administrador)
     if ((b.action === 'sub_cancel' || b.action === 'sub_resume') && me.admin) {
       if (!STRIPE_KEY) return ok(res, { error: 'sense subscripció' }, 409);
@@ -267,6 +272,7 @@ export default async function handler(req, res) {
   let contacts = [];
   try { contacts = await sql`SELECT * FROM mates.contactes ORDER BY created_at DESC LIMIT 100`; } catch (e) { /* la taula es crea amb la primera petició del web */ }
   const centres = await sql`SELECT c.*, (SELECT count(*)::int FROM mates.alumnes a JOIN mates.grups g ON g.id = a.grup_id WHERE g.centre_id = c.id AND a.active) AS alumnes FROM mates.centres c ORDER BY c.nom`;
-  const docents = await sql`SELECT id, nom, email, usuari, rol, centre_id, actiu, last_login FROM mates.docents ORDER BY nom`;
+  await ensureTmp();
+  const docents = await sql`SELECT id, nom, email, usuari, rol, centre_id, actiu, last_login, (pass_tmp IS NOT NULL) AS tmp FROM mates.docents ORDER BY nom`;
   return ok(res, { admin: true, me: me.docent || null, rows, battles, trades, contacts, centres, docents, grups: groups });
 }
