@@ -44,7 +44,7 @@ TVALID.dpriv = st => { const out = []; if (!(st.fields || []).length) out.push('
 /* =====================================================================================================================
    Interfície dels passos
    ===================================================================================================================== */
-const digQ = st => `<div class="tqh"><span class="tqbit">${bitChar(st.mood || 'think')}</span><h2 class="tsq">${tval(st.q)}</h2></div>`;
+const digQ = st => `<div class="tqh"><span class="tqbit">${typeof tHost === 'function' ? tHost(st.mood || 'think') : bitChar(st.mood || 'think')}</span><h2 class="tsq">${tval(st.q)}</h2></div>`;
 if (typeof TSTEP !== 'undefined') {
   // dpass: { q, need: 3, personal?: ['laia'], tip?, sol? } — el que s'escriu NO es desa ni s'envia enlloc
   TSTEP.dpass = function (st) {

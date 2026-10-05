@@ -1027,3 +1027,6 @@ span.tb.c-cond{color:#3A2600}
 /* Robòtica: la mascota és el Maqueen de veritat */
 .tubot.mq{width:78px}.tubot.mq img{width:78px;height:auto;display:block;filter:drop-shadow(0 6px 6px rgba(0,0,0,.3));transform:rotate(-4deg)}
 .tnbit3 img[src*="maqueen"]{transform:none!important;width:120%;margin-left:-10%}
+.tqbit .tqmq{width:100%;height:auto;display:block;filter:drop-shadow(0 4px 4px rgba(0,0,0,.25))}
+@media (max-width:600px){.tlc .sdcode{max-height:24vh;overflow-y:auto;overscroll-behavior:contain}}
+.tqvis{display:flex;gap:12px;justify-content:center;align-items:center;flex-wrap:wrap}.tqvis>.tart.sm{margin:0;flex:0 1 auto}

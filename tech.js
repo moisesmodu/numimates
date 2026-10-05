@@ -345,14 +345,15 @@ function tFit() {
 }
 function tFitWatch() {
   const b = document.querySelector('.tsess>.tsbody'); if (!b) return;
-  const go = () => { cancelAnimationFrame(TFIT.raf); TFIT.raf = requestAnimationFrame(tFit); };
+  // un sol ajust per fotograma, que no es cancel·la (les demos animades canvien el DOM a cada fotograma i el deixaven sense fer)
+  const go = () => { if (TFIT.raf) return; TFIT.raf = requestAnimationFrame(() => { TFIT.raf = 0; tFit(); }); };
   const imgs = () => b.querySelectorAll('img').forEach(i => i.complete || i.addEventListener('load', go, { once: true }));
   if (TFIT.ro) TFIT.ro.disconnect();
-  if (typeof MutationObserver === 'function') { TFIT.ro = new MutationObserver(() => { imgs(); go(); }); TFIT.ro.observe(b, { childList: true, subtree: true, characterData: true }); }
+  if (typeof MutationObserver === 'function') { TFIT.ro = new MutationObserver(ms => { if (ms.every(m => m.target.closest && m.target.closest('.sstage,.tdw,.rdw,.tani,.thud,.svars'))) return; imgs(); go(); }); TFIT.ro.observe(b, { childList: true, subtree: true, characterData: true }); }
   imgs();
   go(); setTimeout(go, 400); setTimeout(go, 1500);
 }
-addEventListener('resize', () => { if (document.querySelector('.tsess')) { cancelAnimationFrame(TFIT.raf); TFIT.raf = requestAnimationFrame(tFit); } });
+addEventListener('resize', () => { if (document.querySelector('.tsess') && !TFIT.raf) TFIT.raf = requestAnimationFrame(() => { TFIT.raf = 0; tFit(); }); });
 // botó de baix: «Continua» (activat quan el pas està fet) o el que demani el pas
 function tFoot(label, fn, on = true, extra = '') {
   const f = document.getElementById('tsf'); if (!f) return;
@@ -391,6 +392,13 @@ function tFinish() {
 }
 
 /* ---------- Tipus de pas ---------- */
+// qui fa les preguntes a cada curs: el Maqueen a Robòtica, en Numi a Creadors (l'estudi), en Bit a la resta
+function tHost(mood = 'think') {
+  const c = typeof TSS !== 'undefined' && TSS && TSS.c ? TSS.c.id : '';
+  if (c === 'robotica') return `<img class="tqmq" src="img/tech/maqueen-${/happy|win|dance/.test(mood) ? 'happy' : 'idle'}.webp" alt="" width="72" height="72">`;
+  if (c === 'creadors') return charSVG('numi', /think/.test(mood) ? 'think' : mood);
+  return bitChar(mood);
+}
 const tWho = (who, mood) => who === 'bit' ? bitChar(mood || 'idle') : charSVG('numi', mood || 'happy');
 const tBubble = (who, html, mood) => `<div class="tsay2 w-${who || 'numi'}"><div class="tsc2">${tWho(who, mood)}</div><div class="bubble big">${html}</div></div>`;
 const TSTEP = {
@@ -411,7 +419,7 @@ const TSTEP = {
     const blk = h => h.replace(/«([^«»<]{2,60})»/g, (m, t) => { const c = (QB.find(([r]) => r.test(t)) || [])[1]; return c ? `<span class="tqb c-${c}">${t}</span>` : m; });
     const order = st.keep ? st.opts.map((_, i) => i) : shuffle(st.opts.map((_, i) => i));
     let pick = null;
-    $('#tsb').innerHTML = `<div class="tcol">${st.who ? tBubble(st.who, tval(st.q)) : `<div class="tqh"><span class="tqbit">${bitChar('think')}</span><h2 class="tsq">${tval(st.q)}</h2></div>`}${st.art ? `<div class="tart sm">${typeof st.art === 'function' ? st.art() : st.art}</div>` : ''}${st.w ? (() => { const W = bitWorld(st.w); return `<div class="tart sm">${bitSVG(W, bitSim(W))}</div>`; })() : ''}
+    $('#tsb').innerHTML = `<div class="tcol">${st.who ? tBubble(st.who, tval(st.q)) : `<div class="tqh"><span class="tqbit">${tHost('think')}</span><h2 class="tsq">${tval(st.q)}</h2></div>`}${(() => { const v = [st.art ? `<div class="tart sm">${typeof st.art === 'function' ? st.art() : st.art}</div>` : '', st.w ? (() => { const W = bitWorld(st.w); return `<div class="tart sm">${bitSVG(W, bitSim(W))}</div>`; })() : ''].filter(Boolean); return v.length > 1 ? `<div class="tqvis">${v.join('')}</div>` : v.join(''); })()}
       <div class="topts ${st.grid ? 'grid' : ''}">${order.map((i, k) => `<button class="topt" data-i="${i}"><span class="tol">${'ABCDEF'[k]}</span><span class="tot">${blk(tval(st.opts[i]))}</span></button>`).join('')}</div><div class="tfb" id="tfb"></div></div>`;
     document.querySelectorAll('.topt').forEach(b => b.onclick = () => { if (TSS.ready) return; pick = +b.dataset.i; document.querySelectorAll('.topt').forEach(x => x.classList.toggle('on', x === b)); SFX.tap && SFX.tap(); tFoot(L('Comprova', 'Comprueba'), check); });
     const check = () => {
@@ -430,7 +438,7 @@ const TSTEP = {
     let ord = shuffle(st.items.map((_, i) => i)); if (ord.every((v, i) => v === i) && ord.length > 1) ord.reverse();
     let phase = 'sort'; const first = { v: true };
     const draw = () => {
-      $('#tsb').innerHTML = `<div class="tcol tseqw">${st.who ? tBubble(st.who, tval(st.q)) : `<div class="tqh"><span class="tqbit">${bitChar('think')}</span><h2 class="tsq">${tval(st.q)}</h2></div>`}
+      $('#tsb').innerHTML = `<div class="tcol tseqw">${st.who ? tBubble(st.who, tval(st.q)) : `<div class="tqh"><span class="tqbit">${tHost('think')}</span><h2 class="tsq">${tval(st.q)}</h2></div>`}
         <div class="tfb" id="tfb"></div>
         ${phase === 'sort' ? `<p class="dhint">${L('Arrossega les targetes (o fes servir les fletxes) per posar-les en ordre.', 'Arrastra las tarjetas (o usa las flechas) para ponerlas en orden.')}</p>` : ''}
         <ol class="tseq2">${ord.map((v, k) => `<li class="tsq2i ${phase !== 'sort' ? (v === k ? 'ok' : 'ko') : ''}" data-k="${k}"><span class="tsqn">${k + 1}</span><span class="tsqt">${tval(st.items[v])}</span>${phase === 'sort' ? `<span class="tsqa"><button data-m="-1" ${k === 0 ? 'disabled' : ''} aria-label="${L('Puja', 'Sube')}">↑</button><button data-m="1" ${k === ord.length - 1 ? 'disabled' : ''} aria-label="${L('Baixa', 'Baja')}">↓</button></span><span class="tsqg" aria-hidden="true">⋮⋮</span>` : phase === 'retry' ? `<i class="dcm">${v === k ? '✓' : '✕'}</i>` : '<i class="dcm">✓</i>'}</li>`).join('')}</ol></div>`;
