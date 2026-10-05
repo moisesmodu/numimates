@@ -24,6 +24,9 @@ async function load() {
   if (r.status === 401 || r.status === 403) { const adm = wasAdmin(); sessionStorage.clear(); return login(L('La sessió ha caducat. Torna a entrar.', 'La sesión ha caducado. Vuelve a entrar.'), adm); }
   if (r.status !== 200) return banner(L("El servidor no respon ara mateix. Torna-ho a provar d'aquí a un moment.", 'El servidor no responde ahora mismo. Vuelve a intentarlo en un momento.'));
   D = await r.json(); ADMIN = !!D.admin; ME = D.me || null; GRUPS = D.grups || [];
+  // el material de Numi Tech (guies i solucionari) només arriba amb sessió; la presentació i les fitxes s'obren en una altra pestanya
+  try { localStorage.setItem('numi-dt', dtok()); } catch (e) { }
+  if (typeof TGUIDE === 'undefined' && typeof TGUARD !== 'undefined') await TGUARD.load(['c1', 'c2', 'c3', 'c5']);
   if (G && !GRUPS.some(g => String(g.id) === G)) G = '';
   ROWS = (D.rows || []).map(enrich);
   route.last = null; route();
@@ -162,7 +165,7 @@ function login(err = '', admin = location.hash === '#admin') {
     load();
   };
 }
-function logout() { sessionStorage.clear(); D = null; ROWS = []; GRUPS = []; ME = null; ADMIN = false; closeDrawer(true); $$('.modal-s,.proj').forEach(x => x.remove()); clearInterval(PROJ_T); history.replaceState(null, '', location.pathname); login(); }
+function logout() { sessionStorage.clear(); try { localStorage.removeItem('numi-dt'); } catch (e) { } D = null; ROWS = []; GRUPS = []; ME = null; ADMIN = false; closeDrawer(true); $$('.modal-s,.proj').forEach(x => x.remove()); clearInterval(PROJ_T); history.replaceState(null, '', location.pathname); login(); }
 function setLang(l, onLogin) { LANG = l; store.set('numi-profe-lang', l); document.documentElement.lang = l; if (onLogin && !D) return login(); ROWS = (D?.rows || []).map(enrich); route.last = null; route(); }
 
 /* ---------- carcassa ---------- */
@@ -353,7 +356,7 @@ const hasGuide = id => typeof TGUIDE !== 'undefined' && !!TGUIDE[id];
 function vMaterial(c, sid) {
   const T = typeof TECH_T !== 'undefined' ? TECH_T : null; if (!T || !T.courses[c]) return shell('material', L('Material del professor', 'Material del profesor'), `<div class="card pad">${L('No hi ha aquest curs.', 'No existe este curso.')}</div>`, { switcher: false });
   const C = T.courses[c], sess = Object.entries(T.s).filter(([, x]) => x.c === c);
-  const tabs = `<div class="mtabs">${Object.entries(T.courses).map(([k, x]) => `<a href="#/material/${k}" class="${k === c ? 'on' : ''}">${esc(tx(x.n))}</a>`).join('')}</div>`;
+  const tabs = `<div class="mtabs">${Object.entries(T.courses).filter(([, x]) => x.ready).map(([k, x]) => `<a href="#/material/${k}" class="${k === c ? 'on' : ''}">${esc(tx(x.n))}</a>`).join('')}</div>`;
   if (sid && T.s[sid]) return matSession(c, sid, tabs);
   const units = {}; sess.forEach(([id, x]) => (units[x.u] ||= []).push([id, x]));
   const body = `${tabs}<p class="t2" style="margin:4px 0 16px">${esc(tx(C.age))} · ${C.units} ${L('unitats', 'unidades')} · ${C.total} ${L('sessions de 60 minuts', 'sesiones de 60 minutos')}. ${L('Cada sessió té la guia (objectius, pla de la classe, errors típics i avaluació), la presentació per projectar i les fitxes per imprimir.', 'Cada sesión tiene la guía (objetivos, plan de la clase, errores típicos y evaluación), la presentación para proyectar y las fichas para imprimir.')}</p>
@@ -362,7 +365,7 @@ function vMaterial(c, sid) {
   shell('material', L('Material del professor', 'Material del profesor'), body, { switcher: false });
 }
 function matSession(c, sid, tabs) {
-  const T = TECH_T, x = T.s[sid], G = TGUIDE[sid];
+  const T = TECH_T, x = T.s[sid], G = typeof TGUIDE !== 'undefined' ? TGUIDE[sid] : null;
   if (!G) return shell('material', tx(x.t), `${tabs}<div class="card pad">${L('Aquesta sessió encara no té material.', 'Esta sesión aún no tiene material.')}</div>`, { switcher: false });
   const list = a => `<ul class="bullets">${(a || []).map(v => `<li>${tx(v)}</li>`).join('')}</ul>`;
   const sec = (t, b) => `<section class="card pad msec"><h3>${t}</h3>${b}</section>`;
@@ -391,7 +394,7 @@ function matSession(c, sid, tabs) {
       ${TSOL[sid].map(r => `<div class="sorow"><div class="son"><b>${r.n}</b><small>${esc(r.k[LANG === 'es' ? 1 : 0])}</small></div><div><p class="soq">${esc(r.q[LANG === 'es' ? 1 : 0])}</p>${r.a[LANG === 'es' ? 1 : 0]}</div></div>`).join('')}</details>`
       : typeof TSOL === 'undefined' ? `<section class="card pad msec"><h3>${L('Solucionari', 'Solucionario')}</h3><p class="t3">${L('Carregant…', 'Cargando…')}</p></section>` : ''}`;
   shell('material', tx(x.t), body, { switcher: false });
-  if (typeof TSOL === 'undefined' && !matSession.loading) { matSession.loading = true; const sc = document.createElement('script'); sc.src = 'tech-sol.js?v=1'; sc.onload = () => { if (location.hash.includes(sid)) matSession(c, sid, tabs); }; document.head.appendChild(sc); }
+  if (typeof TSOL === 'undefined' && !matSession.loading && typeof TGUARD !== 'undefined') { matSession.loading = true; TGUARD.load(['sol']).then(ok => { if (ok && location.hash.includes(sid)) matSession(c, sid, tabs); }); }
 }
 
 /* ---------- Assistent amb IA (només administració): analitza les dades de totes les apps i redacta; no fa cap canvi ---------- */

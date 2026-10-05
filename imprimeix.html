@@ -19,15 +19,11 @@
 <script src="tech-bot.js"></script>
 <script src="tech-c1.js"></script>
 <script src="tech-robo.js"></script>
-<script src="tech-guide-c1.js"></script>
 <script src="tech-c2.js"></script>
-<script src="tech-guide-c2.js"></script>
 <script src="tech-c3.js"></script>
-<script src="tech-guide-c3.js"></script>
 <script src="tech-c5.js"></script>
-<script src="tech-guide-c5.js"></script>
-<script src="tech-sol.js"></script>
-<script src="print.js?v=2"></script>
+<script src="tech-guard.js"></script>
+<script>TGUARD.load(['c1', 'c2', 'c3', 'c5', 'sol']).then(ok => ok ? TGUARD.after('print.js?v=3') : TGUARD.deny(document.getElementById('doc')));</script>
 <script src="icons.js"></script>
 </body>
 </html>
