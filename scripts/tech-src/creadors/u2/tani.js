@@ -18,6 +18,15 @@
   const VS = L('vestit següent', 'disfraz siguiente');
 
   Object.assign(TANI, {
+    // un segon partit en trossos iguals (per a les preguntes amb decimals): 2 meitats de 0,5 s o 4 quarts de 0,25 s
+    // (a mida real, 230 d'ample: a les preguntes es veu petit)
+    g2sec(n = 2) {
+      const x0 = 14, w = 202, part = w / n, lab = n === 2 ? '0,5 s' : n === 4 ? '0,25 s' : stgNum(Math.round(100 / n) / 100) + ' s';
+      const cols = ['#FFC531', '#FFDF7A'];
+      const segs = Array.from({ length: n }, (_, i) => `<rect x="${x0 + i * part + 1.5}" y="40" width="${part - 3}" height="26" rx="7" fill="${cols[i % 2]}" stroke="#B07A00" stroke-width="1.5"/><text x="${x0 + i * part + part / 2}" y="58" text-anchor="middle" class="tat s">${lab}</text>`).join('');
+      return `<svg class="tani" viewBox="0 0 230 92" aria-hidden="true"><rect x="60" y="6" width="110" height="26" rx="13" fill="#14204A"/><text x="115" y="24" text-anchor="middle" class="tat s w">${L('Això és 1 segon', 'Esto es 1 segundo')}</text>
+        ${segs}<path d="M${x0} 76V86M${x0 + w} 76V86M${x0} 81H${x0 + w}" stroke="#14204A" stroke-width="2" stroke-linecap="round"/><text x="${x0}" y="80" text-anchor="start" dx="4" class="tat s" style="font-size:11px">0</text><text x="${x0 + w}" y="80" text-anchor="end" dx="-4" class="tat s" style="font-size:11px">1 s</text></svg>`;
+    },
     // un dibuix animat són molts dibuixos que canvien de pressa (el llibret que es passa amb el dit)
     g2flip() {
       const fish = c => g2a('peix', c, 0, 0, 92);

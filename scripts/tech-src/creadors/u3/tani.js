@@ -25,6 +25,23 @@ Object.assign(TANI, (() => {
   const ground = (x, y, w, h, top = '#BFE8FF', bot = '#E9F7FF', gr = '#7CC456') => `<defs><linearGradient id="g3sky${x}${y}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${top}"/><stop offset="1" stop-color="${bot}"/></linearGradient></defs><rect x="${x}" y="${y}" width="${w}" height="${h}" rx="16" fill="url(#g3sky${x}${y})" stroke="#DCE4FA" stroke-width="2"/><path d="M${x} ${y + h - 34}q${w / 2} -16 ${w} 0v${18}q0 16 -16 16h-${w - 32}q-16 0 -16 -16z" fill="${gr}"/>`;
 
   return {
+    // «guanya l'últim»: dos guions escriuen a la mateixa bafarada al mateix fotograma i només es veu la darrera frase;
+    // amb una espera al segon guió, cada frase té el seu torn
+    g3race() {
+      const D = 9, vis = (a, b) => show('0;1;0', `0;${a};${b}`, D), HC = '#B07A00', AC = '#C447A8';
+      const ring = (x, y, w, a, b) => `<rect x="${x - 3}" y="${y - 3}" width="${w + 6}" height="34" rx="10" fill="none" stroke="#FFC531" stroke-width="4" opacity="0">${vis(a, b)}</rect>`;
+      const say1 = L('digues «Miau!»', 'di «¡Miau!»'), say2 = L('digues «Bon dia!»', 'di «¡Buenos días!»'), when = L('Quan toco el gat', 'Al tocar al gato');
+      return tSvg(236, `<text x="12" y="13" class="tat s" style="fill:#6A78A8">${L('guió 1', 'guion 1')}</text>${hat(10, 18, 176, [when], HC)}${blk(18, 50, 160, say1, AC)}${ring(18, 50, 160, .06, .2)}${ring(18, 50, 160, .55, .7)}
+        <text x="12" y="94" class="tat s" style="fill:#6A78A8">${L('guió 2', 'guion 2')}</text>${hat(10, 99, 176, [when], HC)}
+        <g>${vis(0, .5)}${blk(18, 131, 160, say2, AC)}</g>${ring(18, 131, 160, .06, .2)}
+        <g opacity="0">${vis(.5, 1)}${blk(18, 131, 160, L('espera 1 s', 'espera 1 s'), '#1FA463')}${blk(18, 163, 160, say2, AC)}</g>${ring(18, 163, 160, .74, .88)}
+        ${spr('gat', 0, 258, 156, 74)}
+        <g opacity="0">${vis(.1, .14)}${bub(200, 74, 112, L('Miau!', '¡Miau!'))}</g><g opacity="0">${vis(.55, .74)}${bub(200, 74, 112, L('Miau!', '¡Miau!'))}</g>
+        <g opacity="0">${vis(.14, .5)}${bub(198, 74, 116, L('Bon dia!', '¡Buenos días!'))}<g transform="translate(256 50)"><text x="0" y="0" text-anchor="middle" class="tat s" style="fill:#C2410C">${L('Miau!', '¡Miau!')}</text><path d="M-24 -5H24" stroke="#EF5A5A" stroke-width="3" stroke-linecap="round"/></g></g>
+        <g opacity="0">${vis(.74, .98)}${bub(198, 74, 116, L('Bon dia!', '¡Buenos días!'))}</g>
+        <g opacity="0">${vis(.06, .5)}<rect x="10" y="206" width="300" height="26" rx="13" fill="#FDECEC"/><text x="160" y="224" text-anchor="middle" class="tat s" style="fill:#C2410C">${L('Al mateix fotograma: només es veu l\'última frase', 'En el mismo fotograma: solo se ve la última frase')}</text></g>
+        <g opacity="0">${vis(.5, 1)}<rect x="10" y="206" width="300" height="26" rx="13" fill="#E2F6EA"/><text x="160" y="224" text-anchor="middle" class="tat s" style="fill:#1E7A42">${L('Amb «espera 1 s» al guió 2: cada frase, al seu torn', 'Con «espera 1 s» en el guion 2: cada frase, en su turno')}</text></g>`);
+    },
     // esdeveniment: toques el gat → el guió «Quan toco aquest personatge» comença → vestit següent i «Miau!»
     g3event() {
       const D = 5.5;

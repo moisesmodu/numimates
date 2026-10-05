@@ -77,6 +77,19 @@ Object.assign(TANI, (() => {
         <g ${tA(3.9, 'ta-fade')}><path d="M${X(100)} 184H${X(-100) + 6}" stroke="#F08A24" stroke-width="5" stroke-linecap="round"/><path d="M${X(-100) + 12} 177l-9 7l9 7" fill="none" stroke="#F08A24" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>${pill(160, 201, 120, L('enrere: -200', 'atrás: -200'), '#F08A24')}</g>
         <g>${MV(`0 0;0 0;${X(100) - 160} 0;${X(100) - 160} 0;${X(-100) - 160} 0;${X(-100) - 160} 0;0 0`, '0;.18;.28;.56;.68;.94;1')}${spr('tuga', 132, 92, 56, 56, 1)}</g>`);
     },
+    // la recta de la x per a les preguntes: on és l'actor ara (sense dir on acabarà). A l'esquerra del 0, els negatius
+    g1line(x0 = 0, art = 'numi') {
+      // dibuixada a mida real (230 punts d'ample), perquè a les preguntes es veu petita
+      const X = v => 115 + v * 206 / 480, Y = 58;
+      let tk = '';
+      for (let v = -200; v <= 200; v += 50) tk += `<path d="M${X(v)} ${Y - (v % 100 ? 4 : 7)}V${Y + (v % 100 ? 4 : 7)}" stroke="#14204A" stroke-width="${v ? 2 : 3}" stroke-linecap="round"/>${v % 100 ? '' : `<text x="${X(v)}" y="${Y + 23}" text-anchor="middle" class="tat s"${v < 0 ? ' style="fill:#C2410C"' : v > 0 ? ' style="fill:#1E7A42"' : ''}>${v}</text>`}`;
+      const px = Math.max(30, Math.min(200, X(x0) + (X(x0) > 150 ? -46 : 46)));
+      return `<svg class="tani" viewBox="0 0 230 88" aria-hidden="true"><rect x="${X(-240)}" y="${Y - 11}" width="${X(0) - X(-240)}" height="22" rx="7" fill="#FFE7D1"/><rect x="${X(0)}" y="${Y - 11}" width="${X(240) - X(0)}" height="22" rx="7" fill="#DDF5E7"/>
+        <text x="${X(-236)}" y="${Y + 5}" class="tat b" style="fill:#C2410C">−</text><text x="${X(236)}" y="${Y + 5}" text-anchor="end" class="tat b" style="fill:#1E7A42">+</text>
+        <path d="M${X(-216)} ${Y}H${X(222)}" stroke="#E0533F" stroke-width="2.6" stroke-linecap="round"/>${tk}
+        ${spr(art, X(x0) - 19, 2, 38, 38, 0)}<path d="M${X(x0)} 40V${Y - 7}" stroke="#14204A" stroke-width="2" stroke-dasharray="3 3"/><circle cx="${X(x0)}" cy="${Y}" r="5" fill="#FFC531" stroke="#14204A" stroke-width="2"/>
+        <rect x="${px - 30}" y="10" width="60" height="22" rx="11" fill="#14204A"/><text x="${px}" y="26" text-anchor="middle" class="tat s w">x = ${x0}</text></svg>`;
+    },
     // la direcció: 90 mira a la dreta, 180 avall, -90 a l'esquerra i 0 amunt; «gira 90 graus» és un quart de volta cap a la dreta
     g1dir() {
       const cx = 86, cy = 104, R = 64;
@@ -161,6 +174,15 @@ Object.assign(TANI, (() => {
   const VS = L('vestit següent', 'disfraz siguiente');
 
   Object.assign(TANI, {
+    // un segon partit en trossos iguals (per a les preguntes amb decimals): 2 meitats de 0,5 s o 4 quarts de 0,25 s
+    // (a mida real, 230 d'ample: a les preguntes es veu petit)
+    g2sec(n = 2) {
+      const x0 = 14, w = 202, part = w / n, lab = n === 2 ? '0,5 s' : n === 4 ? '0,25 s' : stgNum(Math.round(100 / n) / 100) + ' s';
+      const cols = ['#FFC531', '#FFDF7A'];
+      const segs = Array.from({ length: n }, (_, i) => `<rect x="${x0 + i * part + 1.5}" y="40" width="${part - 3}" height="26" rx="7" fill="${cols[i % 2]}" stroke="#B07A00" stroke-width="1.5"/><text x="${x0 + i * part + part / 2}" y="58" text-anchor="middle" class="tat s">${lab}</text>`).join('');
+      return `<svg class="tani" viewBox="0 0 230 92" aria-hidden="true"><rect x="60" y="6" width="110" height="26" rx="13" fill="#14204A"/><text x="115" y="24" text-anchor="middle" class="tat s w">${L('Això és 1 segon', 'Esto es 1 segundo')}</text>
+        ${segs}<path d="M${x0} 76V86M${x0 + w} 76V86M${x0} 81H${x0 + w}" stroke="#14204A" stroke-width="2" stroke-linecap="round"/><text x="${x0}" y="80" text-anchor="start" dx="4" class="tat s" style="font-size:11px">0</text><text x="${x0 + w}" y="80" text-anchor="end" dx="-4" class="tat s" style="font-size:11px">1 s</text></svg>`;
+    },
     // un dibuix animat són molts dibuixos que canvien de pressa (el llibret que es passa amb el dit)
     g2flip() {
       const fish = c => g2a('peix', c, 0, 0, 92);
@@ -304,6 +326,23 @@ Object.assign(TANI, (() => {
   const ground = (x, y, w, h, top = '#BFE8FF', bot = '#E9F7FF', gr = '#7CC456') => `<defs><linearGradient id="g3sky${x}${y}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${top}"/><stop offset="1" stop-color="${bot}"/></linearGradient></defs><rect x="${x}" y="${y}" width="${w}" height="${h}" rx="16" fill="url(#g3sky${x}${y})" stroke="#DCE4FA" stroke-width="2"/><path d="M${x} ${y + h - 34}q${w / 2} -16 ${w} 0v${18}q0 16 -16 16h-${w - 32}q-16 0 -16 -16z" fill="${gr}"/>`;
 
   return {
+    // «guanya l'últim»: dos guions escriuen a la mateixa bafarada al mateix fotograma i només es veu la darrera frase;
+    // amb una espera al segon guió, cada frase té el seu torn
+    g3race() {
+      const D = 9, vis = (a, b) => show('0;1;0', `0;${a};${b}`, D), HC = '#B07A00', AC = '#C447A8';
+      const ring = (x, y, w, a, b) => `<rect x="${x - 3}" y="${y - 3}" width="${w + 6}" height="34" rx="10" fill="none" stroke="#FFC531" stroke-width="4" opacity="0">${vis(a, b)}</rect>`;
+      const say1 = L('digues «Miau!»', 'di «¡Miau!»'), say2 = L('digues «Bon dia!»', 'di «¡Buenos días!»'), when = L('Quan toco el gat', 'Al tocar al gato');
+      return tSvg(236, `<text x="12" y="13" class="tat s" style="fill:#6A78A8">${L('guió 1', 'guion 1')}</text>${hat(10, 18, 176, [when], HC)}${blk(18, 50, 160, say1, AC)}${ring(18, 50, 160, .06, .2)}${ring(18, 50, 160, .55, .7)}
+        <text x="12" y="94" class="tat s" style="fill:#6A78A8">${L('guió 2', 'guion 2')}</text>${hat(10, 99, 176, [when], HC)}
+        <g>${vis(0, .5)}${blk(18, 131, 160, say2, AC)}</g>${ring(18, 131, 160, .06, .2)}
+        <g opacity="0">${vis(.5, 1)}${blk(18, 131, 160, L('espera 1 s', 'espera 1 s'), '#1FA463')}${blk(18, 163, 160, say2, AC)}</g>${ring(18, 163, 160, .74, .88)}
+        ${spr('gat', 0, 258, 156, 74)}
+        <g opacity="0">${vis(.1, .14)}${bub(200, 74, 112, L('Miau!', '¡Miau!'))}</g><g opacity="0">${vis(.55, .74)}${bub(200, 74, 112, L('Miau!', '¡Miau!'))}</g>
+        <g opacity="0">${vis(.14, .5)}${bub(198, 74, 116, L('Bon dia!', '¡Buenos días!'))}<g transform="translate(256 50)"><text x="0" y="0" text-anchor="middle" class="tat s" style="fill:#C2410C">${L('Miau!', '¡Miau!')}</text><path d="M-24 -5H24" stroke="#EF5A5A" stroke-width="3" stroke-linecap="round"/></g></g>
+        <g opacity="0">${vis(.74, .98)}${bub(198, 74, 116, L('Bon dia!', '¡Buenos días!'))}</g>
+        <g opacity="0">${vis(.06, .5)}<rect x="10" y="206" width="300" height="26" rx="13" fill="#FDECEC"/><text x="160" y="224" text-anchor="middle" class="tat s" style="fill:#C2410C">${L('Al mateix fotograma: només es veu l\'última frase', 'En el mismo fotograma: solo se ve la última frase')}</text></g>
+        <g opacity="0">${vis(.5, 1)}<rect x="10" y="206" width="300" height="26" rx="13" fill="#E2F6EA"/><text x="160" y="224" text-anchor="middle" class="tat s" style="fill:#1E7A42">${L('Amb «espera 1 s» al guió 2: cada frase, al seu torn', 'Con «espera 1 s» en el guion 2: cada frase, en su turno')}</text></g>`);
+    },
     // esdeveniment: toques el gat → el guió «Quan toco aquest personatge» comença → vestit següent i «Miau!»
     g3event() {
       const D = 5.5;

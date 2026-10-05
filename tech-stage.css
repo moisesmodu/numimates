@@ -36,3 +36,41 @@
 
 .rhat .rhadd{margin-left:auto;width:30px;height:30px;border-radius:50%;border:0;background:rgba(255,255,255,.25);color:#fff;font:800 20px/1 inherit;cursor:pointer}.rhat .rhadd:hover{background:rgba(255,255,255,.4)}
 .rnum.rrnd{align-items:center}.rnum.rrnd span{font-weight:800;color:var(--ink2,#3A4570)}.rnum.rrnd input{width:84px}
+/* eixos de coordenades (botó a l'escenari): la x en vermell, la y en verd, com a les animacions de la unitat 4 */
+.sstage{container-type:inline-size}
+.saxes{position:absolute;inset:0;width:100%;height:100%;display:none;pointer-events:none;z-index:5;overflow:visible}
+.sstage.ax-on .saxes{display:block;animation:saxin .25s ease-out}
+@keyframes saxin{from{opacity:0}to{opacity:1}}
+.saxes path{vector-effect:non-scaling-stroke;fill:none}
+.saxes .saxg{stroke:rgba(20,32,74,.2);stroke-width:1px;stroke-dasharray:4 4}
+.saxes .saxg.w{stroke:rgba(255,255,255,.2);stroke-width:1.5px;stroke-dasharray:none}
+.saxh{stroke:#fff;stroke-width:5.5px;stroke-linecap:round;opacity:.85}
+.saxk{stroke:#14204A;stroke-width:1.8px;stroke-linecap:round;opacity:.75}
+.saxm{stroke-linecap:round;filter:drop-shadow(0 0 1.5px #fff)}
+.saxes{--axf:14}
+.saxt{font-family:Lexend,system-ui,sans-serif;font-weight:800;font-size:calc(var(--axf) * 1px);paint-order:stroke;stroke:#fff;stroke-width:calc(var(--axf) * .3px);stroke-linejoin:round;letter-spacing:.01em}
+.saxt.n{font-size:calc(var(--axf) * 1.35px);font-weight:900}.saxt.m{font-weight:900}.saxt.p{font-size:calc(var(--axf) * .92px)}
+.saxme path{stroke-width:2.4px;stroke-dasharray:6 5;stroke-linecap:round;filter:drop-shadow(0 0 1.5px #fff)}
+.saxme circle,.saxpt circle{stroke:#fff;stroke-width:2px}
+.saxpt path,.saxpt circle{filter:drop-shadow(0 0 1.5px #fff)}
+.sctl .sax{color:#6A78A8}
+@container (max-width:340px){.sctl{gap:4px;right:6px;top:6px}.sctl button{width:34px;height:34px;border-radius:10px}.sctl .sgo svg{width:20px;height:20px}.sctl .sax svg{width:19px;height:19px}.sctl .sst i{width:13px;height:13px}}.sctl .sax svg{width:22px;height:22px}
+.sctl .sax.on{background:#14204A;border-color:#fff;color:#fff;box-shadow:0 0 0 2px #14204A,0 3px 8px rgba(20,32,74,.25)}
+/* l'etiqueta «x · y» del personatge triat i la del dit (a baix de l'escenari) */
+.sxy{position:absolute;left:6px;right:6px;bottom:6px;display:none;flex-wrap:wrap;gap:4px;justify-content:space-between;align-items:flex-end;pointer-events:none;z-index:500}
+.sstage.ax-on .sxy{display:flex}
+.sxy>span{display:inline-flex;align-items:center;gap:.45em;max-width:100%;background:rgba(20,32,74,.9);color:#fff;border-radius:99px;padding:.28em .75em .28em .35em;font:800 clamp(10px,3.1cqw,14px)/1.15 Lexend,system-ui,sans-serif;box-shadow:0 3px 10px rgba(20,32,74,.25);white-space:nowrap}
+.sxy i{display:block;width:1.7em;height:1.7em;flex:none;border-radius:50%;background:rgba(255,255,255,.14);overflow:hidden}.sxy i svg,.sxy i img{display:block;width:100%;height:100%;object-fit:contain}
+.sxy i.ptr{display:grid;place-items:center;background:none;color:#FFC531}.sxy i.ptr svg{width:1.25em;height:1.25em}
+.sxy b{font-weight:800;opacity:.85;overflow:hidden;text-overflow:ellipsis;max-width:7em}
+.sxy em{font-style:normal;font-variant-numeric:tabular-nums;font-weight:900}.sxy em.x{color:#FF9C8F}.sxy em.y{color:#8EE6B4}
+.sxypt{margin-left:auto}
+/* la paleta graduada i la base del programa */
+.tpal .spaltog{flex:0 0 auto;display:inline-flex;align-items:center;gap:6px;min-height:44px;padding:6px 12px;border-radius:12px;border:2px dashed #B9C3E2;background:#fff;color:#3A4570;font:800 13px/1.15 Lexend,system-ui,sans-serif;white-space:nowrap}
+.tpal .spaltog b{display:grid;place-items:center;width:22px;height:22px;border-radius:50%;background:#14204A;color:#fff;font-size:16px;line-height:1}
+.tpal .spaltog.on{border-style:solid;background:#F3F6FF}
+.sbase{display:inline-flex;align-items:center;gap:5px;height:28px;padding:0 10px 0 7px;border-radius:9px;background:#FFF3E4;border:2px solid #F5C7A0;color:#B4501A;font:800 12.5px/1 Lexend,system-ui,sans-serif;white-space:nowrap}
+.sbase svg{width:15px;height:15px}
+@media (max-width:420px){.sbase span{max-width:9.5em;overflow:hidden;text-overflow:ellipsis}}
+/* a un escenari molt petit (editors plens al mòbil) no hi cap el botó dels eixos, si no és que el pas els fa servir */
+@container (max-width:230px){.sstage:not(.ax-on) .sctl .sax{display:none}.sxy b{display:none}}

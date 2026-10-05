@@ -8,7 +8,7 @@ Object.assign(TBADGE, {
 COURSE_UNITS[2] = { t: 'Animació|Animación', d: 'Vestits, bucles i temps|Disfraces, bucles y tiempo', color: '#C447A8', s: [
 
   /* ---------- Sessió 1 · Dibuixos que es mouen (vestits i esperar) ---------- */
-  { id: 'g2-1', t: 'Dibuixos que es mouen|Dibujos que se mueven', min: 40, badge: 'g_vestits',
+  { id: 'g2-1', t: 'Dibuixos que es mouen|Dibujos que se mueven', min: 45, badge: 'g_vestits',
     learn: ["Un personatge té diversos <b>vestits</b> (dibuixos) i, si els canviem de pressa, sembla que es mou.|Un personaje tiene varios <b>disfraces</b> (dibujos) y, si los cambiamos deprisa, parece que se mueve.",
       "«Vestit següent» passa al dibuix següent i «posa el vestit» tria un número concret.|«Disfraz siguiente» pasa al dibujo siguiente y «pon el disfraz» elige un número concreto.",
       "Sense «espera», els canvis són tan ràpids que no es veuen: l'espera dona temps a mirar.|Sin «espera», los cambios son tan rápidos que no se ven: la espera da tiempo a mirar."],
@@ -94,7 +94,7 @@ COURSE_UNITS[2] = { t: 'Animació|Animación', d: 'Vestits, bucles i temps|Disfr
     ] },
 
   /* ---------- Sessió 2 · Bucles per sempre (per sempre, fotogrames, ritme, rebotar) ---------- */
-  { id: 'g2-2', t: 'Bucles per sempre|Bucles para siempre', min: 40, badge: 'g_persempre',
+  { id: 'g2-2', t: 'Bucles per sempre|Bucles para siempre', min: 45, badge: 'g_persempre',
     learn: ["«Per sempre» repeteix els blocs de dins sense parar, i cada volta del bucle dura un fotograma: l'escenari en dibuixa 30 cada segon.|«Por siempre» repite los bloques de dentro sin parar, y cada vuelta del bucle dura un fotograma: el escenario dibuja 30 cada segundo.",
       "La velocitat és una multiplicació (mou-te 6 per volta = 6 × 30 = 180 punts per segon), i l'espera marca el ritme dels vestits.|La velocidad es una multiplicación (muévete 6 por vuelta = 6 × 30 = 180 puntos por segundo), y la espera marca el ritmo de los disfraces.",
       "«Si toques la vora, rebota», dins del bucle, fa que el personatge doni la volta i no surti de l'escenari; el que hi ha a sota d'un «per sempre» no es fa mai.|«Si tocas el borde, rebota», dentro del bucle, hace que el personaje dé la vuelta y no salga del escenario; lo que hay debajo de un «por siempre» no se hace nunca."],
@@ -103,7 +103,7 @@ COURSE_UNITS[2] = { t: 'Animació|Animación', d: 'Vestits, bucles i temps|Disfr
         opts: ['Torna al vestit 1|Vuelve al disfraz 1', "Es queda amb el vestit 2|Se queda con el disfraz 2", 'Desapareix|Desaparece'], a: 0,
         ex: "Després de l'últim vestit, torna a començar pel primer.|Después del último disfraz, vuelve a empezar por el primero." },
       { k: 'quiz', ph: 'recorda', q: "Recorda el <b>repeteix</b> d'en Bit: aquí funciona igual. Quant dura <b>repeteix 4 vegades { vestit següent, espera 0,5 s }</b>?|Recuerda el <b>repite</b> de Bit: aquí funciona igual. ¿Cuánto dura <b>repite 4 veces { disfraz siguiente, espera 0,5 s }</b>?",
-        opts: ['Uns 2 segons|Unos 2 segundos', 'Mig segon|Medio segundo', '4 segons|4 segundos'], a: 0, ex: "4 voltes de mig segon: 4 × 0,5 = 2 segons. I després s'acaba.|4 vueltas de medio segundo: 4 × 0,5 = 2 segundos. Y después se acaba." },
+        art: () => TANI.g2sec(2), opts: ['Uns 2 segons|Unos 2 segundos', 'Mig segon|Medio segundo', '4 segons|4 segundos'], a: 0, ex: "4 voltes de mig segon: 4 × 0,5 = 2 segons. I després s'acaba.|4 vueltas de medio segundo: 4 × 0,5 = 2 segundos. Y después se acaba." },
       { k: 'story', ph: 'missio', who: 'numi', scene: 'moll', title: 'El tanc gran|El tanque grande',
         t: "La Marina està contenta: el peix de la setmana passada ja mou la cua! Però… només 2 segons. «La pantalla ha d'estar encesa <b>tot el dia</b>», diu. «El peix ha de nedar i nedar sense parar.»|Marina está contenta: ¡el pez de la semana pasada ya mueve la cola! Pero… solo 2 segundos. «La pantalla tiene que estar encendida <b>todo el día</b>», dice. «El pez tiene que nadar y nadar sin parar.»" },
       { k: 'story', ph: 'missio', who: 'numi', mood: 'think',
@@ -115,11 +115,13 @@ COURSE_UNITS[2] = { t: 'Animació|Animación', d: 'Vestits, bucles i temps|Disfr
           tip: "Quan poses un bucle, els blocs nous ja hi van a dins. Per posar-ne un a sota, toca l'espai que hi ha just a sota del bucle.|Cuando pones un bucle, los bloques nuevos ya van dentro. Para poner uno debajo, toca el espacio que hay justo debajo del bucle." },
         { k: 'Fotogrames|Fotogramas', t: '30 fotogrames cada segon|30 fotogramas cada segundo', anim: 'g2fps',
           x: "L'escenari es redibuixa <b>30 vegades cada segon</b>: són els <span class='hl'>fotogrames</span>. Cada volta d'un bucle espera el fotograma següent. Per això un <b>mou-te 6</b> dins d'un «per sempre» avança 6 punts a cada fotograma: <b>6 × 30 = 180 punts per segon</b>.|El escenario se redibuja <b>30 veces cada segundo</b>: son los <span class='hl'>fotogramas</span>. Cada vuelta de un bucle espera el fotograma siguiente. Por eso un <b>muévete 6</b> dentro de un «por siempre» avanza 6 puntos en cada fotograma: <b>6 × 30 = 180 puntos por segundo</b>.",
+          tip: "Un <b>fotograma</b> és cada dibuix de l'animació, com cada pàgina d'un llibret que passes de pressa amb el dit.|Un <b>fotograma</b> es cada dibujo de la animación, como cada página de un librito que pasas deprisa con el dedo.",
           bad: "Per anar el doble de ràpid, poso dos «per sempre» un sota l'altre.|Para ir el doble de rápido, pongo dos «por siempre» uno debajo del otro.", good: "Per anar el doble de ràpid, doblo el número: de mou-te 3 a mou-te 6.|Para ir el doble de rápido, doblo el número: de muévete 3 a muévete 6." },
         { k: 'Ritme|Ritmo', t: "El ritme de l'animació|El ritmo de la animación",
           media: { k: 'stage', w: { bg: 'cel', sprites: [{ id: 'rapid', art: 'ocell', x: -115, y: 10, size: 120, rot: 'lr', name: 'Ocell ràpid|Pájaro rápido' }, { id: 'lent', art: 'ocell', x: 115, y: 10, size: 120, rot: 'lr', name: 'Ocell lent|Pájaro lento' }] },
             prog: '@rapid flag{ say:"espera 0,1 s|espera 0,1 s" forever{ next wait:0.1 } } @lent flag{ say:"espera 0,5 s|espera 0,5 s" forever{ next wait:0.5 } }', time: 6 },
-          x: "L'espera decideix quants dibuixos es veuen cada segon. Amb <b>espera 0,1 s</b>, l'ocell de l'esquerra canvia de vestit gairebé 10 vegades per segon i bat les ales de pressa; amb <b>espera 0,5 s</b>, només 2. Molts dibuixos animats fan servir uns 12 dibuixos per segon.|La espera decide cuántos dibujos se ven cada segundo. Con <b>espera 0,1 s</b>, el pájaro de la izquierda cambia de disfraz casi 10 veces por segundo y bate las alas deprisa; con <b>espera 0,5 s</b>, solo 2. Muchos dibujos animados usan unos 12 dibujos por segundo." },
+          x: "L'espera decideix quants dibuixos es veuen cada segon. Amb <b>espera 0,1 s</b>, l'ocell de l'esquerra canvia de vestit gairebé 10 vegades per segon i bat les ales de pressa; amb <b>espera 0,5 s</b>, només 2. Molts dibuixos animats fan servir uns 12 dibuixos per segon.|La espera decide cuántos dibujos se ven cada segundo. Con <b>espera 0,1 s</b>, el pájaro de la izquierda cambia de disfraz casi 10 veces por segundo y bate las alas deprisa; con <b>espera 0,5 s</b>, solo 2. Muchos dibujos animados usan unos 12 dibujos por segundo.",
+          tip: "<b>0,5 s</b> és mig segon. <b>0,1 s</b> és una dècima de segon: en un segon n'hi caben 10.|<b>0,5 s</b> es medio segundo. <b>0,1 s</b> es una décima de segundo: en un segundo caben 10." },
         { k: 'Rebotar|Rebotar', t: '«Si toques la vora, rebota»|«Si tocas el borde, rebota»', anim: 'g2bounce',
           x: "Un peix que fa «mou-te 5 passos» per sempre acaba <b>sortint de l'escenari</b>. El bloc <b>si toques la vora, rebota</b> mira si el personatge toca la vora i, si la toca, li fa <b>donar la volta</b>: si anava cap a la dreta (direcció 90), ara va cap a l'esquerra (-90).|Un pez que hace «muévete 5 pasos» por siempre acaba <b>saliendo del escenario</b>. El bloque <b>si tocas el borde, rebota</b> mira si el personaje toca el borde y, si lo toca, le hace <b>dar la vuelta</b>: si iba hacia la derecha (dirección 90), ahora va hacia la izquierda (-90)." },
         { k: 'Compte!|¡Cuidado!', t: "Després de «per sempre», res|Después de «por siempre», nada", anim: 'g2never',
@@ -137,7 +139,7 @@ COURSE_UNITS[2] = { t: 'Animació|Animación', d: 'Vestits, bucles i temps|Disfr
           "Afegiu una <b>espera</b>: l'actor/actriu només es mou una pica de cada dues. Va més lent o més ràpid? Canvieu els papers.|Añadid una <b>espera</b>: el actor/actriz solo se mueve una palmada de cada dos. ¿Va más lento o más rápido? Cambiad los papeles."],
         tip: "El rellotge de l'escenari pica 30 vegades per segon: per això «mou-te 6» dins d'un bucle fa 180 punts cada segon.|El reloj del escenario da 30 palmadas por segundo: por eso «muévete 6» dentro de un bucle hace 180 puntos cada segundo." },
       { k: 'quiz', ph: 'prova', q: "El cranc fa <b>per sempre { vestit següent, espera 0,25 s }</b>. Aproximadament, quantes vegades canvia de vestit en 1 segon?|El cangrejo hace <b>por siempre { disfraz siguiente, espera 0,25 s }</b>. Aproximadamente, ¿cuántas veces cambia de disfraz en 1 segundo?",
-        opts: ['Unes 4|Unas 4', '25|25', 'Una|Una'], a: 0,
+        art: () => TANI.g2sec(4), opts: ['Unes 4|Unas 4', '25|25', 'Una|Una'], a: 0,
         ex: "Cada canvi espera un quart de segon: unes 4 vegades per segon (una mica menys, perquè cada volta del bucle també gasta un fotograma).|Cada cambio espera un cuarto de segundo: unas 4 veces por segundo (un poco menos, porque cada vuelta del bucle también gasta un fotograma)." },
       { k: 'sfree', ph: 'prova', q: "Toca la bandera verda i mira el peix. Neda <b>per sempre</b>. Què fa quan arriba a la vora? Quan ho hagis vist, toca el botó d'aturar.|Toca la bandera verde y mira el pez. Nada <b>por siempre</b>. ¿Qué hace cuando llega al borde? Cuando lo hayas visto, toca el botón de parar.",
         w: { bg: 'aquari', sprites: [{ id: 'peix', art: 'peix', x: -60, y: 20, size: 120, rot: 'lr' }] },
@@ -184,7 +186,7 @@ COURSE_UNITS[2] = { t: 'Animació|Animación', d: 'Vestits, bucles i temps|Disfr
     ] },
 
   /* ---------- Sessió 3 · Molts personatges alhora ---------- */
-  { id: 'g2-3', t: 'Molts personatges alhora|Muchos personajes a la vez', min: 40, badge: 'g_alhora',
+  { id: 'g2-3', t: 'Molts personatges alhora|Muchos personajes a la vez', min: 45, badge: 'g_alhora',
     learn: ["Cada personatge té els seus propis guions: a dalt tries de qui els vols veure o programar.|Cada personaje tiene sus propios guiones: arriba eliges de quién los quieres ver o programar.",
       "Quan toques la bandera verda, tots els guions «quan comença» comencen alhora.|Cuando tocas la bandera verde, todos los guiones «al empezar» empiezan a la vez.",
       "Amb dos guions, un personatge pot fer dues coses alhora, cadascuna al seu ritme.|Con dos guiones, un personaje puede hacer dos cosas a la vez, cada una a su ritmo."],

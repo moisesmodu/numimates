@@ -74,6 +74,19 @@ Object.assign(TANI, (() => {
         <g ${tA(3.9, 'ta-fade')}><path d="M${X(100)} 184H${X(-100) + 6}" stroke="#F08A24" stroke-width="5" stroke-linecap="round"/><path d="M${X(-100) + 12} 177l-9 7l9 7" fill="none" stroke="#F08A24" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>${pill(160, 201, 120, L('enrere: -200', 'atrás: -200'), '#F08A24')}</g>
         <g>${MV(`0 0;0 0;${X(100) - 160} 0;${X(100) - 160} 0;${X(-100) - 160} 0;${X(-100) - 160} 0;0 0`, '0;.18;.28;.56;.68;.94;1')}${spr('tuga', 132, 92, 56, 56, 1)}</g>`);
     },
+    // la recta de la x per a les preguntes: on és l'actor ara (sense dir on acabarà). A l'esquerra del 0, els negatius
+    g1line(x0 = 0, art = 'numi') {
+      // dibuixada a mida real (230 punts d'ample), perquè a les preguntes es veu petita
+      const X = v => 115 + v * 206 / 480, Y = 58;
+      let tk = '';
+      for (let v = -200; v <= 200; v += 50) tk += `<path d="M${X(v)} ${Y - (v % 100 ? 4 : 7)}V${Y + (v % 100 ? 4 : 7)}" stroke="#14204A" stroke-width="${v ? 2 : 3}" stroke-linecap="round"/>${v % 100 ? '' : `<text x="${X(v)}" y="${Y + 23}" text-anchor="middle" class="tat s"${v < 0 ? ' style="fill:#C2410C"' : v > 0 ? ' style="fill:#1E7A42"' : ''}>${v}</text>`}`;
+      const px = Math.max(30, Math.min(200, X(x0) + (X(x0) > 150 ? -46 : 46)));
+      return `<svg class="tani" viewBox="0 0 230 88" aria-hidden="true"><rect x="${X(-240)}" y="${Y - 11}" width="${X(0) - X(-240)}" height="22" rx="7" fill="#FFE7D1"/><rect x="${X(0)}" y="${Y - 11}" width="${X(240) - X(0)}" height="22" rx="7" fill="#DDF5E7"/>
+        <text x="${X(-236)}" y="${Y + 5}" class="tat b" style="fill:#C2410C">−</text><text x="${X(236)}" y="${Y + 5}" text-anchor="end" class="tat b" style="fill:#1E7A42">+</text>
+        <path d="M${X(-216)} ${Y}H${X(222)}" stroke="#E0533F" stroke-width="2.6" stroke-linecap="round"/>${tk}
+        ${spr(art, X(x0) - 19, 2, 38, 38, 0)}<path d="M${X(x0)} 40V${Y - 7}" stroke="#14204A" stroke-width="2" stroke-dasharray="3 3"/><circle cx="${X(x0)}" cy="${Y}" r="5" fill="#FFC531" stroke="#14204A" stroke-width="2"/>
+        <rect x="${px - 30}" y="10" width="60" height="22" rx="11" fill="#14204A"/><text x="${px}" y="26" text-anchor="middle" class="tat s w">x = ${x0}</text></svg>`;
+    },
     // la direcció: 90 mira a la dreta, 180 avall, -90 a l'esquerra i 0 amunt; «gira 90 graus» és un quart de volta cap a la dreta
     g1dir() {
       const cx = 86, cy = 104, R = 64;

@@ -287,7 +287,10 @@ const SG_ICO = {
   art: '<svg viewBox="0 0 24 24"><circle cx="12" cy="9" r="5" fill="currentColor"/><path d="M4 21c1-5 4-7 8-7s7 2 8 7z" fill="currentColor"/></svg>',
   say: '<svg viewBox="0 0 24 24"><path d="M4 4h16v11H9l-5 5z" fill="currentColor"/></svg>', send: '<svg viewBox="0 0 24 24"><path d="M3 11l18-8-6 18-3-7z" fill="currentColor"/></svg>',
   flag: '<svg viewBox="0 0 24 24"><path d="M5 21V3" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><path d="M6 4c4-2 7 2 13 0v9c-6 2-9-2-13 0z" fill="currentColor"/></svg>',
-  clone: '<svg viewBox="0 0 24 24"><rect x="3" y="7" width="12" height="12" rx="3" fill="none" stroke="currentColor" stroke-width="2.2"/><rect x="9" y="3" width="12" height="12" rx="3" fill="currentColor"/></svg>'
+  clone: '<svg viewBox="0 0 24 24"><rect x="3" y="7" width="12" height="12" rx="3" fill="none" stroke="currentColor" stroke-width="2.2"/><rect x="9" y="3" width="12" height="12" rx="3" fill="currentColor"/></svg>',
+  axes: '<svg viewBox="0 0 24 24"><path d="M3 12h18M12 21V3" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M18 9l3 3-3 3M9 6l3-3 3 3" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M7 10.5v3M17 10.5v3M10.5 7h3M10.5 17h3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" opacity=".7"/></svg>',
+  ptr: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M12 2v5M12 17v5M2 12h5M17 12h5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>',
+  base: '<svg viewBox="0 0 24 24"><path d="M4 7h4a2 2 0 1 1 4 0h4v4a2 2 0 1 1 0 4v4h-4a2 2 0 1 0-4 0H4z" fill="currentColor"/></svg>'
 };
 const sgIco = k => SG_ICO[k] || SG_ICO[SG_CAT[k]] || SG_ICO.mov;
 const SG_HAT = h => h === 'flag' ? L('Quan comença (bandera verda)', 'Al empezar (bandera verde)') : h === 'click' ? L('Quan toco aquest personatge', 'Al tocar este personaje') : h === 'clone' ? L('Quan començo com a clon', 'Al empezar como clon')
@@ -360,7 +363,8 @@ function sgMake(st, o = {}) {
   const hats = st.hats || ['flag'];
   const hatsOf = id => (st.hatsBy && st.hatsBy[id]) || hats;   // capçaleres per personatge (opcional: hatsBy)
   for (const id of edit) { for (const h of hatsOf(id)) progs[id][h] = progs[id][h] && progs[id][h].length ? progs[id][h] : [[]]; }
-  SG = { st, spec, alts, altI: 0, altOk: new Set(), W, progs, edit, hats, hatsOf, sel: null, cur: null, who: edit[0] || (W.sprites.find(d => progs[d.id] && Object.keys(progs[d.id]).length) || W.sprites[0] || {}).id, pal: st.pal || ['move', 'turn', 'wait'], mode: o.mode || 'edit', run: false, solved: false, tries: 0, max: st.max || 0, lists: [], ids: {} };
+  SG = { st, spec, alts, altI: 0, altOk: new Set(), W, progs, edit, hats, hatsOf, sel: null, cur: null, who: edit[0] || (W.sprites.find(d => progs[d.id] && Object.keys(progs[d.id]).length) || W.sprites[0] || {}).id, pal: st.pal || ['move', 'turn', 'wait'], mode: o.mode || 'edit', run: false, solved: false, tries: 0, max: st.max || 0, lists: [], ids: {},
+    ax: sgAxCfg(st.axes ?? spec.axes) || { on: false }, ptr: null, lite: !!(st.palLite && st.palLite.length), base: st.base || null };
   SG.M = stgMachine(W, progs);
   { const P = progs[SG.who] || {}, sc = P[hats[0]] || Object.values(P)[0]; SG.cur = sc && sc[0] ? { l: sc[0], i: sc[0].length } : null; }
   return SG;
@@ -384,16 +388,33 @@ function sgTools(b) {
     ${['if', 'until', 'waitu'].includes(b.k) && SG.pal.includes('and') ? `<button class="wide" onclick="sgJoin()">${b.c.and || b.c.or ? L('Una sola condició', 'Una sola condición') : L('Afegeix «i / o»', 'Añade «y / o»')}</button>` : ''}
     <button class="del" onclick="sgDel()">${L('Esborra', 'Borra')}</button></div>`;
 }
+const SG_NOPAL = ['else', 'and', 'cond+', 'not'];
 function sgPalette() {
-  const full = SG.max && sgUsed() >= SG.max;
-  return `<div class="tpal rpal spal">${SG.pal.filter(k => !['else', 'and', 'cond+', 'not'].includes(k)).map(k => `<button class="tb rb sb c-${SG_CAT[k]} tpb" onclick="sgIns('${k}')" ${full ? 'disabled' : ''}><span class="tbi">${sgIco(k)}</span><span class="tbl">${sgLabel(sgNew(k, SG.st, SG.W), undefined, SG.st)}</span></button>`).join('')}</div>`;
+  const full = SG.max && sgUsed() >= SG.max, lite = SG.lite && SG.st.palLite, all = SG.pal.filter(k => !SG_NOPAL.includes(k)), show = lite ? all.filter(k => SG.st.palLite.includes(k)) : all;
+  // paleta graduada (palLite): primer els blocs bàsics de la peça; un botó obre (o torna a tancar) tots els blocs
+  const nL = SG.st.palLite ? all.filter(k => SG.st.palLite.includes(k)).length : 0;
+  const tog = SG.st.palLite ? `<button class="spaltog${lite ? '' : ' on'}" onclick="sgLite()" aria-pressed="${lite ? 'false' : 'true'}">${lite ? `<b>+</b>${L(`Tots els blocs (${all.length})`, `Todos los bloques (${all.length})`)}` : `<b>−</b>${L(`Només els bàsics (${nL})`, `Solo los básicos (${nL})`)}`}</button>` : '';
+  return `<div class="tpal rpal spal">${tog}${show.map(k => `<button class="tb rb sb c-${SG_CAT[k]} tpb" onclick="sgIns('${k}')" ${full ? 'disabled' : ''}><span class="tbi">${sgIco(k)}</span><span class="tbl">${sgLabel(sgNew(k, SG.st, SG.W), undefined, SG.st)}</span></button>`).join('')}</div>`;
+}
+function sgLite() { if (!SG) return; SG.lite = !SG.lite; SFX.tap && SFX.tap(); sgDraw(); }
+// «Posa una base»: un esquelet del programa (st.base) per als guions que encara són buits; mai no esborra el que ja hi ha
+function sgBase() {
+  if (!SG || !SG.base) return; if (SG.run) sgStop();
+  let P; try { P = SQ(typeof SG.base === 'function' ? SG.base() : SG.base); } catch (e) { return; }
+  const empty = scr => !(scr || []).some(l => l && l.length); let n = 0, kept = 0;
+  for (const [id, H] of Object.entries(P)) { if (!SG.edit.includes(id)) continue; const mine = SG.progs[id] = SG.progs[id] || {};
+    for (const [h, scr] of Object.entries(H)) { if (empty(mine[h])) { mine[h] = JSON.parse(JSON.stringify(scr)); n++; } else kept++; } }
+  SG.base = null; SFX.tap && SFX.tap();
+  toast(n ? L(`Base posada${kept ? ': els guions que ja tenien blocs no s\'han tocat' : ''}. Ara completa-la!`, `Base puesta${kept ? ': los guiones que ya tenían bloques no se han tocado' : ''}. ¡Ahora complétala!`) : L('Ja tens blocs a tots els guions: la base no hi cap.', 'Ya tienes bloques en todos los guiones: la base no cabe.'));
+  sgWhoSel(SG.who); sgFresh(); sgDraw();
 }
 function sgCode() {
   sgIndex();
   const ro = SG.mode !== 'edit', mine = SG.edit.includes(SG.who), P = SG.progs[SG.who] || {};
   const tabs = SG.W.sprites.length > 1 ? `<div class="ssel">${SG.W.sprites.map(d => `<button class="${d.id === SG.who ? 'on' : ''}" onclick="sgWhoSel('${d.id}')"><span class="sthumb">${sgCostume(d.art, d.costume || 0)}</span><b>${esc(tx(d.name || STG_ART[d.art].name))}</b>${SG.edit.includes(d.id) ? '' : `<small>${L('ja programat', 'ya programado')}</small>`}</button>`).join('')}</div>` : '';
   const scripts = Object.entries(P).filter(([h, l]) => mine ? SG.hatsOf(SG.who).includes(h) || l.some(x => x.length) : l.some(x => x.length)).map(([h, scr]) => scr.map(l => `<div class="rscript sh-${h.split(':')[0]}"><div class="rhat"><span>${sgIco(h === 'flag' ? 'flag' : h === 'clone' ? 'clone' : h.startsWith('msg') ? 'send' : 'say')}</span><b>${SG_HAT(h)}</b>${!ro && mine && l === scr[scr.length - 1] ? `<button class="rhadd" onclick="sgAddScr('${h}')" aria-label="${L('Un altre guió com aquest', 'Otro guion como este')}" title="${L('Un altre guió com aquest', 'Otro guion como este')}">+</button>` : ''}</div><div class="tprog rprog">${sgList(l, ro || !mine) || '<p class="tempty">—</p>'}</div></div>`).join('')).join('');
-  return `${tabs}<div class="tphead"><b>${L('Guions', 'Guiones')}</b><span class="tphr">${SG.max ? `<span class="tcount ${sgUsed() >= SG.max ? 'full' : ''}">${sgUsed()}/${SG.max} ${L('blocs', 'bloques')}</span>` : `<span class="tcount">${bitN(sgUsed())}</span>`}</span></div>
+  const base = SG.base && !ro && SG.edit.length ? `<button class="sbase" onclick="sgBase()" title="${L('Posa un esquelet del programa als guions buits', 'Pon un esqueleto del programa en los guiones vacíos')}">${SG_ICO.base}<span>${L('Posa una base', 'Pon una base')}</span></button>` : '';
+  return `${tabs}<div class="tphead"><b>${L('Guions', 'Guiones')}</b><span class="tphr">${base}${SG.max ? `<span class="tcount ${sgUsed() >= SG.max ? 'full' : ''}">${sgUsed()}/${SG.max} ${L('blocs', 'bloques')}</span>` : `<span class="tcount">${bitN(sgUsed())}</span>`}</span></div>
     <div class="rscripts" id="sprog">${scripts || `<p class="tempty">${L('Aquest personatge no té guions.', 'Este personaje no tiene guiones.')}</p>`}</div>${!ro && mine ? sgPalette() : ''}`;
 }
 // el dibuix d'un vestit (SVG); els de Numi fan servir els degradats comuns de la pàgina
@@ -402,8 +423,8 @@ function sgCostume(art, c) { const a = STG_ART[art] || STG_ART.estrella, k = art
 function sgStageHTML() {
   const W = SG.W, keys = W.keys || [];
   const alts = SG.alts.length > 1 ? `<div class="talts">${SG.alts.map((_, i) => `<button class="${i === SG.altI ? 'on' : ''} ${SG.altOk.has(i) ? 'ok' : ''}" onclick="sgAlt(${i})">${SG.altOk.has(i) ? '✓ ' : ''}${L('Prova', 'Prueba')} ${i + 1}</button>`).join('')}</div>` : '';
-  return `<div class="tworld sworld" id="sworld">${alts}<div class="sstage" id="sstage"><div class="sbg" id="sbg">${STG_BG[SG.M.S.bg] ? STG_BG[SG.M.S.bg].svg() : ''}</div><div class="ssprites" id="ssp"></div><div class="svars" id="svars"></div>
-      <div class="sctl"><button class="sgo" onclick="sgGo()" aria-label="${L('Bandera verda: comença', 'Bandera verde: empieza')}">${SG_ICO.flag}</button><button class="sst" onclick="sgStop()" aria-label="${L('Atura', 'Para')}"><i></i></button></div></div>
+  return `<div class="tworld sworld" id="sworld">${alts}<div class="sstage${SG.ax.on ? ' ax-on' : ''}" id="sstage"><div class="sbg" id="sbg">${STG_BG[SG.M.S.bg] ? STG_BG[SG.M.S.bg].svg() : ''}</div>${sgAxesHTML(SG.ax)}<div class="ssprites" id="ssp"></div><div class="svars" id="svars"></div>
+      <div class="sctl"><button class="sax${SG.ax.on ? ' on' : ''}" onclick="sgAxes()" aria-pressed="${SG.ax.on}" aria-label="${L('Eixos de coordenades (x, y)', 'Ejes de coordenadas (x, y)')}" title="${L('Eixos de coordenades (x, y)', 'Ejes de coordenadas (x, y)')}">${SG_ICO.axes}</button><button class="sgo" onclick="sgGo()" aria-label="${L('Bandera verda: comença', 'Bandera verde: empieza')}">${SG_ICO.flag}</button><button class="sst" onclick="sgStop()" aria-label="${L('Atura', 'Para')}"><i></i></button></div></div>
     ${keys.length ? `<div class="skeys">${keys.map(k => `<button data-k="${k}" onpointerdown="sgKey('${k}',true)" onpointerup="sgKey('${k}',false)" onpointerleave="sgKey('${k}',false)">${{ left: '←', right: '→', up: '↑', down: '↓', space: L('espai', 'espacio') }[k] || k.toUpperCase()}</button>`).join('')}</div>` : ''}
     <p class="tsay" id="tsay" aria-live="polite"></p>
     <div class="trun"><button class="btn big trgo" id="sggo" onclick="sgGo()">${SG_ICO.flag}${L('Comença', 'Empieza')}</button>${SG.alts.some(a => a.input && a.input.length) && SG.mode === 'edit' ? `<button class="btn ghost" onclick="sgGo(true)">${L('Comprova', 'Comprueba')}</button>` : ''}<button class="btn ghost ico" onclick="sgReset()" aria-label="${L('Torna a començar', 'Vuelve a empezar')}"><svg viewBox="0 0 24 24"><path d="M12 5V2L7 6l5 4V7a6 6 0 1 1-6 6H4a8 8 0 1 0 8-8z" fill="currentColor"/></svg></button></div></div>`;
@@ -427,7 +448,59 @@ function sgRender() {
     const bub = e.lastChild, txt = s.say ? esc(tx(s.say)) : ''; if (bub.dataset.t !== txt + s.think) { bub.dataset.t = txt + s.think; bub.innerHTML = txt; bub.className = 'sbub' + (txt ? ' on' : '') + (s.think ? ' th' : ''); } }
   box.querySelectorAll('.ssp').forEach(e => { if (!live.has(e.dataset.u)) e.remove(); });
   const vs = document.getElementById('svars'); if (vs) vs.innerHTML = Object.entries(S.vars).map(([k, v]) => `<span><small>${esc(SG.st.varNames && SG.st.varNames[k] ? tx(SG.st.varNames[k]) : k)}</small><b>${stgNum(v)}</b></span>`).join('');
+  sgAxDraw(box.parentElement);
 }
+/* ---------- Eixos de coordenades (es poden activar a l'escenari) ----------
+   Un mapa damunt del fons: la x (vermell) i la y (verd) amb marques cada 50 punts i números cada 100 (x) o cada 50 (y);
+   el personatge triat mostra on és amb dues línies fins als eixos i una etiqueta «x · y», i el dit o el ratolí, també.
+   axes (al pas, a la demo o al món): true · 'x' (només la recta de la x) · { on?: false (no s'encén sol), only?: 'x'|'y',
+     lines?: [{ y: -150, t: 'terra|suelo' }] (una línia marcada, p. ex. la del terra), pts?: [{ x, y, t? }] (punts amb nom) } */
+const SG_AXC = { x: '#E0533F', y: '#1FA463', ink: '#14204A' };
+function sgAxCfg(a) { if (!a) return null; if (a === true) return { on: true }; if (typeof a === 'string') return { on: true, only: a }; return { ...a, on: a.on !== false }; }
+const sgAxX = x => x + STG.W / 2, sgAxY = y => STG.H / 2 - y;
+function sgAxesHTML(cfg, mini) {
+  if (!cfg) return ''; const only = cfg.only, X = sgAxX, Y = sgAxY, hx = only !== 'y', hy = only !== 'x';
+  const T = (x, y, t, a = 'middle', c = SG_AXC.ink, cl = '', dy = '') => `<text x="${x}" y="${y}"${dy ? ` dy="${dy}"` : ''} text-anchor="${a}" fill="${c}" class="saxt${cl}">${t}</text>`;
+  let grid = '', tick = '', lab = '';
+  for (let v = -200; v <= 200; v += 50) if (v) { if (!only) grid += `M${X(v)} 0V${STG.H}`; if (hx) { tick += `M${X(v)} ${Y(0) - (v % 100 ? 4 : 7)}V${Y(0) + (v % 100 ? 4 : 7)}`; if (!(v % 100)) lab += T(X(v), Y(0) + 6, stgNum(v), 'middle', SG_AXC.ink, '', '1em'); } }
+  for (let v = -150; v <= 150; v += 50) if (v) { if (!only) grid += `M0 ${Y(v)}H${STG.W}`; if (hy) { tick += `M${X(0) - 6} ${Y(v)}H${X(0) + 6}`; lab += T(X(0) + 9, Y(v), stgNum(v), 'start', SG_AXC.ink, '', '.36em'); } }
+  const axX = hx ? `<path class="saxh" d="M6 ${Y(0)}H${STG.W - 8}"/><path d="M6 ${Y(0)}H${STG.W - 8}" stroke="${SG_AXC.x}" stroke-width="2.2"/><path d="M${STG.W - 16} ${Y(0) - 7}L${STG.W - 5} ${Y(0)}L${STG.W - 16} ${Y(0) + 7}" fill="none" stroke="${SG_AXC.x}" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>${T(STG.W - 14, Y(0) - 8, 'x', 'middle', SG_AXC.x, ' n')}` : '';
+  const axY = hy ? `<path class="saxh" d="M${X(0)} ${STG.H - 6}V8"/><path d="M${X(0)} ${STG.H - 6}V8" stroke="${SG_AXC.y}" stroke-width="2.2"/><path d="M${X(0) - 7} 16L${X(0)} 5L${X(0) + 7} 16" fill="none" stroke="${SG_AXC.y}" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>${T(X(0) - 10, 6, 'y', 'end', SG_AXC.y, ' n', '.8em')}` : '';
+  const zero = hx && hy ? T(X(0) - 6, Y(0) + 5, '0', 'end', SG_AXC.ink, '', '.9em') : hx ? T(X(0), Y(0) + 6, '0', 'middle', SG_AXC.ink, '', '1em') : T(X(0) + 9, Y(0), '0', 'start', SG_AXC.ink, '', '.36em');
+  // línies marcades (p. ex. y = -150, el terra) i punts amb nom
+  const lines = (cfg.lines || []).map(m => { const c = m.c || '#F08A24', v = m.y ?? m.x, t = `${m.y != null ? 'y' : 'x'} = ${stgNum(v)}${m.t ? ' · ' + esc(tx(m.t)) : ''}`;
+    return m.y != null ? `<path d="M0 ${Y(m.y)}H${STG.W}" stroke="${c}" stroke-width="2.6" stroke-dasharray="9 6" class="saxm"/>${T(10, Y(m.y) - 5, t, 'start', c, ' m')}`
+      : `<path d="M${X(m.x)} 0V${STG.H}" stroke="${c}" stroke-width="2.6" stroke-dasharray="9 6" class="saxm"/>${T(X(m.x) + 6, 6, t, 'start', c, ' m', '2.6em')}`; }).join('');
+  const pts = (cfg.pts || []).map(p => `<circle cx="${X(p.x)}" cy="${Y(p.y)}" r="6" fill="#fff" stroke="${SG_AXC.ink}" stroke-width="2.4"/><circle cx="${X(p.x)}" cy="${Y(p.y)}" r="2.4" fill="${SG_AXC.ink}"/>${T(X(p.x), Y(p.y) - 9, `${p.t ? esc(tx(p.t)) + ' ' : ''}(${stgNum(p.x)}, ${stgNum(p.y)})`, X(p.x) > 380 ? 'end' : X(p.x) < 100 ? 'start' : 'middle', SG_AXC.ink, ' p')}`).join('');
+  // el que es mou: les línies del personatge fins als eixos i la creu del dit
+  const me = `<g class="saxme" display="none"><path class="saxpx" stroke="${SG_AXC.x}"/><path class="saxpy" stroke="${SG_AXC.y}"/><circle class="saxdx" r="4.5" fill="${SG_AXC.x}"/><circle class="saxdy" r="4.5" fill="${SG_AXC.y}"/></g>`;
+  const pt = `<g class="saxpt" display="none"><circle r="9" fill="none" stroke="${SG_AXC.ink}" stroke-width="2"/><path d="M-15 0h9M6 0h9M0 -15v9M0 6v9" stroke="${SG_AXC.ink}" stroke-width="2" stroke-linecap="round"/></g>`;
+  return `<svg class="saxes${only ? ' only-' + only : ''}" viewBox="0 0 ${STG.W} ${STG.H}" preserveAspectRatio="none" aria-hidden="true">${grid ? `<path class="saxg w" d="${grid}"/><path class="saxg" d="${grid}"/>` : ''}${lines}${axX}${axY}<path class="saxk" d="${tick}"/>${lab}${zero}${pts}${me}${pt}</svg>${mini ? '' : `<div class="sxy" aria-live="off"><span class="sxyme" style="display:none"></span><span class="sxypt" style="display:none"></span></div>`}`;
+}
+// actualitzar les línies i l'etiqueta del personatge triat (i la del dit)
+// els números dels eixos es veuen sempre d'uns 10-14 px, sigui quina sigui la mida de l'escenari
+function sgAxFont(stage, svg) { const w = stage.clientWidth; if (!w) return; const px = Math.max(10, Math.min(14, w / 34)); svg.style.setProperty('--axf', (px * STG.W / w).toFixed(2)); }
+function sgAxDraw(stage) {
+  if (!SG || !stage || !SG.M) return; const svg = stage.querySelector('.saxes'); if (!svg) return;
+  if (!svg._ro) { svg._ro = 1; sgAxFont(stage, svg); if (typeof ResizeObserver === 'function') new ResizeObserver(() => sgAxFont(stage, svg)).observe(stage); }
+  const cfg = SG.ax || sgAxCfg(SG.st && SG.st.axes) || {}, on = stage.classList.contains('ax-on') || stage.classList.contains('mini'); if (!on) return;
+  const S = SG.M.S, only = cfg.only, who = SG.who || (cfg.who) || (S.sprites[0] || {}).id, s = S.sprites.find(o => o.id === who && !o.clone && !o.dead);
+  const me = svg.querySelector('.saxme');
+  if (me) { if (!s) me.setAttribute('display', 'none'); else { const x = sgAxX(s.x), y = sgAxY(s.y);
+    me.removeAttribute('display'); me.querySelector('.saxpx').setAttribute('d', only === 'y' ? '' : `M${x} ${y}V${sgAxY(0)}`); me.querySelector('.saxpy').setAttribute('d', only === 'x' ? '' : `M${x} ${y}H${sgAxX(0)}`);
+    const dx = me.querySelector('.saxdx'), dy = me.querySelector('.saxdy'); dx.setAttribute('cx', x); dx.setAttribute('cy', sgAxY(0)); dy.setAttribute('cx', sgAxX(0)); dy.setAttribute('cy', y); dx.style.display = only === 'y' ? 'none' : ''; dy.style.display = only === 'x' ? 'none' : ''; } }
+  const pt = svg.querySelector('.saxpt'), P = SG.ptr && SG.ptr.el === stage ? SG.ptr : null;
+  if (pt) { if (P) { pt.removeAttribute('display'); pt.setAttribute('transform', `translate(${sgAxX(P.x)} ${sgAxY(P.y)})`); } else pt.setAttribute('display', 'none'); }
+  const box = stage.querySelector('.sxy'); if (!box) return;
+  // l'etiqueta es construeix una vegada; a cada fotograma només canvien els números (el dibuix, només si canvia el vestit)
+  const part = (el, ptr) => { if (!el.firstChild) el.innerHTML = `<i${ptr ? ' class="ptr"' : ''}>${ptr ? SG_ICO.ptr : ''}</i>${ptr ? '' : '<b></b>'}<em class="x"></em><em class="y"></em>`; return el; };
+  const nums = (el, x, y) => { const ex = el.querySelector('em.x'), ey = el.querySelector('em.y'), tx0 = only === 'y' ? '' : `x ${stgNum(Math.round(x))}`, ty0 = only === 'x' ? '' : `y ${stgNum(Math.round(y))}`;
+    if (ex.textContent !== tx0) { ex.textContent = tx0; ex.style.display = tx0 ? '' : 'none'; } if (ey.textContent !== ty0) { ey.textContent = ty0; ey.style.display = ty0 ? '' : 'none'; } };
+  const a = part(box.firstChild), b = part(box.lastChild, true);
+  if (s) { const k = s.art + ':' + s.c; if (a.dataset.k !== k) { a.dataset.k = k; const d = (SG.W.sprites || []).find(o => o.id === s.id); a.firstChild.innerHTML = sgCostume(s.art, s.c); a.querySelector('b').textContent = tx((d && d.name) || (STG_ART[s.art] || {}).name || s.id); } nums(a, s.x, s.y); a.style.display = ''; } else a.style.display = 'none';
+  if (P) { nums(b, P.x, P.y); b.style.display = ''; } else b.style.display = 'none';
+}
+function sgAxes() { if (!SG) return; SG.ax.on = !SG.ax.on; const st = document.getElementById('sstage'), b = st && st.querySelector('.sax'); if (st) st.classList.toggle('ax-on', SG.ax.on); if (b) { b.classList.toggle('on', SG.ax.on); b.setAttribute('aria-pressed', SG.ax.on); } SFX.tap && SFX.tap(); sgAxDraw(st); }
 function sgMarkNow() { document.querySelectorAll('.sb.now').forEach(e => e.classList.remove('now')); if (!SG || !SG.run) return; for (const th of SG.M.S.threads) if (th.cur && th.cur._id && th.s.id === SG.who) { const e = document.getElementById('sg' + th.cur._id); if (e) e.classList.add('now'); } }
 let SG_AC = null;
 function sgSound(n) { if (typeof P !== 'undefined' && P && P.sound === false) return; const d = STG_SND[n]; if (!d) return; try { const ctx = SG_AC = SG_AC || new (window.AudioContext || window.webkitAudioContext)(); if (ctx.state === 'suspended') ctx.resume(); const t = ctx.currentTime, o = ctx.createOscillator(), g = ctx.createGain(); o.type = d[2]; o.frequency.setValueAtTime(d[0], t); if (n === 'boing' || n === 'xoc') o.frequency.exponentialRampToValueAtTime(d[0] / 2, t + d[1]); if (n === 'victoria' || n === 'moneda') o.frequency.setValueAtTime(d[0] * 1.5, t + d[1] / 2); o.connect(g); g.connect(ctx.destination); g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(.08, t + .01); g.gain.exponentialRampToValueAtTime(.0001, t + d[1]); o.start(t); o.stop(t + d[1] + .05); } catch (e) { } }
@@ -526,7 +599,7 @@ function sgElse() { const b = SG.sel; b.e = b.e ? null : []; sgFresh(); sgDraw()
 function sgJoin() { const b = SG.sel; b.c = b.c.and || b.c.or ? (b.c.and || b.c.or)[0] : { and: [b.c, { touch: 'edge' }] }; sgFresh(); sgDraw(); }
 // un altre guió amb la mateixa capçalera (p. ex. dos «quan comença» per a dos ritmes diferents)
 function sgAddScr(h) { if (SG.run) sgStop(); const P = SG.progs[SG.who]; if (!P || !P[h] || P[h].length >= 4) return; const l = []; P[h].push(l); SG.cur = { l, i: 0 }; SG.sel = null; sgDraw(); }
-function sgWhoSel(id) { if (SG.run) sgStop(); SG.who = id; SG.sel = null; const P = SG.progs[id], h = Object.keys(P).find(x => SG.hatsOf(id).includes(x)) || Object.keys(P)[0]; const l = h ? P[h][0] : []; SG.cur = { l, i: l.length }; sgDraw(); }
+function sgWhoSel(id) { if (SG.run) sgStop(); SG.who = id; SG.sel = null; const P = SG.progs[id], h = Object.keys(P).find(x => SG.hatsOf(id).includes(x)) || Object.keys(P)[0]; const l = h ? P[h][0] : []; SG.cur = { l, i: l.length }; sgDraw(); sgAxDraw(document.getElementById('sstage')); }
 function sgFresh() { SG.M = stgMachine(SG.W, SG.progs); SG.solved = false; if (SG.altOk.size) SG.altOk.clear(); const box = document.getElementById('ssp'); if (box) box.innerHTML = ''; sgRender(); }
 function sgField(id, path) {
   if (SG.run) sgStop();
@@ -561,7 +634,13 @@ if (typeof window !== 'undefined' && typeof document !== 'undefined' && document
   document.addEventListener('keydown', e => { if (!SG || !document.getElementById('sstage') || ['INPUT', 'TEXTAREA'].includes((e.target || {}).tagName)) return; const k = KM[e.key]; if (!k || !(SG.W.keys || []).includes(k)) return; e.preventDefault(); sgKey(k, true); });
   document.addEventListener('keyup', e => { if (!SG) return; const k = KM[e.key]; if (k) sgKey(k, false); });
   // el ratolí (o el dit) damunt de l'escenari: «apunta cap al ratolí» i «toca el ratolí» quan l'alumne/a prova el programa
-  const mouse = e => { const st = e.target && e.target.closest && e.target.closest('#sstage'); if (!st || !SG || !SG.M || SG.auto) return; const r = st.getBoundingClientRect();
+  let ptrT = 0;
+  const mouse = e => { const st = e.target && e.target.closest && e.target.closest('#sstage');
+    // amb els eixos encesos, on és el dit o el ratolí (amb el dit, l'etiqueta es queda uns segons)
+    if (SG && SG.ax && SG.ax.on) { const had = !!SG.ptr; if (st) { const r = st.getBoundingClientRect(); SG.ptr = { el: st, x: Math.max(-240, Math.min(240, (e.clientX - r.left) / r.width * 480 - 240)), y: Math.max(-180, Math.min(180, 180 - (e.clientY - r.top) / r.height * 360)) };
+        clearTimeout(ptrT); if (e.pointerType && e.pointerType !== 'mouse') ptrT = setTimeout(() => { if (SG) { SG.ptr = null; sgAxDraw(document.getElementById('sstage')); } }, 2500); } else if (e.pointerType === 'mouse') SG.ptr = null;
+      if ((st || had) && !SG.run) sgAxDraw(document.getElementById('sstage')); }
+    if (!st || !SG || !SG.M || SG.auto) return; const r = st.getBoundingClientRect();
     SG.M.S.mx = Math.max(-240, Math.min(240, (e.clientX - r.left) / r.width * 480 - 240)); SG.M.S.my = Math.max(-180, Math.min(180, 180 - (e.clientY - r.top) / r.height * 360)); };
   document.addEventListener('pointermove', mouse); document.addEventListener('pointerdown', mouse);
 }
@@ -603,7 +682,7 @@ if (typeof TSTEP !== 'undefined') {
 /* ---------- Demos i diapositives (TMEDIA.stage) ---------- */
 var TMEDIA = typeof TMEDIA !== 'undefined' ? TMEDIA : {};
 const SGD = { cur: null };
-function sgMiniHTML(m) { return `<div class="sdemo"><div class="sstage mini"><div class="sbg">${STG_BG[m.w.bg] ? STG_BG[m.w.bg].svg() : ''}</div><div class="ssprites"></div><div class="svars"></div></div>${m.code !== false ? `<div class="sdcode">${sgDemoChips(SQ(m.prog), m)}</div>` : ''}</div>`; }
+function sgMiniHTML(m) { const ax = sgAxCfg(m.axes); return `<div class="sdemo"><div class="sstage mini${ax ? ' ax-on' : ''}"><div class="sbg">${STG_BG[m.w.bg] ? STG_BG[m.w.bg].svg() : ''}</div>${ax ? sgAxesHTML(ax, true) : ''}<div class="ssprites"></div><div class="svars"></div></div>${m.code !== false ? `<div class="sdcode">${sgDemoChips(SQ(m.prog), m)}</div>` : ''}</div>`; }
 function sgDemoChips(P, m) {
   const ch = l => (l || []).map(b => `<span class="rdb c-${SG_CAT[b.k]}"><span class="tbi">${sgIco(b.k)}</span><span>${sgLabel(b, undefined, m)}</span></span>${Array.isArray(b.b) ? `<span class="rdin">${ch(b.b)}</span>${b.e ? `<span class="rdelse">${L('si no', 'si no')}</span><span class="rdin">${ch(b.e)}</span>` : ''}` : ''}`).join('');
   return Object.entries(P).flatMap(([id, H]) => Object.entries(H).flatMap(([h, scr]) => scr.map(l => `<div class="rdh"><b>${esc(sgWho(id, stgWorld(m.w)))}<i class="${h === 'flag' ? 'hf' : ''}"> · ${SG_HAT(h)}</i></b>${ch(l)}</div>`))).join('');
@@ -612,7 +691,7 @@ function sgMiniStart(el, m) {
   if (SGD.cur) { cancelAnimationFrame(SGD.cur.raf); clearTimeout(SGD.cur.t); }
   const box = el.querySelector('.sdemo .sstage'); if (!box) return; const me = SGD.cur = {};
   const reset = () => { me.W = stgWorld(m.w); me.M = stgMachine(me.W, SQ(m.prog)); me.M.flag(); me.last = performance.now(); box.querySelector('.ssprites').innerHTML = ''; };
-  const draw = () => { const sp = box.querySelector('.ssprites'), S = me.M.S; const keep = SG; SG = { M: me.M, W: me.W, st: m }; const prev = document.getElementById('ssp'); if (prev) prev.id = ''; sp.id = 'ssp'; const vs = box.querySelector('.svars'); vs.id = 'svars'; const bg = box.querySelector('.sbg'); bg.id = 'sbg'; sgRender(); sp.id = ''; vs.id = ''; bg.id = ''; if (prev) prev.id = 'ssp'; SG = keep; };
+  const draw = () => { const sp = box.querySelector('.ssprites'), S = me.M.S; const keep = SG; SG = { M: me.M, W: me.W, st: m, ax: sgAxCfg(m.axes) }; const prev = document.getElementById('ssp'); if (prev) prev.id = ''; sp.id = 'ssp'; const vs = box.querySelector('.svars'); vs.id = 'svars'; const bg = box.querySelector('.sbg'); bg.id = 'sbg'; sgRender(); sp.id = ''; vs.id = ''; bg.id = ''; if (prev) prev.id = 'ssp'; SG = keep; };
   reset(); draw();
   const loop = now => { if (SGD.cur !== me || !box.isConnected) return; let n = Math.floor((now - me.last) / (1000 / STG.FPS)); me.last += n * 1000 / STG.FPS; while (n-- > 0) me.M.tick(); draw();
     if (me.M.S.t > (m.time || me.W.time) || me.M.S.stopped || (me.M.idle() && me.M.S.t > .5)) { me.t = setTimeout(() => { if (SGD.cur !== me) return; reset(); me.raf = requestAnimationFrame(loop); }, 1500); return; }
@@ -638,6 +717,11 @@ TVALID.stage = TVALID.screate = st => { if (!st.sol) return 'falta la solució (
   if (st.k === 'screate' && !(st.crit || []).length) out.push('el projecte necessita criteris (crit)');
   if (st.check) { try { const m = st.check(stgProgs(st.w, P)); if (m) out.push('la solució no passa la comprovació (check): ' + tx(m)); } catch (e) { out.push('check: ' + e.message); } }
   for (const d of st.w.sprites) if (!STG_ART[d.art]) out.push(`personatge desconegut «${d.art}»`); if (!STG_BG[st.w.bg]) out.push(`fons desconegut «${st.w.bg}»`);
+  if (st.palLite) for (const k of st.palLite) if (!pal.has(k)) out.push(`palLite: «${k}» no és a la paleta`);
+  if (st.base) { try { const B = SQ(typeof st.base === 'function' ? st.base() : st.base), bk = new Set(); for (const [id, H] of Object.entries(B)) { if (!edit.includes(id)) out.push(`la base programa «${id}», que no és editable`); for (const [h, scr] of Object.entries(H)) { if (!((st.hatsBy && st.hatsBy[id]) || st.hats || ['flag']).includes(h)) out.push(`la base fa servir la capçalera «${h}», que no és a hats`); scr.forEach(l => (function w(x) { (x || []).forEach(b => { bk.add(b.k); if (Array.isArray(b.b)) w(b.b); w(b.e); }); })(l)); } }
+      for (const k of bk) if (!pal.has(k)) out.push(`la base fa servir «${k}», que no és a la paleta`);
+      if (!stgSolves(st.w, B) && !(st.check && st.check(stgProgs(st.w, B)))) out.push('la base ja resol el repte: ha de quedar feina per fer'); } catch (e) { out.push('base: ' + e.message); } }
+  if (st.axes && typeof st.axes === 'object') for (const m of [...(st.axes.lines || []), ...(st.axes.pts || [])]) if (m.t && !String(m.t).includes('|')) out.push('axes: el text ha de ser "ca|es"');
   return out; };
 TVALID.sspot = st => { try { const P = SQ(st.prog); let n = 0; Object.values(P).forEach(H => Object.values(H).forEach(scr => scr.forEach(function w(l) { (l || []).forEach(b => { if (b.mk) n++; if (Array.isArray(b.b)) w(b.b); if (b.e) w(b.e); }); }))); return n === 1 ? [] : [`cal exactament 1 bloc marcat amb ! (n'hi ha ${n})`]; } catch (e) { return [e.message]; } };
 TVALID.sfree = st => { try { SQ(st.prog || '@x flag{ }'); return STG_BG[st.w.bg] ? [] : ['fons desconegut']; } catch (e) { return [e.message]; } };
