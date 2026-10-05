@@ -4,17 +4,22 @@ let GROUND = [];
 const shadowEl = (cx, cy, rx, ry = 22, op = .35) => (GROUND.push(`<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="${C.ink2}" opacity="${op}" filter="url(#grpS)"/>`), '');
 let seed = 11; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
 const SEL = new Set(['2,1', '3,2']);
+// «paraula» sense lletres llegibles: un bloc gruixut amb petites osques, com una paraula escrita (no un guió)
+const word = (cx, cy, fill, op = 1) => {
+  const a = 46 + Math.round(rnd() * 26), gap = 9, b2 = rnd() < .45 ? 22 + Math.round(rnd() * 16) : 0, tot = a + (b2 ? gap + b2 : 0), x0 = cx - tot / 2;
+  const seg = (x, w) => `<rect x="${x}" y="${cy - 8}" width="${w}" height="16" rx="5" fill="${fill}" opacity="${op}"/>` + Array.from({ length: Math.floor(w / 13) - 1 }, (_, i) => `<rect x="${x + 11 + i * 13}" y="${cy - 8}" width="2.2" height="16" fill="${fill === '#7E8B86' ? '#F4EDDC' : '#2FA58E'}" opacity=".55"/>`).join('');
+  return seg(x0, a) + (b2 ? seg(x0 + a + gap, b2) : '');
+};
 const tile = (x, y, w, h, sel) => {
-  const bar = 72 + Math.round(rnd() * 30);
   if (sel) return `<rect x="${x - 9}" y="${y + 14}" width="${w}" height="${h}" rx="16" fill="#0B231F" opacity=".45"/>
     <rect x="${x - 4}" y="${y + 6}" width="${w}" height="${h}" rx="16" fill="${C.em2}"/>
     <rect x="${x}" y="${y - 4}" width="${w}" height="${h}" rx="16" fill="${C.em}"/>
     <path d="M${x + 24} ${y + 4} H ${x + w - 18} Q ${x + w - 8} ${y + 4} ${x + w - 8} ${y + 14} V ${y + 28}" stroke="#fff" stroke-width="4" fill="none" stroke-linecap="round" opacity=".45"/>
-    <rect x="${x + (w - bar) / 2}" y="${y + h / 2 - 9}" width="${bar}" height="9" rx="4.5" fill="${C.white}" opacity=".95"/>`;
+    ${word(x + w / 2, y + h / 2 - 4, C.white, .95)}`;
   return `<rect x="${x - 5}" y="${y + 6}" width="${w}" height="${h}" rx="16" fill="#CDBE9C"/>
     <rect x="${x}" y="${y}" width="${w}" height="${h}" rx="16" fill="#F4EDDC"/>
     <path d="M${x + 24} ${y + 7} H ${x + w - 18} Q ${x + w - 8} ${y + 7} ${x + w - 8} ${y + 17} V ${y + 30}" stroke="#fff" stroke-width="4" fill="none" stroke-linecap="round" opacity=".8"/>
-    <rect x="${x + (w - bar) / 2}" y="${y + h / 2 - 5}" width="${bar}" height="9" rx="4.5" fill="#9AA5A0"/>`;
+    ${word(x + w / 2, y + h / 2, '#7E8B86')}`;
 };
 const render = () => {
   seed = 11;
@@ -48,7 +53,7 @@ const render = () => {
   const lx = 1340, ly = 732;
   const loose = `${shadowEl(lx - 16, ly + 20, 86, 16, .5)}<g transform="translate(${lx} ${ly})">
     <g transform="translate(-3 10) scale(1 .52) rotate(-12)"><rect x="-66" y="-46" width="132" height="92" rx="16" fill="#CDBE9C"/></g>
-    <g transform="scale(1 .52) rotate(-12)"><rect x="-66" y="-46" width="132" height="92" rx="16" fill="#F4EDDC"/><rect x="-44" y="-5" width="88" height="9" rx="4.5" fill="#9AA5A0"/></g></g>`;
+    <g transform="scale(1 .52) rotate(-12)"><rect x="-66" y="-46" width="132" height="92" rx="16" fill="#F4EDDC"/><rect x="-40" y="-8" width="52" height="16" rx="5" fill="#7E8B86"/><rect x="20" y="-8" width="24" height="16" rx="5" fill="#7E8B86"/></g></g>`;
   GROUND.push(`<filter id="grpS" x="-60%" y="-400%" width="220%" height="900%"><feGaussianBlur stdDeviation="12"/></filter>
   <filter id="grpB" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="10"/></filter>
   <path d="M${bx + bw} ${by + bh - 8} L${bx + 10} ${by + bh - 8} L${bx - 260} ${by + bh + 64} L${bx + bw - 260} ${by + bh + 64}Z" fill="${C.ink2}" opacity=".34" filter="url(#grpB)"/>
