@@ -775,12 +775,20 @@ function grupCard(g) {
     <div class="meta">${[curs(g.curs), `${n} ${n === 1 ? L('alumne', 'alumno') : L('alumnes', 'alumnos')}`, g.docent ? L('Docent', 'Docente') + ': ' + g.docent : '', ADMIN ? g.centre : ''].filter(Boolean).map(esc).join(' · ')}</div>
     <div class="codebox"><code>${esc(g.codi)}</code><button class="ib" title="${L('Copia el codi', 'Copiar el código')}" onclick="copyTxt(${js(g.codi)},L('Codi copiat','Código copiado'))">${ico('copy')}</button><button class="ib" title="${L('Mostra el codi a la pissarra', 'Mostrar el código en la pizarra')}" onclick="projectar(${g.id})">${ico('qr-code')}</button></div>
     <button class="btn full" onclick="copyInstr(${js(g.codi)})">${ico('copy')}${L('Copia les instruccions', 'Copiar las instrucciones')}</button>
+    ${grupApps(g).map(([v, nm], i, all) => `<button class="btn full primary galum" onclick="grupAlumne(${g.id},'${v}')">${ico('eye')}${L('Entra com a alumne', 'Entra como alumno')}${all.length > 1 ? ' · ' + nm : ''}</button>`).join('')}
     <div class="foot">${L("Els alumnes l'escriuen a Perfil → Tinc un codi de classe", 'Los alumnos lo escriben en Perfil → Tengo un código de clase')}</div>
     <hr class="gsep">${appField(g)}${(g.opts || {}).app === 'tech' ? '' : temaField(g)}${hasTech(g) ? techField(g) : ''}
     <details class="more gopts"><summary>${ico('chevron-right')}${L('Mode escola', 'Modo escuela')}<small>${modeSummary(g)}</small></summary>
       <p class="t3" style="margin:8px 0 4px;font-size:12.5px">${L("Tria què poden fer els alumnes d'aquest grup a l'app. Les lliçons, els repassos i la porta sempre hi són.", 'Elige qué pueden hacer los alumnos de este grupo en la app. Las lecciones, los repasos y la puerta siempre están.')}</p>
       ${[['batalles', L('Batalles entre alumnes', 'Batallas entre alumnos')], ['intercanvis', L('Intercanvi de cartes', 'Intercambio de cartas')], ['xat', L('Assistent amb IA (Numi Pro) · apagat si no l\'enceneu', 'Asistente con IA (Numi Pro) · apagado si no lo encendéis')]].map(([k, t]) => `<label class="switch"><input type="checkbox" ${(k === 'xat' ? (g.opts || {}).xat === true : (g.opts || {})[k] !== false) ? 'checked' : ''} onchange="grupOpt(${g.id},'${k}',this.checked,this)"><span>${t}</span></label>`).join('')}
     </details></div>`;
+}
+// el professor entra a l'app com un alumne del grup (alumne-docent.js): veu el mateix que ells i pot guiar la classe
+const grupApps = g => { const o = g.opts || {}, out = []; if (['tech', 'both'].includes(o.app)) out.push(['tech', 'Numi Tech']); if (o.app !== 'tech') out.push(g.curs >= 6 ? ['pro', 'Numi Pro'] : ['mates', 'Numi Mates']); return out; };
+function grupAlumne(id, v) {
+  const g = GRUPS.find(x => x.id === id); if (!g) return;
+  try { localStorage.setItem('numi-alumne-grup', JSON.stringify({ id: g.id, nom: g.nom, centre: g.centre || '', curs: g.curs, tema: g.tema || null, opts: g.opts || {}, lang: LANG })); } catch (e) { }
+  window.open(`/index.html?v=${v}&alumne=${id}`, '_blank');
 }
 // app del grup: Numi Mates (per defecte) o Numi Tech (extraescolars de programació i robòtica amb classe guiada)
 function appField(g) {

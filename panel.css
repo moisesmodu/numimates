@@ -456,3 +456,4 @@ details.more[open] summary .i{transform:rotate(90deg)}
 .sorow{--b-mov:#3D7BF4;--b-loop:#1FA463;--b-cond:#F2B21B;--b-art:#C447A8;--b-snd:#14A3B8;--b-var:#E0533F;--b-fn:#8B5CF6;--b-act:#F08A24}
 .mstu{display:flex;align-items:center;gap:14px;justify-content:space-between;flex-wrap:wrap;margin-bottom:14px;background:linear-gradient(135deg,#F2F6FF,#E8EEFF)}
 .mstu>div{flex:1;min-width:220px}
+.gc .galum{margin-top:8px}
