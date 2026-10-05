@@ -1033,3 +1033,9 @@ span.tb.c-cond{color:#3A2600}
 /* editors: el món centrat a la seva columna (sense forat blanc a sota) i la zona del programa amb una graella de punts, com un taulell */
 @media (min-width:900px){.tsbody>.tstage .tworld{display:flex;flex-direction:column;justify-content:center}}
 .tsess .tsbody>.tstage .tprog{background-color:#fff;background-image:radial-gradient(color-mix(in srgb,var(--cc) 18%,#D6DEF2) 1.2px,transparent 1.5px);background-size:18px 18px;background-position:6px 6px}
+/* teoria a part */
+.tpth{margin-top:6px;border:0;border-radius:12px;padding:9px 12px;font:inherit;font-weight:800;font-size:14px;cursor:pointer;color:color-mix(in srgb,var(--uc) 80%,#14204A);background:color-mix(in srgb,var(--uc) 10%,#fff);box-shadow:inset 0 0 0 1.5px color-mix(in srgb,var(--uc) 22%,#E1E7F7)}
+.tuth{display:inline-flex;align-items:center;gap:4px;margin-left:6px;border:0;border-radius:99px;padding:4px 11px;font:inherit;font-size:12.5px;font-weight:800;color:#fff;background:rgba(255,255,255,.22);box-shadow:inset 0 0 0 1px rgba(255,255,255,.35);cursor:pointer;position:relative;z-index:2}
+.tuth:active{transform:translateY(1px)}
+.tuhx .tuch{display:inline-flex;vertical-align:middle}.tuhx .tuth{vertical-align:middle;margin-top:6px}
+.tuhr{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:6px}.tuhr .tuch,.tuhr .tuth{margin:0}

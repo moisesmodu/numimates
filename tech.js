@@ -158,14 +158,16 @@ function tNodeTap(btn, ev) {
   const top = parseFloat(btn.style.top), left = parseFloat(btn.style.left), up = top > 34;
   const act = !ready ? '' : !open ? `<button class="tpgo lock" onclick="tLocked(tCourse('${c.id}'),1)">${TIC.lock}${L('Encara tancada', 'Aún cerrada')}</button>`
     : `<button class="tpgo" onclick="tOpen('${s.id}')">${TIC.play || '▶'}${d ? L('Torna-hi', 'Repite') : part ? L('Continua', 'Continúa') : L('Comença', 'Empieza')}</button>`;
+  const th = ready && open && tTheoryCards(s).length ? `<button class="tpth" onclick="tTheory('${c.id}','${s.id}')">📖 ${L('Repassa la teoria', 'Repasa la teoría')}${(t.th || {})[s.id] ? ' ✓' : ''}</button>` : '';
   const ns = d ? tSessStars(s) : 0;
   const el = document.createElement('div'); el.className = `tpop ${up ? 'up' : 'dn'}`; el.dataset.sid = s.id;
   el.innerHTML = `<span class="tpk">${s.proj ? `<em>${L('Projecte', 'Proyecto')}</em>` : `${L('Sessió', 'Sesión')} ${btn.dataset.n}`} · ${s.min || 40} min</span><b>${tx(s.t)}</b>
-    ${d ? `<span class="tpst">${[0, 1, 2].map(k => `<i class="${k < ns ? 'on' : ''}"></i>`).join('')}<small>${L('Feta', 'Hecha')}</small></span>` : !ready ? `<small class="tpm">${L('En preparació', 'En preparación')}</small>` : part ? `<small class="tpm">${L('La tens a mitges', 'La tienes a medias')}</small>` : ''}${act}`;
+    ${d ? `<span class="tpst">${[0, 1, 2].map(k => `<i class="${k < ns ? 'on' : ''}"></i>`).join('')}<small>${L('Feta', 'Hecha')}</small></span>` : !ready ? `<small class="tpm">${L('En preparació', 'En preparación')}</small>` : part ? `<small class="tpm">${L('La tens a mitges', 'La tienes a medias')}</small>` : ''}${act}${th}`;
   box.appendChild(el); btn.classList.add('sel');
   const W = box.clientWidth, w = el.offsetWidth, x = Math.max(6, Math.min(W - w - 6, left / 100 * W - w / 2));
   el.style.left = x + 'px'; el.style.setProperty('--ax', (left / 100 * W - x) + 'px');
-  el.style.top = up ? `calc(${top}% - ${btn.offsetHeight / 2 + 16 + el.offsetHeight}px)` : `calc(${top}% + ${btn.offsetHeight / 2 + 20}px)`;
+  const setDn = () => { el.className = 'tpop dn'; el.style.top = `calc(${top}% + ${btn.offsetHeight / 2 + 20}px)`; };
+  if (up) { el.style.top = `calc(${top}% - ${btn.offsetHeight / 2 + 16 + el.offsetHeight}px)`; if (el.offsetTop < 6) setDn(); } else setDn();
 }
 document.addEventListener('click', e => { if (!e.target.closest('.tpop,.tnode')) { document.querySelectorAll('.tpop').forEach(x => x.remove()); document.querySelectorAll('.tnode.sel').forEach(x => x.classList.remove('sel')); } });
 function tIsland(c, u, ui, nxt) {
@@ -197,7 +199,7 @@ function tIsland(c, u, ui, nxt) {
       ${cur ? `<span class="tnbit3" aria-hidden="true"><img src="img/tech/${c.id === 'robotica' ? 'maqueen-happy' : 'bit-wave'}.webp" alt="" width="64" height="64"></span><span class="tntag">${t.s[s.id] && t.s[s.id].i ? L('Continua', 'Continúa') : L('Comença', 'Empieza')}</span>` : ''}</button>`;
   }).join('');
   const nd = u.s.filter(s => tDone(s.id)).length;
-  return `<section class="tunit2 ${use3 ? 'i3' : ''} ${u.s.some(tReady) ? '' : 'soon'}" style="--uc:${col}"><header class="tuh2"><div class="tuhx"><span class="tuk">${L('Unitat', 'Unidad')} ${ui + 1}</span><h2>${tx(u.t)}</h2><p>${tx(u.d)}</p><span class="tuch ${nd === n ? 'ok' : ''}">${nd === n ? '✓ ' : ''}${nd}/${n} ${L('sessions', 'sesiones')}</span></div><span class="tubot ${c.id === 'robotica' ? 'mq' : ''}" aria-hidden="true">${c.id === 'robotica' ? `<img src="img/tech/maqueen-${nd ? 'happy' : 'idle'}.webp" alt="" width="72" height="72">` : bitChar(nd === n ? 'win' : nd ? 'happy' : 'idle')}</span></header>
+  return `<section class="tunit2 ${use3 ? 'i3' : ''} ${u.s.some(tReady) ? '' : 'soon'}" style="--uc:${col}"><header class="tuh2"><div class="tuhx"><span class="tuk">${L('Unitat', 'Unidad')} ${ui + 1}</span><h2>${tx(u.t)}</h2><p>${tx(u.d)}</p><span class="tuhr"><span class="tuch ${nd === n ? 'ok' : ''}">${nd === n ? '✓ ' : ''}${nd}/${n} ${L('sessions', 'sesiones')}</span>${u.s.some(x => tReady(x) && tTheoryCards(x).length) && u.s.some(x => tSessOpen(c, x)) ? `<button class="tuth" onclick="tTheory('${c.id}',null,${ui})">📖 ${L('Teoria', 'Teoría')}</button>` : ''}</span></div><span class="tubot ${c.id === 'robotica' ? 'mq' : ''}" aria-hidden="true">${c.id === 'robotica' ? `<img src="img/tech/maqueen-${nd ? 'happy' : 'idle'}.webp" alt="" width="72" height="72">` : bitChar(nd === n ? 'win' : nd ? 'happy' : 'idle')}</span></header>
     ${use3 ? `<div class="tmap t3"><div class="tmf"><img class="tisl3" src="img/tech/isles/${c.id}-${ui + 1}.webp" alt="" width="900" height="1125" loading="${ui ? 'lazy' : 'eager'}" decoding="async" onload="tSea(this)">${TFX}${nodes}</div></div>` : `<div class="tmap" style="aspect-ratio:${W}/${H}">${svg}${nodes}</div>`}</section>`;
 }
 
@@ -959,3 +961,24 @@ function tDemo(k, cid, n) {
 addEventListener('load', () => setTimeout(() => { try { if (new URLSearchParams(location.search).has('tipus') && typeof P !== 'undefined' && P && P.unlockAll && typeof IS_TECH !== 'undefined' && IS_TECH) tTypes(); } catch (e) { } }, 1200));
 // l'enunciat dels editors es veu retallat (2-3 línies): un toc l'obre sencer i un altre el torna a plegar
 document.addEventListener('click', e => { const q = e.target.closest('.tsbody>.tsq2, .tdes>.tsq2'); if (q && !e.target.closest('a,button')) { q.classList.toggle('open'); typeof tFit === 'function' && requestAnimationFrame(tFit); } });
+
+/* ---------- Teoria a part (com a Numi Mates): les targetes de teoria d'una sessió o d'una unitat, per repassar-les quan vulguis ----------
+   Des de la fitxa de cada parada («📖 Teoria») i des de la capçalera de la unitat. No compta com a sessió feta ni desa progrés. */
+function tTheoryCards(s) { return (s.steps || []).filter(st => st.k === 'learn').flatMap(st => st.cards || []); }
+function tTheory(cid, sid, ui) {
+  const c = tCourse(cid); if (!c) return;
+  const ss = sid ? [tFind(sid).s] : c.units[ui].s.filter(s => tReady(s));
+  const cards = ss.flatMap(s => tTheoryCards(s).map((cd, j) => !sid && j === 0 ? { ...cd, k: `${L('Sessió', 'Sesión')} ${c.units[ui].s.indexOf(s) + 1} · ${tx(s.t)}|${L('Sessió', 'Sesión')} ${c.units[ui].s.indexOf(s) + 1} · ${tx(s.t)}` } : cd));
+  if (!cards.length) return toast(L('Aquesta sessió no té teoria.', 'Esta sesión no tiene teoría.'));
+  document.querySelectorAll('.tpop').forEach(x => x.remove());
+  const t = TS_(); t.th = t.th || {}; ss.forEach(s => t.th[s.id] = 1); save();
+  TSS = { c, s: { id: 'th', t: sid ? ss[0].t : c.units[ui].t, steps: [{ k: 'learn', ph: 'descobreix', cards }] }, id: null, i: 0, ok: 0, n: 0, theory: { sid, ui } };
+  VIEW = 'tsess'; tStep();
+  const ph = document.querySelector('.tstop .tsph'); if (ph) ph.textContent = '📖 ' + L('Teoria', 'Teoría') + ' · ' + tx(TSS.s.t);
+  const bar = document.querySelector('.tstop .tphases'); if (bar) bar.style.visibility = 'hidden';
+  const mn = document.querySelector('.tstop .tsmin'); if (mn) mn.textContent = '';
+}
+{ const n0 = tNext, q0 = tQuit, f0 = tFinish, back = () => { tStop(); TSS = null; TB = null; go('home'); };
+  tNext = function () { if (TSS && TSS.theory) return back(); return n0.apply(this, arguments); };
+  tQuit = function () { if (TSS && TSS.theory) return back(); return q0.apply(this, arguments); };
+  tFinish = function () { if (TSS && TSS.theory) return back(); return f0.apply(this, arguments); }; }
