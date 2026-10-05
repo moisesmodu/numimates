@@ -876,3 +876,16 @@ span.tb.c-cond{color:#3A2600}
   .tsbody .tcol:has(>.tscene):has(>.tart)>.tsh{grid-column:1/-1}
   .tsbody .tcol:has(>.tscene):has(>.tart)>.tart{grid-column:2;grid-row:2/span 4;align-self:center}
 }
+/* «vista d'alumne» del professor */
+.tdocbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:10px 16px 0;padding:9px 12px 9px 10px;border-radius:16px;background:linear-gradient(135deg,#14204A,#2F3F8F);color:#fff;font-size:14px;box-shadow:0 10px 26px rgba(20,32,74,.25)}
+.tdocbar .tdi{width:32px;height:32px;border-radius:10px;display:grid;place-items:center;background:rgba(255,255,255,.14);font-size:18px}
+.tdocbar b{font-weight:900}
+.tdocbar .tdm{opacity:.75;font-size:12.5px;flex:1;min-width:140px}
+.tdocbar button,.tdocbar a{border:0;border-radius:11px;padding:7px 12px;font:inherit;font-weight:800;font-size:13px;cursor:pointer;text-decoration:none}
+.tdocbar button{background:rgba(255,255,255,.14);color:#fff}
+.tdocbar a{background:#FFC531;color:#14204A}
+@media (max-width:600px){.tdocbar{margin:8px 10px 0;gap:8px;flex-wrap:nowrap;padding:7px 8px}.tdocbar .tdm,.tdocbar .tdl{display:none}.tdocbar b{flex:1;white-space:nowrap}.tdocbar .tdi{width:28px;height:28px;font-size:16px}.tdocbar button{font-size:16px;padding:5px 10px}}
+.tdocno{position:fixed;inset:0;z-index:200;display:grid;place-items:center;background:rgba(20,32,74,.55);padding:16px}
+.tdocno>div{max-width:440px;padding:28px;border-radius:22px;background:#fff;color:#14204A;text-align:center;font-weight:600;box-shadow:0 20px 60px rgba(0,0,0,.25)}
+.tdocno b{font-size:22px}
+.tdocno a{display:inline-block;margin-top:6px;padding:12px 20px;border-radius:14px;background:#2F5BEA;color:#fff;text-decoration:none;font-weight:800}

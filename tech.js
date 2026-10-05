@@ -61,8 +61,12 @@ function tTop() {
   return `<header class="ttop"><img class="tlogo" src="${VAR.logo}" alt="${VAR.name}"><button class="avatar" onclick="go('profile')" title="${L('El meu perfil', 'Mi perfil')}">${typeof meC === 'function' ? meC('idle') : bitChar('idle')}</button>
     <div class="chips"><button class="chip tstarc" onclick="go('home')" title="${L('Estrelles dels reptes', 'Estrellas de los retos')}"><i class="ci">⭐</i>${tStarTotal()}</button><button class="chip" onclick="go('badges')" title="${L('Insígnies', 'Insignias')}"><i class="ci">🏅</i>${Object.keys(t.badges).length}</button><button class="chip" onclick="go('projectes')" title="${L('Projectes', 'Proyectos')}"><i class="ci">🚀</i>${t.port.length}</button></div></header>`;
 }
+// barra de la «vista d'alumne» del professor (tech-revisio.js)
+function tDocBar() {
+  return `<div class="tdocbar"><span class="tdi">🎓</span><b>${L("Vista d'alumne", 'Vista de alumno')}</b><span class="tdm">${L('Tot obert · el progrés només es desa en aquest dispositiu', 'Todo abierto · el progreso solo se guarda en este dispositivo')}</span><button onclick="tDocReset()" title="${L('Comença de nou', 'Empieza de nuevo')}">↺<span class="tdl"> ${L('Comença de nou', 'Empieza de nuevo')}</span></button><a href="profe.html#/material">${L('Panell', 'Panel')}<span class="tdl"> ${L('del professor', 'del profesor')}</span></a></div>`;
+}
 function tShell(t, body, hero = '', side = '') {
-  return `<div class="tpage tp-${t} ${side ? 'tside2' : ''}">${tTop()}<div class="tlay"><div class="tlmain">${hero}<main class="tmain">${body}</main></div>${side ? `<aside class="tside">${side}</aside>` : ''}</div>${tNav(t)}</div>`;
+  return `<div class="tpage tp-${t} ${side ? 'tside2' : ''}">${P && P.docent ? tDocBar() : ''}${tTop()}<div class="tlay"><div class="tlmain">${hero}<main class="tmain">${body}</main></div>${side ? `<aside class="tside">${side}</aside>` : ''}</div>${tNav(t)}</div>`;
 }
 function techGo(v) {
   tStop(); VIEW = ['home', 'projectes', 'profile', 'badges'].includes(v) ? v : 'home';
