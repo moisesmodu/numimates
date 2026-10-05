@@ -19,7 +19,7 @@ const woodTex = canvasTex(256, 256, (g, w, h) => { g.fillStyle = '#C99560'; g.fi
 woodTex.wrapS = woodTex.wrapT = THREE.RepeatWrapping;
 
 /* ---------- El Maqueen Lite V5 ---------- */
-function makeBot(other) {
+export function makeBot(other) {
   const bot = new THREE.Group(), m = {
     pcb: std(other ? '#5B6478' : '#16233D', { roughness: .45, metalness: .15 }), edge: std('#E5B53A', { roughness: .35, metalness: .6 }), tyre: std('#16181D', { roughness: .9 }), hub: std('#F2B21B', { roughness: .4 }),
     bat: std('#2A2F3A', { roughness: .6 }), mb: std('#0D0D0F', { roughness: .35, metalness: .2 }), gold: std('#D8A93A', { roughness: .3, metalness: .8 }), btn: std('#3A3D45'),
@@ -63,7 +63,7 @@ function makeBot(other) {
   bot.traverse(o => { if (o.isMesh && o !== under && !lineDots.includes(o)) o.castShadow = true; });
   return { bot, wheels, mbT, mbMat, heads, under, underM, lineDots, mx: null };
 }
-function drawMicrobit(T, rows, num) {
+export function drawMicrobit(T, rows, num) {
   const g = T.c.getContext('2d'), w = T.c.width, h = T.c.height;
   g.fillStyle = '#121214'; g.fillRect(0, 0, w, h); g.fillStyle = '#C9A24A'; g.fillRect(0, h - 22, w, 22); for (let i = 0; i < 20; i++) { g.fillStyle = '#121214'; g.fillRect(8 + i * 12.4, h - 20, 3, 18); }
   g.fillStyle = '#E8E8E8'; g.font = '700 13px sans-serif'; g.fillText('A', 18, 104); g.fillText('B', w - 28, 104);
