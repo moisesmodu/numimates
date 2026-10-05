@@ -77,7 +77,7 @@ const TK_LOOP = ['fwd', 'left', 'right', 'rep'], TK_LOOPB = ['fwd', 'left', 'rig
 
 
 const TECH = [
-  { id: 'robot', ico: TCI.robot, color: '#2F6BFF', name: 'Tech Robot|Tech Robot', short: 'Robot|Robot', age: '6-10 anys|6-10 años',
+  { id: 'robot', ico: TCI.robot, color: '#2F6BFF', name: 'Tech Robot|Tech Robot', short: 'Robot|Robot', age: '6-8 anys|6-8 años',
     desc: "Pensament computacional amb en Bit, el robot de l'illa: ordres, bucles, sensors, funcions i variables, amb reptes i projectes.|Pensamiento computacional con Bit, el robot de la isla: órdenes, bucles, sensores, funciones y variables, con retos y proyectos.",
     units: [
       { t: 'Ordres en ordre|Órdenes en orden', d: 'Algorismes, girs i errors|Algoritmos, giros y errores', color: '#2F6BFF', s: [
@@ -2110,7 +2110,7 @@ const TECH = [
           ] }
       ] }
     ] },
-  { id: 'robotica', ico: TCI.robotica, color: '#E2574C', soon: true, name: 'Tech Robòtica|Tech Robótica', short: 'Robòtica|Robótica', age: '12-14 anys|12-14 años',
+  { id: 'robotica', ico: TCI.robotica, color: '#E2574C', soon: true, name: 'Tech Robòtica|Tech Robótica', short: 'Robòtica|Robótica', age: '10-12 anys|10-12 años',
     desc: "Un robot amb motors i sensors en un simulador: distància, línia, llum i so. Seguir línies, esquivar obstacles, aparcar sol, sumo i missions de rescat.|Un robot con motores y sensores en un simulador: distancia, línea, luz y sonido. Seguir líneas, esquivar obstáculos, aparcar solo, sumo y misiones de rescate.",
     units: [
       { t: 'Què és un robot?|¿Qué es un robot?', d: 'Sensors, cervell i motors|Sensores, cerebro y motores', s: [{ id: 'k1-1', t: 'Robots al nostre voltant|Robots a nuestro alrededor' }, { id: 'k1-2', t: 'Motors i velocitat|Motores y velocidad' }, { id: 'k1-3', t: 'Girar sobre si mateix|Girar sobre sí mismo' }, { id: 'k1-4', t: 'Projecte: el passeig|Proyecto: el paseo', proj: true }] },
@@ -2122,7 +2122,7 @@ const TECH = [
       { t: 'Missions|Misiones', d: 'Reptes de robòtica|Retos de robótica', s: [{ id: 'k7-1', t: 'El robot aspirador|El robot aspirador' }, { id: 'k7-2', t: 'Sumo|Sumo' }, { id: 'k7-3', t: 'Rescat|Rescate' }, { id: 'k7-4', t: 'Projecte: la cursa contrarellotge|Proyecto: la carrera contrarreloj', proj: true }] },
       { t: 'El meu robot|Mi robot', d: 'Projecte final|Proyecto final', s: [{ id: 'k8-1', t: 'Dissenya la missió|Diseña la misión' }, { id: 'k8-2', t: 'Programa i prova|Programa y prueba' }, { id: 'k8-3', t: 'Del simulador al robot de veritat|Del simulador al robot de verdad' }, { id: 'k8-4', t: 'Presentació i diploma|Presentación y diploma', proj: true }] }
     ] },
-  { id: 'creadors', ico: TCI.creadors, color: '#F08A24', soon: true, name: 'Tech Creadors|Tech Creadores', short: 'Creadors|Creadores', age: '10-12 anys|10-12 años',
+  { id: 'creadors', ico: TCI.creadors, color: '#F08A24', soon: true, name: 'Tech Creadors|Tech Creadores', short: 'Creadors|Creadores', age: '9-11 anys|9-11 años',
     desc: "Programació amb blocs per crear animacions, històries interactives i videojocs propis, amb personatges, sons, punts i nivells.|Programación con bloques para crear animaciones, historias interactivas y videojuegos propios, con personajes, sonidos, puntos y niveles.",
     units: [
       { t: "Primers passos a l'escenari|Primeros pasos en el escenario", d: 'Personatges i moviment|Personajes y movimiento', s: [{ id: 'g1-1', t: 'El meu primer personatge|Mi primer personaje' }, { id: 'g1-2', t: 'Moure i parlar|Mover y hablar' }, { id: 'g1-3', t: 'Fons i escenes|Fondos y escenas' }, { id: 'g1-4', t: 'Projecte: presenta\'t|Proyecto: preséntate', proj: true }] },
@@ -2146,7 +2146,7 @@ const TECH = [
       { t: 'Per al mòbil|Para el móvil', d: 'Disseny adaptable|Diseño adaptable', s: [{ id: 'w7-1', t: 'Pantalles petites|Pantallas pequeñas' }, { id: 'w7-2', t: 'Botons i efectes|Botones y efectos' }, { id: 'w7-3', t: 'Detecta la web falsa|Detecta la web falsa' }, { id: 'w7-4', t: 'Projecte: la guia de Lleida|Proyecto: la guía de Lleida', proj: true }] },
       { t: 'La meva web|Mi web', d: 'Projecte final|Proyecto final', s: [{ id: 'w8-1', t: 'Planificar|Planificar' }, { id: 'w8-2', t: 'Construir|Construir' }, { id: 'w8-3', t: 'Revisar i millorar|Revisar y mejorar' }, { id: 'w8-4', t: 'Presentació i diploma|Presentación y diploma', proj: true }] }
     ] },
-  { id: 'digital', ico: TCI.digital, color: '#3CC47C', soon: true, name: 'Tech Digital|Tech Digital', short: 'Digital|Digital', age: '10-12 anys|10-12 años',
+  { id: 'digital', ico: TCI.digital, color: '#3CC47C', soon: true, name: 'Tech Digital|Tech Digital', short: 'Digital|Digital', age: '9-12 anys|9-12 años',
     desc: "Ciutadania digital: contrasenyes, privadesa, bulos, respecte a la xarxa, què és (i què no és) la intel·ligència artificial i com cuidar-se davant les pantalles.|Ciudadanía digital: contraseñas, privacidad, bulos, respeto en la red, qué es (y qué no es) la inteligencia artificial y cómo cuidarse frente a las pantallas.",
     units: [
       { t: 'Segur a la xarxa|Seguro en la red', d: 'Contrasenyes i privadesa|Contraseñas y privacidad', s: [{ id: 'd1-1', t: 'Contrasenyes fortes|Contraseñas fuertes' }, { id: 'd1-2', t: 'Què compartim?|¿Qué compartimos?' }, { id: 'd1-3', t: "L'empremta digital|La huella digital" }, { id: 'd1-4', t: 'Projecte: el meu decàleg|Proyecto: mi decálogo', proj: true }] },
