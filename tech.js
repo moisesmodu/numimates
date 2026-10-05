@@ -259,7 +259,7 @@ function tStep() {
   tStop(); TB = null; typeof tDemoStop === 'function' && tDemoStop();
   const st = TSS.s.steps[TSS.i], ph = tx(TPH[st.ph].join('|'));
   TSS.st = st; TSS.ready = false; TSS.t0 = Date.now();
-  app.innerHTML = `<div class="tsess k-${st.k}"><div class="tstop"><button class="xbtn" onclick="tQuit()" aria-label="${L('Surt', 'Salir')}">✕</button><div class="tstopm"><b class="tsph">${ph}</b>${tBar()}</div><span class="tsmin">${TSS.i + 1}/${TSS.s.steps.length}</span></div>
+  app.innerHTML = `<div class="tsess k-${st.k} c-${TSS.c.id}" style="--cc:${TSS.c.color};--hb:url(img/tech/scenes/hero-${TSS.c.id}.webp)"><div class="tstop"><button class="xbtn" onclick="tQuit()" aria-label="${L('Surt', 'Salir')}">✕</button><div class="tstopm"><b class="tsph">${ph}</b>${tBar()}</div><span class="tsmin">${TSS.i + 1}/${TSS.s.steps.length}</span></div>
     <div class="tsbody" id="tsb"></div><div class="tsfoot" id="tsf"></div></div>`;
   (TSTEP[st.k] || TSTEP.story)(st);
   const b = document.querySelector('.tsbody'); if (b) b.scrollTop = 0;

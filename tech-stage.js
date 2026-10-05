@@ -606,7 +606,7 @@ const SGD = { cur: null };
 function sgMiniHTML(m) { return `<div class="sdemo"><div class="sstage mini"><div class="sbg">${STG_BG[m.w.bg] ? STG_BG[m.w.bg].svg() : ''}</div><div class="ssprites"></div><div class="svars"></div></div>${m.code !== false ? `<div class="sdcode">${sgDemoChips(SQ(m.prog), m)}</div>` : ''}</div>`; }
 function sgDemoChips(P, m) {
   const ch = l => (l || []).map(b => `<span class="rdb c-${SG_CAT[b.k]}"><span class="tbi">${sgIco(b.k)}</span><span>${sgLabel(b, undefined, m)}</span></span>${Array.isArray(b.b) ? `<span class="rdin">${ch(b.b)}</span>${b.e ? `<span class="rdelse">${L('si no', 'si no')}</span><span class="rdin">${ch(b.e)}</span>` : ''}` : ''}`).join('');
-  return Object.entries(P).flatMap(([id, H]) => Object.entries(H).flatMap(([h, scr]) => scr.map(l => `<div class="rdh"><b>${esc(sgWho(id, stgWorld(m.w)))} · ${SG_HAT(h)}</b>${ch(l)}</div>`))).join('');
+  return Object.entries(P).flatMap(([id, H]) => Object.entries(H).flatMap(([h, scr]) => scr.map(l => `<div class="rdh"><b>${esc(sgWho(id, stgWorld(m.w)))}<i class="${h === 'flag' ? 'hf' : ''}"> · ${SG_HAT(h)}</i></b>${ch(l)}</div>`))).join('');
 }
 function sgMiniStart(el, m) {
   if (SGD.cur) { cancelAnimationFrame(SGD.cur.raf); clearTimeout(SGD.cur.t); }
