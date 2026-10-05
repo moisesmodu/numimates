@@ -21,6 +21,7 @@ export default async function handler(req, res) {
     const me = await who(req); if (!me || !me.docent) return ok(res, { error: 'sessio' }, 401);
     if (!validPass(b.password) || String(b.password).length < 8) return ok(res, { error: 'contrasenya-format' }, 400);
     const h = hashPass(b.password); await sql`UPDATE mates.docents SET pass_hash = ${h} WHERE id = ${me.docent.id}`;
+    try { await sql`UPDATE mates.docents SET pass_tmp = NULL WHERE id = ${me.docent.id}`; } catch (e) { /* la columna es crea des del panell */ }
     // els testimonis anteriors deixen de valer (també els d'altres ordinadors); aquest en rep un de nou
     return ok(res, { ok: true, token: makeToken({ id: me.docent.id, pass_hash: h }) });
   }

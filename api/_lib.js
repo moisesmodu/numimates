@@ -7,7 +7,7 @@ export function summary(s) {
   return { xp: s.xp | 0, streak: s.streak | 0, best: s.best | 0, last_day: s.lastDay || null, lessons: st.lessons | 0, answers: st.answers | 0, correct: st.correct | 0, course: s.course | 0 };
 }
 export function ok(res, data, status = 200) { res.setHeader('Cache-Control', 'no-store'); res.status(status).json(data); }
-import { scryptSync, randomBytes, timingSafeEqual, createHash, createHmac, randomInt } from 'crypto';
+import { scryptSync, randomBytes, timingSafeEqual, createHash, createHmac, randomInt, createCipheriv, createDecipheriv } from 'crypto';
 export const cleanUser = u => String(u || '').trim().toLowerCase();
 export const validUser = u => /^[a-z0-9._-]{3,20}$/.test(u);
 export const validPass = p => typeof p === 'string' && p.length >= 4 && p.length <= 60;
@@ -57,6 +57,11 @@ let TOKT = null;
 const tokTable = () => TOKT || (TOKT = sql`CREATE TABLE IF NOT EXISTS mates.alumne_tok (hash text PRIMARY KEY, code text NOT NULL, created timestamptz NOT NULL DEFAULT now(), last timestamptz NOT NULL DEFAULT now())`
   .then(() => sql`CREATE INDEX IF NOT EXISTS alumne_tok_code ON mates.alumne_tok (code)`).catch(e => { TOKT = null; throw e; }));
 const sha = t => createHash('sha256').update(String(t)).digest('hex');
+// contrasenya provisional d'un docent (la que genera l'administrador): es desa xifrada (AES-256-GCM, clau derivada de
+// SESSION_SECRET) perquè l'administrador la pugui tornar a veure al panell fins que el docent la canviï per una de pròpia.
+const tmpKey = () => createHash('sha256').update((process.env.SESSION_SECRET || 'x') + ':docent-pass-tmp').digest();
+export function sealTmp(p) { const iv = randomBytes(12), c = createCipheriv('aes-256-gcm', tmpKey(), iv), e = Buffer.concat([c.update(String(p), 'utf8'), c.final()]); return [iv, c.getAuthTag(), e].map(x => x.toString('base64url')).join('.'); }
+export function openTmp(s) { try { const [iv, tag, e] = String(s).split('.').map(x => Buffer.from(x, 'base64url')); const d = createDecipheriv('aes-256-gcm', tmpKey(), iv); d.setAuthTag(tag); return Buffer.concat([d.update(e), d.final()]).toString('utf8'); } catch (err) { return null; } }
 export async function issueTok(res, code) {
   await tokTable(); const t = randomBytes(24).toString('base64url');
   await sql`INSERT INTO mates.alumne_tok (hash, code) VALUES (${sha(t)}, ${code})`;
