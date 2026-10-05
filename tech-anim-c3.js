@@ -733,6 +733,21 @@ Object.assign(TANI, (() => {
   const badge = (x, y, name, items, ts) => `<rect x="${x}" y="${y}" width="98" height="30" rx="10" fill="#fff" stroke="#E0533F" stroke-width="2.5"/><text x="${x + 10}" y="${y + 20}" class="tat s" fill="#6B7590">${name}</text>${sw(items.map(n => num(x + 78, y + 22, n, 19)), ts)}`;
   const pet = (x, y, w, i) => typeof STG_ART !== 'undefined' && STG_ART.mascota ? STG_ART.mascota.svg(i).replace('<svg ', `<svg x="${x}" y="${y}" width="${w}" height="${w * 110 / 120}" `) : `<circle cx="${x + w / 2}" cy="${y + w / 2}" r="${w / 2.4}" fill="#3CC47C"/>`;
   return {
+    // un marcador amb tres variables: cada encert suma punts i ratxa; cada error suma errors i posa la ratxa a 0
+    g6board() {
+      const ts = [0, 1, 2, 3, 4];
+      const hat = (y, txt, col) => `<path d="M14 ${y}h150a8 8 0 0 1 8 8v16h-158z" fill="${col}"/><text x="22" y="${y + 17}" class="tat s w">${txt}</text>`;
+      const hl = (y, times) => times.map(t => `<rect x="10" y="${y}" width="180" height="96" rx="12" fill="none" stroke="#FFC531" stroke-width="4" opacity="0">${vis(t, t + .7)}</rect>`).join('');
+      const mark = (t, ok) => `<g opacity="0">${vis(t, t + .8)}<circle cx="259" cy="172" r="17" fill="${ok ? '#3CC47C' : '#EF5A5A'}" stroke="#fff" stroke-width="2.5"/>${ok ? '<path d="M251 172l6 6l10 -11" stroke="#fff" stroke-width="3.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>' : '<path d="M252 165l14 14M266 165l-14 14" stroke="#fff" stroke-width="3.5" stroke-linecap="round"/>'}</g>`;
+      return tSvg(226, `<g ${tA(.1, 'ta-in')}><rect x="6" y="6" width="190" height="204" rx="14" fill="#fff" stroke="#DCE4FA" stroke-width="2"/>
+          ${hat(14, L('Quan encerta', 'Al acertar'), '#1FA463')}${blk(18, 42, 168, L('suma a punts 2', 'suma a puntos 2'))}${blk(18, 74, 168, L('suma a ratxa 1', 'suma a racha 1'))}
+          ${hat(112, L('Quan falla', 'Al fallar'), '#C0392B')}${blk(18, 140, 168, L('suma a errors 1', 'suma a errores 1'))}${blk(18, 172, 168, L('posa ratxa a 0', 'pon racha a 0'))}</g>
+        ${hl(10, [1, 2, 4])}${hl(108, [3])}
+        <g ${tA(.3, 'ta-in')}><rect x="204" y="6" width="110" height="204" rx="14" fill="#E6F4FF" stroke="#B9DDF7" stroke-width="2"/>
+          ${badge(210, 18, L('punts', 'puntos'), [0, 2, 4, 4, 6], ts)}${badge(210, 58, L('errors', 'errores'), [0, 0, 0, 1, 1], ts)}${badge(210, 98, L('ratxa', 'racha'), [0, 1, 2, 0, 1], ts)}</g>
+        ${mark(1, true)}${mark(2, true)}${mark(3, false)}${mark(4, true)}
+        <text x="160" y="222" text-anchor="middle" class="tat s" ${tA(.6, 'ta-fade')}>${L('Cada variable, les seves regles', 'Cada variable, sus reglas')}</text>`);
+    },
     // una variable: una capsa amb nom (punts) i un número que canvia; el marcador de l'escenari diu el mateix
     g6box() {
       const ts = [0, 1.4, 2.6, 3.8];

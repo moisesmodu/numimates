@@ -706,13 +706,13 @@ const STOPS = { tropic: stopTropic, lab: stopLab, teatre: stopTeatre, ciutat: st
 async function scatterNature(X, o) {
   const { sc, R, pl, top } = X;
   const tree = q => put(sc, o.treeList[Math.floor(R() * o.treeList.length)], q[0], top, q[1], { s: .85 + R() * .35, ry: R() * 6, tint: o.treeTint && o.treeTint(R) });
-  for (let c = 0; c < (o.clusters || 0); c++) { const q = pl.find(.3, 1.35, { zone: (x, z) => edgeK(x, z) > (o.edge ?? .5) }); if (!q) continue; await tree(q);
+  for (let c = 0; c < (o.clusters || 0); c++) { const q = pl.find(.3, 1.35, { zone: (x, z) => edgeK(x, z) > (o.edge ?? .5), path: true }); if (!q) continue; await tree(q);
     for (let k = 0; k < 7; k++) { const a = R() * 6.283, d = .45 + R() * .4, x = q[0] + Math.cos(a) * d, z = q[1] + Math.sin(a) * d, w = R();
-      if (w < .4 && pl.ok(x, z, .28, 1.35)) { pl.take(x, z, .28); await tree([x, z]); }
+      if (w < .4 && pl.ok(x, z, .28, 1.35, { path: true })) { pl.take(x, z, .28); await tree([x, z]); }
       else if (w < .7 && pl.ok(x, z, .2, .4)) { pl.take(x, z, .2); await put(sc, ['plant_bushLarge', 'plant_bushDetailed', 'plant_bush'][Math.floor(R() * 3)], x, top, z, { s: 1.15, ry: R() * 6, tint: o.bushTint }); }
       else if (o.flowerList && pl.ok(x, z, .14, .2)) { pl.take(x, z, .14); for (let f = 0; f < 3; f++) await put(sc, o.flowerList[Math.floor(R() * o.flowerList.length)], x + (R() - .5) * .3, top, z + (R() - .5) * .3, { s: 1.3, ry: R() * 6 }); } } }
   // arbres, sobretot a les vores
-  for (let i = 0, k = 0; i < o.trees && k < 900; k++) { const h = 1.35, q = pl.find(.32, h, { tries: 1 }); if (!q) continue; if (edgeK(q[0], q[1]) < (o.edge ?? .5) && R() < .75) { pl.occ.pop(); continue; } await put(sc, o.treeList[Math.floor(R() * o.treeList.length)], q[0], top, q[1], { s: .85 + R() * .35, ry: R() * 6, tint: o.treeTint && o.treeTint(R) }); i++; }
+  for (let i = 0, k = 0; i < o.trees && k < 900; k++) { const h = 1.35, q = pl.find(.32, h, { tries: 1, path: true }); if (!q) continue; if (edgeK(q[0], q[1]) < (o.edge ?? .5) && R() < .75) { pl.occ.pop(); continue; } await put(sc, o.treeList[Math.floor(R() * o.treeList.length)], q[0], top, q[1], { s: .85 + R() * .35, ry: R() * 6, tint: o.treeTint && o.treeTint(R) }); i++; }
   for (let i = 0; i < (o.bushes || 0); i++) { const q = pl.find(.28, .4); if (!q) break; await put(sc, ['plant_bushLarge', 'plant_bushDetailed', 'plant_bush'][Math.floor(R() * 3)], q[0], top, q[1], { s: 1.25, ry: R() * 6, tint: o.bushTint }); }
   for (let i = 0; i < (o.flowers || 0); i++) { const q = pl.find(.3, .2); if (!q) break; for (let f = 0; f < 5; f++) await put(sc, o.flowerList[Math.floor(R() * o.flowerList.length)], q[0] + (R() - .5) * .55, top, q[1] + (R() - .5) * .55, { s: 1.3, ry: R() * 6 }); }
   for (let i = 0; i < (o.grass || 0); i++) { const [x, z] = X.cells[Math.floor(R() * X.cells.length)], px = x + (R() - .5) * .9, pz = z + (R() - .5) * .9; if (pl.ok(px, pz, .08, .1)) await put(sc, R() < .7 ? 'grass' : 'grass_leafs', px, top, pz, { s: 1.15, ry: R() * 6, tint: o.grassTint }); }
@@ -831,8 +831,8 @@ async function decorTeatre(X) {
   for (let i = 0; i < nt; i++) { const s = i ? .85 : 1.05, q = pl.best(.62 * s, 1.35 * s, { at: TA[i] }); if (!q) continue; const [a, b] = TC[(i + X.seed) % TC.length]; tent(sc, q[0], top, q[1], s, a, b, R() * 6); }
   // la càmera de cinema i un focus que il·lumina l'escenari
   if (stageAt) { const st = new THREE.Vector3(stageAt[0], top + .5, stageAt[1]);
-    const fc = pl.best(.3, .9, { at: [stageAt[0] + sideX * 1.9, stageAt[1] + .9] }); if (fc) filmCamera(sc, fc[0], top, fc[1], Math.atan2(st.x - fc[0], st.z - fc[1]), 1.1);
-    const sp = pl.best(.25, 1.2, { at: [stageAt[0] - sideX * .3, stageAt[1] + 2.2] }); if (sp) spotlight(sc, sp[0], top, sp[1], st); }
+    const fc = pl.best(.3, .9, { at: [stageAt[0] + sideX * 1.9, stageAt[1] + .9], path: true }); if (fc) filmCamera(sc, fc[0], top, fc[1], Math.atan2(st.x - fc[0], st.z - fc[1]), 1.1);
+    const sp = pl.best(.25, 1.2, { at: [stageAt[0] - sideX * .3, stageAt[1] + 2.2], path: true }); if (sp) spotlight(sc, sp[0], top, sp[1], st); }
   // a mig camí entre parades, dos fanals de llum càlida a banda i banda de la catifa amb una garlanda de banderetes que la travessa
   const lamps = [], BC = ['#E84A5F', '#FFD15C', '#2FB5A6', '#F08A24', '#7A3FB0', '#FFFFFF'];
   for (let i = 0; i + 1 < P.length; i++) { const mid = P[i].clone().lerp(P[i + 1], .5); let j = 0; pts.forEach((q, k) => { if (q.distanceTo(mid) < pts[j].distanceTo(mid)) j = k; });
