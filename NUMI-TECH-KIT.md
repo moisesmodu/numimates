@@ -1,6 +1,6 @@
 # Numi Tech · Kit de robòtica (proposta de compra)
 
-El curs **Tech Robòtica** (12-14 anys, 1r-2n d'ESO; també a 6è si ja s'ha fet Tech Creadors) està fet per a un robot concret: el **DFRobot Maqueen Lite V5** amb una **BBC micro:bit V2**.
+El curs **Tech Robòtica** (10-12 anys, 5è-6è de primària) està fet per a un robot concret: el **DFRobot Maqueen Lite V5** amb una **BBC micro:bit V2**.
 El simulador de l'app reprodueix aquest robot (mides, sensors, motors, LED i botons) i el botó `</>` dona el codi per a la seva extensió de MakeCode (`Maqueen_V5`).
 Per això cal comprar **exactament aquest model**: altres versions o altres robots no funcionarien igual amb les sessions.
 
@@ -41,7 +41,7 @@ Cada guia de sessió diu, a «Materials», exactament què cal aquell dia.
 3. Proveu el codi de la sessió 1 (botó `</>` de l'app): la micro:bit ha de mostrar un ✓. Si surt una ✕, no troba el robot: reviseu l'interruptor, les piles i que la micro:bit estigui ben endollada.
 4. Regla de seguretat que repeteixen les guies: el programa es descarrega amb el robot apagat, i el robot s'encén a terra (o agafat amb les rodes a l'aire), mai a la vora d'una taula.
 
-## I el curs Tech Robot (7-10 anys)?
+## I el curs Tech Robot (6-8 anys)?
 
 No necessita cap robot. En Bit és virtual, i les activitats sense pantalla es fan amb el cos, amb fitxes i amb una quadrícula a terra.
 Si més endavant voleu un robot físic per a aquestes edats, la idea seria un de botons a terra, com un Blue-Bot, i caldria adaptar algunes activitats.
