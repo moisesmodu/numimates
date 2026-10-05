@@ -1,4 +1,4 @@
-/* Tech Creadors · unitat 8 «El meu videojoc» · animacions de teoria (TANI g8…)
+/* Tech Creadors · unitat 8 «L'estudi de videojocs» · animacions de teoria (TANI g8…)
    Dibuixos propis: fan servir els personatges de l'escenari (STG_ART) dins d'SVG en bucle de 5,5 s. */
 Object.assign(TANI, (() => {
   // un personatge de l'escenari, centrat a (x, y), dins d'un quadre de mida w
@@ -86,15 +86,58 @@ Object.assign(TANI, (() => {
         <rect x="140" y="144" width="40" height="28" rx="8" fill="#fff"/>${zones.map(([, , , n], i) => `<text x="160" y="165" text-anchor="middle" class="tat b" opacity="0">${n}<animate attributeName="opacity" values="${show(i)}" keyTimes="${kt}" dur="5.5s" calcMode="discrete" repeatCount="indefinite"/></text>`).join('')}<text x="190" y="164" class="tat w s">${L('passos', 'pasos')}</text>
         <text x="160" y="204" text-anchor="middle" class="tat s" style="fill:#56628A">${L('Un sol número canvia la dificultat.', 'Un solo número cambia la dificultad.')}</text>`);
     },
-    // un bon comentari: una cosa que m'ha agradat + una idea per millorar
+    // l'informe de prova: dades de les partides + què funciona + un canvi concret
     g8feedback() {
       const bub = (x, y, w, c, s, t1, t2, t0) => `<g ${tA(t0, 'ta-in')}><path d="M${x} ${y}h${w}a12 12 0 0 1 12 12v34a12 12 0 0 1-12 12H${x + 34}l-12 12v-12H${x}a12 12 0 0 1-12-12V${y + 12}a12 12 0 0 1 12-12z" fill="${c}" stroke="${s}" stroke-width="2.4"/><text x="${x + 2}" y="${y + 24}" class="tat s">${t1}</text><text x="${x + 2}" y="${y + 46}" class="tat s" style="fill:#56628A;font-size:13px">${t2}</text></g>`;
-      return tSvg(214, `${bub(18, 12, 200, '#E7F7EE', '#1FA463', L('M\'ha agradat…', 'Me ha gustado…'), L('…la pluja d\'estrelles', '…la lluvia de estrellas'), .3)}
-        <g ${tA(.6, 'ta-pop')}>${heart(296, 30, 1.4)}</g>
-        ${bub(96, 96, 200, '#FFF6D6', '#F2A516', L('I si…?', '¿Y si…?'), L('…l\'enemic anés més lent?', '…el enemigo fuera más lento?'), 1.4)}
+      const watch = `<g transform="translate(296 34)"><circle r="15" fill="#fff" stroke="#3D7BF4" stroke-width="2.6"/><rect x="-3" y="-21" width="6" height="5" rx="1.5" fill="#3D7BF4"/><path d="M0 0V-9M0 0l6 4" stroke="#20306A" stroke-width="2.4" stroke-linecap="round"/></g>`;
+      return tSvg(214, `${bub(18, 12, 200, '#EAF2FF', '#3D7BF4', L('Dades: 3 partides', 'Datos: 3 partidas'), L('duren 3, 4 i 2 segons', 'duran 3, 4 y 2 segundos'), .3)}
+        <g ${tA(.6, 'ta-pop')}>${watch}</g>
+        ${bub(96, 96, 200, '#E7F7EE', '#1FA463', L('La pluja funciona!', '¡La lluvia funciona!'), L('Idea: el cranc més lent', 'Idea: el cangrejo más lento'), 1.4)}
         <g ${tA(1.4, 'ta-pop')}><g transform="translate(52 128)"><circle r="14" fill="#FFE27A" stroke="#B46A00" stroke-width="2.2"/><rect x="-6" y="12" width="12" height="8" rx="2" fill="#B9C1D6"/><path d="M-4 -2l4 5 4-5" fill="none" stroke="#B46A00" stroke-width="2"/></g></g>
         <g ${tA(2.8, 'ta-in')}><rect x="20" y="182" width="124" height="26" rx="9" fill="#FDEBEB" stroke="#EF5A5A" stroke-width="2"/><text x="30" y="200" class="tat s" style="fill:#C0392B">${L('«És avorrit.»', '«Es aburrido.»')}</text><path d="M24 195h116" stroke="#EF5A5A" stroke-width="3" ${tA(3.4, 'ta-pop')}/></g>
-        <text x="236" y="200" text-anchor="middle" class="tat s" style="fill:#147A47" ${tA(3.8, 'ta-fade')}>${L('Amable i útil!', '¡Amable y útil!')}</text>`);
+        <text x="236" y="200" text-anchor="middle" class="tat s" style="fill:#147A47" ${tA(3.8, 'ta-fade')}>${L('Dades + una idea!', '¡Datos + una idea!')}</text>`);
+    },
+    // el document de disseny: cada fila diu quan passa i quina variable canvia (també el final i el nivell 2)
+    g8doc() {
+      const rows = [[L('Toco el premi', 'Toco el premio'), L('punts +1', 'puntos +1'), '#8B5CF6'], [L("Em toca l'enemic", 'Me toca el enemigo'), L('vides −1', 'vidas −1'), '#EF5A5A'],
+        [L('punts = 10', 'puntos = 10'), L('Has guanyat!', '¡Has ganado!'), '#1FA463'], [L('vides = 0', 'vidas = 0'), L('Has perdut!', '¡Has perdido!'), '#C0392B'], [L('Nivell 2: punts > 4', 'Nivel 2: puntos > 4'), L('velocitat 6', 'velocidad 6'), '#F08A24']];
+      const row = ([a, b, c], i) => { const y = 62 + i * 30, t0 = .6 + i * .6; return `<g ${tA(t0, 'ta-in')}><rect x="16" y="${y}" width="288" height="26" rx="8" fill="#fff" stroke="#E2D6B4" stroke-width="1.6"/>
+          <text x="26" y="${y + 18}" class="tat s" style="font-size:12.5px">${a}</text><rect x="176" y="${y + 3}" width="122" height="20" rx="7" fill="${c}"/><text x="237" y="${y + 17.5}" text-anchor="middle" class="tat w s" style="font-size:12.5px">${b}</text></g>
+          <path d="M156 ${y + 13}h14" stroke="#B9A77A" stroke-width="2" stroke-linecap="round" ${tA(t0 + .2, 'ta-fade')}/>`; };
+      return tSvg(232, `<rect x="6" y="6" width="308" height="214" rx="12" fill="#FFFDF5" stroke="#E2D6B4" stroke-width="2" filter="url(#bwSh)"/>
+        <text x="20" y="30" class="tat b">${L('Document de disseny', 'Documento de diseño')}</text><text x="300" y="30" text-anchor="end" class="tat s" style="fill:#8A7A52;font-size:12.5px">${L('«Pluja d\'estrelles»', '«Lluvia de estrellas»')}</text>
+        <text x="26" y="52" class="tat s" style="fill:#8A7A52;font-size:12px" ${tA(.3, 'ta-fade')}>${L('Quan…', 'Cuando…')}</text><text x="237" y="52" text-anchor="middle" class="tat s" style="fill:#8A7A52;font-size:12px" ${tA(.3, 'ta-fade')}>${L('Què canvia', 'Qué cambia')}</text>
+        ${rows.map(row).join('')}`);
+    },
+    // proves amb dades: tres partides, una taula i el número que cal canviar
+    g8data() {
+      const cols = [[48, L('Partida', 'Partida')], [128, L('Temps', 'Tiempo')], [200, L('Punts', 'Puntos')], [270, L('Vides', 'Vidas')]];
+      const data = [['1', '3 s', '0', '0'], ['2', '4 s', '1', '0'], ['3', '2 s', '0', '0']];
+      const rows = data.map((r, i) => { const y = 46 + i * 28, t0 = .4 + i * .6; return `<g ${tA(t0, 'ta-in')}><rect x="14" y="${y}" width="292" height="24" rx="7" fill="${i % 2 ? '#F3F6FF' : '#fff'}" stroke="#DCE4FA" stroke-width="1.4"/>
+          ${r.map((v, j) => `<text x="${cols[j][0]}" y="${y + 17}" text-anchor="middle" class="tat ${j === 1 ? 'b' : 's'}" style="${j === 1 ? 'fill:#C0392B;' : ''}font-size:13px">${v}</text>`).join('')}</g>`; }).join('');
+      return tSvg(232, `<rect x="6" y="6" width="308" height="140" rx="12" fill="#fff" stroke="#DCE4FA" stroke-width="2" filter="url(#bwSh)"/>
+        ${cols.map(([x, t]) => `<text x="${x}" y="34" text-anchor="middle" class="tat s" style="fill:#56628A;font-size:12.5px">${t}</text>`).join('')}
+        <rect x="100" y="42" width="56" height="88" rx="9" fill="none" stroke="#EF5A5A" stroke-width="2.4" stroke-dasharray="5 4" ${tA(2.3, 'ta-pop')}/>
+        ${rows}
+        <g ${tA(2.7, 'ta-pop')}><rect x="40" y="154" width="240" height="28" rx="9" fill="#FDEBEB" stroke="#EF5A5A" stroke-width="2"/><text x="160" y="173" text-anchor="middle" class="tat s" style="fill:#C0392B">${L('Duren 3 s: massa difícil!', 'Duran 3 s: ¡demasiado difícil!')}</text></g>
+        <g ${tA(3.5, 'ta-in')}><rect x="70" y="190" width="180" height="30" rx="9" fill="#3D7BF4"/><text x="84" y="210" class="tat w s">${L('mou-te', 'muévete')}</text>
+          <rect x="${L(140, 158)}" y="195" width="24" height="20" rx="6" fill="#fff"/><text x="${L(152, 170)}" y="210" text-anchor="middle" class="tat s" style="text-decoration:line-through;fill:#C0392B">9</text>
+          <text x="${L(178, 196)}" y="210" class="tat w s">→</text><rect x="${L(196, 214)}" y="195" width="24" height="20" rx="6" fill="#fff"/><text x="${L(208, 226)}" y="210" text-anchor="middle" class="tat b" style="fill:#147A47">4</text></g>`);
+    },
+    // la fitxa de publicació: títol, controls, objectiu, crèdits i versió
+    g8pub() {
+      const key = (x, y, d) => `<rect x="${x}" y="${y}" width="22" height="20" rx="5" fill="#fff" stroke="#56628A" stroke-width="1.6"/><path d="${d}" fill="none" stroke="#20306A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>`;
+      return tSvg(232, `<rect x="8" y="8" width="304" height="178" rx="14" fill="#fff" stroke="#DCE4FA" stroke-width="2" filter="url(#bwSh)"/>
+        <g ${tA(.2, 'ta-in')}><rect x="20" y="20" width="118" height="96" rx="9" fill="#20306A"/>
+          ${[[34, 32], [120, 40], [60, 58], [104, 74], [128, 98]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="1.5" fill="#fff" opacity=".8"/>`).join('')}
+          <g>${mov('0 -30;0 50', 1.6)}${spr('estrella', 62, 40, 18)}</g><g>${mov('0 -20;0 60', 2.1)}${spr('estrella', 104, 30, 16)}</g><g>${mov('-20 0;24 0;-20 0', 3)}${spr('nau', 78, 100, 24)}</g></g>
+        <text x="150" y="40" class="tat b" ${tA(.5, 'ta-fade')}>${L("Pluja d'estrelles", 'Lluvia de estrellas')}</text>
+        <g ${tA(.9, 'ta-pop')}><rect x="150" y="50" width="44" height="20" rx="7" fill="#1FA463"/><text x="172" y="64.5" text-anchor="middle" class="tat w s" style="font-size:12.5px">v1.1</text></g>
+        <g ${tA(1.3, 'ta-in')}>${key(150, 80, 'M166 90h-10m4 -4l-4 4 4 4')}${key(176, 80, 'M182 90h10m-4 -4l4 4 -4 4')}<text x="206" y="95" class="tat s" style="font-size:12.5px">${L('moure la nau', 'mover la nave')}</text></g>
+        <text x="150" y="122" class="tat s" style="font-size:12.5px" ${tA(1.8, 'ta-fade')}>${L('Objectiu: 10 estrelles', 'Objetivo: 10 estrellas')}</text>
+        <text x="150" y="142" class="tat s" style="font-size:12.5px" ${tA(2.2, 'ta-fade')}>${L('Perds: si et queden 0 vides', 'Pierdes: si te quedan 0 vidas')}</text>
+        <g ${tA(2.7, 'ta-in')}><path d="M20 154h280" stroke="#E8EDFB" stroke-width="2"/><text x="20" y="174" class="tat s" style="fill:#56628A;font-size:12.5px">${L('Fet per: Aina · Provat per: Pol', 'Hecho por: Aina · Probado por: Pol')}</text></g>
+        <g ${tA(3.5, 'ta-pop')}><rect x="100" y="194" width="120" height="30" rx="10" fill="#1FA463"/><path d="M114 209l5 5 9-10" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><text x="${L(172, 174)}" y="214" text-anchor="middle" class="tat w s">${L('Publicat!', '¡Publicado!')}</text></g>`);
     },
     // el viatge del curs: vuit illes, de primers passos fins al videojoc
     g8journey() {
