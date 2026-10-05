@@ -3,7 +3,9 @@
    missatges i webs falsos per trobar-hi les pistes, classificar, converses amb decisions, entrenar una petita
    intel·ligència artificial i configurar la privadesa d'un perfil. Tot és inventat i propi de Numi: cap marca, cap
    persona ni cap web reals.
-   Tipus de pas: dpass · dspot · dsort · dchat · dai · dpriv */
+   Tipus de pas: dpass · dspot · dsort · dchat · dai · dpriv
+   Artefactes (kind): sms · mail · web · news · post · chat · game (pantalla d'un videojoc en línia) · lock (pantalla
+   bloquejada amb notificacions) · help (els telèfons d'ajuda: 116 111, 017 i 112) */
 
 /* ---------- Laboratori de contrasenyes ----------
    Valoració qualitativa i honesta (sense xifres inventades): llargada, varietat de caràcters, paraules massa
@@ -64,7 +66,7 @@ if (typeof TSTEP !== 'undefined') {
     const upd = () => { $('#dcnt').innerHTML = L(`Pistes trobades: <b>${Math.min(found.size, need)}</b> de ${need}`, `Pistas encontradas: <b>${Math.min(found.size, need)}</b> de ${need}`); tFoot(L('Continua', 'Continúa'), () => { addXPsafe(3); tNext(); }, found.size >= need); };
     document.querySelectorAll('.dart [data-clue]').forEach(e => e.onclick = ev => { ev.preventDefault(); ev.stopPropagation(); const k = e.dataset.clue; if (found.has(k)) return; found.add(k); e.classList.add('found'); SFX.ok && SFX.ok();
       $('#dclues').insertAdjacentHTML('beforeend', `<div class="dclue"><span>🔎</span><div>${tval(st.clues[k])}</div></div>`); upd(); if (found.size === need && st.ex) $('#dclues').insertAdjacentHTML('beforeend', `<div class="tfbox ok"><b>${L('Molt bé!', '¡Muy bien!')}</b> ${tval(st.ex)}</div>`); });
-    document.querySelector('.dart').addEventListener('click', e => { if (e.target.closest('[data-clue]')) return; const t = e.target.closest('.dbody, .dmsg, .dweb'); if (t) { t.classList.remove('nope'); void t.offsetWidth; t.classList.add('nope'); } });
+    document.querySelector('.dart').addEventListener('click', e => { if (e.target.closest('[data-clue]')) return; const t = e.target.closest('.dbody, .dmsg, .dweb, .dgb, .dnotes'); if (t) { t.classList.remove('nope'); void t.offsetWidth; t.classList.add('nope'); } });
     upd();
   };
   // dsort: { q, bins: ['ca|es', …], items: [{ t: 'text|texto', b: 0, ex? , ico? }] } — es toca un element i després el calaix
@@ -182,9 +184,20 @@ function digFrame(st) {
   if (k === 'chat') return `<div class="dphone"><div class="dphh"><span class="dav">${st.av || '💬'}</span><b>${tval(st.from || 'Xat|Chat')}</b></div><div class="dmsgs">${h}</div></div>`;
   if (k === 'web' || k === 'news') return `<div class="dweb"><div class="wbar"><span class="wdots"><i></i><i></i><i></i></span><span class="wurl">${st.url ? tval(st.url) : ''}</span></div><div class="dwebb">${h}</div></div>`;
   if (k === 'post') return `<div class="dpost"><div class="dphh"><span class="dav">${st.av || '🙂'}</span><b>${tval(st.from || '')}</b><small>${tval(st.when || '')}</small></div><div class="dbody">${h}</div></div>`;
+  if (k === 'game') return `<div class="dgame"><div class="dgh"><span class="dav">${st.av || '🎮'}</span><b>${tval(st.from || 'Partida|Partida')}</b><small>${st.when ? tval(st.when) : ''}</small></div><div class="dgb">${h}</div></div>`;
+  if (k === 'lock') return `<div class="dphone dlock"><div class="dlt"><b>${st.when ? tval(st.when) : '21:47'}</b><small>${st.from ? tval(st.from) : ''}</small></div><div class="dnotes">${h}</div></div>`;
+  if (k === 'help') return digHelp();
   return `<div class="dmail"><div class="dmh"><p><small>${L('De', 'De')}:</small> ${st.from ? tval(st.from) : ''}</p><p><small>${L('Assumpte', 'Asunto')}:</small> <b>${st.subj ? tval(st.subj) : ''}</b></p></div><div class="dbody">${h}</div></div>`;
+}
+// els telèfons d'ajuda (Espanya), sempre iguals a les targetes, a les diapositives i al projecte final:
+// 116 111 (ajuda a la infància i l'adolescència, Fundació ANAR), 017 (Tu Ayuda en Ciberseguridad, INCIBE) i 112 (emergències)
+function digHelp() {
+  const R = [['116 111', L("Ajuda a la infància i l'adolescència", 'Ayuda a la infancia y la adolescencia'), L("Gratuït, confidencial i obert les 24 hores. Si et passa alguna cosa i no saps a qui dir-ho.", 'Gratuito, confidencial y abierto las 24 horas. Si te pasa algo y no sabes a quién decírselo.'), '#2F5BEA', '💬'],
+    ['017', L('Ajuda en ciberseguretat (INCIBE)', 'Ayuda en ciberseguridad (INCIBE)'), L('Gratuït i confidencial. Per a problemes a internet: un engany, un compte robat, un missatge que fa por.', 'Gratuito y confidencial. Para problemas en internet: un engaño, una cuenta robada, un mensaje que da miedo.'), '#0E8FA3', '🛡️'],
+    ['112', L('Emergències', 'Emergencias'), L('Si hi ha un perill ara mateix.', 'Si hay un peligro ahora mismo.'), '#D93F45', '🚨']];
+  return `<div class="dhelp"><p class="dhk">${L('Primer, un adult de confiança. I si no en tens cap a prop:', 'Primero, un adulto de confianza. Y si no tienes ninguno cerca:')}</p>${R.map(([n, t, d, c, e]) => `<div class="dhl" style="--hc:${c}"><span class="dhe">${e}</span><b class="dhn">${n}</b><div><b>${t}</b><small>${d}</small></div></div>`).join('')}</div>`;
 }
 var TMEDIA = typeof TMEDIA !== 'undefined' ? TMEDIA : {};
 // una demo amb un artefacte (sense pistes clicables) per a les targetes de teoria i les diapositives
 TMEDIA.dig = { html: m => `<div class="dart k-${m.kind || 'mail'} still">${digFrame(m)}</div>`, slide: m => `<div class="dart k-${m.kind || 'mail'} still big">${digFrame(m)}</div>` };
-TVALID['media:dig'] = m => m.html ? [] : ['la demo no té html'];
+TVALID['media:dig'] = m => m.html || m.kind === 'help' ? [] : ['la demo no té html'];

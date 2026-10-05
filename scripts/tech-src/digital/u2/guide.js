@@ -88,11 +88,11 @@
             "On ho podríeu comprovar? A qui ho preguntaríeu?|¿Dónde lo podríais comprobar? ¿A quién se lo preguntaríais?"],
           slides: ['s9', 's10'], app: "Cap: activitat sense pantalla.|Ninguna: actividad sin pantalla.", org: "Grups de 3 o 4 amb papers|Grupos de 3 o 4 con papeles" },
         { min: 15, t: "A l'ordinador: descobreix i investiga|En el ordenador: descubre e investiga", fase: 'ordinador',
-          fa: "Cada alumne/a obre la sessió i avança al seu ritme. A les dues activitats de pistes (la notícia i la foto), passeja i demana a qui toca a l'atzar que expliqui per què cada pista és sospitosa abans de tocar-ne una altra. Als més petits, llegeix-los en veu alta l'artefacte si cal.|Cada alumno/a abre la sesión y avanza a su ritmo. En las dos actividades de pistas (la noticia y la foto), pasea y pide a quien toca al azar que explique por qué cada pista es sospechosa antes de tocar otra. A los más pequeños, léeles en voz alta el artefacto si hace falta.",
+          fa: "Cada alumne/a obre la sessió i avança al seu ritme. A l'activitat de pistes de la notícia, passeja i demana a qui toca a l'atzar que expliqui per què cada pista és sospitosa abans de tocar-ne una altra. Als més petits, llegeix-los en veu alta l'artefacte si cal.|Cada alumno/a abre la sesión y avanza a su ritmo. En la actividad de pistas de la noticia, pasea y pide a quien toca al azar que explique por qué cada pista es sospechosa antes de tocar otra. A los más pequeños, léeles en voz alta el artefacto si hace falta.",
           diu: ["Abans de tocar, digues-me per què et sembla una pista.|Antes de tocar, dime por qué te parece una pista.",
             "Mira també la part de dalt: l'adreça i qui ho publica.|Mira también la parte de arriba: la dirección y quién lo publica.",
             "Quines fonts has posat a «poc fiable»? Per què?|¿Qué fuentes has puesto en «poco fiable»? ¿Por qué?"],
-          slides: ['s11'], app: "De «Recorda» fins a «Investiga»: la pregunta de la contrasenya, la missió, les targetes de «Descobreix», ordenar els passos del caçador/a, classificar les fonts, la pregunta de les emocions, les pistes de la notícia i les de la foto.|De «Recuerda» hasta «Investiga»: la pregunta de la contraseña, la misión, las tarjetas de «Descubre», ordenar los pasos del cazador/a, clasificar las fuentes, la pregunta de las emociones, las pistas de la noticia y las de la foto.", org: "Individual|Individual" },
+          slides: ['s11'], app: "De «Recorda» fins a «Investiga»: la pregunta de la contrasenya, la missió, les targetes de «Descobreix», ordenar els passos del caçador/a, classificar les fonts, la pregunta de les emocions i les pistes de la notícia.|De «Recuerda» hasta «Investiga»: la pregunta de la contraseña, la misión, las tarjetas de «Descubre», ordenar los pasos del cazador/a, clasificar las fuentes, la pregunta de las emociones y las pistas de la noticia.", org: "Individual|Individual" },
         { min: 10, t: "Reptes: els missatges trampa|Retos: los mensajes trampa", fase: 'ordinador',
           fa: "Feu la pausa activa tots junts. Després deixa'ls fer els quatre reptes: el missatge del premi, el correu de XatAmics, classificar què fer amb cada missatge i la conversa amb la Nora. Abans de començar, projecta la diapositiva «I si ja hi he caigut?» i deixa-la a la vista: és el missatge més important de la sessió.|Haced la pausa activa todos juntos. Después déjales hacer los cuatro retos: el mensaje del premio, el correo de XatAmics, clasificar qué hacer con cada mensaje y la conversación con Nora. Antes de empezar, proyecta la diapositiva «¿Y si ya he caído?» y déjala a la vista: es el mensaje más importante de la sesión.",
           diu: ["Quin és el truc que fan servir tots dos missatges per enganyar?|¿Cuál es el truco que usan los dos mensajes para engañar?",
@@ -498,7 +498,7 @@
         "L'alumne/a coneix els passos si alguna cosa li fa mal: no respondre amb més mal, guardar una prova, bloquejar i demanar ajuda a un adult de confiança.|El alumno/a conoce los pasos si algo le hace daño: no responder con más daño, guardar una prueba, bloquear y pedir ayuda a un adulto de confianza."
       ],
       comp: [
-        "Competència digital (CD2): comunicar-se a la xarxa amb respecte|Competencia digital (CD2): comunicarse en la red con respeto",
+        "Competència digital (CD3): comunicar-se i col·laborar a la xarxa amb respecte|Competencia digital (CD3): comunicarse y colaborar en la red con respeto",
         "Competència digital (CD4): benestar digital i protecció davant del ciberassetjament|Competencia digital (CD4): bienestar digital y protección ante el ciberacoso",
         "Competència personal, social i d'aprendre a aprendre: empatia, gestió de les emocions i demanar ajuda|Competencia personal, social y de aprender a aprender: empatía, gestión de las emociones y pedir ayuda",
         "Competència ciutadana: convivència, respecte i rebuig de qualsevol forma de violència|Competencia ciudadana: convivencia, respeto y rechazo de cualquier forma de violencia"
@@ -560,7 +560,7 @@
         { min: 8, t: "Reptes: actua!|Retos: ¡actúa!", fase: 'ordinador',
           fa: "Feu junts la respiració del globus de la pausa activa. Després, els tres reptes: la conversa privada amb l'Àlex, ordenar els passos i el missatge del desconegut a FotoNuvi. Anima'ls a provar també respostes equivocades per veure què passa: les converses expliquen per què i deixen rectificar.|Haced juntos la respiración del globo de la pausa activa. Después, los tres retos: la conversación privada con Álex, ordenar los pasos y el mensaje del desconocido en FotoNuvi. Anímales a probar también respuestas equivocadas para ver qué pasa: las conversaciones explican por qué y dejan rectificar.",
           diu: ["Respirar abans de respondre també és una eina.|Respirar antes de responder también es una herramienta.",
-            "Què li ha dit la mare al final? Per què és important? (Que ha fet bé d'explicar-ho i que no és culpa seva.)|¿Qué le ha dicho la madre al final? ¿Por qué es importante? (Que ha hecho bien en contarlo y que no es culpa suya.)",
+            "Què li ha dit l'adult de casa al final? Per què és important? (Que ha fet bé d'explicar-ho i que no és culpa seva.)|¿Qué le ha dicho el adulto de casa al final? ¿Por qué es importante? (Que ha hecho bien en contarlo y que no es culpa suya.)",
             "A l'Àlex, què l'ha ajudat més de la teva resposta?|A Álex, ¿qué le ha ayudado más de tu respuesta?"],
           slides: ['s12', 's13'], app: "«Pausa activa» i els tres reptes de «Reptes».|«Pausa activa» y los tres retos de «Retos».", org: "Tot el grup i després individual|Todo el grupo y después individual" },
         { min: 5, t: "Crea: el banc de missatges amables|Crea: el banco de mensajes amables", fase: 'crea',
@@ -708,9 +708,9 @@
       ]
     },
 
-    /* ---------- Sessió 4 · Projecte: la campanya (final del curs) ---------- */
+    /* ---------- Sessió 4 · Projecte: la campanya (final de la unitat 2; el diploma del curs és a d3-4) ---------- */
     'd2-4': {
-      intro: "Projecte final del curs. En equips, l'alumnat tria un tema del curs (contrasenyes, privadesa, empremta digital, bulos, IA, respecte o descans de pantalles) i un públic de l'escola, i crea una campanya amb tres parts: un cartell que es llegeix de lluny, un missatge curt i positiu que diu què fer i un pla (on, qui, quan i com sabran si ha funcionat). Practiquen decidir en equip, donar i rebre comentaris amables i útils, i fer servir la IA i les imatges amb honestedat i respecte. Una campanya feta per ells dona sentit a tot el que han après i arriba als més petits. La sessió acaba amb una galeria de campanyes i el diploma del curs.|Proyecto final del curso. En equipos, el alumnado elige un tema del curso (contraseñas, privacidad, huella digital, bulos, IA, respeto o descanso de pantallas) y un público del colegio, y crea una campaña con tres partes: un cartel que se lee de lejos, un mensaje corto y positivo que dice qué hacer y un plan (dónde, quién, cuándo y cómo sabrán si ha funcionado). Practican decidir en equipo, dar y recibir comentarios amables y útiles, y usar la IA y las imágenes con honestidad y respeto. Una campaña hecha por ellos da sentido a todo lo que han aprendido y llega a los más pequeños. La sesión termina con una galería de campañas y el diploma del curso.",
+      intro: "Projecte final de la unitat 2. En equips, l'alumnat tria un tema del curs fins ara (contrasenyes, privadesa, empremta digital, bulos, IA o respecte) i un públic de l'escola, i crea una campanya amb tres parts: un cartell que es llegeix de lluny, un missatge curt i positiu que diu què fer i un pla (on, qui, quan i com sabran si ha funcionat). Practiquen decidir en equip, donar i rebre comentaris amables i útils, i fer servir la IA i les imatges amb honestedat i respecte. Una campanya feta per ells dona sentit a tot el que han après i arriba als més petits. La sessió acaba amb una galeria de campanyes. A la unitat 3 es treballen el benestar, els videojocs en línia i les imatges fetes amb IA, i el curs s'acaba a d3-4.|Proyecto final de la unidad 2. En equipos, el alumnado elige un tema del curso hasta ahora (contraseñas, privacidad, huella digital, bulos, IA o respeto) y un público del colegio, y crea una campaña con tres partes: un cartel que se lee de lejos, un mensaje corto y positivo que dice qué hacer y un plan (dónde, quién, cuándo y cómo sabrán si ha funcionado). Practican decidir en equipo, dar y recibir comentarios amables y útiles, y usar la IA y las imágenes con honestidad y respeto. Una campaña hecha por ellos da sentido a todo lo que han aprendido y llega a los más pequeños. La sesión termina con una galería de campañas. En la unidad 3 se trabajan el bienestar, los videojuegos en línea y las imágenes hechas con IA, y el curso termina en d3-4.",
       claus: [
         "Una campanya té tres parts: el cartell (el que es veu), el missatge (el que es recorda) i el pla (com arriba a tothom).|Una campaña tiene tres partes: el cartel (lo que se ve), el mensaje (lo que se recuerda) y el plan (cómo llega a todo el mundo).",
         "Un bon missatge és curt, positiu, diu què fer i s'adapta al públic (no és el mateix per als de 1r que per a les famílies).|Un buen mensaje es corto, positivo, dice qué hacer y se adapta al público (no es lo mismo para los de 1.º que para las familias).",
@@ -729,7 +729,7 @@
         "L'alumne/a dona i rep comentaris amables per millorar la campanya i la presenta a la classe.|El alumno/a da y recibe comentarios amables para mejorar la campaña y la presenta a la clase."
       ],
       comp: [
-        "Competència digital (CD3): crear contingut per informar i sensibilitzar|Competencia digital (CD3): crear contenido para informar y sensibilizar",
+        "Competència digital (CD2): crear contingut digital per informar i sensibilitzar|Competencia digital (CD2): crear contenido digital para informar y sensibilizar",
         "Competència ciutadana: participar en la vida de l'escola i promoure la convivència digital|Competencia ciudadana: participar en la vida de la escuela y promover la convivencia digital",
         "Comunicació oral i escrita: escriure un missatge eficaç i presentar-lo en públic|Comunicación oral y escrita: escribir un mensaje eficaz y presentarlo en público",
         "Competència emprenedora: planificar, decidir en equip i avaluar el resultat|Competencia emprendedora: planificar, decidir en equipo y evaluar el resultado"
@@ -747,14 +747,13 @@
           "Un ordinador per alumne/a amb Numi Tech obert a la sessió «Projecte: la campanya»|Un ordenador por alumno/a con Numi Tech abierto en la sesión «Proyecto: la campaña»",
           "Projector i la presentació d'aquesta sessió|Proyector y la presentación de esta sesión",
           "Per equip de 3 o 4: un full A3 o una cartolina, un full de llapis per a l'esbós, retoladors gruixuts i colors|Por equipo de 3 o 4: una hoja A3 o una cartulina, una hoja de lápiz para el boceto, rotuladores gruesos y colores",
-          "La fitxa de la campanya (una per equip) i un rotlle de cinta adhesiva per a la galeria|La ficha de la campaña (una por equipo) y un rollo de cinta adhesiva para la galería",
-          "Els diplomes del curs impresos, un per alumne/a, amb el nom escrit|Los diplomas del curso impresos, uno por alumno/a, con el nombre escrito"
+          "La fitxa de la campanya (una per equip) i un rotlle de cinta adhesiva per a la galeria|La ficha de la campaña (una por equipo) y un rollo de cinta adhesiva para la galería"
         ],
-        imprimir: ["La fitxa de la campanya (imprimible 1): una per equip|La ficha de la campaña (imprimible 1): una por equipo", "Diploma del curs (imprimible 2): un per alumne/a|Diploma del curso (imprimible 2): uno por alumno/a"],
+        imprimir: ["La fitxa de la campanya (imprimible 1): una per equip|La ficha de la campaña (imprimible 1): una por equipo"],
         prep: [
-          "Imprimir una fitxa per equip i els diplomes amb el nom de cada alumne/a.|Imprimir una ficha por equipo y los diplomas con el nombre de cada alumno/a.",
+          "Imprimir una fitxa per equip.|Imprimir una ficha por equipo.",
           "Parlar amb la direcció per saber on es podran penjar els cartells i a quines classes es podrà explicar la campanya.|Hablar con la dirección para saber dónde se podrán colgar los carteles y en qué clases se podrá explicar la campaña.",
-          "Escriure a la pissarra la llista de temes del curs: contrasenyes, privadesa, empremta digital, bulos, IA, respecte, descans de pantalles.|Escribir en la pizarra la lista de temas del curso: contraseñas, privacidad, huella digital, bulos, IA, respeto, descanso de pantallas.",
+          "Escriure a la pissarra la llista de temes del curs: contrasenyes, privadesa, empremta digital, bulos, IA i respecte.|Escribir en la pizarra la lista de temas del curso: contraseñas, privacidad, huella digital, bulos, IA y respeto.",
           "Preparar una paret o un espai per a la galeria de campanyes.|Preparar una pared o un espacio para la galería de campañas."
         ]
       },
@@ -789,12 +788,12 @@
             "Comenceu per una cosa que funciona i després proposeu una millora.|Empezad por algo que funciona y después proponed una mejora.",
             "On el penjareu? Qui l'explicarà? Com sabreu si ha funcionat?|¿Dónde lo colgaréis? ¿Quién lo explicará? ¿Cómo sabréis si ha funcionado?"],
           slides: ['s11', 's12'], app: "Passos «La nostra campanya» (Ho hem fet!) i la revisió de la campanya.|Pasos «Nuestra campaña» (¡Lo hemos hecho!) y la revisión de la campaña.", org: "Equips i després revisió entre equips|Equipos y después revisión entre equipos" },
-        { min: 8, t: "Galeria, tiquet i diploma|Galería, ticket y diploma", fase: 'tancament',
-          fa: "Pengeu els cartells i feu la galeria: cada portaveu explica en 30 segons el missatge i el pla, i la resta diu una cosa que li ha agradat. Deixa que facin les preguntes finals i el diploma de l'app, fes el tiquet i lliura els diplomes impresos. Acordeu quan es penjaran els cartells a l'escola.|Colgad los carteles y haced la galería: cada portavoz explica en 30 segundos el mensaje y el plan, y el resto dice algo que le ha gustado. Deja que hagan las preguntas finales y el diploma de la app, haz el ticket y entrega los diplomas impresos. Acordad cuándo se colgarán los carteles en la escuela.",
+        { min: 8, t: "Galeria i tiquet de sortida|Galería y ticket de salida", fase: 'tancament',
+          fa: "Pengeu els cartells i feu la galeria: cada portaveu explica en 30 segons el missatge i el pla, i la resta diu una cosa que li ha agradat. Deixa que facin les preguntes finals i fes el tiquet. Acordeu quan es penjaran els cartells a l'escola.|Colgad los carteles y haced la galería: cada portavoz explica en 30 segundos el mensaje y el plan, y el resto dice algo que le ha gustado. Deja que hagan las preguntas finales y haz el ticket. Acordad cuándo se colgarán los carteles en la escuela.",
           diu: ["Què us ha agradat de la campanya d'aquest equip?|¿Qué os ha gustado de la campaña de este equipo?",
             "Ara sou experts i expertes en ciutadania digital: ho podeu explicar a casa i a l'escola!|Ahora sois expertos y expertas en ciudadanía digital: ¡lo podéis explicar en casa y en la escuela!",
             "I recordeu, ara i sempre: si dubteu, pregunteu a un adult de confiança.|Y recordad, ahora y siempre: si dudáis, preguntad a un adulto de confianza."],
-          slides: ['s13', 's14', 's15', 's16'], app: "«Tancament»: les dues preguntes finals, el diploma del curs i com m'he sentit.|«Cierre»: las dos preguntas finales, el diploma del curso y cómo me he sentido.", org: "Tot el grup|Todo el grupo" }
+          slides: ['s13', 's14', 's15', 's16'], app: "«Tancament»: les dues preguntes finals i com m'he sentit.|«Cierre»: las dos preguntas finales y cómo me he sentido.", org: "Tot el grup|Todo el grupo" }
       ],
       errors: [
         ["Fa un eslògan llarg que ho vol explicar tot.|Hace un eslogan largo que lo quiere explicar todo.",
@@ -824,18 +823,18 @@
           ["Imatges i IA amb respecte|Imágenes e IA con respeto", "Fa servir dibuixos propis o icones, no posa fotos de persones sense permís i diu si una IA ha ajudat.|Usa dibujos propios o iconos, no pone fotos de personas sin permiso y dice si una IA ha ayudado.", "Fa servir imatges sense pensar-hi o no diu que l'ha ajudat una IA.|Usa imágenes sin pensarlo o no dice que le ha ayudado una IA."]
         ]
       },
-      casa: "A casa, l'infant pot ensenyar el diploma i explicar la campanya del seu equip. Proposta per a la família: feu junts una «campanya de casa» amb tres normes digitals per a tota la família (per exemple, les hores sense pantalles, comprovar abans de compartir i explicar-nos les coses que ens fan sentir malament) i pengeu-la a la nevera.|En casa, el niño o la niña puede enseñar el diploma y explicar la campaña de su equipo. Propuesta para la familia: haced juntos una «campaña de casa» con tres normas digitales para toda la familia (por ejemplo, las horas sin pantallas, comprobar antes de compartir y contarnos las cosas que nos hacen sentir mal) y colgadla en la nevera.",
+      casa: "A casa, l'infant pot explicar la campanya del seu equip. Proposta per a la família: feu junts una «campanya de casa» amb tres normes digitals per a tota la família (per exemple, les hores sense pantalles, comprovar abans de compartir i explicar-nos les coses que ens fan sentir malament) i pengeu-la a la nevera.|En casa, el niño o la niña puede explicar la campaña de su equipo. Propuesta para la familia: haced juntos una «campaña de casa» con tres normas digitales para toda la familia (por ejemplo, las horas sin pantallas, comprobar antes de compartir y contarnos las cosas que nos hacen sentir mal) y colgadla en la nevera.",
       faq: [
         ["Podem fer la campanya sobre un tema que no hem treballat gaire, com el descans de pantalles?|¿Podemos hacer la campaña sobre un tema que no hemos trabajado mucho, como el descanso de pantallas?", "Sí, si el podeu explicar bé i doneu una acció concreta i positiva, per exemple: «Abans de dormir, el mòbil també descansa».|Sí, si lo podéis explicar bien y dais una acción concreta y positiva, por ejemplo: «Antes de dormir, el móvil también descansa»."],
         ["Podem posar fotos d'internet al cartell?|¿Podemos poner fotos de internet en el cartel?", "Millor dibuixos vostres o icones: les fotos d'internet tenen autor i no sempre es poden fer servir, i les de persones necessiten el seu permís.|Mejor dibujos vuestros o iconos: las fotos de internet tienen autor y no siempre se pueden usar, y las de personas necesitan su permiso."],
         ["Podem fer servir una IA per fer el cartell?|¿Podemos usar una IA para hacer el cartel?", "Segons les normes de l'escola. Si us dona idees, digueu-ho a la fitxa; el text i el dibuix, millor que siguin vostres.|Según las normas del colegio. Si os da ideas, decidlo en la ficha; el texto y el dibujo, mejor que sean vuestros."],
         ["I si a l'equip no ens posem d'acord?|¿Y si en el equipo no nos ponemos de acuerdo?", "Escolteu totes les idees, combineu-les o feu una votació. El coordinador/a ajuda a decidir, i ningú no es queda sense part.|Escuchad todas las ideas, combinadlas o haced una votación. El coordinador/a ayuda a decidir, y nadie se queda sin parte."],
         ["Com sabrem si la campanya ha funcionat?|¿Cómo sabremos si la campaña ha funcionado?", "Fent una pregunta abans i després a una classe (per exemple: «Què faries si et demanen la contrasenya?») i comparant les respostes.|Haciendo una pregunta antes y después a una clase (por ejemplo: «¿Qué harías si te piden la contraseña?») y comparando las respuestas."],
-        ["Què passa quan s'acaba el curs?|¿Qué pasa cuando termina el curso?", "Que ja sabeu cuidar-vos i cuidar els altres a la xarxa. Podeu ajudar la família i l'escola, i recordeu sempre que podeu demanar ajuda a un adult de confiança.|Que ya sabéis cuidaros y cuidar a los demás en la red. Podéis ayudar a la familia y al colegio, y recordad siempre que podéis pedir ayuda a un adulto de confianza."]
+        ["I després de la campanya?|¿Y después de la campaña?", "Ve la unitat 3: el temps amb pantalles, els videojocs en línia, les imatges fetes amb IA i el pla de benestar digital, que tanca el curs amb el diploma.|Viene la unidad 3: el tiempo con pantallas, los videojuegos en línea, las imágenes hechas con IA y el plan de bienestar digital, que cierra el curso con el diploma."]
       ],
       tec: [
         ["A la revisió de l'app no saben què triar.|En la revisión de la app no saben qué elegir.", "És una autoavaluació: no hi ha respostes bones ni dolentes. Que la facin amb l'equip mirant el cartell i que triïn el que han de millorar primer.|Es una autoevaluación: no hay respuestas buenas ni malas. Que la hagan con el equipo mirando el cartel y que elijan lo que tienen que mejorar primero."],
-        ["No es poden imprimir els diplomes a temps.|No se pueden imprimir los diplomas a tiempo.", "L'app també mostra el diploma en acabar. Els impresos es poden lliurar la setmana vinent o enviar a les famílies.|La app también muestra el diploma al terminar. Los impresos se pueden entregar la semana que viene o enviar a las familias."],
+        ["Volen fer la campanya sobre les pantalles o els videojocs.|Quieren hacer la campaña sobre las pantallas o los videojuegos.", "Es pot, però aquests temes es treballen a la unitat 3: també poden guardar la idea per al pla de benestar digital (d3-4).|Se puede, pero estos temas se trabajan en la unidad 3: también pueden guardar la idea para el plan de bienestar digital (d3-4)."],
         ["No hi ha prou A3.|No hay suficientes A3.", "Dos fulls A4 enganxats també serveixen. L'important és que el títol es llegeixi de lluny.|Dos hojas A4 pegadas también sirven. Lo importante es que el título se lea de lejos."],
         ["Un equip acaba molt abans.|Un equipo termina mucho antes.", "Que faci una segona versió del cartell per a un altre públic o que prepari l'enquesta d'abans i després (vegeu «Atenció a la diversitat»).|Que haga una segunda versión del cartel para otro público o que prepare la encuesta de antes y después (ver «Atención a la diversidad»)."],
         ["No queda temps per a la galeria.|No queda tiempo para la galería.", "Feu-la al principi de la sessió següent o en una tutoria; els equips també poden presentar la campanya a una altra classe.|Hacedla al principio de la sesión siguiente o en una tutoría; los equipos también pueden presentar la campaña a otra clase."],
@@ -847,7 +846,7 @@
         "Si mentre preparen la campanya o a la galeria un infant explica una situació real, segueix el protocol del centre: escolta amb calma, digues-li que no és culpa seva, no li demanis detalls davant del grup, no prometis guardar el secret, apunta-ho i avisa el mateix dia la persona de referència.|Si mientras preparan la campaña o en la galería un niño o niña cuenta una situación real, sigue el protocolo del centro: escucha con calma, dile que no es culpa suya, no le pidas detalles delante del grupo, no prometas guardar el secreto, apúntalo y avisa el mismo día a la persona de referencia.",
         "A la galeria i en la revisió entre equips, modela tu primer un comentari amable i concret. Cap burla dels cartells, de la lletra ni dels dibuixos.|En la galería y en la revisión entre equipos, modela tú primero un comentario amable y concreto. Ninguna burla de los carteles, de la letra ni de los dibujos.",
         "Si el tema és el descans de pantalles, no jutgis els hàbits de cap família: parleu d'idees que ajuden, no de qui ho fa bé o malament.|Si el tema es el descanso de pantallas, no juzgues los hábitos de ninguna familia: hablad de ideas que ayudan, no de quién lo hace bien o mal.",
-        "Al final del curs, recorda a tothom (i a les famílies, a la nota de casa) qui són els seus adults de confiança i el telèfon 116 111, gratuït i confidencial.|Al final del curso, recuerda a todo el mundo (y a las familias, en la nota de casa) quiénes son sus adultos de confianza y el teléfono 116 111, gratuito y confidencial."
+        "Al final de la unitat, recorda a tothom (i a les famílies, a la nota de casa) qui són els seus adults de confiança i el telèfon 116 111, gratuït i confidencial.|Al final de la unidad, recuerda a todo el mundo (y a las familias, en la nota de casa) quiénes son sus adultos de confianza y el teléfono 116 111, gratuito y confidencial."
       ],
       extra: [
         "Presentar la campanya en dos minuts a una altra classe (millor de més petits) o al consell d'alumnes, amb el permís del centre.|Presentar la campaña en dos minutos a otra clase (mejor de pequeños) o al consejo de alumnos, con el permiso del centro.",
@@ -861,7 +860,7 @@
       ],
       slides: [
         { id: 's1', k: 'portada', t: "Projecte: la campanya|Proyecto: la campaña", x: "Avui el vostre equip crearà una campanya perquè tota l'escola faci servir internet amb seny.|Hoy vuestro equipo creará una campaña para que toda la escuela use internet con cabeza.",
-          nota: "És l'última sessió del curs: presenta-la com una celebració del que han après.|Es la última sesión del curso: preséntala como una celebración de lo que han aprendido." },
+          nota: "És l'última sessió de la unitat 2: presenta-la com una celebració del que han après.|Es la última sesión de la unidad 2: preséntala como una celebración de lo que han aprendido." },
         { id: 's2', k: 'repas', t: "Què hem après al curs?|¿Qué hemos aprendido en el curso?",
           punts: ["Contrasenyes i privadesa|Contraseñas y privacidad", "L'empremta digital|La huella digital", "Bulos, missatges trampa i IA|Bulos, mensajes trampa e IA", "Respecte a la xarxa i demanar ajuda|Respeto en la red y pedir ayuda"],
           nota: "Que cada alumne/a digui una cosa concreta que recordi d'algun tema.|Que cada alumno/a diga una cosa concreta que recuerde de algún tema." },
@@ -901,10 +900,10 @@
           nota: "Acordeu la data per penjar les campanyes a l'escola.|Acordad la fecha para colgar las campañas en la escuela." },
         { id: 's15', k: 'tiquet', t: "Tiquet de sortida|Ticket de salida",
           punts: ["Digues les tres parts d'una campanya.|Di las tres partes de una campaña.", "Digues el teu eslògan i per què funciona.|Di tu eslogan y por qué funciona."],
-          nota: "Fes el tiquet mentre lliures els diplomes.|Haz el ticket mientras entregas los diplomas." },
-        { id: 's16', k: 'concepte', t: "Enhorabona: curs acabat!|¡Enhorabuena: curso terminado!", pic: 'img/chars/numi-medalla.webp',
-          punts: ["Has acabat el curs Tech Digital.|Has terminado el curso Tech Digital.", "Ara pots ajudar la teva escola i la teva família.|Ahora puedes ayudar a tu escuela y a tu familia.", "Recorda: si dubtes, pregunta a un adult de confiança.|Recuerda: si dudas, pregunta a un adulto de confianza."],
-          nota: "Lliura els diplomes impresos un a un, dient a cada alumne/a una cosa concreta que ha fet bé durant el curs.|Entrega los diplomas impresos uno a uno, diciendo a cada alumno/a algo concreto que ha hecho bien durante el curso." }
+          nota: "Fes el tiquet mentre penjeu els cartells.|Haz el ticket mientras colgáis los carteles." },
+        { id: 's16', k: 'concepte', t: "Enhorabona: unitat acabada!|¡Enhorabuena: unidad terminada!", pic: 'img/chars/numi-medalla.webp',
+          punts: ["Has acabat la unitat 2 i la teva campanya.|Has terminado la unidad 2 y tu campaña.", "Ara pots ajudar la teva escola i la teva família.|Ahora puedes ayudar a tu escuela y a tu familia.", "Recorda: si dubtes, pregunta a un adult de confiança.|Recuerda: si dudas, pregunta a un adulto de confianza."],
+          nota: "Digues a cada equip una cosa concreta que ha fet bé. A la unitat 3 arriben les pantalles, els videojocs i el pla de benestar digital.|Di a cada equipo algo concreto que ha hecho bien. En la unidad 3 llegan las pantallas, los videojuegos y el plan de bienestar digital." }
       ],
       print: [
         { id: 'p1', t: "La fitxa de la campanya|La ficha de la campaña", k: 'fitxa',
@@ -918,15 +917,6 @@
             { q: "El pla: on el penjarem? Qui l'explicarà? Quan?|El plan: ¿dónde lo colgaremos? ¿Quién lo explicará? ¿Cuándo?", sol: "Resposta oberta, amb llocs i dates concrets.|Respuesta abierta, con lugares y fechas concretos." },
             { q: "Com sabrem si ha funcionat?|¿Cómo sabremos si ha funcionado?", sol: "Per exemple, preguntant a una classe abans i després què farien davant d'un bulo o d'un missatge que fa mal.|Por ejemplo, preguntando a una clase antes y después qué harían ante un bulo o un mensaje que hace daño." },
             { q: "Una millora que ens ha proposat un altre equip:|Una mejora que nos ha propuesto otro equipo:", sol: "Resposta oberta.|Respuesta abierta." }
-          ] },
-        { id: 'p2', t: "Diploma del curs|Diploma del curso", k: 'diploma',
-          intro: "ha completat el curs Tech Digital de Numi Tech: sap cuidar-se i cuidar els altres a la xarxa i ha creat una campanya per a la seva escola.|ha completado el curso Tech Digital de Numi Tech: sabe cuidarse y cuidar a los demás en la red y ha creado una campaña para su escuela.",
-          items: [
-            "Crea contrasenyes fortes i protegeix les seves dades.|Crea contraseñas fuertes y protege sus datos.",
-            "Pensa abans de publicar i cuida la seva empremta digital.|Piensa antes de publicar y cuida su huella digital.",
-            "Comprova les notícies i detecta els missatges trampa.|Comprueba las noticias y detecta los mensajes trampa.",
-            "Entén què és una IA i la fa servir amb responsabilitat.|Entiende qué es una IA y la usa con responsabilidad.",
-            "Tracta bé els altres a la xarxa i sap demanar ajuda.|Trata bien a los demás en la red y sabe pedir ayuda."
           ] }
       ]
     }

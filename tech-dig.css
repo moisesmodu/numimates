@@ -110,3 +110,26 @@
 .dpf .dpw button{display:inline-flex;align-items:center;gap:5px;padding:7px 10px;font-size:13px}
 @media (max-width:600px){.dpf .dpw button .dpl{display:none}.dpf .dpw button{padding:6px 9px;font-size:17px}.dpf b{font-size:14px}}
 .dpf .dpw{flex-wrap:nowrap}.dpf .dpw button{flex:none;min-width:0}
+/* ---------- pantalla d'un videojoc en línia (kind: 'game') ---------- */
+.dgame{background:linear-gradient(160deg,#1C2350,#2B1F5C 60%,#3A1F5E);border-radius:20px;color:#F2F4FF;border:2px solid #3B4486}
+.dgame .dgh{display:flex;align-items:center;gap:10px;padding:10px 12px;background:rgba(255,255,255,.08);border-bottom:2px solid rgba(255,255,255,.12)}
+.dgame .dgh small{margin-left:auto;color:#C9CEF5;font-size:12px;font-weight:700}.dgame .dav{background:rgba(255,255,255,.16)}
+.dgb{padding:12px 14px;line-height:1.45}.dgb p{margin:0 0 8px}.dgb p:last-child{margin-bottom:0}
+.dgb .gbox{display:flex;align-items:center;gap:10px;padding:8px 10px;margin:6px 0;border-radius:14px;background:rgba(255,255,255,.1);border:2px solid rgba(255,255,255,.16)}
+.dgb .gbox .ge{font-size:28px;line-height:1}.dgb .gbtn{display:inline-block;padding:3px 10px;border-radius:10px;background:#FFC531;color:#2B1F5C;font-weight:800}
+.dart .gtag{display:inline-block;padding:1px 8px;border-radius:8px;background:#EF5A5A;color:#fff;font-weight:800;font-size:13px}
+.dgame [data-clue].found{color:#2B1F5C}
+/* ---------- pantalla bloquejada amb notificacions (kind: 'lock') ---------- */
+.dlock{background:linear-gradient(180deg,#2A3A7A,#14204A)}
+.dlock .dlt{display:flex;flex-direction:column;align-items:center;padding:12px 10px 6px;color:#fff}.dlock .dlt b{font:800 34px/1 Lexend,system-ui,sans-serif}.dlock .dlt small{opacity:.8;font-weight:700}
+.dnotes{display:flex;flex-direction:column;gap:7px;padding:8px 10px 14px}
+.dnotes .dn{display:flex;align-items:flex-start;gap:8px;padding:8px 10px;border-radius:14px;background:rgba(255,255,255,.92);color:#14204A;font-size:14px;line-height:1.35}
+.dnotes .dn .ne{flex:none;font-size:20px;line-height:1.1}.dnotes .dn small{display:block;color:#5A6488;font-weight:700;font-size:11.5px}
+/* ---------- telèfons d'ajuda (kind: 'help') ---------- */
+.dhelp{display:flex;flex-direction:column;gap:8px;padding:12px;background:#fff;border:2px solid var(--line);border-radius:20px}
+.dhelp .dhk{margin:0;font-weight:800;color:#14204A;font-size:14.5px}
+.dhl{--hc:#2F5BEA;display:grid;grid-template-columns:auto auto minmax(0,1fr);align-items:center;gap:4px 10px;padding:8px 10px;border-radius:14px;background:color-mix(in srgb,var(--hc) 9%,#fff);border:2px solid color-mix(in srgb,var(--hc) 35%,#fff)}
+.dhl .dhe{font-size:22px}.dhl .dhn{font:900 21px/1 Lexend,system-ui,sans-serif;color:var(--hc);white-space:nowrap}
+.dhl div{display:flex;flex-direction:column;min-width:0}.dhl div b{font-size:14px;color:#14204A}.dhl div small{font-size:12.5px;color:#4A5478;font-weight:600;line-height:1.3}
+@media (max-width:420px){.dhl{grid-template-columns:auto minmax(0,1fr)}.dhl div{grid-column:1/-1}}
+.dart.still .dhelp{border:0}
