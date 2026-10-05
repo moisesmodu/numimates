@@ -1279,7 +1279,7 @@ async function docentSave(id) {
   creds(L("Docent donat d'alta", 'Docente dado de alta'), $('#d_em').value, j.usuari, j.password); reload();
 }
 function creds(title, email, usuari, pw, again) {
-  const txt = `${L('Panell docent', 'Panel docente')}: https://app.numimates.com/profe.html\n${L('Correu', 'Correo')}: ${email}${usuari ? `\n${L('Usuari', 'Usuario')}: ${usuari}` : ''}\n${L('Contrasenya provisional', 'Contraseña provisional')}: ${pw}`;
+  const txt = `${L('Panell docent', 'Panel docente')}: https://profe.numimates.com\n${L('Correu', 'Correo')}: ${email}${usuari ? `\n${L('Usuari', 'Usuario')}: ${usuari}` : ''}\n${L('Contrasenya provisional', 'Contraseña provisional')}: ${pw}`;
   modal(`<h3>${title}</h3><p>${again ? L('És la contrasenya provisional: encara no l\'ha canviada.', 'Es la contraseña provisional: aún no la ha cambiado.') : L('Comparteix aquestes dades.', 'Comparte estos datos.')} ${L('La podràs tornar a veure aquí fins que el docent la canviï per una de pròpia.', 'La podrás volver a ver aquí hasta que el docente la cambie por una propia.')}</p><div class="creds">${esc(txt)}</div>
     <div class="acts"><button class="btn" onclick="copyTxt(${js(txt)},L('Copiat','Copiado'))">${ico('copy')}${L("Copia-ho tot", 'Copiarlo todo')}</button><button class="btn primary" onclick="closeModal()">${L('Fet', 'Hecho')}</button></div>`, 'w480');
 }

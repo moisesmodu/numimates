@@ -36,7 +36,7 @@ export default async function handler(req, res) {
     const rows = [['Nom', f.nom], ['Càrrec', f.carrec], ['Centre', f.centre], ['Població', f.poblacio], ['Alumnes', f.alumnes], ['Cursos', f.cursos], ['Correu', f.mail], ['Telèfon', f.tel], ['Idioma', f.lang.toUpperCase()], ['Missatge', f.missatge]];
     try {
       await sendMail({ to: 'hola@numimates.com', subject: `${prod} · Sol·licitud de ${f.centre}`,
-        html: `<p>Nova sol·licitud des de numimates.com (<b>${prod}</b>):</p><table cellpadding="6" style="border-collapse:collapse">${rows.map(([k, v]) => `<tr><td style="color:#667"><b>${k}</b></td><td>${e(v).replace(/\n/g, '<br>')}</td></tr>`).join('')}</table><p>Respon directament a aquest correu per escriure a ${e(f.mail)}, o mira-la al panell: https://app.numimates.com/profe.html</p>`,
+        html: `<p>Nova sol·licitud des de numimates.com (<b>${prod}</b>):</p><table cellpadding="6" style="border-collapse:collapse">${rows.map(([k, v]) => `<tr><td style="color:#667"><b>${k}</b></td><td>${e(v).replace(/\n/g, '<br>')}</td></tr>`).join('')}</table><p>Respon directament a aquest correu per escriure a ${e(f.mail)}, o mira-la al panell: https://profe.numimates.com</p>`,
         text: rows.map(([k, v]) => `${k}: ${v || '—'}`).join('\n'), reply_to: f.mail });
     } catch (err) { console.error('contact mail', err.message); }
   }
