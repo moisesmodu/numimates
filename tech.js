@@ -208,7 +208,7 @@ function tIsland(c, u, ui, nxt) {
    TPORT[kind] = { thumb(p) → HTML, after(p, el)?, open(p) → HTML, mount()? } des del seu fitxer. */
 const TPORT = {};
 // curs al qual pertany una sessió (per agrupar els projectes)
-const tCourseOf = sid => { for (const c of TECH) for (const u of c.units) if ((u.s || []).some(s => s.id === sid)) return c; return null; };
+const tCourseOf = sid => { if (/^lab:/.test(sid || '')) return TECH.find(c => c.id === sid.slice(4)) || null; for (const c of TECH) for (const u of c.units) if ((u.s || []).some(s => s.id === sid)) return c; return null; };
 function tPortThumb(p) { const K = p.kind && TPORT[p.kind]; if (K) return K.thumb(p); if (p.kind) return ''; const W = bitWorld(p.w); return bitSVG(W, bitSim(W), { still: true }); }
 function techProjectes(f) {
   const t = TS_(), acc = tAccess(), cur = tCourse(t.c), filt = f || techProjectes.f || 'all'; techProjectes.f = filt;
@@ -227,7 +227,7 @@ function techProjectes(f) {
     : `<div class="tempty3">${bitChar('idle')}<div><b>${L('Encara no hi ha cap projecte aquí', 'Aún no hay ningún proyecto aquí')}</b><p>${nextP ? L(`El primer arriba a la sessió «${tx(nextP.s.t)}» (unitat ${nextP.ui + 1}).`, `El primero llega en la sesión «${tx(nextP.s.t)}» (unidad ${nextP.ui + 1}).`) : L('A cada unitat en crearàs un.', 'En cada unidad crearás uno.')}</p></div></div>`;
   const rd = road.length ? `<section class="troad"><div class="tbch"><b>${TCI3[cur.id] || ''} ${L(`Els projectes de ${tx(cur.short)}`, `Los proyectos de ${tx(cur.short)}`)}</b><span>${road.filter(r => tDone(r.s.id)).length}/${road.length}</span></div>
       <div class="trdl">${road.map(r => { const d = tDone(r.s.id), nx = nextP && nextP.s.id === r.s.id; return `<div class="trd ${d ? 'ok' : ''} ${nx ? 'cur' : ''}" style="--uc:${r.u.color || cur.color}"><span class="trdn">${d ? TIC.ok : r.ui + 1}</span><div><b>${tx(r.s.t)}</b><small>${L('Unitat', 'Unidad')} ${r.ui + 1} · ${tx(r.u.t)}</small></div>${nx ? `<button class="btn tgo sm" onclick="tOpen('${r.s.id}')">${TIC.play}</button>` : ''}</div>`; }).join('')}</div></section>` : '';
-  app.innerHTML = tShell('projectes', tabs + grid + rd, hero);
+  app.innerHTML = tShell('projectes', (typeof tLabHTML === 'function' ? tLabHTML() : '') + tabs + grid + rd, hero);
   t.port.forEach(p => { const K = p.kind && TPORT[p.kind]; if (K && K.after) K.after(p, app); });
 }
 function tPortOpen(id) {
@@ -960,7 +960,7 @@ function tDemo(k, cid, n) {
   tFinish = function () { if (TSS && TSS.demo) return tTypes(); return f0.apply(this, arguments); }; }
 addEventListener('load', () => setTimeout(() => { try { if (new URLSearchParams(location.search).has('tipus') && typeof P !== 'undefined' && P && P.unlockAll && typeof IS_TECH !== 'undefined' && IS_TECH) tTypes(); } catch (e) { } }, 1200));
 // l'enunciat dels editors es veu retallat (2-3 línies): un toc l'obre sencer i un altre el torna a plegar
-document.addEventListener('click', e => { const q = e.target.closest('.tsbody>.tsq2, .tdes>.tsq2'); if (q && !e.target.closest('a,button')) { q.classList.toggle('open'); typeof tFit === 'function' && requestAnimationFrame(tFit); } });
+document.addEventListener('click', e => { const q = e.target.closest('.tsbody>.tsq2, .tdes>.tsq2'); if (q && !e.target.closest('a,button,input')) { q.classList.toggle('open'); typeof tFit === 'function' && requestAnimationFrame(tFit); } });
 
 /* ---------- Teoria a part (com a Numi Mates): les targetes de teoria d'una sessió o d'una unitat, per repassar-les quan vulguis ----------
    Des de la fitxa de cada parada («📖 Teoria») i des de la capçalera de la unitat. No compta com a sessió feta ni desa progrés. */
