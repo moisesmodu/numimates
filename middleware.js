@@ -16,6 +16,12 @@ const attr = s => s.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g,
 export default async function middleware(request) {
   try {
     const url = new URL(request.url), a = APPS[url.hostname];
+    // profe.numimates.com: la portada és el panell del docent
+    if (url.hostname === 'profe.numimates.com') {
+      const r = await fetch(new URL('/profe.html', url)); if (!r.ok) return;
+      const hd = new Headers(r.headers); hd.delete('content-length'); hd.delete('content-encoding'); hd.delete('transfer-encoding'); hd.delete('etag'); hd.set('content-type', 'text/html; charset=utf-8');
+      return new Response(await r.text(), { status: 200, headers: hd });
+    }
     if (!a) return;
     const r = await fetch(new URL('/index.html', url));
     if (!r.ok) return;
