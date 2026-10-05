@@ -91,10 +91,10 @@ function tSide(c, nxt, mob) {
   const t = TS_(), all = tSessions(c), done = all.filter(s => tDone(s.id)).length;
   let nu = -1; c.units.forEach((u, ui) => { if (nxt && u.s.some(s => s.id === nxt.id)) nu = ui; });
   const nb = nxt && nxt.badge && TBADGE[nxt.badge];
-  const next = nxt ? `<button class="tnext" onclick="tOpen('${nxt.id}')" style="--uc:${(c.units[nu] && c.units[nu].color) || c.color}"><span class="tnk">${L('La propera sessió', 'La próxima sesión')}</span><b>${tx(nxt.t)}</b>
+  const next = nxt ? `<button class="tnextc" onclick="tOpen('${nxt.id}')" style="--uc:${(c.units[nu] && c.units[nu].color) || c.color}"><span class="tnk">${L('La propera sessió', 'La próxima sesión')}</span><b>${tx(nxt.t)}</b>
       <small>${L('Unitat', 'Unidad')} ${nu + 1} · ${tx(c.units[nu].t)} · ${nxt.min || 40} min${nxt.proj ? ` · <em>${L('Projecte', 'Proyecto')}</em>` : ''}</small>
       ${nb ? `<span class="tnb"><span class="tbi on">${nb.ico}</span>${L('Hi pots guanyar', 'Puedes ganar')} <b>${tx(nb.n)}</b></span>` : ''}<span class="tng">${TIC.play} ${t.s[nxt.id] && t.s[nxt.id].i ? L('Continua', 'Continúa') : L('Comença', 'Empieza')}</span></button>`
-    : `<div class="tnext done"><span class="tnk">${L('Al dia!', '¡Al día!')}</span><b>${L("Has fet totes les sessions obertes", 'Has hecho todas las sesiones abiertas')}</b><small>${L("La propera l'obrirà el teu professor a classe.", 'La próxima la abrirá tu profesor en clase.')}</small></div>`;
+    : `<div class="tnextc done"><span class="tnk">${L('Al dia!', '¡Al día!')}</span><b>${L("Has fet totes les sessions obertes", 'Has hecho todas las sesiones abiertas')}</b><small>${L("La propera l'obrirà el teu professor a classe.", 'La próxima la abrirá tu profesor en clase.')}</small></div>`;
   const prog = `<div class="tcprog"><div class="tbch"><b>${TCI3[c.id] || ''} ${tx(c.short)}</b><span>${done}/${all.length} ${L('sessions', 'sesiones')}</span></div>
     ${c.units.map((u, ui) => { const n = u.s.length, d = u.s.filter(s => tDone(s.id)).length; return `<div class="tcpu ${d === n && n ? 'ok' : ''}" style="--uc:${u.color || c.color}"><span class="tcpn">${d === n && n ? TIC.ok : ui + 1}</span><span class="tcpt">${tx(u.t)}</span><span class="tcpb"><i style="width:${n ? d / n * 100 : 0}%"></i></span></div>`; }).join('')}</div>`;
   const own = new Set(c.units.flatMap(u => u.s.map(s => s.badge).filter(Boolean))), bs = Object.values(TBADGE).filter(b => own.has(b.id)), got = bs.filter(b => t.badges[b.id]);

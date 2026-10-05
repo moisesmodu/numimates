@@ -732,15 +732,15 @@ span.tb.c-cond{color:#3A2600}
   .tside2 .tside-m{display:none}
 }
 /* la propera sessió */
-.tnext{--uc:#2F6BFF;position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:4px;width:100%;text-align:left;padding:16px 16px 14px;border-radius:22px;color:#fff;overflow:hidden;
+.tnextc{--uc:#2F6BFF;position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:4px;width:100%;text-align:left;padding:16px 16px 14px;border-radius:22px;color:#fff;overflow:hidden;
   background:radial-gradient(120% 120% at 100% 0%,color-mix(in srgb,var(--uc) 55%,#fff) 0%,transparent 55%),linear-gradient(150deg,var(--uc),color-mix(in srgb,var(--uc) 55%,#0E1630));box-shadow:0 6px 0 color-mix(in srgb,var(--uc) 55%,#000),0 14px 30px rgba(27,43,107,.18);border:0}
-.tnext::after{content:"";position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,.12) 1.2px,transparent 1.3px);background-size:14px 14px;pointer-events:none}
-.tnext>*{position:relative;z-index:1}
-.tnext .tnk{font-size:12px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;opacity:.85}
-.tnext b{font-size:19px;line-height:1.2}.tnext small{font-size:13px;font-weight:700;opacity:.9}.tnext small em{font-style:normal;background:#FFC531;color:#3A2600;border-radius:6px;padding:0 6px}
-.tnext .tnb{display:flex;align-items:center;gap:6px;margin-top:6px;font-size:13px;font-weight:700;background:rgba(255,255,255,.16);border-radius:12px;padding:4px 10px 4px 4px}.tnext .tnb .tbi img.ic{width:26px;height:26px}
-.tnext .tng{margin-top:10px;display:inline-flex;align-items:center;gap:6px;background:#FFC531;color:#3A2600;font-weight:900;font-size:14px;letter-spacing:.04em;text-transform:uppercase;border-radius:14px;padding:9px 16px;box-shadow:0 4px 0 #D99A00}.tnext .tng svg{width:15px;height:15px}
-.tnext.done{--uc:#1FA463}
+.tnextc::after{content:"";position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,.12) 1.2px,transparent 1.3px);background-size:14px 14px;pointer-events:none}
+.tnextc>*{position:relative;z-index:1}
+.tnextc .tnk{font-size:12px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;opacity:.85}
+.tnextc b{font-size:19px;line-height:1.2}.tnextc small{font-size:13px;font-weight:700;opacity:.9}.tnextc small em{font-style:normal;background:#FFC531;color:#3A2600;border-radius:6px;padding:0 6px}
+.tnextc .tnb{display:flex;align-items:center;gap:6px;margin-top:6px;font-size:13px;font-weight:700;background:rgba(255,255,255,.16);border-radius:12px;padding:4px 10px 4px 4px}.tnextc .tnb .tbi img.ic{width:26px;height:26px}
+.tnextc .tng{margin-top:10px;display:inline-flex;align-items:center;gap:6px;background:#FFC531;color:#3A2600;font-weight:900;font-size:14px;letter-spacing:.04em;text-transform:uppercase;border-radius:14px;padding:9px 16px;box-shadow:0 4px 0 #D99A00}.tnextc .tng svg{width:15px;height:15px}
+.tnextc.done{--uc:#1FA463}
 /* progrés del curs, insígnies, últim projecte */
 .tcprog,.tbcard,.troad,.tbgrp{display:block;width:100%;text-align:left;background:#fff;border:2px solid var(--line);border-bottom-width:4px;border-radius:20px;padding:14px 16px}
 .tbch{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:10px}.tbch b{font-size:16px;display:inline-flex;align-items:center;gap:6px}.tbch span{font-size:13px;font-weight:800;color:var(--mut);background:var(--sky);border-radius:99px;padding:2px 10px}
@@ -799,4 +799,4 @@ span.tb.c-cond{color:#3A2600}
 .tuh2 h2{font-size:21px;line-height:1.15;color:#fff}.tuh2 p{color:rgba(255,255,255,.88);font-size:13.5px;font-weight:700}
 .tuch{margin-top:6px;font-size:12.5px;font-weight:900;background:rgba(255,255,255,.2);border-radius:99px;padding:3px 10px}.tuch.ok{background:#3CC47C}
 .tubot{position:relative;z-index:1;flex:none;width:64px}.tubot svg{width:64px;height:78px;display:block}
-.tnext .tnb b{font-size:13px}
+.tnextc .tnb b{font-size:13px}
