@@ -1030,3 +1030,6 @@ span.tb.c-cond{color:#3A2600}
 .tqbit .tqmq{width:100%;height:auto;display:block;filter:drop-shadow(0 4px 4px rgba(0,0,0,.25))}
 @media (max-width:600px){.tlc .sdcode{max-height:24vh;overflow-y:auto;overscroll-behavior:contain}}
 .tqvis{display:flex;gap:12px;justify-content:center;align-items:center;flex-wrap:wrap}.tqvis>.tart.sm{margin:0;flex:0 1 auto}
+/* editors: el món centrat a la seva columna (sense forat blanc a sota) i la zona del programa amb una graella de punts, com un taulell */
+@media (min-width:900px){.tsbody>.tstage .tworld{display:flex;flex-direction:column;justify-content:center}}
+.tsess .tsbody>.tstage .tprog{background-color:#fff;background-image:radial-gradient(color-mix(in srgb,var(--cc) 18%,#D6DEF2) 1.2px,transparent 1.5px);background-size:18px 18px;background-position:6px 6px}
