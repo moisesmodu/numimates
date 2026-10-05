@@ -32,10 +32,10 @@ COURSE_UNITS[4] = (() => {
         { k: 'quiz', ph: 'recorda', q: 'Recordes la unitat passada? Quin guió fa que en Numi es mogui quan prems la fletxa dreta?|¿Recuerdas la unidad pasada? ¿Qué guion hace que Numi se mueva cuando pulsas la flecha derecha?',
           opts: ['«Quan premo la tecla → fletxa dreta»|«Al pulsar la tecla → flecha derecha»', '«Quan comença (bandera verda)»|«Al empezar (bandera verde)»', '«Quan toco aquest personatge»|«Al tocar este personaje»'], a: 0,
           ex: 'Cada tecla té el seu guió: el que hi ha a sota passa cada vegada que la prems.|Cada tecla tiene su guion: lo que hay debajo pasa cada vez que la pulsas.' },
-        { k: 'story', ph: 'missio', who: 'both', scene: 'lab', title: 'La Nit de les Estrelles|La Noche de las Estrellas',
-          t: "Aquesta nit, a l'observatori de l'illa, celebrem la <b>Nit de les Estrelles</b>! En Bit ha fet un mapa del cel i en Numi ha d'anar just on és cada estrella. Però al cel no hi ha carrers ni números de casa… Com li direm <b>on és</b> cada lloc?|¡Esta noche, en el observatorio de la isla, celebramos la <b>Noche de las Estrellas</b>! Bit ha hecho un mapa del cielo y Numi tiene que ir justo donde está cada estrella. Pero en el cielo no hay calles ni números de casa… ¿Cómo le diremos <b>dónde está</b> cada sitio?" },
-        { k: 'story', ph: 'missio', who: 'bit', mood: 'happy',
-          t: "BIP! Ja ho tinc: l'escenari és com un mapa amb <b>dos números</b> per a cada lloc. Es diuen <b>coordenades</b>: la <b>x</b> i la <b>y</b>. Amb aquests dos números, en Numi trobarà qualsevol estrella!|¡BIP! Ya lo tengo: el escenario es como un mapa con <b>dos números</b> para cada sitio. Se llaman <b>coordenadas</b>: la <b>x</b> y la <b>y</b>. ¡Con esos dos números, Numi encontrará cualquier estrella!" },
+        { k: 'story', ph: 'missio', who: 'numi', scene: 'lab', title: 'La Nit de les Estrelles|La Noche de las Estrellas',
+          t: "Aquesta nit, a l'observatori de l'illa, celebrem la <b>Nit de les Estrelles</b>! L'astrònoma ha fet un mapa del cel i en Numi ha d'anar just on és cada estrella. Però al cel no hi ha carrers ni números de casa… Com li direm <b>on és</b> cada lloc?|¡Esta noche, en el observatorio de la isla, celebramos la <b>Noche de las Estrellas</b>! La astrónoma ha hecho un mapa del cielo y Numi tiene que ir justo donde está cada estrella. Pero en el cielo no hay calles ni números de casa… ¿Cómo le diremos <b>dónde está</b> cada sitio?" },
+        { k: 'story', ph: 'missio', who: 'numi', mood: 'happy',
+          t: "Ja ho tinc: l'escenari és com un mapa amb <b>dos números</b> per a cada lloc. Es diuen <b>coordenades</b>: la <b>x</b> i la <b>y</b>. Amb aquests dos números trobaré qualsevol estrella, encara que sigui a la cantonada del cel!|Ya lo tengo: el escenario es como un mapa con <b>dos números</b> para cada sitio. Se llaman <b>coordenadas</b>: la <b>x</b> y la <b>y</b>. ¡Con esos dos números encontraré cualquier estrella, aunque esté en la esquina del cielo!" },
         { k: 'learn', ph: 'descobreix', cards: [
           { k: "L'escenari|El escenario", t: 'Un mapa amb números|Un mapa con números', anim: 'g4grid',
             x: "L'escenari fa 480 punts d'ample i 360 d'alt. Al <b>centre</b> hi ha el punt <b>(0, 0)</b>. Cada lloc té dos números: la <span class='hl'>x</span> i la <span class='hl'>y</span>. Junts en diem les <b>coordenades</b> del punt.|El escenario mide 480 puntos de ancho y 360 de alto. En el <b>centro</b> está el punto <b>(0, 0)</b>. Cada sitio tiene dos números: la <span class='hl'>x</span> y la <span class='hl'>y</span>. Juntos los llamamos las <b>coordenadas</b> del punto.",
@@ -114,7 +114,7 @@ COURSE_UNITS[4] = (() => {
       steps: [
         { k: 'quiz', ph: 'recorda', art: () => TANI.g4pts(2), q: 'En Numi és al (0, 0) i fa <b>ves a x: 0 y: 120</b>. A quin punt anirà?|Numi está en el (0, 0) y hace <b>ve a x: 0 y: 120</b>. ¿A qué punto irá?',
           opts: ['Al punt B|Al punto B', 'Al punt A|Al punto A', 'Al punt C|Al punto C'], a: 0, keep: true, ex: 'La x es queda a 0 (al mig) i la y puja fins a 120: puja recte amunt.|La x se queda en 0 (en el medio) y la y sube hasta 120: sube recto hacia arriba.' },
-        { k: 'story', ph: 'missio', who: 'both', scene: 'illa', title: 'La cursa de globus|La carrera de globos',
+        { k: 'story', ph: 'missio', who: 'numi', scene: 'illa', title: 'La cursa de globus|La carrera de globos',
           t: "Avui és la gran <b>cursa de globus</b> de l'illa! Però els globus no van a salts: volen <b>a poc a poc</b> d'un núvol a l'altre. Si féssim servir «ves a», el globus desapareixeria i apareixeria a l'altra banda… quin truc de màgia més estrany!|¡Hoy es la gran <b>carrera de globos</b> de la isla! Pero los globos no van a saltos: vuelan <b>poco a poco</b> de una nube a otra. Si usáramos «ve a», el globo desaparecería y aparecería al otro lado… ¡qué truco de magia más raro!" },
         { k: 'learn', ph: 'descobreix', cards: [
           { k: 'Llisca|Desliza', t: '«Ves a» salta, «llisca» vola|«Ve a» salta, «desliza» vuela', anim: 'g4goto',
@@ -197,7 +197,7 @@ COURSE_UNITS[4] = (() => {
       steps: [
         { k: 'quiz', ph: 'recorda', q: 'Quin bloc mou el personatge <b>10 punts cap a la dreta</b>, sigui on sigui?|¿Qué bloque mueve al personaje <b>10 puntos hacia la derecha</b>, esté donde esté?',
           opts: ['«canvia x en 10»|«cambia x en 10»', '«posa x a 10»|«pon x a 10»', '«ves a x: 10 y: 0»|«ve a x: 10 y: 0»'], a: 0, ex: '«Canvia x» suma a la x que ja té; els altres dos el porten sempre al mateix lloc.|«Cambia x» suma a la x que ya tiene; los otros dos lo llevan siempre al mismo sitio.' },
-        { k: 'story', ph: 'missio', who: 'both', scene: 'moll', title: 'Festa a la platja|Fiesta en la playa',
+        { k: 'story', ph: 'missio', who: 'numi', scene: 'moll', title: 'Festa a la platja|Fiesta en la playa',
           t: "Avui hi ha festa a la platja del moll! Hi ha una <b>pilota</b> que no para de rebotar, un <b>peix</b> que neda d'una punta a l'altra i un <b>cranc</b> que el vol atrapar. Per programar-los, hem de saber <b>cap on mira</b> cada personatge.|¡Hoy hay fiesta en la playa del muelle! Hay una <b>pelota</b> que no para de rebotar, un <b>pez</b> que nada de una punta a otra y un <b>cangrejo</b> que lo quiere atrapar. Para programarlos, tenemos que saber <b>hacia dónde mira</b> cada personaje." },
         { k: 'learn', ph: 'descobreix', cards: [
           { k: 'Direcció|Dirección', t: 'Cap on mira?|¿Hacia dónde mira?', anim: 'g4dir',
@@ -265,15 +265,15 @@ COURSE_UNITS[4] = (() => {
         { k: 'feel', ph: 'tanca' }
       ] },
     /* ---------- Sessió 4 · Projecte: el laberint ---------- */
-    { id: 'g4-4', t: 'Projecte: el laberint|Proyecto: el laberinto', min: 45, proj: true, badge: 'g_laberint',
+    { id: 'g4-4', t: 'Projecte: escapa del laberint de llum|Proyecto: escapa del laberinto de luz', min: 45, proj: true, badge: 'g_laberint',
       learn: ['Un videojoc té regles: al laberint, si toques la paret blava, tornes a l\'inici.|Un videojuego tiene reglas: en el laberinto, si tocas la pared azul, vuelves al inicio.',
         '«Espera fins que toca el color…» dins un «per sempre» vigila tota l\'estona.|«Espera hasta que toca el color…» dentro de un «por siempre» vigila todo el rato.',
         'Has creat el teu primer videojoc amb fletxes, coordenades i una regla!|¡Has creado tu primer videojuego con flechas, coordenadas y una regla!'],
       steps: [
         { k: 'quiz', ph: 'recorda', q: 'Quin bloc fa que en Numi vagi <b>a poc a poc</b> fins a x: 100, y: 50?|¿Qué bloque hace que Numi vaya <b>poco a poco</b> hasta x: 100, y: 50?',
           opts: ['«llisca en 2 s fins a x: 100 y: 50»|«desliza en 2 s hasta x: 100 y: 50»', '«ves a x: 100 y: 50»|«ve a x: 100 y: 50»', '«canvia x en 100»|«cambia x en 100»'], a: 0, ex: "«Llisca» hi va a poc a poc; «ves a» hi salta i «canvia x» suma a la x que ja té.|«Desliza» va poco a poco; «ve a» salta y «cambia x» suma a la x que ya tiene." },
-        { k: 'story', ph: 'missio', who: 'both', scene: 'taller', title: 'El laberint del far|El laberinto del faro',
-          t: "Gran projecte! Al far de l'illa hi ha un <b>laberint</b> amb parets blaves. Avui el convertirem en el teu primer <b>videojoc</b>: mouràs en Numi amb les fletxes i, si toca una paret, haurà de tornar a començar. Aconseguirà arribar a la <b>sortida verda</b>?|¡Gran proyecto! En el faro de la isla hay un <b>laberinto</b> con paredes azules. Hoy lo convertiremos en tu primer <b>videojuego</b>: moverás a Numi con las flechas y, si toca una pared, tendrá que volver a empezar. ¿Conseguirá llegar a la <b>salida verde</b>?" },
+        { k: 'story', ph: 'missio', who: 'numi', scene: 'taller', title: 'El laberint de llum del far|El laberinto de luz del faro',
+          t: "Gran projecte! Al far de l'illa han muntat un <b>laberint de llum</b>: les parets brillen de color blau. Avui el convertirem en el teu primer <b>videojoc</b>: mouràs en Numi amb les fletxes i, si toca una paret, haurà de tornar a començar. Aconseguirà arribar a la <b>sortida verda</b>?|¡Gran proyecto! En el faro de la isla han montado un <b>laberinto de luz</b>: las paredes brillan de color azul. Hoy lo convertiremos en tu primer <b>videojuego</b>: moverás a Numi con las flechas y, si toca una pared, tendrá que volver a empezar. ¿Conseguirá llegar a la <b>salida verde</b>?" },
         { k: 'learn', ph: 'descobreix', cards: [
           { k: 'El mapa|El mapa', t: 'Primer, el mapa del laberint|Primero, el mapa del laberinto',
             media: { k: 'stage', w: { bg: 'laberint', sprites: [NUMI_M, { ...FLAG_M, prog: undefined }] }, prog: '@numi flag{ goto:-175,100 wait:0.6 glide:1,-175,-100 glide:1,-60,-100 glide:1,-60,100 glide:1,25,100 glide:1,25,-100 glide:1,170,-100 say:"Sortida!|¡Salida!",1.5 }', time: 9 },

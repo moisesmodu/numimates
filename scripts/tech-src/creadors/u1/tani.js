@@ -39,6 +39,18 @@ Object.assign(TANI, (() => {
         <g ${tA(2)}>${pill(124, 30, 56, '180', '#C26F18')}</g><g ${tA(2.2)}>${pill(124, 204, 62, '-180', '#C26F18')}</g>
         <g>${MV('0 0;0 0;70 0;70 0;0 0', '0;.5;.62;.9;1')}<g transform="translate(160 116)">${spr('numi', -24, -46, 48, 48, 1)}<g opacity="0">${show(3.5, 5)}${pill(0, -58, 104, L('x = 120 →', 'x = 120 →'), C.mov)}</g></g></g>`);
     },
+    // el pont per a qui ve de Tech Robot: els blocs d'en Bit i el seu equivalent a l'escenari (+ el bloc nou «apunta en direcció»)
+    g1bridge() {
+      const fs = 'style="font-size:12.5px"';
+      const b = (x, y, w, txt, col) => `<rect x="${x}" y="${y}" width="${w}" height="30" rx="8" fill="${col}"/><text x="${x + 9}" y="${y + 20}" class="tat w s" ${fs}>${txt}</text>`;
+      const rows = [[L('Endavant', 'Adelante'), L('mou-te 50 passos', 'muévete 50 pasos')], [L('Gira a la dreta', 'Gira a la derecha'), L('gira 90 graus', 'gira 90 grados')], [L("Gira a l'esquerra", 'Gira a la izquierda'), L('gira -90 graus', 'gira -90 grados')]];
+      const grid = [0, 1, 2, 3, 4, 5, 6].map(i => `<path d="M${10 + i * 22} 40V166" stroke="#C9D6FB" stroke-width="1"/>`).join('') + [0, 1, 2, 3, 4, 5].map(i => `<path d="M6 ${44 + i * 24}H152" stroke="#C9D6FB" stroke-width="1"/>`).join('');
+      return tSvg(226, `<rect x="2" y="4" width="154" height="168" rx="12" fill="#EEF3FF" stroke="#C9D6FB" stroke-width="2"/><g opacity=".7">${grid}</g>
+        <rect x="164" y="4" width="154" height="168" rx="12" fill="#FFF1E0" stroke="#F4CFA0" stroke-width="2"/>
+        <text x="79" y="27" text-anchor="middle" class="tat b">${L('En Bit', 'En Bit')}</text><text x="241" y="27" text-anchor="middle" class="tat b">${L("A l'escenari", 'En el escenario')}</text>
+        ${rows.map(([a, c], i) => `<g ${tA(.3 + i * .8, 'ta-in')}>${b(7, 40 + i * 44, 144, a, '#2F5BEA')}<circle cx="160" cy="${55 + i * 44}" r="10" fill="${C.gold}" stroke="#14204A" stroke-width="2"/><path d="M155 ${55 + i * 44}h8m-3 -4l4 4l-4 4" stroke="#14204A" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>${b(169, 40 + i * 44, 144, c, C.mov)}</g>`).join('')}
+        <g ${tA(2.8, 'ta-pop')}><rect x="6" y="182" width="308" height="38" rx="12" fill="#FFF8E6" stroke="${C.gold}" stroke-width="2.5"/><rect x="12" y="190" width="66" height="22" rx="11" fill="${C.gold}"/><text x="45" y="206" text-anchor="middle" class="tat s">${L('NOU', 'NUEVO')}</text>${b(84, 186, 224, L('apunta en direcció 90', 'apunta en dirección 90'), C.mov)}</g>`);
+    },
     // la bandera verda fa començar el guió: els blocs es fan un a un, de dalt a baix
     g1flag() {
       const hl = `<rect x="7" y="18" width="198" height="40" rx="11" fill="none" stroke="${C.gold}" stroke-width="4" opacity="0">${SM('opacity', '0;0;1;1;0', 5.5, 'keyTimes="0;.1;.12;.85;1"')}${SM('y', '18;18;60;96;96', 5.5, 'keyTimes="0;.12;.3;.52;1" calcMode="discrete"')}${SM('height', '40;40;34;34', 5.5, 'keyTimes="0;.12;.3;1" calcMode="discrete"')}</rect>`;
@@ -71,7 +83,9 @@ Object.assign(TANI, (() => {
         <g transform="translate(${cx} ${cy})"><g><animateTransform attributeName="transform" type="rotate" values="0;0;90;90;180;180;270;270;360;360" keyTimes="0;.14;.2;.34;.4;.54;.6;.74;.8;1" dur="5.5s" repeatCount="indefinite"/>${spr('cotxe', -34, -18, 68, 36)}</g></g>
         <g ${tA(.4, 'ta-in')}>${blk(172, 26, 144, L('gira 90 graus', 'gira 90 grados'))}<text x="244" y="78" text-anchor="middle" class="tat s">${L('↻ cap a la dreta', '↻ hacia la derecha')}</text></g>
         <g ${tA(1.6, 'ta-in')}>${blk(172, 100, 144, L('gira -90 graus', 'gira -90 grados'))}<text x="244" y="152" text-anchor="middle" class="tat s">${L("↺ cap a l'esquerra", '↺ hacia la izquierda')}</text></g>
-        <text x="160" y="214" text-anchor="middle" class="tat b" ${tA(2.6, 'ta-fade')}>${L('90 graus = un quart de volta', '90 grados = un cuarto de vuelta')}</text>`);
+        <g ${tA(2.2, 'ta-pop')}><circle cx="${cx + 45}" cy="${cy - 45}" r="15" fill="#FFF4D6" stroke="#E8C66A" stroke-width="2"/><text x="${cx + 45}" y="${cy - 40}" text-anchor="middle" class="tat s">45</text></g>
+        <g ${tA(2.5, 'ta-pop')}><circle cx="${cx - 45}" cy="${cy + 45}" r="17" fill="#FFF4D6" stroke="#E8C66A" stroke-width="2"/><text x="${cx - 45}" y="${cy + 50}" text-anchor="middle" class="tat s">-135</text></g>
+        <text x="160" y="214" text-anchor="middle" class="tat b" ${tA(2.8, 'ta-fade')}>${L('Els graus del mig: diagonals', 'Los grados de en medio: diagonales')}</text>`);
     },
     // digues (bafarada) i pensa (núvol); «durant 2 segons»: la frase es veu 2 segons i després va el bloc següent
     g1say() {

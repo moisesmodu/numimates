@@ -60,18 +60,20 @@
         <g ${tA(2.6, 'ta-pop')}><rect x="176" y="100" width="128" height="22" rx="11" fill="#E7F7EE" stroke="#1FA463" stroke-width="2"/><text x="240" y="116" text-anchor="middle" class="tat s" style="font-size:13px;fill:#147A47">${L('Ara es veu ✓', 'Ahora se ve ✓')}</text></g>`);
     },
 
-    // el que es repeteix (vestit següent + espera) entra dins d'un bucle «repeteix»
-    g2loop() {
-      const W8 = L('espera 0,3 s', 'espera 0,3 s');
-      const left = [0, 1, 2].map(i => `<g ${tA(.2 + i * .35, 'ta-in')}>${g2b(4, 12 + i * 64, 124, VS)}${g2b(4, 42 + i * 64, 124, W8, '#1FA463')}
-        <path d="M131 ${14 + i * 64} q5 0 5 6 v40 q0 6 -5 6" fill="none" stroke="#F2B21B" stroke-width="3"/><circle cx="144" cy="${41 + i * 64}" r="9" fill="#F2B21B"/><text x="144" y="${46 + i * 64}" text-anchor="middle" class="tat w s" style="font-size:13px">${i + 1}</text></g>`).join('');
-      return tSvg(214, `${left}
-        <g ${tA(2, 'ta-pop')}><path d="M162 54 h150 a6 6 0 0 1 6 6 v20 a6 6 0 0 1 -6 6 h-136 v64 h136 a6 6 0 0 1 6 6 v10 a6 6 0 0 1 -6 6 h-150 a6 6 0 0 1 -6 -6 v-106 a6 6 0 0 1 6 -6z" fill="#1FA463"/>
-          <text x="166" y="76" class="tat w s" style="font-size:13px">${L('repeteix 3 vegades', 'repite 3 veces')}</text>
-          ${g2b(178, 90, 138, VS)}${g2b(178, 120, 138, W8, '#2BB673')}
-          <circle r="4.5" fill="#FFE27A" stroke="#fff" stroke-width="1.6"><animateMotion dur="1.2s" repeatCount="indefinite" path="M166 92 V146"/></circle></g>
-        <g ${tA(2.8, 'ta-pop')}><rect x="184" y="184" width="112" height="24" rx="12" fill="#E7F7EE" stroke="#1FA463" stroke-width="2"/><text x="240" y="201" text-anchor="middle" class="tat s" style="font-size:13px;fill:#147A47">${L('3 blocs ✓', '3 bloques ✓')}</text></g>
-        <g ${tA(1.2, 'ta-pop')}><rect x="176" y="14" width="128" height="24" rx="12" fill="#FDEBEB" stroke="#EF5A5A" stroke-width="2"/><text x="240" y="31" text-anchor="middle" class="tat s" style="font-size:13px;fill:#C0392B">${L('abans: 6 blocs', 'antes: 6 bloques')}</text></g>`);
+    // 30 fotogrames per segon: cada volta del «per sempre» és un fotograma, i «mou-te 6» avança 6 punts a cada un
+    g2fps() {
+      const D = 2.5, kt = 'keyTimes="0;.2;.4;.6;.8" calcMode="discrete"';
+      const frames = [0, 1, 2, 3, 4].map(i => `<rect x="${16 + i * 60}" y="128" width="50" height="40" rx="5" fill="#fff"/><g transform="translate(${30 + i * 60 + i * 5} 148)">${g2a('peix', i % 2, 0, 0, 26)}</g><text x="${20 + i * 60}" y="139" class="tat s" style="font-size:11px">${i + 1}</text>`).join('');
+      const holes = Array.from({ length: 19 }, (_, i) => `<rect x="${14 + i * 16}" y="120" width="7" height="5" rx="1.5" fill="#fff" opacity=".8"/><rect x="${14 + i * 16}" y="171" width="7" height="5" rx="1.5" fill="#fff" opacity=".8"/>`).join('');
+      return tSvg(226, `${g2st(8, 8, 150, 100, 'g2seaF')}
+        <g><animateTransform attributeName="transform" type="translate" values="40 60;64 60;88 60;112 60;136 60" ${kt} dur="${D}s" repeatCount="indefinite"/>${g2a('peix', 0, 0, 0, 40)}</g>
+        <g ${tA(.3, 'ta-in')}><path d="M170 12 h138 a6 6 0 0 1 6 6 v16 a6 6 0 0 1 -6 6 h-124 v34 h124 a6 6 0 0 1 6 6 v6 a6 6 0 0 1 -6 6 h-138 a6 6 0 0 1 -6 -6 v-68 a6 6 0 0 1 6 -6z" fill="#1FA463"/>
+          <text x="176" y="31" class="tat w s" style="font-size:13px">${L('per sempre', 'por siempre')}</text>${g2b(184, 44, 128, L('mou-te 6 passos', 'muévete 6 pasos'), '#3D7BF4')}</g>
+        <g ${tA(1, 'ta-pop')}><rect x="174" y="92" width="138" height="22" rx="11" fill="#FFF3D6" stroke="#F2B21B" stroke-width="2"/><text x="243" y="108" text-anchor="middle" class="tat s" style="font-size:12.5px;fill:#8A5A00">${L('1 volta = 1 fotograma', '1 vuelta = 1 fotograma')}</text></g>
+        <rect x="8" y="116" width="304" height="64" rx="8" fill="#2A2F45"/>${holes}${frames}
+        <rect x="13" y="125" width="56" height="46" rx="7" fill="none" stroke="#F2B21B" stroke-width="3.5"><animateTransform attributeName="transform" type="translate" values="0 0;60 0;120 0;180 0;240 0" ${kt} dur="${D}s" repeatCount="indefinite"/></rect>
+        <text x="160" y="201" text-anchor="middle" class="tat b" ${tA(1.8, 'ta-fade')}>${L("30 fotogrames cada segon", '30 fotogramas cada segundo')}</text>
+        <text x="160" y="220" text-anchor="middle" class="tat s" ${tA(2.4, 'ta-fade')}>${L('6 punts × 30 = 180 punts per segon', '6 puntos × 30 = 180 puntos por segundo')}</text>`);
     },
 
     // «per sempre» torna a començar i no s'acaba mai: el que hi ha a sota no arriba mai

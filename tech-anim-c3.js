@@ -42,6 +42,18 @@ Object.assign(TANI, (() => {
         <g ${tA(2)}>${pill(124, 30, 56, '180', '#C26F18')}</g><g ${tA(2.2)}>${pill(124, 204, 62, '-180', '#C26F18')}</g>
         <g>${MV('0 0;0 0;70 0;70 0;0 0', '0;.5;.62;.9;1')}<g transform="translate(160 116)">${spr('numi', -24, -46, 48, 48, 1)}<g opacity="0">${show(3.5, 5)}${pill(0, -58, 104, L('x = 120 →', 'x = 120 →'), C.mov)}</g></g></g>`);
     },
+    // el pont per a qui ve de Tech Robot: els blocs d'en Bit i el seu equivalent a l'escenari (+ el bloc nou «apunta en direcció»)
+    g1bridge() {
+      const fs = 'style="font-size:12.5px"';
+      const b = (x, y, w, txt, col) => `<rect x="${x}" y="${y}" width="${w}" height="30" rx="8" fill="${col}"/><text x="${x + 9}" y="${y + 20}" class="tat w s" ${fs}>${txt}</text>`;
+      const rows = [[L('Endavant', 'Adelante'), L('mou-te 50 passos', 'muévete 50 pasos')], [L('Gira a la dreta', 'Gira a la derecha'), L('gira 90 graus', 'gira 90 grados')], [L("Gira a l'esquerra", 'Gira a la izquierda'), L('gira -90 graus', 'gira -90 grados')]];
+      const grid = [0, 1, 2, 3, 4, 5, 6].map(i => `<path d="M${10 + i * 22} 40V166" stroke="#C9D6FB" stroke-width="1"/>`).join('') + [0, 1, 2, 3, 4, 5].map(i => `<path d="M6 ${44 + i * 24}H152" stroke="#C9D6FB" stroke-width="1"/>`).join('');
+      return tSvg(226, `<rect x="2" y="4" width="154" height="168" rx="12" fill="#EEF3FF" stroke="#C9D6FB" stroke-width="2"/><g opacity=".7">${grid}</g>
+        <rect x="164" y="4" width="154" height="168" rx="12" fill="#FFF1E0" stroke="#F4CFA0" stroke-width="2"/>
+        <text x="79" y="27" text-anchor="middle" class="tat b">${L('En Bit', 'En Bit')}</text><text x="241" y="27" text-anchor="middle" class="tat b">${L("A l'escenari", 'En el escenario')}</text>
+        ${rows.map(([a, c], i) => `<g ${tA(.3 + i * .8, 'ta-in')}>${b(7, 40 + i * 44, 144, a, '#2F5BEA')}<circle cx="160" cy="${55 + i * 44}" r="10" fill="${C.gold}" stroke="#14204A" stroke-width="2"/><path d="M155 ${55 + i * 44}h8m-3 -4l4 4l-4 4" stroke="#14204A" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>${b(169, 40 + i * 44, 144, c, C.mov)}</g>`).join('')}
+        <g ${tA(2.8, 'ta-pop')}><rect x="6" y="182" width="308" height="38" rx="12" fill="#FFF8E6" stroke="${C.gold}" stroke-width="2.5"/><rect x="12" y="190" width="66" height="22" rx="11" fill="${C.gold}"/><text x="45" y="206" text-anchor="middle" class="tat s">${L('NOU', 'NUEVO')}</text>${b(84, 186, 224, L('apunta en direcció 90', 'apunta en dirección 90'), C.mov)}</g>`);
+    },
     // la bandera verda fa començar el guió: els blocs es fan un a un, de dalt a baix
     g1flag() {
       const hl = `<rect x="7" y="18" width="198" height="40" rx="11" fill="none" stroke="${C.gold}" stroke-width="4" opacity="0">${SM('opacity', '0;0;1;1;0', 5.5, 'keyTimes="0;.1;.12;.85;1"')}${SM('y', '18;18;60;96;96', 5.5, 'keyTimes="0;.12;.3;.52;1" calcMode="discrete"')}${SM('height', '40;40;34;34', 5.5, 'keyTimes="0;.12;.3;1" calcMode="discrete"')}</rect>`;
@@ -74,7 +86,9 @@ Object.assign(TANI, (() => {
         <g transform="translate(${cx} ${cy})"><g><animateTransform attributeName="transform" type="rotate" values="0;0;90;90;180;180;270;270;360;360" keyTimes="0;.14;.2;.34;.4;.54;.6;.74;.8;1" dur="5.5s" repeatCount="indefinite"/>${spr('cotxe', -34, -18, 68, 36)}</g></g>
         <g ${tA(.4, 'ta-in')}>${blk(172, 26, 144, L('gira 90 graus', 'gira 90 grados'))}<text x="244" y="78" text-anchor="middle" class="tat s">${L('↻ cap a la dreta', '↻ hacia la derecha')}</text></g>
         <g ${tA(1.6, 'ta-in')}>${blk(172, 100, 144, L('gira -90 graus', 'gira -90 grados'))}<text x="244" y="152" text-anchor="middle" class="tat s">${L("↺ cap a l'esquerra", '↺ hacia la izquierda')}</text></g>
-        <text x="160" y="214" text-anchor="middle" class="tat b" ${tA(2.6, 'ta-fade')}>${L('90 graus = un quart de volta', '90 grados = un cuarto de vuelta')}</text>`);
+        <g ${tA(2.2, 'ta-pop')}><circle cx="${cx + 45}" cy="${cy - 45}" r="15" fill="#FFF4D6" stroke="#E8C66A" stroke-width="2"/><text x="${cx + 45}" y="${cy - 40}" text-anchor="middle" class="tat s">45</text></g>
+        <g ${tA(2.5, 'ta-pop')}><circle cx="${cx - 45}" cy="${cy + 45}" r="17" fill="#FFF4D6" stroke="#E8C66A" stroke-width="2"/><text x="${cx - 45}" y="${cy + 50}" text-anchor="middle" class="tat s">-135</text></g>
+        <text x="160" y="214" text-anchor="middle" class="tat b" ${tA(2.8, 'ta-fade')}>${L('Els graus del mig: diagonals', 'Los grados de en medio: diagonales')}</text>`);
     },
     // digues (bafarada) i pensa (núvol); «durant 2 segons»: la frase es veu 2 segons i després va el bloc següent
     g1say() {
@@ -189,18 +203,20 @@ Object.assign(TANI, (() => {
         <g ${tA(2.6, 'ta-pop')}><rect x="176" y="100" width="128" height="22" rx="11" fill="#E7F7EE" stroke="#1FA463" stroke-width="2"/><text x="240" y="116" text-anchor="middle" class="tat s" style="font-size:13px;fill:#147A47">${L('Ara es veu ✓', 'Ahora se ve ✓')}</text></g>`);
     },
 
-    // el que es repeteix (vestit següent + espera) entra dins d'un bucle «repeteix»
-    g2loop() {
-      const W8 = L('espera 0,3 s', 'espera 0,3 s');
-      const left = [0, 1, 2].map(i => `<g ${tA(.2 + i * .35, 'ta-in')}>${g2b(4, 12 + i * 64, 124, VS)}${g2b(4, 42 + i * 64, 124, W8, '#1FA463')}
-        <path d="M131 ${14 + i * 64} q5 0 5 6 v40 q0 6 -5 6" fill="none" stroke="#F2B21B" stroke-width="3"/><circle cx="144" cy="${41 + i * 64}" r="9" fill="#F2B21B"/><text x="144" y="${46 + i * 64}" text-anchor="middle" class="tat w s" style="font-size:13px">${i + 1}</text></g>`).join('');
-      return tSvg(214, `${left}
-        <g ${tA(2, 'ta-pop')}><path d="M162 54 h150 a6 6 0 0 1 6 6 v20 a6 6 0 0 1 -6 6 h-136 v64 h136 a6 6 0 0 1 6 6 v10 a6 6 0 0 1 -6 6 h-150 a6 6 0 0 1 -6 -6 v-106 a6 6 0 0 1 6 -6z" fill="#1FA463"/>
-          <text x="166" y="76" class="tat w s" style="font-size:13px">${L('repeteix 3 vegades', 'repite 3 veces')}</text>
-          ${g2b(178, 90, 138, VS)}${g2b(178, 120, 138, W8, '#2BB673')}
-          <circle r="4.5" fill="#FFE27A" stroke="#fff" stroke-width="1.6"><animateMotion dur="1.2s" repeatCount="indefinite" path="M166 92 V146"/></circle></g>
-        <g ${tA(2.8, 'ta-pop')}><rect x="184" y="184" width="112" height="24" rx="12" fill="#E7F7EE" stroke="#1FA463" stroke-width="2"/><text x="240" y="201" text-anchor="middle" class="tat s" style="font-size:13px;fill:#147A47">${L('3 blocs ✓', '3 bloques ✓')}</text></g>
-        <g ${tA(1.2, 'ta-pop')}><rect x="176" y="14" width="128" height="24" rx="12" fill="#FDEBEB" stroke="#EF5A5A" stroke-width="2"/><text x="240" y="31" text-anchor="middle" class="tat s" style="font-size:13px;fill:#C0392B">${L('abans: 6 blocs', 'antes: 6 bloques')}</text></g>`);
+    // 30 fotogrames per segon: cada volta del «per sempre» és un fotograma, i «mou-te 6» avança 6 punts a cada un
+    g2fps() {
+      const D = 2.5, kt = 'keyTimes="0;.2;.4;.6;.8" calcMode="discrete"';
+      const frames = [0, 1, 2, 3, 4].map(i => `<rect x="${16 + i * 60}" y="128" width="50" height="40" rx="5" fill="#fff"/><g transform="translate(${30 + i * 60 + i * 5} 148)">${g2a('peix', i % 2, 0, 0, 26)}</g><text x="${20 + i * 60}" y="139" class="tat s" style="font-size:11px">${i + 1}</text>`).join('');
+      const holes = Array.from({ length: 19 }, (_, i) => `<rect x="${14 + i * 16}" y="120" width="7" height="5" rx="1.5" fill="#fff" opacity=".8"/><rect x="${14 + i * 16}" y="171" width="7" height="5" rx="1.5" fill="#fff" opacity=".8"/>`).join('');
+      return tSvg(226, `${g2st(8, 8, 150, 100, 'g2seaF')}
+        <g><animateTransform attributeName="transform" type="translate" values="40 60;64 60;88 60;112 60;136 60" ${kt} dur="${D}s" repeatCount="indefinite"/>${g2a('peix', 0, 0, 0, 40)}</g>
+        <g ${tA(.3, 'ta-in')}><path d="M170 12 h138 a6 6 0 0 1 6 6 v16 a6 6 0 0 1 -6 6 h-124 v34 h124 a6 6 0 0 1 6 6 v6 a6 6 0 0 1 -6 6 h-138 a6 6 0 0 1 -6 -6 v-68 a6 6 0 0 1 6 -6z" fill="#1FA463"/>
+          <text x="176" y="31" class="tat w s" style="font-size:13px">${L('per sempre', 'por siempre')}</text>${g2b(184, 44, 128, L('mou-te 6 passos', 'muévete 6 pasos'), '#3D7BF4')}</g>
+        <g ${tA(1, 'ta-pop')}><rect x="174" y="92" width="138" height="22" rx="11" fill="#FFF3D6" stroke="#F2B21B" stroke-width="2"/><text x="243" y="108" text-anchor="middle" class="tat s" style="font-size:12.5px;fill:#8A5A00">${L('1 volta = 1 fotograma', '1 vuelta = 1 fotograma')}</text></g>
+        <rect x="8" y="116" width="304" height="64" rx="8" fill="#2A2F45"/>${holes}${frames}
+        <rect x="13" y="125" width="56" height="46" rx="7" fill="none" stroke="#F2B21B" stroke-width="3.5"><animateTransform attributeName="transform" type="translate" values="0 0;60 0;120 0;180 0;240 0" ${kt} dur="${D}s" repeatCount="indefinite"/></rect>
+        <text x="160" y="201" text-anchor="middle" class="tat b" ${tA(1.8, 'ta-fade')}>${L("30 fotogrames cada segon", '30 fotogramas cada segundo')}</text>
+        <text x="160" y="220" text-anchor="middle" class="tat s" ${tA(2.4, 'ta-fade')}>${L('6 punts × 30 = 180 punts per segon', '6 puntos × 30 = 180 puntos por segundo')}</text>`);
     },
 
     // «per sempre» torna a començar i no s'acaba mai: el que hi ha a sota no arriba mai
@@ -627,6 +643,24 @@ Object.assign(TANI, {
       <g ${tA(.3, 'ta-in')}><rect x="212" y="40" width="102" height="62" rx="14" fill="#fff" stroke="#3D7BF4" stroke-width="2.5"/><rect x="222" y="50" width="20" height="20" rx="5" fill="#3D7BF4"/><text x="250" y="66" class="tat s">${L('blau', 'azul')}</text><text x="222" y="92" class="tat s" style="fill:#C0392B">${L('compte!', '¡cuidado!')}</text></g>
       <g ${tA(.6, 'ta-in')}><rect x="212" y="114" width="102" height="62" rx="14" fill="#fff" stroke="#E2A400" stroke-width="2.5"/><rect x="222" y="124" width="20" height="20" rx="5" fill="#FFC531"/><text x="250" y="140" class="tat s">${L('groc', 'amarillo')}</text><text x="222" y="166" class="tat s" style="fill:#147A47">${L('camina', 'camina')}</text></g>
       <text x="263" y="198" text-anchor="middle" class="tat s" ${tA(.9, 'ta-fade')}>${L('El fons avisa', 'El fondo avisa')}</text>`);
+  },
+  // l'arbre de decisions del salt: «toca el verd?» → no: cau · sí: «fletxa amunt?» → sí: salta · no: camina
+  g5tree() {
+    const D = 'dur="6s" repeatCount="indefinite"';
+    const q = (cx, cy, w, txt) => `<rect x="${cx - w / 2}" y="${cy - 20}" width="${w}" height="40" rx="14" fill="#FFF7E0" stroke="#F2B21B" stroke-width="3"/><text x="${cx}" y="${cy + 6}" text-anchor="middle" class="tat b">${txt}</text>`;
+    const leaf = (cx, cy, w, txt, col, bg) => `<rect x="${cx - w / 2}" y="${cy - 17}" width="${w}" height="34" rx="17" fill="${bg}" stroke="${col}" stroke-width="3"/><text x="${cx}" y="${cy + 5}" text-anchor="middle" class="tat s" style="fill:${col}">${txt}</text>`;
+    const tag = (x, y, txt, col) => `<rect x="${x - 17}" y="${y - 11}" width="34" height="22" rx="11" fill="${col}"/><text x="${x}" y="${y + 5}" text-anchor="middle" class="tat w s" style="font-size:12px">${txt}</text>`;
+    const line = d => `<path d="${d}" fill="none" stroke="#9AA6C8" stroke-width="3" stroke-linecap="round"/>`;
+    const tok = (path, kt, vis) => `<circle r="8" fill="#FFC531" stroke="#14204A" stroke-width="2.5" opacity="0"><animateMotion path="${path}" keyPoints="0;0;1;1" keyTimes="${kt}" calcMode="linear" ${D}/><animate attributeName="opacity" values="${vis}" keyTimes="${kt}" calcMode="discrete" ${D}/></circle>`;
+    return tSvg(222, `${line('M130 50 L70 84')}${line('M190 50 L230 80')}${line('M200 120 L172 154')}${line('M262 120 L276 154')}
+      <g ${tA(.2, 'ta-in')}>${q(160, 30, 168, L('Toca el verd?', '¿Toca el verde?'))}</g>
+      <g ${tA(.7, 'ta-pop')}>${tag(92, 64, 'no', '#EF5A5A')}${tag(218, 62, L('sí', 'sí'), '#1FA463')}</g>
+      <g ${tA(1, 'ta-in')}>${leaf(66, 102, 104, L('cau ↓', 'cae ↓'), '#C0392B', '#FDEBEB')}</g>
+      <g ${tA(1.3, 'ta-in')}>${q(232, 100, 160, L('Fletxa amunt?', '¿Flecha arriba?'))}</g>
+      <g ${tA(1.8, 'ta-pop')}>${tag(176, 136, L('sí', 'sí'), '#1FA463')}${tag(282, 136, 'no', '#EF5A5A')}</g>
+      <g ${tA(2.1, 'ta-in')}>${leaf(168, 172, 96, L('salta ↑', 'salta ↑'), '#147A47', '#E7F7EE')}${leaf(272, 172, 92, L('camina →', 'camina →'), '#1F5FBF', '#E8F0FF')}</g>
+      ${tok('M160 50 L232 100 L272 172', '0;.1;.4;1', '0;1;1;0')}${tok('M160 50 L66 102', '0;.55;.75;1', '0;1;1;0')}
+      <text x="160" y="214" text-anchor="middle" class="tat b" ${tA(2.6, 'ta-fade')}>${L("Un «si» dins d'un altre «si»", 'Un «si» dentro de otro «si»')}</text>`);
   },
   // «i» i «o»: el regal s'obre només si hi són tots dos (i); l'estrella s'encén si n'hi ha algun (o)
   g5andor() {

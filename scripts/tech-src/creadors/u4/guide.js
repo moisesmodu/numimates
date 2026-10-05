@@ -187,7 +187,7 @@ Object.assign(TGUIDE, (() => {
           nota: "Presenta l'objectiu: al final de la classe, tothom portarà en Numi a qualsevol estrella del cel.|Presenta el objetivo: al final de la clase, todos llevarán a Numi a cualquier estrella del cielo." },
         { id: 's2', k: 'pregunta', t: 'On és la teva cadira?|¿Dónde está tu silla?', x: "Explica-li a un amic on seus, sense assenyalar.|Explícale a un amigo dónde te sientas, sin señalar.",
           nota: "Recull respostes i fes notar les que són poc exactes («per allà»). Torna-hi quan expliquis les coordenades.|Recoge respuestas y haz notar las que son poco exactas («por allí»). Vuelve a ello cuando expliques las coordenadas." },
-        { id: 's3', k: 'concepte', t: 'La Nit de les Estrelles|La Noche de las Estrellas', punts: ["En Bit ha fet un mapa del cel.|Bit ha hecho un mapa del cielo.", "En Numi ha d'anar just on és cada estrella.|Numi tiene que ir justo donde está cada estrella.", "Per dir on és cada lloc farem servir dos números: la x i la y.|Para decir dónde está cada sitio usaremos dos números: la x y la y."], pic: 'img/tech/scenes/lab.webp',
+        { id: 's3', k: 'concepte', t: 'La Nit de les Estrelles|La Noche de las Estrellas', punts: ["L'astrònoma ha fet un mapa del cel.|La astrónoma ha hecho un mapa del cielo.", "En Numi ha d'anar just on és cada estrella.|Numi tiene que ir justo donde está cada estrella.", "Per dir on és cada lloc farem servir dos números: la x i la y.|Para decir dónde está cada sitio usaremos dos números: la x y la y."], pic: 'img/tech/scenes/lab.webp',
           nota: "Explica que l'ordinador no entén «una mica més amunt»: necessita números exactes.|Explica que el ordenador no entiende «un poco más arriba»: necesita números exactos." },
         { id: 's4', k: 'anim', t: "L'escenari és un mapa|El escenario es un mapa", anim: 'g4grid', x: "480 punts d'ample, 360 d'alt i el (0, 0) al centre.|480 puntos de ancho, 360 de alto y el (0, 0) en el centro.",
           nota: "Fes notar les dues ratlles: la vermella és la de la x i la verda, la de la y. La línia discontínua mostra com es llegeixen els dos números.|Haz notar las dos rayas: la roja es la de la x y la verde, la de la y. La línea discontinua muestra cómo se leen los dos números." },
@@ -658,7 +658,7 @@ Object.assign(TGUIDE, (() => {
             { q: "Quantes vegades rebota abans d'arribar a una cantonada?|¿Cuántas veces rebota antes de llegar a una esquina?" }] }
       ]
     },
-    /* ---------- Sessió 4 · Projecte: el laberint ---------- */
+    /* ---------- Sessió 4 · Projecte: escapa del laberint de llum ---------- */
     'g4-4': {
     intro: "Sessió de projecte que tanca la primera meitat del curs: l'alumnat crea el seu primer videojoc, el laberint del far. Hi combina el que ha après: les fletxes amb «canvia x» i «canvia y», les coordenades de l'inici i de la sortida i una regla nova, «espera fins que toca el color blau» dins un «per sempre», que torna en Numi a l'inici quan toca una paret. Treballen com un equip de videojocs: pla en paper, programar el moviment, afegir les regles, provar i demanar a algú que el provi. La classe comença amb què té un videojoc, segueix amb el disseny d'un laberint en paper per parelles i acaba amb el videojoc programat i provat per un company/a.|Sesión de proyecto que cierra la primera mitad del curso: el alumnado crea su primer videojuego, el laberinto del faro. Combina lo que ha aprendido: las flechas con «cambia x» y «cambia y», las coordenadas del inicio y de la salida y una regla nueva, «espera hasta que toca el color azul» dentro de un «por siempre», que devuelve a Numi al inicio cuando toca una pared. Trabajan como un equipo de videojuegos: plan en papel, programar el movimiento, añadir las reglas, probar y pedir a alguien que lo pruebe. La clase empieza con qué tiene un videojuego, sigue con el diseño de un laberinto en papel por parejas y termina con el videojuego programado y probado por un compañero/a.",
     claus: [
@@ -734,7 +734,7 @@ Object.assign(TGUIDE, (() => {
       ],
       mat: {
       aula: [
-        "Un ordinador per alumne/a amb Numi Tech obert a la sessió «Projecte: el laberint»|Un ordenador por alumno/a con Numi Tech abierto en la sesión «Proyecto: el laberinto»",
+        "Un ordinador per alumne/a amb Numi Tech obert a la sessió «Projecte: escapa del laberint de llum»|Un ordenador por alumno/a con Numi Tech abierto en la sesión «Proyecto: escapa del laberinto de luz»",
         "Projector i la presentació d'aquesta sessió|Proyector y la presentación de esta sesión",
         "Per parella: 1 «Dissenya el teu laberint» (imprimible 1), llapis de colors (blau, verd i vermell) i 1 llapis normal|Por pareja: 1 «Diseña tu laberinto» (imprimible 1), lápices de colores (azul, verde y rojo) y 1 lápiz normal",
         "1 fitxa «Prova i millora» per alumne/a (imprimible 2)|1 ficha «Prueba y mejora» por alumno/a (imprimible 2)"
@@ -751,7 +751,7 @@ Object.assign(TGUIDE, (() => {
       ]
     },
       plan: [
-        { min: 5, t: "Benvinguda: el laberint del far|Bienvenida: el laberinto del faro", fase: 'inici',
+        { min: 5, t: "Benvinguda: el laberint de llum del far|Bienvenida: el laberinto de luz del faro", fase: 'inici',
           fa: "Presenta el projecte: avui creareu el vostre primer videojoc. Pregunta què té qualsevol videojoc que coneguin (un personatge, uns controls, unes regles, un objectiu) i apunta-ho a la pissarra en quatre columnes. Ho farem servir per planificar el laberint.|Presenta el proyecto: hoy crearéis vuestro primer videojuego. Pregunta qué tiene cualquier videojuego que conozcan (un personaje, unos controles, unas reglas, un objetivo) y apúntalo en la pizarra en cuatro columnas. Lo usaremos para planificar el laberinto.",
           diu: ["Què té un videojoc? Qui es mou, amb què el movem, què no podem fer i què hem d'aconseguir?|¿Qué tiene un videojuego? ¿Quién se mueve, con qué lo movemos, qué no podemos hacer y qué tenemos que conseguir?",
             "Avui no farem servir el videojoc d'algú altre: el crearem nosaltres.|Hoy no usaremos el videojuego de otra persona: lo crearemos nosotros.", "Quin és l'objectiu del nostre laberint? (Arribar a la sortida verda.)|¿Cuál es el objetivo de nuestro laberinto? (Llegar a la salida verde.)"],
@@ -818,7 +818,7 @@ Object.assign(TGUIDE, (() => {
       },
       casa: "A casa, amb el mòbil, podeu obrir el laberint als «Projectes» i ensenyar-lo a la família: que provin d'arribar a la sortida i que us diguin què hi afegirien.|En casa, con el móvil, podéis abrir el laberinto en «Proyectos» y enseñarlo a la familia: que intenten llegar a la salida y que os digan qué añadirían.",
       slides: [
-        { id: 's1', k: 'portada', t: 'Projecte: el laberint|Proyecto: el laberinto', x: "Avui crearem el nostre primer videojoc: un laberint amb fletxes i regles.|Hoy crearemos nuestro primer videojuego: un laberinto con flechas y reglas.",
+        { id: 's1', k: 'portada', t: 'Projecte: escapa del laberint de llum|Proyecto: escapa del laberinto de luz', x: "Avui crearem el nostre primer videojoc: un laberint amb fletxes i regles.|Hoy crearemos nuestro primer videojuego: un laberinto con flechas y reglas.",
           nota: "Explica que és el projecte de la unitat: farà servir les coordenades, les fletxes i els bucles de les sessions anteriors.|Explica que es el proyecto de la unidad: usará las coordenadas, las flechas y los bucles de las sesiones anteriores." },
         { id: 's2', k: 'pregunta', t: 'Què té un videojoc?|¿Qué tiene un videojuego?', punts: ["Qui es mou? (el personatge)|¿Quién se mueve? (el personaje)", "Amb què el movem? (els controls)|¿Con qué lo movemos? (los controles)", "Què no podem fer? (les regles)|¿Qué no podemos hacer? (las reglas)", "Què hem d'aconseguir? (l'objectiu)|¿Qué tenemos que conseguir? (el objetivo)"],
           nota: "Apunta les respostes en quatre columnes a la pissarra i omple-les després amb el laberint: Numi, les fletxes, la paret, la sortida.|Apunta las respuestas en cuatro columnas en la pizarra y rellénalas después con el laberinto: Numi, las flechas, la pared, la salida." },
