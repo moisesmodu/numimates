@@ -262,7 +262,7 @@ export default async function handler(req, res) {
   const rows = await sql`SELECT code, username, name, course, survey, xp, streak, best, last_day, lessons, answers, correct, created_at, updated_at, grup_id, pla, pla_fins,
     state->'tests' AS tests, state->'lang' AS lang, state->'unlockAll' AS unlock_all, state->'week' AS week, state->'stats'->'sk' AS sk, state->'reco' AS reco, state->'school' AS school, state->'album' AS album, state->'stats'->'bwins' AS bwins, state->'crowns' AS crowns, state->'exams' AS exams, state->'days' AS days,
     state->>'variant' AS variant, state->'apps' AS apps, (state->'tech') - 'port' AS tech, state->'ment' AS ment,
-    (SELECT jsonb_agg(jsonb_build_object('t', p->'t', 'd', p->'d', 'sid', p->'sid')) FROM jsonb_array_elements(CASE WHEN jsonb_typeof(state->'tech'->'port') = 'array' THEN state->'tech'->'port' ELSE '[]'::jsonb END) p) AS tech_port
+    (SELECT jsonb_agg(jsonb_build_object('t', p->'t', 'd', p->'d', 'sid', p->'sid', 'k', p->'kind', 'lab', p->'lab')) FROM jsonb_array_elements(CASE WHEN jsonb_typeof(state->'tech'->'port') = 'array' THEN state->'tech'->'port' ELSE '[]'::jsonb END) p) AS tech_port
     FROM mates.alumnes WHERE active AND (${!!me.admin} OR grup_id = ANY(${gids})) ORDER BY streak DESC, xp DESC`;
   if (!me.admin) return ok(res, { me: me.docent, rows, grups: groups });
   const battles = await sql`SELECT b.code, b.kind, b.course, b.status, b.created_at, b.start_at,
