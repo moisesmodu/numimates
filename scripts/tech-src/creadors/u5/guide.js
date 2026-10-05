@@ -218,216 +218,216 @@ Object.assign(TGUIDE, {
         ] }
     ]
   },
-  /* ---------- Sessió 2 · Colors que avisen ---------- */
+  /* ---------- Sessió 2 · Colors i decisions niuades ---------- */
   'g5-2': {
-    intro: "Segona sessió de condicions. El fons també pot donar informació: la condició «toca el color» pregunta si el personatge trepitja una zona de color (el blau del mar, el verd de l'herba, les parets del laberint). Després arriba el «si… si no», que dona dues respostes a una sola pregunta i sempre en fa una, mai les dues. La classe comença amb colors que avisen a la vida real (el semàfor) i té una activitat de graella en parelles abans de passar als reptes, que acaben amb el laberint de colors.|Segunda sesión de condiciones. El fondo también puede dar información: la condición «toca el color» pregunta si el personaje pisa una zona de color (el azul del mar, el verde de la hierba, las paredes del laberinto). Después llega el «si… si no», que da dos respuestas a una sola pregunta y siempre hace una, nunca las dos. La clase empieza con colores que avisan en la vida real (el semáforo) y tiene una actividad de cuadrícula por parejas antes de pasar a los retos, que terminan con el laberinto de colores.",
+    intro: "Segona sessió de condicions. El fons també dona informació: la condició «toca el color» pregunta si el personatge trepitja una zona de color (el blau del mar, el verd de l'herba, les parets del laberint). El «si… si no» ja el coneixen de Tech Robot i de la sessió anterior; la idea nova és posar decisions dins d'altres decisions. En un videojoc de plataformes, primer es pregunta «toco el terra?» i, només si és que sí, «prem algú la fletxa amunt?»: si sí, salta; si no, camina; i si no toca el terra, cau. Aquestes regles es dibuixen com un arbre de decisions abans de programar-les. La classe comença amb el problema d'en Pinces, segueix amb un videojoc de plataformes humà i acaba amb els reptes de colors i el laberint.|Segunda sesión de condiciones. El fondo también da información: la condición «toca el color» pregunta si el personaje pisa una zona de color (el azul del mar, el verde de la hierba, las paredes del laberinto). El «si… si no» ya lo conocen de Tech Robot y de la sesión anterior; la idea nueva es poner decisiones dentro de otras decisiones. En un videojuego de plataformas, primero se pregunta «¿toco el suelo?» y, solo si es que sí, «¿alguien pulsa la flecha arriba?»: si sí, salta; si no, camina; y si no toca el suelo, cae. Estas reglas se dibujan como un árbol de decisiones antes de programarlas. La clase empieza con el problema de Pinzas, sigue con un videojuego de plataformas humano y termina con los retos de colores y el laberinto.",
     claus: [
       "«Toca el color» pregunta pel fons: si el personatge trepitja una zona d'aquell color.|«Toca el color» pregunta por el fondo: si el personaje pisa una zona de ese color.",
-      "Els colors poden tenir un significat: blau, aigua o paret; verd, herba o sortida; vermell, trampa.|Los colores pueden tener un significado: azul, agua o pared; verde, hierba o salida; rojo, trampa.",
-      "El «si… si no» té dues parts: la de dalt per al sí i la de baix per al no.|El «si… si no» tiene dos partes: la de arriba para el sí y la de abajo para el no.",
-      "Cada vegada que pregunta en fa una de les dues, mai totes dues.|Cada vez que pregunta hace una de las dos, nunca las dos."
+      "Un «si» es pot posar dins d'un altre «si» (o del seu «si no»): la segona pregunta només es fa quan la primera ho permet.|Un «si» se puede poner dentro de otro «si» (o de su «si no»): la segunda pregunta solo se hace cuando la primera lo permite.",
+      "Les regles es dibuixen com un arbre de decisions: a cada branca, una pregunta; a cada fulla, una acció.|Las reglas se dibujan como un árbol de decisiones: en cada rama, una pregunta; en cada hoja, una acción.",
+      "Cada camí de l'arbre acaba en una sola acció: a cada fotograma, el personatge en fa només una.|Cada camino del árbol termina en una sola acción: en cada fotograma, el personaje hace solo una."
     ],
     prev: [
-      "El bloc «si» i la condició «toca…» dins del «per sempre» (sessió anterior).|El bloque «si» y la condición «toca…» dentro del «por siempre» (sesión anterior).",
-      "Posar y a un número i canviar y per pujar o baixar (unitat 4).|Poner y a un número y cambiar y para subir o bajar (unidad 4).",
+      "El «si» dins del «per sempre», les condicions «toca…» i les comparacions (sessió anterior).|El «si» dentro del «por siempre», las condiciones «toca…» y las comparaciones (sesión anterior).",
+      "El «si… si no» de Tech Robot o de la targeta de repàs de la sessió anterior.|El «si… si no» de Tech Robot o de la tarjeta de repaso de la sesión anterior.",
       "El laberint de la unitat 4: les parets són blaves i la sortida, verda.|El laberinto de la unidad 4: las paredes son azules y la salida, verde."
     ],
     faq: [
       ["Quins colors puc triar a «toca el color»?|¿Qué colores puedo elegir en «toca el color»?", "Els que té el fons de cada repte: a la platja, el blau del mar i el groc de la sorra; al bosc, el verd de l'herba; al laberint, blau, verd i vermell. Si el fons no té zones de color, l'app t'ho diu.|Los que tiene el fondo de cada reto: en la playa, el azul del mar y el amarillo de la arena; en el bosque, el verde de la hierba; en el laberinto, azul, verde y rojo. Si el fondo no tiene zonas de color, la app te lo dice."],
+      ["Com poso un «si» dins d'un altre?|¿Cómo pongo un «si» dentro de otro?", "Toca el forat de dins del primer «si» (o de la seva part «si no») i afegeix-hi un altre «si» de la paleta. El segon queda dins i només es fa quan el primer hi deixa passar.|Toca el hueco de dentro del primer «si» (o de su parte «si no») y añade otro «si» de la paleta. El segundo queda dentro y solo se hace cuando el primero deja pasar."],
+      ["Quina diferència hi ha entre dos «si» seguits i un «si» dins d'un altre?|¿Qué diferencia hay entre dos «si» seguidos y un «si» dentro de otro?", "Dos «si» seguits pregunten sempre totes dues coses. Un «si» dins d'un altre només fa la segona pregunta si la primera diu que sí: per això en Numi no salta mai a l'aire.|Dos «si» seguidos preguntan siempre las dos cosas. Un «si» dentro de otro solo hace la segunda pregunta si la primera dice que sí: por eso Numi no salta nunca en el aire."],
       ["On és el «si no»? No el trobo a la paleta.|¿Dónde está el «si no»? No lo encuentro en la paleta.", "No és un bloc a part: toca un bloc «si» que ja tinguis i després el botó «Afegeix «si no»». Li surt una segona part a sota.|No es un bloque aparte: toca un bloque «si» que ya tengas y después el botón «Añade «si no»». Le sale una segunda parte debajo."],
-      ["Puc fer el mateix amb dos «si»?|¿Puedo hacer lo mismo con dos «si»?", "De vegades sí, però amb un «si… si no» n'hi ha prou amb una sola pregunta i és impossible que es facin les dues parts alhora.|A veces sí, pero con un «si… si no» basta con una sola pregunta y es imposible que se hagan las dos partes a la vez."],
-      ["Per què en Numi s'enfonsa a l'herba?|¿Por qué Numi se hunde en la hierba?", "Perquè el bloc de caure és a la part del sí. Quan toca el verd ha de caminar; el «canvia y en -5» va a la part «si no».|Porque el bloque de caer está en la parte del sí. Cuando toca el verde tiene que caminar; el «cambia y en -5» va en la parte «si no»."],
       ["Al laberint, per què l'Estel es mou sol quan toco «Comprova»?|En el laberinto, ¿por qué Estel se mueve solo cuando toco «Comprueba»?", "«Comprova» prem les fletxes per tu, sempre igual, per veure si les teves regles funcionen a les dues proves. Amb «Comença» les prems tu.|«Comprueba» pulsa las flechas por ti, siempre igual, para ver si tus reglas funcionan en las dos pruebas. Con «Empieza» las pulsas tú."],
-      ["Què passa si toca dos colors alhora?|¿Qué pasa si toca dos colores a la vez?", "Les dues preguntes diuen sí i es fan els dos «si», un darrere l'altre. Per això l'ordre dels blocs pot importar.|Las dos preguntas dicen sí y se hacen los dos «si», uno detrás del otro. Por eso el orden de los bloques puede importar."]
+      ["Un arbre de decisions es fa servir de veritat?|¿Un árbol de decisiones se usa de verdad?", "Sí: als videojocs (què fa un enemic segons on ets), a les apps que et recomanen coses i fins i tot als metges per decidir quines proves fer. Primer es dibuixa i després es programa.|Sí: en los videojuegos (qué hace un enemigo según dónde estás), en las apps que te recomiendan cosas e incluso los médicos para decidir qué pruebas hacer. Primero se dibuja y después se programa."]
     ],
     tec: [
       ["L'escenari no es mou en tocar «Comença».|El escenario no se mueve al tocar «Empieza».", "Comproveu que el programa té blocs sota «Quan comença». Si no, toqueu el botó de tornar a començar (la fletxa rodona) i proveu-ho de nou.|Comprobad que el programa tiene bloques bajo «Al empezar». Si no, tocad el botón de volver a empezar (la flecha redonda) y probadlo de nuevo."],
       ["Les fletxes del teclat no mouen el personatge.|Las flechas del teclado no mueven al personaje.", "Cal tocar primer l'escenari (perquè la pàgina «escolti» el teclat) o fer servir els botons de fletxes de sota l'escenari, que també funcionen al mòbil.|Hay que tocar primero el escenario (para que la página «escuche» el teclado) o usar los botones de flechas de debajo del escenario, que también funcionan en el móvil."],
-      ["Un alumne/a s'encalla i ha esborrat blocs que no tocava.|Un alumno/a se atasca y ha borrado bloques que no tocaba.", "Després de dos intents apareix el botó «Una pista» i, després, «Mostra una solució». També es pot sortir del pas i tornar-hi: el repte torna a començar.|Después de dos intentos aparece el botón «Una pista» y, después, «Muestra una solución». También se puede salir del paso y volver a entrar: el reto vuelve a empezar."],
+      ["El «si» nou queda a sota de l'altre i no a dins.|El «si» nuevo queda debajo del otro y no dentro.", "Abans d'afegir-lo, cal tocar el forat de dins del primer «si» (surt la línia «els blocs nous van aquí»). Un bloc posat es pot moure amb ↑ i ↓.|Antes de añadirlo, hay que tocar el hueco de dentro del primer «si» (sale la línea «los bloques nuevos van aquí»). Un bloque puesto se puede mover con ↑ y ↓."],
       ["Al laberint, «Comprova» falla tot i que amb les fletxes funciona.|En el laberinto, «Comprueba» falla aunque con las flechas funciona.", "Mireu quina prova falla (Prova 1 o 2, a dalt de l'escenari) i el missatge de sota. Sovint falta «atura tot» després de «He sortit!» o la paret no torna a x: -175, y: 100.|Mirad qué prueba falla (Prueba 1 o 2, encima del escenario) y el mensaje de debajo. A menudo falta «para todo» después de «¡He salido!» o la pared no vuelve a x: -175, y: 100."],
-      ["No apareix el botó «Afegeix «si no»».|No aparece el botón «Añade «si no»».", "Cal tocar la part de dalt del bloc «si» (el nom del bloc, no el forat): s'obren els botons del bloc seleccionat.|Hay que tocar la parte de arriba del bloque «si» (el nombre del bloque, no el hueco): se abren los botones del bloque seleccionado."],
-      ["No queden llapis de colors per a la graella.|No quedan lápices de colores para la cuadrícula.", "Es pot fer amb lletres dins de les caselles: B (blau), V (verd) i R (vermell).|Se puede hacer con letras dentro de las casillas: A (azul), V (verde) y R (rojo)."]
+      ["No apareix el botó «Afegeix «si no»».|No aparece el botón «Añade «si no»».", "Cal tocar la part de dalt del bloc «si» (el nom del bloc, no el forat): s'obren els botons del bloc seleccionat.|Hay que tocar la parte de arriba del bloque «si» (el nombre del bloque, no el hueco): se abren los botones del bloque seleccionado."]
     ],
     seg: [
       "Pantalles: recorda la pausa activa a mitja sessió i que mirin lluny uns segons quan acabin cada repte.|Pantallas: recuerda la pausa activa a media sesión y que miren a lo lejos unos segundos cuando terminen cada reto.",
-      "Semàfor humà: es camina sense moure's del lloc i sense córrer; els colors no s'han de fer servir per triar companys ni per excloure ningú.|Semáforo humano: se camina sin moverse del sitio y sin correr; los colores no se usan para elegir compañeros ni para excluir a nadie.",
-      "Recordeu que a la vida real els semàfors i els senyals es miren sempre amb una persona adulta.|Recordad que en la vida real los semáforos y las señales se miran siempre con una persona adulta."
+      "Plataformes humanes: els fulls de terra es fixen amb cinta perquè no rellisquin; els salts són petits i al lloc, sense empènyer.|Plataformas humanas: las hojas del suelo se fijan con cinta para que no resbalen; los saltos son pequeños y en el sitio, sin empujar."
     ],
     extra: [
       "Al laberint, afegir la regla del vermell (la trampa): si el toca, diu «Ai!» i torna a l'inici.|En el laberinto, añadir la regla del rojo (la trampa): si lo toca, dice «¡Ay!» y vuelve al inicio.",
-      "Fer que la Tuga canviï de vestit quan neda i torni al normal a la sorra, amb un sol «si… si no».|Hacer que Tuga cambie de disfraz cuando nada y vuelva al normal en la arena, con un solo «si… si no».",
-      "Dibuixar un fons propi en paper amb tres zones de colors i escriure'n les regles.|Dibujar un fondo propio en papel con tres zonas de colores y escribir sus reglas."
+      "Afegir una branca a l'arbre del salt: si toca el verd i prem la fletxa dreta, camina més de pressa (mou-te 6).|Añadir una rama al árbol del salto: si toca el verde y pulsa la flecha derecha, camina más deprisa (muévete 6).",
+      "Dibuixar l'arbre de decisions d'un enemic d'un videojoc conegut i explicar-lo a la classe.|Dibujar el árbol de decisiones de un enemigo de un videojuego conocido y explicarlo a la clase."
     ],
     trans: [
-      "Ve de la sessió anterior: el mateix «si», ara amb colors i amb dues parts.|Viene de la sesión anterior: el mismo «si», ahora con colores y con dos partes.",
-      "Sessió següent: ajuntar preguntes amb «i» i «o», i girar-les amb «no».|Sesión siguiente: juntar preguntas con «y» y «o», y girarlas con «no».",
-      "Ciències i educació viària: senyals i colors que avisen (semàfors, sortides d'emergència).|Ciencias y educación vial: señales y colores que avisan (semáforos, salidas de emergencia)."
+      "Ve de la sessió anterior: les mateixes condicions, ara amb colors i posades unes dins de les altres.|Viene de la sesión anterior: las mismas condiciones, ahora con colores y puestas unas dentro de otras.",
+      "Sessió següent: ajuntar preguntes amb «i» i «o», i girar-les amb «no» (una altra manera de combinar condicions).|Sesión siguiente: juntar preguntas con «y» y «o», y girarlas con «no» (otra manera de combinar condiciones).",
+      "Ciències i matemàtiques: els diagrames d'arbre per classificar i per comptar possibilitats.|Ciencias y matemáticas: los diagramas de árbol para clasificar y para contar posibilidades."
     ],
     obj: [
       "L'alumne/a fa servir la condició «toca el color» per fer que un personatge reaccioni a una zona del fons.|El alumno/a usa la condición «toca el color» para que un personaje reaccione a una zona del fondo.",
-      "L'alumne/a explica que el «si… si no» sempre fa una de les dues parts, mai totes dues.|El alumno/a explica que el «si… si no» siempre hace una de las dos partes, nunca las dos.",
-      "L'alumne/a programa un personatge que cau si no toca l'herba i camina si la toca.|El alumno/a programa un personaje que cae si no toca la hierba y camina si la toca.",
-      "L'alumne/a dona un significat a cada color d'un laberint i el programa amb un «si» per color.|El alumno/a da un significado a cada color de un laberinto y lo programa con un «si» por color."
+      "L'alumne/a llegeix un programa amb un «si» dins d'un altre i diu què farà el personatge en cada situació.|El alumno/a lee un programa con un «si» dentro de otro y dice qué hará el personaje en cada situación.",
+      "L'alumne/a dibuixa les regles d'un personatge com un arbre de decisions i les passa a blocs.|El alumno/a dibuja las reglas de un personaje como un árbol de decisiones y las pasa a bloques.",
+      "L'alumne/a programa regles de colors en un laberint i comprova que funcionen a totes les proves.|El alumno/a programa reglas de colores en un laberinto y comprueba que funcionan en todas las pruebas."
     ],
     comp: [
-      "Competència digital (CD5): programar decisions en animacions i videojocs propis|Competencia digital (CD5): programar decisiones en animaciones y videojuegos propios",
-      "Pensament computacional: condicions amb dues sortides («si… si no»)|Pensamiento computacional: condiciones con dos salidas («si… si no»)",
-      "Educació viària i ciutadania: els colors del semàfor com a codi compartit|Educación vial y ciudadanía: los colores del semáforo como código compartido",
+      "Competència digital (CD5): programar la lògica de decisions d'un videojoc propi|Competencia digital (CD5): programar la lógica de decisiones de un videojuego propio",
+      "Pensament computacional: condicions niuades, arbres de decisions i depuració|Pensamiento computacional: condiciones anidadas, árboles de decisiones y depuración",
+      "Matemàtiques: diagrames d'arbre i classificació per passos|Matemáticas: diagramas de árbol y clasificación por pasos",
       "Educació artística: el color com a senyal|Educación artística: el color como señal"
     ],
     vocab: [
       ["Toca el color|Toca el color", "Condició que pregunta si el personatge trepitja un color del fons.|Condición que pregunta si el personaje pisa un color del fondo."],
-      ["Si… si no|Si… si no", "Bloc amb dues parts: una per al sí i una altra per al no.|Bloque con dos partes: una para el sí y otra para el no."],
-      ["Senyal|Señal", "Un color, un so o un dibuix que avisa d'alguna cosa.|Un color, un sonido o un dibujo que avisa de algo."],
+      ["Decisió niuada|Decisión anidada", "Un «si» posat dins d'un altre «si» (o del seu «si no»).|Un «si» puesto dentro de otro «si» (o de su «si no»)."],
+      ["Arbre de decisions|Árbol de decisiones", "Dibuix de les regles: preguntes a les branques i accions a les fulles.|Dibujo de las reglas: preguntas en las ramas y acciones en las hojas."],
       ["Gravetat|Gravedad", "Quan un personatge cau fins que toca el terra.|Cuando un personaje cae hasta que toca el suelo."],
       ["Atura tot|Para todo", "Bloc que acaba el programa: tots els personatges s'aturen.|Bloque que acaba el programa: todos los personajes se paran."]
     ],
     mat: {
       aula: [
-        "Un ordinador per alumne/a amb la sessió «Colors que avisen»|Un ordenador por alumno/a con la sesión «Colores que avisan»",
+        "Un ordinador per alumne/a amb la sessió «Colors i decisions niuades»|Un ordenador por alumno/a con la sesión «Colores y decisiones anidadas»",
         "Projector i la presentació de la sessió|Proyector y la presentación de la sesión",
-        "La graella «El camí dels colors» (una per parella) i llapis de colors blau, verd i vermell|La cuadrícula «El camino de los colores» (una por pareja) y lápices de colores azul, verde y rojo",
-        "Una fitxa o goma petita per parella que farà de personatge|Una ficha o goma pequeña por pareja que hará de personaje"
+        "8 o 10 fulls verds per grup (el terra) i cinta de pintor per fixar-los, i 2 fulls vermells (trampes)|8 o 10 hojas verdes por grupo (el suelo) y cinta de pintor para fijarlas, y 2 hojas rojas (trampas)",
+        "La fitxa «El meu arbre de decisions» (una per alumne/a)|La ficha «Mi árbol de decisiones» (una por alumno/a)"
       ],
-      imprimir: ["El camí dels colors|El camino de los colores"],
+      imprimir: ["El meu arbre de decisions|Mi árbol de decisiones"],
       prep: [
-        "El dia abans (10 min): imprimir una graella «El camí dels colors» per parella i preparar llapis blaus, verds i vermells.|El día antes (10 min): imprimir una cuadrícula «El camino de los colores» por pareja y preparar lápices azules, verdes y rojos.",
-        "El dia abans (10 min): provar el repte del laberint amb les fletxes i amb «Comprova» per saber com funciona.|El día antes (10 min): probar el reto del laberinto con las flechas y con «Comprueba» para saber cómo funciona.",
-        "El dia abans (2 min): recordar com s'afegeix el «si no»: tocar el bloc «si» i el botó «Afegeix «si no»».|El día antes (2 min): recordar cómo se añade el «si no»: tocar el bloque «si» y el botón «Añade «si no»».",
+        "El dia abans (10 min): imprimir una fitxa per alumne/a i preparar els fulls verds i vermells per grup.|El día antes (10 min): imprimir una ficha por alumno/a y preparar las hojas verdes y rojas por grupo.",
+        "El dia abans (10 min): provar el repte del laberint amb les fletxes i amb «Comprova», i la demo del salt (diapositiva 7) per saber quan es prem la fletxa.|El día antes (10 min): probar el reto del laberinto con las flechas y con «Comprueba», y la demo del salto (diapositiva 7) para saber cuándo se pulsa la flecha.",
+        "Abans de classe (5 min): enganxar els fulls al terra, amb espais entre ells, en un o dos recorreguts.|Antes de clase (5 min): pegar las hojas en el suelo, con espacios entre ellas, en uno o dos recorridos.",
         "Abans de classe (5 min): deixar els ordinadors amb la sessió iniciada i la presentació oberta.|Antes de clase (5 min): dejar los ordenadores con la sesión iniciada y la presentación abierta."
       ]
     },
     plan: [
       { min: 5, t: "Inici: colors que avisen|Inicio: colores que avisan", fase: 'inici',
-        fa: "Repassa el «si» dins del «per sempre» amb les dues preguntes de la diapositiva. Pregunta on veuen colors que avisen: el semàfor, la sortida d'emergència, el llum vermell d'un aparell encès… Apunta les respostes a la pissarra. Presenta en Pinces, el cranc que no sap nedar i necessita que el fons l'avisi.|Repasa el «si» dentro del «por siempre» con las dos preguntas de la diapositiva. Pregunta dónde ven colores que avisan: el semáforo, la salida de emergencia, la luz roja de un aparato encendido… Apunta las respuestas en la pizarra. Presenta a Pinzas, el cangrejo que no sabe nadar y necesita que el fondo le avise.",
+        fa: "Repassa la sessió anterior amb les dues preguntes de la diapositiva (l'«igual» i el blau del laberint). Pregunta en quins videojocs el personatge només pot saltar quan és a terra. Presenta en Pinces, el cranc que no sap nedar i necessita que el fons l'avisi.|Repasa la sesión anterior con las dos preguntas de la diapositiva (el «igual» y el azul del laberinto). Pregunta en qué videojuegos el personaje solo puede saltar cuando está en el suelo. Presenta a Pinzas, el cangrejo que no sabe nadar y necesita que el fondo le avise.",
         diu: [
-          "On va el «si toca…» perquè vigili tota l'estona? (dins del «per sempre»)|¿Dónde va el «si toca…» para que vigile todo el rato? (dentro del «por siempre»)",
-          "On heu vist colors que volen dir alguna cosa? (el semàfor, les sortides, els botons…)|¿Dónde habéis visto colores que quieren decir algo? (el semáforo, las salidas, los botones…)",
-          "Què vol dir el verd d'una sortida d'emergència? (per aquí pots sortir)|¿Qué quiere decir el verde de una salida de emergencia? (por aquí puedes salir)",
+          "La poma cau de 7 en 7: «y = -150» o «y < -150»? Per què?|La manzana cae de 7 en 7: ¿«y = -150» o «y < -150»? ¿Por qué?",
+          "En un videojoc de plataformes, podeu saltar mentre sou a l'aire? (Normalment no.)|En un videojuego de plataformas, ¿podéis saltar mientras estáis en el aire? (Normalmente no.)",
           "En Pinces no sap nedar. Com el pot avisar el fons? (amb el blau del mar)|Pinzas no sabe nadar. ¿Cómo le puede avisar el fondo? (con el azul del mar)"
         ],
         slides: ['s1', 's2', 's3'], app: "Encara no.|Todavía no.", org: "Tot el grup|Todo el grupo" },
-      { min: 10, t: "Toca el color i «si… si no»|Toca el color y «si… si no»", fase: 'teoria',
-        fa: "Mostra l'animació del cranc i la demo de la platja. Explica el «si… si no» amb el paraigua i la gorra i fes que diguin quina part es fa en cada cas. Projecta la demo d'en Numi que cau i camina, i acaba amb el laberint: un «si» per a cada color.|Muestra la animación del cangrejo y la demo de la playa. Explica el «si… si no» con el paraguas y la gorra y haz que digan qué parte se hace en cada caso. Proyecta la demo de Numi que cae y camina, y termina con el laberinto: un «si» para cada color.",
+      { min: 10, t: "Toca el color i decisions niuades|Toca el color y decisiones anidadas", fase: 'teoria',
+        fa: "Mostra l'animació del color i la demo d'en Pinces. Després, la demo del salt: atura-la quan en Numi és a l'aire i pregunta què passaria si algú premés la fletxa. Dibuixa l'arbre de decisions a la pissarra mentre mostres l'animació i fes que la classe el recorri en tres situacions (a terra, a terra amb fletxa, a l'aire).|Muestra la animación del color y la demo de Pinzas. Después, la demo del salto: párala cuando Numi está en el aire y pregunta qué pasaría si alguien pulsara la flecha. Dibuja el árbol de decisiones en la pizarra mientras muestras la animación y haz que la clase lo recorra en tres situaciones (en el suelo, en el suelo con flecha, en el aire).",
         diu: [
           "El cranc pregunta «toco el blau?». Què fa quan la resposta és sí? (torna a la sorra)|El cangrejo pregunta «¿toco el azul?». ¿Qué hace cuando la respuesta es sí? (vuelve a la arena)",
-          "«Si plou, agafo el paraigua; si no, la gorra.» Avui fa sol: què agafo? (la gorra)|«Si llueve, cojo el paraguas; si no, la gorra.» Hoy hace sol: ¿qué cojo? (la gorra)",
-          "Pot fer les dues parts alhora? (no, mai: una o l'altra)|¿Puede hacer las dos partes a la vez? (no, nunca: una u otra)",
-          "En Numi és a l'aire: quina part es fa? (la del «si no»: cau)|Numi está en el aire: ¿qué parte se hace? (la del «si no»: cae)",
-          "Al laberint, quina regla falta per a les parets? (si toca el blau, torna a l'inici)|En el laberinto, ¿qué regla falta para las paredes? (si toca el azul, vuelve al inicio)"
+          "En Numi és a l'aire i premo amunt: salta? (No: la pregunta de la fletxa és dins de «toca el verd».)|Numi está en el aire y pulso arriba: ¿salta? (No: la pregunta de la flecha está dentro de «toca el verde».)",
+          "Quantes preguntes fa en Numi quan és a terra? I a l'aire? (Dues; una.)|¿Cuántas preguntas hace Numi cuando está en el suelo? ¿Y en el aire? (Dos; una.)",
+          "Cada camí de l'arbre acaba en una acció. Quantes accions pot fer alhora? (Una.)|Cada camino del árbol termina en una acción. ¿Cuántas acciones puede hacer a la vez? (Una.)"
         ],
         slides: ['s4', 's5', 's6', 's7', 's8'], app: "Encara no.|Todavía no.", org: "Tot el grup|Todo el grupo" },
-      { min: 11, t: "Desconnectat: el camí dels colors|Desconectado: el camino de los colores", fase: 'desconnectat',
-        fa: "En parelles, pinten a la graella unes quantes caselles blaves (aigua), vermelles (trampa) i verdes (sortida) i marquen l'inici. Escriuen les regles amb «si… si no». Després intercanvien la graella amb una altra parella: un/a diu fletxes i l'altre/a mou la fitxa i aplica les regles en veu alta a cada casella.|Por parejas, pintan en la cuadrícula unas cuantas casillas azules (agua), rojas (trampa) y verdes (salida) y marcan el inicio. Escriben las reglas con «si… si no». Después intercambian la cuadrícula con otra pareja: uno/a dice flechas y el otro/a mueve la ficha y aplica las reglas en voz alta en cada casilla.",
+      { min: 11, t: "Desconnectat: regles dins de regles|Desconectado: reglas dentro de reglas", fase: 'desconnectat',
+        fa: "Grups de 4: un actor/actriu, un àrbitre/a i dos dibuixants. Els dibuixants fan l'arbre de decisions a la fitxa (toco verd? → no: m'ajupo; sí: l'àrbitre/a diu «amunt»? → sí: salto; no: un pas). L'actor/actriu recorre els fulls verds del terra i, a cada pas, fa les preguntes en veu alta i en ordre; l'àrbitre/a diu «amunt» de tant en tant i comprova que segueix l'arbre. Segona ronda: afegeixen una pregunta nova (el full vermell, torna a l'inici) a una branca.|Grupos de 4: un actor/actriz, un árbitro/a y dos dibujantes. Los dibujantes hacen el árbol de decisiones en la ficha (¿toco verde? → no: me agacho; sí: ¿el árbitro/a dice «arriba»? → sí: salto; no: un paso). El actor/actriz recorre las hojas verdes del suelo y, en cada paso, hace las preguntas en voz alta y en orden; el árbitro/a dice «arriba» de vez en cuando y comprueba que sigue el árbol. Segunda ronda: añaden una pregunta nueva (la hoja roja, vuelve al inicio) a una rama.",
         diu: [
-          "A cada casella, pregunteu: de quin color és?|En cada casilla, preguntad: ¿de qué color es?",
-          "Si no és de cap color, què fa la fitxa? (continua: és la part del «si no»)|Si no es de ningún color, ¿qué hace la ficha? (sigue: es la parte del «si no»)",
-          "Les regles de l'altra parella són clares? Les podeu seguir sense preguntar?|¿Las reglas de la otra pareja son claras? ¿Las podéis seguir sin preguntar?",
-          "Heu arribat a la sortida verda? Quantes vegades heu tornat a l'inici?|¿Habéis llegado a la salida verde? ¿Cuántas veces habéis vuelto al inicio?"
+          "Primer la pregunta de dalt de l'arbre: toques un full verd?|Primero la pregunta de arriba del árbol: ¿tocas una hoja verde?",
+          "Si no toques el verd, fas la pregunta de l'«amunt»? (No: m'ajupo i prou.)|Si no tocas el verde, ¿haces la pregunta del «arriba»? (No: me agacho y ya está.)",
+          "On heu posat la pregunta del full vermell? Dins de quina branca?|¿Dónde habéis puesto la pregunta de la hoja roja? ¿Dentro de qué rama?",
+          "Algú ha saltat a l'aire? Quina regla de l'arbre s'ha saltat?|¿Alguien ha saltado en el aire? ¿Qué regla del árbol se ha saltado?"
         ],
-        slides: ['s9', 's10'], app: "Cap: activitat sense pantalla.|Ninguna: actividad sin pantalla.", org: "Parelles|Parejas" },
+        slides: ['s9', 's10'], app: "Cap: activitat sense pantalla.|Ninguna: actividad sin pantalla.", org: "Grups de 4|Grupos de 4" },
       { min: 12, t: "A l'ordinador: descobreix i investiga|En el ordenador: descubre e investiga", fase: 'ordinador',
-        fa: "Cada alumne/a fa la missió, les targetes, la pregunta del semàfor, la predicció del cranc a la sorra i el pas de tocar el bloc del «si no». El pas «El semàfor de casa» és per fer a casa: que toquin «Ara no». Passeja i, al pas d'investigar, demana a algú que expliqui en veu alta per què ha triat aquell bloc.|Cada alumno/a hace la misión, las tarjetas, la pregunta del semáforo, la predicción del cangrejo en la arena y el paso de tocar el bloque del «si no». El paso «El semáforo de casa» es para hacer en casa: que toquen «Ahora no». Pasea y, en el paso de investigar, pide a alguien que explique en voz alta por qué ha elegido ese bloque.",
+        fa: "Cada alumne/a fa la missió, les targetes, la pregunta de la regla del salt, la de l'aire i el pas de tocar el bloc. El pas «Regles dins de regles» ja l'han fet: que toquin «Ho hem fet!». Al pas d'investigar, demana a algú que expliqui amb l'arbre per què ha triat aquell bloc.|Cada alumno/a hace la misión, las tarjetas, la pregunta de la regla del salto, la del aire y el paso de tocar el bloque. El paso «Reglas dentro de reglas» ya lo han hecho: que toquen «¡Lo hemos hecho!». En el paso de investigar, pide a alguien que explique con el árbol por qué ha elegido ese bloque.",
         diu: [
-          "Quina part es fa ara, la de dalt o la del «si no»? Com ho saps?|¿Qué parte se hace ahora, la de arriba o la del «si no»? ¿Cómo lo sabes?",
-          "En Pinces és a la sorra: toca el groc? Llavors, què fa? (camina)|Pinzas está en la arena: ¿toca el amarillo? Entonces, ¿qué hace? (camina)",
-          "Quin bloc es fa quan el cranc no toca el blau? (canvia y en 3: puja)|¿Qué bloque se hace cuando el cangrejo no toca el azul? (cambia y en 3: sube)"
+          "Toca el verd i no premo res: quin camí de l'arbre segueix? (sí → no → camina)|Toca el verde y no pulso nada: ¿qué camino del árbol sigue? (sí → no → camina)",
+          "A l'aire i prement amunt: per què no salta? (la segona pregunta no es fa)|En el aire y pulsando arriba: ¿por qué no salta? (la segunda pregunta no se hace)",
+          "Quin bloc es fa quan toca el verd però ningú no prem? (mou-te 3, al «si no» de dins)|¿Qué bloque se hace cuando toca el verde pero nadie pulsa? (muévete 3, en el «si no» de dentro)"
         ],
         slides: ['s11'], app: "De «La missió» fins a «Investiga».|De «La misión» hasta «Investiga».", org: "Individual|Individual" },
       { min: 14, t: "Pausa i reptes|Pausa y retos", fase: 'ordinador',
-        fa: "Pausa activa del semàfor humà. Després, els quatre reptes. Al laberint, explica que primer es prova amb «Comença» i les fletxes, i després «Comprova» prem les tecles sola a les dues proves.|Pausa activa del semáforo humano. Después, los cuatro retos. En el laberinto, explica que primero se prueba con «Empieza» y las flechas, y después «Comprueba» pulsa las teclas sola en las dos pruebas.",
+        fa: "Pausa activa de l'arbre humà. Després, els quatre reptes. Al d'en Numi que cau, recorda com s'afegeix el «si no». Al laberint, explica que primer es prova amb «Comença» i les fletxes, i després «Comprova» prem les tecles sola a les dues proves.|Pausa activa del árbol humano. Después, los cuatro retos. En el de Numi que cae, recuerda cómo se añade el «si no». En el laberinto, explica que primero se prueba con «Empieza» y las flechas, y después «Comprueba» pulsa las teclas sola en las dos pruebas.",
         diu: [
           "Com s'afegeix el «si no»? (toques el «si» i després «Afegeix «si no»»)|¿Cómo se añade el «si no»? (tocas el «si» y después «Añade «si no»»)",
           "En Numi: què va a dalt i què va a baix? (a dalt caminar; al «si no», caure)|Numi: ¿qué va arriba y qué va abajo? (arriba caminar; en el «si no», caer)",
           "Al laberint, què ha de passar si toques la paret? (tornar a l'inici)|En el laberinto, ¿qué tiene que pasar si tocas la pared? (volver al inicio)",
-          "Has provat amb les fletxes? Ara toca «Comprova»: l'app farà les dues proves.|¿Has probado con las flechas? Ahora toca «Comprueba»: la app hará las dos pruebas."
+          "Dibuixa l'arbre de les regles del laberint: quantes branques té?|Dibuja el árbol de las reglas del laberinto: ¿cuántas ramas tiene?"
         ],
         slides: ['s12', 's13'], app: "«Pausa activa» i els reptes: el cranc, en Numi cau, les respostes canviades i el laberint.|«Pausa activa» y los retos: el cangrejo, Numi cae, las respuestas cambiadas y el laberinto.", org: "Individual|Individual" },
       { min: 5, t: "Crea: el meu avís de colors|Crea: mi aviso de colores", fase: 'crea',
-        fa: "La Tuga passeja per la platja amb les fletxes. Cadascú decideix què fa al mar (part del sí) i què fa a la sorra (part del «si no»): dir coses, canviar de vestit, fer sons… Quan funcioni, toquen «Comprova» i ho desen. En parelles, s'ensenyen el programa i l'altre/a ha d'endevinar què farà la Tuga al mar abans de provar-ho.|Tuga pasea por la playa con las flechas. Cada uno decide qué hace en el mar (parte del sí) y qué hace en la arena (parte del «si no»): decir cosas, cambiar de disfraz, hacer sonidos… Cuando funcione, tocan «Comprueba» y lo guardan. Por parejas, se enseñan el programa y el otro/a tiene que adivinar qué hará Tuga en el mar antes de probarlo.",
+        fa: "La Tuga passeja per la platja amb les fletxes. Cadascú decideix què fa al mar (part del sí) i què fa a la sorra (part del «si no»); qui vulgui, que hi posi una decisió niuada (per exemple, dins del mar, si y > -40 diu «Massa endins!»). En parelles, s'ensenyen el programa i l'altre/a dibuixa l'arbre de decisions abans de provar-lo.|Tuga pasea por la playa con las flechas. Cada uno decide qué hace en el mar (parte del sí) y qué hace en la arena (parte del «si no»); quien quiera, que ponga una decisión anidada (por ejemplo, dentro del mar, si y > -40 dice «¡Demasiado adentro!»). Por parejas, se enseñan el programa y el otro/a dibuja el árbol de decisiones antes de probarlo.",
         diu: [
           "Què fa la Tuga al mar? I si no hi és?|¿Qué hace Tuga en el mar? ¿Y si no está?",
-          "Has posat algun bloc a les dues parts? Si una part és buida, no passa res amb aquella resposta.|¿Has puesto algún bloque en las dos partes? Si una parte está vacía, no pasa nada con esa respuesta.",
-          "El teu company/a ha endevinat què faria la Tuga?|¿Tu compañero/a ha adivinado qué haría Tuga?"
+          "Hi has posat alguna pregunta dins d'una altra? Quina?|¿Has puesto alguna pregunta dentro de otra? ¿Cuál?",
+          "L'arbre que ha dibuixat el teu company/a coincideix amb el teu programa?|¿El árbol que ha dibujado tu compañero/a coincide con tu programa?"
         ],
         slides: ['s14'], app: "Pas «Crea»: El meu avís de colors.|Paso «Crea»: Mi aviso de colores.", org: "Individual|Individual" },
       { min: 3, t: "Tancament|Cierre", fase: 'tancament',
-        fa: "Repassa les tres idees amb el resum i torna a la llista de colors que avisen de la pissarra: ara la poden llegir com a regles «si… si no». Deixa que facin les preguntes finals i el «com m'he sentit», i fes el tiquet de sortida a la porta.|Repasa las tres ideas con el resumen y vuelve a la lista de colores que avisan de la pizarra: ahora la pueden leer como reglas «si… si no». Deja que hagan las preguntas finales y el «cómo me he sentido», y haz el ticket de salida en la puerta.",
+        fa: "Repassa les tres idees amb el resum i torna a l'arbre de la pissarra. Deixa que facin les preguntes finals i el «com m'he sentit», i fes el tiquet de sortida a la porta.|Repasa las tres ideas con el resumen y vuelve al árbol de la pizarra. Deja que hagan las preguntas finales y el «cómo me he sentido», y haz el ticket de salida en la puerta.",
         diu: [
-          "Digues un «si… si no» de la vida diària. («Si fa fred, jaqueta; si no, samarreta»)|Di un «si… si no» de la vida diaria. («Si hace frío, chaqueta; si no, camiseta»)",
-          "Quantes parts fa cada vegada un «si… si no»? (una)|¿Cuántas partes hace cada vez un «si… si no»? (una)",
-          "Llegim un color de la pissarra com a regla: «si el semàfor és verd, passo; si no…» (m'espero)|Leemos un color de la pizarra como regla: «si el semáforo está verde, paso; si no…» (espero)"
+          "On va el «si fletxa amunt» perquè només salti des de terra? (dins de «si toca el verd»)|¿Dónde va el «si flecha arriba» para que solo salte desde el suelo? (dentro de «si toca el verde»)",
+          "Digues una regla d'un videojoc que necessiti dues preguntes, una dins de l'altra.|Di una regla de un videojuego que necesite dos preguntas, una dentro de la otra.",
+          "El pròxim dia ajuntarem preguntes d'una altra manera: amb «i», «o» i «no».|El próximo día juntaremos preguntas de otra manera: con «y», «o» y «no»."
         ],
         slides: ['s15', 's16'], app: "«Tancament».|«Cierre».", org: "Tot el grup|Todo el grupo" }
     ],
     errors: [
-      ["Posa dos «si» (un per al sí i un altre igual per al no) i els dos fan el mateix.|Pone dos «si» (uno para el sí y otro igual para el no) y los dos hacen lo mismo.", "Pregunta: quina part es fa quan la resposta és no? Ensenya-li el botó «Afegeix «si no»».|Pregunta: ¿qué parte se hace cuando la respuesta es no? Enséñale el botón «Añade «si no»»."],
-      ["En Numi s'enfonsa a l'herba perquè el bloc de caure és fora del «si no».|Numi se hunde en la hierba porque el bloque de caer está fuera del «si no».", "Que llegeixi en veu alta: «si toca el verd, camina; si no, cau». On és el bloc de caure?|Que lea en voz alta: «si toca el verde, camina; si no, cae». ¿Dónde está el bloque de caer?"],
+      ["Posa el «si fletxa amunt» a sota de «si toca el verd» i no a dins: en Numi salta també a l'aire.|Pone el «si flecha arriba» debajo de «si toca el verde» y no dentro: Numi salta también en el aire.", "Que recorri l'arbre amb el dit: la pregunta de la fletxa penja de la branca del sí? On és el bloc al programa?|Que recorra el árbol con el dedo: ¿la pregunta de la flecha cuelga de la rama del sí? ¿Dónde está el bloque en el programa?"],
+      ["Posa la segona pregunta a la part «si no» quan havia d'anar a la del sí.|Pone la segunda pregunta en la parte «si no» cuando tenía que ir en la del sí.", "Pregunta: quan ha de fer la pregunta de la fletxa, quan toca el verd o quan no? Que miri a quina part del «si» és.|Pregunta: ¿cuándo tiene que hacer la pregunta de la flecha, cuando toca el verde o cuando no? Que mire en qué parte del «si» está."],
+      ["En Numi s'enfonsa a l'herba perquè el bloc de caure és a la part del sí.|Numi se hunde en la hierba porque el bloque de caer está en la parte del sí.", "Que llegeixi en veu alta: «si toca el verd, camina; si no, cau». On és el bloc de caure?|Que lea en voz alta: «si toca el verde, camina; si no, cae». ¿Dónde está el bloque de caer?"],
       ["Al laberint, mou l'Estel amb les fletxes però no toca «Comprova».|En el laberinto, mueve a Estel con las flechas pero no toca «Comprueba».", "Recorda: amb «Comença» proves; amb «Comprova», l'app prem les tecles sola i mira si les regles funcionen.|Recuerda: con «Empieza» pruebas; con «Comprueba», la app pulsa las teclas sola y mira si las reglas funcionan."],
-      ["Al laberint, posa «digues He sortit!» fora del «si toca el verd».|En el laberinto, pone «di ¡He salido!» fuera del «si toca el verde».", "Pregunta: quan ha de dir «He sortit»? Sempre, o només quan toca el verd?|Pregunta: ¿cuándo tiene que decir «He salido»? ¿Siempre, o solo cuando toca el verde?"],
       ["Confon el color de la condició (tria el groc en lloc del blau).|Confunde el color de la condición (elige el amarillo en lugar del azul).", "Que toqui el nom del color dins del bloc i triï el que correspon al mar. Quin color té el mar al fons?|Que toque el nombre del color dentro del bloque y elija el que corresponde al mar. ¿Qué color tiene el mar en el fondo?"],
-      ["Deixa buida la part del «si no» al projecte de la Tuga i no entén per què l'app li demana més.|Deja vacía la parte del «si no» en el proyecto de Tuga y no entiende por qué la app le pide más.", "Pregunta: què fa la Tuga quan és a la sorra? Si no fa res, la part de baix és buida. Quina cosa podria fer quan no és al mar?|Pregunta: ¿qué hace Tuga cuando está en la arena? Si no hace nada, la parte de abajo está vacía. ¿Qué cosa podría hacer cuando no está en el mar?"]
+      ["Dibuixa l'arbre amb dues accions al final d'un mateix camí.|Dibuja el árbol con dos acciones al final de un mismo camino.", "Pregunta: en aquest cas, què fa primer? Cada fulla és una sola acció; si en calen dues, totes dues van dins de la mateixa part del «si».|Pregunta: en este caso, ¿qué hace primero? Cada hoja es una sola acción; si hacen falta dos, las dos van dentro de la misma parte del «si»."]
     ],
     diff: {
-      mes: "Al laberint, afegir una regla per al vermell (la trampa): si el toca, torna a l'inici i diu «Ai!». A la Tuga, afegir regles per a les fletxes perquè canviï de vestit quan neda.|En el laberinto, añadir una regla para el rojo (la trampa): si lo toca, vuelve al inicio y dice «¡Ay!». En Tuga, añadir reglas para las flechas para que cambie de disfraz cuando nada.",
-      menys: "Fer primer els reptes del cranc i d'en Numi, que ja tenen la pregunta del color posada. Tenir la frase «si…, si no…» escrita en un paper al costat i assenyalar cada part.|Hacer primero los retos del cangrejo y de Numi, que ya tienen la pregunta del color puesta. Tener la frase «si…, si no…» escrita en un papel al lado y señalar cada parte."
+      mes: "Al laberint, afegir la regla del vermell (la trampa). A la Tuga, posar una decisió niuada amb un número (dins del mar, si y > -40, «Massa endins!») i dibuixar-ne l'arbre complet.|En el laberinto, añadir la regla del rojo (la trampa). En Tuga, poner una decisión anidada con un número (dentro del mar, si y > -40, «¡Demasiado adentro!») y dibujar su árbol completo.",
+      menys: "Fer primer els reptes del cranc i d'en Numi, que ja tenen la pregunta del color posada. Tenir l'arbre de la pissarra copiat en un paper al costat i assenyalar cada branca abans de posar el bloc.|Hacer primero los retos del cangrejo y de Numi, que ya tienen la pregunta del color puesta. Tener el árbol de la pizarra copiado en un papel al lado y señalar cada rama antes de poner el bloque."
     },
     aval: {
-      ticket: ["Digues un «si… si no» de la vida diària.|Di un «si… si no» de la vida diaria.", "Quantes parts fa cada vegada un «si… si no»?|¿Cuántas partes hace cada vez un «si… si no»?"],
+      ticket: ["Dibuixa l'arbre: «si toca el verd: si prem amunt, salta; si no, camina. Si no toca el verd, cau».|Dibuja el árbol: «si toca el verde: si pulsa arriba, salta; si no, camina. Si no toca el verde, cae».", "A l'aire i prement amunt: què fa en Numi?|En el aire y pulsando arriba: ¿qué hace Numi?"],
       rubric: [
         ["Condició de color|Condición de color", "Tria el color correcte i explica què avisa.|Elige el color correcto y explica qué avisa.", "Fa servir el color amb ajuda.|Usa el color con ayuda."],
-        ["«Si… si no»|«Si… si no»", "Posa cada bloc a la part que toca i explica que només se'n fa una.|Pone cada bloque en la parte que toca y explica que solo se hace una.", "Afegeix el «si no», però confon les parts.|Añade el «si no», pero confunde las partes."],
-        ["Regles del laberint|Reglas del laberinto", "Programa una regla per a cada color i la comprova a les dues proves.|Programa una regla para cada color y la comprueba en las dos pruebas.", "Programa una de les regles, però no l'altra.|Programa una de las reglas, pero no la otra."],
+        ["Decisions niuades|Decisiones anidadas", "Diu què farà el personatge en cada situació d'un «si» dins d'un altre.|Dice qué hará el personaje en cada situación de un «si» dentro de otro.", "Llegeix bé el primer «si», però no el de dins.|Lee bien el primer «si», pero no el de dentro."],
+        ["Arbre de decisions|Árbol de decisiones", "Dibuixa l'arbre d'unes regles i el passa a blocs sense ajuda.|Dibuja el árbol de unas reglas y lo pasa a bloques sin ayuda.", "Dibuixa l'arbre, però li costa passar-lo a blocs.|Dibuja el árbol, pero le cuesta pasarlo a bloques."],
         [
-          "Llegir un «si… si no»|Leer un «si… si no»",
-          "Diu quina part es farà en cada situació (cranc a la sorra, Numi a l'aire).|Dice qué parte se hará en cada situación (cangrejo en la arena, Numi en el aire).",
-          "Necessita executar el programa per saber quina part es fa.|Necesita ejecutar el programa para saber qué parte se hace."
+          "Regles del laberint|Reglas del laberinto",
+          "Programa una regla per a cada color i la comprova a les dues proves.|Programa una regla para cada color y la comprueba en las dos pruebas.",
+          "Programa una de les regles, però no l'altra.|Programa una de las reglas, pero no la otra."
         ]
       ]
     },
-    casa: "A casa, feu «El semàfor de casa» amb dos papers de colors: si és verd, camina; si no, atura't. Després inventeu un tercer color amb una regla nova.|En casa, haced «El semáforo de casa» con dos papeles de colores: si es verde, camina; si no, párate. Después inventad un tercer color con una regla nueva.",
+    casa: "A casa, feu «Regles dins de regles» amb fulls o coixins a terra: dibuixeu l'arbre de decisions del salt i un àrbitre/a diu «amunt» de tant en tant. Després, afegiu-hi una pregunta nova a una branca.|En casa, haced «Reglas dentro de reglas» con hojas o cojines en el suelo: dibujad el árbol de decisiones del salto y un árbitro/a dice «arriba» de vez en cuando. Después, añadid una pregunta nueva a una rama.",
     slides: [
-      { id: 's1', k: 'portada', t: "Colors que avisen|Colores que avisan", x: "Avui el fons de l'escenari parlarà amb els personatges.|Hoy el fondo del escenario hablará con los personajes.",
+      { id: 's1', k: 'portada', t: "Colors i decisions niuades|Colores y decisiones anidadas", x: "Avui el fons avisarà els personatges… i farem preguntes dins d'altres preguntes.|Hoy el fondo avisará a los personajes… y haremos preguntas dentro de otras preguntas.",
         nota: "Presenta l'escena de la platja i en Pinces.|Presenta la escena de la playa y a Pinzas." },
-      { id: 's2', k: 'repas', t: "Recordem|Recordemos", punts: ["On va el «si toca…»?|¿Dónde va el «si toca…»?", "Al laberint, què volia dir el blau?|En el laberinto, ¿qué quería decir el azul?"],
-        nota: "Si no recorden el laberint, mostra'n el fons a la diapositiva 8.|Si no recuerdan el laberinto, muestra su fondo en la diapositiva 8." },
-      { id: 's3', k: 'pregunta', t: "On hi ha colors que avisen?|¿Dónde hay colores que avisan?", x: "Pensa en el carrer, a l'escola i a casa.|Piensa en la calle, en la escuela y en casa.",
-        nota: "Apunta les respostes a la pissarra: hi tornareu al final.|Apunta las respuestas en la pizarra: volveréis a ellas al final." },
+      { id: 's2', k: 'repas', t: "Recordem|Recordemos", punts: ["De 7 en 7: «y = -150» o «y < -150»?|De 7 en 7: ¿«y = -150» o «y < -150»?", "Al laberint, què volia dir el blau?|En el laberinto, ¿qué quería decir el azul?"],
+        nota: "Si no recorden el laberint, mostra'n el fons al repte 4.|Si no recuerdan el laberinto, muestra su fondo en el reto 4." },
+      { id: 's3', k: 'pregunta', t: "Puc saltar a l'aire?|¿Puedo saltar en el aire?", x: "En un videojoc de plataformes, quan pots saltar i quan no?|En un videojuego de plataformas, ¿cuándo puedes saltar y cuándo no?",
+        nota: "Recull respostes: la idea és que primer es mira si toques el terra i després si prems el botó.|Recoge respuestas: la idea es que primero se mira si tocas el suelo y después si pulsas el botón." },
       { id: 's4', k: 'anim', t: "El fons avisa|El fondo avisa", anim: 'g5color', x: "«Toca el color blau?» El cranc ho pregunta tota l'estona.|«¿Toca el color azul?» El cangrejo lo pregunta todo el rato.",
         nota: "Fes notar l'anell de punts: és com si el cranc notés el que trepitja.|Haz notar el anillo de puntos: es como si el cangrejo notara lo que pisa." },
       { id: 's5', k: 'media', t: "En Pinces no es mulla|Pinzas no se moja", x: "Puja, toca el blau i torna a la sorra.|Sube, toca el azul y vuelve a la arena.",
         media: { k: 'stage', w: { bg: 'platja', sprites: [{ id: 'cranc', art: 'cranc', x: -60, y: -150 }] }, prog: '@cranc flag{ forever{ chy:2 if:color:blue{ think:"Aigua!|¡Agua!",1 sety:-150 } } }', time: 7 },
         nota: "Pregunta què passaria sense el «si»: el cranc pujaria fins al cel.|Pregunta qué pasaría sin el «si»: el cangrejo subiría hasta el cielo." },
-      { id: 's6', k: 'anim', t: "Si… si no|Si… si no", anim: 'g5else', x: "Una pregunta, dues respostes: sempre en fa una.|Una pregunta, dos respuestas: siempre hace una.",
-        nota: "Fes-los dir en veu alta la regla del paraigua amb el «si no».|Hazles decir en voz alta la regla del paraguas con el «si no»." },
-      { id: 's7', k: 'media', t: "Caure o caminar|Caer o caminar", x: "Si toca el verd, camina; si no, cau.|Si toca el verde, camina; si no, cae.",
-        media: { k: 'stage', w: { bg: 'bosc', sprites: [{ id: 'numi', art: 'numi', x: -170, y: 130, dir: 90, size: 80 }] }, prog: '@numi flag{ forever{ if:color:green{ move:3 } else{ chy:-5 } } }', time: 6 },
-        nota: "Atura la demo quan en Numi és a l'aire i pregunta quina part es fa. Torna-la a engegar quan arriba a l'herba.|Para la demo cuando Numi está en el aire y pregunta qué parte se hace. Vuelve a ponerla en marcha cuando llega a la hierba." },
-      { id: 's8', k: 'media', t: "Cada color, una regla|Cada color, una regla", x: "Blau: paret. Vermell: trampa. Verd: sortida.|Azul: pared. Rojo: trampa. Verde: salida.",
-        media: { k: 'stage', w: { bg: 'laberint', sprites: [{ id: 'estel', art: 'estel', x: -175, y: 100, size: 60 }] }, prog: '@estel flag{ glide:1,-175,-80 glide:0.8,-75,-80 glide:1,-75,80 glide:0.8,25,80 glide:1,25,-80 glide:0.8,125,-80 } flag{ forever{ if:color:green{ say:"He sortit!|¡He salido!" stop:all } } }', time: 7 },
-        nota: "Pregunta quina regla falta per a les parets i quina per a la trampa: les programaran al repte.|Pregunta qué regla falta para las paredes y cuál para la trampa: las programarán en el reto." },
-      { id: 's9', k: 'activitat', t: "El camí dels colors|El camino de los colores", timer: 11, punts: ["Pinteu caselles blaves, vermelles i verdes.|Pintad casillas azules, rojas y verdes.", "Escriviu les regles amb «si… si no».|Escribid las reglas con «si… si no».", "Intercanvieu la graella amb una altra parella.|Intercambiad la cuadrícula con otra pareja.", "Un/a diu fletxes, l'altre/a mou i aplica les regles.|Uno/a dice flechas, el otro/a mueve y aplica las reglas."],
-        nota: "Limita-ho a 3 o 4 caselles de cada color perquè hi hagi camí.|Limítalo a 3 o 4 casillas de cada color para que haya camino." },
-      { id: 's10', k: 'activitat', t: "Exemple de regles|Ejemplo de reglas", punts: ["Si toca el blau, torna a l'inici.|Si toca el azul, vuelve al inicio.", "Si toca el verd, has sortit!|Si toca el verde, ¡has salido!", "Si no, continua.|Si no, continúa."],
+      { id: 's6', k: 'concepte', t: "Recorda el «si no»|Recuerda el «si no»", punts: ["Una pregunta, dues parts: dalt el sí, baix el no.|Una pregunta, dos partes: arriba el sí, abajo el no.", "Per afegir-lo: toca el «si» i «Afegeix «si no»».|Para añadirlo: toca el «si» y «Añade «si no»».", "Dins de cada part hi pot anar un altre «si».|Dentro de cada parte puede ir otro «si»."],
+        nota: "Un minut de repàs: ja ho coneixen de Tech Robot. La tercera idea és la nova d'avui.|Un minuto de repaso: ya lo conocen de Tech Robot. La tercera idea es la nueva de hoy.", pic: "img/ment/rfx.webp" },
+      { id: 's7', k: 'media', t: "Un «si» dins d'un altre «si»|Un «si» dentro de otro «si»", x: "Toca el verd? Si sí: fletxa amunt? Salta o camina. Si no: cau.|¿Toca el verde? Si sí: ¿flecha arriba? Salta o camina. Si no: cae.",
+        media: { k: 'stage', w: { bg: 'bosc', keys: ['up'], sprites: [{ id: 'numi', art: 'numi', x: -170, y: 130, dir: 90, size: 80 }], input: [{ t: 2.4, key: 'up', dur: .1 }, { t: 3.6, key: 'up', dur: .1 }], time: 6 }, prog: '@numi flag{ forever{ if:color:green{ if:key:up{ chy:70 } else{ move:3 } } else{ chy:-5 } } }' },
+        nota: "Atura la demo amb en Numi a l'aire i pregunta: si ara premo amunt, saltarà? (No.) Torna-la a engegar.|Para la demo con Numi en el aire y pregunta: si ahora pulso arriba, ¿saltará? (No.) Vuelve a ponerla en marcha." },
+      { id: 's8', k: 'anim', t: "L'arbre de decisions|El árbol de decisiones", anim: 'g5tree', x: "Preguntes a les branques, accions a les fulles.|Preguntas en las ramas, acciones en las hojas.",
+        nota: "Dibuixa'l també a la pissarra i deixa'l durant tota la sessió: el faran servir a l'activitat i als reptes.|Dibújalo también en la pizarra y déjalo durante toda la sesión: lo usarán en la actividad y en los retos." },
+      { id: 's9', k: 'activitat', t: "Regles dins de regles|Reglas dentro de reglas", timer: 11, punts: ["Dibuixants: l'arbre de decisions a la fitxa.|Dibujantes: el árbol de decisiones en la ficha.", "Actor/actriu: a cada pas, les preguntes en ordre i en veu alta.|Actor/actriz: en cada paso, las preguntas en orden y en voz alta.", "Àrbitre/a: diu «amunt» de tant en tant i comprova l'arbre.|Árbitro/a: dice «arriba» de vez en cuando y comprueba el árbol.", "Ronda 2: una pregunta nova (el full vermell).|Ronda 2: una pregunta nueva (la hoja roja)."],
+        nota: "Salts petits i al lloc. Si algú salta des de l'aire, és un «bug»: el grup busca quina branca s'ha saltat.|Saltos pequeños y en el sitio. Si alguien salta desde el aire, es un «bug»: el grupo busca qué rama se ha saltado." },
+      { id: 's10', k: 'activitat', t: "L'arbre del salt|El árbol del salto", punts: ["Toco un full verd? No → m'ajupo (caic).|¿Toco una hoja verde? No → me agacho (caigo).", "Sí → «amunt»? Sí → salto. No → un pas.|Sí → ¿«arriba»? Sí → salto. No → un paso.", "Una pregunta nova: on la penges?|Una pregunta nueva: ¿dónde la cuelgas?"],
         nota: "Deixa-la projectada com a model.|Déjala proyectada como modelo." },
-      { id: 's11', k: 'activitat', t: "A l'ordinador|En el ordenador", timer: 12, punts: ["Obre «Colors que avisen».|Abre «Colores que avisan».", "«El semàfor de casa»: toca «Ara no».|«El semáforo de casa»: toca «Ahora no».", "Para a la «Pausa activa».|Para en la «Pausa activa»."],
-        nota: "Comprova que tothom arriba a l'«Investiga».|Comprueba que todos llegan a «Investiga»." },
-      { id: 's12', k: 'repte', t: "Reptes|Retos", timer: 14, punts: ["1. En Pinces no es mulla|1. Pinzas no se moja", "2. En Numi cau del cel|2. Numi cae del cielo", "3. Les respostes canviades|3. Las respuestas cambiadas", "4. El laberint|4. El laberinto"],
+      { id: 's11', k: 'activitat', t: "A l'ordinador|En el ordenador", timer: 12, punts: ["Obre «Colors i decisions niuades».|Abre «Colores y decisiones anidadas».", "«Regles dins de regles»: toca «Ho hem fet!».|«Reglas dentro de reglas»: toca «¡Lo hemos hecho!».", "Para a la «Pausa activa».|Para en la «Pausa activa»."],
+        nota: "Comprova que tothom arriba a l'«Investiga» i que hi fa servir l'arbre.|Comprueba que todos llegan a «Investiga» y que usan el árbol." },
+      { id: 's12', k: 'repte', t: "Reptes|Retos", timer: 14, punts: ["1. En Pinces no es mulla|1. Pinzas no se moja", "2. En Numi cau del cel|2. Numi cae del cielo", "3. Les respostes canviades|3. Las respuestas cambiadas", "4. El laberint de colors|4. El laberinto de colores"],
         nota: "Al laberint, ensenya com es prova amb les fletxes i després «Comprova».|En el laberinto, enseña cómo se prueba con las flechas y después «Comprueba»." },
-      { id: 's13', k: 'concepte', t: "Afegir el «si no»|Añadir el «si no»", punts: ["Toca el bloc «si».|Toca el bloque «si».", "Toca «Afegeix «si no»».|Toca «Añade «si no»».", "Posa els blocs del no a la part de baix.|Pon los bloques del no en la parte de abajo."],
-        nota: "Fes-ho una vegada a la pantalla gran.|Hazlo una vez en la pantalla grande.", pic: "img/ment/rfx.webp" },
-      { id: 's14', k: 'activitat', t: "Crea: el meu avís de colors|Crea: mi aviso de colores", timer: 5, x: "Què fa la Tuga al mar? I a la sorra?|¿Qué hace Tuga en el mar? ¿Y en la arena?",
-        nota: "Valora que cada part faci una cosa diferent.|Valora que cada parte haga una cosa diferente." },
-      { id: 's15', k: 'resum', t: "Què hem après avui|Qué hemos aprendido hoy", punts: ["«Toca el color» pregunta pel fons.|«Toca el color» pregunta por el fondo.", "«Si… si no» té dues parts.|«Si… si no» tiene dos partes.", "Sempre en fa una, mai les dues.|Siempre hace una, nunca las dos."],
-        nota: "Torna a la llista de colors que avisen de la pissarra.|Vuelve a la lista de colores que avisan de la pizarra." },
-      { id: 's16', k: 'tiquet', t: "Tiquet de sortida|Ticket de salida", punts: ["Un «si… si no» de la vida diària.|Un «si… si no» de la vida diaria.", "Quantes parts fa cada vegada?|¿Cuántas partes hace cada vez?"],
-        nota: "Anota qui confon les dues parts.|Anota quién confunde las dos partes." }
+      { id: 's13', k: 'concepte', t: "Posar un «si» dins d'un altre|Poner un «si» dentro de otro", punts: ["Toca el forat de dins del primer «si».|Toca el hueco de dentro del primer «si».", "Afegeix un «si» nou: queda a dins.|Añade un «si» nuevo: queda dentro.", "Comprova-ho amb l'arbre: penja de la branca bona?|Compruébalo con el árbol: ¿cuelga de la rama buena?"],
+        nota: "Fes-ho una vegada a la pantalla gran amb la demo del salt.|Hazlo una vez en la pantalla grande con la demo del salto.", pic: "img/ment/par.webp" },
+      { id: 's14', k: 'activitat', t: "Crea: el meu avís de colors|Crea: mi aviso de colores", timer: 5, x: "Què fa la Tuga al mar? I a la sorra? Si vols, posa-hi una pregunta dins d'una altra!|¿Qué hace Tuga en el mar? ¿Y en la arena? Si quieres, ¡pon una pregunta dentro de otra!",
+        nota: "Que el company/a dibuixi l'arbre del programa abans de provar-lo.|Que el compañero/a dibuje el árbol del programa antes de probarlo." },
+      { id: 's15', k: 'resum', t: "Què hem après avui|Qué hemos aprendido hoy", punts: ["«Toca el color» pregunta pel fons.|«Toca el color» pregunta por el fondo.", "Un «si» dins d'un altre: la segona pregunta, només si cal.|Un «si» dentro de otro: la segunda pregunta, solo si hace falta.", "Primer l'arbre, després els blocs.|Primero el árbol, después los bloques."],
+        nota: "Torna a l'arbre de la pissarra i a la pregunta del principi: ja saben per què no es pot saltar a l'aire.|Vuelve al árbol de la pizarra y a la pregunta del principio: ya saben por qué no se puede saltar en el aire." },
+      { id: 's16', k: 'tiquet', t: "Tiquet de sortida|Ticket de salida", punts: ["Dibuixa l'arbre del salt.|Dibuja el árbol del salto.", "A l'aire i prement amunt: què fa en Numi?|En el aire y pulsando arriba: ¿qué hace Numi?"],
+        nota: "Anota qui encara posa la segona pregunta fora de la primera.|Anota quién todavía pone la segunda pregunta fuera de la primera." }
     ],
     print: [
-      { id: 'p1', t: "El camí dels colors|El camino de los colores", k: 'graella', w: 6, h: 6,
-        intro: "Pinteu 3 o 4 caselles de cada color i marqueu l'inici amb una estrella. Escriviu les regles i doneu la graella a una altra parella.|Pintad 3 o 4 casillas de cada color y marcad el inicio con una estrella. Escribid las reglas y dad la cuadrícula a otra pareja.",
-        legend: [['🟦', "Blau: aigua o paret|Azul: agua o pared"], ['🟥', 'Vermell: trampa|Rojo: trampa'], ['🟩', 'Verd: sortida|Verde: salida'], ['⭐', 'Inici|Inicio']],
-        items: [{ q: "Regla 1: Si toca el blau…|Regla 1: Si toca el azul…" }, { q: "Regla 2: Si toca el vermell…|Regla 2: Si toca el rojo…" }, { q: "Regla 3: Si toca el verd…, si no…|Regla 3: Si toca el verde…, si no…" }] }
+      { id: 'p1', t: "El meu arbre de decisions|Mi árbol de decisiones", k: 'fitxa',
+        intro: "Dibuixa les regles com un arbre: a dalt, la primera pregunta; a cada branca, sí o no; al final de cada camí, què fa el personatge.|Dibuja las reglas como un árbol: arriba, la primera pregunta; en cada rama, sí o no; al final de cada camino, qué hace el personaje.",
+        items: [
+          { q: "Primera pregunta (a dalt de l'arbre):|Primera pregunta (arriba del árbol):", sol: "Exemple: Toco un full verd (el terra)?|Ejemplo: ¿Toco una hoja verde (el suelo)?" },
+          { q: "Branca del NO: què fa el personatge?|Rama del NO: ¿qué hace el personaje?", sol: "Exemple: m'ajupo (caic).|Ejemplo: me agacho (caigo)." },
+          { q: "Branca del SÍ: quina segona pregunta fa? I què fa amb cada resposta?|Rama del SÍ: ¿qué segunda pregunta hace? ¿Y qué hace con cada respuesta?", big: true, sol: "Exemple: L'àrbitre/a diu «amunt»? Sí → salto. No → faig un pas.|Ejemplo: ¿El árbitro/a dice «arriba»? Sí → salto. No → doy un paso." },
+          { q: "Ronda 2: on penges la pregunta del full vermell? Per què?|Ronda 2: ¿dónde cuelgas la pregunta de la hoja roja? ¿Por qué?", sol: "Resposta oberta: per exemple, dins de la branca del sí, abans de la pregunta de l'«amunt» (si toco vermell, torno a l'inici).|Respuesta abierta: por ejemplo, dentro de la rama del sí, antes de la pregunta del «arriba» (si toco rojo, vuelvo al inicio)." },
+          { q: "Escriu l'arbre amb blocs: si toca el verd { si … { … } si no { … } } si no { … }|Escribe el árbol con bloques: si toca el verde { si … { … } si no { … } } si no { … }", sol: "si toca el verd { si tecla amunt premuda { canvia y en 70 } si no { mou-te 3 } } si no { canvia y en -5 }|si toca el verde { si tecla arriba pulsada { cambia y en 70 } si no { muévete 3 } } si no { cambia y en -5 }" }
+        ] }
     ]
   },
   /* ---------- Sessió 3 · I, o, no ---------- */

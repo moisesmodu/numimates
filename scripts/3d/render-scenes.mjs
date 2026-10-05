@@ -47,7 +47,7 @@ try {
     for (const c of CAT) { if (!COURSES.includes(c.id)) continue;
       for (const [ui, u] of c.units.entries()) { if (!u.n || (UNITS && !UNITS.includes(ui + 1))) continue;
         const th = (THEMES[c.id] || THEMES.robot)[ui] || 'algo', t0 = Date.now();
-        const r = await p.evaluate(async o => { const m = await import('./_scenes-bundle.js'); return m.island(o); }, { n: u.n, seed: (c.id.length * 31 + ui * 7 + 3), theme: th === 'lab' && WORLD[c.id] !== 'lab' ? 'llum' : th, color: u.color, world: WORLD[c.id] || 'tropic', W: 1080, H: 1350 });
+        const r = await p.evaluate(async o => { const m = await import('./_scenes-bundle.js'); return m.island(o); }, { n: u.n, seed: (c.id.length * 31 + ui * 7 + 3), theme: th === 'lab' && WORLD[c.id] !== 'lab' ? 'llum' : th, color: u.color, world: WORLD[c.id] || 'tropic', W: 1080, H: 1350, q: .9 });
         save(root + `img/tech/isles/${c.id}-${ui + 1}.webp`, r.url); NODES[`${c.id}-${ui + 1}`] = r.nodes;
         console.log(`${c.id}-${ui + 1}`, WORLD[c.id], th, ((Date.now() - t0) / 1000).toFixed(1) + ' s', r.hidden.some(h => h > .25) ? 'ALERTA: parada tapada ' + JSON.stringify(r.hidden) : '');
       } }

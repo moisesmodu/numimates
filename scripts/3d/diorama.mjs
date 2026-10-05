@@ -860,7 +860,7 @@ async function decorCiutat(X) {
   const { sc, R, pl, top, theme, curve, pts, P, color } = X, N = pts.length - 1, roofs = [];
   // gratacels al fons (alts) i edificis mitjans als costats, amb finestres enceses
   const LED = ['#35E0FF', null, '#B07CFF', null, '#3CC47C'];
-  const any = () => true, towers = [[.7, 1.9, (x, z) => x > .5 && z < -2.6], [.62, 1.55, (x, z) => x > .3 && z < -2.2], [.6, 1.35, (x, z) => z < -2.2], [.55, 1.0, (x, z) => z < -1], [.55, .9, (x, z) => x > 1 && z < 1.5], [.5, .7, any], [.5, .6, any], [.46, .5, any], [.46, .42, any]];
+  const any = () => true, towers = [[.7, 1.75, (x, z) => x > .5 && z < -2.6], [.62, 1.55, (x, z) => x > .3 && z < -2.2], [.6, 1.35, (x, z) => z < -2.2], [.55, 1.0, (x, z) => z < -1], [.55, .9, (x, z) => x > 1 && z < 1.5], [.5, .7, any], [.5, .6, any], [.46, .5, any], [.46, .42, any]];
   for (const [i, [w, h, zone]] of towers.entries()) { const q = i ? pl.find(w * .75, h, { zone, tries: 900, path: h > 1.2 }) : pl.best(w * .75, h, { at: [X.P[0].x > 0 ? -2.4 : 2.4, -4.1], path: true }); if (!q) continue; const b = building(sc, R, q[0], top, q[1], { w, d: w * (.8 + R() * .3), h, ry: (R() - .5) * .5, night: true, led: LED[(i + X.seed) % LED.length], antenna: i < 2 }); roofs.push(b.top); }
   // centre de dades (unitat de la llum): nau baixa amb fileres de llumetes de servidors
   if (theme === 'llum') { const sideX = X.P[0].x > 0 ? 1 : -1, q = pl.best(.8, .6, { at: [sideX * 2.9, -1.1], m: .55 }); if (q) { const g = grp(sc, q[0], top, q[1], sideX * -.25), body = sm('#2A3352', { roughness: .5 });
@@ -878,7 +878,7 @@ async function decorCiutat(X) {
   const arcM = glow('#35E0FF', 2.2), pk = glow('#E8FDFF', 3);
   const pairs = []; for (let i = 0; i < roofs.length; i++) for (let j = i + 1; j < roofs.length; j++) { const d = roofs[i].distanceTo(roofs[j]); if (d > 1.0 && d < 3.6) pairs.push([d, i, j]); }
   pairs.sort((a, b) => a[0] - b[0]); const used = {};
-  for (const [d, i, j] of pairs) { if ((used[i] || 0) > 1 || (used[j] || 0) > 1) continue; const a = roofs[i], b = roofs[j], m = a.clone().lerp(b, .5); m.y = Math.max(a.y, b.y) + d * .32;
+  for (const [d, i, j] of pairs) { if ((used[i] || 0) > 1 || (used[j] || 0) > 1) continue; const a = roofs[i], b = roofs[j], m = a.clone().lerp(b, .5); m.y = Math.max(a.y, b.y) + d * .22;
     const cv = new THREE.QuadraticBezierCurve3(a, m, b); if ([.1, .2, .3, .4, .5, .6, .7, .8, .9].some(t => { const p = cv.getPoint(t); return P.some(s => Math.hypot(s.x - p.x, s.z - p.z) < 1.4) || pts.some(q => Math.hypot(q.x - p.x, q.z - p.z) < .5); })) continue;
     mesh(new THREE.TubeGeometry(cv, 40, .011, 5), arcM, null, sc, { cast: false }); for (const t of [.33, .7]) { const p = cv.getPoint(t); mesh(new THREE.SphereGeometry(.032, 8, 6), pk, [p.x, p.y, p.z], sc, { cast: false }); }
     used[i] = (used[i] || 0) + 1; used[j] = (used[j] || 0) + 1; }

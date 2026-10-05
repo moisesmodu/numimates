@@ -651,7 +651,7 @@ Object.assign(TANI, {
     const leaf = (cx, cy, w, txt, col, bg) => `<rect x="${cx - w / 2}" y="${cy - 17}" width="${w}" height="34" rx="17" fill="${bg}" stroke="${col}" stroke-width="3"/><text x="${cx}" y="${cy + 5}" text-anchor="middle" class="tat s" style="fill:${col}">${txt}</text>`;
     const tag = (x, y, txt, col) => `<rect x="${x - 17}" y="${y - 11}" width="34" height="22" rx="11" fill="${col}"/><text x="${x}" y="${y + 5}" text-anchor="middle" class="tat w s" style="font-size:12px">${txt}</text>`;
     const line = d => `<path d="${d}" fill="none" stroke="#9AA6C8" stroke-width="3" stroke-linecap="round"/>`;
-    const tok = (path, kt, vis) => `<circle r="8" fill="#FFC531" stroke="#14204A" stroke-width="2.5" opacity="0"><animateMotion path="${path}" keyPoints="0;0;1;1" keyTimes="${kt}" calcMode="linear" ${D}/><animate attributeName="opacity" values="${vis}" keyTimes="${kt}" calcMode="discrete" ${D}/></circle>`;
+    const tok = (path, kt, okt) => `<circle r="8" fill="#FFC531" stroke="#14204A" stroke-width="2.5" opacity="0"><animateMotion path="${path}" keyPoints="0;0;1;1" keyTimes="${kt}" calcMode="linear" ${D}/><animate attributeName="opacity" values="0;1;0;0" keyTimes="${okt}" calcMode="discrete" ${D}/></circle>`;
     return tSvg(222, `${line('M130 50 L70 84')}${line('M190 50 L230 80')}${line('M200 120 L172 154')}${line('M262 120 L276 154')}
       <g ${tA(.2, 'ta-in')}>${q(160, 30, 168, L('Toca el verd?', '¿Toca el verde?'))}</g>
       <g ${tA(.7, 'ta-pop')}>${tag(92, 64, 'no', '#EF5A5A')}${tag(218, 62, L('sí', 'sí'), '#1FA463')}</g>
@@ -659,7 +659,7 @@ Object.assign(TANI, {
       <g ${tA(1.3, 'ta-in')}>${q(232, 100, 160, L('Fletxa amunt?', '¿Flecha arriba?'))}</g>
       <g ${tA(1.8, 'ta-pop')}>${tag(176, 136, L('sí', 'sí'), '#1FA463')}${tag(282, 136, 'no', '#EF5A5A')}</g>
       <g ${tA(2.1, 'ta-in')}>${leaf(168, 172, 96, L('salta ↑', 'salta ↑'), '#147A47', '#E7F7EE')}${leaf(272, 172, 92, L('camina →', 'camina →'), '#1F5FBF', '#E8F0FF')}</g>
-      ${tok('M160 50 L232 100 L272 172', '0;.1;.4;1', '0;1;1;0')}${tok('M160 50 L66 102', '0;.55;.75;1', '0;1;1;0')}
+      ${tok('M160 50 L232 80 L232 120 L272 154', '0;.08;.38;1', '0;.08;.5;1')}${tok('M160 50 L66 84', '0;.56;.76;1', '0;.56;.95;1')}
       <text x="160" y="214" text-anchor="middle" class="tat b" ${tA(2.6, 'ta-fade')}>${L("Un «si» dins d'un altre «si»", 'Un «si» dentro de otro «si»')}</text>`);
   },
   // «i» i «o»: el regal s'obre només si hi són tots dos (i); l'estrella s'encén si n'hi ha algun (o)
