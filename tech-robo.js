@@ -411,7 +411,7 @@ const RT = {
   sideAll: ['tots dos', 'los dos'], sideL: ["l'esquerre", 'el izquierdo'], sideR: ['el dret', 'el derecho'], on: ['activat', 'activado'], off: ['desactivat', 'desactivado']
 };
 const RTX = k => tx(RT[k].join('|'));
-const ROP_N = { dist: ['distància (cm)', 'distancia (cm)'], L: ['línia L', 'línea L'], M: ['línia M', 'línea M'], R: ['línia R', 'línea R'], aL: ['línia L (ADC)', 'línea L (ADC)'], aM: ['línia M (ADC)', 'línea M (ADC)'], aR: ['línia R (ADC)', 'línea R (ADC)'], lL: ['llum esquerra', 'luz izquierda'], lR: ['llum dreta', 'luz derecha'], A: ['botó A premut', 'botón A pulsado'], B: ['botó B premut', 'botón B pulsado'], time: ['temps (ms)', 'tiempo (ms)'] };
+const ROP_N = { dist: ['distància (cm)', 'distancia (cm)'], L: ['línia L', 'línea L'], M: ['línia M', 'línea M'], R: ['línia R', 'línea R'], aL: ['valor de gris L', 'valor de gris L'], aM: ['valor de gris M', 'valor de gris M'], aR: ['valor de gris R', 'valor de gris R'], lL: ['llum esquerra', 'luz izquierda'], lR: ['llum dreta', 'luz derecha'], A: ['botó A premut', 'botón A pulsado'], B: ['botó B premut', 'botón B pulsado'], time: ['temps (ms)', 'tiempo (ms)'] };
 const rbVName = (v, st) => { const n = st && st.varNames && st.varNames[v]; return n ? tx(n) : v; };
 const rbOpTxt = (v, st) => typeof v === 'number' ? String(v) : !v ? '0' : v.r === 'var' ? rbVName(v.v, st) : tx(ROP_N[v.r].join('|'));
 const rbCondTxt = (c, st) => !c ? '?' : c.and ? `${rbCondTxt(c.and[0], st)} ${L('i', 'y')} ${rbCondTxt(c.and[1], st)}` : c.or ? `${rbCondTxt(c.or[0], st)} ${L('o', 'o')} ${rbCondTxt(c.or[1], st)}` : `${rbOpTxt(c.a, st)} ${c.op} ${rbOpTxt(c.b, st)}`;

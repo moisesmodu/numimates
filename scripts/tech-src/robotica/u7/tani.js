@@ -111,7 +111,7 @@ Object.assign(TANI, (() => {
         `<rect x="-11" y="-11" width="22" height="22" rx="4" fill="#EF5A5A"/><rect x="-5" y="-5" width="10" height="10" rx="1" fill="#fff"/>`,
         `<circle cx="-7" cy="-4" r="6" fill="#2BD45A"/><circle cx="7" cy="-4" r="6" fill="#2BD45A"/><path d="M-8 9l4 4l10 -10" stroke="#1FA463" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`];
       const lab = [L('busca', 'busca'), L('empeny', 'empuja'), L('deixa', 'deja'), L('avisa', 'avisa')];
-      const code = [[L('fins que', 'hasta que'), 'dist < 25'], [L('fins que', 'hasta que'), 'ADC > 200'], [L('atura', 'para'), L('motors', 'motores')], [L('llums', 'luces'), L('verds', 'verdes')]];
+      const code = [[L('fins que', 'hasta que'), 'dist < 25'], [L('fins que', 'hasta que'), L('gris > 200', 'gris > 200')], [L('atura', 'para'), L('motors', 'motores')], [L('llums', 'luces'), L('verds', 'verdes')]];
       return tSvg(226, `${X.slice(1).map((x, i) => `<path d="M${X[i] + 31} ${Y}H${x - 33}" stroke="#7F95E8" stroke-width="3.4" stroke-linecap="round"/><path d="M${x - 39} ${Y - 6}l6 6l-6 6" fill="none" stroke="#7F95E8" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/>`).join('')}
         ${X.map((x, i) => `<g ${tA(t0[i] * .5, 'ta-pop')}><g transform="translate(${x} ${Y})"><circle r="29" fill="#fff" stroke="#C9D6FB" stroke-width="3" filter="url(#bwSh)"/>${icon[i]}
           <circle r="34" fill="none" stroke="#FFC531" stroke-width="5" opacity="0">${SM('opacity', '0;0;1;1;0;0', `0;${(t0[i] / D).toFixed(3)};${(t0[i] / D + .005).toFixed(3)};${((t0[i] + 1.3) / D).toFixed(3)};${((t0[i] + 1.3) / D + .005).toFixed(3)};1`)}</circle></g>

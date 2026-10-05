@@ -86,7 +86,7 @@ Object.assign(TANI, (() => {
     },
     // la velocitat del bloc i els centímetres que fa cada segon (les dades del simulador i del Maqueen real)
     k1speed() {
-      const V = [[0, 0, '0'], [30, 0, '0'], [60, 3.9, '3,9'], [100, 9.1, '9'], [150, 15.6, '15,6'], [255, 29.2, '29']], base = 176, k = 4.05, x0 = 62, dx = 46;
+      const V = [[0, 0, '0'], [30, 0, '0'], [60, 3.9, '≈4'], [100, 9.1, '≈9'], [150, 15.6, '≈15'], [255, 29.2, '≈30']], base = 176, k = 4.05, x0 = 62, dx = 46;
       const bars = V.map(([n, v, lab], i) => { const x = x0 + i * dx, h = Math.round(v * k), c = ['#C9D6FB', '#C9D6FB', '#9DB5F8', '#6E90F2', '#3D6BEB', '#2347C8'][i], b = (.4 + i * .3).toFixed(2);
         return `<rect x="${x - 15}" y="${base}" width="30" height="0" rx="5" fill="${c}">${SM('height', `0;${h};${h};0`, 5.5, `keyTimes="0;.14;.9;1" begin="${b}s"`)}${SM('y', `${base};${base - h};${base - h};${base}`, 5.5, `keyTimes="0;.14;.9;1" begin="${b}s"`)}</rect>
           <text x="${x}" y="${base - h - 7}" text-anchor="middle" class="tat ${i === 5 ? 'b' : 's'}" ${tA(+b + .7, 'ta-fade')}>${lab}</text>
@@ -132,7 +132,7 @@ Object.assign(TANI, (() => {
         <g transform="translate(${ox} ${oy})"><g><animateTransform attributeName="transform" type="rotate" values="0;0;80;80;0;0;90;90;0" keyTimes="0;.09;.25;.4;.47;.55;.71;.95;1" dur="5.5s" repeatCount="indefinite"/>
           <path d="M0 0V-${R - 26}" stroke="#EF5A5A" stroke-width="3.4" stroke-linecap="round"/>${bot(0, 0, 0, .74)}</g></g>
         <g ${tA(1.3, 'ta-fade')}>${ko(m80x, m80y, 9)}</g><g ${tA(3.9, 'ta-pop')}>${ok(m90x + 2, m90y + 18, 10)}</g>
-        ${step(16, 1, '#EF5A5A', '590 ms', '→ 80°', .5)}${step(78, 2, '#F08A24', L('ajusta', 'ajusta'), '660 ms', 2)}${step(140, 3, '#1FA463', L('torna-hi', 'otra vez'), '→ 90° ✓', 3.4)}`);
+        ${step(16, 1, '#EF5A5A', '600 ms', '→ 80°', .5)}${step(78, 2, '#F08A24', L('ajusta', 'ajusta'), '660 ms', 2)}${step(140, 3, '#1FA463', L('torna-hi', 'otra vez'), '→ 90° ✓', 3.4)}`);
     },
     // del simulador al robot de veritat: MakeCode → cable USB → micro:bit → a la pista!
     k1usb() {
@@ -147,9 +147,38 @@ Object.assign(TANI, (() => {
         <g><animateTransform attributeName="transform" type="translate" values="0 0;0 0;0 -64;0 -64;0 0" keyTimes="0;.6;.84;.97;1" dur="5.5s" repeatCount="indefinite"/>
           ${bot(256, 150, 0, 1.05, { extra: `<g opacity="0">${SM('opacity', '0;0;1;1;0', 5.5, 'keyTimes="0;.42;.46;.97;1"')}${leds('arrow')}</g>` })}</g>
         <path d="M226 192H300" stroke="#121418" stroke-width="5" stroke-linecap="round" opacity=".85"/>
-        <g ${tA(.2, 'ta-in')}>${pill(73, 160, 108, L('1. Programa', '1. Programa'), '#2F5BEA')}</g>
+        <g ${tA(.2, 'ta-in')}>${pill(73, 160, 108, '1. MakeCode', '#2F5BEA')}</g>
         <g ${tA(1.2, 'ta-in')}>${pill(166, 190, 64, '2. USB', '#3D4658')}</g>
         <g ${tA(3.2, 'ta-in')}>${pill(262, 22, 92, L('3. Prova!', '3. ¡Prueba!'), '#1FA463')}</g>`);
+    },
+    // robots i persones: el robot fa la feina, la persona decideix (i en respon)
+    k1ethic() {
+      const person = (x, y) => `<g transform="translate(${x} ${y})"><circle cx="0" cy="-58" r="17" fill="#F2C9A0"/><path d="M-17 -64q2 -16 17 -16t17 16q-6 -8 -17 -8t-17 8z" fill="#5A3A22"/>
+        <circle cx="-6" cy="-58" r="2" fill="#1B2240"/><circle cx="6" cy="-58" r="2" fill="#1B2240"/><path d="M-6 -50q6 5 12 0" stroke="#1B2240" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <path d="M-26 0v-18q0 -20 26 -20t26 20v18z" fill="#8B5CF6"/></g>`;
+      const box = `<g><animateTransform attributeName="transform" type="translate" values="0 0;0 -6;0 0" dur="1.6s" repeatCount="indefinite"/><rect x="58" y="44" width="44" height="30" rx="4" fill="url(#bwWood)" stroke="#7A4A1E" stroke-width="1.8"/><path d="M58 56h44" stroke="#7A4A1E" stroke-width="1.4"/></g>`;
+      return tSvg(214, `<rect x="10" y="150" width="300" height="10" rx="5" fill="#DCE4FA"/>
+        <g ${tA(.1, 'ta-in')}>${box}${bot(80, 112, 0, 1.05)}</g>
+        <g ${tA(.6, 'ta-in')}>${person(236, 150)}</g>
+        <g ${tA(1.4, 'ta-pop')}><path d="M190 30h92a12 12 0 0 1 12 12v22a12 12 0 0 1 -12 12h-40l-12 12v-12h-40a12 12 0 0 1 -12 -12v-22a12 12 0 0 1 12 -12z" fill="#fff" stroke="#8B5CF6" stroke-width="2.4"/>
+          <text x="236" y="60" text-anchor="middle" class="tat b" style="fill:#5B32C8">${L('Per a què?', '¿Para qué?')}</text></g>
+        <g ${tA(.4, 'ta-in')}>${pill(80, 186, 132, L('fa la feina', 'hace el trabajo'), '#2F5BEA')}</g>
+        <g ${tA(1, 'ta-in')}>${pill(236, 186, 132, L('decideix', 'decide'), '#8B5CF6')}</g>`);
+    },
+    // les piles: 3 AA que es gasten i, gastades, al contenidor de piles (mai a la brossa)
+    k1bat() {
+      const cell = (x, i) => `<g transform="translate(${x} 58)"><rect x="0" y="0" width="34" height="96" rx="7" fill="#1B2240"/><rect x="11" y="-7" width="12" height="8" rx="2" fill="#9AA3B5"/>
+        <rect x="5" y="6" width="24" height="84" rx="4" fill="#2A3558"/>
+        <rect x="5" y="6" width="24" height="84" rx="4" fill="#1FA463"><animate attributeName="height" values="84;84;20;20;84" keyTimes="0;.15;.6;.95;1" dur="6s" repeatCount="indefinite"/><animate attributeName="y" values="6;6;70;70;6" keyTimes="0;.15;.6;.95;1" dur="6s" repeatCount="indefinite"/><animate attributeName="fill" values="#1FA463;#1FA463;#EF5A5A;#EF5A5A;#1FA463" keyTimes="0;.15;.6;.95;1" dur="6s" repeatCount="indefinite"/></rect>
+        <text x="17" y="118" text-anchor="middle" class="tat s">AA</text></g>`;
+      const bin = `<g transform="translate(236 70)"><rect x="-34" y="0" width="68" height="84" rx="8" fill="#F08A24"/><rect x="-40" y="-10" width="80" height="14" rx="5" fill="#C96A12"/><rect x="-16" y="-8" width="32" height="5" rx="2.5" fill="#1B2240"/>
+        <g transform="translate(0 40)" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round"><path d="M-14 8l8 -16h12"/><path d="M14 8h-16"/><path d="M6 -8l8 16"/></g>
+        <text x="0" y="78" text-anchor="middle" class="tat b" style="fill:#fff">${L('PILES', 'PILAS')}</text></g>`;
+      return tSvg(214, `<g ${tA(.1, 'ta-in')}>${cell(20, 0)}${cell(62, 1)}${cell(104, 2)}</g>
+        <g ${tA(.5, 'ta-fade')}><text x="79" y="30" text-anchor="middle" class="tat b">3 × AA</text></g>
+        <g ${tA(1.6, 'ta-in')}><path d="M150 106h40" stroke="#3D4658" stroke-width="4" stroke-linecap="round" stroke-dasharray="6 6" class="ta-dash"/><path d="M184 98l10 8l-10 8" fill="none" stroke="#3D4658" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></g>
+        <g ${tA(2, 'ta-pop')}>${bin}</g>
+        <g ${tA(2.6, 'ta-in')}>${pill(236, 196, 150, L('mai a la brossa', 'nunca a la basura'), '#1FA463')}</g>`);
     }
   };
 })());

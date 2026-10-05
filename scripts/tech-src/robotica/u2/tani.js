@@ -24,7 +24,7 @@ Object.assign(TANI, (() => {
       const d = 31 * k;
       const clock = v => `<text x="64" y="86" text-anchor="middle" class="tat b" opacity="0">${v} s<animate attributeName="opacity" values="${v === 0 ? '1;1;0;0;0;0;1' : v === 1 ? '0;0;1;1;0;0;0' : '0;0;0;0;1;1;0'}" keyTimes="0;.42;.425;.74;.745;.98;1" ${LOOP}/></text>`;
       return tSvg(214, `<rect x="12" y="8" width="296" height="44" rx="14" fill="#F1ECFF" stroke="#C9B8FA" stroke-width="2"/>
-        <text x="82" y="37" text-anchor="middle" class="tat b" ${tA(.3)}>15,6 cm/s</text><text x="168" y="37" text-anchor="middle" class="tat b" ${tA(1.6)}>× 2 s</text><text x="250" y="37" text-anchor="middle" class="tat b" style="fill:#6D3FD8" ${tA(4.2)}>= 31 cm</text>
+        <text x="82" y="37" text-anchor="middle" class="tat b" ${tA(.3)}>15 cm/s</text><text x="168" y="37" text-anchor="middle" class="tat b" ${tA(1.6)}>× 2 s</text><text x="250" y="37" text-anchor="middle" class="tat b" style="fill:#6D3FD8" ${tA(4.2)}>= 30 cm</text>
         <circle cx="64" cy="80" r="21" fill="#fff" stroke="#8B5CF6" stroke-width="3"/><path d="M58 57h12" stroke="#8B5CF6" stroke-width="4" stroke-linecap="round"/>${[0, 1, 2].map(clock).join('')}
         <text x="98" y="86" class="tat s" ${tA(.3, 'ta-fade')}>${L('velocitat 150 durant 2000 ms', 'velocidad 150 durante 2000 ms')}</text>
         <rect x="16" y="112" width="290" height="38" rx="8" fill="#F8F7F2" stroke="#E4E1D6" stroke-width="1.5"/>
@@ -48,9 +48,9 @@ Object.assign(TANI, (() => {
         <text x="${X(0) + 10}" y="${Y(21) + 2}" class="tat s">cm/s</text>
         <path d="${curve} Z" fill="#8B5CF6" fill-opacity=".22" ${tA(2.2, 'ta-fade')}/>
         ${drw('path', `d="${curve}" fill="none" stroke="#6D3FD8" stroke-width="4.5" stroke-linejoin="round"`, .05, .35)}
-        <path d="M${X(2.35)} ${Y(15.6)}h-10" stroke="#6D3FD8" stroke-width="2" stroke-dasharray="3 3"/><text x="${X(2.42)}" y="${Y(15.6) + 5}" class="tat s" style="fill:#6D3FD8">15,6</text>
+        <path d="M${X(2.35)} ${Y(15.6)}h-10" stroke="#6D3FD8" stroke-width="2" stroke-dasharray="3 3"/><text x="${X(2.42)}" y="${Y(15.6) + 5}" class="tat s" style="fill:#6D3FD8">15</text>
         <g ${tA(1.3)}><path d="M${X(.78)} ${Y(18.2)}Q${X(.3)} ${Y(19.5)} ${X(.12) + 3} ${Y(15.6) - 3}" fill="none" stroke="#F08A24" stroke-width="2.5" stroke-linecap="round"/><circle cx="${X(.12) + 2}" cy="${Y(15.6) - 2}" r="3.5" fill="#F08A24"/><text x="${X(.82)}" y="${Y(18) + 4}" class="tat s" style="fill:#C2610F">${L('inèrcia: ~0,1 s', 'inercia: ~0,1 s')}</text></g>
-        <g ${tA(2.6)}><text x="${X(1.07)}" y="${Y(8.6)}" text-anchor="middle" class="tat s" style="fill:#4A2A9E">${L('àrea = distància', 'área = distancia')}</text><text x="${X(1.07)}" y="${Y(5.6)}" text-anchor="middle" class="tat b" style="fill:#4A2A9E">15,6 × 2 ≈ 31 cm</text></g>`);
+        <g ${tA(2.6)}><text x="${X(1.07)}" y="${Y(8.6)}" text-anchor="middle" class="tat s" style="fill:#4A2A9E">${L('àrea = distància', 'área = distancia')}</text><text x="${X(1.07)}" y="${Y(5.6)}" text-anchor="middle" class="tat b" style="fill:#4A2A9E">15 × 2 = 30 cm</text></g>`);
     },
     // calibrar: el robot de veritat fa una mica menys; es mesura, es calcula i s'ajusta el temps
     k2cal() {
@@ -62,20 +62,20 @@ Object.assign(TANI, (() => {
         <g ${tA(3)}><rect x="14" y="140" width="292" height="30" rx="10" fill="#FDEBEB"/><text x="160" y="161" text-anchor="middle" class="tat">${L('Mesura: 28 cm ÷ 2 s = 14 cm/s', 'Mide: 28 cm ÷ 2 s = 14 cm/s')}</text></g>
         <g ${tA(3.8)}><rect x="14" y="178" width="292" height="30" rx="10" fill="#E7F7EE"/><text x="160" y="199" text-anchor="middle" class="tat">${L('Ajusta: 31 ÷ 14 ≈ 2,2 s → 2200 ms', 'Ajusta: 31 ÷ 14 ≈ 2,2 s → 2200 ms')}</text></g>`);
     },
-    // girar un angle: a velocitat 100, un motor endavant i l'altre enrere, 90° en 590 ms
+    // girar un angle: a velocitat 100, un motor endavant i l'altre enrere, 90° en 600 ms
     k2ang() {
       const cx = 96, cy = 110, R = 72;
       const pt = (a, r) => [cx + Math.sin(a * Math.PI / 180) * r, cy - Math.cos(a * Math.PI / 180) * r];
       const ticks = [0, 30, 60, 90, 120, 150, 180].map(a => { const [x1, y1] = pt(a, R - 6), [x2, y2] = pt(a, R + 4), [lx, ly] = pt(a, R + 22); return `<path d="M${x1} ${y1}L${x2} ${y2}" stroke="#56628A" stroke-width="2"/><text x="${lx}" y="${ly + 5}" text-anchor="middle" class="tat s">${a}°</text>`; }).join('');
       const wheel = (x, up) => `<g><path d="M${x} ${up ? 12 : -12}V${up ? -14 : 14}" stroke="${up ? '#2BD45A' : '#FF8A3D'}" stroke-width="4" stroke-linecap="round"/><path d="M${x - 5} ${up ? -8 : 8}l5 ${up ? -7 : 7}l5 ${up ? 7 : -7}" fill="none" stroke="${up ? '#2BD45A' : '#FF8A3D'}" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></g>`;
-      const rows = [['30°', '197 ms'], ['60°', '393 ms'], ['90°', '590 ms'], ['120°', '787 ms']];
+      const rows = [['30°', '200 ms'], ['60°', '400 ms'], ['90°', '600 ms'], ['120°', '800 ms']];
       return tSvg(214, `<path d="M${cx} ${cy - R}A${R} ${R} 0 1 1 ${cx} ${cy + R}" fill="none" stroke="#DCE4FA" stroke-width="10"/>${ticks}
         <path d="M${cx} ${cy - R}A${R} ${R} 0 0 1 ${cx + R} ${cy}" pathLength="1" fill="none" stroke="#8B5CF6" stroke-width="10" stroke-dasharray="1 1"><animate attributeName="stroke-dashoffset" values="1;1;0;0" keyTimes="0;.15;.5;1" dur="5.5s" repeatCount="indefinite"/></path>
         <g><animateTransform attributeName="transform" type="rotate" values="0 ${cx} ${cy};0 ${cx} ${cy};90 ${cx} ${cy};90 ${cx} ${cy}" keyTimes="0;.15;.5;1" dur="5.5s" repeatCount="indefinite"/>
           <g transform="translate(${cx} ${cy}) scale(.8)">${mq(0, 0, 0, 1)}<g transform="translate(-24 0)">${wheel(0, true)}</g><g transform="translate(24 0)">${wheel(0, false)}</g></g></g>
         <text x="252" y="24" text-anchor="middle" class="tat s">${L('a velocitat 100', 'a velocidad 100')}</text>
         ${rows.map(([a, ms], i) => `<g ${tA(.5 + i * .5, 'ta-in')}><rect x="196" y="${36 + i * 36}" width="114" height="30" rx="10" fill="#fff" stroke="${i === 2 ? '#8B5CF6' : '#DCE4FA'}" stroke-width="2.5"/><text x="210" y="${57 + i * 36}" class="tat b">${a}</text><text x="300" y="${57 + i * 36}" text-anchor="end" class="tat s">${ms}</text></g>`).join('')}
-        <text x="252" y="196" text-anchor="middle" class="tat s" ${tA(2.6, 'ta-fade')}>${L('≈ 6,5 ms per grau', '≈ 6,5 ms por grado')}</text>`);
+        <text x="252" y="196" text-anchor="middle" class="tat s" ${tA(2.6, 'ta-fade')}>${L('15° ≈ 100 ms', '15° ≈ 100 ms')}</text>`);
     },
     // la regla dels 360°: triangle, quadrat i hexàgon, cada gir és 360° ÷ costats
     k2poly() {
@@ -123,7 +123,7 @@ Object.assign(TANI, (() => {
       const mid = (a, b) => [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2];
       const off = [[-14, 0], [-12, -6], [12, -6], [14, 0], [0, 14]];
       const nums = v.slice(0, 5).map((p, i) => { const [mx, my] = mid(p, v[i + 1]); return `<g ${tA(.9 + i * .45)}><circle cx="${mx + off[i][0]}" cy="${my + off[i][1]}" r="10" fill="#6D3FD8"/><text x="${mx + off[i][0]}" y="${my + off[i][1] + 5}" text-anchor="middle" class="tat w s">${i + 1}</text></g>`; }).join('');
-      const rows = [[1, L('tram 31 cm', 'tramo 31 cm'), '2000'], [0, L('gir 30°', 'giro 30°'), '197'], [2, L('tram 31 cm', 'tramo 31 cm'), '2000'], [0, L('gir 120°', 'giro 120°'), '787'], [3, L('tram 31 cm', 'tramo 31 cm'), '2000'], [-1, '…', '']];
+      const rows = [[1, L('tram 30 cm', 'tramo 30 cm'), '2000'], [0, L('gir 30°', 'giro 30°'), '200'], [2, L('tram 30 cm', 'tramo 30 cm'), '2000'], [0, L('gir 120°', 'giro 120°'), '800'], [3, L('tram 30 cm', 'tramo 30 cm'), '2000'], [-1, '…', '']];
       const badge = (n, x, y) => n > 0 ? `<circle cx="${x}" cy="${y}" r="9" fill="#6D3FD8"/><text x="${x}" y="${y + 5}" text-anchor="middle" class="tat w s">${n}</text>` : n === 0 ? `<circle cx="${x}" cy="${y}" r="9" fill="#F08A24"/><path d="M${x - 3.5} ${y + 2.5}A4.5 4.5 0 1 1 ${x + 3} ${y + 3.2}" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/><path d="M${x + 4.5} ${y + .2}l-1.4 3.4l-3.4 -1" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"/>` : '';
       return tSvg(214, `<rect x="8" y="30" width="116" height="176" rx="14" fill="#FFF8E6" stroke="#F1D9A4" stroke-width="2"/>
         ${drw('path', `d="${d}" fill="none" stroke="#2F5BEA" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"`, .05, .5)}${nums}

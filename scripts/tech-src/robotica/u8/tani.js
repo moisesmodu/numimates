@@ -99,10 +99,10 @@ Object.assign(TANI, (() => {
         <g ${tA(1.4, 'ta-in')}><rect x="212" y="138" width="102" height="62" rx="12" fill="#fff" stroke="#DCE4FA" stroke-width="2" filter="url(#bwSh)"/>
           <text x="263" y="160" text-anchor="middle" class="tat s" style="font-size:12px">${L('Els llums', 'Las luces')}</text><text x="263" y="176" text-anchor="middle" class="tat s" style="font-size:12px">${L('diuen què', 'dicen qué')}</text><text x="263" y="192" text-anchor="middle" class="tat s" style="font-size:12px">${L('pensa!', '¡piensa!')}</text></g>`);
     },
-    // del simulador al robot: el botó &lt;/&gt; dona el codi, MakeCode el converteix en un fitxer .hex i el cable el porta a la micro:bit
+    // del simulador al robot: el botó MakeCode obre el programa en blocs (en anglès), «Descarrega» i el cable USB el porten a la micro:bit
     k8export() {
       const cable = 'M226 116C240 116 244 150 262 150';
-      const file = `<g opacity="0">${SM('opacity', '0;0;1;1;0;0', 5.5, 'keyTimes="0;.5;.53;.7;.73;1"')}<rect x="-10" y="-12" width="20" height="24" rx="3" fill="#FFC531" stroke="#B57A00" stroke-width="1.5"/><text y="4" text-anchor="middle" style="font:900 7px Lexend,system-ui;fill:#6B4A00">.hex</text>
+      const file = `<g opacity="0">${SM('opacity', '0;0;1;1;0;0', 5.5, 'keyTimes="0;.5;.53;.7;.73;1"')}<rect x="-10" y="-12" width="20" height="24" rx="3" fill="#FFC531" stroke="#B57A00" stroke-width="1.5"/><text y="4" text-anchor="middle" style="font:900 7px Lexend,system-ui;fill:#6B4A00">01</text>
         <animateMotion dur="5.5s" repeatCount="indefinite" keyTimes="0;.5;.7;1" keyPoints="0;0;1;1" calcMode="linear" path="${cable}"/></g>`;
       return tSvg(214, `
         <g ${tA(.1, 'ta-in')}><rect x="8" y="34" width="96" height="104" rx="12" fill="#fff" stroke="#DCE4FA" stroke-width="2" filter="url(#bwSh)"/>
@@ -112,8 +112,8 @@ Object.assign(TANI, (() => {
         <text x="56" y="22" text-anchor="middle" class="tat s">${L('1. Simulador', '1. Simulador')}</text>
         <path d="M106 86h10" stroke="#7F95E8" stroke-width="3.5" stroke-linecap="round"/><path d="M113 80l6 6l-6 6" fill="none" stroke="#7F95E8" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
         <g ${tA(1.2, 'ta-in')}><rect x="122" y="34" width="104" height="104" rx="12" fill="#1B2240" filter="url(#bwSh)"/>
-          ${['motorRun(…', 'pause(3000)', 'motorStop(…'].map((t, i) => `<text x="130" y="${58 + i * 18}" style="font:700 10.5px ui-monospace,Menlo,monospace;fill:${['#7FE0A6', '#FFD27A', '#9FC0FF'][i]}">${t}</text>`).join('')}
-          <rect x="138" y="110" width="72" height="20" rx="7" fill="#7B4DE0"/><text x="174" y="124" text-anchor="middle" class="tat w s" style="font-size:10.5px">${L('Descarrega', 'Descarga')}</text></g>
+          ${blk(128, 44, 92, '#1FA463', 'on start', 'tat w s', 10)}${blk(134, 64, 86, '#2F5BEA', 'motor 150', 'tat w s', 10)}${blk(134, 84, 86, '#F08A24', 'pause 3000', 'tat w s', 10)}
+          <rect x="138" y="110" width="72" height="20" rx="7" fill="#7B4DE0"/><text x="174" y="124" text-anchor="middle" class="tat w s" style="font-size:10.5px">${L('Descarrega', 'Descargar')}</text></g>
         <text x="174" y="22" text-anchor="middle" class="tat s">2. MakeCode</text>
         <path d="${cable}" fill="none" stroke="#3D4658" stroke-width="4.4" stroke-linecap="round"/>${file}
         <g>${bot(282, 150, 0, .95, { mx: `<g opacity="0">${SM('opacity', '0;0;1;1;0', 5.5, 'keyTimes="0;.72;.75;.97;1"')}${leds('happy')}</g><g>${SM('opacity', '1;1;0;0;1', 5.5, 'keyTimes="0;.72;.75;.97;1"')}${leds('none')}</g>` })}</g>

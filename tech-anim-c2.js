@@ -89,7 +89,7 @@ Object.assign(TANI, (() => {
     },
     // la velocitat del bloc i els centímetres que fa cada segon (les dades del simulador i del Maqueen real)
     k1speed() {
-      const V = [[0, 0, '0'], [30, 0, '0'], [60, 3.9, '3,9'], [100, 9.1, '9'], [150, 15.6, '15,6'], [255, 29.2, '29']], base = 176, k = 4.05, x0 = 62, dx = 46;
+      const V = [[0, 0, '0'], [30, 0, '0'], [60, 3.9, '≈4'], [100, 9.1, '≈9'], [150, 15.6, '≈15'], [255, 29.2, '≈30']], base = 176, k = 4.05, x0 = 62, dx = 46;
       const bars = V.map(([n, v, lab], i) => { const x = x0 + i * dx, h = Math.round(v * k), c = ['#C9D6FB', '#C9D6FB', '#9DB5F8', '#6E90F2', '#3D6BEB', '#2347C8'][i], b = (.4 + i * .3).toFixed(2);
         return `<rect x="${x - 15}" y="${base}" width="30" height="0" rx="5" fill="${c}">${SM('height', `0;${h};${h};0`, 5.5, `keyTimes="0;.14;.9;1" begin="${b}s"`)}${SM('y', `${base};${base - h};${base - h};${base}`, 5.5, `keyTimes="0;.14;.9;1" begin="${b}s"`)}</rect>
           <text x="${x}" y="${base - h - 7}" text-anchor="middle" class="tat ${i === 5 ? 'b' : 's'}" ${tA(+b + .7, 'ta-fade')}>${lab}</text>
@@ -135,7 +135,7 @@ Object.assign(TANI, (() => {
         <g transform="translate(${ox} ${oy})"><g><animateTransform attributeName="transform" type="rotate" values="0;0;80;80;0;0;90;90;0" keyTimes="0;.09;.25;.4;.47;.55;.71;.95;1" dur="5.5s" repeatCount="indefinite"/>
           <path d="M0 0V-${R - 26}" stroke="#EF5A5A" stroke-width="3.4" stroke-linecap="round"/>${bot(0, 0, 0, .74)}</g></g>
         <g ${tA(1.3, 'ta-fade')}>${ko(m80x, m80y, 9)}</g><g ${tA(3.9, 'ta-pop')}>${ok(m90x + 2, m90y + 18, 10)}</g>
-        ${step(16, 1, '#EF5A5A', '590 ms', '→ 80°', .5)}${step(78, 2, '#F08A24', L('ajusta', 'ajusta'), '660 ms', 2)}${step(140, 3, '#1FA463', L('torna-hi', 'otra vez'), '→ 90° ✓', 3.4)}`);
+        ${step(16, 1, '#EF5A5A', '600 ms', '→ 80°', .5)}${step(78, 2, '#F08A24', L('ajusta', 'ajusta'), '660 ms', 2)}${step(140, 3, '#1FA463', L('torna-hi', 'otra vez'), '→ 90° ✓', 3.4)}`);
     },
     // del simulador al robot de veritat: MakeCode → cable USB → micro:bit → a la pista!
     k1usb() {
@@ -150,9 +150,38 @@ Object.assign(TANI, (() => {
         <g><animateTransform attributeName="transform" type="translate" values="0 0;0 0;0 -64;0 -64;0 0" keyTimes="0;.6;.84;.97;1" dur="5.5s" repeatCount="indefinite"/>
           ${bot(256, 150, 0, 1.05, { extra: `<g opacity="0">${SM('opacity', '0;0;1;1;0', 5.5, 'keyTimes="0;.42;.46;.97;1"')}${leds('arrow')}</g>` })}</g>
         <path d="M226 192H300" stroke="#121418" stroke-width="5" stroke-linecap="round" opacity=".85"/>
-        <g ${tA(.2, 'ta-in')}>${pill(73, 160, 108, L('1. Programa', '1. Programa'), '#2F5BEA')}</g>
+        <g ${tA(.2, 'ta-in')}>${pill(73, 160, 108, '1. MakeCode', '#2F5BEA')}</g>
         <g ${tA(1.2, 'ta-in')}>${pill(166, 190, 64, '2. USB', '#3D4658')}</g>
         <g ${tA(3.2, 'ta-in')}>${pill(262, 22, 92, L('3. Prova!', '3. ¡Prueba!'), '#1FA463')}</g>`);
+    },
+    // robots i persones: el robot fa la feina, la persona decideix (i en respon)
+    k1ethic() {
+      const person = (x, y) => `<g transform="translate(${x} ${y})"><circle cx="0" cy="-58" r="17" fill="#F2C9A0"/><path d="M-17 -64q2 -16 17 -16t17 16q-6 -8 -17 -8t-17 8z" fill="#5A3A22"/>
+        <circle cx="-6" cy="-58" r="2" fill="#1B2240"/><circle cx="6" cy="-58" r="2" fill="#1B2240"/><path d="M-6 -50q6 5 12 0" stroke="#1B2240" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <path d="M-26 0v-18q0 -20 26 -20t26 20v18z" fill="#8B5CF6"/></g>`;
+      const box = `<g><animateTransform attributeName="transform" type="translate" values="0 0;0 -6;0 0" dur="1.6s" repeatCount="indefinite"/><rect x="58" y="44" width="44" height="30" rx="4" fill="url(#bwWood)" stroke="#7A4A1E" stroke-width="1.8"/><path d="M58 56h44" stroke="#7A4A1E" stroke-width="1.4"/></g>`;
+      return tSvg(214, `<rect x="10" y="150" width="300" height="10" rx="5" fill="#DCE4FA"/>
+        <g ${tA(.1, 'ta-in')}>${box}${bot(80, 112, 0, 1.05)}</g>
+        <g ${tA(.6, 'ta-in')}>${person(236, 150)}</g>
+        <g ${tA(1.4, 'ta-pop')}><path d="M190 30h92a12 12 0 0 1 12 12v22a12 12 0 0 1 -12 12h-40l-12 12v-12h-40a12 12 0 0 1 -12 -12v-22a12 12 0 0 1 12 -12z" fill="#fff" stroke="#8B5CF6" stroke-width="2.4"/>
+          <text x="236" y="60" text-anchor="middle" class="tat b" style="fill:#5B32C8">${L('Per a què?', '¿Para qué?')}</text></g>
+        <g ${tA(.4, 'ta-in')}>${pill(80, 186, 132, L('fa la feina', 'hace el trabajo'), '#2F5BEA')}</g>
+        <g ${tA(1, 'ta-in')}>${pill(236, 186, 132, L('decideix', 'decide'), '#8B5CF6')}</g>`);
+    },
+    // les piles: 3 AA que es gasten i, gastades, al contenidor de piles (mai a la brossa)
+    k1bat() {
+      const cell = (x, i) => `<g transform="translate(${x} 58)"><rect x="0" y="0" width="34" height="96" rx="7" fill="#1B2240"/><rect x="11" y="-7" width="12" height="8" rx="2" fill="#9AA3B5"/>
+        <rect x="5" y="6" width="24" height="84" rx="4" fill="#2A3558"/>
+        <rect x="5" y="6" width="24" height="84" rx="4" fill="#1FA463"><animate attributeName="height" values="84;84;20;20;84" keyTimes="0;.15;.6;.95;1" dur="6s" repeatCount="indefinite"/><animate attributeName="y" values="6;6;70;70;6" keyTimes="0;.15;.6;.95;1" dur="6s" repeatCount="indefinite"/><animate attributeName="fill" values="#1FA463;#1FA463;#EF5A5A;#EF5A5A;#1FA463" keyTimes="0;.15;.6;.95;1" dur="6s" repeatCount="indefinite"/></rect>
+        <text x="17" y="118" text-anchor="middle" class="tat s">AA</text></g>`;
+      const bin = `<g transform="translate(236 70)"><rect x="-34" y="0" width="68" height="84" rx="8" fill="#F08A24"/><rect x="-40" y="-10" width="80" height="14" rx="5" fill="#C96A12"/><rect x="-16" y="-8" width="32" height="5" rx="2.5" fill="#1B2240"/>
+        <g transform="translate(0 40)" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round"><path d="M-14 8l8 -16h12"/><path d="M14 8h-16"/><path d="M6 -8l8 16"/></g>
+        <text x="0" y="78" text-anchor="middle" class="tat b" style="fill:#fff">${L('PILES', 'PILAS')}</text></g>`;
+      return tSvg(214, `<g ${tA(.1, 'ta-in')}>${cell(20, 0)}${cell(62, 1)}${cell(104, 2)}</g>
+        <g ${tA(.5, 'ta-fade')}><text x="79" y="30" text-anchor="middle" class="tat b">3 × AA</text></g>
+        <g ${tA(1.6, 'ta-in')}><path d="M150 106h40" stroke="#3D4658" stroke-width="4" stroke-linecap="round" stroke-dasharray="6 6" class="ta-dash"/><path d="M184 98l10 8l-10 8" fill="none" stroke="#3D4658" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></g>
+        <g ${tA(2, 'ta-pop')}>${bin}</g>
+        <g ${tA(2.6, 'ta-in')}>${pill(236, 196, 150, L('mai a la brossa', 'nunca a la basura'), '#1FA463')}</g>`);
     }
   };
 })());
@@ -184,7 +213,7 @@ Object.assign(TANI, (() => {
       const d = 31 * k;
       const clock = v => `<text x="64" y="86" text-anchor="middle" class="tat b" opacity="0">${v} s<animate attributeName="opacity" values="${v === 0 ? '1;1;0;0;0;0;1' : v === 1 ? '0;0;1;1;0;0;0' : '0;0;0;0;1;1;0'}" keyTimes="0;.42;.425;.74;.745;.98;1" ${LOOP}/></text>`;
       return tSvg(214, `<rect x="12" y="8" width="296" height="44" rx="14" fill="#F1ECFF" stroke="#C9B8FA" stroke-width="2"/>
-        <text x="82" y="37" text-anchor="middle" class="tat b" ${tA(.3)}>15,6 cm/s</text><text x="168" y="37" text-anchor="middle" class="tat b" ${tA(1.6)}>× 2 s</text><text x="250" y="37" text-anchor="middle" class="tat b" style="fill:#6D3FD8" ${tA(4.2)}>= 31 cm</text>
+        <text x="82" y="37" text-anchor="middle" class="tat b" ${tA(.3)}>15 cm/s</text><text x="168" y="37" text-anchor="middle" class="tat b" ${tA(1.6)}>× 2 s</text><text x="250" y="37" text-anchor="middle" class="tat b" style="fill:#6D3FD8" ${tA(4.2)}>= 30 cm</text>
         <circle cx="64" cy="80" r="21" fill="#fff" stroke="#8B5CF6" stroke-width="3"/><path d="M58 57h12" stroke="#8B5CF6" stroke-width="4" stroke-linecap="round"/>${[0, 1, 2].map(clock).join('')}
         <text x="98" y="86" class="tat s" ${tA(.3, 'ta-fade')}>${L('velocitat 150 durant 2000 ms', 'velocidad 150 durante 2000 ms')}</text>
         <rect x="16" y="112" width="290" height="38" rx="8" fill="#F8F7F2" stroke="#E4E1D6" stroke-width="1.5"/>
@@ -208,9 +237,9 @@ Object.assign(TANI, (() => {
         <text x="${X(0) + 10}" y="${Y(21) + 2}" class="tat s">cm/s</text>
         <path d="${curve} Z" fill="#8B5CF6" fill-opacity=".22" ${tA(2.2, 'ta-fade')}/>
         ${drw('path', `d="${curve}" fill="none" stroke="#6D3FD8" stroke-width="4.5" stroke-linejoin="round"`, .05, .35)}
-        <path d="M${X(2.35)} ${Y(15.6)}h-10" stroke="#6D3FD8" stroke-width="2" stroke-dasharray="3 3"/><text x="${X(2.42)}" y="${Y(15.6) + 5}" class="tat s" style="fill:#6D3FD8">15,6</text>
+        <path d="M${X(2.35)} ${Y(15.6)}h-10" stroke="#6D3FD8" stroke-width="2" stroke-dasharray="3 3"/><text x="${X(2.42)}" y="${Y(15.6) + 5}" class="tat s" style="fill:#6D3FD8">15</text>
         <g ${tA(1.3)}><path d="M${X(.78)} ${Y(18.2)}Q${X(.3)} ${Y(19.5)} ${X(.12) + 3} ${Y(15.6) - 3}" fill="none" stroke="#F08A24" stroke-width="2.5" stroke-linecap="round"/><circle cx="${X(.12) + 2}" cy="${Y(15.6) - 2}" r="3.5" fill="#F08A24"/><text x="${X(.82)}" y="${Y(18) + 4}" class="tat s" style="fill:#C2610F">${L('inèrcia: ~0,1 s', 'inercia: ~0,1 s')}</text></g>
-        <g ${tA(2.6)}><text x="${X(1.07)}" y="${Y(8.6)}" text-anchor="middle" class="tat s" style="fill:#4A2A9E">${L('àrea = distància', 'área = distancia')}</text><text x="${X(1.07)}" y="${Y(5.6)}" text-anchor="middle" class="tat b" style="fill:#4A2A9E">15,6 × 2 ≈ 31 cm</text></g>`);
+        <g ${tA(2.6)}><text x="${X(1.07)}" y="${Y(8.6)}" text-anchor="middle" class="tat s" style="fill:#4A2A9E">${L('àrea = distància', 'área = distancia')}</text><text x="${X(1.07)}" y="${Y(5.6)}" text-anchor="middle" class="tat b" style="fill:#4A2A9E">15 × 2 = 30 cm</text></g>`);
     },
     // calibrar: el robot de veritat fa una mica menys; es mesura, es calcula i s'ajusta el temps
     k2cal() {
@@ -222,20 +251,20 @@ Object.assign(TANI, (() => {
         <g ${tA(3)}><rect x="14" y="140" width="292" height="30" rx="10" fill="#FDEBEB"/><text x="160" y="161" text-anchor="middle" class="tat">${L('Mesura: 28 cm ÷ 2 s = 14 cm/s', 'Mide: 28 cm ÷ 2 s = 14 cm/s')}</text></g>
         <g ${tA(3.8)}><rect x="14" y="178" width="292" height="30" rx="10" fill="#E7F7EE"/><text x="160" y="199" text-anchor="middle" class="tat">${L('Ajusta: 31 ÷ 14 ≈ 2,2 s → 2200 ms', 'Ajusta: 31 ÷ 14 ≈ 2,2 s → 2200 ms')}</text></g>`);
     },
-    // girar un angle: a velocitat 100, un motor endavant i l'altre enrere, 90° en 590 ms
+    // girar un angle: a velocitat 100, un motor endavant i l'altre enrere, 90° en 600 ms
     k2ang() {
       const cx = 96, cy = 110, R = 72;
       const pt = (a, r) => [cx + Math.sin(a * Math.PI / 180) * r, cy - Math.cos(a * Math.PI / 180) * r];
       const ticks = [0, 30, 60, 90, 120, 150, 180].map(a => { const [x1, y1] = pt(a, R - 6), [x2, y2] = pt(a, R + 4), [lx, ly] = pt(a, R + 22); return `<path d="M${x1} ${y1}L${x2} ${y2}" stroke="#56628A" stroke-width="2"/><text x="${lx}" y="${ly + 5}" text-anchor="middle" class="tat s">${a}°</text>`; }).join('');
       const wheel = (x, up) => `<g><path d="M${x} ${up ? 12 : -12}V${up ? -14 : 14}" stroke="${up ? '#2BD45A' : '#FF8A3D'}" stroke-width="4" stroke-linecap="round"/><path d="M${x - 5} ${up ? -8 : 8}l5 ${up ? -7 : 7}l5 ${up ? 7 : -7}" fill="none" stroke="${up ? '#2BD45A' : '#FF8A3D'}" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></g>`;
-      const rows = [['30°', '197 ms'], ['60°', '393 ms'], ['90°', '590 ms'], ['120°', '787 ms']];
+      const rows = [['30°', '200 ms'], ['60°', '400 ms'], ['90°', '600 ms'], ['120°', '800 ms']];
       return tSvg(214, `<path d="M${cx} ${cy - R}A${R} ${R} 0 1 1 ${cx} ${cy + R}" fill="none" stroke="#DCE4FA" stroke-width="10"/>${ticks}
         <path d="M${cx} ${cy - R}A${R} ${R} 0 0 1 ${cx + R} ${cy}" pathLength="1" fill="none" stroke="#8B5CF6" stroke-width="10" stroke-dasharray="1 1"><animate attributeName="stroke-dashoffset" values="1;1;0;0" keyTimes="0;.15;.5;1" dur="5.5s" repeatCount="indefinite"/></path>
         <g><animateTransform attributeName="transform" type="rotate" values="0 ${cx} ${cy};0 ${cx} ${cy};90 ${cx} ${cy};90 ${cx} ${cy}" keyTimes="0;.15;.5;1" dur="5.5s" repeatCount="indefinite"/>
           <g transform="translate(${cx} ${cy}) scale(.8)">${mq(0, 0, 0, 1)}<g transform="translate(-24 0)">${wheel(0, true)}</g><g transform="translate(24 0)">${wheel(0, false)}</g></g></g>
         <text x="252" y="24" text-anchor="middle" class="tat s">${L('a velocitat 100', 'a velocidad 100')}</text>
         ${rows.map(([a, ms], i) => `<g ${tA(.5 + i * .5, 'ta-in')}><rect x="196" y="${36 + i * 36}" width="114" height="30" rx="10" fill="#fff" stroke="${i === 2 ? '#8B5CF6' : '#DCE4FA'}" stroke-width="2.5"/><text x="210" y="${57 + i * 36}" class="tat b">${a}</text><text x="300" y="${57 + i * 36}" text-anchor="end" class="tat s">${ms}</text></g>`).join('')}
-        <text x="252" y="196" text-anchor="middle" class="tat s" ${tA(2.6, 'ta-fade')}>${L('≈ 6,5 ms per grau', '≈ 6,5 ms por grado')}</text>`);
+        <text x="252" y="196" text-anchor="middle" class="tat s" ${tA(2.6, 'ta-fade')}>${L('15° ≈ 100 ms', '15° ≈ 100 ms')}</text>`);
     },
     // la regla dels 360°: triangle, quadrat i hexàgon, cada gir és 360° ÷ costats
     k2poly() {
@@ -283,7 +312,7 @@ Object.assign(TANI, (() => {
       const mid = (a, b) => [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2];
       const off = [[-14, 0], [-12, -6], [12, -6], [14, 0], [0, 14]];
       const nums = v.slice(0, 5).map((p, i) => { const [mx, my] = mid(p, v[i + 1]); return `<g ${tA(.9 + i * .45)}><circle cx="${mx + off[i][0]}" cy="${my + off[i][1]}" r="10" fill="#6D3FD8"/><text x="${mx + off[i][0]}" y="${my + off[i][1] + 5}" text-anchor="middle" class="tat w s">${i + 1}</text></g>`; }).join('');
-      const rows = [[1, L('tram 31 cm', 'tramo 31 cm'), '2000'], [0, L('gir 30°', 'giro 30°'), '197'], [2, L('tram 31 cm', 'tramo 31 cm'), '2000'], [0, L('gir 120°', 'giro 120°'), '787'], [3, L('tram 31 cm', 'tramo 31 cm'), '2000'], [-1, '…', '']];
+      const rows = [[1, L('tram 30 cm', 'tramo 30 cm'), '2000'], [0, L('gir 30°', 'giro 30°'), '200'], [2, L('tram 30 cm', 'tramo 30 cm'), '2000'], [0, L('gir 120°', 'giro 120°'), '800'], [3, L('tram 30 cm', 'tramo 30 cm'), '2000'], [-1, '…', '']];
       const badge = (n, x, y) => n > 0 ? `<circle cx="${x}" cy="${y}" r="9" fill="#6D3FD8"/><text x="${x}" y="${y + 5}" text-anchor="middle" class="tat w s">${n}</text>` : n === 0 ? `<circle cx="${x}" cy="${y}" r="9" fill="#F08A24"/><path d="M${x - 3.5} ${y + 2.5}A4.5 4.5 0 1 1 ${x + 3} ${y + 3.2}" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/><path d="M${x + 4.5} ${y + .2}l-1.4 3.4l-3.4 -1" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"/>` : '';
       return tSvg(214, `<rect x="8" y="30" width="116" height="176" rx="14" fill="#FFF8E6" stroke="#F1D9A4" stroke-width="2"/>
         ${drw('path', `d="${d}" fill="none" stroke="#2F5BEA" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"`, .05, .5)}${nums}
@@ -962,7 +991,7 @@ Object.assign(TANI, (() => {
         `<rect x="-11" y="-11" width="22" height="22" rx="4" fill="#EF5A5A"/><rect x="-5" y="-5" width="10" height="10" rx="1" fill="#fff"/>`,
         `<circle cx="-7" cy="-4" r="6" fill="#2BD45A"/><circle cx="7" cy="-4" r="6" fill="#2BD45A"/><path d="M-8 9l4 4l10 -10" stroke="#1FA463" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`];
       const lab = [L('busca', 'busca'), L('empeny', 'empuja'), L('deixa', 'deja'), L('avisa', 'avisa')];
-      const code = [[L('fins que', 'hasta que'), 'dist < 25'], [L('fins que', 'hasta que'), 'ADC > 200'], [L('atura', 'para'), L('motors', 'motores')], [L('llums', 'luces'), L('verds', 'verdes')]];
+      const code = [[L('fins que', 'hasta que'), 'dist < 25'], [L('fins que', 'hasta que'), L('gris > 200', 'gris > 200')], [L('atura', 'para'), L('motors', 'motores')], [L('llums', 'luces'), L('verds', 'verdes')]];
       return tSvg(226, `${X.slice(1).map((x, i) => `<path d="M${X[i] + 31} ${Y}H${x - 33}" stroke="#7F95E8" stroke-width="3.4" stroke-linecap="round"/><path d="M${x - 39} ${Y - 6}l6 6l-6 6" fill="none" stroke="#7F95E8" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/>`).join('')}
         ${X.map((x, i) => `<g ${tA(t0[i] * .5, 'ta-pop')}><g transform="translate(${x} ${Y})"><circle r="29" fill="#fff" stroke="#C9D6FB" stroke-width="3" filter="url(#bwSh)"/>${icon[i]}
           <circle r="34" fill="none" stroke="#FFC531" stroke-width="5" opacity="0">${SM('opacity', '0;0;1;1;0;0', `0;${(t0[i] / D).toFixed(3)};${(t0[i] / D + .005).toFixed(3)};${((t0[i] + 1.3) / D).toFixed(3)};${((t0[i] + 1.3) / D + .005).toFixed(3)};1`)}</circle></g>
@@ -1088,10 +1117,10 @@ Object.assign(TANI, (() => {
         <g ${tA(1.4, 'ta-in')}><rect x="212" y="138" width="102" height="62" rx="12" fill="#fff" stroke="#DCE4FA" stroke-width="2" filter="url(#bwSh)"/>
           <text x="263" y="160" text-anchor="middle" class="tat s" style="font-size:12px">${L('Els llums', 'Las luces')}</text><text x="263" y="176" text-anchor="middle" class="tat s" style="font-size:12px">${L('diuen què', 'dicen qué')}</text><text x="263" y="192" text-anchor="middle" class="tat s" style="font-size:12px">${L('pensa!', '¡piensa!')}</text></g>`);
     },
-    // del simulador al robot: el botó &lt;/&gt; dona el codi, MakeCode el converteix en un fitxer .hex i el cable el porta a la micro:bit
+    // del simulador al robot: el botó MakeCode obre el programa en blocs (en anglès), «Descarrega» i el cable USB el porten a la micro:bit
     k8export() {
       const cable = 'M226 116C240 116 244 150 262 150';
-      const file = `<g opacity="0">${SM('opacity', '0;0;1;1;0;0', 5.5, 'keyTimes="0;.5;.53;.7;.73;1"')}<rect x="-10" y="-12" width="20" height="24" rx="3" fill="#FFC531" stroke="#B57A00" stroke-width="1.5"/><text y="4" text-anchor="middle" style="font:900 7px Lexend,system-ui;fill:#6B4A00">.hex</text>
+      const file = `<g opacity="0">${SM('opacity', '0;0;1;1;0;0', 5.5, 'keyTimes="0;.5;.53;.7;.73;1"')}<rect x="-10" y="-12" width="20" height="24" rx="3" fill="#FFC531" stroke="#B57A00" stroke-width="1.5"/><text y="4" text-anchor="middle" style="font:900 7px Lexend,system-ui;fill:#6B4A00">01</text>
         <animateMotion dur="5.5s" repeatCount="indefinite" keyTimes="0;.5;.7;1" keyPoints="0;0;1;1" calcMode="linear" path="${cable}"/></g>`;
       return tSvg(214, `
         <g ${tA(.1, 'ta-in')}><rect x="8" y="34" width="96" height="104" rx="12" fill="#fff" stroke="#DCE4FA" stroke-width="2" filter="url(#bwSh)"/>
@@ -1101,8 +1130,8 @@ Object.assign(TANI, (() => {
         <text x="56" y="22" text-anchor="middle" class="tat s">${L('1. Simulador', '1. Simulador')}</text>
         <path d="M106 86h10" stroke="#7F95E8" stroke-width="3.5" stroke-linecap="round"/><path d="M113 80l6 6l-6 6" fill="none" stroke="#7F95E8" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
         <g ${tA(1.2, 'ta-in')}><rect x="122" y="34" width="104" height="104" rx="12" fill="#1B2240" filter="url(#bwSh)"/>
-          ${['motorRun(…', 'pause(3000)', 'motorStop(…'].map((t, i) => `<text x="130" y="${58 + i * 18}" style="font:700 10.5px ui-monospace,Menlo,monospace;fill:${['#7FE0A6', '#FFD27A', '#9FC0FF'][i]}">${t}</text>`).join('')}
-          <rect x="138" y="110" width="72" height="20" rx="7" fill="#7B4DE0"/><text x="174" y="124" text-anchor="middle" class="tat w s" style="font-size:10.5px">${L('Descarrega', 'Descarga')}</text></g>
+          ${blk(128, 44, 92, '#1FA463', 'on start', 'tat w s', 10)}${blk(134, 64, 86, '#2F5BEA', 'motor 150', 'tat w s', 10)}${blk(134, 84, 86, '#F08A24', 'pause 3000', 'tat w s', 10)}
+          <rect x="138" y="110" width="72" height="20" rx="7" fill="#7B4DE0"/><text x="174" y="124" text-anchor="middle" class="tat w s" style="font-size:10.5px">${L('Descarrega', 'Descargar')}</text></g>
         <text x="174" y="22" text-anchor="middle" class="tat s">2. MakeCode</text>
         <path d="${cable}" fill="none" stroke="#3D4658" stroke-width="4.4" stroke-linecap="round"/>${file}
         <g>${bot(282, 150, 0, .95, { mx: `<g opacity="0">${SM('opacity', '0;0;1;1;0', 5.5, 'keyTimes="0;.72;.75;.97;1"')}${leds('happy')}</g><g>${SM('opacity', '1;1;0;0;1', 5.5, 'keyTimes="0;.72;.75;.97;1"')}${leds('none')}</g>` })}</g>
