@@ -77,7 +77,7 @@ const TK_LOOP = ['fwd', 'left', 'right', 'rep'], TK_LOOPB = ['fwd', 'left', 'rig
 
 
 const TECH = [
-  { id: 'robot', ico: TCI.robot, color: '#2F6BFF', name: 'Tech Robot|Tech Robot', short: 'Robot|Robot', age: '7-10 anys|7-10 años',
+  { id: 'robot', ico: TCI.robot, color: '#2F6BFF', name: 'Tech Robot|Tech Robot', short: 'Robot|Robot', age: '6-10 anys|6-10 años',
     desc: "Pensament computacional amb en Bit, el robot de l'illa: ordres, bucles, sensors, funcions i variables, amb reptes i projectes.|Pensamiento computacional con Bit, el robot de la isla: órdenes, bucles, sensores, funciones y variables, con retos y proyectos.",
     units: [
       { t: 'Ordres en ordre|Órdenes en orden', d: 'Algorismes, girs i errors|Algoritmos, giros y errores', color: '#2F6BFF', s: [
