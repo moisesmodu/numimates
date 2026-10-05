@@ -18,12 +18,13 @@ Prova en producció: https://mates-numi.vercel.app/?v=tech (grup 5b amb tot ober
 ## Fet a la branca `claude/eloquent-galileo-fmypbm` (pendent de revisió i de desplegar)
 | Curs | Contingut | Validador | Navegador (390 i 1440) |
 |---|---|---|---|
-| **Robot** (7-9) | unitats 1-8, 32 sessions (`tech-c1.js`, `tech-guide-c1.js`, TANI a `tech-learn.js`), revisades | 0 errors · 0 avisos (guia completa) | 32/32 bé |
-| **Robòtica** (9-13) | 8 unitats, 32 sessions (`tech-c2.js`, `tech-anim-c2.js`, `tech-guide-c2.js`), revisades | 0 errors · 0 avisos (guia completa) | 32/32 bé |
-| **Creadors** (8-11) | 8 unitats, 32 sessions (`tech-c3.js`, `tech-anim-c3.js`, `tech-guide-c3.js`), revisades | 0 errors · 0 avisos (guia completa) | 32/32 bé |
-| **Digital** (8-14) | 2 unitats, 8 sessions (`tech-c5.js`, `tech-anim-c5.js`, `tech-guide-c5.js`), revisades | 0 errors · 0 avisos (guia completa) | 8/8 bé |
-| **Web** (11-14) | **aparcat** (per decisió del Moisés): esborranys de les 8 unitats a `scripts/tech-src/web/u1..u8` (no es despleguen: `scripts` és a `.vercelignore`); el curs continua «aviat» a l'app | — | — |
+| **Robot** (7-10 · 2n-4t, curs d'entrada) | unitats 1-8, 32 sessions (`tech-c1.js`, `tech-guide-c1.js`, TANI a `tech-learn.js`), revisades | 0 errors · 0 avisos (guia completa) | 32/32 bé |
+| **Robòtica** (12-14 · 1r-2n ESO; a 6è si ja s'ha fet Creadors) | 8 unitats, 32 sessions (`tech-c2.js`, `tech-anim-c2.js`, `tech-guide-c2.js`), revisades | 0 errors · 0 avisos (guia completa) | 32/32 bé |
+| **Creadors** (10-12 · 5è-6è, després de Robot) | 8 unitats, 32 sessions (`tech-c3.js`, `tech-anim-c3.js`, `tech-guide-c3.js`), revisades | 0 errors · 0 avisos (guia completa) | 32/32 bé |
+| **Digital** (10-12 · 5è-6è, també 1r ESO) | 2 unitats, 8 sessions (`tech-c5.js`, `tech-anim-c5.js`, `tech-guide-c5.js`), revisades | 0 errors · 0 avisos (guia completa) | 8/8 bé |
+| **Web** (12-14) | **aparcat** (per decisió del Moisés): esborranys de les 8 unitats a `scripts/tech-src/web/u1..u8` (no es despleguen: `scripts` és a `.vercelignore`); el curs continua «aviat» a l'app | — | — |
 
+- **Edats i itinerari (05/10)**: un curs per cicle, sense solapaments. Robot (2n-4t, 7-10) → Creadors i Digital (5è-6è, 10-12) → Robòtica o Web (1r-2n ESO, 12-14). L'anàlisi (Creadors repetia des de zero unes 10 sessions de Robot: girs, bucle comptat, esdeveniments, «si», variable, unitat 8) és a l'informe de la sessió; Creadors s'ha reescrit perquè parteixi del que ja saben de Robot. A Tech hi ha lectura en veu alta a cada pas (botó de l'altaveu, si el dispositiu té veu en l'idioma).
 - **Revisió completa (04/10, vespre)**: totes les sessions de Robot, Robòtica, Creadors i Digital revisades (llengua, exactitud, coherència, edat). Cada guia té ara «La sessió en breu» (`intro`, `claus`, `prev`), preguntes freqüents (`faq`), «si alguna cosa falla» (`tec`), seguiment i protocol (`seg`), ampliació (`extra`) i transició (`trans`); el pla té el que diu el professor amb les respostes esperades, materials amb quantitats, 5-6 errors típics i rúbrica de 4 criteris. Validador: `GUIDE_FULL=1` avisa si en falta algun camp.
 - **Activitats**: classificar arrossegant targetes als calaixos (`dsort`) i ordenar arrossegant (`seq`), amb comprovació, marques i reintent; a les preguntes, una resposta que cita un bloc («…») es veu com la peça de colors.
 - **Presentacions**: color de cada curs i de cada fase, formes de fons, entrades animades, insígnia d'unitat, temporitzador amb anell, tiquet de sortida, codi MakeCode a la columna dreta, i cap diapositiva no surt de l'escenari (es redueix si cal). Escaneig de les 104 presentacions sense errors ni desbordaments.

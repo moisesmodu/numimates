@@ -8,7 +8,7 @@ const APPS = {
     desc: "Numi Ment: deu minuts al dia de jocs de memòria, atenció, càlcul i lògica per a adults i gent gran, i un test per conèixer l'edat de la teva ment.",
     og: "Deu minuts al dia per mantenir la ment activa. Quina edat té la teva ment?", img: 'https://numimates.com/img/og/ment-ca.jpg' },
   'tech.numimates.com': { name: 'Numi Tech', title: 'Numi Tech · Programació i robòtica', theme: '#1B2B6B', manifest: 'manifest-tech.webmanifest', apple: 'img/brand/apple-touch-icon-tech.png',
-    desc: "Numi Tech: programació, robòtica i projectes digitals per a nens i nenes de 7 a 14 anys, amb sessions com una classe, reptes amb el robot Bit i projectes propis. En català i castellà.",
+    desc: "Numi Tech: programació, robòtica i projectes digitals per a nens i nenes de 7 a 14 anys (de 2n de primària a 2n d'ESO), amb sessions com una classe, reptes amb el robot Bit i projectes propis. En català i castellà.",
     og: 'Programa robots, crea jocs i fes projectes digitals, sessió a sessió.', img: 'https://numimates.com/img/og/mates-ca.jpg' }
 };
 const attr = s => s.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');

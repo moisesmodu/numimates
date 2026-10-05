@@ -1,5 +1,5 @@
 /* ===== Numi Tech · Creadors: l'escenari amb personatges i blocs =====
-   Motor propi de Numi per crear animacions, històries interactives i videojocs amb blocs (per a 8-11 anys).
+   Motor propi de Numi per crear animacions, històries interactives i videojocs amb blocs (per a 10-12 anys, cicle superior).
    · L'escenari fa 480 × 360 punts, amb el (0, 0) al centre: x creix cap a la dreta i y cap amunt (com a la recta i els
      eixos de coordenades de matemàtiques). La direcció 90 és mirar a la dreta, 0 amunt, 180 avall i -90 a l'esquerra.
    · Cada personatge té els seus guions: «quan comença» (la bandera verda), «quan toco aquest personatge», «quan premo

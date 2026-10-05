@@ -1,5 +1,5 @@
 /* ===== Numi Tech · Web: editor d'HTML i CSS amb vista prèvia =====
-   Per a 11-14 anys: escriuen codi de veritat (HTML i CSS) i veuen la pàgina al moment. Cada repte té una llista de
+   Per a 12-14 anys: escriuen codi de veritat (HTML i CSS) i veuen la pàgina al moment. Cada repte té una llista de
    comprovacions que es van marcant mentre escriuen (té un títol h1?, la llista té 3 elements?, el títol és de color?…).
    · Les comprovacions no depenen del navegador: un analitzador propi d'HTML i de CSS (petit i tolerant) construeix
      l'arbre d'etiquetes i les regles, i així també es poden provar les solucions sense navegador.
