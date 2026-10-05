@@ -1061,3 +1061,5 @@ span.tb.c-cond{color:#3A2600}
 .tlaba,.tlaba svg{display:block;width:100%;height:100%}
 .tlabch.bg button{width:92px;height:64px;padding:3px}.tlabbg,.tlabbg svg{display:block;width:100%;height:100%;border-radius:12px;overflow:hidden}
 .tlabname{display:block;margin-top:8px;width:100%;max-width:280px;border:2px solid #DCE3F7;border-radius:12px;padding:8px 10px;font:inherit;font-weight:700;font-size:14px;color:#14204A;background:#fff}
+/* lectura automàtica activa: un punt a l'altaveu */
+.tspk{position:relative}.tspk.auto::after{content:'';position:absolute;top:5px;right:5px;width:8px;height:8px;border-radius:50%;background:#22C55E;box-shadow:0 0 0 2px #fff}

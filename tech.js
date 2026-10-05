@@ -295,16 +295,54 @@ function tBar() {
   const cur = st[TSS.i].ph;
   return `<div class="tphases">${phs.map(p => { return `<i style="flex:${p.n}" class="${p.ph === cur ? 'cur' : ''}"><em style="width:${100 * Math.min(p.n, Math.max(0, TSS.i - p.from)) / p.n}%"></em></i>`; }).join('')}</div>`;
 }
-// lectura en veu alta del pas (sobretot per als més petits de Tech Robot): el text principal, la pregunta i les opcions
-const tCanSpeak = () => { try { return 'speechSynthesis' in window && typeof speakVoice === 'function' && !!speakVoice(); } catch (e) { return false; } };
-function tSpeak(btn) {
-  try { if (speechSynthesis.speaking) { speechSynthesis.cancel(); btn && btn.classList.remove('on'); return; } } catch (e) { return; }
-  const b = document.querySelector('#tsb'); if (!b) return;
-  const pick = ['.tlc h2', '.tlc .tlx', '.tlc .tltip', '.tsh', '.tsbub', '.tbubble .bubble', '.bubble', '.tqh .tsq', '.tsq2', '.tsq', '.tunph h2', '.tunpx', '.tunp li', '.topt .tot', '.topt'];
+// lectura en veu alta del pas (sobretot per als més petits de Tech Robot): el text principal, la pregunta i les opcions;
+// si hi ha una correcció a la vista (o un missatge d'en Bit), primer aquesta: és el que cal a qui s'ha equivocat.
+// El primer toc activa la lectura automàtica (cada pas nou i cada correcció); mantenir premut l'activa o la desactiva.
+const tCanSpeak = () => { try { return 'speechSynthesis' in window && typeof speakVoice === 'function'; } catch (e) { return false; } };
+const TSPK = { auto: (() => { try { return localStorage.getItem('numi.tspk.auto') === '1'; } catch (e) { return false; } })(), mo: null, last: '' };
+const tSpkAuto = on => { TSPK.auto = on; try { localStorage.setItem('numi.tspk.auto', on ? '1' : '0'); } catch (e) { } document.querySelectorAll('.tspk').forEach(x => x.classList.toggle('auto', on)); };
+const tSpkVis = e => !!(e && e.offsetParent !== null && (e.innerText || '').trim());
+function tSay(txt, btn) {
+  txt = String(txt || '').replace(/[«»"]/g, '').replace(/\s+/g, ' ').trim().slice(0, 1200); if (!txt) return false;
+  const v = speakVoice();
+  if (!v) { if (!TSPK.warned) { TSPK.warned = 1; toast(L('Aquest dispositiu no té cap veu en català. Es pot instal·lar a la configuració d\'idioma i veu del sistema.', 'Este dispositivo no tiene ninguna voz en castellano. Se puede instalar en la configuración de idioma y voz del sistema.')); } return false; }
+  try { speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(txt); u.voice = v; u.lang = v.lang; u.rate = .93; btn = btn || document.querySelector('.tspk'); u.onend = u.onerror = () => btn && btn.classList.remove('on'); btn && btn.classList.add('on'); speechSynthesis.speak(u); return true; } catch (e) { return false; }
+}
+const tJoin = parts => parts.map(t => /[.?!:…]$/.test(t) ? t : t + '.').join(' ');
+function tFbText() { const b = document.querySelector('.tsess'); if (!b) return ''; const out = []; b.querySelectorAll('.tfbox, #tsay, .tsay').forEach(e => { const t = tSpkVis(e) ? e.innerText.trim() : ''; if (t && !(e.matches('#tsay, .tsay') && t === TSPK.say0) && !out.includes(t)) out.push(t); }); return tJoin(out); }
+function tStepText() {
+  const b = document.querySelector('#tsb'); if (!b) return '';
+  const pick = ['.tlc h2', '.tlc .tlx', '.tlc .tltip', '.tlc .tlmist', '.tsh', '.tsbub', '.tbubble .bubble', '.bubble', '.tqh .tsq', '.tsq2', '.tsq', '#tsay', '.tunph h2', '.tunpx', '.tunp li', '.topt .tot', '.topt'];
   const seen = new Set(), parts = [];
   for (const q of pick) b.querySelectorAll(q).forEach(e => { if ([...seen].some(x => x.contains(e) || e.contains(x))) return; seen.add(e); const t = e.innerText || e.textContent; if (t && t.trim()) parts.push(t.trim()); });
-  const txt = parts.map(t => /[.?!:…]$/.test(t) ? t : t + '.').join(' ').replace(/[«»"]/g, '').replace(/\s+/g, ' ').slice(0, 1200); if (!txt) return;
-  try { speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(txt), v = speakVoice(); if (v) { u.voice = v; u.lang = v.lang; } u.rate = .93; u.onend = u.onerror = () => btn && btn.classList.remove('on'); btn && btn.classList.add('on'); speechSynthesis.speak(u); } catch (e) { }
+  return tJoin(parts);
+}
+function tSpeak(btn) {
+  if (btn && btn._lp) { btn._lp = 0; return; }   // venia d'una pulsació llarga
+  try { if (speechSynthesis.speaking) { speechSynthesis.cancel(); btn && btn.classList.remove('on'); return; } } catch (e) { return; }
+  const fb = tFbText(), said = tSay(fb || tStepText(), btn);
+  if (said && !TSPK.auto) { tSpkAuto(true); tSpkWatch(btn); toast(L('Ara et llegiré cada pas en veu alta. Mantén premut l\'altaveu per aturar-ho.', 'Ahora te leeré cada paso en voz alta. Mantén pulsado el altavoz para pararlo.')); }
+}
+// pulsació llarga a l'altaveu: activa o desactiva la lectura automàtica
+function tSpkHold(btn) {
+  let t = 0; const down = () => { t = setTimeout(() => { btn._lp = 1; tSpkAuto(!TSPK.auto); try { speechSynthesis.cancel(); } catch (e) { } toast(TSPK.auto ? L('Lectura automàtica activada', 'Lectura automática activada') : L('Lectura automàtica desactivada', 'Lectura automática desactivada')); }, 650); }, up = () => clearTimeout(t);
+  btn.addEventListener('pointerdown', down); ['pointerup', 'pointerleave', 'pointercancel'].forEach(e => btn.addEventListener(e, up)); btn.addEventListener('contextmenu', e => e.preventDefault());
+}
+// en cada pas: si la lectura automàtica és activa, es llegeix el pas i, després, cada correcció nova
+function tSpkStep() {
+  if (TSPK.mo) { TSPK.mo.disconnect(); TSPK.mo = null; }
+  const sy = document.querySelector('.tsess #tsay, .tsess .tsay'); TSPK.say0 = sy ? (sy.innerText || '').trim() : '';   // el missatge inicial d'en Bit no és una correcció
+  const btn = document.querySelector('.tspk'); if (!btn) return; tSpkHold(btn); btn.classList.toggle('auto', TSPK.auto);
+  if (!TSPK.auto || !speakVoice()) return;
+  setTimeout(() => { if (document.body.contains(btn)) tSay(tStepText(), btn); }, 650);
+  tSpkWatch(btn);
+}
+function tSpkWatch(btn) {
+  if (TSPK.mo) { TSPK.mo.disconnect(); TSPK.mo = null; }
+  TSPK.last = tFbText();
+  const b = document.querySelector('.tsess'); if (!b) return; let tm = 0;
+  TSPK.mo = new MutationObserver(() => { clearTimeout(tm); tm = setTimeout(() => { const f = tFbText(); if (f && f !== TSPK.last) { TSPK.last = f; tSay(f, btn); } else if (!f) TSPK.last = ''; }, 350); });
+  TSPK.mo.observe(b, { childList: true, subtree: true, characterData: true });
 }
 function tStep() {
   try { if (window.speechSynthesis) speechSynthesis.cancel(); } catch (e) { }
@@ -315,7 +353,7 @@ function tStep() {
     <div class="tsbody" id="tsb"></div><div class="tsfoot" id="tsf"></div></div>`;
   (TSTEP[st.k] || TSTEP.story)(st);
   const b = document.querySelector('.tsbody'); if (b) b.scrollTop = 0;
-  tFitWatch(); tUndoStart();
+  tFitWatch(); tUndoStart(); tSpkStep();
 }
 // en obrir un editor, el punt de partida per desfer
 function tUndoStart() {

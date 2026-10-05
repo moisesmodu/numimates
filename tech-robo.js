@@ -490,7 +490,7 @@ function rbCode() {
   const used = rbCountAll(RB.prog), ro = RB.mode !== 'edit';
   const scripts = RB.scripts.map(s => `<div class="rscript h-${s}"><div class="rhat"><span>${s === 'A' || s === 'B' ? `<i class="rbtn">${s}</i>` : s === 'forever' ? BIT_ICO.rep : TIC.play}</span><b>${tx(RB_HATS[s].join('|'))}</b></div><div class="tprog rprog">${rbList(RB.prog[s], ro) || (ro ? `<p class="tempty">—</p>` : '')}</div></div>`).join('');
   return `<div class="tphead"><b>${L('Programa', 'Programa')}</b><span class="tphr">${RB.max ? `<span class="tcount ${used >= RB.max ? 'full' : ''}">${used}/${RB.max} ${L('blocs', 'bloques')}</span>` : `<span class="tcount">${bitN(used)}</span>`}
-    <button class="tclr" onclick="rbShowMC()" title="MakeCode" aria-label="${L('Mostra el codi per a MakeCode', 'Muestra el código para MakeCode')}"><svg viewBox="0 0 24 24"><path d="M8 7l-5 5 5 5M16 7l5 5-5 5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    <button class="tclr tmcb" onclick="rbShowMC()" title="${L('Passa el programa al Maqueen de veritat amb MakeCode', 'Pasa el programa al Maqueen de verdad con MakeCode')}" aria-label="${L('Obre MakeCode amb aquest programa', 'Abre MakeCode con este programa')}"><svg viewBox="0 0 24 24"><path d="M8 7l-5 5 5 5M16 7l5 5-5 5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span>MakeCode</span></button>
     ${!ro && used ? `<button class="tclr" onclick="rbClear()" aria-label="${L('Buida el programa', 'Vacía el programa')}"><svg viewBox="0 0 24 24"><path d="M6 7h12l-1 14H7zM9 3h6l1 2h4v2H4V5h4z" fill="currentColor"/></svg></button>` : ''}</span></div>
     <div class="rscripts" id="rprog">${scripts}</div>${ro ? '' : rbPalette()}`;
 }
@@ -581,8 +581,8 @@ function rbField(id, path) {
   if (numeric) { const inp = document.getElementById('rnumi'), ok = () => { const n = parseFloat(inp.value); if (!isNaN(n)) apply(field === 's' ? Math.max(0, Math.min(255, Math.round(n))) : Math.round(n)); };
     document.getElementById('rnumok').onclick = ok; inp.onkeydown = e => { if (e.key === 'Enter') ok(); }; setTimeout(() => inp.focus(), 50); }
 }
-function rbShowMC() {
-  const code = roboMC(RB.prog);
+// el codi en text (MakeCode s'obre dins de l'app amb rbShowMC, a tech-mc.js; això és el camí manual)
+function rbShowCode(code = roboMC(RB.prog)) {
   modal(`<div class="sheet card rmc"><h3>${L('El teu programa per al robot de veritat', 'Tu programa para el robot de verdad')}</h3>
     <p class="mut">${L('A <b>makecode.microbit.org</b>: nou projecte → Extensions → busca «maqueen» → JavaScript → enganxa-hi aquest codi. Després torna a «Blocs»: hi veuràs el mateix programa.', 'En <b>makecode.microbit.org</b>: nuevo proyecto → Extensiones → busca «maqueen» → JavaScript → pega este código. Después vuelve a «Bloques»: verás el mismo programa.')}</p>
     <pre class="rcode">${esc(code)}</pre><div class="rmcb"><button class="btn" id="rmccp">${L('Copia el codi', 'Copia el código')}</button><button class="btn ghost" onclick="closeModal()">${L('Tanca', 'Cierra')}</button></div></div>`, true);
