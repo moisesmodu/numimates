@@ -6,7 +6,9 @@ import { STRIPE_KEY, stripe, stripeMode, setCancel, setupStripe } from './_strip
 import { batTables, batState, BWORDS, MEDALS } from './_batalla.js';
 import { randomInt } from 'crypto';
 import { TECH_T } from './_techunits.js';
-import { tasTables } from './_tasques.js';
+import { tasTables, liveOf, avalTables } from './_tasques.js';
+import { infDocTables, infDocMail, infDocSend } from './_infdocent.js';
+import { ajust, setAjust } from './_informe.js';
 // Panell /profe.html. L'administrador ho veu tot i gestiona centres, docents, grups i plans.
 // Un docent només veu (i gestiona) els alumnes dels seus grups; l'admin de centre, tots els del seu centre.
 const L = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
@@ -122,7 +124,14 @@ export default async function handler(req, res) {
         if (!unit || !fins || !titol) return ok(res, { error: 'dades' }, 400);
         if (fins < inici) return ok(res, { error: 'dates' }, 400);
         const nomDoc = me.docent ? me.docent.nom : 'Administració';
-        const r = await sql`INSERT INTO mates.tasques (grup_id, docent_id, docent_nom, titol, kind, unit, n, inici, fins) VALUES (${gid}, ${me.docent ? me.docent.id : null}, ${nomDoc}, ${titol}, ${kind}, ${unit}, ${n}, ${inici}, ${fins}) RETURNING id`;
+        // només per a uns alumnes (reforç o ampliació): han de ser del grup
+        let al = null;
+        if (Array.isArray(b.alumnes) && b.alumnes.length) {
+          const cs = [...new Set(b.alumnes.map(cleanCode).filter(Boolean))].slice(0, 60);
+          al = (await sql`SELECT code FROM mates.alumnes WHERE code = ANY(${cs}) AND grup_id = ${gid} AND active`).map(r => r.code);
+          if (!al.length) return ok(res, { error: 'alumnes' }, 400);
+        }
+        const r = await sql`INSERT INTO mates.tasques (grup_id, docent_id, docent_nom, titol, kind, unit, n, inici, fins, alumnes) VALUES (${gid}, ${me.docent ? me.docent.id : null}, ${nomDoc}, ${titol}, ${kind}, ${unit}, ${n}, ${inici}, ${fins}, ${al}) RETURNING id`;
         return ok(res, { ok: true, id: r[0].id });
       }
       const t = (await sql`SELECT grup_id FROM mates.tasques WHERE id = ${+b.id}`)[0];
@@ -131,6 +140,34 @@ export default async function handler(req, res) {
       else await sql`DELETE FROM mates.tasques WHERE id = ${+b.id}`;
       return ok(res, { ok: true });
     }
+    // --- avaluació per competències: el docent posa o canvia el nivell d'un sentit (o el comentari) d'un alumne ---
+    if (b.action === 'aval_set') {
+      if (!(await mine(code))) return ok(res, { error: 'permís' }, 403);
+      const per = /^\d{2}-\d{2}-T[123]$/.test(String(b.periode || '')) ? b.periode : null, k = ['num', 'mes', 'esp', 'alg', 'est', 'global', 'coment'].includes(b.k) ? b.k : null;
+      if (!per || !k) return ok(res, { error: 'dades' }, 400);
+      await avalTables();
+      const v = k === 'coment' ? String(b.v || '').trim().slice(0, 600) : (['AE', 'AN', 'AS', 'NA'].includes(b.v) ? b.v : '');
+      if (!v) await sql`DELETE FROM mates.avals WHERE code = ${code} AND periode = ${per} AND k = ${k}`;
+      else await sql`INSERT INTO mates.avals (code, periode, k, v, docent_id) VALUES (${code}, ${per}, ${k}, ${v}, ${me.docent ? me.docent.id : null}) ON CONFLICT (code, periode, k) DO UPDATE SET v = EXCLUDED.v, docent_id = EXCLUDED.docent_id, at = now()`;
+      return ok(res, { ok: true });
+    }
+    // --- informe setmanal per correu als docents ---
+    if (b.action === 'inf_doc_me') {   // cada docent el pot apagar per a ell
+      if (!me.docent) return ok(res, { error: 'docent' }, 400);
+      await infDocTables(); await sql`UPDATE mates.docents SET informe = ${b.on !== false} WHERE id = ${me.docent.id}`; return ok(res, { ok: true });
+    }
+    if (b.action === 'inf_doc_prova') {   // una mostra ara mateix al meu correu (o, per a l'admin, la d'un docent concret)
+      const did = me.admin && b.docent ? +b.docent : me.docent && me.docent.id;
+      if (!did) return ok(res, { error: 'docent' }, 400);
+      const to = me.docent && me.docent.email; if (!to) return ok(res, { error: 'correu' }, 400);
+      try { const m = await infDocMail(did); if (!m) return ok(res, { error: 'sense grups' }, 404); await infDocSend([{ to: [to], subject: '[Prova] ' + m.subject, html: m.html, text: m.text }]); return ok(res, { ok: true, to }); }
+      catch (e) { return ok(res, { error: e.message }, 502); }
+    }
+    if (b.action === 'inf_doc_html') {   // vista prèvia al panell, sense enviar res
+      const did = me.admin && b.docent ? +b.docent : me.docent && me.docent.id;
+      const m = did ? await infDocMail(did) : null; return ok(res, m ? { ok: true, html: m.html, subject: m.subject } : { error: 'sense grups' });
+    }
+    if (b.action === 'inf_doc_on') { if (!me.admin) return ok(res, { error: 'permís' }, 403); await setAjust('informe_docents', { on: !!b.on }); return ok(res, { ok: true }); }
     // --- accions en bloc sobre una selecció d'alumnes (taula d'alumnes i usuaris del panell) ---
     // El docent només pot treure del grup i obrir unitats als seus; la resta (baixa, alta, grup, esborrar) és de l'admin.
     if (b.action === 'bulk') {
@@ -282,6 +319,18 @@ export default async function handler(req, res) {
     return ok(res, { error: 'acció' }, 400);
   }
 
+  // --- classe en directe d'un grup ---
+  if (req.query && req.query.v === 'live') {
+    const gid = +req.query.grup; if (!me.admin && !gids.includes(gid)) return ok(res, { error: 'permís' }, 403);
+    return ok(res, { live: await liveOf(gid) });
+  }
+  // --- avaluacions desades d'un grup (o dels alumnes online, per a l'admin) ---
+  if (req.query && req.query.v === 'avals') {
+    const per = /^\d{2}-\d{2}-T[123]$/.test(String(req.query.periode || '')) ? req.query.periode : null, gid = +req.query.grup;
+    if (!per || (!me.admin && !gids.includes(gid))) return ok(res, { error: 'permís' }, 403);
+    await avalTables();
+    return ok(res, { avals: await sql`SELECT v.code, v.k, v.v FROM mates.avals v JOIN mates.alumnes a ON a.code = v.code WHERE a.grup_id = ${gid} AND v.periode = ${per}` });
+  }
   // --- panell de control de l'administrador: tots els usuaris (també els de baixa), plans i cobraments ---
   if (me.admin && req.query && req.query.v === 'usuaris') {
     const users = await sql`SELECT a.code, a.username, a.name, a.course, a.xp, a.lessons, a.answers, a.correct, a.streak, a.last_day, a.created_at, a.active, a.grup_id,
@@ -310,14 +359,16 @@ export default async function handler(req, res) {
   const rows = await sql`SELECT code, username, name, course, survey, xp, streak, best, last_day, lessons, answers, correct, created_at, updated_at, grup_id, pla, pla_fins,
     state->'tests' AS tests, state->'lang' AS lang, state->'unlockAll' AS unlock_all, state->'week' AS week, state->'stats'->'sk' AS sk, state->'reco' AS reco, state->'school' AS school,
     (SELECT count(*)::int FROM jsonb_object_keys(CASE WHEN jsonb_typeof(state->'album') = 'object' THEN state->'album' ELSE '{}'::jsonb END)) AS album_n, state->'stats'->'bwins' AS bwins, state->'crowns' AS crowns, state->'exams' AS exams, state->'days' AS days,
-    state->>'variant' AS variant, state->'apps' AS apps, state->'deures' AS deures, state->'prog' AS prog, (state->'tech') - 'port' AS tech, state->'ment' AS ment,
+    state->>'variant' AS variant, state->'apps' AS apps, state->'deures' AS deures, state->'prog' AS prog, state->'miss' AS miss, (state->'tech') - 'port' AS tech, state->'ment' AS ment,
     (SELECT jsonb_agg(jsonb_build_object('t', p->'t', 'd', p->'d', 'sid', p->'sid')) FROM jsonb_array_elements(CASE WHEN jsonb_typeof(state->'tech'->'port') = 'array' THEN state->'tech'->'port' ELSE '[]'::jsonb END) p) AS tech_port
     FROM mates.alumnes WHERE active AND (${!!me.admin} OR grup_id = ANY(${gids})) ORDER BY streak DESC, xp DESC`;
   // tasques dels grups que veu (les de l'últim trimestre)
   let tasques = [];
-  try { await tasTables(); tasques = await sql`SELECT id, grup_id, docent_nom, titol, kind, unit, n, inici::text AS inici, fins::text AS fins, tancada, created_at FROM mates.tasques
+  try { await tasTables(); tasques = await sql`SELECT id, grup_id, docent_nom, titol, kind, unit, n, inici::text AS inici, fins::text AS fins, tancada, alumnes, created_at FROM mates.tasques
     WHERE grup_id = ANY(${gids}) AND fins >= CURRENT_DATE - 120 ORDER BY fins DESC, id DESC LIMIT 300`; } catch (e) { console.error('tasques', e.message); }
-  if (!me.admin) return ok(res, { me: me.docent, rows, grups: groups, tasques });
+  let informe = null;
+  try { await infDocTables(); const d = me.docent ? (await sql`SELECT informe FROM mates.docents WHERE id = ${me.docent.id}`)[0] : null; informe = { me: d ? d.informe !== false : null, on: !!((await ajust('informe_docents')) || {}).on }; } catch (e) { }
+  if (!me.admin) return ok(res, { me: me.docent, rows, grups: groups, tasques, informe });
   const battles = await sql`SELECT b.code, b.kind, b.course, b.status, b.created_at, b.start_at,
     COALESCE(json_agg(json_build_object('name', j.name, 'correct', j.correct, 'ms', j.ms, 'done', j.done, 'finished', j.finished, 'card', j.card) ORDER BY j.correct DESC, j.ms) FILTER (WHERE j.sid IS NOT NULL), '[]') AS players
     FROM mates.batalles b LEFT JOIN mates.batalla_jug j USING (code) WHERE b.created_at > now() - interval '30 days' GROUP BY b.code ORDER BY b.created_at DESC LIMIT 60`;
@@ -327,5 +378,5 @@ export default async function handler(req, res) {
   const centres = await sql`SELECT c.*, (SELECT count(*)::int FROM mates.alumnes a JOIN mates.grups g ON g.id = a.grup_id WHERE g.centre_id = c.id AND a.active) AS alumnes FROM mates.centres c ORDER BY c.nom`;
   await ensureTmp();
   const docents = await sql`SELECT id, nom, email, usuari, rol, centre_id, actiu, last_login, (pass_tmp IS NOT NULL) AS tmp FROM mates.docents ORDER BY nom`;
-  return ok(res, { admin: true, me: me.docent || null, rows, battles, trades, contacts, centres, docents, grups: groups, tasques });
+  return ok(res, { admin: true, me: me.docent || null, rows, battles, trades, contacts, centres, docents, grups: groups, tasques, informe });
 }

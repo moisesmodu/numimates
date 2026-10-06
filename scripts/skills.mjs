@@ -13,4 +13,5 @@ const SK = {};
 C.forEach(c => c.units.forEach(u => u.lessons.forEach(l => (l.sk || []).forEach(s => { const k = String(s).slice(0, 40); if (!SK[k] || (l.tier || 1) < SK[k][2]) SK[k] = [u.id, l.t, l.tier || 1]; }))));
 const out = Object.fromEntries(Object.entries(SK).map(([k, [u, t]]) => [k, [u, t]]));
 fs.writeFileSync(new URL('panel-skills.js', root), '/* Habilitat → [unitat, lliçó (ca|es)] per al panell. Generat per scripts/skills.mjs a partir de curriculum.js */\nconst SK_T = ' + JSON.stringify(out) + ';\n');
+fs.writeFileSync(new URL('api/_skills.js', root), '// Habilitat → [unitat, lliçó (ca|es)] per als informes del servidor. Generat per scripts/skills.mjs\nexport const SK_T = ' + JSON.stringify(out) + ';\n');
 console.log(Object.keys(out).length, 'habilitats', fs.statSync(new URL('panel-skills.js', root)).size, 'bytes');

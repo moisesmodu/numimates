@@ -701,6 +701,7 @@ function startRun(o) {
   LS = { ...o, seen, mix, queue: o.plan.map(([s, lv], i) => { const e = genEx(s, lv, seen, mix); if (o.review && o.review[i]) e.review = true; return e; }), total: o.plan.length, done: 0, miss: 0, combo: 0, maxCombo: 0, gold: 0, t0: Date.now(), res: [] };
   if (mix && !o.exam && o.plan.length >= 6) { const g = ri(2, o.plan.length - 1); LS.queue[g].gold = true; }
   LS.eres = []; LS.emiss = [];
+  liveSend('on', true);
   nextEx();
 }
 function nextEx() {
@@ -833,6 +834,9 @@ function check() {
   if (LS.mode === 'place' || LS.mode === 'evo') { LS.res.push(ok); if (LS.mode === 'evo') record(e.sk, ok); LS.done++; SFX.tap(); return nextEx(); }
   LS.state = 'fb';
   record(e.sk, ok);
+  if (!ok) logMiss(e);
+  LS.live = LS.live || { ok: 0, ko: 0, f: 0 }; if (ok) { LS.live.ok++; LS.live.f = 0; } else { LS.live.ko++; LS.live.f++; LS.live.q = exTxt(e); }
+  liveSend('ans', !ok && LS.live.f >= 3);
   let target = null;
   if (e.type === 'choice') $$('.opt,.bln').forEach((b, i) => { b.disabled = true; if (i === e.ans) { b.classList.add('right'); target = b; } else if (i === LS.sel) b.classList.add(e.balloon ? 'popped' : 'wrong'); });
   if (e.type === 'input') { $('#inbox').classList.add(ok ? 'right' : 'wrong'); target = $('#inbox'); }
@@ -864,6 +868,7 @@ function check() {
 }
 function quitRun() {
   EN_PEND = false;
+  liveSend('out', true);
   if (LS && LS.mode === 'battle') return quitBattle();
   if (LS && LS.mode === 'place') return ask(L('Vols saltar-te la prova de nivell? Començaràs pel principi del curs.', '¿Quieres saltarte la prueba de nivel? Empezarás por el principio del curso.'), L('SALTA', 'SALTAR'), L('CONTINUA', 'CONTINÚA'), () => { LS.res = []; finishPlacement(true); });
   ask(L("Segur que vols sortir? Perdràs el progrés d'aquesta activitat.", '¿Seguro que quieres salir? Perderás el progreso de esta actividad.'), L('SURT', 'SALIR'), L('CONTINUA AQUÍ', 'SEGUIR AQUÍ'), () => go('home'));
@@ -901,6 +906,7 @@ const BADGES = [
 function checkBadges() { const nw = BADGES.filter(b => !P.badges.includes(b[0]) && b[4](P)); nw.forEach(b => { P.badges.push(b[0]); P.gems += 10; }); return nw; }
 function finishRun() {
   spendEnergy();
+  liveSend('end', true);
   const R = { mode: LS.mode, ui: LS.ui, li: LS.li, acc: LS.exam ? 0 : Math.round(100 * LS.total / (LS.total + LS.miss)), perfect: LS.miss === 0 && !LS.helps, stars: 0, chest: 0 };
   if (R.mode === 'reco') { R.xp = 12 + (R.perfect ? 4 : 0); R.gems = 6; P.stats.trains++; if (R.acc >= 75) { P.reco = null; R.recoDone = true; } }
   else if (R.mode === 'train') { R.xp = 8 + (R.perfect ? 4 : 0); R.gems = 3 + (R.perfect ? 2 : 0); P.stats.trains++; }
@@ -1572,6 +1578,30 @@ function teacherTema() {
   for (let ci = 0; ci < COURSES.length; ci++) { const ui = COURSES[ci].units.findIndex(u => u.id === t); if (ui >= 0) return { ci, ui, u: COURSES[ci].units[ui] }; }
   return null;
 }
+/* ---------- Per al docent: errors recents i classe en directe ----------
+   logMiss: les últimes 40 respostes equivocades (pregunta, resposta donada i correcta) → panell, «Errors freqüents».
+   liveSend: si l'alumne és en un grup, el panell «Classe en directe» veu què fa ara (com a molt un avís cada 12 s). */
+const plainTxt = v => String(v ?? '').replace(/<[^>]*>/g, ' ').replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&').replace(/\s+/g, ' ').trim();
+// text de la pregunta per al docent: l'enunciat i, si el càlcul és al dibuix (p. ex. «65 + 48 = ?»), també el càlcul
+function exTxt(e) { let vt = e.vis && !/<(svg|img|canvas|video)/i.test(e.vis) ? plainTxt(e.vis) : ''; if ((vt.match(/\p{Extended_Pictographic}/gu) || []).length > 2) vt = ''; return (plainTxt(e.q) + (vt && vt.length <= 70 ? ' ' + vt : '')).slice(0, 110); }
+function logMiss(e) {
+  try {
+    if (!['lesson', 'repte', 'train', 'reco', 'review', 'prep'].includes(LS.mode) || e.type === 'grid') return;
+    const q = exTxt(e); if (!q) return;
+    const a = e.type === 'choice' ? plainTxt(e.opts[LS.sel]) : e.type === 'input' ? String(LS.input || '') + (e.unit ? ' ' + e.unit : '') : (LS.order || []).map(i => plainTxt(showOf(e)(e.items[i]))).join(', ');
+    const c = plainTxt(ansText(e));
+    if (!a || !c || a.length > 40 || c.length > 40) return;
+    P.miss = [...(Array.isArray(P.miss) ? P.miss : []), { sk: String(e.sk).slice(0, 40), q, a, c, d: today() }].slice(-40);
+  } catch (err) { }
+}
+function liveSend(s, now) {
+  if (!P || !P.code || !P.classe || !navigator.onLine || !LS || ['place', 'battle'].includes(LS.mode)) return;
+  const t = Date.now(); if (!now && t - (liveSend.t || 0) < 12000) return; liveSend.t = t;
+  const u = LS.ui != null ? UNITS_()[LS.ui] : null, l = u && LS.li != null ? (LS.li === REP(u) ? { t: L('Porta del Cavaller', 'Puerta del Caballero') } : u.lessons[LS.li]) : null, x = LS.live || {};
+  const d = { s, m: LS.mode, u: u ? u.id : null, ut: u ? tx(u.title) : '', lt: l ? tx(l.t) : '', k: LS.done, n: LS.total, ok: x.ok || 0, ko: x.ko || 0, f: x.f || 0, h: LS.helps || 0, q: x.f >= 2 ? String(x.q || '') : '' };
+  api('classe', { code: P.code, action: 'live', d }).catch(() => { });
+}
+
 /* ---------- Tasques del docent (panell → Tasques) ----------
    P.classe.tasques = [{ id, titol, kind: 'unit'|'gate', unit: 'c4-3', n, inici, fins, docent_nom }] (arriben amb classeRefresh).
    'unit': fer les n primeres lliçons del camí de la unitat amb 2 estrelles o més · 'gate': superar la porta del Cavaller.
