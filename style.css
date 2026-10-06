@@ -1475,3 +1475,10 @@ button,a,.opt,.bln,.pad button,.chipn{touch-action:manipulation}
 .lesson:is(.fit1,.fit2):not(.fit3) .opts:not(.big):not(.list):not(.pics) .opt{padding-left:32px}
 .lesson:is(.fit1,.fit2):not(.fit3) .opts.big .opt{padding-left:30px;padding-right:30px}
 .lesson:is(.fit1,.fit2):not(.fit3) .opts.pics .opt{padding-left:28px}
+/* tasques del docent a la pantalla principal (panell → Tasques) */
+.testcard.task{background:linear-gradient(135deg,#8A4FB0,#602B7A);box-shadow:0 5px 0 #3F1A52;animation:none}
+.testcard.task.done{background:linear-gradient(135deg,#2FB57A,#1F8F5C);box-shadow:0 5px 0 #146B43}
+.testcard.task>span:not(.tci):not(.go){flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.testcard.task .tbar{display:block;height:6px;border-radius:3px;background:rgba(255,255,255,.28);overflow:hidden;margin-top:6px}
+.testcard.task .tbar>i{display:block;height:100%;background:#FFC93C;border-radius:3px}
+.testcard.task.done .tbar{display:none}

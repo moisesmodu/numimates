@@ -728,3 +728,7 @@ html[data-v=pro] body.pro .l-vis>:is(svg,html[data-v=pro] .vpic,html[data-v=pro]
 html[data-v=pro] .l-vis{background-color:#1C1927;background-image:radial-gradient(circle at 1px 1px,color-mix(in srgb,var(--uc,#602B7A) 14%,transparent) 1.2px,transparent 1.6px)}
 html[data-v=pro] body.pro .l-vis>*{box-shadow:none}
 html[data-v=pro][data-v=pro] .vpic.bal{background:transparent;border-color:transparent}
+html[data-v=pro] .testcard.task{background:linear-gradient(135deg,#8A4FB0,#602B7A);box-shadow:0 5px 0 #3F1A52}
+html[data-v=pro] .testcard.task.done{background:linear-gradient(135deg,#2FB57A,#1F8F5C);box-shadow:0 5px 0 #146B43}
+html[data-v=pro] .testcard.task .tbar{background:rgba(28,25,39,.28)}
+html[data-v=pro] .testcard.task .tbar>i{background:#FFC93C}

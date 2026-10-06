@@ -1,5 +1,6 @@
 import { sql, body, ok, cleanCode, blocked, fail, tooMany, alumneOk } from './_lib.js';
 import { batTables } from './_batalla.js';
+import { tasquesAlumne } from './_tasques.js';
 // L'alumne s'uneix al grup del seu docent amb el codi de classe (AULA-XXXX).
 // En unir-s'hi passa al pla «escola» (el paga el centre) mentre sigui al grup.
 export default async function handler(req, res) {
@@ -20,6 +21,8 @@ export default async function handler(req, res) {
   if (b.action === 'info') {
     if (!al.grup_id) return ok(res, { grup: null });
     const g = (await sql`SELECT g.nom, g.tema, g.opts, c.nom AS centre FROM mates.grups g JOIN mates.centres c ON c.id = g.centre_id WHERE g.id = ${al.grup_id} AND g.actiu`)[0];
+    // tasques que el docent ha posat al grup (si la taula encara no existeix o falla, la classe funciona igual)
+    if (g) { try { g.tasques = await tasquesAlumne(al.grup_id); } catch (e) { g.tasques = []; } }
     return ok(res, { grup: g || null });
   }
   if (await blocked(req, 'aula', 30)) return tooMany(res);
