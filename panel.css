@@ -457,3 +457,45 @@ details.more[open] summary .i{transform:rotate(90deg)}
 .mstu{display:flex;align-items:center;gap:14px;justify-content:space-between;flex-wrap:wrap;margin-bottom:14px;background:linear-gradient(135deg,#F2F6FF,#E8EEFF)}
 .mstu>div{flex:1;min-width:220px}
 .gc .galum{margin-top:8px}
+
+/* ---------- alumnes: alta, online i selecció múltiple (06/10) ---------- */
+.intro{margin:0 0 14px;font-size:13.5px;max-width:760px}
+.tw.al th.c-ck,.tw.al td.c-ck{position:sticky;left:0;z-index:1;width:40px;min-width:40px;padding:0 0 0 14px}
+.tw.al th.c-ck{z-index:3}.tw.al .stick{left:40px}
+.ck{display:inline-flex;align-items:center;justify-content:center;width:26px;height:36px;cursor:pointer}
+.ck input{width:17px;height:17px;margin:0;cursor:pointer;accent-color:var(--accent)}
+tbody tr.ck-on td{background:var(--accent-soft)}tbody tr.ck-on:hover td{background:#EBDFF2}
+td.c-alta small{display:block;font-size:11.5px;line-height:13px}
+td.c-alta .nou{color:var(--accent);font-weight:600}
+.orig{display:inline-flex;align-items:center;height:16px;padding:0 6px;border-radius:5px;font-size:11px;font-weight:700;letter-spacing:.02em;background:#E6F1FB;color:#1D5F95;vertical-align:1px}
+.more-rows{text-align:center;margin-top:12px}
+.dr-info{display:flex;align-items:center;gap:8px 14px;flex-wrap:wrap;padding:10px 20px;border-bottom:1px solid var(--border);background:var(--surface-2);font-size:13px;color:var(--text-2)}
+.dr-info>span{display:inline-flex;align-items:center;gap:6px}.dr-info .i{width:14px;height:14px}.dr-info .dr-assign{width:auto;margin-left:auto;height:32px;font-size:13px}
+.kpis.k5{grid-template-columns:repeat(5,1fr)}
+.tw.nw{max-height:none}.tw.nw td small{font-size:11.5px}
+.pw-rel{position:relative}
+.pop.up{top:auto;bottom:calc(100% + 6px)}
+/* barra flotant de la selecció */
+#selbar{position:sticky;bottom:16px;z-index:20;display:flex;justify-content:center;pointer-events:none;margin-top:12px}
+.selbar2{pointer-events:auto;display:flex;align-items:center;gap:8px;flex-wrap:wrap;max-width:100%;background:#1E1724;color:#fff;border-radius:12px;padding:8px 8px 8px 16px;box-shadow:var(--float)}
+.selbar2 b{font-weight:600;white-space:nowrap}.selbar2 small{color:#B9B0C4!important}.selbar2 .sp{flex:1 1 8px}
+.selbar2 .btn{background:#2E2536;border-color:#433A4D;color:#fff}.selbar2 .btn:hover{background:#3A3044}
+.selbar2 .btn.danger{color:#FFB4AB;border-color:#5B3036}.selbar2 .btn.danger.solid{background:#B42318;border-color:#B42318;color:#fff}
+.selbar2 .ib{color:#fff}.selbar2 .ib:hover{background:#3A3044}
+@media (max-width:1599px){.hide-xl{display:none}}
+@media (min-width:768px){.selbar2{flex-wrap:nowrap}}
+@media (min-width:768px) and (max-width:1279px){.selbar2 .btn span{display:none}.selbar2 .btn{width:36px;padding:0;justify-content:center}}
+@media (max-width:1023px){.kpis.k5{grid-template-columns:1fr 1fr}.kpis.k5 .kpi:nth-child(3){border-left:0}.kpis.k5 .kpi:nth-child(n+3){border-top:1px solid var(--border)}.kpis.k5 .kpi:nth-child(5){border-left:0}}
+@media (max-width:767px){
+  .tw.al tbody tr{grid-template-columns:28px 1fr 1fr 1fr 40px;grid-template-areas:"k n n n m" "k t l a m" "k g g g m"}
+  .tw.al td.c-ck{grid-area:k;position:static;width:auto;min-width:0;padding:0}.tw.al td.c-ck .ck{height:26px;justify-content:flex-start}
+  .tw.al td.c-alta{grid-area:t}.tw.al td.c-alta small{display:none}
+  .tw.al td:not(.c-ck,.c-name,.c-alta,.c-last,.c-acc,.c-gate,.c-menu,[colspan]){display:none}
+  .tw.al tbody td.c-ck,.tw.al tbody td.c-alta{display:block}
+  .toolbar select{flex:1 1 calc(50% - 5px)}
+  .tw.al tbody tr.ck-on{border-color:var(--accent);background:var(--accent-soft)}
+  #selbar{bottom:calc(66px + env(safe-area-inset-bottom))}
+  .selbar2{border-radius:10px;padding:8px;gap:6px}.selbar2 .btn span{display:none}.selbar2 .btn{width:40px;padding:0;justify-content:center}.selbar2 small{display:none}
+}
+
+.dr-h>div:not(.acts){min-width:0;flex:1}.dr-h>div:not(.acts) small{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.dr-h h2{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}

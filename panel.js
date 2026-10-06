@@ -27,7 +27,8 @@ async function load() {
   // el material de Numi Tech (guies i solucionari) només arriba amb sessió; la presentació i les fitxes s'obren en una altra pestanya
   try { localStorage.setItem('numi-dt', dtok()); } catch (e) { }
   if (typeof TGUIDE === 'undefined' && typeof TGUARD !== 'undefined') await TGUARD.load(['c1', 'c2', 'c3', 'c5']);
-  if (G && !GRUPS.some(g => String(g.id) === G)) G = '';
+  if (G && G !== 'online' && !GRUPS.some(g => String(g.id) === G)) G = '';
+  if (G === 'online' && !D.admin) G = '';
   ROWS = (D.rows || []).map(enrich);
   route.last = null; route();
 }
@@ -82,7 +83,12 @@ function norm(r) {
   o.exams = isO(r.exams) ? Object.fromEntries(Object.entries(r.exams).filter(([k, x]) => /^c\d{1,2}-\d{1,2}$/.test(k) && isO(x)).map(([k, x]) => [k, { best: n0(x.best), last: n0(x.last), tries: n0(x.tries), d: dstr(x.d) || '' }])) : {};
   o.school = isO(r.school) && nn(r.school.ui) != null ? { ui: +r.school.ui, course: nn(r.school.course) } : null;
   o.week = isO(r.week) ? { xp: n0(r.week.xp) } : null;
-  o.album = isO(r.album) ? r.album : {};
+  o.album_n = n0(r.album_n);
+  // alta: data de registre; online = s'ha registrat sol a l'app i no és a cap grup (sense classe ni docent)
+  o.alta = dstr(typeof r.created_at === 'string' ? r.created_at : r.created_at ? new Date(r.created_at).toISOString() : '') || '';
+  o.alta_docent = isO(r.survey) && r.survey.curs === 'alta del docent';
+  o.pla = ['free', 'premium', 'escola'].includes(r.pla) ? r.pla : 'free';
+  o.pla_fins = dstr(r.pla_fins);
   o.crowns = arr(r.crowns);
   o.bwins = n0(r.bwins);
   o.reco = isO(r.reco) ? { items: arr(r.reco.items) } : null;
@@ -125,13 +131,17 @@ function enrich(r) {
   if (evoD != null && evoD <= -10) add('warn', L(`Baixa a la prova d'evolució (${evoD})`, `Baja en la prueba de evolución (${evoD})`));
   const weak = Object.entries(sent).filter(([, s]) => s.t >= 20 && s.pct < 60).sort((a, b) => a[1].pct - b[1].pct)[0];
   if (weak) add('warn', L('Cal reforçar: ', 'Hay que reforzar: ') + tx(SENT[weak[0]][0]));
-  const sev = reasons.some(x => x.sev === 'crit') ? 2 : reasons.length ? 1 : 0;
-  return { ...r, d14, act7: act(7), actPrev7: act(14) - act(7), act14: act(14), act30: act(30), sent, tests, lt, evoD, exams, acc, reasons, sev, idle };
+  // els alumnes online (sense grup) no tenen cap docent que els hagi de seguir: no entren a «Necessiten atenció»
+  const online = !r.grup_id, sev = online ? 0 : reasons.some(x => x.sev === 'crit') ? 2 : reasons.length ? 1 : 0;
+  const premium = r.pla === 'premium' && (!r.pla_fins || r.pla_fins >= TODAY), newd = daysAgo(r.alta);
+  return { ...r, online, premium, newd, d14, act7: act(7), actPrev7: act(14) - act(7), act14: act(14), act30: act(30), sent, tests, lt, evoD, exams, acc, reasons, sev, idle };
 }
-const scope = () => G ? ROWS.filter(r => String(r.grup_id) === G) : ROWS;
+// G: '' = tots · 'online' = registrats sols a l'app, sense grup (només l'admin en té) · id d'un grup
+const scope = () => G === 'online' ? ROWS.filter(r => !r.grup_id) : G ? ROWS.filter(r => String(r.grup_id) === G) : ROWS;
 const gName = id => (GRUPS.find(g => g.id === id) || {}).nom || '';
+const scopeName = () => G === 'online' ? L('Alumnes online (sense grup)', 'Alumnos online (sin grupo)') : G ? gName(+G) : '';
 const INIT_BG = ['#EDE3F4', '#E3EEF7', '#E6F2EA', '#F7EEDC', '#F6E4E8', '#E9E6EE'];
-const avatar = (r, cls = '') => { const p = String(r.name || '?').trim().split(/\s+/); const ini = (p[0][0] + (p[1] ? p[1][0] : '')).toUpperCase(); let h = 0; for (const c of String(r.code)) h = (h * 31 + c.charCodeAt(0)) >>> 0; return `<span class="av ${cls}" style="background:${INIT_BG[h % 6]}">${esc(ini)}</span>`; };
+const avatar = (r, cls = '') => { const p = String(r.name || '?').trim().split(/\s+/).filter(w => /^\p{L}/u.test(w)); const ini = ((p[0] || '?')[0] + (p[1] ? p[1][0] : '')).toUpperCase(); let h = 0; for (const c of String(r.code)) h = (h * 31 + c.charCodeAt(0)) >>> 0; return `<span class="av ${cls}" style="background:${INIT_BG[h % 6]}">${esc(ini)}</span>`; };
 
 /* ---------- entrada ---------- */
 function login(err = '', admin = location.hash === '#admin') {
@@ -169,10 +179,12 @@ function logout() { sessionStorage.clear(); try { localStorage.removeItem('numi-
 function setLang(l, onLogin) { LANG = l; store.set('numi-profe-lang', l); document.documentElement.lang = l; if (onLogin && !D) return login(); ROWS = (D?.rows || []).map(enrich); route.last = null; route(); }
 
 /* ---------- carcassa ---------- */
-const NAV = () => [['resum', 'layout-dashboard', L('Resum', 'Resumen')], ['material', 'graduation-cap', L('Material Tech', 'Material Tech')], ['alumnes', 'users', L('Alumnes', 'Alumnos'), scope().length], ['grups', 'school', L('Grups', 'Grupos')], ['batalles', 'swords', L('Batalles', 'Batallas')], ['informes', 'chart-column', L('Informes', 'Informes')]];
+const NAV = () => [['resum', 'layout-dashboard', L('Resum', 'Resumen')], ['material', 'graduation-cap', L('Material Tech', 'Material Tech')], ['alumnes', 'users', L('Alumnes', 'Alumnos'), scope().length],
+  ...(ADMIN ? [['online', 'globe', L('Alumnes online', 'Alumnos online'), ROWS.filter(r => r.online && r.newd != null && r.newd <= 7).length, true]] : []), ['grups', 'school', L('Grups', 'Grupos')], ['batalles', 'swords', L('Batalles', 'Batallas')], ['informes', 'chart-column', L('Informes', 'Informes')]];
 const ADMIN_NAV = () => { const seen = +store.get('numi-profe-sol', 0), nou = (D.contacts || []).filter(c => new Date(c.created_at).getTime() > seen).length; return [['ia', 'sparkles', L('Assistent IA', 'Asistente IA')], ['usuaris', 'crown', L('Usuaris i Premium', 'Usuarios y Premium')], ['centres', 'building-2', L('Centres', 'Centros')], ['docents', 'graduation-cap', L('Docents', 'Docentes')], ['totsgrups', 'layout-grid', L('Tots els grups', 'Todos los grupos')], ['sollicituds', 'inbox', L('Sol·licituds', 'Solicitudes'), nou, true], ['activitat', 'activity', L('Activitat', 'Actividad')], ['correus', 'mail', L('Correus', 'Correos')]]; };
 function shell(view, title, body, { acts = '', fluid = false, switcher = true } = {}) {
-  const na = ([k, ic, t, n, isNew]) => `<a href="#/${k}" class="${view === k ? 'on' : ''}" title="${esc(t)}">${ico(ic, 'i20')}<span>${esc(t)}</span>${n ? `<i class="badge ${isNew ? 'new' : ''}">${n}</i>` : ''}</a>`;
+  const cur = view === 'alumnes' && G === 'online' ? 'online' : view;
+  const na = ([k, ic, t, n, isNew]) => `<a href="#/${k}" class="${cur === k ? 'on' : ''}" ${k === 'alumnes' ? `onclick="if(G==='online')setG('')"` : ''} title="${esc(t)}${isNew && n ? ' · ' + L(`${n} nous aquesta setmana`, `${n} nuevos esta semana`) : ''}">${ico(ic, 'i20')}<span>${esc(t)}</span>${n ? `<i class="badge ${isNew ? 'new' : ''}">${n}</i>` : ''}</a>`;
   const who = ADMIN ? { nom: ME?.nom || L('Administració', 'Administración'), rol: 'Numi Mates · Pro · Ment · Tech' } : { nom: ME.nom, rol: ME.rol === 'admin_centre' ? L('Coordinació de centre', 'Coordinación de centro') : L('Docent', 'Docente') };
   root.innerHTML = `<div class="app" id="app"><aside class="side">
       <div class="brand"><img src="img/brand/icona.svg" alt=""><div><b>Numi</b><span>${esc(ADMIN ? L('Panell · tots els centres', 'Panel · todos los centros') : ME.centre || L('Panell', 'Panel'))}</span></div></div>
@@ -189,17 +201,19 @@ function shell(view, title, body, { acts = '', fluid = false, switcher = true } 
   document.title = `${title} · Numi`;
 }
 function switcherHTML() {
-  const cur = G ? gName(+G) : (ADMIN ? L('Tots els grups', 'Todos los grupos') : ME?.rol === 'admin_centre' ? L('Tots els grups del centre', 'Todos los grupos del centro') : L('Tots els meus grups', 'Todos mis grupos'));
+  const cur = G ? scopeName() : (ADMIN ? L('Tots els alumnes', 'Todos los alumnos') : ME?.rol === 'admin_centre' ? L('Tots els grups del centre', 'Todos los grupos del centro') : L('Tots els meus grups', 'Todos mis grupos'));
   return `<div class="gsw"><button onclick="toggleSw(event)"><span>${L('Grup:', 'Grupo:')}</span>${esc(cur)}${ico('chevron-down')}</button></div>`;
 }
 function toggleSw(e) {
   e.stopPropagation(); const w = e.currentTarget.parentElement; if ($('.pop', w)) return closePops();
   closePops(); const n = id => ROWS.filter(r => r.grup_id === id).length;
   const by = {}; GRUPS.forEach(g => { const k = ADMIN ? g.centre : (ME.rol === 'admin_centre' ? (g.docent || '—') : ''); (by[k] ||= []).push(g); });
-  w.insertAdjacentHTML('beforeend', `<div class="pop"><button class="${G ? '' : 'on'}" onclick="setG('')">${ADMIN ? L('Tots els grups', 'Todos los grupos') : L('Tots els meus grups', 'Todos mis grupos')}<span class="n">${ROWS.length}</span></button>
+  const nOn = ROWS.filter(r => !r.grup_id).length;
+  w.insertAdjacentHTML('beforeend', `<div class="pop"><button class="${G ? '' : 'on'}" onclick="setG('')">${ADMIN ? L('Tots els alumnes', 'Todos los alumnos') : L('Tots els meus grups', 'Todos mis grupos')}<span class="n">${ROWS.length}</span></button>
+    ${ADMIN ? `<button class="${G === 'online' ? 'on' : ''}" onclick="setG('online')">${ico('globe')}${L('Online (sense grup)', 'Online (sin grupo)')}<span class="n">${nOn}</span></button>` : ''}
     ${Object.entries(by).map(([k, gs]) => `${k ? `<div class="h">${esc(k)}</div>` : '<hr>'}${gs.map(g => `<button class="${String(g.id) === G ? 'on' : ''}" onclick="setG('${g.id}')">${esc(g.nom)}<span class="n">${n(g.id)}</span></button>`).join('')}`).join('')}</div>`);
 }
-function setG(id) { G = String(id); store.set('numi-profe-g', G); closePops(); route.last = null; route(); }
+function setG(id) { G = String(id); store.set('numi-profe-g', G); closePops(); SEL.clear(); AF.n = PAGE; if (G === 'online') AF.sort = ['alta', -1]; route.last = null; route(); }
 function closePops() { $$('.pop').forEach(p => p.remove()); }
 document.addEventListener('click', e => { if (!e.target.closest('.pop')) closePops(); });
 
@@ -210,6 +224,7 @@ function route() {
   if (v === 'alumnes' && route.last === 'alumnes' && $('#tbl')) { if (arg) openDrawer(decodeURIComponent(arg), true); else if ($('.drawer')) closeDrawer(true); return; }
   route.last = v;
   const V = { resum: vResum, alumnes: vAlumnes, grups: vGrups, batalles: vBatalles, informes: vInformes, guia: vGuia, compte: vCompte, material: () => vMaterial(arg ? decodeURIComponent(arg) : 'robot', h.split('/')[2] ? decodeURIComponent(h.split('/')[2]) : '') };
+  if (ADMIN) V.online = () => { G = 'online'; store.set('numi-profe-g', G); SEL.clear(); AF.n = PAGE; AF.sort = ['alta', -1]; history.replaceState(null, '', '#/alumnes'); route.last = 'alumnes'; vAlumnes(); };
   if (ADMIN) Object.assign(V, { ia: () => vIA(arg ? decodeURIComponent(arg) : ''), usuaris: vUsuaris, centres: vCentres, docents: vDocents, totsgrups: vTotsGrups, sollicituds: vSol, activitat: vActivitat, correus: vCorreus });
   (V[v] || vResum)(arg);
   if (v === 'alumnes' && arg) openDrawer(decodeURIComponent(arg), true); else if ($('.drawer')) closeDrawer(true);
@@ -570,16 +585,23 @@ function vResum() {
   const units = {}; R.forEach(r => r.exams.forEach(x => { const u = units[x.uid] ||= { ok: 0, ko: 0 }; (x.best >= 75 ? u.ok++ : u.ko++); }));
   const mx2 = mixed(R), topU = Object.entries(units).sort((a, b) => (b[1].ok + b[1].ko) - (a[1].ok + a[1].ko)).slice(0, 3);
   const w = v => `${n ? v / n * 100 : 0}%`;
+  // altes noves (sobretot les online: web, anuncis…); a l'admin li surten al resum
+  const nous = R.filter(r => r.newd != null && r.newd <= 7), nous30 = R.filter(r => r.newd != null && r.newd <= 30).length, nOn = nous.filter(r => r.online).length;
+  const last = R.filter(r => r.alta).sort((a, b) => b.alta.localeCompare(a.alta) || a.name.localeCompare(b.name)).slice(0, 8);
+  const showNew = ADMIN && G !== '' ? G === 'online' : ADMIN;
   if (!n) return shell('resum', L('Resum', 'Resumen'), emptyState('users', L('Encara no hi ha alumnes', 'Aún no hay alumnos'), L('Crea un grup i comparteix el codi amb la classe.', 'Crea un grupo y comparte el código con la clase.'), `<a class="btn" href="#/grups">${L('Ves als grups', 'Ir a los grupos')}</a>`));
   shell('resum', L('Resum', 'Resumen'), `
-    <div class="card kpis">
+    <div class="card kpis ${showNew ? 'k5' : ''}">
+      ${showNew ? kpi(L('Altes noves (7 dies)', 'Altas nuevas (7 días)'), nous.length, `<a href="#/alumnes?f=nous">${G === 'online' ? L(`${nous30} en 30 dies`, `${nous30} en 30 días`) : L(`${nOn} online · ${nous.length - nOn} en grup`, `${nOn} online · ${nous.length - nOn} en grupo`)}</a>`) : ''}
       ${kpi(L('Actius aquesta setmana', 'Activos esta semana'), `${a7} <span class="t3" style="font-size:18px;font-weight:600">/ ${n}</span>`, p7 || a7 ? `${ico(dA >= 0 ? 'trending-up' : 'trending-down', dA >= 0 ? 'up' : 'down')}${dA >= 0 ? '+' : ''}${dA} ${L('respecte la setmana passada', 'respecto a la semana pasada')}` : L('Encara sense activitat', 'Aún sin actividad'))}
       ${kpi(L('Precisió mitjana', 'Precisión media'), ans ? Math.round(100 * cor / ans) + ' %' : '—', `${L("des de l'inici", 'desde el inicio')} · ${ans.toLocaleString(LANG)} ${L('respostes', 'respuestas')}`)}
       ${kpi(L('Porta del Cavaller', 'Puerta del Caballero'), ex.length ? Math.round(100 * exOk / ex.length) + ' %' : '—', ex.length ? `${exOk} ${L('de', 'de')} ${ex.length} ${L('portes superades', 'puertas superadas')}` : L('Encara ningú no hi ha arribat', 'Aún nadie ha llegado'))}
       ${kpi(L('Necessiten atenció', 'Necesitan atención'), att.length, att.length ? `<a href="#/alumnes?f=att">${L('Veure la llista', 'Ver la lista')}</a>` : L('Tot en ordre', 'Todo en orden'), att.length ? 'crit' : '')}
     </div>
     <div class="grid12">
-      <section class="c8" id="att"><div class="sec-h"><h2>${L('Necessiten atenció', 'Necesitan atención')}</h2></div><div class="card">
+      ${showNew && last.length ? `<section class="c12"><div class="sec-h"><h2>${L('Últimes altes', 'Últimas altas')}</h2><a class="r" href="#/alumnes?f=nous">${L('Veure-les totes', 'Verlas todas')}</a></div><div class="tw nw"><table><thead><tr><th>${L('Alumne', 'Alumno')}</th><th>${L('Alta', 'Alta')}</th><th>${L('On és', 'Dónde está')}</th><th class="hide-sm">App</th><th class="hide-sm">${L('Pla', 'Plan')}</th><th class="r">${L('Lliçons', 'Lecciones')}</th><th class="r hide-sm">${L('Última activitat', 'Última actividad')}</th></tr></thead><tbody>
+        ${last.map(r => `<tr onclick="location.hash='#/alumnes/${encodeURIComponent(r.code)}'"><td><div class="nm">${avatar(r)}<div><b>${esc(r.name)}</b><small>${r.username ? '@' + esc(r.username) : esc(r.code)}</small></div></div></td><td>${altaTxt(r)} <small class="t3">${altaAgo(r)}</small></td><td>${r.online ? `<span class="orig on">${L('Online', 'Online')}</span>` : esc(gName(r.grup_id))}</td><td class="hide-sm">${esc(APPN[APPS_OF(r)])}</td><td class="hide-sm">${plaChip(r)}</td><td class="r num">${r.lessons}</td><td class="r hide-sm ${r.idle == null || r.idle > 7 ? 't3' : ''}">${ago(r.last_day)}</td></tr>`).join('')}</tbody></table></div></section>` : ''}
+      <section class="c8" id="att"><div class="sec-h"><h2>${L('Necessiten atenció', 'Necesitan atención')}</h2>${ADMIN && R.some(r => r.online) ? `<small>${L('alumnes en grup', 'alumnos en grupo')}</small>` : ''}</div><div class="card">
         ${att.length ? `<ul class="alist">${att.slice(0, 8).map(r => `<li onclick="location.hash='#/alumnes/${encodeURIComponent(r.code)}'">${avatar(r)}<div class="who"><b>${esc(r.name)}${!G && r.grup_id ? ` <span class="t3" style="font-weight:400">· ${esc(gName(r.grup_id))}</span>` : ''}</b><div class="why">${r.reasons.slice(0, 2).map(x => `<span><i class="dot ${x.sev}"></i>${esc(x.txt)}</span>`).join('')}</div></div><span class="when">${ago(r.last_day)}</span>${ico('chevron-right', 't3')}</li>`).join('')}</ul>
           ${att.length > 8 ? `<div class="card-foot"><a href="#/alumnes?f=att">${L(`Mostra'ls tots (${att.length})`, `Mostrarlos todos (${att.length})`)}</a></div>` : ''}`
           : emptyState('check', L('Tot en ordre', 'Todo en orden'), L('Cap alumne no necessita atenció ara mateix.', 'Ningún alumno necesita atención ahora mismo.'))}</div></section>
@@ -597,48 +619,129 @@ function vResum() {
 }
 const emptyState = (ic, t, m, extra = '') => `<div class="empty">${ico(ic)}<b>${t}</b><span>${m}</span>${extra}</div>`;
 
-/* ---------- Alumnes ---------- */
-let AF = { f: 'all', q: '', lv: '', sort: ['sev', -1], compact: store.get('numi-profe-compact', '') === '1' };
+/* ---------- Alumnes ----------
+   Taula amb filtres, data d'alta i selecció múltiple (accions en bloc a la barra de sota).
+   Amb molts alumnes online es pinta per pàgines (PAGE files i «Mostra'n més»). */
+const PAGE = 150;
+let AF = { f: 'all', q: '', lv: '', app: '', pla: '', org: '', sort: ['sev', -1], n: PAGE, compact: store.get('numi-profe-compact', '') === '1' };
+let SEL = new Set(), SEL_LAST = null;
+const APPS_OF = r => r.variant || 'mates';
+const AFILT = () => [['all', L('Tots', 'Todos')], ['att', L('Necessiten atenció', 'Necesitan atención')], ['nous', L('Nous (7 dies)', 'Nuevos (7 días)')], ['idle', L('Sense activitat', 'Sin actividad')], ['new', L('Sense començar', 'Sin empezar')]];
+const afMatch = (r, f) => f === 'all' || (f === 'att' && r.sev) || (f === 'nous' && r.newd != null && r.newd <= 7) || (f === 'idle' && (r.idle == null || r.idle > 7)) || (f === 'new' && !r.lessons);
+const plaOf = r => r.grup_id || r.pla === 'escola' ? 'escola' : r.premium ? 'premium' : 'free';
+const PLA_T = { free: 'Gratuït|Gratuito', premium: 'Premium|Premium', escola: 'Escola|Escuela' };
+const plaChip = r => { const k = plaOf(r); return `<span class="chip ${{ free: 'none', premium: 'gold', escola: 'blue' }[k]}">${tx(PLA_T[k])}</span>`; };
+const altaTxt = r => !r.alta ? '—' : `${fdate(r.alta)}${r.alta.slice(0, 4) !== TODAY.slice(0, 4) ? ' ' + r.alta.slice(0, 4) : ''}`;
+const altaAgo = r => r.newd == null ? '' : r.newd <= 0 ? L('avui', 'hoy') : r.newd === 1 ? L('ahir', 'ayer') : L(`fa ${r.newd} dies`, `hace ${r.newd} días`);
 function vAlumnes() {
-  const qs = new URLSearchParams(location.hash.split('?')[1] || ''); if (qs.get('f')) { AF.f = qs.get('f'); history.replaceState(null, '', '#/alumnes'); }
-  const R = scope(), counts = { all: R.length, att: R.filter(r => r.sev).length, idle: R.filter(r => r.idle == null || r.idle > 7).length, new: R.filter(r => !r.lessons).length };
-  const lvls = [...new Set(R.map(r => r.course))].sort((a, b) => a - b);
-  shell('alumnes', L('Alumnes', 'Alumnos'), `
-    <div class="toolbar"><div class="search">${ico('search')}<input id="q" placeholder="${L('Cerca per nom, usuari o codi', 'Busca por nombre, usuario o código')}" value="${esc(AF.q)}" oninput="AF.q=this.value;clearTimeout(window._qt);window._qt=setTimeout(drawTable,120)"><span class="kbd">/</span></div>
-      <span class="seg">${[['all', L('Tots', 'Todos')], ['att', L('Necessiten atenció', 'Necesitan atención')], ['idle', L('Sense activitat', 'Sin actividad')], ['new', L('Sense començar', 'Sin empezar')]].map(([k, t]) => `<button class="${AF.f === k ? 'on' : ''}" onclick="AF.f='${k}';vAlumnes()">${t}<b>${counts[k]}</b></button>`).join('')}</span>
-      <select style="width:auto" onchange="AF.lv=this.value;drawTable()"><option value="">${L('Tots els nivells', 'Todos los niveles')}</option>${lvls.map(l => `<option value="${l}" ${String(l) === AF.lv ? 'selected' : ''}>${curs(l)}</option>`).join('')}</select>
-      <select class="only-sm" style="width:auto" aria-label="${L('Ordena', 'Ordena')}" onchange="const [k,d]=this.value.split(',');AF.sort=[k,+d];drawTable()">${[['sev,-1', L('Primer, qui necessita atenció', 'Primero, quien necesita atención')], ['name,1', L('Per nom', 'Por nombre')], ['last,-1', L('Activitat més recent', 'Actividad más reciente')], ['last,1', L('Més dies sense entrar', 'Más días sin entrar')], ['acc,-1', L('Precisió més alta', 'Precisión más alta')], ['acc,1', L('Precisió més baixa', 'Precisión más baja')], ['les,-1', L('Més lliçons', 'Más lecciones')]].map(([v, t]) => `<option value="${v}" ${AF.sort.join(',') === v ? 'selected' : ''}>${t}</option>`).join('')}</select>
+  const qs = new URLSearchParams(location.hash.split('?')[1] || ''); if (qs.get('f')) { AF.f = qs.get('f'); if (AF.f === 'nous') AF.sort = ['alta', -1]; history.replaceState(null, '', '#/alumnes'); }
+  const R = scope(), counts = Object.fromEntries(AFILT().map(([k]) => [k, R.filter(r => afMatch(r, k)).length]));
+  const lvls = [...new Set(R.map(r => r.course).filter(x => x != null))].sort((a, b) => a - b), apps = [...new Set(R.map(APPS_OF))];
+  const sel = (k, all, opts) => `<select style="width:auto" aria-label="${all}" onchange="AF.${k}=this.value;AF.n=PAGE;drawTable()"><option value="">${all}</option>${opts.map(([v, t]) => `<option value="${v}" ${String(v) === AF[k] ? 'selected' : ''}>${t}</option>`).join('')}</select>`;
+  const mixGroups = ADMIN && !G && R.some(r => r.online) && R.some(r => !r.online);
+  shell('alumnes', G === 'online' ? L('Alumnes online', 'Alumnos online') : L('Alumnes', 'Alumnos'), `
+    ${G === 'online' ? `<p class="t2 intro">${L("S'han registrat sols a l'app (web, anuncis…) i no són a cap grup ni tenen docent. Els pots assignar a un grup, donar de baixa o esborrar marcant-los a la llista.", 'Se han registrado solos en la app (web, anuncios…) y no están en ningún grupo ni tienen docente. Puedes asignarlos a un grupo, darlos de baja o borrarlos marcándolos en la lista.')}</p>` : ''}
+    <div class="toolbar"><div class="search">${ico('search')}<input id="q" placeholder="${L('Cerca per nom, usuari o codi', 'Busca por nombre, usuario o código')}" value="${esc(AF.q)}" oninput="AF.q=this.value;AF.n=PAGE;clearTimeout(window._qt);window._qt=setTimeout(drawTable,120)"><span class="kbd">/</span></div>
+      <span class="seg">${AFILT().filter(([k]) => !(k === 'att' && G === 'online')).map(([k, t]) => `<button class="${AF.f === k ? 'on' : ''}" onclick="AF.f='${k}';AF.n=PAGE;${k === 'nous' ? "AF.sort=['alta',-1];" : ''}vAlumnes()">${t}<b>${counts[k]}</b></button>`).join('')}</span>
+      ${lvls.length > 1 ? sel('lv', L('Tots els nivells', 'Todos los niveles'), lvls.map(l => [l, curs(l)])) : ''}
+      ${apps.length > 1 ? sel('app', L('Totes les apps', 'Todas las apps'), ['mates', 'pro', 'ment', 'tech'].filter(a => apps.includes(a)).map(a => [a, APPN[a]])) : ''}
+      ${ADMIN ? sel('pla', L('Tots els plans', 'Todos los planes'), Object.entries(PLA_T).map(([k, t]) => [k, tx(t)])) : ''}
+      ${mixGroups ? sel('org', L('Online i en grup', 'Online y en grupo'), [['online', L('Només online', 'Solo online')], ['grup', L('Només en grup', 'Solo en grupo')]]) : ''}
+      <select class="only-sm" style="width:auto" aria-label="${L('Ordena', 'Ordena')}" onchange="const [k,d]=this.value.split(',');AF.sort=[k,+d];drawTable()">${[['sev,-1', L('Primer, qui necessita atenció', 'Primero, quien necesita atención')], ['alta,-1', L('Alta més recent', 'Alta más reciente')], ['alta,1', L('Alta més antiga', 'Alta más antigua')], ['name,1', L('Per nom', 'Por nombre')], ['last,-1', L('Activitat més recent', 'Actividad más reciente')], ['last,1', L('Més dies sense entrar', 'Más días sin entrar')], ['acc,-1', L('Precisió més alta', 'Precisión más alta')], ['acc,1', L('Precisió més baixa', 'Precisión más baja')], ['les,-1', L('Més lliçons', 'Más lecciones')]].map(([v, t]) => `<option value="${v}" ${AF.sort.join(',') === v ? 'selected' : ''}>${t}</option>`).join('')}</select>
       <span class="count" id="cnt"></span>
-      <span class="r"><button class="ib hide-sm ${AF.compact ? 'on' : ''}" title="${L('Compacte', 'Compacto')}" onclick="AF.compact=!AF.compact;store.set('numi-profe-compact',AF.compact?'1':'');drawTable()">${ico('rows-3')}</button><button class="btn" onclick="csvResum()">${ico('download')}${L('Exporta CSV', 'Exporta CSV')}</button></span></div>
-    <div id="tbl"></div>`, { fluid: true });
+      <span class="r">${ADMIN ? `<button class="btn" onclick="selTests()" title="${L('Marca els alumnes de mostra i de prova', 'Marca los alumnos de muestra y de prueba')}">${ico('list-filter')}<span>${L('Mostra i proves', 'Muestra y pruebas')}</span></button>` : ''}<button class="ib hide-sm ${AF.compact ? 'on' : ''}" title="${L('Compacte', 'Compacto')}" onclick="AF.compact=!AF.compact;store.set('numi-profe-compact',AF.compact?'1':'');drawTable()">${ico('rows-3')}</button><button class="btn" onclick="csvResum()">${ico('download')}<span>${L('Exporta CSV', 'Exporta CSV')}</span></button></span></div>
+    <div id="tbl"></div><div id="selbar"></div>`, { fluid: true });
   drawTable();
 }
 function filtered() {
   const q = AF.q.trim().toLowerCase();
-  let R = scope().filter(r => (AF.f === 'all' || (AF.f === 'att' && r.sev) || (AF.f === 'idle' && (r.idle == null || r.idle > 7)) || (AF.f === 'new' && !r.lessons)) && (!AF.lv || String(r.course) === AF.lv) && (!q || (r.name + ' ' + (r.username || '') + ' ' + r.code).toLowerCase().includes(q)));
-  const [k, d] = AF.sort, val = r => ({ sev: r.sev * 1e6 + Math.min(r.idle ?? 999, 999), name: r.name.toLowerCase(), course: r.course, last: -(r.idle ?? 1e4), act: r.act14, les: r.lessons, acc: r.acc ?? -1, evo: r.lt ? r.lt.pct : -1, gate: r.exams[0] ? r.exams[0].best : -1 })[k];
+  let R = scope().filter(r => afMatch(r, AF.f) && (!AF.lv || String(r.course) === AF.lv) && (!AF.app || APPS_OF(r) === AF.app || r.apps.includes(AF.app)) && (!AF.pla || plaOf(r) === AF.pla)
+    && (!AF.org || (AF.org === 'online') === r.online) && (!q || (r.name + ' ' + (r.username || '') + ' ' + r.code).toLowerCase().includes(q)));
+  const [k, d] = AF.sort, val = r => ({ sev: r.sev * 1e6 + Math.min(r.idle ?? 999, 999), name: r.name.toLowerCase(), course: r.course, alta: r.alta || '', last: -(r.idle ?? 1e4), act: r.act14, les: r.lessons, acc: r.acc ?? -1, evo: r.lt ? r.lt.pct : -1, gate: r.exams[0] ? r.exams[0].best : -1 })[k];
   return R.sort((a, b) => { const x = val(a), y = val(b); return (x > y ? 1 : x < y ? -1 : a.name.localeCompare(b.name)) * (k === 'name' ? -d : d); });
 }
 function drawTable() {
-  const R = filtered(), q = AF.q.trim();
+  const R = filtered(), q = AF.q.trim(), shown = R.slice(0, AF.n);
   $('#cnt').textContent = `${R.length} ${R.length === 1 ? L('alumne', 'alumno') : L('alumnes', 'alumnos')}`;
-  const th = (k, t, cls = '') => `<th class="s ${cls} ${AF.sort[0] === k ? 'on' : ''}" onclick="AF.sort=['${k}',AF.sort[0]==='${k}'?-AF.sort[1]:-1];drawTable()" aria-sort="${AF.sort[0] === k ? ((k === 'name' ? -AF.sort[1] : AF.sort[1]) < 0 ? 'descending' : 'ascending') : 'none'}">${t} ${ico(AF.sort[0] === k && AF.sort[1] > 0 ? 'chevron-down' : 'chevron-down')}</th>`;
+  const th = (k, t, cls = '') => `<th class="s ${cls} ${AF.sort[0] === k ? 'on' : ''}" onclick="AF.sort=['${k}',AF.sort[0]==='${k}'?-AF.sort[1]:-1];drawTable()" aria-sort="${AF.sort[0] === k ? ((k === 'name' ? -AF.sort[1] : AF.sort[1]) < 0 ? 'descending' : 'ascending') : 'none'}">${t} ${ico('chevron-down')}</th>`;
   const sevDot = r => `<i class="dot ${r.sev === 2 ? 'crit' : r.sev ? 'warn' : ''}" style="${r.sev ? '' : 'visibility:hidden'}"></i>`;
-  $('#tbl').innerHTML = !scope().length ? `<div class="card">${emptyState('users', L('Encara no hi ha alumnes', 'Aún no hay alumnos'), L('Comparteix el codi del grup perquè els alumnes hi entrin.', 'Comparte el código del grupo para que los alumnos entren.'), `<a class="btn" href="#/grups">${L('Ves als grups', 'Ir a los grupos')}</a>`)}</div>`
-    : `<div class="tw al ${AF.compact ? 'compact' : ''}"><table><thead><tr>${th('name', L('Alumne', 'Alumno'), 'stick')}${th('course', L('Nivell', 'Nivel'), 'hide-sm')}${th('last', L('Última activitat', 'Última actividad'), 'r')}${th('act', L('Dies actius (14 d)', 'Días activos (14 d)'), 'hide-md')}${th('les', L('Lliçons', 'Lecciones'), 'r hide-lg')}${th('acc', L('Precisió', 'Precisión'), 'r')}${th('evo', L('Evolució', 'Evolución'), 'r hide-sm')}${th('gate', L('Porta del Cavaller', 'Puerta del Caballero'), 'hide-sm')}<th></th></tr></thead><tbody>
-    ${R.map(r => { const x = r.exams[0], b = band(r.acc, r.answers); return `<tr tabindex="0" data-c="${esc(r.code)}" onclick="if(!event.target.closest('.rowmenu'))location.hash='#/alumnes/${encodeURIComponent(r.code)}'" onkeydown="rowKey(event,this)">
-      <td class="stick c-name"><div class="nm">${sevDot(r)}${avatar(r)}<div><b>${esc(r.name)}</b><small>${r.username ? '@' + esc(r.username) : L('entra amb codi', 'entra con código')}${!G && r.grup_id ? ' · ' + esc(gName(r.grup_id)) : ''}${q && r.code.toLowerCase().includes(q.toLowerCase()) ? ' · ' + esc(r.code) : ''}</small></div></div></td>
-      <td class="hide-sm">${cursOf(r)}</td><td class="r c-last ${r.idle > 7 || r.idle == null ? 't3' : ''}" data-l="${L('Última activitat', 'Última actividad')}">${ago(r.last_day)}</td>
+  const where = r => r.online ? G === 'online' ? '' : `<span class="orig on">${L('Online', 'Online')}</span>` : !G ? esc(gName(r.grup_id)) : '';
+  const nSel = R.filter(r => SEL.has(r.code)).length;
+  $('#tbl').innerHTML = !scope().length ? `<div class="card">${G === 'online' ? emptyState('globe', L('Cap alumne online', 'Ningún alumno online'), L("Aquí sortiran els que es registrin sols a l'app.", 'Aquí saldrán los que se registren solos en la app.')) : emptyState('users', L('Encara no hi ha alumnes', 'Aún no hay alumnos'), L('Comparteix el codi del grup perquè els alumnes hi entrin.', 'Comparte el código del grupo para que los alumnos entren.'), `<a class="btn" href="#/grups">${L('Ves als grups', 'Ir a los grupos')}</a>`)}</div>`
+    : `<div class="tw al ${AF.compact ? 'compact' : ''}"><table><thead><tr><th class="c-ck"><label class="ck" title="${L('Selecciona tots els de la llista', 'Selecciona todos los de la lista')}"><input type="checkbox" ${nSel && nSel === R.length ? 'checked' : ''} onchange="selAll(this.checked)" aria-label="${L('Selecciona-ho tot', 'Seleccionar todo')}"></label></th>${th('name', L('Alumne', 'Alumno'), 'stick')}${th('alta', L('Alta', 'Alta'))}${th('course', L('Nivell', 'Nivel'), 'hide-sm')}${ADMIN ? `<th class="hide-md">${L('Pla', 'Plan')}</th>` : ''}${th('last', L('Última activitat', 'Última actividad'), 'r')}${th('act', L('Dies actius (14 d)', 'Días activos (14 d)'), 'hide-md')}${th('les', L('Lliçons', 'Lecciones'), 'r hide-lg')}${th('acc', L('Precisió', 'Precisión'), 'r')}${th('evo', L('Evolució', 'Evolución'), 'r hide-xl')}${th('gate', L('Porta del Cavaller', 'Puerta del Caballero'), 'hide-xl')}<th></th></tr></thead><tbody>
+    ${shown.map(r => { const x = r.exams[0], b = band(r.acc, r.answers), on = SEL.has(r.code); return `<tr tabindex="0" data-c="${esc(r.code)}" class="${on ? 'ck-on' : ''}" onclick="rowClick(event,this)" onkeydown="rowKey(event,this)">
+      <td class="c-ck"><label class="ck"><input type="checkbox" ${on ? 'checked' : ''} aria-label="${L('Selecciona', 'Selecciona')} ${esc(r.name)}"></label></td>
+      <td class="stick c-name"><div class="nm">${sevDot(r)}${avatar(r)}<div><b>${esc(r.name)}${r.variant && r.variant !== 'mates' ? ` <span class="varb ${r.variant}">${r.variant.toUpperCase()}</span>` : ''}</b><small>${r.username ? '@' + esc(r.username) : L('entra amb codi', 'entra con código')}${where(r) ? ' · ' + where(r) : ''}${q && r.code.toLowerCase().includes(q.toLowerCase()) ? ' · ' + esc(r.code) : ''}</small></div></div></td>
+      <td class="c-alta" data-l="${L('Alta', 'Alta')}"><span class="${r.newd != null && r.newd <= 7 ? 'nou' : ''}">${altaTxt(r)}</span><small class="t3">${altaAgo(r)}</small></td>
+      <td class="hide-sm">${cursOf(r)}</td>${ADMIN ? `<td class="hide-md">${plaChip(r)}</td>` : ''}<td class="r c-last ${r.idle > 7 || r.idle == null ? 't3' : ''}" data-l="${L('Última activitat', 'Última actividad')}">${ago(r.last_day)}</td>
       <td class="hide-md c-act" data-l="${L('Dies actius (14 d)', 'Días activos (14 d)')}"><span class="d14">${r.d14.map(o => `<i class="${o ? 'on' : ''}"></i>`).join('')}</span><span class="num">${r.act14}</span></td>
       <td class="r num hide-lg">${r.lessons}</td>
       <td class="r num c-acc" data-l="${L('Precisió', 'Precisión')}" style="color:var(--${b === 'none' ? 'text-3' : b})">${r.answers >= 20 ? r.acc + ' %' : '—'}</td>
-      <td class="r num hide-sm">${r.lt ? `${r.lt.pct} %${r.evoD != null ? ` <span class="${r.evoD >= 0 ? 'up' : 'down'}">${ico(r.evoD >= 0 ? 'trending-up' : 'trending-down')}${r.evoD >= 0 ? '+' : ''}${r.evoD}</span>` : ''}` : '<span class="t3">—</span>'}</td>
-      <td class="hide-sm c-gate" data-l="${L('Porta', 'Puerta')}">${x ? `<span class="gate">U${x.uid.split('-')[1]} · ${to12(x.best)}/12 ${x.best >= 75 ? ico('check', 'ok') : ico('x', 'ko')}</span>` : '<span class="t3">—</span>'}</td>
-      <td class="r c-menu"><button class="ib sm rowmenu" aria-label="${L('Accions', 'Acciones')}" onclick="rowMenu(event,${js(r.code)})">${ico('ellipsis')}</button></td></tr>`; }).join('') || `<tr><td colspan="9">${emptyState('search', L('Cap resultat', 'Ningún resultado'), L('Prova amb un altre filtre o una altra cerca.', 'Prueba con otro filtro u otra búsqueda.'))}</td></tr>`}
-    </tbody></table></div>`;
+      <td class="r num hide-xl">${r.lt ? `${r.lt.pct} %${r.evoD != null ? ` <span class="${r.evoD >= 0 ? 'up' : 'down'}">${ico(r.evoD >= 0 ? 'trending-up' : 'trending-down')}${r.evoD >= 0 ? '+' : ''}${r.evoD}</span>` : ''}` : '<span class="t3">—</span>'}</td>
+      <td class="hide-xl c-gate" data-l="${L('Porta', 'Puerta')}">${x ? `<span class="gate">U${x.uid.split('-')[1]} · ${to12(x.best)}/12 ${x.best >= 75 ? ico('check', 'ok') : ico('x', 'ko')}</span>` : '<span class="t3">—</span>'}</td>
+      <td class="r c-menu"><button class="ib sm rowmenu" aria-label="${L('Accions', 'Acciones')}" onclick="rowMenu(event,${js(r.code)})">${ico('ellipsis')}</button></td></tr>`; }).join('') || `<tr><td colspan="12">${emptyState('search', L('Cap resultat', 'Ningún resultado'), L('Prova amb un altre filtre o una altra cerca.', 'Prueba con otro filtro u otra búsqueda.'))}</td></tr>`}
+    </tbody></table></div>
+    ${R.length > AF.n ? `<div class="more-rows"><button class="btn" onclick="AF.n+=PAGE*2;drawTable()">${L(`Mostra'n més (queden ${R.length - AF.n})`, `Mostrar más (quedan ${R.length - AF.n})`)}</button></div>` : ''}`;
+  const hc = $('#tbl thead input'); if (hc) hc.indeterminate = nSel > 0 && nSel < R.length;
   const cur = decodeURIComponent((location.hash.match(/^#\/alumnes\/([^?]+)/) || [])[1] || ''); if (cur) $$('tbody tr').forEach(t => t.classList.toggle('sel', t.dataset.c === cur));
+  selBar();
 }
-function rowKey(e, tr) { if (e.key === 'Enter') location.hash = '#/alumnes/' + encodeURIComponent(tr.dataset.c); if (e.key === 'ArrowDown') tr.nextElementSibling?.focus(); if (e.key === 'ArrowUp') tr.previousElementSibling?.focus(); }
+// clic a la fila: la casella marca/desmarca (amb Maj, tot el tram des de l'última); la resta obre la fitxa
+function rowClick(e, tr) {
+  if (e.target.closest('.rowmenu,.pop')) return;
+  const c = tr.dataset.c;
+  if (e.target.closest('.c-ck')) {
+    if (e.target.tagName !== 'INPUT') return;
+    const on = e.target.checked;
+    if (e.shiftKey && SEL_LAST) { const L_ = filtered().slice(0, AF.n).map(r => r.code), i = L_.indexOf(SEL_LAST), j = L_.indexOf(c); if (i >= 0 && j >= 0) L_.slice(Math.min(i, j), Math.max(i, j) + 1).forEach(k => on ? SEL.add(k) : SEL.delete(k)); }
+    on ? SEL.add(c) : SEL.delete(c); SEL_LAST = c; drawTable(); return;
+  }
+  if (SEL.size && !e.target.closest('.c-name')) { SEL.has(c) ? SEL.delete(c) : SEL.add(c); SEL_LAST = c; drawTable(); return; }
+  location.hash = '#/alumnes/' + encodeURIComponent(c);
+}
+function selAll(on) { filtered().forEach(r => on ? SEL.add(r.code) : SEL.delete(r.code)); drawTable(); }
+// alumnes de mostra i de prova (MOSTRA-…, ZZ…, «prova», «test»…), com a «Usuaris i Premium»
+function selTests() { const T = scope().filter(r => uIsTest(r)); if (!T.length) return toast(L('No hi ha cap alumne de mostra ni de prova.', 'No hay ningún alumno de muestra ni de prueba.')); AF.f = 'all'; AF.q = ''; T.forEach(r => SEL.add(r.code)); vAlumnes(); toast(L(`${T.length} marcats. Revisa la llista abans de fer res.`, `${T.length} marcados. Revisa la lista antes de hacer nada.`)); }
+const selRows = () => ROWS.filter(r => SEL.has(r.code));
+function selBar() {
+  const el = $('#selbar'); if (!el) return;
+  [...SEL].forEach(c => { if (!ROWS.some(r => r.code === c)) SEL.delete(c); });
+  const S = selRows(), n = S.length; document.body.classList.toggle('has-sel', !!n);
+  if (!n) return el.innerHTML = '';
+  const inG = S.filter(r => r.grup_id).length, hidden = S.filter(r => !filtered().some(x => x.code === r.code)).length, lock = S.every(r => r.unlock_all);
+  el.innerHTML = `<div class="selbar2" role="toolbar" aria-label="${L('Accions amb la selecció', 'Acciones con la selección')}"><b>${n} ${n === 1 ? L('seleccionat', 'seleccionado') : L('seleccionats', 'seleccionados')}</b>${hidden ? `<small class="t3">${L(`(${hidden} fora del filtre)`, `(${hidden} fuera del filtro)`)}</small>` : ''}
+    <span class="sp"></span>
+    ${ADMIN && GRUPS.length ? `<div class="pw-rel"><button class="btn sm" onclick="selGrupPop(event)">${ico('user-plus')}<span>${L('Assigna a un grup', 'Asignar a un grupo')}</span></button></div>` : ''}
+    ${inG ? `<button class="btn sm" onclick="bulk('treure')">${ico('user-minus')}<span>${L('Treu del grup', 'Quitar del grupo')}</span></button>` : ''}
+    <button class="btn sm" onclick="bulk('unlock',{value:${!lock}})">${ico(lock ? 'lock' : 'lock-open')}<span>${lock ? L('Torna al camí normal', 'Volver al camino normal') : L('Obre totes les unitats', 'Abrir todas las unidades')}</span></button>
+    <button class="btn sm" onclick="csvResum(selRows())">${ico('download')}<span>CSV</span></button>
+    ${ADMIN ? `<button class="btn sm danger" onclick="bulk('off')">${ico('user-minus')}<span>${L('Dona de baixa', 'Dar de baja')}</span></button><button class="btn sm danger solid" onclick="bulk('esborra')">${ico('trash-2')}<span>${L('Esborra', 'Borrar')}</span></button>` : ''}
+    <button class="ib sm" onclick="SEL.clear();drawTable()" title="${L('Desmarca', 'Desmarcar')}" aria-label="${L('Desmarca', 'Desmarcar')}">${ico('x')}</button></div>`;
+}
+function selGrupPop(e) {
+  e.stopPropagation(); closePops();
+  const by = {}; GRUPS.forEach(g => (by[g.centre || ''] ||= []).push(g));
+  e.currentTarget.insertAdjacentHTML('afterend', `<div class="pop up">${Object.entries(by).map(([k, gs]) => `${k ? `<div class="h">${esc(k)}</div>` : ''}${gs.map(g => `<button onclick="bulk('assign',{grup_id:${g.id}})">${esc(g.nom)}<span class="n">${ROWS.filter(r => r.grup_id === g.id).length}</span></button>`).join('')}`).join('')}</div>`);
+}
+// accions en bloc: confirmació amb els noms i una sola petició al servidor
+async function bulk(op, extra = {}) {
+  closePops(); const S = selRows(), n = S.length; if (!n) return;
+  const noms = S.slice(0, 12).map(r => r.name).join(', ') + (n > 12 ? ` ${L('i', 'y')} ${n - 12} ${L('més', 'más')}` : '');
+  const g = op === 'assign' ? GRUPS.find(x => x.id === extra.grup_id) : null;
+  const C = {
+    assign: [L(`Assignar ${n} alumnes a ${g && g.nom}?`, `¿Asignar ${n} alumnos a ${g && g.nom}?`), L(`Passaran al pla escola del grup. ${noms}.`, `Pasarán al plan escuela del grupo. ${noms}.`), L('Assigna', 'Asignar'), false],
+    treure: [L(`Treure ${n} alumnes del grup?`, `¿Quitar ${n} alumnos del grupo?`), L(`Tornaran al pla gratuït i quedaran com a alumnes online. ${noms}.`, `Volverán al plan gratuito y quedarán como alumnos online. ${noms}.`), L('Treu del grup', 'Quitar del grupo'), true],
+    unlock: [extra.value ? L(`Obrir totes les unitats a ${n} alumnes?`, `¿Abrir todas las unidades a ${n} alumnos?`) : L(`Tornar ${n} alumnes al camí normal?`, `¿Devolver ${n} alumnos al camino normal?`), noms, L('Fes-ho', 'Hacerlo'), false],
+    off: [L(`Donar de baixa ${n} alumnes?`, `¿Dar de baja a ${n} alumnos?`), L(`Deixaran d'aparèixer i no podran entrar. Es poden reactivar des de «Usuaris i Premium» → Baixa. ${noms}.`, `Dejarán de aparecer y no podrán entrar. Se pueden reactivar desde «Usuarios y Premium» → Baja. ${noms}.`), L('Dona de baixa', 'Dar de baja'), true],
+    esborra: [L(`Esborrar ${n} alumnes i tot el seu progrés?`, `¿Borrar ${n} alumnos y todo su progreso?`), L(`No es pot desfer. Els que paguen amb Stripe no s'esborren. ${noms}.`, `No se puede deshacer. Los que pagan con Stripe no se borran. ${noms}.`), L('Esborra-ho tot', 'Borrarlo todo'), true]
+  }[op];
+  if (!await confirmBox(C[0], C[1], C[2], C[3], L('No', 'No'))) return;
+  const j = await act('bulk', { op, codes: S.map(r => r.code), ...extra });
+  if (!j.ok) return toast(L("No s'ha pogut fer. Torna-ho a provar.", 'No se ha podido hacer. Vuelve a intentarlo.'));
+  toast(L(`Fet: ${j.n} de ${n}.`, `Hecho: ${j.n} de ${n}.`) + (j.subs ? L(` ${j.subs} paguen amb Stripe: cancel·leu-ne primer la subscripció.`, ` ${j.subs} pagan con Stripe: cancelad antes la suscripción.`) : ''));
+  SEL.clear(); UD = null; await reload();
+}
+function rowKey(e, tr) { if (e.key === ' ' && e.target === tr) { e.preventDefault(); const c = tr.dataset.c; SEL.has(c) ? SEL.delete(c) : SEL.add(c); SEL_LAST = c; drawTable(); $(`tbody tr[data-c="${c}"]`)?.focus(); return; } if (e.key === 'Enter') location.hash = '#/alumnes/' + encodeURIComponent(tr.dataset.c); if (e.key === 'ArrowDown') tr.nextElementSibling?.focus(); if (e.key === 'ArrowUp') tr.previousElementSibling?.focus(); }
 function rowMenu(e, code) {
   e.stopPropagation(); closePops(); const r = ROWS.find(x => x.code === code), c = js(code);
   e.currentTarget.parentElement.style.position = 'relative';
@@ -657,9 +760,11 @@ function openDrawer(code, keep) {
   if (!$('.drawer')) closeDrawer.from = document.activeElement; closeDrawer(true);
   const list = $('#tbl') ? filtered() : scope(), i = list.findIndex(x => x.code === code), prev = list[i - 1], next = list[i + 1];
   document.body.insertAdjacentHTML('beforeend', `<div class="scrim" onclick="closeDrawer()"></div><aside class="drawer" role="dialog" aria-modal="true" tabindex="-1" aria-label="${esc(r.name)}">
-    <div class="dr-h">${avatar(r, 'lg')}<div><h2>${esc(r.name)}</h2><small>${[r.grup_id ? gName(r.grup_id) : '', cursOf(r), r.lang === 'es' ? 'Castellano' : 'Català'].filter(Boolean).map(esc).join(' · ')}</small></div>
+    <div class="dr-h">${avatar(r, 'lg')}<div><h2>${esc(r.name)}</h2><small>${[r.grup_id ? gName(r.grup_id) : L('Online, sense grup', 'Online, sin grupo'), cursOf(r), r.lang === 'es' ? 'Castellano' : 'Català'].filter(Boolean).map(esc).join(' · ')}</small></div>
       <div class="acts"><button class="ib" ${prev ? `onclick="location.hash='#/alumnes/${encodeURIComponent(prev.code)}'"` : 'disabled'} aria-label="${L('Anterior', 'Anterior')}">${ico('chevron-left')}</button><button class="ib" ${next ? `onclick="location.hash='#/alumnes/${encodeURIComponent(next.code)}'"` : 'disabled'} aria-label="${L('Següent', 'Siguiente')}">${ico('chevron-right')}</button>
-      ${ADMIN ? `<button class="btn sm" onclick="closeDrawer(true);location.hash='#/ia/${encodeURIComponent(r.code)}'">${ico('sparkles')}${L('Pregunta a la IA', 'Pregunta a la IA')}</button>` : ''}<button class="btn sm" onclick="printReport(${js(r.code)})">${ico('printer')}${L('Imprimeix', 'Imprimir')}</button><button class="ib" onclick="closeDrawer()" aria-label="${L('Tanca', 'Cerrar')}">${ico('x')}</button></div></div>
+      ${ADMIN ? `<button class="ib" title="${L('Pregunta a la IA', 'Pregunta a la IA')}" aria-label="${L('Pregunta a la IA', 'Pregunta a la IA')}" onclick="closeDrawer(true);location.hash='#/ia/${encodeURIComponent(r.code)}'">${ico('sparkles')}</button>` : ''}<button class="ib" title="${L("Imprimeix l'informe", 'Imprimir el informe')}" aria-label="${L("Imprimeix l'informe", 'Imprimir el informe')}" onclick="printReport(${js(r.code)})">${ico('printer')}</button><button class="ib" onclick="closeDrawer()" aria-label="${L('Tanca', 'Cerrar')}">${ico('x')}</button></div></div>
+    <div class="dr-info"><span>${ico('calendar')}${L('Alta', 'Alta')} ${altaTxt(r)}${r.newd != null ? ` · ${altaAgo(r)}` : ''}</span><span>${r.alta_docent ? L("Donat d'alta pel docent", 'Dado de alta por el docente') : L("Registrat a l'app", 'Registrado en la app')}</span>${r.online ? `<span class="orig on">${L('Online', 'Online')}</span>` : ''}${ADMIN ? plaChip(r) : ''}
+      ${ADMIN && r.online && GRUPS.length ? `<select class="dr-assign" aria-label="${L('Assigna a un grup', 'Asignar a un grupo')}" onchange="if(this.value)doAssign(${js(r.code)},this.value)"><option value="">${L('Assigna a un grup…', 'Asignar a un grupo…')}</option>${GRUPS.map(g => `<option value="${g.id}">${esc(g.nom)} · ${esc(g.centre)}</option>`).join('')}</select>` : ''}</div>
     <div class="dr-b">${reportHTML(r, false)}</div></aside>`);
   $$('tbody tr').forEach(t => t.classList.toggle('sel', t.dataset.c === code));
   loadDrawerBat(code);
@@ -716,7 +821,7 @@ function reportHTML(r, print) {
   const sec = (t, body, cls = '') => `<section class="dsec ${cls}"><h3>${t}</h3>${body}</section>`;
   const onlyOther = (r.variant === 'tech' || r.variant === 'ment') && !r.answers && !r.exams.length && !r.tests.length;
   const access = print ? '' : sec(L('Accés', 'Acceso'), `<dl class="dl"><dt>${L("Codi de l'alumne", 'Código del alumno')}</dt><dd><span class="mono">${esc(r.code)}</span> <button class="ib sm" onclick="copyTxt(${js(r.code)})" aria-label="${L('Copia', 'Copiar')}">${ico('copy')}</button></dd>
-      <dt>${L('Usuari', 'Usuario')}</dt><dd>${r.username ? '@' + esc(r.username) : L('Entra amb codi', 'Entra con código')}</dd><dt>App</dt><dd>${esc(APPN[r.variant] || 'Numi Mates')}${r.apps.length ? ' + ' + r.apps.map(a => esc(APPN[a])).join(', ') : ''}</dd></dl>
+      <dt>${L('Usuari', 'Usuario')}</dt><dd>${r.username ? '@' + esc(r.username) : L('Entra amb codi', 'Entra con código')}</dd><dt>${L('Alta', 'Alta')}</dt><dd>${altaTxt(r)}${r.newd != null ? ` · ${altaAgo(r)}` : ''}</dd><dt>${L('Grup', 'Grupo')}</dt><dd>${r.grup_id ? esc(gName(r.grup_id)) : L('Cap (alumne online)', 'Ninguno (alumno online)')}</dd><dt>App</dt><dd>${esc(APPN[r.variant] || 'Numi Mates')}${r.apps.length ? ' + ' + r.apps.map(a => esc(APPN[a])).join(', ') : ''}</dd></dl>
       ${ADMIN ? `<div id="dapps" style="margin-top:12px"><b style="font-weight:600">${L('Pot entrar també a', 'También puede entrar en')}</b><div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:6px">${Object.entries(APPN).filter(([k]) => k !== (r.variant || 'mates')).map(([k, n]) => `<label class="switch"><input type="checkbox" value="${k}" ${r.apps.includes(k) ? 'checked' : ''} onchange="doApps(${js(r.code)})"><span>${n}</span></label>`).join('')}</div><small class="t3">${L('Amb el mateix usuari i el mateix Premium.', 'Con el mismo usuario y el mismo Premium.')}</small></div>` : ''}
       ${r.username ? `<div style="margin-top:12px"><button class="btn sm" onclick="pwForm(${js(r.code)})">${ico('key-round')}${L('Canvia la contrasenya', 'Cambiar la contraseña')}</button><div id="pwf"></div></div>` : ''}
       <label class="switch" style="margin-top:16px"><input type="checkbox" ${r.unlock_all ? 'checked' : ''} onchange="doUnlock(${js(r.code)},this.checked)"><span><b style="font-weight:600">${L('Mode mestre: obre totes les unitats', 'Modo maestro: abre todas las unidades')}</b><br><small class="t3">${L("L'alumne podrà fer qualsevol unitat sense passar la porta.", 'El alumno podrá hacer cualquier unidad sin pasar la puerta.')}</small></span></label>
@@ -735,7 +840,7 @@ function reportHTML(r, print) {
     ${print ? '' : `<section class="dsec" id="dbat"><h3>${L('Batalles i medalles', 'Batallas y medallas')}</h3><p class="t3">…</p></section>`}
     ${sec(L("Què diu l'alumne", 'Qué dice el alumno'), `<dl class="dl"><dt>${L('Resultat de la prova inicial', 'Resultado de la prueba inicial')}</dt><dd>${esc(sv.result || '—')}</dd><dt>${L('Com se sent amb les mates', 'Cómo se siente con las mates')}</dt><dd>${FEEL[sv.feel] ? tx(FEEL[sv.feel]) : '—'}</dd><dt>${L('Tema que diu que fa a classe', 'Tema que dice que da en clase')}</dt><dd>${r.school ? L(`Unitat ${r.school.ui + 1} de ${curs(r.school.course)}`, `Unidad ${r.school.ui + 1} de ${curs(r.school.course)}`) : '—'}</dd>${r.reco ? `<dt>${L('Missió recomanada pendent', 'Misión recomendada pendiente')}</dt><dd>${(r.reco.items || []).length} ${L('lliçons', 'lecciones')}</dd>` : ''}</dl>`)}
     ${sec(L('Punts per a la tutoria', 'Puntos para la tutoría'), `<ul class="bullets">${pts.map(p => `<li>${esc(p)}</li>`).join('')}</ul>${print ? `<div id="pnotes"></div>` : `<label class="field" style="margin-top:12px"><span>${L('Notes (només per imprimir)', 'Notas (solo para imprimir)')}</span><textarea id="notes" placeholder="${L('Apunts per a la reunió amb la família…', 'Apuntes para la reunión con la familia…')}"></textarea></label>`}`)}
-    ${print ? '' : `<section class="dsec"><details class="more"><summary>${ico('chevron-right')}${L("Motivació a l'app", 'Motivación en la app')}</summary><dl class="dl" style="margin-top:12px"><dt>XP</dt><dd class="num">${r.xp}</dd><dt>${L('XP aquesta setmana', 'XP esta semana')}</dt><dd class="num">${r.week && r.week.xp ? r.week.xp : 0}</dd><dt>${L('Cartes', 'Cartas')}</dt><dd class="num">${Object.keys(r.album || {}).length} / 100</dd><dt>${L('Batalles guanyades', 'Batallas ganadas')}</dt><dd class="num">${r.bwins || 0}</dd><dt>${L('Corones', 'Coronas')}</dt><dd class="num">${(r.crowns || []).length}</dd></dl></details></section>`}
+    ${print ? '' : `<section class="dsec"><details class="more"><summary>${ico('chevron-right')}${L("Motivació a l'app", 'Motivación en la app')}</summary><dl class="dl" style="margin-top:12px"><dt>XP</dt><dd class="num">${r.xp}</dd><dt>${L('XP aquesta setmana', 'XP esta semana')}</dt><dd class="num">${r.week && r.week.xp ? r.week.xp : 0}</dd><dt>${L('Cartes', 'Cartas')}</dt><dd class="num">${r.album_n} / 100</dd><dt>${L('Batalles guanyades', 'Batallas ganadas')}</dt><dd class="num">${r.bwins || 0}</dd><dt>${L('Corones', 'Coronas')}</dt><dd class="num">${(r.crowns || []).length}</dd></dl></details></section>`}
     ${access}`;
 }
 function printReport(code) {
@@ -1027,9 +1132,9 @@ const csvQ = v => `"${(typeof v === 'string' && /^[=+\-@\t\r]/.test(v) ? "'" + v
 function download(name, head, rows) {
   const s = '﻿' + [head, ...rows].map(r => r.map(csvQ).join(';')).join('\n');
   const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([s], { type: 'text/csv' }));
-  const g = G ? gName(+G).replace(/\W+/g, '-').toLowerCase() : 'tots'; a.download = `numi-${g}-${name}-${TODAY}.csv`; a.click();
+  const g = G === 'online' ? 'online' : G ? gName(+G).replace(/\W+/g, '-').toLowerCase() : 'tots'; a.download = `numi-${g}-${name}-${TODAY}.csv`; a.click();
 }
-function csvResum() { download('resum', [L('Alumne', 'Alumno'), L('Usuari', 'Usuario'), L('Codi', 'Código'), L('Grup', 'Grupo'), L('Nivell', 'Nivel'), L('Última activitat', 'Última actividad'), L('Dies actius (14 d)', 'Días activos (14 d)'), L('Lliçons', 'Lecciones'), L('Precisió %', 'Precisión %'), L('Última prova %', 'Última prueba %'), L('Porta (última)', 'Puerta (última)'), 'XP', L('Ratxa', 'Racha')], filteredOrScope().map(r => [r.name, r.username || '', r.code, gName(r.grup_id), cursOf(r), r.last_day || '', r.act14, r.lessons, r.acc ?? '', r.lt ? r.lt.pct : '', r.exams[0] ? `${r.exams[0].uid} ${to12(r.exams[0].best)}/12` : '', r.xp, r.streak])); }
+function csvResum(rows) { download('resum', [L('Alumne', 'Alumno'), L('Usuari', 'Usuario'), L('Codi', 'Código'), L('Grup', 'Grupo'), L('Alta', 'Alta'), 'App', L('Pla', 'Plan'), L('Nivell', 'Nivel'), L('Última activitat', 'Última actividad'), L('Dies actius (14 d)', 'Días activos (14 d)'), L('Lliçons', 'Lecciones'), L('Precisió %', 'Precisión %'), L('Última prova %', 'Última prueba %'), L('Porta (última)', 'Puerta (última)'), 'XP', L('Ratxa', 'Racha')], (Array.isArray(rows) ? rows : filteredOrScope()).map(r => [r.name, r.username || '', r.code, r.grup_id ? gName(r.grup_id) : 'Online', r.alta, APPN[APPS_OF(r)], tx(PLA_T[plaOf(r)]), cursOf(r), r.last_day || '', r.act14, r.lessons, r.acc ?? '', r.lt ? r.lt.pct : '', r.exams[0] ? `${r.exams[0].uid} ${to12(r.exams[0].best)}/12` : '', r.xp, r.streak])); }
 function csvSentits() { download('sentits', [L('Alumne', 'Alumno'), ...Object.keys(SENT).flatMap(k => [tx(SENT[k][0]) + ' %', tx(SENT[k][0]) + ' ' + L('respostes', 'respuestas')])], scope().map(r => [r.name, ...Object.keys(SENT).flatMap(k => [r.sent[k].pct ?? '', r.sent[k].t])])); }
 function csvPorta() { download('porta', [L('Alumne', 'Alumno'), L('Unitat', 'Unidad'), L('Millor /12', 'Mejor /12'), L('Última /12', 'Última /12'), L('Intents', 'Intentos'), L('Superada', 'Superada')], scope().flatMap(r => r.exams.map(x => [r.name, unitName(x.uid), to12(x.best), to12(x.last), x.tries || 1, x.best >= 75 ? L('sí', 'sí') : 'no']))); }
 const filteredOrScope = () => $('#tbl') ? filtered() : scope();
@@ -1107,7 +1212,8 @@ function uSel(code, on) { on ? USEL.add(code) : USEL.delete(code); uSelBar(); }
 function uSelTests() { UD.users.filter(uIsTest).forEach(u => USEL.add(u.code)); UF.f = 'proves'; UF.n = 100; vUsuaris(); }
 function uSelBar() {
   const el = $('#usel'); if (!el) return;
-  el.innerHTML = USEL.size ? `<div class="card pad selbar"><b>${USEL.size} ${L(USEL.size === 1 ? 'seleccionat' : 'seleccionats', USEL.size === 1 ? 'seleccionado' : 'seleccionados')}</b><button class="btn danger solid" onclick="uEraseSel()">${ico('trash-2')}${L('Esborra-ho tot', 'Borrarlo todo')}</button><button class="btn" onclick="USEL.clear();uTable();uSelBar()">${L('Desmarca', 'Desmarcar')}</button></div>` : '';
+  const S = [...USEL].map(c => UD.users.find(u => u.code === c)).filter(Boolean), off = S.filter(u => !u.active).length, on = S.length - off;
+  el.innerHTML = USEL.size ? `<div class="card pad selbar"><b>${USEL.size} ${L(USEL.size === 1 ? 'seleccionat' : 'seleccionats', USEL.size === 1 ? 'seleccionado' : 'seleccionados')}</b>${off ? `<button class="btn" onclick="uBulk('on')">${ico('rotate-ccw')}${L(`Reactiva (${off})`, `Reactivar (${off})`)}</button>` : ''}${on ? `<button class="btn danger" onclick="uBulk('off')">${ico('user-minus')}${L(`Dona de baixa (${on})`, `Dar de baja (${on})`)}</button>` : ''}<button class="btn danger solid" onclick="uEraseSel()">${ico('trash-2')}${L('Esborra-ho tot', 'Borrarlo todo')}</button><button class="btn" onclick="USEL.clear();uTable();uSelBar()">${L('Desmarca', 'Desmarcar')}</button></div>` : '';
 }
 // esborrar de veritat diversos comptes alhora (p. ex. totes les proves), amb confirmació i la llista de noms
 async function uEraseSel() {
@@ -1118,6 +1224,17 @@ async function uEraseSel() {
   for (const u of us) { const j = await act('esborra', { code: u.code }).catch(() => ({})); if (j.ok) { ok++; USEL.delete(u.code); } else if (j.error === 'subscripció') sub++; else ko++; }
   toast(L(`${ok} esborrats`, `${ok} borrados`) + (sub ? L(` · ${sub} amb subscripció de Stripe (cancel·leu-la primer)`, ` · ${sub} con suscripción de Stripe (cancelad antes)`) : '') + (ko ? L(` · ${ko} amb error`, ` · ${ko} con error`) : ''));
   UD = null; await reload();
+}
+// donar de baixa o reactivar diversos comptes alhora (la baixa es pot desfer; esborrar, no)
+async function uBulk(op) {
+  const us = [...USEL].map(c => UD.users.find(u => u.code === c)).filter(u => u && (op === 'on' ? !u.active : u.active)); if (!us.length) return;
+  const noms = us.slice(0, 20).map(u => u.name).join(', ') + (us.length > 20 ? ` ${L('i', 'y')} ${us.length - 20} ${L('més', 'más')}` : '');
+  if (!await confirmBox(op === 'on' ? L(`Reactivar ${us.length} comptes?`, `¿Reactivar ${us.length} cuentas?`) : L(`Donar de baixa ${us.length} comptes?`, `¿Dar de baja ${us.length} cuentas?`),
+    op === 'on' ? L(`Podran tornar a entrar amb el seu progrés. ${noms}.`, `Podrán volver a entrar con su progreso. ${noms}.`) : L(`No podran entrar, però el progrés es conserva i es poden reactivar. ${noms}.`, `No podrán entrar, pero el progreso se conserva y se pueden reactivar. ${noms}.`),
+    op === 'on' ? L('Reactiva', 'Reactivar') : L('Dona de baixa', 'Dar de baja'), op !== 'on', L('No', 'No'))) return;
+  const j = await act('bulk', { op, codes: us.map(u => u.code) });
+  if (!j.ok) return toast(L("No s'ha pogut fer.", 'No se ha podido hacer.'));
+  toast(L(`Fet: ${j.n} comptes.`, `Hecho: ${j.n} cuentas.`)); USEL.clear(); UD = null; await reload();
 }
 const uCount = k => { const s = UF.f; UF.f = k; const q = UF.q; UF.q = ''; const n = uList().length; UF.f = s; UF.q = q; return n; };
 function uList() {
@@ -1199,7 +1316,10 @@ function uTable() {
 }
 function uOpen(code) {
   if (ROWS.some(r => r.code === code)) { G = ''; location.hash = '#/alumnes/' + encodeURIComponent(code); return; }
-  uErase(code);
+  // compte de baixa: es pot reactivar o esborrar del tot
+  const u = UD && UD.users.find(x => x.code === code); if (!u) return;
+  modal(`<h3>${esc(u.name)}</h3><p>${L(`Compte de baixa · alta el ${fdate(u.alta)} · ${u.lessons || 0} lliçons.`, `Cuenta de baja · alta el ${fdate(u.alta)} · ${u.lessons || 0} lecciones.`)}</p>
+    <div class="acts"><button class="btn danger" onclick="closeModal();uErase(${js(code)})">${ico('trash-2')}${L('Esborra les dades', 'Borrar los datos')}</button><button class="btn primary" onclick="closeModal();USEL=new Set([${js(code)}]);uBulk('on')">${ico('rotate-ccw')}${L('Reactiva', 'Reactivar')}</button></div>`);
 }
 // esborrar de veritat, amb confirmació: no es pot desfer
 async function uErase(code) {

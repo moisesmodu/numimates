@@ -109,6 +109,32 @@ export default async function handler(req, res) {
         return ok(res, { ok: true, state: await batState(bc, null) });
       }
     }
+    // --- accions en bloc sobre una selecció d'alumnes (taula d'alumnes i usuaris del panell) ---
+    // El docent només pot treure del grup i obrir unitats als seus; la resta (baixa, alta, grup, esborrar) és de l'admin.
+    if (b.action === 'bulk') {
+      const codes = [...new Set((Array.isArray(b.codes) ? b.codes : []).map(cleanCode).filter(Boolean))].slice(0, 1000), op = b.op;
+      if (!codes.length) return ok(res, { error: 'buit' }, 400);
+      if (!['treure', 'unlock', 'off', 'on', 'assign', 'esborra'].includes(op)) return ok(res, { error: 'acció' }, 400);
+      if (!me.admin && !['treure', 'unlock'].includes(op)) return ok(res, { error: 'permís' }, 403);
+      // l'admin pot tocar tothom; el docent, només els que són als seus grups
+      const own = me.admin ? codes : (await sql`SELECT code FROM mates.alumnes WHERE code = ANY(${codes}) AND grup_id = ANY(${gids})`).map(r => r.code);
+      let q = [];
+      if (op === 'treure') q = await sql`UPDATE mates.alumnes SET grup_id = NULL, pla = CASE WHEN pla = 'escola' THEN 'free' ELSE pla END WHERE code = ANY(${own}) AND grup_id IS NOT NULL RETURNING code`;
+      if (op === 'unlock') q = await sql`UPDATE mates.alumnes SET state = jsonb_set(state, '{unlockAll}', to_jsonb(${!!b.value}::boolean)) WHERE code = ANY(${own}) RETURNING code`;
+      if (op === 'off' || op === 'on') q = await sql`UPDATE mates.alumnes SET active = ${op === 'on'} WHERE code = ANY(${own}) RETURNING code`;
+      if (op === 'assign') {
+        const g = int(b.grup_id);
+        if (g != null && !(await sql`SELECT 1 FROM mates.grups WHERE id = ${g} AND actiu`).length) return ok(res, { error: 'grup' }, 404);
+        q = await sql`UPDATE mates.alumnes SET grup_id = ${g}, pla = CASE WHEN ${g}::int IS NULL AND pla = 'escola' THEN 'free' WHEN ${g}::int IS NOT NULL THEN 'escola' ELSE pla END WHERE code = ANY(${own}) RETURNING code`;
+      }
+      if (op === 'esborra') {
+        // els que paguen amb Stripe no s'esborren: primer cal cancel·lar la subscripció
+        const subs = (await sql`SELECT code FROM mates.alumnes WHERE code = ANY(${own}) AND stripe_sub IS NOT NULL`).map(r => r.code);
+        let n = 0; for (const c of own.filter(c => !subs.includes(c))) { try { await eraseStudent(c); n++; } catch (e) { } }
+        return ok(res, { ok: true, n, subs: subs.length, skip: codes.length - own.length });
+      }
+      return ok(res, { ok: true, n: q.length, skip: codes.length - q.length });
+    }
     // --- accions sobre un alumne (admin o el seu docent) ---
     if (['setpass', 'unlock', 'off', 'treure', 'apps'].includes(b.action)) {
       if (!(await mine(code))) return ok(res, { error: 'permís' }, 403);
@@ -260,7 +286,8 @@ export default async function handler(req, res) {
   }
   // --- lectura ---
   const rows = await sql`SELECT code, username, name, course, survey, xp, streak, best, last_day, lessons, answers, correct, created_at, updated_at, grup_id, pla, pla_fins,
-    state->'tests' AS tests, state->'lang' AS lang, state->'unlockAll' AS unlock_all, state->'week' AS week, state->'stats'->'sk' AS sk, state->'reco' AS reco, state->'school' AS school, state->'album' AS album, state->'stats'->'bwins' AS bwins, state->'crowns' AS crowns, state->'exams' AS exams, state->'days' AS days,
+    state->'tests' AS tests, state->'lang' AS lang, state->'unlockAll' AS unlock_all, state->'week' AS week, state->'stats'->'sk' AS sk, state->'reco' AS reco, state->'school' AS school,
+    (SELECT count(*)::int FROM jsonb_object_keys(CASE WHEN jsonb_typeof(state->'album') = 'object' THEN state->'album' ELSE '{}'::jsonb END)) AS album_n, state->'stats'->'bwins' AS bwins, state->'crowns' AS crowns, state->'exams' AS exams, state->'days' AS days,
     state->>'variant' AS variant, state->'apps' AS apps, (state->'tech') - 'port' AS tech, state->'ment' AS ment,
     (SELECT jsonb_agg(jsonb_build_object('t', p->'t', 'd', p->'d', 'sid', p->'sid')) FROM jsonb_array_elements(CASE WHEN jsonb_typeof(state->'tech'->'port') = 'array' THEN state->'tech'->'port' ELSE '[]'::jsonb END) p) AS tech_port
     FROM mates.alumnes WHERE active AND (${!!me.admin} OR grup_id = ANY(${gids})) ORDER BY streak DESC, xp DESC`;
