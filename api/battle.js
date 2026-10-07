@@ -73,6 +73,8 @@ export default async function handler(req, res) {
 
   if (act === 'join') {
     if (!inside) {
+      // les batalles per a convidats es juguen a /juga (poden tenir 20 preguntes; l'app en fa sempre 10)
+      if (st0.kind === 'oberta') return ok(res, { error: 'no-existeix' }, 404);
       if (st0.expired || st0.over) return ok(res, { error: 'caducada' }, 410);
       if ((st0.kind === 'classe' || st0.kind === 'comp') && st0.grup !== me.grup_id) return ok(res, { error: 'altra-classe' }, 403);
       if ((st0.kind === 'party' || st0.kind === 'classe') && st0.status !== 'lobby') return ok(res, { error: 'començada' }, 409);

@@ -98,6 +98,10 @@
     {
       "source": "/families",
       "destination": "/families.html"
+    },
+    {
+      "source": "/juga",
+      "destination": "/juga.html"
     }
   ],
   "crons": [
