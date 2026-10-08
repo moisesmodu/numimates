@@ -1,7 +1,8 @@
 /* ===== Numi Mates · batalla per a convidats (/juga) =====
    El docent crea una «batalla per a convidats» al panell i la projecta. Qualsevol hi entra des d'aquí amb el codi de la
    pissarra i un nom (sense compte) i tria un personatge. Les preguntes són les mateixes que a l'app (mateix motor i mateixa
-   llavor): 10 iguals per a tothom; guanya qui n'encerta més i, si hi ha empat, qui ha trigat menys.
+   llavor): les mateixes per a tothom (de 5 a 30, les que triï el docent) i, si ho ha triat, cadascú les rep en un ordre
+   diferent; guanya qui n'encerta més i, si hi ha empat, qui ha trigat menys.
    Aquesta pàgina no carrega app.js: només el motor d'exercicis (ex*.js, curriculum.js, fun.js) i els personatges. */
 const $ = (s, el = document) => el.querySelector(s);
 const $$ = (s, el = document) => [...el.querySelectorAll(s)];
@@ -15,7 +16,7 @@ document.documentElement.lang = LANG;
 document.title = L('Juga · Batalla de mates · Numi Mates', 'Juega · Batalla de mates · Numi Mates');
 document.body.insertAdjacentHTML('afterbegin', DEFS);
 const app = $('#app');
-let BQ = 10;   // preguntes de la batalla (10 o 20): es posa amb l'estat
+let BQ = 10;   // preguntes de la batalla (de 5 a 30): es posa amb l'estat
 const CHARS = ['numi', 'guida', 'vuit', 'tuga', 'flama', 'estel', 'cavaller'];
 const G = { code: '', tok: '', name: '', comp: store.get('numi-juga-comp') || 'numi', st: null, screen: '', poll: null, endAt: null, at: 0 };
 
@@ -49,15 +50,18 @@ function genEx(sk, lv, seen, mix) {
   for (let t = 0; t < 10; t++) { e = EX[name](lv, arg); if (mix) e = remix(e); e.sk = sk; e.L = lv; const key = e.q + (e.vis || '') + (e.items || '') + (e.fixed || '') + (e.need || ''); if (!seen.has(key)) { seen.add(key); break; } }
   return e;
 }
+// barreja estable (la mateixa cada vegada per al mateix convidat: si recarrega, continua on era)
+function shuffleSeeded(arr, seed) { const r = seeded(seed), a = arr.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(r() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
 function battlePlan(st) {
   const c = COURSES[st.course], units = st.unit != null && c.units[st.unit] ? [c.units[st.unit]] : c.units;
-  return withSeed(st.seed, () => {
+  const plan = withSeed(st.seed, () => {
     const pool = [];
     units.forEach(u => u.lessons.slice(0, 10).forEach(l => l.sk.forEach(s => pool.push([s, l.L]))));
     const plan = []; for (let i = 0; i < BQ; i++) plan.push(pick(pool));
     plan.sort((a, b) => a[1] - b[1]);
     const seen = new Set(); return plan.map(([s, lv]) => genEx(s, lv, seen, true));
   });
+  return st.oseed ? shuffleSeeded(plan, st.oseed) : plan;
 }
 
 /* ---------- bucle de consulta: un de sol, el ritme depèn de la pantalla ---------- */
@@ -133,7 +137,7 @@ function renderLobby() {
     <div class="jg-tag">${esc(st.title || L('Batalla de mates', 'Batalla de mates'))} · <span class="mono">${st.code}</span></div>
     <div class="jg-count" id="jcnt"></div>
     <div class="jg-chips" id="jpl"></div>
-    <div class="jg-tips"><b>${L('Com es juga', 'Cómo se juega')}</b><span>${L(`${BQ} preguntes, les mateixes per a tothom. Guanya qui n'encerta més i, si hi ha empat, el més ràpid.`, `${BQ} preguntas, las mismas para todos. Gana quien acierta más y, si hay empate, el más rápido.`)}</span></div>
+    <div class="jg-tips"><b>${L('Com es juga', 'Cómo se juega')}</b><span>${L(`${BQ} preguntes, les mateixes per a tothom${st.mix ? ', però a cadascú li surten en un ordre diferent' : ''}. Guanya qui n'encerta més i, si hi ha empat, el més ràpid.`, `${BQ} preguntas, las mismas para todos${st.mix ? ', pero a cada uno le salen en un orden distinto' : ''}. Gana quien acierta más y, si hay empate, el más rápido.`)}</span></div>
   </section>`;
   updLobby();
 }

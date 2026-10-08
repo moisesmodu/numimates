@@ -68,16 +68,15 @@ export default async function handler(req, res) {
         const course = Number.isInteger(+b.course) && +b.course >= 0 && +b.course <= 9 ? +b.course : (g.curs ?? 3);
         const unit = Number.isInteger(b.unit) && b.unit >= 0 && b.unit < 12 ? b.unit : null, titol = String(b.titol || '').trim().slice(0, 60) || null;
         const days = Math.max(1, Math.min(60, +b.days || 7)), tries = Math.max(1, Math.min(10, +b.tries || 3));
+        // preguntes: les que triï el docent (per defecte, 10; per a convidats, 20) · mix: cada jugador les rep en un ordre diferent
+        const nq = NQ.includes(+b.nq) ? +b.nq : kind === 'oberta' ? 20 : 10, mix = b.mix !== false && b.mix !== 'false';
+        await convTables();
         for (let t = 0; t < 8; t++) {
           const code = BWORDS[randomInt(BWORDS.length)] + '-' + randomInt(1000, 10000);
-          const r = await sql`INSERT INTO mates.batalles (code, kind, course, unit, seed, host, grup_id, docent_id, titol, ends_at, tries)
-            VALUES (${code}, ${kind}, ${course}, ${unit}, ${randomInt(1, 2 ** 31 - 1)}, NULL, ${gid}, ${docId}, ${titol}, ${kind === 'comp' ? new Date(Date.now() + days * 864e5).toISOString() : null}, ${kind === 'comp' ? tries : null})
+          const r = await sql`INSERT INTO mates.batalles (code, kind, course, unit, seed, host, grup_id, docent_id, titol, ends_at, tries, nq, mix)
+            VALUES (${code}, ${kind}, ${course}, ${unit}, ${randomInt(1, 2 ** 31 - 1)}, NULL, ${gid}, ${docId}, ${titol}, ${kind === 'comp' ? new Date(Date.now() + days * 864e5).toISOString() : null}, ${kind === 'comp' ? tries : null}, ${nq}, ${mix})
             ON CONFLICT DO NOTHING RETURNING code`;
-          if (r.length) {
-            // per a convidats: 10 o 20 preguntes (per defecte, 20)
-            if (kind === 'oberta') { await convTables(); await sql`UPDATE mates.batalles SET nq = ${NQ.includes(+b.nq) ? +b.nq : 20} WHERE code = ${code}`; }
-            return ok(res, { ok: true, state: await batState(code, null) });
-          }
+          if (r.length) return ok(res, { ok: true, state: await batState(code, null) });
         }
         return ok(res, { error: 'codi' }, 500);
       }
@@ -103,11 +102,13 @@ export default async function handler(req, res) {
       if (b.action === 'alumne_bat') {
         if (!(await mine(code))) return ok(res, { error: 'permís' }, 403);
         const medals = await sql`SELECT id, kind, comment, docent_nom, created_at FROM mates.medalles WHERE code = ${code} ORDER BY created_at DESC LIMIT 50`;
-        const bats = await sql`SELECT b.code, b.kind, b.titol, b.created_at, j.correct, j.ms, j.finished, j.best_c FROM mates.batalla_jug j JOIN mates.batalles b USING (code) WHERE j.sid = ${code} ORDER BY b.created_at DESC LIMIT 200`;
-        const fin = bats.filter(x => x.finished || x.best_c != null), n = fin.length, ok10 = fin.reduce((s, x) => s + Math.max(x.correct | 0, x.best_c | 0), 0);
+        await convTables();
+        const bats = await sql`SELECT b.code, b.kind, b.titol, b.created_at, b.nq, j.correct, j.ms, j.finished, j.best_c FROM mates.batalla_jug j JOIN mates.batalles b USING (code) WHERE j.sid = ${code} ORDER BY b.created_at DESC LIMIT 200`;
+        // les batalles del docent poden tenir de 5 a 30 preguntes: l'encert es calcula sobre les preguntes de cadascuna
+        const fin = bats.filter(x => x.finished || x.best_c != null), n = fin.length, okN = fin.reduce((s, x) => s + Math.max(x.correct | 0, x.best_c | 0), 0), totN = fin.reduce((s, x) => s + (x.nq || 10), 0);
         const recent = [];
-        for (const x of bats.slice(0, 8)) { const st = await batState(x.code, code); if (st) { const p = st.players.find(q => q.me); recent.push({ code: x.code, kind: x.kind, title: x.titol, date: x.created_at, pos: p ? p.pos : 0, n: st.players.length, correct: p && p.best ? p.best.correct : p ? p.correct : 0, over: st.over }); } }
-        return ok(res, { medals, stats: { played: n, wins: recent.filter(r => r.over && r.pos === 1 && r.n > 1).length, accuracy: n ? Math.round(10 * ok10 / n) : null }, recent });
+        for (const x of bats.slice(0, 8)) { const st = await batState(x.code, code); if (st) { const p = st.players.find(q => q.me); recent.push({ code: x.code, kind: x.kind, title: x.titol, date: x.created_at, pos: p ? p.pos : 0, n: st.players.length, nq: st.nq, correct: p && p.best ? p.best.correct : p ? p.correct : 0, over: st.over }); } }
+        return ok(res, { medals, stats: { played: n, wins: recent.filter(r => r.over && r.pos === 1 && r.n > 1).length, accuracy: totN ? Math.round(100 * okN / totN) : null }, recent });
       }
       if (!bc || !(await ownBat(bc))) return ok(res, { error: 'permís' }, 403);
       if (b.action === 'bat_state') return ok(res, { state: await batState(bc, null) });

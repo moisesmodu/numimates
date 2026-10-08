@@ -4,7 +4,7 @@ Batalla de mates en directe on hi entra **qualsevol, sense compte**, amb el codi
 (portes obertes, classes de prova, famílies…). El docent la crea al panell i la projecta; veu el rànquing en directe.
 
 ## Com funciona
-- **Panell → Batalles → «Per a convidats»**. El grup és opcional. Es pot triar el nivell, el tema, el títol i **10 o 20 preguntes** (per defecte, 20). La batalla es tanca sola als 6 minuts per cada 10 preguntes, o quan tothom ha acabat.
+- **Panell → Batalles → «Per a convidats»**. El grup és opcional. Es pot triar el nivell, el tema, el títol i **de 5 a 30 preguntes** (per defecte, 20). La batalla es tanca sola als 6 minuts per cada 10 preguntes, o quan tothom ha acabat.
 - **Sala projectada** (`panel-batalla.js`, també per a la batalla de classe):
   - Sala: codi gegant, QR, avatars que entren. Si es toca un convidat, se'l pot treure de la sala.
   - Compte enrere.
@@ -23,3 +23,8 @@ Batalla de mates en directe on hi entra **qualsevol, sense compte**, amb el codi
 
 ## Provat
 Amb un servidor local que fa servir les API reals contra Postgres (PGlite) en memòria: panell (crear, sala, començar, directe amb 12 i 28 jugadors, podi), convidats (mòbil i ordinador, 20 preguntes de tots els tipus, recàrrega a mitja partida, resultats), noms amb accents i noms repetits.
+
+## Opcions del docent (08-oct-2026)
+- **Nombre de preguntes** a totes les batalles del docent (en directe, per a convidats i competicions): 5, 10, 15, 20, 25 o 30 (`batalles.nq`). Per defecte, 10 (20 per a convidats). Els duels i les partides dels alumnes continuen sent de 10.
+- **Ordre diferent per a cada alumne** (`batalles.mix`, activat per defecte): tothom rep les mateixes preguntes, però barrejades amb una llavor pròpia (`oseed` a l'estat: depèn del jugador i, a la competició, de l'intent). Si es recarrega, l'ordre és el mateix.
+- **Pantalla en directe des del panell**: a Batalles, les que encara no han acabat surten a dalt amb «Pantalla en directe» i «Pestanya nova» (per al projector); cada fila de la taula té el seu botó; l'adreça `#/batalla/CODI` obre la pantalla directament; i si es tanca la pantalla amb la batalla en marxa, surt el botó flotant «Torna a la batalla» a totes les pantalles del panell. Les competicions tenen «Rànquing en directe» (millor intent de cadascú i qui està jugant).

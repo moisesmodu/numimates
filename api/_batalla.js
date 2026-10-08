@@ -27,16 +27,20 @@ export const batTables = () => READY || (READY = batOk().then(ok => ok || sql`AL
 
 // Convidats de les batalles obertes: no tenen compte. Cada dispositiu rep una clau secreta en entrar i només se'n desa
 // el resum (sha-256). Van en una taula a part perquè no comptin a informes ni estadístiques d'alumnes; s'esborren als 30 dies.
-// Les batalles per a convidats poden tenir 10 o 20 preguntes (batalles.nq; les altres en tenen sempre 10).
+// Les batalles del docent (classe, oberta, comp) tenen el nombre de preguntes que tria (batalles.nq) i poden barrejar
+// l'ordre per a cada jugador (batalles.mix); les dels alumnes (duel, party) en tenen sempre 10, en el mateix ordre.
 let CONV = null;
 export const convTables = () => CONV || (CONV = sql`CREATE TABLE IF NOT EXISTS mates.batalla_conv (id serial PRIMARY KEY, code text NOT NULL, tok text NOT NULL UNIQUE, name text NOT NULL,
     companion text, done int NOT NULL DEFAULT 0, correct int NOT NULL DEFAULT 0, ms int NOT NULL DEFAULT 0, finished boolean NOT NULL DEFAULT false, finished_at timestamptz, joined_at timestamptz NOT NULL DEFAULT now())`
   .then(() => sql`CREATE INDEX IF NOT EXISTS batalla_conv_code ON mates.batalla_conv (code, joined_at)`)
-  // la columna només s'afegeix si falta (un ALTER bloqueja la taula: no a cada arrencada)
-  .then(() => sql`SELECT 1 FROM information_schema.columns WHERE table_schema = 'mates' AND table_name = 'batalles' AND column_name = 'nq'`)
-  .then(r => r.length || sql`ALTER TABLE mates.batalles ADD COLUMN IF NOT EXISTS nq int`).catch(e => { CONV = null; throw e; }));
-export const NQ = [10, 20];
-const nqOf = b => b.kind === 'oberta' && NQ.includes(b.nq) ? b.nq : 10;
+  // les columnes només s'afegeixen si falten (un ALTER bloqueja la taula: no a cada arrencada)
+  .then(() => sql`SELECT count(*)::int AS n FROM information_schema.columns WHERE table_schema = 'mates' AND table_name = 'batalles' AND column_name IN ('nq', 'mix')`)
+  .then(r => r[0].n >= 2 || sql`ALTER TABLE mates.batalles ADD COLUMN IF NOT EXISTS nq int, ADD COLUMN IF NOT EXISTS mix boolean`).catch(e => { CONV = null; throw e; }));
+export const NQ = [5, 10, 15, 20, 25, 30];
+const TEACHER_KINDS = ['classe', 'oberta', 'comp'];
+const nqOf = b => TEACHER_KINDS.includes(b.kind) && NQ.includes(b.nq) ? b.nq : 10;
+// llavor de l'ordre de les preguntes d'un jugador: les mateixes preguntes per a tothom, però cadascú les rep barrejades
+const h32 = s => { let h = 0x811c9dc5; for (const c of String(s)) h = Math.imul(h ^ c.charCodeAt(0), 0x01000193); return h >>> 0; };
 
 // millor resultat d'un jugador de competició: l'intent en curs (si l'ha acabat) o el millor dels anteriors
 const bestOf = p => {
@@ -77,7 +81,9 @@ export async function batState(bcode, sid, gid = null) {
   return {
     code: b.code, kind: b.kind, course: b.course, unit: b.unit, status: b.status, nq, joc: b.joc || null, lv: b.lv || null, hoursLeft,
     // a la competició, cada intent té preguntes noves (la llavor canvia amb l'intent)
-    seed: comp && meP ? b.seed + (meP.tries | 0) * 7919 : b.seed,
+    seed: comp && meP ? b.seed + (meP.tries | 0) * 7919 : b.seed, mix: !!b.mix,
+    // ordre propi de les preguntes (només quan el docent ho ha triat): la llavor depèn del jugador i de l'intent
+    oseed: b.mix && meP ? ((h32(meP.sid) ^ (b.seed + (comp ? (meP.tries | 0) * 7919 : 0))) >>> 0) || 1 : null,
     title: b.titol || null, grup: b.grup_id || null, endsAt: b.ends_at || null, tries: b.tries || null,
     triesLeft: comp && meP ? Math.max(0, (b.tries || 1) - (meP.tries | 0) - 1) : null,
     startIn: start ? start - now : null, over: !!over, expired, host: !!sid && b.host === sid, byTeacher: !!b.docent_id, max: MAX[b.kind],

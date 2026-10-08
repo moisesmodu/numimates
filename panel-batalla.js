@@ -1,7 +1,10 @@
 /* ---------- Panell · sala projectada de les batalles en directe (de classe i per a convidats) ----------
    Pantalla completa per a la pissarra digital: codi i QR, jugadors que entren (el docent pot treure un convidat),
-   compte enrere, rànquing en directe que es reordena amb animació, i podi final amb confeti.
-   La batalla de classe s'hi juga des de l'app; la de convidats, des de /juga (només amb el codi i un nom). */
+   compte enrere, rànquing en directe que es reordena amb animació, i podi final amb confeti. Per a les competicions,
+   la classificació en directe (el millor intent de cadascú).
+   La batalla de classe s'hi juga des de l'app; la de convidats, des de /juga (només amb el codi i un nom).
+   S'hi arriba des de Batalles, amb l'adreça #/batalla/CODI (per obrir-la en una pestanya nova, al projector) i, si es
+   tanca mentre la batalla continua, amb el botó flotant «Torna a la batalla» que surt a totes les pantalles del panell. */
 let BP_T = null, BP = null;
 const JOIN_B = c => `https://app.numimates.com/?b=${c}`;
 // a producció, la pàgina dels convidats és a app.numimates.com/juga; a les previsualitzacions, a la mateixa adreça
@@ -12,8 +15,12 @@ const bsCol = p => BS_COL[p.companion] || ['#8A4FB0', '#36A9E1', '#FF6FA3', '#3C
 const bsAv = (p, cls = '') => `<span class="bs-av ${cls}" style="--c:${bsCol(p)}">${esc([...p.name.trim()][0] || '?').toUpperCase()}</span>`;
 const bsQR = txt => window.qrcode ? (() => { const q = qrcode(0, 'M'); q.addData(txt); q.make(); return q.createSvgTag({ cellSize: 8, margin: 0, scalable: true }); })() : '';
 
+const BS_KEY = 'numi-profe-batalla';
+const bsMem = { get: () => { try { return sessionStorage.getItem(BS_KEY) || ''; } catch (e) { return ''; } }, set: c => { try { c ? sessionStorage.setItem(BS_KEY, c) : sessionStorage.removeItem(BS_KEY); } catch (e) { } } };
+// la mateixa pantalla en una pestanya nova (per arrossegar-la al projector i continuar fent servir el panell)
+function batTab(code) { window.open(location.pathname + location.search + '#/batalla/' + encodeURIComponent(code), '_blank'); }
 async function batProj(code) {
-  clearInterval(BP_T); $$('.proj').forEach(x => x.remove());
+  clearInterval(BP_T); $$('.proj').forEach(x => x.remove()); $('#bspill')?.remove();
   BP = { code, screen: '', keys: new Set(), conf: false };
   document.body.insertAdjacentHTML('beforeend', `<div class="proj bstage" role="dialog" aria-label="${L('Batalla en directe', 'Batalla en directo')}">
     <div class="bs-bg" aria-hidden="true"><i class="b1"></i><i class="b2"></i><i class="b3"></i></div>
@@ -23,15 +30,30 @@ async function batProj(code) {
   const draw = async () => {
     const j = await act('bat_state', { bcode: code }).catch(() => ({})), s = j.state; if (!s || !$('.bstage')) return;
     BP.s = s; if (s.msLeft != null) BP.endAt = Date.now() + s.msLeft;
-    $('#bst').innerHTML = `${esc(s.title || L('Batalla de mates', 'Batalla de mates'))} <span class="mono">${s.code}</span>`;
-    if (s.status === 'lobby') bsLobby(s);
+    if (s.over || s.expired) { if (bsMem.get() === s.code) bsMem.set(''); } else bsMem.set(s.code);
+    $('#bst').innerHTML = `${esc(s.title || (s.kind === 'comp' ? L('Competició', 'Competición') : L('Batalla de mates', 'Batalla de mates')))} <span class="mono">${s.code}</span>`;
+    if (s.kind === 'comp') bsComp(s);
+    else if (s.status === 'lobby') bsLobby(s);
     else if (s.over) { bsPodium(s); clearInterval(BP_T); }
     else if (s.startIn > 0) bsCount(s);
     else bsLive(s);
   };
-  await draw(); BP_T = setInterval(() => { if (!$('.bstage')) return clearInterval(BP_T); draw(); }, 1200);
+  // la competició canvia a poc a poc (cadascú juga quan vol): no cal consultar-la tan sovint
+  await draw(); BP_T = setInterval(() => { if (!$('.bstage')) return clearInterval(BP_T); draw(); }, BP.s && BP.s.kind === 'comp' ? 5000 : 1200);
 }
-function bsClose() { clearInterval(BP_T); $$('.proj').forEach(x => x.remove()); if (document.fullscreenElement) document.exitFullscreen().catch(() => { }); if (route.last === 'batalles') vBatalles(); }
+function bsClose() {
+  clearInterval(BP_T); $$('.proj').forEach(x => x.remove()); if (document.fullscreenElement) document.exitFullscreen().catch(() => { });
+  if (/^#\/batalla\//.test(location.hash)) location.hash = '#/batalles'; else if (route.last === 'batalles') vBatalles(); else bsPill();
+}
+// botó flotant per tornar a la pantalla en directe d'una batalla que continua (es comprova, com a molt, cada 20 s)
+async function bsPill() {
+  const code = bsMem.get(); $('#bspill')?.remove();
+  if (!code || $('.bstage') || route.last === 'batalles' || route.last === 'batalla') return;
+  document.body.insertAdjacentHTML('beforeend', `<button class="bspill" id="bspill" onclick="batProj('${esc(code)}')"><i class="bs-dot" aria-hidden="true"></i>${ico('monitor-play')}<span>${L('Torna a la batalla', 'Volver a la batalla')} <b class="mono">${esc(code)}</b></span></button>`);
+  if (bsPill.at && Date.now() - bsPill.at < 20000) return; bsPill.at = Date.now();
+  const j = await act('bat_state', { bcode: code }).catch(() => ({}));
+  if (!j.state || j.state.over || j.state.expired) { bsMem.set(''); $('#bspill')?.remove(); }
+}
 function bsFull() { const el = $('.bstage'); if (!el) return; document.fullscreenElement ? document.exitFullscreen().catch(() => { }) : (el.requestFullscreen || el.webkitRequestFullscreen || (() => { })).call(el); }
 
 // 1. sala: com s'hi entra, codi i QR, i qui ha entrat
@@ -49,7 +71,7 @@ function bsLobby(s) {
       <div class="bs-qr"><div class="bs-qrbox">${bsQR(url)}</div><small>${L('Escaneja per entrar', 'Escanea para entrar')}</small></div>
     </div>
     <div class="bs-crowd" id="bsc"></div>
-    <footer class="bs-foot"><span class="bs-n" id="bsn"></span><button class="bs-go" id="bsgo" onclick="bsStart()">${ico('swords')}${L('COMENÇA', 'EMPIEZA')}</button></footer>`;
+    <footer class="bs-foot"><span class="bs-n" id="bsn"></span><span class="bs-info">${s.nq || 10} ${L('preguntes', 'preguntas')}${s.mix ? ' · ' + L('cadascú en un ordre diferent', 'cada uno en un orden distinto') : ''}</span><button class="bs-go" id="bsgo" onclick="bsStart()">${ico('swords')}${L('COMENÇA', 'EMPIEZA')}</button></footer>`;
   }
   const pl = s.players, el = $('#bsc');
   el.innerHTML = pl.length ? pl.map(p => `<span class="bs-pl ${BP.keys.size && !BP.keys.has(p.k) ? 'new' : ''} ${p.gid ? 'kick' : ''}" ${p.gid ? `onclick="bsKick(${p.gid},${js(p.name)})" title="${L('Treure de la sala', 'Sacar de la sala')}"` : ''}>${bsAv(p)}<b>${esc(p.name)}</b>${p.gid ? `<i class="bs-x">${ico('x')}</i>` : ''}</span>`).join('')
@@ -115,10 +137,22 @@ function bsPodium(s) {
     $('.bstage').appendChild(c); setTimeout(() => c.remove(), 7000);
   }
 }
+// competició: classificació en directe amb el millor intent de cadascú (només es repinta quan canvia)
+function bsComp(s) {
+  const BQ = s.nq || 10, rank = s.players.filter(p => p.pos).sort((a, b) => a.pos - b.pos), playing = s.players.filter(p => !p.pos);
+  const pod = [rank[1], rank[0], rank[2]], rest = rank.slice(3, 40);
+  const html = `<div class="bs-final bs-comp"><h2>${s.over ? L('Classificació final', 'Clasificación final') : L('Classificació en directe', 'Clasificación en directo')}</h2>
+    <p class="bs-csub">${s.over ? L('Competició acabada', 'Competición terminada') : L(`Oberta fins al ${fdate(s.endsAt)}`, `Abierta hasta el ${fdate(s.endsAt)}`)} · ${s.players.length} ${L('han jugat', 'han jugado')} · ${BQ} ${L('preguntes', 'preguntas')} · ${L('compta el millor intent', 'cuenta el mejor intento')}</p>
+    ${rank.length ? `<div class="bs-pod">${pod.map((p, i) => p ? `<div class="bs-ps s${p.pos}" style="--d:${[.5, 1, .2][i]}s">${p.pos === 1 ? `<span class="bs-crown">${ico('crown')}</span>` : ''}${bsAv(p, 'xl')}<b>${esc(p.name)}</b><small>${p.best.correct}/${BQ} · ${bsecs(p.best.ms)}</small><div class="bs-step">${p.pos}</div></div>` : '<div></div>').join('')}</div>` : `<p class="bs-empty">${L('Encara no ha acabat ningú', 'Aún no ha terminado nadie')}<i class="dots"><b>.</b><b>.</b><b>.</b></i></p>`}
+    ${rest.length ? `<ol class="bs-rest" start="4">${rest.map(p => `<li>${bsAv(p)}<b>${esc(p.name)}</b><span>${p.best.correct}/${BQ} · ${bsecs(p.best.ms)}</span></li>`).join('')}</ol>` : ''}
+    ${playing.length && !s.over ? `<p class="bs-csub">${ico('clock')} ${L('Jugant ara', 'Jugando ahora')}: ${playing.map(p => esc(p.name)).join(', ')}</p>` : ''}
+    <div class="bs-endbtns"><button class="bs-ghost" onclick="bsClose()">${L('Tanca', 'Cerrar')}</button></div></div>`;
+  if (BP.h === html) return; BP.h = html; BP.screen = 'comp'; $('#bpb').innerHTML = html;
+}
 // una altra batalla amb la mateixa configuració (els jugadors hi entren amb el codi nou)
 async function bsAgain() {
   const s = BP.s; if (!s) return;
-  const j = await act('bat_new', { kind: s.kind, grup: s.grup || 0, course: s.course, unit: s.unit ?? undefined, titol: s.title || '', nq: s.nq });
+  const j = await act('bat_new', { kind: s.kind, grup: s.grup || 0, course: s.course, unit: s.unit ?? undefined, titol: s.title || '', nq: s.nq, mix: !!s.mix });
   if (!j.ok) return toast(L("No s'ha pogut crear.", 'No se ha podido crear.'));
   batProj(j.state.code);
 }
