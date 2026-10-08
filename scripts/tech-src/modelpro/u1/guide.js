@@ -1,6 +1,3 @@
-/* Numi Tech · Tech 3D · Nivell 2 · guies del professor. Contingut propi de Numi (vegeu scripts/TECH-CONTRACTE.md). */
-
-/* ── unitat 1 ── */
 /* Tech 3D · Nivell 2 · unitat 1 «Modelar amb instruccions» · guia del professor (p1-1 i p1-3; p1-2 i p1-4, pendents)
    Material propi de Numi. Classe de 60 minuts; mateix esquema que TGUIDE['r1-1']. Les diapositives «media» mostren el
    programa (amb colors) i el model 3D que en surt (TMEDIA.model de tech-model.js). */

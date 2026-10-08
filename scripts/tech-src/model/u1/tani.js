@@ -1,6 +1,3 @@
-/* Numi Tech · Tech 3D · Nivell 1 · animacions de teoria (TANI). Contingut propi de Numi (vegeu scripts/TECH-CONTRACTE.md). */
-
-/* ── unitat 1 ── */
 /* Tech 3D · Nivell 1 · unitat 1 · animacions de teoria (TANI). Dibuixos propis de Numi en perspectiva isomètrica. */
 Object.assign(TANI, (() => {
   // perspectiva isomètrica: (x, y, z) en mm → punt del dibuix (320 × h)

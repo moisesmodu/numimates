@@ -1,8 +1,3 @@
-/* Numi Tech · Tech 3D · Nivell 2 · sessions de les unitats. Contingut propi de Numi (vegeu scripts/TECH-CONTRACTE.md). */
-(function () {
-const COURSE_UNITS = {};
-
-/* ── unitat 1 ── */
 /* Tech 3D · Nivell 2 · unitat 1 «Modelar amb instruccions» (p1-1 … p1-4)
    Contingut propi de Numi (unitat de mostra del motor: scripts/TECH-3D.md). Fil narratiu: l'estudi d'enginyeria del Taller
    de Bit. Hi ha passos a p1-1 (el programa és la recepta: m3predict, primers m3code, m3free) i a p1-3 (llegir un programa
@@ -112,8 +107,4 @@ COURSE_UNITS[1] = (() => {
       ] },
     { id: 'p1-4', t: 'Projecte: el monument|Proyecto: el monumento', proj: true }
   ] };
-})();
-
-const c = TECH.find(x => x.id === 'modelpro'); delete c.soon;
-for (const [n, u] of Object.entries(COURSE_UNITS)) c.units[n - 1] = u;
 })();

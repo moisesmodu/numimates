@@ -1,8 +1,3 @@
-/* Numi Tech · Tech 3D · Nivell 1 · sessions de les unitats. Contingut propi de Numi (vegeu scripts/TECH-CONTRACTE.md). */
-(function () {
-const COURSE_UNITS = {};
-
-/* ── unitat 1 ── */
 /* Tech 3D · Nivell 1 · unitat 1 «L'espai 3D» (m1-1 … m1-4)
    Contingut propi de Numi (unitat de mostra del motor: scripts/TECH-3D.md). Fil narratiu: el Taller de Bit, amb la Nuvi,
    la impressora 3D. Hi ha passos a m1-1 (mirar i girar la vista: m3look, primera peça amb m3free) i a m1-3 (coordenades:
@@ -130,8 +125,4 @@ COURSE_UNITS[1] = (() => {
       ] },
     { id: 'm1-4', t: 'Projecte: la meva primera escultura|Proyecto: mi primera escultura', proj: true }
   ] };
-})();
-
-const c = TECH.find(x => x.id === 'model'); delete c.soon;
-for (const [n, u] of Object.entries(COURSE_UNITS)) c.units[n - 1] = u;
 })();

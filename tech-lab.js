@@ -22,8 +22,10 @@ function tLabTools() {
   return [
     { id: 'bit', c: 'robot', ico: '🤖', t: L("El món d'en Bit", 'El mundo de Bit'), d: L('Dibuixa una illa amb camins, roques i estrelles, i programa en Bit perquè la recorri.', 'Dibuja una isla con caminos, rocas y estrellas, y programa a Bit para que la recorra.') },
     { id: 'stage', c: 'creadors', ico: '🎭', t: L("L'escenari", 'El escenario'), d: L('Tria personatges i un fons, i crea una animació, un conte interactiu o un videojoc.', 'Elige personajes y un fondo, y crea una animación, un cuento interactivo o un videojuego.') },
-    { id: 'robo', c: 'robotica', ico: '🚗', t: L('El taller del Maqueen', 'El taller del Maqueen'), d: L('Dissenya una pista amb parets, cinta i llaunes, i programa el robot Maqueen.', 'Diseña una pista con paredes, cinta y latas, y programa el robot Maqueen.') }
-  ].filter(x => acc.courses.has(x.c) || (P && P.unlockAll));
+    { id: 'robo', c: 'robotica', ico: '🚗', t: L('El taller del Maqueen', 'El taller del Maqueen'), d: L('Dissenya una pista amb parets, cinta i llaunes, i programa el robot Maqueen.', 'Diseña una pista con paredes, cinta y latas, y programa el robot Maqueen.') },
+    { id: 'model', c: 'model', ico: '🧊', t: L('Taller 3D', 'Taller 3D'), d: L('Modela un objecte amb formes, mides i forats, i descarrega\'l en STL per imprimir-lo en 3D.', 'Modela un objeto con formas, medidas y agujeros, y descárgalo en STL para imprimirlo en 3D.') },
+    { id: 'modelpro', c: 'modelpro', ico: '⚙️', t: L('Taller 3D amb codi', 'Taller 3D con código'), d: L('Programa una peça paramètrica amb blocs o amb codi i exporta-la en STL o en .scad.', 'Programa una pieza paramétrica con bloques o con código y expórtala en STL o en .scad.') }
+  ].filter(x => typeof TECH === 'undefined' || TECH.some(c => c.id === x.c)).filter(x => acc.courses.has(x.c) || (P && P.unlockAll));
 }
 function tLabHTML() {
   const tools = tLabTools(); if (!tools.length) return '';
@@ -33,7 +35,7 @@ function tLabHTML() {
 // obre una eina: una sessió sintètica de dos passos (preparar + programar)
 function tLab(kind) {
   TLAB.name = '';
-  const steps = kind === 'bit' ? [
+  const steps = (kind === 'model' || kind === 'modelpro') && typeof m3LabSteps === 'function' ? m3LabSteps(kind) : kind === 'bit' ? [
     { k: 'design', ph: 'crea', slot: 'lab', size: [8, 7], q: L("<b>Dibuixa el teu món.</b> Tria una eina i toca les caselles: camins, roques, aigua, estrelles, caixes, cases i la bandera. Posa-hi en Bit, dona-li un nom i desa'l.", '<b>Dibuja tu mundo.</b> Elige una herramienta y toca las casillas: caminos, rocas, agua, estrellas, cajas, casas y la bandera. Pon a Bit, dale un nombre y guárdalo.') },
     { k: 'mybuild', ph: 'crea', slot: 'lab', lab: 'bit', pal: TLAB.bitPal, conds: TLAB.bitConds, q: L('Programa <b>«{nom}»</b> com vulguis: tens tots els blocs. Quan t\'agradi, desa el projecte.', 'Programa <b>«{nom}»</b> como quieras: tienes todos los bloques. Cuando te guste, guarda el proyecto.') }
   ] : kind === 'stage' ? [
@@ -43,7 +45,7 @@ function tLab(kind) {
     { k: 'rdesign', ph: 'crea', slot: 'lab', q: L("<b>Dissenya la pista.</b> Tria una eina i toca les caselles: parets, cinta negra, llaunes, la llum i la meta. Posa-hi el robot, dona-li un nom i desa-la.", '<b>Diseña la pista.</b> Elige una herramienta y toca las casillas: paredes, cinta negra, latas, la luz y la meta. Pon el robot, dale un nombre y guárdala.') },
     { k: 'rmybuild', ph: 'crea', slot: 'lab', lab: 'robo', pal: TLAB.roboPal, vars: ['v', 'n'], varNames: { v: 'velocitat|velocidad', n: 'comptador|contador' }, q: L('Programa el Maqueen a <b>«{nom}»</b> com vulguis: tens tots els blocs. Quan t\'agradi, desa el projecte.', 'Programa el Maqueen en <b>«{nom}»</b> como quieras: tienes todos los bloques. Cuando te guste, guarda el proyecto.') }
   ];
-  const cid = kind === 'bit' ? 'robot' : kind === 'stage' ? 'creadors' : 'robotica', c = tLabCourse(cid);
+  const cid = kind === 'model' || kind === 'modelpro' ? kind : kind === 'bit' ? 'robot' : kind === 'stage' ? 'creadors' : 'robotica', c = tLabCourse(cid);
   TSS = { c, s: { id: 'lab:' + cid, t: L('Laboratori', 'Laboratorio'), steps }, id: 'lab:' + cid, i: 0, ok: 0, n: 0, lab: kind };
   VIEW = 'tsess'; tStep(); tLabTop();
 }

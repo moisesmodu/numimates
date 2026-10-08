@@ -1,6 +1,3 @@
-/* Numi Tech · Tech 3D · Nivell 2 · animacions de teoria (TANI). Contingut propi de Numi (vegeu scripts/TECH-CONTRACTE.md). */
-
-/* ── unitat 1 ── */
 /* Tech 3D · Nivell 2 · unitat 1 · animacions de teoria (TANI). Dibuixos propis de Numi. */
 Object.assign(TANI, (() => {
   const line = (y, txt, t, col = '#E8EEFF') => `<g ${tA(t, 'ta-in')}><text x="22" y="${y}" class="tat s" style="font-family:ui-monospace,Menlo,Consolas,monospace" fill="${col}">${txt}</text></g>`;
