@@ -1,7 +1,13 @@
-<svg viewBox="0 0 100 70" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="sgPx" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFB24A"/><stop offset="1" stop-color="#F0601F"/></linearGradient><linearGradient id="sgPx2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFD36B"/><stop offset="1" stop-color="#FF9A2E"/></linearGradient></defs>
-    <path d="M78 35 L98 22 L94 35 L98 48 Z" fill="url(#sgPx2)" stroke="#B4400F" stroke-width="2.4" stroke-linejoin="round"/>
-    <ellipse cx="46" cy="35" rx="36" ry="24" fill="url(#sgPx)" stroke="#B4400F" stroke-width="2.6"/>
-    <path d="M40 12 Q52 2 64 14" fill="#FF9A2E" stroke="#B4400F" stroke-width="2.4"/><path d="M44 58 Q52 66 60 57" fill="#FF9A2E" stroke="#B4400F" stroke-width="2.4"/>
-    <path d="M52 16 Q60 35 52 54 M64 18 Q71 35 64 52" fill="none" stroke="#fff" stroke-width="3.4" opacity=".75"/>
-    <circle cx="26" cy="30" r="7" fill="#fff"/><circle cx="23.9" cy="30" r="3.8500000000000005" fill="#1B1D2E"/><circle cx="22.85" cy="27.9" r="1.4000000000000001" fill="#fff"/><path d="M14 42 Q19 45 24 42" fill="none" stroke="#7A2A08" stroke-width="2.4" stroke-linecap="round"/>
-    <path d="M34 44 q8 6 14 0" fill="none" stroke="#FFE7B0" stroke-width="2" opacity=".7"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300"><defs><clipPath id="cc"><rect width="400" height="300" rx="24"/></clipPath><linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#C9F0FF"/><stop offset="1" stop-color="#5EB8E6"/></linearGradient><linearGradient id="body" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFB54C"/><stop offset="1" stop-color="#F0601F"/></linearGradient><linearGradient id="fin" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFD36B"/><stop offset="1" stop-color="#FF8A2A"/></linearGradient></defs><rect width="400" height="300" rx="24" fill="url(#bg)"/><g clip-path="url(#cc)"><circle cx="90" cy="60" r="10" fill="#fff" opacity=".35"/><circle cx="110" cy="92" r="6" fill="#fff" opacity=".35"/><circle cx="300" cy="44" r="12" fill="#fff" opacity=".35"/><circle cx="322" cy="76" r="7" fill="#fff" opacity=".35"/>
+  <path d="M0 250 Q100 236 200 250 T400 246 V300 H0Z" fill="#F6DEA6"/>
+  <path d="M40 300 C30 250 60 230 46 190 C38 168 54 150 50 130" stroke="#2FA866" stroke-width="12" fill="none" stroke-linecap="round"/><path d="M70 300 C80 262 60 240 74 214" stroke="#3CC47C" stroke-width="10" fill="none" stroke-linecap="round"/>
+  <path d="M352 300 C362 256 336 236 350 196 C358 172 344 160 348 140" stroke="#2FA866" stroke-width="12" fill="none" stroke-linecap="round"/>
+  <path d="M0 0 H400 V40 Q300 70 200 40 T0 40Z" fill="#fff" opacity=".18"/></g>
+  <ellipse cx="196" cy="256" rx="90" ry="11.700000000000001" fill="#1B1D2E" opacity="0.1"/>
+  <path d="M274 150 L336 104 Q346 150 336 196Z" fill="url(#fin)" stroke="#B4400F" stroke-width="5" stroke-linejoin="round"/>
+  <path d="M170 92 Q200 52 240 86" fill="url(#fin)" stroke="#B4400F" stroke-width="5" stroke-linejoin="round"/><path d="M178 208 Q204 240 226 206" fill="url(#fin)" stroke="#B4400F" stroke-width="5" stroke-linejoin="round"/>
+  <ellipse cx="196" cy="150" rx="98" ry="64" fill="url(#body)" stroke="#B4400F" stroke-width="5"/>
+  <clipPath id="fb"><ellipse cx="196" cy="150" rx="96" ry="62"/></clipPath>
+  <g clip-path="url(#fb)"><path d="M150 80 Q176 150 150 220 L176 220 Q200 150 176 80Z M226 82 Q250 150 226 218 L250 218 Q270 150 250 82Z" fill="#fff"/><path d="M150 80 Q176 150 150 220 M176 80 Q200 150 176 220 M226 82 Q250 150 226 218 M250 82 Q270 150 250 218" stroke="#1B1D2E" stroke-width="4" fill="none" opacity=".7"/></g>
+  <path d="M128 112 Q150 96 176 98" stroke="#fff" stroke-width="7" stroke-linecap="round" fill="none" opacity=".45"/>
+  <circle cx="134" cy="136" r="15" fill="#fff"/><circle cx="131" cy="136.75" r="9" fill="#1B1D2E"/><circle cx="134" cy="132.25" r="3.3" fill="#fff"/><path d="M108 170 q12 8 22 0" stroke="#7A2A08" stroke-width="4" fill="none" stroke-linecap="round"/><ellipse cx="148" cy="164" rx="9" ry="5.3999999999999995" fill="#FF6FA8" opacity=".35"/></svg>

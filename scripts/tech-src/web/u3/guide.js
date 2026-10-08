@@ -731,3 +731,172 @@ Object.assign(TGUIDE, (() => {
     }
   });
 })());
+
+/* ---------- Guia completa (unitat 3): la sessió en breu, idees clau, coneixements previs, preguntes que faran, què fer si
+   alguna cosa falla, seguretat i benestar, per anar més enllà i connexions ---------- */
+Object.entries({
+  'w3-1': {
+    intro: "L'alumnat aprèn què és un atribut (informació extra dins de l'etiqueta d'obertura) amb l'etiqueta &lt;img&gt;: src diu on és el fitxer, alt descriu la imatge i width en fixa l'amplada; i que &lt;img&gt; no es tanca. Descobreix el camí d'una imatge (el navegador llegeix src, la demana al servidor i la dibuixa) i, sobretot, per què l'alt és tan important: per a les persones cegues que fan servir un lector de pantalla, per a les connexions lentes i per als cercadors. A l'activitat sense pantalla fan de lector de pantalla humà: descriuen una imatge perquè un company/a la dibuixi sense veure-la. Treballen amb les imatges pròpies de Numi.|El alumnado aprende qué es un atributo (información extra dentro de la etiqueta de apertura) con la etiqueta &lt;img&gt;: src dice dónde está el archivo, alt describe la imagen y width fija su anchura; y que &lt;img&gt; no se cierra. Descubre el camino de una imagen (el navegador lee src, la pide al servidor y la dibuja) y, sobre todo, por qué el alt es tan importante: para las personas ciegas que usan un lector de pantalla, para las conexiones lentas y para los buscadores. En la actividad sin pantalla hacen de lector de pantalla humano: describen una imagen para que un compañero/a la dibuje sin verla. Trabajan con las imágenes propias de Numi.",
+    claus: [
+      "Un atribut és informació extra dins de l'etiqueta d'obertura: nom=&quot;valor&quot;.|Un atributo es información extra dentro de la etiqueta de apertura: nombre=&quot;valor&quot;.",
+      "&lt;img src alt width&gt;: src on és el fitxer, alt què hi ha, width l'amplada en píxels. No es tanca.|&lt;img src alt width&gt;: src dónde está el archivo, alt qué hay, width la anchura en píxeles. No se cierra.",
+      "Un bon alt descriu el que importa de la imatge en una frase curta, sense «imatge de…».|Un buen alt describe lo que importa de la imagen en una frase corta, sin «imagen de…».",
+      "Si el nom del fitxer està mal escrit, la imatge no surt: el navegador demana un fitxer que no existeix.|Si el nombre del archivo está mal escrito, la imagen no sale: el navegador pide un archivo que no existe."
+    ],
+    prev: [
+      "L'esquelet de la pàgina, títols i paràgrafs (unitat 2).|El esqueleto de la página, títulos y párrafos (unidad 2).",
+      "Saber que les imatges són fitxers a part que viatgen del servidor al navegador (unitat 1).|Saber que las imágenes son archivos aparte que viajan del servidor al navegador (unidad 1).",
+      "Descriure oralment una imatge amb precisió.|Describir oralmente una imagen con precisión."
+    ],
+    faq: [
+      ["Puc posar una foto meva o del mòbil?|¿Puedo poner una foto mía o del móvil?", "A l'app fem servir les imatges de Numi, que són nostres i les podem fer servir. Les fotos amb cares de persones no es publiquen sense permís: en parlarem a la sessió de citar les fonts.|En la app usamos las imágenes de Numi, que son nuestras y las podemos usar. Las fotos con caras de personas no se publican sin permiso: hablaremos de ello en la sesión de citar las fuentes."],
+      ["Què és un píxel?|¿Qué es un píxel?", "Cada un dels puntets de llum de la pantalla. width=&quot;200&quot; vol dir que la imatge farà 200 puntets d'amplada.|Cada uno de los puntitos de luz de la pantalla. width=&quot;200&quot; quiere decir que la imagen hará 200 puntitos de anchura."],
+      ["Per què no posem també l'alçada?|¿Por qué no ponemos también la altura?", "Si només dius l'amplada, el navegador calcula l'alçada i la imatge no es deforma. Si en poses dues que no quadren, es veu estirada.|Si solo dices la anchura, el navegador calcula la altura y la imagen no se deforma. Si pones dos que no cuadran, se ve estirada."],
+      ["Una imatge decorativa també necessita alt?|¿Una imagen decorativa también necesita alt?", "Si no aporta informació (un adorn), s'hi posa alt=&quot;&quot; buit perquè el lector de pantalla se la salti. Però a les nostres fitxes totes les imatges diuen coses: totes porten descripció.|Si no aporta información (un adorno), se le pone alt=&quot;&quot; vacío para que el lector de pantalla se la salte. Pero en nuestras fichas todas las imágenes dicen cosas: todas llevan descripción."],
+      ["Què vol dir SVG?|¿Qué quiere decir SVG?", "És un tipus de fitxer d'imatge fet amb formes (com un dibuix vectorial): es veu nítid a qualsevol mida. També hi ha JPG i PNG (fotos) i WEBP.|Es un tipo de archivo de imagen hecho con formas (como un dibujo vectorial): se ve nítido a cualquier tamaño. También hay JPG y PNG (fotos) y WEBP."]
+    ],
+    tec: [
+      ["La imatge surt com una icona trencada.|La imagen sale como un icono roto.", "El camí del src no és bo: ha de ser exactament img/tech/web/nom.svg, sense espais ni majúscules. El botó «Imatges» de l'editor escriu el camí bé.|La ruta del src no es buena: tiene que ser exactamente img/tech/web/nombre.svg, sin espacios ni mayúsculas. El botón «Imágenes» del editor escribe la ruta bien."],
+      ["La comprovació de l'alt no es marca.|La comprobación del alt no se marca.", "L'alt ha de tenir una descripció d'almenys unes quantes paraules (no n'hi ha prou amb «gat»). I va entre cometes rectes: alt=&quot;…&quot;.|El alt tiene que tener una descripción de al menos unas cuantas palabras (no basta con «gato»). Y va entre comillas rectas: alt=&quot;…&quot;."],
+      ["Han escrit &lt;/img&gt; i la barra avisa d'un error.|Han escrito &lt;/img&gt; y la barra avisa de un error.", "&lt;img&gt; no es tanca. Esborreu el &lt;/img&gt;.|&lt;img&gt; no se cierra. Borrad el &lt;/img&gt;."],
+      ["A la tauleta, les cometes surten corbes i l'atribut no funciona.|En la tableta, las comillas salen curvas y el atributo no funciona.", "Desactiveu la puntuació intel·ligent del teclat (a l'iPad: Configuració → General → Teclat). Els botons de l'editor escriuen les cometes bones.|Desactivad la puntuación inteligente del teclado (en el iPad: Ajustes → General → Teclado). Los botones del editor escriben las comillas buenas."]
+    ],
+    seg: [
+      "Al lector de pantalla humà, qui dibuixa té els ulls oberts mirant el seu full; ningú no ha de tapar-se els ulls si no vol.|En el lector de pantalla humano, quien dibuja tiene los ojos abiertos mirando su hoja; nadie tiene que taparse los ojos si no quiere.",
+      "Parleu amb respecte de les persones amb discapacitat visual: l'alt és una manera de pensar en tothom.|Hablad con respeto de las personas con discapacidad visual: el alt es una manera de pensar en todo el mundo.",
+      "Cap foto de companys/es a les pàgines: només imatges de Numi.|Ninguna foto de compañeros/as en las páginas: solo imágenes de Numi."
+    ],
+    extra: [
+      "Escriure tres alts diferents per a la mateixa imatge i votar quin és el millor i per què.|Escribir tres alts diferentes para la misma imagen y votar cuál es el mejor y por qué.",
+      "Fer una galeria de quatre animals amb mides diferents (width) i comparar-les.|Hacer una galería de cuatro animales con tamaños diferentes (width) y compararlas.",
+      "Activar el lector de pantalla del mòbil o de l'ordinador (amb un adult) i escoltar com llegeix una web.|Activar el lector de pantalla del móvil o del ordenador (con un adulto) y escuchar cómo lee una web."
+    ],
+    trans: [
+      "Sessió següent: els enllaços, l'altre atribut estrella (href), per connectar pàgines.|Sesión siguiente: los enlaces, el otro atributo estrella (href), para conectar páginas.",
+      "Llengua: la descripció objectiva (què es veu, sense opinar).|Lengua: la descripción objetiva (qué se ve, sin opinar).",
+      "Valors: l'accessibilitat i la inclusió de les persones amb discapacitat.|Valores: la accesibilidad y la inclusión de las personas con discapacidad."
+    ]
+  },
+  'w3-2': {
+    intro: "L'alumnat descobreix la «H» d'HTML, l'hipertext: les pàgines es connecten amb enllaços. Aprèn a escriure &lt;a href=&quot;…&quot;&gt;text&lt;/a&gt; i a distingir tres tipus d'adreça: una pàgina de la mateixa web (tortuga.html), una altra web (https://…) i un lloc de la mateixa pàgina (#id). També aprèn que el text d'un enllaç ha de dir on porta (res de «clica aquí»), pensant en qui fa servir un lector de pantalla. A l'activitat sense pantalla, la classe fa una web de paper connectant pàgines amb llana. Acaben fent un menú, un índex amb salts i una fitxa amb enllaços.|El alumnado descubre la «H» de HTML, el hipertexto: las páginas se conectan con enlaces. Aprende a escribir &lt;a href=&quot;…&quot;&gt;texto&lt;/a&gt; y a distinguir tres tipos de dirección: una página de la misma web (tortuga.html), otra web (https://…) y un lugar de la misma página (#id). También aprende que el texto de un enlace tiene que decir adónde lleva (nada de «clica aquí»), pensando en quien usa un lector de pantalla. En la actividad sin pantalla, la clase hace una web de papel conectando páginas con lana. Terminan haciendo un menú, un índice con saltos y una ficha con enlaces.",
+    claus: [
+      "Un enllaç: &lt;a href=&quot;adreça&quot;&gt;text&lt;/a&gt;. href diu on porta; el text és el que es toca.|Un enlace: &lt;a href=&quot;dirección&quot;&gt;texto&lt;/a&gt;. href dice adónde lleva; el texto es lo que se toca.",
+      "tortuga.html: una pàgina de la teva web · https://…: una altra web · #id: un lloc de la mateixa pàgina.|tortuga.html: una página de tu web · https://…: otra web · #id: un lugar de la misma página.",
+      "Per saltar dins la pàgina: href=&quot;#menja&quot; a l'enllaç i id=&quot;menja&quot; a l'element, el mateix nom.|Para saltar dentro de la página: href=&quot;#menja&quot; en el enlace e id=&quot;menja&quot; en el elemento, el mismo nombre.",
+      "El text de l'enllaç diu on porta; si no es tanca &lt;/a&gt;, tot el que segueix es torna enllaç.|El texto del enlace dice adónde lleva; si no se cierra &lt;/a&gt;, todo lo que sigue se vuelve enlace."
+    ],
+    prev: [
+      "Què és un atribut i com s'escriu (sessió anterior).|Qué es un atributo y cómo se escribe (sesión anterior).",
+      "Les parts d'una URL: protocol, domini i camí (unitat 1).|Las partes de una URL: protocolo, dominio y ruta (unidad 1).",
+      "Fer llistes &lt;ul&gt; amb &lt;li&gt; (unitat 2).|Hacer listas &lt;ul&gt; con &lt;li&gt; (unidad 2)."
+    ],
+    faq: [
+      ["Per què un enllaç a una altra web necessita https://?|¿Por qué un enlace a otra web necesita https://?", "Sense el protocol, el navegador pensa que és una pàgina de la teva web i la busca al teu servidor: sortiria un error 404.|Sin el protocolo, el navegador piensa que es una página de tu web y la busca en tu servidor: saldría un error 404."],
+      ["Com faig que l'enllaç s'obri en una pestanya nova?|¿Cómo hago que el enlace se abra en una pestaña nueva?", "Amb target=&quot;_blank&quot;. Però no cal fer-ho sempre: molta gent prefereix decidir-ho. Si ho feu, aviseu al text de l'enllaç.|Con target=&quot;_blank&quot;. Pero no hace falta hacerlo siempre: mucha gente prefiere decidirlo. Si lo hacéis, avisad en el texto del enlace."],
+      ["Per què «clica aquí» és un mal text d'enllaç?|¿Por qué «clica aquí» es un mal texto de enlace?", "Qui fa servir un lector de pantalla sovint escolta només la llista d'enllaços: «clica aquí, clica aquí» no diu res. «La fitxa de la balena» sí.|Quien usa un lector de pantalla a menudo escucha solo la lista de enlaces: «clica aquí, clica aquí» no dice nada. «La ficha de la ballena» sí."],
+      ["Els enllaços a tortuga.html funcionen a l'app?|¿Los enlaces a tortuga.html funcionan en la app?", "A la vista prèvia, els enllaços #id salten de veritat dins de la pàgina. Els altres no surten de la vista prèvia (és un espai protegit): en tocar-los, un avís diu on portarien. A la web publicada sí que hi portarien.|En la vista previa, los enlaces #id saltan de verdad dentro de la página. Los demás no salen de la vista previa (es un espacio protegido): al tocarlos, un aviso dice adónde llevarían. En la web publicada sí que llevarían."],
+      ["Un id es pot repetir?|¿Un id se puede repetir?", "No: cada id és únic a la pàgina, com el número del DNI. Si n'hi ha dos d'iguals, l'enllaç no sabria on saltar.|No: cada id es único en la página, como el número del DNI. Si hay dos iguales, el enlace no sabría dónde saltar."]
+    ],
+    tec: [
+      ["En tocar un enllaç a la vista prèvia, no canvia de pàgina.|Al tocar un enlace en la vista previa, no cambia de página.", "És normal: la vista prèvia és un espai protegit i no surt a altres pàgines. Surt un avís que diu on portaria l'enllaç; els enllaços #id sí que salten. Si l'avís diu que no hi ha cap element amb aquell id, reviseu el nom.|Es normal: la vista previa es un espacio protegido y no sale a otras páginas. Sale un aviso que dice adónde llevaría el enlace; los enlaces #id sí que saltan. Si el aviso dice que no hay ningún elemento con ese id, revisad el nombre."],
+      ["A partir d'un enllaç, tot el text surt blau i subratllat.|A partir de un enlace, todo el texto sale azul y subrayado.", "Falta tancar l'enllaç amb &lt;/a&gt;. La barra d'estat diu a quina línia es va obrir.|Falta cerrar el enlace con &lt;/a&gt;. La barra de estado dice en qué línea se abrió."],
+      ["L'índex no salta a la secció.|El índice no salta a la sección.", "Compareu lletra a lletra el nom de l'href (sense #) i el de l'id: han de ser idèntics, sense espais ni accents.|Comparad letra a letra el nombre del href (sin #) y el del id: tienen que ser idénticos, sin espacios ni tildes."]
+    ],
+    seg: [
+      "A la web de paper, la llana es passa per sota de les taules i ningú no camina per sobre dels fils.|En la web de papel, la lana se pasa por debajo de las mesas y nadie camina por encima de los hilos.",
+      "Els enllaços a webs reals, només a webs que coneixeu i de confiança; a la unitat 7 aprendrem a detectar webs falses.|Los enlaces a webs reales, solo a webs que conozcáis y de confianza; en la unidad 7 aprenderemos a detectar webs falsas.",
+      "Pausa activa a mitja sessió: la de la pàgina web amb el cos.|Pausa activa a mitad de sesión: la de la página web con el cuerpo."
+    ],
+    extra: [
+      "Afegir a la fitxa un enllaç «Torna a dalt» que salti a l'id del títol.|Añadir a la ficha un enlace «Vuelve arriba» que salte al id del título.",
+      "Fer un menú amb cinc animals i que el text de cada enllaç digui on porta.|Hacer un menú con cinco animales y que el texto de cada enlace diga adónde lleva.",
+      "Dibuixar el mapa de la web de la classe amb fletxes i comptar quantes pàgines té cada pàgina enllaçades.|Dibujar el mapa de la web de la clase con flechas y contar cuántas páginas tiene cada página enlazadas."
+    ],
+    trans: [
+      "Sessió següent: citar les fonts i els drets d'autor de les imatges i els textos.|Sesión siguiente: citar las fuentes y los derechos de autor de las imágenes y los textos.",
+      "Unitat 8: el menú de la teva web farà servir enllaços #id a les seccions.|Unidad 8: el menú de tu web usará enlaces #id a las secciones.",
+      "Biblioteca: l'índex i les referències creuades d'un llibre són enllaços en paper.|Biblioteca: el índice y las referencias cruzadas de un libro son enlaces en papel."
+    ]
+  },
+  'w3-3': {
+    intro: "Sessió de ciutadania digital dins del curs de web. L'alumnat entén que tot el que algú crea (fotos, dibuixos, textos) té autor/a, i que veure-ho a internet no vol dir que es pugui agafar. Aprèn el semàfor de les imatges (verd: meu o amb permís; groc: llicència lliure amb condicions; vermell: no sé de qui és), què volen dir les lletres de les llicències Creative Commons (BY, NC, SA, ND), què és el domini públic i com es cita una font amb quatre preguntes: qui, què, on i quan. A l'HTML, fa servir &lt;figure&gt; i &lt;figcaption&gt; per posar la llegenda amb l'autor/a i una secció de fonts amb enllaços.|Sesión de ciudadanía digital dentro del curso de web. El alumnado entiende que todo lo que alguien crea (fotos, dibujos, textos) tiene autor/a, y que verlo en internet no quiere decir que se pueda coger. Aprende el semáforo de las imágenes (verde: mío o con permiso; amarillo: licencia libre con condiciones; rojo: no sé de quién es), qué quieren decir las letras de las licencias Creative Commons (BY, NC, SA, ND), qué es el dominio público y cómo se cita una fuente con cuatro preguntas: quién, qué, dónde y cuándo. En el HTML, usa &lt;figure&gt; y &lt;figcaption&gt; para poner la leyenda con el autor/a y una sección de fuentes con enlaces.",
+    claus: [
+      "Tota obra té autor/a: que sigui a internet no vol dir que es pugui fer servir.|Toda obra tiene autor/a: que esté en internet no quiere decir que se pueda usar.",
+      "Semàfor: verd (meu o amb permís), groc (llicència lliure: compleix-ne les condicions), vermell (no ho sé: no l'agafo).|Semáforo: verde (mío o con permiso), amarillo (licencia libre: cumple sus condiciones), rojo (no lo sé: no lo cojo).",
+      "Creative Commons: BY cita l'autor/a, NC sense vendre, SA comparteix igual, ND sense canvis.|Creative Commons: BY cita al autor/a, NC sin vender, SA comparte igual, ND sin cambios.",
+      "Citar és dir qui, què, on i quan; a l'HTML, a &lt;figcaption&gt; dins d'una &lt;figure&gt;.|Citar es decir quién, qué, dónde y cuándo; en el HTML, en &lt;figcaption&gt; dentro de una &lt;figure&gt;."
+    ],
+    prev: [
+      "Posar imatges amb &lt;img&gt; i alt, i fer enllaços amb &lt;a href&gt; (sessions 1 i 2).|Poner imágenes con &lt;img&gt; y alt, y hacer enlaces con &lt;a href&gt; (sesiones 1 y 2).",
+      "Saber que els llibres tenen autor/a i editorial.|Saber que los libros tienen autor/a y editorial.",
+      "Haver fet un treball de classe amb informació d'internet o de llibres.|Haber hecho un trabajo de clase con información de internet o de libros."
+    ],
+    faq: [
+      ["Si canvio una mica una foto, ja és meva?|Si cambio un poco una foto, ¿ya es mía?", "No: continua sent una obra de l'autor/a original. Per modificar-la cal permís o una llicència que ho permeti (les CC sense ND).|No: sigue siendo una obra del autor/a original. Para modificarla hace falta permiso o una licencia que lo permita (las CC sin ND)."],
+      ["Què és el domini públic?|¿Qué es el dominio público?", "Quan fa molts anys que l'autor/a ha mort (a Espanya, en general, 70 anys), l'obra la pot fer servir tothom. També hi ha autors/es que hi posen les seves obres voluntàriament (CC0).|Cuando hace muchos años que el autor/a ha muerto (en España, en general, 70 años), la obra la puede usar todo el mundo. También hay autores/as que ponen sus obras en él voluntariamente (CC0)."],
+      ["On trobo imatges que es puguin fer servir?|¿Dónde encuentro imágenes que se puedan usar?", "En bancs d'imatges amb llicències lliures o de domini públic, i als cercadors filtrant per llicència. A la classe, millor les de Numi o dibuixos vostres. Sempre cal mirar i citar la llicència.|En bancos de imágenes con licencias libres o de dominio público, y en los buscadores filtrando por licencia. En clase, mejor las de Numi o dibujos vuestros. Siempre hay que mirar y citar la licencia."],
+      ["Citar la font és el mateix que tenir permís?|¿Citar la fuente es lo mismo que tener permiso?", "No: citar és obligatori sempre, però no dona permís. Si l'obra no té llicència lliure, cal demanar-lo a l'autor/a.|No: citar es obligatorio siempre, pero no da permiso. Si la obra no tiene licencia libre, hay que pedirlo al autor/a."],
+      ["Els textos també tenen drets?|¿Los textos también tienen derechos?", "Sí. Per això escrivim amb les nostres paraules i, si fem servir una frase exacta d'algú, la posem entre cometes i diem de qui és.|Sí. Por eso escribimos con nuestras palabras y, si usamos una frase exacta de alguien, la ponemos entre comillas y decimos de quién es."]
+    ],
+    tec: [
+      ["La llegenda surt lluny de la imatge o a fora de la figura.|La leyenda sale lejos de la imagen o fuera de la figura.", "El &lt;figcaption&gt; ha d'anar dins de &lt;figure&gt;, abans de &lt;/figure&gt;. Mireu on es tanca la figura.|El &lt;figcaption&gt; tiene que ir dentro de &lt;figure&gt;, antes de &lt;/figure&gt;. Mirad dónde se cierra la figura."],
+      ["La font de la llegenda no surt com a enllaç.|La fuente de la leyenda no sale como enlace.", "Cal un &lt;a href=&quot;https://…&quot;&gt; amb l'adreça completa (amb https://) i tancat amb &lt;/a&gt;.|Hace falta un &lt;a href=&quot;https://…&quot;&gt; con la dirección completa (con https://) y cerrado con &lt;/a&gt;."],
+      ["Busquen imatges a internet per posar-les a la pàgina.|Buscan imágenes en internet para ponerlas en la página.", "A l'app només es poden fer servir les imatges de Numi (botó «Imatges»). És una bona ocasió per parlar del semàfor: d'on surt cada imatge?|En la app solo se pueden usar las imágenes de Numi (botón «Imágenes»). Es una buena ocasión para hablar del semáforo: ¿de dónde sale cada imagen?"]
+    ],
+    seg: [
+      "Fotos de persones: mai sense el seu permís, i encara menys de menors. És una qüestió de privadesa, no només de drets d'autor.|Fotos de personas: nunca sin su permiso, y todavía menos de menores. Es una cuestión de privacidad, no solo de derechos de autor.",
+      "Al semàfor, si dubteu, sempre vermell: demanar permís o buscar-ne una altra.|En el semáforo, si dudáis, siempre rojo: pedir permiso o buscar otra.",
+      "No feu cerques d'imatges obertes a classe sense supervisió: hi pot sortir contingut inadequat.|No hagáis búsquedas de imágenes abiertas en clase sin supervisión: puede salir contenido inadecuado."
+    ],
+    extra: [
+      "Buscar la llicència d'una imatge d'un llibre de text o d'un museu i escriure'n la cita completa.|Buscar la licencia de una imagen de un libro de texto o de un museo y escribir su cita completa.",
+      "Fer un dibuix propi, triar-hi una llicència Creative Commons i explicar per què.|Hacer un dibujo propio, elegirle una licencia Creative Commons y explicar por qué.",
+      "Afegir a la notícia una cita textual entre cometes amb el nom de qui la va dir.|Añadir a la noticia una cita textual entre comillas con el nombre de quien la dijo."
+    ],
+    trans: [
+      "Sessió següent: el projecte de la unitat, la fitxa completa d'un animal amb fonts.|Sesión siguiente: el proyecto de la unidad, la ficha completa de un animal con fuentes.",
+      "Treballs de recerca de qualsevol matèria: la bibliografia i les cites.|Trabajos de investigación de cualquier materia: la bibliografía y las citas.",
+      "Educació en valors: respectar la feina dels altres a la xarxa.|Educación en valores: respetar el trabajo de los demás en la red."
+    ]
+  },
+  'w3-4': {
+    intro: "Sessió de projecte que tanca la unitat: l'alumnat fa la fitxa completa d'un animal per a l'Animalari amb tot el que ha après: títol, índex amb salts, figura amb imatge, alt i llegenda amb l'autor/a, dades en una llista amb &lt;strong&gt;, seccions amb id i una secció de fonts amb enllaços. Primer fa l'esbós en paper; després assaja les peces amb la fitxa del lloro; revisa una fitxa amb una llista (alt, enllaços de l'índex, fonts) com un/a professional; i finalment construeix la seva i la fa revisar per un company/a. És un bon moment per avaluar la unitat amb la rúbrica.|Sesión de proyecto que cierra la unidad: el alumnado hace la ficha completa de un animal para el Animalario con todo lo que ha aprendido: título, índice con saltos, figura con imagen, alt y leyenda con el autor/a, datos en una lista con &lt;strong&gt;, secciones con id y una sección de fuentes con enlaces. Primero hace el boceto en papel; después ensaya las piezas con la ficha del loro; revisa una ficha con una lista (alt, enlaces del índice, fuentes) como un/a profesional; y finalmente construye la suya y la hace revisar por un compañero/a. Es un buen momento para evaluar la unidad con la rúbrica.",
+    claus: [
+      "L'esbós en paper decideix què hi haurà i en quin ordre abans d'escriure codi.|El boceto en papel decide qué habrá y en qué orden antes de escribir código.",
+      "Una fitxa completa: &lt;h1&gt;, índex, &lt;figure&gt; amb alt i llegenda, llista de dades, seccions amb id i fonts.|Una ficha completa: &lt;h1&gt;, índice, &lt;figure&gt; con alt y leyenda, lista de datos, secciones con id y fuentes.",
+      "Revisar amb una llista: cada imatge té alt, cada enllaç de l'índex té el seu id i hi ha fonts.|Revisar con una lista: cada imagen tiene alt, cada enlace del índice tiene su id y hay fuentes.",
+      "Les dades són fets: cal treure-les d'un lloc de confiança i dir-ne la font.|Los datos son hechos: hay que sacarlos de un sitio de confianza y decir su fuente."
+    ],
+    prev: [
+      "Imatges amb alt, enllaços i salts amb #id, figure i figcaption (sessions 1-3 de la unitat).|Imágenes con alt, enlaces y saltos con #id, figure y figcaption (sesiones 1-3 de la unidad).",
+      "Llistes i &lt;strong&gt; (unitat 2).|Listas y &lt;strong&gt; (unidad 2).",
+      "Buscar dues o tres dades d'un animal en un llibre o una web de confiança.|Buscar dos o tres datos de un animal en un libro o una web de confianza."
+    ],
+    faq: [
+      ["Puc fer la fitxa d'un animal que no surt a les imatges?|¿Puedo hacer la ficha de un animal que no sale en las imágenes?", "Sí: feu-la de l'animal que vulgueu i trieu una imatge de Numi que s'hi assembli, o una icona (botó «Imatges»). L'alt ha de descriure el dibuix que es veu.|Sí: hacedla del animal que queráis y elegid una imagen de Numi que se le parezca, o un icono (botón «Imágenes»). El alt tiene que describir el dibujo que se ve."],
+      ["Quantes fonts calen?|¿Cuántas fuentes hacen falta?", "Almenys una per a les dades i el crèdit de la imatge a la llegenda. Si heu fet servir un llibre, també compta: títol, autor/a i any.|Al menos una para los datos y el crédito de la imagen en la leyenda. Si habéis usado un libro, también cuenta: título, autor/a y año."],
+      ["Les adreces de les fonts han de ser de veritat?|¿Las direcciones de las fuentes tienen que ser de verdad?", "A les fitxes d'exemple són inventades (.numi). A la vostra, si heu fet servir una web real de confiança, poseu-ne l'adreça; si és un llibre, escriviu-ne les dades sense enllaç.|En las fichas de ejemplo son inventadas (.numi). En la vuestra, si habéis usado una web real de confianza, poned su dirección; si es un libro, escribid sus datos sin enlace."],
+      ["Puc copiar el text de la web d'on trec les dades?|¿Puedo copiar el texto de la web de donde saco los datos?", "Millor no: llegiu, enteneu i escriviu-ho amb les vostres paraules. Les dades (pesa 4 kg, viu 60 anys) sí que les podeu fer servir, citant d'on surten.|Mejor no: leed, entended y escribidlo con vuestras palabras. Los datos (pesa 4 kg, vive 60 años) sí que los podéis usar, citando de dónde salen."]
+    ],
+    tec: [
+      ["La plantilla és llarga i al mòbil costa trobar on escriure.|La plantilla es larga y en el móvil cuesta encontrar dónde escribir.", "Cada part té un comentari &lt;!-- … --&gt; en gris: que escriguin a sota de cada comentari, en ordre. La barra d'estat diu en quina línia són.|Cada parte tiene un comentario &lt;!-- … --&gt; en gris: que escriban debajo de cada comentario, en orden. La barra de estado dice en qué línea están."],
+      ["Hi ha moltes comprovacions i no saben quina falta.|Hay muchas comprobaciones y no saben cuál falta.", "La barra de les comprovacions mostra la primera que falta; si la toqueu, surt la llista sencera amb les fetes en verd.|La barra de las comprobaciones muestra la primera que falta; si la tocáis, sale la lista entera con las hechas en verde."],
+      ["Un enllaç de l'índex no salta.|Un enlace del índice no salta.", "L'href (#nom) i l'id (nom) han de coincidir exactament. A la vista prèvia els salts dins de la pàgina sí que funcionen: proveu-los.|El href (#nombre) y el id (nombre) tienen que coincidir exactamente. En la vista previa los saltos dentro de la página sí que funcionan: probadlos."]
+    ],
+    seg: [
+      "Revisió entre companys amb la fitxa: comentaris concrets i amables, mai sobre la persona.|Revisión entre compañeros con la ficha: comentarios concretos y amables, nunca sobre la persona.",
+      "Si busqueu dades a internet, feu-ho en webs de confiança (enciclopèdies, museus, parcs naturals) i amb un adult a prop.|Si buscáis datos en internet, hacedlo en webs de confianza (enciclopedias, museos, parques naturales) y con un adulto cerca.",
+      "Pausa activa del lloro i el mussol entre l'assaig i el projecte.|Pausa activa del loro y el búho entre el ensayo y el proyecto."
+    ],
+    extra: [
+      "Afegir una segona figura (per exemple, on viu) amb la seva llegenda.|Añadir una segunda figura (por ejemplo, dónde vive) con su leyenda.",
+      "Fer una portada de l'Animalari amb un menú que enllaci les fitxes de tres companys/es (tortuga.html, lloro.html…).|Hacer una portada del Animalario con un menú que enlace las fichas de tres compañeros/as (tortuga.html, lloro.html…).",
+      "Comprovar les dades de la fitxa en una segona font i dir si coincideixen.|Comprobar los datos de la ficha en una segunda fuente y decir si coinciden."
+    ],
+    trans: [
+      "Unitat 4: el CSS, per donar colors, lletres i estil a les fitxes.|Unidad 4: el CSS, para dar colores, letras y estilo a las fichas.",
+      "Ciències naturals: la fitxa d'un ésser viu (com és, on viu, què menja).|Ciencias naturales: la ficha de un ser vivo (cómo es, dónde vive, qué come).",
+      "Competència informacional: buscar, contrastar i citar dades.|Competencia informacional: buscar, contrastar y citar datos."
+    ]
+  }
+}).forEach(([id, g]) => Object.assign(TGUIDE[id], g));

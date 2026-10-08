@@ -183,8 +183,8 @@ Object.assign(TANI, (() => {
     // dins una web: l'HTML (el contingut), el CSS (l'aspecte) i les imatges arriben al navegador, que dibuixa la pàgina
     w1page() {
       const D = 9, W = [120, 10, 192, 168];
-      const slot = (y, body, name) => `<g transform="translate(34 ${y})"><g opacity=".25">${body}</g><text x="0" y="40" text-anchor="middle" class="tat s" style="font-size:13px">${name}</text></g>`;
-      const fly = (y, body, t0, t1) => `<g>${go([[t0, 34, y], [t1, 210, 96]], D)}<g opacity="0">${anim('opacity', [[0, 1], [t1 - .1, 1], [t1 + .15, 0], [D - .05, 0], [D, 1]], D)}${body}</g></g>`;
+      const slot = (y, body, name) => `<g transform="translate(42 ${y})"><g opacity=".25">${body}</g><text x="0" y="40" text-anchor="middle" class="tat s" style="font-size:13px">${name}</text></g>`;
+      const fly = (y, body, t0, t1) => `<g>${go([[t0, 42, y], [t1, 210, 96]], D)}<g opacity="0">${anim('opacity', [[0, 1], [t1 - .1, 1], [t1 + .15, 0], [D - .05, 0], [D, 1]], D)}${body}</g></g>`;
       const fH = file(C.blue, '&lt;/&gt;'), fC = file(C.pink, '{ }'), fI = imgIco();
       // la pàgina sense estil (només HTML) i amb estil (HTML + CSS)
       const plain = `<g opacity="0">${show(1.7, 4.0, D)}<text x="16" y="52" class="tat" style="font-family:Georgia,serif;font-size:17px">${L('Els gats', 'Los gatos')}</text><rect x="16" y="64" width="150" height="5" fill="#9AA3B8"/><rect x="16" y="74" width="132" height="5" fill="#9AA3B8"/><rect x="16" y="84" width="140" height="5" fill="#9AA3B8"/><rect x="16" y="98" width="70" height="56" fill="none" stroke="#9AA3B8" stroke-width="1.5" stroke-dasharray="4 3"/></g>`;
@@ -196,6 +196,43 @@ Object.assign(TANI, (() => {
         <g opacity="0">${show(.3, 2.6, D)}${pill(216, 206, L('HTML: què hi ha', 'HTML: qué hay'), C.blue)}</g>
         <g opacity="0">${show(2.6, 4.8, D)}${pill(216, 206, L('CSS: com es veu', 'CSS: cómo se ve'), C.pink)}</g>
         <g opacity="0">${show(4.8, D, D)}${pill(216, 206, L('Imatges: fitxers a part', 'Imágenes: archivos aparte'), C.green)}</g>`);
+    },
+    // per on viatgen les dades: ones (wifi i dades mòbils), cables de coure i fibra òptica, i els cables sota el mar
+    w1cable() {
+      const D = 7.5;
+      const sea = `<rect x="0" y="124" width="320" height="92" fill="#CFEFFC"/><rect x="0" y="176" width="320" height="40" fill="#B5E3F7"/>${[0, 1].map(k => `<path d="M${-40 + k * 20} 126q10 -5 20 0t20 0t20 0t20 0t20 0t20 0t20 0t20 0t20 0t20 0t20 0t20 0t20 0t20 0t20 0t20 0t20 0t20 0" fill="none" stroke="#fff" stroke-width="2.4" opacity=".8">${anim('opacity', [[0, .9], [D / 2, .3], [D, .9]], D)}</path>`).join('')}`;
+      const land = `<path d="M0 104h98q12 0 20 20H0z" fill="#7BC77E"/><path d="M320 104h-98q-12 0 -20 20h118z" fill="#7BC77E"/><path d="M0 104h98q6 0 10 6H0z" fill="#9BD89A"/><path d="M320 104h-98q-6 0 -10 6h108z" fill="#9BD89A"/>`;
+      const house = `<path d="M-26 0v-32l26 -20l26 20v32z" fill="#FFF6E5" stroke="#E2B676" stroke-width="2.2" stroke-linejoin="round"/><path d="M-32 -30l32 -25l32 25" fill="none" stroke="${C.red}" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><rect x="-7" y="-16" width="14" height="16" rx="2" fill="#E2B676"/>`;
+      const waves = [0, 1, 2].map(i => { const r = 7 + i * 7; return `<path d="M${i * 4} ${-r}A${r} ${r} 0 0 1 ${i * 4} ${r}" fill="none" stroke="${C.teal}" stroke-width="3" stroke-linecap="round" opacity="0">${anim('opacity', [[.1 + i * .15, 0], [.3 + i * .15, 1], [1.0 + i * .15, .15], [1.2 + i * .15, 1], [2.0 + i * .15, 0]], D)}</path>`; }).join('');
+      const cab = 'M58 100C70 100 74 132 96 150C116 166 132 192 160 192C188 192 204 166 224 150C246 132 250 100 262 100';
+      const pulses = [0, 1, 2, 3].map(i => `<circle r="4.2" fill="${C.gold}" stroke="#fff" stroke-width="1.4" opacity="0">${anim('opacity', [[3.0, 0], [3.2, 1], [D - .3, 1], [D, 0]], D)}<animateMotion dur="1.6s" begin="${(i * .4).toFixed(2)}s" repeatCount="indefinite" path="${cab}"/></circle>`).join('');
+      return tSvg(216, `${sea}${land}
+        <path d="${cab}" fill="none" stroke="#2A3557" stroke-width="6" stroke-linecap="round"/><path d="${cab}" fill="none" stroke="${C.gold}" stroke-width="2" stroke-linecap="round" opacity="0">${show(2.9, D, D)}</path>${pulses}
+        ${at(36, 104, 1, house)}<g transform="translate(60 100)"><rect x="-9" y="-6" width="18" height="8" rx="3" fill="${C.teal}"/></g>
+        <g transform="translate(78 70)">${waves}</g>${at(120, 92, 1.15, phone())}
+        ${at(286, 104, .9, server())}
+        <path d="M58 100H44" stroke="#B4501A" stroke-width="3.5" stroke-linecap="round" opacity="0">${show(1.6, 2.9, D)}</path>
+        <g opacity="0">${show(.2, 1.6, D)}${pill(160, 22, L('Ones: el wifi i les dades del mòbil', 'Ondas: el wifi y los datos del móvil'), C.teal)}</g>
+        <g opacity="0">${show(1.6, 2.9, D)}${pill(160, 22, L('Cables de coure fins a la teva casa', 'Cables de cobre hasta tu casa'), C.orange)}</g>
+        <g opacity="0">${show(2.9, D, D)}${pill(160, 22, L('Fibra òptica: llum dins de fils de vidre', 'Fibra óptica: luz dentro de hilos de vidrio'), C.blue)}</g>
+        <g opacity="0">${show(3.6, D, D)}<text x="160" y="210" text-anchor="middle" class="tat s" style="fill:#0E5E78">${L('Entre continents, cables sota el mar', 'Entre continentes, cables bajo el mar')}</text></g>`);
+    },
+    // l'HTTP: la petició (GET /gats.html) i la resposta amb el codi d'estat (200 o 404)
+    w1http() {
+      const D = 10;
+      const okPage = `<g opacity="0">${show(3.2, 4.9, D)}<rect x="8" y="34" width="110" height="16" rx="4" fill="${C.purple}"/><text x="15" y="46.5" class="tat w s" style="font-size:13px">${L('Els gats', 'Los gatos')}</text>${at(34, 82, .6, cat())}<rect x="64" y="66" width="52" height="5" rx="2.5" fill="#C9D3EE"/><rect x="64" y="76" width="42" height="5" rx="2.5" fill="#C9D3EE"/><rect x="64" y="86" width="48" height="5" rx="2.5" fill="#C9D3EE"/></g>`;
+      const nfPage = `<g opacity="0">${show(8.3, D, D)}<text x="63" y="78" text-anchor="middle" class="tat" style="font-size:30px;fill:${C.red}">404</text><text x="63" y="100" text-anchor="middle" class="tat s" style="fill:${C.mut}">${L('No trobada', 'No encontrada')}</text></g>`;
+      const winA = `<g opacity="0">${show(0, 5.0, D)}${win(6, 44, 126, 118, 'gats.numi/gats.html', okPage)}</g>`;
+      const winB = `<g opacity="0">${show(5.0, D, D)}${win(6, 44, 126, 118, 'gats.numi/gosos.html', nfPage)}</g>`;
+      const msg = (t0, t1, x0, x1, y, txt, col) => `<g>${go([[t0, x0, y], [t1, x1, y]], D)}<g opacity="0">${show(t0, t1 + .15, D)}${tag(0, 0, txt, col)}</g></g>`;
+      return tSvg(214, `${winA}${winB}${at(272, 168, 1.15, server())}
+        <path d="M138 86H236M236 128H138" stroke="${C.line}" stroke-width="2.2" stroke-dasharray="5 6"/>
+        ${msg(.6, 2.0, 150, 222, 86, 'GET /gats.html', C.blue)}${msg(2.2, 3.2, 222, 150, 128, '200 OK', C.green)}
+        ${msg(5.6, 7.0, 150, 222, 86, 'GET /gosos.html', C.blue)}${msg(7.2, 8.2, 222, 150, 128, '404', C.red)}
+        <g opacity="0">${show(.3, 5.0, D)}${pill(160, 22, L('HTTP: la petició diu què vols', 'HTTP: la petición dice qué quieres'), C.blue)}</g>
+        <g opacity="0">${show(2.2, 5.0, D)}${pill(160, 196, L('200: aquí la tens!', '200: ¡aquí la tienes!'), C.green)}</g>
+        <g opacity="0">${show(5.0, D, D)}${pill(160, 22, L('Una pàgina que no existeix…', 'Una página que no existe…'), C.orange)}</g>
+        <g opacity="0">${show(7.2, D, D)}${pill(160, 196, L('404: no l\'he trobada', '404: no la he encontrado'), C.red)}</g>`);
     }
   };
 })());
@@ -465,6 +502,16 @@ Object.assign(TANI, (() => {
         <g ${tA(3.5, 'ta-in')}><rect x="12" y="186" width="296" height="24" rx="12" fill="#FDEBEB"/>${tick(26, 198, false)}<text x="44" y="203" class="tat s">${L('Copiar-lo i dir que és teu', 'Copiarlo y decir que es tuyo')}</text></g>`);
     },
     // les quatre preguntes d'una cita: qui, què, on i quan
+    // les llicències Creative Commons: cada lletra és una condició de l'autor/a
+    w3cc() {
+      const row = (y, ab, col, txt, t) => `<g ${tA(t, 'ta-in')}><rect x="8" y="${y}" width="304" height="32" rx="10" fill="#fff" stroke="${col}" stroke-width="2" filter="url(#bwSh)"/><circle cx="28" cy="${y + 16}" r="12.5" fill="${col}"/><text x="28" y="${y + 20.5}" text-anchor="middle" class="tat w" style="font-size:11.5px">${ab}</text><text x="50" y="${y + 21}" class="tat s" style="font-size:13px">${txt}</text></g>`;
+      return tSvg(236, `<g ${tA(.1, 'ta-in')}><rect x="78" y="6" width="164" height="36" rx="18" fill="#14204A" filter="url(#bwSh)"/><circle cx="102" cy="24" r="11.5" fill="none" stroke="#fff" stroke-width="2.4"/><text x="102" y="28.5" text-anchor="middle" class="tat w" style="font-size:11px">cc</text><text x="122" y="29" class="tat w" style="font-size:13.5px">Creative Commons</text></g>
+        ${row(52, 'BY', '#2F5BEA', L("Cal dir qui l'ha feta", 'Hay que decir quién la ha hecho'), .5)}
+        ${row(90, 'NC', '#F08A24', L('No la pots fer servir per vendre', 'No la puedes usar para vender'), 1.0)}
+        ${row(128, 'SA', '#1FA463', L('Si la canvies, comparteix-la igual', 'Si la cambias, compártela igual'), 1.5)}
+        ${row(166, 'ND', '#8B5CF6', L('No la pots canviar', 'No la puedes cambiar'), 2.0)}
+        <g ${tA(2.7, 'ta-in')}><rect x="40" y="204" width="240" height="26" rx="13" fill="#FFF6E5" stroke="#F2D7A6" stroke-width="1.6"/><text x="160" y="221.5" text-anchor="middle" class="tat s" style="font-size:13px">«Foto: Marta Puig · CC BY»</text></g>`);
+    },
     w3cite() {
       const rows = [[L('Qui?', '¿Quién?'), 'Club de Naturalistes', '#3D7BF4'], [L('Què?', '¿Qué?'), L("«Les tortugues de l'illa»", '«Las tortugas de la isla»'), '#8B5CF6'],
         [L('On?', '¿Dónde?'), 'exemple.numi/tortugues', '#2FA866'], [L('Quan?', '¿Cuándo?'), L("el 3 d'octubre", 'el 3 de octubre'), '#F08A24']];

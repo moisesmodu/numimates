@@ -652,3 +652,173 @@ Object.assign(TGUIDE, {
     ]
   }
 });
+
+/* ---------- Guia completa (unitat 5): la sessió en breu, idees clau, coneixements previs, preguntes que faran, què fer si
+   alguna cosa falla, seguretat i benestar, per anar més enllà i connexions ---------- */
+Object.entries({
+  'w5-1': {
+    intro: "L'alumnat descobreix el secret del disseny web: al navegador, tot element és una caixa rectangular, encara que no es vegi. Ho comprova pintant el fons dels elements amb background-color, agrupa títol i text dins d'un &lt;div&gt; amb una classe (com els ous a la capsa) i coneix les quatre capes de cada caixa, de dins cap a fora: contingut, padding, border i margin, amb l'exemple d'un quadre amb paspartú i marc. També aprèn a donar amplada amb width, en px (fixa) i en % (relativa a l'espai), i a no oblidar mai la unitat. És la base de tota la unitat i del projecte de la targeta del videojoc.|El alumnado descubre el secreto del diseño web: en el navegador, todo elemento es una caja rectangular, aunque no se vea. Lo comprueba pintando el fondo de los elementos con background-color, agrupa título y texto dentro de un &lt;div&gt; con una clase (como los huevos en la caja) y conoce las cuatro capas de cada caja, de dentro hacia fuera: contenido, padding, border y margin, con el ejemplo de un cuadro con paspartú y marco. También aprende a dar anchura con width, en px (fija) y en % (relativa al espacio), y a no olvidar nunca la unidad. Es la base de toda la unidad y del proyecto de la tarjeta del videojuego.",
+    claus: [
+      "Cada element és una caixa rectangular: amb background-color la fem visible.|Cada elemento es una caja rectangular: con background-color la hacemos visible.",
+      "&lt;div&gt; és una caixa per agrupar; amb una classe (class=&quot;targeta&quot;) li donem estil.|&lt;div&gt; es una caja para agrupar; con una clase (class=&quot;targeta&quot;) le damos estilo.",
+      "Quatre capes, de dins cap a fora: contingut, padding, border i margin.|Cuatro capas, de dentro hacia fuera: contenido, padding, border y margin.",
+      "width en px és fixa; en % depèn de l'espai que hi ha. Sense unitat (width: 300;) no fa res.|width en px es fija; en % depende del espacio que hay. Sin unidad (width: 300;) no hace nada."
+    ],
+    prev: [
+      "Regles de CSS, colors i classes (unitat 4).|Reglas de CSS, colores y clases (unidad 4).",
+      "Etiquetes que s'obren i es tanquen ben niuades (unitat 2).|Etiquetas que se abren y se cierran bien anidadas (unidad 2).",
+      "Saber què és un percentatge (50 % = la meitat).|Saber qué es un porcentaje (50 % = la mitad)."
+    ],
+    faq: [
+      ["Si tot són caixes, per què no les veig?|Si todo son cajas, ¿por qué no las veo?", "Perquè per defecte són transparents i sense vora. Amb un color de fons o una vora es fan visibles. Els dissenyadors ho fan sovint per entendre una pàgina.|Porque por defecto son transparentes y sin borde. Con un color de fondo o un borde se hacen visibles. Los diseñadores lo hacen a menudo para entender una página."],
+      ["Per a què serveix un &lt;div&gt; si no es veu?|¿Para qué sirve un &lt;div&gt; si no se ve?", "Per agrupar coses i tractar-les com una sola caixa: donar-los un fons, una amplada o moure-les juntes. Sense estil, un &lt;div&gt; no canvia res.|Para agrupar cosas y tratarlas como una sola caja: darles un fondo, una anchura o moverlas juntas. Sin estilo, un &lt;div&gt; no cambia nada."],
+      ["Per què no posem height a les caixes?|¿Por qué no ponemos height a las cajas?", "Si fixes l'alçada i el text creix (o el mòbil és estret), el text surt de la caixa. Millor que l'alçada la decideixi el contingut.|Si fijas la altura y el texto crece (o el móvil es estrecho), el texto sale de la caja. Mejor que la altura la decida el contenido."],
+      ["Quan faig servir px i quan %?|¿Cuándo uso px y cuándo %?", "px per a coses que han de fer sempre el mateix (una icona, una vora); % perquè s'adapti a la pantalla. Proveu els botons Mòbil i Ordinador de la vista prèvia per veure la diferència.|px para cosas que tienen que medir siempre lo mismo (un icono, un borde); % para que se adapte a la pantalla. Probad los botones Móvil y Ordenador de la vista previa para ver la diferencia."],
+      ["La Fira de Videojocs és de veritat?|¿La Feria de Videojuegos es de verdad?", "És una fira inventada de l'escola del poble: els videojocs i els equips també. Al projecte de la unitat cadascú inventarà el seu.|Es una feria inventada de la escuela del pueblo: los videojuegos y los equipos también. En el proyecto de la unidad cada uno inventará el suyo."]
+    ],
+    tec: [
+      ["La caixa en % no canvia entre Mòbil i Ordinador.|La caja en % no cambia entre Móvil y Ordenador.", "Sí que canvia: el % és de l'espai disponible. Al mòbil, la pàgina fa 375 píxels d'amplada; a l'ordinador, 960. Una caixa del 80 % ocupa la mateixa proporció a tots dos, però una de 300px no.|Sí que cambia: el % es del espacio disponible. En el móvil, la página mide 375 píxeles de anchura; en el ordenador, 960. Una caja del 80 % ocupa la misma proporción en los dos, pero una de 300px no."],
+      ["La segona targeta queda dins de la primera.|La segunda tarjeta queda dentro de la primera.", "El primer &lt;div&gt; no està tancat abans d'obrir el segon. Que comptin els &lt;div&gt; i els &lt;/div&gt;: n'hi ha d'haver els mateixos.|El primer &lt;div&gt; no está cerrado antes de abrir el segundo. Que cuenten los &lt;div&gt; y los &lt;/div&gt;: tiene que haber los mismos."],
+      ["La regla .targeta no s'aplica.|La regla .targeta no se aplica.", "A l'HTML, class=&quot;targeta&quot; (sense punt); al CSS, .targeta (amb punt). Han de tenir el mateix nom exacte.|En el HTML, class=&quot;targeta&quot; (sin punto); en el CSS, .targeta (con punto). Tienen que tener el mismo nombre exacto."]
+    ],
+    seg: [
+      "A l'activitat dels raigs X, es dibuixa sobre el full; si feu servir objectes de l'aula, es tornen al seu lloc.|En la actividad de los rayos X, se dibuja sobre la hoja; si usáis objetos del aula, se devuelven a su sitio.",
+      "Els videojocs de la fira són inventats i per a totes les edats: res de violència ni de continguts per a adults.|Los videojuegos de la feria son inventados y para todas las edades: nada de violencia ni de contenidos para adultos.",
+      "Pausa activa de la caixa (braços en rodona) entre els reptes.|Pausa activa de la caja (brazos en redondo) entre los retos."
+    ],
+    extra: [
+      "Posar dues caixes &lt;div&gt; amb amplades diferents (40 % i 250px) i comparar-les al mòbil i a l'ordinador.|Poner dos cajas &lt;div&gt; con anchuras diferentes (40 % y 250px) y compararlas en el móvil y en el ordenador.",
+      "Fer visibles totes les caixes d'una pàgina de la unitat 2 posant un color de fons a cada etiqueta.|Hacer visibles todas las cajas de una página de la unidad 2 poniendo un color de fondo a cada etiqueta.",
+      "Dibuixar en paper les caixes d'una web coneguda (on hi ha el menú, el contingut, el peu…).|Dibujar en papel las cajas de una web conocida (dónde está el menú, el contenido, el pie…)."
+    ],
+    trans: [
+      "Sessió següent: padding i margin, l'espai de dins i el de fora.|Sesión siguiente: padding y margin, el espacio de dentro y el de fuera.",
+      "Matemàtiques: els percentatges i les mesures en píxels.|Matemáticas: los porcentajes y las medidas en píxeles.",
+      "Educació visual i plàstica: l'enquadrament i el marc d'una obra.|Educación visual y plástica: el encuadre y el marco de una obra."
+    ]
+  },
+  'w5-2': {
+    intro: "L'alumnat aprèn a donar espai a les caixes: el padding és l'espai de dins (entre el contingut i la vora, amb el color de fons) i el margin, el de fora (separa la caixa de les altres, sempre transparent). Practica amb un sol valor, amb dos (dalt i baix, costats) i amb quatre seguint l'ordre del rellotge: dalt, dreta, baix, esquerra. També aprèn el truc per centrar una caixa amb amplada: margin: 0 auto. A l'activitat sense pantalla, l'alumnat fa de «persones caixa» davant de la pissarra: s'apropen o s'allunyen segons el padding i el margin que diu el navegador. La sessió acaba amb el tauler d'avisos de la fira.|El alumnado aprende a dar espacio a las cajas: el padding es el espacio de dentro (entre el contenido y el borde, con el color de fondo) y el margin, el de fuera (separa la caja de las demás, siempre transparente). Practica con un solo valor, con dos (arriba y abajo, lados) y con cuatro siguiendo el orden del reloj: arriba, derecha, abajo, izquierda. También aprende el truco para centrar una caja con anchura: margin: 0 auto. En la actividad sin pantalla, el alumnado hace de «personas caja» delante de la pizarra: se acercan o se alejan según el padding y el margin que dice el navegador. La sesión termina con el tablón de avisos de la feria.",
+    claus: [
+      "padding: espai de dins, amb el color de fons; margin: espai de fora, transparent.|padding: espacio de dentro, con el color de fondo; margin: espacio de fuera, transparente.",
+      "Un valor per als quatre costats; dos valors: dalt/baix i costats.|Un valor para los cuatro lados; dos valores: arriba/abajo y lados.",
+      "Quatre valors en l'ordre del rellotge: dalt, dreta, baix, esquerra (margin: 5px 10px 15px 20px).|Cuatro valores en el orden del reloj: arriba, derecha, abajo, izquierda (margin: 5px 10px 15px 20px).",
+      "margin: 0 auto centra una caixa que té amplada (width).|margin: 0 auto centra una caja que tiene anchura (width)."
+    ],
+    prev: [
+      "Les capes de la caixa i width (sessió anterior).|Las capas de la caja y width (sesión anterior).",
+      "Les unitats px i % i les classes de CSS.|Las unidades px y % y las clases de CSS.",
+      "Llegir un rellotge d'agulles (l'ordre dels quatre costats).|Leer un reloj de agujas (el orden de los cuatro lados)."
+    ],
+    faq: [
+      ["Per què el margin no té color?|¿Por qué el margin no tiene color?", "Perquè és l'espai de fora de la caixa: és transparent i hi veus el fons del que hi ha darrere. El color de fons de la caixa arriba fins a la vora (inclou el padding).|Porque es el espacio de fuera de la caja: es transparente y ves el fondo de lo que hay detrás. El color de fondo de la caja llega hasta el borde (incluye el padding)."],
+      ["Per què auto centra la caixa?|¿Por qué auto centra la caja?", "Amb auto als costats, el navegador reparteix l'espai que sobra a parts iguals a l'esquerra i a la dreta. Si la caixa no té amplada, ocupa tota la fila i no sobra res per repartir.|Con auto a los lados, el navegador reparte el espacio que sobra a partes iguales a la izquierda y a la derecha. Si la caja no tiene anchura, ocupa toda la fila y no sobra nada para repartir."],
+      ["Puc posar padding només a un costat?|¿Puedo poner padding solo a un lado?", "Sí: padding-top, padding-right, padding-bottom i padding-left (igual amb margin). O amb quatre valors, posant 0 als costats que no en vols.|Sí: padding-top, padding-right, padding-bottom y padding-left (igual con margin). O con cuatro valores, poniendo 0 en los lados que no quieres."],
+      ["Per què dues caixes amb margin: 20px no queden a 40px?|¿Por qué dos cajas con margin: 20px no quedan a 40px?", "Els marges de dalt i de baix de dues caixes seguides es fusionen: queda el més gran (20px). Els dels costats sí que se sumen.|Los márgenes de arriba y de abajo de dos cajas seguidas se fusionan: queda el más grande (20px). Los de los lados sí que se suman."],
+      ["Es poden fer marges negatius?|¿Se pueden hacer márgenes negativos?", "Sí, i acosten o superposen caixes, però costen de controlar. En aquest curs no els farem servir.|Sí, y acercan o superponen cajas, pero cuestan de controlar. En este curso no los usaremos."]
+    ],
+    tec: [
+      ["El padding no es nota.|El padding no se nota.", "Si la caixa no té color de fons ni vora, el padding no es veu (però hi és). Poseu-hi un background-color per veure'l.|Si la caja no tiene color de fondo ni borde, el padding no se ve (pero está). Ponedle un background-color para verlo."],
+      ["La caixa no es centra amb margin: 0 auto.|La caja no se centra con margin: 0 auto.", "Li falta width (i una amplada més petita que la pàgina). Sense amplada, la caixa ocupa tota la fila.|Le falta width (y una anchura más pequeña que la página). Sin anchura, la caja ocupa toda la fila."],
+      ["Amb dos valors, el padding surt al revés.|Con dos valores, el padding sale al revés.", "El primer valor és per a dalt i baix i el segon per als costats: padding: 10px 30px vol dir 10 a dalt i baix i 30 als costats.|El primer valor es para arriba y abajo y el segundo para los lados: padding: 10px 30px quiere decir 10 arriba y abajo y 30 a los lados."]
+    ],
+    seg: [
+      "Persones caixa: deixar espai lliure davant de la pissarra, caminar a poc a poc i sense tocar-se.|Personas caja: dejar espacio libre delante de la pizarra, caminar despacio y sin tocarse.",
+      "Qui no vulgui sortir davant pot fer de navegador i dir les regles.|Quien no quiera salir delante puede hacer de navegador y decir las reglas.",
+      "Pausa activa del rellotge (dalt, dreta, baix, esquerra) abans dels reptes de quatre valors.|Pausa activa del reloj (arriba, derecha, abajo, izquierda) antes de los retos de cuatro valores."
+    ],
+    extra: [
+      "Fer una caixa amb marges diferents a cada costat amb quatre valors i explicar-los en veu alta.|Hacer una caja con márgenes diferentes en cada lado con cuatro valores y explicarlos en voz alta.",
+      "Fer tres avisos centrats amb amplades diferents (60 %, 300px i 80 %).|Hacer tres avisos centrados con anchuras diferentes (60 %, 300px y 80 %).",
+      "Descobrir els marges que es fusionen: dues caixes amb margin 20px i 30px, quant queda entre elles?|Descubrir los márgenes que se fusionan: dos cajas con margin 20px y 30px, ¿cuánto queda entre ellas?"
+    ],
+    trans: [
+      "Sessió següent: vores, cantonades rodones i ombres per fer targetes de col·leccionista.|Sesión siguiente: bordes, esquinas redondeadas y sombras para hacer tarjetas de coleccionista.",
+      "Matemàtiques: l'ordre en sentit horari i el repartiment a parts iguals.|Matemáticas: el orden en sentido horario y el reparto a partes iguales.",
+      "Educació visual i plàstica: l'espai en blanc fa que un disseny respiri.|Educación visual y plástica: el espacio en blanco hace que un diseño respire."
+    ]
+  },
+  'w5-3': {
+    intro: "L'alumnat fa que les caixes semblin targetes de col·leccionista: posa vores amb gruix, estil i color (i descobreix que sense l'estil la vora no es veu), arrodoneix les cantonades amb border-radius (amb 50 % una caixa quadrada es fa rodona) i afegeix ombres amb box-shadow (dreta, avall, difuminat i color), que queden millor suaus. També calcula quant ocupa de debò una caixa: width + padding + border a cada costat. A l'activitat sense pantalla, una persona descriu una caixa amb CSS i l'altra la dibuixa. Acaben fent la xapa rodona del club de videojocs.|El alumnado hace que las cajas parezcan tarjetas de coleccionista: pone bordes con grosor, estilo y color (y descubre que sin el estilo el borde no se ve), redondea las esquinas con border-radius (con 50 % una caja cuadrada se vuelve redonda) y añade sombras con box-shadow (derecha, abajo, difuminado y color), que quedan mejor suaves. También calcula cuánto ocupa de verdad una caja: width + padding + border en cada lado. En la actividad sin pantalla, una persona describe una caja con CSS y la otra la dibuja. Terminan haciendo la chapa redonda del club de videojuegos.",
+    claus: [
+      "border: gruix estil color (border: 3px solid navy;). Sense l'estil (solid, dashed, dotted, double), no es veu.|border: grosor estilo color (border: 3px solid navy;). Sin el estilo (solid, dashed, dotted, double), no se ve.",
+      "border-radius arrodoneix les cantonades; 50 % en una caixa quadrada fa un cercle.|border-radius redondea las esquinas; 50 % en una caja cuadrada hace un círculo.",
+      "box-shadow: dreta avall difuminat color; les ombres suaus (gris clar, molt difuminat) queden més naturals.|box-shadow: derecha abajo difuminado color; las sombras suaves (gris claro, muy difuminado) quedan más naturales.",
+      "Amplada total = width + padding × 2 + border × 2 (si no es canvia box-sizing).|Anchura total = width + padding × 2 + border × 2 (si no se cambia box-sizing)."
+    ],
+    prev: [
+      "padding, margin i width (sessions 1 i 2).|padding, margin y width (sesiones 1 y 2).",
+      "Colors amb nom i en hex (unitat 4).|Colores con nombre y en hex (unidad 4).",
+      "Sumar i multiplicar per 2 mentalment.|Sumar y multiplicar por 2 mentalmente."
+    ],
+    faq: [
+      ["Per què la vora necessita l'estil?|¿Por qué el borde necesita el estilo?", "Perquè l'estil per defecte és none (cap vora). Encara que diguis el gruix i el color, sense solid, dashed… el navegador no en dibuixa cap.|Porque el estilo por defecto es none (ningún borde). Aunque digas el grosor y el color, sin solid, dashed… el navegador no dibuja ninguno."],
+      ["Com faig una ombra cap a dalt o cap a l'esquerra?|¿Cómo hago una sombra hacia arriba o hacia la izquierda?", "Amb números negatius: box-shadow: -6px -6px 10px gray; posa l'ombra a l'esquerra i a dalt.|Con números negativos: box-shadow: -6px -6px 10px gray; pone la sombra a la izquierda y arriba."],
+      ["Puc fer una caixa que no compti el padding a l'amplada?|¿Puedo hacer una caja que no cuente el padding en la anchura?", "Sí, amb box-sizing: border-box: aleshores width ja inclou el padding i la vora. Molts professionals el posen a totes les caixes.|Sí, con box-sizing: border-box: entonces width ya incluye el padding y el borde. Muchos profesionales lo ponen en todas las cajas."],
+      ["Una imatge també pot ser rodona?|¿Una imagen también puede ser redonda?", "Sí: una imatge quadrada amb border-radius: 50 % es veu rodona, com les fotos de perfil.|Sí: una imagen cuadrada con border-radius: 50 % se ve redonda, como las fotos de perfil."]
+    ],
+    tec: [
+      ["La vora no surt.|El borde no sale.", "Falta l'estil (solid, dashed…) o està mal escrit (solit, dash). La barra de comprovacions avisa si la vora no té els tres valors.|Falta el estilo (solid, dashed…) o está mal escrito (solit, dash). La barra de comprobaciones avisa si el borde no tiene los tres valores."],
+      ["La xapa no queda rodona del tot.|La chapa no queda redonda del todo.", "Amb 50 % surt un cercle només si la caixa és quadrada: width i height iguals. Si no, surt un oval.|Con 50 % sale un círculo solo si la caja es cuadrada: width y height iguales. Si no, sale un óvalo."],
+      ["L'ombra no es veu.|La sombra no se ve.", "Potser el color és gairebé igual que el fons o el difuminat és enorme. Proveu box-shadow: 0 6px 14px gray; per començar.|Quizá el color es casi igual que el fondo o el difuminado es enorme. Probad box-shadow: 0 6px 14px gray; para empezar."]
+    ],
+    seg: [
+      "Amb la llanterna o el llum del mòbil, no enfoqueu mai els ulls de ningú.|Con la linterna o la luz del móvil, no enfoquéis nunca los ojos de nadie.",
+      "Dibuixa-ho i endevina-ho: qui descriu ho fa a poc a poc; ningú no es riu del dibuix de l'altre.|Dibújalo y adivínalo: quien describe lo hace despacio; nadie se ríe del dibujo del otro.",
+      "Pausa activa de l'ombra entre la teoria i els reptes.|Pausa activa de la sombra entre la teoría y los retos."
+    ],
+    extra: [
+      "Fer la xapa amb una vora double i una ombra de color (per exemple, rgba o un color de la paleta).|Hacer la chapa con un borde double y una sombra de color (por ejemplo, rgba o un color de la paleta).",
+      "Calcular l'amplada total de tres caixes diferents i comprovar-ho amb l'eina d'inspeccionar del navegador (amb el professor/a).|Calcular la anchura total de tres cajas diferentes y comprobarlo con la herramienta de inspeccionar del navegador (con el profesor/a).",
+      "Provar box-sizing: border-box i explicar què canvia en els comptes.|Probar box-sizing: border-box y explicar qué cambia en las cuentas."
+    ],
+    trans: [
+      "Sessió següent: el projecte de la unitat, la targeta del videojoc amb tot el model de caixa.|Sesión siguiente: el proyecto de la unidad, la tarjeta del videojuego con todo el modelo de caja.",
+      "Ciències: la llum i les ombres (d'on ve la llum, cap on cau l'ombra).|Ciencias: la luz y las sombras (de dónde viene la luz, hacia dónde cae la sombra).",
+      "Matemàtiques: el càlcul de l'amplada total (sumes i dobles).|Matemáticas: el cálculo de la anchura total (sumas y dobles)."
+    ]
+  },
+  'w5-4': {
+    intro: "Sessió de projecte que tanca la unitat: cada alumne/a inventa un videojoc (nom, gènere i de què va) i en fa la targeta per a la Fira de Videojocs, com les dels dissenyadors web. Primer en dibuixa l'esbós en paper (quines caixes hi ha, una dins de l'altra, i quins espais tenen); després la construeix pas a pas (l'HTML, la caixa amb amplada i centrada, el toc de col·leccionista amb vora, cantonades i ombra, i l'etiqueta del gènere); i al final la revisa amb criteris de llegibilitat, accessibilitat (alt) i mòbil, i hi proposa una millora. Valoreu que facin servir el model de caixa amb sentit, no només que la targeta sigui bonica.|Sesión de proyecto que cierra la unidad: cada alumno/a inventa un videojuego (nombre, género y de qué va) y hace su tarjeta para la Feria de Videojuegos, como las de los diseñadores web. Primero dibuja el boceto en papel (qué cajas hay, una dentro de la otra, y qué espacios tienen); después la construye paso a paso (el HTML, la caja con anchura y centrada, el toque de coleccionista con borde, esquinas y sombra, y la etiqueta del género); y al final la revisa con criterios de legibilidad, accesibilidad (alt) y móvil, y propone una mejora. Valorad que usen el modelo de caja con sentido, no solo que la tarjeta sea bonita.",
+    claus: [
+      "L'esbós decideix les caixes (targeta → imatge, títol, gènere, descripció) i els espais.|El boceto decide las cajas (tarjeta → imagen, título, género, descripción) y los espacios.",
+      "Una targeta és una caixa amb width, centrada (margin auto), amb padding, vora, cantonades rodones i ombra.|Una tarjeta es una caja con width, centrada (margin auto), con padding, borde, esquinas redondeadas y sombra.",
+      "Una etiqueta (com el gènere) és una caixa petita amb fons, padding i border-radius gran.|Una etiqueta (como el género) es una caja pequeña con fondo, padding y border-radius grande.",
+      "Revisar: es llegeix bé, la imatge té alt i es veu bé al mòbil i a l'ordinador.|Revisar: se lee bien, la imagen tiene alt y se ve bien en el móvil y en el ordenador."
+    ],
+    prev: [
+      "Tot el model de caixa: width, padding, margin, border, border-radius i box-shadow (sessions 1-3).|Todo el modelo de caja: width, padding, margin, border, border-radius y box-shadow (sesiones 1-3).",
+      "Imatges amb alt i classes de CSS (unitats 3 i 4).|Imágenes con alt y clases de CSS (unidades 3 y 4).",
+      "Inventar i explicar una idea en poques paraules (el nom i la descripció del videojoc).|Inventar y explicar una idea en pocas palabras (el nombre y la descripción del videojuego)."
+    ],
+    faq: [
+      ["El videojoc ha d'existir?|¿El videojuego tiene que existir?", "No: és un videojoc inventat per vosaltres. Només en fem la targeta de presentació (no el programem). Si a Creadors en vau fer un, podeu fer-ne la targeta.|No: es un videojuego inventado por vosotros. Solo hacemos su tarjeta de presentación (no lo programamos). Si en Creadores hicisteis uno, podéis hacer su tarjeta."],
+      ["Puc posar la imatge d'un videojoc famós?|¿Puedo poner la imagen de un videojuego famoso?", "No: és d'una empresa i té drets d'autor. Feu servir les imatges de Numi (consola, coet, drac, robot…) o un dibuix vostre escanejat amb el professor/a.|No: es de una empresa y tiene derechos de autor. Usad las imágenes de Numi (consola, cohete, dragón, robot…) o un dibujo vuestro escaneado con el profesor/a."],
+      ["Com faig que la targeta sigui més estreta al mòbil?|¿Cómo hago que la tarjeta sea más estrecha en el móvil?", "Amb width en % (per exemple, 90 %) o amb max-width: 320px i width: 100 %. A la unitat 7 ho farem amb @media.|Con width en % (por ejemplo, 90 %) o con max-width: 320px y width: 100 %. En la unidad 7 lo haremos con @media."],
+      ["Quantes regles ha de tenir el CSS?|¿Cuántas reglas tiene que tener el CSS?", "Les que calguin perquè la targeta tingui tot el model de caixa: normalment .targeta, img, h2 i .genere. Les comprovacions diuen què falta.|Las que hagan falta para que la tarjeta tenga todo el modelo de caja: normalmente .targeta, img, h2 y .genere. Las comprobaciones dicen qué falta."]
+    ],
+    tec: [
+      ["La targeta ocupa tota la fila i no es centra.|La tarjeta ocupa toda la fila y no se centra.", "Falta width o està mal escrit (widht). Amb width i margin: 0 auto ja es centra.|Falta width o está mal escrito (widht). Con width y margin: 0 auto ya se centra."],
+      ["L'etiqueta del gènere s'estira per tota la targeta.|La etiqueta del género se estira por toda la tarjeta.", "Un &lt;p&gt; ocupa tota la fila; doneu a .genere una amplada petita (width) o display: inline-block.|Un &lt;p&gt; ocupa toda la fila; dad a .genere una anchura pequeña (width) o display: inline-block."],
+      ["La revisió entre companys no surt al portafoli.|La revisión entre compañeros no sale en el portafolio.", "Les respostes de la revisió es desen amb la sessió; el portafoli guarda la targeta. Comenteu-les en veu alta amb el company/a.|Las respuestas de la revisión se guardan con la sesión; el portafolio guarda la tarjeta. Comentadlas en voz alta con el compañero/a."]
+    ],
+    seg: [
+      "Videojocs inventats per a totes les edats; a la galeria, comentaris amables i concrets.|Videojuegos inventados para todas las edades; en la galería, comentarios amables y concretos.",
+      "No feu servir imatges de videojocs comercials ni noms de marques registrades a la targeta.|No uséis imágenes de videojuegos comerciales ni nombres de marcas registradas en la tarjeta.",
+      "Pausa activa de la caixa amb padding abans del projecte final.|Pausa activa de la caja con padding antes del proyecto final."
+    ],
+    extra: [
+      "Fer una segona targeta per a un altre videojoc i posar-les una al costat de l'altra (a la unitat 6 ho farem amb flex).|Hacer una segunda tarjeta para otro videojuego y ponerlas una al lado de la otra (en la unidad 6 lo haremos con flex).",
+      "Afegir una llista de controls (tecles) amb una vora de punts i cantonades rodones.|Añadir una lista de controles (teclas) con un borde de puntos y esquinas redondeadas.",
+      "Fer una versió fosca de la targeta (fons fosc i text clar) amb bon contrast.|Hacer una versión oscura de la tarjeta (fondo oscuro y texto claro) con buen contraste."
+    ],
+    trans: [
+      "Unitat 6: flexbox i graelles per posar moltes targetes en files i columnes.|Unidad 6: flexbox y rejillas para poner muchas tarjetas en filas y columnas.",
+      "Tech Creadors: si heu fet el curs, la targeta pot presentar el vostre videojoc de veritat.|Tech Creadores: si habéis hecho el curso, la tarjeta puede presentar vuestro videojuego de verdad.",
+      "Llengua: el text publicitari breu (nom, eslògan i descripció).|Lengua: el texto publicitario breve (nombre, eslogan y descripción)."
+    ]
+  }
+}).forEach(([id, g]) => Object.assign(TGUIDE[id], g));
+
+/* les demos de codi de les diapositives, també en castellà (diccionari a la unitat 4) */
+if (typeof webTr === 'function' && typeof WEB_TR45 !== 'undefined') ['w5-1', 'w5-2', 'w5-3', 'w5-4'].forEach(id => TGUIDE[id] && webTr(TGUIDE[id], WEB_TR45));

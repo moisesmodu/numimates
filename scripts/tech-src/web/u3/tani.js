@@ -125,6 +125,16 @@ Object.assign(TANI, (() => {
         <g ${tA(3.5, 'ta-in')}><rect x="12" y="186" width="296" height="24" rx="12" fill="#FDEBEB"/>${tick(26, 198, false)}<text x="44" y="203" class="tat s">${L('Copiar-lo i dir que és teu', 'Copiarlo y decir que es tuyo')}</text></g>`);
     },
     // les quatre preguntes d'una cita: qui, què, on i quan
+    // les llicències Creative Commons: cada lletra és una condició de l'autor/a
+    w3cc() {
+      const row = (y, ab, col, txt, t) => `<g ${tA(t, 'ta-in')}><rect x="8" y="${y}" width="304" height="32" rx="10" fill="#fff" stroke="${col}" stroke-width="2" filter="url(#bwSh)"/><circle cx="28" cy="${y + 16}" r="12.5" fill="${col}"/><text x="28" y="${y + 20.5}" text-anchor="middle" class="tat w" style="font-size:11.5px">${ab}</text><text x="50" y="${y + 21}" class="tat s" style="font-size:13px">${txt}</text></g>`;
+      return tSvg(236, `<g ${tA(.1, 'ta-in')}><rect x="78" y="6" width="164" height="36" rx="18" fill="#14204A" filter="url(#bwSh)"/><circle cx="102" cy="24" r="11.5" fill="none" stroke="#fff" stroke-width="2.4"/><text x="102" y="28.5" text-anchor="middle" class="tat w" style="font-size:11px">cc</text><text x="122" y="29" class="tat w" style="font-size:13.5px">Creative Commons</text></g>
+        ${row(52, 'BY', '#2F5BEA', L("Cal dir qui l'ha feta", 'Hay que decir quién la ha hecho'), .5)}
+        ${row(90, 'NC', '#F08A24', L('No la pots fer servir per vendre', 'No la puedes usar para vender'), 1.0)}
+        ${row(128, 'SA', '#1FA463', L('Si la canvies, comparteix-la igual', 'Si la cambias, compártela igual'), 1.5)}
+        ${row(166, 'ND', '#8B5CF6', L('No la pots canviar', 'No la puedes cambiar'), 2.0)}
+        <g ${tA(2.7, 'ta-in')}><rect x="40" y="204" width="240" height="26" rx="13" fill="#FFF6E5" stroke="#F2D7A6" stroke-width="1.6"/><text x="160" y="221.5" text-anchor="middle" class="tat s" style="font-size:13px">«Foto: Marta Puig · CC BY»</text></g>`);
+    },
     w3cite() {
       const rows = [[L('Qui?', '¿Quién?'), 'Club de Naturalistes', '#3D7BF4'], [L('Què?', '¿Qué?'), L("«Les tortugues de l'illa»", '«Las tortugas de la isla»'), '#8B5CF6'],
         [L('On?', '¿Dónde?'), 'exemple.numi/tortugues', '#2FA866'], [L('Quan?', '¿Cuándo?'), L("el 3 d'octubre", 'el 3 de octubre'), '#F08A24']];

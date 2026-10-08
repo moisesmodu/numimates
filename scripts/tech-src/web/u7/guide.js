@@ -650,3 +650,169 @@ Object.assign(TGUIDE, {
     ]
   }
 });
+
+/* ---------- Guia completa (unitat 7): la sessió en breu, idees clau, coneixements previs, preguntes que faran, què fer si
+   alguna cosa falla, seguretat i benestar, per anar més enllà i connexions ---------- */
+Object.entries({
+  'w7-1': {
+    intro: "L'alumnat descobreix el disseny adaptable: la mateixa web, amb el mateix contingut, s'ha de veure bé a l'ordinador i al mòbil, i el que canvia és com es col·loca. Aprèn tres eines: l'etiqueta &lt;meta name=&quot;viewport&quot;&gt;, perquè el mòbil faci servir la seva amplada de veritat i no una pàgina d'ordinador encongida; les regles @media (max-width: 600px) { … }, que només s'apliquen a les pantalles estretes (amb les claus de dins i les de fora ben tancades); i les amplades flexibles (max-width: 100 % en lloc d'amplades fixes). Els botons Mòbil (375 px) i Ordinador (960 px) de la vista prèvia simulen les pantalles de veritat, i l'activitat sense pantalla reorganitza una web de paper en una tira estreta.|El alumnado descubre el diseño adaptable: la misma web, con el mismo contenido, tiene que verse bien en el ordenador y en el móvil, y lo que cambia es cómo se coloca. Aprende tres herramientas: la etiqueta &lt;meta name=&quot;viewport&quot;&gt;, para que el móvil use su anchura de verdad y no una página de ordenador encogida; las reglas @media (max-width: 600px) { … }, que solo se aplican a las pantallas estrechas (con las llaves de dentro y las de fuera bien cerradas); y las anchuras flexibles (max-width: 100 % en lugar de anchuras fijas). Los botones Móvil (375 px) y Ordenador (960 px) de la vista previa simulan las pantallas de verdad, y la actividad sin pantalla reorganiza una web de papel en una tira estrecha.",
+    claus: [
+      "Una web adaptable canvia la disposició segons la pantalla, però no el contingut.|Una web adaptable cambia la disposición según la pantalla, pero no el contenido.",
+      "&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt; al &lt;head&gt;: el mòbil fa servir la seva amplada real.|&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt; en el &lt;head&gt;: el móvil usa su anchura real.",
+      "@media (max-width: 600px) { regles } només s'aplica a pantalles de 600 px o menys; compta les claus.|@media (max-width: 600px) { reglas } solo se aplica a pantallas de 600 px o menos; cuenta las llaves.",
+      "Les amplades fixes (width: 700px) surten de la pantalla; max-width: 100 % s'adapta.|Las anchuras fijas (width: 700px) salen de la pantalla; max-width: 100 % se adapta."
+    ],
+    prev: [
+      "Flex (display, flex-direction, gap) i el model de caixa (unitats 5 i 6).|Flex (display, flex-direction, gap) y el modelo de caja (unidades 5 y 6).",
+      "L'esquelet de la pàgina amb &lt;head&gt; (unitat 2).|El esqueleto de la página con &lt;head&gt; (unidad 2).",
+      "Haver vist una web al mòbil i a l'ordinador.|Haber visto una web en el móvil y en el ordenador."
+    ],
+    faq: [
+      ["Per què 600 píxels?|¿Por qué 600 píxeles?", "És un punt de tall habitual: gairebé tots els mòbils en vertical fan menys de 600 píxels d'amplada (CSS) i les tauletes i els ordinadors, més. Cada web pot triar els seus punts de tall.|Es un punto de corte habitual: casi todos los móviles en vertical miden menos de 600 píxeles de anchura (CSS) y las tabletas y los ordenadores, más. Cada web puede elegir sus puntos de corte."],
+      ["Què passa al mòbil si no poso el viewport?|¿Qué pasa en el móvil si no pongo el viewport?", "El mòbil fa veure que és una pantalla d'ordinador (uns 980 píxels) i ho encongeix tot: el text surt minúscul i les regles @media del mòbil no s'apliquen.|El móvil hace ver que es una pantalla de ordenador (unos 980 píxeles) y lo encoge todo: el texto sale minúsculo y las reglas @media del móvil no se aplican."],
+      ["La vista prèvia és igual que un mòbil de veritat?|¿La vista previa es igual que un móvil de verdad?", "Simula l'amplada: el botó Mòbil fa 375 píxels (com molts mòbils) i Ordinador, 960. Per estar-ne segurs, al final de la unitat es pot obrir la web en un mòbil real descarregant-la.|Simula la anchura: el botón Móvil mide 375 píxeles (como muchos móviles) y Ordenador, 960. Para estar seguros, al final de la unidad se puede abrir la web en un móvil real descargándola."],
+      ["Puc fer regles només per a ordinadors?|¿Puedo hacer reglas solo para ordenadores?", "Sí, amb @media (min-width: 601px) { … }. Molts dissenyadors fan primer la versió de mòbil i després hi afegeixen regles per a pantalles grans.|Sí, con @media (min-width: 601px) { … }. Muchos diseñadores hacen primero la versión de móvil y después añaden reglas para pantallas grandes."]
+    ],
+    tec: [
+      ["El @media no fa res ni al mòbil.|El @media no hace nada ni en el móvil.", "Mireu l'escriptura: @media (max-width: 600px), amb parèntesis, dos punts i px. I que les claus estiguin ben tancades: una per a cada regla de dins i una per al @media.|Mirad la escritura: @media (max-width: 600px), con paréntesis, dos puntos y px. Y que las llaves estén bien cerradas: una para cada regla de dentro y una para el @media."],
+      ["Al botó Ordinador també surt la versió de mòbil.|En el botón Ordenador también sale la versión de móvil.", "Potser la regla s'ha escrit fora del @media o amb min-width. Les regles de fora del @media s'apliquen sempre.|Quizá la regla se ha escrito fuera del @media o con min-width. Las reglas de fuera del @media se aplican siempre."],
+      ["Al mòbil, la vista prèvia té una barra per desplaçar-se de costat.|En el móvil, la vista previa tiene una barra para desplazarse de lado.", "Alguna cosa és més ampla que la pantalla (una caixa amb width en px o una imatge sense max-width). Canvieu-la per max-width: 100 %.|Algo es más ancho que la pantalla (una caja con width en px o una imagen sin max-width). Cambiadla por max-width: 100 %."]
+    ],
+    seg: [
+      "Si a l'activitat feu servir un mòbil o una tauleta de l'escola, el professor/a el controla; els mòbils personals, guardats.|Si en la actividad usáis un móvil o una tableta del centro, el profesor/a lo controla; los móviles personales, guardados.",
+      "Pensar en el mòbil és pensar en la gent: molta gent només té el mòbil per entrar a internet.|Pensar en el móvil es pensar en la gente: mucha gente solo tiene el móvil para entrar en internet.",
+      "Pausa activa de la web adaptable (braços en fila i en columna).|Pausa activa de la web adaptable (brazos en fila y en columna)."
+    ],
+    extra: [
+      "Afegir un segon punt de tall: @media (max-width: 400px) amb una lletra encara més petita al títol.|Añadir un segundo punto de corte: @media (max-width: 400px) con una letra todavía más pequeña en el título.",
+      "Fer que les imatges de les targetes siguin flexibles (img { max-width: 100%; height: auto; }).|Hacer que las imágenes de las tarjetas sean flexibles (img { max-width: 100%; height: auto; }).",
+      "Dibuixar la mateixa pàgina per a rellotge intel·ligent, mòbil i ordinador i explicar què canvia.|Dibujar la misma página para reloj inteligente, móvil y ordenador y explicar qué cambia."
+    ],
+    trans: [
+      "Sessió següent: botons de veritat amb :hover, :focus i transicions, pensats per al dit.|Sesión siguiente: botones de verdad con :hover, :focus y transiciones, pensados para el dedo.",
+      "Tecnologia: els dispositius (mòbil, tauleta, ordinador) i les seves pantalles.|Tecnología: los dispositivos (móvil, tableta, ordenador) y sus pantallas.",
+      "Ciències socials: Lleida, el tema de la guia de la unitat.|Ciencias sociales: Lleida, el tema de la guía de la unidad."
+    ]
+  },
+  'w7-2': {
+    intro: "L'alumnat converteix enllaços en botons de veritat: fons de color, farciment, vores arrodonides i sense subratllat. Aprèn els estats d'un botó amb :hover (quan el ratolí hi passa per sobre) i :focus (quan s'hi arriba amb el teclat), i que transition, posada a la regla normal, fa el canvi suau en entrar i en sortir. Però al mòbil no hi ha ratolí: els botons han de ser grans i separats (un dit és més gruixut que un ratolí) i no s'ha d'amagar res important darrere d'un :hover. A l'activitat sense pantalla fan codi de paper i un «botó humà» que canvia d'estat. Acaben fent el menú de botons de la guia.|El alumnado convierte enlaces en botones de verdad: fondo de color, relleno, bordes redondeados y sin subrayado. Aprende los estados de un botón con :hover (cuando el ratón pasa por encima) y :focus (cuando se llega con el teclado), y que transition, puesta en la regla normal, hace el cambio suave al entrar y al salir. Pero en el móvil no hay ratón: los botones tienen que ser grandes y separados (un dedo es más grueso que un ratón) y no hay que esconder nada importante detrás de un :hover. En la actividad sin pantalla hacen código de papel y un «botón humano» que cambia de estado. Terminan haciendo el menú de botones de la guía.",
+    claus: [
+      "Un botó és un enllaç amb background, padding, border-radius i text-decoration: none.|Un botón es un enlace con background, padding, border-radius y text-decoration: none.",
+      ".boto:hover s'aplica quan el ratolí hi és a sobre; .boto:focus, quan s'hi arriba amb el teclat (tecla Tab).|.boto:hover se aplica cuando el ratón está encima; .boto:focus, cuando se llega con el teclado (tecla Tab).",
+      "transition: background 0.3s; a la regla normal fa el canvi suau en entrar i en sortir.|transition: background 0.3s; en la regla normal hace el cambio suave al entrar y al salir.",
+      "Al mòbil: botons grans (uns 44 píxels d'alt) i separats, i res important només amb :hover.|En el móvil: botones grandes (unos 44 píxeles de alto) y separados, y nada importante solo con :hover."
+    ],
+    prev: [
+      "Enllaços &lt;a href&gt; (unitat 3) i el model de caixa (unitat 5).|Enlaces &lt;a href&gt; (unidad 3) y el modelo de caja (unidad 5).",
+      "@media (max-width: 600px) (sessió anterior).|@media (max-width: 600px) (sesión anterior).",
+      "Fer servir el ratolí i la tecla Tab per moure's per una pàgina.|Usar el ratón y la tecla Tab para moverse por una página."
+    ],
+    faq: [
+      ["Per què la transition va a la regla normal i no al :hover?|¿Por qué la transition va en la regla normal y no en el :hover?", "Si és al :hover, el canvi és suau en entrar però de cop en sortir (quan el ratolí marxa, el :hover ja no hi és). A la regla normal, funciona en els dos sentits.|Si está en el :hover, el cambio es suave al entrar pero de golpe al salir (cuando el ratón se va, el :hover ya no está). En la regla normal, funciona en los dos sentidos."],
+      ["Per què posem :focus si tothom fa servir el ratolí?|¿Por qué ponemos :focus si todo el mundo usa el ratón?", "Hi ha persones que naveguen amb el teclat o amb altres aparells (per mobilitat reduïda o per comoditat). Amb :focus veuen on són.|Hay personas que navegan con el teclado o con otros aparatos (por movilidad reducida o por comodidad). Con :focus ven dónde están."],
+      ["Puc fer servir la etiqueta &lt;button&gt;?|¿Puedo usar la etiqueta &lt;button&gt;?", "&lt;button&gt; és per a accions dins de la pàgina (enviar un formulari, obrir un menú), i sovint necessita JavaScript. Per anar a un altre lloc es fa servir un enllaç &lt;a&gt; amb estil de botó.|&lt;button&gt; es para acciones dentro de la página (enviar un formulario, abrir un menú), y a menudo necesita JavaScript. Para ir a otro sitio se usa un enlace &lt;a&gt; con estilo de botón."],
+      ["Què fa cursor: pointer?|¿Qué hace cursor: pointer?", "Canvia la fletxa del ratolí per la mà amb el dit quan passa per sobre: així se sap que es pot tocar.|Cambia la flecha del ratón por la mano con el dedo cuando pasa por encima: así se sabe que se puede tocar."]
+    ],
+    tec: [
+      ["Al mòbil no puc provar el :hover.|En el móvil no puedo probar el :hover.", "És normal: a les pantalles tàctils no hi ha ratolí. Proveu-ho a l'ordinador; al mòbil, el :hover a vegades s'activa en tocar i es queda enganxat.|Es normal: en las pantallas táctiles no hay ratón. Probadlo en el ordenador; en el móvil, el :hover a veces se activa al tocar y se queda enganchado."],
+      ["El botó no canvia de color amb el ratolí.|El botón no cambia de color con el ratón.", "Mireu el selector: .boto:hover, sense espai entre .boto i :hover. Amb espai (.boto :hover) vol dir una altra cosa.|Mirad el selector: .boto:hover, sin espacio entre .boto y :hover. Con espacio (.boto :hover) quiere decir otra cosa."],
+      ["En tocar el botó a la vista prèvia, surt un avís en lloc d'anar a la secció.|Al tocar el botón en la vista previa, sale un aviso en lugar de ir a la sección.", "Si l'enllaç és #llocs i hi ha un element amb id=&quot;llocs&quot;, la vista prèvia hi salta. Si surt l'avís que no hi ha cap element amb aquell id, encara no l'heu creat (o el nom no coincideix).|Si el enlace es #llocs y hay un elemento con id=&quot;llocs&quot;, la vista previa salta. Si sale el aviso de que no hay ningún elemento con ese id, todavía no lo habéis creado (o el nombre no coincide)."]
+    ],
+    seg: [
+      "Al botó humà, els canvis d'estat es fan amb el cos a poc a poc, sense empènyer ningú.|En el botón humano, los cambios de estado se hacen con el cuerpo despacio, sin empujar a nadie.",
+      "Pensar en les persones amb mobilitat reduïda: botons grans, separats i amb :focus visible.|Pensar en las personas con movilidad reducida: botones grandes, separados y con :focus visible.",
+      "Pausa activa del botó (transició lenta) a mitja sessió.|Pausa activa del botón (transición lenta) a mitad de sesión."
+    ],
+    extra: [
+      "Afegir un efecte de moviment suau amb transform: scale(1.05) al :hover i a la transition.|Añadir un efecto de movimiento suave con transform: scale(1.05) en el :hover y en la transition.",
+      "Fer dos estils de botó (principal i secundari) amb dues classes.|Hacer dos estilos de botón (principal y secundario) con dos clases.",
+      "Recórrer el menú només amb la tecla Tab i comprovar que sempre es veu on ets.|Recorrer el menú solo con la tecla Tab y comprobar que siempre se ve dónde estás."
+    ],
+    trans: [
+      "Sessió següent: detectar webs falses, que sovint imiten els botons i els colors de les de veritat.|Sesión siguiente: detectar webs falsas, que a menudo imitan los botones y los colores de las de verdad.",
+      "Tecnologia: el disseny d'interfícies (ascensors, microones, comandaments).|Tecnología: el diseño de interfaces (ascensores, microondas, mandos).",
+      "Educació física: la coordinació fina del dit (per què els botons petits costen).|Educación física: la coordinación fina del dedo (por qué los botones pequeños cuestan)."
+    ]
+  },
+  'w7-3': {
+    intro: "Sessió de ciutadania digital molt important per a aquesta edat. L'alumnat aprèn el mètode del detectiu/iva per saber si una web és de fiar: mirar el domini fins a la primera barra «/» (fotonuvi.numi.regals.xyz és de regals.xyz!), entendre que el candau vol dir connexió xifrada però no confiança, i reconèixer els senyals d'alerta: presses i comptes enrere, premis massa bons, faltes d'ortografia i peticions de contrasenyes o dades. I, sobretot, què cal fer: aturar-se, no escriure res, tancar i explicar-ho a un adult. Qui s'hi deixa enganyar no és ximple: les webs falses estan fetes per enganyar. Ho apliquen fent amb HTML i CSS una targeta d'avís i una pàgina de consells per als companys.|Sesión de ciudadanía digital muy importante para esta edad. El alumnado aprende el método del detective para saber si una web es de fiar: mirar el dominio hasta la primera barra «/» (¡fotonuvi.numi.regals.xyz es de regals.xyz!), entender que el candado quiere decir conexión cifrada pero no confianza, y reconocer las señales de alerta: prisas y cuentas atrás, premios demasiado buenos, faltas de ortografía y peticiones de contraseñas o datos. Y, sobre todo, qué hay que hacer: pararse, no escribir nada, cerrar y explicárselo a un adulto. Quien se deja engañar no es tonto: las webs falsas están hechas para engañar. Lo aplican haciendo con HTML y CSS una tarjeta de aviso y una página de consejos para los compañeros.",
+    claus: [
+      "El domini s'acaba just abans de la primera «/»: el que hi ha al final (regals.xyz) diu de qui és la web.|El dominio acaba justo antes de la primera «/»: lo que hay al final (regals.xyz) dice de quién es la web.",
+      "El candau (https) vol dir connexió xifrada, no que la web sigui de confiança.|El candado (https) quiere decir conexión cifrada, no que la web sea de confianza.",
+      "Senyals d'alerta: presses, premis massa bons, faltes, peticions de contrasenyes o dades personals.|Señales de alerta: prisas, premios demasiado buenos, faltas, peticiones de contraseñas o datos personales.",
+      "Atura't, pensa, pregunta: no escriguis res, tanca la pàgina i explica-ho a un adult.|Párate, piensa, pregunta: no escribas nada, cierra la página y explícaselo a un adulto."
+    ],
+    prev: [
+      "Les parts d'una URL i el DNS (unitat 1).|Las partes de una URL y el DNS (unidad 1).",
+      "Botons amb :hover i @media (sessions 1 i 2 de la unitat).|Botones con :hover y @media (sesiones 1 y 2 de la unidad).",
+      "Saber què és una contrasenya i per què no es comparteix.|Saber qué es una contraseña y por qué no se comparte."
+    ],
+    faq: [
+      ["Si una web té el candau, ja és segura?|Si una web tiene el candado, ¿ya es segura?", "No: el candau només diu que el que envies viatja xifrat. Una web falsa també pot tenir-lo. El que diu de qui és la web és el domini.|No: el candado solo dice que lo que envías viaja cifrado. Una web falsa también puede tenerlo. Lo que dice de quién es la web es el dominio."],
+      ["Què faig si ja he escrit la contrasenya en una web falsa?|¿Qué hago si ya he escrito la contraseña en una web falsa?", "Explicar-ho de seguida a un adult de confiança i canviar la contrasenya des de la web de veritat (escrivint l'adreça, no des de l'enllaç). No és culpa teva: han intentat enganyar-te.|Explicárselo enseguida a un adulto de confianza y cambiar la contraseña desde la web de verdad (escribiendo la dirección, no desde el enlace). No es culpa tuya: han intentado engañarte."],
+      ["Per què fan webs falses?|¿Por qué hacen webs falsas?", "Per aconseguir contrasenyes, dades personals o diners. Per això imiten els colors i els logotips de webs que la gent coneix i posen presses.|Para conseguir contraseñas, datos personales o dinero. Por eso imitan los colores y los logotipos de webs que la gente conoce y meten prisas."],
+      ["Un missatge d'un amic amb un enllaç és de fiar?|¿Un mensaje de un amigo con un enlace es de fiar?", "No sempre: el compte de l'amic pot haver estat robat. Si el missatge és estrany o té presses, pregunta-li per una altra via abans d'obrir-lo.|No siempre: la cuenta del amigo puede haber sido robada. Si el mensaje es raro o tiene prisas, pregúntale por otra vía antes de abrirlo."],
+      ["Les webs i els dominis de la sessió són de veritat?|¿Las webs y los dominios de la sesión son de verdad?", "No: són inventats (.numi, .xyz de mentida) perquè ningú no hi entri. No busqueu webs falses de veritat a classe.|No: son inventados (.numi, .xyz de mentira) para que nadie entre. No busquéis webs falsas de verdad en clase."]
+    ],
+    tec: [
+      ["Volen obrir les adreces de la sessió al navegador.|Quieren abrir las direcciones de la sesión en el navegador.", "No funcionaran (són inventades) i no cal: tot el treball és a l'app. Recordeu que no es proven webs sospitoses de veritat.|No funcionarán (son inventadas) y no hace falta: todo el trabajo está en la app. Recordad que no se prueban webs sospechosas de verdad."],
+      ["A «troba la línia», no saben quina és la falta d'ortografia.|En «encuentra la línea», no saben cuál es la falta de ortografía.", "Que llegeixin cada línia en veu alta, a poc a poc. Les webs falses sovint tenen faltes perquè estan fetes amb pressa.|Que lean cada línea en voz alta, despacio. Las webs falsas a menudo tienen faltas porque están hechas con prisas."],
+      ["La targeta d'avís no té fons ni vora.|La tarjeta de aviso no tiene fondo ni borde.", "La regla ha de ser .avis (amb punt) i l'HTML class=&quot;avis&quot;. La vora necessita gruix, estil i color.|La regla tiene que ser .avis (con punto) y el HTML class=&quot;avis&quot;. El borde necesita grosor, estilo y color."]
+    ],
+    seg: [
+      "No entreu mai a webs sospitoses de veritat per «provar-les», ni a classe ni a casa.|No entréis nunca en webs sospechosas de verdad para «probarlas», ni en clase ni en casa.",
+      "Si a algú li ha passat un engany, se l'escolta sense jutjar: qualsevol persona pot caure en una web ben feta.|Si a alguien le ha pasado un engaño, se le escucha sin juzgar: cualquier persona puede caer en una web bien hecha.",
+      "Recordeu els adults de confiança: família, tutor/a, professorat. Davant del dubte, preguntar sempre.|Recordad los adultos de confianza: familia, tutor/a, profesorado. Ante la duda, preguntar siempre."
+    ],
+    extra: [
+      "Inventar tres missatges trampa (sense enllaços reals) i que un company/a hi trobi els senyals d'alerta.|Inventar tres mensajes trampa (sin enlaces reales) y que un compañero/a encuentre en ellos las señales de alerta.",
+      "Afegir a la pàgina de consells una secció «Què fer si ja has fet clic».|Añadir a la página de consejos una sección «Qué hacer si ya has hecho clic».",
+      "Amb un adult, mirar el domini de les webs que feu servir cada dia i escriure on s'acaba cada un.|Con un adulto, mirar el dominio de las webs que usáis cada día y escribir dónde acaba cada uno."
+    ],
+    trans: [
+      "Sessió següent: el projecte de la unitat, la guia de Lleida amb fets certs i fonts.|Sesión siguiente: el proyecto de la unidad, la guía de Lleida con hechos ciertos y fuentes.",
+      "Tech Digital: les contrasenyes fortes i els bulos (si el feu, connecteu-ho).|Tech Digital: las contraseñas fuertes y los bulos (si lo hacéis, conectadlo).",
+      "Tutoria: la seguretat a internet i a qui demanar ajuda.|Tutoría: la seguridad en internet y a quién pedir ayuda."
+    ]
+  },
+  'w7-4': {
+    intro: "Sessió de projecte que tanca la unitat: l'alumnat construeix la guia de Lleida per a uns estudiants d'intercanvi que la miraran pel carrer, amb el mòbil. Primer planifica (per a qui és, quines seccions té i com es veurà al mòbil) amb un esbós; després construeix pas a pas: capçalera amb un menú de botons, una secció de llocs amb targetes (flex), l'estil amb :hover i transition, i un @media que ho reorganitza tot al mòbil. Una guia de veritat només hi posa fets segurs i en cita les fonts al peu de pàgina. Acaben amb la guia completa (festes, menjar i fonts) i una revisió en parella: alt, contrast, fets certs i vista de mòbil.|Sesión de proyecto que cierra la unidad: el alumnado construye la guía de Lleida para unos estudiantes de intercambio que la mirarán por la calle, con el móvil. Primero planifica (para quién es, qué secciones tiene y cómo se verá en el móvil) con un boceto; después construye paso a paso: cabecera con un menú de botones, una sección de lugares con tarjetas (flex), el estilo con :hover y transition, y un @media que lo reorganiza todo en el móvil. Una guía de verdad solo pone hechos seguros y cita sus fuentes en el pie de página. Terminan con la guía completa (fiestas, comida y fuentes) y una revisión en pareja: alt, contraste, hechos ciertos y vista de móvil.",
+    claus: [
+      "Planificar abans de programar: públic, seccions i esbós per a mòbil i ordinador.|Planificar antes de programar: público, secciones y boceto para móvil y ordenador.",
+      "Una guia diu la veritat: fets que es poden comprovar i les fonts al &lt;footer&gt;.|Una guía dice la verdad: hechos que se pueden comprobar y las fuentes en el &lt;footer&gt;.",
+      "Header amb nav de botons, seccions amb id, targetes amb flex i @media per al mòbil.|Header con nav de botones, secciones con id, tarjetas con flex y @media para el móvil.",
+      "Provar-la al mòbil sovint, mentre es fa, no només al final.|Probarla en el móvil a menudo, mientras se hace, no solo al final."
+    ],
+    prev: [
+      "Viewport, @media i amplades flexibles; botons amb :hover i transition (sessions 1 i 2).|Viewport, @media y anchuras flexibles; botones con :hover y transition (sesiones 1 y 2).",
+      "Flex, imatges amb alt, enllaços #id i citar les fonts (unitats 3 i 6).|Flex, imágenes con alt, enlaces #id y citar las fuentes (unidades 3 y 6).",
+      "Conèixer alguns llocs, festes o menjars de Lleida (o d'una altra ciutat propera).|Conocer algunos lugares, fiestas o comidas de Lleida (o de otra ciudad cercana)."
+    ],
+    faq: [
+      ["Podem fer la guia d'una altra ciutat?|¿Podemos hacer la guía de otra ciudad?", "Sí: el que compta és el mateix (seccions, targetes, mòbil, fonts). Si l'escola no és a Lleida, feu la guia de la vostra ciutat o poble.|Sí: lo que cuenta es lo mismo (secciones, tarjetas, móvil, fuentes). Si el centro no está en Lleida, haced la guía de vuestra ciudad o pueblo."],
+      ["D'on trec els fets de la guia?|¿De dónde saco los hechos de la guía?", "De llocs de confiança: la web de l'ajuntament o de turisme, llibres de la biblioteca o fullets oficials. I els citeu al peu de pàgina.|De sitios de confianza: la web del ayuntamiento o de turismo, libros de la biblioteca o folletos oficiales. Y los citáis en el pie de página."],
+      ["Hi ha imatges de Lleida?|¿Hay imágenes de Lleida?", "Sí: la Seu Vella (seu-vella.svg) i el pont (pont.svg) a img/tech/web/, i icones per a festes i menjar. Totes al botó «Imatges».|Sí: la Seu Vella (seu-vella.svg) y el puente (pont.svg) en img/tech/web/, e iconos para fiestas y comida. Todas en el botón «Imágenes»."],
+      ["La puc ensenyar als estudiants d'intercanvi de veritat?|¿La puedo enseñar a los estudiantes de intercambio de verdad?", "A «Projectes» la podeu descarregar com un fitxer .html i obrir-la en qualsevol navegador. Abans de compartir-la, que la revisi un adult i que no tingui cap dada personal.|En «Proyectos» la podéis descargar como un archivo .html y abrirla en cualquier navegador. Antes de compartirla, que la revise un adulto y que no tenga ningún dato personal."]
+    ],
+    tec: [
+      ["El codi és llarg i ja no troben on són.|El código es largo y ya no encuentran dónde están.", "La barra d'estat diu la línia del cursor. Feu servir comentaris (&lt;!-- Llocs --&gt;) per marcar cada secció.|La barra de estado dice la línea del cursor. Usad comentarios (&lt;!-- Lugares --&gt;) para marcar cada sección."],
+      ["Al mòbil, les targetes no es posen en columna.|En el móvil, las tarjetas no se ponen en columna.", "Dins del @media, la regla ha de ser per al contenidor (.targetes) amb flex-direction: column. Compteu les claus del @media.|Dentro del @media, la regla tiene que ser para el contenedor (.targetes) con flex-direction: column. Contad las llaves del @media."],
+      ["Els botons del menú no porten enlloc a la vista prèvia.|Los botones del menú no llevan a ningún sitio en la vista previa.", "Han de portar a #llocs, #festes i #menjar, i les seccions han de tenir aquests id. A la vista prèvia, si l'id existeix, hi salta.|Tienen que llevar a #llocs, #festes y #menjar, y las secciones tienen que tener esos id. En la vista previa, si el id existe, salta."]
+    ],
+    seg: [
+      "La guia no porta dades personals: ni l'adreça de casa, ni l'escola, ni fotos de persones.|La guía no lleva datos personales: ni la dirección de casa, ni el centro, ni fotos de personas.",
+      "Si busqueu informació a internet, en webs oficials i amb un adult; i sempre se cita la font.|Si buscáis información en internet, en webs oficiales y con un adulto; y siempre se cita la fuente.",
+      "Pausa activa del passeig per la guia (pujar a la Seu Vella) a mitja sessió.|Pausa activa del paseo por la guía (subir a la Seu Vella) a mitad de sesión."
+    ],
+    extra: [
+      "Afegir una taula amb els horaris d'un museu o d'un mercat (inventats o comprovats).|Añadir una tabla con los horarios de un museo o de un mercado (inventados o comprobados).",
+      "Fer una versió de la guia en anglès per als estudiants d'intercanvi, amb lang=&quot;en&quot;.|Hacer una versión de la guía en inglés para los estudiantes de intercambio, con lang=&quot;en&quot;.",
+      "Afegir un enllaç «Torna a dalt» i un botó amb :focus ben visible.|Añadir un enlace «Vuelve arriba» y un botón con :focus bien visible."
+    ],
+    trans: [
+      "Unitat 8: la teva pròpia web, de la planificació a la presentació.|Unidad 8: tu propia web, de la planificación a la presentación.",
+      "Ciències socials: el patrimoni i les festes de Lleida.|Ciencias sociales: el patrimonio y las fiestas de Lleida.",
+      "Llengua anglesa: escriure textos breus per a visitants.|Lengua inglesa: escribir textos breves para visitantes."
+    ]
+  }
+}).forEach(([id, g]) => Object.assign(TGUIDE[id], g));

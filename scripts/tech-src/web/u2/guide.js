@@ -608,3 +608,175 @@ Object.assign(TGUIDE, {
     ]
   }
 });
+
+/* ---------- Guia completa (unitat 2): la sessió en breu, idees clau, coneixements previs, preguntes que faran, què fer si
+   alguna cosa falla, seguretat i benestar, per anar més enllà i connexions ---------- */
+Object.entries({
+  'w2-1': {
+    intro: "Primera sessió d'HTML de debò. L'alumnat entén que l'HTML és un llenguatge de marques: no calcula res, sinó que marca què és cada tros de text (un títol, un paràgraf, una cosa important). Aprèn a obrir i tancar etiquetes, que el navegador no les ensenya i que, quan una va dins d'una altra, l'última que s'obre és la primera que es tanca. A l'activitat sense pantalla, cada alumne/a és una etiqueta o un tros de text i el grup s'ha d'ordenar ben niuat. A l'ordinador escriuen el primer codi des de zero i arreglen errors amb l'ajuda dels avisos de l'editor.|Primera sesión de HTML de verdad. El alumnado entiende que el HTML es un lenguaje de marcas: no calcula nada, sino que marca qué es cada trozo de texto (un título, un párrafo, algo importante). Aprende a abrir y cerrar etiquetas, que el navegador no las enseña y que, cuando una va dentro de otra, la última que se abre es la primera que se cierra. En la actividad sin pantalla, cada alumno/a es una etiqueta o un trozo de texto y el grupo tiene que ordenarse bien anidado. En el ordenador escriben el primer código desde cero y arreglan errores con la ayuda de los avisos del editor.",
+    claus: [
+      "L'HTML marca què és cada tros: &lt;h1&gt; títol principal, &lt;p&gt; paràgraf, &lt;strong&gt; important, &lt;em&gt; èmfasi.|El HTML marca qué es cada trozo: &lt;h1&gt; título principal, &lt;p&gt; párrafo, &lt;strong&gt; importante, &lt;em&gt; énfasis.",
+      "Gairebé totes les etiquetes s'obren i es tanquen; la de tancar porta una barra: &lt;/p&gt;.|Casi todas las etiquetas se abren y se cierran; la de cerrar lleva una barra: &lt;/p&gt;.",
+      "Niuar bé: l'última etiqueta que obres és la primera que tanques (els arcs no es creuen).|Anidar bien: la última etiqueta que abres es la primera que cierras (los arcos no se cruzan).",
+      "Si oblides tancar una etiqueta, l'efecte s'escampa per tota la pàgina: la barra de l'editor diu on mirar.|Si olvidas cerrar una etiqueta, el efecto se extiende por toda la página: la barra del editor dice dónde mirar."
+    ],
+    prev: [
+      "La unitat 1: el servidor envia un fitxer HTML i el navegador el dibuixa.|La unidad 1: el servidor envía un archivo HTML y el navegador lo dibuja.",
+      "Saber trobar al teclat els signes &lt;, &gt; i / (o fer servir els botons de l'editor).|Saber encontrar en el teclado los signos &lt;, &gt; y / (o usar los botones del editor).",
+      "Distingir en un text el títol, els paràgrafs i una frase important.|Distinguir en un texto el título, los párrafos y una frase importante."
+    ],
+    faq: [
+      ["Per què &lt;strong&gt; i no &lt;b&gt;, si totes dues fan negreta?|¿Por qué &lt;strong&gt; y no &lt;b&gt;, si las dos hacen negrita?", "&lt;strong&gt; vol dir «això és important» i els lectors de pantalla ho poden destacar; &lt;b&gt; només canvia l'aspecte. A l'HTML triem l'etiqueta pel significat, no per com es veu.|&lt;strong&gt; quiere decir «esto es importante» y los lectores de pantalla lo pueden destacar; &lt;b&gt; solo cambia el aspecto. En el HTML elegimos la etiqueta por el significado, no por cómo se ve."],
+      ["Totes les etiquetes es tanquen?|¿Todas las etiquetas se cierran?", "Gairebé totes. Algunes no tenen res a dins i no es tanquen, com &lt;img&gt; o &lt;br&gt;: les veurem més endavant.|Casi todas. Algunas no tienen nada dentro y no se cierran, como &lt;img&gt; o &lt;br&gt;: las veremos más adelante."],
+      ["Importa si escric les etiquetes en majúscules?|¿Importa si escribo las etiquetas en mayúsculas?", "El navegador les entén igual, però el costum és escriure-les en minúscules, i així ho farem a tot el curs.|El navegador las entiende igual, pero la costumbre es escribirlas en minúsculas, y así lo haremos en todo el curso."],
+      ["Per què l'editor escriu sol l'etiqueta de tancar?|¿Por qué el editor escribe solo la etiqueta de cierre?", "Molts editors professionals ho fan per evitar oblits. Quan escrius &lt;p&gt;, posa &lt;/p&gt; i deixa el cursor al mig, a punt per escriure el text.|Muchos editores profesionales lo hacen para evitar olvidos. Cuando escribes &lt;p&gt;, pone &lt;/p&gt; y deja el cursor en medio, a punto para escribir el texto."],
+      ["Si la pàgina es veu bé, què més dona que estigui mal niuada?|Si la página se ve bien, ¿qué más da que esté mal anidada?", "El navegador intenta arreglar-ho, però cada navegador ho pot fer diferent i els lectors de pantalla s'hi poden perdre. El codi ben fet funciona igual a tot arreu.|El navegador intenta arreglarlo, pero cada navegador lo puede hacer diferente y los lectores de pantalla se pueden perder. El código bien hecho funciona igual en todas partes."]
+    ],
+    tec: [
+      ["En escriure «&gt;», surt una etiqueta de tancar repetida.|Al escribir «&gt;», sale una etiqueta de cierre repetida.", "L'editor tanca les etiquetes sol: si l'alumne/a també escriu &lt;/p&gt;, en queden dues. Que esborri la que sobra; la barra d'estat avisa de l'error.|El editor cierra las etiquetas solo: si el alumno/a también escribe &lt;/p&gt;, quedan dos. Que borre la que sobra; la barra de estado avisa del error."],
+      ["No troben els signes &lt; i &gt; al teclat.|No encuentran los signos &lt; y &gt; en el teclado.", "En molts teclats és la tecla al costat de la Z (amb Majúscules per a &gt;). Al mòbil o a la tauleta, els botons de sota l'editor escriuen les etiquetes senceres.|En muchos teclados es la tecla al lado de la Z (con Mayúsculas para &gt;). En el móvil o en la tableta, los botones de debajo del editor escriben las etiquetas enteras."],
+      ["Tota la pàgina surt en negreta o gegant.|Toda la página sale en negrita o gigante.", "Falta tancar un &lt;strong&gt; o un &lt;h1&gt;. La barra d'estat de l'editor diu la línia de l'etiqueta que no està tancada.|Falta cerrar un &lt;strong&gt; o un &lt;h1&gt;. La barra de estado del editor dice la línea de la etiqueta que no está cerrada."],
+      ["El missatge d'error queda tallat a la barra d'estat.|El mensaje de error queda cortado en la barra de estado.", "Toqueu el missatge: s'obre sencer a sobre de la vista prèvia.|Tocad el mensaje: se abre entero encima de la vista previa."]
+    ],
+    seg: [
+      "A les etiquetes humanes, es busca el lloc caminant i parlant baix; ningú no estira ningú.|En las etiquetas humanas, se busca el sitio caminando y hablando bajo; nadie tira de nadie.",
+      "Els errors de codi són normals i útils: celebreu qui en troba un, no qui no se n'equivoca mai.|Los errores de código son normales y útiles: celebrad a quien encuentra uno, no a quien nunca se equivoca.",
+      "Pausa activa a mitja sessió: braços enlaire (és l'activitat de les etiquetes amb els braços).|Pausa activa a mitad de sesión: brazos arriba (es la actividad de las etiquetas con los brazos)."
+    ],
+    extra: [
+      "Fer el rètol de la botiga amb un segon avís amb &lt;em&gt; dins d'un paràgraf, ben niuat.|Hacer el rótulo de la tienda con un segundo aviso con &lt;em&gt; dentro de un párrafo, bien anidado.",
+      "Escriure en paper un codi amb tres errors per a un company/a i que els trobi.|Escribir en papel un código con tres errores para un compañero/a y que los encuentre.",
+      "Comparar com es veu la mateixa frase amb &lt;strong&gt;, &lt;em&gt; i les dues alhora.|Comparar cómo se ve la misma frase con &lt;strong&gt;, &lt;em&gt; y las dos a la vez."
+    ],
+    trans: [
+      "Sessió següent: els sis nivells de títol, els paràgrafs i l'esquelet d'una pàgina completa.|Sesión siguiente: los seis niveles de título, los párrafos y el esqueleto de una página completa.",
+      "Llengua: el títol, els paràgrafs i la idea principal d'un text.|Lengua: el título, los párrafos y la idea principal de un texto.",
+      "Matemàtiques: els parèntesis ben niuats segueixen la mateixa regla que les etiquetes.|Matemáticas: los paréntesis bien anidados siguen la misma regla que las etiquetas."
+    ]
+  },
+  'w2-2': {
+    intro: "L'alumnat organitza una pàgina com l'índex d'un llibre: sis nivells de títol (de &lt;h1&gt; a &lt;h6&gt;) que es trien pel nivell i no per la mida, i sense saltar-se'n cap. Descobreix que el navegador s'empassa els espais i els salts de línia del codi, i per això cada paràgraf va dins del seu &lt;p&gt;. Després coneix l'esquelet d'una pàgina completa: doctype, &lt;html lang&gt;, &lt;head&gt; amb el &lt;title&gt; de la pestanya i &lt;body&gt; amb el que es veu. Remarqueu el perquè: l'esquema de títols i l'idioma ajuden els cercadors i les persones que fan servir lectors de pantalla.|El alumnado organiza una página como el índice de un libro: seis niveles de título (de &lt;h1&gt; a &lt;h6&gt;) que se eligen por el nivel y no por el tamaño, y sin saltarse ninguno. Descubre que el navegador se traga los espacios y los saltos de línea del código, y por eso cada párrafo va dentro de su &lt;p&gt;. Después conoce el esqueleto de una página completa: doctype, &lt;html lang&gt;, &lt;head&gt; con el &lt;title&gt; de la pestaña y &lt;body&gt; con lo que se ve. Remarcad el porqué: el esquema de títulos y el idioma ayudan a los buscadores y a las personas que usan lectores de pantalla.",
+    claus: [
+      "Els títols van de &lt;h1&gt; (el principal, només un) a &lt;h6&gt;, en ordre i sense saltar nivells.|Los títulos van de &lt;h1&gt; (el principal, solo uno) a &lt;h6&gt;, en orden y sin saltar niveles.",
+      "Es tria el títol pel nivell a l'esquema, no per la mida: la mida es canvia amb CSS.|Se elige el título por el nivel en el esquema, no por el tamaño: el tamaño se cambia con CSS.",
+      "El navegador converteix els espais i salts de línia en un sol espai: cada paràgraf, el seu &lt;p&gt;.|El navegador convierte los espacios y saltos de línea en un solo espacio: cada párrafo, su &lt;p&gt;.",
+      "L'esquelet: &lt;html lang&gt; · &lt;head&gt; (informació, com el &lt;title&gt; de la pestanya) · &lt;body&gt; (el que es veu).|El esqueleto: &lt;html lang&gt; · &lt;head&gt; (información, como el &lt;title&gt; de la pestaña) · &lt;body&gt; (lo que se ve)."
+    ],
+    prev: [
+      "Obrir i tancar etiquetes i niuar-les bé (sessió anterior).|Abrir y cerrar etiquetas y anidarlas bien (sesión anterior).",
+      "Saber què és l'índex d'un llibre: capítols, apartats i subapartats.|Saber qué es el índice de un libro: capítulos, apartados y subapartados.",
+      "Distingir la pestanya del navegador del contingut de la pàgina.|Distinguir la pestaña del navegador del contenido de la página."
+    ],
+    faq: [
+      ["Puc fer servir &lt;h3&gt; perquè és més petit i m'agrada més?|¿Puedo usar &lt;h3&gt; porque es más pequeño y me gusta más?", "No: el número diu el nivell a l'esquema, no la mida. Si el vols més petit, fes servir el títol que toca i canvia'n la mida amb CSS (ho farem a la unitat 4).|No: el número dice el nivel en el esquema, no el tamaño. Si lo quieres más pequeño, usa el título que toca y cambia su tamaño con CSS (lo haremos en la unidad 4)."],
+      ["Per què hi ha d'haver un sol &lt;h1&gt;?|¿Por qué tiene que haber un solo &lt;h1&gt;?", "El &lt;h1&gt; diu de què va tota la pàgina, com el títol d'un llibre. Els cercadors i els lectors de pantalla el fan servir per saber-ho de seguida.|El &lt;h1&gt; dice de qué va toda la página, como el título de un libro. Los buscadores y los lectores de pantalla lo usan para saberlo enseguida."],
+      ["Quina diferència hi ha entre &lt;title&gt; i &lt;h1&gt;?|¿Qué diferencia hay entre &lt;title&gt; y &lt;h1&gt;?", "El &lt;title&gt; va al &lt;head&gt; i surt a la pestanya del navegador i als resultats dels cercadors; el &lt;h1&gt; va al &lt;body&gt; i és el títol que es veu a la pàgina.|El &lt;title&gt; va en el &lt;head&gt; y sale en la pestaña del navegador y en los resultados de los buscadores; el &lt;h1&gt; va en el &lt;body&gt; y es el título que se ve en la página."],
+      ["Per a què serveix lang=&quot;ca&quot;?|¿Para qué sirve lang=&quot;es&quot;?", "Diu en quina llengua és la pàgina: el lector de pantalla la llegeix amb la pronúncia bona i el navegador pot oferir de traduir-la.|Dice en qué lengua está la página: el lector de pantalla la lee con la pronunciación buena y el navegador puede ofrecer traducirla."],
+      ["Com faig un salt de línia sense fer un paràgraf nou?|¿Cómo hago un salto de línea sin hacer un párrafo nuevo?", "Amb &lt;br&gt;, que no es tanca. Però si és un altre tros d'idea, millor un &lt;p&gt; nou.|Con &lt;br&gt;, que no se cierra. Pero si es otro trozo de idea, mejor un &lt;p&gt; nuevo."]
+    ],
+    tec: [
+      ["No veuen el &lt;title&gt; a la vista prèvia.|No ven el &lt;title&gt; en la vista previa.", "El &lt;title&gt; no surt dins de la pàgina: surt a la pestanya. A l'ordinador, toqueu el botó «Ordinador» de la vista prèvia: la pestanya del navegador mostra el &lt;title&gt;.|El &lt;title&gt; no sale dentro de la página: sale en la pestaña. En el ordenador, tocad el botón «Ordenador» de la vista previa: la pestaña del navegador muestra el &lt;title&gt;."],
+      ["Un títol es tanca amb un altre número (&lt;h2&gt; … &lt;/h3&gt;).|Un título se cierra con otro número (&lt;h2&gt; … &lt;/h3&gt;).", "La barra d'estat avisa que l'etiqueta no està tancada. Que comprovin que l'obertura i el tancament tenen el mateix número.|La barra de estado avisa de que la etiqueta no está cerrada. Que comprueben que la apertura y el cierre tienen el mismo número."],
+      ["Han escrit l'esquelet dins del &lt;body&gt; d'un altre esquelet.|Han escrito el esqueleto dentro del &lt;body&gt; de otro esqueleto.", "Només hi pot haver un &lt;html&gt;, un &lt;head&gt; i un &lt;body&gt;. Si s'han embolicat, el botó de tornar a començar recupera el codi del principi.|Solo puede haber un &lt;html&gt;, un &lt;head&gt; y un &lt;body&gt;. Si se han liado, el botón de volver a empezar recupera el código del principio."],
+      ["Les comprovacions de lang o de title no es marquen.|Las comprobaciones de lang o de title no se marcan.", "lang va dins de l'etiqueta d'obertura: &lt;html lang=&quot;ca&quot;&gt;. El &lt;title&gt; ha de tenir text i anar entre &lt;head&gt; i &lt;/head&gt;.|lang va dentro de la etiqueta de apertura: &lt;html lang=&quot;es&quot;&gt;. El &lt;title&gt; tiene que tener texto e ir entre &lt;head&gt; y &lt;/head&gt;."]
+    ],
+    seg: [
+      "Les tires de la revista es retallen abans de la classe; a l'aula, només s'ordenen.|Las tiras de la revista se recortan antes de la clase; en el aula, solo se ordenan.",
+      "A la pausa activa dels títols, cadascú es mou al seu lloc, sense empènyer.|En la pausa activa de los títulos, cada uno se mueve en su sitio, sin empujar.",
+      "Recordeu que el lang i els títols en ordre fan la web més accessible: és una manera de cuidar els altres.|Recordad que el lang y los títulos en orden hacen la web más accesible: es una manera de cuidar a los demás."
+    ],
+    extra: [
+      "Afegir al receptari un tercer nivell (&lt;h3&gt;) amb dues receptes dins de cada secció.|Añadir al recetario un tercer nivel (&lt;h3&gt;) con dos recetas dentro de cada sección.",
+      "Escriure l'esquema de títols d'un capítol del llibre de text i passar-lo a HTML.|Escribir el esquema de títulos de un capítulo del libro de texto y pasarlo a HTML.",
+      "Provar què passa a la pestanya si el &lt;title&gt; és molt llarg i proposar-ne un de curt i clar.|Probar qué pasa en la pestaña si el &lt;title&gt; es muy largo y proponer uno corto y claro."
+    ],
+    trans: [
+      "Sessió següent: les llistes (sense ordre i ordenades) per als ingredients i els passos.|Sesión siguiente: las listas (sin orden y ordenadas) para los ingredientes y los pasos.",
+      "Llengua: l'estructura dels textos (títol, apartats) i l'índex.|Lengua: la estructura de los textos (título, apartados) y el índice.",
+      "Accessibilitat: com llegeix una pàgina un lector de pantalla (hi tornarem a la unitat 8).|Accesibilidad: cómo lee una página un lector de pantalla (volveremos a ello en la unidad 8)."
+    ]
+  },
+  'w2-3': {
+    intro: "L'alumnat descobreix les dues llistes de l'HTML: &lt;ul&gt;, sense ordre (amb pics), i &lt;ol&gt;, ordenada (amb números), i el criteri per triar-ne una: importa l'ordre o no? Aprèn que cada element va dins d'un &lt;li&gt; i que els &lt;li&gt; només poden anar dins d'una llista, i fa llistes niuades (una llista dins d'un &lt;li&gt;). També veu per què una llista feta amb guions dins d'un paràgraf no és una llista de veritat per als lectors de pantalla. L'activitat sense pantalla classifica llistes de la vida real en dues capses, «ul» i «ol».|El alumnado descubre las dos listas del HTML: &lt;ul&gt;, sin orden (con viñetas), y &lt;ol&gt;, ordenada (con números), y el criterio para elegir una: ¿importa el orden o no? Aprende que cada elemento va dentro de un &lt;li&gt; y que los &lt;li&gt; solo pueden ir dentro de una lista, y hace listas anidadas (una lista dentro de un &lt;li&gt;). También ve por qué una lista hecha con guiones dentro de un párrafo no es una lista de verdad para los lectores de pantalla. La actividad sin pantalla clasifica listas de la vida real en dos cajas, «ul» y «ol».",
+    claus: [
+      "&lt;ul&gt;: llista sense ordre (pics); &lt;ol&gt;: llista ordenada (números). Es tria segons si l'ordre importa.|&lt;ul&gt;: lista sin orden (viñetas); &lt;ol&gt;: lista ordenada (números). Se elige según si el orden importa.",
+      "Cada element, dins d'un &lt;li&gt;; i els &lt;li&gt;, sempre dins d'una &lt;ul&gt; o d'una &lt;ol&gt;.|Cada elemento, dentro de un &lt;li&gt;; y los &lt;li&gt;, siempre dentro de una &lt;ul&gt; o de una &lt;ol&gt;.",
+      "Llista niuada: la llista de dins va dins del &lt;li&gt;, abans de tancar-lo.|Lista anidada: la lista de dentro va dentro del &lt;li&gt;, antes de cerrarlo.",
+      "Una llista amb guions dins d'un &lt;p&gt; només ho sembla: el lector de pantalla no la reconeix.|Una lista con guiones dentro de un &lt;p&gt; solo lo parece: el lector de pantalla no la reconoce."
+    ],
+    prev: [
+      "Títols i paràgrafs, i l'esquelet de la pàgina (sessió anterior).|Títulos y párrafos, y el esqueleto de la página (sesión anterior).",
+      "Distingir instruccions on l'ordre importa (una recepta) de llistes on no (la compra).|Distinguir instrucciones donde el orden importa (una receta) de listas donde no (la compra).",
+      "Niuar etiquetes sense que s'encreuin.|Anidar etiquetas sin que se crucen."
+    ],
+    faq: [
+      ["Puc canviar els pics per una altra forma o els números per lletres?|¿Puedo cambiar las viñetas por otra forma o los números por letras?", "Sí, amb CSS (list-style-type) o, a les &lt;ol&gt;, amb l'atribut type=&quot;a&quot;. De moment ens fixem en triar bé la llista; l'aspecte vindrà a la unitat 4.|Sí, con CSS (list-style-type) o, en las &lt;ol&gt;, con el atributo type=&quot;a&quot;. De momento nos fijamos en elegir bien la lista; el aspecto vendrá en la unidad 4."],
+      ["Una &lt;ol&gt; pot començar pel 5?|¿Una &lt;ol&gt; puede empezar por el 5?", "Sí: &lt;ol start=&quot;5&quot;&gt;. Va bé, per exemple, per continuar uns passos després d'una imatge.|Sí: &lt;ol start=&quot;5&quot;&gt;. Va bien, por ejemplo, para continuar unos pasos después de una imagen."],
+      ["Quants nivells de llistes niuades es poden fer?|¿Cuántos niveles de listas anidadas se pueden hacer?", "Tants com vulguis, però més de dos o tres nivells costen de llegir. Si en necessites molts, potser cal dividir la informació amb títols.|Tantos como quieras, pero más de dos o tres niveles cuestan de leer. Si necesitas muchos, quizá hay que dividir la información con títulos."],
+      ["Per què no puc escriure guions i ja està, si es veu igual?|¿Por qué no puedo escribir guiones y ya está, si se ve igual?", "Per a la vista sí, però un lector de pantalla diu «llista de 4 elements» només si és una &lt;ul&gt; o una &lt;ol&gt;. A més, amb CSS podràs donar estil a la llista de veritat.|Para la vista sí, pero un lector de pantalla dice «lista de 4 elementos» solo si es una &lt;ul&gt; o una &lt;ol&gt;. Además, con CSS podrás dar estilo a la lista de verdad."],
+      ["Un &lt;li&gt; pot tenir un enllaç o una imatge a dins?|¿Un &lt;li&gt; puede tener un enlace o una imagen dentro?", "Sí: dins d'un &lt;li&gt; hi pot anar gairebé qualsevol cosa. A la unitat 3 farem menús amb llistes d'enllaços.|Sí: dentro de un &lt;li&gt; puede ir casi cualquier cosa. En la unidad 3 haremos menús con listas de enlaces."]
+    ],
+    tec: [
+      ["Un element surt sense pic o sense número.|Un elemento sale sin viñeta o sin número.", "Aquell text no és dins d'un &lt;li&gt;, o el &lt;li&gt; ha quedat fora de la llista. Que mirin on es tanca la &lt;ul&gt; o la &lt;ol&gt;.|Ese texto no está dentro de un &lt;li&gt;, o el &lt;li&gt; ha quedado fuera de la lista. Que miren dónde se cierra la &lt;ul&gt; o la &lt;ol&gt;."],
+      ["La llista niuada surt al final, fora del grup.|La lista anidada sale al final, fuera del grupo.", "S'ha tancat el &lt;li&gt; abans de posar-hi la llista de dins. La &lt;ul&gt; de dins va abans del &lt;/li&gt;.|Se ha cerrado el &lt;li&gt; antes de poner la lista de dentro. La &lt;ul&gt; de dentro va antes del &lt;/li&gt;."],
+      ["El botó «&lt;li&gt;&lt;/li&gt;» escriu l'element en un lloc estrany.|El botón «&lt;li&gt;&lt;/li&gt;» escribe el elemento en un sitio raro.", "Escriu on hi ha el cursor: abans de tocar-lo, que posin el cursor al final de l'últim &lt;/li&gt; i premin Retorn.|Escribe donde está el cursor: antes de tocarlo, que pongan el cursor al final del último &lt;/li&gt; y pulsen Intro."]
+    ],
+    seg: [
+      "Les capses «ul» i «ol» al centre de la taula; cada grup decideix parlant baix i per torns.|Las cajas «ul» y «ol» en el centro de la mesa; cada grupo decide hablando bajo y por turnos.",
+      "A la pàgina de l'excursió, no hi poseu dades reals de la sortida (dates, llocs exactes) si la pàgina es comparteix.|En la página de la excursión, no pongáis datos reales de la salida (fechas, lugares exactos) si la página se comparte.",
+      "Pausa activa: la llista ordenada de moviments (aixeca't, volta, salta, seu), a poc a poc.|Pausa activa: la lista ordenada de movimientos (levántate, vuelta, salta, siéntate), despacio."
+    ],
+    extra: [
+      "Fer una llista ordenada de passos amb una llista sense ordre niuada en un dels passos (el que cal per a aquell pas).|Hacer una lista ordenada de pasos con una lista sin orden anidada en uno de los pasos (lo que hace falta para ese paso).",
+      "Provar &lt;ol start&gt; i &lt;ol type=&quot;a&quot;&gt; i explicar quan ho faries servir.|Probar &lt;ol start&gt; y &lt;ol type=&quot;a&quot;&gt; y explicar cuándo lo usarías.",
+      "Convertir en llista de veritat un text amb guions trobat en un document de classe.|Convertir en lista de verdad un texto con guiones encontrado en un documento de clase."
+    ],
+    trans: [
+      "Sessió següent: el projecte de la unitat, la recepta completa per al receptari del poble.|Sesión siguiente: el proyecto de la unidad, la receta completa para el recetario del pueblo.",
+      "Llengua: els textos instructius (receptes, instruccions) i els connectors d'ordre.|Lengua: los textos instructivos (recetas, instrucciones) y los conectores de orden.",
+      "Ciències: classificar (els ingredients de la nevera i els del rebost).|Ciencias: clasificar (los ingredientes de la nevera y los de la despensa)."
+    ]
+  },
+  'w2-4': {
+    intro: "Sessió de projecte que tanca la unitat: cada alumne/a escriu la seva recepta per al receptari del poble fent servir tot l'HTML que ha après (esquelet complet, títols en ordre, paràgrafs, una llista &lt;ul&gt; d'ingredients i una &lt;ol&gt; de passos, i &lt;strong&gt;/&lt;em&gt; amb sentit). Primer planifica en paper amb un esbós que assigna una etiqueta a cada part; després construeix, guiat per la recepta d'en Bit a trossos; i al final revisa la pàgina com un/a professional i dona i rep comentaris amables d'un company/a. Valoreu el procés (esbós, revisió) tant com el resultat.|Sesión de proyecto que cierra la unidad: cada alumno/a escribe su receta para el recetario del pueblo usando todo el HTML que ha aprendido (esqueleto completo, títulos en orden, párrafos, una lista &lt;ul&gt; de ingredientes y una &lt;ol&gt; de pasos, y &lt;strong&gt;/&lt;em&gt; con sentido). Primero planifica en papel con un boceto que asigna una etiqueta a cada parte; después construye, guiado por la receta de Bit a trozos; y al final revisa la página como un/a profesional y da y recibe comentarios amables de un compañero/a. Valorad el proceso (boceto, revisión) tanto como el resultado.",
+    claus: [
+      "Primer l'esbós en paper: quines parts té la pàgina i quina etiqueta li toca a cada una.|Primero el boceto en papel: qué partes tiene la página y qué etiqueta le toca a cada una.",
+      "Una recepta: &lt;h1&gt; el nom, &lt;p&gt; la presentació, &lt;h2&gt; + &lt;ul&gt; els ingredients i &lt;h2&gt; + &lt;ol&gt; els passos.|Una receta: &lt;h1&gt; el nombre, &lt;p&gt; la presentación, &lt;h2&gt; + &lt;ul&gt; los ingredientes y &lt;h2&gt; + &lt;ol&gt; los pasos.",
+      "Els comentaris &lt;!-- … --&gt; són notes per a qui llegeix el codi: no surten a la pàgina.|Los comentarios &lt;!-- … --&gt; son notas para quien lee el código: no salen en la página.",
+      "Revisar és part de la feina: etiquetes tancades, títols en ordre, cap falta i la pàgina mirada al mòbil.|Revisar es parte del trabajo: etiquetas cerradas, títulos en orden, ninguna falta y la página mirada en el móvil."
+    ],
+    prev: [
+      "Títols, paràgrafs, llistes, &lt;strong&gt; i &lt;em&gt; i l'esquelet (sessions 1-3 de la unitat).|Títulos, párrafos, listas, &lt;strong&gt; y &lt;em&gt; y el esqueleto (sesiones 1-3 de la unidad).",
+      "Saber una recepta senzilla (de casa o inventada) o tenir-ne una a mà.|Saber una receta sencilla (de casa o inventada) o tener una a mano.",
+      "Donar una opinió amable i concreta sobre la feina d'un company/a.|Dar una opinión amable y concreta sobre el trabajo de un compañero/a."
+    ],
+    faq: [
+      ["La recepta ha de ser de veritat?|¿La receta tiene que ser de verdad?", "Pot ser de casa, una que us agradi o una d'inventada (un batut galàctic!). El que compta és que els passos tinguin sentit i estiguin en ordre.|Puede ser de casa, una que os guste o una inventada (¡un batido galáctico!). Lo que cuenta es que los pasos tengan sentido y estén en orden."],
+      ["Puc posar-hi una foto del plat?|¿Puedo poner una foto del plato?", "Les imatges arriben a la unitat 3. De moment, si en voleu, feu servir les de Numi amb el botó «Imatges» (hi ha pizza, fruita, pastís, pa, sopa…).|Las imágenes llegan en la unidad 3. De momento, si queréis, usad las de Numi con el botón «Imágenes» (hay pizza, fruta, pastel, pan, sopa…)."],
+      ["Puc copiar una recepta d'internet?|¿Puedo copiar una receta de internet?", "Millor escriure-la amb les vostres paraules. Si n'agafeu idees d'un llibre o una web, digueu d'on surt al final: ho aprendrem a fons a la unitat 3 (citar les fonts).|Mejor escribirla con vuestras palabras. Si cogéis ideas de un libro o una web, decid de dónde sale al final: lo aprenderemos a fondo en la unidad 3 (citar las fuentes)."],
+      ["Per què la plantilla té comentaris si no surten?|¿Por qué la plantilla tiene comentarios si no salen?", "Són instruccions per a vosaltres, dins del codi. Els programadors en deixen per recordar què fa cada part o per explicar-ho a qui vindrà després.|Son instrucciones para vosotros, dentro del código. Los programadores los dejan para recordar qué hace cada parte o para explicarlo a quien vendrá después."],
+      ["Quan faig servir &lt;strong&gt; i quan &lt;em&gt;?|¿Cuándo uso &lt;strong&gt; y cuándo &lt;em&gt;?", "&lt;strong&gt; per a un avís important (Compte, crema!); &lt;em&gt; per a una paraula que diries amb més força. Si tot és important, res no destaca: poc i amb sentit.|&lt;strong&gt; para un aviso importante (¡Cuidado, quema!); &lt;em&gt; para una palabra que dirías con más fuerza. Si todo es importante, nada destaca: poco y con sentido."]
+    ],
+    tec: [
+      ["Han escrit dins dels comentaris i el text no surt.|Han escrito dentro de los comentarios y el texto no sale.", "Tot el que hi ha entre &lt;!-- i --&gt; és invisible. Que escriguin a sota del comentari, no a dins.|Todo lo que hay entre &lt;!-- y --&gt; es invisible. Que escriban debajo del comentario, no dentro."],
+      ["Tota la pàgina queda grisa al codi a partir d'una línia.|Toda la página queda gris en el código a partir de una línea.", "S'ha obert un comentari &lt;!-- i no s'ha tancat amb --&gt;. Que busquin on comença el gris.|Se ha abierto un comentario &lt;!-- y no se ha cerrado con --&gt;. Que busquen dónde empieza el gris."],
+      ["La recepta desada no surt al receptari de la galeria.|La receta guardada no sale en el recetario de la galería.", "Cada recepta es desa al portafoli de l'alumne/a. Per a la galeria, que cadascú l'obri a «Projectes» al seu ordinador i el grup hi passi.|Cada receta se guarda en el portafolio del alumno/a. Para la galería, que cada uno la abra en «Proyectos» en su ordenador y el grupo pase por ellos."],
+      ["Al mòbil no veuen tota la recepta.|En el móvil no ven toda la receta.", "La vista prèvia es pot desplaçar amb el dit. També poden passar a «Ordinador» per veure-la sencera més petita.|La vista previa se puede desplazar con el dedo. También pueden pasar a «Ordenador» para verla entera más pequeña."]
+    ],
+    seg: [
+      "A la revisió entre companys: primer una cosa que funciona i després una millora concreta, amb amabilitat.|En la revisión entre compañeros: primero algo que funciona y después una mejora concreta, con amabilidad.",
+      "Si la recepta és de casa, no cal posar-hi noms de familiars ni dades de la família.|Si la receta es de casa, no hace falta poner nombres de familiares ni datos de la familia.",
+      "Pausa activa del xef abans de començar el projecte: estirar braços i espatlles.|Pausa activa del chef antes de empezar el proyecto: estirar brazos y hombros."
+    ],
+    extra: [
+      "Afegir una secció «Trucs» amb una llista niuada i un avís amb &lt;strong&gt;.|Añadir una sección «Trucos» con una lista anidada y un aviso con &lt;strong&gt;.",
+      "Fer una segona recepta i un índex amb el nom de les dues.|Hacer una segunda receta y un índice con el nombre de las dos.",
+      "Revisar la recepta d'un company/a amb la fitxa i proposar-li dues millores.|Revisar la receta de un compañero/a con la ficha y proponerle dos mejoras."
+    ],
+    trans: [
+      "Unitat 3: imatges i enllaços per connectar pàgines (el receptari podrà tenir fotos i un índex).|Unidad 3: imágenes y enlaces para conectar páginas (el recetario podrá tener fotos y un índice).",
+      "Llengua: el text instructiu i la revisió de l'ortografia.|Lengua: el texto instructivo y la revisión de la ortografía.",
+      "Matemàtiques: les quantitats de la recepta (doblar-les per a més persones).|Matemáticas: las cantidades de la receta (doblarlas para más personas)."
+    ]
+  }
+}).forEach(([id, g]) => Object.assign(TGUIDE[id], g));

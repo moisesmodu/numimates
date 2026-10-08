@@ -60,7 +60,7 @@ Object.assign(TGUIDE, (() => {
         diu: ["Si s'espatlla el router de casa, el mòbil continua tenint wifi? I internet?|Si se estropea el router de casa, ¿el móvil sigue teniendo wifi? ¿E internet?",
           'Per què creieu que la pàgina es trenca en trossos en lloc de viatjar sencera?|¿Por qué creéis que la página se rompe en trozos en lugar de viajar entera?',
           "Si es talla un cable, s'atura internet? Mirem què fan els routers.|Si se corta un cable, ¿se para internet? Miremos qué hacen los routers."],
-        slides: ['s4', 's5', 's6', 's7', 's8', 's9'], app: "Encara no: tota l'atenció a la projecció.|Todavía no: toda la atención en la proyección.", org: 'Tot el grup|Todo el grupo' },
+        slides: ['s4', 's5', 's6', 's18', 's7', 's8', 's9'], app: "Encara no: tota l'atenció a la projecció.|Todavía no: toda la atención en la proyección.", org: 'Tot el grup|Todo el grupo' },
       { min: 12, t: 'La xarxa humana|La red humana', fase: 'desconnectat',
         fa: "Col·loca sis alumnes com a routers (A-F) en dues files, units amb llana només amb els veïns. A cada punta, un servidor i un client. Cada servidor té un missatge de sis paquets barrejats. Els routers només poden passar un paquet a un router connectat i han de dir en veu alta cap a on l'envien. A mig camí, «talla» un cable (aixeca la llana) i observa com busquen un altre camí. El client ordena els paquets pel número; si en falta un, el demana. La resta del grup fa d'observador: compta quants paquets passen per cada router.|Coloca a seis alumnos como routers (A-F) en dos filas, unidos con lana solo con los vecinos. En cada punta, un servidor y un cliente. Cada servidor tiene un mensaje de seis paquetes mezclados. Los routers solo pueden pasar un paquete a un router conectado y tienen que decir en voz alta hacia dónde lo envían. A mitad de camino, «corta» un cable (levanta la lana) y observa cómo buscan otro camino. El cliente ordena los paquetes por el número; si falta uno, lo pide. El resto del grupo hace de observador: cuenta cuántos paquetes pasan por cada router.",
         diu: ["Un router només pot passar el paquet a un router amb qui estigui connectat.|Un router solo puede pasar el paquete a un router con el que esté conectado.",
@@ -118,6 +118,8 @@ Object.assign(TGUIDE, (() => {
         nota: "Resposta: no. El wifi només és el tros entre l'aparell i el router. Internet és tot el que hi ha darrere del router.|Respuesta: no. El wifi solo es el tramo entre el aparato y el router. Internet es todo lo que hay detrás del router." },
       { id: 's6', k: 'anim', t: 'Client i servidor|Cliente y servidor', anim: 'w1cs', x: 'El navegador fa una petició; el servidor respon amb els fitxers de la pàgina.|El navegador hace una petición; el servidor responde con los archivos de la página.',
         nota: "Compara-ho amb demanar un plat en un restaurant: el client demana, la cuina prepara i el cambrer porta. Recalca que el servidor és un ordinador de veritat, engegat dia i nit.|Compáralo con pedir un plato en un restaurante: el cliente pide, la cocina prepara y el camarero lo lleva. Recalca que el servidor es un ordenador de verdad, encendido día y noche." },
+      { id: 's18', k: 'anim', t: 'Petició i resposta: HTTP|Petición y respuesta: HTTP', anim: 'w1http', x: "GET /gats.html → 200 OK i la pàgina. Si la pàgina no existeix → 404.|GET /gats.html → 200 OK y la página. Si la página no existe → 404.",
+        nota: "Pregunta qui ha vist mai un «error 404». És el servidor que respon «no tinc aquesta pàgina». Remarca que el servidor sempre respon amb un codi: 200 vol dir que tot va bé.|Pregunta quién ha visto alguna vez un «error 404». Es el servidor que responde «no tengo esta página». Remarca que el servidor siempre responde con un código: 200 quiere decir que todo va bien." },
       { id: 's7', k: 'anim', t: 'La pàgina viatja en paquets|La página viaja en paquetes', anim: 'w1pack', x: "Cada paquet porta l'adreça de destí i un número. En arribar, s'ordenen.|Cada paquete lleva la dirección de destino y un número. Al llegar, se ordenan.",
         nota: "Fes notar que els paquets arriben desordenats a l'animació (3, 1, 4, 2) i que és el número el que permet ordenar-los.|Haz notar que los paquetes llegan desordenados en la animación (3, 1, 4, 2) y que es el número lo que permite ordenarlos." },
       { id: 's8', k: 'anim', t: 'Els routers trien el camí|Los routers eligen el camino', anim: 'w1route', x: "Si un camí falla, els routers en busquen un altre.|Si un camino falla, los routers buscan otro.",
@@ -593,3 +595,179 @@ Object.assign(TGUIDE, (() => {
   }
   });
 })());
+
+/* ---------- Guia completa (unitat 1): la sessió en breu, idees clau, coneixements previs, preguntes que faran, què fer si
+   alguna cosa falla, seguretat i benestar, per anar més enllà i connexions ---------- */
+Object.entries({
+  'w1-1': {
+    intro: "<b>Nivell:</b> 1r-2n d'ESO (12-14 anys) · no cal haver programat mai. Primera sessió del curs: l'alumnat descobreix que internet és una xarxa de xarxes física (cables, fibra òptica i ones), que el navegador fa de client i demana la pàgina a un servidor amb l'HTTP (200 si la té, 404 si no), i que les dades viatgen en paquets numerats que els routers encaminen. Ho viu primer amb el cos (la xarxa humana, tallant un cable a mig camí) i acaba fent la primera pàgina amb HTML, omplint-ne els buits. És la base de tot el curs: cada web que faran farà aquest viatge.|<b>Nivel:</b> 1.º-2.º de ESO (12-14 años) · no hace falta haber programado nunca. Primera sesión del curso: el alumnado descubre que internet es una red de redes física (cables, fibra óptica y ondas), que el navegador hace de cliente y pide la página a un servidor con el HTTP (200 si la tiene, 404 si no), y que los datos viajan en paquetes numerados que los routers encaminan. Lo vive primero con el cuerpo (la red humana, cortando un cable a mitad de camino) y termina haciendo la primera página con HTML, rellenando sus huecos. Es la base de todo el curso: cada web que hagan hará este viaje.",
+    claus: [
+      "Internet és una xarxa de xarxes física: cables de coure, fibra òptica (llum), ones i cables sota el mar.|Internet es una red de redes física: cables de cobre, fibra óptica (luz), ondas y cables bajo el mar.",
+      "El wifi només connecta l'aparell amb el router de casa; internet és tot el que hi ha darrere.|El wifi solo conecta el aparato con el router de casa; internet es todo lo que hay detrás.",
+      "El navegador (client) fa una petició HTTP i el servidor respon amb un codi: 200 (aquí la tens) o 404 (no existeix).|El navegador (cliente) hace una petición HTTP y el servidor responde con un código: 200 (aquí la tienes) o 404 (no existe).",
+      "La pàgina viatja en paquets numerats; els routers trien el camí i, si un falla, en busquen un altre.|La página viaja en paquetes numerados; los routers eligen el camino y, si uno falla, buscan otro."
+    ],
+    prev: [
+      "Haver fet servir un navegador al mòbil o a l'ordinador (obrir una web, tocar un enllaç).|Haber usado un navegador en el móvil o en el ordenador (abrir una web, tocar un enlace).",
+      "Saber escriure amb el teclat i seleccionar text amb el ratolí o el dit.|Saber escribir con el teclado y seleccionar texto con el ratón o el dedo.",
+      "No cal cap coneixement de programació ni d'HTML.|No hace falta ningún conocimiento de programación ni de HTML."
+    ],
+    faq: [
+      ["On són, de veritat, els servidors?|¿Dónde están, de verdad, los servidores?", "En edificis plens d'ordinadors (centres de dades), amb electricitat i refrigeració dia i nit. Una web pot estar guardada en un d'aquests edificis, a l'altra punta del món, o en diversos alhora.|En edificios llenos de ordenadores (centros de datos), con electricidad y refrigeración día y noche. Una web puede estar guardada en uno de esos edificios, en la otra punta del mundo, o en varios a la vez."],
+      ["Si es trenca un cable sota el mar, s'apaga internet?|Si se rompe un cable bajo el mar, ¿se apaga internet?", "No: hi ha molts cables i molts camins. Els routers envien els paquets per un altre camí; potser va una mica més lent, però continua funcionant. És el que heu vist a la xarxa humana.|No: hay muchos cables y muchos caminos. Los routers envían los paquetes por otro camino; quizá va un poco más lento, pero sigue funcionando. Es lo que habéis visto en la red humana."],
+      ["Què vol dir l'«error 404»?|¿Qué quiere decir el «error 404»?", "És la resposta del servidor quan rep la petició però no té aquella pàgina: sovint és perquè l'adreça està mal escrita o perquè la pàgina s'ha esborrat.|Es la respuesta del servidor cuando recibe la petición pero no tiene esa página: a menudo es porque la dirección está mal escrita o porque la página se ha borrado."],
+      ["El wifi i les dades del mòbil són internet?|¿El wifi y los datos del móvil son internet?", "Són dues maneres de connectar-se a internet sense cable: el wifi fins al router de casa i les dades fins a l'antena de la companyia. Internet és la xarxa que hi ha darrere.|Son dos maneras de conectarse a internet sin cable: el wifi hasta el router de casa y los datos hasta la antena de la compañía. Internet es la red que hay detrás."],
+      ["Per què la pàgina es trenca en paquets i no viatja sencera?|¿Por qué la página se rompe en paquetes y no viaja entera?", "Perquè trossos petits poden anar per camins diferents, compartir els cables amb altres missatges i, si se'n perd un, només cal tornar a enviar aquell tros.|Porque los trozos pequeños pueden ir por caminos diferentes, compartir los cables con otros mensajes y, si se pierde uno, solo hay que volver a enviar ese trozo."],
+      ["La meva primera pàgina és a internet de veritat?|¿Mi primera página está en internet de verdad?", "Encara no: es guarda a l'app, al portafoli. Al final del curs veurem què cal per publicar una web i com fer-ho amb seguretat.|Todavía no: se guarda en la app, en el portafolio. Al final del curso veremos qué hace falta para publicar una web y cómo hacerlo con seguridad."]
+    ],
+    tec: [
+      ["La vista prèvia no canvia mentre escriuen.|La vista previa no cambia mientras escriben.", "Es posa al dia uns moments després de deixar d'escriure. Si no ho fa, toqueu el botó de tornar a carregar (la fletxa rodona al costat de l'adreça).|Se actualiza unos momentos después de dejar de escribir. Si no lo hace, tocad el botón de volver a cargar (la flecha redonda al lado de la dirección)."],
+      ["Han esborrat un signe &lt; o &gt; i la pàgina surt estranya.|Han borrado un signo &lt; o &gt; y la página sale rara.", "La barra de sota l'editor diu a quina línia hi ha l'error. Si s'han perdut, el botó de la fletxa circular de dalt de l'editor torna al codi del principi.|La barra de debajo del editor dice en qué línea está el error. Si se han perdido, el botón de la flecha circular de arriba del editor vuelve al código del principio."],
+      ["En una tauleta, les cometes surten corbes (“ ”) i l'HTML falla.|En una tableta, las comillas salen curvas (“ ”) y el HTML falla.", "És la puntuació intel·ligent del teclat. A l'iPad: Configuració → General → Teclat → desactiva «Puntuació intel·ligent». En aquesta sessió no cal escriure cometes.|Es la puntuación inteligente del teclado. En el iPad: Ajustes → General → Teclado → desactiva «Puntuación inteligente». En esta sesión no hace falta escribir comillas."],
+      ["La llista de comprovacions no es marca tot i que la pàgina sembla bé.|La lista de comprobaciones no se marca aunque la página parece bien.", "Llegiu el text de la comprovació que falta: sovint queda un buit ___ o s'ha tocat una etiqueta. Al mòbil, toqueu la barra de les comprovacions per veure-les totes.|Leed el texto de la comprobación que falta: a menudo queda un hueco ___ o se ha tocado una etiqueta. En el móvil, tocad la barra de las comprobaciones para verlas todas."],
+      ["No troben la pàgina desada.|No encuentran la página guardada.", "Es desa en tocar «Desa-ho i continua» i surt a «Projectes». Es guarda al perfil de l'alumne/a: cal entrar-hi amb el mateix codi.|Se guarda al tocar «Guárdalo y continúa» y sale en «Proyectos». Se guarda en el perfil del alumno/a: hay que entrar con el mismo código."]
+    ],
+    seg: [
+      "Al nom de programador/a, millor un nom inventat que el nom i cognoms reals.|En el nombre de programador/a, mejor un nombre inventado que el nombre y apellidos reales.",
+      "A la xarxa humana, els cables de llana a l'altura de la cintura i sense córrer: els paquets es passen, no es llancen.|En la red humana, los cables de lana a la altura de la cintura y sin correr: los paquetes se pasan, no se lanzan.",
+      "Després de 20 minuts de pantalla, la pausa activa: mirar lluny i estirar-se.|Después de 20 minutos de pantalla, la pausa activa: mirar lejos y estirarse."
+    ],
+    extra: [
+      "Buscar en un mapa de cables submarins (n'hi ha de públics) quins cables arriben a la costa catalana i d'on vénen.|Buscar en un mapa de cables submarinos (los hay públicos) qué cables llegan a la costa española y de dónde vienen.",
+      "Afegir a la primera pàgina un quart paràgraf que expliqui què és un router amb les seves paraules.|Añadir a la primera página un cuarto párrafo que explique qué es un router con sus palabras.",
+      "Repetir la xarxa humana amb dos missatges alhora i comptar quants paquets passen per cada router.|Repetir la red humana con dos mensajes a la vez y contar cuántos paquetes pasan por cada router."
+    ],
+    trans: [
+      "Sessió següent: com troba el navegador el servidor (adreces IP, dominis i DNS).|Sesión siguiente: cómo encuentra el navegador el servidor (direcciones IP, dominios y DNS).",
+      "Ciències: la llum i la fibra òptica; Geografia: els cables submarins que uneixen continents.|Ciencias: la luz y la fibra óptica; Geografía: los cables submarinos que unen continentes.",
+      "Tecnologia i digitalització (1r-2n d'ESO): xarxes de comunicació i transmissió de dades.|Tecnología y digitalización (1.º-2.º de ESO): redes de comunicación y transmisión de datos."
+    ]
+  },
+  'w1-2': {
+    intro: "L'alumnat descobreix com troba el navegador una web entre milions: cada aparell té una adreça IP (quatre números de 0 a 255), els dominis són noms fàcils de recordar i el DNS els tradueix a IP, com l'agenda del mòbil. Després aprèn a llegir una URL (protocol, domini i camí) i què vol dir el candau de l'https: la connexió va xifrada, però això no diu si la web és de fiar. A l'activitat sense pantalla, cada alumne/a porta una adreça IP i la classe fa de DNS. Acaben editant una pàgina i fent la seva agenda DNS amb una llista.|El alumnado descubre cómo encuentra el navegador una web entre millones: cada aparato tiene una dirección IP (cuatro números de 0 a 255), los dominios son nombres fáciles de recordar y el DNS los traduce a IP, como la agenda del móvil. Después aprende a leer una URL (protocolo, dominio y ruta) y qué quiere decir el candado del https: la conexión va cifrada, pero eso no dice si la web es de fiar. En la actividad sin pantalla, cada alumno/a lleva una dirección IP y la clase hace de DNS. Terminan editando una página y haciendo su agenda DNS con una lista.",
+    claus: [
+      "Una adreça IP diu on és un aparell: quatre números de 0 a 255 separats per punts.|Una dirección IP dice dónde está un aparato: cuatro números de 0 a 255 separados por puntos.",
+      "El DNS tradueix el domini (el nom) a l'adreça IP (el número), com una agenda.|El DNS traduce el dominio (el nombre) a la dirección IP (el número), como una agenda.",
+      "Una URL té protocol (https://), domini (quina web) i camí (quina pàgina).|Una URL tiene protocolo (https://), dominio (qué web) y ruta (qué página).",
+      "El candau vol dir connexió xifrada, no que la web sigui de confiança; una lletra canviada al domini porta a una altra web.|El candado quiere decir conexión cifrada, no que la web sea de confianza; una letra cambiada en el dominio lleva a otra web."
+    ],
+    prev: [
+      "La sessió anterior: el client demana, el servidor respon i la pàgina viatja en paquets.|La sesión anterior: el cliente pide, el servidor responde y la página viaja en paquetes.",
+      "Llegir números fins a 255 i saber què és un punt i una barra «/».|Leer números hasta 255 y saber qué es un punto y una barra «/».",
+      "Haver fet servir l'agenda de contactes d'un mòbil.|Haber usado la agenda de contactos de un móvil."
+    ],
+    faq: [
+      ["Per què els números de la IP només van fins a 255?|¿Por qué los números de la IP solo van hasta 255?", "Cada número es guarda en 8 bits (vuit zeros o uns), i amb 8 bits es poden fer 256 combinacions: del 0 al 255.|Cada número se guarda en 8 bits (ocho ceros o unos), y con 8 bits se pueden hacer 256 combinaciones: del 0 al 255."],
+      ["El meu mòbil també té una adreça IP?|¿Mi móvil también tiene una dirección IP?", "Sí: tot aparell connectat en té una. A casa, normalment el router en reparteix als aparells i ell en té una altra per sortir a internet.|Sí: todo aparato conectado tiene una. En casa, normalmente el router reparte direcciones a los aparatos y él tiene otra para salir a internet."],
+      ["Qui decideix els dominis? Puc tenir-ne un?|¿Quién decide los dominios? ¿Puedo tener uno?", "Els dominis es registren i es paguen cada any a empreses autoritzades. Els menors d'edat ho han de fer sempre amb un adult. Els .numi del curs són inventats.|Los dominios se registran y se pagan cada año en empresas autorizadas. Los menores de edad tienen que hacerlo siempre con un adulto. Los .numi del curso son inventados."],
+      ["Si una web té el candau, és segura?|Si una web tiene el candado, ¿es segura?", "El candau només diu que el que envies viatja xifrat i ningú pel camí ho pot llegir. Una web falsa també pot tenir candau: cal mirar bé el domini.|El candado solo dice que lo que envías viaja cifrado y nadie por el camino lo puede leer. Una web falsa también puede tener candado: hay que mirar bien el dominio."],
+      ["Què passa si escric una adreça que no existeix?|¿Qué pasa si escribo una dirección que no existe?", "El DNS no troba cap IP i el navegador avisa que no pot trobar el servidor. Si el domini existeix però la pàgina no, el servidor respon amb un 404.|El DNS no encuentra ninguna IP y el navegador avisa de que no puede encontrar el servidor. Si el dominio existe pero la página no, el servidor responde con un 404."],
+      ["Les adreces IP de la sessió són de veritat?|¿Las direcciones IP de la sesión son de verdad?", "Són dels grups d'adreces reservats per a exemples (198.51.100.x i 203.0.113.x): no porten a cap aparell real.|Son de los grupos de direcciones reservados para ejemplos (198.51.100.x y 203.0.113.x): no llevan a ningún aparato real."]
+    ],
+    tec: [
+      ["A l'agenda DNS, una línia nova no surt com a punt de la llista.|En la agenda DNS, una línea nueva no sale como punto de la lista.", "Cada web ha d'anar dins del seu &lt;li&gt; … &lt;/li&gt; i dins de &lt;ul&gt;. El botó «&lt;li&gt;&lt;/li&gt;» de sota l'editor l'escriu sencer.|Cada web tiene que ir dentro de su &lt;li&gt; … &lt;/li&gt; y dentro de &lt;ul&gt;. El botón «&lt;li&gt;&lt;/li&gt;» de debajo del editor lo escribe entero."],
+      ["No saben escriure la fletxa → al teclat.|No saben escribir la flecha → en el teclado.", "El botó « → » de sota l'editor la insereix on hi ha el cursor.|El botón « → » de debajo del editor la inserta donde está el cursor."],
+      ["La comprovació del domini no es marca.|La comprobación del dominio no se marca.", "Ha d'estar escrit exactament igual (fotonuvi.numi, amb v). Un espai o una lletra canviada ja és un altre domini: és justament la lliçó de la sessió!|Tiene que estar escrito exactamente igual (fotonuvi.numi, con v). Un espacio o una letra cambiada ya es otro dominio: ¡es justamente la lección de la sesión!"],
+      ["Volen provar les adreces .numi en un navegador de veritat.|Quieren probar las direcciones .numi en un navegador de verdad.", "No funcionaran: els dominis .numi són inventats per al curs. Si voleu veure un DNS real, feu-ho vosaltres a la projecció amb una web coneguda de l'escola.|No funcionarán: los dominios .numi son inventados para el curso. Si queréis ver un DNS real, hacedlo vosotros en la proyección con una web conocida del centro."]
+    ],
+    seg: [
+      "No busqueu a classe la IP de casa de ningú: és una dada que no es comparteix.|No busquéis en clase la IP de casa de nadie: es un dato que no se comparte.",
+      "Recordeu-ho sovint: abans d'escriure una contrasenya, mireu el domini lletra a lletra.|Recordadlo a menudo: antes de escribir una contraseña, mirad el dominio letra a letra.",
+      "A l'activitat «Troba el servidor», es camina, no es corre, i les targetes s'enganxen a la roba amb cinta suau.|En la actividad «Encuentra el servidor», se camina, no se corre, y las tarjetas se pegan a la ropa con cinta suave."
+    ],
+    extra: [
+      "Inventar tres dominis gairebé iguals a fotonuvi.numi (fotonuvl, fotonuvi-regals…) i explicar per què serien perillosos.|Inventar tres dominios casi iguales a fotonuvi.numi (fotonuvl, fotonuvi-regalos…) y explicar por qué serían peligrosos.",
+      "Escriure en binari un dels números d'una IP (per exemple, 25 = 00011001).|Escribir en binario uno de los números de una IP (por ejemplo, 25 = 00011001).",
+      "Afegir a l'agenda DNS una segona llista amb les URL completes de dues pàgines de cada web.|Añadir a la agenda DNS una segunda lista con las URL completas de dos páginas de cada web."
+    ],
+    trans: [
+      "Sessió següent: què hi ha dins dels paquets (HTML, CSS i imatges).|Sesión siguiente: qué hay dentro de los paquetes (HTML, CSS e imágenes).",
+      "Matemàtiques: el sistema binari i les potències de 2 (256 = 2⁸).|Matemáticas: el sistema binario y las potencias de 2 (256 = 2⁸).",
+      "Llengua: llegir amb atenció i detectar canvis petits en una paraula (dominis gairebé iguals).|Lengua: leer con atención y detectar cambios pequeños en una palabra (dominios casi iguales)."
+    ]
+  },
+  'w1-3': {
+    intro: "L'alumnat obre una web per dins: descobreix que una pàgina són fitxers de text (l'HTML diu què hi ha i el CSS, com es veu) i imatges a part, que el navegador llegeix de dalt a baix i converteix en el que veiem. És la primera vegada que tocaran codi de veritat: canvien el text, el color i la imatge d'una pàgina i n'escriuen l'alt. A l'activitat sense pantalla, una persona fa de navegador i dibuixa una pàgina seguint només el codi que li dicten. Ajuda molt que vegin que no cal entendre-ho tot per començar a modificar: canviar, mirar i tornar a provar.|El alumnado abre una web por dentro: descubre que una página son archivos de texto (el HTML dice qué hay y el CSS, cómo se ve) e imágenes aparte, que el navegador lee de arriba abajo y convierte en lo que vemos. Es la primera vez que tocarán código de verdad: cambian el texto, el color y la imagen de una página y escriben su alt. En la actividad sin pantalla, una persona hace de navegador y dibuja una página siguiendo solo el código que le dictan. Ayuda mucho que vean que no hace falta entenderlo todo para empezar a modificar: cambiar, mirar y volver a probar.",
+    claus: [
+      "Una web és text: l'HTML diu què hi ha (títols, paràgrafs, imatges) i el CSS, com es veu (colors, mides, lletra).|Una web es texto: el HTML dice qué hay (títulos, párrafos, imágenes) y el CSS, cómo se ve (colores, tamaños, letra).",
+      "Les imatges són fitxers a part: l'HTML només diu on són (src) i què mostren (alt).|Las imágenes son archivos aparte: el HTML solo dice dónde están (src) y qué muestran (alt).",
+      "El navegador llegeix el codi de dalt a baix i dibuixa exactament el que diu.|El navegador lee el código de arriba abajo y dibuja exactamente lo que dice.",
+      "Es pot canviar una web amb seguretat: canvio una cosa, miro la vista prèvia i, si cal, desfaig.|Se puede cambiar una web con seguridad: cambio una cosa, miro la vista previa y, si hace falta, deshago."
+    ],
+    prev: [
+      "Saber que el servidor envia fitxers i el navegador els dibuixa (sessions 1 i 2).|Saber que el servidor envía archivos y el navegador los dibuja (sesiones 1 y 2).",
+      "Conèixer el nom d'alguns colors en anglès (red, blue, green…).|Conocer el nombre de algunos colores en inglés (red, blue, green…).",
+      "Seleccionar i esborrar text amb el ratolí o el dit.|Seleccionar y borrar texto con el ratón o el dedo."
+    ],
+    faq: [
+      ["Puc veure el codi d'una web de veritat?|¿Puedo ver el código de una web de verdad?", "Sí: a l'ordinador, amb el botó dret → «Mostra el codi font» (o Ctrl+U). Veureu molt més codi que el nostre, però amb les mateixes etiquetes. No cal fer-ho a classe.|Sí: en el ordenador, con el botón derecho → «Ver código fuente» (o Ctrl+U). Veréis mucho más código que el nuestro, pero con las mismas etiquetas. No hace falta hacerlo en clase."],
+      ["Per què els colors s'escriuen en anglès?|¿Por qué los colores se escriben en inglés?", "El CSS té una llista de noms de colors en anglès que tots els navegadors entenen. Més endavant aprendrem a escriure qualsevol color amb codis (#FF8800).|El CSS tiene una lista de nombres de colores en inglés que todos los navegadores entienden. Más adelante aprenderemos a escribir cualquier color con códigos (#FF8800)."],
+      ["Si canvio el codi d'una web aquí, canvio la web de veritat?|Si cambio el código de una web aquí, ¿cambio la web de verdad?", "No: canvies la teva còpia. La web de veritat només la pot canviar qui té accés al servidor on es guarda.|No: cambias tu copia. La web de verdad solo la puede cambiar quien tiene acceso al servidor donde se guarda."],
+      ["Què és l'alt i per què el posem?|¿Qué es el alt y por qué lo ponemos?", "És el text que descriu la imatge: el llegeixen els lectors de pantalla de les persones cegues i surt si la imatge no es carrega. En parlarem molt a la unitat 3.|Es el texto que describe la imagen: lo leen los lectores de pantalla de las personas ciegas y sale si la imagen no se carga. Hablaremos mucho de ello en la unidad 3."],
+      ["Per què el navegador no ensenya les etiquetes?|¿Por qué el navegador no enseña las etiquetas?", "Perquè són instruccions: el navegador les fa servir per saber què és cada tros, però no les dibuixa. Com les indicacions d'una recepta, que no es mengen.|Porque son instrucciones: el navegador las usa para saber qué es cada trozo, pero no las dibuja. Como las indicaciones de una receta, que no se comen."]
+    ],
+    tec: [
+      ["La imatge no surt i en lloc seu hi ha una icona trencada o el text de l'alt.|La imagen no sale y en su lugar hay un icono roto o el texto del alt.", "El nom del fitxer està mal escrit. Ha de ser exactament img/tech/web/gat.svg (sense espais ni majúscules). El botó «Imatges» de l'editor l'escriu bé.|El nombre del archivo está mal escrito. Tiene que ser exactamente img/tech/web/gat.svg (sin espacios ni mayúsculas). El botón «Imágenes» del editor lo escribe bien."],
+      ["El color nou no s'aplica.|El color nuevo no se aplica.", "Comproveu que el nom del color és en anglès i ben escrit (purple, no porpra) i que el punt i coma hi és. La barra de sota l'editor avisa dels errors de CSS.|Comprobad que el nombre del color está en inglés y bien escrito (purple, no morado) y que el punto y coma está. La barra de debajo del editor avisa de los errores de CSS."],
+      ["No troben la pestanya CSS.|No encuentran la pestaña CSS.", "A dalt de l'editor hi ha dues pestanyes: index.html i estil.css. Cal tocar estil.css per veure i canviar el CSS.|Arriba del editor hay dos pestañas: index.html y estil.css. Hay que tocar estil.css para ver y cambiar el CSS."],
+      ["Han trencat la pàgina i no saben tornar enrere.|Han roto la página y no saben volver atrás.", "Ctrl+Z (o Cmd+Z) desfà els últims canvis. El botó de la fletxa circular de l'editor torna al codi del principi del repte.|Ctrl+Z (o Cmd+Z) deshace los últimos cambios. El botón de la flecha circular del editor vuelve al código del principio del reto."]
+    ],
+    seg: [
+      "A l'activitat del navegador humà, qui dicta ha de llegir el codi a poc a poc; ningú no es riu dels dibuixos.|En la actividad del navegador humano, quien dicta tiene que leer el código despacio; nadie se ríe de los dibujos.",
+      "Recordeu que veure el codi d'una web no dona permís per copiar-ne els textos o les imatges.|Recordad que ver el código de una web no da permiso para copiar sus textos o sus imágenes.",
+      "Pausa activa al minut 25 aproximadament: ulls lluny de la pantalla.|Pausa activa hacia el minuto 25: ojos lejos de la pantalla."
+    ],
+    extra: [
+      "Canviar també el color del paràgraf amb una segona regla de CSS (p { color: … }).|Cambiar también el color del párrafo con una segunda regla de CSS (p { color: … }).",
+      "Posar dues imatges a la fitxa de l'animal, cadascuna amb el seu alt.|Poner dos imágenes en la ficha del animal, cada una con su alt.",
+      "Dictar a un company/a una pàgina inventada i comparar el dibuix amb la vista prèvia.|Dictar a un compañero/a una página inventada y comparar el dibujo con la vista previa."
+    ],
+    trans: [
+      "Sessió següent: el projecte de la unitat, el mapa d'internet i la seva web.|Sesión siguiente: el proyecto de la unidad, el mapa de internet y su web.",
+      "Unitat 2: aprendrem les etiquetes d'HTML una a una (títols, paràgrafs, llistes).|Unidad 2: aprenderemos las etiquetas de HTML una a una (títulos, párrafos, listas).",
+      "Llengua anglesa: el vocabulari dels colors i de les etiquetes (heading, paragraph, image).|Lengua inglesa: el vocabulario de los colores y de las etiquetas (heading, paragraph, image)."
+    ]
+  },
+  'w1-4': {
+    intro: "Sessió de projecte que tanca la unitat. En grups, l'alumnat fa en paper el mapa del viatge sencer d'una pàgina (navegador, DNS, routers, servidor i la resposta en paquets) per a l'exposició de l'escola, i després en fa la web: completa la pàgina amb la peça correcta de cada pas, hi afegeix un paràgraf propi i dona color al títol amb CSS. També diagnostica situacions senzilles: què falla si surt «No es pot trobar el servidor» o si falta un paquet. Valoreu tant que el mapa sigui correcte com que l'expliquin amb les seves paraules a l'exposició final.|Sesión de proyecto que cierra la unidad. En grupos, el alumnado hace en papel el mapa del viaje entero de una página (navegador, DNS, routers, servidor y la respuesta en paquetes) para la exposición del centro, y después hace su web: completa la página con la pieza correcta de cada paso, añade un párrafo propio y da color al título con CSS. También diagnostica situaciones sencillas: qué falla si sale «No se puede encontrar el servidor» o si falta un paquete. Valorad tanto que el mapa sea correcto como que lo expliquen con sus palabras en la exposición final.",
+    claus: [
+      "El viatge sencer: navegador → DNS → routers → servidor → resposta en paquets → navegador.|El viaje entero: navegador → DNS → routers → servidor → respuesta en paquetes → navegador.",
+      "Cada peça té una feina: el DNS troba l'adreça, els routers trien el camí i el servidor guarda i envia la web.|Cada pieza tiene un trabajo: el DNS encuentra la dirección, los routers eligen el camino y el servidor guarda y envía la web.",
+      "Quan alguna cosa falla, pensem quina peça no ha fet la seva feina (domini mal escrit → DNS; paquet perdut → es torna a demanar).|Cuando algo falla, pensamos qué pieza no ha hecho su trabajo (dominio mal escrito → DNS; paquete perdido → se vuelve a pedir).",
+      "Una web es fa amb HTML (contingut) i CSS (aspecte), i la pots ampliar tu mateix/a.|Una web se hace con HTML (contenido) y CSS (aspecto), y la puedes ampliar tú mismo/a."
+    ],
+    prev: [
+      "Les tres sessions de la unitat: client i servidor, paquets i routers, IP, DNS i URL, HTML i CSS.|Las tres sesiones de la unidad: cliente y servidor, paquetes y routers, IP, DNS y URL, HTML y CSS.",
+      "Canviar text i el color d'una regla de CSS (sessió 3).|Cambiar texto y el color de una regla de CSS (sesión 3).",
+      "Treballar en grup repartint-se les tasques.|Trabajar en grupo repartiéndose las tareas."
+    ],
+    faq: [
+      ["El DNS va abans o després del router de casa?|¿El DNS va antes o después del router de casa?", "La pregunta al DNS també viatja per internet, passant pel router de casa. Al mapa, el més important és l'ordre de les feines: primer saber l'adreça (DNS) i després anar-hi (routers fins al servidor).|La pregunta al DNS también viaja por internet, pasando por el router de casa. En el mapa, lo más importante es el orden de los trabajos: primero saber la dirección (DNS) y después ir (routers hasta el servidor)."],
+      ["Quant triga, de veritat, tot el viatge?|¿Cuánto tarda, de verdad, todo el viaje?", "Normalment menys d'un segon, encara que el servidor sigui en un altre continent. Depèn de la connexió i de la distància.|Normalmente menos de un segundo, aunque el servidor esté en otro continente. Depende de la conexión y de la distancia."],
+      ["Podem fer el mapa amb dibuixos nostres en lloc de les peces impreses?|¿Podemos hacer el mapa con dibujos nuestros en lugar de las piezas impresas?", "I tant! Les peces són una ajuda. El que compta és que hi siguin totes, en ordre, i que les fletxes diguin cap on va la petició i cap on torna la resposta.|¡Por supuesto! Las piezas son una ayuda. Lo que cuenta es que estén todas, en orden, y que las flechas digan hacia dónde va la petición y hacia dónde vuelve la respuesta."],
+      ["Per què no surt el meu color al títol?|¿Por qué no sale mi color en el título?", "La regla ha de ser h1 { color: … ; } a la pestanya CSS, amb un color en anglès o un codi. La barra de sota l'editor diu si hi ha algun error.|La regla tiene que ser h1 { color: … ; } en la pestaña CSS, con un color en inglés o un código. La barra de debajo del editor dice si hay algún error."],
+      ["Es pot posar una imatge nostra al mapa web?|¿Se puede poner una imagen nuestra en el mapa web?", "De moment fem servir les imatges de Numi (botó «Imatges»). A la unitat 3 veurem com posar imatges i de qui han de ser.|De momento usamos las imágenes de Numi (botón «Imágenes»). En la unidad 3 veremos cómo poner imágenes y de quién tienen que ser."]
+    ],
+    tec: [
+      ["Queden buits ___ i no saben quina peça hi va.|Quedan huecos ___ y no saben qué pieza va.", "Que mirin el seu mapa de paper: cada pas de la web és una fletxa del mapa. La comprovació diu quina peça falta en cada pas.|Que miren su mapa de papel: cada paso de la web es una flecha del mapa. La comprobación dice qué pieza falta en cada paso."],
+      ["Amb tantes comprovacions, al mòbil no les veuen totes.|Con tantas comprobaciones, en el móvil no las ven todas.", "Toqueu la barra de les comprovacions (a sota de la vista prèvia): es desplega la llista sencera.|Tocad la barra de las comprobaciones (debajo de la vista previa): se despliega la lista entera."],
+      ["El paràgraf nou no compta.|El párrafo nuevo no cuenta.", "Ha d'anar dins de &lt;p&gt; … &lt;/p&gt; i tenir text. El botó «&lt;p&gt;&lt;/p&gt;» l'escriu sencer i deixa el cursor al mig.|Tiene que ir dentro de &lt;p&gt; … &lt;/p&gt; y tener texto. El botón «&lt;p&gt;&lt;/p&gt;» lo escribe entero y deja el cursor en medio."],
+      ["Volen ensenyar la web a l'exposició des d'un altre ordinador.|Quieren enseñar la web en la exposición desde otro ordenador.", "La web es guarda al perfil de l'alumne/a: entreu-hi amb el seu codi a l'ordinador de l'exposició i obriu-la a «Projectes».|La web se guarda en el perfil del alumno/a: entrad con su código en el ordenador de la exposición y abridla en «Proyectos»."]
+    ],
+    seg: [
+      "Amb tisores i pega, a la taula i amb cura; cada grup recull el seu material.|Con tijeras y pegamento, en la mesa y con cuidado; cada grupo recoge su material.",
+      "A l'exposició, tothom pot preguntar i ningú no es burla de les explicacions dels altres.|En la exposición, todo el mundo puede preguntar y nadie se burla de las explicaciones de los demás.",
+      "A la web, el nom de programador/a inventat, no el nom complet.|En la web, el nombre de programador/a inventado, no el nombre completo."
+    ],
+    extra: [
+      "Afegir al mapa què passa quan el domini està mal escrit i quan es perd un paquet, amb un altre color.|Añadir al mapa qué pasa cuando el dominio está mal escrito y cuando se pierde un paquete, con otro color.",
+      "A la web, afegir una llista amb el vocabulari de la unitat (IP, DNS, router, servidor, HTTP).|En la web, añadir una lista con el vocabulario de la unidad (IP, DNS, router, servidor, HTTP).",
+      "Preparar una pregunta de concurs per a cada peça del mapa i fer-la als visitants de l'exposició.|Preparar una pregunta de concurso para cada pieza del mapa y hacerla a los visitantes de la exposición."
+    ],
+    trans: [
+      "Unitat 2: l'HTML a fons, les etiquetes que fan títols, paràgrafs i llistes.|Unidad 2: el HTML a fondo, las etiquetas que hacen títulos, párrafos y listas.",
+      "Expressió oral: explicar un procés en ordre i amb vocabulari precís davant d'un públic.|Expresión oral: explicar un proceso en orden y con vocabulario preciso ante un público.",
+      "Educació visual i plàstica: fer un esquema clar amb fletxes, colors i llegenda.|Educación visual y plástica: hacer un esquema claro con flechas, colores y leyenda."
+    ]
+  }
+}).forEach(([id, g]) => Object.assign(TGUIDE[id], g));

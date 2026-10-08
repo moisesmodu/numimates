@@ -63,7 +63,7 @@ Object.assign(TGUIDE, (() => {
         diu: ["Si s'espatlla el router de casa, el mòbil continua tenint wifi? I internet?|Si se estropea el router de casa, ¿el móvil sigue teniendo wifi? ¿E internet?",
           'Per què creieu que la pàgina es trenca en trossos en lloc de viatjar sencera?|¿Por qué creéis que la página se rompe en trozos en lugar de viajar entera?',
           "Si es talla un cable, s'atura internet? Mirem què fan els routers.|Si se corta un cable, ¿se para internet? Miremos qué hacen los routers."],
-        slides: ['s4', 's5', 's6', 's7', 's8', 's9'], app: "Encara no: tota l'atenció a la projecció.|Todavía no: toda la atención en la proyección.", org: 'Tot el grup|Todo el grupo' },
+        slides: ['s4', 's5', 's6', 's18', 's7', 's8', 's9'], app: "Encara no: tota l'atenció a la projecció.|Todavía no: toda la atención en la proyección.", org: 'Tot el grup|Todo el grupo' },
       { min: 12, t: 'La xarxa humana|La red humana', fase: 'desconnectat',
         fa: "Col·loca sis alumnes com a routers (A-F) en dues files, units amb llana només amb els veïns. A cada punta, un servidor i un client. Cada servidor té un missatge de sis paquets barrejats. Els routers només poden passar un paquet a un router connectat i han de dir en veu alta cap a on l'envien. A mig camí, «talla» un cable (aixeca la llana) i observa com busquen un altre camí. El client ordena els paquets pel número; si en falta un, el demana. La resta del grup fa d'observador: compta quants paquets passen per cada router.|Coloca a seis alumnos como routers (A-F) en dos filas, unidos con lana solo con los vecinos. En cada punta, un servidor y un cliente. Cada servidor tiene un mensaje de seis paquetes mezclados. Los routers solo pueden pasar un paquete a un router conectado y tienen que decir en voz alta hacia dónde lo envían. A mitad de camino, «corta» un cable (levanta la lana) y observa cómo buscan otro camino. El cliente ordena los paquetes por el número; si falta uno, lo pide. El resto del grupo hace de observador: cuenta cuántos paquetes pasan por cada router.",
         diu: ["Un router només pot passar el paquet a un router amb qui estigui connectat.|Un router solo puede pasar el paquete a un router con el que esté conectado.",
@@ -121,6 +121,8 @@ Object.assign(TGUIDE, (() => {
         nota: "Resposta: no. El wifi només és el tros entre l'aparell i el router. Internet és tot el que hi ha darrere del router.|Respuesta: no. El wifi solo es el tramo entre el aparato y el router. Internet es todo lo que hay detrás del router." },
       { id: 's6', k: 'anim', t: 'Client i servidor|Cliente y servidor', anim: 'w1cs', x: 'El navegador fa una petició; el servidor respon amb els fitxers de la pàgina.|El navegador hace una petición; el servidor responde con los archivos de la página.',
         nota: "Compara-ho amb demanar un plat en un restaurant: el client demana, la cuina prepara i el cambrer porta. Recalca que el servidor és un ordinador de veritat, engegat dia i nit.|Compáralo con pedir un plato en un restaurante: el cliente pide, la cocina prepara y el camarero lo lleva. Recalca que el servidor es un ordenador de verdad, encendido día y noche." },
+      { id: 's18', k: 'anim', t: 'Petició i resposta: HTTP|Petición y respuesta: HTTP', anim: 'w1http', x: "GET /gats.html → 200 OK i la pàgina. Si la pàgina no existeix → 404.|GET /gats.html → 200 OK y la página. Si la página no existe → 404.",
+        nota: "Pregunta qui ha vist mai un «error 404». És el servidor que respon «no tinc aquesta pàgina». Remarca que el servidor sempre respon amb un codi: 200 vol dir que tot va bé.|Pregunta quién ha visto alguna vez un «error 404». Es el servidor que responde «no tengo esta página». Remarca que el servidor siempre responde con un código: 200 quiere decir que todo va bien." },
       { id: 's7', k: 'anim', t: 'La pàgina viatja en paquets|La página viaja en paquetes', anim: 'w1pack', x: "Cada paquet porta l'adreça de destí i un número. En arribar, s'ordenen.|Cada paquete lleva la dirección de destino y un número. Al llegar, se ordenan.",
         nota: "Fes notar que els paquets arriben desordenats a l'animació (3, 1, 4, 2) i que és el número el que permet ordenar-los.|Haz notar que los paquetes llegan desordenados en la animación (3, 1, 4, 2) y que es el número lo que permite ordenarlos." },
       { id: 's8', k: 'anim', t: 'Els routers trien el camí|Los routers eligen el camino', anim: 'w1route', x: "Si un camí falla, els routers en busquen un altre.|Si un camino falla, los routers buscan otro.",
@@ -596,6 +598,182 @@ Object.assign(TGUIDE, (() => {
   }
   });
 })());
+
+/* ---------- Guia completa (unitat 1): la sessió en breu, idees clau, coneixements previs, preguntes que faran, què fer si
+   alguna cosa falla, seguretat i benestar, per anar més enllà i connexions ---------- */
+Object.entries({
+  'w1-1': {
+    intro: "<b>Nivell:</b> 1r-2n d'ESO (12-14 anys) · no cal haver programat mai. Primera sessió del curs: l'alumnat descobreix que internet és una xarxa de xarxes física (cables, fibra òptica i ones), que el navegador fa de client i demana la pàgina a un servidor amb l'HTTP (200 si la té, 404 si no), i que les dades viatgen en paquets numerats que els routers encaminen. Ho viu primer amb el cos (la xarxa humana, tallant un cable a mig camí) i acaba fent la primera pàgina amb HTML, omplint-ne els buits. És la base de tot el curs: cada web que faran farà aquest viatge.|<b>Nivel:</b> 1.º-2.º de ESO (12-14 años) · no hace falta haber programado nunca. Primera sesión del curso: el alumnado descubre que internet es una red de redes física (cables, fibra óptica y ondas), que el navegador hace de cliente y pide la página a un servidor con el HTTP (200 si la tiene, 404 si no), y que los datos viajan en paquetes numerados que los routers encaminan. Lo vive primero con el cuerpo (la red humana, cortando un cable a mitad de camino) y termina haciendo la primera página con HTML, rellenando sus huecos. Es la base de todo el curso: cada web que hagan hará este viaje.",
+    claus: [
+      "Internet és una xarxa de xarxes física: cables de coure, fibra òptica (llum), ones i cables sota el mar.|Internet es una red de redes física: cables de cobre, fibra óptica (luz), ondas y cables bajo el mar.",
+      "El wifi només connecta l'aparell amb el router de casa; internet és tot el que hi ha darrere.|El wifi solo conecta el aparato con el router de casa; internet es todo lo que hay detrás.",
+      "El navegador (client) fa una petició HTTP i el servidor respon amb un codi: 200 (aquí la tens) o 404 (no existeix).|El navegador (cliente) hace una petición HTTP y el servidor responde con un código: 200 (aquí la tienes) o 404 (no existe).",
+      "La pàgina viatja en paquets numerats; els routers trien el camí i, si un falla, en busquen un altre.|La página viaja en paquetes numerados; los routers eligen el camino y, si uno falla, buscan otro."
+    ],
+    prev: [
+      "Haver fet servir un navegador al mòbil o a l'ordinador (obrir una web, tocar un enllaç).|Haber usado un navegador en el móvil o en el ordenador (abrir una web, tocar un enlace).",
+      "Saber escriure amb el teclat i seleccionar text amb el ratolí o el dit.|Saber escribir con el teclado y seleccionar texto con el ratón o el dedo.",
+      "No cal cap coneixement de programació ni d'HTML.|No hace falta ningún conocimiento de programación ni de HTML."
+    ],
+    faq: [
+      ["On són, de veritat, els servidors?|¿Dónde están, de verdad, los servidores?", "En edificis plens d'ordinadors (centres de dades), amb electricitat i refrigeració dia i nit. Una web pot estar guardada en un d'aquests edificis, a l'altra punta del món, o en diversos alhora.|En edificios llenos de ordenadores (centros de datos), con electricidad y refrigeración día y noche. Una web puede estar guardada en uno de esos edificios, en la otra punta del mundo, o en varios a la vez."],
+      ["Si es trenca un cable sota el mar, s'apaga internet?|Si se rompe un cable bajo el mar, ¿se apaga internet?", "No: hi ha molts cables i molts camins. Els routers envien els paquets per un altre camí; potser va una mica més lent, però continua funcionant. És el que heu vist a la xarxa humana.|No: hay muchos cables y muchos caminos. Los routers envían los paquetes por otro camino; quizá va un poco más lento, pero sigue funcionando. Es lo que habéis visto en la red humana."],
+      ["Què vol dir l'«error 404»?|¿Qué quiere decir el «error 404»?", "És la resposta del servidor quan rep la petició però no té aquella pàgina: sovint és perquè l'adreça està mal escrita o perquè la pàgina s'ha esborrat.|Es la respuesta del servidor cuando recibe la petición pero no tiene esa página: a menudo es porque la dirección está mal escrita o porque la página se ha borrado."],
+      ["El wifi i les dades del mòbil són internet?|¿El wifi y los datos del móvil son internet?", "Són dues maneres de connectar-se a internet sense cable: el wifi fins al router de casa i les dades fins a l'antena de la companyia. Internet és la xarxa que hi ha darrere.|Son dos maneras de conectarse a internet sin cable: el wifi hasta el router de casa y los datos hasta la antena de la compañía. Internet es la red que hay detrás."],
+      ["Per què la pàgina es trenca en paquets i no viatja sencera?|¿Por qué la página se rompe en paquetes y no viaja entera?", "Perquè trossos petits poden anar per camins diferents, compartir els cables amb altres missatges i, si se'n perd un, només cal tornar a enviar aquell tros.|Porque los trozos pequeños pueden ir por caminos diferentes, compartir los cables con otros mensajes y, si se pierde uno, solo hay que volver a enviar ese trozo."],
+      ["La meva primera pàgina és a internet de veritat?|¿Mi primera página está en internet de verdad?", "Encara no: es guarda a l'app, al portafoli. Al final del curs veurem què cal per publicar una web i com fer-ho amb seguretat.|Todavía no: se guarda en la app, en el portafolio. Al final del curso veremos qué hace falta para publicar una web y cómo hacerlo con seguridad."]
+    ],
+    tec: [
+      ["La vista prèvia no canvia mentre escriuen.|La vista previa no cambia mientras escriben.", "Es posa al dia uns moments després de deixar d'escriure. Si no ho fa, toqueu el botó de tornar a carregar (la fletxa rodona al costat de l'adreça).|Se actualiza unos momentos después de dejar de escribir. Si no lo hace, tocad el botón de volver a cargar (la flecha redonda al lado de la dirección)."],
+      ["Han esborrat un signe &lt; o &gt; i la pàgina surt estranya.|Han borrado un signo &lt; o &gt; y la página sale rara.", "La barra de sota l'editor diu a quina línia hi ha l'error. Si s'han perdut, el botó de la fletxa circular de dalt de l'editor torna al codi del principi.|La barra de debajo del editor dice en qué línea está el error. Si se han perdido, el botón de la flecha circular de arriba del editor vuelve al código del principio."],
+      ["En una tauleta, les cometes surten corbes (“ ”) i l'HTML falla.|En una tableta, las comillas salen curvas (“ ”) y el HTML falla.", "És la puntuació intel·ligent del teclat. A l'iPad: Configuració → General → Teclat → desactiva «Puntuació intel·ligent». En aquesta sessió no cal escriure cometes.|Es la puntuación inteligente del teclado. En el iPad: Ajustes → General → Teclado → desactiva «Puntuación inteligente». En esta sesión no hace falta escribir comillas."],
+      ["La llista de comprovacions no es marca tot i que la pàgina sembla bé.|La lista de comprobaciones no se marca aunque la página parece bien.", "Llegiu el text de la comprovació que falta: sovint queda un buit ___ o s'ha tocat una etiqueta. Al mòbil, toqueu la barra de les comprovacions per veure-les totes.|Leed el texto de la comprobación que falta: a menudo queda un hueco ___ o se ha tocado una etiqueta. En el móvil, tocad la barra de las comprobaciones para verlas todas."],
+      ["No troben la pàgina desada.|No encuentran la página guardada.", "Es desa en tocar «Desa-ho i continua» i surt a «Projectes». Es guarda al perfil de l'alumne/a: cal entrar-hi amb el mateix codi.|Se guarda al tocar «Guárdalo y continúa» y sale en «Proyectos». Se guarda en el perfil del alumno/a: hay que entrar con el mismo código."]
+    ],
+    seg: [
+      "Al nom de programador/a, millor un nom inventat que el nom i cognoms reals.|En el nombre de programador/a, mejor un nombre inventado que el nombre y apellidos reales.",
+      "A la xarxa humana, els cables de llana a l'altura de la cintura i sense córrer: els paquets es passen, no es llancen.|En la red humana, los cables de lana a la altura de la cintura y sin correr: los paquetes se pasan, no se lanzan.",
+      "Després de 20 minuts de pantalla, la pausa activa: mirar lluny i estirar-se.|Después de 20 minutos de pantalla, la pausa activa: mirar lejos y estirarse."
+    ],
+    extra: [
+      "Buscar en un mapa de cables submarins (n'hi ha de públics) quins cables arriben a la costa catalana i d'on vénen.|Buscar en un mapa de cables submarinos (los hay públicos) qué cables llegan a la costa española y de dónde vienen.",
+      "Afegir a la primera pàgina un quart paràgraf que expliqui què és un router amb les seves paraules.|Añadir a la primera página un cuarto párrafo que explique qué es un router con sus palabras.",
+      "Repetir la xarxa humana amb dos missatges alhora i comptar quants paquets passen per cada router.|Repetir la red humana con dos mensajes a la vez y contar cuántos paquetes pasan por cada router."
+    ],
+    trans: [
+      "Sessió següent: com troba el navegador el servidor (adreces IP, dominis i DNS).|Sesión siguiente: cómo encuentra el navegador el servidor (direcciones IP, dominios y DNS).",
+      "Ciències: la llum i la fibra òptica; Geografia: els cables submarins que uneixen continents.|Ciencias: la luz y la fibra óptica; Geografía: los cables submarinos que unen continentes.",
+      "Tecnologia i digitalització (1r-2n d'ESO): xarxes de comunicació i transmissió de dades.|Tecnología y digitalización (1.º-2.º de ESO): redes de comunicación y transmisión de datos."
+    ]
+  },
+  'w1-2': {
+    intro: "L'alumnat descobreix com troba el navegador una web entre milions: cada aparell té una adreça IP (quatre números de 0 a 255), els dominis són noms fàcils de recordar i el DNS els tradueix a IP, com l'agenda del mòbil. Després aprèn a llegir una URL (protocol, domini i camí) i què vol dir el candau de l'https: la connexió va xifrada, però això no diu si la web és de fiar. A l'activitat sense pantalla, cada alumne/a porta una adreça IP i la classe fa de DNS. Acaben editant una pàgina i fent la seva agenda DNS amb una llista.|El alumnado descubre cómo encuentra el navegador una web entre millones: cada aparato tiene una dirección IP (cuatro números de 0 a 255), los dominios son nombres fáciles de recordar y el DNS los traduce a IP, como la agenda del móvil. Después aprende a leer una URL (protocolo, dominio y ruta) y qué quiere decir el candado del https: la conexión va cifrada, pero eso no dice si la web es de fiar. En la actividad sin pantalla, cada alumno/a lleva una dirección IP y la clase hace de DNS. Terminan editando una página y haciendo su agenda DNS con una lista.",
+    claus: [
+      "Una adreça IP diu on és un aparell: quatre números de 0 a 255 separats per punts.|Una dirección IP dice dónde está un aparato: cuatro números de 0 a 255 separados por puntos.",
+      "El DNS tradueix el domini (el nom) a l'adreça IP (el número), com una agenda.|El DNS traduce el dominio (el nombre) a la dirección IP (el número), como una agenda.",
+      "Una URL té protocol (https://), domini (quina web) i camí (quina pàgina).|Una URL tiene protocolo (https://), dominio (qué web) y ruta (qué página).",
+      "El candau vol dir connexió xifrada, no que la web sigui de confiança; una lletra canviada al domini porta a una altra web.|El candado quiere decir conexión cifrada, no que la web sea de confianza; una letra cambiada en el dominio lleva a otra web."
+    ],
+    prev: [
+      "La sessió anterior: el client demana, el servidor respon i la pàgina viatja en paquets.|La sesión anterior: el cliente pide, el servidor responde y la página viaja en paquetes.",
+      "Llegir números fins a 255 i saber què és un punt i una barra «/».|Leer números hasta 255 y saber qué es un punto y una barra «/».",
+      "Haver fet servir l'agenda de contactes d'un mòbil.|Haber usado la agenda de contactos de un móvil."
+    ],
+    faq: [
+      ["Per què els números de la IP només van fins a 255?|¿Por qué los números de la IP solo van hasta 255?", "Cada número es guarda en 8 bits (vuit zeros o uns), i amb 8 bits es poden fer 256 combinacions: del 0 al 255.|Cada número se guarda en 8 bits (ocho ceros o unos), y con 8 bits se pueden hacer 256 combinaciones: del 0 al 255."],
+      ["El meu mòbil també té una adreça IP?|¿Mi móvil también tiene una dirección IP?", "Sí: tot aparell connectat en té una. A casa, normalment el router en reparteix als aparells i ell en té una altra per sortir a internet.|Sí: todo aparato conectado tiene una. En casa, normalmente el router reparte direcciones a los aparatos y él tiene otra para salir a internet."],
+      ["Qui decideix els dominis? Puc tenir-ne un?|¿Quién decide los dominios? ¿Puedo tener uno?", "Els dominis es registren i es paguen cada any a empreses autoritzades. Els menors d'edat ho han de fer sempre amb un adult. Els .numi del curs són inventats.|Los dominios se registran y se pagan cada año en empresas autorizadas. Los menores de edad tienen que hacerlo siempre con un adulto. Los .numi del curso son inventados."],
+      ["Si una web té el candau, és segura?|Si una web tiene el candado, ¿es segura?", "El candau només diu que el que envies viatja xifrat i ningú pel camí ho pot llegir. Una web falsa també pot tenir candau: cal mirar bé el domini.|El candado solo dice que lo que envías viaja cifrado y nadie por el camino lo puede leer. Una web falsa también puede tener candado: hay que mirar bien el dominio."],
+      ["Què passa si escric una adreça que no existeix?|¿Qué pasa si escribo una dirección que no existe?", "El DNS no troba cap IP i el navegador avisa que no pot trobar el servidor. Si el domini existeix però la pàgina no, el servidor respon amb un 404.|El DNS no encuentra ninguna IP y el navegador avisa de que no puede encontrar el servidor. Si el dominio existe pero la página no, el servidor responde con un 404."],
+      ["Les adreces IP de la sessió són de veritat?|¿Las direcciones IP de la sesión son de verdad?", "Són dels grups d'adreces reservats per a exemples (198.51.100.x i 203.0.113.x): no porten a cap aparell real.|Son de los grupos de direcciones reservados para ejemplos (198.51.100.x y 203.0.113.x): no llevan a ningún aparato real."]
+    ],
+    tec: [
+      ["A l'agenda DNS, una línia nova no surt com a punt de la llista.|En la agenda DNS, una línea nueva no sale como punto de la lista.", "Cada web ha d'anar dins del seu &lt;li&gt; … &lt;/li&gt; i dins de &lt;ul&gt;. El botó «&lt;li&gt;&lt;/li&gt;» de sota l'editor l'escriu sencer.|Cada web tiene que ir dentro de su &lt;li&gt; … &lt;/li&gt; y dentro de &lt;ul&gt;. El botón «&lt;li&gt;&lt;/li&gt;» de debajo del editor lo escribe entero."],
+      ["No saben escriure la fletxa → al teclat.|No saben escribir la flecha → en el teclado.", "El botó « → » de sota l'editor la insereix on hi ha el cursor.|El botón « → » de debajo del editor la inserta donde está el cursor."],
+      ["La comprovació del domini no es marca.|La comprobación del dominio no se marca.", "Ha d'estar escrit exactament igual (fotonuvi.numi, amb v). Un espai o una lletra canviada ja és un altre domini: és justament la lliçó de la sessió!|Tiene que estar escrito exactamente igual (fotonuvi.numi, con v). Un espacio o una letra cambiada ya es otro dominio: ¡es justamente la lección de la sesión!"],
+      ["Volen provar les adreces .numi en un navegador de veritat.|Quieren probar las direcciones .numi en un navegador de verdad.", "No funcionaran: els dominis .numi són inventats per al curs. Si voleu veure un DNS real, feu-ho vosaltres a la projecció amb una web coneguda de l'escola.|No funcionarán: los dominios .numi son inventados para el curso. Si queréis ver un DNS real, hacedlo vosotros en la proyección con una web conocida del centro."]
+    ],
+    seg: [
+      "No busqueu a classe la IP de casa de ningú: és una dada que no es comparteix.|No busquéis en clase la IP de casa de nadie: es un dato que no se comparte.",
+      "Recordeu-ho sovint: abans d'escriure una contrasenya, mireu el domini lletra a lletra.|Recordadlo a menudo: antes de escribir una contraseña, mirad el dominio letra a letra.",
+      "A l'activitat «Troba el servidor», es camina, no es corre, i les targetes s'enganxen a la roba amb cinta suau.|En la actividad «Encuentra el servidor», se camina, no se corre, y las tarjetas se pegan a la ropa con cinta suave."
+    ],
+    extra: [
+      "Inventar tres dominis gairebé iguals a fotonuvi.numi (fotonuvl, fotonuvi-regals…) i explicar per què serien perillosos.|Inventar tres dominios casi iguales a fotonuvi.numi (fotonuvl, fotonuvi-regalos…) y explicar por qué serían peligrosos.",
+      "Escriure en binari un dels números d'una IP (per exemple, 25 = 00011001).|Escribir en binario uno de los números de una IP (por ejemplo, 25 = 00011001).",
+      "Afegir a l'agenda DNS una segona llista amb les URL completes de dues pàgines de cada web.|Añadir a la agenda DNS una segunda lista con las URL completas de dos páginas de cada web."
+    ],
+    trans: [
+      "Sessió següent: què hi ha dins dels paquets (HTML, CSS i imatges).|Sesión siguiente: qué hay dentro de los paquetes (HTML, CSS e imágenes).",
+      "Matemàtiques: el sistema binari i les potències de 2 (256 = 2⁸).|Matemáticas: el sistema binario y las potencias de 2 (256 = 2⁸).",
+      "Llengua: llegir amb atenció i detectar canvis petits en una paraula (dominis gairebé iguals).|Lengua: leer con atención y detectar cambios pequeños en una palabra (dominios casi iguales)."
+    ]
+  },
+  'w1-3': {
+    intro: "L'alumnat obre una web per dins: descobreix que una pàgina són fitxers de text (l'HTML diu què hi ha i el CSS, com es veu) i imatges a part, que el navegador llegeix de dalt a baix i converteix en el que veiem. És la primera vegada que tocaran codi de veritat: canvien el text, el color i la imatge d'una pàgina i n'escriuen l'alt. A l'activitat sense pantalla, una persona fa de navegador i dibuixa una pàgina seguint només el codi que li dicten. Ajuda molt que vegin que no cal entendre-ho tot per començar a modificar: canviar, mirar i tornar a provar.|El alumnado abre una web por dentro: descubre que una página son archivos de texto (el HTML dice qué hay y el CSS, cómo se ve) e imágenes aparte, que el navegador lee de arriba abajo y convierte en lo que vemos. Es la primera vez que tocarán código de verdad: cambian el texto, el color y la imagen de una página y escriben su alt. En la actividad sin pantalla, una persona hace de navegador y dibuja una página siguiendo solo el código que le dictan. Ayuda mucho que vean que no hace falta entenderlo todo para empezar a modificar: cambiar, mirar y volver a probar.",
+    claus: [
+      "Una web és text: l'HTML diu què hi ha (títols, paràgrafs, imatges) i el CSS, com es veu (colors, mides, lletra).|Una web es texto: el HTML dice qué hay (títulos, párrafos, imágenes) y el CSS, cómo se ve (colores, tamaños, letra).",
+      "Les imatges són fitxers a part: l'HTML només diu on són (src) i què mostren (alt).|Las imágenes son archivos aparte: el HTML solo dice dónde están (src) y qué muestran (alt).",
+      "El navegador llegeix el codi de dalt a baix i dibuixa exactament el que diu.|El navegador lee el código de arriba abajo y dibuja exactamente lo que dice.",
+      "Es pot canviar una web amb seguretat: canvio una cosa, miro la vista prèvia i, si cal, desfaig.|Se puede cambiar una web con seguridad: cambio una cosa, miro la vista previa y, si hace falta, deshago."
+    ],
+    prev: [
+      "Saber que el servidor envia fitxers i el navegador els dibuixa (sessions 1 i 2).|Saber que el servidor envía archivos y el navegador los dibuja (sesiones 1 y 2).",
+      "Conèixer el nom d'alguns colors en anglès (red, blue, green…).|Conocer el nombre de algunos colores en inglés (red, blue, green…).",
+      "Seleccionar i esborrar text amb el ratolí o el dit.|Seleccionar y borrar texto con el ratón o el dedo."
+    ],
+    faq: [
+      ["Puc veure el codi d'una web de veritat?|¿Puedo ver el código de una web de verdad?", "Sí: a l'ordinador, amb el botó dret → «Mostra el codi font» (o Ctrl+U). Veureu molt més codi que el nostre, però amb les mateixes etiquetes. No cal fer-ho a classe.|Sí: en el ordenador, con el botón derecho → «Ver código fuente» (o Ctrl+U). Veréis mucho más código que el nuestro, pero con las mismas etiquetas. No hace falta hacerlo en clase."],
+      ["Per què els colors s'escriuen en anglès?|¿Por qué los colores se escriben en inglés?", "El CSS té una llista de noms de colors en anglès que tots els navegadors entenen. Més endavant aprendrem a escriure qualsevol color amb codis (#FF8800).|El CSS tiene una lista de nombres de colores en inglés que todos los navegadores entienden. Más adelante aprenderemos a escribir cualquier color con códigos (#FF8800)."],
+      ["Si canvio el codi d'una web aquí, canvio la web de veritat?|Si cambio el código de una web aquí, ¿cambio la web de verdad?", "No: canvies la teva còpia. La web de veritat només la pot canviar qui té accés al servidor on es guarda.|No: cambias tu copia. La web de verdad solo la puede cambiar quien tiene acceso al servidor donde se guarda."],
+      ["Què és l'alt i per què el posem?|¿Qué es el alt y por qué lo ponemos?", "És el text que descriu la imatge: el llegeixen els lectors de pantalla de les persones cegues i surt si la imatge no es carrega. En parlarem molt a la unitat 3.|Es el texto que describe la imagen: lo leen los lectores de pantalla de las personas ciegas y sale si la imagen no se carga. Hablaremos mucho de ello en la unidad 3."],
+      ["Per què el navegador no ensenya les etiquetes?|¿Por qué el navegador no enseña las etiquetas?", "Perquè són instruccions: el navegador les fa servir per saber què és cada tros, però no les dibuixa. Com les indicacions d'una recepta, que no es mengen.|Porque son instrucciones: el navegador las usa para saber qué es cada trozo, pero no las dibuja. Como las indicaciones de una receta, que no se comen."]
+    ],
+    tec: [
+      ["La imatge no surt i en lloc seu hi ha una icona trencada o el text de l'alt.|La imagen no sale y en su lugar hay un icono roto o el texto del alt.", "El nom del fitxer està mal escrit. Ha de ser exactament img/tech/web/gat.svg (sense espais ni majúscules). El botó «Imatges» de l'editor l'escriu bé.|El nombre del archivo está mal escrito. Tiene que ser exactamente img/tech/web/gat.svg (sin espacios ni mayúsculas). El botón «Imágenes» del editor lo escribe bien."],
+      ["El color nou no s'aplica.|El color nuevo no se aplica.", "Comproveu que el nom del color és en anglès i ben escrit (purple, no porpra) i que el punt i coma hi és. La barra de sota l'editor avisa dels errors de CSS.|Comprobad que el nombre del color está en inglés y bien escrito (purple, no morado) y que el punto y coma está. La barra de debajo del editor avisa de los errores de CSS."],
+      ["No troben la pestanya CSS.|No encuentran la pestaña CSS.", "A dalt de l'editor hi ha dues pestanyes: index.html i estil.css. Cal tocar estil.css per veure i canviar el CSS.|Arriba del editor hay dos pestañas: index.html y estil.css. Hay que tocar estil.css para ver y cambiar el CSS."],
+      ["Han trencat la pàgina i no saben tornar enrere.|Han roto la página y no saben volver atrás.", "Ctrl+Z (o Cmd+Z) desfà els últims canvis. El botó de la fletxa circular de l'editor torna al codi del principi del repte.|Ctrl+Z (o Cmd+Z) deshace los últimos cambios. El botón de la flecha circular del editor vuelve al código del principio del reto."]
+    ],
+    seg: [
+      "A l'activitat del navegador humà, qui dicta ha de llegir el codi a poc a poc; ningú no es riu dels dibuixos.|En la actividad del navegador humano, quien dicta tiene que leer el código despacio; nadie se ríe de los dibujos.",
+      "Recordeu que veure el codi d'una web no dona permís per copiar-ne els textos o les imatges.|Recordad que ver el código de una web no da permiso para copiar sus textos o sus imágenes.",
+      "Pausa activa al minut 25 aproximadament: ulls lluny de la pantalla.|Pausa activa hacia el minuto 25: ojos lejos de la pantalla."
+    ],
+    extra: [
+      "Canviar també el color del paràgraf amb una segona regla de CSS (p { color: … }).|Cambiar también el color del párrafo con una segunda regla de CSS (p { color: … }).",
+      "Posar dues imatges a la fitxa de l'animal, cadascuna amb el seu alt.|Poner dos imágenes en la ficha del animal, cada una con su alt.",
+      "Dictar a un company/a una pàgina inventada i comparar el dibuix amb la vista prèvia.|Dictar a un compañero/a una página inventada y comparar el dibujo con la vista previa."
+    ],
+    trans: [
+      "Sessió següent: el projecte de la unitat, el mapa d'internet i la seva web.|Sesión siguiente: el proyecto de la unidad, el mapa de internet y su web.",
+      "Unitat 2: aprendrem les etiquetes d'HTML una a una (títols, paràgrafs, llistes).|Unidad 2: aprenderemos las etiquetas de HTML una a una (títulos, párrafos, listas).",
+      "Llengua anglesa: el vocabulari dels colors i de les etiquetes (heading, paragraph, image).|Lengua inglesa: el vocabulario de los colores y de las etiquetas (heading, paragraph, image)."
+    ]
+  },
+  'w1-4': {
+    intro: "Sessió de projecte que tanca la unitat. En grups, l'alumnat fa en paper el mapa del viatge sencer d'una pàgina (navegador, DNS, routers, servidor i la resposta en paquets) per a l'exposició de l'escola, i després en fa la web: completa la pàgina amb la peça correcta de cada pas, hi afegeix un paràgraf propi i dona color al títol amb CSS. També diagnostica situacions senzilles: què falla si surt «No es pot trobar el servidor» o si falta un paquet. Valoreu tant que el mapa sigui correcte com que l'expliquin amb les seves paraules a l'exposició final.|Sesión de proyecto que cierra la unidad. En grupos, el alumnado hace en papel el mapa del viaje entero de una página (navegador, DNS, routers, servidor y la respuesta en paquetes) para la exposición del centro, y después hace su web: completa la página con la pieza correcta de cada paso, añade un párrafo propio y da color al título con CSS. También diagnostica situaciones sencillas: qué falla si sale «No se puede encontrar el servidor» o si falta un paquete. Valorad tanto que el mapa sea correcto como que lo expliquen con sus palabras en la exposición final.",
+    claus: [
+      "El viatge sencer: navegador → DNS → routers → servidor → resposta en paquets → navegador.|El viaje entero: navegador → DNS → routers → servidor → respuesta en paquetes → navegador.",
+      "Cada peça té una feina: el DNS troba l'adreça, els routers trien el camí i el servidor guarda i envia la web.|Cada pieza tiene un trabajo: el DNS encuentra la dirección, los routers eligen el camino y el servidor guarda y envía la web.",
+      "Quan alguna cosa falla, pensem quina peça no ha fet la seva feina (domini mal escrit → DNS; paquet perdut → es torna a demanar).|Cuando algo falla, pensamos qué pieza no ha hecho su trabajo (dominio mal escrito → DNS; paquete perdido → se vuelve a pedir).",
+      "Una web es fa amb HTML (contingut) i CSS (aspecte), i la pots ampliar tu mateix/a.|Una web se hace con HTML (contenido) y CSS (aspecto), y la puedes ampliar tú mismo/a."
+    ],
+    prev: [
+      "Les tres sessions de la unitat: client i servidor, paquets i routers, IP, DNS i URL, HTML i CSS.|Las tres sesiones de la unidad: cliente y servidor, paquetes y routers, IP, DNS y URL, HTML y CSS.",
+      "Canviar text i el color d'una regla de CSS (sessió 3).|Cambiar texto y el color de una regla de CSS (sesión 3).",
+      "Treballar en grup repartint-se les tasques.|Trabajar en grupo repartiéndose las tareas."
+    ],
+    faq: [
+      ["El DNS va abans o després del router de casa?|¿El DNS va antes o después del router de casa?", "La pregunta al DNS també viatja per internet, passant pel router de casa. Al mapa, el més important és l'ordre de les feines: primer saber l'adreça (DNS) i després anar-hi (routers fins al servidor).|La pregunta al DNS también viaja por internet, pasando por el router de casa. En el mapa, lo más importante es el orden de los trabajos: primero saber la dirección (DNS) y después ir (routers hasta el servidor)."],
+      ["Quant triga, de veritat, tot el viatge?|¿Cuánto tarda, de verdad, todo el viaje?", "Normalment menys d'un segon, encara que el servidor sigui en un altre continent. Depèn de la connexió i de la distància.|Normalmente menos de un segundo, aunque el servidor esté en otro continente. Depende de la conexión y de la distancia."],
+      ["Podem fer el mapa amb dibuixos nostres en lloc de les peces impreses?|¿Podemos hacer el mapa con dibujos nuestros en lugar de las piezas impresas?", "I tant! Les peces són una ajuda. El que compta és que hi siguin totes, en ordre, i que les fletxes diguin cap on va la petició i cap on torna la resposta.|¡Por supuesto! Las piezas son una ayuda. Lo que cuenta es que estén todas, en orden, y que las flechas digan hacia dónde va la petición y hacia dónde vuelve la respuesta."],
+      ["Per què no surt el meu color al títol?|¿Por qué no sale mi color en el título?", "La regla ha de ser h1 { color: … ; } a la pestanya CSS, amb un color en anglès o un codi. La barra de sota l'editor diu si hi ha algun error.|La regla tiene que ser h1 { color: … ; } en la pestaña CSS, con un color en inglés o un código. La barra de debajo del editor dice si hay algún error."],
+      ["Es pot posar una imatge nostra al mapa web?|¿Se puede poner una imagen nuestra en el mapa web?", "De moment fem servir les imatges de Numi (botó «Imatges»). A la unitat 3 veurem com posar imatges i de qui han de ser.|De momento usamos las imágenes de Numi (botón «Imágenes»). En la unidad 3 veremos cómo poner imágenes y de quién tienen que ser."]
+    ],
+    tec: [
+      ["Queden buits ___ i no saben quina peça hi va.|Quedan huecos ___ y no saben qué pieza va.", "Que mirin el seu mapa de paper: cada pas de la web és una fletxa del mapa. La comprovació diu quina peça falta en cada pas.|Que miren su mapa de papel: cada paso de la web es una flecha del mapa. La comprobación dice qué pieza falta en cada paso."],
+      ["Amb tantes comprovacions, al mòbil no les veuen totes.|Con tantas comprobaciones, en el móvil no las ven todas.", "Toqueu la barra de les comprovacions (a sota de la vista prèvia): es desplega la llista sencera.|Tocad la barra de las comprobaciones (debajo de la vista previa): se despliega la lista entera."],
+      ["El paràgraf nou no compta.|El párrafo nuevo no cuenta.", "Ha d'anar dins de &lt;p&gt; … &lt;/p&gt; i tenir text. El botó «&lt;p&gt;&lt;/p&gt;» l'escriu sencer i deixa el cursor al mig.|Tiene que ir dentro de &lt;p&gt; … &lt;/p&gt; y tener texto. El botón «&lt;p&gt;&lt;/p&gt;» lo escribe entero y deja el cursor en medio."],
+      ["Volen ensenyar la web a l'exposició des d'un altre ordinador.|Quieren enseñar la web en la exposición desde otro ordenador.", "La web es guarda al perfil de l'alumne/a: entreu-hi amb el seu codi a l'ordinador de l'exposició i obriu-la a «Projectes».|La web se guarda en el perfil del alumno/a: entrad con su código en el ordenador de la exposición y abridla en «Proyectos»."]
+    ],
+    seg: [
+      "Amb tisores i pega, a la taula i amb cura; cada grup recull el seu material.|Con tijeras y pegamento, en la mesa y con cuidado; cada grupo recoge su material.",
+      "A l'exposició, tothom pot preguntar i ningú no es burla de les explicacions dels altres.|En la exposición, todo el mundo puede preguntar y nadie se burla de las explicaciones de los demás.",
+      "A la web, el nom de programador/a inventat, no el nom complet.|En la web, el nombre de programador/a inventado, no el nombre completo."
+    ],
+    extra: [
+      "Afegir al mapa què passa quan el domini està mal escrit i quan es perd un paquet, amb un altre color.|Añadir al mapa qué pasa cuando el dominio está mal escrito y cuando se pierde un paquete, con otro color.",
+      "A la web, afegir una llista amb el vocabulari de la unitat (IP, DNS, router, servidor, HTTP).|En la web, añadir una lista con el vocabulario de la unidad (IP, DNS, router, servidor, HTTP).",
+      "Preparar una pregunta de concurs per a cada peça del mapa i fer-la als visitants de l'exposició.|Preparar una pregunta de concurso para cada pieza del mapa y hacerla a los visitantes de la exposición."
+    ],
+    trans: [
+      "Unitat 2: l'HTML a fons, les etiquetes que fan títols, paràgrafs i llistes.|Unidad 2: el HTML a fondo, las etiquetas que hacen títulos, párrafos y listas.",
+      "Expressió oral: explicar un procés en ordre i amb vocabulari precís davant d'un públic.|Expresión oral: explicar un proceso en orden y con vocabulario preciso ante un público.",
+      "Educació visual i plàstica: fer un esquema clar amb fletxes, colors i llegenda.|Educación visual y plástica: hacer un esquema claro con flechas, colores y leyenda."
+    ]
+  }
+}).forEach(([id, g]) => Object.assign(TGUIDE[id], g));
 
 /* ── unitat 2 ── */
 /* ===== Numi Tech · guia del professorat · Tech Web · unitat 2 «HTML» (w2-1 … w2-4) =====
@@ -1208,6 +1386,178 @@ Object.assign(TGUIDE, {
     ]
   }
 });
+
+/* ---------- Guia completa (unitat 2): la sessió en breu, idees clau, coneixements previs, preguntes que faran, què fer si
+   alguna cosa falla, seguretat i benestar, per anar més enllà i connexions ---------- */
+Object.entries({
+  'w2-1': {
+    intro: "Primera sessió d'HTML de debò. L'alumnat entén que l'HTML és un llenguatge de marques: no calcula res, sinó que marca què és cada tros de text (un títol, un paràgraf, una cosa important). Aprèn a obrir i tancar etiquetes, que el navegador no les ensenya i que, quan una va dins d'una altra, l'última que s'obre és la primera que es tanca. A l'activitat sense pantalla, cada alumne/a és una etiqueta o un tros de text i el grup s'ha d'ordenar ben niuat. A l'ordinador escriuen el primer codi des de zero i arreglen errors amb l'ajuda dels avisos de l'editor.|Primera sesión de HTML de verdad. El alumnado entiende que el HTML es un lenguaje de marcas: no calcula nada, sino que marca qué es cada trozo de texto (un título, un párrafo, algo importante). Aprende a abrir y cerrar etiquetas, que el navegador no las enseña y que, cuando una va dentro de otra, la última que se abre es la primera que se cierra. En la actividad sin pantalla, cada alumno/a es una etiqueta o un trozo de texto y el grupo tiene que ordenarse bien anidado. En el ordenador escriben el primer código desde cero y arreglan errores con la ayuda de los avisos del editor.",
+    claus: [
+      "L'HTML marca què és cada tros: &lt;h1&gt; títol principal, &lt;p&gt; paràgraf, &lt;strong&gt; important, &lt;em&gt; èmfasi.|El HTML marca qué es cada trozo: &lt;h1&gt; título principal, &lt;p&gt; párrafo, &lt;strong&gt; importante, &lt;em&gt; énfasis.",
+      "Gairebé totes les etiquetes s'obren i es tanquen; la de tancar porta una barra: &lt;/p&gt;.|Casi todas las etiquetas se abren y se cierran; la de cerrar lleva una barra: &lt;/p&gt;.",
+      "Niuar bé: l'última etiqueta que obres és la primera que tanques (els arcs no es creuen).|Anidar bien: la última etiqueta que abres es la primera que cierras (los arcos no se cruzan).",
+      "Si oblides tancar una etiqueta, l'efecte s'escampa per tota la pàgina: la barra de l'editor diu on mirar.|Si olvidas cerrar una etiqueta, el efecto se extiende por toda la página: la barra del editor dice dónde mirar."
+    ],
+    prev: [
+      "La unitat 1: el servidor envia un fitxer HTML i el navegador el dibuixa.|La unidad 1: el servidor envía un archivo HTML y el navegador lo dibuja.",
+      "Saber trobar al teclat els signes &lt;, &gt; i / (o fer servir els botons de l'editor).|Saber encontrar en el teclado los signos &lt;, &gt; y / (o usar los botones del editor).",
+      "Distingir en un text el títol, els paràgrafs i una frase important.|Distinguir en un texto el título, los párrafos y una frase importante."
+    ],
+    faq: [
+      ["Per què &lt;strong&gt; i no &lt;b&gt;, si totes dues fan negreta?|¿Por qué &lt;strong&gt; y no &lt;b&gt;, si las dos hacen negrita?", "&lt;strong&gt; vol dir «això és important» i els lectors de pantalla ho poden destacar; &lt;b&gt; només canvia l'aspecte. A l'HTML triem l'etiqueta pel significat, no per com es veu.|&lt;strong&gt; quiere decir «esto es importante» y los lectores de pantalla lo pueden destacar; &lt;b&gt; solo cambia el aspecto. En el HTML elegimos la etiqueta por el significado, no por cómo se ve."],
+      ["Totes les etiquetes es tanquen?|¿Todas las etiquetas se cierran?", "Gairebé totes. Algunes no tenen res a dins i no es tanquen, com &lt;img&gt; o &lt;br&gt;: les veurem més endavant.|Casi todas. Algunas no tienen nada dentro y no se cierran, como &lt;img&gt; o &lt;br&gt;: las veremos más adelante."],
+      ["Importa si escric les etiquetes en majúscules?|¿Importa si escribo las etiquetas en mayúsculas?", "El navegador les entén igual, però el costum és escriure-les en minúscules, i així ho farem a tot el curs.|El navegador las entiende igual, pero la costumbre es escribirlas en minúsculas, y así lo haremos en todo el curso."],
+      ["Per què l'editor escriu sol l'etiqueta de tancar?|¿Por qué el editor escribe solo la etiqueta de cierre?", "Molts editors professionals ho fan per evitar oblits. Quan escrius &lt;p&gt;, posa &lt;/p&gt; i deixa el cursor al mig, a punt per escriure el text.|Muchos editores profesionales lo hacen para evitar olvidos. Cuando escribes &lt;p&gt;, pone &lt;/p&gt; y deja el cursor en medio, a punto para escribir el texto."],
+      ["Si la pàgina es veu bé, què més dona que estigui mal niuada?|Si la página se ve bien, ¿qué más da que esté mal anidada?", "El navegador intenta arreglar-ho, però cada navegador ho pot fer diferent i els lectors de pantalla s'hi poden perdre. El codi ben fet funciona igual a tot arreu.|El navegador intenta arreglarlo, pero cada navegador lo puede hacer diferente y los lectores de pantalla se pueden perder. El código bien hecho funciona igual en todas partes."]
+    ],
+    tec: [
+      ["En escriure «&gt;», surt una etiqueta de tancar repetida.|Al escribir «&gt;», sale una etiqueta de cierre repetida.", "L'editor tanca les etiquetes sol: si l'alumne/a també escriu &lt;/p&gt;, en queden dues. Que esborri la que sobra; la barra d'estat avisa de l'error.|El editor cierra las etiquetas solo: si el alumno/a también escribe &lt;/p&gt;, quedan dos. Que borre la que sobra; la barra de estado avisa del error."],
+      ["No troben els signes &lt; i &gt; al teclat.|No encuentran los signos &lt; y &gt; en el teclado.", "En molts teclats és la tecla al costat de la Z (amb Majúscules per a &gt;). Al mòbil o a la tauleta, els botons de sota l'editor escriuen les etiquetes senceres.|En muchos teclados es la tecla al lado de la Z (con Mayúsculas para &gt;). En el móvil o en la tableta, los botones de debajo del editor escriben las etiquetas enteras."],
+      ["Tota la pàgina surt en negreta o gegant.|Toda la página sale en negrita o gigante.", "Falta tancar un &lt;strong&gt; o un &lt;h1&gt;. La barra d'estat de l'editor diu la línia de l'etiqueta que no està tancada.|Falta cerrar un &lt;strong&gt; o un &lt;h1&gt;. La barra de estado del editor dice la línea de la etiqueta que no está cerrada."],
+      ["El missatge d'error queda tallat a la barra d'estat.|El mensaje de error queda cortado en la barra de estado.", "Toqueu el missatge: s'obre sencer a sobre de la vista prèvia.|Tocad el mensaje: se abre entero encima de la vista previa."]
+    ],
+    seg: [
+      "A les etiquetes humanes, es busca el lloc caminant i parlant baix; ningú no estira ningú.|En las etiquetas humanas, se busca el sitio caminando y hablando bajo; nadie tira de nadie.",
+      "Els errors de codi són normals i útils: celebreu qui en troba un, no qui no se n'equivoca mai.|Los errores de código son normales y útiles: celebrad a quien encuentra uno, no a quien nunca se equivoca.",
+      "Pausa activa a mitja sessió: braços enlaire (és l'activitat de les etiquetes amb els braços).|Pausa activa a mitad de sesión: brazos arriba (es la actividad de las etiquetas con los brazos)."
+    ],
+    extra: [
+      "Fer el rètol de la botiga amb un segon avís amb &lt;em&gt; dins d'un paràgraf, ben niuat.|Hacer el rótulo de la tienda con un segundo aviso con &lt;em&gt; dentro de un párrafo, bien anidado.",
+      "Escriure en paper un codi amb tres errors per a un company/a i que els trobi.|Escribir en papel un código con tres errores para un compañero/a y que los encuentre.",
+      "Comparar com es veu la mateixa frase amb &lt;strong&gt;, &lt;em&gt; i les dues alhora.|Comparar cómo se ve la misma frase con &lt;strong&gt;, &lt;em&gt; y las dos a la vez."
+    ],
+    trans: [
+      "Sessió següent: els sis nivells de títol, els paràgrafs i l'esquelet d'una pàgina completa.|Sesión siguiente: los seis niveles de título, los párrafos y el esqueleto de una página completa.",
+      "Llengua: el títol, els paràgrafs i la idea principal d'un text.|Lengua: el título, los párrafos y la idea principal de un texto.",
+      "Matemàtiques: els parèntesis ben niuats segueixen la mateixa regla que les etiquetes.|Matemáticas: los paréntesis bien anidados siguen la misma regla que las etiquetas."
+    ]
+  },
+  'w2-2': {
+    intro: "L'alumnat organitza una pàgina com l'índex d'un llibre: sis nivells de títol (de &lt;h1&gt; a &lt;h6&gt;) que es trien pel nivell i no per la mida, i sense saltar-se'n cap. Descobreix que el navegador s'empassa els espais i els salts de línia del codi, i per això cada paràgraf va dins del seu &lt;p&gt;. Després coneix l'esquelet d'una pàgina completa: doctype, &lt;html lang&gt;, &lt;head&gt; amb el &lt;title&gt; de la pestanya i &lt;body&gt; amb el que es veu. Remarqueu el perquè: l'esquema de títols i l'idioma ajuden els cercadors i les persones que fan servir lectors de pantalla.|El alumnado organiza una página como el índice de un libro: seis niveles de título (de &lt;h1&gt; a &lt;h6&gt;) que se eligen por el nivel y no por el tamaño, y sin saltarse ninguno. Descubre que el navegador se traga los espacios y los saltos de línea del código, y por eso cada párrafo va dentro de su &lt;p&gt;. Después conoce el esqueleto de una página completa: doctype, &lt;html lang&gt;, &lt;head&gt; con el &lt;title&gt; de la pestaña y &lt;body&gt; con lo que se ve. Remarcad el porqué: el esquema de títulos y el idioma ayudan a los buscadores y a las personas que usan lectores de pantalla.",
+    claus: [
+      "Els títols van de &lt;h1&gt; (el principal, només un) a &lt;h6&gt;, en ordre i sense saltar nivells.|Los títulos van de &lt;h1&gt; (el principal, solo uno) a &lt;h6&gt;, en orden y sin saltar niveles.",
+      "Es tria el títol pel nivell a l'esquema, no per la mida: la mida es canvia amb CSS.|Se elige el título por el nivel en el esquema, no por el tamaño: el tamaño se cambia con CSS.",
+      "El navegador converteix els espais i salts de línia en un sol espai: cada paràgraf, el seu &lt;p&gt;.|El navegador convierte los espacios y saltos de línea en un solo espacio: cada párrafo, su &lt;p&gt;.",
+      "L'esquelet: &lt;html lang&gt; · &lt;head&gt; (informació, com el &lt;title&gt; de la pestanya) · &lt;body&gt; (el que es veu).|El esqueleto: &lt;html lang&gt; · &lt;head&gt; (información, como el &lt;title&gt; de la pestaña) · &lt;body&gt; (lo que se ve)."
+    ],
+    prev: [
+      "Obrir i tancar etiquetes i niuar-les bé (sessió anterior).|Abrir y cerrar etiquetas y anidarlas bien (sesión anterior).",
+      "Saber què és l'índex d'un llibre: capítols, apartats i subapartats.|Saber qué es el índice de un libro: capítulos, apartados y subapartados.",
+      "Distingir la pestanya del navegador del contingut de la pàgina.|Distinguir la pestaña del navegador del contenido de la página."
+    ],
+    faq: [
+      ["Puc fer servir &lt;h3&gt; perquè és més petit i m'agrada més?|¿Puedo usar &lt;h3&gt; porque es más pequeño y me gusta más?", "No: el número diu el nivell a l'esquema, no la mida. Si el vols més petit, fes servir el títol que toca i canvia'n la mida amb CSS (ho farem a la unitat 4).|No: el número dice el nivel en el esquema, no el tamaño. Si lo quieres más pequeño, usa el título que toca y cambia su tamaño con CSS (lo haremos en la unidad 4)."],
+      ["Per què hi ha d'haver un sol &lt;h1&gt;?|¿Por qué tiene que haber un solo &lt;h1&gt;?", "El &lt;h1&gt; diu de què va tota la pàgina, com el títol d'un llibre. Els cercadors i els lectors de pantalla el fan servir per saber-ho de seguida.|El &lt;h1&gt; dice de qué va toda la página, como el título de un libro. Los buscadores y los lectores de pantalla lo usan para saberlo enseguida."],
+      ["Quina diferència hi ha entre &lt;title&gt; i &lt;h1&gt;?|¿Qué diferencia hay entre &lt;title&gt; y &lt;h1&gt;?", "El &lt;title&gt; va al &lt;head&gt; i surt a la pestanya del navegador i als resultats dels cercadors; el &lt;h1&gt; va al &lt;body&gt; i és el títol que es veu a la pàgina.|El &lt;title&gt; va en el &lt;head&gt; y sale en la pestaña del navegador y en los resultados de los buscadores; el &lt;h1&gt; va en el &lt;body&gt; y es el título que se ve en la página."],
+      ["Per a què serveix lang=&quot;ca&quot;?|¿Para qué sirve lang=&quot;es&quot;?", "Diu en quina llengua és la pàgina: el lector de pantalla la llegeix amb la pronúncia bona i el navegador pot oferir de traduir-la.|Dice en qué lengua está la página: el lector de pantalla la lee con la pronunciación buena y el navegador puede ofrecer traducirla."],
+      ["Com faig un salt de línia sense fer un paràgraf nou?|¿Cómo hago un salto de línea sin hacer un párrafo nuevo?", "Amb &lt;br&gt;, que no es tanca. Però si és un altre tros d'idea, millor un &lt;p&gt; nou.|Con &lt;br&gt;, que no se cierra. Pero si es otro trozo de idea, mejor un &lt;p&gt; nuevo."]
+    ],
+    tec: [
+      ["No veuen el &lt;title&gt; a la vista prèvia.|No ven el &lt;title&gt; en la vista previa.", "El &lt;title&gt; no surt dins de la pàgina: surt a la pestanya. A l'ordinador, toqueu el botó «Ordinador» de la vista prèvia: la pestanya del navegador mostra el &lt;title&gt;.|El &lt;title&gt; no sale dentro de la página: sale en la pestaña. En el ordenador, tocad el botón «Ordenador» de la vista previa: la pestaña del navegador muestra el &lt;title&gt;."],
+      ["Un títol es tanca amb un altre número (&lt;h2&gt; … &lt;/h3&gt;).|Un título se cierra con otro número (&lt;h2&gt; … &lt;/h3&gt;).", "La barra d'estat avisa que l'etiqueta no està tancada. Que comprovin que l'obertura i el tancament tenen el mateix número.|La barra de estado avisa de que la etiqueta no está cerrada. Que comprueben que la apertura y el cierre tienen el mismo número."],
+      ["Han escrit l'esquelet dins del &lt;body&gt; d'un altre esquelet.|Han escrito el esqueleto dentro del &lt;body&gt; de otro esqueleto.", "Només hi pot haver un &lt;html&gt;, un &lt;head&gt; i un &lt;body&gt;. Si s'han embolicat, el botó de tornar a començar recupera el codi del principi.|Solo puede haber un &lt;html&gt;, un &lt;head&gt; y un &lt;body&gt;. Si se han liado, el botón de volver a empezar recupera el código del principio."],
+      ["Les comprovacions de lang o de title no es marquen.|Las comprobaciones de lang o de title no se marcan.", "lang va dins de l'etiqueta d'obertura: &lt;html lang=&quot;ca&quot;&gt;. El &lt;title&gt; ha de tenir text i anar entre &lt;head&gt; i &lt;/head&gt;.|lang va dentro de la etiqueta de apertura: &lt;html lang=&quot;es&quot;&gt;. El &lt;title&gt; tiene que tener texto e ir entre &lt;head&gt; y &lt;/head&gt;."]
+    ],
+    seg: [
+      "Les tires de la revista es retallen abans de la classe; a l'aula, només s'ordenen.|Las tiras de la revista se recortan antes de la clase; en el aula, solo se ordenan.",
+      "A la pausa activa dels títols, cadascú es mou al seu lloc, sense empènyer.|En la pausa activa de los títulos, cada uno se mueve en su sitio, sin empujar.",
+      "Recordeu que el lang i els títols en ordre fan la web més accessible: és una manera de cuidar els altres.|Recordad que el lang y los títulos en orden hacen la web más accesible: es una manera de cuidar a los demás."
+    ],
+    extra: [
+      "Afegir al receptari un tercer nivell (&lt;h3&gt;) amb dues receptes dins de cada secció.|Añadir al recetario un tercer nivel (&lt;h3&gt;) con dos recetas dentro de cada sección.",
+      "Escriure l'esquema de títols d'un capítol del llibre de text i passar-lo a HTML.|Escribir el esquema de títulos de un capítulo del libro de texto y pasarlo a HTML.",
+      "Provar què passa a la pestanya si el &lt;title&gt; és molt llarg i proposar-ne un de curt i clar.|Probar qué pasa en la pestaña si el &lt;title&gt; es muy largo y proponer uno corto y claro."
+    ],
+    trans: [
+      "Sessió següent: les llistes (sense ordre i ordenades) per als ingredients i els passos.|Sesión siguiente: las listas (sin orden y ordenadas) para los ingredientes y los pasos.",
+      "Llengua: l'estructura dels textos (títol, apartats) i l'índex.|Lengua: la estructura de los textos (título, apartados) y el índice.",
+      "Accessibilitat: com llegeix una pàgina un lector de pantalla (hi tornarem a la unitat 8).|Accesibilidad: cómo lee una página un lector de pantalla (volveremos a ello en la unidad 8)."
+    ]
+  },
+  'w2-3': {
+    intro: "L'alumnat descobreix les dues llistes de l'HTML: &lt;ul&gt;, sense ordre (amb pics), i &lt;ol&gt;, ordenada (amb números), i el criteri per triar-ne una: importa l'ordre o no? Aprèn que cada element va dins d'un &lt;li&gt; i que els &lt;li&gt; només poden anar dins d'una llista, i fa llistes niuades (una llista dins d'un &lt;li&gt;). També veu per què una llista feta amb guions dins d'un paràgraf no és una llista de veritat per als lectors de pantalla. L'activitat sense pantalla classifica llistes de la vida real en dues capses, «ul» i «ol».|El alumnado descubre las dos listas del HTML: &lt;ul&gt;, sin orden (con viñetas), y &lt;ol&gt;, ordenada (con números), y el criterio para elegir una: ¿importa el orden o no? Aprende que cada elemento va dentro de un &lt;li&gt; y que los &lt;li&gt; solo pueden ir dentro de una lista, y hace listas anidadas (una lista dentro de un &lt;li&gt;). También ve por qué una lista hecha con guiones dentro de un párrafo no es una lista de verdad para los lectores de pantalla. La actividad sin pantalla clasifica listas de la vida real en dos cajas, «ul» y «ol».",
+    claus: [
+      "&lt;ul&gt;: llista sense ordre (pics); &lt;ol&gt;: llista ordenada (números). Es tria segons si l'ordre importa.|&lt;ul&gt;: lista sin orden (viñetas); &lt;ol&gt;: lista ordenada (números). Se elige según si el orden importa.",
+      "Cada element, dins d'un &lt;li&gt;; i els &lt;li&gt;, sempre dins d'una &lt;ul&gt; o d'una &lt;ol&gt;.|Cada elemento, dentro de un &lt;li&gt;; y los &lt;li&gt;, siempre dentro de una &lt;ul&gt; o de una &lt;ol&gt;.",
+      "Llista niuada: la llista de dins va dins del &lt;li&gt;, abans de tancar-lo.|Lista anidada: la lista de dentro va dentro del &lt;li&gt;, antes de cerrarlo.",
+      "Una llista amb guions dins d'un &lt;p&gt; només ho sembla: el lector de pantalla no la reconeix.|Una lista con guiones dentro de un &lt;p&gt; solo lo parece: el lector de pantalla no la reconoce."
+    ],
+    prev: [
+      "Títols i paràgrafs, i l'esquelet de la pàgina (sessió anterior).|Títulos y párrafos, y el esqueleto de la página (sesión anterior).",
+      "Distingir instruccions on l'ordre importa (una recepta) de llistes on no (la compra).|Distinguir instrucciones donde el orden importa (una receta) de listas donde no (la compra).",
+      "Niuar etiquetes sense que s'encreuin.|Anidar etiquetas sin que se crucen."
+    ],
+    faq: [
+      ["Puc canviar els pics per una altra forma o els números per lletres?|¿Puedo cambiar las viñetas por otra forma o los números por letras?", "Sí, amb CSS (list-style-type) o, a les &lt;ol&gt;, amb l'atribut type=&quot;a&quot;. De moment ens fixem en triar bé la llista; l'aspecte vindrà a la unitat 4.|Sí, con CSS (list-style-type) o, en las &lt;ol&gt;, con el atributo type=&quot;a&quot;. De momento nos fijamos en elegir bien la lista; el aspecto vendrá en la unidad 4."],
+      ["Una &lt;ol&gt; pot començar pel 5?|¿Una &lt;ol&gt; puede empezar por el 5?", "Sí: &lt;ol start=&quot;5&quot;&gt;. Va bé, per exemple, per continuar uns passos després d'una imatge.|Sí: &lt;ol start=&quot;5&quot;&gt;. Va bien, por ejemplo, para continuar unos pasos después de una imagen."],
+      ["Quants nivells de llistes niuades es poden fer?|¿Cuántos niveles de listas anidadas se pueden hacer?", "Tants com vulguis, però més de dos o tres nivells costen de llegir. Si en necessites molts, potser cal dividir la informació amb títols.|Tantos como quieras, pero más de dos o tres niveles cuestan de leer. Si necesitas muchos, quizá hay que dividir la información con títulos."],
+      ["Per què no puc escriure guions i ja està, si es veu igual?|¿Por qué no puedo escribir guiones y ya está, si se ve igual?", "Per a la vista sí, però un lector de pantalla diu «llista de 4 elements» només si és una &lt;ul&gt; o una &lt;ol&gt;. A més, amb CSS podràs donar estil a la llista de veritat.|Para la vista sí, pero un lector de pantalla dice «lista de 4 elementos» solo si es una &lt;ul&gt; o una &lt;ol&gt;. Además, con CSS podrás dar estilo a la lista de verdad."],
+      ["Un &lt;li&gt; pot tenir un enllaç o una imatge a dins?|¿Un &lt;li&gt; puede tener un enlace o una imagen dentro?", "Sí: dins d'un &lt;li&gt; hi pot anar gairebé qualsevol cosa. A la unitat 3 farem menús amb llistes d'enllaços.|Sí: dentro de un &lt;li&gt; puede ir casi cualquier cosa. En la unidad 3 haremos menús con listas de enlaces."]
+    ],
+    tec: [
+      ["Un element surt sense pic o sense número.|Un elemento sale sin viñeta o sin número.", "Aquell text no és dins d'un &lt;li&gt;, o el &lt;li&gt; ha quedat fora de la llista. Que mirin on es tanca la &lt;ul&gt; o la &lt;ol&gt;.|Ese texto no está dentro de un &lt;li&gt;, o el &lt;li&gt; ha quedado fuera de la lista. Que miren dónde se cierra la &lt;ul&gt; o la &lt;ol&gt;."],
+      ["La llista niuada surt al final, fora del grup.|La lista anidada sale al final, fuera del grupo.", "S'ha tancat el &lt;li&gt; abans de posar-hi la llista de dins. La &lt;ul&gt; de dins va abans del &lt;/li&gt;.|Se ha cerrado el &lt;li&gt; antes de poner la lista de dentro. La &lt;ul&gt; de dentro va antes del &lt;/li&gt;."],
+      ["El botó «&lt;li&gt;&lt;/li&gt;» escriu l'element en un lloc estrany.|El botón «&lt;li&gt;&lt;/li&gt;» escribe el elemento en un sitio raro.", "Escriu on hi ha el cursor: abans de tocar-lo, que posin el cursor al final de l'últim &lt;/li&gt; i premin Retorn.|Escribe donde está el cursor: antes de tocarlo, que pongan el cursor al final del último &lt;/li&gt; y pulsen Intro."]
+    ],
+    seg: [
+      "Les capses «ul» i «ol» al centre de la taula; cada grup decideix parlant baix i per torns.|Las cajas «ul» y «ol» en el centro de la mesa; cada grupo decide hablando bajo y por turnos.",
+      "A la pàgina de l'excursió, no hi poseu dades reals de la sortida (dates, llocs exactes) si la pàgina es comparteix.|En la página de la excursión, no pongáis datos reales de la salida (fechas, lugares exactos) si la página se comparte.",
+      "Pausa activa: la llista ordenada de moviments (aixeca't, volta, salta, seu), a poc a poc.|Pausa activa: la lista ordenada de movimientos (levántate, vuelta, salta, siéntate), despacio."
+    ],
+    extra: [
+      "Fer una llista ordenada de passos amb una llista sense ordre niuada en un dels passos (el que cal per a aquell pas).|Hacer una lista ordenada de pasos con una lista sin orden anidada en uno de los pasos (lo que hace falta para ese paso).",
+      "Provar &lt;ol start&gt; i &lt;ol type=&quot;a&quot;&gt; i explicar quan ho faries servir.|Probar &lt;ol start&gt; y &lt;ol type=&quot;a&quot;&gt; y explicar cuándo lo usarías.",
+      "Convertir en llista de veritat un text amb guions trobat en un document de classe.|Convertir en lista de verdad un texto con guiones encontrado en un documento de clase."
+    ],
+    trans: [
+      "Sessió següent: el projecte de la unitat, la recepta completa per al receptari del poble.|Sesión siguiente: el proyecto de la unidad, la receta completa para el recetario del pueblo.",
+      "Llengua: els textos instructius (receptes, instruccions) i els connectors d'ordre.|Lengua: los textos instructivos (recetas, instrucciones) y los conectores de orden.",
+      "Ciències: classificar (els ingredients de la nevera i els del rebost).|Ciencias: clasificar (los ingredientes de la nevera y los de la despensa)."
+    ]
+  },
+  'w2-4': {
+    intro: "Sessió de projecte que tanca la unitat: cada alumne/a escriu la seva recepta per al receptari del poble fent servir tot l'HTML que ha après (esquelet complet, títols en ordre, paràgrafs, una llista &lt;ul&gt; d'ingredients i una &lt;ol&gt; de passos, i &lt;strong&gt;/&lt;em&gt; amb sentit). Primer planifica en paper amb un esbós que assigna una etiqueta a cada part; després construeix, guiat per la recepta d'en Bit a trossos; i al final revisa la pàgina com un/a professional i dona i rep comentaris amables d'un company/a. Valoreu el procés (esbós, revisió) tant com el resultat.|Sesión de proyecto que cierra la unidad: cada alumno/a escribe su receta para el recetario del pueblo usando todo el HTML que ha aprendido (esqueleto completo, títulos en orden, párrafos, una lista &lt;ul&gt; de ingredientes y una &lt;ol&gt; de pasos, y &lt;strong&gt;/&lt;em&gt; con sentido). Primero planifica en papel con un boceto que asigna una etiqueta a cada parte; después construye, guiado por la receta de Bit a trozos; y al final revisa la página como un/a profesional y da y recibe comentarios amables de un compañero/a. Valorad el proceso (boceto, revisión) tanto como el resultado.",
+    claus: [
+      "Primer l'esbós en paper: quines parts té la pàgina i quina etiqueta li toca a cada una.|Primero el boceto en papel: qué partes tiene la página y qué etiqueta le toca a cada una.",
+      "Una recepta: &lt;h1&gt; el nom, &lt;p&gt; la presentació, &lt;h2&gt; + &lt;ul&gt; els ingredients i &lt;h2&gt; + &lt;ol&gt; els passos.|Una receta: &lt;h1&gt; el nombre, &lt;p&gt; la presentación, &lt;h2&gt; + &lt;ul&gt; los ingredientes y &lt;h2&gt; + &lt;ol&gt; los pasos.",
+      "Els comentaris &lt;!-- … --&gt; són notes per a qui llegeix el codi: no surten a la pàgina.|Los comentarios &lt;!-- … --&gt; son notas para quien lee el código: no salen en la página.",
+      "Revisar és part de la feina: etiquetes tancades, títols en ordre, cap falta i la pàgina mirada al mòbil.|Revisar es parte del trabajo: etiquetas cerradas, títulos en orden, ninguna falta y la página mirada en el móvil."
+    ],
+    prev: [
+      "Títols, paràgrafs, llistes, &lt;strong&gt; i &lt;em&gt; i l'esquelet (sessions 1-3 de la unitat).|Títulos, párrafos, listas, &lt;strong&gt; y &lt;em&gt; y el esqueleto (sesiones 1-3 de la unidad).",
+      "Saber una recepta senzilla (de casa o inventada) o tenir-ne una a mà.|Saber una receta sencilla (de casa o inventada) o tener una a mano.",
+      "Donar una opinió amable i concreta sobre la feina d'un company/a.|Dar una opinión amable y concreta sobre el trabajo de un compañero/a."
+    ],
+    faq: [
+      ["La recepta ha de ser de veritat?|¿La receta tiene que ser de verdad?", "Pot ser de casa, una que us agradi o una d'inventada (un batut galàctic!). El que compta és que els passos tinguin sentit i estiguin en ordre.|Puede ser de casa, una que os guste o una inventada (¡un batido galáctico!). Lo que cuenta es que los pasos tengan sentido y estén en orden."],
+      ["Puc posar-hi una foto del plat?|¿Puedo poner una foto del plato?", "Les imatges arriben a la unitat 3. De moment, si en voleu, feu servir les de Numi amb el botó «Imatges» (hi ha pizza, fruita, pastís, pa, sopa…).|Las imágenes llegan en la unidad 3. De momento, si queréis, usad las de Numi con el botón «Imágenes» (hay pizza, fruta, pastel, pan, sopa…)."],
+      ["Puc copiar una recepta d'internet?|¿Puedo copiar una receta de internet?", "Millor escriure-la amb les vostres paraules. Si n'agafeu idees d'un llibre o una web, digueu d'on surt al final: ho aprendrem a fons a la unitat 3 (citar les fonts).|Mejor escribirla con vuestras palabras. Si cogéis ideas de un libro o una web, decid de dónde sale al final: lo aprenderemos a fondo en la unidad 3 (citar las fuentes)."],
+      ["Per què la plantilla té comentaris si no surten?|¿Por qué la plantilla tiene comentarios si no salen?", "Són instruccions per a vosaltres, dins del codi. Els programadors en deixen per recordar què fa cada part o per explicar-ho a qui vindrà després.|Son instrucciones para vosotros, dentro del código. Los programadores los dejan para recordar qué hace cada parte o para explicarlo a quien vendrá después."],
+      ["Quan faig servir &lt;strong&gt; i quan &lt;em&gt;?|¿Cuándo uso &lt;strong&gt; y cuándo &lt;em&gt;?", "&lt;strong&gt; per a un avís important (Compte, crema!); &lt;em&gt; per a una paraula que diries amb més força. Si tot és important, res no destaca: poc i amb sentit.|&lt;strong&gt; para un aviso importante (¡Cuidado, quema!); &lt;em&gt; para una palabra que dirías con más fuerza. Si todo es importante, nada destaca: poco y con sentido."]
+    ],
+    tec: [
+      ["Han escrit dins dels comentaris i el text no surt.|Han escrito dentro de los comentarios y el texto no sale.", "Tot el que hi ha entre &lt;!-- i --&gt; és invisible. Que escriguin a sota del comentari, no a dins.|Todo lo que hay entre &lt;!-- y --&gt; es invisible. Que escriban debajo del comentario, no dentro."],
+      ["Tota la pàgina queda grisa al codi a partir d'una línia.|Toda la página queda gris en el código a partir de una línea.", "S'ha obert un comentari &lt;!-- i no s'ha tancat amb --&gt;. Que busquin on comença el gris.|Se ha abierto un comentario &lt;!-- y no se ha cerrado con --&gt;. Que busquen dónde empieza el gris."],
+      ["La recepta desada no surt al receptari de la galeria.|La receta guardada no sale en el recetario de la galería.", "Cada recepta es desa al portafoli de l'alumne/a. Per a la galeria, que cadascú l'obri a «Projectes» al seu ordinador i el grup hi passi.|Cada receta se guarda en el portafolio del alumno/a. Para la galería, que cada uno la abra en «Proyectos» en su ordenador y el grupo pase por ellos."],
+      ["Al mòbil no veuen tota la recepta.|En el móvil no ven toda la receta.", "La vista prèvia es pot desplaçar amb el dit. També poden passar a «Ordinador» per veure-la sencera més petita.|La vista previa se puede desplazar con el dedo. También pueden pasar a «Ordenador» para verla entera más pequeña."]
+    ],
+    seg: [
+      "A la revisió entre companys: primer una cosa que funciona i després una millora concreta, amb amabilitat.|En la revisión entre compañeros: primero algo que funciona y después una mejora concreta, con amabilidad.",
+      "Si la recepta és de casa, no cal posar-hi noms de familiars ni dades de la família.|Si la receta es de casa, no hace falta poner nombres de familiares ni datos de la familia.",
+      "Pausa activa del xef abans de començar el projecte: estirar braços i espatlles.|Pausa activa del chef antes de empezar el proyecto: estirar brazos y hombros."
+    ],
+    extra: [
+      "Afegir una secció «Trucs» amb una llista niuada i un avís amb &lt;strong&gt;.|Añadir una sección «Trucos» con una lista anidada y un aviso con &lt;strong&gt;.",
+      "Fer una segona recepta i un índex amb el nom de les dues.|Hacer una segunda receta y un índice con el nombre de las dos.",
+      "Revisar la recepta d'un company/a amb la fitxa i proposar-li dues millores.|Revisar la receta de un compañero/a con la ficha y proponerle dos mejoras."
+    ],
+    trans: [
+      "Unitat 3: imatges i enllaços per connectar pàgines (el receptari podrà tenir fotos i un índex).|Unidad 3: imágenes y enlaces para conectar páginas (el recetario podrá tener fotos y un índice).",
+      "Llengua: el text instructiu i la revisió de l'ortografia.|Lengua: el texto instructivo y la revisión de la ortografía.",
+      "Matemàtiques: les quantitats de la recepta (doblar-les per a més persones).|Matemáticas: las cantidades de la receta (doblarlas para más personas)."
+    ]
+  }
+}).forEach(([id, g]) => Object.assign(TGUIDE[id], g));
 
 /* ── unitat 3 ── */
 /* ===== Numi Tech · guia del professorat · Tech Web · unitat 3 «Imatges i enllaços» =====
@@ -1944,6 +2294,175 @@ Object.assign(TGUIDE, (() => {
   });
 })());
 
+/* ---------- Guia completa (unitat 3): la sessió en breu, idees clau, coneixements previs, preguntes que faran, què fer si
+   alguna cosa falla, seguretat i benestar, per anar més enllà i connexions ---------- */
+Object.entries({
+  'w3-1': {
+    intro: "L'alumnat aprèn què és un atribut (informació extra dins de l'etiqueta d'obertura) amb l'etiqueta &lt;img&gt;: src diu on és el fitxer, alt descriu la imatge i width en fixa l'amplada; i que &lt;img&gt; no es tanca. Descobreix el camí d'una imatge (el navegador llegeix src, la demana al servidor i la dibuixa) i, sobretot, per què l'alt és tan important: per a les persones cegues que fan servir un lector de pantalla, per a les connexions lentes i per als cercadors. A l'activitat sense pantalla fan de lector de pantalla humà: descriuen una imatge perquè un company/a la dibuixi sense veure-la. Treballen amb les imatges pròpies de Numi.|El alumnado aprende qué es un atributo (información extra dentro de la etiqueta de apertura) con la etiqueta &lt;img&gt;: src dice dónde está el archivo, alt describe la imagen y width fija su anchura; y que &lt;img&gt; no se cierra. Descubre el camino de una imagen (el navegador lee src, la pide al servidor y la dibuja) y, sobre todo, por qué el alt es tan importante: para las personas ciegas que usan un lector de pantalla, para las conexiones lentas y para los buscadores. En la actividad sin pantalla hacen de lector de pantalla humano: describen una imagen para que un compañero/a la dibuje sin verla. Trabajan con las imágenes propias de Numi.",
+    claus: [
+      "Un atribut és informació extra dins de l'etiqueta d'obertura: nom=&quot;valor&quot;.|Un atributo es información extra dentro de la etiqueta de apertura: nombre=&quot;valor&quot;.",
+      "&lt;img src alt width&gt;: src on és el fitxer, alt què hi ha, width l'amplada en píxels. No es tanca.|&lt;img src alt width&gt;: src dónde está el archivo, alt qué hay, width la anchura en píxeles. No se cierra.",
+      "Un bon alt descriu el que importa de la imatge en una frase curta, sense «imatge de…».|Un buen alt describe lo que importa de la imagen en una frase corta, sin «imagen de…».",
+      "Si el nom del fitxer està mal escrit, la imatge no surt: el navegador demana un fitxer que no existeix.|Si el nombre del archivo está mal escrito, la imagen no sale: el navegador pide un archivo que no existe."
+    ],
+    prev: [
+      "L'esquelet de la pàgina, títols i paràgrafs (unitat 2).|El esqueleto de la página, títulos y párrafos (unidad 2).",
+      "Saber que les imatges són fitxers a part que viatgen del servidor al navegador (unitat 1).|Saber que las imágenes son archivos aparte que viajan del servidor al navegador (unidad 1).",
+      "Descriure oralment una imatge amb precisió.|Describir oralmente una imagen con precisión."
+    ],
+    faq: [
+      ["Puc posar una foto meva o del mòbil?|¿Puedo poner una foto mía o del móvil?", "A l'app fem servir les imatges de Numi, que són nostres i les podem fer servir. Les fotos amb cares de persones no es publiquen sense permís: en parlarem a la sessió de citar les fonts.|En la app usamos las imágenes de Numi, que son nuestras y las podemos usar. Las fotos con caras de personas no se publican sin permiso: hablaremos de ello en la sesión de citar las fuentes."],
+      ["Què és un píxel?|¿Qué es un píxel?", "Cada un dels puntets de llum de la pantalla. width=&quot;200&quot; vol dir que la imatge farà 200 puntets d'amplada.|Cada uno de los puntitos de luz de la pantalla. width=&quot;200&quot; quiere decir que la imagen hará 200 puntitos de anchura."],
+      ["Per què no posem també l'alçada?|¿Por qué no ponemos también la altura?", "Si només dius l'amplada, el navegador calcula l'alçada i la imatge no es deforma. Si en poses dues que no quadren, es veu estirada.|Si solo dices la anchura, el navegador calcula la altura y la imagen no se deforma. Si pones dos que no cuadran, se ve estirada."],
+      ["Una imatge decorativa també necessita alt?|¿Una imagen decorativa también necesita alt?", "Si no aporta informació (un adorn), s'hi posa alt=&quot;&quot; buit perquè el lector de pantalla se la salti. Però a les nostres fitxes totes les imatges diuen coses: totes porten descripció.|Si no aporta información (un adorno), se le pone alt=&quot;&quot; vacío para que el lector de pantalla se la salte. Pero en nuestras fichas todas las imágenes dicen cosas: todas llevan descripción."],
+      ["Què vol dir SVG?|¿Qué quiere decir SVG?", "És un tipus de fitxer d'imatge fet amb formes (com un dibuix vectorial): es veu nítid a qualsevol mida. També hi ha JPG i PNG (fotos) i WEBP.|Es un tipo de archivo de imagen hecho con formas (como un dibujo vectorial): se ve nítido a cualquier tamaño. También hay JPG y PNG (fotos) y WEBP."]
+    ],
+    tec: [
+      ["La imatge surt com una icona trencada.|La imagen sale como un icono roto.", "El camí del src no és bo: ha de ser exactament img/tech/web/nom.svg, sense espais ni majúscules. El botó «Imatges» de l'editor escriu el camí bé.|La ruta del src no es buena: tiene que ser exactamente img/tech/web/nombre.svg, sin espacios ni mayúsculas. El botón «Imágenes» del editor escribe la ruta bien."],
+      ["La comprovació de l'alt no es marca.|La comprobación del alt no se marca.", "L'alt ha de tenir una descripció d'almenys unes quantes paraules (no n'hi ha prou amb «gat»). I va entre cometes rectes: alt=&quot;…&quot;.|El alt tiene que tener una descripción de al menos unas cuantas palabras (no basta con «gato»). Y va entre comillas rectas: alt=&quot;…&quot;."],
+      ["Han escrit &lt;/img&gt; i la barra avisa d'un error.|Han escrito &lt;/img&gt; y la barra avisa de un error.", "&lt;img&gt; no es tanca. Esborreu el &lt;/img&gt;.|&lt;img&gt; no se cierra. Borrad el &lt;/img&gt;."],
+      ["A la tauleta, les cometes surten corbes i l'atribut no funciona.|En la tableta, las comillas salen curvas y el atributo no funciona.", "Desactiveu la puntuació intel·ligent del teclat (a l'iPad: Configuració → General → Teclat). Els botons de l'editor escriuen les cometes bones.|Desactivad la puntuación inteligente del teclado (en el iPad: Ajustes → General → Teclado). Los botones del editor escriben las comillas buenas."]
+    ],
+    seg: [
+      "Al lector de pantalla humà, qui dibuixa té els ulls oberts mirant el seu full; ningú no ha de tapar-se els ulls si no vol.|En el lector de pantalla humano, quien dibuja tiene los ojos abiertos mirando su hoja; nadie tiene que taparse los ojos si no quiere.",
+      "Parleu amb respecte de les persones amb discapacitat visual: l'alt és una manera de pensar en tothom.|Hablad con respeto de las personas con discapacidad visual: el alt es una manera de pensar en todo el mundo.",
+      "Cap foto de companys/es a les pàgines: només imatges de Numi.|Ninguna foto de compañeros/as en las páginas: solo imágenes de Numi."
+    ],
+    extra: [
+      "Escriure tres alts diferents per a la mateixa imatge i votar quin és el millor i per què.|Escribir tres alts diferentes para la misma imagen y votar cuál es el mejor y por qué.",
+      "Fer una galeria de quatre animals amb mides diferents (width) i comparar-les.|Hacer una galería de cuatro animales con tamaños diferentes (width) y compararlas.",
+      "Activar el lector de pantalla del mòbil o de l'ordinador (amb un adult) i escoltar com llegeix una web.|Activar el lector de pantalla del móvil o del ordenador (con un adulto) y escuchar cómo lee una web."
+    ],
+    trans: [
+      "Sessió següent: els enllaços, l'altre atribut estrella (href), per connectar pàgines.|Sesión siguiente: los enlaces, el otro atributo estrella (href), para conectar páginas.",
+      "Llengua: la descripció objectiva (què es veu, sense opinar).|Lengua: la descripción objetiva (qué se ve, sin opinar).",
+      "Valors: l'accessibilitat i la inclusió de les persones amb discapacitat.|Valores: la accesibilidad y la inclusión de las personas con discapacidad."
+    ]
+  },
+  'w3-2': {
+    intro: "L'alumnat descobreix la «H» d'HTML, l'hipertext: les pàgines es connecten amb enllaços. Aprèn a escriure &lt;a href=&quot;…&quot;&gt;text&lt;/a&gt; i a distingir tres tipus d'adreça: una pàgina de la mateixa web (tortuga.html), una altra web (https://…) i un lloc de la mateixa pàgina (#id). També aprèn que el text d'un enllaç ha de dir on porta (res de «clica aquí»), pensant en qui fa servir un lector de pantalla. A l'activitat sense pantalla, la classe fa una web de paper connectant pàgines amb llana. Acaben fent un menú, un índex amb salts i una fitxa amb enllaços.|El alumnado descubre la «H» de HTML, el hipertexto: las páginas se conectan con enlaces. Aprende a escribir &lt;a href=&quot;…&quot;&gt;texto&lt;/a&gt; y a distinguir tres tipos de dirección: una página de la misma web (tortuga.html), otra web (https://…) y un lugar de la misma página (#id). También aprende que el texto de un enlace tiene que decir adónde lleva (nada de «clica aquí»), pensando en quien usa un lector de pantalla. En la actividad sin pantalla, la clase hace una web de papel conectando páginas con lana. Terminan haciendo un menú, un índice con saltos y una ficha con enlaces.",
+    claus: [
+      "Un enllaç: &lt;a href=&quot;adreça&quot;&gt;text&lt;/a&gt;. href diu on porta; el text és el que es toca.|Un enlace: &lt;a href=&quot;dirección&quot;&gt;texto&lt;/a&gt;. href dice adónde lleva; el texto es lo que se toca.",
+      "tortuga.html: una pàgina de la teva web · https://…: una altra web · #id: un lloc de la mateixa pàgina.|tortuga.html: una página de tu web · https://…: otra web · #id: un lugar de la misma página.",
+      "Per saltar dins la pàgina: href=&quot;#menja&quot; a l'enllaç i id=&quot;menja&quot; a l'element, el mateix nom.|Para saltar dentro de la página: href=&quot;#menja&quot; en el enlace e id=&quot;menja&quot; en el elemento, el mismo nombre.",
+      "El text de l'enllaç diu on porta; si no es tanca &lt;/a&gt;, tot el que segueix es torna enllaç.|El texto del enlace dice adónde lleva; si no se cierra &lt;/a&gt;, todo lo que sigue se vuelve enlace."
+    ],
+    prev: [
+      "Què és un atribut i com s'escriu (sessió anterior).|Qué es un atributo y cómo se escribe (sesión anterior).",
+      "Les parts d'una URL: protocol, domini i camí (unitat 1).|Las partes de una URL: protocolo, dominio y ruta (unidad 1).",
+      "Fer llistes &lt;ul&gt; amb &lt;li&gt; (unitat 2).|Hacer listas &lt;ul&gt; con &lt;li&gt; (unidad 2)."
+    ],
+    faq: [
+      ["Per què un enllaç a una altra web necessita https://?|¿Por qué un enlace a otra web necesita https://?", "Sense el protocol, el navegador pensa que és una pàgina de la teva web i la busca al teu servidor: sortiria un error 404.|Sin el protocolo, el navegador piensa que es una página de tu web y la busca en tu servidor: saldría un error 404."],
+      ["Com faig que l'enllaç s'obri en una pestanya nova?|¿Cómo hago que el enlace se abra en una pestaña nueva?", "Amb target=&quot;_blank&quot;. Però no cal fer-ho sempre: molta gent prefereix decidir-ho. Si ho feu, aviseu al text de l'enllaç.|Con target=&quot;_blank&quot;. Pero no hace falta hacerlo siempre: mucha gente prefiere decidirlo. Si lo hacéis, avisad en el texto del enlace."],
+      ["Per què «clica aquí» és un mal text d'enllaç?|¿Por qué «clica aquí» es un mal texto de enlace?", "Qui fa servir un lector de pantalla sovint escolta només la llista d'enllaços: «clica aquí, clica aquí» no diu res. «La fitxa de la balena» sí.|Quien usa un lector de pantalla a menudo escucha solo la lista de enlaces: «clica aquí, clica aquí» no dice nada. «La ficha de la ballena» sí."],
+      ["Els enllaços a tortuga.html funcionen a l'app?|¿Los enlaces a tortuga.html funcionan en la app?", "A la vista prèvia, els enllaços #id salten de veritat dins de la pàgina. Els altres no surten de la vista prèvia (és un espai protegit): en tocar-los, un avís diu on portarien. A la web publicada sí que hi portarien.|En la vista previa, los enlaces #id saltan de verdad dentro de la página. Los demás no salen de la vista previa (es un espacio protegido): al tocarlos, un aviso dice adónde llevarían. En la web publicada sí que llevarían."],
+      ["Un id es pot repetir?|¿Un id se puede repetir?", "No: cada id és únic a la pàgina, com el número del DNI. Si n'hi ha dos d'iguals, l'enllaç no sabria on saltar.|No: cada id es único en la página, como el número del DNI. Si hay dos iguales, el enlace no sabría dónde saltar."]
+    ],
+    tec: [
+      ["En tocar un enllaç a la vista prèvia, no canvia de pàgina.|Al tocar un enlace en la vista previa, no cambia de página.", "És normal: la vista prèvia és un espai protegit i no surt a altres pàgines. Surt un avís que diu on portaria l'enllaç; els enllaços #id sí que salten. Si l'avís diu que no hi ha cap element amb aquell id, reviseu el nom.|Es normal: la vista previa es un espacio protegido y no sale a otras páginas. Sale un aviso que dice adónde llevaría el enlace; los enlaces #id sí que saltan. Si el aviso dice que no hay ningún elemento con ese id, revisad el nombre."],
+      ["A partir d'un enllaç, tot el text surt blau i subratllat.|A partir de un enlace, todo el texto sale azul y subrayado.", "Falta tancar l'enllaç amb &lt;/a&gt;. La barra d'estat diu a quina línia es va obrir.|Falta cerrar el enlace con &lt;/a&gt;. La barra de estado dice en qué línea se abrió."],
+      ["L'índex no salta a la secció.|El índice no salta a la sección.", "Compareu lletra a lletra el nom de l'href (sense #) i el de l'id: han de ser idèntics, sense espais ni accents.|Comparad letra a letra el nombre del href (sin #) y el del id: tienen que ser idénticos, sin espacios ni tildes."]
+    ],
+    seg: [
+      "A la web de paper, la llana es passa per sota de les taules i ningú no camina per sobre dels fils.|En la web de papel, la lana se pasa por debajo de las mesas y nadie camina por encima de los hilos.",
+      "Els enllaços a webs reals, només a webs que coneixeu i de confiança; a la unitat 7 aprendrem a detectar webs falses.|Los enlaces a webs reales, solo a webs que conozcáis y de confianza; en la unidad 7 aprenderemos a detectar webs falsas.",
+      "Pausa activa a mitja sessió: la de la pàgina web amb el cos.|Pausa activa a mitad de sesión: la de la página web con el cuerpo."
+    ],
+    extra: [
+      "Afegir a la fitxa un enllaç «Torna a dalt» que salti a l'id del títol.|Añadir a la ficha un enlace «Vuelve arriba» que salte al id del título.",
+      "Fer un menú amb cinc animals i que el text de cada enllaç digui on porta.|Hacer un menú con cinco animales y que el texto de cada enlace diga adónde lleva.",
+      "Dibuixar el mapa de la web de la classe amb fletxes i comptar quantes pàgines té cada pàgina enllaçades.|Dibujar el mapa de la web de la clase con flechas y contar cuántas páginas tiene cada página enlazadas."
+    ],
+    trans: [
+      "Sessió següent: citar les fonts i els drets d'autor de les imatges i els textos.|Sesión siguiente: citar las fuentes y los derechos de autor de las imágenes y los textos.",
+      "Unitat 8: el menú de la teva web farà servir enllaços #id a les seccions.|Unidad 8: el menú de tu web usará enlaces #id a las secciones.",
+      "Biblioteca: l'índex i les referències creuades d'un llibre són enllaços en paper.|Biblioteca: el índice y las referencias cruzadas de un libro son enlaces en papel."
+    ]
+  },
+  'w3-3': {
+    intro: "Sessió de ciutadania digital dins del curs de web. L'alumnat entén que tot el que algú crea (fotos, dibuixos, textos) té autor/a, i que veure-ho a internet no vol dir que es pugui agafar. Aprèn el semàfor de les imatges (verd: meu o amb permís; groc: llicència lliure amb condicions; vermell: no sé de qui és), què volen dir les lletres de les llicències Creative Commons (BY, NC, SA, ND), què és el domini públic i com es cita una font amb quatre preguntes: qui, què, on i quan. A l'HTML, fa servir &lt;figure&gt; i &lt;figcaption&gt; per posar la llegenda amb l'autor/a i una secció de fonts amb enllaços.|Sesión de ciudadanía digital dentro del curso de web. El alumnado entiende que todo lo que alguien crea (fotos, dibujos, textos) tiene autor/a, y que verlo en internet no quiere decir que se pueda coger. Aprende el semáforo de las imágenes (verde: mío o con permiso; amarillo: licencia libre con condiciones; rojo: no sé de quién es), qué quieren decir las letras de las licencias Creative Commons (BY, NC, SA, ND), qué es el dominio público y cómo se cita una fuente con cuatro preguntas: quién, qué, dónde y cuándo. En el HTML, usa &lt;figure&gt; y &lt;figcaption&gt; para poner la leyenda con el autor/a y una sección de fuentes con enlaces.",
+    claus: [
+      "Tota obra té autor/a: que sigui a internet no vol dir que es pugui fer servir.|Toda obra tiene autor/a: que esté en internet no quiere decir que se pueda usar.",
+      "Semàfor: verd (meu o amb permís), groc (llicència lliure: compleix-ne les condicions), vermell (no ho sé: no l'agafo).|Semáforo: verde (mío o con permiso), amarillo (licencia libre: cumple sus condiciones), rojo (no lo sé: no lo cojo).",
+      "Creative Commons: BY cita l'autor/a, NC sense vendre, SA comparteix igual, ND sense canvis.|Creative Commons: BY cita al autor/a, NC sin vender, SA comparte igual, ND sin cambios.",
+      "Citar és dir qui, què, on i quan; a l'HTML, a &lt;figcaption&gt; dins d'una &lt;figure&gt;.|Citar es decir quién, qué, dónde y cuándo; en el HTML, en &lt;figcaption&gt; dentro de una &lt;figure&gt;."
+    ],
+    prev: [
+      "Posar imatges amb &lt;img&gt; i alt, i fer enllaços amb &lt;a href&gt; (sessions 1 i 2).|Poner imágenes con &lt;img&gt; y alt, y hacer enlaces con &lt;a href&gt; (sesiones 1 y 2).",
+      "Saber que els llibres tenen autor/a i editorial.|Saber que los libros tienen autor/a y editorial.",
+      "Haver fet un treball de classe amb informació d'internet o de llibres.|Haber hecho un trabajo de clase con información de internet o de libros."
+    ],
+    faq: [
+      ["Si canvio una mica una foto, ja és meva?|Si cambio un poco una foto, ¿ya es mía?", "No: continua sent una obra de l'autor/a original. Per modificar-la cal permís o una llicència que ho permeti (les CC sense ND).|No: sigue siendo una obra del autor/a original. Para modificarla hace falta permiso o una licencia que lo permita (las CC sin ND)."],
+      ["Què és el domini públic?|¿Qué es el dominio público?", "Quan fa molts anys que l'autor/a ha mort (a Espanya, en general, 70 anys), l'obra la pot fer servir tothom. També hi ha autors/es que hi posen les seves obres voluntàriament (CC0).|Cuando hace muchos años que el autor/a ha muerto (en España, en general, 70 años), la obra la puede usar todo el mundo. También hay autores/as que ponen sus obras en él voluntariamente (CC0)."],
+      ["On trobo imatges que es puguin fer servir?|¿Dónde encuentro imágenes que se puedan usar?", "En bancs d'imatges amb llicències lliures o de domini públic, i als cercadors filtrant per llicència. A la classe, millor les de Numi o dibuixos vostres. Sempre cal mirar i citar la llicència.|En bancos de imágenes con licencias libres o de dominio público, y en los buscadores filtrando por licencia. En clase, mejor las de Numi o dibujos vuestros. Siempre hay que mirar y citar la licencia."],
+      ["Citar la font és el mateix que tenir permís?|¿Citar la fuente es lo mismo que tener permiso?", "No: citar és obligatori sempre, però no dona permís. Si l'obra no té llicència lliure, cal demanar-lo a l'autor/a.|No: citar es obligatorio siempre, pero no da permiso. Si la obra no tiene licencia libre, hay que pedirlo al autor/a."],
+      ["Els textos també tenen drets?|¿Los textos también tienen derechos?", "Sí. Per això escrivim amb les nostres paraules i, si fem servir una frase exacta d'algú, la posem entre cometes i diem de qui és.|Sí. Por eso escribimos con nuestras palabras y, si usamos una frase exacta de alguien, la ponemos entre comillas y decimos de quién es."]
+    ],
+    tec: [
+      ["La llegenda surt lluny de la imatge o a fora de la figura.|La leyenda sale lejos de la imagen o fuera de la figura.", "El &lt;figcaption&gt; ha d'anar dins de &lt;figure&gt;, abans de &lt;/figure&gt;. Mireu on es tanca la figura.|El &lt;figcaption&gt; tiene que ir dentro de &lt;figure&gt;, antes de &lt;/figure&gt;. Mirad dónde se cierra la figura."],
+      ["La font de la llegenda no surt com a enllaç.|La fuente de la leyenda no sale como enlace.", "Cal un &lt;a href=&quot;https://…&quot;&gt; amb l'adreça completa (amb https://) i tancat amb &lt;/a&gt;.|Hace falta un &lt;a href=&quot;https://…&quot;&gt; con la dirección completa (con https://) y cerrado con &lt;/a&gt;."],
+      ["Busquen imatges a internet per posar-les a la pàgina.|Buscan imágenes en internet para ponerlas en la página.", "A l'app només es poden fer servir les imatges de Numi (botó «Imatges»). És una bona ocasió per parlar del semàfor: d'on surt cada imatge?|En la app solo se pueden usar las imágenes de Numi (botón «Imágenes»). Es una buena ocasión para hablar del semáforo: ¿de dónde sale cada imagen?"]
+    ],
+    seg: [
+      "Fotos de persones: mai sense el seu permís, i encara menys de menors. És una qüestió de privadesa, no només de drets d'autor.|Fotos de personas: nunca sin su permiso, y todavía menos de menores. Es una cuestión de privacidad, no solo de derechos de autor.",
+      "Al semàfor, si dubteu, sempre vermell: demanar permís o buscar-ne una altra.|En el semáforo, si dudáis, siempre rojo: pedir permiso o buscar otra.",
+      "No feu cerques d'imatges obertes a classe sense supervisió: hi pot sortir contingut inadequat.|No hagáis búsquedas de imágenes abiertas en clase sin supervisión: puede salir contenido inadecuado."
+    ],
+    extra: [
+      "Buscar la llicència d'una imatge d'un llibre de text o d'un museu i escriure'n la cita completa.|Buscar la licencia de una imagen de un libro de texto o de un museo y escribir su cita completa.",
+      "Fer un dibuix propi, triar-hi una llicència Creative Commons i explicar per què.|Hacer un dibujo propio, elegirle una licencia Creative Commons y explicar por qué.",
+      "Afegir a la notícia una cita textual entre cometes amb el nom de qui la va dir.|Añadir a la noticia una cita textual entre comillas con el nombre de quien la dijo."
+    ],
+    trans: [
+      "Sessió següent: el projecte de la unitat, la fitxa completa d'un animal amb fonts.|Sesión siguiente: el proyecto de la unidad, la ficha completa de un animal con fuentes.",
+      "Treballs de recerca de qualsevol matèria: la bibliografia i les cites.|Trabajos de investigación de cualquier materia: la bibliografía y las citas.",
+      "Educació en valors: respectar la feina dels altres a la xarxa.|Educación en valores: respetar el trabajo de los demás en la red."
+    ]
+  },
+  'w3-4': {
+    intro: "Sessió de projecte que tanca la unitat: l'alumnat fa la fitxa completa d'un animal per a l'Animalari amb tot el que ha après: títol, índex amb salts, figura amb imatge, alt i llegenda amb l'autor/a, dades en una llista amb &lt;strong&gt;, seccions amb id i una secció de fonts amb enllaços. Primer fa l'esbós en paper; després assaja les peces amb la fitxa del lloro; revisa una fitxa amb una llista (alt, enllaços de l'índex, fonts) com un/a professional; i finalment construeix la seva i la fa revisar per un company/a. És un bon moment per avaluar la unitat amb la rúbrica.|Sesión de proyecto que cierra la unidad: el alumnado hace la ficha completa de un animal para el Animalario con todo lo que ha aprendido: título, índice con saltos, figura con imagen, alt y leyenda con el autor/a, datos en una lista con &lt;strong&gt;, secciones con id y una sección de fuentes con enlaces. Primero hace el boceto en papel; después ensaya las piezas con la ficha del loro; revisa una ficha con una lista (alt, enlaces del índice, fuentes) como un/a profesional; y finalmente construye la suya y la hace revisar por un compañero/a. Es un buen momento para evaluar la unidad con la rúbrica.",
+    claus: [
+      "L'esbós en paper decideix què hi haurà i en quin ordre abans d'escriure codi.|El boceto en papel decide qué habrá y en qué orden antes de escribir código.",
+      "Una fitxa completa: &lt;h1&gt;, índex, &lt;figure&gt; amb alt i llegenda, llista de dades, seccions amb id i fonts.|Una ficha completa: &lt;h1&gt;, índice, &lt;figure&gt; con alt y leyenda, lista de datos, secciones con id y fuentes.",
+      "Revisar amb una llista: cada imatge té alt, cada enllaç de l'índex té el seu id i hi ha fonts.|Revisar con una lista: cada imagen tiene alt, cada enlace del índice tiene su id y hay fuentes.",
+      "Les dades són fets: cal treure-les d'un lloc de confiança i dir-ne la font.|Los datos son hechos: hay que sacarlos de un sitio de confianza y decir su fuente."
+    ],
+    prev: [
+      "Imatges amb alt, enllaços i salts amb #id, figure i figcaption (sessions 1-3 de la unitat).|Imágenes con alt, enlaces y saltos con #id, figure y figcaption (sesiones 1-3 de la unidad).",
+      "Llistes i &lt;strong&gt; (unitat 2).|Listas y &lt;strong&gt; (unidad 2).",
+      "Buscar dues o tres dades d'un animal en un llibre o una web de confiança.|Buscar dos o tres datos de un animal en un libro o una web de confianza."
+    ],
+    faq: [
+      ["Puc fer la fitxa d'un animal que no surt a les imatges?|¿Puedo hacer la ficha de un animal que no sale en las imágenes?", "Sí: feu-la de l'animal que vulgueu i trieu una imatge de Numi que s'hi assembli, o una icona (botó «Imatges»). L'alt ha de descriure el dibuix que es veu.|Sí: hacedla del animal que queráis y elegid una imagen de Numi que se le parezca, o un icono (botón «Imágenes»). El alt tiene que describir el dibujo que se ve."],
+      ["Quantes fonts calen?|¿Cuántas fuentes hacen falta?", "Almenys una per a les dades i el crèdit de la imatge a la llegenda. Si heu fet servir un llibre, també compta: títol, autor/a i any.|Al menos una para los datos y el crédito de la imagen en la leyenda. Si habéis usado un libro, también cuenta: título, autor/a y año."],
+      ["Les adreces de les fonts han de ser de veritat?|¿Las direcciones de las fuentes tienen que ser de verdad?", "A les fitxes d'exemple són inventades (.numi). A la vostra, si heu fet servir una web real de confiança, poseu-ne l'adreça; si és un llibre, escriviu-ne les dades sense enllaç.|En las fichas de ejemplo son inventadas (.numi). En la vuestra, si habéis usado una web real de confianza, poned su dirección; si es un libro, escribid sus datos sin enlace."],
+      ["Puc copiar el text de la web d'on trec les dades?|¿Puedo copiar el texto de la web de donde saco los datos?", "Millor no: llegiu, enteneu i escriviu-ho amb les vostres paraules. Les dades (pesa 4 kg, viu 60 anys) sí que les podeu fer servir, citant d'on surten.|Mejor no: leed, entended y escribidlo con vuestras palabras. Los datos (pesa 4 kg, vive 60 años) sí que los podéis usar, citando de dónde salen."]
+    ],
+    tec: [
+      ["La plantilla és llarga i al mòbil costa trobar on escriure.|La plantilla es larga y en el móvil cuesta encontrar dónde escribir.", "Cada part té un comentari &lt;!-- … --&gt; en gris: que escriguin a sota de cada comentari, en ordre. La barra d'estat diu en quina línia són.|Cada parte tiene un comentario &lt;!-- … --&gt; en gris: que escriban debajo de cada comentario, en orden. La barra de estado dice en qué línea están."],
+      ["Hi ha moltes comprovacions i no saben quina falta.|Hay muchas comprobaciones y no saben cuál falta.", "La barra de les comprovacions mostra la primera que falta; si la toqueu, surt la llista sencera amb les fetes en verd.|La barra de las comprobaciones muestra la primera que falta; si la tocáis, sale la lista entera con las hechas en verde."],
+      ["Un enllaç de l'índex no salta.|Un enlace del índice no salta.", "L'href (#nom) i l'id (nom) han de coincidir exactament. A la vista prèvia els salts dins de la pàgina sí que funcionen: proveu-los.|El href (#nombre) y el id (nombre) tienen que coincidir exactamente. En la vista previa los saltos dentro de la página sí que funcionan: probadlos."]
+    ],
+    seg: [
+      "Revisió entre companys amb la fitxa: comentaris concrets i amables, mai sobre la persona.|Revisión entre compañeros con la ficha: comentarios concretos y amables, nunca sobre la persona.",
+      "Si busqueu dades a internet, feu-ho en webs de confiança (enciclopèdies, museus, parcs naturals) i amb un adult a prop.|Si buscáis datos en internet, hacedlo en webs de confianza (enciclopedias, museos, parques naturales) y con un adulto cerca.",
+      "Pausa activa del lloro i el mussol entre l'assaig i el projecte.|Pausa activa del loro y el búho entre el ensayo y el proyecto."
+    ],
+    extra: [
+      "Afegir una segona figura (per exemple, on viu) amb la seva llegenda.|Añadir una segunda figura (por ejemplo, dónde vive) con su leyenda.",
+      "Fer una portada de l'Animalari amb un menú que enllaci les fitxes de tres companys/es (tortuga.html, lloro.html…).|Hacer una portada del Animalario con un menú que enlace las fichas de tres compañeros/as (tortuga.html, lloro.html…).",
+      "Comprovar les dades de la fitxa en una segona font i dir si coincideixen.|Comprobar los datos de la ficha en una segunda fuente y decir si coinciden."
+    ],
+    trans: [
+      "Unitat 4: el CSS, per donar colors, lletres i estil a les fitxes.|Unidad 4: el CSS, para dar colores, letras y estilo a las fichas.",
+      "Ciències naturals: la fitxa d'un ésser viu (com és, on viu, què menja).|Ciencias naturales: la ficha de un ser vivo (cómo es, dónde vive, qué come).",
+      "Competència informacional: buscar, contrastar i citar dades.|Competencia informacional: buscar, contrastar y citar datos."
+    ]
+  }
+}).forEach(([id, g]) => Object.assign(TGUIDE[id], g));
+
 /* ── unitat 4 ── */
 /* Tech Web · unitat 4 «CSS» · guia del professorat (sessions w4-1 … w4-4)
    Classe de 60 minuts: presentació projectada (amb demos de codi i resultat), una activitat sense pantalla amb el seu
@@ -2608,6 +3127,178 @@ Object.assign(TGUIDE, (() => {
   };
 })());
 
+/* ---------- Guia completa (unitat 4): la sessió en breu, idees clau, coneixements previs, preguntes que faran, què fer si
+   alguna cosa falla, seguretat i benestar, per anar més enllà i connexions ---------- */
+Object.entries({
+  'w4-1': {
+    intro: "Primera sessió de CSS. L'alumnat entén la diferència entre l'HTML (què hi ha a la pàgina) i el CSS (com es veu), i aprèn l'anatomia d'una regla: selector, claus, propietat, dos punts, valor i punt i coma. Escriu les primeres regles amb color, font-size i text-align, primer amb ajuda i després des de zero, i aprèn a trobar els dos errors més habituals: el punt i coma i la clau que falten. A l'activitat sense pantalla, l'alumnat fa de navegador i pinta amb llapis de colors una pàgina seguint les regles que li donen. La idea clau és que el navegador no entén desitjos («posa'l vermell, si us plau»), sinó regles escrites d'una manera exacta.|Primera sesión de CSS. El alumnado entiende la diferencia entre el HTML (qué hay en la página) y el CSS (cómo se ve), y aprende la anatomía de una regla: selector, llaves, propiedad, dos puntos, valor y punto y coma. Escribe las primeras reglas con color, font-size y text-align, primero con ayuda y después desde cero, y aprende a encontrar los dos errores más habituales: el punto y coma y la llave que faltan. En la actividad sin pantalla, el alumnado hace de navegador y pinta con lápices de colores una página siguiendo las reglas que le dan. La idea clave es que el navegador no entiende deseos («ponlo rojo, por favor»), sino reglas escritas de una manera exacta.",
+    claus: [
+      "L'HTML diu què hi ha; el CSS diu com es veu. Normalment van en fitxers separats (estil.css).|El HTML dice qué hay; el CSS dice cómo se ve. Normalmente van en archivos separados (estil.css).",
+      "Una regla: selector { propietat: valor; }. El selector diu a quins elements s'aplica.|Una regla: selector { propiedad: valor; }. El selector dice a qué elementos se aplica.",
+      "Cada declaració acaba amb punt i coma i cada regla es tanca amb }: si en falta un, el navegador se salta part de l'estil.|Cada declaración acaba con punto y coma y cada regla se cierra con }: si falta uno, el navegador se salta parte del estilo.",
+      "Una regla per a h1 s'aplica a tots els &lt;h1&gt; de la pàgina alhora.|Una regla para h1 se aplica a todos los &lt;h1&gt; de la página a la vez."
+    ],
+    prev: [
+      "L'HTML de les unitats 2 i 3: títols, paràgrafs, llistes, imatges i enllaços.|El HTML de las unidades 2 y 3: títulos, párrafos, listas, imágenes y enlaces.",
+      "El nom d'alguns colors en anglès i què és un píxel (px).|El nombre de algunos colores en inglés y qué es un píxel (px).",
+      "Trobar al teclat les claus { } i el punt i coma (o fer servir els botons de l'editor).|Encontrar en el teclado las llaves { } y el punto y coma (o usar los botones del editor)."
+    ],
+    faq: [
+      ["Per què el CSS va en un fitxer a part?|¿Por qué el CSS va en un archivo aparte?", "Perquè un sol fitxer d'estil pot donar el mateix aspecte a totes les pàgines d'una web: si canvies un color, canvia a totes. A l'editor ja està enllaçat: escriviu-lo a la pestanya estil.css.|Porque un solo archivo de estilo puede dar el mismo aspecto a todas las páginas de una web: si cambias un color, cambia en todas. En el editor ya está enlazado: escribidlo en la pestaña estil.css."],
+      ["Quants colors amb nom hi ha?|¿Cuántos colores con nombre hay?", "Uns 140 (crimson, teal, navy, gold…). A la sessió següent aprendrem a fer qualsevol dels milions de colors de la pantalla amb codis.|Unos 140 (crimson, teal, navy, gold…). En la sesión siguiente aprenderemos a hacer cualquiera de los millones de colores de la pantalla con códigos."],
+      ["Puc escriure el CSS dins de l'HTML?|¿Puedo escribir el CSS dentro del HTML?", "Sí, dins d'una etiqueta &lt;style&gt; al &lt;head&gt; o amb l'atribut style. Però és més ordenat tenir-lo a part, i és el que fan els professionals.|Sí, dentro de una etiqueta &lt;style&gt; en el &lt;head&gt; o con el atributo style. Pero es más ordenado tenerlo aparte, y es lo que hacen los profesionales."],
+      ["L'ordre de les declaracions dins de la regla importa?|¿El orden de las declaraciones dentro de la regla importa?", "No, mentre cadascuna acabi amb punt i coma. Si dues regles diuen coses diferents al mateix element, guanya l'última (en general).|No, mientras cada una acabe con punto y coma. Si dos reglas dicen cosas diferentes al mismo elemento, gana la última (en general)."],
+      ["Per què text-align i no align-text?|¿Por qué text-align y no align-text?", "Els noms de les propietats estan fixats en anglès i s'han d'escriure exactament. Una lletra canviada i el navegador no la reconeix (i no fa res).|Los nombres de las propiedades están fijados en inglés y se tienen que escribir exactamente. Una letra cambiada y el navegador no la reconoce (y no hace nada)."]
+    ],
+    tec: [
+      ["Han escrit el CSS a la pestanya HTML i surt com a text a la pàgina.|Han escrito el CSS en la pestaña HTML y sale como texto en la página.", "El CSS va a la pestanya estil.css. Que tallin el text (Ctrl+X), canviïn de pestanya i l'enganxin (Ctrl+V).|El CSS va en la pestaña estil.css. Que corten el texto (Ctrl+X), cambien de pestaña y lo peguen (Ctrl+V)."],
+      ["La meitat de les regles no fan res.|La mitad de las reglas no hacen nada.", "Falta un punt i coma o una clau de tancar en una regla d'abans: el navegador s'hi encalla. La barra d'estat avisa del primer error.|Falta un punto y coma o una llave de cierre en una regla de antes: el navegador se atasca. La barra de estado avisa del primer error."],
+      ["No troben les claus { } al teclat.|No encuentran las llaves { } en el teclado.", "En molts teclats: AltGr + la tecla de l'accent obert o la de la ç. Si costa, l'editor fa una nova línia sagnada en prémer Retorn després de {, i hi ha botons per inserir regles.|En muchos teclados: AltGr + la tecla del acento abierto o la de la ç. Si cuesta, el editor hace una nueva línea sangrada al pulsar Intro después de {, y hay botones para insertar reglas."],
+      ["El color del valor surt subratllat al codi.|El color del valor sale subrayado en el código.", "És una ajuda de l'editor: sota cada color hi ha una ratlla d'aquell color. Si no surt la ratlla, el nom del color potser està mal escrit.|Es una ayuda del editor: debajo de cada color hay una raya de ese color. Si no sale la raya, el nombre del color quizá está mal escrito."]
+    ],
+    seg: [
+      "Llapis de colors compartits per parella: es tornen al pot quan s'acaba l'activitat.|Lápices de colores compartidos por pareja: se devuelven al bote cuando termina la actividad.",
+      "Pensar en els daltònics i en qui hi veu poc: no feu servir només el color per dir coses importants.|Pensar en los daltónicos y en quien ve poco: no uséis solo el color para decir cosas importantes.",
+      "Pausa activa de la regla amb el cos al minut 25-30.|Pausa activa de la regla con el cuerpo hacia el minuto 25-30."
+    ],
+    extra: [
+      "Afegir una regla per a li amb un color i una mida diferents dels paràgrafs.|Añadir una regla para li con un color y un tamaño diferentes de los párrafos.",
+      "Fer dues versions d'estil per a la mateixa pàgina (una de festa i una de seriosa) canviant només el CSS.|Hacer dos versiones de estilo para la misma página (una de fiesta y una seria) cambiando solo el CSS.",
+      "Escriure en paper una regla amb tres errors per a un company/a.|Escribir en papel una regla con tres errores para un compañero/a."
+    ],
+    trans: [
+      "Sessió següent: els colors en codi (hex i rgb) i el contrast perquè tothom ho pugui llegir.|Sesión siguiente: los colores en código (hex y rgb) y el contraste para que todo el mundo lo pueda leer.",
+      "Educació visual i plàstica: el color, la composició i la jerarquia visual.|Educación visual y plástica: el color, la composición y la jerarquía visual.",
+      "Llengua anglesa: el vocabulari del CSS (color, size, align, center).|Lengua inglesa: el vocabulario del CSS (color, size, align, center)."
+    ]
+  },
+  'w4-2': {
+    intro: "L'alumnat descobreix com fa els colors una pantalla: cada píxel barreja llum vermella, verda i blava. Aprèn a escriure colors amb nom, en hex (#RRGGBB) i amb rgb(), i a deduir si un codi hex és clar o fosc mirant-ne les xifres. Distingeix color (el text) de background-color (el fons) i treballa el contrast: un text que no es llegeix és un text que no existeix, sobretot per a qui hi veu poc o mira el mòbil al sol. A la segona part apareixen les classes (class=&quot;avis&quot; a l'HTML i .avis al CSS) per donar estil només a alguns elements. L'activitat sense pantalla descodifica colors hex amb llapis.|El alumnado descubre cómo hace los colores una pantalla: cada píxel mezcla luz roja, verde y azul. Aprende a escribir colores con nombre, en hex (#RRGGBB) y con rgb(), y a deducir si un código hex es claro u oscuro mirando sus cifras. Distingue color (el texto) de background-color (el fondo) y trabaja el contraste: un texto que no se lee es un texto que no existe, sobre todo para quien ve poco o mira el móvil al sol. En la segunda parte aparecen las clases (class=&quot;avis&quot; en el HTML y .avis en el CSS) para dar estilo solo a algunos elementos. La actividad sin pantalla descodifica colores hex con lápices.",
+    claus: [
+      "La pantalla barreja llum vermella, verda i blava: rgb(255, 0, 0) és vermell; rgb(255, 255, 255), blanc.|La pantalla mezcla luz roja, verde y azul: rgb(255, 0, 0) es rojo; rgb(255, 255, 255), blanco.",
+      "Hex: # i sis xifres (de 0 a F) per al vermell, el verd i el blau. 00 = apagat, FF = al màxim.|Hex: # y seis cifras (de 0 a F) para el rojo, el verde y el azul. 00 = apagado, FF = al máximo.",
+      "color pinta el text i background-color, el fons: han de contrastar (fosc sobre clar o clar sobre fosc).|color pinta el texto y background-color, el fondo: tienen que contrastar (oscuro sobre claro o claro sobre oscuro).",
+      "Una classe: class=&quot;avis&quot; a l'HTML i .avis { … } al CSS; el punt només va al CSS.|Una clase: class=&quot;avis&quot; en el HTML y .avis { … } en el CSS; el punto solo va en el CSS."
+    ],
+    prev: [
+      "Escriure regles de CSS amb color (sessió anterior).|Escribir reglas de CSS con color (sesión anterior).",
+      "Saber que els números van de 0 a 9 i, per als hex, conèixer que les lletres A-F valen de 10 a 15.|Saber que los números van de 0 a 9 y, para los hex, conocer que las letras A-F valen de 10 a 15.",
+      "Haver barrejat colors amb pintura (per comparar-ho amb la llum).|Haber mezclado colores con pintura (para compararlo con la luz)."
+    ],
+    faq: [
+      ["Per què el vermell i el verd fan groc, si amb pintura fan marró?|¿Por qué el rojo y el verde hacen amarillo, si con pintura hacen marrón?", "Amb llum, els colors se sumen (cada llum n'afegeix): és la barreja additiva. Amb pintura, cada color absorbeix part de la llum i en queda menys: és la barreja subtractiva.|Con luz, los colores se suman (cada luz añade): es la mezcla aditiva. Con pintura, cada color absorbe parte de la luz y queda menos: es la mezcla sustractiva."],
+      ["Quants colors pot fer una pantalla?|¿Cuántos colores puede hacer una pantalla?", "Amb 256 valors per a cada llum: 256 × 256 × 256 = 16.777.216 colors.|Con 256 valores para cada luz: 256 × 256 × 256 = 16.777.216 colores."],
+      ["Com sé si un color té prou contrast?|¿Cómo sé si un color tiene suficiente contraste?", "Una pista: si el text és fosc (xifres hex baixes, com #1D2433) sobre fons clar (xifres altes, com #F5F5F5), anirà bé. Les eines de contrast calculen un número: per a text normal, cal com a mínim 4,5 a 1.|Una pista: si el texto es oscuro (cifras hex bajas, como #1D2433) sobre fondo claro (cifras altas, como #F5F5F5), irá bien. Las herramientas de contraste calculan un número: para texto normal, hace falta como mínimo 4,5 a 1."],
+      ["Puc posar dues classes al mateix element?|¿Puedo poner dos clases al mismo elemento?", "Sí, separades per un espai: class=&quot;avis gran&quot;. L'element agafa l'estil de les dues regles.|Sí, separadas por un espacio: class=&quot;avis gran&quot;. El elemento coge el estilo de las dos reglas."],
+      ["Les majúscules dels codis hex importen?|¿Las mayúsculas de los códigos hex importan?", "No: #2e7d32 i #2E7D32 són el mateix color. Els noms de les classes sí que distingeixen majúscules: .Avis i .avis són diferents.|No: #2e7d32 y #2E7D32 son el mismo color. Los nombres de las clases sí distinguen mayúsculas: .Avis y .avis son diferentes."]
+    ],
+    tec: [
+      ["El color hex no s'aplica.|El color hex no se aplica.", "Falta el # o té un nombre de xifres que no és 3 ni 6 (o hi ha una lletra que no és de la A a la F). La ratlla de color de sota el valor no surt quan el codi no és bo.|Falta el # o tiene un número de cifras que no es 3 ni 6 (o hay una letra que no es de la A a la F). La raya de color de debajo del valor no sale cuando el código no es bueno."],
+      ["La classe no fa res.|La clase no hace nada.", "A l'HTML va sense punt (class=&quot;avis&quot;) i al CSS amb punt (.avis). Comproveu que el nom és idèntic als dos llocs.|En el HTML va sin punto (class=&quot;avis&quot;) y en el CSS con punto (.avis). Comprobad que el nombre es idéntico en los dos sitios."],
+      ["Han posat background-color a p i volen tot el fons de la pàgina.|Han puesto background-color a p y quieren todo el fondo de la página.", "El fons de tota la pàgina es posa al body: body { background-color: … ; }.|El fondo de toda la página se pone en el body: body { background-color: … ; }."]
+    ],
+    seg: [
+      "Recordeu que alguns companys/es poden distingir malament alguns colors (daltonisme): el contrast i el text ajuden tothom.|Recordad que algunos compañeros/as pueden distinguir mal algunos colores (daltonismo): el contraste y el texto ayudan a todo el mundo.",
+      "Brillantor de la pantalla moderada; si algú es cansa amb fons molt saturats, que triï colors més suaus.|Brillo de la pantalla moderado; si alguien se cansa con fondos muy saturados, que elija colores más suaves.",
+      "Pausa activa del píxel (braços i cames) a mitja sessió.|Pausa activa del píxel (brazos y piernas) a mitad de sesión."
+    ],
+    extra: [
+      "Fer una paleta de cinc colors hex que combinin i escriure al costat si són clars o foscos.|Hacer una paleta de cinco colores hex que combinen y escribir al lado si son claros u oscuros.",
+      "Escriure el mateix color de tres maneres: amb nom, en hex i amb rgb() (per exemple, navy = #000080 = rgb(0, 0, 128)).|Escribir el mismo color de tres maneras: con nombre, en hex y con rgb() (por ejemplo, navy = #000080 = rgb(0, 0, 128)).",
+      "Comprovar el contrast dels colors del cartell amb una eina de contrast en línia (amb el professor/a).|Comprobar el contraste de los colores del cartel con una herramienta de contraste en línea (con el profesor/a)."
+    ],
+    trans: [
+      "Sessió següent: els tipus de lletra, les mides i la diferència entre classe i id.|Sesión siguiente: los tipos de letra, los tamaños y la diferencia entre clase e id.",
+      "Ciències: la llum i els colors (barreja additiva i subtractiva).|Ciencias: la luz y los colores (mezcla aditiva y sustractiva).",
+      "Matemàtiques: el sistema hexadecimal (base 16) i les combinacions (256³).|Matemáticas: el sistema hexadecimal (base 16) y las combinaciones (256³)."
+    ]
+  },
+  'w4-3': {
+    intro: "L'alumnat aprèn a triar la lletra d'una web: les quatre famílies genèriques (serif, sans-serif, monospace i cursive), per què la llista de font-family acaba sempre amb una genèrica (perquè la lletra triada potser no és a l'ordinador de qui mira) i com fer jerarquia amb font-size: títol gran, subtítols menys i text de 16px o més. També veu negreta, cursiva i alineació, i la regla d'or del disseny: com a molt dues lletres per pàgina. A la segona part descobreix l'id (#nom), únic a la pàgina, i el compara amb la classe (.nom), que es pot repetir. A l'activitat sense pantalla, el professor/a fa de navegador i «crida» regles en veu alta.|El alumnado aprende a elegir la letra de una web: las cuatro familias genéricas (serif, sans-serif, monospace y cursive), por qué la lista de font-family acaba siempre con una genérica (porque la letra elegida quizá no está en el ordenador de quien mira) y cómo hacer jerarquía con font-size: título grande, subtítulos menos y texto de 16px o más. También ve negrita, cursiva y alineación, y la regla de oro del diseño: como mucho dos letras por página. En la segunda parte descubre el id (#nombre), único en la página, y lo compara con la clase (.nombre), que se puede repetir. En la actividad sin pantalla, el profesor/a hace de navegador y «grita» reglas en voz alta.",
+    claus: [
+      "font-family: una llista de lletres que acaba en una família genèrica (serif, sans-serif, monospace o cursive).|font-family: una lista de letras que acaba en una familia genérica (serif, sans-serif, monospace o cursive).",
+      "font-size fa jerarquia: el títol més gran, els subtítols menys i el text de lectura de 16px o més.|font-size hace jerarquía: el título más grande, los subtítulos menos y el texto de lectura de 16px o más.",
+      "Com a molt dues lletres per pàgina: massa lletres fan la pàgina desordenada i difícil de llegir.|Como mucho dos letras por página: demasiadas letras hacen la página desordenada y difícil de leer.",
+      "Classe (.nom) per a molts elements; id (#nom) per a un de sol a tota la pàgina.|Clase (.nombre) para muchos elementos; id (#nombre) para uno solo en toda la página."
+    ],
+    prev: [
+      "Regles de CSS, colors i classes (sessions 1 i 2).|Reglas de CSS, colores y clases (sesiones 1 y 2).",
+      "Saber què és un píxel i comparar mides (més gran, més petit).|Saber qué es un píxel y comparar tamaños (más grande, más pequeño).",
+      "Haver vist lletres diferents en llibres, rètols o revistes.|Haber visto letras diferentes en libros, rótulos o revistas."
+    ],
+    faq: [
+      ["Per què la meva lletra preferida no surt?|¿Por qué mi letra preferida no sale?", "El navegador només pot fer servir lletres instal·lades a l'aparell de qui mira (o carregades des de la web). Per això la llista acaba amb una genèrica: si no hi és, en fa servir una de semblant.|El navegador solo puede usar letras instaladas en el aparato de quien mira (o cargadas desde la web). Por eso la lista acaba con una genérica: si no está, usa una parecida."],
+      ["Quina diferència hi ha entre serif i sans-serif?|¿Qué diferencia hay entre serif y sans-serif?", "Les serif tenen uns petits peus (serifes) a les puntes de les lletres, com als diaris; les sans-serif (sense serifes) són més netes i es llegeixen molt bé a les pantalles.|Las serif tienen unos pequeños pies (serifas) en las puntas de las letras, como en los periódicos; las sans-serif (sin serifas) son más limpias y se leen muy bien en las pantallas."],
+      ["Per què el nom d'algunes lletres va entre cometes?|¿Por qué el nombre de algunas letras va entre comillas?", "Si el nom té espais (&quot;Times New Roman&quot;), s'escriu entre cometes perquè el navegador sàpiga on comença i on acaba.|Si el nombre tiene espacios (&quot;Times New Roman&quot;), se escribe entre comillas para que el navegador sepa dónde empieza y dónde acaba."],
+      ["Per què 16px com a mínim?|¿Por qué 16px como mínimo?", "És la mida que els navegadors fan servir per defecte i la que es llegeix bé al mòbil sense fer zoom. Més petit cansa la vista.|Es el tamaño que los navegadores usan por defecto y el que se lee bien en el móvil sin hacer zoom. Más pequeño cansa la vista."],
+      ["Si l'id és únic, per què no el faig servir sempre?|Si el id es único, ¿por qué no lo uso siempre?", "Perquè si demà vols el mateix estil a dos elements, l'id no et deixa. Per a l'estil, normalment classes; l'id, per a coses úniques (i per als enllaços #id).|Porque si mañana quieres el mismo estilo en dos elementos, el id no te deja. Para el estilo, normalmente clases; el id, para cosas únicas (y para los enlaces #id)."]
+    ],
+    tec: [
+      ["La lletra no canvia tot i que la regla és bona.|La letra no cambia aunque la regla es buena.", "Potser la lletra no és a l'ordinador i el navegador fa servir la genèrica, que s'assembla a la d'abans. Proveu de canviar la genèrica (serif ↔ sans-serif) per veure-hi la diferència.|Quizá la letra no está en el ordenador y el navegador usa la genérica, que se parece a la de antes. Probad a cambiar la genérica (serif ↔ sans-serif) para ver la diferencia."],
+      ["La mida no s'aplica (font-size: 30).|El tamaño no se aplica (font-size: 30).", "Falta la unitat: font-size: 30px. Sense unitat, el navegador no sap si són píxels o una altra cosa i ho ignora.|Falta la unidad: font-size: 30px. Sin unidad, el navegador no sabe si son píxeles u otra cosa y lo ignora."],
+      ["La regla #portada no fa res.|La regla #portada no hace nada.", "A l'HTML ha de ser id=&quot;portada&quot; (sense #) i al CSS #portada (amb #). Compte a no escriure class en lloc d'id.|En el HTML tiene que ser id=&quot;portada&quot; (sin #) y en el CSS #portada (con #). Cuidado con no escribir class en lugar de id."]
+    ],
+    seg: [
+      "A l'activitat del navegador que crida, les targetes es porten penjades amb pinces o cinta suau; ningú no surt al passadís.|En la actividad del navegador que grita, las tarjetas se llevan colgadas con pinzas o cinta suave; nadie sale al pasillo.",
+      "Text de 16px o més: pensem en qui llegeix al mòbil o hi veu poc.|Texto de 16px o más: pensamos en quien lee en el móvil o ve poco.",
+      "Pausa activa: escriure el nom a l'aire amb lletres diferents.|Pausa activa: escribir el nombre en el aire con letras diferentes."
+    ],
+    extra: [
+      "Fer la mateixa portada amb una lletra serif i amb una sans-serif i explicar quina transmet què.|Hacer la misma portada con una letra serif y con una sans-serif y explicar cuál transmite qué.",
+      "Afegir una classe .destacat per a dues frases i un id #autor per al nom de qui escriu la revista.|Añadir una clase .destacat para dos frases y un id #autor para el nombre de quien escribe la revista.",
+      "Provar line-height i letter-spacing i descriure com canvia la lectura.|Probar line-height y letter-spacing y describir cómo cambia la lectura."
+    ],
+    trans: [
+      "Sessió següent: el projecte de la unitat, el pòster de la Setmana de la ciència.|Sesión siguiente: el proyecto de la unidad, el póster de la Semana de la ciencia.",
+      "Educació visual i plàstica: la tipografia i la jerarquia en el disseny gràfic.|Educación visual y plástica: la tipografía y la jerarquía en el diseño gráfico.",
+      "Llengua: la diferència entre titular, subtítol i cos del text en una notícia.|Lengua: la diferencia entre titular, subtítulo y cuerpo del texto en una noticia."
+    ]
+  },
+  'w4-4': {
+    intro: "Sessió de projecte que tanca la unitat: cada alumne/a dissenya el pòster web d'una activitat de la Setmana de la ciència. Aplica el que fa que un pòster funcioni: jerarquia (un títol que es veu de lluny, la informació clau i els detalls més petits), una paleta de tres colors amb bon contrast repetida a tot el pòster i una o dues lletres. Primer planifica en paper amb l'esbós; després assaja amb el pòster dels volcans (id, classes, regles); arregla un pòster que no es llegeix; construeix el seu amb almenys cinc regles i una imatge amb alt; i acaba amb la galeria i la prova dels cinc segons d'un company/a.|Sesión de proyecto que cierra la unidad: cada alumno/a diseña el póster web de una actividad de la Semana de la ciencia. Aplica lo que hace que un póster funcione: jerarquía (un título que se ve de lejos, la información clave y los detalles más pequeños), una paleta de tres colores con buen contraste repetida en todo el póster y una o dos letras. Primero planifica en papel con el boceto; después ensaya con el póster de los volcanes (id, clases, reglas); arregla un póster que no se lee; construye el suyo con al menos cinco reglas y una imagen con alt; y termina con la galería y la prueba de los cinco segundos de un compañero/a.",
+    claus: [
+      "Jerarquia: el títol es veu de lluny; després què, quan i on; els detalls, més petits.|Jerarquía: el título se ve de lejos; después qué, cuándo y dónde; los detalles, más pequeños.",
+      "Una paleta de tres colors (fons, text i destacat) amb bon contrast, repetida a tot el pòster.|Una paleta de tres colores (fondo, texto y destacado) con buen contraste, repetida en todo el póster.",
+      "font-family al body: tota la pàgina amb la mateixa lletra; l'id per al títol i classes per a la informació.|font-family en el body: toda la página con la misma letra; el id para el título y clases para la información.",
+      "Planificar → construir → revisar: la prova dels cinc segons diu si el pòster funciona.|Planificar → construir → revisar: la prueba de los cinco segundos dice si el póster funciona."
+    ],
+    prev: [
+      "Regles de CSS, colors (hex) i contrast, lletres i mides, classe i id (sessions 1-3).|Reglas de CSS, colores (hex) y contraste, letras y tamaños, clase e id (sesiones 1-3).",
+      "Imatges amb alt (unitat 3).|Imágenes con alt (unidad 3).",
+      "Fer un esbós en paper amb caixes i fletxes.|Hacer un boceto en papel con cajas y flechas."
+    ],
+    faq: [
+      ["Puc fer servir més de tres colors?|¿Puedo usar más de tres colores?", "Podeu fer servir tons més clars o més foscos dels mateixos, però si poseu molts colors diferents el pòster crida massa i no se sap on mirar.|Podéis usar tonos más claros o más oscuros de los mismos, pero si ponéis muchos colores diferentes el póster grita demasiado y no se sabe dónde mirar."],
+      ["Quines imatges puc posar?|¿Qué imágenes puedo poner?", "Les icones de Numi (img/ic/…, com rocket, star, robot, volcano o flask) i els dibuixos d'img/tech/web/. El botó «Imatges» de l'editor les mostra totes i n'escriu el camí.|Los iconos de Numi (img/ic/…, como rocket, star, robot, volcano o flask) y los dibujos de img/tech/web/. El botón «Imágenes» del editor los muestra todos y escribe su ruta."],
+      ["Què és la prova dels cinc segons?|¿Qué es la prueba de los cinco segundos?", "Un company/a mira el pòster cinc segons i després ha de dir què és, quan i on. Si ho sap, la jerarquia funciona.|Un compañero/a mira el póster cinco segundos y después tiene que decir qué es, cuándo y dónde. Si lo sabe, la jerarquía funciona."],
+      ["L'activitat del pòster ha de ser de veritat?|¿La actividad del póster tiene que ser de verdad?", "No: és la Setmana de la ciència inventada del poble. Podeu inventar-vos l'activitat, el dia i el lloc (sense adreces reals de cases).|No: es la Semana de la ciencia inventada del pueblo. Podéis inventaros la actividad, el día y el lugar (sin direcciones reales de casas)."]
+    ],
+    tec: [
+      ["La imatge de la icona no surt.|La imagen del icono no sale.", "Les icones són .webp: img/ic/rocket.webp (no .svg). El botó «Imatges» escriu el camí correcte.|Los iconos son .webp: img/ic/rocket.webp (no .svg). El botón «Imágenes» escribe la ruta correcta."],
+      ["El títol no agafa el color de la regla #titol.|El título no coge el color de la regla #titol.", "Mireu que l'HTML digui id=&quot;titol&quot; i el CSS #titol. Si hi ha també una regla h1 amb un altre color, l'id guanya; si no canvia, hi ha un error abans (punt i coma o clau).|Mirad que el HTML diga id=&quot;titol&quot; y el CSS #titol. Si hay también una regla h1 con otro color, el id gana; si no cambia, hay un error antes (punto y coma o llave)."],
+      ["Volen veure el pòster gran per a la galeria.|Quieren ver el póster grande para la galería.", "Obriu-lo a «Projectes»: es veu en l'aparell que trieu (mòbil o ordinador). També es pot descarregar com a fitxer .html i obrir-lo en un navegador a pantalla completa.|Abridlo en «Proyectos»: se ve en el aparato que elijáis (móvil u ordenador). También se puede descargar como archivo .html y abrirlo en un navegador a pantalla completa."]
+    ],
+    seg: [
+      "A la galeria, les notes adhesives diuen una cosa que funciona i una millora concreta, amb respecte.|En la galería, las notas adhesivas dicen algo que funciona y una mejora concreta, con respeto.",
+      "Cap dada real de contacte al pòster (telèfons, adreces o correus personals).|Ningún dato real de contacto en el póster (teléfonos, direcciones o correos personales).",
+      "Pausa activa del pòster vivent abans de començar el projecte.|Pausa activa del póster viviente antes de empezar el proyecto."
+    ],
+    extra: [
+      "Fer una segona versió del pòster per a l'ordinador amb el text centrat i més gran (font-size al títol).|Hacer una segunda versión del póster para el ordenador con el texto centrado y más grande (font-size en el título).",
+      "Afegir una classe .preu o .hora que destaqui una dada amb el color de la paleta.|Añadir una clase .preu o .hora que destaque un dato con el color de la paleta.",
+      "Fer la prova dels cinc segons a tres persones i millorar el que hagi fallat.|Hacer la prueba de los cinco segundos a tres personas y mejorar lo que haya fallado."
+    ],
+    trans: [
+      "Unitat 5: les caixes (padding, border, margin) per donar espai i forma a les parts del pòster.|Unidad 5: las cajas (padding, border, margin) para dar espacio y forma a las partes del póster.",
+      "Educació visual i plàstica: el cartell, la jerarquia i la paleta de colors.|Educación visual y plástica: el cartel, la jerarquía y la paleta de colores.",
+      "Ciències: la Setmana de la ciència (volcans, estrelles, robots…).|Ciencias: la Semana de la ciencia (volcanes, estrellas, robots…)."
+    ]
+  }
+}).forEach(([id, g]) => Object.assign(TGUIDE[id], g));
+
+/* les demos de codi de les diapositives, també en castellà (diccionari a la unitat 4) */
+if (typeof webTr === 'function' && typeof WEB_TR45 !== 'undefined') ['w4-1', 'w4-2', 'w4-3', 'w4-4'].forEach(id => TGUIDE[id] && webTr(TGUIDE[id], WEB_TR45));
+
 /* ── unitat 5 ── */
 /* Tech Web · unitat 5 «Caixes» · guia del professorat (w5-1 … w5-4). Classe de 60 minuts; mateix esquema que TGUIDE['r1-1']. */
 Object.assign(TGUIDE, {
@@ -3264,6 +3955,176 @@ Object.assign(TGUIDE, {
   }
 });
 
+/* ---------- Guia completa (unitat 5): la sessió en breu, idees clau, coneixements previs, preguntes que faran, què fer si
+   alguna cosa falla, seguretat i benestar, per anar més enllà i connexions ---------- */
+Object.entries({
+  'w5-1': {
+    intro: "L'alumnat descobreix el secret del disseny web: al navegador, tot element és una caixa rectangular, encara que no es vegi. Ho comprova pintant el fons dels elements amb background-color, agrupa títol i text dins d'un &lt;div&gt; amb una classe (com els ous a la capsa) i coneix les quatre capes de cada caixa, de dins cap a fora: contingut, padding, border i margin, amb l'exemple d'un quadre amb paspartú i marc. També aprèn a donar amplada amb width, en px (fixa) i en % (relativa a l'espai), i a no oblidar mai la unitat. És la base de tota la unitat i del projecte de la targeta del videojoc.|El alumnado descubre el secreto del diseño web: en el navegador, todo elemento es una caja rectangular, aunque no se vea. Lo comprueba pintando el fondo de los elementos con background-color, agrupa título y texto dentro de un &lt;div&gt; con una clase (como los huevos en la caja) y conoce las cuatro capas de cada caja, de dentro hacia fuera: contenido, padding, border y margin, con el ejemplo de un cuadro con paspartú y marco. También aprende a dar anchura con width, en px (fija) y en % (relativa al espacio), y a no olvidar nunca la unidad. Es la base de toda la unidad y del proyecto de la tarjeta del videojuego.",
+    claus: [
+      "Cada element és una caixa rectangular: amb background-color la fem visible.|Cada elemento es una caja rectangular: con background-color la hacemos visible.",
+      "&lt;div&gt; és una caixa per agrupar; amb una classe (class=&quot;targeta&quot;) li donem estil.|&lt;div&gt; es una caja para agrupar; con una clase (class=&quot;targeta&quot;) le damos estilo.",
+      "Quatre capes, de dins cap a fora: contingut, padding, border i margin.|Cuatro capas, de dentro hacia fuera: contenido, padding, border y margin.",
+      "width en px és fixa; en % depèn de l'espai que hi ha. Sense unitat (width: 300;) no fa res.|width en px es fija; en % depende del espacio que hay. Sin unidad (width: 300;) no hace nada."
+    ],
+    prev: [
+      "Regles de CSS, colors i classes (unitat 4).|Reglas de CSS, colores y clases (unidad 4).",
+      "Etiquetes que s'obren i es tanquen ben niuades (unitat 2).|Etiquetas que se abren y se cierran bien anidadas (unidad 2).",
+      "Saber què és un percentatge (50 % = la meitat).|Saber qué es un porcentaje (50 % = la mitad)."
+    ],
+    faq: [
+      ["Si tot són caixes, per què no les veig?|Si todo son cajas, ¿por qué no las veo?", "Perquè per defecte són transparents i sense vora. Amb un color de fons o una vora es fan visibles. Els dissenyadors ho fan sovint per entendre una pàgina.|Porque por defecto son transparentes y sin borde. Con un color de fondo o un borde se hacen visibles. Los diseñadores lo hacen a menudo para entender una página."],
+      ["Per a què serveix un &lt;div&gt; si no es veu?|¿Para qué sirve un &lt;div&gt; si no se ve?", "Per agrupar coses i tractar-les com una sola caixa: donar-los un fons, una amplada o moure-les juntes. Sense estil, un &lt;div&gt; no canvia res.|Para agrupar cosas y tratarlas como una sola caja: darles un fondo, una anchura o moverlas juntas. Sin estilo, un &lt;div&gt; no cambia nada."],
+      ["Per què no posem height a les caixes?|¿Por qué no ponemos height a las cajas?", "Si fixes l'alçada i el text creix (o el mòbil és estret), el text surt de la caixa. Millor que l'alçada la decideixi el contingut.|Si fijas la altura y el texto crece (o el móvil es estrecho), el texto sale de la caja. Mejor que la altura la decida el contenido."],
+      ["Quan faig servir px i quan %?|¿Cuándo uso px y cuándo %?", "px per a coses que han de fer sempre el mateix (una icona, una vora); % perquè s'adapti a la pantalla. Proveu els botons Mòbil i Ordinador de la vista prèvia per veure la diferència.|px para cosas que tienen que medir siempre lo mismo (un icono, un borde); % para que se adapte a la pantalla. Probad los botones Móvil y Ordenador de la vista previa para ver la diferencia."],
+      ["La Fira de Videojocs és de veritat?|¿La Feria de Videojuegos es de verdad?", "És una fira inventada de l'escola del poble: els videojocs i els equips també. Al projecte de la unitat cadascú inventarà el seu.|Es una feria inventada de la escuela del pueblo: los videojuegos y los equipos también. En el proyecto de la unidad cada uno inventará el suyo."]
+    ],
+    tec: [
+      ["La caixa en % no canvia entre Mòbil i Ordinador.|La caja en % no cambia entre Móvil y Ordenador.", "Sí que canvia: el % és de l'espai disponible. Al mòbil, la pàgina fa 375 píxels d'amplada; a l'ordinador, 960. Una caixa del 80 % ocupa la mateixa proporció a tots dos, però una de 300px no.|Sí que cambia: el % es del espacio disponible. En el móvil, la página mide 375 píxeles de anchura; en el ordenador, 960. Una caja del 80 % ocupa la misma proporción en los dos, pero una de 300px no."],
+      ["La segona targeta queda dins de la primera.|La segunda tarjeta queda dentro de la primera.", "El primer &lt;div&gt; no està tancat abans d'obrir el segon. Que comptin els &lt;div&gt; i els &lt;/div&gt;: n'hi ha d'haver els mateixos.|El primer &lt;div&gt; no está cerrado antes de abrir el segundo. Que cuenten los &lt;div&gt; y los &lt;/div&gt;: tiene que haber los mismos."],
+      ["La regla .targeta no s'aplica.|La regla .targeta no se aplica.", "A l'HTML, class=&quot;targeta&quot; (sense punt); al CSS, .targeta (amb punt). Han de tenir el mateix nom exacte.|En el HTML, class=&quot;targeta&quot; (sin punto); en el CSS, .targeta (con punto). Tienen que tener el mismo nombre exacto."]
+    ],
+    seg: [
+      "A l'activitat dels raigs X, es dibuixa sobre el full; si feu servir objectes de l'aula, es tornen al seu lloc.|En la actividad de los rayos X, se dibuja sobre la hoja; si usáis objetos del aula, se devuelven a su sitio.",
+      "Els videojocs de la fira són inventats i per a totes les edats: res de violència ni de continguts per a adults.|Los videojuegos de la feria son inventados y para todas las edades: nada de violencia ni de contenidos para adultos.",
+      "Pausa activa de la caixa (braços en rodona) entre els reptes.|Pausa activa de la caja (brazos en redondo) entre los retos."
+    ],
+    extra: [
+      "Posar dues caixes &lt;div&gt; amb amplades diferents (40 % i 250px) i comparar-les al mòbil i a l'ordinador.|Poner dos cajas &lt;div&gt; con anchuras diferentes (40 % y 250px) y compararlas en el móvil y en el ordenador.",
+      "Fer visibles totes les caixes d'una pàgina de la unitat 2 posant un color de fons a cada etiqueta.|Hacer visibles todas las cajas de una página de la unidad 2 poniendo un color de fondo a cada etiqueta.",
+      "Dibuixar en paper les caixes d'una web coneguda (on hi ha el menú, el contingut, el peu…).|Dibujar en papel las cajas de una web conocida (dónde está el menú, el contenido, el pie…)."
+    ],
+    trans: [
+      "Sessió següent: padding i margin, l'espai de dins i el de fora.|Sesión siguiente: padding y margin, el espacio de dentro y el de fuera.",
+      "Matemàtiques: els percentatges i les mesures en píxels.|Matemáticas: los porcentajes y las medidas en píxeles.",
+      "Educació visual i plàstica: l'enquadrament i el marc d'una obra.|Educación visual y plástica: el encuadre y el marco de una obra."
+    ]
+  },
+  'w5-2': {
+    intro: "L'alumnat aprèn a donar espai a les caixes: el padding és l'espai de dins (entre el contingut i la vora, amb el color de fons) i el margin, el de fora (separa la caixa de les altres, sempre transparent). Practica amb un sol valor, amb dos (dalt i baix, costats) i amb quatre seguint l'ordre del rellotge: dalt, dreta, baix, esquerra. També aprèn el truc per centrar una caixa amb amplada: margin: 0 auto. A l'activitat sense pantalla, l'alumnat fa de «persones caixa» davant de la pissarra: s'apropen o s'allunyen segons el padding i el margin que diu el navegador. La sessió acaba amb el tauler d'avisos de la fira.|El alumnado aprende a dar espacio a las cajas: el padding es el espacio de dentro (entre el contenido y el borde, con el color de fondo) y el margin, el de fuera (separa la caja de las demás, siempre transparente). Practica con un solo valor, con dos (arriba y abajo, lados) y con cuatro siguiendo el orden del reloj: arriba, derecha, abajo, izquierda. También aprende el truco para centrar una caja con anchura: margin: 0 auto. En la actividad sin pantalla, el alumnado hace de «personas caja» delante de la pizarra: se acercan o se alejan según el padding y el margin que dice el navegador. La sesión termina con el tablón de avisos de la feria.",
+    claus: [
+      "padding: espai de dins, amb el color de fons; margin: espai de fora, transparent.|padding: espacio de dentro, con el color de fondo; margin: espacio de fuera, transparente.",
+      "Un valor per als quatre costats; dos valors: dalt/baix i costats.|Un valor para los cuatro lados; dos valores: arriba/abajo y lados.",
+      "Quatre valors en l'ordre del rellotge: dalt, dreta, baix, esquerra (margin: 5px 10px 15px 20px).|Cuatro valores en el orden del reloj: arriba, derecha, abajo, izquierda (margin: 5px 10px 15px 20px).",
+      "margin: 0 auto centra una caixa que té amplada (width).|margin: 0 auto centra una caja que tiene anchura (width)."
+    ],
+    prev: [
+      "Les capes de la caixa i width (sessió anterior).|Las capas de la caja y width (sesión anterior).",
+      "Les unitats px i % i les classes de CSS.|Las unidades px y % y las clases de CSS.",
+      "Llegir un rellotge d'agulles (l'ordre dels quatre costats).|Leer un reloj de agujas (el orden de los cuatro lados)."
+    ],
+    faq: [
+      ["Per què el margin no té color?|¿Por qué el margin no tiene color?", "Perquè és l'espai de fora de la caixa: és transparent i hi veus el fons del que hi ha darrere. El color de fons de la caixa arriba fins a la vora (inclou el padding).|Porque es el espacio de fuera de la caja: es transparente y ves el fondo de lo que hay detrás. El color de fondo de la caja llega hasta el borde (incluye el padding)."],
+      ["Per què auto centra la caixa?|¿Por qué auto centra la caja?", "Amb auto als costats, el navegador reparteix l'espai que sobra a parts iguals a l'esquerra i a la dreta. Si la caixa no té amplada, ocupa tota la fila i no sobra res per repartir.|Con auto a los lados, el navegador reparte el espacio que sobra a partes iguales a la izquierda y a la derecha. Si la caja no tiene anchura, ocupa toda la fila y no sobra nada para repartir."],
+      ["Puc posar padding només a un costat?|¿Puedo poner padding solo a un lado?", "Sí: padding-top, padding-right, padding-bottom i padding-left (igual amb margin). O amb quatre valors, posant 0 als costats que no en vols.|Sí: padding-top, padding-right, padding-bottom y padding-left (igual con margin). O con cuatro valores, poniendo 0 en los lados que no quieres."],
+      ["Per què dues caixes amb margin: 20px no queden a 40px?|¿Por qué dos cajas con margin: 20px no quedan a 40px?", "Els marges de dalt i de baix de dues caixes seguides es fusionen: queda el més gran (20px). Els dels costats sí que se sumen.|Los márgenes de arriba y de abajo de dos cajas seguidas se fusionan: queda el más grande (20px). Los de los lados sí que se suman."],
+      ["Es poden fer marges negatius?|¿Se pueden hacer márgenes negativos?", "Sí, i acosten o superposen caixes, però costen de controlar. En aquest curs no els farem servir.|Sí, y acercan o superponen cajas, pero cuestan de controlar. En este curso no los usaremos."]
+    ],
+    tec: [
+      ["El padding no es nota.|El padding no se nota.", "Si la caixa no té color de fons ni vora, el padding no es veu (però hi és). Poseu-hi un background-color per veure'l.|Si la caja no tiene color de fondo ni borde, el padding no se ve (pero está). Ponedle un background-color para verlo."],
+      ["La caixa no es centra amb margin: 0 auto.|La caja no se centra con margin: 0 auto.", "Li falta width (i una amplada més petita que la pàgina). Sense amplada, la caixa ocupa tota la fila.|Le falta width (y una anchura más pequeña que la página). Sin anchura, la caja ocupa toda la fila."],
+      ["Amb dos valors, el padding surt al revés.|Con dos valores, el padding sale al revés.", "El primer valor és per a dalt i baix i el segon per als costats: padding: 10px 30px vol dir 10 a dalt i baix i 30 als costats.|El primer valor es para arriba y abajo y el segundo para los lados: padding: 10px 30px quiere decir 10 arriba y abajo y 30 a los lados."]
+    ],
+    seg: [
+      "Persones caixa: deixar espai lliure davant de la pissarra, caminar a poc a poc i sense tocar-se.|Personas caja: dejar espacio libre delante de la pizarra, caminar despacio y sin tocarse.",
+      "Qui no vulgui sortir davant pot fer de navegador i dir les regles.|Quien no quiera salir delante puede hacer de navegador y decir las reglas.",
+      "Pausa activa del rellotge (dalt, dreta, baix, esquerra) abans dels reptes de quatre valors.|Pausa activa del reloj (arriba, derecha, abajo, izquierda) antes de los retos de cuatro valores."
+    ],
+    extra: [
+      "Fer una caixa amb marges diferents a cada costat amb quatre valors i explicar-los en veu alta.|Hacer una caja con márgenes diferentes en cada lado con cuatro valores y explicarlos en voz alta.",
+      "Fer tres avisos centrats amb amplades diferents (60 %, 300px i 80 %).|Hacer tres avisos centrados con anchuras diferentes (60 %, 300px y 80 %).",
+      "Descobrir els marges que es fusionen: dues caixes amb margin 20px i 30px, quant queda entre elles?|Descubrir los márgenes que se fusionan: dos cajas con margin 20px y 30px, ¿cuánto queda entre ellas?"
+    ],
+    trans: [
+      "Sessió següent: vores, cantonades rodones i ombres per fer targetes de col·leccionista.|Sesión siguiente: bordes, esquinas redondeadas y sombras para hacer tarjetas de coleccionista.",
+      "Matemàtiques: l'ordre en sentit horari i el repartiment a parts iguals.|Matemáticas: el orden en sentido horario y el reparto a partes iguales.",
+      "Educació visual i plàstica: l'espai en blanc fa que un disseny respiri.|Educación visual y plástica: el espacio en blanco hace que un diseño respire."
+    ]
+  },
+  'w5-3': {
+    intro: "L'alumnat fa que les caixes semblin targetes de col·leccionista: posa vores amb gruix, estil i color (i descobreix que sense l'estil la vora no es veu), arrodoneix les cantonades amb border-radius (amb 50 % una caixa quadrada es fa rodona) i afegeix ombres amb box-shadow (dreta, avall, difuminat i color), que queden millor suaus. També calcula quant ocupa de debò una caixa: width + padding + border a cada costat. A l'activitat sense pantalla, una persona descriu una caixa amb CSS i l'altra la dibuixa. Acaben fent la xapa rodona del club de videojocs.|El alumnado hace que las cajas parezcan tarjetas de coleccionista: pone bordes con grosor, estilo y color (y descubre que sin el estilo el borde no se ve), redondea las esquinas con border-radius (con 50 % una caja cuadrada se vuelve redonda) y añade sombras con box-shadow (derecha, abajo, difuminado y color), que quedan mejor suaves. También calcula cuánto ocupa de verdad una caja: width + padding + border en cada lado. En la actividad sin pantalla, una persona describe una caja con CSS y la otra la dibuja. Terminan haciendo la chapa redonda del club de videojuegos.",
+    claus: [
+      "border: gruix estil color (border: 3px solid navy;). Sense l'estil (solid, dashed, dotted, double), no es veu.|border: grosor estilo color (border: 3px solid navy;). Sin el estilo (solid, dashed, dotted, double), no se ve.",
+      "border-radius arrodoneix les cantonades; 50 % en una caixa quadrada fa un cercle.|border-radius redondea las esquinas; 50 % en una caja cuadrada hace un círculo.",
+      "box-shadow: dreta avall difuminat color; les ombres suaus (gris clar, molt difuminat) queden més naturals.|box-shadow: derecha abajo difuminado color; las sombras suaves (gris claro, muy difuminado) quedan más naturales.",
+      "Amplada total = width + padding × 2 + border × 2 (si no es canvia box-sizing).|Anchura total = width + padding × 2 + border × 2 (si no se cambia box-sizing)."
+    ],
+    prev: [
+      "padding, margin i width (sessions 1 i 2).|padding, margin y width (sesiones 1 y 2).",
+      "Colors amb nom i en hex (unitat 4).|Colores con nombre y en hex (unidad 4).",
+      "Sumar i multiplicar per 2 mentalment.|Sumar y multiplicar por 2 mentalmente."
+    ],
+    faq: [
+      ["Per què la vora necessita l'estil?|¿Por qué el borde necesita el estilo?", "Perquè l'estil per defecte és none (cap vora). Encara que diguis el gruix i el color, sense solid, dashed… el navegador no en dibuixa cap.|Porque el estilo por defecto es none (ningún borde). Aunque digas el grosor y el color, sin solid, dashed… el navegador no dibuja ninguno."],
+      ["Com faig una ombra cap a dalt o cap a l'esquerra?|¿Cómo hago una sombra hacia arriba o hacia la izquierda?", "Amb números negatius: box-shadow: -6px -6px 10px gray; posa l'ombra a l'esquerra i a dalt.|Con números negativos: box-shadow: -6px -6px 10px gray; pone la sombra a la izquierda y arriba."],
+      ["Puc fer una caixa que no compti el padding a l'amplada?|¿Puedo hacer una caja que no cuente el padding en la anchura?", "Sí, amb box-sizing: border-box: aleshores width ja inclou el padding i la vora. Molts professionals el posen a totes les caixes.|Sí, con box-sizing: border-box: entonces width ya incluye el padding y el borde. Muchos profesionales lo ponen en todas las cajas."],
+      ["Una imatge també pot ser rodona?|¿Una imagen también puede ser redonda?", "Sí: una imatge quadrada amb border-radius: 50 % es veu rodona, com les fotos de perfil.|Sí: una imagen cuadrada con border-radius: 50 % se ve redonda, como las fotos de perfil."]
+    ],
+    tec: [
+      ["La vora no surt.|El borde no sale.", "Falta l'estil (solid, dashed…) o està mal escrit (solit, dash). La barra de comprovacions avisa si la vora no té els tres valors.|Falta el estilo (solid, dashed…) o está mal escrito (solit, dash). La barra de comprobaciones avisa si el borde no tiene los tres valores."],
+      ["La xapa no queda rodona del tot.|La chapa no queda redonda del todo.", "Amb 50 % surt un cercle només si la caixa és quadrada: width i height iguals. Si no, surt un oval.|Con 50 % sale un círculo solo si la caja es cuadrada: width y height iguales. Si no, sale un óvalo."],
+      ["L'ombra no es veu.|La sombra no se ve.", "Potser el color és gairebé igual que el fons o el difuminat és enorme. Proveu box-shadow: 0 6px 14px gray; per començar.|Quizá el color es casi igual que el fondo o el difuminado es enorme. Probad box-shadow: 0 6px 14px gray; para empezar."]
+    ],
+    seg: [
+      "Amb la llanterna o el llum del mòbil, no enfoqueu mai els ulls de ningú.|Con la linterna o la luz del móvil, no enfoquéis nunca los ojos de nadie.",
+      "Dibuixa-ho i endevina-ho: qui descriu ho fa a poc a poc; ningú no es riu del dibuix de l'altre.|Dibújalo y adivínalo: quien describe lo hace despacio; nadie se ríe del dibujo del otro.",
+      "Pausa activa de l'ombra entre la teoria i els reptes.|Pausa activa de la sombra entre la teoría y los retos."
+    ],
+    extra: [
+      "Fer la xapa amb una vora double i una ombra de color (per exemple, rgba o un color de la paleta).|Hacer la chapa con un borde double y una sombra de color (por ejemplo, rgba o un color de la paleta).",
+      "Calcular l'amplada total de tres caixes diferents i comprovar-ho amb l'eina d'inspeccionar del navegador (amb el professor/a).|Calcular la anchura total de tres cajas diferentes y comprobarlo con la herramienta de inspeccionar del navegador (con el profesor/a).",
+      "Provar box-sizing: border-box i explicar què canvia en els comptes.|Probar box-sizing: border-box y explicar qué cambia en las cuentas."
+    ],
+    trans: [
+      "Sessió següent: el projecte de la unitat, la targeta del videojoc amb tot el model de caixa.|Sesión siguiente: el proyecto de la unidad, la tarjeta del videojuego con todo el modelo de caja.",
+      "Ciències: la llum i les ombres (d'on ve la llum, cap on cau l'ombra).|Ciencias: la luz y las sombras (de dónde viene la luz, hacia dónde cae la sombra).",
+      "Matemàtiques: el càlcul de l'amplada total (sumes i dobles).|Matemáticas: el cálculo de la anchura total (sumas y dobles)."
+    ]
+  },
+  'w5-4': {
+    intro: "Sessió de projecte que tanca la unitat: cada alumne/a inventa un videojoc (nom, gènere i de què va) i en fa la targeta per a la Fira de Videojocs, com les dels dissenyadors web. Primer en dibuixa l'esbós en paper (quines caixes hi ha, una dins de l'altra, i quins espais tenen); després la construeix pas a pas (l'HTML, la caixa amb amplada i centrada, el toc de col·leccionista amb vora, cantonades i ombra, i l'etiqueta del gènere); i al final la revisa amb criteris de llegibilitat, accessibilitat (alt) i mòbil, i hi proposa una millora. Valoreu que facin servir el model de caixa amb sentit, no només que la targeta sigui bonica.|Sesión de proyecto que cierra la unidad: cada alumno/a inventa un videojuego (nombre, género y de qué va) y hace su tarjeta para la Feria de Videojuegos, como las de los diseñadores web. Primero dibuja el boceto en papel (qué cajas hay, una dentro de la otra, y qué espacios tienen); después la construye paso a paso (el HTML, la caja con anchura y centrada, el toque de coleccionista con borde, esquinas y sombra, y la etiqueta del género); y al final la revisa con criterios de legibilidad, accesibilidad (alt) y móvil, y propone una mejora. Valorad que usen el modelo de caja con sentido, no solo que la tarjeta sea bonita.",
+    claus: [
+      "L'esbós decideix les caixes (targeta → imatge, títol, gènere, descripció) i els espais.|El boceto decide las cajas (tarjeta → imagen, título, género, descripción) y los espacios.",
+      "Una targeta és una caixa amb width, centrada (margin auto), amb padding, vora, cantonades rodones i ombra.|Una tarjeta es una caja con width, centrada (margin auto), con padding, borde, esquinas redondeadas y sombra.",
+      "Una etiqueta (com el gènere) és una caixa petita amb fons, padding i border-radius gran.|Una etiqueta (como el género) es una caja pequeña con fondo, padding y border-radius grande.",
+      "Revisar: es llegeix bé, la imatge té alt i es veu bé al mòbil i a l'ordinador.|Revisar: se lee bien, la imagen tiene alt y se ve bien en el móvil y en el ordenador."
+    ],
+    prev: [
+      "Tot el model de caixa: width, padding, margin, border, border-radius i box-shadow (sessions 1-3).|Todo el modelo de caja: width, padding, margin, border, border-radius y box-shadow (sesiones 1-3).",
+      "Imatges amb alt i classes de CSS (unitats 3 i 4).|Imágenes con alt y clases de CSS (unidades 3 y 4).",
+      "Inventar i explicar una idea en poques paraules (el nom i la descripció del videojoc).|Inventar y explicar una idea en pocas palabras (el nombre y la descripción del videojuego)."
+    ],
+    faq: [
+      ["El videojoc ha d'existir?|¿El videojuego tiene que existir?", "No: és un videojoc inventat per vosaltres. Només en fem la targeta de presentació (no el programem). Si a Creadors en vau fer un, podeu fer-ne la targeta.|No: es un videojuego inventado por vosotros. Solo hacemos su tarjeta de presentación (no lo programamos). Si en Creadores hicisteis uno, podéis hacer su tarjeta."],
+      ["Puc posar la imatge d'un videojoc famós?|¿Puedo poner la imagen de un videojuego famoso?", "No: és d'una empresa i té drets d'autor. Feu servir les imatges de Numi (consola, coet, drac, robot…) o un dibuix vostre escanejat amb el professor/a.|No: es de una empresa y tiene derechos de autor. Usad las imágenes de Numi (consola, cohete, dragón, robot…) o un dibujo vuestro escaneado con el profesor/a."],
+      ["Com faig que la targeta sigui més estreta al mòbil?|¿Cómo hago que la tarjeta sea más estrecha en el móvil?", "Amb width en % (per exemple, 90 %) o amb max-width: 320px i width: 100 %. A la unitat 7 ho farem amb @media.|Con width en % (por ejemplo, 90 %) o con max-width: 320px y width: 100 %. En la unidad 7 lo haremos con @media."],
+      ["Quantes regles ha de tenir el CSS?|¿Cuántas reglas tiene que tener el CSS?", "Les que calguin perquè la targeta tingui tot el model de caixa: normalment .targeta, img, h2 i .genere. Les comprovacions diuen què falta.|Las que hagan falta para que la tarjeta tenga todo el modelo de caja: normalmente .targeta, img, h2 y .genere. Las comprobaciones dicen qué falta."]
+    ],
+    tec: [
+      ["La targeta ocupa tota la fila i no es centra.|La tarjeta ocupa toda la fila y no se centra.", "Falta width o està mal escrit (widht). Amb width i margin: 0 auto ja es centra.|Falta width o está mal escrito (widht). Con width y margin: 0 auto ya se centra."],
+      ["L'etiqueta del gènere s'estira per tota la targeta.|La etiqueta del género se estira por toda la tarjeta.", "Un &lt;p&gt; ocupa tota la fila; doneu a .genere una amplada petita (width) o display: inline-block.|Un &lt;p&gt; ocupa toda la fila; dad a .genere una anchura pequeña (width) o display: inline-block."],
+      ["La revisió entre companys no surt al portafoli.|La revisión entre compañeros no sale en el portafolio.", "Les respostes de la revisió es desen amb la sessió; el portafoli guarda la targeta. Comenteu-les en veu alta amb el company/a.|Las respuestas de la revisión se guardan con la sesión; el portafolio guarda la tarjeta. Comentadlas en voz alta con el compañero/a."]
+    ],
+    seg: [
+      "Videojocs inventats per a totes les edats; a la galeria, comentaris amables i concrets.|Videojuegos inventados para todas las edades; en la galería, comentarios amables y concretos.",
+      "No feu servir imatges de videojocs comercials ni noms de marques registrades a la targeta.|No uséis imágenes de videojuegos comerciales ni nombres de marcas registradas en la tarjeta.",
+      "Pausa activa de la caixa amb padding abans del projecte final.|Pausa activa de la caja con padding antes del proyecto final."
+    ],
+    extra: [
+      "Fer una segona targeta per a un altre videojoc i posar-les una al costat de l'altra (a la unitat 6 ho farem amb flex).|Hacer una segunda tarjeta para otro videojuego y ponerlas una al lado de la otra (en la unidad 6 lo haremos con flex).",
+      "Afegir una llista de controls (tecles) amb una vora de punts i cantonades rodones.|Añadir una lista de controles (teclas) con un borde de puntos y esquinas redondeadas.",
+      "Fer una versió fosca de la targeta (fons fosc i text clar) amb bon contrast.|Hacer una versión oscura de la tarjeta (fondo oscuro y texto claro) con buen contraste."
+    ],
+    trans: [
+      "Unitat 6: flexbox i graelles per posar moltes targetes en files i columnes.|Unidad 6: flexbox y rejillas para poner muchas tarjetas en filas y columnas.",
+      "Tech Creadors: si heu fet el curs, la targeta pot presentar el vostre videojoc de veritat.|Tech Creadores: si habéis hecho el curso, la tarjeta puede presentar vuestro videojuego de verdad.",
+      "Llengua: el text publicitari breu (nom, eslògan i descripció).|Lengua: el texto publicitario breve (nombre, eslogan y descripción)."
+    ]
+  }
+}).forEach(([id, g]) => Object.assign(TGUIDE[id], g));
+
+/* les demos de codi de les diapositives, també en castellà (diccionari a la unitat 4) */
+if (typeof webTr === 'function' && typeof WEB_TR45 !== 'undefined') ['w5-1', 'w5-2', 'w5-3', 'w5-4'].forEach(id => TGUIDE[id] && webTr(TGUIDE[id], WEB_TR45));
+
 /* ── unitat 6 ── */
 /* Tech Web · unitat 6 «Disposició» · guia del professorat (w6-1 … w6-4)
    Material propi de Numi. Classe de 60 minuts, mateix esquema que TGUIDE['r1-1']. Les diapositives «media» fan servir el
@@ -3907,6 +4768,171 @@ Object.assign(TGUIDE, (() => {
   }
   });
 })());
+
+/* ---------- Guia completa (unitat 6): la sessió en breu, idees clau, coneixements previs, preguntes que faran, què fer si
+   alguna cosa falla, seguretat i benestar, per anar més enllà i connexions ---------- */
+Object.entries({
+  'w6-1': {
+    intro: "L'alumnat descobreix flexbox, l'eina moderna per col·locar caixes. Primer entén per què les caixes de bloc fan pila (una sota l'altra) i després que, amb display: flex al contenidor (al pare, no als fills), els elements de dins es posen en fila. Hi afegeix gap per separar-los, flex-direction per triar fila o columna i justify-content per decidir on van al llarg de la fila (a l'inici, al centre, al final o repartits). A l'activitat sense pantalla, quatre alumnes fan d'elements dins d'un rectangle marcat a terra i es mouen segons les propietats que llegeix el navegador. Acaben fent la capçalera de la web del Club Foto amb un menú i una fila de fotos.|El alumnado descubre flexbox, la herramienta moderna para colocar cajas. Primero entiende por qué las cajas de bloque hacen pila (una debajo de la otra) y después que, con display: flex en el contenedor (en el padre, no en los hijos), los elementos de dentro se ponen en fila. Añade gap para separarlos, flex-direction para elegir fila o columna y justify-content para decidir dónde van a lo largo de la fila (al inicio, en el centro, al final o repartidos). En la actividad sin pantalla, cuatro alumnos hacen de elementos dentro de un rectángulo marcado en el suelo y se mueven según las propiedades que lee el navegador. Terminan haciendo la cabecera de la web del Club Foto con un menú y una fila de fotos.",
+    claus: [
+      "Les caixes de bloc (div, p, h1…) fan pila; display: flex al contenidor les posa en fila.|Las cajas de bloque (div, p, h1…) hacen pila; display: flex en el contenedor las pone en fila.",
+      "flex es posa al pare (el contenidor), no als fills.|flex se pone en el padre (el contenedor), no en los hijos.",
+      "gap posa el mateix espai entre tots els elements; flex-direction: column els posa en columna.|gap pone el mismo espacio entre todos los elementos; flex-direction: column los pone en columna.",
+      "justify-content: flex-start, center, flex-end, space-between o space-around decideix on van al llarg de la fila.|justify-content: flex-start, center, flex-end, space-between o space-around decide dónde van a lo largo de la fila."
+    ],
+    prev: [
+      "El model de caixa: div, width, padding i margin (unitat 5).|El modelo de caja: div, width, padding y margin (unidad 5).",
+      "Classes de CSS i imatges amb alt (unitats 3 i 4).|Clases de CSS e imágenes con alt (unidades 3 y 4).",
+      "Distingir fila (horitzontal) i columna (vertical).|Distinguir fila (horizontal) y columna (vertical)."
+    ],
+    faq: [
+      ["Per què flex no funciona si el poso a les fotos?|¿Por qué flex no funciona si lo pongo en las fotos?", "Perquè display: flex canvia com es col·loquen els fills d'una caixa. Si el poses a la foto, afecta el que hi ha dins de la foto (res). S'ha de posar al contenidor que les agrupa (.fila).|Porque display: flex cambia cómo se colocan los hijos de una caja. Si lo pones en la foto, afecta a lo que hay dentro de la foto (nada). Hay que ponerlo en el contenedor que las agrupa (.fila)."],
+      ["Què passa si les fotos no hi caben en una fila?|¿Qué pasa si las fotos no caben en una fila?", "Per defecte s'encongeixen per caber-hi. Amb flex-wrap: wrap, les que no hi caben passen a la fila següent.|Por defecto se encogen para caber. Con flex-wrap: wrap, las que no caben pasan a la fila siguiente."],
+      ["Quina diferència hi ha entre space-between i space-around?|¿Qué diferencia hay entre space-between y space-around?", "space-between enganxa el primer i l'últim a les vores i reparteix l'espai entre els altres; space-around també deixa espai a les vores.|space-between pega el primero y el último a los bordes y reparte el espacio entre los demás; space-around también deja espacio en los bordes."],
+      ["Per què gap i no margin?|¿Por qué gap y no margin?", "gap només posa espai entre els elements (no a les vores) i amb una sola línia; amb margin hauries de vigilar el primer i l'últim.|gap solo pone espacio entre los elementos (no en los bordes) y con una sola línea; con margin tendrías que vigilar el primero y el último."]
+    ],
+    tec: [
+      ["Les fotos continuen en pila.|Las fotos siguen en pila.", "Mireu que la regla sigui per al contenidor (.fila) i que l'HTML tingui les fotos dins d'aquest div. Comproveu l'escriptura: display: flex (no flexbox).|Mirad que la regla sea para el contenedor (.fila) y que el HTML tenga las fotos dentro de ese div. Comprobad la escritura: display: flex (no flexbox)."],
+      ["justify-content no fa res.|justify-content no hace nada.", "Només funciona en un contenidor flex i si sobra espai a la fila. Si les fotos omplen tota l'amplada, no hi ha res per repartir.|Solo funciona en un contenedor flex y si sobra espacio en la fila. Si las fotos llenan toda la anchura, no hay nada que repartir."],
+      ["La quarta foto no surt.|La cuarta foto no sale.", "El camí ha de ser img/tech/web/castell.svg (o una altra del botó «Imatges») i ha d'anar dins del div.fila.|La ruta tiene que ser img/tech/web/castell.svg (u otra del botón «Imágenes») y tiene que ir dentro del div.fila."]
+    ],
+    seg: [
+      "Som caixes flex: el rectangle de cinta a terra en un espai lliure, i es camina, no es corre.|Somos cajas flex: el rectángulo de cinta en el suelo en un espacio libre, y se camina, no se corre.",
+      "Les fotos del club són dibuixos de Numi: no hi poseu fotos de persones reals.|Las fotos del club son dibujos de Numi: no pongáis fotos de personas reales.",
+      "Pausa activa de la caixa flex (row, column, center) a mitja sessió.|Pausa activa de la caja flex (row, column, center) a mitad de sesión."
+    ],
+    extra: [
+      "Provar flex-wrap: wrap amb vuit fotos i explicar què passa al mòbil.|Probar flex-wrap: wrap con ocho fotos y explicar qué pasa en el móvil.",
+      "Fer un menú vertical (flex-direction: column) i un d'horitzontal amb el mateix HTML.|Hacer un menú vertical (flex-direction: column) y uno horizontal con el mismo HTML.",
+      "Provar les cinc opcions de justify-content i dibuixar-ne el resultat.|Probar las cinco opciones de justify-content y dibujar su resultado."
+    ],
+    trans: [
+      "Sessió següent: align-items (de dalt a baix) i les graelles amb grid.|Sesión siguiente: align-items (de arriba abajo) y las rejillas con grid.",
+      "Matemàtiques: la recta (eix horitzontal) i el repartiment de l'espai.|Matemáticas: la recta (eje horizontal) y el reparto del espacio.",
+      "Educació visual i plàstica: l'alineació i el ritme en una composició.|Educación visual y plástica: la alineación y el ritmo en una composición."
+    ]
+  },
+  'w6-2': {
+    intro: "L'alumnat completa flexbox amb align-items (col·loca els elements de dalt a baix, per exemple centrats) i descobreix grid, la graella del CSS: amb display: grid i grid-template-columns dius quantes columnes vols i la graella fa les files sola. Aprèn la unitat fr (un tros de l'espai que queda), repeat(3, 1fr) per no repetir-se i la diferència entre les dues eines: flex per a una direcció, grid per a dues. A l'activitat sense pantalla, els grups fan graelles de paper amb notes adhesives i prediuen quantes files sortiran. Acaben fent la galeria d'una sortida del club.|El alumnado completa flexbox con align-items (coloca los elementos de arriba abajo, por ejemplo centrados) y descubre grid, la rejilla del CSS: con display: grid y grid-template-columns dices cuántas columnas quieres y la rejilla hace las filas sola. Aprende la unidad fr (un trozo del espacio que queda), repeat(3, 1fr) para no repetirse y la diferencia entre las dos herramientas: flex para una dirección, grid para dos. En la actividad sin pantalla, los grupos hacen rejillas de papel con notas adhesivas y predicen cuántas filas saldrán. Terminan haciendo la galería de una salida del club.",
+    claus: [
+      "align-items col·loca els elements d'una fila flex de dalt a baix (center els centra).|align-items coloca los elementos de una fila flex de arriba abajo (center los centra).",
+      "display: grid + grid-template-columns: tu dius les columnes i les files es fan soles.|display: grid + grid-template-columns: tú dices las columnas y las filas se hacen solas.",
+      "1fr és un tros de l'espai que queda; repeat(3, 1fr) fa tres columnes iguals.|1fr es un trozo del espacio que queda; repeat(3, 1fr) hace tres columnas iguales.",
+      "Files = elements ÷ columnes, arrodonit cap amunt (10 fotos en 4 columnes → 3 files).|Filas = elementos ÷ columnas, redondeado hacia arriba (10 fotos en 4 columnas → 3 filas)."
+    ],
+    prev: [
+      "display: flex, gap i justify-content (sessió anterior).|display: flex, gap y justify-content (sesión anterior).",
+      "Dividir i arrodonir cap amunt (quantes files surten).|Dividir y redondear hacia arriba (cuántas filas salen).",
+      "Imatges amb alt i classes.|Imágenes con alt y clases."
+    ],
+    faq: [
+      ["Quan faig servir flex i quan grid?|¿Cuándo uso flex y cuándo grid?", "Flex per a una fila o una columna (un menú, una capçalera); grid per a files i columnes alhora (una galeria, un calendari).|Flex para una fila o una columna (un menú, una cabecera); grid para filas y columnas a la vez (una galería, un calendario)."],
+      ["Puc fer columnes de mides diferents?|¿Puedo hacer columnas de tamaños diferentes?", "Sí: grid-template-columns: 2fr 1fr fa la primera el doble d'ampla que la segona. També pots barrejar px i fr: 120px 1fr.|Sí: grid-template-columns: 2fr 1fr hace la primera el doble de ancha que la segunda. También puedes mezclar px y fr: 120px 1fr."],
+      ["Què vol dir fr?|¿Qué quiere decir fr?", "Fracció: el navegador reparteix l'espai lliure en trossos. Amb 1fr 2fr 1fr, el total són 4 trossos: la del mig n'ocupa 2 de 4.|Fracción: el navegador reparte el espacio libre en trozos. Con 1fr 2fr 1fr, el total son 4 trozos: la del medio ocupa 2 de 4."],
+      ["Al mòbil, tres columnes queden molt estretes. Què faig?|En el móvil, tres columnas quedan muy estrechas. ¿Qué hago?", "A la unitat 7 aprendrem @media per posar-ne menys al mòbil. També es pot fer amb repeat(auto-fill, minmax(150px, 1fr)), que posa les que hi caben.|En la unidad 7 aprenderemos @media para poner menos en el móvil. También se puede hacer con repeat(auto-fill, minmax(150px, 1fr)), que pone las que caben."]
+    ],
+    tec: [
+      ["Les fotos surten en una sola columna.|Las fotos salen en una sola columna.", "Falta display: grid al contenidor o grid-template-columns està mal escrit (grid-template-column, sense s). La barra d'estat no ho detecta: mireu la comprovació que falta.|Falta display: grid en el contenedor o grid-template-columns está mal escrito (grid-template-column, sin s). La barra de estado no lo detecta: mirad la comprobación que falta."],
+      ["repeat no funciona.|repeat no funciona.", "S'escriu repeat(3, 1fr), amb parèntesis i una coma. Un espai entre repeat i el parèntesi també el trenca.|Se escribe repeat(3, 1fr), con paréntesis y una coma. Un espacio entre repeat y el paréntesis también lo rompe."],
+      ["Les icones de les mascotes no surten.|Los iconos de las mascotas no salen.", "Són a img/ic/ i acaben en .webp (img/ic/lion.webp). El botó «Imatges» les mostra a la secció «Icones».|Están en img/ic/ y acaban en .webp (img/ic/lion.webp). El botón «Imágenes» los muestra en la sección «Iconos»."]
+    ],
+    seg: [
+      "Graelles de paper: regle i retoladors, cadascú en el seu full; les notes adhesives es recullen al final.|Rejillas de papel: regla y rotuladores, cada uno en su hoja; las notas adhesivas se recogen al final.",
+      "A casa, buscar graelles (calendaris, rajoles, tauler d'escacs) amb un adult, sense fer fotos de l'interior de casa per compartir.|En casa, buscar rejillas (calendarios, baldosas, tablero de ajedrez) con un adulto, sin hacer fotos del interior de casa para compartir.",
+      "Pausa activa de la graella amb el cos (3 columnes) entre la teoria i els reptes.|Pausa activa de la rejilla con el cuerpo (3 columnas) entre la teoría y los retos."
+    ],
+    extra: [
+      "Fer una galeria amb una foto gran que ocupi dues columnes (grid-column: span 2).|Hacer una galería con una foto grande que ocupe dos columnas (grid-column: span 2).",
+      "Fer un calendari d'un mes amb grid de 7 columnes i els dies en caixes.|Hacer un calendario de un mes con grid de 7 columnas y los días en cajas.",
+      "Provar repeat(auto-fill, minmax(120px, 1fr)) i mirar-ho al mòbil i a l'ordinador.|Probar repeat(auto-fill, minmax(120px, 1fr)) y mirarlo en el móvil y en el ordenador."
+    ],
+    trans: [
+      "Sessió següent: les taules, per a dades amb files i columnes.|Sesión siguiente: las tablas, para datos con filas y columnas.",
+      "Matemàtiques: la divisió amb residu i les fraccions (fr).|Matemáticas: la división con resto y las fracciones (fr).",
+      "Educació visual i plàstica: la retícula en el disseny de revistes i cartells.|Educación visual y plástica: la retícula en el diseño de revistas y carteles."
+    ]
+  },
+  'w6-3': {
+    intro: "L'alumnat aprèn quan cal una taula (dades amb files i columnes, com un horari o uns resultats) i quan no (per col·locar fotos, millor grid). Construeix taules amb &lt;table&gt;, files &lt;tr&gt;, cel·les &lt;td&gt;, capçaleres &lt;th&gt; i un títol amb &lt;caption&gt;, sempre amb el mateix nombre de cel·les a cada fila. Entén per què les capçaleres han de ser &lt;th&gt; (i no &lt;td&gt; en negreta): un lector de pantalla les fa servir per explicar cada dada a qui no la veu. També hi dona estil amb border-collapse, border i padding. L'activitat sense pantalla és una enquesta de la classe que es resumeix en una taula en paper.|El alumnado aprende cuándo hace falta una tabla (datos con filas y columnas, como un horario o unos resultados) y cuándo no (para colocar fotos, mejor grid). Construye tablas con &lt;table&gt;, filas &lt;tr&gt;, celdas &lt;td&gt;, cabeceras &lt;th&gt; y un título con &lt;caption&gt;, siempre con el mismo número de celdas en cada fila. Entiende por qué las cabeceras tienen que ser &lt;th&gt; (y no &lt;td&gt; en negrita): un lector de pantalla las usa para explicar cada dato a quien no lo ve. También les da estilo con border-collapse, border y padding. La actividad sin pantalla es una encuesta de la clase que se resume en una tabla en papel.",
+    claus: [
+      "Una taula és per a dades amb files i columnes, no per col·locar coses a la pàgina.|Una tabla es para datos con filas y columnas, no para colocar cosas en la página.",
+      "&lt;table&gt; → &lt;tr&gt; (fila) → &lt;td&gt; (cel·la) o &lt;th&gt; (capçalera); &lt;caption&gt; és el títol de la taula.|&lt;table&gt; → &lt;tr&gt; (fila) → &lt;td&gt; (celda) o &lt;th&gt; (cabecera); &lt;caption&gt; es el título de la tabla.",
+      "Cada fila ha de tenir el mateix nombre de cel·les: si no, les dades queden a la columna equivocada.|Cada fila tiene que tener el mismo número de celdas: si no, los datos quedan en la columna equivocada.",
+      "&lt;th&gt; i &lt;caption&gt; fan que un lector de pantalla expliqui la taula a qui no la veu.|&lt;th&gt; y &lt;caption&gt; hacen que un lector de pantalla explique la tabla a quien no la ve."
+    ],
+    prev: [
+      "Flex i grid per col·locar caixes (sessions 1 i 2).|Flex y grid para colocar cajas (sesiones 1 y 2).",
+      "Llegir una taula de doble entrada (horari, resultats esportius).|Leer una tabla de doble entrada (horario, resultados deportivos).",
+      "Etiquetes niuades ben tancades (unitat 2).|Etiquetas anidadas bien cerradas (unidad 2)."
+    ],
+    faq: [
+      ["Per què no puc fer servir una taula per posar les fotos en files?|¿Por qué no puedo usar una tabla para poner las fotos en filas?", "Es veuria bé, però un lector de pantalla diria «taula de 3 per 3» i llegiria cel·les buides de sentit. Per col·locar, grid; per a dades, taula.|Se vería bien, pero un lector de pantalla diría «tabla de 3 por 3» y leería celdas vacías de sentido. Para colocar, grid; para datos, tabla."],
+      ["Com faig una cel·la que ocupi dues columnes?|¿Cómo hago una celda que ocupe dos columnas?", "Amb l'atribut colspan=&quot;2&quot; (o rowspan per a files). Aleshores aquella fila té una cel·la menys.|Con el atributo colspan=&quot;2&quot; (o rowspan para filas). Entonces esa fila tiene una celda menos."],
+      ["Què fa border-collapse?|¿Qué hace border-collapse?", "Ajunta les vores de les cel·les veïnes en una sola línia. Sense, cada cel·la té la seva vora i es veuen dobles.|Junta los bordes de las celdas vecinas en una sola línea. Sin él, cada celda tiene su borde y se ven dobles."],
+      ["Les capçaleres poden anar a l'esquerra?|¿Las cabeceras pueden ir a la izquierda?", "Sí: la primera cel·la de cada fila pot ser un &lt;th&gt; (per exemple, el dia de la setmana). Hi pot haver capçaleres de columna i de fila.|Sí: la primera celda de cada fila puede ser un &lt;th&gt; (por ejemplo, el día de la semana). Puede haber cabeceras de columna y de fila."]
+    ],
+    tec: [
+      ["Una dada surt a la columna que no toca.|Un dato sale en la columna que no toca.", "Alguna fila té una cel·la de més o de menys, o un &lt;td&gt; no està tancat. Que comptin les cel·les de cada &lt;tr&gt;.|Alguna fila tiene una celda de más o de menos, o un &lt;td&gt; no está cerrado. Que cuenten las celdas de cada &lt;tr&gt;."],
+      ["La taula no té cap vora.|La tabla no tiene ningún borde.", "Les vores es posen a les cel·les: th, td { border: 1px solid gray; }. I border-collapse: collapse a la taula perquè no surtin dobles.|Los bordes se ponen en las celdas: th, td { border: 1px solid gray; }. Y border-collapse: collapse en la tabla para que no salgan dobles."],
+      ["Al mòbil, la taula és massa ampla.|En el móvil, la tabla es demasiado ancha.", "Amb poques columnes i text curt, hi cap. Si en té moltes, es pot posar dins d'un div amb overflow-x: auto perquè es desplaci de costat.|Con pocas columnas y texto corto, cabe. Si tiene muchas, se puede poner dentro de un div con overflow-x: auto para que se desplace de lado."]
+    ],
+    seg: [
+      "Enquesta de la classe: preguntes que no expliquin dades personals (millor preferències: color, esport, menjar).|Encuesta de la clase: preguntas que no expliquen datos personales (mejor preferencias: color, deporte, comida).",
+      "Les taules amb dades de persones (notes, adreces) no es publiquen mai a una web.|Las tablas con datos de personas (notas, direcciones) no se publican nunca en una web.",
+      "Pausa activa de la taula humana a mitja sessió.|Pausa activa de la tabla humana a mitad de sesión."
+    ],
+    extra: [
+      "Afegir a la taula una fila de totals amb colspan i un estil diferent.|Añadir a la tabla una fila de totales con colspan y un estilo diferente.",
+      "Pintar les files parells d'un altre color amb tr:nth-child(even).|Pintar las filas pares de otro color con tr:nth-child(even).",
+      "Convertir els resultats de l'enquesta en una taula web amb caption i th.|Convertir los resultados de la encuesta en una tabla web con caption y th."
+    ],
+    trans: [
+      "Sessió següent: el projecte de la unitat, l'àlbum de fotos amb flex, grid i una taula.|Sesión siguiente: el proyecto de la unidad, el álbum de fotos con flex, grid y una tabla.",
+      "Matemàtiques: les taules de freqüències i l'estadística.|Matemáticas: las tablas de frecuencias y la estadística.",
+      "Accessibilitat: com un lector de pantalla llegeix una taula.|Accesibilidad: cómo un lector de pantalla lee una tabla."
+    ]
+  },
+  'w6-4': {
+    intro: "Sessió de projecte que tanca la unitat: l'alumnat dissenya i construeix l'àlbum web del Club Foto per a l'exposició de final de curs. Ha de triar l'eina adequada per a cada part: flex per a la capçalera i el menú, grid per a la galeria de fotos (cada foto en una &lt;figure&gt; amb &lt;figcaption&gt;) i una taula accessible per a les dades (les sortides o el rànquing). Comença amb un esbós en paper (wireframe), assaja les tres peces (una amb errors d'una companya per arreglar) i construeix el seu àlbum, que revisa al mòbil i a l'ordinador amb una llista abans de la galeria de l'aula.|Sesión de proyecto que cierra la unidad: el alumnado diseña y construye el álbum web del Club Foto para la exposición de final de curso. Tiene que elegir la herramienta adecuada para cada parte: flex para la cabecera y el menú, grid para la galería de fotos (cada foto en una &lt;figure&gt; con &lt;figcaption&gt;) y una tabla accesible para los datos (las salidas o el ranking). Empieza con un boceto en papel (wireframe), ensaya las tres piezas (una con errores de una compañera para arreglar) y construye su álbum, que revisa en el móvil y en el ordenador con una lista antes de la galería del aula.",
+    claus: [
+      "L'esbós (wireframe) decideix les caixes i com es col·loquen abans de programar.|El boceto (wireframe) decide las cajas y cómo se colocan antes de programar.",
+      "Cada eina per a la seva feina: flex (una fila: capçalera, menú), grid (files i columnes: galeria), taula (dades).|Cada herramienta para su trabajo: flex (una fila: cabecera, menú), grid (filas y columnas: galería), tabla (datos).",
+      "A la galeria, cada foto és una &lt;figure&gt; amb &lt;img alt&gt; i &lt;figcaption&gt;.|En la galería, cada foto es una &lt;figure&gt; con &lt;img alt&gt; y &lt;figcaption&gt;.",
+      "Revisar com a visitant: alt a totes les fotos, títols en ordre, contrast i mòbil.|Revisar como visitante: alt en todas las fotos, títulos en orden, contraste y móvil."
+    ],
+    prev: [
+      "Flex, grid i taules (sessions 1-3 de la unitat).|Flex, grid y tablas (sesiones 1-3 de la unidad).",
+      "figure i figcaption (unitat 3) i el model de caixa (unitat 5).|figure y figcaption (unidad 3) y el modelo de caja (unidad 5).",
+      "Fer un esbós amb rectangles i noms.|Hacer un boceto con rectángulos y nombres."
+    ],
+    faq: [
+      ["Quantes fotos ha de tenir l'àlbum?|¿Cuántas fotos tiene que tener el álbum?", "Almenys sis, amb el seu peu de foto i alt. Feu servir les imatges de Numi del botó «Imatges» (paisatges, animals, llocs).|Al menos seis, con su pie de foto y alt. Usad las imágenes de Numi del botón «Imágenes» (paisajes, animales, lugares)."],
+      ["La taula pot ser de resultats inventats?|¿La tabla puede ser de resultados inventados?", "Sí: les sortides, els premis o el rànquing del concurs del club són inventats. Les dades reals de persones no es publiquen.|Sí: las salidas, los premios o el ranking del concurso del club son inventados. Los datos reales de personas no se publican."],
+      ["Puc fer la galeria amb flex en lloc de grid?|¿Puedo hacer la galería con flex en lugar de grid?", "Es pot, amb flex-wrap, però amb grid les fotos queden alineades en files i columnes sense esforç. Aquí volem que practiqueu grid.|Se puede, con flex-wrap, pero con grid las fotos quedan alineadas en filas y columnas sin esfuerzo. Aquí queremos que practiquéis grid."],
+      ["Com sé si l'àlbum està acabat?|¿Cómo sé si el álbum está terminado?", "Quan totes les comprovacions estan en verd i heu passat la llista de revisió: alt, títols en ordre, contrast i vista al mòbil i a l'ordinador.|Cuando todas las comprobaciones están en verde y habéis pasado la lista de revisión: alt, títulos en orden, contraste y vista en el móvil y en el ordenador."]
+    ],
+    tec: [
+      ["Hi ha moltes comprovacions i el codi és llarg.|Hay muchas comprobaciones y el código es largo.", "Treballeu per peces seguint l'esbós: primer la capçalera, després la galeria i al final la taula. La barra de les comprovacions mostra la primera que falta.|Trabajad por piezas siguiendo el boceto: primero la cabecera, después la galería y al final la tabla. La barra de las comprobaciones muestra la primera que falta."],
+      ["La galeria surt bé a l'ordinador però apretada al mòbil.|La galería sale bien en el ordenador pero apretada en el móvil.", "És normal amb tres columnes. Proveu repeat(2, 1fr) o, a la unitat 7, @media per posar-ne menys al mòbil.|Es normal con tres columnas. Probad repeat(2, 1fr) o, en la unidad 7, @media para poner menos en el móvil."],
+      ["El peu de foto queda al costat de la imatge.|El pie de foto queda al lado de la imagen.", "El &lt;figcaption&gt; ha d'anar dins de la &lt;figure&gt; i la regla flex o grid ha de ser per a la galeria, no per a cada figure.|El &lt;figcaption&gt; tiene que ir dentro de la &lt;figure&gt; y la regla flex o grid tiene que ser para la galería, no para cada figure."]
+    ],
+    seg: [
+      "Àlbum amb dibuixos de Numi; cap foto de persones reals ni de l'escola.|Álbum con dibujos de Numi; ninguna foto de personas reales ni del centro.",
+      "A la galeria de l'aula, comentaris concrets i amables (una cosa que funciona i una millora).|En la galería del aula, comentarios concretos y amables (algo que funciona y una mejora).",
+      "Pausa activa de les fotos (panoràmica i vertical) abans del projecte.|Pausa activa de las fotos (panorámica y vertical) antes del proyecto."
+    ],
+    extra: [
+      "Afegir al menú enllaços #id que portin a la galeria i a la taula.|Añadir al menú enlaces #id que lleven a la galería y a la tabla.",
+      "Fer que la foto preferida ocupi dues columnes a la graella (grid-column: span 2).|Hacer que la foto preferida ocupe dos columnas en la rejilla (grid-column: span 2).",
+      "Afegir un peu de pàgina (&lt;footer&gt;) amb els crèdits de les imatges.|Añadir un pie de página (&lt;footer&gt;) con los créditos de las imágenes."
+    ],
+    trans: [
+      "Unitat 7: fer que l'àlbum i qualsevol web s'adaptin al mòbil (disseny adaptable).|Unidad 7: hacer que el álbum y cualquier web se adapten al móvil (diseño adaptable).",
+      "Educació visual i plàstica: la fotografia i la composició d'un àlbum.|Educación visual y plástica: la fotografía y la composición de un álbum.",
+      "Matemàtiques: organitzar dades en taules.|Matemáticas: organizar datos en tablas."
+    ]
+  }
+}).forEach(([id, g]) => Object.assign(TGUIDE[id], g));
 
 /* ── unitat 7 ── */
 /* ===== Numi Tech · guia del professorat · Tech Web · unitat 7 «Per al mòbil» =====
@@ -4562,6 +5588,172 @@ Object.assign(TGUIDE, {
   }
 });
 
+/* ---------- Guia completa (unitat 7): la sessió en breu, idees clau, coneixements previs, preguntes que faran, què fer si
+   alguna cosa falla, seguretat i benestar, per anar més enllà i connexions ---------- */
+Object.entries({
+  'w7-1': {
+    intro: "L'alumnat descobreix el disseny adaptable: la mateixa web, amb el mateix contingut, s'ha de veure bé a l'ordinador i al mòbil, i el que canvia és com es col·loca. Aprèn tres eines: l'etiqueta &lt;meta name=&quot;viewport&quot;&gt;, perquè el mòbil faci servir la seva amplada de veritat i no una pàgina d'ordinador encongida; les regles @media (max-width: 600px) { … }, que només s'apliquen a les pantalles estretes (amb les claus de dins i les de fora ben tancades); i les amplades flexibles (max-width: 100 % en lloc d'amplades fixes). Els botons Mòbil (375 px) i Ordinador (960 px) de la vista prèvia simulen les pantalles de veritat, i l'activitat sense pantalla reorganitza una web de paper en una tira estreta.|El alumnado descubre el diseño adaptable: la misma web, con el mismo contenido, tiene que verse bien en el ordenador y en el móvil, y lo que cambia es cómo se coloca. Aprende tres herramientas: la etiqueta &lt;meta name=&quot;viewport&quot;&gt;, para que el móvil use su anchura de verdad y no una página de ordenador encogida; las reglas @media (max-width: 600px) { … }, que solo se aplican a las pantallas estrechas (con las llaves de dentro y las de fuera bien cerradas); y las anchuras flexibles (max-width: 100 % en lugar de anchuras fijas). Los botones Móvil (375 px) y Ordenador (960 px) de la vista previa simulan las pantallas de verdad, y la actividad sin pantalla reorganiza una web de papel en una tira estrecha.",
+    claus: [
+      "Una web adaptable canvia la disposició segons la pantalla, però no el contingut.|Una web adaptable cambia la disposición según la pantalla, pero no el contenido.",
+      "&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt; al &lt;head&gt;: el mòbil fa servir la seva amplada real.|&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt; en el &lt;head&gt;: el móvil usa su anchura real.",
+      "@media (max-width: 600px) { regles } només s'aplica a pantalles de 600 px o menys; compta les claus.|@media (max-width: 600px) { reglas } solo se aplica a pantallas de 600 px o menos; cuenta las llaves.",
+      "Les amplades fixes (width: 700px) surten de la pantalla; max-width: 100 % s'adapta.|Las anchuras fijas (width: 700px) salen de la pantalla; max-width: 100 % se adapta."
+    ],
+    prev: [
+      "Flex (display, flex-direction, gap) i el model de caixa (unitats 5 i 6).|Flex (display, flex-direction, gap) y el modelo de caja (unidades 5 y 6).",
+      "L'esquelet de la pàgina amb &lt;head&gt; (unitat 2).|El esqueleto de la página con &lt;head&gt; (unidad 2).",
+      "Haver vist una web al mòbil i a l'ordinador.|Haber visto una web en el móvil y en el ordenador."
+    ],
+    faq: [
+      ["Per què 600 píxels?|¿Por qué 600 píxeles?", "És un punt de tall habitual: gairebé tots els mòbils en vertical fan menys de 600 píxels d'amplada (CSS) i les tauletes i els ordinadors, més. Cada web pot triar els seus punts de tall.|Es un punto de corte habitual: casi todos los móviles en vertical miden menos de 600 píxeles de anchura (CSS) y las tabletas y los ordenadores, más. Cada web puede elegir sus puntos de corte."],
+      ["Què passa al mòbil si no poso el viewport?|¿Qué pasa en el móvil si no pongo el viewport?", "El mòbil fa veure que és una pantalla d'ordinador (uns 980 píxels) i ho encongeix tot: el text surt minúscul i les regles @media del mòbil no s'apliquen.|El móvil hace ver que es una pantalla de ordenador (unos 980 píxeles) y lo encoge todo: el texto sale minúsculo y las reglas @media del móvil no se aplican."],
+      ["La vista prèvia és igual que un mòbil de veritat?|¿La vista previa es igual que un móvil de verdad?", "Simula l'amplada: el botó Mòbil fa 375 píxels (com molts mòbils) i Ordinador, 960. Per estar-ne segurs, al final de la unitat es pot obrir la web en un mòbil real descarregant-la.|Simula la anchura: el botón Móvil mide 375 píxeles (como muchos móviles) y Ordenador, 960. Para estar seguros, al final de la unidad se puede abrir la web en un móvil real descargándola."],
+      ["Puc fer regles només per a ordinadors?|¿Puedo hacer reglas solo para ordenadores?", "Sí, amb @media (min-width: 601px) { … }. Molts dissenyadors fan primer la versió de mòbil i després hi afegeixen regles per a pantalles grans.|Sí, con @media (min-width: 601px) { … }. Muchos diseñadores hacen primero la versión de móvil y después añaden reglas para pantallas grandes."]
+    ],
+    tec: [
+      ["El @media no fa res ni al mòbil.|El @media no hace nada ni en el móvil.", "Mireu l'escriptura: @media (max-width: 600px), amb parèntesis, dos punts i px. I que les claus estiguin ben tancades: una per a cada regla de dins i una per al @media.|Mirad la escritura: @media (max-width: 600px), con paréntesis, dos puntos y px. Y que las llaves estén bien cerradas: una para cada regla de dentro y una para el @media."],
+      ["Al botó Ordinador també surt la versió de mòbil.|En el botón Ordenador también sale la versión de móvil.", "Potser la regla s'ha escrit fora del @media o amb min-width. Les regles de fora del @media s'apliquen sempre.|Quizá la regla se ha escrito fuera del @media o con min-width. Las reglas de fuera del @media se aplican siempre."],
+      ["Al mòbil, la vista prèvia té una barra per desplaçar-se de costat.|En el móvil, la vista previa tiene una barra para desplazarse de lado.", "Alguna cosa és més ampla que la pantalla (una caixa amb width en px o una imatge sense max-width). Canvieu-la per max-width: 100 %.|Algo es más ancho que la pantalla (una caja con width en px o una imagen sin max-width). Cambiadla por max-width: 100 %."]
+    ],
+    seg: [
+      "Si a l'activitat feu servir un mòbil o una tauleta de l'escola, el professor/a el controla; els mòbils personals, guardats.|Si en la actividad usáis un móvil o una tableta del centro, el profesor/a lo controla; los móviles personales, guardados.",
+      "Pensar en el mòbil és pensar en la gent: molta gent només té el mòbil per entrar a internet.|Pensar en el móvil es pensar en la gente: mucha gente solo tiene el móvil para entrar en internet.",
+      "Pausa activa de la web adaptable (braços en fila i en columna).|Pausa activa de la web adaptable (brazos en fila y en columna)."
+    ],
+    extra: [
+      "Afegir un segon punt de tall: @media (max-width: 400px) amb una lletra encara més petita al títol.|Añadir un segundo punto de corte: @media (max-width: 400px) con una letra todavía más pequeña en el título.",
+      "Fer que les imatges de les targetes siguin flexibles (img { max-width: 100%; height: auto; }).|Hacer que las imágenes de las tarjetas sean flexibles (img { max-width: 100%; height: auto; }).",
+      "Dibuixar la mateixa pàgina per a rellotge intel·ligent, mòbil i ordinador i explicar què canvia.|Dibujar la misma página para reloj inteligente, móvil y ordenador y explicar qué cambia."
+    ],
+    trans: [
+      "Sessió següent: botons de veritat amb :hover, :focus i transicions, pensats per al dit.|Sesión siguiente: botones de verdad con :hover, :focus y transiciones, pensados para el dedo.",
+      "Tecnologia: els dispositius (mòbil, tauleta, ordinador) i les seves pantalles.|Tecnología: los dispositivos (móvil, tableta, ordenador) y sus pantallas.",
+      "Ciències socials: Lleida, el tema de la guia de la unitat.|Ciencias sociales: Lleida, el tema de la guía de la unidad."
+    ]
+  },
+  'w7-2': {
+    intro: "L'alumnat converteix enllaços en botons de veritat: fons de color, farciment, vores arrodonides i sense subratllat. Aprèn els estats d'un botó amb :hover (quan el ratolí hi passa per sobre) i :focus (quan s'hi arriba amb el teclat), i que transition, posada a la regla normal, fa el canvi suau en entrar i en sortir. Però al mòbil no hi ha ratolí: els botons han de ser grans i separats (un dit és més gruixut que un ratolí) i no s'ha d'amagar res important darrere d'un :hover. A l'activitat sense pantalla fan codi de paper i un «botó humà» que canvia d'estat. Acaben fent el menú de botons de la guia.|El alumnado convierte enlaces en botones de verdad: fondo de color, relleno, bordes redondeados y sin subrayado. Aprende los estados de un botón con :hover (cuando el ratón pasa por encima) y :focus (cuando se llega con el teclado), y que transition, puesta en la regla normal, hace el cambio suave al entrar y al salir. Pero en el móvil no hay ratón: los botones tienen que ser grandes y separados (un dedo es más grueso que un ratón) y no hay que esconder nada importante detrás de un :hover. En la actividad sin pantalla hacen código de papel y un «botón humano» que cambia de estado. Terminan haciendo el menú de botones de la guía.",
+    claus: [
+      "Un botó és un enllaç amb background, padding, border-radius i text-decoration: none.|Un botón es un enlace con background, padding, border-radius y text-decoration: none.",
+      ".boto:hover s'aplica quan el ratolí hi és a sobre; .boto:focus, quan s'hi arriba amb el teclat (tecla Tab).|.boto:hover se aplica cuando el ratón está encima; .boto:focus, cuando se llega con el teclado (tecla Tab).",
+      "transition: background 0.3s; a la regla normal fa el canvi suau en entrar i en sortir.|transition: background 0.3s; en la regla normal hace el cambio suave al entrar y al salir.",
+      "Al mòbil: botons grans (uns 44 píxels d'alt) i separats, i res important només amb :hover.|En el móvil: botones grandes (unos 44 píxeles de alto) y separados, y nada importante solo con :hover."
+    ],
+    prev: [
+      "Enllaços &lt;a href&gt; (unitat 3) i el model de caixa (unitat 5).|Enlaces &lt;a href&gt; (unidad 3) y el modelo de caja (unidad 5).",
+      "@media (max-width: 600px) (sessió anterior).|@media (max-width: 600px) (sesión anterior).",
+      "Fer servir el ratolí i la tecla Tab per moure's per una pàgina.|Usar el ratón y la tecla Tab para moverse por una página."
+    ],
+    faq: [
+      ["Per què la transition va a la regla normal i no al :hover?|¿Por qué la transition va en la regla normal y no en el :hover?", "Si és al :hover, el canvi és suau en entrar però de cop en sortir (quan el ratolí marxa, el :hover ja no hi és). A la regla normal, funciona en els dos sentits.|Si está en el :hover, el cambio es suave al entrar pero de golpe al salir (cuando el ratón se va, el :hover ya no está). En la regla normal, funciona en los dos sentidos."],
+      ["Per què posem :focus si tothom fa servir el ratolí?|¿Por qué ponemos :focus si todo el mundo usa el ratón?", "Hi ha persones que naveguen amb el teclat o amb altres aparells (per mobilitat reduïda o per comoditat). Amb :focus veuen on són.|Hay personas que navegan con el teclado o con otros aparatos (por movilidad reducida o por comodidad). Con :focus ven dónde están."],
+      ["Puc fer servir la etiqueta &lt;button&gt;?|¿Puedo usar la etiqueta &lt;button&gt;?", "&lt;button&gt; és per a accions dins de la pàgina (enviar un formulari, obrir un menú), i sovint necessita JavaScript. Per anar a un altre lloc es fa servir un enllaç &lt;a&gt; amb estil de botó.|&lt;button&gt; es para acciones dentro de la página (enviar un formulario, abrir un menú), y a menudo necesita JavaScript. Para ir a otro sitio se usa un enlace &lt;a&gt; con estilo de botón."],
+      ["Què fa cursor: pointer?|¿Qué hace cursor: pointer?", "Canvia la fletxa del ratolí per la mà amb el dit quan passa per sobre: així se sap que es pot tocar.|Cambia la flecha del ratón por la mano con el dedo cuando pasa por encima: así se sabe que se puede tocar."]
+    ],
+    tec: [
+      ["Al mòbil no puc provar el :hover.|En el móvil no puedo probar el :hover.", "És normal: a les pantalles tàctils no hi ha ratolí. Proveu-ho a l'ordinador; al mòbil, el :hover a vegades s'activa en tocar i es queda enganxat.|Es normal: en las pantallas táctiles no hay ratón. Probadlo en el ordenador; en el móvil, el :hover a veces se activa al tocar y se queda enganchado."],
+      ["El botó no canvia de color amb el ratolí.|El botón no cambia de color con el ratón.", "Mireu el selector: .boto:hover, sense espai entre .boto i :hover. Amb espai (.boto :hover) vol dir una altra cosa.|Mirad el selector: .boto:hover, sin espacio entre .boto y :hover. Con espacio (.boto :hover) quiere decir otra cosa."],
+      ["En tocar el botó a la vista prèvia, surt un avís en lloc d'anar a la secció.|Al tocar el botón en la vista previa, sale un aviso en lugar de ir a la sección.", "Si l'enllaç és #llocs i hi ha un element amb id=&quot;llocs&quot;, la vista prèvia hi salta. Si surt l'avís que no hi ha cap element amb aquell id, encara no l'heu creat (o el nom no coincideix).|Si el enlace es #llocs y hay un elemento con id=&quot;llocs&quot;, la vista previa salta. Si sale el aviso de que no hay ningún elemento con ese id, todavía no lo habéis creado (o el nombre no coincide)."]
+    ],
+    seg: [
+      "Al botó humà, els canvis d'estat es fan amb el cos a poc a poc, sense empènyer ningú.|En el botón humano, los cambios de estado se hacen con el cuerpo despacio, sin empujar a nadie.",
+      "Pensar en les persones amb mobilitat reduïda: botons grans, separats i amb :focus visible.|Pensar en las personas con movilidad reducida: botones grandes, separados y con :focus visible.",
+      "Pausa activa del botó (transició lenta) a mitja sessió.|Pausa activa del botón (transición lenta) a mitad de sesión."
+    ],
+    extra: [
+      "Afegir un efecte de moviment suau amb transform: scale(1.05) al :hover i a la transition.|Añadir un efecto de movimiento suave con transform: scale(1.05) en el :hover y en la transition.",
+      "Fer dos estils de botó (principal i secundari) amb dues classes.|Hacer dos estilos de botón (principal y secundario) con dos clases.",
+      "Recórrer el menú només amb la tecla Tab i comprovar que sempre es veu on ets.|Recorrer el menú solo con la tecla Tab y comprobar que siempre se ve dónde estás."
+    ],
+    trans: [
+      "Sessió següent: detectar webs falses, que sovint imiten els botons i els colors de les de veritat.|Sesión siguiente: detectar webs falsas, que a menudo imitan los botones y los colores de las de verdad.",
+      "Tecnologia: el disseny d'interfícies (ascensors, microones, comandaments).|Tecnología: el diseño de interfaces (ascensores, microondas, mandos).",
+      "Educació física: la coordinació fina del dit (per què els botons petits costen).|Educación física: la coordinación fina del dedo (por qué los botones pequeños cuestan)."
+    ]
+  },
+  'w7-3': {
+    intro: "Sessió de ciutadania digital molt important per a aquesta edat. L'alumnat aprèn el mètode del detectiu/iva per saber si una web és de fiar: mirar el domini fins a la primera barra «/» (fotonuvi.numi.regals.xyz és de regals.xyz!), entendre que el candau vol dir connexió xifrada però no confiança, i reconèixer els senyals d'alerta: presses i comptes enrere, premis massa bons, faltes d'ortografia i peticions de contrasenyes o dades. I, sobretot, què cal fer: aturar-se, no escriure res, tancar i explicar-ho a un adult. Qui s'hi deixa enganyar no és ximple: les webs falses estan fetes per enganyar. Ho apliquen fent amb HTML i CSS una targeta d'avís i una pàgina de consells per als companys.|Sesión de ciudadanía digital muy importante para esta edad. El alumnado aprende el método del detective para saber si una web es de fiar: mirar el dominio hasta la primera barra «/» (¡fotonuvi.numi.regals.xyz es de regals.xyz!), entender que el candado quiere decir conexión cifrada pero no confianza, y reconocer las señales de alerta: prisas y cuentas atrás, premios demasiado buenos, faltas de ortografía y peticiones de contraseñas o datos. Y, sobre todo, qué hay que hacer: pararse, no escribir nada, cerrar y explicárselo a un adulto. Quien se deja engañar no es tonto: las webs falsas están hechas para engañar. Lo aplican haciendo con HTML y CSS una tarjeta de aviso y una página de consejos para los compañeros.",
+    claus: [
+      "El domini s'acaba just abans de la primera «/»: el que hi ha al final (regals.xyz) diu de qui és la web.|El dominio acaba justo antes de la primera «/»: lo que hay al final (regals.xyz) dice de quién es la web.",
+      "El candau (https) vol dir connexió xifrada, no que la web sigui de confiança.|El candado (https) quiere decir conexión cifrada, no que la web sea de confianza.",
+      "Senyals d'alerta: presses, premis massa bons, faltes, peticions de contrasenyes o dades personals.|Señales de alerta: prisas, premios demasiado buenos, faltas, peticiones de contraseñas o datos personales.",
+      "Atura't, pensa, pregunta: no escriguis res, tanca la pàgina i explica-ho a un adult.|Párate, piensa, pregunta: no escribas nada, cierra la página y explícaselo a un adulto."
+    ],
+    prev: [
+      "Les parts d'una URL i el DNS (unitat 1).|Las partes de una URL y el DNS (unidad 1).",
+      "Botons amb :hover i @media (sessions 1 i 2 de la unitat).|Botones con :hover y @media (sesiones 1 y 2 de la unidad).",
+      "Saber què és una contrasenya i per què no es comparteix.|Saber qué es una contraseña y por qué no se comparte."
+    ],
+    faq: [
+      ["Si una web té el candau, ja és segura?|Si una web tiene el candado, ¿ya es segura?", "No: el candau només diu que el que envies viatja xifrat. Una web falsa també pot tenir-lo. El que diu de qui és la web és el domini.|No: el candado solo dice que lo que envías viaja cifrado. Una web falsa también puede tenerlo. Lo que dice de quién es la web es el dominio."],
+      ["Què faig si ja he escrit la contrasenya en una web falsa?|¿Qué hago si ya he escrito la contraseña en una web falsa?", "Explicar-ho de seguida a un adult de confiança i canviar la contrasenya des de la web de veritat (escrivint l'adreça, no des de l'enllaç). No és culpa teva: han intentat enganyar-te.|Explicárselo enseguida a un adulto de confianza y cambiar la contraseña desde la web de verdad (escribiendo la dirección, no desde el enlace). No es culpa tuya: han intentado engañarte."],
+      ["Per què fan webs falses?|¿Por qué hacen webs falsas?", "Per aconseguir contrasenyes, dades personals o diners. Per això imiten els colors i els logotips de webs que la gent coneix i posen presses.|Para conseguir contraseñas, datos personales o dinero. Por eso imitan los colores y los logotipos de webs que la gente conoce y meten prisas."],
+      ["Un missatge d'un amic amb un enllaç és de fiar?|¿Un mensaje de un amigo con un enlace es de fiar?", "No sempre: el compte de l'amic pot haver estat robat. Si el missatge és estrany o té presses, pregunta-li per una altra via abans d'obrir-lo.|No siempre: la cuenta del amigo puede haber sido robada. Si el mensaje es raro o tiene prisas, pregúntale por otra vía antes de abrirlo."],
+      ["Les webs i els dominis de la sessió són de veritat?|¿Las webs y los dominios de la sesión son de verdad?", "No: són inventats (.numi, .xyz de mentida) perquè ningú no hi entri. No busqueu webs falses de veritat a classe.|No: son inventados (.numi, .xyz de mentira) para que nadie entre. No busquéis webs falsas de verdad en clase."]
+    ],
+    tec: [
+      ["Volen obrir les adreces de la sessió al navegador.|Quieren abrir las direcciones de la sesión en el navegador.", "No funcionaran (són inventades) i no cal: tot el treball és a l'app. Recordeu que no es proven webs sospitoses de veritat.|No funcionarán (son inventadas) y no hace falta: todo el trabajo está en la app. Recordad que no se prueban webs sospechosas de verdad."],
+      ["A «troba la línia», no saben quina és la falta d'ortografia.|En «encuentra la línea», no saben cuál es la falta de ortografía.", "Que llegeixin cada línia en veu alta, a poc a poc. Les webs falses sovint tenen faltes perquè estan fetes amb pressa.|Que lean cada línea en voz alta, despacio. Las webs falsas a menudo tienen faltas porque están hechas con prisas."],
+      ["La targeta d'avís no té fons ni vora.|La tarjeta de aviso no tiene fondo ni borde.", "La regla ha de ser .avis (amb punt) i l'HTML class=&quot;avis&quot;. La vora necessita gruix, estil i color.|La regla tiene que ser .avis (con punto) y el HTML class=&quot;avis&quot;. El borde necesita grosor, estilo y color."]
+    ],
+    seg: [
+      "No entreu mai a webs sospitoses de veritat per «provar-les», ni a classe ni a casa.|No entréis nunca en webs sospechosas de verdad para «probarlas», ni en clase ni en casa.",
+      "Si a algú li ha passat un engany, se l'escolta sense jutjar: qualsevol persona pot caure en una web ben feta.|Si a alguien le ha pasado un engaño, se le escucha sin juzgar: cualquier persona puede caer en una web bien hecha.",
+      "Recordeu els adults de confiança: família, tutor/a, professorat. Davant del dubte, preguntar sempre.|Recordad los adultos de confianza: familia, tutor/a, profesorado. Ante la duda, preguntar siempre."
+    ],
+    extra: [
+      "Inventar tres missatges trampa (sense enllaços reals) i que un company/a hi trobi els senyals d'alerta.|Inventar tres mensajes trampa (sin enlaces reales) y que un compañero/a encuentre en ellos las señales de alerta.",
+      "Afegir a la pàgina de consells una secció «Què fer si ja has fet clic».|Añadir a la página de consejos una sección «Qué hacer si ya has hecho clic».",
+      "Amb un adult, mirar el domini de les webs que feu servir cada dia i escriure on s'acaba cada un.|Con un adulto, mirar el dominio de las webs que usáis cada día y escribir dónde acaba cada uno."
+    ],
+    trans: [
+      "Sessió següent: el projecte de la unitat, la guia de Lleida amb fets certs i fonts.|Sesión siguiente: el proyecto de la unidad, la guía de Lleida con hechos ciertos y fuentes.",
+      "Tech Digital: les contrasenyes fortes i els bulos (si el feu, connecteu-ho).|Tech Digital: las contraseñas fuertes y los bulos (si lo hacéis, conectadlo).",
+      "Tutoria: la seguretat a internet i a qui demanar ajuda.|Tutoría: la seguridad en internet y a quién pedir ayuda."
+    ]
+  },
+  'w7-4': {
+    intro: "Sessió de projecte que tanca la unitat: l'alumnat construeix la guia de Lleida per a uns estudiants d'intercanvi que la miraran pel carrer, amb el mòbil. Primer planifica (per a qui és, quines seccions té i com es veurà al mòbil) amb un esbós; després construeix pas a pas: capçalera amb un menú de botons, una secció de llocs amb targetes (flex), l'estil amb :hover i transition, i un @media que ho reorganitza tot al mòbil. Una guia de veritat només hi posa fets segurs i en cita les fonts al peu de pàgina. Acaben amb la guia completa (festes, menjar i fonts) i una revisió en parella: alt, contrast, fets certs i vista de mòbil.|Sesión de proyecto que cierra la unidad: el alumnado construye la guía de Lleida para unos estudiantes de intercambio que la mirarán por la calle, con el móvil. Primero planifica (para quién es, qué secciones tiene y cómo se verá en el móvil) con un boceto; después construye paso a paso: cabecera con un menú de botones, una sección de lugares con tarjetas (flex), el estilo con :hover y transition, y un @media que lo reorganiza todo en el móvil. Una guía de verdad solo pone hechos seguros y cita sus fuentes en el pie de página. Terminan con la guía completa (fiestas, comida y fuentes) y una revisión en pareja: alt, contraste, hechos ciertos y vista de móvil.",
+    claus: [
+      "Planificar abans de programar: públic, seccions i esbós per a mòbil i ordinador.|Planificar antes de programar: público, secciones y boceto para móvil y ordenador.",
+      "Una guia diu la veritat: fets que es poden comprovar i les fonts al &lt;footer&gt;.|Una guía dice la verdad: hechos que se pueden comprobar y las fuentes en el &lt;footer&gt;.",
+      "Header amb nav de botons, seccions amb id, targetes amb flex i @media per al mòbil.|Header con nav de botones, secciones con id, tarjetas con flex y @media para el móvil.",
+      "Provar-la al mòbil sovint, mentre es fa, no només al final.|Probarla en el móvil a menudo, mientras se hace, no solo al final."
+    ],
+    prev: [
+      "Viewport, @media i amplades flexibles; botons amb :hover i transition (sessions 1 i 2).|Viewport, @media y anchuras flexibles; botones con :hover y transition (sesiones 1 y 2).",
+      "Flex, imatges amb alt, enllaços #id i citar les fonts (unitats 3 i 6).|Flex, imágenes con alt, enlaces #id y citar las fuentes (unidades 3 y 6).",
+      "Conèixer alguns llocs, festes o menjars de Lleida (o d'una altra ciutat propera).|Conocer algunos lugares, fiestas o comidas de Lleida (o de otra ciudad cercana)."
+    ],
+    faq: [
+      ["Podem fer la guia d'una altra ciutat?|¿Podemos hacer la guía de otra ciudad?", "Sí: el que compta és el mateix (seccions, targetes, mòbil, fonts). Si l'escola no és a Lleida, feu la guia de la vostra ciutat o poble.|Sí: lo que cuenta es lo mismo (secciones, tarjetas, móvil, fuentes). Si el centro no está en Lleida, haced la guía de vuestra ciudad o pueblo."],
+      ["D'on trec els fets de la guia?|¿De dónde saco los hechos de la guía?", "De llocs de confiança: la web de l'ajuntament o de turisme, llibres de la biblioteca o fullets oficials. I els citeu al peu de pàgina.|De sitios de confianza: la web del ayuntamiento o de turismo, libros de la biblioteca o folletos oficiales. Y los citáis en el pie de página."],
+      ["Hi ha imatges de Lleida?|¿Hay imágenes de Lleida?", "Sí: la Seu Vella (seu-vella.svg) i el pont (pont.svg) a img/tech/web/, i icones per a festes i menjar. Totes al botó «Imatges».|Sí: la Seu Vella (seu-vella.svg) y el puente (pont.svg) en img/tech/web/, e iconos para fiestas y comida. Todas en el botón «Imágenes»."],
+      ["La puc ensenyar als estudiants d'intercanvi de veritat?|¿La puedo enseñar a los estudiantes de intercambio de verdad?", "A «Projectes» la podeu descarregar com un fitxer .html i obrir-la en qualsevol navegador. Abans de compartir-la, que la revisi un adult i que no tingui cap dada personal.|En «Proyectos» la podéis descargar como un archivo .html y abrirla en cualquier navegador. Antes de compartirla, que la revise un adulto y que no tenga ningún dato personal."]
+    ],
+    tec: [
+      ["El codi és llarg i ja no troben on són.|El código es largo y ya no encuentran dónde están.", "La barra d'estat diu la línia del cursor. Feu servir comentaris (&lt;!-- Llocs --&gt;) per marcar cada secció.|La barra de estado dice la línea del cursor. Usad comentarios (&lt;!-- Lugares --&gt;) para marcar cada sección."],
+      ["Al mòbil, les targetes no es posen en columna.|En el móvil, las tarjetas no se ponen en columna.", "Dins del @media, la regla ha de ser per al contenidor (.targetes) amb flex-direction: column. Compteu les claus del @media.|Dentro del @media, la regla tiene que ser para el contenedor (.targetes) con flex-direction: column. Contad las llaves del @media."],
+      ["Els botons del menú no porten enlloc a la vista prèvia.|Los botones del menú no llevan a ningún sitio en la vista previa.", "Han de portar a #llocs, #festes i #menjar, i les seccions han de tenir aquests id. A la vista prèvia, si l'id existeix, hi salta.|Tienen que llevar a #llocs, #festes y #menjar, y las secciones tienen que tener esos id. En la vista previa, si el id existe, salta."]
+    ],
+    seg: [
+      "La guia no porta dades personals: ni l'adreça de casa, ni l'escola, ni fotos de persones.|La guía no lleva datos personales: ni la dirección de casa, ni el centro, ni fotos de personas.",
+      "Si busqueu informació a internet, en webs oficials i amb un adult; i sempre se cita la font.|Si buscáis información en internet, en webs oficiales y con un adulto; y siempre se cita la fuente.",
+      "Pausa activa del passeig per la guia (pujar a la Seu Vella) a mitja sessió.|Pausa activa del paseo por la guía (subir a la Seu Vella) a mitad de sesión."
+    ],
+    extra: [
+      "Afegir una taula amb els horaris d'un museu o d'un mercat (inventats o comprovats).|Añadir una tabla con los horarios de un museo o de un mercado (inventados o comprobados).",
+      "Fer una versió de la guia en anglès per als estudiants d'intercanvi, amb lang=&quot;en&quot;.|Hacer una versión de la guía en inglés para los estudiantes de intercambio, con lang=&quot;en&quot;.",
+      "Afegir un enllaç «Torna a dalt» i un botó amb :focus ben visible.|Añadir un enlace «Vuelve arriba» y un botón con :focus bien visible."
+    ],
+    trans: [
+      "Unitat 8: la teva pròpia web, de la planificació a la presentació.|Unidad 8: tu propia web, de la planificación a la presentación.",
+      "Ciències socials: el patrimoni i les festes de Lleida.|Ciencias sociales: el patrimonio y las fiestas de Lleida.",
+      "Llengua anglesa: escriure textos breus per a visitants.|Lengua inglesa: escribir textos breves para visitantes."
+    ]
+  }
+}).forEach(([id, g]) => Object.assign(TGUIDE[id], g));
+
 /* ── unitat 8 ── */
 /* Tech Web · unitat 8 «La meva web» · guia del professorat (w8-1 … w8-4)
    Material propi de Numi. Classe de 60 minuts; mateix esquema que TGUIDE['r1-1']. Les demos de web de les
@@ -4968,7 +6160,7 @@ Object.assign(TGUIDE, (() => {
       { min: 12, t: "A l'ordinador: la versió final|En el ordenador: la versión final", fase: 'ordinador',
         fa: "Fan els passos de l'app fins a la versió final de la web: les dades personals, el document complet, «Torna a dalt» i, a la seva web, el peu amb crèdits. Després responen les preguntes per preparar la presentació. Passeja i comprova que ningú no tingui dades personals a la web.|Hacen los pasos de la app hasta la versión final de la web: los datos personales, el documento completo, «Vuelve arriba» y, en su web, el pie con créditos. Después responden las preguntas para preparar la presentación. Pasea y comprueba que nadie tenga datos personales en la web.",
         diu: ['Hi ha alguna cosa a la teva web que digui on vius o on estudies? Treu-la.|¿Hay algo en tu web que diga dónde vives o dónde estudias? Quítalo.', "Al peu: qui l'ha feta i d'on són les imatges.|En el pie: quién la ha hecho y de dónde son las imágenes."],
-        slides: ['s7'], app: "De «La missió» fins a «Crea»: la història, les targetes, ordenar la presentació, la pàgina de la Júlia, la línia que no s'ha de publicar, el title, la pausa activa, els dos reptes, la versió final de la web i les preguntes per preparar la presentació.|De «La misión» hasta «Crea»: la historia, las tarjetas, ordenar la presentación, la página de Júlia, la línea que no se debe publicar, el title, la pausa activa, los dos retos, la versión final de la web y las preguntas para preparar la presentación.", org: 'Individual|Individual' },
+        slides: ['s7'], app: "De «La missió» fins a «Crea»: la història, les targetes, ordenar la presentació, la pàgina de la Júlia, la línia que no s'ha de publicar, el title, la pausa activa, els tres reptes (treure les dades personals, «Torna a dalt» i el document complet), la versió final de la web i les preguntes per preparar la presentació.|De «La misión» hasta «Crea»: la historia, las tarjetas, ordenar la presentación, la página de Júlia, la línea que no se debe publicar, el title, la pausa activa, los tres retos (quitar los datos personales, «Vuelve arriba» y el documento completo), la versión final de la web y las preguntas para preparar la presentación.", org: 'Individual|Individual' },
       { min: 10, t: 'Assaig en trios|Ensayo en tríos', fase: 'desconnectat',
         fa: "En grups de tres, amb el guió imprès. Cada alumne/a assaja la presentació (dos minuts) mentre un company/a fa de públic i l'altre/a controla el temps. El públic diu «una estrella i un desig»: una cosa que ha agradat i una que milloraria. Roten els papers.|En grupos de tres, con el guion impreso. Cada alumno/a ensaya la presentación (dos minutos) mientras un compañero/a hace de público y el otro/a controla el tiempo. El público dice «una estrella y un deseo»: algo que le ha gustado y algo que mejoraría. Rotan los papeles.",
         diu: ['Dos minuts: per a qui és, com l\'has feta i què n\'has après.|Dos minutos: para quién es, cómo la has hecho y qué has aprendido.', "Una estrella i un desig: primer el que ha funcionat.|Una estrella y un deseo: primero lo que ha funcionado."],
@@ -5041,3 +6233,168 @@ Object.assign(TGUIDE, (() => {
   };
   return G;
 })());
+
+/* ---------- Guia completa (unitat 8): la sessió en breu, idees clau, coneixements previs, preguntes que faran, què fer si
+   alguna cosa falla, seguretat i benestar, per anar més enllà i connexions ---------- */
+Object.entries({
+  'w8-1': {
+    intro: "Comença el projecte final del curs: en quatre sessions, cada alumne/a farà la seva pròpia web per a la Mostra de Webs. Aquesta primera sessió és de planificació, com fan els professionals: definir per a qui és la web i què hi ha de trobar el públic, triar tres seccions coherents, dibuixar un esbós en format mòbil i escriure l'esquelet semàntic (header, nav, main amb sections i footer). També connecta el menú amb les seccions amb href=&quot;#id&quot; i un id idèntic. A l'activitat sense pantalla, es fan entrevistes per parelles per conèixer el públic i dibuixen l'esbós. Acaben desant la versió 1 (l'esquelet), que continuaran a les sessions següents.|Empieza el proyecto final del curso: en cuatro sesiones, cada alumno/a hará su propia web para la Muestra de Webs. Esta primera sesión es de planificación, como hacen los profesionales: definir para quién es la web y qué tiene que encontrar el público, elegir tres secciones coherentes, dibujar un boceto en formato móvil y escribir el esqueleto semántico (header, nav, main con sections y footer). También conecta el menú con las secciones con href=&quot;#id&quot; y un id idéntico. En la actividad sin pantalla, se hacen entrevistas por parejas para conocer al público y dibujan el boceto. Terminan guardando la versión 1 (el esqueleto), que continuarán en las sesiones siguientes.",
+    claus: [
+      "Una bona web comença pel públic: per a qui és i què hi ha de trobar.|Una buena web empieza por el público: para quién es y qué tiene que encontrar.",
+      "L'esquelet semàntic: &lt;header&gt; (amb el &lt;nav&gt;), &lt;main&gt; amb &lt;section&gt; i &lt;footer&gt;.|El esqueleto semántico: &lt;header&gt; (con el &lt;nav&gt;), &lt;main&gt; con &lt;section&gt; y &lt;footer&gt;.",
+      "L'esbós en paper (en format mòbil) decideix les parts i l'ordre abans del codi.|El boceto en papel (en formato móvil) decide las partes y el orden antes del código.",
+      "Menú → secció: href=&quot;#cures&quot; i id=&quot;cures&quot;, el nom idèntic i sense espais.|Menú → sección: href=&quot;#cures&quot; e id=&quot;cures&quot;, el nombre idéntico y sin espacios."
+    ],
+    prev: [
+      "Tot el curs: HTML, imatges i enllaços, CSS, caixes, flex i @media.|Todo el curso: HTML, imágenes y enlaces, CSS, cajas, flex y @media.",
+      "Enllaços #id a seccions (unitat 3).|Enlaces #id a secciones (unidad 3).",
+      "Fer preguntes i escoltar un company/a (per a l'entrevista).|Hacer preguntas y escuchar a un compañero/a (para la entrevista)."
+    ],
+    faq: [
+      ["Puc canviar de tema més endavant?|¿Puedo cambiar de tema más adelante?", "Millor no: les sessions següents construeixen sobre aquest esquelet. Si el tema no us convenç, canvieu-lo avui, abans d'escriure el contingut.|Mejor no: las sesiones siguientes construyen sobre este esqueleto. Si el tema no os convence, cambiadlo hoy, antes de escribir el contenido."],
+      ["Per què &lt;header&gt; i &lt;section&gt; i no tot amb &lt;div&gt;?|¿Por qué &lt;header&gt; y &lt;section&gt; y no todo con &lt;div&gt;?", "Les etiquetes semàntiques diuen què és cada part: els lectors de pantalla permeten saltar directament al menú o al contingut, i els cercadors entenen millor la web.|Las etiquetas semánticas dicen qué es cada parte: los lectores de pantalla permiten saltar directamente al menú o al contenido, y los buscadores entienden mejor la web."],
+      ["Quantes seccions ha de tenir la web?|¿Cuántas secciones tiene que tener la web?", "Tres és un bon nombre per a quatre sessions. Més val tres seccions ben fetes que sis de buides.|Tres es un buen número para cuatro sesiones. Más vale tres secciones bien hechas que seis vacías."],
+      ["On es desa la web entre sessions?|¿Dónde se guarda la web entre sesiones?", "Cada versió es desa al portafoli i la sessió següent comença des de l'última que heu desat. Cal entrar sempre amb el mateix perfil.|Cada versión se guarda en el portafolio y la sesión siguiente empieza desde la última que habéis guardado. Hay que entrar siempre con el mismo perfil."]
+    ],
+    tec: [
+      ["L'enllaç del menú no salta a la secció.|El enlace del menú no salta a la sección.", "Compareu lletra a lletra href=&quot;#nom&quot; i id=&quot;nom&quot;. A la vista prèvia, si no hi ha cap element amb aquell id, surt un avís que ho diu.|Comparad letra a letra href=&quot;#nombre&quot; e id=&quot;nombre&quot;. En la vista previa, si no hay ningún elemento con ese id, sale un aviso que lo dice."],
+      ["El peu de pàgina surt a dalt.|El pie de página sale arriba.", "L'ordre del codi és l'ordre de la pàgina: el &lt;footer&gt; ha d'anar l'últim, després de tancar el &lt;/main&gt;.|El orden del código es el orden de la página: el &lt;footer&gt; tiene que ir el último, después de cerrar el &lt;/main&gt;."],
+      ["No troben la versió 1 a la sessió següent.|No encuentran la versión 1 en la sesión siguiente.", "S'ha de desar amb «Desa-ho i continua» al pas «Crea». Si no es va desar, la sessió 2 comença amb una plantilla del tema triat.|Hay que guardarla con «Guárdalo y continúa» en el paso «Crea». Si no se guardó, la sesión 2 empieza con una plantilla del tema elegido."]
+    ],
+    seg: [
+      "Triar un tema que es pugui compartir: res de dades personals ni de temes que facin sentir malament ningú.|Elegir un tema que se pueda compartir: nada de datos personales ni de temas que hagan sentir mal a nadie.",
+      "A l'entrevista, preguntes sobre gustos i necessitats, no sobre la vida privada.|En la entrevista, preguntas sobre gustos y necesidades, no sobre la vida privada.",
+      "Pausa activa de la web amb el cos (capçalera, menú, contingut, peu).|Pausa activa de la web con el cuerpo (cabecera, menú, contenido, pie)."
+    ],
+    extra: [
+      "Fer dos esbossos (mòbil i ordinador) i explicar què canvia d'un a l'altre.|Hacer dos bocetos (móvil y ordenador) y explicar qué cambia de uno a otro.",
+      "Escriure en un comentari, a dalt del codi, el públic i l'objectiu de la web.|Escribir en un comentario, arriba del código, el público y el objetivo de la web.",
+      "Afegir una quarta secció «Sobre aquesta web» (sense dades personals).|Añadir una cuarta sección «Sobre esta web» (sin datos personales)."
+    ],
+    trans: [
+      "Sessió següent: omplir la web amb textos, imatges amb alt i l'estil amb una paleta.|Sesión siguiente: llenar la web con textos, imágenes con alt y el estilo con una paleta.",
+      "Gestió de projectes: planificar per fases (planificar, construir, revisar, presentar).|Gestión de proyectos: planificar por fases (planificar, construir, revisar, presentar).",
+      "Llengua: definir el destinatari i el propòsit d'un text.|Lengua: definir el destinatario y el propósito de un texto."
+    ]
+  },
+  'w8-2': {
+    intro: "Segona sessió del projecte final: l'esquelet s'omple de contingut i estil. L'alumnat aprèn a escriure per a una pantalla (textos curts, clars i amb les seves paraules), a posar imatges amb un alt que les descriu (i només imatges que té permís per fer servir), a donar el mateix estil a moltes seccions amb una classe com .targeta i a triar una paleta de pocs colors i una lletra. També practica una galeria amb flex. A l'activitat sense pantalla, escriu en paper els textos de la seva web abans de picar-los. Acaba desant la versió 2, amb un paràgraf a cada secció, imatges amb alt, un peu de pàgina i l'estil.|Segunda sesión del proyecto final: el esqueleto se llena de contenido y estilo. El alumnado aprende a escribir para una pantalla (textos cortos, claros y con sus palabras), a poner imágenes con un alt que las describe (y solo imágenes que tiene permiso para usar), a dar el mismo estilo a muchas secciones con una clase como .targeta y a elegir una paleta de pocos colores y una letra. También practica una galería con flex. En la actividad sin pantalla, escribe en papel los textos de su web antes de teclearlos. Termina guardando la versión 2, con un párrafo en cada sección, imágenes con alt, un pie de página y el estilo.",
+    claus: [
+      "Textos per a pantalla: curts, clars, amb les teves paraules i pensats per al públic.|Textos para pantalla: cortos, claros, con tus palabras y pensados para el público.",
+      "Cada imatge amb un alt que la descriu, i només imatges amb permís (les de Numi o pròpies).|Cada imagen con un alt que la describe, y solo imágenes con permiso (las de Numi o propias).",
+      "Una classe (.targeta) dona el mateix estil a moltes seccions amb una sola regla.|Una clase (.targeta) da el mismo estilo a muchas secciones con una sola regla.",
+      "Pocs colors (fons, text, destacat) i una lletra a tota la web; copiar no és crear.|Pocos colores (fondo, texto, destacado) y una letra en toda la web; copiar no es crear."
+    ],
+    prev: [
+      "La versió 1 de la web (l'esquelet de la sessió anterior).|La versión 1 de la web (el esqueleto de la sesión anterior).",
+      "Imatges amb alt (unitat 3), colors i classes (unitat 4), caixes i flex (unitats 5 i 6).|Imágenes con alt (unidad 3), colores y clases (unidad 4), cajas y flex (unidades 5 y 6).",
+      "Resumir una idea en dues o tres frases.|Resumir una idea en dos o tres frases."
+    ],
+    faq: [
+      ["Puc copiar textos d'una enciclopèdia?|¿Puedo copiar textos de una enciclopedia?", "No: llegiu, enteneu i escriviu-ho amb les vostres paraules. Si feu servir una frase exacta, entre cometes i amb la font. I citeu d'on heu tret les dades.|No: leed, entended y escribidlo con vuestras palabras. Si usáis una frase exacta, entre comillas y con la fuente. Y citad de dónde habéis sacado los datos."],
+      ["Quantes paraules ha de tenir cada secció?|¿Cuántas palabras tiene que tener cada sección?", "Les que calguin per dir-ho clar: sovint, un o dos paràgrafs curts. A la pantalla, la gent llegeix per sobre: frases curtes i una idea per paràgraf.|Las que hagan falta para decirlo claro: a menudo, uno o dos párrafos cortos. En la pantalla, la gente lee por encima: frases cortas y una idea por párrafo."],
+      ["Puc fer servir imatges generades amb IA?|¿Puedo usar imágenes generadas con IA?", "A l'app fem servir les de Numi. Si mai en feu servir d'IA, digueu-ho a la llegenda i comproveu que el servei us permeti fer-les servir.|En la app usamos las de Numi. Si alguna vez usáis de IA, decidlo en la leyenda y comprobad que el servicio os permita usarlas."],
+      ["Com trio una paleta que quedi bé?|¿Cómo elijo una paleta que quede bien?", "Un fons clar, un text fosc i un color per destacar (títols, botons). Comproveu el contrast i repetiu els mateixos colors a tota la web.|Un fondo claro, un texto oscuro y un color para destacar (títulos, botones). Comprobad el contraste y repetid los mismos colores en toda la web."]
+    ],
+    tec: [
+      ["La sessió no comença amb la versió que van desar.|La sesión no empieza con la versión que guardaron.", "Comença amb l'última versió desada al perfil. Si es va desar en un altre perfil o no es va desar, en surt una plantilla: podeu copiar-hi el codi de «Projectes».|Empieza con la última versión guardada en el perfil. Si se guardó en otro perfil o no se guardó, sale una plantilla: podéis copiar el código de «Proyectos»."],
+      ["La classe .targeta no s'aplica a totes les seccions.|La clase .targeta no se aplica a todas las secciones.", "Cada &lt;section&gt; ha de portar class=&quot;targeta&quot;. Si ja té un id, totes dues coses hi caben: &lt;section id=&quot;cures&quot; class=&quot;targeta&quot;&gt;.|Cada &lt;section&gt; tiene que llevar class=&quot;targeta&quot;. Si ya tiene un id, las dos cosas caben: &lt;section id=&quot;cures&quot; class=&quot;targeta&quot;&gt;."],
+      ["El CSS sembla ben escrit però no fa res.|El CSS parece bien escrito pero no hace nada.", "Mireu si hi ha una clau sense tancar més amunt o un nom de propietat mal escrit (backgroud). La barra d'estat avisa de les claus.|Mirad si hay una llave sin cerrar más arriba o un nombre de propiedad mal escrito (backgroud). La barra de estado avisa de las llaves."]
+    ],
+    seg: [
+      "Cap dada personal ni fotos de persones a la web: és un projecte per publicar.|Ningún dato personal ni fotos de personas en la web: es un proyecto para publicar.",
+      "Si busqueu informació, en llocs de confiança i amb un adult a prop.|Si buscáis información, en sitios de confianza y con un adulto cerca.",
+      "Pausa activa (imatge al 100 % i salts flex) entre els reptes i el projecte.|Pausa activa (imagen al 100 % y saltos flex) entre los retos y el proyecto."
+    ],
+    extra: [
+      "Afegir una galeria de tres imatges amb flex i gap, cadascuna amb el seu alt.|Añadir una galería de tres imágenes con flex y gap, cada una con su alt.",
+      "Fer una classe .destacat per a una frase important de cada secció.|Hacer una clase .destacat para una frase importante de cada sección.",
+      "Llegir els textos a un company/a i escurçar el que no s'entengui a la primera.|Leer los textos a un compañero/a y acortar lo que no se entienda a la primera."
+    ],
+    trans: [
+      "Sessió següent: revisar i millorar (accessibilitat, contrast, ortografia i mòbil).|Sesión siguiente: revisar y mejorar (accesibilidad, contraste, ortografía y móvil).",
+      "Llengua: l'escriptura clara i la revisió d'un text.|Lengua: la escritura clara y la revisión de un texto.",
+      "Educació visual i plàstica: la paleta de colors i la coherència visual.|Educación visual y plástica: la paleta de colores y la coherencia visual."
+    ]
+  },
+  'w8-3': {
+    intro: "Tercera sessió del projecte final: revisar i millorar, com en una empresa de veritat. L'alumnat revisa l'accessibilitat (alt a totes les imatges, títols en ordre sense saltar-ne, enllaços amb un text clar), el contrast dels colors, l'ortografia (llegint en veu alta) i la vista de mòbil (amb un @media si cal). A l'activitat sense pantalla, una persona fa de lector de pantalla i llegeix en veu alta una web de paper tal com la «sentiria» algú que no hi veu. Després es fa una revisió per parelles amable i concreta (una cosa que funciona i una millora) i cadascú desa la versió 3 de la seva web amb els canvis.|Tercera sesión del proyecto final: revisar y mejorar, como en una empresa de verdad. El alumnado revisa la accesibilidad (alt en todas las imágenes, títulos en orden sin saltarse ninguno, enlaces con un texto claro), el contraste de los colores, la ortografía (leyendo en voz alta) y la vista de móvil (con un @media si hace falta). En la actividad sin pantalla, una persona hace de lector de pantalla y lee en voz alta una web de papel tal como la «oiría» alguien que no ve. Después se hace una revisión por parejas amable y concreta (algo que funciona y una mejora) y cada uno guarda la versión 3 de su web con los cambios.",
+    claus: [
+      "Accessibilitat: alt a les imatges, títols en ordre (h1 → h2 → h3) i enllaços que diuen on porten.|Accesibilidad: alt en las imágenes, títulos en orden (h1 → h2 → h3) y enlaces que dicen adónde llevan.",
+      "Contrast: text fosc sobre fons clar (o al revés); gris clar o groc sobre blanc no es llegeix.|Contraste: texto oscuro sobre fondo claro (o al revés); gris claro o amarillo sobre blanco no se lee.",
+      "Ortografia: llegir en veu alta a poc a poc; mòbil: provar-la i afegir @media si cal.|Ortografía: leer en voz alta despacio; móvil: probarla y añadir @media si hace falta.",
+      "Una bona revisió diu una cosa que funciona i una millora concreta, amb amabilitat.|Una buena revisión dice algo que funciona y una mejora concreta, con amabilidad."
+    ],
+    prev: [
+      "La versió 2 de la web (sessió anterior).|La versión 2 de la web (sesión anterior).",
+      "Alt, títols en ordre, contrast i @media (unitats 2, 3, 4 i 7).|Alt, títulos en orden, contraste y @media (unidades 2, 3, 4 y 7).",
+      "Donar i rebre opinions sobre una feina.|Dar y recibir opiniones sobre un trabajo."
+    ],
+    faq: [
+      ["Com llegeix una web un lector de pantalla?|¿Cómo lee una web un lector de pantalla?", "Llegeix el text en ordre, diu «títol de nivell 2», «enllaç: …», «imatge: …» (l'alt) i permet saltar d'un títol a l'altre. Per això importen tant l'alt, els títols en ordre i el text dels enllaços.|Lee el texto en orden, dice «título de nivel 2», «enlace: …», «imagen: …» (el alt) y permite saltar de un título a otro. Por eso importan tanto el alt, los títulos en orden y el texto de los enlaces."],
+      ["Què faig si no estic d'acord amb la revisió del company/a?|¿Qué hago si no estoy de acuerdo con la revisión del compañero/a?", "Escoltar-la, pensar-hi i decidir: la web és vostra. Però si algú no ha entès una cosa, potser cal explicar-la millor.|Escucharla, pensarla y decidir: la web es vuestra. Pero si alguien no ha entendido algo, quizá hay que explicarlo mejor."],
+      ["Hi ha eines que revisen l'accessibilitat soles?|¿Hay herramientas que revisan la accesibilidad solas?", "Sí, i els professionals les fan servir, però no ho troben tot: un alt pot existir i ser dolent. La revisió humana és imprescindible.|Sí, y los profesionales las usan, pero no lo encuentran todo: un alt puede existir y ser malo. La revisión humana es imprescindible."],
+      ["Quantes coses he de canviar?|¿Cuántas cosas tengo que cambiar?", "Com a mínim les que diu la llista (alt, títols, contrast, mòbil) i una millora de la revisió. Millor poques i ben fetes.|Como mínimo las que dice la lista (alt, títulos, contraste, móvil) y una mejora de la revisión. Mejor pocas y bien hechas."]
+    ],
+    tec: [
+      ["Per revisar la web del company/a, cal canviar d'ordinador.|Para revisar la web del compañero/a, hay que cambiar de ordenador.", "Que l'altra persona obri la seva web a «Projectes» al seu ordinador i el revisor/a s'hi assegui al costat. Ningú no canvia el codi de l'altre.|Que la otra persona abra su web en «Proyectos» en su ordenador y el revisor/a se siente al lado. Nadie cambia el código del otro."],
+      ["La comprovació de l'ordre dels títols no es marca.|La comprobación del orden de los títulos no se marca.", "El primer títol ha de ser l'&lt;h1&gt; i després els &lt;h2&gt;. Si la capçalera té un &lt;h2&gt; abans del &lt;h1&gt;, canvieu-lo.|El primer título tiene que ser el &lt;h1&gt; y después los &lt;h2&gt;. Si la cabecera tiene un &lt;h2&gt; antes del &lt;h1&gt;, cambiadlo."],
+      ["No saben si un color té prou contrast.|No saben si un color tiene suficiente contraste.", "Regla ràpida: si el codi hex del text comença per 0-4 i el del fons per C-F (o al revés), anirà bé. Els grisos clars (#999 o més) sobre blanc, no.|Regla rápida: si el código hex del texto empieza por 0-4 y el del fondo por C-F (o al revés), irá bien. Los grises claros (#999 o más) sobre blanco, no."]
+    ],
+    seg: [
+      "Revisió amable: es parla de la web, no de la persona; primer el que funciona.|Revisión amable: se habla de la web, no de la persona; primero lo que funciona.",
+      "Al lector de pantalla humà, ningú no s'ha de tapar els ulls si no vol.|En el lector de pantalla humano, nadie tiene que taparse los ojos si no quiere.",
+      "Pausa activa de cos sencer (ulls, coll, espatlles) a mitja sessió: és una sessió de molta pantalla.|Pausa activa de cuerpo entero (ojos, cuello, hombros) a mitad de sesión: es una sesión de mucha pantalla."
+    ],
+    extra: [
+      "Activar el lector de pantalla de l'ordinador o del mòbil (amb el professor/a) i escoltar la vostra web.|Activar el lector de pantalla del ordenador o del móvil (con el profesor/a) y escuchar vuestra web.",
+      "Afegir :focus als enllaços del menú perquè es vegin bé amb el teclat.|Añadir :focus a los enlaces del menú para que se vean bien con el teclado.",
+      "Fer la revisió a dues persones diferents i comparar què diu cadascuna.|Hacer la revisión a dos personas diferentes y comparar qué dice cada una."
+    ],
+    trans: [
+      "Sessió següent: la versió final, a punt per publicar, i la presentació a la Mostra.|Sesión siguiente: la versión final, a punto para publicar, y la presentación en la Muestra.",
+      "Valors: l'accessibilitat com a dret de totes les persones.|Valores: la accesibilidad como derecho de todas las personas.",
+      "Llengua: la revisió de l'ortografia i la lectura en veu alta.|Lengua: la revisión de la ortografía y la lectura en voz alta."
+    ]
+  },
+  'w8-4': {
+    intro: "Última sessió del curs: la Mostra de Webs. Abans de presentar, l'alumnat deixa la web a punt per publicar: treu qualsevol dada personal (adreça, telèfon, escola), completa el document (lang, title i viewport), hi afegeix un peu de pàgina amb els crèdits i un enllaç «Torna a dalt». Aprèn què vol dir publicar: pujar el fitxer a un servidor i que un domini hi porti, i que a «Projectes» pot descarregar la seva web com un fitxer .html (sempre amb permís d'un adult per publicar-la). Després assaja la presentació en trios amb un guió (per a qui és, com l'ha feta i què n'ha après), presenta a la Mostra i rep el diploma del curs.|Última sesión del curso: la Muestra de Webs. Antes de presentar, el alumnado deja la web a punto para publicar: quita cualquier dato personal (dirección, teléfono, centro), completa el documento (lang, title y viewport), añade un pie de página con los créditos y un enlace «Vuelve arriba». Aprende qué quiere decir publicar: subir el archivo a un servidor y que un dominio lleve a él, y que en «Proyectos» puede descargar su web como un archivo .html (siempre con permiso de un adulto para publicarla). Después ensaya la presentación en tríos con un guion (para quién es, cómo la ha hecho y qué ha aprendido), presenta en la Muestra y recibe el diploma del curso.",
+    claus: [
+      "Una web pública no porta mai dades personals: ni adreça, ni telèfon, ni escola, ni fotos de la cara.|Una web pública no lleva nunca datos personales: ni dirección, ni teléfono, ni centro, ni fotos de la cara.",
+      "A punt per publicar: &lt;html lang&gt;, &lt;title&gt;, viewport, crèdits al &lt;footer&gt; i «Torna a dalt».|A punto para publicar: &lt;html lang&gt;, &lt;title&gt;, viewport, créditos en el &lt;footer&gt; y «Vuelve arriba».",
+      "Publicar és pujar els fitxers a un servidor; el domini hi porta (unitat 1). Sempre amb un adult.|Publicar es subir los archivos a un servidor; el dominio lleva a ellos (unidad 1). Siempre con un adulto.",
+      "Presentar: per a qui és, com funciona, com l'has feta (una part del codi) i què n'has après.|Presentar: para quién es, cómo funciona, cómo la has hecho (una parte del código) y qué has aprendido."
+    ],
+    prev: [
+      "La versió 3 de la web, revisada (sessió anterior).|La versión 3 de la web, revisada (sesión anterior).",
+      "L'esquelet complet del document i els enllaços #id (unitats 2 i 3).|El esqueleto completo del documento y los enlaces #id (unidades 2 y 3).",
+      "Parlar davant d'un grup petit durant un parell de minuts.|Hablar delante de un grupo pequeño durante un par de minutos."
+    ],
+    faq: [
+      ["Puc publicar la meva web a internet de veritat?|¿Puedo publicar mi web en internet de verdad?", "Sí, amb un adult: a «Projectes» la descarregueu com a fitxer .html i es pot pujar a un servei d'allotjament (n'hi ha de gratuïts) o a la web de l'escola. Abans, revisar que no tingui cap dada personal.|Sí, con un adulto: en «Proyectos» la descargáis como archivo .html y se puede subir a un servicio de alojamiento (los hay gratuitos) o a la web del centro. Antes, revisar que no tenga ningún dato personal."],
+      ["Per què no puc posar el nom de la meva escola?|¿Por qué no puedo poner el nombre de mi centro?", "Perquè amb el nom, l'edat i l'escola qualsevol persona podria saber on trobar-te. A internet, el que publiques ho pot veure tothom i durant molt de temps.|Porque con el nombre, la edad y el centro cualquier persona podría saber dónde encontrarte. En internet, lo que publicas lo puede ver todo el mundo y durante mucho tiempo."],
+      ["Què han de dir els crèdits?|¿Qué tienen que decir los créditos?", "Qui ha fet la web (el nom de pila o de programador/a), amb quina eina (Numi Tech) i d'on són les imatges (Numi) i la informació (les fonts).|Quién ha hecho la web (el nombre de pila o de programador/a), con qué herramienta (Numi Tech) y de dónde son las imágenes (Numi) y la información (las fuentes)."],
+      ["Em fa vergonya presentar. He de fer-ho?|Me da vergüenza presentar. ¿Tengo que hacerlo?", "L'assaig en trios ajuda molt. Si cal, es pot presentar a un grup petit o amb el guió a la mà: el que importa és explicar la web, no fer-ho perfecte.|El ensayo en tríos ayuda mucho. Si hace falta, se puede presentar a un grupo pequeño o con el guion en la mano: lo que importa es explicar la web, no hacerlo perfecto."]
+    ],
+    tec: [
+      ["Volen ensenyar la web al projector.|Quieren enseñar la web en el proyector.", "Obriu-la a «Projectes» des del perfil de l'alumne/a a l'ordinador del projector, o descarregueu-la (.html) i obriu-la amb el navegador a pantalla completa.|Abridla en «Proyectos» desde el perfil del alumno/a en el ordenador del proyector, o descargadla (.html) y abridla con el navegador a pantalla completa."],
+      ["La web descarregada no mostra les imatges sense connexió.|La web descargada no muestra las imágenes sin conexión.", "Les imatges de Numi es carreguen des del servidor de Numi: cal connexió a internet. El text i l'estil sí que hi són dins del fitxer.|Las imágenes de Numi se cargan desde el servidor de Numi: hace falta conexión a internet. El texto y el estilo sí que están dentro del archivo."],
+      ["El diploma no surt.|El diploma no sale.", "Surt al final de la sessió, després de la versió final i de preparar la presentació. Si cal imprimir-lo, hi ha el diploma a les fitxes per imprimir.|Sale al final de la sesión, después de la versión final y de preparar la presentación. Si hay que imprimirlo, está el diploma en las fichas para imprimir."]
+    ],
+    seg: [
+      "Abans de publicar res, un adult revisa la web: cap dada personal, cap foto de persones, imatges amb permís.|Antes de publicar nada, un adulto revisa la web: ningún dato personal, ninguna foto de personas, imágenes con permiso.",
+      "A la Mostra, es pregunta i es comenta amb respecte: «una estrella i un desig».|En la Muestra, se pregunta y se comenta con respeto: «una estrella y un deseo».",
+      "Celebreu l'esforç de tothom: cada web és diferent i totes compten.|Celebrad el esfuerzo de todo el mundo: cada web es diferente y todas cuentan."
+    ],
+    extra: [
+      "Publicar la web amb un adult en un servei d'allotjament gratuït o a la web de l'escola.|Publicar la web con un adulto en un servicio de alojamiento gratuito o en la web del centro.",
+      "Afegir-hi una pàgina nova (pagina2.html) enllaçada des del menú.|Añadir una página nueva (pagina2.html) enlazada desde el menú.",
+      "Fer una versió de la web en una altra llengua amb el lang que toqui.|Hacer una versión de la web en otra lengua con el lang que toque."
+    ],
+    trans: [
+      "Després del curs: continuar millorant la web a «Projectes» i descarregar-la quan estigui a punt.|Después del curso: seguir mejorando la web en «Proyectos» y descargarla cuando esté a punto.",
+      "Tech Digital: la privadesa i la petjada digital (el que publiques es queda).|Tech Digital: la privacidad y la huella digital (lo que publicas se queda).",
+      "Expressió oral: presentar un projecte davant d'un públic.|Expresión oral: presentar un proyecto ante un público."
+    ]
+  }
+}).forEach(([id, g]) => Object.assign(TGUIDE[id], g));

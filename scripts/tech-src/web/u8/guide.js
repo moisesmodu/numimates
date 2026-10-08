@@ -403,7 +403,7 @@ Object.assign(TGUIDE, (() => {
       { min: 12, t: "A l'ordinador: la versió final|En el ordenador: la versión final", fase: 'ordinador',
         fa: "Fan els passos de l'app fins a la versió final de la web: les dades personals, el document complet, «Torna a dalt» i, a la seva web, el peu amb crèdits. Després responen les preguntes per preparar la presentació. Passeja i comprova que ningú no tingui dades personals a la web.|Hacen los pasos de la app hasta la versión final de la web: los datos personales, el documento completo, «Vuelve arriba» y, en su web, el pie con créditos. Después responden las preguntas para preparar la presentación. Pasea y comprueba que nadie tenga datos personales en la web.",
         diu: ['Hi ha alguna cosa a la teva web que digui on vius o on estudies? Treu-la.|¿Hay algo en tu web que diga dónde vives o dónde estudias? Quítalo.', "Al peu: qui l'ha feta i d'on són les imatges.|En el pie: quién la ha hecho y de dónde son las imágenes."],
-        slides: ['s7'], app: "De «La missió» fins a «Crea»: la història, les targetes, ordenar la presentació, la pàgina de la Júlia, la línia que no s'ha de publicar, el title, la pausa activa, els dos reptes, la versió final de la web i les preguntes per preparar la presentació.|De «La misión» hasta «Crea»: la historia, las tarjetas, ordenar la presentación, la página de Júlia, la línea que no se debe publicar, el title, la pausa activa, los dos retos, la versión final de la web y las preguntas para preparar la presentación.", org: 'Individual|Individual' },
+        slides: ['s7'], app: "De «La missió» fins a «Crea»: la història, les targetes, ordenar la presentació, la pàgina de la Júlia, la línia que no s'ha de publicar, el title, la pausa activa, els tres reptes (treure les dades personals, «Torna a dalt» i el document complet), la versió final de la web i les preguntes per preparar la presentació.|De «La misión» hasta «Crea»: la historia, las tarjetas, ordenar la presentación, la página de Júlia, la línea que no se debe publicar, el title, la pausa activa, los tres retos (quitar los datos personales, «Vuelve arriba» y el documento completo), la versión final de la web y las preguntas para preparar la presentación.", org: 'Individual|Individual' },
       { min: 10, t: 'Assaig en trios|Ensayo en tríos', fase: 'desconnectat',
         fa: "En grups de tres, amb el guió imprès. Cada alumne/a assaja la presentació (dos minuts) mentre un company/a fa de públic i l'altre/a controla el temps. El públic diu «una estrella i un desig»: una cosa que ha agradat i una que milloraria. Roten els papers.|En grupos de tres, con el guion impreso. Cada alumno/a ensaya la presentación (dos minutos) mientras un compañero/a hace de público y el otro/a controla el tiempo. El público dice «una estrella y un deseo»: algo que le ha gustado y algo que mejoraría. Rotan los papeles.",
         diu: ['Dos minuts: per a qui és, com l\'has feta i què n\'has après.|Dos minutos: para quién es, cómo la has hecho y qué has aprendido.', "Una estrella i un desig: primer el que ha funcionat.|Una estrella y un deseo: primero lo que ha funcionado."],
@@ -476,3 +476,168 @@ Object.assign(TGUIDE, (() => {
   };
   return G;
 })());
+
+/* ---------- Guia completa (unitat 8): la sessió en breu, idees clau, coneixements previs, preguntes que faran, què fer si
+   alguna cosa falla, seguretat i benestar, per anar més enllà i connexions ---------- */
+Object.entries({
+  'w8-1': {
+    intro: "Comença el projecte final del curs: en quatre sessions, cada alumne/a farà la seva pròpia web per a la Mostra de Webs. Aquesta primera sessió és de planificació, com fan els professionals: definir per a qui és la web i què hi ha de trobar el públic, triar tres seccions coherents, dibuixar un esbós en format mòbil i escriure l'esquelet semàntic (header, nav, main amb sections i footer). També connecta el menú amb les seccions amb href=&quot;#id&quot; i un id idèntic. A l'activitat sense pantalla, es fan entrevistes per parelles per conèixer el públic i dibuixen l'esbós. Acaben desant la versió 1 (l'esquelet), que continuaran a les sessions següents.|Empieza el proyecto final del curso: en cuatro sesiones, cada alumno/a hará su propia web para la Muestra de Webs. Esta primera sesión es de planificación, como hacen los profesionales: definir para quién es la web y qué tiene que encontrar el público, elegir tres secciones coherentes, dibujar un boceto en formato móvil y escribir el esqueleto semántico (header, nav, main con sections y footer). También conecta el menú con las secciones con href=&quot;#id&quot; y un id idéntico. En la actividad sin pantalla, se hacen entrevistas por parejas para conocer al público y dibujan el boceto. Terminan guardando la versión 1 (el esqueleto), que continuarán en las sesiones siguientes.",
+    claus: [
+      "Una bona web comença pel públic: per a qui és i què hi ha de trobar.|Una buena web empieza por el público: para quién es y qué tiene que encontrar.",
+      "L'esquelet semàntic: &lt;header&gt; (amb el &lt;nav&gt;), &lt;main&gt; amb &lt;section&gt; i &lt;footer&gt;.|El esqueleto semántico: &lt;header&gt; (con el &lt;nav&gt;), &lt;main&gt; con &lt;section&gt; y &lt;footer&gt;.",
+      "L'esbós en paper (en format mòbil) decideix les parts i l'ordre abans del codi.|El boceto en papel (en formato móvil) decide las partes y el orden antes del código.",
+      "Menú → secció: href=&quot;#cures&quot; i id=&quot;cures&quot;, el nom idèntic i sense espais.|Menú → sección: href=&quot;#cures&quot; e id=&quot;cures&quot;, el nombre idéntico y sin espacios."
+    ],
+    prev: [
+      "Tot el curs: HTML, imatges i enllaços, CSS, caixes, flex i @media.|Todo el curso: HTML, imágenes y enlaces, CSS, cajas, flex y @media.",
+      "Enllaços #id a seccions (unitat 3).|Enlaces #id a secciones (unidad 3).",
+      "Fer preguntes i escoltar un company/a (per a l'entrevista).|Hacer preguntas y escuchar a un compañero/a (para la entrevista)."
+    ],
+    faq: [
+      ["Puc canviar de tema més endavant?|¿Puedo cambiar de tema más adelante?", "Millor no: les sessions següents construeixen sobre aquest esquelet. Si el tema no us convenç, canvieu-lo avui, abans d'escriure el contingut.|Mejor no: las sesiones siguientes construyen sobre este esqueleto. Si el tema no os convence, cambiadlo hoy, antes de escribir el contenido."],
+      ["Per què &lt;header&gt; i &lt;section&gt; i no tot amb &lt;div&gt;?|¿Por qué &lt;header&gt; y &lt;section&gt; y no todo con &lt;div&gt;?", "Les etiquetes semàntiques diuen què és cada part: els lectors de pantalla permeten saltar directament al menú o al contingut, i els cercadors entenen millor la web.|Las etiquetas semánticas dicen qué es cada parte: los lectores de pantalla permiten saltar directamente al menú o al contenido, y los buscadores entienden mejor la web."],
+      ["Quantes seccions ha de tenir la web?|¿Cuántas secciones tiene que tener la web?", "Tres és un bon nombre per a quatre sessions. Més val tres seccions ben fetes que sis de buides.|Tres es un buen número para cuatro sesiones. Más vale tres secciones bien hechas que seis vacías."],
+      ["On es desa la web entre sessions?|¿Dónde se guarda la web entre sesiones?", "Cada versió es desa al portafoli i la sessió següent comença des de l'última que heu desat. Cal entrar sempre amb el mateix perfil.|Cada versión se guarda en el portafolio y la sesión siguiente empieza desde la última que habéis guardado. Hay que entrar siempre con el mismo perfil."]
+    ],
+    tec: [
+      ["L'enllaç del menú no salta a la secció.|El enlace del menú no salta a la sección.", "Compareu lletra a lletra href=&quot;#nom&quot; i id=&quot;nom&quot;. A la vista prèvia, si no hi ha cap element amb aquell id, surt un avís que ho diu.|Comparad letra a letra href=&quot;#nombre&quot; e id=&quot;nombre&quot;. En la vista previa, si no hay ningún elemento con ese id, sale un aviso que lo dice."],
+      ["El peu de pàgina surt a dalt.|El pie de página sale arriba.", "L'ordre del codi és l'ordre de la pàgina: el &lt;footer&gt; ha d'anar l'últim, després de tancar el &lt;/main&gt;.|El orden del código es el orden de la página: el &lt;footer&gt; tiene que ir el último, después de cerrar el &lt;/main&gt;."],
+      ["No troben la versió 1 a la sessió següent.|No encuentran la versión 1 en la sesión siguiente.", "S'ha de desar amb «Desa-ho i continua» al pas «Crea». Si no es va desar, la sessió 2 comença amb una plantilla del tema triat.|Hay que guardarla con «Guárdalo y continúa» en el paso «Crea». Si no se guardó, la sesión 2 empieza con una plantilla del tema elegido."]
+    ],
+    seg: [
+      "Triar un tema que es pugui compartir: res de dades personals ni de temes que facin sentir malament ningú.|Elegir un tema que se pueda compartir: nada de datos personales ni de temas que hagan sentir mal a nadie.",
+      "A l'entrevista, preguntes sobre gustos i necessitats, no sobre la vida privada.|En la entrevista, preguntas sobre gustos y necesidades, no sobre la vida privada.",
+      "Pausa activa de la web amb el cos (capçalera, menú, contingut, peu).|Pausa activa de la web con el cuerpo (cabecera, menú, contenido, pie)."
+    ],
+    extra: [
+      "Fer dos esbossos (mòbil i ordinador) i explicar què canvia d'un a l'altre.|Hacer dos bocetos (móvil y ordenador) y explicar qué cambia de uno a otro.",
+      "Escriure en un comentari, a dalt del codi, el públic i l'objectiu de la web.|Escribir en un comentario, arriba del código, el público y el objetivo de la web.",
+      "Afegir una quarta secció «Sobre aquesta web» (sense dades personals).|Añadir una cuarta sección «Sobre esta web» (sin datos personales)."
+    ],
+    trans: [
+      "Sessió següent: omplir la web amb textos, imatges amb alt i l'estil amb una paleta.|Sesión siguiente: llenar la web con textos, imágenes con alt y el estilo con una paleta.",
+      "Gestió de projectes: planificar per fases (planificar, construir, revisar, presentar).|Gestión de proyectos: planificar por fases (planificar, construir, revisar, presentar).",
+      "Llengua: definir el destinatari i el propòsit d'un text.|Lengua: definir el destinatario y el propósito de un texto."
+    ]
+  },
+  'w8-2': {
+    intro: "Segona sessió del projecte final: l'esquelet s'omple de contingut i estil. L'alumnat aprèn a escriure per a una pantalla (textos curts, clars i amb les seves paraules), a posar imatges amb un alt que les descriu (i només imatges que té permís per fer servir), a donar el mateix estil a moltes seccions amb una classe com .targeta i a triar una paleta de pocs colors i una lletra. També practica una galeria amb flex. A l'activitat sense pantalla, escriu en paper els textos de la seva web abans de picar-los. Acaba desant la versió 2, amb un paràgraf a cada secció, imatges amb alt, un peu de pàgina i l'estil.|Segunda sesión del proyecto final: el esqueleto se llena de contenido y estilo. El alumnado aprende a escribir para una pantalla (textos cortos, claros y con sus palabras), a poner imágenes con un alt que las describe (y solo imágenes que tiene permiso para usar), a dar el mismo estilo a muchas secciones con una clase como .targeta y a elegir una paleta de pocos colores y una letra. También practica una galería con flex. En la actividad sin pantalla, escribe en papel los textos de su web antes de teclearlos. Termina guardando la versión 2, con un párrafo en cada sección, imágenes con alt, un pie de página y el estilo.",
+    claus: [
+      "Textos per a pantalla: curts, clars, amb les teves paraules i pensats per al públic.|Textos para pantalla: cortos, claros, con tus palabras y pensados para el público.",
+      "Cada imatge amb un alt que la descriu, i només imatges amb permís (les de Numi o pròpies).|Cada imagen con un alt que la describe, y solo imágenes con permiso (las de Numi o propias).",
+      "Una classe (.targeta) dona el mateix estil a moltes seccions amb una sola regla.|Una clase (.targeta) da el mismo estilo a muchas secciones con una sola regla.",
+      "Pocs colors (fons, text, destacat) i una lletra a tota la web; copiar no és crear.|Pocos colores (fondo, texto, destacado) y una letra en toda la web; copiar no es crear."
+    ],
+    prev: [
+      "La versió 1 de la web (l'esquelet de la sessió anterior).|La versión 1 de la web (el esqueleto de la sesión anterior).",
+      "Imatges amb alt (unitat 3), colors i classes (unitat 4), caixes i flex (unitats 5 i 6).|Imágenes con alt (unidad 3), colores y clases (unidad 4), cajas y flex (unidades 5 y 6).",
+      "Resumir una idea en dues o tres frases.|Resumir una idea en dos o tres frases."
+    ],
+    faq: [
+      ["Puc copiar textos d'una enciclopèdia?|¿Puedo copiar textos de una enciclopedia?", "No: llegiu, enteneu i escriviu-ho amb les vostres paraules. Si feu servir una frase exacta, entre cometes i amb la font. I citeu d'on heu tret les dades.|No: leed, entended y escribidlo con vuestras palabras. Si usáis una frase exacta, entre comillas y con la fuente. Y citad de dónde habéis sacado los datos."],
+      ["Quantes paraules ha de tenir cada secció?|¿Cuántas palabras tiene que tener cada sección?", "Les que calguin per dir-ho clar: sovint, un o dos paràgrafs curts. A la pantalla, la gent llegeix per sobre: frases curtes i una idea per paràgraf.|Las que hagan falta para decirlo claro: a menudo, uno o dos párrafos cortos. En la pantalla, la gente lee por encima: frases cortas y una idea por párrafo."],
+      ["Puc fer servir imatges generades amb IA?|¿Puedo usar imágenes generadas con IA?", "A l'app fem servir les de Numi. Si mai en feu servir d'IA, digueu-ho a la llegenda i comproveu que el servei us permeti fer-les servir.|En la app usamos las de Numi. Si alguna vez usáis de IA, decidlo en la leyenda y comprobad que el servicio os permita usarlas."],
+      ["Com trio una paleta que quedi bé?|¿Cómo elijo una paleta que quede bien?", "Un fons clar, un text fosc i un color per destacar (títols, botons). Comproveu el contrast i repetiu els mateixos colors a tota la web.|Un fondo claro, un texto oscuro y un color para destacar (títulos, botones). Comprobad el contraste y repetid los mismos colores en toda la web."]
+    ],
+    tec: [
+      ["La sessió no comença amb la versió que van desar.|La sesión no empieza con la versión que guardaron.", "Comença amb l'última versió desada al perfil. Si es va desar en un altre perfil o no es va desar, en surt una plantilla: podeu copiar-hi el codi de «Projectes».|Empieza con la última versión guardada en el perfil. Si se guardó en otro perfil o no se guardó, sale una plantilla: podéis copiar el código de «Proyectos»."],
+      ["La classe .targeta no s'aplica a totes les seccions.|La clase .targeta no se aplica a todas las secciones.", "Cada &lt;section&gt; ha de portar class=&quot;targeta&quot;. Si ja té un id, totes dues coses hi caben: &lt;section id=&quot;cures&quot; class=&quot;targeta&quot;&gt;.|Cada &lt;section&gt; tiene que llevar class=&quot;targeta&quot;. Si ya tiene un id, las dos cosas caben: &lt;section id=&quot;cures&quot; class=&quot;targeta&quot;&gt;."],
+      ["El CSS sembla ben escrit però no fa res.|El CSS parece bien escrito pero no hace nada.", "Mireu si hi ha una clau sense tancar més amunt o un nom de propietat mal escrit (backgroud). La barra d'estat avisa de les claus.|Mirad si hay una llave sin cerrar más arriba o un nombre de propiedad mal escrito (backgroud). La barra de estado avisa de las llaves."]
+    ],
+    seg: [
+      "Cap dada personal ni fotos de persones a la web: és un projecte per publicar.|Ningún dato personal ni fotos de personas en la web: es un proyecto para publicar.",
+      "Si busqueu informació, en llocs de confiança i amb un adult a prop.|Si buscáis información, en sitios de confianza y con un adulto cerca.",
+      "Pausa activa (imatge al 100 % i salts flex) entre els reptes i el projecte.|Pausa activa (imagen al 100 % y saltos flex) entre los retos y el proyecto."
+    ],
+    extra: [
+      "Afegir una galeria de tres imatges amb flex i gap, cadascuna amb el seu alt.|Añadir una galería de tres imágenes con flex y gap, cada una con su alt.",
+      "Fer una classe .destacat per a una frase important de cada secció.|Hacer una clase .destacat para una frase importante de cada sección.",
+      "Llegir els textos a un company/a i escurçar el que no s'entengui a la primera.|Leer los textos a un compañero/a y acortar lo que no se entienda a la primera."
+    ],
+    trans: [
+      "Sessió següent: revisar i millorar (accessibilitat, contrast, ortografia i mòbil).|Sesión siguiente: revisar y mejorar (accesibilidad, contraste, ortografía y móvil).",
+      "Llengua: l'escriptura clara i la revisió d'un text.|Lengua: la escritura clara y la revisión de un texto.",
+      "Educació visual i plàstica: la paleta de colors i la coherència visual.|Educación visual y plástica: la paleta de colores y la coherencia visual."
+    ]
+  },
+  'w8-3': {
+    intro: "Tercera sessió del projecte final: revisar i millorar, com en una empresa de veritat. L'alumnat revisa l'accessibilitat (alt a totes les imatges, títols en ordre sense saltar-ne, enllaços amb un text clar), el contrast dels colors, l'ortografia (llegint en veu alta) i la vista de mòbil (amb un @media si cal). A l'activitat sense pantalla, una persona fa de lector de pantalla i llegeix en veu alta una web de paper tal com la «sentiria» algú que no hi veu. Després es fa una revisió per parelles amable i concreta (una cosa que funciona i una millora) i cadascú desa la versió 3 de la seva web amb els canvis.|Tercera sesión del proyecto final: revisar y mejorar, como en una empresa de verdad. El alumnado revisa la accesibilidad (alt en todas las imágenes, títulos en orden sin saltarse ninguno, enlaces con un texto claro), el contraste de los colores, la ortografía (leyendo en voz alta) y la vista de móvil (con un @media si hace falta). En la actividad sin pantalla, una persona hace de lector de pantalla y lee en voz alta una web de papel tal como la «oiría» alguien que no ve. Después se hace una revisión por parejas amable y concreta (algo que funciona y una mejora) y cada uno guarda la versión 3 de su web con los cambios.",
+    claus: [
+      "Accessibilitat: alt a les imatges, títols en ordre (h1 → h2 → h3) i enllaços que diuen on porten.|Accesibilidad: alt en las imágenes, títulos en orden (h1 → h2 → h3) y enlaces que dicen adónde llevan.",
+      "Contrast: text fosc sobre fons clar (o al revés); gris clar o groc sobre blanc no es llegeix.|Contraste: texto oscuro sobre fondo claro (o al revés); gris claro o amarillo sobre blanco no se lee.",
+      "Ortografia: llegir en veu alta a poc a poc; mòbil: provar-la i afegir @media si cal.|Ortografía: leer en voz alta despacio; móvil: probarla y añadir @media si hace falta.",
+      "Una bona revisió diu una cosa que funciona i una millora concreta, amb amabilitat.|Una buena revisión dice algo que funciona y una mejora concreta, con amabilidad."
+    ],
+    prev: [
+      "La versió 2 de la web (sessió anterior).|La versión 2 de la web (sesión anterior).",
+      "Alt, títols en ordre, contrast i @media (unitats 2, 3, 4 i 7).|Alt, títulos en orden, contraste y @media (unidades 2, 3, 4 y 7).",
+      "Donar i rebre opinions sobre una feina.|Dar y recibir opiniones sobre un trabajo."
+    ],
+    faq: [
+      ["Com llegeix una web un lector de pantalla?|¿Cómo lee una web un lector de pantalla?", "Llegeix el text en ordre, diu «títol de nivell 2», «enllaç: …», «imatge: …» (l'alt) i permet saltar d'un títol a l'altre. Per això importen tant l'alt, els títols en ordre i el text dels enllaços.|Lee el texto en orden, dice «título de nivel 2», «enlace: …», «imagen: …» (el alt) y permite saltar de un título a otro. Por eso importan tanto el alt, los títulos en orden y el texto de los enlaces."],
+      ["Què faig si no estic d'acord amb la revisió del company/a?|¿Qué hago si no estoy de acuerdo con la revisión del compañero/a?", "Escoltar-la, pensar-hi i decidir: la web és vostra. Però si algú no ha entès una cosa, potser cal explicar-la millor.|Escucharla, pensarla y decidir: la web es vuestra. Pero si alguien no ha entendido algo, quizá hay que explicarlo mejor."],
+      ["Hi ha eines que revisen l'accessibilitat soles?|¿Hay herramientas que revisan la accesibilidad solas?", "Sí, i els professionals les fan servir, però no ho troben tot: un alt pot existir i ser dolent. La revisió humana és imprescindible.|Sí, y los profesionales las usan, pero no lo encuentran todo: un alt puede existir y ser malo. La revisión humana es imprescindible."],
+      ["Quantes coses he de canviar?|¿Cuántas cosas tengo que cambiar?", "Com a mínim les que diu la llista (alt, títols, contrast, mòbil) i una millora de la revisió. Millor poques i ben fetes.|Como mínimo las que dice la lista (alt, títulos, contraste, móvil) y una mejora de la revisión. Mejor pocas y bien hechas."]
+    ],
+    tec: [
+      ["Per revisar la web del company/a, cal canviar d'ordinador.|Para revisar la web del compañero/a, hay que cambiar de ordenador.", "Que l'altra persona obri la seva web a «Projectes» al seu ordinador i el revisor/a s'hi assegui al costat. Ningú no canvia el codi de l'altre.|Que la otra persona abra su web en «Proyectos» en su ordenador y el revisor/a se siente al lado. Nadie cambia el código del otro."],
+      ["La comprovació de l'ordre dels títols no es marca.|La comprobación del orden de los títulos no se marca.", "El primer títol ha de ser l'&lt;h1&gt; i després els &lt;h2&gt;. Si la capçalera té un &lt;h2&gt; abans del &lt;h1&gt;, canvieu-lo.|El primer título tiene que ser el &lt;h1&gt; y después los &lt;h2&gt;. Si la cabecera tiene un &lt;h2&gt; antes del &lt;h1&gt;, cambiadlo."],
+      ["No saben si un color té prou contrast.|No saben si un color tiene suficiente contraste.", "Regla ràpida: si el codi hex del text comença per 0-4 i el del fons per C-F (o al revés), anirà bé. Els grisos clars (#999 o més) sobre blanc, no.|Regla rápida: si el código hex del texto empieza por 0-4 y el del fondo por C-F (o al revés), irá bien. Los grises claros (#999 o más) sobre blanco, no."]
+    ],
+    seg: [
+      "Revisió amable: es parla de la web, no de la persona; primer el que funciona.|Revisión amable: se habla de la web, no de la persona; primero lo que funciona.",
+      "Al lector de pantalla humà, ningú no s'ha de tapar els ulls si no vol.|En el lector de pantalla humano, nadie tiene que taparse los ojos si no quiere.",
+      "Pausa activa de cos sencer (ulls, coll, espatlles) a mitja sessió: és una sessió de molta pantalla.|Pausa activa de cuerpo entero (ojos, cuello, hombros) a mitad de sesión: es una sesión de mucha pantalla."
+    ],
+    extra: [
+      "Activar el lector de pantalla de l'ordinador o del mòbil (amb el professor/a) i escoltar la vostra web.|Activar el lector de pantalla del ordenador o del móvil (con el profesor/a) y escuchar vuestra web.",
+      "Afegir :focus als enllaços del menú perquè es vegin bé amb el teclat.|Añadir :focus a los enlaces del menú para que se vean bien con el teclado.",
+      "Fer la revisió a dues persones diferents i comparar què diu cadascuna.|Hacer la revisión a dos personas diferentes y comparar qué dice cada una."
+    ],
+    trans: [
+      "Sessió següent: la versió final, a punt per publicar, i la presentació a la Mostra.|Sesión siguiente: la versión final, a punto para publicar, y la presentación en la Muestra.",
+      "Valors: l'accessibilitat com a dret de totes les persones.|Valores: la accesibilidad como derecho de todas las personas.",
+      "Llengua: la revisió de l'ortografia i la lectura en veu alta.|Lengua: la revisión de la ortografía y la lectura en voz alta."
+    ]
+  },
+  'w8-4': {
+    intro: "Última sessió del curs: la Mostra de Webs. Abans de presentar, l'alumnat deixa la web a punt per publicar: treu qualsevol dada personal (adreça, telèfon, escola), completa el document (lang, title i viewport), hi afegeix un peu de pàgina amb els crèdits i un enllaç «Torna a dalt». Aprèn què vol dir publicar: pujar el fitxer a un servidor i que un domini hi porti, i que a «Projectes» pot descarregar la seva web com un fitxer .html (sempre amb permís d'un adult per publicar-la). Després assaja la presentació en trios amb un guió (per a qui és, com l'ha feta i què n'ha après), presenta a la Mostra i rep el diploma del curs.|Última sesión del curso: la Muestra de Webs. Antes de presentar, el alumnado deja la web a punto para publicar: quita cualquier dato personal (dirección, teléfono, centro), completa el documento (lang, title y viewport), añade un pie de página con los créditos y un enlace «Vuelve arriba». Aprende qué quiere decir publicar: subir el archivo a un servidor y que un dominio lleve a él, y que en «Proyectos» puede descargar su web como un archivo .html (siempre con permiso de un adulto para publicarla). Después ensaya la presentación en tríos con un guion (para quién es, cómo la ha hecho y qué ha aprendido), presenta en la Muestra y recibe el diploma del curso.",
+    claus: [
+      "Una web pública no porta mai dades personals: ni adreça, ni telèfon, ni escola, ni fotos de la cara.|Una web pública no lleva nunca datos personales: ni dirección, ni teléfono, ni centro, ni fotos de la cara.",
+      "A punt per publicar: &lt;html lang&gt;, &lt;title&gt;, viewport, crèdits al &lt;footer&gt; i «Torna a dalt».|A punto para publicar: &lt;html lang&gt;, &lt;title&gt;, viewport, créditos en el &lt;footer&gt; y «Vuelve arriba».",
+      "Publicar és pujar els fitxers a un servidor; el domini hi porta (unitat 1). Sempre amb un adult.|Publicar es subir los archivos a un servidor; el dominio lleva a ellos (unidad 1). Siempre con un adulto.",
+      "Presentar: per a qui és, com funciona, com l'has feta (una part del codi) i què n'has après.|Presentar: para quién es, cómo funciona, cómo la has hecho (una parte del código) y qué has aprendido."
+    ],
+    prev: [
+      "La versió 3 de la web, revisada (sessió anterior).|La versión 3 de la web, revisada (sesión anterior).",
+      "L'esquelet complet del document i els enllaços #id (unitats 2 i 3).|El esqueleto completo del documento y los enlaces #id (unidades 2 y 3).",
+      "Parlar davant d'un grup petit durant un parell de minuts.|Hablar delante de un grupo pequeño durante un par de minutos."
+    ],
+    faq: [
+      ["Puc publicar la meva web a internet de veritat?|¿Puedo publicar mi web en internet de verdad?", "Sí, amb un adult: a «Projectes» la descarregueu com a fitxer .html i es pot pujar a un servei d'allotjament (n'hi ha de gratuïts) o a la web de l'escola. Abans, revisar que no tingui cap dada personal.|Sí, con un adulto: en «Proyectos» la descargáis como archivo .html y se puede subir a un servicio de alojamiento (los hay gratuitos) o a la web del centro. Antes, revisar que no tenga ningún dato personal."],
+      ["Per què no puc posar el nom de la meva escola?|¿Por qué no puedo poner el nombre de mi centro?", "Perquè amb el nom, l'edat i l'escola qualsevol persona podria saber on trobar-te. A internet, el que publiques ho pot veure tothom i durant molt de temps.|Porque con el nombre, la edad y el centro cualquier persona podría saber dónde encontrarte. En internet, lo que publicas lo puede ver todo el mundo y durante mucho tiempo."],
+      ["Què han de dir els crèdits?|¿Qué tienen que decir los créditos?", "Qui ha fet la web (el nom de pila o de programador/a), amb quina eina (Numi Tech) i d'on són les imatges (Numi) i la informació (les fonts).|Quién ha hecho la web (el nombre de pila o de programador/a), con qué herramienta (Numi Tech) y de dónde son las imágenes (Numi) y la información (las fuentes)."],
+      ["Em fa vergonya presentar. He de fer-ho?|Me da vergüenza presentar. ¿Tengo que hacerlo?", "L'assaig en trios ajuda molt. Si cal, es pot presentar a un grup petit o amb el guió a la mà: el que importa és explicar la web, no fer-ho perfecte.|El ensayo en tríos ayuda mucho. Si hace falta, se puede presentar a un grupo pequeño o con el guion en la mano: lo que importa es explicar la web, no hacerlo perfecto."]
+    ],
+    tec: [
+      ["Volen ensenyar la web al projector.|Quieren enseñar la web en el proyector.", "Obriu-la a «Projectes» des del perfil de l'alumne/a a l'ordinador del projector, o descarregueu-la (.html) i obriu-la amb el navegador a pantalla completa.|Abridla en «Proyectos» desde el perfil del alumno/a en el ordenador del proyector, o descargadla (.html) y abridla con el navegador a pantalla completa."],
+      ["La web descarregada no mostra les imatges sense connexió.|La web descargada no muestra las imágenes sin conexión.", "Les imatges de Numi es carreguen des del servidor de Numi: cal connexió a internet. El text i l'estil sí que hi són dins del fitxer.|Las imágenes de Numi se cargan desde el servidor de Numi: hace falta conexión a internet. El texto y el estilo sí que están dentro del archivo."],
+      ["El diploma no surt.|El diploma no sale.", "Surt al final de la sessió, després de la versió final i de preparar la presentació. Si cal imprimir-lo, hi ha el diploma a les fitxes per imprimir.|Sale al final de la sesión, después de la versión final y de preparar la presentación. Si hay que imprimirlo, está el diploma en las fichas para imprimir."]
+    ],
+    seg: [
+      "Abans de publicar res, un adult revisa la web: cap dada personal, cap foto de persones, imatges amb permís.|Antes de publicar nada, un adulto revisa la web: ningún dato personal, ninguna foto de personas, imágenes con permiso.",
+      "A la Mostra, es pregunta i es comenta amb respecte: «una estrella i un desig».|En la Muestra, se pregunta y se comenta con respeto: «una estrella y un deseo».",
+      "Celebreu l'esforç de tothom: cada web és diferent i totes compten.|Celebrad el esfuerzo de todo el mundo: cada web es diferente y todas cuentan."
+    ],
+    extra: [
+      "Publicar la web amb un adult en un servei d'allotjament gratuït o a la web de l'escola.|Publicar la web con un adulto en un servicio de alojamiento gratuito o en la web del centro.",
+      "Afegir-hi una pàgina nova (pagina2.html) enllaçada des del menú.|Añadir una página nueva (pagina2.html) enlazada desde el menú.",
+      "Fer una versió de la web en una altra llengua amb el lang que toqui.|Hacer una versión de la web en otra lengua con el lang que toque."
+    ],
+    trans: [
+      "Després del curs: continuar millorant la web a «Projectes» i descarregar-la quan estigui a punt.|Después del curso: seguir mejorando la web en «Proyectos» y descargarla cuando esté a punto.",
+      "Tech Digital: la privadesa i la petjada digital (el que publiques es queda).|Tech Digital: la privacidad y la huella digital (lo que publicas se queda).",
+      "Expressió oral: presentar un projecte davant d'un públic.|Expresión oral: presentar un proyecto ante un público."
+    ]
+  }
+}).forEach(([id, g]) => Object.assign(TGUIDE[id], g));

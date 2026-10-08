@@ -660,3 +660,175 @@ Object.assign(TGUIDE, (() => {
     }
   };
 })());
+
+/* ---------- Guia completa (unitat 4): la sessió en breu, idees clau, coneixements previs, preguntes que faran, què fer si
+   alguna cosa falla, seguretat i benestar, per anar més enllà i connexions ---------- */
+Object.entries({
+  'w4-1': {
+    intro: "Primera sessió de CSS. L'alumnat entén la diferència entre l'HTML (què hi ha a la pàgina) i el CSS (com es veu), i aprèn l'anatomia d'una regla: selector, claus, propietat, dos punts, valor i punt i coma. Escriu les primeres regles amb color, font-size i text-align, primer amb ajuda i després des de zero, i aprèn a trobar els dos errors més habituals: el punt i coma i la clau que falten. A l'activitat sense pantalla, l'alumnat fa de navegador i pinta amb llapis de colors una pàgina seguint les regles que li donen. La idea clau és que el navegador no entén desitjos («posa'l vermell, si us plau»), sinó regles escrites d'una manera exacta.|Primera sesión de CSS. El alumnado entiende la diferencia entre el HTML (qué hay en la página) y el CSS (cómo se ve), y aprende la anatomía de una regla: selector, llaves, propiedad, dos puntos, valor y punto y coma. Escribe las primeras reglas con color, font-size y text-align, primero con ayuda y después desde cero, y aprende a encontrar los dos errores más habituales: el punto y coma y la llave que faltan. En la actividad sin pantalla, el alumnado hace de navegador y pinta con lápices de colores una página siguiendo las reglas que le dan. La idea clave es que el navegador no entiende deseos («ponlo rojo, por favor»), sino reglas escritas de una manera exacta.",
+    claus: [
+      "L'HTML diu què hi ha; el CSS diu com es veu. Normalment van en fitxers separats (estil.css).|El HTML dice qué hay; el CSS dice cómo se ve. Normalmente van en archivos separados (estil.css).",
+      "Una regla: selector { propietat: valor; }. El selector diu a quins elements s'aplica.|Una regla: selector { propiedad: valor; }. El selector dice a qué elementos se aplica.",
+      "Cada declaració acaba amb punt i coma i cada regla es tanca amb }: si en falta un, el navegador se salta part de l'estil.|Cada declaración acaba con punto y coma y cada regla se cierra con }: si falta uno, el navegador se salta parte del estilo.",
+      "Una regla per a h1 s'aplica a tots els &lt;h1&gt; de la pàgina alhora.|Una regla para h1 se aplica a todos los &lt;h1&gt; de la página a la vez."
+    ],
+    prev: [
+      "L'HTML de les unitats 2 i 3: títols, paràgrafs, llistes, imatges i enllaços.|El HTML de las unidades 2 y 3: títulos, párrafos, listas, imágenes y enlaces.",
+      "El nom d'alguns colors en anglès i què és un píxel (px).|El nombre de algunos colores en inglés y qué es un píxel (px).",
+      "Trobar al teclat les claus { } i el punt i coma (o fer servir els botons de l'editor).|Encontrar en el teclado las llaves { } y el punto y coma (o usar los botones del editor)."
+    ],
+    faq: [
+      ["Per què el CSS va en un fitxer a part?|¿Por qué el CSS va en un archivo aparte?", "Perquè un sol fitxer d'estil pot donar el mateix aspecte a totes les pàgines d'una web: si canvies un color, canvia a totes. A l'editor ja està enllaçat: escriviu-lo a la pestanya estil.css.|Porque un solo archivo de estilo puede dar el mismo aspecto a todas las páginas de una web: si cambias un color, cambia en todas. En el editor ya está enlazado: escribidlo en la pestaña estil.css."],
+      ["Quants colors amb nom hi ha?|¿Cuántos colores con nombre hay?", "Uns 140 (crimson, teal, navy, gold…). A la sessió següent aprendrem a fer qualsevol dels milions de colors de la pantalla amb codis.|Unos 140 (crimson, teal, navy, gold…). En la sesión siguiente aprenderemos a hacer cualquiera de los millones de colores de la pantalla con códigos."],
+      ["Puc escriure el CSS dins de l'HTML?|¿Puedo escribir el CSS dentro del HTML?", "Sí, dins d'una etiqueta &lt;style&gt; al &lt;head&gt; o amb l'atribut style. Però és més ordenat tenir-lo a part, i és el que fan els professionals.|Sí, dentro de una etiqueta &lt;style&gt; en el &lt;head&gt; o con el atributo style. Pero es más ordenado tenerlo aparte, y es lo que hacen los profesionales."],
+      ["L'ordre de les declaracions dins de la regla importa?|¿El orden de las declaraciones dentro de la regla importa?", "No, mentre cadascuna acabi amb punt i coma. Si dues regles diuen coses diferents al mateix element, guanya l'última (en general).|No, mientras cada una acabe con punto y coma. Si dos reglas dicen cosas diferentes al mismo elemento, gana la última (en general)."],
+      ["Per què text-align i no align-text?|¿Por qué text-align y no align-text?", "Els noms de les propietats estan fixats en anglès i s'han d'escriure exactament. Una lletra canviada i el navegador no la reconeix (i no fa res).|Los nombres de las propiedades están fijados en inglés y se tienen que escribir exactamente. Una letra cambiada y el navegador no la reconoce (y no hace nada)."]
+    ],
+    tec: [
+      ["Han escrit el CSS a la pestanya HTML i surt com a text a la pàgina.|Han escrito el CSS en la pestaña HTML y sale como texto en la página.", "El CSS va a la pestanya estil.css. Que tallin el text (Ctrl+X), canviïn de pestanya i l'enganxin (Ctrl+V).|El CSS va en la pestaña estil.css. Que corten el texto (Ctrl+X), cambien de pestaña y lo peguen (Ctrl+V)."],
+      ["La meitat de les regles no fan res.|La mitad de las reglas no hacen nada.", "Falta un punt i coma o una clau de tancar en una regla d'abans: el navegador s'hi encalla. La barra d'estat avisa del primer error.|Falta un punto y coma o una llave de cierre en una regla de antes: el navegador se atasca. La barra de estado avisa del primer error."],
+      ["No troben les claus { } al teclat.|No encuentran las llaves { } en el teclado.", "En molts teclats: AltGr + la tecla de l'accent obert o la de la ç. Si costa, l'editor fa una nova línia sagnada en prémer Retorn després de {, i hi ha botons per inserir regles.|En muchos teclados: AltGr + la tecla del acento abierto o la de la ç. Si cuesta, el editor hace una nueva línea sangrada al pulsar Intro después de {, y hay botones para insertar reglas."],
+      ["El color del valor surt subratllat al codi.|El color del valor sale subrayado en el código.", "És una ajuda de l'editor: sota cada color hi ha una ratlla d'aquell color. Si no surt la ratlla, el nom del color potser està mal escrit.|Es una ayuda del editor: debajo de cada color hay una raya de ese color. Si no sale la raya, el nombre del color quizá está mal escrito."]
+    ],
+    seg: [
+      "Llapis de colors compartits per parella: es tornen al pot quan s'acaba l'activitat.|Lápices de colores compartidos por pareja: se devuelven al bote cuando termina la actividad.",
+      "Pensar en els daltònics i en qui hi veu poc: no feu servir només el color per dir coses importants.|Pensar en los daltónicos y en quien ve poco: no uséis solo el color para decir cosas importantes.",
+      "Pausa activa de la regla amb el cos al minut 25-30.|Pausa activa de la regla con el cuerpo hacia el minuto 25-30."
+    ],
+    extra: [
+      "Afegir una regla per a li amb un color i una mida diferents dels paràgrafs.|Añadir una regla para li con un color y un tamaño diferentes de los párrafos.",
+      "Fer dues versions d'estil per a la mateixa pàgina (una de festa i una de seriosa) canviant només el CSS.|Hacer dos versiones de estilo para la misma página (una de fiesta y una seria) cambiando solo el CSS.",
+      "Escriure en paper una regla amb tres errors per a un company/a.|Escribir en papel una regla con tres errores para un compañero/a."
+    ],
+    trans: [
+      "Sessió següent: els colors en codi (hex i rgb) i el contrast perquè tothom ho pugui llegir.|Sesión siguiente: los colores en código (hex y rgb) y el contraste para que todo el mundo lo pueda leer.",
+      "Educació visual i plàstica: el color, la composició i la jerarquia visual.|Educación visual y plástica: el color, la composición y la jerarquía visual.",
+      "Llengua anglesa: el vocabulari del CSS (color, size, align, center).|Lengua inglesa: el vocabulario del CSS (color, size, align, center)."
+    ]
+  },
+  'w4-2': {
+    intro: "L'alumnat descobreix com fa els colors una pantalla: cada píxel barreja llum vermella, verda i blava. Aprèn a escriure colors amb nom, en hex (#RRGGBB) i amb rgb(), i a deduir si un codi hex és clar o fosc mirant-ne les xifres. Distingeix color (el text) de background-color (el fons) i treballa el contrast: un text que no es llegeix és un text que no existeix, sobretot per a qui hi veu poc o mira el mòbil al sol. A la segona part apareixen les classes (class=&quot;avis&quot; a l'HTML i .avis al CSS) per donar estil només a alguns elements. L'activitat sense pantalla descodifica colors hex amb llapis.|El alumnado descubre cómo hace los colores una pantalla: cada píxel mezcla luz roja, verde y azul. Aprende a escribir colores con nombre, en hex (#RRGGBB) y con rgb(), y a deducir si un código hex es claro u oscuro mirando sus cifras. Distingue color (el texto) de background-color (el fondo) y trabaja el contraste: un texto que no se lee es un texto que no existe, sobre todo para quien ve poco o mira el móvil al sol. En la segunda parte aparecen las clases (class=&quot;avis&quot; en el HTML y .avis en el CSS) para dar estilo solo a algunos elementos. La actividad sin pantalla descodifica colores hex con lápices.",
+    claus: [
+      "La pantalla barreja llum vermella, verda i blava: rgb(255, 0, 0) és vermell; rgb(255, 255, 255), blanc.|La pantalla mezcla luz roja, verde y azul: rgb(255, 0, 0) es rojo; rgb(255, 255, 255), blanco.",
+      "Hex: # i sis xifres (de 0 a F) per al vermell, el verd i el blau. 00 = apagat, FF = al màxim.|Hex: # y seis cifras (de 0 a F) para el rojo, el verde y el azul. 00 = apagado, FF = al máximo.",
+      "color pinta el text i background-color, el fons: han de contrastar (fosc sobre clar o clar sobre fosc).|color pinta el texto y background-color, el fondo: tienen que contrastar (oscuro sobre claro o claro sobre oscuro).",
+      "Una classe: class=&quot;avis&quot; a l'HTML i .avis { … } al CSS; el punt només va al CSS.|Una clase: class=&quot;avis&quot; en el HTML y .avis { … } en el CSS; el punto solo va en el CSS."
+    ],
+    prev: [
+      "Escriure regles de CSS amb color (sessió anterior).|Escribir reglas de CSS con color (sesión anterior).",
+      "Saber que els números van de 0 a 9 i, per als hex, conèixer que les lletres A-F valen de 10 a 15.|Saber que los números van de 0 a 9 y, para los hex, conocer que las letras A-F valen de 10 a 15.",
+      "Haver barrejat colors amb pintura (per comparar-ho amb la llum).|Haber mezclado colores con pintura (para compararlo con la luz)."
+    ],
+    faq: [
+      ["Per què el vermell i el verd fan groc, si amb pintura fan marró?|¿Por qué el rojo y el verde hacen amarillo, si con pintura hacen marrón?", "Amb llum, els colors se sumen (cada llum n'afegeix): és la barreja additiva. Amb pintura, cada color absorbeix part de la llum i en queda menys: és la barreja subtractiva.|Con luz, los colores se suman (cada luz añade): es la mezcla aditiva. Con pintura, cada color absorbe parte de la luz y queda menos: es la mezcla sustractiva."],
+      ["Quants colors pot fer una pantalla?|¿Cuántos colores puede hacer una pantalla?", "Amb 256 valors per a cada llum: 256 × 256 × 256 = 16.777.216 colors.|Con 256 valores para cada luz: 256 × 256 × 256 = 16.777.216 colores."],
+      ["Com sé si un color té prou contrast?|¿Cómo sé si un color tiene suficiente contraste?", "Una pista: si el text és fosc (xifres hex baixes, com #1D2433) sobre fons clar (xifres altes, com #F5F5F5), anirà bé. Les eines de contrast calculen un número: per a text normal, cal com a mínim 4,5 a 1.|Una pista: si el texto es oscuro (cifras hex bajas, como #1D2433) sobre fondo claro (cifras altas, como #F5F5F5), irá bien. Las herramientas de contraste calculan un número: para texto normal, hace falta como mínimo 4,5 a 1."],
+      ["Puc posar dues classes al mateix element?|¿Puedo poner dos clases al mismo elemento?", "Sí, separades per un espai: class=&quot;avis gran&quot;. L'element agafa l'estil de les dues regles.|Sí, separadas por un espacio: class=&quot;avis gran&quot;. El elemento coge el estilo de las dos reglas."],
+      ["Les majúscules dels codis hex importen?|¿Las mayúsculas de los códigos hex importan?", "No: #2e7d32 i #2E7D32 són el mateix color. Els noms de les classes sí que distingeixen majúscules: .Avis i .avis són diferents.|No: #2e7d32 y #2E7D32 son el mismo color. Los nombres de las clases sí distinguen mayúsculas: .Avis y .avis son diferentes."]
+    ],
+    tec: [
+      ["El color hex no s'aplica.|El color hex no se aplica.", "Falta el # o té un nombre de xifres que no és 3 ni 6 (o hi ha una lletra que no és de la A a la F). La ratlla de color de sota el valor no surt quan el codi no és bo.|Falta el # o tiene un número de cifras que no es 3 ni 6 (o hay una letra que no es de la A a la F). La raya de color de debajo del valor no sale cuando el código no es bueno."],
+      ["La classe no fa res.|La clase no hace nada.", "A l'HTML va sense punt (class=&quot;avis&quot;) i al CSS amb punt (.avis). Comproveu que el nom és idèntic als dos llocs.|En el HTML va sin punto (class=&quot;avis&quot;) y en el CSS con punto (.avis). Comprobad que el nombre es idéntico en los dos sitios."],
+      ["Han posat background-color a p i volen tot el fons de la pàgina.|Han puesto background-color a p y quieren todo el fondo de la página.", "El fons de tota la pàgina es posa al body: body { background-color: … ; }.|El fondo de toda la página se pone en el body: body { background-color: … ; }."]
+    ],
+    seg: [
+      "Recordeu que alguns companys/es poden distingir malament alguns colors (daltonisme): el contrast i el text ajuden tothom.|Recordad que algunos compañeros/as pueden distinguir mal algunos colores (daltonismo): el contraste y el texto ayudan a todo el mundo.",
+      "Brillantor de la pantalla moderada; si algú es cansa amb fons molt saturats, que triï colors més suaus.|Brillo de la pantalla moderado; si alguien se cansa con fondos muy saturados, que elija colores más suaves.",
+      "Pausa activa del píxel (braços i cames) a mitja sessió.|Pausa activa del píxel (brazos y piernas) a mitad de sesión."
+    ],
+    extra: [
+      "Fer una paleta de cinc colors hex que combinin i escriure al costat si són clars o foscos.|Hacer una paleta de cinco colores hex que combinen y escribir al lado si son claros u oscuros.",
+      "Escriure el mateix color de tres maneres: amb nom, en hex i amb rgb() (per exemple, navy = #000080 = rgb(0, 0, 128)).|Escribir el mismo color de tres maneras: con nombre, en hex y con rgb() (por ejemplo, navy = #000080 = rgb(0, 0, 128)).",
+      "Comprovar el contrast dels colors del cartell amb una eina de contrast en línia (amb el professor/a).|Comprobar el contraste de los colores del cartel con una herramienta de contraste en línea (con el profesor/a)."
+    ],
+    trans: [
+      "Sessió següent: els tipus de lletra, les mides i la diferència entre classe i id.|Sesión siguiente: los tipos de letra, los tamaños y la diferencia entre clase e id.",
+      "Ciències: la llum i els colors (barreja additiva i subtractiva).|Ciencias: la luz y los colores (mezcla aditiva y sustractiva).",
+      "Matemàtiques: el sistema hexadecimal (base 16) i les combinacions (256³).|Matemáticas: el sistema hexadecimal (base 16) y las combinaciones (256³)."
+    ]
+  },
+  'w4-3': {
+    intro: "L'alumnat aprèn a triar la lletra d'una web: les quatre famílies genèriques (serif, sans-serif, monospace i cursive), per què la llista de font-family acaba sempre amb una genèrica (perquè la lletra triada potser no és a l'ordinador de qui mira) i com fer jerarquia amb font-size: títol gran, subtítols menys i text de 16px o més. També veu negreta, cursiva i alineació, i la regla d'or del disseny: com a molt dues lletres per pàgina. A la segona part descobreix l'id (#nom), únic a la pàgina, i el compara amb la classe (.nom), que es pot repetir. A l'activitat sense pantalla, el professor/a fa de navegador i «crida» regles en veu alta.|El alumnado aprende a elegir la letra de una web: las cuatro familias genéricas (serif, sans-serif, monospace y cursive), por qué la lista de font-family acaba siempre con una genérica (porque la letra elegida quizá no está en el ordenador de quien mira) y cómo hacer jerarquía con font-size: título grande, subtítulos menos y texto de 16px o más. También ve negrita, cursiva y alineación, y la regla de oro del diseño: como mucho dos letras por página. En la segunda parte descubre el id (#nombre), único en la página, y lo compara con la clase (.nombre), que se puede repetir. En la actividad sin pantalla, el profesor/a hace de navegador y «grita» reglas en voz alta.",
+    claus: [
+      "font-family: una llista de lletres que acaba en una família genèrica (serif, sans-serif, monospace o cursive).|font-family: una lista de letras que acaba en una familia genérica (serif, sans-serif, monospace o cursive).",
+      "font-size fa jerarquia: el títol més gran, els subtítols menys i el text de lectura de 16px o més.|font-size hace jerarquía: el título más grande, los subtítulos menos y el texto de lectura de 16px o más.",
+      "Com a molt dues lletres per pàgina: massa lletres fan la pàgina desordenada i difícil de llegir.|Como mucho dos letras por página: demasiadas letras hacen la página desordenada y difícil de leer.",
+      "Classe (.nom) per a molts elements; id (#nom) per a un de sol a tota la pàgina.|Clase (.nombre) para muchos elementos; id (#nombre) para uno solo en toda la página."
+    ],
+    prev: [
+      "Regles de CSS, colors i classes (sessions 1 i 2).|Reglas de CSS, colores y clases (sesiones 1 y 2).",
+      "Saber què és un píxel i comparar mides (més gran, més petit).|Saber qué es un píxel y comparar tamaños (más grande, más pequeño).",
+      "Haver vist lletres diferents en llibres, rètols o revistes.|Haber visto letras diferentes en libros, rótulos o revistas."
+    ],
+    faq: [
+      ["Per què la meva lletra preferida no surt?|¿Por qué mi letra preferida no sale?", "El navegador només pot fer servir lletres instal·lades a l'aparell de qui mira (o carregades des de la web). Per això la llista acaba amb una genèrica: si no hi és, en fa servir una de semblant.|El navegador solo puede usar letras instaladas en el aparato de quien mira (o cargadas desde la web). Por eso la lista acaba con una genérica: si no está, usa una parecida."],
+      ["Quina diferència hi ha entre serif i sans-serif?|¿Qué diferencia hay entre serif y sans-serif?", "Les serif tenen uns petits peus (serifes) a les puntes de les lletres, com als diaris; les sans-serif (sense serifes) són més netes i es llegeixen molt bé a les pantalles.|Las serif tienen unos pequeños pies (serifas) en las puntas de las letras, como en los periódicos; las sans-serif (sin serifas) son más limpias y se leen muy bien en las pantallas."],
+      ["Per què el nom d'algunes lletres va entre cometes?|¿Por qué el nombre de algunas letras va entre comillas?", "Si el nom té espais (&quot;Times New Roman&quot;), s'escriu entre cometes perquè el navegador sàpiga on comença i on acaba.|Si el nombre tiene espacios (&quot;Times New Roman&quot;), se escribe entre comillas para que el navegador sepa dónde empieza y dónde acaba."],
+      ["Per què 16px com a mínim?|¿Por qué 16px como mínimo?", "És la mida que els navegadors fan servir per defecte i la que es llegeix bé al mòbil sense fer zoom. Més petit cansa la vista.|Es el tamaño que los navegadores usan por defecto y el que se lee bien en el móvil sin hacer zoom. Más pequeño cansa la vista."],
+      ["Si l'id és únic, per què no el faig servir sempre?|Si el id es único, ¿por qué no lo uso siempre?", "Perquè si demà vols el mateix estil a dos elements, l'id no et deixa. Per a l'estil, normalment classes; l'id, per a coses úniques (i per als enllaços #id).|Porque si mañana quieres el mismo estilo en dos elementos, el id no te deja. Para el estilo, normalmente clases; el id, para cosas únicas (y para los enlaces #id)."]
+    ],
+    tec: [
+      ["La lletra no canvia tot i que la regla és bona.|La letra no cambia aunque la regla es buena.", "Potser la lletra no és a l'ordinador i el navegador fa servir la genèrica, que s'assembla a la d'abans. Proveu de canviar la genèrica (serif ↔ sans-serif) per veure-hi la diferència.|Quizá la letra no está en el ordenador y el navegador usa la genérica, que se parece a la de antes. Probad a cambiar la genérica (serif ↔ sans-serif) para ver la diferencia."],
+      ["La mida no s'aplica (font-size: 30).|El tamaño no se aplica (font-size: 30).", "Falta la unitat: font-size: 30px. Sense unitat, el navegador no sap si són píxels o una altra cosa i ho ignora.|Falta la unidad: font-size: 30px. Sin unidad, el navegador no sabe si son píxeles u otra cosa y lo ignora."],
+      ["La regla #portada no fa res.|La regla #portada no hace nada.", "A l'HTML ha de ser id=&quot;portada&quot; (sense #) i al CSS #portada (amb #). Compte a no escriure class en lloc d'id.|En el HTML tiene que ser id=&quot;portada&quot; (sin #) y en el CSS #portada (con #). Cuidado con no escribir class en lugar de id."]
+    ],
+    seg: [
+      "A l'activitat del navegador que crida, les targetes es porten penjades amb pinces o cinta suau; ningú no surt al passadís.|En la actividad del navegador que grita, las tarjetas se llevan colgadas con pinzas o cinta suave; nadie sale al pasillo.",
+      "Text de 16px o més: pensem en qui llegeix al mòbil o hi veu poc.|Texto de 16px o más: pensamos en quien lee en el móvil o ve poco.",
+      "Pausa activa: escriure el nom a l'aire amb lletres diferents.|Pausa activa: escribir el nombre en el aire con letras diferentes."
+    ],
+    extra: [
+      "Fer la mateixa portada amb una lletra serif i amb una sans-serif i explicar quina transmet què.|Hacer la misma portada con una letra serif y con una sans-serif y explicar cuál transmite qué.",
+      "Afegir una classe .destacat per a dues frases i un id #autor per al nom de qui escriu la revista.|Añadir una clase .destacat para dos frases y un id #autor para el nombre de quien escribe la revista.",
+      "Provar line-height i letter-spacing i descriure com canvia la lectura.|Probar line-height y letter-spacing y describir cómo cambia la lectura."
+    ],
+    trans: [
+      "Sessió següent: el projecte de la unitat, el pòster de la Setmana de la ciència.|Sesión siguiente: el proyecto de la unidad, el póster de la Semana de la ciencia.",
+      "Educació visual i plàstica: la tipografia i la jerarquia en el disseny gràfic.|Educación visual y plástica: la tipografía y la jerarquía en el diseño gráfico.",
+      "Llengua: la diferència entre titular, subtítol i cos del text en una notícia.|Lengua: la diferencia entre titular, subtítulo y cuerpo del texto en una noticia."
+    ]
+  },
+  'w4-4': {
+    intro: "Sessió de projecte que tanca la unitat: cada alumne/a dissenya el pòster web d'una activitat de la Setmana de la ciència. Aplica el que fa que un pòster funcioni: jerarquia (un títol que es veu de lluny, la informació clau i els detalls més petits), una paleta de tres colors amb bon contrast repetida a tot el pòster i una o dues lletres. Primer planifica en paper amb l'esbós; després assaja amb el pòster dels volcans (id, classes, regles); arregla un pòster que no es llegeix; construeix el seu amb almenys cinc regles i una imatge amb alt; i acaba amb la galeria i la prova dels cinc segons d'un company/a.|Sesión de proyecto que cierra la unidad: cada alumno/a diseña el póster web de una actividad de la Semana de la ciencia. Aplica lo que hace que un póster funcione: jerarquía (un título que se ve de lejos, la información clave y los detalles más pequeños), una paleta de tres colores con buen contraste repetida en todo el póster y una o dos letras. Primero planifica en papel con el boceto; después ensaya con el póster de los volcanes (id, clases, reglas); arregla un póster que no se lee; construye el suyo con al menos cinco reglas y una imagen con alt; y termina con la galería y la prueba de los cinco segundos de un compañero/a.",
+    claus: [
+      "Jerarquia: el títol es veu de lluny; després què, quan i on; els detalls, més petits.|Jerarquía: el título se ve de lejos; después qué, cuándo y dónde; los detalles, más pequeños.",
+      "Una paleta de tres colors (fons, text i destacat) amb bon contrast, repetida a tot el pòster.|Una paleta de tres colores (fondo, texto y destacado) con buen contraste, repetida en todo el póster.",
+      "font-family al body: tota la pàgina amb la mateixa lletra; l'id per al títol i classes per a la informació.|font-family en el body: toda la página con la misma letra; el id para el título y clases para la información.",
+      "Planificar → construir → revisar: la prova dels cinc segons diu si el pòster funciona.|Planificar → construir → revisar: la prueba de los cinco segundos dice si el póster funciona."
+    ],
+    prev: [
+      "Regles de CSS, colors (hex) i contrast, lletres i mides, classe i id (sessions 1-3).|Reglas de CSS, colores (hex) y contraste, letras y tamaños, clase e id (sesiones 1-3).",
+      "Imatges amb alt (unitat 3).|Imágenes con alt (unidad 3).",
+      "Fer un esbós en paper amb caixes i fletxes.|Hacer un boceto en papel con cajas y flechas."
+    ],
+    faq: [
+      ["Puc fer servir més de tres colors?|¿Puedo usar más de tres colores?", "Podeu fer servir tons més clars o més foscos dels mateixos, però si poseu molts colors diferents el pòster crida massa i no se sap on mirar.|Podéis usar tonos más claros o más oscuros de los mismos, pero si ponéis muchos colores diferentes el póster grita demasiado y no se sabe dónde mirar."],
+      ["Quines imatges puc posar?|¿Qué imágenes puedo poner?", "Les icones de Numi (img/ic/…, com rocket, star, robot, volcano o flask) i els dibuixos d'img/tech/web/. El botó «Imatges» de l'editor les mostra totes i n'escriu el camí.|Los iconos de Numi (img/ic/…, como rocket, star, robot, volcano o flask) y los dibujos de img/tech/web/. El botón «Imágenes» del editor los muestra todos y escribe su ruta."],
+      ["Què és la prova dels cinc segons?|¿Qué es la prueba de los cinco segundos?", "Un company/a mira el pòster cinc segons i després ha de dir què és, quan i on. Si ho sap, la jerarquia funciona.|Un compañero/a mira el póster cinco segundos y después tiene que decir qué es, cuándo y dónde. Si lo sabe, la jerarquía funciona."],
+      ["L'activitat del pòster ha de ser de veritat?|¿La actividad del póster tiene que ser de verdad?", "No: és la Setmana de la ciència inventada del poble. Podeu inventar-vos l'activitat, el dia i el lloc (sense adreces reals de cases).|No: es la Semana de la ciencia inventada del pueblo. Podéis inventaros la actividad, el día y el lugar (sin direcciones reales de casas)."]
+    ],
+    tec: [
+      ["La imatge de la icona no surt.|La imagen del icono no sale.", "Les icones són .webp: img/ic/rocket.webp (no .svg). El botó «Imatges» escriu el camí correcte.|Los iconos son .webp: img/ic/rocket.webp (no .svg). El botón «Imágenes» escribe la ruta correcta."],
+      ["El títol no agafa el color de la regla #titol.|El título no coge el color de la regla #titol.", "Mireu que l'HTML digui id=&quot;titol&quot; i el CSS #titol. Si hi ha també una regla h1 amb un altre color, l'id guanya; si no canvia, hi ha un error abans (punt i coma o clau).|Mirad que el HTML diga id=&quot;titol&quot; y el CSS #titol. Si hay también una regla h1 con otro color, el id gana; si no cambia, hay un error antes (punto y coma o llave)."],
+      ["Volen veure el pòster gran per a la galeria.|Quieren ver el póster grande para la galería.", "Obriu-lo a «Projectes»: es veu en l'aparell que trieu (mòbil o ordinador). També es pot descarregar com a fitxer .html i obrir-lo en un navegador a pantalla completa.|Abridlo en «Proyectos»: se ve en el aparato que elijáis (móvil u ordenador). También se puede descargar como archivo .html y abrirlo en un navegador a pantalla completa."]
+    ],
+    seg: [
+      "A la galeria, les notes adhesives diuen una cosa que funciona i una millora concreta, amb respecte.|En la galería, las notas adhesivas dicen algo que funciona y una mejora concreta, con respeto.",
+      "Cap dada real de contacte al pòster (telèfons, adreces o correus personals).|Ningún dato real de contacto en el póster (teléfonos, direcciones o correos personales).",
+      "Pausa activa del pòster vivent abans de començar el projecte.|Pausa activa del póster viviente antes de empezar el proyecto."
+    ],
+    extra: [
+      "Fer una segona versió del pòster per a l'ordinador amb el text centrat i més gran (font-size al títol).|Hacer una segunda versión del póster para el ordenador con el texto centrado y más grande (font-size en el título).",
+      "Afegir una classe .preu o .hora que destaqui una dada amb el color de la paleta.|Añadir una clase .preu o .hora que destaque un dato con el color de la paleta.",
+      "Fer la prova dels cinc segons a tres persones i millorar el que hagi fallat.|Hacer la prueba de los cinco segundos a tres personas y mejorar lo que haya fallado."
+    ],
+    trans: [
+      "Unitat 5: les caixes (padding, border, margin) per donar espai i forma a les parts del pòster.|Unidad 5: las cajas (padding, border, margin) para dar espacio y forma a las partes del póster.",
+      "Educació visual i plàstica: el cartell, la jerarquia i la paleta de colors.|Educación visual y plástica: el cartel, la jerarquía y la paleta de colores.",
+      "Ciències: la Setmana de la ciència (volcans, estrelles, robots…).|Ciencias: la Semana de la ciencia (volcanes, estrellas, robots…)."
+    ]
+  }
+}).forEach(([id, g]) => Object.assign(TGUIDE[id], g));
+
+/* les demos de codi de les diapositives, també en castellà (diccionari a la unitat 4) */
+if (typeof webTr === 'function' && typeof WEB_TR45 !== 'undefined') ['w4-1', 'w4-2', 'w4-3', 'w4-4'].forEach(id => TGUIDE[id] && webTr(TGUIDE[id], WEB_TR45));

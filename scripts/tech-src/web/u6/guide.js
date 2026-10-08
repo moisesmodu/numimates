@@ -640,3 +640,168 @@ Object.assign(TGUIDE, (() => {
   }
   });
 })());
+
+/* ---------- Guia completa (unitat 6): la sessió en breu, idees clau, coneixements previs, preguntes que faran, què fer si
+   alguna cosa falla, seguretat i benestar, per anar més enllà i connexions ---------- */
+Object.entries({
+  'w6-1': {
+    intro: "L'alumnat descobreix flexbox, l'eina moderna per col·locar caixes. Primer entén per què les caixes de bloc fan pila (una sota l'altra) i després que, amb display: flex al contenidor (al pare, no als fills), els elements de dins es posen en fila. Hi afegeix gap per separar-los, flex-direction per triar fila o columna i justify-content per decidir on van al llarg de la fila (a l'inici, al centre, al final o repartits). A l'activitat sense pantalla, quatre alumnes fan d'elements dins d'un rectangle marcat a terra i es mouen segons les propietats que llegeix el navegador. Acaben fent la capçalera de la web del Club Foto amb un menú i una fila de fotos.|El alumnado descubre flexbox, la herramienta moderna para colocar cajas. Primero entiende por qué las cajas de bloque hacen pila (una debajo de la otra) y después que, con display: flex en el contenedor (en el padre, no en los hijos), los elementos de dentro se ponen en fila. Añade gap para separarlos, flex-direction para elegir fila o columna y justify-content para decidir dónde van a lo largo de la fila (al inicio, en el centro, al final o repartidos). En la actividad sin pantalla, cuatro alumnos hacen de elementos dentro de un rectángulo marcado en el suelo y se mueven según las propiedades que lee el navegador. Terminan haciendo la cabecera de la web del Club Foto con un menú y una fila de fotos.",
+    claus: [
+      "Les caixes de bloc (div, p, h1…) fan pila; display: flex al contenidor les posa en fila.|Las cajas de bloque (div, p, h1…) hacen pila; display: flex en el contenedor las pone en fila.",
+      "flex es posa al pare (el contenidor), no als fills.|flex se pone en el padre (el contenedor), no en los hijos.",
+      "gap posa el mateix espai entre tots els elements; flex-direction: column els posa en columna.|gap pone el mismo espacio entre todos los elementos; flex-direction: column los pone en columna.",
+      "justify-content: flex-start, center, flex-end, space-between o space-around decideix on van al llarg de la fila.|justify-content: flex-start, center, flex-end, space-between o space-around decide dónde van a lo largo de la fila."
+    ],
+    prev: [
+      "El model de caixa: div, width, padding i margin (unitat 5).|El modelo de caja: div, width, padding y margin (unidad 5).",
+      "Classes de CSS i imatges amb alt (unitats 3 i 4).|Clases de CSS e imágenes con alt (unidades 3 y 4).",
+      "Distingir fila (horitzontal) i columna (vertical).|Distinguir fila (horizontal) y columna (vertical)."
+    ],
+    faq: [
+      ["Per què flex no funciona si el poso a les fotos?|¿Por qué flex no funciona si lo pongo en las fotos?", "Perquè display: flex canvia com es col·loquen els fills d'una caixa. Si el poses a la foto, afecta el que hi ha dins de la foto (res). S'ha de posar al contenidor que les agrupa (.fila).|Porque display: flex cambia cómo se colocan los hijos de una caja. Si lo pones en la foto, afecta a lo que hay dentro de la foto (nada). Hay que ponerlo en el contenedor que las agrupa (.fila)."],
+      ["Què passa si les fotos no hi caben en una fila?|¿Qué pasa si las fotos no caben en una fila?", "Per defecte s'encongeixen per caber-hi. Amb flex-wrap: wrap, les que no hi caben passen a la fila següent.|Por defecto se encogen para caber. Con flex-wrap: wrap, las que no caben pasan a la fila siguiente."],
+      ["Quina diferència hi ha entre space-between i space-around?|¿Qué diferencia hay entre space-between y space-around?", "space-between enganxa el primer i l'últim a les vores i reparteix l'espai entre els altres; space-around també deixa espai a les vores.|space-between pega el primero y el último a los bordes y reparte el espacio entre los demás; space-around también deja espacio en los bordes."],
+      ["Per què gap i no margin?|¿Por qué gap y no margin?", "gap només posa espai entre els elements (no a les vores) i amb una sola línia; amb margin hauries de vigilar el primer i l'últim.|gap solo pone espacio entre los elementos (no en los bordes) y con una sola línea; con margin tendrías que vigilar el primero y el último."]
+    ],
+    tec: [
+      ["Les fotos continuen en pila.|Las fotos siguen en pila.", "Mireu que la regla sigui per al contenidor (.fila) i que l'HTML tingui les fotos dins d'aquest div. Comproveu l'escriptura: display: flex (no flexbox).|Mirad que la regla sea para el contenedor (.fila) y que el HTML tenga las fotos dentro de ese div. Comprobad la escritura: display: flex (no flexbox)."],
+      ["justify-content no fa res.|justify-content no hace nada.", "Només funciona en un contenidor flex i si sobra espai a la fila. Si les fotos omplen tota l'amplada, no hi ha res per repartir.|Solo funciona en un contenedor flex y si sobra espacio en la fila. Si las fotos llenan toda la anchura, no hay nada que repartir."],
+      ["La quarta foto no surt.|La cuarta foto no sale.", "El camí ha de ser img/tech/web/castell.svg (o una altra del botó «Imatges») i ha d'anar dins del div.fila.|La ruta tiene que ser img/tech/web/castell.svg (u otra del botón «Imágenes») y tiene que ir dentro del div.fila."]
+    ],
+    seg: [
+      "Som caixes flex: el rectangle de cinta a terra en un espai lliure, i es camina, no es corre.|Somos cajas flex: el rectángulo de cinta en el suelo en un espacio libre, y se camina, no se corre.",
+      "Les fotos del club són dibuixos de Numi: no hi poseu fotos de persones reals.|Las fotos del club son dibujos de Numi: no pongáis fotos de personas reales.",
+      "Pausa activa de la caixa flex (row, column, center) a mitja sessió.|Pausa activa de la caja flex (row, column, center) a mitad de sesión."
+    ],
+    extra: [
+      "Provar flex-wrap: wrap amb vuit fotos i explicar què passa al mòbil.|Probar flex-wrap: wrap con ocho fotos y explicar qué pasa en el móvil.",
+      "Fer un menú vertical (flex-direction: column) i un d'horitzontal amb el mateix HTML.|Hacer un menú vertical (flex-direction: column) y uno horizontal con el mismo HTML.",
+      "Provar les cinc opcions de justify-content i dibuixar-ne el resultat.|Probar las cinco opciones de justify-content y dibujar su resultado."
+    ],
+    trans: [
+      "Sessió següent: align-items (de dalt a baix) i les graelles amb grid.|Sesión siguiente: align-items (de arriba abajo) y las rejillas con grid.",
+      "Matemàtiques: la recta (eix horitzontal) i el repartiment de l'espai.|Matemáticas: la recta (eje horizontal) y el reparto del espacio.",
+      "Educació visual i plàstica: l'alineació i el ritme en una composició.|Educación visual y plástica: la alineación y el ritmo en una composición."
+    ]
+  },
+  'w6-2': {
+    intro: "L'alumnat completa flexbox amb align-items (col·loca els elements de dalt a baix, per exemple centrats) i descobreix grid, la graella del CSS: amb display: grid i grid-template-columns dius quantes columnes vols i la graella fa les files sola. Aprèn la unitat fr (un tros de l'espai que queda), repeat(3, 1fr) per no repetir-se i la diferència entre les dues eines: flex per a una direcció, grid per a dues. A l'activitat sense pantalla, els grups fan graelles de paper amb notes adhesives i prediuen quantes files sortiran. Acaben fent la galeria d'una sortida del club.|El alumnado completa flexbox con align-items (coloca los elementos de arriba abajo, por ejemplo centrados) y descubre grid, la rejilla del CSS: con display: grid y grid-template-columns dices cuántas columnas quieres y la rejilla hace las filas sola. Aprende la unidad fr (un trozo del espacio que queda), repeat(3, 1fr) para no repetirse y la diferencia entre las dos herramientas: flex para una dirección, grid para dos. En la actividad sin pantalla, los grupos hacen rejillas de papel con notas adhesivas y predicen cuántas filas saldrán. Terminan haciendo la galería de una salida del club.",
+    claus: [
+      "align-items col·loca els elements d'una fila flex de dalt a baix (center els centra).|align-items coloca los elementos de una fila flex de arriba abajo (center los centra).",
+      "display: grid + grid-template-columns: tu dius les columnes i les files es fan soles.|display: grid + grid-template-columns: tú dices las columnas y las filas se hacen solas.",
+      "1fr és un tros de l'espai que queda; repeat(3, 1fr) fa tres columnes iguals.|1fr es un trozo del espacio que queda; repeat(3, 1fr) hace tres columnas iguales.",
+      "Files = elements ÷ columnes, arrodonit cap amunt (10 fotos en 4 columnes → 3 files).|Filas = elementos ÷ columnas, redondeado hacia arriba (10 fotos en 4 columnas → 3 filas)."
+    ],
+    prev: [
+      "display: flex, gap i justify-content (sessió anterior).|display: flex, gap y justify-content (sesión anterior).",
+      "Dividir i arrodonir cap amunt (quantes files surten).|Dividir y redondear hacia arriba (cuántas filas salen).",
+      "Imatges amb alt i classes.|Imágenes con alt y clases."
+    ],
+    faq: [
+      ["Quan faig servir flex i quan grid?|¿Cuándo uso flex y cuándo grid?", "Flex per a una fila o una columna (un menú, una capçalera); grid per a files i columnes alhora (una galeria, un calendari).|Flex para una fila o una columna (un menú, una cabecera); grid para filas y columnas a la vez (una galería, un calendario)."],
+      ["Puc fer columnes de mides diferents?|¿Puedo hacer columnas de tamaños diferentes?", "Sí: grid-template-columns: 2fr 1fr fa la primera el doble d'ampla que la segona. També pots barrejar px i fr: 120px 1fr.|Sí: grid-template-columns: 2fr 1fr hace la primera el doble de ancha que la segunda. También puedes mezclar px y fr: 120px 1fr."],
+      ["Què vol dir fr?|¿Qué quiere decir fr?", "Fracció: el navegador reparteix l'espai lliure en trossos. Amb 1fr 2fr 1fr, el total són 4 trossos: la del mig n'ocupa 2 de 4.|Fracción: el navegador reparte el espacio libre en trozos. Con 1fr 2fr 1fr, el total son 4 trozos: la del medio ocupa 2 de 4."],
+      ["Al mòbil, tres columnes queden molt estretes. Què faig?|En el móvil, tres columnas quedan muy estrechas. ¿Qué hago?", "A la unitat 7 aprendrem @media per posar-ne menys al mòbil. També es pot fer amb repeat(auto-fill, minmax(150px, 1fr)), que posa les que hi caben.|En la unidad 7 aprenderemos @media para poner menos en el móvil. También se puede hacer con repeat(auto-fill, minmax(150px, 1fr)), que pone las que caben."]
+    ],
+    tec: [
+      ["Les fotos surten en una sola columna.|Las fotos salen en una sola columna.", "Falta display: grid al contenidor o grid-template-columns està mal escrit (grid-template-column, sense s). La barra d'estat no ho detecta: mireu la comprovació que falta.|Falta display: grid en el contenedor o grid-template-columns está mal escrito (grid-template-column, sin s). La barra de estado no lo detecta: mirad la comprobación que falta."],
+      ["repeat no funciona.|repeat no funciona.", "S'escriu repeat(3, 1fr), amb parèntesis i una coma. Un espai entre repeat i el parèntesi també el trenca.|Se escribe repeat(3, 1fr), con paréntesis y una coma. Un espacio entre repeat y el paréntesis también lo rompe."],
+      ["Les icones de les mascotes no surten.|Los iconos de las mascotas no salen.", "Són a img/ic/ i acaben en .webp (img/ic/lion.webp). El botó «Imatges» les mostra a la secció «Icones».|Están en img/ic/ y acaban en .webp (img/ic/lion.webp). El botón «Imágenes» los muestra en la sección «Iconos»."]
+    ],
+    seg: [
+      "Graelles de paper: regle i retoladors, cadascú en el seu full; les notes adhesives es recullen al final.|Rejillas de papel: regla y rotuladores, cada uno en su hoja; las notas adhesivas se recogen al final.",
+      "A casa, buscar graelles (calendaris, rajoles, tauler d'escacs) amb un adult, sense fer fotos de l'interior de casa per compartir.|En casa, buscar rejillas (calendarios, baldosas, tablero de ajedrez) con un adulto, sin hacer fotos del interior de casa para compartir.",
+      "Pausa activa de la graella amb el cos (3 columnes) entre la teoria i els reptes.|Pausa activa de la rejilla con el cuerpo (3 columnas) entre la teoría y los retos."
+    ],
+    extra: [
+      "Fer una galeria amb una foto gran que ocupi dues columnes (grid-column: span 2).|Hacer una galería con una foto grande que ocupe dos columnas (grid-column: span 2).",
+      "Fer un calendari d'un mes amb grid de 7 columnes i els dies en caixes.|Hacer un calendario de un mes con grid de 7 columnas y los días en cajas.",
+      "Provar repeat(auto-fill, minmax(120px, 1fr)) i mirar-ho al mòbil i a l'ordinador.|Probar repeat(auto-fill, minmax(120px, 1fr)) y mirarlo en el móvil y en el ordenador."
+    ],
+    trans: [
+      "Sessió següent: les taules, per a dades amb files i columnes.|Sesión siguiente: las tablas, para datos con filas y columnas.",
+      "Matemàtiques: la divisió amb residu i les fraccions (fr).|Matemáticas: la división con resto y las fracciones (fr).",
+      "Educació visual i plàstica: la retícula en el disseny de revistes i cartells.|Educación visual y plástica: la retícula en el diseño de revistas y carteles."
+    ]
+  },
+  'w6-3': {
+    intro: "L'alumnat aprèn quan cal una taula (dades amb files i columnes, com un horari o uns resultats) i quan no (per col·locar fotos, millor grid). Construeix taules amb &lt;table&gt;, files &lt;tr&gt;, cel·les &lt;td&gt;, capçaleres &lt;th&gt; i un títol amb &lt;caption&gt;, sempre amb el mateix nombre de cel·les a cada fila. Entén per què les capçaleres han de ser &lt;th&gt; (i no &lt;td&gt; en negreta): un lector de pantalla les fa servir per explicar cada dada a qui no la veu. També hi dona estil amb border-collapse, border i padding. L'activitat sense pantalla és una enquesta de la classe que es resumeix en una taula en paper.|El alumnado aprende cuándo hace falta una tabla (datos con filas y columnas, como un horario o unos resultados) y cuándo no (para colocar fotos, mejor grid). Construye tablas con &lt;table&gt;, filas &lt;tr&gt;, celdas &lt;td&gt;, cabeceras &lt;th&gt; y un título con &lt;caption&gt;, siempre con el mismo número de celdas en cada fila. Entiende por qué las cabeceras tienen que ser &lt;th&gt; (y no &lt;td&gt; en negrita): un lector de pantalla las usa para explicar cada dato a quien no lo ve. También les da estilo con border-collapse, border y padding. La actividad sin pantalla es una encuesta de la clase que se resume en una tabla en papel.",
+    claus: [
+      "Una taula és per a dades amb files i columnes, no per col·locar coses a la pàgina.|Una tabla es para datos con filas y columnas, no para colocar cosas en la página.",
+      "&lt;table&gt; → &lt;tr&gt; (fila) → &lt;td&gt; (cel·la) o &lt;th&gt; (capçalera); &lt;caption&gt; és el títol de la taula.|&lt;table&gt; → &lt;tr&gt; (fila) → &lt;td&gt; (celda) o &lt;th&gt; (cabecera); &lt;caption&gt; es el título de la tabla.",
+      "Cada fila ha de tenir el mateix nombre de cel·les: si no, les dades queden a la columna equivocada.|Cada fila tiene que tener el mismo número de celdas: si no, los datos quedan en la columna equivocada.",
+      "&lt;th&gt; i &lt;caption&gt; fan que un lector de pantalla expliqui la taula a qui no la veu.|&lt;th&gt; y &lt;caption&gt; hacen que un lector de pantalla explique la tabla a quien no la ve."
+    ],
+    prev: [
+      "Flex i grid per col·locar caixes (sessions 1 i 2).|Flex y grid para colocar cajas (sesiones 1 y 2).",
+      "Llegir una taula de doble entrada (horari, resultats esportius).|Leer una tabla de doble entrada (horario, resultados deportivos).",
+      "Etiquetes niuades ben tancades (unitat 2).|Etiquetas anidadas bien cerradas (unidad 2)."
+    ],
+    faq: [
+      ["Per què no puc fer servir una taula per posar les fotos en files?|¿Por qué no puedo usar una tabla para poner las fotos en filas?", "Es veuria bé, però un lector de pantalla diria «taula de 3 per 3» i llegiria cel·les buides de sentit. Per col·locar, grid; per a dades, taula.|Se vería bien, pero un lector de pantalla diría «tabla de 3 por 3» y leería celdas vacías de sentido. Para colocar, grid; para datos, tabla."],
+      ["Com faig una cel·la que ocupi dues columnes?|¿Cómo hago una celda que ocupe dos columnas?", "Amb l'atribut colspan=&quot;2&quot; (o rowspan per a files). Aleshores aquella fila té una cel·la menys.|Con el atributo colspan=&quot;2&quot; (o rowspan para filas). Entonces esa fila tiene una celda menos."],
+      ["Què fa border-collapse?|¿Qué hace border-collapse?", "Ajunta les vores de les cel·les veïnes en una sola línia. Sense, cada cel·la té la seva vora i es veuen dobles.|Junta los bordes de las celdas vecinas en una sola línea. Sin él, cada celda tiene su borde y se ven dobles."],
+      ["Les capçaleres poden anar a l'esquerra?|¿Las cabeceras pueden ir a la izquierda?", "Sí: la primera cel·la de cada fila pot ser un &lt;th&gt; (per exemple, el dia de la setmana). Hi pot haver capçaleres de columna i de fila.|Sí: la primera celda de cada fila puede ser un &lt;th&gt; (por ejemplo, el día de la semana). Puede haber cabeceras de columna y de fila."]
+    ],
+    tec: [
+      ["Una dada surt a la columna que no toca.|Un dato sale en la columna que no toca.", "Alguna fila té una cel·la de més o de menys, o un &lt;td&gt; no està tancat. Que comptin les cel·les de cada &lt;tr&gt;.|Alguna fila tiene una celda de más o de menos, o un &lt;td&gt; no está cerrado. Que cuenten las celdas de cada &lt;tr&gt;."],
+      ["La taula no té cap vora.|La tabla no tiene ningún borde.", "Les vores es posen a les cel·les: th, td { border: 1px solid gray; }. I border-collapse: collapse a la taula perquè no surtin dobles.|Los bordes se ponen en las celdas: th, td { border: 1px solid gray; }. Y border-collapse: collapse en la tabla para que no salgan dobles."],
+      ["Al mòbil, la taula és massa ampla.|En el móvil, la tabla es demasiado ancha.", "Amb poques columnes i text curt, hi cap. Si en té moltes, es pot posar dins d'un div amb overflow-x: auto perquè es desplaci de costat.|Con pocas columnas y texto corto, cabe. Si tiene muchas, se puede poner dentro de un div con overflow-x: auto para que se desplace de lado."]
+    ],
+    seg: [
+      "Enquesta de la classe: preguntes que no expliquin dades personals (millor preferències: color, esport, menjar).|Encuesta de la clase: preguntas que no expliquen datos personales (mejor preferencias: color, deporte, comida).",
+      "Les taules amb dades de persones (notes, adreces) no es publiquen mai a una web.|Las tablas con datos de personas (notas, direcciones) no se publican nunca en una web.",
+      "Pausa activa de la taula humana a mitja sessió.|Pausa activa de la tabla humana a mitad de sesión."
+    ],
+    extra: [
+      "Afegir a la taula una fila de totals amb colspan i un estil diferent.|Añadir a la tabla una fila de totales con colspan y un estilo diferente.",
+      "Pintar les files parells d'un altre color amb tr:nth-child(even).|Pintar las filas pares de otro color con tr:nth-child(even).",
+      "Convertir els resultats de l'enquesta en una taula web amb caption i th.|Convertir los resultados de la encuesta en una tabla web con caption y th."
+    ],
+    trans: [
+      "Sessió següent: el projecte de la unitat, l'àlbum de fotos amb flex, grid i una taula.|Sesión siguiente: el proyecto de la unidad, el álbum de fotos con flex, grid y una tabla.",
+      "Matemàtiques: les taules de freqüències i l'estadística.|Matemáticas: las tablas de frecuencias y la estadística.",
+      "Accessibilitat: com un lector de pantalla llegeix una taula.|Accesibilidad: cómo un lector de pantalla lee una tabla."
+    ]
+  },
+  'w6-4': {
+    intro: "Sessió de projecte que tanca la unitat: l'alumnat dissenya i construeix l'àlbum web del Club Foto per a l'exposició de final de curs. Ha de triar l'eina adequada per a cada part: flex per a la capçalera i el menú, grid per a la galeria de fotos (cada foto en una &lt;figure&gt; amb &lt;figcaption&gt;) i una taula accessible per a les dades (les sortides o el rànquing). Comença amb un esbós en paper (wireframe), assaja les tres peces (una amb errors d'una companya per arreglar) i construeix el seu àlbum, que revisa al mòbil i a l'ordinador amb una llista abans de la galeria de l'aula.|Sesión de proyecto que cierra la unidad: el alumnado diseña y construye el álbum web del Club Foto para la exposición de final de curso. Tiene que elegir la herramienta adecuada para cada parte: flex para la cabecera y el menú, grid para la galería de fotos (cada foto en una &lt;figure&gt; con &lt;figcaption&gt;) y una tabla accesible para los datos (las salidas o el ranking). Empieza con un boceto en papel (wireframe), ensaya las tres piezas (una con errores de una compañera para arreglar) y construye su álbum, que revisa en el móvil y en el ordenador con una lista antes de la galería del aula.",
+    claus: [
+      "L'esbós (wireframe) decideix les caixes i com es col·loquen abans de programar.|El boceto (wireframe) decide las cajas y cómo se colocan antes de programar.",
+      "Cada eina per a la seva feina: flex (una fila: capçalera, menú), grid (files i columnes: galeria), taula (dades).|Cada herramienta para su trabajo: flex (una fila: cabecera, menú), grid (filas y columnas: galería), tabla (datos).",
+      "A la galeria, cada foto és una &lt;figure&gt; amb &lt;img alt&gt; i &lt;figcaption&gt;.|En la galería, cada foto es una &lt;figure&gt; con &lt;img alt&gt; y &lt;figcaption&gt;.",
+      "Revisar com a visitant: alt a totes les fotos, títols en ordre, contrast i mòbil.|Revisar como visitante: alt en todas las fotos, títulos en orden, contraste y móvil."
+    ],
+    prev: [
+      "Flex, grid i taules (sessions 1-3 de la unitat).|Flex, grid y tablas (sesiones 1-3 de la unidad).",
+      "figure i figcaption (unitat 3) i el model de caixa (unitat 5).|figure y figcaption (unidad 3) y el modelo de caja (unidad 5).",
+      "Fer un esbós amb rectangles i noms.|Hacer un boceto con rectángulos y nombres."
+    ],
+    faq: [
+      ["Quantes fotos ha de tenir l'àlbum?|¿Cuántas fotos tiene que tener el álbum?", "Almenys sis, amb el seu peu de foto i alt. Feu servir les imatges de Numi del botó «Imatges» (paisatges, animals, llocs).|Al menos seis, con su pie de foto y alt. Usad las imágenes de Numi del botón «Imágenes» (paisajes, animales, lugares)."],
+      ["La taula pot ser de resultats inventats?|¿La tabla puede ser de resultados inventados?", "Sí: les sortides, els premis o el rànquing del concurs del club són inventats. Les dades reals de persones no es publiquen.|Sí: las salidas, los premios o el ranking del concurso del club son inventados. Los datos reales de personas no se publican."],
+      ["Puc fer la galeria amb flex en lloc de grid?|¿Puedo hacer la galería con flex en lugar de grid?", "Es pot, amb flex-wrap, però amb grid les fotos queden alineades en files i columnes sense esforç. Aquí volem que practiqueu grid.|Se puede, con flex-wrap, pero con grid las fotos quedan alineadas en filas y columnas sin esfuerzo. Aquí queremos que practiquéis grid."],
+      ["Com sé si l'àlbum està acabat?|¿Cómo sé si el álbum está terminado?", "Quan totes les comprovacions estan en verd i heu passat la llista de revisió: alt, títols en ordre, contrast i vista al mòbil i a l'ordinador.|Cuando todas las comprobaciones están en verde y habéis pasado la lista de revisión: alt, títulos en orden, contraste y vista en el móvil y en el ordenador."]
+    ],
+    tec: [
+      ["Hi ha moltes comprovacions i el codi és llarg.|Hay muchas comprobaciones y el código es largo.", "Treballeu per peces seguint l'esbós: primer la capçalera, després la galeria i al final la taula. La barra de les comprovacions mostra la primera que falta.|Trabajad por piezas siguiendo el boceto: primero la cabecera, después la galería y al final la tabla. La barra de las comprobaciones muestra la primera que falta."],
+      ["La galeria surt bé a l'ordinador però apretada al mòbil.|La galería sale bien en el ordenador pero apretada en el móvil.", "És normal amb tres columnes. Proveu repeat(2, 1fr) o, a la unitat 7, @media per posar-ne menys al mòbil.|Es normal con tres columnas. Probad repeat(2, 1fr) o, en la unidad 7, @media para poner menos en el móvil."],
+      ["El peu de foto queda al costat de la imatge.|El pie de foto queda al lado de la imagen.", "El &lt;figcaption&gt; ha d'anar dins de la &lt;figure&gt; i la regla flex o grid ha de ser per a la galeria, no per a cada figure.|El &lt;figcaption&gt; tiene que ir dentro de la &lt;figure&gt; y la regla flex o grid tiene que ser para la galería, no para cada figure."]
+    ],
+    seg: [
+      "Àlbum amb dibuixos de Numi; cap foto de persones reals ni de l'escola.|Álbum con dibujos de Numi; ninguna foto de personas reales ni del centro.",
+      "A la galeria de l'aula, comentaris concrets i amables (una cosa que funciona i una millora).|En la galería del aula, comentarios concretos y amables (algo que funciona y una mejora).",
+      "Pausa activa de les fotos (panoràmica i vertical) abans del projecte.|Pausa activa de las fotos (panorámica y vertical) antes del proyecto."
+    ],
+    extra: [
+      "Afegir al menú enllaços #id que portin a la galeria i a la taula.|Añadir al menú enlaces #id que lleven a la galería y a la tabla.",
+      "Fer que la foto preferida ocupi dues columnes a la graella (grid-column: span 2).|Hacer que la foto preferida ocupe dos columnas en la rejilla (grid-column: span 2).",
+      "Afegir un peu de pàgina (&lt;footer&gt;) amb els crèdits de les imatges.|Añadir un pie de página (&lt;footer&gt;) con los créditos de las imágenes."
+    ],
+    trans: [
+      "Unitat 7: fer que l'àlbum i qualsevol web s'adaptin al mòbil (disseny adaptable).|Unidad 7: hacer que el álbum y cualquier web se adapten al móvil (diseño adaptable).",
+      "Educació visual i plàstica: la fotografia i la composició d'un àlbum.|Educación visual y plástica: la fotografía y la composición de un álbum.",
+      "Matemàtiques: organitzar dades en taules.|Matemáticas: organizar datos en tablas."
+    ]
+  }
+}).forEach(([id, g]) => Object.assign(TGUIDE[id], g));

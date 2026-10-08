@@ -388,3 +388,6 @@ COURSE_UNITS[5] = { t: 'Caixes|Cajas', d: 'Marges, vores i espais|Márgenes, bor
       { k: 'feel', ph: 'tanca' }
     ] }
 ] };
+
+/* el codi d'exemple també en castellà (el diccionari és a la unitat 4) */
+if (typeof webTr === 'function' && typeof WEB_TR45 !== 'undefined') webTr(COURSE_UNITS[5], WEB_TR45);
