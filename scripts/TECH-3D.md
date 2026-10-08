@@ -33,6 +33,10 @@ Les unitats i els títols de les sessions són al catàleg `TECH` de `tech-c1.js
   - `hex` prisma hexagonal (cara plana a ±y)
 - `p` = **centre** de la caixa que envolta la peça (abans de girar). «Està sobre la placa» vol dir `p.z - s.z/2 = 0`
   (sense gir).
+- `m` (opcional, Nivell 2): matriu afí 4 × 4 en mm (16 nombres, ordre de columnes com three.js `Matrix4.elements`). Si hi
+  és, **substitueix** `p` i `r`: la forma canònica centrada a l'origen amb mides `s` es transforma amb `m` (pot incloure
+  girs al voltant de l'origen, escales i moviments encadenats del programa). Així `gira`/`mou`/`escala` del codi
+  s'apliquen com a OpenSCAD (al voltant de l'origen) sense haver de convertir a angles d'Euler.
 - `hole: true` = **forat**: es resta a les peces sòlides. Nivell 1: semàntica de Tinkercad, totes les peces sòlides es
   sumen i tots els forats es resten (dins d'un grup `g`, el forat només resta a les peces del grup).
 - Un **model** és `{ parts: [...] }` (Nivell 1) o `{ tree }` (Nivell 2). Tots dos es converteixen en un **arbre CSG**:
