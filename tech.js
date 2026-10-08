@@ -87,8 +87,8 @@ function tStop() { if (typeof TB !== 'undefined' && TB) { clearTimeout(TB.t); TB
 // un curs es mostra si té alguna sessió feta (Web encara és en preparació i no surt)
 const tVis = c => c.units.some(u => (u.s || []).some(tReady));
 // nivell escolar de cada curs (un curs per cicle): Robot → Creadors i Digital → Robòtica
-const TLVL = { robot: "1r-2n de primària · curs d'entrada|1.º-2.º de primaria · curso de entrada", creadors: '4t-6è de primària · després de Robot|4.º-6.º de primaria · después de Robot', digital: '4t-6è de primària|4.º-6.º de primaria', robotica: "5è-6è de primària · amb el robot Maqueen|5.º-6.º de primaria · con el robot Maqueen", web: "1r-2n d'ESO|1.º-2.º de ESO" };
-const TCI3 = { robot: '🤖', robotica: '🚗', creadors: '🎭', digital: '🛡️' };
+const TLVL = { robot: "1r-2n de primària · curs d'entrada|1.º-2.º de primaria · curso de entrada", creadors: '4t-6è de primària · després de Robot|4.º-6.º de primaria · después de Robot', digital: '4t-6è de primària|4.º-6.º de primaria', robotica: "5è-6è de primària · amb el robot Maqueen|5.º-6.º de primaria · con el robot Maqueen", web: "1r-2n d'ESO|1.º-2.º de ESO", model: '4t-6è de primària · disseny i impressió 3D|4.º-6.º de primaria · diseño e impresión 3D', modelpro: "1r-2n d'ESO · disseny 3D amb codi|1.º-2.º de ESO · diseño 3D con código" };
+const TCI3 = { robot: '🤖', robotica: '🚗', creadors: '🎭', digital: '🛡️', web: '🌐', model: '🧊', modelpro: '⚙️' };
 // estrelles dels reptes (la millor de cada repte) i el total
 function tStarSave(n) { if (!TSS || !TSS.id || TSS.demo) return; const t = TS_(); t.st = t.st || {}; const k = TSS.id + ':' + TSS.i; if ((t.st[k] || 0) < n) { t.st[k] = n; save(); } }
 const tStarTotal = () => Object.values(TS_().st || {}).reduce((a, n) => a + n, 0);

@@ -108,7 +108,7 @@
   ],
   "functions": {
     "api/guia.js": {
-      "includeFiles": "{tech-guide-c1.js,tech-guide-c2.js,tech-guide-c3.js,tech-guide-c5.js,tech-sol.js}"
+      "includeFiles": "{tech-guide-c1.js,tech-guide-c2.js,tech-guide-c3.js,tech-guide-c4.js,tech-guide-c5.js,tech-guide-c6.js,tech-guide-c7.js,tech-sol.js}"
     }
   },
   "redirects": [
