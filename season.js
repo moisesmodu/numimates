@@ -112,15 +112,15 @@ function renderSeason() {
   const { cfg, left } = seasonInfo(), s = seasonState(), t = seasonTier(s), into = s.xp - t * SP_TIER;
   const cards = Object.entries(cfg.cards).map(([tier, id]) => { const c = STK.find(x => x[0] === id); return c ? `<div class="sccard"><div>${stickerHTML(c)}</div><small>${L('Nivell', 'Nivel')} ${tier}</small></div>` : ''; }).join('');
   const rows = [...Array(SP_TIERS).keys()].map(i => i + 1).map(i => {
-    const r = tierReward(i, cfg), got = s.got.includes(i), can = i <= t && !got;
-    return `<div class="tier ${got ? 'got' : can ? 'can' : ''} ${r.card ? 'big' : ''}"><span class="tn">${i}</span><span class="tr">${rewardLabel(r)}</span>${got ? '<span class="tok">✓</span>' : can ? `<button class="btn sm gold" onclick="claimTier(${i})">${L('RECULL', 'RECOGE')}</button>` : `<span class="tl">${i * SP_TIER} XP</span>`}</div>`;
+    const r = tierReward(i, cfg), got = s.got.includes(i), can = i <= t && !got, nx = i === t + 1;
+    return `<div class="tier ${got ? 'got' : can ? 'can' : ''} ${r.card ? 'big' : ''} ${nx ? 'next' : ''}" style="--i:${i}"><span class="tn" data-n="${i}">${i}${nx ? `<i class="tme" aria-hidden="true">${meC('happy')}</i>` : ''}</span><span class="tr">${r.card ? `<i class="tcimg" style="background-image:url(img/myth/${r.card}.jpg)" aria-hidden="true"></i>` : ''}${rewardLabel(r)}${nx ? `<i class="tnbar" aria-hidden="true"><i style="width:${into / SP_TIER * 100}%"></i></i>` : ''}</span>${got ? '<span class="tok">✓</span>' : can ? `<button class="btn sm gold" onclick="claimTier(${i})">${L('RECULL', 'RECOGE')}</button>` : `<span class="tl">${i * SP_TIER} XP</span>`}</div>`;
   }).join('');
-  app.innerHTML = shell(`<div class="seasonhead" style="--sc:${cfg.color}"><div class="shi">${cfg.icon}</div><small>${L('RUTA DE TEMPORADA', 'RUTA DE TEMPORADA')}</small><h1>${tx(cfg.name)}</h1>
+  app.innerHTML = shell(`<div class="seasonhead" style="--sc:${cfg.color}"><i class="mg-sky" aria-hidden="true"></i><div class="shi">${cfg.icon}</div><small>${L('RUTA DE TEMPORADA', 'RUTA DE TEMPORADA')}</small><h1>${tx(cfg.name)}</h1>
     <p>${L(`Queden <b>${left} dies</b>. Tota l'XP que guanyis aquest mes et fa pujar de nivell. L'1 del mes que ve comença una temporada nova.`, `Quedan <b>${left} días</b>. Toda la XP que ganes este mes te hace subir de nivel. El día 1 del mes que viene empieza una temporada nueva.`)}</p>
     <div class="shlv"><b>${L('Nivell', 'Nivel')} ${t}</b><span class="scbar"><i style="width:${t >= SP_TIERS ? 100 : into / SP_TIER * 100}%"></i></span><small>${t >= SP_TIERS ? L('Temporada completada! 🏆', '¡Temporada completada! 🏆') : `${into}/${SP_TIER} XP`}</small></div></div>
     ${cards ? `<h2 class="h2">${L('Cartes exclusives d\'aquesta temporada', 'Cartas exclusivas de esta temporada')}</h2><div class="sccards">${cards}</div>` : ''}
     ${t > s.got.length ? `<button class="btn big gold" onclick="claimAllTiers()">🎁 ${L('RECULL-HO TOT', 'RECÓGELO TODO')}</button>` : ''}
-    <div class="tiers">${rows}</div>`, 'home');
+    <div class="tiers" style="--prog:${Math.min(1, (t + (t < SP_TIERS ? into / SP_TIER : 0)) / SP_TIERS)}">${rows}</div>`, 'home');
 }
 function grantTier(i, pack) {
   const { cfg } = seasonInfo(), s = seasonState();

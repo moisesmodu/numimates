@@ -176,11 +176,16 @@ function openPack(n = 1) {
   return got;
 }
 // full = amb la curiositat (sobre i fitxa); sense = versió petita de l'àlbum
-const stickerHTML = (s, cls = '', full = false) => `<div class="mcardx r-${s[1]} ${cls}"><div class="min"><img src="img/myth/${s[0]}.jpg" alt="" loading="lazy"><span class="mnum">Nº ${CARDNUM(s[0])}</span><span class="mgem"></span><div class="mplate"><div class="mname">${tx(s[2])}</div>${full ? `<div class="mrom">${tx(s[3])}</div><div class="mmeander"></div><div class="mfact">${tx(s[4])}</div>` : ''}</div></div><span class="mrar">${tx(RAR[s[1]])}</span></div>`;
+const stickerHTML = (s, cls = '', full = false) => `<div class="mcardx r-${s[1]} ${cls}"><div class="min"><img src="img/myth/${s[0]}.jpg" alt="" loading="lazy"><span class="mnum">Nº ${CARDNUM(s[0])}</span><span class="mgem"></span><div class="mplate"><div class="mname">${tx(s[2])}</div>${full ? `<div class="mrom">${tx(s[3])}</div><div class="mmeander"></div><div class="mfact">${tx(s[4])}</div>` : ''}</div><i class="mfoil"></i><i class="mglare"></i></div><span class="mrar">${tx(RAR[s[1]])}</span></div>`;
+// sobre de cartes: a Numi Mates és un sobre de paper metal·litzat (img/games/pack.webp) que s'esquinça per dalt;
+// les cartes surten de cara avall i es giren una a una, amb una llum del color de la raresa
+// Numi Mates té els efectes nous (sobre, cartes, lliga…); la resta d'apps es veuen com sempre. També el fan servir battle.js i season.js.
+const mgMates = () => document.documentElement.dataset.v === 'mates';
 function scrPack(got) {
-  app.innerHTML = `<div class="scr"><div class="burst gold"></div><h1>${got.length > 1 ? L('Sobre de cartes!', '¡Sobre de cartas!') : L('Nova carta!', '¡Nueva carta!')}</h1><p class="sub">${L('Toca el sobre per obrir-lo', 'Toca el sobre para abrirlo')}</p>
-    <button class="pack wiggle" id="pack" onclick="revealPack()"><span>🏛️</span><small>OLIMP</small></button>
-    <div id="packOut" class="packout" hidden>${got.map((g, i) => `<div class="stkwrap" style="animation-delay:${i * 250}ms">${stickerHTML(g.s, '', true)}${g.dup ? `<p class="dup">${L('Repetida: +3 💎', 'Repetida: +3 💎')}</p>` : `<p class="newst">${L('NOVA!', '¡NUEVA!')}</p>`}</div>`).join('')}
+  const best = 'crel'[Math.max(...got.map(g => 'crel'.indexOf(g.s[1])))];
+  app.innerHTML = `<div class="scr mg-packscr best-${best}"><div class="burst gold"></div><h1>${got.length > 1 ? L('Sobre de cartes!', '¡Sobre de cartas!') : L('Nova carta!', '¡Nueva carta!')}</h1><p class="sub">${L('Toca el sobre per obrir-lo', 'Toca el sobre para abrirlo')}</p>
+    <button class="pack wiggle" id="pack" onclick="revealPack()" aria-label="${L('Obre el sobre', 'Abre el sobre')}"><span>🏛️</span><small>OLIMP</small><i class="pk-body"></i><i class="pk-top"></i><i class="pk-shine"></i></button>
+    <div id="packOut" class="packout" hidden>${got.map((g, i) => `<div class="stkwrap rw-${g.s[1]}" style="animation-delay:${i * 250}ms;--i:${i}"><i class="mg-glow"></i><div class="mg-flip"><div class="mg-back"></div>${stickerHTML(g.s, '', true)}</div>${g.dup ? `<p class="dup">${L('Repetida: +3 💎', 'Repetida: +3 💎')}</p>` : `<p class="newst">${L('NOVA!', '¡NUEVA!')}</p>`}</div>`).join('')}
     <button class="btn big" onclick="flowNext()">${L('CONTINUA', 'CONTINÚA')}</button></div></div>`;
   SCR_PACK = got;
 }
@@ -188,10 +193,16 @@ let SCR_PACK = null;
 function revealPack() {
   const p = $('#pack'); if (!p || p.classList.contains('open')) return;
   p.classList.add('shake'); SFX.tap();
-  setTimeout(() => { p.classList.remove('shake'); p.classList.add('open'); SFX.win(); }, 500);
+  setTimeout(() => { p.classList.remove('shake'); p.classList.add('open'); SFX.win(); if (mgMates()) mgPackFlash(); }, 500);
   const best = Math.max(...SCR_PACK.map(g => 'crel'.indexOf(g.s[1])));
-  confetti(best >= 2 ? 220 : 90);
+  if (mgMates()) setTimeout(() => confetti(best >= 2 ? 220 : 90), 520); else confetti(best >= 2 ? 220 : 90);
   setTimeout(() => { p.style.display = 'none'; $('#packOut').hidden = false; }, 950);
+}
+// esclat de llum quan s'obre el sobre (del color de la millor carta)
+function mgPackFlash() {
+  const s = $('.mg-packscr'); if (!s) return;
+  s.insertAdjacentHTML('beforeend', '<i class="mg-flash" aria-hidden="true"></i>');
+  setTimeout(() => { const f = $('.mg-flash'); if (f) f.remove(); }, 1300);
 }
 function renderAlbum(tab) {
   VIEW = 'album';
@@ -204,12 +215,12 @@ function renderAlbum(tab) {
   app.innerHTML = shell(`<h1 class="ph1">${L('Déus i herois', 'Dioses y héroes')}</h1>${tabs}
     <p class="lead">${L(`Tens <b>${have}</b> de ${STK.length} cartes de la mitologia grega i romana. Cada lliçó que acabes t'obre un sobre!`, `Tienes <b>${have}</b> de ${STK.length} cartas de la mitología griega y romana. ¡Cada lección que acabes te abre un sobre!`)}</p>
     <div class="abar"><div style="width:${have / STK.length * 100}%"></div></div>
-    ${['l', 'e', 'r', 'c'].map(k => `<h2 class="h2"><span class="rdotb" style="background:${RAR[k][2]}"></span>${tx(RAR[k])} <small>${STK.filter(s => s[1] === k && A[s[0]]).length}/${STK.filter(s => s[1] === k).length}</small></h2>
-      <div class="agrid">${STK.filter(s => s[1] === k).map(s => A[s[0]] ? `<button class="stkbtn" onclick="stickerModal('${s[0]}')">${stickerHTML(s)}${A[s[0]] > 1 ? `<i class="cnt">×${A[s[0]]}</i>` : ''}</button>` : `<div class="mcardx empty r-${k}"><div class="min"><span class="mnum">Nº ${CARDNUM(s[0])}</span><div class="mq">${BATTLE_ONLY.includes(s[0]) ? '🛍️' : SEASON_ONLY.includes(s[0]) ? '🌙' : '?'}</div>${BATTLE_ONLY.includes(s[0]) ? `<div class="mhint">${L('A la botiga', 'En la tienda')}</div>` : SEASON_ONLY.includes(s[0]) ? `<div class="mhint">${L('Ruta de temporada', 'Ruta de temporada')}</div>` : ''}</div></div>`).join('')}</div>`).join('')}`, 'album');
+    ${['l', 'e', 'r', 'c'].map(k => `<section class="mg-page r-${k}"><h2 class="h2"><span class="rdotb" style="background:${RAR[k][2]}"></span>${tx(RAR[k])} <small>${STK.filter(s => s[1] === k && A[s[0]]).length}/${STK.filter(s => s[1] === k).length}</small></h2>
+      <div class="agrid">${STK.filter(s => s[1] === k).map(s => A[s[0]] ? `<button class="stkbtn" onclick="stickerModal('${s[0]}')">${stickerHTML(s)}${A[s[0]] > 1 ? `<i class="cnt">×${A[s[0]]}</i>` : ''}</button>` : `<div class="mcardx empty r-${k}"><div class="min"><span class="mnum">Nº ${CARDNUM(s[0])}</span><div class="mq">${BATTLE_ONLY.includes(s[0]) ? '🛍️' : SEASON_ONLY.includes(s[0]) ? '🌙' : '?'}</div>${BATTLE_ONLY.includes(s[0]) ? `<div class="mhint">${L('A la botiga', 'En la tienda')}</div>` : SEASON_ONLY.includes(s[0]) ? `<div class="mhint">${L('Ruta de temporada', 'Ruta de temporada')}</div>` : ''}</div></div>`).join('')}</div></section>`).join('')}`, 'album');
 }
 function stickerModal(id) {
   const s = STK.find(x => x[0] === id);
-  modal(`<div class="sheet card cent mythsheet">${stickerHTML(s, 'bigcard', true)}<button class="btn big" onclick="closeModal()">${L('GENIAL!', '¡GENIAL!')}</button></div>`, true);
+  modal(`<div class="sheet card cent mythsheet r-${s[1]}"><i class="mg-rays" aria-hidden="true"></i>${stickerHTML(s, 'bigcard', true)}<button class="btn big" onclick="closeModal()">${L('GENIAL!', '¡GENIAL!')}</button></div>`, true);
 }
 
 /* ---------- 3. Missions diàries ---------- */
@@ -245,7 +256,7 @@ function misEvent(ev, amount = 1) {
 }
 function missionsCard() {
   const M = missions(), all = M.list.every(x => x.done);
-  return `<div class="mcard"><div class="mhead"><b>🎯 ${L("Missions d'avui", 'Misiones de hoy')}</b><small>${L('Es renoven cada dia', 'Se renuevan cada día')}</small></div>
+  return `<div class="mcard ${all ? 'alldone' : ''}"><div class="mhead"><b>🎯 ${L("Missions d'avui", 'Misiones de hoy')}</b><small>${L('Es renoven cada dia', 'Se renuevan cada día')}</small><span class="mprog">${M.list.filter(x => x.done).length}/${M.list.length}</span></div>
     ${M.list.map(x => { const m = MIS.find(y => y.id === x.id); return `<div class="mrow ${x.done ? 'done' : ''}"><span class="mchk">${x.done ? '✔' : ''}</span><div class="mtxt"><span>${tx(m.t)}</span><div class="mbar"><div style="width:${x.p / m.goal * 100}%"></div></div></div><span class="mrew">${x.done ? '✓' : `+${m.gems}💎`}</span></div>`; }).join('')}
     ${all ? (M.chest ? `<div class="mdone">✅ ${L('Cofre diari obert. Torna demà!', 'Cofre diario abierto. ¡Vuelve mañana!')}</div>` : `<button class="btn gold big" onclick="dailyChest()">🎁 ${L('OBRE EL COFRE DIARI', 'ABRE EL COFRE DIARIO')}</button>`) : `<div class="mchest">🎁 ${L('Completa les 3 per obrir el cofre diari', 'Completa las 3 para abrir el cofre diario')}</div>`}</div>`;
 }
@@ -291,8 +302,9 @@ async function renderLeague(period) {
   if (!r.rows) { box.className = 'empty'; box.textContent = L("Ara no s'ha pogut carregar la lliga.", 'Ahora no se ha podido cargar la liga.'); return; }
   const h = $('.ph1'); if (h && LLIGA_NOM[r.lliga]) h.innerHTML = `🏆 ${tx(LLIGA_NOM[r.lliga])}`;
   const me = r.me || {}, rows = r.rows;
-  box.className = 'league';
-  box.innerHTML = (rows.length ? rows.map((x, i) => `<div class="lrow ${x.me ? 'me' : ''} ${i < 3 ? 'top' + (i + 1) : ''}" style="animation-delay:${i * 40}ms"><span class="lpos">${i < 3 ? ['🥇', '🥈', '🥉'][i] : i + 1}</span><b>${esc(lligaAlias(x.a))}${x.me ? ` <small>(${L('tu', 'tú')})</small>` : ''}</b><span class="lxp">${x.p}</span></div>`).join('')
+  box.className = 'league' + (rows.length >= 3 ? ' haspod' : '');
+  const pod = rows.length >= 3 ? `<div class="lgpod">${[1, 0, 2].map(i => { const x = rows[i]; return `<div class="lgp p${i + 1} ${x.me ? 'me' : ''}" style="--d:${[.25, .5, .05][[1, 0, 2].indexOf(i)]}s"><span class="lgm">${['🥇', '🥈', '🥉'][i]}</span><b>${esc(lligaAlias(x.a))}${x.me ? ` <small>(${L('tu', 'tú')})</small>` : ''}</b><span class="lxp">${x.p}</span><div class="lgstep"><span>${i + 1}</span></div></div>`; }).join('')}</div>` : '';
+  box.innerHTML = pod + (rows.length ? rows.map((x, i) => `<div class="lrow ${x.me ? 'me' : ''} ${i < 3 ? 'top' + (i + 1) : ''}" style="animation-delay:${i * 40}ms"><span class="lpos">${i < 3 ? ['🥇', '🥈', '🥉'][i] : i + 1}</span><b>${esc(lligaAlias(x.a))}${x.me ? ` <small>(${L('tu', 'tú')})</small>` : ''}</b><span class="lxp">${x.p}</span></div>`).join('')
     : `<p class="empty">${L('Encara ningú no té punts. Fes una lliçó i sigues el primer!', 'Todavía nadie tiene puntos. ¡Haz una lección y sé el primero!')}</p>`)
     + (me.pos && !rows.some(x => x.me) ? `<div class="lrow me lsep"><span class="lpos">${me.pos}</span><b>${esc(lligaAlias(me.a))} <small>(${L('tu', 'tú')})</small></b><span class="lxp">${me.p}</span></div>` : '')
     + (me.hidden ? `<p class="lgsmall">${L('Ara mateix no surts a la lliga (ho has triat tu).', 'Ahora mismo no sales en la liga (lo has elegido tú).')}</p>` : !me.pos ? `<p class="lgsmall">${L(`El teu àlies és <b>${esc(lligaAlias(me.a))}</b>. Guanya XP per entrar al rànquing.`, `Tu alias es <b>${esc(lligaAlias(me.a))}</b>. Gana XP para entrar en el ranking.`)}</p>` : '');
@@ -310,3 +322,29 @@ async function lligaCheck() {
     <button class="btn big" onclick="closeModal()">${L('Genial!', '¡Genial!')}</button></div>`, true);
   if (typeof confetti === 'function') confetti(100);
 }
+
+/* ---------- Cartes amb relleu (Numi Mates): s'inclinen seguint el dit o el ratolí i la capa hologràfica es mou ----------
+   Només canvia variables CSS (--rx, --ry, --mx, --my) un cop per fotograma; el moviment el fa el CSS (mates-games.css). */
+(() => {
+  if (typeof matchMedia !== 'function' || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const fine = matchMedia('(hover: hover) and (pointer: fine)').matches;
+  const SEL = '.bigcard, .stkwrap .mcardx, .tbig .mcardx' + (fine ? ', .agrid .mcardx:not(.empty), .sccard .mcardx, .tcard-mini .mcardx' : '');
+  let cur = null, ev = null, raf = 0;
+  const reset = el => { el.classList.remove('tilt'); ['--rx', '--ry', '--mx', '--my'].forEach(k => el.style.removeProperty(k)); };
+  const paint = () => {
+    raf = 0; if (!cur || !ev || !cur.isConnected) return;
+    const r = cur.getBoundingClientRect(), x = Math.min(1, Math.max(0, (ev.clientX - r.left) / r.width)), y = Math.min(1, Math.max(0, (ev.clientY - r.top) / r.height));
+    cur.style.setProperty('--rx', ((.5 - y) * 20).toFixed(2) + 'deg'); cur.style.setProperty('--ry', ((x - .5) * 24).toFixed(2) + 'deg');
+    cur.style.setProperty('--mx', (x * 100).toFixed(1) + '%'); cur.style.setProperty('--my', (y * 100).toFixed(1) + '%');
+  };
+  document.addEventListener('pointermove', e => {
+    if (document.documentElement.dataset.v !== 'mates') return;
+    const el = e.target.closest ? e.target.closest(SEL) : null;
+    if (el !== cur) { if (cur) reset(cur); cur = el; if (el) el.classList.add('tilt'); }
+    if (el) { ev = e; if (!raf) raf = requestAnimationFrame(paint); }
+  }, { passive: true });
+  const out = () => { if (cur) reset(cur); cur = null; };
+  document.addEventListener('pointerleave', out);
+  document.addEventListener('pointerup', e => { if (e.pointerType !== 'mouse') out(); }, { passive: true });
+  document.addEventListener('pointercancel', out, { passive: true });
+})();

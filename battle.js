@@ -31,9 +31,10 @@ function bLoop(key, fn, every = 2000) {
   setTimeout(tick, every);
 }
 
-/* ---------- Escenari d'arena (només visual): focus de llum, estrelles i grades ---------- */
-const arenaBG = (tone = '') => `<div class="arena-bg ${tone}" aria-hidden="true"><i class="beam b1"></i><i class="beam b2"></i><i class="beam b3"></i><i class="stars"></i><i class="crowd"></i><i class="floor"></i></div>`;
-const vsBolt = () => `<div class="vsx" aria-hidden="true"><svg viewBox="0 0 64 64"><path d="M38 2 14 36h14l-6 26 28-38H34z" fill="url(#vsg)"/><defs><linearGradient id="vsg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFE38A"/><stop offset="1" stop-color="#FF8A3C"/></linearGradient></defs></svg><b>VS</b></div>`;
+/* ---------- Escenari d'arena (només visual): estadi 3D renderitzat (img/games), focus de llum, espurnes i grades ----------
+   A Numi Mates la foto de l'estadi i les espurnes es veuen (mates-games.css); a la resta d'apps queden amagades i es veu l'escenari antic. */
+const arenaBG = (tone = '') => `<div class="arena-bg ${tone}" aria-hidden="true"><i class="mg-photo"></i><i class="beam b1"></i><i class="beam b2"></i><i class="beam b3"></i><i class="stars"></i><i class="crowd"></i><i class="floor"></i><i class="mg-haze"></i><i class="mg-sparks">${'<i></i>'.repeat(14)}</i></div>`;
+const vsBolt = () => `<div class="vsx" aria-hidden="true"><i class="mg-vsring"></i><svg viewBox="0 0 64 64"><defs><linearGradient id="vsg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFF6C8"/><stop offset=".45" stop-color="#FFD24A"/><stop offset="1" stop-color="#FF7A2C"/></linearGradient></defs><path d="M38 2 14 36h14l-6 26 28-38H34z" fill="url(#vsg)" stroke="#7A2E00" stroke-width="1.5" stroke-linejoin="round"/><path d="M36 6 20 32h9" fill="none" stroke="#fff" stroke-opacity=".75" stroke-width="2" stroke-linecap="round"/></svg><b>VS</b></div>`;
 // cursa de la batalla: un carril per jugador (tu sempre el primer), amb el company que avança
 function raceHTML(st) {
   const me = { name: P.name, companion: P.companion, done: LS ? LS.done : 0, me: true };
@@ -43,7 +44,7 @@ function raceHTML(st) {
 // podi en tres graons (2n · 1r · 3r) amb els personatges a dalt
 function podium3(rank) {
   const top = [rank[1], rank[0], rank[2]];
-  return `<div class="pod3">${top.map((p, i) => p ? `<div class="pst s${p.pos} ${p.me ? 'me' : ''}" style="--d:${[.35, .7, .15][i]}s"><div class="pch">${p.pos === 1 ? '<span class="crown">👑</span>' : ''}${charSVG(p.companion || 'numi', 'happy')}</div><b>${esc(p.name)}</b><small>${p.correct}/${BQ} · ${secs(p.ms)}</small><div class="step"><span>${p.pos}</span></div></div>` : '<div class="pst empty"></div>').join('')}</div>`;
+  return `<div class="pod3">${top.map((p, i) => p ? `<div class="pst s${p.pos} ${p.me ? 'me' : ''}" style="--d:${[.35, .7, .15][i]}s">${p.pos === 1 ? '<i class="mg-spot" aria-hidden="true"></i>' : ''}<div class="pch">${p.pos === 1 ? '<i class="mg-rays" aria-hidden="true"></i><span class="crown">👑</span>' : ''}${charSVG(p.companion || 'numi', 'happy')}</div><b>${esc(p.name)}</b><small>${p.correct}/${BQ} · ${secs(p.ms)}</small><div class="step"><span>${p.pos}</span></div></div>` : '<div class="pst empty"></div>').join('')}</div>`;
 }
 function battleRewardsHTML() {
   return `<div class="brules">
@@ -194,14 +195,20 @@ async function startParty() {
 function partyCountdown(st) {
   BT.st = st;
   const t0 = Date.now() + Math.max(0, st.startIn || 0);
-  app.innerHTML = `<div class="scr arena bcd" data-bk="cd${st.code}">${arenaBG('gold')}<h1>${L('Preparats?', '¿Preparados?')}</h1><div class="bring"><svg viewBox="0 0 120 120" aria-hidden="true"><circle cx="60" cy="60" r="54"/></svg><div class="bcount" id="bcount">…</div></div><div class="bcd-pl">${st.players.slice(0, 8).map(p => `<span>${charSVG(p.companion || 'numi', 'happy')}<b>${esc(p.name)}</b></span>`).join('')}</div></div>`;
+  app.innerHTML = `<div class="scr arena bcd" data-bk="cd${st.code}">${arenaBG('gold')}<h1>${L('Preparats?', '¿Preparados?')}</h1><div class="bring"><i class="mg-rays" aria-hidden="true"></i><svg viewBox="0 0 120 120" aria-hidden="true"><circle class="mg-r0" cx="60" cy="60" r="58"/><circle cx="60" cy="60" r="54"/><circle class="mg-r1" cx="60" cy="60" r="47"/></svg><i class="mg-wave" id="bwave" aria-hidden="true"></i><div class="bcount" id="bcount">…</div></div><div class="bcd-pl">${st.players.slice(0, 8).map(p => `<span>${charSVG(p.companion || 'numi', 'happy')}<b>${esc(p.name)}</b></span>`).join('')}</div></div>`;
   let last = null;
   const iv = setInterval(() => {
     const left = Math.ceil((t0 - Date.now()) / 1000), el = $('#bcount');
     if (!el) return clearInterval(iv);
-    if (left <= 0) { clearInterval(iv); el.textContent = L('JA!', '¡YA!'); el.classList.add('go'); SFX.win && SFX.win(); return setTimeout(startBattle, 650); }
-    if (left !== last) { last = left; el.textContent = left; el.classList.remove('pop-in'); void el.offsetWidth; el.classList.add('pop-in'); SFX.tap(); }
+    if (left <= 0) { clearInterval(iv); el.textContent = L('JA!', '¡YA!'); el.classList.add('go'); mgCdWave(true); SFX.win && SFX.win(); return setTimeout(startBattle, 650); }
+    if (left !== last) { last = left; el.textContent = left; el.classList.remove('pop-in'); void el.offsetWidth; el.classList.add('pop-in'); SFX.tap(); mgCdWave(); }
   }, 100);
+}
+
+// ona de llum que s'expandeix a cada número del compte enrere (Web Animations: no força cap reflow)
+function mgCdWave(big) {
+  const w = $('#bwave'); if (!w || REDUCED || !w.animate) return;
+  w.animate([{ transform: 'scale(.35)', opacity: .95 }, { transform: `scale(${big ? 2.6 : 1.7})`, opacity: 0 }], { duration: big ? 900 : 750, easing: 'cubic-bezier(.15,.7,.3,1)' });
 }
 
 /* Jugar */
@@ -215,13 +222,33 @@ function startBattle() {
   const run = async () => { if (!LS || LS.bcode !== st.code) return; try { const n = await bApi('state', { bcode: st.code }); if (!n.error) { BT.st = n; battleStrip(); } } catch (e) { } setTimeout(run, 3000); };
   setTimeout(run, 3000);
 }
+// marcador en directe (només visual): encerts, una bola per pregunta i la posició provisional
+const mgBPips = {};
+function mgBattleHUD(st) {
+  if (!LS || LS.mode !== 'battle') return '';
+  const ok = LS.bOk || 0, pos = 1 + st.players.filter(p => !p.me && (p.correct || 0) > ok).length, res = mgBPips[LS.bcode] || [];
+  const pips = [...Array(BQ).keys()].map(i => `<i class="${i < LS.done ? (res[i] === true ? 'ok' : res[i] === false ? 'ko' : 'dn') : i === LS.done ? 'now' : ''}"></i>`).join('');
+  return `<div class="bhud"><div class="bh-sc"><span class="bh-av">${meC('happy')}</span><b id="bhok">${ok}</b><small>${L('encerts', 'aciertos')}</small></div><div class="bh-pips">${pips}</div>${st.players.length > 1 ? `<div class="bh-pos"><small>${L('posició', 'posición')}</small><b>${ordN(pos)}</b></div>` : ''}</div>`;
+}
 function battleStrip() {
   const el = $('#bstrip'); if (!el || !BT) return;
-  el.classList.add('race'); el.innerHTML = raceHTML(BT.st);
+  el.classList.add('race'); el.innerHTML = mgBattleHUD(BT.st) + `<div class="lanes">${raceHTML(BT.st)}</div>`;
+  // a Numi Mates la pregunta es juga dins de l'estadi
+  const les = el.closest('.lesson');
+  if (les && mgMates() && !les.classList.contains('bmode')) { les.classList.add('bmode', BT.st.kind === 'duel' ? 'bduel' : 'bparty'); les.insertAdjacentHTML('afterbegin', arenaBG(BT.st.kind === 'duel' ? 'red' : '')); }
 }
 function battleAnswer(ok) {
   LS.bMs += Math.min(120000, Date.now() - LS.q0); if (ok) LS.bOk++;
   bApi('progress', { bcode: LS.bcode, done: LS.done, correct: LS.bOk, ms: LS.bMs }).catch(() => { });
+  (mgBPips[LS.bcode] = mgBPips[LS.bcode] || [])[LS.done - 1] = ok;
+  mgBattleFX(ok);
+}
+// efecte de cada resposta a la batalla: el marcador salta i la targeta s'il·lumina (verd o vermell)
+function mgBattleFX(ok) {
+  battleStrip();
+  const les = $('.lesson.bmode'); if (!les) return;
+  les.classList.remove('bfx-ok', 'bfx-ko'); void les.offsetWidth; les.classList.add(ok ? 'bfx-ok' : 'bfx-ko');
+  const b = $('#bhok'); if (ok && b && !REDUCED) { b.animate([{ transform: 'scale(1)' }, { transform: 'scale(1.7)', color: '#7CFFB0' }, { transform: 'scale(1)' }], { duration: 520, easing: 'cubic-bezier(.2,1.6,.4,1)' }); floatTxt(b, '+1', 'gain bplus'); }
 }
 async function finishBattle() {
   const code = LS.bcode, body = { bcode: code, done: BQ, correct: LS.bOk, ms: LS.bMs, finished: true };
@@ -257,7 +284,7 @@ function scrBattleResult(st) {
   const claimed = (P.bclaim || {})[st.code];
   app.innerHTML = `<div class="scr arena bres">${arenaBG(win ? 'gold' : '')}
     <div class="cheer"><div class="saybubble">${win ? L(`Ho has aconseguit, ${esc(P.name)}!`, `¡Lo has conseguido, ${esc(P.name)}!`) : L('Molt ben jugat! La pròxima és teva.', '¡Muy bien jugado! La próxima es tuya.')}</div><div class="rchar dance tapme">${meC('happy')}</div></div>
-    <h1>${win ? L('Has guanyat!', '¡Has ganado!') : me.pos ? L(`Has quedat ${ordN(me.pos)}`, `Has quedado ${ordN(me.pos)}`) : L('Batalla acabada', 'Batalla terminada')}</h1>
+    <h1 class="mg-title ${win ? 'win' : ''}">${win ? L('Has guanyat!', '¡Has ganado!') : me.pos ? L(`Has quedat ${ordN(me.pos)}`, `Has quedado ${ordN(me.pos)}`) : L('Batalla acabada', 'Batalla terminada')}</h1>
     ${tie ? `<p class="sub">⏱️ ${L("Empat d'encerts: guanya el més ràpid!", '¡Empate de aciertos: gana el más rápido!')}</p>` : ''}
     ${rank.length > 1 ? podium3(rank) : ''}<div class="podium">${rank.slice(rank.length > 1 ? 3 : 0).map(p => `<div class="prow ${p.me ? 'me' : ''} p${p.pos}"><span class="ppos">${['🥇', '🥈', '🥉'][p.pos - 1] || p.pos}</span><span class="pc">${charSVG(p.companion || 'numi', 'happy')}</span><b>${esc(p.name)}</b><span class="psc">${p.correct}/${BQ}</span><span class="pt">${secs(p.ms)}</span></div>`).join('')}</div>
     ${claimed ? `<button class="btn big" onclick="go('battles')">${L('CONTINUA', 'CONTINÚA')}</button>` : `<button class="btn big gold" onclick="claimBattle()">🎁 ${L('RECULL EL PREMI', 'RECOGE EL PREMIO')}</button>`}</div>`;
@@ -271,7 +298,7 @@ function claimBattle() {
   if (!P.bday || P.bday.d !== today()) P.bday = { d: today(), n: 0 };
   const capped = P.bday.n >= BCAP; P.bday.n++;
   if (win) P.stats.bwins = (P.stats.bwins || 0) + 1;
-  const R = { mode: 'battle', title: win ? L('Victòria!|¡Victoria!', 'Victòria!|¡Victoria!') : L('Batalla acabada|Batalla terminada', 'Batalla acabada|Batalla terminada'), score: me.correct, xp: 15 + (win ? 10 : 0), gems: 0, chest: 0, perfect: false };
+  const R = { mode: 'battle', win, title: win ? L('Victòria!|¡Victoria!', 'Victòria!|¡Victoria!') : L('Batalla acabada|Batalla terminada', 'Batalla acabada|Batalla terminada'), score: me.correct, xp: 15 + (win ? 10 : 0), gems: 0, chest: 0, perfect: false };
   R.sub = L(`${me.correct} de ${BQ} encerts en ${secs(me.ms)}`, `${me.correct} de ${BQ} aciertos en ${secs(me.ms)}`);
   if (capped) R.sub += L(` · Avui ja has cobrat ${BCAP} premis de batalla: demà més!`, ` · Hoy ya has cobrado ${BCAP} premios de batalla: ¡mañana más!`);
   else {
@@ -282,3 +309,93 @@ function claimBattle() {
 }
 // Enllaç directe: mates-numi.vercel.app/?b=ZEUS-1234
 (() => { const b = new URLSearchParams(location.search).get('b'); if (!b) return; history.replaceState(null, '', location.pathname); if (P) setTimeout(() => joinBattle(b), 400); })();
+
+/* ---------- Efectes de recompensa de Numi Mates (només aspecte; la lògica és a app.js) ----------
+   Confeti amb paper que gira en 3D, cintes i guspires daurades; un anell de llum quan encertes;
+   i a la pantalla de resultats els diamants i les estrelles volen fins al seu marcador.
+   Només a Numi Mates: les altres apps fan servir els efectes de sempre. Amb «menys moviment» no es fa res. */
+(() => {
+  if (typeof confetti !== 'function') return;
+  const LOW = (navigator.hardwareConcurrency || 4) <= 4 || (navigator.deviceMemory || 4) <= 2;
+  const base = { confetti, sparkle, comboBanner, scrResult };
+  const PAL = [['#FFE07A', '#C98A00'], ['#FFD24A', '#B87800'], ['#B57BFF', '#5B2A86'], ['#FF7AA8', '#B8336A'], ['#5FD3B3', '#1F8A6E'], ['#5CC8FF', '#1F6FB0'], ['#FF9A3C', '#B8561A'], ['#FFFFFF', '#C9B8E0']];
+  confetti = function (n = 140) {
+    if (!mgMates() || REDUCED) return base.confetti(n);
+    const c = document.createElement('canvas'), dpr = Math.min(2, devicePixelRatio || 1); c.className = 'confetti'; document.body.appendChild(c);
+    const ctx = c.getContext('2d'), W = c.width = innerWidth * dpr, H = c.height = innerHeight * dpr;
+    n = Math.round(Math.min(260, n) * (LOW ? .7 : 1));
+    // cada peça: posició, velocitat (px de pantalla per fotograma a 60 Hz), forma, color de cara i de revers, gir i aleteig
+    const ps = [], add = (x, y, vx, vy) => {
+      const k = Math.random(), col = PAL[k < .35 ? Math.floor(Math.random() * 2) : Math.floor(Math.random() * PAL.length)];
+      ps.push({ x, y, vx: vx * dpr, vy: vy * dpr, t: k < .12 ? 2 : k < .22 ? 1 : k < .3 ? 3 : 0, w: (5 + Math.random() * 6) * dpr, h: (8 + Math.random() * 9) * dpr, c: col, a: Math.random() * 6, va: (Math.random() - .5) * .25, f: Math.random() * 6, vf: .12 + Math.random() * .22, wb: Math.random() * 6 });
+    };
+    const cx = W / 2, cy = H * .38;
+    if (n >= 150) { const k = Math.round(n * .28); for (let i = 0; i < k; i++) { const vy = -(12 + Math.random() * 11); add(0, H * .92, 4 + Math.random() * 8, vy); add(W, H * .92, -(4 + Math.random() * 8), vy); } n -= k * 2; }
+    for (let i = 0; i < n; i++) add(cx + (Math.random() - .5) * W * .2, cy, (Math.random() - .5) * 13, -(5 + Math.random() * 13));
+    let last = performance.now(), age = 0;
+    (function loop(t) {
+      const dt = Math.min(2.2, (t - last) / 16.7); last = t; age += dt;
+      ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, W, H);
+      if (age < 22) { const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, W * .5), o = (1 - age / 22) * .5; g.addColorStop(0, `rgba(255,244,200,${o})`); g.addColorStop(1, 'rgba(255,244,200,0)'); ctx.fillStyle = g; ctx.fillRect(0, 0, W, H); }
+      let alive = 0;
+      for (const p of ps) {
+        p.vy += .36 * dpr * dt; p.vx *= Math.pow(.985, dt); p.vy *= Math.pow(p.vy < 0 ? .985 : p.t === 1 ? .9 : .93, dt);
+        p.x += (p.vx + Math.sin(age * .08 + p.wb) * 1.2 * dpr) * dt; p.y += p.vy * dt; p.a += p.va * dt; p.f += p.vf * dt;
+        if (p.y > H + 40 || p.x < -60 || p.x > W + 60) continue; alive++;
+        const fl = Math.cos(p.f), ca = Math.cos(p.a), sa = Math.sin(p.a);
+        ctx.setTransform(ca, sa, -sa * fl, ca * fl, p.x, p.y);
+        ctx.fillStyle = fl > 0 ? p.c[0] : p.c[1];
+        if (p.t === 0) ctx.fillRect(-p.w / 2, -p.h / 4, p.w, p.h / 2);
+        else if (p.t === 1) ctx.fillRect(-p.w * .18, -p.h * 1.2, p.w * .36, p.h * 2.4);
+        else if (p.t === 3) { ctx.beginPath(); ctx.arc(0, 0, p.w * .42, 0, 6.3); ctx.fill(); }
+        else { const r = p.w * .75, tw = .55 + .45 * Math.sin(age * .3 + p.wb); ctx.globalAlpha = tw; ctx.fillStyle = '#FFF3B0'; ctx.beginPath(); for (let i = 0; i < 8; i++) { const rr = i % 2 ? r * .32 : r, aa = i * Math.PI / 4; ctx.lineTo(Math.cos(aa) * rr, Math.sin(aa) * rr); } ctx.fill(); ctx.globalAlpha = 1; }
+      }
+      if (alive && age < 260) requestAnimationFrame(loop); else c.remove();
+    })(last);
+  };
+  // anell de llum i estrelles al voltant de la resposta correcta
+  sparkle = function (el, n) {
+    base.sparkle(el, n);
+    if (!mgMates() || REDUCED || !el) return;
+    const r = el.getBoundingClientRect(), d = document.createElement('i'); d.className = 'mg-ring';
+    d.style.cssText = `left:${r.left - 4}px;top:${r.top - 4}px;width:${r.width + 8}px;height:${r.height + 8}px`;
+    document.body.appendChild(d); setTimeout(() => d.remove(), 800);
+  };
+  comboBanner = function (n) {
+    base.comboBanner(n);
+    const b = document.body.lastElementChild;
+    if (mgMates() && b && b.classList.contains('combobanner')) { b.insertAdjacentHTML('afterbegin', '<i class="mg-cbr" aria-hidden="true"></i>'); if (n >= 10) b.classList.add('mega'); }
+  };
+  // pantalla de resultats: a les batalles, dins de l'estadi; i els premis volen fins al seu marcador
+  scrResult = function (R) {
+    base.scrResult(R);
+    if (!mgMates()) return;
+    const s = $('#app > .scr'); if (!s) return;
+    s.classList.add('mg-res');
+    if (R.mode === 'battle') { s.classList.add('arena', 'mg-bres'); s.insertAdjacentHTML('afterbegin', arenaBG(R.win ? 'gold' : '')); }
+    if (REDUCED) return;
+    const from = s.querySelector('.rchar') || s.querySelector('h1');
+    setTimeout(() => {
+      if (!document.body.contains(s)) return;
+      if (R.gems > 0) fly(from, s.querySelector('.rs.gem'), 'img/ic/diamond.webp', Math.min(12, 3 + Math.round(R.gems / 5)));
+      if (R.xp > 0) fly(from, s.querySelector('.rs.xp'), 'img/ic/star.webp', Math.min(10, 3 + Math.round(R.xp / 10)));
+    }, 450);
+  };
+  function fly(fromEl, toEl, src, n) {
+    if (!fromEl || !toEl || !document.body.animate) return;
+    const a = fromEl.getBoundingClientRect(), b = toEl.getBoundingClientRect();
+    const x0 = a.left + a.width / 2, y0 = a.top + a.height / 2, dx = b.left + b.width / 2 - x0, dy = b.top + b.height * .35 - y0;
+    for (let i = 0; i < n; i++) {
+      const im = document.createElement('img'); im.src = src; im.alt = ''; im.className = 'mg-coin'; im.style.left = x0 + 'px'; im.style.top = y0 + 'px';
+      document.body.appendChild(im);
+      const ang = Math.random() * Math.PI * 2, r = 50 + Math.random() * 60, mx = Math.cos(ang) * r, my = Math.sin(ang) * r * .7 - 40, rot = (Math.random() - .5) * 120;
+      const an = im.animate([
+        { transform: 'translate(0,0) scale(.2) rotate(0deg)', opacity: 0 },
+        { transform: `translate(${mx}px,${my}px) scale(1.15) rotate(${rot}deg)`, opacity: 1, offset: .32 },
+        { transform: `translate(${mx * .6}px,${my - 10}px) scale(1) rotate(${rot * 1.3}deg)`, opacity: 1, offset: .5 },
+        { transform: `translate(${dx}px,${dy}px) scale(.5) rotate(${rot * 2}deg)`, opacity: .9 }
+      ], { duration: 1050, delay: i * 70, easing: 'cubic-bezier(.45,0,.35,1)', fill: 'both' });
+      an.onfinish = () => { im.remove(); toEl.animate([{ transform: 'scale(1)' }, { transform: 'scale(1.1)', filter: 'brightness(1.4)' }, { transform: 'scale(1)' }], { duration: 240 }); };
+    }
+  }
+})();
