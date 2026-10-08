@@ -138,3 +138,31 @@ un dit gira la càmera, dos dits fan zoom i desplacen; tocar una peça la selecc
 - Contingut: `scripts/tech-src/model/u*` i `scripts/tech-src/modelpro/u*` → `node scripts/tech-build-course.mjs model c6 "Tech 3D · Nivell 1"`
   i `node scripts/tech-build-course.mjs modelpro c7 "Tech 3D · Nivell 2"`.
 - Integració (no la toqueu): `tech.js`, `tech.css`, `index.html`, `tech-c1.js`, `tech-lab.js`, `vercel.json`, panell.
+
+## Com s'escriuen els passos (guia per als agents de contingut)
+Model de referència: les sessions `m1-1`, `m1-3` (`scripts/tech-src/model/u1`) i `p1-1`, `p1-3` (`scripts/tech-src/modelpro/u1`).
+- `p` és el **centre** de la peça: un cub de 20 mm sobre la placa té `p:[x, y, 10]`.
+- El text d'una comprovació va a `t: "ca|es"`; a `count` i `part`, `t` és el tipus de peça i el text va a `txt`.
+- Els números de les comprovacions poden ser expressions (`'mida+4'`). Comprovacions extra del motor: `part`, `colors`, `zmax`, `nohole`.
+- Nivell 1:
+  ```js
+  { k:'m3build', ph:'repte', q:'Mou el cub fins al fantasma…|…', start:{parts:[{id:'a1',t:'box',s:[20,20,20],p:[0,0,10]}]}, palette:['box'],
+    target:{parts:[{t:'box',s:[20,20,20],p:[30,0,10]}]}, checks:[{k:'match',target:{parts:[{t:'box',s:[20,20,20],p:[30,0,10]}]},th:.92,t:'El cub és dins del fantasma|…'},{k:'onplate'}],
+    hint:'Posició → x = 30|…', sol:{parts:[{id:'a1',t:'box',s:[20,20,20],p:[30,0,10]}]} }
+  { k:'m3look', ph:'prova', q:"Troba l'estrella amagada|…", model:{parts:[…, {id:'estrella',t:'star',…}]}, pick:'estrella', yes:'…|…', ex:'…|…' }   // o opts:['3|3','4|4'], a:1, view:'top', lock:true
+  { k:'m3fix', ph:'repte', q:"El pont flota: arregla'l|…", start:{parts:[{id:'a1',t:'box',s:[60,20,10],p:[0,0,20]}]}, fix:['a1'], checks:[{k:'onplate'}], hint:'…|…', sol:{parts:[{id:'a1',t:'box',s:[60,20,10],p:[0,0,5]}]} }
+  ```
+- Nivell 2 (programes en text; `"ca|es"` per tenir una versió a cada idioma):
+  ```js
+  { k:'m3code', ph:'repte', q:'…|…', start:'cub(20)', blocks:['cub','esf','mou'], target:'cub(20)\nmou(10, 10, 30) esfera(20)',
+    checks:[{k:'match',target:'cub(20)\nmou(10, 10, 30) esfera(20)',th:.85,t:"S'assembla al fantasma|…"},{k:'uses',b:'mou'}], hint:'…|…', sol:'cub(20)\nmou(10, 10, 30) esfera(20)' }
+  { k:'m3predict', ph:'prova', q:'Quin model fa?|…', prog:'cub(40, 10, 10)', opts:[{prog:'cub(40, 10, 10)'},{prog:'cub(10, 40, 10)'}], a:0, ex:'…|…' }
+  { k:'m3spot', ph:'investiga', q:'…|…', prog:'cub(40, 40, 10)\nmou(20, 20, 70)! esfera(20)', target:'…', ex:'…|…' }   // el ! just després de la instrucció errònia
+  // paramètric: checks:[{k:'size',ax:'x',v:'mida'},{k:'param',v:'mida',vals:[20,40]}]
+  ```
+- Paraules del llenguatge: formes `cub`, `cilindre(d,h)`, `esfera(d)`, `con(d,h,d2)`, `piramide`, `tub(d,h,paret)`,
+  `anell(d,gruix)`, `prisma`, `falca`, `estrella(d,h,n)`, `cor` i l'opció `centrat`; `mou`, `gira`, `escala`,
+  `color("blau")`, `uneix`, `resta`, `interseca`; `repeteix i de 0 a 3 [pas n] {…}` (els dos extrems inclosos);
+  `defineix nom(a) {…}`; variables `mida = 30`; comentaris `//`.
+- Altres: `m3free` (projecte amb `crit`), targetes `learn` amb `media: { k: 'model', model | prog, view? }`, diapositives
+  `k: 'media'` amb el mateix `media`. El validador (`validate.mjs --course model|modelpro`) comprova solucions i `start`.
