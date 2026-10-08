@@ -64,3 +64,14 @@ Per revisar aquesta branca sense tocar producció: des d'un checkout de `claude/
 - **Digital**: unitat 3 nova, edat mínima de les dades, telèfons d'ajuda visibles (116 111, 017, 112).
 - Les edats dels cursos no s'han canviat.
 
+
+## Pla en curs (octubre 2026): «pujar de nivell»
+Petició del Moisés (8-10-2026): gràfics més realistes i espectaculars a tots els jocs (sobretot a Tech), acabar tots els
+cursos de Tech i crear un curs de disseny 3D en dos nivells. Sense desplegar a producció.
+1. **Base** (fet): Tech Web (c4) i Tech 3D · Nivell 1 (`model`, c6) i · Nivell 2 (`modelpro`, c7) registrats; contracte a
+   `scripts/TECH-3D.md`.
+2. **En marxa**: renderitzador `tech-model3d.js` (scripts/3d/model3d.mjs) · motor `tech-model.js` · acabar Tech Web ·
+   gràfics del món 3D d'en Bit (bit3d.mjs) · arena 3D del Maqueen (robo3d.mjs) · art de l'escenari de Creadors.
+3. **Després**: contingut de Tech 3D (2 × 32 sessions amb guies), illes i escenes 3D dels cursos nous (món «taller»),
+   tornar a renderitzar illes/escenes amb el renderitzador millorat, Laboratori «Taller 3D», panell i solucionari.
+4. **Després**: gràfics dels jocs de Numi Mates (batalles, cromos, lliga, missions) i de Numi Ment.
