@@ -165,9 +165,21 @@ const MICO = {
   so: '<path d="M4 9.5v5h4l5 4v-13l-5 4z"/><path d="M16.5 9a4 4 0 0 1 0 6M19 6.5a7.5 7.5 0 0 1 0 11"/>',
   medalla: '<circle cx="12" cy="14.5" r="5.5"/><path d="M8.7 10 6 3h4l2 4 2-4h4l-2.7 7"/><path d="m10 14.5 1.4 1.4 2.8-2.8"/>',
   compartir: '<circle cx="18" cy="5.5" r="2.6"/><circle cx="6" cy="12" r="2.6"/><circle cx="18" cy="18.5" r="2.6"/><path d="m8.3 10.8 7.4-4.1M8.3 13.2l7.4 4.1"/>',
-  diana: '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.2" fill="currentColor"/>'
+  diana: '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.2" fill="currentColor"/>',
+  bombeta: '<path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-3.6 10.8c.7.6 1.1 1.4 1.1 2.2V16h5v-.1c0-.8.4-1.6 1.1-2.2A6 6 0 0 0 12 3z"/>',
+  esborra: '<path d="M8.5 5H20a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H8.5L3 12z"/><path d="m11.5 9.5 5 5M16.5 9.5l-5 5"/>',
+  barreja: '<path d="M3 7h3.5c2 0 3.2 1 4.3 2.6l2.4 4.8C14.3 16 15.5 17 17.5 17H21M3 17h3.5c1.4 0 2.4-.5 3.2-1.4M14.3 8.4c.8-.9 1.8-1.4 3.2-1.4H21"/><path d="m18.5 4.5 2.5 2.5-2.5 2.5M18.5 14.5l2.5 2.5-2.5 2.5"/>'
 };
 const mSvg = (k, cls = 'mico') => `<svg class="${cls}" viewBox="0 0 24 24" aria-hidden="true">${MICO[k] || ''}</svg>`;
+// pictogrames nítids (SVG) en lloc d'emojis als jocs on el dibuix forma part de l'estímul (es veuen igual a tots els mòbils)
+const MPICS = {
+  '🚗': '<svg class="mvp" viewBox="0 0 64 40" aria-hidden="true"><ellipse cx="33" cy="35.5" rx="27" ry="2.6" fill="#000" opacity=".22"/><path d="M5 27.5c0-4.6 2.6-6.9 7.4-7.7l8.3-1.3 6.8-7.2c1.7-1.8 3.7-2.6 6.2-2.6h9.6c2.6 0 4.6.9 6.3 3l5.3 6.6c4.6.9 7.1 3.1 7.1 7.3v2.8c0 1.7-1.2 2.9-2.9 2.9H7.9C6.2 31.3 5 30 5 28.4z" fill="#D9473C"/><path d="M5 26.6h56v1.8c0 1.7-1.2 2.9-2.9 2.9H7.9C6.2 31.3 5 30 5 28.4z" fill="#A9302A"/><path d="M22.6 18.4l6.1-6.4c1.2-1.2 2.6-1.8 4.3-1.8h4.4v8.2zM39.6 10.2h4.2c1.8 0 3.2.7 4.4 2.2l4.7 6z" fill="#CFE7F3"/><path d="M24.4 16.6l3.4-3.6c.8-.8 1.6-1.1 2.6-1.1h1.6l-4.6 4.7zM41.2 11.9h1.9l-3 3.2v-3.2z" fill="#fff" opacity=".75"/><path d="M38.2 10.2v8.2" stroke="#A9302A" stroke-width="1.4"/><rect x="56.4" y="21.4" width="4" height="2.4" rx="1.2" fill="#FFE7A6"/><rect x="5.2" y="21.8" width="2.6" height="2.4" rx="1" fill="#7A1F1A"/><path d="M14 22.4h8M42 22.4h6" stroke="#fff" stroke-opacity=".28" stroke-width="1.2" stroke-linecap="round"/><g><circle cx="17" cy="31" r="6.2" fill="#1E2224"/><circle cx="17" cy="31" r="3.2" fill="#C9CED3"/><circle cx="17" cy="31" r="1.1" fill="#6B7378"/></g><g><circle cx="49" cy="31" r="6.2" fill="#1E2224"/><circle cx="49" cy="31" r="3.2" fill="#C9CED3"/><circle cx="49" cy="31" r="1.1" fill="#6B7378"/></g></svg>',
+  '🚚': '<svg class="mvp" viewBox="0 0 64 40" aria-hidden="true"><ellipse cx="33" cy="35.5" rx="28" ry="2.6" fill="#000" opacity=".22"/><rect x="3.5" y="5.5" width="37" height="24.5" rx="2.4" fill="#F4F1EA"/><rect x="3.5" y="22.5" width="37" height="7.5" rx="1.6" fill="#DCD6C9"/><rect x="3.5" y="13" width="37" height="4.2" fill="#2E9D8A"/><path d="M41.5 11.5h10.2c2.1 0 3.6.9 4.7 2.6l4.1 6.6c.8 1.3 1.2 2.6 1.2 4.1v3.8c0 1.3-1 2.4-2.4 2.4H41.5z" fill="#2F6CC6"/><path d="M41.5 25h20.2v2.6c0 1.3-1 2.4-2.4 2.4H41.5z" fill="#21508F"/><path d="M45 14.4h6.3c1 0 1.9.5 2.5 1.4l2.9 4.8H45z" fill="#CFE7F3"/><path d="M46.4 15.6h2.6l-2.6 2.8z" fill="#fff" opacity=".7"/><rect x="58.6" y="21.6" width="3" height="2.2" rx="1" fill="#FFE7A6"/><g><circle cx="13.5" cy="31" r="5.6" fill="#1E2224"/><circle cx="13.5" cy="31" r="2.8" fill="#C9CED3"/></g><g><circle cx="27" cy="31" r="5.6" fill="#1E2224"/><circle cx="27" cy="31" r="2.8" fill="#C9CED3"/></g><g><circle cx="52" cy="31" r="5.6" fill="#1E2224"/><circle cx="52" cy="31" r="2.8" fill="#C9CED3"/></g></svg>',
+  star: '<svg class="mvs" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.4l2.95 6.02 6.63.94-4.8 4.66 1.14 6.6L12 17.5l-5.92 3.12 1.14-6.6-4.8-4.66 6.63-.94z" fill="#F2B83A" stroke="#B9801A" stroke-width="1.1" stroke-linejoin="round"/><path d="M12 4.9l2.1 4.3 1.6.25-3.7.35z" fill="#FFF3C4" opacity=".9"/></svg>',
+  tri: '<svg class="mvs" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4.2 21 19.6H3z" fill="#8B9496" stroke="#6E777A" stroke-width="1.1" stroke-linejoin="round"/></svg>',
+  casa: '<svg class="mhome" viewBox="0 0 32 32" aria-hidden="true"><ellipse cx="16" cy="28.4" rx="10" ry="1.8" fill="#000" opacity=".18"/><path d="M6.5 14.5 16 6.2l9.5 8.3V26a1.4 1.4 0 0 1-1.4 1.4H7.9A1.4 1.4 0 0 1 6.5 26z" fill="#FFF6E2"/><path d="M4.2 15.4 16 5l11.8 10.4" fill="none" stroke="#C4553D" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><rect x="13.2" y="18.6" width="5.6" height="8.8" rx="1" fill="#B9801A"/><rect x="8.8" y="16.2" width="3.4" height="3.4" rx=".6" fill="#8FC6DE"/><rect x="19.8" y="16.2" width="3.4" height="3.4" rx=".6" fill="#8FC6DE"/></svg>'
+};
+const mPic = c => MPICS[c] || c;
 const mGic = g => `<span class="mgic d-${MG[g] ? MG[g].cap : 'cal'}">${mSvg(g)}</span>`;
 const mTile = (ic, d) => `<span class="mgic d-${d}">${mSvg(ic)}</span>`;
 
@@ -252,7 +264,7 @@ function mentHome() {
   const hero = `<section class="mhero"><p class="mdate">${(t => t[0].toUpperCase() + t.slice(1))(new Date().toLocaleDateString(mLoc(), { weekday: 'long', day: 'numeric', month: 'long' }))}</p><h1 class="mh1">${mHello()}, ${esc(P.name)}</h1>
     <div class="mherow">${mRing(fets, 3)}<div><h2>${nxt ? L("La sessió d'avui", 'La sesión de hoy') : L('Sessió feta!', '¡Sesión hecha!')}</h2><p>${nxt ? L('3 jocs · uns 10 minuts', '3 juegos · unos 10 minutos') : L('Demà en tindràs una de nova.', 'Mañana tendrás una nueva.')}</p></div></div>
     ${nxt ? `<button class="btn big mbtn" onclick="mPlay('${nxt}',true)">${fets ? L('Continua la sessió', 'Continúa la sesión') : L('Comença la sessió', 'Empieza la sesión')}</button>` : `<button class="btn big mbtn" onclick="mShare()">${mSvg('compartir')} ${L('Comparteix-ho', 'Compártelo')}</button>`}</section>`;
-  const sess = `<section class="mtcard msess mlift"><div class="mgames">${s.map(g => `<button class="mg d-${MG[g].cap} ${dd.s.includes(g) ? 'done' : ''}" onclick="mPlay('${g}',true)">${mGic(g)}<span><b>${tx(MG[g].n)}</b><span class="mdom d-${MG[g].cap}">${tx(MCAP[MG[g].cap])}</span></span>${dd.s.includes(g) ? `<i class="mok">${mSvg('ok')}</i>` : `<span class="mnext">${mSvg('seg')}</span>`}</button>`).join('')}</div>
+  const sess = `<section class="mtcard msess mlift"><div class="mgames">${s.map(g => `<button class="mg d-${MG[g].cap} ${dd.s.includes(g) ? 'done' : ''}" onclick="mPlay('${g}',true)">${MIMG.has(g) ? `<span class="mg-art" aria-hidden="true"><img src="img/ment/${g}.webp" alt="" decoding="async"></span>` : ''}${mGic(g)}<span><b>${tx(MG[g].n)}</b><span class="mdom d-${MG[g].cap}">${tx(MCAP[MG[g].cap])}</span></span>${dd.s.includes(g) ? `<i class="mok">${mSvg('ok')}</i>` : `<span class="mnext">${mSvg('seg')}</span>`}</button>`).join('')}</div>
     ${nxt ? '' : `<button class="btn ghost mbtn" style="margin-top:8px" onclick="go('jocs')">${L('Juga una estona més', 'Juega un rato más')}</button>`}</section>`;
   app.innerHTML = mShell('home', `${sess}${mAnamCard()}${mAgeCard()}
     <section class="mtcard"><div class="mthead"><b>${L('Aquesta setmana', 'Esta semana')}</b><span>${P.streak > 1 ? L(`${P.streak} dies seguits`, `${P.streak} días seguidos`) : ''}</span></div><div class="mweek">${week}</div>
@@ -273,13 +285,16 @@ function mHabAlt() { const d = mDay(); d.hk = (d.hk || 0) + 1; save(); mentHome(
 function mHab() { const d = mDay(); d.hab = d.hab ? 0 : 1; if (d.hab && !d.hxp) { d.hxp = 1; P.xp = (P.xp || 0) + 5; } save(); if (d.hab) { SFX.ok && SFX.ok(); toast(L('Molt bé! La ment també s\'entrena fora de la pantalla.', '¡Muy bien! La mente también se entrena fuera de la pantalla.')); } mentHome(); }
 // indicador semicircular de 20 a 90 anys: el punt daurat és l'edat de la ment; la marca blanca, l'edat real
 function mGauge(age, real) {
-  const a = v => Math.PI * (1 - (Math.max(20, Math.min(90, v)) - 20) / 70), P = (v, r) => [150 + r * Math.cos(a(v)), 150 - r * Math.sin(a(v))], [x, y] = P(age, 118);
-  const tick = real ? (() => { const [x1, y1] = P(real, 100), [x2, y2] = P(real, 136), [tx, ty] = P(real, 150); return `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="#fff" stroke-width="3" stroke-linecap="round"/><text x="${tx.toFixed(1)}" y="${(ty - 2).toFixed(1)}" text-anchor="middle" font-size="13" font-weight="700" fill="#C9C6E6">${L('tu', 'tú')} ${real}</text>`; })() : '';
-  return `<svg class="mgauge" viewBox="0 -12 300 176" aria-hidden="true"><defs><linearGradient id="mgg" x1="0" x2="1"><stop offset="0" stop-color="#6FD8BD"/><stop offset=".55" stop-color="#F3D48E"/><stop offset="1" stop-color="#E9967A"/></linearGradient></defs>
-    <path d="M32 150A118 118 0 0 1 268 150" fill="none" stroke="rgba(255,255,255,.12)" stroke-width="18" stroke-linecap="round"/><path d="M32 150A118 118 0 0 1 268 150" fill="none" stroke="url(#mgg)" stroke-width="10" stroke-linecap="round" opacity=".9"/>
-    ${tick}<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="13" fill="#F3D48E" stroke="#1C1B3A" stroke-width="4"/>
-    <text x="150" y="128" text-anchor="middle" font-family="Schibsted Grotesk,system-ui,sans-serif" font-size="60" font-weight="700" fill="#F3D48E">${age}</text><text x="150" y="152" text-anchor="middle" font-size="15" font-weight="600" fill="#C9C6E6">${L('anys', 'años')}</text>
-    <text x="32" y="172" text-anchor="middle" font-size="12" fill="#8E8AB8">20</text><text x="268" y="172" text-anchor="middle" font-size="12" fill="#8E8AB8">90</text></svg>`;
+  const cl = v => Math.max(20, Math.min(90, v)), a = v => Math.PI * (1 - (cl(v) - 20) / 70), P = (v, r) => [150 + r * Math.cos(a(v)), 150 - r * Math.sin(a(v))], f = n => n.toFixed(1);
+  const ticks = [...Array(15).keys()].map(i => { const v = 20 + i * 5, big = v % 10 === 0, [x1, y1] = P(v, big ? 97 : 100), [x2, y2] = P(v, 106); return `<line x1="${f(x1)}" y1="${f(y1)}" x2="${f(x2)}" y2="${f(y2)}" class="${big ? 'tk big' : 'tk'}"/>`; }).join('');
+  const labs = [20, 40, 60, 80].map(v => { const [x, y] = P(v, 84); return `<text x="${f(x)}" y="${f(y + 4)}" text-anchor="middle" class="lb">${v}</text>`; }).join('');
+  const tick = real ? (() => { const [x1, y1] = P(real, 108), [x2, y2] = P(real, 132), [tx, ty] = P(real, 150); return `<line x1="${f(x1)}" y1="${f(y1)}" x2="${f(x2)}" y2="${f(y2)}" class="real"/><text x="${f(tx)}" y="${f(ty - 2)}" text-anchor="middle" class="rl">${L('tu', 'tú')} ${real}</text>`; })() : '';
+  const deg = (cl(age) - 20) / 70 * 180;
+  return `<svg class="mgauge" viewBox="0 -14 300 178" aria-hidden="true"><defs><linearGradient id="mgg" x1="0" x2="1"><stop offset="0" stop-color="#6FD8BD"/><stop offset=".55" stop-color="#F3D48E"/><stop offset="1" stop-color="#E9967A"/></linearGradient><radialGradient id="mgk" cx="35%" cy="30%" r="75%"><stop offset="0" stop-color="#FFF6D6"/><stop offset=".55" stop-color="#F0C766"/><stop offset="1" stop-color="#B9801A"/></radialGradient><linearGradient id="mgn" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFF3C9"/><stop offset="1" stop-color="#E2B04A"/></linearGradient><filter id="mgf" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="5"/></filter></defs>
+    <path d="M32 150A118 118 0 0 1 268 150" class="trk"/><path d="M32 150A118 118 0 0 1 268 150" class="arc" stroke="url(#mgg)"/><path d="M32 150A118 118 0 0 1 268 150" class="arc glow" stroke="url(#mgg)" filter="url(#mgf)"/>
+    ${ticks}${labs}${tick}
+    <g class="mg-knob" style="--a:${deg.toFixed(1)}deg"><circle cx="32" cy="150" r="20" fill="#F3D48E" opacity=".28" filter="url(#mgf)"/><circle cx="32" cy="150" r="13" fill="url(#mgk)" stroke="#1C1B3A" stroke-width="4"/></g>
+    <text x="150" y="128" text-anchor="middle" class="num" fill="url(#mgn)">${age}</text><text x="150" y="152" text-anchor="middle" class="yr">${L('anys', 'años')}</text></svg>`;
 }
 // targeta de l'edat de la ment: convida a fer el test, o mostra l'última i quan toca repetir-lo
 function mAgeCard() {
@@ -299,7 +314,7 @@ function mAgeCard() {
 function mentJocs() {
   const m = MS(), prem = isPremium(), fr = m.free[today()] || {}, ses = mSession();
   // rajola: icona, nom, nivell (punts de l'1 al 10) i millor resultat
-  const card = g => { const o = MG[g], lv = mLv10(g); return `<button class="mjoc d-${o.cap}" onclick="mPlay('${g}',false)"><span class="mjart" aria-hidden="true">${mSvg(g)}</span>${o.nou && !m.hist[g] ? `<span class="mnew">${L('Nou', 'Nuevo')}</span>` : ''}${mGic(g)}<b>${tx(o.n)}</b>
+  const card = g => { const o = MG[g], lv = mLv10(g); return `<button class="mjoc d-${o.cap} ${MIMG.has(g) ? 'img' : ''}" onclick="mPlay('${g}',false)">${MIMG.has(g) ? `<span class="mj-img" aria-hidden="true"><img src="img/ment/${g}.webp" alt="" loading="lazy" decoding="async" width="1200" height="675"></span>` : `<span class="mjart" aria-hidden="true">${mSvg(g)}</span>`}${o.nou && !m.hist[g] ? `<span class="mnew">${L('Nou', 'Nuevo')}</span>` : ''}${mGic(g)}<b>${tx(o.n)}</b>
     ${lv ? `<span class="mdots" aria-label="${L('nivell', 'nivel')} ${lv}">${[...Array(10).keys()].map(i => `<i class="${i < lv ? 'on' : ''}"></i>`).join('')}</span>` : ''}
     <span class="mrec">${m.hist[g] ? `${L('Millor', 'Mejor')}: <b>${mNice(g, m.best[g])}</b>` : L('Per estrenar', 'Por estrenar')}${!prem && fr[g] && !ses.includes(g) ? ` · <i>${L('demà més', 'mañana más')}</i>` : ''}</span></button>`; };
   const nj = Object.keys(MG).length;
@@ -326,8 +341,41 @@ function mPremium(gen) {
 }
 const mPin = () => `<svg class="mpin" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22s7-6.2 7-12a7 7 0 0 0-14 0c0 5.8 7 12 7 12z" fill="currentColor" opacity=".18"/><path d="M12 22s7-6.2 7-12a7 7 0 0 0-14 0c0 5.8 7 12 7 12z" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="10" r="2.6" fill="currentColor"/></svg>`;
 function mGameShell(g, top, body, title) {
-  app.innerHTML = `<div class="mgame d-${MG[g] ? MG[g].cap : 'cal'}"><div class="mgtop"><button class="xbtn" onclick="mQuit()" aria-label="${L('Surt', 'Salir')}">✕</button><b>${title || tx(MG[g].n)}</b><span id="mgstat">${top || ''}</span></div><div class="mgprog" hidden aria-hidden="true"><i></i></div><div class="mgbody" id="mgb">${body}</div></div>`;
+  app.innerHTML = `<div class="mgame d-${MG[g] ? MG[g].cap : 'cal'}" data-g="${g}"><div class="mgtop"><button class="xbtn" onclick="mQuit()" aria-label="${L('Surt', 'Salir')}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 6.5l11 11M17.5 6.5l-11 11"/></svg></button><b>${title || tx(MG[g].n)}</b><span id="mgstat">${top || ''}</span></div><div class="mgprog" hidden aria-hidden="true"><i></i></div><div class="mgbody" id="mgb">${body}</div></div>`;
   mGameFx();
+}
+const mReduced = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
+// compte enrere abans dels jocs on compta el temps (3, 2, 1): el joc i el seu rellotge comencen just després
+const MCD = new Set(['vel', 'rfx', 'sim', 'igu', 'ate', 'int', 'uni', 'atu', 'cal', 'est', 'pal', 'nbk', 'sud', 'kil', 'ken', 'sol', 'cor']);
+function mCount(x) {
+  const g = typeof x === 'string' ? x : MGCUR, go = typeof x === 'function' ? x : () => mStart(x), b = $('#mgb');
+  mHush(); clearTimeout(MGT);
+  if (!b || !MCD.has(g)) return go();
+  SFX.tap && SFX.tap();
+  const C = 2 * Math.PI * 52;
+  b.innerHTML = `<div class="mcd" role="status" aria-live="assertive"><div class="mcd-dial"><svg viewBox="0 0 120 120" aria-hidden="true"><circle cx="60" cy="60" r="52" class="mcd-t"/><circle cx="60" cy="60" r="52" class="mcd-r" style="stroke-dasharray:${C.toFixed(1)}"/></svg><b id="mcdn">3</b></div><p>${L('Prepara\'t…', 'Prepárate…')}</p></div>`;
+  let n = 3;
+  const step = () => { const e = $('#mcdn'); if (!e) return; if (--n <= 0) return go(); e.textContent = n; e.classList.remove('in'); void e.offsetWidth; e.classList.add('in'); SFX.tap && SFX.tap(); MGT = setTimeout(step, 650); };
+  MGT = setTimeout(step, 650);
+}
+// celebració elegant (daurat, blanc i el color de la capacitat): partícules que cauen amb llum, sense colors d'infantil
+function mCelebrate(n = 90) {
+  if (mReduced()) return;
+  const c = document.createElement('canvas'), dpr = Math.min(2, devicePixelRatio || 1);
+  c.className = 'mcele'; document.body.appendChild(c);
+  const x = c.getContext('2d'), W = c.width = innerWidth * dpr, H = c.height = innerHeight * dpr, cols = ['#F7DE9F', '#E9C46F', '#FFFFFF', '#C9932F', '#FFF1C9', '#BDF3DF'];
+  const ps = [...Array(n)].map((_, i) => { const a = -Math.PI / 2 + (Math.random() - .5) * 2.2, v = (7 + Math.random() * 11) * dpr;
+    return { x: W / 2 + (Math.random() - .5) * 60 * dpr, y: H * .34, vx: Math.cos(a) * v, vy: Math.sin(a) * v, s: (2.5 + Math.random() * 4.5) * dpr, c: cols[i % cols.length], r: Math.random() * 6, vr: (Math.random() - .5) * .25, k: Math.random() < .35 }; });
+  let f = 0;
+  (function loop() {
+    x.clearRect(0, 0, W, H);
+    for (const p of ps) { p.vy += .32 * dpr; p.vx *= .985; p.vy *= .985; p.x += p.vx; p.y += p.vy; p.r += p.vr; const al = Math.max(0, 1 - f / 120);
+      x.globalAlpha = al; x.fillStyle = p.c; x.save(); x.translate(p.x, p.y); x.rotate(p.r);
+      if (p.k) { x.beginPath(); for (let j = 0; j < 4; j++) { const an = j * Math.PI / 2; x.lineTo(Math.cos(an) * p.s * 1.6, Math.sin(an) * p.s * 1.6); x.lineTo(Math.cos(an + Math.PI / 4) * p.s * .45, Math.sin(an + Math.PI / 4) * p.s * .45); } x.closePath(); x.fill(); }
+      else x.fillRect(-p.s, -p.s * .35, p.s * 2, p.s * .7);
+      x.restore(); }
+    if (++f < 130) requestAnimationFrame(loop); else c.remove();
+  })();
 }
 // barra sota el títol a partir del marcador de cada joc: «3/8» = progrés; «44 s» = temps que queda (es compta des del primer valor)
 // i un destell del fons quan una peça es marca com a encert o error. Així els 34 jocs ho tenen sense tocar-los un per un.
@@ -335,7 +383,7 @@ let MFX = null;
 function mGameFx() {
   if (MFX) { MFX.forEach(o => o.disconnect()); MFX = null; }
   const st = $('#mgstat'), bar = $('.mgprog'), gm = $('.mgame'), body = $('#mgb'); if (!st || !bar || !gm) return;
-  let tmax = 0, segs = 0, cur = 0, run = 0;
+  let tmax = 0, segs = 0, cur = 0, run = 0, last = null, smooth = 0;
   const res = gm._res || (gm._res = []);
   const draw = () => {
     if (segs) { bar.classList.add('seg'); bar.innerHTML = Array.from({ length: segs }, (_, i) => `<i class="${res[i] || (i === cur - 1 ? 'cur' : i < cur - 1 ? 'done' : '')}"></i>`).join(''); }
@@ -345,36 +393,55 @@ function mGameFx() {
     let w = null, low = false;
     if (r && +r[2] > 0 && +r[2] <= 12) { segs = +r[2]; cur = +r[1]; bar.hidden = false; return draw(); }
     if (r && +r[2] > 0) w = Math.min(1, +r[1] / +r[2]);
-    else if (s2) { const sec = (s2[1] ? +s2[1] * 60 : 0) + +s2[2]; if (sec > tmax) tmax = sec; if (tmax >= 10) { w = sec / tmax; low = sec <= 10; } }
+    else if (s2) {
+      const sec = (s2[1] ? +s2[1] * 60 : 0) + +s2[2], up = last != null && sec > last; last = sec; if (sec > tmax) tmax = sec;
+      // un cronòmetre que puja (sudoku, uneix els punts…) no fa barra: només el compte enrere
+      if (up) { bar.hidden = true; st.classList.remove('low'); return; }
+      if (tmax >= 10) { w = sec / tmax; low = sec <= 10; }
+    }
+    st.classList.toggle('low', low);
     bar.classList.remove('seg'); if (!bar.firstChild || bar.children.length !== 1) bar.innerHTML = '<i></i>';
-    bar.hidden = w == null; bar.classList.toggle('low', low); if (w != null) bar.firstChild.style.width = (w * 100).toFixed(1) + '%';
+    bar.hidden = w == null; bar.classList.toggle('low', low); if (w == null) return;
+    const i = bar.firstChild, end = MGA && typeof MGA.end === 'number' ? MGA.end : 0, left = end - Date.now();
+    // compte enrere amb hora d'acabar coneguda: la barra baixa contínua (una sola transició lineal fins a zero)
+    if (s2 && end && left > 0 && tmax >= 10 && !mReduced()) {
+      if (smooth !== end) { smooth = end; i.style.transition = 'none'; i.style.width = (Math.min(1, left / 1000 / tmax) * 100).toFixed(2) + '%'; void i.offsetWidth; i.style.transition = `width ${left}ms linear,background .4s`; i.style.width = '0%'; }
+      return;
+    }
+    i.style.width = (w * 100).toFixed(1) + '%';
   };
   const o1 = new MutationObserver(upd); o1.observe(st, { childList: true, characterData: true, subtree: true }); upd();
   let lastFx = 0;
-  const flash = k => {
+  const flash = (k, el) => {
     const now = Date.now(); if (now - lastFx < 250) return; lastFx = now;
     gm.classList.remove('fx-ok', 'fx-ko'); void gm.offsetWidth; gm.classList.add(k); setTimeout(() => gm.classList.remove(k), 650);
     if (segs && cur) { res[cur - 1] = k === 'fx-ok' ? 'ok' : 'ko'; draw(); }
     run = k === 'fx-ok' ? run + 1 : 0;
-    // bombolla al mig: ✓ o ✗, i cada 3 encerts seguits, un missatge d'ànim
+    // segell discret a dalt: ✓ o ✗, i cada 3 encerts seguits, un missatge d'ànim
     const bub = document.createElement('div'); bub.className = 'mfxb ' + (k === 'fx-ok' ? 'ok' : 'ko'); bub.setAttribute('aria-hidden', 'true');
-    bub.innerHTML = `<span>${k === 'fx-ok' ? '✓' : '✗'}</span>${k === 'fx-ok' && run >= 3 && run % 3 === 0 ? `<em>${run} ${L('seguides!', 'seguidas!')}</em>` : ''}`;
+    bub.innerHTML = `<span><svg viewBox="0 0 24 24">${k === 'fx-ok' ? '<path d="m5.5 12.5 4.2 4.2L18.5 7.8"/>' : '<path d="M7 7l10 10M17 7 7 17"/>'}</svg></span>${k === 'fx-ok' && run >= 3 && run % 3 === 0 ? `<em>${run} ${L('seguides!', 'seguidas!')}</em>` : ''}`;
     gm.appendChild(bub); setTimeout(() => bub.remove(), 900);
-    // espurnes en encertar
-    if (k === 'fx-ok' && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      const r = bub.getBoundingClientRect(), cx = r.left + r.width / 2, cy = r.top + 34, cols = ['#F3D58C', '#FFFFFF', '#4FD08A', getComputedStyle(gm).getPropertyValue('--dc') || '#9FE3D2'];
-      for (let i = 0; i < 14; i++) { const s = document.createElement('i'), a = Math.PI * 2 * i / 14 + Math.random() * .4, d = 70 + Math.random() * 60;
-        s.className = 'mspark'; s.style.cssText = `left:${cx - 5}px;top:${cy - 5}px;position:fixed;background:${cols[i % 4]};--x:${Math.cos(a) * d}px;--y:${Math.sin(a) * d}px;--r:${Math.random() * 360}deg`;
+    // en encertar: un anell de llum i espurnes que surten de la peça tocada (o del segell, si la peça ja no hi és)
+    if (k === 'fx-ok' && !mReduced()) {
+      const tr = el && el.isConnected ? el.getBoundingClientRect() : null, r = tr && tr.width ? tr : bub.getBoundingClientRect();
+      const cx = r.left + r.width / 2, cy = tr && tr.width ? r.top + r.height / 2 : r.top + 30, big = tr && tr.width ? Math.max(r.width, r.height) : 60;
+      const cols = ['#F7DE9F', '#FFFFFF', '#7CF0B4', '#FFE9B8'];
+      // anell de llum amb la mateixa forma que la peça
+      const ring = document.createElement('i'), br = tr && tr.width ? getComputedStyle(el).borderRadius : '50%', rw = tr && tr.width ? r.width : 60, rh = tr && tr.width ? r.height : 60;
+      ring.className = 'mring2'; ring.style.cssText = `left:${cx}px;top:${cy}px;width:${rw + 6}px;height:${rh + 6}px;border-radius:${br};--sc:${(1 + 26 / Math.max(rw, rh)).toFixed(3)}`; gm.appendChild(ring); setTimeout(() => ring.remove(), 700);
+      const N = run >= 3 ? 18 : 12;
+      for (let i = 0; i < N; i++) { const s = document.createElement('i'), a = Math.PI * 2 * i / N + Math.random() * .5, d = big * .45 + 26 + Math.random() * 46;
+        s.className = 'mspark' + (i % 3 ? '' : ' st'); s.style.cssText = `left:${cx - 4}px;top:${cy - 4}px;position:fixed;color:${cols[i % 4]};--x:${(Math.cos(a) * d).toFixed(1)}px;--y:${(Math.sin(a) * d).toFixed(1)}px;--r:${Math.round(Math.random() * 360)}deg`;
         gm.appendChild(s); setTimeout(() => s.remove(), 850); }
     }
   };
   // un mateix toc pot marcar la resposta bona (okc) i la triada (koc): si n'hi ha cap d'error, mana l'error
   const o2 = new MutationObserver(ms => {
-    let ok = false, ko = false;
+    let ok = null, ko = false;
     for (const m of ms) { const c = m.target.classList; if (!c) continue; const was = m.oldValue || '';
       if ((c.contains('koc') && !/\bkoc\b/.test(was)) || (c.contains('fko') && !/\bfko\b/.test(was)) || (c.contains('ko') && !/\bko\b/.test(was))) ko = true;
-      else if ((c.contains('okc') && !/\bokc\b/.test(was)) || (c.contains('fok') && !/\bfok\b/.test(was)) || (c.contains('ok') && !/\bok\b/.test(was) && m.target !== st)) ok = true; }
-    if (ko) flash('fx-ko'); else if (ok) flash('fx-ok');
+      else if ((c.contains('okc') && !/\bokc\b/.test(was)) || (c.contains('fok') && !/\bfok\b/.test(was)) || (c.contains('ok') && !/\bok\b/.test(was) && m.target !== st)) ok = ok || m.target; }
+    if (ko) flash('fx-ko'); else if (ok) flash('fx-ok', ok);
   });
   if (body) o2.observe(body, { subtree: true, attributes: true, attributeFilter: ['class'], attributeOldValue: true });
   MFX = [o1, o2];
@@ -389,7 +456,7 @@ function mIntro(g, inSes) {
     best != null ? `<span>${mSvg('copa', 'mico')}${L('Rècord', 'Récord')}: <b>${mNice(g, best)}</b></span>` : `<span>${mSvg('fulla', 'mico')}${L('Primera partida', 'Primera partida')}</span>`].join('');
   mGameShell(g, '', `<div class="mintro mintro2">${MIMG.has(g) ? `<div class="mi-art"><img src="img/ment/${g}.webp" alt="" width="1200" height="675"></div>` : ''}<div class="mi-hero">${mGic(g)}<div><p class="mi-cap">${tx(MCAP[MG[g].cap])}</p><h2>${tx(MG[g].n)}</h2></div></div>
     <div class="mi-chips">${chips}</div>${mHow(g)}
-    <div class="mi-acts">${'speechSynthesis' in window ? `<button class="btn ghost mspeak" onclick="mSpeak('${g}')">${mSvg('so', 'mico')} ${L("Escolta-ho", 'Escúchalo')}</button>` : ''}<button class="btn big mbtn mplay" onclick="mStart('${g}')">${L('Juga', 'Juega')}</button></div></div>`);
+    <div class="mi-acts">${'speechSynthesis' in window ? `<button class="btn ghost mspeak" onclick="mSpeak('${g}')">${mSvg('so', 'mico')} ${L("Escolta-ho", 'Escúchalo')}</button>` : ''}<button class="btn big mbtn mplay" onclick="mCount('${g}')"><svg class="mico" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5z" fill="currentColor" stroke="none"/></svg>${L('Juga', 'Juega')}</button></div></div>`);
 }
 function mHow(g) {
   const h = {
@@ -464,18 +531,46 @@ function mEnd(g, score, up, msg, o) {
   P.xp = (P.xp || 0) + 10; if (ses && d.s.length >= 3 && !d.bonus) { d.bonus = 1; P.xp += 20; }
   touchStreak(); save(); syncNow();
   const s = mSession(), left = s.filter(x => !mDay().s.includes(x)), nx = left[0], fita = mFitesNew();
-  const hist = (m.hist[g] || []).filter(h => !h[2]).slice(-8).map(h => h[1]), hmax = Math.max(...hist, 1), hmin = Math.min(...hist, 0);
-  const spark = hist.length >= 2 ? `<div class="mr-spark" aria-hidden="true">${hist.map((v, i) => { const k = lowB ? (hmax - v) / ((hmax - hmin) || 1) : (v - hmin) / ((hmax - hmin) || 1); return `<i class="${i === hist.length - 1 ? 'now' : ''}" style="height:${Math.round(18 + k * 82)}%"></i>`; }).join('')}</div><p class="mr-sub">${L('Les teves últimes partides', 'Tus últimas partidas')}</p>` : '';
-  const prevTxt = was != null && !rec ? `<p class="mr-prev">${L('El teu rècord', 'Tu récord')}: <b>${mNice(g, was)}</b></p>` : '';
-  app.innerHTML = `<div class="mgame ${MG[g] ? 'd-' + MG[g].cap : ''}"><div class="mgbody"><div class="mres mres2"><div class="mr-hero">${rec && was != null ? `<span class="mr-rib">${L('Nou rècord', 'Nuevo récord')}</span>` : ''}${mGic(g)}<h2>${rec && was != null ? L('Nou rècord!', '¡Nuevo récord!') : weak ? L('Partida acabada', 'Partida terminada') : L('Ben fet!', '¡Bien hecho!')}</h2>
-    <p class="mscore">${mNice(g, score)}</p><p class="mr-msg">${msg || ''}</p>${o.note ? `<p class="mr-note">${o.note}</p>` : ''}${prevTxt}</div>${spark}
-    ${adapt ? `<p class="mlvl ${lvB > lvA ? 'up' : ''}">${lvB > lvA ? L(`Puges al nivell ${lvB} de 10!`, `¡Subes al nivel ${lvB} de 10!`) : lvB < lvA ? L(`La propera, nivell ${lvB}: una mica més assequible.`, `La próxima, nivel ${lvB}: algo más asequible.`) : L(`Nivell ${lvB} de 10${lvB < 10 ? ' · si ho fas una mica millor, pujaràs' : ''}`, `Nivel ${lvB} de 10${lvB < 10 ? ' · si lo haces un poco mejor, subirás' : ''}`)}</p>` : ''}${was != null && !rec ? `<p class="mmut">${L('El teu millor resultat', 'Tu mejor resultado')}: ${mNice(g, was)}</p>` : ''}
-    ${fita ? `<p class="mtcard" style="display:flex;gap:12px;align-items:center;text-align:left">${mTile('medalla', 'gold')}<span><b>${L('Nova fita', 'Nuevo logro')}</b><br>${tx(fita[1])}</span></p>` : ''}
-    ${ses ? `<div class="mr-ses">${[0, 1, 2].map(i => `<i class="${i < 3 - left.length ? 'on' : ''}"></i>`).join('')}</div>` : ''}${ses && nx ? `<p class="mmut">${L(`Sessió d'avui: ${3 - left.length} de 3`, `Sesión de hoy: ${3 - left.length} de 3`)}</p><button class="btn big mbtn" onclick="mPlay('${nx}',true)">${L('Següent joc', 'Siguiente juego')}: ${tx(MG[nx].n)}</button>` : ''}
-    ${ses && !nx ? `<p class="mtdone">${L('Sessió d\'avui completada!', '¡Sesión de hoy completada!')}</p><button class="btn gold big mbtn mshare" onclick="mShare('ratxa')">${mSvg('compartir')} ${L('Comparteix-ho', 'Compártelo')}</button>` : ''}
-    <button class="btn ${ses && nx ? 'ghost' : ''} big mbtn" style="margin-top:10px" onclick="go('home')">${L('Torna a l\'inici', 'Vuelve al inicio')}</button></div></div></div>`;
-  { const sc = $('.mres2 .mscore'), t = sc && sc.textContent.match(/^(\d+)(.*)$/); if (t && +t[1] > 1 && !matchMedia('(prefers-reduced-motion: reduce)').matches) { const to = +t[1], t0 = performance.now(); const st = n => { const k = Math.min(1, (n - t0) / 900); sc.textContent = Math.round(to * (1 - Math.pow(1 - k, 3))) + t[2]; if (k < 1) requestAnimationFrame(st); }; requestAnimationFrame(st); } }
-  if (!weak) SFX.win && SFX.win(); if ((rec && was != null || (ses && !nx)) && typeof confetti === 'function') confetti(70);
+  const hist = (m.hist[g] || []).filter(h => !h[2]).slice(-8).map(h => h[1]);
+  const tone = rec && was != null ? 'rec' : weak ? 'weak' : 'good', lvUp = adapt && lvB > lvA;
+  const chart = hist.length >= 2 ? `<section class="mr-card mr-chart"><div class="mr-ch"><b>${L('Les teves últimes partides', 'Tus últimas partidas')}</b><span>${lowB ? L('com més amunt, millor', 'cuanto más arriba, mejor') : ''}</span></div>${mResChart(g, hist, lowB)}</section>` : '';
+  const prevTxt = was != null && !rec ? `<p class="mr-prev">${mSvg('copa')}${L('El teu rècord', 'Tu récord')}: <b>${mNice(g, was)}</b></p>` : '';
+  const lvTxt = adapt ? `<p class="mlvl ${lvUp ? 'up' : lvB < lvA ? 'dn' : ''}">${lvUp ? L(`Puges al nivell ${lvB} de 10!`, `¡Subes al nivel ${lvB} de 10!`) : lvB < lvA ? L(`La propera, nivell ${lvB}: una mica més assequible.`, `La próxima, nivel ${lvB}: algo más asequible.`) : L(`Nivell ${lvB} de 10${lvB < 10 ? ' · si ho fas una mica millor, pujaràs' : ''}`, `Nivel ${lvB} de 10${lvB < 10 ? ' · si lo haces un poco mejor, subirás' : ''}`)}</p>` : '';
+  const dd2 = mDay(), path = ses ? `<div class="mr-path" aria-hidden="true">${s.map(x => `<span class="mrp d-${MG[x].cap} ${dd2.s.includes(x) ? 'done' : ''} ${x === g ? 'now' : ''} ${x === nx ? 'next' : ''}">${mGic(x)}${dd2.s.includes(x) ? `<i>${mSvg('ok')}</i>` : ''}</span>`).join('<em></em>')}</div>` : '';
+  app.innerHTML = `<div class="mgame ${MG[g] ? 'd-' + MG[g].cap : ''}" data-g="${g}"><div class="mgbody"><div class="mres mres2 mr3 t-${tone}"><div class="mr-hero">${rec && was != null ? `<span class="mr-rib">${L('Nou rècord', 'Nuevo récord')}</span>` : ''}${mMedal(g, adapt ? lvB : null, lvUp, tone)}<h2>${rec && was != null ? L('Nou rècord!', '¡Nuevo récord!') : weak ? L('Partida acabada', 'Partida terminada') : L('Ben fet!', '¡Bien hecho!')}</h2>
+    <p class="mscore">${mNice(g, score)}</p><p class="mr-msg">${msg || ''}</p>${o.note ? `<p class="mr-note">${o.note}</p>` : ''}${prevTxt}${lvTxt}</div>${chart}
+    ${fita ? `<section class="mr-card mr-fita">${mTile('medalla', 'gold')}<span><small>${L('Nova fita', 'Nuevo logro')}</small><b>${tx(fita[1])}</b></span></section>` : ''}
+    ${ses ? `<section class="mr-card mr-ses2">${path}${nx ? `<p class="mr-pt">${L(`Sessió d'avui: ${3 - left.length} de 3`, `Sesión de hoy: ${3 - left.length} de 3`)}</p>` : `<p class="mtdone">${L('Sessió d\'avui completada!', '¡Sesión de hoy completada!')}</p>`}</section>` : ''}
+    <div class="mr-acts">${ses && nx ? `<button class="btn big mbtn mr-next" onclick="mPlay('${nx}',true)"><span>${L('Següent joc', 'Siguiente juego')}: ${tx(MG[nx].n)}</span>${mSvg('seg')}</button>` : ''}
+    ${ses && !nx ? `<button class="btn gold big mbtn mshare" onclick="mShare('ratxa')">${mSvg('compartir')} ${L('Comparteix-ho', 'Compártelo')}</button>` : ''}
+    <button class="btn ${ses ? 'ghost' : ''} big mbtn" onclick="go('home')">${L('Torna a l\'inici', 'Vuelve al inicio')}</button></div></div></div></div>`;
+  { const sc = $('.mres2 .mscore'), t = sc && sc.textContent.match(/^(\d+)(.*)$/); if (t && +t[1] > 1 && !mReduced()) { const to = +t[1], t0 = performance.now(); const st = n => { const k = Math.min(1, (n - t0) / 900); sc.textContent = Math.round(to * (1 - Math.pow(1 - k, 3))) + t[2]; if (k < 1) requestAnimationFrame(st); }; requestAnimationFrame(st); } }
+  if (!weak) SFX.win && SFX.win(); if (rec && was != null || (ses && !nx)) setTimeout(() => mCelebrate(rec && was != null ? 110 : 80), 350);
+}
+// medalla del resultat: la icona del joc dins d'un anell; als jocs amb nivells, l'anell té 10 trams (el nivell actual)
+function mMedal(g, lv, up, tone) {
+  const R = 54, seg = i => { const a0 = (-90 + i * 36 + 3.5) * Math.PI / 180, a1 = (-90 + i * 36 + 32.5) * Math.PI / 180;
+    return `M${(60 + R * Math.cos(a0)).toFixed(2)} ${(60 + R * Math.sin(a0)).toFixed(2)}A${R} ${R} 0 0 1 ${(60 + R * Math.cos(a1)).toFixed(2)} ${(60 + R * Math.sin(a1)).toFixed(2)}`; };
+  const ring = lv != null ? [...Array(10).keys()].map(i => `<path d="${seg(i)}" class="${i < lv ? 'on' : ''} ${up && i === lv - 1 ? 'new' : ''}" style="--i:${i}"/>`).join('')
+    : `<circle cx="60" cy="60" r="${R}" class="on full" pathLength="1"/>`;
+  return `<div class="mr-medal ${tone === 'rec' ? 'gold' : ''}"><svg viewBox="0 0 120 120" aria-hidden="true"><circle cx="60" cy="60" r="${R}" class="trk"/>${ring}</svg>${mGic(g)}${lv != null ? `<span class="mr-lv">${L('Nivell', 'Nivel')} <b>${lv}</b></span>` : ''}</div>`;
+}
+// gràfica de les últimes partides: àrea suau, línia i punts; l'última, destacada amb el valor (amunt sempre és millor)
+function mResChart(g, v, low) {
+  const W = 320, H = 118, px = 18, top = 30, bot = 18, mn = Math.min(...v), mx = Math.max(...v), rg = mx - mn || 1;
+  const X = i => px + i * (W - 2 * px) / (v.length - 1), Y = y => { const k = (y - mn) / rg; return top + (low ? k : 1 - k) * (H - top - bot); };
+  const pts = v.map((y, i) => [X(i), mx === mn ? (top + H - bot) / 2 : Y(y)]);
+  // corba suau (Catmull-Rom → Bézier)
+  let d = `M${pts[0][0].toFixed(1)} ${pts[0][1].toFixed(1)}`;
+  for (let i = 0; i < pts.length - 1; i++) { const p0 = pts[i - 1] || pts[i], p1 = pts[i], p2 = pts[i + 1], p3 = pts[i + 2] || p2;
+    d += `C${(p1[0] + (p2[0] - p0[0]) / 6).toFixed(1)} ${(p1[1] + (p2[1] - p0[1]) / 6).toFixed(1)} ${(p2[0] - (p3[0] - p1[0]) / 6).toFixed(1)} ${(p2[1] - (p3[1] - p1[1]) / 6).toFixed(1)} ${p2[0].toFixed(1)} ${p2[1].toFixed(1)}`; }
+  const [lx, ly] = pts[pts.length - 1], bi = v.indexOf(low ? mn : mx), lab = mNice(g, v[v.length - 1]);
+  return `<svg class="mr-svg" viewBox="0 0 ${W} ${H}" aria-hidden="true"><defs><linearGradient id="mrca" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--dc,#2FA58E)" stop-opacity=".55"/><stop offset="1" stop-color="var(--dc,#2FA58E)" stop-opacity="0"/></linearGradient><linearGradient id="mrcl" x1="0" x2="1"><stop offset="0" stop-color="#fff" stop-opacity=".55"/><stop offset="1" stop-color="#F7DE9F"/></linearGradient></defs>
+    ${[0, 1, 2].map(k => `<line x1="${px}" x2="${W - px}" y1="${(top + k * (H - top - bot) / 2).toFixed(1)}" y2="${(top + k * (H - top - bot) / 2).toFixed(1)}" class="gl"/>`).join('')}
+    <path d="${d}L${lx.toFixed(1)} ${H - bot + 6}L${pts[0][0].toFixed(1)} ${H - bot + 6}Z" fill="url(#mrca)" class="ar"/><path d="${d}" class="ln" pathLength="1"/>
+    ${pts.map(([x, y], i) => i === pts.length - 1 ? '' : `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${i === bi ? 3.6 : 2.6}" class="pt ${i === bi ? 'best' : ''}" style="--i:${i}"/>`).join('')}
+    <circle cx="${lx.toFixed(1)}" cy="${ly.toFixed(1)}" r="9" class="halo"/><circle cx="${lx.toFixed(1)}" cy="${ly.toFixed(1)}" r="5" class="now"/>
+    <g class="tag" transform="translate(${Math.min(W - 40, Math.max(40, lx)).toFixed(1)} ${Math.max(14, ly - 16).toFixed(1)})"><rect x="${-(lab.length * 3.6 + 10).toFixed(1)}" y="-11" width="${(lab.length * 7.2 + 20).toFixed(1)}" height="20" rx="10"/><text y="3.6" text-anchor="middle">${lab}</text></g></svg>`;
 }
 const mSet = h => { const e = $('#mgstat'); if (e) e.innerHTML = h; };
 const mSleep = ms => new Promise(r => { MGT = setTimeout(r, ms); });
@@ -490,10 +585,10 @@ async function velTrial() {
   const pos = i => { const a = i * Math.PI / 4 - Math.PI / 2; return `left:${50 + 40 * Math.cos(a)}%;top:${50 + 40 * Math.sin(a)}%`; };
   const box = inner => `<div class="velbox">${inner}</div>`;
   $('#mgb').innerHTML = box('<span class="velfix">+</span>'); await mSleep(700); if (MGA !== A) return;
-  $('#mgb').innerHTML = box(`<span class="velc">${c}</span>${[...Array(8).keys()].map(i => i === p ? `<span class="velp" style="${pos(i)}">⭐</span>` : dis ? `<span class="velp dis" style="${pos(i)}">▲</span>` : '').join('')}`);
+  $('#mgb').innerHTML = box(`<span class="velc">${mPic(c)}</span>${[...Array(8).keys()].map(i => i === p ? `<span class="velp" style="${pos(i)}">${MPICS.star}</span>` : dis ? `<span class="velp dis" style="${pos(i)}">${MPICS.tri}</span>` : '').join('')}`);
   await mSleep(A.T); if (MGA !== A) return;
-  $('#mgb').innerHTML = box(`<span class="velmask"></span>${[...Array(8).keys()].map(i => `<span class="velp mk" style="${pos(i)}">▦</span>`).join('')}`); await mSleep(250); if (MGA !== A) return;
-  $('#mgb').innerHTML = `<p class="mtq">${L('Què hi havia al centre?', '¿Qué había en el centro?')}</p><div class="velq"><button class="mopt" onclick="velA1('🚗')">🚗<small>${L('Cotxe', 'Coche')}</small></button><button class="mopt" onclick="velA1('🚚')">🚚<small>${L('Camió', 'Camión')}</small></button></div>`;
+  $('#mgb').innerHTML = box(`<span class="velmask"></span>${[...Array(8).keys()].map(i => `<span class="velp mk" style="${pos(i)}"></span>`).join('')}`); await mSleep(250); if (MGA !== A) return;
+  $('#mgb').innerHTML = `<p class="mtq">${L('Què hi havia al centre?', '¿Qué había en el centro?')}</p><div class="velq"><button class="mopt" onclick="velA1('🚗')">${mPic('🚗')}<small>${L('Cotxe', 'Coche')}</small></button><button class="mopt" onclick="velA1('🚚')">${mPic('🚚')}<small>${L('Camió', 'Camión')}</small></button></div>`;
   A.c = c; A.p = p;
 }
 function velA1(x) {
@@ -504,7 +599,7 @@ function velA1(x) {
 async function velA2(i) {
   const A = MGA, ok = A.a1 && i === A.p;
   if (ok) { A.ok++; A.T = Math.max(34, Math.round(A.T * .85)); SFX.ok && SFX.ok(); } else { A.T = Math.min(1000, Math.round(A.T * 1.2)); SFX.ko && SFX.ko(); }
-  $('#mgb').innerHTML = `<div class="mfb ${ok ? 'ok' : 'ko'}">${ok ? '✓' : '✗'}<small>${ok ? L('Molt bé!', '¡Muy bien!') : !A.a1 ? L(`Al centre hi havia ${A.c === '🚗' ? 'un cotxe' : 'un camió'}`, `En el centro había ${A.c === '🚗' ? 'un coche' : 'un camión'}`) : L("L'estrella era en un altre lloc", 'La estrella estaba en otro sitio')}</small></div>`;
+  $('#mgb').innerHTML = `<div class="mfb ${ok ? 'ok' : 'ko'}"><span><svg viewBox="0 0 24 24" aria-hidden="true">${ok ? '<path d="m5.5 12.5 4.2 4.2L18.5 7.8"/>' : '<path d="M7 7l10 10M17 7 7 17"/>'}</svg></span><small>${ok ? L('Molt bé!', '¡Muy bien!') : !A.a1 ? L(`Al centre hi havia ${A.c === '🚗' ? 'un cotxe' : 'un camió'}`, `En el centro había ${A.c === '🚗' ? 'un coche' : 'un camión'}`) : L("L'estrella era en un altre lloc", 'La estrella estaba en otro sitio')}</small></div>`;
   await mSleep(900); if (MGA === A) velTrial();
 }
 
@@ -539,12 +634,12 @@ async function memTap(i) {
   const b = $('#mc' + i); b.classList.add('tap'); setTimeout(() => b.classList.remove('tap'), 250);
   A.inp.push(i); const k = A.inp.length - 1;
   if (A.inp[k] !== A.seq[k]) {
-    A.lock = true; A.fails++; SFX.ko && SFX.ko(); $('#memq').textContent = L('Oh! No era aquesta.', '¡Oh! No era esta.');
+    A.lock = true; A.fails++; SFX.ko && SFX.ko(); $('#memq').textContent = L('Oh! No era aquesta.', '¡Oh! No era esta.'); { const gr = $('.memg'); gr && gr.classList.add('ko'); }
     await mSleep(900); if (MGA !== A) return;
     if (A.fails >= 2) { if (!A.test) MS().lvl.mem = Math.max(3, A.best || A.len - 1); return mEnd('mem', A.best || A.len - 1, 0, L(`Has recordat seqüències de fins a ${A.best || A.len - 1} caselles.`, `Has recordado secuencias de hasta ${A.best || A.len - 1} casillas.`)); }
     return memRound();
   }
-  if (A.inp.length === A.seq.length) { A.lock = true; A.best = A.len; A.fails = 0; A.len++; SFX.ok && SFX.ok(); $('#memq').textContent = L('Perfecte! Una més…', '¡Perfecto! Una más…'); await mSleep(900); if (MGA === A) { if (A.len > 12) { if (!A.test) MS().lvl.mem = 12; return mEnd('mem', 12, 0, ''); } memRound(); } }
+  if (A.inp.length === A.seq.length) { A.lock = true; A.best = A.len; A.fails = 0; A.len++; SFX.ok && SFX.ok(); $('#memq').textContent = L('Perfecte! Una més…', '¡Perfecto! Una más…'); { const gr = $('.memg'); gr && gr.classList.add('ok'); } await mSleep(900); if (MGA === A) { if (A.len > 12) { if (!A.test) MS().lvl.mem = 12; return mEnd('mem', 12, 0, ''); } memRound(); } }
 }
 
 /* ---------- 4. Parelles (memòria visual) ---------- */
@@ -585,7 +680,7 @@ function calQ(lv) {
 }
 function calGo() {
   const lv = mDlv('cal'); MGA = { ...MGA, lv, ok: 0, end: Date.now() + 60000, inp: '' };
-  $('#mgb').innerHTML = `<p class="calq" id="calq"></p><div class="calin" id="calin">?</div><div class="mpad">${[1, 2, 3, 4, 5, 6, 7, 8, 9, '⌫', 0].map(k => `<button class="${k === 0 ? 'k0' : ''}" onclick="calK('${k}')">${k}</button>`).join('')}</div>`;
+  $('#mgb').innerHTML = `<p class="calq" id="calq"></p><div class="calin" id="calin">?</div><div class="mpad">${[1, 2, 3, 4, 5, 6, 7, 8, 9, '⌫', 0].map(k => `<button class="${k === 0 ? 'k0' : ''}" onclick="calK('${k}')"${k === '⌫' ? ` aria-label="${L('Esborra', 'Borra')}"` : ''}>${k === '⌫' ? mSvg('esborra') : k}</button>`).join('')}</div>`;
   calNext(); MGA_TK = setInterval(() => { const s = Math.max(0, Math.ceil((MGA.end - Date.now()) / 1000)); mSet(`${s} s · ✓ ${MGA.ok}`); if (s <= 0) calEnd(); }, 250);
 }
 function calNext() { const A = MGA, [q, r] = calQ(A.lv); A.q = q; A.r = r; A.inp = ''; $('#calq').textContent = q + ' ='; $('#calin').textContent = '?'; $('#calin').className = 'calin'; }
@@ -622,7 +717,7 @@ function sudDraw() {
   const bad = (r, c) => { const v = cur[r][c]; if (!v) return false; for (let i = 0; i < n; i++) if ((i !== c && cur[r][i] === v) || (i !== r && cur[i][c] === v)) return true; const r0 = r - r % br, c0 = c - c % bc; for (let i = 0; i < br; i++) for (let j = 0; j < bc; j++) { const R = r0 + i, C = c0 + j; if ((R !== r || C !== c) && cur[R][C] === v) return true; } return false; };
   const [sr, sc] = A.sel || [-1, -1], sv = A.sel ? cur[sr][sc] : 0;
   $('#mgb').innerHTML = `<div class="sudg" style="--n:${n}">${cur.map((row, r) => row.map((v, c) => `<button class="sudc ${A.fix[r][c] ? 'fix' : ''} ${r === sr && c === sc ? 'sel' : ''} ${sv && v === sv ? 'same' : ''} ${bad(r, c) ? 'bad' : ''} ${(c + 1) % bc === 0 && c < n - 1 ? 'br' : ''} ${(r + 1) % br === 0 && r < n - 1 ? 'bb' : ''}" onclick="sudSel(${r},${c})">${v || ''}</button>`).join('')).join('')}</div>
-    <div class="sudpad" style="--n:${Math.min(n, 5)}">${[...Array(n).keys()].map(i => `<button onclick="sudK(${i + 1})">${i + 1}</button>`).join('')}<button class="sud0" onclick="sudK(0)">⌫</button><button class="sudh" onclick="sudHint()">💡 ${L('Pista', 'Pista')}</button></div>`;
+    <div class="sudpad" style="--n:${Math.min(n, 5)}">${[...Array(n).keys()].map(i => `<button onclick="sudK(${i + 1})">${i + 1}</button>`).join('')}<button class="sud0" onclick="sudK(0)" aria-label="${L('Esborra', 'Borra')}">${mSvg('esborra')}</button><button class="sudh" onclick="sudHint()">${mSvg('bombeta')} ${L('Pista', 'Pista')}</button></div>`;
 }
 function sudSel(r, c) { MGA.sel = [r, c]; SFX.tap && SFX.tap(); sudDraw(); }
 function sudK(v) {
@@ -669,7 +764,7 @@ function palDraw() {
   $('#mgb').innerHTML = `<p class="palcat">${L('Pista', 'Pista')}: <b>${A.cat}</b> · ${A.w.length} ${L('lletres', 'letras')}</p>
     <div class="palslots">${A.w.map((_, i) => `<button class="pals ${A.pos[i] != null ? 'full' : ''}" onclick="palUndo(${i})">${A.pos[i] != null ? A.sh[A.pos[i]][0] : ''}</button>`).join('')}</div>
     <div class="paltiles">${A.sh.map(([l], i) => `<button class="palt" ${A.pos.includes(i) ? 'disabled' : ''} onclick="palTap(${i})">${l}</button>`).join('')}</div>
-    <div class="palbtns"><button class="btn ghost" onclick="palHint()">💡 ${L('Primera lletra', 'Primera letra')}</button><button class="btn ghost" onclick="palSkip()">${L('Salta', 'Salta')} ›</button></div>`;
+    <div class="palbtns"><button class="btn ghost" onclick="palHint()">${mSvg('bombeta')} ${L('Primera lletra', 'Primera letra')}</button><button class="btn ghost" onclick="palSkip()">${L('Salta', 'Salta')} ›</button></div>`;
 }
 function palTap(i) { const A = MGA; if (A.pos.includes(i)) return; A.pos.push(i); SFX.tap && SFX.tap(); if (A.pos.length === A.w.length) return palCheck(); palDraw(); }
 function palUndo(k) { const A = MGA; if (k < A.pos.length) { A.pos = A.pos.slice(0, k); palDraw(); } }
@@ -733,8 +828,9 @@ async function dirNext() {
   }
   A.end = [x, y]; A.lock = hide;
   const arrow = d => d[1] === -1 ? L('↑ amunt', '↑ arriba') : d[1] === 1 ? L('↓ avall', '↓ abajo') : d[0] === 1 ? L('→ dreta', '→ derecha') : L('← esquerra', '← izquierda');
-  const steps = moves.map(([d, st]) => `<span>${arrow(d)} <b>${st}</b></span>`).join('');
-  const grid = () => `<div class="dirg">${[...Array(N * N).keys()].map(i => { const cx = i % N, cy = Math.floor(i / N), home = cx === A.start[0] && cy === A.start[1]; return `<button class="dirc ${home ? 'home' : ''}" id="dc${i}" onclick="dirTap(${i})">${home ? '🏠' : ''}</button>`; }).join('')}</div>`;
+  const rot = d => d[1] === -1 ? 0 : d[0] === 1 ? 90 : d[1] === 1 ? 180 : 270;
+  const steps = moves.map(([d, st]) => `<span><i class="dira" style="--rot:${rot(d)}deg"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5M6 11l6-6 6 6"/></svg></i>${arrow(d).replace(/^\S+\s/, '')} <b>${st}</b></span>`).join('');
+  const grid = () => `<div class="dirg">${[...Array(N * N).keys()].map(i => { const cx = i % N, cy = Math.floor(i / N), home = cx === A.start[0] && cy === A.start[1]; return `<button class="dirc ${home ? 'home' : ''}" id="dc${i}" onclick="dirTap(${i})"${home ? ` aria-label="${L('Casa', 'Casa')}"` : ''}>${home ? MPICS.casa : ''}</button>`; }).join('')}</div>`;
   mSet(`${A.q}/6`);
   $('#mgb').innerHTML = `<p class="mtq">${hide ? L('Memoritza el camí', 'Memoriza el camino') : L('On acabes?', '¿Dónde acabas?')}</p><div class="dirsteps">${steps}</div>${grid()}`;
   if (hide) { await mSleep(2500 + k * 1300); if (MGA !== A) return; const s = $('.dirsteps'); if (s) s.innerHTML = `<span class="mmut">${L('Ara toca on acabes', 'Ahora toca dónde acabas')}</span>`; A.lock = false; }
@@ -800,10 +896,12 @@ function mClock(m) {
   const h = (m / 60) % 12, mi = m % 60, ha = h * 30, ma = mi * 6, P2 = a => [Math.sin(a * Math.PI / 180), -Math.cos(a * Math.PI / 180)];
   const ticks = [...Array(60).keys()].map(i => { const [x, y] = P2(i * 6), big = i % 5 === 0; return `<line x1="${(50 + (big ? 37 : 39.5) * x).toFixed(2)}" y1="${(50 + (big ? 37 : 39.5) * y).toFixed(2)}" x2="${(50 + 42 * x).toFixed(2)}" y2="${(50 + 42 * y).toFixed(2)}" stroke="${big ? '#27302F' : '#9AA19F'}" stroke-width="${big ? 1.8 : .7}" stroke-linecap="round"/>`; }).join('');
   const nums = [...Array(12).keys()].map(i => { const n = i || 12, [x, y] = P2(i * 30); return `<text x="${(50 + 30.5 * x).toFixed(2)}" y="${(50 + 30.5 * y + 3.6).toFixed(2)}" text-anchor="middle" font-size="${n % 3 ? 8.4 : 10.5}" font-weight="${n % 3 ? 600 : 800}" fill="#27302F" font-family="inherit">${n}</text>`; }).join('');
-  const hand = (ang, len, w, col, tail) => { const [x, y] = P2(ang); return `<line x1="${(50 - tail * x).toFixed(2)}" y1="${(50 - tail * y).toFixed(2)}" x2="${(50 + len * x).toFixed(2)}" y2="${(50 + len * y).toFixed(2)}" stroke="${col}" stroke-width="${w}" stroke-linecap="round"/>`; };
-  return `<svg class="relsvg" viewBox="0 0 100 100" role="img" aria-label="${L('Rellotge', 'Reloj')}"><defs><radialGradient id="rf" cx="50%" cy="40%" r="60%"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#F3EEE3"/></radialGradient><linearGradient id="rr" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4A5553"/><stop offset="1" stop-color="#1C2423"/></linearGradient><filter id="rs" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx=".6" dy="1.2" stdDeviation=".9" flood-opacity=".28"/></filter></defs>
-    <circle cx="50" cy="50" r="49" fill="url(#rr)"/><circle cx="50" cy="50" r="45.2" fill="url(#rf)"/>${ticks}${nums}
-    <g filter="url(#rs)">${hand(ha, 21, 4.6, '#27302F', 4)}${hand(ma, 33, 2.8, 'var(--dc,#5F8A2C)', 5)}</g><circle cx="50" cy="50" r="3.2" fill="#27302F"/><circle cx="50" cy="50" r="1.2" fill="#F2B544"/></svg>`;
+  // agulles afuades amb contrapès (dibuixades cap amunt i girades)
+  const hand = (ang, len, w, col, tail) => `<path transform="rotate(${ang.toFixed(2)} 50 50)" d="M${50 - w * .32} ${50 + tail}L${50 - w / 2} 50L${50 - w * .18} ${50 - len}L50 ${50 - len - w * .6}L${50 + w * .18} ${50 - len}L${50 + w / 2} 50L${50 + w * .32} ${50 + tail}Z" fill="${col}"/>`;
+  return `<svg class="relsvg" viewBox="0 0 100 100" role="img" aria-label="${L('Rellotge', 'Reloj')}"><defs><radialGradient id="rf" cx="46%" cy="38%" r="64%"><stop offset="0" stop-color="#FFFFFF"/><stop offset=".72" stop-color="#F7F2E8"/><stop offset="1" stop-color="#E4DCCB"/></radialGradient><linearGradient id="rr" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#F3E2B4"/><stop offset=".35" stop-color="#C9A25A"/><stop offset=".62" stop-color="#8E6A2C"/><stop offset="1" stop-color="#E7CF92"/></linearGradient><linearGradient id="rr2" x1="1" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#F6E7BF"/><stop offset=".5" stop-color="#9C7634"/><stop offset="1" stop-color="#5E4318"/></linearGradient><linearGradient id="rg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".75"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient><filter id="rs" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx=".9" dy="1.6" stdDeviation="1" flood-opacity=".3"/></filter></defs>
+    <circle cx="50" cy="50" r="49.4" fill="url(#rr)"/><circle cx="50" cy="50" r="46.6" fill="url(#rr2)"/><circle cx="50" cy="50" r="45" fill="url(#rf)"/><circle cx="50" cy="50" r="45" fill="none" stroke="#000" stroke-opacity=".12" stroke-width="1.2"/>${ticks}${nums}
+    <g filter="url(#rs)">${hand(ha, 20, 4.4, '#1F2726', 6)}${hand(ma, 32, 3, '#1F2726', 7)}</g><circle cx="50" cy="50" r="3.4" fill="#1F2726"/><circle cx="50" cy="50" r="1.6" fill="#D6A445"/>
+    <path d="M14 38A38 38 0 0 1 70 13.5 46 46 0 0 0 14 38z" fill="url(#rg)" opacity=".55"/></svg>`;
 }
 function relGo() { MGA = { ...MGA, lv: mDlv('rel'), q: 0, ok: 0 }; relNext(); }
 function relNext() {
@@ -880,7 +978,7 @@ function uniTap(i) {
   if (i < A.next) return;
   if (i !== A.next) { A.err++; SFX.ko && SFX.ko(); b.classList.remove('bad'); void b.offsetWidth; b.classList.add('bad'); return; }
   b.classList.add('done'); SFX.tap && SFX.tap();
-  if (i > 0) { const p = A.pts[i - 1], q = A.pts[i]; $('#unil').insertAdjacentHTML('beforeend', `<line x1="${p[0]}" y1="${p[1]}" x2="${q[0]}" y2="${q[1]}" stroke="#177E6E" stroke-width="1.2" stroke-linecap="round" vector-effect="non-scaling-stroke" style="stroke-width:4"/>`); }
+  if (i > 0) { const p = A.pts[i - 1], q = A.pts[i]; $('#unil').insertAdjacentHTML('beforeend', `<line class="uln" pathLength="1" x1="${p[0]}" y1="${p[1]}" x2="${q[0]}" y2="${q[1]}" stroke="#177E6E" stroke-width="1.2" stroke-linecap="round" vector-effect="non-scaling-stroke" style="stroke-width:4"/>`); }
   A.next++;
   // cada error suma 2 s al temps que compta (puntuació i rècord): tocar a l'atzar no surt a compte
   if (A.next === A.n) { clearInterval(MGA_TK); const t = Math.round((Date.now() - A.t0) / 1000), pen = A.err * 2, s = t + pen, per = s / A.n;
@@ -923,7 +1021,7 @@ async function digRound() {
   for (const d of A.seq) { if (MGA !== A) return; const e = $('#dign'); if (e) { e.textContent = d; e.classList.remove('pop'); void e.offsetWidth; e.classList.add('pop'); } await mSleep(850); if (e) e.textContent = ''; await mSleep(250); }
   if (MGA !== A) return; A.lock = false;
   $('#mgb').innerHTML = `<p class="mtq">${A.rev ? `<span class="digrev">${L('Al revés', 'Al revés')}</span> ${L('del final al principi', 'del final al principio')}` : L('Escriu-los en el mateix ordre', 'Escríbelos en el mismo orden')}</p><div class="digin" id="digi">&nbsp;</div>
-    <div class="mpad">${[1, 2, 3, 4, 5, 6, 7, 8, 9, '⌫', 0, 'OK'].map(k => `<button class="${k === 'OK' ? 'kok' : ''}" onclick="digK('${k}')">${k}</button>`).join('')}</div>`;
+    <div class="mpad">${[1, 2, 3, 4, 5, 6, 7, 8, 9, '⌫', 0, 'OK'].map(k => `<button class="${k === 'OK' ? 'kok' : ''}" onclick="digK('${k}')"${k === '⌫' ? ` aria-label="${L('Esborra', 'Borra')}"` : ''}>${k === '⌫' ? mSvg('esborra') : k}</button>`).join('')}</div>`;
 }
 async function digK(k) {
   const A = MGA; if (!A || A.lock) return;
@@ -1009,7 +1107,7 @@ async function cadNext() {
   await mSleep(600);
   for (const s of st) { if (MGA !== A) return; const e = $('#dign'); if (e) { e.textContent = s; e.classList.remove('pop'); void e.offsetWidth; e.classList.add('pop'); } await mSleep(t); if (e) e.textContent = ''; await mSleep(200); }
   if (MGA !== A) return; A.lock = false;
-  $('#mgb').innerHTML = `<p class="mtq">${L('Quin és el total?', '¿Cuál es el total?')}</p><div class="digin" id="digi">&nbsp;</div><div class="mpad">${[1, 2, 3, 4, 5, 6, 7, 8, 9, '⌫', 0, 'OK'].map(k => `<button class="${k === 'OK' ? 'kok' : ''}" onclick="cadK('${k}')">${k}</button>`).join('')}</div>`;
+  $('#mgb').innerHTML = `<p class="mtq">${L('Quin és el total?', '¿Cuál es el total?')}</p><div class="digin" id="digi">&nbsp;</div><div class="mpad">${[1, 2, 3, 4, 5, 6, 7, 8, 9, '⌫', 0, 'OK'].map(k => `<button class="${k === 'OK' ? 'kok' : ''}" onclick="cadK('${k}')"${k === '⌫' ? ` aria-label="${L('Esborra', 'Borra')}"` : ''}>${k === '⌫' ? mSvg('esborra') : k}</button>`).join('')}</div>`;
 }
 async function cadK(k) {
   const A = MGA; if (!A || A.lock) return;
@@ -1093,7 +1191,7 @@ function iguNext() {
     else { let c; do c = mpick(MIGU); while (c === a[i]); b[i] = c; }
   }
   const e1 = $('#igu1'), e2 = $('#igu2'); if (!e1) return;
-  e1.textContent = a.join(''); e2.textContent = b.join('');
+  e1.innerHTML = a.map(c => `<i>${c}</i>`).join(''); e2.innerHTML = b.map(c => `<i>${c}</i>`).join(''); e1.setAttribute('aria-label', a.join('')); e2.setAttribute('aria-label', b.join(''));
   [e1, e2].forEach(e => { e.classList.remove('pop'); void e.offsetWidth; e.classList.add('pop'); });
 }
 function iguA(v) { const A = MGA; if (!A || A.same == null) return; const ok = !!v === A.same; ok ? (A.ok++, SFX.tap && SFX.tap()) : (A.ko++, SFX.ko && SFX.ko()); mFlash($$('.copt')[v ? 0 : 1], ok); iguNext(); }
@@ -1347,7 +1445,7 @@ function mcgDraw() {
       Z.br && (c + 1) % Z.bc === 0 && c < n - 1 && 'xr', Z.br && (r + 1) % Z.br === 0 && r < n - 1 && 'xb'].filter(Boolean).join(' ');
     return `<button class="mcg-c ${cls}" style="--t:${MCG_TINT[A.col[Z.id[k]]]}" onclick="mcgSel(${k})" aria-label="${L('Fila', 'Fila')} ${r + 1}, ${L('columna', 'columna')} ${c + 1}">${k === cg.cells[0] ? `<i class="mcg-l">${lab(cg)}</i>` : ''}<b>${v || ''}</b></button>`;
   }).join('')}</div>
-    <div class="sudpad" style="--n:${Math.min(n, 5)}">${[...Array(n).keys()].map(i => `<button onclick="mcgK(${i + 1})">${i + 1}</button>`).join('')}<button class="sud0" onclick="mcgK(0)">⌫</button><button class="sudh" onclick="mcgHint()">💡 ${L('Pista', 'Pista')}</button></div>`;
+    <div class="sudpad" style="--n:${Math.min(n, 5)}">${[...Array(n).keys()].map(i => `<button onclick="mcgK(${i + 1})">${i + 1}</button>`).join('')}<button class="sud0" onclick="mcgK(0)" aria-label="${L('Esborra', 'Borra')}">${mSvg('esborra')}</button><button class="sudh" onclick="mcgHint()">${mSvg('bombeta')} ${L('Pista', 'Pista')}</button></div>`;
 }
 function mcgSel(k) { if (!MGA) return; MGA.sel = k; SFX.tap && SFX.tap(); mcgDraw(); }
 function mcgK(v) {
@@ -1371,8 +1469,8 @@ function mcgCheck() {
 
 // --- Sol i lluna: meitat i meitat a cada fila i columna, mai tres iguals seguits, «=» iguals i «×» diferents ---
 const MSL_IC = {
-  1: '<svg viewBox="0 0 24 24" aria-hidden="true"><g stroke="#E2A92F" stroke-width="2.2" stroke-linecap="round"><path d="M12 1.8v2.8M12 19.4v2.8M1.8 12h2.8M19.4 12h2.8M4.8 4.8l2 2M17.2 17.2l2 2M4.8 19.2l2-2M17.2 6.8l2-2"/></g><circle cx="12" cy="12" r="5.6" fill="#F2BE45"/><circle cx="10.4" cy="10.4" r="1.8" fill="#fff" opacity=".45"/></svg>',
-  2: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15.2 2.6A9.6 9.6 0 1 0 21.4 17 7.8 7.8 0 0 1 15.2 2.6z" fill="#2F6F8F"/><path d="M8.5 6.5a6 6 0 0 0-1.6 6" stroke="#fff" stroke-width="1.6" stroke-linecap="round" fill="none" opacity=".4"/></svg>'
+  1: '<svg viewBox="0 0 24 24" aria-hidden="true"><defs><radialGradient id="msun" cx="38%" cy="34%" r="72%"><stop offset="0" stop-color="#FFF4C2"/><stop offset=".5" stop-color="#F7C548"/><stop offset="1" stop-color="#E0861E"/></radialGradient></defs><g fill="#EFA93A"><path transform="rotate(0 12 12)" d="M12 1.2l1.35 3.7h-2.7z"/><path transform="rotate(45 12 12)" d="M12 1.2l1.35 3.7h-2.7z"/><path transform="rotate(90 12 12)" d="M12 1.2l1.35 3.7h-2.7z"/><path transform="rotate(135 12 12)" d="M12 1.2l1.35 3.7h-2.7z"/><path transform="rotate(180 12 12)" d="M12 1.2l1.35 3.7h-2.7z"/><path transform="rotate(225 12 12)" d="M12 1.2l1.35 3.7h-2.7z"/><path transform="rotate(270 12 12)" d="M12 1.2l1.35 3.7h-2.7z"/><path transform="rotate(315 12 12)" d="M12 1.2l1.35 3.7h-2.7z"/></g><circle cx="12" cy="12" r="6" fill="url(#msun)"/><circle cx="12" cy="12" r="6" fill="none" stroke="#C9771A" stroke-opacity=".45" stroke-width=".6"/><ellipse cx="10.1" cy="9.7" rx="2.1" ry="1.3" fill="#fff" opacity=".6"/></svg>',
+  2: '<svg viewBox="0 0 24 24" aria-hidden="true"><defs><linearGradient id="mmoon" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8FB5E8"/><stop offset=".55" stop-color="#3F68B0"/><stop offset="1" stop-color="#22396E"/></linearGradient></defs><path d="M15.2 2.6A9.6 9.6 0 1 0 21.4 17 7.8 7.8 0 0 1 15.2 2.6z" fill="url(#mmoon)"/><circle cx="8.6" cy="14.6" r="1.3" fill="#22396E" opacity=".35"/><circle cx="11.4" cy="18.2" r=".9" fill="#22396E" opacity=".3"/><circle cx="6.6" cy="10.6" r=".8" fill="#22396E" opacity=".3"/><path d="M8.8 5.8a7.4 7.4 0 0 0-3.4 4.8" stroke="#fff" stroke-width="1.3" stroke-linecap="round" fill="none" opacity=".55"/></svg>'
 };
 function mslValid(G, n, sg) {
   const h = n / 2;
@@ -1431,7 +1529,7 @@ function mslDraw() {
   const pos = (p, q) => { const r = Math.floor(p / n), c = p % n; return q === p + 1 ? `left:calc(6px + (100% - 12px) * ${(c + 1) / n});top:calc(6px + (100% - 12px) * ${(r + .5) / n})` : `left:calc(6px + (100% - 12px) * ${(c + .5) / n});top:calc(6px + (100% - 12px) * ${(r + 1) / n})`; };
   $('#mgb').innerHTML = `<div class="msl" style="--n:${n}">${G.map((v, k) => `<button class="msl-c ${A.fix[k] ? 'fix' : ''} ${bad.has(k) ? 'bad' : ''}" onclick="mslTap(${k})" aria-label="${v === 1 ? L('Sol', 'Sol') : v === 2 ? L('Lluna', 'Luna') : L('Buida', 'Vacía')}"><span>${v ? MSL_IC[v] : ''}</span></button>`).join('')}
     ${sg.map(([p, q, t], i) => `<span class="msl-s ${bs.has(i) ? 'bad' : ''}" style="${pos(p, q)}">${t === '=' ? '=' : '×'}</span>`).join('')}</div>
-    <div class="msl-act"><button class="btn ghost" onclick="mslClr()">${L('Esborra-ho', 'Bórralo')}</button><button class="btn ghost" onclick="mslHint()">💡 ${L('Pista', 'Pista')}</button></div>`;
+    <div class="msl-act"><button class="btn ghost" onclick="mslClr()">${L('Esborra-ho', 'Bórralo')}</button><button class="btn ghost" onclick="mslHint()">${mSvg('bombeta')} ${L('Pista', 'Pista')}</button></div>`;
 }
 function mslTap(k) { const A = MGA; if (!A || A.fix[k]) return; A.cur[k] = (A.cur[k] + 1) % 3; SFX.tap && SFX.tap(); mslDraw(); mslCheck(); }
 function mslClr() { const A = MGA; A.cur = A.cur.map((v, k) => A.fix[k] ? v : 0); mslDraw(); }
@@ -1449,7 +1547,7 @@ function mslCheck() {
 
 // --- Corones: una per fila, columna i zona de color, i que no es toquin ---
 const MCR_TINT = ['#BFE3D5', '#F6D9A6', '#F2C4B5', '#D5CCF0', '#BFD9EE', '#E6DDBF', '#CDE6B8', '#F0C9DD'];
-const MCR_IC = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.6 17.6 2.4 7.4l5.2 4.2L12 4.8l4.4 6.8 5.2-4.2-1.2 10.2z" fill="#F2BE45" stroke="#A8740F" stroke-width="1.3" stroke-linejoin="round"/><rect x="3.6" y="18.4" width="16.8" height="2.6" rx="1.1" fill="#C98F22"/><circle cx="12" cy="13.2" r="1.5" fill="#fff" opacity=".6"/></svg>';
+const MCR_IC = '<svg viewBox="0 0 24 24" aria-hidden="true"><defs><linearGradient id="mcrg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFE9A3"/><stop offset=".5" stop-color="#F0B93A"/><stop offset="1" stop-color="#B9801A"/></linearGradient></defs><path d="M3.6 17.6 2.4 7.4l5.2 4.2L12 4.8l4.4 6.8 5.2-4.2-1.2 10.2z" fill="url(#mcrg)" stroke="#94650F" stroke-width=".9" stroke-linejoin="round"/><rect x="3.4" y="18.2" width="17.2" height="3" rx="1.2" fill="#C98F22" stroke="#94650F" stroke-width=".7"/><circle cx="12" cy="13.6" r="1.6" fill="#D6453A"/><circle cx="7.4" cy="15" r="1.05" fill="#2F8F7C"/><circle cx="16.6" cy="15" r="1.05" fill="#2F6CC6"/><circle cx="2.4" cy="7.2" r="1.05" fill="#F7D774"/><circle cx="12" cy="4.6" r="1.15" fill="#F7D774"/><circle cx="21.6" cy="7.2" r="1.05" fill="#F7D774"/><path d="M5.2 9.6l.6 5.4" stroke="#fff" stroke-width=".9" stroke-linecap="round" opacity=".55"/></svg>';
 function mcrSolve(n, reg, lim = 2) {
   let cnt = 0; const usedC = new Set(), usedR = new Set(), q = [];
   const rec = r => {
@@ -1498,7 +1596,7 @@ function mcrDraw() {
     return `<button class="mcr-c ${bad.has(k) ? 'bad' : ''} ${c < n - 1 && reg[k] !== reg[k + 1] ? 'er' : ''} ${r < n - 1 && reg[k] !== reg[k + n] ? 'eb' : ''}" style="--t:${MCR_TINT[reg[k] % MCR_TINT.length]}" onclick="mcrTap(${k})" aria-label="${L('Fila', 'Fila')} ${r + 1}, ${L('columna', 'columna')} ${c + 1}">${v === 2 ? MCR_IC : v === 1 ? '<i class="x">×</i>' : ''}</button>`;
   }).join('')}</div>
     <p class="mmut mcr-tip">${L('Un toc: creu (aquí no hi va). Dos tocs: corona.', 'Un toque: cruz (aquí no va). Dos toques: corona.')}</p>
-    <div class="msl-act"><button class="btn ghost" onclick="mcrClr()">${L('Esborra-ho', 'Bórralo')}</button><button class="btn ghost" onclick="mcrHint()">💡 ${L('Pista', 'Pista')}</button></div>`;
+    <div class="msl-act"><button class="btn ghost" onclick="mcrClr()">${L('Esborra-ho', 'Bórralo')}</button><button class="btn ghost" onclick="mcrHint()">${mSvg('bombeta')} ${L('Pista', 'Pista')}</button></div>`;
 }
 function mcrTap(k) { const A = MGA; if (!A) return; A.cur[k] = (A.cur[k] + 1) % 3; SFX.tap && SFX.tap(); mcrDraw(); mcrCheck(); }
 function mcrClr() { MGA.cur = MGA.cur.map(() => 0); mcrDraw(); }
@@ -1800,7 +1898,7 @@ const MTEST = ['rfx', 'sim', 'dig', 'mem'];
 function mTestIntro() {
   mStop(); VIEW = 'mgame'; MGCUR = null; const m = MS(), yr = new Date().getFullYear();
   MT = { i: 0, r: {}, born: m.born || null };
-  mGameShell('rfx', '', `<div class="mintro">${mTile('ment', 'ink')}<h2>${L('Test de la ment', 'Test de la mente')}</h2>
+  mGameShell('rfx', '', `<div class="mintro">${mTile('ment', 'ink')}<h2>${L('Test de la ment', 'Test de la mente')}</h2><div class="mt-four" aria-hidden="true">${MTEST.map((g, i) => `<span style="--i:${i}">${mGic(g)}<small>${tx(MG[g].n)}</small></span>`).join('')}</div>
     <p>${L('Quatre proves curtes, uns 4 minuts: <b>reflexos</b>, <b>símbols i números</b>, <b>dígits</b> i <b>seqüències</b>. Fes-lo tranquil·lament, en un lloc sense distraccions.', 'Cuatro pruebas cortas, unos 4 minutos: <b>reflejos</b>, <b>símbolos y números</b>, <b>dígitos</b> y <b>secuencias</b>. Hazlo con calma, en un sitio sin distracciones.')}</p>
     ${m.born ? '' : `<div class="mbirth"><p class="mmut" style="margin:0">${L("En quin any vas néixer? El farem servir només per comparar el resultat amb la teva edat.", '¿En qué año naciste? Solo lo usaremos para comparar el resultado con tu edad.')}</p><select id="mtborn"><option value="">${L('Prefereixo no dir-ho', 'Prefiero no decirlo')}</option>${[...Array(83).keys()].map(i => yr - 18 - i).map(y => `<option ${y === yr - 60 ? 'selected' : ''}>${y}</option>`).join('')}</select></div>`}
     <p class="mmut">${L('És un resultat orientatiu per seguir la teva evolució; no és cap prova mèdica.', 'Es un resultado orientativo para seguir tu evolución; no es ninguna prueba médica.')}</p>
@@ -1812,7 +1910,7 @@ function mTestNext() {
   if (MT.i >= MTEST.length) return mTestFin();
   const g = MTEST[MT.i]; mStop(); MGCUR = g; VIEW = 'mgame';
   mGameShell(g, '', `<div class="mintro"><div class="mtbar" style="margin:0 auto 14px">${MTEST.map((_, i) => `<i class="${i <= MT.i ? 'on' : ''}"></i>`).join('')}</div><p class="mstep">${L(`Prova ${MT.i + 1} de 4`, `Prueba ${MT.i + 1} de 4`)}</p>${mGic(g)}<h2>${tx(MG[g].n)}</h2>${mHow(g)}
-    ${'speechSynthesis' in window ? `<button class="btn ghost mspeak" onclick="mSpeak('${g}')">${mSvg('so', 'mico')} ${L("Escolta-ho", 'Escúchalo')}</button>` : ''}<button class="btn big mbtn" onclick="MGA={test:true};mStart('${g}')">${L('Comença', 'Empieza')}</button></div>`, L('Test de la ment', 'Test de la mente'));
+    ${'speechSynthesis' in window ? `<button class="btn ghost mspeak" onclick="mSpeak('${g}')">${mSvg('so', 'mico')} ${L("Escolta-ho", 'Escúchalo')}</button>` : ''}<button class="btn big mbtn mplay" onclick="MGA={test:true};mCount('${g}')">${L('Comença', 'Empieza')}</button></div>`, L('Test de la ment', 'Test de la mente'));
   MGA = { test: true };
 }
 function mTestStep(g, score) {
@@ -1861,13 +1959,13 @@ function mAgeInfo(fresh) {
   const first = T.length > 1 ? T[0] : null, dif = t.real ? t.real - t.age : null;
   mGameShell('rfx', '', `<div class="mres" style="max-width:520px"><div class="mageres"><p class="mstep" style="color:#8FE3CF">${L('Edat de la ment · orientativa', 'Edad de la mente · orientativa')}</p>${mGauge(t.age, t.real)}<p style="margin:-2px 0 10px;font-weight:700">${L(`Franja orientativa: ${t.age - 5}–${t.age + 5} anys`, `Franja orientativa: ${t.age - 5}–${t.age + 5} años`)}</p>
       <p>${dif == null ? L('Rendiment semblant a la mitjana de les persones d\'aquesta edat.', 'Rendimiento parecido a la media de las personas de esta edad.') : dif >= 3 ? L(`${dif} anys menys que la teva edat real (${t.real}). Molt bé!`, `${dif} años menos que tu edad real (${t.real}). ¡Muy bien!`) : dif <= -3 ? L(`Una mica per sobre de la teva edat real (${t.real}). Entrenant cada dia és normal anar millorant.`, `Algo por encima de tu edad real (${t.real}). Entrenando cada día es normal ir mejorando.`) : L(`Molt a prop de la teva edat real (${t.real}).`, `Muy cerca de tu edad real (${t.real}).`)}</p></div>
-    <div class="mtres mtcard" style="margin-top:14px">${MTEST.map(g => `<div class="mdrow2"><b>${lab[g]}</b><span>${val[g](t.r[g])}</span><small class="mmut" style="grid-column:1/3">${cmp(g)}</small></div>`).join('')}</div>
+    <div class="mtres mtcard mtres2">${MTEST.map(g => `<div class="mdrow2 d-${MG[g].cap}">${mGic(g)}<b>${lab[g]}</b><span>${val[g](t.r[g])}</span><div class="mbul" aria-hidden="true"><i class="band"></i><i class="mid"></i><i class="dot" style="--p:${(50 + 20 * Math.max(-2.4, Math.min(2.4, zr(g)))).toFixed(1)}%"></i></div><small class="mmut">${cmp(g)}</small></div>`).join('')}<p class="mbul-k" aria-hidden="true"><span>−</span><span>${L('mitjana', 'media')}</span><span>+</span></p></div>
     ${first ? `<p class="mmut">${L(`Primer test (${dayShort(first.d)}): ${first.age} anys.`, `Primer test (${dayShort(first.d)}): ${first.age} años.`)}</p>` : ''}
     <div class="mtcard" style="text-align:left"><b>${L('Com l\'entrenem', 'Cómo la entrenamos')}</b><p style="font-size:17px;margin:6px 0 0">${L(`A les sessions et posarem més jocs per treballar ${foTxt}, sense deixar la resta. Torna a fer el test d'aquí a dues setmanes per veure l'evolució.`, `En las sesiones te pondremos más juegos para trabajar ${foTxt}, sin dejar el resto. Vuelve a hacer el test dentro de dos semanas para ver la evolución.`)}</p></div>
     <p class="mmut" style="font-size:14.5px">${L("Resultat orientatiu: compara les teves proves amb com canvien de mitjana la rapidesa i la memòria amb l'edat. Persones de la mateixa edat poden ser molt diferents, per això et donem una franja. Als tests repetits descomptem la millora que ve només de conèixer les proves. No és cap diagnòstic: si et preocupa la memòria, parla-ho amb el metge.", 'Resultado orientativo: compara tus pruebas con cómo cambian de media la rapidez y la memoria con la edad. Personas de la misma edad pueden ser muy distintas, por eso te damos una franja. En los tests repetidos descontamos la mejora que viene solo de conocer las pruebas. No es ningún diagnóstico: si te preocupa la memoria, háblalo con el médico.')}</p>
     <button class="btn big mbtn" onclick="go('home')">${fresh ? L('Comença a entrenar', 'Empieza a entrenar') : L('Torna', 'Vuelve')}</button>
     <button class="btn ghost big mbtn mshare" style="margin-top:10px" onclick="mShare('edat')">${mSvg('compartir')} ${L('Comparteix el resultat', 'Comparte el resultado')}</button></div>`, L('Edat de la ment', 'Edad de la mente'));
-  if (fresh && typeof confetti === 'function') confetti(60);
+  if (fresh) setTimeout(() => mCelebrate(90), 700);
 }
 const dayShort = d => new Date(d + 'T12:00').toLocaleDateString(mLoc(), { day: 'numeric', month: 'short' });
 
@@ -2007,8 +2105,16 @@ function mLv10(g) {
 }
 function mAgeChart(T) {
   if (T.length < 2) return '';
-  const v = T.slice(-8), ys = v.map(t => t.age), mn = Math.min(...ys) - 3, mx = Math.max(...ys) + 3, W = 300, H = 120, x = i => 20 + i * (W - 40) / (v.length - 1), y = a => 12 + (a - mn) / (mx - mn) * (H - 34);
-  return `<svg class="magech" viewBox="0 0 ${W} ${H}"><polyline points="${v.map((t, i) => `${x(i)},${y(t.age)}`).join(' ')}" fill="none" stroke="var(--pri)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>${v.map((t, i) => `<circle cx="${x(i)}" cy="${y(t.age)}" r="5" fill="#fff" stroke="var(--pri)" stroke-width="3"/><text x="${x(i)}" y="${y(t.age) - 10}" text-anchor="middle" font-size="13" font-weight="700" fill="#1B2323">${t.age}</text><text x="${x(i)}" y="${H - 4}" text-anchor="${i === 0 ? 'start' : i === v.length - 1 ? 'end' : 'middle'}" dx="${i === 0 ? -14 : i === v.length - 1 ? 14 : 0}" font-size="11.5" fill="#56615F">${dayShort(t.d)}</text>`).join('')}</svg>`;
+  const v = T.slice(-8), ys = v.map(t => t.age), mn = Math.min(...ys) - 3, mx = Math.max(...ys) + 3, W = 320, H = 150, x = i => 24 + i * (W - 48) / (v.length - 1), y = a => 26 + (a - mn) / (mx - mn) * (H - 62);
+  const pts = v.map((t, i) => [x(i), y(t.age)]);
+  let d = `M${pts[0][0].toFixed(1)} ${pts[0][1].toFixed(1)}`;
+  for (let i = 0; i < pts.length - 1; i++) { const p0 = pts[i - 1] || pts[i], p1 = pts[i], p2 = pts[i + 1], p3 = pts[i + 2] || p2;
+    d += `C${(p1[0] + (p2[0] - p0[0]) / 6).toFixed(1)} ${(p1[1] + (p2[1] - p0[1]) / 6).toFixed(1)} ${(p2[0] - (p3[0] - p1[0]) / 6).toFixed(1)} ${(p2[1] - (p3[1] - p1[1]) / 6).toFixed(1)} ${p2[0].toFixed(1)} ${p2[1].toFixed(1)}`; }
+  const L0 = pts.length - 1;
+  return `<svg class="magech" viewBox="0 0 ${W} ${H}" aria-hidden="true"><defs><linearGradient id="mage-a" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F3D48E" stop-opacity=".38"/><stop offset="1" stop-color="#F3D48E" stop-opacity="0"/></linearGradient></defs>
+    ${[0, 1, 2].map(k => `<line x1="20" x2="${W - 20}" y1="${(26 + k * (H - 62) / 2).toFixed(1)}" y2="${(26 + k * (H - 62) / 2).toFixed(1)}" class="gl"/>`).join('')}
+    <path d="${d}L${pts[L0][0].toFixed(1)} ${H - 30}L${pts[0][0].toFixed(1)} ${H - 30}Z" fill="url(#mage-a)"/><path d="${d}" class="ln" pathLength="1"/>
+    ${v.map((t, i) => `<circle cx="${pts[i][0].toFixed(1)}" cy="${pts[i][1].toFixed(1)}" r="${i === L0 ? 6 : 4.5}" class="pt ${i === L0 ? 'now' : ''}"/><text x="${pts[i][0].toFixed(1)}" y="${(pts[i][1] - 12).toFixed(1)}" text-anchor="middle" class="v ${i === L0 ? 'now' : ''}">${t.age}</text><text x="${pts[i][0].toFixed(1)}" y="${H - 8}" text-anchor="${i === 0 ? 'start' : i === L0 ? 'end' : 'middle'}" dx="${i === 0 ? -14 : i === L0 ? 14 : 0}" class="dt">${dayShort(t.d)}</text>`).join('')}</svg>`;
 }
 // gràfic d'aranya de les sis capacitats (nivell mitjà d'1 a 10)
 function mRadar(doms) {
@@ -2183,7 +2289,7 @@ async function mDuelPlay(code, st) {
   MGA = { ses: false, duel: { code: st.code, seed: st.seed, lv: st.lv || 5 } };
   mGameShell(g, '', `<div class="mintro">${mGic(g)}<h2>${tx(MG[g].n)}</h2><p class="mdtag">${st.kind === 'repte' ? L('Repte de grup', 'Reto de grupo') : L('Duel', 'Duelo')}${rivals ? ' · ' + L('amb', 'con') + ' ' + rivals : ''}</p>${mHow(g)}
     <p class="mmut">${L('Només tens una oportunitat: quan comencis, compta.', 'Solo tienes una oportunidad: cuando empieces, cuenta.')}</p>
-    <button class="btn big mbtn" onclick="mDuelGo()">${L('Comença el repte', 'Empieza el reto')}</button></div>`);
+    <button class="btn big mbtn mplay" onclick="mCount(mDuelGo)">${L('Comença el repte', 'Empieza el reto')}</button></div>`);
 }
 async function mDuelGo() {
   const A = MGA; if (!A || !A.duel) return;
