@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300">
+<defs>
+<linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#BFE6FF"/><stop offset="1" stop-color="#E9F7FF"/></linearGradient>
+<linearGradient id="gr" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4CC36E"/><stop offset="1" stop-color="#1F8F48"/></linearGradient>
+<radialGradient id="sh" cx=".38" cy=".32" r=".75"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".7" stop-color="#9FB3D1" stop-opacity=".15"/><stop offset="1" stop-color="#5B6F99" stop-opacity=".55"/></radialGradient>
+<clipPath id="b"><circle cx="200" cy="150" r="80"/></clipPath>
+<clipPath id="r"><rect width="400" height="300" rx="24"/></clipPath>
+</defs>
+<g clip-path="url(#r)">
+<rect width="400" height="300" fill="url(#sky)"/>
+<path d="M50 60q12-14 28-6 12-10 26 0 14 0 14 10H50zM280 50q10-12 24-5 10-8 22 0 12 0 12 9h-58z" fill="#fff"/>
+<path d="M0 200h400v100H0z" fill="url(#gr)"/>
+<path d="M0 230h400M0 270h400" stroke="#fff" stroke-width="0"/>
+<g fill="#2E9A55" opacity=".5"><path d="M0 215h400v20H0zM0 255h400v20H0z"/></g>
+<path d="M300 80h80v120" fill="none" stroke="#fff" stroke-width="8" stroke-linejoin="round"/>
+<path d="M300 80l20 16h60M320 96v100" fill="none" stroke="#fff" stroke-width="3" opacity=".8"/>
+<g stroke="#fff" stroke-width="1.5" opacity=".5"><path d="M320 110h60M320 130h60M320 150h60M320 170h60M340 96v104M360 96v104"/></g>
+<path d="M300 80v122" stroke="#fff" stroke-width="8" stroke-linecap="round"/>
+</g>
+<ellipse cx="204" cy="236" rx="74" ry="12" fill="#13532B" opacity=".35"/>
+<circle cx="200" cy="150" r="80" fill="#fff"/>
+<g clip-path="url(#b)">
+<path fill="#1B2B6B" d="M200 126L222.8 142.6 214.1 169.4H185.9L177.2 142.6zM200 102L179.1 86.8 187.1 62.2H212.9L220.9 86.8zM245.7 135.2L253.6 110.6H279.5L287.5 135.2 266.6 150.4zM228.2 188.8H254.1L262.1 213.4 241.1 228.6 220.2 213.4zM171.8 188.8L179.8 213.4 158.9 228.6 137.9 213.4 145.9 188.8zM154.3 135.2L133.4 150.4 112.5 135.2 120.5 110.6H146.4z"/>
+<path fill="none" stroke="#1B2B6B" stroke-width="3" stroke-linecap="round" d="M200 126v-24M222.8 142.6l22.9-7.4M214.1 169.4l14.1 19.4M185.9 169.4l-14.1 19.4M177.2 142.6l-22.9-7.4M220.9 86.8l32.7 23.8M266.6 150.4l-12.5 38.4M220.2 213.4h-40.4M145.9 188.8l-12.5-38.4M146.4 110.6l32.7-23.8"/>
+<circle cx="200" cy="150" r="80" fill="url(#sh)"/>
+</g>
+<path d="M150 104q20-26 52-30" stroke="#fff" stroke-width="7" stroke-linecap="round" opacity=".7" fill="none"/>
+</svg>

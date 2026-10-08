@@ -28,10 +28,45 @@ const TBADGE = {
   bug: { id: 'bug', ico: '🐞', n: 'Caçabugs|Cazabugs', d: 'Has trobat i arreglat errors en programes.|Has encontrado y arreglado errores en programas.' },
   rep: { id: 'rep', ico: '📦', n: 'Repartidor/a|Repartidor/a', d: 'Primer projecte acabat: el repartiment de l\'illa.|Primer proyecto terminado: el reparto de la isla.' }
 };
-// blocs per escriure programes ràpid: P('f f r f') → [{k:'fwd'},…]
-const TP = s => s.trim().split(/\s+/).map(t => ({ f: { k: 'fwd' }, l: { k: 'left' }, r: { k: 'right' }, p: { k: 'pick' }, d: { k: 'drop' } })[t.replace('!', '')]).map(b => ({ ...b }));
+// blocs per escriure programes ràpid: TP('f f r f') → [{k:'fwd'},…]. També bucles, condicions, funcions i més:
+//   f l r p d (endavant, esquerra, dreta, agafa, deixa) · w (espera) · A B (crida la funció) · c:r (pinta) · L:g (llum) · n:mi (nota)
+//   + o +3 (suma al comptador) · 0 (comptador a 0) · 4[ … ] (repeteix 4) · u:goal[ … ] (repeteix fins que) · i:wall[ … ] e[ … ] (si… si no…)
+//   Les condicions poden ser wall free freeR freeL goal gem fruit box home floor:r cnt:5. Amb «!» al final es marca el bloc (pas «investiga»).
+function TP(s, mark) {
+  const tk = String(s).replace(/\[/g, '[ ').replace(/\]/g, ' ] ').trim().split(/\s+/).filter(Boolean);
+  let i = 0;
+  const one = { f: 'fwd', l: 'left', r: 'right', p: 'pick', d: 'drop', w: 'wait', 0: 'zero' };
+  const list = () => {
+    const out = [];
+    while (i < tk.length) {
+      let t = tk[i++]; if (t === ']') break;
+      const x = t.endsWith('!') || t.endsWith('![') ? (t = t.replace('!', ''), 1) : 0;
+      let b;
+      if (t.endsWith('[')) {
+        const h = t.slice(0, -1);
+        if (/^\d+$/.test(h)) b = { k: 'rep', n: +h, b: list() };
+        else if (h.startsWith('u:')) b = { k: 'until', c: h.slice(2), b: list() };
+        else if (h.startsWith('i:')) { b = { k: 'if', c: h.slice(2), b: list(), e: null }; if (tk[i] === 'e[') { i++; b.e = list(); } }
+        else throw new Error('TP: ' + t);
+      }
+      else if (one[t]) b = { k: one[t] };
+      else if (/^[A-B]$/.test(t)) b = { k: 'call', f: t };
+      else if (t.startsWith('c:')) b = { k: 'paint', c: t.slice(2) };
+      else if (t.startsWith('L:')) b = { k: 'light', c: t.slice(2) };
+      else if (t.startsWith('n:')) b = { k: 'note', n: t.slice(2) };
+      else if (/^\+\d*$/.test(t)) b = { k: 'inc', n: +t.slice(1) || 1 };
+      else throw new Error('TP: ' + t);
+      if (x && mark) b.x = 1;
+      out.push(b);
+    }
+    return out;
+  };
+  return list();
+}
 // el mateix però marcant amb x el bloc que s'ha de tocar (pas «investiga»): 'f f r! f'
-const TPX = s => s.trim().split(/\s+/).map(t => ({ ...({ f: { k: 'fwd' }, l: { k: 'left' }, r: { k: 'right' }, p: { k: 'pick' }, d: { k: 'drop' } })[t.replace('!', '')], ...(t.endsWith('!') ? { x: 1 } : {}) }));
+const TPX = s => TP(s, true);
+// funcions i botons: TF({A:'f f r', '@a':'L:g'}) → {A:[…], '@a':[…]}
+const TF = o => Object.fromEntries(Object.entries(o).map(([k, v]) => [k, Array.isArray(v) ? v : TP(v)]));
 // un bloc dibuixat dins d'un text o d'una opció
 const tChip = k => () => `<span class="tb c-${BIT_CAT[k]} tpb inl"><span class="tbi">${BIT_ICO[k]}</span><span class="tbl">${bitLabel({ k })}</span></span>`;
 const TK_MOV = ['fwd', 'left', 'right'], TK_REP = ['fwd', 'left', 'right', 'pick', 'drop'];
@@ -250,3 +285,8 @@ const TECH = [
       { t: 'Pensar abans de creure|Pensar antes de creer', d: 'Bulos, IA i benestar|Bulos, IA y bienestar', s: [{ id: 'd2-1', t: 'Caçadors de bulos|Cazadores de bulos' }, { id: 'd2-2', t: 'Què és la intel·ligència artificial?|¿Qué es la inteligencia artificial?' }, { id: 'd2-3', t: 'Respecte a la xarxa|Respeto en la red' }, { id: 'd2-4', t: 'Projecte: la campanya|Proyecto: la campaña', proj: true }] }
     ] }
 ];
+
+/* ===== Tech Robot · unitats 2-8 =====
+   Cada sessió s'omple amb bot2Sess(id, {t, min, badge, learn, steps}) sobre el catàleg de dalt (es mantenen els ids).
+   Les animacions noves són a TANI_ROBOT (tech-bot.js); les demostracions en directe amb bucles es creen aquí amb bot2Live(). */
+function bot2Sess(id, o) { const c = TECH.find(x => x.id === 'robot'); for (const u of c.units) for (const s of u.s) if (s.id === id) Object.assign(s, o); }

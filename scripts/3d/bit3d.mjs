@@ -15,7 +15,7 @@ const REDUCED = typeof matchMedia === 'function' && matchMedia('(prefers-reduced
 
 // materials compartits (es creen una vegada)
 let M = null;
-function mats() {
+export function mats() {
   if (M) return M;
   const std = (c, o = {}) => new THREE.MeshStandardMaterial({ color: c, roughness: .85, metalness: 0, ...o });
   M = {
@@ -36,7 +36,7 @@ function mats() {
   return M;
 }
 const G = {};   // geometries compartides
-function geos() {
+export function geos() {
   if (G.tile) return G;
   G.tile = new RoundedBoxGeometry(.96, .5, .96, 2, .06); G.sandTile = new RoundedBoxGeometry(.94, .5, .94, 2, .08);
   G.cyl = new THREE.CylinderGeometry(1, 1, 1, 10); G.ico = new THREE.IcosahedronGeometry(1, 1); G.dode = new THREE.DodecahedronGeometry(1, 0);
@@ -49,7 +49,7 @@ const mesh = (g, m, o = {}) => { const x = new THREE.Mesh(g, m); x.castShadow = 
 // textura de fusta per a les caixes, i rodona amb lletra per a les marques A/B/C
 function canvasTex(w, h, draw) { const c = document.createElement('canvas'); c.width = w; c.height = h; draw(c.getContext('2d'), w, h); const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 4; return t; }
 let TEX = null;
-function texs() {
+export function texs() {
   if (TEX) return TEX;
   TEX = {
     crate: canvasTex(128, 128, (g, w, h) => { g.fillStyle = '#D29A5A'; g.fillRect(0, 0, w, h); g.strokeStyle = '#A86A33'; g.lineWidth = 3; for (let y = 16; y < h; y += 28) { g.beginPath(); g.moveTo(0, y); g.lineTo(w, y); g.stroke(); } g.strokeStyle = '#7A4A1E'; g.lineWidth = 10; g.strokeRect(5, 5, w - 10, h - 10); g.fillStyle = '#F6DCA8'; g.fillRect(w / 2 - 9, 0, 18, h); }),
@@ -62,13 +62,16 @@ function texs() {
 const markTex = (k, on) => canvasTex(96, 96, (g) => { g.fillStyle = on ? '#FFC531' : '#FFFFFF'; g.beginPath(); g.arc(48, 48, 42, 0, 7); g.fill(); g.lineWidth = 7; g.strokeStyle = '#20306A'; g.stroke(); g.fillStyle = '#20306A'; g.font = '900 52px Lexend, system-ui, sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(k, 48, 52); });
 
 /* ---------- En Bit ---------- */
-function makeBit() {
+export function makeBit() {
   const m = mats(), g = geos(), bit = new THREE.Group(), body = new THREE.Group(); bit.add(body);
   // cos arrodonit amb una franja i el llum del pit
   body.add(mesh(new RoundedBoxGeometry(.46, .3, .4, 4, .12), m.body, { p: [0, .32, 0] }));
   body.add(mesh(new RoundedBoxGeometry(.48, .06, .42, 2, .03), m.bodyB, { p: [0, .2, 0] }));
   const led = new THREE.Mesh(g.sph, new THREE.MeshStandardMaterial({ color: '#FFC531', emissive: '#FFB000', emissiveIntensity: .8 })); led.scale.set(.06, .06, .025); led.position.set(0, .33, .2);
   body.add(led);
+  // llum de colors del pit: il·lumina el voltant quan s'encén (bloc «Encén el llum»)
+  const ledLight = new THREE.PointLight('#FFC531', 0, 2.6, 1.6); ledLight.position.set(0, .45, .45); body.add(ledLight);
+  const ledGlow = new THREE.Sprite(new THREE.SpriteMaterial({ map: texs().glow, color: '#FFFFFF', transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, opacity: 0 })); ledGlow.position.set(0, .5, .25); ledGlow.scale.setScalar(1.1); body.add(ledGlow);
   // rodes grans als costats
   const wheels = [-1, 1].map(s => { const w = new THREE.Group(); w.position.set(s * .25, .15, 0);
     w.add(mesh(new THREE.TorusGeometry(.11, .045, 10, 24), m.wheel, { r: [0, Math.PI / 2, 0] }), mesh(g.cyl, m.hub, { s: [.09, .05, .09], r: [0, 0, Math.PI / 2] }), mesh(g.cyl, m.wheel, { p: [s * .03, 0, 0], s: [.03, .02, .03], r: [0, 0, Math.PI / 2] }));
@@ -99,8 +102,23 @@ function makeBit() {
   carry.add(mesh(g.box, new THREE.MeshStandardMaterial({ map: texs().crate, roughness: .8 }), { s: .3 })); body.add(carry);
   bit.traverse(o => { if (o.isMesh) o.castShadow = true; });
   bit.scale.setScalar(1.05);
-  return { bit, body, head, eyes, joy, sad, smile, wheels, arms, led, bulb, carry };
+  return { bit, body, head, eyes, joy, sad, smile, wheels, arms, led, bulb, carry, ledLight, ledGlow };
 }
+// una poma (la fruita que es recull com les estrelles)
+function makeApple() {
+  const a = new THREE.Group(), red = new THREE.MeshStandardMaterial({ color: '#E53935', roughness: .35, metalness: .05 });
+  const body = mesh(G.sph, red, { s: [.17, .15, .17] }); a.add(body);
+  a.add(mesh(G.cyl, new THREE.MeshStandardMaterial({ color: '#6B3F20' }), { p: [0, .16, 0], s: [.012, .08, .012], r: [0, 0, .25] }));
+  a.add(mesh(G.sph, new THREE.MeshStandardMaterial({ color: '#4FAE45', flatShading: true }), { p: [.06, .17, 0], s: [.07, .02, .035], r: [0, 0, -.5] }));
+  a.add(mesh(G.sph, new THREE.MeshBasicMaterial({ color: '#FFFFFF', transparent: true, opacity: .55 }), { p: [-.07, .05, .1], s: .03, cast: false }));
+  return a;
+}
+// un número que flota (el comptador, damunt d'en Bit)
+function numTex(n) { return canvasTex(128, 128, (g) => { g.fillStyle = '#FFFFFF'; g.beginPath(); g.roundRect(8, 18, 112, 92, 26); g.fill(); g.lineWidth = 9; g.strokeStyle = '#F2683C'; g.stroke(); g.fillStyle = '#F2683C'; g.font = '900 64px Lexend, system-ui, sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(String(n), 64, 68); }); }
+// una nota musical (partícula quan en Bit toca una nota)
+const NOTEC = ['#EF5A5A', '#F08A24', '#E3A400', '#3CC47C', '#14A3B8', '#3D7BF4', '#8B5CF6', '#E5489A'];
+let NOTE_T = null;
+function noteTex() { return NOTE_T || (NOTE_T = canvasTex(64, 64, (g) => { g.fillStyle = '#FFFFFF'; g.strokeStyle = '#FFFFFF'; g.lineWidth = 6; g.beginPath(); g.ellipse(22, 46, 11, 8, -.4, 0, 7); g.fill(); g.beginPath(); g.moveTo(31, 44); g.lineTo(31, 10); g.lineTo(50, 16); g.stroke(); })); }
 /* ---------- L'illa ---------- */
 export function create(el, W, S, opt = {}) {
   const m = mats(), g = geos(), t = texs();
@@ -122,7 +140,7 @@ export function create(el, W, S, opt = {}) {
   function build(W0, S0) {
     if (world) { scene.remove(world); world.traverse(o => { if (o.geometry && !Object.values(G).includes(o.geometry)) o.geometry.dispose(); }); }
     world = new THREE.Group(); scene.add(world);
-    st = { W: W0, items: {}, trees: [], flag: null, homes: {}, paint: {} };
+    st = { W: W0, items: {}, trees: [], flag: null, homes: {}, paint: {}, lit: {}, cnt: null };
     const { w, h } = W0;
     // base de terra de l'illa (tres capes) i mar al voltant
     const base = mesh(new RoundedBoxGeometry(w + .5, .5, h + .5, 3, .2), m.grassSide, { p: [0, -.36, 0], recv: true }); world.add(base);
@@ -135,7 +153,7 @@ export function create(el, W, S, opt = {}) {
     // caselles
     for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
       const k = x + ',' + y, p = pos(x, y);
-      if (W0.water.has(k)) { world.add(mesh(g.tile, m.sandSide, { p: [p.x, -.55, p.z], s: [1, .4, 1], recv: true })); const wt = mesh(new THREE.BoxGeometry(.94, .1, .94), m.water, { p: [p.x, -.2, p.z], cast: false, recv: true }); wt.userData.water = rnd(x, y); world.add(wt); continue; }
+      if (W0.water.has(k)) { world.add(mesh(g.tile, m.sandSide, { p: [p.x, -.55, p.z], s: [1, .4, 1], recv: true })); const wt = mesh(new RoundedBoxGeometry(.94, .12, .94, 2, .05), m.water, { p: [p.x, -.07, p.z], cast: false, recv: true }); wt.userData.water = rnd(x, y); world.add(wt); continue; }
       const path = W0.path.has(k), fl = W0.floor[k];
       const top = mesh(path ? g.sandTile : g.tile, fl ? new THREE.MeshStandardMaterial({ color: COL[fl], roughness: .5, emissive: COL[fl], emissiveIntensity: .12 }) : path ? m.sand : (x + y) % 2 ? m.grassA : m.grassB, { p: [p.x, path ? -.27 : -.25, p.z], recv: true, cast: false });
       world.add(top);
@@ -174,7 +192,7 @@ export function create(el, W, S, opt = {}) {
     }
     // coses que canvien: estrelles, caixes, bandera
     for (const k of W0.gems) { const [x, y] = k.split(',').map(Number), p = pos(x, y), gr = new THREE.Group(); gr.position.set(p.x, .38, p.z);
-      const s = mesh(g.star, m.gold); gr.add(s); const glow = new THREE.Sprite(new THREE.SpriteMaterial({ map: t.glow, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending })); glow.scale.setScalar(.9); gr.add(glow);
+      const fr = W0.fruits && W0.fruits.has(k), s = fr ? makeApple() : mesh(g.star, m.gold); gr.add(s); const glow = new THREE.Sprite(new THREE.SpriteMaterial({ map: t.glow, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending })); glow.scale.setScalar(.9); gr.add(glow);
       gr.userData = { kind: 'gem', ph: rnd(x, y, 4) * 6, star: s, y0: .38 }; st.items[k] = gr; world.add(gr); }
     for (const k of W0.boxes) { const [x, y] = k.split(',').map(Number), p = pos(x, y), b = mesh(g.box, new THREE.MeshStandardMaterial({ map: t.crate, roughness: .8 }), { p: [p.x, .19, p.z], s: .38 }); b.rotation.y = rnd(x, y) * .5 - .25; b.userData = { kind: 'box' }; st.items['b' + k] = b; world.add(b); }
     if (W0.goal) { const p = pos(...W0.goal), f = new THREE.Group(); f.position.set(p.x - .12, 0, p.z);
@@ -183,6 +201,9 @@ export function create(el, W, S, opt = {}) {
     // en Bit
     if (!bitR) bitR = makeBit();
     world.add(bitR.bit);
+    // el comptador flota damunt d'en Bit (només als reptes que el fan servir)
+    if (bitR.cntS) { bitR.bit.remove(bitR.cntS); bitR.cntS.material.map.dispose(); bitR.cntS = null; }
+    if (W0.cnt) { const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: numTex(0), depthTest: false })); sp.position.set(0, 1.62, 0); sp.scale.setScalar(.72); sp.renderOrder = 5; sp.userData = { n: 0, t0: 0 }; bitR.bit.add(sp); bitR.cntS = sp; }
     marksG = new THREE.Group(); world.add(marksG);
     // càmera i sol segons la mida del mapa
     fit();
@@ -209,10 +230,13 @@ export function create(el, W, S, opt = {}) {
     for (const h of Object.values(st.homes)) { h.done = false; h.ok.scale.setScalar(0); h.wins.forEach(w => w.material = m.win); }
     if (st.flag) st.flag.cloth.material = m.flag;
     for (const c of Object.values(st.paint)) world.remove(c); st.paint = {};
+    for (const c of Object.values(st.lit)) world.remove(c); st.lit = {};
     anim = null; if (hard) bitR.body.position.set(0, 0, 0);
     sync(S);
   }
-  function setLed(c) { const col = c ? COL[c] : '#FFC531'; bitR.led.material.color.set(col); bitR.led.material.emissive.set(col); bitR.bulb.material.color.set(col); bitR.bulb.material.emissive.set(col); }
+  function setLed(c) { const col = c ? COL[c] : '#FFC531'; bitR.led.material.color.set(col); bitR.led.material.emissive.set(col); bitR.bulb.material.color.set(col); bitR.bulb.material.emissive.set(col);
+    bitR.led.material.emissiveIntensity = c ? 2.2 : .8; bitR.led.scale.set(c ? .085 : .06, c ? .085 : .06, c ? .04 : .025);
+    if (bitR.ledLight) { bitR.ledLight.color.set(col); bitR.ledLight.intensity = c ? 3.2 : 0; bitR.ledGlow.material.color.set(col); bitR.ledGlow.material.opacity = c ? .85 : 0; } }
   // estat dels objectes segons la simulació (recollits, entregats, pintats…)
   function sync(S, prev) {
     for (const k of st.W.gems) { const o = st.items[k]; if (S.gems.has(k) && !o.userData.gone) { o.userData.gone = performance.now(); const [x, y] = k.split(',').map(Number); fx('star', x, y); } }
@@ -220,6 +244,11 @@ export function create(el, W, S, opt = {}) {
     for (const [k, h] of Object.entries(st.homes)) if (S.done.has(k) && !h.done) { h.done = performance.now(); h.wins.forEach(w => w.material = m.winOn); const [x, y] = k.split(',').map(Number); fx('heart', x, y); }
     if (st.flag) st.flag.cloth.material = st.W.goal && S.x === st.W.goal[0] && S.y === st.W.goal[1] ? m.flagOk : m.flag;
     for (const [k, v] of Object.entries(S.paint || {})) if (!st.paint[k]) { const [x, y] = k.split(',').map(Number), p = pos(x, y); const c = mesh(new RoundedBoxGeometry(.8, .04, .8, 2, .02), new THREE.MeshStandardMaterial({ color: COL[v] || COL.p, roughness: .5 }), { p: [p.x, .02, p.z], cast: false, recv: true }); st.paint[k] = c; world.add(c); }
+    // llums encesos sobre els terres de colors (repte «leds»): una columna de llum del color
+    for (const [k, v] of Object.entries(S.lit || {})) if (!st.lit[k] && st.W.floor[k]) { const [x, y] = k.split(',').map(Number), p = pos(x, y), ok = st.W.floor[k] === v;
+      const beam = new THREE.Mesh(new THREE.CylinderGeometry(.3, .38, 1.4, 20, 1, true), new THREE.MeshBasicMaterial({ color: COL[v], transparent: true, opacity: ok ? .35 : .15, depthWrite: false, side: THREE.DoubleSide, blending: THREE.AdditiveBlending }));
+      beam.position.set(p.x, .7, p.z); beam.userData.beam = performance.now(); st.lit[k] = beam; world.add(beam); if (ok) fx('star', x, y); }
+    if (bitR.cntS && S.cnt !== bitR.cntS.userData.n) { const sp = bitR.cntS; sp.material.map.dispose(); sp.material.map = numTex(S.cnt); sp.material.needsUpdate = true; sp.userData.n = S.cnt; sp.userData.t0 = performance.now(); }
     bitR.carry.visible = !!S.carry; setLed(S.led);
   }
   // un pas: en Bit llisca d'una casella a l'altra (amb un petit salt) o gira
@@ -236,6 +265,8 @@ export function create(el, W, S, opt = {}) {
   function fx(kind, x, y) { fxAt(kind, pos(x, y)); }
   function fxAt(kind, p) {
     if (REDUCED) return;
+    if (kind === 'note') { for (let i = 0; i < 3; i++) { const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: noteTex(), color: NOTEC[(Math.random() * 8) | 0], transparent: true, depthWrite: false })); s.position.set(p.x + (i - 1) * .18, 1.1, p.z); s.scale.setScalar(.26);
+      s.userData = { v: new THREE.Vector3((i - 1) * .25, 1 + Math.random() * .4, 0), life: -i * .12, max: 1.3, g: 0, sway: Math.random() * 6 }; world.add(s); fxList.push(s); } return; }
     const n = kind === 'confetti' ? 26 : kind === 'dust' ? 10 : 14, cols = kind === 'star' ? ['#FFE16B', '#FFFFFF', '#FFC531'] : kind === 'dust' ? ['#EDE4D3', '#D9CDB5'] : kind === 'heart' ? ['#FF6B8B', '#FF9DB3'] : ['#FFC531', '#3CC47C', '#3D8BFF', '#EF5A5A', '#8B5CF6'];
     for (let i = 0; i < n; i++) {
       const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: t.dot, color: cols[i % cols.length], transparent: true, depthWrite: false }));
@@ -291,10 +322,12 @@ export function create(el, W, S, opt = {}) {
       if (q > 1.6) { react = null; b.body.rotation.y = 0; b.body.position.x = 0; b.head.rotation.x = 0; b.arms.forEach(a => a.rotation.z = 0); } }
     const blink = (bt % 3.6) < .12; b.eyes.scale.y = blink ? .15 : 1;
     b.bulb.material.emissiveIntensity = .7 + Math.sin(bt * 4) * .3;
+    if (bitR.cntS) { const u = bitR.cntS.userData, q = Math.min(1, (now - u.t0) / 420); bitR.cntS.scale.setScalar(.72 * (1 + Math.sin(q * Math.PI) * .45)); bitR.cntS.position.y = 1.62 + Math.sin(T * 2) * .03; }
+    for (const b2 of Object.values(st.lit)) b2.material.opacity = (b2.material.userData.o ??= b2.material.opacity) * (.8 + Math.sin(T * 3) * .2);
     // partícules
-    for (let i = fxList.length - 1; i >= 0; i--) { const s = fxList[i], u = s.userData; u.life += dt; s.position.addScaledVector(u.v, dt); u.v.y -= u.g * dt; s.material.opacity = Math.max(0, 1 - u.life / u.max); if (u.life > u.max) { world.remove(s); s.material.dispose(); fxList.splice(i, 1); } }
+    for (let i = fxList.length - 1; i >= 0; i--) { const s = fxList[i], u = s.userData; u.life += dt; if (u.life < 0) { s.visible = false; continue; } s.visible = true; s.position.addScaledVector(u.v, dt); u.v.y -= u.g * dt; if (u.sway != null) s.position.x += Math.sin(u.life * 8 + u.sway) * dt * .4; s.material.opacity = Math.max(0, 1 - u.life / u.max); if (u.life > u.max) { world.remove(s); s.material.dispose(); fxList.splice(i, 1); } }
     // aigua dels estanys
-    world.children.forEach(o => { if (o.userData.water != null) o.position.y = -.2 + Math.sin(bt * 2 + o.userData.water * 6) * .015; });
+    world.children.forEach(o => { if (o.userData.water != null) o.position.y = -.07 + Math.sin(bt * 2 + o.userData.water * 6) * .015; });
     renderer.render(scene, cam);
   }
   function dispose() { alive = false; ro.disconnect(); renderer.dispose(); scene.traverse(o => { if (o.material && o.material.map && !Object.values(TEX).includes(o.material.map)) o.material.map.dispose(); }); }
