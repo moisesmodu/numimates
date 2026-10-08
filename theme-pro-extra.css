@@ -34,3 +34,25 @@ html[data-v=pro] :is(.l-vis,.opt,.lexbox,.lwrap) svg text:is([fill="#2B1A38"],[f
 html[data-v=pro] :is(.l-vis,.opt,.lexbox,.lwrap) svg text:is([fill="#8A7B99"],[fill="#8E829A"]){fill:#B9AECB}
 html[data-v=pro] :is(.l-vis,.opt,.lexbox,.lwrap) svg :is(line,polyline)[stroke="#2B1A38"]{stroke:#CFC5DF}
 html[data-v=pro] :is(.l-vis,.opt,.lexbox,.lwrap) svg :is(line,polyline)[stroke="#602B7A"]{stroke:#C9A6E8}
+
+/* Teoria animada (svg.scene, anim-eso*.js) sobre la pissarra fosca: les escenes estan dibuixades per a fons blanc.
+   Abans només s'aclaria el text, i quedaven lletres clares sobre caselles blanques i números blancs sobre groc. */
+html[data-v=pro] svg.scene :is(rect,circle,ellipse,path,polygon):is([fill="#fff" i],[fill="#ffffff" i],[fill="white" i],[fill="#FAF7FC" i],[fill="#F7F2FB" i]){fill:#2A2440}
+html[data-v=pro] svg.scene :is(rect,circle,ellipse,path,polygon):is([fill="#F3ECF8" i],[fill="#E9DFF1" i],[fill="#E9DDF3" i]){fill:#332C4A}
+html[data-v=pro] svg.scene :is(rect,circle,ellipse,path,polygon):is([fill="#E6DEEE" i],[fill="#D9CCE6" i],[fill="#DCCBEB" i],[fill="#CFC6D8" i]){fill:#453E5E}
+html[data-v=pro] svg.scene :is(rect,circle,ellipse,path,polygon)[fill="#FFF6DA" i]{fill:#3D3420}
+html[data-v=pro] svg.scene :is([stroke="#E6DEEE" i],[stroke="#D9CCE6" i],[stroke="#CFC6D8" i],[stroke="#F3ECF8" i]){stroke:#4E4768}
+html[data-v=pro] svg.scene :is(rect,circle,ellipse,path,polygon,line,polyline):is([stroke="#2B1A38" i],[stroke="#3A2A48" i]){stroke:#CFC5DF}
+html[data-v=pro] svg.scene circle[stroke="#fff" i]{stroke:#221D31}
+html[data-v=pro] svg.scene :is(text,tspan):is([fill="#2B1A38" i],[fill="#3A2A48" i],[fill="#602B7A" i]){fill:#EEE8F8}
+html[data-v=pro] svg.scene :is(text,tspan):is([fill="#8E829A" i],[fill="#6B5A7B" i]){fill:#B9AECB}
+html[data-v=pro] svg.scene :is(text,tspan)[fill="#B98900" i]{fill:#F2C14E}
+/* sobre peces de colors, pro-contrast.js tria la tinta (fosca o clara) segons el que hi ha darrere de cada text */
+/* text sense color propi (negre per defecte) i lila fosc */
+html[data-v=pro] svg.scene{fill:#EEE8F8}
+html[data-v=pro] svg.scene :is(text,tspan):is([fill="#8A4FB0" i],[fill="#7A3FA0" i]){fill:#C9A6E8}
+/* els signes grans de fons (marca d'aigua) es veien massa poc */
+html[data-v=pro] svg.scene g[opacity=".16"]{opacity:.34}
+/* el subratllat groc del text de la teoria: lletra clara sobre un groc fosc translúcid */
+html[data-v=pro] .lcard .hl{background:linear-gradient(transparent 52%,rgba(255,201,60,.42) 52%);color:#FFE7A3}
+html[data-v=pro] .fxex .hl{background:rgba(255,201,60,.22);color:#FFE7A3}
