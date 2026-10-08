@@ -419,11 +419,41 @@ function sgCode() {
 }
 // el dibuix d'un vestit (SVG); els de Numi fan servir els degradats comuns de la pàgina
 const SG_CC = {};
-function sgCostume(art, c) { const a = STG_ART[art] || STG_ART.estrella, k = art + ':' + c; return SG_CC[k] || (SG_CC[k] = a.svg(c % (a.n || 1))); }
+function sgCostume(art, c) { const a = STG_ART[art] || STG_ART.estrella, k = art + ':' + c, v = SG_CC[k] || (SG_CC[k] = a.svg(c % (a.n || 1))); return typeof stgU === 'function' ? stgU(v) : v; }
+// a l'escenari, cada vestit es pinta UNA vegada en una imatge (mapa de bits) amb la seva ombra suau ja posada: canviar de
+// vestit (p. ex. a cada fotograma, per caminar) o moure 40 clons és només moure i canviar imatges, sense tornar a dibuixar
+// degradats ni ombres (que és el que costa). Mentre es pinta (un moment, la primera vegada) es veu el dibuix en línia.
+// Els personatges de Numi (amb la seva animació) es queden sempre en línia.
+const SG_IMG = {}, SG_PADX = 18, SG_PADT = 14, SG_PADB = 34;
+let SG_IMGV = 0;
+function sgRaster(art, i, sv) {
+  const k = art + ':' + i, a = STG_ART[art] || {}; if (SG_IMG[k]) return SG_IMG[k];
+  const vb = ((sv.match(/viewBox="([^"]+)"/) || [])[1] || '0 0 100 100').split(/[\s,]+/).map(Number), W = Math.min(440, Math.round((a.w || 80) * 3.2)), sc = W / vb[2], H = Math.round(vb[3] * sc);
+  const R = SG_IMG[k] = { u: null, vb, ar: `${vb[2]} / ${vb[3]}`, st: `left:${-SG_PADX / W * 100}%;top:${-SG_PADT / H * 100}%;width:${(W + 2 * SG_PADX) / W * 100}%;height:${(H + SG_PADT + SG_PADB) / H * 100}%` };
+  const CW = W + 2 * SG_PADX, CH = H + SG_PADT + SG_PADB, ph = sv.match(/^<svg[^>]*>\s*<image href="([^"]+)" x="(-?[\d.]+)" y="(-?[\d.]+)" width="([\d.]+)" height="([\d.]+)"\/>\s*<\/svg>$/);
+  if (!ph && sv.includes('<image')) return R.u = 'inline', R;   // dibuix amb fotos i més coses: en línia
+  const draw = (im, x, y, w, h) => { try { const cv = document.createElement('canvas'); cv.width = CW; cv.height = CH; const g = cv.getContext('2d'), k2 = 2.6;
+    for (const [bl, dy, al] of [[6 * k2, 6 * k2, .24], [1.6 * k2, 1.6 * k2, .24]]) { g.save(); g.shadowColor = `rgba(8,16,48,${al})`; g.shadowBlur = bl; g.shadowOffsetX = 10000; g.shadowOffsetY = dy; g.drawImage(im, x - 10000, y, w, h); g.restore(); }
+    g.drawImage(im, x, y, w, h); if (!ph) URL.revokeObjectURL(im.src); cv.toBlob(bl => { if (bl) { R.u = URL.createObjectURL(bl); SG_IMGV++; } }, 'image/png'); } catch (e) { R.u = 'inline'; } };
+  const im = new Image(); im.onerror = () => { R.u = 'inline'; };
+  if (ph) { im.onload = () => draw(im, SG_PADX + (+ph[2] - vb[0]) * sc, SG_PADT + (+ph[3] - vb[1]) * sc, +ph[4] * sc, +ph[5] * sc); im.src = ph[1]; }
+  else { im.onload = () => draw(im, 0, 0, CW, CH); im.src = URL.createObjectURL(new Blob([sv.replace(/viewBox="[^"]+"/, `viewBox="${vb[0] - SG_PADX / sc} ${vb[1] - SG_PADT / sc} ${vb[2] + 2 * SG_PADX / sc} ${vb[3] + (SG_PADT + SG_PADB) / sc}" width="${CW}" height="${CH}"`)], { type: 'image/svg+xml' })); }
+  return R;
+}
+// el vestit per a l'escenari: { h: html, ar: proporció (si és una imatge pintada) }
+function sgCostumeEl(art, c) {
+  const a = STG_ART[art] || STG_ART.estrella, n = a.n || 1, i = c % n, k = art + ':' + i, v = SG_CC[k] || (SG_CC[k] = a.svg(i));
+  if (!a.numi && typeof document !== 'undefined' && typeof Blob !== 'undefined' && typeof URL !== 'undefined' && URL.createObjectURL) { try { const R = sgRaster(art, i, v); if (R.u && R.u !== 'inline') return { h: `<img class="sgr" src="${R.u}" alt="" draggable="false" style="${R.st}">`, ar: R.ar }; } catch (e) { } }
+  return { h: typeof stgU === 'function' ? stgU(v) : v, ar: '' };
+}
+// el fons de l'escenari: el dibuix i, a sobre, la capa animada (núvols, bombolles, estrelles…; les miniatures no la tenen)
+function sgBgHTML(n) { const B = STG_BG[n]; if (!B) return ''; let fx = ''; try { fx = B.fx ? B.fx() : ''; } catch (e) { fx = ''; } return B.svg(true) + (fx ? `<div class="sbgfx" aria-hidden="true">${fx}</div>` : ''); }
+// capes de llum de l'escenari: vinyeta suau i llum de dalt (sota els personatges) i la capa de partícules (a sobre)
+const SG_LIGHT = '<div class="svig" aria-hidden="true"></div>', SG_PFX = '<div class="sfxp" aria-hidden="true"></div>';
 function sgStageHTML() {
   const W = SG.W, keys = W.keys || [];
   const alts = SG.alts.length > 1 ? `<div class="talts">${SG.alts.map((_, i) => `<button class="${i === SG.altI ? 'on' : ''} ${SG.altOk.has(i) ? 'ok' : ''}" onclick="sgAlt(${i})">${SG.altOk.has(i) ? '✓ ' : ''}${L('Prova', 'Prueba')} ${i + 1}</button>`).join('')}</div>` : '';
-  return `<div class="tworld sworld" id="sworld">${alts}<div class="sstage${SG.ax.on ? ' ax-on' : ''}" id="sstage"><div class="sbg" id="sbg">${STG_BG[SG.M.S.bg] ? STG_BG[SG.M.S.bg].svg() : ''}</div>${sgAxesHTML(SG.ax)}<div class="ssprites" id="ssp"></div><div class="svars" id="svars"></div>
+  return `<div class="tworld sworld" id="sworld">${alts}<div class="sstage${SG.ax.on ? ' ax-on' : ''}" id="sstage"><div class="sbg" id="sbg" data-b="${esc(SG.M.S.bg || '')}">${sgBgHTML(SG.M.S.bg)}</div>${SG_LIGHT}${sgAxesHTML(SG.ax)}<div class="ssprites" id="ssp"></div>${SG_PFX}<div class="svars" id="svars"></div>
       <div class="sctl"><button class="sax${SG.ax.on ? ' on' : ''}" onclick="sgAxes()" aria-pressed="${SG.ax.on}" aria-label="${L('Eixos de coordenades (x, y)', 'Ejes de coordenadas (x, y)')}" title="${L('Eixos de coordenades (x, y)', 'Ejes de coordenadas (x, y)')}">${SG_ICO.axes}</button><button class="sgo" onclick="sgGo()" aria-label="${L('Bandera verda: comença', 'Bandera verde: empieza')}">${SG_ICO.flag}</button><button class="sst" onclick="sgStop()" aria-label="${L('Atura', 'Para')}"><i></i></button></div></div>
     ${keys.length ? `<div class="skeys">${keys.map(k => `<button data-k="${k}" onpointerdown="sgKey('${k}',true)" onpointerup="sgKey('${k}',false)" onpointerleave="sgKey('${k}',false)">${{ left: '←', right: '→', up: '↑', down: '↓', space: L('espai', 'espacio') }[k] || k.toUpperCase()}</button>`).join('')}</div>` : ''}
     <p class="tsay" id="tsay" aria-live="polite"></p>
@@ -433,21 +463,61 @@ function sgHTML(extra = '') { return `<div class="tstage rstage sstagew m-${SG.m
 function sgDraw() { const c = document.querySelector('.sstagew .tcode'); if (!c) return; const sc = document.getElementById('sprog'), top = sc ? sc.scrollTop : 0; c.innerHTML = (SG.extra || '') + sgCode(); const s2 = document.getElementById('sprog'); if (s2) s2.scrollTop = top; }
 function sgSay(t, cls = '') { const e = document.getElementById('tsay'); if (e) { e.className = 'tsay ' + cls; e.innerHTML = t; } }
 // dibuixar els personatges al seu lloc (es fa a cada fotograma; el dibuix del vestit només canvia quan canvia el vestit)
+const sgMotion = () => { try { return !(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches); } catch (e) { return true; } };
+// canvi de fons: el nou apareix i el vell s'esvaeix a sobre
+function sgBgSwap(bg, n) {
+  const had = bg.dataset.b; bg.dataset.b = n; const old = had && sgMotion() ? document.createElement('div') : null;
+  if (old) { bg.querySelectorAll('.sbgold').forEach(o => o.remove()); old.className = 'sbgold'; while (bg.firstChild) old.appendChild(bg.firstChild); }
+  bg.innerHTML = sgBgHTML(n); if (old) { bg.appendChild(old); old.addEventListener('animationend', () => old.remove()); setTimeout(() => old.remove(), 900); }
+}
+// partícules dels esdeveniments (espurnes, núvol de fum, notes, onades, xocs): només decoren, el motor no en sap res
+function sgPart(stage, kind, x, y, n = 1) {
+  const L = stage && stage.querySelector('.sfxp'); if (!L || !sgMotion() || L.childElementCount > 44) return;
+  for (let k = 0; k < n; k++) { const p = document.createElement('i'), a = (k / n) * Math.PI * 2 + Math.random() * .7, d = kind === 'note' ? 2 + Math.random() * 2 : 3.5 + Math.random() * 3.5;
+    p.className = 'pf pf-' + kind; p.style.cssText = `left:${((x + STG.W / 2) / STG.W * 100).toFixed(2)}%;top:${((STG.H / 2 - y) / STG.H * 100).toFixed(2)}%;--dx:${(Math.cos(a) * d).toFixed(2)}cqw;--dy:${(Math.sin(a) * d - (kind === 'note' ? 7 : 0)).toFixed(2)}cqw;animation-delay:${k * (kind === 'note' ? 160 : 18)}ms`;
+    if (kind === 'note') p.textContent = k % 2 ? '♫' : '♪';
+    p.addEventListener('animationend', () => p.remove()); L.appendChild(p); setTimeout(() => p.remove(), 3000); }
+}
+// què ha passat des del fotograma anterior (clons nous o esborrats, amagar/mostrar, sons, xocs nous) → partícules
+function sgFxScan(stage, S, live) {
+  let m = stage._sgfx; const fresh = !m || m.S !== S;
+  if (fresh) { m = stage._sgfx = { S, seen: new Map(), li: S.log.length, tn: S.touched.size }; for (const s of S.sprites) if (!s.dead) m.seen.set(s.uid, { h: s.hidden, x: s.x, y: s.y }); return; }
+  for (const s of S.sprites) { if (s.dead) continue; const pv = m.seen.get(s.uid);
+    if (!pv) { if (s.clone && !s.hidden) sgPart(stage, 'spark', s.x, s.y, 4); m.seen.set(s.uid, { h: s.hidden, x: s.x, y: s.y }); }
+    else { if (pv.h !== s.hidden) sgPart(stage, s.hidden ? 'puff' : 'spark', s.x, s.y, s.hidden ? 6 : 4); pv.h = s.hidden; pv.x = s.x; pv.y = s.y; } }
+  for (const [u, pv] of m.seen) if (!live.has(u)) { if (!pv.h) sgPart(stage, 'puff', pv.x, pv.y, 5); m.seen.delete(u); }
+  for (let i = m.li; i < S.log.length; i++) { const l = S.log[i]; if (l.k !== 'sound') continue;
+    const th = S.threads.find(t => t.cur && t.cur.k === 'sound'), w = (th && th.s) || S.sprites.find(o => o.id === (SG && SG.who) && !o.dead) || S.sprites[0]; if (w && !w.hidden) sgPart(stage, 'note', w.x + 10, w.y + 18, 2); }
+  m.li = S.log.length;
+  if (S.touched.size > m.tn) { let k = 0; for (const t of S.touched) { if (k++ < m.tn) continue; const [a, b] = t.split('>'), A = S.sprites.find(o => o.id === a && !o.dead && !o.hidden), B = A && S.sprites.filter(o => o.id === b && !o.dead && !o.hidden).sort((p, q) => Math.hypot(p.x - A.x, p.y - A.y) - Math.hypot(q.x - A.x, q.y - A.y))[0];
+      const key = [a, b].sort().join('|'); if (A && B && !(m.hit = m.hit || new Set()).has(key)) { m.hit.add(key); sgPart(stage, 'hit', (A.x + B.x) / 2, (A.y + B.y) / 2, 1); sgPart(stage, 'spark', (A.x + B.x) / 2, (A.y + B.y) / 2, 3); } }
+    m.tn = S.touched.size; }
+}
 function sgRender() {
-  const box = document.getElementById('ssp'); if (!box || !SG) return; const S = SG.M.S;
-  const bg = document.getElementById('sbg'); if (bg && bg.dataset.b !== S.bg) { bg.dataset.b = S.bg; bg.innerHTML = STG_BG[S.bg] ? STG_BG[S.bg].svg() : ''; }
+  const box = document.getElementById('ssp'); if (!box || !SG) return; const S = SG.M.S, stage = box.parentElement;
+  const bg = document.getElementById('sbg'); if (bg && bg.dataset.b !== S.bg) { if (STG_BG[S.bg]) sgBgSwap(bg, S.bg); else { bg.dataset.b = S.bg; bg.innerHTML = ''; } }
   const live = new Set();
   for (const s of S.sprites) { if (s.dead) continue; live.add(s.uid);
     let e = box.querySelector(`[data-u="${s.uid}"]`); const a = STG_ART[s.art] || STG_ART.estrella;
-    if (!e) { e = document.createElement('div'); e.className = 'ssp'; e.dataset.u = s.uid; e.innerHTML = `<div class="sspi"></div><div class="sbub"></div>`; e.onclick = () => { if (SG && SG.run) SG.M.click(s.uid); }; box.appendChild(e); }
-    const im = e.firstChild; if (im.dataset.c !== String(s.c)) { im.dataset.c = s.c; im.innerHTML = sgCostume(s.art, s.c); }
+    if (!e) { e = document.createElement('div'); e.className = 'ssp'; e.dataset.u = s.uid; e.innerHTML = `<div class="sspi"><div class="sspt"></div></div><div class="sbub"></div>`;
+      e.onclick = () => { if (SG && SG.run) { SG.M.click(s.uid); const st = e.closest('.sstage'); if (st) sgPart(st, 'ring', parseFloat(e.style.left) / 100 * STG.W - STG.W / 2, STG.H / 2 - parseFloat(e.style.top) / 100 * STG.H, 1); } }; box.appendChild(e); }
+    const im = e.firstChild, tr = im.firstChild;
+    // canvi de vestit: el vestit nou i, a sobre, el vell que s'esvaeix (així el canvi és suau)
+    const ck = s.c + ':' + SG_IMGV; if (im.dataset.c !== ck) { const chg = im.dataset.c != null && im.dataset.c.split(':')[0] !== String(s.c), now = performance.now(), slow = now - (e._ct || 0) > 240; if (chg) e._ct = now;
+      const prev = chg && slow && sgMotion() ? tr.querySelector(':scope > svg, :scope > img') : null, ce = sgCostumeEl(s.art, s.c); im.dataset.c = ck;
+      if (!chg && (ce.ar ? im.dataset.h === ce.h : im.classList.contains('inl'))) { } else { tr.innerHTML = ce.h; im.dataset.h = ce.ar ? ce.h : ''; tr.style.aspectRatio = ce.ar; im.classList.toggle('inl', !ce.ar); }
+      if (prev) { const o = document.createElement('div'); o.className = 'sspo'; o.appendChild(prev); tr.appendChild(o); o.addEventListener('animationend', () => o.remove()); } }
     const rot = s.rot || a.rot || (a.numi || ['gat', 'peix', 'ocell', 'drac', 'cranc', 'mascota', 'bit'].includes(s.art) ? 'lr' : 'all');
     const w = (a.w || 80) * s.size / 100 / STG.W * 100;
     e.style.cssText = `left:${(s.x + STG.W / 2) / STG.W * 100}%;top:${(STG.H / 2 - s.y) / STG.H * 100}%;width:${w}%;z-index:${Math.round(s.z * 10) + 10};opacity:${s.hidden ? 0 : 1 - s.ghost / 100}`;
-    im.style.transform = rot === 'all' ? `rotate(${s.dir - (a.face ?? 90)}deg)` : rot === 'lr' && s.dir < 0 ? 'scaleX(-1)' : 'none';
-    const bub = e.lastChild, txt = s.say ? esc(tx(s.say)) : ''; if (bub.dataset.t !== txt + s.think) { bub.dataset.t = txt + s.think; bub.innerHTML = txt; bub.className = 'sbub' + (txt ? ' on' : '') + (s.think ? ' th' : ''); } }
+    tr.style.transform = rot === 'all' ? `rotate(${s.dir - (a.face ?? 90)}deg)` : rot === 'lr' && s.dir < 0 ? 'scaleX(-1)' : 'none';
+    // la bombolla de text: a l'esquerra si el personatge és a la dreta, i a sota si és molt amunt (perquè no surti de l'escenari)
+    const bub = e.lastChild, txt = s.say ? esc(tx(s.say)) : ''; if (bub.dataset.t !== txt + s.think) { bub.dataset.t = txt + s.think; if (txt) bub.innerHTML = txt; bub.className = 'sbub' + (txt ? ' on' : '') + (s.think ? ' th' : '') + (s.x > 70 ? ' l' : '') + (s.y > 105 ? ' b' : ''); } }
   box.querySelectorAll('.ssp').forEach(e => { if (!live.has(e.dataset.u)) e.remove(); });
-  const vs = document.getElementById('svars'); if (vs) vs.innerHTML = Object.entries(S.vars).map(([k, v]) => `<span><small>${esc(SG.st.varNames && SG.st.varNames[k] ? tx(SG.st.varNames[k]) : k)}</small><b>${stgNum(v)}</b></span>`).join('');
+  if (stage) sgFxScan(stage, S, live);
+  // les variables: només es tornen a escriure quan canvien (i el número que puja fa un salt)
+  const vs = document.getElementById('svars'); if (vs) { const prev = vs._v || {}, h = Object.entries(S.vars).map(([k, v]) => `<span${prev[k] !== undefined && v > prev[k] ? ' class="up"' : ''}><small>${esc(SG.st && SG.st.varNames && SG.st.varNames[k] ? tx(SG.st.varNames[k]) : k)}</small><b>${stgNum(v)}</b></span>`).join('');
+    const key = JSON.stringify(S.vars); if (vs._k !== key) { vs._k = key; vs.innerHTML = h; } vs._v = { ...S.vars }; }
   sgAxDraw(box.parentElement);
 }
 /* ---------- Eixos de coordenades (es poden activar a l'escenari) ----------
@@ -566,7 +636,7 @@ function sgEnd(why) {
   if (!bad.length) {
     if (SG.alts.length > 1) { SG.altOk.add(SG.altI); const nx = SG.alts.findIndex((_, i) => !SG.altOk.has(i)); const t = document.querySelector('#sworld .talts'); if (t) t.outerHTML = sgStageHTML().match(/<div class="talts">[\s\S]*?<\/div>/)[0];
       if (nx >= 0) { SFX.ok && SFX.ok(); const au = SG.auto; sgSay(L(`La prova ${SG.altI + 1} funciona! Ara la prova ${nx + 1}…`, `¡La prueba ${SG.altI + 1} funciona! Ahora la prueba ${nx + 1}…`), 'ok'); setTimeout(() => { if (!SG || SG.run) return; sgAlt(nx); sgGo(au); }, 1300); return; } }
-    SG.solved = true; SFX.win && SFX.win(); typeof confetti === 'function' && confetti(90); sgSay(L('Molt bé! Funciona!', '¡Muy bien! ¡Funciona!'), 'ok'); if (SG.onDone) SG.onDone(); return;
+    SG.solved = true; SFX.win && SFX.win(); typeof confetti === 'function' && confetti(90); { const st = document.getElementById('sstage'); if (st) { st.classList.remove('sgwin'); void st.offsetWidth; st.classList.add('sgwin'); setTimeout(() => st.classList.remove('sgwin'), 1700); } } sgSay(L('Molt bé! Funciona!', '¡Muy bien! ¡Funciona!'), 'ok'); if (SG.onDone) SG.onDone(); return;
   }
   SFX.ko && SFX.ko(); sgSay((SG.alts.length > 1 ? L(`Prova ${SG.altI + 1}: `, `Prueba ${SG.altI + 1}: `) : '') + SG_WHY(bad[0]) + ' ' + L('Canvia els blocs i torna-ho a provar.', 'Cambia los bloques y vuelve a probar.'), 'bad');
   if (SG.onFail) SG.onFail(bad);
@@ -682,7 +752,7 @@ if (typeof TSTEP !== 'undefined') {
 /* ---------- Demos i diapositives (TMEDIA.stage) ---------- */
 var TMEDIA = typeof TMEDIA !== 'undefined' ? TMEDIA : {};
 const SGD = { cur: null };
-function sgMiniHTML(m) { const ax = sgAxCfg(m.axes); return `<div class="sdemo"><div class="sstage mini${ax ? ' ax-on' : ''}"><div class="sbg">${STG_BG[m.w.bg] ? STG_BG[m.w.bg].svg() : ''}</div>${ax ? sgAxesHTML(ax, true) : ''}<div class="ssprites"></div><div class="svars"></div></div>${m.code !== false ? `<div class="sdcode">${sgDemoChips(SQ(m.prog), m)}</div>` : ''}</div>`; }
+function sgMiniHTML(m) { const ax = sgAxCfg(m.axes); return `<div class="sdemo"><div class="sstage mini${ax ? ' ax-on' : ''}"><div class="sbg" data-b="${esc(m.w.bg || '')}">${sgBgHTML(m.w.bg)}</div>${SG_LIGHT}${ax ? sgAxesHTML(ax, true) : ''}<div class="ssprites"></div>${SG_PFX}<div class="svars"></div></div>${m.code !== false ? `<div class="sdcode">${sgDemoChips(SQ(m.prog), m)}</div>` : ''}</div>`; }
 function sgDemoChips(P, m) {
   const ch = l => (l || []).map(b => `<span class="rdb c-${SG_CAT[b.k]}"><span class="tbi">${sgIco(b.k)}</span><span>${sgLabel(b, undefined, m)}</span></span>${Array.isArray(b.b) ? `<span class="rdin">${ch(b.b)}</span>${b.e ? `<span class="rdelse">${L('si no', 'si no')}</span><span class="rdin">${ch(b.e)}</span>` : ''}` : ''}`).join('');
   return Object.entries(P).flatMap(([id, H]) => Object.entries(H).flatMap(([h, scr]) => scr.map(l => `<div class="rdh"><b>${esc(sgWho(id, stgWorld(m.w)))}<i class="${h === 'flag' ? 'hf' : ''}"> · ${SG_HAT(h)}</i></b>${ch(l)}</div>`))).join('');

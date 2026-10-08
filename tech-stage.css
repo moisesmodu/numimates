@@ -1,17 +1,30 @@
 /* ===== Numi Tech · Creadors: l'escenari ===== */
 .sworld{display:flex;flex-direction:column;gap:8px}
-.sstage{position:relative;width:100%;aspect-ratio:4/3;border-radius:18px;overflow:hidden;background:#fff;box-shadow:inset 0 0 0 2px var(--line);user-select:none;-webkit-user-select:none;touch-action:manipulation}
-.sbg,.sbg svg{position:absolute;inset:0;width:100%;height:100%;display:block}
+.sstage{position:relative;width:100%;aspect-ratio:4/3;border-radius:18px;overflow:hidden;background:#DCE6F5;box-shadow:0 0 0 1.5px rgba(20,32,74,.14),0 14px 30px -16px rgba(20,32,74,.55);user-select:none;-webkit-user-select:none;touch-action:manipulation;isolation:isolate}
+.sstage::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:470;box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.3),inset 0 2px 0 rgba(255,255,255,.22),inset 0 -14px 28px -18px rgba(6,10,40,.35)}
+.sbg{position:absolute;inset:0;width:100%;height:100%;display:block}
 .ssprites{position:absolute;inset:0}
-.ssp{position:absolute;transform:translate(-50%,-50%);cursor:pointer;transition:opacity .15s}
+.ssp{position:absolute;transform:translate(-50%,-50%);cursor:pointer;transition:opacity .15s;will-change:transform}
 .sspi svg,.sspi img{display:block;width:100%;height:auto;overflow:visible}
-.sspi{transform-origin:50% 50%;filter:drop-shadow(0 4px 3px rgba(10,20,50,.22))}
-.sbub{position:absolute;left:62%;bottom:88%;min-width:56px;width:max-content;max-width:200px;background:#fff;color:#14204A;border:2.5px solid #14204A;border-radius:16px;padding:5px 10px;font:800 14px/1.25 Lexend,system-ui,sans-serif;white-space:normal;text-align:center;opacity:0;transform:scale(.6);transform-origin:0 100%;transition:opacity .15s,transform .15s;pointer-events:none;z-index:2}
+/* l'ombra suau ja va pintada a la imatge de cada vestit (img.sgr); els dibuixos en línia (els de Numi) la fan amb un filtre */
+.sspi.inl{filter:drop-shadow(0 1.5px 1px rgba(8,16,48,.2)) drop-shadow(0 6px 6px rgba(8,16,48,.17))}
+.sspi img.sgr{position:absolute;max-width:none;height:auto}
+.sspt{position:relative;transform-origin:50% 50%}
+.sspo{position:absolute;inset:0;pointer-events:none;animation:sgCo .16s ease-out forwards}@keyframes sgCo{to{opacity:0}}
+.sbub{position:absolute;left:60%;bottom:84%;min-width:44px;width:max-content;max-width:min(210px,46cqw);background:linear-gradient(180deg,#FFFFFF,#F1F5FF);color:#14204A;border:2px solid #1B2A5E;border-radius:1.15em;padding:.38em .8em .42em;font:800 clamp(11px,3.3cqw,15px)/1.25 Lexend,system-ui,sans-serif;white-space:normal;text-align:center;box-shadow:0 .55em 1.1em -.4em rgba(10,20,60,.5),inset 0 -.2em 0 rgba(27,42,94,.06);opacity:0;transform:translateY(.4em) scale(.35);transform-origin:1em 100%;transition:opacity .14s ease-out,transform .4s cubic-bezier(.34,1.56,.64,1);pointer-events:none;z-index:2}
 .sbub.on{opacity:1;transform:none}
-.sbub::after{content:"";position:absolute;left:12px;bottom:-11px;border:10px solid transparent;border-top-color:#14204A;border-bottom:0}
-.sbub.th{border-style:dashed;border-radius:24px}.sbub.th::after{border:0;width:10px;height:10px;border-radius:50%;background:#fff;border:2.5px solid #14204A;bottom:-16px;left:6px}
+.sbub::after{content:"";position:absolute;left:.9em;bottom:-.47em;width:.78em;height:.78em;background:#F1F5FF;border:solid #1B2A5E;border-width:0 2px 2px 0;border-bottom-right-radius:.22em;transform:rotate(45deg) skew(8deg,8deg)}
+.sbub.l{left:auto;right:60%;transform-origin:calc(100% - 1em) 100%}.sbub.l::after{left:auto;right:.9em}
+.sbub.b{bottom:auto;top:84%;transform-origin:1em 0;transform:translateY(-.4em) scale(.35)}.sbub.b.on{transform:none}.sbub.b.l{transform-origin:calc(100% - 1em) 0}
+.sbub.b::after{bottom:auto;top:-.47em;background:#fff;border-width:2px 0 0 2px;border-radius:.22em 0 0 0}
+.sbub.th{border-radius:2em/1.7em;padding:.45em .95em}
+.sbub.th::after{width:.62em;height:.62em;border-radius:50%;border-width:2px;transform:none;left:.55em;bottom:-.78em;background:#fff}
+.sbub.th::before{content:"";position:absolute;width:.36em;height:.36em;border-radius:50%;border:2px solid #1B2A5E;background:#fff;left:.15em;bottom:-1.3em}
+.sbub.th.l::after{left:auto;right:.55em}.sbub.th.l::before{left:auto;right:.15em}
+.sbub.th.b::after{bottom:auto;top:-.78em}.sbub.th.b::before{bottom:auto;top:-1.3em}
 .svars{position:absolute;left:8px;top:8px;display:flex;gap:6px;flex-wrap:wrap;pointer-events:none;z-index:500}
-.svars span{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.94);border:2px solid #E0533F;border-radius:12px;padding:3px 10px;font-weight:800;color:#14204A;box-shadow:0 3px 10px rgba(20,32,74,.15)}
+.svars span{display:inline-flex;align-items:center;gap:6px;background:linear-gradient(180deg,#fff,#F3F6FF);border:2px solid #E0533F;border-radius:12px;padding:3px 10px;font-weight:800;color:#14204A;box-shadow:0 4px 12px -2px rgba(20,32,74,.3),inset 0 -2px 0 rgba(224,83,63,.12)}
+.svars span.up b{animation:sgUp .5s cubic-bezier(.34,1.56,.64,1)}@keyframes sgUp{0%{transform:scale(1.6);color:#1FA463}100%{transform:none}}.svars b{display:inline-block}
 .svars small{font-size:12px;color:var(--mut)}.svars b{font-size:18px;color:#E0533F}
 .sctl{position:absolute;right:8px;top:8px;display:flex;gap:6px;z-index:500}
 .sctl button{display:grid;place-items:center;width:40px;height:40px;border-radius:12px;background:rgba(255,255,255,.94);border:2px solid var(--line);box-shadow:0 3px 8px rgba(20,32,74,.15)}
@@ -74,3 +87,57 @@
 @media (max-width:420px){.sbase span{max-width:9.5em;overflow:hidden;text-overflow:ellipsis}}
 /* a un escenari molt petit (editors plens al mòbil) no hi cap el botó dels eixos, si no és que el pas els fa servir */
 @container (max-width:230px){.sstage:not(.ax-on) .sctl .sax{display:none}.sxy b{display:none}}
+/* ===== Fons il·lustrats: capa animada (fx), vinyeta i llum =====
+   Les peces animades només fan servir transform i opacitat (no repinten el fons). Amb «menys moviment» es queden quietes. */
+.sbg>svg{position:absolute;inset:0;width:100%;height:100%;display:block}
+.sbgfx{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.sfx{position:absolute;display:block;will-change:transform,opacity;pointer-events:none}
+.sfx>svg{display:block;width:100%;height:100%;overflow:visible}
+.fx-drift{animation:sgDrift 140s linear infinite}
+@keyframes sgDrift{from{transform:translateX(var(--a,-20cqw))}to{transform:translateX(100cqw)}}
+.fx-bob{animation:sgBob 3.4s ease-in-out infinite alternate}
+@keyframes sgBob{from{transform:translateY(-12%)}to{transform:translateY(12%)}}
+.fx-twk{animation:sgTwk 3.4s ease-in-out infinite}
+@keyframes sgTwk{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.2;transform:scale(.6)}}
+.fx-ray{transform-origin:50% 0;animation:sgRay 8s ease-in-out infinite}
+@keyframes sgRay{0%,100%{opacity:.3;transform:skewX(0)}50%{opacity:1;transform:skewX(-5deg)}}
+.fx-rise{animation:sgRise 7s linear infinite}
+@keyframes sgRise{0%{transform:translate(0,0) scale(.5);opacity:0}8%{opacity:.95}35%{transform:translate(1.4cqw,-28cqw) scale(.85)}65%{transform:translate(-.8cqw,-52cqw) scale(1)}90%{opacity:.8}100%{transform:translate(.6cqw,-76cqw) scale(1.1);opacity:0}}
+.fx-fall{animation:sgFall 12s linear infinite}
+@keyframes sgFall{0%{transform:translate(0,0) rotate(0);opacity:0}6%{opacity:1}30%{transform:translate(calc(var(--fx,-14cqw) * .25),16cqw) rotate(160deg)}55%{transform:translate(calc(var(--fx,-14cqw) * .7),30cqw) rotate(300deg)}85%{opacity:1}100%{transform:translate(var(--fx,-14cqw),46cqw) rotate(520deg);opacity:0}}
+.fx-shoot{animation:sgShoot 10s ease-in infinite}
+@keyframes sgShoot{0%,84%{transform:translate(0,0);opacity:0}86%{opacity:1}95%,100%{transform:translate(-26cqw,13cqw);opacity:0}}
+.fx-fly{animation:sgFly 8s ease-in-out infinite}
+@keyframes sgFly{0%,100%{transform:translate(0,0);opacity:.15}25%{transform:translate(2.2cqw,-1.6cqw);opacity:1}50%{transform:translate(3.6cqw,.6cqw);opacity:.3}75%{transform:translate(1.2cqw,2.2cqw);opacity:.9}}
+.fx-caus{animation:sgCaus 6s ease-in-out infinite alternate}
+@keyframes sgCaus{from{transform:translateX(-1.6cqw) scaleY(.92);opacity:.4}to{transform:translateX(1.6cqw) scaleY(1.08);opacity:.9}}
+.fx-foam{animation:sgFoam 4.6s ease-in-out infinite alternate}
+@keyframes sgFoam{from{transform:translate(-1.2cqw,.35cqw);opacity:.7}to{transform:translate(1.2cqw,-.45cqw);opacity:1}}
+.fx-blink{animation:sgBlink 1.6s steps(1) infinite}
+@keyframes sgBlink{0%,55%{opacity:1}56%,100%{opacity:.15}}
+.fx-win{background:#FFE8A8;border-radius:1px;animation:sgWin 9s steps(1) infinite}
+@keyframes sgWin{0%,40%{opacity:0}41%,100%{opacity:.9}}
+.fx-spot{transform-origin:50% 0;animation:sgSpot 7s ease-in-out infinite alternate}
+@keyframes sgSpot{from{transform:rotate(var(--r,6deg));opacity:.65}to{transform:rotate(calc(var(--r,6deg) * -1));opacity:1}}
+.fx-glow{animation:sgGlow 2.6s ease-in-out infinite}
+@keyframes sgGlow{0%,100%{opacity:.25}50%{opacity:1}}
+@media (prefers-reduced-motion:reduce){.sbgfx .sfx,.sbgfx .sfx>svg{animation-play-state:paused!important}}
+/* vinyeta i llum de dalt (sobre el fons, sota els personatges) */
+.sbgold{position:absolute;inset:0;animation:sgBgOut .5s ease-in forwards}.sbgold>svg{position:absolute;inset:0;width:100%;height:100%;display:block}@keyframes sgBgOut{to{opacity:0}}
+.svig{position:absolute;inset:0;pointer-events:none;background:radial-gradient(125% 100% at 50% 38%,rgba(6,10,40,0) 58%,rgba(6,10,40,.24) 100%),linear-gradient(180deg,rgba(255,255,255,.1),rgba(255,255,255,0) 24%)}
+.sbg[data-b=laberint]~.svig{opacity:.4}
+/* partícules dels esdeveniments */
+.sfxp{position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:460}
+.pf{position:absolute;display:block;width:2.6cqw;height:2.6cqw;margin:-1.3cqw 0 0 -1.3cqw;pointer-events:none;will-change:transform,opacity;opacity:0;animation:sgPf .7s cubic-bezier(.2,.7,.3,1) forwards}
+@keyframes sgPf{0%{transform:translate(0,0) scale(.3);opacity:0}15%{opacity:1}100%{transform:translate(var(--dx),var(--dy)) scale(var(--s1,1));opacity:0}}
+.pf-spark{width:3.6cqw;height:3.6cqw;margin:-1.8cqw 0 0 -1.8cqw;background:radial-gradient(closest-side,#fff 18%,#FFE36A 42%,#FFB000 70%,rgba(255,170,0,0));clip-path:polygon(50% 0,60% 40%,100% 50%,60% 60%,50% 100%,40% 60%,0 50%,40% 40%);animation-duration:.85s}
+.pf-puff{width:4.6cqw;height:4.6cqw;margin:-2.3cqw 0 0 -2.3cqw;border-radius:50%;background:radial-gradient(circle at 38% 34%,#fff 0,#F4F7FF 38%,#C9D3EC 72%,rgba(170,184,220,0) 74%);--s1:1.6;animation-duration:.65s}
+.pf-note{width:auto;height:auto;margin:-1em 0 0 -.4em;font:900 clamp(13px,4.4cqw,24px)/1 Lexend,system-ui,sans-serif;color:#6A3DF0;text-shadow:0 0 2px #fff,0 0 5px #fff,0 3px 6px rgba(40,20,120,.4);animation-duration:1.2s;animation-timing-function:ease-out}
+.pf-ring{width:11cqw;height:11cqw;margin:-5.5cqw 0 0 -5.5cqw;border-radius:50%;border:.55cqw solid rgba(255,255,255,.95);box-shadow:0 0 0 .2cqw rgba(20,32,74,.25),0 0 1.2cqw rgba(255,255,255,.7),inset 0 0 0 .2cqw rgba(20,32,74,.2);animation:sgRing .5s ease-out forwards}
+@keyframes sgRing{from{transform:scale(.2);opacity:1}to{transform:scale(1);opacity:0}}
+.pf-hit{width:8cqw;height:8cqw;margin:-4cqw 0 0 -4cqw;background:radial-gradient(closest-side,#fff,rgba(255,226,100,.95) 42%,rgba(255,150,40,0));clip-path:polygon(50% 0,60% 32%,93% 18%,70% 45%,100% 62%,64% 64%,70% 100%,50% 72%,28% 98%,34% 64%,0 66%,30% 46%,6% 18%,40% 32%);animation:sgHit .45s ease-out forwards}
+@keyframes sgHit{from{transform:scale(.3) rotate(0);opacity:1}to{transform:scale(1.25) rotate(25deg);opacity:0}}
+/* quan el repte funciona: una llum daurada a la vora de l'escenari */
+.sstage.sgwin::after{animation:sgWinG 1.6s ease-out}
+@keyframes sgWinG{0%{box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.3)}25%{box-shadow:inset 0 0 0 4px rgba(255,210,80,.95),inset 0 0 40px rgba(255,210,80,.55)}100%{box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.3),inset 0 2px 0 rgba(255,255,255,.22),inset 0 -14px 28px -18px rgba(6,10,40,.35)}}
+@media (prefers-reduced-motion:reduce){.sbub{transition:opacity .14s}.sspo,.sbgold{animation:none;display:none}}
