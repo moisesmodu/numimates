@@ -122,3 +122,15 @@ html[data-v] .tmcfoot .btn{--c:rgba(255,255,255,.12);--cd:rgba(0,0,0,.35);flex:n
 .tmcnob{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
 @media (max-width:900px){.tmcsteps{display:none}.tmct{margin-right:auto}}
 @media (max-width:520px){.tmcfoot small{display:none}.tmch{padding:8px 10px}.tmct small{display:none}}
+/* ordinador: el tauler del robot en una sola fila, i l'arena (amb el Maqueen) es fa més gran */
+@media (min-width:900px){
+  .tsbody>.tstage .rdash{grid-template-columns:auto minmax(0,1fr);align-items:stretch;gap:6px}
+  .tsbody>.tstage .rmb{grid-template-columns:auto auto auto;grid-template-rows:auto;padding:6px 8px;gap:6px;border-radius:14px}
+  .tsbody>.tstage .rmbm{grid-column:auto;width:50px;height:50px;padding:3px}
+  .tsbody>.tstage .rbtn.big{width:32px;height:32px;font-size:13px}
+  .tsbody>.tstage .rsens{display:flex;gap:5px;min-width:0}
+  .tsbody>.tstage .rs{flex:1 1 auto;padding:4px 7px;border-radius:11px;min-width:0}
+  .tsbody>.tstage .rs small{font-size:10px;letter-spacing:0;text-transform:none;white-space:nowrap;overflow:visible;text-overflow:clip}
+  .tsbody>.tstage .rs b{font-size:14.5px;white-space:nowrap}
+  .tsbody>.tstage .rln i{width:16px;height:16px;font-size:10px}
+}

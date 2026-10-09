@@ -936,6 +936,7 @@ const M3I = {
   ghost: '<svg viewBox="0 0 24 24"><path d="M5 20V11a7 7 0 0 1 14 0v9l-2.3-1.6L14.3 20 12 18.4 9.7 20l-2.4-1.6z" fill="currentColor" opacity=".5" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><circle cx="9.5" cy="11" r="1.3" fill="currentColor"/><circle cx="14.5" cy="11" r="1.3" fill="currentColor"/></svg>',
   snap: '<svg viewBox="0 0 24 24"><path d="M4 4h16v16H4zM4 12h16M12 4v16" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>',
   code: '<svg viewBox="0 0 24 24"><path d="M8 7l-5 5 5 5M16 7l5 5-5 5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+  tools: '<svg viewBox="0 0 24 24"><path d="M14.7 3.6a5 5 0 0 0-5 6.6l-6 6a1.9 1.9 0 0 0 2.7 2.7l6-6a5 5 0 0 0 6.6-5l-2.9 2.9-2.5-.6-.6-2.5z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>',
   blocks: '<svg viewBox="0 0 24 24"><path d="M3 5h8l1 2h9v5H3zM3 14h12l1 2h5v4H3z" fill="currentColor"/></svg>'
 };
 const M3_PAL = ['#7C5CFF', '#FF8A3D', '#2FB36D', '#3D7BF4', '#F7C531', '#EC5FA8', '#5BC0EB', '#E8453C'];
@@ -964,7 +965,7 @@ const m3Fmt = v => (Math.abs(v) < 1e-9 ? 0 : m3R(v, 1)).toString().replace('.', 
 function m3VpHTML(o = {}) {
   const vb = (v, ico, t) => `<button class="m3vb ${M3E && M3E.view === v ? 'on' : ''}" data-v="${v}" onclick="m3SetView('${v}')" title="${t}" aria-label="${t}">${ico}</button>`;
   return `<div class="m3vp ${o.cls || ''}" id="m3vp"><div class="m3vt"><div class="m3seg">${vb('iso', M3I.iso, m3L('Perspectiva', 'Perspectiva'))}${vb('front', M3I.front, m3L('Davant (alçat)', 'Delante (alzado)'))}${vb('top', M3I.top, m3L('Dalt (planta)', 'Arriba (planta)'))}${vb('right', M3I.right, m3L('Costat (perfil)', 'Lado (perfil)'))}</div>
-      <span class="m3sp"></span>${o.right || ''}</div>${o.bottom ? `<div class="m3vbb">${o.bottom}</div>` : ''}<p class="tsay m3say" id="tsay" aria-live="polite"></p></div>`;
+      <span class="m3sp"></span>${o.right || ''}</div>${o.bottom ? `<div class="m3vbb">${o.bottom}</div>` : ''}<p class="tsay m3say" id="tsay" aria-live="polite" onclick="m3SayX()" title="${m3L('Toca per tancar', 'Toca para cerrar')}"></p></div>`;
 }
 function m3edHTML() {
   const E = M3E, st = E.st, ro = E.ro;
@@ -975,7 +976,7 @@ function m3edHTML() {
     <button class="m3vb ${E.meas ? 'on' : ''}" id="m3me" onclick="m3edMeas()" title="${m3L('Mesures (mm)', 'Medidas (mm)')}" aria-label="${m3L('Mesures', 'Medidas')}">${M3I.ruler}</button>
     ${ro ? '' : `<button class="m3chip" id="m3sn" onclick="m3edSnap()" title="${m3L('Pas de la quadrícula', 'Paso de la cuadrícula')}">${M3I.snap}<b>${E.snap}</b> mm</button>`}<span class="m3sp"></span>
     ${st.stl !== false && (st.k === 'm3free' || st.stl) ? `<button class="m3chip" onclick="m3edSTL()" title="${m3L('Descarrega el fitxer STL per imprimir-lo', 'Descarga el archivo STL para imprimirlo')}">${M3I.dl}<b>STL</b></button>` : ''}`;
-  return `<div class="tstage m3stage m3ed ${ro ? 'ro' : ''}" id="m3st">${m3VpHTML({ right, bottom })}
+  return `<div class="tstage m3stage m3ed ${ro ? 'ro' : ''} ${E.fold ? 'fold' : ''}" id="m3st">${m3VpHTML({ right, bottom })}
     <div class="m3ck" id="m3ck">${m3CkHTML(st.checks, E.res)}</div>
     ${ro ? '' : `<div class="m3in" id="m3in">${m3edInsp()}</div><div class="m3pl" id="m3pl">${m3edPal()}</div>`}</div>`;
 }
@@ -989,24 +990,35 @@ function m3edPal() {
     return `<button class="m3pb ${hole ? 'hole' : ''}" onclick="m3edAdd('${k}')" title="${hole ? m3L('Forat', 'Agujero') + ' · ' + m3TName(t) : m3TName(t)}">${m3Ico(t, hole ? '#9AA3B5' : '#7C5CFF', hole)}<span>${m3PName(t, hole)}</span></button>`; }).join('')}</div>`;
 }
 // l'inspector: la peça seleccionada (mides, posició, gir, color) i les eines
+// al mòbil (fins a 899 px) l'inspector és compacte: una fila de pestanyes (amb «Accions» per a les eines) i una sola fila de contingut,
+// sempre de la mateixa alçada (la vista 3D no salta en seleccionar); tocar la pestanya activa el plega
+const m3Ph = () => typeof matchMedia === 'function' && matchMedia('(max-width:899px)').matches;
+function m3edTab(k) { const E = M3E; if (!E) return; if (E.tab === k && m3Ph()) E.fold = !E.fold; else { E.tab = k; E.fold = false; } const st = document.getElementById('m3st'); st && st.classList.toggle('fold', !!E.fold); m3edDraw(); }
 function m3edInsp() {
-  const E = M3E, ps = m3edSelP();
+  const E = M3E, ps = m3edSelP(), ph = m3Ph();
   if (!ps.length) return `<div class="m3emp"><span class="m3empi">${m3Ico('box', '#7C5CFF')}</span><p>${E.parts.length ? m3L('<b>Toca una peça</b> per moure-la, girar-la o canviar-ne les mides. O afegeix-ne una de la paleta.', '<b>Toca una pieza</b> para moverla, girarla o cambiar sus medidas. O añade una de la paleta.') : m3L('<b>Afegeix una forma</b> de la paleta: apareixerà al mig de la placa.', '<b>Añade una forma</b> de la paleta: aparecerá en el centro de la placa.')}</p>
       ${E.parts.length > 1 ? `<button class="m3tb" onclick="m3edAll()">${M3I.multi}<span>${m3L('Totes', 'Todas')}</span></button>` : ''}</div>`;
   const one = ps.length === 1 ? ps[0] : null, B = m3edBox(ps), grp = ps.length > 1 && ps.every(p => p.g != null && p.g === ps[0].g) && E.parts.filter(p => p.g === ps[0].g).length === ps.length;
-  const name = one ? `${m3Ico(one.t, one.hole ? '#9AA3B5' : one.c, one.hole)}<b>${one.hole ? m3L('Forat', 'Agujero') + ' · ' : ''}${m3TName(one.t)}</b>` : `${M3I.group}<b>${grp ? m3L('Grup', 'Grupo') : m3L(`${ps.length} peces`, `${ps.length} piezas`)}</b>`;
+  const nm = one ? (one.hole ? m3L('Forat', 'Agujero') + ' · ' : '') + m3TName(one.t) : grp ? m3L('Grup', 'Grupo') : m3L(`${ps.length} peces`, `${ps.length} piezas`);
+  const ico = one ? m3Ico(one.t, one.hole ? '#9AA3B5' : one.c, one.hole) : M3I.group, name = `${ico}<b>${nm}</b>`;
+  const tab = E.tab === 'tools' && !ph ? 'size' : E.tab;
   const tabs = [['size', m3L('Mida', 'Medida') + ' <small>mm</small>'], ['pos', m3L('Posició', 'Posición') + ' <small>mm</small>'], ['rot', m3L('Gir', 'Giro') + ' <small>°</small>'], ['col', m3L('Color', 'Color')]];
+  if (ph) tabs.push(['tools', m3L('Accions', 'Acciones')]);
   const f = (key, ax, v, unit, dis) => `<label class="m3f a${ax}"><span class="m3ax">${'XYZ'[ax]}</span><button type="button" onclick="m3edNudge('${key}',${ax},-1)" ${dis ? 'disabled' : ''} aria-label="−">−</button><input inputmode="decimal" value="${dis ? '—' : m3Fmt(v)}" ${dis ? 'disabled' : ''} onfocus="this.select()" onkeydown="if(event.key==='Enter')this.blur()" onchange="m3edVal('${key}',${ax},this.value)"><em>${unit}</em><button type="button" onclick="m3edNudge('${key}',${ax},1)" ${dis ? 'disabled' : ''} aria-label="+">+</button></label>`;
-  let body = '';
-  if (E.tab === 'size') body = `<div class="m3fs">${[0, 1, 2].map(i => f('s', i, one ? one.s[i] : B[i + 3] - B[i], 'mm', !one)).join('')}</div>${one ? `<button class="m3lk ${E.lock ? 'on' : ''}" onclick="M3E.lock=!M3E.lock;m3edDraw()" title="${m3L('Proporcional: canvien totes les mides alhora', 'Proporcional: cambian todas las medidas a la vez')}">${M3I.lock}<span>${m3L('Proporcional', 'Proporcional')}</span></button>` : `<p class="m3fn">${m3L('Les mides es canvien peça a peça.', 'Las medidas se cambian pieza a pieza.')}</p>`}`;
-  else if (E.tab === 'pos') body = `<div class="m3fs">${f('p', 0, (B[0] + B[3]) / 2, 'mm')}${f('p', 1, (B[1] + B[4]) / 2, 'mm')}${f('p', 2, B[2], 'mm')}</div><p class="m3fn">${m3L('x i y: el centre · z: l\'alçada de la base sobre la placa', 'x e y: el centro · z: la altura de la base sobre la placa')}</p>`;
-  else if (E.tab === 'rot') body = `<div class="m3fs">${[0, 1, 2].map(i => f('r', i, one ? one.r[i] : 0, '°', !one && false)).join('')}</div><p class="m3fn">${m3L('Cada toc gira 15°', 'Cada toque gira 15°')}${one ? '' : ' · ' + m3L('el grup gira al voltant del seu centre', 'el grupo gira alrededor de su centro')}</p>`;
-  else body = `<div class="m3sw">${M3_SWATCH.map(c => `<button style="--c:${c}" class="${ps.every(p => String(p.c).toUpperCase() === c) ? 'on' : ''}" onclick="m3edCol('${c}')" aria-label="${c}"></button>`).join('')}</div>`;
-  const tool = (fn, ico, t, cls = '', dis = false) => `<button class="m3tb ${cls}" onclick="${fn}" title="${t}" aria-label="${t}" ${dis ? 'disabled' : ''}>${ico}<span>${t}</span></button>`;
+  const tool = (fn, ico, t, cls = '', sh = t) => `<button class="m3tb ${cls}" onclick="${fn}" title="${t}" aria-label="${t}">${ico}<span>${sh}</span></button>`;
   const allHole = ps.every(p => p.hole);
-  return `<div class="m3ih"><span class="m3inm">${name}</span><span class="m3tools">${tool('m3edDup()', M3I.dup, m3L('Duplica', 'Duplica'))}${tool('m3edHole()', M3I.hole, allHole ? m3L('Sòlid', 'Sólido') : m3L('Forat', 'Agujero'), allHole ? 'on' : '')}${tool("m3edPop('mir')", M3I.mirror, m3L('Mirall', 'Espejo'))}${tool("m3edPop('ali')", M3I.align, m3L('Alinea', 'Alinea'))}
-      ${tool('m3edMulti()', M3I.multi, m3L('Selecciona\'n més', 'Selecciona más'), E.multi ? 'on' : '')}${ps.length > 1 || grp ? tool('m3edGroup()', M3I.group, grp ? m3L('Desagrupa', 'Desagrupa') : m3L('Agrupa', 'Agrupa'), grp ? 'on' : '') : ''}${tool('m3edDel()', M3I.del, m3L('Esborra', 'Borra'), 'del')}</span></div>
-    <div class="m3tabs">${tabs.map(([k, t]) => `<button class="${E.tab === k ? 'on' : ''}" onclick="M3E.tab='${k}';m3edDraw()">${t}</button>`).join('')}</div><div class="m3body">${body}</div><div class="m3pop" id="m3pop" hidden></div>`;
+  const tools = `${tool('m3edDup()', M3I.dup, m3L('Duplica', 'Duplica'))}${tool('m3edHole()', M3I.hole, allHole ? m3L('Sòlid', 'Sólido') : m3L('Forat', 'Agujero'), allHole ? 'on' : '')}${tool("m3edPop('mir')", M3I.mirror, m3L('Mirall', 'Espejo'))}${tool("m3edPop('ali')", M3I.align, m3L('Alinea', 'Alinea'))}
+      ${tool('m3edMulti()', M3I.multi, m3L('Selecciona\'n més', 'Selecciona más'), E.multi ? 'on' : '', m3L('Més peces', 'Más piezas'))}${ps.length > 1 || grp ? tool('m3edGroup()', M3I.group, grp ? m3L('Desagrupa', 'Desagrupa') : m3L('Agrupa', 'Agrupa'), grp ? 'on' : '') : ''}${tool('m3edDel()', M3I.del, m3L('Esborra', 'Borra'), 'del')}`;
+  let body = '';
+  if (tab === 'size') body = `<div class="m3fs">${[0, 1, 2].map(i => f('s', i, one ? one.s[i] : B[i + 3] - B[i], 'mm', !one)).join('')}</div>${one ? `<button class="m3lk ${E.lock ? 'on' : ''}" onclick="M3E.lock=!M3E.lock;m3edDraw()" title="${m3L('Proporcional: canvien totes les mides alhora', 'Proporcional: cambian todas las medidas a la vez')}">${M3I.lock}<span>${m3L('Proporcional', 'Proporcional')}</span></button>` : `<p class="m3fn">${m3L('Les mides es canvien peça a peça.', 'Las medidas se cambian pieza a pieza.')}</p>`}`;
+  else if (tab === 'pos') body = `<div class="m3fs">${f('p', 0, (B[0] + B[3]) / 2, 'mm')}${f('p', 1, (B[1] + B[4]) / 2, 'mm')}${f('p', 2, B[2], 'mm')}</div><p class="m3fn">${m3L('x i y: el centre · z: l\'alçada de la base sobre la placa', 'x e y: el centro · z: la altura de la base sobre la placa')}</p>`;
+  else if (tab === 'rot') body = `<div class="m3fs">${[0, 1, 2].map(i => f('r', i, one ? one.r[i] : 0, '°', false)).join('')}</div><p class="m3fn">${m3L('Cada toc gira 15°', 'Cada toque gira 15°')}${one ? '' : ' · ' + m3L('el grup gira al voltant del seu centre', 'el grupo gira alrededor de su centro')}</p>`;
+  else if (tab === 'col') body = `<div class="m3sw">${M3_SWATCH.map(c => `<button style="--c:${c}" class="${ps.every(p => String(p.c).toUpperCase() === c) ? 'on' : ''}" onclick="m3edCol('${c}')" aria-label="${c}"></button>`).join('')}</div>`;
+  else body = `<div class="m3tl">${tools}</div>`;
+  const tabBar = `<div class="m3tabs">${ph ? `<span class="m3ti" title="${m3Esc(nm)}">${ico}</span>` : ''}${tabs.map(([k, t]) => `<button class="${tab === k ? 'on' : ''} ${k === 'tools' ? 'm3tt' : ''}" onclick="m3edTab('${k}')" ${ph && tab === k ? `aria-expanded="${!E.fold}"` : ''}>${t}</button>`).join('')}</div>`;
+  if (ph) return `${tabBar}<div class="m3body">${body}</div><div class="m3pop" id="m3pop" hidden></div>`;
+  return `<div class="m3ih"><span class="m3inm">${name}</span><span class="m3tools">${tools}</span></div>
+    ${tabBar}<div class="m3body">${body}</div><div class="m3pop" id="m3pop" hidden></div>`;
 }
 function m3edDraw() {
   const E = M3E; if (!E) return;
@@ -1022,7 +1034,8 @@ function m3edMount() {
     onDone: () => m3edMoveEnd() });
   E.V.set({ parts: E.parts }); if (E.st.target && E.ghost) E.V.target(E.st.target); if (E.view !== 'iso') E.V.view(E.view);
   m3edCheck(true);
-  if (!E.ro && typeof document !== 'undefined' && !m3edMount.keys) { m3edMount.keys = 1; document.addEventListener('keydown', m3edKey); }
+  if (!E.ro && typeof document !== 'undefined' && !m3edMount.keys) { m3edMount.keys = 1; document.addEventListener('keydown', m3edKey);
+    try { matchMedia('(max-width:899px)').addEventListener('change', () => { if (M3E && document.getElementById('m3in')) { const i = document.getElementById('m3in'); i.innerHTML = m3edInsp(); } }); } catch (e) { } }
 }
 function m3edKey(e) {
   const E = M3E; if (!E || E.ro || !document.getElementById('m3st') || /INPUT|TEXTAREA/.test((e.target || {}).tagName || '')) return;
@@ -1166,9 +1179,12 @@ function m3edGhost() { const E = M3E; E.ghost = !E.ghost; E.V && E.V.target(E.gh
 function m3edMeas() { const E = M3E; E.meas = !E.meas; E.V && E.V.measure(E.meas); const b = document.getElementById('m3me'); if (b) b.classList.toggle('on', E.meas); }
 function m3edSnap() { const E = M3E; E.snap = E.snap === 1 ? 5 : E.snap === 5 ? 10 : 1; const b = document.getElementById('m3sn'); if (b) b.querySelector('b').textContent = E.snap; if (E.V && E.V.snap) E.V.snap(E.snap); toast && toast(m3L(`Pas de la quadrícula: ${E.snap} mm`, `Paso de la cuadrícula: ${E.snap} mm`)); }
 function m3SetView(v) { const S = M3E || M3P; if (S) S.view = v; const V = (M3E && M3E.V) || (M3P && M3P.V) || (M3VW && M3VW.V); V && V.view(v); document.querySelectorAll('#m3vp .m3vb[data-v]').forEach(b => b.classList.toggle('on', b.dataset.v === v)); SFX.tap && SFX.tap(); }
-// el missatge flotant: els avisos neutres i els errors s'amaguen sols al cap d'una estona (no tapen el model)
+// el missatge d'en Bit: una pastilla a dalt de la vista (a sota de la barra), que es tanca tocant-la;
+// els avisos neutres i els errors s'amaguen sols (més temps com més llargs), l'enhorabona es queda fins que es toca
 function m3Say(html, cls = '') { const e = document.getElementById('tsay'); if (!e) return; e.className = 'tsay m3say ' + cls; e.innerHTML = html; clearTimeout(m3Say.t);
-  if (cls !== 'ok' && html) m3Say.t = setTimeout(() => { if (e.innerHTML === html) { e.classList.add('out'); setTimeout(() => { if (e.classList.contains('out')) { e.innerHTML = ''; e.className = 'tsay m3say'; } }, 400); } }, cls === 'bad' ? 9000 : 6500); }
+  const n = String(html || '').replace(/<[^>]*>/g, '').length, ms = Math.max(cls === 'bad' ? 8000 : 5000, Math.min(15000, n * 75));
+  if (cls !== 'ok' && html) m3Say.t = setTimeout(() => { if (e.innerHTML === html) m3SayX(); }, ms); }
+function m3SayX() { const e = document.getElementById('tsay'); if (!e || !e.innerHTML) return; clearTimeout(m3Say.t); e.classList.add('out'); setTimeout(() => { if (e.classList.contains('out')) { e.innerHTML = ''; e.className = 'tsay m3say'; } }, 300); }
 // les comprovacions en directe
 function m3edCheck(first) {
   const E = M3E; if (!E) return; const st = E.st, cks = st.checks || [];
@@ -1181,8 +1197,9 @@ function m3edCheck(first) {
 }
 function m3CkUpdate(res, first) {
   const ul = document.querySelector('#m3ck .m3cks'); if (!ul) return;
-  [...ul.children].forEach((li, i) => { const ok = !!(res[i] && res[i].ok), was = li.classList.contains('ok'); li.classList.toggle('ok', ok); if (ok) li.classList.remove('bad'); li.querySelector('.m3cb').innerHTML = ok ? TIC.ok : ''; if (ok && !was && !first) { li.classList.remove('pop'); void li.offsetWidth; li.classList.add('pop'); SFX.tap && SFX.tap(); } });
+  [...ul.children].forEach((li, i) => { const ok = !!(res[i] && res[i].ok), was = li.classList.contains('ok'); li.classList.toggle('ok', ok); if (ok) li.classList.remove('bad'); li.querySelector('.m3cb').innerHTML = ok ? TIC.ok : ''; if (ok && !was && !first) { li.classList.remove('pop'); void li.offsetWidth; li.classList.add('pop'); SFX.tap && SFX.tap(); m3CkShow(ul, li); } });
 }
+function m3CkShow(ul, li) { if (ul.scrollWidth <= ul.clientWidth + 2) return; const l = li.offsetLeft - ul.offsetLeft, r = l + li.offsetWidth; if (l < ul.scrollLeft || r > ul.scrollLeft + ul.clientWidth) try { ul.scrollTo({ left: Math.max(0, l - 8), behavior: 'smooth' }); } catch (e) { ul.scrollLeft = l; } }
 // estrelles: resolt · sense pista · sense peces de més
 function m3Stars(hint, used, best) {
   if (typeof tStarSave !== 'function' || typeof TSS === 'undefined' || !TSS) return;

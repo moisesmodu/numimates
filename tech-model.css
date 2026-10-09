@@ -21,15 +21,17 @@
 .m3chip svg{width:17px;height:17px}.m3chip b{font-weight:900}
 .m3hunt{background:var(--m3a);color:#fff;cursor:default;animation:m3pulse 2.2s ease-in-out infinite}
 @keyframes m3pulse{50%{box-shadow:0 0 0 6px color-mix(in srgb,var(--m3a) 25%,transparent)}}
-/* el missatge d'en Bit, flotant a sota de la vista */
-.m3say.tsay{position:absolute;left:50%;bottom:50px;transform:translateX(-50%);width:max-content;max-width:min(88%,560px);margin:0;padding:7px 12px;border-radius:14px;font-size:13px!important;background:rgba(255,255,255,.95);box-shadow:0 6px 22px rgba(27,43,107,.18);font-size:14px;line-height:1.35;font-weight:700;color:var(--ink);z-index:3;text-align:center}
-.m3say.tsay:empty{display:none}
-.m3say.tsay.out{opacity:0;transform:translateX(-50%) translateY(6px);transition:opacity .35s,transform .35s}
+/* el missatge d'en Bit: una pastilla a dalt de la vista, sota la barra d'eines (no tapa el model); es tanca tocant-la */
+.m3vp>.tsay.m3say{--m3tx:translateX(-50%);position:absolute;top:56px;left:50%;right:auto;bottom:auto;transform:var(--m3tx);width:max-content;max-width:min(calc(100% - 16px),560px);margin:0;padding:7px 30px 7px 12px;border-radius:14px;background:rgba(255,255,255,.96);box-shadow:0 6px 22px rgba(27,43,107,.18);font-size:13.5px!important;line-height:1.35;font-weight:700;color:var(--ink);z-index:4;text-align:left;cursor:pointer;animation:m3sin .25s ease-out both}
+.m3vp>.tsay.m3say::after{content:"✕";position:absolute;right:10px;top:7px;font:900 11px/1.6 system-ui,sans-serif;color:currentColor;opacity:.45}
+.m3vp>.tsay.m3say:empty{display:none}
+.m3vp>.tsay.m3say.out{opacity:0;transform:var(--m3tx) translateY(-6px);transition:opacity .25s,transform .25s}
+@keyframes m3sin{from{opacity:0;transform:var(--m3tx) translateY(-6px)}}
+.m3vp>.tsay.m3say.ok{background:#ECF9F2;color:#0E6B43;box-shadow:0 6px 22px rgba(34,160,107,.25),inset 0 0 0 2px #A8E0C0}
+.m3vp>.tsay.m3say.bad{background:#FFF1F1;color:#A12A2E;box-shadow:0 6px 22px rgba(229,72,77,.2),inset 0 0 0 2px #F2B8BA}
+.m3vp>.tsay.m3say .tstars{display:flex;justify-content:center;gap:6px;margin:4px 0 0;font-size:22px!important}
 .m3cks li.bad{border-color:#F2B8BA;background:#FFF6F6;color:#A12A2E}
 .m3cks li.bad .m3cb{border-color:#E5484D}
-.m3say.tsay.ok{background:#ECF9F2;color:#0E6B43;box-shadow:0 6px 22px rgba(34,160,107,.25),inset 0 0 0 2px #A8E0C0}
-.m3say.tsay.bad{background:#FFF1F1;color:#A12A2E;box-shadow:0 6px 22px rgba(229,72,77,.2),inset 0 0 0 2px #F2B8BA}
-.m3say .tstars{display:flex;justify-content:center;gap:6px;margin:4px 0 0;font-size:24px!important}
 .m3hide{display:none!important}
 .m3lockv{grid-area:vp;z-index:1;position:relative}
 /* ---------- comprovacions en directe ---------- */
@@ -99,10 +101,10 @@
 .m3pb:active{transform:translateY(2px);box-shadow:0 1px 0 #DCE3F5}
 .m3pb.hole{background:repeating-linear-gradient(135deg,#fff 0 6px,#F1F3F9 6px 12px)}
 /* ---------- distribució de cada pas (mòbil: una columna que cap a la pantalla) ---------- */
-.tsbody>.tstage.m3stage{display:grid;gap:7px;grid-template-columns:minmax(0,1fr)}
+.tsbody>.tstage.m3stage{display:grid;gap:6px;grid-template-columns:minmax(0,1fr)}
 .tsbody>.tstage.m3ed{grid-template-areas:"vp" "ck" "in" "pl";grid-template-rows:minmax(150px,1fr) auto auto auto}
 .tsbody>.tstage.m3ed.ro{grid-template-areas:"vp" "ck";grid-template-rows:minmax(0,1fr) auto}
-.tsbody>.tstage.m3pg{grid-template-areas:"vp" "ck" "cd";grid-template-rows:minmax(140px,.85fr) auto minmax(190px,1.15fr)}
+.tsbody>.tstage.m3pg{grid-template-areas:"vp" "ck" "cd";grid-template-rows:minmax(150px,1fr) auto minmax(215px,1fr)}
 .tsbody>.tstage.m3pg.spot{grid-template-rows:minmax(150px,1fr) auto minmax(160px,1fr)}
 .tsbody>.tstage.m3look{grid-template-areas:"vp";grid-template-rows:minmax(0,1fr)}
 .tsbody>.tstage.m3look.qa{grid-template-areas:"vp" "qa";grid-template-rows:minmax(150px,1fr) auto}
@@ -204,11 +206,12 @@ span.m3thumb{display:grid;place-items:center}span.m3thumb .m3ico{width:50%;heigh
 @media (min-width:900px){
   .tsbody>.tstage.m3ed{grid-template-columns:minmax(0,1.55fr) minmax(330px,1fr);grid-template-areas:"vp ck" "vp in" "vp pl";grid-template-rows:auto auto minmax(0,1fr);gap:10px}
   .tsbody>.tstage.m3ed.ro{grid-template-areas:"vp ck";grid-template-rows:minmax(0,1fr)}
-  .m3cks{flex-direction:column;overflow:visible;gap:5px}
-  .m3cks li{white-space:normal;border-radius:12px;padding:6px 10px 6px 7px;font-size:13.5px}
+  .m3cks{flex-wrap:wrap;overflow:visible;gap:5px}
+  .m3cks li{white-space:normal;padding:4px 11px 4px 5px;font-size:13px;line-height:1.3}
   .m3tb span{display:inline}
-  .m3tools{flex-wrap:wrap;justify-content:flex-end;overflow:visible}
-  .m3ih{flex-wrap:wrap}
+  .m3tools{display:contents}
+  .m3ih{flex-wrap:wrap;gap:5px}
+  .m3inm{margin-right:auto;padding-right:4px}
   .m3tb{height:32px;padding:0 8px}
   .m3fn{display:block}.m3lk{display:inline-flex}
   .m3pl{overflow:auto;background:#fff;border:2px solid var(--line);border-radius:18px;padding:8px;align-self:start;max-height:100%}
@@ -233,7 +236,7 @@ span.m3thumb{display:grid;place-items:center}span.m3thumb .m3ico{width:50%;heigh
   .m3pred.shown .m3pr2 .m3opts{grid-template-columns:repeat(2,minmax(0,1fr))}
 .m3pr2 .m3opts .m3oimg{aspect-ratio:16/10}
   .m3media.m3wc{grid-template-columns:1.3fr 1fr;align-items:center}
-  .m3say.tsay{font-size:15px}
+  .m3vp>.tsay.m3say{font-size:14.5px!important}
 }
 @media (max-width:899px){.m3vp .m3seg .m3vb{min-width:30px;height:30px;padding:0 4px}.m3vb{min-width:34px;height:34px}.m3vb svg{width:19px;height:19px}}
 @media (max-width:380px){.m3f button{width:23px}.m3f .m3ax{width:14px}.m3f input{font-size:14px}}
@@ -241,4 +244,54 @@ span.m3thumb{display:grid;place-items:center}span.m3thumb .m3ico{width:50%;heigh
 
 /* al mòbil, els criteris del projecte es veuen tocant l'enunciat (les comprovacions ja són a sota de la vista) */
 @media (max-width:899px){.tsbody:has(>.m3stage)>.tsq2:not(.open) .tcrit{display:none}.tsbody:has(>.m3stage)>.tsq2:not(.open):has(.tcrit) p::after{content:" ▾";color:var(--mut)}}
-@media (max-width:899px){.m3tabs button small{display:none}}
+/* ---------- mòbil: la vista 3D és la protagonista; la resta, compacte i d'alçada fixa ---------- */
+@media (max-width:899px){
+  .m3tabs button small{display:none}
+  /* el missatge: pastilla d'amplada completa just a sota de la barra de dalt */
+  .m3vp>.tsay.m3say{--m3tx:translateY(0);top:48px;left:8px;right:8px;width:auto;max-width:none;padding:6px 28px 6px 10px;border-radius:12px;font-size:12.5px!important;line-height:1.3}
+  .m3vp>.tsay.m3say::after{top:6px;right:9px}
+  .m3vp>.tsay.m3say .tstars{display:inline-flex;vertical-align:-2px;margin:0 0 0 6px;gap:2px;font-size:17px!important}
+  /* comprovacions: xips petits en una fila que llisca */
+  .m3cks{gap:5px}
+  .m3cks li{gap:5px;padding:3px 10px 3px 4px;border-width:1.5px;font-size:12px}
+  .m3cb{width:18px;height:18px;border-width:1.5px}.m3cb svg{width:12px;height:12px}
+  /* inspector: pestanyes + una fila de contingut (sempre la mateixa alçada); tocar la pestanya activa el plega */
+  .m3in{display:flex;flex-direction:column;gap:5px;height:94px;padding:5px 6px 6px;border-radius:16px}
+  .m3ed.fold .m3in{height:48px}
+  .m3in .m3tabs{flex:none;margin:0;align-items:center;gap:2px;padding:3px}
+  .m3ti{flex:none;display:grid;place-items:center;width:28px;height:30px}.m3ti .m3ico,.m3ti>svg{width:24px;height:24px}
+  .m3in .m3tabs button{flex:1 1 auto;min-width:0;height:30px;padding:0 5px;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .m3in .m3tabs button.on::after{content:"▾";margin-left:3px;font-size:10px;opacity:.55}
+  .m3ed.fold .m3in .m3tabs button.on::after{content:"▴"}
+  .m3in .m3tabs button.m3tt{color:color-mix(in srgb,var(--m3a) 75%,#000)}
+  .m3in .m3tabs button.m3tt.on{color:var(--ink)}
+  .m3body{flex:1;min-height:0;display:flex;align-items:center}
+  .m3body>*{flex:1;min-width:0}
+  .m3ed.fold .m3body{display:none}
+  .m3tl{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;padding:0 1px}
+  .m3tl::-webkit-scrollbar{display:none}
+  .m3tl .m3tb{flex-direction:column;gap:1px;height:40px;min-width:46px;padding:2px 4px;border-width:1.5px}
+  .m3tl .m3tb svg{width:18px;height:18px}
+  .m3tl .m3tb span{display:block;font-size:9.5px;line-height:1.1;white-space:nowrap}
+  .m3sw{flex-wrap:nowrap;justify-content:flex-start;gap:5px;overflow-x:auto;scrollbar-width:none;padding:3px 3px}
+  .m3sw::-webkit-scrollbar{display:none}
+  .m3sw button{flex:none;width:27px;height:27px}
+  .m3emp{height:100%;min-height:0;gap:8px;padding:0 2px}
+  .m3empi .m3ico{width:32px;height:32px}
+  .m3emp p{font-size:12.5px;line-height:1.3;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+  .m3emp .m3tb span{display:inline}
+  .m3ed.fold .m3empi .m3ico{width:24px;height:24px}
+  .m3ed.fold .m3emp p{-webkit-line-clamp:2;font-size:12px}
+  /* els menús de mirall/alinea s'obren cap amunt (sobre la vista), no tapen la paleta */
+  .m3pop{top:auto;bottom:calc(100% + 6px);right:0;left:auto;max-width:100%}
+  /* paleta de formes: una sola fila que llisca */
+  .m3pals{gap:5px;padding:1px 2px 3px}
+  .m3pb{width:auto;min-width:54px;height:50px;border-radius:14px;box-shadow:0 2px 0 #DCE3F5;padding:2px 5px}
+  .m3pb .m3ico{width:28px;height:28px}
+  .m3pb span{font-size:9.5px;max-width:64px}
+  /* Nivell 2: capçalera i paleta de blocs més baixes */
+  .tsbody>.tstage.m3stage>.tcode.m3cd{gap:5px}
+  .tsbody>.tstage.m3stage>.tcode .m3pal{padding:1px 2px 3px}
+  .tsbody>.tstage.m3stage>.tcode .m3pal button.tb{min-height:38px;font-size:13px}
+  .m3tabs2 button{height:28px;padding:0 10px}
+}
