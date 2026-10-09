@@ -1149,7 +1149,7 @@ if (typeof TSTEP !== 'undefined') TSTEP.learn = function (st) {
 };
 
 /* ---------- Escenes il·lustrades per a les històries ---------- */
-const TSCENE3 = { illa: 1, poble: 1, taller: 1, moll: 1, lab: 1 };
+const TSCENE3 = { illa: 1, poble: 1, taller: 1, moll: 1, lab: 1, fab: 1, estudi: 1 };
 function tScene(kind, who, mood) {
   const sky = kind === 'taller' ? ['#FFE9C7', '#FFD0A1'] : ['#9FDBFF', '#D9F2FF'];
   const clouds = kind === 'taller' ? '' : [[60, 40, 1], [250, 28, .8], [170, 60, .6]].map(([x, y, s], i) => `<g class="tcloud" style="--d:${-i * 7}s"><g transform="translate(${x} ${y}) scale(${s})"><ellipse rx="26" ry="11" fill="#fff"/><ellipse cx="-14" cy="-6" rx="14" ry="11" fill="#fff"/><ellipse cx="10" cy="-9" rx="16" ry="13" fill="#fff"/></g></g>`).join('');
