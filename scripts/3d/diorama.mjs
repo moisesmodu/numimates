@@ -1567,8 +1567,10 @@ export async function scene(kind = 'illa', W = 1600, H = 900, o = {}) {
   if (kind === 'moll') { for (let i = 0; i < 5; i++) await put(sc, 'bridge_wood', 7.4, .12, -2.4 - i * 1.25, { s: [1.25, 1, 1.25] }); await put(sc, 'canoe', 9.3, .02, -6.2, { ry: .3, s: 2 }); await put(sc, 'log_stackLarge', 6.5, top, 2.6, { s: 1.5 }); await put(sc, 'tent_detailedClosed', -6.2, top, 1.2, { s: 1.8, ry: .4 }); await put(sc, 'campfire_logs', -4.6, top, 2.6, { s: 1.4 }); }
   if (kind === 'lab') { await put(sc, 'tent_detailedOpen', -5, top, -2, { s: 2.4, ry: .4 }); await put(sc, 'campfire_stones', -2.6, top, .4, { s: 1.8 }); await put(sc, 'log', -4, top, .8, { s: 1.8, ry: .3 }); await put(sc, 'statue_obelisk', 5, top, -2.4, { s: 2 }); await put(sc, 'statue_ring', 7, top, -.5, { s: 1.6, ry: -.4 }); const f = new THREE.PointLight('#FFB347', 8, 6, 1.6); f.position.set(-2.6, top + .7, .4); sc.add(f); }
   if (kind === 'illa') { await put(sc, 'statue_obelisk', 5.4, top, -2.4, { s: 2 }); await put(sc, 'stone_largeA', 4.2, top, -.4, { s: 1.6 }); await put(sc, 'tree_palmTall', -7.4, top, 1.5, { s: 2.2 }); await put(sc, 'tree_palmBend', 8.6, top, 2, { s: 2.2, ry: 2.6 }); await put(sc, 'sign', -3.4, top, -.4, { s: 1.8, ry: .4 }); }
-  const cam = new THREE.PerspectiveCamera(30, W / H, .1, 200); if (o.bit) bitHero(sc, 3.5, top, 4.6, 2.2, -.4); if (o.bot) botHero(sc, 3.6, top, 4.3, .36, Math.PI - .75);
-  cam.position.set(0, 4.6, 15.5); cam.lookAt(0, 1.6, -2); cam.updateMatrixWorld();
+  // o.cam / o.look / o.fov / o.at (x, z, mida, gir del personatge): enquadraments a mida (p. ex. la portada del dossier)
+  const at = o.at || [3.5, 4.6, 2.2, -.4], cam = new THREE.PerspectiveCamera(o.fov || 30, W / H, .1, 200);
+  if (o.bit) bitHero(sc, at[0], top, at[1], at[2], at[3]); if (o.bot) botHero(sc, 3.6, top, 4.3, .36, Math.PI - .75);
+  cam.position.set(...(o.cam || [0, 4.6, 15.5])); cam.lookAt(...(o.look || [0, 1.6, -2])); cam.updateMatrixWorld();
   return finish(r, sc, cam, W, H, { focus: 15, aperture: .0006, maxblur: .005, grade: { sat: 1.05, con: 1.04, vig: .1 } });
 }
 // el taller d'en Bit: una aula-taller càlida amb taules, ordinadors, prestatges, plantes i finestres
