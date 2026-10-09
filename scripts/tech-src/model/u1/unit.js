@@ -1,8 +1,11 @@
 /* Tech 3D · Nivell 1 · unitat 1 «L'espai 3D» (m1-1 … m1-4)
-   Contingut propi de Numi (unitat de mostra del motor: scripts/TECH-3D.md). Fil narratiu: el Taller de Bit, amb la Nuvi,
-   la impressora 3D. Hi ha passos a m1-1 (mirar i girar la vista: m3look, primera peça amb m3free) i a m1-3 (coordenades:
-   m3look, m3build amb fantasma, m3fix i m3free amb comprovacions). m1-2 i m1-4 són per als agents de contingut.
+   Contingut propi de Numi. Fil narratiu: el Taller de Bit, amb la Nuvi, la impressora 3D. m1-1: mirar i girar la vista;
+   m1-2: les vistes (alçat, planta i perfil); m1-3: coordenades x, y, z; m1-4: projecte, la primera escultura.
    Models: peces { id, t, s: [x, y, z] (mm), p: centre, r: graus, c: color, hole }, placa de 200 × 200 mm centrada a l'origen. */
+Object.assign(TBADGE, {
+  m12vistes: { id: 'm12vistes', ico: '👁️', n: 'Ull de dissenyador/a|Ojo de diseñador/a', d: 'Llegeixes les vistes de davant, de dalt i del costat d\'un objecte.|Lees las vistas de delante, de arriba y del lado de un objeto.' },
+  m14escultura: { id: 'm14escultura', ico: '🗿', n: 'Escultor/a 3D|Escultor/a 3D', d: 'Has dissenyat la teva primera escultura 3D, ben recolzada i bonica de totes les vistes.|Has diseñado tu primera escultura 3D, bien apoyada y bonita desde todas las vistas.' }
+});
 COURSE_UNITS[1] = (() => {
   const P = (id, t, s, p, c, o = {}) => ({ id, t, s, p, r: o.r || [0, 0, 0], c, ...o });
   // la casa de la Nuvi (amb una estrella amagada al darrere)
@@ -15,6 +18,23 @@ COURSE_UNITS[1] = (() => {
   const EIXOS = [P('c0', 'box', [10, 10, 10], [0, 0, 5], '#9AA3B5'), P('cx', 'box', [10, 10, 10], [40, 0, 5], '#E5484D'), P('cy', 'box', [10, 10, 10], [0, 40, 5], '#22A06B'), P('cz', 'box', [10, 10, 10], [0, 0, 45], '#2F5BEA')];
   const PUNTS = [P('p1', 'cyl', [14, 14, 14], [-20, 20, 7], '#E8453C'), P('p2', 'cyl', [14, 14, 14], [20, 20, 7], '#3D7BF4'), P('p3', 'cyl', [14, 14, 14], [-20, -20, 7], '#2FB36D'), P('p4', 'cyl', [14, 14, 14], [20, -20, 7], '#F7C531')];
   const cub = (x, y, z = 0, id = 'a1', c = '#7C5CFF') => P(id, 'box', [20, 20, 20], [x, y, z + 10], c);
+  // m1-2: l'estació de joguina d'en Pau, el fuster (la porta només es veu de davant; la torre rodona, a la dreta)
+  const ESTACIO = [P('base', 'box', [50, 24, 18], [0, 0, 9], '#7C5CFF'), P('porta', 'box', [10, 2, 12], [-12, -12.5, 6], '#3A2A6B'), P('torre', 'cyl', [14, 14, 22], [14, 0, 29], '#2FB36D'), P('teula', 'cone', [18, 18, 12], [14, 0, 46], '#EC5FA8')];
+  // un cub i un cilindre bessons: de davant són iguals
+  const BESSONS = [P('cub', 'box', [20, 20, 30], [-20, 0, 15], '#3D7BF4'), P('rodo', 'cyl', [20, 20, 30], [20, 0, 15], '#3D7BF4')];
+  // tres models que només es distingeixen bé de dalt
+  const VA = [P('a', 'box', [30, 30, 10], [0, 0, 5], '#F5893A'), P('b', 'cyl', [16, 16, 20], [0, 0, 20], '#2FB36D')];
+  const VB = [P('a', 'box', [30, 30, 10], [0, 0, 5], '#F5893A'), P('b', 'box', [16, 16, 20], [0, 0, 20], '#2FB36D')];
+  const VC = [P('a', 'cyl', [30, 30, 10], [0, 0, 5], '#F5893A'), P('b', 'box', [16, 16, 20], [0, 0, 20], '#2FB36D')];
+  // tres cilindres en fila cap al fons (de davant només se'n veu un) i una caixa
+  const FILA = [P('c1', 'cyl', [16, 16, 24], [-10, -22, 12], '#E8453C'), P('c2', 'cyl', [16, 16, 24], [-10, 0, 12], '#F7C531'), P('c3', 'cyl', [16, 16, 24], [-10, 22, 12], '#3D7BF4'), P('cx', 'box', [16, 16, 16], [20, -22, 8], '#2FB36D')];
+  const PLACA3 = { box: P('a1', 'box', [20, 20, 20], [-40, 30, 10], '#F5893A'), cyl: P('a2', 'cyl', [20, 20, 20], [40, 30, 10], '#2FB36D'), cone: P('a3', 'cone', [20, 20, 24], [0, -30, 12], '#EC5FA8') };
+  // m1-4: escultures d'exemple
+  const ESCULT = [P('peu', 'cyl', [44, 44, 8], [0, 0, 4], '#9AA3B5'), P('columna', 'box', [14, 14, 30], [0, 0, 23], '#7C5CFF'), P('bola', 'sph', [26, 26, 26], [0, 0, 49], '#F7C531'), P('estrella', 'star', [20, 20, 5], [0, 0, 63], '#EC5FA8', { r: [90, 0, 0] })];
+  const CONTRAST = [P('base', 'box', [56, 30, 8], [0, 0, 4], '#1B2B6B'), P('con', 'cone', [22, 22, 44], [-14, 0, 30], '#F5893A'), P('bola', 'sph', [24, 24, 24], [14, 0, 19], '#5BC0EB'), P('anell', 'torus', [30, 30, 6], [14, 0, 11], '#EC5FA8')];
+  const FLOTA = [P('peu', 'cyl', [40, 40, 8], [0, 0, 4], '#9AA3B5'), P('columna', 'cyl', [14, 14, 30], [0, 0, 23], '#3D7BF4'), P('bola', 'sph', [22, 22, 22], [0, 0, 53], '#F5893A')];
+  const ARC = [P('pota1', 'cyl', [20, 20, 20], [-20, 0, 10], '#2FB36D'), P('pota2', 'cyl', [20, 20, 20], [20, 0, 10], '#2FB36D'), P('biga', 'box', [60, 20, 10], [0, 0, 25], '#F7C531')];
+  const TOTEM = [cub(0, 0, 0, 'a1', '#3D7BF4'), P('a2', 'cyl', [20, 20, 20], [0, 0, 30], '#F7C531'), P('a3', 'pyr', [20, 20, 20], [0, 0, 50], '#E8453C')];
   return {
   t: "L'espai 3D|El espacio 3D", d: 'Mirar en tres dimensions|Mirar en tres dimensiones', color: '#7C5CFF',
   s: [
@@ -29,7 +49,7 @@ COURSE_UNITS[1] = (() => {
         { k: 'quiz', ph: 'recorda', q: "Vols veure el <b>darrere</b> d'una joguina que és a la taula. Què fas?|Quieres ver la <b>parte de atrás</b> de un juguete que está en la mesa. ¿Qué haces?",
           opts: ['La giro o camino al seu voltant|Lo giro o camino a su alrededor', 'Tanco un ull|Cierro un ojo', "M'hi apropo sense moure'm del lloc|Me acerco sin moverme del sitio"], a: 0,
           ex: 'Per veure una cosa per tots els costats l\'has de girar o canviar de lloc. Al taller 3D farem el mateix amb la càmera.|Para ver una cosa por todos los lados tienes que girarla o cambiar de sitio. En el taller 3D haremos lo mismo con la cámara.' },
-        { k: 'story', ph: 'missio', who: 'bit', scene: 'taller', title: 'El Taller de Bit|El Taller de Bit',
+        { k: 'story', ph: 'missio', who: 'bit', scene: 'fab', title: 'El Taller de Bit|El Taller de Bit',
           t: "Benvinguts al meu <b>taller de fabricació digital</b>! Aquesta és la <b>Nuvi</b>, la nostra impressora 3D: construeix objectes de veritat capa a capa. Però abans d'imprimir res, hem d'aprendre a <b>mirar en 3D</b>: com és un objecte per davant, per darrere i per dalt. Som-hi!|¡Bienvenidos a mi <b>taller de fabricación digital</b>! Esta es <b>Nuvi</b>, nuestra impresora 3D: construye objetos de verdad capa a capa. Pero antes de imprimir nada, tenemos que aprender a <b>mirar en 3D</b>: cómo es un objeto por delante, por detrás y por arriba. ¡Vamos!" },
         { k: 'learn', ph: 'descobreix', cards: [
           { k: 'Un objecte 3D|Un objeto 3D', t: 'Tres mides: amplada, fondària i alçada|Tres medidas: anchura, fondo y altura', media: { k: 'model', model: { parts: [P('m', 'box', [40, 30, 20], [0, 0, 10], '#7C5CFF')] } },
@@ -67,7 +87,82 @@ COURSE_UNITS[1] = (() => {
         { k: 'quiz', ph: 'tanca', q: 'Al taller, com veus el darrere d\'un model?|En el taller, ¿cómo ves la parte de atrás de un modelo?', opts: ['Arrossego amb el dit per girar la vista|Arrastro con el dedo para girar la vista', 'Esborro el model i el torno a fer|Borro el modelo y lo vuelvo a hacer', 'No es pot veure|No se puede ver'], a: 0 },
         { k: 'feel', ph: 'tanca' }
       ] },
-    { id: 'm1-2', t: 'Davant, dalt i costat|Delante, arriba y lado' },
+    { id: 'm1-2', t: 'Davant, dalt i costat|Delante, arriba y lado', min: 45, badge: 'm12vistes',
+      learn: ["Una vista és el que veus des d'un lloc: davant (alçat), dalt (planta) i costat (perfil).|Una vista es lo que ves desde un sitio: delante (alzado), arriba (planta) y lado (perfil).",
+        "Cada vista només mostra dues de les tres mides: per conèixer bé un objecte en calen almenys dues.|Cada vista solo muestra dos de las tres medidas: para conocer bien un objeto hacen falta al menos dos.",
+        "La vista de dalt ajuda a col·locar peces a la placa; la de davant i la del costat, a comparar alçades.|La vista de arriba ayuda a colocar piezas en la placa; la de delante y la del lado, a comparar alturas."],
+      steps: [
+        { k: 'quiz', ph: 'recorda', q: "Quina mida d'un objecte va <b>de davant a darrere</b>?|¿Qué medida de un objeto va <b>de delante a detrás</b>?",
+          opts: ['La fondària|El fondo', "L'amplada|La anchura", "L'alçada|La altura"], a: 0,
+          ex: "L'amplada va d'esquerra a dreta, la fondària de davant a darrere i l'alçada de baix a dalt.|La anchura va de izquierda a derecha, el fondo de delante a detrás y la altura de abajo arriba." },
+        { k: 'm3look', ph: 'recorda', q: 'Estem mirant la casa de la Nuvi <b>per darrere</b>. Gira la vista i toca la <b>porta</b>.|Estamos mirando la casa de Nuvi <b>por detrás</b>. Gira la vista y toca la <b>puerta</b>.',
+          model: { parts: CASA }, view: 'back', pick: 'porta', yes: 'Aquí és!|¡Aquí está!', no: 'Aquesta no és la porta. Arrossega per girar la casa fins a veure-la de cara.|Esta no es la puerta. Arrastra para girar la casa hasta verla de cara.',
+          ex: 'La porta és al davant: des del darrere la tapava la casa.|La puerta está delante: desde detrás la tapaba la casa.' },
+        { k: 'story', ph: 'missio', who: 'bit', scene: 'fab', title: 'Un encàrrec dibuixat|Un encargo dibujado',
+          t: "Ha arribat un sobre per a la Nuvi! És d'en <b>Pau, el fuster del barri</b>: vol una <b>estació de tren</b> per a l'aparador de la seva botiga de joguines. Però no ens envia cap foto, sinó <b>tres dibuixos</b>: un de <b>davant</b>, un de <b>dalt</b> i un del <b>costat</b>. Així treballen els enginyers i els arquitectes! Avui aprendrem a llegir-los.|¡Ha llegado un sobre para Nuvi! Es de <b>Pau, el carpintero del barrio</b>: quiere una <b>estación de tren</b> para el escaparate de su tienda de juguetes. Pero no nos envía ninguna foto, sino <b>tres dibujos</b>: uno de <b>delante</b>, uno de <b>arriba</b> y uno del <b>lado</b>. ¡Así trabajan los ingenieros y los arquitectos! Hoy aprenderemos a leerlos." },
+        { k: 'learn', ph: 'descobreix', cards: [
+          { k: 'Les vistes|Las vistas', t: 'Mirar des de tres llocs|Mirar desde tres sitios', anim: 'm12cams',
+            x: "Una <b>vista</b> és com una foto feta des d'un lloc fix. Els dissenyadors en fan servir tres: des de <b>davant</b> (en diuen <b>alçat</b>), des de <b>dalt</b> (la <b>planta</b>) i des del <b>costat</b> (el <b>perfil</b>). Cada vista és un dibuix pla de l'objecte.|Una <b>vista</b> es como una foto hecha desde un sitio fijo. Los diseñadores usan tres: desde <b>delante</b> (lo llaman <b>alzado</b>), desde <b>arriba</b> (la <b>planta</b>) y desde el <b>lado</b> (el <b>perfil</b>). Cada vista es un dibujo plano del objeto.",
+            tip: 'Al taller tens un botó per a cada vista, a dalt de la pantalla 3D.|En el taller tienes un botón para cada vista, arriba de la pantalla 3D.' },
+          { k: 'Alçat|Alzado', t: 'La vista de davant|La vista de delante', media: { k: 'model', model: { parts: ESTACIO }, view: 'front', spin: false },
+            x: "Mires l'objecte <b>de cara</b>, amb els ulls a la seva altura. Hi veus l'<b>amplada</b> i l'<b>alçada</b>, i també la porta de l'estació. Però no saps si és prima o gruixuda: la <b>fondària</b> no es veu.|Miras el objeto <b>de cara</b>, con los ojos a su altura. Ves la <b>anchura</b> y la <b>altura</b>, y también la puerta de la estación. Pero no sabes si es delgada o gruesa: el <b>fondo</b> no se ve.",
+            tip: 'Gira-la una mica amb el dit i torna a la vista de davant amb el botó.|Gírala un poco con el dedo y vuelve a la vista de delante con el botón.' },
+          { k: 'Planta|Planta', t: 'La vista de dalt|La vista de arriba', media: { k: 'model', model: { parts: ESTACIO }, view: 'top', spin: false },
+            x: "Mires l'objecte <b>des de dalt</b>, com un ocell. Hi veus l'<b>amplada</b> i la <b>fondària</b>, però no l'alçada: la torre rodona de l'estació es veu com un <b>cercle</b>.|Miras el objeto <b>desde arriba</b>, como un pájaro. Ves la <b>anchura</b> y el <b>fondo</b>, pero no la altura: la torre redonda de la estación se ve como un <b>círculo</b>.",
+            tip: "Els plànols d'una casa o d'una escola són vistes de dalt.|Los planos de una casa o de una escuela son vistas de arriba." },
+          { k: 'Perfil|Perfil', t: 'La vista del costat|La vista del lado', media: { k: 'model', model: { parts: ESTACIO }, view: 'right', spin: false },
+            x: "Mires l'objecte <b>des del costat</b>. Hi veus la <b>fondària</b> i l'<b>alçada</b>. La porta no hi surt, perquè és al davant, i l'estació sembla més estreta.|Miras el objeto <b>desde el lado</b>. Ves el <b>fondo</b> y la <b>altura</b>. La puerta no sale, porque está delante, y la estación parece más estrecha.",
+            tip: "La vista del costat et diu si un objecte és gruixut o prim.|La vista del lado te dice si un objeto es grueso o delgado." },
+          { k: 'Dues mides|Dos medidas', t: 'Cada vista amaga una mida|Cada vista esconde una medida', anim: 'm12dims',
+            x: "Una vista és plana: només hi caben <b>dues</b> de les tres mides. De davant: amplada i alçada. De dalt: amplada i fondària. Del costat: fondària i alçada. Per saber-les totes tres, en necessites almenys <b>dues</b>.|Una vista es plana: solo caben <b>dos</b> de las tres medidas. De delante: anchura y altura. De arriba: anchura y fondo. Del lado: fondo y altura. Para saber las tres, necesitas al menos <b>dos</b>." },
+          { k: 'Compte!|¡Cuidado!', t: 'Una sola vista pot enganyar|Una sola vista puede engañar', anim: 'm12trick',
+            x: "Un cub i un cilindre de la mateixa mida, vistos <b>de davant</b>, són dos quadrats iguals. Només <b>des de dalt</b> descobreixes que un dels dos és rodó. Per això els plànols sempre porten més d'una vista.|Un cubo y un cilindro del mismo tamaño, vistos <b>de delante</b>, son dos cuadrados iguales. Solo <b>desde arriba</b> descubres que uno de los dos es redondo. Por eso los planos siempre llevan más de una vista.",
+            bad: 'Amb una sola vista ja sé com és un objecte.|Con una sola vista ya sé cómo es un objeto.', good: 'Miro un objecte almenys des de dues vistes abans de decidir com és.|Miro un objeto al menos desde dos vistas antes de decidir cómo es.' }
+        ] },
+        { k: 'unplug', ph: 'mans', ico: '📷', title: 'Fotògrafs de blocs|Fotógrafos de bloques', t: 'Per parelles, amb 6 blocs de construcció (o cubs encaixables), un llibre dret i la fitxa de les tres vistes:|Por parejas, con 6 bloques de construcción (o cubos encajables), un libro de pie y la ficha de las tres vistas:',
+          steps: ["Una persona construeix una figura petita amagada darrere del llibre.|Una persona construye una figura pequeña escondida detrás del libro.",
+            "En dibuixa la vista de davant, la de dalt i la del costat a la quadrícula: cada bloc, un quadret.|Dibuja la vista de delante, la de arriba y la del lado en la cuadrícula: cada bloque, un cuadrito.",
+            "L'altra persona construeix la figura només mirant els dibuixos. Traieu el llibre: és igual?|La otra persona construye la figura solo mirando los dibujos. Quitad el libro: ¿es igual?",
+            'Canvieu els papers. Quina vista us ha ajudat més?|Cambiad los papeles. ¿Qué vista os ha ayudado más?'],
+          tip: 'Si teniu una tauleta, feu tres fotos de debò: ajupits davant de la figura, des de dalt i des del costat.|Si tenéis una tableta, haced tres fotos de verdad: agachados delante de la figura, desde arriba y desde el lado.' },
+        { k: 'm3look', ph: 'prova', q: "Aquesta és l'estació d'en Pau. <b>Quina vista</b> és?|Esta es la estación de Pau. ¿<b>Qué vista</b> es?", model: { parts: ESTACIO }, view: 'right', lock: true,
+          opts: ['Costat (perfil)|Lado (perfil)', 'Davant (alçat)|Delante (alzado)', 'Dalt (planta)|Arriba (planta)'], a: 0,
+          ex: "No es veu la porta i l'estació sembla estreta: la mirem pel costat. La torre queda al mig perquè, des del costat, no es veu que és a la dreta.|No se ve la puerta y la estación parece estrecha: la miramos por el lado. La torre queda en el medio porque, desde el lado, no se ve que está a la derecha." },
+        { k: 'm3look', ph: 'prova', q: 'Toca el botó de la vista de <b>dalt</b>. Quina forma té la torre vista des de dalt?|Toca el botón de la vista de <b>arriba</b>. ¿Qué forma tiene la torre vista desde arriba?', model: { parts: ESTACIO },
+          opts: ['Un cercle|Un círculo', 'Un quadrat|Un cuadrado', 'Un triangle|Un triángulo'], a: 0,
+          ex: "Des de dalt, el cilindre i el con es veuen com cercles: no se'n veu l'alçada.|Desde arriba, el cilindro y el cono se ven como círculos: no se ve su altura." },
+        { k: 'm3look', ph: 'investiga', q: 'Des de davant, aquestes dues peces semblen <b>iguals</b>. Gira la vista i toca la que és <b>rodona</b>.|Desde delante, estas dos piezas parecen <b>iguales</b>. Gira la vista y toca la que es <b>redonda</b>.',
+          model: { parts: BESSONS }, view: 'front', pick: 'rodo', yes: "Ben trobat! És un cilindre.|¡Bien encontrado! Es un cilindro.", no: "Aquesta és el cub. Mira-les des de dalt: la rodona fa un cercle.|Esta es el cubo. Míralas desde arriba: la redonda hace un círculo.",
+          ex: 'De davant, el cub i el cilindre fan el mateix quadrat. De dalt, un és un quadrat i l\'altre un cercle.|De delante, el cubo y el cilindro hacen el mismo cuadrado. De arriba, uno es un cuadrado y el otro un círculo.' },
+        { k: 'move', ph: 'pausa', title: 'La càmera humana|La cámara humana', secs: 30,
+          t: "Ajup-te fins que els ulls quedin a l'altura de la taula: <b>vista de davant</b>! Puja de puntetes i mira avall: <b>vista de dalt</b>! Fes dos passos de costat: <b>vista del costat</b>! Ara més de pressa: davant, dalt, costat!|Agáchate hasta que los ojos queden a la altura de la mesa: ¡<b>vista de delante</b>! Sube de puntillas y mira hacia abajo: ¡<b>vista de arriba</b>! Da dos pasos de lado: ¡<b>vista del lado</b>! Ahora más rápido: ¡delante, arriba, lado!" },
+        { k: 'm3look', ph: 'repte', q: "Quina d'aquestes imatges és la vista de <b>dalt</b> de l'estació?|¿Cuál de estas imágenes es la vista de <b>arriba</b> de la estación?", model: { parts: ESTACIO },
+          opts: [{ model: { parts: ESTACIO }, view: 'top' }, { model: { parts: ESTACIO }, view: 'front' }, { model: { parts: ESTACIO }, view: 'right' }], a: 0,
+          ex: "Des de dalt es veu el rectangle de l'estació i el cercle de la torre, sense cap alçada.|Desde arriba se ve el rectángulo de la estación y el círculo de la torre, sin ninguna altura." },
+        { k: 'm3look', ph: 'repte', q: "En Pau ens envia aquesta <b>vista de dalt</b>. De quin model és?|Pau nos envía esta <b>vista de arriba</b>. ¿De qué modelo es?", model: { parts: VA }, view: 'top', lock: true,
+          opts: [{ model: { parts: VA } }, { model: { parts: VB } }, { model: { parts: VC } }], a: 0,
+          ex: "De dalt es veu un quadrat amb un cercle al mig: la base és una caixa i la peça de sobre, un cilindre.|De arriba se ve un cuadrado con un círculo en el medio: la base es una caja y la pieza de encima, un cilindro." },
+        { k: 'm3build', ph: 'repte', q: "Posa la xemeneia (el cilindre) a sobre del seu <b>fantasma</b>. Truc: posa la <b>vista de dalt</b> i arrossega-la.|Pon la chimenea (el cilindro) encima de su <b>fantasma</b>. Truco: pon la <b>vista de arriba</b> y arrástrala.",
+          start: { parts: [P('a1', 'cyl', [20, 20, 20], [0, 0, 10], '#2FB36D')] }, palette: ['cyl'], snap: 10, target: { parts: [P('g', 'cyl', [20, 20, 20], [40, 30, 10], '#2FB36D')] },
+          checks: [{ k: 'match', target: { parts: [P('g', 'cyl', [20, 20, 20], [40, 30, 10], '#2FB36D')] }, th: 0.9, t: 'El cilindre és dins del fantasma|El cilindro está dentro del fantasma' }, { k: 'onplate' }],
+          hint: "A la vista de dalt, el fantasma és un cercle transparent: arrossega el cilindre fins que hi quedi a sobre, exacte.|En la vista de arriba, el fantasma es un círculo transparente: arrastra el cilindro hasta que quede encima, exacto.",
+          sol: { parts: [P('a1', 'cyl', [20, 20, 20], [40, 30, 10], '#2FB36D')] } },
+        { k: 'm3build', ph: 'repte', q: "L'aparador d'en Pau: posa <b>cada peça</b> a sobre del seu fantasma. Des de dalt ho veuràs millor.|El escaparate de Pau: pon <b>cada pieza</b> encima de su fantasma. Desde arriba lo verás mejor.",
+          start: { parts: [P('a1', 'box', [20, 20, 20], [0, 0, 10], '#F5893A'), P('a2', 'cyl', [20, 20, 20], [30, 0, 10], '#2FB36D'), P('a3', 'cone', [20, 20, 24], [-30, 0, 12], '#EC5FA8')] }, palette: ['box', 'cyl', 'cone'], snap: 10,
+          target: { parts: [PLACA3.box, PLACA3.cyl, PLACA3.cone] }, checks: [{ k: 'match', target: { parts: [PLACA3.box, PLACA3.cyl, PLACA3.cone] }, th: 0.88, t: 'Les tres peces són als seus fantasmes|Las tres piezas están en sus fantasmas' }, { k: 'onplate' }],
+          hint: "De dalt, el quadrat és la caixa, el cercle gran és el cilindre i el cercle amb punta és el con. Arrossega-les una a una.|De arriba, el cuadrado es la caja, el círculo grande es el cilindro y el círculo con punta es el cono. Arrástralas una a una.",
+          sol: { parts: [PLACA3.box, PLACA3.cyl, PLACA3.cone] } },
+        { k: 'm3look', ph: 'repte', extra: true, q: "Quantes peces té aquest model? Des de davant no les veus totes: mira'l també des de dalt.|¿Cuántas piezas tiene este modelo? Desde delante no las ves todas: míralo también desde arriba.", model: { parts: FILA }, view: 'front',
+          opts: ['2|2', '3|3', '4|4'], a: 2, ex: "Hi ha 4 peces: tres cilindres en fila cap al fons (de davant només es veu el vermell) i una caixa verda.|Hay 4 piezas: tres cilindros en fila hacia el fondo (de delante solo se ve el rojo) y una caja verde." },
+        { k: 'm3free', ph: 'crea', q: "<b>Una figura per a en Pau.</b> Fes una figura amb almenys <b>3 peces</b> que es vegi diferent de davant, de dalt i del costat. Mira-la amb els tres botons i tria la teva vista preferida.|<b>Una figura para Pau.</b> Haz una figura con al menos <b>3 piezas</b> que se vea distinta de delante, de arriba y del lado. Mírala con los tres botones y elige tu vista preferida.",
+          name: 'La figura de les tres vistes|La figura de las tres vistas', palette: ['box', 'cyl', 'sph', 'cone', 'pyr', 'star', 'heart'],
+          crit: ['Almenys 3 peces|Al menos 3 piezas', 'Totes toquen la placa|Todas tocan la placa', 'De dalt i de davant es veu diferent|De arriba y de delante se ve distinta', 'Has triat la teva vista preferida|Has elegido tu vista preferida'],
+          checks: [{ k: 'count', min: 3 }, { k: 'onplate' }], sol: { parts: [P('a1', 'box', [30, 20, 20], [0, 0, 10], '#7C5CFF'), P('a2', 'cyl', [20, 20, 30], [35, 0, 15], '#2FB36D'), P('a3', 'cone', [20, 20, 24], [-35, 0, 12], '#EC5FA8')] } },
+        { k: 'quiz', ph: 'tanca', q: 'La vista <b>de dalt</b> també es diu…|La vista <b>de arriba</b> también se llama…', opts: ['Planta|Planta', 'Alçat|Alzado', 'Perfil|Perfil'], a: 0 },
+        { k: 'quiz', ph: 'tanca', q: "Quina vista <b>no</b> et diu l'alçada d'un objecte?|¿Qué vista <b>no</b> te dice la altura de un objeto?", opts: ['La de dalt (planta)|La de arriba (planta)', 'La de davant (alçat)|La de delante (alzado)', 'La del costat (perfil)|La del lado (perfil)'], a: 0,
+          ex: 'Des de dalt, una peça alta i una de baixa poden fer el mateix dibuix.|Desde arriba, una pieza alta y una baja pueden hacer el mismo dibujo.' },
+        { k: 'feel', ph: 'tanca' }
+      ] },
     { id: 'm1-3', t: 'Els eixos x, y, z|Los ejes x, y, z', min: 40,
       learn: ["Les coordenades x, y, z diuen on és una peça: x d'esquerra a dreta, y de davant a darrere i z cap amunt.|Las coordenadas x, y, z dicen dónde está una pieza: x de izquierda a derecha, y de delante a detrás y z hacia arriba.",
         "L'origen (0, 0, 0) és el centre de la placa; els números negatius van a l'altre costat.|El origen (0, 0, 0) es el centro de la placa; los números negativos van al otro lado.",
@@ -76,7 +171,7 @@ COURSE_UNITS[1] = (() => {
         { k: 'quiz', ph: 'recorda', q: 'Amb quina vista veus un model <b>des de dalt</b>, com si fossis un ocell?|¿Con qué vista ves un modelo <b>desde arriba</b>, como si fueras un pájaro?', opts: ['La vista de dalt (planta)|La vista de arriba (planta)', 'La vista de davant (alçat)|La vista de delante (alzado)', 'La vista del costat (perfil)|La vista del lado (perfil)'], a: 0 },
         { k: 'm3look', ph: 'recorda', q: 'Quina vista és aquesta?|¿Qué vista es esta?', model: { parts: CASA }, view: 'front', lock: true, opts: ['Davant (alçat)|Delante (alzado)', 'Dalt (planta)|Arriba (planta)', 'Perspectiva|Perspectiva'], a: 0,
           ex: 'Veiem la porta de cara i la teulada com un triangle: és la vista de davant.|Vemos la puerta de cara y el tejado como un triángulo: es la vista de delante.' },
-        { k: 'story', ph: 'missio', who: 'bit', scene: 'taller', title: 'Números per a la Nuvi|Números para Nuvi',
+        { k: 'story', ph: 'missio', who: 'bit', scene: 'fab', title: 'Números per a la Nuvi|Números para Nuvi',
           t: "Tenim un encàrrec de la biblioteca: una figura amb peces col·locades <b>exactament</b> al seu lloc. Però a la Nuvi no li podem dir «una mica més a la dreta»: només entén <b>números</b>. Avui aprendrem les <b>coordenades x, y, z</b>!|Tenemos un encargo de la biblioteca: una figura con piezas colocadas <b>exactamente</b> en su sitio. Pero a Nuvi no le podemos decir «un poco más a la derecha»: solo entiende <b>números</b>. ¡Hoy aprenderemos las <b>coordenadas x, y, z</b>!" },
         { k: 'learn', ph: 'descobreix', cards: [
           { k: 'Els eixos|Los ejes', t: 'Tres direccions amb nom: x, y, z|Tres direcciones con nombre: x, y, z', anim: 'm3axes',
@@ -123,6 +218,82 @@ COURSE_UNITS[1] = (() => {
         { k: 'quiz', ph: 'tanca', q: 'Una peça a <b>x = 0, y = 0</b> és…|Una pieza en <b>x = 0, y = 0</b> está…', opts: ['Al centre de la placa|En el centro de la placa', "A la cantonada de l'esquerra|En la esquina de la izquierda", 'Fora de la placa|Fuera de la placa'], a: 0 },
         { k: 'feel', ph: 'tanca' }
       ] },
-    { id: 'm1-4', t: 'Projecte: la meva primera escultura|Proyecto: mi primera escultura', proj: true }
+    { id: 'm1-4', t: 'Projecte: la meva primera escultura|Proyecto: mi primera escultura', min: 45, proj: true, badge: 'm14escultura',
+      learn: ["Una escultura es mira de tots els costats: la dissenyo pensant com es veurà de davant, de dalt i del costat.|Una escultura se mira por todos los lados: la diseño pensando cómo se verá de delante, de arriba y del lado.",
+        "Per dissenyar segueixo un procés: idea, esbós, model i revisió (i, si cal, la millora).|Para diseñar sigo un proceso: idea, boceto, modelo y revisión (y, si hace falta, la mejora).",
+        "Per poder-la imprimir, cada peça ha de tocar la placa o una altra peça: res no pot flotar.|Para poder imprimirla, cada pieza tiene que tocar la placa u otra pieza: nada puede flotar."],
+      steps: [
+        { k: 'quiz', ph: 'recorda', q: 'Una peça té <b>z = 0</b> a la pestanya Posició. Què vol dir?|Una pieza tiene <b>z = 0</b> en la pestaña Posición. ¿Qué quiere decir?',
+          opts: ['Que toca la placa|Que toca la placa', 'Que flota per sobre de la placa|Que flota por encima de la placa', 'Que és al centre de la placa|Que está en el centro de la placa'], a: 0,
+          ex: "La z diu a quina alçada és la base de la peça: z = 0 vol dir a la placa. El centre de la placa és x = 0, y = 0.|La z dice a qué altura está la base de la pieza: z = 0 quiere decir en la placa. El centro de la placa es x = 0, y = 0." },
+        { k: 'm3look', ph: 'recorda', q: 'Des d\'on mirem aquesta escultura?|¿Desde dónde miramos esta escultura?', model: { parts: ESCULT }, view: 'front', lock: true,
+          opts: ['Des de davant|Desde delante', 'Des de dalt|Desde arriba', 'Des del costat|Desde el lado'], a: 0,
+          ex: "L'estrella es veu sencera, de cara: és la vista de davant. Des del costat seria una ratlla prima i des de dalt veuríem cercles.|La estrella se ve entera, de cara: es la vista de delante. Desde el lado sería una raya fina y desde arriba veríamos círculos." },
+        { k: 'story', ph: 'missio', who: 'bit', scene: 'fab', title: "L'exposició del taller|La exposición del taller",
+          t: "Grans notícies: la biblioteca del barri ens deixa el seu aparador per fer una <b>exposició d'escultures</b>! Cada escultor/a del taller en dissenyarà una de petita, amb <b>3, 4 o 5 formes</b>. Ha de tocar bé la placa i ha de ser bonica <b>de totes les vistes</b>, perquè la gent la mirarà passant pel davant i pel costat. La Nuvi ja s'escalfa per imprimir-les!|¡Grandes noticias: la biblioteca del barrio nos deja su escaparate para hacer una <b>exposición de esculturas</b>! Cada escultor/a del taller diseñará una pequeña, con <b>3, 4 o 5 formas</b>. Tiene que tocar bien la placa y tiene que ser bonita <b>desde todas las vistas</b>, porque la gente la mirará pasando por delante y por el lado. ¡Nuvi ya se calienta para imprimirlas!" },
+        { k: 'learn', ph: 'descobreix', cards: [
+          { k: 'Escultura|Escultura', t: 'Una forma per mirar de tots els costats|Una forma para mirar por todos los lados', media: { k: 'model', model: { parts: ESCULT } },
+            x: "Un dibuix es mira de cara, però una <b>escultura</b> es mira caminant-hi al voltant. Per això l'escultor/a pensa com es veurà des de <b>davant</b>, des de <b>dalt</b> i des del <b>costat</b>. Aquesta en té 4 formes: un peu, una columna, una bola i una estrella.|Un dibujo se mira de cara, pero una <b>escultura</b> se mira caminando a su alrededor. Por eso el escultor/a piensa cómo se verá desde <b>delante</b>, desde <b>arriba</b> y desde el <b>lado</b>. Esta tiene 4 formas: un pie, una columna, una bola y una estrella.",
+            tip: "Gira-la i busca la vista on l'estrella gairebé desapareix.|Gírala y busca la vista donde la estrella casi desaparece." },
+          { k: 'Equilibri|Equilibrio', t: 'Gran a baix, petit a dalt|Grande abajo, pequeño arriba', anim: 'm14balance',
+            x: "Una escultura amb una <b>base ampla</b> s'aguanta dreta i, a la impressora, s'enganxa millor a la placa. Si poses una peça molt grossa a sobre d'una de molt petita, trontolla i es pot trencar.|Una escultura con una <b>base ancha</b> se aguanta de pie y, en la impresora, se pega mejor a la placa. Si pones una pieza muy grande encima de una muy pequeña, se tambalea y se puede romper.",
+            tip: "Pensa en un arbre: el tronc és fort a baix i les branques s'aprimen a dalt.|Piensa en un árbol: el tronco es fuerte abajo y las ramas se hacen más finas arriba." },
+          { k: 'Contrast|Contraste', t: 'Formes i colors que fan parella|Formas y colores que hacen pareja', media: { k: 'model', model: { parts: CONTRAST } },
+            x: "Una escultura queda més viva si combines formes <b>rodones</b> (esfera, cilindre, anell) amb formes <b>punxegudes</b> (con, piràmide, estrella), peces <b>altes</b> amb peces <b>baixes</b>, i dos o tres colors que facin bona parella.|Una escultura queda más viva si combinas formas <b>redondas</b> (esfera, cilindro, anillo) con formas <b>puntiagudas</b> (cono, pirámide, estrella), piezas <b>altas</b> con piezas <b>bajas</b>, y dos o tres colores que hagan buena pareja." },
+          { k: 'El procés|El proceso', t: 'Idea, esbós, model i revisió|Idea, boceto, modelo y revisión', anim: 'm14steps',
+            x: "Els dissenyadors no posen peces a l'atzar. Primer tenen una <b>idea</b>, en fan un <b>esbós</b> en paper, després construeixen el <b>model</b> a l'ordinador i, al final, el <b>revisen</b> de totes les vistes. Si alguna cosa no els agrada, tornen enrere i el milloren.|Los diseñadores no ponen piezas al azar. Primero tienen una <b>idea</b>, hacen un <b>boceto</b> en papel, después construyen el <b>modelo</b> en el ordenador y, al final, lo <b>revisan</b> desde todas las vistas. Si algo no les gusta, vuelven atrás y lo mejoran." },
+          { k: 'Per imprimir|Para imprimir', t: 'Cada peça ha de tocar alguna cosa|Cada pieza tiene que tocar algo', media: { k: 'model', model: { parts: TOTEM } },
+            x: "La Nuvi construeix de baix a dalt, capa a capa. Cada peça ha de tocar la <b>placa</b> o una <b>altra peça</b>. Si una peça <b>flota</b>, encara que sigui un mil·límetre, la Nuvi no la pot fer: deixaria el plàstic a l'aire. En aquest tòtem, cada peça comença just on acaba la de sota.|Nuvi construye de abajo arriba, capa a capa. Cada pieza tiene que tocar la <b>placa</b> u <b>otra pieza</b>. Si una pieza <b>flota</b>, aunque sea un milímetro, Nuvi no puede hacerla: dejaría el plástico en el aire. En este tótem, cada pieza empieza justo donde acaba la de debajo.",
+            bad: 'Si de davant sembla que toca, ja està bé.|Si de delante parece que toca, ya está bien.', good: 'La giro i la miro de prop: cada peça toca la de sota.|La giro y la miro de cerca: cada pieza toca la de debajo.' }
+        ] },
+        { k: 'seq', ph: 'mans', q: "Posa en ordre com treballa un escultor/a 3D.|Pon en orden cómo trabaja un escultor/a 3D.",
+          items: ["Tinc una idea per a l'escultura|Tengo una idea para la escultura", 'En dibuixo un esbós en paper|Dibujo un boceto en papel', 'La construeixo al taller 3D|La construyo en el taller 3D', 'La reviso des de totes les vistes|La reviso desde todas las vistas', 'La Nuvi la imprimeix|Nuvi la imprime'],
+          ex: "Primer pensar i dibuixar; després construir i revisar. Imprimir és l'últim pas: abans cal estar segurs que tot està bé.|Primero pensar y dibujar; después construir y revisar. Imprimir es el último paso: antes hay que estar seguros de que todo está bien." },
+        { k: 'unplug', ph: 'mans', ico: '✏️', title: "L'esbós de l'escultura|El boceto de la escultura", t: "Amb la fitxa «Esbós de l'escultura», abans de tocar l'ordinador:|Con la ficha «Boceto de la escultura», antes de tocar el ordenador:",
+          steps: ['Pensa una idea: un animal, un monument, una forma inventada…|Piensa una idea: un animal, un monumento, una forma inventada…', 'Dibuixa-la des de davant a la quadrícula (cada quadret són 10 mm).|Dibújala desde delante en la cuadrícula (cada cuadrito son 10 mm).',
+            'Escriu la llista de formes: quina forma, de quin color i on va.|Escribe la lista de formas: qué forma, de qué color y dónde va.', "Ensenya l'esbós a un company: entén què és? T'ajuda a millorar-lo?|Enseña el boceto a un compañero: ¿entiende qué es? ¿Te ayuda a mejorarlo?"],
+          tip: "Un esbós no ha de ser bonic: ha de servir per pensar.|Un boceto no tiene que ser bonito: tiene que servir para pensar." },
+        { k: 'm3look', ph: 'prova', q: "Aquesta escultura té una peça que <b>flota</b>. Gira la vista i toca-la.|Esta escultura tiene una pieza que <b>flota</b>. Gira la vista y tócala.", model: { parts: FLOTA }, pick: 'bola',
+          no: "Aquesta toca alguna cosa. Mira l'escultura des de davant: on hi ha un forat d'aire?|Esta toca algo. Mira la escultura desde delante: ¿dónde hay un hueco de aire?", yes: "L'has trobada!|¡La has encontrado!",
+          ex: 'Entre la bola i la columna hi ha 4 mm d\'aire: la Nuvi no la podria imprimir.|Entre la bola y la columna hay 4 mm de aire: Nuvi no podría imprimirla.' },
+        { k: 'm3fix', ph: 'investiga', q: "Arregla l'escultura: baixa la bola fins que <b>toqui</b> la columna (la columna acaba a 38 mm).|Arregla la escultura: baja la bola hasta que <b>toque</b> la columna (la columna acaba a 38 mm).",
+          start: { parts: FLOTA }, fix: ['bola'], palette: ['sph'],
+          checks: [{ k: 'onplate' }, { k: 'one' }, { k: 'part', t: 'sph', base: 37, tol: 1.5, txt: 'La bola reposa a sobre de la columna|La bola descansa encima de la columna' }],
+          hint: "Toca la bola i, a Posició, posa z = 37: així entra un mil·límetre dins de la columna i queda ben enganxada.|Toca la bola y, en Posición, pon z = 37: así entra un milímetro dentro de la columna y queda bien pegada.",
+          sol: { parts: [FLOTA[0], FLOTA[1], P('bola', 'sph', [22, 22, 22], [0, 0, 48], '#F5893A')] } },
+        { k: 'move', ph: 'pausa', title: 'Escultures vives|Esculturas vivas', secs: 35,
+          t: "Fes una escultura amb el cos i congela't 5 segons: primer una de <b>base ampla</b> (cames obertes, braços amunt), després una de <b>punxeguda</b> (mans juntes ben amunt) i després una de <b>rodona</b> (fes-te una bola). Quina era més estable?|Haz una escultura con el cuerpo y congélate 5 segundos: primero una de <b>base ancha</b> (piernas abiertas, brazos arriba), después una <b>puntiaguda</b> (manos juntas bien arriba) y después una <b>redonda</b> (hazte una bola). ¿Cuál era más estable?" },
+        { k: 'm3build', ph: 'repte', q: 'Comencem un tòtem: posa el <b>con</b> a sobre del cub. Ha d\'anar a <b>x = 0, y = 0, z = 20</b>.|Empezamos un tótem: pon el <b>cono</b> encima del cubo. Tiene que ir en <b>x = 0, y = 0, z = 20</b>.',
+          start: { parts: [cub(0, 0, 0, 'a1', '#3D7BF4'), P('a2', 'cone', [20, 20, 24], [40, 0, 12], '#E8453C')] }, palette: ['cone'],
+          target: { parts: [cub(0, 0, 0, 'g1'), P('g2', 'cone', [20, 20, 24], [0, 0, 32])] },
+          checks: [{ k: 'match', target: { parts: [cub(0, 0, 0, 'g1'), P('g2', 'cone', [20, 20, 24], [0, 0, 32])] }, th: 0.9, t: 'El tòtem és com el fantasma|El tótem es como el fantasma' }, { k: 'one' }, { k: 'onplate' }],
+          hint: 'Toca el con i, a Posició, escriu x = 0 i z = 20 (el cub fa 20 mm d\'alt).|Toca el cono y, en Posición, escribe x = 0 y z = 20 (el cubo mide 20 mm de alto).',
+          sol: { parts: [cub(0, 0, 0, 'a1', '#3D7BF4'), P('a2', 'cone', [20, 20, 24], [0, 0, 32], '#E8453C')] } },
+        { k: 'm3build', ph: 'repte', q: "Un tòtem de <b>tres pisos</b>: el cilindre a sobre del cub (z = 20) i la piràmide a sobre del cilindre (z = 40).|Un tótem de <b>tres pisos</b>: el cilindro encima del cubo (z = 20) y la pirámide encima del cilindro (z = 40).",
+          start: { parts: [cub(0, 0, 0, 'a1', '#3D7BF4'), P('a2', 'cyl', [20, 20, 20], [-40, 0, 10], '#F7C531'), P('a3', 'pyr', [20, 20, 20], [40, 0, 10], '#E8453C')] }, palette: ['cyl', 'pyr'], target: { parts: TOTEM },
+          checks: [{ k: 'match', target: { parts: TOTEM }, th: 0.9, t: 'El tòtem és com el fantasma|El tótem es como el fantasma' }, { k: 'one' }, { k: 'onplate' }],
+          hint: "Cilindre: x = 0, z = 20. Piràmide: x = 0, z = 40. Cada peça comença on acaba la de sota.|Cilindro: x = 0, z = 20. Pirámide: x = 0, z = 40. Cada pieza empieza donde acaba la de debajo.", sol: { parts: TOTEM } },
+        { k: 'm3build', ph: 'repte', q: "Una escultura amb <b>forat</b>: un arc. Posa les columnes a <b>x = −20</b> i <b>x = 20</b>, i la biga a sobre (<b>z = 20</b>).|Una escultura con <b>hueco</b>: un arco. Pon las columnas en <b>x = −20</b> y <b>x = 20</b>, y la viga encima (<b>z = 20</b>).",
+          start: { parts: [P('a1', 'cyl', [20, 20, 20], [-50, 0, 10], '#2FB36D'), P('a2', 'cyl', [20, 20, 20], [50, 0, 10], '#2FB36D'), P('a3', 'box', [60, 20, 10], [0, -40, 5], '#F7C531')] }, palette: ['cyl', 'box'], target: { parts: ARC },
+          checks: [{ k: 'match', target: { parts: ARC }, th: 0.88, t: "L'arc és com el fantasma|El arco es como el fantasma" }, { k: 'one' }, { k: 'onplate' }],
+          hint: 'Columnes: x = −20 i x = 20, amb y = 0. Biga: x = 0, y = 0, z = 20.|Columnas: x = −20 y x = 20, con y = 0. Viga: x = 0, y = 0, z = 20.',
+          sol: { parts: [P('a1', 'cyl', [20, 20, 20], [-20, 0, 10], '#2FB36D'), P('a2', 'cyl', [20, 20, 20], [20, 0, 10], '#2FB36D'), P('a3', 'box', [60, 20, 10], [0, 0, 25], '#F7C531')] } },
+        { k: 'm3look', ph: 'repte', extra: true, q: "En quina vista es veu millor el <b>forat</b> de l'arc?|¿En qué vista se ve mejor el <b>hueco</b> del arco?", model: { parts: ARC },
+          opts: [{ model: { parts: ARC }, view: 'front' }, { model: { parts: ARC }, view: 'top' }, { model: { parts: ARC }, view: 'right' }], a: 0,
+          ex: "De davant es veu el forat entre les columnes. De dalt la biga el tapa i del costat les columnes es veuen una darrere l'altra.|De delante se ve el hueco entre las columnas. De arriba la viga lo tapa y del lado las columnas se ven una detrás de la otra." },
+        { k: 'm3free', ph: 'crea', q: "<b>La teva escultura per a l'exposició.</b> Fes-la amb <b>3, 4 o 5 formes</b>, ben recolzada i bonica de totes les vistes. Fes servir el teu esbós!|<b>Tu escultura para la exposición.</b> Hazla con <b>3, 4 o 5 formas</b>, bien apoyada y bonita desde todas las vistas. ¡Usa tu boceto!",
+          name: 'La meva primera escultura|Mi primera escultura', palette: ['box', 'cyl', 'sph', 'cone', 'pyr', 'wedge', 'torus', 'star', 'heart'],
+          crit: ['Entre 3 i 5 formes|Entre 3 y 5 formas', 'Toca la placa i cap peça no flota|Toca la placa y ninguna pieza flota', 'Almenys 2 colors|Al menos 2 colores', 'Bonica de totes les vistes: tria la teva preferida|Bonita desde todas las vistas: elige tu preferida'],
+          checks: [{ k: 'count', min: 3, max: 5, txt: 'Té entre 3 i 5 formes|Tiene entre 3 y 5 formas' }, { k: 'onplate' }, { k: 'one' }, { k: 'colors', min: 2 }], sol: { parts: ESCULT } },
+        { k: 'review', ph: 'crea', q: "Ara fes de crític/a d'art: revisa la teva escultura.|Ahora haz de crítico/a de arte: revisa tu escultura.",
+          items: [{ q: "L'has mirada des de davant, de dalt i del costat?|¿La has mirado desde delante, desde arriba y desde el lado?", opts: ['Sí, des de les tres|Sí, desde las tres', "Només des d'una o dues|Solo desde una o dos"] },
+            { q: 'Quina és la teva vista preferida?|¿Cuál es tu vista preferida?', opts: ['Davant|Delante', 'Dalt|Arriba', 'Costat|Lado', 'Perspectiva|Perspectiva'] },
+            { q: 'Què hi canviaries si la tornessis a fer?|¿Qué cambiarías si la volvieras a hacer?', opts: ['Les formes|Las formas', 'Els colors|Los colores', 'Les mides|Los tamaños', "Res, m'agrada així|Nada, me gusta así"] }] },
+        { k: 'quiz', ph: 'tanca', q: 'Per què una escultura per imprimir no pot tenir peces que floten?|¿Por qué una escultura para imprimir no puede tener piezas que flotan?',
+          opts: ["Perquè la impressora construeix de baix a dalt i no pot deixar plàstic a l'aire|Porque la impresora construye de abajo arriba y no puede dejar plástico en el aire", 'Perquè no es veurien bé a la foto|Porque no se verían bien en la foto', 'Perquè gasten massa colors|Porque gastan demasiados colores'], a: 0 },
+        { k: 'quiz', ph: 'tanca', q: 'Quin és el <b>primer pas</b> per dissenyar una escultura?|¿Cuál es el <b>primer paso</b> para diseñar una escultura?',
+          opts: ['Pensar una idea i fer-ne un esbós|Pensar una idea y hacer un boceto', 'Imprimir-la directament|Imprimirla directamente', 'Triar el color de la placa|Elegir el color de la placa'], a: 0 },
+        { k: 'feel', ph: 'tanca' }
+      ] }
   ] };
 })();
