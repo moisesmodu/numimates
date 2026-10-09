@@ -105,7 +105,7 @@ function norm(r) {
   o.tech = { c: typeof tt.c === 'string' ? tt.c.replace(/[^a-z]/g, '') : null,
     s: isO(tt.s) ? Object.fromEntries(Object.entries(tt.s).filter(([k, v]) => /^[a-z]\d{1,2}-\d{1,2}$/.test(k) && isO(v)).map(([k, v]) => [k, { done: !!v.done, i: n0(v.i), d: dstr(v.d) || '', n: n0(v.n), f: nn(v.f), ms: n0(v.ms) }])) : {},
     badges: isO(tt.badges) ? Object.fromEntries(Object.entries(tt.badges).filter(([k]) => /^[a-z0-9]{1,12}$/.test(k)).map(([k, v]) => [k, dstr(v) || ''])) : {} };
-  o.tech_port = arr(r.tech_port).filter(isO).map(x => ({ t: typeof x.t === 'string' ? x.t : '', d: dstr(x.d) || '', sid: typeof x.sid === 'string' ? x.sid : '', k: ['stage', 'robo'].includes(x.k) ? x.k : 'bit', lab: x.lab === 1 })).slice(-60);
+  o.tech_port = arr(r.tech_port).filter(isO).map(x => ({ t: typeof x.t === 'string' ? x.t : '', d: dstr(x.d) || '', sid: typeof x.sid === 'string' ? x.sid : '', k: ['stage', 'robo', 'model'].includes(x.k) ? x.k : 'bit', lab: x.lab === 1 || (typeof x.sid === 'string' && x.sid.startsWith('lab:')) })).slice(-60);
   const mm = isO(r.ment) ? r.ment : {};
   o.ment = { days: isO(mm.days) ? Object.keys(mm.days).filter(dstr).length : 0, tests: arr(mm.tests).filter(isO).map(t => ({ d: dstr(t.d) || '', age: nn(t.age) })).filter(t => t.age != null).slice(-12), lvl: isO(mm.lvl) ? mm.lvl : {} };
   return o;
@@ -776,7 +776,7 @@ function techSecHTML(r, sec) {
     ${rec.length ? `<table class="mini-t" style="margin-top:10px"><thead><tr><th>${L('Sessió', 'Sesión')}</th><th>${L('Dia', 'Día')}</th><th>${L('Com li ha anat', 'Cómo le ha ido')}</th></tr></thead><tbody>${rec.map(k => `<tr><td>${esc(techName(k))}${S[k].done ? '' : ` <span class="t3">(${L('a mitges', 'a medias')})</span>`}</td><td>${fdate(S[k].d)}</td><td>${S[k].f != null ? esc(tx(TFEEL[S[k].f] || '')) : '—'}</td></tr>`).join('')}</tbody></table>` : `<p class="t3">${L('Encara no ha començat cap sessió.', 'Aún no ha empezado ninguna sesión.')}</p>`}
     ${hard >= 2 ? `<p class="t2" style="margin-top:8px">${L(`Ha marcat ${hard} sessions com a difícils: potser li convé repetir-ne alguna.`, `Ha marcado ${hard} sesiones como difíciles: quizá le convenga repetir alguna.`)}</p>` : ''}
     ${bd.length ? `<p style="margin-top:10px">${bd.map(([k, d]) => { const b = T && T.badges[k]; return `<span class="chip" title="${fdate(d)}">${b ? b.ico + ' ' + esc(tx(b.n)) : esc(k)}</span>`; }).join(' ')}</p>` : ''}
-    ${r.tech_port.length ? `<details class="more" style="margin-top:10px"><summary>${ico('chevron-right')}${L('Projectes desats', 'Proyectos guardados')} (${r.tech_port.length})</summary><ul class="bullets">${r.tech_port.slice().reverse().map(p => `<li>${p.lab ? `<span class="chip">🧪 ${L('Laboratori', 'Laboratorio')} · ${p.k === 'stage' ? L('Escenari', 'Escenario') : p.k === 'robo' ? 'Maqueen' : 'Bit'}</span> ` : ''}${esc(tx(p.t))} · ${fdate(p.d)}</li>`).join('')}</ul></details>` : ''}`;
+    ${r.tech_port.length ? `<details class="more" style="margin-top:10px"><summary>${ico('chevron-right')}${L('Projectes desats', 'Proyectos guardados')} (${r.tech_port.length})</summary><ul class="bullets">${r.tech_port.slice().reverse().map(p => `<li>${p.lab ? `<span class="chip">🧪 ${L('Laboratori', 'Laboratorio')} · ${p.k === 'stage' ? L('Escenari', 'Escenario') : p.k === 'robo' ? 'Maqueen' : p.k === 'model' ? L('Taller 3D', 'Taller 3D') : 'Bit'}</span> ` : ''}${esc(tx(p.t))} · ${fdate(p.d)}</li>`).join('')}</ul></details>` : ''}`;
   return sec('Numi Tech', body);
 }
 function mentSecHTML(r, sec) {
