@@ -75,3 +75,15 @@ cursos de Tech i crear un curs de disseny 3D en dos nivells. Sense desplegar a p
 3. **Després**: contingut de Tech 3D (2 × 32 sessions amb guies), illes i escenes 3D dels cursos nous (món «taller»),
    tornar a renderitzar illes/escenes amb el renderitzador millorat, Laboratori «Taller 3D», panell i solucionari.
 4. **Després**: gràfics dels jocs de Numi Mates (batalles, cromos, lliga, missions) i de Numi Ment.
+
+### Estat a 9-10-2026 (abans del desplegament)
+- **Fet i provat:** Tech Web (32 sessions); Tech 3D · Nivell 1 (unitats 1, 2, 3, 5 i 7: 20 sessions) i Nivell 2
+  (unitats 1, 2, 3, 5, 6 i 7: 24 sessions) amb guies; renderitzador `tech-model3d.js` i motor `tech-model.js`
+  (editor amb el dit i editor de codi, també al mòbil); Laboratori «Taller 3D» i «Taller 3D amb codi»; gràfics nous del
+  món d'en Bit, de l'arena del Maqueen, de l'escenari de Creadors, de les batalles i cartes de Numi Mates i dels jocs
+  de Numi Ment; món 3D «fab» i totes les illes, escenes, capçaleres i retrats tornats a renderitzar; colors de la
+  teoria de Numi Pro en fosc.
+- **Pendent:** Tech 3D · Nivell 1, unitats 4 (Construir), 6 (Del model a l'objecte) i 8 (El meu disseny); Nivell 2,
+  unitats 4 (Variables i paràmetres) i 8 (Producte final). Surten com a «aviat» a l'app. Els agents de contingut
+  segueixen `scripts/TECH-3D.md` i `scripts/TECH-3D-PROGRAMA.md`.
+
