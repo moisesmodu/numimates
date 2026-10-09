@@ -1,20 +1,25 @@
 /* ---------- Batalles de mates ----------
    Duel 1 contra 1 (cadascú juga quan pot, 48 h) i partida de grup (fins a 10, tots alhora).
-   Tothom rep les mateixes 10 preguntes: surten de la llavor de la batalla.
+   Tothom rep les mateixes preguntes: surten de la llavor de la batalla. Són 10, excepte a les batalles del docent,
+   que en poden tenir de 5 a 30 (st.nq) i, si ell ho tria, arriben a cada alumne en un ordre diferent (st.oseed).
    Guanya qui n'encerta més; si hi ha empat, qui ha trigat menys (només compta el temps de pensar). */
 const BQ = 10, BCAP = 5, DUEL_COST = 10;
 let BT = null;
 function seeded(seed) { let a = seed >>> 0; return () => { a = (a + 0x6D2B79F5) >>> 0; let t = a; t = Math.imul(t ^ t >>> 15, t | 1); t ^= t + Math.imul(t ^ t >>> 7, t | 61); return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
 function withSeed(seed, fn) { const r = Math.random; Math.random = seeded(seed); try { return fn(); } finally { Math.random = r; } }
+const bq = st => (st && st.nq) || BQ;
+// barreja estable (la mateixa cada vegada per al mateix jugador: si recarrega, continua on era)
+function shuffleSeeded(arr, seed) { const r = seeded(seed), a = arr.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(r() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
 function battlePlan(st) {
-  const c = COURSES[st.course], units = st.unit != null && c.units[st.unit] ? [c.units[st.unit]] : c.units;
-  return withSeed(st.seed, () => {
+  const c = COURSES[st.course], units = st.unit != null && c.units[st.unit] ? [c.units[st.unit]] : c.units, n = bq(st);
+  const plan = withSeed(st.seed, () => {
     const pool = [];
     units.forEach(u => u.lessons.slice(0, 10).forEach(l => l.sk.forEach(s => pool.push([s, l.L]))));
-    const plan = []; for (let i = 0; i < BQ; i++) plan.push(pick(pool));
+    const plan = []; for (let i = 0; i < n; i++) plan.push(pick(pool));
     plan.sort((a, b) => a[1] - b[1]);
     const seen = new Set(); return plan.map(([s, lv]) => genEx(s, lv, seen, true));
   });
+  return st.oseed ? shuffleSeeded(plan, st.oseed) : plan;
 }
 const ordN = n => L(n + ({ 1: 'r', 2: 'n', 3: 'r', 4: 't' }[n] || 'è'), n + 'º');
 const secs = ms => (ms / 1000).toFixed(1).replace('.', ',') + ' s';
@@ -39,12 +44,12 @@ const vsBolt = () => `<div class="vsx" aria-hidden="true"><i class="mg-vsring"><
 function raceHTML(st) {
   const me = { name: P.name, companion: P.companion, done: LS ? LS.done : 0, me: true };
   const ps = [me, ...st.players.filter(p => !p.me).sort((a, b) => b.done - a.done).slice(0, 4)];
-  return ps.map(p => `<div class="lane ${p.me ? 'me' : ''}"><span class="ln">${esc(p.me ? L('Tu', 'Tú') : p.name)}</span><span class="track"><i class="fill" style="width:${Math.min(100, p.done / BQ * 100)}%"></i><span class="runner" style="left:${Math.min(100, p.done / BQ * 100)}%">${charSVG(p.companion || 'numi', p.done >= BQ ? 'happy' : 'idle')}</span><i class="flag">🏁</i></span></div>`).join('');
+  return ps.map(p => `<div class="lane ${p.me ? 'me' : ''}"><span class="ln">${esc(p.me ? L('Tu', 'Tú') : p.name)}</span><span class="track"><i class="fill" style="width:${Math.min(100, p.done / bq(st) * 100)}%"></i><span class="runner" style="left:${Math.min(100, p.done / bq(st) * 100)}%">${charSVG(p.companion || 'numi', p.done >= bq(st) ? 'happy' : 'idle')}</span><i class="flag">🏁</i></span></div>`).join('');
 }
 // podi en tres graons (2n · 1r · 3r) amb els personatges a dalt
-function podium3(rank) {
+function podium3(rank, n = BQ) {
   const top = [rank[1], rank[0], rank[2]];
-  return `<div class="pod3">${top.map((p, i) => p ? `<div class="pst s${p.pos} ${p.me ? 'me' : ''}" style="--d:${[.35, .7, .15][i]}s">${p.pos === 1 ? '<i class="mg-spot" aria-hidden="true"></i>' : ''}<div class="pch">${p.pos === 1 ? '<i class="mg-rays" aria-hidden="true"></i><span class="crown">👑</span>' : ''}${charSVG(p.companion || 'numi', 'happy')}</div><b>${esc(p.name)}</b><small>${p.correct}/${BQ} · ${secs(p.ms)}</small><div class="step"><span>${p.pos}</span></div></div>` : '<div class="pst empty"></div>').join('')}</div>`;
+  return `<div class="pod3">${top.map((p, i) => p ? `<div class="pst s${p.pos} ${p.me ? 'me' : ''}" style="--d:${[.35, .7, .15][i]}s">${p.pos === 1 ? '<i class="mg-spot" aria-hidden="true"></i>' : ''}<div class="pch">${p.pos === 1 ? '<i class="mg-rays" aria-hidden="true"></i><span class="crown">👑</span>' : ''}${charSVG(p.companion || 'numi', 'happy')}</div><b>${esc(p.name)}</b><small>${p.correct}/${n} · ${secs(p.ms)}</small><div class="step"><span>${p.pos}</span></div></div>` : '<div class="pst empty"></div>').join('')}</div>`;
 }
 function battleRewardsHTML() {
   return `<div class="brules">
@@ -80,7 +85,7 @@ async function loadClasse() {
     const me = st.players.find(p => p.me);
     if (st.kind === 'classe') return `<button class="tcard party" onclick="joinBattle('${st.code}')"><span class="ti">📺</span><span><b>${esc(st.title || L('Batalla de classe', 'Batalla de clase'))}</b><small>${st.over ? L('Acabada: mira la classificació', 'Terminada: mira la clasificación') : st.status === 'live' ? L('Ja ha començat', 'Ya ha empezado') : L(`${st.players.length} a la sala · entra-hi i espera que la profe comenci`, `${st.players.length} en la sala · entra y espera a que la profe empiece`)}</small></span></button>`;
     const left = me ? (me.finished ? st.triesLeft : (st.tries || 1) - (me.tries || 0)) : st.tries;
-    return `<button class="tcard lliga" onclick="openComp('${st.code}')"><span class="ti">🏆</span><span><b>${esc(st.title || L('Competició', 'Competición'))}</b><small>${st.over ? L('Acabada: mira la classificació', 'Terminada: mira la clasificación') : L(`Fins al ${dayMonth(st.endsAt)} · ${me && me.best ? `el teu millor: ${me.best.correct}/${BQ} · ` : ''}${left} ${left === 1 ? 'intent' : 'intents'}`, `Hasta el ${dayMonth(st.endsAt)} · ${me && me.best ? `tu mejor: ${me.best.correct}/${BQ} · ` : ''}${left} ${left === 1 ? 'intento' : 'intentos'}`)}${me && me.pos ? ` · ${ordN(me.pos)}` : ''}</small></span></button>`;
+    return `<button class="tcard lliga" onclick="openComp('${st.code}')"><span class="ti">🏆</span><span><b>${esc(st.title || L('Competició', 'Competición'))}</b><small>${st.over ? L('Acabada: mira la classificació', 'Terminada: mira la clasificación') : L(`Fins al ${dayMonth(st.endsAt)} · ${me && me.best ? `el teu millor: ${me.best.correct}/${bq(st)} · ` : ''}${left} ${left === 1 ? 'intent' : 'intents'}`, `Hasta el ${dayMonth(st.endsAt)} · ${me && me.best ? `tu mejor: ${me.best.correct}/${bq(st)} · ` : ''}${left} ${left === 1 ? 'intento' : 'intentos'}`)}${me && me.pos ? ` · ${ordN(me.pos)}` : ''}</small></span></button>`;
   }).join('');
 }
 // competició: entrar-hi, jugar, veure la classificació i tornar-hi mentre quedin intents
@@ -95,8 +100,8 @@ function scrComp(st) {
   BT = { st };
   const me = st.players.find(p => p.me), rank = st.players.filter(p => p.pos).sort((a, b) => a.pos - b.pos);
   app.innerHTML = `<div class="scr"><div class="burst ${me && me.pos === 1 ? 'gold' : ''}"></div><div class="bkind">${kindLabel(st)}</div><h1>${esc(st.title || L('Competició', 'Competición'))}</h1>
-    <p class="sub">${st.over ? L('Competició acabada.', 'Competición terminada.') : L(`Oberta fins al ${dayMonth(st.endsAt)}. Compta el teu millor intent.`, `Abierta hasta el ${dayMonth(st.endsAt)}. Cuenta tu mejor intento.`)}${me && me.best ? ` ${L(`El teu millor: <b>${me.best.correct}/${BQ}</b> en ${secs(me.best.ms)}.`, `Tu mejor: <b>${me.best.correct}/${BQ}</b> en ${secs(me.best.ms)}.`)}` : ''}</p>
-    <div class="podium">${rank.slice(0, 10).map(p => `<div class="prow ${p.me ? 'me' : ''} p${p.pos}"><span class="ppos">${['🥇', '🥈', '🥉'][p.pos - 1] || p.pos}</span><span class="pc">${charSVG(p.companion || 'numi', 'happy')}</span><b>${esc(p.name)}</b><span>${p.best.correct}/${BQ} · ${secs(p.best.ms)}</span></div>`).join('')}</div>
+    <p class="sub">${st.over ? L('Competició acabada.', 'Competición terminada.') : L(`Oberta fins al ${dayMonth(st.endsAt)}. Compta el teu millor intent.`, `Abierta hasta el ${dayMonth(st.endsAt)}. Cuenta tu mejor intento.`)}${me && me.best ? ` ${L(`El teu millor: <b>${me.best.correct}/${bq(st)}</b> en ${secs(me.best.ms)}.`, `Tu mejor: <b>${me.best.correct}/${bq(st)}</b> en ${secs(me.best.ms)}.`)}` : ''}</p>
+    <div class="podium">${rank.slice(0, 10).map(p => `<div class="prow ${p.me ? 'me' : ''} p${p.pos}"><span class="ppos">${['🥇', '🥈', '🥉'][p.pos - 1] || p.pos}</span><span class="pc">${charSVG(p.companion || 'numi', 'happy')}</span><b>${esc(p.name)}</b><span>${p.best.correct}/${bq(st)} · ${secs(p.best.ms)}</span></div>`).join('')}</div>
     ${!st.over && st.triesLeft > 0 ? `<button class="btn big" onclick="retryComp()">${L(`TORNA-HI (${st.triesLeft} ${st.triesLeft === 1 ? 'intent' : 'intents'})`, `OTRA VEZ (${st.triesLeft} ${st.triesLeft === 1 ? 'intento' : 'intentos'})`)}</button>` : ''}
     ${st.over && !(P.bclaim || {})[st.code] && me && me.best ? `<button class="btn big gold" onclick="claimBattle()">🎁 ${L('RECULL EL PREMI', 'RECOGE EL PREMIO')}</button>` : ''}
     <button class="btn big ghost" onclick="go('battles')">${L('TORNA A LES BATALLES', 'VOLVER A LAS BATALLAS')}</button></div>`;
@@ -161,7 +166,7 @@ function shareBattle(code, kind) {
 /* Sala d'espera / versus */
 function playerChip(p, st) {
   return `<div class="bpl ${p.me ? 'me' : ''}"><div class="bpc">${charSVG(p.companion || 'numi', p.finished ? 'happy' : 'idle')}</div><b>${esc(p.name)}${p.me ? ` <small>(${L('tu', 'tú')})</small>` : ''}</b>
-    <small>${p.finished ? `✅ ${p.correct}/${BQ}` : p.done ? `${p.done}/${BQ}…` : p.isHost ? '👑' : ''}</small></div>`;
+    <small>${p.finished ? `✅ ${p.correct}/${bq(st)}` : p.done ? `${p.done}/${bq(st)}…` : p.isHost ? '👑' : ''}</small></div>`;
 }
 function scrLobby(st) {
   BT = { st };
@@ -216,8 +221,8 @@ function startBattle() {
   const st = BT.st; closeModal();
   if (st.kind === 'duel') { P.bpaid = P.bpaid || {}; if (!P.bpaid[st.code]) { if (P.gems < DUEL_COST) return noGems(); P.gems -= DUEL_COST; P.bpaid[st.code] = 1; save(); toast(`−${DUEL_COST} 💎`); } }
   // si ja havia començat (ha tancat l'app a mitja partida), continua on era: no es poden repetir les preguntes per millorar el temps
-  const me = st.players.find(p => p.me) || {}, done = Math.min(me.done || 0, BQ);
-  LS = { mode: 'battle', bcode: st.code, kind: st.kind, color: st.kind === 'duel' ? '#C0392B' : '#1F7A8C', seen: new Set(), mix: true, queue: battlePlan(st).slice(done), total: BQ, done, miss: 0, combo: 0, maxCombo: 0, gold: 0, t0: Date.now(), res: [], bOk: me.correct || 0, bMs: me.ms || 0, q0: 0 };
+  const me = st.players.find(p => p.me) || {}, n = bq(st), done = Math.min(me.done || 0, n);
+  LS = { mode: 'battle', bcode: st.code, kind: st.kind, color: st.kind === 'duel' ? '#C0392B' : '#1F7A8C', seen: new Set(), mix: true, queue: battlePlan(st).slice(done), total: n, done, miss: 0, combo: 0, maxCombo: 0, gold: 0, t0: Date.now(), res: [], bOk: me.correct || 0, bMs: me.ms || 0, q0: 0 };
   nextEx();
   const run = async () => { if (!LS || LS.bcode !== st.code) return; try { const n = await bApi('state', { bcode: st.code }); if (!n.error) { BT.st = n; battleStrip(); } } catch (e) { } setTimeout(run, 3000); };
   setTimeout(run, 3000);
@@ -251,7 +256,7 @@ function mgBattleFX(ok) {
   const b = $('#bhok'); if (ok && b && !REDUCED) { b.animate([{ transform: 'scale(1)' }, { transform: 'scale(1.7)', color: '#7CFFB0' }, { transform: 'scale(1)' }], { duration: 520, easing: 'cubic-bezier(.2,1.6,.4,1)' }); floatTxt(b, '+1', 'gain bplus'); }
 }
 async function finishBattle() {
-  const code = LS.bcode, body = { bcode: code, done: BQ, correct: LS.bOk, ms: LS.bMs, finished: true };
+  const code = LS.bcode, body = { bcode: code, done: LS.total, correct: LS.bOk, ms: LS.bMs, finished: true };
   P.stats.games++; LS = null; save();
   let st = null;
   for (let t = 0; t < 3 && !st; t++) { try { const r = await bApi('progress', body); if (!r.error) st = r; } catch (e) { await new Promise(r => setTimeout(r, 1000)); } }
@@ -260,7 +265,7 @@ async function finishBattle() {
 }
 function quitBattle() {
   ask(L('Si surts ara, la batalla compta com a acabada amb el que portes. Segur?', 'Si sales ahora, la batalla cuenta como terminada con lo que llevas. ¿Seguro?'), L('SURT', 'SALIR'), L('CONTINUA', 'CONTINÚA'), async () => {
-    const b = { bcode: LS.bcode, done: BQ, correct: LS.bOk, ms: LS.bMs + (BQ - LS.done) * 30000, finished: true }; LS = null;
+    const b = { bcode: LS.bcode, done: LS.total, correct: LS.bOk, ms: LS.bMs + (LS.total - LS.done) * 30000, finished: true }; LS = null;
     try { await bApi('progress', b); } catch (e) { } go('battles');
   });
 }
@@ -271,7 +276,7 @@ function scrBattleWait(st) {
   BT = { st };
   if (st.over) return scrBattleResult(st);
   const me = st.players.find(p => p.me), key = 'wait' + st.code;
-  app.innerHTML = `<div class="scr arena" data-bk="${key}">${arenaBG()}<div class="rchar big tapme">${meC('think')}</div><h1>${L('Fet!', '¡Hecho!')} <span class="bscore">${me.correct}/${BQ}</span></h1>
+  app.innerHTML = `<div class="scr arena" data-bk="${key}">${arenaBG()}<div class="rchar big tapme">${meC('think')}</div><h1>${L('Fet!', '¡Hecho!')} <span class="bscore">${me.correct}/${bq(st)}</span></h1>
     <p class="sub">${L(`Temps: ${secs(me.ms)}. Esperant la resta de jugadors…`, `Tiempo: ${secs(me.ms)}. Esperando al resto de jugadores…`)}</p>
     <div class="bplayers">${st.players.map(p => playerChip(p, st)).join('')}</div>
     ${st.kind === 'duel' ? `<p class="sub small">${L("Quan el teu rival jugui, veuràs qui ha guanyat a «Les meves batalles».", 'Cuando tu rival juegue, verás quién ha ganado en «Mis batallas».')}</p><button class="btn sm gold" onclick="shareBattle('${st.code}','duel')">📨 ${L('RECORDA-LI EL CODI', 'RECUÉRDALE EL CÓDIGO')}</button>` : ''}
@@ -286,7 +291,7 @@ function scrBattleResult(st) {
     <div class="cheer"><div class="saybubble">${win ? L(`Ho has aconseguit, ${esc(P.name)}!`, `¡Lo has conseguido, ${esc(P.name)}!`) : L('Molt ben jugat! La pròxima és teva.', '¡Muy bien jugado! La próxima es tuya.')}</div><div class="rchar dance tapme">${meC('happy')}</div></div>
     <h1 class="mg-title ${win ? 'win' : ''}">${win ? L('Has guanyat!', '¡Has ganado!') : me.pos ? L(`Has quedat ${ordN(me.pos)}`, `Has quedado ${ordN(me.pos)}`) : L('Batalla acabada', 'Batalla terminada')}</h1>
     ${tie ? `<p class="sub">⏱️ ${L("Empat d'encerts: guanya el més ràpid!", '¡Empate de aciertos: gana el más rápido!')}</p>` : ''}
-    ${rank.length > 1 ? podium3(rank) : ''}<div class="podium">${rank.slice(rank.length > 1 ? 3 : 0).map(p => `<div class="prow ${p.me ? 'me' : ''} p${p.pos}"><span class="ppos">${['🥇', '🥈', '🥉'][p.pos - 1] || p.pos}</span><span class="pc">${charSVG(p.companion || 'numi', 'happy')}</span><b>${esc(p.name)}</b><span class="psc">${p.correct}/${BQ}</span><span class="pt">${secs(p.ms)}</span></div>`).join('')}</div>
+    ${rank.length > 1 ? podium3(rank, bq(st)) : ''}<div class="podium">${rank.slice(rank.length > 1 ? 3 : 0).map(p => `<div class="prow ${p.me ? 'me' : ''} p${p.pos}"><span class="ppos">${['🥇', '🥈', '🥉'][p.pos - 1] || p.pos}</span><span class="pc">${charSVG(p.companion || 'numi', 'happy')}</span><b>${esc(p.name)}</b><span class="psc">${p.correct}/${bq(st)}</span><span class="pt">${secs(p.ms)}</span></div>`).join('')}</div>
     ${claimed ? `<button class="btn big" onclick="go('battles')">${L('CONTINUA', 'CONTINÚA')}</button>` : `<button class="btn big gold" onclick="claimBattle()">🎁 ${L('RECULL EL PREMI', 'RECOGE EL PREMIO')}</button>`}</div>`;
   SFX.win(); if (win) confetti(220);
 }
@@ -299,7 +304,7 @@ function claimBattle() {
   const capped = P.bday.n >= BCAP; P.bday.n++;
   if (win) P.stats.bwins = (P.stats.bwins || 0) + 1;
   const R = { mode: 'battle', win, title: win ? L('Victòria!|¡Victoria!', 'Victòria!|¡Victoria!') : L('Batalla acabada|Batalla terminada', 'Batalla acabada|Batalla terminada'), score: me.correct, xp: 15 + (win ? 10 : 0), gems: 0, chest: 0, perfect: false };
-  R.sub = L(`${me.correct} de ${BQ} encerts en ${secs(me.ms)}`, `${me.correct} de ${BQ} aciertos en ${secs(me.ms)}`);
+  R.sub = L(`${me.correct} de ${bq(st)} encerts en ${secs(me.ms)}`, `${me.correct} de ${bq(st)} aciertos en ${secs(me.ms)}`);
   if (capped) R.sub += L(` · Avui ja has cobrat ${BCAP} premis de batalla: demà més!`, ` · Hoy ya has cobrado ${BCAP} premios de batalla: ¡mañana más!`);
   else {
     // A les batalles només es guanyen diamants

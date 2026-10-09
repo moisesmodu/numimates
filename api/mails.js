@@ -3,6 +3,7 @@ import { sql, ok, body, purge, revokeOf, withdrawConsent } from './_lib.js';
 import { who } from './_auth.js';
 import { STRIPE_KEY, stripe, ensureHookEvents } from './_stripe.js';
 import { informeTables, informesRun, prefOf, ajust, setAjust, reportMail, periodNow, kidRow, reportExtra } from './_informe.js';
+import { infDocRun } from './_infdocent.js';
 // Correus des del panell (només l'administrador): esborranys en HTML, prova, enviament ara o programat.
 // Destinataris: docents, famílies (zona de famílies), contactes del web, clients de Premium (correu de Stripe)
 // i una llista lliure. Cada correu porta l'enllaç de baixa (LSSI art. 21) i la capçalera List-Unsubscribe.
@@ -138,10 +139,13 @@ export default async function handler(req, res) {
     // informes setmanals i mensuals a les famílies (només si l'administrador els ha encès al panell)
     let inf = null;
     if (Date.now() < until) { try { inf = await informesRun(until, items => resendBatch(items.map(i => ({ from: FROM, reply_to: 'hola@numimates.com', ...i })))); } catch (e) { console.error('informes', e.message); } }
+    // informe setmanal als docents (dilluns; només si l'administrador l'ha encès)
+    let infd = null;
+    if (Date.now() < until) { try { infd = await infDocRun(until); } catch (e) { console.error('informe docents', e.message); } }
     // neteja de conservació, un cop cada hora (el cron passa cada 10 minuts)
     let pg = null;
     if (new Date().getUTCMinutes() < 10 && Date.now() < until) { try { pg = await purge(); } catch (e) { console.error('purge', e.message); } try { pg = { ...pg, hook: await ensureHookEvents() }; } catch (e) { console.error('hook', e.message); } }
-    return ok(res, { ok: true, n: due.length, inf, pg });
+    return ok(res, { ok: true, n: due.length, inf, infd, pg });
   }
   const me = await who(req);
   if (!me || !me.admin) { await new Promise(r => setTimeout(r, 600)); return ok(res, { error: 'permís' }, 403); }

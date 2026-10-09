@@ -73,6 +73,8 @@ export default async function handler(req, res) {
 
   if (act === 'join') {
     if (!inside) {
+      // les batalles per a convidats es juguen a /juga, no a l'app
+      if (st0.kind === 'oberta') return ok(res, { error: 'no-existeix' }, 404);
       if (st0.expired || st0.over) return ok(res, { error: 'caducada' }, 410);
       if ((st0.kind === 'classe' || st0.kind === 'comp') && st0.grup !== me.grup_id) return ok(res, { error: 'altra-classe' }, 403);
       if ((st0.kind === 'party' || st0.kind === 'classe') && st0.status !== 'lobby') return ok(res, { error: 'començada' }, 409);
@@ -104,7 +106,7 @@ export default async function handler(req, res) {
   if (act === 'progress') {
     if (st0.kind === 'comp' && st0.over) return ok(res, { error: 'caducada' }, 410);
     if (st0.kind === 'classe' && st0.status !== 'live') return ok(res, { error: 'no-començada' }, 409);
-    const lim = st0.joc ? 300 : 10, done = Math.max(0, Math.min(lim, b.done | 0)), correct = Math.max(0, Math.min(done, b.correct | 0)), ms = Math.max(0, Math.min(3600e3, b.ms | 0)), fin = !!b.finished;
+    const lim = st0.joc ? 300 : st0.nq || 10, done = Math.max(0, Math.min(lim, b.done | 0)), correct = Math.max(0, Math.min(done, b.correct | 0)), ms = Math.max(0, Math.min(3600e3, b.ms | 0)), fin = !!b.finished;
     // Només endavant: no es pot desfer una resposta ni tornar a jugar
     await sql`UPDATE mates.batalla_jug SET done = ${done}, correct = ${correct}, ms = ${ms}, finished = finished OR ${fin}, finished_at = CASE WHEN ${fin} AND NOT finished THEN now() ELSE finished_at END
       WHERE code = ${bcode} AND sid = ${sid} AND NOT finished AND ${done} >= done AND ${correct} >= correct AND ${ms} >= ms`;
