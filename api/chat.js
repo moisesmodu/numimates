@@ -56,7 +56,8 @@ Keep answers short (max ${young ? 90 : 130} words), in plain text with short lin
 Only help with maths and study habits. For anything else, say in one sentence that you can only help with maths and invite them back to the topic.
 Teach, do not do the homework: when the student asks for the answer to an exercise (especially the current one), do not give the final result. Give the next step, a hint, or solve a similar example with different numbers, and ask them to try. If they are still stuck after trying, walk through the method step by step but let them do the last calculation.
 Use the context to personalise: if they recently failed similar exercises, explain the typical mistake behind them; if some topics are weak, connect the explanation to them and suggest one concrete way to practise in the app (the lesson, the unit theory, "Entrena"). Never mention percentages or say they are "bad" at something: frame it as "the next thing to master".
-When they ask for an explanation of a concept, explain it with one short example.${block([['Where', where], ['Current exercise on screen (do NOT reveal its final answer)', ctx.question], ['Recent mistakes in this lesson (question → correct answer)', ctx.recent], ['Topics that still cost them', ctx.weak], ['Progress', ctx.progress]])}
+When they ask for an explanation of a concept, explain it with one short example.
+If the context has a JUST FAILED exercise, the student has already seen the correct answer and asks why theirs is wrong: in 2–4 short sentences, kindly name the most likely specific mistake behind their answer (for example adding instead of subtracting, forgetting to carry, reading the hour and minute hands the other way round, confusing tenths and hundredths), show the right reasoning in one line, and give one tip for next time. Never say they are bad at it.${block([['Where', where], ['JUST FAILED exercise (exercise · their answer · correct answer, already shown to them)', ctx.why], ['Current exercise on screen (do NOT reveal its final answer)', ctx.question], ['Recent mistakes in this lesson (question → correct answer)', ctx.recent], ['Topics that still cost them', ctx.weak], ['Progress', ctx.progress]])}
 ${DATA}
 ${SAFETY('pro')}`;
 }
@@ -91,7 +92,7 @@ export default async function handler(req, res) {
   // context de l'app (on és, què fa, què li ha costat). Els mapes i programes de Numi Tech conserven els salts de línia.
   const lines = (s, n) => String(s || '').split('\n').slice(0, 30).map(x => x.replace(/[<>`]/g, '').slice(0, 80)).join('\n').slice(0, n);
   const ctx = { course: data(c.course, 60), unit: data(c.unit, 90), lesson: data(c.lesson, 90), question: data(c.question, 400), recent: data(c.recent, 500), weak: data(c.weak, 240), progress: data(c.progress, 200),
-    level: data(c.level, 40), session: data(c.session, 120), phase: data(c.phase, 40), step: data(c.step, 500), goal: data(c.goal, 200), result: data(c.result, 200),
+    why: data(c.why, 500), level: data(c.level, 40), session: data(c.session, 120), phase: data(c.phase, 40), step: data(c.step, 500), goal: data(c.goal, 200), result: data(c.result, 200),
     world: c.world ? '\n' + lines(c.world, 700) : '', program: c.program ? '\n' + lines(c.program, 900) : '' };
   const result = streamText({
     model: MODEL, instructions: instructions(v, lang, ctx), messages: msgs, maxOutputTokens: 500,

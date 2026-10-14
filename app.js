@@ -191,6 +191,15 @@ ${famBox(true)}
   setTimeout(() => { const i = $('#famMail'); i && i.focus(); }, 60);
 }
 addEventListener('online', syncNow);
+// sense connexió: l'app continua amb el que ja s'havia carregat (sw.js) i el progrés es puja sol quan torna la xarxa
+addEventListener('offline', () => typeof toast === 'function' && toast(L('Sense connexió. Pots continuar: el progrés es desarà quan tornis a tenir internet.', 'Sin conexión. Puedes seguir: el progreso se guardará cuando vuelvas a tener internet.')));
+addEventListener('online', () => typeof toast === 'function' && toast(L('Connexió recuperada ✓', 'Conexión recuperada ✓')));
+(() => { try {
+  if (!('serviceWorker' in navigator)) return;
+  // ?nosw=1: treu el mode sense connexió d'aquest dispositiu (per si mai donés problemes)
+  if (new URLSearchParams(location.search).has('nosw')) { navigator.serviceWorker.getRegistrations().then(rs => rs.forEach(r => r.unregister())); if (window.caches) caches.keys().then(ks => ks.forEach(k => caches.delete(k))); return; }
+  if (location.protocol === 'https:' || /^(localhost|127\.0\.0\.1)$/.test(location.hostname)) addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(() => { }));
+} catch (e) { } })();
 setInterval(() => { if (P && !P.gone && (P.dirty || !P.code)) syncNow(); syncOthers(); }, 30000);
 // tauleta compartida: els altres perfils del dispositiu amb canvis pendents també es pugen (un cada vegada)
 async function syncOthers() {
@@ -861,7 +870,8 @@ function check() {
     LS.miss++; LS.combo = 0; SFX.ko(); try { (LS.errs = LS.errs || []).push({ q: xatPlain(e.q).slice(0, 140), a: xatPlain(String(ansText(e))).slice(0, 40) }); if (LS.errs.length > 5) LS.errs.shift(); } catch (x) { } $('#lbody').classList.add('shake');
     if (LS.mode === 'battle' || LS.exam) LS.done++;
     else { const n = genEx(e.sk, e.L, LS.seen, LS.mix); n.retry = true; LS.queue.push(n); }
-    fb.innerHTML = `<div class="fbh">✖ ${pick(OOPS())}</div><div class="ans">${L('Resposta correcta', 'Respuesta correcta')}: <b>${ansText(e)}</b></div>${e.ex ? `<div class="exp">💡 ${e.ex}</div>` : ''}`;
+    LS.why = whyData(e);
+    fb.innerHTML = `<div class="fbh">✖ ${pick(OOPS())}</div><div class="ans">${L('Resposta correcta', 'Respuesta correcta')}: <b>${ansText(e)}</b></div>${e.ex ? `<div class="exp">💡 ${e.ex}</div>` : ''}${LS.why ? `<button class="whyb" onclick="whyAsk()">🤔 ${L('Per què m\'he equivocat?', '¿Por qué me he equivocado?')}</button><div class="whyout" id="whyout" aria-live="polite"></div>` : ''}`;
   }
   if (LS.mode === 'battle') battleAnswer(ok);
   $('#buddy').innerHTML = meC(ok ? 'happy' : 'sad');
@@ -869,6 +879,37 @@ function check() {
   chk.textContent = L('CONTINUA', 'CONTINÚA'); chk.disabled = false; chk.className = 'btn check ' + (ok ? 'okb' : 'kob');
   foot.scrollIntoView({ block: 'nearest' });
   saveLocal();
+}
+/* ---------- «Per què m'he equivocat?»: en Numi explica l'error concret de l'alumne (IA, /api/chat) ----------
+   Només on l'assistent és permès: a l'escola si el docent l'ha encès per al grup (apagat per defecte) i, fora de l'escola, amb
+   Premium. Mai a la prova de nivell, a la d'evolució, a la porta del Cavaller ni a les batalles. La resposta bona ja s'ha vist. */
+const whyCan = () => !!(P && P.code && P.id !== 'tmp' && !IS_MENT && !IS_TECH && LS && !LS.exam && !['battle', 'place', 'evo'].includes(LS.mode)
+  && (P.classe ? !!(P.classe.opts && P.classe.opts.xat === true) : isPremium()) && navigator.onLine !== false && typeof xatPlain === 'function');
+function whyData(e) {
+  try {
+    if (!whyCan() || (e.type !== 'choice' && e.type !== 'input')) return null;
+    const mine = e.type === 'choice' ? xatPlain(String(e.opts[LS.sel])) : (inputShow(LS.input) + (e.unit ? ' ' + e.unit : '')).replace(/<[^>]+>/g, '');
+    const ok = xatPlain(String(ansText(e))); if (!mine || !ok || mine === '?') return null;   // opcions amb dibuixos: no hi ha res a explicar en text
+    return { q: (xatPlain(e.q) + (e.vis ? ' ' + xatPlain(e.vis).slice(0, 140) : '')).slice(0, 300), mine: mine.slice(0, 60), ok: ok.slice(0, 60), ex: xatPlain(e.ex || '').slice(0, 160) };
+  } catch (x) { return null; }
+}
+async function whyAsk() {
+  const w = LS && LS.why, out = $('#whyout'), btn = $('.whyb'); if (!w || !out) return;
+  if (btn) btn.remove(); out.innerHTML = '<span class="xm bot typing"><i></i><i></i><i></i></span>';
+  const msg = L(`He respost «${w.mine}» i la resposta bona és «${w.ok}». Per què la meva està malament?`, `He respondido «${w.mine}» y la respuesta correcta es «${w.ok}». ¿Por qué la mía está mal?`);
+  let txt = '';
+  try {
+    const r = await fetch('/api/chat', { method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ code: P.code, variant: VAR.id, lang: LANG, ctx: { ...xatCtx(), why: `${w.q} · ${L("resposta de l'alumne", 'respuesta del alumno')}: ${w.mine} · ${L('resposta bona', 'respuesta correcta')}: ${w.ok}${w.ex ? ' · ' + w.ex : ''}` }, messages: [{ role: 'user', content: msg }] }) });
+    if (!r.ok) {
+      const er = await r.json().catch(() => ({}));
+      out.innerHTML = `<span class="whyw">${er.error === 'xat-off' ? L("El teu docent no ha encès l'assistent per a la classe.", 'Tu docente no ha encendido el asistente para la clase.') : er.error === 'limit' ? L('Avui ja has fet totes les preguntes. Demà en tens més!', 'Hoy ya has hecho todas las preguntas. ¡Mañana tienes más!') : er.error === 'premium' ? L('Això és amb Premium.', 'Esto es con Premium.') : L("Ara no ho puc explicar. Torna-ho a provar d'aquí a una estona.", 'Ahora no lo puedo explicar. Vuelve a probarlo en un rato.')}</span>`;
+      return;
+    }
+    const rd = r.body.getReader(), dec = new TextDecoder();
+    for (;;) { const { done, value } = await rd.read(); if (done || !document.contains(out)) break; txt += dec.decode(value, { stream: true }); out.innerHTML = `<div class="whytx">${xatMd(txt)}</div>`; }
+    if (!txt.trim()) throw new Error('buit');
+  } catch (x) { if (document.contains(out) && !txt.trim()) out.innerHTML = `<span class="whyw">${L("Ara no ho puc explicar. Torna-ho a provar d'aquí a una estona.", 'Ahora no lo puedo explicar. Vuelve a probarlo en un rato.')}</span>`; }
 }
 function quitRun() {
   EN_PEND = false;

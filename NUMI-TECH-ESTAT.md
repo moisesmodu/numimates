@@ -116,3 +116,19 @@ cursos de Tech i crear un curs de disseny 3D en dos nivells. Sense desplegar a p
   sense lliçons, precisió ni porta; el resum mostra sessions fetes, progrés mitjà, projectes, on és cada alumne i com va
   cada unitat. «Sense començar» i «No ha entrat mai» ja compten les sessions de Tech.
 - Arreglat: les instruccions, el QR i l'enllaç d'un grup de Tech portaven a Numi Mates; ara porten a Numi Tech.
+
+## Teclat, sense connexió i «Per què?» (14-10-2026)
+- **Editors de blocs amb el teclat i lector de pantalla** (`tech-a11y.js`, en Bit, Maqueen, escenari de Creadors i Taller 3D
+  amb blocs): tot es fa amb Tab i Retorn; els blocs `div.tbh` passen a ser focusables (`role=button`); amb un bloc triat,
+  Supr/Retrocés l'esborra, Alt+↑/↓ el mou, Esc el deixa anar, ↑/↓ passa d'un element del programa al següent. Quan es torna
+  a pintar el programa, el focus torna on era. Avisos per al lector (`#tlive`). Només actua si l'última interacció és amb
+  el teclat. Contorn de focus visible (tech.css).
+- **Sense connexió** (`sw.js`): xarxa primer i, si falla, el que es va desar l'última vegada (portada, scripts, estils,
+  imatges, sons). Mai desa `/api` ni el panell. Avís «Sense connexió…» i «Tornes a tenir connexió» (app.js). El progrés ja
+  es desava al dispositiu i es puja sol. Per desactivar-lo: obrir amb `?nosw=1` (l'esborra d'aquell navegador) o publicar
+  `sw.js` amb `OFF = true` (l'esborra de tothom). `vercel.json`: `/sw.js` sense memòria cau.
+- **«Per què?» en fallar** (Mates i Pro, exercicis de triar o d'escriure): botó que demana a l'assistent per què la resposta
+  no és bona (2-4 frases, raonament i un truc; `ctx.why` a `api/chat.js`). Només si hi ha assistent: en un grup, si el docent
+  l'ha activat (`opts.xat`); fora de grups, Premium. No surt a exàmens, batalles, prova de nivell ni avaluació.
+- **Dossier per a centres**: pàgina 6 amb «Pensat per a l'escola» (pantalla, la justa · IA amb criteri · per a tothom ·
+  també sense wifi).

@@ -1067,3 +1067,8 @@ span.tb.c-cond{color:#3A2600}
 /* repte extra (⭐): es pot saltar */
 .tskipx{flex:none;height:32px;padding:0 11px;margin-right:6px;border-radius:999px;border:0;font:800 12.5px/1 inherit;color:#7A4B00;background:linear-gradient(#FFE9A8,#FFD66B);box-shadow:inset 0 0 0 1.5px #F4BE3A;cursor:pointer;white-space:nowrap}
 .tskipx:hover{filter:brightness(1.04)}
+
+/* teclat i lector de pantalla als editors de blocs (tech-a11y.js) */
+.tsr{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+.tstage .tbh:focus-visible,.tstage .tslot:focus-visible,.tstage .tpb:focus-visible,.tstage .tbtools button:focus-visible,#m3cd .tbh:focus-visible,#m3cd .tslot:focus-visible{outline:3px solid #2F6BFF;outline-offset:2px;border-radius:10px}
+.tstage .tslot:focus-visible{min-height:28px}

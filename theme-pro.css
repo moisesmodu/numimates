@@ -734,3 +734,5 @@ html[data-v=pro] .testcard.task{background:linear-gradient(135deg,#8A4FB0,#602B7
 html[data-v=pro] .testcard.task.done{background:linear-gradient(135deg,#2FB57A,#1F8F5C);box-shadow:0 5px 0 #146B43}
 html[data-v=pro] .testcard.task .tbar{background:rgba(28,25,39,.28)}
 html[data-v=pro] .testcard.task .tbar>i{background:#FFC93C}
+html[data-v=pro] .whyb{border:2px solid currentColor;background:transparent;color:inherit}
+html[data-v=pro] .whytx{background:rgba(28,25,39,.7);color:var(--ink)}
