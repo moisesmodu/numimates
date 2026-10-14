@@ -261,13 +261,15 @@ export default async function handler(req, res) {
         return ok(res, { ok: true, tema });
       }
       const o = b.opts || {}, opts = { batalles: o.batalles !== false, intercanvis: o.intercanvis !== false, xat: o.xat === true };   // el xat amb IA només si el docent l'encén expressament
-      // Numi Tech: el professor tria els cursos del grup i fins a quina sessió poden arribar (classe guiada).
+      // Numi Tech: el professor tria els cursos del grup i quines sessions hi ha obertes (classe guiada).
       // Si la petició no diu res de l'app (p. ex. només canvia les batalles), es conserva el que ja tenia el grup.
       if (o.app === undefined && !b.app_canvi) { const prev = ((await sql`SELECT opts FROM mates.grups WHERE id = ${+b.id}`)[0] || {}).opts || {}; if (prev.app === 'tech' || prev.app === 'both') { o.app = prev.app; o.tech = o.tech || prev.tech; } }
       if (o.app === 'tech' || o.app === 'both') {
         const t = o.tech || {}, courses = [...new Set((Array.isArray(t.courses) ? t.courses : []).filter(c => TECH_T.courses[c]))];
         const fins = {}; for (const [c, id] of Object.entries(t.fins || {})) if (courses.includes(c) && (id === 'tot' || (TECH_T.s[id] && TECH_T.s[id].c === c))) fins[c] = id;
-        Object.assign(opts, { app: o.app, tech: { courses, fins, casa: t.casa !== false } });
+        // obert[curs] = les sessions obertes, una a una (mana sobre «fins»); només sessions d'aquell curs
+        const obert = {}; for (const [c, ids] of Object.entries(t.obert && typeof t.obert === 'object' ? t.obert : {})) if (courses.includes(c) && Array.isArray(ids)) obert[c] = [...new Set(ids.filter(id => TECH_T.s[id] && TECH_T.s[id].c === c))];
+        Object.assign(opts, { app: o.app, tech: { courses, fins, obert, casa: t.casa !== false } });
       }
       await sql`UPDATE mates.grups SET opts = ${JSON.stringify(opts)}::jsonb WHERE id = ${+b.id}`;
       return ok(res, { ok: true, opts });

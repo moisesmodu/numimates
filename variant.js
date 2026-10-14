@@ -42,7 +42,32 @@ const natOf = p => !p ? 'mates' : p.variant === 'ment' ? 'ment' : p.variant === 
 const varOf = p => HOST_VAR || VAR_TEST || natOf(p);
 // un compte pot tenir apps addicionals (state.apps, les dona l'administrador al panell): també hi pot entrar
 const appMismatch = p => !!(HOST_VAR && p && p.id !== 'tmp' && natOf(p) !== HOST_VAR && !(Array.isArray(p.apps) && p.apps.includes(HOST_VAR))
-  && !(HOST_VAR === 'tech' && p.classe && p.classe.opts && ['tech', 'both'].includes(p.classe.opts.app)));   // un grup amb Numi Tech també hi dona accés
+  && !(HOST_VAR === 'tech' && p.classe && p.classe.opts && ['tech', 'both'].includes(p.classe.opts.app))   // un grup amb Numi Tech també hi dona accés
+  && !(natOf(p) === 'tech' && mathsApp(p) === HOST_VAR));                                                   // i un de Numi Tech pot fer mates (vegeu mathsApp)
+// les mates d'un compte de Numi Tech: Numi Mates (o Numi Pro) si l'administrador l'hi ha donat al panell, o si el seu grup
+// té Numi Mates i Numi Tech; si no, cap (null)
+function mathsApp(p) {
+  if (!p || p.id === 'tmp' || natOf(p) !== 'tech') return null;
+  const a = Array.isArray(p.apps) ? p.apps : [];
+  if (a.includes('mates')) return 'mates'; if (a.includes('pro')) return 'pro';
+  return p.classe && p.classe.opts && p.classe.opts.app === 'both' ? ((p.maxCourse ?? p.course ?? 0) >= ESO_FROM ? 'pro' : 'mates') : null;
+}
+// el botó per anar a les mates amb el mateix compte (a l'inici de Numi Tech) i, un cop a les mates, el de tornar a Numi Tech
+// (només en un compte de Numi Tech: és de Tech cap a Mates, no al revés)
+const appTile = id => `<button class="appsw" onclick="appGo('${id}')"><img src="${appLogo(id)}" alt="${VARIANTS[id].name}"><span>${id === 'tech' ? L('Torna a Numi Tech', 'Vuelve a Numi Tech') : L('Fes mates amb el mateix usuari', 'Haz mates con el mismo usuario')}</span><b aria-hidden="true">›</b></button>`;
+// anar a l'altra app: a la mateixa adreça (proves, mates-numi.vercel.app) es canvia aquí mateix amb el mateix perfil;
+// a les adreces pròpies (app.numimates.com, tech.numimates.com…) cada app té la seva sessió: s'hi entra amb el mateix usuari
+function appGo(id) {
+  const t = VARIANTS[id]; if (!t || !P) return;
+  try { if (typeof save === 'function') save(); } catch (e) { }
+  if (!HOST_VAR) { try { localStorage.setItem('numi_v', id); } catch (e) { } location.href = location.pathname; return; }
+  const u = P.username;
+  modal(`<div class="sheet card cent appgo"><img class="appgol" src="${appLogo(id)}" alt="${t.name}">
+    <p>${u ? L('Hi entres amb el mateix usuari i la mateixa contrasenya.', 'Entras con el mismo usuario y la misma contraseña.') : L('Hi entres amb el codi del teu compte.', 'Entras con el código de tu cuenta.')}</p>
+    <div class="codecard big"><div><small>${u ? L('El teu usuari', 'Tu usuario') : L('El teu codi', 'Tu código')}</small><b>${esc(u || P.code || '')}</b></div></div>
+    <a class="btn big" href="${t.url}/${u ? '?entra=' + encodeURIComponent(u) : ''}">${L('OBRE', 'ABRE')} ${t.name.toUpperCase()}</a>
+    <button class="btn ghost big" onclick="closeModal()">${L('Ara no', 'Ahora no')}</button></div>`, true);
+}
 function setVariant(id) {
   const o = VARIANTS[HOST_VAR || VAR_TEST || id] || VARIANTS.mates;
   if (o === VAR && document.documentElement.dataset.v === o.id) return false;

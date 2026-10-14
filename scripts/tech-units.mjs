@@ -9,7 +9,7 @@ vm.runInContext(fs.readFileSync(R + 'tech-bot.js', 'utf8') + '\n' + src + '\n;gl
 const { TECH, TBADGE } = ctx.__, T = { courses: {}, units: {}, s: {}, badges: {} };
 for (const c of TECH) {
   T.courses[c.id] = { n: c.name, age: c.age, units: c.units.length, total: c.units.reduce((a, u) => a + u.s.length, 0), ready: c.units.reduce((a, u) => a + u.s.filter(s => s.steps && s.steps.length).length, 0) };
-  c.units.forEach((u, ui) => { T.units[`${c.id}:${ui + 1}`] = u.t; u.s.forEach((s, si) => { T.s[s.id] = { t: s.t, c: c.id, u: ui + 1, n: si + 1, proj: !!s.proj, min: s.min || 40 }; }); });
+  c.units.forEach((u, ui) => { T.units[`${c.id}:${ui + 1}`] = u.t; u.s.forEach((s, si) => { T.s[s.id] = { t: s.t, c: c.id, u: ui + 1, n: si + 1, proj: !!s.proj, min: s.min || 40, ...(s.steps && s.steps.length ? {} : { prep: true }) }; }); });
 }
 for (const b of Object.values(TBADGE)) T.badges[b.id] = { n: b.n, ico: b.ico };
 const json = JSON.stringify(T);

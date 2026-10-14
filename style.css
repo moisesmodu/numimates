@@ -367,6 +367,14 @@ body{background:radial-gradient(1200px 500px at 50% -120px,#F1E6FA 0%,rgba(241,2
 .course span:nth-child(2){flex:1}
 .cch{font-size:13px;background:rgba(255,255,255,.2);border-radius:10px;padding:6px 10px;font-weight:900}
 .cgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:8px}
+/* botó per anar a l'altra app amb el mateix compte (Numi Tech ↔ Numi Mates) */
+.appsw{display:flex;align-items:center;gap:12px;width:100%;margin:0 0 12px;padding:12px 14px;border-radius:18px;border:2px solid var(--line);border-bottom-width:4px;background:var(--card);color:var(--ink);text-align:left;font:inherit;cursor:pointer}
+.appsw img{flex:none;height:30px;width:auto;max-width:46%}
+.appsw span{flex:1;min-width:0;font-weight:800;font-size:14.5px;line-height:1.25}
+.appsw b{flex:none;font-size:24px;line-height:1;color:var(--mut)}
+.appsw:active{transform:translateY(2px)}
+.appgo .appgol{display:block;height:46px;margin:4px auto 12px}
+.appgo a.btn{text-decoration:none}
 .cbtn{display:flex;flex-direction:column;align-items:center;gap:2px;border:2px solid var(--line);border-bottom-width:5px;border-radius:18px;padding:12px 6px;background:#fff;transition:transform .08s}
 .cbtn:active{transform:translateY(3px);border-bottom-width:2px}
 .cbtn .cem{font-size:34px}.cbtn b{font-size:20px;color:var(--pri)}.cbtn small{color:var(--mut);font-size:12.5px}

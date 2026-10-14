@@ -15,19 +15,25 @@ const tCourse = id => TECH.find(c => c.id === id) || TECH[0];
 // totes les sessions d'un curs en ordre, amb la unitat
 const tSessions = c => c.units.flatMap((u, ui) => u.s.map((s, si) => ({ ...s, ui, si, u })));
 const tDone = id => !!(TS_().s[id] && TS_().s[id].done);
-// Accés: Numi Tech es fa servir a les extraescolars amb classe guiada. El professor assigna els cursos al grup (i fins a
-// quina sessió poden arribar) des del panell; l'administrador també pot obrir cursos a un alumne concret. No hi ha Premium.
+// Accés: Numi Tech es fa servir a les extraescolars amb classe guiada. El professor assigna els cursos al grup i hi obre i
+// tanca unitats i sessions des del panell; l'administrador també pot obrir cursos a un alumne concret. No hi ha Premium.
 function tAccess() {
-  if (P && P.unlockAll) return { courses: new Set(TECH.map(c => c.id)), fins: {} };
+  if (P && P.unlockAll) return { courses: new Set(TECH.map(c => c.id)), fins: {}, obert: {} };
   const o = P && P.classe && P.classe.opts, t = o && (o.app === 'tech' || o.app === 'both') && o.tech;
-  if (t) return { courses: new Set(t.courses || []), fins: t.fins || {}, classe: P.classe };
-  if (P && Array.isArray(P.tcursos)) return { courses: new Set(P.tcursos), fins: {} };
-  return { courses: new Set(), fins: {} };
+  if (t) return { courses: new Set(t.courses || []), fins: t.fins || {}, obert: t.obert || {}, classe: P.classe };
+  if (P && Array.isArray(P.tcursos)) return { courses: new Set(P.tcursos), fins: {}, obert: {} };
+  return { courses: new Set(), fins: {}, obert: {} };
 }
-// una sessió és oberta si el curs és assignat i no passa d'on el professor ha obert (les ja fetes sempre es poden repetir)
+// una sessió és oberta si el curs és assignat i el professor l'ha oberta (les ja fetes sempre es poden repetir):
+//   obert[curs] = llista de sessions obertes (el que marca el professor al panell, unitat a unitat o sessió a sessió);
+//   si no n'hi ha: fins[curs] = 'tot' (tot obert) o una sessió (obert fins a aquesta; grups d'abans) i, si no hi ha res,
+//   en una classe només la primera unitat (sense classe, p. ex. cursos donats a un alumne, tot obert)
 function tSessOpen(c, s) {
   const a = tAccess(); if (!a.courses.has(c.id)) return false;
-  const f = a.fins[c.id]; if (!f || f === 'tot' || tDone(s.id)) return true;
+  if (tDone(s.id)) return true;
+  if (Array.isArray(a.obert[c.id])) return a.obert[c.id].includes(s.id);
+  const f = a.fins[c.id]; if (f === 'tot') return true;
+  if (!f) return !a.classe || !!(c.units[0] && c.units[0].s.some(x => x.id === s.id));
   const all = tSessions(c), i = all.findIndex(x => x.id === s.id), j = all.findIndex(x => x.id === f);
   return j < 0 || i <= j;
 }
@@ -87,7 +93,8 @@ function tStop() { if (typeof TB !== 'undefined' && TB) { clearTimeout(TB.t); TB
 // un curs es mostra si té alguna sessió feta (Web encara és en preparació i no surt)
 const tVis = c => c.units.some(u => (u.s || []).some(tReady));
 // nivell escolar de cada curs (un curs per cicle): Robot → Creadors i Digital → Robòtica
-const TLVL = { robot: "1r-2n de primària · curs d'entrada|1.º-2.º de primaria · curso de entrada", creadors: '4t-6è de primària · després de Robot|4.º-6.º de primaria · después de Robot', digital: '4t-6è de primària|4.º-6.º de primaria', robotica: "5è-6è de primària · amb el robot Maqueen|5.º-6.º de primaria · con el robot Maqueen", web: "1r-2n d'ESO|1.º-2.º de ESO", model: '4t-6è de primària · disseny i impressió 3D|4.º-6.º de primaria · diseño e impresión 3D', modelpro: "1r-2n d'ESO · disseny 3D amb codi|1.º-2.º de ESO · diseño 3D con código" };
+// què és cada curs, dit a l'alumne: sense edats ni cursos escolars (això és per a les famílies i els docents: panell i dossier)
+const TLVL = { robot: "Curs d'entrada|Curso de entrada", creadors: 'Animacions i videojocs|Animaciones y videojuegos', digital: 'Ciutadania digital|Ciudadanía digital', robotica: 'Amb el robot Maqueen|Con el robot Maqueen', web: 'Pàgines web amb HTML i CSS|Páginas web con HTML y CSS', model: 'Disseny i impressió 3D|Diseño e impresión 3D', modelpro: 'Disseny 3D amb codi|Diseño 3D con código' };
 const TCI3 = { robot: '🤖', robotica: '🚗', creadors: '🎭', digital: '🛡️', web: '🌐', model: '🧊', modelpro: '⚙️' };
 // estrelles dels reptes (la millor de cada repte) i el total
 function tStarSave(n) { if (!TSS || !TSS.id || TSS.demo) return; const t = TS_(); t.st = t.st || {}; const k = TSS.id + ':' + TSS.i; if ((t.st[k] || 0) < n) { t.st[k] = n; save(); } }
@@ -109,7 +116,8 @@ function tSide(c, nxt, mob) {
     <div class="tbrow">${(got.length ? got.slice(-5) : bs.slice(0, 5)).map(b => `<span class="tbi ${t.badges[b.id] ? 'on' : ''}">${b.ico}</span>`).join('')}</div></button>`;
   const lp = t.port[t.port.length - 1], K = lp && lp.kind && TPORT[lp.kind];
   const proj = lp ? `<button class="tbcard tlp" onclick="tPortOpen('${lp.id}')"><div class="tbch"><b>🚀 ${L('El meu últim projecte', 'Mi último proyecto')}</b><span>${t.port.length}</span></div><span class="tlpimg">${K ? K.thumb(lp) : !lp.kind ? (() => { const W = bitWorld(lp.w); return bitSVG(W, bitSim(W), { still: true }); })() : ''}</span><b class="tlpt">${tx(lp.t)}</b></button>` : '';
-  return (mob ? '' : next) + prog + bad + proj;
+  const ma = typeof mathsApp === 'function' && mathsApp(P), sw = ma ? appTile(ma) : '';   // fer mates amb el mateix usuari
+  return (mob ? '' : next) + sw + prog + bad + proj;
 }
 function techHome() {
   if (P.code && navigator.onLine && !techHome.pulled && typeof classeRefresh === 'function') { techHome.pulled = 1; classeRefresh(); }
@@ -119,13 +127,13 @@ function techHome() {
   const c = tCourse(t.c), all = tSessions(c), nxt = all.find(s => tReady(s) && !tDone(s.id) && tSessOpen(c, s));
   const done = all.filter(s => tDone(s.id)).length;
   const prog = nxt && t.s[nxt.id] && t.s[nxt.id].i ? t.s[nxt.id] : null;
-  const hero = `<section class="thero img" style="--hb:url(img/tech/scenes/hero-${c.id}.webp)"><div class="thtxt"><p class="tkick">${tx(c.name)} · ${tx(c.age)}</p>${TLVL[c.id] ? `<span class="tlvl">🎓 ${tx(TLVL[c.id])}</span>` : ''}<h1>${L(`Hola, ${esc(P.name)}!`, `¡Hola, ${esc(P.name)}!`)}</h1>
+  const hero = `<section class="thero img" style="--hb:url(img/tech/scenes/hero-${c.id}.webp)"><div class="thtxt"><p class="tkick">${tx(c.name)}</p>${TLVL[c.id] ? `<span class="tlvl">🎓 ${tx(TLVL[c.id])}</span>` : ''}<h1>${L(`Hola, ${esc(P.name)}!`, `¡Hola, ${esc(P.name)}!`)}</h1>
       ${acc.classe ? `<p class="tcls">${esc(acc.classe.nom)}${acc.classe.centre ? ' · ' + esc(acc.classe.centre) : ''}</p>` : ''}${nxt ? `<p>${L('Següent sessió', 'Siguiente sesión')}: <b>${tx(nxt.t)}</b></p><button class="btn big tgo" onclick="tOpen('${nxt.id}')">${TIC.play} ${prog ? L('Continua la sessió', 'Continúa la sesión') : L('Comença la sessió', 'Empieza la sesión')}</button>`
         : `<p>${L("Has fet totes les sessions obertes. La següent l'obrirà el teu professor a classe.", 'Has hecho todas las sesiones abiertas. La siguiente la abrirá tu profesor en clase.')}</p>`}</div>
     <div class="thbot" aria-hidden="true">${bitChar('happy')}</div>
     <div class="thbar"><i style="width:${Math.round(100 * done / all.length)}%"></i></div><small class="thsm">${L(`${done} de ${all.length} sessions`, `${done} de ${all.length} sesiones`)}</small></section>`;
   const courses = `<div class="tcourses">${TECH.filter(tVis).map(k => { const mine = acc.courses.has(k.id);
-    return `<button class="tcrs ${k.id === c.id ? 'on' : ''} ${mine ? '' : 'lock'}" onclick="${mine ? `TS_().c='${k.id}';save();techHome()` : `tLocked(tCourse('${k.id}'))`}" style="--cc:${k.color}"><span class="tcico">${TCI3[k.id] ? `<span class="tci3">${TCI3[k.id]}</span>` : k.ico}</span><b>${tx(k.short)}</b><small>${mine ? tx(k.age) : `${TIC.lock} ${L('No assignat', 'No asignado')}`}</small></button>`; }).join('')}</div>`;
+    return `<button class="tcrs ${k.id === c.id ? 'on' : ''} ${mine ? '' : 'lock'}" onclick="${mine ? `TS_().c='${k.id}';save();techHome()` : `tLocked(tCourse('${k.id}'))`}" style="--cc:${k.color}"><span class="tcico">${TCI3[k.id] ? `<span class="tci3">${TCI3[k.id]}</span>` : k.ico}</span><b>${tx(k.short)}</b><small>${mine ? (() => { const ks = tSessions(k); return `${ks.filter(s => tDone(s.id)).length}/${ks.length} ${L('sessions', 'sesiones')}`; })() : `${TIC.lock} ${L('No assignat', 'No asignado')}`}</small></button>`; }).join('')}</div>`;
   const units = `<div class="tunits">${c.units.map((u, ui) => tIsland(c, u, ui, nxt)).join('<div class="tbridge" aria-hidden="true"></div>')}</div>`;
   app.innerHTML = tShell('home', courses + `<div class="tside-m">${tSide(c, nxt, true)}</div>` + units, hero, tSide(c, nxt));
 }
@@ -199,7 +207,7 @@ function tIsland(c, u, ui, nxt) {
       ${cur ? `<span class="tnbit3" aria-hidden="true"><img src="img/tech/${c.id === 'robotica' ? 'maqueen-happy' : 'bit-wave'}.webp" alt="" width="64" height="64"></span><span class="tntag">${t.s[s.id] && t.s[s.id].i ? L('Continua', 'Continúa') : L('Comença', 'Empieza')}</span>` : ''}</button>`;
   }).join('');
   const nd = u.s.filter(s => tDone(s.id)).length;
-  return `<section class="tunit2 ${use3 ? 'i3' : ''} ${u.s.some(tReady) ? '' : 'soon'}" style="--uc:${col}"><header class="tuh2"><div class="tuhx"><span class="tuk">${L('Unitat', 'Unidad')} ${ui + 1}</span><h2>${tx(u.t)}</h2><p>${tx(u.d)}</p><span class="tuhr"><span class="tuch ${nd === n ? 'ok' : ''}">${nd === n ? '✓ ' : ''}${nd}/${n} ${L('sessions', 'sesiones')}</span>${u.s.some(x => tReady(x) && tTheoryCards(x).length) && u.s.some(x => tSessOpen(c, x)) ? `<button class="tuth" onclick="tTheory('${c.id}',null,${ui})">📖 ${L('Teoria', 'Teoría')}</button>` : ''}</span></div><span class="tubot ${c.id === 'robotica' ? 'mq' : ''}" aria-hidden="true">${c.id === 'robotica' ? `<img src="img/tech/maqueen-${nd ? 'happy' : 'idle'}.webp" alt="" width="72" height="72">` : bitChar(nd === n ? 'win' : nd ? 'happy' : 'idle')}</span></header>
+  return `<section class="tunit2 ${use3 ? 'i3' : ''} ${u.s.some(tReady) ? '' : 'soon'}" style="--uc:${col}"><header class="tuh2"><div class="tuhx"><span class="tuk">${L('Unitat', 'Unidad')} ${ui + 1}</span><h2>${tx(u.t)}</h2><p>${tx(u.d)}</p><span class="tuhr"><span class="tuch ${nd === n ? 'ok' : ''}">${nd === n ? '✓ ' : ''}${nd}/${n} ${L('sessions', 'sesiones')}</span>${u.s.some(tReady) && !u.s.some(x => tSessOpen(c, x)) ? `<span class="tuch tulk">${TIC.lock} ${L("L'obrirà el professor", 'La abrirá el profesor')}</span>` : ''}${u.s.some(x => tReady(x) && tTheoryCards(x).length) && u.s.some(x => tSessOpen(c, x)) ? `<button class="tuth" onclick="tTheory('${c.id}',null,${ui})">📖 ${L('Teoria', 'Teoría')}</button>` : ''}</span></div><span class="tubot ${c.id === 'robotica' ? 'mq' : ''}" aria-hidden="true">${c.id === 'robotica' ? `<img src="img/tech/maqueen-${nd ? 'happy' : 'idle'}.webp" alt="" width="72" height="72">` : bitChar(nd === n ? 'win' : nd ? 'happy' : 'idle')}</span></header>
     ${use3 ? `<div class="tmap t3"><div class="tmf"><img class="tisl3" src="img/tech/isles/${c.id}-${ui + 1}.webp" alt="" width="900" height="1125" loading="${ui ? 'lazy' : 'eager'}" decoding="async" onload="tSea(this)">${TFX}${nodes}</div></div>` : `<div class="tmap" style="aspect-ratio:${W}/${H}">${svg}${nodes}</div>`}</section>`;
 }
 
@@ -728,7 +736,7 @@ function techCatalog() {
     <p>${acc.classe ? L("Ja ets a la teva classe. Quan el professor t'assigni un curs, el trobaràs aquí.", 'Ya estás en tu clase. Cuando el profesor te asigne un curso, lo encontrarás aquí.') : L('Per començar, entra a la teva classe amb el codi que et dona el professor.', 'Para empezar, entra en tu clase con el código que te da el profesor.')}</p>
     ${acc.classe ? '' : `<button class="btn big tgo" onclick="classeModal()">${L('TINC UN CODI DE CLASSE', 'TENGO UN CÓDIGO DE CLASE')}</button>`}</div>
     <div class="thbot" aria-hidden="true">${bitChar('happy')}</div></section>`;
-  const cards = TECH.map(k => `<button class="tcat" style="--cc:${k.color}" onclick="tLocked(tCourse('${k.id}'))"><span class="tcico">${k.ico}</span><span><b>${tx(k.name)}</b><small>${tx(k.age)}${TLVL[k.id] ? ` · ${tx(TLVL[k.id])}` : ''} · ${k.units.length} ${L('unitats', 'unidades')}</small><em>${tx(k.desc)}</em></span></button>`).join('');
+  const cards = TECH.map(k => `<button class="tcat" style="--cc:${k.color}" onclick="tLocked(tCourse('${k.id}'))"><span class="tcico">${k.ico}</span><span><b>${tx(k.name)}</b><small>${TLVL[k.id] ? `${tx(TLVL[k.id])} · ` : ''}${k.units.length} ${L('unitats', 'unidades')}</small><em>${tx(k.desc)}</em></span></button>`).join('');
   app.innerHTML = tShell('home', `<h2 class="tcath">${L('Els cursos de Numi Tech', 'Los cursos de Numi Tech')}</h2><div class="tcats">${cards}</div>`, hero);
 }
 
@@ -781,6 +789,11 @@ setTimeout(() => {
   if (typeof P !== 'undefined' && P && P.id !== 'tmp' && varOf(P) === 'tech' && VIEW !== 'profiles') go(VIEW && VIEW !== 'onboard' ? VIEW : 'home');
   else if (VIEW === 'onboard' && (HOST_VAR === 'tech' || VAR_TEST === 'tech')) onbTech();
 }, 0);
+// els cursos que van després d'aquest fitxer (tech-c2…c7: Creadors, Web, 3D…) encara es poden estar carregant: quan ja hi
+// són tots, es torna a pintar la pantalla (si no, amb una connexió lenta les sessions sortien «en preparació» fins a canviar de pantalla)
+document.addEventListener('DOMContentLoaded', () => {
+  if (typeof P !== 'undefined' && P && P.id !== 'tmp' && varOf(P) === 'tech' && !appMismatch(P) && ['home', 'projectes', 'badges', 'profile'].includes(VIEW) && !document.querySelector('.modal-bg')) techGo(VIEW);
+});
 
 /* ---------- Arrossegar blocs als editors (en Bit, Maqueen, escenari) ----------
    De la paleta al lloc exacte del programa (es veu on caurà), d'un lloc a l'altre del programa, i a la paleta per esborrar-lo.

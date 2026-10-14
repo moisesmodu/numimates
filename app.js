@@ -124,7 +124,9 @@ async function pull() {
     if (r.consent === 'pending') return;
     if (r.pla && r.pla !== P.pla) { P.pla = r.pla; saveLocal(); if (VIEW === 'home') renderHome(); }
     if ('sub' in r && JSON.stringify(r.sub || null) !== JSON.stringify(P.sub || null)) { P.sub = r.sub || null; saveLocal(); if (VIEW === 'profile') renderProfile(); } if (r.state && r.state.xp > P.xp && !P.resetPending) { mergeIn(r.state); if (VIEW === 'home') renderHome(); }
-    if (r.state && !!r.state.unlockAll !== !!P.unlockAll) { P.unlockAll = !!r.state.unlockAll; saveLocal(); if (VIEW === 'home') renderHome(); } if (r.username && !P.username) { P.username = r.username; saveLocal(); } } catch (e) { }
+    if (r.state && !!r.state.unlockAll !== !!P.unlockAll) { P.unlockAll = !!r.state.unlockAll; saveLocal(); if (VIEW === 'home') renderHome(); } if (r.username && !P.username) { P.username = r.username; saveLocal(); }
+    // apps addicionals que dona l'administrador al panell (p. ex. Numi Mates a un alumne de Numi Tech): les decideix el servidor
+    if (r.state) { const ap = Array.isArray(r.state.apps) ? r.state.apps : []; if (JSON.stringify(ap) !== JSON.stringify(P.apps || [])) { if (ap.length) P.apps = ap; else delete P.apps; saveLocal(); if (VIEW === 'home') go('home'); } } } catch (e) { }
 }
 // Fusiona el progrés de dos dispositius (la tauleta de l'escola i el mòbil de casa) sense perdre res de cap dels dos:
 // estrelles, cartes, medalles, proves i estadístiques es combinen; els comptadors es queden amb el valor més alt.
@@ -359,6 +361,8 @@ function go(v) {
   if ((v === 'battles' || v === 'season') && !isPremium()) { premiumModal(v === 'battles' ? 'batalles' : 'temporada'); v = VIEW && VIEW !== v ? VIEW : 'home'; if (v === VIEW) return; }
   if ((v === 'battles' && classOff('batalles'))) { toast(L("El teu docent ha desactivat les batalles per a la classe.", 'Tu docente ha desactivado las batallas para la clase.')); v = 'train'; }
   VIEW = v; if (v === 'home') { setTimeout(credNudge, 1500); setTimeout(medalCheck, 1200); setTimeout(classeBatCheck, 2200); }
+  // un alumne de Numi Tech que entra per primer cop a les mates: tria el curs que fa i, després, la prova de nivell
+  if ((v === 'home' || v === 'place') && P && P.id !== 'tmp' && natOf(P) === 'tech' && ['mates', 'pro'].includes(varOf(P)) && !P.mstart) return mathsStart();
   // compte creat pel docent amb «prova de nivell»: primer la prova, després la portada
   if ((v === 'home' || v === 'place') && P && P.placeAsk && varOf(P) !== 'ment' && varOf(P) !== 'tech') return placeIntro();
   if (v !== 'onboard') setVariant(varOf(P));
@@ -625,7 +629,7 @@ function renderHome() {
   VIEW = 'home';
   const c = CUR();
   app.innerHTML = shell(`<button class="course" onclick="pickCourse()"><span class="cem">${c.emoji}</span><span><small>${L('Estàs fent', 'Estás haciendo')}</small><b>${tx(c.long)}</b></span><span class="cch">${L('Canvia', 'Cambia')} ▾</span></button>
-    ${famCard()}${taskCards()}${seasonCard()}${IS_PRO && typeof examCard === 'function' ? examCard() : ''}${testCard()}${reviewCard()}${recoBox()}${schoolCard()}${goalCard()}${missionsCard()}${streakCard()}${UNITS_().map(unitHTML).join('')}
+    ${natOf(P) === 'tech' ? appTile('tech') : ''}${famCard()}${taskCards()}${seasonCard()}${IS_PRO && typeof examCard === 'function' ? examCard() : ''}${testCard()}${reviewCard()}${recoBox()}${schoolCard()}${goalCard()}${missionsCard()}${streakCard()}${UNITS_().map(unitHTML).join('')}
     <div class="theend">${P.course < COURSES.length - 1 ? L(`Quan acabis ${tx(c.long)}, t'espera <b>${tx(COURSES[P.course + 1].long)}</b>! 🚀`, `Cuando acabes ${tx(c.long)}, ¡te espera <b>${tx(COURSES[P.course + 1].long)}</b>! 🚀`) : L('Has arribat a l\'últim nivell! 🎓', '¡Has llegado al último nivel! 🎓')}</div>`, 'home');
   revealNodes(); showGain();
   if (JUST_OPEN) { const t = $('.trail.fresh'); if (t) setTimeout(() => t.scrollIntoView({ block: 'center', behavior: 'smooth' }), 80); JUST_OPEN = null; return; }
@@ -1521,6 +1525,11 @@ async function classeJoin() {
     P.classe = r.grup; save(); closeModal(); SFX.win(); toast(L(`Ja ets a ${esc(r.grup.nom)}!`, `¡Ya estás en ${esc(r.grup.nom)}!`)); IS_TECH ? go(VIEW === 'profile' ? 'profile' : 'home') : renderProfile();
   } catch (e) { $('#aerr').textContent = ERR(); }
 }
+// ve del botó de l'altra app (?entra=usuari): s'obre «Entra al teu compte» amb l'usuari ja escrit, si no és el perfil d'ara
+(() => { try { const q = new URLSearchParams(location.search).get('entra'); if (q && /^[a-z0-9._-]{3,20}$/.test(q)) sessionStorage.setItem('numi-entra', q); if (q) { const sp = new URLSearchParams(location.search); sp.delete('entra'); history.replaceState(null, '', location.pathname + (sp.toString() ? '?' + sp : '')); } } catch (e) { } })();
+setTimeout(() => { let u = null; try { u = sessionStorage.getItem('numi-entra'); sessionStorage.removeItem('numi-entra'); } catch (e) { }
+  if (!u || (P && P.id !== 'tmp' && P.username === u) || $('.modal-bg')) return;
+  loginModal(); const i = $('#lu'); if (i) { i.value = u; const p = $('#lp'); p && p.focus(); } }, 700);
 // enllaç o QR del docent (?classe=AULA-XXXX): obre el formulari amb el codi ja escrit quan l'alumne ja té compte
 (() => { try { const q = new URLSearchParams(location.search).get('classe'); if (q && /^AULA-[A-Z0-9]{4}$/i.test(q)) sessionStorage.setItem('numi-classe', q.toUpperCase()); if (q) history.replaceState(null, '', location.pathname); } catch (e) { } })();
 function classeLink() {
@@ -1814,6 +1823,15 @@ function placeIntro() {
     <div class="bubble big">${L(`Hola, <b>${esc(P.name)}</b>! Abans de començar farem una <b>prova de nivell</b> curta (uns 3 minuts) per saber per on començar. Si alguna cosa no la saps, no passa res!`, `¡Hola, <b>${esc(P.name)}</b>! Antes de empezar haremos una <b>prueba de nivel</b> corta (unos 3 minutos) para saber por dónde empezar. Si algo no lo sabes, ¡no pasa nada!`)}</div>
     <button class="btn big" onclick="startPlacementMe()">${L('COMENÇA', 'EMPIEZA')}</button></div>`;
 }
+// primer cop a les mates d'un compte de Numi Tech: el curs que fa a l'escola (d'aquí parteix la prova de nivell)
+function mathsStart() {
+  VIEW = 'place'; setVariant(varOf(P));
+  app.innerHTML = `<div class="page solo onb"><img class="onb-logo" src="${VAR.logo}" alt="${VAR.name}"><div class="onb-char tapme">${charSVG('numi', 'happy')}</div>
+    <div class="bubble big">${L(`Hola, <b>${esc(P.name)}</b>! Aquí faràs mates amb el mateix usuari de Numi Tech. <b>Quin curs fas a l'escola?</b>`, `¡Hola, <b>${esc(P.name)}</b>! Aquí harás mates con el mismo usuario de Numi Tech. <b>¿Qué curso haces en el cole?</b>`)}</div>
+    <div class="cgrid">${VAR.courses.map(i => `<button class="cbtn" onclick="mathsStartGo(${i})"><span class="cem">${COURSES[i].emoji}</span><b>${tx(COURSES[i].grade || COURSES[i].long)}</b></button>`).join('')}</div>
+    <button class="link" onclick="appGo('tech')">${L('Torna a Numi Tech', 'Vuelve a Numi Tech')}</button></div>`;
+}
+function mathsStartGo(i) { P.course = i; P.baseCourse = i; P.maxCourse = Math.max(P.maxCourse | 0, i); P.mstart = today(); P.placeAsk = true; save(); go('home'); }
 function startPlacementMe() { ONB = { course: Math.min(COURSES.length - 1, Math.max(0, P.course | 0)), name: P.name, variant: varOf(P), me: P }; startPlacement(); }
 function startPlacement() {
   const ci = ONB.course, c = COURSES[ci], meta = [];

@@ -87,3 +87,18 @@ cursos de Tech i crear un curs de disseny 3D en dos nivells. Sense desplegar a p
   unitats 4 (Variables i paràmetres) i 8 (Producte final). Surten com a «aviat» a l'app. Els agents de contingut
   segueixen `scripts/TECH-3D.md` i `scripts/TECH-3D-PROGRAMA.md`.
 
+
+## Accés i control del professor (14-10-2026)
+- **Edats**: l'alumne ja no veu edats ni cursos escolars dels cursos de Tech (inici, xips i catàleg); `TLVL` diu què és el
+  curs («Animacions i videojocs»…). Les edats continuen al panell, a la presentació i al dossier.
+- **Unitats i sessions obertes**: `opts.tech.obert[curs]` = llista de sessions obertes (la valida `api/profe.js`). Al panell,
+  a la fitxa del grup, «Unitats i sessions obertes»: obrir la sessió següent, una unitat sencera, una sessió, tot o res.
+  Sense res marcat, en una classe només hi ha oberta la **unitat 1** (abans era tot obert); «Obre-ho tot» ho obre tot.
+  `fins` (obert fins a una sessió) es manté per als grups d'abans. Les sessions fetes sempre es poden repetir.
+- **De Tech a Mates amb el mateix usuari** (només en aquest sentit): un compte de Tech pot fer mates si l'administrador li
+  marca «Pot entrar també a: Numi Mates» o si el grup és «Numi Mates i Numi Tech» (`mathsApp` a variant.js). A l'inici de
+  Tech surt el botó «Fes mates amb el mateix usuari»; el primer cop tria el curs que fa i fa la prova de nivell; a Mates hi
+  ha «Torna a Numi Tech». A la mateixa adreça (vercel.app) es canvia aquí mateix; a les adreces pròpies obre l'altra app
+  amb l'usuari ja escrit (`?entra=usuari`). Els alumnes de Mates no veuen cap botó cap a Tech.
+- Arreglat: amb connexió lenta, els cursos que es carreguen després de tech.js (Creadors, Web, 3D…) sortien amb les
+  sessions «en preparació» fins a canviar de pantalla; ara es torna a pintar en acabar de carregar.
