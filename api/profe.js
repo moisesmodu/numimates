@@ -1,6 +1,10 @@
 import { sql, ok, body, cleanCode, validPass, hashPass, dropToks, cleanUser, validUser, newStudentCode, eraseStudent, sealTmp, openTmp } from './_lib.js';
 let tmpCol = false;
 const ensureTmp = async () => { if (!tmpCol) { await sql`ALTER TABLE mates.docents ADD COLUMN IF NOT EXISTS pass_tmp text`; tmpCol = true; } };
+// contrasenya d'un alumne posada pel docent (en donar-lo d'alta o en canviar-la): es desa xifrada (sealTmp) perquè el docent
+// la pugui tornar a veure i imprimir les targetes d'accés; si l'alumne se'n posa una de pròpia, s'esborra (api/account.js)
+let vistaCol = false;
+const ensureVista = async () => { if (!vistaCol) { await sql`ALTER TABLE mates.alumnes ADD COLUMN IF NOT EXISTS pass_vista text`; vistaCol = true; } };
 import { who, groupsOf } from './_auth.js';
 import { STRIPE_KEY, stripe, stripeMode, setCancel, setupStripe } from './_stripe.js';
 import { batTables, batState, convTables, BWORDS, MEDALS, LIVE_KINDS, NQ } from './_batalla.js';
@@ -29,6 +33,7 @@ export default async function handler(req, res) {
     // --- alta d'alumnes en bloc dins d'un grup (admin o docent del grup): nom, usuari i contrasenya ---
     if (b.action === 'alta') {
       const gid = +b.grup; if (!me.admin && !gids.includes(gid)) return ok(res, { error: 'permís' }, 403);
+      await ensureVista();
       const g = (await sql`SELECT id, curs FROM mates.grups WHERE id = ${gid} AND actiu`)[0]; if (!g) return ok(res, { error: 'grup' }, 404);
       const cc = Number.isInteger(+b.curs) && +b.curs >= 0 && +b.curs <= 9 ? +b.curs : (g.curs ?? 3), out = [];
       for (const r of (Array.isArray(b.rows) ? b.rows : []).slice(0, 60)) {
@@ -43,14 +48,22 @@ export default async function handler(req, res) {
         for (let i = 0; i < 8 && !code; i++) {
           const c = newStudentCode(), st = { name, lang, code: c, username: user, course: cc, baseCourse: cc, maxCourse: cc, holdReg: false, unlockAll: false, ...(b.prova && !tech ? { placeAsk: true } : {}),
             ...(tech ? { variant: 'tech', tech: { c: (gt.opts.tech && gt.opts.tech.courses && gt.opts.tech.courses[0]) || 'robot', s: {}, port: [], badges: {} } } : {}) };
-          const q = await sql`INSERT INTO mates.alumnes (code, name, course, survey, state, xp, streak, best, last_day, lessons, answers, correct, username, pass_hash, grup_id, pla)
-            VALUES (${c}, ${name}, ${cc}, ${JSON.stringify({ curs: 'alta del docent', date: new Date().toISOString().slice(0, 10) })}, ${JSON.stringify(st)}, 0, 0, 0, NULL, 0, 0, 0, ${user}, ${hash}, ${gid}, 'escola')
+          const q = await sql`INSERT INTO mates.alumnes (code, name, course, survey, state, xp, streak, best, last_day, lessons, answers, correct, username, pass_hash, pass_vista, grup_id, pla)
+            VALUES (${c}, ${name}, ${cc}, ${JSON.stringify({ curs: 'alta del docent', date: new Date().toISOString().slice(0, 10) })}, ${JSON.stringify(st)}, 0, 0, 0, NULL, 0, 0, 0, ${user}, ${hash}, ${sealTmp(pass)}, ${gid}, 'escola')
             ON CONFLICT DO NOTHING RETURNING code`;
           if (q.length) code = c;
         }
         out.push(code ? { name, username: user, code, ok: true } : { name, username: user, error: 'codi' });
       }
       return ok(res, { ok: true, rows: out });
+    }
+    // --- usuaris i contrasenyes dels alumnes (fitxa, llista i targetes d'accés): només dels alumnes que veu el docent;
+    //     la contrasenya només si l'ha posada el docent i l'alumne no l'ha canviada (si no, null) ---
+    if (b.action === 'passos') {
+      await ensureVista();
+      const cs = [...new Set((Array.isArray(b.codes) ? b.codes : []).map(cleanCode).filter(Boolean))].slice(0, 300);
+      const q = await sql`SELECT code, username, pass_vista FROM mates.alumnes WHERE code = ANY(${cs}) AND active AND (${!!me.admin} OR grup_id = ANY(${gids}))`;
+      return ok(res, { ok: true, rows: q.map(r => ({ code: r.code, username: r.username, password: r.pass_vista ? openTmp(r.pass_vista) : null })) });
     }
     // --- batalles del docent: en directe per a la classe (les projecta i les fa començar) i competicions amb data final ---
     if (['bat_new', 'bat_state', 'bat_start', 'bat_end', 'bat_list', 'bat_kick', 'medal_give', 'medal_del', 'alumne_bat'].includes(b.action)) {
@@ -224,7 +237,8 @@ export default async function handler(req, res) {
       }
       if (b.action === 'setpass') {
         if (!validPass(b.password)) return ok(res, { error: 'contrasenya-format' }, 400);
-        const r = await sql`UPDATE mates.alumnes SET pass_hash = ${hashPass(b.password)} WHERE code = ${code} AND username IS NOT NULL RETURNING code`; if (r.length) await dropToks(code);
+        await ensureVista();
+        const r = await sql`UPDATE mates.alumnes SET pass_hash = ${hashPass(b.password)}, pass_vista = ${sealTmp(b.password)} WHERE code = ${code} AND username IS NOT NULL RETURNING code`; if (r.length) await dropToks(code);
         return ok(res, r.length ? { ok: true } : { error: 'sense usuari' }, r.length ? 200 : 404);
       }
       if (b.action === 'unlock') { await sql`UPDATE mates.alumnes SET state = jsonb_set(state, '{unlockAll}', to_jsonb(${!!b.value}::boolean)) WHERE code = ${code}`; return ok(res, { ok: true }); }

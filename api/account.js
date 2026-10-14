@@ -37,6 +37,8 @@ export default async function handler(req, res) {
   const taken = await sql`SELECT code FROM mates.alumnes WHERE username = ${user}`;
   if (taken.length && taken[0].code !== code) return ok(res, { error: 'usuari-ocupat' }, 409);
   await sql`UPDATE mates.alumnes SET username = ${user}, pass_hash = ${hashPass(b.password)}, state = jsonb_set(state, '{username}', to_jsonb(${user}::text)) WHERE code = ${code} AND active`;
+  // la contrasenya ara és de l'alumne: el docent ja no la veu (la que havia posat ell, si n'hi havia, s'esborra)
+  try { await sql`UPDATE mates.alumnes SET pass_vista = NULL WHERE code = ${code}`; } catch (e) { /* la columna la crea el panell */ }
   // contrasenya nova: es tanquen els altres dispositius i aquest rep la seva clau
   await dropToks(code); await issueTok(res, code);
   return ok(res, { ok: true, username: user });

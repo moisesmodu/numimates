@@ -103,3 +103,15 @@ cursos de Tech i crear un curs de disseny 3D en dos nivells. Sense desplegar a p
   amb l'usuari ja escrit (`?entra=usuari`). Els alumnes de Mates no veuen cap botó cap a Tech.
 - Arreglat: amb connexió lenta, els cursos que es carreguen després de tech.js (Creadors, Web, 3D…) sortien amb les
   sessions «en preparació» fins a canviar de pantalla; ara es torna a pintar en acabar de carregar.
+
+## Panell del professorat: alumnes, usuaris i contrasenyes (14-10-2026)
+- **Usuari i contrasenya a la llista d'alumnes** (i a la fitxa): la contrasenya es demana al servidor quan es vol veure
+  (ull a la fila, «Mostra les contrasenyes» per a tota la llista). Es desa xifrada (`mates.alumnes.pass_vista`, `sealTmp`)
+  només quan la posa el docent (alta o «Canvia la contrasenya», que ara en proposa una de fàcil); si l'alumne se'n posa una
+  de pròpia (`api/account.js`) s'esborra. Les d'abans d'aquest canvi no es poden veure: el panell diu «canvia-la».
+  Acció `passos` (api/profe.js): només alumnes dels grups del docent (l'admin, tots).
+- **Targetes d'accés** quan es vulgui: de tot el grup (fitxa del grup), de la llista, de la selecció o d'un alumne.
+- **Grups de Numi Tech**: la llista mostra curs, progrés (sessions fetes) i on és cada alumne (sessió a mitges o la següent),
+  sense lliçons, precisió ni porta; el resum mostra sessions fetes, progrés mitjà, projectes, on és cada alumne i com va
+  cada unitat. «Sense començar» i «No ha entrat mai» ja compten les sessions de Tech.
+- Arreglat: les instruccions, el QR i l'enllaç d'un grup de Tech portaven a Numi Mates; ara porten a Numi Tech.
