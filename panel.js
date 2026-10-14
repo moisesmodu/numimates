@@ -716,6 +716,8 @@ function drawTable() {
       <td class="r c-menu"><button class="ib sm rowmenu" aria-label="${L('Accions', 'Acciones')}" onclick="rowMenu(event,${js(r.code)})">${ico('ellipsis')}</button></td></tr>`; }).join('') || `<tr><td colspan="12">${emptyState('search', L('Cap resultat', 'Ningún resultado'), L('Prova amb un altre filtre o una altra cerca.', 'Prueba con otro filtro u otra búsqueda.'))}</td></tr>`}
     </tbody></table></div>
     ${R.length > AF.n ? `<div class="more-rows"><button class="btn" onclick="AF.n+=PAGE*2;drawTable()">${L(`Mostra'n més (queden ${R.length - AF.n})`, `Mostrar más (quedan ${R.length - AF.n})`)}</button></div>` : ''}`;
+  const old = PASS_ON ? R.filter(r => r.username && r.code in PASS && !PASS[r.code]) : [];
+  if (old.length) $('#tbl').insertAdjacentHTML('afterbegin', `<div class="pwbanner">${ico('key-round')}<span>${L(`${old.length} ${old.length === 1 ? 'alumne té' : 'alumnes tenen'} una contrasenya d'abans que encara no es pot veure: sortirà quan tornin a entrar amb el seu usuari. Si no se'n recorden, posa'ls-en una de nova ara.`, `${old.length} ${old.length === 1 ? 'alumno tiene' : 'alumnos tienen'} una contraseña de antes que aún no se puede ver: saldrá cuando vuelvan a entrar con su usuario. Si no se acuerdan, ponles una nueva ahora.`)}</span><button class="btn sm primary" onclick='pwModal(${js(old.map(r => r.code))})'>${L(`Posa'ls-en de noves (${old.length})`, `Ponerles nuevas (${old.length})`)}</button></div>`);
   const hc = $('#tbl thead input'); if (hc) hc.indeterminate = nSel > 0 && nSel < R.length;
   const cur = decodeURIComponent((location.hash.match(/^#\/alumnes\/([^?]+)/) || [])[1] || ''); if (cur) $$('tbody tr').forEach(t => t.classList.toggle('sel', t.dataset.c === cur));
   selBar();
@@ -749,6 +751,7 @@ function selBar() {
     ${inG ? `<button class="btn sm" onclick="bulk('treure')">${ico('user-minus')}<span>${L('Treu del grup', 'Quitar del grupo')}</span></button>` : ''}
     <button class="btn sm" onclick="bulk('unlock',{value:${!lock}})">${ico(lock ? 'lock' : 'lock-open')}<span>${lock ? L('Torna al camí normal', 'Volver al camino normal') : L('Obre totes les unitats', 'Abrir todas las unidades')}</span></button>
     ${S.every(r => r.grup_id && r.grup_id === S[0].grup_id) ? `<button class="btn sm" onclick='taskFrom(null,${js(S.map(r => r.code))})'>${ico('clipboard-check')}<span>${L("Posa'ls una tasca", 'Ponerles una tarea')}</span></button>` : ''}
+    <button class="btn sm" onclick="pwModal(selRows().map(r=>r.code))">${ico('key-round')}<span>${L('Contrasenyes noves', 'Contraseñas nuevas')}</span></button>
     <button class="btn sm" onclick="accessCards(selRows())">${ico('printer')}<span>${L("Targetes d'accés", 'Tarjetas de acceso')}</span></button>
     <button class="btn sm" onclick="csvResum(selRows())">${ico('download')}<span>CSV</span></button>
     ${ADMIN ? `<button class="btn sm danger" onclick="bulk('off')">${ico('user-minus')}<span>${L('Dona de baixa', 'Dar de baja')}</span></button><button class="btn sm danger solid" onclick="bulk('esborra')">${ico('trash-2')}<span>${L('Esborra', 'Borrar')}</span></button>` : ''}
@@ -785,7 +788,7 @@ function rowMenu(e, code) {
     <a href="#/alumnes/${encodeURIComponent(code)}">${ico('users')}${L('Obre la fitxa', 'Abrir la ficha')}</a>
     <button onclick="printReport(${c})">${ico('printer')}${L("Imprimeix l'informe", 'Imprimir el informe')}</button>
     <button onclick="closePops();accessCards([ROWS.find(x=>x.code===${c})])">${ico('key-round')}${L("Targeta d'accés", 'Tarjeta de acceso')}</button>
-    ${r.username ? `<button onclick="location.hash='#/alumnes/${encodeURIComponent(code)}';setTimeout(()=>pwForm(${c}),50)">${ico('key-round')}${L('Canvia la contrasenya', 'Cambiar la contraseña')}</button>` : ''}
+    ${r.username ? `<button onclick="pwModal([${c}])">${ico('key-round')}${L('Canvia la contrasenya', 'Cambiar la contraseña')}</button>` : ''}
     <button onclick="doUnlock(${c},${!r.unlock_all})">${ico(r.unlock_all ? 'lock' : 'lock-open')}${r.unlock_all ? L('Torna al camí normal', 'Volver al camino normal') : L('Obre totes les unitats', 'Abrir todas las unidades')}</button>
     ${r.grup_id ? `<button onclick="doTreure(${c})">${ico('user-minus')}${L('Treu del grup', 'Quitar del grupo')}</button>` : ''}
     ${ADMIN ? `<hr><button class="danger" onclick="doBaixa(${c})">${ico('trash-2')}${L('Dona de baixa', 'Dar de baja')}</button>` : ''}</div>`);
@@ -858,8 +861,8 @@ const tNowHTML = t => !t ? '<span class="t3">—</span>' : t.now ? `<b class="nu
 
 /* ---------- Usuaris i contrasenyes ----------
    La contrasenya no ve amb la llista: es demana al servidor quan el docent la vol veure (fila, fitxa, «Mostra-les totes»)
-   o imprimir les targetes. Només se sap si l'ha posada el docent (alta o canvi des del panell, d'ençà del 14-10-2026) i
-   l'alumne no l'ha canviada; si no, es diu que no es pot veure i que el docent la pot canviar. */
+   o imprimir les targetes. El servidor la té dels comptes d'escola (alta, canvi, o l'última vegada que l'alumne va entrar amb
+   l'usuari); dels d'abans encara no: es veurà quan l'alumne torni a entrar, o el docent la pot canviar. */
 const PASS = {}, PASS_SHOW = new Set(); let PASS_ON = false;
 async function passLoad(codes) {
   const need = [...new Set(codes)].filter(c => !(c in PASS)); if (!need.length) return true;
@@ -869,9 +872,34 @@ async function passLoad(codes) {
   }
   return true;
 }
-const passTxt = r => PASS[r.code] ? `<span class="mono pwv">${ico('key-round')}${esc(PASS[r.code])}</span>` : `<span class="t3" title="${L("O la va triar l'alumne o es va posar abans que el panell les desés. Canvia-la i la tornaràs a veure.", 'O la eligió el alumno o se puso antes de que el panel las guardara. Cámbiala y la volverás a ver.')}">${L('no es pot veure: canvia-la', 'no se puede ver: cámbiala')}</span>`;
-const passCell = r => !r.username ? `<span class="t3">${L('entra amb el codi', 'entra con el código')}</span>` : (PASS_ON || PASS_SHOW.has(r.code)) && r.code in PASS ? passTxt(r)
+const passTxt = r => PASS[r.code] ? `<span class="mono pwv">${ico('key-round')}${esc(PASS[r.code])}</span>` : `<span class="t3" title="${L("És d'abans que el panell les desés. Es veurà quan l'alumne torni a entrar amb el seu usuari i contrasenya; si cal ara, canvia-la.", 'Es de antes de que el panel las guardara. Se verá cuando el alumno vuelva a entrar con su usuario y contraseña; si hace falta ya, cámbiala.')}">${L('es veurà quan torni a entrar', 'se verá cuando vuelva a entrar')}</span>`;
+const pwEdit = r => `<button class="ib xs pwe" onclick="event.stopPropagation();pwModal([${js(r.code)}])" title="${L('Canvia la contrasenya', 'Cambiar la contraseña')}" aria-label="${L('Canvia la contrasenya', 'Cambiar la contraseña')}">${ico('pencil')}</button>`;
+const passCell = r => !r.username ? `<span class="t3">${L('entra amb el codi', 'entra con el código')}</span>` : (PASS_ON || PASS_SHOW.has(r.code)) && r.code in PASS
+  ? (PASS[r.code] ? passTxt(r) + pwEdit(r) : `<button class="pwnew" onclick="event.stopPropagation();pwModal([${js(r.code)}])" title="${L("És d'abans que el panell les desés: es veurà quan torni a entrar. Ara li'n pots posar una de nova.", 'Es de antes de que el panel las guardara: se verá cuando vuelva a entrar. Ahora le puedes poner una nueva.')}">${ico('key-round')}${L('Posa-li una', 'Ponle una')}</button>`)
   : `<button class="pwb" onclick="event.stopPropagation();passOne(${js(r.code)})" title="${L('Mostra la contrasenya', 'Mostrar la contraseña')}">•••••• ${ico('eye')}</button>`;
+// posar contrasenyes noves (a un alumne o a molts): se'n proposen de fàcils, es poden canviar, i després es veuen i s'imprimeixen
+function pwModal(codes) {
+  closePops(); const R = codes.map(c => ROWS.find(x => x.code === c)).filter(r => r && r.username);
+  if (!R.length) return toast(L('Cap dels seleccionats no té usuari (entren amb el codi).', 'Ninguno de los seleccionados tiene usuario (entran con el código).'));
+  modal(`<h3>${R.length === 1 ? L(`Contrasenya nova per a ${esc(R[0].name)}`, `Contraseña nueva para ${esc(R[0].name)}`) : L(`Contrasenyes noves per a ${R.length} alumnes`, `Contraseñas nuevas para ${R.length} alumnos`)}</h3>
+    <p class="t3" style="margin:-4px 0 12px">${L("Te'n proposem de fàcils per als nens; les pots canviar. Hauran de tornar a entrar amb la nova (a la tauleta on ja eren dins, també).", 'Te proponemos unas fáciles para los niños; las puedes cambiar. Tendrán que volver a entrar con la nueva (también en la tableta donde ya estaban dentro).')}</p>
+    <div class="pwrows">${R.map(r => `<label class="pwr"><span><b>${esc(r.name)}</b><small class="mono">${esc(r.username)}</small></span><input class="mono" data-c="${esc(r.code)}" value="${esc(PASS[r.code] && R.length > 1 ? PASS[r.code] : altaPass())}" autocomplete="off" autocapitalize="off" spellcheck="false"></label>`).join('')}</div>
+    <div class="err-msg" id="pwe"></div>
+    <div class="acts"><button class="btn" onclick="closeModal()">${L('Cancel·la', 'Cancelar')}</button><button class="btn primary" id="pwgo" onclick="pwBulkGo()">${L('Desa', 'Guardar')}</button></div>`, 'w480');
+  const i = $('.pwr input'); if (i) i.select();
+}
+async function pwBulkGo() {
+  const rows = $$('.pwr input').map(i => ({ code: i.dataset.c, password: i.value.trim() }));
+  if (rows.some(r => r.password.length < 4)) return $('#pwe').textContent = L('Cada contrasenya ha de tenir 4 caràcters o més.', 'Cada contraseña tiene que tener 4 caracteres o más.');
+  $('#pwgo').disabled = true; $('#pwgo').textContent = L('Desant…', 'Guardando…');
+  const j = await act('setpass_bulk', { rows }); if (!j.ok) { $('#pwgo').disabled = false; $('#pwgo').textContent = L('Desa', 'Guardar'); return $('#pwe').textContent = L("No s'ha pogut desar. Torna-ho a provar.", 'No se ha podido guardar. Vuelve a intentarlo.'); }
+  const okc = j.rows.filter(x => x.ok).map(x => x.code); rows.forEach(r => { if (okc.includes(r.code)) { PASS[r.code] = r.password; PASS_SHOW.add(r.code); } });
+  closeModal(); if ($('#tbl')) drawTable(); const cur = decodeURIComponent((location.hash.match(/^#\/alumnes\/([^?]+)/) || [])[1] || ''); if (cur && okc.includes(cur) && $('#dpw')) $('#dpw').innerHTML = passTxt(ROWS.find(x => x.code === cur));
+  const R = okc.map(c => ROWS.find(x => x.code === c)).filter(Boolean), ko = j.rows.length - okc.length;
+  modal(`<h3>${L(`Fet: ${okc.length} contrasenyes noves`, `Hecho: ${okc.length} contraseñas nuevas`)}</h3>${ko ? `<p class="err-msg">${L(`${ko} no s'han pogut canviar.`, `${ko} no se han podido cambiar.`)}</p>` : ''}
+    <div class="tw" style="max-height:300px"><table><thead><tr><th>${L('Alumne', 'Alumno')}</th><th>${L('Usuari', 'Usuario')}</th><th>${L('Contrasenya', 'Contraseña')}</th></tr></thead><tbody>${R.map(r => `<tr style="cursor:default"><td>${esc(r.name)}</td><td class="mono">${esc(r.username)}</td><td class="mono"><b>${esc(PASS[r.code] || '')}</b></td></tr>`).join('')}</tbody></table></div>
+    <div class="acts"><button class="btn" onclick='closeModal();accessCards(${js(okc)}.map(c=>ROWS.find(x=>x.code===c)))'>${ico('printer')}${L("Imprimeix les targetes", 'Imprimir las tarjetas')}</button><button class="btn primary" onclick="closeModal()">${L("D'acord", 'De acuerdo')}</button></div>`, 'w480');
+}
 const accCell = r => `<td class="c-accs" data-l="${L('Usuari i contrasenya', 'Usuario y contraseña')}"><span class="mono uname">${r.username ? esc(r.username) : esc(r.code)}</span><small>${passCell(r)}</small></td>`;
 async function passOne(code) {
   if (!(await passLoad([code]))) return toast(L("No s'ha pogut carregar.", 'No se ha podido cargar.'));
@@ -926,7 +954,7 @@ function reportHTML(r, print) {
       <dt>${L('Usuari', 'Usuario')}</dt><dd>${r.username ? `<span class="mono">${esc(r.username)}</span> <button class="ib sm" onclick="copyTxt(${js(r.username)})" aria-label="${L('Copia', 'Copiar')}">${ico('copy')}</button>` : L('Entra amb codi', 'Entra con código')}</dd>
       ${r.username ? `<dt>${L('Contrasenya', 'Contraseña')}</dt><dd id="dpw">${r.code in PASS ? passTxt(r) : `<button class="pwb" onclick="passOne(${js(r.code)})">•••••• ${ico('eye')} ${L('Mostra-la', 'Mostrarla')}</button>`}</dd>` : ''}<dt>${L('Alta', 'Alta')}</dt><dd>${altaTxt(r)}${r.newd != null ? ` · ${altaAgo(r)}` : ''}</dd><dt>${L('Grup', 'Grupo')}</dt><dd>${r.grup_id ? esc(gName(r.grup_id)) : L('Cap (alumne online)', 'Ninguno (alumno online)')}</dd><dt>App</dt><dd>${esc(APPN[r.variant] || 'Numi Mates')}${r.apps.length ? ' + ' + r.apps.map(a => esc(APPN[a])).join(', ') : ''}</dd></dl>
       ${ADMIN ? `<div id="dapps" style="margin-top:12px"><b style="font-weight:600">${L('Pot entrar també a', 'También puede entrar en')}</b><div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:6px">${Object.entries(APPN).filter(([k]) => k !== (r.variant || 'mates')).map(([k, n]) => `<label class="switch"><input type="checkbox" value="${k}" ${r.apps.includes(k) ? 'checked' : ''} onchange="doApps(${js(r.code)})"><span>${n}</span></label>`).join('')}</div><small class="t3">${L('Amb el mateix usuari i el mateix Premium.', 'Con el mismo usuario y el mismo Premium.')}</small></div>` : ''}
-      <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">${r.username ? `<button class="btn sm" onclick="pwForm(${js(r.code)})">${ico('key-round')}${L('Canvia la contrasenya', 'Cambiar la contraseña')}</button>` : ''}<button class="btn sm" onclick="accessCards([ROWS.find(x=>x.code===${js(r.code)})])">${ico('printer')}${L("Targeta d'accés", 'Tarjeta de acceso')}</button></div><div id="pwf"></div>
+      <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">${r.username ? `<button class="btn sm" onclick="pwModal([${js(r.code)}])">${ico('key-round')}${L('Canvia la contrasenya', 'Cambiar la contraseña')}</button>` : ''}<button class="btn sm" onclick="accessCards([ROWS.find(x=>x.code===${js(r.code)})])">${ico('printer')}${L("Targeta d'accés", 'Tarjeta de acceso')}</button></div>
       <label class="switch" style="margin-top:16px"><input type="checkbox" ${r.unlock_all ? 'checked' : ''} onchange="doUnlock(${js(r.code)},this.checked)"><span><b style="font-weight:600">${L('Mode mestre: obre totes les unitats', 'Modo maestro: abre todas las unidades')}</b><br><small class="t3">${L("L'alumne podrà fer qualsevol unitat sense passar la porta.", 'El alumno podrá hacer cualquier unidad sin pasar la puerta.')}</small></span></label>
       ${ADMIN ? `<div class="inline-form"><label class="field"><span>${L('Pla', 'Plan')}</span><select onchange="doPla(${js(r.code)},this.value)">${[['free', 'Gratuït|Gratuito'], ['premium', 'Premium|Premium'], ['escola', 'Escola|Escuela']].map(([k, t]) => `<option value="${k}" ${r.pla === k ? 'selected' : ''}>${tx(t)}</option>`).join('')}</select></label>${uInfo(r.code)}
         <label class="field"><span>${L('Grup', 'Grupo')}</span><select onchange="doAssign(${js(r.code)},this.value)"><option value="">${L('Sense grup', 'Sin grupo')}</option>${GRUPS.map(g => `<option value="${g.id}" ${g.id === r.grup_id ? 'selected' : ''}>${esc(g.nom)} · ${esc(g.centre)}</option>`).join('')}</select></label>
@@ -955,18 +983,6 @@ function printReport(code) {
     <div class="pf">${L(`Dades des de l'inici fins al ${fdate(TODAY)}`, `Datos desde el inicio hasta el ${fdate(TODAY)}`)} · Numi Mates</div>`;
   if (notes) $('#pnotes', p).innerHTML = `<p style="margin-top:8px;white-space:pre-wrap"><b>${L('Notes', 'Notas')}:</b> ${esc(notes)}</p>`;
   document.body.classList.add('printing'); setTimeout(() => { window.print(); document.body.classList.remove('printing'); }, 50);
-}
-function pwForm(code) {
-  const f = $('#pwf'); if (!f) return;
-  f.innerHTML = `<div class="inline-form"><label class="field"><span>${L('Contrasenya nova', 'Contraseña nueva')}</span><div class="pw"><input id="np1" class="mono" autocomplete="off" autocapitalize="off" spellcheck="false" value="${esc(altaPass())}"><button type="button" class="ib sm" title="${L("Proposa'n una altra", 'Proponer otra')}" aria-label="${L("Proposa'n una altra", 'Proponer otra')}" onclick="$('#np1').value=altaPass()">${ico('refresh-cw')}</button></div><small>${L("Mínim 4 caràcters. Te'n proposem una de fàcil per a l'alumne; la pots canviar.", 'Mínimo 4 caracteres. Te proponemos una fácil para el alumno; la puedes cambiar.')}</small></label><div class="err-msg" id="npe"></div><div style="display:flex;gap:8px"><button class="btn primary sm" onclick="doPw(${js(code)})">${L('Desa', 'Guardar')}</button><button class="btn sm" onclick="$('#pwf').innerHTML=''">${L('Cancel·la', 'Cancelar')}</button></div></div>`;
-  $('#np1').select();
-}
-async function doPw(code) {
-  const a = $('#np1').value.trim(), r = ROWS.find(x => x.code === code);
-  if (a.length < 4) return $('#npe').textContent = L('Mínim 4 caràcters.', 'Mínimo 4 caracteres.');
-  const j = await act('setpass', { code, password: a }); if (!j.ok) return $('#npe').textContent = L("No s'ha pogut canviar.", 'No se ha podido cambiar.');
-  PASS[code] = a; PASS_SHOW.add(code); $('#pwf').innerHTML = ''; const d = $('#dpw'); if (d) d.innerHTML = passTxt(r); if ($('#tbl')) drawTable();
-  toast(L(`Contrasenya canviada. Comunica-la a ${r.name}.`, `Contraseña cambiada. Comunícasela a ${r.name}.`));
 }
 async function doUnlock(code, v) { closePops(); await act('unlock', { code, value: v }); toast(v ? L('Totes les unitats obertes per a aquest alumne.', 'Todas las unidades abiertas para este alumno.') : L("L'alumne torna al camí normal.", 'El alumno vuelve al camino normal.')); reload(); }
 async function doTreure(code) { closePops(); const r = ROWS.find(x => x.code === code); if (!await confirmBox(L(`Treure ${r.name} del grup?`, `¿Quitar a ${r.name} del grupo?`), L('Tornarà al pla gratuït.', 'Volverá al plan gratuito.'), L('Treu del grup', 'Quitar del grupo'))) return; await act('treure', { code }); closeDrawer(); toast(L('Alumne tret del grup.', 'Alumno quitado del grupo.')); reload(); }

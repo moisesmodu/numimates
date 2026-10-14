@@ -1,4 +1,4 @@
-import { sql, body, ok, cleanCode, blocked, fail, tooMany, alumneOk } from './_lib.js';
+import { sql, body, ok, cleanCode, blocked, fail, tooMany, alumneOk, setVista } from './_lib.js';
 import { batTables } from './_batalla.js';
 import { tasquesAlumne, liveSet } from './_tasques.js';
 // L'alumne s'uneix al grup del seu docent amb el codi de classe (AULA-XXXX).
@@ -10,7 +10,7 @@ export default async function handler(req, res) {
   const al = (await sql`SELECT code, grup_id, pass_hash FROM mates.alumnes WHERE code = ${sid} AND active`)[0];
   if (!al) { await fail(req, 'codi'); return ok(res, { error: 'alumne' }, 404); }
   if (!(await alumneOk(req, res, sid, al.pass_hash))) return;
-  if (b.action === 'leave') { await sql`UPDATE mates.alumnes SET grup_id = NULL, pla = CASE WHEN pla = 'escola' THEN 'free' ELSE pla END WHERE code = ${sid}`; return ok(res, { ok: true }); }
+  if (b.action === 'leave') { await sql`UPDATE mates.alumnes SET grup_id = NULL, pla = CASE WHEN pla = 'escola' THEN 'free' ELSE pla END WHERE code = ${sid}`; await setVista(sid, null); return ok(res, { ok: true }); }
   // medalles que li ha donat el docent (les noves es marquen com a vistes en llegir-les)
   if (b.action === 'medals') {
     await batTables();

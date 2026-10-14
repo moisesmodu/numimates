@@ -1,4 +1,4 @@
-import { sql, body, cleanCode, cleanUser, validUser, validPass, hashPass, checkPass, ok, blocked, fail, note, tooMany, issueTok, dropToks, alumneStrict, consentOk, consentCols, eraseStudent, logConsent } from './_lib.js';
+import { sql, body, cleanCode, cleanUser, validUser, validPass, hashPass, checkPass, ok, blocked, fail, note, tooMany, issueTok, dropToks, alumneStrict, consentOk, consentCols, eraseStudent, logConsent, setVista } from './_lib.js';
 import familia from './_familia.js';
 // Crea o canvia l'usuari i la contrasenya d'un alumne (el codi fa de clau) · o comprova si un usuari està lliure.
 // Si l'alumne ja té contrasenya, per canviar-la cal la contrasenya actual (o que la canviï el docent des del panell).
@@ -37,8 +37,8 @@ export default async function handler(req, res) {
   const taken = await sql`SELECT code FROM mates.alumnes WHERE username = ${user}`;
   if (taken.length && taken[0].code !== code) return ok(res, { error: 'usuari-ocupat' }, 409);
   await sql`UPDATE mates.alumnes SET username = ${user}, pass_hash = ${hashPass(b.password)}, state = jsonb_set(state, '{username}', to_jsonb(${user}::text)) WHERE code = ${code} AND active`;
-  // la contrasenya ara és de l'alumne: el docent ja no la veu (la que havia posat ell, si n'hi havia, s'esborra)
-  try { await sql`UPDATE mates.alumnes SET pass_vista = NULL WHERE code = ${code}`; } catch (e) { /* la columna la crea el panell */ }
+  // compte d'escola (en un grup): el docent veurà la nova; si no és de cap grup, no se'n desa cap
+  await setVista(code, al.grup_id ? b.password : null);
   // contrasenya nova: es tanquen els altres dispositius i aquest rep la seva clau
   await dropToks(code); await issueTok(res, code);
   return ok(res, { ok: true, username: user });

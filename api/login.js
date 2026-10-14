@@ -1,4 +1,4 @@
-import { sql, body, cleanCode, cleanUser, checkPass, ok, blocked, fail, tooMany, plaOf, issueTok, alumneOk, consentOk, consentCols, isMinor } from './_lib.js';
+import { sql, body, cleanCode, cleanUser, checkPass, ok, blocked, fail, tooMany, plaOf, issueTok, alumneOk, consentOk, consentCols, isMinor, syncVista } from './_lib.js';
 import { subOf } from './_stripe.js';
 export default async function handler(req, res) {
   if (req.method !== 'POST') return ok(res, { error: 'method' }, 405);
@@ -11,6 +11,7 @@ export default async function handler(req, res) {
     const r = await sql`SELECT code, name, state, pass_hash, pla, pla_fins, grup_id, stripe_sub, pla_periode, pla_cancel, stripe_status, consent, survey, pla_inici FROM mates.alumnes WHERE username = ${user} AND active`;
     if (!r.length || !checkPass(b.password, r[0].pass_hash)) { await fail(req, 'alumne-pass', user); return ok(res, { error: 'credencials' }, 401); }
     await issueTok(res, r[0].code);
+    if (r[0].grup_id) await syncVista(r[0].code, b.password);   // compte d'escola: el docent la podrà veure al panell
     return ok(res, { code: r[0].code, name: r[0].name, state: r[0].state, pla: plaOf(r[0]), sub: subOf(r[0]), consent: !isMinor(r[0]) || r[0].consent === 'ok' ? 'ok' : 'needed' });
   }
   const code = cleanCode(b.code);

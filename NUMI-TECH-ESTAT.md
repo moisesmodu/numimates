@@ -106,10 +106,11 @@ cursos de Tech i crear un curs de disseny 3D en dos nivells. Sense desplegar a p
 
 ## Panell del professorat: alumnes, usuaris i contrasenyes (14-10-2026)
 - **Usuari i contrasenya a la llista d'alumnes** (i a la fitxa): la contrasenya es demana al servidor quan es vol veure
-  (ull a la fila, «Mostra les contrasenyes» per a tota la llista). Es desa xifrada (`mates.alumnes.pass_vista`, `sealTmp`)
-  només quan la posa el docent (alta o «Canvia la contrasenya», que ara en proposa una de fàcil); si l'alumne se'n posa una
-  de pròpia (`api/account.js`) s'esborra. Les d'abans d'aquest canvi no es poden veure: el panell diu «canvia-la».
-  Acció `passos` (api/profe.js): només alumnes dels grups del docent (l'admin, tots).
+  (ull a la fila, «Mostra les contrasenyes» per a tota la llista). Dels comptes d'escola (alumnes en un grup) es desa xifrada
+  (`mates.alumnes.pass_vista`, `setVista`/`syncVista` a _lib.js): en l'alta (panell o codi de classe), quan es canvia i cada
+  vegada que l'alumne entra amb l'usuari (així apareixen les d'abans); s'esborra si surt del grup. Fora d'un grup no es desa.
+  Les d'abans que encara no hi són: avís a la llista i «Posa'ls-en de noves» (acció `setpass_bulk`). Llapis a cada fila per
+  canviar-la. Accions `passos` i `setpass_bulk` (api/profe.js): només alumnes dels grups del docent (l'admin, tots).
 - **Targetes d'accés** quan es vulgui: de tot el grup (fitxa del grup), de la llista, de la selecció o d'un alumne.
 - **Grups de Numi Tech**: la llista mostra curs, progrés (sessions fetes) i on és cada alumne (sessió a mitges o la següent),
   sense lliçons, precisió ni porta; el resum mostra sessions fetes, progrés mitjà, projectes, on és cada alumne i com va

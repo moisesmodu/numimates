@@ -61,6 +61,19 @@ const sha = t => createHash('sha256').update(String(t)).digest('hex');
 // SESSION_SECRET) perquè l'administrador la pugui tornar a veure al panell fins que el docent la canviï per una de pròpia.
 const tmpKey = () => createHash('sha256').update((process.env.SESSION_SECRET || 'x') + ':docent-pass-tmp').digest();
 export function sealTmp(p) { const iv = randomBytes(12), c = createCipheriv('aes-256-gcm', tmpKey(), iv), e = Buffer.concat([c.update(String(p), 'utf8'), c.final()]); return [iv, c.getAuthTag(), e].map(x => x.toString('base64url')).join('.'); }
+// contrasenya dels comptes d'escola (alumnes en un grup) perquè el docent la pugui veure al panell i imprimir les targetes:
+// xifrada amb sealTmp a mates.alumnes.pass_vista. Es desa en donar d'alta, en canviar-la i en entrar amb l'usuari (així
+// també es recuperen les dels comptes d'abans); s'esborra quan l'alumne surt del grup. Fora d'un grup no es desa mai.
+let vistaOk = false;
+async function vistaCol() { if (!vistaOk) { await sql`ALTER TABLE mates.alumnes ADD COLUMN IF NOT EXISTS pass_vista text`; vistaOk = true; } }
+export async function setVista(code, pass) {
+  try { await vistaCol(); await sql`UPDATE mates.alumnes SET pass_vista = ${pass == null ? null : sealTmp(pass)} WHERE code = ${code}`; } catch (e) { console.error('pass_vista', e.message); }
+}
+// en entrar amb l'usuari: només si és d'un grup i encara no la teníem (o era una altra)
+export async function syncVista(code, pass) {
+  try { await vistaCol(); const r = (await sql`SELECT grup_id, pass_vista FROM mates.alumnes WHERE code = ${code}`)[0];
+    if (r && r.grup_id && (!r.pass_vista || openTmp(r.pass_vista) !== pass)) await sql`UPDATE mates.alumnes SET pass_vista = ${sealTmp(pass)} WHERE code = ${code}`; } catch (e) { console.error('pass_vista', e.message); }
+}
 export function openTmp(s) { try { const [iv, tag, e] = String(s).split('.').map(x => Buffer.from(x, 'base64url')); const d = createDecipheriv('aes-256-gcm', tmpKey(), iv); d.setAuthTag(tag); return Buffer.concat([d.update(e), d.final()]).toString('utf8'); } catch (err) { return null; } }
 export async function issueTok(res, code) {
   await tokTable(); const t = randomBytes(24).toString('base64url');

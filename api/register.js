@@ -1,4 +1,4 @@
-import { sql, body, summary, ok, cleanUser, validUser, validPass, hashPass, cleanState, blocked, note, tooMany, newStudentCode, issueTok, isMinor, consentCols, fail } from './_lib.js';
+import { sql, body, summary, ok, cleanUser, validUser, validPass, hashPass, cleanState, blocked, note, tooMany, newStudentCode, issueTok, isMinor, consentCols, fail, setVista } from './_lib.js';
 // Alta d'un perfil nou. Si és d'un menor de 14 anys (Numi Mates o Pro), al servidor NOMÉS hi queda un codi intern i l'edat:
 // ni nom ni progrés fins que un adult ho autoritzi des del correu (consent = 'pending'). El progrés es queda al dispositiu.
 export default async function handler(req, res) {
@@ -48,7 +48,8 @@ export default async function handler(req, res) {
         ON CONFLICT (code) DO NOTHING RETURNING code`;
     }
     // aquest dispositiu rep la seva clau: és la que permet les accions delicades (convidar un adult, pagar, posar contrasenya)
-    if (r.length) { await issueTok(res, code); return ok(res, { code, username: user, consent: minor ? 'pending' : 'ok', ...(grup ? { grup: { nom: grup.nom, centre: grup.centre, curs: grup.curs, tema: grup.tema, opts: grup.opts } } : {}) }); }
+    if (r.length) { await issueTok(res, code); if (grup && hash) await setVista(code, b.password);   // alta amb el codi de classe: el docent la veurà
+      return ok(res, { code, username: user, consent: minor ? 'pending' : 'ok', ...(grup ? { grup: { nom: grup.nom, centre: grup.centre, curs: grup.curs, tema: grup.tema, opts: grup.opts } } : {}) }); }
   }
   return ok(res, { error: 'codi' }, 500);
 }

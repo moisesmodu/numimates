@@ -1,8 +1,7 @@
 import { sql, ok, body, cleanCode, validPass, hashPass, dropToks, cleanUser, validUser, newStudentCode, eraseStudent, sealTmp, openTmp } from './_lib.js';
 let tmpCol = false;
 const ensureTmp = async () => { if (!tmpCol) { await sql`ALTER TABLE mates.docents ADD COLUMN IF NOT EXISTS pass_tmp text`; tmpCol = true; } };
-// contrasenya d'un alumne posada pel docent (en donar-lo d'alta o en canviar-la): es desa xifrada (sealTmp) perquè el docent
-// la pugui tornar a veure i imprimir les targetes d'accés; si l'alumne se'n posa una de pròpia, s'esborra (api/account.js)
+// contrasenya dels alumnes de l'escola (vegeu setVista a _lib.js): xifrada perquè el docent la vegi i imprimeixi les targetes
 let vistaCol = false;
 const ensureVista = async () => { if (!vistaCol) { await sql`ALTER TABLE mates.alumnes ADD COLUMN IF NOT EXISTS pass_vista text`; vistaCol = true; } };
 import { who, groupsOf } from './_auth.js';
@@ -58,12 +57,24 @@ export default async function handler(req, res) {
       return ok(res, { ok: true, rows: out });
     }
     // --- usuaris i contrasenyes dels alumnes (fitxa, llista i targetes d'accés): només dels alumnes que veu el docent;
-    //     la contrasenya només si l'ha posada el docent i l'alumne no l'ha canviada (si no, null) ---
+    //     la contrasenya, si la tenim (comptes d'escola: alta, canvi o l'última vegada que va entrar amb l'usuari; si no, null) ---
     if (b.action === 'passos') {
       await ensureVista();
       const cs = [...new Set((Array.isArray(b.codes) ? b.codes : []).map(cleanCode).filter(Boolean))].slice(0, 300);
       const q = await sql`SELECT code, username, pass_vista FROM mates.alumnes WHERE code = ANY(${cs}) AND active AND (${!!me.admin} OR grup_id = ANY(${gids}))`;
       return ok(res, { ok: true, rows: q.map(r => ({ code: r.code, username: r.username, password: r.pass_vista ? openTmp(r.pass_vista) : null })) });
+    }
+    // --- contrasenyes noves per a diversos alumnes alhora (les posa el docent: es veuran al panell i a les targetes) ---
+    if (b.action === 'setpass_bulk') {
+      await ensureVista(); const out = [];
+      for (const x of (Array.isArray(b.rows) ? b.rows : []).slice(0, 60)) {
+        const c = cleanCode(x && x.code), p = String((x && x.password) || '');
+        if (!c || !(await mine(c))) { out.push({ code: c, error: 'permís' }); continue; }
+        if (!validPass(p)) { out.push({ code: c, error: 'contrasenya-format' }); continue; }
+        const r = await sql`UPDATE mates.alumnes SET pass_hash = ${hashPass(p)}, pass_vista = ${sealTmp(p)} WHERE code = ${c} AND username IS NOT NULL RETURNING code`;
+        if (r.length) { await dropToks(c); out.push({ code: c, ok: true }); } else out.push({ code: c, error: 'sense usuari' });
+      }
+      return ok(res, { ok: true, rows: out });
     }
     // --- batalles del docent: en directe per a la classe (les projecta i les fa començar) i competicions amb data final ---
     if (['bat_new', 'bat_state', 'bat_start', 'bat_end', 'bat_list', 'bat_kick', 'medal_give', 'medal_del', 'alumne_bat'].includes(b.action)) {
@@ -209,7 +220,7 @@ export default async function handler(req, res) {
       // l'admin pot tocar tothom; el docent, només els que són als seus grups
       const own = me.admin ? codes : (await sql`SELECT code FROM mates.alumnes WHERE code = ANY(${codes}) AND grup_id = ANY(${gids})`).map(r => r.code);
       let q = [];
-      if (op === 'treure') q = await sql`UPDATE mates.alumnes SET grup_id = NULL, pla = CASE WHEN pla = 'escola' THEN 'free' ELSE pla END WHERE code = ANY(${own}) AND grup_id IS NOT NULL RETURNING code`;
+      if (op === 'treure') { await ensureVista(); q = await sql`UPDATE mates.alumnes SET grup_id = NULL, pass_vista = NULL, pla = CASE WHEN pla = 'escola' THEN 'free' ELSE pla END WHERE code = ANY(${own}) AND grup_id IS NOT NULL RETURNING code`; }
       if (op === 'unlock') q = await sql`UPDATE mates.alumnes SET state = jsonb_set(state, '{unlockAll}', to_jsonb(${!!b.value}::boolean)) WHERE code = ANY(${own}) RETURNING code`;
       if (op === 'off' || op === 'on') q = await sql`UPDATE mates.alumnes SET active = ${op === 'on'} WHERE code = ANY(${own}) RETURNING code`;
       if (op === 'assign') {
@@ -242,7 +253,7 @@ export default async function handler(req, res) {
         return ok(res, r.length ? { ok: true } : { error: 'sense usuari' }, r.length ? 200 : 404);
       }
       if (b.action === 'unlock') { await sql`UPDATE mates.alumnes SET state = jsonb_set(state, '{unlockAll}', to_jsonb(${!!b.value}::boolean)) WHERE code = ${code}`; return ok(res, { ok: true }); }
-      if (b.action === 'treure') { await sql`UPDATE mates.alumnes SET grup_id = NULL, pla = CASE WHEN pla = 'escola' THEN 'free' ELSE pla END WHERE code = ${code}`; return ok(res, { ok: true }); }
+      if (b.action === 'treure') { await ensureVista(); await sql`UPDATE mates.alumnes SET grup_id = NULL, pass_vista = NULL, pla = CASE WHEN pla = 'escola' THEN 'free' ELSE pla END WHERE code = ${code}`; return ok(res, { ok: true }); }
       if (b.action === 'off') { if (!me.admin) return ok(res, { error: 'permís' }, 403); await sql`UPDATE mates.alumnes SET active = false WHERE code = ${code}`; return ok(res, { ok: true }); }
     }
     // --- grups: l'admin a qualsevol centre; el docent al seu ---
@@ -290,7 +301,7 @@ export default async function handler(req, res) {
     }
     if (b.action === 'grup_codi' || b.action === 'grup_off') {
       if (!gids.includes(+b.id)) return ok(res, { error: 'permís' }, 403);
-      if (b.action === 'grup_off') { await sql`UPDATE mates.grups SET actiu = false WHERE id = ${+b.id}`; await sql`UPDATE mates.alumnes SET grup_id = NULL, pla = CASE WHEN pla = 'escola' THEN 'free' ELSE pla END WHERE grup_id = ${+b.id}`; return ok(res, { ok: true }); }
+      if (b.action === 'grup_off') { await ensureVista(); await sql`UPDATE mates.grups SET actiu = false WHERE id = ${+b.id}`; await sql`UPDATE mates.alumnes SET grup_id = NULL, pass_vista = NULL, pla = CASE WHEN pla = 'escola' THEN 'free' ELSE pla END WHERE grup_id = ${+b.id}`; return ok(res, { ok: true }); }
       for (let t = 0; t < 8; t++) { try { const r = await sql`UPDATE mates.grups SET codi = ${newCode()} WHERE id = ${+b.id} RETURNING codi`; return ok(res, { ok: true, codi: r[0].codi }); } catch (e) { /* codi repetit: en provem un altre */ } }
       return ok(res, { error: 'codi' }, 500);
     }
