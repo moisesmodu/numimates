@@ -50,7 +50,8 @@ Petició del Moisés: cada exercici ha de cabre a la pantalla sense baixar (mòb
 5. Canviar la contrasenya feble de l'usuari admin `mmora`.
 
 ## Desplegament
-Vercel CLI (`vercel deploy --prod`) des d'un checkout de `main` amb `.vercel`. No fer `vercel env pull`.
+Des del 14-10-2026 el projecte de Vercel (mates-numi) està connectat a GitHub: cada push a `main` es publica sol.
+Si cal fer-ho a mà: Vercel CLI (`vercel deploy --prod`) des d'un checkout de `main` amb `.vercel`. No fer `vercel env pull`.
 Per revisar aquesta branca sense tocar producció: des d'un checkout de `claude/eloquent-galileo-fmypbm`, `vercel` (sense `--prod`) dona una URL de previsualització.
 
 ## Auditoria de contingut aplicada (octubre 2026)
