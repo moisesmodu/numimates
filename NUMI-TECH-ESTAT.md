@@ -84,7 +84,7 @@ cursos de Tech i crear un curs de disseny 3D en dos nivells. Sense desplegar a p
   món d'en Bit, de l'arena del Maqueen, de l'escenari de Creadors, de les batalles i cartes de Numi Mates i dels jocs
   de Numi Ment; món 3D «fab» i totes les illes, escenes, capçaleres i retrats tornats a renderitzar; colors de la
   teoria de Numi Pro en fosc.
-- **Pendent:** Tech 3D · Nivell 1, unitats 6 (Del model a l'objecte) i 8 (El meu disseny) (la 4 ja és feta, 15-10); Nivell 2,
+- **Pendent:** Tech 3D · Nivell 1, unitat 8 (El meu disseny) (la 4 i la 6 ja són fetes, 15-10); Nivell 2,
   unitats 4 (Variables i paràmetres) i 8 (Producte final). Surten com a «aviat» a l'app. Els agents de contingut
   segueixen `scripts/TECH-3D.md` i `scripts/TECH-3D-PROGRAMA.md`.
 
@@ -140,3 +140,11 @@ cursos de Tech i crear un curs de disseny 3D en dos nivells. Sense desplegar a p
 - Límits del motor que les sessions tenen en compte: «Duplica» després d'haver mogut la còpia només repeteix el moviment
   fet després de copiar (no tot el desplaçament, com Tinkercad); «Mirall» gira la selecció al seu lloc (no la passa a
   l'altre costat de l'eix); la comprovació de simetria és estricta (1-1,5 mm ja falla). Per això els reptes donen les x.
+
+## Tech 3D · Nivell 1, unitat 6 «Del model a l'objecte» (15-10-2026)
+- m6-1 Com treballa una impressora 3D (capes, filament, temps; plastilina per capes) · m6-2 Gruix i base plana (peces
+  d'escacs del club del barri: corona que flota, parets de 0,5 mm, con al revés; regla dels 45°) · m6-3 Exportar el fitxer
+  STL (triangles, sense color ni unitats, escala) · m6-4 Projecte: el porta-llapis (forats de 9 mm, fons i parets de 2 mm).
+  13 animacions, guies, insígnies i solucionari. Validador: 192 sessions, 0 errors; cap pas necessita scroll.
+- El motor no comprova voladissos ni que hi càpiguen els llapis: s'ensenya amb vistes laterals, `flatbase`, `count` (6
+  forats) i `wall`, i als criteris del projecte l'alumne ho revisa. Les puntes de cons i estrelles compten com a paret prima.
