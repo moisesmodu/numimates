@@ -84,7 +84,7 @@ cursos de Tech i crear un curs de disseny 3D en dos nivells. Sense desplegar a p
   món d'en Bit, de l'arena del Maqueen, de l'escenari de Creadors, de les batalles i cartes de Numi Mates i dels jocs
   de Numi Ment; món 3D «fab» i totes les illes, escenes, capçaleres i retrats tornats a renderitzar; colors de la
   teoria de Numi Pro en fosc.
-- **Pendent:** Tech 3D · Nivell 1, unitats 4 (Construir), 6 (Del model a l'objecte) i 8 (El meu disseny); Nivell 2,
+- **Pendent:** Tech 3D · Nivell 1, unitats 6 (Del model a l'objecte) i 8 (El meu disseny) (la 4 ja és feta, 15-10); Nivell 2,
   unitats 4 (Variables i paràmetres) i 8 (Producte final). Surten com a «aviat» a l'app. Els agents de contingut
   segueixen `scripts/TECH-3D.md` i `scripts/TECH-3D-PROGRAMA.md`.
 
@@ -132,3 +132,11 @@ cursos de Tech i crear un curs de disseny 3D en dos nivells. Sense desplegar a p
   l'ha activat (`opts.xat`); fora de grups, Premium. No surt a exàmens, batalles, prova de nivell ni avaluació.
 - **Dossier per a centres**: pàgina 6 amb «Pensat per a l'escola» (pantalla, la justa · IA amb criteri · per a tothom ·
   també sense wifi).
+
+## Tech 3D · Nivell 1, unitat 4 «Construir» (15-10-2026)
+- m4-1 Alinear · m4-2 Duplicar i repetir · m4-3 Simetria: el mirall · m4-4 Projecte: la casa del futur (portafoli).
+  Encàrrec: la maqueta del «Barri del Futur» de la Mireia, l'arquitecta del barri. Guies, 9 animacions, insígnies i
+  solucionari. Validador: 188 sessions, 0 errors; cap pas necessita scroll a 390 × 740 ni a 1440 × 800.
+- Límits del motor que les sessions tenen en compte: «Duplica» després d'haver mogut la còpia només repeteix el moviment
+  fet després de copiar (no tot el desplaçament, com Tinkercad); «Mirall» gira la selecció al seu lloc (no la passa a
+  l'altre costat de l'eix); la comprovació de simetria és estricta (1-1,5 mm ja falla). Per això els reptes donen les x.
