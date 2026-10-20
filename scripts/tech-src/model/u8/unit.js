@@ -45,7 +45,8 @@ COURSE_UNITS[8] = (() => {
   const V2_SENSE = [...V1, ...DR, NR, NANSA('n2', -33, 38, [180, 0, 0])];
 
   /* ---------- m8-3 · dissenys d'altres participants de la fira, per revisar ---------- */
-  const BIEL = d => [B('peu', 'cyl', [50, 50, 4], 0, 0, 0, '#3D7BF4'), B('got', 'cyl', [40, 40, 60], 0, 0, 0, '#5BC0EB'), HB('forat', 'cyl', [d, d, 60], 0, 0, 3)];
+  const BIEL = d => [B('got', 'cyl', [40, 40, 60], 0, 0, 0, '#5BC0EB'), HB('forat', 'cyl', [d, d, 60], 0, 0, 3)];
+  const BIEL_TALL = [...BIEL(38), H('tall', 'box', [60, 30, 70], [0, -15, 30])];   // tallat pel mig: es veu el gruix de la paret
   const COTXE = dz => [B('xassis', 'box', [56, 24, 12], 0, 0, 6 + dz, VM), B('cabina', 'box', [26, 20, 12], -6, 0, 18 + dz, '#5BC0EB'),
     ...[[-18, -13], [18, -13], [-18, 13], [18, 13]].map(([x, y], i) => B('roda' + (i + 1), 'cyl', [14, 14, 6], x, y, dz, '#2A2F3A', { r: [90, 0, 0], h: 14 }))];
   const RODES = ['xassis', 'cabina', 'roda1', 'roda2', 'roda3', 'roda4'];
@@ -168,7 +169,7 @@ COURSE_UNITS[8] = (() => {
         { k: 'm3look', ph: 'prova', q: "Les dues nanses són iguals però <b>miren cap a costats oposats</b>. Quina eina va fer servir la Jana per fer la segona?|Las dos asas son iguales pero <b>miran hacia lados opuestos</b>. ¿Qué herramienta usó Jana para hacer la segunda?",
           model: { parts: V2 }, view: 'front', opts: ['Duplica i Mirall|Duplica y Espejo', 'Escala amb Proporcional|Escala con Proporcional', 'Forat|Agujero'], a: 0,
           ex: "Duplica fa la còpia i Mirall li dona la volta, com en un mirall. Després només cal posar-la al seu lloc.|Duplica hace la copia y Espejo le da la vuelta, como en un espejo. Después solo hay que ponerla en su sitio." },
-        { k: 'm3look', ph: 'investiga', q: "Aquesta prova <b>no</b> és simètrica: una nansa té el pendent a dalt i la seva punta de sota quedaria a l'aire. <b>Toca-la.</b>|Esta prueba <b>no</b> es simétrica: un asa tiene la pendiente arriba y su punta de abajo quedaría en el aire. <b>Tócala.</b>",
+        { k: 'm3look', ph: 'investiga', q: "Una nansa <b>no</b> és el reflex de l'altra: té el pendent a dalt i la punta de sota a l'aire. <b>Toca-la.</b>|Un asa <b>no</b> es el reflejo de la otra: tiene la pendiente arriba y la punta de abajo en el aire. <b>Tócala.</b>",
           model: { parts: V2_SENSE }, view: 'front', pick: 'n2', yes: "Exacte: aquesta nansa no és el reflex de l'altra. La Nuvi començaria la seva punta de sota en l'aire.|Exacto: esta asa no es el reflejo de la otra. Nuvi empezaría su punta de abajo en el aire.",
           no: "Aquesta nansa té el pendent a sota, com ha de ser. Compara-les de davant.|Esta asa tiene la pendiente debajo, como tiene que ser. Compáralas de delante.",
           ex: "Amb Duplica i Mirall, la còpia hauria quedat com un reflex: amb el pendent a sota, com la dreta.|Con Duplica y Espejo, la copia habría quedado como un reflejo: con la pendiente debajo, como la derecha." },
@@ -234,8 +235,8 @@ COURSE_UNITS[8] = (() => {
         { k: 'quiz', ph: 'mans', q: "L'Aleix ha revisat el disseny de la Wei. <b>Quina nota l'ajudarà més?</b>|Aleix ha revisado el diseño de Wei. <b>¿Qué nota la ayudará más?</b>",
           opts: ["«Toca la placa i té una base ampla. Desig: la paret del got fa 1 mm; fes-la de 2.»|«Toca la placa y tiene una base ancha. Deseo: la pared del vaso mide 1 mm; hazla de 2.»", '«Està bé.»|«Está bien.»', '«El meu és millor.»|«El mío es mejor.»'], a: 0,
           ex: "És amable i concreta: diu què funciona i quin número cal canviar.|Es amable y concreta: dice qué funciona y qué número hay que cambiar." },
-        { k: 'm3look', ph: 'prova', q: "El <b>porta-pinzells d'en Biel</b>, vist de dalt. Quina prova de la Nuvi <b>no</b> passarà?|El <b>portapinceles de Biel</b>, visto desde arriba. ¿Qué prueba de Nuvi <b>no</b> pasará?",
-          model: { parts: BIEL(38) }, mode: 'result', view: 'top', opts: ['Parets de 2 mm o més|Paredes de 2 mm o más', 'Toca la placa|Toca la placa', 'Cap a la placa|Cabe en la placa'], a: 0,
+        { k: 'm3look', ph: 'prova', q: "El <b>porta-pinzells d'en Biel</b>, tallat pel mig. Quina prova de la Nuvi <b>no</b> passarà?|El <b>portapinceles de Biel</b>, cortado por la mitad. ¿Qué prueba de Nuvi <b>no</b> pasará?",
+          model: { parts: BIEL_TALL }, mode: 'result', opts: ['Parets de 2 mm o més|Paredes de 2 mm o más', 'Toca la placa|Toca la placa', 'Cap a la placa|Cabe en la placa'], a: 0,
           ex: "La paret del got fa només 1 mm: (40 − 38) ÷ 2. Es trencaria amb un cop.|La pared del vaso mide solo 1 mm: (40 − 38) ÷ 2. Se rompería con un golpe." },
         { k: 'm3look', ph: 'investiga', q: "El <b>ninot de neu de la Carla</b> té una peça que no toca res: la Nuvi la imprimiria a l'aire. <b>Toca-la.</b>|El <b>muñeco de nieve de Carla</b> tiene una pieza que no toca nada: Nuvi la imprimiría en el aire. <b>Tócala.</b>",
           model: { parts: NINOT }, pick: 'barret', yes: "L'has trobada: el barret flota 3 mm per sobre del cap.|La has encontrado: el sombrero flota 3 mm por encima de la cabeza.",
@@ -244,7 +245,7 @@ COURSE_UNITS[8] = (() => {
         { k: 'move', ph: 'pausa', title: 'Revisors/es de la Nuvi|Revisores/as de Nuvi', secs: 30, t: "Fes de Nuvi revisora! Posa't unes ulleres imaginàries i revisa't: toques a terra amb els dos peus (base plana)? Tens els braços enganxats al cos (una sola peça)? Ara estira't tant com puguis… caps a la placa? Ajup-te!|¡Haz de Nuvi revisora! Ponte unas gafas imaginarias y revísate: ¿tocas el suelo con los dos pies (base plana)? ¿Tienes los brazos pegados al cuerpo (una sola pieza)? Ahora estírate tanto como puedas… ¿cabes en la placa? ¡Agáchate!" },
         { k: 'm3fix', ph: 'repte', q: "<b>Revisió 1: el porta-pinzells d'en Biel.</b> La paret fa 1 mm. Fes el forat de <b>36 mm</b>: la paret farà (40 − 36) ÷ 2 = 2 mm.|<b>Revisión 1: el portapinceles de Biel.</b> La pared mide 1 mm. Haz el agujero de <b>36 mm</b>: la pared medirá (40 − 36) ÷ 2 = 2 mm.",
           start: { parts: BIEL(38) }, fix: ['forat'], palette: ['hcyl'],
-          checks: [{ k: 'wall', min: 1.8, t: 'Parets de 2 mm o més|Paredes de 2 mm o más' }, { k: 'hole', t: 'Continua buit per dins|Sigue hueco por dentro' }, { k: 'flatbase', min: 1500, t: 'Té una base plana|Tiene una base plana' }, { k: 'one' }],
+          checks: [{ k: 'wall', min: 1.8, t: 'Parets de 2 mm o més|Paredes de 2 mm o más' }, { k: 'hole', t: 'Continua buit per dins|Sigue hueco por dentro' }, { k: 'flatbase', min: 1000, t: 'Té una base plana|Tiene una base plana' }, { k: 'one' }],
           hint: "El forat ja està seleccionat. A Mida, escriu 36 a la X i 36 a la Y.|El agujero ya está seleccionado. En Medida, escribe 36 en la X y 36 en la Y.",
           sol: { parts: BIEL(36) } },
         { k: 'm3fix', ph: 'repte', q: "<b>Revisió 2: el cotxet de l'Ona.</b> Tot el cotxe flota 3 mm. <b>Baixa'l</b> fins que les rodes toquin la placa.|<b>Revisión 2: el cochecito de Ona.</b> Todo el coche flota 3 mm. <b>Bájalo</b> hasta que las ruedas toquen la placa.",
