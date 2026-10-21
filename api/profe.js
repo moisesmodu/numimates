@@ -1,4 +1,4 @@
-import { sql, ok, body, cleanCode, validPass, hashPass, dropToks, cleanUser, validUser, newStudentCode, eraseStudent, sealTmp, openTmp } from './_lib.js';
+import { sql, ok, body, consentCols, cleanCode, validPass, hashPass, dropToks, cleanUser, validUser, newStudentCode, eraseStudent, sealTmp, openTmp } from './_lib.js';
 let tmpCol = false;
 const ensureTmp = async () => { if (!tmpCol) { await sql`ALTER TABLE mates.docents ADD COLUMN IF NOT EXISTS pass_tmp text`; tmpCol = true; } };
 // contrasenya dels alumnes de l'escola (vegeu setVista a _lib.js): xifrada perquè el docent la vegi i imprimeixi les targetes
@@ -237,8 +237,40 @@ export default async function handler(req, res) {
       return ok(res, { ok: true, n: q.length, skip: codes.length - q.length });
     }
     // --- accions sobre un alumne (admin o el seu docent) ---
-    if (['setpass', 'unlock', 'off', 'treure', 'apps'].includes(b.action)) {
+    if (['setpass', 'unlock', 'off', 'treure', 'apps', 'usuari', 'nom'].includes(b.action)) {
       if (!(await mine(code))) return ok(res, { error: 'permís' }, 403);
+      // nom i cognoms (admin o el seu docent); un menor encara sense permís de la família no té nom al servidor
+      if (b.action === 'nom') {
+        const name = String(b.name || '').trim().slice(0, 30);
+        if (!name) return ok(res, { error: 'nom' }, 400);
+        await consentCols();
+        const r = await sql`UPDATE mates.alumnes SET name = ${name}, state = jsonb_set(coalesce(state, '{}'), '{name}', to_jsonb(${name}::text))
+          WHERE code = ${code} AND active AND coalesce(consent, 'ok') <> 'pending' RETURNING code`;
+        return r.length ? ok(res, { ok: true, name }) : ok(res, { error: 'no trobat' }, 404);
+      }
+      // canviar l'usuari d'entrada (només l'admin). Si el nom el té un compte donat de baixa, aquell passa a «<nom>-baixa»
+      // (no s'esborra res) i el nom queda lliure; si el té un compte actiu, no es toca.
+      if (b.action === 'usuari') {
+        if (!me.admin) return ok(res, { error: 'permís' }, 403);
+        const user = cleanUser(b.username);
+        if (!validUser(user)) return ok(res, { error: 'usuari-format' }, 400);
+        const al = (await sql`SELECT username FROM mates.alumnes WHERE code = ${code} AND active`)[0];
+        if (!al) return ok(res, { error: 'no trobat' }, 404);
+        if (al.username === user) return ok(res, { ok: true, username: user });
+        const t = (await sql`SELECT code, active FROM mates.alumnes WHERE username = ${user}`)[0];
+        if (t && t.active) return ok(res, { error: 'usuari-ocupat' }, 409);
+        if (t) {
+          let lliure = null;
+          for (let i = 0; i < 20 && !lliure; i++) {
+            const n = user.slice(0, 13) + '-baixa' + (i ? i : '');
+            if (!(await sql`SELECT 1 FROM mates.alumnes WHERE username = ${n}`).length) lliure = n;
+          }
+          if (!lliure) return ok(res, { error: 'usuari-ocupat' }, 409);
+          await sql`UPDATE mates.alumnes SET username = ${lliure}, state = jsonb_set(coalesce(state, '{}'), '{username}', to_jsonb(${lliure}::text)) WHERE code = ${t.code} AND NOT active`;
+        }
+        await sql`UPDATE mates.alumnes SET username = ${user}, state = jsonb_set(coalesce(state, '{}'), '{username}', to_jsonb(${user}::text)) WHERE code = ${code} AND active`;
+        return ok(res, { ok: true, username: user });
+      }
       // a quines apps pot entrar el compte, a més de la seva (p. ex. un alumne de Numi Mates que també fa Numi Tech)
       if (b.action === 'apps') {
         if (!me.admin) return ok(res, { error: 'permís' }, 403);

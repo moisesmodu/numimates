@@ -877,6 +877,32 @@ const pwEdit = r => `<button class="ib xs pwe" onclick="event.stopPropagation();
 const passCell = r => !r.username ? `<span class="t3">${L('entra amb el codi', 'entra con el código')}</span>` : (PASS_ON || PASS_SHOW.has(r.code)) && r.code in PASS
   ? (PASS[r.code] ? passTxt(r) + pwEdit(r) : `<button class="pwnew" onclick="event.stopPropagation();pwModal([${js(r.code)}])" title="${L("És d'abans que el panell les desés: es veurà quan torni a entrar. Ara li'n pots posar una de nova.", 'Es de antes de que el panel las guardara: se verá cuando vuelva a entrar. Ahora le puedes poner una nueva.')}">${ico('key-round')}${L('Posa-li una', 'Ponle una')}</button>`)
   : `<button class="pwb" onclick="event.stopPropagation();passOne(${js(r.code)})" title="${L('Mostra la contrasenya', 'Mostrar la contraseña')}">•••••• ${ico('eye')}</button>`;
+// nom i cognoms (docent o admin) i usuari d'entrada (només l'admin; si el nom el té un compte donat de baixa, el servidor l'allibera)
+function editModal(code) {
+  closePops(); const r = ROWS.find(x => x.code === code); if (!r) return; const u = ADMIN && r.username;
+  modal(`<h3>${L('Edita', 'Editar')} ${esc(r.name)}</h3>
+    <label class="field"><span>${L('Nom i cognoms', 'Nombre y apellidos')}</span><input id="ed_nom" value="${esc(r.name)}" maxlength="30"></label>
+    ${u ? `<label class="field"><span>${L("Usuari per entrar", 'Usuario para entrar')}</span><input id="ed_user" class="mono" value="${esc(r.username)}" maxlength="20" autocomplete="off" autocapitalize="none" spellcheck="false"><small class="t3">${L("3-20 lletres sense accents, números, punt o guió. La contrasenya no canvia.", 'De 3 a 20 letras sin acentos, números, punto o guion. La contraseña no cambia.')}</small></label>` : ''}
+    <div class="err-msg" id="ed_err"></div>
+    <div class="acts"><button class="btn" onclick="closeModal()">${L('Cancel·la', 'Cancelar')}</button><button class="btn primary" id="ed_go" onclick="editSave(${js(code)})">${L('Desa', 'Guardar')}</button></div>`, 'w480');
+  $('#ed_nom').focus();
+}
+async function editSave(code) {
+  const r = ROWS.find(x => x.code === code), e = $('#ed_err'), go = $('#ed_go'); if (!r) return;
+  const name = $('#ed_nom').value.trim(), ui = $('#ed_user'), user = ui ? ui.value.trim().toLowerCase() : r.username;
+  if (!name) { e.textContent = L('Falta el nom.', 'Falta el nombre.'); return; }
+  if (ui && !/^[a-z0-9._-]{3,20}$/.test(user)) { e.textContent = L('Usuari: 3-20 lletres sense accents, números, punt o guió.', 'Usuario: de 3 a 20 letras sin acentos, números, punto o guion.'); return; }
+  go.disabled = true;
+  if (ui && user !== r.username) {
+    const j = await act('usuari', { code, username: user });
+    if (!j.ok) { go.disabled = false; e.textContent = j.error === 'usuari-ocupat' ? L('Aquest usuari ja el fa servir un altre alumne.', 'Este usuario ya lo usa otro alumno.') : L("No s'ha pogut canviar l'usuari.", 'No se ha podido cambiar el usuario.'); return; }
+  }
+  if (name !== r.name) {
+    const j = await act('nom', { code, name });
+    if (!j.ok) { go.disabled = false; e.textContent = L("No s'ha pogut canviar el nom.", 'No se ha podido cambiar el nombre.'); return; }
+  }
+  closeModal(); toast(L('Alumne actualitzat.', 'Alumno actualizado.')); reload();
+}
 // posar contrasenyes noves (a un alumne o a molts): se'n proposen de fàcils, es poden canviar, i després es veuen i s'imprimeixen
 function pwModal(codes) {
   closePops(); const R = codes.map(c => ROWS.find(x => x.code === c)).filter(r => r && r.username);
@@ -954,7 +980,7 @@ function reportHTML(r, print) {
       <dt>${L('Usuari', 'Usuario')}</dt><dd>${r.username ? `<span class="mono">${esc(r.username)}</span> <button class="ib sm" onclick="copyTxt(${js(r.username)})" aria-label="${L('Copia', 'Copiar')}">${ico('copy')}</button>` : L('Entra amb codi', 'Entra con código')}</dd>
       ${r.username ? `<dt>${L('Contrasenya', 'Contraseña')}</dt><dd id="dpw">${r.code in PASS ? passTxt(r) : `<button class="pwb" onclick="passOne(${js(r.code)})">•••••• ${ico('eye')} ${L('Mostra-la', 'Mostrarla')}</button>`}</dd>` : ''}<dt>${L('Alta', 'Alta')}</dt><dd>${altaTxt(r)}${r.newd != null ? ` · ${altaAgo(r)}` : ''}</dd><dt>${L('Grup', 'Grupo')}</dt><dd>${r.grup_id ? esc(gName(r.grup_id)) : L('Cap (alumne online)', 'Ninguno (alumno online)')}</dd><dt>App</dt><dd>${esc(APPN[r.variant] || 'Numi Mates')}${r.apps.length ? ' + ' + r.apps.map(a => esc(APPN[a])).join(', ') : ''}</dd></dl>
       ${ADMIN ? `<div id="dapps" style="margin-top:12px"><b style="font-weight:600">${L('Pot entrar també a', 'También puede entrar en')}</b><div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:6px">${Object.entries(APPN).filter(([k]) => k !== (r.variant || 'mates')).map(([k, n]) => `<label class="switch"><input type="checkbox" value="${k}" ${r.apps.includes(k) ? 'checked' : ''} onchange="doApps(${js(r.code)})"><span>${n}</span></label>`).join('')}</div><small class="t3">${L('Amb el mateix usuari i el mateix Premium.', 'Con el mismo usuario y el mismo Premium.')}</small></div>` : ''}
-      <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">${r.username ? `<button class="btn sm" onclick="pwModal([${js(r.code)}])">${ico('key-round')}${L('Canvia la contrasenya', 'Cambiar la contraseña')}</button>` : ''}<button class="btn sm" onclick="accessCards([ROWS.find(x=>x.code===${js(r.code)})])">${ico('printer')}${L("Targeta d'accés", 'Tarjeta de acceso')}</button></div>
+      <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap"><button class="btn sm" onclick="editModal(${js(r.code)})">${ico('pencil')}${ADMIN && r.username ? L('Nom i usuari', 'Nombre y usuario') : L('Canvia el nom', 'Cambiar el nombre')}</button>${r.username ? `<button class="btn sm" onclick="pwModal([${js(r.code)}])">${ico('key-round')}${L('Canvia la contrasenya', 'Cambiar la contraseña')}</button>` : ''}<button class="btn sm" onclick="accessCards([ROWS.find(x=>x.code===${js(r.code)})])">${ico('printer')}${L("Targeta d'accés", 'Tarjeta de acceso')}</button></div>
       <label class="switch" style="margin-top:16px"><input type="checkbox" ${r.unlock_all ? 'checked' : ''} onchange="doUnlock(${js(r.code)},this.checked)"><span><b style="font-weight:600">${L('Mode mestre: obre totes les unitats', 'Modo maestro: abre todas las unidades')}</b><br><small class="t3">${L("L'alumne podrà fer qualsevol unitat sense passar la porta.", 'El alumno podrá hacer cualquier unidad sin pasar la puerta.')}</small></span></label>
       ${ADMIN ? `<div class="inline-form"><label class="field"><span>${L('Pla', 'Plan')}</span><select onchange="doPla(${js(r.code)},this.value)">${[['free', 'Gratuït|Gratuito'], ['premium', 'Premium|Premium'], ['escola', 'Escola|Escuela']].map(([k, t]) => `<option value="${k}" ${r.pla === k ? 'selected' : ''}>${tx(t)}</option>`).join('')}</select></label>${uInfo(r.code)}
         <label class="field"><span>${L('Grup', 'Grupo')}</span><select onchange="doAssign(${js(r.code)},this.value)"><option value="">${L('Sense grup', 'Sin grupo')}</option>${GRUPS.map(g => `<option value="${g.id}" ${g.id === r.grup_id ? 'selected' : ''}>${esc(g.nom)} · ${esc(g.centre)}</option>`).join('')}</select></label>
