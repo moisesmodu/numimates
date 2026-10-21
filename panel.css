@@ -929,3 +929,108 @@ body{background:
 @media (max-width:480px){.gacts:has(>:nth-child(4)){grid-template-columns:repeat(2,minmax(0,1fr))}}
 .kpi.has-ic{padding-right:54px}.kpi-ic{width:36px;height:36px;top:14px;right:12px}
 @media (max-width:767px){.qa{flex-direction:column;align-items:flex-start;gap:6px;min-height:0;padding:12px}.qa small{display:none}.qa .qa-i{width:34px;height:34px}}
+
+/* ===== Redisseny 2026 · v3 «L'aula viva» =====
+   Menú flotant, blocs amb doble bisell, la classe d'un cop d'ull amb el personatge de cada alumne i entrades esglaonades. */
+:root{--spring:cubic-bezier(.32,.72,0,1);--r-xl:22px;--ok:#22A06B;--week:#8B5CF6;--wa:#E0A100}
+/* menú: illa flotant */
+@media (min-width:1280px){.app{grid-template-columns:268px 1fr}}
+.side{margin:12px 0 12px 12px;height:calc(100vh - 24px);top:12px;border-radius:var(--r-xl);
+  background:radial-gradient(120% 60% at 0% 0%,rgba(140,80,180,.35),transparent 60%),linear-gradient(180deg,#2E1A3B 0%,#1F1128 100%);
+  box-shadow:0 0 0 1px rgba(255,255,255,.04),0 24px 48px -20px rgba(31,17,40,.6)}
+.nav a.on::before{left:-12px}
+.top{border-bottom:0;margin:12px 16px 0;border-radius:18px;height:58px;background:rgba(255,255,255,.66);box-shadow:0 0 0 1px rgba(96,43,122,.07),0 10px 30px -18px rgba(58,30,82,.3);top:12px}
+@media (min-width:1024px) and (max-width:1279px){.app{grid-template-columns:236px 1fr}}
+@media (max-width:1023px){.side{margin:0;height:100vh;top:0;border-radius:0 22px 22px 0}.top{margin:0;border-radius:0}}
+
+/* doble bisell: cada bloc és una placa dins d'una safata */
+.card,.kpi,.tw{border-radius:18px;border-color:rgba(96,43,122,.10);
+  box-shadow:0 0 0 5px rgba(255,255,255,.6),0 0 0 6px rgba(96,43,122,.07),0 22px 44px -26px rgba(58,30,82,.42)}
+.tw{overflow:auto}
+.content{gap:28px}
+.grid12{gap:22px}
+
+/* entrada esglaonada */
+@keyframes rise{from{opacity:0;transform:translateY(14px) scale(.99);filter:blur(4px)}to{opacity:1;transform:none;filter:none}}
+.content>*{animation:rise .7s var(--spring) both}
+.content>*:nth-child(2){animation-delay:.06s}.content>*:nth-child(3){animation-delay:.12s}.content>*:nth-child(4){animation-delay:.18s}.content>*:nth-child(n+5){animation-delay:.24s}
+
+/* avatars amb el personatge de l'alumne */
+.av.ch{background:radial-gradient(circle at 50% 35%,#FFFFFF 0%,#EFE6F6 70%);overflow:hidden;box-shadow:inset 0 0 0 1px rgba(96,43,122,.10)}
+.av.ch img{width:118%;height:118%;object-fit:contain;margin-top:8%}
+.av.xl{width:56px;height:56px;font-size:16px}
+
+/* mosaic superior del resum */
+.bento-top{display:grid;grid-template-columns:minmax(0,1.9fr) minmax(280px,1fr);gap:22px;align-items:stretch}
+.b-hero{position:relative;overflow:hidden;border-radius:24px;padding:24px 24px 18px;color:#fff;
+  background:radial-gradient(60% 90% at 100% 0%,rgba(255,201,60,.30),transparent 60%),radial-gradient(70% 100% at 0% 100%,rgba(155,93,229,.55),transparent 60%),linear-gradient(140deg,#5E2A7C 0%,#3B1950 100%);
+  box-shadow:0 0 0 5px rgba(255,255,255,.55),0 0 0 6px rgba(96,43,122,.10),0 30px 60px -30px rgba(59,25,80,.8)}
+.b-hero::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at 1px 1px,rgba(255,255,255,.10) 1px,transparent 1.4px) 0 0/18px 18px;mask:linear-gradient(180deg,#000,transparent 85%)}
+.b-hero>*{position:relative}
+.eyebrow{display:inline-block;font-size:10.5px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:#FFD872;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.14);border-radius:999px;padding:4px 10px}
+.b-hero h2{margin:10px 0 2px;font-size:30px;line-height:34px;font-weight:800;letter-spacing:-.025em}
+.b-hero-h p{margin:0;color:#E3D2F0;font-size:13.5px}
+.aula{display:grid;grid-template-columns:repeat(auto-fill,minmax(70px,1fr));gap:12px 8px;margin:20px 0 14px}
+.seat{display:grid;justify-items:center;gap:6px;color:#fff;text-decoration:none;font-size:11.5px;font-weight:600;animation:rise .6s var(--spring) both;animation-delay:var(--d,0ms)}
+.seat:hover{text-decoration:none}
+.seat span:last-child{max-width:70px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;opacity:.92}
+.seat .av{box-shadow:0 0 0 3px #3B1950,0 0 0 5px var(--seat,#6E5A80),0 8px 16px -6px rgba(0,0,0,.5);transition:transform .35s var(--spring)}
+.seat:hover .av{transform:translateY(-3px) scale(1.06)}
+.seat.s-today{--seat:var(--ok)}.seat.s-week{--seat:#A78BFA}.seat.s-warn{--seat:var(--wa)}.seat.s-crit{--seat:#F04438}.seat.s-none{--seat:#6E5A80}
+.seat.s-none .av{filter:grayscale(.6) brightness(.9)}
+.seat.more .av{background:rgba(255,255,255,.12);color:#fff;font-weight:800}
+.aula-l{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:12px;color:#E3D2F0;border-top:1px solid rgba(255,255,255,.12);padding-top:12px}
+.aula-l i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;vertical-align:0}
+.aula-l .s-today{background:var(--ok)}.aula-l .s-week{background:#A78BFA}.aula-l .s-warn{background:var(--wa)}.aula-l .s-crit{background:#F04438}
+.b-qa{display:grid;grid-template-rows:repeat(4,1fr);gap:12px}
+.b-qa .qa{display:flex;align-items:center;gap:14px;padding:12px 12px 12px 14px;border-radius:18px;background:#fff;color:var(--text);min-height:0;flex-direction:row;
+  box-shadow:0 0 0 5px rgba(255,255,255,.6),0 0 0 6px rgba(96,43,122,.07),0 16px 30px -22px rgba(58,30,82,.45);transition:transform .45s var(--spring),box-shadow .45s var(--spring)}
+.b-qa .qa:hover{transform:translateX(4px);text-decoration:none}
+.b-qa .qa-i{width:44px;height:44px;flex:none;object-fit:contain;filter:drop-shadow(0 4px 6px rgba(60,20,80,.22));background:none;border-radius:0}
+.b-qa .qa>span{flex:1;min-width:0}.b-qa .qa b{font-size:14.5px}.b-qa .qa small{display:block}
+.qa-go{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent);flex:none;transition:transform .45s var(--spring),background .3s}
+.b-qa .qa:hover .qa-go{background:var(--accent);color:#fff;transform:translateX(2px) scale(1.06)}
+@media (max-width:1279px){.bento-top{grid-template-columns:1fr}.b-qa{grid-template-rows:none;grid-template-columns:1fr 1fr}}
+@media (max-width:767px){.b-hero{padding:20px 16px 14px}.b-hero h2{font-size:24px;line-height:28px}.aula{grid-template-columns:repeat(auto-fill,minmax(58px,1fr))}.av.xl{width:46px;height:46px}.b-qa{grid-template-columns:1fr}.b-qa .qa small{display:block}}
+
+/* indicadors amb anell */
+.kpi.has-ring{padding-right:86px;min-height:118px}
+.kpi-viz{position:absolute;right:14px;top:50%;transform:translateY(-50%);width:64px;height:64px;display:grid;place-items:center}
+.kpi-viz img{position:absolute;width:30px;height:30px;object-fit:contain}
+.ring{width:64px;height:64px;transform:rotate(-90deg)}
+.ring .rt{fill:none;stroke:#EFE8F5;stroke-width:6}
+.ring .rv{fill:none;stroke:var(--accent);stroke-width:6;stroke-linecap:round;transition:stroke-dasharray 1s var(--spring)}
+.ring.good .rv{stroke:var(--ok)}.ring.gold .rv{stroke:#E0A100}
+.kpis,.kpis.k5{grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:18px}
+.kpi.has-ring{padding-right:76px}
+.kpi-viz,.ring{width:54px;height:54px}.kpi-viz{right:12px}.kpi-viz img{width:26px;height:26px}
+.aula{grid-template-columns:repeat(auto-fill,minmax(64px,1fr))}
+
+/* Material Tech: accés dels alumnes a tech.numimates.com */
+.tacc{position:relative;overflow:hidden;display:grid;grid-template-columns:1fr auto;gap:24px;align-items:center;padding:26px 28px;border-radius:24px;color:#fff;
+  background:radial-gradient(60% 100% at 100% 0%,rgba(110,231,255,.35),transparent 60%),radial-gradient(70% 120% at 0% 100%,rgba(99,102,241,.45),transparent 60%),linear-gradient(140deg,#2D6CB5 0%,#173E73 100%);
+  box-shadow:0 0 0 5px rgba(255,255,255,.55),0 0 0 6px rgba(37,99,168,.12),0 30px 60px -30px rgba(23,62,115,.8)}
+.tacc::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at 1px 1px,rgba(255,255,255,.12) 1px,transparent 1.4px) 0 0/18px 18px;mask:linear-gradient(90deg,#000,transparent 80%)}
+.tacc>*{position:relative}
+.tacc .eyebrow{color:#BFF3FF}
+.tacc h2{margin:10px 0 6px;font-size:34px;line-height:40px;font-weight:800;letter-spacing:-.03em}
+.tacc h2 a{color:#fff;text-decoration:none;background:linear-gradient(transparent 70%,rgba(110,231,255,.35) 70%)}
+.tacc p{margin:0;max-width:62ch;color:#D7E8FA;font-size:13.5px}
+.tacc-b{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
+.tacc-b .btn{border-radius:999px;height:38px;padding:0 16px;background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.22);color:#fff}
+.tacc-b .btn:hover{background:rgba(255,255,255,.2);text-decoration:none}
+.tacc-b .btn.primary{background:#fff;color:#173E73;border-color:#fff}
+.tacc-g{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.tcode{display:grid;gap:0;text-align:left;padding:8px 12px;border-radius:12px;border:1px dashed rgba(255,255,255,.35);background:rgba(255,255,255,.06);color:#fff;cursor:pointer;transition:background .3s var(--spring),transform .4s var(--spring)}
+.tcode:hover{background:rgba(255,255,255,.14);transform:translateY(-2px)}
+.tcode small{font-size:11px;color:#BFD6F0}.tcode code{font:700 16px var(--mono);letter-spacing:.06em}
+.tacc-qr{display:grid;justify-items:center;gap:8px;padding:14px;background:#fff;border-radius:18px;color:#173E73;box-shadow:0 16px 30px -16px rgba(0,0,0,.5);z-index:2}
+.tacc-qr svg{width:132px;height:132px;display:block}
+.tacc-qr small{font-size:11.5px;font-weight:700}
+.tacc-bot{position:absolute;right:170px;bottom:-14px;width:96px;opacity:.95;filter:drop-shadow(0 12px 16px rgba(0,0,0,.35));pointer-events:none}
+@media (max-width:1023px){.tacc-bot{display:none}}
+@media (max-width:767px){.tacc{grid-template-columns:1fr;padding:20px 16px}.tacc h2{font-size:26px;line-height:32px}.tacc-qr{justify-self:start}}
+.kpis,.kpis.k5{grid-template-columns:repeat(auto-fit,minmax(176px,1fr));gap:16px}.kpi.has-ring{padding-right:70px}
+.proj code.url{font-size:clamp(28px,4.2vw,56px);letter-spacing:0;white-space:nowrap}.proj{gap:48px}
+@media (max-width:1023px){.app:not(.open) .side .brand>div,.app:not(.open) .side .me .seg{display:none}.app:not(.open) .side .me{padding:6px;background:none;border:0}.app:not(.open) .side .brand{justify-content:center;padding:6px 0 12px}}
+@media (max-width:767px){.aula{grid-template-columns:repeat(auto-fill,minmax(50px,1fr));gap:10px 4px;margin:16px 0 12px}.seat .av.xl{width:40px;height:40px;font-size:13px}.seat{font-size:10px}.seat span:last-child{max-width:52px}}

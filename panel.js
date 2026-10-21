@@ -147,7 +147,10 @@ const scope = () => G === 'online' ? ROWS.filter(r => !r.grup_id) : G ? ROWS.fil
 const gName = id => (GRUPS.find(g => g.id === id) || {}).nom || '';
 const scopeName = () => G === 'online' ? L('Alumnes online (sense grup)', 'Alumnos online (sin grupo)') : G ? gName(+G) : '';
 const INIT_BG = ['#EDE3F4', '#E3EEF7', '#E6F2EA', '#F7EEDC', '#F6E4E8', '#E9E6EE'];
-const avatar = (r, cls = '') => { const p = String(r.name || '?').trim().split(/\s+/).filter(w => /^\p{L}/u.test(w)); const ini = ((p[0] || '?')[0] + (p[1] ? p[1][0] : '')).toUpperCase(); let h = 0; for (const c of String(r.code)) h = (h * 31 + c.charCodeAt(0)) >>> 0; return `<span class="av ${cls}" style="background:${INIT_BG[h % 6]}">${esc(ini)}</span>`; };
+// l'avatar és el company que l'alumne ha triat a l'app (amb l'accessori que porta); si no en té, les inicials
+const CHARS = ['numi', 'guida', 'vuit', 'tuga', 'flama', 'estel', 'cavaller'], CH_ACC = ['llacet', 'gorra', 'ulleres', 'barret', 'corona', 'medalla', 'auriculars', 'coronafoc'];
+const charImg = r => { const c = String(r.companion || ''); if (!CHARS.includes(c)) return ''; const a = isO(r.acc) ? [r.acc.head, r.acc.eyes, r.acc.neck].find(k => CH_ACC.includes(k)) : null; return `img/chars/${c}${a ? '-' + a : ''}.webp`; };
+const avatar = (r, cls = '') => { const im = charImg(r); if (im) return `<span class="av ch ${cls}"><img src="${im}" alt="" loading="lazy" decoding="async"></span>`; const p = String(r.name || '?').trim().split(/\s+/).filter(w => /^\p{L}/u.test(w)); const ini = ((p[0] || '?')[0] + (p[1] ? p[1][0] : '')).toUpperCase(); let h = 0; for (const c of String(r.code)) h = (h * 31 + c.charCodeAt(0)) >>> 0; return `<span class="av ${cls}" style="background:${INIT_BG[h % 6]}">${esc(ini)}</span>`; };
 
 /* ---------- entrada ---------- */
 function login(err = '', admin = location.hash === '#admin') {
@@ -368,13 +371,30 @@ const MFASE = { inici: ['Inici', 'Inicio', '#2F5BEA'], teoria: ['Teoria', 'Teor�
 // «vista d'alumne»: l'app de Numi Tech amb tot obert (tech-revisio.js comprova el testimoni del docent)
 const stuView = (c, sid) => `index.html?v=tech&docent=1&curs=${encodeURIComponent(c)}${sid ? '&s=' + encodeURIComponent(sid) : ''}&l=${LANG}`;
 const hasGuide = id => typeof TGUIDE !== 'undefined' && !!TGUIDE[id];
+// accés dels alumnes a Numi Tech: l'adreça ben grossa, el QR per a la tauleta i els codis dels grups de Tech
+const TECH_URL = 'https://tech.numimates.com';
+const qrOf = (txt, cell = 6) => { if (!window.qrcode) return ''; const q = qrcode(0, 'M'); q.addData(txt); q.make(); return q.createSvgTag({ cellSize: cell, margin: 0, scalable: true }); };
+function techAccess() {
+  const gs = GRUPS.filter(g => hasTech(g));
+  return `<section class="tacc"><div class="tacc-t"><span class="eyebrow">${L('Accés dels alumnes', 'Acceso de los alumnos')}</span>
+      <h2><a href="${TECH_URL}" target="_blank" rel="noopener">tech.numimates.com</a></h2>
+      <p>${L("Els alumnes hi entren amb el seu usuari i contrasenya (o amb el codi de classe, si encara no en tenen). Projecta-ho a la pissarra perquè escanegin el QR amb la tauleta.", 'Los alumnos entran con su usuario y contraseña (o con el código de clase, si aún no tienen). Proyéctalo en la pizarra para que escaneen el QR con la tableta.')}</p>
+      <div class="tacc-b"><button class="btn primary" onclick="techProj()">${ico('maximize-2')}${L('Projecta a la pissarra', 'Proyectar en la pizarra')}</button><button class="btn" onclick="copyTxt(TECH_URL,L('Enllaç copiat','Enlace copiado'))">${ico('copy')}${L("Copia l'enllaç", 'Copiar el enlace')}</button><a class="btn" href="${TECH_URL}" target="_blank" rel="noopener">${ico('external-link')}${L('Obre-la', 'Abrirla')}</a></div>
+      ${gs.length ? `<div class="tacc-g">${gs.map(g => `<button class="tcode" onclick="projectar(${g.id})" title="${L('Mostra el codi a la pissarra', 'Mostrar el código en la pizarra')}"><small>${esc(g.nom)}</small><code>${esc(g.codi)}</code></button>`).join('')}</div>` : ''}</div>
+    <div class="tacc-qr">${qrOf(TECH_URL)}<small>${L('Escaneja per entrar', 'Escanea para entrar')}</small></div><img class="tacc-bot" src="img/ic/robot.webp" alt=""></section>`;
+}
+function techProj() {
+  document.body.insertAdjacentHTML('beforeend', `<div class="proj"><button class="btn close" onclick="$('.proj').remove()">${ico('x')}${L('Tanca', 'Cerrar')}</button>
+    <div><h2>${L('Entra a Numi Tech', 'Entra en Numi Tech')}</h2><ol><li>${L('Obre', 'Abre')} <b>tech.numimates.com</b></li><li>${L('Escriu el teu usuari i la teva contrasenya', 'Escribe tu usuario y tu contraseña')}</li></ol><code class="url">tech.numimates.com</code></div>
+    <div class="qr">${qrOf(TECH_URL, 8)}<p>${L('O escaneja aquest codi amb la tauleta', 'O escanea este código con la tableta')}</p></div></div>`);
+}
 function vMaterial(c, sid) {
   const T = typeof TECH_T !== 'undefined' ? TECH_T : null; if (!T || !T.courses[c]) return shell('material', L('Material del professor', 'Material del profesor'), `<div class="card pad">${L('No hi ha aquest curs.', 'No existe este curso.')}</div>`, { switcher: false });
   const C = T.courses[c], sess = Object.entries(T.s).filter(([, x]) => x.c === c);
   const tabs = `<div class="mtabs">${Object.entries(T.courses).filter(([, x]) => x.ready).map(([k, x]) => `<a href="#/material/${k}" class="${k === c ? 'on' : ''}">${esc(tx(x.n))}</a>`).join('')}</div>`;
   if (sid && T.s[sid]) return matSession(c, sid, tabs);
   const units = {}; sess.forEach(([id, x]) => (units[x.u] ||= []).push([id, x]));
-  const body = `${tabs}<div class="mstu card pad"><div><b>${L('Vista d\'alumne', 'Vista de alumno')}</b><p class="t3" style="margin:2px 0 0">${L('Obre l\'app tal com la veu un alumne, amb totes les sessions obertes, per provar-les abans de la classe.', 'Abre la app tal como la ve un alumno, con todas las sesiones abiertas, para probarlas antes de la clase.')}</p></div><a class="btn primary" href="${stuView(c)}" target="_blank" rel="noopener">${ico('external-link')}${L('Obre la vista d\'alumne', 'Abre la vista de alumno')}</a></div><p class="t2" style="margin:4px 0 16px">${esc(tx(C.age))} · ${C.units} ${L('unitats', 'unidades')} · ${C.total} ${L('sessions de 60 minuts', 'sesiones de 60 minutos')}. ${L('Cada sessió té la guia (objectius, pla de la classe, errors típics i avaluació), la presentació per projectar i les fitxes per imprimir.', 'Cada sesión tiene la guía (objetivos, plan de la clase, errores típicos y evaluación), la presentación para proyectar y las fichas para imprimir.')}</p>
+  const body = `${techAccess()}${tabs}<div class="mstu card pad"><div><b>${L('Vista d\'alumne', 'Vista de alumno')}</b><p class="t3" style="margin:2px 0 0">${L('Obre l\'app tal com la veu un alumne, amb totes les sessions obertes, per provar-les abans de la classe.', 'Abre la app tal como la ve un alumno, con todas las sesiones abiertas, para probarlas antes de la clase.')}</p></div><a class="btn primary" href="${stuView(c)}" target="_blank" rel="noopener">${ico('external-link')}${L('Obre la vista d\'alumne', 'Abre la vista de alumno')}</a></div><p class="t2" style="margin:4px 0 16px">${esc(tx(C.age))} · ${C.units} ${L('unitats', 'unidades')} · ${C.total} ${L('sessions de 60 minuts', 'sesiones de 60 minutos')}. ${L('Cada sessió té la guia (objectius, pla de la classe, errors típics i avaluació), la presentació per projectar i les fitxes per imprimir.', 'Cada sesión tiene la guía (objetivos, plan de la clase, errores típicos y evaluación), la presentación para proyectar y las fichas para imprimir.')}</p>
     ${Object.entries(units).map(([u, list]) => `<div class="card pad munit"><h3>${L('Unitat', 'Unidad')} ${u} · ${esc(tx(T.units[c + ':' + u] || ''))}</h3><div class="mlist">${list.map(([id, x]) => { const g = hasGuide(id);
       return `<a class="msess ${g ? '' : 'off'}" href="${g ? `#/material/${c}/${id}` : 'javascript:void 0'}"><span class="mn">${x.n}</span><span><b>${esc(tx(x.t))}</b><small>${x.proj ? L('Projecte · ', 'Proyecto · ') : ''}${g ? L('Guia, presentació i fitxes', 'Guía, presentación y fichas') : L('En preparació', 'En preparación')}</small></span>${g ? ico('chevron-right') : ''}</a>`; }).join('')}</div></div>`).join('')}`;
   shell('material', L('Material del professor', 'Material del profesor'), body, { switcher: false });
@@ -570,25 +590,34 @@ async function mDup() { const r = await mapi('dup', { id: MED.id }); if (r.ok) {
 async function mDel() { if (!await confirmBox(L('Esborrar aquest correu?', '¿Borrar este correo?'), L("S'esborra l'esborrany o el registre de l'enviament.", 'Se borra el borrador o el registro del envío.'), L('Esborra', 'Borrar'))) return; await mapi('delete', { id: MED.id }); MED = null; location.hash = '#/correus'; }
 
 /* ---------- Resum ---------- */
-// capçalera del resum: salutació i les quatre coses que es fan cada dia, a un clic
+// capçalera del resum («l'aula viva»): salutació, la classe d'un cop d'ull (cada alumne amb el seu personatge i un halo
+// segons com va) i les quatre coses que es fan cada dia, a un clic
+const seatSt = r => r.reasons && r.reasons.some(x => x.sev === 'crit') ? 'crit' : r.reasons && r.reasons.length ? 'warn' : r.idle === 0 ? 'today' : r.act7 ? 'week' : 'none';
 function todayHero() {
   const h = new Date().getHours(), nom = (ME && ME.nom ? ME.nom.split(' ')[0] : '');
   const hola = h < 14 ? L('Bon dia', 'Buenos días') : h < 21 ? L('Bona tarda', 'Buenas tardes') : L('Bona nit', 'Buenas noches');
   const dia = new Date().toLocaleDateString(LANG === 'es' ? 'es-ES' : 'ca-ES', { weekday: 'long', day: 'numeric', month: 'long' });
-  const go = (href, ic, t, d) => `<a class="qa" href="${href}"><img class="qa-i" src="img/ic/${ic}.webp" alt=""><span><b>${t}</b><small>${d}</small></span></a>`;
-  return `<section class="hero"><img class="hero-bot" src="img/chars/numi-happy.webp" alt=""><div class="hero-t"><p class="hero-d">${esc(dia)}</p><h2>${esc(hola)}${nom ? ', ' + esc(nom) : ''}</h2><p class="t2">${esc(G ? scopeName() : L('Tots els teus alumnes', 'Todos tus alumnos'))} · ${scope().length} ${L('alumnes', 'alumnos')}</p></div>
-    <div class="qas">${go('#/directe', 'bolt', L('Classe en directe', 'Clase en directo'), L('Mira qui treballa ara', 'Mira quién trabaja ahora'))}
+  const R = scope(), ord = { today: 0, week: 1, warn: 2, crit: 3, none: 4 };
+  const seats = R.slice().sort((x, y) => ord[seatSt(x)] - ord[seatSt(y)] || x.name.localeCompare(y.name)), MAX = seats.length <= 32 ? 32 : 27, more = seats.length - MAX;
+  const cnt = k => R.filter(r => seatSt(r) === k).length;
+  const go = (href, ic, t, d) => `<a class="qa" href="${href}"><img class="qa-i" src="img/ic/${ic}.webp" alt=""><span><b>${t}</b><small>${d}</small></span><i class="qa-go">${ico('chevron-right')}</i></a>`;
+  return `<section class="bento-top"><div class="b-hero"><div class="b-hero-h"><span class="eyebrow">${esc(dia)}</span><h2>${esc(hola)}${nom ? ', ' + esc(nom) : ''}</h2><p>${esc(G ? scopeName() : L('La teva classe, d\'un cop d\'ull', 'Tu clase, de un vistazo'))}</p></div>
+      <div class="aula">${seats.slice(0, MAX).map((r, i) => `<a class="seat s-${seatSt(r)}" style="--d:${i * 28}ms" href="#/alumnes/${encodeURIComponent(r.code)}" title="${esc(r.name)} · ${esc(ago(r.last_day))}">${avatar(r, 'xl')}<span>${esc(String(r.name).split(' ')[0])}</span></a>`).join('')}${more > 0 ? `<a class="seat more" href="#/alumnes"><span class="av xl">+${more}</span><span>${L('tots', 'todos')}</span></a>` : ''}</div>
+      <div class="aula-l"><span><i class="s-today"></i>${L('Avui', 'Hoy')} · ${cnt('today')}</span><span><i class="s-week"></i>${L('Aquesta setmana', 'Esta semana')} · ${cnt('week')}</span><span><i class="s-warn"></i>${L('Vigilar', 'Vigilar')} · ${cnt('warn')}</span><span><i class="s-crit"></i>${L('Cal atenció', 'Necesita atención')} · ${cnt('crit')}</span></div></div>
+    <div class="b-qa">${go('#/directe', 'bolt', L('Classe en directe', 'Clase en directo'), L('Qui treballa ara mateix', 'Quién trabaja ahora mismo'))}
       ${go('#/batalles', 'swords', L('Batalla', 'Batalla'), L('Un repte per a tota la classe', 'Un reto para toda la clase'))}
       ${go('#/tasques', 'target', L('Tasca', 'Tarea'), L('Deures per a casa', 'Deberes para casa'))}
       ${go('#/grups', 'school', L('Alumnes', 'Alumnos'), L('Afegeix-ne o imprimeix targetes', 'Añade o imprime tarjetas'))}</div></section>`;
 }
+// anell de progrés per als indicadors
+const ring = (pct, cls = '') => { const p = Math.max(0, Math.min(100, pct || 0)), c = 2 * Math.PI * 22; return `<svg class="ring ${cls}" viewBox="0 0 52 52" aria-hidden="true"><circle cx="26" cy="26" r="22" class="rt"/><circle cx="26" cy="26" r="22" class="rv" stroke-dasharray="${(c * p / 100).toFixed(1)} ${c.toFixed(1)}"/></svg>`; };
 function vResum() {
   const R = scope(), n = R.length;
   const a7 = R.filter(r => r.act7).length, p7 = R.filter(r => r.actPrev7).length, dA = a7 - p7;
   const ans = R.reduce((s, r) => s + (r.answers || 0), 0), cor = R.reduce((s, r) => s + (r.correct || 0), 0);
   const ex = R.flatMap(r => r.exams), exOk = ex.filter(x => (x.best || 0) >= 75).length;
   const att = R.filter(r => r.sev).sort((a, b) => b.sev - a.sev || (b.idle || 0) - (a.idle || 0) || a.name.localeCompare(b.name));
-  const kpi = (l, v, m, cls = '', ic = '') => `<div class="kpi ${ic ? 'has-ic' : ''}">${ic ? `<img class="kpi-ic" src="img/ic/${ic}.webp" alt="">` : ''}<span class="kpi-l">${l}</span><span class="kpi-v ${cls}">${v}</span><span class="kpi-m">${m}</span></div>`;
+  const kpi = (l, v, m, cls = '', ic = '', viz = '') => `<div class="kpi ${ic || viz ? 'has-ic' : ''} ${viz ? 'has-ring' : ''}">${viz ? `<span class="kpi-viz">${viz}<img src="img/ic/${ic}.webp" alt=""></span>` : ic ? `<img class="kpi-ic" src="img/ic/${ic}.webp" alt="">` : ''}<span class="kpi-l">${l}</span><span class="kpi-v ${cls}">${v}</span><span class="kpi-m">${m}</span></div>`;
   const byDay = Array.from({ length: 14 }, (_, i) => R.filter(r => r.d14[i]).length), mx = Math.max(1, n);
   const avg = Math.round(byDay.reduce((s, x) => s + x, 0) / 14);
   const sentRows = Object.keys(SENT).map(k => { const b = { good: 0, warn: 0, crit: 0, none: 0 }; let c = 0, t = 0; R.forEach(r => { const s = r.sent[k]; b[band(s.pct, s.t)]++; c += s.c; t += s.t; }); return { k, b, pct: t ? Math.round(100 * c / t) : null }; });
@@ -604,9 +633,9 @@ function vResum() {
   shell('resum', L('Resum', 'Resumen'), `${todayHero()}
     <div class="card kpis ${showNew ? 'k5' : ''}">
       ${showNew ? kpi(L('Altes noves (7 dies)', 'Altas nuevas (7 días)'), nous.length, `<a href="#/alumnes?f=nous">${G === 'online' ? L(`${nous30} en 30 dies`, `${nous30} en 30 días`) : L(`${nOn} online · ${nous.length - nOn} en grup`, `${nOn} online · ${nous.length - nOn} en grupo`)}</a>`, '', 'party') : ''}
-      ${kpi(L('Actius aquesta setmana', 'Activos esta semana'), `${a7} <span class="t3" style="font-size:18px;font-weight:600">/ ${n}</span>`, p7 || a7 ? `${ico(dA >= 0 ? 'trending-up' : 'trending-down', dA >= 0 ? 'up' : 'down')}${dA >= 0 ? '+' : ''}${dA} ${L('respecte la setmana passada', 'respecto a la semana pasada')}` : L('Encara sense activitat', 'Aún sin actividad'), '', 'fire')}
-      ${kpi(L('Precisió mitjana', 'Precisión media'), ans ? Math.round(100 * cor / ans) + ' %' : '—', `${L("des de l'inici", 'desde el inicio')} · ${ans.toLocaleString(LANG)} ${L('respostes', 'respuestas')}`, '', 'target')}
-      ${kpi(L('Porta del Cavaller', 'Puerta del Caballero'), ex.length ? Math.round(100 * exOk / ex.length) + ' %' : '—', ex.length ? `${exOk} ${L('de', 'de')} ${ex.length} ${L('portes superades', 'puertas superadas')}` : L('Encara ningú no hi ha arribat', 'Aún nadie ha llegado'), '', 'castle')}
+      ${kpi(L('Actius aquesta setmana', 'Activos esta semana'), `${a7} <span class="t3" style="font-size:18px;font-weight:600">/ ${n}</span>`, p7 || a7 ? `${ico(dA >= 0 ? 'trending-up' : 'trending-down', dA >= 0 ? 'up' : 'down')}${dA >= 0 ? '+' : ''}${dA} ${L('respecte la setmana passada', 'respecto a la semana pasada')}` : L('Encara sense activitat', 'Aún sin actividad'), '', 'fire', ring(n ? a7 / n * 100 : 0))}
+      ${kpi(L('Precisió mitjana', 'Precisión media'), ans ? Math.round(100 * cor / ans) + ' %' : '—', `${L("des de l'inici", 'desde el inicio')} · ${ans.toLocaleString(LANG)} ${L('respostes', 'respuestas')}`, '', 'target', ring(ans ? 100 * cor / ans : 0, 'good'))}
+      ${kpi(L('Porta del Cavaller', 'Puerta del Caballero'), ex.length ? Math.round(100 * exOk / ex.length) + ' %' : '—', ex.length ? `${exOk} ${L('de', 'de')} ${ex.length} ${L('portes superades', 'puertas superadas')}` : L('Encara ningú no hi ha arribat', 'Aún nadie ha llegado'), '', 'castle', ring(ex.length ? 100 * exOk / ex.length : 0, 'gold'))}
       ${kpi(L('Necessiten atenció', 'Necesitan atención'), att.length, att.length ? `<a href="#/alumnes?f=att">${L('Veure la llista', 'Ver la lista')}</a>` : L('Tot en ordre', 'Todo en orden'), att.length ? 'crit' : '', att.length ? 'worried' : 'good')}
     </div>
     <div class="grid12">
@@ -1861,7 +1890,7 @@ function vUsuaris() {
   const prem30 = pay.filter(u => u.pla_des && daysAgo(u.pla_des) <= 30).length, part = c('free') + pay.length + c('manual');
   const act0 = A.filter(u => u.idle === 0).length, act7 = A.filter(u => u.idle != null && u.idle <= 6).length, act30 = A.filter(u => u.idle != null && u.idle <= 29).length;
   const cb = UD.stripe && UD.stripe.cobrat, mode = UD.stripe && UD.stripe.mode;
-  const kpi = (l, v, m, cls = '', ic = '') => `<div class="kpi ${ic ? 'has-ic' : ''}">${ic ? `<img class="kpi-ic" src="img/ic/${ic}.webp" alt="">` : ''}<span class="kpi-l">${l}</span><span class="kpi-v ${cls}">${v}</span><span class="kpi-m">${m}</span></div>`;
+  const kpi = (l, v, m, cls = '', ic = '', viz = '') => `<div class="kpi ${ic || viz ? 'has-ic' : ''} ${viz ? 'has-ring' : ''}">${viz ? `<span class="kpi-viz">${viz}<img src="img/ic/${ic}.webp" alt=""></span>` : ic ? `<img class="kpi-ic" src="img/ic/${ic}.webp" alt="">` : ''}<span class="kpi-l">${l}</span><span class="kpi-v ${cls}">${v}</span><span class="kpi-m">${m}</span></div>`;
   // repartiment per plans
   const segs = [['pagament', 'gold'], ['manual', 'purple'], ['free', 'none'], ['escola', 'blue']].map(([k, cl]) => ({ k, cl, v: c(k) })).filter(x => x.v);
   // altes dels últims 30 dies, apilades pel pla que tenen ara
