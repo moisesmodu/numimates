@@ -693,7 +693,9 @@ function vResumTech(R, { kpi, a7, p7, dA, att, byDay, mx, avg }) {
         ${units.map(u => `<div class="srow tunit ${u.prep ? 'prep' : ''}"><span><b class="num">${cs.length > 1 && T ? esc(tx(T.courses[u.c].n)) + ' · ' : ''}U${u.u}</b> ${esc(u.t)}${u.prep ? ` <small class="t3">· ${L('en preparació', 'en preparación')}</small>` : ''}</span><div class="sbar">${u.fin ? `<i class="good" style="width:${w(u.fin, u.tot)}" title="${L('Acabada', 'Acabada')}: ${u.fin}"></i>` : ''}${u.en ? `<i class="warn" style="width:${w(u.en, u.tot)}" title="${L('Hi és', 'Está en ella')}: ${u.en}"></i>` : ''}${u.no ? `<i class="none" style="width:${w(u.no, u.tot)}"></i>` : ''}</div><b class="num">${u.fin}/${u.tot}</b></div>`).join('')}</div></section>` : ''}
     </div>`);
 }
-const emptyState = (ic, t, m, extra = '') => `<div class="empty">${ico(ic)}<b>${t}</b><span>${m}</span>${extra}</div>`;
+// pantalles buides amb la icona 3D de l'app (si n'hi ha una que hi encaixi) i, quan tot va bé, en Numi content
+const EMPTY_3D = { 'building-2': 'school', 'chart-column': 'chart', check: 'good', 'circle-alert': 'worried', 'clipboard-check': 'target', globe: 'map', 'graduation-cap': 'cap', 'grid-3x3': 'puzzle', inbox: 'envelope', 'layout-grid': 'puzzle', 'lock-open': 'unlock', mail: 'envelope', repeat: 'refresh', school: 'school', search: 'magnifier', swords: 'swords', 'trending-up': 'chart', users: 'person' };
+const emptyState = (ic, t, m, extra = '') => `<div class="empty">${ic === 'check' ? '<img class="empty-ch" src="img/chars/numi-happy.webp" alt="">' : EMPTY_3D[ic] ? `<img class="empty-ic" src="img/ic/${EMPTY_3D[ic]}.webp" alt="">` : ico(ic)}<b>${t}</b><span>${m}</span>${extra}</div>`;
 
 /* ---------- Alumnes ----------
    Taula amb filtres, data d'alta i selecció múltiple (accions en bloc a la barra de sota).
