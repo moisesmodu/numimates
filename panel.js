@@ -575,12 +575,12 @@ function todayHero() {
   const h = new Date().getHours(), nom = (ME && ME.nom ? ME.nom.split(' ')[0] : '');
   const hola = h < 14 ? L('Bon dia', 'Buenos días') : h < 21 ? L('Bona tarda', 'Buenas tardes') : L('Bona nit', 'Buenas noches');
   const dia = new Date().toLocaleDateString(LANG === 'es' ? 'es-ES' : 'ca-ES', { weekday: 'long', day: 'numeric', month: 'long' });
-  const go = (href, ic, t, d) => `<a class="qa" href="${href}"><span class="qa-i">${ico(ic, 'i20')}</span><span><b>${t}</b><small>${d}</small></span></a>`;
-  return `<section class="hero"><div class="hero-t"><p class="hero-d">${esc(dia)}</p><h2>${esc(hola)}${nom ? ', ' + esc(nom) : ''}</h2><p class="t2">${esc(G ? scopeName() : L('Tots els teus alumnes', 'Todos tus alumnos'))} · ${scope().length} ${L('alumnes', 'alumnos')}</p></div>
-    <div class="qas">${go('#/directe', 'monitor-play', L('Classe en directe', 'Clase en directo'), L('Mira qui treballa ara', 'Mira quién trabaja ahora'))}
+  const go = (href, ic, t, d) => `<a class="qa" href="${href}"><img class="qa-i" src="img/ic/${ic}.webp" alt=""><span><b>${t}</b><small>${d}</small></span></a>`;
+  return `<section class="hero"><img class="hero-bot" src="img/chars/numi-happy.webp" alt=""><div class="hero-t"><p class="hero-d">${esc(dia)}</p><h2>${esc(hola)}${nom ? ', ' + esc(nom) : ''}</h2><p class="t2">${esc(G ? scopeName() : L('Tots els teus alumnes', 'Todos tus alumnos'))} · ${scope().length} ${L('alumnes', 'alumnos')}</p></div>
+    <div class="qas">${go('#/directe', 'bolt', L('Classe en directe', 'Clase en directo'), L('Mira qui treballa ara', 'Mira quién trabaja ahora'))}
       ${go('#/batalles', 'swords', L('Batalla', 'Batalla'), L('Un repte per a tota la classe', 'Un reto para toda la clase'))}
-      ${go('#/tasques', 'clipboard-check', L('Tasca', 'Tarea'), L('Deures per a casa', 'Deberes para casa'))}
-      ${go('#/grups', 'user-plus', L('Alumnes', 'Alumnos'), L('Afegeix-ne o imprimeix targetes', 'Añade o imprime tarjetas'))}</div></section>`;
+      ${go('#/tasques', 'target', L('Tasca', 'Tarea'), L('Deures per a casa', 'Deberes para casa'))}
+      ${go('#/grups', 'school', L('Alumnes', 'Alumnos'), L('Afegeix-ne o imprimeix targetes', 'Añade o imprime tarjetas'))}</div></section>`;
 }
 function vResum() {
   const R = scope(), n = R.length;
@@ -588,7 +588,7 @@ function vResum() {
   const ans = R.reduce((s, r) => s + (r.answers || 0), 0), cor = R.reduce((s, r) => s + (r.correct || 0), 0);
   const ex = R.flatMap(r => r.exams), exOk = ex.filter(x => (x.best || 0) >= 75).length;
   const att = R.filter(r => r.sev).sort((a, b) => b.sev - a.sev || (b.idle || 0) - (a.idle || 0) || a.name.localeCompare(b.name));
-  const kpi = (l, v, m, cls = '') => `<div class="kpi"><span class="kpi-l">${l}</span><span class="kpi-v ${cls}">${v}</span><span class="kpi-m">${m}</span></div>`;
+  const kpi = (l, v, m, cls = '', ic = '') => `<div class="kpi ${ic ? 'has-ic' : ''}">${ic ? `<img class="kpi-ic" src="img/ic/${ic}.webp" alt="">` : ''}<span class="kpi-l">${l}</span><span class="kpi-v ${cls}">${v}</span><span class="kpi-m">${m}</span></div>`;
   const byDay = Array.from({ length: 14 }, (_, i) => R.filter(r => r.d14[i]).length), mx = Math.max(1, n);
   const avg = Math.round(byDay.reduce((s, x) => s + x, 0) / 14);
   const sentRows = Object.keys(SENT).map(k => { const b = { good: 0, warn: 0, crit: 0, none: 0 }; let c = 0, t = 0; R.forEach(r => { const s = r.sent[k]; b[band(s.pct, s.t)]++; c += s.c; t += s.t; }); return { k, b, pct: t ? Math.round(100 * c / t) : null }; });
@@ -603,11 +603,11 @@ function vResum() {
   if (techScope()) return vResumTech(R, { kpi, a7, p7, dA, att, byDay, mx, avg });
   shell('resum', L('Resum', 'Resumen'), `${todayHero()}
     <div class="card kpis ${showNew ? 'k5' : ''}">
-      ${showNew ? kpi(L('Altes noves (7 dies)', 'Altas nuevas (7 días)'), nous.length, `<a href="#/alumnes?f=nous">${G === 'online' ? L(`${nous30} en 30 dies`, `${nous30} en 30 días`) : L(`${nOn} online · ${nous.length - nOn} en grup`, `${nOn} online · ${nous.length - nOn} en grupo`)}</a>`) : ''}
-      ${kpi(L('Actius aquesta setmana', 'Activos esta semana'), `${a7} <span class="t3" style="font-size:18px;font-weight:600">/ ${n}</span>`, p7 || a7 ? `${ico(dA >= 0 ? 'trending-up' : 'trending-down', dA >= 0 ? 'up' : 'down')}${dA >= 0 ? '+' : ''}${dA} ${L('respecte la setmana passada', 'respecto a la semana pasada')}` : L('Encara sense activitat', 'Aún sin actividad'))}
-      ${kpi(L('Precisió mitjana', 'Precisión media'), ans ? Math.round(100 * cor / ans) + ' %' : '—', `${L("des de l'inici", 'desde el inicio')} · ${ans.toLocaleString(LANG)} ${L('respostes', 'respuestas')}`)}
-      ${kpi(L('Porta del Cavaller', 'Puerta del Caballero'), ex.length ? Math.round(100 * exOk / ex.length) + ' %' : '—', ex.length ? `${exOk} ${L('de', 'de')} ${ex.length} ${L('portes superades', 'puertas superadas')}` : L('Encara ningú no hi ha arribat', 'Aún nadie ha llegado'))}
-      ${kpi(L('Necessiten atenció', 'Necesitan atención'), att.length, att.length ? `<a href="#/alumnes?f=att">${L('Veure la llista', 'Ver la lista')}</a>` : L('Tot en ordre', 'Todo en orden'), att.length ? 'crit' : '')}
+      ${showNew ? kpi(L('Altes noves (7 dies)', 'Altas nuevas (7 días)'), nous.length, `<a href="#/alumnes?f=nous">${G === 'online' ? L(`${nous30} en 30 dies`, `${nous30} en 30 días`) : L(`${nOn} online · ${nous.length - nOn} en grup`, `${nOn} online · ${nous.length - nOn} en grupo`)}</a>`, '', 'party') : ''}
+      ${kpi(L('Actius aquesta setmana', 'Activos esta semana'), `${a7} <span class="t3" style="font-size:18px;font-weight:600">/ ${n}</span>`, p7 || a7 ? `${ico(dA >= 0 ? 'trending-up' : 'trending-down', dA >= 0 ? 'up' : 'down')}${dA >= 0 ? '+' : ''}${dA} ${L('respecte la setmana passada', 'respecto a la semana pasada')}` : L('Encara sense activitat', 'Aún sin actividad'), '', 'fire')}
+      ${kpi(L('Precisió mitjana', 'Precisión media'), ans ? Math.round(100 * cor / ans) + ' %' : '—', `${L("des de l'inici", 'desde el inicio')} · ${ans.toLocaleString(LANG)} ${L('respostes', 'respuestas')}`, '', 'target')}
+      ${kpi(L('Porta del Cavaller', 'Puerta del Caballero'), ex.length ? Math.round(100 * exOk / ex.length) + ' %' : '—', ex.length ? `${exOk} ${L('de', 'de')} ${ex.length} ${L('portes superades', 'puertas superadas')}` : L('Encara ningú no hi ha arribat', 'Aún nadie ha llegado'), '', 'castle')}
+      ${kpi(L('Necessiten atenció', 'Necesitan atención'), att.length, att.length ? `<a href="#/alumnes?f=att">${L('Veure la llista', 'Ver la lista')}</a>` : L('Tot en ordre', 'Todo en orden'), att.length ? 'crit' : '', att.length ? 'worried' : 'good')}
     </div>
     <div class="grid12">
       <section class="c8" id="att"><div class="sec-h"><h2>${L('Necessiten atenció', 'Necesitan atención')}</h2>${ADMIN && R.some(r => r.online) ? `<small>${L('alumnes en grup', 'alumnos en grupo')}</small>` : ''}</div><div class="card">
@@ -1043,7 +1043,7 @@ function grupCard(g) {
   const R = ROWS.filter(r => r.grup_id === g.id), n = R.length, act = R.filter(r => r.act7).length, att = R.filter(r => r.sev).length;
   const tech = isTechG(g), app = (g.opts || {}).app === 'both' ? 'Numi Mates + Tech' : tech ? 'Numi Tech' : g.curs >= 6 ? 'Numi Pro' : 'Numi Mates';
   const stat = (v, t, cls = '', href = '') => `<${href ? `a href="${href}" onclick="setG(${g.id})"` : 'div'} class="gstat ${cls}"><b class="num">${v}</b><span>${t}</span></${href ? 'a' : 'div'}>`;
-  return `<article class="card gc ${tech ? 'tech' : ''}"><header class="r1"><div><span class="gapp">${esc(app)}</span><b>${esc(g.nom)}</b>
+  return `<article class="card gc ${tech ? 'tech' : ''}"><header class="r1"><img class="gc-ic" src="img/ic/${tech ? 'robot' : 'abacus'}.webp" alt=""><div><span class="gapp">${esc(app)}</span><b>${esc(g.nom)}</b>
       <div class="meta">${[g.curs != null && !tech ? curs(g.curs) : '', g.docent ? g.docent : '', ADMIN ? g.centre : ''].filter(Boolean).map(esc).join(' · ')}</div></div>
       <button class="ib" onclick="grupMenu(event,${g.id})" aria-label="${L('Accions', 'Acciones')}">${ico('ellipsis')}</button></header>
     <div class="gstats">${stat(n, n === 1 ? L('alumne', 'alumno') : L('alumnes', 'alumnos'), '', '#/alumnes')}${stat(act, L('actius (7 dies)', 'activos (7 días)'))}${stat(att, L('necessiten atenció', 'necesitan atención'), att ? 'crit' : '', att ? '#/alumnes?f=att' : '')}</div>
@@ -1861,7 +1861,7 @@ function vUsuaris() {
   const prem30 = pay.filter(u => u.pla_des && daysAgo(u.pla_des) <= 30).length, part = c('free') + pay.length + c('manual');
   const act0 = A.filter(u => u.idle === 0).length, act7 = A.filter(u => u.idle != null && u.idle <= 6).length, act30 = A.filter(u => u.idle != null && u.idle <= 29).length;
   const cb = UD.stripe && UD.stripe.cobrat, mode = UD.stripe && UD.stripe.mode;
-  const kpi = (l, v, m, cls = '') => `<div class="kpi"><span class="kpi-l">${l}</span><span class="kpi-v ${cls}">${v}</span><span class="kpi-m">${m}</span></div>`;
+  const kpi = (l, v, m, cls = '', ic = '') => `<div class="kpi ${ic ? 'has-ic' : ''}">${ic ? `<img class="kpi-ic" src="img/ic/${ic}.webp" alt="">` : ''}<span class="kpi-l">${l}</span><span class="kpi-v ${cls}">${v}</span><span class="kpi-m">${m}</span></div>`;
   // repartiment per plans
   const segs = [['pagament', 'gold'], ['manual', 'purple'], ['free', 'none'], ['escola', 'blue']].map(([k, cl]) => ({ k, cl, v: c(k) })).filter(x => x.v);
   // altes dels últims 30 dies, apilades pel pla que tenen ara

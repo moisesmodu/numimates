@@ -842,3 +842,90 @@ a.gstat:hover{text-decoration:none;background:var(--accent-soft)}
 .toolbar select{border-radius:999px;width:auto}
 @media (max-width:767px){.toolbar .seg{flex-wrap:nowrap;overflow-x:auto}}
 @media (max-width:480px){.gacts{grid-template-columns:1fr 1fr}.gacts .btn{font-size:12.5px}}
+
+/* ===== Redisseny 2026 · v2: profunditat, color i la personalitat de l'app (robot i icones 3D de Numi) ===== */
+:root{--plum:#2A1736;--plum-2:#3A2149;--plum-3:#4B2C5E}
+body{background:
+  radial-gradient(900px 500px at 100% -10%,rgba(255,201,60,.10),transparent 60%),
+  radial-gradient(1000px 600px at 20% -20%,rgba(96,43,122,.10),transparent 60%),var(--bg);background-attachment:fixed}
+.top{background:rgba(246,244,249,.72)}
+
+/* menú fosc: dona contrast i fa que el contingut respiri */
+.side{background:linear-gradient(180deg,var(--plum) 0%,#22122C 100%);border-right:0;color:#EDE4F3;box-shadow:4px 0 24px rgba(42,23,54,.18)}
+.side .brand b{color:#fff}.side .brand span{color:#B9A7C6}
+.nav .lbl{color:#9C88AB}
+.nav a{color:#D9CCE3}
+.nav a .i{color:#A993B9}
+.nav a:hover{background:rgba(255,255,255,.07);color:#fff}.nav a:hover .i{color:#fff}
+.nav a.on{background:linear-gradient(90deg,rgba(255,201,60,.18),rgba(255,255,255,.08));color:#fff;box-shadow:inset 0 0 0 1px rgba(255,255,255,.10)}
+.nav a.on::before{background:var(--gold)}
+.nav a.on .i{color:var(--gold)}
+.nav a .badge{background:rgba(255,255,255,.14);color:#fff}.nav a .badge.new{background:var(--gold);color:var(--plum)}
+.side .me{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.10);color:#EDE4F3}
+.side .me small{color:#B9A7C6}
+.side .me .seg{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.12)}
+.side .me .seg button{color:#D9CCE3}.side .me .seg button.on{background:#fff;color:var(--plum)}
+.side .me .ib{color:#D9CCE3}.side .me .ib:hover{background:rgba(255,255,255,.10);color:#fff}
+.side::-webkit-scrollbar{width:8px}.side::-webkit-scrollbar-thumb{background:rgba(255,255,255,.14);border-radius:8px}
+
+/* capçalera del resum en lila Numi amb el robot */
+.hero{background:
+  radial-gradient(60% 120% at 92% 10%,rgba(255,201,60,.35),transparent 60%),
+  radial-gradient(80% 140% at 0% 100%,rgba(140,80,180,.55),transparent 60%),
+  linear-gradient(135deg,#6A2F87 0%,#4E2264 100%);
+  border:0;color:#fff;box-shadow:0 18px 40px -18px rgba(78,34,100,.65),0 2px 6px rgba(78,34,100,.25);padding:26px 28px;grid-template-columns:minmax(220px,.8fr) 2.6fr;overflow:visible;margin-top:8px}
+.hero::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:repeating-radial-gradient(circle at 0 0,rgba(255,255,255,.05) 0 1px,transparent 1px 14px);mask:linear-gradient(90deg,#000,transparent 70%)}
+.hero-bot{position:absolute;left:clamp(150px,19%,250px);bottom:-6px;height:132px;filter:drop-shadow(0 12px 18px rgba(30,10,40,.45));pointer-events:none;z-index:1}
+.hero-t{position:relative;z-index:2}
+.hero-d{color:var(--gold)}
+.hero h2{color:#fff;font-size:26px}
+.hero .t2{color:#E3D2F0}
+.qas{position:relative;z-index:2}
+.qa{background:#fff;border:0;box-shadow:0 6px 16px -6px rgba(30,10,40,.45);min-height:76px;align-items:center;padding:12px 14px}
+.qa:hover{transform:translateY(-2px);box-shadow:0 14px 26px -10px rgba(30,10,40,.55)}
+.qa .qa-i,.qa:hover .qa-i{width:40px;height:40px;border-radius:0;background:none;object-fit:contain;filter:drop-shadow(0 3px 4px rgba(60,20,80,.25))}
+.qa b{font-size:14px}
+@media (max-width:1279px){.hero{grid-template-columns:1fr}.hero-bot{left:auto;right:18px;top:-30px;bottom:auto;height:104px}}
+@media (max-width:767px){.hero-bot{height:84px;top:-18px;right:8px}}
+
+/* indicadors amb icona i un toc de color */
+.kpi{position:relative;overflow:hidden;padding:18px 18px 16px;background:linear-gradient(180deg,#fff 0%,#FDFBFE 100%)}
+.kpi.has-ic{padding-right:64px}
+.kpi-ic{position:absolute;top:14px;right:14px;width:42px;height:42px;object-fit:contain;filter:drop-shadow(0 4px 6px rgba(60,20,80,.18));transition:transform .25s var(--ease)}
+.kpi:hover .kpi-ic{transform:rotate(-6deg) scale(1.08)}
+.kpi::before{content:"";position:absolute;left:0;right:0;top:0;height:3px;background:linear-gradient(90deg,var(--accent),#B07AD0)}
+.kpi:has(.kpi-v.crit)::before{background:linear-gradient(90deg,var(--crit-fill),#F59E8B)}
+.kpi:has(.kpi-v.crit){background:linear-gradient(180deg,#FFF7F6 0%,#fff 70%)}
+.kpi-v{font-weight:800}
+
+/* blocs amb una mica més de relleu */
+.card,.tw,.kpi{box-shadow:0 1px 2px rgba(58,30,82,.06),0 8px 24px -12px rgba(58,30,82,.18)}
+.sec-h h2{font-size:16px;font-weight:800}
+
+/* targetes de grup amb capçalera de color */
+.gc{border-top:0}
+.gc .r1{margin:0;padding:16px 18px 18px;gap:12px;align-items:center;color:#fff;
+  background:radial-gradient(80% 140% at 100% 0%,rgba(255,201,60,.30),transparent 60%),linear-gradient(135deg,#6A2F87,#4E2264)}
+.gc.tech .r1{background:radial-gradient(80% 140% at 100% 0%,rgba(110,231,255,.28),transparent 60%),linear-gradient(135deg,#2D6CB5,#1C4A85)}
+.gc-ic{width:46px;height:46px;object-fit:contain;flex:none;filter:drop-shadow(0 6px 8px rgba(0,0,0,.28))}
+.gc .r1 b{color:#fff}
+.gc .meta{color:rgba(255,255,255,.78)}
+.gapp,.gc.tech .gapp{background:rgba(255,255,255,.18);color:#fff;margin-bottom:4px}
+.gc .r1 .ib{color:#fff}.gc .r1 .ib:hover{background:rgba(255,255,255,.16);color:#fff}
+.gstats{padding-top:16px}
+.gstat{background:#fff;border:1px solid var(--border);box-shadow:0 1px 2px rgba(58,30,82,.05)}
+.gstat.crit{background:var(--crit-bg);border-color:#F6C9C3}
+.gc:hover{box-shadow:0 2px 4px rgba(58,30,82,.06),0 18px 36px -16px rgba(58,30,82,.32)}
+.gc{transition:box-shadow .2s var(--ease),transform .2s var(--ease)}
+.hero{grid-template-columns:auto 112px minmax(0,1fr);column-gap:8px}
+.hero-t{grid-column:1;grid-row:1}
+.hero-bot{position:relative;left:auto;right:auto;top:auto;bottom:-30px;grid-column:2;grid-row:1;align-self:end;height:124px;justify-self:center}
+.qas{grid-column:3;grid-row:1}
+@media (max-width:1279px){.hero{grid-template-columns:1fr;row-gap:18px}.hero-t,.qas{grid-column:1;grid-row:auto}.hero-bot{position:absolute;grid-column:auto;right:18px;top:-30px;bottom:auto;height:100px}}
+@media (max-width:767px){.hero-bot{height:80px;top:-20px;right:10px}}
+.gacts{grid-template-columns:repeat(2,minmax(0,1fr))}
+.gacts:has(>:nth-child(4)){grid-template-columns:repeat(3,minmax(0,1fr))}
+.gacts .btn{min-width:0;overflow:hidden;text-overflow:ellipsis}
+@media (max-width:480px){.gacts:has(>:nth-child(4)){grid-template-columns:repeat(2,minmax(0,1fr))}}
+.kpi.has-ic{padding-right:54px}.kpi-ic{width:36px;height:36px;top:14px;right:12px}
+@media (max-width:767px){.qa{flex-direction:column;align-items:flex-start;gap:6px;min-height:0;padding:12px}.qa small{display:none}.qa .qa-i{width:34px;height:34px}}
