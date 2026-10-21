@@ -152,7 +152,8 @@ cursos de Tech i crear un curs de disseny 3D en dos nivells. Sense desplegar a p
 ## Només la sessió que obre el professor (21-10-2026)
 - Petició del Moisés: als grups de les escoles, l'alumne només pot entrar a la sessió que obre el professor.
 - `opts.tech.nomes` (per defecte **activat** a tots els grups de Tech, també els d'abans): l'alumne només pot entrar a les
-  sessions de `obert[curs]`; ni les ja fetes ni la unitat 1 per defecte. Si no n'hi ha cap d'oberta, l'inici diu
+  sessions de `obert[curs]`; ni les ja fetes. Mentre el professor no ha obert ni tancat res d'un curs (no hi ha
+  `obert[curs]`), val la regla d'abans: la unitat 1 oberta (arreglat el 21-10: al Mater els sortia tancada). Si no n'hi ha cap d'oberta, l'inici diu
   «Encara no hi ha cap sessió oberta». Es pot desactivar a la fitxa del grup («Només la sessió que obre el professor»):
   aleshores torna la regla d'abans (obert/fins, unitat 1 per defecte i les fetes es poden repetir). «Obre-ho tot» el desactiva.
 - Panell (fitxa del grup, «Sessió oberta»): tocar una sessió l'obre i tanca la que hi havia; «Obre la següent: U.N…» (segueix

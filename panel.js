@@ -1027,7 +1027,8 @@ const techNomes = g => ((g.opts || {}).tech || {}).nomes !== false;
 function techOpen(g, c) {
   const t = (g.opts || {}).tech || {}, ob = (t.obert || {})[c], f = (t.fins || {})[c], all = techSess(c).map(([id]) => id);
   // «només la sessió que obre el professor»: només el que hi ha marcat (sense la unitat 1 per defecte)
-  if (techNomes(g)) return new Set(Array.isArray(ob) ? ob : []);
+  // (si encara no ha obert ni tancat res d'aquest curs, els alumnes tenen la unitat 1 com abans)
+  if (techNomes(g) && Array.isArray(ob)) return new Set(ob);
   if (Array.isArray(ob)) return new Set(ob);
   if (f === 'tot') return new Set(all);
   if (!f) return new Set(techSess(c).filter(([, x]) => x.u === 1).map(([id]) => id));
@@ -1051,6 +1052,7 @@ function techLocks(g, c) {
 function techLocksNomes(g, c, open, ss, us) {
   const cur = ss.filter(([id, x]) => !x.prep && open.has(id)), nx = techNext(g, c), lbl = ([, x]) => `${x.u}.${x.n} ${tx(x.t)}`;
   return `<details class="tlocks" ${techLocks.open === g.id + c ? 'open' : ''} ontoggle="if(this.open)techLocks.open=${js(g.id + c)}"><summary><b>${L('Sessió oberta', 'Sesión abierta')}</b><span class="chip ${cur.length ? 'good' : ''}">${cur.length === 1 ? esc(lbl(cur[0])) : cur.length ? L(`${cur.length} obertes`, `${cur.length} abiertas`) : L('Cap', 'Ninguna')}</span></summary>
+    ${Array.isArray(((g.opts || {}).tech || {}).obert?.[c]) ? '' : `<p class="t3" style="color:var(--warn)">${L('Encara no has obert cap sessió: de moment els alumnes tenen oberta la unitat 1. Quan n\'obris una, només podran entrar a aquella.', 'Aún no has abierto ninguna sesión: de momento los alumnos tienen abierta la unidad 1. Cuando abras una, solo podrán entrar en esa.')}</p>`}
     <p class="t3">${L("Els alumnes només poden entrar a la sessió que obris (tampoc a les que ja han fet). Toca una sessió per obrir-la: es tanca la que hi havia. Els alumnes que són a l'inici de l'app la veuen en uns segons.", 'Los alumnos solo pueden entrar en la sesión que abras (tampoco en las que ya han hecho). Toca una sesión para abrirla: se cierra la que había. Los alumnos que están en el inicio de la app la ven en unos segundos.')}</p>
     <div class="tlact">${nx ? `<button class="btn sm primary" onclick="grupTechOpen(${g.id},${js(c)},'s1',${js(nx[0])})">${ico('plus')}${L('Obre la següent', 'Abre la siguiente')}: ${esc(lbl(nx))}</button>` : ''}${cur.length ? `<button class="btn sm" onclick="grupTechOpen(${g.id},${js(c)},'none')">${ico('lock')}${L('Tanca-la', 'Ciérrala')}</button>` : ''}</div>
     ${us.map(u => { const su = ss.filter(([, x]) => x.u === u);
@@ -1061,7 +1063,8 @@ function techLocksNomes(g, c, open, ss, us) {
 // la següent sessió per obrir: la que va després de l'oberta (o de l'última que s'ha obert)
 function techNext(g, c) {
   const t = (g.opts || {}).tech || {}, ss = techSess(c).filter(([, x]) => !x.prep), open = techOpen(g, c);
-  const ref = [...ss].reverse().find(([id]) => open.has(id))?.[0] || (t.ultima || {})[c], i = ss.findIndex(([id]) => id === ref);
+  // (mentre no ha obert res, la unitat 1 per defecte no compta: la primera per obrir és la 1.1 o la que va després de l'última que va obrir)
+  const ref = (Array.isArray((t.obert || {})[c]) ? [...ss].reverse().find(([id]) => open.has(id))?.[0] : null) || (t.ultima || {})[c], i = ss.findIndex(([id]) => id === ref);
   return ref ? ss[i + 1] || null : ss[0] || null;
 }
 function techField(g) {

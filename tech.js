@@ -33,7 +33,8 @@ function tAccess() {
 //   en una classe només la primera unitat (sense classe, p. ex. cursos donats a un alumne, tot obert)
 function tSessOpen(c, s) {
   const a = tAccess(); if (!a.courses.has(c.id)) return false;
-  if (a.nomes && a.classe) return Array.isArray(a.obert[c.id]) && a.obert[c.id].includes(s.id);
+  // (si el professor encara no ha obert ni tancat res d'aquest curs, val la regla d'abans: la unitat 1 oberta)
+  if (a.nomes && a.classe && Array.isArray(a.obert[c.id])) return a.obert[c.id].includes(s.id);
   if (tDone(s.id)) return true;
   if (Array.isArray(a.obert[c.id])) return a.obert[c.id].includes(s.id);
   const f = a.fins[c.id]; if (f === 'tot') return true;
