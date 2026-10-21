@@ -1573,10 +1573,12 @@ setTimeout(() => { let u = null; try { u = sessionStorage.getItem('numi-entra');
   loginModal(); const i = $('#lu'); if (i) { i.value = u; const p = $('#lp'); p && p.focus(); } }, 700);
 // enllaç o QR del docent (?classe=AULA-XXXX): obre el formulari amb el codi ja escrit quan l'alumne ja té compte
 (() => { try { const q = new URLSearchParams(location.search).get('classe'); if (q && /^AULA-[A-Z0-9]{4}$/i.test(q)) sessionStorage.setItem('numi-classe', q.toUpperCase()); if (q) history.replaceState(null, '', location.pathname); } catch (e) { } })();
-function classeLink() {
+async function classeLink() {
   let c = null; try { c = sessionStorage.getItem('numi-classe'); } catch (e) { }
   if (!c || !P || !P.code || VIEW !== 'home' || $('.modal-bg')) return;
   try { sessionStorage.removeItem('numi-classe'); } catch (e) { }
+  // just després d'entrar amb usuari encara no se sap la classe: primer es pregunta (si ja hi és, no es demana el codi)
+  if (!P.classe && navigator.onLine) { await classeRefresh(); if (!P || $('.modal-bg')) return; }
   if (P.classe) return toast(L(`Ja ets a la classe ${esc(P.classe.nom)}.`, `Ya estás en la clase ${esc(P.classe.nom)}.`));
   classeModal(); setTimeout(() => { const i = $('#aula'); if (i) i.value = c; }, 60);
 }

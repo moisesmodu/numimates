@@ -133,7 +133,7 @@ function tWatch(acc) {
 }
 function techHome() {
   // una vegada per perfil (abans era una sola vegada per pàgina: si s'entrava amb un altre usuari, no se'n sabia la classe)
-  if (P.code && navigator.onLine && techHome.pulled !== P.code && typeof classeRefresh === 'function') { techHome.pulled = P.code; classeRefresh(); }
+  if (P.code && navigator.onLine && techHome.pulled !== P.code && typeof classeRefresh === 'function') { const k = techHome.pulled = P.code; classeRefresh().finally(() => { techHome.ready = k; if (P && P.code === k && VIEW === 'home' && !tAccess().courses.size) go('home'); }); }
   const t = TS_(), acc = tAccess();
   if (!acc.courses.size) return techCatalog();
   if (!acc.courses.has(t.c)) t.c = [...acc.courses].find(id => TECH.some(c => c.id === id)) || t.c;
@@ -751,6 +751,11 @@ function tSaveProj(st) {
 /* ---------- Catàleg: quan encara no hi ha cap curs assignat ---------- */
 function techCatalog() {
   const acc = tAccess();
+  // mentre es demana la classe al servidor (just després d'entrar), res de «Tinc un codi de classe»
+  if (!acc.classe && P.code && navigator.onLine && techHome.ready !== P.code) {
+    app.innerHTML = tShell('home', '', `<section class="thero"><div class="thtxt"><p class="tkick">Numi Tech</p><h1>${L(`Hola, ${esc(P.name)}!`, `¡Hola, ${esc(P.name)}!`)}</h1><p>${L('Un moment, carregant la teva classe…', 'Un momento, cargando tu clase…')}</p></div><div class="thbot" aria-hidden="true">${bitChar('happy')}</div></section>`);
+    return;
+  }
   const hero = `<section class="thero"><div class="thtxt"><p class="tkick">Numi Tech</p><h1>${L(`Hola, ${esc(P.name)}!`, `¡Hola, ${esc(P.name)}!`)}</h1>
     <p>${acc.classe ? L("Ja ets a la teva classe. Quan el professor t'assigni un curs, el trobaràs aquí.", 'Ya estás en tu clase. Cuando el profesor te asigne un curso, lo encontrarás aquí.') : L('Per començar, entra a la teva classe amb el codi que et dona el professor.', 'Para empezar, entra en tu clase con el código que te da el profesor.')}</p>
     ${acc.classe ? '' : `<button class="btn big tgo" onclick="classeModal()">${L('TINC UN CODI DE CLASSE', 'TENGO UN CÓDIGO DE CLASE')}</button>`}</div>
@@ -768,7 +773,7 @@ function onbTech() {
     <button class="btn big" onclick="loginModal()">${L('ENTRA AMB EL TEU USUARI', 'ENTRA CON TU USUARIO')}</button>
     <button class="btn big ghost" onclick="onbTechCode()">${L('TINC UN CODI DE CLASSE', 'TENGO UN CÓDIGO DE CLASE')}</button>
     <p class="mut" style="font-size:14px;margin-top:14px">${L("L'usuari i la contrasenya, o el codi de classe, te'ls dona el teu professor.", 'El usuario y la contraseña, o el código de clase, te los da tu profesor.')}</p></div>`;
-  if (pre) onbTechCode();
+  // amb l'enllaç del professor (?classe=…) ja no se salta al formulari de compte nou: qui ja té usuari hi ha d'entrar
 }
 function onbTechCode() {
   let pre = ''; try { pre = sessionStorage.getItem('numi-classe') || ''; } catch (e) { }
