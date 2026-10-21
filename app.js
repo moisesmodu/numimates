@@ -1790,6 +1790,8 @@ async function doLogin(withCode) {
     P = migrate({ ...r.state, id, code, name: r.name, username: r.state.username || r.username || (withCode ? null : data.username), pla: r.pla || 'free', sub: r.sub || null }); P.dirty = false; P.holdReg = false;
     DB.profiles[id] = P; DB.current = id; LANG = P.lang; saveLocal();
     closeModal(); go('home'); toast(L(`Hola de nou, ${esc(P.name)}! 👋`, `¡Hola de nuevo, ${esc(P.name)}! 👋`));
+    // la classe (grup, cursos de Tech, sessions obertes) no arriba amb el login: es demana ara (si no, Tech demanava el codi de classe)
+    classeRefresh();
     // ha entrat amb el codi i el compte no té usuari: que el creï ara
     if (withCode && !P.username) setTimeout(() => accountModal(true), 900);
   } catch (e) { $('#lerr').textContent = ERR(); }

@@ -132,7 +132,8 @@ function tWatch(acc) {
   tWatch.t = setTimeout(function tick() { if (VIEW !== 'home' || !P || !P.code) return; if (!document.hidden && navigator.onLine) classeRefresh(); tWatch.t = setTimeout(tick, 15000); }, 15000);
 }
 function techHome() {
-  if (P.code && navigator.onLine && !techHome.pulled && typeof classeRefresh === 'function') { techHome.pulled = 1; classeRefresh(); }
+  // una vegada per perfil (abans era una sola vegada per pàgina: si s'entrava amb un altre usuari, no se'n sabia la classe)
+  if (P.code && navigator.onLine && techHome.pulled !== P.code && typeof classeRefresh === 'function') { techHome.pulled = P.code; classeRefresh(); }
   const t = TS_(), acc = tAccess();
   if (!acc.courses.size) return techCatalog();
   if (!acc.courses.has(t.c)) t.c = [...acc.courses].find(id => TECH.some(c => c.id === id)) || t.c;
