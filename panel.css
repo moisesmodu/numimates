@@ -1088,3 +1088,11 @@ body{background:
 .dstat b{font-size:24px;line-height:30px;font-weight:800;letter-spacing:-.02em}.dstat b small{font-size:14px;color:var(--text-3);font-weight:700}
 .dstat .kpi-viz{right:10px;width:54px;height:54px}.dstat .ring{width:54px;height:54px}.dstat .kpi-viz img{width:24px;height:24px}
 .dstat-ic{position:absolute;right:16px;top:50%;transform:translateY(-50%);width:40px;height:40px;object-fit:contain;filter:drop-shadow(0 4px 6px rgba(60,20,80,.18))}
+/* grups: les cares de la classe */
+.gfaces{display:flex;align-items:center;padding-top:14px;padding-left:22px!important;text-decoration:none}
+.gfaces:hover{text-decoration:none}
+.gf{margin-left:-8px;transition:transform .35s var(--spring)}
+.gf .av{width:34px;height:34px;box-shadow:0 0 0 2px #fff,0 0 0 4px var(--seat,#D6D1DD)}
+.gf.s-today{--seat:var(--ok)}.gf.s-week{--seat:#C4B5FD}.gf.s-warn{--seat:var(--wa)}.gf.s-crit{--seat:#F04438}.gf.s-none{--seat:#E2DCE8}
+.gfaces:hover .gf{transform:translateX(3px)}.gfaces:hover .gf:hover{transform:translateY(-3px)}
+.gf.more .av{background:var(--surface-2);color:var(--text-2);font-size:11.5px;font-weight:800}
