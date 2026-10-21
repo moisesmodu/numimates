@@ -719,3 +719,126 @@ td.c-accs .uname{font-weight:500}
 .pwr{display:grid;grid-template-columns:minmax(0,1fr) 150px;gap:10px;align-items:center}
 .pwr span{display:flex;flex-direction:column;min-width:0}.pwr span b{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.pwr small{color:var(--text-3)}
 .pwr input{height:36px;font-size:15px}
+
+/* ===== Redisseny 2026: més ordre i més calidesa, mateixa identitat (lila Numi, Nunito Sans) =====
+   Capa final: només retoca el que hi ha a sobre; si cal tornar enrere, n'hi ha prou de treure aquest bloc. */
+:root{
+  --bg:#F6F4F9;--surface-2:#F4F1F8;--surface-3:#EAE5F0;--border:#E8E3EF;--border-strong:#D3CBDD;
+  --r-sm:8px;--r:12px;--r-lg:16px;
+  --pop:0 6px 20px rgba(58,30,82,.10),0 1px 3px rgba(58,30,82,.08);--float:0 24px 64px rgba(58,30,82,.20);
+  --card-sh:0 1px 2px rgba(58,30,82,.05),0 2px 8px rgba(58,30,82,.04);
+  --ease:cubic-bezier(.2,.8,.2,1);
+}
+body{font-size:14px;line-height:21px}
+h1,h2,h3,.kpi-v,.hero h2{text-wrap:balance}
+/* botons: estat en passar per sobre i en prémer */
+.btn,.ib,.nav a,.qa,.gstat,.pop button,.pop a,tbody tr td,.alist li{transition:background-color .18s var(--ease),color .18s var(--ease),border-color .18s var(--ease),box-shadow .18s var(--ease),transform .12s var(--ease)}
+.btn{border-radius:var(--r-sm);height:34px}
+.btn:active,.ib:active,.qa:active{transform:translateY(1px) scale(.99)}
+.btn.primary{box-shadow:0 1px 2px rgba(78,34,100,.25),inset 0 1px 0 rgba(255,255,255,.12)}
+.btn.sm{height:30px}
+input,select,textarea{border-radius:var(--r-sm)}
+input:hover,select:hover,textarea:hover{border-color:#BFB5CC}
+
+/* carcassa: menú amb seccions */
+.side{background:linear-gradient(180deg,#FBFAFD 0%,#F7F4FB 100%);padding:14px 12px;gap:0;overflow-y:auto}
+.side .brand{padding:6px 8px 12px}
+.nav{display:grid;gap:1px}
+.nav .lbl{font-size:11.5px;letter-spacing:.02em;color:var(--text-3);padding:18px 12px 6px;font-weight:700}
+.nav a{height:34px;border-radius:var(--r-sm);position:relative;font-size:13.5px}
+.nav a .i{color:var(--text-3)}
+.nav a:hover .i{color:var(--text-2)}
+.nav a.on{background:#fff;color:var(--accent);box-shadow:0 1px 2px rgba(58,30,82,.08),0 0 0 1px var(--border)}
+.nav a.on::before{content:"";position:absolute;left:-12px;top:8px;bottom:8px;width:3px;border-radius:0 3px 3px 0;background:var(--accent)}
+.nav a.on .i{color:var(--accent)}
+.side .me{background:#fff;border:1px solid var(--border);border-radius:var(--r);padding:12px;margin-top:16px}
+.top{background:rgba(246,244,249,.82);backdrop-filter:saturate(1.4) blur(10px);-webkit-backdrop-filter:saturate(1.4) blur(10px);height:60px}
+.top h1{font-size:19px;letter-spacing:-.01em}
+.gsw>button{border-radius:999px;padding:0 14px;height:34px}
+.gsw>button:hover{border-color:var(--accent-line);background:#FDFCFE}
+.pop{border-radius:var(--r);padding:6px}
+
+/* blocs */
+.card{border-radius:var(--r);border-color:var(--border);box-shadow:var(--card-sh)}
+.sec-h h2{font-size:15.5px;letter-spacing:-.005em}
+.tw{border-radius:var(--r);box-shadow:var(--card-sh)}
+th{background:#FAF8FC;font-size:12px;letter-spacing:.01em}
+tbody tr:hover td{background:#F8F5FB}
+.chip{border-radius:6px}
+.alist li:hover{background:#F8F5FB}
+.modal,.drawer{border-radius:var(--r-lg)}
+.drawer{border-radius:var(--r-lg) 0 0 var(--r-lg)}
+
+/* resum: indicadors separats i llegibles */
+.kpis{background:none;border:0;box-shadow:none;gap:12px;grid-template-columns:repeat(auto-fit,minmax(170px,1fr))}
+.kpis.k5{grid-template-columns:repeat(auto-fit,minmax(160px,1fr))}
+.kpi{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--card-sh);padding:16px 18px;align-content:start}
+.kpi+.kpi{border-left:1px solid var(--border)}
+.kpi-v{font-size:30px;line-height:36px;letter-spacing:-.02em}
+
+/* resum: salutació i accessos directes */
+.hero{position:relative;display:grid;grid-template-columns:minmax(200px,.75fr) 2.6fr;gap:20px;align-items:center;padding:22px 24px;border-radius:var(--r-lg);overflow:hidden;
+  background:radial-gradient(120% 140% at 0% 0%,#F1E7F8 0%,rgba(241,231,248,0) 55%),radial-gradient(90% 120% at 100% 100%,#FFF4D9 0%,rgba(255,244,217,0) 60%),#fff;border:1px solid var(--border);box-shadow:var(--card-sh)}
+.hero-d{margin:0;font-size:12.5px;font-weight:700;color:var(--accent);text-transform:none}
+.hero-d::first-letter{text-transform:uppercase}
+.hero h2{margin:2px 0 2px;font-size:24px;line-height:30px;font-weight:800;letter-spacing:-.02em}
+.hero .t2{margin:0;font-size:13px}
+.qas{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.qa{display:flex;gap:10px;align-items:flex-start;padding:12px;border-radius:var(--r);background:rgba(255,255,255,.75);border:1px solid var(--border);color:var(--text);text-decoration:none;min-height:72px}
+.qa:hover{text-decoration:none;border-color:var(--accent-line);background:#fff;box-shadow:var(--pop)}
+.qa-i{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;flex:none;background:var(--accent-soft);color:var(--accent)}
+.qa:hover .qa-i{background:var(--accent);color:#fff}
+.qa b{display:block;font-weight:700;font-size:13.5px;line-height:18px}
+.qa small{display:block;color:var(--text-3);font-size:12px;line-height:16px;margin-top:2px}
+@media (max-width:1279px){.hero{grid-template-columns:1fr}}
+@media (max-width:767px){.qas{grid-template-columns:1fr 1fr}.hero{padding:18px}.hero h2{font-size:21px}}
+
+/* grups: targetes compactes, el dia a dia a dalt i la configuració plegada */
+.gcards{grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:16px;align-items:start}
+.gc{padding:0;gap:0;overflow:hidden;border-top:3px solid var(--accent)}
+.gc.tech{border-top-color:#2563A8}
+.gc>*{padding-left:18px;padding-right:18px}
+.gc .r1{align-items:flex-start;padding-top:16px}
+.gc .r1>div{min-width:0;flex:1}
+.gc .r1 b{display:block;font-size:16px;line-height:22px;letter-spacing:-.01em}
+.gapp{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.02em;color:var(--accent);background:var(--accent-soft);border-radius:5px;padding:1px 7px;margin-bottom:6px}
+.gc.tech .gapp{color:#1E4F86;background:#E6EFF9}
+.gc .meta{margin:2px 0 0;font-size:12.5px;color:var(--text-3)}
+.gstats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding-top:14px}
+.gstat{display:grid;gap:0;padding:8px 10px;border-radius:var(--r-sm);background:var(--surface-2);color:var(--text);text-decoration:none}
+a.gstat:hover{text-decoration:none;background:var(--accent-soft)}
+.gstat b{font-size:19px;line-height:24px;font-weight:800}
+.gstat span{font-size:11.5px;color:var(--text-3);line-height:15px}
+.gstat.crit b{color:var(--crit)}.gstat.crit{background:var(--crit-bg)}
+.gc .codebox{margin:12px 18px 0;padding:0 6px 0 12px;height:50px;gap:2px;background:#FBF9FD;border-style:dashed;border-color:var(--accent-line)}
+.codebox .cl{font-size:11px;font-weight:700;color:var(--text-3);margin-right:8px;white-space:nowrap}
+.gc .codebox code{font-size:19px}
+.gacts{display:grid;grid-template-columns:repeat(auto-fit,minmax(96px,1fr));gap:8px;padding-top:12px}
+.gacts .btn{width:100%;font-size:13px;padding:0 10px}
+.gacts .galum{grid-column:1/-1;background:var(--accent);border-color:var(--accent);color:#fff}
+.gacts .galum:hover{background:var(--accent-hover)}
+.gc .foot{margin:10px 0 12px;font-size:12px;color:var(--text-3)}
+.gc details.gopts{border-top:1px solid var(--border);padding-top:0;padding-bottom:0;margin:0}
+.gc details.gopts>summary{padding:12px 0;font-weight:700;font-size:13px}
+.gc details.gopts[open]{padding-bottom:16px;background:#FCFBFD}
+.gc details.gopts[open]>summary{color:var(--accent)}
+.gc details.gopts .field{margin-top:4px}
+
+/* menús emergents i modals amb una mica d'entrada */
+@keyframes popIn{from{opacity:0;transform:translateY(-4px) scale(.98)}to{opacity:1;transform:none}}
+.pop{animation:popIn .14s var(--ease)}
+.modal{animation:popIn .18s var(--ease)}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+
+/* alumnes: els filtres ràpids com a pestanyes a dalt; cerca, desplegables i accions a sota */
+.toolbar{row-gap:12px}
+.toolbar .seg{order:-1;flex:1 1 100%;background:none;border:0;padding:0;gap:6px;flex-wrap:wrap}
+.toolbar .seg button{height:32px;padding:0 12px;border-radius:999px;border:1px solid var(--border);background:var(--surface);color:var(--text-2)}
+.toolbar .seg button:hover{border-color:var(--accent-line);color:var(--text)}
+.toolbar .seg button.on{background:var(--accent);border-color:var(--accent);color:#fff;box-shadow:none}
+.toolbar .seg button b{display:inline-block;min-width:20px;height:18px;line-height:18px;padding:0 6px;margin-left:6px;border-radius:9px;background:var(--surface-2);color:var(--text-3);font-size:11.5px}
+.toolbar .seg button.on b{background:rgba(255,255,255,.22);color:#fff}
+.toolbar .search input{border-radius:999px}
+.toolbar select{border-radius:999px;width:auto}
+@media (max-width:767px){.toolbar .seg{flex-wrap:nowrap;overflow-x:auto}}
+@media (max-width:480px){.gacts{grid-template-columns:1fr 1fr}.gacts .btn{font-size:12.5px}}
