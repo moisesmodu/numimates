@@ -1023,8 +1023,11 @@ const hasTech = g => ['tech', 'both'].includes((g.opts || {}).app);
 // Numi Tech: cursos assignats al grup i quines unitats i sessions hi ha obertes (el professor les obre a mesura que avancen)
 const techSess = c => Object.entries(TECH_T.s).filter(([, x]) => x.c === c);
 // sessions obertes d'un curs al grup: la mateixa regla que l'app (tSessOpen a tech.js)
+const techNomes = g => ((g.opts || {}).tech || {}).nomes !== false;
 function techOpen(g, c) {
   const t = (g.opts || {}).tech || {}, ob = (t.obert || {})[c], f = (t.fins || {})[c], all = techSess(c).map(([id]) => id);
+  // «només la sessió que obre el professor»: només el que hi ha marcat (sense la unitat 1 per defecte)
+  if (techNomes(g)) return new Set(Array.isArray(ob) ? ob : []);
   if (Array.isArray(ob)) return new Set(ob);
   if (f === 'tot') return new Set(all);
   if (!f) return new Set(techSess(c).filter(([, x]) => x.u === 1).map(([id]) => id));
@@ -1034,6 +1037,7 @@ function techOpen(g, c) {
 function techLocks(g, c) {
   const open = techOpen(g, c), ss = techSess(c), ready = ss.filter(([, x]) => !x.prep), n = ready.filter(([id]) => open.has(id)).length;
   const us = [...new Set(ss.map(([, x]) => x.u))];
+  if (techNomes(g)) return techLocksNomes(g, c, open, ss, us);
   return `<details class="tlocks" ${techLocks.open === g.id + c ? 'open' : ''} ontoggle="if(this.open)techLocks.open=${js(g.id + c)}"><summary><b>${L('Unitats i sessions obertes', 'Unidades y sesiones abiertas')}</b><span class="chip ${n === ready.length ? 'good' : ''}">${n === ready.length ? L('Tot obert', 'Todo abierto') : L(`${n} de ${ready.length} obertes`, `${n} de ${ready.length} abiertas`)}</span></summary>
     <p class="t3">${L("Els alumnes només poden fer el que és obert; les sessions ja fetes sempre les poden repetir. Toca una sessió per obrir-la o tancar-la.", 'Los alumnos solo pueden hacer lo que está abierto; las sesiones ya hechas siempre las pueden repetir. Toca una sesión para abrirla o cerrarla.')}</p>
     <div class="tlact"><button class="btn sm primary" onclick="grupTechOpen(${g.id},${js(c)},'next')" ${n === ready.length ? 'disabled' : ''}>${ico('plus')}${L('Obre la següent sessió', 'Abre la siguiente sesión')}</button><button class="btn sm" onclick="grupTechOpen(${g.id},${js(c)},'all')">${L('Obre-ho tot', 'Ábrelo todo')}</button><button class="btn sm" onclick="grupTechOpen(${g.id},${js(c)},'none')">${L('Tanca-ho tot', 'Ciérralo todo')}</button></div>
@@ -1043,11 +1047,29 @@ function techLocks(g, c) {
         ${ru.length ? `<button class="btn sm ${on === ru.length ? '' : 'primary'}" onclick="grupTechOpen(${g.id},${js(c)},'u',${u})">${on === ru.length ? L('Tanca la unitat', 'Cierra la unidad') : L('Obre la unitat', 'Abre la unidad')}</button>` : `<small class="t3">${L('En preparació', 'En preparación')}</small>`}</div>`; }).join('')}
   </details>`;
 }
+// mode «només la sessió que obre el professor»: una sessió oberta cada vegada; obrir-ne una tanca la que hi havia
+function techLocksNomes(g, c, open, ss, us) {
+  const cur = ss.filter(([id, x]) => !x.prep && open.has(id)), nx = techNext(g, c), lbl = ([, x]) => `${x.u}.${x.n} ${tx(x.t)}`;
+  return `<details class="tlocks" ${techLocks.open === g.id + c ? 'open' : ''} ontoggle="if(this.open)techLocks.open=${js(g.id + c)}"><summary><b>${L('Sessió oberta', 'Sesión abierta')}</b><span class="chip ${cur.length ? 'good' : ''}">${cur.length === 1 ? esc(lbl(cur[0])) : cur.length ? L(`${cur.length} obertes`, `${cur.length} abiertas`) : L('Cap', 'Ninguna')}</span></summary>
+    <p class="t3">${L("Els alumnes només poden entrar a la sessió que obris (tampoc a les que ja han fet). Toca una sessió per obrir-la: es tanca la que hi havia. Els alumnes que són a l'inici de l'app la veuen en uns segons.", 'Los alumnos solo pueden entrar en la sesión que abras (tampoco en las que ya han hecho). Toca una sesión para abrirla: se cierra la que había. Los alumnos que están en el inicio de la app la ven en unos segundos.')}</p>
+    <div class="tlact">${nx ? `<button class="btn sm primary" onclick="grupTechOpen(${g.id},${js(c)},'s1',${js(nx[0])})">${ico('plus')}${L('Obre la següent', 'Abre la siguiente')}: ${esc(lbl(nx))}</button>` : ''}${cur.length ? `<button class="btn sm" onclick="grupTechOpen(${g.id},${js(c)},'none')">${ico('lock')}${L('Tanca-la', 'Ciérrala')}</button>` : ''}</div>
+    ${us.map(u => { const su = ss.filter(([, x]) => x.u === u);
+      return `<div class="tlu"><div class="tlut"><b>U${u}</b> ${esc(tx(TECH_T.units[c + ':' + u] || ''))}</div>
+        <div class="tls">${su.map(([id, x]) => `<button class="tlsb ${x.prep ? 'prep' : open.has(id) ? 'on' : ''}" ${x.prep ? `disabled title="${L('En preparació', 'En preparación')}"` : `onclick="grupTechOpen(${g.id},${js(c)},'s1',${js(id)})" title="${esc(tx(x.t))}" aria-pressed="${open.has(id)}"`}>${open.has(id) && !x.prep ? ico('check') : ico('lock')}${u}.${x.n}${x.proj ? ' ★' : ''}</button>`).join('')}</div></div>`; }).join('')}
+  </details>`;
+}
+// la següent sessió per obrir: la que va després de l'oberta (o de l'última que s'ha obert)
+function techNext(g, c) {
+  const t = (g.opts || {}).tech || {}, ss = techSess(c).filter(([, x]) => !x.prep), open = techOpen(g, c);
+  const ref = [...ss].reverse().find(([id]) => open.has(id))?.[0] || (t.ultima || {})[c], i = ss.findIndex(([id]) => id === ref);
+  return ref ? ss[i + 1] || null : ss[0] || null;
+}
 function techField(g) {
   const T = typeof TECH_T !== 'undefined' ? TECH_T : null; if (!T) return '';
   const t = (g.opts || {}).tech || {}, cs = t.courses || [];
   const all = Object.keys(T.courses).every(c => cs.includes(c) && techSess(c).every(([id, x]) => x.prep || techOpen(g, c).has(id)));
   return `<div class="tfield"><div class="tfh"><span class="flbl">${L('Cursos de Numi Tech', 'Cursos de Numi Tech')}</span>${all ? `<span class="chip good">${L('Tot obert', 'Todo abierto')}</span>` : `<button class="btn sm primary" onclick="grupTechAll(${g.id})">${L('Obre-ho tot', 'Ábrelo todo')}</button>`}</div>
+    <label class="switch" style="margin:2px 0 10px"><input type="checkbox" ${techNomes(g) ? 'checked' : ''} onchange="grupTech(${g.id},'nomes',null,this.checked)"><span><b style="font-weight:600">${L('Només la sessió que obre el professor', 'Solo la sesión que abre el profesor')}</b> <small class="t3">${techNomes(g) ? L("Els alumnes no poden entrar a cap altra sessió, ni a les que ja han fet.", 'Los alumnos no pueden entrar en ninguna otra sesión, ni en las que ya han hecho.') : L('Desactivat: poden fer tot el que és obert i repetir les sessions fetes.', 'Desactivado: pueden hacer todo lo abierto y repetir las sesiones hechas.')}</small></span></label>
     ${Object.entries(T.courses).map(([c, x]) => `<div class="tcourse"><label class="switch"><input type="checkbox" ${cs.includes(c) ? 'checked' : ''} onchange="grupTech(${g.id},'course',${js(c)},this.checked)"><span><b style="font-weight:600">${esc(tx(x.n))}</b> <small class="t3">${esc(tx(x.age))} · ${x.ready ? L(`${x.ready} de ${x.total} sessions fetes`, `${x.ready} de ${x.total} sesiones hechas`) : L('en preparació', 'en preparación')}</small></span></label>
       ${cs.includes(c) ? `<div style="margin:6px 0 0 44px">${techLocks(g, c)}</div>
       <div style="margin:6px 0 0 44px"><a class="btn sm" href="#/material/${encodeURIComponent(c)}">${ico('graduation-cap')}${L('Material del professor', 'Material del profesor')}</a></div>` : ''}</div>`).join('')}
@@ -1056,7 +1078,7 @@ function techField(g) {
 // obre tots els cursos i totes les sessions de Numi Tech al grup (per provar-ho o si el grup va per lliure)
 async function grupTechAll(id) {
   const g = GRUPS.find(x => x.id === id), o = { ...(g.opts || {}) }, T = TECH_T;
-  o.app = o.app === 'tech' ? 'tech' : 'both'; o.tech = { courses: Object.keys(T.courses), fins: Object.fromEntries(Object.keys(T.courses).map(c => [c, 'tot'])), obert: {}, casa: true };
+  o.app = o.app === 'tech' ? 'tech' : 'both'; o.tech = { courses: Object.keys(T.courses), fins: Object.fromEntries(Object.keys(T.courses).map(c => [c, 'tot'])), obert: {}, casa: true, nomes: false };
   const j = await act('grup_opts', { id, opts: o, app_canvi: true });
   if (!j.ok) return toast(L("No s'ha pogut desar.", 'No se ha podido guardar.'));
   g.opts = j.opts; vGrups(); toast(L('Tot Numi Tech obert per a aquest grup.', 'Todo Numi Tech abierto para este grupo.'));
@@ -1068,11 +1090,20 @@ async function grupApp(id, app) {
   if (!j.ok) return toast(L("No s'ha pogut desar.", 'No se ha podido guardar.'));
   g.opts = j.opts; vGrups(); toast(app === 'tech' ? L('El grup ara és de Numi Tech.', 'El grupo ahora es de Numi Tech.') : app === 'both' ? L('El grup ara té Numi Mates i Numi Tech.', 'El grupo ahora tiene Numi Mates y Numi Tech.') : L('El grup ara és de Numi Mates.', 'El grupo ahora es de Numi Mates.'));
 }
+async function grupTechSave(id, t, msg) {
+  const g = GRUPS.find(x => x.id === id), o = { ...(g.opts || {}) };
+  o.app = o.app === 'both' ? 'both' : 'tech'; o.tech = t;
+  const j = await act('grup_opts', { id, opts: o });
+  if (!j.ok) return toast(L("No s'ha pogut desar.", 'No se ha podido guardar.'));
+  g.opts = j.opts; vGrups(); toast(msg || L("Desat. Els alumnes ho veuran en obrir l'app.", 'Guardado. Los alumnos lo verán al abrir la app.'));
+}
 async function grupTech(id, what, c, v) {
   const g = GRUPS.find(x => x.id === id), o = { ...(g.opts || {}) }, t = { courses: [], fins: {}, casa: true, ...(o.tech || {}) };
   if (what === 'course') t.courses = v ? [...new Set([...t.courses, c])] : t.courses.filter(x => x !== c);
   if (what === 'fins') t.fins = { ...t.fins, [c]: v };
   if (what === 'obert') t.obert = { ...(t.obert || {}), [c]: v };
+  if (what === 'nomes') t.nomes = !!v;
+  if (what === 'ultima') t.ultima = { ...(t.ultima || {}), [c]: v };
   o.app = o.app === 'both' ? 'both' : 'tech'; o.tech = t;
   const j = await act('grup_opts', { id, opts: o });
   if (!j.ok) return toast(L("No s'ha pogut desar.", 'No se ha podido guardar.'));
@@ -1087,8 +1118,13 @@ function grupTechOpen(id, c, what, x) {
   if (what === 'none') open.clear();
   if (what === 'u') { const su = ss.filter(([, s]) => s.u === x).map(([sid]) => sid), on = su.every(sid => open.has(sid)); su.forEach(sid => on ? open.delete(sid) : open.add(sid)); }
   if (what === 's') open.has(x) ? open.delete(x) : open.add(x);
+  // només la sessió que obre el professor: obrir-ne una tanca les altres (si ja era l'única oberta, es tanca)
+  if (what === 's1') { const only = open.size === 1 && open.has(x); open.clear(); if (!only) open.add(x); }
   techLocks.open = id + c;
-  grupTech(id, 'obert', c, techSess(c).map(([sid]) => sid).filter(sid => open.has(sid)));
+  const g2 = { ...g.opts }, t2 = { courses: [], fins: {}, casa: true, ...(g2.tech || {}) }, ids = techSess(c).map(([sid]) => sid).filter(sid => open.has(sid));
+  if (what === 's1' && open.size) t2.ultima = { ...(t2.ultima || {}), [c]: x };
+  t2.obert = { ...(t2.obert || {}), [c]: ids };
+  grupTechSave(id, t2, what === 's1' ? (open.size ? L(`Oberta: ${techSess(c).find(([sid]) => sid === x)[1].u}.${techSess(c).find(([sid]) => sid === x)[1].n}. Els alumnes la veuen en uns segons.`, `Abierta: ${techSess(c).find(([sid]) => sid === x)[1].u}.${techSess(c).find(([sid]) => sid === x)[1].n}. Los alumnos la ven en unos segundos.`) : L('Sessió tancada.', 'Sesión cerrada.')) : null);
 }
 // tema que es treballa a classe: l'app el mostra a la pantalla principal i en fa pràctiques (70 % tema, 30 % repàs)
 function temaField(g) {

@@ -148,3 +148,14 @@ cursos de Tech i crear un curs de disseny 3D en dos nivells. Sense desplegar a p
   13 animacions, guies, insígnies i solucionari. Validador: 192 sessions, 0 errors; cap pas necessita scroll.
 - El motor no comprova voladissos ni que hi càpiguen els llapis: s'ensenya amb vistes laterals, `flatbase`, `count` (6
   forats) i `wall`, i als criteris del projecte l'alumne ho revisa. Les puntes de cons i estrelles compten com a paret prima.
+
+## Només la sessió que obre el professor (21-10-2026)
+- Petició del Moisés: als grups de les escoles, l'alumne només pot entrar a la sessió que obre el professor.
+- `opts.tech.nomes` (per defecte **activat** a tots els grups de Tech, també els d'abans): l'alumne només pot entrar a les
+  sessions de `obert[curs]`; ni les ja fetes ni la unitat 1 per defecte. Si no n'hi ha cap d'oberta, l'inici diu
+  «Encara no hi ha cap sessió oberta». Es pot desactivar a la fitxa del grup («Només la sessió que obre el professor»):
+  aleshores torna la regla d'abans (obert/fins, unitat 1 per defecte i les fetes es poden repetir). «Obre-ho tot» el desactiva.
+- Panell (fitxa del grup, «Sessió oberta»): tocar una sessió l'obre i tanca la que hi havia; «Obre la següent: U.N…» (segueix
+  `opts.tech.ultima[curs]`, l'última oberta, encara que s'hagi tancat) i «Tanca-la».
+- App: a l'inici, cada 15 s es consulta quina sessió hi ha oberta (`tWatch`); en tocar una sessió tancada, primer es
+  pregunta al servidor (potser s'acaba d'obrir). La comprovació és a l'app (com abans); el servidor no bloqueja el progrés.

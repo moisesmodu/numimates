@@ -294,7 +294,9 @@ export default async function handler(req, res) {
         const fins = {}; for (const [c, id] of Object.entries(t.fins || {})) if (courses.includes(c) && (id === 'tot' || (TECH_T.s[id] && TECH_T.s[id].c === c))) fins[c] = id;
         // obert[curs] = les sessions obertes, una a una (mana sobre «fins»); només sessions d'aquell curs
         const obert = {}; for (const [c, ids] of Object.entries(t.obert && typeof t.obert === 'object' ? t.obert : {})) if (courses.includes(c) && Array.isArray(ids)) obert[c] = [...new Set(ids.filter(id => TECH_T.s[id] && TECH_T.s[id].c === c))];
-        Object.assign(opts, { app: o.app, tech: { courses, fins, obert, casa: t.casa !== false } });
+        // nomes: els alumnes només poden entrar a la sessió que obre el professor (per defecte); ultima = l'última que ha obert (per a «la següent»)
+        const ultima = {}; for (const [c, id] of Object.entries(t.ultima && typeof t.ultima === 'object' ? t.ultima : {})) if (courses.includes(c) && TECH_T.s[id] && TECH_T.s[id].c === c) ultima[c] = id;
+        Object.assign(opts, { app: o.app, tech: { courses, fins, obert, casa: t.casa !== false, nomes: t.nomes !== false, ultima } });
       }
       await sql`UPDATE mates.grups SET opts = ${JSON.stringify(opts)}::jsonb WHERE id = ${+b.id}`;
       return ok(res, { ok: true, opts });
