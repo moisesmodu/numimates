@@ -79,7 +79,8 @@
 /* les cotes de la vista (del renderitzador) i el camp per escriure-les */
 .m3hud .m3dim.ed:hover{background:#fff!important;transform-origin:center;box-shadow:0 0 0 3px rgba(47,107,255,.25),0 2px 10px rgba(20,32,74,.25)!important}
 .m3hud .m3dim.ed::after{content:"✎";margin-left:4px;font-size:10px;opacity:.5}
-.m3dimed{position:absolute;z-index:8;display:flex;align-items:center;gap:3px;transform:translate(-50%,-50%);padding:3px 8px 3px 4px;border-radius:12px;background:#fff;box-shadow:0 0 0 2.5px var(--dc,#2F5BEA),0 8px 24px rgba(20,32,74,.3);animation:m3pin .12s ease-out}
+.m3dimed{position:absolute;z-index:8;display:flex;align-items:center;gap:3px;transform:translate(-50%,-50%);padding:3px 8px 3px 4px;border-radius:12px;background:#fff;box-shadow:0 0 0 2.5px var(--dc,#2F5BEA),0 8px 24px rgba(20,32,74,.3);animation:m3dimin .12s ease-out}
+@keyframes m3dimin{from{opacity:0;transform:translate(-50%,-50%) scale(.92)}}
 .m3dimed.a0{--dc:var(--m3ax0)}.m3dimed.a1{--dc:var(--m3ax1)}.m3dimed.a2{--dc:var(--m3ax2)}.m3dimed.az{--dc:#E07A10}
 .m3dimed input{width:64px;height:30px;border:0;outline:none;background:#F4F6FE;border-radius:8px;text-align:center;font:900 16px/1 Lexend,system-ui,sans-serif;color:var(--ink)}
 .m3dimed em{font-style:normal;font:800 12px/1 Lexend,system-ui,sans-serif;color:var(--mut)}
@@ -323,7 +324,7 @@ span.m3thumb{display:grid;place-items:center}span.m3thumb .m3ico{width:50%;heigh
 /* ordinador gran: l'editor fa servir tota l'amplada (la placa és la protagonista) */
 @media (min-width:1100px){.tsbody.wide>.tstage.m3ed,.tsbody.wide:has(>.tstage.m3ed)>.tsq2{max-width:1240px}}
 @media (max-width:380px){.m3f button{width:23px}.m3f .m3ax{width:14px}.m3f input{font-size:14px}}
-@media (prefers-reduced-motion:reduce){.m3hunt{animation:none}.m3cks li.pop{animation:none}}
+@media (prefers-reduced-motion:reduce){.m3hunt{animation:none}.m3cks li.pop{animation:none}.m3dimed{animation:none}}
 
 /* al mòbil, els criteris del projecte es veuen tocant l'enunciat (les comprovacions ja són a sota de la vista) */
 @media (max-width:899px){.tsbody:has(>.m3stage)>.tsq2:not(.open) .tcrit{display:none}.tsbody:has(>.m3stage)>.tsq2:not(.open):has(.tcrit) p::after{content:" ▾";color:var(--mut)}}
