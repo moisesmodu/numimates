@@ -20,16 +20,21 @@ const tDone = id => !!(TS_().s[id] && TS_().s[id].done);
 function tAccess() {
   if (P && P.unlockAll) return { courses: new Set(TECH.map(c => c.id)), fins: {}, obert: {} };
   const o = P && P.classe && P.classe.opts, t = o && (o.app === 'tech' || o.app === 'both') && o.tech;
-  if (t) return { courses: new Set(t.courses || []), fins: t.fins || {}, obert: t.obert || {}, classe: P.classe };
+  // nomes: a l'escola, l'alumne només pot entrar a la sessió que obre el professor (per defecte; el professor ho pot treure)
+  if (t) return { courses: new Set(t.courses || []), fins: t.fins || {}, obert: t.obert || {}, classe: P.classe, nomes: t.nomes !== false };
   if (P && Array.isArray(P.tcursos)) return { courses: new Set(P.tcursos), fins: {}, obert: {} };
   return { courses: new Set(), fins: {}, obert: {} };
 }
-// una sessió és oberta si el curs és assignat i el professor l'ha oberta (les ja fetes sempre es poden repetir):
+// una sessió és oberta si el curs és assignat i el professor l'ha oberta:
+//   en una classe amb «només la sessió que obre el professor» (nomes), NOMÉS les d'obert[curs] (ni les ja fetes ni la unitat 1);
+//   si no, les ja fetes sempre es poden repetir i
 //   obert[curs] = llista de sessions obertes (el que marca el professor al panell, unitat a unitat o sessió a sessió);
 //   si no n'hi ha: fins[curs] = 'tot' (tot obert) o una sessió (obert fins a aquesta; grups d'abans) i, si no hi ha res,
 //   en una classe només la primera unitat (sense classe, p. ex. cursos donats a un alumne, tot obert)
 function tSessOpen(c, s) {
   const a = tAccess(); if (!a.courses.has(c.id)) return false;
+  // (si el professor encara no ha obert ni tancat res d'aquest curs, val la regla d'abans: la unitat 1 oberta)
+  if (a.nomes && a.classe && Array.isArray(a.obert[c.id])) return a.obert[c.id].includes(s.id);
   if (tDone(s.id)) return true;
   if (Array.isArray(a.obert[c.id])) return a.obert[c.id].includes(s.id);
   const f = a.fins[c.id]; if (f === 'tot') return true;
@@ -39,8 +44,9 @@ function tSessOpen(c, s) {
 }
 function tLocked(c, s) {
   const a = tAccess(), mine = a.courses.has(c.id);
-  modal(`<div class="sheet card cent"><div class="tsoonico" style="--cc:${c.color}">${c.ico}</div><h3>${mine ? L('Aquesta sessió encara no és oberta', 'Esta sesión aún no está abierta') : tx(c.name)}</h3>
-    <p>${mine ? L("La farem a classe: el teu professor l'obrirà quan hi arribeu.", 'La haremos en clase: tu profesor la abrirá cuando lleguéis.') : `${tx(c.desc)}</p><p class="mut">${a.classe ? L("Aquest curs te l'ha d'assignar el teu professor.", 'Este curso te lo tiene que asignar tu profesor.') : L('Per començar, entra a la teva classe amb el codi que et dona el professor.', 'Para empezar, entra en tu clase con el código que te da el profesor.')}`}</p>
+  const only = mine && a.nomes && a.classe, was = only && s && tDone(s.id);
+  modal(`<div class="sheet card cent"><div class="tsoonico" style="--cc:${c.color}">${c.ico}</div><h3>${mine ? (was ? L('Aquesta sessió ara és tancada', 'Esta sesión ahora está cerrada') : L('Aquesta sessió encara no és oberta', 'Esta sesión aún no está abierta')) : tx(c.name)}</h3>
+    <p>${only ? L("A classe només pots entrar a la sessió que obre el teu professor. Quan l'obri, et sortirà a l'inici.", 'En clase solo puedes entrar en la sesión que abre tu profesor. Cuando la abra, te saldrá en el inicio.') : mine ? L("La farem a classe: el teu professor l'obrirà quan hi arribeu.", 'La haremos en clase: tu profesor la abrirá cuando lleguéis.') : `${tx(c.desc)}</p><p class="mut">${a.classe ? L("Aquest curs te l'ha d'assignar el teu professor.", 'Este curso te lo tiene que asignar tu profesor.') : L('Per començar, entra a la teva classe amb el codi que et dona el professor.', 'Para empezar, entra en tu clase con el código que te da el profesor.')}`}</p>
     ${!a.classe && !a.courses.size ? `<button class="btn big" onclick="closeModal();classeModal()">${L('TINC UN CODI DE CLASSE', 'TENGO UN CÓDIGO DE CLASE')}</button>` : ''}<button class="btn ghost big" onclick="closeModal()">${L("D'ACORD", 'DE ACUERDO')}</button></div>`, true);
 }
 const tReady = s => !!(s.steps && s.steps.length);
@@ -108,6 +114,7 @@ function tSide(c, nxt, mob) {
   const next = nxt ? `<button class="tnextc" onclick="tOpen('${nxt.id}')" style="--uc:${(c.units[nu] && c.units[nu].color) || c.color}"><span class="tnk">${L('La propera sessió', 'La próxima sesión')}</span><b>${tx(nxt.t)}</b>
       <small>${L('Unitat', 'Unidad')} ${nu + 1} · ${tx(c.units[nu].t)} · ${nxt.min || 40} min${nxt.proj ? ` · <em>${L('Projecte', 'Proyecto')}</em>` : ''}</small>
       ${nb ? `<span class="tnb"><span class="tbi on">${nb.ico}</span>${L('Hi pots guanyar', 'Puedes ganar')} <b>${tx(nb.n)}</b></span>` : ''}<span class="tng">${TIC.play} ${t.s[nxt.id] && t.s[nxt.id].i ? L('Continua', 'Continúa') : L('Comença', 'Empieza')}</span></button>`
+    : tAccess().nomes && tAccess().classe ? `<div class="tnextc done"><span class="tnk">${L('Esperant el professor', 'Esperando al profesor')}</span><b>${L('Encara no hi ha cap sessió oberta', 'Aún no hay ninguna sesión abierta')}</b><small>${L("Quan el teu professor l'obri a classe, sortirà aquí.", 'Cuando tu profesor la abra en clase, saldrá aquí.')}</small></div>`
     : `<div class="tnextc done"><span class="tnk">${L('Al dia!', '¡Al día!')}</span><b>${L("Has fet totes les sessions obertes", 'Has hecho todas las sesiones abiertas')}</b><small>${L("La propera l'obrirà el teu professor a classe.", 'La próxima la abrirá tu profesor en clase.')}</small></div>`;
   const prog = `<div class="tcprog"><div class="tbch"><b>${TCI3[c.id] || ''} ${tx(c.short)}</b><span>${done}/${all.length} ${L('sessions', 'sesiones')}</span></div>
     ${c.units.map((u, ui) => { const n = u.s.length, d = u.s.filter(s => tDone(s.id)).length; return `<div class="tcpu ${d === n && n ? 'ok' : ''}" style="--uc:${u.color || c.color}"><span class="tcpn">${d === n && n ? TIC.ok : ui + 1}</span><span class="tcpt">${tx(u.t)}</span><span class="tcpb"><i style="width:${n ? d / n * 100 : 0}%"></i></span></div>`; }).join('')}</div>`;
@@ -119,16 +126,24 @@ function tSide(c, nxt, mob) {
   const ma = typeof mathsApp === 'function' && mathsApp(P), sw = ma ? appTile(ma) : '';   // fer mates amb el mateix usuari
   return (mob ? '' : next) + sw + prog + bad + proj;
 }
+// a classe, mentre l'alumne és a l'inici, es mira cada 15 s quina sessió té oberta el professor (classeRefresh repinta l'inici si canvia)
+function tWatch(acc) {
+  clearTimeout(tWatch.t); if (!acc.classe || !P.code) return;
+  tWatch.t = setTimeout(function tick() { if (VIEW !== 'home' || !P || !P.code) return; if (!document.hidden && navigator.onLine) classeRefresh(); tWatch.t = setTimeout(tick, 15000); }, 15000);
+}
 function techHome() {
-  if (P.code && navigator.onLine && !techHome.pulled && typeof classeRefresh === 'function') { techHome.pulled = 1; classeRefresh(); }
+  // una vegada per perfil (abans era una sola vegada per pàgina: si s'entrava amb un altre usuari, no se'n sabia la classe)
+  if (P.code && navigator.onLine && techHome.pulled !== P.code && typeof classeRefresh === 'function') { const k = techHome.pulled = P.code; classeRefresh().finally(() => { techHome.ready = k; if (P && P.code === k && VIEW === 'home' && !tAccess().courses.size) go('home'); }); }
   const t = TS_(), acc = tAccess();
   if (!acc.courses.size) return techCatalog();
   if (!acc.courses.has(t.c)) t.c = [...acc.courses].find(id => TECH.some(c => c.id === id)) || t.c;
-  const c = tCourse(t.c), all = tSessions(c), nxt = all.find(s => tReady(s) && !tDone(s.id) && tSessOpen(c, s));
+  const c = tCourse(t.c), all = tSessions(c), nxt = all.find(s => tReady(s) && !tDone(s.id) && tSessOpen(c, s)) || (acc.nomes && acc.classe ? all.find(s => tReady(s) && tSessOpen(c, s)) : null);
+  tWatch(acc);
   const done = all.filter(s => tDone(s.id)).length;
   const prog = nxt && t.s[nxt.id] && t.s[nxt.id].i ? t.s[nxt.id] : null;
   const hero = `<section class="thero img" style="--hb:url(img/tech/scenes/hero-${c.id}.webp)"><div class="thtxt"><p class="tkick">${tx(c.name)}</p>${TLVL[c.id] ? `<span class="tlvl">🎓 ${tx(TLVL[c.id])}</span>` : ''}<h1>${L(`Hola, ${esc(P.name)}!`, `¡Hola, ${esc(P.name)}!`)}</h1>
       ${acc.classe ? `<p class="tcls">${esc(acc.classe.nom)}${acc.classe.centre ? ' · ' + esc(acc.classe.centre) : ''}</p>` : ''}${nxt ? `<p>${L('Següent sessió', 'Siguiente sesión')}: <b>${tx(nxt.t)}</b></p><button class="btn big tgo" onclick="tOpen('${nxt.id}')">${TIC.play} ${prog ? L('Continua la sessió', 'Continúa la sesión') : L('Comença la sessió', 'Empieza la sesión')}</button>`
+        : acc.nomes && acc.classe ? `<p>${L("Encara no hi ha cap sessió oberta. Quan el teu professor l'obri a classe, sortirà aquí.", 'Aún no hay ninguna sesión abierta. Cuando tu profesor la abra en clase, saldrá aquí.')}</p>`
         : `<p>${L("Has fet totes les sessions obertes. La següent l'obrirà el teu professor a classe.", 'Has hecho todas las sesiones abiertas. La siguiente la abrirá tu profesor en clase.')}</p>`}</div>
     <div class="thbot" aria-hidden="true">${bitChar('happy')}</div>
     <div class="thbar"><i style="width:${Math.round(100 * done / all.length)}%"></i></div><small class="thsm">${L(`${done} de ${all.length} sessions`, `${done} de ${all.length} sesiones`)}</small></section>`;
@@ -286,7 +301,11 @@ let TSS = null, TS_T = null;
 function tFind(id) { for (const c of TECH) { const s = tSessions(c).find(x => x.id === id); if (s) return { c, s }; } return null; }
 function tOpen(id) {
   const f = tFind(id); if (!f || !tReady(f.s)) return;
-  if (!tSessOpen(f.c, f.s)) return tLocked(f.c, f.s);
+  if (!tSessOpen(f.c, f.s)) {
+    // potser el professor l'acaba d'obrir: es pregunta al servidor abans de dir que és tancada
+    if (!tOpen.retry && tAccess().classe && typeof classeRefresh === 'function') { tOpen.retry = 1; return classeRefresh().finally(() => { tOpen.retry = 0; tSessOpen(f.c, f.s) ? tOpen(id) : tLocked(f.c, f.s); }); }
+    return tLocked(f.c, f.s);
+  }
   const rec = TS_().s[id] || {}, again = rec.done;
   TSS = { c: f.c, s: f.s, id, i: again ? 0 : Math.min(rec.i || 0, f.s.steps.length - 1), ok: 0, n: 0, again };
   VIEW = 'tsess'; tStep();
@@ -732,6 +751,11 @@ function tSaveProj(st) {
 /* ---------- Catàleg: quan encara no hi ha cap curs assignat ---------- */
 function techCatalog() {
   const acc = tAccess();
+  // mentre es demana la classe al servidor (just després d'entrar), res de «Tinc un codi de classe»
+  if (!acc.classe && P.code && navigator.onLine && techHome.ready !== P.code) {
+    app.innerHTML = tShell('home', '', `<section class="thero"><div class="thtxt"><p class="tkick">Numi Tech</p><h1>${L(`Hola, ${esc(P.name)}!`, `¡Hola, ${esc(P.name)}!`)}</h1><p>${L('Un moment, carregant la teva classe…', 'Un momento, cargando tu clase…')}</p></div><div class="thbot" aria-hidden="true">${bitChar('happy')}</div></section>`);
+    return;
+  }
   const hero = `<section class="thero"><div class="thtxt"><p class="tkick">Numi Tech</p><h1>${L(`Hola, ${esc(P.name)}!`, `¡Hola, ${esc(P.name)}!`)}</h1>
     <p>${acc.classe ? L("Ja ets a la teva classe. Quan el professor t'assigni un curs, el trobaràs aquí.", 'Ya estás en tu clase. Cuando el profesor te asigne un curso, lo encontrarás aquí.') : L('Per començar, entra a la teva classe amb el codi que et dona el professor.', 'Para empezar, entra en tu clase con el código que te da el profesor.')}</p>
     ${acc.classe ? '' : `<button class="btn big tgo" onclick="classeModal()">${L('TINC UN CODI DE CLASSE', 'TENGO UN CÓDIGO DE CLASE')}</button>`}</div>
@@ -749,7 +773,7 @@ function onbTech() {
     <button class="btn big" onclick="loginModal()">${L('ENTRA AMB EL TEU USUARI', 'ENTRA CON TU USUARIO')}</button>
     <button class="btn big ghost" onclick="onbTechCode()">${L('TINC UN CODI DE CLASSE', 'TENGO UN CÓDIGO DE CLASE')}</button>
     <p class="mut" style="font-size:14px;margin-top:14px">${L("L'usuari i la contrasenya, o el codi de classe, te'ls dona el teu professor.", 'El usuario y la contraseña, o el código de clase, te los da tu profesor.')}</p></div>`;
-  if (pre) onbTechCode();
+  // amb l'enllaç del professor (?classe=…) ja no se salta al formulari de compte nou: qui ja té usuari hi ha d'entrar
 }
 function onbTechCode() {
   let pre = ''; try { pre = sessionStorage.getItem('numi-classe') || ''; } catch (e) { }

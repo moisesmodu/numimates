@@ -1573,10 +1573,12 @@ setTimeout(() => { let u = null; try { u = sessionStorage.getItem('numi-entra');
   loginModal(); const i = $('#lu'); if (i) { i.value = u; const p = $('#lp'); p && p.focus(); } }, 700);
 // enllaç o QR del docent (?classe=AULA-XXXX): obre el formulari amb el codi ja escrit quan l'alumne ja té compte
 (() => { try { const q = new URLSearchParams(location.search).get('classe'); if (q && /^AULA-[A-Z0-9]{4}$/i.test(q)) sessionStorage.setItem('numi-classe', q.toUpperCase()); if (q) history.replaceState(null, '', location.pathname); } catch (e) { } })();
-function classeLink() {
+async function classeLink() {
   let c = null; try { c = sessionStorage.getItem('numi-classe'); } catch (e) { }
   if (!c || !P || !P.code || VIEW !== 'home' || $('.modal-bg')) return;
   try { sessionStorage.removeItem('numi-classe'); } catch (e) { }
+  // just després d'entrar amb usuari encara no se sap la classe: primer es pregunta (si ja hi és, no es demana el codi)
+  if (!P.classe && navigator.onLine) { await classeRefresh(); if (!P || $('.modal-bg')) return; }
   if (P.classe) return toast(L(`Ja ets a la classe ${esc(P.classe.nom)}.`, `Ya estás en la clase ${esc(P.classe.nom)}.`));
   classeModal(); setTimeout(() => { const i = $('#aula'); if (i) i.value = c; }, 60);
 }
@@ -1790,6 +1792,8 @@ async function doLogin(withCode) {
     P = migrate({ ...r.state, id, code, name: r.name, username: r.state.username || r.username || (withCode ? null : data.username), pla: r.pla || 'free', sub: r.sub || null }); P.dirty = false; P.holdReg = false;
     DB.profiles[id] = P; DB.current = id; LANG = P.lang; saveLocal();
     closeModal(); go('home'); toast(L(`Hola de nou, ${esc(P.name)}! 👋`, `¡Hola de nuevo, ${esc(P.name)}! 👋`));
+    // la classe (grup, cursos de Tech, sessions obertes) no arriba amb el login: es demana ara (si no, Tech demanava el codi de classe)
+    classeRefresh();
     // ha entrat amb el codi i el compte no té usuari: que el creï ara
     if (withCode && !P.username) setTimeout(() => accountModal(true), 900);
   } catch (e) { $('#lerr').textContent = ERR(); }

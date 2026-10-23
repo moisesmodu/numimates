@@ -1,4 +1,4 @@
-import { sql, ok, body, cleanCode, validPass, hashPass, dropToks, cleanUser, validUser, newStudentCode, eraseStudent, sealTmp, openTmp } from './_lib.js';
+import { sql, ok, body, consentCols, cleanCode, validPass, hashPass, dropToks, cleanUser, validUser, newStudentCode, eraseStudent, sealTmp, openTmp } from './_lib.js';
 let tmpCol = false;
 const ensureTmp = async () => { if (!tmpCol) { await sql`ALTER TABLE mates.docents ADD COLUMN IF NOT EXISTS pass_tmp text`; tmpCol = true; } };
 // contrasenya dels alumnes de l'escola (vegeu setVista a _lib.js): xifrada perquè el docent la vegi i imprimeixi les targetes
@@ -237,8 +237,40 @@ export default async function handler(req, res) {
       return ok(res, { ok: true, n: q.length, skip: codes.length - q.length });
     }
     // --- accions sobre un alumne (admin o el seu docent) ---
-    if (['setpass', 'unlock', 'off', 'treure', 'apps'].includes(b.action)) {
+    if (['setpass', 'unlock', 'off', 'treure', 'apps', 'usuari', 'nom'].includes(b.action)) {
       if (!(await mine(code))) return ok(res, { error: 'permís' }, 403);
+      // nom i cognoms (admin o el seu docent); un menor encara sense permís de la família no té nom al servidor
+      if (b.action === 'nom') {
+        const name = String(b.name || '').trim().slice(0, 30);
+        if (!name) return ok(res, { error: 'nom' }, 400);
+        await consentCols();
+        const r = await sql`UPDATE mates.alumnes SET name = ${name}, state = jsonb_set(coalesce(state, '{}'), '{name}', to_jsonb(${name}::text))
+          WHERE code = ${code} AND active AND coalesce(consent, 'ok') <> 'pending' RETURNING code`;
+        return r.length ? ok(res, { ok: true, name }) : ok(res, { error: 'no trobat' }, 404);
+      }
+      // canviar l'usuari d'entrada (només l'admin). Si el nom el té un compte donat de baixa, aquell passa a «<nom>-baixa»
+      // (no s'esborra res) i el nom queda lliure; si el té un compte actiu, no es toca.
+      if (b.action === 'usuari') {
+        if (!me.admin) return ok(res, { error: 'permís' }, 403);
+        const user = cleanUser(b.username);
+        if (!validUser(user)) return ok(res, { error: 'usuari-format' }, 400);
+        const al = (await sql`SELECT username FROM mates.alumnes WHERE code = ${code} AND active`)[0];
+        if (!al) return ok(res, { error: 'no trobat' }, 404);
+        if (al.username === user) return ok(res, { ok: true, username: user });
+        const t = (await sql`SELECT code, active FROM mates.alumnes WHERE username = ${user}`)[0];
+        if (t && t.active) return ok(res, { error: 'usuari-ocupat' }, 409);
+        if (t) {
+          let lliure = null;
+          for (let i = 0; i < 20 && !lliure; i++) {
+            const n = user.slice(0, 13) + '-baixa' + (i ? i : '');
+            if (!(await sql`SELECT 1 FROM mates.alumnes WHERE username = ${n}`).length) lliure = n;
+          }
+          if (!lliure) return ok(res, { error: 'usuari-ocupat' }, 409);
+          await sql`UPDATE mates.alumnes SET username = ${lliure}, state = jsonb_set(coalesce(state, '{}'), '{username}', to_jsonb(${lliure}::text)) WHERE code = ${t.code} AND NOT active`;
+        }
+        await sql`UPDATE mates.alumnes SET username = ${user}, state = jsonb_set(coalesce(state, '{}'), '{username}', to_jsonb(${user}::text)) WHERE code = ${code} AND active`;
+        return ok(res, { ok: true, username: user });
+      }
       // a quines apps pot entrar el compte, a més de la seva (p. ex. un alumne de Numi Mates que també fa Numi Tech)
       if (b.action === 'apps') {
         if (!me.admin) return ok(res, { error: 'permís' }, 403);
@@ -294,7 +326,9 @@ export default async function handler(req, res) {
         const fins = {}; for (const [c, id] of Object.entries(t.fins || {})) if (courses.includes(c) && (id === 'tot' || (TECH_T.s[id] && TECH_T.s[id].c === c))) fins[c] = id;
         // obert[curs] = les sessions obertes, una a una (mana sobre «fins»); només sessions d'aquell curs
         const obert = {}; for (const [c, ids] of Object.entries(t.obert && typeof t.obert === 'object' ? t.obert : {})) if (courses.includes(c) && Array.isArray(ids)) obert[c] = [...new Set(ids.filter(id => TECH_T.s[id] && TECH_T.s[id].c === c))];
-        Object.assign(opts, { app: o.app, tech: { courses, fins, obert, casa: t.casa !== false } });
+        // nomes: els alumnes només poden entrar a la sessió que obre el professor (per defecte); ultima = l'última que ha obert (per a «la següent»)
+        const ultima = {}; for (const [c, id] of Object.entries(t.ultima && typeof t.ultima === 'object' ? t.ultima : {})) if (courses.includes(c) && TECH_T.s[id] && TECH_T.s[id].c === c) ultima[c] = id;
+        Object.assign(opts, { app: o.app, tech: { courses, fins, obert, casa: t.casa !== false, nomes: t.nomes !== false, ultima } });
       }
       await sql`UPDATE mates.grups SET opts = ${JSON.stringify(opts)}::jsonb WHERE id = ${+b.id}`;
       return ok(res, { ok: true, opts });
@@ -404,7 +438,7 @@ export default async function handler(req, res) {
   const rows = await sql`SELECT code, username, name, course, survey, xp, streak, best, last_day, lessons, answers, correct, created_at, updated_at, grup_id, pla, pla_fins,
     state->'tests' AS tests, state->'lang' AS lang, state->'unlockAll' AS unlock_all, state->'week' AS week, state->'stats'->'sk' AS sk, state->'reco' AS reco, state->'school' AS school,
     (SELECT count(*)::int FROM jsonb_object_keys(CASE WHEN jsonb_typeof(state->'album') = 'object' THEN state->'album' ELSE '{}'::jsonb END)) AS album_n, state->'stats'->'bwins' AS bwins, state->'crowns' AS crowns, state->'exams' AS exams, state->'days' AS days,
-    state->>'variant' AS variant, state->'apps' AS apps, state->'deures' AS deures, state->'prog' AS prog, state->'miss' AS miss, (state->'tech') - 'port' AS tech, state->'ment' AS ment,
+    state->>'variant' AS variant, state->>'companion' AS companion, state->'acc' AS acc, state->'apps' AS apps, state->'deures' AS deures, state->'prog' AS prog, state->'miss' AS miss, (state->'tech') - 'port' AS tech, state->'ment' AS ment,
     (SELECT jsonb_agg(jsonb_build_object('t', p->'t', 'd', p->'d', 'sid', p->'sid', 'k', p->'kind', 'lab', p->'lab')) FROM jsonb_array_elements(CASE WHEN jsonb_typeof(state->'tech'->'port') = 'array' THEN state->'tech'->'port' ELSE '[]'::jsonb END) p) AS tech_port
     FROM mates.alumnes WHERE active AND (${!!me.admin} OR grup_id = ANY(${gids})) ORDER BY streak DESC, xp DESC`;
   // tasques dels grups que veu (les de l'últim trimestre)
