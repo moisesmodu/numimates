@@ -168,3 +168,15 @@ cursos de Tech i crear un curs de disseny 3D en dos nivells. Sense desplegar a p
 - Diploma amb el pas `diploma` de sempre (com r8-4, k8-4, g8-4) i diploma en paper a la guia. 12 animacions, guies,
   insígnia `m8fira`, solucionari. Validador: 196 sessions, 0 errors; cap pas necessita scroll.
 - La versió final no exigeix el gruix de paret (perquè ningú no s'encalli abans del diploma); a la v3 de m8-3 sí.
+
+## Tech 3D · Nivell 2, unitat 4 «Variables i paràmetres» (23-10-2026)
+- p4-1 Variables · p4-2 Expressions · p4-3 Disseny paramètric · p4-4 Projecte: la caixa a mida. Clienta: la Noa, del museu
+  de ciències naturals. Primera unitat amb l'editor de text (`text: true`, primer amb blocs i després Codi). Comprovacions
+  `param` a quasi tots els reptes: escriure números a mà no passa. 10 animacions, guies, solucionari. 200 sessions, 0 errors.
+- Límit del motor: `param` fa servir un sol nom de variable (no «ca|es»); per això les variables comprovades es diuen igual
+  en català i castellà. Pendent del Nivell 2: unitat 8 (Producte final).
+- **Pla següent (petició del Moisés, 23-10):** editor 3D més a l'estil Tinkercad als dos nivells (arrossegar formes, cotes
+  editables, barra d'eines, cub de vistes, text en relleu, duplicar i mirall arreglats), sessions pràctiques noves (clauer amb
+  nom, suport de mòbil, tallagaletes, organitzador, caixa amb tapa) amb «porta-ho a Tinkercad o a la impressora», Nivell 2
+  amb menys blocs (l'editor com a eina principal; el codi en text per a variables, bucles i mòduls) i dossier actualitzat
+  (centres i famílies).
