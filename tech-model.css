@@ -28,12 +28,66 @@
 .m3vp>.tsay.m3say.out{opacity:0;transform:var(--m3tx) translateY(-6px);transition:opacity .25s,transform .25s}
 @keyframes m3sin{from{opacity:0;transform:var(--m3tx) translateY(-6px)}}
 .m3vp>.tsay.m3say.ok{background:#ECF9F2;color:#0E6B43;box-shadow:0 6px 22px rgba(34,160,107,.25),inset 0 0 0 2px #A8E0C0}
+.m3vpe>.tsay.m3say{top:62px;max-width:min(calc(100% - 200px),520px)}
 .m3vp>.tsay.m3say.bad{background:#FFF1F1;color:#A12A2E;box-shadow:0 6px 22px rgba(229,72,77,.2),inset 0 0 0 2px #F2B8BA}
 .m3vp>.tsay.m3say .tstars{display:flex;justify-content:center;gap:6px;margin:4px 0 0;font-size:22px!important}
 .m3cks li.bad{border-color:#F2B8BA;background:#FFF6F6;color:#A12A2E}
 .m3cks li.bad .m3cb{border-color:#E5484D}
 .m3hide{display:none!important}
 .m3lockv{grid-area:vp;z-index:1;position:relative}
+/* ---------- el cub de vistes (gira com la càmera; tocar una cara hi porta la vista) ---------- */
+.m3cube{--cs:48px;position:absolute;left:4px;top:4px;z-index:3;width:calc(var(--cs) * 1.76);display:flex;flex-direction:column;align-items:center;gap:0;pointer-events:none}
+.m3vpe .m3cube{top:58px}
+.m3cb3{position:relative;width:var(--cs);height:var(--cs);margin:calc(var(--cs) * .38) 0;transform-style:preserve-3d;pointer-events:none}
+.m3cf{position:absolute;inset:0;display:grid;place-items:center;padding:0;border:0;border-radius:9px;backface-visibility:hidden;-webkit-backface-visibility:hidden;pointer-events:auto;cursor:pointer;
+  background:linear-gradient(160deg,#FFFFFF,#EEF1FB 70%,#E3E8F7);box-shadow:inset 0 0 0 1.6px rgba(42,53,97,.22),inset 0 -6px 12px rgba(124,92,255,.07);color:#2A3561;transition:background .15s,color .15s}
+.m3cf span{font:900 max(6.6px,calc(var(--cs) * .15))/1 Lexend,system-ui,sans-serif;letter-spacing:.02em;text-transform:uppercase;max-width:92%;overflow:hidden;text-overflow:clip;white-space:nowrap}
+.m3cf.f-top{background:linear-gradient(160deg,#FFFFFF,#F1EDFF 70%,#E6E0FF)}
+.m3cf.f-bottom{cursor:default;background:#DDE2F0}
+.m3cf:hover:not(:disabled),.m3cf:focus-visible{background:var(--m3a);color:#fff;outline:none}
+.m3cf.on{background:color-mix(in srgb,var(--m3a) 16%,#fff);color:color-mix(in srgb,var(--m3a) 85%,#000);box-shadow:inset 0 0 0 2px color-mix(in srgb,var(--m3a) 60%,#fff)}
+.m3chome{pointer-events:auto;display:grid;place-items:center;width:30px;height:30px;border-radius:50%;border:0;background:rgba(255,255,255,.88);color:#2A3561;box-shadow:0 2px 10px rgba(27,43,107,.14);cursor:pointer;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.m3chome svg{width:18px;height:18px}
+.m3chome:hover,.m3chome:focus-visible{background:var(--m3a);color:#fff;outline:none}
+/* ---------- l'editor: la barra d'eines de dalt de la vista ---------- */
+.m3vpe:focus{outline:none}
+.m3vpe:focus-visible{box-shadow:inset 0 0 0 3px #2F6BFF,0 10px 28px rgba(27,43,107,.10)}
+.m3tbar{position:absolute;left:8px;right:8px;top:8px;z-index:5;display:flex;align-items:center;gap:2px;padding:3px 4px;border-radius:16px;background:rgba(255,255,255,.86);backdrop-filter:blur(10px) saturate(1.2);-webkit-backdrop-filter:blur(10px) saturate(1.2);box-shadow:0 4px 16px rgba(27,43,107,.14),inset 0 0 0 1px rgba(255,255,255,.7);overflow-x:auto;scrollbar-width:none}
+.m3tbar::-webkit-scrollbar{display:none}
+.m3tg{display:flex;align-items:center;gap:1px;flex:none}
+.m3tsep{flex:none;width:1.5px;height:26px;margin:0 3px;border-radius:2px;background:#DCE2F2}
+.m3tb2{flex:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-width:50px;height:42px;padding:3px 5px 2px;border:0;border-radius:11px;background:transparent;color:#2A3561;font:800 10.5px/1.05 Lexend,system-ui,sans-serif;cursor:pointer;transition:background .15s,color .15s,transform .1s}
+.m3tb2 svg{width:20px;height:20px;flex:none}
+.m3tb2 span{white-space:nowrap}
+.m3tb2:hover:not(:disabled){background:color-mix(in srgb,var(--m3a) 10%,#fff)}
+.m3tb2:active:not(:disabled){transform:scale(.94)}
+.m3tb2:focus-visible{outline:3px solid #2F6BFF;outline-offset:-2px}
+.m3tb2:disabled{opacity:.33;cursor:default}
+.m3tb2.on{background:var(--m3a);color:#fff}
+.m3tb2.del:not(:disabled){color:#C8383D}
+.m3tb2.del:hover:not(:disabled){background:#FFECEC}
+.m3vbb .m3mob{display:none}
+.m3vbt{display:flex;gap:6px}
+.m3vbt .m3tb2{min-width:36px;height:36px;padding:0 8px;flex-direction:row;gap:5px;background:rgba(255,255,255,.86);box-shadow:0 2px 10px rgba(27,43,107,.12);font-size:12px}
+.m3vbt .m3tb2.on{background:var(--m3a)}
+/* els menús de Mirall i Alinea (sota el botó de la barra) */
+.m3vp>.m3pop{position:absolute;top:58px;right:8px;left:auto;bottom:auto;z-index:7;width:max-content;min-width:230px;max-width:calc(100% - 12px);background:#fff;border-radius:16px;padding:10px;box-shadow:0 14px 40px rgba(27,43,107,.25),0 0 0 2px var(--line);display:flex;flex-direction:column;gap:6px;animation:m3pin .16s ease-out}
+.m3vp>.m3pop[hidden]{display:none}
+.m3pop small{font-size:11.5px;color:var(--mut);font-weight:700;line-height:1.3;max-width:300px}
+.m3pr button svg{width:17px;height:17px;vertical-align:-3px;margin-right:2px}
+@keyframes m3pin{from{opacity:0;transform:translateY(-4px)}}
+/* les cotes de la vista (del renderitzador) i el camp per escriure-les */
+.m3hud .m3dim.ed:hover{background:#fff!important;transform-origin:center;box-shadow:0 0 0 3px rgba(47,107,255,.25),0 2px 10px rgba(20,32,74,.25)!important}
+.m3hud .m3dim.ed::after{content:"✎";margin-left:4px;font-size:10px;opacity:.5}
+.m3dimed{position:absolute;z-index:8;display:flex;align-items:center;gap:3px;transform:translate(-50%,-50%);padding:3px 8px 3px 4px;border-radius:12px;background:#fff;box-shadow:0 0 0 2.5px var(--dc,#2F5BEA),0 8px 24px rgba(20,32,74,.3);animation:m3pin .12s ease-out}
+.m3dimed.a0{--dc:var(--m3ax0)}.m3dimed.a1{--dc:var(--m3ax1)}.m3dimed.a2{--dc:var(--m3ax2)}.m3dimed.az{--dc:#E07A10}
+.m3dimed input{width:64px;height:30px;border:0;outline:none;background:#F4F6FE;border-radius:8px;text-align:center;font:900 16px/1 Lexend,system-ui,sans-serif;color:var(--ink)}
+.m3dimed em{font-style:normal;font:800 12px/1 Lexend,system-ui,sans-serif;color:var(--mut)}
+/* arrossegar una forma de la paleta */
+.m3dragg{position:fixed;left:0;top:0;z-index:9999;width:60px;height:60px;margin:-30px 0 0 -30px;display:grid;place-items:center;border-radius:18px;background:rgba(255,255,255,.92);box-shadow:0 12px 30px rgba(27,43,107,.3);pointer-events:none;transition:opacity .12s,width .12s,height .12s}
+.m3dragg svg,.m3dragg img{width:44px;height:44px;display:block}
+.m3dragg.in{opacity:0}
+body.m3dragon,body.m3dragon *{cursor:grabbing!important;user-select:none;-webkit-user-select:none}
 /* ---------- comprovacions en directe ---------- */
 .m3ck{grid-area:ck;min-width:0}
 .m3ck:empty{display:none}
@@ -47,57 +101,76 @@
 .m3cks li.pop{animation:m3pop .55s}
 @keyframes m3pop{35%{transform:scale(1.07)}}
 /* ---------- inspector (peça seleccionada) ---------- */
-.m3in{grid-area:in;position:relative;min-width:0;background:#fff;border:2px solid var(--line);border-radius:18px;padding:6px 8px 8px;box-shadow:0 4px 14px rgba(27,43,107,.05)}
-.m3ih{display:flex;align-items:center;gap:6px;min-width:0}
-.m3inm{display:flex;align-items:center;gap:6px;min-width:0;flex:0 1 auto;font-size:14px;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.m3inm .m3ico,.m3inm>svg{width:30px;height:30px;flex:none}
+.m3in{grid-area:in;position:relative;min-width:0;background:#fff;border:2px solid var(--line);border-radius:18px;padding:8px 9px 9px;box-shadow:0 4px 14px rgba(27,43,107,.05)}
+.m3ih{display:flex;align-items:center;gap:8px;min-width:0}
+.m3inm{display:flex;align-items:center;gap:7px;min-width:0;flex:1 1 auto;font-size:14.5px;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.m3inm .m3ico,.m3inm>svg{width:32px;height:32px;flex:none}
 .m3inm b{overflow:hidden;text-overflow:ellipsis}
-.m3tools{display:flex;gap:4px;margin-left:auto;overflow-x:auto;scrollbar-width:none;min-width:0}
-.m3tools::-webkit-scrollbar{display:none}
-.m3tb{flex:none;display:inline-flex;align-items:center;justify-content:center;gap:5px;height:36px;min-width:36px;padding:0 7px;border-radius:11px;border:2px solid var(--line);background:linear-gradient(#fff,#F6F8FE);color:#2A3561;font:800 12px/1 Lexend,system-ui,sans-serif;cursor:pointer}
+/* sòlid o forat (com dues fitxes: la del color i la ratllada) */
+.m3shf{flex:none;display:flex;gap:2px;padding:3px;border-radius:12px;background:#F0F3FC}
+.m3shf button{display:inline-flex;align-items:center;gap:5px;height:30px;padding:0 10px 0 7px;border:0;border-radius:9px;background:transparent;color:var(--mut);font:800 12.5px/1 Lexend,system-ui,sans-serif;cursor:pointer}
+.m3shf button svg{width:17px;height:17px}
+.m3shf button.on{background:#fff;color:var(--ink);box-shadow:0 1px 4px rgba(27,43,107,.16)}
+.m3shf button.h.on{background:repeating-linear-gradient(135deg,#fff 0 5px,#E9EDF7 5px 10px);color:#46506B}
+.m3tb{flex:none;display:inline-flex;align-items:center;justify-content:center;gap:5px;height:36px;min-width:36px;padding:0 9px;border-radius:11px;border:2px solid var(--line);background:linear-gradient(#fff,#F6F8FE);color:#2A3561;font:800 12px/1 Lexend,system-ui,sans-serif;cursor:pointer}
 .m3tb svg{width:19px;height:19px;flex:none}
-.m3tb span{display:none}
 .m3tb.on{background:var(--m3a2);border-color:color-mix(in srgb,var(--m3a) 55%,#fff);color:color-mix(in srgb,var(--m3a) 80%,#000)}
-.m3tb.del{color:#C8383D}
-.m3tb:active{transform:translateY(1px)}
-.m3tabs{display:flex;gap:3px;margin:6px 0 6px;padding:3px;border-radius:12px;background:#F0F3FC}
+.m3tabs{display:flex;gap:3px;margin:7px 0 6px;padding:3px;border-radius:12px;background:#F0F3FC}
 .m3tabs button{flex:1;height:28px;border-radius:9px;border:0;background:transparent;color:var(--mut);font:800 12.5px/1 Lexend,system-ui,sans-serif;cursor:pointer}
 .m3tabs button.on{background:#fff;color:var(--ink);box-shadow:0 1px 4px rgba(27,43,107,.14)}
 .m3tabs button small{font-weight:700;font-size:10.5px;opacity:.7}
+.m3tabs:has(>button:nth-of-type(4)) button small{display:none}
+.m3tabs button:focus-visible,.m3shf button:focus-visible,.m3sw button:focus-visible,.m3pb:focus-visible,.m3f button:focus-visible{outline:3px solid #2F6BFF;outline-offset:1px}
 .m3body{position:relative}
 .m3fs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px}
 .m3f{display:flex;align-items:center;gap:2px;min-width:0;height:38px;border-radius:12px;background:#F6F8FE;border:2px solid #E3E9F8;padding:0 2px}
 .m3f .m3ax{flex:none;display:grid;place-items:center;width:18px;font:900 12px/1 Lexend,system-ui,sans-serif;color:var(--ax)}
-.m3f.a0{--ax:var(--m3ax0)}.m3f.a1{--ax:var(--m3ax1)}.m3f.a2{--ax:var(--m3ax2)}
-.m3f button{flex:none;width:26px;height:30px;border-radius:8px;border:0;background:#fff;color:#2A3561;font:900 17px/1 system-ui;box-shadow:0 1px 3px rgba(27,43,107,.15);cursor:pointer}
+.m3f.a0{--ax:var(--m3ax0)}.m3f.a1{--ax:var(--m3ax1)}.m3f.a2{--ax:var(--m3ax2)}.m3f.m3fp{--ax:var(--m3a)}
+.m3f button{flex:none;width:24px;height:30px;border-radius:8px;border:0;background:#fff;color:#2A3561;font:900 17px/1 system-ui;box-shadow:0 1px 3px rgba(27,43,107,.15);cursor:pointer}
 .m3f button:disabled{opacity:.3}
-.m3f input{flex:1;min-width:0;width:100%;height:30px;border:0;background:transparent;text-align:center;font:800 15px/1 Lexend,system-ui,sans-serif;color:var(--ink);padding:0;outline:none;-moz-appearance:textfield}
+.m3f input{flex:1;min-width:0;width:100%;height:30px;border:0;background:transparent;text-align:center;font:800 14.5px/1 Lexend,system-ui,sans-serif;color:var(--ink);padding:0;outline:none;-moz-appearance:textfield}
 .m3f input:focus{background:#fff;border-radius:7px;box-shadow:inset 0 0 0 2px var(--ax)}
 .m3f em{display:none;font-style:normal;font-size:11px;color:var(--mut);font-weight:700}
+.m3fps{grid-template-columns:minmax(0,1fr)}
+.m3fp .m3pn{flex:none;padding:0 6px 0 8px;font:800 12.5px/1 Lexend,system-ui,sans-serif;color:color-mix(in srgb,var(--m3a) 80%,#000)}
+.m3fp em{display:inline;padding-right:4px}
 .m3fn{margin:5px 2px 0;font-size:12px;color:var(--mut);font-weight:600;line-height:1.3;display:none}
 .m3lk{display:none;align-items:center;gap:5px;margin-top:5px;height:28px;padding:0 10px;border-radius:99px;border:2px solid var(--line);background:#fff;font:800 12px/1 Lexend,system-ui,sans-serif;color:var(--mut);cursor:pointer}
 .m3lk svg{width:15px;height:15px}.m3lk.on{background:var(--m3a);border-color:var(--m3a);color:#fff}
 .m3sw{display:flex;flex-wrap:wrap;gap:6px;justify-content:space-between}
+.m3in>.m3sw{margin-top:7px;gap:4px}
 .m3sw button{width:28px;height:28px;border-radius:50%;border:3px solid #fff;background:var(--c);box-shadow:0 0 0 1.5px rgba(27,43,107,.18),0 2px 4px rgba(27,43,107,.2);cursor:pointer}
+.m3in>.m3sw button{width:24px;height:24px;border-width:2.5px}
 .m3sw button.on{box-shadow:0 0 0 3px var(--ink)}
+.m3colr{display:flex;align-items:center;gap:8px;min-width:0}
+.m3colr .m3sw{flex:1;min-width:0}
+/* el text d'una peça de text */
+.m3txt{display:flex;align-items:center;gap:8px;margin-top:7px;height:40px;padding:0 4px 0 10px;border-radius:12px;background:#F6F8FE;border:2px solid #E3E9F8}
+.m3txt span{flex:none;font:800 12.5px/1 Lexend,system-ui,sans-serif;color:color-mix(in srgb,var(--m3a) 80%,#000)}
+.m3txt input{flex:1;min-width:0;height:32px;border:0;border-radius:9px;background:#fff;padding:0 10px;font:900 16px/1 Lexend,system-ui,sans-serif;letter-spacing:.06em;text-transform:uppercase;color:var(--ink);outline:none;box-shadow:inset 0 0 0 1.5px #DCE3F5}
+.m3txt input:focus{box-shadow:inset 0 0 0 2px var(--m3a)}
+.m3body>.m3txt{margin-top:0}
 .m3emp{display:flex;align-items:center;gap:10px;min-height:52px}
 .m3empi .m3ico{width:40px;height:40px}
 .m3emp p{margin:0;flex:1;font-size:13.5px;line-height:1.35;color:var(--mut);font-weight:600}.m3emp p b{color:var(--ink)}
-.m3pop{position:absolute;right:6px;top:46px;z-index:6;min-width:220px;max-width:calc(100% - 12px);background:#fff;border-radius:16px;padding:10px;box-shadow:0 14px 40px rgba(27,43,107,.25),0 0 0 2px var(--line);display:flex;flex-direction:column;gap:6px}
-.m3pop[hidden]{display:none}
 .m3pop>b{font-size:12.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--mut)}
 .m3pr{display:flex;gap:5px;align-items:center}.m3pr.col{flex-direction:column;align-items:stretch}
 .m3pr button{flex:1;min-height:36px;padding:6px 10px;border-radius:11px;border:2px solid var(--line);background:linear-gradient(#fff,#F6F8FE);font:700 13px/1.2 Lexend,system-ui,sans-serif;color:var(--ink);cursor:pointer;text-align:center}
+.m3pr button:hover{border-color:color-mix(in srgb,var(--m3a) 45%,#fff);background:var(--m3a2)}
 .m3pr .m3ax{flex:none;width:20px;font:900 13px/1 Lexend,system-ui,sans-serif;text-align:center}
 .m3pr .m3ax.a0{color:var(--m3ax0)}.m3pr .m3ax.a1{color:var(--m3ax1)}.m3pr .m3ax.a2{color:var(--m3ax2)}
-/* ---------- la paleta de formes ---------- */
+/* ---------- les formes: miniatures 3D que es toquen o s'arrosseguen a la placa ---------- */
 .m3pl{grid-area:pl;min-width:0;min-height:0}
 .m3palh{display:none}
 .m3pals{display:flex;gap:6px;overflow-x:auto;padding:2px 2px 4px;scrollbar-width:none;-webkit-overflow-scrolling:touch;scroll-snap-type:x proximity}
 .m3pals::-webkit-scrollbar{display:none}
-.m3pb{flex:none;scroll-snap-align:start;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;width:58px;height:60px;border-radius:16px;border:2px solid var(--line);background:linear-gradient(180deg,#fff,#F3F5FD);box-shadow:0 3px 0 #DCE3F5;cursor:pointer;padding:3px 2px 2px}
-.m3pb .m3ico{width:36px;height:36px}
+.m3pb{flex:none;scroll-snap-align:start;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;width:58px;height:60px;border-radius:16px;border:2px solid var(--line);background:linear-gradient(180deg,#fff,#F3F5FD);box-shadow:0 3px 0 #DCE3F5;cursor:grab;padding:3px 2px 2px;touch-action:pan-x;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;transition:transform .12s,box-shadow .12s,border-color .12s}
+.m3pbi{display:grid;place-items:center;width:38px;height:38px}
+.m3pb .m3ico,.m3pbm{width:38px;height:38px;display:block;pointer-events:none}
+.m3pbm{object-fit:contain;filter:drop-shadow(0 2px 2px rgba(27,43,107,.18));animation:m3fin .3s ease-out}
+@keyframes m3fin{from{opacity:.3}}
 .m3pb span{font:800 10px/1.1 Lexend,system-ui,sans-serif;color:var(--mut);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:54px}
+.m3pb:hover{border-color:color-mix(in srgb,var(--m3a) 40%,#fff);transform:translateY(-1px)}
 .m3pb:active{transform:translateY(2px);box-shadow:0 1px 0 #DCE3F5}
 .m3pb.hole{background:repeating-linear-gradient(135deg,#fff 0 6px,#F1F3F9 6px 12px)}
 /* ---------- distribució de cada pas (mòbil: una columna que cap a la pantalla) ---------- */
@@ -158,6 +231,7 @@ b.m3v{cursor:default}
 .m3err{margin:0;padding:6px 10px;border-radius:10px;background:#FFF1E4;color:#9A3F0E;font-size:13.5px;font-weight:700;line-height:1.35}
 .m3err:empty{display:none}
 /* l'editor de codi (pestanya «Codi»): text amb colors a sota d'un textarea transparent */
+.tsbody>.tstage>.tcode>.m3cw{flex:1 1 auto;min-height:110px}
 .m3cw{flex:1 1 auto;min-height:120px;display:grid;grid-template-columns:auto minmax(0,1fr);background:#14204A;border-radius:14px;overflow:hidden;box-shadow:0 8px 24px rgba(20,32,74,.18)}
 .m3ln{overflow:hidden;padding:10px 7px 10px 10px;background:#0E1736;color:#5A6BA0;font:600 13.5px/1.6 ui-monospace,Menlo,Consolas,monospace;text-align:right;user-select:none}
 .m3ln i{display:block;font-style:normal;padding:0 3px}.m3ln i.e{color:#fff;background:#E5484D;border-radius:4px}
@@ -167,9 +241,13 @@ b.m3v{cursor:default}
 .m3ta{background:transparent;color:transparent;-webkit-text-fill-color:transparent;caret-color:#FFC531;resize:none;outline:none;-webkit-appearance:none;appearance:none}
 .m3ta::selection{background:rgba(255,197,49,.3);-webkit-text-fill-color:transparent}
 .m3hl i,.m3pre i{font-style:normal}.m3hk{color:#7FB8FF}.m3hp{color:#C9B6FF}.m3hn{color:#FFB86B}.m3hs{color:#7DE3A6}.m3hc{color:#6B7AA8}.m3hi{color:#E8EEFF}
-.m3snips{flex:none;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding:1px 1px 3px}
+.m3snips{flex:none;display:flex;gap:5px;overflow-x:auto;scrollbar-width:none;padding:1px 1px 3px;-webkit-overflow-scrolling:touch}
 .m3snips::-webkit-scrollbar{display:none}
-.m3snips button{flex:none;font:700 12.5px ui-monospace,Menlo,Consolas,monospace;background:#fff;border:2px solid var(--line);border-bottom-width:3px;border-radius:10px;padding:5px 9px;color:#4A2FB8;cursor:pointer}
+.m3sn{--bc:#6C4CF0;flex:none;display:inline-flex;align-items:center;height:32px;font:800 12.5px/1 ui-monospace,Menlo,Consolas,monospace;background:color-mix(in srgb,var(--bc) 9%,#fff);border:2px solid color-mix(in srgb,var(--bc) 35%,#fff);border-bottom:3px solid color-mix(in srgb,var(--bc) 55%,#fff);border-radius:10px;padding:0 9px;color:color-mix(in srgb,var(--bc) 82%,#000);cursor:pointer;white-space:nowrap;touch-action:manipulation}
+.m3sn:active{transform:translateY(1px);border-bottom-width:2px}
+.m3sn:focus-visible{outline:3px solid #2F6BFF;outline-offset:1px}
+.m3sn.c-shp{--bc:#6C4CF0}.m3sn.c-tr{--bc:#2F7BF0}.m3sn.c-col{--bc:#0FA3A3}.m3sn.c-bool{--bc:#EE7A1E}.m3sn.c-loop{--bc:#1FA463}.m3sn.c-fn{--bc:#B44FD6}.m3sn.c-var{--bc:#E0533F}.m3sn.c-vn{--bc:#C98A00;background:#FFF8E6}.m3sn.c-rem{--bc:#8A94B3}
+.m3sn.c-sym{--bc:#4A5578;min-width:34px;justify-content:center;font-size:15px;background:#fff}
 /* selector de valors */
 .m3pick h3{margin:0 0 10px}
 .m3exp{display:flex;gap:8px}.m3exp input{flex:1;min-width:0;font:800 22px/1 ui-monospace,Menlo,Consolas,monospace;padding:10px 12px;border-radius:12px;border:2px solid var(--line)}
@@ -204,20 +282,20 @@ span.m3thumb{display:grid;place-items:center}span.m3thumb .m3ico{width:50%;heigh
 .soprog.m3so{white-space:pre-wrap;font:600 12.5px/1.45 ui-monospace,Menlo,Consolas,monospace;background:#14204A;color:#E8EEFF;border-radius:10px;padding:8px 10px}
 /* ---------- ordinador: dues columnes ---------- */
 @media (min-width:900px){
-  .tsbody>.tstage.m3ed{grid-template-columns:minmax(0,1.55fr) minmax(330px,1fr);grid-template-areas:"vp ck" "vp in" "vp pl";grid-template-rows:auto auto minmax(0,1fr);gap:10px}
+  /* l'editor: la placa gran a l'esquerra; a la dreta, les comprovacions, l'inspector i les formes */
+  .tsbody>.tstage.m3ed{grid-template-columns:minmax(0,1fr) minmax(300px,360px);grid-template-areas:"vp ck" "vp in" "vp pl";grid-template-rows:auto auto minmax(0,1fr);gap:10px}
   .tsbody>.tstage.m3ed.ro{grid-template-areas:"vp ck";grid-template-rows:minmax(0,1fr)}
   .m3cks{flex-wrap:wrap;overflow:visible;gap:5px}
   .m3cks li{white-space:normal;padding:4px 11px 4px 5px;font-size:13px;line-height:1.3}
-  .m3tb span{display:inline}
-  .m3tools{display:contents}
-  .m3ih{flex-wrap:wrap;gap:5px}
-  .m3inm{margin-right:auto;padding-right:4px}
-  .m3tb{height:32px;padding:0 8px}
   .m3fn{display:block}.m3lk{display:inline-flex}
   .m3pl{overflow:auto;background:#fff;border:2px solid var(--line);border-radius:18px;padding:8px;align-self:start;max-height:100%}
   .m3palh{display:flex;align-items:baseline;gap:8px;margin:0 2px 6px}.m3palh b{font-size:12.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--mut)}.m3palh small{font-size:12px;color:var(--mut)}
-  .m3pals{display:grid;grid-template-columns:repeat(auto-fill,minmax(52px,1fr));overflow:visible;gap:6px}
-  .m3pb{width:auto;height:58px}
+  .m3pals{display:grid;grid-template-columns:repeat(auto-fill,minmax(50px,1fr));overflow:visible;gap:5px}
+  .m3pb{width:auto;height:56px;border-radius:14px}
+  .m3pbi,.m3pb .m3ico,.m3pbm{width:36px;height:36px}
+  .m3pb{height:60px;justify-content:flex-start;padding-top:4px}
+  .m3pb.lng span{font-size:7.9px;letter-spacing:-.04em}
+  .m3pb span{font-size:9px;line-height:1;max-width:100%;white-space:normal;text-align:center;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;letter-spacing:-.01em}
   .m3vl{display:inline}
   .tsbody>.tstage.m3pg{grid-template-columns:minmax(0,1.2fr) minmax(340px,1fr);grid-template-areas:"vp cd" "ck cd";grid-template-rows:minmax(0,1fr) auto;gap:10px}
   .tsbody>.tstage.m3pg.ro,.tsbody>.tstage.m3pg.spot{grid-template-columns:minmax(0,1.2fr) minmax(320px,1fr);grid-template-rows:minmax(0,1fr) auto}
@@ -226,6 +304,7 @@ span.m3thumb{display:grid;place-items:center}span.m3thumb .m3ico{width:50%;heigh
   .tsbody>.tstage.m3stage>.tcode .m3pal{flex-wrap:wrap;overflow-y:auto;overflow-x:hidden;max-height:34%}
   .tsbody>.tstage.m3stage>.tcode .m3pal .tpb{flex:0 1 calc(33.333% - 4px);max-width:none}
   .tsbody>.tstage.m3stage>.tcode .m3pal button.tb{min-height:40px}
+  .m3snips{flex-wrap:wrap;overflow-x:hidden;overflow-y:auto;max-height:116px}
   .tsbody>.tstage.m3look.qa{grid-template-columns:minmax(0,1.5fr) minmax(300px,1fr);grid-template-areas:"vp qa";grid-template-rows:minmax(0,1fr)}
   .m3qa{justify-content:center}
   .m3opts{grid-template-columns:1fr}
@@ -238,7 +317,11 @@ span.m3thumb{display:grid;place-items:center}span.m3thumb .m3ico{width:50%;heigh
   .m3media.m3wc{grid-template-columns:1.3fr 1fr;align-items:center}
   .m3vp>.tsay.m3say{font-size:14.5px!important}
 }
-@media (max-width:899px){.m3vp .m3seg .m3vb{min-width:30px;height:30px;padding:0 4px}.m3vb{min-width:34px;height:34px}.m3vb svg{width:19px;height:19px}}
+@media (max-width:899px){.m3vb{min-width:34px;height:34px}.m3vb svg{width:19px;height:19px}}
+/* tauleta / ordinador petit: la barra d'eines, més compacta */
+@media (min-width:900px) and (max-width:1180px){.m3tb2{min-width:40px;padding:3px 3px 2px;font-size:9.4px}.m3tsep{margin:0 1px}}
+/* ordinador gran: l'editor fa servir tota l'amplada (la placa és la protagonista) */
+@media (min-width:1100px){.tsbody.wide>.tstage.m3ed,.tsbody.wide:has(>.tstage.m3ed)>.tsq2{max-width:1240px}}
 @media (max-width:380px){.m3f button{width:23px}.m3f .m3ax{width:14px}.m3f input{font-size:14px}}
 @media (prefers-reduced-motion:reduce){.m3hunt{animation:none}.m3cks li.pop{animation:none}}
 
@@ -249,6 +332,22 @@ span.m3thumb{display:grid;place-items:center}span.m3thumb .m3ico{width:50%;heigh
   .m3tabs button small{display:none}
   /* el missatge: pastilla d'amplada completa just a sota de la barra de dalt */
   .m3vp>.tsay.m3say{--m3tx:translateY(0);top:48px;left:8px;right:8px;width:auto;max-width:none;padding:6px 28px 6px 10px;border-radius:12px;font-size:12.5px!important;line-height:1.3}
+  .m3vpe>.tsay.m3say{top:54px;left:70px;max-width:none}
+  /* el cub, més petit; la barra d'eines, només amb les eines de la peça (desfés i el resultat van a baix) */
+  .m3cube{--cs:36px;left:2px;top:2px}.m3vpe .m3cube{top:50px}
+  .m3chome{width:26px;height:26px}.m3chome svg{width:16px;height:16px}
+  .m3tbar{left:6px;right:6px;top:6px;padding:2px 3px;border-radius:14px;justify-content:space-between}
+  .m3tbar .m3tgu,.m3tbar .m3tgv,.m3tbar .m3sp{display:none}
+  .m3tsep{margin:0;width:1px;height:22px}
+  .m3tb2{min-width:30px;flex:1 1 auto;height:40px;padding:2px 2px 1px;font-size:8.4px;line-height:.98;letter-spacing:-.02em;border-radius:10px}
+  .m3tb2 span{white-space:nowrap;text-align:center}
+  .m3tb2[data-t="mu"] span{white-space:normal;max-width:30px}
+  .m3tg{flex:1 1 auto;justify-content:space-around}
+  .m3tb2 svg{width:19px;height:19px}
+  .m3vbb .m3mob{display:flex;gap:6px}.m3vbb .m3dsk{display:none}
+  .m3vbt .m3tb2{min-width:34px;height:34px;padding:0 6px}.m3vbt .m3tb2 span{display:none}
+  .m3cdb b{display:none}.m3cdb{padding:0 9px}
+  .m3vpe .m3vbb{gap:5px}.m3vpe .m3vbb .m3mm{display:none}.m3vpe #m3sn{padding:0 9px 0 7px}
   .m3vp>.tsay.m3say::after{top:6px;right:9px}
   .m3vp>.tsay.m3say .tstars{display:inline-flex;vertical-align:-2px;margin:0 0 0 6px;gap:2px;font-size:17px!important}
   /* comprovacions: xips petits en una fila que llisca */
@@ -268,11 +367,9 @@ span.m3thumb{display:grid;place-items:center}span.m3thumb .m3ico{width:50%;heigh
   .m3body{flex:1;min-height:0;display:flex;align-items:center}
   .m3body>*{flex:1;min-width:0}
   .m3ed.fold .m3body{display:none}
-  .m3tl{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;padding:0 1px}
-  .m3tl::-webkit-scrollbar{display:none}
-  .m3tl .m3tb{flex-direction:column;gap:1px;height:40px;min-width:46px;padding:2px 4px;border-width:1.5px}
-  .m3tl .m3tb svg{width:18px;height:18px}
-  .m3tl .m3tb span{display:block;font-size:9.5px;line-height:1.1;white-space:nowrap}
+  .m3colr{gap:6px}.m3colr .m3shf{padding:2px}.m3colr .m3shf button{height:28px;padding:0 6px}.m3colr .m3shf button span{font-size:11px}
+  .m3fp .m3pn{font-size:12px;padding:0 4px 0 6px}
+  .m3txt{height:38px;margin:0}
   .m3sw{flex-wrap:nowrap;justify-content:flex-start;gap:5px;overflow-x:auto;scrollbar-width:none;padding:3px 3px}
   .m3sw::-webkit-scrollbar{display:none}
   .m3sw button{flex:none;width:27px;height:27px}
@@ -282,12 +379,12 @@ span.m3thumb{display:grid;place-items:center}span.m3thumb .m3ico{width:50%;heigh
   .m3emp .m3tb span{display:inline}
   .m3ed.fold .m3empi .m3ico{width:24px;height:24px}
   .m3ed.fold .m3emp p{-webkit-line-clamp:2;font-size:12px}
-  /* els menús de mirall/alinea s'obren cap amunt (sobre la vista), no tapen la paleta */
-  .m3pop{top:auto;bottom:calc(100% + 6px);right:0;left:auto;max-width:100%}
+  .m3vp>.m3pop{max-width:calc(100% - 12px);padding:8px}
+  .m3vp>.m3pop .m3pr button{min-height:34px;padding:5px 7px;font-size:12.5px}
   /* paleta de formes: una sola fila que llisca */
   .m3pals{gap:5px;padding:1px 2px 3px}
   .m3pb{width:auto;min-width:54px;height:50px;border-radius:14px;box-shadow:0 2px 0 #DCE3F5;padding:2px 5px}
-  .m3pb .m3ico{width:28px;height:28px}
+  .m3pbi,.m3pb .m3ico,.m3pbm{width:30px;height:30px}
   .m3pb span{font-size:9.5px;max-width:64px}
   /* Nivell 2: capçalera i paleta de blocs més baixes */
   .tsbody>.tstage.m3stage>.tcode.m3cd{gap:5px}

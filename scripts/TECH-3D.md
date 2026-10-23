@@ -21,7 +21,7 @@ Les unitats i els títols de les sessions són al catàleg `TECH` de `tech-c1.js
 ## El model (format comú)
 ```js
 // una peça (primitiva)
-{ id: 'a1', t: 'box', s: [40, 30, 20], p: [0, 0, 10], r: [0, 0, 0], c: '#7C5CFF', hole: false, g: null, top: 1, w: 2, n: 5 }
+{ id: 'a1', t: 'box', s: [40, 30, 20], p: [0, 0, 10], r: [0, 0, 0], c: '#7C5CFF', hole: false, g: null, top: 1, w: 2, n: 5, cr: 3, txt: 'NOM' }
 ```
 - `t` (tipus) i el significat de `s` (mides de la caixa que l'envolta abans de girar, en mm):
   - `box` caixa · `cyl` cilindre (s.x, s.y diàmetres de l'el·lipse, s.z alçada) · `sph` esfera / el·lipsoide (diàmetres)
@@ -31,6 +31,18 @@ Les unitats i els títols de les sessions són al catàleg `TECH` de `tech-c1.js
   - `torus` anell: diàmetre exterior s.x (i s.y), gruix del tub s.z · `tube` tub buit: com `cyl` amb paret `w` mm
   - `star` estrella de `n` puntes (radi interior 0,5) i `heart` cor, extrudits d'alçada s.z i caixa s.x × s.y
   - `hex` prisma hexagonal (cara plana a ±y)
+  - `hsph` **semiesfera** (cúpula): la cara plana a baix i la cúpula a dalt; base el·líptica s.x × s.y, alçada s.z
+    (una mitja esfera «rodona» de 30 mm és `s: [30, 30, 15]`)
+  - `rbox` **caixa arrodonida**: una caixa amb totes les arestes i cantonades arrodonides de radi `cr` mm (per defecte 3;
+    com a molt la meitat del costat més curt). Atenció: el radi és `cr` perquè `r` ja és el gir
+  - `text` **text en relleu**: `txt` (com a molt 24 caràcters; les minúscules es fan majúscules) amb la lletra de blocs
+    pròpia «Numi 3D». s.x = amplada de tot el text, s.y = alçada de les majúscules, s.z = gruix (el relleu). Els accents
+    (À È É Í Ï Ò Ó Ú Ü Á Ñ) sobresurten una mica per dalt de s.y i la ce trencada (Ç) per baix. Lletres: A-Z, Ç, Ñ, les
+    vocals accentuades, 0-9 i `. , ! ? - + ' · : / # ♥` i l'espai; qualsevol altre caràcter es dibuixa «?». Mida per
+    defecte: lletres de 12 mm i 3 mm de gruix; els traços fan 2 unitats de lletra (2,4 mm amb lletres de 12 mm; amb
+    lletres de 10 mm, 2 mm). Per fer-ne la caixa d'un text: `m3TextSize('NOM', alçada, gruix)` → `[amplada, alçada, gruix]`
+    (a 12 mm d'alçada, «NOM» fa 30,48 mm d'ample). Una placa amb nom: una `rbox` de 3 mm i el `text` a sobre (p.z = 3 + gruix / 2).
+    Comprovacions: `wall` amb `min: 1.2` el passa (els caps dels traços tenen xamfrans); `one` no, si les lletres van soltes.
 - `p` = **centre** de la caixa que envolta la peça (abans de girar). «Està sobre la placa» vol dir `p.z - s.z/2 = 0`
   (sense gir).
 - `m` (opcional, Nivell 2): matriu afí 4 × 4 en mm (16 nombres, ordre de columnes com three.js `Matrix4.elements`). Si hi
@@ -101,7 +113,15 @@ vista.measure(on)              // cotes en mm de la peça seleccionada
 vista.snapshot(w, h) → dataURL // captura
 vista.stl() → ArrayBuffer      // STL binari del sòlid final, en mm, z amunt
 vista.dispose()
-export async function thumb(model, w, h) → dataURL   // miniatura (preguntes, portafoli, diapositives)
+// afegits per a l'editor (octubre 2026):
+//   opts.dims: true    → amb una sola peça triada es veuen les seves cotes (amplada, fondària, alçada i, si està enlairada,
+//                        l'alçada sobre la placa) i es poden tocar: opts.onDim({ k: 's'|'p', ax, v, rect })
+//   opts.onCam(az, el) → la càmera ha girat (el cub de vistes del motor la segueix)
+//   opts.inset         → { top, bottom } (o una funció) en px tapats per les barres: l'encaix centra el model a la resta
+vista.set(model, { still: true })   // sense l'animació de caiguda (arrossegar formes de la paleta)
+vista.dropAt(x, y, sense?) → { p: [x, y], z, on }   // on cauria una peça deixada anar en aquest punt de la vista
+vista.drop(id)                      // la peça cau una mica (en deixar-la anar) · vista.snap(mm)
+export async function thumb(model, w, h) → dataURL   // miniatura (preguntes, portafoli, diapositives, paleta de formes)
 ```
 **Qualitat (obligatori, és el punt fort del curs):** materials PBR de plàstic (com un PLA brillant), entorn d'il·luminació
 (PMREM/RoomEnvironment), ombres suaus, oclusió ambiental (GTAO o SSAO) si l'aparell ho permet, una placa d'impressió
@@ -113,11 +133,55 @@ un dit gira la càmera, dos dits fan zoom i desplacen; tocar una peça la selecc
 
 ## Motor: `tech-model.js` + `tech-model.css` (script global, prefix `m3`)
 - Model, `m3Tree`, `m3Inside`, `m3In`, `m3Check`, IoU, volum, caixa, connexió, simetria (Node i navegador).
-- **Editor Nivell 1 (`M3ED`)**: paleta de formes (amb dibuix 3D de cada forma), tiradors i camps numèrics (mida, posició,
-  gir de 15 en 15°, color), duplicar, eliminar, agrupar, alinear, mirall, forat/sòlid, desfer/refer, vistes, mesures.
-  Tot ha de cabre en una pantalla (390 × 740 i 1440 × 800) com la resta d'editors.
-- **Editor Nivell 2 (`M3PG`)**: blocs tàctils (inserir amb un toc, com els editors de Robòtica) i, quan el pas ho permet,
-  pestanya «Codi» amb text i ressaltat; tots dos sincronitzats. Errors amb línia i explicació en català i castellà.
+- **Editor Nivell 1 (`M3ED`)**: un taller «amb el dit», a la manera dels editors de modelatge per blocs:
+  - **Barra d'eines a dalt de la vista** (actua sobre la selecció; els noms són els de sempre, perquè les pistes en
+    parlen): **Desfés / Refés** · **Duplica** · **Esborra** · **Forat / Sòlid** · **Mirall** ▾ · **Alinea** ▾ ·
+    **Agrupa / Desagrupa** · **Més peces** (selecció múltiple) · **Totes** · i, a la dreta, **Fantasma** i **Resultat**.
+    Al mòbil la barra només té les eines de la peça; Desfés/Refés, Fantasma i Resultat són a la barra de baix de la vista.
+  - **Cub de vistes** (a dalt a l'esquerra de la vista): gira com la càmera; tocar una cara (Davant, Darrere, Dreta,
+    Esquerra, Dalt) hi porta la vista amb la transició suau; el botó de sota torna a la perspectiva. Substitueix els
+    botons de vistes (també a les vistes de m3look, m3code… ; als m3look amb `lock`, s'amaga).
+  - **Cotes a la vista**: amb una peça triada es veuen amplada (vermell, x), fondària (verd, y) i alçada (blau, z) en mm i,
+    si està enlairada, «↑ N mm» (alçada sobre la placa). **Tocar una cota obre un camp per escriure el número** (la base
+    es queda on era). El botó del regle continua mostrant les mesures de tot el model.
+  - **Inspector** (a la dreta a l'ordinador; a sota, compacte, al mòbil): **Sòlid / Forat**, els 12 colors, i les
+    pestanyes **Mida** (amb **Proporcional**), **Posició** (x, y del centre i z de la base) i **Gir** (de 15 en 15°); al
+    mòbil hi ha també la pestanya **Color** (sòlid/forat i colors). Les formes amb paràmetres tenen la pestanya **Forma**:
+    **Paret** del tub (`w`), **Dalt** del con (`top`, en %), **Puntes** de l'estrella (`n`), **Radi** de la caixa
+    arrodonida (`cr`); el text té el camp **Text** (a l'ordinador, sempre visible; al mòbil, a la pestanya Text).
+    (Ja no hi ha la pestanya «Accions» al mòbil: les eines són a la barra de dalt.)
+  - **Formes** (miniatures 3D de veritat): **tocar** una forma la posa en el lloc lliure més a prop del centre de la
+    placa (sempre el mateix ordre: el centre, després a la dreta, a davant, a l'esquerra, a darrere, de 5 en 5 mm);
+    **arrossegar-la** a la vista la deixa **on es deixa anar** (amb la quadrícula); si es deixa anar a sobre d'una peça
+    sòlida, s'hi posa a sobre; els forats sempre van a la placa (z = 0). Al mòbil, la forma s'arrossega cap amunt (de
+    costat, la paleta llisca). Formes noves a la paleta per defecte: `hsph`, `rbox`, `text` (els passos amb `palette`
+    només tenen les que diuen).
+  - **Duplica**: la còpia surt al costat (amplada + 5 mm en x). Si es mou la còpia i es torna a duplicar, la nova còpia
+    repeteix **el salt sencer des de l'original** (el de la primera còpia més el que s'ha mogut): duplicar a −12, moure la
+    còpia a 0 i tornar a duplicar posa la tercera a 12 sense escriure res.
+  - **Mirall** ▾: «Esquerra ↔ dreta (x)» / «Davant ↔ darrere (y)» giren la selecció com en un mirall **on és** (no es mou;
+    és el de sempre: després cal posar-la al seu lloc amb Posició). Opció nova: **«Còpia a l'altre costat (x | y)»** en
+    fa una còpia emmirallada a l'altre costat de la línia del mig de la placa (x = 0 o y = 0): una ala a x = −12 dona
+    la còpia a x = 12 en un sol toc. (Si la peça ja és al mig, avisa.) El text emmirallat es llegeix al revés (és un mirall).
+  - **Alinea** ▾: amb una peça, «Al centre de la placa», «A terra (z = 0)» i «A sobre de la peça de sota»; amb diverses,
+    X/Y/Z (Esquerra · Centre · Dreta, Davant · Centre · Darrere, A baix · Centre · A dalt) i, nou, **«A terra (z = 0)»**
+    (totes juntes, sense desfer l'apilament) i **«Cada peça a terra»**.
+  - **Teclat** (amb la vista triada; mai mentre s'escriu en un camp): fletxes = moure (el pas de la quadrícula; Maj = ×10),
+    Re Pàg / Av Pàg o Ctrl + ↑/↓ = pujar i baixar, Ctrl + D duplicar, Ctrl + G agrupar, Ctrl + Maj + G desagrupar,
+    Supr esborrar, Ctrl + Z / Ctrl + Y desfer / refer, H forat ↔ sòlid, Ctrl + A totes, Esc deixar anar. Cada acció
+    s'anuncia al lector de pantalla.
+  - **Veure el codi** (botó «Codi» de baix, als `m3free`, als passos amb `code: true` i a tots els passos del curs
+    `modelpro`): el model de peces escrit en el llenguatge del Nivell 2 (cada peça amb `mou`, `gira` i la forma
+    `centrat`; els forats dins d'un `resta`) i la descàrrega en `.scad`. Per a qualsevol model, `m3PartsProg(parts)`.
+  - Tot cap en una pantalla (390 × 740 i 1440 × 800). A l'ordinador gran (≥ 1100 px) l'editor fa servir fins a 1240 px.
+- **Editor Nivell 2 (`M3PG`)**: blocs tàctils (inserir amb un toc, com els editors de Robòtica) i, quan el pas ho permet
+  (`text: true`), la pestanya **Codi**, que ara és **la que s'obre primer** (si el pas no diu `tab: 'blocks'`); tots dos
+  sincronitzats. A la pestanya Codi hi ha una **paleta de fragments**: tocar `cub(20, 20, 20)`, `mou(10, 0, 0)`,
+  `resta { }`, `repeteix i de 0 a 3 { }`, `mida = 20`, les variables i els mòduls del programa, o els símbols `( ) { } , + −
+  × ÷ =` i `centrat`, els escriu on hi ha el cursor (amb el sagnat) i en deixa triat el primer número, per escriure'l de
+  seguida; una forma o un bloc no es posen mai dins d'uns parèntesis (van just després). Els fragments són els dels
+  `blocks` del pas (o tots). Els passos sense `text` continuen sent només de blocs. Errors amb línia i explicació en
+  català i castellà.
 - **Tipus de pas** (registrats a `TSTEP` des de `tech-model.js`):
   - `m3look` explorar un model i respondre (on és, quina vista és, quantes peces…), amb el model en 3D
   - `m3build` (Nivell 1) construir fins que es compleixin les `checks` (sovint `match` amb fantasma): `{ start?, palette?, target?, checks, hint }`
@@ -161,8 +225,27 @@ Model de referència: les sessions `m1-1`, `m1-3` (`scripts/tech-src/model/u1`) 
   // paramètric: checks:[{k:'size',ax:'x',v:'mida'},{k:'param',v:'mida',vals:[20,40]}]
   ```
 - Paraules del llenguatge: formes `cub`, `cilindre(d,h)`, `esfera(d)`, `con(d,h,d2)`, `piramide`, `tub(d,h,paret)`,
+  `semiesfera(d, h?)`, `arrodonit(x, y, z, radi?)` (es: `redondeado`; radi per defecte 2), `text("NOM", alçada?, gruix?)`
+  (es: `texto`; per defecte 10 i 2; com `cub`, la cantonada de baix a l'esquerra a l'origen si no és `centrat`),
   `anell(d,gruix)`, `prisma`, `falca`, `estrella(d,h,n)`, `cor` i l'opció `centrat`; `mou`, `gira`, `escala`,
   `color("blau")`, `uneix`, `resta`, `interseca`; `repeteix i de 0 a 3 [pas n] {…}` (els dos extrems inclosos);
   `defineix nom(a) {…}`; variables `mida = 30`; comentaris `//`.
 - Altres: `m3free` (projecte amb `crit`), targetes `learn` amb `media: { k: 'model', model | prog, view? }`, diapositives
   `k: 'media'` amb el mateix `media`. El validador (`validate.mjs --course model|modelpro`) comprova solucions i `start`.
+
+## Canvis de l'editor (octubre 2026) que afecten les pistes
+- **Duplica repeteix el salt sencer**: ja no cal escriure la x de cada còpia si les còpies van a la mateixa distància
+  (duplicar, posar la primera còpia al seu lloc i tornar a duplicar). Les pistes antigues («Duplica i posa-la a x = …»)
+  continuen funcionant, però poden ser més curtes.
+- **Mirall → «Còpia a l'altre costat»** fa la còpia emmirallada a l'altre costat de x = 0 (o y = 0) d'un sol toc. «Duplica,
+  Mirall → x i posa-la a x = …» continua funcionant igual.
+- **Alinea amb diverses peces** té «A terra (z = 0)» i «Cada peça a terra».
+- **Al mòbil ja no hi ha la pestanya «Accions»**: Duplica, Mirall, Alinea, Forat, Agrupa, Més peces, Totes i Esborra són a la
+  barra de dalt de la vista (també a l'ordinador). Desfés/Refés, Fantasma i Resultat, al mòbil, a la barra de baix.
+- **Les formes** van al lloc lliure més a prop del centre (ja no a un lloc «a l'atzar») o on s'arrosseguen.
+- **Cotes**: amb una peça triada, tocar «40 mm» a la vista deixa escriure la mida (alternativa a la pestanya Mida).
+- **Vistes**: el cub de vistes substitueix els quatre botons (Perspectiva, Davant, Dalt, Costat): «la vista de dalt» és
+  tocar la cara «Dalt» del cub; el botó de sota del cub és la perspectiva.
+- **Nivell 2**: als passos amb `text: true`, la pestanya **Codi** s'obre primer (es pot tornar a Blocs). Una pista que digui
+  «toca el bloc…» en un pas amb text continua sent vàlida, però l'alumne/a ha de passar a la pestanya Blocs.
+- Pas nou possible: `m3build` dins del curs `modelpro` (l'editor de peces amb el botó «Codi» per veure'n el programa).

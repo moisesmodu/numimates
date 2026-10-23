@@ -29,6 +29,10 @@
             t = k·6° (k = 0 … 59)   (la punta a -y, els lòbuls a +y)
      star i heart: el polígon unitari s'escala i es desplaça eix per eix perquè la seva caixa (mín/màx dels vèrtexs)
             sigui exactament [-a,a] × [-b,b]:  X = -a + (x - xmin)/(xmax - xmin)·2a,  Y = -b + (y - ymin)/(ymax - ymin)·2b.
+     hsph   |z| ≤ h, u = (z + h) / (2h), (x/a)² + (y/b)² + u² ≤ 1      (semiesfera: cara plana a baix, cúpula a dalt)
+     rbox   |x| ≤ a, |y| ≤ b, |z| ≤ h i max(0,|x|-a+r)² + max(0,|y|-b+r)² + max(0,|z|-h+r)² ≤ r²,  r = min(cr ?? 3, a, b, h)
+     text   |z| ≤ h i (u, v) dins dels polígons de la lletra «Numi 3D» (globalThis.m3TextLay(txt), del motor):
+            u = (x + a)·W/(2a), v = (y + b)·10/(2b)  (W = amplada del text en unitats de lletra; 10 = alçada de les majúscules)
    Les corbes (cyl, cone, sph, torus, tube) es dibuixen amb polígons inscrits de 24 a 64 costats (segons la mida).
    En edició les sòlides tenen una vora arrodonida de 0,15-0,6 mm (només de dibuix: les mides exteriors són exactes);
    la CSG, el mode resultat, les miniatures i l'STL fan servir les formes vives. A la CSG els forats creixen 0,02 mm.
@@ -40,7 +44,14 @@
      onMove(id, { p })     moure sobre la placa (amb snap) o la fletxa d'alçada
      onMove(id, { r })     girar amb un anell (passos de snapRot; Maj = 1°). r en graus, normalitzat a (-180, 180]
      onMove(id, { s, p })  escalar amb un tirador: la cara (o cantonada) oposada es queda quieta, per això canvia p
-     onDone(id, 'move'|'lift'|'rot'|'scale') en deixar anar. La vista en fa una vista prèvia però no toca el model del
+     onDone(id, 'move'|'lift'|'rot'|'scale') en deixar anar.
+     dims: true → amb una sola peça triada (mode edició) es veuen les seves cotes (amplada, fondària, alçada i, si està
+       enlairada, l'alçada sobre la placa) i es poden tocar: onDim({ k: 's'|'p', ax, v, rect }) (el motor obre un camp).
+     onCam(az, el): la càmera ha girat (graus; per al cub de vistes) · inset: { top, bottom } o una funció → px de la
+       vista tapats per les barres (l'encaix centra el model a la resta) · set(model, { still: true }) sense caiguda
+     dropAt(x, y, sense?) → { p: [x, y], z, on } on cauria una peça deixada anar en aquest punt (a sobre d'una peça sòlida
+       si s'hi apunta per dalt; si no, a la placa) · drop(id) fa caure una mica la peça (en deixar-la anar) · snap(mm)
+     La vista en fa una vista prèvia però no toca el model del
      motor: el motor aplica el canvi i torna a cridar set() (si no ho fa, la vista es queda amb la vista prèvia).
      Les peces amb `m` es poden seleccionar (halo) però no tenen tiradors. Tocar el buit → onPick(null); doble toc → fit().
      select(id | [ids] | null) · view('iso'|'front'|'back'|'left'|'right'|'top', instant?) · fit(instant?)
@@ -203,7 +214,43 @@ function tube(a, b, h, w, N) {
   }
   return B.geo();
 }
-const TYPES = ['box', 'cyl', 'sph', 'cone', 'pyr', 'wedge', 'torus', 'tube', 'star', 'heart', 'hex'];
+// semiesfera (la meitat de dalt d'un el·lipsoide de semieixos a, b, 2h centrat a z = −h) amb la tapa plana a baix
+function hsph(a, b, h, N) {
+  const B = new TriBuf(), M = Math.max(6, N >> 2), c2 = 2 * h, pt = (i, j) => { const t = i / N * Math.PI * 2, f = j / M * Math.PI / 2, cf = Math.cos(f), sf = Math.sin(f);
+    return [[a * cf * Math.cos(t), b * cf * Math.sin(t), -h + c2 * sf], nrm([cf * Math.cos(t) / a, cf * Math.sin(t) / b, sf / c2])]; };
+  for (let j = 0; j < M; j++) for (let i = 0; i < N; i++) {
+    const [p00, n00] = pt(i, j), [p10, n10] = pt(i + 1, j), [p11, n11] = pt(i + 1, j + 1), [p01, n01] = pt(i, j + 1);
+    if (j === M - 1) B.tri(p00, p10, [0, 0, h], n00, n10, [0, 0, 1]); else B.quad(p00, p10, p11, p01, n00, n10, n11, n01);
+  }
+  const P = ellPoly(a, b, N), tris = []; for (let i = 1; i < N - 1; i++) tris.push([0, i, i + 1]); cap(B, P, -h, false, tris);
+  return B.geo();
+}
+// prisma d'un polígon amb forats (contorn i forats en qualsevol sentit)
+function prismH(outer, holes, h) {
+  outer = ccw(outer); holes = holes.map(H => ccw(H).slice().reverse());
+  const B = new TriBuf(), all = [...outer, ...holes.flat()], tris = THREE.ShapeUtils.triangulateShape(outer.map(([x, y]) => new THREE.Vector2(x, y)), holes.map(H => H.map(([x, y]) => new THREE.Vector2(x, y))));
+  const up = [0, 0, 1], dn = [0, 0, -1];
+  for (const [i, j, k] of tris) { const A = all[i], Bq = all[j], C = all[k]; B.tri([A[0], A[1], h], [Bq[0], Bq[1], h], [C[0], C[1], h], up, up, up); B.tri([A[0], A[1], -h], [C[0], C[1], -h], [Bq[0], Bq[1], -h], dn, dn, dn); }
+  for (const L of [outer, ...holes]) { const N = L.length, vn = sideNormals(L, 0); for (let i = 0; i < N; i++) { const [x0, y0] = L[i], [x1, y1] = L[(i + 1) % N], [n0, n1] = vn[i]; B.quad([x0, y0, -h], [x1, y1, -h], [x1, y1, h], [x0, y0, h], n0, n1, n1, n0); } }
+  return B.geo();
+}
+// ajunta geometries (position + normal) en una de sola
+function joinGeo(list) {
+  let n = 0; for (const g of list) n += g.attributes.position.count; const P = new Float32Array(n * 3), N = new Float32Array(n * 3); let o = 0;
+  for (const g of list) { P.set(g.attributes.position.array, o * 3); N.set(g.attributes.normal.array, o * 3); o += g.attributes.position.count; g.dispose(); }
+  const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.BufferAttribute(P, 3)); g.setAttribute('normal', new THREE.BufferAttribute(N, 3)); return g;
+}
+// els polígons d'un text (de la lletra del motor) en coordenades locals de la peça
+function textPolys(q, a, b) {
+  const L = typeof globalThis.m3TextLay === 'function' ? globalThis.m3TextLay(q.txt) : null; if (!L || !L.polys.length) return [];
+  const kx = 2 * a / L.W, ky = 2 * b / L.H; return L.polys.map(P => P.map(R => R.map(([x, y]) => [-a + x * kx, -b + y * ky])));
+}
+function textGeo(q, a, b, h, rb) {
+  const P = textPolys(q, a, b); if (!P.length) return box(a, b, h);
+  return joinGeo(P.map(([o, ...H]) => rb ? bevelPrism(o, H, h, rb, false) : prismH(o, H, h)));
+}
+const crOf = (q, a, b, h) => Math.max(0, Math.min(num(q.cr, 3), a, b, h));
+const TYPES = ['box', 'cyl', 'sph', 'cone', 'pyr', 'wedge', 'torus', 'tube', 'star', 'heart', 'hex', 'hsph', 'rbox', 'text'];
 // mides i paràmetres normalitzats d'una peça (el que determina la forma local)
 function dims(q) {
   const s = Array.isArray(q.s) ? q.s : [20, 20, 20], x = Math.abs(num(s[0], 20));
@@ -212,7 +259,7 @@ function dims(q) {
 function shapeKey(q, seg) {
   const [sx, sy, sz] = dims(q), t = TYPES.includes(q.t) ? q.t : 'box';
   return t + ':' + sx.toFixed(3) + ',' + sy.toFixed(3) + ',' + sz.toFixed(3) + (t === 'cone' ? ',' + clamp(num(q.top, 0), 0, 1).toFixed(3) : '') +
-    (t === 'tube' ? ',' + num(q.w, 2).toFixed(3) : '') + (t === 'star' ? ',' + clamp(Math.round(num(q.n, 5)), 3, 12) : '') + '/' + seg;
+    (t === 'tube' ? ',' + num(q.w, 2).toFixed(3) : '') + (t === 'star' ? ',' + clamp(Math.round(num(q.n, 5)), 3, 12) : '') + (t === 'rbox' ? ',' + num(q.cr, 3).toFixed(3) : '') + (t === 'text' ? ',' + JSON.stringify(String(q.txt ?? '')) : '') + '/' + seg;
 }
 // N: costats de les corbes (adaptat a la mida perquè les peces petites no tinguin triangles inútils)
 const segFor = (q, seg) => { const [sx, sy] = dims(q); return Math.max(24, Math.min(seg, Math.round(Math.max(sx, sy) * .9 + 20) & ~3)); };
@@ -229,6 +276,9 @@ export function shapeGeometry(q, seg = 64) {
     case 'star': return prism(starPoly(q.n, a, b), h, false);
     case 'heart': return prism(heartPoly(a, b), h);
     case 'hex': return prism(hexPoly(a, b), h, false);
+    case 'hsph': return hsph(a, b, h, N);
+    case 'rbox': { const r = crOf(q, a, b, h); return r < .05 ? box(a, b, h) : roundBox(a, b, h, r, Math.max(3, Math.min(6, Math.round(r * 1.2) + 2))); }
+    case 'text': return textGeo(q, a, b, h, 0);
     default: return box(a, b, h);
   }
 }
@@ -292,6 +342,7 @@ export function displayGeometry(q, seg = 64) {
     case 'hex': return bevelPrism(hexPoly(a, b), [], h, rb, false);
     case 'star': return bevelPrism(starPoly(q.n, a, b), [], h, rb * .55, false);
     case 'heart': return bevelPrism(heartPoly(a, b), [], h, rb * .5);
+    case 'text': return textGeo(q, a, b, h, Math.min(rb * .45, h * .3, .25));
     default: return shapeGeometry(q, seg);
   }
 }
@@ -1009,7 +1060,8 @@ function stubView() {
 }
 
 function makeView(el, opts) {
-  const O = Object.assign({ plate: 200, snap: 1, snapRot: 15, quality: 'auto', mode: 'edit', editable: true, bg: 'studio', intro: true, view: 'iso', spin: false }, opts);
+  const O = Object.assign({ plate: 200, snap: 1, snapRot: 15, quality: 'auto', mode: 'edit', editable: true, bg: 'studio', intro: true, view: 'iso', spin: false, dims: false, inset: null }, opts);
+  const inset = () => { const v = typeof O.inset === 'function' ? O.inset() : O.inset; return { top: Math.max(0, num(v && v.top, 0)), bottom: Math.max(0, num(v && v.bottom, 0)) }; };
   const PL = Math.max(60, num(O.plate, 200));
   const R = new THREE.WebGLRenderer({ antialias: false, alpha: false, stencil: false, powerPreference: 'high-performance', preserveDrawingBuffer: false });
   let QN = detectQuality(R, O.quality), Q = QL[QN];
@@ -1109,9 +1161,12 @@ function makeView(el, opts) {
   }
   function fit(instant) {
     const L = []; for (const e of S.map.values()) L.push({ g: e.mesh.geometry, M: e.M }); if (S.ghost) L.push({ g: S.ghost.g });
-    const P = geoPoints(L), f = P.length ? fitPoints(P, goal.az, goal.el, goal.fov, S.W / S.H, .82) : null;
-    if (f) { goal.t.copy(f.c); goal.F = clamp(Math.max(f.F, 26), LIM.Fmin, LIM.Fmax); }
-    else { const b = sceneBox(); goal.t.copy(b.getCenter(new THREE.Vector3())); goal.F = solveF(b, goal.az, goal.el, goal.fov); }
+    // les barres de dalt i de baix tapen una part de la vista: el model s'encaixa a la resta (i s'hi centra)
+    const I = inset(), Hh = Math.max(60, S.H - I.top - I.bottom), kh = S.H / Hh;
+    const P = geoPoints(L), f = P.length ? fitPoints(P, goal.az, goal.el, goal.fov, S.W / Hh, .82) : null;
+    if (f) { goal.t.copy(f.c); goal.F = clamp(Math.max(f.F, 26) * kh, LIM.Fmin, LIM.Fmax); }
+    else { const b = sceneBox(); goal.t.copy(b.getCenter(new THREE.Vector3())); goal.F = clamp(solveF(b, goal.az, goal.el, goal.fov) * kh, LIM.Fmin, LIM.Fmax); }
+    if (I.top || I.bottom) goal.t.addScaledVector(basis(goal.az, goal.el).u, (I.top - I.bottom) * goal.F / S.H);
     if (instant) { Object.assign(cur, { az: goal.az, el: goal.el, F: goal.F, fov: goal.fov }); cur.t.copy(goal.t); } else fly = 1;
     wake();
   }
@@ -1153,14 +1208,14 @@ function makeView(el, opts) {
     placeEntry(e);
   }
   function dropEntry(e) { for (const o of [e.mesh, e.back, e.edges, e.proxy]) if (o) o.removeFromParent(); if (e.edges) e.edges.geometry.dispose(); }
-  function set(model) {
+  function set(model, so) {
     S.model = clone(model) || { parts: [] };
     const list = partsOf(S.model), seen = new Set(), animOK = !REDUCED && O.intro !== false;
     let i = 0;
     for (const { q, id, hole } of list) {
       if (seen.has(id)) continue; seen.add(id);
       let e = S.map.get(id);
-      if (!e) { e = entry(id); S.map.set(id, e); if (animOK && !(S.drag && S.drag.id === id)) e.anim = { t: -(S.first ? Math.min(i * .07, .9) : 0), h: S.first ? 34 : 46 }; }
+      if (!e) { e = entry(id); S.map.set(id, e); if (animOK && !(so && so.still) && !(S.drag && S.drag.id === id)) e.anim = { t: -(S.first ? Math.min(i * .07, .9) : 0), h: S.first ? 34 : 46 }; }
       updateEntry(e, q, hole); i++;
     }
     for (const [id, e] of S.map) if (!seen.has(id)) { dropEntry(e); S.map.delete(id); }
@@ -1272,11 +1327,17 @@ function makeView(el, opts) {
   const ray = new THREE.Raycaster(), ndc = new THREE.Vector2();
   function rayAt(x, y) { ndc.set(x / S.W * 2 - 1, -(y / S.H) * 2 + 1); ray.setFromCamera(ndc, cam); return ray.ray; }
   function planeHit(x, y, n, p) { const r = rayAt(x, y), den = r.direction.dot(n); if (Math.abs(den) < 1e-6) return null; const t = _v2.copy(p).sub(r.origin).dot(n) / den; return t > 0 ? r.origin.clone().addScaledVector(r.direction, t) : null; }
-  function pickPart(x, y) {
-    rayAt(x, y); const objs = []; for (const id of S.order) { const e = S.map.get(id); if (e) objs.push(e.mesh); }
+  function pickPart(x, y, skip) {
+    rayAt(x, y); const objs = []; for (const id of S.order) { const e = S.map.get(id); if (e && (skip == null || String(skip) !== id)) objs.push(e.mesh); }
     const hits = ray.intersectObjects(objs, false);
     const h = S.mode === 'result' ? hits.find(x => !x.object.userData.e.hole) || hits[0] : hits[0];   // en el resultat els forats no es veuen
-    return h ? { e: h.object.userData.e, point: h.point } : null;
+    return h ? { e: h.object.userData.e, point: h.point, n: h.face ? h.face.normal.clone().transformDirection(h.object.matrixWorld) : null } : null;
+  }
+  // on cauria una peça deixada anar en aquest punt de la pantalla: a sobre d'una peça sòlida (si s'hi apunta per dalt) o a la placa
+  function dropAt(x, y, skip) {
+    if (S.W < 4) return null; const lim = PL * .75;
+    const h = pickPart(x, y, skip); if (h && !h.e.hole && h.n && h.n.z > .55) return { p: [clamp(h.point.x, -lim, lim), clamp(h.point.y, -lim, lim)], z: Math.max(0, h.point.z), on: h.e.id };
+    const hp = planeHit(x, y, Z, new THREE.Vector3(0, 0, 0)); if (!hp) return null; return { p: [clamp(hp.x, -lim, lim), clamp(hp.y, -lim, lim)], z: 0, on: null };
   }
 
   /* ---------- arrossegar: moure, alçada, girar, escalar ---------- */
@@ -1447,14 +1508,21 @@ function makeView(el, opts) {
   const tagCSS = { position: 'absolute', left: '0', top: '0', transform: 'translate(-50%,-50%)', padding: '3px 9px', borderRadius: '999px', background: 'rgba(255,255,255,.95)', color: UI.ink,
     font: '800 12.5px/1.25 Lexend, system-ui, sans-serif', whiteSpace: 'nowrap', boxShadow: '0 2px 10px rgba(20,32,74,.2)', letterSpacing: '.01em', display: 'none', willChange: 'transform' };
   const mkTag = (o = {}) => { const d = document.createElement('div'); Object.assign(d.style, tagCSS, o); hud.appendChild(d); return d; };
-  const dimTags = [UI.ax[0], UI.ax[1], UI.ax[2], '#E07A10'].map(c => mkTag({ border: `2px solid ${c}` }));
+  const dimTags = [UI.ax[0], UI.ax[1], UI.ax[2], '#E07A10'].map((c, i) => { const t = mkTag({ border: `2px solid ${c}` }); t.className = 'm3dim m3dim' + 'xyzl'[i];
+    // tocar una cota (amb una sola peça triada) obre el camp per escriure-la al motor
+    t.addEventListener('pointerdown', ev => { if (!t._d || !O.onDim) return; ev.preventDefault(); ev.stopPropagation(); O.onDim({ ...t._d, rect: t.getBoundingClientRect() }); });
+    return t; });
   const dragTag = mkTag({ background: UI.ink, color: '#fff', padding: '5px 11px', fontSize: '13px', transform: 'translate(14px,-130%)' });
-  function hudDrag(text, x, y) { if (!text) { dragTag.style.display = 'none'; return; } dragTag.textContent = text; dragTag.style.display = 'block'; dragTag.style.left = x + 'px'; dragTag.style.top = y + 'px'; }
+  // zoom CSS d'un pare (p. ex. .tsbody a l'ordinador gran): S.W/S.H i els punters són px de pantalla; les etiquetes, px CSS
+  const zoomK = () => { const ch = el.clientHeight; return ch > 0 ? el.getBoundingClientRect().height / ch || 1 : 1; };
+  function hudDrag(text, x, y) { if (!text) { dragTag.style.display = 'none'; return; } dragTag.textContent = text; dragTag.style.display = 'block'; const k = zoomK(); dragTag.style.left = x / k + 'px'; dragTag.style.top = y / k + 'px'; }
   const measLines = UI.ax.map(c => { const l = segs([0, 0, 0, 1, 0, 0], lineMat(c, 2.2, { depthTest: false })); l.material.transparent = false; l.renderOrder = 16; measG.add(l); return l; }), measLine = measLines[0];
   const liftLine = segs([0, 0, 0, 0, 0, 1], lineMat('#E07A10', 1.8, { opacity: .95, depthTest: false, dashed: true, dash: 1.6, gap: 1.2 })); liftLine.renderOrder = 16; measG.add(liftLine);
   let measKey = '';
   function updateMeasure() {
-    const show = S.measure && S.map.size > 0; measG.visible = show;
+    const e0 = selE(), auto = !!(O.dims && O.editable && S.mode === 'edit' && e0 && !e0.fixed && !(S.drag && S.drag.k === 'rot'));
+    const show = (S.measure && S.map.size > 0) || auto; measG.visible = show;
+    const ed = auto && !S.drag; dimTags.forEach(t => { t.style.pointerEvents = ed ? 'auto' : 'none'; t.style.cursor = ed ? 'pointer' : 'default'; t.classList.toggle('ed', ed); if (!ed) t._d = null; });
     if (!show) { dimTags.forEach(t => (t.style.display = 'none')); return; }
     const e = selE(); let L = [], tags = [];
     // caixa a mesurar: la peça (en els seus eixos) o, si no n'hi ha cap de seleccionada, tot el model (eixos del món)
@@ -1469,18 +1537,18 @@ function makeView(el, opts) {
     const y0 = W(a + off, -b, -h), y1 = W(a + off, b, -h); seg(1, y0, y1); seg(1, W(a, -b, -h), W(a + off + tk, -b, -h)); seg(1, W(a, b, -h), W(a + off + tk, b, -h));
     const z0 = W(a + off * .7, -b - off * .7, -h), z1 = W(a + off * .7, -b - off * .7, h); seg(2, z0, z1); for (const zz of [-h, h]) seg(2, W(a + off * .7 - tk * .5, -b - off * .7 + tk * .5, zz), W(a + off * .7 + tk * .5, -b - off * .7 - tk * .5, zz));
     L = LL.flat();
-    tags.push([x0.clone().add(x1).multiplyScalar(.5), `${fmt(vals[0])} mm`], [y0.clone().add(y1).multiplyScalar(.5), `${fmt(vals[1])} mm`], [z0.clone().add(z1).multiplyScalar(.5), `${fmt(vals[2])} mm`]);
+    tags.push([x0.clone().add(x1).multiplyScalar(.5), `${fmt(vals[0])} mm`, { k: 's', ax: 0, v: vals[0] }], [y0.clone().add(y1).multiplyScalar(.5), `${fmt(vals[1])} mm`, { k: 's', ax: 1, v: vals[1] }], [z0.clone().add(z1).multiplyScalar(.5), `${fmt(vals[2])} mm`, { k: 's', ax: 2, v: vals[2] }]);
     const k = JSON.stringify(L.map(v => Math.round(v * 100)));
     if (k !== measKey) { measKey = k; LL.forEach((P, i) => measLines[i].geometry.setPositions(P)); }
     // distància a la placa (si la peça està enlairada)
     const wb = e ? worldBox(e) : null;
-    if (wb && wb.min.z > .05) { const c = new THREE.Vector3(wb.min.x, wb.min.y, 0); liftLine.visible = true; liftLine.geometry.setPositions([c.x, c.y, 0, c.x, c.y, wb.min.z]); liftLine.computeLineDistances(); tags.push([new THREE.Vector3(c.x, c.y, wb.min.z / 2), `↑ ${fmt(wb.min.z)} mm`]); }
+    if (wb && wb.min.z > .05) { const c = new THREE.Vector3(wb.min.x, wb.min.y, 0); liftLine.visible = true; liftLine.geometry.setPositions([c.x, c.y, 0, c.x, c.y, wb.min.z]); liftLine.computeLineDistances(); tags.push([new THREE.Vector3(c.x, c.y, wb.min.z / 2), `↑ ${fmt(wb.min.z)} mm`, { k: 'p', ax: 2, v: Math.round(wb.min.z * 1000) / 1000 }]); }
     else liftLine.visible = false;
     // posicions a la pantalla; si dues etiquetes es trepitgen, se separen en vertical
-    const pos = dimTags.map((t, i) => { const g = tags[i]; if (!g) return null; const [sx, sy, sz] = toScreen(g[0]); if (sz > 1) return null; t.textContent = g[1]; t.style.display = 'block'; const w = t.offsetWidth || 64, h = t.offsetHeight || 22; return { t, x: clamp(sx, w / 2 + 4, S.W - w / 2 - 4), y: sy, w, h }; });
+    const zk = zoomK(); const pos = dimTags.map((t, i) => { const g = tags[i]; if (!g) return null; const [sx, sy, sz] = toScreen(g[0]); if (sz > 1) return null; t.textContent = g[1]; t.style.display = 'block'; t._d = ed && e && !e.fixed ? g[2] : null; const w = (t.offsetWidth || 64) * zk, h = (t.offsetHeight || 22) * zk; return { t, x: clamp(sx, w / 2 + 4, S.W - w / 2 - 4), y: sy, w, h }; });
     const P = pos.filter(Boolean).sort((a, b) => a.y - b.y);
     for (let it = 0; it < 4; it++) for (let i = 0; i < P.length; i++) for (let j = i + 1; j < P.length; j++) { const A = P[i], B = P[j], ox = (A.w + B.w) / 2 + 4 - Math.abs(A.x - B.x), oy = (A.h + B.h) / 2 + 3 - Math.abs(A.y - B.y); if (ox > 0 && oy > 0) { A.y -= oy / 2; B.y += oy / 2; } }
-    dimTags.forEach((t, i) => { const q = pos[i]; if (!q) { t.style.display = 'none'; return; } t.style.transform = `translate(${q.x}px,${clamp(q.y, 14, S.H - 14)}px) translate(-50%,-50%)`; });
+    const I = inset(); dimTags.forEach((t, i) => { const q = pos[i]; if (!q) { t.style.display = 'none'; return; } t.style.transform = `translate(${q.x / zk}px,${clamp(q.y, I.top + 14, S.H - I.bottom - 14) / zk}px) translate(-50%,-50%)`; });
   }
 
   /* ---------- mida, bucle de dibuix i qualitat adaptativa ---------- */
@@ -1504,6 +1572,7 @@ function makeView(el, opts) {
     // gir lent de vitrina (targetes i diapositives): s'atura mentre l'alumne toca la vista i torna al cap d'una estona
     if (O.spin && !REDUCED && !GS && !S.drag && now - (S.lastUser || 0) > 3500) { goal.az += dt * .32; }
     let active = camStep(dt) || (O.spin && !REDUCED);
+    if (O.onCam) { const a = cur.az / D2R, e2 = cur.el / D2R; if (S.camA == null || Math.abs(a - S.camA) > .05 || Math.abs(e2 - S.camE) > .05) { S.camA = a; S.camE = e2; try { O.onCam(a, e2); } catch (_) { } } }
     for (const e of S.map.values()) if (e.anim) { e.anim.t += dt / .52; if (e.anim.t >= 1) e.anim = null; placeEntry(e); active = true; }
     if (S.resAnim) { S.resAnim.t += dt / .6; if (S.resAnim.t >= 1) S.resAnim = null; resMesh.position.z = S.resAnim ? dropZ(S.resAnim.t) * 36 : 0; active = true; S.cv++; }
     if (S.mode === 'result' && S.resDirty && now - S.lastRes > (S.drag ? 45 : 0)) computeResult();
@@ -1551,7 +1620,10 @@ function makeView(el, opts) {
   resize(); view(O.view || 'iso', true); raf = requestAnimationFrame(frame);
   const api = {
     ok: true,
-    set(m) { set(m); return api; },
+    set(m, so) { set(m, so); return api; },
+    dropAt(x, y, skip) { return dropAt(x, y, skip); },
+    drop(id) { const e = S.map.get(String(id)); if (e && !REDUCED && O.intro !== false) { e.anim = { t: 0, h: 9 }; wake(); } return api; },
+    snap(v) { O.snap = num(v, O.snap); return api; },
     mode(m) { if (m == null) return S.mode; setMode(m); return api; },
     select(id) { if (id === undefined) return S.sel.length ? S.sel[0] : null; setSel(id, false); return api; },
     target(m) { target(m); return api; },
