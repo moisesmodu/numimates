@@ -35,7 +35,7 @@ Object.assign(TANI, (() => {
       const P = iso(250, 150, 1.25);
       return tSvg(196, `<rect width="320" height="196" rx="20" fill="#F1F2FB"/>
         <g ${tA(.2, 'ta-in')}><path d="M22 92h104l-8 74H30z" fill="#E9B97A"/><path d="M22 92h104l-8 74H30z" fill="none" stroke="#C98A4B" stroke-width="2.5" stroke-linejoin="round"/><path d="M22 92l-10 -16h104l10 16" fill="#F3CE97" stroke="#C98A4B" stroke-width="2.5" stroke-linejoin="round"/>
-          <rect x="40" y="122" width="68" height="26" rx="8" fill="#fff" stroke="#C98A4B" stroke-width="2"/>${txt(74, 140, MIDA(), 'tat b', 'font-size:14px')}</g>
+          <rect x="40" y="122" width="68" height="26" rx="8" fill="#fff" stroke="#C98A4B" stroke-width="2"/>${txt(74, 140, L('mida', 'medida'), 'tat b', `font-size:14px;fill:${C.vioD}`)}</g>
         <g ${tA(.9, 'ta-in')}><rect x="52" y="64" width="44" height="40" rx="8" fill="#fff" stroke="${C.vio}" stroke-width="2.5" filter="url(#bwSh)"/>${txt(74, 91, '30', 'tat b', `font-size:19px;fill:${C.vioD}`)}</g>
         <g ${tA(.5, 'ta-in')}>${panel(146, 14, 166, 92)}${mono(158, 42, `${MIDA()} = ${NU(30)}`, { s: 13 })}</g>
         <g ${tA(1.5, 'ta-in')}>${mono(158, 68, `${KW('cub', 'cubo')}(${MIDA()})`, { s: 13 })}</g>
