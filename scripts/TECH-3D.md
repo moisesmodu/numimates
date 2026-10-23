@@ -74,7 +74,9 @@ Cada repte té una llista de comprovacions que es marquen en directe (com al cur
 - `{ k: 'sym', ax: 'x'|'y' }` simètric · `{ k: 'wall', min: 1.2 }` cap paret més prima de N mm (aproximat)
 - `{ k: 'uses', b: 'diff'|'rep'|'def'|'var'|… }` (Nivell 2) el programa fa servir aquest bloc
 - `{ k: 'param', v: 'mida', vals: [20, 40] }` (Nivell 2) amb aquests valors de la variable el resultat continua complint
-  la resta de comprovacions (disseny paramètric de veritat)
+  la resta de comprovacions (disseny paramètric de veritat). Si la variable es diu diferent en cada llengua, `v` és bilingüe:
+  `v: 'mida|medida'` (el valor es posa a tots dos noms, així el programa de l'alumne/a i el fantasma poden estar escrits en
+  llengües diferents; l'etiqueta automàtica fa servir el nom de cada llengua). Un nom sense «|» funciona com sempre.
 Cada comprovació porta `t: "ca|es"` (el text que veu l'alumne) i el motor calcula `m3Check(model, checks)` → `[{ok, t}]`.
 
 ## Nivell 2: el llenguatge (blocs i text)
@@ -208,6 +210,9 @@ Model de referència: les sessions `m1-1`, `m1-3` (`scripts/tech-src/model/u1`) 
 - `p` és el **centre** de la peça: un cub de 20 mm sobre la placa té `p:[x, y, 10]`.
 - El text d'una comprovació va a `t: "ca|es"`; a `count` i `part`, `t` és el tipus de peça i el text va a `txt`.
 - Els números de les comprovacions poden ser expressions (`'mida+4'`). Comprovacions extra del motor: `part`, `colors`, `zmax`, `nohole`.
+  Si l'expressió fa servir una variable amb nom diferent en cada llengua, escriu-la bilingüe: `v: 'mida * 2|medida * 2'` (es fa
+  servir la primera alternativa que es pot calcular amb les variables del programa, començant per la de la llengua de l'alumne/a).
+  Atenció: amb `param`, una `size` amb un número fix (80) deixa de complir-se quan la variable canvia; o és una expressió o no hi va.
 - Nivell 1:
   ```js
   { k:'m3build', ph:'repte', q:'Mou el cub fins al fantasma…|…', start:{parts:[{id:'a1',t:'box',s:[20,20,20],p:[0,0,10]}]}, palette:['box'],
@@ -249,3 +254,7 @@ Model de referència: les sessions `m1-1`, `m1-3` (`scripts/tech-src/model/u1`) 
 - **Nivell 2**: als passos amb `text: true`, la pestanya **Codi** s'obre primer (es pot tornar a Blocs). Una pista que digui
   «toca el bloc…» en un pas amb text continua sent vàlida, però l'alumne/a ha de passar a la pestanya Blocs.
 - Pas nou possible: `m3build` dins del curs `modelpro` (l'editor de peces amb el botó «Codi» per veure'n el programa).
+- **Contingut ja actualitzat** (unitats i guies de `model` i `modelpro`): les vistes es fan amb el cub; les eines, a la barra de
+  dalt (el botó de selecció múltiple és «Més peces»); les pistes de files fan servir el salt sencer de Duplica i les de simetria,
+  Mirall → «Còpia a l'altre costat», sempre amb la x exacta com a alternativa; les pistes dels passos amb `text: true` (p5-1,
+  p6-1, p7-1) expliquen el codi i els fragments. Les pistes noves s'han de poder seguir tal com estan escrites.
