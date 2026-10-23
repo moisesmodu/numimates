@@ -84,7 +84,7 @@ cursos de Tech i crear un curs de disseny 3D en dos nivells. Sense desplegar a p
   món d'en Bit, de l'arena del Maqueen, de l'escenari de Creadors, de les batalles i cartes de Numi Mates i dels jocs
   de Numi Ment; món 3D «fab» i totes les illes, escenes, capçaleres i retrats tornats a renderitzar; colors de la
   teoria de Numi Pro en fosc.
-- **Pendent:** Tech 3D · Nivell 1, unitat 8 (El meu disseny) (la 4 i la 6 ja són fetes, 15-10); Nivell 2,
+- **Pendent:** Tech 3D · Nivell 1 ja és complet (32 sessions; unitats 4, 6 i 8 fetes el 15 i el 23-10); Nivell 2,
   unitats 4 (Variables i paràmetres) i 8 (Producte final). Surten com a «aviat» a l'app. Els agents de contingut
   segueixen `scripts/TECH-3D.md` i `scripts/TECH-3D-PROGRAMA.md`.
 
@@ -160,3 +160,11 @@ cursos de Tech i crear un curs de disseny 3D en dos nivells. Sense desplegar a p
   `opts.tech.ultima[curs]`, l'última oberta, encara que s'hagi tancat) i «Tanca-la».
 - App: a l'inici, cada 15 s es consulta quina sessió hi ha oberta (`tWatch`); en tocar una sessió tancada, primer es
   pregunta al servidor (potser s'acaba d'obrir). La comprovació és a l'app (com abans); el servidor no bloqueja el progrés.
+
+## Tech 3D · Nivell 1, unitat 8 «El meu disseny» (23-10-2026): el Nivell 1 ja és complet
+- m8-1 La idea · m8-2 Modelar-lo · m8-3 Revisar-lo · m8-4 Presentació i diploma. Fira d'Invents de l'escola i el casal; exemple
+  guiat: el test de la Jana per a l'hort de P4. El disseny propi passa d'una sessió a la següent (cada `m3free` comença amb
+  l'últim model desat a m8; si no n'hi ha, el de la Jana). Revisió entre iguals canviant de lloc, amb rúbrica en paper.
+- Diploma amb el pas `diploma` de sempre (com r8-4, k8-4, g8-4) i diploma en paper a la guia. 12 animacions, guies,
+  insígnia `m8fira`, solucionari. Validador: 196 sessions, 0 errors; cap pas necessita scroll.
+- La versió final no exigeix el gruix de paret (perquè ningú no s'encalli abans del diploma); a la v3 de m8-3 sí.
