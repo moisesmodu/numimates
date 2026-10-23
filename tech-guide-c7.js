@@ -900,7 +900,7 @@ Object.assign(TGUIDE, (() => {
   const J = (...l) => l.join('\n');
   // $m, $p, $f → el nom de la variable en cada llengua; «// ca|es» → el comentari de cada llengua
   const NM = { $m: ['mida', 'medida'], $p: ['paret', 'pared'], $f: ['fora', 'fuera'] };
-  const V = (src, li) => src.replace(/\$[a-z]/g, k => NM[k][li]).replace(/\/\/ ([^\n|]*)\|([^\n]*)/g, (_, a, b) => '// ' + (li ? b : a));
+  const V = (src, li) => src.replace(/\$[a-z]/g, k => NM[k][li]).replace(/\/\/ ([^\n|]*)\|([^\n]*)/g, (_, a, b) => '// ' + (li ? b.replace(/^\/\/\s*/, '') : a));
   const BV = src => V(src, 0) + '|' + V(src, 1);
   // el codi de les diapositives: també les paraules del llenguatge en castellà (les línies de comentari no es toquen)
   const KES = { cub: 'cubo', cilindre: 'cilindro', mou: 'mueve', uneix: 'une', con: 'cono', centrat: 'centrado', tub: 'tubo' };
