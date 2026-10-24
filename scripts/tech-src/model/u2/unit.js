@@ -114,7 +114,7 @@ COURSE_UNITS[2] = (() => {
         { k: 'm3build', ph: 'repte', q: 'Un <b>dau gegant</b>: un cub de <b>40 mm</b>. Truc: activa <b>Proporcional</b> i canvia només una mida.|Un <b>dado gigante</b>: un cubo de <b>40 mm</b>. Truco: activa <b>Proporcional</b> y cambia solo una medida.',
           start: M([on('a1', 'box', [20, 20, 20], 0, 0, 0, '#F3F3EE')]), palette: ['box'], target: M(DAU),
           checks: [{ k: 'part', t: 'box', s: [40, 40, 40], txt: 'Les tres mides fan 40 mm|Las tres medidas miden 40 mm' }, { k: 'onplate' }],
-          hint: 'A Mida, toca el botó Proporcional i escriu 40 a la x: la y i la z canvien soles.|En Medida, toca el botón Proporcional y escribe 40 en la x: la y y la z cambian solas.', sol: M([on('a1', 'box', [40, 40, 40], 0, 0, 0, '#F3F3EE')]) },
+          hint: 'A Mida, toca el botó Proporcional (el cadenat) i escriu 40 a la x: la y i la z canvien soles.|En Medida, toca el botón Proporcional (el candado) y escribe 40 en la x: la y y la z cambian solas.', sol: M([on('a1', 'box', [40, 40, 40], 0, 0, 0, '#F3F3EE')]) },
         { k: 'm3build', ph: 'repte', q: 'La <b>torre de 3 pisos</b> de la plaça: caixes de 40 × 40, 30 × 30 i 20 × 20 mm, totes de 10 mm d\'alt.|La <b>torre de 3 pisos</b> de la plaza: cajas de 40 × 40, 30 × 30 y 20 × 20 mm, todas de 10 mm de alto.',
           start: M([TORRE3[0]]), palette: ['box'], target: M(TORRE3),
           checks: [{ k: 'match', target: M(TORRE3), th: 0.88, t: 'La torre és com el fantasma|La torre es como el fantasma' }, { k: 'count', t: 'box', min: 3, txt: 'Almenys 3 caixes|Al menos 3 cajas' }, { k: 'one' }, { k: 'onplate' }],

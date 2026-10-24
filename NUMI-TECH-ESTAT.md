@@ -191,3 +191,16 @@ cursos de Tech i crear un curs de disseny 3D en dos nivells. Sense desplegar a p
   de qualsevol model. Al Nivell 2, els passos amb `text: true` s'obren a Codi amb botons que insereixen codi.
 - `param` accepta noms bilingües (`mida|medida`). Pistes i guies de les unitats publicades adaptades (cub de vistes, barra
   d'eines, Duplica i Mirall nous). Totes les pistes comprovades amb l'editor real a 390 i 1440.
+
+## Tech 3D més pràctic: tallers i Nivell 2 amb menys blocs (24-10-2026)
+- **Tallers** (sessió pràctica extra, `proj: true, taller: true`, clau anglesa al mapa en lloc d'un segon trofeu):
+  Nivell 1 (ara 37 sessions): m3-5 suport per al mòbil, m4-5 organitzador de taula, m5-5 rètol de la porta (text en relleu),
+  m6-5 de Numi a la impressora (STL → Tinkercad «Importa» → laminador Cura/PrusaSlicer, llista de comprovació; es pot fer
+  sense impressora ni internet), m7-5 tallagaletes. El clauer de m5-2 ara porta el nom amb la forma Text.
+  Nivell 2 (ara 35 sessions, 31 a punt; falta la U8): p1-5 porta-noms (editor → «Veure el codi»), p3-5 organitzador de
+  cables, p7-5 caixa amb tapa que encaixa (tolerància 0,3 mm, paramètrica).
+- **Nivell 2 amb menys blocs:** totes les passes de codi de les unitats 1-4 s'obren a la pestanya Codi amb botons que
+  insereixen codi (els blocs, com a opció); només p1-1:9 comença amb blocs. Descripció nova del curs.
+- Illes 3D tornades a renderitzar amb 5 parades (Nivell 1 unitats 3-7, Nivell 2 unitats 1, 3 i 7).
+- Al mòbil, «Proporcional» és el cadenat de la barra de pestanyes quan la pestanya és Mida (abans no es veia al mòbil).
+- Solucionari: 208 sessions, 2.435 respostes. Validador: 208 sessions, 0 errors.
