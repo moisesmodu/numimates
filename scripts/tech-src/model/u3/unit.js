@@ -52,6 +52,18 @@ COURSE_UNITS[3] = (() => {
   const RB1 = [...RODES, COS], RB2 = [...RB1, CAPR, ...ULLS], RB3 = [...RB2, brac('b1', -23), brac('b2', 23)];
   const RODES_DRETES = [B('r1', 'cyl', [16, 16, 6], -16, 0, 0, '#2A2F3A'), B('r2', 'cyl', [16, 16, 6], 16, 0, 0, '#2A2F3A')];
   const CILS3 = [B('c1', 'cyl', [12, 12, 30], -30, 0, 0, '#3D7BF4'), B('c2', 'cyl', [12, 12, 30], 0, 0, 0, '#2FB36D', { r: [0, 90, 0], h: 12 }), B('c3', 'cyl', [12, 12, 30], 30, 0, 0, '#FF8A3D', { r: [90, 0, 0], h: 12 })];
+  // ---- m3-5 · taller: el suport per al mòbil ----
+  // Base de 70 × 80 × 4 mm, vora de 70 × 6 × 14 mm que aguanta el mòbil i esquena: una placa de 70 × 80 × 6 mm estirada que,
+  // girada 65° en x, s'aixeca cap enrere (la seva caixa fa 70 × 39,25 × 75,04 mm). Amb l'esquena a y = 15 i ficada a la base
+  // (z = 0), la cara de davant toca la base a y ≈ −3,9; amb la vora a y = −20 (cara de darrere a −17), la ranura fa uns 13 mm.
+  const SBASE = B('base', 'rbox', [70, 80, 4], 0, 0, 0, '#3D7BF4', { cr: 2 });
+  const SVORA = (y = -20) => B('vora', 'box', [70, 6, 14], 0, y, 0, '#F7C531');
+  const SESQ = (a = 65, y = 15, z0 = 0) => { const r = a * Math.PI / 180, h = 80 * Math.abs(Math.sin(r)) + 6 * Math.abs(Math.cos(r)); return P('esquena', 'box', [70, 80, 6], [0, y, +(z0 + h / 2).toFixed(3)], '#7C5CFF', { r: [a, 0, 0] }); };
+  const SUPORT = [SBASE, SVORA(), SESQ()];
+  // un mòbil de 70 × 150 × 9 mm recolzat a l'esquena (només per veure-ho: no és a cap repte)
+  const MOBIL = (a, E) => { const r = a * Math.PI / 180, n = [0, -Math.sin(r), Math.cos(r)], u = [0, Math.cos(r), Math.sin(r)], c = E.p.map((v, i) => v + n[i] * 7.5), hh = (150 * Math.sin(r) + 9 * Math.abs(Math.cos(r))) / 2, d = (4 + hh - c[2]) / u[2];
+    return P('mobil', 'rbox', [70, 150, 9], c.map((v, i) => +(v + u[i] * d).toFixed(2)), '#2A2F3A', { r: [a, 0, 0], cr: 4 }); };
+  const AMB_MOBIL = (a = 65, y = 15) => { const E = SESQ(a, y); return [SBASE, SVORA(), E, MOBIL(a, E)]; };
   return {
   t: 'Moure, girar i escalar|Mover, girar y escalar', d: 'Mesures en mil·límetres|Medidas en milímetros', color: '#3D7BF4',
   s: [

@@ -151,3 +151,45 @@ Object.assign(TANI, (() => {
     }
   };
 })());
+/* ---------- m3-5 · taller: el suport per al mòbil (vist de costat: davant a l'esquerra, darrere a la dreta) ----------
+   m35ranura: el mòbil entra a la ranura (gruix 10 mm + marge = 13 mm) · m35angle: la placa estirada es gira 65° en x i baixa. */
+Object.assign(TANI, (() => {
+  const D = 5.5, fr = s => (s / D).toFixed(3), K = 1.7, X0 = 52, Y0 = 176;
+  const S = (y, z) => [X0 + (y + 40) * K, Y0 - z * K];
+  const poly = l => l.map(([y, z]) => S(y, z).map(v => v.toFixed(1)).join(',')).join(' ');
+  // una placa (rectangle de costat) de llarg L i gruix G, girada a graus (com Gir x), amb el centre a (yc, zc)
+  const rot = (L, G, a, yc, zc) => { const r = a * Math.PI / 180, c = Math.cos(r), s = Math.sin(r); return [[-L / 2, -G / 2], [L / 2, -G / 2], [L / 2, G / 2], [-L / 2, G / 2]].map(([u, v]) => [yc + u * c - v * s, zc + u * s + v * c]); };
+  const pill = (x, y, w, txt, t, col = '#fff', cls = 'tat s') => `<g ${tA(t, 'ta-pop')}><rect x="${x}" y="${y}" width="${w}" height="26" rx="13" fill="${col}" filter="url(#bwSh)"/><text x="${x + w / 2}" y="${y + 18}" text-anchor="middle" class="${cls}">${txt}</text></g>`;
+  const bg = h => `<rect width="320" height="${h}" rx="20" fill="#F1F2FB"/><rect x="14" y="${Y0}" width="292" height="8" rx="3" fill="#5A678C"/>`;
+  const BASE = `<polygon points="${poly([[-40, 0], [40, 0], [40, 4], [-40, 4]])}" fill="#3D7BF4"/>`, VORA = `<polygon points="${poly([[-23, 0], [-17, 0], [-17, 14], [-23, 14]])}" fill="#F7C531"/>`;
+  const ESQ = rot(80, 6, 65, 15, 37.52);
+  const arrowH = (y1, y2, z, col) => { const [a, b] = S(y1, z), [c] = S(y2, z); return `<path d="M${a} ${b}H${c}M${a + 6} ${b - 4}L${a} ${b}l6 4M${c - 6} ${b - 4}L${c} ${b}l-6 4" stroke="${col}" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`; };
+  return {
+    m35ranura() {
+      // el mòbil (150 × 9 mm) recolzat a l'esquena: entra lliscant per la seva pròpia direcció
+      const r = 65 * Math.PI / 180, n = [-Math.sin(r), Math.cos(r)], u = [Math.cos(r), Math.sin(r)], c0 = [15 + n[0] * 7.5, 37.52 + n[1] * 7.5], hh = (150 * Math.sin(r) + 9 * Math.cos(r)) / 2, d = (4 + hh - c0[1]) / u[1];
+      const M = rot(150, 9, 65, c0[0] + u[0] * d, c0[1] + u[1] * d), dx = (u[0] * 40 * K).toFixed(1), dy = (-u[1] * 40 * K).toFixed(1);
+      return tSvg(200, `${bg(200)}<g ${tA(0.1, 'ta-fade')}>${BASE}${VORA}<polygon points="${poly(ESQ)}" fill="#7C5CFF"/></g>
+        <g><animateTransform attributeName="transform" type="translate" values="${dx} ${dy};${dx} ${dy};0 0;0 0" keyTimes="0;${fr(0.6)};${fr(1.8)};1" dur="${D}s" repeatCount="indefinite"/>
+          <polygon points="${poly(M)}" fill="#2A2F3A" stroke="#14204A" stroke-width="1.5" stroke-linejoin="round"/></g>
+        <g ${tA(2.1, 'ta-in')}>${arrowH(-17, -3.9, 9, '#E8453C')}</g>
+        ${pill(20, 18, 132, L('mòbil: 10 mm', 'móvil: 10 mm'), 0.4, '#2A2F3A', 'tat s w')}
+        ${pill(20, 52, 150, L('ranura: 10 + 3 = 13 mm', 'ranura: 10 + 3 = 13 mm'), 2.3, '#E8453C', 'tat s w')}
+        ${pill(20, 86, 124, L('vora: 70 × 6 × 14', 'borde: 70 × 6 × 14'), 3.2)}`);
+    },
+    m35angle() {
+      // la placa estirada (a sobre de la base) es gira 65° pel seu centre i després baixa fins a z = 0
+      const flat = rot(80, 6, 0, 0, 7), [cx, cy] = S(0, 7), [ax, ay] = S(15, 37.52), up = (S(0, 37.52)[1] - cy).toFixed(1), right = (ax - cx).toFixed(1);
+      const arc = (() => { const [px, py] = S(-25, 4), R = 46; return `<path d="M${px + R} ${py}A${R} ${R} 0 0 0 ${(px + R * Math.cos(65 * Math.PI / 180)).toFixed(1)} ${(py - R * Math.sin(65 * Math.PI / 180)).toFixed(1)}" fill="none" stroke="#E8453C" stroke-width="3" stroke-linecap="round" pathLength="1" ${tA(2.3, 'ta-draw')}/><text x="${px + 30}" y="${py - 14}" class="tat b" style="fill:#E8453C" ${tA(2.6, 'ta-in')}>65°</text>`; })();
+      return tSvg(200, `${bg(200)}${BASE}${VORA}
+        <polygon points="${poly(flat)}" fill="#7C5CFF" fill-opacity=".18" stroke="#7C5CFF" stroke-width="1.5" stroke-dasharray="4 3"/>
+        <g><animateTransform attributeName="transform" type="translate" values="0 0;0 0;${right} ${up};${right} ${up}" keyTimes="0;${fr(2.6)};${fr(3.6)};1" dur="${D}s" repeatCount="indefinite"/>
+          <g><animateTransform attributeName="transform" type="rotate" values="0 ${cx.toFixed(1)} ${cy.toFixed(1)};0 ${cx.toFixed(1)} ${cy.toFixed(1)};-65 ${cx.toFixed(1)} ${cy.toFixed(1)};-65 ${cx.toFixed(1)} ${cy.toFixed(1)}" keyTimes="0;${fr(0.6)};${fr(2.2)};1" dur="${D}s" repeatCount="indefinite"/>
+            <polygon points="${poly(flat)}" fill="#7C5CFF"/></g></g>
+        ${arc}
+        ${pill(184, 18, 120, L('Gir x = 65', 'Giro x = 65'), 0.6, '#7C5CFF', 'tat s w')}
+        ${pill(184, 52, 120, 'y = 15 · z = 0', 3.0)}
+        ${pill(184, 86, 120, L('ficada a la base', 'metida en la base'), 3.8, '#22A06B', 'tat s w')}`);
+    }
+  };
+})());
