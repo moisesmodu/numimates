@@ -210,3 +210,56 @@ Object.assign(TANI, (() => {
     }
   };
 })());
+/* ---------- m6-5 · taller: de Numi a la impressora ----------
+   m65cami: Numi → STL → laminador → impressora (amb el Tinkercad com a parada opcional, amb «Importa») · m65lamina: capes de
+   0,2 mm, farciment del 15-20 % i suports, i el laminador calcula el temps i el filament · m65llista: la llista abans d'imprimir.
+   Dibuixos genèrics (cap logotip ni pantalla de cap programa). */
+Object.assign(TANI, (() => {
+  const D = 5.5, fr = s => (s / D).toFixed(3), OR = '#F5893A', OR2 = '#FFA866';
+  const bg = h => `<rect width="320" height="${h}" rx="20" fill="#F1F2FB"/>`;
+  const card = (x, y, w, h, dash) => `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="14" fill="#fff" stroke="${dash ? '#7C5CFF' : '#DCE4FA'}" stroke-width="2" ${dash ? 'stroke-dasharray="5 4"' : ''} filter="url(#bwSh)"/>`;
+  const pill = (x, y, w, txt, t, col = '#fff', cls = 'tat s') => `<g ${tA(t, 'ta-pop')}><rect x="${x}" y="${y}" width="${w}" height="26" rx="13" fill="${col}" filter="url(#bwSh)"/><text x="${x + w / 2}" y="${y + 18}" text-anchor="middle" class="${cls}">${txt}</text></g>`;
+  const ok = (x, y, t) => `<g ${tA(t, 'ta-pop')}><circle cx="${x}" cy="${y}" r="9" fill="#22A06B"/><path d="M${x - 4} ${y}l3 3.2l5.5 -6.2" stroke="#fff" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g>`;
+  const arrow = (x, y, t) => `<g ${tA(t, 'ta-pop')}><path d="M${x} ${y}h8m-4 -5l5 5l-5 5" stroke="#14204A" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g>`;
+  // la fitxa de les inicials vista de costat (disc + lletres), amb franges de capes si cal
+  const token = (x, y, w, k, layers) => { const disc = 3 * k, let_ = 2 * k; let g = `<rect x="${x}" y="${y - disc}" width="${w}" height="${disc}" rx="2" fill="${OR}"/><rect x="${x + w * .22}" y="${y - disc - let_}" width="${w * .2}" height="${let_}" fill="#fff" stroke="${OR}" stroke-width="1"/><rect x="${x + w * .56}" y="${y - disc - let_}" width="${w * .2}" height="${let_}" fill="#fff" stroke="${OR}" stroke-width="1"/>`;
+    if (layers) for (let i = 1; i < 25; i++) { const yy = y - i * k / 5; g += `<line x1="${x}" y1="${yy}" x2="${x + w}" y2="${yy}" stroke="#14204A" stroke-width=".6" opacity="${i < 15 ? .35 : 0}"/>`; } return g; };
+  return {
+    m65cami() {
+      const xs = [8, 86, 164, 242], w = 64, y0 = 96, h = 82;
+      const box = (i, art, lab, t) => `<g ${tA(t, 'ta-in')}>${card(xs[i], y0, w, h)}${art}<text x="${xs[i] + w / 2}" y="${y0 + h - 10}" text-anchor="middle" class="tat s">${lab}</text></g>`;
+      const numi = `<rect x="17" y="108" width="46" height="32" rx="4" fill="#14204A"/><rect x="21" y="112" width="38" height="24" rx="2" fill="#2E3446"/><ellipse cx="40" cy="129" rx="11" ry="4" fill="${OR}"/><rect x="31" y="122" width="18" height="6" rx="2" fill="${OR2}"/><rect x="12" y="140" width="56" height="5" rx="2" fill="#9AA3B5"/>`;
+      const stl = `<path d="M105 106h22l9 9v32a4 4 0 0 1 -4 4h-27a4 4 0 0 1 -4 -4v-37a4 4 0 0 1 4 -4z" fill="#F5F7FF" stroke="#C9D3EE" stroke-width="2"/><g stroke="#7C5CFF" stroke-width="1.4" fill="none"><path d="M105 144l9 -16l9 16zM114 128l9 16l9 -16zM114 128h18"/></g><text x="118" y="122" text-anchor="middle" class="tat s" style="font-size:11px;fill:#7C5CFF">STL</text>`;
+      const sl = Array.from({ length: 6 }, (_, i) => `<rect x="${175 + i * 1.5}" y="${146 - i * 7}" width="${42 - i * 3}" height="5.5" rx="2.5" fill="${i % 2 ? OR2 : OR}"/>`).join('') + `<text x="196" y="${108}" text-anchor="middle" class="tat s" style="font-size:10px">0,2 mm</text>`;
+      const pr = `<rect x="251" y="104" width="46" height="46" rx="5" fill="none" stroke="#5A678C" stroke-width="3"/><rect x="251" y="116" width="46" height="4" fill="#5A678C"/><rect x="267" y="113" width="14" height="10" rx="2" fill="#7C5CFF"/><path d="M274 123v4" stroke="#E8453C" stroke-width="2.5"/><rect x="259" y="142" width="30" height="5" rx="2" fill="#9AA3B5"/><rect x="265" y="137" width="18" height="5" rx="2" fill="${OR}"/>`;
+      const tk = `<g ${tA(1.6, 'ta-in')}>${card(118, 12, 84, 58, true)}<path d="M142 26l12 -6l12 6v14l-12 6l-12 -6z" fill="#E7E2FF" stroke="#7C5CFF" stroke-width="1.6"/><path d="M142 26l12 6l12 -6M154 32v14" fill="none" stroke="#7C5CFF" stroke-width="1.6"/><text x="160" y="62" text-anchor="middle" class="tat s" style="font-size:11.5px">Tinkercad</text></g>
+        <g ${tA(1.4, 'ta-in')}><path d="M121 96C121 84 128 72 136 66" fill="none" stroke="#7C5CFF" stroke-width="2" stroke-dasharray="4 4"/><path d="M184 66C192 72 199 84 199 96" fill="none" stroke="#7C5CFF" stroke-width="2" stroke-dasharray="4 4"/></g>
+        ${pill(214, 20, 98, L('«Importa»', '«Importar»'), 2.0, '#7C5CFF', 'tat s w')}${pill(8, 20, 100, L('opcional', 'opcional'), 2.0)}`;
+      return tSvg(196, `${bg(196)}${box(0, numi, 'Numi', 0.2)}${arrow(75, y0 + 40, 0.8)}${box(1, stl, L('STL', 'STL'), 1.0)}${arrow(153, y0 + 40, 2.2)}${box(2, sl, L('Laminador', 'Laminador'), 2.4)}${arrow(231, y0 + 40, 3.2)}${box(3, pr, L('Impressora', 'Impresora'), 3.4)}${tk}`);
+    },
+    m65lamina() {
+      // a l'esquerra, la fitxa de costat tallada en capes; al mig, una capa de dalt amb el farciment; a la dreta, les opcions
+      const cx = 132, cy = 96, R = 40, grid = [];
+      for (let v = -40; v <= 40; v += 10) { grid.push(`<line x1="${cx + v}" y1="${cy - R}" x2="${cx + v}" y2="${cy + R}"/>`, `<line x1="${cx - R}" y1="${cy + v}" x2="${cx + R}" y2="${cy + v}"/>`); }
+      const row = (y, a, b, t) => `<g ${tA(t, 'ta-in')}><text x="190" y="${y}" class="tat s" style="font-size:11px">${a}</text><text x="306" y="${y}" text-anchor="end" class="tat s" style="font-size:11px;fill:#7C5CFF">${b}</text></g>`;
+      return tSvg(200, `${bg(200)}
+        <g ${tA(0.1, 'ta-in')}>${token(14, 120, 70, 14, true)}<rect x="10" y="120" width="78" height="4" rx="2" fill="#5A678C"/></g>
+        ${pill(10, 136, 80, L('25 capes', '25 capas'), 0.6, OR, 'tat s w')}
+        <defs><clipPath id="m65c"><circle cx="${cx}" cy="${cy}" r="${R - 3}"/></clipPath></defs>
+        <g ${tA(1.1, 'ta-pop')}><circle cx="${cx}" cy="${cy}" r="${R}" fill="#FFF3E8"/><g clip-path="url(#m65c)" stroke="${OR}" stroke-width="1.6">${grid.join('')}</g><circle cx="${cx}" cy="${cy}" r="${R - 1.5}" fill="none" stroke="${OR}" stroke-width="4"/></g>
+        ${pill(92, 148, 82, L('farciment', 'relleno'), 1.4)}
+        <g ${tA(1.8, 'ta-in')}><rect x="180" y="14" width="134" height="118" rx="14" fill="#fff" stroke="#DCE4FA" stroke-width="2" filter="url(#bwSh)"/></g>
+        ${row(40, L('Capa', 'Capa'), '0,2 mm', 2.0)}${row(68, L('Farciment', 'Relleno'), '15-20 %', 2.4)}${row(96, L('Suports', 'Soportes'), L('no', 'no'), 2.8)}
+        <g ${tA(3.3, 'ta-pop')}><rect x="210" y="106" width="78" height="20" rx="10" fill="#7C5CFF"/><text x="249" y="120" text-anchor="middle" class="tat s w" style="font-size:12px">${L('Lamina', 'Laminar')}</text></g>
+        ${pill(180, 142, 134, L('⏱ temps · ⚖ filament', '⏱ tiempo · ⚖ filamento'), 3.9, '#22A06B', 'tat s w')}
+        <g ${tA(4.4, 'ta-in')}><text x="132" y="186" text-anchor="middle" class="tat s" style="fill:#5A678C">${L('la vora, plena · per dins, quadrícula', 'el borde, lleno · por dentro, cuadrícula')}</text></g>`);
+    },
+    m65llista() {
+      const items = [L('Toca la placa', 'Toca la placa'), L('Base plana', 'Base plana'), L('Una sola peça', 'Una sola pieza'), L('Parets ≥ 1,2-2 mm', 'Paredes ≥ 1,2-2 mm'), L('Cap a la impressora', 'Cabe en la impresora'), L('Voladissos ≤ 45°', 'Voladizos ≤ 45°')];
+      return tSvg(206, `${bg(206)}<g ${tA(0.1, 'ta-in')}><rect x="16" y="14" width="186" height="182" rx="14" fill="#FFF8E6" stroke="#F1D9A4" stroke-width="2"/><rect x="82" y="8" width="54" height="14" rx="5" fill="#9AA3B5"/></g>
+        ${items.map((t, i) => `<g ${tA(0.3 + i * 0.25, 'ta-in')}><rect x="30" y="${34 + i * 26}" width="16" height="16" rx="4" fill="#fff" stroke="#C9CFDD" stroke-width="2"/><text x="56" y="${47 + i * 26}" class="tat s" style="font-size:12.5px">${t}</text></g>${ok(38, 42 + i * 26, 1.9 + i * 0.4)}`).join('')}
+        <g ${tA(0.6, 'ta-pop')}><ellipse cx="262" cy="118" rx="42" ry="14" fill="#D06A1E"/><rect x="220" y="100" width="84" height="18" fill="${OR}"/><ellipse cx="262" cy="100" rx="42" ry="14" fill="${OR2}"/><text x="262" y="106" text-anchor="middle" class="tat b" style="fill:#fff">A B</text></g>
+        ${pill(214, 150, 96, L('a imprimir!', '¡a imprimir!'), 4.5, '#22A06B', 'tat s w')}`);
+    }
+  };
+})());

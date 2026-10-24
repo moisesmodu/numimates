@@ -8,6 +8,7 @@
    colors ni unitats: s'entén que són mm). El motor no té cap comprovació de voladissos: s'ensenyen amb m3look i targetes.
    Models: peces { id, t, s: [x, y, z] (mm), p: CENTRE, r: graus, c, hole, g }, placa de 200 × 200 mm centrada a l'origen. */
 Object.assign(TBADGE, {
+  m65_imp: { id: 'm65_imp', ico: '🖨️', n: 'De la pantalla a la placa|De la pantalla a la placa', d: "Taller fet: has preparat una fitxa amb les teves inicials per imprimir-la de veritat (STL, laminador, capes de 0,2 mm, farciment i la llista abans d'imprimir).|Taller hecho: has preparado una ficha con tus iniciales para imprimirla de verdad (STL, laminador, capas de 0,2 mm, relleno y la lista antes de imprimir)." },
   m6llapis: { id: 'm6llapis', ico: '✏️', n: 'Mestre/a de la impressió|Maestro/a de la impresión', d: "Has preparat models perquè la Nuvi els imprimeixi bé (capes, base plana, parets de 2 mm, mida real i STL) i has dissenyat un porta-llapis per a sis llapis.|Has preparado modelos para que Nuvi los imprima bien (capas, base plana, paredes de 2 mm, tamaño real y STL) y has diseñado un portalápices para seis lápices." }
 });
 COURSE_UNITS[6] = (() => {
@@ -62,6 +63,17 @@ COURSE_UNITS[6] = (() => {
   // tres forats tallats pel mig (es veu el tall de davant): el del mig no té fons
   const TRES = [B('bloc', 'box', [40, 16, 30], 0, 0, 0, '#2FB36D'), hp('f1', -12, 0, 2, 30), hp('f2', 0, 0, 0, 32), hp('f3', 12, 0, 2, 30), H('tall', 'box', [50, 10, 40], [0, -5, 18])];
 
+  // ---------- m6-5 · taller: de Numi a la impressora ----------
+  // La fitxa de les inicials (petita i ràpida): un disc de 32 × 32 × 3 mm i les inicials en relleu amb la forma Text (lletres de
+  // 12 mm, 2 mm de gruix; «AB» fa 18,24 mm d'ample): 5 mm en total, 25 capes de 0,2 mm. El camí: STL → (Tinkercad, opcional) →
+  // laminador (Ultimaker Cura, PrusaSlicer…: capes de 0,2 mm, farciment del 15-20 %, suports només si cal) → impressora.
+  const FTX = (z = 0) => [B('fitxa', 'cyl', [32, 32, 3], 0, 0, z, '#F5893A'), B('ini', 'text', [18.24, 12, 2], 0, 0, z + 3, '#FFFFFF', { txt: 'AB' })];
+  const FDISC = [FTX()[0]];
+  const COR_GRAN = k => B('cor', 'heart', [240 * k, 240 * k, 6 * k], 0, 0, 0, '#EC5FA8');
+  const TDRETA = [B('pal', 'box', [6, 6, 30], 0, 0, 0, '#3D7BF4'), B('barra', 'box', [30, 6, 6], 0, 0, 30, '#3D7BF4')];
+  const TESTIRADA = [B('pal', 'box', [30, 6, 6], 0, 0, 0, '#3D7BF4'), B('barra', 'box', [6, 30, 6], 18, 0, 0, '#3D7BF4')];
+  // les tres peces juntes per a la pregunta dels suports: la T dreta (blava), la T estirada (verda) i la fitxa
+  const TRES_PECES = [...TDRETA.map(p => ({ ...p, id: p.id + '1', p: [p.p[0] - 52, p.p[1], p.p[2]] })), ...TESTIRADA.map(p => ({ ...p, id: p.id + '2', c: '#2FB36D', p: [p.p[0] - 3, p.p[1], p.p[2]] })), ...FTX().map(p => ({ ...p, p: [p.p[0] + 50, p.p[1], p.p[2]] }))];
   return {
   t: "Del model a l'objecte|Del modelo al objeto", d: 'Imprimir en 3D|Imprimir en 3D', color: '#F5893A',
   s: [
@@ -348,6 +360,80 @@ COURSE_UNITS[6] = (() => {
           sol: { parts: PORTA } },
         { k: 'quiz', ph: 'tanca', q: "Per què el forat del llapis fa 9 mm si el llapis en fa 8?|¿Por qué el agujero del lápiz mide 9 mm si el lápiz mide 8?", opts: ["Perquè entri i surti sense encallar-se: cal una mica de marge|Para que entre y salga sin atascarse: hace falta un poco de margen", 'Perquè la Nuvi no sap fer forats de 8 mm|Porque Nuvi no sabe hacer agujeros de 8 mm', 'Perquè així gasta més plàstic|Porque así gasta más plástico'], a: 0 },
         { k: 'quiz', ph: 'tanca', q: "Dos forats de <b>9 mm</b> estan a <b>12 mm</b> de centre a centre. Quant fa la paret del mig?|Dos agujeros de <b>9 mm</b> están a <b>12 mm</b> de centro a centro. ¿Cuánto mide la pared del medio?", opts: ['3 mm|3 mm', '12 mm|12 mm', '21 mm|21 mm'], a: 0 },
+        { k: 'feel', ph: 'tanca' }
+      ] },
+    /* ---------- Sessió 5 · Taller: de Numi a la impressora ---------- */
+    { id: 'm6-5', t: 'Taller: de Numi a la impressora|Taller: de Numi a la impresora', min: 45, proj: true, taller: true, badge: 'm65_imp',
+      learn: ["El camí d'un disseny: es descarrega l'STL de Numi, es pot obrir al Tinkercad amb «Importa» i el laminador el prepara per a la impressora.|El camino de un diseño: se descarga el STL de Numi, se puede abrir en Tinkercad con «Importar» y el laminador lo prepara para la impresora.",
+        "Al laminador triem capes de 0,2 mm, un farciment del 15-20 % i suports només si hi ha voladissos de més de 45°; ens diu el temps i el filament.|En el laminador elegimos capas de 0,2 mm, un relleno del 15-20 % y soportes solo si hay voladizos de más de 45°; nos dice el tiempo y el filamento.",
+        "Abans d'imprimir, la llista: a la placa i amb base plana, una sola peça, parets d'1,2-2 mm o més, que hi càpiga i sense voladissos de més de 45°.|Antes de imprimir, la lista: en la placa y con base plana, una sola pieza, paredes de 1,2-2 mm o más, que quepa y sin voladizos de más de 45°."],
+      steps: [
+        { k: 'quiz', ph: 'recorda', q: "Què guarda el fitxer <b>STL</b> que descarregues de Numi?|¿Qué guarda el archivo <b>STL</b> que descargas de Numi?",
+          opts: ['La forma del model, feta de triangles|La forma del modelo, hecha de triángulos', 'La forma i els colors de cada peça|La forma y los colores de cada pieza', 'Les ordres per moure la impressora|Las órdenes para mover la impresora'], a: 0,
+          ex: "Les ordres per a la impressora les fa el laminador, a partir de l'STL. Avui ho veurem!|Las órdenes para la impresora las hace el laminador, a partir del STL. ¡Hoy lo veremos!" },
+        { k: 'quiz', ph: 'recorda', q: "Fins a quin angle pot sortir una paret cap enfora <b>sense suports</b>?|¿Hasta qué ángulo puede salir una pared hacia fuera <b>sin soportes</b>?",
+          opts: ['Uns 45°|Unos 45°', '90°|90°', '10°|10°'], a: 0 },
+        { k: 'story', ph: 'missio', who: 'both', scene: 'fab', title: "La impressora de l'escola|La impresora de la escuela",
+          t: "Grans notícies: l'<b>Escola del Turó</b> ha comprat una impressora 3D! Però la mestra <b>Aina</b> ens escriu preocupada: «La tenim a la classe… i no sabem per on començar!». Avui farem el <b>camí sencer</b>, de Numi a la impressora: descarregar l'STL, preparar-lo al <b>laminador</b> i passar la <b>llista</b> abans d'imprimir. I farem una cosa petita i ràpida: una <b>fitxa amb les teves inicials</b>.|¡Grandes noticias: la <b>Escuela del Turó</b> ha comprado una impresora 3D! Pero la maestra <b>Aina</b> nos escribe preocupada: «La tenemos en la clase… ¡y no sabemos por dónde empezar!». Hoy haremos el <b>camino entero</b>, de Numi a la impresora: descargar el STL, prepararlo en el <b>laminador</b> y pasar la <b>lista</b> antes de imprimir. Y haremos una cosa pequeña y rápida: una <b>ficha con tus iniciales</b>." },
+        { k: 'learn', ph: 'descobreix', cards: [
+          { k: 'El camí del fitxer|El camino del archivo', t: 'De Numi a la impressora|De Numi a la impresora', anim: 'm65cami',
+            x: "<b>1)</b> A Numi, el botó <b>STL</b> descarrega el model. <b>2)</b> Si el vols continuar amb un altre programa, el <b>Tinkercad</b> (un taller 3D al web, gratuït, d'Autodesk) l'obre amb <b>Importa</b>. <b>3)</b> El <b>laminador</b> (per exemple Ultimaker Cura o PrusaSlicer, gratuïts) el talla en capes i en fa les ordres. <b>4)</b> La impressora el fa capa a capa.|<b>1)</b> En Numi, el botón <b>STL</b> descarga el modelo. <b>2)</b> Si lo quieres continuar con otro programa, <b>Tinkercad</b> (un taller 3D en la web, gratuito, de Autodesk) lo abre con <b>Importar</b>. <b>3)</b> El <b>laminador</b> (por ejemplo Ultimaker Cura o PrusaSlicer, gratuitos) lo corta en capas y hace sus órdenes. <b>4)</b> La impresora lo hace capa a capa.",
+            tip: "A l'escola, el Tinkercad es fa servir amb la classe que crea el/la docent, sense comptes personals.|En la escuela, Tinkercad se usa con la clase que crea el/la docente, sin cuentas personales." },
+          { k: 'El laminador|El laminador', t: 'Capes, farciment i suports|Capas, relleno y soportes', anim: 'm65lamina',
+            x: "Al laminador col·loques la peça a la placa, amb la cara plana a baix, i tries: <b>capes de 0,2 mm</b>; <b>farciment del 15-20 %</b> (per dins, una quadrícula: forta i amb poc plàstic); i <b>suports</b> només si hi ha voladissos de més de 45°. Després el botó de <b>laminar</b> et diu el <b>temps</b> i el <b>filament</b> que gastarà.|En el laminador colocas la pieza en la placa, con la cara plana abajo, y eliges: <b>capas de 0,2 mm</b>; <b>relleno del 15-20 %</b> (por dentro, una cuadrícula: fuerte y con poco plástico); y <b>soportes</b> solo si hay voladizos de más de 45°. Después el botón de <b>laminar</b> te dice el <b>tiempo</b> y el <b>filamento</b> que gastará." },
+          { k: "La llista abans d'imprimir|La lista antes de imprimir", t: 'Sis preguntes, sis «sí»|Seis preguntas, seis «sí»', anim: 'm65llista',
+            x: "<b>1)</b> Toca la placa? <b>2)</b> Té una base plana? <b>3)</b> És una sola peça? <b>4)</b> Les parets i els traços fan 1,2-2 mm o més? <b>5)</b> Cap a la impressora? <b>6)</b> No té voladissos de més de 45°? Si tot és «sí», a imprimir!|<b>1)</b> ¿Toca la placa? <b>2)</b> ¿Tiene una base plana? <b>3)</b> ¿Es una sola pieza? <b>4)</b> ¿Las paredes y los trazos miden 1,2-2 mm o más? <b>5)</b> ¿Cabe en la impresora? <b>6)</b> ¿No tiene voladizos de más de 45°? Si todo es «sí», ¡a imprimir!",
+            tip: "Les cinc primeres te les marca el taller; els voladissos, mira'ls de costat.|Las cinco primeras te las marca el taller; los voladizos, míralos de lado." }
+        ] },
+        { k: 'unplug', ph: 'mans', ico: '🍰', title: 'Fes de laminador|Haz de laminador', t: 'Amb paper quadriculat (cada quadret, 5 mm), un llapis i colors, «lamina» la fitxa de les inicials:|Con papel cuadriculado (cada cuadrito, 5 mm), un lápiz y colores, «lamina» la ficha de las iniciales:',
+          steps: ["La fitxa fa 3 mm de disc i 2 mm de lletres. Quantes capes de 0,2 mm té en total?|La ficha mide 3 mm de disco y 2 mm de letras. ¿Cuántas capas de 0,2 mm tiene en total?",
+            "Dibuixa la capa 5 vista de dalt: un cercle de 32 mm (uns 6 quadrets i mig).|Dibuja la capa 5 vista desde arriba: un círculo de 32 mm (unos 6 cuadritos y medio).",
+            "Dibuixa la capa 20: només hi ha les inicials! Per què?|Dibuja la capa 20: ¡solo están las iniciales! ¿Por qué?",
+            "Omple el cercle de la capa 5 amb una quadrícula (una ratlla cada quadret): és el farciment. Només la vora va plena.|Rellena el círculo de la capa 5 con una cuadrícula (una raya cada cuadrito): es el relleno. Solo el borde va lleno."],
+          tip: "Resposta: 15 + 10 = 25 capes. Les capes 16-25 només tenen lletres.|Respuesta: 15 + 10 = 25 capas. Las capas 16-25 solo tienen letras." },
+        { k: 'm3look', ph: 'prova', q: "Aquesta fitxa fa <b>5 mm</b> d'alçada (3 de disc i 2 de lletres). Quantes capes de 0,2 mm farà la impressora?|Esta ficha mide <b>5 mm</b> de altura (3 de disco y 2 de letras). ¿Cuántas capas de 0,2 mm hará la impresora?",
+          model: { parts: FTX() }, opts: ['25|25', '5|5', '50|50'], a: 0,
+          ex: "5 × 5 = 25 capes: és una peça petita i ràpida, ideal per a la primera impressió.|5 × 5 = 25 capas: es una pieza pequeña y rápida, ideal para la primera impresión." },
+        { k: 'm3look', ph: 'investiga', q: "Al laminador, quina d'aquestes peces necessitarà <b>suports</b> si la poses així?|En el laminador, ¿cuál de estas piezas necesitará <b>soportes</b> si la pones así?",
+          model: { parts: TRES_PECES }, opts: ['La T dreta (blava)|La T de pie (azul)', 'La T estirada (verda)|La T tumbada (verde)', 'La fitxa|La ficha'], a: 0,
+          ex: "La barra de la T dreta queda a l'aire (90°). Estirada a la placa, ja no en necessita.|La barra de la T de pie queda en el aire (90°). Tumbada en la placa, ya no los necesita." },
+        { k: 'move', ph: 'pausa', title: 'La impressora humana|La impresora humana', secs: 30, t: "Fes d'impressora! Ajupit/da, dibuixa la primera capa amb el dit a terra. Puja una mica: farciment, ziga-zaga amb la mà. Puja més: ara només les lletres, petites. I al final… dret/a, braços amunt: impressió acabada!|¡Haz de impresora! Agachado/a, dibuja la primera capa con el dedo en el suelo. Sube un poco: relleno, zigzag con la mano. Sube más: ahora solo las letras, pequeñas. Y al final… de pie, brazos arriba: ¡impresión acabada!" },
+        { k: 'seq', ph: 'investiga', q: "Ordena el camí de la fitxa, de Numi a la impressora.|Ordena el camino de la ficha, de Numi a la impresora.",
+          items: ["Desa la fitxa a Numi i descarrega'n l'STL|Guarda la ficha en Numi y descarga su STL", "Obre l'STL al laminador|Abre el STL en el laminador", 'Posa la fitxa al mig de la placa, amb la cara plana a baix|Pon la ficha en el centro de la placa, con la cara plana abajo', 'Tria capes de 0,2 mm, farciment del 15-20 % i sense suports|Elige capas de 0,2 mm, relleno del 15-20 % y sin soportes', 'Lamina i mira el temps i el filament|Lamina y mira el tiempo y el filamento', "Envia-ho a la impressora, amb un adult|Envíalo a la impresora, con un adulto"],
+          ex: "Primer el fitxer, després la preparació i, al final, la impressió (sempre amb un adult: el broquet crema).|Primero el archivo, después la preparación y, al final, la impresión (siempre con un adulto: la boquilla quema)." },
+        { k: 'm3build', ph: 'repte', stl: true, done: "Molt bé! Ara prova el botó STL: la fitxa es descarrega a mida real, en mil·límetres.|¡Muy bien! Ahora prueba el botón STL: la ficha se descarga a tamaño real, en milímetros.", q: "<b>La fitxa.</b> Les teves inicials en relleu: un <b>Text</b> de <b>2 mm</b> de gruix, al mig i a sobre del disc (<b>z = 3</b>).|<b>La ficha.</b> Tus iniciales en relieve: un <b>Texto</b> de <b>2 mm</b> de grosor, en el centro y encima del disco (<b>z = 3</b>).",
+          start: { parts: FDISC }, palette: ['text'], target: { parts: FTX() },
+          checks: [{ k: 'count', t: 'text', hole: false, min: 1, txt: 'Hi ha un text en relleu|Hay un texto en relieve' }, { k: 'part', t: 'text', hole: false, at: [0, 0, null], base: 3, tol: 1, txt: 'Inicials al mig, a sobre del disc|Iniciales en el centro, sobre el disco' },
+            { k: 'fit', box: [32, 32, 5], t: 'Fa 5 mm en total: lletres de 2 mm|Mide 5 mm en total: letras de 2 mm' }, { k: 'one' }, { k: 'wall', min: 1.2, t: "Els traços s'imprimeixen bé|Los trazos se imprimen bien" }],
+          hint: "Toca la forma Text i escriu-hi les teves inicials (2 o 3 lletres). A Mida, posa 2 a la z. A Posició: x = 0, y = 0 i z = 3.|Toca la forma Texto y escribe tus iniciales (2 o 3 letras). En Medida, pon 2 en la z. En Posición: x = 0, y = 0 y z = 3.",
+          sol: { parts: FTX() } },
+        { k: 'm3fix', ph: 'repte', q: "La fitxa <b>flota</b> 2 mm: la impressora començaria a l'aire! Les dues peces ja són triades: <b>baixa-les juntes</b> a terra.|La ficha <b>flota</b> 2 mm: ¡la impresora empezaría en el aire! Las dos piezas ya están elegidas: <b>bájalas juntas</b> al suelo.",
+          start: { parts: FTX(2) }, fix: ['fitxa', 'ini'], palette: ['cyl', 'text'],
+          checks: [{ k: 'onplate' }, { k: 'flatbase', min: 600, t: 'Tota la base toca la placa|Toda la base toca la placa' }, { k: 'part', t: 'text', at: [0, 0, null], base: 3, tol: 0.5, txt: 'Les inicials continuen a sobre del disc|Las iniciales siguen encima del disco' }],
+          hint: "Toca Alinea → A terra (z = 0): baixen totes dues sense desfer-se. (Compte: «Cada peça a terra» enfonsaria les lletres dins del disc.)|Toca Alinea → Al suelo (z = 0): bajan las dos sin deshacerse. (Cuidado: «Cada pieza al suelo» hundiría las letras dentro del disco.)",
+          sol: { parts: FTX() } },
+        { k: 'm3fix', ph: 'repte', extra: true, q: "La placa de la impressora de l'escola fa <b>180 × 180 mm</b> i aquest posagots, 240. Fes-lo <b>a la meitat</b> sense deformar-lo.|La placa de la impresora de la escuela mide <b>180 × 180 mm</b> y este posavasos, 240. Hazlo <b>a la mitad</b> sin deformarlo.",
+          start: { parts: [COR_GRAN(1)] }, fix: ['cor'], palette: ['heart'],
+          checks: [{ k: 'fit', box: [180, 180, 180], t: 'Cap a la placa de 180 × 180 mm|Cabe en la placa de 180 × 180 mm' }, { k: 'size', ax: 'x', v: 120, tol: 1, t: 'Fa 120 mm: la meitat|Mide 120 mm: la mitad' }, { k: 'size', ax: 'z', v: 3, tol: 0.2, t: 'Fa 3 mm de gruix: no s\'ha deformat|Mide 3 mm de grosor: no se ha deformado' }],
+          hint: "El cor ja està triat. A Mida, activa Proporcional (el cadenat) i escriu 120 a la x.|El corazón ya está elegido. En Medida, activa Proporcional (el candado) y escribe 120 en la x.",
+          sol: { parts: [COR_GRAN(0.5)] } },
+        { k: 'm3free', ph: 'crea', q: "<b>La teva fitxa.</b> Personalitza-la i passa-la per la llista: petita, plana i d'una sola peça. Descarrega'n l'STL i desa-la.|<b>Tu ficha.</b> Personalízala y pásala por la lista: pequeña, plana y de una sola pieza. Descarga su STL y guárdala.",
+          name: 'La meva fitxa|Mi ficha', start: { parts: FTX() }, palette: ['cyl', 'rbox', 'hex', 'heart', 'star', 'text', 'hcyl'],
+          crit: ['Toca la placa amb una base plana i és una sola peça|Toca la placa con una base plana y es una sola pieza', "Les parets i els traços fan 1,2 mm o més i no hi ha voladissos de més de 45°|Las paredes y los trazos miden 1,2 mm o más y no hay voladizos de más de 45°", "És petita (cap en 60 × 60 × 10 mm) i n'has descarregat l'STL|Es pequeña (cabe en 60 × 60 × 10 mm) y has descargado su STL"],
+          checks: [{ k: 'onplate' }, { k: 'flatbase', min: 300, t: 'Té una base plana|Tiene una base plana' }, { k: 'one' }, { k: 'wall', min: 1.2, t: 'Parets i traços de 1,2 mm o més|Paredes y trazos de 1,2 mm o más' }, { k: 'fit', box: [60, 60, 10], t: 'Petita: cap en 60 × 60 × 10 mm|Pequeña: cabe en 60 × 60 × 10 mm' }],
+          sol: { parts: FTX() } },
+        { k: 'unplug', ph: 'crea', ico: '🖨️', title: 'A la impressora de veritat|A la impresora de verdad', t: "Si a l'escola hi ha impressora 3D, amb un adult:|Si en la escuela hay impresora 3D, con un adulto:",
+          steps: ["Obre l'STL de la fitxa al laminador de l'escola i tria la impressora i el filament (PLA).|Abre el STL de la ficha en el laminador de la escuela y elige la impresora y el filamento (PLA).",
+            'Comprova que la fitxa és plana i al mig de la placa.|Comprueba que la ficha está plana y en el centro de la placa.',
+            'Capes de 0,2 mm, farciment del 15-20 % i sense suports.|Capas de 0,2 mm, relleno del 15-20 % y sin soportes.',
+            "Lamina-la i apunta el temps i el filament que calcula. Després, l'adult l'envia a la impressora.|Lamínala y apunta el tiempo y el filamento que calcula. Después, el adulto la envía a la impresora."],
+          tip: "Sense impressora (o sense internet)? Fes la llista amb la fitxa a la pantalla i el «laminador de paper»: ja saps preparar una impressió!|¿Sin impresora (o sin internet)? Haz la lista con la ficha en la pantalla y el «laminador de papel»: ¡ya sabes preparar una impresión!" },
+        { k: 'quiz', ph: 'tanca', q: "Quin <b>farciment</b> tries per a la fitxa?|¿Qué <b>relleno</b> eliges para la ficha?",
+          opts: ['Un 15-20 %|Un 15-20 %', 'Un 100 %: tota plena|Un 100 %: toda llena', 'Un 0 %: buida|Un 0 %: vacía'], a: 0,
+          ex: "Amb un 15-20 % la quadrícula de dins l'aguanta prou i gasta menys plàstic i temps.|Con un 15-20 % la cuadrícula de dentro la aguanta bastante y gasta menos plástico y tiempo." },
+        { k: 'quiz', ph: 'tanca', q: "Vols continuar el teu disseny al <b>Tinkercad</b>. Com hi obres l'STL?|Quieres continuar tu diseño en <b>Tinkercad</b>. ¿Cómo abres allí el STL?",
+          opts: ['Amb «Importa»|Con «Importar»', 'Amb «Exporta»|Con «Exportar»', 'Fent-ne una foto|Haciéndole una foto'], a: 0,
+          ex: "«Importa» porta un fitxer a dins del programa; «Exporta» en treu un, com el botó STL de Numi.|«Importar» lleva un archivo dentro del programa; «Exportar» saca uno, como el botón STL de Numi." },
         { k: 'feel', ph: 'tanca' }
       ] }
   ] };

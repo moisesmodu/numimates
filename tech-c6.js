@@ -671,6 +671,7 @@ Object.assign(TBADGE, {
   m31_prec: { id: 'm31_prec', ico: '🎯', n: 'Mà de precisió|Mano de precisión', d: 'Col·loques les peces al mil·límetre, amb el dit i amb números.|Colocas las piezas al milímetro, con el dedo y con números.' },
   m32_gir: { id: 'm32_gir', ico: '🔄', n: 'Mestre/a del gir|Maestro/a del giro', d: 'Gires peces 15°, 45° i 90°, en planta i tombant-les de costat.|Giras piezas 15°, 45° y 90°, en planta y tumbándolas de lado.' },
   m33_esc: { id: 'm33_esc', ico: '🔍', n: "Lupa d'escala|Lupa de escala", d: 'Fas peces i figures al doble i a la meitat sense deformar-les.|Haces piezas y figuras al doble y a la mitad sin deformarlas.' },
+  m35_mobil: { id: 'm35_mobil', ico: '📱', n: 'Suport a mida|Soporte a medida', d: "Taller fet: un suport per al mòbil amb mesures reals (ranura de 13 mm), una esquena girada 65° i una base que no es tomba.|Taller hecho: un soporte para el móvil con medidas reales (ranura de 13 mm), un respaldo girado 65° y una base que no se vuelca." },
   m34_rob: { id: 'm34_rob', ico: '🤖', n: 'Constructor/a de robots|Constructor/a de robots', d: 'Projecte acabat: un robot de peces fet amb una fitxa tècnica, amb peces mogudes, girades i escalades.|Proyecto terminado: un robot de piezas hecho con una ficha técnica, con piezas movidas, giradas y escaladas.' }
 });
 COURSE_UNITS[3] = (() => {
@@ -715,6 +716,18 @@ COURSE_UNITS[3] = (() => {
   const RB1 = [...RODES, COS], RB2 = [...RB1, CAPR, ...ULLS], RB3 = [...RB2, brac('b1', -23), brac('b2', 23)];
   const RODES_DRETES = [B('r1', 'cyl', [16, 16, 6], -16, 0, 0, '#2A2F3A'), B('r2', 'cyl', [16, 16, 6], 16, 0, 0, '#2A2F3A')];
   const CILS3 = [B('c1', 'cyl', [12, 12, 30], -30, 0, 0, '#3D7BF4'), B('c2', 'cyl', [12, 12, 30], 0, 0, 0, '#2FB36D', { r: [0, 90, 0], h: 12 }), B('c3', 'cyl', [12, 12, 30], 30, 0, 0, '#FF8A3D', { r: [90, 0, 0], h: 12 })];
+  // ---- m3-5 · taller: el suport per al mòbil ----
+  // Base de 70 × 80 × 4 mm, vora de 70 × 6 × 14 mm que aguanta el mòbil i esquena: una placa de 70 × 80 × 6 mm estirada que,
+  // girada 65° en x, s'aixeca cap enrere (la seva caixa fa 70 × 39,25 × 75,04 mm). Amb l'esquena a y = 15 i ficada a la base
+  // (z = 0), la cara de davant toca la base a y ≈ −3,9; amb la vora a y = −20 (cara de darrere a −17), la ranura fa uns 13 mm.
+  const SBASE = B('base', 'rbox', [70, 80, 4], 0, 0, 0, '#3D7BF4', { cr: 2 });
+  const SVORA = (y = -20) => B('vora', 'box', [70, 6, 14], 0, y, 0, '#F7C531');
+  const SESQ = (a = 65, y = 15, z0 = 0) => { const r = a * Math.PI / 180, h = 80 * Math.abs(Math.sin(r)) + 6 * Math.abs(Math.cos(r)); return P('esquena', 'box', [70, 80, 6], [0, y, +(z0 + h / 2).toFixed(3)], '#7C5CFF', { r: [a, 0, 0] }); };
+  const SUPORT = [SBASE, SVORA(), SESQ()];
+  // un mòbil de 70 × 150 × 9 mm recolzat a l'esquena (només per veure-ho: no és a cap repte)
+  const MOBIL = (a, E) => { const r = a * Math.PI / 180, n = [0, -Math.sin(r), Math.cos(r)], u = [0, Math.cos(r), Math.sin(r)], c = E.p.map((v, i) => v + n[i] * 7.5), hh = (150 * Math.sin(r) + 9 * Math.abs(Math.cos(r))) / 2, d = (4 + hh - c[2]) / u[2];
+    return P('mobil', 'rbox', [70, 150, 9], c.map((v, i) => +(v + u[i] * d).toFixed(2)), '#2A2F3A', { r: [a, 0, 0], cr: 4 }); };
+  const AMB_MOBIL = (a = 65, y = 15) => { const E = SESQ(a, y); return [SBASE, SVORA(), E, MOBIL(a, E)]; };
   return {
   t: 'Moure, girar i escalar|Mover, girar y escalar', d: 'Mesures en mil·límetres|Medidas en milímetros', color: '#3D7BF4',
   s: [
@@ -999,6 +1012,79 @@ COURSE_UNITS[3] = (() => {
         { k: 'quiz', ph: 'tanca', q: 'A la fitxa, una roda diu «gir: 0°, 90°, 0°». Què vol dir?|En la ficha, una rueda dice «giro: 0°, 90°, 0°». ¿Qué quiere decir?', opts: ['Que està girada 90° en y|Que está girada 90° en y', 'Que està girada 90° en x|Que está girada 90° en x', 'Que no està girada|Que no está girada'], a: 0,
           ex: "Els tres números van en ordre: x, y, z. El 90 és al mig: gir en y.|Los tres números van en orden: x, y, z. El 90 está en el medio: giro en y." },
         { k: 'feel', ph: 'tanca' }
+      ] },
+    /* ---------- Sessió 5 · Taller: el suport per al mòbil ---------- */
+    { id: 'm3-5', t: 'Taller: el suport per al mòbil|Taller: el soporte para el móvil', min: 40, proj: true, taller: true, badge: 'm35_mobil',
+      learn: ["Un objecte útil es dissenya amb mesures de veritat: un mòbil fa uns 8-11 mm de gruix i la ranura que l'aguanta en fa 2 o 3 més.|Un objeto útil se diseña con medidas de verdad: un móvil mide unos 8-11 mm de grosor y la ranura que lo aguanta mide 2 o 3 más.",
+        "Girar una placa estirada 65° en x l'aixeca cap enrere com un faristol: és un angle còmode per mirar la pantalla.|Girar una placa tumbada 65° en x la levanta hacia atrás como un atril: es un ángulo cómodo para mirar la pantalla.",
+        "Un suport estable té una base ampla i les peces ficades les unes dins les altres, perquè la Nuvi l'imprimeixi com una sola peça.|Un soporte estable tiene una base ancha y las piezas metidas unas dentro de otras, para que Nuvi lo imprima como una sola pieza."],
+      steps: [
+        { k: 'quiz', ph: 'recorda', q: "Vols inclinar cap enrere una placa estirada, com un faristol. A la pestanya Gir, quin número canvies?|Quieres inclinar hacia atrás una placa tumbada, como un atril. En la pestaña Giro, ¿qué número cambias?",
+          opts: ['El de la x|El de la x', 'El de la z|El de la z', 'Cap: es fa a Mida|Ninguno: se hace en Medida'], a: 0,
+          ex: "Girar en x aixeca la peça cap endavant o cap enrere; girar en z la fa girar com una baldufa, vista de dalt.|Girar en x levanta la pieza hacia delante o hacia atrás; girar en z la hace girar como una peonza, vista desde arriba." },
+        { k: 'quiz', ph: 'recorda', q: "Una base fa <b>4 mm</b> de gruix. Vols que una peça hi quedi ficada fins a baix de tot. Quina <b>z</b> li poses a Posició?|Una base mide <b>4 mm</b> de grosor. Quieres que una pieza quede metida en ella hasta abajo del todo. ¿Qué <b>z</b> le pones en Posición?",
+          opts: ['z = 0|z = 0', 'z = 4|z = 4', 'z = 8|z = 8'], a: 0,
+          ex: "La z de Posició és on comença la peça. Amb z = 0 comença a la placa i queda ficada 4 mm dins la base: tot serà una sola peça.|La z de Posición es donde empieza la pieza. Con z = 0 empieza en la placa y queda metida 4 mm dentro de la base: todo será una sola pieza." },
+        { k: 'story', ph: 'missio', who: 'both', scene: 'fab', title: 'Receptes amb farina|Recetas con harina',
+          t: "En <b>Marc</b>, el cuiner del menjador de l'escola, segueix les receptes al mòbil… però el deixa estirat al marbre i sempre acaba ple de farina! Ens demana un <b>suport</b> perquè el mòbil quedi <b>dret i inclinat</b>, fàcil de mirar mentre cuina. Avui és dia de <b>taller</b>: farem un objecte de veritat, amb les mides del mòbil, una peça girada <b>65°</b> i una base que no es tombi.|<b>Marc</b>, el cocinero del comedor de la escuela, sigue las recetas en el móvil… ¡pero lo deja tumbado en el mármol y siempre acaba lleno de harina! Nos pide un <b>soporte</b> para que el móvil quede <b>de pie e inclinado</b>, fácil de mirar mientras cocina. Hoy es día de <b>taller</b>: haremos un objeto de verdad, con las medidas del móvil, una pieza girada <b>65°</b> y una base que no se vuelque." },
+        { k: 'learn', ph: 'descobreix', cards: [
+          { k: 'Mesures de veritat|Medidas de verdad', t: 'La ranura, a mida del mòbil|La ranura, a medida del móvil', anim: 'm35ranura',
+            x: "Abans de modelar, <b>mesurem</b> l'objecte real. Un mòbil fa uns <b>8-11 mm</b> de gruix (amb la funda, una mica més). La <b>ranura</b> on s'aguanta ha de fer 2 o 3 mm més: entre <b>12 i 14 mm</b>. Massa justa, no hi entra; massa ampla, balla.|Antes de modelar, <b>medimos</b> el objeto real. Un móvil mide unos <b>8-11 mm</b> de grosor (con la funda, un poco más). La <b>ranura</b> donde se aguanta tiene que medir 2 o 3 mm más: entre <b>12 y 14 mm</b>. Demasiado justa, no entra; demasiado ancha, baila.",
+            tip: 'Mesura sempre el mòbil amb la funda posada.|Mide siempre el móvil con la funda puesta.' },
+          { k: 'Girar 65°|Girar 65°', t: "L'esquena inclinada|El respaldo inclinado", anim: 'm35angle',
+            x: "Una placa estirada, girada <b>65° en x</b>, s'aixeca cap enrere com un faristol. Entre 60° i 70° la pantalla es veu bé i el mòbil no cau. El taller gira la peça pel seu centre: després, a Posició, la col·loquem i la baixem a <b>z = 0</b>, ficada a la base.|Una placa tumbada, girada <b>65° en x</b>, se levanta hacia atrás como un atril. Entre 60° y 70° la pantalla se ve bien y el móvil no se cae. El taller gira la pieza por su centro: después, en Posición, la colocamos y la bajamos a <b>z = 0</b>, metida en la base." },
+          { k: 'Les tres peces|Las tres piezas', t: 'Base, vora i esquena|Base, borde y respaldo', media: { k: 'model', model: { parts: AMB_MOBIL() } },
+            x: "La <b>base</b> ampla (70 × 80 mm) fa que no es tombi. La <b>vora</b> de davant atura el mòbil per baix. L'<b>esquena</b> l'aguanta inclinat. Totes es fiquen dins la base: així la Nuvi les imprimeix com <b>una sola peça</b>.|La <b>base</b> ancha (70 × 80 mm) hace que no se vuelque. El <b>borde</b> de delante para el móvil por abajo. El <b>respaldo</b> lo aguanta inclinado. Todas se meten en la base: así Nuvi las imprime como <b>una sola pieza</b>.",
+            tip: "El mòbil gris només hi és per veure-ho: no s'imprimeix!|El móvil gris solo está para verlo: ¡no se imprime!" }
+        ] },
+        { k: 'unplug', ph: 'mans', ico: '📏', title: 'Mesura el mòbil|Mide el móvil', t: 'Amb un regle, un llibre i un transportador:|Con una regla, un libro y un transportador:',
+          steps: ["Mesura el gruix d'un mòbil (amb la funda) en mm. Si no en teniu cap a mà, feu servir una calculadora o una llibreta.|Mide el grosor de un móvil (con la funda) en mm. Si no tenéis ninguno a mano, usad una calculadora o una libreta.",
+            'Suma-hi 2 o 3 mm: aquesta és la teva ranura. Apunta-la.|Súmale 2 o 3 mm: esta es tu ranura. Apúntala.',
+            "Posa el llibre dret, recolzat en una pila de llibres, i inclina'l fins que el llegeixis bé assegut/da.|Pon el libro de pie, apoyado en una pila de libros, e inclínalo hasta que lo leas bien sentado/a.",
+            "Mesura l'angle entre el llibre i la taula amb el transportador. És a prop de 65°?|Mide el ángulo entre el libro y la mesa con el transportador. ¿Está cerca de 65°?"],
+          tip: 'Compareu les mesures: tots els mòbils fan el mateix gruix?|Comparad las medidas: ¿todos los móviles miden lo mismo de grosor?' },
+        { k: 'm3look', ph: 'prova', q: "Mira el suport <b>de costat</b>. Quin angle fa el mòbil amb la taula?|Mira el soporte <b>de lado</b>. ¿Qué ángulo forma el móvil con la mesa?",
+          model: { parts: AMB_MOBIL() }, view: 'right', opts: ['Uns 65°|Unos 65°', '90°: ben dret|90°: bien de pie', 'Uns 30°: gairebé estirat|Unos 30°: casi tumbado'], a: 0,
+          ex: "L'esquena es va girar 65° en x i el mòbil s'hi recolza: queda inclinat 65°. A 90° cauria endavant i a 30° costaria veure la pantalla.|El respaldo se giró 65° en x y el móvil se apoya en él: queda inclinado 65°. A 90° caería hacia delante y a 30° costaría ver la pantalla." },
+        { k: 'm3look', ph: 'investiga', q: "Sense quina peça el mòbil relliscaria endavant fins a caure? <b>Toca-la.</b>|¿Sin qué pieza el móvil resbalaría hacia delante hasta caer? <b>Tócala.</b>",
+          model: { parts: AMB_MOBIL() }, pick: 'vora', yes: 'Exacte: la vora atura el mòbil per baix.|Exacto: el borde para el móvil por abajo.',
+          no: "Aquesta peça també ajuda, però no és la que atura el mòbil per baix. Gira la vista i mira'l de costat.|Esta pieza también ayuda, pero no es la que para el móvil por abajo. Gira la vista y míralo de lado.",
+          ex: "Entre la vora i l'esquena queda una ranura de 13 mm: hi cap un mòbil d'11 mm amb la funda.|Entre el borde y el respaldo queda una ranura de 13 mm: cabe un móvil de 11 mm con la funda." },
+        { k: 'move', ph: 'pausa', title: 'El suport amb els braços|El soporte con los brazos', secs: 30, t: "Fes de suport! Un avantbraç estirat a la taula és la base. Aixeca l'altre braç a <b>90°</b>, ben dret… baixa'l a <b>65°</b>… a <b>30°</b>… i torna a 65°. Ara fes la vora amb els dits de la mà de baix!|¡Haz de soporte! Un antebrazo estirado en la mesa es la base. Levanta el otro brazo a <b>90°</b>, bien recto… bájalo a <b>65°</b>… a <b>30°</b>… y vuelve a 65°. ¡Ahora haz el borde con los dedos de la mano de abajo!" },
+        { k: 'm3build', ph: 'repte', q: "<b>La vora.</b> Afegeix una caixa de <b>70 × 6 × 14 mm</b> a <b>y = −20</b>, ficada a la base des de <b>z = 0</b>: aturarà el mòbil per baix.|<b>El borde.</b> Añade una caja de <b>70 × 6 × 14 mm</b> en <b>y = −20</b>, metida en la base desde <b>z = 0</b>: parará el móvil por abajo.",
+          start: { parts: [SBASE] }, palette: ['box'], target: { parts: [SBASE, SVORA()] },
+          checks: [{ k: 'part', t: 'box', s: [70, 6, 14], at: [0, -20, null], base: 0, tol: 0.6, txt: 'Vora de 70 × 6 × 14 mm a y = −20|Borde de 70 × 6 × 14 mm en y = −20' }, { k: 'one' }, { k: 'onplate' }],
+          hint: 'Toca la forma Caixa. A Mida: 70, 6 i 14. A Posició: x = 0, y = −20 i z = 0.|Toca la forma Caja. En Medida: 70, 6 y 14. En Posición: x = 0, y = −20 y z = 0.',
+          sol: { parts: [SBASE, SVORA()] } },
+        { k: 'm3build', ph: 'repte', q: "<b>L'esquena a 65°.</b> Gira la placa lila <b>65° en x</b> i col·loca-la a <b>y = 15</b>, ficada a la base (<b>z = 0</b>).|<b>El respaldo a 65°.</b> Gira la placa lila <b>65° en x</b> y colócala en <b>y = 15</b>, metida en la base (<b>z = 0</b>).",
+          start: { parts: [SBASE, SVORA(), SESQ(0, 0, 4)] }, palette: ['box'], target: { parts: SUPORT },
+          checks: [{ k: 'part', t: 'box', s: [70, 39.25, 75.04], at: [0, 15, null], base: 0, tol: 1.3, txt: 'Esquena girada 65°, a y = 15 i z = 0|Respaldo girado 65°, en y = 15 y z = 0' },
+            { k: 'match', target: { parts: SUPORT }, th: 0.9, t: "S'inclina cap enrere, com el fantasma|Se inclina hacia atrás, como el fantasma" }, { k: 'one' }, { k: 'onplate' }],
+          hint: "Toca la placa lila. A Gir, escriu 65 a la x: s'aixeca. Després, a Posició: x = 0, y = 15 i z = 0.|Toca la placa lila. En Giro, escribe 65 en la x: se levanta. Después, en Posición: x = 0, y = 15 y z = 0.",
+          sol: { parts: SUPORT } },
+        { k: 'm3fix', ph: 'repte', extra: true, q: "El mòbil de la <b>Iris</b> fa <b>11 mm</b> amb la funda i aquesta ranura només en fa 6. Mou la <b>vora</b> a <b>y = −20</b>: farà 13 mm.|El móvil de <b>Iris</b> mide <b>11 mm</b> con la funda y esta ranura solo mide 6. Mueve el <b>borde</b> a <b>y = −20</b>: medirá 13 mm.",
+          start: { parts: [SBASE, SVORA(-13), SESQ()] }, fix: ['vora'], palette: ['box'],
+          checks: [{ k: 'part', t: 'box', s: [70, 6, 14], at: [0, -20, null], base: 0, tol: 1, txt: "Ranura d'uns 13 mm: hi cap el mòbil|Ranura de unos 13 mm: cabe el móvil" }, { k: 'one' }],
+          hint: 'La vora ja està seleccionada: a Posició, escriu y = −20.|El borde ya está seleccionado: en Posición, escribe y = −20.',
+          sol: { parts: SUPORT } },
+        { k: 'm3free', ph: 'crea', q: "<b>El teu suport.</b> Adapta'l al mòbil que has mesurat: la ranura (gruix + 2 o 3 mm), l'angle (60-70°) i un detall teu. Després, desa'l.|<b>Tu soporte.</b> Adáptalo al móvil que has medido: la ranura (grosor + 2 o 3 mm), el ángulo (60-70°) y un detalle tuyo. Después, guárdalo.",
+          name: 'El meu suport per al mòbil|Mi soporte para el móvil', start: { parts: SUPORT }, palette: ['box', 'rbox', 'wedge', 'cyl', 'hsph', 'star', 'heart', 'text'],
+          crit: ['La ranura fa el gruix del mòbil + 2 o 3 mm|La ranura mide el grosor del móvil + 2 o 3 mm', "L'esquena està inclinada entre 60° i 70°|El respaldo está inclinado entre 60° y 70°", 'La base és ampla i tot és una sola peça|La base es ancha y todo es una sola pieza'],
+          checks: [{ k: 'onplate' }, { k: 'one' }, { k: 'flatbase', min: 2500, t: 'Té una base plana i ampla|Tiene una base plana y ancha' }, { k: 'fit', box: [180, 180, 150], t: 'Cap a la placa de la Nuvi|Cabe en la placa de Nuvi' }],
+          sol: { parts: [...SUPORT, B('cor', 'heart', [14, 14, 2], 0, -31, 4, '#EC5FA8')] } },
+        { k: 'unplug', ph: 'tanca', ico: '🖨️', title: 'Porta-ho a la impressora|Llévalo a la impresora', t: "Si a l'escola hi ha una impressora 3D, el teu suport pot ser de veritat:|Si en la escuela hay una impresora 3D, tu soporte puede ser de verdad:",
+          steps: ["Descarrega'n l'<b>STL</b> amb el botó STL (també el trobaràs a «Projectes»).|Descarga su <b>STL</b> con el botón STL (también lo encontrarás en «Proyectos»).",
+            "S'imprimeix tal com és, amb la base a la placa: l'esquena s'inclina cap enrere i no necessita suports.|Se imprime tal como es, con la base en la placa: el respaldo se inclina hacia atrás y no necesita soportes.",
+            'És una peça gran: pot tardar unes quantes hores. Es pot deixar imprimint a la tarda, amb un adult.|Es una pieza grande: puede tardar unas cuantas horas. Se puede dejar imprimiendo por la tarde, con un adulto.',
+            'Prova-hi el mòbil: si balla o no hi entra, mou la vora 1 mm i fes-ne la versió 2.|Prueba el móvil: si baila o no entra, mueve el borde 1 mm y haz la versión 2.'],
+          tip: "A la unitat 6 aprendràs tot el camí, de Numi a la impressora.|En la unidad 6 aprenderás todo el camino, de Numi a la impresora." },
+        { k: 'quiz', ph: 'tanca', q: "Un mòbil fa <b>11 mm</b> de gruix amb la funda. Quina ranura li fas?|Un móvil mide <b>11 mm</b> de grosor con la funda. ¿Qué ranura le haces?",
+          opts: ['De 13 o 14 mm|De 13 o 14 mm', "D'11 mm justos|De 11 mm justos", 'De 25 mm|De 25 mm'], a: 0,
+          ex: "Amb 2 o 3 mm de marge entra i surt bé; justa, s'encallaria, i massa ampla, ballaria.|Con 2 o 3 mm de margen entra y sale bien; justa, se atascaría, y demasiado ancha, bailaría." },
+        { k: 'quiz', ph: 'tanca', q: "Com vas inclinar l'esquena del suport?|¿Cómo inclinaste el respaldo del soporte?",
+          opts: ['La vaig girar 65° en x i la vaig baixar a z = 0|La giré 65° en x y la bajé a z = 0', 'La vaig fer més alta a Mida|La hice más alta en Medida', 'La vaig girar 65° en z|La giré 65° en z'], a: 0,
+          ex: "Girar en x l'aixeca cap enrere; girar en z només la faria girar vista de dalt.|Girar en x la levanta hacia atrás; girar en z solo la haría girar vista desde arriba." },
+        { k: 'feel', ph: 'tanca' }
       ] }
   ] };
 })();
@@ -1018,6 +1104,7 @@ Object.assign(TBADGE, {
   m41_ali: { id: 'm41_ali', ico: '📐', n: 'Alineador/a|Alineador/a', d: "Alinees peces a les vores i al centre, i les recolzes l'una sobre l'altra sense que res floti.|Alineas piezas a los bordes y al centro, y las apoyas una sobre otra sin que nada flote." },
   m42_rep: { id: 'm42_rep', ico: '🔁', n: 'Mestre/a dels patrons|Maestro/a de los patrones', d: 'Dupliques peces i grups i els repeteixes amb un pas exacte: tanques, files i graelles.|Duplicas piezas y grupos y los repites con un paso exacto: vallas, filas y cuadrículas.' },
   m43_mir: { id: 'm43_mir', ico: '🦋', n: 'Mirall màgic|Espejo mágico', d: "Fas la meitat d'una figura i la completes amb el mirall: papallones, cares i vehicles simètrics.|Haces la mitad de una figura y la completas con el espejo: mariposas, caras y vehículos simétricos." },
+  m45_org: { id: 'm45_org', ico: '🗂️', n: 'Ordre a la taula|Orden en la mesa', d: "Taller fet: un organitzador de taula amb tubs per als llapis i calaixets per a la goma i els clips, fet amb Alinea, Duplica i Mirall i parets de 2 mm.|Taller hecho: un organizador de mesa con tubos para los lápices y cajoncitos para la goma y los clips, hecho con Alinea, Duplica y Espejo y paredes de 2 mm." },
   m44_casa: { id: 'm44_casa', ico: '🏡', n: 'Arquitecte/a del futur|Arquitecto/a del futuro', d: 'Projecte acabat: la casa del futur, amb parts alineades, peces repetides i una façana simètrica.|Proyecto terminado: la casa del futuro, con partes alineadas, piezas repetidas y una fachada simétrica.' }
 });
 COURSE_UNITS[4] = (() => {
@@ -1107,6 +1194,22 @@ COURSE_UNITS[4] = (() => {
   const CASA_MEVA = [...ARB1, B('xemeneia', 'box', [8, 8, 12], 0, 6, 44, '#9AA3B5'), ...fanalC(1, -48), ...fanalC(2, 48)];
   const fpis = (id, x, z0) => B(id, 'box', [10, 2, 8], x, -10, z0, '#5BC0EB');
   const PISOS = [B('bloc', 'box', [60, 20, 50], 0, 0, 0, '#F3F3EE'), fpis('w1', -15, 8), fpis('w2', 15, 8), fpis('w3', -15, 22), fpis('trenca', 21, 22), fpis('w5', -15, 36), fpis('w6', 15, 36), B('pb', 'box', [12, 2, 14], 0, -10, 0, '#A0683A')];
+  // ---------- m4-5 · taller: l'organitzador de taula ----------
+  // Safata de 100 × 70 × 4 mm; tres tubs per als llapis (26 mm, paret de 2 mm, 50 mm d'alt) a y = 16, x = −31, 0 i 31 (Duplica fa
+  // salts de 26 + 5 = 31 mm); davant, un calaix de parets de 2 × 20 mm (dues de 96 mm a y = −32 i −6 i tres de 24 mm a x = −47, 0 i
+  // 47) que en fa dos compartiments de 44 × 24 mm per a la goma i els clips. Unitat 4: encara sense forats.
+  const SAF = B('safata', 'rbox', [100, 70, 4], 0, 0, 0, '#14A3B8', { cr: 2 });
+  const OTUB = (id, x, z0 = 4) => B(id, 'tube', [26, 26, 50], x, 16, z0, '#F7C531', { w: 2 });
+  const OPD = (id, y) => B(id, 'box', [96, 2, 20], 0, y, 4, '#EC5FA8');
+  const OPL = (id, x, t = 2) => B(id, 'box', [t, 24, 20], x, -19, 4, '#EC5FA8');
+  const OTUBS = [OTUB('t1', -31), OTUB('t2', 0), OTUB('t3', 31)];
+  const OCAL0 = [OPD('pdavant', -32), OPL('pesq', -47)], OCAL1 = [...OCAL0, OPD('pdarrere', -6), OPL('pdreta', 47)];
+  const ORG2 = [SAF, ...OTUBS, ...OCAL1], ORG = [...ORG2, OPL('pmig', 0)];
+  // l'organitzador amb les coses a dins (només per veure-ho)
+  const OCOSES = [...[[-35, 12], [-28, 19], [-4, 13], [3, 20], [28, 14]].map(([x, y], i) => B('ll' + i, 'hex', [8, 6.93, 90], x, y, 4, ['#E8453C', '#3D7BF4', '#2FB36D', '#F7C531', '#7C5CFF'][i])),
+    B('goma', 'rbox', [36, 16, 10], -23, -19, 4, '#F3F3EE', { cr: 2 }), B('clip1', 'torus', [14, 8, 2], 18, -22, 4, '#9AA3B5'), B('clip2', 'torus', [14, 8, 2], 30, -16, 4, '#9AA3B5'), B('clip3', 'torus', [14, 8, 2], 22, -12, 6, '#9AA3B5')];
+  const ORG_PLE = [...ORG.map(p => ({ ...p, g: 'org' })), ...OCOSES];
+  const ORG_PRIM = [...ORG.slice(0, -1), OPL('pmig', 0, 0.8)];
   return {
   t: 'Construir|Construir', d: 'Alinear, duplicar i mirall|Alinear, duplicar y espejo', color: '#2FB36D',
   s: [
@@ -1397,6 +1500,78 @@ COURSE_UNITS[4] = (() => {
           opts: ["La duplico, li aplico el Mirall i la poso a l'altra banda|La duplico, le aplico el Espejo y la pongo al otro lado", 'La duplico i ja està|La duplico y ya está', 'La faig el doble de gran|La hago el doble de grande'], a: 0,
           ex: "Sense el Mirall, la segona falca baixaria cap al mateix costat i la teulada quedaria torta.|Sin el Espejo, la segunda cuña bajaría hacia el mismo lado y el tejado quedaría torcido." },
         { k: 'feel', ph: 'tanca' }
+      ] },
+    /* ---------- Sessió 5 · Taller: l'organitzador de taula ---------- */
+    { id: 'm4-5', t: "Taller: l'organitzador de taula|Taller: el organizador de mesa", min: 40, proj: true, taller: true, badge: 'm45_org',
+      learn: ["Abans de dissenyar un organitzador, mesurem el que hi anirà: els llapis, la goma i els clips, i deixem una mica de marge.|Antes de diseñar un organizador, medimos lo que irá dentro: los lápices, la goma y los clips, y dejamos un poco de margen.",
+        "Alinea posa una peça a sobre d'una altra, Duplica repeteix el mateix salt i Mirall fa la còpia a l'altre costat: menys feina i més precisió.|Alinea pone una pieza encima de otra, Duplica repite el mismo salto y Espejo hace la copia al otro lado: menos trabajo y más precisión.",
+        "Les parets de 2 mm són prou fortes per imprimir-les i gasten poc plàstic.|Las paredes de 2 mm son bastante fuertes para imprimirlas y gastan poco plástico."],
+      steps: [
+        { k: 'quiz', ph: 'recorda', q: "Dupliques una peça i mous la còpia <b>31 mm</b> a la dreta. Si tornes a tocar <b>Duplica</b>, on surt la còpia nova?|Duplicas una pieza y mueves la copia <b>31 mm</b> a la derecha. Si vuelves a tocar <b>Duplica</b>, ¿dónde sale la copia nueva?",
+          opts: ['31 mm més a la dreta: fa el mateix salt|31 mm más a la derecha: hace el mismo salto', "A sobre de l'original|Encima del original", 'Al mig de la placa|En el centro de la placa'], a: 0,
+          ex: "Duplica recorda el salt: cada còpia nova va a la mateixa distància. Així es fan files sense escriure cada x.|Duplica recuerda el salto: cada copia nueva va a la misma distancia. Así se hacen filas sin escribir cada x." },
+        { k: 'quiz', ph: 'recorda', q: "Una paret és a <b>x = −47</b>. Què fa <b>Mirall → Còpia a l'altre costat (x)</b>?|Una pared está en <b>x = −47</b>. ¿Qué hace <b>Espejo → Copia al otro lado (x)</b>?",
+          opts: ["En fa una còpia emmirallada a x = 47|Hace una copia reflejada en x = 47", 'La gira 90°|La gira 90°', 'La fa el doble de llarga|La hace el doble de larga'], a: 0,
+          ex: "La còpia surt a l'altre costat de la línia del mig (x = 0), a la mateixa distància.|La copia sale al otro lado de la línea del medio (x = 0), a la misma distancia." },
+        { k: 'story', ph: 'missio', who: 'both', scene: 'fab', title: 'Una taula plena de coses|Una mesa llena de cosas',
+          t: "La <b>Mireia</b>, l'arquitecta de la maqueta del barri, té la taula plena de llapis, gomes i clips barrejats, i cada dia perd alguna cosa! Ens demana un <b>organitzador de taula</b>: tubs per als llapis i calaixets per a la goma i els clips. Avui és dia de <b>taller</b>: el farem amb les eines de la unitat (<b>Alinea</b>, <b>Duplica</b> i <b>Mirall</b>) i parets de 2 mm, com un objecte de veritat.|<b>Mireia</b>, la arquitecta de la maqueta del barrio, tiene la mesa llena de lápices, gomas y clips mezclados, ¡y cada día pierde alguna cosa! Nos pide un <b>organizador de mesa</b>: tubos para los lápices y cajoncitos para la goma y los clips. Hoy es día de <b>taller</b>: lo haremos con las herramientas de la unidad (<b>Alinea</b>, <b>Duplica</b> y <b>Espejo</b>) y paredes de 2 mm, como un objeto de verdad." },
+        { k: 'learn', ph: 'descobreix', cards: [
+          { k: 'Un lloc per a cada cosa|Un sitio para cada cosa', t: 'Mesures de les coses de la taula|Medidas de las cosas de la mesa', anim: 'm45lloc',
+            x: "Un llapis fa uns <b>8 mm</b> de gruix: en un tub de <b>22 mm</b> per dins n'hi caben uns quants. Una goma fa uns 40 × 20 mm: el seu calaix en fa <b>44 × 24</b>, amb marge per agafar-la amb els dits.|Un lápiz mide unos <b>8 mm</b> de grosor: en un tubo de <b>22 mm</b> por dentro caben unos cuantos. Una goma mide unos 40 × 20 mm: su cajón mide <b>44 × 24</b>, con margen para cogerla con los dedos.",
+            tip: "Mesura les teves coses: no totes les gomes fan el mateix!|Mide tus cosas: ¡no todas las gomas miden lo mismo!" },
+          { k: 'Les eines del taller|Las herramientas del taller', t: 'Alinea, Duplica i Mirall|Alinea, Duplica y Espejo', anim: 'm45eines',
+            x: "<b>Alinea → A sobre de la peça de sota</b> posa el tub just a sobre de la safata. <b>Duplica</b> fa la còpia 31 mm al costat (26 mm del tub + 5) i, si hi tornes, repeteix el salt. <b>Mirall → Còpia a l'altre costat</b> fa la paret de la dreta d'un sol toc.|<b>Alinea → Encima de la pieza de debajo</b> pone el tubo justo encima de la bandeja. <b>Duplica</b> hace la copia 31 mm al lado (26 mm del tubo + 5) y, si vuelves a tocarlo, repite el salto. <b>Espejo → Copia al otro lado</b> hace la pared de la derecha de un solo toque." },
+          { k: 'Parets de 2 mm|Paredes de 2 mm', t: 'Fortes i amb poc plàstic|Fuertes y con poco plástico', media: { k: 'model', model: { parts: ORG_PLE } },
+            x: "Els tubs tenen una <b>paret</b> de 2 mm (la forma Tub la fa sola) i les parets dels calaixets són caixes de <b>2 mm</b> de gruix. Tot recolza a la safata: és <b>una sola peça</b>. Unes parets de 0,8 mm es trencarien!|Los tubos tienen una <b>pared</b> de 2 mm (la forma Tubo la hace sola) y las paredes de los cajoncitos son cajas de <b>2 mm</b> de grosor. Todo se apoya en la bandeja: es <b>una sola pieza</b>. ¡Unas paredes de 0,8 mm se romperían!",
+            tip: 'Els llapis i la goma només hi són per veure-ho: no s\'imprimeixen.|Los lápices y la goma solo están para verlo: no se imprimen.' }
+        ] },
+        { k: 'unplug', ph: 'mans', ico: '✏️', title: "Buida l'estoig|Vacía el estuche", t: "Amb el teu estoig, un regle i paper quadriculat (cada quadret, 5 mm):|Con tu estuche, una regla y papel cuadriculado (cada cuadrito, 5 mm):",
+          steps: ["Treu-ho tot i fes dos grups: coses llargues (llapis, retoladors) i coses petites (goma, maquineta, clips).|Sácalo todo y haz dos grupos: cosas largas (lápices, rotuladores) y cosas pequeñas (goma, sacapuntas, clips).",
+            "Mesura el gruix d'un llapis i la llargada i l'amplada de la goma, en mm.|Mide el grosor de un lápiz y el largo y el ancho de la goma, en mm.",
+            "Dibuixa l'organitzador vist de dalt, a mida real: tubs rodons per a les coses llargues i calaixets per a les petites.|Dibuja el organizador visto desde arriba, a tamaño real: tubos redondos para las cosas largas y cajoncitos para las pequeñas.",
+            'Marca les parets amb una línia doble (2 mm) i escriu les mides de cada compartiment.|Marca las paredes con una línea doble (2 mm) y escribe las medidas de cada compartimento.'],
+          tip: "Quines peces es repeteixen? Encercla-les: les faràs amb Duplica o amb Mirall.|¿Qué piezas se repiten? Rodéalas: las harás con Duplica o con Espejo." },
+        { k: 'm3look', ph: 'prova', q: "Mira l'organitzador <b>des de dalt</b>. Quants compartiments té per guardar coses?|Mira el organizador <b>desde arriba</b>. ¿Cuántos compartimentos tiene para guardar cosas?",
+          model: { parts: ORG }, view: 'top', opts: ['5|5', '3|3', '9|9'], a: 0,
+          ex: "Tres tubs per als llapis i dos calaixets davant, separats per la paret del mig.|Tres tubos para los lápices y dos cajoncitos delante, separados por la pared del medio." },
+        { k: 'm3look', ph: 'investiga', q: "Una de les parets fa <b>0,8 mm</b>: es trencaria en ficar-hi els clips. <b>Toca-la.</b>|Una de las paredes mide <b>0,8 mm</b>: se rompería al meter los clips. <b>Tócala.</b>",
+          model: { parts: ORG_PRIM }, view: 'top', pick: 'pmig', yes: 'Exacte: la paret del mig és tan prima com un full de cartolina.|Exacto: la pared del medio es tan fina como una hoja de cartulina.',
+          no: "Aquesta paret fa 2 mm: és prou forta. Busca la més prima, mirant de dalt.|Esta pared mide 2 mm: es bastante fuerte. Busca la más fina, mirando desde arriba.",
+          ex: "Al taller cap paret no fa menys de 2 mm: les impressores fan línies d'uns 0,4 mm i en calen unes quantes de juntes.|En el taller ninguna pared mide menos de 2 mm: las impresoras hacen líneas de unos 0,4 mm y hacen falta unas cuantas juntas." },
+        { k: 'move', ph: 'pausa', title: 'La fila que es duplica|La fila que se duplica', secs: 30, t: "Fem de Duplica! Una persona s'aixeca. La segona s'aixeca un pas més enllà. La tercera fa el <b>mateix salt</b>: un altre pas. I la quarta? Ara feu de Mirall: el de l'esquerra aixeca la mà dreta i el de la dreta, l'esquerra!|¡Hacemos de Duplica! Una persona se levanta. La segunda se levanta un paso más allá. La tercera hace el <b>mismo salto</b>: otro paso. ¿Y la cuarta? Ahora haced de Espejo: el de la izquierda levanta la mano derecha y el de la derecha, ¡la izquierda!" },
+        { k: 'm3build', ph: 'repte', q: "<b>Els tubs.</b> El tub groc és enfonsat a la safata: posa'l <b>a sobre</b> i fes-ne <b>tres</b> en fila, a x = −31, 0 i 31.|<b>Los tubos.</b> El tubo amarillo está hundido en la bandeja: ponlo <b>encima</b> y haz <b>tres</b> en fila, en x = −31, 0 y 31.",
+          start: { parts: [SAF, OTUB('t1', -31, 0)] }, palette: ['tube'], target: { parts: [SAF, ...OTUBS] },
+          checks: [...[-31, 0, 31].map(x => ({ k: 'part', t: 'tube', at: [x, 16, null], base: 4, tol: 0.6, txt: `Tub a x = ${String(x).replace('-', '−')}, a sobre de la safata|Tubo en x = ${String(x).replace('-', '−')}, encima de la bandeja` })), { k: 'one' }],
+          hint: "Toca el tub i Alinea → A sobre de la peça de sota: puja a z = 4. Després toca Duplica dues vegades: les còpies surten soles a x = 0 i x = 31.|Toca el tubo y Alinea → Encima de la pieza de debajo: sube a z = 4. Después toca Duplica dos veces: las copias salen solas en x = 0 y x = 31.",
+          sol: { parts: [SAF, ...OTUBS] } },
+        { k: 'm3build', ph: 'repte', q: "<b>El calaix.</b> Fes la <b>paret de darrere</b> (còpia de la de davant, a y = −6) i la <b>de la dreta</b>, emmirallada a x = 47.|<b>El cajón.</b> Haz la <b>pared de atrás</b> (copia de la de delante, en y = −6) y la <b>de la derecha</b>, reflejada en x = 47.",
+          start: { parts: [SAF, ...OTUBS, ...OCAL0] }, palette: ['box'], target: { parts: ORG2 },
+          checks: [{ k: 'part', t: 'box', s: [96, 2, 20], at: [0, -6, null], base: 4, tol: 0.6, txt: 'Paret de darrere a y = −6|Pared de atrás en y = −6' }, { k: 'part', t: 'box', s: [2, 24, 20], at: [47, -19, null], base: 4, tol: 0.6, txt: 'Paret de la dreta a x = 47|Pared de la derecha en x = 47' },
+            { k: 'sym', ax: 'x', th: 0.98, t: "És simètric (mirall en x)|Es simétrico (espejo en x)" }, { k: 'one' }],
+          hint: "Toca la paret de davant, Duplica i, a Posició, escriu x = 0 i y = −6. Després toca la paret de l'esquerra i Mirall → Còpia a l'altre costat (x).|Toca la pared de delante, Duplica y, en Posición, escribe x = 0 e y = −6. Después toca la pared de la izquierda y Espejo → Copia al otro lado (x).",
+          sol: { parts: ORG2 } },
+        { k: 'm3build', ph: 'repte', q: "<b>Dos calaixets.</b> Posa una paret al mig, a <b>x = 0</b>: un compartiment per a la goma i un altre per als clips.|<b>Dos cajoncitos.</b> Pon una pared en el medio, en <b>x = 0</b>: un compartimento para la goma y otro para los clips.",
+          start: { parts: ORG2 }, palette: ['box'], target: { parts: ORG },
+          checks: [{ k: 'part', t: 'box', s: [2, 24, 20], at: [0, -19, null], base: 4, tol: 0.6, txt: 'Paret del mig a x = 0|Pared del medio en x = 0' }, { k: 'wall', min: 1.8, t: 'Cap paret fa menys de 2 mm|Ninguna pared mide menos de 2 mm' }, { k: 'one' }],
+          hint: "Toca la paret de l'esquerra, Duplica i, a Posició, escriu x = 0.|Toca la pared de la izquierda, Duplica y, en Posición, escribe x = 0.",
+          sol: { parts: ORG } },
+        { k: 'm3free', ph: 'crea', q: "<b>El teu organitzador.</b> Adapta'l a les coses que has mesurat (tubs, calaixets, el teu nom) amb Alinea, Duplica i Mirall.|<b>Tu organizador.</b> Adáptalo a las cosas que has medido (tubos, cajoncitos, tu nombre) con Alinea, Duplica y Espejo.",
+          name: 'El meu organitzador|Mi organizador', start: { parts: ORG }, palette: ['box', 'rbox', 'tube', 'cyl', 'hex', 'star', 'heart', 'text'],
+          crit: ['Té un lloc per a cada cosa: llapis, goma i clips|Tiene un sitio para cada cosa: lápices, goma y clips', 'Parets de 2 mm o més i tot recolzat a la safata|Paredes de 2 mm o más y todo apoyado en la bandeja', "Has fet servir Alinea, Duplica o Mirall per col·locar i repetir|Has usado Alinea, Duplica o Espejo para colocar y repetir"],
+          checks: [{ k: 'onplate' }, { k: 'one' }, { k: 'wall', min: 1.8, t: 'Cap paret fa menys de 2 mm|Ninguna pared mide menos de 2 mm' }, { k: 'flatbase', min: 3000, t: 'Té una base plana i ampla|Tiene una base plana y ancha' }, { k: 'fit', box: [180, 180, 150], t: 'Cap a la placa de la Nuvi|Cabe en la placa de Nuvi' }],
+          sol: { parts: [...ORG.slice(0, 4).map(p => p.t === 'tube' ? { ...p, c: '#2FB36D' } : p), ...ORG.slice(4)] } },
+        { k: 'unplug', ph: 'tanca', ico: '🖨️', title: 'Porta-ho a la impressora|Llévalo a la impresora', t: "Si a l'escola hi ha una impressora 3D, l'organitzador pot anar a la teva taula:|Si en la escuela hay una impresora 3D, el organizador puede ir a tu mesa:",
+          steps: ["Descarrega'n l'<b>STL</b> amb el botó STL (també el trobaràs a «Projectes»).|Descarga su <b>STL</b> con el botón STL (también lo encontrarás en «Proyectos»).",
+            "S'imprimeix amb la safata a la placa: els tubs i les parets pugen rectes i no necessiten suports.|Se imprime con la bandeja en la placa: los tubos y las paredes suben rectos y no necesitan soportes.",
+            "És una peça gran: pot tardar unes quantes hores. Un adult la pot deixar imprimint.|Es una pieza grande: puede tardar unas cuantas horas. Un adulto la puede dejar imprimiendo.",
+            'Omple-la: hi caben els llapis i la goma? Apunta què canviaries a la versió 2.|Llénala: ¿caben los lápices y la goma? Apunta qué cambiarías en la versión 2.'],
+          tip: "Sense impressora? Fes-ne una maqueta de cartolina amb les mateixes mides.|¿Sin impresora? Haz una maqueta de cartulina con las mismas medidas." },
+        { k: 'quiz', ph: 'tanca', q: "El tub és enfonsat a la safata. Quina eina el posa <b>just a sobre</b>?|El tubo está hundido en la bandeja. ¿Qué herramienta lo pone <b>justo encima</b>?",
+          opts: ['Alinea → A sobre de la peça de sota|Alinea → Encima de la pieza de debajo', 'Mirall → Còpia a l\'altre costat|Espejo → Copia al otro lado', 'Duplica|Duplica'], a: 0 },
+        { k: 'quiz', ph: 'tanca', q: "Quin gruix mínim donem a les parets d'un objecte per imprimir?|¿Qué grosor mínimo damos a las paredes de un objeto para imprimir?",
+          opts: ['2 mm|2 mm', '0,8 mm|0,8 mm', '20 mm|20 mm'], a: 0,
+          ex: "Amb 2 mm la paret és forta; amb 20 mm gastaríem molt plàstic i hi cabrien poques coses.|Con 2 mm la pared es fuerte; con 20 mm gastaríamos mucho plástico y cabrían pocas cosas." },
+        { k: 'feel', ph: 'tanca' }
       ] }
   ] };
 })();
@@ -1409,6 +1584,7 @@ COURSE_UNITS[4] = (() => {
    Idea central: un forat és una forma que TREU plàstic (semàntica de Tinkercad: tots els forats es resten de les peces
    sòlides). Forat passant, gravat (clot poc profund) i buidat per dins; parets i fons de 2 mm; mirall per al segell. */
 Object.assign(TBADGE, {
+  m55_retol: { id: 'm55_retol', ico: '🚪', n: 'Rètol amb nom|Letrero con nombre', d: "Taller fet: un rètol per a la porta amb el nom en relleu (lletres de 12 mm), dos forats per penjar-lo fets amb Mirall i traços que s'imprimeixen bé.|Taller hecho: un letrero para la puerta con el nombre en relieve (letras de 12 mm), dos agujeros para colgarlo hechos con Espejo y trazos que se imprimen bien." },
   m5segell: { id: 'm5segell', ico: '🔏', n: 'Mestre/a dels forats|Maestro/a de los agujeros', d: "Has restat formes per fer forats, gravats i recipients, i has dissenyat un segell amb mirall.|Has restado formas para hacer agujeros, grabados y recipientes, y has diseñado un sello con espejo." }
 });
 COURSE_UNITS[5] = (() => {
@@ -1432,7 +1608,13 @@ COURSE_UNITS[5] = (() => {
   const RING = (x, y, d = 5) => H('f1', 'cyl', [d, d, 20], [x, y, 10]);
   const RK = P('a1', 'cyl', [36, 36, 4], [0, 0, 2], '#F7C531');
   const KH = { parts: [RK, RING(0, 13), H('c1', 'heart', [14, 14, 3], [0, -2, 4.5])] };
-  const KT = { parts: [PL, RING(-14, 0), H('t1', 'box', [14, 4, 3], [5, 5, 4.5]), H('t2', 'box', [4, 10, 3], [5, -2, 4.5])] };
+  // el clauer llarg amb el nom gravat amb la forma Text (lletres de 12 mm i 3 mm de gruix: «NUMI» fa 34,32 mm d'ample);
+  // el text és un forat a z = 3: entra 1 mm al clauer de 4 mm
+  const KL = P('a1', 'rbox', [70, 20, 4], [0, 0, 2], '#3D7BF4', { cr: 1.5 }), RL = H('f1', 'cyl', [5, 5, 20], [-28, 0, 10]);
+  const KN = { parts: [KL, RL, H('nom', 'text', [34.32, 12, 3], [5, 0, 4.5], { txt: 'NUMI' })] };
+  // per a la targeta: el mateix clauer gravat (a dalt) i un altre amb el nom en relleu de color blanc (a baix)
+  const mvy = (L, dy, sfx) => L.map(q => ({ ...q, id: q.id + sfx, p: [q.p[0], q.p[1] + dy, q.p[2]] }));
+  const KNR = { parts: [...mvy(KN.parts, 15, 'g'), ...mvy([{ ...KL, c: '#EC5FA8' }, RL, P('nom', 'text', [34.32, 12, 2], [5, 0, 5], '#FFFFFF', { txt: 'NUMI' })], -15, 'r')] };
   const TRES = [P('k1', 'box', [30, 20, 4], [-40, 0, 2], '#3D7BF4'), H('h1', 'cyl', [5, 5, 10], [-50, 0, 2]), P('k2', 'box', [30, 20, 1], [0, 0, 0.5], '#F7C531'), H('h2', 'cyl', [5, 5, 10], [-10, 0, 2]), P('k3', 'box', [30, 20, 4], [40, 0, 2], '#EC5FA8'), H('h3', 'cyl', [5, 5, 10], [25.5, 0, 2])];
   const RELL = [P('a1', 'box', [40, 24, 4], [0, 0, 2], '#2FB36D'), RING(-14, 0), P('t1', 'box', [14, 4, 2], [5, 5, 5], '#F3F3EE'), P('t2', 'box', [4, 10, 2], [5, -2, 5], '#F3F3EE')];
   // ---------- m5-3: tasses, testets i capses ----------
@@ -1461,6 +1643,18 @@ COURSE_UNITS[5] = (() => {
   const CARA = (F) => ({ parts: [PLACA(), ...F] });
   const Fv = (z = 6, c = '#F3F3EE') => [P('f1', 'box', [4, 24, 2], [-6, 0, z], c), P('f2', 'box', [16, 4, 2], [0, -10, z], c), P('f3', 'box', [12, 4, 2], [-2, 0, z], c)];
 
+  // ---------- m5-5 · taller: el rètol de la porta ----------
+  // Placa de 120 × 40 × 4 mm (caixa arrodonida, radi 1,5), dos forats de 5 mm per penjar-la a (±52, 12) i el nom en relleu
+  // amb la forma Text: lletres de 12 mm i 3 mm de gruix, centrat a (0, −3) i a sobre de la placa (z = 4). Mides del text
+  // escrites a mà (m3TextSize): «TALLER» 54 × 12, «AULA 5» 52,08 × 12 (o 21,7 × 5 amb lletres de 5 mm), «NUMI» 34,32 × 12.
+  const RB = (id, t, s, x, y, z0, c, o = {}) => P(id, t, s, [x, y, z0 + s[2] / 2], c, o);
+  const RPL = RB('placa', 'rbox', [120, 40, 4], 0, 0, 0, '#3D7BF4', { cr: 1.5 });
+  const RF = (id, x, y = 12) => RB(id, 'cyl', [5, 5, 20], x, y, 0, '#9AA3B5', { hole: true });
+  const RFS = [RF('f1', -52), RF('f2', 52)];
+  const RTX = (txt, s, c = '#F7C531', y = -3) => RB('nom', 'text', s, 0, y, 4, c, { txt });
+  const RETOL = [RPL, ...RFS, RTX('TALLER', [54, 12, 3])];
+  const RETOL_AULA = s => [RPL, ...RFS, RTX('AULA 5', s, '#FFFFFF')];
+  const RETOL_TRENCAT = [RPL, RF('f1', -52), RF('f2', 59), RTX('TALLER', [54, 12, 3])];
   return {
   t: 'Forats|Agujeros', d: 'Restar formes|Restar formas', color: '#14A3B8',
   s: [
@@ -1545,7 +1739,7 @@ COURSE_UNITS[5] = (() => {
     { id: 'm5-2', t: 'Un clauer|Un llavero', min: 45,
       learn: ["Un clauer resistent fa 3-4 mm de gruix i té el forat de l'anella amb almenys 2-3 mm de plàstic al voltant.|Un llavero resistente mide 3-4 mm de grosor y tiene el agujero de la anilla con al menos 2-3 mm de plástico alrededor.",
         "Gravar és fer un forat poc profund (1 mm) a la cara de dalt: el dibuix queda enfonsat i a sota hi queda plàstic.|Grabar es hacer un agujero poco profundo (1 mm) en la cara de arriba: el dibujo queda hundido y debajo queda plástico.",
-        "Les lletres es construeixen amb formes senzilles, com caixes, amb traços d'almenys 3 mm d'ample.|Las letras se construyen con formas sencillas, como cajas, con trazos de al menos 3 mm de ancho."],
+        "La forma Text escriu el nom amb la lletra de blocs del taller: amb lletres de 10 mm o més, els traços fan 2 mm o més i la Nuvi els marca bé.|La forma Texto escribe el nombre con la letra de bloques del taller: con letras de 10 mm o más, los trazos miden 2 mm o más y Nuvi los marca bien."],
       steps: [
         { k: 'quiz', ph: 'recorda', q: "Vols un forat que <b>travessi</b> una peça de 4 mm. Quina alçada li dones?|Quieres un agujero que <b>atraviese</b> una pieza de 4 mm. ¿Qué altura le das?",
           opts: ['Més de 4 mm, que sobresurti per dalt i per baix|Más de 4 mm, que sobresalga por arriba y por abajo', 'Exactament 2 mm|Exactamente 2 mm', 'No importa: un forat sempre ho travessa tot|No importa: un agujero siempre lo atraviesa todo'], a: 0,
@@ -1553,7 +1747,7 @@ COURSE_UNITS[5] = (() => {
         { k: 'quiz', ph: 'recorda', q: "Com veus l'objecte final, amb els forats ja fets?|¿Cómo ves el objeto final, con los agujeros ya hechos?",
           opts: ["Amb el botó Resultat (l'ull)|Con el botón Resultado (el ojo)", 'Esborrant els forats|Borrando los agujeros', 'Girant la vista des de dalt|Girando la vista desde arriba'], a: 0 },
         { k: 'story', ph: 'missio', who: 'both', scene: 'fab', title: 'La fira solidària|La feria solidaria',
-          t: "L'escola organitza una <b>fira solidària</b> per comprar llibres per a la biblioteca i ens ha encarregat <b>clauers</b> amb inicials. Un bon clauer ha de ser <b>fort</b>, tenir un <b>forat per a l'anella</b> amb prou plàstic al voltant i un dibuix o una lletra <b>gravats</b>. La Nuvi ja ha preparat el filament de colors!|La escuela organiza una <b>feria solidaria</b> para comprar libros para la biblioteca y nos ha encargado <b>llaveros</b> con iniciales. Un buen llavero tiene que ser <b>fuerte</b>, tener un <b>agujero para la anilla</b> con suficiente plástico alrededor y un dibujo o una letra <b>grabados</b>. ¡Nuvi ya ha preparado el filamento de colores!" },
+          t: "L'escola organitza una <b>fira solidària</b> per comprar llibres per a la biblioteca i ens ha encarregat <b>clauers</b> amb noms. Un bon clauer ha de ser <b>fort</b>, tenir un <b>forat per a l'anella</b> amb prou plàstic al voltant i un dibuix o un nom <b>gravats</b>. La Nuvi ja ha preparat el filament de colors!|La escuela organiza una <b>feria solidaria</b> para comprar libros para la biblioteca y nos ha encargado <b>llaveros</b> con nombres. Un buen llavero tiene que ser <b>fuerte</b>, tener un <b>agujero para la anilla</b> con suficiente plástico alrededor y un dibujo o un nombre <b>grabados</b>. ¡Nuvi ya ha preparado el filamento de colores!" },
         { k: 'learn', ph: 'descobreix', cards: [
           { k: "Les parts d'un clauer|Las partes de un llavero", t: 'Gruix, anella i dibuix|Grosor, anilla y dibujo', anim: 'm5clauer',
             x: "Un clauer té tres coses importants: el <b>gruix</b> (3-4 mm, perquè no es doblegui), el <b>forat de l'anella</b> (uns 5 mm) amb una <b>vora</b> d'almenys 2-3 mm, i el <b>dibuix</b> o la lletra.|Un llavero tiene tres cosas importantes: el <b>grosor</b> (3-4 mm, para que no se doble), el <b>agujero de la anilla</b> (unos 5 mm) con un <b>borde</b> de al menos 2-3 mm, y el <b>dibujo</b> o la letra.",
@@ -1563,14 +1757,14 @@ COURSE_UNITS[5] = (() => {
             tip: "Mira-ho des del costat: el forat ha de sobresortir per dalt i no arribar a baix.|Míralo desde el lado: el agujero tiene que sobresalir por arriba y no llegar abajo." },
           { k: 'Gravat o relleu|Grabado o relieve', t: 'Enfonsat o sobresortint|Hundido o sobresaliendo', anim: 'm5relleu',
             x: "El dibuix pot anar <b>gravat</b> (un forat poc profund: queda enfonsat) o en <b>relleu</b> (peces sòlides a sobre: sobresurt). Tots dos es noten amb el dit i es veuen encara millor si el dibuix és d'un altre color.|El dibujo puede ir <b>grabado</b> (un agujero poco profundo: queda hundido) o en <b>relieve</b> (piezas sólidas encima: sobresale). Los dos se notan con el dedo y se ven aún mejor si el dibujo es de otro color." },
-          { k: 'Lletres amb formes|Letras con formas', t: 'Una T amb dues caixes|Una T con dos cajas', media: { k: 'model', model: KT, view: 'top' },
-            x: "El taller no té lletres, però les pots construir amb <b>caixes</b>: una T són dues caixes, una L també, una E en són quatre. Fes els traços d'almenys <b>3 mm</b> d'ample: si són més prims, la Nuvi no els marca bé.|El taller no tiene letras, pero las puedes construir con <b>cajas</b>: una T son dos cajas, una L también, una E son cuatro. Haz los trazos de al menos <b>3 mm</b> de ancho: si son más finos, Nuvi no los marca bien.",
-            tip: "Quan la lletra estigui feta, agrupa-la: així la mous tota alhora.|Cuando la letra esté hecha, agrúpala: así la mueves toda a la vez." }
+          { k: 'El nom amb la forma Text|El nombre con la forma Texto', t: 'Lletres de blocs per imprimir|Letras de bloques para imprimir', media: { k: 'model', model: KNR },
+            x: "La forma <b>Text</b> escriu el que vulguis amb la lletra del taller, feta per imprimir-la: toca-la, escriu el teu nom al camp <b>Text</b> i ja és a la placa. Amb lletres de <b>12 mm</b>, els traços fan 2,4 mm: la Nuvi els marca bé. Per <b>gravar</b>-lo, toca <b>Forat</b> i posa'l a <b>z = 3</b>; per fer-lo en <b>relleu</b>, deixa'l sòlid a sobre, a z = 4.|La forma <b>Texto</b> escribe lo que quieras con la letra del taller, hecha para imprimirla: tócala, escribe tu nombre en el campo <b>Texto</b> y ya está en la placa. Con letras de <b>12 mm</b>, los trazos miden 2,4 mm: Nuvi los marca bien. Para <b>grabarlo</b>, toca <b>Agujero</b> y ponlo en <b>z = 3</b>; para hacerlo en <b>relieve</b>, déjalo sólido encima, en z = 4.",
+            tip: "No facis les lletres de menys de 10 mm d'alt: els traços quedarien massa prims.|No hagas las letras de menos de 10 mm de alto: los trazos quedarían demasiado finos." }
         ] },
         { k: 'unplug', ph: 'mans', ico: '✂️', title: 'El clauer en paper|El llavero en papel', t: 'En paper quadriculat (cada quadret, 5 mm) i amb un regle:|En papel cuadriculado (cada cuadrito, 5 mm) y con una regla:',
           steps: ["Dibuixa el contorn del clauer a mida real: per exemple, 8 × 5 quadrets (40 × 25 mm).|Dibuja el contorno del llavero a tamaño real: por ejemplo, 8 × 5 cuadritos (40 × 25 mm).",
             "Marca el forat de l'anella: un cercle d'un quadret, a un quadret de la vora.|Marca el agujero de la anilla: un círculo de un cuadrito, a un cuadrito del borde.",
-            "Dissenya la teva inicial només amb rectangles d'almenys mig quadret d'ample.|Diseña tu inicial solo con rectángulos de al menos medio cuadrito de ancho.",
+            "Escriu-hi el teu nom en majúscules de pal, d'uns 2 quadrets i mig d'alt (12 mm) i amb traços de mig quadret.|Escribe tu nombre en mayúsculas de palo, de unos 2 cuadritos y medio de alto (12 mm) y con trazos de medio cuadrito.",
             "Pinta d'un color el que serà gravat i d'un altre el forat que travessa.|Pinta de un color lo que será grabado y de otro el agujero que atraviesa."],
           tip: "Retalla'l i comprova amb una anella o un clip si el forat té prou vora.|Recórtalo y comprueba con una anilla o un clip si el agujero tiene suficiente borde." },
         { k: 'm3look', ph: 'prova', q: "Quin d'aquests clauers aguantarà millor penjat a la motxilla? Gira'ls i mira'ls de prop.|¿Cuál de estos llaveros aguantará mejor colgado en la mochila? Gíralos y míralos de cerca.",
@@ -1592,20 +1786,20 @@ COURSE_UNITS[5] = (() => {
           checks: [{ k: 'count', t: 'heart', hole: true, min: 1, txt: 'Hi ha un cor que és forat|Hay un corazón que es agujero' }, { k: 'match', target: KH, th: 0.983, t: 'El cor està gravat 1 mm, com al fantasma|El corazón está grabado 1 mm, como en el fantasma' }],
           hint: "Afegeix el cor i toca Forat. A Mida: 14 i 14. A Posició: x = 0, y = −2 i z = 3 (el clauer fa 4 mm: així només entra 1 mm).|Añade el corazón y toca Agujero. En Medida: 14 y 14. En Posición: x = 0, y = −2 y z = 3 (el llavero mide 4 mm: así solo entra 1 mm).",
           sol: KH },
-        { k: 'm3build', ph: 'repte', q: "Ara una inicial: <b>grava una T</b> amb dues caixes que siguin forat. Barra: <b>14 × 4 mm</b> a (5, 5). Pal: <b>4 × 10 mm</b> a (5, −2). Totes dues amb <b>z = 3</b>.|Ahora una inicial: <b>graba una T</b> con dos cajas que sean agujero. Barra: <b>14 × 4 mm</b> en (5, 5). Palo: <b>4 × 10 mm</b> en (5, −2). Las dos con <b>z = 3</b>.",
-          start: { parts: [PL, RING(-14, 0)] }, palette: ['hbox'], target: KT,
-          checks: [{ k: 'count', t: 'box', hole: true, min: 2, txt: 'La T té dues caixes que són forat|La T tiene dos cajas que son agujero' }, { k: 'match', target: KT, th: 0.985, t: 'La T està gravada com al fantasma|La T está grabada como en el fantasma' }],
-          hint: "Afegeix un Forat (cub) per a la barra i un altre per al pal. Recorda la z = 3 a totes dues: si no, travessarien el clauer.|Añade un Agujero (cubo) para la barra y otro para el palo. Recuerda la z = 3 en las dos: si no, atravesarían el llavero.",
-          sol: KT },
+        { k: 'm3build', ph: 'repte', q: "Ara <b>el nom</b>: un <b>Text</b> amb el teu nom (o NUMI), convertit en <b>forat</b>, a <b>x = 5</b>, y = 0 i <b>z = 3</b>: gravat 1 mm.|Ahora <b>el nombre</b>: un <b>Texto</b> con tu nombre (o NUMI), convertido en <b>agujero</b>, en <b>x = 5</b>, y = 0 y <b>z = 3</b>: grabado 1 mm.",
+          start: { parts: [KL, RL] }, palette: ['text'], target: KN,
+          checks: [{ k: 'count', t: 'text', hole: true, min: 1, txt: 'Hi ha un text que és forat (gravat)|Hay un texto que es agujero (grabado)' }, { k: 'part', t: 'text', hole: true, at: [5, 0, null], base: 3, tol: 1, txt: 'Nom a (5, 0), gravat 1 mm (z = 3)|Nombre en (5, 0), grabado 1 mm (z = 3)' }, { k: 'hole', t: "El forat de l'anella travessa|El agujero de la anilla atraviesa" }],
+          hint: "Toca la forma Text i, al camp Text, escriu el teu nom. Toca Forat (a la barra de dalt). A Posició: x = 5, y = 0 i z = 3.|Toca la forma Texto y, en el campo Texto, escribe tu nombre. Toca Agujero (en la barra de arriba). En Posición: x = 5, y = 0 y z = 3.",
+          sol: KN },
         { k: 'm3fix', ph: 'repte', extra: true, q: "Aquest clauer és fi com un full: només fa <b>1,2 mm</b> i es doblegaria. Fes-lo de <b>4 mm</b> de gruix.|Este llavero es fino como una hoja: solo mide <b>1,2 mm</b> y se doblaría. Hazlo de <b>4 mm</b> de grosor.",
           start: { parts: [P('a1', 'box', [40, 24, 1.2], [0, 0, 0.6], '#2FB36D'), RING(-14, 0)] }, fix: ['a1'], palette: ['box'],
           checks: [{ k: 'size', ax: 'z', v: 4, tol: 0.3, t: 'Fa 4 mm de gruix|Mide 4 mm de grosor' }, { k: 'wall', min: 1.8, t: 'Res no és més prim de 2 mm|Nada es más fino de 2 mm' }],
           hint: "El clauer ja està seleccionat: a Mida, posa 4 a la z.|El llavero ya está seleccionado: en Medida, pon 4 en la z.",
           sol: { parts: [P('a1', 'box', [40, 24, 4], [0, 0, 2], '#2FB36D'), RING(-14, 0)] } },
-        { k: 'm3free', ph: 'crea', q: "<b>El meu clauer per a la fira.</b> Tria la forma, fes-li el forat de l'anella amb vora i grava-hi (o posa-hi en relleu) la teva inicial o un dibuix. Quan tot estigui verd, desa'l.|<b>Mi llavero para la feria.</b> Elige la forma, hazle el agujero de la anilla con borde y graba (o pon en relieve) tu inicial o un dibujo. Cuando todo esté en verde, guárdalo.",
-          name: 'El meu clauer|Mi llavero', palette: ['box', 'cyl', 'heart', 'star', 'hex', 'hcyl', 'hbox'],
-          crit: ["Té el forat de l'anella amb 2-3 mm de vora|Tiene el agujero de la anilla con 2-3 mm de borde", 'Fa 3-4 mm de gruix|Mide 3-4 mm de grosor', 'Té una inicial o un dibuix gravat o en relleu|Tiene una inicial o un dibujo grabado o en relieve'],
-          checks: [{ k: 'hole', t: "Té un forat per a l'anella|Tiene un agujero para la anilla" }, { k: 'zmax', v: 6, t: 'Fa com a molt 6 mm de gruix|Mide como mucho 6 mm de grosor' }, { k: 'wall', min: 1.8, t: 'Res no és més prim de 2 mm|Nada es más fino de 2 mm' }, { k: 'one' }, { k: 'onplate' }],
+        { k: 'm3free', ph: 'crea', q: "<b>El meu clauer per a la fira.</b> Tria la forma, fes-li el forat de l'anella amb vora i grava-hi (o posa-hi en relleu) el teu nom, la inicial o un dibuix. Quan tot estigui verd, desa'l.|<b>Mi llavero para la feria.</b> Elige la forma, hazle el agujero de la anilla con borde y graba (o pon en relieve) tu nombre, la inicial o un dibujo. Cuando todo esté en verde, guárdalo.",
+          name: 'El meu clauer|Mi llavero', palette: ['box', 'cyl', 'heart', 'star', 'hex', 'text', 'hcyl', 'hbox'],
+          crit: ["Té el forat de l'anella amb 2-3 mm de vora|Tiene el agujero de la anilla con 2-3 mm de borde", 'Fa 3-4 mm de gruix|Mide 3-4 mm de grosor', 'Té el nom, una inicial o un dibuix, gravat o en relleu, amb lletres de 10 mm o més|Tiene el nombre, una inicial o un dibujo, grabado o en relieve, con letras de 10 mm o más'],
+          checks: [{ k: 'hole', t: "Té un forat per a l'anella|Tiene un agujero para la anilla" }, { k: 'size', ax: 'z', v: 4.5, tol: 1.5, t: 'Fa entre 3 i 6 mm de gruix|Mide entre 3 y 6 mm de grosor' }, { k: 'wall', min: 1.2, t: 'Res no és massa prim (1,2 mm o més)|Nada es demasiado fino (1,2 mm o más)' }, { k: 'one' }, { k: 'onplate' }],
           sol: { parts: [P('a1', 'heart', [36, 36, 4], [0, 0, 2], '#EC5FA8'), H('f1', 'cyl', [5, 5, 20], [-7, 8, 10]), H('e1', 'star', [12, 12, 3], [3, -3, 4.5], { n: 5 })] } },
         { k: 'quiz', ph: 'tanca', q: "Un clauer fa <b>4 mm</b>. Vols gravar-hi una lletra d'<b>1 mm</b> de fondària. A quina z poses la base del forat?|Un llavero mide <b>4 mm</b>. Quieres grabar una letra de <b>1 mm</b> de profundidad. ¿En qué z pones la base del agujero?", opts: ['z = 3|z = 3', 'z = 0|z = 0', 'z = 4|z = 4'], a: 0 },
         { k: 'quiz', ph: 'tanca', q: "Per què el forat de l'anella no pot tocar la vora?|¿Por qué el agujero de la anilla no puede tocar el borde?", opts: ['Perquè el plàstic del voltant seria massa prim i es trencaria|Porque el plástico de alrededor sería demasiado fino y se rompería', 'Perquè la Nuvi no sap fer forats rodons|Porque Nuvi no sabe hacer agujeros redondos', 'Perquè els forats sempre van al mig|Porque los agujeros siempre van en el medio'], a: 0 },
@@ -1746,6 +1940,78 @@ COURSE_UNITS[5] = (() => {
         { k: 'quiz', ph: 'tanca', q: "Vols un segell que escrigui una <b>R</b> al paper. Com ha de ser la R del segell?|Quieres un sello que escriba una <b>R</b> en el papel. ¿Cómo tiene que ser la R del sello?", opts: ["Emmirallada (girada d'esquerra a dreta)|Reflejada (girada de izquierda a derecha)", 'Igual que la vols veure|Igual que la quieres ver', 'De cap per avall|Boca abajo'], a: 0 },
         { k: 'quiz', ph: 'tanca', q: "Quina d'aquestes formes <b>no</b> cal emmirallar per fer un segell?|¿Cuál de estas formas <b>no</b> hace falta reflejar para hacer un sello?", opts: ['Un cor|Un corazón', 'La lletra L|La letra L', 'El número 7|El número 7'], a: 0 },
         { k: 'feel', ph: 'tanca' }
+      ] },
+    /* ---------- Sessió 5 · Taller: el rètol de la porta ---------- */
+    { id: 'm5-5', t: 'Taller: el rètol de la porta|Taller: el letrero de la puerta', min: 40, proj: true, taller: true, badge: 'm55_retol',
+      learn: ["Un rètol per penjar té una placa d'uns 4 mm, dos forats amb vora a les cantonades de dalt i el nom en relleu.|Un letrero para colgar tiene una placa de unos 4 mm, dos agujeros con borde en las esquinas de arriba y el nombre en relieve.",
+        "La forma Text escriu el nom amb lletres de blocs; per posar-lo en relleu va a sobre de la placa (z = 4) i, per gravar-lo, és un forat.|La forma Texto escribe el nombre con letras de bloques; para ponerlo en relieve va encima de la placa (z = 4) y, para grabarlo, es un agujero.",
+        "Amb lletres de 10 mm o més, els traços fan 2 mm o més: si les fas petites, cal fer-les créixer amb Proporcional.|Con letras de 10 mm o más, los trazos miden 2 mm o más: si las haces pequeñas, hay que hacerlas crecer con Proporcional."],
+      steps: [
+        { k: 'quiz', ph: 'recorda', q: "Tens un forat a <b>x = −52</b>. Vols el mateix forat a l'altre costat, a <b>x = 52</b>. Quina eina ho fa d'un sol toc?|Tienes un agujero en <b>x = −52</b>. Quieres el mismo agujero al otro lado, en <b>x = 52</b>. ¿Qué herramienta lo hace de un solo toque?",
+          opts: ["Mirall → Còpia a l'altre costat (x)|Espejo → Copia al otro lado (x)", 'Alinea → A terra|Alinea → Al suelo', 'Forat|Agujero'], a: 0 },
+        { k: 'quiz', ph: 'recorda', q: "Al clauer vas gravar el nom amb la forma Text. Quina alçada mínima de lletra fem servir perquè els traços es marquin bé?|En el llavero grabaste el nombre con la forma Texto. ¿Qué altura mínima de letra usamos para que los trazos se marquen bien?",
+          opts: ['10 mm o més|10 mm o más', '3 mm|3 mm', '1 mm|1 mm'], a: 0,
+          ex: "Amb lletres de 10 mm, els traços fan 2 mm; amb 3 mm, farien menys d'1 mm.|Con letras de 10 mm, los trazos miden 2 mm; con 3 mm, medirían menos de 1 mm." },
+        { k: 'story', ph: 'missio', who: 'both', scene: 'fab', title: 'Portes noves|Puertas nuevas',
+          t: "L'escola ha pintat les portes de totes les aules i cada classe vol un <b>rètol</b> amb el seu nom. En Bit diu que el primer serà per a la porta del <b>TALLER</b>… i que tu també en pots fer un amb <b>el teu nom</b> per a la porta de la teva habitació! Avui és dia de <b>taller</b>: placa, dos forats per penjar-lo i el nom en relleu, amb lletres que la Nuvi pugui imprimir.|La escuela ha pintado las puertas de todas las aulas y cada clase quiere un <b>letrero</b> con su nombre. Bit dice que el primero será para la puerta del <b>TALLER</b>… ¡y que tú también puedes hacer uno con <b>tu nombre</b> para la puerta de tu habitación! Hoy es día de <b>taller</b>: placa, dos agujeros para colgarlo y el nombre en relieve, con letras que Nuvi pueda imprimir." },
+        { k: 'learn', ph: 'descobreix', cards: [
+          { k: 'Les parts del rètol|Las partes del letrero', t: 'Placa, forats i nom|Placa, agujeros y nombre', anim: 'm55retol',
+            x: "La <b>placa</b> fa 120 × 40 × 4 mm. A les cantonades de dalt, dos <b>forats</b> de 5 mm, amb 5 mm de vora, per passar-hi un cordill. Al mig, el <b>nom en relleu</b>: sobresurt 3 mm i es veu de lluny.|La <b>placa</b> mide 120 × 40 × 4 mm. En las esquinas de arriba, dos <b>agujeros</b> de 5 mm, con 5 mm de borde, para pasar un cordel. En el medio, el <b>nombre en relieve</b>: sobresale 3 mm y se ve de lejos.",
+            tip: "El segon forat no cal fer-lo a mà: Mirall → Còpia a l'altre costat (x).|El segundo agujero no hace falta hacerlo a mano: Espejo → Copia al otro lado (x)." },
+          { k: "Lletres que s'imprimeixen|Letras que se imprimen", t: 'Traços de 2 mm o més|Trazos de 2 mm o más', anim: 'm55trac',
+            x: "Cada lletra del taller té traços de 2 unitats: amb lletres de <b>12 mm</b>, els traços fan <b>2,4 mm</b> i la Nuvi els fa amb unes quantes línies. Amb lletres de 5 mm, farien 1 mm: fràgils i borrosos. Per fer-les créixer sense deformar-les, <b>Proporcional</b>.|Cada letra del taller tiene trazos de 2 unidades: con letras de <b>12 mm</b>, los trazos miden <b>2,4 mm</b> y Nuvi los hace con unas cuantas líneas. Con letras de 5 mm, medirían 1 mm: frágiles y borrosos. Para hacerlas crecer sin deformarlas, <b>Proporcional</b>." },
+          { k: 'El nom a la placa|El nombre en la placa', t: 'Text a z = 4, centrat|Texto en z = 4, centrado', media: { k: 'model', model: { parts: RETOL } },
+            x: "Toca la forma <b>Text</b> i escriu-hi al camp Text (les minúscules es fan majúscules soles). A Posició, <b>x = 0</b> el centra i <b>z = 4</b> el posa just a sobre de la placa: així el nom i la placa són una sola peça.|Toca la forma <b>Texto</b> y escribe en el campo Texto (las minúsculas se hacen mayúsculas solas). En Posición, <b>x = 0</b> lo centra y <b>z = 4</b> lo pone justo encima de la placa: así el nombre y la placa son una sola pieza.",
+            tip: "Si el nom és llarg, fes la placa més ampla: les lletres no han de tocar els forats.|Si el nombre es largo, haz la placa más ancha: las letras no tienen que tocar los agujeros." }
+        ] },
+        { k: 'unplug', ph: 'mans', ico: '🚪', title: 'El rètol en paper|El letrero en papel', t: 'Amb paper quadriculat (cada quadret, 5 mm), un regle i un llapis:|Con papel cuadriculado (cada cuadrito, 5 mm), una regla y un lápiz:',
+          steps: ["Dibuixa la placa a mida real: 24 × 8 quadrets (120 × 40 mm).|Dibuja la placa a tamaño real: 24 × 8 cuadritos (120 × 40 mm).",
+            "Marca els dos forats a les cantonades de dalt, a un quadret de les vores.|Marca los dos agujeros en las esquinas de arriba, a un cuadrito de los bordes.",
+            "Escriu el teu nom al mig en majúscules de pal, de 2 quadrets i mig d'alt (12 mm). Cada lletra ocupa uns 2 quadrets d'ample.|Escribe tu nombre en el medio en mayúsculas de palo, de 2 cuadritos y medio de alto (12 mm). Cada letra ocupa unos 2 cuadritos de ancho.",
+            "Hi cap sense tocar els forats? Si no, dibuixa una placa més ampla i apunta'n la mida.|¿Cabe sin tocar los agujeros? Si no, dibuja una placa más ancha y apunta su medida."],
+          tip: "Mesura la porta de la teva habitació: on hi penjaries el rètol?|Mide la puerta de tu habitación: ¿dónde colgarías el letrero?" },
+        { k: 'm3look', ph: 'prova', q: "Mira el rètol <b>de costat</b>. Quant sobresurten les lletres de la placa?|Mira el letrero <b>de lado</b>. ¿Cuánto sobresalen las letras de la placa?",
+          model: { parts: RETOL }, view: 'front', opts: ['3 mm|3 mm', '7 mm|7 mm', '12 mm|12 mm'], a: 0,
+          ex: "La placa fa 4 mm i les lletres arriben a 7 mm: sobresurten 7 − 4 = 3 mm, el gruix del text. Els 12 mm són l'alçada de les lletres.|La placa mide 4 mm y las letras llegan a 7 mm: sobresalen 7 − 4 = 3 mm, el grosor del texto. Los 12 mm son la altura de las letras." },
+        { k: 'm3look', ph: 'investiga', q: "Un dels dos forats s'ha menjat la vora: el cordill s'escaparia. <b>Toca'l.</b>|Uno de los dos agujeros se ha comido el borde: el cordel se escaparía. <b>Tócalo.</b>",
+          model: { parts: RETOL_TRENCAT }, view: 'top', pick: 'f2', yes: "Exacte: és massa a prop de la vora i la trenca.|Exacto: está demasiado cerca del borde y lo rompe.",
+          no: "Aquest té vora per tots costats. Mira'l de dalt, amb el botó Resultat.|Este tiene borde por todos los lados. Míralo desde arriba, con el botón Resultado.",
+          ex: "El bo és a 52 mm del mig i deixa 5,5 mm de vora; l'altre és a 59 mm i surt de la placa.|El bueno está a 52 mm del medio y deja 5,5 mm de borde; el otro está a 59 mm y sale de la placa." },
+        { k: 'move', ph: 'pausa', title: 'El rètol humà|El letrero humano', secs: 30, t: "Fes de rètol: obre els braços ben amples (la placa) i fes un cercle amb els dits de cada mà (els forats). Ara, sense moure els peus, «escriu» el teu nom a l'aire amb el colze, ben gran i a poc a poc!|Haz de letrero: abre los brazos bien anchos (la placa) y haz un círculo con los dedos de cada mano (los agujeros). Ahora, sin mover los pies, ¡«escribe» tu nombre en el aire con el codo, bien grande y despacio!" },
+        { k: 'm3build', ph: 'repte', q: "<b>Els forats per penjar-lo.</b> Fes un forat rodó de <b>5 mm</b> a <b>(−52, 12)</b> i fes-ne la còpia a l'altre costat amb <b>Mirall</b>.|<b>Los agujeros para colgarlo.</b> Haz un agujero redondo de <b>5 mm</b> en <b>(−52, 12)</b> y haz su copia al otro lado con <b>Espejo</b>.",
+          start: { parts: [RPL] }, palette: ['hcyl'], target: { parts: [RPL, ...RFS] },
+          checks: [{ k: 'part', t: 'cyl', hole: true, s: [5, 5, 20], at: [-52, 12, null], tol: 0.6, txt: 'Forat de 5 mm a (−52, 12)|Agujero de 5 mm en (−52, 12)' }, { k: 'part', t: 'cyl', hole: true, s: [5, 5, 20], at: [52, 12, null], tol: 0.6, txt: 'Forat de 5 mm a (52, 12)|Agujero de 5 mm en (52, 12)' },
+            { k: 'hole', t: 'Els forats travessen la placa|Los agujeros atraviesan la placa' }, { k: 'sym', ax: 'x', th: 0.98, t: 'És simètric (mirall en x)|Es simétrico (espejo en x)' }],
+          hint: "Toca Forat rodó. A Mida: 5 i 5. A Posició: x = −52 i y = 12. Després, Mirall → Còpia a l'altre costat (x).|Toca Agujero redondo. En Medida: 5 y 5. En Posición: x = −52 e y = 12. Después, Espejo → Copia al otro lado (x).",
+          sol: { parts: [RPL, ...RFS] } },
+        { k: 'm3build', ph: 'repte', q: "<b>El nom en relleu.</b> Afegeix un <b>Text</b> i escriu-hi <b>TALLER</b>. Col·loca'l a <b>x = 0, y = −3</b>, just a sobre de la placa (<b>z = 4</b>).|<b>El nombre en relieve.</b> Añade un <b>Texto</b> y escribe <b>TALLER</b>. Colócalo en <b>x = 0, y = −3</b>, justo encima de la placa (<b>z = 4</b>).",
+          start: { parts: [RPL, ...RFS] }, palette: ['text'], target: { parts: RETOL },
+          checks: [{ k: 'count', t: 'text', hole: false, min: 1, txt: 'Hi ha un text sòlid (en relleu)|Hay un texto sólido (en relieve)' }, { k: 'part', t: 'text', hole: false, at: [0, -3, null], base: 4, tol: 1, txt: 'Text a (0, −3), a sobre de la placa|Texto en (0, −3), encima de la placa' },
+            { k: 'one', t: 'El nom i la placa són una sola peça|El nombre y la placa son una sola pieza' }, { k: 'wall', min: 1.2, t: "Els traços s'imprimeixen bé|Los trazos se imprimen bien" }],
+          hint: "Toca la forma Text i, al camp Text, escriu TALLER. A Posició: x = 0, y = −3 i z = 4.|Toca la forma Texto y, en el campo Texto, escribe TALLER. En Posición: x = 0, y = −3 y z = 4.",
+          sol: { parts: RETOL } },
+        { k: 'm3fix', ph: 'repte', extra: true, q: "Les lletres de l'<b>AULA 5</b> fan <b>5 mm</b>: traços d'1 mm, massa prims! Fes-les de <b>12 mm</b> d'alt sense deformar-les.|Las letras del <b>AULA 5</b> miden <b>5 mm</b>: ¡trazos de 1 mm, demasiado finos! Hazlas de <b>12 mm</b> de alto sin deformarlas.",
+          start: { parts: RETOL_AULA([21.7, 5, 1]) }, fix: ['nom'], palette: ['text'],
+          checks: [{ k: 'part', t: 'text', s: [52.08, 12, 2.4], tol: 0.8, txt: 'Lletres de 12 mm: traços de 2,4 mm|Letras de 12 mm: trazos de 2,4 mm' }, { k: 'one' }],
+          hint: "El text ja està seleccionat. A Mida, activa Proporcional (el cadenat) i escriu 12 a la y: tot creix igual.|El texto ya está seleccionado. En Medida, activa Proporcional (el candado) y escribe 12 en la y: todo crece igual.",
+          sol: { parts: RETOL_AULA([52.08, 12, 2.4]) } },
+        { k: 'm3free', ph: 'crea', q: "<b>El teu rètol.</b> Canvia TALLER pel teu nom (o el de la classe) i ajusta la placa si cal. Quan estigui llest, desa'l.|<b>Tu letrero.</b> Cambia TALLER por tu nombre (o el de la clase) y ajusta la placa si hace falta. Cuando esté listo, guárdalo.",
+          name: 'El meu rètol|Mi letrero', start: { parts: RETOL }, palette: ['text', 'rbox', 'box', 'star', 'heart', 'hcyl', 'hbox'],
+          crit: ["Hi ha el teu nom (o el de la classe) en relleu, amb lletres de 10 mm o més|Está tu nombre (o el de la clase) en relieve, con letras de 10 mm o más", 'Té dos forats per penjar-lo, amb vora al voltant|Tiene dos agujeros para colgarlo, con borde alrededor', 'Les lletres no toquen els forats i tot és una sola peça|Las letras no tocan los agujeros y todo es una sola pieza'],
+          checks: [{ k: 'count', t: 'text', min: 1, txt: 'Hi ha un text|Hay un texto' }, { k: 'hole', t: 'Té forats per penjar-lo|Tiene agujeros para colgarlo' }, { k: 'one' }, { k: 'onplate' }, { k: 'wall', min: 1.2, t: "Els traços s'imprimeixen bé|Los trazos se imprimen bien" }, { k: 'flatbase', min: 1500, t: 'Té una base plana|Tiene una base plana' }],
+          sol: { parts: [...RETOL.slice(0, 3), RTX('NUMI', [34.32, 12, 3], '#EC5FA8')] } },
+        { k: 'unplug', ph: 'tanca', ico: '🖨️', title: 'Porta-ho a la impressora|Llévalo a la impresora', t: "Si a l'escola hi ha una impressora 3D, el rètol pot anar a la porta:|Si en la escuela hay una impresora 3D, el letrero puede ir a la puerta:",
+          steps: ["Descarrega'n l'<b>STL</b> amb el botó STL (també el trobaràs a «Projectes»).|Descarga su <b>STL</b> con el botón STL (también lo encontrarás en «Proyectos»).",
+            "S'imprimeix pla, amb la placa a baix: les lletres pugen rectes i no necessiten suports.|Se imprime plano, con la placa abajo: las letras suben rectas y no necesitan soportes.",
+            "Truc: si l'adult que imprimeix fa una pausa a 4 mm i canvia el filament, les lletres sortiran d'un altre color.|Truco: si el adulto que imprime hace una pausa a 4 mm y cambia el filamento, las letras saldrán de otro color.",
+            'Passa un cordill pels dos forats i penja-ho a la porta.|Pasa un cordel por los dos agujeros y cuélgalo en la puerta.'],
+          tip: "Sense impressora? Retalla el rètol de cartró i enganxa-hi les lletres de cartolina, amb les mateixes mides.|¿Sin impresora? Recorta el letrero de cartón y pega las letras de cartulina, con las mismas medidas." },
+        { k: 'quiz', ph: 'tanca', q: "La placa fa <b>4 mm</b>. Per posar el nom en relleu, a quina <b>z</b> va la base del text?|La placa mide <b>4 mm</b>. Para poner el nombre en relieve, ¿en qué <b>z</b> va la base del texto?",
+          opts: ['z = 4|z = 4', 'z = 0|z = 0', 'z = 3|z = 3'], a: 0,
+          ex: "A z = 4 comença just on s'acaba la placa: sobresurt. A z = 3 i convertit en forat, quedaria gravat.|En z = 4 empieza justo donde acaba la placa: sobresale. En z = 3 y convertido en agujero, quedaría grabado." },
+        { k: 'quiz', ph: 'tanca', q: "Unes lletres fan <b>5 mm</b> i són massa primes. Com les fas créixer sense deformar-les?|Unas letras miden <b>5 mm</b> y son demasiado finas. ¿Cómo las haces crecer sin deformarlas?",
+          opts: ['Amb Proporcional, escrivint 12 a la mida|Con Proporcional, escribiendo 12 en la medida', 'Canviant només la x|Cambiando solo la x', 'Fent-les forat|Haciéndolas agujero'], a: 0 },
+        { k: 'feel', ph: 'tanca' }
       ] }
   ] };
 })();
@@ -1761,6 +2027,7 @@ COURSE_UNITS[5] = (() => {
    colors ni unitats: s'entén que són mm). El motor no té cap comprovació de voladissos: s'ensenyen amb m3look i targetes.
    Models: peces { id, t, s: [x, y, z] (mm), p: CENTRE, r: graus, c, hole, g }, placa de 200 × 200 mm centrada a l'origen. */
 Object.assign(TBADGE, {
+  m65_imp: { id: 'm65_imp', ico: '🖨️', n: 'De la pantalla a la placa|De la pantalla a la placa', d: "Taller fet: has preparat una fitxa amb les teves inicials per imprimir-la de veritat (STL, laminador, capes de 0,2 mm, farciment i la llista abans d'imprimir).|Taller hecho: has preparado una ficha con tus iniciales para imprimirla de verdad (STL, laminador, capas de 0,2 mm, relleno y la lista antes de imprimir)." },
   m6llapis: { id: 'm6llapis', ico: '✏️', n: 'Mestre/a de la impressió|Maestro/a de la impresión', d: "Has preparat models perquè la Nuvi els imprimeixi bé (capes, base plana, parets de 2 mm, mida real i STL) i has dissenyat un porta-llapis per a sis llapis.|Has preparado modelos para que Nuvi los imprima bien (capas, base plana, paredes de 2 mm, tamaño real y STL) y has diseñado un portalápices para seis lápices." }
 });
 COURSE_UNITS[6] = (() => {
@@ -1815,6 +2082,17 @@ COURSE_UNITS[6] = (() => {
   // tres forats tallats pel mig (es veu el tall de davant): el del mig no té fons
   const TRES = [B('bloc', 'box', [40, 16, 30], 0, 0, 0, '#2FB36D'), hp('f1', -12, 0, 2, 30), hp('f2', 0, 0, 0, 32), hp('f3', 12, 0, 2, 30), H('tall', 'box', [50, 10, 40], [0, -5, 18])];
 
+  // ---------- m6-5 · taller: de Numi a la impressora ----------
+  // La fitxa de les inicials (petita i ràpida): un disc de 32 × 32 × 3 mm i les inicials en relleu amb la forma Text (lletres de
+  // 12 mm, 2 mm de gruix; «AB» fa 18,24 mm d'ample): 5 mm en total, 25 capes de 0,2 mm. El camí: STL → (Tinkercad, opcional) →
+  // laminador (Ultimaker Cura, PrusaSlicer…: capes de 0,2 mm, farciment del 15-20 %, suports només si cal) → impressora.
+  const FTX = (z = 0) => [B('fitxa', 'cyl', [32, 32, 3], 0, 0, z, '#F5893A'), B('ini', 'text', [18.24, 12, 2], 0, 0, z + 3, '#FFFFFF', { txt: 'AB' })];
+  const FDISC = [FTX()[0]];
+  const COR_GRAN = k => B('cor', 'heart', [240 * k, 240 * k, 6 * k], 0, 0, 0, '#EC5FA8');
+  const TDRETA = [B('pal', 'box', [6, 6, 30], 0, 0, 0, '#3D7BF4'), B('barra', 'box', [30, 6, 6], 0, 0, 30, '#3D7BF4')];
+  const TESTIRADA = [B('pal', 'box', [30, 6, 6], 0, 0, 0, '#3D7BF4'), B('barra', 'box', [6, 30, 6], 18, 0, 0, '#3D7BF4')];
+  // les tres peces juntes per a la pregunta dels suports: la T dreta (blava), la T estirada (verda) i la fitxa
+  const TRES_PECES = [...TDRETA.map(p => ({ ...p, id: p.id + '1', p: [p.p[0] - 52, p.p[1], p.p[2]] })), ...TESTIRADA.map(p => ({ ...p, id: p.id + '2', c: '#2FB36D', p: [p.p[0] - 3, p.p[1], p.p[2]] })), ...FTX().map(p => ({ ...p, p: [p.p[0] + 50, p.p[1], p.p[2]] }))];
   return {
   t: "Del model a l'objecte|Del modelo al objeto", d: 'Imprimir en 3D|Imprimir en 3D', color: '#F5893A',
   s: [
@@ -2102,6 +2380,80 @@ COURSE_UNITS[6] = (() => {
         { k: 'quiz', ph: 'tanca', q: "Per què el forat del llapis fa 9 mm si el llapis en fa 8?|¿Por qué el agujero del lápiz mide 9 mm si el lápiz mide 8?", opts: ["Perquè entri i surti sense encallar-se: cal una mica de marge|Para que entre y salga sin atascarse: hace falta un poco de margen", 'Perquè la Nuvi no sap fer forats de 8 mm|Porque Nuvi no sabe hacer agujeros de 8 mm', 'Perquè així gasta més plàstic|Porque así gasta más plástico'], a: 0 },
         { k: 'quiz', ph: 'tanca', q: "Dos forats de <b>9 mm</b> estan a <b>12 mm</b> de centre a centre. Quant fa la paret del mig?|Dos agujeros de <b>9 mm</b> están a <b>12 mm</b> de centro a centro. ¿Cuánto mide la pared del medio?", opts: ['3 mm|3 mm', '12 mm|12 mm', '21 mm|21 mm'], a: 0 },
         { k: 'feel', ph: 'tanca' }
+      ] },
+    /* ---------- Sessió 5 · Taller: de Numi a la impressora ---------- */
+    { id: 'm6-5', t: 'Taller: de Numi a la impressora|Taller: de Numi a la impresora', min: 45, proj: true, taller: true, badge: 'm65_imp',
+      learn: ["El camí d'un disseny: es descarrega l'STL de Numi, es pot obrir al Tinkercad amb «Importa» i el laminador el prepara per a la impressora.|El camino de un diseño: se descarga el STL de Numi, se puede abrir en Tinkercad con «Importar» y el laminador lo prepara para la impresora.",
+        "Al laminador triem capes de 0,2 mm, un farciment del 15-20 % i suports només si hi ha voladissos de més de 45°; ens diu el temps i el filament.|En el laminador elegimos capas de 0,2 mm, un relleno del 15-20 % y soportes solo si hay voladizos de más de 45°; nos dice el tiempo y el filamento.",
+        "Abans d'imprimir, la llista: a la placa i amb base plana, una sola peça, parets d'1,2-2 mm o més, que hi càpiga i sense voladissos de més de 45°.|Antes de imprimir, la lista: en la placa y con base plana, una sola pieza, paredes de 1,2-2 mm o más, que quepa y sin voladizos de más de 45°."],
+      steps: [
+        { k: 'quiz', ph: 'recorda', q: "Què guarda el fitxer <b>STL</b> que descarregues de Numi?|¿Qué guarda el archivo <b>STL</b> que descargas de Numi?",
+          opts: ['La forma del model, feta de triangles|La forma del modelo, hecha de triángulos', 'La forma i els colors de cada peça|La forma y los colores de cada pieza', 'Les ordres per moure la impressora|Las órdenes para mover la impresora'], a: 0,
+          ex: "Les ordres per a la impressora les fa el laminador, a partir de l'STL. Avui ho veurem!|Las órdenes para la impresora las hace el laminador, a partir del STL. ¡Hoy lo veremos!" },
+        { k: 'quiz', ph: 'recorda', q: "Fins a quin angle pot sortir una paret cap enfora <b>sense suports</b>?|¿Hasta qué ángulo puede salir una pared hacia fuera <b>sin soportes</b>?",
+          opts: ['Uns 45°|Unos 45°', '90°|90°', '10°|10°'], a: 0 },
+        { k: 'story', ph: 'missio', who: 'both', scene: 'fab', title: "La impressora de l'escola|La impresora de la escuela",
+          t: "Grans notícies: l'<b>Escola del Turó</b> ha comprat una impressora 3D! Però la mestra <b>Aina</b> ens escriu preocupada: «La tenim a la classe… i no sabem per on començar!». Avui farem el <b>camí sencer</b>, de Numi a la impressora: descarregar l'STL, preparar-lo al <b>laminador</b> i passar la <b>llista</b> abans d'imprimir. I farem una cosa petita i ràpida: una <b>fitxa amb les teves inicials</b>.|¡Grandes noticias: la <b>Escuela del Turó</b> ha comprado una impresora 3D! Pero la maestra <b>Aina</b> nos escribe preocupada: «La tenemos en la clase… ¡y no sabemos por dónde empezar!». Hoy haremos el <b>camino entero</b>, de Numi a la impresora: descargar el STL, prepararlo en el <b>laminador</b> y pasar la <b>lista</b> antes de imprimir. Y haremos una cosa pequeña y rápida: una <b>ficha con tus iniciales</b>." },
+        { k: 'learn', ph: 'descobreix', cards: [
+          { k: 'El camí del fitxer|El camino del archivo', t: 'De Numi a la impressora|De Numi a la impresora', anim: 'm65cami',
+            x: "<b>1)</b> A Numi, el botó <b>STL</b> descarrega el model. <b>2)</b> Si el vols continuar amb un altre programa, el <b>Tinkercad</b> (un taller 3D al web, gratuït, d'Autodesk) l'obre amb <b>Importa</b>. <b>3)</b> El <b>laminador</b> (per exemple Ultimaker Cura o PrusaSlicer, gratuïts) el talla en capes i en fa les ordres. <b>4)</b> La impressora el fa capa a capa.|<b>1)</b> En Numi, el botón <b>STL</b> descarga el modelo. <b>2)</b> Si lo quieres continuar con otro programa, <b>Tinkercad</b> (un taller 3D en la web, gratuito, de Autodesk) lo abre con <b>Importar</b>. <b>3)</b> El <b>laminador</b> (por ejemplo Ultimaker Cura o PrusaSlicer, gratuitos) lo corta en capas y hace sus órdenes. <b>4)</b> La impresora lo hace capa a capa.",
+            tip: "A l'escola, el Tinkercad es fa servir amb la classe que crea el/la docent, sense comptes personals.|En la escuela, Tinkercad se usa con la clase que crea el/la docente, sin cuentas personales." },
+          { k: 'El laminador|El laminador', t: 'Capes, farciment i suports|Capas, relleno y soportes', anim: 'm65lamina',
+            x: "Al laminador col·loques la peça a la placa, amb la cara plana a baix, i tries: <b>capes de 0,2 mm</b>; <b>farciment del 15-20 %</b> (per dins, una quadrícula: forta i amb poc plàstic); i <b>suports</b> només si hi ha voladissos de més de 45°. Després el botó de <b>laminar</b> et diu el <b>temps</b> i el <b>filament</b> que gastarà.|En el laminador colocas la pieza en la placa, con la cara plana abajo, y eliges: <b>capas de 0,2 mm</b>; <b>relleno del 15-20 %</b> (por dentro, una cuadrícula: fuerte y con poco plástico); y <b>soportes</b> solo si hay voladizos de más de 45°. Después el botón de <b>laminar</b> te dice el <b>tiempo</b> y el <b>filamento</b> que gastará." },
+          { k: "La llista abans d'imprimir|La lista antes de imprimir", t: 'Sis preguntes, sis «sí»|Seis preguntas, seis «sí»', anim: 'm65llista',
+            x: "<b>1)</b> Toca la placa? <b>2)</b> Té una base plana? <b>3)</b> És una sola peça? <b>4)</b> Les parets i els traços fan 1,2-2 mm o més? <b>5)</b> Cap a la impressora? <b>6)</b> No té voladissos de més de 45°? Si tot és «sí», a imprimir!|<b>1)</b> ¿Toca la placa? <b>2)</b> ¿Tiene una base plana? <b>3)</b> ¿Es una sola pieza? <b>4)</b> ¿Las paredes y los trazos miden 1,2-2 mm o más? <b>5)</b> ¿Cabe en la impresora? <b>6)</b> ¿No tiene voladizos de más de 45°? Si todo es «sí», ¡a imprimir!",
+            tip: "Les cinc primeres te les marca el taller; els voladissos, mira'ls de costat.|Las cinco primeras te las marca el taller; los voladizos, míralos de lado." }
+        ] },
+        { k: 'unplug', ph: 'mans', ico: '🍰', title: 'Fes de laminador|Haz de laminador', t: 'Amb paper quadriculat (cada quadret, 5 mm), un llapis i colors, «lamina» la fitxa de les inicials:|Con papel cuadriculado (cada cuadrito, 5 mm), un lápiz y colores, «lamina» la ficha de las iniciales:',
+          steps: ["La fitxa fa 3 mm de disc i 2 mm de lletres. Quantes capes de 0,2 mm té en total?|La ficha mide 3 mm de disco y 2 mm de letras. ¿Cuántas capas de 0,2 mm tiene en total?",
+            "Dibuixa la capa 5 vista de dalt: un cercle de 32 mm (uns 6 quadrets i mig).|Dibuja la capa 5 vista desde arriba: un círculo de 32 mm (unos 6 cuadritos y medio).",
+            "Dibuixa la capa 20: només hi ha les inicials! Per què?|Dibuja la capa 20: ¡solo están las iniciales! ¿Por qué?",
+            "Omple el cercle de la capa 5 amb una quadrícula (una ratlla cada quadret): és el farciment. Només la vora va plena.|Rellena el círculo de la capa 5 con una cuadrícula (una raya cada cuadrito): es el relleno. Solo el borde va lleno."],
+          tip: "Resposta: 15 + 10 = 25 capes. Les capes 16-25 només tenen lletres.|Respuesta: 15 + 10 = 25 capas. Las capas 16-25 solo tienen letras." },
+        { k: 'm3look', ph: 'prova', q: "Aquesta fitxa fa <b>5 mm</b> d'alçada (3 de disc i 2 de lletres). Quantes capes de 0,2 mm farà la impressora?|Esta ficha mide <b>5 mm</b> de altura (3 de disco y 2 de letras). ¿Cuántas capas de 0,2 mm hará la impresora?",
+          model: { parts: FTX() }, opts: ['25|25', '5|5', '50|50'], a: 0,
+          ex: "5 × 5 = 25 capes: és una peça petita i ràpida, ideal per a la primera impressió.|5 × 5 = 25 capas: es una pieza pequeña y rápida, ideal para la primera impresión." },
+        { k: 'm3look', ph: 'investiga', q: "Al laminador, quina d'aquestes peces necessitarà <b>suports</b> si la poses així?|En el laminador, ¿cuál de estas piezas necesitará <b>soportes</b> si la pones así?",
+          model: { parts: TRES_PECES }, opts: ['La T dreta (blava)|La T de pie (azul)', 'La T estirada (verda)|La T tumbada (verde)', 'La fitxa|La ficha'], a: 0,
+          ex: "La barra de la T dreta queda a l'aire (90°). Estirada a la placa, ja no en necessita.|La barra de la T de pie queda en el aire (90°). Tumbada en la placa, ya no los necesita." },
+        { k: 'move', ph: 'pausa', title: 'La impressora humana|La impresora humana', secs: 30, t: "Fes d'impressora! Ajupit/da, dibuixa la primera capa amb el dit a terra. Puja una mica: farciment, ziga-zaga amb la mà. Puja més: ara només les lletres, petites. I al final… dret/a, braços amunt: impressió acabada!|¡Haz de impresora! Agachado/a, dibuja la primera capa con el dedo en el suelo. Sube un poco: relleno, zigzag con la mano. Sube más: ahora solo las letras, pequeñas. Y al final… de pie, brazos arriba: ¡impresión acabada!" },
+        { k: 'seq', ph: 'investiga', q: "Ordena el camí de la fitxa, de Numi a la impressora.|Ordena el camino de la ficha, de Numi a la impresora.",
+          items: ["Desa la fitxa a Numi i descarrega'n l'STL|Guarda la ficha en Numi y descarga su STL", "Obre l'STL al laminador|Abre el STL en el laminador", 'Posa la fitxa al mig de la placa, amb la cara plana a baix|Pon la ficha en el centro de la placa, con la cara plana abajo', 'Tria capes de 0,2 mm, farciment del 15-20 % i sense suports|Elige capas de 0,2 mm, relleno del 15-20 % y sin soportes', 'Lamina i mira el temps i el filament|Lamina y mira el tiempo y el filamento', "Envia-ho a la impressora, amb un adult|Envíalo a la impresora, con un adulto"],
+          ex: "Primer el fitxer, després la preparació i, al final, la impressió (sempre amb un adult: el broquet crema).|Primero el archivo, después la preparación y, al final, la impresión (siempre con un adulto: la boquilla quema)." },
+        { k: 'm3build', ph: 'repte', stl: true, done: "Molt bé! Ara prova el botó STL: la fitxa es descarrega a mida real, en mil·límetres.|¡Muy bien! Ahora prueba el botón STL: la ficha se descarga a tamaño real, en milímetros.", q: "<b>La fitxa.</b> Les teves inicials en relleu: un <b>Text</b> de <b>2 mm</b> de gruix, al mig i a sobre del disc (<b>z = 3</b>).|<b>La ficha.</b> Tus iniciales en relieve: un <b>Texto</b> de <b>2 mm</b> de grosor, en el centro y encima del disco (<b>z = 3</b>).",
+          start: { parts: FDISC }, palette: ['text'], target: { parts: FTX() },
+          checks: [{ k: 'count', t: 'text', hole: false, min: 1, txt: 'Hi ha un text en relleu|Hay un texto en relieve' }, { k: 'part', t: 'text', hole: false, at: [0, 0, null], base: 3, tol: 1, txt: 'Inicials al mig, a sobre del disc|Iniciales en el centro, sobre el disco' },
+            { k: 'fit', box: [32, 32, 5], t: 'Fa 5 mm en total: lletres de 2 mm|Mide 5 mm en total: letras de 2 mm' }, { k: 'one' }, { k: 'wall', min: 1.2, t: "Els traços s'imprimeixen bé|Los trazos se imprimen bien" }],
+          hint: "Toca la forma Text i escriu-hi les teves inicials (2 o 3 lletres). A Mida, posa 2 a la z. A Posició: x = 0, y = 0 i z = 3.|Toca la forma Texto y escribe tus iniciales (2 o 3 letras). En Medida, pon 2 en la z. En Posición: x = 0, y = 0 y z = 3.",
+          sol: { parts: FTX() } },
+        { k: 'm3fix', ph: 'repte', q: "La fitxa <b>flota</b> 2 mm: la impressora començaria a l'aire! Les dues peces ja són triades: <b>baixa-les juntes</b> a terra.|La ficha <b>flota</b> 2 mm: ¡la impresora empezaría en el aire! Las dos piezas ya están elegidas: <b>bájalas juntas</b> al suelo.",
+          start: { parts: FTX(2) }, fix: ['fitxa', 'ini'], palette: ['cyl', 'text'],
+          checks: [{ k: 'onplate' }, { k: 'flatbase', min: 600, t: 'Tota la base toca la placa|Toda la base toca la placa' }, { k: 'part', t: 'text', at: [0, 0, null], base: 3, tol: 0.5, txt: 'Les inicials continuen a sobre del disc|Las iniciales siguen encima del disco' }],
+          hint: "Toca Alinea → A terra (z = 0): baixen totes dues sense desfer-se. (Compte: «Cada peça a terra» enfonsaria les lletres dins del disc.)|Toca Alinea → Al suelo (z = 0): bajan las dos sin deshacerse. (Cuidado: «Cada pieza al suelo» hundiría las letras dentro del disco.)",
+          sol: { parts: FTX() } },
+        { k: 'm3fix', ph: 'repte', extra: true, q: "La placa de la impressora de l'escola fa <b>180 × 180 mm</b> i aquest posagots, 240. Fes-lo <b>a la meitat</b> sense deformar-lo.|La placa de la impresora de la escuela mide <b>180 × 180 mm</b> y este posavasos, 240. Hazlo <b>a la mitad</b> sin deformarlo.",
+          start: { parts: [COR_GRAN(1)] }, fix: ['cor'], palette: ['heart'],
+          checks: [{ k: 'fit', box: [180, 180, 180], t: 'Cap a la placa de 180 × 180 mm|Cabe en la placa de 180 × 180 mm' }, { k: 'size', ax: 'x', v: 120, tol: 1, t: 'Fa 120 mm: la meitat|Mide 120 mm: la mitad' }, { k: 'size', ax: 'z', v: 3, tol: 0.2, t: 'Fa 3 mm de gruix: no s\'ha deformat|Mide 3 mm de grosor: no se ha deformado' }],
+          hint: "El cor ja està triat. A Mida, activa Proporcional (el cadenat) i escriu 120 a la x.|El corazón ya está elegido. En Medida, activa Proporcional (el candado) y escribe 120 en la x.",
+          sol: { parts: [COR_GRAN(0.5)] } },
+        { k: 'm3free', ph: 'crea', q: "<b>La teva fitxa.</b> Personalitza-la i passa-la per la llista: petita, plana i d'una sola peça. Descarrega'n l'STL i desa-la.|<b>Tu ficha.</b> Personalízala y pásala por la lista: pequeña, plana y de una sola pieza. Descarga su STL y guárdala.",
+          name: 'La meva fitxa|Mi ficha', start: { parts: FTX() }, palette: ['cyl', 'rbox', 'hex', 'heart', 'star', 'text', 'hcyl'],
+          crit: ['Toca la placa amb una base plana i és una sola peça|Toca la placa con una base plana y es una sola pieza', "Les parets i els traços fan 1,2 mm o més i no hi ha voladissos de més de 45°|Las paredes y los trazos miden 1,2 mm o más y no hay voladizos de más de 45°", "És petita (cap en 60 × 60 × 10 mm) i n'has descarregat l'STL|Es pequeña (cabe en 60 × 60 × 10 mm) y has descargado su STL"],
+          checks: [{ k: 'onplate' }, { k: 'flatbase', min: 300, t: 'Té una base plana|Tiene una base plana' }, { k: 'one' }, { k: 'wall', min: 1.2, t: 'Parets i traços de 1,2 mm o més|Paredes y trazos de 1,2 mm o más' }, { k: 'fit', box: [60, 60, 10], t: 'Petita: cap en 60 × 60 × 10 mm|Pequeña: cabe en 60 × 60 × 10 mm' }],
+          sol: { parts: FTX() } },
+        { k: 'unplug', ph: 'crea', ico: '🖨️', title: 'A la impressora de veritat|A la impresora de verdad', t: "Si a l'escola hi ha impressora 3D, amb un adult:|Si en la escuela hay impresora 3D, con un adulto:",
+          steps: ["Obre l'STL de la fitxa al laminador de l'escola i tria la impressora i el filament (PLA).|Abre el STL de la ficha en el laminador de la escuela y elige la impresora y el filamento (PLA).",
+            'Comprova que la fitxa és plana i al mig de la placa.|Comprueba que la ficha está plana y en el centro de la placa.',
+            'Capes de 0,2 mm, farciment del 15-20 % i sense suports.|Capas de 0,2 mm, relleno del 15-20 % y sin soportes.',
+            "Lamina-la i apunta el temps i el filament que calcula. Després, l'adult l'envia a la impressora.|Lamínala y apunta el tiempo y el filamento que calcula. Después, el adulto la envía a la impresora."],
+          tip: "Sense impressora (o sense internet)? Fes la llista amb la fitxa a la pantalla i el «laminador de paper»: ja saps preparar una impressió!|¿Sin impresora (o sin internet)? Haz la lista con la ficha en la pantalla y el «laminador de papel»: ¡ya sabes preparar una impresión!" },
+        { k: 'quiz', ph: 'tanca', q: "Quin <b>farciment</b> tries per a la fitxa?|¿Qué <b>relleno</b> eliges para la ficha?",
+          opts: ['Un 15-20 %|Un 15-20 %', 'Un 100 %: tota plena|Un 100 %: toda llena', 'Un 0 %: buida|Un 0 %: vacía'], a: 0,
+          ex: "Amb un 15-20 % la quadrícula de dins l'aguanta prou i gasta menys plàstic i temps.|Con un 15-20 % la cuadrícula de dentro la aguanta bastante y gasta menos plástico y tiempo." },
+        { k: 'quiz', ph: 'tanca', q: "Vols continuar el teu disseny al <b>Tinkercad</b>. Com hi obres l'STL?|Quieres continuar tu diseño en <b>Tinkercad</b>. ¿Cómo abres allí el STL?",
+          opts: ['Amb «Importa»|Con «Importar»', 'Amb «Exporta»|Con «Exportar»', 'Fent-ne una foto|Haciéndole una foto'], a: 0,
+          ex: "«Importa» porta un fitxer a dins del programa; «Exporta» en treu un, com el botó STL de Numi.|«Importar» lleva un archivo dentro del programa; «Exportar» saca uno, como el botón STL de Numi." },
+        { k: 'feel', ph: 'tanca' }
       ] }
   ] };
 })();
@@ -2114,6 +2466,7 @@ COURSE_UNITS[6] = (() => {
    «un invent per a l'escola» amb especificacions pròpies (m7-4). A m7-3 la versió 2 continua des del porta-coses desat
    a m7-2 (portafoli), si n'hi ha. Models: peces { id, t, s: [x, y, z] mm, p: centre, r: graus, c, hole }, placa 200 × 200. */
 Object.assign(TBADGE, {
+  m75_galeta: { id: 'm75_galeta', ico: '🍪', n: 'Tallagaletes a mida|Cortador a medida', d: "Taller fet: un tallagaletes amb una paret d'uns 1,6 mm (la forma menys una còpia més petita) i una vora ampla per als dits, pensat per a qui el farà servir.|Taller hecho: un cortador de galletas con una pared de unos 1,6 mm (la forma menos una copia más pequeña) y un borde ancho para los dedos, pensado para quien lo usará." },
   m7inventor: { id: 'm7inventor', ico: '🛠️', n: "Inventor/a de l'escola|Inventor/a de la escuela", d: "Has escrit les especificacions d'un invent per a l'escola i l'has modelat pensant en qui el farà servir.|Has escrito las especificaciones de un invento para la escuela y lo has modelado pensando en quién lo usará." }
 });
 COURSE_UNITS[7] = (() => {
@@ -2164,6 +2517,22 @@ COURSE_UNITS[7] = (() => {
   const mv = (l, dx, dy, g, pre) => l.map(p => ({ ...p, id: pre + p.id, p: [p.p[0] + dx, p.p[1] + dy, p.p[2]], g }));
   const INVENTS = [...mv(HOOK(-19), -66, 0, 'h', 'pj'), ...mv(BOOK, -2, 0, 'b', 'al'), ...mv(ORG2, 64, 0, 'o', 'or')];
 
+  /* ---------- m7-5 · taller: el tallagaletes ---------- */
+  // La paret que talla és la forma sòlida menys una còpia una mica més petita convertida en forat, que la travessa (z = −1, 20 mm
+  // d'alt). Cercle de 50 mm − 46,8 mm: paret d'1,6 mm. Estrella de 50 mm − 40 mm: les puntes queden d'uns 2 mm i els racons, més gruixuts
+  // (una còpia escalada no fa la paret igual a tot arreu). La vora per als dits (estrella de 60 × 60 × 3 mm) va a baix per imprimir-lo sense
+  // suports; per fer servir el tallagaletes, es gira. El cor no hi va bé: el racó de dalt és tan tancat que la paret hi queda massa prima.
+  const GB = (id, t, s, x, y, z0, c, o = {}) => P(id, t, s, [x, y, z0 + s[2] / 2], c, o);
+  const GH = (id, t, s, x, y, z0, o = {}) => GB(id, t, s, x, y, z0, '#9AA3B5', { hole: true, ...o });
+  const GCIR = [GB('cos', 'cyl', [50, 50, 14], 0, 0, 0, '#2FB36D'), GH('buit', 'cyl', [46.8, 46.8, 20], 0, 0, -1)];
+  const GST0 = GB('cos', 'star', [50, 50, 14], 0, 0, 0, '#F7C531', { n: 5 }), GSTH = GH('buit', 'star', [40, 40, 20], 0, 0, -1, { n: 5 });
+  const GVORA = (z0 = 0) => GB('vora', 'star', [60, 60, 3], 0, 0, z0, '#F7C531', { n: 5 });
+  const GST = [GST0, GSTH], GSTV = [...GST, GVORA()];
+  // per comparar: el de la vora (rosa) i el que no en té (groc), l'un al costat de l'altre
+  const GDOS = [...GSTV.map(p => ({ ...p, id: p.id + 'A', p: [p.p[0] - 36, p.p[1], p.p[2]], c: p.hole ? p.c : '#EC5FA8' })), ...GST.map(p => ({ ...p, id: p.id + 'B', p: [p.p[0] + 36, p.p[1], p.p[2]] }))];
+  // tres tallagaletes rodons tallats pel mig (es veu el tall de davant): el de la dreta té fons i no tallaria
+  const GTALL = [...[-40, 0, 40].flatMap((x, i) => [GB('c' + i, 'cyl', [30, 30, 14], x, 0, 0, ['#2FB36D', '#3D7BF4', '#EC5FA8'][i]), GH('f' + i, 'cyl', [26.8, 26.8, 20], x, 0, i === 2 ? 3 : -1)]),
+    GH('tall', 'box', [130, 20, 30], 0, -10, -2)];
   return {
   t: 'Dissenyar per a persones|Diseñar para personas', d: 'Objectes útils|Objetos útiles', color: '#EC5FA8',
   s: [
@@ -2424,6 +2793,75 @@ COURSE_UNITS[7] = (() => {
         { k: 'quiz', ph: 'tanca', q: 'Quina especificació es pot comprovar?|¿Qué especificación se puede comprobar?', opts: ["«Fa com a molt 100 mm d'alt»|«Mide como mucho 100 mm de alto»", '«Ha de ser bonic»|«Tiene que ser bonito»', "«Ha d'agradar a tothom»|«Tiene que gustar a todo el mundo»"], a: 0,
           ex: "Amb un regle (o amb les comprovacions del taller) se sap si fa 100 mm o no. «Bonic» depèn de qui ho mira.|Con una regla (o con las comprobaciones del taller) se sabe si mide 100 mm o no. «Bonito» depende de quien lo mira." },
         { k: 'quiz', ph: 'tanca', q: 'Per què el penjador es dissenya estirat a la placa?|¿Por qué el colgador se diseña tumbado en la placa?', opts: ['Perquè no necessita suports i queda més fort|Porque no necesita soportes y queda más fuerte', 'Perquè així és més bonic|Porque así es más bonito', 'Perquè la Nuvi només imprimeix coses planes|Porque Nuvi solo imprime cosas planas'], a: 0 },
+        { k: 'feel', ph: 'tanca' }
+      ] },
+    /* ---------- Sessió 5 · Taller: el tallagaletes ---------- */
+    { id: 'm7-5', t: 'Taller: el tallagaletes|Taller: el cortador de galletas', min: 40, proj: true, taller: true, badge: 'm75_galeta',
+      learn: ["Un tallagaletes és una paret prima (uns 1,6 mm) que segueix la forma: la forma sòlida menys una còpia una mica més petita que la travessa.|Un cortador de galletas es una pared fina (unos 1,6 mm) que sigue la forma: la forma sólida menos una copia un poco más pequeña que la atraviesa.",
+        "Pensar en qui el farà servir canvia el disseny: una vora ampla protegeix els dits quan es prem la massa.|Pensar en quién lo usará cambia el diseño: un borde ancho protege los dedos cuando se aprieta la masa.",
+        "S'imprimeix amb la vora a baix, sense suports, i el PLA va bé per tallar massa de tant en tant si es renta i no s'hi guarda menjar.|Se imprime con el borde abajo, sin soportes, y el PLA va bien para cortar masa de vez en cuando si se lava y no se guarda comida en él."],
+      steps: [
+        { k: 'quiz', ph: 'recorda', q: "Un cilindre fa <b>50 mm</b> i li fas un forat de <b>46,8 mm</b> que el travessa. Quant fa la paret?|Un cilindro mide <b>50 mm</b> y le haces un agujero de <b>46,8 mm</b> que lo atraviesa. ¿Cuánto mide la pared?",
+          opts: ['1,6 mm|1,6 mm', '3,2 mm|3,2 mm', '46,8 mm|46,8 mm'], a: 0,
+          ex: "(50 − 46,8) ÷ 2 = 1,6 mm: la diferència es reparteix entre els dos costats.|(50 − 46,8) ÷ 2 = 1,6 mm: la diferencia se reparte entre los dos lados." },
+        { k: 'quiz', ph: 'recorda', q: "Abans de dissenyar un objecte per a algú, què fem primer?|Antes de diseñar un objeto para alguien, ¿qué hacemos primero?",
+          opts: ['Li preguntem què necessita i mesurem|Le preguntamos qué necesita y medimos', 'Triem el color que ens agrada|Elegimos el color que nos gusta', 'Imprimim una prova a l\'atzar|Imprimimos una prueba al azar'], a: 0 },
+        { k: 'story', ph: 'missio', who: 'both', scene: 'fab', title: "Les galetes de l'àvia Rosa|Las galletas de la abuela Rosa",
+          t: "L'<b>àvia Rosa</b> farà galetes amb els seus néts per a la festa del barri i ens demana un <b>tallagaletes en forma d'estrella</b>. Però té les mans adolorides: «Els que tinc em claven la vora als dits quan premo!». Avui és dia de <b>taller</b>: farem un tallagaletes de veritat, amb una paret prima que talli bé i una <b>vora ampla</b> per als dits.|La <b>abuela Rosa</b> hará galletas con sus nietos para la fiesta del barrio y nos pide un <b>cortador de galletas en forma de estrella</b>. Pero tiene las manos doloridas: «¡Los que tengo me clavan el borde en los dedos cuando aprieto!». Hoy es día de <b>taller</b>: haremos un cortador de verdad, con una pared fina que corte bien y un <b>borde ancho</b> para los dedos." },
+        { k: 'learn', ph: 'descobreix', cards: [
+          { k: 'La paret que talla|La pared que corta', t: 'La forma menys una còpia més petita|La forma menos una copia más pequeña', anim: 'm75paret',
+            x: "Un tallagaletes és una <b>paret prima</b>, d'uns <b>1,6 mm</b> (entre 1,2 i 2 mm), i d'uns <b>14 mm</b> d'alt. Es fa amb la forma <b>sòlida</b> i una <b>còpia més petita convertida en forat</b>, que la travessa de dalt a baix (z = −1, més alta). En un cercle, paret = (fora − dins) ÷ 2: (50 − 46,8) ÷ 2 = 1,6 mm.|Un cortador de galletas es una <b>pared fina</b>, de unos <b>1,6 mm</b> (entre 1,2 y 2 mm), y de unos <b>14 mm</b> de alto. Se hace con la forma <b>sólida</b> y una <b>copia más pequeña convertida en agujero</b>, que la atraviesa de arriba abajo (z = −1, más alta). En un círculo, pared = (fuera − dentro) ÷ 2: (50 − 46,8) ÷ 2 = 1,6 mm.",
+            tip: "En una estrella, les puntes s'aprimen: la còpia ha de ser més petita (40 de 50 mm). El cor no hi va bé: el racó de dalt és massa tancat.|En una estrella, las puntas se adelgazan: la copia tiene que ser más pequeña (40 de 50 mm). El corazón no va bien: el rincón de arriba es demasiado cerrado." },
+          { k: 'Pensat per als dits|Pensado para los dedos', t: 'Una vora ampla, a baix per imprimir-lo|Un borde ancho, abajo para imprimirlo', anim: 'm75vora',
+            x: "Una paret de 1,6 mm talla bé la massa… i també es clava als dits! Una <b>vora</b> de 5 mm més per cada costat reparteix la força. Es dissenya i s'imprimeix amb la vora <b>a baix</b> (base plana, sense suports) i, per fer galetes, es gira: la vora queda a dalt i la paret prima talla.|Una pared de 1,6 mm corta bien la masa… ¡y también se clava en los dedos! Un <b>borde</b> de 5 mm más por cada lado reparte la fuerza. Se diseña y se imprime con el borde <b>abajo</b> (base plana, sin soportes) y, para hacer galletas, se gira: el borde queda arriba y la pared fina corta." },
+          { k: "L'estrella de l'àvia|La estrella de la abuela", t: 'Paret, forat i vora|Pared, agujero y borde', media: { k: 'model', model: { parts: GSTV } },
+            x: "Estrella de <b>50 × 50 × 14 mm</b>, forat d'estrella de <b>40 × 40 mm</b> que la travessa i vora d'estrella de <b>60 × 60 × 3 mm</b> a baix. El forat també buida la vora: queda un marc pla on es posen els dits.|Estrella de <b>50 × 50 × 14 mm</b>, agujero de estrella de <b>40 × 40 mm</b> que la atraviesa y borde de estrella de <b>60 × 60 × 3 mm</b> abajo. El agujero también vacía el borde: queda un marco plano donde se ponen los dedos.",
+            tip: "Gira'l i mira'l per sota: és obert de dalt a baix?|Gíralo y míralo por debajo: ¿es abierto de arriba abajo?" }
+        ] },
+        { k: 'unplug', ph: 'mans', ico: '✏️', title: 'Esbós i prova de la plastilina|Boceto y prueba de la plastilina', t: 'Amb paper, un regle, plastilina, un got de plàstic i un tap gruixut:|Con papel, una regla, plastilina, un vaso de plástico y un tapón grueso:',
+          steps: ["Dibuixa la forma de la galeta a mida real (uns 5 cm d'ample).|Dibuja la forma de la galleta a tamaño real (unos 5 cm de ancho).",
+            "Repassa-la per dins amb una línia doble ben junta: és la paret que talla.|Repásala por dentro con una línea doble bien junta: es la pared que corta.",
+            "Dibuixa per fora la vora per als dits, a mig centímetre del contorn.|Dibuja por fuera el borde para los dedos, a medio centímetro del contorno.",
+            "Aplana la plastilina i prem-la amb la vora del got i amb el tap: quin talla millor? Quin et fa més mal al dit?|Aplana la plastilina y apriétala con el borde del vaso y con el tapón: ¿cuál corta mejor? ¿Cuál te hace más daño en el dedo?"],
+          tip: "La paret prima talla; la vora ampla protegeix: el tallagaletes ha de tenir totes dues coses.|La pared fina corta; el borde ancho protege: el cortador tiene que tener las dos cosas." },
+        { k: 'm3look', ph: 'prova', q: "Quin tallagaletes farà menys mal als dits de l'àvia quan premi la massa?|¿Qué cortador hará menos daño en los dedos de la abuela cuando apriete la masa?",
+          model: { parts: GDOS }, opts: ['El rosa, amb la vora ampla|El rosa, con el borde ancho', 'El groc, sense vora|El amarillo, sin borde'], a: 0,
+          ex: "Amb la vora, la força es reparteix i no es clava als dits.|Con el borde, la fuerza se reparte y no se clava en los dedos." },
+        { k: 'm3look', ph: 'investiga', q: "Aquests tres tallagaletes estan <b>tallats pel mig</b>. Quin <b>no</b> tallaria la massa?|Estos tres cortadores están <b>cortados por la mitad</b>. ¿Cuál <b>no</b> cortaría la masa?",
+          model: { parts: GTALL }, mode: 'result', view: 'front', opts: ['El de la dreta|El de la derecha', "El de l'esquerra|El de la izquierda", 'El del mig|El del medio'], a: 0,
+          ex: "El forat del de la dreta comença a z = 3: queda un fons de 3 mm i és un motlle, no un tallagaletes. El forat ha de travessar-lo de dalt a baix.|El agujero del de la derecha empieza en z = 3: queda un fondo de 3 mm y es un molde, no un cortador. El agujero tiene que atravesarlo de arriba abajo." },
+        { k: 'move', ph: 'pausa', title: 'Mans de pastisser|Manos de pastelero', secs: 30, t: "Fes que pastes: amassa amb les dues mans… estira la massa amb el corró… i ara prem el tallagaletes amb el palmell, ben pla, sense clavar-te res! Obre i tanca les mans cinc vegades per descansar-les.|Haz que amasas: amasa con las dos manos… estira la masa con el rodillo… ¡y ahora aprieta el cortador con la palma, bien plana, sin clavarte nada! Abre y cierra las manos cinco veces para descansarlas." },
+        { k: 'm3build', ph: 'repte', q: "<b>Primer, un de rodó.</b> Fes-li un forat rodó de <b>46,8 mm</b> que el travessi (20 mm d'alt, des de <b>z = −1</b>): paret d'1,6 mm.|<b>Primero, uno redondo.</b> Hazle un agujero redondo de <b>46,8 mm</b> que lo atraviese (20 mm de alto, desde <b>z = −1</b>): pared de 1,6 mm.",
+          start: { parts: [GCIR[0]] }, palette: ['hcyl'], target: { parts: GCIR },
+          checks: [{ k: 'part', t: 'cyl', hole: true, s: [46.8, 46.8, 20], at: [0, 0, null], base: -1, tol: 1.1, txt: 'Forat de 46,8 mm que el travessa|Agujero de 46,8 mm que lo atraviesa' }, { k: 'wall', min: 1.2, t: 'La paret fa 1,2 mm o més|La pared mide 1,2 mm o más' }, { k: 'one' }],
+          hint: "Toca Forat rodó. A Mida: 46,8, 46,8 i 20. A Posició: x = 0, y = 0 i z = −1.|Toca Agujero redondo. En Medida: 46,8, 46,8 y 20. En Posición: x = 0, y = 0 y z = −1.",
+          sol: { parts: GCIR } },
+        { k: 'm3build', ph: 'repte', q: "<b>L'estrella.</b> Una estrella <b>forat</b> de <b>40 × 40 × 20 mm</b> a (0, 0), des de <b>z = −1</b>: les puntes faran uns 2 mm.|<b>La estrella.</b> Una estrella <b>agujero</b> de <b>40 × 40 × 20 mm</b> en (0, 0), desde <b>z = −1</b>: las puntas medirán unos 2 mm.",
+          start: { parts: [GST0] }, palette: ['star'], target: { parts: GST },
+          checks: [{ k: 'part', t: 'star', hole: true, s: [40, 40, 20], at: [0, 0, null], base: -1, tol: 1.1, txt: "Forat d'estrella de 40 mm, passant|Agujero de estrella de 40 mm, pasante" }, { k: 'wall', min: 1.2, t: 'Ni les puntes fan menys de 1,2 mm|Ni las puntas miden menos de 1,2 mm' }, { k: 'one' }],
+          hint: "Toca Estrella i després Forat (a la barra de dalt). A Mida: 40, 40 i 20. A Posició: x = 0, y = 0 i z = −1.|Toca Estrella y después Agujero (en la barra de arriba). En Medida: 40, 40 y 20. En Posición: x = 0, y = 0 y z = −1.",
+          sol: { parts: GST } },
+        { k: 'm3build', ph: 'repte', q: "<b>La vora per als dits.</b> Afegeix una estrella sòlida de <b>60 × 60 × 3 mm</b> a (0, 0), <b>a baix</b> (z = 0). El forat també la buidarà.|<b>El borde para los dedos.</b> Añade una estrella sólida de <b>60 × 60 × 3 mm</b> en (0, 0), <b>abajo</b> (z = 0). El agujero también la vaciará.",
+          start: { parts: GST }, palette: ['star'], target: { parts: GSTV },
+          checks: [{ k: 'part', t: 'star', hole: false, s: [60, 60, 3], at: [0, 0, null], base: 0, tol: 0.6, txt: "Vora d'estrella de 60 × 60 × 3, a baix|Borde de estrella de 60 × 60 × 3, abajo" }, { k: 'flatbase', min: 500, t: 'La vora fa una base plana i ampla|El borde hace una base plana y ancha' }, { k: 'one' }, { k: 'wall', min: 1.2, t: 'Parets de 1,2 mm o més|Paredes de 1,2 mm o más' }],
+          hint: "Toca Estrella. A Mida: 60, 60 i 3. A Posició: x = 0, y = 0 i z = 0.|Toca Estrella. En Medida: 60, 60 y 3. En Posición: x = 0, y = 0 y z = 0.",
+          sol: { parts: GSTV } },
+        { k: 'm3free', ph: 'crea', q: "<b>El teu tallagaletes.</b> Pensa per a qui és i tria la forma. Paret d'uns 1,6 mm, obert de dalt a baix i vora ampla a baix.|<b>Tu cortador de galletas.</b> Piensa para quién es y elige la forma. Pared de unos 1,6 mm, abierto de arriba abajo y borde ancho abajo.",
+          name: 'El meu tallagaletes|Mi cortador de galletas', start: { parts: GSTV }, palette: ['star', 'cyl', 'hex', 'rbox', 'heart', 'hcyl', 'hbox'],
+          crit: ["La paret fa uns 1,6 mm (entre 1,2 i 2 mm) i és oberta de dalt a baix|La pared mide unos 1,6 mm (entre 1,2 y 2 mm) y es abierta de arriba abajo", 'Té una vora ampla per als dits, a baix per imprimir-lo|Tiene un borde ancho para los dedos, abajo para imprimirlo', "Fa 12-15 mm d'alt i està pensat per a algú|Mide 12-15 mm de alto y está pensado para alguien"],
+          checks: [{ k: 'hole', t: 'Té el forat que el travessa|Tiene el agujero que lo atraviesa' }, { k: 'wall', min: 1.2, t: 'Parets de 1,2 mm o més|Paredes de 1,2 mm o más' }, { k: 'size', ax: 'z', v: 13.5, tol: 1.5, t: "Fa entre 12 i 15 mm d'alt|Mide entre 12 y 15 mm de alto" }, { k: 'flatbase', min: 200, t: 'Té una base plana|Tiene una base plana' }, { k: 'one' }, { k: 'onplate' }],
+          sol: { parts: GSTV } },
+        { k: 'unplug', ph: 'tanca', ico: '🖨️', title: 'Porta-ho a la impressora|Llévalo a la impresora', t: "Si a l'escola hi ha una impressora 3D, l'àvia Rosa tindrà el seu tallagaletes:|Si en la escuela hay una impresora 3D, la abuela Rosa tendrá su cortador:",
+          steps: ["Descarrega'n l'<b>STL</b> (botó STL o «Projectes»).|Descarga su <b>STL</b> (botón STL o «Proyectos»).",
+            "S'imprimeix tal com és, amb la vora a la placa: no necessita suports i és ràpid.|Se imprime tal como es, con el borde en la placa: no necesita soportes y es rápido.",
+            "Abans de fer galetes, renta'l amb aigua tèbia i sabó. Després, igual: no al rentaplats, que la calor el deforma.|Antes de hacer galletas, lávalo con agua tibia y jabón. Después, igual: no en el lavavajillas, que el calor lo deforma.",
+            "Gira'l, posa els dits a la vora i prem la massa. Com ha anat? Apunta què milloraries.|Gíralo, pon los dedos en el borde y aprieta la masa. ¿Cómo ha ido? Apunta qué mejorarías."],
+          tip: "El PLA va bé per tallar massa en una activitat de l'escola, de tant en tant. No hi guardis menjar: a les ratlles de les capes s'hi poden quedar restes.|El PLA va bien para cortar masa en una actividad de la escuela, de vez en cuando. No guardes comida en él: en las rayas de las capas pueden quedar restos." },
+        { k: 'quiz', ph: 'tanca', q: "Per què s'imprimeix amb la <b>vora a baix</b>?|¿Por qué se imprime con el <b>borde abajo</b>?",
+          opts: ["Perquè fa una base plana i ampla i no calen suports|Porque hace una base plana y ancha y no hacen falta soportes", 'Perquè així talla més|Porque así corta más', 'Perquè la impressora no sap fer vores a dalt|Porque la impresora no sabe hacer bordes arriba'], a: 0,
+          ex: "Amb la vora a dalt, quedaria a l'aire: un voladís de 90°. A baix, s'enganxa bé a la placa.|Con el borde arriba, quedaría en el aire: un voladizo de 90°. Abajo, se pega bien a la placa." },
+        { k: 'quiz', ph: 'tanca', q: "Després de fer galetes amb el tallagaletes de PLA, què en fas?|Después de hacer galletas con el cortador de PLA, ¿qué haces con él?",
+          opts: ['El rento amb aigua tèbia i sabó, sense rentaplats, i no hi guardo menjar|Lo lavo con agua tibia y jabón, sin lavavajillas, y no guardo comida en él', 'El poso al rentaplats ben calent|Lo pongo en el lavavajillas bien caliente', 'Hi guardo les galetes que sobren|Guardo en él las galletas que sobran'], a: 0 },
         { k: 'feel', ph: 'tanca' }
       ] }
   ] };

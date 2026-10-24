@@ -5,6 +5,7 @@
    Idea central: un forat és una forma que TREU plàstic (semàntica de Tinkercad: tots els forats es resten de les peces
    sòlides). Forat passant, gravat (clot poc profund) i buidat per dins; parets i fons de 2 mm; mirall per al segell. */
 Object.assign(TBADGE, {
+  m55_retol: { id: 'm55_retol', ico: '🚪', n: 'Rètol amb nom|Letrero con nombre', d: "Taller fet: un rètol per a la porta amb el nom en relleu (lletres de 12 mm), dos forats per penjar-lo fets amb Mirall i traços que s'imprimeixen bé.|Taller hecho: un letrero para la puerta con el nombre en relieve (letras de 12 mm), dos agujeros para colgarlo hechos con Espejo y trazos que se imprimen bien." },
   m5segell: { id: 'm5segell', ico: '🔏', n: 'Mestre/a dels forats|Maestro/a de los agujeros', d: "Has restat formes per fer forats, gravats i recipients, i has dissenyat un segell amb mirall.|Has restado formas para hacer agujeros, grabados y recipientes, y has diseñado un sello con espejo." }
 });
 COURSE_UNITS[5] = (() => {
@@ -28,7 +29,13 @@ COURSE_UNITS[5] = (() => {
   const RING = (x, y, d = 5) => H('f1', 'cyl', [d, d, 20], [x, y, 10]);
   const RK = P('a1', 'cyl', [36, 36, 4], [0, 0, 2], '#F7C531');
   const KH = { parts: [RK, RING(0, 13), H('c1', 'heart', [14, 14, 3], [0, -2, 4.5])] };
-  const KT = { parts: [PL, RING(-14, 0), H('t1', 'box', [14, 4, 3], [5, 5, 4.5]), H('t2', 'box', [4, 10, 3], [5, -2, 4.5])] };
+  // el clauer llarg amb el nom gravat amb la forma Text (lletres de 12 mm i 3 mm de gruix: «NUMI» fa 34,32 mm d'ample);
+  // el text és un forat a z = 3: entra 1 mm al clauer de 4 mm
+  const KL = P('a1', 'rbox', [70, 20, 4], [0, 0, 2], '#3D7BF4', { cr: 1.5 }), RL = H('f1', 'cyl', [5, 5, 20], [-28, 0, 10]);
+  const KN = { parts: [KL, RL, H('nom', 'text', [34.32, 12, 3], [5, 0, 4.5], { txt: 'NUMI' })] };
+  // per a la targeta: el mateix clauer gravat (a dalt) i un altre amb el nom en relleu de color blanc (a baix)
+  const mvy = (L, dy, sfx) => L.map(q => ({ ...q, id: q.id + sfx, p: [q.p[0], q.p[1] + dy, q.p[2]] }));
+  const KNR = { parts: [...mvy(KN.parts, 15, 'g'), ...mvy([{ ...KL, c: '#EC5FA8' }, RL, P('nom', 'text', [34.32, 12, 2], [5, 0, 5], '#FFFFFF', { txt: 'NUMI' })], -15, 'r')] };
   const TRES = [P('k1', 'box', [30, 20, 4], [-40, 0, 2], '#3D7BF4'), H('h1', 'cyl', [5, 5, 10], [-50, 0, 2]), P('k2', 'box', [30, 20, 1], [0, 0, 0.5], '#F7C531'), H('h2', 'cyl', [5, 5, 10], [-10, 0, 2]), P('k3', 'box', [30, 20, 4], [40, 0, 2], '#EC5FA8'), H('h3', 'cyl', [5, 5, 10], [25.5, 0, 2])];
   const RELL = [P('a1', 'box', [40, 24, 4], [0, 0, 2], '#2FB36D'), RING(-14, 0), P('t1', 'box', [14, 4, 2], [5, 5, 5], '#F3F3EE'), P('t2', 'box', [4, 10, 2], [5, -2, 5], '#F3F3EE')];
   // ---------- m5-3: tasses, testets i capses ----------
@@ -57,6 +64,18 @@ COURSE_UNITS[5] = (() => {
   const CARA = (F) => ({ parts: [PLACA(), ...F] });
   const Fv = (z = 6, c = '#F3F3EE') => [P('f1', 'box', [4, 24, 2], [-6, 0, z], c), P('f2', 'box', [16, 4, 2], [0, -10, z], c), P('f3', 'box', [12, 4, 2], [-2, 0, z], c)];
 
+  // ---------- m5-5 · taller: el rètol de la porta ----------
+  // Placa de 120 × 40 × 4 mm (caixa arrodonida, radi 1,5), dos forats de 5 mm per penjar-la a (±52, 12) i el nom en relleu
+  // amb la forma Text: lletres de 12 mm i 3 mm de gruix, centrat a (0, −3) i a sobre de la placa (z = 4). Mides del text
+  // escrites a mà (m3TextSize): «TALLER» 54 × 12, «AULA 5» 52,08 × 12 (o 21,7 × 5 amb lletres de 5 mm), «NUMI» 34,32 × 12.
+  const RB = (id, t, s, x, y, z0, c, o = {}) => P(id, t, s, [x, y, z0 + s[2] / 2], c, o);
+  const RPL = RB('placa', 'rbox', [120, 40, 4], 0, 0, 0, '#3D7BF4', { cr: 1.5 });
+  const RF = (id, x, y = 12) => RB(id, 'cyl', [5, 5, 20], x, y, 0, '#9AA3B5', { hole: true });
+  const RFS = [RF('f1', -52), RF('f2', 52)];
+  const RTX = (txt, s, c = '#F7C531', y = -3) => RB('nom', 'text', s, 0, y, 4, c, { txt });
+  const RETOL = [RPL, ...RFS, RTX('TALLER', [54, 12, 3])];
+  const RETOL_AULA = s => [RPL, ...RFS, RTX('AULA 5', s, '#FFFFFF')];
+  const RETOL_TRENCAT = [RPL, RF('f1', -52), RF('f2', 59), RTX('TALLER', [54, 12, 3])];
   return {
   t: 'Forats|Agujeros', d: 'Restar formes|Restar formas', color: '#14A3B8',
   s: [
@@ -141,7 +160,7 @@ COURSE_UNITS[5] = (() => {
     { id: 'm5-2', t: 'Un clauer|Un llavero', min: 45,
       learn: ["Un clauer resistent fa 3-4 mm de gruix i té el forat de l'anella amb almenys 2-3 mm de plàstic al voltant.|Un llavero resistente mide 3-4 mm de grosor y tiene el agujero de la anilla con al menos 2-3 mm de plástico alrededor.",
         "Gravar és fer un forat poc profund (1 mm) a la cara de dalt: el dibuix queda enfonsat i a sota hi queda plàstic.|Grabar es hacer un agujero poco profundo (1 mm) en la cara de arriba: el dibujo queda hundido y debajo queda plástico.",
-        "Les lletres es construeixen amb formes senzilles, com caixes, amb traços d'almenys 3 mm d'ample.|Las letras se construyen con formas sencillas, como cajas, con trazos de al menos 3 mm de ancho."],
+        "La forma Text escriu el nom amb la lletra de blocs del taller: amb lletres de 10 mm o més, els traços fan 2 mm o més i la Nuvi els marca bé.|La forma Texto escribe el nombre con la letra de bloques del taller: con letras de 10 mm o más, los trazos miden 2 mm o más y Nuvi los marca bien."],
       steps: [
         { k: 'quiz', ph: 'recorda', q: "Vols un forat que <b>travessi</b> una peça de 4 mm. Quina alçada li dones?|Quieres un agujero que <b>atraviese</b> una pieza de 4 mm. ¿Qué altura le das?",
           opts: ['Més de 4 mm, que sobresurti per dalt i per baix|Más de 4 mm, que sobresalga por arriba y por abajo', 'Exactament 2 mm|Exactamente 2 mm', 'No importa: un forat sempre ho travessa tot|No importa: un agujero siempre lo atraviesa todo'], a: 0,
@@ -149,7 +168,7 @@ COURSE_UNITS[5] = (() => {
         { k: 'quiz', ph: 'recorda', q: "Com veus l'objecte final, amb els forats ja fets?|¿Cómo ves el objeto final, con los agujeros ya hechos?",
           opts: ["Amb el botó Resultat (l'ull)|Con el botón Resultado (el ojo)", 'Esborrant els forats|Borrando los agujeros', 'Girant la vista des de dalt|Girando la vista desde arriba'], a: 0 },
         { k: 'story', ph: 'missio', who: 'both', scene: 'fab', title: 'La fira solidària|La feria solidaria',
-          t: "L'escola organitza una <b>fira solidària</b> per comprar llibres per a la biblioteca i ens ha encarregat <b>clauers</b> amb inicials. Un bon clauer ha de ser <b>fort</b>, tenir un <b>forat per a l'anella</b> amb prou plàstic al voltant i un dibuix o una lletra <b>gravats</b>. La Nuvi ja ha preparat el filament de colors!|La escuela organiza una <b>feria solidaria</b> para comprar libros para la biblioteca y nos ha encargado <b>llaveros</b> con iniciales. Un buen llavero tiene que ser <b>fuerte</b>, tener un <b>agujero para la anilla</b> con suficiente plástico alrededor y un dibujo o una letra <b>grabados</b>. ¡Nuvi ya ha preparado el filamento de colores!" },
+          t: "L'escola organitza una <b>fira solidària</b> per comprar llibres per a la biblioteca i ens ha encarregat <b>clauers</b> amb noms. Un bon clauer ha de ser <b>fort</b>, tenir un <b>forat per a l'anella</b> amb prou plàstic al voltant i un dibuix o un nom <b>gravats</b>. La Nuvi ja ha preparat el filament de colors!|La escuela organiza una <b>feria solidaria</b> para comprar libros para la biblioteca y nos ha encargado <b>llaveros</b> con nombres. Un buen llavero tiene que ser <b>fuerte</b>, tener un <b>agujero para la anilla</b> con suficiente plástico alrededor y un dibujo o un nombre <b>grabados</b>. ¡Nuvi ya ha preparado el filamento de colores!" },
         { k: 'learn', ph: 'descobreix', cards: [
           { k: "Les parts d'un clauer|Las partes de un llavero", t: 'Gruix, anella i dibuix|Grosor, anilla y dibujo', anim: 'm5clauer',
             x: "Un clauer té tres coses importants: el <b>gruix</b> (3-4 mm, perquè no es doblegui), el <b>forat de l'anella</b> (uns 5 mm) amb una <b>vora</b> d'almenys 2-3 mm, i el <b>dibuix</b> o la lletra.|Un llavero tiene tres cosas importantes: el <b>grosor</b> (3-4 mm, para que no se doble), el <b>agujero de la anilla</b> (unos 5 mm) con un <b>borde</b> de al menos 2-3 mm, y el <b>dibujo</b> o la letra.",
@@ -159,14 +178,14 @@ COURSE_UNITS[5] = (() => {
             tip: "Mira-ho des del costat: el forat ha de sobresortir per dalt i no arribar a baix.|Míralo desde el lado: el agujero tiene que sobresalir por arriba y no llegar abajo." },
           { k: 'Gravat o relleu|Grabado o relieve', t: 'Enfonsat o sobresortint|Hundido o sobresaliendo', anim: 'm5relleu',
             x: "El dibuix pot anar <b>gravat</b> (un forat poc profund: queda enfonsat) o en <b>relleu</b> (peces sòlides a sobre: sobresurt). Tots dos es noten amb el dit i es veuen encara millor si el dibuix és d'un altre color.|El dibujo puede ir <b>grabado</b> (un agujero poco profundo: queda hundido) o en <b>relieve</b> (piezas sólidas encima: sobresale). Los dos se notan con el dedo y se ven aún mejor si el dibujo es de otro color." },
-          { k: 'Lletres amb formes|Letras con formas', t: 'Una T amb dues caixes|Una T con dos cajas', media: { k: 'model', model: KT, view: 'top' },
-            x: "El taller no té lletres, però les pots construir amb <b>caixes</b>: una T són dues caixes, una L també, una E en són quatre. Fes els traços d'almenys <b>3 mm</b> d'ample: si són més prims, la Nuvi no els marca bé.|El taller no tiene letras, pero las puedes construir con <b>cajas</b>: una T son dos cajas, una L también, una E son cuatro. Haz los trazos de al menos <b>3 mm</b> de ancho: si son más finos, Nuvi no los marca bien.",
-            tip: "Quan la lletra estigui feta, agrupa-la: així la mous tota alhora.|Cuando la letra esté hecha, agrúpala: así la mueves toda a la vez." }
+          { k: 'El nom amb la forma Text|El nombre con la forma Texto', t: 'Lletres de blocs per imprimir|Letras de bloques para imprimir', media: { k: 'model', model: KNR },
+            x: "La forma <b>Text</b> escriu el que vulguis amb la lletra del taller, feta per imprimir-la: toca-la, escriu el teu nom al camp <b>Text</b> i ja és a la placa. Amb lletres de <b>12 mm</b>, els traços fan 2,4 mm: la Nuvi els marca bé. Per <b>gravar</b>-lo, toca <b>Forat</b> i posa'l a <b>z = 3</b>; per fer-lo en <b>relleu</b>, deixa'l sòlid a sobre, a z = 4.|La forma <b>Texto</b> escribe lo que quieras con la letra del taller, hecha para imprimirla: tócala, escribe tu nombre en el campo <b>Texto</b> y ya está en la placa. Con letras de <b>12 mm</b>, los trazos miden 2,4 mm: Nuvi los marca bien. Para <b>grabarlo</b>, toca <b>Agujero</b> y ponlo en <b>z = 3</b>; para hacerlo en <b>relieve</b>, déjalo sólido encima, en z = 4.",
+            tip: "No facis les lletres de menys de 10 mm d'alt: els traços quedarien massa prims.|No hagas las letras de menos de 10 mm de alto: los trazos quedarían demasiado finos." }
         ] },
         { k: 'unplug', ph: 'mans', ico: '✂️', title: 'El clauer en paper|El llavero en papel', t: 'En paper quadriculat (cada quadret, 5 mm) i amb un regle:|En papel cuadriculado (cada cuadrito, 5 mm) y con una regla:',
           steps: ["Dibuixa el contorn del clauer a mida real: per exemple, 8 × 5 quadrets (40 × 25 mm).|Dibuja el contorno del llavero a tamaño real: por ejemplo, 8 × 5 cuadritos (40 × 25 mm).",
             "Marca el forat de l'anella: un cercle d'un quadret, a un quadret de la vora.|Marca el agujero de la anilla: un círculo de un cuadrito, a un cuadrito del borde.",
-            "Dissenya la teva inicial només amb rectangles d'almenys mig quadret d'ample.|Diseña tu inicial solo con rectángulos de al menos medio cuadrito de ancho.",
+            "Escriu-hi el teu nom en majúscules de pal, d'uns 2 quadrets i mig d'alt (12 mm) i amb traços de mig quadret.|Escribe tu nombre en mayúsculas de palo, de unos 2 cuadritos y medio de alto (12 mm) y con trazos de medio cuadrito.",
             "Pinta d'un color el que serà gravat i d'un altre el forat que travessa.|Pinta de un color lo que será grabado y de otro el agujero que atraviesa."],
           tip: "Retalla'l i comprova amb una anella o un clip si el forat té prou vora.|Recórtalo y comprueba con una anilla o un clip si el agujero tiene suficiente borde." },
         { k: 'm3look', ph: 'prova', q: "Quin d'aquests clauers aguantarà millor penjat a la motxilla? Gira'ls i mira'ls de prop.|¿Cuál de estos llaveros aguantará mejor colgado en la mochila? Gíralos y míralos de cerca.",
@@ -188,20 +207,20 @@ COURSE_UNITS[5] = (() => {
           checks: [{ k: 'count', t: 'heart', hole: true, min: 1, txt: 'Hi ha un cor que és forat|Hay un corazón que es agujero' }, { k: 'match', target: KH, th: 0.983, t: 'El cor està gravat 1 mm, com al fantasma|El corazón está grabado 1 mm, como en el fantasma' }],
           hint: "Afegeix el cor i toca Forat. A Mida: 14 i 14. A Posició: x = 0, y = −2 i z = 3 (el clauer fa 4 mm: així només entra 1 mm).|Añade el corazón y toca Agujero. En Medida: 14 y 14. En Posición: x = 0, y = −2 y z = 3 (el llavero mide 4 mm: así solo entra 1 mm).",
           sol: KH },
-        { k: 'm3build', ph: 'repte', q: "Ara una inicial: <b>grava una T</b> amb dues caixes que siguin forat. Barra: <b>14 × 4 mm</b> a (5, 5). Pal: <b>4 × 10 mm</b> a (5, −2). Totes dues amb <b>z = 3</b>.|Ahora una inicial: <b>graba una T</b> con dos cajas que sean agujero. Barra: <b>14 × 4 mm</b> en (5, 5). Palo: <b>4 × 10 mm</b> en (5, −2). Las dos con <b>z = 3</b>.",
-          start: { parts: [PL, RING(-14, 0)] }, palette: ['hbox'], target: KT,
-          checks: [{ k: 'count', t: 'box', hole: true, min: 2, txt: 'La T té dues caixes que són forat|La T tiene dos cajas que son agujero' }, { k: 'match', target: KT, th: 0.985, t: 'La T està gravada com al fantasma|La T está grabada como en el fantasma' }],
-          hint: "Afegeix un Forat (cub) per a la barra i un altre per al pal. Recorda la z = 3 a totes dues: si no, travessarien el clauer.|Añade un Agujero (cubo) para la barra y otro para el palo. Recuerda la z = 3 en las dos: si no, atravesarían el llavero.",
-          sol: KT },
+        { k: 'm3build', ph: 'repte', q: "Ara <b>el nom</b>: un <b>Text</b> amb el teu nom (o NUMI), convertit en <b>forat</b>, a <b>x = 5</b>, y = 0 i <b>z = 3</b>: gravat 1 mm.|Ahora <b>el nombre</b>: un <b>Texto</b> con tu nombre (o NUMI), convertido en <b>agujero</b>, en <b>x = 5</b>, y = 0 y <b>z = 3</b>: grabado 1 mm.",
+          start: { parts: [KL, RL] }, palette: ['text'], target: KN,
+          checks: [{ k: 'count', t: 'text', hole: true, min: 1, txt: 'Hi ha un text que és forat (gravat)|Hay un texto que es agujero (grabado)' }, { k: 'part', t: 'text', hole: true, at: [5, 0, null], base: 3, tol: 1, txt: 'Nom a (5, 0), gravat 1 mm (z = 3)|Nombre en (5, 0), grabado 1 mm (z = 3)' }, { k: 'hole', t: "El forat de l'anella travessa|El agujero de la anilla atraviesa" }],
+          hint: "Toca la forma Text i, al camp Text, escriu el teu nom. Toca Forat (a la barra de dalt). A Posició: x = 5, y = 0 i z = 3.|Toca la forma Texto y, en el campo Texto, escribe tu nombre. Toca Agujero (en la barra de arriba). En Posición: x = 5, y = 0 y z = 3.",
+          sol: KN },
         { k: 'm3fix', ph: 'repte', extra: true, q: "Aquest clauer és fi com un full: només fa <b>1,2 mm</b> i es doblegaria. Fes-lo de <b>4 mm</b> de gruix.|Este llavero es fino como una hoja: solo mide <b>1,2 mm</b> y se doblaría. Hazlo de <b>4 mm</b> de grosor.",
           start: { parts: [P('a1', 'box', [40, 24, 1.2], [0, 0, 0.6], '#2FB36D'), RING(-14, 0)] }, fix: ['a1'], palette: ['box'],
           checks: [{ k: 'size', ax: 'z', v: 4, tol: 0.3, t: 'Fa 4 mm de gruix|Mide 4 mm de grosor' }, { k: 'wall', min: 1.8, t: 'Res no és més prim de 2 mm|Nada es más fino de 2 mm' }],
           hint: "El clauer ja està seleccionat: a Mida, posa 4 a la z.|El llavero ya está seleccionado: en Medida, pon 4 en la z.",
           sol: { parts: [P('a1', 'box', [40, 24, 4], [0, 0, 2], '#2FB36D'), RING(-14, 0)] } },
-        { k: 'm3free', ph: 'crea', q: "<b>El meu clauer per a la fira.</b> Tria la forma, fes-li el forat de l'anella amb vora i grava-hi (o posa-hi en relleu) la teva inicial o un dibuix. Quan tot estigui verd, desa'l.|<b>Mi llavero para la feria.</b> Elige la forma, hazle el agujero de la anilla con borde y graba (o pon en relieve) tu inicial o un dibujo. Cuando todo esté en verde, guárdalo.",
-          name: 'El meu clauer|Mi llavero', palette: ['box', 'cyl', 'heart', 'star', 'hex', 'hcyl', 'hbox'],
-          crit: ["Té el forat de l'anella amb 2-3 mm de vora|Tiene el agujero de la anilla con 2-3 mm de borde", 'Fa 3-4 mm de gruix|Mide 3-4 mm de grosor', 'Té una inicial o un dibuix gravat o en relleu|Tiene una inicial o un dibujo grabado o en relieve'],
-          checks: [{ k: 'hole', t: "Té un forat per a l'anella|Tiene un agujero para la anilla" }, { k: 'zmax', v: 6, t: 'Fa com a molt 6 mm de gruix|Mide como mucho 6 mm de grosor' }, { k: 'wall', min: 1.8, t: 'Res no és més prim de 2 mm|Nada es más fino de 2 mm' }, { k: 'one' }, { k: 'onplate' }],
+        { k: 'm3free', ph: 'crea', q: "<b>El meu clauer per a la fira.</b> Tria la forma, fes-li el forat de l'anella amb vora i grava-hi (o posa-hi en relleu) el teu nom, la inicial o un dibuix. Quan tot estigui verd, desa'l.|<b>Mi llavero para la feria.</b> Elige la forma, hazle el agujero de la anilla con borde y graba (o pon en relieve) tu nombre, la inicial o un dibujo. Cuando todo esté en verde, guárdalo.",
+          name: 'El meu clauer|Mi llavero', palette: ['box', 'cyl', 'heart', 'star', 'hex', 'text', 'hcyl', 'hbox'],
+          crit: ["Té el forat de l'anella amb 2-3 mm de vora|Tiene el agujero de la anilla con 2-3 mm de borde", 'Fa 3-4 mm de gruix|Mide 3-4 mm de grosor', 'Té el nom, una inicial o un dibuix, gravat o en relleu, amb lletres de 10 mm o més|Tiene el nombre, una inicial o un dibujo, grabado o en relieve, con letras de 10 mm o más'],
+          checks: [{ k: 'hole', t: "Té un forat per a l'anella|Tiene un agujero para la anilla" }, { k: 'size', ax: 'z', v: 4.5, tol: 1.5, t: 'Fa entre 3 i 6 mm de gruix|Mide entre 3 y 6 mm de grosor' }, { k: 'wall', min: 1.2, t: 'Res no és massa prim (1,2 mm o més)|Nada es demasiado fino (1,2 mm o más)' }, { k: 'one' }, { k: 'onplate' }],
           sol: { parts: [P('a1', 'heart', [36, 36, 4], [0, 0, 2], '#EC5FA8'), H('f1', 'cyl', [5, 5, 20], [-7, 8, 10]), H('e1', 'star', [12, 12, 3], [3, -3, 4.5], { n: 5 })] } },
         { k: 'quiz', ph: 'tanca', q: "Un clauer fa <b>4 mm</b>. Vols gravar-hi una lletra d'<b>1 mm</b> de fondària. A quina z poses la base del forat?|Un llavero mide <b>4 mm</b>. Quieres grabar una letra de <b>1 mm</b> de profundidad. ¿En qué z pones la base del agujero?", opts: ['z = 3|z = 3', 'z = 0|z = 0', 'z = 4|z = 4'], a: 0 },
         { k: 'quiz', ph: 'tanca', q: "Per què el forat de l'anella no pot tocar la vora?|¿Por qué el agujero de la anilla no puede tocar el borde?", opts: ['Perquè el plàstic del voltant seria massa prim i es trencaria|Porque el plástico de alrededor sería demasiado fino y se rompería', 'Perquè la Nuvi no sap fer forats rodons|Porque Nuvi no sabe hacer agujeros redondos', 'Perquè els forats sempre van al mig|Porque los agujeros siempre van en el medio'], a: 0 },
@@ -341,6 +360,78 @@ COURSE_UNITS[5] = (() => {
           sol: SEG },
         { k: 'quiz', ph: 'tanca', q: "Vols un segell que escrigui una <b>R</b> al paper. Com ha de ser la R del segell?|Quieres un sello que escriba una <b>R</b> en el papel. ¿Cómo tiene que ser la R del sello?", opts: ["Emmirallada (girada d'esquerra a dreta)|Reflejada (girada de izquierda a derecha)", 'Igual que la vols veure|Igual que la quieres ver', 'De cap per avall|Boca abajo'], a: 0 },
         { k: 'quiz', ph: 'tanca', q: "Quina d'aquestes formes <b>no</b> cal emmirallar per fer un segell?|¿Cuál de estas formas <b>no</b> hace falta reflejar para hacer un sello?", opts: ['Un cor|Un corazón', 'La lletra L|La letra L', 'El número 7|El número 7'], a: 0 },
+        { k: 'feel', ph: 'tanca' }
+      ] },
+    /* ---------- Sessió 5 · Taller: el rètol de la porta ---------- */
+    { id: 'm5-5', t: 'Taller: el rètol de la porta|Taller: el letrero de la puerta', min: 40, proj: true, taller: true, badge: 'm55_retol',
+      learn: ["Un rètol per penjar té una placa d'uns 4 mm, dos forats amb vora a les cantonades de dalt i el nom en relleu.|Un letrero para colgar tiene una placa de unos 4 mm, dos agujeros con borde en las esquinas de arriba y el nombre en relieve.",
+        "La forma Text escriu el nom amb lletres de blocs; per posar-lo en relleu va a sobre de la placa (z = 4) i, per gravar-lo, és un forat.|La forma Texto escribe el nombre con letras de bloques; para ponerlo en relieve va encima de la placa (z = 4) y, para grabarlo, es un agujero.",
+        "Amb lletres de 10 mm o més, els traços fan 2 mm o més: si les fas petites, cal fer-les créixer amb Proporcional.|Con letras de 10 mm o más, los trazos miden 2 mm o más: si las haces pequeñas, hay que hacerlas crecer con Proporcional."],
+      steps: [
+        { k: 'quiz', ph: 'recorda', q: "Tens un forat a <b>x = −52</b>. Vols el mateix forat a l'altre costat, a <b>x = 52</b>. Quina eina ho fa d'un sol toc?|Tienes un agujero en <b>x = −52</b>. Quieres el mismo agujero al otro lado, en <b>x = 52</b>. ¿Qué herramienta lo hace de un solo toque?",
+          opts: ["Mirall → Còpia a l'altre costat (x)|Espejo → Copia al otro lado (x)", 'Alinea → A terra|Alinea → Al suelo', 'Forat|Agujero'], a: 0 },
+        { k: 'quiz', ph: 'recorda', q: "Al clauer vas gravar el nom amb la forma Text. Quina alçada mínima de lletra fem servir perquè els traços es marquin bé?|En el llavero grabaste el nombre con la forma Texto. ¿Qué altura mínima de letra usamos para que los trazos se marquen bien?",
+          opts: ['10 mm o més|10 mm o más', '3 mm|3 mm', '1 mm|1 mm'], a: 0,
+          ex: "Amb lletres de 10 mm, els traços fan 2 mm; amb 3 mm, farien menys d'1 mm.|Con letras de 10 mm, los trazos miden 2 mm; con 3 mm, medirían menos de 1 mm." },
+        { k: 'story', ph: 'missio', who: 'both', scene: 'fab', title: 'Portes noves|Puertas nuevas',
+          t: "L'escola ha pintat les portes de totes les aules i cada classe vol un <b>rètol</b> amb el seu nom. En Bit diu que el primer serà per a la porta del <b>TALLER</b>… i que tu també en pots fer un amb <b>el teu nom</b> per a la porta de la teva habitació! Avui és dia de <b>taller</b>: placa, dos forats per penjar-lo i el nom en relleu, amb lletres que la Nuvi pugui imprimir.|La escuela ha pintado las puertas de todas las aulas y cada clase quiere un <b>letrero</b> con su nombre. Bit dice que el primero será para la puerta del <b>TALLER</b>… ¡y que tú también puedes hacer uno con <b>tu nombre</b> para la puerta de tu habitación! Hoy es día de <b>taller</b>: placa, dos agujeros para colgarlo y el nombre en relieve, con letras que Nuvi pueda imprimir." },
+        { k: 'learn', ph: 'descobreix', cards: [
+          { k: 'Les parts del rètol|Las partes del letrero', t: 'Placa, forats i nom|Placa, agujeros y nombre', anim: 'm55retol',
+            x: "La <b>placa</b> fa 120 × 40 × 4 mm. A les cantonades de dalt, dos <b>forats</b> de 5 mm, amb 5 mm de vora, per passar-hi un cordill. Al mig, el <b>nom en relleu</b>: sobresurt 3 mm i es veu de lluny.|La <b>placa</b> mide 120 × 40 × 4 mm. En las esquinas de arriba, dos <b>agujeros</b> de 5 mm, con 5 mm de borde, para pasar un cordel. En el medio, el <b>nombre en relieve</b>: sobresale 3 mm y se ve de lejos.",
+            tip: "El segon forat no cal fer-lo a mà: Mirall → Còpia a l'altre costat (x).|El segundo agujero no hace falta hacerlo a mano: Espejo → Copia al otro lado (x)." },
+          { k: "Lletres que s'imprimeixen|Letras que se imprimen", t: 'Traços de 2 mm o més|Trazos de 2 mm o más', anim: 'm55trac',
+            x: "Cada lletra del taller té traços de 2 unitats: amb lletres de <b>12 mm</b>, els traços fan <b>2,4 mm</b> i la Nuvi els fa amb unes quantes línies. Amb lletres de 5 mm, farien 1 mm: fràgils i borrosos. Per fer-les créixer sense deformar-les, <b>Proporcional</b>.|Cada letra del taller tiene trazos de 2 unidades: con letras de <b>12 mm</b>, los trazos miden <b>2,4 mm</b> y Nuvi los hace con unas cuantas líneas. Con letras de 5 mm, medirían 1 mm: frágiles y borrosos. Para hacerlas crecer sin deformarlas, <b>Proporcional</b>." },
+          { k: 'El nom a la placa|El nombre en la placa', t: 'Text a z = 4, centrat|Texto en z = 4, centrado', media: { k: 'model', model: { parts: RETOL } },
+            x: "Toca la forma <b>Text</b> i escriu-hi al camp Text (les minúscules es fan majúscules soles). A Posició, <b>x = 0</b> el centra i <b>z = 4</b> el posa just a sobre de la placa: així el nom i la placa són una sola peça.|Toca la forma <b>Texto</b> y escribe en el campo Texto (las minúsculas se hacen mayúsculas solas). En Posición, <b>x = 0</b> lo centra y <b>z = 4</b> lo pone justo encima de la placa: así el nombre y la placa son una sola pieza.",
+            tip: "Si el nom és llarg, fes la placa més ampla: les lletres no han de tocar els forats.|Si el nombre es largo, haz la placa más ancha: las letras no tienen que tocar los agujeros." }
+        ] },
+        { k: 'unplug', ph: 'mans', ico: '🚪', title: 'El rètol en paper|El letrero en papel', t: 'Amb paper quadriculat (cada quadret, 5 mm), un regle i un llapis:|Con papel cuadriculado (cada cuadrito, 5 mm), una regla y un lápiz:',
+          steps: ["Dibuixa la placa a mida real: 24 × 8 quadrets (120 × 40 mm).|Dibuja la placa a tamaño real: 24 × 8 cuadritos (120 × 40 mm).",
+            "Marca els dos forats a les cantonades de dalt, a un quadret de les vores.|Marca los dos agujeros en las esquinas de arriba, a un cuadrito de los bordes.",
+            "Escriu el teu nom al mig en majúscules de pal, de 2 quadrets i mig d'alt (12 mm). Cada lletra ocupa uns 2 quadrets d'ample.|Escribe tu nombre en el medio en mayúsculas de palo, de 2 cuadritos y medio de alto (12 mm). Cada letra ocupa unos 2 cuadritos de ancho.",
+            "Hi cap sense tocar els forats? Si no, dibuixa una placa més ampla i apunta'n la mida.|¿Cabe sin tocar los agujeros? Si no, dibuja una placa más ancha y apunta su medida."],
+          tip: "Mesura la porta de la teva habitació: on hi penjaries el rètol?|Mide la puerta de tu habitación: ¿dónde colgarías el letrero?" },
+        { k: 'm3look', ph: 'prova', q: "Mira el rètol <b>de costat</b>. Quant sobresurten les lletres de la placa?|Mira el letrero <b>de lado</b>. ¿Cuánto sobresalen las letras de la placa?",
+          model: { parts: RETOL }, view: 'front', opts: ['3 mm|3 mm', '7 mm|7 mm', '12 mm|12 mm'], a: 0,
+          ex: "La placa fa 4 mm i les lletres arriben a 7 mm: sobresurten 7 − 4 = 3 mm, el gruix del text. Els 12 mm són l'alçada de les lletres.|La placa mide 4 mm y las letras llegan a 7 mm: sobresalen 7 − 4 = 3 mm, el grosor del texto. Los 12 mm son la altura de las letras." },
+        { k: 'm3look', ph: 'investiga', q: "Un dels dos forats s'ha menjat la vora: el cordill s'escaparia. <b>Toca'l.</b>|Uno de los dos agujeros se ha comido el borde: el cordel se escaparía. <b>Tócalo.</b>",
+          model: { parts: RETOL_TRENCAT }, view: 'top', pick: 'f2', yes: "Exacte: és massa a prop de la vora i la trenca.|Exacto: está demasiado cerca del borde y lo rompe.",
+          no: "Aquest té vora per tots costats. Mira'l de dalt, amb el botó Resultat.|Este tiene borde por todos los lados. Míralo desde arriba, con el botón Resultado.",
+          ex: "El bo és a 52 mm del mig i deixa 5,5 mm de vora; l'altre és a 59 mm i surt de la placa.|El bueno está a 52 mm del medio y deja 5,5 mm de borde; el otro está a 59 mm y sale de la placa." },
+        { k: 'move', ph: 'pausa', title: 'El rètol humà|El letrero humano', secs: 30, t: "Fes de rètol: obre els braços ben amples (la placa) i fes un cercle amb els dits de cada mà (els forats). Ara, sense moure els peus, «escriu» el teu nom a l'aire amb el colze, ben gran i a poc a poc!|Haz de letrero: abre los brazos bien anchos (la placa) y haz un círculo con los dedos de cada mano (los agujeros). Ahora, sin mover los pies, ¡«escribe» tu nombre en el aire con el codo, bien grande y despacio!" },
+        { k: 'm3build', ph: 'repte', q: "<b>Els forats per penjar-lo.</b> Fes un forat rodó de <b>5 mm</b> a <b>(−52, 12)</b> i fes-ne la còpia a l'altre costat amb <b>Mirall</b>.|<b>Los agujeros para colgarlo.</b> Haz un agujero redondo de <b>5 mm</b> en <b>(−52, 12)</b> y haz su copia al otro lado con <b>Espejo</b>.",
+          start: { parts: [RPL] }, palette: ['hcyl'], target: { parts: [RPL, ...RFS] },
+          checks: [{ k: 'part', t: 'cyl', hole: true, s: [5, 5, 20], at: [-52, 12, null], tol: 0.6, txt: 'Forat de 5 mm a (−52, 12)|Agujero de 5 mm en (−52, 12)' }, { k: 'part', t: 'cyl', hole: true, s: [5, 5, 20], at: [52, 12, null], tol: 0.6, txt: 'Forat de 5 mm a (52, 12)|Agujero de 5 mm en (52, 12)' },
+            { k: 'hole', t: 'Els forats travessen la placa|Los agujeros atraviesan la placa' }, { k: 'sym', ax: 'x', th: 0.98, t: 'És simètric (mirall en x)|Es simétrico (espejo en x)' }],
+          hint: "Toca Forat rodó. A Mida: 5 i 5. A Posició: x = −52 i y = 12. Després, Mirall → Còpia a l'altre costat (x).|Toca Agujero redondo. En Medida: 5 y 5. En Posición: x = −52 e y = 12. Después, Espejo → Copia al otro lado (x).",
+          sol: { parts: [RPL, ...RFS] } },
+        { k: 'm3build', ph: 'repte', q: "<b>El nom en relleu.</b> Afegeix un <b>Text</b> i escriu-hi <b>TALLER</b>. Col·loca'l a <b>x = 0, y = −3</b>, just a sobre de la placa (<b>z = 4</b>).|<b>El nombre en relieve.</b> Añade un <b>Texto</b> y escribe <b>TALLER</b>. Colócalo en <b>x = 0, y = −3</b>, justo encima de la placa (<b>z = 4</b>).",
+          start: { parts: [RPL, ...RFS] }, palette: ['text'], target: { parts: RETOL },
+          checks: [{ k: 'count', t: 'text', hole: false, min: 1, txt: 'Hi ha un text sòlid (en relleu)|Hay un texto sólido (en relieve)' }, { k: 'part', t: 'text', hole: false, at: [0, -3, null], base: 4, tol: 1, txt: 'Text a (0, −3), a sobre de la placa|Texto en (0, −3), encima de la placa' },
+            { k: 'one', t: 'El nom i la placa són una sola peça|El nombre y la placa son una sola pieza' }, { k: 'wall', min: 1.2, t: "Els traços s'imprimeixen bé|Los trazos se imprimen bien" }],
+          hint: "Toca la forma Text i, al camp Text, escriu TALLER. A Posició: x = 0, y = −3 i z = 4.|Toca la forma Texto y, en el campo Texto, escribe TALLER. En Posición: x = 0, y = −3 y z = 4.",
+          sol: { parts: RETOL } },
+        { k: 'm3fix', ph: 'repte', extra: true, q: "Les lletres de l'<b>AULA 5</b> fan <b>5 mm</b>: traços d'1 mm, massa prims! Fes-les de <b>12 mm</b> d'alt sense deformar-les.|Las letras del <b>AULA 5</b> miden <b>5 mm</b>: ¡trazos de 1 mm, demasiado finos! Hazlas de <b>12 mm</b> de alto sin deformarlas.",
+          start: { parts: RETOL_AULA([21.7, 5, 1]) }, fix: ['nom'], palette: ['text'],
+          checks: [{ k: 'part', t: 'text', s: [52.08, 12, 2.4], tol: 0.8, txt: 'Lletres de 12 mm: traços de 2,4 mm|Letras de 12 mm: trazos de 2,4 mm' }, { k: 'one' }],
+          hint: "El text ja està seleccionat. A Mida, activa Proporcional (el cadenat) i escriu 12 a la y: tot creix igual.|El texto ya está seleccionado. En Medida, activa Proporcional (el candado) y escribe 12 en la y: todo crece igual.",
+          sol: { parts: RETOL_AULA([52.08, 12, 2.4]) } },
+        { k: 'm3free', ph: 'crea', q: "<b>El teu rètol.</b> Canvia TALLER pel teu nom (o el de la classe) i ajusta la placa si cal. Quan estigui llest, desa'l.|<b>Tu letrero.</b> Cambia TALLER por tu nombre (o el de la clase) y ajusta la placa si hace falta. Cuando esté listo, guárdalo.",
+          name: 'El meu rètol|Mi letrero', start: { parts: RETOL }, palette: ['text', 'rbox', 'box', 'star', 'heart', 'hcyl', 'hbox'],
+          crit: ["Hi ha el teu nom (o el de la classe) en relleu, amb lletres de 10 mm o més|Está tu nombre (o el de la clase) en relieve, con letras de 10 mm o más", 'Té dos forats per penjar-lo, amb vora al voltant|Tiene dos agujeros para colgarlo, con borde alrededor', 'Les lletres no toquen els forats i tot és una sola peça|Las letras no tocan los agujeros y todo es una sola pieza'],
+          checks: [{ k: 'count', t: 'text', min: 1, txt: 'Hi ha un text|Hay un texto' }, { k: 'hole', t: 'Té forats per penjar-lo|Tiene agujeros para colgarlo' }, { k: 'one' }, { k: 'onplate' }, { k: 'wall', min: 1.2, t: "Els traços s'imprimeixen bé|Los trazos se imprimen bien" }, { k: 'flatbase', min: 1500, t: 'Té una base plana|Tiene una base plana' }],
+          sol: { parts: [...RETOL.slice(0, 3), RTX('NUMI', [34.32, 12, 3], '#EC5FA8')] } },
+        { k: 'unplug', ph: 'tanca', ico: '🖨️', title: 'Porta-ho a la impressora|Llévalo a la impresora', t: "Si a l'escola hi ha una impressora 3D, el rètol pot anar a la porta:|Si en la escuela hay una impresora 3D, el letrero puede ir a la puerta:",
+          steps: ["Descarrega'n l'<b>STL</b> amb el botó STL (també el trobaràs a «Projectes»).|Descarga su <b>STL</b> con el botón STL (también lo encontrarás en «Proyectos»).",
+            "S'imprimeix pla, amb la placa a baix: les lletres pugen rectes i no necessiten suports.|Se imprime plano, con la placa abajo: las letras suben rectas y no necesitan soportes.",
+            "Truc: si l'adult que imprimeix fa una pausa a 4 mm i canvia el filament, les lletres sortiran d'un altre color.|Truco: si el adulto que imprime hace una pausa a 4 mm y cambia el filamento, las letras saldrán de otro color.",
+            'Passa un cordill pels dos forats i penja-ho a la porta.|Pasa un cordel por los dos agujeros y cuélgalo en la puerta.'],
+          tip: "Sense impressora? Retalla el rètol de cartró i enganxa-hi les lletres de cartolina, amb les mateixes mides.|¿Sin impresora? Recorta el letrero de cartón y pega las letras de cartulina, con las mismas medidas." },
+        { k: 'quiz', ph: 'tanca', q: "La placa fa <b>4 mm</b>. Per posar el nom en relleu, a quina <b>z</b> va la base del text?|La placa mide <b>4 mm</b>. Para poner el nombre en relieve, ¿en qué <b>z</b> va la base del texto?",
+          opts: ['z = 4|z = 4', 'z = 0|z = 0', 'z = 3|z = 3'], a: 0,
+          ex: "A z = 4 comença just on s'acaba la placa: sobresurt. A z = 3 i convertit en forat, quedaria gravat.|En z = 4 empieza justo donde acaba la placa: sobresale. En z = 3 y convertido en agujero, quedaría grabado." },
+        { k: 'quiz', ph: 'tanca', q: "Unes lletres fan <b>5 mm</b> i són massa primes. Com les fas créixer sense deformar-les?|Unas letras miden <b>5 mm</b> y son demasiado finas. ¿Cómo las haces crecer sin deformarlas?",
+          opts: ['Amb Proporcional, escrivint 12 a la mida|Con Proporcional, escribiendo 12 en la medida', 'Canviant només la x|Cambiando solo la x', 'Fent-les forat|Haciéndolas agujero'], a: 0 },
         { k: 'feel', ph: 'tanca' }
       ] }
   ] };

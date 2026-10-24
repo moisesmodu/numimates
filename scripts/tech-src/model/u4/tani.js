@@ -149,3 +149,43 @@ Object.assign(TANI, (() => {
     }
   };
 })());
+/* ---------- m4-5 · taller: l'organitzador de taula (vist de dalt; 1 mm = 2 px) ----------
+   m45lloc: cada cosa al seu lloc, amb les mides · m45eines: Alinea, Duplica (salt de 31 mm) i Mirall → còpia a l'altre costat. */
+Object.assign(TANI, (() => {
+  const D = 5.5, fr = s => (s / D).toFixed(3), K = 2, CX = 112, CY = 100;
+  const X = x => +(CX + x * K).toFixed(1), Y = y => +(CY - y * K).toFixed(1);
+  const pill = (x, y, w, txt, t, col = '#fff', cls = 'tat s') => `<g ${tA(t, 'ta-pop')}><rect x="${x}" y="${y}" width="${w}" height="26" rx="13" fill="${col}" filter="url(#bwSh)"/><text x="${x + w / 2}" y="${y + 18}" text-anchor="middle" class="${cls}">${txt}</text></g>`;
+  const tray = `<rect x="${X(-50)}" y="${Y(35)}" width="${100 * K}" height="${70 * K}" rx="8" fill="#14A3B8"/><rect x="${X(-50) + 4}" y="${Y(35) + 4}" width="${100 * K - 8}" height="${70 * K - 8}" rx="6" fill="#3BC0D2" opacity=".5"/>`;
+  const tube = (x, extra = '') => `<g ${extra}><circle cx="${X(x)}" cy="${Y(16)}" r="${13 * K}" fill="#F7C531"/><circle cx="${X(x)}" cy="${Y(16)}" r="${11 * K}" fill="#8C6A00" opacity=".55"/></g>`;
+  const wall = (x, y, w, d, extra = '') => `<rect x="${X(x - w / 2)}" y="${Y(y + d / 2)}" width="${w * K}" height="${d * K}" rx="1" fill="#EC5FA8" ${extra}/>`;
+  const walls = (t = 0) => wall(0, -32, 96, 2) + wall(0, -6, 96, 2) + wall(-47, -19, 2, 24) + wall(47, -19, 2, 24) + wall(0, -19, 2, 24);
+  return {
+    m45lloc() {
+      const pen = (x, y, c, t) => `<g ${tA(t, 'ta-pop')}><polygon points="${[0, 60, 120, 180, 240, 300].map(a => `${(X(x) + 4 * K * Math.cos(a * Math.PI / 180)).toFixed(1)},${(Y(y) + 4 * K * Math.sin(a * Math.PI / 180)).toFixed(1)}`).join(' ')}" fill="${c}" stroke="#14204A" stroke-width="1"/></g>`;
+      const clip = (x, y, a, t) => `<g ${tA(t, 'ta-pop')}><rect x="${X(x) - 12}" y="${Y(y) - 5}" width="24" height="10" rx="5" fill="none" stroke="#5A678C" stroke-width="2.4" transform="rotate(${a} ${X(x)} ${Y(y)})"/></g>`;
+      return tSvg(200, `<rect width="320" height="200" rx="20" fill="#F1F2FB"/>${tray}${tube(-31)}${tube(0)}${tube(31)}${walls()}
+        ${pen(-35, 12, '#E8453C', 0.5)}${pen(-27, 19, '#3D7BF4', 0.65)}${pen(-3, 13, '#2FB36D', 0.8)}${pen(4, 20, '#F7C531', 0.95)}${pen(28, 14, '#7C5CFF', 1.1)}
+        <g ${tA(1.6, 'ta-pop')}><rect x="${X(-41)}" y="${Y(-11)}" width="${36 * K}" height="${16 * K}" rx="5" fill="#F3F3EE" stroke="#C9CFDD" stroke-width="1.5"/></g>
+        ${clip(18, -22, 20, 2.1)}${clip(32, -15, -30, 2.25)}${clip(24, -12, 70, 2.4)}
+        <g ${tA(2.9, 'ta-in')}><path d="M${X(20)} ${Y(16)}H${X(42)}" stroke="#14204A" stroke-width="2" stroke-dasharray="3 3"/></g>
+        ${pill(222, 22, 92, L('llapis 8 mm', 'lápiz 8 mm'), 0.5)}${pill(222, 54, 92, L('tub: 22 mm', 'tubo: 22 mm'), 2.9, '#F7C531')}
+        ${pill(222, 104, 92, L('goma 40 × 20', 'goma 40 × 20'), 1.6)}${pill(222, 136, 92, L('calaix 44 × 24', 'cajón 44 × 24'), 3.4, '#EC5FA8', 'tat s w')}
+        ${pill(222, 168, 92, L('paret 2 mm', 'pared 2 mm'), 4.0, '#14204A', 'tat s w')}`);
+    },
+    m45eines() {
+      // 1) el tub puja a sobre (de ratllat a ple), 2) Duplica ×2 (salts de 31 mm), 3) Mirall: la paret de l'esquerra a l'altre costat
+      const slide = (dx, t0, t1) => `<animateTransform attributeName="transform" type="translate" values="${dx} 0;${dx} 0;0 0;0 0" keyTimes="0;${fr(t0)};${fr(t1)};1" dur="${D}s" repeatCount="indefinite"/>`;
+      const jump = (x1, x2, t) => `<g ${tA(t, 'ta-in')}><path d="M${X(x1)} ${Y(33)}Q${(X(x1) + X(x2)) / 2} ${Y(45)} ${X(x2)} ${Y(33)}" fill="none" stroke="#14204A" stroke-width="2" stroke-dasharray="4 3"/><path d="M${X(x2) - 6} ${Y(36)}L${X(x2)} ${Y(33)}l-1 -7" fill="none" stroke="#14204A" stroke-width="2" stroke-linecap="round"/><text x="${(X(x1) + X(x2)) / 2}" y="${Y(44) - 4}" text-anchor="middle" class="tat s">+31</text></g>`;
+      return tSvg(200, `<rect width="320" height="200" rx="20" fill="#F1F2FB"/>${tray}
+        <g opacity=".45"><circle cx="${X(-31)}" cy="${Y(16)}" r="${13 * K}" fill="none" stroke="#B88A00" stroke-width="2" stroke-dasharray="5 4"/></g>
+        ${tube(-31, tA(0.7, 'ta-pop'))}
+        <g>${slide(-31 * K, 1.4, 1.9)}<g ${tA(1.4, 'ta-fade')}>${tube(0)}</g></g>${jump(-31, 0, 1.9)}
+        <g>${slide(-31 * K, 2.4, 2.9)}<g ${tA(2.4, 'ta-fade')}>${tube(31)}</g></g>${jump(0, 31, 2.9)}
+        ${wall(0, -32, 96, 2)}${wall(-47, -19, 2, 24)}
+        <g ${tA(3.4, 'ta-in')}><path d="M${X(0)} ${Y(-2)}V${Y(-36)}" stroke="#7C5CFF" stroke-width="2" stroke-dasharray="5 4"/></g>
+        <g ${tA(3.9, 'ta-pop')}>${wall(47, -19, 2, 24)}</g><g ${tA(3.9, 'ta-in')}><path d="M${X(-40)} ${Y(-19)}H${X(40)}" stroke="#7C5CFF" stroke-width="2" stroke-dasharray="2 4"/><path d="M${X(40) - 6} ${Y(-19) - 5}L${X(40)} ${Y(-19)}l-6 5" fill="none" stroke="#7C5CFF" stroke-width="2"/></g>
+        ${pill(222, 30, 92, L('1 Alinea', '1 Alinea'), 0.7, '#14A3B8', 'tat s w')}${pill(222, 70, 92, L('2 Duplica ×2', '2 Duplica ×2'), 1.4, '#F7C531')}${pill(222, 110, 92, L('3 Mirall', '3 Espejo'), 3.4, '#7C5CFF', 'tat s w')}
+        ${pill(222, 150, 92, L('x = 0: el mig', 'x = 0: el medio'), 3.4)}`);
+    }
+  };
+})());

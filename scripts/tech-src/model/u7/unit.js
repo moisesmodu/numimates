@@ -5,6 +5,7 @@
    «un invent per a l'escola» amb especificacions pròpies (m7-4). A m7-3 la versió 2 continua des del porta-coses desat
    a m7-2 (portafoli), si n'hi ha. Models: peces { id, t, s: [x, y, z] mm, p: centre, r: graus, c, hole }, placa 200 × 200. */
 Object.assign(TBADGE, {
+  m75_galeta: { id: 'm75_galeta', ico: '🍪', n: 'Tallagaletes a mida|Cortador a medida', d: "Taller fet: un tallagaletes amb una paret d'uns 1,6 mm (la forma menys una còpia més petita) i una vora ampla per als dits, pensat per a qui el farà servir.|Taller hecho: un cortador de galletas con una pared de unos 1,6 mm (la forma menos una copia más pequeña) y un borde ancho para los dedos, pensado para quien lo usará." },
   m7inventor: { id: 'm7inventor', ico: '🛠️', n: "Inventor/a de l'escola|Inventor/a de la escuela", d: "Has escrit les especificacions d'un invent per a l'escola i l'has modelat pensant en qui el farà servir.|Has escrito las especificaciones de un invento para la escuela y lo has modelado pensando en quién lo usará." }
 });
 COURSE_UNITS[7] = (() => {
@@ -55,6 +56,22 @@ COURSE_UNITS[7] = (() => {
   const mv = (l, dx, dy, g, pre) => l.map(p => ({ ...p, id: pre + p.id, p: [p.p[0] + dx, p.p[1] + dy, p.p[2]], g }));
   const INVENTS = [...mv(HOOK(-19), -66, 0, 'h', 'pj'), ...mv(BOOK, -2, 0, 'b', 'al'), ...mv(ORG2, 64, 0, 'o', 'or')];
 
+  /* ---------- m7-5 · taller: el tallagaletes ---------- */
+  // La paret que talla és la forma sòlida menys una còpia una mica més petita convertida en forat, que la travessa (z = −1, 20 mm
+  // d'alt). Cercle de 50 mm − 46,8 mm: paret d'1,6 mm. Estrella de 50 mm − 40 mm: les puntes queden d'uns 2 mm i els racons, més gruixuts
+  // (una còpia escalada no fa la paret igual a tot arreu). La vora per als dits (estrella de 60 × 60 × 3 mm) va a baix per imprimir-lo sense
+  // suports; per fer servir el tallagaletes, es gira. El cor no hi va bé: el racó de dalt és tan tancat que la paret hi queda massa prima.
+  const GB = (id, t, s, x, y, z0, c, o = {}) => P(id, t, s, [x, y, z0 + s[2] / 2], c, o);
+  const GH = (id, t, s, x, y, z0, o = {}) => GB(id, t, s, x, y, z0, '#9AA3B5', { hole: true, ...o });
+  const GCIR = [GB('cos', 'cyl', [50, 50, 14], 0, 0, 0, '#2FB36D'), GH('buit', 'cyl', [46.8, 46.8, 20], 0, 0, -1)];
+  const GST0 = GB('cos', 'star', [50, 50, 14], 0, 0, 0, '#F7C531', { n: 5 }), GSTH = GH('buit', 'star', [40, 40, 20], 0, 0, -1, { n: 5 });
+  const GVORA = (z0 = 0) => GB('vora', 'star', [60, 60, 3], 0, 0, z0, '#F7C531', { n: 5 });
+  const GST = [GST0, GSTH], GSTV = [...GST, GVORA()];
+  // per comparar: el de la vora (rosa) i el que no en té (groc), l'un al costat de l'altre
+  const GDOS = [...GSTV.map(p => ({ ...p, id: p.id + 'A', p: [p.p[0] - 36, p.p[1], p.p[2]], c: p.hole ? p.c : '#EC5FA8' })), ...GST.map(p => ({ ...p, id: p.id + 'B', p: [p.p[0] + 36, p.p[1], p.p[2]] }))];
+  // tres tallagaletes rodons tallats pel mig (es veu el tall de davant): el de la dreta té fons i no tallaria
+  const GTALL = [...[-40, 0, 40].flatMap((x, i) => [GB('c' + i, 'cyl', [30, 30, 14], x, 0, 0, ['#2FB36D', '#3D7BF4', '#EC5FA8'][i]), GH('f' + i, 'cyl', [26.8, 26.8, 20], x, 0, i === 2 ? 3 : -1)]),
+    GH('tall', 'box', [130, 20, 30], 0, -10, -2)];
   return {
   t: 'Dissenyar per a persones|Diseñar para personas', d: 'Objectes útils|Objetos útiles', color: '#EC5FA8',
   s: [
@@ -315,6 +332,75 @@ COURSE_UNITS[7] = (() => {
         { k: 'quiz', ph: 'tanca', q: 'Quina especificació es pot comprovar?|¿Qué especificación se puede comprobar?', opts: ["«Fa com a molt 100 mm d'alt»|«Mide como mucho 100 mm de alto»", '«Ha de ser bonic»|«Tiene que ser bonito»', "«Ha d'agradar a tothom»|«Tiene que gustar a todo el mundo»"], a: 0,
           ex: "Amb un regle (o amb les comprovacions del taller) se sap si fa 100 mm o no. «Bonic» depèn de qui ho mira.|Con una regla (o con las comprobaciones del taller) se sabe si mide 100 mm o no. «Bonito» depende de quien lo mira." },
         { k: 'quiz', ph: 'tanca', q: 'Per què el penjador es dissenya estirat a la placa?|¿Por qué el colgador se diseña tumbado en la placa?', opts: ['Perquè no necessita suports i queda més fort|Porque no necesita soportes y queda más fuerte', 'Perquè així és més bonic|Porque así es más bonito', 'Perquè la Nuvi només imprimeix coses planes|Porque Nuvi solo imprime cosas planas'], a: 0 },
+        { k: 'feel', ph: 'tanca' }
+      ] },
+    /* ---------- Sessió 5 · Taller: el tallagaletes ---------- */
+    { id: 'm7-5', t: 'Taller: el tallagaletes|Taller: el cortador de galletas', min: 40, proj: true, taller: true, badge: 'm75_galeta',
+      learn: ["Un tallagaletes és una paret prima (uns 1,6 mm) que segueix la forma: la forma sòlida menys una còpia una mica més petita que la travessa.|Un cortador de galletas es una pared fina (unos 1,6 mm) que sigue la forma: la forma sólida menos una copia un poco más pequeña que la atraviesa.",
+        "Pensar en qui el farà servir canvia el disseny: una vora ampla protegeix els dits quan es prem la massa.|Pensar en quién lo usará cambia el diseño: un borde ancho protege los dedos cuando se aprieta la masa.",
+        "S'imprimeix amb la vora a baix, sense suports, i el PLA va bé per tallar massa de tant en tant si es renta i no s'hi guarda menjar.|Se imprime con el borde abajo, sin soportes, y el PLA va bien para cortar masa de vez en cuando si se lava y no se guarda comida en él."],
+      steps: [
+        { k: 'quiz', ph: 'recorda', q: "Un cilindre fa <b>50 mm</b> i li fas un forat de <b>46,8 mm</b> que el travessa. Quant fa la paret?|Un cilindro mide <b>50 mm</b> y le haces un agujero de <b>46,8 mm</b> que lo atraviesa. ¿Cuánto mide la pared?",
+          opts: ['1,6 mm|1,6 mm', '3,2 mm|3,2 mm', '46,8 mm|46,8 mm'], a: 0,
+          ex: "(50 − 46,8) ÷ 2 = 1,6 mm: la diferència es reparteix entre els dos costats.|(50 − 46,8) ÷ 2 = 1,6 mm: la diferencia se reparte entre los dos lados." },
+        { k: 'quiz', ph: 'recorda', q: "Abans de dissenyar un objecte per a algú, què fem primer?|Antes de diseñar un objeto para alguien, ¿qué hacemos primero?",
+          opts: ['Li preguntem què necessita i mesurem|Le preguntamos qué necesita y medimos', 'Triem el color que ens agrada|Elegimos el color que nos gusta', 'Imprimim una prova a l\'atzar|Imprimimos una prueba al azar'], a: 0 },
+        { k: 'story', ph: 'missio', who: 'both', scene: 'fab', title: "Les galetes de l'àvia Rosa|Las galletas de la abuela Rosa",
+          t: "L'<b>àvia Rosa</b> farà galetes amb els seus néts per a la festa del barri i ens demana un <b>tallagaletes en forma d'estrella</b>. Però té les mans adolorides: «Els que tinc em claven la vora als dits quan premo!». Avui és dia de <b>taller</b>: farem un tallagaletes de veritat, amb una paret prima que talli bé i una <b>vora ampla</b> per als dits.|La <b>abuela Rosa</b> hará galletas con sus nietos para la fiesta del barrio y nos pide un <b>cortador de galletas en forma de estrella</b>. Pero tiene las manos doloridas: «¡Los que tengo me clavan el borde en los dedos cuando aprieto!». Hoy es día de <b>taller</b>: haremos un cortador de verdad, con una pared fina que corte bien y un <b>borde ancho</b> para los dedos." },
+        { k: 'learn', ph: 'descobreix', cards: [
+          { k: 'La paret que talla|La pared que corta', t: 'La forma menys una còpia més petita|La forma menos una copia más pequeña', anim: 'm75paret',
+            x: "Un tallagaletes és una <b>paret prima</b>, d'uns <b>1,6 mm</b> (entre 1,2 i 2 mm), i d'uns <b>14 mm</b> d'alt. Es fa amb la forma <b>sòlida</b> i una <b>còpia més petita convertida en forat</b>, que la travessa de dalt a baix (z = −1, més alta). En un cercle, paret = (fora − dins) ÷ 2: (50 − 46,8) ÷ 2 = 1,6 mm.|Un cortador de galletas es una <b>pared fina</b>, de unos <b>1,6 mm</b> (entre 1,2 y 2 mm), y de unos <b>14 mm</b> de alto. Se hace con la forma <b>sólida</b> y una <b>copia más pequeña convertida en agujero</b>, que la atraviesa de arriba abajo (z = −1, más alta). En un círculo, pared = (fuera − dentro) ÷ 2: (50 − 46,8) ÷ 2 = 1,6 mm.",
+            tip: "En una estrella, les puntes s'aprimen: la còpia ha de ser més petita (40 de 50 mm). El cor no hi va bé: el racó de dalt és massa tancat.|En una estrella, las puntas se adelgazan: la copia tiene que ser más pequeña (40 de 50 mm). El corazón no va bien: el rincón de arriba es demasiado cerrado." },
+          { k: 'Pensat per als dits|Pensado para los dedos', t: 'Una vora ampla, a baix per imprimir-lo|Un borde ancho, abajo para imprimirlo', anim: 'm75vora',
+            x: "Una paret de 1,6 mm talla bé la massa… i també es clava als dits! Una <b>vora</b> de 5 mm més per cada costat reparteix la força. Es dissenya i s'imprimeix amb la vora <b>a baix</b> (base plana, sense suports) i, per fer galetes, es gira: la vora queda a dalt i la paret prima talla.|Una pared de 1,6 mm corta bien la masa… ¡y también se clava en los dedos! Un <b>borde</b> de 5 mm más por cada lado reparte la fuerza. Se diseña y se imprime con el borde <b>abajo</b> (base plana, sin soportes) y, para hacer galletas, se gira: el borde queda arriba y la pared fina corta." },
+          { k: "L'estrella de l'àvia|La estrella de la abuela", t: 'Paret, forat i vora|Pared, agujero y borde', media: { k: 'model', model: { parts: GSTV } },
+            x: "Estrella de <b>50 × 50 × 14 mm</b>, forat d'estrella de <b>40 × 40 mm</b> que la travessa i vora d'estrella de <b>60 × 60 × 3 mm</b> a baix. El forat també buida la vora: queda un marc pla on es posen els dits.|Estrella de <b>50 × 50 × 14 mm</b>, agujero de estrella de <b>40 × 40 mm</b> que la atraviesa y borde de estrella de <b>60 × 60 × 3 mm</b> abajo. El agujero también vacía el borde: queda un marco plano donde se ponen los dedos.",
+            tip: "Gira'l i mira'l per sota: és obert de dalt a baix?|Gíralo y míralo por debajo: ¿es abierto de arriba abajo?" }
+        ] },
+        { k: 'unplug', ph: 'mans', ico: '✏️', title: 'Esbós i prova de la plastilina|Boceto y prueba de la plastilina', t: 'Amb paper, un regle, plastilina, un got de plàstic i un tap gruixut:|Con papel, una regla, plastilina, un vaso de plástico y un tapón grueso:',
+          steps: ["Dibuixa la forma de la galeta a mida real (uns 5 cm d'ample).|Dibuja la forma de la galleta a tamaño real (unos 5 cm de ancho).",
+            "Repassa-la per dins amb una línia doble ben junta: és la paret que talla.|Repásala por dentro con una línea doble bien junta: es la pared que corta.",
+            "Dibuixa per fora la vora per als dits, a mig centímetre del contorn.|Dibuja por fuera el borde para los dedos, a medio centímetro del contorno.",
+            "Aplana la plastilina i prem-la amb la vora del got i amb el tap: quin talla millor? Quin et fa més mal al dit?|Aplana la plastilina y apriétala con el borde del vaso y con el tapón: ¿cuál corta mejor? ¿Cuál te hace más daño en el dedo?"],
+          tip: "La paret prima talla; la vora ampla protegeix: el tallagaletes ha de tenir totes dues coses.|La pared fina corta; el borde ancho protege: el cortador tiene que tener las dos cosas." },
+        { k: 'm3look', ph: 'prova', q: "Quin tallagaletes farà menys mal als dits de l'àvia quan premi la massa?|¿Qué cortador hará menos daño en los dedos de la abuela cuando apriete la masa?",
+          model: { parts: GDOS }, opts: ['El rosa, amb la vora ampla|El rosa, con el borde ancho', 'El groc, sense vora|El amarillo, sin borde'], a: 0,
+          ex: "Amb la vora, la força es reparteix i no es clava als dits.|Con el borde, la fuerza se reparte y no se clava en los dedos." },
+        { k: 'm3look', ph: 'investiga', q: "Aquests tres tallagaletes estan <b>tallats pel mig</b>. Quin <b>no</b> tallaria la massa?|Estos tres cortadores están <b>cortados por la mitad</b>. ¿Cuál <b>no</b> cortaría la masa?",
+          model: { parts: GTALL }, mode: 'result', view: 'front', opts: ['El de la dreta|El de la derecha', "El de l'esquerra|El de la izquierda", 'El del mig|El del medio'], a: 0,
+          ex: "El forat del de la dreta comença a z = 3: queda un fons de 3 mm i és un motlle, no un tallagaletes. El forat ha de travessar-lo de dalt a baix.|El agujero del de la derecha empieza en z = 3: queda un fondo de 3 mm y es un molde, no un cortador. El agujero tiene que atravesarlo de arriba abajo." },
+        { k: 'move', ph: 'pausa', title: 'Mans de pastisser|Manos de pastelero', secs: 30, t: "Fes que pastes: amassa amb les dues mans… estira la massa amb el corró… i ara prem el tallagaletes amb el palmell, ben pla, sense clavar-te res! Obre i tanca les mans cinc vegades per descansar-les.|Haz que amasas: amasa con las dos manos… estira la masa con el rodillo… ¡y ahora aprieta el cortador con la palma, bien plana, sin clavarte nada! Abre y cierra las manos cinco veces para descansarlas." },
+        { k: 'm3build', ph: 'repte', q: "<b>Primer, un de rodó.</b> Fes-li un forat rodó de <b>46,8 mm</b> que el travessi (20 mm d'alt, des de <b>z = −1</b>): paret d'1,6 mm.|<b>Primero, uno redondo.</b> Hazle un agujero redondo de <b>46,8 mm</b> que lo atraviese (20 mm de alto, desde <b>z = −1</b>): pared de 1,6 mm.",
+          start: { parts: [GCIR[0]] }, palette: ['hcyl'], target: { parts: GCIR },
+          checks: [{ k: 'part', t: 'cyl', hole: true, s: [46.8, 46.8, 20], at: [0, 0, null], base: -1, tol: 1.1, txt: 'Forat de 46,8 mm que el travessa|Agujero de 46,8 mm que lo atraviesa' }, { k: 'wall', min: 1.2, t: 'La paret fa 1,2 mm o més|La pared mide 1,2 mm o más' }, { k: 'one' }],
+          hint: "Toca Forat rodó. A Mida: 46,8, 46,8 i 20. A Posició: x = 0, y = 0 i z = −1.|Toca Agujero redondo. En Medida: 46,8, 46,8 y 20. En Posición: x = 0, y = 0 y z = −1.",
+          sol: { parts: GCIR } },
+        { k: 'm3build', ph: 'repte', q: "<b>L'estrella.</b> Una estrella <b>forat</b> de <b>40 × 40 × 20 mm</b> a (0, 0), des de <b>z = −1</b>: les puntes faran uns 2 mm.|<b>La estrella.</b> Una estrella <b>agujero</b> de <b>40 × 40 × 20 mm</b> en (0, 0), desde <b>z = −1</b>: las puntas medirán unos 2 mm.",
+          start: { parts: [GST0] }, palette: ['star'], target: { parts: GST },
+          checks: [{ k: 'part', t: 'star', hole: true, s: [40, 40, 20], at: [0, 0, null], base: -1, tol: 1.1, txt: "Forat d'estrella de 40 mm, passant|Agujero de estrella de 40 mm, pasante" }, { k: 'wall', min: 1.2, t: 'Ni les puntes fan menys de 1,2 mm|Ni las puntas miden menos de 1,2 mm' }, { k: 'one' }],
+          hint: "Toca Estrella i després Forat (a la barra de dalt). A Mida: 40, 40 i 20. A Posició: x = 0, y = 0 i z = −1.|Toca Estrella y después Agujero (en la barra de arriba). En Medida: 40, 40 y 20. En Posición: x = 0, y = 0 y z = −1.",
+          sol: { parts: GST } },
+        { k: 'm3build', ph: 'repte', q: "<b>La vora per als dits.</b> Afegeix una estrella sòlida de <b>60 × 60 × 3 mm</b> a (0, 0), <b>a baix</b> (z = 0). El forat també la buidarà.|<b>El borde para los dedos.</b> Añade una estrella sólida de <b>60 × 60 × 3 mm</b> en (0, 0), <b>abajo</b> (z = 0). El agujero también la vaciará.",
+          start: { parts: GST }, palette: ['star'], target: { parts: GSTV },
+          checks: [{ k: 'part', t: 'star', hole: false, s: [60, 60, 3], at: [0, 0, null], base: 0, tol: 0.6, txt: "Vora d'estrella de 60 × 60 × 3, a baix|Borde de estrella de 60 × 60 × 3, abajo" }, { k: 'flatbase', min: 500, t: 'La vora fa una base plana i ampla|El borde hace una base plana y ancha' }, { k: 'one' }, { k: 'wall', min: 1.2, t: 'Parets de 1,2 mm o més|Paredes de 1,2 mm o más' }],
+          hint: "Toca Estrella. A Mida: 60, 60 i 3. A Posició: x = 0, y = 0 i z = 0.|Toca Estrella. En Medida: 60, 60 y 3. En Posición: x = 0, y = 0 y z = 0.",
+          sol: { parts: GSTV } },
+        { k: 'm3free', ph: 'crea', q: "<b>El teu tallagaletes.</b> Pensa per a qui és i tria la forma. Paret d'uns 1,6 mm, obert de dalt a baix i vora ampla a baix.|<b>Tu cortador de galletas.</b> Piensa para quién es y elige la forma. Pared de unos 1,6 mm, abierto de arriba abajo y borde ancho abajo.",
+          name: 'El meu tallagaletes|Mi cortador de galletas', start: { parts: GSTV }, palette: ['star', 'cyl', 'hex', 'rbox', 'heart', 'hcyl', 'hbox'],
+          crit: ["La paret fa uns 1,6 mm (entre 1,2 i 2 mm) i és oberta de dalt a baix|La pared mide unos 1,6 mm (entre 1,2 y 2 mm) y es abierta de arriba abajo", 'Té una vora ampla per als dits, a baix per imprimir-lo|Tiene un borde ancho para los dedos, abajo para imprimirlo', "Fa 12-15 mm d'alt i està pensat per a algú|Mide 12-15 mm de alto y está pensado para alguien"],
+          checks: [{ k: 'hole', t: 'Té el forat que el travessa|Tiene el agujero que lo atraviesa' }, { k: 'wall', min: 1.2, t: 'Parets de 1,2 mm o més|Paredes de 1,2 mm o más' }, { k: 'size', ax: 'z', v: 13.5, tol: 1.5, t: "Fa entre 12 i 15 mm d'alt|Mide entre 12 y 15 mm de alto" }, { k: 'flatbase', min: 200, t: 'Té una base plana|Tiene una base plana' }, { k: 'one' }, { k: 'onplate' }],
+          sol: { parts: GSTV } },
+        { k: 'unplug', ph: 'tanca', ico: '🖨️', title: 'Porta-ho a la impressora|Llévalo a la impresora', t: "Si a l'escola hi ha una impressora 3D, l'àvia Rosa tindrà el seu tallagaletes:|Si en la escuela hay una impresora 3D, la abuela Rosa tendrá su cortador:",
+          steps: ["Descarrega'n l'<b>STL</b> (botó STL o «Projectes»).|Descarga su <b>STL</b> (botón STL o «Proyectos»).",
+            "S'imprimeix tal com és, amb la vora a la placa: no necessita suports i és ràpid.|Se imprime tal como es, con el borde en la placa: no necesita soportes y es rápido.",
+            "Abans de fer galetes, renta'l amb aigua tèbia i sabó. Després, igual: no al rentaplats, que la calor el deforma.|Antes de hacer galletas, lávalo con agua tibia y jabón. Después, igual: no en el lavavajillas, que el calor lo deforma.",
+            "Gira'l, posa els dits a la vora i prem la massa. Com ha anat? Apunta què milloraries.|Gíralo, pon los dedos en el borde y aprieta la masa. ¿Cómo ha ido? Apunta qué mejorarías."],
+          tip: "El PLA va bé per tallar massa en una activitat de l'escola, de tant en tant. No hi guardis menjar: a les ratlles de les capes s'hi poden quedar restes.|El PLA va bien para cortar masa en una actividad de la escuela, de vez en cuando. No guardes comida en él: en las rayas de las capas pueden quedar restos." },
+        { k: 'quiz', ph: 'tanca', q: "Per què s'imprimeix amb la <b>vora a baix</b>?|¿Por qué se imprime con el <b>borde abajo</b>?",
+          opts: ["Perquè fa una base plana i ampla i no calen suports|Porque hace una base plana y ancha y no hacen falta soportes", 'Perquè així talla més|Porque así corta más', 'Perquè la impressora no sap fer vores a dalt|Porque la impresora no sabe hacer bordes arriba'], a: 0,
+          ex: "Amb la vora a dalt, quedaria a l'aire: un voladís de 90°. A baix, s'enganxa bé a la placa.|Con el borde arriba, quedaría en el aire: un voladizo de 90°. Abajo, se pega bien a la placa." },
+        { k: 'quiz', ph: 'tanca', q: "Després de fer galetes amb el tallagaletes de PLA, què en fas?|Después de hacer galletas con el cortador de PLA, ¿qué haces con él?",
+          opts: ['El rento amb aigua tèbia i sabó, sense rentaplats, i no hi guardo menjar|Lo lavo con agua tibia y jabón, sin lavavajillas, y no guardo comida en él', 'El poso al rentaplats ben calent|Lo pongo en el lavavajillas bien caliente', 'Hi guardo les galetes que sobren|Guardo en él las galletas que sobran'], a: 0 },
         { k: 'feel', ph: 'tanca' }
       ] }
   ] };

@@ -12,6 +12,7 @@ Object.assign(TBADGE, {
   m41_ali: { id: 'm41_ali', ico: '📐', n: 'Alineador/a|Alineador/a', d: "Alinees peces a les vores i al centre, i les recolzes l'una sobre l'altra sense que res floti.|Alineas piezas a los bordes y al centro, y las apoyas una sobre otra sin que nada flote." },
   m42_rep: { id: 'm42_rep', ico: '🔁', n: 'Mestre/a dels patrons|Maestro/a de los patrones', d: 'Dupliques peces i grups i els repeteixes amb un pas exacte: tanques, files i graelles.|Duplicas piezas y grupos y los repites con un paso exacto: vallas, filas y cuadrículas.' },
   m43_mir: { id: 'm43_mir', ico: '🦋', n: 'Mirall màgic|Espejo mágico', d: "Fas la meitat d'una figura i la completes amb el mirall: papallones, cares i vehicles simètrics.|Haces la mitad de una figura y la completas con el espejo: mariposas, caras y vehículos simétricos." },
+  m45_org: { id: 'm45_org', ico: '🗂️', n: 'Ordre a la taula|Orden en la mesa', d: "Taller fet: un organitzador de taula amb tubs per als llapis i calaixets per a la goma i els clips, fet amb Alinea, Duplica i Mirall i parets de 2 mm.|Taller hecho: un organizador de mesa con tubos para los lápices y cajoncitos para la goma y los clips, hecho con Alinea, Duplica y Espejo y paredes de 2 mm." },
   m44_casa: { id: 'm44_casa', ico: '🏡', n: 'Arquitecte/a del futur|Arquitecto/a del futuro', d: 'Projecte acabat: la casa del futur, amb parts alineades, peces repetides i una façana simètrica.|Proyecto terminado: la casa del futuro, con partes alineadas, piezas repetidas y una fachada simétrica.' }
 });
 COURSE_UNITS[4] = (() => {
@@ -101,6 +102,22 @@ COURSE_UNITS[4] = (() => {
   const CASA_MEVA = [...ARB1, B('xemeneia', 'box', [8, 8, 12], 0, 6, 44, '#9AA3B5'), ...fanalC(1, -48), ...fanalC(2, 48)];
   const fpis = (id, x, z0) => B(id, 'box', [10, 2, 8], x, -10, z0, '#5BC0EB');
   const PISOS = [B('bloc', 'box', [60, 20, 50], 0, 0, 0, '#F3F3EE'), fpis('w1', -15, 8), fpis('w2', 15, 8), fpis('w3', -15, 22), fpis('trenca', 21, 22), fpis('w5', -15, 36), fpis('w6', 15, 36), B('pb', 'box', [12, 2, 14], 0, -10, 0, '#A0683A')];
+  // ---------- m4-5 · taller: l'organitzador de taula ----------
+  // Safata de 100 × 70 × 4 mm; tres tubs per als llapis (26 mm, paret de 2 mm, 50 mm d'alt) a y = 16, x = −31, 0 i 31 (Duplica fa
+  // salts de 26 + 5 = 31 mm); davant, un calaix de parets de 2 × 20 mm (dues de 96 mm a y = −32 i −6 i tres de 24 mm a x = −47, 0 i
+  // 47) que en fa dos compartiments de 44 × 24 mm per a la goma i els clips. Unitat 4: encara sense forats.
+  const SAF = B('safata', 'rbox', [100, 70, 4], 0, 0, 0, '#14A3B8', { cr: 2 });
+  const OTUB = (id, x, z0 = 4) => B(id, 'tube', [26, 26, 50], x, 16, z0, '#F7C531', { w: 2 });
+  const OPD = (id, y) => B(id, 'box', [96, 2, 20], 0, y, 4, '#EC5FA8');
+  const OPL = (id, x, t = 2) => B(id, 'box', [t, 24, 20], x, -19, 4, '#EC5FA8');
+  const OTUBS = [OTUB('t1', -31), OTUB('t2', 0), OTUB('t3', 31)];
+  const OCAL0 = [OPD('pdavant', -32), OPL('pesq', -47)], OCAL1 = [...OCAL0, OPD('pdarrere', -6), OPL('pdreta', 47)];
+  const ORG2 = [SAF, ...OTUBS, ...OCAL1], ORG = [...ORG2, OPL('pmig', 0)];
+  // l'organitzador amb les coses a dins (només per veure-ho)
+  const OCOSES = [...[[-35, 12], [-28, 19], [-4, 13], [3, 20], [28, 14]].map(([x, y], i) => B('ll' + i, 'hex', [8, 6.93, 90], x, y, 4, ['#E8453C', '#3D7BF4', '#2FB36D', '#F7C531', '#7C5CFF'][i])),
+    B('goma', 'rbox', [36, 16, 10], -23, -19, 4, '#F3F3EE', { cr: 2 }), B('clip1', 'torus', [14, 8, 2], 18, -22, 4, '#9AA3B5'), B('clip2', 'torus', [14, 8, 2], 30, -16, 4, '#9AA3B5'), B('clip3', 'torus', [14, 8, 2], 22, -12, 6, '#9AA3B5')];
+  const ORG_PLE = [...ORG.map(p => ({ ...p, g: 'org' })), ...OCOSES];
+  const ORG_PRIM = [...ORG.slice(0, -1), OPL('pmig', 0, 0.8)];
   return {
   t: 'Construir|Construir', d: 'Alinear, duplicar i mirall|Alinear, duplicar y espejo', color: '#2FB36D',
   s: [
@@ -390,6 +407,78 @@ COURSE_UNITS[4] = (() => {
         { k: 'quiz', ph: 'tanca', q: "Per fer la segona aigua de la teulada, què fas amb la primera falca?|Para hacer la segunda agua del tejado, ¿qué haces con la primera cuña?",
           opts: ["La duplico, li aplico el Mirall i la poso a l'altra banda|La duplico, le aplico el Espejo y la pongo al otro lado", 'La duplico i ja està|La duplico y ya está', 'La faig el doble de gran|La hago el doble de grande'], a: 0,
           ex: "Sense el Mirall, la segona falca baixaria cap al mateix costat i la teulada quedaria torta.|Sin el Espejo, la segunda cuña bajaría hacia el mismo lado y el tejado quedaría torcido." },
+        { k: 'feel', ph: 'tanca' }
+      ] },
+    /* ---------- Sessió 5 · Taller: l'organitzador de taula ---------- */
+    { id: 'm4-5', t: "Taller: l'organitzador de taula|Taller: el organizador de mesa", min: 40, proj: true, taller: true, badge: 'm45_org',
+      learn: ["Abans de dissenyar un organitzador, mesurem el que hi anirà: els llapis, la goma i els clips, i deixem una mica de marge.|Antes de diseñar un organizador, medimos lo que irá dentro: los lápices, la goma y los clips, y dejamos un poco de margen.",
+        "Alinea posa una peça a sobre d'una altra, Duplica repeteix el mateix salt i Mirall fa la còpia a l'altre costat: menys feina i més precisió.|Alinea pone una pieza encima de otra, Duplica repite el mismo salto y Espejo hace la copia al otro lado: menos trabajo y más precisión.",
+        "Les parets de 2 mm són prou fortes per imprimir-les i gasten poc plàstic.|Las paredes de 2 mm son bastante fuertes para imprimirlas y gastan poco plástico."],
+      steps: [
+        { k: 'quiz', ph: 'recorda', q: "Dupliques una peça i mous la còpia <b>31 mm</b> a la dreta. Si tornes a tocar <b>Duplica</b>, on surt la còpia nova?|Duplicas una pieza y mueves la copia <b>31 mm</b> a la derecha. Si vuelves a tocar <b>Duplica</b>, ¿dónde sale la copia nueva?",
+          opts: ['31 mm més a la dreta: fa el mateix salt|31 mm más a la derecha: hace el mismo salto', "A sobre de l'original|Encima del original", 'Al mig de la placa|En el centro de la placa'], a: 0,
+          ex: "Duplica recorda el salt: cada còpia nova va a la mateixa distància. Així es fan files sense escriure cada x.|Duplica recuerda el salto: cada copia nueva va a la misma distancia. Así se hacen filas sin escribir cada x." },
+        { k: 'quiz', ph: 'recorda', q: "Una paret és a <b>x = −47</b>. Què fa <b>Mirall → Còpia a l'altre costat (x)</b>?|Una pared está en <b>x = −47</b>. ¿Qué hace <b>Espejo → Copia al otro lado (x)</b>?",
+          opts: ["En fa una còpia emmirallada a x = 47|Hace una copia reflejada en x = 47", 'La gira 90°|La gira 90°', 'La fa el doble de llarga|La hace el doble de larga'], a: 0,
+          ex: "La còpia surt a l'altre costat de la línia del mig (x = 0), a la mateixa distància.|La copia sale al otro lado de la línea del medio (x = 0), a la misma distancia." },
+        { k: 'story', ph: 'missio', who: 'both', scene: 'fab', title: 'Una taula plena de coses|Una mesa llena de cosas',
+          t: "La <b>Mireia</b>, l'arquitecta de la maqueta del barri, té la taula plena de llapis, gomes i clips barrejats, i cada dia perd alguna cosa! Ens demana un <b>organitzador de taula</b>: tubs per als llapis i calaixets per a la goma i els clips. Avui és dia de <b>taller</b>: el farem amb les eines de la unitat (<b>Alinea</b>, <b>Duplica</b> i <b>Mirall</b>) i parets de 2 mm, com un objecte de veritat.|<b>Mireia</b>, la arquitecta de la maqueta del barrio, tiene la mesa llena de lápices, gomas y clips mezclados, ¡y cada día pierde alguna cosa! Nos pide un <b>organizador de mesa</b>: tubos para los lápices y cajoncitos para la goma y los clips. Hoy es día de <b>taller</b>: lo haremos con las herramientas de la unidad (<b>Alinea</b>, <b>Duplica</b> y <b>Espejo</b>) y paredes de 2 mm, como un objeto de verdad." },
+        { k: 'learn', ph: 'descobreix', cards: [
+          { k: 'Un lloc per a cada cosa|Un sitio para cada cosa', t: 'Mesures de les coses de la taula|Medidas de las cosas de la mesa', anim: 'm45lloc',
+            x: "Un llapis fa uns <b>8 mm</b> de gruix: en un tub de <b>22 mm</b> per dins n'hi caben uns quants. Una goma fa uns 40 × 20 mm: el seu calaix en fa <b>44 × 24</b>, amb marge per agafar-la amb els dits.|Un lápiz mide unos <b>8 mm</b> de grosor: en un tubo de <b>22 mm</b> por dentro caben unos cuantos. Una goma mide unos 40 × 20 mm: su cajón mide <b>44 × 24</b>, con margen para cogerla con los dedos.",
+            tip: "Mesura les teves coses: no totes les gomes fan el mateix!|Mide tus cosas: ¡no todas las gomas miden lo mismo!" },
+          { k: 'Les eines del taller|Las herramientas del taller', t: 'Alinea, Duplica i Mirall|Alinea, Duplica y Espejo', anim: 'm45eines',
+            x: "<b>Alinea → A sobre de la peça de sota</b> posa el tub just a sobre de la safata. <b>Duplica</b> fa la còpia 31 mm al costat (26 mm del tub + 5) i, si hi tornes, repeteix el salt. <b>Mirall → Còpia a l'altre costat</b> fa la paret de la dreta d'un sol toc.|<b>Alinea → Encima de la pieza de debajo</b> pone el tubo justo encima de la bandeja. <b>Duplica</b> hace la copia 31 mm al lado (26 mm del tubo + 5) y, si vuelves a tocarlo, repite el salto. <b>Espejo → Copia al otro lado</b> hace la pared de la derecha de un solo toque." },
+          { k: 'Parets de 2 mm|Paredes de 2 mm', t: 'Fortes i amb poc plàstic|Fuertes y con poco plástico', media: { k: 'model', model: { parts: ORG_PLE } },
+            x: "Els tubs tenen una <b>paret</b> de 2 mm (la forma Tub la fa sola) i les parets dels calaixets són caixes de <b>2 mm</b> de gruix. Tot recolza a la safata: és <b>una sola peça</b>. Unes parets de 0,8 mm es trencarien!|Los tubos tienen una <b>pared</b> de 2 mm (la forma Tubo la hace sola) y las paredes de los cajoncitos son cajas de <b>2 mm</b> de grosor. Todo se apoya en la bandeja: es <b>una sola pieza</b>. ¡Unas paredes de 0,8 mm se romperían!",
+            tip: 'Els llapis i la goma només hi són per veure-ho: no s\'imprimeixen.|Los lápices y la goma solo están para verlo: no se imprimen.' }
+        ] },
+        { k: 'unplug', ph: 'mans', ico: '✏️', title: "Buida l'estoig|Vacía el estuche", t: "Amb el teu estoig, un regle i paper quadriculat (cada quadret, 5 mm):|Con tu estuche, una regla y papel cuadriculado (cada cuadrito, 5 mm):",
+          steps: ["Treu-ho tot i fes dos grups: coses llargues (llapis, retoladors) i coses petites (goma, maquineta, clips).|Sácalo todo y haz dos grupos: cosas largas (lápices, rotuladores) y cosas pequeñas (goma, sacapuntas, clips).",
+            "Mesura el gruix d'un llapis i la llargada i l'amplada de la goma, en mm.|Mide el grosor de un lápiz y el largo y el ancho de la goma, en mm.",
+            "Dibuixa l'organitzador vist de dalt, a mida real: tubs rodons per a les coses llargues i calaixets per a les petites.|Dibuja el organizador visto desde arriba, a tamaño real: tubos redondos para las cosas largas y cajoncitos para las pequeñas.",
+            'Marca les parets amb una línia doble (2 mm) i escriu les mides de cada compartiment.|Marca las paredes con una línea doble (2 mm) y escribe las medidas de cada compartimento.'],
+          tip: "Quines peces es repeteixen? Encercla-les: les faràs amb Duplica o amb Mirall.|¿Qué piezas se repiten? Rodéalas: las harás con Duplica o con Espejo." },
+        { k: 'm3look', ph: 'prova', q: "Mira l'organitzador <b>des de dalt</b>. Quants compartiments té per guardar coses?|Mira el organizador <b>desde arriba</b>. ¿Cuántos compartimentos tiene para guardar cosas?",
+          model: { parts: ORG }, view: 'top', opts: ['5|5', '3|3', '9|9'], a: 0,
+          ex: "Tres tubs per als llapis i dos calaixets davant, separats per la paret del mig.|Tres tubos para los lápices y dos cajoncitos delante, separados por la pared del medio." },
+        { k: 'm3look', ph: 'investiga', q: "Una de les parets fa <b>0,8 mm</b>: es trencaria en ficar-hi els clips. <b>Toca-la.</b>|Una de las paredes mide <b>0,8 mm</b>: se rompería al meter los clips. <b>Tócala.</b>",
+          model: { parts: ORG_PRIM }, view: 'top', pick: 'pmig', yes: 'Exacte: la paret del mig és tan prima com un full de cartolina.|Exacto: la pared del medio es tan fina como una hoja de cartulina.',
+          no: "Aquesta paret fa 2 mm: és prou forta. Busca la més prima, mirant de dalt.|Esta pared mide 2 mm: es bastante fuerte. Busca la más fina, mirando desde arriba.",
+          ex: "Al taller cap paret no fa menys de 2 mm: les impressores fan línies d'uns 0,4 mm i en calen unes quantes de juntes.|En el taller ninguna pared mide menos de 2 mm: las impresoras hacen líneas de unos 0,4 mm y hacen falta unas cuantas juntas." },
+        { k: 'move', ph: 'pausa', title: 'La fila que es duplica|La fila que se duplica', secs: 30, t: "Fem de Duplica! Una persona s'aixeca. La segona s'aixeca un pas més enllà. La tercera fa el <b>mateix salt</b>: un altre pas. I la quarta? Ara feu de Mirall: el de l'esquerra aixeca la mà dreta i el de la dreta, l'esquerra!|¡Hacemos de Duplica! Una persona se levanta. La segunda se levanta un paso más allá. La tercera hace el <b>mismo salto</b>: otro paso. ¿Y la cuarta? Ahora haced de Espejo: el de la izquierda levanta la mano derecha y el de la derecha, ¡la izquierda!" },
+        { k: 'm3build', ph: 'repte', q: "<b>Els tubs.</b> El tub groc és enfonsat a la safata: posa'l <b>a sobre</b> i fes-ne <b>tres</b> en fila, a x = −31, 0 i 31.|<b>Los tubos.</b> El tubo amarillo está hundido en la bandeja: ponlo <b>encima</b> y haz <b>tres</b> en fila, en x = −31, 0 y 31.",
+          start: { parts: [SAF, OTUB('t1', -31, 0)] }, palette: ['tube'], target: { parts: [SAF, ...OTUBS] },
+          checks: [...[-31, 0, 31].map(x => ({ k: 'part', t: 'tube', at: [x, 16, null], base: 4, tol: 0.6, txt: `Tub a x = ${String(x).replace('-', '−')}, a sobre de la safata|Tubo en x = ${String(x).replace('-', '−')}, encima de la bandeja` })), { k: 'one' }],
+          hint: "Toca el tub i Alinea → A sobre de la peça de sota: puja a z = 4. Després toca Duplica dues vegades: les còpies surten soles a x = 0 i x = 31.|Toca el tubo y Alinea → Encima de la pieza de debajo: sube a z = 4. Después toca Duplica dos veces: las copias salen solas en x = 0 y x = 31.",
+          sol: { parts: [SAF, ...OTUBS] } },
+        { k: 'm3build', ph: 'repte', q: "<b>El calaix.</b> Fes la <b>paret de darrere</b> (còpia de la de davant, a y = −6) i la <b>de la dreta</b>, emmirallada a x = 47.|<b>El cajón.</b> Haz la <b>pared de atrás</b> (copia de la de delante, en y = −6) y la <b>de la derecha</b>, reflejada en x = 47.",
+          start: { parts: [SAF, ...OTUBS, ...OCAL0] }, palette: ['box'], target: { parts: ORG2 },
+          checks: [{ k: 'part', t: 'box', s: [96, 2, 20], at: [0, -6, null], base: 4, tol: 0.6, txt: 'Paret de darrere a y = −6|Pared de atrás en y = −6' }, { k: 'part', t: 'box', s: [2, 24, 20], at: [47, -19, null], base: 4, tol: 0.6, txt: 'Paret de la dreta a x = 47|Pared de la derecha en x = 47' },
+            { k: 'sym', ax: 'x', th: 0.98, t: "És simètric (mirall en x)|Es simétrico (espejo en x)" }, { k: 'one' }],
+          hint: "Toca la paret de davant, Duplica i, a Posició, escriu x = 0 i y = −6. Després toca la paret de l'esquerra i Mirall → Còpia a l'altre costat (x).|Toca la pared de delante, Duplica y, en Posición, escribe x = 0 e y = −6. Después toca la pared de la izquierda y Espejo → Copia al otro lado (x).",
+          sol: { parts: ORG2 } },
+        { k: 'm3build', ph: 'repte', q: "<b>Dos calaixets.</b> Posa una paret al mig, a <b>x = 0</b>: un compartiment per a la goma i un altre per als clips.|<b>Dos cajoncitos.</b> Pon una pared en el medio, en <b>x = 0</b>: un compartimento para la goma y otro para los clips.",
+          start: { parts: ORG2 }, palette: ['box'], target: { parts: ORG },
+          checks: [{ k: 'part', t: 'box', s: [2, 24, 20], at: [0, -19, null], base: 4, tol: 0.6, txt: 'Paret del mig a x = 0|Pared del medio en x = 0' }, { k: 'wall', min: 1.8, t: 'Cap paret fa menys de 2 mm|Ninguna pared mide menos de 2 mm' }, { k: 'one' }],
+          hint: "Toca la paret de l'esquerra, Duplica i, a Posició, escriu x = 0.|Toca la pared de la izquierda, Duplica y, en Posición, escribe x = 0.",
+          sol: { parts: ORG } },
+        { k: 'm3free', ph: 'crea', q: "<b>El teu organitzador.</b> Adapta'l a les coses que has mesurat (tubs, calaixets, el teu nom) amb Alinea, Duplica i Mirall.|<b>Tu organizador.</b> Adáptalo a las cosas que has medido (tubos, cajoncitos, tu nombre) con Alinea, Duplica y Espejo.",
+          name: 'El meu organitzador|Mi organizador', start: { parts: ORG }, palette: ['box', 'rbox', 'tube', 'cyl', 'hex', 'star', 'heart', 'text'],
+          crit: ['Té un lloc per a cada cosa: llapis, goma i clips|Tiene un sitio para cada cosa: lápices, goma y clips', 'Parets de 2 mm o més i tot recolzat a la safata|Paredes de 2 mm o más y todo apoyado en la bandeja', "Has fet servir Alinea, Duplica o Mirall per col·locar i repetir|Has usado Alinea, Duplica o Espejo para colocar y repetir"],
+          checks: [{ k: 'onplate' }, { k: 'one' }, { k: 'wall', min: 1.8, t: 'Cap paret fa menys de 2 mm|Ninguna pared mide menos de 2 mm' }, { k: 'flatbase', min: 3000, t: 'Té una base plana i ampla|Tiene una base plana y ancha' }, { k: 'fit', box: [180, 180, 150], t: 'Cap a la placa de la Nuvi|Cabe en la placa de Nuvi' }],
+          sol: { parts: [...ORG.slice(0, 4).map(p => p.t === 'tube' ? { ...p, c: '#2FB36D' } : p), ...ORG.slice(4)] } },
+        { k: 'unplug', ph: 'tanca', ico: '🖨️', title: 'Porta-ho a la impressora|Llévalo a la impresora', t: "Si a l'escola hi ha una impressora 3D, l'organitzador pot anar a la teva taula:|Si en la escuela hay una impresora 3D, el organizador puede ir a tu mesa:",
+          steps: ["Descarrega'n l'<b>STL</b> amb el botó STL (també el trobaràs a «Projectes»).|Descarga su <b>STL</b> con el botón STL (también lo encontrarás en «Proyectos»).",
+            "S'imprimeix amb la safata a la placa: els tubs i les parets pugen rectes i no necessiten suports.|Se imprime con la bandeja en la placa: los tubos y las paredes suben rectos y no necesitan soportes.",
+            "És una peça gran: pot tardar unes quantes hores. Un adult la pot deixar imprimint.|Es una pieza grande: puede tardar unas cuantas horas. Un adulto la puede dejar imprimiendo.",
+            'Omple-la: hi caben els llapis i la goma? Apunta què canviaries a la versió 2.|Llénala: ¿caben los lápices y la goma? Apunta qué cambiarías en la versión 2.'],
+          tip: "Sense impressora? Fes-ne una maqueta de cartolina amb les mateixes mides.|¿Sin impresora? Haz una maqueta de cartulina con las mismas medidas." },
+        { k: 'quiz', ph: 'tanca', q: "El tub és enfonsat a la safata. Quina eina el posa <b>just a sobre</b>?|El tubo está hundido en la bandeja. ¿Qué herramienta lo pone <b>justo encima</b>?",
+          opts: ['Alinea → A sobre de la peça de sota|Alinea → Encima de la pieza de debajo', 'Mirall → Còpia a l\'altre costat|Espejo → Copia al otro lado', 'Duplica|Duplica'], a: 0 },
+        { k: 'quiz', ph: 'tanca', q: "Quin gruix mínim donem a les parets d'un objecte per imprimir?|¿Qué grosor mínimo damos a las paredes de un objeto para imprimir?",
+          opts: ['2 mm|2 mm', '0,8 mm|0,8 mm', '20 mm|20 mm'], a: 0,
+          ex: "Amb 2 mm la paret és forta; amb 20 mm gastaríem molt plàstic i hi cabrien poques coses.|Con 2 mm la pared es fuerte; con 20 mm gastaríamos mucho plástico y cabrían pocas cosas." },
         { k: 'feel', ph: 'tanca' }
       ] }
   ] };

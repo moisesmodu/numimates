@@ -117,3 +117,43 @@ Object.assign(TANI, (() => {
     }
   };
 })());
+/* ---------- m5-5 · taller: el rètol de la porta ----------
+   m55retol: placa, dos forats amb un cordill i el nom en relleu (vist de davant) · m55trac: lletres de 5 mm (traços d'1 mm) que
+   creixen amb Proporcional fins a 12 mm (traços de 2,4 mm). Les lletres són les de la forma Text («Numi 3D», m3Glyph). */
+Object.assign(TANI, (() => {
+  const D = 5.5, fr = s => (s / D).toFixed(3);
+  const pill = (x, y, w, txt, t, col = '#fff', cls = 'tat s') => `<g ${tA(t, 'ta-pop')}><rect x="${x}" y="${y}" width="${w}" height="26" rx="13" fill="${col}" filter="url(#bwSh)"/><text x="${x + w / 2}" y="${y + 18}" text-anchor="middle" class="${cls}">${txt}</text></g>`;
+  // una paraula amb la lletra del taller: x0, y0 = cantonada de baix a l'esquerra; k = px per unitat (les majúscules fan 10 unitats)
+  const word = (txt, x0, y0, k, fill, extra = '') => { if (typeof m3Glyph !== 'function' || typeof m3GlyphPath !== 'function') return `<text x="${x0}" y="${y0}" style="font:900 ${10 * k * 1.25}px Lexend,sans-serif" fill="${fill}" ${extra}>${txt}</text>`;
+    let x = x0, d = ''; for (const ch of txt) { const g = m3Glyph(ch); if (!g) continue; d += m3GlyphPath(ch, x, y0, k); x += (g.w + 1.2) * k; } return `<path d="${d}" fill="${fill}" fill-rule="evenodd" ${extra}/>`; };
+  const wordW = (txt, k) => { if (typeof m3Glyph !== 'function') return txt.length * 8.2 * k; let w = 0; for (const ch of txt) { const g = m3Glyph(ch); if (g) w += g.w + 1.2; } return (w - 1.2) * k; };
+  return {
+    m55retol() {
+      const K = 2.2, X = x => 160 + x * K, Y = y => 118 - y * K, k = 1.2 * K, w = wordW('TALLER', k), x0 = X(0) - w / 2, y0 = Y(-9);
+      return tSvg(206, `<rect width="320" height="206" rx="20" fill="#F1F2FB"/>
+        <g ${tA(0.1, 'ta-pop')}><rect x="${X(-60)}" y="${Y(20)}" width="${120 * K}" height="${40 * K}" rx="7" fill="#2A5BC4"/><rect x="${X(-60)}" y="${Y(20) - 4}" width="${120 * K}" height="${40 * K}" rx="7" fill="#3D7BF4"/></g>
+        <g ${tA(0.6, 'ta-pop')}><circle cx="${X(-52)}" cy="${Y(12) - 4}" r="${2.5 * K + 0.5}" fill="#F1F2FB" stroke="#2A5BC4" stroke-width="1.5"/></g>
+        <g ${tA(1.1, 'ta-pop')}><circle cx="${X(52)}" cy="${Y(12) - 4}" r="${2.5 * K + 0.5}" fill="#F1F2FB" stroke="#2A5BC4" stroke-width="1.5"/></g>
+        <g ${tA(0.9, 'ta-in')}><path d="M${X(-30)} ${Y(12) - 4}H${X(30)}" stroke="#7C5CFF" stroke-width="2" stroke-dasharray="4 4"/><path d="M${X(30) - 6} ${Y(12) - 9}L${X(30)} ${Y(12) - 4}l-6 5" fill="none" stroke="#7C5CFF" stroke-width="2"/></g>
+        <g ${tA(1.7, 'ta-in')}>${word('TALLER', x0 + 3, y0 + 1, k, '#B88A00')}${word('TALLER', x0, y0 - 4, k, '#F7C531')}</g>
+        <path ${tA(2.5, 'ta-draw')} pathLength="1" d="M${X(-52)} ${Y(12) - 4}L160 22L${X(52)} ${Y(12) - 4}" fill="none" stroke="#A0683A" stroke-width="2.5" stroke-linecap="round"/>
+        <g ${tA(2.5, 'ta-pop')}><circle cx="160" cy="21" r="5" fill="#5A678C"/></g>
+        ${pill(14, 168, 132, '120 × 40 × 4 mm', 0.3)}${pill(152, 168, 74, L('Ø 5 mm', 'Ø 5 mm'), 0.8, '#7C5CFF', 'tat s w')}${pill(232, 168, 82, L('relleu 3', 'relieve 3'), 1.9, '#F7C531')}`);
+    },
+    m55trac() {
+      // la mateixa A amb lletres de 5 mm i de 12 mm (8 px per mm): els traços (2 unitats) fan 1 mm i 2,4 mm
+      const P = 8, kS = 0.5 * P, kB = 1.2 * P, yb = 168;
+      const lines = (x, y, h, n) => Array.from({ length: n }, (_, i) => `<line x1="${x + 1.6 + i * 3.2}" y1="${y}" x2="${x + 1.6 + i * 3.2}" y2="${y + h}" stroke="#fff" stroke-width="1" opacity=".55"/>`).join('');
+      return tSvg(206, `<rect width="320" height="206" rx="20" fill="#F1F2FB"/><rect x="14" y="${yb}" width="292" height="6" rx="3" fill="#C9CFDD"/>
+        <g ${tA(0.2, 'ta-pop')}>${word('A', 34, yb, kS, '#E8453C')}</g>
+        <g ${tA(0.6, 'ta-in')}>${lines(34, yb - 7 * kS, 7 * kS - 2, 2)}</g>
+        ${pill(14, 18, 116, L('5 mm: traç 1 mm', '5 mm: trazo 1 mm'), 0.5, '#E8453C', 'tat s w')}
+        <g ${tA(1.2, 'ta-in')}><path d="M90 130H150" stroke="#7C5CFF" stroke-width="3" stroke-linecap="round"/><path d="M142 123L151 130L142 137" fill="none" stroke="#7C5CFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></g>
+        ${pill(72, 92, 96, L('Proporcional', 'Proporcional'), 1.2, '#7C5CFF', 'tat s w')}
+        <g ${tA(1.9, 'ta-pop')}>${word('A', 176, yb, kB, '#22A06B')}</g>
+        <g ${tA(2.4, 'ta-in')}>${lines(176, yb - 7 * kB, 7 * kB - 2, 6)}</g>
+        ${pill(176, 18, 130, L('12 mm: traç 2,4 mm', '12 mm: trazo 2,4 mm'), 2.0, '#22A06B', 'tat s w')}
+        <g ${tA(2.9, 'ta-in')}><text x="70" y="${yb + 26}" text-anchor="middle" class="tat s" style="fill:#E8453C">${L('2 línies: fràgil', '2 líneas: frágil')}</text><text x="210" y="${yb + 26}" text-anchor="middle" class="tat s" style="fill:#22A06B">${L('6 línies: fort', '6 líneas: fuerte')}</text></g>`);
+    }
+  };
+})());

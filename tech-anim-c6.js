@@ -427,6 +427,51 @@ Object.assign(TANI, (() => {
     }
   };
 })());
+/* ---------- m3-5 · taller: el suport per al mòbil (vist de costat i de prop: davant a l'esquerra, darrere a la dreta) ----------
+   m35ranura: el mòbil entra a la ranura (gruix 10 mm + marge = 13 mm) · m35angle: la placa estirada es gira 65° en x (el taller
+   la gira pel centre i la puja perquè no s'enfonsi) i després es col·loca a y = 15 i z = 0, ficada a la base. 1 mm = 2,6 px. */
+Object.assign(TANI, (() => {
+  const D = 5.5, fr = s => (s / D).toFixed(3), K = 2.6, X0 = 56, Y0 = 182;
+  const S = (y, z) => [+(X0 + (y + 40) * K).toFixed(1), +(Y0 - z * K).toFixed(1)];
+  const poly = l => l.map(([y, z]) => S(y, z).join(',')).join(' ');
+  // un rectangle de costat de llarg L i gruix G, girat a graus (com Gir x), amb el centre a (yc, zc)
+  const rot = (L, G, a, yc, zc) => { const r = a * Math.PI / 180, c = Math.cos(r), s = Math.sin(r); return [[-L / 2, -G / 2], [L / 2, -G / 2], [L / 2, G / 2], [-L / 2, G / 2]].map(([u, v]) => [yc + u * c - v * s, zc + u * s + v * c]); };
+  const pill = (x, y, w, txt, t, col = '#fff', cls = 'tat s') => `<g ${tA(t, 'ta-pop')}><rect x="${x}" y="${y}" width="${w}" height="26" rx="13" fill="${col}" filter="url(#bwSh)"/><text x="${x + w / 2}" y="${y + 18}" text-anchor="middle" class="${cls}">${txt}</text></g>`;
+  const bg = h => `<rect width="320" height="${h}" rx="20" fill="#F1F2FB"/><rect x="10" y="${Y0}" width="300" height="10" rx="3" fill="#5A678C"/>`;
+  const BASE = `<polygon points="${poly([[-40, 0], [40, 0], [40, 4], [-40, 4]])}" fill="#3D7BF4"/>`, VORA = `<polygon points="${poly([[-23, 0], [-17, 0], [-17, 14], [-23, 14]])}" fill="#F7C531"/>`;
+  const ESQ = rot(80, 6, 65, 15, 37.52);
+  const dimH = (y1, y2, z, col) => { const [a, b] = S(y1, z), [c] = S(y2, z); return `<path d="M${a} ${b}H${c}M${a + 6} ${b - 4}L${a} ${b}l6 4M${c - 6} ${b - 4}L${c} ${b}l-6 4" stroke="${col}" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`; };
+  return {
+    m35ranura() {
+      // el mòbil (150 × 9 mm) recolzat a l'esquena: entra lliscant en la seva direcció fins a la base
+      const r = 65 * Math.PI / 180, n = [-Math.sin(r), Math.cos(r)], u = [Math.cos(r), Math.sin(r)], c0 = [15 + n[0] * 7.5, 37.52 + n[1] * 7.5], hh = (150 * Math.sin(r) + 9 * Math.cos(r)) / 2, d = (4 + hh - c0[1]) / u[1];
+      const M = rot(150, 9, 65, c0[0] + u[0] * d, c0[1] + u[1] * d), dx = (u[0] * 30 * K).toFixed(1), dy = (-u[1] * 30 * K).toFixed(1);
+      return tSvg(200, `${bg(200)}<g ${tA(0.1, 'ta-fade')}>${BASE}${VORA}<polygon points="${poly(ESQ)}" fill="#7C5CFF"/></g>
+        <g><animateTransform attributeName="transform" type="translate" values="${dx} ${dy};${dx} ${dy};0 0;0 0" keyTimes="0;${fr(0.5)};${fr(1.6)};1" dur="${D}s" repeatCount="indefinite"/>
+          <polygon points="${poly(M)}" fill="#2A2F3A" stroke="#14204A" stroke-width="1.5" stroke-linejoin="round"/></g>
+        <g ${tA(2.0, 'ta-in')}>${dimH(-17, -1.6, 9, '#E8453C')}</g>
+        ${pill(10, 14, 128, L('mòbil: 10 mm', 'móvil: 10 mm'), 0.4, '#2A2F3A', 'tat s w')}
+        ${pill(10, 46, 152, L('ranura: 10 + 3 = 13', 'ranura: 10 + 3 = 13'), 2.2, '#E8453C', 'tat s w')}
+        ${pill(10, 78, 128, L('vora: 70 × 6 × 14', 'borde: 70 × 6 × 14'), 3.0)}`);
+    },
+    m35angle() {
+      const zc = a => { const r = a * Math.PI / 180; return 4 + (80 * Math.sin(r) + 6 * Math.cos(r)) / 2; };
+      const T = [0, 0.6, 1.0, 1.4, 1.8, 2.2, 2.6, 3.4, D], A = [0, 0, 15, 30, 45, 65, 65, 65, 65];
+      const tr = A.map((a, i) => (i >= 7 ? S(15, 37.52) : S(0, zc(a))).join(' ')).join(';'), ro = A.map(a => -a).join(';'), kt = T.map(t => (t / D).toFixed(3)).join(';');
+      const plate = `<rect x="${-40 * K}" y="${-3 * K}" width="${80 * K}" height="${6 * K}" rx="2" fill="#7C5CFF"/>`;
+      const [px, py] = S(2.69, 4), R = 46, a65 = 65 * Math.PI / 180;
+      return tSvg(200, `${bg(200)}${BASE}${VORA}
+        <polygon points="${poly(rot(80, 6, 0, 0, 7))}" fill="#7C5CFF" fill-opacity=".16" stroke="#7C5CFF" stroke-width="1.5" stroke-dasharray="4 3"/>
+        <g><animateTransform attributeName="transform" type="translate" values="${tr}" keyTimes="${kt}" dur="${D}s" repeatCount="indefinite"/>
+          <g><animateTransform attributeName="transform" type="rotate" values="${ro}" keyTimes="${kt}" dur="${D}s" repeatCount="indefinite"/>${plate}</g></g>
+        <path d="M${(px + R).toFixed(1)} ${py}A${R} ${R} 0 0 0 ${(px + R * Math.cos(a65)).toFixed(1)} ${(py - R * Math.sin(a65)).toFixed(1)}" fill="none" stroke="#E8453C" stroke-width="3" stroke-linecap="round" pathLength="1" ${tA(3.6, 'ta-draw')}/>
+        <g ${tA(3.8, 'ta-in')}><text x="${(px + 30).toFixed(1)}" y="${(py - 12).toFixed(1)}" class="tat b" style="fill:#E8453C">65°</text></g>
+        ${pill(10, 14, 120, L('Gir x = 65', 'Giro x = 65'), 0.6, '#7C5CFF', 'tat s w')}
+        ${pill(10, 46, 120, 'y = 15 · z = 0', 2.6)}
+        ${pill(10, 78, 140, L('ficada a la base', 'metida en la base'), 3.4, '#22A06B', 'tat s w')}`);
+    }
+  };
+})());
 
 /* ── unitat 4 ── */
 /* Tech 3D · Nivell 1 · unitat 4 · animacions de teoria (TANI): alinear, recolzar, duplicar, el pas, la simetria i la casa.
@@ -580,6 +625,46 @@ Object.assign(TANI, (() => {
     }
   };
 })());
+/* ---------- m4-5 · taller: l'organitzador de taula (vist de dalt; 1 mm = 2 px) ----------
+   m45lloc: cada cosa al seu lloc, amb les mides · m45eines: Alinea, Duplica (salt de 31 mm) i Mirall → còpia a l'altre costat. */
+Object.assign(TANI, (() => {
+  const D = 5.5, fr = s => (s / D).toFixed(3), K = 2, CX = 112, CY = 100;
+  const X = x => +(CX + x * K).toFixed(1), Y = y => +(CY - y * K).toFixed(1);
+  const pill = (x, y, w, txt, t, col = '#fff', cls = 'tat s') => `<g ${tA(t, 'ta-pop')}><rect x="${x}" y="${y}" width="${w}" height="26" rx="13" fill="${col}" filter="url(#bwSh)"/><text x="${x + w / 2}" y="${y + 18}" text-anchor="middle" class="${cls}">${txt}</text></g>`;
+  const tray = `<rect x="${X(-50)}" y="${Y(35)}" width="${100 * K}" height="${70 * K}" rx="8" fill="#14A3B8"/><rect x="${X(-50) + 4}" y="${Y(35) + 4}" width="${100 * K - 8}" height="${70 * K - 8}" rx="6" fill="#3BC0D2" opacity=".5"/>`;
+  const tube = (x, extra = '') => `<g ${extra}><circle cx="${X(x)}" cy="${Y(16)}" r="${13 * K}" fill="#F7C531"/><circle cx="${X(x)}" cy="${Y(16)}" r="${11 * K}" fill="#8C6A00" opacity=".55"/></g>`;
+  const wall = (x, y, w, d, extra = '') => `<rect x="${X(x - w / 2)}" y="${Y(y + d / 2)}" width="${w * K}" height="${d * K}" rx="1" fill="#EC5FA8" ${extra}/>`;
+  const walls = (t = 0) => wall(0, -32, 96, 2) + wall(0, -6, 96, 2) + wall(-47, -19, 2, 24) + wall(47, -19, 2, 24) + wall(0, -19, 2, 24);
+  return {
+    m45lloc() {
+      const pen = (x, y, c, t) => `<g ${tA(t, 'ta-pop')}><polygon points="${[0, 60, 120, 180, 240, 300].map(a => `${(X(x) + 4 * K * Math.cos(a * Math.PI / 180)).toFixed(1)},${(Y(y) + 4 * K * Math.sin(a * Math.PI / 180)).toFixed(1)}`).join(' ')}" fill="${c}" stroke="#14204A" stroke-width="1"/></g>`;
+      const clip = (x, y, a, t) => `<g ${tA(t, 'ta-pop')}><rect x="${X(x) - 12}" y="${Y(y) - 5}" width="24" height="10" rx="5" fill="none" stroke="#5A678C" stroke-width="2.4" transform="rotate(${a} ${X(x)} ${Y(y)})"/></g>`;
+      return tSvg(200, `<rect width="320" height="200" rx="20" fill="#F1F2FB"/>${tray}${tube(-31)}${tube(0)}${tube(31)}${walls()}
+        ${pen(-35, 12, '#E8453C', 0.5)}${pen(-27, 19, '#3D7BF4', 0.65)}${pen(-3, 13, '#2FB36D', 0.8)}${pen(4, 20, '#F7C531', 0.95)}${pen(28, 14, '#7C5CFF', 1.1)}
+        <g ${tA(1.6, 'ta-pop')}><rect x="${X(-41)}" y="${Y(-11)}" width="${36 * K}" height="${16 * K}" rx="5" fill="#F3F3EE" stroke="#C9CFDD" stroke-width="1.5"/></g>
+        ${clip(18, -22, 20, 2.1)}${clip(32, -15, -30, 2.25)}${clip(24, -12, 70, 2.4)}
+        <g ${tA(2.9, 'ta-in')}><path d="M${X(20)} ${Y(16)}H${X(42)}" stroke="#14204A" stroke-width="2" stroke-dasharray="3 3"/></g>
+        ${pill(222, 22, 92, L('llapis 8 mm', 'lápiz 8 mm'), 0.5)}${pill(222, 54, 92, L('tub: 22 mm', 'tubo: 22 mm'), 2.9, '#F7C531')}
+        ${pill(222, 104, 92, L('goma 40 × 20', 'goma 40 × 20'), 1.6)}${pill(222, 136, 92, L('calaix 44 × 24', 'cajón 44 × 24'), 3.4, '#EC5FA8', 'tat s w')}
+        ${pill(222, 168, 92, L('paret 2 mm', 'pared 2 mm'), 4.0, '#14204A', 'tat s w')}`);
+    },
+    m45eines() {
+      // 1) el tub puja a sobre (de ratllat a ple), 2) Duplica ×2 (salts de 31 mm), 3) Mirall: la paret de l'esquerra a l'altre costat
+      const slide = (dx, t0, t1) => `<animateTransform attributeName="transform" type="translate" values="${dx} 0;${dx} 0;0 0;0 0" keyTimes="0;${fr(t0)};${fr(t1)};1" dur="${D}s" repeatCount="indefinite"/>`;
+      const jump = (x1, x2, t) => `<g ${tA(t, 'ta-in')}><path d="M${X(x1)} ${Y(33)}Q${(X(x1) + X(x2)) / 2} ${Y(45)} ${X(x2)} ${Y(33)}" fill="none" stroke="#14204A" stroke-width="2" stroke-dasharray="4 3"/><path d="M${X(x2) - 6} ${Y(36)}L${X(x2)} ${Y(33)}l-1 -7" fill="none" stroke="#14204A" stroke-width="2" stroke-linecap="round"/><text x="${(X(x1) + X(x2)) / 2}" y="${Y(44) - 4}" text-anchor="middle" class="tat s">+31</text></g>`;
+      return tSvg(200, `<rect width="320" height="200" rx="20" fill="#F1F2FB"/>${tray}
+        <g opacity=".45"><circle cx="${X(-31)}" cy="${Y(16)}" r="${13 * K}" fill="none" stroke="#B88A00" stroke-width="2" stroke-dasharray="5 4"/></g>
+        ${tube(-31, tA(0.7, 'ta-pop'))}
+        <g>${slide(-31 * K, 1.4, 1.9)}<g ${tA(1.4, 'ta-fade')}>${tube(0)}</g></g>${jump(-31, 0, 1.9)}
+        <g>${slide(-31 * K, 2.4, 2.9)}<g ${tA(2.4, 'ta-fade')}>${tube(31)}</g></g>${jump(0, 31, 2.9)}
+        ${wall(0, -32, 96, 2)}${wall(-47, -19, 2, 24)}
+        <g ${tA(3.4, 'ta-in')}><path d="M${X(0)} ${Y(-2)}V${Y(-36)}" stroke="#7C5CFF" stroke-width="2" stroke-dasharray="5 4"/></g>
+        <g ${tA(3.9, 'ta-pop')}>${wall(47, -19, 2, 24)}</g><g ${tA(3.9, 'ta-in')}><path d="M${X(-40)} ${Y(-19)}H${X(40)}" stroke="#7C5CFF" stroke-width="2" stroke-dasharray="2 4"/><path d="M${X(40) - 6} ${Y(-19) - 5}L${X(40)} ${Y(-19)}l-6 5" fill="none" stroke="#7C5CFF" stroke-width="2"/></g>
+        ${pill(222, 30, 92, L('1 Alinea', '1 Alinea'), 0.7, '#14A3B8', 'tat s w')}${pill(222, 70, 92, L('2 Duplica ×2', '2 Duplica ×2'), 1.4, '#F7C531')}${pill(222, 110, 92, L('3 Mirall', '3 Espejo'), 3.4, '#7C5CFF', 'tat s w')}
+        ${pill(222, 150, 92, L('x = 0: el mig', 'x = 0: el medio'), 3.4)}`);
+    }
+  };
+})());
 
 /* ── unitat 5 ── */
 /* Tech 3D · Nivell 1 · unitat 5 «Forats» · animacions de teoria (TANI)
@@ -698,6 +783,46 @@ Object.assign(TANI, (() => {
       const s2 = `<rect x="26" y="150" width="130" height="18" rx="2" fill="#3D7BF4"/><rect x="64" y="150" width="54" height="7" fill="#fff"/><g opacity="0">${show(3.0)}<rect x="26" y="146" width="38" height="4" rx="2" fill="#E5489A"/><rect x="118" y="146" width="38" height="4" rx="2" fill="#E5489A"/></g>`;
       const p2 = `<rect x="222" y="134" width="76" height="44" rx="4" fill="#FBFBFE" stroke="#DCE4FA"/><g opacity="0">${show(3.6)}<rect x="226" y="138" width="68" height="36" rx="3" fill="#E5489A"/>${heart(260, 160, 1.3, '#fff')}</g>`;
       return tSvg(204, `${bg(204)}${row(14, 0.2, L('Relleu: el dibuix agafa la tinta', 'Relieve: el dibujo coge la tinta'), s1, p1)}${row(104, 2.2, L('Gravat: el dibuix queda en blanc', 'Grabado: el dibujo queda en blanco'), s2, p2)}`);
+    }
+  };
+})());
+/* ---------- m5-5 · taller: el rètol de la porta ----------
+   m55retol: placa, dos forats amb un cordill i el nom en relleu (vist de davant) · m55trac: lletres de 5 mm (traços d'1 mm) que
+   creixen amb Proporcional fins a 12 mm (traços de 2,4 mm). Les lletres són les de la forma Text («Numi 3D», m3Glyph). */
+Object.assign(TANI, (() => {
+  const D = 5.5, fr = s => (s / D).toFixed(3);
+  const pill = (x, y, w, txt, t, col = '#fff', cls = 'tat s') => `<g ${tA(t, 'ta-pop')}><rect x="${x}" y="${y}" width="${w}" height="26" rx="13" fill="${col}" filter="url(#bwSh)"/><text x="${x + w / 2}" y="${y + 18}" text-anchor="middle" class="${cls}">${txt}</text></g>`;
+  // una paraula amb la lletra del taller: x0, y0 = cantonada de baix a l'esquerra; k = px per unitat (les majúscules fan 10 unitats)
+  const word = (txt, x0, y0, k, fill, extra = '') => { if (typeof m3Glyph !== 'function' || typeof m3GlyphPath !== 'function') return `<text x="${x0}" y="${y0}" style="font:900 ${10 * k * 1.25}px Lexend,sans-serif" fill="${fill}" ${extra}>${txt}</text>`;
+    let x = x0, d = ''; for (const ch of txt) { const g = m3Glyph(ch); if (!g) continue; d += m3GlyphPath(ch, x, y0, k); x += (g.w + 1.2) * k; } return `<path d="${d}" fill="${fill}" fill-rule="evenodd" ${extra}/>`; };
+  const wordW = (txt, k) => { if (typeof m3Glyph !== 'function') return txt.length * 8.2 * k; let w = 0; for (const ch of txt) { const g = m3Glyph(ch); if (g) w += g.w + 1.2; } return (w - 1.2) * k; };
+  return {
+    m55retol() {
+      const K = 2.2, X = x => 160 + x * K, Y = y => 118 - y * K, k = 1.2 * K, w = wordW('TALLER', k), x0 = X(0) - w / 2, y0 = Y(-9);
+      return tSvg(206, `<rect width="320" height="206" rx="20" fill="#F1F2FB"/>
+        <g ${tA(0.1, 'ta-pop')}><rect x="${X(-60)}" y="${Y(20)}" width="${120 * K}" height="${40 * K}" rx="7" fill="#2A5BC4"/><rect x="${X(-60)}" y="${Y(20) - 4}" width="${120 * K}" height="${40 * K}" rx="7" fill="#3D7BF4"/></g>
+        <g ${tA(0.6, 'ta-pop')}><circle cx="${X(-52)}" cy="${Y(12) - 4}" r="${2.5 * K + 0.5}" fill="#F1F2FB" stroke="#2A5BC4" stroke-width="1.5"/></g>
+        <g ${tA(1.1, 'ta-pop')}><circle cx="${X(52)}" cy="${Y(12) - 4}" r="${2.5 * K + 0.5}" fill="#F1F2FB" stroke="#2A5BC4" stroke-width="1.5"/></g>
+        <g ${tA(0.9, 'ta-in')}><path d="M${X(-30)} ${Y(12) - 4}H${X(30)}" stroke="#7C5CFF" stroke-width="2" stroke-dasharray="4 4"/><path d="M${X(30) - 6} ${Y(12) - 9}L${X(30)} ${Y(12) - 4}l-6 5" fill="none" stroke="#7C5CFF" stroke-width="2"/></g>
+        <g ${tA(1.7, 'ta-in')}>${word('TALLER', x0 + 3, y0 + 1, k, '#B88A00')}${word('TALLER', x0, y0 - 4, k, '#F7C531')}</g>
+        <path ${tA(2.5, 'ta-draw')} pathLength="1" d="M${X(-52)} ${Y(12) - 4}L160 22L${X(52)} ${Y(12) - 4}" fill="none" stroke="#A0683A" stroke-width="2.5" stroke-linecap="round"/>
+        <g ${tA(2.5, 'ta-pop')}><circle cx="160" cy="21" r="5" fill="#5A678C"/></g>
+        ${pill(14, 168, 132, '120 × 40 × 4 mm', 0.3)}${pill(152, 168, 74, L('Ø 5 mm', 'Ø 5 mm'), 0.8, '#7C5CFF', 'tat s w')}${pill(232, 168, 82, L('relleu 3', 'relieve 3'), 1.9, '#F7C531')}`);
+    },
+    m55trac() {
+      // la mateixa A amb lletres de 5 mm i de 12 mm (8 px per mm): els traços (2 unitats) fan 1 mm i 2,4 mm
+      const P = 8, kS = 0.5 * P, kB = 1.2 * P, yb = 168;
+      const lines = (x, y, h, n) => Array.from({ length: n }, (_, i) => `<line x1="${x + 1.6 + i * 3.2}" y1="${y}" x2="${x + 1.6 + i * 3.2}" y2="${y + h}" stroke="#fff" stroke-width="1" opacity=".55"/>`).join('');
+      return tSvg(206, `<rect width="320" height="206" rx="20" fill="#F1F2FB"/><rect x="14" y="${yb}" width="292" height="6" rx="3" fill="#C9CFDD"/>
+        <g ${tA(0.2, 'ta-pop')}>${word('A', 34, yb, kS, '#E8453C')}</g>
+        <g ${tA(0.6, 'ta-in')}>${lines(34, yb - 7 * kS, 7 * kS - 2, 2)}</g>
+        ${pill(14, 18, 116, L('5 mm: traç 1 mm', '5 mm: trazo 1 mm'), 0.5, '#E8453C', 'tat s w')}
+        <g ${tA(1.2, 'ta-in')}><path d="M90 130H150" stroke="#7C5CFF" stroke-width="3" stroke-linecap="round"/><path d="M142 123L151 130L142 137" fill="none" stroke="#7C5CFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></g>
+        ${pill(72, 92, 96, L('Proporcional', 'Proporcional'), 1.2, '#7C5CFF', 'tat s w')}
+        <g ${tA(1.9, 'ta-pop')}>${word('A', 176, yb, kB, '#22A06B')}</g>
+        <g ${tA(2.4, 'ta-in')}>${lines(176, yb - 7 * kB, 7 * kB - 2, 6)}</g>
+        ${pill(176, 18, 130, L('12 mm: traç 2,4 mm', '12 mm: trazo 2,4 mm'), 2.0, '#22A06B', 'tat s w')}
+        <g ${tA(2.9, 'ta-in')}><text x="70" y="${yb + 26}" text-anchor="middle" class="tat s" style="fill:#E8453C">${L('2 línies: fràgil', '2 líneas: frágil')}</text><text x="210" y="${yb + 26}" text-anchor="middle" class="tat s" style="fill:#22A06B">${L('6 línies: fort', '6 líneas: fuerte')}</text></g>`);
     }
   };
 })());
@@ -915,6 +1040,59 @@ Object.assign(TANI, (() => {
     }
   };
 })());
+/* ---------- m6-5 · taller: de Numi a la impressora ----------
+   m65cami: Numi → STL → laminador → impressora (amb el Tinkercad com a parada opcional, amb «Importa») · m65lamina: capes de
+   0,2 mm, farciment del 15-20 % i suports, i el laminador calcula el temps i el filament · m65llista: la llista abans d'imprimir.
+   Dibuixos genèrics (cap logotip ni pantalla de cap programa). */
+Object.assign(TANI, (() => {
+  const D = 5.5, fr = s => (s / D).toFixed(3), OR = '#F5893A', OR2 = '#FFA866';
+  const bg = h => `<rect width="320" height="${h}" rx="20" fill="#F1F2FB"/>`;
+  const card = (x, y, w, h, dash) => `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="14" fill="#fff" stroke="${dash ? '#7C5CFF' : '#DCE4FA'}" stroke-width="2" ${dash ? 'stroke-dasharray="5 4"' : ''} filter="url(#bwSh)"/>`;
+  const pill = (x, y, w, txt, t, col = '#fff', cls = 'tat s') => `<g ${tA(t, 'ta-pop')}><rect x="${x}" y="${y}" width="${w}" height="26" rx="13" fill="${col}" filter="url(#bwSh)"/><text x="${x + w / 2}" y="${y + 18}" text-anchor="middle" class="${cls}">${txt}</text></g>`;
+  const ok = (x, y, t) => `<g ${tA(t, 'ta-pop')}><circle cx="${x}" cy="${y}" r="9" fill="#22A06B"/><path d="M${x - 4} ${y}l3 3.2l5.5 -6.2" stroke="#fff" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g>`;
+  const arrow = (x, y, t) => `<g ${tA(t, 'ta-pop')}><path d="M${x} ${y}h8m-4 -5l5 5l-5 5" stroke="#14204A" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g>`;
+  // la fitxa de les inicials vista de costat (disc + lletres), amb franges de capes si cal
+  const token = (x, y, w, k, layers) => { const disc = 3 * k, let_ = 2 * k; let g = `<rect x="${x}" y="${y - disc}" width="${w}" height="${disc}" rx="2" fill="${OR}"/><rect x="${x + w * .22}" y="${y - disc - let_}" width="${w * .2}" height="${let_}" fill="#fff" stroke="${OR}" stroke-width="1"/><rect x="${x + w * .56}" y="${y - disc - let_}" width="${w * .2}" height="${let_}" fill="#fff" stroke="${OR}" stroke-width="1"/>`;
+    if (layers) for (let i = 1; i < 25; i++) { const yy = y - i * k / 5; g += `<line x1="${x}" y1="${yy}" x2="${x + w}" y2="${yy}" stroke="#14204A" stroke-width=".6" opacity="${i < 15 ? .35 : 0}"/>`; } return g; };
+  return {
+    m65cami() {
+      const xs = [8, 86, 164, 242], w = 64, y0 = 96, h = 82;
+      const box = (i, art, lab, t) => `<g ${tA(t, 'ta-in')}>${card(xs[i], y0, w, h)}${art}<text x="${xs[i] + w / 2}" y="${y0 + h - 10}" text-anchor="middle" class="tat s">${lab}</text></g>`;
+      const numi = `<rect x="17" y="108" width="46" height="32" rx="4" fill="#14204A"/><rect x="21" y="112" width="38" height="24" rx="2" fill="#2E3446"/><ellipse cx="40" cy="129" rx="11" ry="4" fill="${OR}"/><rect x="31" y="122" width="18" height="6" rx="2" fill="${OR2}"/><rect x="12" y="140" width="56" height="5" rx="2" fill="#9AA3B5"/>`;
+      const stl = `<path d="M105 106h22l9 9v32a4 4 0 0 1 -4 4h-27a4 4 0 0 1 -4 -4v-37a4 4 0 0 1 4 -4z" fill="#F5F7FF" stroke="#C9D3EE" stroke-width="2"/><g stroke="#7C5CFF" stroke-width="1.4" fill="none"><path d="M105 144l9 -16l9 16zM114 128l9 16l9 -16zM114 128h18"/></g><text x="118" y="122" text-anchor="middle" class="tat s" style="font-size:11px;fill:#7C5CFF">STL</text>`;
+      const sl = Array.from({ length: 6 }, (_, i) => `<rect x="${175 + i * 1.5}" y="${146 - i * 7}" width="${42 - i * 3}" height="5.5" rx="2.5" fill="${i % 2 ? OR2 : OR}"/>`).join('') + `<text x="196" y="${108}" text-anchor="middle" class="tat s" style="font-size:10px">0,2 mm</text>`;
+      const pr = `<rect x="251" y="104" width="46" height="46" rx="5" fill="none" stroke="#5A678C" stroke-width="3"/><rect x="251" y="116" width="46" height="4" fill="#5A678C"/><rect x="267" y="113" width="14" height="10" rx="2" fill="#7C5CFF"/><path d="M274 123v4" stroke="#E8453C" stroke-width="2.5"/><rect x="259" y="142" width="30" height="5" rx="2" fill="#9AA3B5"/><rect x="265" y="137" width="18" height="5" rx="2" fill="${OR}"/>`;
+      const tk = `<g ${tA(1.6, 'ta-in')}>${card(118, 12, 84, 58, true)}<path d="M142 26l12 -6l12 6v14l-12 6l-12 -6z" fill="#E7E2FF" stroke="#7C5CFF" stroke-width="1.6"/><path d="M142 26l12 6l12 -6M154 32v14" fill="none" stroke="#7C5CFF" stroke-width="1.6"/><text x="160" y="62" text-anchor="middle" class="tat s" style="font-size:11.5px">Tinkercad</text></g>
+        <g ${tA(1.4, 'ta-in')}><path d="M121 96C121 84 128 72 136 66" fill="none" stroke="#7C5CFF" stroke-width="2" stroke-dasharray="4 4"/><path d="M184 66C192 72 199 84 199 96" fill="none" stroke="#7C5CFF" stroke-width="2" stroke-dasharray="4 4"/></g>
+        ${pill(214, 20, 98, L('«Importa»', '«Importar»'), 2.0, '#7C5CFF', 'tat s w')}${pill(8, 20, 100, L('opcional', 'opcional'), 2.0)}`;
+      return tSvg(196, `${bg(196)}${box(0, numi, 'Numi', 0.2)}${arrow(75, y0 + 40, 0.8)}${box(1, stl, L('STL', 'STL'), 1.0)}${arrow(153, y0 + 40, 2.2)}${box(2, sl, L('Laminador', 'Laminador'), 2.4)}${arrow(231, y0 + 40, 3.2)}${box(3, pr, L('Impressora', 'Impresora'), 3.4)}${tk}`);
+    },
+    m65lamina() {
+      // a l'esquerra, la fitxa de costat tallada en capes; al mig, una capa de dalt amb el farciment; a la dreta, les opcions
+      const cx = 132, cy = 96, R = 40, grid = [];
+      for (let v = -40; v <= 40; v += 10) { grid.push(`<line x1="${cx + v}" y1="${cy - R}" x2="${cx + v}" y2="${cy + R}"/>`, `<line x1="${cx - R}" y1="${cy + v}" x2="${cx + R}" y2="${cy + v}"/>`); }
+      const row = (y, a, b, t) => `<g ${tA(t, 'ta-in')}><text x="190" y="${y}" class="tat s" style="font-size:11px">${a}</text><text x="306" y="${y}" text-anchor="end" class="tat s" style="font-size:11px;fill:#7C5CFF">${b}</text></g>`;
+      return tSvg(200, `${bg(200)}
+        <g ${tA(0.1, 'ta-in')}>${token(14, 120, 70, 14, true)}<rect x="10" y="120" width="78" height="4" rx="2" fill="#5A678C"/></g>
+        ${pill(10, 136, 80, L('25 capes', '25 capas'), 0.6, OR, 'tat s w')}
+        <defs><clipPath id="m65c"><circle cx="${cx}" cy="${cy}" r="${R - 3}"/></clipPath></defs>
+        <g ${tA(1.1, 'ta-pop')}><circle cx="${cx}" cy="${cy}" r="${R}" fill="#FFF3E8"/><g clip-path="url(#m65c)" stroke="${OR}" stroke-width="1.6">${grid.join('')}</g><circle cx="${cx}" cy="${cy}" r="${R - 1.5}" fill="none" stroke="${OR}" stroke-width="4"/></g>
+        ${pill(92, 148, 82, L('farciment', 'relleno'), 1.4)}
+        <g ${tA(1.8, 'ta-in')}><rect x="180" y="14" width="134" height="118" rx="14" fill="#fff" stroke="#DCE4FA" stroke-width="2" filter="url(#bwSh)"/></g>
+        ${row(40, L('Capa', 'Capa'), '0,2 mm', 2.0)}${row(68, L('Farciment', 'Relleno'), '15-20 %', 2.4)}${row(96, L('Suports', 'Soportes'), L('no', 'no'), 2.8)}
+        <g ${tA(3.3, 'ta-pop')}><rect x="210" y="106" width="78" height="20" rx="10" fill="#7C5CFF"/><text x="249" y="120" text-anchor="middle" class="tat s w" style="font-size:12px">${L('Lamina', 'Laminar')}</text></g>
+        ${pill(180, 142, 134, L('⏱ temps · ⚖ filament', '⏱ tiempo · ⚖ filamento'), 3.9, '#22A06B', 'tat s w')}
+        <g ${tA(4.4, 'ta-in')}><text x="132" y="186" text-anchor="middle" class="tat s" style="fill:#5A678C">${L('la vora, plena · per dins, quadrícula', 'el borde, lleno · por dentro, cuadrícula')}</text></g>`);
+    },
+    m65llista() {
+      const items = [L('Toca la placa', 'Toca la placa'), L('Base plana', 'Base plana'), L('Una sola peça', 'Una sola pieza'), L('Parets ≥ 1,2-2 mm', 'Paredes ≥ 1,2-2 mm'), L('Cap a la impressora', 'Cabe en la impresora'), L('Voladissos ≤ 45°', 'Voladizos ≤ 45°')];
+      return tSvg(206, `${bg(206)}<g ${tA(0.1, 'ta-in')}><rect x="16" y="14" width="186" height="182" rx="14" fill="#FFF8E6" stroke="#F1D9A4" stroke-width="2"/><rect x="82" y="8" width="54" height="14" rx="5" fill="#9AA3B5"/></g>
+        ${items.map((t, i) => `<g ${tA(0.3 + i * 0.25, 'ta-in')}><rect x="30" y="${34 + i * 26}" width="16" height="16" rx="4" fill="#fff" stroke="#C9CFDD" stroke-width="2"/><text x="56" y="${47 + i * 26}" class="tat s" style="font-size:12.5px">${t}</text></g>${ok(38, 42 + i * 26, 1.9 + i * 0.4)}`).join('')}
+        <g ${tA(0.6, 'ta-pop')}><ellipse cx="262" cy="118" rx="42" ry="14" fill="#D06A1E"/><rect x="220" y="100" width="84" height="18" fill="${OR}"/><ellipse cx="262" cy="100" rx="42" ry="14" fill="${OR2}"/><text x="262" y="106" text-anchor="middle" class="tat b" style="fill:#fff">A B</text></g>
+        ${pill(214, 150, 96, L('a imprimir!', '¡a imprimir!'), 4.5, '#22A06B', 'tat s w')}`);
+    }
+  };
+})());
 
 /* ── unitat 7 ── */
 /* Tech 3D · Nivell 1 · unitat 7 «Dissenyar per a persones» · animacions de teoria (TANI). Dibuixos propis de Numi. */
@@ -1064,6 +1242,44 @@ Object.assign(TANI, (() => {
         ${S.map(([x, y, c, t], i) => `<g ${tA(.2 + i * .55, 'ta-pop')}><circle cx="${x}" cy="${y}" r="15" fill="${c}" stroke="#fff" stroke-width="3"/><text x="${x}" y="${y + 5}" text-anchor="middle" class="tat w s">${i + 1}</text>
           <text x="${x}" y="${y + (y > 100 ? 36 : -24)}" text-anchor="middle" class="tat s" style="font-size:12.5px">${t}</text></g>`).join('')}
         <g><animateMotion dur="6s" repeatCount="indefinite" path="${road}" keyPoints="0;1;1" keyTimes="0;.85;1" calcMode="linear"/>${tBitMini(0, -6, 2, .34)}</g>`);
+    }
+  };
+})());
+/* ---------- m7-5 · taller: el tallagaletes ----------
+   m75paret: vist de dalt (la paret es dibuixa més gruixuda perquè es vegi), el cercle (50 − 46,8 = paret d'1,6 mm a tot arreu) i l'estrella (la còpia de 40 mm deixa les puntes
+   d'uns 2 mm i els racons més gruixuts) · m75vora: tallat pel mig, s'imprimeix amb la vora a baix i, per fer galetes, es gira. */
+Object.assign(TANI, (() => {
+  const D = 5.5, fr = s => (s / D).toFixed(3), GR = '#2FB36D', YE = '#F7C531';
+  const bg = h => `<rect width="320" height="${h}" rx="20" fill="#F1F2FB"/>`;
+  const pill = (x, y, w, txt, t, col = '#fff', cls = 'tat s') => `<g ${tA(t, 'ta-pop')}><rect x="${x}" y="${y}" width="${w}" height="26" rx="13" fill="${col}" filter="url(#bwSh)"/><text x="${x + w / 2}" y="${y + 18}" text-anchor="middle" class="${cls}">${txt}</text></g>`;
+  const star = (cx, cy, R) => Array.from({ length: 10 }, (_, k) => { const a = -Math.PI / 2 + k * Math.PI / 5, r = k % 2 ? R / 2 : R; return `${(cx + r * Math.cos(a)).toFixed(1)},${(cy + r * Math.sin(a)).toFixed(1)}`; }).join(' ');
+  return {
+    m75paret() {
+      const K = 1.5, c1 = [80, 98], c2 = [236, 98];
+      return tSvg(206, `${bg(206)}
+        <g ${tA(0.1, 'ta-pop')}><circle cx="${c1[0]}" cy="${c1[1]}" r="${25 * K}" fill="${GR}"/></g>
+        <g ${tA(0.7, 'ta-pop')}><circle cx="${c1[0]}" cy="${c1[1]}" r="${22 * K}" fill="#F1F2FB" stroke="#9AA3B5" stroke-width="1.5" stroke-dasharray="4 3"/></g>
+        <g ${tA(1.2, 'ta-in')}><path d="M${c1[0] + 22 * K} ${c1[1]}h${3 * K}" stroke="#14204A" stroke-width="2"/><circle cx="${c1[0] + 23.5 * K}" cy="${c1[1]}" r="9" fill="none" stroke="#E8453C" stroke-width="2"/></g>
+        ${pill(12, 16, 136, '(50 − 46,8) ÷ 2', 1.4)}${pill(36, 164, 88, '1,6 mm', 1.8, GR, 'tat s w')}
+        <g ${tA(2.4, 'ta-pop')}><polygon points="${star(c2[0], c2[1] + 4, 27 * K)}" fill="${YE}" stroke="#D9A514" stroke-width="1.5" stroke-linejoin="round"/></g>
+        <g ${tA(3.0, 'ta-pop')}><polygon points="${star(c2[0], c2[1] + 4, 21.6 * K)}" fill="#F1F2FB" stroke="#9AA3B5" stroke-width="1.5" stroke-dasharray="4 3" stroke-linejoin="round"/></g>
+        <g ${tA(3.6, 'ta-in')}><circle cx="${c2[0]}" cy="${(c2[1] + 4 - 24.3 * K).toFixed(1)}" r="9" fill="none" stroke="#22A06B" stroke-width="2"/></g>
+        ${pill(176, 16, 120, L('còpia: 40 de 50', 'copia: 40 de 50'), 2.6)}${pill(170, 164, 132, L('puntes: uns 2 mm', 'puntas: unos 2 mm'), 3.8, '#22A06B', 'tat s w')}`);
+    },
+    m75vora() {
+      // tall pel mig: dues parets d'1,6 mm i 14 mm d'alt i la vora de 3 mm (5 mm més ampla per cada costat)
+      const K = 2.1, prof = (x0, yb, flip) => { const z = v => flip ? yb - (14 - v) * K : yb - v * K, w = (x, a, b, c, d) => `<rect x="${(x0 + a * K).toFixed(1)}" y="${Math.min(z(c), z(d)).toFixed(1)}" width="${((b - a) * K).toFixed(1)}" height="${(Math.abs(d - c) * K).toFixed(1)}" fill="${YE}" stroke="#D9A514" stroke-width="1"/>`;
+        return w(0, -30, -25, 0, 3) + w(0, 25, 30, 0, 3) + w(0, -25, -23.4, 0, 14) + w(0, 23.4, 25, 0, 14); };
+      return tSvg(206, `${bg(206)}
+        <g ${tA(0.1, 'ta-in')}><rect x="14" y="150" width="138" height="8" rx="3" fill="#5A678C"/>${prof(83, 150, false)}</g>
+        ${pill(14, 166, 138, L('imprimir: vora a baix', 'imprimir: borde abajo'), 0.6, '#5A678C', 'tat s w')}
+        <g ${tA(1.4, 'ta-in')}><path d="M146 60q22 -26 44 0" fill="none" stroke="#7C5CFF" stroke-width="3" stroke-linecap="round"/><path d="M184 52l7 8l-10 2" fill="none" stroke="#7C5CFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></g>
+        ${pill(118, 14, 88, L("gira'l", 'gíralo'), 1.4, '#7C5CFF', 'tat s w')}
+        <g ${tA(2.0, 'ta-in')}><rect x="168" y="146" width="138" height="12" rx="4" fill="#E9C99A"/>${prof(237, 146, true)}</g>
+        <g><animateTransform attributeName="transform" type="translate" values="0 -14;0 -14;0 0;0 0" keyTimes="0;${fr(2.6)};${fr(3.4)};1" dur="${D}s" repeatCount="indefinite"/>
+          <g ${tA(2.6, 'ta-pop')}><ellipse cx="179" cy="${146 - 14 * K - 10}" rx="12" ry="9" fill="#F2B98F" stroke="#C98B5E" stroke-width="1.5"/><ellipse cx="295" cy="${146 - 14 * K - 10}" rx="12" ry="9" fill="#F2B98F" stroke="#C98B5E" stroke-width="1.5"/></g></g>
+        ${pill(168, 166, 138, L('fer galetes: vora a dalt', 'galletas: borde arriba'), 3.0, '#22A06B', 'tat s w')}
+        <g ${tA(3.6, 'ta-in')}><text x="237" y="${146 - 14 * K - 34}" text-anchor="middle" class="tat s" style="fill:#5A678C">${L('els dits, a la vora', 'los dedos, en el borde')}</text></g>`);
     }
   };
 })());

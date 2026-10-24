@@ -148,3 +148,41 @@ Object.assign(TANI, (() => {
     }
   };
 })());
+/* ---------- m7-5 · taller: el tallagaletes ----------
+   m75paret: vist de dalt (la paret es dibuixa més gruixuda perquè es vegi), el cercle (50 − 46,8 = paret d'1,6 mm a tot arreu) i l'estrella (la còpia de 40 mm deixa les puntes
+   d'uns 2 mm i els racons més gruixuts) · m75vora: tallat pel mig, s'imprimeix amb la vora a baix i, per fer galetes, es gira. */
+Object.assign(TANI, (() => {
+  const D = 5.5, fr = s => (s / D).toFixed(3), GR = '#2FB36D', YE = '#F7C531';
+  const bg = h => `<rect width="320" height="${h}" rx="20" fill="#F1F2FB"/>`;
+  const pill = (x, y, w, txt, t, col = '#fff', cls = 'tat s') => `<g ${tA(t, 'ta-pop')}><rect x="${x}" y="${y}" width="${w}" height="26" rx="13" fill="${col}" filter="url(#bwSh)"/><text x="${x + w / 2}" y="${y + 18}" text-anchor="middle" class="${cls}">${txt}</text></g>`;
+  const star = (cx, cy, R) => Array.from({ length: 10 }, (_, k) => { const a = -Math.PI / 2 + k * Math.PI / 5, r = k % 2 ? R / 2 : R; return `${(cx + r * Math.cos(a)).toFixed(1)},${(cy + r * Math.sin(a)).toFixed(1)}`; }).join(' ');
+  return {
+    m75paret() {
+      const K = 1.5, c1 = [80, 98], c2 = [236, 98];
+      return tSvg(206, `${bg(206)}
+        <g ${tA(0.1, 'ta-pop')}><circle cx="${c1[0]}" cy="${c1[1]}" r="${25 * K}" fill="${GR}"/></g>
+        <g ${tA(0.7, 'ta-pop')}><circle cx="${c1[0]}" cy="${c1[1]}" r="${22 * K}" fill="#F1F2FB" stroke="#9AA3B5" stroke-width="1.5" stroke-dasharray="4 3"/></g>
+        <g ${tA(1.2, 'ta-in')}><path d="M${c1[0] + 22 * K} ${c1[1]}h${3 * K}" stroke="#14204A" stroke-width="2"/><circle cx="${c1[0] + 23.5 * K}" cy="${c1[1]}" r="9" fill="none" stroke="#E8453C" stroke-width="2"/></g>
+        ${pill(12, 16, 136, '(50 − 46,8) ÷ 2', 1.4)}${pill(36, 164, 88, '1,6 mm', 1.8, GR, 'tat s w')}
+        <g ${tA(2.4, 'ta-pop')}><polygon points="${star(c2[0], c2[1] + 4, 27 * K)}" fill="${YE}" stroke="#D9A514" stroke-width="1.5" stroke-linejoin="round"/></g>
+        <g ${tA(3.0, 'ta-pop')}><polygon points="${star(c2[0], c2[1] + 4, 21.6 * K)}" fill="#F1F2FB" stroke="#9AA3B5" stroke-width="1.5" stroke-dasharray="4 3" stroke-linejoin="round"/></g>
+        <g ${tA(3.6, 'ta-in')}><circle cx="${c2[0]}" cy="${(c2[1] + 4 - 24.3 * K).toFixed(1)}" r="9" fill="none" stroke="#22A06B" stroke-width="2"/></g>
+        ${pill(176, 16, 120, L('còpia: 40 de 50', 'copia: 40 de 50'), 2.6)}${pill(170, 164, 132, L('puntes: uns 2 mm', 'puntas: unos 2 mm'), 3.8, '#22A06B', 'tat s w')}`);
+    },
+    m75vora() {
+      // tall pel mig: dues parets d'1,6 mm i 14 mm d'alt i la vora de 3 mm (5 mm més ampla per cada costat)
+      const K = 2.1, prof = (x0, yb, flip) => { const z = v => flip ? yb - (14 - v) * K : yb - v * K, w = (x, a, b, c, d) => `<rect x="${(x0 + a * K).toFixed(1)}" y="${Math.min(z(c), z(d)).toFixed(1)}" width="${((b - a) * K).toFixed(1)}" height="${(Math.abs(d - c) * K).toFixed(1)}" fill="${YE}" stroke="#D9A514" stroke-width="1"/>`;
+        return w(0, -30, -25, 0, 3) + w(0, 25, 30, 0, 3) + w(0, -25, -23.4, 0, 14) + w(0, 23.4, 25, 0, 14); };
+      return tSvg(206, `${bg(206)}
+        <g ${tA(0.1, 'ta-in')}><rect x="14" y="150" width="138" height="8" rx="3" fill="#5A678C"/>${prof(83, 150, false)}</g>
+        ${pill(14, 166, 138, L('imprimir: vora a baix', 'imprimir: borde abajo'), 0.6, '#5A678C', 'tat s w')}
+        <g ${tA(1.4, 'ta-in')}><path d="M146 60q22 -26 44 0" fill="none" stroke="#7C5CFF" stroke-width="3" stroke-linecap="round"/><path d="M184 52l7 8l-10 2" fill="none" stroke="#7C5CFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></g>
+        ${pill(118, 14, 88, L("gira'l", 'gíralo'), 1.4, '#7C5CFF', 'tat s w')}
+        <g ${tA(2.0, 'ta-in')}><rect x="168" y="146" width="138" height="12" rx="4" fill="#E9C99A"/>${prof(237, 146, true)}</g>
+        <g><animateTransform attributeName="transform" type="translate" values="0 -14;0 -14;0 0;0 0" keyTimes="0;${fr(2.6)};${fr(3.4)};1" dur="${D}s" repeatCount="indefinite"/>
+          <g ${tA(2.6, 'ta-pop')}><ellipse cx="179" cy="${146 - 14 * K - 10}" rx="12" ry="9" fill="#F2B98F" stroke="#C98B5E" stroke-width="1.5"/><ellipse cx="295" cy="${146 - 14 * K - 10}" rx="12" ry="9" fill="#F2B98F" stroke="#C98B5E" stroke-width="1.5"/></g></g>
+        ${pill(168, 166, 138, L('fer galetes: vora a dalt', 'galletas: borde arriba'), 3.0, '#22A06B', 'tat s w')}
+        <g ${tA(3.6, 'ta-in')}><text x="237" y="${146 - 14 * K - 34}" text-anchor="middle" class="tat s" style="fill:#5A678C">${L('els dits, a la vora', 'los dedos, en el borde')}</text></g>`);
+    }
+  };
+})());
