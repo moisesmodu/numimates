@@ -2,7 +2,7 @@
    Contingut propi de Numi. Fil narratiu: la Noa, conservadora del museu de ciències naturals de la ciutat, encarrega a
    l'estudi d'enginyeria del Taller de Bit peanyes, vitrines, suports per a geodes i caixes de transport per a fòssils, i
    cada peça en moltes mides. Conceptes: la variable (mida = 30: canviar un sol número i que tot s'adapti), les regles dels
-   noms, la pestanya «Codi» (primera unitat amb text: text: true), les expressions (+ − * / i parèntesis, mida / 2,
+   noms, la pestanya «Codi» (text: true, com a les unitats 1-3: el codi és el camí principal), les expressions (+ − * / i parèntesis, mida / 2,
    mida + 2 * paret, la prioritat de les operacions), les variables calculades, el disseny paramètric (paràmetres i mides
    que en depenen, comentaris //, max, la comprovació «param») i el projecte de la caixa a mida amb tapa.
    · A la teoria, les variables tenen el nom de cada llengua (mida/medida, paret/pared): els programes són "ca|es" i els
@@ -121,14 +121,14 @@ COURSE_UNITS[4] = (() => {
           ex: "mou ja és una paraula del llenguatge: si l'intentes fer servir, l'app et demana que triïs un altre nom. Els altres dos són bons noms: diuen què guarda la variable.|mueve ya es una palabra del lenguaje: si intentas usarla, la app te pide que elijas otro nombre. Los otros dos son buenos nombres: dicen qué guarda la variable." },
         { k: 'move', ph: 'pausa', title: 'La variable dels salts|La variable de los saltos', secs: 40,
           t: "Tothom dret! A la pissarra hi ha <b>salts = 2</b>: feu tants salts com diu la variable. Ara el professor la canvia: <b>salts = 4</b>… i <b>salts = 1</b>. Vosaltres sou el programa: sempre feu el mateix, però amb el número que hi ha a la capsa.|¡Todo el mundo de pie! En la pizarra hay <b>saltos = 2</b>: dad tantos saltos como dice la variable. Ahora el profesor la cambia: <b>saltos = 4</b>… y <b>saltos = 1</b>. Vosotros sois el programa: siempre hacéis lo mismo, pero con el número que hay en la caja." },
-        { k: 'm3code', ph: 'repte', q: 'La Noa vol el graó expositor de <b>40 mm</b>. El programa ja fa servir la variable: canvia <b>un sol número</b>.|Noa quiere el escalón expositor de <b>40 mm</b>. El programa ya usa la variable: cambia <b>un solo número</b>.',
+        { k: 'm3code', ph: 'repte', text: true, q: 'La Noa vol el graó expositor de <b>40 mm</b>. El programa ja fa servir la variable: canvia <b>un sol número</b>.|Noa quiere el escalón expositor de <b>40 mm</b>. El programa ya usa la variable: cambia <b>un solo número</b>.',
           start: GRAOB(30), blocks: BL1, target: GRAO(40, 0),
           checks: [ck('match', { target: GRAO(40, 0), th: 0.92, t: GHOST }), ck('uses', { b: 'var' }), ck('param', { v: B('mida', 'medida'), vals: [30, 50], t: "Si canvies mida (30 o 50), tot s'adapta|Si cambias medida (30 o 50), todo se adapta" })],
-          hint: 'Toca el 30 del bloc «mida = 30» i escriu-hi 40. Tota la resta s\'adapta sola.|Toca el 30 del bloque «medida = 30» y escribe 40. Todo lo demás se adapta solo.', sol: GRAOB(40) },
-        { k: 'm3code', ph: 'repte', q: "La columna té la variable <code>altura</code>, però els números són a mà. Fes-la servir a la columna i a la bola.|La columna tiene la variable <code>altura</code>, pero los números están a mano. Úsala en la columna y en la bola.",
+          hint: 'A la primera línia, mida = 30, canvia el 30 per 40. Tota la resta s\'adapta sola, perquè fa servir mida.|En la primera línea, medida = 30, cambia el 30 por 40. Todo lo demás se adapta solo, porque usa medida.', sol: GRAOB(40) },
+        { k: 'm3code', ph: 'repte', text: true, q: "La columna té la variable <code>altura</code>, però els números són a mà. Fes-la servir a la columna i a la bola.|La columna tiene la variable <code>altura</code>, pero los números están a mano. Úsala en la columna y en la bola.",
           start: J('altura = 45', 'cilindre(16, 30)', 'mou(0, 0, 30) esfera(16)'), blocks: ['var', 'cil', 'esf', 'mou'], target: COLA(45),
           checks: [ck('match', { target: COLA(45), th: 0.9, t: GHOST }), ck('uses', { b: 'var' }), ck('param', { v: 'altura', vals: [30, 60], t: "Si canvies altura (30 o 60), tot s'adapta|Si cambias altura (30 o 60), todo se adapta" })],
-          hint: 'Toca el 30 del cilindre: a «Variables que pots fer servir» tria altura. Fes el mateix amb la z del mou.|Toca el 30 del cilindro: en «Variables que puedes usar» elige altura. Haz lo mismo con la z del mueve.', sol: COLA(45) },
+          hint: 'Tria el 30 del cilindre i toca «altura» a la paleta (o escriu-ho): el número es canvia pel nom. Fes el mateix amb la z del mou.|Elige el 30 del cilindro y toca «altura» en la paleta (o escríbelo): el número se cambia por el nombre. Haz lo mismo con la z del mueve.', sol: COLA(45) },
         { k: 'm3code', ph: 'repte', text: true, tab: 'code', q: "A la pestanya <b>Codi</b>: escriu <code>bola = 30</code> abans del cilindre i canvia cada 20 per <code>bola</code>.|En la pestaña <b>Código</b>: escribe <code>bola = 30</code> antes del cilindro y cambia cada 20 por <code>bola</code>.",
           start: BOLA0, blocks: ['var', 'cil', 'esf', 'mou', 'rem'], vars: ['bola'], target: BOLA(30),
           checks: [ck('match', { target: BOLA(30), th: 0.9, t: GHOST }), ck('uses', { b: 'var' }), ck('param', { v: 'bola', vals: [20, 44], t: "Si canvies bola (20 o 44), tot s'adapta|Si cambias bola (20 o 44), todo se adapta" })],

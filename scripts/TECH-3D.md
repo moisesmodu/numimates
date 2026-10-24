@@ -7,7 +7,7 @@ han de compartir el motor (`tech-model.js`), el renderitzador 3D (`tech-model3d.
 | | **Tech 3D · Nivell 1** (`model`, sessions `m1-1…m8-4`, fitxers c6) | **Tech 3D · Nivell 2** (`modelpro`, sessions `p1-1…p8-4`, fitxers c7) |
 |---|---|---|
 | Edat | 9-12 (4t-6è) | 12-14 (1r-2n ESO) |
-| Com es modela | **Amb el dit**: es posen formes a la placa i es mouen, giren i escalen amb tiradors i amb números (mm) | **Amb blocs i amb codi**: un programa construeix el model (com OpenSCAD, però en blocs; a partir de la U4 també en text) |
+| Com es modela | **Amb el dit**: es posen formes a la placa i es mouen, giren i escalen amb tiradors i amb números (mm) | **Amb codi en text (i blocs opcionals) i amb l'editor**: un programa construeix el model (com OpenSCAD, però en blocs; a partir de la U4 també en text) |
 | Conceptes | espai 3D, vistes, formes, mesures, alinear, duplicar, mirall, **forats** (restar), impressió 3D, STL, disseny per a persones | paràmetres, transformacions i ordre, **unió / diferència / intersecció**, variables, expressions, bucles i patrons, mòduls, toleràncies i encaixos, fabricació |
 | Exporta | STL | STL i `.scad` |
 
@@ -258,3 +258,9 @@ Model de referència: les sessions `m1-1`, `m1-3` (`scripts/tech-src/model/u1`) 
   dalt (el botó de selecció múltiple és «Més peces»); les pistes de files fan servir el salt sencer de Duplica i les de simetria,
   Mirall → «Còpia a l'altre costat», sempre amb la x exacta com a alternativa; les pistes dels passos amb `text: true` (p5-1,
   p6-1, p7-1) expliquen el codi i els fragments. Les pistes noves s'han de poder seguir tal com estan escrites.
+
+
+## Sessions «Taller»
+Una sessió pràctica extra al final d'algunes unitats: `{ id: 'm3-5', …, proj: true, taller: true }`. Es desa al portafoli
+com un projecte, però al mapa surt amb una clau anglesa (no amb un segon trofeu). Les illes 3D es tornen a renderitzar amb
+el nombre de parades de cada unitat (`ONLY=isles COURSES=model UNITS=3,4 node scripts/3d/render-scenes.mjs`).

@@ -80,7 +80,13 @@ Progressió: mirar → posar formes → mesurar → construir → restar → fab
 
 ## Nivell 2 (12-14 anys) · «Dissenya amb codi»
 Progressió: instruccions → transformacions → booleanes → variables → bucles → mòduls → enginyeria → producte.
-A partir de la U4 es pot alternar blocs i text (`text: true`); a la U8 el text és el mode principal.
+Des de la U1 el codi s'escriu en **text** (`text: true`, s'obre a la pestanya Codi amb botons que insereixen codi); els blocs
+hi són com a opció. L'editor directe (estil Tinkercad) apareix als tallers i al producte final, amb «Veure el codi».
+
+**Tallers (octubre 2026):** cada nivell té sessions pràctiques extra de fabricar objectes reals (`proj: true, taller: true`,
+al mapa surten amb una clau anglesa): Nivell 1 m3-5 suport per al mòbil, m4-5 organitzador de taula, m5-5 rètol de la porta,
+m6-5 de Numi a la impressora (Tinkercad i laminador), m7-5 tallagaletes; Nivell 2 p1-5 porta-noms, p3-5 organitzador de
+cables, p7-5 caixa amb tapa que encaixa.
 
 ### U1 Modelar amb instruccions
 - **p1-1 Del ratolí al codi**: per què modelar amb codi (precisió, repetició, canvis ràpids); el programa és la recepta.

@@ -1,15 +1,17 @@
-/* Tech 3D · Nivell 2 · unitat 7 «Enginyeria i fabricació» (p7-1 … p7-4)
+/* Tech 3D · Nivell 2 · unitat 7 «Enginyeria i fabricació» (p7-1 … p7-5)
    Contingut propi de Numi. Fil narratiu: l'estudi d'enginyeria del Taller de Bit rep els primers encàrrecs reals (la
    fusteria d'en Ramon, la Marta i el seu penjador, el museu del barri) i aprèn a dissenyar per fabricar:
    p7-1 peces que encaixen (eix i forat, pestanya i ranura, tapa amb llavi) · p7-2 toleràncies (forat = d + 2 × tol) ·
    p7-3 voladissos, la regla dels 45°, ponts i orientació a la placa · p7-4 projecte: una frontissa desmuntable en dues
-   peces amb tolerància paramètrica.
+   peces amb tolerància paramètrica · p7-5 taller: la caixa amb tapa de llavi que encaixa (ix − 2 × tol), paramètrica, i
+   el pont cap a la impressora (STL, Tinkercad o un programa de laminat, capes de 0,2 mm, peces planes).
    Notes tècniques: les comprovacions que han de distingir dècimes de mil·límetre fan servir «part» (mides exactes de la
    peça, tol 0,05) i no la semblança de volum; quan hi ha dues peces separades a la placa no es demana «one». Les
    variables que surten a les comprovacions tenen el mateix nom en les dues llengües (d, tol, diam, h); la resta de
    programes porten versió «ca|es» quan hi ha comentaris o noms propis de cada llengua. */
 Object.assign(TBADGE, {
-  p74_frontissa: { id: 'p74_frontissa', ico: '🔩', n: 'Enginyer/a de frontisses|Ingeniero/a de bisagras', d: "Has dissenyat una frontissa de dues peces amb tolerància paramètrica, sense suports i a punt per imprimir.|Has diseñado una bisagra de dos piezas con tolerancia paramétrica, sin soportes y lista para imprimir." }
+  p74_frontissa: { id: 'p74_frontissa', ico: '🔩', n: 'Enginyer/a de frontisses|Ingeniero/a de bisagras', d: "Has dissenyat una frontissa de dues peces amb tolerància paramètrica, sense suports i a punt per imprimir.|Has diseñado una bisagra de dos piezas con tolerancia paramétrica, sin soportes y lista para imprimir." },
+  p75_caixa: { id: 'p75_caixa', ico: '📦', n: 'Tapa que encaixa|Tapa que encaja', d: "Has dissenyat una caixa amb una tapa de llavi que encaixa de debò (ix − 2 × tol), paramètrica i a punt per imprimir.|Has diseñado una caja con una tapa de labio que encaja de verdad (ix − 2 × tol), paramétrica y lista para imprimir." }
 });
 COURSE_UNITS[7] = (() => {
   /* ---------- p7-1 · peces que encaixen ---------- */
@@ -58,6 +60,26 @@ COURSE_UNITS[7] = (() => {
   const HTWO = HMOD((A, B, mo) => `${A}()\n${mo}(40, 0, 0) ${B}()`);
   const HMNT = HMOD((A, B, mo, gi) => `${A}()\n${mo}(0, 0, h) ${gi}(0, 0, 120) ${B}()`);
   const BL1 = ['cub', 'cil', 'tub', 'mou', 'resta', 'uneix', 'var'];
+  /* ---------- p7-5 · la caixa amb tapa que encaixa (variables: ix, iy, iz, paret/pared, tol, ex, ey) ----------
+     La caixa: un cub buidat amb parets i fons de «paret». La tapa (al costat, amb el llavi amunt): una placa i un llavi que
+     per fora fa ix − 2 × tol, perquè entri al forat de la caixa amb marge a cada costat; al final, el llavi buidat (un marc). */
+  const BXL = f => [f('paret', ["mides de dins: l'objecte que hi guardaràs", 'mides de fora', 'la caixa', "la tapa (s'imprimeix amb el llavi amunt)"]), f('pared', ['medidas de dentro: el objeto que guardarás', 'medidas de fuera', 'la caja', 'la tapa (se imprime con el labio hacia arriba)'])].join('|');
+  const BXH = (w, c) => `// ${c[0]}\nix = 50\niy = 30\niz = 20\n${w} = 2\ntol = 0.3\n// ${c[1]}\nex = ix + 2 * ${w}\ney = iy + 2 * ${w}`;
+  const BXB = (w, c) => `// ${c[2]}\nresta {\n  cub(ex, ey, iz + ${w})\n  mou(${w}, ${w}, ${w}) cub(ix, iy, iz + 1)\n}`;
+  const BXLIP = (w, s = '-', bang = '') => `mou(${w} + tol, ${w} + tol, ${w}) cub(ix ${s} 2 * tol, iy ${s} 2 * tol, 4)${bang}`;
+  const BXLIPH = w => `mou(${w} + tol, ${w} + tol, ${w}) resta {\n    cub(ix - 2 * tol, iy - 2 * tol, 4)\n    mou(${w}, ${w}, -1) cub(ix - 2 * tol - 2 * ${w}, iy - 2 * tol - 2 * ${w}, 6)\n  }`;
+  const BXT = (w, c, inner) => `// ${c[3]}\nmou(ex + 10, 0, 0) {\n  cub(ex, ey, ${w})${inner ? '\n  ' + inner : '\n  // ' + (w === 'paret' ? 'aquí anirà el llavi' : 'aquí irá el labio')}\n}`;
+  const BX0 = BXL((w, c) => `${BXH(w, c)}\n// ${c[2]}\ncub(ex, ey, iz + ${w})`), BX1 = BXL((w, c) => `${BXH(w, c)}\n${BXB(w, c)}`);
+  const BX2S = BXL((w, c) => `${BXH(w, c)}\n${BXB(w, c)}\n${BXT(w, c)}`), BX2 = BXL((w, c) => `${BXH(w, c)}\n${BXB(w, c)}\n${BXT(w, c, BXLIP(w))}`);
+  const BX3 = BXL((w, c) => `${BXH(w, c)}\n${BXB(w, c)}\n${BXT(w, c, BXLIPH(w))}`), BXSPOT = BXL((w, c) => `${BXH(w, c)}\n${BXB(w, c)}\n${BXT(w, c, BXLIP(w, '+', '!'))}`);
+  const BXCAV = { k: 'part', t: 'box', hole: true, s: ['ix', 'iy', 'iz + 1'], at: ['ex / 2', 'ey / 2', null], base: 'paret|pared', tol: 0.05, txt: "El buit fa ix × iy i deixa parets i fons de «paret»|El hueco mide ix × iy y deja paredes y fondo de «pared»" };
+  const BXLIPC = { k: 'part', t: 'box', hole: false, s: ['ix - 2 * tol', 'iy - 2 * tol', 4], at: ['1.5 * ex + 10', 'ey / 2', null], base: 'paret|pared', tol: 0.05, txt: 'El llavi fa ix − 2 × tol per fora i és al mig de la tapa|El labio mide ix − 2 × tol por fuera y está en el centro de la tapa' };
+  const BXTOL = { k: 'param', v: 'tol', vals: [0.2, 0.4], t: 'Encaixa amb tol = 0,2 i amb tol = 0,4|Encaja con tol = 0,2 y con tol = 0,4' };
+  const BXIX = { k: 'param', v: 'ix', vals: [30, 70], t: 'Funciona amb objectes de 30 i de 70 mm|Funciona con objetos de 30 y de 70 mm' };
+  const BXBL = ['var', 'cub', 'mou', 'resta', 'uneix'];
+  // la caixa i la tapa (ix = 50, iy = 30, iz = 20, paret = 2, tol = 0,3) com a peces, per a la targeta de teoria
+  const BXM = { parts: [{ id: 'c1', t: 'box', s: [54, 34, 22], p: [-32, 0, 11], g: 'c', c: '#3D7BF4' }, { id: 'c2', t: 'box', s: [50, 30, 21], p: [-32, 0, 12.5], g: 'c', hole: true },
+    { id: 't1', t: 'box', s: [54, 34, 2], p: [32, 0, 1], g: 't', c: '#F7C531' }, { id: 't2', t: 'box', s: [49.4, 29.4, 4], p: [32, 0, 4], g: 't', c: '#F7C531' }, { id: 't3', t: 'box', s: [45.4, 25.4, 6], p: [32, 0, 5], g: 't', hole: true }] };
   return {
   t: 'Enginyeria i fabricació|Ingeniería y fabricación', d: 'Encaixos i toleràncies|Encajes y tolerancias', color: '#14A3B8',
   s: [
@@ -324,6 +346,60 @@ COURSE_UNITS[7] = (() => {
           sol: HTWO },
         { k: 'quiz', ph: 'tanca', q: 'Per què el forat de la peça B és més fondo que el passador?|¿Por qué el agujero de la pieza B es más hondo que el pasador?', opts: ["Perquè B es recolzi sobre el cilindre d'A i no sobre la punta del passador|Para que B se apoye sobre el cilindro de A y no sobre la punta del pasador", 'Per gastar menys plàstic|Para gastar menos plástico', 'Perquè el passador creix en imprimir-lo|Porque el pasador crece al imprimirlo'], a: 0 },
         { k: 'quiz', ph: 'tanca', q: 'Vols fer el cilindre de la frontissa més prim. Què has de vigilar?|Quieres hacer el cilindro de la bisagra más fino. ¿Qué tienes que vigilar?', opts: ['Que la paret al voltant del forat no faci menys de 1,2 mm amb la tolerància més gran|Que la pared alrededor del agujero no mida menos de 1,2 mm con la tolerancia más grande', 'Res: com més prim, millor|Nada: cuanto más fino, mejor', 'Que tingui un color diferent|Que tenga un color distinto'], a: 0 },
+        { k: 'feel', ph: 'tanca' }
+      ] },
+    /* =================================== Sessió 5 · Taller: la caixa amb tapa que encaixa =================================== */
+    { id: 'p7-5', t: 'Taller: la caixa amb tapa que encaixa|Taller: la caja con tapa que encaja', min: 45, proj: true, taller: true, badge: 'p75_caixa',
+      learn: ["Una tapa de llavi encaixa si el llavi fa per fora el forat de la caixa menys el marge dels dos costats: ix − 2 × tol (amb tol de 0,3 a 0,4 mm).|Una tapa de labio encaja si el labio mide por fuera el agujero de la caja menos el margen de los dos lados: ix − 2 × tol (con tol de 0,3 a 0,4 mm).",
+        "Si totes les mides surten de les variables (ix, iy, iz, paret i tol), la mateixa caixa serveix per a qualsevol objecte.|Si todas las medidas salen de las variables (ix, iy, iz, pared y tol), la misma caja sirve para cualquier objeto.",
+        "Per imprimir-la: l'STL a Tinkercad o a un programa de laminat (capes de 0,2 mm), les dues peces planes a la placa i, després, provar l'encaix.|Para imprimirla: el STL en Tinkercad o en un programa de laminado (capas de 0,2 mm), las dos piezas planas en la placa y, después, probar el encaje."],
+      steps: [
+        { k: 'quiz', ph: 'recorda', q: "La impressora fa els forats una mica més petits del que diu el model. Què passa amb una tapa que fa <b>exactament</b> la mida del forat de la caixa?|La impresora hace los agujeros un poco más pequeños de lo que dice el modelo. ¿Qué pasa con una tapa que mide <b>exactamente</b> lo mismo que el agujero de la caja?", opts: ['No hi entra o hi entra a cops: cal deixar marge|No entra o entra a golpes: hay que dejar margen', 'Encaixa perfecta|Encaja perfecta', 'Queda molt fluixa|Queda muy floja'], a: 0,
+          ex: "Per això a la unitat hem après a posar tolerància: la peça que entra es fa una mica més petita (o el forat, una mica més gran).|Por eso en la unidad hemos aprendido a poner tolerancia: la pieza que entra se hace un poco más pequeña (o el agujero, un poco más grande)." },
+        { k: 'story', ph: 'missio', who: 'bit', scene: 'estudi', title: 'Capses per a la fusteria|Cajas para la carpintería',
+          t: "En Ramon torna a trucar: vol <b>capses amb tapa</b> per guardar les broques i els cargols petits. La tapa ha d'entrar justa: si queda fluixa, s'obre a la motxilla; si queda massa estreta, no la treus. Farem una caixa <b>paramètrica</b> amb una <b>tapa de llavi</b> i la tolerància bona, i aquesta vegada l'enviarem de debò a la <b>impressora</b>.|Ramon vuelve a llamar: quiere <b>cajas con tapa</b> para guardar las brocas y los tornillos pequeños. La tapa tiene que entrar justa: si queda floja, se abre en la mochila; si queda demasiado estrecha, no la sacas. Haremos una caja <b>paramétrica</b> con una <b>tapa de labio</b> y la tolerancia buena, y esta vez la enviaremos de verdad a la <b>impresora</b>." },
+        { k: 'learn', ph: 'descobreix', cards: [
+          { k: 'La tapa de llavi|La tapa de labio', t: 'Una placa i una vora que entra a dins|Una placa y un borde que entra dentro', media: { k: 'model', model: BXM },
+            x: "La caixa és un cub buidat, amb parets i fons de <code>paret</code> (2 mm). La tapa és una placa de la mida de fora de la caixa amb un <b>llavi</b> de 4 mm que entra al forat. S'imprimeixen l'una al costat de l'altra; la tapa, amb el llavi amunt.|La caja es un cubo vaciado, con paredes y fondo de <code>pared</code> (2 mm). La tapa es una placa del tamaño de fuera de la caja con un <b>labio</b> de 4 mm que entra en el agujero. Se imprimen una al lado de la otra; la tapa, con el labio hacia arriba." },
+          { k: 'El marge|El margen', t: 'ix − 2 × tol: marge a cada costat|ix − 2 × tol: margen a cada lado', anim: 'p75gap',
+            x: "El forat de la caixa fa <code>ix</code>. Si el llavi fes ix, no hi entraria. Per fora ha de fer <code>ix − 2 * tol</code>: queda <code>tol</code> de marge a l'esquerra i <code>tol</code> a la dreta. Amb 0,3-0,4 mm, la tapa entra i s'aguanta. Si en lloc de restar sumes, el llavi és més gran que el forat!|El agujero de la caja mide <code>ix</code>. Si el labio midiera ix, no entraría. Por fuera tiene que medir <code>ix − 2 * tol</code>: queda <code>tol</code> de margen a la izquierda y <code>tol</code> a la derecha. Con 0,3-0,4 mm, la tapa entra y se aguanta. Si en lugar de restar sumas, ¡el labio es más grande que el agujero!" },
+          { k: 'Porta-ho a la impressora|Llévalo a la impresora', t: "De l'STL a la peça|Del STL a la pieza", anim: 'p75print',
+            x: "Amb el botó <b>STL</b> descarregues el model. Obre'l a <b>Tinkercad</b> (gratuït, d'Autodesk: «Importa» accepta STL; amb menys de 14 anys, des de la classe del professor/a) o en un programa de <b>laminat</b> gratuït, com Ultimaker Cura o PrusaSlicer. Capes de <b>0,2 mm</b>, farciment baix (15-20 %) i les dues peces <b>planes</b>.|Con el botón <b>STL</b> descargas el modelo. Ábrelo en <b>Tinkercad</b> (gratuito, de Autodesk: «Importar» acepta STL; con menos de 14 años, desde la clase del profesor/a) o en un programa de <b>laminado</b> gratuito, como Ultimaker Cura o PrusaSlicer. Capas de <b>0,2 mm</b>, relleno bajo (15-20 %) y las dos piezas <b>planas</b>." }
+        ] },
+        { k: 'm3predict', text: true, tab: 'code', ph: 'prova', q: 'Llegeix el programa de l\'estudi. <b>Quines peces fa?</b>|Lee el programa del estudio. <b>¿Qué piezas hace?</b>', prog: BX2,
+          opts: [{ prog: BX2 }, { prog: BX2S }, { prog: BX1 }], a: 0,
+          ex: "La caixa buidada i, al costat (ex + 10), la tapa amb el llavi a sobre: quan la giris, el llavi entrarà al forat.|La caja vaciada y, al lado (ex + 10), la tapa con el labio encima: cuando la gires, el labio entrará en el agujero." },
+        { k: 'm3spot', ph: 'investiga', q: "La tapa d'un company <b>no entra</b> a la caixa. Toca la instrucció que fa la mida equivocada.|La tapa de un compañero <b>no entra</b> en la caja. Toca la instrucción que hace la medida equivocada.",
+          prog: BXSPOT, target: BX2,
+          ex: "El llavi fa ix + 2 × tol: és 0,6 mm més ample que el forat i no hi cap. Ha de ser ix − 2 × tol, una mica més estret que el forat.|El labio mide ix + 2 × tol: es 0,6 mm más ancho que el agujero y no cabe. Tiene que ser ix − 2 × tol, un poco más estrecho que el agujero." },
+        { k: 'move', ph: 'pausa', title: 'La tapa humana|La tapa humana', secs: 30, t: "Fes un cercle amb el polze i l'índex: és el forat de la caixa. Amb l'altra mà, fes un puny: és el llavi. Entra? Fes el puny més petit (menys tol) o el cercle més gran fins que entri just, sense forçar. Això és la tolerància!|Haz un círculo con el pulgar y el índice: es el agujero de la caja. Con la otra mano, haz un puño: es el labio. ¿Entra? Haz el puño más pequeño (menos tol) o el círculo más grande hasta que entre justo, sin forzar. ¡Eso es la tolerancia!" },
+        { k: 'm3code', ph: 'repte', text: true, q: "<b>Pas 1 · La caixa.</b> Buida-la amb un <code>resta</code>: un cub de <code>ix × iy</code> i <code>iz + 1</code> d'alt, a <code>paret</code> de cada cara.|<b>Paso 1 · La caja.</b> Vacíala con un <code>resta</code>: un cubo de <code>ix × iy</code> e <code>iz + 1</code> de alto, a <code>pared</code> de cada cara.",
+          start: BX0, blocks: BXBL, target: BX1,
+          checks: [BXCAV, { k: 'wall', min: 1.5, t: 'Cap paret de menys de 1,5 mm|Ninguna pared de menos de 1,5 mm' }, BXIX, { k: 'onplate' }],
+          hint: "Escriu resta { en una línia nova a sobre del cub i } en una línia nova a sota. Dins, després del cub, toca «mou(10, 0, 0)» amb (paret, paret, paret) i «cub(20, 20, 20)» amb (ix, iy, iz + 1). Les variables, toca-les a la paleta.|Escribe resta { en una línea nueva encima del cubo y } en una línea nueva debajo. Dentro, después del cubo, toca «mueve(10, 0, 0)» con (pared, pared, pared) y «cubo(20, 20, 20)» con (ix, iy, iz + 1). Las variables, tócalas en la paleta.",
+          sol: BX1 },
+        { k: 'm3code', ph: 'repte', text: true, q: "<b>Pas 2 · El llavi.</b> A sobre de la placa de la tapa: un cub de <code>ix − 2 × tol</code> per <code>iy − 2 × tol</code> i 4 mm d'alt.|<b>Paso 2 · El labio.</b> Encima de la placa de la tapa: un cubo de <code>ix − 2 × tol</code> por <code>iy − 2 × tol</code> y 4 mm de alto.",
+          start: BX2S, blocks: BXBL, target: BX2,
+          checks: [BXLIPC, BXTOL, BXIX, { k: 'onplate' }],
+          hint: "Posa el cursor al final de la línia de la placa, cub(ex, ey, paret), toca «mou(10, 0, 0)» amb (paret + tol, paret + tol, paret) i després «cub(20, 20, 20)» amb (ix - 2 * tol, iy - 2 * tol, 4).|Pon el cursor al final de la línea de la placa, cubo(ex, ey, pared), toca «mueve(10, 0, 0)» con (pared + tol, pared + tol, pared) y después «cubo(20, 20, 20)» con (ix - 2 * tol, iy - 2 * tol, 4).",
+          sol: BX2 },
+        { k: 'm3code', ph: 'repte', text: true, q: "<b>Pas 3 · Menys plàstic.</b> Buida el llavi amb un <code>resta</code>: que sigui un marc de parets de <code>paret</code>.|<b>Paso 3 · Menos plástico.</b> Vacía el labio con un <code>resta</code>: que sea un marco de paredes de <code>pared</code>.",
+          start: BX2, blocks: BXBL, target: BX3,
+          checks: [BXLIPC, { k: 'part', t: 'box', hole: true, s: ['ix - 2 * tol - 2 * paret|ix - 2 * tol - 2 * pared', 'iy - 2 * tol - 2 * paret|iy - 2 * tol - 2 * pared', 6], tol: 0.05, txt: 'El llavi és un marc de parets de «paret»|El labio es un marco de paredes de «pared»' }, { k: 'wall', min: 1.2, t: 'Cap paret de menys de 1,2 mm|Ninguna pared de menos de 1,2 mm' }, BXTOL, { k: 'onplate' }],
+          hint: "A la línia del llavi, posa el cursor entre el mou i el cub, escriu resta { i prem Retorn. Al final del cub, en una línia nova: mou(paret, paret, -1) cub(ix - 2 * tol - 2 * paret, iy - 2 * tol - 2 * paret, 6), i després } en una altra línia.|En la línea del labio, pon el cursor entre el mueve y el cubo, escribe resta { y pulsa Intro. Al final del cubo, en una línea nueva: mueve(pared, pared, -1) cubo(ix - 2 * tol - 2 * pared, iy - 2 * tol - 2 * pared, 6), y después } en otra línea.",
+          sol: BX3 },
+        { k: 'm3free', ph: 'crea', text: true, q: "<b>La teva caixa.</b> Mesura un objecte, posa'n les mides a <code>ix</code>, <code>iy</code> i <code>iz</code> (amb aire), tria la <code>tol</code> i descarrega l'STL.|<b>Tu caja.</b> Mide un objeto, pon sus medidas en <code>ix</code>, <code>iy</code> e <code>iz</code> (con aire), elige la <code>tol</code> y descarga el STL.",
+          name: 'La meva caixa amb tapa|Mi caja con tapa', start: BX3, blocks: ['var', 'cub', 'cil', 'mou', 'gira', 'resta', 'uneix', 'color', 'text', 'rem'],
+          crit: ["ix, iy i iz són les mides del teu objecte (mesurades) més una mica d'aire|ix, iy e iz son las medidas de tu objeto (medidas) más un poco de aire", 'El llavi fa ix − 2 × tol i iy − 2 × tol: la tapa entra amb marge|El labio mide ix − 2 × tol e iy − 2 × tol: la tapa entra con margen', "Parets i fons de 2 mm; la caixa i la tapa, l'una al costat de l'altra a la placa|Paredes y fondo de 2 mm; la caja y la tapa, una al lado de la otra en la placa", "Has descarregat l'STL per imprimir-la|Has descargado el STL para imprimirla"],
+          checks: [{ k: 'uses', b: 'var' }, { k: 'uses', b: 'diff' }, BXLIPC, BXTOL, { k: 'wall', min: 1.2, t: 'Cap paret de menys de 1,2 mm|Ninguna pared de menos de 1,2 mm' }, { k: 'onplate' }],
+          sol: BX3 },
+        { k: 'unplug', ph: 'mans', ico: '🖨️', title: 'Porta-ho a la impressora|Llévalo a la impresora', t: 'Amb el professor/a, quan tingueu el fitxer STL:|Con el profesor/a, cuando tengáis el archivo STL:',
+          steps: ["Obriu l'STL a Tinkercad («Importa») o en un programa de laminat (Ultimaker Cura o PrusaSlicer, gratuïts). Comproveu que les mides en mm són les del model.|Abrid el STL en Tinkercad («Importar») o en un programa de laminado (Ultimaker Cura o PrusaSlicer, gratuitos). Comprobad que las medidas en mm son las del modelo.",
+            "Al programa de laminat: capes de 0,2 mm, farciment baix (un 15-20 %) i sense suports. Les dues peces planes a la placa: la caixa amb l'obertura amunt i la tapa amb el llavi amunt.|En el programa de laminado: capas de 0,2 mm, relleno bajo (un 15-20 %) y sin soportes. Las dos piezas planas en la placa: la caja con la abertura hacia arriba y la tapa con el labio hacia arriba.",
+            "Quan s'hagin refredat, proveu l'encaix. Si la tapa entra massa justa, pugeu tol 0,1 mm; si balla, baixeu-la 0,1 mm. Apunteu-ho a la llibreta: és la tolerància de la vostra impressora!|Cuando se hayan enfriado, probad el encaje. Si la tapa entra demasiado justa, subid tol 0,1 mm; si baila, bajadla 0,1 mm. Apuntadlo en la libreta: ¡es la tolerancia de vuestra impresora!"],
+          tip: "Cada impressora és una mica diferent: per això la tolerància és una variable.|Cada impresora es un poco distinta: por eso la tolerancia es una variable." },
+        { k: 'quiz', ph: 'tanca', q: 'El forat de la caixa fa <b>ix = 50</b> i <code>tol = 0.3</code>. Quina amplada fa el llavi per fora?|El agujero de la caja mide <b>ix = 50</b> y <code>tol = 0.3</code>. ¿Qué anchura mide el labio por fuera?', opts: ['49,4 mm (50 − 2 × 0,3)|49,4 mm (50 − 2 × 0,3)', '50,6 mm (50 + 2 × 0,3)|50,6 mm (50 + 2 × 0,3)', '50 mm justos|50 mm justos'], a: 0 },
+        { k: 'quiz', ph: 'tanca', q: "Com s'imprimeixen la caixa i la tapa?|¿Cómo se imprimen la caja y la tapa?", opts: ["Planes a la placa, l'una al costat de l'altra: la caixa oberta amunt i la tapa amb el llavi amunt|Planas en la placa, una al lado de la otra: la caja abierta hacia arriba y la tapa con el labio hacia arriba", 'Ja muntades, amb la tapa posada|Ya montadas, con la tapa puesta', 'De costat, perquè es vegin millor|De lado, para que se vean mejor'], a: 0 },
         { k: 'feel', ph: 'tanca' }
       ] }
   ] };

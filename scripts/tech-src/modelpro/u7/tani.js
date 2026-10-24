@@ -98,6 +98,32 @@ Object.assign(TANI, (() => {
         <g class="p74op"><rect x="252" y="113" width="52" height="10" rx="3" fill="#FF8A3D"/></g>
         <circle cx="252" cy="118" r="15" fill="#FFA766" stroke="#fff" stroke-width="2"/><circle cx="252" cy="118" r="6" fill="#5B3FD6"/>
         <g ${tA(3.4, 'ta-in')}><text x="252" y="170" text-anchor="middle" class="tat s">${L('B gira al voltant', 'B gira alrededor')}</text><text x="252" y="188" text-anchor="middle" class="tat s">${L('del passador', 'del pasador')}</text></g>`);
+    },
+    // p7-5 · la tapa de llavi vista de tall: baixa i entra a la caixa amb «tol» de marge a cada costat (repòs: tapada)
+    p75gap() {
+      const B = '#3D7BF4', Y = '#F7C531', YD = '#D9A514', KO = '#E8453C';
+      return tSvg(200, `<style>.p75dn{animation:p75dn 5.2s ease-in-out infinite}@keyframes p75dn{0%,14%{transform:translateY(-46px)}48%,86%{transform:none}100%{transform:translateY(-46px)}}</style>${BG}
+        <rect x="40" y="92" width="16" height="92" rx="3" fill="${B}"/><rect x="264" y="92" width="16" height="92" rx="3" fill="${B}"/><rect x="40" y="168" width="240" height="16" rx="3" fill="${B}"/>
+        <g class="p75dn"><rect x="40" y="76" width="240" height="16" rx="3" fill="${Y}"/><rect x="62" y="92" width="14" height="32" fill="${YD}"/><rect x="244" y="92" width="14" height="32" fill="${YD}"/>
+          <line x1="62" y1="112" x2="258" y2="112" stroke="#14204A" stroke-width="1.4" stroke-dasharray="4 3"/><rect x="118" y="100" width="84" height="22" rx="11" fill="#fff"/><text x="160" y="115" text-anchor="middle" class="tat s" style="font-size:11.5px">ix − 2 × tol</text></g>
+        <line x1="56" y1="150" x2="264" y2="150" stroke="#14204A" stroke-width="1.6"/><path d="M56 144v12M264 144v12" stroke="#14204A" stroke-width="1.6"/><rect x="142" y="139" width="36" height="22" rx="11" fill="#fff"/><text x="160" y="154" text-anchor="middle" class="tat s">ix</text>
+        <g ${tA(2.6, 'ta-in')}><path d="M57 130h4M259 130h4" stroke="${KO}" stroke-width="3" stroke-linecap="round"/></g>
+        ${chip(59, 52, 54, 'tol', KO, 2.8)}${chip(261, 52, 54, 'tol', KO, 2.8)}<g ${tA(2.8)}><path d="M59 66 V124 M261 66 V124" stroke="${KO}" stroke-width="1.4" stroke-dasharray="2 3"/></g>
+        <g ${tA(3.4, 'ta-in')}><text x="160" y="30" text-anchor="middle" class="tat b">${L('El llavi entra amb marge', 'El labio entra con margen')}</text></g>`);
+    },
+    // p7-5 · porta-ho a la impressora: STL → laminat en capes de 0,2 mm → impressió → provar l'encaix
+    p75print() {
+      const card = (x, t, n, body) => `<g ${tA(t, 'ta-in')}><rect x="${x}" y="40" width="70" height="104" rx="12" fill="#fff" filter="url(#bwSh)"/>${body}<text x="${x + 35}" y="162" text-anchor="middle" class="tat s" style="font-size:11px">${n}</text></g>`;
+      const arrow = (x, t) => `<g ${tA(t)}><path d="M${x} 92 h8 M${x + 4} 88 l4 4 -4 4" fill="none" stroke="#6B7390" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></g>`;
+      const mesh = `<path d="M18 120 L35 62 L52 120 Z M18 120 L35 98 L52 120 M35 62 L35 98 M26 92 L44 92" fill="#B9A7FF" stroke="#5B3FD6" stroke-width="1.6" stroke-linejoin="round" transform="translate(6 0)"/>`;
+      const layers = Array.from({ length: 9 }, (_, k) => `<rect x="${92}" y="${118 - k * 7}" width="${46 - Math.abs(k - 4) * 3}" height="5" rx="2" fill="${k % 2 ? '#FF8A3D' : '#FFB47F'}" transform="translate(${Math.abs(k - 4) * 1.5} 0)"/>`).join('');
+      const printer = `<rect x="174" y="56" width="52" height="66" rx="4" fill="none" stroke="#14204A" stroke-width="3"/><rect x="190" y="70" width="20" height="12" rx="3" fill="#7C5CFF"/><path d="M196 82 l4 8 4 -8" fill="#14204A"/><circle cx="196" cy="76" r="2" fill="#fff"/><circle cx="204" cy="76" r="2" fill="#fff"/><rect x="180" y="112" width="40" height="6" rx="2" fill="#9AA3B5"/>`;
+      const parts = `<rect x="250" y="102" width="26" height="18" rx="2" fill="#3D7BF4"/><rect x="254" y="102" width="18" height="14" fill="#DCE4FA"/><rect x="280" y="114" width="26" height="6" rx="2" fill="#F7C531"/><rect x="284" y="108" width="18" height="6" fill="#D9A514"/>`;
+      return tSvg(200, `${BG}<text x="160" y="26" text-anchor="middle" class="tat b">${L('Porta-ho a la impressora', 'Llévalo a la impresora')}</text>
+        ${card(6, .2, '1 · STL', mesh)}${arrow(77, .7)}${card(86, 1, L('2 · Capes', '2 · Capas'), layers + '<text x="123" y="54" text-anchor="middle" class="tat s" style="font-size:11px;fill:#C25E14">0,2 mm</text>')}${arrow(157, 1.5)}${card(166, 1.8, L('3 · Imprimeix', '3 · Imprime'), printer)}${arrow(237, 2.3)}
+        ${card(246, 2.6, L('4 · Prova-ho', '4 · Pruébalo'), parts)}
+        <g ${tA(3.4)}><circle cx="300" cy="50" r="11" fill="#1FA463"/><path d="M295 50l3.5 3.5 6.5 -7" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></g>
+        <g ${tA(3, 'ta-in')}><text x="160" y="186" text-anchor="middle" class="tat s" style="font-size:11.5px">${L('Les dues peces planes, sense suports', 'Las dos piezas planas, sin soportes')}</text></g>`);
     }
   };
 })());

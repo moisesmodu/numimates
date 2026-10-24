@@ -60,6 +60,8 @@ const TIC = {
   ok: '<svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>',
   lock: '<svg viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="11" rx="2" fill="currentColor"/><path d="M8 10V7a4 4 0 0 1 8 0v3" fill="none" stroke="currentColor" stroke-width="2.4"/></svg>',
   play: '<svg viewBox="0 0 24 24"><path d="M7 4l13 8-13 8z" fill="currentColor"/></svg>',
+  // taller (sessió pràctica de fabricar: una clau anglesa)
+  tool: '<svg viewBox="0 0 24 24"><path d="M14.7 3.3a5 5 0 0 0-6 6.6L3.6 15a2 2 0 0 0 0 2.8l2.6 2.6a2 2 0 0 0 2.8 0l5.1-5.1a5 5 0 0 0 6.6-6l-3 3-3.2-.8-.8-3.2z" fill="currentColor"/></svg>',
   cup: '<svg viewBox="0 0 24 24"><path d="M7 3h10v5a5 5 0 0 1-10 0z" fill="currentColor"/><path d="M7 5H4v2a3 3 0 0 0 3 3M17 5h3v2a3 3 0 0 1-3 3" fill="none" stroke="currentColor" stroke-width="2"/><path d="M10 13h4v3h-4zM8 18h8v3H8z" fill="currentColor"/></svg>',
   rellotge: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 7v5l3 2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>'
 };
@@ -216,7 +218,7 @@ function tIsland(c, u, ui, nxt) {
     <path d="${road}" fill="none" stroke="#fff" stroke-width="3" stroke-dasharray="2 14" stroke-linecap="round" opacity=".7"/></svg>`;
   const nodes = u.s.map((s, si) => {
     const [x, y] = P[si], pos = use3 ? I3[si] : [x / W * 100, y / H * 100], d = tDone(s.id), ready = tReady(s), open = tSessOpen(c, s), cur = nxt && nxt.id === s.id;
-    const ico = d ? TIC.ok : !ready ? '<b>…</b>' : !open ? TIC.lock : s.proj ? TIC.cup : `<b>${si + 1}</b>`, ns = d ? tSessStars(s) : 0;
+    const ico = d ? TIC.ok : !ready ? '<b>…</b>' : !open ? TIC.lock : s.taller ? TIC.tool : s.proj ? TIC.cup : `<b>${si + 1}</b>`, ns = d ? tSessStars(s) : 0;
     return `<button class="tnode ${d ? 'done' : ''} ${cur ? 'cur' : ''} ${ready ? '' : 'soon'} ${!open && ready ? 'lock' : ''} ${s.proj ? 'proj' : ''} ${pos[0] < 50 ? 'lf' : 'rt'}" style="left:${pos[0].toFixed(2)}%;top:${pos[1].toFixed(2)}%" data-sid="${s.id}" data-n="${si + 1}" onclick="tNodeTap(this,event)" aria-label="${esc(tx(s.t))}">
       <span class="tnc">${ico}</span>${d ? `<span class="tnst" aria-hidden="true">${[0, 1, 2].map(k => `<i class="${k < ns ? 'on' : ''}"></i>`).join('')}</span>` : ''}
       ${cur ? `<span class="tnbit3" aria-hidden="true"><img src="img/tech/${c.id === 'robotica' ? 'maqueen-happy' : 'bit-wave'}.webp" alt="" width="64" height="64"></span><span class="tntag">${t.s[s.id] && t.s[s.id].i ? L('Continua', 'Continúa') : L('Comença', 'Empieza')}</span>` : ''}</button>`;

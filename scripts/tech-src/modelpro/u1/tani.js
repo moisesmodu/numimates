@@ -124,6 +124,39 @@ Object.assign(TANI, (() => {
         ${it.map((t, i) => `<g ${tA(.4 + i * .9, 'ta-in')}><rect x="34" y="${62 + i * 28}" width="20" height="20" rx="6" fill="#E9EEFB" stroke="#9AA6CC" stroke-width="2"/><text x="64" y="${77 + i * 28}" class="tat s">${t}</text></g><g ${tA(.9 + i * .9)}><path d="M38 ${72 + i * 28} l5 5 l9 -11" fill="none" stroke="#1FA463" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/></g>`).join('')}
         <g ${tA(.2)}><rect x="226" y="150" width="76" height="14" rx="2" fill="#B9A7FF"/><rect x="250" y="86" width="28" height="64" fill="#7C5CFF"/><circle cx="264" cy="74" r="13" fill="#EC5FA8"/></g>
         <g ${tA(4.2)}><rect x="216" y="36" width="96" height="140" rx="10" fill="none" stroke="#3D7BF4" stroke-width="2" stroke-dasharray="5 4"/></g>`);
+    },
+    // p1-5 · l'editor directe i el codi: cada peça del porta-noms és una línia del programa
+    p15edcode() {
+      const I = ISO(84, 140, .72), face = (a, c) => `<polygon points="${pts(a.map(p => I(...p)))}" fill="${c}"/>`;
+      // la placa inclinada 15° enrere: la cara del davant va de (y = −2, z = 4) a (y = 6, z = 33) i fa 4 mm de gruix
+      const fr = [[-45, -2, 4], [45, -2, 4], [45, 6, 33], [-45, 6, 33]], tp = [[-45, 6, 33], [45, 6, 33], [45, 10, 32], [-45, 10, 32]], sd = [[-45, -2, 4], [-45, 6, 33], [-45, 10, 32], [-45, 2, 3]];
+      const [tx, ty] = I(0, 1, 15);
+      const card = (y, c, l1, l2, t) => `<g ${tA(t, 'ta-in')}><rect x="176" y="${y}" width="128" height="40" rx="9" fill="#1E2B5C"/><rect x="176" y="${y}" width="6" height="40" rx="3" fill="${c}"/><text x="190" y="${y + 16}" class="tat s" style="${MONO};fill:#C9B6FF;font-size:10.5px">${l1}</text><text x="190" y="${y + 32}" class="tat s" style="${MONO};fill:#E8EEFF;font-size:10.5px">${l2}</text></g>`;
+      return tSvg(200, `<rect width="320" height="200" rx="20" fill="#F1F2FB"/><rect x="8" y="12" width="154" height="176" rx="14" fill="#fff" filter="url(#bwSh)"/>
+        <text x="85" y="34" text-anchor="middle" class="tat b">${L('Editor directe', 'Editor directo')}</text>
+        <g ${tA(.3)}>${box(I, -50, -20, 0, 100, 40, 6, '#3D7BF4')}</g>
+        <g ${tA(1.5)}>${face(sd, shade('#F7C531', -.3))}${face(fr, shade('#F7C531', -.04))}${face(tp, shade('#F7C531', .3))}</g>
+        <g ${tA(2.7)}><text transform="matrix(.866 -.5 0 1 ${tx.toFixed(1)} ${ty.toFixed(1)})" text-anchor="middle" class="tat b" style="fill:#E8453C;font-size:15px">BIT</text></g>
+        <rect x="168" y="12" width="144" height="176" rx="14" fill="#14204A"/>
+        <text x="240" y="34" text-anchor="middle" class="tat b" style="fill:#fff">${L('Codi', 'Código')}</text>
+        ${card(46, '#3D7BF4', `${L('mou', 'mueve')}(0, 0, 3)`, `${L('arrodonit', 'redondeado')}(100, 40, 6)`, .6)}
+        ${card(92, '#F7C531', 'gira(75, 0, 0)', `${L('arrodonit', 'redondeado')}(90, 30, 4)`, 1.8)}
+        ${card(138, '#E8453C', 'gira(75, 0, 0)', `${L('text', 'texto')}("BIT", 12, 3)`, 3)}
+        <g ${tA(3.8, 'ta-in')}><rect x="58" y="160" width="56" height="20" rx="10" fill="#14204A"/><text x="86" y="174" text-anchor="middle" class="tat s w" style="${MONO};font-size:11px">&lt;/&gt; ${L('Codi', 'Código')}</text></g>`);
+    },
+    // p1-5 · pla primer, inclinat després: el grup gira 5 × 15° = 75° i entra 2 mm dins de la base (vist de costat)
+    p15tilt() {
+      const plate = `<rect x="-30" y="-4" width="60" height="8" rx="2" fill="#F7C531"/><rect x="-14" y="-10" width="28" height="6" rx="1.5" fill="#E8453C"/>`;
+      const panel = (x, t, n, s) => `<g ${tA(t, 'ta-in')}><rect x="${x}" y="12" width="98" height="176" rx="14" fill="#fff" filter="url(#bwSh)"/><text x="${x + 49}" y="34" text-anchor="middle" class="tat b">${n}</text><text x="${x + 49}" y="180" text-anchor="middle" class="tat s">${s}</text></g>`;
+      return tSvg(200, `<rect width="320" height="200" rx="20" fill="#F1F2FB"/>
+        ${panel(6, .1, L('1 · Pla', '1 · Plano'), L('placa + nom', 'placa + nombre'))}${panel(111, 1.2, L('2 · Gira', '2 · Gira'), L('5 × 15° = 75°', '5 × 15° = 75°'))}${panel(216, 2.6, L('3 · A la base', '3 · En la base'), L('entra 2 mm', 'entra 2 mm'))}
+        <g ${tA(.5)}><g transform="translate(55 120)">${plate}</g><rect x="22" y="146" width="66" height="18" rx="9" fill="#EEF1FB"/><text x="55" y="159" text-anchor="middle" class="tat s" style="font-size:11px">${L('Agrupa', 'Agrupa')}</text></g>
+        <g ${tA(1.6)}><g transform="translate(160 112) rotate(-75)" opacity=".18">${plate}</g><g transform="translate(160 112) rotate(-40)">${plate}</g>
+          <path d="M196 120 A40 40 0 0 0 168 76" fill="none" stroke="#7C5CFF" stroke-width="3" stroke-linecap="round" stroke-dasharray="5 5"/><path d="M164 82 l2 -9 8 5" fill="none" stroke="#7C5CFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+          <rect x="126" y="146" width="68" height="18" rx="9" fill="#EEF1FB"/><text x="160" y="159" text-anchor="middle" class="tat s" style="font-size:11px">${L('Gir X: + × 5', 'Giro X: + × 5')}</text></g>
+        <g ${tA(3)}><rect x="226" y="150" width="78" height="14" rx="4" fill="#3D7BF4"/><g transform="translate(270 124) rotate(-75)">${plate}</g>
+          <line x1="266" y1="150" x2="266" y2="78" stroke="#6B7390" stroke-width="1.6" stroke-dasharray="3 3"/><text x="252" y="92" text-anchor="middle" class="tat s" style="fill:#5B3FD6">15°</text></g>
+        <g ${tA(4)}><circle cx="266" cy="152" r="8" fill="none" stroke="#E8453C" stroke-width="2.4"/><text x="290" y="144" class="tat s" style="fill:#C2362D;font-size:11px">2 mm</text></g>`);
     }
   };
 })());

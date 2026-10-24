@@ -96,6 +96,34 @@ Object.assign(TANI, (() => {
         + node(70, 176, `${L('cub', 'cubo')}(20, ${L('centrat', 'centrado')})`, PC, 2.1) + node(200, 176, 'esfera(28)', PC, 2.1)
         + `<g ${tA(2.6, 'ta-in')}>${txt(40, 124, L('la peça', 'la pieza'), 'tat s', `fill:${MUT};font-size:12px`)}${txt(250, 148, L('les eines (els punts)', 'herramientas (puntos)'), 'tat s', `fill:${MUT};font-size:12px`)}</g>`
         + `<g ${tA(3, 'ta-in')}>${txt(160, 206, L('de baix a dalt: el cos i després els forats', 'de abajo arriba: el cuerpo y luego los agujeros'), 'tat s', `fill:${MUT};font-size:11.5px`)}</g>`);
+    },
+    // p3-5 · la ranura en U vista de cara: el cable, 0,5 mm de marge per cada costat i l'endoll, que no hi passa
+    p35cable() {
+      const G = '#2FB36D', GD = '#23905A';
+      return tSvg(200, `<rect width="320" height="200" rx="20" fill="#F1F2FB"/>
+        <g ${tA(.2)}><path d="M24 70 H110 V140 A20 20 0 0 0 150 140 V70 H226 V188 H24 Z" fill="${G}"/><path d="M24 70 H110 V140 A20 20 0 0 0 150 140 V70 H226 V78 H158 V140 A28 28 0 0 1 102 140 V78 H24 Z" fill="${GD}" opacity=".35"/></g>
+        <g ${tA(1)}><circle cx="130" cy="144" r="16" fill="#14204A"/><circle cx="124" cy="138" r="5" fill="#fff" opacity=".35"/></g>
+        <g ${tA(1.8)}><path d="M110 108 h4 M146 108 h4" stroke="${KO}" stroke-width="3" stroke-linecap="round"/><line x1="110" y1="58" x2="150" y2="58" stroke="#14204A" stroke-width="1.6"/><path d="M110 52v12M150 52v12" stroke="#14204A" stroke-width="1.6"/></g>
+        <g ${tA(.4, 'ta-in')}><rect x="96" y="14" width="68" height="28" rx="9" fill="#9AA3B5"/><rect x="104" y="20" width="52" height="16" rx="5" fill="#C5CBD8"/></g>
+        <g ${tA(2.6)}>${badge(176, 28, false)}</g>
+        <g ${tA(2.2, 'ta-in')}>${txt(272, 34, L("l'endoll", 'el enchufe'), 'tat s', `fill:${MUT}`)}${txt(272, 52, L('no hi passa', 'no pasa'), 'tat s', `fill:${KO}`)}</g>
+        <g ${tA(1.3, 'ta-in')}><rect x="236" y="80" width="76" height="26" rx="13" fill="#fff" filter="url(#bwSh)"/>${txt(274, 98, L('cable 4 mm', 'cable 4 mm'), 'tat s')}</g>
+        <g ${tA(2, 'ta-in')}><rect x="236" y="114" width="76" height="26" rx="13" fill="#fff" filter="url(#bwSh)"/>${txt(274, 132, '+ 0,5 + 0,5', 'tat s', `fill:${KO}`)}</g>
+        <g ${tA(2.8, 'ta-in')}><rect x="236" y="148" width="76" height="26" rx="13" fill="${PC}"/>${txt(274, 166, L('ranura 5 mm', 'ranura 5 mm'), 'tat s w')}</g>`);
+    },
+    // p3-5 · un forat de l'editor és una eina del resta; al codi es copia i es canvien la x i l'amplada
+    p35edcode() {
+      const P = iso(86, 118, 1.25), hole = (x, w, t) => `<g ${tA(t)}>${poly([P(x, -2, 18), P(x + w, -2, 18), P(x + w, 22, 18), P(x, 22, 18)], '#9AA3B5', 'opacity=".55" stroke="#6B7390" stroke-dasharray="3 2"')}${poly([P(x, 22, 6), P(x + w, 22, 6), P(x + w, 22, 18), P(x, 22, 18)], '#C5CBD8', 'opacity=".7" stroke="#6B7390" stroke-dasharray="3 2"')}</g>`;
+      const ln = (y, s, t, c = '#E8EEFF') => `<g ${tA(t, 'ta-in')}><text x="190" y="${y}" class="tat s" style="${mono}fill:${c};font-size:11px">${s}</text></g>`;
+      return tSvg(200, `<rect width="320" height="200" rx="20" fill="#F1F2FB"/>${card(8, 12, 162, 176)}
+        ${txt(89, 34, L('Editor directe', 'Editor directo'), 'tat b')}
+        <g ${tA(.2)}>${isoBox(iso(86, 118, 1.25), 40, 20, 16, ['#7FD6A6', '#2FB36D', '#23905A'])}</g>
+        ${hole(17.5, 5, 1.1)}${hole(7, 4, 3.2)}${hole(29.5, 7, 3.6)}
+        <g ${tA(1.5, 'ta-in')}><rect x="52" y="156" width="72" height="22" rx="11" fill="#6B7390"/>${txt(88, 171, L('Forat', 'Agujero'), 'tat s w')}</g>
+        <rect x="178" y="12" width="134" height="176" rx="14" fill="#14204A"/>${txt(245, 34, L('Codi', 'Código'), 'tat b', 'fill:#fff')}
+        ${ln(60, 'resta {', .5, '#C9B6FF')}${ln(80, `  ${L('cub', 'cubo')}(60, 20, 16)`, .8)}${ln(100, `  // ${L('les eines', 'agujeros')}`, 1.2, '#8FA2DD')}${ln(120, `  ${L('cub', 'cubo')}(5, 24, 12)`, 1.4)}
+        ${ln(140, `  ${L('cub', 'cubo')}(4, 24, 12)`, 3.2, '#FFC531')}${ln(160, `  ${L('cub', 'cubo')}(7, 24, 12)`, 3.6, '#FFC531')}${ln(180, '}', .5, '#C9B6FF')}
+        <g ${tA(2.6, 'ta-in')}><rect x="250" y="40" width="56" height="20" rx="10" fill="#FFC531"/>${txt(278, 54, L('copia', 'copia'), 'tat s', 'font-size:11px')}</g>`);
     }
   };
 })());
