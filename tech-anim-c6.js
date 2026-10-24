@@ -1086,10 +1086,10 @@ Object.assign(TANI, (() => {
     },
     m65llista() {
       const items = [L('Toca la placa', 'Toca la placa'), L('Base plana', 'Base plana'), L('Una sola peça', 'Una sola pieza'), L('Parets ≥ 1,2-2 mm', 'Paredes ≥ 1,2-2 mm'), L('Cap a la impressora', 'Cabe en la impresora'), L('Voladissos ≤ 45°', 'Voladizos ≤ 45°')];
-      return tSvg(206, `${bg(206)}<g ${tA(0.1, 'ta-in')}><rect x="16" y="14" width="186" height="182" rx="14" fill="#FFF8E6" stroke="#F1D9A4" stroke-width="2"/><rect x="82" y="8" width="54" height="14" rx="5" fill="#9AA3B5"/></g>
-        ${items.map((t, i) => `<g ${tA(0.3 + i * 0.25, 'ta-in')}><rect x="30" y="${34 + i * 26}" width="16" height="16" rx="4" fill="#fff" stroke="#C9CFDD" stroke-width="2"/><text x="56" y="${47 + i * 26}" class="tat s" style="font-size:12.5px">${t}</text></g>${ok(38, 42 + i * 26, 1.9 + i * 0.4)}`).join('')}
-        <g ${tA(0.6, 'ta-pop')}><ellipse cx="262" cy="118" rx="42" ry="14" fill="#D06A1E"/><rect x="220" y="100" width="84" height="18" fill="${OR}"/><ellipse cx="262" cy="100" rx="42" ry="14" fill="${OR2}"/><text x="262" y="106" text-anchor="middle" class="tat b" style="fill:#fff">A B</text></g>
-        ${pill(214, 150, 96, L('a imprimir!', '¡a imprimir!'), 4.5, '#22A06B', 'tat s w')}`);
+      return tSvg(206, `${bg(206)}<g ${tA(0.1, 'ta-in')}><rect x="12" y="14" width="200" height="182" rx="14" fill="#FFF8E6" stroke="#F1D9A4" stroke-width="2"/><rect x="85" y="8" width="54" height="14" rx="5" fill="#9AA3B5"/></g>
+        ${items.map((t, i) => `<g ${tA(0.3 + i * 0.25, 'ta-in')}><rect x="24" y="${34 + i * 26}" width="16" height="16" rx="4" fill="#fff" stroke="#C9CFDD" stroke-width="2"/><text x="48" y="${47 + i * 26}" class="tat s" style="font-size:12.5px">${t}</text></g>${ok(32, 42 + i * 26, 1.9 + i * 0.4)}`).join('')}
+        <g ${tA(0.6, 'ta-pop')}><ellipse cx="266" cy="118" rx="42" ry="14" fill="#D06A1E"/><rect x="224" y="100" width="84" height="18" fill="${OR}"/><ellipse cx="266" cy="100" rx="42" ry="14" fill="${OR2}"/><text x="266" y="106" text-anchor="middle" class="tat b" style="fill:#fff">A B</text></g>
+        ${pill(220, 150, 94, L('a imprimir!', '¡a imprimir!'), 3.9, '#22A06B', 'tat s w')}`);
     }
   };
 })());
