@@ -180,3 +180,14 @@ cursos de Tech i crear un curs de disseny 3D en dos nivells. Sense desplegar a p
   nom, suport de mòbil, tallagaletes, organitzador, caixa amb tapa) amb «porta-ho a Tinkercad o a la impressora», Nivell 2
   amb menys blocs (l'editor com a eina principal; el codi en text per a variables, bucles i mòduls) i dossier actualitzat
   (centres i famílies).
+
+## Editor 3D estil Tinkercad (24-10-2026)
+- Barra d'eines a dalt de la vista (Desfés/Refés, Duplica, Esborra, Forat/Sòlid, Mirall ▾ amb «Còpia a l'altre costat»,
+  Alinea ▾ amb «A terra», Agrupa/Desagrupa, Més peces, Totes, Fantasma, Resultat), cub de vistes, cotes en mm a la vista que es
+  poden tocar per escriure-les, formes que s'arrosseguen a la placa (o es toquen i surten al lloc lliure més a prop del centre),
+  pestanya Forma (paret del tub, punta del con, puntes de l'estrella, radi de la caixa rodona), dreceres de teclat.
+- Duplica repeteix tot el salt des de l'original. Formes noves: **text** (lletra pròpia «Numi 3D», traç de 2,4 mm),
+  semiesfera i caixa rodona (també al llenguatge del Nivell 2: `text`, `semiesfera`, `arrodonit`). «Veure el codi» i `.scad`
+  de qualsevol model. Al Nivell 2, els passos amb `text: true` s'obren a Codi amb botons que insereixen codi.
+- `param` accepta noms bilingües (`mida|medida`). Pistes i guies de les unitats publicades adaptades (cub de vistes, barra
+  d'eines, Duplica i Mirall nous). Totes les pistes comprovades amb l'editor real a 390 i 1440.

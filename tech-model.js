@@ -22,6 +22,9 @@
 /* ---------- Text bilingüe (també a Node, on potser no hi ha L ni tx) ---------- */
 const m3L = (ca, es) => typeof L === 'function' ? L(ca, es) : ca;
 const m3T = v => v == null ? '' : typeof v === 'function' ? v() : typeof tx === 'function' ? tx(v) : String(v).split('|')[0];
+// un nom de variable o una expressió d'una comprovació poden ser bilingües ('mida|medida', 'mida * 2|medida * 2'):
+// les alternatives, primer la de la llengua de l'alumne/a (un nom sense «|» és l'única alternativa)
+const m3Alts = v => { const s = String(v); if (!s.includes('|')) return [s.trim()]; const a = s.split('|').map(x => x.trim()), c = m3T(s).trim(); return [c, ...a.filter(x => x !== c)]; };
 const m3Esc = s => typeof esc === 'function' ? esc(s) : String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 const m3Clone = o => JSON.parse(JSON.stringify(o, (k, v) => k[0] === '_' ? undefined : v));
 const m3R = (v, d = 2) => { const k = 10 ** d; return Math.round(v * k) / k; };
@@ -457,7 +460,9 @@ function m3BBox(model, o) { return m3An(m3Tree(model), o).box(); }
    { k: 'match', target, th: 0.85 } · { k: 'size', ax, v, tol } · { k: 'fit', box: [x,y,z] } · { k: 'onplate' } · { k: 'flatbase', min }
    { k: 'hole' } · { k: 'count', t?, min?, max?, hole? } · { k: 'vol', min?, max? } (cm³) · { k: 'one' } · { k: 'sym', ax, th? } · { k: 'wall', min }
    { k: 'uses', b } (Nivell 2) · { k: 'param', v, vals } (Nivell 2) · extres: { k: 'colors', min } · { k: 'part', t?, s?, at?, base?, tol? }
-   · { k: 'zmax', v } (alçada màxima) · { k: 'nohole' }. Els números poden ser expressions amb les variables del programa ('mida + 4'). */
+   · { k: 'zmax', v } (alçada màxima) · { k: 'nohole' }. Els números poden ser expressions amb les variables del programa ('mida + 4').
+   Si la variable té un nom diferent a cada llengua, el nom de «param» i les expressions poden ser bilingües: { k: 'param',
+   v: 'mida|medida' } (el valor es posa a tots dos noms) i v: 'mida * 2|medida * 2' (es fa servir l'alternativa que es pot calcular). */
 const M3_TN = { box: ['caixa', 'caja'], cyl: ['cilindre', 'cilindro'], sph: ['esfera', 'esfera'], cone: ['con', 'cono'], pyr: ['piràmide', 'pirámide'], wedge: ['falca', 'cuña'], torus: ['anell', 'anillo'], tube: ['tub', 'tubo'], star: ['estrella', 'estrella'], heart: ['cor', 'corazón'], hex: ['prisma hexagonal', 'prisma hexagonal'], hsph: ['semiesfera', 'semiesfera'], rbox: ['caixa arrodonida', 'caja redondeada'], text: ['text', 'texto'] };
 // plurals que no es fan només afegint -s / -es
 const M3_TNP = { hex: ['prismes hexagonals', 'prismas hexagonales'], rbox: ['caixes arrodonides', 'cajas redondeadas'], hsph: ['semiesferes', 'semiesferas'], text: ['textos', 'textos'], heart: ['cors', 'corazones'] };
@@ -465,7 +470,10 @@ const M3_BN = { diff: ['resta', 'resta'], union: ['uneix', 'une'], inter: ['inte
 // a «count» i «part», t és el tipus de peça (contracte); el text de la comprovació va a txt (o a t si no és un tipus)
 const m3CkShape = c => c.shape || (M3_TYPES.includes(c.t) ? c.t : null);
 const m3CkLabel = c => c.txt || (c.t && !M3_TYPES.includes(c.t) ? c.t : null) || m3CheckTxt(c);
+const M3_CKNUM = ['v', 'min', 'max', 'tol', 'base', 'box', 's', 'at'];
+const m3Pick = (x, i) => typeof x === 'string' && x.includes('|') ? (x.split('|')[i] ?? x.split('|')[0]).trim() : Array.isArray(x) ? x.map(y => m3Pick(y, i)) : x;
 function m3CheckTxt(c) {
+  if (M3_CKNUM.some(k => c[k] != null && JSON.stringify(c[k]).includes('|'))) { const one = i => { const d = { ...c }; for (const k of M3_CKNUM) if (d[k] != null) d[k] = m3Pick(d[k], i); return m3CheckTxt(d).split('|')[i]; }; return one(0) + '|' + one(1); }
   const B = (ca, es) => ca + '|' + es, ax = (c.ax || 'x').toUpperCase(), n = v => typeof v === 'number' ? String(v).replace('.', ',') : String(v);
   switch (c.k) {
     case 'match': return B("S'assembla al model fantasma", 'Se parece al modelo fantasma');
@@ -499,7 +507,7 @@ function m3Norm(model, o = {}) {
   return { tree: m3Tree(model), parts: model.parts || null };
 }
 // un número d'una comprovació: pot ser una expressió amb les variables del programa
-function m3Num(v, env) { if (typeof v === 'number') return v; if (v == null) return v; try { return m3Expr(m3ExprParse(String(v)), env || {}); } catch (e) { return NaN; } }
+function m3Num(v, env) { if (typeof v === 'number') return v; if (v == null) return v; if (typeof v === 'string' && v.includes('|')) { for (const a of m3Alts(v)) { const r = m3Num(a, env); if (Number.isFinite(r)) return r; } return NaN; } try { return m3Expr(m3ExprParse(String(v)), env || {}); } catch (e) { return NaN; } }
 function m3CheckOne(N, A, c, o) {
   const env = (N.run && N.run.env) || {}, num = v => m3Num(v, env);
   switch (c.k) {
@@ -524,7 +532,7 @@ function m3CheckOne(N, A, c, o) {
         if (c.base != null && Math.abs(b[2] - num(c.base)) > tol) return false; return true; }); }
     case 'uses': return !!(N.run && N.run.used && N.run.used.has(c.b));
     case 'param': { if (!N.run) return false; const rest = (o.all || []).filter(x => x !== c && x.k !== 'param' && x.k !== 'uses' && !(x.k === 'match' && typeof x.target !== 'string' && !(x.target && (x.target.src || x.target.prog))));
-      const src = N.run.src; for (const v of c.vals) { const N2 = m3Norm({ src }, { over: { [c.v]: v } }); if (N2.run.err) return false; const A2 = m3An(N2.tree, { cells: o.cells }); for (const x of rest) if (!m3CheckOne(N2, A2, x, { ...o, over: { [c.v]: v } })) return false; } return true; }
+      const src = N.run.src, names = m3Alts(c.v); for (const v of c.vals) { const over = Object.fromEntries(names.map(k => [k, v])), N2 = m3Norm({ src }, { over }); if (N2.run.err) return false; const A2 = m3An(N2.tree, { cells: o.cells }); for (const x of rest) if (!m3CheckOne(N2, A2, x, { ...o, over })) return false; } return true; }
   }
   return false;
 }
