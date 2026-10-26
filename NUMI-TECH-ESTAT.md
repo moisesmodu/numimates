@@ -204,3 +204,9 @@ cursos de Tech i crear un curs de disseny 3D en dos nivells. Sense desplegar a p
 - Illes 3D tornades a renderitzar amb 5 parades (Nivell 1 unitats 3-7, Nivell 2 unitats 1, 3 i 7).
 - Al mòbil, «Proporcional» és el cadenat de la barra de pestanyes quan la pestanya és Mida (abans no es veia al mòbil).
 - Solucionari: 208 sessions, 2.435 respostes. Validador: 208 sessions, 0 errors.
+
+## Tech 3D · Nivell 2, unitat 8 «Producte final» (26-10-2026): els dos nivells complets
+- p8-1 El repte i les especificacions · p8-2 El prototip paramètric · p8-3 Proves i iteració · p8-4 Presentació i diploma.
+  Fira de producte de l'estudi amb encàrrecs reals; exemple guiat: el comptador de pals i anelles de la Sílvia (P5). Prototip
+  opcional amb l'editor que passa a codi («Codi»), versions v1-v3 que continuen d'una sessió a la següent, revisió entre
+  iguals i diploma. Tech 3D: Nivell 1 37 sessions, Nivell 2 35. Numi Tech: 212 sessions, 0 errors.
