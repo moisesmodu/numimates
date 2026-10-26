@@ -20,7 +20,7 @@ import { build } from 'esbuild';
 const root = new URL('../../', import.meta.url).pathname;
 const ONLY = process.env.ONLY || 'all', BASE = process.env.BASE || 'http://127.0.0.1:5190/';
 const WORLD = { robot: 'tropic', robotica: 'lab', creadors: 'teatre', digital: 'ciutat', web: 'tropic', model: 'fab', modelpro: 'estudi' };
-const THEMES = { robot: ['algo', 'loop', 'llum', 'sensor', 'ciutat', 'fruita', 'cova', 'trofeu'], robotica: ['lab', 'algo', 'sensor', 'loop', 'llum', 'ciutat', 'cova', 'trofeu'], creadors: ['llum', 'loop', 'ciutat', 'algo', 'sensor', 'fruita', 'cova', 'trofeu'], web: ['ciutat', 'algo', 'loop', 'llum', 'sensor', 'ciutat', 'fruita', 'trofeu'], digital: ['sensor', 'llum'],
+const THEMES = { robot: ['algo', 'loop', 'llum', 'sensor', 'ciutat', 'fruita', 'cova', 'trofeu'], robotica: ['lab', 'algo', 'sensor', 'loop', 'llum', 'ciutat', 'cova', 'trofeu'], creadors: ['llum', 'loop', 'ciutat', 'algo', 'sensor', 'fruita', 'cova', 'trofeu'], web: ['ciutat', 'algo', 'loop', 'llum', 'sensor', 'ciutat', 'fruita', 'trofeu'], digital: ['sensor', 'llum', 'ciutat', 'cova', 'loop', 'trofeu'],
   // Tech 3D: una fita per unitat (vegeu FABHERO a diorama.mjs)
   model: ['eixos', 'formes', 'mesura', 'casa', 'forats', 'impressio', 'persones', 'trofeu'], modelpro: ['codi', 'moli', 'dau', 'caixa', 'engranatge', 'ciutat', 'frontissa', 'trofeu'] };
 // el curs web està aparcat: les seves illes no es tornen a fer si no es demana explícitament amb COURSES
