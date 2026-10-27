@@ -72,7 +72,7 @@ MakeCode és un servei de Microsoft (fet per a la Micro:bit Educational Foundati
 3. Comproveu que la xarxa deixa obrir MakeCode. Si no, prepareu el camí alternatiu («Copia el codi» + makecode.microbit.org).
 4. Regla de seguretat que repeteixen les guies: el programa es descarrega amb el robot apagat, i el robot s'encén a terra (o agafat amb les rodes a l'aire), mai a la vora d'una taula.
 
-## I el curs Tech Robot (6-8 anys)?
+## I el curs Tech Robot (6-9 anys)?
 
 No necessita cap robot. En Bit és virtual, i les activitats sense pantalla es fan amb el cos, amb fitxes i amb una quadrícula a terra.
 Si més endavant voleu un robot físic per a aquestes edats, la idea seria un de botons a terra, com un Blue-Bot, i caldria adaptar algunes activitats.

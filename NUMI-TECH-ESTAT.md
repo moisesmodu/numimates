@@ -18,7 +18,7 @@ Prova en producció: https://mates-numi.vercel.app/?v=tech (grup 5b amb tot ober
 ## Fet a la branca `claude/eloquent-galileo-fmypbm` (pendent de revisió i de desplegar)
 | Curs | Contingut | Validador | Navegador (390 i 1440) |
 |---|---|---|---|
-| **Robot** (6-8 · 1r-2n, curs d'entrada) | unitats 1-8, 32 sessions (`tech-c1.js`, `tech-guide-c1.js`, TANI a `tech-learn.js`), revisades | 0 errors · 0 avisos (guia completa) | 32/32 bé |
+| **Robot** (6-9 · 1r-3r, curs d'entrada) | unitats 1-8, 32 sessions (`tech-c1.js`, `tech-guide-c1.js`, TANI a `tech-learn.js`), revisades | 0 errors · 0 avisos (guia completa) | 32/32 bé |
 | **Robòtica** (10-12 · 5è-6è) | 8 unitats, 32 sessions (`tech-c2.js`, `tech-anim-c2.js`, `tech-guide-c2.js`), revisades | 0 errors · 0 avisos (guia completa) | 32/32 bé |
 | **Creadors** (9-11 · 4t-6è, després de Robot) | 8 unitats, 32 sessions (`tech-c3.js`, `tech-anim-c3.js`, `tech-guide-c3.js`), revisades | 0 errors · 0 avisos (guia completa) | 32/32 bé |
 | **Digital** (9-12 · 4t-6è) | 3 unitats, 12 sessions (U3 «Benestar i vida digital»: pantalles, videojocs en línia, IA i autoria, pla digital) (`tech-c5.js`, `tech-anim-c5.js`, `tech-guide-c5.js`), revisades | 0 errors · 0 avisos (guia completa) | 12/12 bé |
