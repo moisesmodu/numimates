@@ -11,7 +11,7 @@
         <g ${tA(2.8, 'ta-pop')}><rect x="${cx}" y="15" width="74" height="28" rx="9" fill="#8B5CF6"/><text x="${cx + 37}" y="35" text-anchor="middle" class="tat w b">${W[0][0]}</text></g>
         <text x="160" y="78" text-anchor="middle" class="tat s" style="fill:#56628A">${L('Quina fitxa ve després?', '¿Qué ficha viene después?')}</text>
         ${W.map(([t, p, c], i) => `<g ${tA(.5 + i * .5, 'ta-in')}><text x="24" y="${107 + i * 36}" class="tat b">${t}</text>${iaBar(104, 95 + i * 36, 150, p, c, Math.round(p * 100) + ' %')}</g>`).join('')}
-        <g ${tA(2.4, 'ta-pop')}><circle cx="296" cy="102" r="11" fill="#3CC47C"/><path d="M291 102l4 4 6-7" stroke="#fff" stroke-width="2.5" fill="none" stroke-linecap="round"/></g>`);
+        <g ${tA(2.4, 'ta-pop')}><circle cx="98" cy="102" r="11" fill="#3CC47C"/><path d="M93 102l4 4 6-7" stroke="#fff" stroke-width="2.5" fill="none" stroke-linecap="round"/></g>`);
     },
     // regles escrites per una persona · patrons trobats a partir d'exemples
     i1regles() {

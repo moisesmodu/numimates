@@ -22,6 +22,9 @@ const iaPick = (v, lang) => { if (v == null) return ''; const s = String(v), i =
 const iaT = v => typeof v === 'function' ? v() : iaPick(v, typeof LANG !== 'undefined' ? LANG : 'ca');
 const iaE = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 const iaCode = (v, lang) => v && typeof v === 'object' ? ((lang || (typeof LANG !== 'undefined' ? LANG : 'ca')) === 'es' ? v.es ?? v.ca : v.ca ?? v.es) : v;   // codi bilingüe: { ca, es } o una sola cadena
+// \b de les expressions → límit de paraula que entén les lletres amb accent (botó, línies, propón…)
+const IA_UB = '(?:(?<![\\p{L}\\p{N}])(?=[\\p{L}\\p{N}])|(?<=[\\p{L}\\p{N}])(?![\\p{L}\\p{N}]))';
+const iaU = rx => new RegExp(rx.source.replace(/\\b/g, IA_UB), rx.flags.includes('u') ? rx.flags : rx.flags + 'u');
 const iaRx = v => typeof v === 'string' && v.length > 2 && v[0] === '/' && v.lastIndexOf('/') > 0 ? new RegExp(v.slice(1, v.lastIndexOf('/')), v.slice(v.lastIndexOf('/') + 1) || 'i') : null;
 const iaPc = p => Math.round(p * 100) + ' %';
 function iaRng(seed) { let s = (seed >>> 0) || 0x9E3779B9; return () => { s ^= s << 13; s >>>= 0; s ^= s >>> 17; s ^= s << 5; s >>>= 0; return s / 4294967296; }; }
@@ -224,11 +227,12 @@ const IA_PII = [
   [/\b(el meu institut|mi instituto|la meva escola|mi colegio|vaig a l'institut|voy al instituto)\s+[A-ZÀ-Ý]/, 'el teu centre|tu centro']
 ];
 const IA_CHEAT = /\b(fes|haz|escriu|escribe|fes-me|hazme|escriu-me|escríbeme)\b[^.]{0,30}\b(els deures|los deberes|el treball sencer|el trabajo entero|tot el treball|todo el trabajo|la redacció|la redacción|l'examen|el examen)\b|\b(copiar-ho|copiarlo|el copiaré|lo copiaré|entregar-ho com|entregarlo como|que sembli meu|que parezca mío)\b/i;
+const IA_CHEAT_U = iaU(IA_CHEAT);
 function iaRubric(text) {
   const s = String(text || ''), parts = {}; let score = 0;
   for (const [k, , rx] of IA_RUB) { parts[k] = rx.test(s); if (parts[k]) score++; }
   const words = (s.match(/[\p{L}\p{N}]+/gu) || []).length; if (words < 6) { score = Math.min(score, 1); }
-  const pii = IA_PII.filter(([rx]) => rx.test(s)).map(([, n]) => n), cheat = IA_CHEAT.test(s);
+  const pii = IA_PII.filter(([rx]) => rx.test(s)).map(([, n]) => n), cheat = IA_CHEAT_U.test(s);
   let lv = score <= 1 ? 0 : score <= 3 ? 1 : score === 4 ? 2 : 3; if (pii.length) lv = Math.min(lv, 1);
   return { parts, score, lv, pii, cheat, words };
 }
@@ -238,6 +242,7 @@ const IA_VQ = [
   ['act', 'Què passa quan…|Qué pasa cuando…', /\b(quan|cuando|en (prémer|tocar|clicar|fer clic|escriure)|al (pulsar|tocar|hacer clic|clicar|escribir|apretar)|si (toco|clico|premo|pulso|escric|escribo|arriba|llega)|cada (cop|vez)|després|después)\b/i],
   ['det', 'Detalls|Detalles', /(\d+|color|vermell|verd|blau|groc|rojo|verde|azul|amarillo|gran|petit|grande|pequeño|fosc|oscuro|missatge|mensaje|segons|segundos|emoji|negreta|centrat|centrado|\p{Extended_Pictographic})/iu]
 ];
+IA_RUB.forEach(r => { r[2] = iaU(r[2]); }); IA_VQ.forEach(r => { r[2] = iaU(r[2]); });
 const iaVQual = s => IA_VQ.filter(([, , rx]) => rx.test(String(s || ''))).map(([k]) => k);
 
 /* =====================================================================================================================
@@ -304,6 +309,7 @@ const IA_VF = [
 const IA_VX = [['reset', /\b(reinici|reinicia|torna a zero|vuelve a cero|a zero|a cero|reset|esborra|borra|des de zero|desde cero)/i, '🔁', 'reinici|reinicio'],
   ['goal', /\b(arriba a|arribes a|llega a|llegas a|objectiu|objetivo|meta|guanya|gana|quan arribi|cuando llegue)/i, '🎯', 'objectiu|objetivo'],
   ['color', /\b(color|colors|colores|fons|fondo)\b/i, '🎨', 'colors|colores']];
+IA_VF.forEach(r => { r[1] = iaU(r[1]); }); IA_VX.forEach(r => { r[1] = iaU(r[1]); });
 function iaVibeFeats(desc) {
   const s = String(desc || ''), main = IA_VF.filter(([, rx]) => rx.test(s)).map(([k]) => k), extra = IA_VX.filter(([, rx]) => rx.test(s)).map(([k]) => k);
   const num = (s.match(/\b(\d{1,3})\s*(punts|clics|vegades|cops|puntos|veces|toques|tocs)?/i) || [])[1];
@@ -380,7 +386,7 @@ function iaSplitHTML(code) {
    ===================================================================================================================== */
 function iaLive() {
   try {
-    if (typeof VAR === 'undefined' || !VAR.chat || typeof P === 'undefined' || !P || !P.code || P.docent) return false;
+    if (typeof VAR === 'undefined' || !VAR.chat || typeof P === 'undefined' || !P || !P.code || P.docent || P.id === 'revisio' || P.code === 'REVISIO') return false;   // vistes de revisió: sense IA real
     if (typeof isPremium === 'function' && !isPremium()) return false;
     if (typeof classOff === 'function' && classOff('xat')) return false;
     return navigator.onLine !== false;
@@ -502,7 +508,7 @@ const iaWait = () => tFoot(L('Continua', 'Continúa'), tNext, false, typeof TSS 
 function iaPortSave(p) { if (!p) return; const t = TS_(); t.port.push({ id: 'pj' + Date.now().toString(36), kind: p.kind || 'ia', sid: TSS && TSS.id, d: today(), ...(TSS && TSS.lab ? { lab: 1 } : {}), ...p }); if (t.port.length > 60) t.port.shift(); save(); toast(L('Desat a «Projectes»!', '¡Guardado en «Proyectos»!')); }
 // pestanyes al mòbil (dues o tres columnes a l'ordinador)
 const iaTabs = (tabs, cur, fn) => `<div class="iatabs" role="tablist">${tabs.map(([k, t]) => `<button role="tab" aria-selected="${k === cur}" class="${k === cur ? 'on' : ''}" onclick="${fn}('${k}')">${t}</button>`).join('')}</div>`;
-const iaStage = (cls, tab, body) => `<div class="tstage iast ${cls}" data-tab="${tab}">${body}</div>`;
+const iaStage = (cls, tab, body) => { const b = typeof document !== 'undefined' && document.getElementById('tsb'); if (b) b.classList.add('wide'); return `<div class="tstage iast ${cls}" data-tab="${tab}">${body}</div>`; };
 
 /* ---------- 9.1 iangram: el mini model de llenguatge ---------- */
 if (typeof TSTEP !== 'undefined') TSTEP.iangram = function (st) {
@@ -529,7 +535,7 @@ if (typeof TSTEP !== 'undefined') TSTEP.iangram = function (st) {
         <label class="iactx"><span>${L('Comença amb', 'Empieza con')}</span><input id="iactx" value="${iaE(S.ctx)}" autocomplete="off" spellcheck="false" placeholder="${L('escriu unes paraules', 'escribe unas palabras')}"></label>
         <div id="iabars">${bars()}</div>
         <div class="iagenw"><label class="iatemp"><span>🧊</span><input id="iatemp" type="range" min="0" max="2" step="0.1" value="${S.temp}" aria-label="${L('Temperatura', 'Temperatura')}"><span>🔥</span><b id="iatv">${String(S.temp).replace('.', ',')}</b></label><button class="btn iago" onclick="IA.ng.gen()">✨ ${L('Genera', 'Genera')}</button></div>
-        <div id="iaout" class="iaout" aria-live="polite">${outHTML()}</div>
+        <div id="iaout" class="iaouttxt" aria-live="polite">${outHTML()}</div>
         ${checks.length ? iaChk(lab, r) : ''}</section>`);
     wire();
     if (checks.length && r.every(Boolean)) iaDone(st, S, st.save ? () => ({ ia: 'ngram', t: st.name || TSS.s.t, sum: L(`${m.size} paraules`, `${m.size} palabras`), text: S.text.slice(0, 2000), unit: S.unit, n: S.n }) : null);
@@ -581,7 +587,7 @@ if (typeof TSTEP !== 'undefined') TSTEP.iatrain = function (st) {
   const res = () => checks.map(c => c.k === 'perclass' ? S.cls.every((_, i) => cnt(i) >= c.min) : c.k === 'total' ? S.train.length >= c.min : c.k === 'acc' ? !!S.ev && S.ev.n >= 2 * nc() && S.ev.acc >= c.min - 1e-9 && !S.stale
     : c.k === 'test' ? S.tests > 0 : c.k === 'bias' ? S.biasAns === (st.biasq && st.biasq.a) : c.k === 'classes' ? S.cls.filter(x => x.n.trim()).length >= c.min : false);
   const verb = { cam: L('Mostra', 'Muestra'), draw: L('Dibuixa', 'Dibuja'), mic: L('Fes el so de', 'Haz el sonido de'), data: '' };
-  const addLbl = () => S.src === 'cam' ? L('Mantén premut', 'Mantén pulsado') : S.src === 'draw' ? L('Desa el dibuix', 'Guarda el dibujo') : S.src === 'mic' ? L('Grava 1 s', 'Graba 1 s') : '+5';
+  const addLbl = () => S.src === 'cam' ? L('Mantén premut', 'Mantén pulsado') : S.src === 'draw' ? L('Desa el dibuix', 'Guarda el dibujo') : S.src === 'mic' ? L('Grava 1 s', 'Graba 1 s') : L('exemples', 'ejemplos');
   const viewHTML = () => {
     if (S.src === 'cam') return `<div class="iacam ${S.on ? 'on' : ''}"><video id="iavid" playsinline muted autoplay aria-label="${L('Imatge de la càmera', 'Imagen de la cámara')}"></video>${S.on ? '' : `<button class="btn iaon" onclick="IA.tr.cam()">📷 ${L('Activa la càmera', 'Activa la cámara')}</button>`}<span class="iarec" aria-hidden="true"></span></div>`;
     if (S.src === 'mic') return `<div class="iamic ${S.on ? 'on' : ''}"><canvas id="iaspec" width="320" height="120" aria-hidden="true"></canvas>${S.on ? '' : `<button class="btn iaon" onclick="IA.tr.mic()">🎤 ${L('Activa el micròfon', 'Activa el micrófono')}</button>`}</div>`;
@@ -673,7 +679,8 @@ if (typeof TSTEP !== 'undefined') TSTEP.iatrain = function (st) {
   S.one = () => { const c = Math.floor(Math.random() * nc()); S.cur = iaGenSample(S.cls[c], c, 'test', 90000 + Math.floor(Math.random() * 1e5), st.test); iaFx('tap'); const p = document.getElementById('iapw'); if (p) p.innerHTML = predHTML(); };
   S.plus = () => { if (S.cls.length >= 4) return; S.cls.push({ n: `${L('Classe', 'Clase')} ${'ABCD'[S.cls.length]}`, col: IA_COL[S.cls.length] }); draw(); };
   S.del = i => { S.train = S.train.filter(s => s.c !== i).map(s => ({ ...s, c: s.c > i ? s.c - 1 : s.c })); S.cls.splice(i, 1); S.ev = null; draw(); };
-  const finish = test => { S.ev = iaEval(S.train, test, nc(), S.k); S.tests++; S.stale = false; S.tq = null; iaFx(S.ev.acc >= .8 ? 'ok' : 'ko'); iaSay(L(`La IA ha encertat un ${iaPc(S.ev.acc)}`, `La IA ha acertado un ${iaPc(S.ev.acc)}`)); S.go('out'); draw(); S.go('out'); };
+  const finish = test => { S.ev = iaEval(S.train, test, nc(), S.k); S.tests++; S.stale = false; S.tq = null; iaFx(S.ev.acc >= .8 ? 'ok' : 'ko'); iaSay(L(`La IA ha encertat un ${iaPc(S.ev.acc)}`, `La IA ha acertado un ${iaPc(S.ev.acc)}`)); S.go('out'); draw(); S.go('out');
+    const q = document.querySelector('.iabq') || document.querySelector('.iaev'); if (q && q.scrollIntoView) q.scrollIntoView({ block: 'nearest' }); };
   S.test = () => {
     if (S.gen && (S.src === 'data' || !['cam', 'mic'].includes(S.src) && S.cls.every(c => iaFam(c.g) === 'draw'))) return finish(iaGenTest(S.cls, st.test));
     const per = (st.test && st.test.n) || 3, order = []; for (let j = 0; j < per; j++) S.cls.forEach((_, i) => order.push(i));

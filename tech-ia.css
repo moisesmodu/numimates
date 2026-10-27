@@ -15,6 +15,7 @@
 .iabtn,.iasm{font:800 13.5px/1 Lexend,system-ui,sans-serif;padding:8px 12px;border-radius:12px;border:2px solid rgba(255,255,255,.18);background:rgba(255,255,255,.08);color:inherit;cursor:pointer}
 .iap:not(.iamodel):not(.iaout):not(.iarun):not(.iacodep) .iasm{border-color:var(--line);background:var(--sky);color:var(--pri-d)}
 .iago{background:var(--iag)!important;border:0!important;color:#fff!important;box-shadow:0 6px 18px rgba(139,92,246,.35)}
+.iast .btn{font-size:14.5px;padding:11px 18px;letter-spacing:.02em}
 .iarow{display:flex;align-items:center;gap:10px;justify-content:flex-end;flex-wrap:wrap}
 /* pestanyes (només al mòbil) */
 .iatabs{display:flex;gap:4px;padding:4px;border-radius:16px;background:#E6EBFB;flex:none}
@@ -51,8 +52,8 @@
 .iabw{height:12px;border-radius:99px;background:rgba(255,255,255,.1);overflow:hidden}.iabw i{display:block;height:100%;border-radius:99px;background:var(--iag);transition:width .35s cubic-bezier(.2,.8,.2,1);box-shadow:0 0 12px rgba(34,195,230,.45)}
 .iabar b{font:800 13px/1 ui-monospace,Menlo,Consolas,monospace;text-align:right}
 .iagenw{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-.iatemp{flex:1;display:flex;align-items:center;gap:6px;min-width:170px}.iatemp input{flex:1;accent-color:#A78BFA}.iatemp b{font:800 13px/1 ui-monospace,monospace;min-width:26px}
-.iaout{min-height:62px}
+.iatemp{flex:1 1 150px;display:flex;align-items:center;gap:6px;min-width:0}.iatemp input{flex:1;min-width:0;accent-color:#A78BFA}.iatemp b{flex:none;font:800 13px/1 ui-monospace,monospace;min-width:26px}.iagenw .iago{flex:none}
+.iaouttxt{flex:none;min-height:62px}
 .iagen{margin:0;font:600 16px/1.6 ui-monospace,Menlo,Consolas,monospace;color:#fff;background:rgba(0,0,0,.22);border-radius:14px;padding:10px 12px;word-break:break-word}
 .iatk{border-radius:5px;padding:1px 2px;animation:iatok .3s both}.iatk.p3{background:rgba(139,92,246,.75)}.iatk.p2{background:rgba(139,92,246,.42)}.iatk.p1{background:rgba(236,72,153,.35)}.iatk.p0{background:rgba(239,68,68,.5);outline:1px dashed #FCA5A5}
 @keyframes iatok{from{opacity:0;transform:translateY(4px)}}
