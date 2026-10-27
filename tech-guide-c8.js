@@ -3056,3 +3056,1007 @@ Object.assign(TGUIDE, {
     ]
   }
 });
+
+/* ── unitat 7 ── */
+/* Tech IA · unitat 7 · guies del professor (mateix esquema que tech-guide-c1.js).
+   IA i societat: la feina (tasques, exposició, habilitats), l'energia i l'aigua dels centres de dades, la privadesa i el
+   reconeixement facial, la llei europea d'IA i una assemblea de classe amb proves. Tot es pot fer sense IA real.
+   Fets amb data i xifres (comprovats l'octubre de 2026):
+   · OIT, «Generative AI and Jobs: A Refined Global Index of Occupational Exposure» (Working Paper 140, maig de 2025): al voltant
+     d'1 de cada 4 feines del món és en ocupacions amb alguna exposició a la IA generativa; un 3,3 % en el grau més alt; el més
+     probable és la transformació de les feines. https://webapps.ilo.org/static/english/intserv/working-papers/wp140/index.html
+   · AIE, «Energy and AI» (abril de 2025): els centres de dades van fer servir uns 415 TWh el 2024 (≈ 1,5 % de l'electricitat
+     mundial) i podrien arribar a uns 945 TWh el 2030 (més del doble). https://www.iea.org/reports/energy-and-ai
+     L'aigua es tracta qualitativament (no hi ha xifres comparables i publicades per a cada model).
+   · Reglament (UE) 2024/1689 (llei europea d'IA): pràctiques prohibides (art. 5) des del 2 de febrer de 2025; obligacions de
+     transparència (art. 50: avisar que és una IA, etiquetar deepfakes) des del 2 d'agost de 2026. https://eur-lex.europa.eu/eli/reg/2024/1689/oj
+     El «Digital Omnibus» sobre IA (publicat al DOUE el juliol de 2026) ajorna part de les obligacions d'alt risc; a l'alumnat
+     només se li diu que s'han ajornat, sense dates. Drets del RGPD (accés, rectificació, supressió, oposició, art. 22). */
+Object.assign(TGUIDE, {
+
+  /* ---------- Sessió 1 · La IA i la feina ---------- */
+  'i7-1': {
+    intro: "L'alumnat analitza l'impacte de la IA a la feina sense bombo ni pànic. Aprèn que una feina és un paquet de tasques i que la IA en pot fer o ajudar a fer algunes; que «exposat» no vol dir «substituït» (segons l'OIT, al voltant d'1 de cada 4 feines del món té tasques exposades a la IA generativa, però el més probable és que es transformin); que hi ha feines que canvien, que s'encongeixen i que neixen; i quines habilitats compten. Desmunta una feina en tasques amb notes adhesives, classifica tasques, caça bombo i pànic en un xat d'orientació i fa la radiografia d'una feina que li interessa.|El alumnado analiza el impacto de la IA en el trabajo sin bombo ni pánico. Aprende que un trabajo es un paquete de tareas y que la IA puede hacer o ayudar a hacer algunas; que «expuesto» no quiere decir «sustituido» (según la OIT, alrededor de 1 de cada 4 trabajos del mundo tiene tareas expuestas a la IA generativa, pero lo más probable es que se transformen); que hay trabajos que cambian, que se encogen y que nacen; y qué habilidades cuentan. Desmonta un trabajo en tareas con notas adhesivas, clasifica tareas, caza bombo y pánico en un chat de orientación y hace la radiografía de un trabajo que le interesa.",
+    claus: [
+      "Pensar en tasques, no en feines senceres: la pregunta és «quines tasques canvien?».|Pensar en tareas, no en trabajos enteros: la pregunta es «¿qué tareas cambian?».",
+      "Exposat ≠ substituït: l'OIT (2025) conclou que el més probable és la transformació de les feines.|Expuesto ≠ sustituido: la OIT (2025) concluye que lo más probable es la transformación de los trabajos.",
+      "Les decisions importants sobre persones, el món físic i la cura continuen sent humanes.|Las decisiones importantes sobre personas, el mundo físico y el cuidado siguen siendo humanas.",
+      "Davant d'un titular: qui ho diu, amb quines dades, tasques o feines, en quant de temps.|Ante un titular: quién lo dice, con qué datos, tareas o trabajos, en cuánto tiempo."
+    ],
+    prev: ["Unitat 6: els agents fan tasques de diversos passos, i una persona decideix el que no es pot desfer.|Unidad 6: los agentes hacen tareas de varios pasos, y una persona decide lo que no se puede deshacer.", "Unitat 3: les al·lucinacions i com comprovar xifres i fonts.|Unidad 3: las alucinaciones y cómo comprobar cifras y fuentes."],
+    obj: [
+      "L'alumne/a descompon una feina en tasques i valora quines pot fer o ajudar a fer una IA.|El alumno/a descompone un trabajo en tareas y valora cuáles puede hacer o ayudar a hacer una IA.",
+      "L'alumne/a distingeix exposició de substitució i explica per què la majoria de feines es transformen.|El alumno/a distingue exposición de sustitución y explica por qué la mayoría de trabajos se transforman.",
+      "L'alumne/a identifica habilitats valuoses en un món amb IA.|El alumno/a identifica habilidades valiosas en un mundo con IA.",
+      "L'alumne/a analitza críticament titulars i consells sobre IA i feina.|El alumno/a analiza críticamente titulares y consejos sobre IA y trabajo."
+    ],
+    comp: [
+      "Competència digital (CD5): impacte social i laboral de la IA|Competencia digital (CD5): impacto social y laboral de la IA",
+      "Competència ciutadana (CC): analitzar canvis socials i econòmics|Competencia ciudadana (CC): analizar cambios sociales y económicos",
+      "Competència personal i d'aprendre a aprendre (CPSAA): orientació i projecte de futur|Competencia personal y de aprender a aprender (CPSAA): orientación y proyecto de futuro"
+    ],
+    vocab: [
+      ["Tasca|Tarea", "Una de les coses concretes que es fan en una feina (escriure un informe, atendre un client…).|Una de las cosas concretas que se hacen en un trabajo (escribir un informe, atender a un cliente…)."],
+      ["Exposició (a la IA)|Exposición (a la IA)", "Part de les tasques d'una feina que la IA pot fer o ajudar a fer. No vol dir que la feina desaparegui.|Parte de las tareas de un trabajo que la IA puede hacer o ayudar a hacer. No quiere decir que el trabajo desaparezca."],
+      ["Automatitzar|Automatizar", "Fer que una màquina faci una tasca sense una persona.|Hacer que una máquina haga una tarea sin una persona."],
+      ["Augmentar (una feina)|Aumentar (un trabajo)", "Que la IA ajudi la persona a fer millor o més de pressa la seva feina.|Que la IA ayude a la persona a hacer mejor o más deprisa su trabajo."],
+      ["Bombo (hype)|Bombo (hype)", "Exagerar el que farà una tecnologia, sovint per vendre o per cridar l'atenció.|Exagerar lo que hará una tecnología, a menudo para vender o para llamar la atención."]
+    ],
+    mat: {
+      aula: ["Un ordinador per alumne/a amb Numi Tech obert a la sessió «La IA i la feina»|Un ordenador por alumno/a con Numi Tech abierto en la sesión «La IA y el trabajo»", "Projector i la presentació d'aquesta sessió|Proyector y la presentación de esta sesión", "Notes adhesives (unes 6 per grup) i un espai a la pissarra amb tres columnes|Notas adhesivas (unas 6 por grupo) y un espacio en la pizarra con tres columnas"],
+      imprimir: ["Targetes de feines (imprimible 1): una targeta per grup de tres|Tarjetas de trabajos (imprimible 1): una tarjeta por grupo de tres"],
+      prep: ["Imprimir i retallar les targetes de feines.|Imprimir y recortar las tarjetas de trabajos.", "Dibuixar a la pissarra les tres columnes: «La IA ho pot fer», «La IA ajuda, la persona decideix», «Cal una persona».|Dibujar en la pizarra las tres columnas: «La IA lo puede hacer», «La IA ayuda, la persona decide», «Hace falta una persona».", "Pensar un exemple proper de feina que ja ha canviat amb la tecnologia (una botiga, una oficina, un taller).|Pensar un ejemplo cercano de trabajo que ya ha cambiado con la tecnología (una tienda, una oficina, un taller)."]
+    },
+    plan: [
+      { min: 5, t: 'Dos titulars, una pregunta|Dos titulares, una pregunta', fase: 'inici',
+        fa: "Presenta els dos titulars de la història (la IA ho canviarà tot / no canviarà res). Recull a mà alçada què pensen i quines feines els preocupen o els interessen.|Presenta los dos titulares de la historia (la IA lo cambiará todo / no cambiará nada). Recoge a mano alzada qué piensan y qué trabajos les preocupan o les interesan.",
+        diu: ["Quina feina voldríeu fer? Creieu que la IA la canviarà?|¿Qué trabajo querríais hacer? ¿Creéis que la IA lo cambiará?"],
+        slides: ['s1', 's2'], app: "Encara no: pantalles abaixades.|Todavía no: pantallas bajadas.", org: "Tot el grup|Todo el grupo" },
+      { min: 10, t: 'Tasques, exposició, canvis, habilitats i titulars|Tareas, exposición, cambios, habilidades y titulares', fase: 'teoria',
+        fa: "Amb les animacions: una feina és un paquet de tasques, exposat no vol dir substituït (dades de l'OIT, 2025), feines que canvien i neixen, habilitats que compten i les quatre preguntes davant d'un titular.|Con las animaciones: un trabajo es un paquete de tareas, expuesto no quiere decir sustituido (datos de la OIT, 2025), trabajos que cambian y nacen, habilidades que cuentan y las cuatro preguntas ante un titular.",
+        diu: ["Què vol dir que 1 de cada 4 feines està «exposada»? Vol dir que desapareixeran?|¿Qué quiere decir que 1 de cada 4 trabajos está «expuesto»? ¿Quiere decir que desaparecerán?", "Quina feina que avui existeix no existia quan van néixer els vostres avis?|¿Qué trabajo que hoy existe no existía cuando nacieron vuestros abuelos?"],
+        slides: ['s3', 's4', 's5', 's6', 's7'], app: "Encara no: tota l'atenció a la projecció.|Todavía no: toda la atención en la proyección.", org: "Tot el grup|Todo el grupo" },
+      { min: 12, t: 'Desmunta una feina|Desmonta un trabajo', fase: 'desconnectat',
+        fa: "En grups de tres, cada grup amb una targeta de feina: escriuen 6 tasques en notes adhesives, les classifiquen a les tres columnes de la pissarra i decideixen si la feina desapareix, s'encongeix o canvia. Presentació de 30 segons; els altres poden moure una nota justificant-ho.|En grupos de tres, cada grupo con una tarjeta de trabajo: escriben 6 tareas en notas adhesivas, las clasifican en las tres columnas de la pizarra y deciden si el trabajo desaparece, se encoge o cambia. Presentación de 30 segundos; los demás pueden mover una nota justificándolo.",
+        diu: ["Quina tasca us ha costat més de classificar? Per què?|¿Qué tarea os ha costado más clasificar? ¿Por qué?", "Què faria aquesta persona amb el temps que estalvia?|¿Qué haría esta persona con el tiempo que ahorra?"],
+        slides: ['s8', 's9'], app: "Cap: activitat sense pantalla.|Ninguna: actividad sin pantalla.", org: "Grups de 3|Grupos de 3" },
+      { min: 25, t: "A l'ordinador: tasques, titulars i habilitats|En el ordenador: tareas, titulares y habilidades", fase: 'ordinador',
+        fa: "Fan la sessió de l'app: classificar tasques, el titular del 50 %, la pausa activa, l'OrientaBot amb bombo i pànic, el mètode per analitzar una feina, les habilitats i la radiografia d'una feina (es desa).|Hacen la sesión de la app: clasificar tareas, el titular del 50 %, la pausa activa, el OrientaBot con bombo y pánico, el método para analizar un trabajo, las habilidades y la radiografía de un trabajo (se guarda).",
+        diu: ["Quines frases de l'OrientaBot eren bombo o pànic? Com ho has sabut?|¿Qué frases del OrientaBot eran bombo o pánico? ¿Cómo lo has sabido?", "Quines tres habilitats has triat per a la teva feina?|¿Qué tres habilidades has elegido para tu trabajo?"],
+        slides: ['s10', 's11', 's12', 's13'], app: "De «Recorda» fins al pas «Crea» (la radiografia d'una feina).|De «Recuerda» hasta el paso «Crea» (la radiografía de un trabajo).", org: "Individual|Individual" },
+      { min: 8, t: 'Tancament: ni bombo ni pànic|Cierre: ni bombo ni pánico', fase: 'tancament',
+        fa: "Resumeix: tasques i no feines, exposat no vol dir substituït, habilitats que compten. Anuncia la sessió següent (energia i aigua). Tiquet de sortida i com s'han sentit.|Resume: tareas y no trabajos, expuesto no quiere decir sustituido, habilidades que cuentan. Anuncia la sesión siguiente (energía y agua). Tique de salida y cómo se han sentido.",
+        diu: ["Què li diríeu al cosí de la Txell?|¿Qué le diríais al primo de Txell?"],
+        slides: ['s14', 's15', 's16'], app: "«Tancament»: les preguntes finals i com m'he sentit.|«Cierre»: las preguntas finales y cómo me he sentido.", org: "Tot el grup|Todo el grupo" }
+    ],
+    errors: [
+      ["Escriu tasques molt generals («treballar», «ajudar la gent»).|Escribe tareas muy generales («trabajar», «ayudar a la gente»).", "Demana un verb i un objecte concrets: «respondre els correus de les famílies», «revisar el motor».|Pide un verbo y un objeto concretos: «responder los correos de las familias», «revisar el motor»."],
+      ["Conclou que «la IA ens prendrà totes les feines».|Concluye que «la IA nos quitará todos los trabajos».", "Torna a la dada de l'OIT: exposició és una mesura de tasques. Quines tasques de la seva targeta necessiten una persona?|Vuelve al dato de la OIT: exposición es una medida de tareas. ¿Qué tareas de su tarjeta necesitan una persona?"],
+      ["Conclou que «no canviarà res».|Concluye que «no cambiará nada».", "Mostra una tasca de la seva targeta que la IA ja fa (transcriure, traduir, resumir): la feina ja està canviant.|Muestra una tarea de su tarjeta que la IA ya hace (transcribir, traducir, resumir): el trabajo ya está cambiando."],
+      ["A l'OrientaBot, marca com a falsa una frase raonable.|En el OrientaBot, marca como falsa una frase razonable.", "La 🚩 és per a les exageracions sense proves; si la frase parla de tasques i de canvis amb matisos, és probable que sigui raonable.|La 🚩 es para las exageraciones sin pruebas; si la frase habla de tareas y de cambios con matices, es probable que sea razonable."],
+      ["Tria habilitats a l'atzar a la radiografia.|Elige habilidades al azar en la radiografía.", "Que les relacioni amb les tasques «Cal una persona» de la seva feina.|Que las relacione con las tareas «Hace falta una persona» de su trabajo."]
+    ],
+    diff: {
+      mes: "Nivell PRO: una feina amb el 60 % de les tasques exposades, el mètode amb fonts i contrast amb una persona experta, i per què el criteri val més. Repte extra: la decisió responsable d'una empresa. Investigació: entrevistar algú de la família sobre com ha canviat la seva feina.|Nivel PRO: un trabajo con el 60 % de las tareas expuestas, el método con fuentes y contraste con una persona experta, y por qué el criterio vale más. Reto extra: la decisión responsable de una empresa. Investigación: entrevistar a alguien de la familia sobre cómo ha cambiado su trabajo.",
+      menys: "Fer la classificació de tasques tots junts a la projecció. A la radiografia, donar una feina ja desmuntada a la pissarra i deixar triar només les habilitats i la pregunta.|Hacer la clasificación de tareas todos juntos en la proyección. En la radiografía, dar un trabajo ya desmontado en la pizarra y dejar elegir solo las habilidades y la pregunta."
+    },
+    aval: {
+      ticket: ["Explica amb un exemple per què «exposat» no vol dir «substituït».|Explica con un ejemplo por qué «expuesto» no quiere decir «sustituido».", "Digues una habilitat que valdrà més amb la IA i per què.|Di una habilidad que valdrá más con la IA y por qué."],
+      rubric: [
+        ["Tasques|Tareas", "Descompon una feina en tasques concretes i les classifica amb arguments.|Descompone un trabajo en tareas concretas y las clasifica con argumentos.", "Parla de feines senceres o de tasques vagues.|Habla de trabajos enteros o de tareas vagas."],
+        ["Exposició|Exposición", "Distingeix exposició de substitució i matisa les conclusions.|Distingue exposición de sustitución y matiza las conclusiones.", "Conclou «desapareixerà» o «no canviarà res».|Concluye «desaparecerá» o «no cambiará nada»."],
+        ["Pensament crític|Pensamiento crítico", "Detecta bombo i pànic i demana fonts i dades.|Detecta bombo y pánico y pide fuentes y datos.", "Es creu titulars i consells sense comprovar-los.|Se cree titulares y consejos sin comprobarlos."],
+        ["Habilitats|Habilidades", "Relaciona habilitats amb les tasques humanes de la feina.|Relaciona habilidades con las tareas humanas del trabajo.", "Tria habilitats sense relació amb la feina.|Elige habilidades sin relación con el trabajo."]
+      ]
+    },
+    casa: "Pregunteu a casa: com ha canviat la vostra feina amb els ordinadors, els mòbils o la IA? Quines tasques fa ara una màquina i quines no deixaríeu mai a una màquina?|Preguntad en casa: ¿cómo ha cambiado vuestro trabajo con los ordenadores, los móviles o la IA? ¿Qué tareas hace ahora una máquina y cuáles no dejaríais nunca a una máquina?",
+    faq: [
+      ["D'on surt la dada d'1 de cada 4 feines?|¿De dónde sale el dato de 1 de cada 4 trabajos?", "D'un estudi de l'Organització Internacional del Treball (Working Paper 140, maig de 2025) que analitza unes 30.000 tasques. Diu que al voltant d'una quarta part de l'ocupació mundial és en feines amb alguna exposició a la IA generativa, que només un 3,3 % és en el grau més alt i que el més probable és que les feines es transformin.|De un estudio de la Organización Internacional del Trabajo (Working Paper 140, mayo de 2025) que analiza unas 30.000 tareas. Dice que alrededor de una cuarta parte del empleo mundial está en trabajos con alguna exposición a la IA generativa, que solo un 3,3 % está en el grado más alto y que lo más probable es que los trabajos se transformen."],
+      ["Llavors, no es perdrà cap feina?|Entonces, ¿no se perderá ningún trabajo?", "No es pot dir això. En algunes tasques caldrà menys gent i hi haurà sectors que es reduiran, mentre que en creixeran d'altres. El que passi depèn també de decisions d'empreses, governs i de la formació. Per això és important no caure ni en el bombo ni en el pànic.|No se puede decir eso. En algunas tareas hará falta menos gente y habrá sectores que se reducirán, mientras que crecerán otros. Lo que pase depende también de decisiones de empresas, gobiernos y de la formación. Por eso es importante no caer ni en el bombo ni en el pánico."],
+      ["Quines feines noves han sortit amb la IA?|¿Qué trabajos nuevos han salido con la IA?", "Per exemple, persones que preparen i revisen dades, que avaluen i milloren les respostes dels models, que revisen riscos i seguretat de sistemes d'IA, o professionals de tota mena que integren la IA en el seu ofici.|Por ejemplo, personas que preparan y revisan datos, que evalúan y mejoran las respuestas de los modelos, que revisan riesgos y seguridad de sistemas de IA, o profesionales de todo tipo que integran la IA en su oficio."]
+    ],
+    tec: [
+      ["La radiografia no deixa desar.|La radiografía no deja guardar.", "Cal triar exactament com canviarà la feina i almenys 3 habilitats, i cada text ha de tenir el mínim de caràcters (el número al costat del camp).|Hay que elegir cómo cambiará el trabajo y al menos 3 habilidades, y cada texto tiene que tener el mínimo de caracteres (el número junto al campo)."],
+      ["A l'OrientaBot no surten les frases dolentes.|En el OrientaBot no salen las frases malas.", "Depèn del camí: cada opció porta a frases diferents, i totes dues branques en tenen. Toca la 🚩 al costat de la frase.|Depende del camino: cada opción lleva a frases distintas, y las dos ramas tienen. Toca la 🚩 junto a la frase."]
+    ],
+    seg: ["Cap alumne/a no ha de sentir que el seu futur «ja està decidit». Si apareix angoixa, recorda que les feines canvien des de sempre i que aprendre és la millor eina.|Ningún alumno/a debe sentir que su futuro «ya está decidido». Si aparece angustia, recuerda que los trabajos cambian desde siempre y que aprender es la mejor herramienta."],
+    extra: [
+      "Orientació: connectar la radiografia amb la tutoria i les sessions d'orientació acadèmica i professional.|Orientación: conectar la radiografía con la tutoría y las sesiones de orientación académica y profesional.",
+      "Història: comparar la IA amb altres canvis tecnològics (la impremta, la màquina de vapor, internet).|Historia: comparar la IA con otros cambios tecnológicos (la imprenta, la máquina de vapor, internet)."
+    ],
+    trans: ["Sessió i7-2: energia, aigua i planeta. Unitat 8: el projecte final pensarà en qui farà servir la IA del centre i què canviarà.|Sesión i7-2: energía, agua y planeta. Unidad 8: el proyecto final pensará en quién usará la IA del centro y qué cambiará."],
+    slides: [
+      { id: 's1', k: 'portada', t: 'La IA i la feina|La IA y el trabajo', x: 'IA i societat|IA y sociedad', nota: "Primera sessió de la unitat 7.|Primera sesión de la unidad 7." },
+      { id: 's2', k: 'pregunta', t: 'Ho canviarà tot o res?|¿Lo cambiará todo o nada?', x: 'Dos titulars que no poden ser certs alhora.|Dos titulares que no pueden ser ciertos a la vez.', nota: "Recull opinions sense jutjar-les.|Recoge opiniones sin juzgarlas." },
+      { id: 's3', k: 'anim', t: 'Una feina és un paquet de tasques|Un trabajo es un paquete de tareas', anim: 'i71tasks', x: 'Quines tasques canvien?|¿Qué tareas cambian?', nota: "Desmunta una feina propera amb la classe.|Desmonta un trabajo cercano con la clase." },
+      { id: 's4', k: 'anim', t: 'Exposat no vol dir substituït|Expuesto no quiere decir sustituido', anim: 'i71expo', x: "OIT, 2025: ≈ 1 de cada 4 feines amb tasques exposades.|OIT, 2025: ≈ 1 de cada 4 trabajos con tareas expuestas.", nota: "Explica la diferència entre una tasca exposada i una feina substituïda.|Explica la diferencia entre una tarea expuesta y un trabajo sustituido." },
+      { id: 's5', k: 'anim', t: 'Canvien, s\'encongeixen, neixen|Cambian, se encogen, nacen', anim: 'i71new', x: 'Ja ha passat altres vegades.|Ya ha pasado otras veces.', nota: "Demana exemples de feines noves dels darrers 20 anys.|Pide ejemplos de trabajos nuevos de los últimos 20 años." },
+      { id: 's6', k: 'anim', t: 'El que val, amb IA i sense|Lo que vale, con IA y sin ella', anim: 'i71skills', x: 'Comprovar, comunicar, crear, cuidar, entendre, aprendre.|Comprobar, comunicar, crear, cuidar, entender, aprender.', nota: "Quina és la vostra habilitat forta?|¿Cuál es vuestra habilidad fuerte?" },
+      { id: 's7', k: 'anim', t: 'Ni bombo ni pànic|Ni bombo ni pánico', anim: 'i71hype', x: 'Quatre preguntes davant de cada titular.|Cuatro preguntas ante cada titular.', nota: "Llegiu un titular real (sense persones de l'aula) i passeu-hi les preguntes.|Leed un titular real (sin personas del aula) y pasadle las preguntas." },
+      { id: 's8', k: 'activitat', t: 'Desmunta una feina|Desmonta un trabajo', timer: 12, punts: ['6 tasques en notes adhesives.|6 tareas en notas adhesivas.', 'Tres columnes a la pissarra.|Tres columnas en la pizarra.', 'Desapareix, s\'encongeix o canvia?|¿Desaparece, se encoge o cambia?'], nota: "Una targeta de feina per grup de tres.|Una tarjeta de trabajo por grupo de tres." },
+      { id: 's9', k: 'pregunta', t: 'Quina tasca ha costat més?|¿Qué tarea ha costado más?', x: 'I què faria la persona amb el temps estalviat?|¿Y qué haría la persona con el tiempo ahorrado?', nota: "Comparteix dues o tres pissarres.|Comparte dos o tres pizarras." },
+      { id: 's10', k: 'activitat', t: "A l'ordinador|En el ordenador", timer: 25, punts: ['Classificar tasques i el titular del 50 %.|Clasificar tareas y el titular del 50 %.', "L'OrientaBot: bombo o pànic?|El OrientaBot: ¿bombo o pánico?", "La radiografia d'una feina.|La radiografía de un trabajo."], nota: "Fes la pausa activa quan hi arribin.|Haz la pausa activa cuando lleguen." },
+      { id: 's11', k: 'repte', t: "L'OrientaBot|El OrientaBot", punts: ['Dues frases sense proves.|Dos frases sin pruebas.', 'Contrasta amb persones que fan la feina.|Contrasta con personas que hacen el trabajo.'], nota: "Que expliquin per què han marcat cada frase.|Que expliquen por qué han marcado cada frase." },
+      { id: 's12', k: 'concepte', t: 'Nivell PRO|Nivel PRO', punts: ['Una feina amb el 60 % exposat.|Un trabajo con el 60 % expuesto.', 'El mètode amb fonts i persones expertes.|El método con fuentes y personas expertas.', 'Per què el criteri val més.|Por qué el criterio vale más.'], nota: "Per a 3r-4t d'ESO o qui vagi ràpid.|Para 3.º-4.º de ESO o quien vaya rápido." },
+      { id: 's13', k: 'repte', t: "La radiografia d'una feina|La radiografía de un trabajo", punts: ['Tasques de la IA i de la persona.|Tareas de la IA y de la persona.', 'Com canviarà i 3 habilitats.|Cómo cambiará y 3 habilidades.', 'Una pregunta per a una professional.|Una pregunta para una profesional.'], nota: "Es desa al portafoli i es pot imprimir.|Se guarda en el portafolio y se puede imprimir." },
+      { id: 's14', k: 'concepte', t: 'I què gasta tot això?|¿Y qué gasta todo esto?', punts: ['Cada resposta es calcula en un centre de dades.|Cada respuesta se calcula en un centro de datos.', 'Propera sessió: energia i aigua.|Próxima sesión: energía y agua.'], nota: "Deixa la pregunta oberta.|Deja la pregunta abierta." },
+      { id: 's15', k: 'resum', t: 'Avui hem après…|Hoy hemos aprendido…', punts: ['Tasques, no feines senceres.|Tareas, no trabajos enteros.', 'Exposat no vol dir substituït.|Expuesto no quiere decir sustituido.', 'Habilitats que compten.|Habilidades que cuentan.'], nota: "Llegiu-ho junts.|Leedlo juntos." },
+      { id: 's16', k: 'tiquet', t: 'Tiquet de sortida|Tique de salida', punts: ['Exposat ≠ substituït, amb un exemple.|Expuesto ≠ sustituido, con un ejemplo.', 'Una habilitat que valdrà més.|Una habilidad que valdrá más.'], nota: "Respostes orals o en un paper.|Respuestas orales o en un papel." }
+    ],
+    print: [
+      { id: 'p1', t: 'Targetes de feines|Tarjetas de trabajos', k: 'targetes',
+        intro: "Una targeta per grup de tres. Cada grup escriu 6 tasques reals d'aquesta feina en notes adhesives i les classifica a la pissarra.|Una tarjeta por grupo de tres. Cada grupo escribe 6 tareas reales de este trabajo en notas adhesivas y las clasifica en la pizarra.",
+        items: [{ t: 'Infermer/a 🩺|Enfermero/a 🩺' }, { t: 'Periodista 📰|Periodista 📰' }, { t: 'Cuiner/a 🍳|Cocinero/a 🍳' }, { t: 'Programador/a 💻|Programador/a 💻' }, { t: 'Mestre/a 🍎|Maestro/a 🍎' }, { t: 'Mecànic/a 🔧|Mecánico/a 🔧' }, { t: 'Traductor/a 🌐|Traductor/a 🌐' }, { t: 'Agricultor/a 🚜|Agricultor/a 🚜' }, { t: 'Dissenyador/a gràfic/a 🎨|Diseñador/a gráfico/a 🎨' }, { t: 'Administratiu/va 🗂️|Administrativo/a 🗂️' }, { t: 'Electricista ⚡|Electricista ⚡' }, { t: 'Creador/a de vídeos 🎬|Creador/a de vídeos 🎬' }] }
+    ]
+  },
+
+  /* ---------- Sessió 2 · Energia, aigua i planeta ---------- */
+  'i7-2': {
+    intro: "L'alumnat descobreix què gasta una IA: cada resposta es calcula en centres de dades que fan servir electricitat i, sovint, aigua per refrigerar els xips. Distingeix entrenar (poques vegades, molt) i fer servir (poc cada vegada, milions de vegades), aprèn que generar imatges i vídeo gasta més que un text curt, coneix la dada de l'AIE (els centres de dades, ≈ 1,5 % de l'electricitat mundial el 2024, i més del doble el 2030) i usos de la IA que ajuden el planeta. Fa un pressupost d'energia amb targetes, tria l'eina justa per a cada tasca, caça xifres sense font i escriu el seu pacte verd amb la IA.|El alumnado descubre qué gasta una IA: cada respuesta se calcula en centros de datos que usan electricidad y, a menudo, agua para refrigerar los chips. Distingue entrenar (pocas veces, mucho) y usar (poco cada vez, millones de veces), aprende que generar imágenes y vídeo gasta más que un texto corto, conoce el dato de la AIE (los centros de datos, ≈ 1,5 % de la electricidad mundial en 2024, y más del doble en 2030) y usos de la IA que ayudan al planeta. Hace un presupuesto de energía con tarjetas, elige la herramienta justa para cada tarea, caza cifras sin fuente y escribe su pacto verde con la IA.",
+    claus: [
+      "«El núvol» són edificis: centres de dades amb xips que gasten electricitat i, sovint, aigua.|«La nube» son edificios: centros de datos con chips que gastan electricidad y, a menudo, agua.",
+      "Entrenar costa molt una vegada; fer servir costa poc cada vegada, però milions de vegades. Imatge i vídeo, més que text.|Entrenar cuesta mucho una vez; usar cuesta poco cada vez, pero millones de veces. Imagen y vídeo, más que texto.",
+      "Dada amb font: AIE (2025), ≈ 1,5 % de l'electricitat mundial el 2024 i més del doble el 2030.|Dato con fuente: AIE (2025), ≈ 1,5 % de la electricidad mundial en 2024 y más del doble en 2030.",
+      "L'eina justa per a cada tasca, només quan aporta, i exigir transparència. La IA també pot ajudar el clima.|La herramienta justa para cada tarea, solo cuando aporta, y exigir transparencia. La IA también puede ayudar al clima."
+    ],
+    prev: ["Unitat 4: les imatges generades es fan en molts passos de càlcul.|Unidad 4: las imágenes generadas se hacen en muchos pasos de cálculo.", "Sessió i7-1: la IA i la feina.|Sesión i7-1: la IA y el trabajo."],
+    obj: [
+      "L'alumne/a explica on es calcula una resposta d'IA i què gasta (electricitat i aigua).|El alumno/a explica dónde se calcula una respuesta de IA y qué gasta (electricidad y agua).",
+      "L'alumne/a compara l'impacte d'entrenar i de fer servir, i de diferents tipus de tasques.|El alumno/a compara el impacto de entrenar y de usar, y de distintos tipos de tareas.",
+      "L'alumne/a interpreta una dada amb font i detecta xifres sense font i rentat d'imatge verd.|El alumno/a interpreta un dato con fuente y detecta cifras sin fuente y lavado de imagen verde.",
+      "L'alumne/a tria l'eina justa per a cada tasca i es compromet amb hàbits d'ús responsable.|El alumno/a elige la herramienta justa para cada tarea y se compromete con hábitos de uso responsable."
+    ],
+    comp: [
+      "Competència digital (CD5): impacte ambiental de la tecnologia|Competencia digital (CD5): impacto ambiental de la tecnología",
+      "Competència en ciència i tecnologia (STEM): energia, transferència de calor i sostenibilitat|Competencia en ciencia y tecnología (STEM): energía, transferencia de calor y sostenibilidad",
+      "Competència ciutadana (CC): consum responsable i medi ambient|Competencia ciudadana (CC): consumo responsable y medio ambiente"
+    ],
+    vocab: [
+      ["Centre de dades|Centro de datos", "Edifici ple d'ordinadors (servidors) que guarden dades i fan càlculs, com les respostes de la IA.|Edificio lleno de ordenadores (servidores) que guardan datos y hacen cálculos, como las respuestas de la IA."],
+      ["Entrenament / ús (inferència)|Entrenamiento / uso (inferencia)", "Entrenar és ensenyar el model amb moltes dades; fer-lo servir és demanar-li respostes.|Entrenar es enseñar al modelo con muchos datos; usarlo es pedirle respuestas."],
+      ["Refrigeració per evaporació|Refrigeración por evaporación", "Treure calor fent que l'aigua s'evapori; l'aigua evaporada no torna al riu.|Quitar calor haciendo que el agua se evapore; el agua evaporada no vuelve al río."],
+      ["Efecte rebot|Efecto rebote", "Quan una cosa es fa més eficient, se'n fa servir més i el consum total pot créixer.|Cuando algo se hace más eficiente, se usa más y el consumo total puede crecer."],
+      ["Rentat d'imatge verd (greenwashing)|Lavado de imagen verde (greenwashing)", "Presentar un producte com a ecològic sense dades que ho demostrin.|Presentar un producto como ecológico sin datos que lo demuestren."]
+    ],
+    mat: {
+      aula: ["Un ordinador per alumne/a amb Numi Tech obert a la sessió «Energia, aigua i planeta»|Un ordenador por alumno/a con Numi Tech abierto en la sesión «Energía, agua y planeta»", "Projector i la presentació d'aquesta sessió|Proyector y la presentación de esta sesión"],
+      imprimir: ["Quant gasta? (imprimible 1): un conjunt de targetes per grup de tres|¿Cuánto gasta? (imprimible 1): un conjunto de tarjetas por grupo de tres"],
+      prep: ["Imprimir i retallar les targetes «Quant gasta?».|Imprimir y recortar las tarjetas «¿Cuánto gasta?».", "Llegir la nota de les fonts (capçalera de la guia): AIE 2025. Recordar que les piles de les targetes són comparacions aproximades, no mesures.|Leer la nota de las fuentes (cabecera de la guía): AIE 2025. Recordar que las pilas de las tarjetas son comparaciones aproximadas, no medidas.", "Pensar un exemple local d'ús de la IA per al medi ambient (previsió del temps, reg, xarxa elèctrica).|Pensar un ejemplo local de uso de la IA para el medio ambiente (previsión del tiempo, riego, red eléctrica)."]
+    },
+    plan: [
+      { min: 5, t: 'Quant gasta una pregunta?|¿Cuánto gasta una pregunta?', fase: 'inici',
+        fa: "Planteja la pregunta de l'Arnau. Demana estimacions: gasta més una pregunta a un xat o una cerca? I un vídeo generat? Apunta les hipòtesis.|Plantea la pregunta de Arnau. Pide estimaciones: ¿gasta más una pregunta a un chat o una búsqueda? ¿Y un vídeo generado? Apunta las hipótesis.",
+        diu: ["On creieu que es calcula la resposta d'un xat d'IA?|¿Dónde creéis que se calcula la respuesta de un chat de IA?"],
+        slides: ['s1', 's2'], app: "Encara no: pantalles abaixades.|Todavía no: pantallas bajadas.", org: "Tot el grup|Todo el grupo" },
+      { min: 10, t: 'Viatge, energia, aigua, dades i solucions|Viaje, energía, agua, datos y soluciones', fase: 'teoria',
+        fa: "Amb les animacions: el viatge d'una pregunta, entrenar i fer servir, per què una IA té set, la dada de l'AIE (amb font) i la IA que ajuda el planeta. Torna a les hipòtesis de l'inici.|Con las animaciones: el viaje de una pregunta, entrenar y usar, por qué una IA tiene sed, el dato de la AIE (con fuente) y la IA que ayuda al planeta. Vuelve a las hipótesis del inicio.",
+        diu: ["Per què l'aigua que s'evapora és un problema en zones amb sequera?|¿Por qué el agua que se evapora es un problema en zonas con sequía?", "Per què les xifres sobre l'aigua de la IA varien tant?|¿Por qué las cifras sobre el agua de la IA varían tanto?"],
+        slides: ['s3', 's4', 's5', 's6', 's7'], app: "Encara no: tota l'atenció a la projecció.|Todavía no: toda la atención en la proyección.", org: "Tot el grup|Todo el grupo" },
+      { min: 12, t: "El pressupost d'energia|El presupuesto de energía", fase: 'desconnectat',
+        fa: "En grups de tres, amb les targetes «Quant gasta?» i 20 piles, planifiquen un treball sobre el reciclatge. Decideixen on la IA val la pena i on és millor una eina simple. Comparen els plans.|En grupos de tres, con las tarjetas «¿Cuánto gasta?» y 20 pilas, planifican un trabajo sobre el reciclaje. Deciden dónde la IA vale la pena y dónde es mejor una herramienta simple. Comparan los planes.",
+        diu: ["On heu gastat més piles? Valia la pena?|¿Dónde habéis gastado más pilas? ¿Valía la pena?"],
+        slides: ['s8', 's9'], app: "Cap: activitat sense pantalla.|Ninguna: actividad sin pantalla.", org: "Grups de 3|Grupos de 3" },
+      { min: 25, t: "A l'ordinador: gasta poc o molt, l'eina justa i el pacte verd|En el ordenador: gasta poco o mucho, la herramienta justa y el pacto verde", fase: 'ordinador',
+        fa: "Fan la sessió de l'app: gasta poc o molt, l'aigua dels centres de dades, la pausa activa, l'eina justa, l'EcoBot amb xifres sense font, la «IA 100 % verda» i el pacte verd (es desa).|Hacen la sesión de la app: gasta poco o mucho, el agua de los centros de datos, la pausa activa, la herramienta justa, el EcoBot con cifras sin fuente, la «IA 100 % verde» y el pacto verde (se guarda).",
+        diu: ["Quina xifra de l'EcoBot no tenia font?|¿Qué cifra del EcoBot no tenía fuente?", "Quina tasca vostra podríeu fer amb una eina més simple?|¿Qué tarea vuestra podríais hacer con una herramienta más simple?"],
+        slides: ['s10', 's11', 's12', 's13'], app: "De «Recorda» fins al pas «Crea» (el pacte verd).|De «Recuerda» hasta el paso «Crea» (el pacto verde).", org: "Individual|Individual" },
+      { min: 8, t: 'Tancament: el pacte de la classe|Cierre: el pacto de la clase', fase: 'tancament',
+        fa: "Posen en comú tres compromisos del pacte verd i en trien un per a tota la classe. Anuncia la sessió següent (privadesa i la llei europea). Tiquet de sortida i com s'han sentit.|Ponen en común tres compromisos del pacto verde y eligen uno para toda la clase. Anuncia la sesión siguiente (privacidad y la ley europea). Tique de salida y cómo se han sentido.",
+        diu: ["Quin compromís faríeu com a classe?|¿Qué compromiso haríais como clase?"],
+        slides: ['s14', 's15', 's16'], app: "«Tancament»: les preguntes finals i com m'he sentit.|«Cierre»: las preguntas finales y cómo me he sentido.", org: "Tot el grup|Todo el grupo" }
+    ],
+    errors: [
+      ["Creu que la IA «no gasta» perquè és al núvol.|Cree que la IA «no gasta» porque está en la nube.", "Mostra l'animació del viatge: el núvol són edificis amb servidors, llum i refrigeració.|Muestra la animación del viaje: la nube son edificios con servidores, luz y refrigeración."],
+      ["Dona una xifra exacta de litres per pregunta que ha vist en un vídeo.|Da una cifra exacta de litros por pregunta que ha visto en un vídeo.", "Pregunta per la font: qui ho ha mesurat, de quin model i en quin centre de dades? Les estimacions varien molt.|Pregunta por la fuente: ¿quién lo ha medido, de qué modelo y en qué centro de datos? Las estimaciones varían mucho."],
+      ["Conclou que no s'ha de fer servir mai la IA.|Concluye que no se debe usar nunca la IA.", "No es tracta de prohibir-la sinó de fer-la servir quan aporta. A més, també pot ajudar el clima.|No se trata de prohibirla sino de usarla cuando aporta. Además, también puede ayudar al clima."],
+      ["Confon l'1,5 % amb «poc important».|Confunde el 1,5 % con «poco importante».", "És tanta electricitat com la d'alguns països sencers i creix de pressa: per això preocupa on i com es produeix.|Es tanta electricidad como la de algunos países enteros y crece deprisa: por eso preocupa dónde y cómo se produce."]
+    ],
+    diff: {
+      mes: "Nivell PRO: el centre de dades en una zona amb sequera i l'efecte rebot. Repte extra: la IA que ajuda el clima. Investigació: buscar l'informe de l'AIE «Energy and AI» i explicar a la classe una altra dada amb la font.|Nivel PRO: el centro de datos en una zona con sequía y el efecto rebote. Reto extra: la IA que ayuda al clima. Investigación: buscar el informe de la AIE «Energy and AI» y explicar a la clase otro dato con la fuente.",
+      menys: "Fer el pressupost d'energia tots junts amb un sol treball a la pissarra. Al pacte verd, donar començaments de frase («Faré servir la IA per…»).|Hacer el presupuesto de energía todos juntos con un solo trabajo en la pizarra. En el pacto verde, dar comienzos de frase («Usaré la IA para…»)."
+    },
+    aval: {
+      ticket: ["Per què un centre de dades fa servir aigua?|¿Por qué un centro de datos usa agua?", "Digues una tasca per a la qual faries servir una eina simple en lloc d'una IA.|Di una tarea para la que usarías una herramienta simple en lugar de una IA."],
+      rubric: [
+        ["Comprensió|Comprensión", "Explica on es calcula la IA i què gasta (electricitat i aigua).|Explica dónde se calcula la IA y qué gasta (electricidad y agua).", "Creu que la IA no gasta o no sap per què.|Cree que la IA no gasta o no sabe por qué."],
+        ["Comparar|Comparar", "Compara entrenar i fer servir i tipus de tasques.|Compara entrenar y usar y tipos de tareas.", "No distingeix tasques lleugeres i pesades.|No distingue tareas ligeras y pesadas."],
+        ["Dades i fonts|Datos y fuentes", "Fa servir dades amb font i desconfia de les xifres sense font.|Usa datos con fuente y desconfía de las cifras sin fuente.", "Es creu qualsevol xifra.|Se cree cualquier cifra."],
+        ["Compromís|Compromiso", "Fa un pacte verd concret i realista.|Hace un pacto verde concreto y realista.", "Compromisos vagues o impossibles.|Compromisos vagos o imposibles."]
+      ]
+    },
+    casa: "Mireu a casa quantes vegades al dia feu servir eines amb IA (filtres, assistents, recomanacions). Quines tasques podríeu fer amb una eina més simple? Ensenyeu el pacte verd (és al portafoli).|Mirad en casa cuántas veces al día usáis herramientas con IA (filtros, asistentes, recomendaciones). ¿Qué tareas podríais hacer con una herramienta más simple? Enseñad el pacto verde (está en el portafolio).",
+    faq: [
+      ["D'on surt la dada de l'1,5 %?|¿De dónde sale el dato del 1,5 %?", "De l'informe «Energy and AI» de l'Agència Internacional de l'Energia (abril de 2025): uns 415 TWh el 2024, al voltant de l'1,5 % de l'electricitat mundial, amb una previsió d'uns 945 TWh el 2030 (més del doble).|Del informe «Energy and AI» de la Agencia Internacional de la Energía (abril de 2025): unos 415 TWh en 2024, alrededor del 1,5 % de la electricidad mundial, con una previsión de unos 945 TWh en 2030 (más del doble)."],
+      ["Quanta aigua gasta una pregunta a un xat?|¿Cuánta agua gasta una pregunta a un chat?", "No hi ha una xifra única i fiable: depèn del model, del centre de dades, del clima, del sistema de refrigeració i de com es produeix l'electricitat. Per això a la sessió es tracta de manera qualitativa i es treballa la pregunta «d'on surt aquesta xifra?».|No hay una cifra única y fiable: depende del modelo, del centro de datos, del clima, del sistema de refrigeración y de cómo se produce la electricidad. Por eso en la sesión se trata de manera cualitativa y se trabaja la pregunta «¿de dónde sale esta cifra?»."],
+      ["Les piles de les targetes són dades reals?|¿Las pilas de las tarjetas son datos reales?", "No: són una comparació aproximada per ordenar les tasques (una cerca o un text curt gasten molt menys que generar imatges o vídeo). Digueu-ho a l'alumnat.|No: son una comparación aproximada para ordenar las tareas (una búsqueda o un texto corto gastan mucho menos que generar imágenes o vídeo). Decídselo al alumnado."]
+    ],
+    tec: [
+      ["El pacte verd no deixa desar.|El pacto verde no deja guardar.", "Cal triar almenys 3 maneres de reduir l'impacte i omplir cada text amb el mínim de caràcters.|Hay que elegir al menos 3 maneras de reducir el impacto y rellenar cada texto con el mínimo de caracteres."],
+      ["A «L'eina justa» no sé on va una tasca.|En «La herramienta justa» no sé dónde va una tarea.", "Pregunta't: hi ha una eina simple que ho faci bé? Si sí, eina simple. Si cal entendre, transformar o conversar, la IA hi aporta.|Pregúntate: ¿hay una herramienta simple que lo haga bien? Si sí, herramienta simple. Si hay que entender, transformar o conversar, la IA aporta."]
+    ],
+    seg: ["Evita el missatge de culpa individual: l'impacte depèn sobretot de com es dissenyen i alimenten els centres de dades. Els hàbits personals sumen, i exigir transparència també.|Evita el mensaje de culpa individual: el impacto depende sobre todo de cómo se diseñan y alimentan los centros de datos. Los hábitos personales suman, y exigir transparencia también."],
+    extra: [
+      "Física i química: la calor que produeixen els xips i com es transfereix (aire, aigua, evaporació).|Física y química: el calor que producen los chips y cómo se transfiere (aire, agua, evaporación).",
+      "Geografia: on es construeixen els centres de dades i per què (clima, energia, aigua).|Geografía: dónde se construyen los centros de datos y por qué (clima, energía, agua)."
+    ],
+    trans: ["Sessió i7-3: privadesa, vigilància i drets. Unitat 8: el projecte final pensarà si cal IA i quina eina és la justa.|Sesión i7-3: privacidad, vigilancia y derechos. Unidad 8: el proyecto final pensará si hace falta IA y qué herramienta es la justa."],
+    slides: [
+      { id: 's1', k: 'portada', t: 'Energia, aigua i planeta|Energía, agua y planeta', x: 'IA i societat|IA y sociedad', nota: "Segona sessió de la unitat 7.|Segunda sesión de la unidad 7." },
+      { id: 's2', k: 'pregunta', t: 'Quant gasta una pregunta?|¿Cuánto gasta una pregunta?', x: 'Feu les vostres hipòtesis.|Haced vuestras hipótesis.', nota: "Apunta-les per tornar-hi al final de la teoria.|Apúntalas para volver a ellas al final de la teoría." },
+      { id: 's3', k: 'anim', t: 'On viu la IA?|¿Dónde vive la IA?', anim: 'i72trip', x: 'El núvol és un edifici.|La nube es un edificio.', nota: "Si podeu, mostreu una foto d'un centre de dades.|Si podéis, mostrad una foto de un centro de datos." },
+      { id: 's4', k: 'anim', t: 'Entrenar i fer servir|Entrenar y usar', anim: 'i72train', x: 'Molt una vegada; poc, milions de vegades.|Mucho una vez; poco, millones de veces.', nota: "Imatge i vídeo gasten més que un text curt.|Imagen y vídeo gastan más que un texto corto." },
+      { id: 's5', k: 'anim', t: 'Per què una IA té set?|¿Por qué una IA tiene sed?', anim: 'i72water', x: 'Refrigerar els xips.|Refrigerar los chips.', nota: "L'aigua evaporada no torna al riu.|El agua evaporada no vuelve al río." },
+      { id: 's6', k: 'anim', t: 'Quant? Mira la font|¿Cuánto? Mira la fuente', anim: 'i72chart', x: 'AIE 2025: ≈ 1,5 % el 2024; més del doble el 2030.|AIE 2025: ≈ 1,5 % en 2024; más del doble en 2030.', nota: "Previsió, no certesa: depèn de com creixi l'ús.|Previsión, no certeza: depende de cómo crezca el uso." },
+      { id: 's7', k: 'anim', t: 'La IA que ajuda el planeta|La IA que ayuda al planeta', anim: 'i72help', x: 'Temps, xarxa elèctrica, satèl·lits, edificis.|Tiempo, red eléctrica, satélites, edificios.', nota: "Demana un exemple proper.|Pide un ejemplo cercano." },
+      { id: 's8', k: 'activitat', t: "El pressupost d'energia|El presupuesto de energía", timer: 12, punts: ['20 piles per a tot el treball.|20 pilas para todo el trabajo.', 'On val la pena la IA?|¿Dónde vale la pena la IA?', 'Compareu els plans.|Comparad los planes.'], nota: "Targetes «Quant gasta?», un conjunt per grup.|Tarjetas «¿Cuánto gasta?», un conjunto por grupo." },
+      { id: 's9', k: 'pregunta', t: 'Quin pla ha gastat menys?|¿Qué plan ha gastado menos?', x: 'I el treball era igual de bo?|¿Y el trabajo era igual de bueno?', nota: "Destaca els plans que combinen IA i eines simples.|Destaca los planes que combinan IA y herramientas simples." },
+      { id: 's10', k: 'activitat', t: "A l'ordinador|En el ordenador", timer: 25, punts: ['Gasta poc o molt i l\'aigua.|Gasta poco o mucho y el agua.', "L'eina justa i l'EcoBot.|La herramienta justa y el EcoBot.", 'El pacte verd.|El pacto verde.'], nota: "Fes la pausa activa quan hi arribin.|Haz la pausa activa cuando lleguen." },
+      { id: 's11', k: 'repte', t: "L'EcoBot|El EcoBot", punts: ['Dues afirmacions falses o sense font.|Dos afirmaciones falsas o sin fuente.', 'La dada bona té font.|El dato bueno tiene fuente.'], nota: "Que expliquin per què «exactament 1 litre» és sospitós.|Que expliquen por qué «exactamente 1 litro» es sospechoso." },
+      { id: 's12', k: 'concepte', t: 'Nivell PRO|Nivel PRO', punts: ['Un centre de dades en una zona amb sequera.|Un centro de datos en una zona con sequía.', "L'efecte rebot.|El efecto rebote.", 'Extra: la IA que ajuda el clima.|Extra: la IA que ayuda al clima.'], nota: "Per a 3r-4t d'ESO o qui vagi ràpid.|Para 3.º-4.º de ESO o quien vaya rápido." },
+      { id: 's13', k: 'repte', t: 'El pacte verd|El pacto verde', punts: ['Quan sí i quan no.|Cuándo sí y cuándo no.', "Com en reduiré l'impacte.|Cómo reduciré su impacto.", 'Una pregunta per a les empreses.|Una pregunta para las empresas.'], nota: "Es desa al portafoli i es pot imprimir.|Se guarda en el portafolio y se puede imprimir." },
+      { id: 's14', k: 'concepte', t: 'El pacte de la classe|El pacto de la clase', punts: ['Tres compromisos en comú.|Tres compromisos en común.', 'Un per a tota la classe.|Uno para toda la clase.'], nota: "Escriviu-lo en un cartell.|Escribidlo en un cartel." },
+      { id: 's15', k: 'resum', t: 'Avui hem après…|Hoy hemos aprendido…', punts: ['El núvol gasta electricitat i aigua.|La nube gasta electricidad y agua.', 'Dades amb font, no xifres màgiques.|Datos con fuente, no cifras mágicas.', "L'eina justa per a cada tasca.|La herramienta justa para cada tarea."], nota: "Propera sessió: privadesa i la llei europea.|Próxima sesión: privacidad y la ley europea." },
+      { id: 's16', k: 'tiquet', t: 'Tiquet de sortida|Tique de salida', punts: ["Per què cal aigua en un centre de dades?|¿Por qué hace falta agua en un centro de datos?", 'Una tasca amb una eina simple.|Una tarea con una herramienta simple.'], nota: "Respostes orals o en un paper.|Respuestas orales o en un papel." }
+    ],
+    print: [
+      { id: 'p1', t: 'Quant gasta?|¿Cuánto gasta?', k: 'targetes',
+        intro: "Un conjunt per grup de tres. Cada targeta diu una acció i, entre parèntesis, el que costa en piles (comparació aproximada per ordenar les tasques, no una mesura). Teniu 20 piles per fer un treball sobre el reciclatge.|Un conjunto por grupo de tres. Cada tarjeta dice una acción y, entre paréntesis, lo que cuesta en pilas (comparación aproximada para ordenar las tareas, no una medida). Tenéis 20 pilas para hacer un trabajo sobre el reciclaje.",
+        items: [{ t: 'Buscar al diccionari o als apunts (0) 📖|Buscar en el diccionario o en los apuntes (0) 📖' }, { t: 'Una cerca al cercador (1) 🔍|Una búsqueda en el buscador (1) 🔍' }, { t: 'Una pregunta curta a un xat d\'IA (2) 💬|Una pregunta corta a un chat de IA (2) 💬' }, { t: 'Resumir un text llarg amb IA (3) 📝|Resumir un texto largo con IA (3) 📝' }, { t: 'Generar una imatge (5) 🖼️|Generar una imagen (5) 🖼️' }, { t: 'Generar 4 imatges per triar-ne una (15) 🖼️|Generar 4 imágenes para elegir una (15) 🖼️' }, { t: 'Generar un vídeo curt (20) 🎬|Generar un vídeo corto (20) 🎬' }, { t: 'Dibuixar-ho a mà (0) ✏️|Dibujarlo a mano (0) ✏️' }, { t: 'Fer una foto pròpia (0) 📷|Hacer una foto propia (0) 📷' }, { t: 'Preguntar el mateix 5 vegades (10) 🔁|Preguntar lo mismo 5 veces (10) 🔁' }, { t: 'Revisar el treball en grup (0) 🤝|Revisar el trabajo en grupo (0) 🤝' }, { t: '20 piles per al treball 🔋|20 pilas para el trabajo 🔋' }] }
+    ]
+  },
+
+  /* ---------- Sessió 3 · Privadesa, vigilància i drets ---------- */
+  'i7-3': {
+    intro: "L'alumnat descobreix què fan les IA amb les dades: el que publiquem, cerquem, la cara i la veu poden servir per entrenar models i fer perfils. Entén com funciona el reconeixement facial (una cara convertida en números i comparada amb una base de dades), per què s'equivoca més amb alguns grups i la diferència entre desbloquejar el mòbil (1 a 1, ho tries tu) i identificar persones al carrer (1 entre milers, sense saber-ho). Coneix la piràmide de riscos de la llei europea d'IA (prohibit, alt risc, transparència i mínim) i els seus drets sobre les dades. Fa una piràmide amb targetes, analitza les condicions d'una app trampa, escriu una sol·licitud de dades sense dades reals i fa l'auditoria de privadesa d'una app.|El alumnado descubre qué hacen las IA con los datos: lo que publicamos, buscamos, la cara y la voz pueden servir para entrenar modelos y hacer perfiles. Entiende cómo funciona el reconocimiento facial (una cara convertida en números y comparada con una base de datos), por qué se equivoca más con algunos grupos y la diferencia entre desbloquear el móvil (1 a 1, lo eliges tú) e identificar personas en la calle (1 entre miles, sin saberlo). Conoce la pirámide de riesgos de la ley europea de IA (prohibido, alto riesgo, transparencia y mínimo) y sus derechos sobre los datos. Hace una pirámide con tarjetas, analiza las condiciones de una app trampa, escribe una solicitud de datos sin datos reales y hace la auditoría de privacidad de una app.",
+    claus: [
+      "Les dades són el menjar de la IA: dona només les que calen. Cara, salut i ubicació, encara més protegides.|Los datos son la comida de la IA: da solo los necesarios. Cara, salud y ubicación, aún más protegidos.",
+      "Reconeixement facial: cara → números → comparació. Pot equivocar-se, i més amb grups poc representats.|Reconocimiento facial: cara → números → comparación. Puede equivocarse, y más con grupos poco representados.",
+      "Llei europea d'IA: prohibit (des de febrer de 2025), alt risc (terminis ajornats el 2026), transparència (des d'agost de 2026) i mínim.|Ley europea de IA: prohibido (desde febrero de 2025), alto riesgo (plazos aplazados en 2026), transparencia (desde agosto de 2026) y mínimo.",
+      "Drets: saber, corregir, esborrar, oposar-se, revisió humana i queixa a l'autoritat de dades.|Derechos: saber, corregir, borrar, oponerse, revisión humana y queja a la autoridad de datos."
+    ],
+    prev: ["Unitat 2: el biaix (qui queda fora de les dades d'entrenament).|Unidad 2: el sesgo (quién se queda fuera de los datos de entrenamiento).", "Unitat 6: la fitxa de riscos i els usos prohibits als centres educatius.|Unidad 6: la ficha de riesgos y los usos prohibidos en los centros educativos."],
+    obj: [
+      "L'alumne/a explica com les IA fan servir les dades i per què algunes són especialment delicades.|El alumno/a explica cómo las IA usan los datos y por qué algunos son especialmente delicados.",
+      "L'alumne/a descriu com funciona el reconeixement facial i en distingeix usos (verificar o identificar).|El alumno/a describe cómo funciona el reconocimiento facial y distingue sus usos (verificar o identificar).",
+      "L'alumne/a classifica usos de la IA segons la piràmide de riscos de la llei europea.|El alumno/a clasifica usos de la IA según la pirámide de riesgos de la ley europea.",
+      "L'alumne/a coneix i exerceix els seus drets sobre les dades.|El alumno/a conoce y ejerce sus derechos sobre los datos."
+    ],
+    comp: [
+      "Competència digital (CD4): protecció de dades personals i privadesa|Competencia digital (CD4): protección de datos personales y privacidad",
+      "Competència ciutadana (CC): drets, lleis i democràcia en l'entorn digital|Competencia ciudadana (CC): derechos, leyes y democracia en el entorno digital",
+      "Competència digital (CD5): funcionament i límits dels sistemes d'IA|Competencia digital (CD5): funcionamiento y límites de los sistemas de IA"
+    ],
+    vocab: [
+      ["Dada biomètrica|Dato biométrico", "Dada del cos que identifica una persona: la cara, la veu, l'empremta dactilar.|Dato del cuerpo que identifica a una persona: la cara, la voz, la huella dactilar."],
+      ["Reconeixement facial|Reconocimiento facial", "Sistema que converteix una cara en números i la compara amb altres per saber qui és.|Sistema que convierte una cara en números y la compara con otras para saber quién es."],
+      ["Perfil (perfilat)|Perfil (perfilado)", "Deduccions sobre una persona a partir de les seves dades: gustos, hàbits, com se sent.|Deducciones sobre una persona a partir de sus datos: gustos, hábitos, cómo se siente."],
+      ["Llei europea d'IA|Ley europea de IA", "Reglament de la UE que ordena els usos de la IA segons el risc i fixa prohibicions i obligacions.|Reglamento de la UE que ordena los usos de la IA según el riesgo y fija prohibiciones y obligaciones."],
+      ["Dret de supressió|Derecho de supresión", "Dret a demanar que s'esborrin les teves dades personals.|Derecho a pedir que se borren tus datos personales."]
+    ],
+    mat: {
+      aula: ["Un ordinador per alumne/a amb Numi Tech obert a la sessió «Privadesa, vigilància i drets»|Un ordenador por alumno/a con Numi Tech abierto en la sesión «Privacidad, vigilancia y derechos»", "Projector i la presentació d'aquesta sessió|Proyector y la presentación de esta sesión", "Cinta adhesiva per fer la piràmide a la pissarra o a terra|Cinta adhesiva para hacer la pirámide en la pizarra o en el suelo"],
+      imprimir: ["Usos de la IA (imprimible 1): un conjunt de targetes per a la piràmide|Usos de la IA (imprimible 1): un conjunto de tarjetas para la pirámide"],
+      prep: ["Imprimir i retallar les targetes d'usos (la solució és al final de la guia: el nivell de cada targeta).|Imprimir y recortar las tarjetas de usos (la solución está al final de la guía: el nivel de cada tarjeta).", "Fer la piràmide de quatre pisos amb cinta adhesiva abans de la classe.|Hacer la pirámide de cuatro pisos con cinta adhesiva antes de la clase.", "Saber quina és l'autoritat de protecció de dades del vostre territori (APDCAT a Catalunya, AEPD a Espanya) per si ho pregunten.|Saber cuál es la autoridad de protección de datos de vuestro territorio (APDCAT en Cataluña, AEPD en España) por si lo preguntan."]
+    },
+    plan: [
+      { min: 5, t: 'Troba totes les teves fotos|Encuentra todas tus fotos', fase: 'inici',
+        fa: "Presenta l'app SelfiTroba i la pregunta de la Nil. Vota a mà alçada qui la provaria i per què.|Presenta la app SelfiEncuentra y la pregunta de Nil. Vota a mano alzada quién la probaría y por qué.",
+        diu: ["Què podria fer algú amb una app així i una foto vostra?|¿Qué podría hacer alguien con una app así y una foto vuestra?"],
+        slides: ['s1', 's2'], app: "Encara no: pantalles abaixades.|Todavía no: pantallas bajadas.", org: "Tot el grup|Todo el grupo" },
+      { min: 12, t: 'Dades, rostre, vigilància, llei i drets|Datos, rostro, vigilancia, ley y derechos', fase: 'teoria',
+        fa: "Amb les animacions: les dades i els perfils, com es reconeix una cara (i per què s'equivoca), verificar o identificar, la piràmide de riscos de la llei europea (amb les dates que s'apliquen i l'ajornament de 2026) i els drets.|Con las animaciones: los datos y los perfiles, cómo se reconoce una cara (y por qué se equivoca), verificar o identificar, la pirámide de riesgos de la ley europea (con las fechas que se aplican y el aplazamiento de 2026) y los derechos.",
+        diu: ["Per què creieu que la llei prohibeix deduir emocions a l'escola?|¿Por qué creéis que la ley prohíbe deducir emociones en la escuela?", "Qui pot decidir si una càmera reconeix les cares al carrer?|¿Quién puede decidir si una cámara reconoce las caras en la calle?"],
+        slides: ['s3', 's4', 's5', 's6', 's7'], app: "Encara no: tota l'atenció a la projecció.|Todavía no: toda la atención en la proyección.", org: "Tot el grup|Todo el grupo" },
+      { min: 10, t: 'La piràmide de la classe|La pirámide de la clase', fase: 'desconnectat',
+        fa: "Per torns, cada grup llegeix una targeta d'ús i la col·loca a la piràmide justificant-ho (a qui pot fer mal i com de greu seria un error). Els altres la poden moure amb un argument millor. Al final, revela els nivells de la llei.|Por turnos, cada grupo lee una tarjeta de uso y la coloca en la pirámide justificándolo (a quién puede hacer daño y lo grave que sería un error). Los demás la pueden mover con un argumento mejor. Al final, revela los niveles de la ley.",
+        diu: ["On no coincidiu amb la llei? Per què creieu que ho ha decidit així?|¿Dónde no coincidís con la ley? ¿Por qué creéis que lo ha decidido así?"],
+        slides: ['s8', 's9'], app: "Cap: activitat sense pantalla.|Ninguna: actividad sin pantalla.", org: "Grups de 3-4|Grupos de 3-4" },
+      { min: 25, t: "A l'ordinador: piràmide, condicions trampa i drets|En el ordenador: pirámide, condiciones trampa y derechos", fase: 'ordinador',
+        fa: "Fan la sessió de l'app: la piràmide, verificar o identificar, la pausa activa, les condicions de SelfiTroba, la sol·licitud de dades (sense dades reals), la transparència dels xatbots i l'auditoria de privadesa d'una app (es desa).|Hacen la sesión de la app: la pirámide, verificar o identificar, la pausa activa, las condiciones de SelfiEncuentra, la solicitud de datos (sin datos reales), la transparencia de los chatbots y la auditoría de privacidad de una app (se guarda).",
+        diu: ["Quina clàusula de SelfiTroba us sembla més perillosa?|¿Qué cláusula de SelfiEncuentra os parece más peligrosa?", "Quins permisos sobraven a l'app que has auditat?|¿Qué permisos sobraban en la app que has auditado?"],
+        slides: ['s10', 's11', 's12', 's13'], app: "De «Recorda» fins al pas «Crea» (l'auditoria de privadesa).|De «Recuerda» hasta el paso «Crea» (la auditoría de privacidad).", org: "Individual|Individual" },
+      { min: 8, t: 'Tancament: els meus drets|Cierre: mis derechos', fase: 'tancament',
+        fa: "Resumeix la piràmide i els drets. Anuncia l'assemblea de la sessió següent i demana que pensin quina moció voldrien debatre. Tiquet de sortida i com s'han sentit.|Resume la pirámide y los derechos. Anuncia la asamblea de la sesión siguiente y pide que piensen qué moción querrían debatir. Tique de salida y cómo se han sentido.",
+        diu: ["Quin dret fareu servir aquesta setmana?|¿Qué derecho usaréis esta semana?"],
+        slides: ['s14', 's15', 's16'], app: "«Tancament»: les preguntes finals i com m'he sentit.|«Cierre»: las preguntas finales y cómo me he sentido.", org: "Tot el grup|Todo el grupo" }
+    ],
+    errors: [
+      ["Posa el xatbot d'una botiga a «alt risc».|Pone el chatbot de una tienda en «alto riesgo».", "Pregunta: decideix alguna cosa important sobre la teva vida? No: el risc és que no sàpigues que parles amb una màquina. Per això és transparència.|Pregunta: ¿decide algo importante sobre tu vida? No: el riesgo es que no sepas que hablas con una máquina. Por eso es transparencia."],
+      ["Creu que si una cosa és legal, és segura.|Cree que si algo es legal, es seguro.", "Un ús de risc mínim també pot recollir massa dades. La llei d'IA i la de protecció de dades es complementen.|Un uso de riesgo mínimo también puede recoger demasiados datos. La ley de IA y la de protección de datos se complementan."],
+      ["A la sol·licitud escriu el seu nom i el seu correu.|En la solicitud escribe su nombre y su correo.", "L'app ho avisa: deixa espais en blanc ([nom]) i no donis dades teves a cap IA.|La app lo avisa: deja espacios en blanco ([nombre]) y no des datos tuyos a ninguna IA."],
+      ["Diu que totes les obligacions de la llei ja s'apliquen.|Dice que todas las obligaciones de la ley ya se aplican.", "Les prohibicions (2025) i la transparència (agost de 2026), sí; part de les d'alt risc s'han ajornat el 2026.|Las prohibiciones (2025) y la transparencia (agosto de 2026), sí; parte de las de alto riesgo se han aplazado en 2026."]
+    ],
+    diff: {
+      mes: "Nivell PRO: el biaix del reconeixement facial, l'etiquetatge dels deepfakes i la sol·licitud amb 5 peces i comprovació. Repte extra: les obligacions d'alt risc ajornades. Investigació: llegir l'article 5 de la llei europea d'IA (pràctiques prohibides) i fer-ne un resum amb paraules pròpies.|Nivel PRO: el sesgo del reconocimiento facial, el etiquetado de los deepfakes y la solicitud con 5 piezas y comprobación. Reto extra: las obligaciones de alto riesgo aplazadas. Investigación: leer el artículo 5 de la ley europea de IA (prácticas prohibidas) y hacer un resumen con palabras propias.",
+      menys: "Fer la piràmide de l'app tots junts a la projecció. A la sol·licitud, fer servir els botons de peces. A l'auditoria, donar un tipus d'app ja triat (un editor de fotos).|Hacer la pirámide de la app todos juntos en la proyección. En la solicitud, usar los botones de piezas. En la auditoría, dar un tipo de app ya elegido (un editor de fotos)."
+    },
+    aval: {
+      ticket: ["Digues un ús prohibit i un d'alt risc segons la llei europea d'IA.|Di un uso prohibido y uno de alto riesgo según la ley europea de IA.", "Quin dret tens sobre les teves dades?|¿Qué derecho tienes sobre tus datos?"],
+      rubric: [
+        ["Dades|Datos", "Explica com es fan servir les dades i quines són delicades.|Explica cómo se usan los datos y cuáles son delicados.", "No veu el problema de donar dades.|No ve el problema de dar datos."],
+        ["Reconeixement facial|Reconocimiento facial", "Distingeix verificar d'identificar i coneix els errors i el biaix.|Distingue verificar de identificar y conoce los errores y el sesgo.", "Creu que és infal·lible o que tot és el mateix.|Cree que es infalible o que todo es lo mismo."],
+        ["Llei|Ley", "Classifica usos a la piràmide amb arguments.|Clasifica usos en la pirámide con argumentos.", "Classifica a l'atzar.|Clasifica al azar."],
+        ["Drets|Derechos", "Escriu una sol·licitud correcta sense dades reals i fa una auditoria concreta.|Escribe una solicitud correcta sin datos reales y hace una auditoría concreta.", "Hi posa dades reals o fa una auditoria genèrica.|Pone datos reales o hace una auditoría genérica."]
+      ]
+    },
+    casa: "Reviseu junts els permisos de dues apps del mòbil (ubicació, micròfon, càmera, contactes). Quins tenen sentit? Quins traureu? Parleu de quines fotos de la família es poden publicar i quines no.|Revisad juntos los permisos de dos apps del móvil (ubicación, micrófono, cámara, contactos). ¿Cuáles tienen sentido? ¿Cuáles quitaréis? Hablad de qué fotos de la familia se pueden publicar y cuáles no.",
+    faq: [
+      ["Quines dates de la llei europea d'IA s'apliquen ja?|¿Qué fechas de la ley europea de IA se aplican ya?", "La llei (Reglament (UE) 2024/1689) va entrar en vigor el 2024. Les pràctiques prohibides s'apliquen des del 2 de febrer de 2025 i les obligacions de transparència (avisar que és una IA, etiquetar deepfakes) des del 2 d'agost de 2026. El 2026, el «Digital Omnibus» va ajornar part de les obligacions dels sistemes d'alt risc: consulteu la font oficial (EUR-Lex) si cal una data concreta.|La ley (Reglamento (UE) 2024/1689) entró en vigor en 2024. Las prácticas prohibidas se aplican desde el 2 de febrero de 2025 y las obligaciones de transparencia (avisar que es una IA, etiquetar deepfakes) desde el 2 de agosto de 2026. En 2026, el «Digital Omnibus» aplazó parte de las obligaciones de los sistemas de alto riesgo: consultad la fuente oficial (EUR-Lex) si hace falta una fecha concreta."],
+      ["El reconeixement facial està prohibit a Europa?|¿El reconocimiento facial está prohibido en Europa?", "No del tot. Està prohibit crear bases de dades de cares recollint-les a l'engròs d'internet o de càmeres, i la identificació biomètrica a distància en temps real en espais públics per part de la policia, llevat d'excepcions molt limitades. Altres usos són d'alt risc i tenen controls. Desbloquejar el teu mòbil no és el mateix.|No del todo. Está prohibido crear bases de datos de caras recogiéndolas a lo grande de internet o de cámaras, y la identificación biométrica a distancia en tiempo real en espacios públicos por parte de la policía, salvo excepciones muy limitadas. Otros usos son de alto riesgo y tienen controles. Desbloquear tu móvil no es lo mismo."],
+      ["On es pot presentar una queixa per les dades?|¿Dónde se puede presentar una queja por los datos?", "A l'autoritat de protecció de dades: a Catalunya, l'Autoritat Catalana de Protecció de Dades (APDCAT) per a les administracions catalanes, i l'Agència Espanyola de Protecció de Dades (AEPD) per a la majoria d'empreses. Els menors ho haurien de fer amb la família.|En la autoridad de protección de datos: en Cataluña, la Autoridad Catalana de Protección de Datos (APDCAT) para las administraciones catalanas, y la Agencia Española de Protección de Datos (AEPD) para la mayoría de empresas. Los menores deberían hacerlo con la familia."]
+    ],
+    tec: [
+      ["A la sol·licitud surt l'avís de dades personals.|En la solicitud sale el aviso de datos personales.", "Has escrit un correu, un telèfon o un nom? Canvia'ls per espais en blanc com [nom] o [correu].|¿Has escrito un correo, un teléfono o un nombre? Cámbialos por espacios en blanco como [nombre] o [correo]."],
+      ["No trobo les clàusules de SelfiTroba.|No encuentro las cláusulas de SelfiEncuentra.", "Toca directament el text de cada clàusula numerada que et sembli perillosa: n'hi ha tres.|Toca directamente el texto de cada cláusula numerada que te parezca peligrosa: hay tres."]
+    ],
+    seg: ["No es fan servir fotos ni dades de l'alumnat en cap activitat. Si algú explica un cas d'una foto seva publicada sense permís, atén-lo en privat i segueix el protocol del centre.|No se usan fotos ni datos del alumnado en ninguna actividad. Si alguien explica un caso de una foto suya publicada sin permiso, atiéndelo en privado y sigue el protocolo del centro."],
+    extra: [
+      "Ciutadania: debatre el dret a la privadesa i la seguretat (càmeres, controls) com a drets que s'han d'equilibrar.|Ciudadanía: debatir el derecho a la privacidad y la seguridad (cámaras, controles) como derechos que se deben equilibrar.",
+      "Llengua: redactar una carta formal real a una empresa (sense enviar-la) amb el format adequat.|Lengua: redactar una carta formal real a una empresa (sin enviarla) con el formato adecuado."
+    ],
+    trans: ["Sessió i7-4: l'assemblea «Hauríem de…?». Unitat 8: el projecte final farà la seva fitxa de riscos i el nivell de risc.|Sesión i7-4: la asamblea «¿Deberíamos…?». Unidad 8: el proyecto final hará su ficha de riesgos y el nivel de riesgo."],
+    slides: [
+      { id: 's1', k: 'portada', t: 'Privadesa, vigilància i drets|Privacidad, vigilancia y derechos', x: 'IA i societat|IA y sociedad', nota: "Tercera sessió de la unitat 7.|Tercera sesión de la unidad 7." },
+      { id: 's2', k: 'pregunta', t: 'La provaríeu?|¿La probaríais?', x: "SelfiTroba: totes les teves fotos amb una selfie.|SelfiEncuentra: todas tus fotos con un selfi.", nota: "Recull motius a favor i en contra.|Recoge motivos a favor y en contra." },
+      { id: 's3', k: 'anim', t: 'Les dades, el menjar de la IA|Los datos, la comida de la IA', anim: 'i73data', x: 'De les dades al perfil.|De los datos al perfil.', nota: "Quines dades doneu cada dia sense pensar-hi?|¿Qué datos dais cada día sin pensarlo?" },
+      { id: 's4', k: 'anim', t: 'Com et reconeix una màquina|Cómo te reconoce una máquina', anim: 'i73face', x: 'Cara → números → comparació.|Cara → números → comparación.', nota: "Connecta-ho amb el biaix de la unitat 2.|Conéctalo con el sesgo de la unidad 2." },
+      { id: 's5', k: 'anim', t: 'Desbloquejar o identificar|Desbloquear o identificar', anim: 'i73surv', x: '1 a 1, o 1 entre milers.|1 a 1, o 1 entre miles.', nota: "Parla de com canvia la vida si et poden identificar a tot arreu.|Habla de cómo cambia la vida si te pueden identificar en todas partes." },
+      { id: 's6', k: 'anim', t: 'La piràmide de riscos|La pirámide de riesgos', anim: 'i73pyr', x: 'Prohibit, alt risc, transparència, mínim.|Prohibido, alto riesgo, transparencia, mínimo.', nota: "Prohibicions des de febrer de 2025; transparència des d'agost de 2026; part de l'alt risc, ajornada el 2026.|Prohibiciones desde febrero de 2025; transparencia desde agosto de 2026; parte del alto riesgo, aplazada en 2026." },
+      { id: 's7', k: 'anim', t: 'Els teus drets|Tus derechos', anim: 'i73rights', x: 'Saber, corregir, esborrar, revisió humana, queixa.|Saber, corregir, borrar, revisión humana, queja.', nota: "Digues quina és l'autoritat de dades del territori.|Di cuál es la autoridad de datos del territorio." },
+      { id: 's8', k: 'activitat', t: 'La piràmide de la classe|La pirámide de la clase', timer: 10, punts: ['Llegiu la targeta i col·loqueu-la.|Leed la tarjeta y colocadla.', 'Justifiqueu-ho: a qui fa mal?|Justificadlo: ¿a quién hace daño?', 'Es pot moure amb un argument millor.|Se puede mover con un argumento mejor.'], nota: "Targetes «Usos de la IA» i la piràmide de cinta.|Tarjetas «Usos de la IA» y la pirámide de cinta." },
+      { id: 's9', k: 'pregunta', t: 'On no coincidiu amb la llei?|¿Dónde no coincidís con la ley?', x: 'Per què creieu que ho ha decidit així?|¿Por qué creéis que lo ha decidido así?', nota: "Revela els nivells de la llei d'un en un.|Revela los niveles de la ley de uno en uno." },
+      { id: 's10', k: 'activitat', t: "A l'ordinador|En el ordenador", timer: 25, punts: ['La piràmide i verificar o identificar.|La pirámide y verificar o identificar.', 'Les condicions de SelfiTroba.|Las condiciones de SelfiEncuentra.', "La sol·licitud i l'auditoria.|La solicitud y la auditoría."], nota: "Fes la pausa activa quan hi arribin.|Haz la pausa activa cuando lleguen." },
+      { id: 's11', k: 'repte', t: 'Les condicions trampa|Las condiciones trampa', punts: ['Tres clàusules perilloses.|Tres cláusulas peligrosas.', 'Entrenar, per sempre i qualsevol persona.|Entrenar, para siempre y cualquier persona.'], nota: "Que expliquin per a qui és perillosa cada clàusula.|Que expliquen para quién es peligrosa cada cláusula." },
+      { id: 's12', k: 'concepte', t: 'Nivell PRO|Nivel PRO', punts: ['El biaix del reconeixement facial.|El sesgo del reconocimiento facial.', 'Etiquetar els deepfakes.|Etiquetar los deepfakes.', 'Sol·licitud amb 5 peces.|Solicitud con 5 piezas.'], nota: "Per a 3r-4t d'ESO o qui vagi ràpid.|Para 3.º-4.º de ESO o quien vaya rápido." },
+      { id: 's13', k: 'repte', t: "L'auditoria de privadesa|La auditoría de privacidad", punts: ['Què demana i què necessita.|Qué pide y qué necesita.', 'Cara, veu o ubicació?|¿Cara, voz o ubicación?', 'Nivell de risc i dues accions.|Nivel de riesgo y dos acciones.'], nota: "Es desa al portafoli i es pot imprimir.|Se guarda en el portafolio y se puede imprimir." },
+      { id: 's14', k: 'concepte', t: "I com decidim com a classe?|¿Y cómo decidimos como clase?", punts: ["Propera sessió: l'assemblea.|Próxima sesión: la asamblea.", 'Penseu una moció «Hauríem de…?».|Pensad una moción «¿Deberíamos…?».'], nota: "Recull mocions per triar-ne una.|Recoge mociones para elegir una." },
+      { id: 's15', k: 'resum', t: 'Avui hem après…|Hoy hemos aprendido…', punts: ['Les dades i la cara mereixen protecció.|Los datos y la cara merecen protección.', 'La piràmide de riscos de la llei.|La pirámide de riesgos de la ley.', 'Tenim drets i els podem fer servir.|Tenemos derechos y los podemos usar.'], nota: "Llegiu-ho junts.|Leedlo juntos." },
+      { id: 's16', k: 'tiquet', t: 'Tiquet de sortida|Tique de salida', punts: ['Un ús prohibit i un d\'alt risc.|Un uso prohibido y uno de alto riesgo.', 'Un dret sobre les teves dades.|Un derecho sobre tus datos.'], nota: "Respostes orals o en un paper.|Respuestas orales o en un papel." }
+    ],
+    print: [
+      { id: 'p1', t: 'Usos de la IA|Usos de la IA', k: 'targetes',
+        intro: "Un conjunt per grup. Col·loqueu cada targeta a la piràmide (prohibit, alt risc, transparència o mínim) i justifiqueu-ho. Solució per al docent: puntuació social, emocions a l'escola, emocions a la feina, cares d'internet a l'engròs → prohibit; admissió, notes, currículums, crèdit → alt risc; xatbot, deepfake, text generat sobre temes públics → transparència; correu brossa, corrector, recomanador de música → mínim.|Un conjunto por grupo. Colocad cada tarjeta en la pirámide (prohibido, alto riesgo, transparencia o mínimo) y justificadlo. Solución para el docente: puntuación social, emociones en la escuela, emociones en el trabajo, caras de internet a lo grande → prohibido; admisión, notas, currículos, crédito → alto riesgo; chatbot, deepfake, texto generado sobre temas públicos → transparencia; correo basura, corrector, recomendador de música → mínimo.",
+        items: [{ t: 'Puntuar els ciutadans pel comportament 🧮|Puntuar a los ciudadanos por su comportamiento 🧮' }, { t: "Deduir si l'alumnat s'avorreix per la cara 😐|Deducir si el alumnado se aburre por la cara 😐" }, { t: 'Deduir si els treballadors estan contents 😀|Deducir si los trabajadores están contentos 😀' }, { t: "Recollir cares d'internet a l'engròs 🖼️|Recoger caras de internet a lo grande 🖼️" }, { t: 'Decidir qui entra a la universitat 🎓|Decidir quién entra en la universidad 🎓' }, { t: 'Posar la nota dels exàmens 📝|Poner la nota de los exámenes 📝' }, { t: 'Filtrar currículums 📄|Filtrar currículos 📄' }, { t: 'Decidir qui rep un préstec 🏦|Decidir quién recibe un préstamo 🏦' }, { t: "El xatbot d'una botiga 💬|El chatbot de una tienda 💬" }, { t: 'Un vídeo deepfake 🎭|Un vídeo deepfake 🎭' }, { t: 'Un filtre de correu brossa 📥|Un filtro de correo basura 📥' }, { t: 'Un recomanador de música 🎵|Un recomendador de música 🎵' }] }
+    ]
+  },
+
+  /* ---------- Sessió 4 · Projecte: l'assemblea «Hauríem de…?» ---------- */
+  'i7-4': {
+    intro: "Sessió de projecte que tanca la unitat 7. La classe fa una assemblea per donar la seva opinió al consell escolar (inventat) sobre una norma d'IA al centre. L'alumnat aprèn a formular una moció «Hauríem de…?», a construir arguments (afirmació + prova amb font + per tant), a detectar fal·làcies i a resumir el millor argument de l'altre bàndol. Debat amb rols (bàndols, moderador/a, verificador/a, relator/a i jurat) fent servir com a proves el que ha après a la unitat, verifica les proves d'un assessor d'IA que s'inventa xifres i lleis, i escriu el posicionament de la classe amb una norma que diu què es permet, amb quines condicions, qui en respon i quan es revisarà.|Sesión de proyecto que cierra la unidad 7. La clase hace una asamblea para dar su opinión al consejo escolar (inventado) sobre una norma de IA en el centro. El alumnado aprende a formular una moción «¿Deberíamos…?», a construir argumentos (afirmación + prueba con fuente + por lo tanto), a detectar falacias y a resumir el mejor argumento del otro bando. Debate con roles (bandos, moderador/a, verificador/a, relator/a y jurado) usando como pruebas lo que ha aprendido en la unidad, verifica las pruebas de un asesor de IA que se inventa cifras y leyes, y escribe el posicionamiento de la clase con una norma que dice qué se permite, con qué condiciones, quién responde de ello y cuándo se revisará.",
+    claus: [
+      "Moció: pregunta de sí o no, sobre una acció concreta: «Hauríem de…?».|Moción: pregunta de sí o no, sobre una acción concreta: «¿Deberíamos…?».",
+      "Argument = afirmació + prova amb font + per tant. Sense prova, és opinió.|Argumento = afirmación + prueba con fuente + por lo tanto. Sin prueba, es opinión.",
+      "Fal·làcies: atac a la persona, pendent relliscós, tot o res, tothom ho fa.|Falacias: ataque a la persona, pendiente resbaladiza, todo o nada, todo el mundo lo hace.",
+      "Bona norma: què es permet, condicions, qui en respon i quan es revisa.|Buena norma: qué se permite, condiciones, quién responde de ello y cuándo se revisa."
+    ],
+    prev: ["Sessions i7-1, i7-2 i i7-3: feina, energia i aigua, privadesa i la llei europea d'IA (les proves del debat).|Sesiones i7-1, i7-2 e i7-3: trabajo, energía y agua, privacidad y la ley europea de IA (las pruebas del debate).", "Unitat 3: les al·lucinacions (xifres i fonts inventades).|Unidad 3: las alucinaciones (cifras y fuentes inventadas)."],
+    obj: [
+      "L'alumne/a formula una moció clara i construeix arguments amb proves i fonts.|El alumno/a formula una moción clara y construye argumentos con pruebas y fuentes.",
+      "L'alumne/a detecta fal·làcies i proves falses (també les generades per una IA).|El alumno/a detecta falacias y pruebas falsas (también las generadas por una IA).",
+      "L'alumne/a participa en un debat amb un rol, escolta i resumeix l'argument contrari.|El alumno/a participa en un debate con un rol, escucha y resume el argumento contrario.",
+      "L'alumne/a redacta un posicionament amb una norma completa.|El alumno/a redacta un posicionamiento con una norma completa."
+    ],
+    comp: [
+      "Competència en comunicació lingüística (CCL): argumentar, debatre i escoltar|Competencia en comunicación lingüística (CCL): argumentar, debatir y escuchar",
+      "Competència ciutadana (CC): participació democràtica i normes de convivència|Competencia ciudadana (CC): participación democrática y normas de convivencia",
+      "Competència digital (CD5): pensament crític sobre la IA i les seves conseqüències|Competencia digital (CD5): pensamiento crítico sobre la IA y sus consecuencias"
+    ],
+    vocab: [
+      ["Moció|Moción", "Proposta clara que es debat i es vota: «Hauríem de…?».|Propuesta clara que se debate y se vota: «¿Deberíamos…?»."],
+      ["Argument|Argumento", "Afirmació defensada amb una prova i un raonament.|Afirmación defendida con una prueba y un razonamiento."],
+      ["Fal·làcia|Falacia", "Raonament tramposo que sembla convincent però no s'aguanta.|Razonamiento tramposo que parece convincente pero no se sostiene."],
+      ["Verificació de fets|Verificación de hechos", "Comprovar si una dada o una cita és certa i d'on surt.|Comprobar si un dato o una cita es cierto y de dónde sale."],
+      ["Posicionament|Posicionamiento", "Text que diu què decideix un grup i per què, amb propostes concretes.|Texto que dice qué decide un grupo y por qué, con propuestas concretas."]
+    ],
+    mat: {
+      aula: ["Un ordinador per alumne/a amb Numi Tech obert a la sessió del projecte|Un ordenador por alumno/a con Numi Tech abierto en la sesión del proyecto", "Projector i la presentació d'aquesta sessió|Proyector y la presentación de esta sesión", "Cronòmetre (el de la presentació serveix) i taules en U o en dos fronts|Cronómetro (el de la presentación sirve) y mesas en U o en dos frentes"],
+      imprimir: ["Targetes de proves i rols (imprimible 1): un conjunt per classe|Tarjetas de pruebas y roles (imprimible 1): un conjunto por clase", "Full del relator/a (imprimible 2): un per assemblea|Hoja del relator/a (imprimible 2): una por asamblea"],
+      prep: ["Imprimir les targetes de proves i rols i el full del relator/a.|Imprimir las tarjetas de pruebas y roles y la hoja del relator/a.", "Preparar tres o quatre mocions per votar (o recollir les que va proposar l'alumnat a i7-3).|Preparar tres o cuatro mociones para votar (o recoger las que propuso el alumnado en i7-3).", "Organitzar l'espai: dos bàndols de cara, el moderador/a al mig i el jurat al voltant.|Organizar el espacio: dos bandos de cara, el moderador/a en medio y el jurado alrededor."]
+    },
+    plan: [
+      { min: 4, t: "L'encàrrec del consell|El encargo del consejo", fase: 'inici',
+        fa: "Presenta l'encàrrec del consell escolar i les mocions possibles. Explica com acabarà la sessió: amb un posicionament que es podria portar al consell de veritat.|Presenta el encargo del consejo escolar y las mociones posibles. Explica cómo terminará la sesión: con un posicionamiento que se podría llevar al consejo de verdad.",
+        diu: ["Quina moció us sembla més important per al centre?|¿Qué moción os parece más importante para el centro?"],
+        slides: ['s1', 's2'], app: "Encara no: pantalles abaixades.|Todavía no: pantallas bajadas.", org: "Tot el grup|Todo el grupo" },
+      { min: 8, t: 'Moció, arguments, trampes, rols i posicionament|Moción, argumentos, trampas, roles y posicionamiento', fase: 'teoria',
+        fa: "Amb les animacions: una bona moció, afirmació + prova + per tant, les quatre trampes, els rols i el posicionament. Mostra la rúbrica.|Con las animaciones: una buena moción, afirmación + prueba + por lo tanto, las cuatro trampas, los roles y el posicionamiento. Muestra la rúbrica.",
+        diu: ["Per què un bon debat no es guanya cridant?|¿Por qué un buen debate no se gana gritando?"],
+        slides: ['s3', 's4', 's5', 's6', 's7'], app: "Encara no: tota l'atenció a la projecció.|Todavía no: toda la atención en la proyección.", org: "Tot el grup|Todo el grupo" },
+      { min: 18, t: "L'assemblea|La asamblea", fase: 'desconnectat',
+        fa: "Voten la moció i reparteixen rols. Preparació de 4 minuts amb les targetes de proves. Debat: obertura (1 min per bàndol), ronda de proves amb preguntes (el verificador/a mira les fonts), resum del millor argument contrari i votació del jurat. El relator/a omple el full.|Votan la moción y reparten roles. Preparación de 4 minutos con las tarjetas de pruebas. Debate: apertura (1 min por bando), ronda de pruebas con preguntas (el verificador/a mira las fuentes), resumen del mejor argumento contrario y votación del jurado. El relator/a rellena la hoja.",
+        diu: ["Quina prova ha estat més convincent? Tenia font?|¿Qué prueba ha sido más convincente? ¿Tenía fuente?", "Algú ha canviat d'opinió? Per què?|¿Alguien ha cambiado de opinión? ¿Por qué?"],
+        slides: ['s8', 's9'], app: "Cap: activitat sense pantalla.|Ninguna: actividad sin pantalla.", org: "Tota la classe amb rols|Toda la clase con roles" },
+      { min: 24, t: "A l'ordinador: verificar i escriure el posicionament|En el ordenador: verificar y escribir el posicionamiento", fase: 'ordinador',
+        fa: "Fan la sessió de l'app: prova o opinió, la trampa del pendent relliscós, la pausa activa (línia de valors), l'assessor d'IA que s'inventa proves, l'ordre de l'assemblea, la bona norma, l'autoavaluació i el posicionament de la classe (es desa).|Hacen la sesión de la app: prueba u opinión, la trampa de la pendiente resbaladiza, la pausa activa (línea de valores), el asesor de IA que se inventa pruebas, el orden de la asamblea, la buena norma, la autoevaluación y el posicionamiento de la clase (se guarda).",
+        diu: ["Quines proves de l'assessor eren inventades?|¿Qué pruebas del asesor eran inventadas?", "Què posareu a la norma: condicions, responsables i revisió?|¿Qué pondréis en la norma: condiciones, responsables y revisión?"],
+        slides: ['s10', 's11', 's12', 's13'], app: "De «Recorda» fins al posicionament de la classe (es desa).|De «Recuerda» hasta el posicionamiento de la clase (se guarda).", org: "Individual|Individual" },
+      { min: 6, t: 'Tancament: la veu de la classe|Cierre: la voz de la clase', fase: 'tancament',
+        fa: "El relator/a llegeix el posicionament acordat. Proposa portar-lo al consell escolar o a la direcció real. Resumeix la unitat i anuncia el projecte final (unitat 8). Com s'han sentit.|El relator/a lee el posicionamiento acordado. Propón llevarlo al consejo escolar o a la dirección real. Resume la unidad y anuncia el proyecto final (unidad 8). Cómo se han sentido.",
+        diu: ["Què milloraríeu de la norma abans de portar-la al consell?|¿Qué mejoraríais de la norma antes de llevarla al consejo?"],
+        slides: ['s14', 's15', 's16'], app: "«Tancament»: les preguntes finals i com m'he sentit.|«Cierre»: las preguntas finales y cómo me he sentido.", org: "Tot el grup|Todo el grupo" }
+    ],
+    errors: [
+      ["El debat es converteix en crits o en atacs personals.|El debate se convierte en gritos o en ataques personales.", "El moderador/a atura i demana reformular: «critica l'argument, no la persona». Recorda la norma abans de començar.|El moderador/a para y pide reformular: «critica el argumento, no a la persona». Recuerda la norma antes de empezar."],
+      ["Un bàndol fa servir una xifra sense font.|Un bando usa una cifra sin fuente.", "El verificador/a la pot invalidar. Que la busquin a les targetes o a la unitat, o la retirin.|El verificador/a la puede invalidar. Que la busquen en las tarjetas o en la unidad, o la retiren."],
+      ["L'alumnat no vol defensar el bàndol que no pensa.|El alumnado no quiere defender el bando que no piensa.", "Explica que és un entrenament: defensar l'altra postura ajuda a entendre-la i a fer millors normes.|Explica que es un entrenamiento: defender la otra postura ayuda a entenderla y a hacer mejores normas."],
+      ["El posicionament és només «sí» o «no».|El posicionamiento es solo «sí» o «no».", "Fes les quatre preguntes: què es permet, amb quines condicions, qui en respon, quan es revisarà.|Haz las cuatro preguntas: qué se permite, con qué condiciones, quién responde de ello, cuándo se revisará."]
+    ],
+    diff: {
+      mes: "Nivell PRO: resumir bé l'argument contrari (steelman) i el que li falta a una norma. Repte extra: per què cal el verificador/a. Ampliació: fer de verificador/a amb les fonts originals (OIT, AIE, EUR-Lex).|Nivel PRO: resumir bien el argumento contrario (steelman) y lo que le falta a una norma. Reto extra: por qué hace falta el verificador/a. Ampliación: hacer de verificador/a con las fuentes originales (OIT, AIE, EUR-Lex).",
+      menys: "Fer l'assemblea amb guió («Nosaltres pensem que… perquè… per tant…») i amb només dues proves per bàndol. Al posicionament, començar pels camps de tria i fer els de text en parella.|Hacer la asamblea con guion («Nosotros pensamos que… porque… por lo tanto…») y con solo dos pruebas por bando. En el posicionamiento, empezar por los campos de elegir y hacer los de texto en pareja."
+    },
+    aval: {
+      ticket: ["Escriu un argument amb les tres peces sobre la moció del debat.|Escribe un argumento con las tres piezas sobre la moción del debate.", "Quina fal·làcia has sentit avui (o has estat a punt de fer)?|¿Qué falacia has oído hoy (o has estado a punto de hacer)?"],
+      rubric: [
+        ["Arguments|Argumentos", "Arguments amb afirmació, prova amb font i per tant.|Argumentos con afirmación, prueba con fuente y por lo tanto.", "Opinions sense proves.|Opiniones sin pruebas."],
+        ["Pensament crític|Pensamiento crítico", "Detecta fal·làcies i proves falses, també d'una IA.|Detecta falacias y pruebas falsas, también de una IA.", "Accepta qualsevol prova.|Acepta cualquier prueba."],
+        ["Debat i escolta|Debate y escucha", "Respecta torns i resumeix bé l'altre bàndol.|Respeta turnos y resume bien al otro bando.", "Interromp o caricaturitza l'altre bàndol.|Interrumpe o caricaturiza al otro bando."],
+        ["Posicionament|Posicionamiento", "Norma completa: permís, condicions, responsables i revisió.|Norma completa: permiso, condiciones, responsables y revisión.", "Només «sí» o «no», sense condicions.|Solo «sí» o «no», sin condiciones."]
+      ]
+    },
+    casa: "Expliqueu a casa la moció del debat i la decisió de la classe. Pregunteu-los què en pensen i quin argument afegirien. Ensenyeu el posicionament (és al portafoli i es pot imprimir).|Explicad en casa la moción del debate y la decisión de la clase. Preguntadles qué piensan y qué argumento añadirían. Enseñad el posicionamiento (está en el portafolio y se puede imprimir).",
+    faq: [
+      ["I si la classe vota una cosa que no es pot fer al centre?|¿Y si la clase vota algo que no se puede hacer en el centro?", "És una opinió argumentada per al consell, no una decisió. Podeu afegir al posicionament què caldria comprovar (normes del centre, lleis) abans d'aplicar-la.|Es una opinión argumentada para el consejo, no una decisión. Podéis añadir al posicionamiento qué habría que comprobar (normas del centro, leyes) antes de aplicarla."],
+      ["Puc fer servir una moció pròpia?|¿Puedo usar una moción propia?", "Sí: al posicionament hi ha l'opció «Una altra moció». Que sigui una pregunta de sí o no sobre una acció concreta del centre.|Sí: en el posicionamiento está la opción «Otra moción». Que sea una pregunta de sí o no sobre una acción concreta del centro."],
+      ["Com evito que sempre parlin els mateixos?|¿Cómo evito que hablen siempre los mismos?", "Doneu torns amb temps (el moderador/a), feu que cada membre del bàndol presenti una prova diferent i deixeu que el jurat faci preguntes.|Dad turnos con tiempo (el moderador/a), haced que cada miembro del bando presente una prueba distinta y dejad que el jurado haga preguntas."]
+    ],
+    tec: [
+      ["El posicionament no deixa desar.|El posicionamiento no deja guardar.", "Cal triar la moció i la decisió i omplir cada text amb el mínim de caràcters (els arguments en demanen 30).|Hay que elegir la moción y la decisión y rellenar cada texto con el mínimo de caracteres (los argumentos piden 30)."],
+      ["A l'assessor no surten les proves falses.|En el asesor no salen las pruebas falsas.", "Cada moció té el seu camí i totes dues branques arriben a la llei inventada: marca la 🚩 al costat de cada frase sospitosa.|Cada moción tiene su camino y las dos ramas llegan a la ley inventada: marca la 🚩 junto a cada frase sospechosa."]
+    ],
+    seg: ["Cap debat no ha d'assenyalar persones concretes del centre. Les mocions parlen de normes i usos, no de qui fa què.|Ningún debate debe señalar a personas concretas del centro. Las mociones hablan de normas y usos, no de quién hace qué."],
+    extra: [
+      "Llengua: el text argumentatiu i les fal·làcies, amb el posicionament com a producte final.|Lengua: el texto argumentativo y las falacias, con el posicionamiento como producto final.",
+      "Tutoria: portar el posicionament al consell escolar o a l'assemblea de delegats com a exercici de participació real.|Tutoría: llevar el posicionamiento al consejo escolar o a la asamblea de delegados como ejercicio de participación real."
+    ],
+    trans: ["Unitat 8: el projecte final, una IA per al nostre centre (la idea, el prototip, les proves i els riscos, i la presentació amb el diploma).|Unidad 8: el proyecto final, una IA para nuestro centro (la idea, el prototipo, las pruebas y los riesgos, y la presentación con el diploma)."],
+    slides: [
+      { id: 's1', k: 'portada', t: "Projecte: l'assemblea «Hauríem de…?»|Proyecto: la asamblea «¿Deberíamos…?»", x: 'IA i societat|IA y sociedad', nota: "Sessió de projecte de la unitat 7.|Sesión de proyecto de la unidad 7." },
+      { id: 's2', k: 'pregunta', t: 'Quina moció debatem?|¿Qué moción debatimos?', x: "El consell escolar vol escoltar l'alumnat.|El consejo escolar quiere escuchar al alumnado.", nota: "Votació ràpida a mà alçada.|Votación rápida a mano alzada." },
+      { id: 's3', k: 'anim', t: 'Una bona moció|Una buena moción', anim: 'i74motion', x: 'Sí o no, una acció, concreta.|Sí o no, una acción, concreta.', nota: "Reformuleu una moció massa general.|Reformulad una moción demasiado general." },
+      { id: 's4', k: 'anim', t: 'Afirmació + prova + per tant|Afirmación + prueba + por lo tanto', anim: 'i74arg', x: 'Sense prova, és opinió.|Sin prueba, es opinión.', nota: "Construïu un argument tots junts.|Construid un argumento todos juntos." },
+      { id: 's5', k: 'anim', t: 'Les trampes dels debats|Las trampas de los debates', anim: 'i74fall', x: 'Atac, pendent, tot o res, tothom ho fa.|Ataque, pendiente, todo o nada, todo el mundo lo hace.', nota: "Demana un exemple de cada trampa.|Pide un ejemplo de cada trampa." },
+      { id: 's6', k: 'anim', t: 'Els rols|Los roles', anim: 'i74roles', x: 'Bàndols, moderador/a, verificador/a, relator/a, jurat.|Bandos, moderador/a, verificador/a, relator/a, jurado.', nota: "Repartiu els rols ara.|Repartid los roles ahora." },
+      { id: 's7', k: 'anim', t: "De l'opinió a la norma|De la opinión a la norma", anim: 'i74paper', x: 'Què, condicions, qui, quan es revisa.|Qué, condiciones, quién, cuándo se revisa.', nota: "És la fila més important de la rúbrica.|Es la fila más importante de la rúbrica." },
+      { id: 's8', k: 'activitat', t: "L'assemblea|La asamblea", timer: 18, punts: ['Preparació: 4 min.|Preparación: 4 min.', 'Obertura, proves i preguntes.|Apertura, pruebas y preguntas.', "Resum de l'altre bàndol i votació.|Resumen del otro bando y votación."], nota: "Controla el temps amb el cronòmetre.|Controla el tiempo con el cronómetro." },
+      { id: 's9', k: 'pregunta', t: 'Algú ha canviat d\'opinió?|¿Alguien ha cambiado de opinión?', x: 'Quina prova ha estat més convincent?|¿Qué prueba ha sido más convincente?', nota: "Valora el canvi d'opinió com a senyal d'escolta.|Valora el cambio de opinión como señal de escucha." },
+      { id: 's10', k: 'activitat', t: "A l'ordinador|En el ordenador", timer: 22, punts: ['Prova o opinió i les trampes.|Prueba u opinión y las trampas.', "L'assessor que s'inventa proves.|El asesor que se inventa pruebas.", 'El posicionament de la classe.|El posicionamiento de la clase.'], nota: "Fes la pausa activa quan hi arribin.|Haz la pausa activa cuando lleguen." },
+      { id: 's11', k: 'repte', t: "L'assessor del debat|El asesor del debate", punts: ['Una xifra inventada i una llei mal citada.|Una cifra inventada y una ley mal citada.', 'El verificador/a les rebutja.|El verificador/a las rechaza.'], nota: "Connecta-ho amb les al·lucinacions de la unitat 3.|Conéctalo con las alucinaciones de la unidad 3." },
+      { id: 's12', k: 'concepte', t: 'Nivell PRO|Nivel PRO', punts: ["Resumir bé l'argument contrari.|Resumir bien el argumento contrario.", 'El que li falta a una norma.|Lo que le falta a una norma.', 'Extra: per què cal verificar.|Extra: por qué hay que verificar.'], nota: "Per a 3r-4t d'ESO o qui vagi ràpid.|Para 3.º-4.º de ESO o quien vaya rápido." },
+      { id: 's13', k: 'repte', t: 'El posicionament|El posicionamiento', punts: ['Moció i decisió.|Moción y decisión.', 'Els millors arguments amb proves.|Los mejores argumentos con pruebas.', 'La norma i la revisió.|La norma y la revisión.'], nota: "Es desa al portafoli i es pot imprimir.|Se guarda en el portafolio y se puede imprimir." },
+      { id: 's14', k: 'concepte', t: 'La veu de la classe|La voz de la clase', punts: ['El relator/a llegeix el posicionament.|El relator/a lee el posicionamiento.', 'El portem al consell?|¿Lo llevamos al consejo?'], nota: "Si és possible, feu-ho de veritat.|Si es posible, hacedlo de verdad." },
+      { id: 's15', k: 'resum', t: 'Hem après a…|Hemos aprendido a…', punts: ['Argumentar amb proves i fonts.|Argumentar con pruebas y fuentes.', "Escoltar i resumir l'altre bàndol.|Escuchar y resumir al otro bando.", 'Fer normes completes sobre la IA.|Hacer normas completas sobre la IA.'], nota: "Propera unitat: el projecte final.|Próxima unidad: el proyecto final." },
+      { id: 's16', k: 'tiquet', t: 'Tiquet de sortida|Tique de salida', punts: ['Un argument amb les tres peces.|Un argumento con las tres piezas.', 'Una fal·làcia que has sentit.|Una falacia que has oído.'], nota: "Respostes orals o en un paper.|Respuestas orales o en un papel." }
+    ],
+    print: [
+      { id: 'p1', t: 'Targetes de proves i rols|Tarjetas de pruebas y roles', k: 'targetes',
+        intro: "Un conjunt per classe. Les proves tenen la font entre parèntesis: el verificador/a les pot comprovar. Repartiu els rols amb les targetes de rol.|Un conjunto por clase. Las pruebas tienen la fuente entre paréntesis: el verificador/a las puede comprobar. Repartid los roles con las tarjetas de rol.",
+        items: [{ t: "≈ 1 de cada 4 feines amb tasques exposades a la IA generativa (OIT, 2025) 💼|≈ 1 de cada 4 trabajos con tareas expuestas a la IA generativa (OIT, 2025) 💼" }, { t: "Centres de dades: ≈ 1,5 % de l'electricitat mundial el 2024 (AIE, 2025) ⚡|Centros de datos: ≈ 1,5 % de la electricidad mundial en 2024 (AIE, 2025) ⚡" }, { t: "Prohibit deduir emocions de l'alumnat als centres (llei europea d'IA, 2025) ⛔|Prohibido deducir emociones del alumnado en los centros (ley europea de IA, 2025) ⛔" }, { t: "Els xatbots han de dir que són IA (llei europea d'IA, agost de 2026) 🏷️|Los chatbots tienen que decir que son IA (ley europea de IA, agosto de 2026) 🏷️" }, { t: "Avaluar alumnat amb IA és d'alt risc (llei europea d'IA) ⚠️|Evaluar alumnado con IA es de alto riesgo (ley europea de IA) ⚠️" }, { t: "Les IA poden inventar dades i fonts (unitat 3) 🚩|Las IA pueden inventar datos y fuentes (unidad 3) 🚩" }, { t: "Una IA tutora fa preguntes i dona pistes (unitat 3) 🎓|Una IA tutora hace preguntas y da pistas (unidad 3) 🎓" }, { t: "El reconeixement facial s'equivoca més amb grups poc representats (unitats 2 i 7) 👥|El reconocimiento facial se equivoca más con grupos poco representados (unidades 2 y 7) 👥" }, { t: 'Rol: moderador/a ⏱️|Rol: moderador/a ⏱️' }, { t: 'Rol: verificador/a 🔍|Rol: verificador/a 🔍' }, { t: 'Rol: relator/a 📝|Rol: relator/a 📝' }, { t: 'Rol: jurat 🗳️|Rol: jurado 🗳️', n: 4 }] },
+      { id: 'p2', t: 'Full del relator/a|Hoja del relator/a', k: 'fitxa',
+        intro: "Per al relator/a: apunta els arguments de cada bàndol, les proves que el verificador/a ha acceptat o rebutjat i els acords.|Para el relator/a: apunta los argumentos de cada bando, las pruebas que el verificador/a ha aceptado o rechazado y los acuerdos.",
+        items: [
+          { q: "Moció i resultat de la votació:|Moción y resultado de la votación:", sol: "Per exemple: «Hauríem de permetre la IA per fer els deures?» Sí, amb condicions: 14 vots; no: 9; abstencions: 2.|Por ejemplo: «¿Deberíamos permitir la IA para hacer los deberes?» Sí, con condiciones: 14 votos; no: 9; abstenciones: 2." },
+          { q: "Arguments a favor (amb la prova i si el verificador/a l'ha acceptada):|Argumentos a favor (con la prueba y si el verificador/a la ha aceptado):", big: true, sol: "Resposta oberta: cada argument amb la seva prova i ✓ o ✕.|Respuesta abierta: cada argumento con su prueba y ✓ o ✕." },
+          { q: "Arguments en contra (amb la prova i si el verificador/a l'ha acceptada):|Argumentos en contra (con la prueba y si el verificador/a la ha aceptado):", big: true, sol: "Resposta oberta: cada argument amb la seva prova i ✓ o ✕.|Respuesta abierta: cada argumento con su prueba y ✓ o ✕." },
+          { q: "Acords: què es permet, condicions, qui en respon i quan es revisarà:|Acuerdos: qué se permite, condiciones, quién responde de ello y cuándo se revisará:", big: true, sol: "Per exemple: la IA com a tutora, declarant-ne l'ús; el que s'avalua, a classe; en respon el tutor/a; es revisa a final de curs.|Por ejemplo: la IA como tutora, declarando su uso; lo que se evalúa, en clase; responde el tutor/a; se revisa a final de curso." }
+        ] }
+    ]
+  }
+});
+
+/* ── unitat 8 ── */
+/* Tech IA · unitat 8 · guies del professor (mateix esquema que tech-guide-c1.js).
+   Projecte final: una IA per al nostre centre. Els equips escolten persones del centre, decideixen si la IA és l'eina justa,
+   construeixen un prototip amb una de les cinc eines del curs (classificador, model de llenguatge, assistent amb prompt, app
+   amb vibe coding o agent; PRO: dues combinades), el proven amb usuaris, en revisen els riscos (model card i fitxa de riscos),
+   en fan la versió 2 i el presenten en una fira amb la fitxa de transparència. La sessió i8-4 tanca el curs: diploma a l'app
+   i en paper. El projecte es guarda al portafoli: el nom, el problema i l'eina de la fitxa de la idea (i8-1) apareixen a les
+   sessions següents i el pas del prototip es converteix en el de l'eina triada. Tot es pot fer sense IA real. */
+Object.assign(TGUIDE, {
+
+  /* ---------- Sessió 1 · El problema i la idea ---------- */
+  'i8-1': {
+    intro: "Comença el projecte final del curs: el «Repte IA del centre». L'alumnat aprèn a començar pel problema i no per la tecnologia: fa entrevistes amb preguntes obertes a personatges del centre, troba necessitats reals, es pregunta si la IA és l'eina justa (o si n'hi ha prou amb una regla simple o amb una persona), coneix les cinc eines del curs que pot fer servir i escriu criteris d'èxit que es poden comprovar. A l'app classifica necessitats (cal IA o no?), descarta idees invasives d'una pluja d'idees amb IA i omple la fitxa de la idea, que es desa i acompanyarà el projecte fins a la presentació.|Empieza el proyecto final del curso: el «Reto IA del centro». El alumnado aprende a empezar por el problema y no por la tecnología: hace entrevistas con preguntas abiertas a personajes del centro, encuentra necesidades reales, se pregunta si la IA es la herramienta justa (o si basta con una regla simple o con una persona), conoce las cinco herramientas del curso que puede usar y escribe criterios de éxito que se pueden comprobar. En la app clasifica necesidades (¿hace falta IA o no?), descarta ideas invasivas de una lluvia de ideas con IA y rellena la ficha de la idea, que se guarda y acompañará al proyecto hasta la presentación.",
+    claus: [
+      "Primer el problema, després la tecnologia: concret, real i abastable en quatre sessions.|Primero el problema, después la tecnología: concreto, real y abarcable en cuatro sesiones.",
+      "Entrevistes amb preguntes obertes sobre fets, sense preguntes que porten la resposta i sense noms.|Entrevistas con preguntas abiertas sobre hechos, sin preguntas que llevan la respuesta y sin nombres.",
+      "Cal IA? Regla simple → no; exemples sense dades personals → potser; si un error fa mal → decideix una persona.|¿Hace falta IA? Regla simple → no; ejemplos sin datos personales → quizá; si un error hace daño → decide una persona.",
+      "Criteris d'èxit amb números i proves: seran les proves de la sessió 3.|Criterios de éxito con números y pruebas: serán las pruebas de la sesión 3."
+    ],
+    prev: ["Unitats 1-6: les cinc eines (model de llenguatge, classificador, assistent amb prompt, vibe coding i agent).|Unidades 1-6: las cinco herramientas (modelo de lenguaje, clasificador, asistente con prompt, vibe coding y agente).", "Unitat 7: l'eina justa, la privadesa i la piràmide de riscos.|Unidad 7: la herramienta justa, la privacidad y la pirámide de riesgos."],
+    obj: [
+      "L'alumne/a identifica un problema real del centre a partir d'entrevistes.|El alumno/a identifica un problema real del centro a partir de entrevistas.",
+      "L'alumne/a decideix de manera argumentada si la IA és l'eina adequada.|El alumno/a decide de manera argumentada si la IA es la herramienta adecuada.",
+      "L'alumne/a tria una eina del curs i formula criteris d'èxit comprovables.|El alumno/a elige una herramienta del curso y formula criterios de éxito comprobables.",
+      "L'alumne/a descarta idees que vulneren la privadesa o són d'alt risc.|El alumno/a descarta ideas que vulneran la privacidad o son de alto riesgo."
+    ],
+    comp: [
+      "Competència emprenedora (CE): detectar necessitats i generar idees de valor|Competencia emprendedora (CE): detectar necesidades y generar ideas de valor",
+      "Competència digital (CD5): resoldre problemes amb tecnologia triant l'eina adequada|Competencia digital (CD5): resolver problemas con tecnología eligiendo la herramienta adecuada",
+      "Competència en comunicació lingüística (CCL): entrevistar i escoltar|Competencia en comunicación lingüística (CCL): entrevistar y escuchar"
+    ],
+    vocab: [
+      ["Necessitat|Necesidad", "El que una persona necessita de veritat, que sovint no és el que diu a la primera.|Lo que una persona necesita de verdad, que a menudo no es lo que dice a la primera."],
+      ["Pregunta oberta|Pregunta abierta", "Pregunta que no es pot respondre amb sí o no i que fa explicar fets.|Pregunta que no se puede responder con sí o no y que hace explicar hechos."],
+      ["Criteri d'èxit|Criterio de éxito", "Condició comprovable que diu si el projecte ha aconseguit l'objectiu.|Condición comprobable que dice si el proyecto ha conseguido el objetivo."],
+      ["Abast|Alcance", "El que el projecte farà (i el que no) en el temps que hi ha.|Lo que el proyecto hará (y lo que no) en el tiempo que hay."],
+      ["Solució proporcionada|Solución proporcionada", "La que fa servir només els mitjans (i les dades) que calen per al problema.|La que usa solo los medios (y los datos) que hacen falta para el problema."]
+    ],
+    mat: {
+      aula: ["Un ordinador per alumne/a amb Numi Tech obert a la sessió «El problema i la idea»|Un ordenador por alumno/a con Numi Tech abierto en la sesión «El problema y la idea»", "Projector i la presentació d'aquesta sessió|Proyector y la presentación de esta sesión", "Equips de 3-4 persones per al projecte (es mantenen fins a i8-4)|Equipos de 3-4 personas para el proyecto (se mantienen hasta i8-4)"],
+      imprimir: ["Targetes de personatges (imprimible 1): un conjunt per classe|Tarjetas de personajes (imprimible 1): un conjunto por clase", "Guió d'entrevista (imprimible 2): un per parella|Guion de entrevista (imprimible 2): uno por pareja"],
+      prep: ["Imprimir les targetes de personatges i retallar-les (la necessitat amagada és a la mateixa targeta: plegueu-la).|Imprimir las tarjetas de personajes y recortarlas (la necesidad escondida está en la misma tarjeta: doblarla).", "Fer els equips del projecte abans de la classe, barrejant perfils.|Hacer los equipos del proyecto antes de la clase, mezclando perfiles.", "Si és possible, convidar una persona real del centre (conserge, bibliotecària…) perquè la puguin entrevistar.|Si es posible, invitar a una persona real del centro (conserje, bibliotecaria…) para que la puedan entrevistar."]
+    },
+    plan: [
+      { min: 4, t: 'El Repte IA del centre|El Reto IA del centro', fase: 'inici',
+        fa: "Presenta el repte i el criteri del jurat: útil, segura i honesta. Explica les quatre sessions del projecte (idea, prototip, proves, presentació i diploma). Fes els equips.|Presenta el reto y el criterio del jurado: útil, segura y honesta. Explica las cuatro sesiones del proyecto (idea, prototipo, pruebas, presentación y diploma). Haz los equipos.",
+        diu: ["Quina cosa petita del centre us agradaria millorar?|¿Qué cosa pequeña del centro os gustaría mejorar?"],
+        slides: ['s1', 's2'], app: "Encara no: pantalles abaixades.|Todavía no: pantallas bajadas.", org: "Tot el grup|Todo el grupo" },
+      { min: 10, t: 'Problema, entrevistes, cal IA?, eines i èxit|Problema, entrevistas, ¿hace falta IA?, herramientas y éxito', fase: 'teoria',
+        fa: "Amb les animacions: enamorar-se del problema, preguntes obertes, l'arbre «cal IA?», les cinc eines del curs i els criteris d'èxit. Presenta l'exemple de tot el projecte: BiblioGuia.|Con las animaciones: enamorarse del problema, preguntas abiertas, el árbol «¿hace falta IA?», las cinco herramientas del curso y los criterios de éxito. Presenta el ejemplo de todo el proyecto: BiblioGuía.",
+        diu: ["Quina diferència hi ha entre «fem una IA que…» i «a qui li passa què»?|¿Qué diferencia hay entre «hagamos una IA que…» y «a quién le pasa qué»?", "Per què «que funcioni bé» no és un criteri d'èxit?|¿Por qué «que funcione bien» no es un criterio de éxito?"],
+        slides: ['s3', 's4', 's5', 's6', 's7'], app: "Encara no: tota l'atenció a la projecció.|Todavía no: toda la atención en la proyección.", org: "Tot el grup|Todo el grupo" },
+      { min: 14, t: 'Entrevistes al centre|Entrevistas en el centro', fase: 'desconnectat',
+        fa: "En parelles, amb les targetes de personatges i el guió: preparen tres preguntes obertes, entrevisten 3 minuts (el personatge només revela la necessitat si la pregunta hi arriba), canvien de papers i trien el problema que es repeteix o fa més mal.|En parejas, con las tarjetas de personajes y el guion: preparan tres preguntas abiertas, entrevistan 3 minutos (el personaje solo revela la necesidad si la pregunta llega a ella), cambian de papeles y eligen el problema que se repite o hace más daño.",
+        diu: ["Quina pregunta ha fet sortir la necessitat amagada?|¿Qué pregunta ha hecho salir la necesidad escondida?", "Algú ha fet una pregunta que ja portava la resposta?|¿Alguien ha hecho una pregunta que ya llevaba la respuesta?"],
+        slides: ['s8', 's9'], app: "Cap: activitat sense pantalla.|Ninguna: actividad sin pantalla.", org: "Parelles i equips|Parejas y equipos" },
+      { min: 25, t: "A l'ordinador: cal IA?, criteris i la fitxa de la idea|En el ordenador: ¿hace falta IA?, criterios y la ficha de la idea", fase: 'ordinador',
+        fa: "Fan la sessió de l'app: cal IA?, la bona pregunta d'entrevista, la pausa activa, el camí del problema a la idea, el criteri d'èxit, la pluja d'idees amb IA (amb dues idees invasives) i la fitxa de la idea (es desa i es fa servir a les sessions següents).|Hacen la sesión de la app: ¿hace falta IA?, la buena pregunta de entrevista, la pausa activa, el camino del problema a la idea, el criterio de éxito, la lluvia de ideas con IA (con dos ideas invasivas) y la ficha de la idea (se guarda y se usa en las sesiones siguientes).",
+        diu: ["Per què heu descartat la càmera que passa llista?|¿Por qué habéis descartado la cámara que pasa lista?", "Quina eina heu triat? Per què és la justa?|¿Qué herramienta habéis elegido? ¿Por qué es la justa?"],
+        slides: ['s10', 's11', 's12', 's13'], app: "De «Recorda» fins al pas «Crea» (la fitxa de la idea).|De «Recuerda» hasta el paso «Crea» (la ficha de la idea).", org: "Equips (un ordinador per persona, la mateixa fitxa)|Equipos (un ordenador por persona, la misma ficha)" },
+      { min: 7, t: 'Tancament: les idees de la classe|Cierre: las ideas de la clase', fase: 'tancament',
+        fa: "Cada equip diu en una frase el nom, el problema i l'eina. Anuncia la sessió següent: el prototip. Com s'han sentit.|Cada equipo dice en una frase el nombre, el problema y la herramienta. Anuncia la sesión siguiente: el prototipo. Cómo se han sentido.",
+        diu: ["Quin criteri d'èxit fareu servir per saber si ho heu aconseguit?|¿Qué criterio de éxito usaréis para saber si lo habéis conseguido?"],
+        slides: ['s14', 's15', 's16'], app: "«Tancament»: les preguntes finals i com m'he sentit.|«Cierre»: las preguntas finales y cómo me he sentido.", org: "Tot el grup|Todo el grupo" }
+    ],
+    errors: [
+      ["L'equip comença per «volem fer un xatbot» sense problema.|El equipo empieza por «queremos hacer un chatbot» sin problema.", "Pregunta: a qui li passa què, quan i on? Torneu a les notes de les entrevistes.|Pregunta: ¿a quién le pasa qué, cuándo y dónde? Volved a las notas de las entrevistas."],
+      ["Fa preguntes tancades o que porten la resposta.|Hace preguntas cerradas o que llevan la respuesta.", "Transforma-les: «Oi que…?» → «Explica'm l'última vegada que…».|Transfórmalas: «¿A que…?» → «Cuéntame la última vez que…»."],
+      ["Tria un problema massa gran («millorar l'institut»).|Elige un problema demasiado grande («mejorar el instituto»).", "Retalla'l: quina part es pot millorar en quatre sessions?|Recórtalo: ¿qué parte se puede mejorar en cuatro sesiones?"],
+      ["Proposa una idea que fa servir cares o dades de l'alumnat.|Propone una idea que usa caras o datos del alumnado.", "Connecta-ho amb la unitat 7 (privadesa i piràmide de riscos) i busqueu una versió sense dades personals.|Conéctalo con la unidad 7 (privacidad y pirámide de riesgos) y buscad una versión sin datos personales."],
+      ["Escriu criteris d'èxit sense números.|Escribe criterios de éxito sin números.", "Pregunta: com ho comprovareu a la sessió 3? Quantes persones? Quants encerts?|Pregunta: ¿cómo lo comprobaréis en la sesión 3? ¿Cuántas personas? ¿Cuántos aciertos?"]
+    ],
+    diff: {
+      mes: "Nivell PRO: com triar entre tres problemes, el camí amb els riscos i el criteri d'èxit que no és honest (provat amb les dades d'entrenament). A la fitxa, una segona eina per combinar. Repte extra: la IA que posa notes.|Nivel PRO: cómo elegir entre tres problemas, el camino con los riesgos y el criterio de éxito que no es honesto (probado con los datos de entrenamiento). En la ficha, una segunda herramienta para combinar. Reto extra: la IA que pone notas.",
+      menys: "Donar tres problemes ja trobats (BiblioGuia, objectes perduts, acollida de l'alumnat nou) perquè l'equip en triï un. Fer la fitxa de la idea amb l'exemple a la projecció.|Dar tres problemas ya encontrados (BiblioGuía, objetos perdidos, acogida del alumnado nuevo) para que el equipo elija uno. Hacer la ficha de la idea con el ejemplo en la proyección."
+    },
+    aval: {
+      ticket: ["Escriu una bona pregunta d'entrevista per al vostre problema.|Escribe una buena pregunta de entrevista para vuestro problema.", "Per què la IA és (o no és) l'eina justa per al vostre projecte?|¿Por qué la IA es (o no es) la herramienta justa para vuestro proyecto?"],
+      rubric: [
+        ["Problema|Problema", "Problema concret, real (de les entrevistes) i abastable.|Problema concreto, real (de las entrevistas) y abarcable.", "Problema vague, inventat o massa gran.|Problema vago, inventado o demasiado grande."],
+        ["Entrevista|Entrevista", "Preguntes obertes sobre fets i notes sense noms.|Preguntas abiertas sobre hechos y notas sin nombres.", "Preguntes tancades o que porten la resposta.|Preguntas cerradas o que llevan la respuesta."],
+        ["Decisió sobre la IA|Decisión sobre la IA", "Justifica per què la IA és l'eina justa i descarta usos invasius.|Justifica por qué la IA es la herramienta justa y descarta usos invasivos.", "Tria IA perquè sí.|Elige IA porque sí."],
+        ["Criteris d'èxit|Criterios de éxito", "Criteris amb números que es poden comprovar.|Criterios con números que se pueden comprobar.", "Criteris vagues («que vagi bé»).|Criterios vagos («que vaya bien»)."]
+      ]
+    },
+    casa: "Expliqueu a casa el problema que voleu resoldre i feu-los una pregunta oberta: «Explica'm l'última vegada que…». Afegiu el que us diguin a les notes (sense noms).|Explicad en casa el problema que queréis resolver y hacedles una pregunta abierta: «Cuéntame la última vez que…». Añadid lo que os digan a las notas (sin nombres).",
+    faq: [
+      ["Cada alumne/a ha d'omplir la fitxa de la idea?|¿Cada alumno/a tiene que rellenar la ficha de la idea?", "Sí: es desa al portafoli de cadascú i és la que fa servir l'app a les sessions següents (el nom, el problema i l'eina hi apareixen). Que l'equip la pensi junt i cada persona l'escrigui al seu ordinador.|Sí: se guarda en el portafolio de cada uno y es la que usa la app en las sesiones siguientes (el nombre, el problema y la herramienta aparecen en ellas). Que el equipo la piense junto y cada persona la escriba en su ordenador."],
+      ["I si un equip conclou que no cal IA?|¿Y si un equipo concluye que no hace falta IA?", "És una conclusió excel·lent. Poden fer una app sense IA a dins amb vibe coding (eina 4: l'app) o reformular el problema cap a una part on la IA sí que aporti.|Es una conclusión excelente. Pueden hacer una app sin IA dentro con vibe coding (herramienta 4: la app) o reformular el problema hacia una parte donde la IA sí aporte."],
+      ["Es poden fer servir eines d'IA externes?|¿Se pueden usar herramientas de IA externas?", "No cal: les cinc eines del curs són a l'app i funcionen sense IA real. La IA en directe només surt si el centre l'ha activat i amb els límits de sempre.|No hace falta: las cinco herramientas del curso están en la app y funcionan sin IA real. La IA en directo solo sale si el centro la ha activado y con los límites de siempre."]
+    ],
+    tec: [
+      ["La fitxa de la idea no deixa desar.|La ficha de la idea no deja guardar.", "Cal triar l'eina del prototip (la segona eina és opcional) i omplir cada text amb el mínim de caràcters.|Hay que elegir la herramienta del prototipo (la segunda herramienta es opcional) y rellenar cada texto con el mínimo de caracteres."],
+      ["He desat la fitxa amb un nom equivocat.|He guardado la ficha con un nombre equivocado.", "Torneu a fer el pas: la fitxa nova substitueix l'anterior i és la que fan servir les sessions següents.|Volved a hacer el paso: la ficha nueva sustituye a la anterior y es la que usan las sesiones siguientes."]
+    ],
+    seg: ["A les entrevistes i a les fitxes no hi ha d'haver noms ni dades de persones reals. Si entrevisteu personal del centre, demaneu-los permís i no apunteu res que els identifiqui.|En las entrevistas y en las fichas no debe haber nombres ni datos de personas reales. Si entrevistáis a personal del centro, pedidles permiso y no apuntéis nada que los identifique."],
+    extra: [
+      "Emprenedoria: el mètode de pensament de disseny (empatitzar, definir, idear, prototipar, provar) aplicat al centre.|Emprendimiento: el método de pensamiento de diseño (empatizar, definir, idear, prototipar, probar) aplicado al centro.",
+      "Tutoria: presentar les necessitats trobades al consell de delegats encara que no es resolguin amb IA.|Tutoría: presentar las necesidades encontradas al consejo de delegados aunque no se resuelvan con IA."
+    ],
+    trans: ["Sessió i8-2: el prototip (especificació i versió 1 amb l'eina triada).|Sesión i8-2: el prototipo (especificación y versión 1 con la herramienta elegida)."],
+    slides: [
+      { id: 's1', k: 'portada', t: 'El problema i la idea|El problema y la idea', x: 'Projecte: una IA per al nostre centre|Proyecto: una IA para nuestro centro', nota: "Primera sessió del projecte final.|Primera sesión del proyecto final." },
+      { id: 's2', k: 'pregunta', t: 'Útil, segura i honesta|Útil, segura y honesta', x: 'El criteri del jurat del Repte IA.|El criterio del jurado del Reto IA.', nota: "Recull problemes petits del centre.|Recoge problemas pequeños del centro." },
+      { id: 's3', k: 'anim', t: "Enamora't del problema|Enamórate del problema", anim: 'i81prob', x: 'Concret, real, abastable.|Concreto, real, abarcable.', nota: "Reformula una idea «fem una IA que…» en un problema.|Reformula una idea «hagamos una IA que…» en un problema." },
+      { id: 's4', k: 'anim', t: 'Entrevistes: pregunta, no venguis|Entrevistas: pregunta, no vendas', anim: 'i81talk', x: 'Preguntes obertes sobre fets.|Preguntas abiertas sobre hechos.', nota: "Fes una entrevista d'exemple amb un voluntari/ària.|Haz una entrevista de ejemplo con un voluntario/a." },
+      { id: 's5', k: 'anim', t: "És la IA l'eina justa?|¿Es la IA la herramienta justa?", anim: 'i81tool', x: 'Regla simple, exemples, i si falla?|Regla simple, ejemplos, ¿y si falla?', nota: "Recorda l'eina justa (i7-2) i la piràmide (i7-3).|Recuerda la herramienta justa (i7-2) y la pirámide (i7-3)." },
+      { id: 's6', k: 'anim', t: 'Les cinc eines del curs|Las cinco herramientas del curso', anim: 'i81kit', x: 'Classificador, model, assistent, app, agent.|Clasificador, modelo, asistente, app, agente.', nota: "Amb el PRO, se'n poden combinar dues.|Con el PRO, se pueden combinar dos." },
+      { id: 's7', k: 'anim', t: "Criteris d'èxit|Criterios de éxito", anim: 'i81goal', x: 'Números que es poden comprovar.|Números que se pueden comprobar.', nota: "Exemple: BiblioGuia, 3 de 4 alumnes troben un llibre en 5 minuts.|Ejemplo: BiblioGuía, 3 de 4 alumnos encuentran un libro en 5 minutos." },
+      { id: 's8', k: 'activitat', t: 'Entrevistes al centre|Entrevistas en el centro', timer: 14, punts: ['Tres preguntes obertes.|Tres preguntas abiertas.', 'Entrevista de 3 minuts i canvi.|Entrevista de 3 minutos y cambio.', 'Necessitats sense noms.|Necesidades sin nombres.'], nota: "Targetes de personatges i guió d'entrevista.|Tarjetas de personajes y guion de entrevista." },
+      { id: 's9', k: 'pregunta', t: 'Quina necessitat ha sortit?|¿Qué necesidad ha salido?', x: 'Quina pregunta l\'ha fet sortir?|¿Qué pregunta la ha hecho salir?', nota: "Apunta a la pissarra les necessitats de la classe.|Apunta en la pizarra las necesidades de la clase." },
+      { id: 's10', k: 'activitat', t: "A l'ordinador|En el ordenador", timer: 25, punts: ['Cal IA? i la bona pregunta.|¿Hace falta IA? y la buena pregunta.', 'La pluja d\'idees amb IA.|La lluvia de ideas con IA.', 'La fitxa de la idea.|La ficha de la idea.'], nota: "Fes la pausa activa quan hi arribin.|Haz la pausa activa cuando lleguen." },
+      { id: 's11', k: 'repte', t: "La pluja d'idees amb IA|La lluvia de ideas con IA", punts: ['Dues idees invasives.|Dos ideas invasivas.', 'Decidir què no fem també és dissenyar.|Decidir qué no hacemos también es diseñar.'], nota: "Connecta-ho amb la privadesa (i7-3).|Conéctalo con la privacidad (i7-3)." },
+      { id: 's12', k: 'concepte', t: 'Nivell PRO|Nivel PRO', punts: ['Triar entre tres problemes.|Elegir entre tres problemas.', "Un criteri d'èxit honest.|Un criterio de éxito honesto.", 'Una segona eina per combinar.|Una segunda herramienta para combinar.'], nota: "Per a 3r-4t d'ESO o qui vagi ràpid.|Para 3.º-4.º de ESO o quien vaya rápido." },
+      { id: 's13', k: 'repte', t: 'La fitxa de la idea|La ficha de la idea', punts: ['Nom, problema i per què IA.|Nombre, problema y por qué IA.', "L'eina (i la segona, PRO).|La herramienta (y la segunda, PRO).", "Criteris d'èxit i què no farà mai.|Criterios de éxito y qué no hará nunca."], nota: "Es desa i acompanya el projecte fins a i8-4.|Se guarda y acompaña el proyecto hasta i8-4." },
+      { id: 's14', k: 'concepte', t: 'Les idees de la classe|Las ideas de la clase', punts: ['Nom, problema i eina en una frase.|Nombre, problema y herramienta en una frase.', 'Propera sessió: el prototip.|Próxima sesión: el prototipo.'], nota: "Fes una llista dels projectes a la pissarra.|Haz una lista de los proyectos en la pizarra." },
+      { id: 's15', k: 'resum', t: 'Avui hem après…|Hoy hemos aprendido…', punts: ['Primer el problema.|Primero el problema.', 'Escoltar amb preguntes obertes.|Escuchar con preguntas abiertas.', "Triar l'eina justa i criteris comprovables.|Elegir la herramienta justa y criterios comprobables."], nota: "Llegiu-ho junts.|Leedlo juntos." },
+      { id: 's16', k: 'tiquet', t: 'Tiquet de sortida|Tique de salida', punts: ["Una bona pregunta d'entrevista.|Una buena pregunta de entrevista.", 'Per què la IA (o no) per al vostre projecte.|Por qué la IA (o no) para vuestro proyecto.'], nota: "Respostes orals o en un paper.|Respuestas orales o en un papel." }
+    ],
+    print: [
+      { id: 'p1', t: 'Targetes de personatges|Tarjetas de personajes', k: 'targetes',
+        intro: "Un conjunt per classe. Plegueu cada targeta: a dalt, el personatge; a dins, la necessitat amagada (només es diu si una pregunta oberta hi arriba). Personatges inventats.|Un conjunto por clase. Doblad cada tarjeta: arriba, el personaje; dentro, la necesidad escondida (solo se dice si una pregunta abierta llega a ella). Personajes inventados.",
+        items: [{ t: "Bibliotecària: a l'hora del pati no pot atendre tothom que busca llibre 📚|Bibliotecaria: a la hora del patio no puede atender a todos los que buscan libro 📚" }, { t: 'Conserge: cada setmana hi ha una caixa plena d\'objectes perduts que ningú no reclama 🎒|Conserje: cada semana hay una caja llena de objetos perdidos que nadie reclama 🎒' }, { t: "Alumne de 1r: el primer mes es perdia buscant les aules 🗺️|Alumno de 1.º: el primer mes se perdía buscando las aulas 🗺️" }, { t: "Cuiner del menjador: es llença menjar perquè no sap quants plats calen 🍽️|Cocinero del comedor: se tira comida porque no sabe cuántos platos hacen falta 🍽️" }, { t: "Professora de l'hort: les plantes s'assequen els caps de setmana de calor 🌱|Profesora del huerto: las plantas se secan los fines de semana de calor 🌱" }, { t: "Alumna de 3r: li costa practicar l'anglès parlat fora de classe 🗣️|Alumna de 3.º: le cuesta practicar el inglés hablado fuera de clase 🗣️" }, { t: "Tutor: les famílies no s'assabenten de les sortides a temps 📣|Tutor: las familias no se enteran de las salidas a tiempo 📣" }, { t: "Delegada: al pati, el reciclatge acaba barrejat als contenidors ♻️|Delegada: en el patio, el reciclaje acaba mezclado en los contenedores ♻️" }] },
+      { id: 'p2', t: "Guió d'entrevista|Guion de entrevista", k: 'fitxa',
+        intro: "Un per parella. Escriviu les preguntes abans i apunteu el que us diguin, sense noms.|Uno por pareja. Escribid las preguntas antes y apuntad lo que os digan, sin nombres.",
+        items: [
+          { q: "Les nostres tres preguntes obertes (sobre fets: «Explica'm l'última vegada que…»):|Nuestras tres preguntas abiertas (sobre hechos: «Cuéntame la última vez que…»):", big: true, sol: "Per exemple: «Explica'm l'última vegada que vas buscar un llibre. Què va passar? Què et va costar més?»|Por ejemplo: «Cuéntame la última vez que buscaste un libro. ¿Qué pasó? ¿Qué te costó más?»" },
+          { q: "Què ens ha dit (fets, sense noms):|Qué nos ha dicho (hechos, sin nombres):", big: true, sol: "Resposta oberta.|Respuesta abierta." },
+          { q: "La necessitat que hem trobat i a qui afecta:|La necesidad que hemos encontrado y a quién afecta:", sol: "Per exemple: l'alumnat de 1r no troba llibres que li agradin i la bibliotecària no arriba a tothom.|Por ejemplo: el alumnado de 1.º no encuentra libros que le gusten y la bibliotecaria no llega a todos." },
+          { q: "Cal IA? (regla simple / exemples sense noms / i si s'equivoca?):|¿Hace falta IA? (regla simple / ejemplos sin nombres / ¿y si se equivoca?):", sol: "Per exemple: sí, perquè cal entendre el que demana cada persona; si s'equivoca, només recomana un llibre que no agrada.|Por ejemplo: sí, porque hay que entender lo que pide cada persona; si se equivoca, solo recomienda un libro que no gusta." }
+        ] }
+    ]
+  },
+
+  /* ---------- Sessió 2 · El prototip ---------- */
+  'i8-2': {
+    intro: "Els equips passen de la idea al prototip. Aprenen què és un prototip (la versió més petita que es pot provar), escriuen una especificació d'una pàgina (què rep, què torna, amb quines dades inventades i sense noms, i tres proves d'acceptació), fan un prototip de paper per provar el flux amb persones i construeixen la versió 1 amb l'eina triada a la fitxa de la idea. El pas del prototip de l'app es converteix en el de l'eina de cada alumne/a (classificador, model de llenguatge, assistent amb prompt, app amb vibe coding o agent). Amb el nivell PRO, hi combinen una segona eina.|Los equipos pasan de la idea al prototipo. Aprenden qué es un prototipo (la versión más pequeña que se puede probar), escriben una especificación de una página (qué recibe, qué devuelve, con qué datos inventados y sin nombres, y tres pruebas de aceptación), hacen un prototipo de papel para probar el flujo con personas y construyen la versión 1 con la herramienta elegida en la ficha de la idea. El paso del prototipo de la app se convierte en el de la herramienta de cada alumno/a (clasificador, modelo de lenguaje, asistente con prompt, app con vibe coding o agente). Con el nivel PRO, combinan una segunda herramienta.",
+    claus: [
+      "Prototip: la versió més petita que es pot provar; fa bé la tasca principal.|Prototipo: la versión más pequeña que se puede probar; hace bien la tarea principal.",
+      "Especificació: entra, surt, dades (inventades, variades i sense noms) i proves d'acceptació.|Especificación: entra, sale, datos (inventados, variados y sin nombres) y pruebas de aceptación.",
+      "Prototip de paper primer: és la manera més barata de trobar errors de flux.|Prototipo de papel primero: es la manera más barata de encontrar errores de flujo.",
+      "Un canvi cada vegada i totes les proves de nou; desar les versions.|Un cambio cada vez y todas las pruebas de nuevo; guardar las versiones."
+    ],
+    prev: ["Sessió i8-1: la fitxa de la idea (nom, problema, eina i criteris d'èxit).|Sesión i8-1: la ficha de la idea (nombre, problema, herramienta y criterios de éxito).", "Unitat 5: especificació, proves d'acceptació, versions i regressions.|Unidad 5: especificación, pruebas de aceptación, versiones y regresiones."],
+    obj: [
+      "L'alumne/a redacta l'especificació d'un prototip amb proves d'acceptació.|El alumno/a redacta la especificación de un prototipo con pruebas de aceptación.",
+      "L'alumne/a prova un flux amb un prototip de paper.|El alumno/a prueba un flujo con un prototipo de papel.",
+      "L'alumne/a construeix la versió 1 amb una eina d'IA del curs i la desa.|El alumno/a construye la versión 1 con una herramienta de IA del curso y la guarda.",
+      "L'alumne/a (PRO) combina dues eines en un sistema.|El alumno/a (PRO) combina dos herramientas en un sistema."
+    ],
+    comp: [
+      "Competència digital (CD3): crear continguts i prototips digitals|Competencia digital (CD3): crear contenidos y prototipos digitales",
+      "Competència en ciència i tecnologia (STEM): procés tecnològic: especificar, construir i provar|Competencia en ciencia y tecnología (STEM): proceso tecnológico: especificar, construir y probar",
+      "Competència emprenedora (CE): convertir una idea en una solució provable|Competencia emprendedora (CE): convertir una idea en una solución probable"
+    ],
+    vocab: [
+      ["Prototip|Prototipo", "Primera versió petita d'un producte, feta per provar-la amb persones.|Primera versión pequeña de un producto, hecha para probarla con personas."],
+      ["Especificació|Especificación", "Document curt que diu què ha de fer el prototip i com es comprovarà.|Documento corto que dice qué tiene que hacer el prototipo y cómo se comprobará."],
+      ["Prova d'acceptació|Prueba de aceptación", "«Si li dono…, ha de…»: comprova que el prototip fa el que s'ha demanat.|«Si le doy…, tiene que…»: comprueba que el prototipo hace lo que se ha pedido."],
+      ["Prototip de paper|Prototipo de papel", "Simulació amb fulls i una persona que fa de sistema per provar el flux abans de programar.|Simulación con hojas y una persona que hace de sistema para probar el flujo antes de programar."],
+      ["Sistema|Sistema", "Diverses eines que treballen juntes i es passen la feina.|Varias herramientas que trabajan juntas y se pasan el trabajo."]
+    ],
+    mat: {
+      aula: ["Un ordinador per alumne/a amb Numi Tech obert a la sessió «El prototip»|Un ordenador por alumno/a con Numi Tech abierto en la sesión «El prototipo»", "Projector i la presentació d'aquesta sessió|Proyector y la presentación de esta sesión", "Fulls, retoladors i una carpeta per equip (prototip de paper)|Hojas, rotuladores y una carpeta por equipo (prototipo de papel)"],
+      imprimir: ["Especificació i prototip de paper (imprimible 1): un per equip|Especificación y prototipo de papel (imprimible 1): uno por equipo"],
+      prep: ["Comprovar que cada alumne/a té desada la fitxa de la idea (al portafoli). Si no, que la refaci a i8-1 o que faci servir l'exemple BiblioGuia.|Comprobar que cada alumno/a tiene guardada la ficha de la idea (en el portafolio). Si no, que la rehaga en i8-1 o que use el ejemplo BiblioGuía.", "Repassar les cinc eines: fer abans el pas del prototip amb dues eines diferents (canviant l'eina a l'especificació).|Repasar las cinco herramientas: hacer antes el paso del prototipo con dos herramientas distintas (cambiando la herramienta en la especificación).", "Si algun equip fa servir la càmera o el micròfon, preparar un racó tranquil i recordar que no es desa res.|Si algún equipo usa la cámara o el micrófono, preparar un rincón tranquilo y recordar que no se guarda nada."]
+    },
+    plan: [
+      { min: 4, t: 'De la idea al prototip|De la idea al prototipo', fase: 'inici',
+        fa: "Recorda les fitxes de la idea (cada equip en diu el nom i l'eina). Presenta la regla del dia: res de construir-ho tot alhora.|Recuerda las fichas de la idea (cada equipo dice su nombre y la herramienta). Presenta la regla del día: nada de construirlo todo a la vez.",
+        diu: ["Quina és la tasca principal del vostre projecte, en una frase?|¿Cuál es la tarea principal de vuestro proyecto, en una frase?"],
+        slides: ['s1', 's2'], app: "Encara no: pantalles abaixades.|Todavía no: pantallas bajadas.", org: "Tot el grup|Todo el grupo" },
+      { min: 9, t: 'Prototip, especificació, dades, combinar i versions|Prototipo, especificación, datos, combinar y versiones', fase: 'teoria',
+        fa: "Amb les animacions: prototip petit i provable, l'especificació (entra, surt, proves), dades variades i sense noms, dues eines en un sistema i les versions.|Con las animaciones: prototipo pequeño y probable, la especificación (entra, sale, pruebas), datos variados y sin nombres, dos herramientas en un sistema y las versiones.",
+        diu: ["Què deixaríeu fora de la versió 1?|¿Qué dejaríais fuera de la versión 1?"],
+        slides: ['s3', 's4', 's5', 's6', 's7'], app: "Encara no: tota l'atenció a la projecció.|Todavía no: toda la atención en la proyección.", org: "Tot el grup|Todo el grupo" },
+      { min: 12, t: 'El prototip de paper|El prototipo de papel', fase: 'desconnectat',
+        fa: "En equip: dibuixen les pantalles o els missatges, una persona fa de «IA» darrere d'una carpeta, una altra d'usuari/ària i una tercera apunta on dubta. Canvien una cosa del flux i ho tornen a provar. Comencen l'especificació en paper.|En equipo: dibujan las pantallas o los mensajes, una persona hace de «IA» detrás de una carpeta, otra de usuario/a y una tercera apunta dónde duda. Cambian una cosa del flujo y lo vuelven a probar. Empiezan la especificación en papel.",
+        diu: ["On ha dubtat l'usuari/ària? Què heu canviat?|¿Dónde ha dudado el usuario/a? ¿Qué habéis cambiado?"],
+        slides: ['s8', 's9'], app: "Cap: activitat sense pantalla.|Ninguna: actividad sin pantalla.", org: "Equips|Equipos" },
+      { min: 29, t: "A l'ordinador: especificació i versió 1|En el ordenador: especificación y versión 1", fase: 'ordinador',
+        fa: "Fan la sessió de l'app: què va a l'especificació, el prototip de paper, la pausa activa, l'especificació (es desa i pot canviar l'eina), la versió 1 amb l'eina triada (es desa), la segona eina (opcional; obligatòria amb PRO), què fer si falla una prova i la revisió de la versió 1.|Hacen la sesión de la app: qué va en la especificación, el prototipo de papel, la pausa activa, la especificación (se guarda y puede cambiar la herramienta), la versión 1 con la herramienta elegida (se guarda), la segunda herramienta (opcional; obligatoria con PRO), qué hacer si falla una prueba y la revisión de la versión 1.",
+        diu: ["Quina prova d'acceptació us ha costat més de passar?|¿Qué prueba de aceptación os ha costado más pasar?", "(PRO) Com es passen la feina les dues eines?|(PRO) ¿Cómo se pasan el trabajo las dos herramientas?"],
+        slides: ['s10', 's11', 's12', 's13'], app: "De «Recorda» fins a la revisió de la versió 1.|De «Recuerda» hasta la revisión de la versión 1.", org: "Equips (cadascú al seu ordinador)|Equipos (cada uno en su ordenador)" },
+      { min: 6, t: 'Tancament: la versió 1|Cierre: la versión 1', fase: 'tancament',
+        fa: "Cada equip ensenya en 30 segons la seva versió 1 (des del portafoli). Anuncia la sessió de proves amb usuaris d'un altre equip. Com s'han sentit.|Cada equipo enseña en 30 segundos su versión 1 (desde el portafolio). Anuncia la sesión de pruebas con usuarios de otro equipo. Cómo se han sentido.",
+        diu: ["Què creieu que fallarà quan el provi algú altre?|¿Qué creéis que fallará cuando lo pruebe otra persona?"],
+        slides: ['s14', 's15', 's16'], app: "«Tancament»: les preguntes finals i com m'he sentit.|«Cierre»: las preguntas finales y cómo me he sentido.", org: "Tot el grup|Todo el grupo" }
+    ],
+    errors: [
+      ["Vol posar-ho tot a la versió 1.|Quiere poner todo en la versión 1.", "Tasca principal i tres proves; la resta, a la llista «per a més endavant».|Tarea principal y tres pruebas; el resto, a la lista «para más adelante»."],
+      ["Les proves d'acceptació són desitjos («que sigui ràpid»).|Las pruebas de aceptación son deseos («que sea rápido»).", "Format «si li dono…, ha de…». Si no ho pots provar, no és una prova.|Formato «si le doy…, tiene que…». Si no lo puedes probar, no es una prueba."],
+      ["El pas del prototip mostra una eina que no és la seva.|El paso del prototipo muestra una herramienta que no es la suya.", "Agafa l'eina de la fitxa més recent: que la triï bé a l'especificació (pas anterior) i torni a entrar al pas.|Coge la herramienta de la ficha más reciente: que la elija bien en la especificación (paso anterior) y vuelva a entrar en el paso."],
+      ["Fa servir fotos de companys o noms reals com a exemples.|Usa fotos de compañeros o nombres reales como ejemplos.", "Dibuixos, objectes o textos inventats. Recorda la privadesa (unitat 7).|Dibujos, objetos o textos inventados. Recuerda la privacidad (unidad 7)."],
+      ["Canvia moltes coses alhora i no sap què ho ha arreglat.|Cambia muchas cosas a la vez y no sabe qué lo ha arreglado.", "Un canvi cada vegada i totes les proves de nou.|Un cambio cada vez y todas las pruebas de nuevo."]
+    ],
+    diff: {
+      mes: "Nivell PRO: la versió 1 més exigent (més classes, més exemples, totes les peces del prompt, el comentari que signa el canvi, cap permís de més) i la segona eina obligatòria. Preguntes de la prova d'acceptació i de la regressió. Repte extra: per què un prototip petit.|Nivel PRO: la versión 1 más exigente (más clases, más ejemplos, todas las piezas del prompt, el comentario que firma el cambio, ningún permiso de más) y la segunda herramienta obligatoria. Preguntas de la prueba de aceptación y de la regresión. Reto extra: por qué un prototipo pequeño.",
+      menys: "Fer l'especificació en equip amb l'exemple BiblioGuia a la vista i triar l'eina més assequible (l'assistent amb prompt amb els botons de peces). Saltar la segona eina.|Hacer la especificación en equipo con el ejemplo BiblioGuía a la vista y elegir la herramienta más asequible (el asistente con prompt con los botones de piezas). Saltar la segunda herramienta."
+    },
+    aval: {
+      ticket: ["Escriu una prova d'acceptació del vostre prototip.|Escribe una prueba de aceptación de vuestro prototipo.", "Què heu deixat fora de la versió 1 i per què?|¿Qué habéis dejado fuera de la versión 1 y por qué?"],
+      rubric: [
+        ["Especificació|Especificación", "Entrades, sortides, dades sense noms i tres proves comprovables.|Entradas, salidas, datos sin nombres y tres pruebas comprobables.", "Especificació vaga o sense proves.|Especificación vaga o sin pruebas."],
+        ["Prototip de paper|Prototipo de papel", "Prova el flux amb una persona i en canvia alguna cosa.|Prueba el flujo con una persona y cambia algo.", "No el prova o no canvia res.|No lo prueba o no cambia nada."],
+        ["Versió 1|Versión 1", "Funciona, passa les comprovacions de l'app i està desada.|Funciona, pasa las comprobaciones de la app y está guardada.", "No arriba a funcionar.|No llega a funcionar."],
+        ["Procés|Proceso", "Fa canvis d'un en un i torna a provar.|Hace cambios de uno en uno y vuelve a probar.", "Canvia moltes coses alhora sense provar.|Cambia muchas cosas a la vez sin probar."]
+      ]
+    },
+    casa: "Ensenyeu a casa la versió 1 del prototip (és al portafoli) i demaneu-los que la provin sense explicar-los res. On dubten? Apunteu-ho per a la sessió de proves.|Enseñad en casa la versión 1 del prototipo (está en el portafolio) y pedidles que la prueben sin explicarles nada. ¿Dónde dudan? Apuntadlo para la sesión de pruebas.",
+    faq: [
+      ["Com sap l'app quina eina ha de fer servir cada alumne/a?|¿Cómo sabe la app qué herramienta tiene que usar cada alumno/a?", "Llegeix l'última fitxa desada del projecte (la de l'especificació o, si no, la de la idea). Si un alumne/a no té cap fitxa, surt l'assistent amb prompt de l'exemple BiblioGuia. Per canviar d'eina, n'hi ha prou de tornar a desar l'especificació.|Lee la última ficha guardada del proyecto (la de la especificación o, si no, la de la idea). Si un alumno/a no tiene ninguna ficha, sale el asistente con prompt del ejemplo BiblioGuía. Para cambiar de herramienta, basta con volver a guardar la especificación."],
+      ["El prototip de l'agent no és exactament el del nostre projecte.|El prototipo del agente no es exactamente el de nuestro proyecto.", "És un agent genèric de projecte (llegir dades, buscar, resumir i avisar) amb els riscos típics: serveix per decidir el pla i la taula de permisos, que després traslladen a la fitxa de riscos.|Es un agente genérico de proyecto (leer datos, buscar, resumir y avisar) con los riesgos típicos: sirve para decidir el plan y la tabla de permisos, que después trasladan a la ficha de riesgos."],
+      ["Com combinen dues eines si són pantalles separades?|¿Cómo combinan dos herramientas si son pantallas separadas?", "Cada eina fa la seva part i l'equip explica a l'especificació i al pitch com es passen la feina (per exemple: l'assistent respon i l'agent envia l'avís preguntant abans).|Cada herramienta hace su parte y el equipo explica en la especificación y en el pitch cómo se pasan el trabajo (por ejemplo: el asistente responde y el agente envía el aviso preguntando antes)."]
+    ],
+    tec: [
+      ["El classificador no arriba a l'encert que es demana.|El clasificador no llega al acierto que se pide.", "Més exemples i més variats de cada classe (com a la unitat 2) i classes ben diferents entre elles.|Más ejemplos y más variados de cada clase (como en la unidad 2) y clases bien distintas entre ellas."],
+      ["L'app no surt amb la descripció del projecte.|La app no sale con la descripción del proyecto.", "La IA simulada fa apps de plantilles (comptador, llista, preguntes, dau, temporitzador…). Descriviu el projecte amb una d'aquestes formes, amb les tres coses: què es veu, què passa quan… i detalls.|La IA simulada hace apps de plantillas (contador, lista, preguntas, dado, temporizador…). Describid el proyecto con una de estas formas, con las tres cosas: qué se ve, qué pasa cuando… y detalles."]
+    ],
+    seg: ["Si algun equip fa servir la càmera o el micròfon, les imatges i els sons no es desen ni s'envien: només el nom de les classes i l'encert. Cap cara de companys com a exemple.|Si algún equipo usa la cámara o el micrófono, las imágenes y los sonidos no se guardan ni se envían: solo el nombre de las clases y el acierto. Ninguna cara de compañeros como ejemplo."],
+    extra: [
+      "Tecnologia: el procés tecnològic complet (necessitat, especificació, prototip, prova) amb un projecte real.|Tecnología: el proceso tecnológico completo (necesidad, especificación, prototipo, prueba) con un proyecto real.",
+      "Plàstica: dissenyar les pantalles del prototip de paper amb criteris de llegibilitat i accessibilitat.|Plástica: diseñar las pantallas del prototipo de papel con criterios de legibilidad y accesibilidad."
+    ],
+    trans: ["Sessió i8-3: proves amb usuaris, riscos, model card i versió 2.|Sesión i8-3: pruebas con usuarios, riesgos, model card y versión 2."],
+    slides: [
+      { id: 's1', k: 'portada', t: 'El prototip|El prototipo', x: 'Projecte: una IA per al nostre centre|Proyecto: una IA para nuestro centro', nota: "Segona sessió del projecte final.|Segunda sesión del proyecto final." },
+      { id: 's2', k: 'pregunta', t: 'Quina és la tasca principal?|¿Cuál es la tarea principal?', x: 'En una frase, per equip.|En una frase, por equipo.', nota: "Ha de cabre en una frase.|Tiene que caber en una frase." },
+      { id: 's3', k: 'anim', t: 'Petit, provable i ràpid|Pequeño, probable y rápido', anim: 'i82proto', x: 'Una tasca, ben feta.|Una tarea, bien hecha.', nota: "Què deixaríeu fora?|¿Qué dejaríais fuera?" },
+      { id: 's4', k: 'anim', t: "L'especificació|La especificación", anim: 'i82spec', x: 'Entra, surt i proves.|Entra, sale y pruebas.', nota: "Escriviu junts una prova per a BiblioGuia.|Escribid juntos una prueba para BiblioGuía." },
+      { id: 's5', k: 'anim', t: 'Dades del prototip|Datos del prototipo', anim: 'i82data', x: 'Variades, inventades i sense noms.|Variadas, inventadas y sin nombres.', nota: "Recorda el biaix (unitat 2).|Recuerda el sesgo (unidad 2)." },
+      { id: 's6', k: 'anim', t: 'Dues eines, un sistema|Dos herramientas, un sistema', anim: 'i82combo', x: 'Cada eina fa el que fa millor.|Cada herramienta hace lo que hace mejor.', nota: "Per al nivell PRO.|Para el nivel PRO." },
+      { id: 's7', k: 'anim', t: 'Versions|Versiones', anim: 'i82ver', x: 'v1 → prova → v2.|v1 → prueba → v2.', nota: "Avui, la versió 1, desada.|Hoy, la versión 1, guardada." },
+      { id: 's8', k: 'activitat', t: 'El prototip de paper|El prototipo de papel', timer: 12, punts: ['Pantalles o missatges en paper.|Pantallas o mensajes en papel.', 'Una «IA» darrere la carpeta.|Una «IA» detrás de la carpeta.', 'Provar, canviar i tornar a provar.|Probar, cambiar y volver a probar.'], nota: "Fulls, retoladors i una carpeta per equip.|Hojas, rotuladores y una carpeta por equipo." },
+      { id: 's9', k: 'pregunta', t: 'On ha dubtat l\'usuari/ària?|¿Dónde ha dudado el usuario/a?', x: 'I què heu canviat?|¿Y qué habéis cambiado?', nota: "Comparteix dos canvis bons.|Comparte dos cambios buenos." },
+      { id: 's10', k: 'activitat', t: "A l'ordinador|En el ordenador", timer: 29, punts: ["L'especificació (es pot canviar l'eina).|La especificación (se puede cambiar la herramienta).", "La versió 1 amb l'eina triada.|La versión 1 con la herramienta elegida.", 'La revisió de la versió 1.|La revisión de la versión 1.'], nota: "Fes la pausa activa quan hi arribin.|Haz la pausa activa cuando lleguen." },
+      { id: 's11', k: 'repte', t: 'La versió 1|La versión 1', punts: ["Fa la tasca principal.|Hace la tarea principal.", "Passa les comprovacions de l'app.|Pasa las comprobaciones de la app.", 'Es desa al portafoli.|Se guarda en el portafolio.'], nota: "Cada alumne/a veu el pas de la seva eina.|Cada alumno/a ve el paso de su herramienta." },
+      { id: 's12', k: 'concepte', t: 'Nivell PRO|Nivel PRO', punts: ['Versió 1 més exigent.|Versión 1 más exigente.', 'Segona eina obligatòria.|Segunda herramienta obligatoria.', 'Proves i regressions.|Pruebas y regresiones.'], nota: "Per a 3r-4t d'ESO o qui vagi ràpid.|Para 3.º-4.º de ESO o quien vaya rápido." },
+      { id: 's13', k: 'repte', t: 'Revisió de la versió 1|Revisión de la versión 1', punts: ['Tasca principal i proves.|Tarea principal y pruebas.', 'Dades sense noms.|Datos sin nombres.', 'Què ha fet la IA i què nosaltres.|Qué ha hecho la IA y qué nosotros.'], nota: "Es desa al perfil.|Se guarda en el perfil." },
+      { id: 's14', k: 'concepte', t: 'Les versions 1 de la classe|Las versiones 1 de la clase', punts: ['30 segons per equip.|30 segundos por equipo.', 'Propera sessió: proves amb usuaris.|Próxima sesión: pruebas con usuarios.'], nota: "Obriu-les des del portafoli.|Abridlas desde el portafolio." },
+      { id: 's15', k: 'resum', t: 'Avui hem après…|Hoy hemos aprendido…', punts: ['Un prototip és petit i provable.|Un prototipo es pequeño y probable.', "L'especificació guia la construcció.|La especificación guía la construcción.", 'Un canvi cada vegada.|Un cambio cada vez.'], nota: "Llegiu-ho junts.|Leedlo juntos." },
+      { id: 's16', k: 'tiquet', t: 'Tiquet de sortida|Tique de salida', punts: ["Una prova d'acceptació vostra.|Una prueba de aceptación vuestra.", 'Què heu deixat fora i per què.|Qué habéis dejado fuera y por qué.'], nota: "Respostes orals o en un paper.|Respuestas orales o en un papel." }
+    ],
+    print: [
+      { id: 'p1', t: 'Especificació i prototip de paper|Especificación y prototipo de papel', k: 'fitxa',
+        intro: "Un per equip. Primer proveu el flux en paper; després ompliu l'especificació que passareu a l'app.|Uno por equipo. Primero probad el flujo en papel; después rellenad la especificación que pasaréis a la app.",
+        items: [
+          { q: "Dibuix del flux (pantalles o missatges, en ordre):|Dibujo del flujo (pantallas o mensajes, en orden):", big: true, sol: "Resposta oberta: 3-4 pantalles o missatges, del primer contacte a la resposta.|Respuesta abierta: 3-4 pantallas o mensajes, del primer contacto a la respuesta." },
+          { q: "On ha dubtat l'usuari/ària i què hem canviat:|Dónde ha dudado el usuario/a y qué hemos cambiado:", sol: "Per exemple: no sabia per on començar; hem afegit una frase de benvinguda amb un exemple.|Por ejemplo: no sabía por dónde empezar; hemos añadido una frase de bienvenida con un ejemplo." },
+          { q: "Eina · què rep · què torna · dades (inventades, sense noms):|Herramienta · qué recibe · qué devuelve · datos (inventados, sin nombres):", sol: "Per exemple: assistent · una pregunta sobre llibres · 3 títols amb una frase · catàleg inventat de 30 llibres.|Por ejemplo: asistente · una pregunta sobre libros · 3 títulos con una frase · catálogo inventado de 30 libros." },
+          { q: "Tres proves d'acceptació (si li dono…, ha de…):|Tres pruebas de aceptación (si le doy…, tiene que…):", big: true, sol: "Per exemple: si demano misteri, 3 títols; si dic el meu nom, no el guarda; si no ho sap, ho diu.|Por ejemplo: si pido misterio, 3 títulos; si digo mi nombre, no lo guarda; si no lo sabe, lo dice." }
+        ] }
+    ]
+  },
+
+  /* ---------- Sessió 3 · Proves, riscos i millora ---------- */
+  'i8-3': {
+    intro: "Els equips proven el prototip amb persones d'un altre equip que no l'han vist mai (pensant en veu alta i sense ajudar-les) i en revisen els riscos com ho faria un equip professional: biaix (qui queda fora?), privadesa (quines dades?), seguretat i errors (enganys, accions, respostes inventades) i nivell de risc segons la llei europea d'IA. Proven un assistent d'exemple amb dos errors, escriuen la model card i la fitxa de riscos del seu projecte i en fan la versió 2 amb l'eina triada, més exigent que la primera.|Los equipos prueban el prototipo con personas de otro equipo que no lo han visto nunca (pensando en voz alta y sin ayudarlas) y revisan sus riesgos como lo haría un equipo profesional: sesgo (¿quién queda fuera?), privacidad (¿qué datos?), seguridad y errores (engaños, acciones, respuestas inventadas) y nivel de riesgo según la ley europea de IA. Prueban un asistente de ejemplo con dos errores, escriben la model card y la ficha de riesgos de su proyecto y hacen la versión 2 con la herramienta elegida, más exigente que la primera.",
+    claus: [
+      "Prova amb usuaris: una tasca, pensar en veu alta, l'equip mira, apunta i calla.|Prueba con usuarios: una tarea, pensar en voz alta, el equipo mira, apunta y calla.",
+      "Revisió de riscos: biaix, privadesa, seguretat i errors, i nivell de risc segons la llei.|Revisión de riesgos: sesgo, privacidad, seguridad y errores, y nivel de riesgo según la ley.",
+      "Model card i fitxa de riscos: honestes, amb resultats i límits. Totes les IA fallen.|Model card y ficha de riesgos: honestas, con resultados y límites. Todas las IA fallan.",
+      "Versió 2: arreglar primer el que és més greu i afecta més persones, i tornar a provar-ho tot.|Versión 2: arreglar primero lo más grave y que afecta a más personas, y volver a probarlo todo."
+    ],
+    prev: ["Sessió i8-2: la versió 1 i les proves d'acceptació.|Sesión i8-2: la versión 1 y las pruebas de aceptación.", "Unitat 2 (biaix i model card), unitat 3 (al·lucinacions), unitat 6 (injecció i fitxa de riscos) i unitat 7 (privadesa i llei).|Unidad 2 (sesgo y model card), unidad 3 (alucinaciones), unidad 6 (inyección y ficha de riesgos) y unidad 7 (privacidad y ley)."],
+    obj: [
+      "L'alumne/a prova un prototip amb usuaris i en recull problemes sense influir-hi.|El alumno/a prueba un prototipo con usuarios y recoge problemas sin influir en ellos.",
+      "L'alumne/a classifica i analitza riscos de biaix, privadesa i seguretat.|El alumno/a clasifica y analiza riesgos de sesgo, privacidad y seguridad.",
+      "L'alumne/a redacta una model card i una fitxa de riscos honestes.|El alumno/a redacta una model card y una ficha de riesgos honestas.",
+      "L'alumne/a prioritza millores i construeix la versió 2.|El alumno/a prioriza mejoras y construye la versión 2."
+    ],
+    comp: [
+      "Competència digital (CD4): seguretat, privadesa i ús responsable|Competencia digital (CD4): seguridad, privacidad y uso responsable",
+      "Competència en ciència i tecnologia (STEM): provar, mesurar i millorar|Competencia en ciencia y tecnología (STEM): probar, medir y mejorar",
+      "Competència ciutadana (CC): ètica i responsabilitat en el disseny de tecnologia|Competencia ciudadana (CC): ética y responsabilidad en el diseño de tecnología"
+    ],
+    vocab: [
+      ["Prova amb usuaris|Prueba con usuarios", "Observar persones reals fent servir el prototip per trobar-ne problemes.|Observar a personas reales usando el prototipo para encontrar sus problemas."],
+      ["Pensar en veu alta|Pensar en voz alta", "L'usuari/ària diu el que pensa mentre prova el prototip.|El usuario/a dice lo que piensa mientras prueba el prototipo."],
+      ["Model card|Model card", "Fitxa que explica per a què serveix un model, amb quines dades, com ha anat a les proves i quan falla.|Ficha que explica para qué sirve un modelo, con qué datos, cómo ha ido en las pruebas y cuándo falla."],
+      ["Fitxa de riscos|Ficha de riesgos", "Document amb el que pot sortir malament i les defenses que es fan servir.|Documento con lo que puede salir mal y las defensas que se usan."],
+      ["Prioritzar|Priorizar", "Decidir què s'arregla primer segons la gravetat i les persones afectades.|Decidir qué se arregla primero según la gravedad y las personas afectadas."]
+    ],
+    mat: {
+      aula: ["Un ordinador per alumne/a amb Numi Tech obert a la sessió «Proves, riscos i millora»|Un ordenador por alumno/a con Numi Tech abierto en la sesión «Pruebas, riesgos y mejora»", "Projector i la presentació d'aquesta sessió|Proyector y la presentación de esta sesión"],
+      imprimir: ["Fitxa d'observació (imprimible 1): una per equip|Ficha de observación (imprimible 1): una por equipo", "Revisió de riscos (imprimible 2): una per equip|Revisión de riesgos (imprimible 2): una por equipo"],
+      prep: ["Decidir les parelles d'equips que es provaran els prototips (millor de nivells i eines diferents).|Decidir las parejas de equipos que se probarán los prototipos (mejor de niveles y herramientas distintas).", "Escriure a la pissarra la tasca de prova de cada equip (la fa servir l'usuari/ària).|Escribir en la pizarra la tarea de prueba de cada equipo (la usa el usuario/a).", "Recordar on és al portafoli la versió 1 de cada alumne/a.|Recordar dónde está en el portafolio la versión 1 de cada alumno/a."]
+    },
+    plan: [
+      { min: 4, t: 'Funciona… per a vosaltres|Funciona… para vosotros', fase: 'inici',
+        fa: "Planteja la idea clau: un prototip sempre funciona per a qui l'ha fet. Explica l'ordre: proves, riscos, fitxes i versió 2.|Plantea la idea clave: un prototipo siempre funciona para quien lo ha hecho. Explica el orden: pruebas, riesgos, fichas y versión 2.",
+        diu: ["Què creieu que no entendrà algú que no ha fet el vostre prototip?|¿Qué creéis que no entenderá alguien que no ha hecho vuestro prototipo?"],
+        slides: ['s1', 's2'], app: "Encara no: pantalles abaixades.|Todavía no: pantallas bajadas.", org: "Tot el grup|Todo el grupo" },
+      { min: 8, t: 'Usuaris, biaix, riscos, model card i millora|Usuarios, sesgo, riesgos, model card y mejora', fase: 'teoria',
+        fa: "Amb les animacions: la prova amb usuaris (mira i calla), el biaix (qui queda fora), la revisió de riscos, la model card honesta i com prioritzar de la versió 1 a la 2.|Con las animaciones: la prueba con usuarios (mira y calla), el sesgo (quién queda fuera), la revisión de riesgos, la model card honesta y cómo priorizar de la versión 1 a la 2.",
+        diu: ["Per què costa tant no ajudar l'usuari/ària?|¿Por qué cuesta tanto no ayudar al usuario/a?"],
+        slides: ['s3', 's4', 's5', 's6', 's7'], app: "Encara no: tota l'atenció a la projecció.|Todavía no: toda la atención en la proyección.", org: "Tot el grup|Todo el grupo" },
+      { min: 14, t: 'Proves amb usuaris|Pruebas con usuarios', fase: 'desconnectat',
+        fa: "Els equips s'intercanvien: l'equip autor dona una tasca, l'usuari/ària pensa en veu alta 3 minuts i l'equip apunta a la fitxa d'observació sense ajudar. Canvien de rol. Al final, ordenen els problemes per gravetat i omplen la revisió de riscos.|Los equipos se intercambian: el equipo autor da una tarea, el usuario/a piensa en voz alta 3 minutos y el equipo apunta en la ficha de observación sin ayudar. Cambian de rol. Al final, ordenan los problemas por gravedad y rellenan la revisión de riesgos.",
+        diu: ["Quin problema no havíeu imaginat?|¿Qué problema no habíais imaginado?", "Heu pogut callar quan l'usuari s'encallava?|¿Habéis podido callar cuando el usuario se atascaba?"],
+        slides: ['s8', 's9'], app: "La versió 1 des del portafoli (o en paper).|La versión 1 desde el portafolio (o en papel).", org: "Parelles d'equips|Parejas de equipos" },
+      { min: 28, t: "A l'ordinador: riscos, fitxes i versió 2|En el ordenador: riesgos, fichas y versión 2", fase: 'ordinador',
+        fa: "Fan la sessió de l'app: quin risc és, no ajudar l'usuari/ària, la pausa activa, la prova de la BiblioGuia v1 (dos errors), la model card, la fitxa de riscos (totes dues es desen) i la versió 2 amb l'eina triada, més exigent (es desa).|Hacen la sesión de la app: qué riesgo es, no ayudar al usuario/a, la pausa activa, la prueba de la BiblioGuía v1 (dos errores), la model card, la ficha de riesgos (las dos se guardan) y la versión 2 con la herramienta elegida, más exigente (se guarda).",
+        diu: ["Quin nivell de risc li heu posat i per què?|¿Qué nivel de riesgo le habéis puesto y por qué?", "Què heu arreglat a la versió 2?|¿Qué habéis arreglado en la versión 2?"],
+        slides: ['s10', 's11', 's12', 's13'], app: "De «Recorda» fins a la versió 2.|De «Recuerda» hasta la versión 2.", org: "Equips (cadascú al seu ordinador)|Equipos (cada uno en su ordenador)" },
+      { min: 6, t: 'Tancament: de la v1 a la v2|Cierre: de la v1 a la v2', fase: 'tancament',
+        fa: "Cada equip diu el problema més greu que ha trobat i com l'ha arreglat. Anuncia la fira i el diploma. Com s'han sentit.|Cada equipo dice el problema más grave que ha encontrado y cómo lo ha arreglado. Anuncia la feria y el diploma. Cómo se han sentido.",
+        diu: ["Què posareu a la model card com a límit?|¿Qué pondréis en la model card como límite?"],
+        slides: ['s14', 's15', 's16'], app: "«Tancament»: les preguntes finals i com m'he sentit.|«Cierre»: las preguntas finales y cómo me he sentido.", org: "Tot el grup|Todo el grupo" }
+    ],
+    errors: [
+      ["L'equip autor ajuda l'usuari/ària a la primera dificultat.|El equipo autor ayuda al usuario/a a la primera dificultad.", "Recorda: cada dubte és or. Que l'apuntin i només ajudin si l'usuari/ària porta més d'un minut encallat.|Recuerda: cada duda es oro. Que la apunten y solo ayuden si el usuario/a lleva más de un minuto atascado."],
+      ["La model card diu que el prototip no falla mai.|La model card dice que el prototipo no falla nunca.", "Totes les IA fallen: què ha passat a les proves? On ha dubtat l'usuari/ària?|Todas las IA fallan: ¿qué ha pasado en las pruebas? ¿Dónde ha dudado el usuario/a?"],
+      ["Confon biaix i privadesa.|Confunde sesgo y privacidad.", "Biaix: funciona pitjor per a alguns. Privadesa: fa servir dades que no calen.|Sesgo: funciona peor para algunos. Privacidad: usa datos que no hacen falta."],
+      ["Posa «alt risc» a qualsevol prototip.|Pone «alto riesgo» a cualquier prototipo.", "Mireu la piràmide (i7-3): decideix sobre la vida de les persones (notes, admissió)? Si no, probablement és transparència o mínim.|Mirad la pirámide (i7-3): ¿decide sobre la vida de las personas (notas, admisión)? Si no, probablemente es transparencia o mínimo."],
+      ["A la versió 2 vol arreglar-ho tot.|En la versión 2 quiere arreglarlo todo.", "Primer el que és més greu i afecta més persones; la resta, a la model card com a límit.|Primero lo más grave y que afecta a más personas; el resto, en la model card como límite."]
+    ],
+    diff: {
+      mes: "Nivell PRO: el classificador que encerta molt amb les fotos de l'equip i poc amb les d'altres, i la versió 2 més exigent (més classes i exemples, les 6 peces del prompt, cap permís de més i pla curt…). Repte extra: la model card que diu que no falla mai.|Nivel PRO: el clasificador que acierta mucho con las fotos del equipo y poco con las de otros, y la versión 2 más exigente (más clases y ejemplos, las 6 piezas del prompt, ningún permiso de más y plan corto…). Reto extra: la model card que dice que no falla nunca.",
+      menys: "Fer la revisió de riscos amb l'imprimible i en equip. A la model card i la fitxa de riscos, partir de l'exemple BiblioGuia i adaptar-lo. A la versió 2, centrar-se en un sol problema.|Hacer la revisión de riesgos con el imprimible y en equipo. En la model card y la ficha de riesgos, partir del ejemplo BiblioGuía y adaptarlo. En la versión 2, centrarse en un solo problema."
+    },
+    aval: {
+      ticket: ["Quin problema han trobat els usuaris que vosaltres no havíeu vist?|¿Qué problema han encontrado los usuarios que vosotros no habíais visto?", "Digues un risc del vostre prototip i la defensa que hi heu posat.|Di un riesgo de vuestro prototipo y la defensa que habéis puesto."],
+      rubric: [
+        ["Prova amb usuaris|Prueba con usuarios", "Observa sense ajudar i recull problemes concrets.|Observa sin ayudar y recoge problemas concretos.", "Ajuda l'usuari/ària o no apunta res.|Ayuda al usuario/a o no apunta nada."],
+        ["Revisió de riscos|Revisión de riesgos", "Identifica biaix, privadesa i seguretat amb exemples del seu prototip.|Identifica sesgo, privacidad y seguridad con ejemplos de su prototipo.", "Riscos genèrics o confosos.|Riesgos genéricos o confundidos."],
+        ["Model card i fitxa|Model card y ficha", "Honestes, amb resultats, límits, defenses i nivell de risc ben justificat.|Honestas, con resultados, límites, defensas y nivel de riesgo bien justificado.", "Diuen que no falla o són buides.|Dicen que no falla o están vacías."],
+        ["Versió 2|Versión 2", "Arregla els problemes prioritaris i passa les comprovacions.|Arregla los problemas prioritarios y pasa las comprobaciones.", "No millora o no arriba a funcionar.|No mejora o no llega a funcionar."]
+      ]
+    },
+    casa: "Ensenyeu a casa la model card i la fitxa de riscos (són al portafoli i es poden imprimir). Pregunteu: confiaríeu en aquest prototip? Què hi trobeu a faltar?|Enseñad en casa la model card y la ficha de riesgos (están en el portafolio y se pueden imprimir). Preguntad: ¿confiaríais en este prototipo? ¿Qué echáis de menos?",
+    faq: [
+      ["Quantes persones calen per provar un prototip?|¿Cuántas personas hacen falta para probar un prototipo?", "A l'aula, amb dues o tres persones d'un altre equip ja surten els problemes més importants. El que compta és observar bé i no ajudar.|En el aula, con dos o tres personas de otro equipo ya salen los problemas más importantes. Lo que cuenta es observar bien y no ayudar."],
+      ["La versió 2 és la mateixa eina?|¿La versión 2 es la misma herramienta?", "Sí: el pas es converteix en l'eina de l'última fitxa del projecte, amb comprovacions més exigents que a la versió 1. Si l'equip ha canviat d'eina, que torni a desar l'especificació (i8-2).|Sí: el paso se convierte en la herramienta de la última ficha del proyecto, con comprobaciones más exigentes que en la versión 1. Si el equipo ha cambiado de herramienta, que vuelva a guardar la especificación (i8-2)."],
+      ["Quin nivell de risc tenen els projectes de la classe?|¿Qué nivel de riesgo tienen los proyectos de la clase?", "La majoria seran de risc mínim o de transparència (un assistent ha de dir que és una IA). Si algun projecte avalua, admet o vigila alumnat, seria d'alt risc: millor reformular-lo.|La mayoría serán de riesgo mínimo o de transparencia (un asistente tiene que decir que es una IA). Si algún proyecto evalúa, admite o vigila alumnado, sería de alto riesgo: mejor reformularlo."]
+    ],
+    tec: [
+      ["La fitxa de riscos no deixa desar.|La ficha de riesgos no deja guardar.", "Cal triar almenys 3 defenses i el nivell de risc, i omplir els textos amb el mínim de caràcters.|Hay que elegir al menos 3 defensas y el nivel de riesgo, y rellenar los textos con el mínimo de caracteres."],
+      ["No trobo la versió 1 per fer la prova amb usuaris.|No encuentro la versión 1 para hacer la prueba con usuarios.", "És al portafoli («Projectes»), amb el nom «Prototip v1». Si no hi és, la poden provar en paper amb la fitxa d'especificació.|Está en el portafolio («Proyectos»), con el nombre «Prototipo v1». Si no está, la pueden probar en papel con la ficha de especificación."]
+    ],
+    seg: ["A les proves amb usuaris es fan servir exemples inventats. Si el prototip fa servir càmera o micròfon, res no es desa ni s'envia; no s'enfoca la cara de ningú.|En las pruebas con usuarios se usan ejemplos inventados. Si el prototipo usa cámara o micrófono, nada se guarda ni se envía; no se enfoca la cara de nadie."],
+    extra: [
+      "Matemàtiques: calcular percentatges d'encert i comparar resultats entre grups d'usuaris.|Matemáticas: calcular porcentajes de acierto y comparar resultados entre grupos de usuarios.",
+      "Ciutadania: llegir una model card publicada per una organització i comentar què hi diu i què hi falta.|Ciudadanía: leer una model card publicada por una organización y comentar qué dice y qué falta."
+    ],
+    trans: ["Sessió i8-4: presentació a la fira del Repte IA i diploma del curs.|Sesión i8-4: presentación en la feria del Reto IA y diploma del curso."],
+    slides: [
+      { id: 's1', k: 'portada', t: 'Proves, riscos i millora|Pruebas, riesgos y mejora', x: 'Projecte: una IA per al nostre centre|Proyecto: una IA para nuestro centro', nota: "Tercera sessió del projecte final.|Tercera sesión del proyecto final." },
+      { id: 's2', k: 'pregunta', t: 'Funciona… per a qui?|¿Funciona… para quién?', x: 'Un prototip sempre funciona per a qui l\'ha fet.|Un prototipo siempre funciona para quien lo ha hecho.', nota: "Recull prediccions de problemes.|Recoge predicciones de problemas." },
+      { id: 's3', k: 'anim', t: 'Prova amb usuaris|Prueba con usuarios', anim: 'i83user', x: 'Mira, apunta… i calla.|Mira, apunta… y calla.', nota: "Fes una prova d'exemple amb un voluntari/ària.|Haz una prueba de ejemplo con un voluntario/a." },
+      { id: 's4', k: 'anim', t: 'Qui queda fora?|¿Quién queda fuera?', anim: 'i83bias', x: 'Encerts segons qui el prova.|Aciertos según quién lo prueba.', nota: "Connecta-ho amb la unitat 2.|Conéctalo con la unidad 2." },
+      { id: 's5', k: 'anim', t: 'La revisió de riscos|La revisión de riesgos', anim: 'i83risk', x: 'Dades, invents, enganys, accions, llei.|Datos, inventos, engaños, acciones, ley.', nota: "Una pregunta per cada unitat del curs.|Una pregunta por cada unidad del curso." },
+      { id: 's6', k: 'anim', t: 'La model card|La model card', anim: 'i83card', x: 'Honesta > perfecta.|Honesta > perfecta.', nota: "Llegiu la de BiblioGuia com a exemple.|Leed la de BiblioGuía como ejemplo." },
+      { id: 's7', k: 'anim', t: 'De la v1 a la v2|De la v1 a la v2', anim: 'i83iter', x: 'Primer el més greu.|Primero lo más grave.', nota: "Prioritzar és una habilitat.|Priorizar es una habilidad." },
+      { id: 's8', k: 'activitat', t: 'Proves amb usuaris|Pruebas con usuarios', timer: 14, punts: ['Una tasca, sense explicar com.|Una tarea, sin explicar cómo.', 'Pensar en veu alta, 3 minuts.|Pensar en voz alta, 3 minutos.', 'Apuntar i canviar de rol.|Apuntar y cambiar de rol.'], nota: "Fitxa d'observació, una per equip.|Ficha de observación, una por equipo." },
+      { id: 's9', k: 'pregunta', t: 'Què no havíeu imaginat?|¿Qué no habíais imaginado?', x: 'Ordeneu els problemes per gravetat.|Ordenad los problemas por gravedad.', nota: "Comparteix dos o tres descobriments.|Comparte dos o tres descubrimientos." },
+      { id: 's10', k: 'activitat', t: "A l'ordinador|En el ordenador", timer: 26, punts: ['Quin risc és i la BiblioGuia v1.|Qué riesgo es y la BiblioGuía v1.', 'Model card i fitxa de riscos.|Model card y ficha de riesgos.', 'La versió 2.|La versión 2.'], nota: "Fes la pausa activa quan hi arribin.|Haz la pausa activa cuando lleguen." },
+      { id: 's11', k: 'repte', t: 'Les fitxes del projecte|Las fichas del proyecto', punts: ['Per a què, dades, proves i límits.|Para qué, datos, pruebas y límites.', 'Riscos, defenses, persona i nivell.|Riesgos, defensas, persona y nivel.'], nota: "Es desen al portafoli i es poden imprimir.|Se guardan en el portafolio y se pueden imprimir." },
+      { id: 's12', k: 'concepte', t: 'Nivell PRO|Nivel PRO', punts: ['9 de 10 amb les nostres fotos, 5 de 10 amb les d\'altres.|9 de 10 con nuestras fotos, 5 de 10 con las de otros.', 'Versió 2 més exigent.|Versión 2 más exigente.', 'Extra: «no falla mai».|Extra: «no falla nunca».'], nota: "Per a 3r-4t d'ESO o qui vagi ràpid.|Para 3.º-4.º de ESO o quien vaya rápido." },
+      { id: 's13', k: 'repte', t: 'La versió 2|La versión 2', punts: ['Arregla el més greu.|Arregla lo más grave.', 'Torna a passar totes les proves.|Vuelve a pasar todas las pruebas.', 'Desa-la al portafoli.|Guárdala en el portafolio.'], nota: "És la que presentaran a la fira.|Es la que presentarán en la feria." },
+      { id: 's14', k: 'concepte', t: 'La fira i el diploma|La feria y el diploma', punts: ['Propera sessió: pitch, demo i jurat.|Próxima sesión: pitch, demo y jurado.', 'I el diploma de Tech IA!|¡Y el diploma de Tech IA!'], nota: "Que portin pensat qui parlarà de cada part.|Que traigan pensado quién hablará de cada parte." },
+      { id: 's15', k: 'resum', t: 'Avui hem après…|Hoy hemos aprendido…', punts: ['Provar amb usuaris sense ajudar.|Probar con usuarios sin ayudar.', 'Revisar riscos com un equip professional.|Revisar riesgos como un equipo profesional.', 'Millorar el que és més important.|Mejorar lo que es más importante.'], nota: "Llegiu-ho junts.|Leedlo juntos." },
+      { id: 's16', k: 'tiquet', t: 'Tiquet de sortida|Tique de salida', punts: ['Un problema que no havíeu vist.|Un problema que no habíais visto.', 'Un risc i la seva defensa.|Un riesgo y su defensa.'], nota: "Respostes orals o en un paper.|Respuestas orales o en un papel." }
+    ],
+    print: [
+      { id: 'p1', t: "Fitxa d'observació|Ficha de observación", k: 'fitxa',
+        intro: "Una per equip autor. Apunteu el que fa i diu l'usuari/ària, sense ajudar-lo i sense escriure el seu nom.|Una por equipo autor. Apuntad lo que hace y dice el usuario/a, sin ayudarle y sin escribir su nombre.",
+        items: [
+          { q: "Tasca que hem donat a l'usuari/ària:|Tarea que hemos dado al usuario/a:", sol: "Per exemple: «Troba un llibre de misteri per a algú de 1r».|Por ejemplo: «Encuentra un libro de misterio para alguien de 1.º»." },
+          { q: "On ha dubtat o s'ha equivocat (i què ha dit):|Dónde ha dudado o se ha equivocado (y qué ha dicho):", big: true, sol: "Resposta oberta: frases literals de l'usuari/ària i el moment en què ha passat.|Respuesta abierta: frases literales del usuario/a y el momento en que ha pasado." },
+          { q: "Ha passat els criteris d'èxit? (✓ / ✕ i per què):|¿Ha pasado los criterios de éxito? (✓ / ✕ y por qué):", sol: "Per exemple: ✓ ha trobat un llibre en 4 minuts; ✕ l'assistent li ha demanat el nom.|Por ejemplo: ✓ ha encontrado un libro en 4 minutos; ✕ el asistente le ha pedido el nombre." },
+          { q: "Problemes ordenats per gravetat (1 = el més greu):|Problemas ordenados por gravedad (1 = el más grave):", big: true, sol: "Per exemple: 1) demana dades personals; 2) s'inventa l'horari; 3) el botó d'inici és poc visible.|Por ejemplo: 1) pide datos personales; 2) se inventa el horario; 3) el botón de inicio es poco visible." }
+        ] },
+      { id: 'p2', t: 'Revisió de riscos|Revisión de riesgos', k: 'fitxa',
+        intro: "Una per equip. Repasseu el prototip amb les preguntes de tot el curs abans de fer les fitxes a l'app.|Una por equipo. Repasad el prototipo con las preguntas de todo el curso antes de hacer las fichas en la app.",
+        items: [
+          { q: "⚖️ Biaix: per a qui funciona pitjor? Amb quins exemples el vam provar?|⚖️ Sesgo: ¿para quién funciona peor? ¿Con qué ejemplos lo probamos?", sol: "Per exemple: entén pitjor les preguntes amb faltes; l'hem provat només amb alumnat de 3r.|Por ejemplo: entiende peor las preguntas con faltas; lo hemos probado solo con alumnado de 3.º." },
+          { q: "🔒 Privadesa: quines dades fa servir? Calen totes?|🔒 Privacidad: ¿qué datos usa? ¿Hacen falta todos?", sol: "Per exemple: cap dada personal; només el catàleg inventat.|Por ejemplo: ningún dato personal; solo el catálogo inventado." },
+          { q: "🛡️ Seguretat i errors: s'inventa coses? El poden enganyar? Què fa sense preguntar?|🛡️ Seguridad y errores: ¿se inventa cosas? ¿Lo pueden engañar? ¿Qué hace sin preguntar?", big: true, sol: "Per exemple: es pot inventar horaris; no fa cap acció sense preguntar; diu que és una IA.|Por ejemplo: se puede inventar horarios; no hace ninguna acción sin preguntar; dice que es una IA." },
+          { q: "🔺 Nivell de risc segons la llei europea d'IA i per què:|🔺 Nivel de riesgo según la ley europea de IA y por qué:", sol: "Per exemple: transparència (és un assistent que conversa: ha de dir que és una IA).|Por ejemplo: transparencia (es un asistente que conversa: tiene que decir que es una IA)." }
+        ] }
+    ]
+  },
+
+  /* ---------- Sessió 4 · Presentació i diploma ---------- */
+  'i8-4': {
+    intro: "Última sessió del curs: la fira del Repte IA del centre. L'alumnat aprèn a fer un pitch de 3 minuts (problema, solució i demo, proves i riscos, petició), a preparar una demo amb pla B, a declarar amb transparència què ha fet la IA i què ha fet l'equip i a respondre preguntes difícils del jurat amb les seves fitxes. Assaja el pitch amb «dues estrelles i un desig», ordena el pitch, omple la fitxa de transparència, assaja les respostes al jurat, presenta el projecte i valora el d'un altre equip. La sessió acaba amb el diploma de Tech IA, a l'app i en paper.|Última sesión del curso: la feria del Reto IA del centro. El alumnado aprende a hacer un pitch de 3 minutos (problema, solución y demo, pruebas y riesgos, petición), a preparar una demo con plan B, a declarar con transparencia qué ha hecho la IA y qué ha hecho el equipo y a responder preguntas difíciles del jurado con sus fichas. Ensaya el pitch con «dos estrellas y un deseo», ordena el pitch, rellena la ficha de transparencia, ensaya las respuestas al jurado, presenta el proyecto y valora el de otro equipo. La sesión acaba con el diploma de Tech IA, en la app y en papel.",
+    claus: [
+      "Pitch de 3 minuts: problema, solució i demo, proves i riscos, petició.|Pitch de 3 minutos: problema, solución y demo, pruebas y riesgos, petición.",
+      "Demo provada abans i pla B; si falla, s'explica amb calma (és a la model card).|Demo probada antes y plan B; si falla, se explica con calma (está en la model card).",
+      "Transparència: quines eines, què ha fet la IA, què ha fet l'equip, quines dades i quins límits.|Transparencia: qué herramientas, qué ha hecho la IA, qué ha hecho el equipo, qué datos y qué límites.",
+      "Al jurat: respondre amb les fitxes i dir «no ho sabem, però ho comprovaríem així» quan calgui.|Al jurado: responder con las fichas y decir «no lo sabemos, pero lo comprobaríamos así» cuando haga falta."
+    ],
+    prev: ["Sessions i8-1, i8-2 i i8-3: la idea, el prototip, les proves, la model card i la fitxa de riscos.|Sesiones i8-1, i8-2 e i8-3: la idea, el prototipo, las pruebas, la model card y la ficha de riesgos.", "Unitats 4 i 5: declarar l'autoria i la fitxa de transparència.|Unidades 4 y 5: declarar la autoría y la ficha de transparencia."],
+    obj: [
+      "L'alumne/a estructura i fa un pitch del projecte amb una demo.|El alumno/a estructura y hace un pitch del proyecto con una demo.",
+      "L'alumne/a declara amb transparència l'ús de la IA i el treball de l'equip.|El alumno/a declara con transparencia el uso de la IA y el trabajo del equipo.",
+      "L'alumne/a respon preguntes sobre riscos i límits amb arguments.|El alumno/a responde preguntas sobre riesgos y límites con argumentos.",
+      "L'alumne/a valora el projecte d'un altre equip amb una rúbrica i rep el diploma del curs.|El alumno/a valora el proyecto de otro equipo con una rúbrica y recibe el diploma del curso."
+    ],
+    comp: [
+      "Competència en comunicació lingüística (CCL): presentar oralment i respondre preguntes|Competencia en comunicación lingüística (CCL): presentar oralmente y responder preguntas",
+      "Competència digital (CD5): ús ètic i transparent de la IA|Competencia digital (CD5): uso ético y transparente de la IA",
+      "Competència personal i d'aprendre a aprendre (CPSAA): valorar el propi procés i el dels altres|Competencia personal y de aprender a aprender (CPSAA): valorar el propio proceso y el de los demás"
+    ],
+    vocab: [
+      ["Pitch|Pitch", "Presentació curta i ben estructurada d'un projecte per convèncer un jurat.|Presentación corta y bien estructurada de un proyecto para convencer a un jurado."],
+      ["Demo|Demo", "Mostra en directe de com funciona el prototip.|Muestra en directo de cómo funciona el prototipo."],
+      ["Pla B|Plan B", "Alternativa preparada per si la demo falla (captures, versió desada).|Alternativa preparada por si la demo falla (capturas, versión guardada)."],
+      ["Fitxa de transparència|Ficha de transparencia", "Document que diu quines eines d'IA s'han fet servir i què ha fet la IA i què l'equip.|Documento que dice qué herramientas de IA se han usado y qué ha hecho la IA y qué el equipo."],
+      ["Retroacció|Retroalimentación", "Comentaris per millorar: «dues estrelles i un desig».|Comentarios para mejorar: «dos estrellas y un deseo»."]
+    ],
+    mat: {
+      aula: ["Un ordinador per alumne/a amb Numi Tech obert a la sessió «Presentació i diploma»|Un ordenador por alumno/a con Numi Tech abierto en la sesión «Presentación y diploma»", "Projector i la presentació d'aquesta sessió (també per a les demos)|Proyector y la presentación de esta sesión (también para las demos)", "Cronòmetre i els diplomes impresos, un per alumne/a|Cronómetro y los diplomas impresos, uno por alumno/a"],
+      imprimir: ["Guió del pitch (imprimible 1): un per equip|Guion del pitch (imprimible 1): uno por equipo", "Diploma del curs (imprimible 2): un per alumne/a|Diploma del curso (imprimible 2): uno por alumno/a"],
+      prep: ["Imprimir el guió del pitch i un diploma per alumne/a. Escriure-hi el nom abans de la classe i signar-los.|Imprimir el guion del pitch y un diploma por alumno/a. Escribir el nombre antes de la clase y firmarlos.", "Organitzar l'ordre de les presentacions i, si és possible, convidar la direcció o famílies com a jurat.|Organizar el orden de las presentaciones y, si es posible, invitar a la dirección o a familias como jurado.", "Comprovar que les versions 2 s'obren des del portafoli al projector.|Comprobar que las versiones 2 se abren desde el portafolio en el proyector."]
+    },
+    plan: [
+      { min: 3, t: "S'obre la fira!|¡Se abre la feria!", fase: 'inici',
+        fa: "Dona la benvinguda a l'última sessió del curs. Explica l'ordre: preparar, assajar, presentar i diplomes.|Da la bienvenida a la última sesión del curso. Explica el orden: preparar, ensayar, presentar y diplomas.",
+        diu: ["Què és el que més us agrada del vostre projecte?|¿Qué es lo que más os gusta de vuestro proyecto?"],
+        slides: ['s1', 's2'], app: "Encara no: pantalles abaixades.|Todavía no: pantallas bajadas.", org: "Tot el grup|Todo el grupo" },
+      { min: 7, t: 'Pitch, demo, transparència, jurat i viatge|Pitch, demo, transparencia, jurado y viaje', fase: 'teoria',
+        fa: "Amb les animacions: el pitch de 3 minuts, la demo amb pla B, la transparència, les preguntes del jurat i el viatge del curs.|Con las animaciones: el pitch de 3 minutos, la demo con plan B, la transparencia, las preguntas del jurado y el viaje del curso.",
+        diu: ["Quina pregunta difícil us pot fer el jurat?|¿Qué pregunta difícil os puede hacer el jurado?"],
+        slides: ['s3', 's4', 's5', 's6', 's7'], app: "Encara no: tota l'atenció a la projecció.|Todavía no: toda la atención en la proyección.", org: "Tot el grup|Todo el grupo" },
+      { min: 8, t: 'Assaig del pitch|Ensayo del pitch', fase: 'desconnectat',
+        fa: "En equip, amb el guió: reparteixen les parts, fan un assaig de 3 minuts amb cronòmetre i un altre equip dona «dues estrelles i un desig».|En equipo, con el guion: reparten las partes, hacen un ensayo de 3 minutos con cronómetro y otro equipo da «dos estrellas y un deseo».",
+        diu: ["Quin desig us ha donat l'altre equip?|¿Qué deseo os ha dado el otro equipo?"],
+        slides: ['s8', 's9'], app: "Cap: activitat sense pantalla.|Ninguna: actividad sin pantalla.", org: "Equips|Equipos" },
+      { min: 34, t: "A l'ordinador i la fira|En el ordenador y la feria", fase: 'ordinador',
+        fa: "Fan la sessió de l'app fins a la valoració: qui ho ha fet, la pregunta del jurat, la pausa activa, l'ordre del pitch, la fitxa de transparència (es desa) i les preguntes del jurat. Després, la fira: cada equip presenta 3 minuts (amb la versió 2 del portafoli) i respon dues preguntes; la resta valora a l'app.|Hacen la sesión de la app hasta la valoración: quién lo ha hecho, la pregunta del jurado, la pausa activa, el orden del pitch, la ficha de transparencia (se guarda) y las preguntas del jurado. Después, la feria: cada equipo presenta 3 minutos (con la versión 2 del portafolio) y responde dos preguntas; el resto valora en la app.",
+        diu: ["Què ha fet la IA i què heu fet vosaltres?|¿Qué ha hecho la IA y qué habéis hecho vosotros?", "Quin projecte us ha semblat més honest amb els riscos?|¿Qué proyecto os ha parecido más honesto con los riesgos?"],
+        slides: ['s10', 's11', 's12', 's13'], app: "De «Recorda» fins a «La fira del Repte IA».|De «Recuerda» hasta «La feria del Reto IA».", org: "Equips i tot el grup|Equipos y todo el grupo" },
+      { min: 8, t: 'Diplomes i tancament|Diplomas y cierre', fase: 'tancament',
+        fa: "Cada alumne/a arriba al diploma de l'app (es pot imprimir) i, mentrestant, lliura el diploma en paper a cadascú dient-li una cosa concreta que ha fet bé al curs. Última pregunta, com s'han sentit i comiat.|Cada alumno/a llega al diploma de la app (se puede imprimir) y, mientras, entrega el diploma en papel a cada uno diciéndole algo concreto que ha hecho bien en el curso. Última pregunta, cómo se han sentido y despedida.",
+        diu: ["Què us emporteu del curs?|¿Qué os lleváis del curso?", "Com fareu servir la IA a partir d'ara?|¿Cómo usaréis la IA a partir de ahora?"],
+        slides: ['s14', 's15', 's16'], app: "«Tancament»: la pregunta final, el diploma i com m'he sentit.|«Cierre»: la pregunta final, el diploma y cómo me he sentido.", org: "Tot el grup|Todo el grupo" }
+    ],
+    errors: [
+      ["El pitch comença explicant la tecnologia.|El pitch empieza explicando la tecnología.", "Comenceu per una persona i el seu problema: el jurat ha d'entendre per què abans de com.|Empezad por una persona y su problema: el jurado tiene que entender por qué antes de cómo."],
+      ["S'allarga i no arriba als riscos.|Se alarga y no llega a los riesgos.", "Assaig amb cronòmetre i un temps per part (30 + 90 + 30 + 30 s).|Ensayo con cronómetro y un tiempo por parte (30 + 90 + 30 + 30 s)."],
+      ["Amaga què ha fet la IA per semblar més treballat.|Esconde qué ha hecho la IA para parecer más trabajado.", "Declarar-ho dona confiança; el mèrit és escoltar, decidir, provar i fer-se'n responsable.|Declararlo da confianza; el mérito es escuchar, decidir, probar y hacerse responsable."],
+      ["Quan la demo falla, l'equip es bloqueja.|Cuando la demo falla, el equipo se bloquea.", "Pla B (portafoli o captures) i explicar el límit: és a la model card.|Plan B (portafolio o capturas) y explicar el límite: está en la model card."],
+      ["La valoració d'un altre equip és només «m'ha agradat».|La valoración de otro equipo es solo «me ha gustado».", "Feu servir les preguntes de l'app i un comentari concret («dues estrelles i un desig»).|Usad las preguntas de la app y un comentario concreto («dos estrellas y un deseo»)."]
+    ],
+    diff: {
+      mes: "Nivell PRO: el pitch amb ganxo i tancament i què fer quan la demo falla davant del jurat. Repte extra: per què la transparència no treu mèrit. Ampliació: preparar una pàgina o un cartell del projecte per a la fira.|Nivel PRO: el pitch con gancho y cierre y qué hacer cuando la demo falla delante del jurado. Reto extra: por qué la transparencia no quita mérito. Ampliación: preparar una página o un cartel del proyecto para la feria.",
+      menys: "Pitch amb guió escrit (el de l'imprimible) i repartit entre tot l'equip; demo amb captures si cal. A la fitxa de transparència, començar pels camps de triar.|Pitch con guion escrito (el del imprimible) y repartido entre todo el equipo; demo con capturas si hace falta. En la ficha de transparencia, empezar por los campos de elegir."
+    },
+    aval: {
+      ticket: ["Digues una cosa que ha fet la IA i una que heu fet vosaltres.|Di una cosa que ha hecho la IA y una que habéis hecho vosotros.", "Què és el més important que has après al curs?|¿Qué es lo más importante que has aprendido en el curso?"],
+      rubric: [
+        ["Pitch|Pitch", "Estructura clara (problema, solució i demo, riscos, petició) en el temps.|Estructura clara (problema, solución y demo, riesgos, petición) en el tiempo.", "Desordenat o sense riscos.|Desordenado o sin riesgos."],
+        ["Demo|Demo", "Funciona o, si falla, s'explica amb el límit i el pla B.|Funciona o, si falla, se explica con el límite y el plan B.", "No hi ha demo ni explicació.|No hay demo ni explicación."],
+        ["Transparència|Transparencia", "Diu quines eines, què ha fet la IA i què l'equip, i les dades.|Dice qué herramientas, qué ha hecho la IA y qué el equipo, y los datos.", "Amaga o no sap explicar l'ús de la IA.|Esconde o no sabe explicar el uso de la IA."],
+        ["Respostes i valoració|Respuestas y valoración", "Respon el jurat amb les fitxes i valora amb comentaris concrets.|Responde al jurado con las fichas y valora con comentarios concretos.", "Respostes vagues i valoració genèrica.|Respuestas vagas y valoración genérica."]
+      ]
+    },
+    casa: "Ha acabat el curs Tech IA! A casa podeu mirar junts el portafoli (la idea, el prototip, la model card, la fitxa de riscos i la de transparència) i el diploma. Pregunteu: com fareu servir la IA a partir d'ara? Què no li deixareu fer mai?|¡Ha terminado el curso Tech IA! En casa podéis mirar juntos el portafolio (la idea, el prototipo, la model card, la ficha de riesgos y la de transparencia) y el diploma. Preguntad: ¿cómo usaréis la IA a partir de ahora? ¿Qué no le dejaréis hacer nunca?",
+    faq: [
+      ["El diploma de l'app és el mateix que el de paper?|¿El diploma de la app es el mismo que el de papel?", "Tots dos diuen què s'ha après al curs. El de l'app compta les sessions, les insígnies i els projectes del perfil i es pot imprimir a casa; el de paper el lliura el professor/a amb la signatura.|Los dos dicen qué se ha aprendido en el curso. El de la app cuenta las sesiones, las insignias y los proyectos del perfil y se puede imprimir en casa; el de papel lo entrega el profesor/a con la firma."],
+      ["I si un equip no ha acabat el prototip?|¿Y si un equipo no ha terminado el prototipo?", "Presenta el que té: la idea, el prototip de paper, la versió 1 i el que ha après de les proves. La rúbrica valora el procés i l'honestedat, no només que funcioni.|Presenta lo que tiene: la idea, el prototipo de papel, la versión 1 y lo que ha aprendido de las pruebas. La rúbrica valora el proceso y la honestidad, no solo que funcione."],
+      ["Es pot portar algun projecte al centre de veritat?|¿Se puede llevar algún proyecto al centro de verdad?", "Sí, com a proposta: amb la fitxa de riscos, la model card i la de transparència, la direcció pot decidir si val la pena provar-lo amb les eines i les normes del centre.|Sí, como propuesta: con la ficha de riesgos, la model card y la de transparencia, la dirección puede decidir si vale la pena probarlo con las herramientas y las normas del centro."]
+    ],
+    tec: [
+      ["El pas del diploma no mostra totes les sessions fetes.|El paso del diploma no muestra todas las sesiones hechas.", "Compta les sessions acabades en aquest perfil. Si l'alumne/a n'ha fet alguna en un altre dispositiu o perfil, no hi surt, però el diploma és vàlid igualment.|Cuenta las sesiones terminadas en este perfil. Si el alumno/a ha hecho alguna en otro dispositivo o perfil, no sale, pero el diploma es válido igualmente."],
+      ["No s'obre la versió 2 al projector.|No se abre la versión 2 en el proyector.", "Obriu el portafoli («Projectes») amb el perfil de l'alumne/a, o feu servir el pla B: captures o el prototip de paper.|Abrid el portafolio («Proyectos») con el perfil del alumno/a, o usad el plan B: capturas o el prototipo de papel."]
+    ],
+    seg: ["Si hi ha públic (direcció o famílies), cap demo no ha de mostrar dades reals de l'alumnat ni fotos de cares. Les valoracions entre equips han de ser respectuoses i concretes.|Si hay público (dirección o familias), ninguna demo debe mostrar datos reales del alumnado ni fotos de caras. Las valoraciones entre equipos tienen que ser respetuosas y concretas."],
+    extra: [
+      "Llengua: el discurs persuasiu i la gestió del temps en una presentació oral.|Lengua: el discurso persuasivo y la gestión del tiempo en una presentación oral.",
+      "Tutoria: exposar els projectes a les famílies o en una jornada de portes obertes.|Tutoría: exponer los proyectos a las familias o en una jornada de puertas abiertas."
+    ],
+    trans: ["Final del curs Tech IA. L'alumnat pot continuar al laboratori d'IA de l'app (totes les eines en mode lliure).|Final del curso Tech IA. El alumnado puede continuar en el laboratorio de IA de la app (todas las herramientas en modo libre)."],
+    slides: [
+      { id: 's1', k: 'portada', t: 'Presentació i diploma|Presentación y diploma', x: 'Projecte: una IA per al nostre centre|Proyecto: una IA para nuestro centro', nota: "Última sessió del curs Tech IA.|Última sesión del curso Tech IA." },
+      { id: 's2', k: 'pregunta', t: "S'obre la fira!|¡Se abre la feria!", x: 'Útil, segura i honesta.|Útil, segura y honesta.', nota: "Recorda l'ordre de la sessió.|Recuerda el orden de la sesión." },
+      { id: 's3', k: 'anim', t: 'Tres minuts que convencen|Tres minutos que convencen', anim: 'i84pitch', x: '30 + 90 + 30 + 30 segons.|30 + 90 + 30 + 30 segundos.', nota: "Cronometreu-ho a l'assaig.|Cronometradlo en el ensayo." },
+      { id: 's4', k: 'anim', t: 'La demo i el pla B|La demo y el plan B', anim: 'i84demo', x: 'Provada abans; si falla, s\'explica.|Probada antes; si falla, se explica.', nota: "Que tinguin la versió 2 oberta al portafoli.|Que tengan la versión 2 abierta en el portafolio." },
+      { id: 's5', k: 'anim', t: 'Què ha fet la IA i què nosaltres|Qué ha hecho la IA y qué nosotros', anim: 'i84transp', x: 'Declarar-ho dona confiança.|Declararlo da confianza.', nota: "Connecta-ho amb les unitats 4 i 5.|Conéctalo con las unidades 4 y 5." },
+      { id: 's6', k: 'anim', t: 'Les preguntes del jurat|Las preguntas del jurado', anim: 'i84qa', x: 'Respon amb les fitxes.|Responde con las fichas.', nota: "Practiqueu «no ho sabem, però ho comprovaríem així».|Practicad «no lo sabemos, pero lo comprobaríamos así»." },
+      { id: 's7', k: 'anim', t: 'El vostre viatge per la IA|Vuestro viaje por la IA', anim: 'i84journey', x: 'Vuit unitats fins al diploma.|Ocho unidades hasta el diploma.', nota: "Recordeu una cosa de cada unitat.|Recordad una cosa de cada unidad." },
+      { id: 's8', k: 'activitat', t: 'Assaig del pitch|Ensayo del pitch', timer: 8, punts: ['Repartiu les parts.|Repartid las partes.', 'Assaig de 3 minuts.|Ensayo de 3 minutos.', 'Dues estrelles i un desig.|Dos estrellas y un deseo.'], nota: "Guió del pitch, un per equip.|Guion del pitch, uno por equipo." },
+      { id: 's9', k: 'pregunta', t: 'Quin desig us han donat?|¿Qué deseo os han dado?', x: 'Canvieu una cosa abans de la fira.|Cambiad una cosa antes de la feria.', nota: "Comparteix dos desigs útils.|Comparte dos deseos útiles." },
+      { id: 's10', k: 'activitat', t: "A l'ordinador|En el ordenador", timer: 14, punts: ['Qui ho ha fet i l\'ordre del pitch.|Quién lo ha hecho y el orden del pitch.', 'La fitxa de transparència.|La ficha de transparencia.', 'Les preguntes del jurat.|Las preguntas del jurado.'], nota: "Fes la pausa activa quan hi arribin.|Haz la pausa activa cuando lleguen." },
+      { id: 's11', k: 'activitat', t: 'La fira del Repte IA|La feria del Reto IA', timer: 20, punts: ['3 minuts per equip.|3 minutos por equipo.', 'Dues preguntes del jurat.|Dos preguntas del jurado.', "La resta valora a l'app.|El resto valora en la app."], nota: "Controla el temps amb el cronòmetre.|Controla el tiempo con el cronómetro." },
+      { id: 's12', k: 'concepte', t: 'Nivell PRO|Nivel PRO', punts: ['Pitch amb ganxo i tancament.|Pitch con gancho y cierre.', 'Si la demo falla davant del jurat.|Si la demo falla delante del jurado.', 'Extra: transparència i mèrit.|Extra: transparencia y mérito.'], nota: "Per a 3r-4t d'ESO o qui vagi ràpid.|Para 3.º-4.º de ESO o quien vaya rápido." },
+      { id: 's13', k: 'concepte', t: 'El jurat destaca…|El jurado destaca…', punts: ['La IA més útil.|La IA más útil.', 'La IA més segura.|La IA más segura.', 'La IA més honesta.|La IA más honesta.'], nota: "No hi ha una IA guanyadora: aplaudiu cada projecte.|No hay una IA ganadora: aplaudid cada proyecto." },
+      { id: 's14', k: 'resum', t: 'Hem après a…|Hemos aprendido a…', punts: ['Entendre com funciona la IA per dins.|Entender cómo funciona la IA por dentro.', 'Crear amb IA i comprovar el que fa.|Crear con IA y comprobar lo que hace.', 'Fer-la servir amb criteri i responsabilitat.|Usarla con criterio y responsabilidad.'], nota: "Deixa-la projectada mentre lliures els diplomes.|Déjala proyectada mientras entregas los diplomas." },
+      { id: 's15', k: 'tiquet', t: 'Tiquet de sortida|Tique de salida', punts: ['Una cosa de la IA i una de l\'equip.|Una cosa de la IA y una del equipo.', 'El més important del curs.|Lo más importante del curso.'], nota: "Fes el tiquet mentre lliures els diplomes.|Haz el tique mientras entregas los diplomas." },
+      { id: 's16', k: 'portada', t: 'Enhorabona!|¡Enhorabuena!', x: 'Curs Tech IA completat|Curso Tech IA completado', nota: "Lliura els diplomes un a un, dient a cada alumne/a una cosa concreta que ha fet bé.|Entrega los diplomas uno a uno, diciendo a cada alumno/a algo concreto que ha hecho bien." }
+    ],
+    print: [
+      { id: 'p1', t: 'Guió del pitch|Guion del pitch', k: 'fitxa',
+        intro: "Un per equip. 3 minuts en total. Escriviu qui diu cada part i assageu-lo amb cronòmetre.|Uno por equipo. 3 minutos en total. Escribid quién dice cada parte y ensayadlo con cronómetro.",
+        items: [
+          { q: "🎯 El problema, amb un cas concret i sense noms (30 s) · qui ho diu:|🎯 El problema, con un caso concreto y sin nombres (30 s) · quién lo dice:", sol: "Per exemple: «A l'hora del pati, la bibliotecària no pot atendre tothom i molts alumnes de 1r marxen sense llibre».|Por ejemplo: «A la hora del patio, la bibliotecaria no puede atender a todos y muchos alumnos de 1.º se van sin libro»." },
+          { q: "🛠️ La solució i la demo (90 s) · qui ho diu i quin exemple fareu servir:|🛠️ La solución y la demo (90 s) · quién lo dice y qué ejemplo usaréis:", big: true, sol: "Per exemple: la BiblioGuia v2; demo amb «llibres de misteri per a 1r»; pla B: captures.|Por ejemplo: la BiblioGuía v2; demo con «libros de misterio para 1.º»; plan B: capturas." },
+          { q: "🧪 Proves i riscos: resultats, límits i com els controleu (30 s):|🧪 Pruebas y riesgos: resultados, límites y cómo los controláis (30 s):", sol: "Per exemple: 3 de 4 usuaris troben llibre en 5 minuts; no demana dades; diu que és una IA i si no sap l'horari ho diu.|Por ejemplo: 3 de 4 usuarios encuentran libro en 5 minutos; no pide datos; dice que es una IA y si no sabe el horario lo dice." },
+          { q: "🙋 Què ha fet la IA i què nosaltres · la petició al jurat (30 s):|🙋 Qué ha hecho la IA y qué nosotros · la petición al jurado (30 s):", sol: "Per exemple: la IA genera les recomanacions; nosaltres hem escoltat, decidit, provat i escrit les fitxes. Petició: provar-la un mes a la biblioteca.|Por ejemplo: la IA genera las recomendaciones; nosotros hemos escuchado, decidido, probado y escrito las fichas. Petición: probarla un mes en la biblioteca." }
+        ] },
+      { id: 'p2', t: 'Diploma del curs|Diploma del curso', k: 'diploma',
+        intro: "ha completat el curs Tech IA de Numi Tech: entén com funciona la intel·ligència artificial, la fa servir amb criteri i ha dissenyat, provat i presentat una IA per al seu centre.|ha completado el curso Tech IA de Numi Tech: entiende cómo funciona la inteligencia artificial, la usa con criterio y ha diseñado, probado y presentado una IA para su centro.",
+        items: [
+          "Entén què hi ha dins una IA: dades, probabilitats i prediccions.|Entiende qué hay dentro de una IA: datos, probabilidades y predicciones.",
+          "Entrena models, en mesura els errors i en detecta el biaix.|Entrena modelos, mide sus errores y detecta el sesgo.",
+          "Parla amb models de llenguatge amb bons prompts i en comprova les respostes.|Habla con modelos de lenguaje con buenos prompts y comprueba sus respuestas.",
+          "Crea amb IA declarant-ne l'autoria i detecta deepfakes.|Crea con IA declarando su autoría y detecta deepfakes.",
+          "Crea apps amb vibe coding i dissenya agents segurs.|Crea apps con vibe coding y diseña agentes seguros.",
+          "Pensa l'impacte de la IA en la feina, el planeta, la privadesa i els drets.|Piensa el impacto de la IA en el trabajo, el planeta, la privacidad y los derechos.",
+          "Ha dissenyat, provat i presentat una IA útil i honesta per al centre.|Ha diseñado, probado y presentado una IA útil y honesta para el centro."
+        ] }
+    ]
+  }
+});

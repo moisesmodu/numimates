@@ -218,3 +218,17 @@ cursos de Tech i crear un curs de disseny 3D en dos nivells. Sense desplegar a p
   Exemples inventats; telèfons d'ajuda només 116 111, 017 i 112. Illes 3D de les unitats 4-6.
 - El diploma del curs passa de d3-4 a d6-4 (d3-4 i la seva guia ara diuen «unitat acabada»). Mòdul Digital al dossier: 12 €.
 - Numi Tech: 224 sessions, solucionari 2.608 respostes, 0 errors.
+
+## Curs nou: Tech IA (12-16 anys, 1r-4t ESO) — 8 unitats, 32 sessions (28-10-2026)
+- Contracte: `scripts/TECH-IA.md`. Motor `tech-ia.js`/`tech-ia.css` (curs `ia`, fitxers c8): `iatrain` (entrenar un
+  classificador al navegador amb càmera, dibuix, so o conjunts d'exemples propis; res no surt del dispositiu), `iangram`
+  (minimodel de llenguatge), `iachat` (xats simulats amb al·lucinacions per caçar; IA real opcional només si el docent ha
+  activat l'assistent, màx. 8 preguntes per sessió, mode «NumiLM» a `api/chat.js`), `iaprompt`, `iaagent` (pla, eines,
+  permisos, memòria, injecció de prompts), `iavibe` (vibe coding amb l'editor web: pestanya `app.js` i proves `run`),
+  `iacard` (fitxes: model, riscos, transparència…). Nivell PRO per a 3r-4t (`pro: {…}`), botó PRO a la barra.
+- Unitats: 1 Què hi ha dins una IA? · 2 Entrena la teva IA · 3 Models de llenguatge · 4 Imatge, veu i vídeo generats ·
+  5 Crea amb IA (vibe coding) · 6 Agents · 7 IA i societat · 8 Projecte: una IA per al nostre centre (diploma).
+  Fets verificats a la web (llei europea d'IA, OIT 2025, AIE 2025, OWASP 2025…), fonts a les guies.
+- Altres canvis: `tech.js` (el temporitzador de la pausa ja no reactiva «Continua» en un altre pas), `imprimeix.html`
+  (capçalera de la graella), `vercel.json` (guia c8 al servidor), `variant.js`/`middleware.js` (full d'estil `tech-ia`).
+- Numi Tech: 256 sessions, solucionari 2.942 respostes, 0 errors.
