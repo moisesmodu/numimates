@@ -472,13 +472,14 @@ function rbBlock(b, ro) {
   return `<div class="tb rb c-${RB_CAT[b.k]}${sel ? ' sel' : ''}${cont ? ' cont' : ''}" id="rb${b._id}"><div class="tbh" ${ro ? '' : `onclick="rbSel(${b._id})"`}><span class="tbi">${RB_ICO[b.k] || ''}</span><span class="tbl">${rbLabel(b, f, RB.st)}</span></div>
     ${cont ? `<div class="tbin">${rbList(b.b, ro)}</div>${b.k === 'if' && b.e ? `<div class="tbelse">${L('si no', 'si no')}</div><div class="tbin">${rbList(b.e, ro)}</div>` : ''}<div class="tbend"></div>` : ''}</div>${sel && !ro ? rbTools(b) : ''}`;
 }
-function rbSlot(l, i) { const on = RB.cur && RB.cur.l === l && RB.cur.i === i; return `<button class="tslot${on ? ' on' : ''}" onclick="rbCur(${rbLid(l)},${i})" aria-label="${L('Posa els blocs aquí', 'Pon los bloques aquí')}">${on ? `<span>${L('els blocs nous van aquí', 'los bloques nuevos van aquí')}</span>` : ''}</button>`; }
+function rbSlot(l, i) { const on = RB.cur && RB.cur.l === l && RB.cur.i === i, empty = on && !l.length && RB.scripts.some(s => RB.prog[s] === l) && !rbCountAll(RB.prog); return `<button class="tslot${on ? ' on' : ''}${empty ? ' empty' : ''}" onclick="rbCur(${rbLid(l)},${i})" aria-label="${L('Posa els blocs aquí', 'Pon los bloques aquí')}">${on ? `<span>${empty ? L('Arrossega aquí un bloc de la paleta (o toca\'l)', 'Arrastra aquí un bloque de la paleta (o tócalo)') : L('els blocs nous van aquí', 'los bloques nuevos van aquí')}</span>` : ''}</button>`; }
 function rbList(list, ro) { if (ro || RB.mode !== 'edit') return list.map(b => rbBlock(b, true)).join(''); return list.map((b, i) => rbSlot(list, i) + rbBlock(b)).join('') + rbSlot(list, list.length); }
 function rbTools(b) {
   const ix = RB.ids[b._id], i = ix.list.indexOf(b);
   return `<div class="tbtools"><button onclick="rbMove(-1)" ${!rbMoveTo(b, -1) ? 'disabled' : ''} aria-label="${L('Puja', 'Sube')}">↑</button><button onclick="rbMove(1)" ${!rbMoveTo(b, 1) ? 'disabled' : ''} aria-label="${L('Baixa', 'Baja')}">↓</button>
     ${b.k === 'if' && RB.pal.includes('else') ? `<button class="wide" onclick="rbElse()">${b.e ? L('Treu «si no»', 'Quita «si no»') : L('Afegeix «si no»', 'Añade «si no»')}</button>` : ''}
     ${(b.k === 'if' || b.k === 'while' || b.k === 'until') && RB.pal.includes('and') ? `<button class="wide" onclick="rbJoin()">${b.c.and || b.c.or ? L('Una sola condició', 'Una sola condición') : L('Afegeix «i / o»', 'Añade «y / o»')}</button>` : ''}
+    ${typeof TDUP_ICO !== 'undefined' ? `<button class="dup" onclick="rbDup()" aria-label="${L('Duplica', 'Duplica')}" title="${L('Duplica', 'Duplica')}">${TDUP_ICO}</button>` : ''}
     <button class="del" onclick="rbDel()">${L('Esborra', 'Borra')}</button></div>`;
 }
 function rbPalette() {
@@ -500,7 +501,7 @@ function rbWorldHTML() {
   const alts = RB.alts.length > 1 ? `<div class="talts">${RB.alts.map((_, i) => `<button class="${i === RB.altI ? 'on' : ''} ${RB.altOk.has(i) ? 'ok' : ''}" onclick="rbAlt(${i})">${RB.altOk.has(i) ? '✓ ' : ''}${L('Pista', 'Pista')} ${i + 1}</button>`).join('')}</div>` : '';
   return `<div class="tworld rworld" id="rworld">${alts}<div class="rarena" id="rarena" style="--ar2:${(1 / ar).toFixed(3)};--ar3:${(1 / Math.max(ar, .62)).toFixed(3)}"><canvas id="rcv"></canvas><div class="rcam" id="rcam" hidden><button onclick="rbView()" aria-label="${L('Canvia la vista', 'Cambia la vista')}" id="rviewb">${rbViewLabel()}</button></div></div>
     <div class="rdash" id="rdash">${rbDashHTML()}</div><p class="tsay" id="tsay" aria-live="polite"></p>
-    <div class="trun"><button class="btn big trgo" id="rbgo" onclick="rbGo()">${TIC.play}${L('Executa', 'Ejecuta')}</button><button class="btn ghost ico" onclick="rbReset()" aria-label="${L('Torna a començar', 'Vuelve a empezar')}"><svg viewBox="0 0 24 24"><path d="M12 5V2L7 6l5 4V7a6 6 0 1 1-6 6H4a8 8 0 1 0 8-8z" fill="currentColor"/></svg></button><button class="btn ghost ico" onclick="rbSpeed()" id="rbsp" aria-label="${L('Velocitat', 'Velocidad')}">×1</button></div></div>`;
+    <div class="trun"><button class="btn big trgo" id="rbgo" onclick="rbGo()">${TIC.play}${L('Executa', 'Ejecuta')}</button>${RB.mode === 'edit' ? `<button class="btn ghost" onclick="rbStep()" title="${L('Fes un sol bloc i atura\'t', 'Haz un solo bloque y para')}">${L('Pas a pas', 'Paso a paso')}</button>` : ''}<button class="btn ghost ico" onclick="rbReset()" aria-label="${L('Torna a començar', 'Vuelve a empezar')}"><svg viewBox="0 0 24 24"><path d="M12 5V2L7 6l5 4V7a6 6 0 1 1-6 6H4a8 8 0 1 0 8-8z" fill="currentColor"/></svg></button><button class="btn ghost ico" onclick="rbSpeed()" id="rbsp" aria-label="${L('Velocitat', 'Velocidad')}">×1</button></div></div>`;
 }
 function rbDashHTML() {
   const W = RB.W, S = RB.M.S, d = roboDist(W, S), ln = ['L', 'M', 'R'].map(k => roboLine(W, S, k).black ? 1 : 0), lL = roboLight(W, S, 'L'), lR = roboLight(W, S, 'R');
@@ -526,7 +527,7 @@ function rbIns(k) {
   if (RB.run) rbStop();
   if (RB.max && rbCountAll(RB.prog) >= RB.max) return toast(L(`Només pots fer servir ${RB.max} blocs.`, `Solo puedes usar ${RB.max} bloques.`));
   const b = rbNew(k, RB.st); const { l, i } = RB.cur; l.splice(i, 0, b);
-  RB.cur = b.b ? { l: b.b, i: 0 } : { l, i: i + 1 }; RB.sel = null; SFX.tap && SFX.tap(); rbFresh(); rbDraw();
+  RB.cur = b.b ? { l: b.b, i: 0 } : { l, i: i + 1 }; RB.sel = null; SFX.snap ? SFX.snap() : SFX.tap && SFX.tap(); rbFresh(); rbDraw();
 }
 function rbCur(li, i) { if (RB.run) rbStop(); RB.cur = { l: RB.lists[li], i }; RB.sel = null; rbDraw(); }
 function rbSel(id) { if (RB.run) rbStop(); const ix = RB.ids[id]; if (!ix) return; RB.sel = RB.sel === ix.b ? null : ix.b; RB.cur = { l: ix.list, i: ix.list.indexOf(ix.b) + 1 }; rbDraw(); }
@@ -544,6 +545,13 @@ function rbMoveTo(b, d) {
   const j = par.list.indexOf(par.b); return { l: par.list, i: d > 0 ? j + 1 : j };
 }
 function rbMove(d) { const b = RB.sel, l = RB.ids[b._id].list, to = rbMoveTo(b, d); if (!to) return; l.splice(l.indexOf(b), 1); to.l.splice(to.i, 0, b); RB.cur = { l: to.l, i: to.i + 1 }; rbFresh(); rbDraw(); }
+// duplica el bloc triat (amb el que té a dins) just a sota; la còpia queda triada
+function rbDup() {
+  const b = RB.sel; if (!b) return; if (RB.run) rbStop();
+  const ix = RB.ids[b._id], c = rbClone(b); if (!ix) return;
+  if (RB.max && rbCountAll(RB.prog) + rbCount([c]) > RB.max) return toast(L(`Només pots fer servir ${RB.max} blocs.`, `Solo puedes usar ${RB.max} bloques.`));
+  ix.list.splice(ix.list.indexOf(b) + 1, 0, c); RB.sel = c; RB.cur = { l: ix.list, i: ix.list.indexOf(c) + 1 }; SFX.snap ? SFX.snap() : SFX.tap && SFX.tap(); rbFresh(); rbDraw();
+}
 function rbDel() { const b = RB.sel, l = RB.ids[b._id].list, i = l.indexOf(b); l.splice(i, 1); RB.sel = null; RB.cur = { l, i }; rbFresh(); rbDraw(); }
 function rbElse() { const b = RB.sel; b.e = b.e ? null : []; rbFresh(); rbDraw(); }
 function rbJoin() { const b = RB.sel; b.c = b.c.and || b.c.or ? (b.c.and || b.c.or)[0] : { and: [b.c, { a: { r: 'dist' }, op: '>', b: 10 }] }; rbFresh(); rbDraw(); }
@@ -689,6 +697,28 @@ function rbGo() {
     rbRender(); if (++fr % 3 === 0) { rbDash(); rbMarkNow(); }
     if (why) return rbEnd(why);
     RB_RAF = requestAnimationFrame(step);
+  };
+  RB_RAF = requestAnimationFrame(step);
+}
+// «Pas a pas» (com a en Bit): el robot fa el bloc que toca i s'atura quan en comença un altre (de qualsevol guió); el bloc que ve queda marcat.
+// Qualsevol canvi (programa, pista, «torna a començar») fa un robot nou (RB.M) i el pas a pas torna a començar des de la sortida.
+function rbStep() {
+  if (!RB) return; if (RB.run) rbStop();
+  if (!rbCountAll(RB.prog)) return rbSay(L('Primer posa algun bloc al programa.', 'Primero pon algún bloque en el programa.'));
+  if (!RB.stepM || RB.stepM !== RB.M) { RB.W = roboWorld(RB.alts[RB.altI]); RB.M = roboMachine(RB.W, RB.prog); if (RB.b3) RB.b3.reset(RB.W, RB.M.S); RB.stepM = RB.M; RB.sel = null; rbSay(''); rbRender(); rbDash(); }
+  const M = RB.M, key = () => Object.values(M.cur).map(b => b && b._id).join(','), k0 = key(), t0 = M.S.t;
+  const mark = () => { document.querySelectorAll('.rb.now').forEach(e => e.classList.remove('now')); let first = null; for (const b of Object.values(M.cur)) if (b && b._id) { const e = document.getElementById('rb' + b._id); if (e) { e.classList.add('now'); first = first || e; } } if (first && typeof tInView === 'function') tInView(first); };
+  RB.run = true; const bt = document.getElementById('rbgo'); if (bt) bt.innerHTML = L('Atura', 'Para');
+  let last = performance.now(), acc = 0, lastNote = null;
+  const step = now => {
+    if (!RB || !RB.run || RB.M !== M) return;
+    acc += Math.min(100, now - last) * RB.speed; last = now; let why = null, next = false;
+    while (acc >= ROBO.DT * 1000) { acc -= ROBO.DT * 1000; roboSnap(RB.W, M.S); M.tick(); if ((why = roboShouldEnd(M))) break; if (key() !== k0 || M.S.t - t0 > 20) { next = true; break; } }
+    const S = M.S; if (S.sound && S.sound !== lastNote) { lastNote = S.sound; rbTone(S.sound.n, 300); }
+    rbRender(); rbDash();
+    if (why) { RB.stepM = null; return rbEnd(why); }
+    if (next) { rbStop(); mark(); return; }
+    mark(); RB_RAF = requestAnimationFrame(step);
   };
   RB_RAF = requestAnimationFrame(step);
 }

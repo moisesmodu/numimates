@@ -232,3 +232,12 @@ cursos de Tech i crear un curs de disseny 3D en dos nivells. Sense desplegar a p
 - Altres canvis: `tech.js` (el temporitzador de la pausa ja no reactiva «Continua» en un altre pas), `imprimeix.html`
   (capçalera de la graella), `vercel.json` (guia c8 al servidor), `variant.js`/`middleware.js` (full d'estil `tech-ia`).
 - Numi Tech: 256 sessions, solucionari 2.942 respostes, 0 errors.
+
+## Editors de blocs més «Scratch» (28-10-2026) — Robot, Robòtica i Creadors
+- En arrossegar: vista prèvia translúcida al lloc on anirà el bloc, el bucle o el «si» que el rebrà s'il·lumina i la paleta
+  fa de paperera. Animació del bloc que vola de la paleta al programa, sons de «clic», vibració curta amb el dit.
+- Refés (al costat de Desfés; Ctrl+Maj+Z / Ctrl+Y), Duplica al bloc triat, estat buit més clar, la paleta del mòbil
+  manté la posició, el programa del mòbil no s'escapa en arrossegar i mostra el bloc nou.
+- Robot: números, colors, notes, condicions i funcions es toquen dins del bloc (selector petit); els botons d'abans hi
+  continuen. Robòtica: «Pas a pas». Arreglats: classe `tdin` duplicada i text seleccionat en arrossegar amb el ratolí.
+- Pendent: «Pas a pas» a Creadors, assenyalar el bloc de l'error a Robòtica i Creadors, zoom per a programes llargs.

@@ -60,6 +60,10 @@ function makeSFX(enabled) {
       [523.3, 659.3, 784].forEach(f => { voice('triangle', f, t + .45, .06, .05, 1.1, .8); voice('sine', f * 2, t + .45, .06, .04, 1.2, .8, 5); });
       bell(2093, t + .47, .1, 1.2); sparkle(t + .5, 9, 2093, .04);
     }),
+    // editors de blocs: la peça encaixa (clic de fusta + cop greu), s'aixeca i va a la paperera
+    snap: run(t => { noise(t, .03, 2600, 5, .16); const o = voice('sine', 210, t, .002, .11, .07, .05); o.frequency.exponentialRampToValueAtTime(140, t + .07); }),
+    pick: run(t => { const o = voice('sine', 520, t, .004, .06, .08, .1); o.frequency.exponentialRampToValueAtTime(820, t + .07); }),
+    trash: run(t => { noise(t, .16, 1400, .8, .07); const o = voice('triangle', 420, t, .004, .07, .16, .2); o.frequency.exponentialRampToValueAtTime(160, t + .16); }),
     // compte enrere: cop de fusta
     tick: run(t => { noise(t, .045, 1900, 6, .22); voice('sine', 1200, t, .001, .04, .03, 0); }),
     // salt del company: molla

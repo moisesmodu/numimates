@@ -1,5 +1,5 @@
 /* ===== Numi Tech · en Bit, el robot de l'illa =====
-   Un món de caselles, un llenguatge de blocs i un editor per tocs pensat per al mòbil (sense arrossegar).
+   Un món de caselles, un llenguatge de blocs i un editor per al mòbil (tocar o arrossegar: l'arrossegament és a tech.js).
    · Sense eval (la CSP no ho deixa): els programes són arbres de blocs i els executa un intèrpret propi, pas a pas,
      perquè es vegi quin bloc fa cada moviment.
    · Els mons s'escriuen com un mapa de text (vegeu BIT_MAP) per poder crear-ne molts de pressa. */
@@ -440,17 +440,48 @@ function tbIndex() {
   walk(TB.prog); if (TB.fns) Object.values(TB.fns).forEach(walk); if (TB.evs) Object.values(TB.evs).forEach(walk); if (TB.pool) walk(TB.pool);
 }
 const tbLid = l => TB.lists.indexOf(l);
+// camps que es toquen dins del mateix bloc (com al Maqueen i a l'escenari): el número, el color, la nota, la condició o la funció
+function tbFieldK(b) {
+  if (['rep', 'add', 'sub', 'setv'].includes(b.k)) return 'n';
+  if (b.k === 'note') return 'note';
+  if (b.k === 'paint' || b.k === 'light') return (TB.colors || ['r', 'g', 'y', 'u']).length > 1 ? 'c' : null;
+  if (b.k === 'if' || b.k === 'until') return (TB.conds || []).length > 1 ? 'cond' : null;
+  if (b.k === 'call') return TB.fns && Object.keys(TB.fns).length > 1 ? 'fn' : null;
+  return null;
+}
+function tbLabelF(b) {
+  const h = bitLabel(b), f = tbFieldK(b); if (!f) return h;
+  const btn = x => `<button class="rf tbf" onclick="event.stopPropagation();tbField(${b._id},this)" aria-label="${L('Canvia', 'Cambia')}: ${x.replace(/<[^>]+>/g, '').trim() || L('color', 'color')}" aria-haspopup="true">${x}</button>`;
+  if (f === 'n') return h.replace(/<b class="tnum">([^<]*)<\/b>/, (m, x) => btn(x));
+  if (f === 'c') return h.replace(/<i class="tdot"[^>]*><\/i>/, m => btn(m));
+  return h.replace(/<b>([\s\S]*?)<\/b>/, (m, x) => btn(x));
+}
+function tbField(id, el) {
+  if (TB.run) tbStop();
+  const ix = TB.ids[id]; if (!ix || typeof tPop !== 'function') return; const b = ix.b, f = tbFieldK(b); if (!f) return;
+  const CN = { r: L('vermell', 'rojo'), g: L('verd', 'verde'), y: L('groc', 'amarillo'), u: L('blau', 'azul'), p: L('lila', 'lila') };
+  let opts = [];
+  if (f === 'n') { const lo = b.k === 'setv' ? 0 : 1, hi = b.k === 'rep' ? 12 : 20, cur = b.n ?? (b.k === 'rep' ? 2 : b.k === 'setv' ? 0 : 1); for (let v = lo; v <= hi; v++) opts.push([v, String(v), v === cur]); }
+  else if (f === 'note') opts = (TB.notes || BIT_NOTES).map(n => [n, n, n === (b.n || 'do')]);
+  else if (f === 'c') opts = (TB.colors || ['r', 'g', 'y', 'u']).map(c => [c, `<i class="tdot" style="background:${BIT_COL[c]}"></i>${CN[c] || c}`, c === (b.c || 'r')]);
+  else if (f === 'cond') opts = TB.conds.map(c => [c, bitCondLabel(c, b.k === 'until'), c === b.c]);
+  else opts = Object.keys(TB.fns).map(x => [x, `${L('Funció', 'Función')} ${bitFName(x)}`, x === b.f]);
+  tPop(el, opts, v => { if (f === 'c' || f === 'cond') b.c = v; else if (f === 'fn') b.f = v; else b.n = v; if (f === 'note') bitSnd('note', v); tbFresh(); tbDraw(); }, { grid: f === 'n', label: bitLabel(b).replace(/<[^>]+>/g, '') });
+}
 function tbBlock(b, ro) {
   const cont = b.k === 'rep' || b.k === 'until' || b.k === 'if', sel = TB.sel === b;
   const click = TB.mode === 'spot' ? `tbSpot(${b._id})` : TB.mode === 'parsons' ? `tbPar(${b._id})` : ro ? '' : `tbSel(${b._id})`;
+  // a l'editor, el bloc és un <div> (s'hi poden tocar els camps); tech-a11y.js el fa focusable
+  const fld = !ro && TB.mode === 'edit' && tbFieldK(b);
   return `<div class="tb c-${BIT_CAT[b.k]}${sel ? ' sel' : ''}${cont ? ' cont' : ''}" id="tb${b._id}">
-    <button class="tbh" ${click ? `onclick="${click}"` : 'tabindex="-1"'}><span class="tbi">${BIT_ICO[b.k] || ''}</span><span class="tbl">${bitLabel(b)}</span></button>
+    ${fld ? `<div class="tbh" onclick="${click}"><span class="tbi">${BIT_ICO[b.k] || ''}</span><span class="tbl">${tbLabelF(b)}</span></div>` : `<button class="tbh" ${click ? `onclick="${click}"` : 'tabindex="-1"'}><span class="tbi">${BIT_ICO[b.k] || ''}</span><span class="tbl">${bitLabel(b)}</span></button>`}
     ${cont ? `<div class="tbin">${tbList(b.b, ro)}</div>${b.k === 'if' && b.e ? `<div class="tbelse">${L('Si no', 'Si no')}</div><div class="tbin">${tbList(b.e, ro)}</div>` : ''}<div class="tbend"></div>` : ''}
   </div>${sel && !ro ? tbTools(b) : ''}`;
 }
 function tbSlot(l, i) {
   const on = TB.cur && TB.cur.l === l && TB.cur.i === i && TB.mode === 'edit';
-  return `<button class="tslot${on ? ' on' : ''}" onclick="tbCur(${tbLid(l)},${i})" aria-label="${L('Posa els blocs aquí', 'Pon los bloques aquí')}">${on ? `<span>${L('els blocs nous van aquí', 'los bloques nuevos van aquí')}</span>` : ''}</button>`;
+  const empty = on && !l.length && Object.values(TB.fns || {}).concat(Object.values(TB.evs || {}), [TB.prog]).includes(l);
+  return `<button class="tslot${on ? ' on' : ''}${empty ? ' empty' : ''}" onclick="tbCur(${tbLid(l)},${i})" aria-label="${L('Posa els blocs aquí', 'Pon los bloques aquí')}">${on ? `<span>${empty ? L('Arrossega aquí un bloc de la paleta (o toca\'l)', 'Arrastra aquí un bloque de la paleta (o tócalo)') : L('els blocs nous van aquí', 'los bloques nuevos van aquí')}</span>` : ''}</button>`;
 }
 function tbList(list, ro) {
   if (ro || TB.mode !== 'edit') return list.map(b => tbBlock(b, ro)).join('') || (TB.mode === 'parsons' ? `<p class="tempty">${L('Toca els blocs de sota en ordre', 'Toca los bloques de abajo en orden')}</p>` : '');
@@ -466,6 +497,7 @@ function tbTools(b) {
     ${(b.k === 'if' || b.k === 'until') && (TB.conds || []).length > 1 ? `<button class="wide" onclick="tbCond()">${L('Canvia la condició', 'Cambia la condición')}</button>` : ''}
     ${b.k === 'if' && TB.pal.includes('else') ? `<button class="wide" onclick="tbElse()">${b.e ? L('Treu «si no»', 'Quita «si no»') : L('Afegeix «si no»', 'Añade «si no»')}</button>` : ''}
     ${(b.k === 'paint' || b.k === 'light') ? `<button class="wide" onclick="tbColor()">${L('Canvia el color', 'Cambia el color')}</button>` : ''}
+    ${typeof TDUP_ICO !== 'undefined' ? `<button class="dup" onclick="tbDup()" aria-label="${L('Duplica', 'Duplica')}" title="${L('Duplica', 'Duplica')}">${TDUP_ICO}</button>` : ''}
     <button class="del" onclick="tbDel()" aria-label="${L('Esborra', 'Borra')}">${L('Esborra', 'Borra')}</button></div>`;
 }
 function tbPalette() {
@@ -568,7 +600,7 @@ function tbIns(k) {
   const { l, i } = TB.cur; l.splice(i, 0, b);
   // dins d'un bucle o d'un «si» nou, el cursor hi entra (és el que gairebé sempre es vol fer després)
   TB.cur = b.b ? { l: b.b, i: 0 } : { l, i: i + 1 };
-  TB.sel = null; SFX.tap && SFX.tap(); tbFresh(); tbDraw();
+  TB.sel = null; SFX.snap ? SFX.snap() : SFX.tap && SFX.tap(); tbFresh(); tbDraw();
 }
 function tbCur(li, i) { if (TB.run) tbStop(); TB.cur = { l: TB.lists[li], i }; TB.sel = null; tbDraw(); }
 function tbSel(id) { if (TB.run) tbStop(); const ix = TB.ids[id]; if (!ix) return; TB.sel = TB.sel === ix.b ? null : ix.b; TB.cur = { l: ix.list, i: ix.list.indexOf(ix.b) + 1 }; tbDraw(); }
@@ -585,6 +617,13 @@ function tbMoveTo(b, d) {
   const j = par.list.indexOf(par.b); return { l: par.list, i: d > 0 ? j + 1 : j };
 }
 function tbMove(d) { const b = TB.sel, l = TB.ids[b._id].list, to = tbMoveTo(b, d); if (!to) return; l.splice(l.indexOf(b), 1); to.l.splice(to.i, 0, b); TB.cur = { l: to.l, i: to.i + 1 }; tbFresh(); tbDraw(); }
+// duplica el bloc triat (amb el que té a dins) just a sota; la còpia queda triada per moure-la
+function tbDup() {
+  const b = TB.sel; if (!b) return; if (TB.run) tbStop();
+  const ix = TB.ids[b._id], c = bitClone(b); if (!ix) return;
+  if (TB.max && tbUsed() + bitCount([c]) > TB.max) return toast(L(`Només pots fer servir ${TB.max} blocs.`, `Solo puedes usar ${TB.max} bloques.`));
+  ix.list.splice(ix.list.indexOf(b) + 1, 0, c); TB.sel = c; TB.cur = { l: ix.list, i: ix.list.indexOf(c) + 1 }; SFX.snap ? SFX.snap() : SFX.tap && SFX.tap(); tbFresh(); tbDraw();
+}
 function tbDel() { const b = TB.sel, l = TB.ids[b._id].list, i = l.indexOf(b); l.splice(i, 1); TB.sel = null; TB.cur = { l, i }; tbFresh(); tbDraw(); }
 function tbNum(d) { const b = TB.sel, lo = b.k === 'setv' ? 0 : 1, hi = b.k === 'rep' ? 12 : 20; b.n = Math.max(lo, Math.min(hi, (b.n ?? (b.k === 'rep' ? 2 : 1)) + d)); tbFresh(); tbDraw(); }
 function tbNote() { const b = TB.sel, ns = TB.notes || BIT_NOTES; b.n = ns[(ns.indexOf(b.n) + 1) % ns.length]; bitSnd('note', b.n); tbFresh(); tbDraw(); }

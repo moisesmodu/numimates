@@ -375,7 +375,7 @@ function tSpkWatch(btn) {
 }
 function tStep() {
   try { if (window.speechSynthesis) speechSynthesis.cancel(); } catch (e) { }
-  tStop(); TB = null; typeof tDemoStop === 'function' && tDemoStop();
+  tStop(); TB = null; typeof tDemoStop === 'function' && tDemoStop(); typeof tPopClose === 'function' && tPopClose();
   const st = TSS.s.steps[TSS.i], ph = tx(TPH[st.ph].join('|'));
   TSS.st = st; TSS.ready = false; TSS.t0 = Date.now();
   app.innerHTML = `<div class="tsess k-${st.k} c-${TSS.c.id}" style="--cc:${TSS.c.color};--hb:url(img/tech/scenes/hero-${TSS.c.id}.webp)"><div class="tstop"><button class="xbtn" onclick="tQuit()" aria-label="${L('Surt', 'Salir')}">✕</button><div class="tstopm"><b class="tsph">${ph}</b>${tBar()}</div>${tCanSpeak() ? `<button class="tspk" onclick="tSpeak(this)" aria-label="${L('Escolta', 'Escucha')}" title="${L('Escolta', 'Escucha')}"><svg viewBox="0 0 24 24"><path d="M4 9h4l5-4v14l-5-4H4z" fill="currentColor"/><path d="M16 8.5a5 5 0 0 1 0 7M18.6 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></button>` : ''}${st.extra ? `<button class="tskipx" onclick="tSkipExtra()" title="${L('És un repte extra: el pots saltar', 'Es un reto extra: puedes saltarlo')}">⭐ ${L('Salta', 'Saltar')}</button>` : ''}<span class="tsmin">${TSS.i + 1}/${TSS.s.steps.length}</span></div>
@@ -388,16 +388,18 @@ function tStep() {
 function tUndoStart() {
   const st = document.querySelector('.tsbody>.tstage'); if (!st || typeof TUNDO === 'undefined') return;
   const ed = st.classList.contains('sstagew') ? 'sg' : st.classList.contains('rstage') ? 'rb' : 'tb', U = TUNDO[ed], S = U.S(); if (!S) return;
-  S._uh = []; S._last = tuSer(U.get(S)); tUndoBtn(ed, S); if (S.mode === 'edit') tCoachStart(ed);
+  S._uh = []; S._rh = []; S._last = tuSer(U.get(S)); tUndoBtn(ed, S); tEdPost(ed, S, false); if (S.mode === 'edit') tCoachStart(ed);
 }
 // tot el pas a la vista, sense haver de baixar: si no hi cap, el contingut es fa més petit (fins a un mínim llegible)
 const TFIT = { ro: null, raf: 0 };
 // editors de blocs: el món, el programa i la paleta en franges fixes; aquí es calcula quant pot ocupar el món
 function tEdFit(b) {
   const st = b.querySelector(':scope>.tstage'), w = st && st.querySelector('.tworld'), box = w && w.querySelector('.b3d,.rarena,.sstage'); if (!box) return;
+  if (st.classList.contains('dnd')) return;   // mentre s'arrossega, res no es mou de lloc
   const two = getComputedStyle(st).gridTemplateColumns.trim().split(/\s+/).length > 1, H = st.clientHeight;
   let others = 0; [...w.children].forEach(c => { if (c !== box && c.offsetParent !== null) others += c.offsetHeight + 8; });
-  const avail = two ? H - others - 20 : Math.min(H * .52 - others, H - others - 190);
+  // al mòbil, quan l'alumne/a ja té un programa que no hi cap, el món es fa una mica més petit (st._big, el posa tEdPost)
+  const avail = two ? H - others - 20 : Math.min(H * (st._big ? .42 : .52) - others, H - others - 190);
   st.style.setProperty('--wh', Math.max(110, Math.round(avail)) + 'px');
 }
 function tFit() {
@@ -824,7 +826,11 @@ document.addEventListener('DOMContentLoaded', () => {
 /* ---------- Arrossegar blocs als editors (en Bit, Maqueen, escenari) ----------
    De la paleta al lloc exacte del programa (es veu on caurà), d'un lloc a l'altre del programa, i a la paleta per esborrar-lo.
    Tocar continua funcionant igual (toc = afegeix on hi ha el cursor; toc al bloc = el selecciona). */
-const TDND = { at: 0 };
+const TDND = { at: 0, touch: false };
+// vibració curta en encaixar / esborrar (només amb el dit i si l'aparell en té)
+const tHap = p => { try { if (TDND.touch && navigator.vibrate) navigator.vibrate(p); } catch (e) { } };
+const tSnd = k => { try { (SFX[k] || SFX.tap)(); } catch (e) { } };
+document.addEventListener('pointerdown', ev => { TDND.touch = ev.pointerType === 'touch'; }, true);
 const TED = {
   tb: { S: () => TB, cur: (l, i) => tbCur(l, i), ins: k => tbIns(k), del: () => tbDel(), fresh: () => { tbFresh(); tbDraw(); } },
   rb: { S: () => RB, cur: (l, i) => rbCur(l, i), ins: k => rbIns(k), del: () => rbDel(), fresh: () => { rbFresh(); rbDraw(); } },
@@ -839,11 +845,19 @@ document.addEventListener('pointerdown', ev => {
   let src;
   if (pb) { if (pb.disabled) return; const m = (pb.getAttribute('onclick') || '').match(/(tb|rb|sg)Ins\('([^']+)'\)/); if (!m) return; src = { ed: m[1], k: m[2], el: pb }; }
   else { const blk = bh.closest('.tb'), m = blk && blk.id.match(/^(tb|rb|sg)(\d+)$/); if (!m || !blk.closest('.tprog,.sprogw,.tcode') || !document.querySelector('.tsbody>.tstage .tslot')) return; src = { ed: m[1], id: +m[2], el: bh, blk }; }
-  const x0 = ev.clientX, y0 = ev.clientY, stage = document.querySelector('.tsbody>.tstage'); let ghost = null, drop = null, trash = false, raf = 0;
+  const x0 = ev.clientX, y0 = ev.clientY, stage = document.querySelector('.tsbody>.tstage'); let ghost = null, drop = null, trash = false, raf = 0, zd = 0, zt = 0;
   const pal = stage.querySelector('.tpal');
   const start = () => {
     const r = src.el.getBoundingClientRect(); ghost = src.el.cloneNode(true); ghost.classList.add('tdghost'); ghost.removeAttribute('id'); ghost.style.width = Math.min(r.width, 300) + 'px'; const cs = getComputedStyle(src.el); ghost.style.background = cs.backgroundColor; ghost.style.color = cs.color; ghost.style.borderRadius = cs.borderRadius;
-    document.body.appendChild(ghost); stage.classList.add('dnd', src.k ? 'dnd-new' : 'dnd-move'); if (src.blk) src.blk.classList.add('tdlift'); SFX.tap && SFX.tap();
+    document.body.appendChild(ghost); stage.classList.add('dnd', src.k ? 'dnd-new' : 'dnd-move'); if (src.blk) src.blk.classList.add('tdlift'); tSnd('pick'); tHap(8); if (src.blk && pal) pal.dataset.bin = L('Deixa-la aquí per esborrar-la', 'Suéltala aquí para borrarla');
+    // la vista prèvia: on caurà es veu la mateixa peça, transparent
+    src.prev = `<div class="tdprev" aria-hidden="true">${src.el.innerHTML.replace(/ id="[^"]*"/g, '').replace(/ onclick="[^"]*"/g, '').replace(/<(\/?)button/g, '<$1span')}</div>`; src.col = cs.backgroundColor;
+  };
+  // un buit: mostra-hi (o treu-hi) la peça que hi caurà; el bucle o el «si» que la rebrà s'il·lumina
+  const mark = (s, on) => {
+    if (!s) return; s.classList.toggle('drop', on);
+    if (on) { s._h = s.innerHTML; s.style.setProperty('--dcol', src.col); s.insertAdjacentHTML('beforeend', src.prev); } else if (s._h !== undefined) { s.innerHTML = s._h; delete s._h; }
+    const bin = s.closest('.tbin'), host = bin && bin.parentElement; if (host && host.classList.contains('cont')) host.classList.toggle('tdhost', on);
   };
   const move = m => {
     if (!ghost) { if (Math.hypot(m.clientX - x0, m.clientY - y0) < 8) return; start(); }
@@ -856,26 +870,30 @@ document.addEventListener('pointerdown', ev => {
       const d = Math.abs(m.clientY - (q.top + q.height / 2)) + (m.clientX < q.left ? q.left - m.clientX : m.clientX > q.right ? m.clientX - q.right : 0) * .3; if (d < bd) { bd = d; best = s; } });
     trash = !!(src.blk && pal && (() => { const q = pal.getBoundingClientRect(); return m.clientY > q.top + 4 && m.clientY < q.bottom + 10 && m.clientX > q.left - 10 && m.clientX < q.right + 10; })());
     if (trash) best = null;
-    if (best !== drop) { drop && drop.classList.remove('drop'); drop = best; drop && drop.classList.add('drop'); }
+    if (best !== drop) { mark(drop, false); drop = best; mark(drop, true); if (drop) tHap(4); }
     pal && pal.classList.toggle('trash', trash);
     // a prop de les vores del programa, es desplaça sol
+    // (només si el dit s'hi atura una mica: passar-hi per sobre venint de la paleta no ha de fer córrer el programa)
     const sc = drop && drop.closest('.tprog'); cancelAnimationFrame(raf);
-    if (sc) { const q = sc.getBoundingClientRect(), d = m.clientY < q.top + 34 ? -8 : m.clientY > q.bottom - 34 ? 8 : 0; if (d) { const step = () => { sc.scrollTop += d; raf = requestAnimationFrame(step); }; raf = requestAnimationFrame(step); } }
+    if (sc && sc.scrollHeight > sc.clientHeight) { const q = sc.getBoundingClientRect(), z = Math.max(14, Math.min(34, q.height * .2)), d = m.clientY < q.top + z ? -1 : m.clientY > q.bottom - z ? 1 : 0;
+      if (d !== zd) { zd = d; zt = performance.now(); }
+      if (d) { const step = () => { if (performance.now() - zt > 280) sc.scrollTop += d * 7; raf = requestAnimationFrame(step); }; raf = requestAnimationFrame(step); } } else zd = 0;
   };
   const end = () => {
     removeEventListener('pointermove', move); removeEventListener('pointerup', end); removeEventListener('pointercancel', end); cancelAnimationFrame(raf);
     if (!ghost) return;
     TDND.at = Date.now(); ghost.remove(); stage.classList.remove('dnd', 'dnd-new', 'dnd-move'); pal && pal.classList.remove('trash'); src.blk && src.blk.classList.remove('tdlift');
+    const t0 = drop && tdSlot(drop); mark(drop, false);
     const E = TED[src.ed], S = E && E.S(); if (!S) return;
-    if (src.k) { const t = drop && tdSlot(drop); if (t && t.ed === src.ed) { E.cur(t.li, t.i); E.ins(src.k); } return; }
+    if (src.k) { const t = t0; if (t && t.ed === src.ed) { E.cur(t.li, t.i); E.ins(src.k); tHap(12); } return; }
     const ix = S.ids[src.id]; if (!ix) return;
-    if (trash) { S.sel = ix.b; E.del(); SFX.ko && SFX.ko(); return; }
-    const t = drop && tdSlot(drop); if (!t || t.ed !== src.ed) return;
+    if (trash) { S.sel = ix.b; E.del(); tSnd('trash'); tHap([10, 40, 14]); return; }
+    const t = t0; if (!t || t.ed !== src.ed) return;
     const tl = S.lists[t.li]; if (!tl || tdInside(ix.b, tl)) return;
     if (S.run) (src.ed === 'tb' ? tbStop : src.ed === 'rb' ? rbStop : sgStop)();
     let i = t.i; const j = ix.list.indexOf(ix.b); if (ix.list === tl && j < i) i--; if (ix.list === tl && j === i) return;
-    ix.list.splice(j, 1); tl.splice(i, 0, ix.b); S.sel = null; S.cur = { l: tl, i: i + 1 }; SFX.tap && SFX.tap(); E.fresh();
-    const e = document.getElementById(src.ed + src.id); if (e) { e.classList.add('tdin'); setTimeout(() => e.classList.remove('tdin'), 450); }
+    ix.list.splice(j, 1); tl.splice(i, 0, ix.b); S.sel = null; S.cur = { l: tl, i: i + 1 }; tSnd('snap'); tHap(12); E.fresh();
+    const e = document.getElementById(src.ed + src.id); if (e) tPopIn(e);
   };
   addEventListener('pointermove', move, { passive: false }); addEventListener('pointerup', end); addEventListener('pointercancel', end);
 }, true);
@@ -895,16 +913,31 @@ const TUNDO = {
     fresh: () => { sgFresh(); sgDraw(); }, draw: 'sgDraw' }
 };
 const tuSer = v => JSON.stringify(v, (k, x) => k === '_id' ? undefined : x);
-function tUndo(ed) {
-  const U = TUNDO[ed], S = U && U.S(); if (!S || !S._uh || !S._uh.length) return;
+function tUndo(ed, redo) {
+  const U = TUNDO[ed], S = U && U.S(), from = S && (redo ? S._rh : S._uh); if (!S || S.mode !== 'edit' || !from || !from.length) return;
   const run = ed === 'tb' ? S.run && tbStop : ed === 'rb' ? S.run && rbStop : S.run && sgStop; run && run();
-  const prev = S._uh.pop(); S._undoing = true; U.set(S, JSON.parse(prev)); S.sel = null; S._last = prev; SFX.tap && SFX.tap(); U.fresh(); S._undoing = false;
+  // el que hi ha ara va a l'altra pila (desfer ↔ refer)
+  const now = tuSer(U.get(S)), to = redo ? (S._uh = S._uh || []) : (S._rh = S._rh || []); to.push(now);
+  const prev = from.pop(); S._undoing = true; U.set(S, JSON.parse(prev)); S.sel = null; S._last = prev; SFX.tap && SFX.tap(); U.fresh(); S._undoing = false;
+  typeof tkbSay === 'function' && TKB.kb && tkbSay(redo ? L('Refet', 'Rehecho') : L('Desfet', 'Deshecho'));
 }
+const tRedo = ed => tUndo(ed, true);
+// Ctrl/Cmd+Z desfà; Ctrl/Cmd+Maj+Z o Ctrl+Y refà (fora dels camps de text)
+document.addEventListener('keydown', e => {
+  if (!(e.ctrlKey || e.metaKey) || e.altKey) return; const k = (e.key || '').toLowerCase(); if (k !== 'z' && k !== 'y') return;
+  if (e.target && e.target.closest && e.target.closest('input, textarea, select, [contenteditable], .cm-editor')) return;
+  const st = document.querySelector('.tsbody>.tstage'); if (!st || document.querySelector('.modal-bg')) return;
+  const ed = tEdOf(st), U = TUNDO[ed], S = U && U.S(); if (!S || S.mode !== 'edit') return;
+  e.preventDefault(); if (k === 'y' || e.shiftKey) tRedo(ed); else tUndo(ed);
+});
+const tEdOf = st => st.classList.contains('sstagew') ? 'sg' : st.classList.contains('rstage') ? 'rb' : 'tb';
 function tUndoBtn(ed, S) {
   const h = document.querySelector('.tsbody>.tstage .tphead .tphr'); if (!h || S.mode !== 'edit') return;
   let b = h.querySelector('.tundo');
-  if (!b) { h.insertAdjacentHTML('afterbegin', `<button class="tclr tundo" onclick="tUndo('${ed}')" aria-label="${L('Desfés', 'Deshacer')}" title="${L('Desfés', 'Deshacer')}"><svg viewBox="0 0 24 24"><path d="M9 7H4V2M4 7a9 9 0 1 1-1 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>`); b = h.querySelector('.tundo'); }
+  if (!b) { h.insertAdjacentHTML('afterbegin', `<button class="tclr tundo" onclick="tUndo('${ed}')" aria-label="${L('Desfés', 'Deshacer')}" title="${L('Desfés (Ctrl+Z)', 'Deshacer (Ctrl+Z)')}"><svg viewBox="0 0 24 24"><path d="M9 7H4V2M4 7a9 9 0 1 1-1 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button class="tclr tredo" onclick="tRedo('${ed}')" aria-label="${L('Refés', 'Rehacer')}" title="${L('Refés (Ctrl+Y)', 'Rehacer (Ctrl+Y)')}" hidden><svg viewBox="0 0 24 24"><path d="M15 7h5V2M20 7a9 9 0 1 0 1 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>`); b = h.querySelector('.tundo'); }
   b.disabled = !(S._uh && S._uh.length);
+  // refer només surt quan hi ha alguna cosa per refer (així la capçalera no s'omple)
+  const rd = h.querySelector('.tredo'); if (rd) rd.hidden = !(S._rh && S._rh.length);
   // pressupost de blocs: un punt per bloc (ple = fet servir), com els forats de Lightbot
   const c = h.querySelector('.tcount'), m = c && c.textContent.match(/^\s*(\d+)\s*\/\s*(\d+)/);
   if (m && +m[2] <= 12) { const u = +m[1], n = +m[2]; c.classList.add('dots'); c.innerHTML = `<span class="tdots">${Array.from({ length: n }, (_, i) => `<i class="${i < u ? 'on' : ''}"></i>`).join('')}</span><b>${u}/${n}</b>`; c.title = L(`${u} de ${n} blocs`, `${u} de ${n} bloques`); }
@@ -913,12 +946,96 @@ addEventListener('load', () => {
   for (const [ed, U] of Object.entries(TUNDO)) {
     const f = window[U.draw]; if (typeof f !== 'function') continue;
     window[U.draw] = function () {
-      const S = U.S(); let r;
-      if (S && S.mode === 'edit') { const now = tuSer(U.get(S)); if (S._last !== undefined && now !== S._last && !S._undoing) { (S._uh = S._uh || []).push(S._last); if (S._uh.length > 60) S._uh.shift(); } S._last = now; }
-      r = f.apply(this, arguments); if (S) tUndoBtn(ed, S); return r;
+      const S = U.S(); let r, ch = false;
+      if (S && S.mode === 'edit') { const now = tuSer(U.get(S)); if (S._last !== undefined && now !== S._last && !S._undoing) { (S._uh = S._uh || []).push(S._last); if (S._uh.length > 60) S._uh.shift(); S._rh = []; ch = true; } S._last = now; }
+      // la tira de la paleta no torna al principi cada vegada que es pinta el programa
+      const pl = document.querySelector('.tsbody>.tstage .tcode .tpal'), px = pl ? pl.scrollLeft : 0;
+      r = f.apply(this, arguments);
+      const pl2 = document.querySelector('.tsbody>.tstage .tcode .tpal'); if (pl2 && px) pl2.scrollLeft = px;
+      if (S) { tUndoBtn(ed, S); tEdPost(ed, S, ch); } return r;
     };
   }
 });
+
+/* ---------- Després de cada canvi als editors: la peça nova vola de la paleta al seu lloc i fa «pop»,
+   el programa es desplaça perquè es vegi el bloc nou (o les eines del bloc triat) i la paleta avisa si en té més a la dreta ---------- */
+const TDUP_ICO = '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="3" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M5 15H4.5A1.5 1.5 0 0 1 3 13.5v-9A1.5 1.5 0 0 1 4.5 3h9A1.5 1.5 0 0 1 15 4.5V5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>';
+const TEDP = { tap: null };
+const tMotion = () => { try { return !matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) { return true; } };
+document.addEventListener('click', e => {
+  const pb = e.target && e.target.closest && e.target.closest('.tsbody>.tstage .tpal .tpb'); if (!pb || pb.disabled || Date.now() - TDND.at < 350) return;
+  const cs = getComputedStyle(pb); TEDP.tap = { r: pb.getBoundingClientRect(), html: pb.innerHTML, bg: cs.backgroundColor, fg: cs.color, t: Date.now() };
+}, true);
+function tPopIn(e) { e.classList.remove('tdpop'); void e.offsetWidth; e.classList.add('tdpop'); setTimeout(() => e.classList.remove('tdpop'), 500); }
+// fa que un element del programa es vegi dins de la zona que es desplaça (sense moure la pàgina)
+function tInView(el) {
+  const sc = el && el.closest('#tprog,#rprog,#sprog'); if (!sc || sc.scrollHeight <= sc.clientHeight) return;
+  const r = el.getBoundingClientRect(), q = sc.getBoundingClientRect(); if (r.height > q.height) { if (r.top > q.bottom - 40 || r.bottom < q.top) sc.scrollTop += r.top - q.top - 8; return; }
+  if (r.bottom > q.bottom - 4) sc.scrollTop += r.bottom - q.bottom + 10; else if (r.top < q.top + 4) sc.scrollTop -= q.top - r.top + 10;
+}
+function tEdPost(ed, S, changed) {
+  const st = document.querySelector('.tsbody>.tstage'); if (!st) return;
+  const els = [...st.querySelectorAll('.tcode .tb[id]')].filter(e => new RegExp('^' + ed + '\\d+$').test(e.id)), ids = new Set(els.map(e => e.id)), old = S._seen; S._seen = ids;
+  const nw = changed && old ? els.filter(e => !old.has(e.id) && !(e.parentElement && e.parentElement.closest('.tb[id]') && !old.has(e.parentElement.closest('.tb[id]').id) && els.includes(e.parentElement.closest('.tb[id]')))) : [];
+  if (nw.length) {
+    const e = nw[0], h = e.querySelector(':scope>.tbh') || e; tInView(e);
+    const tap = TEDP.tap; TEDP.tap = null;
+    if (tap && Date.now() - tap.t < 700 && tMotion() && document.body.animate) {
+      // vol de la paleta al lloc
+      const c = h.getBoundingClientRect(), g = document.createElement('div'); g.className = 'tdghost tdfly'; g.innerHTML = tap.html;
+      Object.assign(g.style, { width: tap.r.width + 'px', background: tap.bg, color: tap.fg }); document.body.appendChild(g);
+      const w1 = Math.min(c.width, Math.max(tap.r.width, 120));
+      e.style.visibility = 'hidden';
+      const an = g.animate([{ transform: `translate(${tap.r.left}px,${tap.r.top}px)`, width: tap.r.width + 'px' }, { transform: `translate(${tap.r.left + (c.left - tap.r.left) * .5}px,${Math.min(tap.r.top, c.top) - 24}px) rotate(-2deg)`, offset: .55 }, { transform: `translate(${c.left}px,${c.top}px)`, width: w1 + 'px', opacity: .9 }], { duration: 300, easing: 'cubic-bezier(.3,.7,.4,1)' });
+      const done = () => { g.remove(); e.style.visibility = ''; tPopIn(e); }; an.onfinish = done; an.oncancel = done; setTimeout(() => { if (g.isConnected) done(); }, 600);
+    } else nw.forEach(tPopIn);
+    tHap(10);
+  } else if (S.sel) {
+    // les eines del bloc triat s'han de veure, però sense que el bloc fugi per dalt
+    const t = st.querySelector('.tcode .tbtools'), e = document.getElementById(ed + S.sel._id), h = e && e.querySelector(':scope>.tbh'), sc = t && t.closest('#tprog,#rprog,#sprog');
+    if (t && h && sc && sc.scrollHeight > sc.clientHeight) { const q = sc.getBoundingClientRect(), r = t.getBoundingClientRect(), hr = h.getBoundingClientRect(); if (r.bottom > q.bottom - 4) sc.scrollTop += Math.max(0, Math.min(r.bottom - q.bottom + 10, Math.max(hr.top - q.top - 6, e.getBoundingClientRect().bottom - q.top - 26))); }
+  }
+  tPalCue(st);
+  // al mòbil, quan el programa que s'està fent ja no hi cap, el món es fa una mica més petit (i ja no torna a créixer en aquest pas)
+  const sc = changed && !st._big && st.querySelector('#tprog,#rprog,#sprog');
+  if (sc && sc.clientHeight && sc.scrollHeight > sc.clientHeight + 24 && getComputedStyle(st).gridTemplateColumns.trim().split(/\s+/).length < 2) { st._big = true; typeof tFit === 'function' && tFit(); }
+}
+// la paleta del mòbil és una tira que es desplaça: s'esvaeix a la vora on n'hi ha més
+function tPalCue(st) {
+  const p = st.querySelector('.tcode .tpal'); if (!p) return;
+  const f = () => { const ov = p.scrollWidth > p.clientWidth + 4; p.classList.toggle('tpl', ov && p.scrollLeft > 4); p.classList.toggle('tpr', ov && p.scrollLeft < p.scrollWidth - p.clientWidth - 4); };
+  f(); if (!p._cue) { p._cue = 1; p.addEventListener('scroll', f, { passive: true }); }
+}
+
+/* ---------- Selector al costat del camp d'un bloc (el número del bucle, el color, la nota, la condició…) ----------
+   tPop(element, [[valor, html, triat], …], quanEsTria, { grid, label }): es tanca amb Esc, tocant fora o en desplaçar. */
+function tPopClose() { const p = document.getElementById('tpop'); if (p) p.remove(); document.removeEventListener('pointerdown', tPopOut, true); removeEventListener('resize', tPopClose); document.removeEventListener('scroll', tPopScroll, true); }
+function tPopOut(e) { if (!e.target.closest || !e.target.closest('#tpop')) tPopClose(); }
+// en desplaçar-se el programa, el selector segueix el camp (i es tanca si el camp ja no hi és o no es veu)
+function tPopScroll(e) { const p = document.getElementById('tpop'); if (!p || (e.target.closest && e.target.closest('#tpop'))) return; if (p._place) p._place(); }
+function tPop(anchor, opts, onPick, o = {}) {
+  tPopClose(); if (!anchor || !opts.length) return;
+  const p = document.createElement('div'); p.id = 'tpop'; p.className = 'tpop' + (o.grid ? ' grid' : ''); p.setAttribute('role', 'dialog'); p.setAttribute('aria-label', o.label || L('Tria', 'Elige'));
+  p.innerHTML = `<div class="tpopo">${opts.map(([, h, on], i) => `<button type="button" class="${on ? 'on' : ''}" data-i="${i}" aria-pressed="${on ? 'true' : 'false'}">${h}</button>`).join('')}</div>`;
+  document.body.appendChild(p);
+  p._place = () => {
+    if (!anchor.isConnected) return tPopClose();
+    const r = anchor.getBoundingClientRect(), W = innerWidth, H = innerHeight, pw = p.offsetWidth, ph = p.offsetHeight; if (!r.width || r.bottom < 0 || r.top > H) return tPopClose();
+    const x = Math.max(8, Math.min(W - pw - 8, r.left + r.width / 2 - pw / 2)); let y = r.bottom + 10, up = false;
+    if (y + ph > H - 8 && r.top - ph - 10 > 8) { y = r.top - ph - 10; up = true; }
+    y = Math.max(8, Math.min(H - ph - 8, y));
+    p.style.left = x + 'px'; p.style.top = y + 'px'; p.style.setProperty('--ax', Math.max(16, Math.min(pw - 16, r.left + r.width / 2 - x)) + 'px'); p.classList.toggle('up', up);
+  };
+  p._place();
+  p.addEventListener('click', e => { const bt = e.target.closest('button[data-i]'); if (!bt) return; const v = opts[+bt.dataset.i][0]; tPopClose(); try { if (anchor.isConnected) anchor.focus({ preventScroll: true }); } catch (e) { } SFX.tap && SFX.tap(); onPick(v); });
+  p.addEventListener('keydown', e => {
+    const bs = [...p.querySelectorAll('button[data-i]')], i = bs.indexOf(document.activeElement);
+    if (e.key === 'Escape' || e.key === 'Tab') { e.preventDefault(); tPopClose(); if (anchor.isConnected) anchor.focus(); return; }
+    const d = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 }[e.key]; if (d && bs.length) { e.preventDefault(); bs[(i + d + bs.length) % bs.length].focus(); }
+  });
+  setTimeout(() => { document.addEventListener('pointerdown', tPopOut, true); document.addEventListener('scroll', tPopScroll, true); }, 0); addEventListener('resize', tPopClose);
+  try { (p.querySelector('button.on') || p.querySelector('button')).focus({ preventScroll: true }); } catch (e) { }
+}
 
 /* ---------- Ajuda que reacciona al que fa l'alumne/a (editors) ----------
    Programa buit una estona → la paleta parpelleja; blocs posats però sense executar → «Executa» parpelleja;

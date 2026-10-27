@@ -378,7 +378,7 @@ function sgBlock(b, ro) {
   return `<div class="tb rb sb c-${SG_CAT[b.k]}${sel ? ' sel' : ''}${cont ? ' cont' : ''}" id="sg${b._id}"><div class="tbh" ${ro ? '' : `onclick="sgSel(${b._id})"`}><span class="tbi">${sgIco(b.k)}</span><span class="tbl">${sgLabel(b, f, SG.st)}</span></div>
     ${cont ? `<div class="tbin">${sgList(b.b, ro)}</div>${b.k === 'if' && b.e ? `<div class="tbelse">${L('si no', 'si no')}</div><div class="tbin">${sgList(b.e, ro)}</div>` : ''}<div class="tbend"></div>` : ''}</div>${sel && !ro ? sgTools(b) : ''}`;
 }
-function sgSlot(l, i) { const on = SG.cur && SG.cur.l === l && SG.cur.i === i; return `<button class="tslot${on ? ' on' : ''}" onclick="sgCurAt(${sgLid(l)},${i})">${on ? `<span>${L('els blocs nous van aquí', 'los bloques nuevos van aquí')}</span>` : ''}</button>`; }
+function sgSlot(l, i) { const on = SG.cur && SG.cur.l === l && SG.cur.i === i, empty = on && !l.length && Object.values(SG.progs[SG.who] || {}).some(scr => scr.includes(l)); return `<button class="tslot${on ? ' on' : ''}${empty ? ' empty' : ''}" onclick="sgCurAt(${sgLid(l)},${i})" aria-label="${L('Posa els blocs aquí', 'Pon los bloques aquí')}">${on ? `<span>${empty ? L('Arrossega aquí un bloc de la paleta (o toca\'l)', 'Arrastra aquí un bloque de la paleta (o tócalo)') : L('els blocs nous van aquí', 'los bloques nuevos van aquí')}</span>` : ''}</button>`; }
 function sgList(list, ro) { if (ro) return list.map(b => sgBlock(b, true)).join(''); return list.map((b, i) => sgSlot(list, i) + sgBlock(b)).join('') + sgSlot(list, list.length); }
 function sgTools(b) {
   const ix = SG.ids[b._id], i = ix.list.indexOf(b);
@@ -386,6 +386,7 @@ function sgTools(b) {
     ${b.k === 'if' && SG.pal.includes('else') ? `<button class="wide" onclick="sgElse()">${b.e ? L('Treu «si no»', 'Quita «si no»') : L('Afegeix «si no»', 'Añade «si no»')}</button>` : ''}
     ${['if', 'until', 'waitu'].includes(b.k) && SG.pal.includes('not') ? `<button class="wide" onclick="sgNot()">${b.c && b.c.not ? L('Treu el «no»', 'Quita el «no»') : L('Afegeix «no»', 'Añade «no»')}</button>` : ''}
     ${['if', 'until', 'waitu'].includes(b.k) && SG.pal.includes('and') ? `<button class="wide" onclick="sgJoin()">${b.c.and || b.c.or ? L('Una sola condició', 'Una sola condición') : L('Afegeix «i / o»', 'Añade «y / o»')}</button>` : ''}
+    ${typeof TDUP_ICO !== 'undefined' ? `<button class="dup" onclick="sgDup()" aria-label="${L('Duplica', 'Duplica')}" title="${L('Duplica', 'Duplica')}">${TDUP_ICO}</button>` : ''}
     <button class="del" onclick="sgDel()">${L('Esborra', 'Borra')}</button></div>`;
 }
 const SG_NOPAL = ['else', 'and', 'cond+', 'not'];
@@ -645,7 +646,7 @@ function sgEnd(why) {
 function sgIns(k) {
   if (SG.run) sgStop(); if (SG.max && sgUsed() >= SG.max) return toast(L(`Només pots fer servir ${SG.max} blocs.`, `Solo puedes usar ${SG.max} bloques.`));
   if (!SG.edit.includes(SG.who)) return toast(L('Aquest personatge ja està programat. Tria el teu personatge a dalt.', 'Este personaje ya está programado. Elige tu personaje arriba.'));
-  const b = sgNew(k, SG.st, SG.W), { l, i } = SG.cur; l.splice(i, 0, b); SG.cur = b.b ? { l: b.b, i: 0 } : { l, i: i + 1 }; SG.sel = null; SFX.tap && SFX.tap(); sgFresh(); sgDraw();
+  const b = sgNew(k, SG.st, SG.W), { l, i } = SG.cur; l.splice(i, 0, b); SG.cur = b.b ? { l: b.b, i: 0 } : { l, i: i + 1 }; SG.sel = null; SFX.snap ? SFX.snap() : SFX.tap && SFX.tap(); sgFresh(); sgDraw();
 }
 function sgCurAt(li, i) { if (SG.run) sgStop(); SG.cur = { l: SG.lists[li], i }; SG.sel = null; sgDraw(); }
 function sgSel(id) { if (SG.run) sgStop(); const ix = SG.ids[id]; if (!ix) return; SG.sel = SG.sel === ix.b ? null : ix.b; SG.cur = { l: ix.list, i: ix.list.indexOf(ix.b) + 1 }; sgDraw(); }
@@ -664,6 +665,13 @@ function sgMoveTo(b, d) {
 }
 function sgMoveB(d) { const b = SG.sel, l = SG.ids[b._id].list, to = sgMoveTo(b, d); if (!to) return; l.splice(l.indexOf(b), 1); to.l.splice(to.i, 0, b); SG.cur = { l: to.l, i: to.i + 1 }; sgFresh(); sgDraw(); }
 function sgNot() { const b = SG.sel; b.c = b.c.not ? b.c.not : { not: b.c }; sgFresh(); sgDraw(); }
+// duplica el bloc triat (amb el que té a dins) just a sota; la còpia queda triada
+function sgDup() {
+  const b = SG.sel; if (!b) return; if (SG.run) sgStop();
+  const ix = SG.ids[b._id], c = JSON.parse(JSON.stringify(b, (k, v) => k === '_id' ? undefined : v)); if (!ix) return;
+  if (SG.max && sgUsed() + sgCount([c]) > SG.max) return toast(L(`Només pots fer servir ${SG.max} blocs.`, `Solo puedes usar ${SG.max} bloques.`));
+  ix.list.splice(ix.list.indexOf(b) + 1, 0, c); SG.sel = c; SG.cur = { l: ix.list, i: ix.list.indexOf(c) + 1 }; SFX.snap ? SFX.snap() : SFX.tap && SFX.tap(); sgFresh(); sgDraw();
+}
 function sgDel() { const b = SG.sel, l = SG.ids[b._id].list, i = l.indexOf(b); l.splice(i, 1); SG.sel = null; SG.cur = { l, i }; sgFresh(); sgDraw(); }
 function sgElse() { const b = SG.sel; b.e = b.e ? null : []; sgFresh(); sgDraw(); }
 function sgJoin() { const b = SG.sel; b.c = b.c.and || b.c.or ? (b.c.and || b.c.or)[0] : { and: [b.c, { touch: 'edge' }] }; sgFresh(); sgDraw(); }
