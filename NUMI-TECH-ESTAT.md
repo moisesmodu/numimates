@@ -210,3 +210,11 @@ cursos de Tech i crear un curs de disseny 3D en dos nivells. Sense desplegar a p
   Fira de producte de l'estudi amb encàrrecs reals; exemple guiat: el comptador de pals i anelles de la Sílvia (P5). Prototip
   opcional amb l'editor que passa a codi («Codi»), versions v1-v3 que continuen d'una sessió a la següent, revisió entre
   iguals i diploma. Tech 3D: Nivell 1 37 sessions, Nivell 2 35. Numi Tech: 212 sessions, 0 errors.
+
+## Tech Digital: unitats 4-6, ara 24 sessions (27-10-2026)
+- U4 Ciberseguretat (missatges trampa, permisos de les apps, wifi/actualitzacions/còpies, escape room), U5 La IA a fons
+  (com es parla amb una IA amb xats simulats, imatges falses i deepfakes, què aprèn la IA de nosaltres, manual de la classe),
+  U6 Consumidors digitals (publicitat amagada, compres dins dels videojocs, algoritmes de recomanació, l'anunci honest).
+  Exemples inventats; telèfons d'ajuda només 116 111, 017 i 112. Illes 3D de les unitats 4-6.
+- El diploma del curs passa de d3-4 a d6-4 (d3-4 i la seva guia ara diuen «unitat acabada»). Mòdul Digital al dossier: 12 €.
+- Numi Tech: 224 sessions, solucionari 2.608 respostes, 0 errors.

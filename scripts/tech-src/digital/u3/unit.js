@@ -9,7 +9,7 @@ Object.assign(TBADGE, {
   d_temps: { id: 'd_temps', ico: '⏰', n: 'Guardià/ana del temps|Guardián/a del tiempo', d: "Saps quines trampes fan que no paris, cuides el teu son i tens un pla per a les pantalles.|Sabes qué trampas hacen que no pares, cuidas tu sueño y tienes un plan para las pantallas." },
   d_partida: { id: 'd_partida', ico: '🎮', n: 'Partida segura|Partida segura', d: "Saps protegir-te als videojocs en línia: desconeguts, xat de veu, compres i caixes sorpresa.|Sabes protegerte en los videojuegos en línea: desconocidos, chat de voz, compras y cajas sorpresa." },
   d_autor: { id: 'd_autor', ico: '🎨', n: 'Detectiu/va de fonts|Detective de fuentes', d: "Reconeixes imatges i veus fetes amb IA, busques amb paraules clau i respectes l'autoria dels altres.|Reconoces imágenes y voces hechas con IA, buscas con palabras clave y respetas la autoría de los demás." },
-  d_guia: { id: 'd_guia', ico: '🧭', n: 'Expert/a en benestar digital|Experto/a en bienestar digital', d: "Projecte acabat: has fet el pacte digital de casa i la teva targeta d'ajuda, i has completat el curs.|Proyecto terminado: has hecho el pacto digital de casa y tu tarjeta de ayuda, y has completado el curso." }
+  d_guia: { id: 'd_guia', ico: '🧭', n: 'Expert/a en benestar digital|Experto/a en bienestar digital', d: "Projecte acabat: has fet el pacte digital de casa i la teva targeta d'ajuda.|Proyecto terminado: has hecho el pacto digital de casa y tu tarjeta de ayuda." }
 });
 
 COURSE_UNITS[3] = { t: 'Benestar i vida digital|Bienestar y vida digital', d: 'Pantalles, videojocs i IA|Pantallas, videojuegos e IA', color: '#E8742A', s: [
@@ -455,14 +455,6 @@ COURSE_UNITS[3] = { t: 'Benestar i vida digital|Bienestar y vida digital', d: 'P
       { k: 'quiz', ph: 'tanca', q: "Quins són els tres telèfons de la teva <b>targeta d'ajuda</b>?|¿Cuáles son los tres teléfonos de tu <b>tarjeta de ayuda</b>?",
         opts: ['116 111, 017 i 112|116 111, 017 y 112', '123, 456 i 789|123, 456 y 789', "Cap: ningú no t'ajuda|Ninguno: nadie te ayuda"], a: 0,
         ex: "116 111 si et passa alguna cosa i no saps a qui dir-ho, 017 per a problemes d'internet i 112 per a emergències.|116 111 si te pasa algo y no sabes a quién decírselo, 017 para problemas de internet y 112 para emergencias." },
-      { k: 'diploma', ph: 'tanca', t: "ha completat el curs <b>Tech Digital</b>: sap cuidar-se i cuidar els altres a la xarxa, i té el seu pla de benestar digital.|ha completado el curso <b>Tech Digital</b>: sabe cuidarse y cuidar a los demás en la red, y tiene su plan de bienestar digital.",
-        skills: ['Crear contrasenyes fortes i protegir les meves dades|Crear contraseñas fuertes y proteger mis datos',
-          'Pensar abans de publicar: la meva empremta digital|Pensar antes de publicar: mi huella digital',
-          "Caçar bulos, missatges trampa i imatges fetes amb IA|Cazar bulos, mensajes trampa e imágenes hechas con IA",
-          'Entendre què és una IA i fer-la servir amb cap|Entender qué es una IA y usarla con cabeza',
-          'Tractar bé els altres a la xarxa i respectar la seva feina|Tratar bien a los demás en la red y respetar su trabajo',
-          'Cuidar el meu temps amb pantalles i les meves partides|Cuidar mi tiempo con pantallas y mis partidas',
-          "Demanar ajuda: adults de confiança, 116 111, 017 i 112|Pedir ayuda: adultos de confianza, 116 111, 017 y 112"] },
       { k: 'feel', ph: 'tanca' }
     ] }
 ] };

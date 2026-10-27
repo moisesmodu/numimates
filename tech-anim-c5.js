@@ -348,3 +348,320 @@ Object.assign(TANI, (() => {
     }
   });
 }
+
+/* ── unitat 4 ── */
+/* Tech Digital · unitat 4 «Ciberseguretat» · animacions de teoria (TANI)
+   Dibuixos propis de Numi: les disfresses dels missatges trampa, els quatre passos, els permisos de les apps, el diàleg de
+   permís, les wifis que imiten noms, els forats que tapen les actualitzacions, les còpies de seguretat, el bloqueig de
+   pantalla i l'escape room. Cap marca ni cap app reals. */
+{
+  const d4e = (x, y, e, s = 24) => `<text x="${x}" y="${y}" font-size="${s}" text-anchor="middle">${e}</text>`;
+  const d4ph = (x, y, w, h) => `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${w * .16}" fill="#1B1F2E"/><rect x="${x + 4}" y="${y + 8}" width="${w - 8}" height="${h - 16}" rx="${w * .08}" fill="#fff"/>`;
+  const d4ok = (cx, cy, c = '#3CC47C') => `<circle cx="${cx}" cy="${cy}" r="10" fill="${c}"/><path d="M${cx - 5} ${cy}l4 4 6-7" stroke="#fff" stroke-width="2.5" fill="none" stroke-linecap="round"/>`;
+  const d4ko = (cx, cy) => `<circle cx="${cx}" cy="${cy}" r="10" fill="#EF5A5A"/><path d="M${cx - 4} ${cy - 4}l8 8M${cx + 4} ${cy - 4}l-8 8" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>`;
+
+  Object.assign(TANI, {
+    // les disfresses de l'engany: paquet, premi, amic, suport… i sempre el mateix truc (que vagis de pressa)
+    d4disfressa() {
+      const R = [['📦', L('Paquet retingut', 'Paquete retenido')], ['🎁', L('Has guanyat!', '¡Has ganado!')], ['💬', L('«Soc en Pau»', '«Soy Pau»')], ['🛠️', L('«Suport oficial»', '«Soporte oficial»')]];
+      return tSvg(226, `${R.map(([e, t], i) => `<g ${tA(.2 + i * .45, 'ta-in')}><rect x="8" y="${8 + i * 44}" width="176" height="36" rx="12" fill="#fff" stroke="#DCE4FA" stroke-width="2" filter="url(#bwSh)"/><g>${d4e(28, 33 + i * 44, e, 18)}</g><text x="46" y="${31 + i * 44}" class="tat s">${t}</text></g>
+          <path d="M186 ${26 + i * 44}L204 ${88}" stroke="#F08A24" stroke-width="2.5" stroke-dasharray="4 4" ${tA(.5 + i * .45, 'ta-fade')}/>`).join('')}
+        <g ${tA(2.2, 'ta-pop')}><circle cx="256" cy="88" r="50" fill="#FFF3D6" stroke="#F2B21B" stroke-width="3"/><g>${d4e(256, 86, '🎣', 34)}</g>
+          <text x="256" y="110" text-anchor="middle" class="tat s">${L('Mateix truc:', 'Mismo truco:')}</text><text x="256" y="127" text-anchor="middle" class="tat b">${L('de pressa!', '¡deprisa!')}</text></g>
+        <g ${tA(3.2, 'ta-pop')}><rect x="10" y="186" width="300" height="34" rx="16" fill="#E7F7EE" stroke="#3CC47C" stroke-width="2.5"/><text x="160" y="208" text-anchor="middle" class="tat b">${L("Atura't, comprova i pregunta", 'Para, comprueba y pregunta')}</text></g>`);
+    },
+    // els quatre passos davant d'un missatge trampa
+    d4passos() {
+      const R = [['✋', L("Atura't:", 'Para:'), L('no toquis res', 'no toques nada'), '#EF5A5A'], ['🔍', L('Comprova:', 'Comprueba:'), L('per un altre camí', 'por otro camino'), '#2F5BEA'], ['🗣️', L('Explica-ho:', 'Cuéntalo:'), L('a un adult', 'a un adulto'), '#9B6CF2'], ['🚩', L('Denuncia:', 'Denuncia:'), L('bloqueja i esborra', 'bloquea y borra'), '#3CC47C']];
+      return tSvg(214, `${R.map(([e, t, s, c], i) => `<g ${tA(.3 + i * .6, 'ta-in')}><rect x="10" y="${6 + i * 44}" width="300" height="38" rx="14" fill="#fff" stroke="${c}" stroke-width="2.5"/>
+          <circle cx="30" cy="${25 + i * 44}" r="12" fill="${c}"/><text x="30" y="${30 + i * 44}" text-anchor="middle" class="tat w s">${i + 1}</text><g>${d4e(60, 32 + i * 44, e, 18)}</g>
+          <text x="80" y="${30 + i * 44}" class="tat b">${t} <tspan style="font-size:13.5px;font-weight:700">${s}</tspan></text></g>`).join('')}
+        <g ${tA(3, 'ta-pop')}><rect x="10" y="184" width="300" height="28" rx="14" fill="#FFF3D6" stroke="#F2B21B" stroke-width="2"/><text x="160" y="203" text-anchor="middle" class="tat s">${L('Si ja has caigut: explica-ho de seguida', 'Si ya has caído: cuéntalo enseguida')}</text></g>`);
+    },
+    // un permís és una clau que deixes a una app
+    d4permis() {
+      const R = [['📷', L('Càmera', 'Cámara')], ['🎙️', L('Micròfon', 'Micrófono')], ['📍', L('Ubicació', 'Ubicación')], ['👥', L('Contactes', 'Contactos')], ['🖼️', L('Fotos', 'Fotos')]];
+      return tSvg(216, `${d4ph(20, 14, 96, 168)}${[0, 1, 2, 3, 4, 5].map(i => `<rect x="${32 + (i % 3) * 25}" y="${36 + Math.floor(i / 3) * 28}" width="20" height="20" rx="6" fill="${['#7C9BFF', '#3CC47C', '#F2B21B', '#EF5A5A', '#9B6CF2', '#14A3B8'][i]}"/>`).join('')}
+        <g ${tA(.3, 'ta-pop')}><rect x="30" y="104" width="76" height="56" rx="10" fill="#FFF3D6" stroke="#F2B21B" stroke-width="2"/>${d4e(68, 132, '🔑', 20)}<text x="68" y="152" text-anchor="middle" class="tat s">${L('Permís?', '¿Permiso?')}</text></g>
+        ${R.map(([e, t], i) => `<g ${tA(.8 + i * .4, 'ta-in')}><path d="M118 ${120}L148 ${25 + i * 36}" stroke="#C9D3F2" stroke-width="2" stroke-dasharray="3 4"/><rect x="150" y="${10 + i * 36}" width="160" height="30" rx="12" fill="#fff" stroke="#DCE4FA" stroke-width="2" filter="url(#bwSh)"/><g>${d4e(170, 31 + i * 36, e, 16)}</g><text x="188" y="${30 + i * 36}" class="tat s">${t}</text></g>`).join('')}
+        <g ${tA(3, 'ta-pop')}><rect x="10" y="188" width="300" height="26" rx="13" fill="#2F5BEA"/><text x="160" y="206" text-anchor="middle" class="tat w s">${L('Un permís = una clau per a una app', 'Un permiso = una llave para una app')}</text></g>`);
+    },
+    // té sentit? cada app, el permís que necessita (i el que no)
+    d4sentit() {
+      const R = [['🗺️', L('Mapes', 'Mapas'), '📍', L('Ubicació', 'Ubicación'), 1], ['📸', L('Fotos', 'Fotos'), '📷', L('Càmera', 'Cámara'), 1], ['🧮', L('Calculadora', 'Calculadora'), '👥', L('Contactes', 'Contactos'), 0]];
+      return tSvg(214, `${R.map(([e1, a, e2, p, ok], i) => `<g ${tA(.3 + i * .8, 'ta-in')}><rect x="10" y="${8 + i * 52}" width="122" height="42" rx="14" fill="#fff" stroke="#DCE4FA" stroke-width="2" filter="url(#bwSh)"/><g>${d4e(32, 36 + i * 52, e1, 20)}</g><text x="50" y="${34 + i * 52}" class="tat s">${a}</text>
+          <path d="M136 ${29 + i * 52}h16" stroke="#9AA6C8" stroke-width="3"/><path d="M150 ${23 + i * 52}l8 6-8 6" fill="#9AA6C8"/>
+          <rect x="162" y="${8 + i * 52}" width="118" height="42" rx="14" fill="${ok ? '#E7F7EE' : '#FDEBEB'}" stroke="${ok ? '#3CC47C' : '#EF5A5A'}" stroke-width="2"/><g>${d4e(182, 36 + i * 52, e2, 18)}</g><text x="198" y="${34 + i * 52}" class="tat s">${p}</text></g>
+          <g ${tA(.8 + i * .8, 'ta-pop')}>${ok ? d4ok(300, 29 + i * 52) : d4ko(300, 29 + i * 52)}</g>`).join('')}
+        <g ${tA(3.2, 'ta-pop')}><rect x="40" y="166" width="240" height="40" rx="18" fill="#FFF3D6" stroke="#F2B21B" stroke-width="2.5"/><text x="160" y="191" text-anchor="middle" class="tat b">${L('Per a què ho necessita?', '¿Para qué lo necesita?')}</text></g>`);
+    },
+    // el diàleg de permís: sovint hi ha més opcions que «sí» o «no»
+    d4dialeg() {
+      const B = [[L("Mentre faig servir l'app", 'Mientras uso la app'), 1], [L('Només aquesta vegada', 'Solo esta vez'), 0], [L('No permetre', 'No permitir'), 0]];
+      return tSvg(214, `<rect x="30" y="6" width="260" height="168" rx="22" fill="#F3F6FF" stroke="#DCE4FA" stroke-width="2"/>
+        <g ${tA(.2, 'ta-fade')}>${d4e(160, 34, '📍', 22)}<text x="160" y="56" text-anchor="middle" class="tat s">${L('Vols que «Mapes» sàpiga', '¿Quieres que «Mapas» sepa')}</text><text x="160" y="73" text-anchor="middle" class="tat s">${L('on ets?', 'dónde estás?')}</text></g>
+        ${B.map(([t, on], i) => `<g ${tA(.8 + i * .4, 'ta-in')}><rect x="48" y="${84 + i * 30}" width="224" height="26" rx="13" fill="#fff" stroke="#C9D3F2" stroke-width="2"/><text x="160" y="${102 + i * 30}" text-anchor="middle" class="tat s">${t}</text></g>`).join('')}
+        <g ${tA(2.4, 'ta-pop')}><rect x="48" y="84" width="224" height="26" rx="13" fill="none" stroke="#3CC47C" stroke-width="4"/></g>
+        <g ${tA(3, 'ta-pop')}><rect x="20" y="180" width="280" height="30" rx="15" fill="#E7F7EE" stroke="#3CC47C" stroke-width="2"/><text x="160" y="200" text-anchor="middle" class="tat s">${L('Tria la més petita que serveixi', 'Elige la más pequeña que sirva')}</text></g>`);
+    },
+    // la wifi de l'estació i les que n'imiten el nom; el cadenat vol dir xifrat, no «de fiar»
+    d4wifi() {
+      const R = [['🔒', 'Estacio_Vilabit', L("✓ La de l'estació", '✓ La de la estación'), '#1E8A50'], ['🔓', 'Estacio_Vilabit_FREE', L('? Imita el nom', '? Imita el nombre'), '#D93F45'], ['🔓', 'WIFI_GRATIS_RAPIDA', L('? De qui és?', '? ¿De quién es?'), '#D93F45']];
+      return tSvg(226, `<text x="160" y="18" text-anchor="middle" class="tat b" ${tA(.1, 'ta-fade')}>📶 ${L("Wifis de l'estació", 'Wifis de la estación')}</text>
+        ${R.map(([e, n, t, c], i) => `<g ${tA(.4 + i * .6, 'ta-in')}><rect x="10" y="${26 + i * 46}" width="300" height="40" rx="12" fill="#fff" stroke="#DCE4FA" stroke-width="2"/><g>${d4e(28, 52 + i * 46, e, 15)}</g><text x="44" y="${43 + i * 46}" class="tat s">${n}</text>
+          <text x="44" y="${60 + i * 46}" class="tat s" style="fill:${c};font-size:11.5px" ${tA(.8 + i * .6, 'ta-fade')}>${t}</text></g>`).join('')}
+        <g ${tA(2.6, 'ta-in')}><rect x="10" y="166" width="300" height="24" rx="12" fill="#F3F6FF" stroke="#C9D3F2" stroke-width="2"/><text x="24" y="183" class="tat s">🔒 https://… ${L('= xifrat, no «de fiar»', '= cifrado, no «de fiar»')}</text></g>
+        <g ${tA(3.4, 'ta-pop')}><rect x="10" y="196" width="300" height="26" rx="13" fill="#FFF3D6" stroke="#F2B21B" stroke-width="2"/><text x="160" y="214" text-anchor="middle" class="tat s">${L('Comptes i compres: millor a casa', 'Cuentas y compras: mejor en casa')}</text></g>`);
+    },
+    // els programes tenen forats; l'actualització els tapa
+    d4forat() {
+      const H = [[70, 70], [150, 110], [230, 60]];
+      return tSvg(214, `<rect x="20" y="20" width="280" height="130" rx="14" fill="#DCE4FA"/>${[0, 1, 2, 3, 4].map(r => `<path d="M20 ${46 + r * 26}h280" stroke="#C3CEF0" stroke-width="2"/>`).join('')}
+        ${H.map(([x, y], i) => `<ellipse cx="${x}" cy="${y}" rx="16" ry="12" fill="#14204A" ${tA(.2 + i * .2, 'ta-pop')}/>`).join('')}
+        <g ${tA(.9, 'ta-in')}>${d4e(110, 84, '🐛', 22)}</g>
+        ${H.map(([x, y], i) => `<g ${tA(1.8 + i * .4, 'ta-pop')}><rect x="${x - 22}" y="${y - 16}" width="44" height="32" rx="8" fill="#3CC47C" stroke="#fff" stroke-width="2"/><text x="${x}" y="${y + 6}" text-anchor="middle" class="tat w b">⬆️</text></g>`).join('')}
+        <text x="160" y="14" text-anchor="middle" class="tat s" ${tA(.3, 'ta-fade')}>${L('Tots els programes tenen errors (forats)', 'Todos los programas tienen errores (agujeros)')}</text>
+        <g ${tA(3.2, 'ta-pop')}><rect x="10" y="158" width="300" height="24" rx="12" fill="#3CC47C"/><text x="160" y="175" text-anchor="middle" class="tat w s">${L("L'actualització els tapa", 'La actualización los tapa')}</text></g>
+        <text x="160" y="204" text-anchor="middle" class="tat s" ${tA(3.8, 'ta-fade')}>${L('Des de la configuració, no des d\'una web', 'Desde la configuración, no desde una web')}</text>`);
+    },
+    // una còpia de seguretat: les fotos també en un altre lloc
+    d4copia() {
+      return tSvg(214, `<g ${tA(.2, 'ta-in')}>${d4ph(124, 52, 72, 116)}${['🏖️', '🐶', '🎂', '🎨'].map((e, i) => `<g>${d4e(146 + (i % 2) * 28, 90 + Math.floor(i / 2) * 32, e, 18)}</g>`).join('')}</g>
+        <path d="M120 96C90 80 80 60 74 48" stroke="#2F5BEA" stroke-width="3" stroke-dasharray="5 4" fill="none" ${tA(.8, 'ta-fade')}/><path d="M200 96C230 80 240 60 246 48" stroke="#2F5BEA" stroke-width="3" stroke-dasharray="5 4" fill="none" ${tA(1, 'ta-fade')}/>
+        <g ${tA(1.2, 'ta-pop')}><rect x="14" y="6" width="112" height="44" rx="16" fill="#EAF4FF" stroke="#7C9BFF" stroke-width="2"/><g>${d4e(38, 36, '☁️', 22)}</g><text x="58" y="33" class="tat s">${L('Núvol', 'Nube')}</text></g>
+        <g ${tA(1.4, 'ta-pop')}><rect x="182" y="6" width="130" height="44" rx="16" fill="#EAF4FF" stroke="#7C9BFF" stroke-width="2"/><g>${d4e(200, 36, '💾', 18)}</g><text x="214" y="33" class="tat s">${L('Disc extern', 'Disco externo')}</text></g>
+        <g ${tA(2.4, 'ta-pop')}>${d4e(220, 140, '💥', 34)}</g>
+        <g ${tA(3.2, 'ta-pop')}><rect x="10" y="176" width="300" height="32" rx="15" fill="#E7F7EE" stroke="#3CC47C" stroke-width="2.5"/><text x="160" y="197" text-anchor="middle" class="tat s">${L("Si es trenca, les fotos són a l'altre lloc", 'Si se rompe, las fotos están a salvo')}</text></g>`);
+    },
+    // el bloqueig de pantalla i els dos panys del compte
+    d4pany() {
+      return tSvg(214, `<g ${tA(.2, 'ta-in')}><rect x="16" y="8" width="118" height="196" rx="20" fill="#1B1F2E"/><rect x="22" y="16" width="106" height="180" rx="14" fill="#22306E"/>
+          <g>${d4e(75, 52, '🔒', 22)}</g>${[0, 1, 2, 3, 4, 5].map(i => `<circle cx="${44 + i * 12}" cy="72" r="4" fill="#fff" ${tA(.6 + i * .2, 'ta-pop')}/>`).join('')}
+          ${[1, 2, 3, 4, 5, 6, 7, 8, 9].map((n, i) => `<circle cx="${50 + (i % 3) * 25}" cy="${98 + Math.floor(i / 3) * 26}" r="10" fill="rgba(255,255,255,.14)"/><text x="${50 + (i % 3) * 25}" y="${103 + Math.floor(i / 3) * 26}" text-anchor="middle" class="tat w s">${n}</text>`).join('')}</g>
+        <g ${tA(1.8, 'ta-in')}><rect x="148" y="10" width="162" height="50" rx="16" fill="#fff" stroke="#DCE4FA" stroke-width="2"/><g>${d4e(170, 42, '⏱️', 18)}</g><text x="188" y="32" class="tat s">${L('Es bloqueja sola', 'Se bloquea sola')}</text><text x="188" y="50" class="tat b">${L('als 2 minuts', 'a los 2 minutos')}</text></g>
+        <g ${tA(2.6, 'ta-in')}><rect x="148" y="72" width="162" height="78" rx="16" fill="#F3F6FF" stroke="#C9D3F2" stroke-width="2"/><text x="229" y="94" text-anchor="middle" class="tat s">${L('Dos panys:', 'Dos candados:')}</text>
+          <g>${d4e(186, 132, '🔑', 22)}</g><text x="210" y="126" class="tat b">+</text><g>${d4e(240, 132, '📱', 22)}</g><text x="268" y="128" class="tat s">${L('codi', 'código')}</text></g>
+        <g ${tA(3.4, 'ta-pop')}><rect x="148" y="160" width="162" height="44" rx="16" fill="#E7F7EE" stroke="#3CC47C" stroke-width="2.5"/><text x="229" y="179" text-anchor="middle" class="tat s">${L('PIN difícil', 'PIN difícil')}</text><text x="229" y="196" text-anchor="middle" class="tat s">${L("d'endevinar", 'de adivinar')}</text></g>`);
+    },
+    // l'escape room: quatre sales, quatre xifres i la porta s'obre
+    d4escape() {
+      const S = [['🎣', '7'], ['📲', '2'], ['📶', '9'], ['🔐', '4']];
+      return tSvg(214, `${S.map(([e], i) => `<g ${tA(.2 + i * .5, 'ta-in')}><rect x="${10 + i * 52}" y="10" width="44" height="44" rx="12" fill="#fff" stroke="#DCE4FA" stroke-width="2" filter="url(#bwSh)"/><g>${d4e(32 + i * 52, 40, e, 20)}</g><text x="${32 + i * 52}" y="70" text-anchor="middle" class="tat s">${L('Sala', 'Sala')} ${i + 1}</text></g>`).join('')}
+        <rect x="222" y="8" width="90" height="190" rx="10" fill="#8A5A3B"/><rect x="230" y="16" width="74" height="174" rx="6" fill="#A86E47"/><circle cx="292" cy="108" r="5" fill="#FFD54A"/>
+        <rect x="12" y="92" width="196" height="56" rx="14" fill="#14204A"/>
+        ${S.map(([, d], i) => `<rect x="${24 + i * 46}" y="102" width="36" height="36" rx="8" fill="#22306E"/><text x="${42 + i * 46}" y="128" text-anchor="middle" class="tat w b" style="font-size:20px" ${tA(.6 + i * .5, 'ta-pop')}>${d}</text>`).join('')}
+        <g ${tA(3, 'ta-pop')}><rect x="230" y="16" width="74" height="174" rx="6" fill="#FFF3D6"/>${d4e(267, 110, '🤖', 30)}</g>
+        <g ${tA(3.4, 'ta-pop')}><rect x="12" y="160" width="196" height="40" rx="16" fill="#E7F7EE" stroke="#3CC47C" stroke-width="2.5"/><text x="110" y="185" text-anchor="middle" class="tat b">${L('Porta oberta!', '¡Puerta abierta!')}</text></g>`);
+    },
+    // com es dissenya una bona prova
+    d4prova() {
+      const R = [['🏷️', L('Tema', 'Tema'), L('les wifis', 'las wifis')], ['🎬', L('Situació', 'Situación'), L('curta i clara', 'corta y clara')], ['💡', L('Pista', 'Pista'), L('ajuda, sense resoldre', 'ayuda, sin resolver')], ['✅', L('Solució', 'Solución'), L('es pot comprovar', 'se puede comprobar')]];
+      return tSvg(214, `<rect x="14" y="6" width="292" height="164" rx="14" fill="#FFFDF5" stroke="#F2B21B" stroke-width="2.5"/><text x="160" y="28" text-anchor="middle" class="tat b">${L('La meva prova', 'Mi prueba')}</text>
+        ${R.map(([e, k, v], i) => `<g ${tA(.4 + i * .5, 'ta-in')}><g>${d4e(38, 58 + i * 30, e, 16)}</g><text x="56" y="${57 + i * 30}" class="tat b">${k}:</text><text x="148" y="${57 + i * 30}" class="tat s">${v}</text></g>`).join('')}
+        <g ${tA(2.8, 'ta-pop')}><rect x="40" y="176" width="240" height="32" rx="16" fill="#9B6CF2"/><text x="160" y="197" text-anchor="middle" class="tat w s">💡 ${L("I una idea per aprendre", 'Y una idea para aprender')}</text></g>`);
+    }
+  });
+}
+
+/* ── unitat 5 ── */
+/* Tech Digital · unitat 5 «La IA a fons» · animacions de teoria (TANI)
+   Dibuixos propis de Numi: instrucció vaga i instrucció clara, les tres peces d'un bon prompt, revisar la resposta, les
+   quatre menes d'imatges, el filtre de bellesa, els passos de verificar, les dades d'entrenament, què passa amb les
+   converses, la configuració de privadesa, el manual de la IA i el que no deleguem. Cap marca ni cap app reals. */
+{
+  const d5e = (x, y, e, s = 24) => `<text x="${x}" y="${y}" font-size="${s}" text-anchor="middle">${e}</text>`;
+  const d5bub = (x, y, w, h, me) => `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="14" fill="${me ? '#2F5BEA' : '#fff'}" stroke="${me ? '#2F5BEA' : '#DCE4FA'}" stroke-width="2"/>`;
+  const d5tg = (x, y, on) => `<rect x="${x}" y="${y}" width="40" height="22" rx="11" fill="${on ? '#3CC47C' : '#C9D3F2'}"/><circle cx="${on ? x + 29 : x + 11}" cy="${y + 11}" r="8" fill="#fff"/>`;
+
+  Object.assign(TANI, {
+    // instrucció vaga → resposta que no serveix; instrucció clara → resposta útil
+    d5prompt() {
+      return tSvg(214, `<g ${tA(.2, 'ta-in')}>${d5bub(196, 6, 110, 30, 1)}<text x="251" y="26" text-anchor="middle" class="tat w s">${L('volcans', 'volcanes')}</text></g>
+        <g ${tA(.8, 'ta-in')}>${d5bub(14, 42, 200, 40)}<g>${d5e(34, 70, '🤖', 18)}</g>${[0, 1, 2].map(i => `<rect x="54" y="${52 + i * 9}" width="${[148, 140, 120][i]}" height="5" rx="2.5" fill="#C9D3F2"/>`).join('')}</g>
+        <g ${tA(1.3, 'ta-pop')}>${d5e(240, 72, '😵', 24)}</g>
+        <g ${tA(1.9, 'ta-in')}>${d5bub(48, 96, 258, 46, 1)}<text x="177" y="115" text-anchor="middle" class="tat w s">${L('Per a 5è: explica en 5 frases', 'Para 5.º: explica en 5 frases')}</text><text x="177" y="133" text-anchor="middle" class="tat w s">${L('fàcils com es forma un volcà', 'fáciles cómo se forma un volcán')}</text></g>
+        <g ${tA(2.8, 'ta-in')}>${d5bub(14, 150, 200, 56)}<g>${d5e(34, 184, '🤖', 18)}</g>${[0, 1, 2, 3, 4].map(i => `<text x="54" y="${163 + i * 9.5}" font-size="9" font-weight="800" fill="#2F5BEA">${i + 1}.</text><rect x="66" y="${158 + i * 9.5}" width="${[120, 110, 128, 100, 116][i]}" height="5" rx="2.5" fill="#C9D3F2"/>`).join('')}</g>
+        <g ${tA(3.4, 'ta-pop')}>${d5e(250, 186, '🙂', 26)}<circle cx="282" cy="166" r="10" fill="#3CC47C"/><path d="M277 166l4 4 6-7" stroke="#fff" stroke-width="2.5" fill="none" stroke-linecap="round"/></g>`);
+    },
+    // les tres peces d'una bona instrucció: context, tasca i forma
+    d5peces() {
+      const P = [['🧭', L('Context', 'Contexto'), L('per a 5è', 'para 5.º'), '#2F5BEA'], ['🎯', L('Tasca', 'Tarea'), L('explica…', 'explica…'), '#9B6CF2'], ['📏', L('Forma', 'Forma'), L('en 5 frases', 'en 5 frases'), '#F08A24']];
+      return tSvg(214, `${P.map(([e, k, v, c], i) => `<g ${tA(.3 + i * .6, 'ta-pop')}><rect x="${12 + i * 100}" y="14" width="94" height="96" rx="16" fill="#fff" stroke="${c}" stroke-width="3"/><circle cx="${106 + i * 100}" cy="62" r="9" fill="${i < 2 ? c : 'none'}"/>
+          <g>${d5e(59 + i * 100, 50, e, 24)}</g><text x="${59 + i * 100}" y="78" text-anchor="middle" class="tat b">${k}</text><text x="${59 + i * 100}" y="98" text-anchor="middle" class="tat s">${v}</text></g>`).join('')}
+        <path d="M160 116v16" stroke="#9AA6C8" stroke-width="3" ${tA(2.2, 'ta-fade')}/><path d="M153 128l7 8 7-8" fill="#9AA6C8" ${tA(2.2, 'ta-fade')}/>
+        <g ${tA(2.6, 'ta-pop')}><rect x="40" y="142" width="240" height="40" rx="18" fill="#E7F7EE" stroke="#3CC47C" stroke-width="2.5"/><g>${d5e(70, 170, '🤖', 20)}</g><text x="172" y="167" text-anchor="middle" class="tat b">${L('Resposta útil!', '¡Respuesta útil!')}</text></g>
+        <text x="160" y="204" text-anchor="middle" class="tat s" ${tA(3.2, 'ta-fade')}>${L('I sense dades personals', 'Y sin datos personales')}</text>`);
+    },
+    // revisar la resposta: demanar-ne més i tres preguntes
+    d5revisa() {
+      const C = [L('«més fàcil»', '«más fácil»'), L('«un exemple»', '«un ejemplo»'), L('«més curt»', '«más corto»')];
+      const R = [['🔍', L('És veritat?', '¿Es verdad?'), L('ho comprovo', 'lo compruebo'), '#2F5BEA'], ['💡', L('Ho entenc?', '¿Lo entiendo?'), L('si no, pregunto', 'si no, pregunto'), '#F2B21B'], ['✍️', L('És meu?', '¿Es mío?'), L('amb les meves paraules', 'con mis palabras'), '#3CC47C']];
+      return tSvg(214, `<text x="160" y="18" text-anchor="middle" class="tat s" ${tA(.1, 'ta-fade')}>${L('Demana-li més:', 'Pídele más:')}</text>
+        ${C.map((t, i) => `<g ${tA(.3 + i * .3, 'ta-pop')}><rect x="${12 + i * 100}" y="26" width="94" height="28" rx="14" fill="#F3E8FF" stroke="#9B6CF2" stroke-width="2"/><text x="${59 + i * 100}" y="45" text-anchor="middle" class="tat s">${t}</text></g>`).join('')}
+        ${R.map(([e, q, a, c], i) => `<g ${tA(1.4 + i * .6, 'ta-in')}><rect x="12" y="${66 + i * 48}" width="296" height="40" rx="14" fill="#fff" stroke="${c}" stroke-width="2.5"/><g>${d5e(36, 93 + i * 48, e, 18)}</g><text x="58" y="${91 + i * 48}" class="tat b">${q} <tspan style="font-size:13.5px;font-weight:700">${a}</tspan></text></g>`).join('')}`);
+    },
+    // quatre menes d'imatges: real, retocada, fora de context i feta amb IA
+    d5quatre() {
+      const T = [['📷', L('Real', 'Real'), '🌳🏠', '#3CC47C'], ['🪄', L('Retocada', 'Retocada'), '🌳🏠✨', '#F2B21B'], ['📅', L('Fora de context', 'Fuera de contexto'), '❄️🏠', '#F08A24'], ['🤖', L('Feta amb IA', 'Hecha con IA'), '🐉🏠', '#9B6CF2']];
+      return tSvg(214, `${T.map(([e, t, sc, c], i) => { const x = 10 + (i % 2) * 154, y = 8 + Math.floor(i / 2) * 102; return `<g ${tA(.3 + i * .6, 'ta-pop')}><rect x="${x}" y="${y}" width="146" height="94" rx="14" fill="#fff" stroke="${c}" stroke-width="3"/>
+          <rect x="${x + 8}" y="${y + 8}" width="130" height="50" rx="8" fill="#EAF4FF"/><g>${d5e(x + 73, y + 42, sc, 22)}</g><g>${d5e(x + 20, y + 82, e, 15)}</g><text x="${x + 34}" y="${y + 81}" class="tat s">${t}</text></g>`; }).join('')}`);
+    },
+    // un filtre canvia la cara: et compares amb una cosa que no és real
+    d5filtre() {
+      const face = (cx, f) => `<circle cx="${cx}" cy="78" r="46" fill="${f ? '#FFE1CF' : '#F2C4A6'}"/><path d="M${cx - 46} 70c4-34 30-48 46-48s42 14 46 48c-12-18-30-24-46-24s-34 6-46 24z" fill="#6B4430"/>
+        <ellipse cx="${cx - 16}" cy="78" rx="${f ? 8 : 5}" ry="${f ? 9 : 5}" fill="#14204A"/><ellipse cx="${cx + 16}" cy="78" rx="${f ? 8 : 5}" ry="${f ? 9 : 5}" fill="#14204A"/>
+        <path d="M${cx - 14} 100q14 ${f ? 12 : 8} 28 0" stroke="#B5523B" stroke-width="3" fill="none" stroke-linecap="round"/>
+        ${f ? `<text x="${cx + 34}" y="40" font-size="16">✨</text><text x="${cx - 48}" y="118" font-size="14">✨</text>` : [[-22, 92], [-26, 98], [20, 94], [26, 90], [-6, 64]].map(([dx, dy]) => `<circle cx="${cx + dx}" cy="${dy}" r="2" fill="#C98B6A"/>`).join('')}`;
+      return tSvg(214, `<g ${tA(.2, 'ta-in')}>${face(72, 0)}<text x="72" y="146" text-anchor="middle" class="tat b">${L('Foto real', 'Foto real')}</text></g>
+        <g ${tA(1, 'ta-fade')}><rect x="132" y="66" width="56" height="10" rx="5" fill="#E3E8F6"/><circle cx="182" cy="71" r="9" fill="#9B6CF2"/><text x="160" y="58" text-anchor="middle" class="tat s">${L('filtre', 'filtro')}</text></g>
+        <g ${tA(1.6, 'ta-pop')}>${face(248, 1)}<text x="248" y="146" text-anchor="middle" class="tat b">${L('Amb filtre', 'Con filtro')}</text></g>
+        <g ${tA(2.8, 'ta-pop')}><rect x="14" y="160" width="292" height="46" rx="16" fill="#FFF3D6" stroke="#F2B21B" stroke-width="2.5"/><text x="160" y="179" text-anchor="middle" class="tat s">${L('Amb un filtre et compares', 'Con un filtro te comparas')}</text><text x="160" y="197" text-anchor="middle" class="tat b">${L('amb una cosa que no és real', 'con algo que no es real')}</text></g>`);
+    },
+    // fer com els verificadors: sortir a buscar
+    d5verif() {
+      const R = [['👤', L('Qui la publica?', '¿Quién la publica?')], ['🗂️', L("On és l'original?", '¿Dónde está el original?')], ['📅', L('Quan i on es va fer?', '¿Cuándo y dónde?')], ['📰', L('Qui més ho explica?', '¿Quién más lo cuenta?')]];
+      return tSvg(214, `<g ${tA(.2, 'ta-pop')}><rect x="10" y="40" width="100" height="84" rx="12" fill="#EAF4FF" stroke="#7C9BFF" stroke-width="2"/><g>${d5e(60, 92, '🌉💥', 26)}</g><text x="60" y="144" text-anchor="middle" class="tat s">${L('Foto increïble', 'Foto increíble')}</text></g>
+        <g ${tA(.6, 'ta-pop')}>${d5e(100, 52, '🔎', 30)}</g>
+        ${R.map(([e, t], i) => `<g ${tA(1 + i * .55, 'ta-in')}><rect x="118" y="${8 + i * 44}" width="194" height="36" rx="12" fill="#fff" stroke="#DCE4FA" stroke-width="2" filter="url(#bwSh)"/><g>${d5e(134, 32 + i * 44, e, 14)}</g><text x="148" y="${31 + i * 44}" class="tat s" style="font-size:12px">${i + 1}. ${t}</text></g>`).join('')}
+        <g ${tA(3.4, 'ta-pop')}><rect x="10" y="186" width="300" height="24" rx="12" fill="#3CC47C"/><text x="160" y="203" text-anchor="middle" class="tat w s">${L('Si no és clar, no es comparteix', 'Si no está claro, no se comparte')}</text></g>`);
+    },
+    // les dades d'entrenament: textos, imatges, veus i converses → la IA aprèn patrons
+    d5dades() {
+      const D = [['📚', L('Textos', 'Textos')], ['🖼️', L('Imatges', 'Imágenes')], ['🎙️', L('Veus', 'Voces')], ['💬', L('Converses', 'Conversaciones')]];
+      return tSvg(214, `${D.map(([e, t], i) => `<g ${tA(.2 + i * .45, 'ta-in')}><rect x="10" y="${8 + i * 44}" width="132" height="36" rx="12" fill="#fff" stroke="#DCE4FA" stroke-width="2" filter="url(#bwSh)"/><g>${d5e(30, 32 + i * 44, e, 17)}</g><text x="48" y="${31 + i * 44}" class="tat s">${t}</text>
+          <circle r="4" fill="#9B6CF2"><animateMotion dur="1.8s" begin="${i * .4}s" repeatCount="indefinite" path="M144 ${26 + i * 44}L214 92"/></circle></g>`).join('')}
+        <g ${tA(2, 'ta-pop')}><circle cx="252" cy="92" r="46" fill="#14204A"/><g>${d5e(252, 102, '🤖', 34)}</g></g>
+        <text x="252" y="158" text-anchor="middle" class="tat b" ${tA(2.6, 'ta-fade')}>${L('Busca patrons', 'Busca patrones')}</text>
+        <g ${tA(3.2, 'ta-pop')}><rect x="10" y="184" width="300" height="26" rx="13" fill="#F3E8FF" stroke="#9B6CF2" stroke-width="2"/><text x="160" y="202" text-anchor="middle" class="tat s">${L('Tot això ho han fet persones', 'Todo esto lo han hecho personas')}</text></g>`);
+    },
+    // el que escrius a una IA es pot guardar, fer servir per entrenar i llegir
+    d5guarda() {
+      return tSvg(214, `<g ${tA(.2, 'ta-in')}>${d5bub(10, 14, 128, 46, 1)}<text x="74" y="33" text-anchor="middle" class="tat w s">${L('El meu secret', 'Mi secreto')}</text><text x="74" y="50" text-anchor="middle" class="tat w s">${L('és que…', 'es que…')}</text></g>
+        <path d="M140 37h30" stroke="#9AA6C8" stroke-width="3" ${tA(.8, 'ta-fade')}/><path d="M166 31l8 6-8 6" fill="#9AA6C8" ${tA(.8, 'ta-fade')}/>
+        <g ${tA(1.1, 'ta-pop')}><rect x="178" y="8" width="132" height="60" rx="14" fill="#FFF3D6" stroke="#F2B21B" stroke-width="2.5"/><g>${d5e(204, 46, '📦', 22)}</g><text x="224" y="35" class="tat s">${L('Es pot', 'Se puede')}</text><text x="224" y="53" class="tat b">${L('guardar', 'guardar')}</text></g>
+        <g ${tA(1.9, 'ta-in')}><rect x="10" y="84" width="146" height="54" rx="14" fill="#fff" stroke="#DCE4FA" stroke-width="2"/><g>${d5e(32, 118, '🧠', 20)}</g><text x="52" y="106" class="tat s">${L('Per entrenar', 'Para entrenar')}</text><text x="52" y="124" class="tat s">${L('la IA', 'la IA')}</text></g>
+        <g ${tA(2.4, 'ta-in')}><rect x="164" y="84" width="146" height="54" rx="14" fill="#fff" stroke="#DCE4FA" stroke-width="2"/><g>${d5e(186, 118, '👀', 20)}</g><text x="206" y="106" class="tat s">${L('Ho pot llegir', 'Lo puede leer')}</text><text x="206" y="124" class="tat s">${L('una persona', 'una persona')}</text></g>
+        <g ${tA(3.2, 'ta-pop')}><rect x="10" y="150" width="300" height="56" rx="16" fill="#E7F7EE" stroke="#3CC47C" stroke-width="2.5"/><text x="160" y="173" text-anchor="middle" class="tat b">${L('Dades personals, fotos i secrets:', 'Datos personales, fotos y secretos:')}</text><text x="160" y="194" text-anchor="middle" class="tat s">${L('fora. Els secrets, a persones de confiança', 'fuera. Los secretos, a personas de confianza')}</text></g>`);
+    },
+    // la configuració de privadesa d'una app d'IA: tu tries
+    d5config() {
+      const R = [[L('Entrenar amb les converses', 'Entrenar con las conversaciones'), 1, 0], [L("Desar l'historial", 'Guardar el historial'), 1, 0], [L('Conversa temporal', 'Conversación temporal'), 0, 1], [L('Ubicació', 'Ubicación'), 1, 0]];
+      return tSvg(214, `<rect x="10" y="6" width="300" height="200" rx="18" fill="#F3F6FF" stroke="#DCE4FA" stroke-width="2"/><text x="28" y="30" class="tat b">⚙️ ${L('Privadesa', 'Privacidad')}</text>
+        ${R.map(([t, a, b], i) => `<g><rect x="22" y="${40 + i * 36}" width="276" height="30" rx="12" fill="#fff"/><text x="34" y="${60 + i * 36}" class="tat s" style="font-size:12.5px">${t}</text>
+          <g ${tA(.2, 'ta-fade')}>${d5tg(248, 44 + i * 36, a)}</g><g ${tA(1 + i * .5, 'ta-pop')}><rect x="246" y="${42 + i * 36}" width="44" height="26" rx="13" fill="#fff"/>${d5tg(248, 44 + i * 36, b)}</g></g>`).join('')}
+        <text x="160" y="200" text-anchor="middle" class="tat s" ${tA(3.4, 'ta-fade')}>${L('Ho reviseu amb un adult', 'Lo revisáis con un adulto')}</text>`);
+    },
+    // el manual de la IA de la classe: sis capítols
+    d5manual() {
+      const C = [['💬', L('Preguntar bé', 'Preguntar bien')], ['🔍', L('Comprovar', 'Comprobar')], ['🤝', L('Honestedat', 'Honestidad')], ['🔒', L('Dades', 'Datos')], ['🖼️', L('Imatges i respecte', 'Imágenes y respeto')], ['🎂', L('Edats i permisos', 'Edades y permisos')]];
+      return tSvg(214, `<rect x="10" y="8" width="300" height="198" rx="14" fill="#7C4DE0"/><rect x="18" y="16" width="138" height="182" rx="8" fill="#FFFDF5"/><rect x="164" y="16" width="138" height="182" rx="8" fill="#FFFDF5"/><path d="M160 16v182" stroke="#5B33B8" stroke-width="3"/>
+        ${C.map(([e, t], i) => { const x = i < 3 ? 26 : 172, y = 30 + (i % 3) * 58; return `<g ${tA(.3 + i * .45, 'ta-in')}><rect x="${x}" y="${y}" width="122" height="48" rx="10" fill="#fff" stroke="#DCE4FA" stroke-width="2"/><circle cx="${x + 14}" cy="${y + 14}" r="9" fill="#9B6CF2"/><text x="${x + 14}" y="${y + 18}" text-anchor="middle" class="tat w s">${i + 1}</text><g>${d5e(x + 36, y + 21, e, 15)}</g><text x="${x + 61}" y="${y + 40}" text-anchor="middle" class="tat s">${t}</text></g>`; }).join('')}`);
+    },
+    // el que la IA pot fer amb nosaltres i el que és nostre
+    d5quanno() {
+      const A = [L('Idees', 'Ideas'), L('Explicacions', 'Explicaciones'), L('Repassar', 'Repasar')];
+      const B = [L('Les emocions', 'Las emociones'), L('Els problemes', 'Los problemas'), L('Les decisions', 'Las decisiones'), L('Aprendre a fer-ho', 'Aprender a hacerlo')];
+      return tSvg(214, `<g ${tA(.2, 'ta-in')}><rect x="8" y="6" width="304" height="88" rx="16" fill="#F3F6FF" stroke="#7C9BFF" stroke-width="2"/><g>${d5e(30, 33, '🤖', 20)}</g><text x="48" y="31" class="tat b">${L('Amb la IA (i amb permís)', 'Con la IA (y con permiso)')}</text></g>
+        ${A.map((t, i) => `<g ${tA(.6 + i * .4, 'ta-pop')}><rect x="${18 + i * 98}" y="46" width="90" height="36" rx="12" fill="#fff" stroke="#C9D3F2" stroke-width="2"/><text x="${63 + i * 98}" y="69" text-anchor="middle" class="tat s" style="font-size:12px">✅ ${t}</text></g>`).join('')}
+        <g ${tA(1.8, 'ta-in')}><rect x="8" y="102" width="304" height="106" rx="16" fill="#FFF3F6" stroke="#EF5A5A" stroke-width="2"/><g>${d5e(30, 129, '🧑', 20)}</g><text x="48" y="127" class="tat b">${L('Amb persones de confiança', 'Con personas de confianza')}</text></g>
+        ${B.map((t, i) => `<g ${tA(2.2 + i * .4, 'ta-pop')}><rect x="${18 + (i % 2) * 146}" y="${140 + Math.floor(i / 2) * 32}" width="138" height="28" rx="12" fill="#fff" stroke="#F4B7B7" stroke-width="2"/><text x="${87 + (i % 2) * 146}" y="${159 + Math.floor(i / 2) * 32}" text-anchor="middle" class="tat s" style="font-size:12.5px">💛 ${t}</text></g>`).join('')}`);
+    }
+  });
+}
+
+/* ── unitat 6 ── */
+/* Tech Digital · unitat 6 «Consumidors digitals» · animacions de teoria (TANI)
+   Dibuixos propis de Numi: anuncis per tot arreu, publicitat disfressada, les tres preguntes davant d'un anunci, com
+   guanya diners un videojoc «gratis», les monedes virtuals que amaguen euros, l'atzar de les caixes sorpresa, para-calcula-
+   pregunta, l'algoritme com una recepta, les pistes que mira, la bombolla de filtre i l'anunci honest. Cap marca real. */
+{
+  const d6e = (x, y, e, s = 24) => `<text x="${x}" y="${y}" font-size="${s}" text-anchor="middle">${e}</text>`;
+  const d6tag = (x, y, t, c = '#EF5A5A') => `<rect x="${x}" y="${y}" width="${Math.round(t.length * 6.3 + 12)}" height="18" rx="9" fill="${c}"/><text x="${x + 6}" y="${y + 13}" class="tat w s" style="font-size:11px">${t}</text>`;
+
+  Object.assign(TANI, {
+    // anuncis per tot arreu: uns es veuen i d'altres s'amaguen
+    d6anuncis() {
+      const A = [['📺', L('Tele', 'Tele'), L('Anunci', 'Anuncio')], ['🪧', L('Carrer', 'Calle'), L('Cartell', 'Cartel')], ['📱', L('Mòbil', 'Móvil'), '#publi'], ['▶️', L('Vídeo', 'Vídeo'), L('Patrocinat', 'Patrocinado')]];
+      return tSvg(214, `${A.map(([e, t, g], i) => { const x = 10 + (i % 2) * 154, y = 8 + Math.floor(i / 2) * 86; return `<g ${tA(.2 + i * .5, 'ta-pop')}><rect x="${x}" y="${y}" width="146" height="78" rx="14" fill="#fff" stroke="#DCE4FA" stroke-width="2" filter="url(#bwSh)"/><g>${d6e(x + 34, y + 50, e, 28)}</g><text x="${x + 62}" y="${y + 32}" class="tat b">${t}</text>
+          <g ${tA(.6 + i * .5, 'ta-pop')}>${d6tag(x + 58, y + 44, g, i < 2 ? '#2F5BEA' : '#EF5A5A')}</g></g>`; }).join('')}
+        <g ${tA(3, 'ta-pop')}><rect x="10" y="182" width="300" height="28" rx="14" fill="#FFF3D6" stroke="#F2B21B" stroke-width="2"/><text x="160" y="201" text-anchor="middle" class="tat s">${L("Uns es veuen… i d'altres s'amaguen", 'Unos se ven… y otros se esconden')}</text></g>`);
+    },
+    // la publicitat disfressada: caixes regalades, marques a la sèrie, resultats patrocinats i «notícies» pagades
+    d6disfressa() {
+      const D = [['📦', L('Obrir caixes regalades', 'Abrir cajas regaladas')], ['🎬', L('La marca, a la sèrie', 'La marca, en la serie')], ['🔍', L('Resultat patrocinat', 'Resultado patrocinado')], ['📰', L('«Notícia» pagada', '«Noticia» pagada')]];
+      return tSvg(214, `${D.map(([e, t], i) => `<g ${tA(.2 + i * .5, 'ta-in')}><rect x="10" y="${8 + i * 44}" width="300" height="38" rx="12" fill="#fff" stroke="#DCE4FA" stroke-width="2"/><g>${d6e(32, 34 + i * 44, e, 18)}</g><text x="54" y="${32 + i * 44}" class="tat s">${t}</text>
+          <g ${tA(.9 + i * .5, 'ta-pop')}>${d6tag(232, 18 + i * 44, L('Anunci', 'Anuncio'))}</g></g>`).join('')}
+        <text x="160" y="204" text-anchor="middle" class="tat b" ${tA(3.2, 'ta-fade')}>${L('Mira la lletra petita!', '¡Mira la letra pequeña!')}</text>`);
+    },
+    // la lupa de l'anunci: tres preguntes
+    d6lupa() {
+      const Q = [['💶', L('Qui el paga?', '¿Quién lo paga?')], ['🎯', L('Què vol que faci?', '¿Qué quiere que haga?')], ['🙈', L('Què no em diu?', '¿Qué no me dice?')]];
+      return tSvg(214, `<g ${tA(.2, 'ta-in')}><rect x="8" y="20" width="100" height="150" rx="14" fill="#FFF3D6" stroke="#F2B21B" stroke-width="2"/><g>${d6e(58, 82, '👟', 36)}</g><text x="58" y="112" text-anchor="middle" class="tat s" style="font-size:12px">${L('Les millors!', '¡Las mejores!')}</text><text x="58" y="132" text-anchor="middle" class="tat s" style="font-size:12px">${L('Només avui!', '¡Solo hoy!')}</text></g>
+        <g ${tA(.7, 'ta-pop')}><circle cx="96" cy="52" r="22" fill="none" stroke="#14204A" stroke-width="5"/><path d="M111 67l12 12" stroke="#14204A" stroke-width="7" stroke-linecap="round"/></g>
+        ${Q.map(([e, t], i) => `<g ${tA(1.3 + i * .6, 'ta-in')}><rect x="118" y="${14 + i * 52}" width="194" height="42" rx="14" fill="#fff" stroke="#2F5BEA" stroke-width="2.5"/><circle cx="134" cy="${35 + i * 52}" r="10" fill="#2F5BEA"/><text x="134" y="${40 + i * 52}" text-anchor="middle" class="tat w s">${i + 1}</text><g>${d6e(156, 41 + i * 52, e, 15)}</g><text x="170" y="${40 + i * 52}" class="tat s" style="font-size:12.5px">${t}</text></g>`).join('')}
+        <text x="160" y="196" text-anchor="middle" class="tat s" ${tA(3.4, 'ta-fade')}>${L('Després, decideixo amb calma', 'Después, decido con calma')}</text>`);
+    },
+    // com guanya diners un videojoc «gratis»: compres, anuncis i dades
+    d6gratis() {
+      const S = [['💎', L('Compres', 'Compras'), '#9B6CF2'], ['📺', L('Anuncis', 'Anuncios'), '#F08A24'], ['📊', L('Dades', 'Datos'), '#14A3B8']];
+      return tSvg(214, `<g ${tA(.2, 'ta-pop')}><rect x="96" y="6" width="128" height="58" rx="16" fill="#3CC47C"/><text x="160" y="32" text-anchor="middle" class="tat w b">🎮 ${L('GRATIS!', '¡GRATIS!')}</text><text x="160" y="52" text-anchor="middle" class="tat w s">${L('per descarregar', 'para descargar')}</text></g>
+        ${S.map(([e, t, c], i) => `<g ${tA(.8 + i * .5, 'ta-in')}><rect x="${10 + i * 104}" y="86" width="96" height="58" rx="14" fill="#fff" stroke="${c}" stroke-width="3"/><g>${d6e(58 + i * 104, 114, e, 22)}</g><text x="${58 + i * 104}" y="135" text-anchor="middle" class="tat s">${t}</text>
+          <circle r="5" fill="#FFD54A" stroke="#C99A00"><animateMotion dur="1.6s" begin="${i * .5}s" repeatCount="indefinite" path="M${58 + i * 104} 148L160 176"/></circle></g>`).join('')}
+        <g ${tA(2.6, 'ta-pop')}><rect x="80" y="176" width="160" height="32" rx="14" fill="#14204A"/><text x="160" y="197" text-anchor="middle" class="tat w s">🏢 ${L("L'empresa guanya", 'La empresa gana')}</text></g>`);
+    },
+    // les monedes virtuals amaguen els euros, i els paquets no quadren
+    d6moneda() {
+      return tSvg(214, `<g ${tA(.2, 'ta-in')}><rect x="10" y="8" width="300" height="46" rx="14" fill="#fff" stroke="#DCE4FA" stroke-width="2"/><text x="40" y="37" class="tat b">5 €</text><text x="88" y="37" class="tat b">=</text><text x="118" y="37" class="tat b">💎 500</text><text x="206" y="37" class="tat s">${L('(paquet)', '(paquete)')}</text></g>
+        <g ${tA(1, 'ta-in')}><rect x="10" y="62" width="300" height="46" rx="14" fill="#fff" stroke="#DCE4FA" stroke-width="2"/><text x="30" y="91" class="tat b">🧢 💎 100</text><text x="140" y="91" class="tat b">=</text><text x="170" y="91" class="tat b" ${tA(1.6, 'ta-pop')}>1 € ✓</text></g>
+        <g ${tA(2.2, 'ta-in')}><rect x="10" y="116" width="300" height="56" rx="14" fill="#FDEBEB" stroke="#EF5A5A" stroke-width="2"/><text x="26" y="139" class="tat s">${L('Vestit: 💎 600 → 2 paquets (10 €)', 'Traje: 💎 600 → 2 paquetes (10 €)')}</text><text x="26" y="160" class="tat b" ${tA(2.8, 'ta-fade')}>${L('Et sobren 💎 400…', 'Te sobran 💎 400…')}</text></g>
+        <g ${tA(3.4, 'ta-pop')}><rect x="40" y="180" width="240" height="30" rx="15" fill="#2F5BEA"/><text x="160" y="200" text-anchor="middle" class="tat w s">🧮 ${L('Passa sempre a euros', 'Pásalo siempre a euros')}</text></g>`);
+    },
+    // l'atzar: 1 de cada 100 caixes té el premi
+    d6atzar() {
+      return tSvg(214, `${Array.from({ length: 100 }, (_, i) => { const x = 14 + (i % 10) * 15, y = 14 + Math.floor(i / 10) * 15, g = i === 67; return `<rect x="${x}" y="${y}" width="12" height="12" rx="3" fill="${g ? '#FFC531' : '#C9B8F2'}" ${g ? tA(2, 'ta-pop') : ''}/>`; }).join('')}
+        <g ${tA(2.2, 'ta-pop')}><circle cx="125" cy="110" r="13" fill="none" stroke="#F08A24" stroke-width="3"/></g>
+        <g ${tA(.4, 'ta-in')}><rect x="176" y="14" width="134" height="64" rx="14" fill="#fff" stroke="#9B6CF2" stroke-width="2.5"/><text x="243" y="40" text-anchor="middle" class="tat b">${L('1 de cada 100', '1 de cada 100')}</text><text x="243" y="62" text-anchor="middle" class="tat s">${L('té el drac 🐉', 'tiene el dragón 🐉')}</text></g>
+        <g ${tA(1.4, 'ta-in')}><rect x="176" y="88" width="134" height="64" rx="14" fill="#FFF3D6" stroke="#F2B21B" stroke-width="2.5"/><text x="243" y="113" text-anchor="middle" class="tat s">${L('De mitjana, cal', 'De media, hay que')}</text><text x="243" y="134" text-anchor="middle" class="tat b">${L('obrir-ne 100', 'abrir 100')}</text></g>
+        <g ${tA(3, 'ta-pop')}><rect x="14" y="170" width="296" height="38" rx="16" fill="#FDEBEB" stroke="#EF5A5A" stroke-width="2.5"/><text x="162" y="194" text-anchor="middle" class="tat s">${L("…i potser més. Decideix l'atzar.", '…y quizá más. Decide el azar.')}</text></g>`);
+    },
+    // para, calcula, pregunta
+    d6stop() {
+      const S = [['✋', L('Para', 'Para'), L('sense presses', 'sin prisas'), '#EF5A5A'], ['🧮', L('Calcula', 'Calcula'), L('quants euros?', '¿cuántos euros?'), '#F2B21B'], ['🙋', L('Pregunta', 'Pregunta'), L('a un adult', 'a un adulto'), '#3CC47C']];
+      return tSvg(214, `<rect x="10" y="20" width="300" height="130" rx="65" fill="#1B1F2E"/>
+        ${S.map(([e, t, s, c], i) => `<g ${tA(.4 + i * .8, 'ta-pop')}><circle cx="${62 + i * 98}" cy="85" r="44" fill="${c}"/><g>${d6e(62 + i * 98, 82, e, 30)}</g><text x="${62 + i * 98}" y="112" text-anchor="middle" class="tat w b">${t}</text></g>
+          <text x="${62 + i * 98}" y="172" text-anchor="middle" class="tat s" ${tA(.8 + i * .8, 'ta-fade')}>${s}</text>`).join('')}
+        <text x="160" y="204" text-anchor="middle" class="tat b" ${tA(3.2, 'ta-fade')}>${L('Abans de comprar res', 'Antes de comprar nada')}</text>`);
+    },
+    // un algoritme és una recepta de passos; el de recomanació tria què veus
+    d6algo() {
+      const P = [L('Mira què has vist', 'Mira qué has visto'), L('Busca semblants', 'Busca parecidos'), L('Els ordena', 'Los ordena'), L("Te'ls mostra", 'Te los muestra')];
+      return tSvg(214, `<g ${tA(.2, 'ta-in')}><rect x="10" y="8" width="176" height="198" rx="14" fill="#FFFDF5" stroke="#F2B21B" stroke-width="2.5"/><text x="98" y="32" text-anchor="middle" class="tat b">📜 ${L('La recepta', 'La receta')}</text></g>
+        ${P.map((t, i) => `<g ${tA(.6 + i * .5, 'ta-in')}><circle cx="30" cy="${58 + i * 40}" r="11" fill="#F08A24"/><text x="30" y="${63 + i * 40}" text-anchor="middle" class="tat w s">${i + 1}</text><text x="48" y="${63 + i * 40}" class="tat s" style="font-size:12.5px">${t}</text></g>`).join('')}
+        <g ${tA(2.8, 'ta-pop')}>${['🐱', '🐶', '🐰'].map((e, i) => `<rect x="200" y="${14 + i * 64}" width="110" height="54" rx="12" fill="#fff" stroke="#DCE4FA" stroke-width="2" filter="url(#bwSh)"/><rect x="208" y="${22 + i * 64}" width="44" height="38" rx="8" fill="#EAF4FF"/><g>${d6e(230, 49 + i * 64, e, 20)}</g><rect x="258" y="${28 + i * 64}" width="44" height="6" rx="3" fill="#C9D3F2"/><rect x="258" y="${42 + i * 64}" width="32" height="6" rx="3" fill="#E3E8F6"/>`).join('')}</g>`);
+    },
+    // les pistes que mira l'algoritme
+    d6pistes() {
+      const P = [['👀', L('Què mires', 'Qué miras')], ['⏱️', L('Quanta estona', 'Cuánto rato')], ['❤️', L("Què t'agrada", 'Qué te gusta')], ['🔍', L('Què busques', 'Qué buscas')], ['🕘', L('A quina hora', 'A qué hora')], ['👥', L('Gent com tu', 'Gente como tú')]];
+      return tSvg(214, `${P.map(([e, t], i) => { const a = (i / 6) * Math.PI * 2 - Math.PI / 2, x = 160 + Math.cos(a) * 98, y = 100 + Math.sin(a) * 74; return `<g ${tA(.2 + i * .4, 'ta-pop')}><rect x="${x - 58}" y="${y - 17}" width="116" height="34" rx="14" fill="#fff" stroke="#DCE4FA" stroke-width="2" filter="url(#bwSh)"/><g>${d6e(x - 42, y + 6, e, 14)}</g><text x="${x - 30}" y="${y + 5}" class="tat s" style="font-size:12px">${t}</text>
+          <path d="M${160 + Math.cos(a) * 40} ${100 + Math.sin(a) * 26}L${160 + Math.cos(a) * 62} ${100 + Math.sin(a) * 42}" stroke="#9B6CF2" stroke-width="2.5" stroke-dasharray="3 3"/></g>`; }).join('')}
+        <g ${tA(2.6, 'ta-pop')}><circle cx="160" cy="100" r="30" fill="#14204A"/><g>${d6e(160, 110, '⚙️', 26)}</g></g>
+        <text x="160" y="206" text-anchor="middle" class="tat s" ${tA(3.2, 'ta-fade')}>${L("Amb tot això, endevina què t'enganxarà", 'Con todo esto, adivina qué te enganchará')}</text>`);
+    },
+    // la bombolla de filtre: a dins, sempre el mateix; a fora, tot un món
+    d6bombolla() {
+      const O = [['🎻', 30, 30], ['🔭', 290, 34], ['🎨', 26, 150], ['🌍', 292, 156], ['🐢', 160, 22], ['🧪', 60, 96], ['📚', 262, 96]];
+      return tSvg(214, `${O.map(([e, x, y], i) => `<g ${tA(1.8 + i * .2, 'ta-pop')}>${d6e(x, y, e, 22)}</g>`).join('')}
+        <g ${tA(.2, 'ta-pop')}><circle cx="160" cy="96" r="66" fill="#CFE9FF" fill-opacity=".55" stroke="#7CB8F0" stroke-width="3"><animate attributeName="r" values="66;70;66" dur="3s" repeatCount="indefinite"/></circle>
+          <g>${d6e(160, 108, '🧒', 34)}</g>${[[124, 62], [196, 62], [118, 128], [202, 128], [160, 48]].map(([x, y]) => `<g>${d6e(x, y, '⚽', 16)}</g>`).join('')}</g>
+        <g ${tA(3, 'ta-pop')}><rect x="20" y="176" width="280" height="32" rx="16" fill="#FFF3D6" stroke="#F2B21B" stroke-width="2"/><text x="160" y="197" text-anchor="middle" class="tat s">${L("El teu inici no és el món sencer", 'Tu inicio no es el mundo entero')}</text></g>`);
+    },
+    // l'anunci honest: què hi va i què no
+    d6honest() {
+      const Y = [L('Què és', 'Qué es'), L('Quant costa', 'Cuánto cuesta'), L('Qui el fa', 'Quién lo hace'), L('Per a què', 'Para qué')], N = [L('Presses falses', 'Prisas falsas'), L('Lletra petita', 'Letra pequeña'), L('«El millor del món»', '«Lo mejor del mundo»')];
+      return tSvg(214, `<g ${tA(.2, 'ta-in')}><rect x="10" y="8" width="150" height="198" rx="14" fill="#E7F7EE" stroke="#3CC47C" stroke-width="2.5"/><text x="85" y="32" text-anchor="middle" class="tat b">✅ ${L('Hi va', 'Va')}</text></g>
+        ${Y.map((t, i) => `<g ${tA(.6 + i * .4, 'ta-in')}><rect x="20" y="${44 + i * 38}" width="130" height="30" rx="10" fill="#fff"/><text x="85" y="${64 + i * 38}" text-anchor="middle" class="tat s">${t}</text></g>`).join('')}
+        <g ${tA(2.2, 'ta-in')}><rect x="168" y="8" width="142" height="198" rx="14" fill="#FDEBEB" stroke="#EF5A5A" stroke-width="2.5"/><text x="239" y="32" text-anchor="middle" class="tat b">🚫 ${L('No hi va', 'No va')}</text></g>
+        ${N.map((t, i) => `<g ${tA(2.6 + i * .4, 'ta-in')}><rect x="176" y="${44 + i * 38}" width="126" height="30" rx="10" fill="#fff"/><text x="239" y="${64 + i * 38}" text-anchor="middle" class="tat s" style="font-size:12px">${t}</text></g>`).join('')}`);
+    }
+  });
+}

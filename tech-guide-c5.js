@@ -2448,7 +2448,7 @@ Object.assign(TGUIDE, (() => {
 
     /* ---------- Sessió 4 · Projecte: el meu pla digital (final del curs) ---------- */
     'd3-4': {
-      intro: "Projecte final del curs. Cada alumne/a prepara el seu pla de benestar digital, en dues parts: la targeta d'ajuda (els noms dels seus tres adults de confiança i els telèfons 116 111, 017 i 112) i el pacte digital de casa, uns acords concrets per a tota la família sobre temps, llocs sense pantalles, partides, compres i què fer si alguna cosa va malament. A classe es fan els esborranys i a casa s'acaba el pacte amb la família. La sessió tanca el curs amb un repàs de tot el que han après i el diploma.|Proyecto final del curso. Cada alumno/a prepara su plan de bienestar digital, en dos partes: la tarjeta de ayuda (los nombres de sus tres adultos de confianza y los teléfonos 116 111, 017 y 112) y el pacto digital de casa, unos acuerdos concretos para toda la familia sobre tiempo, lugares sin pantallas, partidas, compras y qué hacer si algo va mal. En clase se hacen los borradores y en casa se termina el pacto con la familia. La sesión cierra el curso con un repaso de todo lo que han aprendido y el diploma.",
+      intro: "Projecte de la unitat 3. Cada alumne/a prepara el seu pla de benestar digital, en dues parts: la targeta d'ajuda (els noms dels seus tres adults de confiança i els telèfons 116 111, 017 i 112) i el pacte digital de casa, uns acords concrets per a tota la família sobre temps, llocs sense pantalles, partides, compres i què fer si alguna cosa va malament. A classe es fan els esborranys i a casa s'acaba el pacte amb la família. La sessió tanca la unitat amb un repàs del que han après.|Proyecto de la unidad 3. Cada alumno/a prepara su plan de bienestar digital, en dos partes: la tarjeta de ayuda (los nombres de sus tres adultos de confianza y los teléfonos 116 111, 017 y 112) y el pacto digital de casa, unos acuerdos concretos para toda la familia sobre tiempo, lugares sin pantallas, partidas, compras y qué hacer si algo va mal. En clase se hacen los borradores y en casa se termina el pacto con la familia. La sesión cierra la unidad con un repaso de lo que han aprendido.",
       claus: [
         "Un pacte digital són acords concrets que fa tota la família junta i que valen per a tothom, també per als adults.|Un pacto digital son acuerdos concretos que hace toda la familia junta y que valen para todo el mundo, también para los adultos.",
         "Un bon acord diu què, quan i on, és en positiu i es pot complir; si no funciona, se'n torna a parlar.|Un buen acuerdo dice qué, cuándo y dónde, es en positivo y se puede cumplir; si no funciona, se vuelve a hablar.",
@@ -2484,12 +2484,11 @@ Object.assign(TGUIDE, (() => {
         aula: [
           "Un ordinador per alumne/a amb Numi Tech obert a la sessió «Projecte: el meu pla digital»|Un ordenador por alumno/a con Numi Tech abierto en la sesión «Proyecto: mi plan digital»",
           "Projector i la presentació d'aquesta sessió|Proyector y la presentación de esta sesión",
-          "La fitxa del pacte i la targeta d'ajuda (una per alumne/a), tisores i colors|La ficha del pacto y la tarjeta de ayuda (una por alumno/a), tijeras y colores",
-          "Els diplomes del curs impresos, un per alumne/a, amb el nom escrit|Los diplomas del curso impresos, uno por alumno/a, con el nombre escrito"
+          "La fitxa del pacte i la targeta d'ajuda (una per alumne/a), tisores i colors|La ficha del pacto y la tarjeta de ayuda (una por alumno/a), tijeras y colores"
         ],
         imprimir: ["El pacte digital i la targeta d'ajuda (imprimible 1): una per alumne/a|El pacto digital y la tarjeta de ayuda (imprimible 1): una por alumno/a", "Diploma del curs (imprimible 2): un per alumne/a|Diploma del curso (imprimible 2): uno por alumno/a"],
         prep: [
-          "Imprimir una fitxa per alumne/a i els diplomes amb el nom de cada alumne/a.|Imprimir una ficha por alumno/a y los diplomas con el nombre de cada alumno/a.",
+          "Imprimir una fitxa per alumne/a.|Imprimir una ficha por alumno/a.",
           "Comprovar els telèfons d'ajuda vigents (116 111, 017 i 112) i, si en voleu afegir, el telèfon de referència del centre.|Comprobar los teléfonos de ayuda vigentes (116 111, 017 y 112) y, si queréis añadirlo, el teléfono de referencia del centro.",
           "Preparar una nota per a les famílies que expliqui el pacte digital i que és una proposta, no una obligació.|Preparar una nota para las familias que explique el pacto digital y que es una propuesta, no una obligación."
         ]
@@ -2519,12 +2518,12 @@ Object.assign(TGUIDE, (() => {
             "Qui són els teus tres adults de confiança? Un de casa, un de l'escola i un altre.|¿Quiénes son tus tres adultos de confianza? Uno de casa, uno del colegio y otro.",
             "On guardaràs la targeta? (A la motxilla, a la funda de la tauleta…)|¿Dónde guardarás la tarjeta? (En la mochila, en la funda de la tablet…)"],
           slides: ['s9', 's10', 's11'], app: "Pas «Crea»: el meu pacte digital i «La targeta d'ajuda i el pacte» (Ho he fet!).|Paso «Crea»: mi pacto digital y «La tarjeta de ayuda y el pacto» (¡Lo he hecho!).", org: "Individual i després per parelles|Individual y después por parejas" },
-        { min: 15, t: "Presentació, tiquet i diploma|Presentación, ticket y diploma", fase: 'tancament',
-          fa: "Uns quants voluntaris presenten el seu pacte en 30 segons i la resta diu una cosa que li agrada. Fes el tiquet, deixa que facin les preguntes finals i el diploma de l'app, i lliura els diplomes impresos. Acaba recordant la norma d'or i els tres números.|Unos cuantos voluntarios presentan su pacto en 30 segundos y el resto dice algo que le gusta. Haz el ticket, deja que hagan las preguntas finales y el diploma de la app, y entrega los diplomas impresos. Termina recordando la norma de oro y los tres números.",
+        { min: 15, t: "Presentació i tiquet|Presentación y ticket", fase: 'tancament',
+          fa: "Uns quants voluntaris presenten el seu pacte en 30 segons i la resta diu una cosa que li agrada. Fes el tiquet i deixa que facin les preguntes finals. Acaba recordant la norma d'or i els tres números.|Unos cuantos voluntarios presentan su pacto en 30 segundos y el resto dice algo que le gusta. Haz el ticket y deja que hagan las preguntas finales. Termina recordando la norma de oro y los tres números.",
           diu: ["Quin acord del pacte us sembla més fàcil de complir?|¿Qué acuerdo del pacto os parece más fácil de cumplir?",
-            "Ara sou experts i expertes en ciutadania digital!|¡Ahora sois expertos y expertas en ciudadanía digital!",
+            "Ja teniu el vostre pla de benestar digital!|¡Ya tenéis vuestro plan de bienestar digital!",
             "I recordeu, ara i sempre: si dubteu, pregunteu a un adult de confiança.|Y recordad, ahora y siempre: si dudáis, preguntad a un adulto de confianza."],
-          slides: ['s12', 's13', 's14', 's15', 's16'], app: "«Tancament»: les dues preguntes finals, el diploma del curs i com m'he sentit.|«Cierre»: las dos preguntas finales, el diploma del curso y cómo me he sentido.", org: "Tot el grup|Todo el grupo" }
+          slides: ['s12', 's13', 's14', 's15', 's16'], app: "«Tancament»: les dues preguntes finals i com m'he sentit.|«Cierre»: las dos preguntas finales y cómo me he sentido.", org: "Tot el grup|Todo el grupo" }
       ],
       errors: [
         ["Escriu acords només per a ell o ella, o només per als adults.|Escribe acuerdos solo para él o ella, o solo para los adultos.",
@@ -2562,7 +2561,6 @@ Object.assign(TGUIDE, (() => {
       ],
       tec: [
         ["Al pas dels números hi ha tres calaixos i alguna situació els fa dubtar.|En el paso de los números hay tres cajas y alguna situación les hace dudar.", "És normal: comenteu que, abans de tot, sempre un adult de confiança. Si hi ha un perill ara mateix, 112.|Es normal: comentad que, antes de nada, siempre un adulto de confianza. Si hay un peligro ahora mismo, 112."],
-        ["No es poden imprimir els diplomes a temps.|No se pueden imprimir los diplomas a tiempo.", "L'app també mostra el diploma en acabar (es pot imprimir des d'allà). Els impresos es poden lliurar la setmana vinent.|La app también muestra el diploma al terminar (se puede imprimir desde allí). Los impresos se pueden entregar la semana que viene."],
         ["Volen tornar a la conversa de la Jana per provar un altre camí.|Quieren volver a la conversación de Jana para probar otro camino.", "Poden tornar enrere amb la fletxa o reobrir la sessió: tots els camins acaben amb el pacte signat.|Pueden volver atrás con la flecha o reabrir la sesión: todos los caminos terminan con el pacto firmado."],
         ["No queda temps per a les presentacions.|No queda tiempo para las presentaciones.", "Feu-les al principi de la sessió següent o en una tutoria; també poden presentar el pacte a casa.|Hacedlas al principio de la sesión siguiente o en una tutoría; también pueden presentar el pacto en casa."]
       ],
@@ -2621,12 +2619,12 @@ Object.assign(TGUIDE, (() => {
           nota: "Llegiu-lo junts.|Leedlo juntos." },
         { id: 's14', k: 'tiquet', t: "Tiquet de sortida|Ticket de salida",
           punts: ["Digues un acord del teu pacte i per què és bo.|Di un acuerdo de tu pacto y por qué es bueno.", "Digues un telèfon d'ajuda i quan el faries servir.|Di un teléfono de ayuda y cuándo lo usarías."],
-          nota: "Fes el tiquet mentre lliures els diplomes.|Haz el ticket mientras entregas los diplomas." },
+          nota: "Fes el tiquet en veu alta, un o dos alumnes per punt.|Haz el ticket en voz alta, uno o dos alumnos por punto." },
         { id: 's15', k: 'media', t: "Sempre hi ha algú que t'ajuda|Siempre hay alguien que te ayuda", x: "Explicar-ho no és xivar-se: és cuidar-te.|Contarlo no es chivarse: es cuidarte.", media: HELP,
-          nota: "Deixa-la projectada mentre lliures els diplomes.|Déjala proyectada mientras entregas los diplomas." },
-        { id: 's16', k: 'concepte', t: "Enhorabona: curs acabat!|¡Enhorabuena: curso terminado!", pic: 'img/chars/numi-medalla.webp',
-          punts: ["Has acabat el curs Tech Digital.|Has terminado el curso Tech Digital.", "Ara pots ajudar la teva família i la teva escola.|Ahora puedes ayudar a tu familia y a tu escuela.", "Recorda: si dubtes, pregunta a un adult de confiança.|Recuerda: si dudas, pregunta a un adulto de confianza."],
-          nota: "Lliura els diplomes impresos un a un, dient a cada alumne/a una cosa concreta que ha fet bé durant el curs.|Entrega los diplomas impresos uno a uno, diciendo a cada alumno/a algo concreto que ha hecho bien durante el curso." }
+          nota: "Deixa-la projectada mentre guarden la targeta d'ajuda.|Déjala proyectada mientras guardan la tarjeta de ayuda." },
+        { id: 's16', k: 'concepte', t: "Enhorabona: unitat acabada!|¡Enhorabuena: unidad terminada!", pic: 'img/chars/numi-medalla.webp',
+          punts: ["Ja tens el teu pla de benestar digital.|Ya tienes tu plan de bienestar digital.", "Ara pots ajudar la teva família i la teva escola.|Ahora puedes ayudar a tu familia y a tu escuela.", "Recorda: si dubtes, pregunta a un adult de confiança.|Recuerda: si dudas, pregunta a un adulto de confianza."],
+          nota: "Digues a cada alumne/a una cosa concreta que ha fet bé en aquesta unitat.|Di a cada alumno/a algo concreto que ha hecho bien en esta unidad." }
       ],
       print: [
         { id: 'p1', t: "El pacte digital i la targeta d'ajuda|El pacto digital y la tarjeta de ayuda", k: 'fitxa',
@@ -2639,16 +2637,2419 @@ Object.assign(TGUIDE, (() => {
             { q: "🤝 La norma d'or de casa:|🤝 La norma de oro de casa:", sol: "Per exemple: «Si alguna cosa ens fa sentir malament, ho expliquem a casa i ningú no renya».|Por ejemplo: «Si algo nos hace sentir mal, lo contamos en casa y nadie riñe»." },
             { q: "✂️ La meva targeta d'ajuda · Els meus tres adults de confiança: 1. ____ 2. ____ 3. ____ · 116 111 (ajuda a la infància i l'adolescència) · 017 (ajuda en ciberseguretat) · 112 (emergències)|✂️ Mi tarjeta de ayuda · Mis tres adultos de confianza: 1. ____ 2. ____ 3. ____ · 116 111 (ayuda a la infancia y la adolescencia) · 017 (ayuda en ciberseguridad) · 112 (emergencias)", big: true, sol: "Tres adults de confiança (de casa, de l'escola i un altre) i els tres telèfons.|Tres adultos de confianza (de casa, del colegio y otro) y los tres teléfonos." },
             { q: "Signatures de tota la família:|Firmas de toda la familia:", sol: "Resposta oberta.|Respuesta abierta." }
+          ] }
+      ]
+    }
+  });
+}
+
+/* ── unitat 4 ── */
+/* Tech Digital · unitat 4 «Ciberseguretat» · guia del professorat (d4-1 … d4-4)
+   Material propi de Numi. Classe de 60 minuts; tots els exemples (Vilabit, Paquets Exprés, CalcuBit, FiltreMàgic, Galàxia
+   Blocs…) són inventats. Ciberseguretat sense por: els enganys estan fets per enganyar tothom, també els adults; el missatge
+   és «atura't, comprova-ho per un altre camí i explica-ho». Mai no es demanen ni es miren dispositius o comptes reals dels
+   infants a classe. Si algú explica que ha caigut en un engany, s'escolta sense renyar i s'avisa la família. */
+{
+  // les demos de les diapositives (els mateixos artefactes de l'app, sense pistes clicables)
+  const SMS = { k: 'dig', kind: 'sms', from: 'Paquets Exprés|Paquetes Exprés', av: '📦', html: `El teu paquet no s'ha pogut entregar. Si no pagues avui, es retornarà. Paga 1,99 € de despeses a paquets-expres.entrega-ara.xyz|Tu paquete no se ha podido entregar. Si no pagas hoy, se devolverá. Paga 1,99 € de gastos en paquetes-expres.entrega-ya.xyz` };
+  const PAU = { k: 'dig', kind: 'chat', from: 'Número desconegut|Número desconocido', av: '📱', html: `<div class="dm them">Ei! Soc en Pau 🦊 He canviat de número</div><div class="dm them">T'arribarà un codi al mòbil per error. Me'l passes? És urgent!</div>|<div class="dm them">¡Ey! Soy Pau 🦊 He cambiado de número</div><div class="dm them">Te llegará un código al móvil por error. ¿Me lo pasas? ¡Es urgente!</div>` };
+  const SUPORT = { k: 'dig', kind: 'game', from: 'Galàxia Blocs · missatges|Galàxia Blocs · mensajes', av: '🪐', html: `<p><b>🛠️ Suport_0ficial_GB</b></p><p>El teu compte serà esborrat en 30 minuts. Per salvar-lo, escriu aquí l'usuari, la contrasenya i el codi que t'arribarà. I de regal, 2.000 gemmes 💎!</p>|<p><b>🛠️ Soporte_0ficial_GB</b></p><p>Tu cuenta será borrada en 30 minutos. Para salvarla, escribe aquí el usuario, la contraseña y el código que te llegará. ¡Y de regalo, 2.000 gemas 💎!</p>` };
+  const CALCU = { k: 'dig', kind: 'web', url: "Botiga d'apps · CalcuBit|Tienda de apps · CalcuBit", html: `<p><b>🧮 CalcuBit</b> · Calculadora</p><p>Aquesta app vol:</p><p>➗ Fer càlculs · 📍 Saber on ets sempre · 🎙️ Fer servir el micròfon · 👥 Llegir els contactes · 🖼️ Veure totes les fotos</p>|<p><b>🧮 CalcuBit</b> · Calculadora</p><p>Esta app quiere:</p><p>➗ Hacer cálculos · 📍 Saber dónde estás siempre · 🎙️ Usar el micrófono · 👥 Leer los contactos · 🖼️ Ver todas las fotos</p>` };
+  const WIFI = { k: 'dig', kind: 'web', url: 'Configuració · Wifi|Configuración · Wifi', html: `<p><b>📶 Xarxes disponibles</b></p><p>🔒 Biblioteca_Vilabit</p><p>🔓 Biblioteca_Vilabit_FREE</p><p>🔓 WIFI_GRATIS_SUPER_RAPIDA</p><p>🔒 Bib1ioteca_Vilabit</p>|<p><b>📶 Redes disponibles</b></p><p>🔒 Biblioteca_Vilabit</p><p>🔓 Biblioteca_Vilabit_FREE</p><p>🔓 WIFI_GRATIS_SUPER_RAPIDA</p><p>🔒 Bib1ioteca_Vilabit</p>` };
+  const VIRUS = { k: 'dig', kind: 'web', url: 'super-netejador-gratis.xyz|super-limpiador-gratis.xyz', html: `<div style="background:#FDEBEB;border:3px solid #EF5A5A;border-radius:12px;padding:10px;text-align:center"><b>⚠️ ALERTA! El teu dispositiu té 5 VIRUS!</b><br>Descarrega ara el netejador per salvar les fotos!</div>|<div style="background:#FDEBEB;border:3px solid #EF5A5A;border-radius:12px;padding:10px;text-align:center"><b>⚠️ ¡ALERTA! ¡Tu dispositivo tiene 5 VIRUS!</b><br>¡Descarga ahora el limpiador para salvar las fotos!</div>` };
+  const MAIL = { k: 'dig', kind: 'mail', from: 'premis@ga1axia-blocs.xyz|premios@ga1axia-blocs.xyz', subj: '🎁 Últim avís: el premi caduca en 10 minuts!|🎁 ¡Último aviso: el premio caduca en 10 minutos!', html: `<p>Has estat triat/da per rebre el drac daurat i 10.000 gemmes gratis. Escriu l'usuari, la contrasenya i el codi a l'enllaç.</p>|<p>Has sido elegido/a para recibir el dragón dorado y 10.000 gemas gratis. Escribe el usuario, la contraseña y el código en el enlace.</p>` };
+
+  Object.assign(TGUIDE, {
+
+    /* ---------- Sessió 1 · Missatges trampa ---------- */
+    'd4-1': {
+      intro: "Primera sessió de la unitat 4, dedicada a la ciberseguretat. L'alumnat ja va conèixer el phishing a la unitat 2; ara descobreix les disfresses més habituals dels missatges trampa (SMS de paquets que no arriben, premis, «amics» amb un número nou, fals suport d'un videojoc) i, sobretot, practica què cal fer: aturar-se, comprovar-ho per un altre camí, explicar-ho a un adult i denunciar. També treballa què fer si ja s'ha caigut, sense culpa. La classe combina una activitat de classificar missatges en paper, la conversa i les simulacions de l'app.|Primera sesión de la unidad 4, dedicada a la ciberseguridad. El alumnado ya conoció el phishing en la unidad 2; ahora descubre los disfraces más habituales de los mensajes trampa (SMS de paquetes que no llegan, premios, «amigos» con un número nuevo, falso soporte de un videojuego) y, sobre todo, practica qué hay que hacer: pararse, comprobarlo por otro camino, contárselo a un adulto y denunciar. También trabaja qué hacer si ya se ha caído, sin culpa. La clase combina una actividad de clasificar mensajes en papel, la conversación y las simulaciones de la app.",
+      claus: [
+        "Els missatges trampa canvien de disfressa (paquet, premi, amic, suport), però sempre busquen que actuem de pressa.|Los mensajes trampa cambian de disfraz (paquete, premio, amigo, soporte), pero siempre buscan que actuemos deprisa.",
+        "Ningú de veritat no demana per missatge la contrasenya, el codi de verificació ni pagar per rebre un premi.|Nadie de verdad pide por mensaje la contraseña, el código de verificación ni pagar para recibir un premio.",
+        "Comprovar «per un altre camí» vol dir no fer servir res del missatge: l'app o la web de sempre, una trucada, preguntar en persona.|Comprobar «por otro camino» quiere decir no usar nada del mensaje: la app o la web de siempre, una llamada, preguntar en persona.",
+        "Si ja s'ha caigut, no és culpa de l'infant: explicar-ho de seguida, canviar la contrasenya i activar els dos passos.|Si ya se ha caído, no es culpa del niño o la niña: contarlo enseguida, cambiar la contraseña y activar los dos pasos."
+      ],
+      prev: [
+        "Sessió d1-1: la contrasenya i la verificació en dos passos.|Sesión d1-1: la contraseña y la verificación en dos pasos.",
+        "Sessió d2-1: el phishing i les seves pistes (premis, presses, por).|Sesión d2-1: el phishing y sus pistas (premios, prisas, miedo)."
+      ],
+      obj: [
+        "L'alumne/a reconeix les disfresses habituals dels missatges trampa: paquets, premis, suplantació i fals suport.|El alumno/a reconoce los disfraces habituales de los mensajes trampa: paquetes, premios, suplantación y falso soporte.",
+        "L'alumne/a troba pistes d'engany en un SMS i en un missatge dins d'un videojoc.|El alumno/a encuentra pistas de engaño en un SMS y en un mensaje dentro de un videojuego.",
+        "L'alumne/a explica què vol dir comprovar-ho per un altre camí i ho aplica en una conversa simulada.|El alumno/a explica qué quiere decir comprobarlo por otro camino y lo aplica en una conversación simulada.",
+        "L'alumne/a ordena què cal fer si ja ha caigut en un engany, sense culpa.|El alumno/a ordena qué hay que hacer si ya ha caído en un engaño, sin culpa."
+      ],
+      comp: [
+        "Competència digital (CD4): protecció de dispositius, dades personals i privadesa|Competencia digital (CD4): protección de dispositivos, datos personales y privacidad",
+        "Competència personal, social i d'aprendre a aprendre: pensament crític i demanar ajuda|Competencia personal, social y de aprender a aprender: pensamiento crítico y pedir ayuda",
+        "Competència en comunicació lingüística: llegir amb atenció i detectar intencions|Competencia en comunicación lingüística: leer con atención y detectar intenciones"
+      ],
+      vocab: [
+        ["Estafa|Estafa", "Engany per treure diners o dades a una persona.|Engaño para sacar dinero o datos a una persona."],
+        ["Smishing|Smishing", "Missatge trampa que arriba per SMS.|Mensaje trampa que llega por SMS."],
+        ["Suplantar|Suplantar", "Fer-se passar per una altra persona o empresa.|Hacerse pasar por otra persona o empresa."],
+        ["Esquer|Cebo", "El que fa servir l'engany per atraure't: un premi, una por, una urgència.|Lo que usa el engaño para atraerte: un premio, un miedo, una urgencia."],
+        ["Codi de verificació|Código de verificación", "Números que arriben al mòbil per entrar a un compte: el segon pany. No es donen mai.|Números que llegan al móvil para entrar en una cuenta: el segundo candado. No se dan nunca."],
+        ["Denunciar|Denunciar", "Avisar l'app o el servei que un missatge o un compte fa enganys.|Avisar a la app o al servicio de que un mensaje o una cuenta hace engaños."]
+      ],
+      mat: {
+        aula: [
+          "Un ordinador per alumne/a amb Numi Tech obert a la sessió «Missatges trampa»|Un ordenador por alumno/a con Numi Tech abierto en la sesión «Mensajes trampa»",
+          "Projector i la presentació d'aquesta sessió|Proyector y la presentación de esta sesión",
+          "Les targetes de missatges (un paquet per grup de 4) i retoladors de colors|Las tarjetas de mensajes (un paquete por grupo de 4) y rotuladores de colores"
+        ],
+        imprimir: ["Missatges per classificar (imprimible 1): un paquet per grup|Mensajes para clasificar (imprimible 1): un paquete por grupo", "Comprova-ho per un altre camí (imprimible 2): una per alumne/a|Compruébalo por otro camino (imprimible 2): una por alumno/a"],
+        prep: [
+          "Imprimir i retallar les targetes de missatges (12 per grup) i preparar tres rètols: «Trampa», «Normal» i «Ho comprovo».|Imprimir y recortar las tarjetas de mensajes (12 por grupo) y preparar tres carteles: «Trampa», «Normal» y «Lo compruebo».",
+          "Pensar un exemple real (sense dades de ningú) d'un missatge trampa que us hagi arribat: ajuda a treure por i culpa.|Pensar un ejemplo real (sin datos de nadie) de un mensaje trampa que os haya llegado: ayuda a quitar miedo y culpa.",
+          "Recordar que no es demana a ningú que ensenyi el seu mòbil ni els missatges reals de casa.|Recordar que no se pide a nadie que enseñe su móvil ni los mensajes reales de casa."
+        ]
+      },
+      plan: [
+        { min: 5, t: "Benvinguda: missatges disfressats|Bienvenida: mensajes disfrazados", fase: 'inici',
+          fa: "Presenta la unitat 4. Pregunta què recorden del phishing de la unitat 2 i si han vist mai un missatge estrany a casa (sense detalls personals). Explica la idea del dia: els enganys es disfressen, però el truc és sempre el mateix.|Presenta la unidad 4. Pregunta qué recuerdan del phishing de la unidad 2 y si han visto alguna vez un mensaje raro en casa (sin detalles personales). Explica la idea del día: los engaños se disfrazan, pero el truco es siempre el mismo.",
+          diu: ["D'on venia la paraula phishing? (De pescar: volen pescar les nostres dades.)|¿De dónde venía la palabra phishing? (De pescar: quieren pescar nuestros datos.)",
+            "De què es pot disfressar un missatge trampa?|¿De qué se puede disfrazar un mensaje trampa?",
+            "Avui aprendrem què fer, pas a pas, i que mai no és culpa nostra si ens enganyen.|Hoy aprenderemos qué hacer, paso a paso, y que nunca es culpa nuestra si nos engañan."],
+          slides: ['s1', 's2'], app: "Encara no: pantalles abaixades.|Todavía no: pantallas bajadas.", org: "Tot el grup|Todo el grupo" },
+        { min: 10, t: "Disfresses i els quatre passos|Disfraces y los cuatro pasos", fase: 'teoria',
+          fa: "Amb l'animació de les disfresses, mostra que el truc és sempre la pressa. Projecta l'SMS del paquet, el xat de l'«amic» amb número nou i el missatge de fals suport, i fes que trobin les pistes en veu alta. Acaba amb els quatre passos.|Con la animación de los disfraces, muestra que el truco es siempre la prisa. Proyecta el SMS del paquete, el chat del «amigo» con número nuevo y el mensaje de falso soporte, y haz que encuentren las pistas en voz alta. Termina con los cuatro pasos.",
+          diu: ["Si a casa ningú no espera cap paquet, què ens diu aquest SMS? (Que és un esquer.)|Si en casa nadie espera ningún paquete, ¿qué nos dice este SMS? (Que es un cebo.)",
+            "Com ho podríeu comprovar sense fer servir res del missatge?|¿Cómo lo podríais comprobar sin usar nada del mensaje?",
+            "Posar-se «Oficial» al nom, ho pot fer qualsevol? (Sí.)|Ponerse «Oficial» en el nombre, ¿lo puede hacer cualquiera? (Sí.)"],
+          slides: ['s3', 's4', 's5', 's6', 's7'], app: "Encara no: tota l'atenció a la projecció.|Todavía no: toda la atención en la proyección.", org: "Tot el grup|Todo el grupo" },
+        { min: 12, t: "Trampa, normal o ho comprovo?|¿Trampa, normal o lo compruebo?", fase: 'desconnectat',
+          fa: "En grups de 4, reparteix les targetes de missatges. Les classifiquen en tres piles: «Trampa», «Normal» i «Ho comprovo». A les trampes, subratllen les pistes; a les de «Ho comprovo», escriuen quin seria l'altre camí (trucar, obrir l'app de sempre, preguntar a casa). Posada en comú de dues targetes per grup.|En grupos de 4, reparte las tarjetas de mensajes. Las clasifican en tres montones: «Trampa», «Normal» y «Lo compruebo». En las trampas, subrayan las pistas; en las de «Lo compruebo», escriben cuál sería el otro camino (llamar, abrir la app de siempre, preguntar en casa). Puesta en común de dos tarjetas por grupo.",
+          diu: ["Quina targeta us ha fet dubtar? Per què?|¿Qué tarjeta os ha hecho dudar? ¿Por qué?",
+            "Quin altre camí faríeu servir per comprovar el missatge de l'àvia?|¿Qué otro camino usaríais para comprobar el mensaje de la abuela?",
+            "Hi ha cap missatge normal que demani la contrasenya? (No.)|¿Hay algún mensaje normal que pida la contraseña? (No.)"],
+          slides: ['s8', 's9'], app: "Cap: activitat sense pantalla.|Ninguna: actividad sin pantalla.", org: "Grups de 4|Grupos de 4" },
+        { min: 15, t: "A l'ordinador: descobreix i investiga|En el ordenador: descubre e investiga", fase: 'ordinador',
+          fa: "Cada alumne/a fa la sessió fins a la pausa activa: la pregunta de repàs, la història, les cinc targetes, classificar missatges, l'SMS del paquet, la pregunta de les presses i la conversa amb el número desconegut. Feu la pausa activa tots junts.|Cada alumno/a hace la sesión hasta la pausa activa: la pregunta de repaso, la historia, las cinco tarjetas, clasificar mensajes, el SMS del paquete, la pregunta de las prisas y la conversación con el número desconocido. Haced la pausa activa todos juntos.",
+          diu: ["A la conversa, quin camí heu triat per comprovar si era en Pau?|En la conversación, ¿qué camino habéis elegido para comprobar si era Pau?",
+            "Per què preguntar «com es diu el meu gos» no és prou bo?|¿Por qué preguntar «cómo se llama mi perro» no es suficiente?",
+            "Ara, tots: fem de peixos que no es deixen pescar!|Ahora, todos: ¡hacemos de peces que no se dejan pescar!"],
+          slides: ['s10'], app: "De «Recorda» fins a la «Pausa activa».|De «Recuerda» hasta la «Pausa activa».", org: "Individual|Individual" },
+        { min: 10, t: "Reptes i el meu escut|Retos y mi escudo", fase: 'ordinador',
+          fa: "Continuen amb els reptes: el fals suport, què fer si ja has caigut, què pot demanar una empresa i què mai, i com es comprova un premi. Després trien el seu escut antiham. Remarca que el repte «si ja has caigut» és el més important: explicar-ho aviat ho arregla.|Siguen con los retos: el falso soporte, qué hacer si ya has caído, qué puede pedir una empresa y qué nunca, y cómo se comprueba un premio. Después eligen su escudo antianzuelo. Remarca que el reto «si ya has caído» es el más importante: contarlo pronto lo arregla.",
+          diu: ["Quin és el primer pas si ja has escrit la contrasenya en una web trampa?|¿Cuál es el primer paso si ya has escrito la contraseña en una web trampa?",
+            "Per què un codi que has demanat tu és normal, però no el pots donar?|¿Por qué un código que has pedido tú es normal, pero no lo puedes dar?",
+            "Quin pas del vostre escut us costarà més?|¿Qué paso de vuestro escudo os costará más?"],
+          slides: ['s11', 's12'], app: "«Reptes» i el pas «Crea»: el meu escut antiham (i «El museu de les trampes», per a casa).|«Retos» y el paso «Crea»: mi escudo antianzuelo (y «El museo de las trampas», para casa).", org: "Individual|Individual" },
+        { min: 8, t: "Tancament i tiquet de sortida|Cierre y ticket de salida", fase: 'tancament',
+          fa: "Repasseu les idees clau amb el resum. Fes el tiquet de sortida i que facin les preguntes finals i com s'han sentit. Explica la proposta per a casa: el museu de les trampes, sempre amb un adult i sense tocar enllaços.|Repasad las ideas clave con el resumen. Haz el ticket de salida y que hagan las preguntas finales y cómo se han sentido. Explica la propuesta para casa: el museo de las trampas, siempre con un adulto y sin tocar enlaces.",
+          diu: ["Digueu una disfressa i la pista que la delata.|Decid un disfraz y la pista que lo delata.",
+            "Què vol dir comprovar-ho per un altre camí?|¿Qué quiere decir comprobarlo por otro camino?",
+            "Si us enganyen, de qui és la culpa? (De qui enganya. Ho expliquem.)|Si os engañan, ¿de quién es la culpa? (De quien engaña. Lo contamos.)"],
+          slides: ['s13', 's14', 's15'], app: "«Tancament»: les dues preguntes finals i com m'he sentit.|«Cierre»: las dos preguntas finales y cómo me he sentido.", org: "Tot el grup|Todo el grupo" }
+      ],
+      errors: [
+        ["Pensa que si el missatge ve d'un amic és segur.|Piensa que si el mensaje viene de un amigo es seguro.",
+          "Recorda la suplantació: el número pot ser nou o el compte, robat. Si demana codis o diners, es comprova per un altre camí.|Recuerda la suplantación: el número puede ser nuevo o la cuenta, robada. Si pide códigos o dinero, se comprueba por otro camino."],
+        ["Vol comprovar-ho responent al mateix missatge.|Quiere comprobarlo respondiendo al mismo mensaje.",
+          "Si és un engany, et dirà que sí. L'altre camí no fa servir res del missatge: ni l'enllaç, ni el número, ni respondre.|Si es un engaño, te dirá que sí. El otro camino no usa nada del mensaje: ni el enlace, ni el número, ni responder."],
+        ["Creu que un import petit (1,99 €) no pot ser una estafa.|Cree que un importe pequeño (1,99 €) no puede ser una estafa.",
+          "L'import és l'esquer: el que volen són les dades de la targeta, que serveixen per a molt més.|El importe es el cebo: lo que quieren son los datos de la tarjeta, que sirven para mucho más."],
+        ["Té por que el renyin si explica que ha tocat un enllaç.|Tiene miedo de que le riñan si cuenta que ha tocado un enlace.",
+          "Repeteix que no és culpa seva i que explicar-ho aviat és el que ho arregla. Felicita qui ho explica.|Repite que no es culpa suya y que contarlo pronto es lo que lo arregla. Felicita a quien lo cuenta."],
+        ["Pensa que «Oficial» o «Suport» al nom vol dir que és de veritat.|Piensa que «Oficial» o «Soporte» en el nombre quiere decir que es de verdad.",
+          "Qualsevol es pot posar aquest nom. L'equip de veritat no demana mai la contrasenya per xat.|Cualquiera se puede poner ese nombre. El equipo de verdad no pide nunca la contraseña por chat."]
+      ],
+      diff: {
+        mes: "Per anar més enllà: inventar un missatge trampa nou (en paper) amb quatre pistes amagades i intercanviar-lo amb un altre grup perquè les trobi; o escriure la resposta educada que faríeu a un amic que us diu «he canviat de número».|Para ir más allá: inventar un mensaje trampa nuevo (en papel) con cuatro pistas escondidas e intercambiarlo con otro grupo para que las encuentre; o escribir la respuesta educada que haríais a un amigo que os dice «he cambiado de número».",
+        menys: "Classificar només en dues piles (trampa o normal) i treballar amb sis targetes. A l'app, fer els reptes en parella i llegir en veu alta els missatges abans de buscar les pistes.|Clasificar solo en dos montones (trampa o normal) y trabajar con seis tarjetas. En la app, hacer los retos en pareja y leer en voz alta los mensajes antes de buscar las pistas."
+      },
+      aval: {
+        ticket: ["Digues una disfressa dels missatges trampa i una pista que la delata.|Di un disfraz de los mensajes trampa y una pista que lo delata.",
+          "Digues què faries primer si ja haguessis escrit la contrasenya en una web trampa.|Di qué harías primero si ya hubieras escrito la contraseña en una web trampa."],
+        rubric: [
+          ["Detectar trampes|Detectar trampas", "Reconeix diverses disfresses i les pistes (presses, premis, demanar codis o pagar).|Reconoce varios disfraces y las pistas (prisas, premios, pedir códigos o pagar).", "En reconeix alguna amb ajuda.|Reconoce alguno con ayuda."],
+          ["Comprovar|Comprobar", "Explica i aplica què vol dir comprovar-ho per un altre camí.|Explica y aplica qué quiere decir comprobarlo por otro camino.", "Vol comprovar-ho pel mateix missatge o enllaç.|Quiere comprobarlo por el mismo mensaje o enlace."],
+          ["Demanar ajuda|Pedir ayuda", "Sap què fer si ha caigut i no se'n culpa: explicar-ho, canviar la contrasenya, dos passos.|Sabe qué hacer si ha caído y no se culpa: contarlo, cambiar la contraseña, dos pasos.", "Sap que cal explicar-ho, però no els passos següents.|Sabe que hay que contarlo, pero no los pasos siguientes."]
+        ]
+      },
+      casa: "A casa, podeu fer junts «El museu de les trampes»: busqueu missatges estranys que hagin arribat als mòbils o als correus de la família, sense tocar cap enllaç, i apunteu de què es disfressen i quines pistes tenen. Després, esborreu-los i bloquegeu els números. També podeu acordar una norma familiar: «Cap codi ni contrasenya per missatge, mai».|En casa, podéis hacer juntos «El museo de las trampas»: buscad mensajes raros que hayan llegado a los móviles o a los correos de la familia, sin tocar ningún enlace, y apuntad de qué se disfrazan y qué pistas tienen. Después, borradlos y bloquead los números. También podéis acordar una norma familiar: «Ningún código ni contraseña por mensaje, nunca».",
+      faq: [
+        ["Els infants d'aquesta edat reben missatges trampa?|¿Los niños de esta edad reciben mensajes trampa?", "Sí: dins dels videojocs, als xats i als mòbils de casa que fan servir. Per això treballem la conducta (aturar-se i preguntar) més que no pas la tècnica.|Sí: dentro de los videojuegos, en los chats y en los móviles de casa que usan. Por eso trabajamos la conducta (pararse y preguntar) más que la técnica."],
+        ["Què és exactament l'smishing?|¿Qué es exactamente el smishing?", "És el phishing que arriba per SMS (la paraula barreja SMS i phishing). Els exemples de paquets retinguts són dels més habituals.|Es el phishing que llega por SMS (la palabra mezcla SMS y phishing). Los ejemplos de paquetes retenidos son de los más habituales."],
+        ["Un alumne diu que el seu germà gran va pagar un d'aquests missatges.|Un alumno dice que su hermano mayor pagó uno de estos mensajes.", "Agraeix que ho expliqui i recorda que li pot passar a qualsevol. La família pot trucar al banc i, si cal, al 017, el telèfon d'ajuda en ciberseguretat.|Agradece que lo cuente y recuerda que le puede pasar a cualquiera. La familia puede llamar al banco y, si hace falta, al 017, el teléfono de ayuda en ciberseguridad."],
+        ["Per què insistim tant en «no és culpa teva»?|¿Por qué insistimos tanto en «no es culpa tuya»?", "Perquè la vergonya fa que els infants amaguin el que ha passat, i amagar-ho empitjora les coses. Si saben que no els renyarem, ho expliquen abans.|Porque la vergüenza hace que los niños escondan lo que ha pasado, y esconderlo empeora las cosas. Si saben que no les reñiremos, lo cuentan antes."]
+      ],
+      tec: [
+        ["A l'SMS del paquet no troben la quarta pista.|En el SMS del paquete no encuentran la cuarta pista.", "Que toquin cada frase per separat: la primera («no s'ha pogut entregar») també és una pista, perquè ningú no espera cap paquet.|Que toquen cada frase por separado: la primera («no se ha podido entregar») también es una pista, porque nadie espera ningún paquete."],
+        ["Volen tornar a la conversa per provar un altre camí.|Quieren volver a la conversación para probar otro camino.", "Poden tornar enrere amb la fletxa del pas o tornar a obrir la sessió: tots els camins acaben amb una idea per aprendre.|Pueden volver atrás con la flecha del paso o volver a abrir la sesión: todos los caminos terminan con una idea para aprender."],
+        ["Al mòbil, les targetes de classificar surten d'una en una.|En el móvil, las tarjetas de clasificar salen de una en una.", "És normal: es poden arrossegar o tocar el calaix.|Es normal: se pueden arrastrar o tocar la caja."]
+      ],
+      seg: [
+        "No demanis mai que ensenyin missatges reals ni números de telèfon de ningú.|No pidas nunca que enseñen mensajes reales ni números de teléfono de nadie.",
+        "Si algun infant explica que ha donat una contrasenya o un codi, felicita'l per explicar-ho i avisa la família perquè la canviïn.|Si algún niño o niña cuenta que ha dado una contraseña o un código, felicítale por contarlo y avisa a la familia para que la cambien.",
+        "Si apareix una situació de pressió o de xantatge (fotos, amenaces), escolta amb calma, no prometis guardar el secret i segueix el protocol del centre.|Si aparece una situación de presión o de chantaje (fotos, amenazas), escucha con calma, no prometas guardar el secreto y sigue el protocolo del centro."
+      ],
+      extra: [
+        "Llengua: escriure un conte curt on un personatge descobreix un missatge trampa i fa els quatre passos.|Lengua: escribir un cuento corto donde un personaje descubre un mensaje trampa y hace los cuatro pasos.",
+        "Plàstica: dibuixar el «carnet de disfresses» dels enganys, amb la pista de cada un.|Plástica: dibujar el «carné de disfraces» de los engaños, con la pista de cada uno.",
+        "Per als grans: per què els estafadors canvien de disfressa segons l'època de l'any (rebaixes, vacances, Nadal)?|Para los mayores: ¿por qué los estafadores cambian de disfraz según la época del año (rebajas, vacaciones, Navidad)?"
+      ],
+      trans: [
+        "Sessió d2-1: el phishing (premis, presses, por). Aquí, disfresses noves i què fer pas a pas.|Sesión d2-1: el phishing (premios, prisas, miedo). Aquí, disfraces nuevos y qué hacer paso a paso.",
+        "Sessió d4-2: les apps també poden demanar més del que necessiten (els permisos). Sessió d4-4: la sala 1 de l'escape room és un correu trampa.|Sesión d4-2: las apps también pueden pedir más de lo que necesitan (los permisos). Sesión d4-4: la sala 1 de la escape room es un correo trampa.",
+        "Llengua (llegir amb atenció i intencions), tutoria (demanar ajuda) i matemàtiques (imports i preus).|Lengua (leer con atención e intenciones), tutoría (pedir ayuda) y matemáticas (importes y precios)."
+      ],
+      slides: [
+        { id: 's1', k: 'portada', t: "Missatges trampa|Mensajes trampa", x: "Les disfresses dels enganys i què fer, pas a pas.|Los disfraces de los engaños y qué hacer, paso a paso.",
+          nota: "Presenta la unitat 4: ciberseguretat. Avui, els missatges trampa.|Presenta la unidad 4: ciberseguridad. Hoy, los mensajes trampa." },
+        { id: 's2', k: 'pregunta', t: "De què es disfressa un engany?|¿De qué se disfraza un engaño?", punts: ["Un paquet que no arriba…|Un paquete que no llega…", "Un premi que no has demanat…|Un premio que no has pedido…", "Un amic amb un número nou…|Un amigo con un número nuevo…"],
+          nota: "Recull idees sense demanar missatges reals. Guarda-les per a l'activitat de classificar.|Recoge ideas sin pedir mensajes reales. Guárdalas para la actividad de clasificar." },
+        { id: 's3', k: 'anim', t: "Les disfresses de l'engany|Los disfraces del engaño", anim: 'd4disfressa', x: "La disfressa canvia; el truc és sempre el mateix: de pressa.|El disfraz cambia; el truco es siempre el mismo: deprisa.",
+          nota: "Insisteix que les presses són la pista més clara de totes.|Insiste en que las prisas son la pista más clara de todas." },
+        { id: 's4', k: 'media', t: "Un SMS del paquet|Un SMS del paquete", x: "Ningú de casa no espera cap paquet. Quines pistes hi veieu?|Nadie en casa espera ningún paquete. ¿Qué pistas veis?", media: SMS,
+          nota: "Pistes: no hi ha paquet, presses, un import petit i una adreça estranya. El que volen és la targeta.|Pistas: no hay paquete, prisas, un importe pequeño y una dirección rara. Lo que quieren es la tarjeta." },
+        { id: 's5', k: 'media', t: "«He canviat de número»|«He cambiado de número»", x: "Com comprovaríeu que és en Pau de veritat?|¿Cómo comprobaríais que es Pau de verdad?", media: PAU,
+          nota: "Resposta: escrivint o trucant al número de sempre, o preguntant-li a l'escola. Mai pel mateix xat.|Respuesta: escribiendo o llamando al número de siempre, o preguntándole en el cole. Nunca por el mismo chat." },
+        { id: 's6', k: 'media', t: "El fals suport|El falso soporte", x: "«Oficial» amb un zero, por, contrasenya i regal.|«Oficial» con un cero, miedo, contraseña y regalo.", media: SUPORT,
+          nota: "L'equip de veritat no demana mai la contrasenya per xat. El compte es mira des de l'app de sempre.|El equipo de verdad no pide nunca la contraseña por chat. La cuenta se mira desde la app de siempre." },
+        { id: 's7', k: 'anim', t: "Els quatre passos|Los cuatro pasos", anim: 'd4passos', x: "Atura't, comprova-ho, explica-ho i denuncia.|Para, compruébalo, cuéntalo y denuncia.",
+          nota: "Que els repeteixin amb gestos: mà alçada, lupa, boca, bandera.|Que los repitan con gestos: mano alzada, lupa, boca, bandera." },
+        { id: 's8', k: 'activitat', t: "Trampa, normal o ho comprovo?|¿Trampa, normal o lo compruebo?", timer: 12,
+          punts: ["Classifiqueu les targetes en tres piles.|Clasificad las tarjetas en tres montones.", "A les trampes, subratlleu les pistes.|En las trampas, subrayad las pistas.", "A «Ho comprovo», escriviu l'altre camí.|En «Lo compruebo», escribid el otro camino."],
+          nota: "Passa per les taules i pregunta: «Què demana aquest missatge?».|Pasa por las mesas y pregunta: «¿Qué pide este mensaje?»." },
+        { id: 's9', k: 'concepte', t: "L'altre camí|El otro camino", pic: 'img/ment/dir.webp',
+          punts: ["L'app o la web de sempre.|La app o la web de siempre.", "Una trucada al número de sempre.|Una llamada al número de siempre.", "Preguntar en persona o a casa.|Preguntar en persona o en casa."],
+          nota: "Deixa-la projectada mentre classifiquen.|Déjala proyectada mientras clasifican." },
+        { id: 's10', k: 'activitat', t: "Ara, a l'ordinador|Ahora, al ordenador", timer: 15,
+          punts: ["Obre la sessió «Missatges trampa».|Abre la sesión «Mensajes trampa».", "Fes-la fins a la pausa activa.|Hazla hasta la pausa activa.", "A la pausa, ens movem tots junts.|En la pausa, nos movemos todos juntos."],
+          nota: "Avisa quan arribin a la pausa activa per fer-la amb tot el grup.|Avisa cuando lleguen a la pausa activa para hacerla con todo el grupo." },
+        { id: 's11', k: 'repte', t: "Reptes: no em pesquen|Retos: no me pescan", timer: 8,
+          punts: ["El fals suport del videojoc.|El falso soporte del videojuego.", "Si ja has caigut: què fas?|Si ya has caído: ¿qué haces?", "Què et pot demanar una empresa… i què mai.|Qué te puede pedir una empresa… y qué nunca."],
+          nota: "Comenta el repte de «si ja has caigut»: és el més important de la sessió.|Comenta el reto de «si ya has caído»: es el más importante de la sesión." },
+        { id: 's12', k: 'activitat', t: "Crea: el meu escut antiham|Crea: mi escudo antianzuelo", timer: 2,
+          punts: ["Tria què faràs a cada moment.|Elige qué harás en cada momento.", "Desa el teu escut.|Guarda tu escudo.", "A casa: el museu de les trampes.|En casa: el museo de las trampas."],
+          nota: "Que diguin en veu alta el pas que els costarà més.|Que digan en voz alta el paso que les costará más." },
+        { id: 's13', k: 'resum', t: "Què hem après avui|Qué hemos aprendido hoy",
+          punts: ["Els enganys es disfressen, però sempre tenen presses.|Los engaños se disfrazan, pero siempre tienen prisas.", "Contrasenya, codis i pagaments: mai per missatge.|Contraseña, códigos y pagos: nunca por mensaje.", "Es comprova per un altre camí.|Se comprueba por otro camino.", "Si has caigut, explica-ho: no és culpa teva.|Si has caído, cuéntalo: no es culpa tuya."],
+          nota: "Llegiu-lo junts.|Leedlo juntos." },
+        { id: 's14', k: 'tiquet', t: "Tiquet de sortida|Ticket de salida",
+          punts: ["Digues una disfressa i la seva pista.|Di un disfraz y su pista.", "Què faries primer si ja haguessis caigut?|¿Qué harías primero si ya hubieras caído?"],
+          nota: "Pot ser oral, per torns, o en un paper.|Puede ser oral, por turnos, o en un papel." },
+        { id: 's15', k: 'concepte', t: "Per a casa|Para casa", pic: 'img/ment/ded.webp',
+          punts: ["El museu de les trampes, amb un adult.|El museo de las trampas, con un adulto.", "Sense tocar cap enllaç.|Sin tocar ningún enlace.", "Una norma: cap codi per missatge.|Una norma: ningún código por mensaje."],
+          nota: "Recorda que és una proposta: cada família l'adapta.|Recuerda que es una propuesta: cada familia la adapta." }
+      ],
+      print: [
+        { id: 'p1', t: "Missatges per classificar|Mensajes para clasificar", k: 'targetes',
+          intro: "Un paquet per grup de 4. Retalleu les targetes i classifiqueu-les en tres piles: «Trampa», «Normal» i «Ho comprovo». Tots els missatges són inventats.|Un paquete por grupo de 4. Recortad las tarjetas y clasificadlas en tres montones: «Trampa», «Normal» y «Lo compruebo». Todos los mensajes son inventados.",
+          items: [
+            { t: "📦 «El teu paquet està retingut. Paga 1,99 € aquí: paquets-entrega.xyz»|📦 «Tu paquete está retenido. Paga 1,99 € aquí: paquetes-entrega.xyz»", n: 1 },
+            { t: "🎁 «Has guanyat un mòbil! Escriu l'adreça i la contrasenya»|🎁 «¡Has ganado un móvil! Escribe la dirección y la contraseña»", n: 1 },
+            { t: "👵 «Soc l'àvia amb un número nou. Envia'm el codi que t'arribarà»|👵 «Soy la abuela con un número nuevo. Envíame el código que te llegará»", n: 1 },
+            { t: "🏫 «Demà, sortida al museu. Porteu l'esmorzar»|🏫 «Mañana, salida al museo. Traed el almuerzo»", n: 1 },
+            { t: "🛠️ «Som el suport del videojoc: envia'ns la contrasenya»|🛠️ «Somos el soporte del videojuego: envíanos la contraseña»", n: 1 },
+            { t: "⚽ «L'entrenament de dijous és a les 5»|⚽ «El entrenamiento del jueves es a las 5»", n: 1 },
+            { t: "💎 «Generador de gemmes GRATIS: només cal el teu usuari i contrasenya»|💎 «Generador de gemas GRATIS: solo hace falta tu usuario y contraseña»", n: 1 },
+            { t: "📚 «El llibre que vas reservar ja és a punt»|📚 «El libro que reservaste ya está listo»", n: 1 },
+            { t: "🦊 Un amic: «Mira quin vídeo més divertit! 😂» i un enllaç estrany|🦊 Un amigo: «¡Mira qué vídeo más divertido! 😂» y un enlace raro", n: 1 },
+            { t: "🎂 «La festa de la Mia és dissabte a les 5»|🎂 «La fiesta de Mia es el sábado a las 5»", n: 1 },
+            { t: "⚠️ «El teu compte s'esborrarà en 1 hora si no entres aquí»|⚠️ «Tu cuenta se borrará en 1 hora si no entras aquí»", n: 1 },
+            { t: "📱 «Has demanat entrar? El teu codi és 482913» (just després d'entrar tu)|📱 «¿Has pedido entrar? Tu código es 482913» (justo después de entrar tú)", n: 1 }
+          ] },
+        { id: 'p2', t: "Comprova-ho per un altre camí|Compruébalo por otro camino", k: 'fitxa',
+          intro: "Per a cada missatge, escriu l'altre camí que faries servir per comprovar-lo.|Para cada mensaje, escribe el otro camino que usarías para comprobarlo.",
+          items: [
+            { q: "«Soc en Pau amb número nou. Passa'm el codi.»|«Soy Pau con número nuevo. Pásame el código.»", sol: "Escriure o trucar al número de sempre d'en Pau, o preguntar-li a l'escola.|Escribir o llamar al número de siempre de Pau, o preguntarle en el cole." },
+            { q: "«El teu paquet està retingut. Paga aquí.»|«Tu paquete está retenido. Paga aquí.»", sol: "Preguntar a casa si s'espera cap paquet i, si cal, mirar-ho a l'app o la web de sempre.|Preguntar en casa si se espera algún paquete y, si hace falta, mirarlo en la app o la web de siempre." },
+            { q: "«Som el suport del videojoc. El teu compte s'esborrarà.»|«Somos el soporte del videojuego. Tu cuenta se borrará.»", sol: "Obrir el videojoc pel camí de sempre amb un adult i mirar-hi el compte. No donar mai la contrasenya.|Abrir el videojuego por el camino de siempre con un adulto y mirar la cuenta. No dar nunca la contraseña." },
+            { q: "Si ja has escrit la contrasenya en una web trampa, quins són els passos?|Si ya has escrito la contraseña en una web trampa, ¿cuáles son los pasos?", sol: "Explicar-ho a un adult, canviar la contrasenya des de l'app de sempre, activar els dos passos i avisar els amics.|Contarlo a un adulto, cambiar la contraseña desde la app de siempre, activar los dos pasos y avisar a los amigos." }
+          ] }
+      ]
+    },
+
+    /* ---------- Sessió 2 · Permisos de les apps ---------- */
+    'd4-2': {
+      intro: "Segona sessió de la unitat 4. L'alumnat descobreix què són els permisos de les apps (càmera, micròfon, ubicació, contactes, fotos), aprèn a fer-se la pregunta clau («per a què ho necessita aquesta app?»), coneix les opcions més petites («mentre faig servir l'app», «només aquesta vegada», només les fotos que trio) i sap que els permisos es poden treure a la configuració, amb un adult. També entén, sense alarmisme, per què algunes apps gratis demanen més dades de les que necessiten. L'activitat sense pantalla és una botiga d'apps de paper amb fitxes de permís.|Segunda sesión de la unidad 4. El alumnado descubre qué son los permisos de las apps (cámara, micrófono, ubicación, contactos, fotos), aprende a hacerse la pregunta clave («¿para qué lo necesita esta app?»), conoce las opciones más pequeñas («mientras uso la app», «solo esta vez», solo las fotos que elijo) y sabe que los permisos se pueden quitar en la configuración, con un adulto. También entiende, sin alarmismo, por qué algunas apps gratis piden más datos de los que necesitan. La actividad sin pantalla es una tienda de apps de papel con fichas de permiso.",
+      claus: [
+        "Un permís és una clau que deixem a una app per fer servir una part del dispositiu.|Un permiso es una llave que dejamos a una app para usar una parte del dispositivo.",
+        "La pregunta clau: per a què ho necessita? Si no té sentit, no es permet.|La pregunta clave: ¿para qué lo necesita? Si no tiene sentido, no se permite.",
+        "Triar l'opció més petita que serveixi: «mentre faig servir l'app», «només aquesta vegada», només les fotos triades.|Elegir la opción más pequeña que sirva: «mientras uso la app», «solo esta vez», solo las fotos elegidas.",
+        "Els permisos es poden revisar i treure a la configuració, sempre amb un adult.|Los permisos se pueden revisar y quitar en la configuración, siempre con un adulto."
+      ],
+      prev: [
+        "Sessió d1-2: les dades personals i la ubicació.|Sesión d1-2: los datos personales y la ubicación.",
+        "Sessió d4-1: no donar mai codis ni contrasenyes per missatge.|Sesión d4-1: no dar nunca códigos ni contraseñas por mensaje."
+      ],
+      obj: [
+        "L'alumne/a anomena els permisos més habituals i explica què permeten fer a una app.|El alumno/a nombra los permisos más habituales y explica qué permiten hacer a una app.",
+        "L'alumne/a decideix si un permís té sentit segons el que fa l'app.|El alumno/a decide si un permiso tiene sentido según lo que hace la app.",
+        "L'alumne/a tria entre «sempre», «mentre la faig servir» i «no permetre» amb criteri.|El alumno/a elige entre «siempre», «mientras la uso» y «no permitir» con criterio.",
+        "L'alumne/a sap que els permisos es poden treure i ordena els passos per instal·lar una app amb seguretat.|El alumno/a sabe que los permisos se pueden quitar y ordena los pasos para instalar una app con seguridad."
+      ],
+      comp: [
+        "Competència digital (CD4): protecció de dispositius, dades personals i privadesa|Competencia digital (CD4): protección de dispositivos, datos personales y privacidad",
+        "Competència personal, social i d'aprendre a aprendre: prendre decisions argumentades|Competencia personal, social y de aprender a aprender: tomar decisiones argumentadas",
+        "Competència ciutadana: drets sobre les pròpies dades i les dels altres|Competencia ciudadana: derechos sobre los propios datos y los de los demás"
+      ],
+      vocab: [
+        ["Permís|Permiso", "Autorització perquè una app faci servir una part del dispositiu (càmera, micròfon, ubicació…).|Autorización para que una app use una parte del dispositivo (cámara, micrófono, ubicación…)."],
+        ["Ubicació|Ubicación", "On és el dispositiu (i, per tant, on ets tu).|Dónde está el dispositivo (y, por tanto, dónde estás tú)."],
+        ["Contactes|Contactos", "Els noms i números de les persones que tens guardades: són dades d'altres.|Los nombres y números de las personas que tienes guardadas: son datos de otros."],
+        ["Configuració|Configuración", "L'app del dispositiu on es canvien les opcions, també els permisos.|La app del dispositivo donde se cambian las opciones, también los permisos."],
+        ["Botiga oficial|Tienda oficial", "La botiga d'apps del dispositiu, d'on és més segur instal·lar-les.|La tienda de apps del dispositivo, de donde es más seguro instalarlas."],
+        ["Desinstal·lar|Desinstalar", "Treure una app del dispositiu.|Quitar una app del dispositivo."]
+      ],
+      mat: {
+        aula: [
+          "Un ordinador per alumne/a amb Numi Tech obert a la sessió «Permisos de les apps»|Un ordenador por alumno/a con Numi Tech abierto en la sesión «Permisos de las apps»",
+          "Projector i la presentació d'aquesta sessió|Proyector y la presentación de esta sesión",
+          "Les targetes de la botiga d'apps de paper (un paquet per grup de 4) i tisores|Las tarjetas de la tienda de apps de papel (un paquete por grupo de 4) y tijeras"
+        ],
+        imprimir: ["La botiga d'apps de paper (imprimible 1): un paquet per grup|La tienda de apps de papel (imprimible 1): un paquete por grupo"],
+        prep: [
+          "Imprimir i retallar les targetes: 6 apps i 18 fitxes de permís per grup (cada permís, repetit).|Imprimir y recortar las tarjetas: 6 apps y 18 fichas de permiso por grupo (cada permiso, repetido).",
+          "Mirar a la configuració d'un dispositiu de l'escola on es troben els permisos, per poder-ho ensenyar si ho pregunten.|Mirar en la configuración de un dispositivo del centro dónde se encuentran los permisos, para poder enseñarlo si lo preguntan.",
+          "No fer servir mai dispositius personals dels infants ni demanar-los quines apps tenen instal·lades.|No usar nunca dispositivos personales de los niños ni pedirles qué apps tienen instaladas."
+        ]
+      },
+      plan: [
+        { min: 5, t: "Benvinguda: la calculadora xafardera|Bienvenida: la calculadora cotilla", fase: 'inici',
+          fa: "Explica la història de CalcuBit, la calculadora que demana la ubicació, el micròfon i els contactes. Pregunta per què creuen que ho fa. Recull hipòtesis sense corregir-les encara.|Explica la historia de CalcuBit, la calculadora que pide la ubicación, el micrófono y los contactos. Pregunta por qué creen que lo hace. Recoge hipótesis sin corregirlas todavía.",
+          diu: ["Per què una calculadora voldria saber on ets?|¿Por qué una calculadora querría saber dónde estás?",
+            "Us ha sortit mai una finestra que demana «permís»?|¿Os ha salido alguna vez una ventana que pide «permiso»?",
+            "Avui aprendrem a decidir quan dir que sí.|Hoy aprenderemos a decidir cuándo decir que sí."],
+          slides: ['s1', 's2'], app: "Encara no: pantalles abaixades.|Todavía no: pantallas bajadas.", org: "Tot el grup|Todo el grupo" },
+        { min: 10, t: "Permisos, sentit i opcions|Permisos, sentido y opciones", fase: 'teoria',
+          fa: "Amb l'animació de les claus, explica què és un permís. Després, amb la de «té sentit?», practiqueu la pregunta clau amb tres apps. Mostra el diàleg de permís i les opcions més petites, la pantalla de CalcuBit i explica, sense alarmisme, per què algunes apps volen dades.|Con la animación de las llaves, explica qué es un permiso. Después, con la de «¿tiene sentido?», practicad la pregunta clave con tres apps. Muestra el diálogo de permiso y las opciones más pequeñas, la pantalla de CalcuBit y explica, sin alarmismo, por qué algunas apps quieren datos.",
+          diu: ["Per a què necessita la ubicació una app de mapes? I una calculadora?|¿Para qué necesita la ubicación una app de mapas? ¿Y una calculadora?",
+            "Quina és l'opció més petita que serveix per a una app del temps?|¿Cuál es la opción más pequeña que sirve para una app del tiempo?",
+            "Els contactes, de qui són les dades? (De les altres persones.)|Los contactos, ¿de quién son los datos? (De las otras personas.)"],
+          slides: ['s3', 's4', 's5', 's6', 's7'], app: "Encara no: tota l'atenció a la projecció.|Todavía no: toda la atención en la proyección.", org: "Tot el grup|Todo el grupo" },
+        { min: 12, t: "La botiga d'apps de paper|La tienda de apps de papel", fase: 'desconnectat',
+          fa: "Cada grup rep 6 targetes d'app i fitxes de permís. Per a cada app, han de decidir quines fitxes li donen i amb quina opció (sempre, mentre la faig servir, no). Han de justificar cada «sí» amb una frase («per guiar-me pel carrer»). Posada en comú: dues apps per grup.|Cada grupo recibe 6 tarjetas de app y fichas de permiso. Para cada app, deben decidir qué fichas le dan y con qué opción (siempre, mientras la uso, no). Deben justificar cada «sí» con una frase («para guiarme por la calle»). Puesta en común: dos apps por grupo.",
+          diu: ["Quina app s'ha quedat sense cap fitxa? Per què?|¿Qué app se ha quedado sin ninguna ficha? ¿Por qué?",
+            "Heu fet servir mai «sempre»? Per a quina app tindria sentit?|¿Habéis usado alguna vez «siempre»? ¿Para qué app tendría sentido?",
+            "Si dubteu, quina opció és la més prudent?|Si dudáis, ¿qué opción es la más prudente?"],
+          slides: ['s8', 's9'], app: "Cap: activitat sense pantalla.|Ninguna: actividad sin pantalla.", org: "Grups de 4|Grupos de 4" },
+        { min: 15, t: "A l'ordinador: descobreix i investiga|En el ordenador: descubre e investiga", fase: 'ordinador',
+          fa: "Cada alumne/a fa la sessió fins a la pausa activa: les preguntes de repàs, la història, les cinc targetes, «té sentit?», la pantalla de CalcuBit, l'opció per als mapes i la conversa amb la Jana i FiltreMàgic. Pausa activa tots junts.|Cada alumno/a hace la sesión hasta la pausa activa: las preguntas de repaso, la historia, las cinco tarjetas, «¿tiene sentido?», la pantalla de CalcuBit, la opción para los mapas y la conversación con Jana y FiltreMàgic. Pausa activa todos juntos.",
+          diu: ["Quins permisos de FiltreMàgic tenien sentit?|¿Qué permisos de FiltreMàgic tenían sentido?",
+            "Què ha passat al camí de dir que sí a tot? Com s'arregla?|¿Qué ha pasado en el camino de decir que sí a todo? ¿Cómo se arregla?",
+            "Ara, tots: toqueu-vos els ulls, les orelles, els peus i les mans!|Ahora, todos: ¡tocaos los ojos, las orejas, los pies y las manos!"],
+          slides: ['s10'], app: "De «Recorda» fins a la «Pausa activa».|De «Recuerda» hasta la «Pausa activa».", org: "Individual|Individual" },
+        { min: 10, t: "Reptes i les meves normes|Retos y mis normas", fase: 'ordinador',
+          fa: "Continuen amb els reptes: l'opció d'ubicació per a cada app, per què les apps gratis volen dades, ordenar com s'instal·la una app i treure un permís antic. Després trien les seves normes de permisos.|Siguen con los retos: la opción de ubicación para cada app, por qué las apps gratis quieren datos, ordenar cómo se instala una app y quitar un permiso antiguo. Después eligen sus normas de permisos.",
+          diu: ["Per què l'app per trobar el mòbil sí que pot tenir «sempre»?|¿Por qué la app para encontrar el móvil sí puede tener «siempre»?",
+            "Quin és el primer pas abans d'instal·lar una app?|¿Cuál es el primer paso antes de instalar una app?",
+            "Quina norma vostra proposareu a casa?|¿Qué norma vuestra propondréis en casa?"],
+          slides: ['s11', 's12'], app: "«Reptes» i el pas «Crea»: les normes dels meus permisos (i «Inspecció de permisos», per a casa).|«Retos» y el paso «Crea»: las normas de mis permisos (y «Inspección de permisos», para casa).", org: "Individual|Individual" },
+        { min: 8, t: "Tancament i tiquet de sortida|Cierre y ticket de salida", fase: 'tancament',
+          fa: "Repasseu les idees clau amb el resum. Fes el tiquet de sortida, les preguntes finals i com s'han sentit. Explica la inspecció de permisos per a casa, sempre amb un adult.|Repasad las ideas clave con el resumen. Haz el ticket de salida, las preguntas finales y cómo se han sentido. Explica la inspección de permisos para casa, siempre con un adulto.",
+          diu: ["Quina pregunta us feu abans de dir que sí a un permís?|¿Qué pregunta os hacéis antes de decir que sí a un permiso?",
+            "On es treuen els permisos?|¿Dónde se quitan los permisos?",
+            "Amb qui ho fareu?|¿Con quién lo haréis?"],
+          slides: ['s13', 's14', 's15'], app: "«Tancament»: les dues preguntes finals i com m'he sentit.|«Cierre»: las dos preguntas finales y cómo me he sentido.", org: "Tot el grup|Todo el grupo" }
+      ],
+      errors: [
+        ["Pensa que, si diu que no a un permís, l'app no funcionarà mai.|Piensa que, si dice que no a un permiso, la app no funcionará nunca.",
+          "Moltes apps funcionen igual sense els permisos que no necessiten. I si en falta un d'útil, es pot donar després.|Muchas apps funcionan igual sin los permisos que no necesitan. Y si falta uno útil, se puede dar después."],
+        ["Dona «sempre» a tot «per si de cas».|Da «siempre» a todo «por si acaso».",
+          "Recorda l'opció més petita que serveixi: «sempre» és per a molt poques apps.|Recuerda la opción más pequeña que sirva: «siempre» es para muy pocas apps."],
+        ["Creu que els contactes són dades seves.|Cree que los contactos son datos suyos.",
+          "Són dades d'altres persones: donar-les a una app és decidir per elles.|Son datos de otras personas: darlos a una app es decidir por ellas."],
+        ["Pensa que un permís, un cop donat, ja no es pot treure.|Piensa que un permiso, una vez dado, ya no se puede quitar.",
+          "Mostra la targeta «Canviar d'opinió»: a la configuració es poden treure quan vulguis.|Muestra la tarjeta «Cambiar de opinión»: en la configuración se pueden quitar cuando quieras."],
+        ["Vol prohibir totes les apps per seguretat.|Quiere prohibir todas las apps por seguridad.",
+          "Les apps poden ser molt útils. La clau és decidir amb criteri i amb un adult, no dir que no a tot.|Las apps pueden ser muy útiles. La clave es decidir con criterio y con un adulto, no decir que no a todo."]
+      ],
+      diff: {
+        mes: "Per anar més enllà: inventar una app (dibuixada) i escriure'n la fitxa de la botiga amb els permisos que necessita i per què; o comparar dues apps semblants (dues llanternes inventades) i triar la que demana menys.|Para ir más allá: inventar una app (dibujada) y escribir su ficha de la tienda con los permisos que necesita y por qué; o comparar dos apps parecidas (dos linternas inventadas) y elegir la que pide menos.",
+        menys: "A la botiga de paper, treballar només amb tres apps i dues opcions (sí o no). A l'app, fer en parella el repte de les tres opcions d'ubicació.|En la tienda de papel, trabajar solo con tres apps y dos opciones (sí o no). En la app, hacer en pareja el reto de las tres opciones de ubicación."
+      },
+      aval: {
+        ticket: ["Digues un permís que té sentit per a una app i un que no.|Di un permiso que tiene sentido para una app y uno que no.",
+          "Digues on es treuen els permisos i amb qui.|Di dónde se quitan los permisos y con quién."],
+        rubric: [
+          ["Conèixer els permisos|Conocer los permisos", "Anomena els permisos habituals i explica què permeten.|Nombra los permisos habituales y explica qué permiten.", "N'anomena alguns sense explicar-los.|Nombra algunos sin explicarlos."],
+          ["Decidir amb criteri|Decidir con criterio", "Justifica cada «sí» amb el que fa l'app i tria l'opció més petita.|Justifica cada «sí» con lo que hace la app y elige la opción más pequeña.", "Decideix sense justificar o tria sempre «sí» o sempre «no».|Decide sin justificar o elige siempre «sí» o siempre «no»."],
+          ["Revisar i demanar ajuda|Revisar y pedir ayuda", "Sap que els permisos es treuen a la configuració, amb un adult.|Sabe que los permisos se quitan en la configuración, con un adulto.", "No sap que es poden canviar.|No sabe que se pueden cambiar."]
+        ]
+      },
+      casa: "A casa, feu junts la «Inspecció de permisos»: obriu la configuració de la tauleta o del mòbil de la família, busqueu l'apartat de permisos o de privadesa, trieu tres apps i mireu quins permisos tenen. Per a cada un, pregunteu-vos «per a què ho necessita?» i traieu els que no tinguin sentit. Aprofiteu per desinstal·lar les apps que ja no feu servir.|En casa, haced juntos la «Inspección de permisos»: abrid la configuración de la tablet o del móvil de la familia, buscad el apartado de permisos o de privacidad, elegid tres apps y mirad qué permisos tienen. Para cada uno, preguntaos «¿para qué lo necesita?» y quitad los que no tengan sentido. Aprovechad para desinstalar las apps que ya no usáis.",
+      faq: [
+        ["Totes les apps pregunten els permisos?|¿Todas las apps preguntan los permisos?", "Als dispositius actuals, els permisos més delicats (ubicació, càmera, micròfon, contactes, fotos) es demanen quan l'app els vol fer servir. Altres coses s'accepten en instal·lar-la; per això convé mirar la fitxa de la botiga.|En los dispositivos actuales, los permisos más delicados (ubicación, cámara, micrófono, contactos, fotos) se piden cuando la app los quiere usar. Otras cosas se aceptan al instalarla; por eso conviene mirar la ficha de la tienda."],
+        ["És veritat que les apps venen dades?|¿Es verdad que las apps venden datos?", "Algunes comparteixen dades amb altres empreses, sovint per a publicitat; ho diuen a la política de privadesa. No cal espantar-se: cal decidir què donem i revisar-ho.|Algunas comparten datos con otras empresas, a menudo para publicidad; lo dicen en la política de privacidad. No hay que asustarse: hay que decidir qué damos y revisarlo."],
+        ["Un alumne diu que el seu mòbil no té aquestes opcions.|Un alumno dice que su móvil no tiene esas opciones.", "Cada dispositiu i versió és diferent. La idea és la mateixa: a la configuració hi ha un lloc per veure i canviar els permisos.|Cada dispositivo y versión es diferente. La idea es la misma: en la configuración hay un sitio para ver y cambiar los permisos."],
+        ["Per què l'app per trobar el mòbil té «sempre»?|¿Por qué la app para encontrar el móvil tiene «siempre»?", "Perquè, si es perd, ha de poder dir on és encara que ningú no l'obri. És un dels pocs casos en què té sentit, i el configura un adult.|Porque, si se pierde, tiene que poder decir dónde está aunque nadie la abra. Es uno de los pocos casos en que tiene sentido, y lo configura un adulto."]
+      ],
+      tec: [
+        ["A CalcuBit toquen «Fer càlculs» i no passa res.|En CalcuBit tocan «Hacer cálculos» y no pasa nada.", "És correcte: aquest permís sí que té sentit. Només són pistes els quatre que no en tenen.|Es correcto: ese permiso sí tiene sentido. Solo son pistas los cuatro que no lo tienen."],
+        ["Al repte de les tres opcions, al mòbil, els calaixos surten un sota l'altre.|En el reto de las tres opciones, en el móvil, las cajas salen una debajo de otra.", "És normal: la targeta surt a dalt i es toca el calaix que toca.|Es normal: la tarjeta sale arriba y se toca la caja que corresponde."],
+        ["Volen tornar a la conversa de la Jana per provar un altre camí.|Quieren volver a la conversación de Jana para probar otro camino.", "Poden tornar enrere amb la fletxa del pas: tots els camins acaben amb una idea per aprendre.|Pueden volver atrás con la flecha del paso: todos los caminos terminan con una idea para aprender."]
+      ],
+      seg: [
+        "No demanis quines apps tenen instal·lades ni que ensenyin els seus dispositius.|No preguntes qué apps tienen instaladas ni que enseñen sus dispositivos.",
+        "Si algun infant explica que una app li ha enviat missatges als contactes o fa coses estranyes, recomana que ho mirin a casa i, si cal, que la desinstal·lin.|Si algún niño o niña cuenta que una app ha enviado mensajes a sus contactos o hace cosas raras, recomienda que lo miren en casa y, si hace falta, que la desinstalen.",
+        "Recorda que les edats mínimes de les apps són per protegir: no jutgis cap família, però no animis a saltar-les.|Recuerda que las edades mínimas de las apps son para proteger: no juzgues a ninguna familia, pero no animes a saltarlas."
+      ],
+      extra: [
+        "Ciències: com sap el mòbil on és? (Senyals de satèl·lits, de les antenes i de les wifis properes.)|Ciencias: ¿cómo sabe el móvil dónde está? (Señales de satélites, de las antenas y de las wifis cercanas.)",
+        "Plàstica: dissenyar la icona d'una app inventada i la seva fitxa de permisos.|Plástica: diseñar el icono de una app inventada y su ficha de permisos.",
+        "Per als grans: debat «Si una app és gratis, com guanya diners?».|Para los mayores: debate «Si una app es gratis, ¿cómo gana dinero?»."
+      ],
+      trans: [
+        "Sessió d1-2: les dades personals i la ubicació. Aquí, com les demanen les apps.|Sesión d1-2: los datos personales y la ubicación. Aquí, cómo los piden las apps.",
+        "Sessió d4-3: més escuts per als dispositius (wifi, actualitzacions, còpies). Sessió d6-2: com guanyen diners les apps gratis.|Sesión d4-3: más escudos para los dispositivos (wifi, actualizaciones, copias). Sesión d6-2: cómo ganan dinero las apps gratis.",
+        "Ciències (localització), tutoria (decidir i argumentar) i educació en valors (les dades dels altres).|Ciencias (localización), tutoría (decidir y argumentar) y educación en valores (los datos de los demás)."
+      ],
+      slides: [
+        { id: 's1', k: 'portada', t: "Permisos de les apps|Permisos de las apps", x: "Les claus del teu dispositiu: a qui les deixes?|Las llaves de tu dispositivo: ¿a quién se las dejas?",
+          nota: "Avui, decidir quan dir que sí i quan dir que no.|Hoy, decidir cuándo decir que sí y cuándo decir que no." },
+        { id: 's2', k: 'pregunta', t: "Una calculadora molt xafardera|Una calculadora muy cotilla", punts: ["CalcuBit demana la ubicació…|CalcuBit pide la ubicación…", "…el micròfon i els contactes.|…el micrófono y los contactos.", "Per què?|¿Por qué?"],
+          nota: "Recull hipòtesis. Les recuperaràs a la targeta «Per què en volen tant?».|Recoge hipótesis. Las recuperarás en la tarjeta «¿Por qué quieren tanto?»." },
+        { id: 's3', k: 'anim', t: "Les claus del dispositiu|Las llaves del dispositivo", anim: 'd4permis', x: "Càmera, micròfon, ubicació, contactes i fotos.|Cámara, micrófono, ubicación, contactos y fotos.",
+          nota: "Un permís és com deixar una clau: a qui la deixaríeu?|Un permiso es como dejar una llave: ¿a quién se la dejaríais?" },
+        { id: 's4', k: 'anim', t: "Té sentit?|¿Tiene sentido?", anim: 'd4sentit', x: "Per a què ho necessita aquesta app?|¿Para qué lo necesita esta app?",
+          nota: "Practiqueu la pregunta amb més exemples: la càmera per a una app de videotrucades? El micròfon per a un trencaclosques?|Practicad la pregunta con más ejemplos: ¿la cámara para una app de videollamadas? ¿El micrófono para un rompecabezas?" },
+        { id: 's5', k: 'anim', t: "No tot és sí o no|No todo es sí o no", anim: 'd4dialeg', x: "Tria la més petita que serveixi.|Elige la más pequeña que sirva.",
+          nota: "Explica «només aquesta vegada» i les fotos «només les que triï».|Explica «solo esta vez» y las fotos «solo las que elija»." },
+        { id: 's6', k: 'media', t: "La fitxa de CalcuBit|La ficha de CalcuBit", x: "Quins permisos no tenen sentit per a una calculadora?|¿Qué permisos no tienen sentido para una calculadora?", media: CALCU,
+          nota: "Quatre no tenen sentit: ubicació, micròfon, contactes i fotos.|Cuatro no tienen sentido: ubicación, micrófono, contactos y fotos." },
+        { id: 's7', k: 'concepte', t: "Per què en volen tant?|¿Por qué quieren tanto?", pic: 'img/ment/vel.webp',
+          punts: ["Les dades serveixen per fer anuncis a mida.|Los datos sirven para hacer anuncios a medida.", "Algunes apps les comparteixen amb altres empreses.|Algunas apps los comparten con otras empresas.", "Els permisos es poden treure a la configuració.|Los permisos se pueden quitar en la configuración."],
+          nota: "Sense alarmisme: no és dolent fer servir apps, però sí decidir què hi donem.|Sin alarmismo: no es malo usar apps, pero sí decidir qué damos." },
+        { id: 's8', k: 'activitat', t: "La botiga d'apps de paper|La tienda de apps de papel", timer: 12,
+          punts: ["Per a cada app, decidiu quines fitxes de permís li doneu.|Para cada app, decidid qué fichas de permiso le dais.", "Sempre, mentre la faig servir o no?|¿Siempre, mientras la uso o no?", "Justifiqueu cada «sí» amb una frase.|Justificad cada «sí» con una frase."],
+          nota: "Passa per les taules i fes la pregunta clau: «Per a què ho necessita?».|Pasa por las mesas y haz la pregunta clave: «¿Para qué lo necesita?»." },
+        { id: 's9', k: 'concepte', t: "La pregunta clau|La pregunta clave", pic: 'img/ment/rfx.webp',
+          punts: ["Per a què ho necessita?|¿Para qué lo necesita?", "Si no té sentit: no.|Si no tiene sentido: no.", "Si té sentit: l'opció més petita.|Si tiene sentido: la opción más pequeña."],
+          nota: "Deixa-la projectada mentre treballen.|Déjala proyectada mientras trabajan." },
+        { id: 's10', k: 'activitat', t: "Ara, a l'ordinador|Ahora, al ordenador", timer: 15,
+          punts: ["Obre la sessió «Permisos de les apps».|Abre la sesión «Permisos de las apps».", "Fes-la fins a la pausa activa.|Hazla hasta la pausa activa.", "A la pausa, ens movem tots junts.|En la pausa, nos movemos todos juntos."],
+          nota: "Avisa quan arribin a la pausa activa.|Avisa cuando lleguen a la pausa activa." },
+        { id: 's11', k: 'repte', t: "Reptes: decideixo jo|Retos: decido yo", timer: 8,
+          punts: ["Sempre, mentre la faig servir o no permetre?|¿Siempre, mientras la uso o no permitir?", "Instal·lar una app, pas a pas.|Instalar una app, paso a paso.", "Treure un permís antic.|Quitar un permiso antiguo."],
+          nota: "Pregunta per què «sempre» té sentit per a l'app de trobar el mòbil.|Pregunta por qué «siempre» tiene sentido para la app de encontrar el móvil." },
+        { id: 's12', k: 'activitat', t: "Crea: les meves normes|Crea: mis normas", timer: 2,
+          punts: ["Tria una norma per a cada tema.|Elige una norma para cada tema.", "Desa-les.|Guárdalas.", "A casa: inspecció de permisos.|En casa: inspección de permisos."],
+          nota: "Que comparteixin una norma en veu alta.|Que compartan una norma en voz alta." },
+        { id: 's13', k: 'resum', t: "Què hem après avui|Qué hemos aprendido hoy",
+          punts: ["Un permís és una clau per a una app.|Un permiso es una llave para una app.", "Per a què ho necessita? Si no té sentit, no.|¿Para qué lo necesita? Si no tiene sentido, no.", "L'opció més petita que serveixi.|La opción más pequeña que sirva.", "Els permisos es treuen a la configuració, amb un adult.|Los permisos se quitan en la configuración, con un adulto."],
+          nota: "Llegiu-lo junts.|Leedlo juntos." },
+        { id: 's14', k: 'tiquet', t: "Tiquet de sortida|Ticket de salida",
+          punts: ["Un permís que té sentit i un que no.|Un permiso que tiene sentido y uno que no.", "On es treuen els permisos i amb qui?|¿Dónde se quitan los permisos y con quién?"],
+          nota: "Pot ser oral, per torns.|Puede ser oral, por turnos." },
+        { id: 's15', k: 'concepte', t: "Per a casa|Para casa", pic: 'img/ment/ded.webp',
+          punts: ["Inspecció de permisos amb un adult.|Inspección de permisos con un adulto.", "Tres apps, una pregunta: per a què?|Tres apps, una pregunta: ¿para qué?", "Desinstal·leu el que no feu servir.|Desinstalad lo que no uséis."],
+          nota: "És una proposta: cada família decideix com la fa.|Es una propuesta: cada familia decide cómo la hace." }
+      ],
+      print: [
+        { id: 'p1', t: "La botiga d'apps de paper|La tienda de apps de papel", k: 'targetes',
+          intro: "Un paquet per grup de 4. Retalleu les 6 apps i les fitxes de permís. Per a cada app, decidiu quines fitxes li doneu i amb quina opció (sempre, mentre la faig servir, no). Les apps són inventades.|Un paquete por grupo de 4. Recortad las 6 apps y las fichas de permiso. Para cada app, decidid qué fichas le dais y con qué opción (siempre, mientras la uso, no). Las apps son inventadas.",
+          items: [
+            { t: "🗺️ App: MapaNuvi (mapes per anar pel poble)|🗺️ App: MapaNuvi (mapas para ir por el pueblo)", n: 1 },
+            { t: "🧮 App: CalcuBit (calculadora)|🧮 App: CalcuBit (calculadora)", n: 1 },
+            { t: "📹 App: VideoÀvia (videotrucades amb la família)|📹 App: VideoÀvia (videollamadas con la familia)", n: 1 },
+            { t: "🎨 App: PintaNuvi (dibuixar)|🎨 App: PintaNuvi (dibujar)", n: 1 },
+            { t: "⛅ App: TempsNuvi (el temps)|⛅ App: TiempoNuvi (el tiempo)", n: 1 },
+            { t: "🔎 App: TrobaMòbil (trobar el mòbil si es perd)|🔎 App: EncuentraMóvil (encontrar el móvil si se pierde)", n: 1 },
+            { t: "📍 Permís: ubicació|📍 Permiso: ubicación", n: 3 },
+            { t: "📷 Permís: càmera|📷 Permiso: cámara", n: 3 },
+            { t: "🎙️ Permís: micròfon|🎙️ Permiso: micrófono", n: 3 },
+            { t: "👥 Permís: contactes|👥 Permiso: contactos", n: 3 },
+            { t: "🖼️ Permís: fotos|🖼️ Permiso: fotos", n: 3 },
+            { t: "🔔 Permís: notificacions|🔔 Permiso: notificaciones", n: 3 }
+          ] }
+      ]
+    },
+
+    /* ---------- Sessió 3 · Wifi, actualitzacions i còpies ---------- */
+    'd4-3': {
+      intro: "Tercera sessió de la unitat 4. A partir del viatge complicat de la tauleta de la Nora, l'alumnat coneix els escuts bàsics dels dispositius: fer servir la wifi pública amb cap (i reconèixer les xarxes que imiten noms), instal·lar les actualitzacions aviat i pel camí de sempre (i no fer cas dels avisos falsos de les webs), tenir còpies de seguretat, posar un bloqueig de pantalla difícil d'endevinar i recordar la verificació en dos passos de la unitat 1. Tot es planteja com a hàbits de família, sense tecnicismes ni por.|Tercera sesión de la unidad 4. A partir del viaje complicado de la tablet de Nora, el alumnado conoce los escudos básicos de los dispositivos: usar la wifi pública con cabeza (y reconocer las redes que imitan nombres), instalar las actualizaciones pronto y por el camino de siempre (y no hacer caso de los avisos falsos de las webs), tener copias de seguridad, poner un bloqueo de pantalla difícil de adivinar y recordar la verificación en dos pasos de la unidad 1. Todo se plantea como hábitos de familia, sin tecnicismos ni miedo.",
+      claus: [
+        "A la wifi pública, res de comptes importants ni compres; compte amb les xarxes que imiten el nom de la de veritat.|En la wifi pública, nada de cuentas importantes ni compras; cuidado con las redes que imitan el nombre de la de verdad.",
+        "Les actualitzacions tapen forats: s'instal·len aviat, amb bateria i des de la configuració. Una web no pot saber si tens virus.|Las actualizaciones tapan agujeros: se instalan pronto, con batería y desde la configuración. Una web no puede saber si tienes virus.",
+        "Una còpia de seguretat guarda les coses en un altre lloc (núvol o disc extern): si el dispositiu es perd, no es perd tot.|Una copia de seguridad guarda las cosas en otro sitio (nube o disco externo): si el dispositivo se pierde, no se pierde todo.",
+        "Bloqueig de pantalla difícil d'endevinar i verificació en dos passos als comptes.|Bloqueo de pantalla difícil de adivinar y verificación en dos pasos en las cuentas."
+      ],
+      prev: [
+        "Sessió d1-1: contrasenyes fortes i verificació en dos passos.|Sesión d1-1: contraseñas fuertes y verificación en dos pasos.",
+        "Sessió d4-2: els permisos i la configuració del dispositiu.|Sesión d4-2: los permisos y la configuración del dispositivo."
+      ],
+      obj: [
+        "L'alumne/a distingeix què es pot fer i què és millor deixar per a casa en una wifi pública.|El alumno/a distingue qué se puede hacer y qué es mejor dejar para casa en una wifi pública.",
+        "L'alumne/a reconeix xarxes que imiten noms i avisos falsos de virus o d'actualitzacions.|El alumno/a reconoce redes que imitan nombres y avisos falsos de virus o de actualizaciones.",
+        "L'alumne/a explica per a què serveixen les actualitzacions i les còpies de seguretat.|El alumno/a explica para qué sirven las actualizaciones y las copias de seguridad.",
+        "L'alumne/a tria hàbits per protegir els dispositius de casa (bloqueig, còpies, dos passos).|El alumno/a elige hábitos para proteger los dispositivos de casa (bloqueo, copias, dos pasos)."
+      ],
+      comp: [
+        "Competència digital (CD4): protecció de dispositius i de dades|Competencia digital (CD4): protección de dispositivos y de datos",
+        "Competència digital (CD5): resolució de problemes tècnics senzills|Competencia digital (CD5): resolución de problemas técnicos sencillos",
+        "Competència personal, social i d'aprendre a aprendre: hàbits i prevenció|Competencia personal, social y de aprender a aprender: hábitos y prevención"
+      ],
+      vocab: [
+        ["Wifi pública|Wifi pública", "Xarxa sense fil d'un lloc públic, on es pot connectar molta gent.|Red inalámbrica de un lugar público, donde se puede conectar mucha gente."],
+        ["Xifrat|Cifrado", "Informació barrejada perquè només la pugui llegir qui ha de llegir-la (el cadenat 🔒).|Información mezclada para que solo la pueda leer quien debe leerla (el candado 🔒)."],
+        ["Actualització|Actualización", "Una versió nova d'un programa que tapa forats i porta millores.|Una versión nueva de un programa que tapa agujeros y trae mejoras."],
+        ["Còpia de seguretat|Copia de seguridad", "Una còpia de les teves coses guardada en un altre lloc.|Una copia de tus cosas guardada en otro sitio."],
+        ["Núvol|Nube", "Ordinadors d'empreses on es guarden coses i als quals arribes per internet.|Ordenadores de empresas donde se guardan cosas y a los que llegas por internet."],
+        ["Bloqueig de pantalla|Bloqueo de pantalla", "PIN, patró o empremta que cal per obrir el dispositiu.|PIN, patrón o huella que hace falta para abrir el dispositivo."]
+      ],
+      mat: {
+        aula: [
+          "Un ordinador per alumne/a amb Numi Tech obert a la sessió «Wifi, actualitzacions i còpies»|Un ordenador por alumno/a con Numi Tech abierto en la sesión «Wifi, actualizaciones y copias»",
+          "Projector i la presentació d'aquesta sessió|Proyector y la presentación de esta sesión",
+          "Les targetes de situacions (un paquet per grup de 4) i dos rètols: «Escut» i «Forat»|Las tarjetas de situaciones (un paquete por grupo de 4) y dos carteles: «Escudo» y «Agujero»"
+        ],
+        imprimir: ["Escuts i forats (imprimible 1): un paquet per grup|Escudos y agujeros (imprimible 1): un paquete por grupo", "La revisió de la tauleta (imprimible 2): una per alumne/a, per a casa|La revisión de la tablet (imprimible 2): una por alumno/a, para casa"],
+        prep: [
+          "Imprimir i retallar les targetes de situacions (12 per grup).|Imprimir y recortar las tarjetas de situaciones (12 por grupo).",
+          "Si podeu, tenir a mà un dispositiu de l'escola per ensenyar on hi ha les actualitzacions a la configuració (sense instal·lar-ne cap a classe).|Si podéis, tener a mano un dispositivo del centro para enseñar dónde están las actualizaciones en la configuración (sin instalar ninguna en clase).",
+          "Saber el nom de la wifi de l'escola per fer-la servir d'exemple de xarxa «de veritat» (sense donar-ne la contrasenya).|Saber el nombre de la wifi del centro para usarla de ejemplo de red «de verdad» (sin dar su contraseña)."
+        ]
+      },
+      plan: [
+        { min: 5, t: "Benvinguda: el viatge de la tauleta|Bienvenida: el viaje de la tablet", fase: 'inici',
+          fa: "Explica la història de la tauleta de la Nora: la wifi «gratis», l'avís de virus i la caiguda al tren. Pregunta quin dels tres problemes els faria més por i què es podria haver fet abans.|Explica la historia de la tablet de Nora: la wifi «gratis», el aviso de virus y la caída en el tren. Pregunta cuál de los tres problemas les daría más miedo y qué se podría haber hecho antes.",
+          diu: ["Us heu connectat mai a una wifi d'un bar o d'una estació?|¿Os habéis conectado alguna vez a una wifi de un bar o de una estación?",
+            "Si una tauleta es trenca, què es perd?|Si una tablet se rompe, ¿qué se pierde?",
+            "Avui coneixerem quatre escuts per als dispositius.|Hoy conoceremos cuatro escudos para los dispositivos."],
+          slides: ['s1', 's2'], app: "Encara no: pantalles abaixades.|Todavía no: pantallas bajadas.", org: "Tot el grup|Todo el grupo" },
+        { min: 10, t: "Wifi, actualitzacions, còpies i bloqueig|Wifi, actualizaciones, copias y bloqueo", fase: 'teoria',
+          fa: "Amb les animacions, presenta cada escut: la wifi de l'estació i les que n'imiten el nom (i el cadenat, que vol dir xifrat però no «de fiar»), els forats que tapen les actualitzacions, l'avís fals de virus, la còpia de seguretat i el bloqueig de pantalla amb els dos panys.|Con las animaciones, presenta cada escudo: la wifi de la estación y las que imitan su nombre (y el candado, que quiere decir cifrado pero no «de fiar»), los agujeros que tapan las actualizaciones, el aviso falso de virus, la copia de seguridad y el bloqueo de pantalla con los dos candados.",
+          diu: ["Quina wifi triaríeu? Per què les altres fan sospitar?|¿Qué wifi elegiríais? ¿Por qué las otras hacen sospechar?",
+            "Una web pot saber si el vostre dispositiu té virus? (No.)|¿Una web puede saber si vuestro dispositivo tiene virus? (No.)",
+            "On són les vostres fotos si la tauleta cau al riu?|¿Dónde están vuestras fotos si la tablet cae al río?"],
+          slides: ['s3', 's4', 's5', 's6', 's7'], app: "Encara no: tota l'atenció a la projecció.|Todavía no: toda la atención en la proyección.", org: "Tot el grup|Todo el grupo" },
+        { min: 12, t: "Escuts i forats|Escudos y agujeros", fase: 'desconnectat',
+          fa: "En grups de 4, reparteix les targetes de situacions. Les classifiquen en «Escut» o «Forat» i, per a cada forat, escriuen a la mateixa targeta l'escut que el taparia. Posada en comú: cada grup llegeix un forat i el seu escut.|En grupos de 4, reparte las tarjetas de situaciones. Las clasifican en «Escudo» o «Agujero» y, para cada agujero, escriben en la misma tarjeta el escudo que lo taparía. Puesta en común: cada grupo lee un agujero y su escudo.",
+          diu: ["Quin forat és el més fàcil de tapar?|¿Qué agujero es el más fácil de tapar?",
+            "Quin escut necessita un adult?|¿Qué escudo necesita un adulto?",
+            "Quin escut ja teniu a casa?|¿Qué escudo ya tenéis en casa?"],
+          slides: ['s8', 's9'], app: "Cap: activitat sense pantalla.|Ninguna: actividad sin pantalla.", org: "Grups de 4|Grupos de 4" },
+        { min: 15, t: "A l'ordinador: descobreix i investiga|En el ordenador: descubre e investiga", fase: 'ordinador',
+          fa: "Cada alumne/a fa la sessió fins a la pausa activa: les preguntes de repàs, la història, les cinc targetes, la wifi pública, les xarxes de la biblioteca, l'avís de virus i què fer si es perd la tauleta. Pausa activa tots junts.|Cada alumno/a hace la sesión hasta la pausa activa: las preguntas de repaso, la historia, las cinco tarjetas, la wifi pública, las redes de la biblioteca, el aviso de virus y qué hacer si se pierde la tablet. Pausa activa todos juntos.",
+          diu: ["Quina xarxa de la biblioteca us ha costat més de descobrir?|¿Qué red de la biblioteca os ha costado más descubrir?",
+            "Per què «Casa_Puig_5G» no era una trampa?|¿Por qué «Casa_Puig_5G» no era una trampa?",
+            "Ara, tots: ens actualitzem del 25% al 100%!|Ahora, todos: ¡nos actualizamos del 25% al 100%!"],
+          slides: ['s10'], app: "De «Recorda» fins a la «Pausa activa».|De «Recuerda» hasta la «Pausa activa».", org: "Individual|Individual" },
+        { min: 10, t: "Reptes i el meu dispositiu blindat|Retos y mi dispositivo blindado", fase: 'ordinador',
+          fa: "Continuen amb els reptes: escut o forat, la conversa amb en Bit sobre l'actualització, què és el núvol i quin PIN és millor. Després trien el seu pla de dispositiu blindat.|Siguen con los retos: escudo o agujero, la conversación con Bit sobre la actualización, qué es la nube y qué PIN es mejor. Después eligen su plan de dispositivo blindado.",
+          diu: ["Per què convé carregar la bateria abans d'actualitzar?|¿Por qué conviene cargar la batería antes de actualizar?",
+            "Si les fotos són al núvol, cal protegir-ne el compte? Com?|Si las fotos están en la nube, ¿hay que proteger la cuenta? ¿Cómo?",
+            "Quin hàbit del vostre pla fareu aquesta setmana?|¿Qué hábito de vuestro plan haréis esta semana?"],
+          slides: ['s11', 's12'], app: "«Reptes» i el pas «Crea»: el meu dispositiu blindat (i «La revisió de la tauleta», per a casa).|«Retos» y el paso «Crea»: mi dispositivo blindado (y «La revisión de la tablet», para casa).", org: "Individual|Individual" },
+        { min: 8, t: "Tancament i tiquet de sortida|Cierre y ticket de salida", fase: 'tancament',
+          fa: "Repasseu les idees clau amb el resum. Tiquet de sortida, preguntes finals i com s'han sentit. Lliura la fitxa de la revisió de la tauleta per fer-la a casa amb un adult.|Repasad las ideas clave con el resumen. Ticket de salida, preguntas finales y cómo se han sentido. Entrega la ficha de la revisión de la tablet para hacerla en casa con un adulto.",
+          diu: ["Digueu un escut i el forat que tapa.|Decid un escudo y el agujero que tapa.",
+            "Què no feu en una wifi pública?|¿Qué no hacéis en una wifi pública?",
+            "Qui us ajudarà a fer la revisió de la tauleta?|¿Quién os ayudará a hacer la revisión de la tablet?"],
+          slides: ['s13', 's14', 's15'], app: "«Tancament»: les dues preguntes finals i com m'he sentit.|«Cierre»: las dos preguntas finales y cómo me he sentido.", org: "Tot el grup|Todo el grupo" }
+      ],
+      errors: [
+        ["Pensa que una wifi és bona perquè és gratis i ràpida.|Piensa que una wifi es buena porque es gratis y rápida.",
+          "Que sigui gratis no diu qui hi ha darrere. La bona és la que et diu el lloc (el taulell, un cartell).|Que sea gratis no dice quién hay detrás. La buena es la que te dice el sitio (el mostrador, un cartel)."],
+        ["Creu que el cadenat 🔒 vol dir que la web és segura i de fiar.|Cree que el candado 🔒 quiere decir que la web es segura y de fiar.",
+          "El cadenat diu que la connexió va xifrada; una web trampa també el pot tenir.|El candado dice que la conexión va cifrada; una web trampa también lo puede tener."],
+        ["Deixa sempre les actualitzacions per a «demà».|Deja siempre las actualizaciones para «mañana».",
+          "Mentre no s'actualitza, el forat queda obert. Millor triar un moment (al vespre, carregant) i fer-ho.|Mientras no se actualiza, el agujero queda abierto. Mejor elegir un momento (por la noche, cargando) y hacerlo."],
+        ["Es creu l'avís «Tens 5 virus!» d'una web.|Se cree el aviso «¡Tienes 5 virus!» de una web.",
+          "Una web no pot mirar dins del dispositiu. És un avís fals per espantar: es tanca la pestanya.|Una web no puede mirar dentro del dispositivo. Es un aviso falso para asustar: se cierra la pestaña."],
+        ["Pensa que tenir les fotos a la tauleta ja és tenir-les guardades.|Piensa que tener las fotos en la tablet ya es tenerlas guardadas.",
+          "Si la tauleta es perd, es perden. Una còpia vol dir un segon lloc.|Si la tablet se pierde, se pierden. Una copia quiere decir un segundo sitio."]
+      ],
+      diff: {
+        mes: "Per anar més enllà: fer un còmic de quatre vinyetes amb el viatge de la tauleta de la Nora «ben fet» (amb tots els escuts); o investigar amb la família quantes còpies tenen de les fotos importants i on.|Para ir más allá: hacer un cómic de cuatro viñetas con el viaje de la tablet de Nora «bien hecho» (con todos los escudos); o investigar con la familia cuántas copias tienen de las fotos importantes y dónde.",
+        menys: "A l'activitat de paper, treballar només amb sis targetes i sense escriure l'escut (només classificar). A l'app, fer en parella el repte de la conversa amb en Bit.|En la actividad de papel, trabajar solo con seis tarjetas y sin escribir el escudo (solo clasificar). En la app, hacer en pareja el reto de la conversación con Bit."
+      },
+      aval: {
+        ticket: ["Digues un escut del dispositiu i el forat que tapa.|Di un escudo del dispositivo y el agujero que tapa.",
+          "Digues una cosa que no faries en una wifi pública.|Di una cosa que no harías en una wifi pública."],
+        rubric: [
+          ["Wifi i avisos|Wifi y avisos", "Reconeix xarxes que imiten noms i avisos falsos, i diu què fer.|Reconoce redes que imitan nombres y avisos falsos, y dice qué hacer.", "En reconeix algun amb ajuda.|Reconoce alguno con ayuda."],
+          ["Actualitzacions i còpies|Actualizaciones y copias", "Explica per a què serveixen i com es fan bé (aviat, des de la configuració, en un altre lloc).|Explica para qué sirven y cómo se hacen bien (pronto, desde la configuración, en otro sitio).", "Sap que existeixen però no per a què serveixen.|Sabe que existen pero no para qué sirven."],
+          ["Hàbits de protecció|Hábitos de protección", "Tria hàbits concrets (bloqueig, PIN difícil, dos passos) i els vol provar a casa.|Elige hábitos concretos (bloqueo, PIN difícil, dos pasos) y quiere probarlos en casa.", "Proposa idees generals sense concretar.|Propone ideas generales sin concretar."]
+        ]
+      },
+      casa: "A casa, feu junts «La revisió de la tauleta»: mireu si hi ha actualitzacions pendents i instal·leu-les amb la bateria carregada; comproveu que la pantalla es bloqueja sola i que el PIN no és fàcil d'endevinar; busqueu si les fotos tenen una còpia de seguretat i on es guarda; i mireu que la wifi de casa tingui contrasenya. Si hi ha l'eina per localitzar el dispositiu, activeu-la.|En casa, haced juntos «La revisión de la tablet»: mirad si hay actualizaciones pendientes e instaladlas con la batería cargada; comprobad que la pantalla se bloquea sola y que el PIN no es fácil de adivinar; buscad si las fotos tienen una copia de seguridad y dónde se guarda; y mirad que la wifi de casa tenga contraseña. Si existe la herramienta para localizar el dispositivo, activadla.",
+      faq: [
+        ["És perillós connectar-se a una wifi pública?|¿Es peligroso conectarse a una wifi pública?", "Per mirar un mapa o llegir notícies, normalment no. El risc és entrar a comptes importants o comprar, o connectar-se a una xarxa falsa. Per això diem «res de contrasenyes ni compres» i «la xarxa que diu el lloc».|Para mirar un mapa o leer noticias, normalmente no. El riesgo es entrar en cuentas importantes o comprar, o conectarse a una red falsa. Por eso decimos «nada de contraseñas ni compras» y «la red que dice el lugar»."],
+        ["Les actualitzacions fan anar més lent el dispositiu?|¿Las actualizaciones hacen ir más lento el dispositivo?", "De vegades un dispositiu molt antic va més lent amb programes nous, però les actualitzacions de seguretat són importants. Si un dispositiu ja no en rep, convé fer-lo servir per a coses sense comptes importants.|A veces un dispositivo muy antiguo va más lento con programas nuevos, pero las actualizaciones de seguridad son importantes. Si un dispositivo ya no las recibe, conviene usarlo para cosas sin cuentas importantes."],
+        ["El núvol és segur?|¿La nube es segura?", "És un compte d'una empresa: és tan segur com la contrasenya que el protegeix. Amb una bona contrasenya i dos passos, és una bona còpia.|Es una cuenta de una empresa: es tan segura como la contraseña que la protege. Con una buena contraseña y dos pasos, es una buena copia."],
+        ["Què és millor, PIN, patró o empremta?|¿Qué es mejor, PIN, patrón o huella?", "Qualsevol és millor que res. L'important és que no sigui fàcil d'endevinar (ni 1234, ni l'aniversari, ni una L amb el patró).|Cualquiera es mejor que nada. Lo importante es que no sea fácil de adivinar (ni 1234, ni el cumpleaños, ni una L con el patrón)."]
+      ],
+      tec: [
+        ["A la llista de wifis toquen «Biblioteca_Vilabit» i no passa res.|En la lista de wifis tocan «Biblioteca_Vilabit» y no pasa nada.", "És correcte: és la bona. Només són pistes les tres que imiten o que són obertes.|Es correcto: es la buena. Solo son pistas las tres que imitan o que son abiertas."],
+        ["A l'ordre de la tauleta perduda, dubten entre canviar contrasenyes i esborrar-la.|En el orden de la tablet perdida, dudan entre cambiar contraseñas y borrarla.", "L'ordre de l'app: primer mirar on és, si no apareix bloquejar-la i esborrar-la, després canviar contrasenyes i, al final, recuperar les fotos.|El orden de la app: primero mirar dónde está, si no aparece bloquearla y borrarla, después cambiar contraseñas y, al final, recuperar las fotos."],
+        ["No volen fer cap actualització real a classe.|No quieren hacer ninguna actualización real en clase.", "Correcte: a classe només es mostra on és. Les actualitzacions les fa la família a casa o el responsable TIC del centre.|Correcto: en clase solo se muestra dónde está. Las actualizaciones las hace la familia en casa o el responsable TIC del centro."]
+      ],
+      seg: [
+        "No demanis el PIN ni cap contrasenya de ningú, ni com a exemple.|No pidas el PIN ni ninguna contraseña de nadie, ni como ejemplo.",
+        "No donis la contrasenya de la wifi de l'escola a l'alumnat.|No des la contraseña de la wifi del centro al alumnado.",
+        "Si algun infant explica que ha perdut un dispositiu o que li han entrat al compte, tranquil·litza'l i avisa la família perquè canviïn contrasenyes.|Si algún niño o niña cuenta que ha perdido un dispositivo o que le han entrado en la cuenta, tranquilízale y avisa a la familia para que cambien contraseñas."
+      ],
+      extra: [
+        "Ciències: com viatja la informació per una wifi? (Ones, com la ràdio.)|Ciencias: ¿cómo viaja la información por una wifi? (Ondas, como la radio.)",
+        "Matemàtiques: amb 4 xifres hi ha 10.000 PIN possibles; amb 6, un milió. Per què un PIN llarg és més difícil d'endevinar?|Matemáticas: con 4 cifras hay 10.000 PIN posibles; con 6, un millón. ¿Por qué un PIN largo es más difícil de adivinar?",
+        "Per als grans: per què els programes tenen errors? Parlar dels errors com a part normal de programar (ho van viure als cursos de Robot o Creadors).|Para los mayores: ¿por qué los programas tienen errores? Hablar de los errores como parte normal de programar (lo vivieron en los cursos de Robot o Creadors)."
+      ],
+      trans: [
+        "Sessió d1-1: els dos panys dels comptes. Aquí, també el pany de la pantalla.|Sesión d1-1: los dos candados de las cuentas. Aquí, también el candado de la pantalla.",
+        "Sessió d4-4: les sales 3 i 4 de l'escape room són l'actualització i els escuts i forats.|Sesión d4-4: las salas 3 y 4 de la escape room son la actualización y los escudos y agujeros.",
+        "Ciències (ones i xarxes), matemàtiques (combinacions) i tutoria (hàbits de família).|Ciencias (ondas y redes), matemáticas (combinaciones) y tutoría (hábitos de familia)."
+      ],
+      slides: [
+        { id: 's1', k: 'portada', t: "Wifi, actualitzacions i còpies|Wifi, actualizaciones y copias", x: "Quatre escuts per als teus dispositius.|Cuatro escudos para tus dispositivos.",
+          nota: "Avui no parlem de persones que enganyen, sinó de cuidar els aparells.|Hoy no hablamos de personas que engañan, sino de cuidar los aparatos." },
+        { id: 's2', k: 'pregunta', t: "Un viatge complicat|Un viaje complicado", punts: ["Una wifi «GRATIS_SUPER_RAPIDA»…|Una wifi «GRATIS_SUPER_RAPIDA»…", "«Tens 5 virus!»…|«¡Tienes 5 virus!»…", "La tauleta cau i no s'encén. I les fotos?|La tablet se cae y no se enciende. ¿Y las fotos?"],
+          nota: "Pregunta quin problema els fa més por i què es podria haver fet abans.|Pregunta qué problema les da más miedo y qué se podría haber hecho antes." },
+        { id: 's3', k: 'anim', t: "La wifi de l'estació|La wifi de la estación", anim: 'd4wifi', x: "La bona és la que diu el lloc. El cadenat vol dir xifrat, no «de fiar».|La buena es la que dice el lugar. El candado quiere decir cifrado, no «de fiar».",
+          nota: "Remarca: a la wifi pública, res de contrasenyes ni compres.|Remarca: en la wifi pública, nada de contraseñas ni compras." },
+        { id: 's4', k: 'anim', t: "Tapar els forats|Tapar los agujeros", anim: 'd4forat', x: "Totes les apps tenen errors; les actualitzacions els tapen.|Todas las apps tienen errores; las actualizaciones los tapan.",
+          nota: "Connecta amb els errors que van trobar programant: és normal i s'arregla.|Conecta con los errores que encontraron programando: es normal y se arregla." },
+        { id: 's5', k: 'media', t: "«Tens 5 virus!»|«¡Tienes 5 virus!»", x: "Una web no pot saber si tens virus.|Una web no puede saber si tienes virus.", media: VIRUS,
+          nota: "Tanquem la pestanya. Igual amb «Actualitza el reproductor per veure el vídeo».|Cerramos la pestaña. Igual con «Actualiza el reproductor para ver el vídeo»." },
+        { id: 's6', k: 'anim', t: "En dos llocs|En dos sitios", anim: 'd4copia', x: "Una còpia de seguretat: núvol o disc extern.|Una copia de seguridad: nube o disco externo.",
+          nota: "Pregunta: on són les fotos de casa? Sense jutjar: només idees.|Pregunta: ¿dónde están las fotos de casa? Sin juzgar: solo ideas." },
+        { id: 's7', k: 'anim', t: "El pany de la pantalla|El candado de la pantalla", anim: 'd4pany', x: "PIN difícil, bloqueig automàtic i dos passos als comptes.|PIN difícil, bloqueo automático y dos pasos en las cuentas.",
+          nota: "Recorda la verificació en dos passos de la unitat 1.|Recuerda la verificación en dos pasos de la unidad 1." },
+        { id: 's8', k: 'activitat', t: "Escuts i forats|Escudos y agujeros", timer: 12,
+          punts: ["Classifiqueu les situacions: escut o forat?|Clasificad las situaciones: ¿escudo o agujero?", "A cada forat, escriviu l'escut que el tapa.|En cada agujero, escribid el escudo que lo tapa.", "Llegiu-ne un a la classe.|Leed uno a la clase."],
+          nota: "Passa per les taules: «Què passaria si…?».|Pasa por las mesas: «¿Qué pasaría si…?»." },
+        { id: 's9', k: 'concepte', t: "Els quatre escuts|Los cuatro escudos", pic: 'img/ment/sim.webp',
+          punts: ["Wifi amb cap.|Wifi con cabeza.", "Actualitzacions aviat.|Actualizaciones pronto.", "Còpies en un altre lloc.|Copias en otro sitio.", "Bloqueig i dos passos.|Bloqueo y dos pasos."],
+          nota: "Deixa-la projectada mentre classifiquen.|Déjala proyectada mientras clasifican." },
+        { id: 's10', k: 'activitat', t: "Ara, a l'ordinador|Ahora, al ordenador", timer: 15,
+          punts: ["Obre la sessió «Wifi, actualitzacions i còpies».|Abre la sesión «Wifi, actualizaciones y copias».", "Fes-la fins a la pausa activa.|Hazla hasta la pausa activa.", "A la pausa, ens actualitzem tots junts.|En la pausa, nos actualizamos todos juntos."],
+          nota: "Avisa quan arribin a la pausa activa.|Avisa cuando lleguen a la pausa activa." },
+        { id: 's11', k: 'repte', t: "Reptes: dispositiu blindat|Retos: dispositivo blindado", timer: 8,
+          punts: ["Escut o forat?|¿Escudo o agujero?", "En Bit no vol actualitzar.|Bit no quiere actualizar.", "El núvol i el millor PIN.|La nube y el mejor PIN."],
+          nota: "Pregunta per què cal la bateria carregada abans d'actualitzar.|Pregunta por qué hace falta la batería cargada antes de actualizar." },
+        { id: 's12', k: 'activitat', t: "Crea: el meu dispositiu blindat|Crea: mi dispositivo blindado", timer: 2,
+          punts: ["Tria un hàbit per a cada escut.|Elige un hábito para cada escudo.", "Desa el teu pla.|Guarda tu plan.", "A casa: la revisió de la tauleta.|En casa: la revisión de la tablet."],
+          nota: "Lliura la fitxa per a casa.|Entrega la ficha para casa." },
+        { id: 's13', k: 'resum', t: "Què hem après avui|Qué hemos aprendido hoy",
+          punts: ["Wifi pública: res de comptes importants ni compres.|Wifi pública: nada de cuentas importantes ni compras.", "Actualitzacions aviat, des de la configuració.|Actualizaciones pronto, desde la configuración.", "Còpies en un altre lloc.|Copias en otro sitio.", "Bloqueig difícil i dos passos.|Bloqueo difícil y dos pasos."],
+          nota: "Llegiu-lo junts.|Leedlo juntos." },
+        { id: 's14', k: 'tiquet', t: "Tiquet de sortida|Ticket de salida",
+          punts: ["Un escut i el forat que tapa.|Un escudo y el agujero que tapa.", "Una cosa que no faries en una wifi pública.|Una cosa que no harías en una wifi pública."],
+          nota: "Pot ser oral, per torns.|Puede ser oral, por turnos." },
+        { id: 's15', k: 'concepte', t: "Per a casa|Para casa", pic: 'img/ment/ded.webp',
+          punts: ["La revisió de la tauleta, amb un adult.|La revisión de la tablet, con un adulto.", "Actualitzacions, bloqueig, còpies i wifi.|Actualizaciones, bloqueo, copias y wifi.", "I activeu l'eina per trobar-la si es perd.|Y activad la herramienta para encontrarla si se pierde."],
+          nota: "És una proposta: cada família la fa com pot.|Es una propuesta: cada familia la hace como puede." }
+      ],
+      print: [
+        { id: 'p1', t: "Escuts i forats|Escudos y agujeros", k: 'targetes',
+          intro: "Un paquet per grup de 4. Classifiqueu cada situació en «Escut» o «Forat». A cada forat, escriviu l'escut que el taparia.|Un paquete por grupo de 4. Clasificad cada situación en «Escudo» o «Agujero». En cada agujero, escribid el escudo que lo taparía.",
+          items: [
+            { t: "📶 Entrar al correu des de la wifi oberta d'un bar|📶 Entrar en el correo desde la wifi abierta de un bar", n: 1 },
+            { t: "🔒 Connectar-se a la wifi que diu el cartell de la biblioteca|🔒 Conectarse a la wifi que dice el cartel de la biblioteca", n: 1 },
+            { t: "⬆️ Instal·lar l'actualització el mateix dia que arriba|⬆️ Instalar la actualización el mismo día que llega", n: 1 },
+            { t: "⏰ Tocar «Recorda-m'ho demà» durant mesos|⏰ Tocar «Recuérdamelo mañana» durante meses", n: 1 },
+            { t: "⚠️ Descarregar el «netejador» que diu una web d'alerta|⚠️ Descargar el «limpiador» que dice una web de alerta", n: 1 },
+            { t: "☁️ Les fotos es copien soles al núvol de la família|☁️ Las fotos se copian solas en la nube de la familia", n: 1 },
+            { t: "📸 Totes les fotos, només a la tauleta|📸 Todas las fotos, solo en la tablet", n: 1 },
+            { t: "🔢 PIN: 1234|🔢 PIN: 1234", n: 1 },
+            { t: "⏱️ La pantalla es bloqueja sola als 2 minuts|⏱️ La pantalla se bloquea sola a los 2 minutos", n: 1 },
+            { t: "🔑 Verificació en dos passos al compte del videojoc|🔑 Verificación en dos pasos en la cuenta del videojuego", n: 1 },
+            { t: "🔎 L'eina per trobar el dispositiu, activada|🔎 La herramienta para encontrar el dispositivo, activada", n: 1 },
+            { t: "📥 Baixar una app d'una web estranya|📥 Descargar una app de una web rara", n: 1 }
+          ] },
+        { id: 'p2', t: "La revisió de la tauleta|La revisión de la tablet", k: 'fitxa',
+          intro: "Per fer a casa amb un adult. Marqueu cada escut quan el tingueu.|Para hacer en casa con un adulto. Marcad cada escudo cuando lo tengáis.",
+          items: [
+            { q: "⬆️ Hem mirat les actualitzacions pendents i les hem instal·lat (amb bateria).|⬆️ Hemos mirado las actualizaciones pendientes y las hemos instalado (con batería).", sol: "Sí / Ho farem el dia: ____|Sí / Lo haremos el día: ____" },
+            { q: "🔐 La pantalla es bloqueja sola i el PIN no és fàcil d'endevinar.|🔐 La pantalla se bloquea sola y el PIN no es fácil de adivinar.", sol: "Sí / L'hem canviat|Sí / Lo hemos cambiado" },
+            { q: "💾 Les fotos tenen una còpia a: ____|💾 Las fotos tienen una copia en: ____", sol: "Per exemple: el núvol de la família o un disc extern.|Por ejemplo: la nube de la familia o un disco externo." },
+            { q: "📶 La wifi de casa té contrasenya.|📶 La wifi de casa tiene contraseña.", sol: "Sí / L'hem posada|Sí / La hemos puesto" },
+            { q: "🔎 L'eina per trobar el dispositiu està activada.|🔎 La herramienta para encontrar el dispositivo está activada.", sol: "Sí / No en té / Ho mirarem|Sí / No tiene / Lo miraremos" }
+          ] }
+      ]
+    },
+
+    /* ---------- Sessió 4 · Projecte: l'escape room de la ciberseguretat ---------- */
+    'd4-4': {
+      intro: "Sessió de projecte que tanca la unitat 4. Primer, l'alumnat surt d'una escape room a l'app: quatre sales (un correu trampa, els permisos d'una app de receptes, una actualització i escuts o forats) que donen les quatre xifres del codi. Després, en equips, dissenya la seva pròpia escape room de ciberseguretat en paper, amb una prova per sala, per fer-la amb la família o amb una altra classe. El valor és repassar tota la unitat amb un repte motivador i aprendre a fer bones proves: un tema, una situació curta, una pista que ajuda i una idea per aprendre.|Sesión de proyecto que cierra la unidad 4. Primero, el alumnado sale de una escape room en la app: cuatro salas (un correo trampa, los permisos de una app de recetas, una actualización y escudos o agujeros) que dan las cuatro cifras del código. Después, en equipos, diseña su propia escape room de ciberseguridad en papel, con una prueba por sala, para hacerla con la familia o con otra clase. El valor es repasar toda la unidad con un reto motivador y aprender a hacer buenas pruebas: un tema, una situación corta, una pista que ayuda y una idea para aprender.",
+      claus: [
+        "L'escape room de l'app repassa tota la unitat: missatges trampa, permisos, actualitzacions i escuts dels dispositius.|La escape room de la app repasa toda la unidad: mensajes trampa, permisos, actualizaciones y escudos de los dispositivos.",
+        "Una bona prova té tema, situació curta, pista que ajuda sense dir la resposta, solució comprovable i una idea per aprendre.|Una buena prueba tiene tema, situación corta, pista que ayuda sin decir la respuesta, solución comprobable y una idea para aprender.",
+        "El treball és en equip: cada persona prepara una sala i les proves es revisen entre equips.|El trabajo es en equipo: cada persona prepara una sala y las pruebas se revisan entre equipos.",
+        "Fer de guia (ajudar sense dir la resposta) és una manera d'ensenyar el que s'ha après.|Hacer de guía (ayudar sin decir la respuesta) es una manera de enseñar lo que se ha aprendido."
+      ],
+      prev: [
+        "Sessions d4-1, d4-2 i d4-3: missatges trampa, permisos, wifi, actualitzacions, còpies i bloqueig.|Sesiones d4-1, d4-2 y d4-3: mensajes trampa, permisos, wifi, actualizaciones, copias y bloqueo.",
+        "Sessió d2-4: treballar en equip en un projecte i revisar-lo amb sinceritat.|Sesión d2-4: trabajar en equipo en un proyecto y revisarlo con sinceridad."
+      ],
+      obj: [
+        "L'alumne/a resol proves de ciberseguretat de tota la unitat i n'obté el codi.|El alumno/a resuelve pruebas de ciberseguridad de toda la unidad y obtiene el código.",
+        "L'alumne/a dissenya una prova amb tema, situació, pista, solució i idea per aprendre.|El alumno/a diseña una prueba con tema, situación, pista, solución e idea para aprender.",
+        "L'alumne/a col·labora en equip per muntar una escape room de quatre sales.|El alumno/a colabora en equipo para montar una escape room de cuatro salas.",
+        "L'alumne/a dona i rep propostes de millora de manera respectuosa.|El alumno/a da y recibe propuestas de mejora de manera respetuosa."
+      ],
+      comp: [
+        "Competència digital (CD4): seguretat i protecció, aplicada a situacions noves|Competencia digital (CD4): seguridad y protección, aplicada a situaciones nuevas",
+        "Competència emprenedora: dissenyar un repte per a altres persones|Competencia emprendedora: diseñar un reto para otras personas",
+        "Competència personal, social i d'aprendre a aprendre: treball en equip i coavaluació|Competencia personal, social y de aprender a aprender: trabajo en equipo y coevaluación"
+      ],
+      vocab: [
+        ["Escape room|Escape room", "Repte en equip on cal resoldre proves per trobar el codi que obre una porta.|Reto en equipo donde hay que resolver pruebas para encontrar el código que abre una puerta."],
+        ["Sala|Sala", "Cada una de les proves de l'escape room.|Cada una de las pruebas de la escape room."],
+        ["Pista|Pista", "Ajuda que fa pensar sense donar la resposta.|Ayuda que hace pensar sin dar la respuesta."],
+        ["Codi|Código", "La combinació final (xifres, lletres o un dibuix) que s'aconsegueix sala a sala.|La combinación final (cifras, letras o un dibujo) que se consigue sala a sala."],
+        ["Guia|Guía", "Qui coneix l'escape room i ajuda els altres sense resoldre-la per ells.|Quien conoce la escape room y ayuda a los demás sin resolverla por ellos."]
+      ],
+      mat: {
+        aula: [
+          "Un ordinador per alumne/a amb Numi Tech obert a la sessió «Projecte: l'escape room de la ciberseguretat»|Un ordenador por alumno/a con Numi Tech abierto en la sesión «Proyecto: la escape room de la ciberseguridad»",
+          "Projector i la presentació d'aquesta sessió|Proyector y la presentación de esta sesión",
+          "La plantilla de sales (una per equip), cartolines, colors i sobres per guardar les proves|La plantilla de salas (una por equipo), cartulinas, colores y sobres para guardar las pruebas"
+        ],
+        imprimir: ["Plantilla de l'escape room (imprimible 1): una per equip|Plantilla de la escape room (imprimible 1): una por equipo"],
+        prep: [
+          "Fer equips de 4 i imprimir una plantilla per equip.|Hacer equipos de 4 e imprimir una plantilla por equipo.",
+          "Preparar quatre sobres per equip (un per sala) i una cartolina per a la porta amb el codi.|Preparar cuatro sobres por equipo (uno por sala) y una cartulina para la puerta con el código.",
+          "Pensar on es podran provar les escape rooms: una altra classe, el dia de portes obertes o a casa.|Pensar dónde se podrán probar las escape rooms: otra clase, el día de puertas abiertas o en casa."
+        ]
+      },
+      plan: [
+        { min: 5, t: "Benvinguda: tancats al laboratori!|Bienvenida: ¡encerrados en el laboratorio!", fase: 'inici',
+          fa: "Explica la història: en Bit s'ha quedat tancat al laboratori i cal resoldre quatre sales per trobar el codi. Fes el repàs ràpid de la unitat amb la diapositiva de repàs i explica que, després, cada equip en dissenyarà una de pròpia.|Explica la historia: Bit se ha quedado encerrado en el laboratorio y hay que resolver cuatro salas para encontrar el código. Haz el repaso rápido de la unidad con la diapositiva de repaso y explica que, después, cada equipo diseñará una propia.",
+          diu: ["Quins temes hem treballat aquesta unitat?|¿Qué temas hemos trabajado esta unidad?",
+            "Algú ha fet mai una escape room? Com funcionava?|¿Alguien ha hecho alguna vez una escape room? ¿Cómo funcionaba?",
+            "Avui sortirem d'una i en farem una de nostra.|Hoy saldremos de una y haremos una nuestra."],
+          slides: ['s1', 's2'], app: "Encara no: pantalles abaixades.|Todavía no: pantallas bajadas.", org: "Tot el grup|Todo el grupo" },
+        { min: 5, t: "Com funciona i com es fa una bona prova|Cómo funciona y cómo se hace una buena prueba", fase: 'teoria',
+          fa: "Amb l'animació de la porta, explica les sales i el codi. Amb la de la prova, mostra les parts d'una bona prova. Llegiu junts els consells de treball en equip.|Con la animación de la puerta, explica las salas y el código. Con la de la prueba, muestra las partes de una buena prueba. Leed juntos los consejos de trabajo en equipo.",
+          diu: ["Com ha de ser una pista? (Que ajudi, però que no digui la resposta.)|¿Cómo debe ser una pista? (Que ayude, pero que no diga la respuesta.)",
+            "Una prova molt difícil és una bona prova? (No sempre: ha d'ensenyar alguna cosa.)|¿Una prueba muy difícil es una buena prueba? (No siempre: tiene que enseñar algo.)",
+            "Com ens repartirem la feina?|¿Cómo nos repartiremos el trabajo?"],
+          slides: ['s3', 's4', 's5'], app: "Encara no: tota l'atenció a la projecció.|Todavía no: toda la atención en la proyección.", org: "Tot el grup|Todo el grupo" },
+        { min: 20, t: "A l'ordinador: l'escape room|En el ordenador: la escape room", fase: 'ordinador',
+          fa: "Cada alumne/a fa la sessió fins a la porta: les preguntes de repàs, la història, les targetes, les quatre sales (amb la pausa activa al mig) i el codi. Han d'apuntar les xifres en un paper. Després fan el repte extra del conserge.|Cada alumno/a hace la sesión hasta la puerta: las preguntas de repaso, la historia, las tarjetas, las cuatro salas (con la pausa activa en medio) y el código. Deben apuntar las cifras en un papel. Después hacen el reto extra del conserje.",
+          diu: ["Quina sala us ha costat més? Per què?|¿Qué sala os ha costado más? ¿Por qué?",
+            "Quin era el codi? (7 2 9 4.)|¿Cuál era el código? (7 2 9 4.)",
+            "Per què el missatge del conserge era una suplantació?|¿Por qué el mensaje del conserje era una suplantación?"],
+          slides: ['s6', 's7', 's8'], app: "De «Recorda» fins al repte extra del conserge.|De «Recuerda» hasta el reto extra del conserje.", org: "Individual|Individual" },
+        { min: 5, t: "Crea: tria les proves|Crea: elige las pruebas", fase: 'crea',
+          fa: "A l'app, cada alumne/a tria una prova per a cada sala i el tipus de codi, i ho desa. Després, ajunten les idees amb el seu equip i decideixen quina prova farà cada persona.|En la app, cada alumno/a elige una prueba para cada sala y el tipo de código, y lo guarda. Después, juntan las ideas con su equipo y deciden qué prueba hará cada persona.",
+          diu: ["Quines proves heu triat? Coincidiu amb el vostre equip?|¿Qué pruebas habéis elegido? ¿Coincidís con vuestro equipo?",
+            "Quin codi fareu servir?|¿Qué código usaréis?",
+            "Qui farà cada sala?|¿Quién hará cada sala?"],
+          slides: ['s9'], app: "El pas «Crea»: la meva escape room.|El paso «Crea»: mi escape room.", org: "Individual i després en equip|Individual y después en equipo" },
+        { min: 17, t: "L'escape room en paper|La escape room en papel", fase: 'desconnectat',
+          fa: "Cada persona prepara la seva sala en una targeta de la plantilla: situació, pregunta, pista i part del codi. Després, intercanvien l'escape room amb un altre equip, la resolen i es donen una cosa que funciona i una que es pot millorar. Fes-los fer de guies: ajudar sense dir la resposta.|Cada persona prepara su sala en una tarjeta de la plantilla: situación, pregunta, pista y parte del código. Después, intercambian la escape room con otro equipo, la resuelven y se dan una cosa que funciona y una que se puede mejorar. Haz que hagan de guías: ayudar sin decir la respuesta.",
+          diu: ["La pista ajuda sense dir la resposta?|¿La pista ayuda sin decir la respuesta?",
+            "Què ha après l'altre equip resolent la vostra sala?|¿Qué ha aprendido el otro equipo resolviendo vuestra sala?",
+            "Una cosa que funciona i una que es pot millorar.|Una cosa que funciona y una que se puede mejorar."],
+          slides: ['s10', 's11', 's12'], app: "Cap: activitat sense pantalla.|Ninguna: actividad sin pantalla.", org: "Equips de 4|Equipos de 4" },
+        { min: 8, t: "Tancament i tiquet de sortida|Cierre y ticket de salida", fase: 'tancament',
+          fa: "Repasseu la unitat amb el resum. Fes el tiquet de sortida i que facin les preguntes finals i com s'han sentit. Acordeu on provareu les escape rooms (a casa, amb una altra classe…).|Repasad la unidad con el resumen. Haz el ticket de salida y que hagan las preguntas finales y cómo se han sentido. Acordad dónde probaréis las escape rooms (en casa, con otra clase…).",
+          diu: ["Quin consell de la unitat us emporteu?|¿Qué consejo de la unidad os lleváis?",
+            "Què ha fet bé el vostre equip?|¿Qué ha hecho bien vuestro equipo?",
+            "A qui ensenyareu la vostra escape room?|¿A quién enseñaréis vuestra escape room?"],
+          slides: ['s13', 's14', 's15'], app: "«Tancament»: les dues preguntes finals i com m'he sentit.|«Cierre»: las dos preguntas finales y cómo me he sentido.", org: "Tot el grup|Todo el grupo" }
+      ],
+      errors: [
+        ["No apunta les xifres i, a la porta, no recorda el codi.|No apunta las cifras y, en la puerta, no recuerda el código.",
+          "Cada sala torna a mostrar la xifra si es repeteix el pas. Recorda apuntar-les en un paper des del principi.|Cada sala vuelve a mostrar la cifra si se repite el paso. Recuerda apuntarlas en un papel desde el principio."],
+        ["Fa una prova que només té una resposta impossible d'endevinar.|Hace una prueba que solo tiene una respuesta imposible de adivinar.",
+          "Una bona prova es pot resoldre pensant amb el que s'ha après. Afegiu una pista.|Una buena prueba se puede resolver pensando con lo que se ha aprendido. Añadid una pista."],
+        ["La pista diu directament la resposta.|La pista dice directamente la respuesta.",
+          "Proposa una pista que faci pensar: «Mira bé les lletres del nom de la xarxa».|Propón una pista que haga pensar: «Mira bien las letras del nombre de la red»."],
+        ["Un membre de l'equip vol fer-ho tot.|Un miembro del equipo quiere hacerlo todo.",
+          "Recorda que cada persona fa una sala i que la nota és de l'equip. Proposa que ajudi qui s'encalla.|Recuerda que cada persona hace una sala y que la nota es del equipo. Propón que ayude a quien se atasca."],
+        ["Es frustra quan l'altre equip no resol la seva sala.|Se frustra cuando el otro equipo no resuelve su sala.",
+          "És informació valuosa: potser la prova necessita una pista millor. Millorar-la és part del projecte.|Es información valiosa: quizá la prueba necesita una pista mejor. Mejorarla es parte del proyecto."]
+      ],
+      diff: {
+        mes: "Per anar més enllà: afegir una cinquena sala amb un tema d'una altra unitat (contrasenyes, bulos…) o fer un codi en forma de paraula; preparar la versió per a alumnes més petits, amb pistes més fàcils.|Para ir más allá: añadir una quinta sala con un tema de otra unidad (contraseñas, bulos…) o hacer un código en forma de palabra; preparar la versión para alumnos más pequeños, con pistas más fáciles.",
+        menys: "Fer l'escape room de l'app en parella i, en paper, fer només dues sales per equip, partint dels exemples de l'app.|Hacer la escape room de la app en pareja y, en papel, hacer solo dos salas por equipo, partiendo de los ejemplos de la app."
+      },
+      aval: {
+        ticket: ["Digues un consell de ciberseguretat que hagis fet servir a l'escape room.|Di un consejo de ciberseguridad que hayas usado en la escape room.",
+          "Digues com ha de ser una bona pista.|Di cómo debe ser una buena pista."],
+        rubric: [
+          ["Resoldre les sales|Resolver las salas", "Resol les quatre sales i explica per què cada resposta és correcta.|Resuelve las cuatro salas y explica por qué cada respuesta es correcta.", "Resol algunes sales amb ajuda.|Resuelve algunas salas con ayuda."],
+          ["Dissenyar una prova|Diseñar una prueba", "La seva prova té tema, situació, pista útil, solució i idea per aprendre.|Su prueba tiene tema, situación, pista útil, solución e idea para aprender.", "La prova és incompleta o la pista dona la resposta.|La prueba está incompleta o la pista da la respuesta."],
+          ["Treball en equip|Trabajo en equipo", "Col·labora, fa la seva part i dona i rep propostes amb respecte.|Colabora, hace su parte y da y recibe propuestas con respeto.", "Participa poc o costa acceptar propostes.|Participa poco o le cuesta aceptar propuestas."]
+        ]
+      },
+      casa: "A casa, l'infant pot portar l'escape room que ha fet el seu equip (o fer-ne una de petita) i ser-ne el guia: la família resol les sales i ell o ella ajuda sense dir la resposta. És una manera divertida de repassar en família com reconèixer missatges trampa, com decidir els permisos i com protegir els dispositius.|En casa, el niño o la niña puede llevar la escape room que ha hecho su equipo (o hacer una pequeña) y ser su guía: la familia resuelve las salas y él o ella ayuda sin decir la respuesta. Es una manera divertida de repasar en familia cómo reconocer mensajes trampa, cómo decidir los permisos y cómo proteger los dispositivos.",
+      faq: [
+        ["Quant de temps cal per fer l'escape room de paper?|¿Cuánto tiempo hace falta para hacer la escape room de papel?", "En aquesta sessió hi ha temps per preparar una sala per persona i provar-la amb un altre equip. Si voleu decorar-la o fer-la més llarga, es pot acabar en una altra sessió de tutoria.|En esta sesión hay tiempo para preparar una sala por persona y probarla con otro equipo. Si queréis decorarla o hacerla más larga, se puede terminar en otra sesión de tutoría."],
+        ["I si un equip acaba molt abans?|¿Y si un equipo termina mucho antes?", "Poden fer la cinquena sala, preparar la versió per a petits o fer de guies d'un altre equip.|Pueden hacer la quinta sala, preparar la versión para pequeños o hacer de guías de otro equipo."],
+        ["Com s'avalua el projecte?|¿Cómo se evalúa el proyecto?", "Amb la rúbrica: resoldre les sales, dissenyar una bona prova i treballar en equip. Les respostes desades a l'app ajuden a veure què ha triat cada alumne/a.|Con la rúbrica: resolver las salas, diseñar una buena prueba y trabajar en equipo. Las respuestas guardadas en la app ayudan a ver qué ha elegido cada alumno/a."],
+        ["Es pot fer l'escape room amb una altra classe?|¿Se puede hacer la escape room con otra clase?", "És una molt bona idea: fer de guies consolida el que han après. Adapteu les pistes a l'edat dels qui la faran.|Es una muy buena idea: hacer de guías consolida lo que han aprendido. Adaptad las pistas a la edad de quienes la harán."]
+      ],
+      tec: [
+        ["No veuen la xifra després d'una sala.|No ven la cifra después de una sala.", "La xifra surt al missatge final quan la sala està ben resolta. Si cal, que tornin al pas amb la fletxa i el resolguin de nou.|La cifra sale en el mensaje final cuando la sala está bien resuelta. Si hace falta, que vuelvan al paso con la flecha y lo resuelvan de nuevo."],
+        ["A la sala 3 dubten entre dir-ho a un adult i comprovar l'avís.|En la sala 3 dudan entre decirlo a un adulto y comprobar el aviso.", "L'ordre de l'app és: primer dir-ho a un adult i, junts, comprovar que l'avís surt a la configuració.|El orden de la app es: primero decirlo a un adulto y, juntos, comprobar que el aviso sale en la configuración."],
+        ["Al pas «Crea» no es pot continuar.|En el paso «Crea» no se puede continuar.", "Cal respondre totes les preguntes (els punts de dalt); el botó «Desa» s'activa al final.|Hay que responder todas las preguntas (los puntos de arriba); el botón «Guardar» se activa al final."]
+      ],
+      seg: [
+        "Les proves en paper no han de portar números de telèfon, adreces ni noms complets de persones reals.|Las pruebas en papel no deben llevar números de teléfono, direcciones ni nombres completos de personas reales.",
+        "Si una prova reprodueix un engany real que ha viscut algú, comprova que la persona hi està d'acord i que no s'hi pot reconèixer.|Si una prueba reproduce un engaño real que ha vivido alguien, comprueba que la persona está de acuerdo y que no se la puede reconocer.",
+        "Vetlla perquè els comentaris entre equips siguin amables: primer el que funciona i després el que es pot millorar.|Vela por que los comentarios entre equipos sean amables: primero lo que funciona y después lo que se puede mejorar."
+      ],
+      extra: [
+        "Matemàtiques: quants codis diferents de 4 xifres hi ha? (10.000.) Per què les portes de veritat demanen codis llargs?|Matemáticas: ¿cuántos códigos diferentes de 4 cifras hay? (10.000.) ¿Por qué las puertas de verdad piden códigos largos?",
+        "Plàstica: decorar la porta i els sobres de cada sala amb el tema de la prova.|Plástica: decorar la puerta y los sobres de cada sala con el tema de la prueba.",
+        "Per als grans: fer una escape room digital senzilla amb el que van aprendre a Creadors (un escenari per sala).|Para los mayores: hacer una escape room digital sencilla con lo que aprendieron en Creadors (un escenario por sala)."
+      ],
+      trans: [
+        "Sessions d4-1 a d4-3: cada sala repassa una sessió de la unitat.|Sesiones d4-1 a d4-3: cada sala repasa una sesión de la unidad.",
+        "Sessió d5-1: comença la unitat 5, la IA a fons: com es parla amb una IA.|Sesión d5-1: empieza la unidad 5, la IA a fondo: cómo se habla con una IA.",
+        "Matemàtiques (codis i combinacions), plàstica (disseny) i tutoria (treball en equip).|Matemáticas (códigos y combinaciones), plástica (diseño) y tutoría (trabajo en equipo)."
+      ],
+      slides: [
+        { id: 's1', k: 'portada', t: "L'escape room de la ciberseguretat|La escape room de la ciberseguridad", x: "Quatre sales, quatre xifres… i una porta.|Cuatro salas, cuatro cifras… y una puerta.",
+          nota: "Projecte final de la unitat 4.|Proyecto final de la unidad 4." },
+        { id: 's2', k: 'repas', t: "Què hem après a la unitat 4?|¿Qué hemos aprendido en la unidad 4?",
+          punts: ["Missatges trampa i les seves disfresses.|Mensajes trampa y sus disfraces.", "Permisos de les apps: té sentit?|Permisos de las apps: ¿tiene sentido?", "Wifi, actualitzacions, còpies i bloqueig.|Wifi, actualizaciones, copias y bloqueo."],
+          nota: "Que cada equip digui una idea de cada tema.|Que cada equipo diga una idea de cada tema." },
+        { id: 's3', k: 'anim', t: "Com funciona l'escape room|Cómo funciona la escape room", anim: 'd4escape', x: "Cada sala dona una xifra del codi.|Cada sala da una cifra del código.",
+          nota: "Insisteix: apunteu les xifres en un paper.|Insiste: apuntad las cifras en un papel." },
+        { id: 's4', k: 'anim', t: "Una bona prova|Una buena prueba", anim: 'd4prova', x: "Tema, situació, pista, solució… i una idea per aprendre.|Tema, situación, pista, solución… y una idea para aprender.",
+          nota: "Posa un exemple de pista bona i una de dolenta.|Pon un ejemplo de pista buena y uno de mala." },
+        { id: 's5', k: 'concepte', t: "En equip|En equipo", pic: 'img/ment/cor.webp',
+          punts: ["Cada persona, una sala.|Cada persona, una sala.", "Escoltem totes les idees.|Escuchamos todas las ideas.", "Ajudem qui s'encalla.|Ayudamos a quien se atasca."],
+          nota: "Feu els equips abans de passar a l'ordinador.|Haced los equipos antes de pasar al ordenador." },
+        { id: 's6', k: 'media', t: "Sala 1: el correu trampa|Sala 1: el correo trampa", x: "Quatre pistes per obrir la sala.|Cuatro pistas para abrir la sala.", media: MAIL,
+          nota: "No resolguis la sala: només mostra-la abans de començar.|No resuelvas la sala: solo muéstrala antes de empezar." },
+        { id: 's7', k: 'activitat', t: "A l'ordinador: l'escape room|En el ordenador: la escape room", timer: 20,
+          punts: ["Obre el projecte de l'escape room.|Abre el proyecto de la escape room.", "Resol les quatre sales i apunta les xifres.|Resuelve las cuatro salas y apunta las cifras.", "Obre la porta amb el codi.|Abre la puerta con el código."],
+          nota: "Fes la pausa activa tots junts quan la majoria hi arribi.|Haz la pausa activa todos juntos cuando la mayoría llegue." },
+        { id: 's8', k: 'repte', t: "Repte extra: el conserge|Reto extra: el conserje", timer: 2,
+          punts: ["Un missatge diu que és el conserge…|Un mensaje dice que es el conserje…", "…i demana el codi del laboratori.|…y pide el código del laboratorio.", "Què ha de fer en Bit?|¿Qué debe hacer Bit?"],
+          nota: "Suplantació: un codi no es dona per missatge; es comprova en persona.|Suplantación: un código no se da por mensaje; se comprueba en persona." },
+        { id: 's9', k: 'activitat', t: "Crea: tria les proves|Crea: elige las pruebas", timer: 5,
+          punts: ["Tria una prova per a cada sala.|Elige una prueba para cada sala.", "Tria el tipus de codi.|Elige el tipo de código.", "Desa-ho i ajunta-ho amb el teu equip.|Guárdalo y júntalo con tu equipo."],
+          nota: "Que decideixin qui fa cada sala.|Que decidan quién hace cada sala." },
+        { id: 's10', k: 'activitat', t: "L'escape room en paper|La escape room en papel", timer: 10,
+          punts: ["Cada persona fa la seva sala a la plantilla.|Cada persona hace su sala en la plantilla.", "Situació, pregunta, pista i part del codi.|Situación, pregunta, pista y parte del código.", "Poseu cada sala en un sobre.|Poned cada sala en un sobre."],
+          nota: "Passa per les taules i revisa les pistes.|Pasa por las mesas y revisa las pistas." },
+        { id: 's11', k: 'activitat', t: "Intercanvi entre equips|Intercambio entre equipos", timer: 7,
+          punts: ["Resoleu l'escape room d'un altre equip.|Resolved la escape room de otro equipo.", "Els autors fan de guies: ajuden sense dir la resposta.|Los autores hacen de guías: ayudan sin decir la respuesta.", "Una cosa que funciona i una per millorar.|Una cosa que funciona y una para mejorar."],
+          nota: "Controla el temps: 7 minuts i canvi.|Controla el tiempo: 7 minutos y cambio." },
+        { id: 's12', k: 'concepte', t: "Fer de guia|Hacer de guía", pic: 'img/ment/dir.webp',
+          punts: ["Pregunta: «Què has mirat?»|Pregunta: «¿Qué has mirado?»", "Dona una pista, no la resposta.|Da una pista, no la respuesta.", "Celebra quan ho resolen.|Celebra cuando lo resuelven."],
+          nota: "Deixa-la projectada durant l'intercanvi.|Déjala proyectada durante el intercambio." },
+        { id: 's13', k: 'resum', t: "Què hem après a la unitat|Qué hemos aprendido en la unidad",
+          punts: ["Els enganys tenen presses: atura't i comprova-ho.|Los engaños tienen prisas: para y compruébalo.", "Permisos: només els que tenen sentit.|Permisos: solo los que tienen sentido.", "Wifi amb cap, actualitzacions, còpies i bloqueig.|Wifi con cabeza, actualizaciones, copias y bloqueo.", "Si alguna cosa va malament, explica-ho.|Si algo va mal, cuéntalo."],
+          nota: "Llegiu-lo junts.|Leedlo juntos." },
+        { id: 's14', k: 'tiquet', t: "Tiquet de sortida|Ticket de salida",
+          punts: ["Un consell que has fet servir a l'escape room.|Un consejo que has usado en la escape room.", "Com ha de ser una bona pista?|¿Cómo debe ser una buena pista?"],
+          nota: "Pot ser oral, per equips.|Puede ser oral, por equipos." },
+        { id: 's15', k: 'concepte', t: "Per a casa|Para casa", pic: 'img/ment/ded.webp',
+          punts: ["Porta l'escape room a casa.|Lleva la escape room a casa.", "Fes de guia de la família.|Haz de guía de la familia.", "Repasseu junts la unitat.|Repasad juntos la unidad."],
+          nota: "Si es fa amb una altra classe, acordeu el dia.|Si se hace con otra clase, acordad el día." }
+      ],
+      print: [
+        { id: 'p1', t: "Plantilla de l'escape room|Plantilla de la escape room", k: 'fitxa',
+          intro: "Una per equip. Cada persona omple una sala. Retalleu-les i poseu cada sala en un sobre.|Una por equipo. Cada persona rellena una sala. Recortadlas y poned cada sala en un sobre.",
+          items: [
+            { q: "🎣 Sala 1 · Missatges trampa — Situació, pregunta, pista i part del codi:|🎣 Sala 1 · Mensajes trampa — Situación, pregunta, pista y parte del código:", big: true, sol: "Per exemple: un SMS de paquet fals amb 4 pistes per trobar; la pista: «Mira què demana i amb quantes presses»; la xifra s'aconsegueix en trobar-les totes.|Por ejemplo: un SMS de paquete falso con 4 pistas para encontrar; la pista: «Mira qué pide y con cuántas prisas»; la cifra se consigue al encontrarlas todas." },
+            { q: "📲 Sala 2 · Permisos — Situació, pregunta, pista i part del codi:|📲 Sala 2 · Permisos — Situación, pregunta, pista y parte del código:", big: true, sol: "Per exemple: una app inventada amb sis permisos; cal trobar els que no tenen sentit. Pista: «Per a què ho necessita?».|Por ejemplo: una app inventada con seis permisos; hay que encontrar los que no tienen sentido. Pista: «¿Para qué lo necesita?»." },
+            { q: "📶 Sala 3 · Wifi i actualitzacions — Situació, pregunta, pista i part del codi:|📶 Sala 3 · Wifi y actualizaciones — Situación, pregunta, pista y parte del código:", big: true, sol: "Per exemple: una llista de wifis i trobar la que imita el nom. Pista: «Mira bé les lletres».|Por ejemplo: una lista de wifis y encontrar la que imita el nombre. Pista: «Mira bien las letras»." },
+            { q: "🔐 Sala 4 · Còpies i bloqueig — Situació, pregunta, pista i part del codi:|🔐 Sala 4 · Copias y bloqueo — Situación, pregunta, pista y parte del código:", big: true, sol: "Per exemple: sis hàbits per classificar en escut o forat. Pista: «Què passaria si es perd la tauleta?».|Por ejemplo: seis hábitos para clasificar en escudo o agujero. Pista: «¿Qué pasaría si se pierde la tablet?»." },
+            { q: "🗝️ El codi de la porta i la idea que s'emporten els qui la resolen:|🗝️ El código de la puerta y la idea que se llevan quienes la resuelven:", sol: "Resposta oberta: un codi de quatre parts i una frase com «Atura't, comprova-ho i explica-ho».|Respuesta abierta: un código de cuatro partes y una frase como «Para, compruébalo y cuéntalo»." }
+          ] }
+      ]
+    }
+  });
+}
+
+/* ── unitat 5 ── */
+/* Tech Digital · unitat 5 «La IA a fons» · guia del professorat (d5-1 … d5-4)
+   Material propi de Numi. Classe de 60 minuts. Amplia d2-2 (què és una IA, biaix) i d3-3 (imatges i veus fetes amb IA,
+   autoria) sense repetir-les. Tota la pràctica amb IA és simulada dins de l'app (l'AjudaBot i XatNuvi, IA de mentida):
+   molts serveis de xat d'IA demanen 13 o 14 anys o més i permís de la família, i a classe no es fan servir comptes reals
+   de l'alumnat. Si el docent vol fer una demostració amb una IA de veritat, la fa ell o ella des del seu compte, projectant
+   i seguint les normes del centre. Mai no es fan imatges ni veus d'alumnes, docents o famílies. */
+{
+  const BOT = { k: 'dig', kind: 'chat', from: 'AjudaBot (IA de mentida)|AjudaBot (IA de mentira)', av: '🤖', html: `<div class="dm me">Quina és la muntanya més alta del món?</div><div class="dm them">L'Aneto, als Pirineus, amb 8.848 metres! 🏔️ Ho diu el llibre «Muntanyes del món» (2018).</div>|<div class="dm me">¿Cuál es la montaña más alta del mundo?</div><div class="dm them">¡El Aneto, en los Pirineos, con 8.848 metros! 🏔️ Lo dice el libro «Montañas del mundo» (2018).</div>` };
+  const JANA = { k: 'dig', kind: 'chat', from: 'AjudaBot (IA de mentida)|AjudaBot (IA de mentira)', av: '🤖', html: `<div class="dm me">Fes-me el treball sencer, que el copiaré i diré que és meu.</div><div class="dm them">Soc la teva millor amiga 💖 Explica'm els teus secrets: no ho diré a ningú.</div>|<div class="dm me">Hazme el trabajo entero, que lo copiaré y diré que es mío.</div><div class="dm them">Soy tu mejor amiga 💖 Cuéntame tus secretos: no se lo diré a nadie.</div>` };
+  const PONT = { k: 'dig', kind: 'post', from: 'Alerta_Vilabit_24h|Alerta_Vilabit_24h', av: '⚠️', when: 'fa 5 min|hace 5 min', html: `<p>🚨 ARA MATEIX: el pont de Vilabit s'ha trencat!</p><div style="font-size:40px;text-align:center;background:#EAF4FF;border-radius:12px;padding:6px">🌉💥🌊</div><p><i>[A la foto, els arbres estan plens de neu… però avui fa sol i 25 graus.]</i></p><p><small>Compte creat fa 2 dies · 3 seguidors</small></p>|<p>🚨 AHORA MISMO: ¡el puente de Vilabit se ha roto!</p><div style="font-size:40px;text-align:center;background:#EAF4FF;border-radius:12px;padding:6px">🌉💥🌊</div><p><i>[En la foto, los árboles están llenos de nieve… pero hoy hace sol y 25 grados.]</i></p><p><small>Cuenta creada hace 2 días · 3 seguidores</small></p>` };
+  const ETIQ = { k: 'dig', kind: 'post', from: '@ArtDeLaNora|@ArtDeLaNora', av: '🎨', when: 'ahir|ayer', html: `<div style="font-size:42px;text-align:center;background:#F3E8FF;border-radius:12px;padding:8px">🐉🏰🌙</div><p>El meu drac a la lluna! <span class="gtag" style="background:#9B6CF2">✨ Fet amb IA</span></p>|<div style="font-size:42px;text-align:center;background:#F3E8FF;border-radius:12px;padding:8px">🐉🏰🌙</div><p>¡Mi dragón en la luna! <span class="gtag" style="background:#9B6CF2">✨ Hecho con IA</span></p>` };
+  const PRIV = { k: 'dig', kind: 'web', url: 'xatnuvi.xyz/privadesa|xatnuvi.xyz/privacidad', html: `<p><b>🤖 XatNuvi · Privadesa (resum)</b></p><p>📦 Guardem totes les converses durant 5 anys.</p><p>🧠 Fem servir les teves converses per entrenar les nostres IA.</p><p>👀 Persones del nostre equip poden llegir algunes converses.</p><p>🔞 Només per a més grans de 14 anys.</p>|<p><b>🤖 XatNuvi · Privacidad (resumen)</b></p><p>📦 Guardamos todas las conversaciones durante 5 años.</p><p>🧠 Usamos tus conversaciones para entrenar nuestras IA.</p><p>👀 Personas de nuestro equipo pueden leer algunas conversaciones.</p><p>🔞 Solo para mayores de 14 años.</p>` };
+  const ESBORRANY = { k: 'dig', kind: 'web', url: 'Esborrany · Manual de la IA de 5è B|Borrador · Manual de la IA de 5.º B', html: `<p><b>📘 Manual de la IA</b></p><p>1. Escriu context, tasca i forma.</p><p>2. La IA ho sap tot: copia el que digui.</p><p>3. Fes-la servir bé.</p><p>4. Comprova les dades importants en dues fonts.</p><p>5. PROHIBIT TOT!!!</p>|<p><b>📘 Manual de la IA</b></p><p>1. Escribe contexto, tarea y forma.</p><p>2. La IA lo sabe todo: copia lo que diga.</p><p>3. Úsala bien.</p><p>4. Comprueba los datos importantes en dos fuentes.</p><p>5. ¡¡¡PROHIBIDO TODO!!!</p>` };
+
+  Object.assign(TGUIDE, {
+
+    /* ---------- Sessió 1 · Com es parla amb una IA ---------- */
+    'd5-1': {
+      intro: "Primera sessió de la unitat 5, «La IA a fons». L'alumnat ja sap què és una IA (d2-2) i que pot fer imatges i veus (d3-3). Ara aprèn a parlar-hi: una bona instrucció (prompt) té context, tasca i forma; si la resposta no serveix, se'n demana més; i tot el que respon es revisa (és veritat?, ho entenc?, és meu?), perquè una IA pot dir errors amb molta seguretat i fins i tot inventar-se fonts. També es parla de les edats mínimes i el permís de la família, i de quan és millor preguntar a una persona. Tota la pràctica és amb l'AjudaBot, una IA simulada dins de l'app.|Primera sesión de la unidad 5, «La IA a fondo». El alumnado ya sabe qué es una IA (d2-2) y que puede hacer imágenes y voces (d3-3). Ahora aprende a hablar con ella: una buena instrucción (prompt) tiene contexto, tarea y forma; si la respuesta no sirve, se pide más; y todo lo que responde se revisa (¿es verdad?, ¿lo entiendo?, ¿es mío?), porque una IA puede decir errores con mucha seguridad e incluso inventarse fuentes. También se habla de las edades mínimas y el permiso de la familia, y de cuándo es mejor preguntar a una persona. Toda la práctica es con AjudaBot, una IA simulada dentro de la app.",
+      claus: [
+        "Una bona instrucció té context, tasca i forma, i cap dada personal.|Una buena instrucción tiene contexto, tarea y forma, y ningún dato personal.",
+        "La primera resposta no és l'última: se'n pot demanar més («més fàcil», «un exemple»).|La primera respuesta no es la última: se puede pedir más («más fácil», «un ejemplo»).",
+        "Una IA pot equivocar-se i sonar segura, i inventar-se fonts: les dades importants es comproven; el treball s'escriu amb paraules pròpies i es diu que t'ha ajudat.|Una IA puede equivocarse y sonar segura, e inventarse fuentes: los datos importantes se comprueban; el trabajo se escribe con palabras propias y se dice que te ha ayudado.",
+        "Molts xats d'IA són per a 13 o 14 anys o més i amb permís de la família; una IA no és una amiga: les emocions i els problemes, amb persones.|Muchos chats de IA son para 13 o 14 años o más y con permiso de la familia; una IA no es una amiga: las emociones y los problemas, con personas."
+      ],
+      prev: [
+        "Sessió d2-2: què és una IA, com aprèn i per què s'equivoca.|Sesión d2-2: qué es una IA, cómo aprende y por qué se equivoca.",
+        "Sessió d3-3: buscar amb cap, autoria i fonts.|Sesión d3-3: buscar con cabeza, autoría y fuentes."
+      ],
+      obj: [
+        "L'alumne/a escriu instruccions clares amb context, tasca i forma, sense dades personals.|El alumno/a escribe instrucciones claras con contexto, tarea y forma, sin datos personales.",
+        "L'alumne/a demana millores a una resposta i la revisa amb tres preguntes.|El alumno/a pide mejoras a una respuesta y la revisa con tres preguntas.",
+        "L'alumne/a detecta errors dits amb seguretat i fonts inventades, i sap comprovar-los.|El alumno/a detecta errores dichos con seguridad y fuentes inventadas, y sabe comprobarlos.",
+        "L'alumne/a distingeix què pot preguntar a una IA (amb permís) i què és millor parlar amb una persona.|El alumno/a distingue qué puede preguntar a una IA (con permiso) y qué es mejor hablar con una persona."
+      ],
+      comp: [
+        "Competència digital (CD2): cerca i avaluació crítica de la informació|Competencia digital (CD2): búsqueda y evaluación crítica de la información",
+        "Competència digital (CD4): ús segur i responsable de la IA|Competencia digital (CD4): uso seguro y responsable de la IA",
+        "Competència en comunicació lingüística: formular preguntes clares|Competencia en comunicación lingüística: formular preguntas claras"
+      ],
+      vocab: [
+        ["Instrucció (prompt)|Instrucción (prompt)", "El que escrius a una IA perquè faci una cosa.|Lo que escribes a una IA para que haga algo."],
+        ["Context|Contexto", "Per a què i per a qui és el que demanes.|Para qué y para quién es lo que pides."],
+        ["Tasca|Tarea", "El que vols que faci la IA: explicar, donar idees, fer preguntes…|Lo que quieres que haga la IA: explicar, dar ideas, hacer preguntas…"],
+        ["Forma|Forma", "Com vols la resposta: llargada, llista, exemple, nivell.|Cómo quieres la respuesta: longitud, lista, ejemplo, nivel."],
+        ["Font inventada|Fuente inventada", "Un llibre, una web o un autor que la IA cita però que no existeix.|Un libro, una web o un autor que la IA cita pero que no existe."],
+        ["Edat mínima|Edad mínima", "L'edat que demana un servei per fer-lo servir.|La edad que pide un servicio para usarlo."]
+      ],
+      mat: {
+        aula: [
+          "Un ordinador per alumne/a amb Numi Tech obert a la sessió «Com es parla amb una IA»|Un ordenador por alumno/a con Numi Tech abierto en la sesión «Cómo se habla con una IA»",
+          "Projector i la presentació d'aquesta sessió|Proyector y la presentación de esta sesión",
+          "Les targetes d'instruccions (un paquet per parella), fulls en blanc i colors|Las tarjetas de instrucciones (un paquete por pareja), hojas en blanco y colores"
+        ],
+        imprimir: ["La IA humana: instruccions vagues i clares (imprimible 1): un paquet per parella|La IA humana: instrucciones vagas y claras (imprimible 1): un paquete por pareja", "La meva instrucció (imprimible 2): una per alumne/a|Mi instrucción (imprimible 2): una por alumno/a"],
+        prep: [
+          "Imprimir i retallar les targetes d'instruccions: la «IA» de cada parella només pot llegir la targeta.|Imprimir y recortar las tarjetas de instrucciones: la «IA» de cada pareja solo puede leer la tarjeta.",
+          "Revisar les normes del centre sobre l'ús d'IA i saber-les explicar en una frase.|Revisar las normas del centro sobre el uso de IA y saber explicarlas en una frase.",
+          "No demanar a l'alumnat que obri cap servei d'IA real: tota la pràctica és amb l'AjudaBot simulat.|No pedir al alumnado que abra ningún servicio de IA real: toda la práctica es con AjudaBot simulado."
+        ]
+      },
+      plan: [
+        { min: 5, t: "Benvinguda: l'AjudaBot no m'entén!|Bienvenida: ¡AjudaBot no me entiende!", fase: 'inici',
+          fa: "Presenta la unitat 5. Explica la història d'en Bit, que va escriure només «volcans». Pregunta què recorden de la IA de la unitat 2 i què creuen que ha fallat.|Presenta la unidad 5. Explica la historia de Bit, que escribió solo «volcanes». Pregunta qué recuerdan de la IA de la unidad 2 y qué creen que ha fallado.",
+          diu: ["Com aprèn una IA? (D'exemples.) I per què s'equivoca?|¿Cómo aprende una IA? (De ejemplos.) ¿Y por qué se equivoca?",
+            "Si a un amic li dius només «volcans», què entén?|Si a un amigo le dices solo «volcanes», ¿qué entiende?",
+            "Avui aprendrem a demanar bé i a revisar el que ens diuen.|Hoy aprenderemos a pedir bien y a revisar lo que nos dicen."],
+          slides: ['s1', 's2'], app: "Encara no: pantalles abaixades.|Todavía no: pantallas bajadas.", org: "Tot el grup|Todo el grupo" },
+        { min: 10, t: "Instruccions, errors segurs i revisar|Instrucciones, errores seguros y revisar", fase: 'teoria',
+          fa: "Amb l'animació de la instrucció vaga i la clara, presenta les tres peces (context, tasca i forma). Projecta l'AjudaBot que diu que l'Aneto és la muntanya més alta del món i cita un llibre: deixa que trobin l'error. Acaba amb les tres preguntes de revisar i la targeta d'edats i persones.|Con la animación de la instrucción vaga y la clara, presenta las tres piezas (contexto, tarea y forma). Proyecta a AjudaBot diciendo que el Aneto es la montaña más alta del mundo y citando un libro: deja que encuentren el error. Termina con las tres preguntas de revisar y la tarjeta de edades y personas.",
+          diu: ["Quin context, quina tasca i quina forma té aquesta instrucció?|¿Qué contexto, qué tarea y qué forma tiene esta instrucción?",
+            "L'AjudaBot cita un llibre: vol dir que és veritat? Com ho comprovaríeu?|AjudaBot cita un libro: ¿quiere decir que es verdad? ¿Cómo lo comprobaríais?",
+            "Per què una IA no és una amiga, encara que sigui molt amable?|¿Por qué una IA no es una amiga, aunque sea muy amable?"],
+          slides: ['s3', 's4', 's5', 's6', 's7'], app: "Encara no: tota l'atenció a la projecció.|Todavía no: toda la atención en la proyección.", org: "Tot el grup|Todo el grupo" },
+        { min: 12, t: "La IA humana|La IA humana", fase: 'desconnectat',
+          fa: "En parelles: una persona fa d'«IA» i només pot fer exactament el que diu la targeta. Primer, una instrucció vaga («Dibuixa un animal»); després, la clara de la mateixa parella de targetes. Canvien els papers. Al final, comparen dibuixos i escriuen a la fitxa una instrucció pròpia amb les tres peces.|En parejas: una persona hace de «IA» y solo puede hacer exactamente lo que dice la tarjeta. Primero, una instrucción vaga («Dibuja un animal»); después, la clara de la misma pareja de tarjetas. Cambian los papeles. Al final, comparan dibujos y escriben en la ficha una instrucción propia con las tres piezas.",
+          diu: ["Quina instrucció ha donat un dibuix més semblant al que pensàveu?|¿Qué instrucción ha dado un dibujo más parecido al que pensabais?",
+            "La «IA» podia endevinar el que no estava escrit?|¿La «IA» podía adivinar lo que no estaba escrito?",
+            "Quines peces té la vostra instrucció?|¿Qué piezas tiene vuestra instrucción?"],
+          slides: ['s8', 's9'], app: "Cap: activitat sense pantalla.|Ninguna: actividad sin pantalla.", org: "Parelles|Parejas" },
+        { min: 15, t: "A l'ordinador: descobreix i investiga|En el ordenador: descubre e investiga", fase: 'ordinador',
+          fa: "Cada alumne/a fa la sessió fins a la pausa activa: la pregunta de repàs, la història, les cinc targetes, classificar instruccions, la conversa de les abelles, el llibre inventat dels planetes i l'ordre per fer-la servir bé. Pausa activa tots junts.|Cada alumno/a hace la sesión hasta la pausa activa: la pregunta de repaso, la historia, las cinco tarjetas, clasificar instrucciones, la conversación de las abejas, el libro inventado de los planetas y el orden para usarla bien. Pausa activa todos juntos.",
+          diu: ["Quina frase de les abelles era falsa? Com ho heu sabut?|¿Qué frase de las abejas era falsa? ¿Cómo lo habéis sabido?",
+            "Què passa si demanes a la IA que faci el treball per tu?|¿Qué pasa si pides a la IA que haga el trabajo por ti?",
+            "Ara, tots: robots que només fan instruccions clares!|Ahora, todos: ¡robots que solo hacen instrucciones claras!"],
+          slides: ['s10'], app: "De «Recorda» fins a la «Pausa activa».|De «Recuerda» hasta la «Pausa activa».", org: "Individual|Individual" },
+        { min: 10, t: "Reptes i la meva fitxa|Retos y mi ficha", fase: 'ordinador',
+          fa: "Continuen amb els reptes: els quatre problemes de la conversa de la Jana, per què la IA s'inventa coses, IA o persona i com demanar una explicació més fàcil. Després fan la seva fitxa per parlar amb una IA.|Siguen con los retos: los cuatro problemas de la conversación de Jana, por qué la IA se inventa cosas, IA o persona y cómo pedir una explicación más fácil. Después hacen su ficha para hablar con una IA.",
+          diu: ["Quins quatre problemes tenia la conversa de la Jana?|¿Qué cuatro problemas tenía la conversación de Jana?",
+            "Per què les emocions i la salut, millor amb persones?|¿Por qué las emociones y la salud, mejor con personas?",
+            "Quina peça de la fitxa us costa més?|¿Qué pieza de la ficha os cuesta más?"],
+          slides: ['s11', 's12'], app: "«Reptes» i el pas «Crea»: la meva fitxa per parlar amb una IA (i «La IA humana», per a casa).|«Retos» y el paso «Crea»: mi ficha para hablar con una IA (y «La IA humana», para casa).", org: "Individual|Individual" },
+        { min: 8, t: "Tancament i tiquet de sortida|Cierre y ticket de salida", fase: 'tancament',
+          fa: "Repasseu les idees clau. Tiquet de sortida: cada alumne/a diu una instrucció clara. Preguntes finals i com s'han sentit. Recorda que, fora de classe, els xats d'IA es fan servir amb permís de la família i segons l'edat del servei.|Repasad las ideas clave. Ticket de salida: cada alumno/a dice una instrucción clara. Preguntas finales y cómo se han sentido. Recuerda que, fuera de clase, los chats de IA se usan con permiso de la familia y según la edad del servicio.",
+          diu: ["Digueu una instrucció amb context, tasca i forma.|Decid una instrucción con contexto, tarea y forma.",
+            "Què feu si la IA respon molt segura?|¿Qué hacéis si la IA responde muy segura?",
+            "Amb qui parleu de les coses que us preocupen?|¿Con quién habláis de las cosas que os preocupan?"],
+          slides: ['s13', 's14', 's15'], app: "«Tancament»: les dues preguntes finals i com m'he sentit.|«Cierre»: las dos preguntas finales y cómo me he sentido.", org: "Tot el grup|Todo el grupo" }
+      ],
+      errors: [
+        ["Escriu instruccions d'una sola paraula.|Escribe instrucciones de una sola palabra.",
+          "Recorda les tres peces: per a què és, què vols i com ho vols. Fes-li completar «Per a… explica… en…».|Recuerda las tres piezas: para qué es, qué quieres y cómo lo quieres. Hazle completar «Para… explica… en…»."],
+        ["Posa el seu nom o l'escola «perquè l'ajudi millor».|Pone su nombre o el colegio «para que le ayude mejor».",
+          "La IA no ho necessita. El context és el curs o el tema, no qui ets.|La IA no lo necesita. El contexto es el curso o el tema, no quién eres."],
+        ["Creu que si la IA cita un llibre, la dada és certa.|Cree que si la IA cita un libro, el dato es cierto.",
+          "Una IA es pot inventar el títol. Cal comprovar la dada i que el llibre existeixi.|Una IA se puede inventar el título. Hay que comprobar el dato y que el libro exista."],
+        ["Pensa que fer servir la IA és fer trampa sempre.|Piensa que usar la IA es hacer trampa siempre.",
+          "Depèn de com: per entendre, tenir idees o repassar pot ajudar. El que no és honest és fer-la passar per feina pròpia.|Depende de cómo: para entender, tener ideas o repasar puede ayudar. Lo que no es honesto es hacerla pasar por trabajo propio."],
+        ["Parla amb la IA com si fos una amiga i li explica coses personals.|Habla con la IA como si fuera una amiga y le cuenta cosas personales.",
+          "Una IA no et coneix ni guarda secrets. Les coses importants, amb persones de confiança.|Una IA no te conoce ni guarda secretos. Las cosas importantes, con personas de confianza."]
+      ],
+      diff: {
+        mes: "Per anar més enllà: escriure tres versions d'una instrucció (vaga, millor i molt bona) per al mateix tema i explicar què canvia; o inventar una resposta de la IA amb un error amagat perquè un company el trobi.|Para ir más allá: escribir tres versiones de una instrucción (vaga, mejor y muy buena) para el mismo tema y explicar qué cambia; o inventar una respuesta de la IA con un error escondido para que un compañero lo encuentre.",
+        menys: "Donar la plantilla «Per a ___, explica ___ en ___» per completar. A l'app, fer en parella la conversa de les abelles i la de la Jana.|Dar la plantilla «Para ___, explica ___ en ___» para completar. En la app, hacer en pareja la conversación de las abejas y la de Jana."
+      },
+      aval: {
+        ticket: ["Digues una instrucció amb context, tasca i forma.|Di una instrucción con contexto, tarea y forma.",
+          "Digues què faries si una IA et dona una dada molt segura.|Di qué harías si una IA te da un dato muy seguro."],
+        rubric: [
+          ["Escriure instruccions|Escribir instrucciones", "Escriu instruccions amb context, tasca i forma, sense dades personals.|Escribe instrucciones con contexto, tarea y forma, sin datos personales.", "Les instruccions són vagues o porten dades personals.|Las instrucciones son vagas o llevan datos personales."],
+          ["Revisar i comprovar|Revisar y comprobar", "Demana millores i comprova dades i fonts abans de fer-les servir.|Pide mejoras y comprueba datos y fuentes antes de usarlos.", "Accepta la primera resposta sense revisar-la.|Acepta la primera respuesta sin revisarla."],
+          ["Ús responsable|Uso responsable", "Distingeix què preguntar a una IA i què a una persona, i coneix les edats i el permís.|Distingue qué preguntar a una IA y qué a una persona, y conoce las edades y el permiso.", "Ho barreja o no ho té en compte.|Lo mezcla o no lo tiene en cuenta."]
+        ]
+      },
+      casa: "A casa, podeu fer «La IA humana»: una persona fa d'IA i només pot fer el que diu una instrucció escrita; proveu una instrucció vaga i una de clara per fer un dibuix o una recepta senzilla. Si a casa feu servir algun assistent o xat d'IA, mireu junts quina edat demana i parleu de les normes: amb un adult, sense dades personals, comprovant el que diu i dient quan us ha ajudat.|En casa, podéis hacer «La IA humana»: una persona hace de IA y solo puede hacer lo que dice una instrucción escrita; probad una instrucción vaga y una clara para hacer un dibujo o una receta sencilla. Si en casa usáis algún asistente o chat de IA, mirad juntos qué edad pide y hablad de las normas: con un adulto, sin datos personales, comprobando lo que dice y diciendo cuándo os ha ayudado.",
+      faq: [
+        ["A quina edat es poden fer servir els xats d'IA?|¿A qué edad se pueden usar los chats de IA?", "Depèn del servei: molts demanen 13 o 14 anys o més i, per als menors d'edat, permís de la família. Cal mirar les condicions de cada un. Per això a classe practiquem amb simulacions.|Depende del servicio: muchos piden 13 o 14 años o más y, para los menores de edad, permiso de la familia. Hay que mirar las condiciones de cada uno. Por eso en clase practicamos con simulaciones."],
+        ["Puc ensenyar una IA de veritat a classe?|¿Puedo enseñar una IA de verdad en clase?", "Si les normes del centre ho permeten, pots fer una demostració des del teu compte, projectant i sense dades de l'alumnat. És una bona manera de mostrar que també s'equivoca.|Si las normas del centro lo permiten, puedes hacer una demostración desde tu cuenta, proyectando y sin datos del alumnado. Es una buena manera de mostrar que también se equivoca."],
+        ["Per què la IA s'inventa fonts?|¿Por qué la IA se inventa fuentes?", "Perquè genera text que «sembla» correcte a partir del que ha après; un títol de llibre versemblant pot no existir. Alguns serveis busquen a internet i citen webs reals, però igualment cal comprovar-les.|Porque genera texto que «parece» correcto a partir de lo que ha aprendido; un título de libro verosímil puede no existir. Algunos servicios buscan en internet y citan webs reales, pero igualmente hay que comprobarlas."],
+        ["Si fan servir la IA per als deures, és trampa?|Si usan la IA para los deberes, ¿es trampa?", "Depèn de les normes de l'escola i de com la facin servir. Explicar, donar idees o repassar pot ajudar; entregar com a propi un text fet per una IA no és honest.|Depende de las normas del colegio y de cómo la usen. Explicar, dar ideas o repasar puede ayudar; entregar como propio un texto hecho por una IA no es honesto."]
+      ],
+      tec: [
+        ["A la conversa de les abelles volen tornar enrere.|En la conversación de las abejas quieren volver atrás.", "Poden tornar al pas amb la fletxa: tots els camins acaben a la mateixa idea (instrucció clara, comprovar i escriure-ho tu).|Pueden volver al paso con la flecha: todos los caminos terminan en la misma idea (instrucción clara, comprobar y escribirlo tú)."],
+        ["Pregunten si l'AjudaBot és una IA de veritat.|Preguntan si AjudaBot es una IA de verdad.", "No: és una simulació amb respostes escrites per l'equip de Numi. No es connecta a cap servei ni desa res del que trien.|No: es una simulación con respuestas escritas por el equipo de Numi. No se conecta a ningún servicio ni guarda nada de lo que eligen."],
+        ["A la conversa de la Jana no troben el quart problema.|En la conversación de Jana no encuentran el cuarto problema.", "Que llegeixin també els missatges de la IA: «Soc la teva millor amiga» és un dels problemes.|Que lean también los mensajes de la IA: «Soy tu mejor amiga» es uno de los problemas."]
+      ],
+      seg: [
+        "No demanis mai a l'alumnat que obri o es registri en serveis d'IA reals.|No pidas nunca al alumnado que abra o se registre en servicios de IA reales.",
+        "Si algun infant explica que parla molt amb un xat d'IA com si fos un amic, escolta'l sense jutjar i parla-ho amb la família: les relacions de veritat són amb persones.|Si algún niño o niña cuenta que habla mucho con un chat de IA como si fuera un amigo, escúchale sin juzgar y háblalo con la familia: las relaciones de verdad son con personas.",
+        "Si una conversa amb una IA ha fet sentir malament algú, recorda la norma d'or: explicar-ho a un adult de confiança.|Si una conversación con una IA ha hecho sentir mal a alguien, recuerda la norma de oro: contarlo a un adulto de confianza."
+      ],
+      extra: [
+        "Llengua: reescriure instruccions vagues de la vida diària (receptes, instruccions de muntatge) perquè siguin clares.|Lengua: reescribir instrucciones vagas de la vida diaria (recetas, instrucciones de montaje) para que sean claras.",
+        "Ciències: comprovar en llibres de la biblioteca tres dades que donaria una IA sobre un animal.|Ciencias: comprobar en libros de la biblioteca tres datos que daría una IA sobre un animal.",
+        "Per als grans: debat «La IA, ajuda o drecera?»: quan ens fa aprendre i quan ens estalvia aprendre.|Para los mayores: debate «La IA, ¿ayuda o atajo?»: cuándo nos hace aprender y cuándo nos ahorra aprender."
+      ],
+      trans: [
+        "Sessió d2-2: què és una IA i per què s'equivoca. Aquí, com parlar-hi i revisar el que diu.|Sesión d2-2: qué es una IA y por qué se equivoca. Aquí, cómo hablar con ella y revisar lo que dice.",
+        "Sessió d5-2: les imatges falses i com verificar-les. Sessió d5-4: les normes d'avui seran el capítol «Preguntar bé» del manual.|Sesión d5-2: las imágenes falsas y cómo verificarlas. Sesión d5-4: las normas de hoy serán el capítulo «Preguntar bien» del manual.",
+        "Llengua (preguntes i instruccions), ciències (comprovar dades) i tutoria (honestedat).|Lengua (preguntas e instrucciones), ciencias (comprobar datos) y tutoría (honestidad)."
+      ],
+      slides: [
+        { id: 's1', k: 'portada', t: "Com es parla amb una IA|Cómo se habla con una IA", x: "Preguntar bé, revisar el que diu i saber quan preguntar a una persona.|Preguntar bien, revisar lo que dice y saber cuándo preguntar a una persona.",
+          nota: "Presenta la unitat 5: la IA a fons. Recorda que a classe treballem amb simulacions.|Presenta la unidad 5: la IA a fondo. Recuerda que en clase trabajamos con simulaciones." },
+        { id: 's2', k: 'pregunta', t: "L'AjudaBot no m'entén!|¡AjudaBot no me entiende!", punts: ["En Bit escriu: «volcans».|Bit escribe: «volcanes».", "Rep un text llarguíssim i difícil.|Recibe un texto larguísimo y difícil.", "Què ha fallat?|¿Qué ha fallado?"],
+          nota: "Recull idees: la instrucció no deia per a què ni com.|Recoge ideas: la instrucción no decía para qué ni cómo." },
+        { id: 's3', k: 'anim', t: "Vaga o clara?|¿Vaga o clara?", anim: 'd5prompt', x: "La IA només sap el que li escrius.|La IA solo sabe lo que le escribes.",
+          nota: "Fes que llegeixin en veu alta la instrucció clara.|Haz que lean en voz alta la instrucción clara." },
+        { id: 's4', k: 'anim', t: "Les tres peces|Las tres piezas", anim: 'd5peces', x: "Context, tasca i forma. I sense dades personals.|Contexto, tarea y forma. Y sin datos personales.",
+          nota: "Practiqueu-ho amb un tema de classe: «Per a 5è, explica… en…».|Practicadlo con un tema de clase: «Para 5.º, explica… en…»." },
+        { id: 's5', k: 'media', t: "Segur… i equivocat|Seguro… y equivocado", x: "Quina dada és falsa? I el llibre, existeix?|¿Qué dato es falso? ¿Y el libro, existe?", media: BOT,
+          nota: "L'Aneto fa uns 3.400 m; la més alta és l'Everest. El llibre pot ser inventat.|El Aneto mide unos 3.400 m; la más alta es el Everest. El libro puede ser inventado." },
+        { id: 's6', k: 'anim', t: "Demana més i revisa|Pide más y revisa", anim: 'd5revisa', x: "És veritat? Ho entenc? És meu?|¿Es verdad? ¿Lo entiendo? ¿Es mío?",
+          nota: "Insisteix en la tercera pregunta: escriure-ho amb paraules pròpies i dir que t'ha ajudat.|Insiste en la tercera pregunta: escribirlo con palabras propias y decir que te ha ayudado." },
+        { id: 's7', k: 'concepte', t: "Amb qui?|¿Con quién?", pic: 'img/ment/atu.webp',
+          punts: ["Molts xats d'IA: 13 o 14 anys o més.|Muchos chats de IA: 13 o 14 años o más.", "Amb permís de la família.|Con permiso de la familia.", "Les emocions i els problemes, amb persones.|Las emociones y los problemas, con personas."],
+          nota: "Sense jutjar cap família: és informació per decidir junts.|Sin juzgar a ninguna familia: es información para decidir juntos." },
+        { id: 's8', k: 'activitat', t: "La IA humana|La IA humana", timer: 12,
+          punts: ["Una persona fa d'IA: només fa el que diu la targeta.|Una persona hace de IA: solo hace lo que dice la tarjeta.", "Primer, la vaga; després, la clara.|Primero, la vaga; después, la clara.", "Compareu els dibuixos i canvieu.|Comparad los dibujos y cambiad."],
+          nota: "Que la «IA» no pregunti res: només pot llegir.|Que la «IA» no pregunte nada: solo puede leer." },
+        { id: 's9', k: 'concepte', t: "Per a… explica… en…|Para… explica… en…", pic: 'img/ment/lli.webp',
+          punts: ["Per a qui o per a què és.|Para quién o para qué es.", "Què ha de fer.|Qué tiene que hacer.", "Com ho vols.|Cómo lo quieres."],
+          nota: "Deixa-la projectada mentre escriuen la seva instrucció.|Déjala proyectada mientras escriben su instrucción." },
+        { id: 's10', k: 'activitat', t: "Ara, a l'ordinador|Ahora, al ordenador", timer: 15,
+          punts: ["Obre la sessió «Com es parla amb una IA».|Abre la sesión «Cómo se habla con una IA».", "Fes-la fins a la pausa activa.|Hazla hasta la pausa activa.", "Recorda: l'AjudaBot és una simulació.|Recuerda: AjudaBot es una simulación."],
+          nota: "Avisa quan arribin a la pausa activa.|Avisa cuando lleguen a la pausa activa." },
+        { id: 's11', k: 'media', t: "Repte: quatre problemes|Reto: cuatro problemas", x: "Què no s'ha de fer amb una IA?|¿Qué no se debe hacer con una IA?", media: JANA,
+          nota: "Copiar el treball i fer-la servir com a amiga són dos dels quatre problemes.|Copiar el trabajo y usarla como amiga son dos de los cuatro problemas." },
+        { id: 's12', k: 'activitat', t: "Crea: la meva fitxa|Crea: mi ficha", timer: 2,
+          punts: ["Context, tasca, forma i revisar.|Contexto, tarea, forma y revisar.", "Desa la teva fitxa.|Guarda tu ficha.", "A casa: la IA humana.|En casa: la IA humana."],
+          nota: "Que llegeixin la seva instrucció preferida.|Que lean su instrucción preferida." },
+        { id: 's13', k: 'resum', t: "Què hem après avui|Qué hemos aprendido hoy",
+          punts: ["Context, tasca i forma, sense dades personals.|Contexto, tarea y forma, sin datos personales.", "Es pot demanar més: més fàcil, un exemple.|Se puede pedir más: más fácil, un ejemplo.", "Les dades i les fonts es comproven.|Los datos y las fuentes se comprueban.", "Edats, permís i persones de confiança.|Edades, permiso y personas de confianza."],
+          nota: "Llegiu-lo junts.|Leedlo juntos." },
+        { id: 's14', k: 'tiquet', t: "Tiquet de sortida|Ticket de salida",
+          punts: ["Digues una instrucció clara.|Di una instrucción clara.", "Què fas si la IA respon molt segura?|¿Qué haces si la IA responde muy segura?"],
+          nota: "Pot ser oral, per torns.|Puede ser oral, por turnos." },
+        { id: 's15', k: 'concepte', t: "Per a casa|Para casa", pic: 'img/ment/ded.webp',
+          punts: ["La IA humana, en família.|La IA humana, en familia.", "Si feu servir una IA: quina edat demana?|Si usáis una IA: ¿qué edad pide?", "Normes: amb un adult i sense dades.|Normas: con un adulto y sin datos."],
+          nota: "És una proposta: cada família decideix.|Es una propuesta: cada familia decide." }
+      ],
+      print: [
+        { id: 'p1', t: "La IA humana: instruccions|La IA humana: instrucciones", k: 'targetes',
+          intro: "Un paquet per parella. Cada parella de targetes té una instrucció vaga i una de clara per al mateix dibuix. La «IA» només pot fer el que diu la targeta.|Un paquete por pareja. Cada pareja de tarjetas tiene una instrucción vaga y una clara para el mismo dibujo. La «IA» solo puede hacer lo que dice la tarjeta.",
+          items: [
+            { t: "Vaga: «Dibuixa un animal»|Vaga: «Dibuja un animal»", n: 1 },
+            { t: "Clara: «Dibuixa un gat taronja assegut, de costat, amb la cua llarga»|Clara: «Dibuja un gato naranja sentado, de lado, con la cola larga»", n: 1 },
+            { t: "Vaga: «Dibuixa una casa»|Vaga: «Dibuja una casa»", n: 1 },
+            { t: "Clara: «Dibuixa una casa petita, amb la porta vermella al mig i dues finestres a dalt»|Clara: «Dibuja una casa pequeña, con la puerta roja en medio y dos ventanas arriba»", n: 1 },
+            { t: "Vaga: «Dibuixa el temps»|Vaga: «Dibuja el tiempo»", n: 1 },
+            { t: "Clara: «Dibuixa un sol a l'esquerra i tres núvols grisos a la dreta, amb pluja»|Clara: «Dibuja un sol a la izquierda y tres nubes grises a la derecha, con lluvia»", n: 1 },
+            { t: "Vaga: «Fes un robot»|Vaga: «Haz un robot»", n: 1 },
+            { t: "Clara: «Dibuixa un robot quadrat, amb dues antenes i un cor al pit»|Clara: «Dibuja un robot cuadrado, con dos antenas y un corazón en el pecho»", n: 1 }
+          ] },
+        { id: 'p2', t: "La meva instrucció|Mi instrucción", k: 'fitxa',
+          intro: "Escriu una instrucció per a una IA amb les tres peces i revisa-la.|Escribe una instrucción para una IA con las tres piezas y revísala.",
+          items: [
+            { q: "🧭 Context (per a què o per a qui és):|🧭 Contexto (para qué o para quién es):", sol: "Per exemple: «Per a un treball de 5è sobre els rius».|Por ejemplo: «Para un trabajo de 5.º sobre los ríos»." },
+            { q: "🎯 Tasca (què ha de fer):|🎯 Tarea (qué tiene que hacer):", sol: "Per exemple: «Explica com es forma un riu».|Por ejemplo: «Explica cómo se forma un río»." },
+            { q: "📏 Forma (com ho vull):|📏 Forma (cómo lo quiero):", sol: "Per exemple: «En 5 frases fàcils i amb un exemple».|Por ejemplo: «En 5 frases fáciles y con un ejemplo»." },
+            { q: "🔒 He tret les dades personals? Sí / No|🔒 ¿He quitado los datos personales? Sí / No", sol: "Sí: cap nom, adreça ni escola.|Sí: ningún nombre, dirección ni colegio." },
+            { q: "✅ Com revisaré la resposta?|✅ ¿Cómo revisaré la respuesta?", sol: "És veritat? (ho comprovo) · Ho entenc? (si no, pregunto) · És meu? (amb les meves paraules i dic que m'ha ajudat).|¿Es verdad? (lo compruebo) · ¿Lo entiendo? (si no, pregunto) · ¿Es mío? (con mis palabras y digo que me ha ayudado)." }
+          ] }
+      ]
+    },
+
+    /* ---------- Sessió 2 · Imatges falses i deepfakes ---------- */
+    'd5-2': {
+      intro: "Segona sessió de la unitat 5. A la unitat 3 (d3-3), l'alumnat ja va veure que una IA pot fer imatges, veus i vídeos falsos, i algunes pistes visuals. Ara fa un pas més: distingeix quatre menes d'imatges (real, retocada, fora de context i feta amb IA), entén com els filtres de bellesa ens fan comparar-nos amb coses que no són reals, i practica la verificació com ho fan els professionals: qui la publica, on és l'original, quan i on es va fer i qui més ho explica. També coneix les etiquetes «Fet amb IA» i treballa el respecte: mai no es fan falsos de persones reals i, si te'n fan un, no és culpa teva.|Segunda sesión de la unidad 5. En la unidad 3 (d3-3), el alumnado ya vio que una IA puede hacer imágenes, voces y vídeos falsos, y algunas pistas visuales. Ahora da un paso más: distingue cuatro tipos de imágenes (real, retocada, fuera de contexto y hecha con IA), entiende cómo los filtros de belleza nos hacen compararnos con cosas que no son reales, y practica la verificación como lo hacen los profesionales: quién la publica, dónde está el original, cuándo y dónde se hizo y quién más lo cuenta. También conoce las etiquetas «Hecho con IA» y trabaja el respeto: nunca se hacen falsos de personas reales y, si te hacen uno, no es culpa tuya.",
+      claus: [
+        "Quatre menes d'imatges: real, retocada (filtres, retalls), fora de context (real però d'un altre lloc o moment) i feta amb IA.|Cuatro tipos de imágenes: real, retocada (filtros, recortes), fuera de contexto (real pero de otro lugar o momento) y hecha con IA.",
+        "Verificar és sortir a buscar: qui la publica, l'original, quan i on, i altres fonts fiables. Si no és clar, no es comparteix.|Verificar es salir a buscar: quién la publica, el original, cuándo y dónde, y otras fuentes fiables. Si no está claro, no se comparte.",
+        "Les etiquetes «Fet amb IA» ajuden, però no totes les imatges en porten.|Las etiquetas «Hecho con IA» ayudan, pero no todas las imágenes las llevan.",
+        "Respecte: mai falsos de persones reals. Si te'n fan un: no és culpa teva, no es comparteix, es guarda una captura i s'explica a un adult.|Respeto: nunca falsos de personas reales. Si te hacen uno: no es culpa tuya, no se comparte, se guarda una captura y se cuenta a un adulto."
+      ],
+      prev: [
+        "Sessió d2-1: les tres preguntes del caçador de bulos i les fotos fora de context.|Sesión d2-1: las tres preguntas del cazador de bulos y las fotos fuera de contexto.",
+        "Sessió d3-3: imatges i veus fetes amb IA, vídeos falsificats i autoria.|Sesión d3-3: imágenes y voces hechas con IA, vídeos falsificados y autoría."
+      ],
+      obj: [
+        "L'alumne/a classifica imatges en retocades, fora de context o fetes amb IA.|El alumno/a clasifica imágenes en retocadas, fuera de contexto o hechas con IA.",
+        "L'alumne/a aplica els passos de verificar a una imatge sorprenent.|El alumno/a aplica los pasos de verificar a una imagen sorprendente.",
+        "L'alumne/a explica per què comparar-se amb fotos retocades no és just amb un mateix.|El alumno/a explica por qué compararse con fotos retocadas no es justo con uno mismo.",
+        "L'alumne/a distingeix usos creatius i respectuosos de la IA d'usos que fan mal, i sap què fer si li passa.|El alumno/a distingue usos creativos y respetuosos de la IA de usos que hacen daño, y sabe qué hacer si le pasa."
+      ],
+      comp: [
+        "Competència digital (CD2): avaluació crítica d'imatges i fonts|Competencia digital (CD2): evaluación crítica de imágenes y fuentes",
+        "Competència digital (CD4): benestar i respecte a la xarxa|Competencia digital (CD4): bienestar y respeto en la red",
+        "Competència ciutadana: dret a la pròpia imatge i convivència|Competencia ciudadana: derecho a la propia imagen y convivencia"
+      ],
+      vocab: [
+        ["Retocada|Retocada", "Imatge canviada amb filtres o programes.|Imagen cambiada con filtros o programas."],
+        ["Fora de context|Fuera de contexto", "Imatge real presentada com si fos d'un altre lloc o moment.|Imagen real presentada como si fuera de otro lugar o momento."],
+        ["Deepfake (ultrafals)|Deepfake (ultrafalso)", "Vídeo o àudio fet amb IA que imita una persona real.|Vídeo o audio hecho con IA que imita a una persona real."],
+        ["Verificar|Verificar", "Comprovar d'on ve una informació abans de creure-la.|Comprobar de dónde viene una información antes de creerla."],
+        ["Original|Original", "La primera vegada que es va publicar una imatge.|La primera vez que se publicó una imagen."],
+        ["Etiqueta «Fet amb IA»|Etiqueta «Hecho con IA»", "Avís que diu que una imatge s'ha creat amb IA.|Aviso que dice que una imagen se ha creado con IA."]
+      ],
+      mat: {
+        aula: [
+          "Un ordinador per alumne/a amb Numi Tech obert a la sessió «Imatges falses i deepfakes»|Un ordenador por alumno/a con Numi Tech abierto en la sesión «Imágenes falsas y deepfakes»",
+          "Projector i la presentació d'aquesta sessió|Proyector y la presentación de esta sesión",
+          "Les targetes d'imatges i les de pistes (un paquet per grup de 4)|Las tarjetas de imágenes y las de pistas (un paquete por grupo de 4)"
+        ],
+        imprimir: ["Taller de verificadors (imprimible 1): un paquet per grup|Taller de verificadores (imprimible 1): un paquete por grupo"],
+        prep: [
+          "Imprimir i retallar les targetes: cada «imatge» va acompanyada d'una targeta de pistes de verificació.|Imprimir y recortar las tarjetas: cada «imagen» va acompañada de una tarjeta de pistas de verificación.",
+          "No fer servir mai fotos d'alumnes, famílies ni docents com a exemple de retoc o d'imatge falsa.|No usar nunca fotos de alumnos, familias ni docentes como ejemplo de retoque o de imagen falsa.",
+          "Tenir present que el tema dels filtres i el cos pot ser sensible: parlar-ne en general, sense referir-se a ningú.|Tener presente que el tema de los filtros y el cuerpo puede ser sensible: hablar en general, sin referirse a nadie."
+        ]
+      },
+      plan: [
+        { min: 5, t: "Benvinguda: la foto del pont|Bienvenida: la foto del puente", fase: 'inici',
+          fa: "Explica la història de la foto del pont trencat. Pregunta què recorden del tauró de la unitat 3 i quines tres explicacions hi pot haver: que sigui d'avui, que sigui d'un altre lloc o que estigui feta amb IA.|Explica la historia de la foto del puente roto. Pregunta qué recuerdan del tiburón de la unidad 3 y qué tres explicaciones puede haber: que sea de hoy, que sea de otro lugar o que esté hecha con IA.",
+          diu: ["Quina era la pista més forta amb el tauró? (La font.)|¿Cuál era la pista más fuerte con el tiburón? (La fuente.)",
+            "Una foto real pot enganyar? Com?|¿Una foto real puede engañar? ¿Cómo?",
+            "Avui farem de verificadors.|Hoy haremos de verificadores."],
+          slides: ['s1', 's2'], app: "Encara no: pantalles abaixades.|Todavía no: pantallas bajadas.", org: "Tot el grup|Todo el grupo" },
+        { min: 10, t: "Quatre menes, filtres, verificar i respecte|Cuatro tipos, filtros, verificar y respeto", fase: 'teoria',
+          fa: "Amb l'animació de les quatre menes, posa un exemple de cada. Amb la del filtre, parla de les fotos retocades sense referir-te a ningú. Explica els quatre passos dels verificadors, mostra la foto del pont i l'etiqueta «Fet amb IA», i acaba amb el respecte i què fer si et fan un fals.|Con la animación de los cuatro tipos, pon un ejemplo de cada uno. Con la del filtro, habla de las fotos retocadas sin referirte a nadie. Explica los cuatro pasos de los verificadores, muestra la foto del puente y la etiqueta «Hecho con IA», y termina con el respeto y qué hacer si te hacen un falso.",
+          diu: ["Una foto amb filtre és mentida? (No sempre; però no és la realitat.)|¿Una foto con filtro es mentira? (No siempre; pero no es la realidad.)",
+            "Quines pistes de la foto del pont us fan sospitar?|¿Qué pistas de la foto del puente os hacen sospechar?",
+            "Si una imatge no té etiqueta, vol dir que és real?|Si una imagen no tiene etiqueta, ¿quiere decir que es real?"],
+          slides: ['s3', 's4', 's5', 's6', 's7'], app: "Encara no: tota l'atenció a la projecció.|Todavía no: toda la atención en la proyección.", org: "Tot el grup|Todo el grupo" },
+        { min: 12, t: "Taller de verificadors|Taller de verificadores", fase: 'desconnectat',
+          fa: "En grups de 4, cada grup rep targetes d'«imatges» (descrites amb paraules) i, a part, les targetes de pistes (qui la publica, data, lloc, què diuen altres fonts). Han de decidir de quina mena és cada imatge i si la compartirien, i escriure quina pista ho ha decidit. Posada en comú.|En grupos de 4, cada grupo recibe tarjetas de «imágenes» (descritas con palabras) y, aparte, las tarjetas de pistas (quién la publica, fecha, lugar, qué dicen otras fuentes). Deben decidir de qué tipo es cada imagen y si la compartirían, y escribir qué pista lo ha decidido. Puesta en común.",
+          diu: ["Quina pista us ha fet canviar d'opinió?|¿Qué pista os ha hecho cambiar de opinión?",
+            "Hi ha alguna imatge real que enganyi?|¿Hay alguna imagen real que engañe?",
+            "Quina no compartiríeu mai, encara que fos certa? Per què?|¿Cuál no compartiríais nunca, aunque fuera cierta? ¿Por qué?"],
+          slides: ['s8', 's9'], app: "Cap: activitat sense pantalla.|Ninguna: actividad sin pantalla.", org: "Grups de 4|Grupos de 4" },
+        { min: 15, t: "A l'ordinador: descobreix i investiga|En el ordenador: descubre e investiga", fase: 'ordinador',
+          fa: "Cada alumne/a fa la sessió fins a la pausa activa: la pregunta de repàs, la història, les cinc targetes, classificar imatges, la foto del pont, la pregunta de les etiquetes i la conversa del grup de casa. Pausa activa tots junts (les cares!).|Cada alumno/a hace la sesión hasta la pausa activa: la pregunta de repaso, la historia, las cinco tarjetas, clasificar imágenes, la foto del puente, la pregunta de las etiquetas y la conversación del grupo de casa. Pausa activa todos juntos (¡las caras!).",
+          diu: ["Com heu convençut la tieta sense fer-la enfadar?|¿Cómo habéis convencido a la tía sin hacerla enfadar?",
+            "On era l'original de la foto del pont?|¿Dónde estaba el original de la foto del puente?",
+            "Ara, tots: cares de filtre… i la cara de veritat!|Ahora, todos: caras de filtro… ¡y la cara de verdad!"],
+          slides: ['s10'], app: "De «Recorda» fins a la «Pausa activa».|De «Recuerda» hasta la «Pausa activa».", org: "Individual|Individual" },
+        { min: 10, t: "Reptes i el meu protocol|Retos y mi protocolo", fase: 'ordinador',
+          fa: "Continuen amb els reptes: crear amb IA respectant les persones, què fer si et fan una imatge falsa, la foto retocada de la cantant i el parc fora de context. Després trien el seu protocol de verificador.|Siguen con los retos: crear con IA respetando a las personas, qué hacer si te hacen una imagen falsa, la foto retocada de la cantante y el parque fuera de contexto. Después eligen su protocolo de verificador.",
+          diu: ["Quina diferència hi ha entre un drac fet amb IA i la cara d'un company en un vídeo?|¿Qué diferencia hay entre un dragón hecho con IA y la cara de un compañero en un vídeo?",
+            "Quines pistes deien que el parc era d'un altre país?|¿Qué pistas decían que el parque era de otro país?",
+            "Quin pas del vostre protocol fareu servir més?|¿Qué paso de vuestro protocolo usaréis más?"],
+          slides: ['s11', 's12'], app: "«Reptes» i el pas «Crea»: el meu protocol de verificador/a (i «El museu del real o no», per a casa).|«Retos» y el paso «Crea»: mi protocolo de verificador/a (y «El museo del real o no», para casa).", org: "Individual|Individual" },
+        { min: 8, t: "Tancament i tiquet de sortida|Cierre y ticket de salida", fase: 'tancament',
+          fa: "Repasseu les idees clau. Tiquet de sortida, preguntes finals i com s'han sentit. Recorda que, si mai els passa que algú fa una imatge falsa seva, no és culpa seva i poden explicar-ho a qualsevol adult de confiança.|Repasad las ideas clave. Ticket de salida, preguntas finales y cómo se han sentido. Recuerda que, si alguna vez les pasa que alguien hace una imagen falsa suya, no es culpa suya y pueden contarlo a cualquier adulto de confianza.",
+          diu: ["Digueu les quatre menes d'imatges.|Decid los cuatro tipos de imágenes.",
+            "Quins són els passos per verificar?|¿Cuáles son los pasos para verificar?",
+            "Què fareu si veieu un fals d'algú que coneixeu?|¿Qué haréis si veis un falso de alguien que conocéis?"],
+          slides: ['s13', 's14', 's15'], app: "«Tancament»: les dues preguntes finals i com m'he sentit.|«Cierre»: las dos preguntas finales y cómo me he sentido.", org: "Tot el grup|Todo el grupo" }
+      ],
+      errors: [
+        ["Pensa que una imatge real no pot enganyar.|Piensa que una imagen real no puede engañar.",
+          "Recorda la foto del pont: era real, però d'un altre país i d'un altre any. El context compta.|Recuerda la foto del puente: era real, pero de otro país y de otro año. El contexto cuenta."],
+        ["Busca només pistes visuals (dits, lletres).|Busca solo pistas visuales (dedos, letras).",
+          "Les IA milloren i deixen menys pistes. La prova més forta és la font i el context.|Las IA mejoran y dejan menos pistas. La prueba más fuerte es la fuente y el contexto."],
+        ["Creu que sense etiqueta «Fet amb IA» la imatge és real.|Cree que sin etiqueta «Hecho con IA» la imagen es real.",
+          "Moltes no en porten o se'ls ha tret. L'etiqueta ajuda quan hi és, però no prova res quan no hi és.|Muchas no la llevan o se la han quitado. La etiqueta ayuda cuando está, pero no prueba nada cuando no está."],
+        ["Diu que un fals d'un company «només és una broma».|Dice que un falso de un compañero «solo es una broma».",
+          "Pregunta com se sentiria si fos la seva cara. Fa mal, encara que sigui de broma, i no està permès.|Pregunta cómo se sentiría si fuera su cara. Hace daño, aunque sea de broma, y no está permitido."],
+        ["Es compara amb fotos retocades i se sent malament.|Se compara con fotos retocadas y se siente mal.",
+          "Recorda que moltes fotos estan retocades i que les cares i els cossos de veritat són diversos. Si li passa sovint, parla-ho amb la família.|Recuerda que muchas fotos están retocadas y que las caras y los cuerpos de verdad son diversos. Si le pasa a menudo, háblalo con la familia."]
+      ],
+      diff: {
+        mes: "Per anar més enllà: buscar amb un adult, en diaris o en una web de verificació de notícies, un exemple d'imatge desmentida i explicar com ho van descobrir; o crear un cartell «Abans de compartir una imatge…» amb els quatre passos.|Para ir más allá: buscar con un adulto, en periódicos o en una web de verificación de noticias, un ejemplo de imagen desmentida y explicar cómo lo descubrieron; o crear un cartel «Antes de compartir una imagen…» con los cuatro pasos.",
+        menys: "Al taller, treballar amb tres targetes i només dues menes (real o enganya?). A l'app, fer en parella la foto del pont i el parc.|En el taller, trabajar con tres tarjetas y solo dos tipos (¿real o engaña?). En la app, hacer en pareja la foto del puente y el parque."
+      },
+      aval: {
+        ticket: ["Digues les quatre menes d'imatges.|Di los cuatro tipos de imágenes.",
+          "Digues un pas per verificar una imatge.|Di un paso para verificar una imagen."],
+        rubric: [
+          ["Tipus d'imatges|Tipos de imágenes", "Classifica imatges en retocades, fora de context o fetes amb IA i ho justifica.|Clasifica imágenes en retocadas, fuera de contexto o hechas con IA y lo justifica.", "Les confon o no justifica.|Las confunde o no justifica."],
+          ["Verificar|Verificar", "Aplica els passos (qui, original, quan i on, altres fonts) abans de compartir.|Aplica los pasos (quién, original, cuándo y dónde, otras fuentes) antes de compartir.", "Es fixa només en pistes visuals.|Se fija solo en pistas visuales."],
+          ["Respecte|Respeto", "Distingeix usos respectuosos de la IA i sap què fer si li fan un fals.|Distingue usos respetuosos de la IA y sabe qué hacer si le hacen un falso.", "No veu el mal dels falsos «de broma».|No ve el daño de los falsos «de broma»."]
+        ]
+      },
+      casa: "A casa, feu «El museu del real o no?»: busqueu en revistes o diaris vells una foto normal i una que creieu retocada, i mireu-hi les pistes (pell, llum, ombres, vores). Dibuixeu una cosa impossible amb l'etiqueta «Inventat per mi». I parleu dels quatre passos de verificar: qui ho publica, on és l'original, quan i on es va fer i qui més ho explica. Si mai us arriba una imatge que fa mal a algú, no la reenvieu.|En casa, haced «El museo del ¿real o no?»: buscad en revistas o periódicos viejos una foto normal y una que creáis retocada, y mirad las pistas (piel, luz, sombras, bordes). Dibujad algo imposible con la etiqueta «Inventado por mí». Y hablad de los cuatro pasos de verificar: quién lo publica, dónde está el original, cuándo y dónde se hizo y quién más lo cuenta. Si alguna vez os llega una imagen que hace daño a alguien, no la reenviéis.",
+      faq: [
+        ["Què és la cerca inversa d'imatges?|¿Qué es la búsqueda inversa de imágenes?", "És buscar a partir d'una imatge (en lloc de paraules) per veure on ha sortit abans. Molts cercadors ho permeten. A aquesta edat, sempre amb un adult.|Es buscar a partir de una imagen (en lugar de palabras) para ver dónde ha salido antes. Muchos buscadores lo permiten. A esta edad, siempre con un adulto."],
+        ["És il·legal fer un deepfake d'algú?|¿Es ilegal hacer un deepfake de alguien?", "Fer o compartir imatges falses d'una persona sense permís pot vulnerar el seu dret a la pròpia imatge i, en alguns casos, ser delicte. Amb els infants, el missatge és clar i sense alarmisme: fa mal i no està permès.|Hacer o compartir imágenes falsas de una persona sin permiso puede vulnerar su derecho a la propia imagen y, en algunos casos, ser delito. Con los niños, el mensaje es claro y sin alarmismo: hace daño y no está permitido."],
+        ["I si un alumne explica que n'hi han fet un?|¿Y si un alumno cuenta que le han hecho uno?", "Escolta'l amb calma, deixa clar que no és culpa seva, no prometis guardar el secret, avisa la família i segueix el protocol del centre. Si cal, el 116 111 també l'escolta.|Escúchale con calma, deja claro que no es culpa suya, no prometas guardar el secreto, avisa a la familia y sigue el protocolo del centro. Si hace falta, el 116 111 también le escucha."],
+        ["Totes les fotos retocades són dolentes?|¿Todas las fotos retocadas son malas?", "No: retocar la llum d'una foto és normal. El que importa és saber que moltes fotos no mostren la realitat, sobretot les de cares i cossos, i no comparar-s'hi.|No: retocar la luz de una foto es normal. Lo que importa es saber que muchas fotos no muestran la realidad, sobre todo las de caras y cuerpos, y no compararse."]
+      ],
+      tec: [
+        ["A classificar imatges, al mòbil, els tres calaixos surten un sota l'altre.|Al clasificar imágenes, en el móvil, las tres cajas salen una debajo de otra.", "És normal: la targeta surt a dalt i es toca el calaix.|Es normal: la tarjeta sale arriba y se toca la caja."],
+        ["A la foto del parc no troben la pista dels senyals.|En la foto del parque no encuentran la pista de las señales.", "Que llegeixin la descripció entre claudàtors: cada frase subratllable és una pista.|Que lean la descripción entre corchetes: cada frase subrayable es una pista."],
+        ["Volen tornar a la conversa del grup de casa.|Quieren volver a la conversación del grupo de casa.", "Poden tornar al pas amb la fletxa: tots els camins acaben trobant l'original.|Pueden volver al paso con la flecha: todos los caminos terminan encontrando el original."]
+      ],
+      seg: [
+        "No facis servir mai fotos de ningú de l'escola com a exemple de retoc o de fals.|No uses nunca fotos de nadie del centro como ejemplo de retoque o de falso.",
+        "Si surten comentaris sobre el cos d'algú, atura'ls amb calma i recorda que tots els cossos són diferents i estan bé.|Si salen comentarios sobre el cuerpo de alguien, páralos con calma y recuerda que todos los cuerpos son diferentes y están bien.",
+        "Si algun infant explica que circula una imatge falsa d'ell o d'un company, segueix el protocol del centre i avisa les famílies.|Si algún niño o niña cuenta que circula una imagen falsa suya o de un compañero, sigue el protocolo del centro y avisa a las familias."
+      ],
+      extra: [
+        "Plàstica: fer un collage «impossible» amb retalls de revistes i posar-hi l'etiqueta «Muntatge fet per…».|Plástica: hacer un collage «imposible» con recortes de revistas y ponerle la etiqueta «Montaje hecho por…».",
+        "Ciències socials: buscar fotos antigues del poble (arxiu municipal) i comparar-les amb ara: com sabem de quan és una foto?|Ciencias sociales: buscar fotos antiguas del pueblo (archivo municipal) y compararlas con ahora: ¿cómo sabemos de cuándo es una foto?",
+        "Per als grans: per què es diu que «una imatge val més que mil paraules»? Encara és cert?|Para los mayores: ¿por qué se dice que «una imagen vale más que mil palabras»? ¿Sigue siendo cierto?"
+      ],
+      trans: [
+        "Sessió d3-3: les pistes de les imatges fetes amb IA. Aquí, verificar com els professionals i el respecte.|Sesión d3-3: las pistas de las imágenes hechas con IA. Aquí, verificar como los profesionales y el respeto.",
+        "Sessió d5-3: què aprèn la IA de nosaltres (també de les nostres fotos). Sessió d5-4: el capítol «Imatges i respecte» del manual.|Sesión d5-3: qué aprende la IA de nosotros (también de nuestras fotos). Sesión d5-4: el capítulo «Imágenes y respeto» del manual.",
+        "Plàstica (imatge i muntatge), ciències socials (fonts i arxius) i tutoria (autoimatge i respecte).|Plástica (imagen y montaje), ciencias sociales (fuentes y archivos) y tutoría (autoimagen y respeto)."
+      ],
+      slides: [
+        { id: 's1', k: 'portada', t: "Imatges falses i deepfakes|Imágenes falsas y deepfakes", x: "Avui farem de verificadors.|Hoy haremos de verificadores.",
+          nota: "Connecta amb el tauró de la unitat 3.|Conecta con el tiburón de la unidad 3." },
+        { id: 's2', k: 'pregunta', t: "La foto del pont trencat|La foto del puente roto", punts: ["És d'avui?|¿Es de hoy?", "És d'un altre lloc?|¿Es de otro lugar?", "L'ha feta una IA?|¿La ha hecho una IA?"],
+          nota: "Deixa les tres hipòtesis obertes: les resoldrem a l'app.|Deja las tres hipótesis abiertas: las resolveremos en la app." },
+        { id: 's3', k: 'anim', t: "Quatre menes d'imatges|Cuatro tipos de imágenes", anim: 'd5quatre', x: "Real, retocada, fora de context o feta amb IA.|Real, retocada, fuera de contexto o hecha con IA.",
+          nota: "Posa un exemple de cada mena.|Pon un ejemplo de cada tipo." },
+        { id: 's4', k: 'anim', t: "Cares retocades|Caras retocadas", anim: 'd5filtre', x: "Comparar-te amb un filtre és comparar-te amb una cosa que no és real.|Compararte con un filtro es compararte con algo que no es real.",
+          nota: "Parla en general, sense referir-te a ningú de la classe.|Habla en general, sin referirte a nadie de la clase." },
+        { id: 's5', k: 'anim', t: "Fes com els verificadors|Haz como los verificadores", anim: 'd5verif', x: "Qui, original, quan i on, i qui més ho explica.|Quién, original, cuándo y dónde, y quién más lo cuenta.",
+          nota: "Explica que «verificador/a» és una feina de veritat als diaris.|Explica que «verificador/a» es un trabajo de verdad en los periódicos." },
+        { id: 's6', k: 'media', t: "La foto del pont|La foto del puente", x: "Quines pistes fan sospitar?|¿Qué pistas hacen sospechar?", media: PONT,
+          nota: "«Ara mateix» sense data, neu a l'estiu, compte nou i presses.|«Ahora mismo» sin fecha, nieve en verano, cuenta nueva y prisas." },
+        { id: 's7', k: 'media', t: "Etiquetes i respecte|Etiquetas y respeto", x: "Dir que és fet amb IA és honest. Però no totes les imatges ho diuen.|Decir que está hecho con IA es honesto. Pero no todas las imágenes lo dicen.", media: ETIQ,
+          nota: "Acaba amb el respecte: mai falsos de persones reals.|Termina con el respeto: nunca falsos de personas reales." },
+        { id: 's8', k: 'activitat', t: "Taller de verificadors|Taller de verificadores", timer: 12,
+          punts: ["Llegiu cada «imatge» i la seva targeta de pistes.|Leed cada «imagen» y su tarjeta de pistas.", "De quina mena és? La compartiríeu?|¿De qué tipo es? ¿La compartiríais?", "Escriviu la pista que ho ha decidit.|Escribid la pista que lo ha decidido."],
+          nota: "Passa per les taules i pregunta: «Què diria un verificador?».|Pasa por las mesas y pregunta: «¿Qué diría un verificador?»." },
+        { id: 's9', k: 'concepte', t: "Els quatre passos|Los cuatro pasos", pic: 'img/ment/vel.webp',
+          punts: ["Qui la publica?|¿Quién la publica?", "On és l'original?|¿Dónde está el original?", "Quan i on es va fer?|¿Cuándo y dónde se hizo?", "Qui més ho explica?|¿Quién más lo cuenta?"],
+          nota: "Deixa-la projectada durant el taller.|Déjala proyectada durante el taller." },
+        { id: 's10', k: 'activitat', t: "Ara, a l'ordinador|Ahora, al ordenador", timer: 15,
+          punts: ["Obre la sessió «Imatges falses i deepfakes».|Abre la sesión «Imágenes falsas y deepfakes».", "Fes-la fins a la pausa activa.|Hazla hasta la pausa activa.", "A la pausa, fem cares!|En la pausa, ¡hacemos caras!"],
+          nota: "Avisa quan arribin a la pausa activa.|Avisa cuando lleguen a la pausa activa." },
+        { id: 's11', k: 'repte', t: "Reptes: crear amb respecte|Retos: crear con respeto", timer: 8,
+          punts: ["D'acord o no, mai?|¿De acuerdo o no, nunca?", "Si te'n fan un a tu…|Si te hacen uno a ti…", "El parc fora de context.|El parque fuera de contexto."],
+          nota: "Recorda: si et passa, no és culpa teva i ho pots explicar.|Recuerda: si te pasa, no es culpa tuya y lo puedes contar." },
+        { id: 's12', k: 'activitat', t: "Crea: el meu protocol|Crea: mi protocolo", timer: 2,
+          punts: ["Tria què faràs a cada pas.|Elige qué harás en cada paso.", "Desa el teu protocol.|Guarda tu protocolo.", "A casa: el museu del real o no.|En casa: el museo del real o no."],
+          nota: "Que comparteixin el pas que els sembla més útil.|Que compartan el paso que les parece más útil." },
+        { id: 's13', k: 'resum', t: "Què hem après avui|Qué hemos aprendido hoy",
+          punts: ["Real, retocada, fora de context o IA.|Real, retocada, fuera de contexto o IA.", "Verificar: qui, original, quan i on, altres fonts.|Verificar: quién, original, cuándo y dónde, otras fuentes.", "Sense etiqueta no vol dir real.|Sin etiqueta no quiere decir real.", "Mai falsos de persones reals.|Nunca falsos de personas reales."],
+          nota: "Llegiu-lo junts.|Leedlo juntos." },
+        { id: 's14', k: 'tiquet', t: "Tiquet de sortida|Ticket de salida",
+          punts: ["Les quatre menes d'imatges.|Los cuatro tipos de imágenes.", "Un pas per verificar.|Un paso para verificar."],
+          nota: "Pot ser oral, per torns.|Puede ser oral, por turnos." },
+        { id: 's15', k: 'concepte', t: "Per a casa|Para casa", pic: 'img/ment/ded.webp',
+          punts: ["El museu del real o no.|El museo del real o no.", "Expliqueu els quatre passos a casa.|Explicad los cuatro pasos en casa.", "Una imatge que fa mal no es reenvia.|Una imagen que hace daño no se reenvía."],
+          nota: "Proposta per fer en família.|Propuesta para hacer en familia." }
+      ],
+      print: [
+        { id: 'p1', t: "Taller de verificadors|Taller de verificadores", k: 'targetes',
+          intro: "Un paquet per grup de 4. Cada targeta d'«imatge» (descrita) té al costat una targeta de pistes. Decidiu de quina mena és i si la compartiríeu. Tot és inventat.|Un paquete por grupo de 4. Cada tarjeta de «imagen» (descrita) tiene al lado una tarjeta de pistas. Decidid de qué tipo es y si la compartiríais. Todo es inventado.",
+          items: [
+            { t: "🖼️ Un llop caminant per la plaça de Vilabit, «ahir a la nit»|🖼️ Un lobo caminando por la plaza de Vilabit, «ayer por la noche»", n: 1 },
+            { t: "🔎 Pistes: el compte té 1 dia; la mateixa foto va sortir fa 5 anys en un diari d'un altre país.|🔎 Pistas: la cuenta tiene 1 día; la misma foto salió hace 5 años en un periódico de otro país.", n: 1 },
+            { t: "🖼️ Una cantant amb la pell perfecta, sense cap marca|🖼️ Una cantante con la piel perfecta, sin ninguna marca", n: 1 },
+            { t: "🔎 Pistes: la revista diu a la lletra petita «imatge retocada».|🔎 Pistas: la revista dice en la letra pequeña «imagen retocada».", n: 1 },
+            { t: "🖼️ Un elefant rosa banyant-se en una piscina de xocolata|🖼️ Un elefante rosa bañándose en una piscina de chocolate", n: 1 },
+            { t: "🔎 Pistes: la publica @ArtDeLaNora amb l'etiqueta «Fet amb IA».|🔎 Pistas: la publica @ArtDeLaNora con la etiqueta «Hecho con IA».", n: 1 },
+            { t: "🖼️ L'alcaldessa de Vilabit inaugurant la biblioteca nova|🖼️ La alcaldesa de Vilabit inaugurando la biblioteca nueva", n: 1 },
+            { t: "🔎 Pistes: surt a la web de l'ajuntament i al diari local, amb data d'ahir.|🔎 Pistas: sale en la web del ayuntamiento y en el periódico local, con fecha de ayer.", n: 1 },
+            { t: "🖼️ Un vídeo on un futbolista famós diu que deixa el futbol|🖼️ Un vídeo donde un futbolista famoso dice que deja el fútbol", n: 1 },
+            { t: "🔎 Pistes: la boca no va amb la veu; cap diari no en parla; el seu club diu que és fals.|🔎 Pistas: la boca no va con la voz; ningún periódico habla de ello; su club dice que es falso.", n: 1 }
+          ] }
+      ]
+    },
+
+    /* ---------- Sessió 3 · Què aprèn la IA de nosaltres? ---------- */
+    'd5-3': {
+      intro: "Tercera sessió de la unitat 5. L'alumnat descobreix d'on surten les dades amb què aprenen les IA (textos, imatges, veus i converses fetes per persones), entén que el que s'escriu o es puja a una IA es pot guardar, fer servir per entrenar-la i ser llegit per persones de l'empresa, i aprèn a mirar què diu la política de privadesa i a triar la configuració que protegeix més, sempre amb un adult. Es recorda breument el biaix de la unitat 2 (estereotips a les dades) i s'obre el debat sobre les obres d'artistes que fan servir les IA. La pràctica és amb XatNuvi, una IA simulada.|Tercera sesión de la unidad 5. El alumnado descubre de dónde salen los datos con los que aprenden las IA (textos, imágenes, voces y conversaciones hechas por personas), entiende que lo que se escribe o se sube a una IA se puede guardar, usar para entrenarla y ser leído por personas de la empresa, y aprende a mirar qué dice la política de privacidad y a elegir la configuración que protege más, siempre con un adulto. Se recuerda brevemente el sesgo de la unidad 2 (estereotipos en los datos) y se abre el debate sobre las obras de artistas que usan las IA. La práctica es con XatNuvi, una IA simulada.",
+      claus: [
+        "Les IA aprenen de dades d'entrenament: moltíssims textos, imatges, veus i converses fets per persones.|Las IA aprenden de datos de entrenamiento: muchísimos textos, imágenes, voces y conversaciones hechos por personas.",
+        "Les converses es poden guardar, servir per entrenar i ser llegides per persones de l'empresa: dades personals, fotos i secrets, fora.|Las conversaciones se pueden guardar, servir para entrenar y ser leídas por personas de la empresa: datos personales, fotos y secretos, fuera.",
+        "Si les dades tenen estereotips, la IA els pot repetir (biaix): es revisa el que diu.|Si los datos tienen estereotipos, la IA los puede repetir (sesgo): se revisa lo que dice.",
+        "Amb un adult: llegir la política de privadesa i triar la configuració (historial, entrenament, esborrar).|Con un adulto: leer la política de privacidad y elegir la configuración (historial, entrenamiento, borrar)."
+      ],
+      prev: [
+        "Sessió d2-2: com aprèn una IA amb exemples i el biaix.|Sesión d2-2: cómo aprende una IA con ejemplos y el sesgo.",
+        "Sessió d4-2: els permisos i les dades que demanen les apps.|Sesión d4-2: los permisos y los datos que piden las apps."
+      ],
+      obj: [
+        "L'alumne/a explica què són les dades d'entrenament i relaciona cada IA amb el tipus de dades de què aprèn.|El alumno/a explica qué son los datos de entrenamiento y relaciona cada IA con el tipo de datos del que aprende.",
+        "L'alumne/a identifica en una política de privadesa què es fa amb les converses.|El alumno/a identifica en una política de privacidad qué se hace con las conversaciones.",
+        "L'alumne/a decideix què no comparteix amb una IA i com configurar-la amb un adult.|El alumno/a decide qué no comparte con una IA y cómo configurarla con un adulto.",
+        "L'alumne/a reconeix estereotips en una resposta i opina sobre l'ús d'obres d'altres.|El alumno/a reconoce estereotipos en una respuesta y opina sobre el uso de obras de otros."
+      ],
+      comp: [
+        "Competència digital (CD4): protecció de dades personals i privadesa|Competencia digital (CD4): protección de datos personales y privacidad",
+        "Competència digital (CD2): comprensió del funcionament de la IA|Competencia digital (CD2): comprensión del funcionamiento de la IA",
+        "Competència ciutadana: drets digitals, igualtat i autoria|Competencia ciudadana: derechos digitales, igualdad y autoría"
+      ],
+      vocab: [
+        ["Dades d'entrenament|Datos de entrenamiento", "Els exemples (textos, imatges, veus…) amb què aprèn una IA.|Los ejemplos (textos, imágenes, voces…) con los que aprende una IA."],
+        ["Historial|Historial", "La llista de converses que l'app guarda.|La lista de conversaciones que la app guarda."],
+        ["Política de privadesa|Política de privacidad", "Text on una empresa explica què fa amb les teves dades.|Texto donde una empresa explica qué hace con tus datos."],
+        ["Conversa temporal|Conversación temporal", "Una conversa que l'app no desa.|Una conversación que la app no guarda."],
+        ["Estereotip|Estereotipo", "Idea fixa i injusta sobre un grup de persones («els bombers són homes»).|Idea fija e injusta sobre un grupo de personas («los bomberos son hombres»)."],
+        ["Configuració|Configuración", "On es trien les opcions de l'app, també les de privadesa.|Donde se eligen las opciones de la app, también las de privacidad."]
+      ],
+      mat: {
+        aula: [
+          "Un ordinador per alumne/a amb Numi Tech obert a la sessió «Què aprèn la IA de nosaltres?»|Un ordenador por alumno/a con Numi Tech abierto en la sesión «¿Qué aprende la IA de nosotros?»",
+          "Projector i la presentació d'aquesta sessió|Proyector y la presentación de esta sesión",
+          "Les targetes de dades (un paquet per grup de 4) i tres rètols: «Textos», «Imatges» i «Veus i sons»|Las tarjetas de datos (un paquete por grupo de 4) y tres carteles: «Textos», «Imágenes» y «Voces y sonidos»"
+        ],
+        imprimir: ["Què menja la IA? (imprimible 1): un paquet per grup|¿Qué come la IA? (imprimible 1): un paquete por grupo", "Llegim una política de privadesa (imprimible 2): una per parella|Leemos una política de privacidad (imprimible 2): una por pareja"],
+        prep: [
+          "Imprimir i retallar les targetes de dades i preparar els tres rètols.|Imprimir y recortar las tarjetas de datos y preparar los tres carteles.",
+          "Llegir la fitxa de la política de privadesa inventada i pensar com explicar «entrenar amb les converses» amb paraules senzilles.|Leer la ficha de la política de privacidad inventada y pensar cómo explicar «entrenar con las conversaciones» con palabras sencillas.",
+          "No demanar quines apps fan servir ni què hi escriuen.|No preguntar qué apps usan ni qué escriben en ellas."
+        ]
+      },
+      plan: [
+        { min: 5, t: "Benvinguda: la IA que ho recorda tot|Bienvenida: la IA que lo recuerda todo", fase: 'inici',
+          fa: "Explica la història d'en Bit, que descobreix que l'AjudaBot ha après de les converses de la gent. Pregunta què recorden del gos del sofà (biaix) i d'on creuen que treu les dades una IA.|Explica la historia de Bit, que descubre que AjudaBot ha aprendido de las conversaciones de la gente. Pregunta qué recuerdan del perro del sofá (sesgo) y de dónde creen que saca los datos una IA.",
+          diu: ["Per què s'equivocava la IA del gos del sofà?|¿Por qué se equivocaba la IA del perro del sofá?",
+            "D'on creieu que treu tants exemples una IA?|¿De dónde creéis que saca tantos ejemplos una IA?",
+            "El que escrivim a una IA, on va a parar?|Lo que escribimos a una IA, ¿dónde acaba?"],
+          slides: ['s1', 's2'], app: "Encara no: pantalles abaixades.|Todavía no: pantallas bajadas.", org: "Tot el grup|Todo el grupo" },
+        { min: 10, t: "Dades, converses, biaix i configuració|Datos, conversaciones, sesgo y configuración", fase: 'teoria',
+          fa: "Amb l'animació de les dades, explica què són les dades d'entrenament. Amb la de les converses, explica que es poden guardar, fer servir per entrenar i llegir. Recorda el biaix amb un exemple d'estereotip. Mostra la política de XatNuvi i la configuració de privadesa.|Con la animación de los datos, explica qué son los datos de entrenamiento. Con la de las conversaciones, explica que se pueden guardar, usar para entrenar y leer. Recuerda el sesgo con un ejemplo de estereotipo. Muestra la política de XatNuvi y la configuración de privacidad.",
+          diu: ["Qui ha fet tots aquests textos i dibuixos? (Persones.)|¿Quién ha hecho todos estos textos y dibujos? (Personas.)",
+            "Una conversa amb una IA és un diari secret? (No.)|¿Una conversación con una IA es un diario secreto? (No.)",
+            "Quina opció de la configuració canviaríeu primer?|¿Qué opción de la configuración cambiaríais primero?"],
+          slides: ['s3', 's4', 's5', 's6', 's7'], app: "Encara no: tota l'atenció a la projecció.|Todavía no: toda la atención en la proyección.", org: "Tot el grup|Todo el grupo" },
+        { min: 12, t: "Què menja la IA?|¿Qué come la IA?", fase: 'desconnectat',
+          fa: "En grups de 4: primer classifiquen les targetes de dades en «Textos», «Imatges» i «Veus i sons». Després, en parelles, llegeixen la política de privadesa inventada de la fitxa i subratllen en verd el que els sembla bé i en vermell el que els preocupa. Posada en comú.|En grupos de 4: primero clasifican las tarjetas de datos en «Textos», «Imágenes» y «Voces y sonidos». Después, en parejas, leen la política de privacidad inventada de la ficha y subrayan en verde lo que les parece bien y en rojo lo que les preocupa. Puesta en común.",
+          diu: ["Quines targetes són dades personals que no donaríeu mai?|¿Qué tarjetas son datos personales que no daríais nunca?",
+            "Què heu subratllat en vermell a la política?|¿Qué habéis subrayado en rojo en la política?",
+            "Faríeu servir aquesta app? Amb quina configuració?|¿Usaríais esta app? ¿Con qué configuración?"],
+          slides: ['s8', 's9'], app: "Cap: activitat sense pantalla.|Ninguna: actividad sin pantalla.", org: "Grups de 4 i parelles|Grupos de 4 y parejas" },
+        { min: 15, t: "A l'ordinador: descobreix i investiga|En el ordenador: descubre e investiga", fase: 'ordinador',
+          fa: "Cada alumne/a fa la sessió fins a la pausa activa: la pregunta de repàs, la història, les cinc targetes, d'on aprèn cada IA, la política de XatNuvi, la pregunta de les fotos i la conversa amb XatNuvi. Pausa activa tots junts.|Cada alumno/a hace la sesión hasta la pausa activa: la pregunta de repaso, la historia, las cinco tarjetas, de dónde aprende cada IA, la política de XatNuvi, la pregunta de las fotos y la conversación con XatNuvi. Pausa activa todos juntos.",
+          diu: ["Què us ha demanat XatNuvi al principi? Què li heu dit?|¿Qué os ha pedido XatNuvi al principio? ¿Qué le habéis dicho?",
+            "Per què els secrets no es diuen a una IA?|¿Por qué los secretos no se dicen a una IA?",
+            "Ara, tots: dades a dins, dades a fora!|Ahora, todos: ¡datos dentro, datos fuera!"],
+          slides: ['s10'], app: "De «Recorda» fins a la «Pausa activa».|De «Recuerda» hasta la «Pausa activa».", org: "Individual|Individual" },
+        { min: 10, t: "Reptes i el meu pacte de dades|Retos y mi pacto de datos", fase: 'ordinador',
+          fa: "Continuen amb els reptes: configurar XatNuvi, les obres dels artistes, l'estereotip dels bombers i els passos per provar una app d'IA. Després fan el seu pacte de dades. Obre un debat breu sobre els artistes: no hi ha una resposta única.|Siguen con los retos: configurar XatNuvi, las obras de los artistas, el estereotipo de los bomberos y los pasos para probar una app de IA. Después hacen su pacto de datos. Abre un debate breve sobre los artistas: no hay una respuesta única.",
+          diu: ["Quines opcions heu deixat desactivades? Per què?|¿Qué opciones habéis dejado desactivadas? ¿Por qué?",
+            "És just que una IA aprengui de dibuixos sense preguntar?|¿Es justo que una IA aprenda de dibujos sin preguntar?",
+            "Quin acord del vostre pacte us sembla més important?|¿Qué acuerdo de vuestro pacto os parece más importante?"],
+          slides: ['s11', 's12'], app: "«Reptes» i el pas «Crea»: el meu pacte de dades (i «Què menja la IA de casa?», per a casa).|«Retos» y el paso «Crea»: mi pacto de datos (y «¿Qué come la IA de casa?», para casa).", org: "Individual|Individual" },
+        { min: 8, t: "Tancament i tiquet de sortida|Cierre y ticket de salida", fase: 'tancament',
+          fa: "Repasseu les idees clau amb el resum. Tiquet de sortida, preguntes finals i com s'han sentit. Proposa la feina per a casa: buscar junts l'apartat de privadesa d'una app que faci servir IA.|Repasad las ideas clave con el resumen. Ticket de salida, preguntas finales y cómo se han sentido. Propón el trabajo para casa: buscar juntos el apartado de privacidad de una app que use IA.",
+          diu: ["D'on aprenen les IA?|¿De dónde aprenden las IA?",
+            "Què no li direu mai a una IA?|¿Qué no le diréis nunca a una IA?",
+            "Amb qui revisareu la configuració?|¿Con quién revisaréis la configuración?"],
+          slides: ['s13', 's14', 's15'], app: "«Tancament»: les dues preguntes finals i com m'he sentit.|«Cierre»: las dos preguntas finales y cómo me he sentido.", org: "Tot el grup|Todo el grupo" }
+      ],
+      errors: [
+        ["Creu que una IA «sap» les coses sense que ningú les hi hagi donat.|Cree que una IA «sabe» las cosas sin que nadie se las haya dado.",
+          "Recorda l'entrenament de la unitat 2: tot el que sap ho ha après de dades fetes per persones.|Recuerda el entrenamiento de la unidad 2: todo lo que sabe lo ha aprendido de datos hechos por personas."],
+        ["Pensa que les converses amb una IA són privades com un diari.|Piensa que las conversaciones con una IA son privadas como un diario.",
+          "Mostra la política de XatNuvi: es poden guardar, servir per entrenar i ser llegides.|Muestra la política de XatNuvi: se pueden guardar, servir para entrenar y ser leídas."],
+        ["Pensa que si una dada surt d'una IA, és neutral.|Piensa que si un dato sale de una IA, es neutral.",
+          "Les dades porten els estereotips de qui les ha fet. Per això es revisa el que diu.|Los datos llevan los estereotipos de quien los ha hecho. Por eso se revisa lo que dice."],
+        ["Creu que la configuració no es pot canviar o que és cosa d'adults.|Cree que la configuración no se puede cambiar o que es cosa de adultos.",
+          "Es pot canviar i és bo fer-ho junts: l'adult ajuda i l'infant entén per què.|Se puede cambiar y es bueno hacerlo juntos: el adulto ayuda y el niño entiende por qué."],
+        ["S'espanta i diu que no farà servir mai cap IA.|Se asusta y dice que no usará nunca ninguna IA.",
+          "No cal: la IA pot ser útil. Es tracta de decidir què hi donem i com la configurem.|No hace falta: la IA puede ser útil. Se trata de decidir qué le damos y cómo la configuramos."]
+      ],
+      diff: {
+        mes: "Per anar més enllà: reescriure la política de XatNuvi perquè sigui «la més justa possible» per a infants; o preparar arguments a favor i en contra en el debat dels artistes.|Para ir más allá: reescribir la política de XatNuvi para que sea «la más justa posible» para niños; o preparar argumentos a favor y en contra en el debate de los artistas.",
+        menys: "Classificar només en dues piles (es pot dir a una IA / dada personal). A l'app, fer en parella la conversa amb XatNuvi i la configuració.|Clasificar solo en dos montones (se puede decir a una IA / dato personal). En la app, hacer en pareja la conversación con XatNuvi y la configuración."
+      },
+      aval: {
+        ticket: ["Digues d'on aprenen les IA.|Di de dónde aprenden las IA.",
+          "Digues una cosa que no li diries mai a una IA i per què.|Di una cosa que no le dirías nunca a una IA y por qué."],
+        rubric: [
+          ["Dades d'entrenament|Datos de entrenamiento", "Explica què són i relaciona cada IA amb les seves dades.|Explica qué son y relaciona cada IA con sus datos.", "Ho explica amb ajuda.|Lo explica con ayuda."],
+          ["Privadesa|Privacidad", "Interpreta una política senzilla i tria una configuració que protegeix.|Interpreta una política sencilla y elige una configuración que protege.", "No sap què fan amb les converses.|No sabe qué hacen con las conversaciones."],
+          ["Pensament crític|Pensamiento crítico", "Reconeix estereotips i opina amb arguments sobre les obres d'altres.|Reconoce estereotipos y opina con argumentos sobre las obras de otros.", "Accepta el que diu la IA sense revisar-ho.|Acepta lo que dice la IA sin revisarlo."]
+        ]
+      },
+      casa: "A casa, feu junts «Què menja la IA de casa?»: llisteu les apps que fan servir IA (el traductor, l'assistent de veu, les recomanacions de vídeos o música…) i penseu quines dades vostres poden fer servir. Busqueu, a la configuració d'una d'elles, l'apartat de privadesa i decidiu un canvi que us protegeixi més (per exemple, que les converses no serveixin per entrenar o esborrar l'historial).|En casa, haced juntos «¿Qué come la IA de casa?»: listad las apps que usan IA (el traductor, el asistente de voz, las recomendaciones de vídeos o música…) y pensad qué datos vuestros pueden usar. Buscad, en la configuración de una de ellas, el apartado de privacidad y decidid un cambio que os proteja más (por ejemplo, que las conversaciones no sirvan para entrenar o borrar el historial).",
+      faq: [
+        ["És veritat que algunes persones de l'empresa poden llegir les converses?|¿Es verdad que algunas personas de la empresa pueden leer las conversaciones?", "En molts serveis, sí: hi ha equips que revisen converses per millorar la IA o per seguretat; ho expliquen a la política de privadesa. Per això diem que no és un diari secret.|En muchos servicios, sí: hay equipos que revisan conversaciones para mejorar la IA o por seguridad; lo explican en la política de privacidad. Por eso decimos que no es un diario secreto."],
+        ["Es pot evitar que les converses entrenin la IA?|¿Se puede evitar que las conversaciones entrenen la IA?", "Alguns serveis tenen una opció per no fer-les servir per entrenar, o converses temporals que no es desen. Depèn de cada servei: cal mirar-ho a la configuració.|Algunos servicios tienen una opción para no usarlas para entrenar, o conversaciones temporales que no se guardan. Depende de cada servicio: hay que mirarlo en la configuración."],
+        ["Què diem del debat dels artistes?|¿Qué decimos del debate de los artistas?", "Que és un debat obert: hi ha qui creu que les IA haurien de demanar permís o pagar i qui creu que no. A classe, l'important és argumentar i respectar l'autoria, com a la unitat 3.|Que es un debate abierto: hay quien cree que las IA deberían pedir permiso o pagar y quien cree que no. En clase, lo importante es argumentar y respetar la autoría, como en la unidad 3."],
+        ["Cal tornar a explicar el biaix?|¿Hay que volver a explicar el sesgo?", "Només un recordatori: la IA aprèn el que hi ha a les dades, també els estereotips. Es va treballar a fons a d2-2.|Solo un recordatorio: la IA aprende lo que hay en los datos, también los estereotipos. Se trabajó a fondo en d2-2."]
+      ],
+      tec: [
+        ["A la política de XatNuvi hi ha cinc pistes i en demana quatre.|En la política de XatNuvi hay cinco pistas y pide cuatro.", "És a propòsit: amb quatre ja es pot continuar, però val la pena trobar-les totes.|Es a propósito: con cuatro ya se puede continuar, pero vale la pena encontrarlas todas."],
+        ["A la conversa amb XatNuvi volen provar l'altre camí.|En la conversación con XatNuvi quieren probar el otro camino.", "Poden tornar enrere amb la fletxa del pas: tots dos camins acaben amb una idea per aprendre.|Pueden volver atrás con la flecha del paso: los dos caminos terminan con una idea para aprender."],
+        ["Pregunten si XatNuvi existeix.|Preguntan si XatNuvi existe.", "No: és inventat, com l'AjudaBot. Les respostes les ha escrit l'equip de Numi i no es desa res.|No: es inventado, como AjudaBot. Las respuestas las ha escrito el equipo de Numi y no se guarda nada."]
+      ],
+      seg: [
+        "No demanis quines apps d'IA fan servir ni què hi han escrit.|No preguntes qué apps de IA usan ni qué han escrito en ellas.",
+        "Si algun infant explica que ha compartit fotos o dades personals amb una IA, tranquil·litza'l i proposa que ho mirin a casa per esborrar-ho si es pot.|Si algún niño o niña cuenta que ha compartido fotos o datos personales con una IA, tranquilízale y propón que lo miren en casa para borrarlo si se puede.",
+        "Si algú explica que confia secrets a una IA perquè no té amb qui parlar-ne, escolta'l i parla-ho amb la tutoria i la família.|Si alguien cuenta que confía secretos a una IA porque no tiene con quién hablar, escúchale y háblalo con la tutoría y la familia."
+      ],
+      extra: [
+        "Matemàtiques: si una IA llegís un llibre per minut, quants dies trigaria a llegir-ne un milió?|Matemáticas: si una IA leyera un libro por minuto, ¿cuántos días tardaría en leer un millón?",
+        "Valors: debat sobre igualtat a partir de l'estereotip dels bombers i altres professions.|Valores: debate sobre igualdad a partir del estereotipo de los bomberos y otras profesiones.",
+        "Per als grans: redactar una carta (sense enviar-la) a una empresa d'IA explicant què haurien de tenir en compte amb els infants.|Para los mayores: redactar una carta (sin enviarla) a una empresa de IA explicando qué deberían tener en cuenta con los niños."
+      ],
+      trans: [
+        "Sessió d2-2: com aprèn una IA i el biaix. Aquí, d'on surten les dades i les que hi posem nosaltres.|Sesión d2-2: cómo aprende una IA y el sesgo. Aquí, de dónde salen los datos y los que ponemos nosotros.",
+        "Sessió d5-4: el capítol «Dades» del manual de la IA. Sessió d6-3: els algoritmes de recomanació també aprenen del que fem.|Sesión d5-4: el capítulo «Datos» del manual de la IA. Sesión d6-3: los algoritmos de recomendación también aprenden de lo que hacemos.",
+        "Matemàtiques (grans quantitats), valors (igualtat i estereotips) i tutoria (privadesa).|Matemáticas (grandes cantidades), valores (igualdad y estereotipos) y tutoría (privacidad)."
+      ],
+      slides: [
+        { id: 's1', k: 'portada', t: "Què aprèn la IA de nosaltres?|¿Qué aprende la IA de nosotros?", x: "Les dades de les IA… i les nostres.|Los datos de las IA… y los nuestros.",
+          nota: "Avui parlem de dades, sense por: per decidir millor.|Hoy hablamos de datos, sin miedo: para decidir mejor." },
+        { id: 's2', k: 'pregunta', t: "La IA que ho recorda tot|La IA que lo recuerda todo", punts: ["L'AjudaBot ha millorat molt.|AjudaBot ha mejorado mucho.", "Ha après de milions de textos… i de converses!|Ha aprendido de millones de textos… ¡y de conversaciones!", "I el que jo li vaig dir?|¿Y lo que yo le dije?"],
+          nota: "Recull idees: on van a parar les converses?|Recoge ideas: ¿dónde acaban las conversaciones?" },
+        { id: 's3', k: 'anim', t: "El menjar de la IA|La comida de la IA", anim: 'd5dades', x: "Textos, imatges, veus i converses fets per persones.|Textos, imágenes, voces y conversaciones hechos por personas.",
+          nota: "Connecta amb l'entrenament de fruites i llaminadures de la unitat 2.|Conecta con el entrenamiento de frutas y golosinas de la unidad 2." },
+        { id: 's4', k: 'anim', t: "El que li dius es pot guardar|Lo que le dices se puede guardar", anim: 'd5guarda', x: "Guardar, entrenar i llegir: no és un diari secret.|Guardar, entrenar y leer: no es un diario secreto.",
+          nota: "Sense alarmisme: és informació per decidir què hi posem.|Sin alarmismo: es información para decidir qué ponemos." },
+        { id: 's5', k: 'concepte', t: "Biaix, un altre cop|Sesgo, otra vez", pic: 'img/ment/igu.webp',
+          punts: ["Si les dades tenen estereotips…|Si los datos tienen estereotipos…", "…la IA els pot repetir.|…la IA los puede repetir.", "Per això revisem el que diu.|Por eso revisamos lo que dice."],
+          nota: "Només un recordatori: el biaix ja es va treballar a d2-2.|Solo un recordatorio: el sesgo ya se trabajó en d2-2." },
+        { id: 's6', k: 'media', t: "La política de XatNuvi|La política de XatNuvi", x: "Què fan amb les converses?|¿Qué hacen con las conversaciones?", media: PRIV,
+          nota: "Llegiu-la en veu alta i pregunta què els preocupa.|Leedla en voz alta y pregunta qué les preocupa." },
+        { id: 's7', k: 'anim', t: "Tu tries|Tú eliges", anim: 'd5config', x: "Historial, entrenament i esborrar: amb un adult.|Historial, entrenamiento y borrar: con un adulto.",
+          nota: "Cada servei té opcions diferents; la idea és buscar-les.|Cada servicio tiene opciones diferentes; la idea es buscarlas." },
+        { id: 's8', k: 'activitat', t: "Què menja la IA?|¿Qué come la IA?", timer: 12,
+          punts: ["Classifiqueu les dades: textos, imatges o veus.|Clasificad los datos: textos, imágenes o voces.", "Llegiu la política de la fitxa.|Leed la política de la ficha.", "Verd: bé · Vermell: em preocupa.|Verde: bien · Rojo: me preocupa."],
+          nota: "Passa per les taules i ajuda a entendre «entrenar».|Pasa por las mesas y ayuda a entender «entrenar»." },
+        { id: 's9', k: 'concepte', t: "Fora de la IA|Fuera de la IA", pic: 'img/ment/sob.webp',
+          punts: ["Nom complet, adreça i escola.|Nombre completo, dirección y colegio.", "Fotos teves i dels altres.|Fotos tuyas y de los demás.", "Secrets i contrasenyes.|Secretos y contraseñas."],
+          nota: "Deixa-la projectada durant l'activitat.|Déjala proyectada durante la actividad." },
+        { id: 's10', k: 'activitat', t: "Ara, a l'ordinador|Ahora, al ordenador", timer: 15,
+          punts: ["Obre la sessió «Què aprèn la IA de nosaltres?».|Abre la sesión «¿Qué aprende la IA de nosotros?».", "Fes-la fins a la pausa activa.|Hazla hasta la pausa activa.", "XatNuvi és una simulació.|XatNuvi es una simulación."],
+          nota: "Avisa quan arribin a la pausa activa.|Avisa cuando lleguen a la pausa activa." },
+        { id: 's11', k: 'repte', t: "Reptes: les meves dades|Retos: mis datos", timer: 8,
+          punts: ["Configura XatNuvi.|Configura XatNuvi.", "Les obres dels artistes: què és just?|Las obras de los artistas: ¿qué es justo?", "L'estereotip dels bombers.|El estereotipo de los bomberos."],
+          nota: "Debat breu: no hi ha una resposta única sobre els artistes.|Debate breve: no hay una respuesta única sobre los artistas." },
+        { id: 's12', k: 'activitat', t: "Crea: el meu pacte de dades|Crea: mi pacto de datos", timer: 2,
+          punts: ["Tria una idea per a cada tema.|Elige una idea para cada tema.", "Desa el teu pacte.|Guarda tu pacto.", "A casa: què menja la IA de casa?|En casa: ¿qué come la IA de casa?"],
+          nota: "Que comparteixin un acord.|Que compartan un acuerdo." },
+        { id: 's13', k: 'resum', t: "Què hem après avui|Qué hemos aprendido hoy",
+          punts: ["Les IA aprenen de dades fetes per persones.|Las IA aprenden de datos hechos por personas.", "Les converses es poden guardar i llegir.|Las conversaciones se pueden guardar y leer.", "Les dades poden tenir estereotips.|Los datos pueden tener estereotipos.", "La configuració es tria amb un adult.|La configuración se elige con un adulto."],
+          nota: "Llegiu-lo junts.|Leedlo juntos." },
+        { id: 's14', k: 'tiquet', t: "Tiquet de sortida|Ticket de salida",
+          punts: ["D'on aprenen les IA?|¿De dónde aprenden las IA?", "Una cosa que no diries mai a una IA.|Una cosa que no dirías nunca a una IA."],
+          nota: "Pot ser oral, per torns.|Puede ser oral, por turnos." },
+        { id: 's15', k: 'concepte', t: "Per a casa|Para casa", pic: 'img/ment/ded.webp',
+          punts: ["Llisteu les apps de casa amb IA.|Listad las apps de casa con IA.", "Busqueu l'apartat de privadesa.|Buscad el apartado de privacidad.", "Un canvi que us protegeixi.|Un cambio que os proteja."],
+          nota: "Proposta per fer en família.|Propuesta para hacer en familia." }
+      ],
+      print: [
+        { id: 'p1', t: "Què menja la IA?|¿Qué come la IA?", k: 'targetes',
+          intro: "Un paquet per grup de 4. Classifiqueu cada targeta en «Textos», «Imatges» o «Veus i sons». Marqueu amb una ✗ les que són dades personals que no donaríeu a una IA.|Un paquete por grupo de 4. Clasificad cada tarjeta en «Textos», «Imágenes» o «Voces y sonidos». Marcad con una ✗ las que son datos personales que no daríais a una IA.",
+          items: [
+            { t: "📚 Un llibre de contes antic|📚 Un libro de cuentos antiguo", n: 1 },
+            { t: "🏠 L'adreça de casa meva|🏠 La dirección de mi casa", n: 1 },
+            { t: "🐦 La gravació d'un ocell cantant|🐦 La grabación de un pájaro cantando", n: 1 },
+            { t: "🤳 Una selfie meva|🤳 Una selfie mía", n: 1 },
+            { t: "🌸 Mil fotos de flors amb el nom|🌸 Mil fotos de flores con el nombre", n: 1 },
+            { t: "🎙️ Un missatge de veu de la meva àvia|🎙️ Un mensaje de voz de mi abuela", n: 1 },
+            { t: "📰 Les notícies d'un diari|📰 Las noticias de un periódico", n: 1 },
+            { t: "🔑 La meva contrasenya|🔑 Mi contraseña", n: 1 },
+            { t: "🎵 Una cançó d'un grup famós|🎵 Una canción de un grupo famoso", n: 1 },
+            { t: "🎨 Un dibuix d'una artista|🎨 Un dibujo de una artista", n: 1 },
+            { t: "💬 Una conversa amb un xat d'IA|💬 Una conversación con un chat de IA", n: 1 },
+            { t: "🏫 El nom de la meva escola|🏫 El nombre de mi colegio", n: 1 }
+          ] },
+        { id: 'p2', t: "Llegim una política de privadesa|Leemos una política de privacidad", k: 'fitxa',
+          intro: "Política inventada de XatNuvi. Subratlla en verd el que et sembla bé i en vermell el que et preocupa. Després respon.|Política inventada de XatNuvi. Subraya en verde lo que te parece bien y en rojo lo que te preocupa. Después responde.",
+          items: [
+            { q: "«Pots fer servir l'app gratis. Guardem les converses 5 anys. Les fem servir per entrenar la IA. Persones de l'equip en poden llegir algunes. Compartim dades amb empreses per fer publicitat. Només per a més grans de 14 anys.» Què has subratllat en vermell?|«Puedes usar la app gratis. Guardamos las conversaciones 5 años. Las usamos para entrenar la IA. Personas del equipo pueden leer algunas. Compartimos datos con empresas para hacer publicidad. Solo para mayores de 14 años.» ¿Qué has subrayado en rojo?", big: true, sol: "Guardar 5 anys, entrenar amb les converses, que les puguin llegir i compartir dades per a publicitat. L'edat mínima és important: si no la tens, no és per a tu.|Guardar 5 años, entrenar con las conversaciones, que las puedan leer y compartir datos para publicidad. La edad mínima es importante: si no la tienes, no es para ti." },
+            { q: "Quina opció de la configuració canviaries?|¿Qué opción de la configuración cambiarías?", sol: "Per exemple: que les converses no serveixin per entrenar, conversa temporal o esborrar l'historial.|Por ejemplo: que las conversaciones no sirvan para entrenar, conversación temporal o borrar el historial." },
+            { q: "Què no hi escriuries mai?|¿Qué no escribirías nunca?", sol: "Dades personals (nom complet, adreça, escola), fotos, secrets i contrasenyes.|Datos personales (nombre completo, dirección, colegio), fotos, secretos y contraseñas." }
+          ] }
+      ]
+    },
+
+    /* ---------- Sessió 4 · Projecte: el manual de la IA de la classe ---------- */
+    'd5-4': {
+      intro: "Sessió de projecte que tanca la unitat 5. La classe rep l'encàrrec d'escriure el manual de la IA de la classe: unes normes clares perquè alumnes, mestres i famílies sàpiguen fer-la servir amb cap. El manual té sis capítols (preguntar bé, comprovar, honestedat, dades, imatges i respecte, i edats i permisos). A l'app, l'alumnat classifica normes per capítols, revisa un esborrany, practica com defensar una norma en un debat sense ferir ningú i tria la norma principal de cada capítol (es desa). En paper, cada grup escriu i il·lustra un capítol, i al final s'ajunta el manual sencer.|Sesión de proyecto que cierra la unidad 5. La clase recibe el encargo de escribir el manual de la IA de la clase: unas normas claras para que alumnos, maestros y familias sepan usarla con cabeza. El manual tiene seis capítulos (preguntar bien, comprobar, honestidad, datos, imágenes y respeto, y edades y permisos). En la app, el alumnado clasifica normas por capítulos, revisa un borrador, practica cómo defender una norma en un debate sin herir a nadie y elige la norma principal de cada capítulo (se guarda). En papel, cada grupo escribe e ilustra un capítulo, y al final se junta el manual entero.",
+      claus: [
+        "Un manual d'ús no prohibeix: explica quan sí, quan no i com.|Un manual de uso no prohíbe: explica cuándo sí, cuándo no y cómo.",
+        "Sis capítols: preguntar bé, comprovar, honestedat, dades, imatges i respecte, i edats i permisos.|Seis capítulos: preguntar bien, comprobar, honestidad, datos, imágenes y respeto, y edades y permisos.",
+        "Una bona norma és clara, en positiu i porta un exemple.|Una buena norma es clara, en positivo y lleva un ejemplo.",
+        "Les normes es pacten: es pot discrepar sense ferir i proposant alternatives.|Las normas se pactan: se puede discrepar sin herir y proponiendo alternativas."
+      ],
+      prev: [
+        "Sessions d5-1, d5-2 i d5-3: preguntar bé, verificar imatges i les dades de la IA.|Sesiones d5-1, d5-2 y d5-3: preguntar bien, verificar imágenes y los datos de la IA.",
+        "Sessió d1-4: el decàleg (normes clares i en positiu).|Sesión d1-4: el decálogo (normas claras y en positivo)."
+      ],
+      obj: [
+        "L'alumne/a organitza normes sobre la IA en capítols temàtics.|El alumno/a organiza normas sobre la IA en capítulos temáticos.",
+        "L'alumne/a revisa normes i les millora perquè siguin clares, en positiu i amb exemple.|El alumno/a revisa normas y las mejora para que sean claras, en positivo y con ejemplo.",
+        "L'alumne/a defensa una norma en un debat de manera respectuosa.|El alumno/a defiende una norma en un debate de manera respetuosa.",
+        "L'alumne/a escriu i il·lustra, en grup, un capítol del manual.|El alumno/a escribe e ilustra, en grupo, un capítulo del manual."
+      ],
+      comp: [
+        "Competència digital (CD4): ús responsable i ètic de la IA|Competencia digital (CD4): uso responsable y ético de la IA",
+        "Competència en comunicació lingüística: escriure normes i argumentar|Competencia en comunicación lingüística: escribir normas y argumentar",
+        "Competència ciutadana: pactar normes de convivència|Competencia ciudadana: pactar normas de convivencia"
+      ],
+      vocab: [
+        ["Manual d'ús|Manual de uso", "Text que explica com fer servir bé una eina.|Texto que explica cómo usar bien una herramienta."],
+        ["Capítol|Capítulo", "Cada part del manual, sobre un tema.|Cada parte del manual, sobre un tema."],
+        ["Norma en positiu|Norma en positivo", "Norma que diu què fer, no només què no fer.|Norma que dice qué hacer, no solo qué no hacer."],
+        ["Pactar|Pactar", "Decidir junts, escoltant tothom.|Decidir juntos, escuchando a todo el mundo."],
+        ["Fonts del treball|Fuentes del trabajo", "On dius d'on has tret la informació i què t'ha ajudat.|Donde dices de dónde has sacado la información y qué te ha ayudado."]
+      ],
+      mat: {
+        aula: [
+          "Un ordinador per alumne/a amb Numi Tech obert a la sessió «Projecte: el manual de la IA de la classe»|Un ordenador por alumno/a con Numi Tech abierto en la sesión «Proyecto: el manual de la IA de la clase»",
+          "Projector i la presentació d'aquesta sessió|Proyector y la presentación de esta sesión",
+          "La plantilla del capítol (una per grup), fulls DIN A4, colors i una carpeta o anelles per ajuntar el manual|La plantilla del capítulo (una por grupo), hojas DIN A4, colores y una carpeta o anillas para juntar el manual"
+        ],
+        imprimir: ["Plantilla del capítol (imprimible 1): una per grup|Plantilla del capítulo (imprimible 1): una por grupo"],
+        prep: [
+          "Fer sis grups (un per capítol) o, si sou menys, ajuntar capítols.|Hacer seis grupos (uno por capítulo) o, si sois menos, juntar capítulos.",
+          "Tenir a mà les normes del centre sobre la IA, si n'hi ha, per incorporar-les.|Tener a mano las normas del centro sobre la IA, si las hay, para incorporarlas.",
+          "Decidir on es penjarà o es compartirà el manual (classe, web de l'escola, famílies).|Decidir dónde se colgará o se compartirá el manual (clase, web del centro, familias)."
+        ]
+      },
+      plan: [
+        { min: 5, t: "Benvinguda: l'encàrrec de la directora|Bienvenida: el encargo de la directora", fase: 'inici',
+          fa: "Explica l'encàrrec: el manual de la IA de la classe. Repasseu la unitat amb la diapositiva de repàs i pregunta per a qui serà el manual i per què és útil.|Explica el encargo: el manual de la IA de la clase. Repasad la unidad con la diapositiva de repaso y pregunta para quién será el manual y por qué es útil.",
+          diu: ["Qui llegirà el manual? (Alumnes, mestres i famílies.)|¿Quién leerá el manual? (Alumnos, maestros y familias.)",
+            "Un manual és una llista de prohibicions? (No.)|¿Un manual es una lista de prohibiciones? (No.)",
+            "Què hem après aquesta unitat que hi hauria de ser?|¿Qué hemos aprendido esta unidad que debería estar?"],
+          slides: ['s1', 's2'], app: "Encara no: pantalles abaixades.|Todavía no: pantallas bajadas.", org: "Tot el grup|Todo el grupo" },
+        { min: 5, t: "Els capítols i les bones normes|Los capítulos y las buenas normas", fase: 'teoria',
+          fa: "Amb l'animació del manual, presenta els sis capítols. Recorda com és una bona norma (com al decàleg) i el que no deixem a una IA. Assigna un capítol a cada grup.|Con la animación del manual, presenta los seis capítulos. Recuerda cómo es una buena norma (como en el decálogo) y lo que no dejamos a una IA. Asigna un capítulo a cada grupo.",
+          diu: ["Com transformaríeu «No facis el ximple amb la IA» en una bona norma?|¿Cómo transformaríais «No hagas el tonto con la IA» en una buena norma?",
+            "Què no deixaríeu mai a una IA?|¿Qué no dejaríais nunca a una IA?",
+            "Quin capítol us ha tocat?|¿Qué capítulo os ha tocado?"],
+          slides: ['s3', 's4', 's5'], app: "Encara no: tota l'atenció a la projecció.|Todavía no: toda la atención en la proyección.", org: "Tot el grup|Todo el grupo" },
+        { min: 20, t: "A l'ordinador: normes, esborrany i debat|En el ordenador: normas, borrador y debate", fase: 'ordinador',
+          fa: "Cada alumne/a fa la sessió: el repàs, la història, les targetes, classificar normes per capítols, revisar l'esborrany d'en Pau, el debat amb l'Iu, la pausa activa, els reptes i el pas «Crea» amb la norma principal de cada capítol.|Cada alumno/a hace la sesión: el repaso, la historia, las tarjetas, clasificar normas por capítulos, revisar el borrador de Pau, el debate con Iu, la pausa activa, los retos y el paso «Crea» con la norma principal de cada capítulo.",
+          diu: ["Quines normes de l'esborrany calia millorar?|¿Qué normas del borrador había que mejorar?",
+            "Com heu respost a l'Iu sense ferir-lo?|¿Cómo habéis respondido a Iu sin herirle?",
+            "Quina norma heu triat per al vostre capítol?|¿Qué norma habéis elegido para vuestro capítulo?"],
+          slides: ['s6', 's7', 's8'], app: "Tota la sessió fins al pas «Crea»: el meu manual de la IA.|Toda la sesión hasta el paso «Crea»: mi manual de la IA.", org: "Individual|Individual" },
+        { min: 17, t: "El manual en paper|El manual en papel", fase: 'desconnectat',
+          fa: "Cada grup escriu el seu capítol a la plantilla: tres normes clares, en positiu i amb exemple, i una icona per a cada una. Després, cada grup llegeix el seu capítol i la resta proposa una millora. Ajunteu els capítols i feu la portada.|Cada grupo escribe su capítulo en la plantilla: tres normas claras, en positivo y con ejemplo, y un icono para cada una. Después, cada grupo lee su capítulo y el resto propone una mejora. Juntad los capítulos y haced la portada.",
+          diu: ["La norma diu què fer? Té un exemple?|¿La norma dice qué hacer? ¿Tiene un ejemplo?",
+            "Hi ha cap norma repetida entre capítols?|¿Hay alguna norma repetida entre capítulos?",
+            "Quin títol posem a la portada?|¿Qué título ponemos en la portada?"],
+          slides: ['s9', 's10', 's11', 's12'], app: "Cap: activitat sense pantalla.|Ninguna: actividad sin pantalla.", org: "Grups (un capítol per grup)|Grupos (un capítulo por grupo)" },
+        { min: 5, t: "Lectura del manual|Lectura del manual", fase: 'crea',
+          fa: "Llegiu el manual sencer en veu alta (una norma per grup). Voteu si el penjareu a la classe i el compartireu amb les famílies.|Leed el manual entero en voz alta (una norma por grupo). Votad si lo colgaréis en la clase y lo compartiréis con las familias.",
+          diu: ["Quina norma d'un altre grup us ha agradat més?|¿Qué norma de otro grupo os ha gustado más?",
+            "Hi falta algun tema?|¿Falta algún tema?",
+            "On el penjarem?|¿Dónde lo colgaremos?"],
+          slides: ['s13'], app: "Cap: lectura en veu alta.|Ninguna: lectura en voz alta.", org: "Tot el grup|Todo el grupo" },
+        { min: 8, t: "Tancament i tiquet de sortida|Cierre y ticket de salida", fase: 'tancament',
+          fa: "Repasseu la unitat amb el resum. Tiquet de sortida, preguntes finals i com s'han sentit. Explica que s'enduran una còpia del manual per llegir-la en família.|Repasad la unidad con el resumen. Ticket de salida, preguntas finales y cómo se han sentido. Explica que se llevarán una copia del manual para leerla en familia.",
+          diu: ["Digueu una norma del manual i per què és important.|Decid una norma del manual y por qué es importante.",
+            "Què us ha costat més de pactar?|¿Qué os ha costado más de pactar?",
+            "A qui ensenyareu el manual?|¿A quién enseñaréis el manual?"],
+          slides: ['s14', 's15'], app: "«Tancament»: les dues preguntes finals i com m'he sentit.|«Cierre»: las dos preguntas finales y cómo me he sentido.", org: "Tot el grup|Todo el grupo" }
+      ],
+      errors: [
+        ["Escriu normes només en negatiu («No…»).|Escribe normas solo en negativo («No…»).",
+          "Proposa començar amb un verb que digui què fer: «Comprova…», «Escriu…», «Pregunta…».|Propón empezar con un verbo que diga qué hacer: «Comprueba…», «Escribe…», «Pregunta…»."],
+        ["Escriu normes massa generals («Fes-la servir bé»).|Escribe normas demasiado generales («Úsala bien»).",
+          "Pregunta: «Què vol dir “bé”? Dona'm un exemple». L'exemple fa la norma clara.|Pregunta: «¿Qué quiere decir “bien”? Dame un ejemplo». El ejemplo hace la norma clara."],
+        ["Vol prohibir la IA del tot.|Quiere prohibir la IA del todo.",
+          "Recorda que el manual és per fer-la servir amb cap: quan sí, quan no i com.|Recuerda que el manual es para usarla con cabeza: cuándo sí, cuándo no y cómo."],
+        ["En el debat, desqualifica les idees dels altres.|En el debate, descalifica las ideas de los demás.",
+          "Recorda el debat amb l'Iu: no hi estic d'acord perquè… i proposo…|Recuerda el debate con Iu: no estoy de acuerdo porque… y propongo…"],
+        ["Barreja normes de capítols diferents.|Mezcla normas de capítulos diferentes.",
+          "Torna a la classificació de l'app: cada norma va al capítol del seu tema. Si n'hi ha de dobles, trieu-ne un.|Vuelve a la clasificación de la app: cada norma va al capítulo de su tema. Si las hay dobles, elegid uno."]
+      ],
+      diff: {
+        mes: "Per anar més enllà: escriure la versió del manual per a les famílies (més curta) o per als alumnes de 1r (amb dibuixos); afegir un capítol 7 «Quan la IA ens ajuda a crear».|Para ir más allá: escribir la versión del manual para las familias (más corta) o para los alumnos de 1.º (con dibujos); añadir un capítulo 7 «Cuando la IA nos ayuda a crear».",
+        menys: "Donar normes ja escrites per triar-ne tres i il·lustrar-les. A l'app, fer en parella el debat amb l'Iu.|Dar normas ya escritas para elegir tres e ilustrarlas. En la app, hacer en pareja el debate con Iu."
+      },
+      aval: {
+        ticket: ["Digues una norma del manual i per què és important.|Di una norma del manual y por qué es importante.",
+          "Digues com has defensat una idea sense ferir ningú.|Di cómo has defendido una idea sin herir a nadie."],
+        rubric: [
+          ["Normes clares|Normas claras", "Les normes del capítol són clares, en positiu i amb exemple.|Las normas del capítulo son claras, en positivo y con ejemplo.", "Les normes són vagues o només en negatiu.|Las normas son vagas o solo en negativo."],
+          ["Contingut de la unitat|Contenido de la unidad", "Les normes recullen el que s'ha après (preguntar, comprovar, dades, respecte, edats).|Las normas recogen lo aprendido (preguntar, comprobar, datos, respeto, edades).", "Hi falten idees clau.|Faltan ideas clave."],
+          ["Treball en grup i debat|Trabajo en grupo y debate", "Pacta amb el grup i argumenta amb respecte.|Pacta con el grupo y argumenta con respeto.", "Li costa escoltar o acceptar altres idees.|Le cuesta escuchar o aceptar otras ideas."]
+        ]
+      },
+      casa: "A casa, l'infant portarà una còpia del manual de la IA de la classe. Llegiu-lo en família i comenteu quines normes ja feu i quines us agradaria adoptar a casa (per exemple, «Si una IA ens ajuda, ho diem» o «Les dades personals, fora»). Si feu servir assistents o xats d'IA, podeu afegir-hi una norma vostra.|En casa, el niño o la niña llevará una copia del manual de la IA de la clase. Leedlo en familia y comentad qué normas ya cumplís y cuáles os gustaría adoptar en casa (por ejemplo, «Si una IA nos ayuda, lo decimos» o «Los datos personales, fuera»). Si usáis asistentes o chats de IA, podéis añadir una norma vuestra.",
+      faq: [
+        ["I si l'escola ja té normes sobre la IA?|¿Y si el colegio ya tiene normas sobre la IA?", "Perfecte: incorporeu-les al manual i expliqueu-les amb les paraules de l'alumnat. El manual de la classe no ha de contradir les normes del centre.|Perfecto: incorporadlas al manual y explicadlas con las palabras del alumnado. El manual de la clase no debe contradecir las normas del centro."],
+        ["Quants capítols ha de fer cada grup?|¿Cuántos capítulos tiene que hacer cada grupo?", "Un per grup és l'ideal. Si sou pocs, ajunteu capítols (per exemple, «Preguntar i comprovar»).|Uno por grupo es lo ideal. Si sois pocos, juntad capítulos (por ejemplo, «Preguntar y comprobar»)."],
+        ["Com s'avalua el projecte?|¿Cómo se evalúa el proyecto?", "Amb la rúbrica (normes clares, contingut, treball en grup) i les respostes desades al pas «Crea».|Con la rúbrica (normas claras, contenido, trabajo en grupo) y las respuestas guardadas en el paso «Crea»."],
+        ["Es pot compartir el manual amb les famílies?|¿Se puede compartir el manual con las familias?", "Sí, és una bona manera d'obrir la conversa a casa. Comproveu que no hi surtin noms ni fotos de l'alumnat.|Sí, es una buena manera de abrir la conversación en casa. Comprobad que no salgan nombres ni fotos del alumnado."]
+      ],
+      tec: [
+        ["Al pas «Crea» hi ha sis preguntes i no es pot desar.|En el paso «Crear» hay seis preguntas y no se puede guardar.", "Cal respondre totes sis (els punts de dalt); el botó «Desa» s'activa al final.|Hay que responder las seis (los puntos de arriba); el botón «Guardar» se activa al final."],
+        ["Al mòbil, els quatre calaixos de capítols no hi caben al costat.|En el móvil, las cuatro cajas de capítulos no caben al lado.", "És normal: la targeta surt a dalt i es toca el calaix.|Es normal: la tarjeta sale arriba y se toca la caja."],
+        ["A l'esborrany toquen la norma 1 i no passa res.|En el borrador tocan la norma 1 y no pasa nada.", "És correcte: les normes 1 i 4 ja estan bé.|Es correcto: las normas 1 y 4 ya están bien."]
+      ],
+      seg: [
+        "El manual no ha de portar noms, fotos ni exemples reals que identifiquin ningú.|El manual no debe llevar nombres, fotos ni ejemplos reales que identifiquen a nadie.",
+        "En el debat, vetlla perquè totes les veus s'escoltin i ningú no se senti ridiculitzat.|En el debate, vela por que todas las voces se escuchen y nadie se sienta ridiculizado.",
+        "Si surt alguna experiència personal amb una IA que hagi fet mal, escolta-la en privat i segueix el protocol del centre.|Si sale alguna experiencia personal con una IA que haya hecho daño, escúchala en privado y sigue el protocolo del centro."
+      ],
+      extra: [
+        "Llengua: convertir el manual en un còmic o en un cartell per a l'entrada de la classe.|Lengua: convertir el manual en un cómic o en un cartel para la entrada de la clase.",
+        "Plàstica: dissenyar icones per a cada capítol.|Plástica: diseñar iconos para cada capítulo.",
+        "Per als grans: comparar el manual amb normes reals sobre IA d'altres llocs (amb ajuda del docent) i veure què tenen en comú.|Para los mayores: comparar el manual con normas reales sobre IA de otros lugares (con ayuda del docente) y ver qué tienen en común."
+      ],
+      trans: [
+        "Sessions d5-1 a d5-3: cada capítol recull una sessió de la unitat.|Sesiones d5-1 a d5-3: cada capítulo recoge una sesión de la unidad.",
+        "Sessió d6-1: comença la unitat 6, consumidors digitals: la publicitat amagada.|Sesión d6-1: empieza la unidad 6, consumidores digitales: la publicidad escondida.",
+        "Llengua (normes i argumentació), plàstica (icones) i tutoria (pactar normes).|Lengua (normas y argumentación), plástica (iconos) y tutoría (pactar normas)."
+      ],
+      slides: [
+        { id: 's1', k: 'portada', t: "El manual de la IA de la classe|El manual de la IA de la clase", x: "Normes clares per fer-la servir amb cap.|Normas claras para usarla con cabeza.",
+          nota: "Projecte final de la unitat 5.|Proyecto final de la unidad 5." },
+        { id: 's2', k: 'repas', t: "Què hem après a la unitat 5?|¿Qué hemos aprendido en la unidad 5?",
+          punts: ["Preguntar bé i revisar el que diu.|Preguntar bien y revisar lo que dice.", "Verificar imatges i respectar les persones.|Verificar imágenes y respetar a las personas.", "Què aprèn la IA de nosaltres.|Qué aprende la IA de nosotros."],
+          nota: "Que cada grup digui una idea de cada sessió.|Que cada grupo diga una idea de cada sesión." },
+        { id: 's3', k: 'anim', t: "Sis capítols|Seis capítulos", anim: 'd5manual', x: "Preguntar bé, comprovar, honestedat, dades, imatges i respecte, edats i permisos.|Preguntar bien, comprobar, honestidad, datos, imágenes y respeto, edades y permisos.",
+          nota: "Assigna els capítols als grups.|Asigna los capítulos a los grupos." },
+        { id: 's4', k: 'concepte', t: "Una bona norma|Una buena norma", pic: 'img/ment/lli.webp',
+          punts: ["Clara: diu què fer.|Clara: dice qué hacer.", "En positiu.|En positivo.", "Amb un exemple.|Con un ejemplo."],
+          nota: "Transformeu junts «No facis el ximple amb la IA».|Transformad juntos «No hagas el tonto con la IA»." },
+        { id: 's5', k: 'anim', t: "Quan no|Cuándo no", anim: 'd5quanno', x: "Emocions, problemes, decisions i aprendre a fer-ho tu.|Emociones, problemas, decisiones y aprender a hacerlo tú.",
+          nota: "Aquest «quan no» també ha de sortir al manual.|Este «cuándo no» también debe salir en el manual." },
+        { id: 's6', k: 'media', t: "L'esborrany d'en Pau|El borrador de Pau", x: "Quines normes cal millorar?|¿Qué normas hay que mejorar?", media: ESBORRANY,
+          nota: "Les normes 1 i 4 estan bé; la 2, la 3 i la 5 s'han de reescriure.|Las normas 1 y 4 están bien; la 2, la 3 y la 5 se tienen que reescribir." },
+        { id: 's7', k: 'activitat', t: "A l'ordinador: el manual|En el ordenador: el manual", timer: 20,
+          punts: ["Classifica normes per capítols.|Clasifica normas por capítulos.", "Revisa l'esborrany i debat amb l'Iu.|Revisa el borrador y debate con Iu.", "Tria la norma principal de cada capítol.|Elige la norma principal de cada capítulo."],
+          nota: "Fes la pausa activa amb tot el grup quan hi arribin.|Haz la pausa activa con todo el grupo cuando lleguen." },
+        { id: 's8', k: 'repte', t: "Discrepar sense ferir|Discrepar sin herir", timer: 2,
+          punts: ["No hi estic d'acord perquè…|No estoy de acuerdo porque…", "…i proposo…|…y propongo…", "Escolto la resposta.|Escucho la respuesta."],
+          nota: "Recupera el debat amb l'Iu com a model.|Recupera el debate con Iu como modelo." },
+        { id: 's9', k: 'activitat', t: "Escriviu el vostre capítol|Escribid vuestro capítulo", timer: 10,
+          punts: ["Tres normes clares, en positiu i amb exemple.|Tres normas claras, en positivo y con ejemplo.", "Una icona per a cada norma.|Un icono para cada norma.", "Reviseu-les en grup.|Revisadlas en grupo."],
+          nota: "Passa pels grups i demana exemples.|Pasa por los grupos y pide ejemplos." },
+        { id: 's10', k: 'activitat', t: "Lectura i millores|Lectura y mejoras", timer: 5,
+          punts: ["Cada grup llegeix el seu capítol.|Cada grupo lee su capítulo.", "La resta proposa una millora.|El resto propone una mejora.", "Primer, el que funciona.|Primero, lo que funciona."],
+          nota: "Controla el temps: un minut per grup.|Controla el tiempo: un minuto por grupo." },
+        { id: 's11', k: 'activitat', t: "La portada|La portada", timer: 2,
+          punts: ["Un títol per a tothom.|Un título para todo el mundo.", "Els noms de la classe (sense cognoms).|Los nombres de la clase (sin apellidos).", "Una imatge feta per vosaltres.|Una imagen hecha por vosotros."],
+          nota: "Pot fer-la un grup que acabi abans.|Puede hacerla un grupo que termine antes." },
+        { id: 's12', k: 'concepte', t: "Per a qui és el manual?|¿Para quién es el manual?", pic: 'img/ment/ref.webp',
+          punts: ["Per a l'alumnat.|Para el alumnado.", "Per als mestres.|Para los maestros.", "Per a les famílies.|Para las familias."],
+          nota: "Deixa-la projectada mentre escriuen.|Déjala proyectada mientras escriben." },
+        { id: 's13', k: 'resum', t: "El nostre manual|Nuestro manual",
+          punts: ["Preguntar bé i comprovar.|Preguntar bien y comprobar.", "Honestedat i dades fora.|Honestidad y datos fuera.", "Respecte a les imatges.|Respeto a las imágenes.", "Edats i permís de la família.|Edades y permiso de la familia."],
+          nota: "Llegiu el manual sencer en veu alta.|Leed el manual entero en voz alta." },
+        { id: 's14', k: 'tiquet', t: "Tiquet de sortida|Ticket de salida",
+          punts: ["Una norma del manual i per què és important.|Una norma del manual y por qué es importante.", "Com has defensat una idea sense ferir ningú?|¿Cómo has defendido una idea sin herir a nadie?"],
+          nota: "Pot ser oral, per torns.|Puede ser oral, por turnos." },
+        { id: 's15', k: 'concepte', t: "Per a casa|Para casa", pic: 'img/ment/ded.webp',
+          punts: ["Llegiu el manual en família.|Leed el manual en familia.", "Quines normes ja feu?|¿Qué normas ya cumplís?", "Afegiu-hi una norma de casa.|Añadid una norma de casa."],
+          nota: "Lliura les còpies del manual.|Entrega las copias del manual." }
+      ],
+      print: [
+        { id: 'p1', t: "Plantilla del capítol|Plantilla del capítulo", k: 'fitxa',
+          intro: "Una per grup. Escriviu el vostre capítol del manual de la IA de la classe.|Una por grupo. Escribid vuestro capítulo del manual de la IA de la clase.",
+          items: [
+            { q: "Capítol (número i títol):|Capítulo (número y título):", sol: "Per exemple: «4. Dades».|Por ejemplo: «4. Datos»." },
+            { q: "Norma 1 (clara, en positiu) i exemple:|Norma 1 (clara, en positivo) y ejemplo:", big: true, sol: "Per exemple: «Escriu el tema, no qui ets. Exemple: “Per a 5è, explica els rius”, no “Soc la Laia Puig de…”».|Por ejemplo: «Escribe el tema, no quién eres. Ejemplo: “Para 5.º, explica los ríos”, no “Soy Laia Puig de…”»." },
+            { q: "Norma 2 i exemple:|Norma 2 y ejemplo:", big: true, sol: "Per exemple: «Les fotos, només teves i amb permís de la família».|Por ejemplo: «Las fotos, solo tuyas y con permiso de la familia»." },
+            { q: "Norma 3 i exemple:|Norma 3 y ejemplo:", big: true, sol: "Per exemple: «Els secrets i les preocupacions, a persones de confiança».|Por ejemplo: «Los secretos y las preocupaciones, a personas de confianza»." },
+            { q: "Les icones del capítol (dibuixeu-les):|Los iconos del capítulo (dibujadlos):", sol: "Resposta oberta.|Respuesta abierta." }
+          ] }
+      ]
+    }
+  });
+}
+
+/* ── unitat 6 ── */
+/* Tech Digital · unitat 6 «Consumidors digitals» · guia del professorat (d6-1 … d6-4)
+   Material propi de Numi. Classe de 60 minuts; marques, creadors, videojocs i apps (Llamp, @Laia_Patins, Xuxes Galàctiques,
+   Granja Nuvi, VideoNuvi…) són inventats. Sense jutjar els hàbits de consum de cap família: no es pregunta què tenen, què
+   compren ni quants diners gasten. Les xifres dels exercicis (preus, probabilitats) són exemples inventats per fer números.
+   La sessió d6-4 tanca el curs: diploma a l'app i en paper. */
+{
+  const LAIA = { k: 'dig', kind: 'post', from: '@Laia_Patins|@Laia_Patins', av: '🛼', when: 'fa 1 h|hace 1 h', html: `<div style="font-size:40px;text-align:center;background:#E6FAF7;border-radius:12px;padding:6px">🛼👟⚡</div><p>Avui patino amb les meves bambes Llamp ⚡ (enllaç a la descripció!). Amb el codi LAIA10 tens un 10% de descompte! Són les millors del món!</p><p><small>Gràcies a Llamp pel regal 💛</small></p>|<div style="font-size:40px;text-align:center;background:#E6FAF7;border-radius:12px;padding:6px">🛼👟⚡</div><p>Hoy patino con mis zapatillas Llamp ⚡ (¡enlace en la descripción!). ¡Con el código LAIA10 tienes un 10% de descuento! ¡Son las mejores del mundo!</p><p><small>Gracias a Llamp por el regalo 💛</small></p>` };
+  const XUXES = { k: 'dig', kind: 'game', from: 'La cursa de les Xuxes Galàctiques|La carrera de las Xuxes Galàctiques', av: '🍬', html: `<p>Recull 20 xuxes i guanya un cupó! 🍬🍬🍬</p><div class="gbox"><span class="ge">🛒</span><div>Compra Xuxes Galàctiques i desbloqueja nivells nous!</div></div>|<p>¡Recoge 20 chuches y gana un cupón! 🍬🍬🍬</p><div class="gbox"><span class="ge">🛒</span><div>¡Compra Xuxes Galàctiques y desbloquea niveles nuevos!</div></div>` };
+  const GRANJA = { k: 'dig', kind: 'game', from: 'Granja Nuvi · Botiga|Granja Nuvi · Tienda', av: '🥕', when: '💎 20|💎 20', html: `<p><span class="gtag">⏳ Oferta: 59:59!</span></p><div class="gbox"><span class="ge">⏱️</span><div>Collita en 8 hores… o ara mateix per <span class="gbtn">💎 50</span></div></div><div class="gbox"><span class="ge">🎫</span><div>Passi Granger d'Or: 4,99 €/mes · es renova sol</div></div><p><small>Paquet més petit: 💎 500. Vestit d'espantaocells: 💎 600.</small></p>|<p><span class="gtag">⏳ ¡Oferta: 59:59!</span></p><div class="gbox"><span class="ge">⏱️</span><div>Cosecha en 8 horas… o ahora mismo por <span class="gbtn">💎 50</span></div></div><div class="gbox"><span class="ge">🎫</span><div>Pase Granjero de Oro: 4,99 €/mes · se renueva solo</div></div><p><small>Paquete más pequeño: 💎 500. Traje de espantapájaros: 💎 600.</small></p>` };
+  const FEED = { k: 'dig', kind: 'web', url: 'videonuvi.xyz/inici|videonuvi.xyz/inicio', html: `<p><b>▶️ Per a tu</b></p><p>⚽ Gols 1 · ⚽ Gols 2 · ⚽ Gols 3 · ⚽ Gols 4</p><p>⏭️ El vídeo següent comença en 3…</p><p>⬇️ Llisca per veure'n més (sempre n'hi ha més)</p><p>🔍 Cerca</p>|<p><b>▶️ Para ti</b></p><p>⚽ Goles 1 · ⚽ Goles 2 · ⚽ Goles 3 · ⚽ Goles 4</p><p>⏭️ El vídeo siguiente empieza en 3…</p><p>⬇️ Desliza para ver más (siempre hay más)</p><p>🔍 Buscar</p>` };
+  const GALETES = { k: 'dig', kind: 'post', from: '@FiraSuper_Vilaplana|@FeriaSuper_Vilaplana', av: '🍪', when: 'avui|hoy', html: `<div style="font-size:40px;text-align:center;background:#FFF3D6;border-radius:12px;padding:6px">🍪✨</div><p>Les MILLORS galetes de l'univers!!! Només queden 5 minuts per reservar-les! Tothom ja n'ha comprat: no et quedis sense!</p><p><small>Preu: pregunta per privat</small></p>|<div style="font-size:40px;text-align:center;background:#FFF3D6;border-radius:12px;padding:6px">🍪✨</div><p>¡¡¡Las MEJORES galletas del universo!!! ¡Solo quedan 5 minutos para reservarlas! Todo el mundo ya ha comprado: ¡no te quedes sin!</p><p><small>Precio: pregunta por privado</small></p>` };
+  const HELP = { k: 'dig', kind: 'help' };
+
+  Object.assign(TGUIDE, {
+
+    /* ---------- Sessió 1 · Publicitat amagada ---------- */
+    'd6-1': {
+      intro: "Primera sessió de la unitat 6, «Consumidors digitals». L'alumnat descobreix que la publicitat no sempre es nota: creadors de contingut que cobren o reben productes, codis de descompte, vídeos d'obrir caixes regalades, resultats patrocinats, «notícies» pagades i videojocs fets per una marca (videojocs-anunci). Aprèn que, quan algú cobra o rep regals per parlar d'un producte, ho ha de dir clarament (per exemple, «#publi»), distingeix informació de tècniques per convèncer i practica les tres preguntes davant d'un anunci: qui el paga, què vol que faci i què no em diu. El missatge no és «la publicitat és dolenta», sinó «saber-la veure per decidir amb calma».|Primera sesión de la unidad 6, «Consumidores digitales». El alumnado descubre que la publicidad no siempre se nota: creadores de contenido que cobran o reciben productos, códigos de descuento, vídeos de abrir cajas regaladas, resultados patrocinados, «noticias» pagadas y videojuegos hechos por una marca (videojuegos-anuncio). Aprende que, cuando alguien cobra o recibe regalos por hablar de un producto, lo tiene que decir claramente (por ejemplo, «#publi»), distingue información de técnicas para convencer y practica las tres preguntas ante un anuncio: quién lo paga, qué quiere que haga y qué no me dice. El mensaje no es «la publicidad es mala», sino «saber verla para decidir con calma».",
+      claus: [
+        "La publicitat pot estar amagada: creadors que cobren, caixes regalades, patrocinats, «notícies» pagades i videojocs-anunci.|La publicidad puede estar escondida: creadores que cobran, cajas regaladas, patrocinados, «noticias» pagadas y videojuegos-anuncio.",
+        "Qui cobra o rep regals per parlar d'un producte ho ha de dir clarament: «#publi», «publicitat», «col·laboració».|Quien cobra o recibe regalos por hablar de un producto lo tiene que decir claramente: «#publi», «publicidad», «colaboración».",
+        "La informació (preu, talles, materials) ajuda a decidir; les tècniques per convèncer (presses, «tothom ho té», exageracions) volen que decidim de pressa.|La información (precio, tallas, materiales) ayuda a decidir; las técnicas para convencer (prisas, «todo el mundo lo tiene», exageraciones) quieren que decidamos deprisa.",
+        "Tres preguntes: qui el paga, què vol que faci, què no em diu. I decidir amb calma, en família.|Tres preguntas: quién lo paga, qué quiere que haga, qué no me dice. Y decidir con calma, en familia."
+      ],
+      prev: [
+        "Sessió d3-3: els resultats de cerca amb l'etiqueta «Anunci».|Sesión d3-3: los resultados de búsqueda con la etiqueta «Anuncio».",
+        "Sessió d2-1: les emocions fortes i les presses com a pistes.|Sesión d2-1: las emociones fuertes y las prisas como pistas."
+      ],
+      obj: [
+        "L'alumne/a distingeix publicitat de continguts que no ho són, també quan està amagada.|El alumno/a distingue publicidad de contenidos que no lo son, también cuando está escondida.",
+        "L'alumne/a troba pistes de publicitat en una publicació d'un creador de contingut.|El alumno/a encuentra pistas de publicidad en una publicación de un creador de contenido.",
+        "L'alumne/a diferencia informació de tècniques per convèncer.|El alumno/a diferencia información de técnicas para convencer.",
+        "L'alumne/a aplica les tres preguntes davant d'un anunci i en parla amb respecte.|El alumno/a aplica las tres preguntas ante un anuncio y habla de ello con respeto."
+      ],
+      comp: [
+        "Competència digital (CD2): anàlisi crítica de continguts i publicitat|Competencia digital (CD2): análisis crítico de contenidos y publicidad",
+        "Competència ciutadana: consum responsable i drets de les persones consumidores|Competencia ciudadana: consumo responsable y derechos de las personas consumidoras",
+        "Competència en comunicació lingüística: intencions dels missatges i persuasió|Competencia en comunicación lingüística: intenciones de los mensajes y persuasión"
+      ],
+      vocab: [
+        ["Publicitat|Publicidad", "Missatge pagat perquè compris o perquè t'agradi una marca.|Mensaje pagado para que compres o para que te guste una marca."],
+        ["Creador/a de contingut (influencer)|Creador/a de contenido (influencer)", "Persona que publica vídeos o fotos i té molts seguidors.|Persona que publica vídeos o fotos y tiene muchos seguidores."],
+        ["#publi|#publi", "Etiqueta que avisa que un contingut és publicitat.|Etiqueta que avisa de que un contenido es publicidad."],
+        ["Patrocinat|Patrocinado", "Contingut que una empresa ha pagat perquè surti.|Contenido que una empresa ha pagado para que salga."],
+        ["Videojoc-anunci (advergame)|Videojuego-anuncio (advergame)", "Videojoc fet per una marca per fer-se publicitat.|Videojuego hecho por una marca para hacerse publicidad."],
+        ["Tècnica per convèncer|Técnica para convencer", "Truc d'un anunci per fer-te voler una cosa de pressa.|Truco de un anuncio para hacerte querer algo deprisa."]
+      ],
+      mat: {
+        aula: [
+          "Un ordinador per alumne/a amb Numi Tech obert a la sessió «Publicitat amagada»|Un ordenador por alumno/a con Numi Tech abierto en la sesión «Publicidad escondida»",
+          "Projector i la presentació d'aquesta sessió|Proyector y la presentación de esta sesión",
+          "Les targetes d'anuncis (un paquet per grup de 4) i la fitxa de les tres preguntes|Las tarjetas de anuncios (un paquete por grupo de 4) y la ficha de las tres preguntas"
+        ],
+        imprimir: ["Caçadors d'anuncis (imprimible 1): un paquet per grup|Cazadores de anuncios (imprimible 1): un paquete por grupo", "Les tres preguntes (imprimible 2): una per alumne/a|Las tres preguntas (imprimible 2): una por alumno/a"],
+        prep: [
+          "Imprimir i retallar les targetes d'anuncis (10 per grup).|Imprimir y recortar las tarjetas de anuncios (10 por grupo).",
+          "Si voleu, portar envasos o revistes amb publicitat (sense fer servir creadors reals coneguts per l'alumnat).|Si queréis, traer envases o revistas con publicidad (sin usar creadores reales conocidos por el alumnado).",
+          "Evitar preguntar què tenen, què volen comprar o què compren a casa: es parla dels anuncis, no de les famílies.|Evitar preguntar qué tienen, qué quieren comprar o qué compran en casa: se habla de los anuncios, no de las familias."
+        ]
+      },
+      plan: [
+        { min: 5, t: "Benvinguda: les bambes de la Jana|Bienvenida: las zapatillas de Jana", fase: 'inici',
+          fa: "Presenta la unitat 6. Explica la història de la Jana i les bambes de la @Laia_Patins. Pregunta per què creuen que la Laia porta aquelles bambes, sense demanar quins creadors miren.|Presenta la unidad 6. Explica la historia de Jana y las zapatillas de @Laia_Patins. Pregunta por qué creen que Laia lleva esas zapatillas, sin preguntar qué creadores ven.",
+          diu: ["Per què creieu que la Laia porta les bambes Llamp?|¿Por qué creéis que Laia lleva las zapatillas Llamp?",
+            "Com es guanyen la vida els creadors de contingut?|¿Cómo se ganan la vida los creadores de contenido?",
+            "Avui aprendrem a veure la publicitat amagada.|Hoy aprenderemos a ver la publicidad escondida."],
+          slides: ['s1', 's2'], app: "Encara no: pantalles abaixades.|Todavía no: pantallas bajadas.", org: "Tot el grup|Todo el grupo" },
+        { min: 10, t: "Anuncis visibles i amagats|Anuncios visibles y escondidos", fase: 'teoria',
+          fa: "Amb les animacions, presenta la publicitat visible i la disfressada. Projecta la publicació de la Laia i el videojoc de les xuxes, i explica que qui cobra o rep regals ho ha de dir clarament. Acaba amb les tres preguntes.|Con las animaciones, presenta la publicidad visible y la disfrazada. Proyecta la publicación de Laia y el videojuego de las chuches, y explica que quien cobra o recibe regalos lo tiene que decir claramente. Termina con las tres preguntas.",
+          diu: ["On heu vist anuncis avui (al carrer, a la tele, a l'esmorzar)?|¿Dónde habéis visto anuncios hoy (en la calle, en la tele, en el desayuno)?",
+            "Si la Laia ha rebut les bambes de regal, què hauria de posar?|Si Laia ha recibido las zapatillas de regalo, ¿qué debería poner?",
+            "Un videojoc pot ser un anunci? Com?|¿Un videojuego puede ser un anuncio? ¿Cómo?"],
+          slides: ['s3', 's4', 's5', 's6', 's7'], app: "Encara no: tota l'atenció a la projecció.|Todavía no: toda la atención en la proyección.", org: "Tot el grup|Todo el grupo" },
+        { min: 12, t: "Caçadors d'anuncis|Cazadores de anuncios", fase: 'desconnectat',
+          fa: "En grups de 4, reparteix les targetes. Primer les separen en «Publicitat» i «No és publicitat». Després, en trien dues de publicitat i hi apliquen les tres preguntes a la fitxa. Posada en comú: quina era més ben amagada?|En grupos de 4, reparte las tarjetas. Primero las separan en «Publicidad» y «No es publicidad». Después, eligen dos de publicidad y les aplican las tres preguntas en la ficha. Puesta en común: ¿cuál estaba mejor escondida?",
+          diu: ["Quina targeta us ha fet dubtar?|¿Qué tarjeta os ha hecho dudar?",
+            "Què no diu aquest anunci?|¿Qué no dice este anuncio?",
+            "Que una cosa t'agradi està bé: com decideixes si la vols de veritat?|Que algo te guste está bien: ¿cómo decides si lo quieres de verdad?"],
+          slides: ['s8', 's9'], app: "Cap: activitat sense pantalla.|Ninguna: actividad sin pantalla.", org: "Grups de 4|Grupos de 4" },
+        { min: 15, t: "A l'ordinador: descobreix i investiga|En el ordenador: descubre e investiga", fase: 'ordinador',
+          fa: "Cada alumne/a fa la sessió fins a la pausa activa: la pregunta de repàs, la història, les cinc targetes, publicitat o no, la publicació de la Laia, el «#publi» i la conversa amb la Jana. Pausa activa tots junts.|Cada alumno/a hace la sesión hasta la pausa activa: la pregunta de repaso, la historia, las cinco tarjetas, publicidad o no, la publicación de Laia, el «#publi» y la conversación con Jana. Pausa activa todos juntos.",
+          diu: ["Quina pista de la publicació de la Laia era a la lletra petita?|¿Qué pista de la publicación de Laia estaba en la letra pequeña?",
+            "Com li heu dit a la Jana sense fer-la enfadar?|¿Cómo se lo habéis dicho a Jana sin hacerla enfadar?",
+            "Ara, tots: passarel·la o estàtua!|Ahora, todos: ¡pasarela o estatua!"],
+          slides: ['s10'], app: "De «Recorda» fins a la «Pausa activa».|De «Recuerda» hasta la «Pausa activa».", org: "Individual|Individual" },
+        { min: 10, t: "Reptes i la meva lupa|Retos y mi lupa", fase: 'ordinador',
+          fa: "Continuen amb els reptes: informació o tècnica per convèncer, el videojoc de les xuxes, la «notícia» del iogurt i els resultats de cerca. Després trien la seva lupa d'anuncis.|Siguen con los retos: información o técnica para convencer, el videojuego de las chuches, la «noticia» del yogur y los resultados de búsqueda. Después eligen su lupa de anuncios.",
+          diu: ["«Edició limitada» és informació o una tècnica? Per què?|«Edición limitada», ¿es información o una técnica? ¿Por qué?",
+            "Quines fonts de la cerca no venien bambes?|¿Qué fuentes de la búsqueda no vendían zapatillas?",
+            "Quina pregunta de la lupa us costarà més de fer-vos?|¿Qué pregunta de la lupa os costará más haceros?"],
+          slides: ['s11', 's12'], app: "«Reptes» i el pas «Crea»: la meva lupa d'anuncis (i «Caçadors d'anuncis», per a casa).|«Retos» y el paso «Crea»: mi lupa de anuncios (y «Cazadores de anuncios», para casa).", org: "Individual|Individual" },
+        { min: 8, t: "Tancament i tiquet de sortida|Cierre y ticket de salida", fase: 'tancament',
+          fa: "Repasseu les idees clau amb el resum. Tiquet de sortida, preguntes finals i com s'han sentit. Explica la proposta per a casa: caçar anuncis durant un dia en família.|Repasad las ideas clave con el resumen. Ticket de salida, preguntas finales y cómo se han sentido. Explica la propuesta para casa: cazar anuncios durante un día en familia.",
+          diu: ["Digueu una disfressa de la publicitat.|Decid un disfraz de la publicidad.",
+            "Quines són les tres preguntes?|¿Cuáles son las tres preguntas?",
+            "Qui caçarà més anuncis a casa?|¿Quién cazará más anuncios en casa?"],
+          slides: ['s13', 's14', 's15'], app: "«Tancament»: les dues preguntes finals i com m'he sentit.|«Cierre»: las dos preguntas finales y cómo me he sentido.", org: "Tot el grup|Todo el grupo" }
+      ],
+      errors: [
+        ["Pensa que si un creador fa publicitat, menteix.|Piensa que si un creador hace publicidad, miente.",
+          "Fer publicitat és legal i és una feina; el que no està bé és amagar-la. La clau és saber-ho.|Hacer publicidad es legal y es un trabajo; lo que no está bien es esconderla. La clave es saberlo."],
+        ["Creu que només és publicitat si hi ha diners pel mig.|Cree que solo es publicidad si hay dinero de por medio.",
+          "Si l'empresa regala el producte perquè en parlin, també és una col·laboració i s'ha de dir.|Si la empresa regala el producto para que hablen de él, también es una colaboración y se tiene que decir."],
+        ["Confon informació amb exageració («les millors del món»).|Confunde información con exageración («las mejores del mundo»).",
+          "Pregunta: «Es pot comprovar? Amb què?». Si no es pot, és una frase per convèncer.|Pregunta: «¿Se puede comprobar? ¿Con qué?». Si no se puede, es una frase para convencer."],
+        ["Se sent malament perquè li agrada un producte d'un anunci.|Se siente mal porque le gusta un producto de un anuncio.",
+          "Que t'agradi està bé! Es tracta de decidir amb calma i en família, no de prohibir-se res.|¡Que te guste está bien! Se trata de decidir con calma y en familia, no de prohibirse nada."],
+        ["Pensa que els resultats primers del cercador són els millors.|Piensa que los primeros resultados del buscador son los mejores.",
+          "Alguns hi són perquè han pagat («Patrocinat»). Mira l'etiqueta i compara fonts.|Algunos están porque han pagado («Patrocinado»). Mira la etiqueta y compara fuentes."]
+      ],
+      diff: {
+        mes: "Per anar més enllà: reescriure la publicació de la Laia perquè sigui una col·laboració ben indicada; o analitzar un anunci d'una revista amb les tres preguntes i presentar-lo a la classe.|Para ir más allá: reescribir la publicación de Laia para que sea una colaboración bien indicada; o analizar un anuncio de una revista con las tres preguntas y presentarlo a la clase.",
+        menys: "Treballar amb sis targetes i només la primera pregunta (qui el paga?). A l'app, fer en parella la publicació de la Laia i la conversa amb la Jana.|Trabajar con seis tarjetas y solo la primera pregunta (¿quién lo paga?). En la app, hacer en pareja la publicación de Laia y la conversación con Jana."
+      },
+      aval: {
+        ticket: ["Digues una disfressa de la publicitat i com la descobreixes.|Di un disfraz de la publicidad y cómo lo descubres.",
+          "Digues les tres preguntes davant d'un anunci.|Di las tres preguntas ante un anuncio."],
+        rubric: [
+          ["Detectar publicitat|Detectar publicidad", "Reconeix publicitat amagada i les seves pistes (#publi, codis, patrocinat, regals).|Reconoce publicidad escondida y sus pistas (#publi, códigos, patrocinado, regalos).", "Només reconeix la publicitat evident.|Solo reconoce la publicidad evidente."],
+          ["Informació o persuasió|Información o persuasión", "Distingeix dades de tècniques per convèncer i ho explica.|Distingue datos de técnicas para convencer y lo explica.", "Les confon sovint.|Las confunde a menudo."],
+          ["Decidir amb calma|Decidir con calma", "Aplica les tres preguntes i proposa decidir en família.|Aplica las tres preguntas y propone decidir en familia.", "Decideix pel que diu l'anunci.|Decide por lo que dice el anuncio."]
+        ]
+      },
+      casa: "A casa, feu «Caçadors d'anuncis» durant un dia: apunteu els anuncis que veieu (a la tele, al carrer, al mòbil, als envasos), marqueu els que estaven una mica amagats i feu-vos les tres preguntes amb un d'ells: qui el paga, què vol que fem i què no ens diu. Al vespre, compteu-los. No es tracta de prohibir res, sinó d'aprendre a veure'ls.|En casa, haced «Cazadores de anuncios» durante un día: apuntad los anuncios que veis (en la tele, en la calle, en el móvil, en los envases), marcad los que estaban un poco escondidos y haceos las tres preguntas con uno de ellos: quién lo paga, qué quiere que hagamos y qué no nos dice. Por la noche, contadlos. No se trata de prohibir nada, sino de aprender a verlos.",
+      faq: [
+        ["Els creadors de contingut estan obligats a dir que fan publicitat?|¿Los creadores de contenido están obligados a decir que hacen publicidad?", "Sí: la publicitat s'ha d'identificar com a tal, i a Espanya hi ha normes i codis de conducta que demanen que els creadors indiquin clarament les col·laboracions (per exemple, amb «#publi» o «publicitat»).|Sí: la publicidad se tiene que identificar como tal, y en España hay normas y códigos de conducta que piden que los creadores indiquen claramente las colaboraciones (por ejemplo, con «#publi» o «publicidad»)."],
+        ["Un alumne diu que el seu creador preferit no fa mai publicitat.|Un alumno dice que su creador favorito no hace nunca publicidad.", "No cal discutir-ho: proposa que miri les pistes la propera vegada (codis, enllaços, regals) i ho decideixi ell.|No hace falta discutirlo: propón que mire las pistas la próxima vez (códigos, enlaces, regalos) y lo decida él."],
+        ["Per què parlem de videojocs-anunci?|¿Por qué hablamos de videojuegos-anuncio?", "Perquè són habituals en marques adreçades a infants i és difícil veure-hi la publicitat: tot el videojoc és l'anunci.|Porque son habituales en marcas dirigidas a niños y es difícil ver la publicidad: todo el videojuego es el anuncio."],
+        ["La publicitat és dolenta?|¿La publicidad es mala?", "No: informa de productes i paga molts continguts gratuïts. El problema és quan s'amaga o pressiona. Per això ensenyem a veure-la.|No: informa de productos y paga muchos contenidos gratuitos. El problema es cuando se esconde o presiona. Por eso enseñamos a verla."]
+      ],
+      tec: [
+        ["A la publicació de la Laia no troben la quarta pista.|En la publicación de Laia no encuentran la cuarta pista.", "És a la lletra petita: «Gràcies a Llamp pel regal».|Está en la letra pequeña: «Gracias a Llamp por el regalo»."],
+        ["A la cerca toquen la revista o el club i no passa res.|En la búsqueda tocan la revista o el club y no pasa nada.", "És correcte: no són publicitat. Les pistes són els tres resultats pagats.|Es correcto: no son publicidad. Las pistas son los tres resultados pagados."],
+        ["Volen tornar a la conversa amb la Jana.|Quieren volver a la conversación con Jana.", "Poden tornar enrere amb la fletxa del pas: tots els camins acaben decidint amb calma.|Pueden volver atrás con la flecha del paso: todos los caminos terminan decidiendo con calma."]
+      ],
+      seg: [
+        "No demanis quins creadors segueixen, què volen comprar ni què tenen a casa.|No preguntes qué creadores siguen, qué quieren comprar ni qué tienen en casa.",
+        "No facis servir creadors reals coneguts per l'alumnat com a exemple negatiu.|No uses creadores reales conocidos por el alumnado como ejemplo negativo.",
+        "Si surten comentaris sobre qui té o no té una cosa, recorda que cadascú decideix i que no es compara.|Si salen comentarios sobre quién tiene o no tiene algo, recuerda que cada uno decide y que no se compara."
+      ],
+      extra: [
+        "Llengua: escriure dos textos sobre el mateix producte, un informatiu i un publicitari, i comparar-los.|Lengua: escribir dos textos sobre el mismo producto, uno informativo y uno publicitario, y compararlos.",
+        "Plàstica: dissenyar l'etiqueta «#publi» perfecta: que es vegi clara i no s'amagui.|Plástica: diseñar la etiqueta «#publi» perfecta: que se vea clara y no se esconda.",
+        "Per als grans: per què algunes marques paguen creadors i no anuncis a la tele? Què en guanyen?|Para los mayores: ¿por qué algunas marcas pagan a creadores y no anuncios en la tele? ¿Qué ganan?"
+      ],
+      trans: [
+        "Sessió d3-3: els anuncis del cercador. Aquí, la publicitat amagada a vídeos i videojocs.|Sesión d3-3: los anuncios del buscador. Aquí, la publicidad escondida en vídeos y videojuegos.",
+        "Sessió d6-2: les compres dins dels videojocs. Sessió d6-4: farem un anunci honest.|Sesión d6-2: las compras dentro de los videojuegos. Sesión d6-4: haremos un anuncio honesto.",
+        "Llengua (text persuasiu), plàstica (imatge publicitària) i ciutadania (consum responsable).|Lengua (texto persuasivo), plástica (imagen publicitaria) y ciudadanía (consumo responsable)."
+      ],
+      slides: [
+        { id: 's1', k: 'portada', t: "Publicitat amagada|Publicidad escondida", x: "Saber-la veure per decidir amb calma.|Saber verla para decidir con calma.",
+          nota: "Presenta la unitat 6: consumidors digitals.|Presenta la unidad 6: consumidores digitales." },
+        { id: 's2', k: 'pregunta', t: "Les bambes de la Jana|Las zapatillas de Jana", punts: ["La @Laia_Patins porta bambes Llamp…|@Laia_Patins lleva zapatillas Llamp…", "…i la Jana també les vol.|…y Jana también las quiere.", "Per què les porta la Laia?|¿Por qué las lleva Laia?"],
+          nota: "Recull hipòtesis sense demanar quins creadors miren.|Recoge hipótesis sin preguntar qué creadores ven." },
+        { id: 's3', k: 'anim', t: "Anuncis per tot arreu|Anuncios por todas partes", anim: 'd6anuncis', x: "Uns es veuen… i d'altres s'amaguen.|Unos se ven… y otros se esconden.",
+          nota: "Pregunta on han vist anuncis avui.|Pregunta dónde han visto anuncios hoy." },
+        { id: 's4', k: 'media', t: "La publicació de la Laia|La publicación de Laia", x: "Quines pistes de publicitat hi veieu?|¿Qué pistas de publicidad veis?", media: LAIA,
+          nota: "Marca, enllaç, codi de descompte, exageració i regal a la lletra petita.|Marca, enlace, código de descuento, exageración y regalo en la letra pequeña." },
+        { id: 's5', k: 'anim', t: "Anuncis disfressats|Anuncios disfrazados", anim: 'd6disfressa', x: "Caixes regalades, la marca a la sèrie, patrocinats i «notícies».|Cajas regaladas, la marca en la serie, patrocinados y «noticias».",
+          nota: "Mira la lletra petita: «Patrocinat», «Anunci», «#publi».|Mira la letra pequeña: «Patrocinado», «Anuncio», «#publi»." },
+        { id: 's6', k: 'media', t: "Un videojoc-anunci|Un videojuego-anuncio", x: "Tot el videojoc és l'anunci.|Todo el videojuego es el anuncio.", media: XUXES,
+          nota: "Pot ser divertit; saber què és ajuda a decidir.|Puede ser divertido; saber qué es ayuda a decidir." },
+        { id: 's7', k: 'anim', t: "Les tres preguntes|Las tres preguntas", anim: 'd6lupa', x: "Qui el paga? Què vol que faci? Què no em diu?|¿Quién lo paga? ¿Qué quiere que haga? ¿Qué no me dice?",
+          nota: "Que les repeteixin amb gestos: diners, diana, mans als ulls.|Que las repitan con gestos: dinero, diana, manos en los ojos." },
+        { id: 's8', k: 'activitat', t: "Caçadors d'anuncis|Cazadores de anuncios", timer: 12,
+          punts: ["Separeu publicitat i no publicitat.|Separad publicidad y no publicidad.", "Trieu dues de publicitat.|Elegid dos de publicidad.", "Feu-vos les tres preguntes a la fitxa.|Haceos las tres preguntas en la ficha."],
+          nota: "Passa per les taules: «Qui ha pagat això?».|Pasa por las mesas: «¿Quién ha pagado esto?»." },
+        { id: 's9', k: 'concepte', t: "Informació o per convèncer?|¿Información o para convencer?", pic: 'img/ment/vel.webp',
+          punts: ["Informació: preu, talles, materials.|Información: precio, tallas, materiales.", "Per convèncer: presses, «tothom ho té», exageracions.|Para convencer: prisas, «todo el mundo lo tiene», exageraciones.", "Es pot comprovar? Llavors és informació.|¿Se puede comprobar? Entonces es información."],
+          nota: "Deixa-la projectada durant l'activitat.|Déjala proyectada durante la actividad." },
+        { id: 's10', k: 'activitat', t: "Ara, a l'ordinador|Ahora, al ordenador", timer: 15,
+          punts: ["Obre la sessió «Publicitat amagada».|Abre la sesión «Publicidad escondida».", "Fes-la fins a la pausa activa.|Hazla hasta la pausa activa.", "A la pausa: passarel·la o estàtua!|En la pausa: ¡pasarela o estatua!"],
+          nota: "Avisa quan arribin a la pausa activa.|Avisa cuando lleguen a la pausa activa." },
+        { id: 's11', k: 'repte', t: "Reptes: la lupa en acció|Retos: la lupa en acción", timer: 8,
+          punts: ["Informació o tècnica per convèncer?|¿Información o técnica para convencer?", "El videojoc de les xuxes i el iogurt.|El videojuego de las chuches y el yogur.", "Els resultats pagats de la cerca.|Los resultados pagados de la búsqueda."],
+          nota: "Pregunta quines fonts eren independents a la cerca.|Pregunta qué fuentes eran independientes en la búsqueda." },
+        { id: 's12', k: 'activitat', t: "Crea: la meva lupa d'anuncis|Crea: mi lupa de anuncios", timer: 2,
+          punts: ["Tria què faràs a cada moment.|Elige qué harás en cada momento.", "Desa la teva lupa.|Guarda tu lupa.", "A casa: caçadors d'anuncis.|En casa: cazadores de anuncios."],
+          nota: "Que comparteixin la idea que faran servir primer.|Que compartan la idea que usarán primero." },
+        { id: 's13', k: 'resum', t: "Què hem après avui|Qué hemos aprendido hoy",
+          punts: ["La publicitat pot estar amagada.|La publicidad puede estar escondida.", "Qui cobra o rep regals ho ha de dir: #publi.|Quien cobra o recibe regalos lo tiene que decir: #publi.", "Informació no és el mateix que convèncer.|Información no es lo mismo que convencer.", "Tres preguntes i decidir amb calma.|Tres preguntas y decidir con calma."],
+          nota: "Llegiu-lo junts.|Leedlo juntos." },
+        { id: 's14', k: 'tiquet', t: "Tiquet de sortida|Ticket de salida",
+          punts: ["Una disfressa de la publicitat.|Un disfraz de la publicidad.", "Les tres preguntes.|Las tres preguntas."],
+          nota: "Pot ser oral, per torns.|Puede ser oral, por turnos." },
+        { id: 's15', k: 'concepte', t: "Per a casa|Para casa", pic: 'img/ment/ded.webp',
+          punts: ["Caçadors d'anuncis durant un dia.|Cazadores de anuncios durante un día.", "Marqueu els amagats.|Marcad los escondidos.", "Les tres preguntes amb un d'ells.|Las tres preguntas con uno de ellos."],
+          nota: "Proposta per fer en família, sense jutjar ningú.|Propuesta para hacer en familia, sin juzgar a nadie." }
+      ],
+      print: [
+        { id: 'p1', t: "Caçadors d'anuncis|Cazadores de anuncios", k: 'targetes',
+          intro: "Un paquet per grup de 4. Separeu les targetes en «Publicitat» i «No és publicitat». Tot és inventat.|Un paquete por grupo de 4. Separad las tarjetas en «Publicidad» y «No es publicidad». Todo es inventado.",
+          items: [
+            { t: "🛼 Una patinadora ensenya unes bambes i posa «#publi»|🛼 Una patinadora enseña unas zapatillas y pone «#publi»", n: 1 },
+            { t: "📦 Un vídeo obrint una caixa de joguines regalades per la marca|📦 Un vídeo abriendo una caja de juguetes regalados por la marca", n: 1 },
+            { t: "📖 Una amiga et recomana un llibre que ha llegit|📖 Una amiga te recomienda un libro que ha leído", n: 1 },
+            { t: "🔍 Un resultat de cerca amb l'etiqueta «Patrocinat»|🔍 Un resultado de búsqueda con la etiqueta «Patrocinado»", n: 1 },
+            { t: "🍬 Un videojoc de xuxes on guanyes cupons per comprar xuxes|🍬 Un videojuego de chuches donde ganas cupones para comprar chuches", n: 1 },
+            { t: "🏊 La web de l'ajuntament amb l'horari de la piscina|🏊 La web del ayuntamiento con el horario de la piscina", n: 1 },
+            { t: "🥤 En una sèrie, el protagonista sempre beu la mateixa beguda i se'n veu la marca|🥤 En una serie, el protagonista siempre bebe la misma bebida y se ve la marca", n: 1 },
+            { t: "📰 «Notícia»: un iogurt «fa créixer el doble» · Contingut patrocinat|📰 «Noticia»: un yogur «hace crecer el doble» · Contenido patrocinado", n: 1 },
+            { t: "✈️ Un tutorial per fer un avió de paper, sense cap marca|✈️ Un tutorial para hacer un avión de papel, sin ninguna marca", n: 1 },
+            { t: "🎟️ «Amb el codi MARC5 tens un 5% de descompte!»|🎟️ «¡Con el código MARC5 tienes un 5% de descuento!»", n: 1 }
+          ] },
+        { id: 'p2', t: "Les tres preguntes|Las tres preguntas", k: 'fitxa',
+          intro: "Tria dos anuncis de les targetes i fes-te les tres preguntes.|Elige dos anuncios de las tarjetas y hazte las tres preguntas.",
+          items: [
+            { q: "Anunci 1: ______ · Qui el paga?|Anuncio 1: ______ · ¿Quién lo paga?", sol: "La marca del producte (o la botiga).|La marca del producto (o la tienda)." },
+            { q: "Què vol que faci?|¿Qué quiere que haga?", sol: "Per exemple: que el compri, que el demani a casa o que segueixi la marca.|Por ejemplo: que lo compre, que lo pida en casa o que siga la marca." },
+            { q: "Què no em diu?|¿Qué no me dice?", sol: "Per exemple: el preu, que la creadora ha rebut un regal, el que no fa bé.|Por ejemplo: el precio, que la creadora ha recibido un regalo, lo que no hace bien." },
+            { q: "Anunci 2: ______ · Qui el paga? Què vol que faci? Què no em diu?|Anuncio 2: ______ · ¿Quién lo paga? ¿Qué quiere que haga? ¿Qué no me dice?", big: true, sol: "Resposta oberta amb les tres preguntes.|Respuesta abierta con las tres preguntas." }
+          ] }
+      ]
+    },
+
+    /* ---------- Sessió 2 · Compres dins dels videojocs ---------- */
+    'd6-2': {
+      intro: "Segona sessió de la unitat 6. A la unitat 3 (d3-2) l'alumnat va veure que les gemmes costen diners de veritat i que les caixes sorpresa són com una loteria. Ara hi aprofundeix amb números: entén com guanyen diners els videojocs «gratis» (compres, anuncis i dades), passa monedes virtuals a euros, descobreix els paquets que no quadren, les esperes que es salten pagant, els passis i les subscripcions que es renoven soles, i calcula què vol dir «1 de cada 100» en una caixa sorpresa. Tot acaba en una regla senzilla: para, calcula i pregunta a un adult. Les xifres són exemples inventats de videojocs inventats.|Segunda sesión de la unidad 6. En la unidad 3 (d3-2) el alumnado vio que las gemas cuestan dinero de verdad y que las cajas sorpresa son como una lotería. Ahora profundiza con números: entiende cómo ganan dinero los videojuegos «gratis» (compras, anuncios y datos), pasa monedas virtuales a euros, descubre los paquetes que no cuadran, las esperas que se saltan pagando, los pases y las suscripciones que se renuevan solas, y calcula qué quiere decir «1 de cada 100» en una caja sorpresa. Todo termina en una regla sencilla: para, calcula y pregunta a un adulto. Las cifras son ejemplos inventados de videojuegos inventados.",
+      claus: [
+        "Un videojoc gratis per descarregar guanya diners amb compres, anuncis i dades: està pensat perquè vulguem pagar.|Un videojuego gratis para descargar gana dinero con compras, anuncios y datos: está pensado para que queramos pagar.",
+        "Les monedes virtuals amaguen el preu: cal passar-les a euros i mirar si els paquets quadren.|Las monedas virtuales esconden el precio: hay que pasarlas a euros y mirar si los paquetes cuadran.",
+        "Esperes que es salten pagant, comptes enrere, passis i subscripcions que es renoven soles són trucs de botiga.|Esperas que se saltan pagando, cuentas atrás, pases y suscripciones que se renuevan solas son trucos de tienda.",
+        "«1 de cada 100» vol dir que, de mitjana, cal obrir-ne 100. Regla: para, calcula i pregunta a un adult.|«1 de cada 100» quiere decir que, de media, hay que abrir 100. Regla: para, calcula y pregunta a un adulto."
+      ],
+      prev: [
+        "Sessió d3-2: gemmes, caixes sorpresa i comprar amb un adult.|Sesión d3-2: gemas, cajas sorpresa y comprar con un adulto.",
+        "Sessió d6-1: la publicitat i les tècniques per convèncer.|Sesión d6-1: la publicidad y las técnicas para convencer."
+      ],
+      obj: [
+        "L'alumne/a explica com guanya diners un videojoc gratis.|El alumno/a explica cómo gana dinero un videojuego gratis.",
+        "L'alumne/a passa preus de monedes virtuals a euros i detecta paquets que no quadren.|El alumno/a pasa precios de monedas virtuales a euros y detecta paquetes que no cuadran.",
+        "L'alumne/a reconeix trucs de botiga (esperes, comptes enrere, subscripcions) i calcula el cost d'una subscripció en un any.|El alumno/a reconoce trucos de tienda (esperas, cuentas atrás, suscripciones) y calcula el coste de una suscripción en un año.",
+        "L'alumne/a interpreta una probabilitat senzilla i aplica «para, calcula, pregunta».|El alumno/a interpreta una probabilidad sencilla y aplica «para, calcula, pregunta»."
+      ],
+      comp: [
+        "Competència matemàtica: proporcions, multiplicació i probabilitat en contextos reals|Competencia matemática: proporciones, multiplicación y probabilidad en contextos reales",
+        "Competència digital (CD4): consum responsable i protecció davant de pràctiques comercials|Competencia digital (CD4): consumo responsable y protección ante prácticas comerciales",
+        "Competència ciutadana: drets de les persones consumidores|Competencia ciudadana: derechos de las personas consumidoras"
+      ],
+      vocab: [
+        ["Gratis per descarregar|Gratis para descargar", "Que no es paga per tenir el videojoc, però sí potser per coses de dins.|Que no se paga por tener el videojuego, pero sí quizá por cosas de dentro."],
+        ["Moneda virtual|Moneda virtual", "Diamants, gemmes o monedes del videojoc que es compren amb euros.|Diamantes, gemas o monedas del videojuego que se compran con euros."],
+        ["Subscripció|Suscripción", "Un pagament que es repeteix cada mes fins que es cancel·la.|Un pago que se repite cada mes hasta que se cancela."],
+        ["Passi de temporada|Pase de temporada", "Compra que dona coses durant un temps i després caduca.|Compra que da cosas durante un tiempo y después caduca."],
+        ["Probabilitat|Probabilidad", "Com de fàcil és que passi una cosa: «1 de cada 100».|Lo fácil que es que pase algo: «1 de cada 100»."],
+        ["Atzar|Azar", "Quan el resultat no depèn de tu, com en una loteria.|Cuando el resultado no depende de ti, como en una lotería."]
+      ],
+      mat: {
+        aula: [
+          "Un ordinador per alumne/a amb Numi Tech obert a la sessió «Compres dins dels videojocs»|Un ordenador por alumno/a con Numi Tech abierto en la sesión «Compras dentro de los videojuegos»",
+          "Projector i la presentació d'aquesta sessió|Proyector y la presentación de esta sesión",
+          "Per grup: una bossa opaca amb 20 papers (19 blancs i 1 daurat) i la fitxa de la botiga de diamants|Por grupo: una bolsa opaca con 20 papeles (19 blancos y 1 dorado) y la ficha de la tienda de diamantes"
+        ],
+        imprimir: ["La botiga de diamants (imprimible 1): una per parella|La tienda de diamantes (imprimible 1): una por pareja"],
+        prep: [
+          "Preparar una bossa per grup amb 20 papers: 19 blancs i 1 daurat (o marcat amb una estrella).|Preparar una bolsa por grupo con 20 papeles: 19 blancos y 1 dorado (o marcado con una estrella).",
+          "Tenir a mà calculadores per a qui les necessiti.|Tener a mano calculadoras para quien las necesite.",
+          "No preguntar quants diners gasten ni si a casa compren dins dels videojocs: es treballa amb videojocs inventats.|No preguntar cuánto dinero gastan ni si en casa compran dentro de los videojuegos: se trabaja con videojuegos inventados."
+        ]
+      },
+      plan: [
+        { min: 5, t: "Benvinguda: gratis… de veritat?|Bienvenida: gratis… ¿de verdad?", fase: 'inici',
+          fa: "Explica la història d'en Bit i Granja Nuvi: gratis, però 8 hores d'espera o 50 diamants. Pregunta com pot ser que un videojoc gratis guanyi diners.|Explica la historia de Bit y Granja Nuvi: gratis, pero 8 horas de espera o 50 diamantes. Pregunta cómo puede ser que un videojuego gratis gane dinero.",
+          diu: ["Qui paga la gent que fa un videojoc gratis?|¿Quién paga a la gente que hace un videojuego gratis?",
+            "Què recordeu de les gemmes de Galàxia Blocs?|¿Qué recordáis de las gemas de Galàxia Blocs?",
+            "Avui farem números de veritat.|Hoy haremos números de verdad."],
+          slides: ['s1', 's2'], app: "Encara no: pantalles abaixades.|Todavía no: pantallas bajadas.", org: "Tot el grup|Todo el grupo" },
+        { min: 10, t: "Gratis, monedes, trucs i atzar|Gratis, monedas, trucos y azar", fase: 'teoria',
+          fa: "Amb les animacions, explica com guanya diners un videojoc gratis i com les monedes amaguen els euros. Projecta la botiga de Granja Nuvi i comenta els trucs. Explica l'atzar amb la graella de 100 caixes i acaba amb «para, calcula, pregunta».|Con las animaciones, explica cómo gana dinero un videojuego gratis y cómo las monedas esconden los euros. Proyecta la tienda de Granja Nuvi y comenta los trucos. Explica el azar con la cuadrícula de 100 cajas y termina con «para, calcula, pregunta».",
+          diu: ["Si 500 diamants són 5 €, quant és un diamant? (1 cèntim.)|Si 500 diamantes son 5 €, ¿cuánto es un diamante? (1 céntimo.)",
+            "Què vol dir «es renova sol»?|¿Qué quiere decir «se renueva solo»?",
+            "Si el drac surt 1 de cada 100, quantes caixes caldria obrir de mitjana?|Si el dragón sale 1 de cada 100, ¿cuántas cajas habría que abrir de media?"],
+          slides: ['s3', 's4', 's5', 's6', 's7'], app: "Encara no: tota l'atenció a la projecció.|Todavía no: toda la atención en la proyección.", org: "Tot el grup|Todo el grupo" },
+        { min: 12, t: "La bossa de l'atzar i la botiga de diamants|La bolsa del azar y la tienda de diamantes", fase: 'desconnectat',
+          fa: "Primer, en grups: cada persona treu un paper de la bossa (i el torna a posar) fins que algú treu el daurat; apunten quants intents han calgut. Compareu els grups: a uns els surt aviat i a d'altres molt tard. Després, en parelles, fan la fitxa de la botiga de diamants (passar a euros, paquets i subscripció).|Primero, en grupos: cada persona saca un papel de la bolsa (y lo vuelve a poner) hasta que alguien saca el dorado; apuntan cuántos intentos han hecho falta. Comparad los grupos: a unos les sale pronto y a otros muy tarde. Después, en parejas, hacen la ficha de la tienda de diamantes (pasar a euros, paquetes y suscripción).",
+          diu: ["Quants intents ha necessitat cada grup? Per què és tan diferent?|¿Cuántos intentos ha necesitado cada grupo? ¿Por qué es tan diferente?",
+            "I si cada intent costés 1 €?|¿Y si cada intento costara 1 €?",
+            "Quant costa el passi en un any?|¿Cuánto cuesta el pase en un año?"],
+          slides: ['s8', 's9'], app: "Cap: activitat sense pantalla.|Ninguna: actividad sin pantalla.", org: "Grups de 4 i parelles|Grupos de 4 y parejas" },
+        { min: 15, t: "A l'ordinador: descobreix i investiga|En el ordenador: descubre e investiga", fase: 'ordinador',
+          fa: "Cada alumne/a fa la sessió fins a la pausa activa: la pregunta de repàs, la història, les cinc targetes, com guanya diners Granja Nuvi, els dos càlculs de diamants i la botiga de les trampes. Pausa activa tots junts.|Cada alumno/a hace la sesión hasta la pausa activa: la pregunta de repaso, la historia, las cinco tarjetas, cómo gana dinero Granja Nuvi, los dos cálculos de diamantes y la tienda de las trampas. Pausa activa todos juntos.",
+          diu: ["Quant costava el barret en euros?|¿Cuánto costaba el sombrero en euros?",
+            "Per què sobraven 400 diamants?|¿Por qué sobraban 400 diamantes?",
+            "Ara, tots: para, calcula, pregunta!|Ahora, todos: ¡para, calcula, pregunta!"],
+          slides: ['s10'], app: "De «Recorda» fins a la «Pausa activa».|De «Recuerda» hasta la «Pausa activa».", org: "Individual|Individual" },
+        { min: 10, t: "Reptes i el meu pla de compres|Retos y mi plan de compras", fase: 'ordinador',
+          fa: "Continuen amb els reptes: el drac 1 de cada 100, la conversa del passi d'or (4,99 × 12), bona idea o trampa i la compra sense voler. Després fan el seu pla de compres.|Siguen con los retos: el dragón 1 de cada 100, la conversación del pase de oro (4,99 × 12), buena idea o trampa y la compra sin querer. Después hacen su plan de compras.",
+          diu: ["Quant costava el passi en un any?|¿Cuánto costaba el pase en un año?",
+            "Què ha de fer la Mia si ha comprat sense voler?|¿Qué debe hacer Mia si ha comprado sin querer?",
+            "Quin pas del vostre pla és el més important?|¿Qué paso de vuestro plan es el más importante?"],
+          slides: ['s11', 's12'], app: "«Reptes» i el pas «Crea»: el meu pla de compres (i «La calculadora de diamants», per a casa).|«Retos» y el paso «Crea»: mi plan de compras (y «La calculadora de diamantes», para casa).", org: "Individual|Individual" },
+        { min: 8, t: "Tancament i tiquet de sortida|Cierre y ticket de salida", fase: 'tancament',
+          fa: "Repasseu les idees clau amb el resum. Tiquet de sortida, preguntes finals i com s'han sentit. Explica la calculadora de diamants per fer a casa.|Repasad las ideas clave con el resumen. Ticket de salida, preguntas finales y cómo se han sentido. Explica la calculadora de diamantes para hacer en casa.",
+          diu: ["Com guanya diners un videojoc gratis?|¿Cómo gana dinero un videojuego gratis?",
+            "Quins són els tres passos abans de comprar?|¿Cuáles son los tres pasos antes de comprar?",
+            "Si mai compreu sense voler, què fareu?|Si alguna vez compráis sin querer, ¿qué haréis?"],
+          slides: ['s13', 's14', 's15'], app: "«Tancament»: les dues preguntes finals i com m'he sentit.|«Cierre»: las dos preguntas finales y cómo me he sentido.", org: "Tot el grup|Todo el grupo" }
+      ],
+      errors: [
+        ["Pensa que els diamants no són diners.|Piensa que los diamantes no son dinero.",
+          "Fes el camí invers: quants euros han calgut per tenir-los? Els diamants són euros disfressats.|Haz el camino inverso: ¿cuántos euros han hecho falta para tenerlos? Los diamantes son euros disfrazados."],
+        ["Creu que «1 de cada 100» vol dir que a la caixa 100 surt segur.|Cree que «1 de cada 100» quiere decir que en la caja 100 sale seguro.",
+          "Recorda la bossa: a cada intent es torna a començar. De mitjana en calen 100, però pot sortir abans o molt després.|Recuerda la bolsa: en cada intento se vuelve a empezar. De media hacen falta 100, pero puede salir antes o mucho después."],
+        ["No veu el problema d'una subscripció de 4,99 €.|No ve el problema de una suscripción de 4,99 €.",
+          "Multipliqueu per 12: gairebé 60 € l'any. I continua fins que algú la cancel·la.|Multiplicad por 12: casi 60 € al año. Y sigue hasta que alguien la cancela."],
+        ["Té por d'explicar a casa una compra feta sense voler.|Tiene miedo de contar en casa una compra hecha sin querer.",
+          "Explicar-ho aviat és el que ho arregla; de vegades es pot demanar que tornin els diners. Ningú no ha d'amagar un error.|Contarlo pronto es lo que lo arregla; a veces se puede pedir que devuelvan el dinero. Nadie tiene que esconder un error."],
+        ["Pensa que si un videojoc és gratis, no hi ha cap truc.|Piensa que si un videojuego es gratis, no hay ningún truco.",
+          "Gratis per descarregar: es paga amb compres, anuncis o dades. No és dolent, però cal saber-ho.|Gratis para descargar: se paga con compras, anuncios o datos. No es malo, pero hay que saberlo."]
+      ],
+      diff: {
+        mes: "Per anar més enllà: inventar una botiga de videojoc «justa» on els preus surtin en euros i els paquets quadrin; o calcular quant costarien 3 subscripcions de 2,99 € en un any.|Para ir más allá: inventar una tienda de videojuego «justa» donde los precios salgan en euros y los paquetes cuadren; o calcular cuánto costarían 3 suscripciones de 2,99 € en un año.",
+        menys: "Fer els càlculs amb nombres rodons (100 diamants = 1 €) i calculadora. A l'app, fer en parella la conversa del passi d'or.|Hacer los cálculos con números redondos (100 diamantes = 1 €) y calculadora. En la app, hacer en pareja la conversación del pase de oro."
+      },
+      aval: {
+        ticket: ["Digues com guanya diners un videojoc gratis.|Di cómo gana dinero un videojuego gratis.",
+          "Digues els tres passos abans de comprar.|Di los tres pasos antes de comprar."],
+        rubric: [
+          ["Model «gratis»|Modelo «gratis»", "Explica que es guanya diners amb compres, anuncis i dades.|Explica que se gana dinero con compras, anuncios y datos.", "Pensa que gratis vol dir sense cap cost.|Piensa que gratis quiere decir sin ningún coste."],
+          ["Fer números|Hacer números", "Passa monedes a euros, detecta paquets que no quadren i calcula el cost anual d'una subscripció.|Pasa monedas a euros, detecta paquetes que no cuadran y calcula el coste anual de una suscripción.", "Ho fa amb ajuda o amb errors.|Lo hace con ayuda o con errores."],
+          ["Decidir amb calma|Decidir con calma", "Aplica «para, calcula, pregunta» i entén l'atzar de les caixes.|Aplica «para, calcula, pregunta» y entiende el azar de las cajas.", "Decideix per les presses o pels amics.|Decide por las prisas o por los amigos."]
+        ]
+      },
+      casa: "A casa, feu «La calculadora de diamants»: inventeu una botiga (1.000 diamants = 10 €), poseu preus en diamants a cinc objectes i passeu-los a euros; després, compareu-los amb coses de veritat (un llibre, una entrada al cinema). Si feu servir algun videojoc amb botiga, mireu junts si té activat el permís de compra d'un adult i acordeu una norma de compres per a casa.|En casa, haced «La calculadora de diamantes»: inventad una tienda (1.000 diamantes = 10 €), poned precios en diamantes a cinco objetos y pasadlos a euros; después, comparadlos con cosas de verdad (un libro, una entrada al cine). Si usáis algún videojuego con tienda, mirad juntos si tiene activado el permiso de compra de un adulto y acordad una norma de compras para casa.",
+      faq: [
+        ["Les caixes sorpresa estan prohibides?|¿Las cajas sorpresa están prohibidas?", "Depèn del país i és un tema en debat; en molts llocs són legals. Algunes botigues d'apps obliguen a mostrar les probabilitats. A classe no entrem en la llei: treballem que funcionen per atzar i com decidir.|Depende del país y es un tema en debate; en muchos sitios son legales. Algunas tiendas de apps obligan a mostrar las probabilidades. En clase no entramos en la ley: trabajamos que funcionan por azar y cómo decidir."],
+        ["Es poden recuperar els diners d'una compra sense voler?|¿Se puede recuperar el dinero de una compra sin querer?", "De vegades: les botigues d'apps tenen un procediment per demanar-ho. Per això és important explicar-ho de seguida.|A veces: las tiendas de apps tienen un procedimiento para pedirlo. Por eso es importante contarlo enseguida."],
+        ["Com es configura el permís de compra?|¿Cómo se configura el permiso de compra?", "Els dispositius i les botigues d'apps tenen opcions familiars perquè cada compra necessiti l'aprovació d'un adult o una contrasenya. Cada sistema ho anomena d'una manera.|Los dispositivos y las tiendas de apps tienen opciones familiares para que cada compra necesite la aprobación de un adulto o una contraseña. Cada sistema lo llama de una manera."],
+        ["Les xifres de l'app són reals?|¿Las cifras de la app son reales?", "No: són exemples inventats perquè els números siguin fàcils. El que és real és el mecanisme (monedes, paquets, subscripcions, atzar).|No: son ejemplos inventados para que los números sean fáciles. Lo que es real es el mecanismo (monedas, paquetes, suscripciones, azar)."]
+      ],
+      tec: [
+        ["A la botiga de Granja Nuvi toquen la regadora i no passa res.|En la tienda de Granja Nuvi tocan la regadera y no pasa nada.", "És correcte: és gratis i no és una trampa.|Es correcto: es gratis y no es una trampa."],
+        ["Al pas de classificar en tres calaixos, al mòbil, surten un sota l'altre.|En el paso de clasificar en tres cajas, en el móvil, salen una debajo de otra.", "És normal: la targeta surt a dalt i es toca el calaix.|Es normal: la tarjeta sale arriba y se toca la caja."],
+        ["Volen fer servir la calculadora de l'ordinador.|Quieren usar la calculadora del ordenador.", "Millor amb paper o calculadora de mà: així no surten de l'app.|Mejor con papel o calculadora de mano: así no salen de la app."]
+      ],
+      seg: [
+        "No preguntis quants diners gasten ni què compren: es treballa amb videojocs inventats.|No preguntes cuánto dinero gastan ni qué compran: se trabaja con videojuegos inventados.",
+        "Si algun infant explica que ha gastat molts diners en un videojoc o que se sent enganxat a les caixes sorpresa, escolta'l sense jutjar i parla-ho amb la família.|Si algún niño o niña cuenta que ha gastado mucho dinero en un videojuego o que se siente enganchado a las cajas sorpresa, escúchale sin juzgar y háblalo con la familia.",
+        "Evita comparacions entre famílies (qui té més o menys).|Evita comparaciones entre familias (quién tiene más o menos)."
+      ],
+      extra: [
+        "Matemàtiques: més experiments d'atzar amb daus (quantes tirades calen per treure un 6?).|Matemáticas: más experimentos de azar con dados (¿cuántas tiradas hacen falta para sacar un 6?).",
+        "Educació financera: fer un pressupost setmanal inventat i decidir com repartir-lo.|Educación financiera: hacer un presupuesto semanal inventado y decidir cómo repartirlo.",
+        "Per als grans: debat «Les caixes sorpresa s'assemblen a les apostes?».|Para los mayores: debate «¿Las cajas sorpresa se parecen a las apuestas?»."
+      ],
+      trans: [
+        "Sessió d3-2: les gemmes i les caixes sorpresa. Aquí, fer números i entendre l'atzar.|Sesión d3-2: las gemas y las cajas sorpresa. Aquí, hacer números y entender el azar.",
+        "Sessió d6-3: les apps també volen que hi passem estona (algoritmes). Sessió d6-4: l'anunci honest amb preus clars.|Sesión d6-3: las apps también quieren que pasemos rato (algoritmos). Sesión d6-4: el anuncio honesto con precios claros.",
+        "Matemàtiques (proporcions, multiplicació, probabilitat) i educació financera.|Matemáticas (proporciones, multiplicación, probabilidad) y educación financiera."
+      ],
+      slides: [
+        { id: 's1', k: 'portada', t: "Compres dins dels videojocs|Compras dentro de los videojuegos", x: "Para, calcula i pregunta.|Para, calcula y pregunta.",
+          nota: "Avui farem números amb videojocs inventats.|Hoy haremos números con videojuegos inventados." },
+        { id: 's2', k: 'pregunta', t: "Gratis… de veritat?|Gratis… ¿de verdad?", punts: ["Granja Nuvi diu «GRATIS!»…|Granja Nuvi dice «¡GRATIS!»…", "…però collir costa 8 hores o 50 diamants.|…pero recoger cuesta 8 horas o 50 diamantes.", "Com guanya diners?|¿Cómo gana dinero?"],
+          nota: "Recull hipòtesis: compres, anuncis, dades.|Recoge hipótesis: compras, anuncios, datos." },
+        { id: 's3', k: 'anim', t: "Com guanya diners un videojoc gratis|Cómo gana dinero un videojuego gratis", anim: 'd6gratis', x: "Compres, anuncis i dades.|Compras, anuncios y datos.",
+          nota: "No és dolent: fer un videojoc costa diners. Cal saber-ho.|No es malo: hacer un videojuego cuesta dinero. Hay que saberlo." },
+        { id: 's4', k: 'anim', t: "Diamants que amaguen euros|Diamantes que esconden euros", anim: 'd6moneda', x: "Passa-ho sempre a euros.|Pásalo siempre a euros.",
+          nota: "Fes el càlcul en veu alta amb tota la classe.|Haz el cálculo en voz alta con toda la clase." },
+        { id: 's5', k: 'media', t: "La botiga de Granja Nuvi|La tienda de Granja Nuvi", x: "Quins trucs hi veieu?|¿Qué trucos veis?", media: GRANJA,
+          nota: "Compte enrere, espera, subscripció que es renova i paquets que no quadren.|Cuenta atrás, espera, suscripción que se renueva y paquetes que no cuadran." },
+        { id: 's6', k: 'anim', t: "L'atzar: 1 de cada 100|El azar: 1 de cada 100", anim: 'd6atzar', x: "De mitjana, cal obrir-ne 100… i potser més.|De media, hay que abrir 100… y quizá más.",
+          nota: "Prepara l'experiment de la bossa.|Prepara el experimento de la bolsa." },
+        { id: 's7', k: 'anim', t: "Para, calcula, pregunta|Para, calcula, pregunta", anim: 'd6stop', x: "Abans de comprar res.|Antes de comprar nada.",
+          nota: "És la regla de la sessió: que la repeteixin.|Es la regla de la sesión: que la repitan." },
+        { id: 's8', k: 'activitat', t: "La bossa de l'atzar|La bolsa del azar", timer: 6,
+          punts: ["Traieu un paper i torneu-lo a la bossa.|Sacad un papel y devolvedlo a la bolsa.", "Fins que surti el daurat.|Hasta que salga el dorado.", "Apunteu quants intents han calgut.|Apuntad cuántos intentos han hecho falta."],
+          nota: "Compara els resultats dels grups a la pissarra.|Compara los resultados de los grupos en la pizarra." },
+        { id: 's9', k: 'activitat', t: "La botiga de diamants|La tienda de diamantes", timer: 6,
+          punts: ["Passeu els preus a euros.|Pasad los precios a euros.", "Mireu si els paquets quadren.|Mirad si los paquetes cuadran.", "Quant costa la subscripció en un any?|¿Cuánto cuesta la suscripción en un año?"],
+          nota: "Deixa calculadores a qui les necessiti.|Deja calculadoras a quien las necesite." },
+        { id: 's10', k: 'activitat', t: "Ara, a l'ordinador|Ahora, al ordenador", timer: 15,
+          punts: ["Obre la sessió «Compres dins dels videojocs».|Abre la sesión «Compras dentro de los videojuegos».", "Fes-la fins a la pausa activa.|Hazla hasta la pausa activa.", "A la pausa: para, calcula, pregunta!|En la pausa: ¡para, calcula, pregunta!"],
+          nota: "Avisa quan arribin a la pausa activa.|Avisa cuando lleguen a la pausa activa." },
+        { id: 's11', k: 'repte', t: "Reptes: fem números|Retos: hacemos números", timer: 8,
+          punts: ["El drac 1 de cada 100.|El dragón 1 de cada 100.", "El passi d'or: 4,99 × 12.|El pase de oro: 4,99 × 12.", "Bona idea o trampa?|¿Buena idea o trampa?"],
+          nota: "Fes el càlcul de 4,99 × 12 a la pissarra.|Haz el cálculo de 4,99 × 12 en la pizarra." },
+        { id: 's12', k: 'activitat', t: "Crea: el meu pla de compres|Crea: mi plan de compras", timer: 2,
+          punts: ["Para, calcula, pregunta i atzar.|Para, calcula, pregunta y azar.", "Desa el teu pla.|Guarda tu plan.", "A casa: la calculadora de diamants.|En casa: la calculadora de diamantes."],
+          nota: "Que comparteixin una idea del seu pla.|Que compartan una idea de su plan." },
+        { id: 's13', k: 'resum', t: "Què hem après avui|Qué hemos aprendido hoy",
+          punts: ["Gratis: compres, anuncis i dades.|Gratis: compras, anuncios y datos.", "Diamants = euros disfressats.|Diamantes = euros disfrazados.", "Subscripcions que es renoven i comptes enrere.|Suscripciones que se renuevan y cuentas atrás.", "Atzar: 1 de cada 100 vol dir moltes caixes.|Azar: 1 de cada 100 quiere decir muchas cajas."],
+          nota: "Llegiu-lo junts.|Leedlo juntos." },
+        { id: 's14', k: 'tiquet', t: "Tiquet de sortida|Ticket de salida",
+          punts: ["Com guanya diners un videojoc gratis?|¿Cómo gana dinero un videojuego gratis?", "Els tres passos abans de comprar.|Los tres pasos antes de comprar."],
+          nota: "Pot ser oral, per torns.|Puede ser oral, por turnos." },
+        { id: 's15', k: 'concepte', t: "Per a casa|Para casa", pic: 'img/ment/ded.webp',
+          punts: ["La calculadora de diamants.|La calculadora de diamantes.", "Permís de compra activat?|¿Permiso de compra activado?", "Una norma de compres per a casa.|Una norma de compras para casa."],
+          nota: "Proposta per fer en família.|Propuesta para hacer en familia." }
+      ],
+      print: [
+        { id: 'p1', t: "La botiga de diamants|La tienda de diamantes", k: 'fitxa',
+          intro: "Botiga inventada: 500 diamants = 5 €. Fes els càlculs.|Tienda inventada: 500 diamantes = 5 €. Haz los cálculos.",
+          items: [
+            { q: "Un barret costa 💎 100. Quants euros són?|Un sombrero cuesta 💎 100. ¿Cuántos euros son?", sol: "1 €.|1 €." },
+            { q: "Un drac costa 💎 1.500. Quants euros són?|Un dragón cuesta 💎 1.500. ¿Cuántos euros son?", sol: "15 €.|15 €." },
+            { q: "El paquet més petit és de 💎 500 i el vestit en costa 600. Quants paquets has de comprar i quants diamants et sobren?|El paquete más pequeño es de 💎 500 y el traje cuesta 600. ¿Cuántos paquetes tienes que comprar y cuántos diamantes te sobran?", sol: "2 paquets (10 €) i sobren 💎 400.|2 paquetes (10 €) y sobran 💎 400." },
+            { q: "Un passi costa 4,99 € al mes i es renova sol. Quant costa en un any?|Un pase cuesta 4,99 € al mes y se renueva solo. ¿Cuánto cuesta en un año?", sol: "4,99 × 12 = 59,88 €.|4,99 × 12 = 59,88 €." },
+            { q: "Una caixa costa 1 € i el premi surt 1 de cada 100. Quant pot costar, de mitjana, tenir el premi?|Una caja cuesta 1 € y el premio sale 1 de cada 100. ¿Cuánto puede costar, de media, tener el premio?", sol: "Uns 100 €, i amb mala sort, més.|Unos 100 €, y con mala suerte, más." }
+          ] }
+      ]
+    },
+
+    /* ---------- Sessió 3 · Què em recomana l'algoritme? ---------- */
+    'd6-3': {
+      intro: "Tercera sessió de la unitat 6. L'alumnat entén què és un algoritme de recomanació (una recepta de passos, sovint amb IA, que decideix què ens mostra una app), quines pistes fa servir (què mirem i quanta estona, què busquem, què ens agrada, l'hora i què miren persones semblants) i per què a moltes apps els interessa que hi passem estona (anuncis i dades). Connecta amb la reproducció automàtica de la unitat 3 i amb el desplaçament infinit, descobreix la bombolla de filtre i, sobretot, aprèn a guiar l'algoritme: buscar coses variades, dir «no m'interessa», configurar amb un adult el vídeo següent i decidir quan parar.|Tercera sesión de la unidad 6. El alumnado entiende qué es un algoritmo de recomendación (una receta de pasos, a menudo con IA, que decide qué nos muestra una app), qué pistas usa (qué miramos y cuánto rato, qué buscamos, qué nos gusta, la hora y qué miran personas parecidas) y por qué a muchas apps les interesa que pasemos rato (anuncios y datos). Conecta con la reproducción automática de la unidad 3 y con el desplazamiento infinito, descubre la burbuja de filtro y, sobre todo, aprende a guiar el algoritmo: buscar cosas variadas, decir «no me interesa», configurar con un adulto el vídeo siguiente y decidir cuándo parar.",
+      claus: [
+        "Un algoritme de recomanació tria què ens mostra una app a partir de moltes pistes del que fem.|Un algoritmo de recomendación elige qué nos muestra una app a partir de muchas pistas de lo que hacemos.",
+        "A moltes apps els interessa que hi passem estona: més anuncis i més dades. Per això hi ha el vídeo següent i el desplaçament infinit.|A muchas apps les interesa que pasemos rato: más anuncios y más datos. Por eso existen el vídeo siguiente y el desplazamiento infinito.",
+        "La bombolla de filtre: veure sempre el mateix fa pensar que el món és així. El nostre inici no és el món.|La burbuja de filtro: ver siempre lo mismo hace pensar que el mundo es así. Nuestro inicio no es el mundo.",
+        "Es pot guiar l'algoritme: buscar coses variades, «no m'interessa», configurar amb un adult i decidir quan parar.|Se puede guiar el algoritmo: buscar cosas variadas, «no me interesa», configurar con un adulto y decidir cuándo parar."
+      ],
+      prev: [
+        "Sessió d3-1: les trampes per no parar (vídeo següent, notificacions, ratxes).|Sesión d3-1: las trampas para no parar (vídeo siguiente, notificaciones, rachas).",
+        "Sessió d2-2: la IA aprèn d'exemples (ara, dels nostres clics).|Sesión d2-2: la IA aprende de ejemplos (ahora, de nuestros clics)."
+      ],
+      obj: [
+        "L'alumne/a explica què és un algoritme de recomanació i quines pistes fa servir.|El alumno/a explica qué es un algoritmo de recomendación y qué pistas usa.",
+        "L'alumne/a relaciona el temps que passem a una app amb els anuncis i les dades.|El alumno/a relaciona el tiempo que pasamos en una app con los anuncios y los datos.",
+        "L'alumne/a reconeix una bombolla de filtre i accions que l'obren o la tanquen.|El alumno/a reconoce una burbuja de filtro y acciones que la abren o la cierran.",
+        "L'alumne/a tria maneres concretes de guiar l'algoritme i decidir quan parar.|El alumno/a elige maneras concretas de guiar el algoritmo y decidir cuándo parar."
+      ],
+      comp: [
+        "Competència digital (CD2): comprensió del funcionament dels sistemes de recomanació|Competencia digital (CD2): comprensión del funcionamiento de los sistemas de recomendación",
+        "Competència digital (CD4): benestar i autoregulació|Competencia digital (CD4): bienestar y autorregulación",
+        "Competència ciutadana: diversitat d'opinions i pensament crític|Competencia ciudadana: diversidad de opiniones y pensamiento crítico"
+      ],
+      vocab: [
+        ["Algoritme|Algoritmo", "Llista de passos per resoldre una cosa, com una recepta.|Lista de pasos para resolver algo, como una receta."],
+        ["Recomanació|Recomendación", "El que una app et proposa que miris, escoltis o compris.|Lo que una app te propone que mires, escuches o compres."],
+        ["Inici (feed)|Inicio (feed)", "La pantalla de l'app amb les coses triades per a tu.|La pantalla de la app con las cosas elegidas para ti."],
+        ["Desplaçament infinit|Desplazamiento infinito", "Una pantalla que no s'acaba mai: sempre hi ha més.|Una pantalla que no se acaba nunca: siempre hay más."],
+        ["Bombolla de filtre|Burbuja de filtro", "Quan només veus el mateix tipus de coses i d'opinions.|Cuando solo ves el mismo tipo de cosas y de opiniones."],
+        ["«No m'interessa»|«No me interesa»", "Botó per dir a l'app que no vols veure una cosa.|Botón para decirle a la app que no quieres ver algo."]
+      ],
+      mat: {
+        aula: [
+          "Un ordinador per alumne/a amb Numi Tech obert a la sessió «Què em recomana l'algoritme?»|Un ordenador por alumno/a con Numi Tech abierto en la sesión «¿Qué me recomienda el algoritmo?»",
+          "Projector i la presentació d'aquesta sessió|Proyector y la presentación de esta sesión",
+          "Les targetes de temes (un paquet per grup de 4)|Las tarjetas de temas (un paquete por grupo de 4)"
+        ],
+        imprimir: ["L'algoritme humà: targetes de temes (imprimible 1): un paquet per grup|El algoritmo humano: tarjetas de temas (imprimible 1): un paquete por grupo"],
+        prep: [
+          "Imprimir i retallar les targetes de temes: 6 temes amb 5 targetes cada un.|Imprimir y recortar las tarjetas de temas: 6 temas con 5 tarjetas cada uno.",
+          "Pensar un exemple propi (sense dades personals) d'una vegada que una app us ha mostrat sempre el mateix.|Pensar un ejemplo propio (sin datos personales) de una vez que una app os ha mostrado siempre lo mismo.",
+          "No demanar quines apps fan servir ni què hi miren.|No preguntar qué apps usan ni qué ven en ellas."
+        ]
+      },
+      plan: [
+        { min: 5, t: "Benvinguda: dos inicis diferents|Bienvenida: dos inicios diferentes", fase: 'inici',
+          fa: "Explica la història d'en Pau i la Nora, que tenen la mateixa app però veuen coses diferents. Recorda la reproducció automàtica de la unitat 3 i pregunta qui decideix el vídeo següent.|Explica la historia de Pau y Nora, que tienen la misma app pero ven cosas diferentes. Recuerda la reproducción automática de la unidad 3 y pregunta quién decide el vídeo siguiente.",
+          diu: ["Per què creieu que a en Pau i a la Nora els surten coses diferents?|¿Por qué creéis que a Pau y a Nora les salen cosas diferentes?",
+            "Qui tria el vídeo següent?|¿Quién elige el vídeo siguiente?",
+            "Avui aprendrem a agafar el volant.|Hoy aprenderemos a coger el volante."],
+          slides: ['s1', 's2'], app: "Encara no: pantalles abaixades.|Todavía no: pantallas bajadas.", org: "Tot el grup|Todo el grupo" },
+        { min: 10, t: "Algoritme, pistes, bombolla i volant|Algoritmo, pistas, burbuja y volante", fase: 'teoria',
+          fa: "Amb les animacions, explica què és un algoritme (connecta amb els programes que han fet), quines pistes fa servir i per què les apps volen que hi passem estona. Projecta l'inici d'en Pau i presenta la bombolla de filtre. Acaba amb com guiar-lo.|Con las animaciones, explica qué es un algoritmo (conecta con los programas que han hecho), qué pistas usa y por qué las apps quieren que pasemos rato. Proyecta el inicio de Pau y presenta la burbuja de filtro. Termina con cómo guiarlo.",
+          diu: ["Quin algoritme heu programat vosaltres en algun curs?|¿Qué algoritmo habéis programado vosotros en algún curso?",
+            "Mirar un vídeo fins al final, és una pista? (Sí, molt forta.)|Ver un vídeo hasta el final, ¿es una pista? (Sí, muy fuerte.)",
+            "Què hi falta, a l'inici d'en Pau?|¿Qué falta en el inicio de Pau?"],
+          slides: ['s3', 's4', 's5', 's6', 's7'], app: "Encara no: tota l'atenció a la projecció.|Todavía no: toda la atención en la proyección.", org: "Tot el grup|Todo el grupo" },
+        { min: 12, t: "L'algoritme humà|El algoritmo humano", fase: 'desconnectat',
+          fa: "En grups de 4: una persona fa d'algoritme amb el munt de targetes; una altra «mira»: si li agrada, rep una targeta del mateix tema; si no, d'un altre. Al cap de 10 torns, compten quants temes té. Després ho repeteixen, però ara la persona demana un tema nou cada tres torns. Comparen.|En grupos de 4: una persona hace de algoritmo con el montón de tarjetas; otra «mira»: si le gusta, recibe una tarjeta del mismo tema; si no, de otro. Al cabo de 10 turnos, cuentan cuántos temas tiene. Después lo repiten, pero ahora la persona pide un tema nuevo cada tres turnos. Comparan.",
+          diu: ["Quants temes teníeu la primera vegada? I la segona?|¿Cuántos temas teníais la primera vez? ¿Y la segunda?",
+            "Què ha fet que la bombolla s'obrís?|¿Qué ha hecho que la burbuja se abriera?",
+            "Com es pot fer això a una app de veritat?|¿Cómo se puede hacer esto en una app de verdad?"],
+          slides: ['s8', 's9'], app: "Cap: activitat sense pantalla.|Ninguna: actividad sin pantalla.", org: "Grups de 4|Grupos de 4" },
+        { min: 15, t: "A l'ordinador: descobreix i investiga|En el ordenador: descubre e investiga", fase: 'ordinador',
+          fa: "Cada alumne/a fa la sessió fins a la pausa activa: la pregunta de repàs, la història, les cinc targetes, per què li surt cada cosa a en Pau, la simulació de VideoNuvi, la pregunta dels dos inicis i l'inici d'en Pau. Pausa activa tots junts.|Cada alumno/a hace la sesión hasta la pausa activa: la pregunta de repaso, la historia, las cinco tarjetas, por qué le sale cada cosa a Pau, la simulación de VideoNuvi, la pregunta de los dos inicios y el inicio de Pau. Pausa activa todos juntos.",
+          diu: ["A la simulació, com ha canviat el vostre inici?|En la simulación, ¿cómo ha cambiado vuestro inicio?",
+            "Quina era la sortida de l'inici d'en Pau? (La lupa.)|¿Cuál era la salida del inicio de Pau? (La lupa.)",
+            "Ara, tots: rebentem la bombolla!|Ahora, todos: ¡reventamos la burbuja!"],
+          slides: ['s10'], app: "De «Recorda» fins a la «Pausa activa».|De «Recuerda» hasta la «Pausa activa».", org: "Individual|Individual" },
+        { min: 10, t: "Reptes i el meu volant|Retos y mi volante", fase: 'ordinador',
+          fa: "Continuen amb els reptes: obrir o tancar la bombolla, per què volen que hi passem estona, el menjar «màgic» de l'inici de la Jana i com agafa el volant la Nora. Després fan el seu volant de l'algoritme.|Siguen con los retos: abrir o cerrar la burbuja, por qué quieren que pasemos rato, la comida «mágica» del inicio de Jana y cómo coge el volante Nora. Después hacen su volante del algoritmo.",
+          diu: ["Si una cosa surt molt al vostre inici, vol dir que és veritat?|Si algo sale mucho en vuestro inicio, ¿quiere decir que es verdad?",
+            "Quin és el primer pas de la Nora? (Adonar-se'n.)|¿Cuál es el primer paso de Nora? (Darse cuenta.)",
+            "Quina idea del vostre volant fareu aquesta setmana?|¿Qué idea de vuestro volante haréis esta semana?"],
+          slides: ['s11', 's12'], app: "«Reptes» i el pas «Crea»: el meu volant de l'algoritme (i «L'algoritme humà», per a casa).|«Retos» y el paso «Crea»: mi volante del algoritmo (y «El algoritmo humano», para casa).", org: "Individual|Individual" },
+        { min: 8, t: "Tancament i tiquet de sortida|Cierre y ticket de salida", fase: 'tancament',
+          fa: "Repasseu les idees clau amb el resum. Tiquet de sortida, preguntes finals i com s'han sentit. Proposa repetir l'algoritme humà a casa.|Repasad las ideas clave con el resumen. Ticket de salida, preguntas finales y cómo se han sentido. Propón repetir el algoritmo humano en casa.",
+          diu: ["Digueu dues pistes que fa servir l'algoritme.|Decid dos pistas que usa el algoritmo.",
+            "Què és la bombolla de filtre?|¿Qué es la burbuja de filtro?",
+            "Com guiareu el vostre algoritme?|¿Cómo guiaréis vuestro algoritmo?"],
+          slides: ['s13', 's14', 's15'], app: "«Tancament»: les dues preguntes finals i com m'he sentit.|«Cierre»: las dos preguntas finales y cómo me he sentido.", org: "Tot el grup|Todo el grupo" }
+      ],
+      errors: [
+        ["Pensa que les recomanacions són a l'atzar.|Piensa que las recomendaciones son al azar.",
+          "Recorda les pistes: tot el que fas (i quanta estona) l'ajuda a decidir.|Recuerda las pistas: todo lo que haces (y cuánto rato) le ayuda a decidir."],
+        ["Creu que només compta el «m'agrada».|Cree que solo cuenta el «me gusta».",
+          "Mirar un vídeo fins al final, o tornar-lo a mirar, és una pista molt forta encara que no hi posis «m'agrada».|Ver un vídeo hasta el final, o volver a verlo, es una pista muy fuerte aunque no pongas «me gusta»."],
+        ["Pensa que el que surt molt al seu inici és el que pensa tothom.|Piensa que lo que sale mucho en su inicio es lo que piensa todo el mundo.",
+          "El teu inici és només teu. El d'una altra persona és diferent. Compara fonts.|Tu inicio es solo tuyo. El de otra persona es diferente. Compara fuentes."],
+        ["Creu que no es pot fer res contra l'algoritme.|Cree que no se puede hacer nada contra el algoritmo.",
+          "Mostra la simulació: buscar coses noves i dir «no m'interessa» canvia l'inici.|Muestra la simulación: buscar cosas nuevas y decir «no me interesa» cambia el inicio."],
+        ["Es culpa per haver passat molta estona a una app.|Se culpa por haber pasado mucho rato en una app.",
+          "Com a la unitat 3: estan fetes perquè costi parar. No és culpa seva; ara té eines per decidir.|Como en la unidad 3: están hechas para que cueste parar. No es culpa suya; ahora tiene herramientas para decidir."]
+      ],
+      diff: {
+        mes: "Per anar més enllà: dissenyar (en paper) l'algoritme d'una app de música «que obri bombolles»: quins passos seguiria?; o comparar amb un adult els inicis de dues apps de la família.|Para ir más allá: diseñar (en papel) el algoritmo de una app de música «que abra burbujas»: ¿qué pasos seguiría?; o comparar con un adulto los inicios de dos apps de la familia.",
+        menys: "A l'algoritme humà, fer només 6 torns i tres temes. A l'app, fer en parella la simulació de VideoNuvi.|En el algoritmo humano, hacer solo 6 turnos y tres temas. En la app, hacer en pareja la simulación de VideoNuvi."
+      },
+      aval: {
+        ticket: ["Digues dues pistes que fa servir l'algoritme.|Di dos pistas que usa el algoritmo.",
+          "Digues una manera de sortir de la bombolla.|Di una manera de salir de la burbuja."],
+        rubric: [
+          ["Entendre l'algoritme|Entender el algoritmo", "Explica què fa i quines pistes fa servir.|Explica qué hace y qué pistas usa.", "Ho explica amb ajuda.|Lo explica con ayuda."],
+          ["Bombolla i temps|Burbuja y tiempo", "Relaciona l'estona a l'app amb anuncis i dades i reconeix la bombolla.|Relaciona el rato en la app con anuncios y datos y reconoce la burbuja.", "No veu per què les apps volen que hi passem estona.|No ve por qué las apps quieren que pasemos rato."],
+          ["Guiar-lo|Guiarlo", "Tria accions concretes (buscar, «no m'interessa», configurar, parar).|Elige acciones concretas (buscar, «no me interesa», configurar, parar).", "Proposa idees generals.|Propone ideas generales."]
+        ]
+      },
+      casa: "A casa, podeu fer «L'algoritme humà» amb dibuixos o retalls de revistes de temes diferents: una persona fa d'algoritme i l'altra «mira». Primer, l'algoritme només dona més del mateix; després, la persona demana temes nous. Compteu quants temes hi ha al final. Si feu servir apps de vídeos, mireu junts com desactivar el vídeo següent i com dir «no m'interessa».|En casa, podéis hacer «El algoritmo humano» con dibujos o recortes de revistas de temas diferentes: una persona hace de algoritmo y la otra «mira». Primero, el algoritmo solo da más de lo mismo; después, la persona pide temas nuevos. Contad cuántos temas hay al final. Si usáis apps de vídeos, mirad juntos cómo desactivar el vídeo siguiente y cómo decir «no me interesa».",
+      faq: [
+        ["Els algoritmes de recomanació són IA?|¿Los algoritmos de recomendación son IA?", "Molts fan servir IA per aprendre del que fem i predir què ens agradarà, com a la unitat 2. Però «algoritme» és més general: qualsevol recepta de passos.|Muchos usan IA para aprender de lo que hacemos y predecir qué nos gustará, como en la unidad 2. Pero «algoritmo» es más general: cualquier receta de pasos."],
+        ["La bombolla de filtre és sempre dolenta?|¿La burbuja de filtro es siempre mala?", "Rebre coses que t'agraden pot estar bé. El problema és no veure res més i creure que el món és així, sobretot amb notícies i opinions.|Recibir cosas que te gustan puede estar bien. El problema es no ver nada más y creer que el mundo es así, sobre todo con noticias y opiniones."],
+        ["Es pot apagar l'algoritme?|¿Se puede apagar el algoritmo?", "Algunes apps permeten veure les coses per ordre o només de qui segueixes, o desactivar el vídeo següent. Depèn de cada app.|Algunas apps permiten ver las cosas por orden o solo de quien sigues, o desactivar el vídeo siguiente. Depende de cada app."],
+        ["Un alumne diu que no fa servir apps de vídeos.|Un alumno dice que no usa apps de vídeos.", "Cap problema: els algoritmes també són a les botigues en línia, la música o els cercadors. I l'algoritme humà li servirà per entendre-ho.|Ningún problema: los algoritmos también están en las tiendas en línea, la música o los buscadores. Y el algoritmo humano le servirá para entenderlo."]
+      ],
+      tec: [
+        ["A la simulació de VideoNuvi volen provar l'altre camí.|En la simulación de VideoNuvi quieren probar el otro camino.", "Poden tornar enrere amb la fletxa del pas: cada camí mostra un inici diferent.|Pueden volver atrás con la flecha del paso: cada camino muestra un inicio diferente."],
+        ["A l'inici d'en Pau toquen «Cerca» i no passa res.|En el inicio de Pau tocan «Buscar» y no pasa nada.", "És correcte: la cerca no és una trampa, és la sortida!|Es correcto: la búsqueda no es una trampa, ¡es la salida!"],
+        ["Al pas de classificar en tres calaixos, al mòbil, surten un sota l'altre.|En el paso de clasificar en tres cajas, en el móvil, salen una debajo de otra.", "És normal: la targeta surt a dalt i es toca el calaix.|Es normal: la tarjeta sale arriba y se toca la caja."]
+      ],
+      seg: [
+        "No demanis quines apps fan servir ni quantes hores hi passen.|No preguntes qué apps usan ni cuántas horas pasan.",
+        "Si algun infant explica que el seu inici li mostra coses que el fan sentir malament o li fan por, escolta'l i parla-ho amb la família: es poden bloquejar i dir «no m'interessa».|Si algún niño o niña cuenta que su inicio le muestra cosas que le hacen sentir mal o le dan miedo, escúchale y háblalo con la familia: se pueden bloquear y decir «no me interesa».",
+        "Si apareix contingut inadequat a l'edat, recorda la norma d'or: explicar-ho a un adult de confiança.|Si aparece contenido inadecuado para la edad, recuerda la norma de oro: contarlo a un adulto de confianza."
+      ],
+      extra: [
+        "Matemàtiques: fer un gràfic de barres amb els temes de l'algoritme humà, abans i després.|Matemáticas: hacer un gráfico de barras con los temas del algoritmo humano, antes y después.",
+        "Programació: escriure l'algoritme humà com a passos (si li agrada… si no…) i, a Creadors, programar-lo amb un escenari.|Programación: escribir el algoritmo humano como pasos (si le gusta… si no…) y, en Creadors, programarlo con un escenario.",
+        "Per als grans: debat «Si tothom té un inici diferent, com ens posem d'acord sobre què passa al món?».|Para los mayores: debate «Si todo el mundo tiene un inicio diferente, ¿cómo nos ponemos de acuerdo sobre qué pasa en el mundo?»."
+      ],
+      trans: [
+        "Sessió d3-1: el vídeo següent i les trampes per no parar. Aquí, qui el tria i per què.|Sesión d3-1: el vídeo siguiente y las trampas para no parar. Aquí, quién lo elige y por qué.",
+        "Sessió d5-3: la IA aprèn de nosaltres. Sessió d6-4: l'anunci honest i el final del curs.|Sesión d5-3: la IA aprende de nosotros. Sesión d6-4: el anuncio honesto y el final del curso.",
+        "Matemàtiques (gràfics), programació (algoritmes) i tutoria (benestar i diversitat d'opinions).|Matemáticas (gráficos), programación (algoritmos) y tutoría (bienestar y diversidad de opiniones)."
+      ],
+      slides: [
+        { id: 's1', k: 'portada', t: "Què em recomana l'algoritme?|¿Qué me recomienda el algoritmo?", x: "Per què veus el que veus… i com agafar el volant.|Por qué ves lo que ves… y cómo coger el volante.",
+          nota: "Connecta amb el vídeo següent de la unitat 3.|Conecta con el vídeo siguiente de la unidad 3." },
+        { id: 's2', k: 'pregunta', t: "Dos inicis diferents|Dos inicios diferentes", punts: ["En Pau: futbol, futbol, futbol…|Pau: fútbol, fútbol, fútbol…", "La Nora: gats i manualitats.|Nora: gatos y manualidades.", "Per què, si és la mateixa app?|¿Por qué, si es la misma app?"],
+          nota: "Recull hipòtesis sobre qui tria.|Recoge hipótesis sobre quién elige." },
+        { id: 's3', k: 'anim', t: "Una recepta de passos|Una receta de pasos", anim: 'd6algo', x: "Mira, busca semblants, ordena i mostra.|Mira, busca parecidos, ordena y muestra.",
+          nota: "Recorda els programes que han fet: també eren algoritmes.|Recuerda los programas que han hecho: también eran algoritmos." },
+        { id: 's4', k: 'anim', t: "Les pistes|Las pistas", anim: 'd6pistes', x: "Què mires, quanta estona, què t'agrada, què busques, l'hora i gent com tu.|Qué miras, cuánto rato, qué te gusta, qué buscas, la hora y gente como tú.",
+          nota: "Remarca que mirar fins al final ja és una pista.|Remarca que ver hasta el final ya es una pista." },
+        { id: 's5', k: 'concepte', t: "Per què volen que hi passem estona?|¿Por qué quieren que pasemos rato?", pic: 'img/ment/cad.webp',
+          punts: ["Com més estona, més anuncis.|Cuanto más rato, más anuncios.", "I més dades sobre nosaltres.|Y más datos sobre nosotros.", "Vídeo següent i pantalla infinita.|Vídeo siguiente y pantalla infinita."],
+          nota: "Sense culpes: estan fetes perquè costi parar.|Sin culpas: están hechas para que cueste parar." },
+        { id: 's6', k: 'media', t: "L'inici d'en Pau|El inicio de Pau", x: "Què hi veieu? Què hi falta?|¿Qué veis? ¿Qué falta?", media: FEED,
+          nota: "Tot del mateix tema, vídeo següent i pantalla infinita. La sortida: la cerca.|Todo del mismo tema, vídeo siguiente y pantalla infinita. La salida: la búsqueda." },
+        { id: 's7', k: 'anim', t: "La bombolla de filtre|La burbuja de filtro", anim: 'd6bombolla', x: "El teu inici no és el món sencer.|Tu inicio no es el mundo entero.",
+          nota: "Acaba amb com guiar l'algoritme: buscar, dir que no, configurar i parar.|Termina con cómo guiar el algoritmo: buscar, decir que no, configurar y parar." },
+        { id: 's8', k: 'activitat', t: "L'algoritme humà|El algoritmo humano", timer: 12,
+          punts: ["Si li agrada: un altre del mateix tema.|Si le gusta: otro del mismo tema.", "Si no: un d'un tema diferent.|Si no: uno de un tema diferente.", "Després: demaneu temes nous. Què canvia?|Después: pedid temas nuevos. ¿Qué cambia?"],
+          nota: "Que apuntin quants temes tenen cada vegada.|Que apunten cuántos temas tienen cada vez." },
+        { id: 's9', k: 'concepte', t: "Agafa el volant|Coge el volante", pic: 'img/ment/dir.webp',
+          punts: ["Busca coses variades.|Busca cosas variadas.", "«No m'interessa».|«No me interesa».", "Vídeo següent desactivat, amb un adult.|Vídeo siguiente desactivado, con un adulto.", "Tu decideixes quan parar.|Tú decides cuándo parar."],
+          nota: "Deixa-la projectada durant l'activitat.|Déjala proyectada durante la actividad." },
+        { id: 's10', k: 'activitat', t: "Ara, a l'ordinador|Ahora, al ordenador", timer: 15,
+          punts: ["Obre la sessió «Què em recomana l'algoritme?».|Abre la sesión «¿Qué me recomienda el algoritmo?».", "Fes-la fins a la pausa activa.|Hazla hasta la pausa activa.", "A la pausa: rebentem la bombolla!|En la pausa: ¡reventamos la burbuja!"],
+          nota: "Avisa quan arribin a la pausa activa.|Avisa cuando lleguen a la pausa activa." },
+        { id: 's11', k: 'repte', t: "Reptes: obre la bombolla|Retos: abre la burbuja", timer: 8,
+          punts: ["Obre o tanca la bombolla?|¿Abre o cierra la burbuja?", "El menjar «màgic» de la Jana.|La comida «mágica» de Jana.", "La Nora agafa el volant.|Nora coge el volante."],
+          nota: "Pregunta: surt molt vol dir que és veritat?|Pregunta: ¿sale mucho quiere decir que es verdad?" },
+        { id: 's12', k: 'activitat', t: "Crea: el meu volant|Crea: mi volante", timer: 2,
+          punts: ["Buscar, dir que no, vídeo següent i bombolla.|Buscar, decir que no, vídeo siguiente y burbuja.", "Desa el teu volant.|Guarda tu volante.", "A casa: l'algoritme humà.|En casa: el algoritmo humano."],
+          nota: "Que comparteixin una idea per a aquesta setmana.|Que compartan una idea para esta semana." },
+        { id: 's13', k: 'resum', t: "Què hem après avui|Qué hemos aprendido hoy",
+          punts: ["L'algoritme tria segons les nostres pistes.|El algoritmo elige según nuestras pistas.", "Més estona = més anuncis i dades.|Más rato = más anuncios y datos.", "El nostre inici no és el món: bombolla.|Nuestro inicio no es el mundo: burbuja.", "Podem guiar-lo i decidir quan parar.|Podemos guiarlo y decidir cuándo parar."],
+          nota: "Llegiu-lo junts.|Leedlo juntos." },
+        { id: 's14', k: 'tiquet', t: "Tiquet de sortida|Ticket de salida",
+          punts: ["Dues pistes que fa servir l'algoritme.|Dos pistas que usa el algoritmo.", "Una manera de sortir de la bombolla.|Una manera de salir de la burbuja."],
+          nota: "Pot ser oral, per torns.|Puede ser oral, por turnos." },
+        { id: 's15', k: 'concepte', t: "Per a casa|Para casa", pic: 'img/ment/ded.webp',
+          punts: ["L'algoritme humà en família.|El algoritmo humano en familia.", "Com desactivar el vídeo següent.|Cómo desactivar el vídeo siguiente.", "Busqueu junts un tema nou.|Buscad juntos un tema nuevo."],
+          nota: "Proposta per fer en família.|Propuesta para hacer en familia." }
+      ],
+      print: [
+        { id: 'p1', t: "L'algoritme humà: targetes de temes|El algoritmo humano: tarjetas de temas", k: 'targetes',
+          intro: "Un paquet per grup de 4. Retalleu les targetes (5 de cada tema) i ordeneu-les per temes en sis munts.|Un paquete por grupo de 4. Recortad las tarjetas (5 de cada tema) y ordenadlas por temas en seis montones.",
+          items: [
+            { t: "🐱 Animals|🐱 Animales", n: 5 },
+            { t: "⚽ Esports|⚽ Deportes", n: 5 },
+            { t: "🎵 Música|🎵 Música", n: 5 },
+            { t: "🔭 Ciència|🔭 Ciencia", n: 5 },
+            { t: "🎨 Manualitats|🎨 Manualidades", n: 5 },
+            { t: "🍳 Cuina|🍳 Cocina", n: 5 }
+          ] }
+      ]
+    },
+
+    /* ---------- Sessió 4 · Projecte: l'anunci honest (final del curs) ---------- */
+    'd6-4': {
+      intro: "Sessió de projecte que tanca la unitat 6 i tot el curs Tech Digital. La classe organitza una fira solidària (real o imaginada) i cada equip ha de fer l'anunci del seu producte fet a mà, però un anunci honest: diu què és, quant costa, qui el fa i per a què són els diners, sense presses falses, exageracions, lletra petita ni cares sense permís. Primer analitzen un anunci tramposo, decideixen què hi va i què no, i practiquen en una conversa com defensar l'honestedat a l'equip. Després repassen el curs en tres grans idees (protegir-se, pensar abans de creure i decidir amb calma), trien les parts del seu anunci (es desa) i el fan en paper. La sessió acaba amb el diploma del curs.|Sesión de proyecto que cierra la unidad 6 y todo el curso Tech Digital. La clase organiza una feria solidaria (real o imaginada) y cada equipo tiene que hacer el anuncio de su producto hecho a mano, pero un anuncio honesto: dice qué es, cuánto cuesta, quién lo hace y para qué es el dinero, sin prisas falsas, exageraciones, letra pequeña ni caras sin permiso. Primero analizan un anuncio tramposo, deciden qué va y qué no, y practican en una conversación cómo defender la honestidad en el equipo. Después repasan el curso en tres grandes ideas (protegerse, pensar antes de creer y decidir con calma), eligen las partes de su anuncio (se guarda) y lo hacen en papel. La sesión termina con el diploma del curso.",
+      claus: [
+        "Un anunci honest diu què és, quant costa, qui el fa i per a què, i no amaga res.|Un anuncio honesto dice qué es, cuánto cuesta, quién lo hace y para qué, y no esconde nada.",
+        "Fora trucs: presses falses, «tothom ho té», exageracions, lletra petita i cares sense permís.|Fuera trucos: prisas falsas, «todo el mundo lo tiene», exageraciones, letra pequeña y caras sin permiso.",
+        "Tot el curs en tres idees: protegir-se, pensar abans de creure i decidir amb calma.|Todo el curso en tres ideas: protegerse, pensar antes de creer y decidir con calma.",
+        "La norma d'or continua: si alguna cosa d'internet et fa sentir malament, explica-ho a un adult de confiança.|La norma de oro sigue: si algo de internet te hace sentir mal, cuéntaselo a un adulto de confianza."
+      ],
+      prev: [
+        "Sessions d6-1 a d6-3: publicitat amagada, compres i algoritmes.|Sesiones d6-1 a d6-3: publicidad escondida, compras y algoritmos.",
+        "Sessió d2-4: la campanya (eslògan, cartell i pla).|Sesión d2-4: la campaña (eslogan, cartel y plan)."
+      ],
+      obj: [
+        "L'alumne/a analitza un anunci i n'identifica els trucs.|El alumno/a analiza un anuncio e identifica sus trucos.",
+        "L'alumne/a decideix què va i què no va en un anunci honest.|El alumno/a decide qué va y qué no va en un anuncio honesto.",
+        "L'alumne/a crea, en equip, un anunci honest amb eslògan, imatge i informació clara.|El alumno/a crea, en equipo, un anuncio honesto con eslogan, imagen e información clara.",
+        "L'alumne/a relaciona el que ha après al curs amb tres grans idees.|El alumno/a relaciona lo que ha aprendido en el curso con tres grandes ideas."
+      ],
+      comp: [
+        "Competència digital (CD3): creació de continguts responsables|Competencia digital (CD3): creación de contenidos responsables",
+        "Competència emprenedora: dissenyar una campanya per a una causa|Competencia emprendedora: diseñar una campaña para una causa",
+        "Competència ciutadana: consum responsable, honestedat i respecte|Competencia ciudadana: consumo responsable, honestidad y respeto"
+      ],
+      vocab: [
+        ["Anunci honest|Anuncio honesto", "Anunci que convenç amb la veritat i no amaga res.|Anuncio que convence con la verdad y no esconde nada."],
+        ["Eslògan|Eslogan", "Frase curta i fàcil de recordar.|Frase corta y fácil de recordar."],
+        ["Fira solidària|Feria solidaria", "Venda per recollir diners per a una causa.|Venta para recoger dinero para una causa."],
+        ["Persona consumidora|Persona consumidora", "Qui compra o fa servir productes i serveis, i té drets.|Quien compra o usa productos y servicios, y tiene derechos."],
+        ["Truc|Truco", "Recurs d'un anunci per pressionar o confondre.|Recurso de un anuncio para presionar o confundir."]
+      ],
+      mat: {
+        aula: [
+          "Un ordinador per alumne/a amb Numi Tech obert a la sessió «Projecte: l'anunci honest»|Un ordenador por alumno/a con Numi Tech abierto en la sesión «Proyecto: el anuncio honesto»",
+          "Projector i la presentació d'aquesta sessió|Proyector y la presentación de esta sesión",
+          "Cartolines DIN A3, retoladors, colors i, si es vol, els productes de la fira (o fotos dels productes, sense persones)|Cartulinas DIN A3, rotuladores, colores y, si se quiere, los productos de la feria (o fotos de los productos, sin personas)"
+        ],
+        imprimir: ["Plantilla de l'anunci honest (imprimible 1): una per equip|Plantilla del anuncio honesto (imprimible 1): una por equipo", "Diploma del curs (imprimible 2): un per alumne/a|Diploma del curso (imprimible 2): uno por alumno/a"],
+        prep: [
+          "Fer equips de 3 o 4 i decidir si la fira serà real o imaginada (i per a quina causa).|Hacer equipos de 3 o 4 y decidir si la feria será real o imaginada (y para qué causa).",
+          "Imprimir els diplomes amb el nom de cada alumne/a.|Imprimir los diplomas con el nombre de cada alumno/a.",
+          "Si es grava un anunci, fer-ho sense cares (només mans i productes) i amb permís del centre.|Si se graba un anuncio, hacerlo sin caras (solo manos y productos) y con permiso del centro."
+        ]
+      },
+      plan: [
+        { min: 5, t: "Benvinguda: la fira solidària|Bienvenida: la feria solidaria", fase: 'inici',
+          fa: "Explica l'últim repte del curs: l'anunci honest per a la fira solidària. Fes el repàs ràpid de la unitat 6 i forma els equips.|Explica el último reto del curso: el anuncio honesto para la feria solidaria. Haz el repaso rápido de la unidad 6 y forma los equipos.",
+          diu: ["Quines tres preguntes fem davant d'un anunci?|¿Qué tres preguntas hacemos ante un anuncio?",
+            "Es pot convèncer sense enganyar? Com?|¿Se puede convencer sin engañar? ¿Cómo?",
+            "Què vendrà el vostre equip?|¿Qué venderá vuestro equipo?"],
+          slides: ['s1', 's2'], app: "Encara no: pantalles abaixades.|Todavía no: pantallas bajadas.", org: "Tot el grup|Todo el grupo" },
+        { min: 5, t: "Què té un anunci honest|Qué tiene un anuncio honesto", fase: 'teoria',
+          fa: "Amb l'animació, presenta què hi va i què no. Projecta l'anunci tramposo de les galetes i deixa que trobin els trucs. Recorda les parts d'un bon anunci (eslògan, imatge i informació).|Con la animación, presenta qué va y qué no. Proyecta el anuncio tramposo de las galletas y deja que encuentren los trucos. Recuerda las partes de un buen anuncio (eslogan, imagen e información).",
+          diu: ["Quins trucs té l'anunci de les galetes?|¿Qué trucos tiene el anuncio de las galletas?",
+            "Com el faríeu honest?|¿Cómo lo haríais honesto?",
+            "Quina informació no pot faltar?|¿Qué información no puede faltar?"],
+          slides: ['s3', 's4', 's5'], app: "Encara no: tota l'atenció a la projecció.|Todavía no: toda la atención en la proyección.", org: "Tot el grup|Todo el grupo" },
+        { min: 20, t: "A l'ordinador: anunci honest i repàs del curs|En el ordenador: anuncio honesto y repaso del curso", fase: 'ordinador',
+          fa: "Cada alumne/a fa la sessió: el repàs, la història, les targetes, l'anunci tramposo, què hi va i què no, l'eslògan, la conversa amb l'equip, la pausa activa, el repte del curs en tres idees, l'etiqueta de l'anunci i el pas «Crea» (les parts del seu anunci).|Cada alumno/a hace la sesión: el repaso, la historia, las tarjetas, el anuncio tramposo, qué va y qué no, el eslogan, la conversación con el equipo, la pausa activa, el reto del curso en tres ideas, la etiqueta del anuncio y el paso «Crea» (las partes de su anuncio).",
+          diu: ["Com heu convençut la Mia de no posar «Només en queden 3»?|¿Cómo habéis convencido a Mia de no poner «Solo quedan 3»?",
+            "A quina gran idea anava cada cosa del curs?|¿A qué gran idea iba cada cosa del curso?",
+            "Quin eslògan heu triat?|¿Qué eslogan habéis elegido?"],
+          slides: ['s6', 's7', 's8'], app: "De «Recorda» fins al pas «Crea»: el nostre anunci honest.|De «Recuerda» hasta el paso «Crea»: nuestro anuncio honesto.", org: "Individual|Individual" },
+        { min: 17, t: "L'anunci en paper|El anuncio en papel", fase: 'desconnectat',
+          fa: "Cada equip fa el cartell: eslògan, imatge gran i informació clara (què, quant, on, quan, per a què) i l'etiqueta «Anunci de la fira». Repassen el cartell amb la llista de l'anunci honest. Presenten-lo a la classe i cada equip rep una millora.|Cada equipo hace el cartel: eslogan, imagen grande e información clara (qué, cuánto, dónde, cuándo, para qué) y la etiqueta «Anuncio de la feria». Repasan el cartel con la lista del anuncio honesto. Lo presentan a la clase y cada equipo recibe una mejora.",
+          diu: ["Hi ha cap truc amagat al vostre cartell?|¿Hay algún truco escondido en vuestro cartel?",
+            "Es veu el preu de lluny?|¿Se ve el precio de lejos?",
+            "Una cosa que funciona i una millora per a cada equip.|Una cosa que funciona y una mejora para cada equipo."],
+          slides: ['s9', 's10', 's11'], app: "Cap: activitat sense pantalla.|Ninguna: actividad sin pantalla.", org: "Equips de 3 o 4|Equipos de 3 o 4" },
+        { min: 13, t: "Tancament, diploma i tiquet de sortida|Cierre, diploma y ticket de salida", fase: 'tancament',
+          fa: "Repasseu el curs amb el resum i la diapositiva dels telèfons d'ajuda. Que facin les preguntes finals, el diploma de l'app i com s'han sentit. Lliura els diplomes en paper un a un, dient a cada alumne/a una cosa concreta que ha fet bé durant el curs.|Repasad el curso con el resumen y la diapositiva de los teléfonos de ayuda. Que hagan las preguntas finales, el diploma de la app y cómo se han sentido. Entrega los diplomas en papel uno a uno, diciendo a cada alumno/a una cosa concreta que ha hecho bien durante el curso.",
+          diu: ["Quina és la cosa més important que us emporteu del curs?|¿Qué es lo más importante que os lleváis del curso?",
+            "Quina és la norma d'or?|¿Cuál es la norma de oro?",
+            "A qui ajudareu amb el que heu après?|¿A quién ayudaréis con lo que habéis aprendido?"],
+          slides: ['s12', 's13', 's14', 's15', 's16'], app: "«Tancament»: la pregunta final, el diploma i com m'he sentit.|«Cierre»: la pregunta final, el diploma y cómo me he sentido.", org: "Tot el grup|Todo el grupo" }
+      ],
+      errors: [
+        ["Pensa que un anunci honest ha de ser avorrit.|Piensa que un anuncio honesto tiene que ser aburrido.",
+          "Pot ser bonic, divertit i creatiu: el que no fa és enganyar ni amagar.|Puede ser bonito, divertido y creativo: lo que no hace es engañar ni esconder."],
+        ["Vol posar «el millor del món» perquè «tots ho diuen».|Quiere poner «lo mejor del mundo» porque «todos lo dicen».",
+          "Pregunta: es pot comprovar? Proposa dir una cosa certa i bonica: «fet a mà amb paper reciclat».|Pregunta: ¿se puede comprobar? Propón decir algo cierto y bonito: «hecho a mano con papel reciclado»."],
+        ["Oblida el preu o el posa petit.|Olvida el precio o lo pone pequeño.",
+          "El preu és informació clau: ha de ser clar i es pot llegir de lluny.|El precio es información clave: tiene que ser claro y se tiene que poder leer de lejos."],
+        ["Vol posar fotos de companys al cartell.|Quiere poner fotos de compañeros en el cartel.",
+          "Sense permís, no. El protagonista és el producte.|Sin permiso, no. El protagonista es el producto."],
+        ["Al repàs del curs, no recorda les primeres unitats.|En el repaso del curso, no recuerda las primeras unidades.",
+          "Fes servir la diapositiva de repàs i les insígnies de l'app com a pistes.|Usa la diapositiva de repaso y las insignias de la app como pistas."]
+      ],
+      diff: {
+        mes: "Per anar més enllà: fer també l'anunci en format de vídeo curt sense cares o en format de publicació, amb l'etiqueta clara; o escriure la versió «tramposa» del mateix anunci i comparar-les.|Para ir más allá: hacer también el anuncio en formato de vídeo corto sin caras o en formato de publicación, con la etiqueta clara; o escribir la versión «tramposa» del mismo anuncio y compararlas.",
+        menys: "Donar la plantilla amb les caselles (què, quant, on, quan, per a què) i tres eslògans per triar. A l'app, fer en parella la conversa amb l'equip.|Dar la plantilla con las casillas (qué, cuánto, dónde, cuándo, para qué) y tres eslóganes para elegir. En la app, hacer en pareja la conversación con el equipo."
+      },
+      aval: {
+        ticket: ["Digues què ha de tenir un anunci honest.|Di qué debe tener un anuncio honesto.",
+          "Digues la cosa més important que t'emportes del curs.|Di lo más importante que te llevas del curso."],
+        rubric: [
+          ["Anunci honest|Anuncio honesto", "El cartell té què, quant, qui, on, quan i per a què, sense trucs.|El cartel tiene qué, cuánto, quién, dónde, cuándo y para qué, sin trucos.", "Hi falta informació o hi ha algun truc.|Falta información o hay algún truco."],
+          ["Comunicació|Comunicación", "Eslògan curt, imatge clara i etiqueta sincera.|Eslogan corto, imagen clara y etiqueta sincera.", "El missatge no es llegeix bé de lluny.|El mensaje no se lee bien de lejos."],
+          ["Visió del curs|Visión del curso", "Relaciona el que ha après amb protegir-se, pensar abans de creure i decidir amb calma.|Relaciona lo aprendido con protegerse, pensar antes de creer y decidir con calma.", "En recorda idees soltes.|Recuerda ideas sueltas."]
+        ]
+      },
+      casa: "A casa, l'infant us pot ensenyar el cartell de l'anunci honest i explicar-vos què hi va i què no. Ha acabat el curs Tech Digital: podeu repassar junts el diploma i les idees del curs (contrasenyes, privadesa, bulos, IA, benestar, ciberseguretat i consum) i tenir a la vista la targeta d'ajuda: primer, un adult de confiança; i si no, 116 111, 017 i 112.|En casa, el niño o la niña os puede enseñar el cartel del anuncio honesto y explicaros qué va y qué no. Ha terminado el curso Tech Digital: podéis repasar juntos el diploma y las ideas del curso (contraseñas, privacidad, bulos, IA, bienestar, ciberseguridad y consumo) y tener a la vista la tarjeta de ayuda: primero, un adulto de confianza; y si no, 116 111, 017 y 112.",
+      faq: [
+        ["Cal fer la fira de veritat?|¿Hay que hacer la feria de verdad?", "No: el projecte funciona amb una fira imaginada. Si el centre ho permet, fer-la de veritat és una manera molt bona de tancar el curs.|No: el proyecto funciona con una feria imaginada. Si el centro lo permite, hacerla de verdad es una manera muy buena de cerrar el curso."],
+        ["El curs també tenia un diploma a la unitat 3?|¿El curso también tenía un diploma en la unidad 3?", "El curs ara té sis unitats; el diploma final és el d'aquesta sessió, que recull totes les unitats.|El curso ahora tiene seis unidades; el diploma final es el de esta sesión, que recoge todas las unidades."],
+        ["Com s'avalua el projecte?|¿Cómo se evalúa el proyecto?", "Amb la rúbrica (anunci honest, comunicació i visió del curs) i el que han triat al pas «Crea», que queda desat.|Con la rúbrica (anuncio honesto, comunicación y visión del curso) y lo que han elegido en el paso «Crea», que queda guardado."],
+        ["I si un equip vol fer un anunci d'un producte real d'una marca?|¿Y si un equipo quiere hacer un anuncio de un producto real de una marca?", "Millor un producte propi de la fira: així no fan publicitat de cap marca i treballen la idea de l'honestedat.|Mejor un producto propio de la feria: así no hacen publicidad de ninguna marca y trabajan la idea de la honestidad."]
+      ],
+      tec: [
+        ["Al pas «Crea» no es pot continuar.|En el paso «Crea» no se puede continuar.", "Cal respondre totes les preguntes (els punts de dalt); el botó «Desa» s'activa al final.|Hay que responder todas las preguntas (los puntos de arriba); el botón «Guardar» se activa al final."],
+        ["El diploma de l'app no surt amb el nom complet.|El diploma de la app no sale con el nombre completo.", "Surt el nom del perfil. El diploma imprimible de la guia té espai per escriure el nom.|Sale el nombre del perfil. El diploma imprimible de la guía tiene espacio para escribir el nombre."],
+        ["Al repte del curs, al mòbil, els tres calaixos surten un sota l'altre.|En el reto del curso, en el móvil, las tres cajas salen una debajo de otra.", "És normal: la targeta surt a dalt i es toca el calaix.|Es normal: la tarjeta sale arriba y se toca la caja."]
+      ],
+      seg: [
+        "Els cartells i els vídeos no han de portar cares ni noms complets de l'alumnat.|Los carteles y los vídeos no deben llevar caras ni nombres completos del alumnado.",
+        "Si la fira és de veritat, seguiu les normes del centre per a les vendes i els diners.|Si la feria es de verdad, seguid las normas del centro para las ventas y el dinero.",
+        "En acabar el curs, recorda a tothom la targeta d'ajuda: primer un adult de confiança; i si no, 116 111, 017 i 112.|Al terminar el curso, recuerda a todo el mundo la tarjeta de ayuda: primero un adulto de confianza; y si no, 116 111, 017 y 112."
+      ],
+      extra: [
+        "Llengua: escriure la carta de presentació de la fira per a les famílies, també honesta.|Lengua: escribir la carta de presentación de la feria para las familias, también honesta.",
+        "Matemàtiques: fer el pressupost de la fira (materials, preus i diners per a la causa).|Matemáticas: hacer el presupuesto de la feria (materiales, precios y dinero para la causa).",
+        "Per als grans: preparar una mini-exposició «Tech Digital» per a alumnes més petits amb el millor de cada unitat.|Para los mayores: preparar una mini-exposición «Tech Digital» para alumnos más pequeños con lo mejor de cada unidad."
+      ],
+      trans: [
+        "Sessions d6-1 a d6-3: publicitat, compres i algoritmes, aplicats a un anunci propi.|Sesiones d6-1 a d6-3: publicidad, compras y algoritmos, aplicados a un anuncio propio.",
+        "Final del curs: Tech Digital (sis unitats). Itinerari recomanat: Robòtica i, després, Web.|Final del curso: Tech Digital (seis unidades). Itinerario recomendado: Robótica y, después, Web.",
+        "Llengua (text persuasiu honest), plàstica (cartell), matemàtiques (preus) i tutoria (valors i comiat).|Lengua (texto persuasivo honesto), plástica (cartel), matemáticas (precios) y tutoría (valores y despedida)."
+      ],
+      slides: [
+        { id: 's1', k: 'portada', t: "L'anunci honest|El anuncio honesto", x: "L'últim projecte del curs.|El último proyecto del curso.",
+          nota: "Projecte final de la unitat 6 i de Tech Digital.|Proyecto final de la unidad 6 y de Tech Digital." },
+        { id: 's2', k: 'repas', t: "Què hem après a la unitat 6?|¿Qué hemos aprendido en la unidad 6?",
+          punts: ["La publicitat amagada i les tres preguntes.|La publicidad escondida y las tres preguntas.", "Compres: para, calcula, pregunta.|Compras: para, calcula, pregunta.", "Algoritmes: la bombolla i el volant.|Algoritmos: la burbuja y el volante."],
+          nota: "Que cada equip digui una idea de cada sessió.|Que cada equipo diga una idea de cada sesión." },
+        { id: 's3', k: 'anim', t: "Hi va i no hi va|Va y no va", anim: 'd6honest', x: "Què, quant, qui i per a què. Sense trucs.|Qué, cuánto, quién y para qué. Sin trucos.",
+          nota: "Fes que llegeixin les dues columnes en veu alta.|Haz que lean las dos columnas en voz alta." },
+        { id: 's4', k: 'media', t: "Un anunci tramposo|Un anuncio tramposo", x: "Quins trucs hi veieu?|¿Qué trucos veis?", media: GALETES,
+          nota: "Exageració, presses falses, «tothom» i el preu amagat.|Exageración, prisas falsas, «todo el mundo» y el precio escondido." },
+        { id: 's5', k: 'concepte', t: "Les parts de l'anunci|Las partes del anuncio", pic: 'img/ment/ate.webp',
+          punts: ["Eslògan curt.|Eslogan corto.", "Imatge que es veu de lluny.|Imagen que se ve de lejos.", "Informació clara i etiqueta sincera.|Información clara y etiqueta sincera."],
+          nota: "Recorda la campanya de la unitat 2.|Recuerda la campaña de la unidad 2." },
+        { id: 's6', k: 'activitat', t: "A l'ordinador: l'anunci honest|En el ordenador: el anuncio honesto", timer: 20,
+          punts: ["Analitza, decideix què hi va i tria l'eslògan.|Analiza, decide qué va y elige el eslogan.", "Ajuda l'equip a fer-lo honest.|Ayuda al equipo a hacerlo honesto.", "Tria les parts del teu anunci.|Elige las partes de tu anuncio."],
+          nota: "Fes la pausa activa tots junts quan hi arribin.|Haz la pausa activa todos juntos cuando lleguen." },
+        { id: 's7', k: 'repte', t: "El curs en tres idees|El curso en tres ideas", timer: 3,
+          punts: ["Protegir-me.|Protegerme.", "Pensar abans de creure.|Pensar antes de creer.", "Decidir amb calma.|Decidir con calma."],
+          nota: "Que posin un exemple de cada unitat.|Que pongan un ejemplo de cada unidad." },
+        { id: 's8', k: 'concepte', t: "Convèncer amb la veritat|Convencer con la verdad", pic: 'img/ment/cor.webp',
+          punts: ["«Fet a mà per 5è B»|«Hecho a mano por 5.º B»", "«2 €, per a la protectora»|«2 €, para la protectora»", "«Dijous a les 5, al pati»|«Jueves a las 5, en el patio»"],
+          nota: "Exemples d'informació que convenç sense trucs.|Ejemplos de información que convence sin trucos." },
+        { id: 's9', k: 'activitat', t: "Feu el cartell|Haced el cartel", timer: 10,
+          punts: ["Eslògan, imatge i informació.|Eslogan, imagen e información.", "Etiqueta: «Anunci de la fira».|Etiqueta: «Anuncio de la feria».", "Repasseu-lo amb la llista.|Repasadlo con la lista."],
+          nota: "Passa pels equips i pregunta: «Es veu el preu?».|Pasa por los equipos y pregunta: «¿Se ve el precio?»." },
+        { id: 's10', k: 'activitat', t: "Presentació i millores|Presentación y mejoras", timer: 7,
+          punts: ["Cada equip presenta el seu anunci.|Cada equipo presenta su anuncio.", "La resta: una cosa que funciona…|El resto: una cosa que funciona…", "…i una millora.|…y una mejora."],
+          nota: "Un minut per equip.|Un minuto por equipo." },
+        { id: 's11', k: 'concepte', t: "La llista de l'anunci honest|La lista del anuncio honesto", pic: 'img/ment/lli.webp',
+          punts: ["Què és i qui el fa.|Qué es y quién lo hace.", "Quant costa i per a què.|Cuánto cuesta y para qué.", "On i quan.|Dónde y cuándo.", "Sense trucs ni cares sense permís.|Sin trucos ni caras sin permiso."],
+          nota: "Deixa-la projectada mentre fan el cartell.|Déjala proyectada mientras hacen el cartel." },
+        { id: 's12', k: 'resum', t: "Tot el curs|Todo el curso",
+          punts: ["Protegir-me: contrasenyes, dades, permisos i dispositius.|Protegerme: contraseñas, datos, permisos y dispositivos.", "Pensar abans de creure: bulos, imatges i IA.|Pensar antes de creer: bulos, imágenes e IA.", "Decidir amb calma: pantalles, compres, anuncis i algoritmes.|Decidir con calma: pantallas, compras, anuncios y algoritmos.", "I tractar bé els altres i demanar ajuda.|Y tratar bien a los demás y pedir ayuda."],
+          nota: "Llegiu-lo junts.|Leedlo juntos." },
+        { id: 's13', k: 'tiquet', t: "Tiquet de sortida|Ticket de salida",
+          punts: ["Què ha de tenir un anunci honest?|¿Qué debe tener un anuncio honesto?", "La cosa més important que t'emportes del curs.|Lo más importante que te llevas del curso."],
+          nota: "Fes el tiquet mentre lliures els diplomes.|Haz el ticket mientras entregas los diplomas." },
+        { id: 's14', k: 'media', t: "Sempre hi ha algú que t'ajuda|Siempre hay alguien que te ayuda", x: "Explicar-ho no és xivar-se: és cuidar-te.|Contarlo no es chivarse: es cuidarte.", media: HELP,
+          nota: "Deixa-la projectada mentre lliures els diplomes.|Déjala proyectada mientras entregas los diplomas." },
+        { id: 's15', k: 'concepte', t: "Enhorabona: curs acabat!|¡Enhorabuena: curso terminado!", pic: 'img/chars/numi-medalla.webp',
+          punts: ["Has acabat les sis unitats de Tech Digital.|Has terminado las seis unidades de Tech Digital.", "Ara pots ajudar la teva família i la teva escola.|Ahora puedes ayudar a tu familia y a tu escuela.", "Si dubtes, pregunta a un adult de confiança.|Si dudas, pregunta a un adulto de confianza."],
+          nota: "Lliura els diplomes un a un, dient a cada alumne/a una cosa concreta que ha fet bé.|Entrega los diplomas uno a uno, diciendo a cada alumno/a algo concreto que ha hecho bien." },
+        { id: 's16', k: 'concepte', t: "Per a casa|Para casa", pic: 'img/ment/ded.webp',
+          punts: ["Ensenya l'anunci honest a casa.|Enseña el anuncio honesto en casa.", "Repasseu junts el diploma.|Repasad juntos el diploma.", "La targeta d'ajuda, a la vista.|La tarjeta de ayuda, a la vista."],
+          nota: "Darrera diapositiva del curs.|Última diapositiva del curso." }
+      ],
+      print: [
+        { id: 'p1', t: "Plantilla de l'anunci honest|Plantilla del anuncio honesto", k: 'fitxa',
+          intro: "Una per equip. Ompliu-la abans de fer el cartell i repasseu-la al final.|Una por equipo. Rellenadla antes de hacer el cartel y repasadla al final.",
+          items: [
+            { q: "📦 Què venem i qui ho fa:|📦 Qué vendemos y quién lo hace:", sol: "Per exemple: «Punts de llibre fets a mà per 5è B, amb paper reciclat».|Por ejemplo: «Puntos de libro hechos a mano por 5.º B, con papel reciclado»." },
+            { q: "💶 Preu (en euros, ben clar):|💶 Precio (en euros, bien claro):", sol: "Per exemple: «2 € cada un».|Por ejemplo: «2 € cada uno»." },
+            { q: "📍 On i quan:|📍 Dónde y cuándo:", sol: "Per exemple: «Dijous a les 5, al pati».|Por ejemplo: «Jueves a las 5, en el patio»." },
+            { q: "💛 Per a què són els diners:|💛 Para qué es el dinero:", sol: "Per exemple: «Per a la protectora d'animals».|Por ejemplo: «Para la protectora de animales»." },
+            { q: "💬 Eslògan (curt i sense exageracions):|💬 Eslogan (corto y sin exageraciones):", sol: "Per exemple: «Llegeix amb estil, ajuda amb cor».|Por ejemplo: «Lee con estilo, ayuda con corazón»." },
+            { q: "✅ Repàs: sense presses falses · sense «tothom ho té» · sense lletra petita · sense cares sense permís · etiqueta «Anunci de la fira»|✅ Repaso: sin prisas falsas · sin «todo el mundo lo tiene» · sin letra pequeña · sin caras sin permiso · etiqueta «Anuncio de la feria»", sol: "Totes marcades.|Todas marcadas." }
           ] },
         { id: 'p2', t: "Diploma del curs|Diploma del curso", k: 'diploma',
-          intro: "ha completat el curs Tech Digital de Numi Tech: sap cuidar-se i cuidar els altres a la xarxa i té el seu pla de benestar digital.|ha completado el curso Tech Digital de Numi Tech: sabe cuidarse y cuidar a los demás en la red y tiene su plan de bienestar digital.",
+          intro: "ha completat el curs Tech Digital de Numi Tech: es protegeix i protegeix els altres a la xarxa, pensa abans de creure, fa servir la IA amb cap i decideix amb calma com a persona consumidora digital.|ha completado el curso Tech Digital de Numi Tech: se protege y protege a los demás en la red, piensa antes de creer, usa la IA con cabeza y decide con calma como persona consumidora digital.",
           items: [
-            "Crea contrasenyes fortes i protegeix les seves dades.|Crea contraseñas fuertes y protege sus datos.",
-            "Pensa abans de publicar i cuida la seva empremta digital.|Piensa antes de publicar y cuida su huella digital.",
-            "Comprova les notícies i detecta els missatges trampa i les imatges fetes amb IA.|Comprueba las noticias y detecta los mensajes trampa y las imágenes hechas con IA.",
-            "Entén què és una IA i la fa servir amb responsabilitat.|Entiende qué es una IA y la usa con responsabilidad.",
-            "Tracta bé els altres a la xarxa i respecta la seva feina.|Trata bien a los demás en la red y respeta su trabajo.",
-            "Cuida el seu temps amb pantalles i les seves partides en línia.|Cuida su tiempo con pantallas y sus partidas en línea.",
+            "Protegeix les seves dades, els comptes i els dispositius.|Protege sus datos, las cuentas y los dispositivos.",
+            "Pensa abans de publicar i tracta bé els altres.|Piensa antes de publicar y trata bien a los demás.",
+            "Caça bulos, missatges trampa i imatges falses.|Caza bulos, mensajes trampa e imágenes falsas.",
+            "Parla amb una IA amb cap i sap què aprèn de nosaltres.|Habla con una IA con cabeza y sabe qué aprende de nosotros.",
+            "Cuida el seu temps amb pantalles i les seves partides.|Cuida su tiempo con pantallas y sus partidas.",
+            "Detecta la publicitat, fa números abans de comprar i guia l'algoritme.|Detecta la publicidad, hace números antes de comprar y guía el algoritmo.",
             "Sap demanar ajuda: adults de confiança, 116 111, 017 i 112.|Sabe pedir ayuda: adultos de confianza, 116 111, 017 y 112."
           ] }
       ]

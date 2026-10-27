@@ -608,7 +608,7 @@
 
     /* ---------- Sessió 4 · Projecte: el meu pla digital (final del curs) ---------- */
     'd3-4': {
-      intro: "Projecte final del curs. Cada alumne/a prepara el seu pla de benestar digital, en dues parts: la targeta d'ajuda (els noms dels seus tres adults de confiança i els telèfons 116 111, 017 i 112) i el pacte digital de casa, uns acords concrets per a tota la família sobre temps, llocs sense pantalles, partides, compres i què fer si alguna cosa va malament. A classe es fan els esborranys i a casa s'acaba el pacte amb la família. La sessió tanca el curs amb un repàs de tot el que han après i el diploma.|Proyecto final del curso. Cada alumno/a prepara su plan de bienestar digital, en dos partes: la tarjeta de ayuda (los nombres de sus tres adultos de confianza y los teléfonos 116 111, 017 y 112) y el pacto digital de casa, unos acuerdos concretos para toda la familia sobre tiempo, lugares sin pantallas, partidas, compras y qué hacer si algo va mal. En clase se hacen los borradores y en casa se termina el pacto con la familia. La sesión cierra el curso con un repaso de todo lo que han aprendido y el diploma.",
+      intro: "Projecte de la unitat 3. Cada alumne/a prepara el seu pla de benestar digital, en dues parts: la targeta d'ajuda (els noms dels seus tres adults de confiança i els telèfons 116 111, 017 i 112) i el pacte digital de casa, uns acords concrets per a tota la família sobre temps, llocs sense pantalles, partides, compres i què fer si alguna cosa va malament. A classe es fan els esborranys i a casa s'acaba el pacte amb la família. La sessió tanca la unitat amb un repàs del que han après.|Proyecto de la unidad 3. Cada alumno/a prepara su plan de bienestar digital, en dos partes: la tarjeta de ayuda (los nombres de sus tres adultos de confianza y los teléfonos 116 111, 017 y 112) y el pacto digital de casa, unos acuerdos concretos para toda la familia sobre tiempo, lugares sin pantallas, partidas, compras y qué hacer si algo va mal. En clase se hacen los borradores y en casa se termina el pacto con la familia. La sesión cierra la unidad con un repaso de lo que han aprendido.",
       claus: [
         "Un pacte digital són acords concrets que fa tota la família junta i que valen per a tothom, també per als adults.|Un pacto digital son acuerdos concretos que hace toda la familia junta y que valen para todo el mundo, también para los adultos.",
         "Un bon acord diu què, quan i on, és en positiu i es pot complir; si no funciona, se'n torna a parlar.|Un buen acuerdo dice qué, cuándo y dónde, es en positivo y se puede cumplir; si no funciona, se vuelve a hablar.",
@@ -644,12 +644,11 @@
         aula: [
           "Un ordinador per alumne/a amb Numi Tech obert a la sessió «Projecte: el meu pla digital»|Un ordenador por alumno/a con Numi Tech abierto en la sesión «Proyecto: mi plan digital»",
           "Projector i la presentació d'aquesta sessió|Proyector y la presentación de esta sesión",
-          "La fitxa del pacte i la targeta d'ajuda (una per alumne/a), tisores i colors|La ficha del pacto y la tarjeta de ayuda (una por alumno/a), tijeras y colores",
-          "Els diplomes del curs impresos, un per alumne/a, amb el nom escrit|Los diplomas del curso impresos, uno por alumno/a, con el nombre escrito"
+          "La fitxa del pacte i la targeta d'ajuda (una per alumne/a), tisores i colors|La ficha del pacto y la tarjeta de ayuda (una por alumno/a), tijeras y colores"
         ],
         imprimir: ["El pacte digital i la targeta d'ajuda (imprimible 1): una per alumne/a|El pacto digital y la tarjeta de ayuda (imprimible 1): una por alumno/a", "Diploma del curs (imprimible 2): un per alumne/a|Diploma del curso (imprimible 2): uno por alumno/a"],
         prep: [
-          "Imprimir una fitxa per alumne/a i els diplomes amb el nom de cada alumne/a.|Imprimir una ficha por alumno/a y los diplomas con el nombre de cada alumno/a.",
+          "Imprimir una fitxa per alumne/a.|Imprimir una ficha por alumno/a.",
           "Comprovar els telèfons d'ajuda vigents (116 111, 017 i 112) i, si en voleu afegir, el telèfon de referència del centre.|Comprobar los teléfonos de ayuda vigentes (116 111, 017 y 112) y, si queréis añadirlo, el teléfono de referencia del centro.",
           "Preparar una nota per a les famílies que expliqui el pacte digital i que és una proposta, no una obligació.|Preparar una nota para las familias que explique el pacto digital y que es una propuesta, no una obligación."
         ]
@@ -679,12 +678,12 @@
             "Qui són els teus tres adults de confiança? Un de casa, un de l'escola i un altre.|¿Quiénes son tus tres adultos de confianza? Uno de casa, uno del colegio y otro.",
             "On guardaràs la targeta? (A la motxilla, a la funda de la tauleta…)|¿Dónde guardarás la tarjeta? (En la mochila, en la funda de la tablet…)"],
           slides: ['s9', 's10', 's11'], app: "Pas «Crea»: el meu pacte digital i «La targeta d'ajuda i el pacte» (Ho he fet!).|Paso «Crea»: mi pacto digital y «La tarjeta de ayuda y el pacto» (¡Lo he hecho!).", org: "Individual i després per parelles|Individual y después por parejas" },
-        { min: 15, t: "Presentació, tiquet i diploma|Presentación, ticket y diploma", fase: 'tancament',
-          fa: "Uns quants voluntaris presenten el seu pacte en 30 segons i la resta diu una cosa que li agrada. Fes el tiquet, deixa que facin les preguntes finals i el diploma de l'app, i lliura els diplomes impresos. Acaba recordant la norma d'or i els tres números.|Unos cuantos voluntarios presentan su pacto en 30 segundos y el resto dice algo que le gusta. Haz el ticket, deja que hagan las preguntas finales y el diploma de la app, y entrega los diplomas impresos. Termina recordando la norma de oro y los tres números.",
+        { min: 15, t: "Presentació i tiquet|Presentación y ticket", fase: 'tancament',
+          fa: "Uns quants voluntaris presenten el seu pacte en 30 segons i la resta diu una cosa que li agrada. Fes el tiquet i deixa que facin les preguntes finals. Acaba recordant la norma d'or i els tres números.|Unos cuantos voluntarios presentan su pacto en 30 segundos y el resto dice algo que le gusta. Haz el ticket y deja que hagan las preguntas finales. Termina recordando la norma de oro y los tres números.",
           diu: ["Quin acord del pacte us sembla més fàcil de complir?|¿Qué acuerdo del pacto os parece más fácil de cumplir?",
-            "Ara sou experts i expertes en ciutadania digital!|¡Ahora sois expertos y expertas en ciudadanía digital!",
+            "Ja teniu el vostre pla de benestar digital!|¡Ya tenéis vuestro plan de bienestar digital!",
             "I recordeu, ara i sempre: si dubteu, pregunteu a un adult de confiança.|Y recordad, ahora y siempre: si dudáis, preguntad a un adulto de confianza."],
-          slides: ['s12', 's13', 's14', 's15', 's16'], app: "«Tancament»: les dues preguntes finals, el diploma del curs i com m'he sentit.|«Cierre»: las dos preguntas finales, el diploma del curso y cómo me he sentido.", org: "Tot el grup|Todo el grupo" }
+          slides: ['s12', 's13', 's14', 's15', 's16'], app: "«Tancament»: les dues preguntes finals i com m'he sentit.|«Cierre»: las dos preguntas finales y cómo me he sentido.", org: "Tot el grup|Todo el grupo" }
       ],
       errors: [
         ["Escriu acords només per a ell o ella, o només per als adults.|Escribe acuerdos solo para él o ella, o solo para los adultos.",
@@ -722,7 +721,6 @@
       ],
       tec: [
         ["Al pas dels números hi ha tres calaixos i alguna situació els fa dubtar.|En el paso de los números hay tres cajas y alguna situación les hace dudar.", "És normal: comenteu que, abans de tot, sempre un adult de confiança. Si hi ha un perill ara mateix, 112.|Es normal: comentad que, antes de nada, siempre un adulto de confianza. Si hay un peligro ahora mismo, 112."],
-        ["No es poden imprimir els diplomes a temps.|No se pueden imprimir los diplomas a tiempo.", "L'app també mostra el diploma en acabar (es pot imprimir des d'allà). Els impresos es poden lliurar la setmana vinent.|La app también muestra el diploma al terminar (se puede imprimir desde allí). Los impresos se pueden entregar la semana que viene."],
         ["Volen tornar a la conversa de la Jana per provar un altre camí.|Quieren volver a la conversación de Jana para probar otro camino.", "Poden tornar enrere amb la fletxa o reobrir la sessió: tots els camins acaben amb el pacte signat.|Pueden volver atrás con la flecha o reabrir la sesión: todos los caminos terminan con el pacto firmado."],
         ["No queda temps per a les presentacions.|No queda tiempo para las presentaciones.", "Feu-les al principi de la sessió següent o en una tutoria; també poden presentar el pacte a casa.|Hacedlas al principio de la sesión siguiente o en una tutoría; también pueden presentar el pacto en casa."]
       ],
@@ -781,12 +779,12 @@
           nota: "Llegiu-lo junts.|Leedlo juntos." },
         { id: 's14', k: 'tiquet', t: "Tiquet de sortida|Ticket de salida",
           punts: ["Digues un acord del teu pacte i per què és bo.|Di un acuerdo de tu pacto y por qué es bueno.", "Digues un telèfon d'ajuda i quan el faries servir.|Di un teléfono de ayuda y cuándo lo usarías."],
-          nota: "Fes el tiquet mentre lliures els diplomes.|Haz el ticket mientras entregas los diplomas." },
+          nota: "Fes el tiquet en veu alta, un o dos alumnes per punt.|Haz el ticket en voz alta, uno o dos alumnos por punto." },
         { id: 's15', k: 'media', t: "Sempre hi ha algú que t'ajuda|Siempre hay alguien que te ayuda", x: "Explicar-ho no és xivar-se: és cuidar-te.|Contarlo no es chivarse: es cuidarte.", media: HELP,
-          nota: "Deixa-la projectada mentre lliures els diplomes.|Déjala proyectada mientras entregas los diplomas." },
-        { id: 's16', k: 'concepte', t: "Enhorabona: curs acabat!|¡Enhorabuena: curso terminado!", pic: 'img/chars/numi-medalla.webp',
-          punts: ["Has acabat el curs Tech Digital.|Has terminado el curso Tech Digital.", "Ara pots ajudar la teva família i la teva escola.|Ahora puedes ayudar a tu familia y a tu escuela.", "Recorda: si dubtes, pregunta a un adult de confiança.|Recuerda: si dudas, pregunta a un adulto de confianza."],
-          nota: "Lliura els diplomes impresos un a un, dient a cada alumne/a una cosa concreta que ha fet bé durant el curs.|Entrega los diplomas impresos uno a uno, diciendo a cada alumno/a algo concreto que ha hecho bien durante el curso." }
+          nota: "Deixa-la projectada mentre guarden la targeta d'ajuda.|Déjala proyectada mientras guardan la tarjeta de ayuda." },
+        { id: 's16', k: 'concepte', t: "Enhorabona: unitat acabada!|¡Enhorabuena: unidad terminada!", pic: 'img/chars/numi-medalla.webp',
+          punts: ["Ja tens el teu pla de benestar digital.|Ya tienes tu plan de bienestar digital.", "Ara pots ajudar la teva família i la teva escola.|Ahora puedes ayudar a tu familia y a tu escuela.", "Recorda: si dubtes, pregunta a un adult de confiança.|Recuerda: si dudas, pregunta a un adulto de confianza."],
+          nota: "Digues a cada alumne/a una cosa concreta que ha fet bé en aquesta unitat.|Di a cada alumno/a algo concreto que ha hecho bien en esta unidad." }
       ],
       print: [
         { id: 'p1', t: "El pacte digital i la targeta d'ajuda|El pacto digital y la tarjeta de ayuda", k: 'fitxa',
@@ -799,17 +797,6 @@
             { q: "🤝 La norma d'or de casa:|🤝 La norma de oro de casa:", sol: "Per exemple: «Si alguna cosa ens fa sentir malament, ho expliquem a casa i ningú no renya».|Por ejemplo: «Si algo nos hace sentir mal, lo contamos en casa y nadie riñe»." },
             { q: "✂️ La meva targeta d'ajuda · Els meus tres adults de confiança: 1. ____ 2. ____ 3. ____ · 116 111 (ajuda a la infància i l'adolescència) · 017 (ajuda en ciberseguretat) · 112 (emergències)|✂️ Mi tarjeta de ayuda · Mis tres adultos de confianza: 1. ____ 2. ____ 3. ____ · 116 111 (ayuda a la infancia y la adolescencia) · 017 (ayuda en ciberseguridad) · 112 (emergencias)", big: true, sol: "Tres adults de confiança (de casa, de l'escola i un altre) i els tres telèfons.|Tres adultos de confianza (de casa, del colegio y otro) y los tres teléfonos." },
             { q: "Signatures de tota la família:|Firmas de toda la familia:", sol: "Resposta oberta.|Respuesta abierta." }
-          ] },
-        { id: 'p2', t: "Diploma del curs|Diploma del curso", k: 'diploma',
-          intro: "ha completat el curs Tech Digital de Numi Tech: sap cuidar-se i cuidar els altres a la xarxa i té el seu pla de benestar digital.|ha completado el curso Tech Digital de Numi Tech: sabe cuidarse y cuidar a los demás en la red y tiene su plan de bienestar digital.",
-          items: [
-            "Crea contrasenyes fortes i protegeix les seves dades.|Crea contraseñas fuertes y protege sus datos.",
-            "Pensa abans de publicar i cuida la seva empremta digital.|Piensa antes de publicar y cuida su huella digital.",
-            "Comprova les notícies i detecta els missatges trampa i les imatges fetes amb IA.|Comprueba las noticias y detecta los mensajes trampa y las imágenes hechas con IA.",
-            "Entén què és una IA i la fa servir amb responsabilitat.|Entiende qué es una IA y la usa con responsabilidad.",
-            "Tracta bé els altres a la xarxa i respecta la seva feina.|Trata bien a los demás en la red y respeta su trabajo.",
-            "Cuida el seu temps amb pantalles i les seves partides en línia.|Cuida su tiempo con pantallas y sus partidas en línea.",
-            "Sap demanar ajuda: adults de confiança, 116 111, 017 i 112.|Sabe pedir ayuda: adultos de confianza, 116 111, 017 y 112."
           ] }
       ]
     }
