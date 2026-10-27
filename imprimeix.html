@@ -25,8 +25,9 @@
 <script src="tech-c5.js"></script>
 <script src="tech-c6.js"></script>
 <script src="tech-c7.js"></script>
+<script src="tech-c8.js"></script>
 <script src="tech-guard.js"></script>
-<script>TGUARD.load(['c1', 'c2', 'c3', 'c4', 'c5', 'c6', 'c7', 'sol']).then(ok => ok ? TGUARD.after('print.js?v=3') : TGUARD.deny(document.getElementById('doc')));</script>
+<script>TGUARD.load(['c1', 'c2', 'c3', 'c4', 'c5', 'c6', 'c7', 'sol']).then(ok => ok ? TGUARD.load(['c8']).then(() => TGUARD.after('print.js?v=3')) : TGUARD.deny(document.getElementById('doc')));</script>
 <script src="icons.js"></script>
 </body>
 </html>

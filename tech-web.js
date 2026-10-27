@@ -8,7 +8,7 @@
 
 const WEB_VOID = new Set(['img', 'br', 'hr', 'input', 'meta', 'link', 'source', 'area', 'col', 'embed', 'wbr']);
 const WEB_KNOWN = new Set(['html', 'head', 'body', 'title', 'meta', 'link', 'style', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'a', 'img', 'ul', 'ol', 'li', 'div', 'span', 'section', 'header', 'footer', 'nav', 'main', 'article', 'aside', 'figure', 'figcaption',
-  'strong', 'em', 'b', 'i', 'u', 'small', 'mark', 'br', 'hr', 'table', 'thead', 'tbody', 'tr', 'th', 'td', 'caption', 'button', 'input', 'label', 'form', 'textarea', 'select', 'option', 'blockquote', 'q', 'cite', 'code', 'pre', 'sup', 'sub', 'abbr', 'time', 'address', 'dl', 'dt', 'dd', 'iframe', 'video', 'audio', 'source', 'picture', 'details', 'summary']);
+  'strong', 'em', 'b', 'i', 'u', 'small', 'mark', 'br', 'hr', 'table', 'thead', 'tbody', 'tr', 'th', 'td', 'caption', 'button', 'input', 'label', 'form', 'textarea', 'select', 'option', 'blockquote', 'q', 'cite', 'code', 'pre', 'sup', 'sub', 'abbr', 'time', 'address', 'dl', 'dt', 'dd', 'iframe', 'video', 'audio', 'source', 'picture', 'details', 'summary', 'script', 'canvas']);
 /* ---------- HTML: de text a arbre (tolerant: anota els errors però continua) ---------- */
 function webParse(src) {
   const root = { t: '#root', kids: [], attrs: {}, line: 0 }, errs = [], st = [root];
@@ -22,7 +22,7 @@ function webParse(src) {
       if (k === 0) errs.push({ k: 'close', t, line: at(m.index) }); else { for (let j = st.length - 1; j > k; j--) errs.push({ k: 'open', t: st[j].t, line: st[j].line }); st.length = k; } continue; }
     if (m[2]) { const t = m[2].toLowerCase(), attrs = {}; (m[3] || '').replace(/([^\s=>\/]+)(?:\s*=\s*("([^"]*)"|'([^']*)'|([^\s>]+)))?/g, (_, a, __, d, s1, b) => { attrs[a.toLowerCase()] = d ?? s1 ?? b ?? ''; return ''; });
       const el = { t, attrs, kids: [], line: at(m.index), parent: top }; top.kids.push(el); if (!WEB_KNOWN.has(t)) errs.push({ k: 'unknown', t, line: el.line });
-      if (!WEB_VOID.has(t) && !m[4]) { if (t === 'style') { const end = src.toLowerCase().indexOf('</style', re.lastIndex); el.css = src.slice(re.lastIndex, end < 0 ? src.length : end); re.lastIndex = end < 0 ? src.length : end; } st.push(el); } continue; }
+      if (!WEB_VOID.has(t) && !m[4]) { if (t === 'style' || t === 'script') { const end = src.toLowerCase().indexOf('</' + t, re.lastIndex); el[t === 'style' ? 'css' : 'js'] = src.slice(re.lastIndex, end < 0 ? src.length : end); re.lastIndex = end < 0 ? src.length : end; } st.push(el); } continue; }
     if (m[5] != null) { if (m[5].trim()) top.kids.push({ t: '#text', text: m[5], parent: top }); continue; }
     if (m[6]) errs.push({ k: 'lt', line: at(m.index) });
   }
@@ -58,16 +58,20 @@ function webMatch(el, sel) {
 }
 // el valor d'una propietat per a un element (l'última regla que hi apunta; sense herència ni especificitat fina)
 function webProp(doc, el, p) { let v = null; for (const r of doc.css.rules) if (r.decls && r.decls[p] != null && r.sel.some(s => webMatch(el, s))) v = r.decls[p]; if (el.attrs.style) el.attrs.style.split(';').forEach(x => { const c = x.indexOf(':'); if (c > 0 && x.slice(0, c).trim().toLowerCase() === p) v = x.slice(c + 1).trim(); }); return v; }
-function webDoc(html, css) {
-  const H = webParse(html || ''), inner = webAll(H.root).filter(e => e.t === 'style').map(e => e.css || '').join('\n');
-  return { html: H, css: webCSS((css || '') + '\n' + inner), els: webAll(H.root) };
+function webDoc(html, css, js) {
+  const H = webParse(html || ''), all = webAll(H.root), inner = all.filter(e => e.t === 'style').map(e => e.css || '').join('\n');
+  return { html: H, css: webCSS((css || '') + '\n' + inner), els: all, js: [js || '', ...all.filter(e => e.t === 'script').map(e => e.js || '')].join('\n') };
 }
 /* ---------- Comprovacions ----------
    { k: 'tag', t: 'h1', min?: 1, max?, text?: 'conté' } · { k: 'in', t: 'li', p: 'ul', min? } (dins de) · { k: 'attr', t: 'img', a: 'alt', v?: 'valor o /regex/' , min? }
    { k: 'text', t: 'h1', min?: 3 } (text de com a mínim N lletres) · { k: 'order', a: 'h1', b: 'p' } · { k: 'css', s: 'h1', p: 'color', v?: '/regex/' } (una regla per a aquest selector)
    { k: 'styled', t: 'h1', p: 'color', v? } (l'element té la propietat, vingui d'on vingui) · { k: 'prop', p: 'font-family', v? } (alguna regla la fa servir)
    { k: 'media', max?: 600 } (@media) · { k: 'class', c: 'targeta', min? } (elements amb aquesta classe) · { k: 'id', id } · { k: 'link', href?: '/regex/', min? }
-   { k: 'clean' } (sense errors: totes les etiquetes ben tancades) · { k: 'cssclean' } · { k: 'notag', t } · { k: 'rules', min } · { k: 'lang' } (<html lang>) · { k: 'title' } */
+   { k: 'clean' } (sense errors: totes les etiquetes ben tancades) · { k: 'cssclean' } · { k: 'notag', t } · { k: 'rules', min } · { k: 'lang' } (<html lang>) · { k: 'title' }
+   JavaScript (pestanya app.js, st.js): { k: 'js', v: '/regex/' o text } (el codi ho fa servir) · { k: 'jsid' } (tots els #id que fa servir el codi existeixen)
+   { k: 'run', act: [{ click: '#id' } | { type: ['#id', 'text'] } | { key: 'ArrowUp' } | { wait: ms }], see: { sel, text?: 'x' o '/regex/', num?: [mín, màx],
+     count?, cls?, not?, style?: ['color', '/regex/'], visible?, exists? }, rep?: N } (prova de comportament: s'executa al navegador, en una pàgina
+     a part per a cada prova; a Node no es pot comprovar) */
 const webRx = v => typeof v === 'string' && v.length > 2 && v[0] === '/' && v.lastIndexOf('/') > 0 ? new RegExp(v.slice(1, v.lastIndexOf('/')), v.slice(v.lastIndexOf('/') + 1) || 'i') : null;
 const webEq = (got, v) => { if (v == null) return got != null && String(got).trim() !== ''; if (got == null) return false; const r = webRx(v); return r ? r.test(String(got)) : String(got).trim().toLowerCase() === String(v).toLowerCase(); };
 function webCheck(doc, c) {
@@ -92,6 +96,9 @@ function webCheck(doc, c) {
     case 'rules': return doc.css.rules.filter(r => r.sel).length >= c.min;
     case 'lang': return of('html').some(e => e.attrs.lang);
     case 'title': return of('title').some(e => webTxt(e));
+    case 'js': { const r = webRx(c.v); return r ? r.test(doc.js || '') : String(doc.js || '').includes(c.v); }
+    case 'jsid': { const ids = new Set(E.map(e => e.attrs.id).filter(Boolean)), used = [...String(doc.js || '').matchAll(/getElementById\(\s*['"]([\w-]+)['"]\s*\)|querySelector(?:All)?\(\s*['"]#([\w-]+)['"]/g)].map(m => m[1] || m[2]); return used.length > 0 && used.every(id => ids.has(id)); }
+    case 'run': return !!(doc.run && doc.run[c._i]);
   }
   return false;
 }
@@ -118,6 +125,9 @@ function webCheckTxt(c) {
     case 'rules': return L(`Hi ha almenys ${c.min} regles de CSS`, `Hay al menos ${c.min} reglas de CSS`);
     case 'lang': return L('<code>&lt;html&gt;</code> diu l\'idioma (lang)', '<code>&lt;html&gt;</code> dice el idioma (lang)');
     case 'title': return L('La pàgina té <code>&lt;title&gt;</code>', 'La página tiene <code>&lt;title&gt;</code>');
+    case 'js': return L(`El codi fa servir <code>${esc(String(c.v).replace(/^\/|\/\w*$/g, ''))}</code>`, `El código usa <code>${esc(String(c.v).replace(/^\/|\/\w*$/g, ''))}</code>`);
+    case 'jsid': return L('Tots els <code>#id</code> que fa servir el codi existeixen a l\'HTML', 'Todos los <code>#id</code> que usa el código existen en el HTML');
+    case 'run': return L('La prova automàtica funciona', 'La prueba automática funciona');
   }
   return c.k;
 }
@@ -137,9 +147,10 @@ function webErrTxt(d) {
 // o.live (la vista prèvia gran): els enllaços es poden provar. Un guió nostre, amb «nonce», fa que els enllaços #id
 // facin el salt dins de la pàgina i que la resta ensenyin on portarien (sense sortir de la vista prèvia). La política
 // de seguretat (CSP) del principi impedeix que s'executi cap altre guió: el codi de l'alumne/a continua sense scripts.
-function webLive(nonce) {
+function webLive(nonce, js) {
   const T = JSON.stringify({ go: L('Aquest enllaç porta a', 'Este enlace lleva a'), pub: L('A la web publicada, t\'hi portaria.', 'En la web publicada, te llevaría allí.'), no: L('No hi ha cap element amb aquest id a la pàgina:', 'No hay ningún elemento con este id en la página:') }).replace(/</g, '\\u003c');
-  return `<meta http-equiv="Content-Security-Policy" content="script-src 'nonce-${nonce}'; object-src 'none'; form-action 'none'"><script nonce="${nonce}">(function(){var T=${T};var box=null,tm=0;
+  // amb JavaScript (st.js): els guions de l'alumne/a s'executen (iframe aïllat, sense xarxa) i els errors es comuniquen a l'editor
+  return `<meta http-equiv="Content-Security-Policy" content="${js ? "script-src 'unsafe-inline'; connect-src 'none'" : `script-src 'nonce-${nonce}'`}; object-src 'none'; form-action 'none'"><script nonce="${nonce}">${js ? `addEventListener('error',function(e){try{parent.postMessage({numiErr:'${nonce}',m:String(e.message||''),l:e.lineno||0},'*')}catch(x){}});` : ''}(function(){var T=${T};var box=null,tm=0;
 function tip(a,b,bad){if(!box){var h=document.createElement('numi-tip');document.documentElement.appendChild(h);var r=h.attachShadow({mode:'closed'});r.innerHTML='<style>div{position:fixed;left:10px;right:10px;bottom:34px;z-index:2147483647;font:700 14px/1.35 system-ui,sans-serif;color:#fff;background:rgba(20,32,74,.94);border-radius:12px;padding:10px 12px;box-shadow:0 10px 26px rgba(0,0,0,.3);transition:opacity .25s,transform .25s;opacity:0;transform:translateY(8px)}div.on{opacity:1;transform:none}div.bad{background:rgba(180,80,26,.95)}b{font-family:ui-monospace,Menlo,Consolas,monospace;background:rgba(255,255,255,.16);border-radius:5px;padding:0 5px}small{display:block;font-weight:600;opacity:.8;margin-top:2px}</style><div></div>';box=r.querySelector('div');}
 box.className=bad?'bad':'';box.innerHTML='';var t=document.createElement('span');t.textContent=a+' ';var c=document.createElement('b');c.textContent=b;box.appendChild(t);box.appendChild(c);if(!bad){var s=document.createElement('small');s.textContent=T.pub;box.appendChild(s);}void box.offsetWidth;box.className+=' on';clearTimeout(tm);tm=setTimeout(function(){box.className=box.className.replace(' on','');},2600);}
 document.addEventListener('click',function(e){var a=e.target&&e.target.closest?e.target.closest('a[href]'):null;if(!a)return;var h=a.getAttribute('href')||'';e.preventDefault();
@@ -150,14 +161,36 @@ document.addEventListener('submit',function(e){e.preventDefault();},true);})();<
 function webPage(html, css, o = {}) {
   const base = `<style>html{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.45;color:#1d2433;scroll-behavior:smooth}body{margin:12px}img{max-width:100%}${o.extra || ''}</style>`;
   let h = String(html || '');
-  if (o.live) { const pre = webLive(o.live); const d = h.match(/^\s*(<!--[\s\S]*?-->\s*)*<!doctype[^>]*>/i); h = d ? d[0] + pre + h.slice(d[0].length) : /<(html|head)[\s>]/i.test(h) ? pre + h : h; if (!/<(html|head)[\s>]/i.test(String(html || '')) && !d) return `<!doctype html><html><head><meta charset="utf-8">${pre}${base}<style>${css || ''}</style></head><body>${h}</body></html>`; }
+  if (o.js != null) h = webAddJs(h, String(o.js), o.post || '');
+  const pre = (o.live ? webLive(o.live, o.js != null) : '') + (o.pre || '');
+  if (pre) { const d = h.match(/^\s*(<!--[\s\S]*?-->\s*)*<!doctype[^>]*>/i); h = d ? d[0] + pre + h.slice(d[0].length) : /<(html|head)[\s>]/i.test(h) ? pre + h : h; if (!/<(html|head)[\s>]/i.test(String(html || '')) && !d) return `<!doctype html><html><head><meta charset="utf-8">${pre}${base}<style>${css || ''}</style></head><body>${h}</body></html>`; }
   if (/<head[\s>]/i.test(h)) return h.replace(/<head[^>]*>/i, m => m + base + `<style>${css || ''}</style>`);
   if (/<html[\s>]/i.test(h)) return h.replace(/<html[^>]*>/i, m => m + `<head><meta charset="utf-8">${base}<style>${css || ''}</style></head>`);
   return `<!doctype html><html><head><meta charset="utf-8">${base}<style>${css || ''}</style></head><body>${h}</body></html>`;
 }
+// el JavaScript de l'alumne/a, al final del <body> (amb una marca per saber a quina línia comença)
+const webAddJs = (h, js, post) => { const tag = `<script>/*numi-js*/\n${js.replace(/<\/script/gi, '<\\/script')}\n</script>${post || ''}`, i = h.search(/<\/body>(?![\s\S]*<\/body>)/i); return i >= 0 ? h.slice(0, i) + tag + h.slice(i) : h + tag; };
+// una prova de comportament ({ k: 'run' }): la pàgina amb el codi i, al final, un guió nostre que fa les accions i mira el resultat
+function webRunPage(html, css, js, c, tok) {
+  const C = JSON.stringify({ act: c.act || [], see: c.see || {}, rep: Math.max(1, Math.min(60, c.rep || 1)), tok }).replace(/</g, '\\u003c');
+  const pre = `<script>window.__ne=0;addEventListener('error',function(){window.__ne++});window.alert=window.confirm=window.prompt=function(){};</script>`;
+  const post = `<script>(function(){var C=${C};function q(s){try{return document.querySelector(s)}catch(e){return null}}function sl(ms){return new Promise(function(r){setTimeout(r,ms)})}
+function tx(e){return /^(INPUT|TEXTAREA|SELECT)$/.test(e.tagName)?String(e.value):String(e.textContent||'').trim()}
+function rx(v){return typeof v==='string'&&v.length>2&&v[0]==='/'&&v.lastIndexOf('/')>0?new RegExp(v.slice(1,v.lastIndexOf('/')),v.slice(v.lastIndexOf('/')+1)||'i'):null}
+async function act(a){var e;if(a.click){e=q(a.click);if(!e)throw 0;e.click()}else if(a.type){e=q(a.type[0]);if(!e)throw 0;if(e.focus)e.focus();e.value=a.type[1];e.dispatchEvent(new Event('input',{bubbles:true}));e.dispatchEvent(new Event('change',{bubbles:true}))}
+else if(a.key){var t=document.activeElement||document.body;['keydown','keyup'].forEach(function(k){t.dispatchEvent(new KeyboardEvent(k,{key:a.key,code:a.key,bubbles:true}))})}else if(a.wait){await sl(Math.min(5000,a.wait))}await sl(15)}
+function see(s){var l=s.sel?document.querySelectorAll(s.sel):[],e=l[0];if(s.count!=null)return l.length===s.count;if(s.exists===false)return!e;if(!e)return false;var t=tx(e),r;
+if(s.text!=null){r=rx(s.text);if(r?!r.test(t):t!==String(s.text))return false}if(s.num){var n=parseFloat(t.replace(',','.'));if(isNaN(n)||n<s.num[0]||n>s.num[1])return false}
+if(s.cls){var h=e.classList.contains(s.cls);if(s.not?h:!h)return false}if(s.style){var v=getComputedStyle(e)[s.style[0]];r=rx(s.style[1]);if(r?!r.test(v):v!==s.style[1])return false}
+if(s.visible!=null&&!!(e.offsetWidth||e.offsetHeight)!==s.visible)return false;return true}
+async function run(){var ok=true;try{for(var k=0;k<C.rep&&ok;k++){for(var i=0;i<C.act.length;i++)await act(C.act[i]);ok=see(C.see)}}catch(e){ok=false}if(window.__ne)ok=false;parent.postMessage({numiRun:C.tok,ok:ok},'*')}
+if(document.readyState==='complete')setTimeout(run,30);else addEventListener('load',function(){setTimeout(run,30)})})();<\/script>`;
+  return webPage(html, css, { js: js || '', pre, post });
+}
 // la pàgina completa per descarregar-la (per publicar-la): amb viewport i les imatges de Numi amb adreça completa
-function webFile(html, css, title) {
+function webFile(html, css, title, js) {
   let h = String(html || '');
+  if (js != null && String(js).trim()) h = webAddJs(h, String(js), '').replace('/*numi-js*/', '');
   const org = typeof location !== 'undefined' && /^https?:/.test(location.origin) ? location.origin + '/' : '';
   if (org) h = h.replace(/(src|href)=(["'])(img\/tech\/web\/)/g, `$1=$2${org}$3`);
   const meta = '<meta charset="utf-8">\n<meta name="viewport" content="width=device-width, initial-scale=1">';
@@ -232,7 +265,12 @@ function webTok(code, lang) {
       let j = i; while (j < s.length && !';{}'.includes(s[j]) && !s.startsWith('/*', j)) j++; val(s.slice(i, j)); if (s[j] === ';') { P('wpu', ';'); j++; mode = 'prop'; } i = j;
     } };
   const attrs = t => t.replace(/(\s+)|([^\s=\/>"']+)(\s*=\s*)?("[^"]*"?|'[^']*'?|[^\s>"']+)?|([\s\S])/g, (z, sp, a, eq, v, o) => { if (sp) P('', sp); else if (a) { P('wa', a); if (eq) P('wpu', eq); if (v) { const q = /^["']/.test(v) ? v[0] : ''; if (q) P('wv', q); blanks(v.slice(q ? 1 : 0, v.endsWith(q) && q && v.length > 1 ? -1 : undefined), 'wv'); if (q && v.length > 1 && v.endsWith(q)) P('wv', q); } } else P('wpu', o); return z; });
+  // JavaScript: comentaris, textos, números, paraules clau, propietats i funcions
+  const JSK = /^(const|let|var|function|return|if|else|for|while|do|break|continue|new|of|in|typeof|instanceof|true|false|null|undefined|this|class|switch|case|default|try|catch|finally|await|async)$/;
+  const js = t => { const re = /(\/\/[^\n]*|\/\*[\s\S]*?(?:\*\/|$))|(`(?:\\[\s\S]|[^`\\])*`?|'(?:\\.|[^'\\\n])*'?|"(?:\\.|[^"\\\n])*"?)|(\b\d+(?:\.\d+)?\b)|([A-Za-z_$][\w$]*)|(\s+)|([\s\S])/g; let m;
+    while ((m = re.exec(t))) { if (m[1]) P('wc', m[1]); else if (m[2]) P('wv', m[2]); else if (m[3]) P('wnum', m[3]); else if (m[4]) P(JSK.test(m[4]) ? 'wt' : t[m.index - 1] === '.' ? 'wa' : /^(document|window|Math|console|Date|JSON)$/.test(m[4]) ? 'wp' : /^\s*\(/.test(t.slice(re.lastIndex)) ? 'ws' : '', m[4]); else if (m[5]) P('', m[5]); else P('wpu', m[6]); } };
   if (lang === 'css') { css(String(code || '')); return out; }
+  if (lang === 'js') { js(String(code || '')); return out; }
   const s = String(code || ''); let i = 0;
   while (i < s.length) {
     if (s.startsWith('<!--', i)) { const j = s.indexOf('-->', i + 4), e = j < 0 ? s.length : j + 3; P('wc', s.slice(i, e)); i = e; continue; }
@@ -243,6 +281,7 @@ function webTok(code, lang) {
       if (!m) { text(src); i = e; continue; }
       P('wpu', '<' + m[1]); P('wt', m[2]); attrs(m[3]); P('wpu', m[4] || ''); i = e;
       if (!m[1] && m[2].toLowerCase() === 'style' && m[4]) { const k = s.toLowerCase().indexOf('</style', i), ce = k < 0 ? s.length : k; css(s.slice(i, ce)); i = ce; }
+      if (!m[1] && m[2].toLowerCase() === 'script' && m[4]) { const k = s.toLowerCase().indexOf('</script', i), ce = k < 0 ? s.length : k; js(s.slice(i, ce)); i = ce; }
       continue;
     }
     let j = s.indexOf('<', i + 1); if (j < 0) j = s.length; text(s.slice(i, j)); i = j;
@@ -262,22 +301,24 @@ function webLines(code, lang) {
 /* ---------- L'estat de l'editor ---------- */
 let WB = null, WB_T = null, WB_E = null, WB_RO = null;
 function wbMake(st, o = {}) {
-  WB = { st, html: o.html ?? st.html ?? '', css: o.css ?? st.css ?? '', tab: st.tab || (st.html == null && st.css != null ? 'css' : 'html'), dev: WB && WB.devKeep ? WB.dev : 'mob', devKeep: !!(WB && WB.devKeep), solved: false, tries: 0, mode: o.mode || 'edit', onDone: null, open: false, front: 'a', p: o.p || null };
+  WB = { st, html: o.html ?? st.html ?? '', css: o.css ?? st.css ?? '', js: o.js ?? st.js ?? null, tab: st.tab || (st.html == null && st.css != null ? 'css' : 'html'), dev: WB && WB.devKeep ? WB.dev : 'mob', devKeep: !!(WB && WB.devKeep), solved: false, tries: 0, mode: o.mode || 'edit', onDone: null, open: false, front: 'a', p: o.p || null };
   if (st.tabs && !st.tabs.includes(WB.tab)) WB.tab = st.tabs[0];
   return WB;
 }
 const WB_CSSK = ['css', 'styled', 'prop', 'media', 'rules', 'cssclean'];
-const wbTabs = () => WB.st.tabs || (WB.st.css != null || (WB.st.checks || []).some(c => WB_CSSK.includes(c.k)) ? ['html', 'css'] : ['html']);
+const wbTabs = () => WB.st.tabs || (WB.st.css != null || (WB.st.checks || []).some(c => WB_CSSK.includes(c.k)) ? ['html', 'css'] : ['html']).concat(WB.js != null ? ['js'] : []);
+// el resultat de cada comprovació (les proves «run» les fa el navegador a part: WB.runRes)
+const wbRes = checks => { const d = webDoc(WB.html, WB.css, WB.js); d.run = WB.runRes || {}; return checks.map((c, i) => !!webCheck(d, { ...c, _i: i })); };
 const wbIsCss = t => !/^\s*</.test(t) && (/[{}]/.test(t) || /^\s*[\w-]+\s*:/.test(t) || /^\s*@/.test(t));
 const wbUrl = () => { const u = String(WB.st.url || 'la-meva-web.numi'), m = u.match(/^(https?:\/\/)?([^\/]+)(.*)$/) || [, '', u, '']; return { safe: !/^http:\/\//.test(u), host: m[2], path: m[3] || '' }; };
 const wbWantsImg = () => { const st = WB.st; return WB.mode === 'free' || st.k === 'wcreate' || (st.checks || []).some(c => c.t === 'img' || c.t === 'figure' || c.t === 'picture') || /<img/i.test(WB.html) || (st.snips || []).some(x => /<img/.test(typeof x === 'string' ? x : x.t)); };
 function wbHTML() {
-  const tabs = wbTabs(), ro = WB.mode === 'view', checks = WB.mode === 'edit' ? WB.st.checks || [] : [], res = webRun({ checks }, WB.html, WB.css);
+  const tabs = wbTabs(), ro = WB.mode === 'view', checks = WB.mode === 'edit' ? WB.st.checks || [] : [], res = wbRes(checks);
   const all = WB.st.snips || [], snips = all.filter(x => { const t = typeof x === 'string' ? x : x.t; return tabs.length < 2 || (typeof x === 'string' ? (wbIsCss(t) ? 'css' : 'html') : (x.tab || 'html')) === WB.tab; });
   const u = wbUrl(), nok = res.filter(Boolean).length, done = checks.length && nok === checks.length;
   const next = checks.findIndex((c, i) => !res[i]);
   const ctxt = c => c.txt ? tval(c.txt) : webCheckTxt(c);
-  const tab = t => `<button class="wtab ${t === WB.tab ? 'on' : ''} f-${t}" onclick="wbTab('${t}')"><span class="wfi">${t === 'html' ? '&lt;/&gt;' : '#'}</span>${t === 'html' ? 'index.html' : 'estil.css'}</button>`;
+  const tab = t => `<button class="wtab ${t === WB.tab ? 'on' : ''} f-${t}" onclick="wbTab('${t}')"><span class="wfi">${t === 'html' ? '&lt;/&gt;' : t === 'js' ? 'JS' : '#'}</span>${t === 'html' ? 'index.html' : t === 'js' ? 'app.js' : 'estil.css'}</button>`;
   return `<div class="tstage wstage m-${WB.mode}${checks.length ? ' has-chk' : ''}" data-dev="${WB.dev}">
     <div class="wedit"><div class="wwin">
       <div class="wtabs">${tabs.map(tab).join('')}<span class="wsp"></span>
@@ -286,7 +327,7 @@ function wbHTML() {
         ${!ro ? `<button class="wtool ico" onclick="wbReset()" title="${L('Torna a començar', 'Vuelve a empezar')}" aria-label="${L('Torna a començar', 'Vuelve a empezar')}">${WI.reset}</button>` : ''}</div>
       <div class="wcode"><div class="warea"><div class="whl" id="whl" aria-hidden="true"></div><textarea id="wta" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off" aria-label="${L('Editor de codi', 'Editor de código')}" ${ro ? 'readonly' : ''}></textarea></div><div class="wgal" id="wgal" hidden></div></div>
       ${snips.length && !ro ? `<div class="wsnips">${snips.map(x => { const t = (typeof x === 'string' ? x : x.t).replace('|', ''), lang = typeof x === 'string' ? (wbIsCss(t) ? 'css' : 'html') : (x.tab || 'html'); return `<button onclick="wbSnip(${all.indexOf(x)})" title="${esc(t)}">${webHL(t.length > 30 ? t.slice(0, 28) + '…' : t, lang)}</button>`; }).join('')}</div>` : ''}
-      <div class="wstat"><button class="wst" id="werr" onclick="wbErrShow()"></button><span class="wpos" id="wpos"></span><span class="wlg">${WB.tab === 'css' ? 'CSS' : 'HTML'}</span></div>
+      <div class="wstat"><button class="wst" id="werr" onclick="wbErrShow()"></button><span class="wpos" id="wpos"></span><span class="wlg">${WB.tab === 'css' ? 'CSS' : WB.tab === 'js' ? 'JavaScript' : 'HTML'}</span></div>
     </div></div>
     <div class="wview">
       <div class="wdevice" id="wdev"><div class="wbody">
@@ -310,12 +351,12 @@ function wbHTML() {
 }
 function wbMount() {
   const ta = document.getElementById('wta'); if (!ta) return;
-  ta.value = WB.tab === 'css' ? WB.css : WB.html;
+  ta.value = WB.tab === 'css' ? WB.css : WB.tab === 'js' ? WB.js || '' : WB.html;
   const hl = document.getElementById('whl');
   const cur = () => ta.value.slice(0, ta.selectionStart).split('\n').length;
   const pos = () => { const n = cur(), c = ta.selectionStart - ta.value.lastIndexOf('\n', ta.selectionStart - 1); const p = document.getElementById('wpos'); if (p) p.textContent = L(`Línia ${n}, col. ${c}`, `Línea ${n}, col. ${c}`); hl.querySelectorAll('.wl.cur').forEach(x => x.classList.remove('cur')); const l = hl.children[n - 1]; if (l) l.classList.add('cur'); };
   const sync = () => { hl.innerHTML = webLines(ta.value, WB.tab).map((l, i) => `<div class="wl"><b class="wn">${i + 1}</b>${l || '​'}</div>`).join(''); hl.scrollTop = ta.scrollTop; pos(); };
-  ta.oninput = () => { if (WB.tab === 'css') WB.css = ta.value; else WB.html = ta.value; sync(); clearTimeout(WB_T); WB_T = setTimeout(wbUpdate, 240); wbErr(true); };
+  ta.oninput = () => { if (WB.tab === 'css') WB.css = ta.value; else if (WB.tab === 'js') WB.js = ta.value; else WB.html = ta.value; sync(); clearTimeout(WB_T); WB_T = setTimeout(wbUpdate, 240); wbErr(true); };
   ta.onscroll = () => { hl.scrollTop = ta.scrollTop; };
   ['keyup', 'click', 'focus'].forEach(e => ta.addEventListener(e, pos)); WB.pos = pos;
   ta.onkeydown = e => {
@@ -359,14 +400,14 @@ function wbFrames() { ['wfa', 'wfb'].forEach(id => { const f = document.getEleme
 function wbUpdate(first) {
   if (!WB) return;
   if (!WB.nonce) WB.nonce = Math.random().toString(36).slice(2, 12);
-  const empty = !String(WB.html).trim(), page = empty ? webPage(`<div style="height:90vh;display:grid;place-items:center;text-align:center;color:#8A94B5;font:600 15px/1.45 system-ui,sans-serif"><div><div style="font-size:34px;margin-bottom:6px">✏️</div>${L("Escriu codi a l'editor:<br>la pàgina sortirà aquí.", 'Escribe código en el editor:<br>la página saldrá aquí.')}</div></div>`, '') : webPage(WB.html, WB.css, { live: WB.nonce }), init = first === true; first = init;
+  const empty = !String(WB.html).trim(), page = empty ? webPage(`<div style="height:90vh;display:grid;place-items:center;text-align:center;color:#8A94B5;font:600 15px/1.45 system-ui,sans-serif"><div><div style="font-size:34px;margin-bottom:6px">✏️</div>${L("Escriu codi a l'editor:<br>la pàgina sortirà aquí.", 'Escribe código en el editor:<br>la página saldrá aquí.')}</div></div>`, '') : webPage(WB.html, WB.css, { live: WB.nonce, js: WB.js }), init = first === true; first = init;
   if (page !== WB.lastPage || init || arguments[0] === 'reload') {
-    WB.lastPage = page; WB.v = (WB.v || 0) + 1;
+    WB.lastPage = page; WB.v = (WB.v || 0) + 1; WB.jsErr = null; if (WB.js != null) { const k = page.indexOf('/*numi-js*/'); WB.jsLine0 = k < 0 ? 0 : page.slice(0, k).split('\n').length; }
     const a = document.getElementById('wfa'), b = document.getElementById('wfb');
     if (a && b) { const back = a.classList.contains('on') ? b : a; back.dataset.v = String(WB.v); back.srcdoc = page; }
     const lv = document.getElementById('wlive'); if (lv && !first) { lv.classList.remove('beat'); void lv.offsetWidth; lv.classList.add('beat'); }
   }
-  const d = webDoc(WB.html, WB.css), checks = WB.mode === 'edit' ? WB.st.checks || [] : [], res = checks.map(c => !!webCheck(d, c));
+  const d = webDoc(WB.html, WB.css, WB.js), checks = WB.mode === 'edit' ? WB.st.checks || [] : [], res = wbRes(checks); wbRunTests();
   const t = d.els.find(e => e.t === 'title'), pt = document.getElementById('wptitle'); if (pt) pt.textContent = (t && webTxt(t)) || (d.els.find(e => e.t === 'h1') && webTxt(d.els.find(e => e.t === 'h1'))) || wbUrl().host;
   const ul = document.getElementById('wchecks');
   if (ul) { let pop = false; [...ul.children].forEach((li, i) => { const was = li.classList.contains('ok'); li.classList.toggle('ok', res[i]); if (res[i] && !was && !first) { li.classList.remove('pop'); void li.offsetWidth; li.classList.add('pop'); pop = true; } });
@@ -380,16 +421,29 @@ function wbUpdate(first) {
 }
 // la barra d'estat: els errors d'escriptura (surten quan deixen d'escriure una estona, per no molestar mentre escriuen)
 function wbErr(wait) {
-  clearTimeout(WB_E); const go = () => { const b = document.getElementById('werr'); if (!b || !WB) return; const d = webDoc(WB.html, WB.css), m = webErrTxt(d);
+  clearTimeout(WB_E); const go = () => { const b = document.getElementById('werr'); if (!b || !WB) return; const d = webDoc(WB.html, WB.css), j = WB.js != null && WB.jsErr, m = j ? L(`Error de JavaScript${j.l ? ` a la línia ${j.l} d'app.js` : ''}: ${esc(j.m)}`, `Error de JavaScript${j.l ? ` en la línea ${j.l} de app.js` : ''}: ${esc(j.m)}`) : webErrTxt(d);
     b.className = 'wst ' + (m ? 'bad' : 'good'); b.innerHTML = m ? `${WI.warn}<span>${m}</span>` : `${WI.ok}<span>${WB.tab === 'css' ? L('CSS ben escrit', 'CSS bien escrito') : L('Etiquetes ben tancades', 'Etiquetas bien cerradas')}</span>`; b.dataset.m = m ? 1 : ''; };
   if (wait) { const b = document.getElementById('werr'); if (b && b.classList.contains('good')) { /* mentre escriuen, no es mostra cap error nou */ } WB_E = setTimeout(go, 1100); } else go();
 }
-function wbErrShow() { const b = document.getElementById('werr'); if (b && b.dataset.m) wbSay('⚠️ ' + webErrTxt(webDoc(WB.html, WB.css)), 'warn'); }
+function wbErrShow() { const b = document.getElementById('werr'); if (b && b.dataset.m) wbSay('⚠️ ' + (b.querySelector('span') ? b.querySelector('span').innerHTML : webErrTxt(webDoc(WB.html, WB.css))), 'warn'); }
+// les proves de comportament: una pàgina amagada per a cada prova «run» (es tornen a fer quan canvia el codi)
+let WB_RUN = null;
+function wbRunTests() {
+  if (!WB || typeof document === 'undefined') return; const checks = (WB.mode === 'edit' && WB.st.checks) || [], key = [WB.html, WB.css, WB.js].join('\u0001');
+  if (!checks.some(c => c.k === 'run') || WB.runKey === key) return; WB.runKey = key; clearTimeout(WB_RUN);
+  WB_RUN = setTimeout(() => { if (!WB || WB.runKey !== key) return; let host = document.getElementById('wrun'); if (!host) { host = document.createElement('div'); host.id = 'wrun'; host.setAttribute('aria-hidden', 'true'); document.body.appendChild(host); }
+    const tok = Math.random().toString(36).slice(2); host.innerHTML = ''; WB.runTok = tok; WB.runRes = {};
+    checks.forEach((c, i) => { if (c.k !== 'run') return; const f = document.createElement('iframe'); f.setAttribute('sandbox', 'allow-scripts'); f.tabIndex = -1; f.title = ''; f.srcdoc = webRunPage(WB.html, WB.css, WB.js, c, tok + ':' + i); host.appendChild(f); });
+    setTimeout(() => { if (WB && WB.runTok === tok && host.isConnected) host.innerHTML = ''; }, 15000); }, 500);
+}
+if (typeof addEventListener === 'function') addEventListener('message', e => { const d = e.data; if (!d || typeof d !== 'object' || !WB) return;
+  if (d.numiRun && WB.runTok && String(d.numiRun).indexOf(WB.runTok + ':') === 0) { WB.runRes[+String(d.numiRun).split(':')[1]] = !!d.ok; wbUpdate(); }
+  else if (d.numiErr && d.numiErr === WB.nonce && WB.js != null) { const f = ['wfa', 'wfb'].map(id => document.getElementById(id)).find(x => x && x.contentWindow === e.source); if (!f || f.dataset.v !== String(WB.v)) return; WB.jsErr = { m: String(d.m || '').slice(0, 160), l: Math.max(0, (d.l | 0) - (WB.jsLine0 || 0)) }; wbErr(false); } });
 // el missatge d'en Numi a sobre de la vista prèvia (pistes, errors i el «molt bé»)
 function wbSay(html, kind = '') { const s = document.getElementById('tsay'); if (!s) return; if (!html) { s.innerHTML = ''; s.className = 'tsay wsay'; return; }
   s.className = 'tsay wsay show ' + kind; s.innerHTML = `<span class="wsayt">${html}</span><button class="wsayx" onclick="wbSay('')" aria-label="${L('Tanca', 'Cierra')}">${WI.x}</button>`;
   const id = (wbSay.n = (wbSay.n || 0) + 1); if (kind === 'ok') setTimeout(() => { if (wbSay.n === id && s.isConnected) s.classList.add('fade'); setTimeout(() => { if (wbSay.n === id && s.isConnected) wbSay(''); }, 400); }, 5000); }
-function wbReset() { if (!confirm(L('Vols tornar al codi del principi? Perdràs els canvis.', '¿Quieres volver al código del principio? Perderás los cambios.'))) return; const st = WB.st; WB.html = WB.p ? WB.p.html0 ?? st.html ?? '' : st.html ?? ''; WB.css = WB.p ? WB.p.css0 ?? st.css ?? '' : st.css ?? ''; wbRedraw(); wbUpdate(); }
+function wbReset() { if (!confirm(L('Vols tornar al codi del principi? Perdràs els canvis.', '¿Quieres volver al código del principio? Perderás los cambios.'))) return; const st = WB.st; WB.html = WB.p ? WB.p.html0 ?? st.html ?? '' : st.html ?? ''; WB.css = WB.p ? WB.p.css0 ?? st.css ?? '' : st.css ?? ''; if (WB.js != null) WB.js = WB.p ? WB.p.js0 ?? st.js ?? '' : st.js ?? ''; wbRedraw(); wbUpdate(); }
 // la galeria d'imatges: toca'n una i s'escriu el camí on és el cursor
 function wbGal() { const g = document.getElementById('wgal'); if (!g) return; if (!g.hidden) { g.hidden = true; return; }
   g.innerHTML = `<div class="wgh"><b>${L('Imatges per a la teva web', 'Imágenes para tu web')}</b><small>${L('Toca-ne una: s\'escriu el camí on tens el cursor (dins de <code>src=""</code>).', 'Toca una: se escribe la ruta donde tienes el cursor (dentro de <code>src=""</code>).')}</small><button onclick="wbGal()" aria-label="${L('Tanca', 'Cierra')}">${WI.x}</button></div>
@@ -398,10 +452,10 @@ function wbGal() { const g = document.getElementById('wgal'); if (!g) return; if
 function wbGalPick(f) { const g = document.getElementById('wgal'); if (g) g.hidden = true; const ta = document.getElementById('wta'); if (!ta) return; const a = ta.selectionStart, before = ta.value.slice(0, a);
   const inSrc = /src\s*=\s*["'][^"']*$/i.test(before); wbInsert(inSrc ? f : `<img src="${f}" alt="">`, inSrc ? undefined : `<img src="${f}" alt="`.length); }
 function wbDownload() { const p = WB.p, name = String((p && tval(p.t)) || 'web').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'web';
-  const blob = new Blob([webFile(WB.html, WB.css, p && tval(p.t))], { type: 'text/html' }), a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name + '.html'; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 400);
+  const blob = new Blob([webFile(WB.html, WB.css, p && tval(p.t), WB.js)], { type: 'text/html' }), a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name + '.html'; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 400);
   toast(L('Web descarregada: és un fitxer .html que pots obrir amb qualsevol navegador.', 'Web descargada: es un archivo .html que puedes abrir con cualquier navegador.')); }
 let WB_S = null;
-function wbAutosave() { clearTimeout(WB_S); WB_S = setTimeout(() => { const p = WB && WB.p; if (!p) return; if (p.html0 == null) { p.html0 = p.html; p.css0 = p.css; } p.html = WB.html; p.css = WB.css; p.d = today(); save(); const b = document.getElementById('wlive'); if (b) b.dataset.saved = '1'; }, 700); }
+function wbAutosave() { clearTimeout(WB_S); WB_S = setTimeout(() => { const p = WB && WB.p; if (!p) return; if (p.html0 == null) { p.html0 = p.html; p.css0 = p.css; p.js0 = p.js; } p.html = WB.html; p.css = WB.css; if (WB.js != null) p.js = WB.js; p.d = today(); save(); const b = document.getElementById('wlive'); if (b) b.dataset.saved = '1'; }, 700); }
 
 /* ---------- Tipus de pas de Web ----------
    web: repte { q, html?, css?, tabs?, checks: [...], snips?, sol: { html, css }, hint, url? } · wcreate: projecte { …, name, crit } (es desa)
@@ -414,14 +468,14 @@ function wbHintBtn(st) {
   if (document.getElementById('thint') || !(st.hint || st.sol) || !document.querySelector('.wstage') || !WB || WB.st !== st) return;
   const f = document.getElementById('tsf'); if (!f) return; const b = document.createElement('button'); b.className = 'btn ghost'; b.id = 'thint'; b.textContent = L('Una pista', 'Una pista');
   b.onclick = () => { if (st.hint && !b.dataset.k) { b.dataset.k = 1; wbSay(`💡 ${tval(st.hint)}`, 'hint'); b.textContent = L('Mostra una solució', 'Muestra una solución'); return; }
-    if (st.sol) { WB.html = st.sol.html ?? WB.html; WB.css = st.sol.css ?? WB.css; wbRedraw(); wbUpdate(); wbSay(L('Aquí tens una solució. Llegeix-la línia a línia i compara-la amb la teva.', 'Aquí tienes una solución. Léela línea a línea y compárala con la tuya.'), 'hint'); b.remove(); } };
+    if (st.sol) { WB.html = st.sol.html ?? WB.html; WB.css = st.sol.css ?? WB.css; if (WB.js != null && st.sol.js != null) WB.js = st.sol.js; wbRedraw(); wbUpdate(); wbSay(L('Aquí tens una solució. Llegeix-la línia a línia i compara-la amb la teva.', 'Aquí tienes una solución. Léela línea a línea y compárala con la tuya.'), 'hint'); b.remove(); } };
   f.insertBefore(b, f.firstChild);
 }
 // codi bilingüe: html, css i la solució poden ser { ca: '…', es: '…' } (la pàgina d'exemple en la llengua de l'alumne/a)
 const webL = (v, lang) => v && typeof v === 'object' && ('ca' in v || 'es' in v) ? ((lang || (typeof LANG !== 'undefined' ? LANG : 'ca')) === 'es' ? v.es ?? v.ca : v.ca ?? v.es) : v;
 function webLoc(st, lang) {
-  const o = { ...st }; for (const k of ['html', 'css', 'page']) if (k in o) o[k] = webL(o[k], lang);
-  if (o.sol) o.sol = { html: webL(o.sol.html, lang), css: webL(o.sol.css, lang) }; if (o.code) o.code = { html: webL(o.code.html, lang), css: webL(o.code.css, lang) };
+  const o = { ...st }; for (const k of ['html', 'css', 'page', 'js']) if (k in o) o[k] = webL(o[k], lang);
+  if (o.sol) o.sol = { html: webL(o.sol.html, lang), css: webL(o.sol.css, lang), js: webL(o.sol.js, lang) }; if (o.code) o.code = { html: webL(o.code.html, lang), css: webL(o.code.css, lang) };
   if (o.opts) o.opts = o.opts.map(x => x && typeof x === 'object' && !Array.isArray(x) ? { html: webL(x.html, lang), css: webL(x.css, lang) } : x); return o;
 }
 // una finestra de navegador petita amb la pàgina (opcions de wquiz, demos, wspot)
@@ -434,7 +488,7 @@ if (typeof TSTEP !== 'undefined') {
     const hint = () => { if (TSS.st === orig) wbHintBtn(st); }; setTimeout(hint, 90000); const ta = document.getElementById('wta'); if (ta) ta.addEventListener('input', () => { WB.tries++; if (WB.tries === 40) hint(); }); };
   TSTEP.wcreate = function (st) {
     TSTEP.web(st); const sl = WB.st;
-    WB.onDone = () => tFoot(L('Desa-ho i continua', 'Guárdalo y continúa'), () => { const t = TS_(); t.port.push({ id: 'pj' + Date.now().toString(36), kind: 'web', sid: TSS.id, t: sl.name || TSS.s.t, html: WB.html, css: WB.css, url: sl.url || '', d: today() }); if (t.port.length > 60) t.port.shift(); save(); toast(L('Pàgina desada a «Projectes»!', '¡Página guardada en «Proyectos»!')); tNext(); }, true);
+    WB.onDone = () => tFoot(L('Desa-ho i continua', 'Guárdalo y continúa'), () => { const t = TS_(); t.port.push({ id: 'pj' + Date.now().toString(36), kind: 'web', sid: TSS.id, t: sl.name || TSS.s.t, html: WB.html, css: WB.css, ...(WB.js != null ? { js: WB.js } : {}), url: sl.url || '', d: today() }); if (t.port.length > 60) t.port.shift(); save(); toast(L('Pàgina desada a «Projectes»!', '¡Página guardada en «Proyectos»!')); tNext(); }, true);
   };
   TSTEP.wspot = function (st) {
     st = webLoc(st); const code = st.html ?? st.css, lang = st.html != null ? 'html' : 'css';   // amb css i `page` (html de la pàgina), la vista prèvia ensenya l'efecte
@@ -471,7 +525,7 @@ TMEDIA.web = {
 if (typeof TPORT !== 'undefined') TPORT.web = {
   thumb: p => `<span class="wthumb"><iframe sandbox="" tabindex="-1" aria-hidden="true" srcdoc="${esc(webPage(p.html, p.css))}"></iframe></span>`,
   // el projecte es pot continuar millorant (es desa sol) i descarregar com un fitxer .html per publicar-lo
-  open: p => { wbMake({ html: p.html, css: p.css, tabs: ['html', 'css'], url: p.url || 'la-meva-web.numi', snips: [] }, { mode: 'free', p }); return `<div class="tsbody wide wport">${wbHTML()}</div>`; },
+  open: p => { wbMake({ html: p.html, css: p.css, js: p.js ?? null, tabs: p.js != null ? ['html', 'css', 'js'] : ['html', 'css'], url: p.url || 'la-meva-web.numi', snips: [] }, { mode: 'free', p }); return `<div class="tsbody wide wport">${wbHTML()}</div>`; },
   mount: () => wbMount()
 };
 var TVALID = typeof TVALID !== 'undefined' ? TVALID : {};

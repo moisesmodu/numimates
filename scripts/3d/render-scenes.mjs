@@ -3,7 +3,8 @@
 //   img/tech/scenes/<escena>.webp        (escenes de les històries)  i  img/tech/scenes/hero-<curs>.webp (capçaleres)
 //   img/tech/bit-<posa>.webp, img/tech/maqueen-<posa>.webp  (retrats d'en Bit i del Maqueen, fons transparent)
 // Cada curs és un món diferent (vegeu WORLD i scripts/3d/diorama.mjs): robot → tropic, robotica → lab, creadors → teatre,
-// digital → ciutat, model (Tech 3D · Nivell 1) → fab (el taller d'impressió 3D d'en Bit i la Nuvi), modelpro (Nivell 2) → estudi.
+// digital → ciutat, model (Tech 3D · Nivell 1) → fab (el taller d'impressió 3D d'en Bit i la Nuvi), modelpro (Nivell 2) → estudi,
+// ia (Tech IA) → ciutat (capçalera: estudi). Només la capçalera i les illes de Tech IA: ONLY=heroes HEROES=ia … i ONLY=isles COURSES=ia ….
 // Ús (cal el servidor estàtic del repo a http://127.0.0.1:5190, o BASE=<url>):
 //   node scripts/3d/render-scenes.mjs                                   tot: illes dels cursos actius, escenes, capçaleres i retrats
 //   ONLY=isles node scripts/3d/render-scenes.mjs                        només les illes
@@ -19,17 +20,19 @@ import { execFileSync } from 'child_process';
 import { build } from 'esbuild';
 const root = new URL('../../', import.meta.url).pathname;
 const ONLY = process.env.ONLY || 'all', BASE = process.env.BASE || 'http://127.0.0.1:5190/';
-const WORLD = { robot: 'tropic', robotica: 'lab', creadors: 'teatre', digital: 'ciutat', web: 'tropic', model: 'fab', modelpro: 'estudi' };
+const WORLD = { robot: 'tropic', robotica: 'lab', creadors: 'teatre', digital: 'ciutat', web: 'tropic', model: 'fab', modelpro: 'estudi', ia: 'ciutat' };
 const THEMES = { robot: ['algo', 'loop', 'llum', 'sensor', 'ciutat', 'fruita', 'cova', 'trofeu'], robotica: ['lab', 'algo', 'sensor', 'loop', 'llum', 'ciutat', 'cova', 'trofeu'], creadors: ['llum', 'loop', 'ciutat', 'algo', 'sensor', 'fruita', 'cova', 'trofeu'], web: ['ciutat', 'algo', 'loop', 'llum', 'sensor', 'ciutat', 'fruita', 'trofeu'], digital: ['sensor', 'llum', 'ciutat', 'cova', 'loop', 'trofeu'],
   // Tech 3D: una fita per unitat (vegeu FABHERO a diorama.mjs)
-  model: ['eixos', 'formes', 'mesura', 'casa', 'forats', 'impressio', 'persones', 'trofeu'], modelpro: ['codi', 'moli', 'dau', 'caixa', 'engranatge', 'ciutat', 'frontissa', 'trofeu'] };
+  model: ['eixos', 'formes', 'mesura', 'casa', 'forats', 'impressio', 'persones', 'trofeu'], modelpro: ['codi', 'moli', 'dau', 'caixa', 'engranatge', 'ciutat', 'frontissa', 'trofeu'],
+  // Tech IA (12-16): la ciutat connectada de nit (observatori → laberint → far → ciutat → molí → cova → ciutat → trofeu)
+  ia: ['sensor', 'algo', 'llum', 'ciutat', 'loop', 'cova', 'ciutat', 'trofeu'] };
 // el curs web està aparcat: les seves illes no es tornen a fer si no es demana explícitament amb COURSES
-const COURSES = process.env.COURSES ? process.env.COURSES.split(',').map(s => s.trim()) : ['robot', 'robotica', 'creadors', 'digital', 'model', 'modelpro'];
+const COURSES = process.env.COURSES ? process.env.COURSES.split(',').map(s => s.trim()) : ['robot', 'robotica', 'creadors', 'digital', 'model', 'modelpro', 'ia'];
 const UNITS = process.env.UNITS ? process.env.UNITS.split(',').map(Number) : null;
 const list = (k, all) => process.env[k] ? process.env[k].split(',').map(s => s.trim()) : all;
 const SCENES = list('SCENES', ['illa', 'poble', 'taller', 'moll', 'lab', 'fab', 'estudi']);
 // capçaleres: curs → escena; robòtica porta el Maqueen (la seva mascota), la resta en Bit
-const HERO = { robot: 'illa', robotica: 'lab', creadors: 'poble', web: 'poble', digital: 'taller', model: 'fab', modelpro: 'estudi' };
+const HERO = { robot: 'illa', robotica: 'lab', creadors: 'poble', web: 'poble', digital: 'taller', model: 'fab', modelpro: 'estudi', ia: 'estudi' };
 const HEROES = list('HEROES', Object.keys(HERO));
 // retrats: mides de sortida (les de sempre: l'app les fa servir tal qual)
 const BIT = { idle: [280, 490], happy: [289, 489], win: [315, 524], dance: [321, 480], wave: [293, 489], think: [296, 487], sad: [289, 484] }, MAQ = { idle: [640, 640], happy: [640, 640] };

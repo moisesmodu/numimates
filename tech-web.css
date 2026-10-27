@@ -29,7 +29,7 @@
   box-shadow:0 0 0 1px rgba(255,255,255,.04) inset,0 16px 34px -14px rgba(11,16,39,.55),0 2px 6px rgba(11,16,39,.18)}
 .wtabs{flex:none;height:36px;display:flex;align-items:flex-end;gap:2px;padding:0 6px 0 8px;background:linear-gradient(#0A0F25,#080C1F);border-bottom:1px solid rgba(0,0,0,.35)}
 .wtab{height:30px;display:inline-flex;align-items:center;gap:7px;padding:0 13px 0 11px;border-radius:9px 9px 0 0;border:0;background:transparent;color:#7E8BC0;font:700 12.5px/1 Lexend,system-ui,sans-serif;letter-spacing:.01em;position:relative;cursor:pointer;transition:color .15s,background .15s}
-.wtab.f-html{--tc:#FF8A4C}.wtab.f-css{--tc:#56A8FF}
+.wtab.f-html{--tc:#FF8A4C}.wtab.f-css{--tc:#56A8FF}.wtab.f-js{--tc:#F7DF1E}
 .wtab:hover{color:#C9D3F5}
 .wtab.on{background:var(--wbg);color:#fff;box-shadow:inset 0 2px 0 var(--tc)}
 .wtab.on::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:2px;background:var(--wbg)}
@@ -306,3 +306,6 @@
 .tsess .wport{display:flex;flex-direction:column}
 
 @media (prefers-reduced-motion:reduce){.wbl,.wspoth,.wchecks li.pop,.wchecks li.pop::after,.wchk.bump .wring,.wsay,.wgal,.wst.bad,.wsl.ko{animation:none}.wring .wrf,.wscreen iframe{transition:none}}
+
+/* proves de comportament (JavaScript): pàgines amagades fora de la vista */
+#wrun{position:fixed;left:-10000px;top:0;width:380px;height:660px;overflow:hidden;visibility:hidden;pointer-events:none}#wrun iframe{width:375px;height:640px;border:0}

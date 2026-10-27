@@ -102,8 +102,8 @@ function tStop() { if (typeof TB !== 'undefined' && TB) { clearTimeout(TB.t); TB
 const tVis = c => c.units.some(u => (u.s || []).some(tReady));
 // nivell escolar de cada curs (un curs per cicle): Robot → Creadors i Digital → Robòtica
 // què és cada curs, dit a l'alumne: sense edats ni cursos escolars (això és per a les famílies i els docents: panell i dossier)
-const TLVL = { robot: "Curs d'entrada|Curso de entrada", creadors: 'Animacions i videojocs|Animaciones y videojuegos', digital: 'Ciutadania digital|Ciudadanía digital', robotica: 'Amb el robot Maqueen|Con el robot Maqueen', web: 'Pàgines web amb HTML i CSS|Páginas web con HTML y CSS', model: 'Disseny i impressió 3D|Diseño e impresión 3D', modelpro: 'Disseny 3D amb codi|Diseño 3D con código' };
-const TCI3 = { robot: '🤖', robotica: '🚗', creadors: '🎭', digital: '🛡️', web: '🌐', model: '🧊', modelpro: '⚙️' };
+const TLVL = { robot: "Curs d'entrada|Curso de entrada", creadors: 'Animacions i videojocs|Animaciones y videojuegos', digital: 'Ciutadania digital|Ciudadanía digital', robotica: 'Amb el robot Maqueen|Con el robot Maqueen', web: 'Pàgines web amb HTML i CSS|Páginas web con HTML y CSS', model: 'Disseny i impressió 3D|Diseño e impresión 3D', modelpro: 'Disseny 3D amb codi|Diseño 3D con código', ia: 'Intel·ligència artificial|Inteligencia artificial' };
+const TCI3 = { robot: '🤖', robotica: '🚗', creadors: '🎭', digital: '🛡️', web: '🌐', model: '🧊', modelpro: '⚙️', ia: '🧠' };
 // estrelles dels reptes (la millor de cada repte) i el total
 function tStarSave(n) { if (!TSS || !TSS.id || TSS.demo) return; const t = TS_(); t.st = t.st || {}; const k = TSS.id + ':' + TSS.i; if ((t.st[k] || 0) < n) { t.st[k] = n; save(); } }
 const tStarTotal = () => Object.values(TS_().st || {}).reduce((a, n) => a + n, 0);
@@ -1010,6 +1010,12 @@ const TKIND = {
   move: ['Pausa activa', 'Pausa activa', 'Moure el cos amb el concepte.', 'Mover el cuerpo con el concepto.'],
   feel: ['Com et sents?', '¿Cómo te sientes?', 'Valoració ràpida del final.', 'Valoración rápida del final.'],
   review: ['Valoració', 'Valoración', 'Preguntes d\'una en una.', 'Preguntas de una en una.'],
+  iatrain: ['Entrena una IA', 'Entrena una IA', 'Classificador amb càmera, dibuix, so o exemples; prova i biaix.', 'Clasificador con cámara, dibujo, sonido o ejemplos; prueba y sesgo.'],
+  iangram: ['Model de llenguatge', 'Modelo de lenguaje', 'N-grames: la paraula següent, dades i temperatura.', 'N-gramas: la palabra siguiente, datos y temperatura.'],
+  iachat: ['Xat amb una IA', 'Chat con una IA', 'Conversa simulada: caça les al·lucinacions.', 'Conversación simulada: caza las alucinaciones.'],
+  iaprompt: ['Prompts', 'Prompts', 'Escriu un prompt i mira com respon el model.', 'Escribe un prompt y mira cómo responde el modelo.'],
+  iaagent: ['Dissenya un agent', 'Diseña un agente', 'Pla, eines i permisos: mira què fa.', 'Plan, herramientas y permisos: mira qué hace.'],
+  iavibe: ['Vibe coding', 'Vibe coding', 'Descriu l\'app, la IA escriu el codi; prova i arregla.', 'Describe la app, la IA escribe el código; prueba y arregla.'],
   diploma: ['Diploma', 'Diploma', 'Final del curs.', 'Final del curso.']
 };
 function tKindIdx() {

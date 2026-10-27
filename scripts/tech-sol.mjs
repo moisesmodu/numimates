@@ -10,7 +10,7 @@ for (const lang of ['ca', 'es']) {
   await p.goto(`${base}/?v=tech&revisio=1`); await p.waitForTimeout(2500);
   await p.addScriptTag({ path: path.join(root, 'scripts/tech-solgen.js') });
   // els passos de Tech Web els afegeix tech-web.js (webSolRows) i els de Tech 3D (m3look, m3build, m3code…) tech-model.js (m3SolRows)
-  res[lang] = await p.evaluate(l => { LANG = l; const o = TSOLGEN(); if (typeof webSolRows === 'function') webSolRows(o); if (typeof m3SolRows === 'function') m3SolRows(o); return o; }, lang);
+  res[lang] = await p.evaluate(l => { LANG = l; const o = TSOLGEN(); if (typeof webSolRows === 'function') webSolRows(o); if (typeof m3SolRows === 'function') m3SolRows(o); if (typeof iaSolRows === 'function') iaSolRows(o); return o; }, lang);
 }
 await b.close();
 if (errs.length) console.warn('errors a la pàgina:', [...new Set(errs)].slice(0, 5));
