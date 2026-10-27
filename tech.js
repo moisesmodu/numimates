@@ -629,7 +629,7 @@ const TSTEP = {
     $('#tsb').innerHTML = `<div class="tcol"><div class="tmove"><div class="tmvbot">${bitChar('dance')}</div><h2>${tx(st.title || 'Pausa activa!|¡Pausa activa!')}</h2><p>${tval(st.t)}</p><div class="tclock" id="tclock">${n}</div></div></div>`;
     tFoot(L('Ja està!', '¡Ya está!'), tNext, false);
     TS_T = setInterval(() => { n--; const c = document.getElementById('tclock'); if (c) c.textContent = Math.max(0, n); if (n <= 0) { clearInterval(TS_T); TS_T = null; SFX.ok && SFX.ok(); const b = document.getElementById('tnext'); if (b) b.disabled = false; } }, 1000);
-    setTimeout(() => { const b = document.getElementById('tnext'); if (b) b.disabled = false; }, Math.min(8000, n * 1000));
+    const t0 = TSS.t0, s0 = TSS.st; setTimeout(() => { if (!TSS || TSS.t0 !== t0 || TSS.st !== s0) return; const b = document.getElementById('tnext'); if (b) b.disabled = false; }, Math.min(8000, n * 1000));   // només si encara som en aquest pas
   },
   // com t'ha anat? (autoavaluació; no compta per a res, ajuda a pensar-hi)
   feel(st) {

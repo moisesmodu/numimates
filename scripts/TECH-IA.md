@@ -23,8 +23,8 @@ Solucionari: `PLAYWRIGHT=… node scripts/tech-sol.mjs` (ja inclou els passos IA
 2. **Entrena la teva IA** dades, etiquetes, prova, errors (matriu de confusió), biaix (`iatrain`).
 3. **Parlar amb models de llenguatge** com funcionen, al·lucinacions, bons prompts, comprovar, la IA com a tutora i no com a copiadora (`iachat`, `iaprompt`).
 4. **Imatge, veu i vídeo generats** com es generen (conceptualment), drets d'autor, deepfakes i com detectar-los, ús creatiu amb autoria declarada (`learn`, `dspot`, `dsort`, `quiz`, `create`…).
-5. **Crea amb IA: vibe coding** descriure → la IA escriu el codi → llegir, provar i arreglar (`iavibe`, `web`).
-6. **Agents** objectiu, pla, eines, permisos, memòria; què pot sortir malament (injecció de prompts) (`iaagent`).
+5. **Crea amb IA: vibe coding** descriure → la IA escriu el codi → llegir, provar i arreglar; especificació i proves d'acceptació; depurar, versions i regressions; projecte amb fitxa de transparència (`iavibe` amb `checksBy`, `wspot` amb JavaScript, `quiz` amb `art` de codi, `iacard`). Fet: `scripts/tech-src/ia/u5/`.
+6. **Agents** objectiu, pla, eines, permisos, memòria, mínim privilegi i confirmació; injecció de prompts i errors en cadena; projecte d'un agent per al centre amb taula de permisos i fitxa de riscos (`iaagent`, `iachat` amb el registre al `tip`, `dspot`, `iacard`). Fet: `scripts/tech-src/ia/u6/`.
 7. **IA i societat** feina, energia i aigua, privadesa, la llei europea d'IA (nivells de risc), bons usos (`dsort`, `iachat`, `quiz`).
 8. **Projecte: una IA per al nostre centre** idea, fitxa de riscos (model card), prototip, pitch i `diploma`.
 
@@ -113,6 +113,9 @@ dany, amb 2 → la persona diu que no; la injecció s'executa si l'agent té el 
 { k: 'iavibe', ph: 'crea', q, idea: 'descripció d'exemple|…', kind?: 'count', kindHint?, bug: true (la IA simulada hi posa un error), needQ: 2,
   checks: [...comprovacions de Tech Web, també JavaScript...], sol: { html: { ca, es } | '…', css, js }, hint, q2?, url?, save?: true, live: true }
 ```
+`checksBy: { count: [...], list: [...], … }` (opcional, per a apps lliures sense `kind`): comprovacions que s'afegeixen a `checks` segons la plantilla
+que surti de la descripció, amb les proves `run` que destapen l'error típic de cada plantilla. El validador comprova que la plantilla sense
+l'error passa les estàtiques i que té els `#id` de les proves. Amb la IA en directe (sense plantilla) i sense `checks`, es fa servir «el codi respon».
 1) Descripció amb tres indicadors (què es veu · què passa quan… · detalls) i les funcions que «ha entès» la IA. 2) La IA (simulada:
 plantilles pròpies; o en directe) escriu el codi. 3) S'obre l'editor de Tech Web amb les pestanyes `index.html`, `estil.css` i `app.js`.
 Plantilles i ids fixos (per a les comprovacions `run`): **count** `#count #btn #reset #msg` (error: suma 2) · **dice** `#roll #dice #face #rolls`
@@ -125,14 +128,37 @@ Comprovacions noves de l'editor web (també per al curs Web): `{ k: 'js', v: '/r
 num: [1, 6], count, cls, not, style: ['color', '/regex/'], visible, exists }, rep: 40 }`. Les `run` s'executen al navegador, cadascuna en una pàgina
 amagada i aïllada (sense xarxa); el validador (Node) només comprova les estàtiques. Els errors de JavaScript surten a la barra d'estat amb la línia d'`app.js`.
 
+### `iacard` — una fitxa per omplir que es desa al portafoli (model card, riscos, transparència…)
+```js
+{ k: 'iacard', ph: 'crea', q, kind: 'model'|'risk'|'transp'|'agent'|'perm'|'spec'|'app' (icona, color i nom del tipus), title: 'ca|es' (títol de la fitxa),
+  name?: 'ca|es' (nom al portafoli), intro?: 'ca|es', ico?, col?, kindT?: 'ca|es' (per canviar el nom del tipus), save?: false (no es desa),
+  fields: [{ k: 'us', label: 'ca|es', hint?: 'ca|es' (placeholder), min?: 20 (caràcters; 0 = opcional), rows?: 1-8 (1 = una línia), max? },
+           { k: 'risc', label, choices: ['ca|es', …], multi?: true, min?: 1 (opcions mínimes), hint? }],
+  sol?: { us: 'ca|es', risc: 0 } (exemple per al solucionari i el validador) }
+```
+Formulari a l'esquerra (al mòbil, pestanyes «Omple / Fitxa») i, al costat, la fitxa tal com quedarà (capçalera amb la icona, camps, autor/a i
+data), que s'actualitza mentre s'escriu. Cada camp mostra `n/min` i ✓. «Desa la fitxa i continua» s'activa quan tots els camps tenen el mínim.
+Es desa a `TPORT.ia` (`ia: 'card'`, una per pas: si es torna a fer, la substitueix i es pot millorar), es veu al portafoli i s'imprimeix
+(🖨️ només la fitxa). L'esborrany es manté si es redibuixa el pas (p. ex. en canviar el nivell PRO). Al solucionari: els camps i l'exemple.
+
+### Motor: comportaments comuns
+- Temporitzadors i esperes dels passos IA: `iaTO(fn, ms)`, `iaIV(fn, ms)` i `iaAlive()` (després d'un `await`). Es cancel·len a `tStop`, quan
+  canvia el pas: un pas anterior no pot redibuixar el pas nou ni tornar a activar «Continua». Feu-los servir a qualsevol codi nou.
+- L'enunciat (`q`) es retalla a 2-3 línies perquè el pas càpiga; si no hi cap, surt «llegir més» (i queda obert en redibuixar el pas).
+- `iangram` amb `texts` i `edit`: cada corpus guarda el que s'hi ha escrit i afegit en canviar de corpus.
+- Matriu de confusió: capçaleres que no es repeteixen (icones, o el prefix més curt que distingeix les classes; el nom sencer al `title`).
+- Imprimibles `graella`: `label: 'ca|es'` canvia «Nom del repte» de la línia del nom (fora del curs Robot, per defecte «Títol»).
+- Codi JavaScript per llegir: a un `quiz`, `art: () => '<div class="wcwin iacodeart">…</div>'` (finestra d'editor de Tech Web, només per mirar;
+  vegeu `I5C` a `u5/unit.js`); a un `wspot`, el JavaScript dins de `<script>` a `html` amb `preview: false` (es toca la línia).
+
 ### Demos de teoria i diapositives
 `learn` amb `media: { k: 'ia', demo: 'ngram', text, ctx }` (barres de la paraula següent) · `{ demo: 'knn' }` (els 5 veïns més propers) ·
 `{ demo: 'chat', msgs: [['me'|'them', 'ca|es', bad?]] }`. Les mateixes a les diapositives `k: 'media'`. Animacions pròpies a `uN/tani.js` (`TANI`).
 
 ## Referències que funcionen
-- `IA_SAMPLES` (al final de `tech-ia.js`): un pas de cada tipus amb solució (també el laboratori i el validador els fan servir).
+- `IA_SAMPLES` (al final de `tech-ia.js`): un pas de cada tipus amb solució, també `iacard` (també el laboratori i el validador els fan servir).
 - `scripts/tech-src/ia/u1/`: sessió i1-1 completa (16 passos, guia de 60 min amb 16 diapositives i un imprimible).
-- Laboratori d'IA (`tLab('ia')`, `iaLabSteps()`): els sis tipus en mode lliure, amb «Eina següent».
+- Laboratori d'IA (`tLab('ia')`, `iaLabSteps()`): els set tipus en mode lliure (l'última, una model card), amb «Eina següent».
 
 ## Comprovar abans d'acabar
 `node <scratchpad>/t/validate.mjs` (0 errors, 0 avisos; `--course ia`), `node --check` de cada fitxer, i al navegador cada pas a 390×740 i

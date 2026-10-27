@@ -28,6 +28,21 @@
 <script src="tech-c8.js"></script>
 <script src="tech-guard.js"></script>
 <script>TGUARD.load(['c1', 'c2', 'c3', 'c4', 'c5', 'c6', 'c7', 'sol']).then(ok => ok ? TGUARD.load(['c8']).then(() => TGUARD.after('print.js?v=3')) : TGUARD.deny(document.getElementById('doc')));</script>
+<script>
+// fitxes «graella»: la línia del nom fa servir l'etiqueta de l'imprimible (label: "ca|es"); si no en té, «Nom del repte» al curs
+// Robot (reptes d'en Bit) i «Títol» als altres cursos (Tech IA…), on la fitxa no és un repte
+(function () {
+  var doc = document.getElementById('doc'); if (!doc || typeof MutationObserver !== 'function') return;
+  var mo = new MutationObserver(function () {
+    var sid = new URLSearchParams(location.search).get('s'), G = typeof TGUIDE !== 'undefined' && TGUIDE[sid], ps = doc.querySelectorAll('.page'); if (!G || !ps.length) return; mo.disconnect();
+    var C = (TECH || []).find(function (c) { return c.units.some(function (u) { return (u.s || []).some(function (s) { return s.id === sid; }); }); }), robot = !C || C.id === 'robot';
+    var gs = (G.print || []).filter(function (p) { return p.k === 'graella'; }), pages = [].filter.call(ps, function (pg) { return pg.querySelector('.pgrid'); });
+    pages.forEach(function (pg, i) { var pr = gs[i], n = pg.querySelector('p.name'); if (!pr || !n || (!pr.label && robot)) return;
+      n.innerHTML = L('Nom', 'Nombre') + ': ______________________________ &nbsp; ' + esc(pr.label ? tx(pr.label) : L('Títol', 'Título')) + ': ______________________'; });
+  });
+  mo.observe(doc, { childList: true });
+})();
+</script>
 <script src="icons.js"></script>
 </body>
 </html>

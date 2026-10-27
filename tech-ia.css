@@ -95,7 +95,7 @@
 .iaev{display:grid;gap:6px}.iaacc{margin:0;font-weight:700;font-size:14px}.iaacc b{font:900 26px/1 Lexend,system-ui,sans-serif;color:#FCA5A5}.iaacc.ok b{color:var(--ok)}
 .iacm{border-collapse:separate;border-spacing:3px;font:800 13px/1 ui-monospace,monospace;align-self:flex-start}
 .iacm caption{caption-side:bottom;font:600 11.5px/1.3 Lexend,system-ui,sans-serif;color:var(--iamu);text-align:left;padding-top:3px}
-.iacm th{padding:4px 6px;font-size:15px}.iacm td{min-width:30px;padding:6px;text-align:center;border-radius:7px;background:rgba(255,255,255,.06)}.iacm td.d{background:rgba(52,211,153,.3)}.iacm td.x{background:rgba(239,68,68,.45)}
+.iacm th{padding:4px 6px;font-size:15px;max-width:10ch;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.iacm td{min-width:30px;padding:6px;text-align:center;border-radius:7px;background:rgba(255,255,255,.06)}.iacm td.d{background:rgba(52,211,153,.3)}.iacm td.x{background:rgba(239,68,68,.45)}
 .iabq{display:grid;gap:6px;background:rgba(255,255,255,.06);border-radius:14px;padding:10px}.iabq p{margin:0;font-size:14.5px}
 .iabq button{text-align:left;padding:9px 11px;border-radius:12px;border:1.5px solid rgba(255,255,255,.2);background:rgba(255,255,255,.07);color:inherit;font:700 13.5px/1.3 Lexend,system-ui,sans-serif;cursor:pointer}.iabq button.ko{border-color:#F87171;background:rgba(239,68,68,.18)}
 .iaout .tfbox,.iarun .tfbox{margin:0;font-size:14px}.iafix{margin-top:8px}
@@ -168,6 +168,43 @@
 /* vibe coding */
 .iacode{flex:1;min-height:110px;margin:0;padding:10px 12px;border-radius:14px;background:#090D24;color:#C8F7DC;font:600 12.5px/1.5 ui-monospace,Menlo,Consolas,monospace;white-space:pre-wrap;word-break:break-word;overflow:auto;border:1px solid #1E2766}
 .iacode.light{background:#F6F7FF;color:var(--ink);border-color:var(--line);flex:none;max-height:240px}
+/* codi per llegir dins d'una pregunta (quiz amb art: un .wcwin.iacodeart de Tech Web, només per mirar) */
+.tart.sm:has(>.iacodeart){max-width:min(100%,380px)}
+.iacodeart{text-align:left;box-shadow:0 10px 26px rgba(14,19,50,.22)}.iacodeart .wcwb{font-size:13px}
+/* fitxes per omplir (iacard) */
+.iacf{display:grid;gap:5px;padding:8px 10px;border-radius:14px;background:#F7F8FE;border:2px solid var(--line);transition:border-color .2s,background .2s;flex:none}
+.iacf.ok{border-color:#9BE5C2;background:#F1FCF6}
+.iacf label{display:flex;align-items:baseline;gap:8px}.iacf label b{flex:1;font:800 14px/1.25 Lexend,system-ui,sans-serif}
+.iacf label em{flex:none;font:800 11.5px/1 ui-monospace,Menlo,monospace;font-style:normal;color:var(--mut);background:#fff;border:1.5px solid var(--line);border-radius:99px;padding:3px 7px}
+.iacf.ok label em{background:#10B981;border-color:#10B981;color:#fff}
+.iacf input,.iacf textarea{width:100%;font:600 14.5px/1.4 Lexend,system-ui,sans-serif;padding:8px 10px;border-radius:12px;border:2px solid #DCE2F5;background:#fff;color:var(--ink);resize:none}
+.iacf input:focus,.iacf textarea:focus{outline:none;border-color:var(--ia1);box-shadow:0 0 0 3px rgba(139,92,246,.15)}
+.iacf small{font-size:12px;color:var(--mut);font-weight:600;line-height:1.3}
+.iacho{display:flex;flex-wrap:wrap;gap:5px}.iacho button{padding:7px 11px;border-radius:12px;border:2px solid #D3D9EE;background:#fff;font:700 13px/1.25 Lexend,system-ui,sans-serif;color:#3A4573;cursor:pointer;text-align:left}
+.iacho button.on{border-color:var(--ia1);background:#F1ECFF;color:#4C2BB5;box-shadow:inset 0 0 0 1px var(--ia1)}
+.iast .iap.iacside{background:linear-gradient(150deg,#EEF1FF,#F8F1FF)}
+.iacvw{flex:1;min-height:0;overflow:auto;padding:4px 2px}
+.iacv{--cc:#7C5CFF;position:relative;background:#fff;border-radius:18px;overflow:hidden;box-shadow:0 10px 30px rgba(27,43,107,.16),0 0 0 1px rgba(27,43,107,.06);font-family:Lexend,system-ui,sans-serif;color:#14204A;animation:iacvin .35s ease-out}
+@keyframes iacvin{from{opacity:0;transform:translateY(8px) scale(.98)}}
+.iacv>header{display:flex;align-items:center;gap:10px;padding:12px 14px;background:linear-gradient(120deg,var(--cc),color-mix(in srgb,var(--cc) 55%,#14204A));color:#fff}
+.iacvi{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:rgba(255,255,255,.2);font-size:22px;flex:none}
+.iacv>header div{flex:1;min-width:0}.iacv>header small{display:block;font:800 10.5px/1.2 Lexend,system-ui,sans-serif;letter-spacing:.12em;text-transform:uppercase;opacity:.88}.iacv>header b{display:block;font:800 16px/1.25 Lexend,system-ui,sans-serif}
+.iacvs{flex:none;font:800 9.5px/1.2 ui-monospace,Menlo,monospace;text-align:center;opacity:.9;border:1.5px solid rgba(255,255,255,.55);border-radius:8px;padding:4px 6px;transform:rotate(-5deg)}
+.iacv dl{margin:0;padding:4px 14px}
+.iacv dl>div{display:grid;grid-template-columns:minmax(92px,34%) 1fr;gap:10px;padding:8px 0;border-bottom:1px dashed #DCE2F5}.iacv dl>div:last-child{border-bottom:0}
+.iacv dt{font:800 11px/1.35 Lexend,system-ui,sans-serif;color:color-mix(in srgb,var(--cc) 72%,#14204A);text-transform:uppercase;letter-spacing:.04em}
+.iacv dd{margin:0;font:600 14px/1.45 Lexend,system-ui,sans-serif;word-break:break-word}.iacv dl>div.e dd{color:#A6AFCF}
+.iacv>footer{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;padding:8px 14px 10px;background:#F6F7FD;font-size:12px;color:#56628A;border-top:2px solid color-mix(in srgb,var(--cc) 22%,#fff)}
+.iacside .iarow{justify-content:space-between}
+@media print{.iacv,.iacv *{visibility:visible}.iacv{position:fixed;left:0;right:0;top:0;margin:0 auto;max-width:180mm;box-shadow:none;border:1.5px solid #C9D0E8;animation:none;-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+/* «llegir més» de l'enunciat */
+.iamore{display:inline-block;margin-top:2px;padding:2px 0;border:0;background:none;font:800 12.5px/1.2 Lexend,system-ui,sans-serif;color:#6D4BD8;cursor:pointer}.iamore[hidden]{display:none}
+.tsbody:has(>.tstage)>.tsq2.iaq.open p{max-height:34vh;overflow-y:auto}
+@media (min-width:900px) and (min-height:860px){.tsbody:has(>.tstage)>.tsq2.iaq p{-webkit-line-clamp:3}}
+/* barra de dalt amb PRO (i «Salta»): la fase sempre es llegeix */
+.tstop.iatop .tsph{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@media (max-width:380px){.tstop.iatop .tsph{letter-spacing:.02em;font-size:12.5px}}
+@media (max-width:520px){.tstop.iatop{gap:6px;padding-left:10px;padding-right:10px}.tstop.iatop .tskipx{padding:0 9px;margin-right:0}.tstop.iatop .tskipx .tskl{display:none}.tstop.iatop .iapro{padding:6px 7px;font-size:11px}.tstop.iatop .tsmin{min-width:0}}
 /* nivell PRO */
 .iapro{flex:none;padding:6px 10px;border-radius:10px;border:2px solid #C9D2F2;background:#fff;font:900 12px/1 Lexend,system-ui,sans-serif;letter-spacing:.08em;color:#8A94B5;cursor:pointer}
 .iapro.on{background:linear-gradient(120deg,#8B5CF6,#22C3E6);border-color:transparent;color:#fff;box-shadow:0 4px 12px rgba(139,92,246,.35)}
@@ -183,11 +220,13 @@
 /* portafoli */
 .iathumb{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;height:100%;min-height:90px;border-radius:12px;background:radial-gradient(130% 90% at 100% 0%,#28327A 0%,#0E1332 58%);color:#E9ECFF;padding:8px;text-align:center}
 .iathumb b{font-size:30px}.iathumb small{font-size:11px;font-weight:700;line-height:1.25;opacity:.85;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.iaport{background:#fff;border:2px solid var(--line);border-radius:22px;padding:18px;display:grid;gap:10px}.iaport h2{margin:0}.iaport p{margin:0}.iapico{font-size:40px}
+.iaport{background:#fff;border:2px solid var(--line);border-radius:22px;padding:18px;display:grid;gap:10px}
+.iaport.card{background:none;border:0;padding:0;max-width:640px;margin:0 auto;width:100%}.iathumb.card{background:linear-gradient(140deg,var(--cc),color-mix(in srgb,var(--cc) 50%,#14204A))}.iaport h2{margin:0}.iaport p{margin:0}.iapico{font-size:40px}
 /* mòbil: una columna amb pestanyes; ordinador: columnes */
 @media (max-width:899px){
   .iang[data-tab=data] .iamodel,.iang[data-tab=model] .iadata,.iatr[data-tab=in] .iaout,.iatr[data-tab=out] .iain,
-  .iaag[data-tab=plan] .iaperm,.iaag[data-tab=plan] .iarun,.iaag[data-tab=perm] .iaplan,.iaag[data-tab=perm] .iarun,.iaag[data-tab=run] .iaplan,.iaag[data-tab=run] .iaperm{display:none}
+  .iaag[data-tab=plan] .iaperm,.iaag[data-tab=plan] .iarun,.iaag[data-tab=perm] .iaplan,.iaag[data-tab=perm] .iarun,.iaag[data-tab=run] .iaplan,.iaag[data-tab=run] .iaperm,
+  .iacd[data-tab=form] .iacside,.iacd[data-tab=card] .iacform{display:none}
   .iast .iap{flex:1}
   .iach{grid-template-rows:minmax(0,1fr) auto}.iaside .iamut.sm{display:none}.iacount{padding:6px 10px}
   .iapr,.iavb{overflow:auto}.iapr .iap,.iavb .iap{flex:none;overflow:visible}
@@ -203,6 +242,7 @@
   .tsbody>.tstage.iapr,.tsbody>.tstage.iavb{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
   .tsbody>.tstage.iaag{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1.1fr);grid-template-rows:auto minmax(0,1fr)}
   .iaag .iagoal{grid-column:1/-1}
+  .tsbody>.tstage.iacd{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr)}
   .iang .iatxt{min-height:120px}
   .iacam{width:min(100%,340px)}.iadraw{width:min(100%,260px)}
 }

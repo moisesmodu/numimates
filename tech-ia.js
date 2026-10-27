@@ -9,14 +9,14 @@
      través de /api/chat (mode «ia»), amb un màxim de preguntes per sessió. Sense això, tot es fa amb la IA simulada.
    · Nivell «pro» (3r-4t d'ESO): qualsevol pas pot portar pro: { …camps }, que substitueixen els del pas quan l'alumne/a
      té el nivell pro activat (botó PRO de la barra de dalt; TS_().iapro). Els reptes opcionals continuen sent extra: true.
-   Tipus de pas: iatrain · iangram · iachat · iaprompt · iaagent · iavibe (el contracte és a scripts/TECH-IA.md).
+   Tipus de pas: iatrain · iangram · iachat · iaprompt · iaagent · iavibe · iacard (el contracte és a scripts/TECH-IA.md).
    Les funcions de càlcul (iaNgram, iaKnn, iaImgFeat, iaDrawFeat, iaSndFeat, iaRubric, iaAgentRun, iaVibeGen…) són
    JavaScript pur: el validador les fa servir a Node per comprovar que cada repte té solució. */
 
 /* =====================================================================================================================
    1. Utilitats
    ===================================================================================================================== */
-const IA = { n: {}, cap: 8 };                     // preguntes en directe per sessió (IA.n[sessió])
+const IA = { n: {}, cap: 8, gen: 0, tm: new Set(), cd: {}, qo: null };   // n: preguntes en directe per sessió (IA.n[sessió]) · gen/tm: temporitzadors del pas · cd: esborranys de fitxes · qo: enunciat obert
 const IA_COL = ['#7C5CFF', '#F08A24', '#14A3B8', '#E5489A'];
 const iaPick = (v, lang) => { if (v == null) return ''; const s = String(v), i = s.indexOf('|'); return i < 0 ? s : lang === 'es' ? s.slice(i + 1) : s.slice(0, i); };
 const iaT = v => typeof v === 'function' ? v() : iaPick(v, typeof LANG !== 'undefined' ? LANG : 'ca');
@@ -31,6 +31,12 @@ function iaRng(seed) { let s = (seed >>> 0) || 0x9E3779B9; return () => { s ^= s
 const iaSay = t => { try { if (typeof tkbSay === 'function') tkbSay(String(t).replace(/<[^>]+>/g, '')); } catch (e) { } };
 const iaFx = k => { try { SFX[k] && SFX[k](); } catch (e) { } };
 const iaRM = () => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) { return false; } };
+// temporitzadors i feina asíncrona dels passos: es cancel·len quan canvia el pas (tStop → iaStopTimers), perquè un pas anterior
+// no pugui tocar el pas nou (redibuixar-lo o tornar a activar «Continua»). IA.gen canvia a cada pas.
+const iaTO = (f, ms) => { const g = IA.gen, id = setTimeout(() => { IA.tm.delete(id); if (g === IA.gen) f(); }, ms); IA.tm.add(id); return id; };
+const iaIV = (f, ms) => { const g = IA.gen, id = setInterval(() => { if (g === IA.gen) f(); else { clearInterval(id); IA.tm.delete(id); } }, ms); IA.tm.add(id); return id; };
+const iaAlive = () => { const g = IA.gen; return () => g === IA.gen; };   // per a les esperes (await): const ok = iaAlive(); … if (!ok()) return;
+function iaStopTimers() { IA.gen++; IA.tm.forEach(id => { clearTimeout(id); clearInterval(id); }); IA.tm.clear(); }
 
 /* =====================================================================================================================
    2. Model de llenguatge de n-grames (paraules o lletres)
@@ -310,9 +316,10 @@ const IA_VX = [['reset', /\b(reinici|reinicia|torna a zero|vuelve a cero|a zero|
   ['goal', /\b(arriba a|arribes a|llega a|llegas a|objectiu|objetivo|meta|guanya|gana|quan arribi|cuando llegue)/i, '🎯', 'objectiu|objetivo'],
   ['color', /\b(color|colors|colores|fons|fondo)\b/i, '🎨', 'colors|colores']];
 IA_VF.forEach(r => { r[1] = iaU(r[1]); }); IA_VX.forEach(r => { r[1] = iaU(r[1]); });
+const IA_VGOAL = iaU(/\b(?:arriba|arribi|arribar|arribes|llega|llegue|llegar|llegues|objectiu(?: de)?|objetivo(?: de)?|meta(?: de)?)\s+(?:a\s+|al\s+|de\s+)?(\d{1,3})\b/i);
 function iaVibeFeats(desc) {
   const s = String(desc || ''), main = IA_VF.filter(([, rx]) => rx.test(s)).map(([k]) => k), extra = IA_VX.filter(([, rx]) => rx.test(s)).map(([k]) => k);
-  const num = (s.match(/\b(\d{1,3})\s*(punts|clics|vegades|cops|puntos|veces|toques|tocs)?/i) || [])[1];
+  const gm = s.match(IA_VGOAL), num = gm ? gm[1] : (s.match(/\b(\d{1,3})\s*(punts|clics|vegades|cops|puntos|veces|toques|tocs)?/i) || [])[1];   // l'objectiu: el número de «quan arribi a 10» (si no, el primer)
   const emo = (s.match(/\p{Extended_Pictographic}/u) || [])[0];
   const ti = (s.match(/[«"“]([^»"”]{2,32})[»"”]/) || [])[1];
   return { main, extra, goal: num ? +num : null, emo, title: ti };
@@ -380,6 +387,14 @@ function iaSplitHTML(code) {
   const b = s.match(/<body[^>]*>([\s\S]*?)<\/body>/i); const html = (b ? b[1] : s.replace(/<!doctype[^>]*>|<\/?(html|head|body)[^>]*>|<meta[^>]*>|<title>[\s\S]*?<\/title>/gi, '')).trim();
   return html ? { html, css: css.trim(), js: js.trim() } : null;
 }
+
+/* ---------- Fitxes per omplir (iacard): model card, fitxa de riscos, de transparència, d'agent, especificació… ---------- */
+// tipus: [icona, color, nom del tipus]
+const IA_CARDK = { model: ['🪪', '#7C5CFF', 'Model card|Model card'], risk: ['⚠️', '#E5489A', 'Fitxa de riscos|Ficha de riesgos'], transp: ['🏷️', '#14A3B8', 'Fitxa de transparència|Ficha de transparencia'],
+  agent: ['🤖', '#F08A24', "Fitxa d'agent|Ficha de agente"], perm: ['🔑', '#D97706', 'Taula de permisos|Tabla de permisos'], spec: ['📐', '#3D7BF4', 'Especificació|Especificación'], app: ['📱', '#16A34A', "Fitxa de l'app|Ficha de la app"] };
+// un camp és fet: un text d'almenys «min» caràcters (per defecte 1) · una opció triada · (multi) almenys «min» opcions; min: 0 = opcional
+const iaCardOk = (f, v) => f.choices ? (f.multi ? (Array.isArray(v) ? v.length : 0) >= (f.min ?? 1) : f.min === 0 || (typeof v === 'number' && v >= 0 && v < f.choices.length)) : String(v ?? '').trim().length >= (f.min ?? 1);
+const iaCardVal = (f, v, lang = typeof LANG !== 'undefined' ? LANG : 'ca') => f.choices ? (f.multi ? (Array.isArray(v) ? v : []).map(i => iaPick(f.choices[i], lang)).join(' · ') : typeof v === 'number' && f.choices[v] != null ? iaPick(f.choices[v], lang) : '') : String(v ?? '');
 
 /* =====================================================================================================================
    7. IA en directe (opcional) a través de /api/chat (mode «ia»)
@@ -480,14 +495,36 @@ TVALID.iaagent = st => {
   const D0 = iaAgentDef(st, st.start || { plan: [], perms: 'all' }), R0 = iaAgentRun(st, D0); if (checks.length && checks.every(c => iaAgentCheck(R0, c, D0))) out.push('el punt de partida ja passa totes les comprovacions');
   return out;
 };
+// els #id que fa servir una prova «run» (clics, escriure i el que es mira)
+const iaRunIds = c => [...(c.act || []).map(a => a.click || (a.type && a.type[0])), c.see && c.see.sel].filter(Boolean).flatMap(sel => [...String(sel).matchAll(/#([\w-]+)/g)].map(m => m[1]));
+const IA_VFULL = 'reinicia objectiu 10 color';   // amb els extres de la plantilla (botó de reinici, objectiu, colors)
 TVALID.iavibe = st => {
-  const out = [], checks = st.checks || []; if (!checks.length) out.push('falten les comprovacions (checks)');
-  for (const c of checks) if (c.k === 'run' && (!Array.isArray(c.act) || !c.see || !c.see.sel)) out.push('una comprovació run necessita act: [...] i see: { sel, … }');
+  const out = [], checks = st.checks || [], by = st.checksBy || {}; if (!checks.length && !Object.keys(by).length) out.push('falten les comprovacions (checks o checksBy)');
+  for (const c of [...checks, ...Object.values(by).flat()]) if (c.k === 'run' && (!Array.isArray(c.act) || !c.see || !c.see.sel)) out.push('una comprovació run necessita act: [...] i see: { sel, … }');
+  // checksBy: { plantilla: [comprovacions] } (s'afegeixen a checks segons l'app que surti): la plantilla arreglada ha de passar les estàtiques i tenir els #id de les proves
+  for (const [k, cs] of Object.entries(by)) { if (!IA_VF.some(r => r[0] === k)) { out.push(`checksBy: plantilla desconeguda «${k}»`); continue; }
+    for (const lang of ['ca', 'es']) { if (typeof webDoc !== 'function') break; const g = iaVibeGen(IA_VFULL, { lang, kind: k }), d = webDoc(g.html, g.css, g.js), ids = new Set(d.els.map(e => e.attrs.id).filter(Boolean));
+      cs.forEach((c, i) => { if (c.k !== 'run' && !webCheck(d, c)) out.push(`(${lang}) la plantilla «${k}» sense l'error no passa la comprovació ${i + 1} (${c.k})`); if (c.k === 'run') for (const id of iaRunIds(c)) if (!ids.has(id)) out.push(`(${lang}) la prova ${i + 1} de «${k}» fa servir #${id}, que la plantilla no té`); }); } }
+  if (st.kind && IA_VF.some(r => r[0] === st.kind) && typeof webDoc === 'function') { const g = iaVibeGen(IA_VFULL, { kind: st.kind }), ids = new Set(webDoc(g.html, g.css, g.js).els.map(e => e.attrs.id).filter(Boolean)); checks.forEach((c, i) => { if (c.k === 'run') for (const id of iaRunIds(c)) if (!ids.has(id)) out.push(`la prova ${i + 1} fa servir #${id}, que la plantilla «${st.kind}» no té`); }); }
   for (const lang of ['ca', 'es']) {
     if (st.idea) { const g = iaVibeGen(iaPick(st.idea, lang), { lang, kind: st.kind }); if (!g.kind) out.push(`(${lang}) la idea d'exemple no fa sortir cap plantilla`); else if (st.kind && g.kind !== st.kind) out.push(`(${lang}) la idea fa sortir «${g.kind}», no «${st.kind}»`); }
     if (st.sol && typeof webDoc === 'function') { const s = st.sol, d = webDoc(iaCode(s.html, lang) || '', iaCode(s.css, lang) || '', iaCode(s.js, lang) || ''); checks.forEach((c, i) => { if (c.k !== 'run' && !webCheck(d, c)) out.push(`(${lang}) la solució no passa la comprovació ${i + 1} (${c.k})`); }); }
   }
-  if (!st.sol && !st.kind) out.push('falta la solució (sol: { html, css, js }) o la plantilla (kind)');
+  if (!st.sol && !st.kind && !st.checksBy) out.push('falta la solució (sol: { html, css, js }), la plantilla (kind) o les proves per plantilla (checksBy)');
+  if (st.checksBy && !st.kind && st.idea) for (const lang of ['ca', 'es']) { const k = iaVibeGen(iaPick(st.idea, lang), { lang }).kind; if (k && !st.checksBy[k]) out.push(`(${lang}) la idea fa sortir «${k}», que no té proves a checksBy`); }
+  return out;
+};
+TVALID.iacard = st => {
+  const out = [], fs = st.fields || [], ks = new Set(); if (!fs.length) out.push('falten els camps (fields)');
+  iaBil(st.title, 'title', out); iaBil(st.intro, 'intro', out); if (st.kind && !IA_CARDK[st.kind]) out.push(`tipus de fitxa desconegut «${st.kind}» (${Object.keys(IA_CARDK).join(', ')})`);
+  fs.forEach((f, i) => { const w = `camp ${i + 1}${f.k ? ` (${f.k})` : ''}`;
+    if (!f.k) out.push(`${w}: falta la clau (k)`); else if (ks.has(f.k)) out.push(`${w}: clau repetida`); ks.add(f.k);
+    if (!f.label) out.push(`${w}: falta l'etiqueta (label)`); iaBil(f.label, `${w} label`, out); iaBil(f.hint, `${w} hint`, out);
+    if (f.min != null && !(f.min >= 0)) out.push(`${w}: min ha de ser un número ≥ 0`); if (f.rows != null && !(f.rows >= 1 && f.rows <= 8)) out.push(`${w}: rows ha de ser d'1 a 8`);
+    if (f.choices) { if (!Array.isArray(f.choices) || f.choices.length < 2) out.push(`${w}: calen almenys 2 opcions (choices)`); else f.choices.forEach((c, j) => iaBil(c, `${w} opció ${j + 1}`, out)); if (f.multi && (f.min ?? 1) > (f.choices || []).length) out.push(`${w}: min és més gran que les opcions`); }
+    else if ((f.min ?? 1) > (f.max || (f.rows > 1 ? 600 : 80))) out.push(`${w}: min és més gran que max`); });
+  if (fs.length && fs.every(f => f.min === 0)) out.push('cap camp és obligatori: «Continua» sortiria activat');
+  if (st.sol) for (const lang of ['ca', 'es']) for (const f of fs) { const v = st.sol[f.k]; if (!iaCardOk(f, typeof v === 'string' ? iaPick(v, lang) : v)) out.push(`(${lang}) l'exemple (sol) no omple bé el camp «${f.k}»`); }
   return out;
 };
 TVALID['media:ia'] = m => ['ngram', 'knn', 'chat'].includes(m.demo) ? [] : ['demo IA desconeguda (ngram, knn o chat)'];
@@ -495,7 +532,17 @@ TVALID['media:ia'] = m => ['ngram', 'knn', 'chat'].includes(m.demo) ? [] : ['dem
 /* =====================================================================================================================
    9. Interfície dels passos
    ===================================================================================================================== */
-const iaHead = st => `<div class="tsq2 iaq"><span class="tsqc">${typeof tHost === 'function' ? tHost(st.mood || 'think') : ''}</span><div><p>${iaT(st.q)}</p></div></div>`;
+// l'enunciat: retallat a 2-3 línies perquè el pas càpiga a la pantalla; si no hi cap sencer, surt «llegir més» (i queda obert en redibuixar)
+const iaQKey = () => typeof TSS !== 'undefined' && TSS ? `${TSS.id}:${TSS.i}` : '';
+const iaHead = st => `<div class="tsq2 iaq${IA.qo && IA.qo === iaQKey() ? ' open' : ''}"><span class="tsqc">${typeof tHost === 'function' ? tHost(st.mood || 'think') : ''}</span><div><p>${iaT(st.q)}</p><button class="iamore" type="button" hidden onclick="iaMore(this)" aria-expanded="false"></button></div></div>`;
+function iaClamp() {
+  const q = typeof document !== 'undefined' && document.querySelector('.tsbody>.tsq2.iaq'); if (!q) return; const p = q.querySelector('p'), b = q.querySelector('.iamore'); if (!p || !b) return;
+  const open = q.classList.contains('open'); b.hidden = !(open || p.scrollHeight > p.clientHeight + 2); b.setAttribute('aria-expanded', open);
+  b.textContent = open ? L('llegir menys', 'leer menos') + ' ▴' : L('llegir més', 'leer más') + ' ▾';
+}
+function iaMore(b) { const q = b.closest('.tsq2'); q.classList.toggle('open'); IA.qo = q.classList.contains('open') ? iaQKey() : null; iaClamp(); if (typeof tFit === 'function') requestAnimationFrame(tFit); }
+if (typeof document !== 'undefined' && document.addEventListener) document.addEventListener('click', e => { const q = e.target.closest && e.target.closest('.tsbody>.tsq2.iaq'); if (q && !e.target.closest('a,button,input')) { IA.qo = q.classList.contains('open') ? iaQKey() : null; iaClamp(); } });
+if (typeof tFit === 'function') { const f0 = tFit; tFit = function () { const r = f0.apply(this, arguments); iaClamp(); return r; }; }
 const iaChk = (list, res) => `<ul class="iachk">${list.map((t, i) => `<li class="${res[i] ? 'ok' : ''}"><i aria-hidden="true">${res[i] ? '✓' : ''}</i><span>${t}</span></li>`).join('')}</ul>`;
 // quan totes les comprovacions es compleixen: «Continua» (i, si és un pas per desar, «Desa-ho i continua»)
 function iaDone(st, S, save) {
@@ -513,7 +560,7 @@ const iaStage = (cls, tab, body) => { const b = typeof document !== 'undefined' 
 /* ---------- 9.1 iangram: el mini model de llenguatge ---------- */
 if (typeof TSTEP !== 'undefined') TSTEP.iangram = function (st) {
   const texts = st.texts ? st.texts.map(x => ({ n: iaT(x.n), x: iaT(x.x) })) : null;
-  const S = IA.ng = { st, unit: st.unit || 'word', n: st.n || (st.unit === 'char' ? 4 : 2), sel: 0, text: texts ? texts[0].x : iaT(st.text || ''), ctx: iaT(st.ctx || ''), temp: st.temp ?? 1, gens: 0, lo: false, hi: false, out: null, tab: 'model', added: new Set(), done: false };
+  const S = IA.ng = { st, unit: st.unit || 'word', n: st.n || (st.unit === 'char' ? 4 : 2), sel: 0, text: texts ? texts[0].x : iaT(st.text || ''), ctx: iaT(st.ctx || ''), temp: st.temp ?? 1, gens: 0, lo: false, hi: false, out: null, tab: 'model', added: new Set(), done: false, keep: {} };   // keep: el text (i els «＋») de cada corpus, per no perdre el que s'hi ha afegit
   const checks = st.checks || [], lab = checks.map(c => c.txt ? iaT(c.txt) : iaNgTxt(c));
   const M = () => S.M || (S.M = iaNgram(S.text, { unit: S.unit, n: S.n }));
   const res = () => checks.map(c => iaNgCheck(M(), c, S, typeof LANG !== 'undefined' ? LANG : 'ca'));
@@ -546,13 +593,13 @@ if (typeof TSTEP !== 'undefined') TSTEP.iangram = function (st) {
     if (checks.length && r.every(Boolean) && !S.done) draw(); };
   const wireBars = () => document.querySelectorAll('#iabars .iabar').forEach(b => b.onclick = () => { const t = b.dataset.t; S.ctx = S.unit === 'char' ? S.ctx + t : (S.ctx.trim() ? S.ctx.trim() + (/^[.!?]$/.test(t) ? '' : ' ') + t : t); const i = document.getElementById('iactx'); if (i) i.value = S.ctx; iaFx('tap'); upd(); });
   const wire = () => {
-    const ta = document.getElementById('iatxt'); if (ta && st.edit) ta.oninput = () => { S.text = ta.value; S.M = null; clearTimeout(S.t); S.t = setTimeout(() => { const s = document.querySelector('.iadata .iastat'), m = M(); if (s) s.textContent = `${m.size} ${S.unit === 'char' ? L('lletres', 'letras') : L('paraules', 'palabras')} · ${m.vocab} ${L('diferents', 'distintas')}`; upd(); }, 200); };
+    const ta = document.getElementById('iatxt'); if (ta && st.edit) ta.oninput = () => { S.text = ta.value; S.M = null; clearTimeout(S.t); S.t = iaTO(() => { const s = document.querySelector('.iadata .iastat'), m = M(); if (s) s.textContent = `${m.size} ${S.unit === 'char' ? L('lletres', 'letras') : L('paraules', 'palabras')} · ${m.vocab} ${L('diferents', 'distintas')}`; upd(); }, 200); };
     const ci = document.getElementById('iactx'); if (ci) ci.oninput = () => { S.ctx = ci.value; upd(); };
     const tr = document.getElementById('iatemp'); if (tr) tr.oninput = () => { S.temp = +tr.value; document.getElementById('iatv').textContent = String(S.temp).replace('.', ','); };
     wireBars();
   };
   S.go = k => { S.tab = k; const e = document.querySelector('.iang'); if (e) e.dataset.tab = k; document.querySelectorAll('.iang .iatabs button').forEach(b => { const on = b.getAttribute('onclick').includes(`'${k}'`); b.classList.toggle('on', on); b.setAttribute('aria-selected', on); }); };
-  S.pick = i => { S.sel = i; S.text = texts[i].x; S.M = null; S.out = null; iaFx('tap'); draw(); };
+  S.pick = i => { if (i === S.sel) return; S.keep[S.sel] = { text: S.text, added: S.added }; const k = S.keep[i]; S.sel = i; S.text = k ? k.text : texts[i].x; S.added = k ? k.added : new Set(); S.M = null; S.out = null; iaFx('tap'); draw(); };
   S.add = i => { if (S.added.has(i)) return; S.added.add(i); S.text = S.text.trim() + ' ' + iaT(st.add[i]); S.M = null; iaFx('tap'); draw(); iaSay(L('Dades afegides', 'Datos añadidos')); };
   S.order = n => { S.n = n; S.M = null; S.out = null; iaFx('tap'); draw(); };
   S.gen = () => { S.out = iaGen(M(), S.ctx, S.unit === 'char' ? 60 : 16, S.temp); S.gens++; if (S.temp <= .4) S.lo = true; if (S.temp >= 1.4) S.hi = true; iaFx('tap'); const o = document.getElementById('iaout'); if (o) o.innerHTML = outHTML(); iaSay(iaJoin(S.out.map(x => x.t), S.unit)); const r = res(); if ((checks.length && r.every(Boolean)) || !checks.length) draw(); else upd(); };
@@ -562,7 +609,7 @@ if (typeof TSTEP !== 'undefined') TSTEP.iangram = function (st) {
 /* ---------- 9.2 iatrain: entrena un classificador ---------- */
 const IA_M = { stream: null, ac: null, an: null, iv: 0, raf: 0, cv: null, buf: [] };
 function iaStopMedia() { clearInterval(IA_M.iv); IA_M.iv = 0; cancelAnimationFrame(IA_M.raf); IA_M.raf = 0; if (IA_M.stream) { IA_M.stream.getTracks().forEach(t => t.stop()); IA_M.stream = null; } if (IA_M.ac) { try { IA_M.ac.close(); } catch (e) { } IA_M.ac = null; IA_M.an = null; } IA_M.buf = []; if (IA.tr) IA.tr.on = false; }
-if (typeof tStop === 'function') { const s0 = tStop; tStop = function () { iaStopMedia(); return s0.apply(this, arguments); }; }
+if (typeof tStop === 'function') { const s0 = tStop; tStop = function () { iaStopMedia(); iaStopTimers(); return s0.apply(this, arguments); }; }
 function iaImgURL(px) {
   if (typeof document === 'undefined') return ''; const c = document.createElement('canvas'); c.width = IA_IW; c.height = IA_IH; const g = c.getContext('2d'), d = g.createImageData(IA_IW, IA_IH);
   for (let i = 0, j = 0; i < d.data.length; i += 4) { d.data[i] = px[j++]; d.data[i + 1] = px[j++]; d.data[i + 2] = px[j++]; d.data[i + 3] = 255; } g.putImageData(d, 0, 0); return c.toDataURL('image/png');
@@ -575,6 +622,17 @@ function iaGrab(video) {
   const c = IA_M.cv || (IA_M.cv = document.createElement('canvas')); c.width = IA_IW; c.height = IA_IH; const g = c.getContext('2d', { willReadFrequently: true }), r = IA_IW / IA_IH, sw = Math.min(vw, vh * r), sh = sw / r;
   g.save(); g.translate(IA_IW, 0); g.scale(-1, 1); g.drawImage(video, (vw - sw) / 2, (vh - sh) / 2, sw, sh, 0, 0, IA_IW, IA_IH); g.restore();
   const d = g.getImageData(0, 0, IA_IW, IA_IH).data, px = new Uint8ClampedArray(IA_IW * IA_IH * 3); for (let i = 0, j = 0; i < d.length; i += 4) { px[j++] = d[i]; px[j++] = d[i + 1]; px[j++] = d[i + 2]; } return px;
+}
+// capçaleres de la matriu de confusió, que no es poden confondre: les icones (si totes en tenen i són diferents) o, si no, el
+// prefix més curt que no es repeteix (sense les paraules que comparteixen totes: «Classe A», «Classe B» → «A», «B»); el nom sencer, al title
+function iaCmHead(cls) {
+  const ns = cls.map(c => String(c.n || '').trim() || '?'), ic = cls.map(c => c.ico || '');
+  if (ic.every(Boolean) && new Set(ic).size === ic.length) return ic.map((t, i) => ({ t, full: ns[i] }));
+  const w = ns.map(n => n.split(/\s+/)); let cut = 0; while (w.every(a => a.length > cut + 1 && a[cut].toLowerCase() === w[0][cut].toLowerCase())) cut++;
+  const rest = w.map(a => a.slice(cut).join(' ')), ch = rest.map(r => [...r]), mx = Math.max(...ch.map(a => a.length)); let k = Math.min(3, mx);
+  while (k < mx && new Set(ch.map(a => a.slice(0, k).join('').toLowerCase())).size < ch.length) k++;
+  const H = ch.map((a, i) => ({ t: a.length > Math.max(k, 5) ? a.slice(0, k).join('') + '…' : rest[i], full: ns[i] }));
+  return H.map((h, i) => H.filter(x => x.t.toLowerCase() === h.t.toLowerCase()).length > 1 ? { ...h, t: `${h.t} ${i + 1}` } : h);   // noms repetits: un número
 }
 const IA_SRC = { cam: ['📷', 'Càmera', 'Cámara'], draw: ['✏️', 'Dibuix', 'Dibujo'], mic: ['🎤', 'So', 'Sonido'], data: ['🗂️', 'Exemples', 'Ejemplos'] };
 if (typeof TSTEP !== 'undefined') TSTEP.iatrain = function (st) {
@@ -603,11 +661,11 @@ if (typeof TSTEP !== 'undefined') TSTEP.iatrain = function (st) {
         ${r ? `<p class="iann"><small>${L(`Dels ${r.nn.length} exemples més semblants:`, `De los ${r.nn.length} ejemplos más parecidos:`)}</small>${r.nn.map(s => `<span class="iasmp" style="--cc:${S.cls[s.c].col}">${iaThumb(s)}</span>`).join('')}</p>` : `<p class="iamut sm">${S.src === 'cam' ? L('Posa alguna cosa davant de la càmera.', 'Pon algo delante de la cámara.') : S.src === 'draw' ? L('Dibuixa alguna cosa al llenç.', 'Dibuja algo en el lienzo.') : S.src === 'mic' ? L('Fes un so a prop del micròfon.', 'Haz un sonido cerca del micrófono.') : L('Toca «Un de nou».', 'Toca «Uno nuevo».')}</p>`}`}</div>`;
   };
   const testHTML = () => {
-    const ev = S.ev, q = st.biasq;
+    const ev = S.ev, q = st.biasq, H = iaCmHead(S.cls);
     if (S.tq) return `<div class="iatest"><p class="iamut">🧪 ${L('Prova en marxa', 'Prueba en marcha')}: ${S.tq.i}/${S.tq.order.length}</p></div>`;
     return `<div class="iatest"><button class="btn iatb" onclick="IA.tr.test()" ${S.cls.filter((_, i) => cnt(i)).length >= 2 ? '' : 'disabled'}>🧪 ${S.tests ? L('Torna a fer la prova', 'Vuelve a hacer la prueba') : L('Fes la prova', 'Haz la prueba')}</button>
       ${ev ? `<div class="iaev"><p class="iaacc ${checks.some(c => c.k === 'acc' && ev.acc >= c.min) ? 'ok' : ''}"><b>${iaPc(ev.acc)}</b> ${L(`d'encerts (${Math.round(ev.acc * ev.n)} de ${ev.n})`, `de aciertos (${Math.round(ev.acc * ev.n)} de ${ev.n})`)}${S.stale ? ` · <em>${L('has canviat les dades: torna a provar', 'has cambiado los datos: vuelve a probar')}</em>` : ''}</p>
-        <table class="iacm"><caption>${L('Files: el que era · columnes: el que ha dit la IA', 'Filas: lo que era · columnas: lo que ha dicho la IA')}</caption><tr><th></th>${S.cls.map(c => `<th style="color:${c.col}">${iaE((c.ico || c.n.slice(0, 3)))}</th>`).join('')}</tr>${ev.M.map((row, i) => `<tr><th style="color:${S.cls[i].col}">${iaE(S.cls[i].ico || S.cls[i].n.slice(0, 3))}</th>${row.map((v, j) => `<td class="${i === j ? 'd' : v ? 'x' : ''}">${v}</td>`).join('')}</tr>`).join('')}</table>
+        <table class="iacm"><caption>${L('Files: el que era · columnes: el que ha dit la IA', 'Filas: lo que era · columnas: lo que ha dicho la IA')}</caption><tr><th></th>${S.cls.map((c, i) => `<th style="color:${c.col}" title="${iaE(H[i].full)}" scope="col">${iaE(H[i].t)}</th>`).join('')}</tr>${ev.M.map((row, i) => `<tr><th style="color:${S.cls[i].col}" title="${iaE(H[i].full)}" scope="row">${iaE(H[i].t)}</th>${row.map((v, j) => `<td class="${i === j ? 'd' : v ? 'x' : ''}">${v}</td>`).join('')}</tr>`).join('')}</table>
         ${ev.bad.length ? `<p class="iamut sm">${L('Errors', 'Errores')}: ${ev.bad.slice(0, 5).map(b => `<span class="iasmp" style="--cc:${S.cls[b.t.c].col}" title="${iaE(S.cls[b.t.c].n)} → ${iaE(b.p >= 0 ? S.cls[b.p].n : '?')}">${iaThumb(b.t)}</span>`).join('')}</p>` : ''}</div>` : ''}
       ${q && S.tests && (S.biasAns !== q.a) ? `<div class="iabq"><p><b>🤔 ${iaT(q.q)}</b></p>${q.opts.map((o, i) => `<button class="${S.biasAns === i ? 'ko' : ''}" onclick="IA.tr.bq(${i})">${iaT(o)}</button>`).join('')}</div>` : ''}
       ${q && S.biasAns === q.a ? `<div class="tfbox ok">${q.ex ? iaT(q.ex) : L('Exacte!', '¡Exacto!')}${S.fixed ? '' : `<br><button class="btn iafix" onclick="IA.tr.fix()">🌈 ${L('Afegeix exemples variats', 'Añade ejemplos variados')}</button>`}</div>` : ''}</div>`;
@@ -643,7 +701,7 @@ if (typeof TSTEP !== 'undefined') TSTEP.iatrain = function (st) {
   };
   const wireCls = () => {
     document.querySelectorAll('.iacl .iaadd').forEach(b => { const c = +b.dataset.c;
-      if (S.src === 'cam') { let iv = 0; const stop = () => { clearInterval(iv); iv = 0; b.classList.remove('rec'); }; b.onpointerdown = e => { e.preventDefault(); if (!S.on) return toast(L('Primer activa la càmera.', 'Primero activa la cámara.')); addOne(c); b.classList.add('rec'); iv = setInterval(() => addOne(c), 180); }; b.onpointerup = b.onpointerleave = b.onpointercancel = stop; b.onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); if (S.on) addOne(c); } }; b.onclick = null; }
+      if (S.src === 'cam') { let iv = 0; const stop = () => { clearInterval(iv); iv = 0; b.classList.remove('rec'); }; b.onpointerdown = e => { e.preventDefault(); if (!S.on) return toast(L('Primer activa la càmera.', 'Primero activa la cámara.')); addOne(c); b.classList.add('rec'); iv = iaIV(() => addOne(c), 180); }; b.onpointerup = b.onpointerleave = b.onpointercancel = stop; b.onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); if (S.on) addOne(c); } }; b.onclick = null; }
       else b.onclick = () => addOne(c); });
     document.querySelectorAll('.iacln input').forEach(i => i.oninput = () => { S.cls[+i.dataset.i].n = i.value; });
   };
@@ -661,7 +719,7 @@ if (typeof TSTEP !== 'undefined') TSTEP.iatrain = function (st) {
       IA_M.raf = requestAnimationFrame(tick); };
     tick(); clearInterval(IA_M.iv); IA_M.iv = setInterval(() => { if (S.tq || IA_M.buf.length < 8) return; S.cur = { f: iaSndFeat(IA_M.buf.slice(-16), hz) }; const p = document.getElementById('iapw'); if (p && S.train.length) p.innerHTML = predHTML(); }, 400); };
   const recOne = cb => { if (!IA_M.an) return toast(L('Primer activa el micròfon.', 'Primero activa el micrófono.')); const hz = IA_M.ac.sampleRate / IA_M.an.fftSize, fr = [], arr = new Uint8Array(IA_M.an.frequencyBinCount); let n = 0;
-    const b = document.querySelector('.iamic'); b && b.classList.add('rec'); const iv = setInterval(() => { IA_M.an.getByteFrequencyData(arr); fr.push(Array.from(arr)); if (++n >= 20) { clearInterval(iv); b && b.classList.remove('rec'); const f = iaSndFeat(fr, hz); cb({ f, b: f.slice(0, IA_SB) }); } }, 50); };
+    const b = document.querySelector('.iamic'); b && b.classList.add('rec'); const iv = iaIV(() => { if (!IA_M.an) return clearInterval(iv); IA_M.an.getByteFrequencyData(arr); fr.push(Array.from(arr)); if (++n >= 20) { clearInterval(iv); b && b.classList.remove('rec'); const f = iaSndFeat(fr, hz); cb({ f, b: f.slice(0, IA_SB) }); } }, 50); };
   const fallback = (why) => { iaStopMedia(); const to = srcs.find(k => k === 'data' || k === 'draw') || (gen ? 'data' : 'draw'); if (!srcs.includes(to)) srcs.push(to); S.src = to; S.on = false;
     S.note = `${why} ${to === 'data' ? L('Pots fer el mateix amb el conjunt d\'exemples.', 'Puedes hacer lo mismo con el conjunto de ejemplos.') : L('Pots fer el mateix dibuixant.', 'Puedes hacer lo mismo dibujando.')}`; draw(); iaSay(S.note); };
   const noPerm = e => e && (e.name === 'NotAllowedError' || e.name === 'SecurityError') ? L('No hi ha permís per fer-la servir.', 'No hay permiso para usarla.') : L('No l\'hem trobada en aquest aparell.', 'No la hemos encontrado en este aparato.');
@@ -716,7 +774,7 @@ if (typeof TSTEP !== 'undefined') TSTEP.iachat = function (st) {
     const box = document.getElementById('iamsgs'); if (box) box.scrollTop = box.scrollHeight;
     document.querySelectorAll('.iaopts button').forEach(b => b.onclick = () => { const o = n.opts[+b.dataset.i]; S.log.push(`<div class="iam me">${iaT(o.t)}</div>`); if (o.fb) S.log.push(`<div class="iam note ${o.good === false ? 'ko' : 'ok'}">${o.good === false ? '⚠️' : '💡'} ${iaT(o.fb)}</div>`); iaFx('tap'); S.cur = o.go; push(); });
     document.querySelectorAll('.iaflag').forEach(b => b.onclick = () => flag(b.dataset.k));
-    const ni = document.getElementById('iaq'); if (ni && !S.busy && (S.live || free)) setTimeout(() => ni.focus(), 50);
+    const ni = document.getElementById('iaq'); if (ni && !S.busy && (S.live || free)) iaTO(() => ni.focus(), 50);
     check();
   };
   const msgOf = k => { const [id, j] = k.split(':'), n = node(id); const m = n && (n.msg || [])[+j]; return typeof m === 'object' ? m : { t: m }; };
@@ -727,13 +785,13 @@ if (typeof TSTEP !== 'undefined') TSTEP.iachat = function (st) {
   // els missatges de la IA surten d'un en un, amb «…» mentre «escriu»
   const push = () => { const n = node(S.cur); if (!n) return draw(); (n.msg || []).forEach((m, j) => S.q.push([m, `${n.id}:${j}`])); flush(); };
   const flush = () => { if (!S.q.length) return draw(); const [m, k] = S.q.shift(); if (iaRM()) { S.log.push(bub(m, k)); return flush(); }
-    S.log.push('<div class="iam them typing"><i></i><i></i><i></i></div>'); draw(); setTimeout(() => { S.log.pop(); S.log.push(bub(m, k)); flush(); }, 520); };
+    S.log.push('<div class="iam them typing"><i></i><i></i><i></i></div>'); draw(); iaTO(() => { S.log.pop(); S.log.push(bub(m, k)); flush(); }, 520); };
   S.setLive = on => { S.live = on && canLive; iaFx('tap'); draw(); };
   S.send = async () => { const i = document.getElementById('iaq'), t = i && i.value.trim(); if (!t || S.busy) return; S.log.push(`<div class="iam me">${iaE(t)}</div>`); S.hist.push({ role: 'user', content: t }); S.sent++; i.value = '';
     if (!S.live) { const r = (st.replies || []).find(x => { const rx = iaRx(x.if); return rx && rx.test(t); }); S.log.push(`<div class="iam them"><div class="iamt">${iaT(r ? r.t : st.fallback || L("Soc una IA simulada molt petita: només sé respondre unes poques coses d'aquest tema. Prova a preguntar-ho d'una altra manera.", 'Soy una IA simulada muy pequeña: solo sé responder unas pocas cosas de este tema. Prueba a preguntarlo de otra manera.'))}</div></div>`); iaFx('tap'); return draw(); }
-    S.busy = true; S.log.push('<div class="iam them typing"><i></i><i></i><i></i></div>'); draw(); const k = S.log.length - 1;
-    const r = await iaAsk('chat', S.hist, { topic: iaT(st.topic || st.q) }, txt => { S.log[k] = `<div class="iam them"><div class="iamt">${iaMd(txt)}</div></div>`; const m = document.querySelectorAll('#iamsgs .iam'); const last = m[m.length - 1]; if (last) { last.outerHTML = S.log[k]; const b = document.getElementById('iamsgs'); b.scrollTop = b.scrollHeight; } });
-    S.busy = false; if (r.err) { S.log[k] = `<div class="iam note ko">⚠️ ${iaErrTxt(r.err)}</div>`; S.hist.pop(); S.live = false; } else S.hist.push({ role: 'assistant', content: r.txt }); draw(); };
+    S.busy = true; S.log.push('<div class="iam them typing"><i></i><i></i><i></i></div>'); draw(); const k = S.log.length - 1, alive = iaAlive();
+    const r = await iaAsk('chat', S.hist, { topic: iaT(st.topic || st.q) }, txt => { if (!alive()) return; S.log[k] = `<div class="iam them"><div class="iamt">${iaMd(txt)}</div></div>`; const m = document.querySelectorAll('#iamsgs .iam'); const last = m[m.length - 1]; if (last) { last.outerHTML = S.log[k]; const b = document.getElementById('iamsgs'); b.scrollTop = b.scrollHeight; } });
+    if (!alive()) return; S.busy = false; if (r.err) { S.log[k] = `<div class="iam note ko">⚠️ ${iaErrTxt(r.err)}</div>`; S.hist.pop(); S.live = false; } else S.hist.push({ role: 'assistant', content: r.txt }); draw(); };
   IA.ch = S;
   if (free) { if (st.hello) S.log.push(`<div class="iam them"><div class="iamt">${iaT(st.hello)}</div></div>`); draw(); } else push();
 };
@@ -759,7 +817,7 @@ if (typeof TSTEP !== 'undefined') TSTEP.iaprompt = function (st) {
   };
   S.part = i => { const p = iaT(st.parts[i]); S.txt = (S.txt.trim() ? S.txt.trim() + ' ' : '') + p; iaFx('tap'); draw(); };
   S.send = async () => { if (!S.txt.trim()) return toast(L('Primer escriu el prompt.', 'Primero escribe el prompt.')); const r = iaRubric(S.txt); r.txt = S.txt; S.sent = r; S.ans = ''; iaFx(pass(r) ? 'ok' : 'tap');
-    if (S.live && canLive && !r.pii.length) { S.busy = true; draw(); const a = await iaAsk('prompt', [{ role: 'user', content: S.txt }], { topic: iaT(st.task) }, t => { S.ans = iaMd(t); const e = document.querySelector('#iaans .iamt'); if (e) e.innerHTML = S.ans; }); S.busy = false; if (a.err) { S.ans = ''; toast(iaErrTxt(a.err)); } }
+    if (S.live && canLive && !r.pii.length) { S.busy = true; draw(); const alive = iaAlive(), a = await iaAsk('prompt', [{ role: 'user', content: S.txt }], { topic: iaT(st.task) }, t => { if (!alive()) return; S.ans = iaMd(t); const e = document.querySelector('#iaans .iamt'); if (e) e.innerHTML = S.ans; }); if (!alive()) return; S.busy = false; if (a.err) { S.ans = ''; toast(iaErrTxt(a.err)); } }
     draw(); iaSay(`${LV[r.lv]}: ${r.score} / 6`); };
   IA.pr = S; draw();
 };
@@ -824,30 +882,80 @@ if (typeof TSTEP !== 'undefined') TSTEP.iavibe = function (st) {
       <section class="iap iacodep"><header class="iaph"><b>🤖 ${L('La IA ha entès…', 'La IA ha entendido…')}</b></header><div id="iavi">${I.html}</div>
         <pre class="iacode" id="iacode" aria-live="off">${S.busy ? L('// la IA està escrivint…', '// la IA está escribiendo…') : L('// aquí sortirà el codi', '// aquí saldrá el código')}</pre>
         <p class="iamut sm">${L("Després el llegiràs, el provaràs i l'arreglaràs: la IA també s'equivoca.", 'Después lo leerás, lo probarás y lo arreglarás: la IA también se equivoca.')}</p></section>`);
-    const ta = document.getElementById('iavt'); ta.oninput = () => { S.txt = ta.value; clearTimeout(S.t); S.t = setTimeout(upd, 250); };
+    const ta = document.getElementById('iavt'); ta.oninput = () => { S.txt = ta.value; clearTimeout(S.t); S.t = iaTO(upd, 250); };
     iaWait();
   };
   S.redo = () => upd();
   S.gen = async () => {
     let g = null;
-    if (S.live && canLive) { S.busy = true; desc(); const a = await iaAsk('vibe', [{ role: 'user', content: S.txt }], { topic: iaT(st.q) }, t => { const c = document.getElementById('iacode'); if (c) { c.textContent = t.slice(-1400); c.scrollTop = c.scrollHeight; } }); S.busy = false;
+    if (S.live && canLive) { S.busy = true; desc(); const alive = iaAlive(), a = await iaAsk('vibe', [{ role: 'user', content: S.txt }], { topic: iaT(st.q) }, t => { if (!alive()) return; const c = document.getElementById('iacode'); if (c) { c.textContent = t.slice(-1400); c.scrollTop = c.scrollHeight; } }); if (!alive()) return; S.busy = false;
       const sp = a.txt && iaSplitHTML(a.txt); if (sp) g = { ...sp, live: true }; else { toast(a.err ? iaErrTxt(a.err) : L('No he pogut llegir el codi de la IA: faig servir la simulada.', 'No he podido leer el código de la IA: uso la simulada.')); } }
     if (!g) { const v = iaVibeGen(S.txt, { bug: st.bug !== false, kind: st.kind && iaVibeFeats(S.txt).main.includes(st.kind) ? st.kind : undefined }); if (!v.kind) return; g = v; }
     S.g = g; iaFx('tap');
     // l'efecte de «la IA escrivint» (curt) i després a l'editor
     const c = document.getElementById('iacode'), all = `<!-- index.html -->\n${g.html}\n\n/* estil.css */\n${g.css}\n\n// app.js\n${g.js}`;
-    if (c && !iaRM()) { let i = 0; const step = () => { if (!document.body.contains(c)) return; i = Math.min(all.length, i + 70); c.textContent = all.slice(0, i); c.scrollTop = c.scrollHeight; if (i < all.length) setTimeout(step, 16); else setTimeout(editor, 350); }; step(); } else editor();
+    if (c && !iaRM()) { let i = 0; const step = () => { if (!document.body.contains(c)) return; i = Math.min(all.length, i + 70); c.textContent = all.slice(0, i); c.scrollTop = c.scrollHeight; if (i < all.length) iaTO(step, 16); else iaTO(editor, 350); }; step(); } else editor();
   };
   const editor = () => {
-    if (typeof wbMake !== 'function') return; S.phase = 'code'; const g = S.g;
-    const st2 = { ...st, k: 'web', html: g.html, css: g.css, js: g.js || '', tabs: ['html', 'css', 'js'], url: st.url || 'la-meva-app.numi', snips: st.snips || [], hint: st.hint ? iaT(st.hint) : g.bug || null, sol: st.sol ? { html: iaCode(st.sol.html), css: iaCode(st.sol.css), js: iaCode(st.sol.js) } : null, q: st.q2 || L("La IA ha escrit aquest codi a partir de la teva descripció. <b>Llegeix-lo, prova'l i arregla el que no funcioni.</b>", 'La IA ha escrito este código a partir de tu descripción. <b>Léelo, pruébalo y arregla lo que no funcione.</b>') };
+    if (typeof wbMake !== 'function') return; S.phase = 'code'; const g = S.g, ck = (st.checks || []).concat((g.kind && st.checksBy && st.checksBy[g.kind]) || []);
+    if (!ck.length) ck.push({ k: 'js', v: '/addEventListener|onclick|oninput|onchange/', txt: 'El codi respon al que fas|El código responde a lo que haces' });
+    const st2 = { ...st, checks: ck, k: 'web', html: g.html, css: g.css, js: g.js || '', tabs: ['html', 'css', 'js'], url: st.url || 'la-meva-app.numi', snips: st.snips || [], hint: st.hint ? iaT(st.hint) : g.bug || null, sol: st.sol ? { html: iaCode(st.sol.html), css: iaCode(st.sol.css), js: iaCode(st.sol.js) } : null, q: st.q2 || L("La IA ha escrit aquest codi a partir de la teva descripció. <b>Llegeix-lo, prova'l i arregla el que no funcioni.</b>", 'La IA ha escrito este código a partir de tu descripción. <b>Léelo, pruébalo y arregla lo que no funcione.</b>') };
     wbMake(st2); WB.onDone = () => { tFoot(st.save !== false ? L('Desa-ho i continua', 'Guárdalo y continúa') : L('Continua', 'Continúa'), () => { if (st.save !== false) iaPortSave({ kind: 'web', t: st.name || iaT(iaVibeFeats(S.txt).title || '') || TSS.s.t, html: WB.html, css: WB.css, js: WB.js, url: st2.url }); tNext(); }, true); TSS.ready = true; TSS.ok = (TSS.ok || 0) + 1; };
     wbStage(st2); iaWait();
     const f = document.getElementById('tsf'); if (f) { const b = document.createElement('button'); b.className = 'btn ghost'; b.textContent = '← ' + L('Descripció', 'Descripción'); b.onclick = () => { S.phase = 'desc'; WB = null; desc(); }; f.insertBefore(b, f.firstChild); }
-    setTimeout(() => { if (typeof wbHintBtn === 'function' && WB && WB.st === st2 && !WB.solved) wbHintBtn(st2); }, 60000);
-    if (g.bug && !g.live) setTimeout(() => typeof wbSay === 'function' && wbSay(L('💡 Prova l\'app a la vista prèvia i mira les comprovacions: alguna cosa no fa el que has demanat.', '💡 Prueba la app en la vista previa y mira las comprobaciones: algo no hace lo que has pedido.'), 'hint'), 900);
+    iaTO(() => { if (typeof wbHintBtn === 'function' && WB && WB.st === st2 && !WB.solved) wbHintBtn(st2); }, 60000);
+    if (g.bug && !g.live) iaTO(() => typeof wbSay === 'function' && wbSay(L('💡 Prova l\'app a la vista prèvia i mira les comprovacions: alguna cosa no fa el que has demanat.', '💡 Prueba la app en la vista previa y mira las comprobaciones: algo no hace lo que has pedido.'), 'hint'), 900);
   };
   desc();
+};
+
+/* ---------- 9.7 iacard: una fitxa per omplir (model card, fitxa de riscos, de transparència…) que es desa al portafoli ---------- */
+const iaDate = d => { try { const x = d ? new Date(d) : new Date(); return isNaN(x) ? String(d || '') : x.toLocaleDateString(typeof LANG !== 'undefined' && LANG === 'es' ? 'es-ES' : 'ca-ES', { day: 'numeric', month: 'short', year: 'numeric' }); } catch (e) { return String(d || ''); } };
+const iaCardTxt = v => iaE(v).replace(/\n/g, '<br>');
+// la fitxa «de veritat» (al pas, al portafoli i en paper): o = { ico, col, kind, title, rows: [[etiqueta, valor HTML, buit?, clau]], who, d }
+function iaCardHTML(o) {
+  return `<article class="iacv" style="--cc:${o.col}"><header><span class="iacvi" aria-hidden="true">${o.ico}</span><div><small>${iaE(o.kind)}</small><b>${iaE(o.title)}</b></div><span class="iacvs">Numi Tech<br>IA</span></header>
+    <dl>${o.rows.map(([l, v, e, k]) => `<div class="${e ? 'e' : ''}"${k ? ` data-k="${iaE(k)}"` : ''}><dt>${iaE(l)}</dt><dd>${v}</dd></div>`).join('')}</dl>
+    <footer><span>${L('Autor/a', 'Autor/a')}: <b>${iaE(o.who || '—')}</b></span><span>${iaE(o.d || '')}</span></footer></article>`;
+}
+if (typeof TSTEP !== 'undefined') TSTEP.iacard = function (st) {
+  const fs = st.fields || [], K = IA_CARDK[st.kind] || IA_CARDK.model, key = iaQKey(), lab = !!(TSS && TSS.lab);
+  const prev = (TS_().port || []).filter(p => p.ia === 'card' && p.sid === TSS.id && p.si === TSS.i).pop();   // si ja l'havia desada, es pot millorar
+  const S = IA.cr = { v: IA.cd[key] || (prev && prev.v ? JSON.parse(JSON.stringify(prev.v)) : {}), tab: 'form', won: false, fa: null };
+  IA.cd[key] = S.v;
+  const ok = f => iaCardOk(f, S.v[f.k]), all = () => fs.every(ok), n = () => fs.filter(ok).length;
+  const em = f => ok(f) ? '✓' : f.choices ? (f.multi && (f.min ?? 1) > 1 ? L(`tria'n ${f.min}`, `elige ${f.min}`) : L('tria', 'elige')) : `${String(S.v[f.k] ?? '').trim().length}/${f.min ?? 1}`;
+  const val = f => { const v = iaCardVal(f, S.v[f.k]); return [v.trim() ? iaCardTxt(v) : `<i>${L('per omplir…', 'por rellenar…')}</i>`, !v.trim()]; };
+  const card = () => iaCardHTML({ ico: st.ico || K[0], col: st.col || K[1], kind: iaT(st.kindT || K[2]), title: iaT(st.title || st.name || TSS.s.t), rows: fs.map(f => { const [v, e] = val(f); return [iaT(f.label), v, e, f.k]; }), who: typeof P !== 'undefined' && P && P.name, d: iaDate() });
+  const field = (f, i) => { const v = S.v[f.k], id = `iacf${i}`, ph = iaE(iaT(f.hint || ''));
+    const inp = f.choices ? `<div class="iacho" role="group" aria-label="${iaE(iaT(f.label))}">${f.choices.map((c, j) => { const on = f.multi ? (Array.isArray(v) && v.includes(j)) : v === j; return `<button type="button" class="${on ? 'on' : ''}" aria-pressed="${on}" data-j="${j}">${iaT(c)}</button>`; }).join('')}</div>${f.hint ? `<small>${iaT(f.hint)}</small>` : ''}`
+      : (f.rows || 2) > 1 ? `<textarea id="${id}" rows="${f.rows || 2}" maxlength="${f.max || 600}" placeholder="${ph}" spellcheck="true">${iaE(v ?? '')}</textarea>` : `<input id="${id}" maxlength="${f.max || 80}" autocomplete="off" placeholder="${ph}" value="${iaE(v ?? '')}">`;
+    return `<div class="iacf ${ok(f) ? 'ok' : ''}" data-f="${iaE(f.k)}"><label${f.choices ? '' : ` for="${id}"`}><b>${iaT(f.label)}</b><em>${em(f)}</em></label>${inp}</div>`; };
+  const foot = () => { const a = all(); TSS.ready = a; if (a && !S.won) { S.won = true; TSS.ok = (TSS.ok || 0) + 1; iaFx('win'); iaSay(L('Fitxa completa!', '¡Ficha completa!')); if (!iaRM() && typeof confetti === 'function') confetti(50); }
+    if (S.fa === a) return; S.fa = a; const x = lab ? `<button class="btn ghost" onclick="tNext()">${L('Eina següent', 'Herramienta siguiente')} ›</button>` : '';
+    if (st.save === false) tFoot(L('Continua', 'Continúa'), () => { if (all()) tNext(); }, a, x); else tFoot(L('Desa la fitxa i continua', 'Guarda la ficha y continúa'), () => { if (!all()) return; S.save(); tNext(); }, a, x); };
+  const upd = k => { const f = fs.find(x => x.k === k), el = document.querySelector(`.iacf[data-f="${k}"]`); if (el) { el.classList.toggle('ok', ok(f)); el.querySelector('em').textContent = em(f); }
+    const row = document.querySelector(`.iacv [data-k="${k}"]`); if (row) { const [v, e] = val(f); row.classList.toggle('e', e); row.querySelector('dd').innerHTML = v; }
+    const c = document.getElementById('iacn'); if (c) c.textContent = `${n()}/${fs.length}`; foot(); };
+  const draw = () => {
+    $('#tsb').innerHTML = iaHead(st) + iaStage('iacd', S.tab, `${iaTabs([['form', '✏️ ' + L('Omple', 'Rellena')], ['card', (st.ico || K[0]) + ' ' + L('Fitxa', 'Ficha')]], S.tab, 'IA.cr.go')}
+      <section class="iap iacform"><header class="iaph"><b>✏️ ${L('Omple la fitxa', 'Rellena la ficha')}</b><span class="iastat" id="iacn">${n()}/${fs.length}</span></header>
+        ${st.intro ? `<p class="iamut sm">${iaT(st.intro)}</p>` : ''}${fs.map(field).join('')}
+        <p class="iapriv">🔒 ${L("No hi escriguis dades personals (teves ni d'altres): la fitxa es desa al teu portafoli.", 'No escribas datos personales (tuyos ni de otros): la ficha se guarda en tu portafolio.')}</p></section>
+      <section class="iap iacside"><div class="iacvw">${card()}</div><div class="iarow"><span class="iamut sm">${L('Així quedarà al teu portafoli.', 'Así quedará en tu portafolio.')}</span><button class="iasm" type="button" onclick="window.print()">🖨️ ${L('Imprimeix', 'Imprime')}</button></div></section>`);
+    fs.forEach((f, i) => { if (f.choices) document.querySelectorAll(`.iacf[data-f="${f.k}"] .iacho button`).forEach(b => b.onclick = () => S.pick(f.k, +b.dataset.j));
+      else { const e = document.getElementById(`iacf${i}`); if (e) e.oninput = () => { S.v[f.k] = e.value; upd(f.k); }; } });
+    S.fa = null; foot();
+  };
+  S.pick = (k, j) => { const f = fs.find(x => x.k === k); if (f.multi) { const a = Array.isArray(S.v[k]) ? S.v[k] : (S.v[k] = []), i = a.indexOf(j); if (i >= 0) a.splice(i, 1); else a.push(j); a.sort((x, y) => x - y); } else S.v[k] = j; iaFx('tap');
+    document.querySelectorAll(`.iacf[data-f="${k}"] .iacho button`).forEach(b => { const on = f.multi ? S.v[k].includes(+b.dataset.j) : S.v[k] === +b.dataset.j; b.classList.toggle('on', on); b.setAttribute('aria-pressed', on); }); upd(k); };
+  S.go = k => { S.tab = k; const e = document.querySelector('.iacd'); if (e) e.dataset.tab = k; document.querySelectorAll('.iacd .iatabs button').forEach(b => { const on = b.getAttribute('onclick').includes(`'${k}'`); b.classList.toggle('on', on); b.setAttribute('aria-selected', on); }); };
+  S.save = () => { const t = TS_(); t.port = t.port.filter(p => !(p.ia === 'card' && p.sid === TSS.id && p.si === TSS.i));
+    const first = fs.find(f => !f.choices && String(S.v[f.k] ?? '').trim());
+    iaPortSave({ ia: 'card', t: st.name || st.title || TSS.s.t, sum: first ? String(S.v[first.k]).trim().slice(0, 80) : '', si: TSS.i, ck: st.kind || 'model', ico: st.ico || K[0], col: st.col || K[1], title: st.title || st.name || TSS.s.t, kt: st.kindT || K[2],
+      v: JSON.parse(JSON.stringify(S.v)), f: fs.map(f => f.choices ? { l: f.label, c: (f.multi ? (S.v[f.k] || []) : [S.v[f.k]]).filter(j => f.choices[j] != null).map(j => f.choices[j]) } : { l: f.label, t: String(S.v[f.k] ?? '').trim() }) });
+    delete IA.cd[key]; };
+  draw();
 };
 
 /* =====================================================================================================================
@@ -860,7 +968,9 @@ if (typeof tStep === 'function') { const s0 = tStep; tStep = function () {
   const S = typeof TSS !== 'undefined' && TSS && TSS.s, st = S && S.steps && S.steps[TSS.i];
   if (st && st.pro && iaIsIA() && iaProOn()) { const a = S.steps, m = Object.assign({}, st, st.pro); delete m.pro; m._pro = true; S.steps = a.slice(); S.steps[TSS.i] = m; try { s0.apply(this, arguments); } finally { S.steps = a; } }
   else s0.apply(this, arguments);
-  if (iaIsIA() && S && S.steps && S.steps.some(x => x.pro)) { const top = document.querySelector('.tstop'), x = top && top.querySelector('.xbtn'); if (x && !top.querySelector('.iapro')) x.insertAdjacentHTML('afterend', `<button class="iapro ${iaProOn() ? 'on' : ''}" onclick="iaProToggle()" aria-pressed="${iaProOn()}" title="${L('Nivell PRO (3r-4t d\'ESO)', 'Nivel PRO (3.º-4.º de ESO)')}">PRO</button>`); }
+  if (iaIsIA() && S && S.steps && S.steps.some(x => x.pro)) { const top = document.querySelector('.tstop'), x = top && top.querySelector('.xbtn'); if (x && !top.querySelector('.iapro')) x.insertAdjacentHTML('afterend', `<button class="iapro ${iaProOn() ? 'on' : ''}" onclick="iaProToggle()" aria-pressed="${iaProOn()}" title="${L('Nivell PRO (3r-4t d\'ESO)', 'Nivel PRO (3.º-4.º de ESO)')}">PRO</button>`);
+    // amb PRO i «Salta» alhora, al mòbil «Salta» es queda en ⭐ perquè la fase de dalt es pugui llegir (tech-ia.css: .tstop.iatop)
+    if (top) { top.classList.add('iatop'); const sk = top.querySelector('.tskipx'); if (sk && !sk.querySelector('.tskl')) { const t = sk.textContent.replace(/^\s*⭐\s*/u, '').trim(); sk.innerHTML = `<span aria-hidden="true">⭐</span><span class="tskl">${t}</span>`; sk.setAttribute('aria-label', t); } } }
 }; }
 var TMEDIA = typeof TMEDIA !== 'undefined' ? TMEDIA : {};
 // media: { k: 'ia', demo: 'ngram', text: 'ca|es', ctx: 'ca|es' } · { demo: 'knn' } · { demo: 'chat', msgs: [['me'|'them', 'ca|es', bad?]] }
@@ -875,13 +985,16 @@ TMEDIA.ia = {
   },
   slide: m => TMEDIA.ia.html(m).replace('class="iademo', 'class="iademo slide')
 };
-const IA_PICO = { train: '🏋️', ngram: '📚', chat: '💬', prompt: '✍️', agent: '🤖' };
+const IA_PICO = { train: '🏋️', ngram: '📚', chat: '💬', prompt: '✍️', agent: '🤖', card: '🪪' };
+// una fitxa desada (iacard), en la llengua de qui la mira: les etiquetes i les opcions són «ca|es»; el que ha escrit l'alumne/a, tal qual
+const iaCardOf = p => iaCardHTML({ ico: p.ico || '🪪', col: p.col || '#7C5CFF', kind: iaT(p.kt || 'Fitxa|Ficha'), title: iaT(p.title || p.t), d: iaDate(p.d), who: typeof P !== 'undefined' && P && P.name,
+  rows: (p.f || []).map(f => { const v = f.c ? f.c.map(iaT).join(' · ') : f.t || ''; return [iaT(f.l), v ? (f.c ? iaE(v) : iaCardTxt(v)) : '—', !v]; }) });
 if (typeof TPORT !== 'undefined') TPORT.ia = {
-  thumb: p => `<span class="iathumb"><b>${IA_PICO[p.ia] || '🧠'}</b><small>${iaE(p.sum || '')}</small></span>`,
-  open: p => `<div class="tsbody"><div class="iaport"><span class="iapico">${IA_PICO[p.ia] || '🧠'}</span><h2>${iaE(iaT(p.t))}</h2><p>${iaE(p.sum || '')}</p>${p.text ? `<pre class="iacode light">${iaE(p.text)}</pre>` : ''}${p.plan ? `<ol>${p.plan.map(x => `<li>${iaE(x)}</li>`).join('')}</ol>` : ''}${p.acc != null ? `<p>${L('Encerts a la prova', 'Aciertos en la prueba')}: <b>${iaPc(p.acc)}</b></p>` : ''}<p class="iamut sm">🔒 ${L('Del model entrenat només es desen els noms de les classes i quants exemples tenia: cap imatge ni cap so.', 'Del modelo entrenado solo se guardan los nombres de las clases y cuántos ejemplos tenía: ninguna imagen ni ningún sonido.')}</p></div></div>`
+  thumb: p => p.ia === 'card' ? `<span class="iathumb card" style="--cc:${p.col || '#7C5CFF'}"><b>${p.ico || '🪪'}</b><small>${iaE(iaT(p.title || p.t))}</small></span>` : `<span class="iathumb"><b>${IA_PICO[p.ia] || '🧠'}</b><small>${iaE(p.sum || '')}</small></span>`,
+  open: p => p.ia === 'card' ? `<div class="tsbody"><div class="iaport card">${iaCardOf(p)}<div class="iarow"><span class="iamut sm">${L('Desada el', 'Guardada el')} ${iaE(iaDate(p.d))}</span><button class="iasm" type="button" onclick="window.print()">🖨️ ${L('Imprimeix', 'Imprime')}</button></div></div></div>` : `<div class="tsbody"><div class="iaport"><span class="iapico">${IA_PICO[p.ia] || '🧠'}</span><h2>${iaE(iaT(p.t))}</h2><p>${iaE(p.sum || '')}</p>${p.text ? `<pre class="iacode light">${iaE(p.text)}</pre>` : ''}${p.plan ? `<ol>${p.plan.map(x => `<li>${iaE(x)}</li>`).join('')}</ol>` : ''}${p.acc != null ? `<p>${L('Encerts a la prova', 'Aciertos en la prueba')}: <b>${iaPc(p.acc)}</b></p>` : ''}<p class="iamut sm">🔒 ${L('Del model entrenat només es desen els noms de les classes i quants exemples tenia: cap imatge ni cap so.', 'Del modelo entrenado solo se guardan los nombres de las clases y cuántos ejemplos tenía: ninguna imagen ni ningún sonido.')}</p></div></div>`
 };
 // el solucionari del professor: files per als passos de Tech IA (o = { idSessió: [{ n, k, q, a }] })
-const IA_SOLK = { iatrain: ['Entrena la IA', 'Entrena la IA'], iangram: ['Model de llenguatge', 'Modelo de lenguaje'], iachat: ['Xat amb la IA', 'Chat con la IA'], iaprompt: ['Prompt', 'Prompt'], iaagent: ['Agent', 'Agente'], iavibe: ['Vibe coding', 'Vibe coding'] };
+const IA_SOLK = { iatrain: ['Entrena la IA', 'Entrena la IA'], iangram: ['Model de llenguatge', 'Modelo de lenguaje'], iachat: ['Xat amb la IA', 'Chat con la IA'], iaprompt: ['Prompt', 'Prompt'], iaagent: ['Agent', 'Agente'], iavibe: ['Vibe coding', 'Vibe coding'], iacard: ['Fitxa', 'Ficha'] };
 function iaSolHTML(st) {
   switch (st.k) {
     case 'iangram': return `<p class="soop">${(st.checks || []).map(c => c.txt ? iaT(c.txt) : iaNgTxt(c)).join(' · ')}</p>${st.sol ? `<p class="soa">${L('Per exemple, afegir', 'Por ejemplo, añadir')}: <i>${iaE(iaT(st.sol))}</i></p>` : (st.add || []).length ? `<p class="soa">${L('Afegir les frases proposades.', 'Añadir las frases propuestas.')}</p>` : ''}`;
@@ -889,7 +1002,8 @@ function iaSolHTML(st) {
     case 'iachat': { const b = []; (st.nodes || []).forEach(n => (n.msg || []).forEach(m => { if (m && m.bad) b.push(`«${iaT(m.t).replace(/<[^>]+>/g, '').slice(0, 90)}» → ${iaT(m.bad)}`); })); return b.length ? `<ul>${b.map(x => `<li>${x}</li>`).join('')}</ul>` : null; }
     case 'iaprompt': return st.sol ? `<p class="soa"><i>${iaE(iaT(st.sol))}</i></p>` : null;
     case 'iaagent': { if (!st.sol) return null; const D = iaAgentDef(st, st.sol); return `<ol>${D.plan.map(id => `<li>${iaT((st.acts.find(a => a.id === id) || {}).t)}</li>`).join('')}</ol><p class="soop">${st.tools.map(t => `${iaT(t.n)}: ${t.perms.map(p => `${iaPermN(p)} ${['✕', '✓', '🙋'][D.perms[t.id][p]]}`).join(', ')}`).join(' · ')}</p>`; }
-    case 'iavibe': return st.sol ? `<pre class="socode">${iaE(iaCode(st.sol.js) || '')}</pre>` : st.kind ? `<p class="soop">${L("Plantilla", 'Plantilla')} «${st.kind}»: ${iaE(iaVibeGen('', { kind: st.kind, bug: true }).bug || '')}</p>` : null;
+    case 'iacard': return `<p class="soop">${L('Fitxa oberta: es pot continuar quan cada camp té el mínim. Valoreu que les respostes siguin concretes i honestes.', 'Ficha abierta: se puede continuar cuando cada campo tiene el mínimo. Valorad que las respuestas sean concretas y honestas.')}</p><ul>${(st.fields || []).map(f => { const v = st.sol && st.sol[f.k]; return `<li><b>${iaT(f.label)}</b>: ${f.choices ? (v != null ? `<i>${iaE(iaCardVal(f, v, typeof LANG !== 'undefined' ? LANG : 'ca'))}</i>` : f.choices.map(c => iaE(iaT(c))).join(' · ')) : v ? `<i>${iaE(iaT(v))}</i>` : L(`resposta oberta (${f.min ?? 1}+ caràcters)`, `respuesta abierta (${f.min ?? 1}+ caracteres)`)}</li>`; }).join('')}</ul>`;
+    case 'iavibe': return st.sol ? `<pre class="socode">${iaE(iaCode(st.sol.js) || '')}</pre>` : st.kind ? `<p class="soop">${L("Plantilla", 'Plantilla')} «${st.kind}»: ${iaE(iaVibeGen('', { kind: st.kind, bug: true }).bug || '')}</p>` : st.checksBy ? `<p class="soop">${L("App lliure. Si surt una d'aquestes plantilles, té proves pròpies i l'error típic que cal arreglar", "App libre. Si sale una de estas plantillas, tiene pruebas propias y el error típico que hay que arreglar")}:</p><ul>${Object.keys(st.checksBy).map(k => `<li><b>${k}</b>: ${iaE(iaVibeGen('', { kind: k, bug: true }).bug || '')}</li>`).join('')}</ul>` : null;
   }
   return null;
 }
@@ -939,7 +1053,15 @@ const IA_SAMPLES = [
       { k: 'run', act: [{ click: '#btn' }, { click: '#btn' }, { click: '#reset' }], see: { sel: '#count', text: '0' }, txt: 'El botó de reinici torna a 0|El botón de reinicio vuelve a 0' }],
     sol: { html: { ca: '<main class="app">\n  <h1>El meu comptador</h1>\n  <p class="big" id="count">0</p>\n  <button id="btn">👆 +1</button>\n  <button id="reset">Reinicia</button>\n</main>', es: '<main class="app">\n  <h1>Mi contador</h1>\n  <p class="big" id="count">0</p>\n  <button id="btn">👆 +1</button>\n  <button id="reset">Reinicia</button>\n</main>' },
       css: '', js: "let count = 0;\nconst out = document.getElementById('count');\ndocument.getElementById('btn').addEventListener('click', () => { count = count + 1; out.textContent = count; });\ndocument.getElementById('reset').addEventListener('click', () => { count = 0; out.textContent = count; });" },
-    hint: "Llegeix la línia que suma: quant hi suma cada clic?|Lee la línea que suma: ¿cuánto suma cada clic?" }
+    hint: "Llegeix la línia que suma: quant hi suma cada clic?|Lee la línea que suma: ¿cuánto suma cada clic?" },
+  { k: 'iacard', ph: 'crea', kind: 'model', q: "Omple la <b>model card</b> del classificador de fruites: per a què serveix, amb quines dades ha après i quan falla.|Rellena la <b>model card</b> del clasificador de frutas: para qué sirve, con qué datos ha aprendido y cuándo falla.",
+    title: 'Model card: el classificador de fruites|Model card: el clasificador de frutas', name: 'La meva model card|Mi model card',
+    fields: [{ k: 'nom', label: 'Nom del model|Nombre del modelo', hint: 'p. ex. FruitaVista|p. ej. FrutaVista', min: 3, rows: 1 },
+      { k: 'us', label: 'Per a què serveix (i per a què no)|Para qué sirve (y para qué no)', hint: 'Distingeix… No serveix per a…|Distingue… No sirve para…', min: 25, rows: 2 },
+      { k: 'dades', label: 'Amb quines dades ha après|Con qué datos ha aprendido', hint: 'Quants exemples, de quines classes, amb quins fons…|Cuántos ejemplos, de qué clases, con qué fondos…', min: 20, rows: 2 },
+      { k: 'limits', label: 'Quan falla (límits i biaixos)|Cuándo falla (límites y sesgos)', hint: "p. ex. si el fons és diferent del de l'entrenament|p. ej. si el fondo es distinto del del entrenamiento", min: 20, rows: 2 },
+      { k: 'risc', label: "Què passa si s'equivoca?|¿Qué pasa si se equivoca?", choices: ['Poca cosa|Poca cosa', 'Una molèstia|Una molestia', 'Un mal greu|Un daño grave'] }],
+    sol: { nom: 'FruitaVista|FrutaVista', us: "Distingeix pomes de plàtans en fotos. No serveix per a altres fruites.|Distingue manzanas de plátanos en fotos. No sirve para otras frutas.", dades: "20 exemples de cada classe, amb fons de fusta i blanc.|20 ejemplos de cada clase, con fondos de madera y blanco.", limits: "Falla amb fons que no ha vist i amb fruites tallades.|Falla con fondos que no ha visto y con frutas cortadas.", risc: 0 } }
 ];
 // el laboratori de Tech IA (tech-lab.js): els mateixos tipus en mode lliure, sense correcció
 function iaLabSteps() {
@@ -949,6 +1071,7 @@ function iaLabSteps() {
     { k: 'iachat', ph: 'crea', free: true, live: true, min: 2, q: L('<b>Xat lliure.</b> Fes preguntes a la IA (simulada o, si el teu docent ho permet, de veritat) i revisa el que respon.', '<b>Chat libre.</b> Haz preguntas a la IA (simulada o, si tu docente lo permite, de verdad) y revisa lo que responde.'), hello: L('Hola! Soc una IA de prova. Què vols saber?', '¡Hola! Soy una IA de prueba. ¿Qué quieres saber?') },
     { ...IA_SAMPLES[3], ph: 'crea', save: true },
     { ...IA_SAMPLES[4], ph: 'crea' },
-    { k: 'iavibe', ph: 'crea', bug: false, q: L("<b>Vibe coding lliure.</b> Descriu una app petita (comptador, dau, llista, test de reflexos, preguntes, mode fosc, moure't amb fletxes o salutació) i millora-la a l'editor.", '<b>Vibe coding libre.</b> Describe una app pequeña (contador, dado, lista, test de reflejos, preguntas, modo oscuro, moverse con flechas o saludo) y mejórala en el editor.'), checks: [{ k: 'js', v: '/addEventListener|onclick/', txt: L('El codi respon al que fas', 'El código responde a lo que haces') }], save: true }
+    { k: 'iavibe', ph: 'crea', bug: false, q: L("<b>Vibe coding lliure.</b> Descriu una app petita (comptador, dau, llista, test de reflexos, preguntes, mode fosc, moure't amb fletxes o salutació) i millora-la a l'editor.", '<b>Vibe coding libre.</b> Describe una app pequeña (contador, dado, lista, test de reflejos, preguntas, modo oscuro, moverse con flechas o saludo) y mejórala en el editor.'), checks: [{ k: 'js', v: '/addEventListener|onclick/', txt: L('El codi respon al que fas', 'El código responde a lo que haces') }], save: true },
+    { ...IA_SAMPLES[6], ph: 'crea', save: true }
   ];
 }
