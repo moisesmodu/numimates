@@ -20,13 +20,13 @@ const tDone = id => !!(TS_().s[id] && TS_().s[id].done);
 function tAccess() {
   if (P && P.unlockAll) return { courses: new Set(TECH.map(c => c.id)), fins: {}, obert: {} };
   const o = P && P.classe && P.classe.opts, t = o && (o.app === 'tech' || o.app === 'both') && o.tech;
-  // nomes: a l'escola, l'alumne només pot entrar a la sessió que obre el professor (per defecte; el professor ho pot treure)
+  // nomes: a l'escola, l'alumne només pot entrar a les sessions que obre el professor (per defecte; el professor ho pot treure)
   if (t) return { courses: new Set(t.courses || []), fins: t.fins || {}, obert: t.obert || {}, classe: P.classe, nomes: t.nomes !== false };
   if (P && Array.isArray(P.tcursos)) return { courses: new Set(P.tcursos), fins: {}, obert: {} };
   return { courses: new Set(), fins: {}, obert: {} };
 }
 // una sessió és oberta si el curs és assignat i el professor l'ha oberta:
-//   en una classe amb «només la sessió que obre el professor» (nomes), NOMÉS les d'obert[curs] (ni les ja fetes ni la unitat 1);
+//   en una classe amb «només les sessions que obre el professor» (nomes), NOMÉS les d'obert[curs] (ni les ja fetes ni la unitat 1);
 //   si no, les ja fetes sempre es poden repetir i
 //   obert[curs] = llista de sessions obertes (el que marca el professor al panell, unitat a unitat o sessió a sessió);
 //   si no n'hi ha: fins[curs] = 'tot' (tot obert) o una sessió (obert fins a aquesta; grups d'abans) i, si no hi ha res,
@@ -46,7 +46,7 @@ function tLocked(c, s) {
   const a = tAccess(), mine = a.courses.has(c.id);
   const only = mine && a.nomes && a.classe, was = only && s && tDone(s.id);
   modal(`<div class="sheet card cent"><div class="tsoonico" style="--cc:${c.color}">${c.ico}</div><h3>${mine ? (was ? L('Aquesta sessió ara és tancada', 'Esta sesión ahora está cerrada') : L('Aquesta sessió encara no és oberta', 'Esta sesión aún no está abierta')) : tx(c.name)}</h3>
-    <p>${only ? L("A classe només pots entrar a la sessió que obre el teu professor. Quan l'obri, et sortirà a l'inici.", 'En clase solo puedes entrar en la sesión que abre tu profesor. Cuando la abra, te saldrá en el inicio.') : mine ? L("La farem a classe: el teu professor l'obrirà quan hi arribeu.", 'La haremos en clase: tu profesor la abrirá cuando lleguéis.') : `${tx(c.desc)}</p><p class="mut">${a.classe ? L("Aquest curs te l'ha d'assignar el teu professor.", 'Este curso te lo tiene que asignar tu profesor.') : L('Per començar, entra a la teva classe amb el codi que et dona el professor.', 'Para empezar, entra en tu clase con el código que te da el profesor.')}`}</p>
+    <p>${only ? L("A classe només pots entrar a les sessions que obre el teu professor. Quan l'obri, et sortirà a l'inici.", 'En clase solo puedes entrar en las sesiones que abre tu profesor. Cuando la abra, te saldrá en el inicio.') : mine ? L("La farem a classe: el teu professor l'obrirà quan hi arribeu.", 'La haremos en clase: tu profesor la abrirá cuando lleguéis.') : `${tx(c.desc)}</p><p class="mut">${a.classe ? L("Aquest curs te l'ha d'assignar el teu professor.", 'Este curso te lo tiene que asignar tu profesor.') : L('Per començar, entra a la teva classe amb el codi que et dona el professor.', 'Para empezar, entra en tu clase con el código que te da el profesor.')}`}</p>
     ${!a.classe && !a.courses.size ? `<button class="btn big" onclick="closeModal();classeModal()">${L('TINC UN CODI DE CLASSE', 'TENGO UN CÓDIGO DE CLASE')}</button>` : ''}<button class="btn ghost big" onclick="closeModal()">${L("D'ACORD", 'DE ACUERDO')}</button></div>`, true);
 }
 const tReady = s => !!(s.steps && s.steps.length);
@@ -454,13 +454,13 @@ function tFinish() {
   if (newB) t.badges[bd.id] = today();
   if (typeof touchStreak === 'function') touchStreak();
   save(); if (typeof syncNow === 'function') syncNow();
-  const s = TSS.s;
+  const s = TSS.s, c = TSS.c, nx = c && tSessions(c).find(x => x.id !== s.id && tReady(x) && !tDone(x.id) && tSessOpen(c, x));
   app.innerHTML = `<div class="tsess k-end"><div class="tsbody"><div class="tend"><div class="burst"></div><div class="tendbot">${bitChar('win')}</div>
     <h1>${L('Sessió completada!', '¡Sesión completada!')}</h1><p class="sub">${tx(s.t)}</p>
     ${s.learn ? `<div class="tlearn"><b>${L('Avui has après…', 'Hoy has aprendido…')}</b><ul>${s.learn.map(x => `<li>${TIC.ok}<span>${tval(x)}</span></li>`).join('')}</ul></div>` : ''}
     ${newB ? `<div class="tnewb"><span>${bd.ico}</span><div><small>${L('Insígnia nova', 'Insignia nueva')}</small><b>${tx(bd.n)}</b><p>${tx(bd.d)}</p></div></div>` : ''}
     ${first ? `<p class="txp">+${30 + 2 * (s.steps.length - 1)} XP</p>` : ''}</div></div>
-    <div class="tsfoot"><button class="btn big" onclick="TSS=null;go('home')">${L('Molt bé!', '¡Muy bien!')}</button></div></div>`;
+    <div class="tsfoot">${nx ? `<button class="btn big ghost" onclick="TSS=null;go('home')">${L('Inici', 'Inicio')}</button><button class="btn big" onclick="TSS=null;tOpen('${nx.id}')" title="${tx(nx.t)}">${L('Següent sessió', 'Siguiente sesión')} →</button>` : `<button class="btn big" onclick="TSS=null;go('home')">${L('Molt bé!', '¡Muy bien!')}</button>`}</div></div>`;
   SFX.win && SFX.win(); typeof confetti === 'function' && confetti(140);
 }
 

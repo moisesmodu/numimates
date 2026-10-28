@@ -156,8 +156,11 @@ cursos de Tech i crear un curs de disseny 3D en dos nivells. Sense desplegar a p
   `obert[curs]`), val la regla d'abans: la unitat 1 oberta (arreglat el 21-10: al Mater els sortia tancada). Si no n'hi ha cap d'oberta, l'inici diu
   «Encara no hi ha cap sessió oberta». Es pot desactivar a la fitxa del grup («Només la sessió que obre el professor»):
   aleshores torna la regla d'abans (obert/fins, unitat 1 per defecte i les fetes es poden repetir). «Obre-ho tot» el desactiva.
-- Panell (fitxa del grup, «Sessió oberta»): tocar una sessió l'obre i tanca la que hi havia; «Obre la següent: U.N…» (segueix
-  `opts.tech.ultima[curs]`, l'última oberta, encara que s'hagi tancat) i «Tanca-la».
+- Panell (fitxa del grup, «Sessions obertes»): des del 28-10-2026 (petició del Moisés per al Mater) se'n poden obrir
+  diverses: tocar una sessió l'obre o la tanca (ja no tanca la que hi havia), «Obre la unitat» / «Tanca la unitat» per a
+  unitats senceres, «Obre la següent: U.N…» (s'afegeix a les obertes; va després de l'última oberta en l'ordre del curs o
+  de `opts.tech.ultima[curs]`) i «Tanca-les totes». L'interruptor ara diu «Només les sessions que obre el professor».
+- App: en acabar una sessió, si n'hi ha una altra d'oberta i sense fer, surt «Següent sessió →» al costat d'«Inici».
 - App: a l'inici, cada 15 s es consulta quina sessió hi ha oberta (`tWatch`); en tocar una sessió tancada, primer es
   pregunta al servidor (potser s'acaba d'obrir). La comprovació és a l'app (com abans); el servidor no bloqueja el progrés.
 
