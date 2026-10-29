@@ -503,9 +503,9 @@ function tbTools(b) {
 function tbPalette() {
   const used = tbUsed(), full = TB.max && used >= TB.max;
   const ks = TB.pal.filter(k => k !== 'else').flatMap(k => k === 'call' ? Object.keys(TB.fns || { A: 1 }).map(f => 'call:' + f) : [k]);
-  return `<div class="tpal">${ks.map(k => { const b = k.startsWith('call:') ? { k: 'call', f: k.slice(5) } : bitNew(k), kk = b.k;
+  return tPalHTML('tb', ks.map(k => { const b = k.startsWith('call:') ? { k: 'call', f: k.slice(5) } : bitNew(k), kk = b.k;
     if ((kk === 'if' || kk === 'until') && TB.conds && TB.conds.length) b.c = TB.conds[0];
-    return `<button class="tb c-${BIT_CAT[kk]} k-${kk} tpb" onclick="tbIns('${k}')" ${full ? 'disabled' : ''}><span class="tbi">${BIT_ICO[kk] || ''}</span><span class="tbl">${bitLabel(b).replace(/<b class="tnum">\d+<\/b>/, kk === 'rep' ? 'N' : kk === 'setv' ? '$&' : '<b class="tnum">1</b>')}</span></button>`; }).join('')}</div>`;
+    return { k: kk, html: `<button class="tb c-${BIT_CAT[kk]} k-${kk} tpb" onclick="tbIns('${k}')" ${full ? 'disabled' : ''}><span class="tbi">${BIT_ICO[kk] || ''}</span><span class="tbl">${bitLabel(b).replace(/<b class="tnum">\d+<\/b>/, kk === 'rep' ? 'N' : kk === 'setv' ? '$&' : '<b class="tnum">1</b>')}</span></button>` }; }), { cls: 'tpal' });
 }
 // les altres llistes de blocs: funcions (es poden editar si el repte ho diu) i esdeveniments (quan premo A…)
 function tbExtraLists() {

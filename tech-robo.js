@@ -459,7 +459,9 @@ function rbMake(st, o = {}) {
   const spec = st.w, alts = roboAlts(spec);
   const scripts = st.scripts || ['start', 'forever'];
   const prog = { start: [], forever: [], A: [], B: [] }; if (o.prog || st.prog) Object.assign(prog, rbClone(RQ(o.prog || st.prog)));
-  RB = { st, spec, alts, altI: 0, altOk: new Set(), W: roboWorld(alts[0]), prog, scripts, pal: st.pal || ['run', 'stop', 'wait'], mode: o.mode || 'edit', ops: st.ops || ['dist'], vars: st.vars || ((st.pal || []).some(k => ['set', 'change', 'calc'].includes(k)) ? ['v'] : roboProgVars(prog)),
+  // la paleta creix amb el temari (tech.js, tPalLearned): els blocs del repte i els de les sessions anteriors
+  const LP = (o.mode || 'edit') === 'edit' ? tPalLearned(st.pal || ['run', 'stop', 'wait'], k => k in RB_CAT || ['else', 'and'].includes(k)) : { pal: st.pal || ['run', 'stop', 'wait'], nou: new Set(), later: [] };
+  RB = { st, spec, alts, altI: 0, altOk: new Set(), W: roboWorld(alts[0]), prog, scripts, pal: LP.pal, palNou: LP.nou, palLater: LP.later, mode: o.mode || 'edit', ops: st.ops || ['dist'], vars: st.vars || (LP.pal.some(k => ['set', 'change', 'calc'].includes(k)) ? ['v'] : roboProgVars(prog)),
     cur: null, sel: null, run: false, speed: 1, solved: false, tries: 0, onDone: o.onDone || null, onFail: o.onFail || null, M: null, view: o.view || 'auto', max: st.max || 0, lists: [], ids: {} };
   RB.cur = { l: prog[scripts[scripts.length - 1]] || prog.start, i: 0 };
   RB.cur.i = RB.cur.l.length;
@@ -486,7 +488,7 @@ function rbTools(b) {
 }
 function rbPalette() {
   const full = RB.max && rbCountAll(RB.prog) >= RB.max;
-  return `<div class="tpal rpal">${RB.pal.filter(k => !['else', 'and'].includes(k)).map(k => { const b = rbNew(k, RB.st); return `<button class="tb rb c-${RB_CAT[k]} k-${k} tpb" onclick="rbIns('${k}')" ${full ? 'disabled' : ''}><span class="tbi">${RB_ICO[k]}</span><span class="tbl">${rbLabel(b, undefined, RB.st)}</span></button>`; }).join('')}</div>`;
+  return tPalHTML('rb', RB.pal.filter(k => !['else', 'and'].includes(k)).map(k => { const b = rbNew(k, RB.st); return { k, html: `<button class="tb rb c-${RB_CAT[k]} k-${k} tpb" onclick="rbIns('${k}')" ${full ? 'disabled' : ''}><span class="tbi">${RB_ICO[k]}</span><span class="tbl">${rbLabel(b, undefined, RB.st)}</span>${tNou(RB, k)}</button>` }; }), { cls: 'tpal rpal', later: RB.palLater });
 }
 function rbCode() {
   rbIndex();

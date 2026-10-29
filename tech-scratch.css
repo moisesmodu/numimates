@@ -100,12 +100,38 @@
 .tstage .tcode .tpal button.tb.tpb:disabled{filter:grayscale(.6);opacity:.4}
 .tstage .tcode .tpal button.tb.tpb:hover:not(:disabled){filter:brightness(1.06) drop-shadow(0 1px 0 color-mix(in srgb,var(--bc) 70%,#000))}
 
+/* ---------- categories de blocs (com la columna de colors de Scratch) i grups de la paleta ---------- */
+.tstage .tcode .tbcats{display:flex;gap:6px;flex:none;min-width:0}
+.tstage .tcode .tbcat{display:flex;align-items:center;gap:5px;border:0;background:none;padding:0;cursor:pointer;color:#575E75;font:700 11px/1.15 Lexend,system-ui,sans-serif}
+.tstage .tcode .tbcat>i{flex:none;display:grid;place-items:center;width:20px;height:20px;border-radius:50%;background:var(--cc);border:1px solid color-mix(in srgb,var(--cc) 75%,#000);font-style:normal;font-size:10px}
+.tstage .tcode .tbcat.on>span{color:var(--cc);filter:brightness(.8)}
+.tstage .tcode .tbcat.lock{color:#A3A8B8;cursor:help}
+.tstage .tcode .tbcat.lock>i{background:#E9EBF2;border-color:#D3D7E2}
+.tstage .tcode .tbcat:focus-visible{outline:3px solid #855CD6;outline-offset:2px;border-radius:8px}
+.tstage .tcode .tpal .tpg{display:flex;gap:8px;align-items:flex-start;flex:none}
+.tstage .tcode .tpal .tpgh{font:800 12px/1.1 Lexend,system-ui,sans-serif;color:#575E75}
+/* «nou»: el bloc s'estrena en aquesta sessió */
+.tstage .tcode .tpal .tnou{flex:none;margin-left:2px;padding:2px 6px;border-radius:8px;background:#FFF3B0;color:#6B4E00;font:800 10px/1.2 Lexend,system-ui,sans-serif;letter-spacing:.02em;text-transform:uppercase}
+/* un barret d'esdeveniment: toca'l i tindràs un guió nou */
+.tstage .tcode .tpal .tph{flex:none;width:max-content;border:0;cursor:pointer;padding:16px 14px 10px 10px;min-height:44px;background:#FFBF00;color:#fff;font:var(--s-font);
+  border-radius:22px 22px 4px 4px/14px 14px 4px 4px;filter:drop-shadow(0 1px 0 #CC9900);text-align:left}
+.tstage .tcode .tpal .tph:hover{filter:brightness(1.05) drop-shadow(0 1px 0 #CC9900)}
+
 /* ---------- mòbil: el món a dalt; el programa i la paleta (tira lliscant) a sota ---------- */
 @media (max-width:899px){
   /* mentre s'edita, el món una mica més petit perquè el programa tingui més lloc */
   .tsbody>.tstage:has(>.tcode>.tpal) .tworld{--wh:26vh}
   .tsbody>.tstage>.tcode .tpal{padding:4px 2px 8px;gap:8px;background:#fff;border-top:1px solid #E6E8F0}
   .tsbody>.tstage>.tcode .tpal .tpb{max-width:none}
+  /* les categories, una fila de xips; cada grup de la tira porta una ratlla del seu color */
+  .tsbody>.tstage>.tcode .tbcats{overflow-x:auto;scrollbar-width:none;padding:2px 2px 0}
+  .tsbody>.tstage>.tcode .tbcats::-webkit-scrollbar{display:none}
+  .tsbody>.tstage>.tcode .tbcat{flex:none;padding:3px 9px 3px 4px;border-radius:999px;background:#F2F3F8;min-height:28px}
+  .tsbody>.tstage>.tcode .tbcat>i{width:16px;height:16px;font-size:8px}
+  .tsbody>.tstage>.tcode .tbcat.on{background:color-mix(in srgb,var(--cc) 16%,#fff)}
+  .tsbody>.tstage>.tcode .tpal .tpg{align-items:center;padding-left:8px;border-left:3px solid var(--gc,#DDE0EA)}
+  .tsbody>.tstage>.tcode .tpal .tpg:first-of-type{border-left:0;padding-left:0}
+  .tsbody>.tstage>.tcode .tpal .tpgh{display:none}
 }
 /* ---------- ordinador: paleta a l'esquerra, programa al mig i el món a la dreta (com a Scratch) ---------- */
 @media (min-width:900px){
@@ -114,8 +140,16 @@
   .tsbody>.tstage:not(.m3stage):not(.wstage):not(.iast)>.tcode:has(>.tpal) :is(#tprog,#rprog,#sprog) .tbl{flex-wrap:nowrap;white-space:nowrap}
   .tsbody>.tstage:not(.m3stage):not(.wstage):not(.iast)>.tcode:has(>.tpal) :is(#tprog,#rprog,#sprog) .tb,.tsbody>.tstage:not(.m3stage):not(.wstage):not(.iast)>.tcode:has(>.tpal) :is(#tprog,#rprog,#sprog) .tb>.tbh,.tsbody>.tstage:not(.m3stage):not(.wstage):not(.iast)>.tcode:has(>.tpal) .rscript{max-width:none}
   .tsbody>.tstage:not(.m3stage):not(.wstage):not(.iast)>.tcode:has(>.tpal) :is(#tprog,#rprog,#sprog){overflow:auto}
-  .tsbody>.tstage:not(.m3stage):not(.wstage):not(.iast)>.tcode:has(>.tpal){order:-1;position:relative;padding-left:calc(var(--palw,286px) + 12px)}
-  .tsbody>.tstage:not(.m3stage):not(.wstage):not(.iast)>.tcode:has(>.tpal)>.tpal{position:absolute;left:0;top:0;bottom:0;width:max-content;min-width:190px;max-width:400px;flex-direction:column;flex-wrap:nowrap;
+  .tsbody>.tstage:not(.m3stage):not(.wstage):not(.iast)>.tcode:has(>.tpal){order:-1;position:relative;padding-left:calc(var(--catw,0px) + var(--palw,286px) + 12px)}
+  /* la columna de categories a l'esquerra de tot, com a Scratch */
+  .tsbody>.tstage:not(.m3stage):not(.wstage):not(.iast)>.tcode:has(>.tpal)>.tbcats{position:absolute;left:0;top:0;bottom:0;width:76px;flex-direction:column;gap:12px;padding:10px 0;overflow-y:auto;
+    background:#fff;border:1px solid #DDE0EA;border-radius:10px}
+  .tsbody>.tstage:not(.m3stage):not(.wstage):not(.iast)>.tcode:has(>.tpal)>.tbcats .tbcat{flex-direction:column;gap:3px;width:100%;font-size:10px;text-align:center;padding:4px 2px;border-radius:8px;hyphens:auto;overflow-wrap:anywhere}
+  .tsbody>.tstage:not(.m3stage):not(.wstage):not(.iast)>.tcode:has(>.tpal)>.tbcats .tbcat>i{width:24px;height:24px;font-size:11px}
+  .tsbody>.tstage:not(.m3stage):not(.wstage):not(.iast)>.tcode:has(>.tpal)>.tbcats .tbcat.on{background:color-mix(in srgb,var(--cc) 14%,#fff)}
+  .tsbody>.tstage:not(.m3stage):not(.wstage):not(.iast)>.tcode:has(>.tpal)>.tpal .tpg{flex-direction:column;gap:9px;padding-top:4px}
+  .tsbody>.tstage:not(.m3stage):not(.wstage):not(.iast)>.tcode:has(>.tpal)>.tpal .tpg+.tpg{margin-top:10px}
+  .tsbody>.tstage:not(.m3stage):not(.wstage):not(.iast)>.tcode:has(>.tpal)>.tpal{position:absolute;left:var(--catw,0px);top:0;bottom:0;width:max-content;min-width:190px;max-width:400px;flex-direction:column;flex-wrap:nowrap;
     overflow-y:auto;overflow-x:hidden;padding:12px 10px 16px;margin:0;background:#fff;border:1px solid #DDE0EA;border-radius:10px;gap:9px;scroll-snap-type:none}
   .tsbody>.tstage:not(.m3stage):not(.wstage):not(.iast)>.tcode:has(>.tpal)>.tpal .tpb{flex:0 0 auto;max-width:100%}
   .tsbody>.tstage:not(.m3stage):not(.wstage):not(.iast)>.tcode:has(>.tpal)>.tpal{overflow-x:auto}

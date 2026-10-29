@@ -930,6 +930,59 @@ document.addEventListener('keydown', e => {
   const ed = tEdOf(st), U = TUNDO[ed], S = U && U.S(); if (!S || S.mode !== 'edit') return;
   e.preventDefault(); if (k === 'y' || e.shiftKey) tRedo(ed); else tUndo(ed);
 });
+/* ---------- Paleta per categories, a l'estil de Scratch, i que creix amb el temari ----------
+   Robòtica i Creadors: a cada repte hi ha tots els blocs apresos fins a aquesta sessió (els del repte i els de les sessions
+   anteriors del curs), agrupats per les categories de Scratch. Les categories que encara no han arribat surten amb un cadenat
+   i els blocs que s'estrenen en aquesta sessió porten «nou». Robot (6-9 anys) es queda amb els blocs de cada repte, també
+   per categories. Els blocs «meta» (else, and, not…) també s'aprenen així: activen les eines del bloc quan toca. */
+const TCATS = { mov: ['Moviment|Movimiento', '#4C97FF'], look: ['Aparença|Apariencia', '#9966FF'], snd: ['So|Sonido', '#CF63CF'], ev: ['Esdeveni\u00ADments|Eventos', '#FFBF00'],
+  ctl: ['Control|Control', '#FFAB19'], sen: ['Sensors|Sensores', '#5CB1D6'], var: ['Variables|Variables', '#FF8C1A'], my: ['Els meus blocs|Mis bloques', '#FF6680'], act: ['Accions|Acciones', '#0FBD8C'] };
+const TCAT_ORD = ['mov', 'look', 'snd', 'ev', 'ctl', 'sen', 'var', 'my', 'act'];
+const TCAT_OF = {
+  sg: { move: 'mov', turn: 'mov', goto: 'mov', gotorand: 'mov', glide: 'mov', setx: 'mov', sety: 'mov', chx: 'mov', chy: 'mov', point: 'mov', pointto: 'mov', bounce: 'mov',
+    say: 'look', think: 'look', costume: 'look', next: 'look', size: 'look', chsize: 'look', show: 'look', hide: 'look', ghost: 'look', front: 'look', bg: 'look', nextbg: 'look',
+    sound: 'snd', send: 'ev', wait: 'ctl', rep: 'ctl', forever: 'ctl', until: 'ctl', waitu: 'ctl', stop: 'ctl', if: 'ctl', clone: 'ctl', delclone: 'ctl', setv: 'var', chv: 'var', timer0: 'sen' },
+  rb: { run: 'mov', stop: 'mov', patrol: 'mov', car: 'look', under: 'look', icon: 'look', num: 'look', clear: 'look', note: 'snd', wait: 'ctl', rep: 'ctl', while: 'ctl', until: 'ctl', if: 'ctl', set: 'var', change: 'var', calc: 'var' },
+  tb: { fwd: 'mov', left: 'mov', right: 'mov', pick: 'act', drop: 'act', paint: 'look', light: 'look', note: 'snd', rep: 'ctl', until: 'ctl', if: 'ctl', call: 'my', add: 'var', sub: 'var', setv: 'var' }
+};
+// els blocs apresos fins a la sessió d'ara: { pal, nou (s'estrenen avui), later (vindran més endavant) }; ok(k): és un bloc d'aquest editor.
+// L'ordre és el del curs (l'ordre en què s'aprenen), així els blocs no canvien de lloc d'una sessió a l'altra.
+function tPalLearned(own, ok = () => true) {
+  const none = { pal: own, nou: new Set(), later: [] };
+  try {
+    if (typeof TSS === 'undefined' || !TSS || !TSS.c || TSS.lab || TSS.demo || TSS.theory) return none;
+    const ss = tSessions(TSS.c), cur = ss.findIndex(s => s.id === TSS.id); if (cur < 0) return none;
+    const first = {}; ss.forEach((s, si) => (s.steps || []).forEach(st => (Array.isArray(st.pal) ? st.pal : []).forEach(k => { if (ok(k) && !(k in first)) first[k] = si; })));
+    const ks = Object.keys(first);
+    return { pal: [...new Set([...ks.filter(k => first[k] <= cur), ...own])], nou: new Set(ks.filter(k => first[k] === cur)), later: ks.filter(k => first[k] > cur) };
+  } catch (e) { return none; }
+}
+// la paleta per categories: items = [{ k, html }]; hats = blocs de barret (Creadors: afegeixen un guió); o = { cls, pre, later }
+function tPalHTML(ed, items, o = {}) {
+  const C = TCAT_OF[ed] || {}, g = {};
+  items.forEach(it => { const c = C[it.k] || 'ctl'; (g[c] = g[c] || []).push(it.html); });
+  (o.hats || []).forEach(h => (g.ev = g.ev || []).unshift(h));
+  const lock = new Set((o.later || []).map(k => C[k]).filter(c => c && !g[c])), cats = TCAT_ORD.filter(c => g[c] || lock.has(c));
+  const rail = cats.length > 1 ? `<div class="tbcats" role="group" aria-label="${L('Categories de blocs', 'Categorías de bloques')}">${cats.map(c => lock.has(c)
+    ? `<button type="button" class="tbcat lock" style="--cc:${TCATS[c][1]}" onclick="toast(L('${tx(TCATS[c][0]).replace(/'/g, "\\'")}: ho descobriràs més endavant al curs.','${tx(TCATS[c][0]).replace(/'/g, "\\'")}: lo descubrirás más adelante en el curso.'))" title="${L('Més endavant', 'Más adelante')}"><i>🔒</i><span>${tx(TCATS[c][0])}</span></button>`
+    : `<button type="button" class="tbcat" style="--cc:${TCATS[c][1]}" onclick="tPalGo('${c}')"><i></i><span>${tx(TCATS[c][0])}</span></button>`).join('')}</div>` : '';
+  return rail + `<div class="${o.cls || 'tpal'}">${o.pre || ''}${TCAT_ORD.filter(c => g[c]).map(c => `<div class="tpg" data-cat="${c}" style="--gc:${TCATS[c][1]}"><span class="tpgh" style="--cc:${TCATS[c][1]}">${tx(TCATS[c][0])}</span>${g[c].join('')}</div>`).join('')}</div>`;
+}
+// la categoria que es veu ara a la paleta queda marcada a la columna (o a la fila de xips)
+function tPalCat(p) {
+  const cats = p.parentElement && p.parentElement.querySelector(':scope>.tbcats'); if (!cats) return;
+  const pr = p.getBoundingClientRect(), col = getComputedStyle(p).flexDirection === 'column'; let cur = null;
+  p.querySelectorAll('.tpg').forEach(g => { const r = g.getBoundingClientRect(); if (!cur || (col ? r.top <= pr.top + 30 : r.left <= pr.left + 30)) cur = g.dataset.cat; });
+  cats.querySelectorAll('.tbcat').forEach(b => b.classList.toggle('on', !!cur && (b.getAttribute('onclick') || '').includes(`'${cur}'`)));
+}
+// tocar una categoria porta la paleta (i només la paleta) als seus blocs
+function tPalGo(c) {
+  const p = document.querySelector('.tsbody>.tstage .tcode .tpal'), g = p && p.querySelector(`.tpg[data-cat="${c}"]`); if (!g) return;
+  const pr = p.getBoundingClientRect(), r = g.getBoundingClientRect(), sm = matchMedia('(prefers-reduced-motion:reduce)').matches ? 'auto' : 'smooth';
+  if (getComputedStyle(p).flexDirection === 'column') p.scrollTo({ top: p.scrollTop + r.top - pr.top - 8, behavior: sm }); else p.scrollTo({ left: p.scrollLeft + r.left - pr.left - 4, behavior: sm });
+  SFX.tap && SFX.tap();
+}
+const tNou = (S, k) => S && S.palNou && S.palNou.has(k) ? `<span class="tnou">${L('nou', 'nuevo')}</span>` : '';
 // mida dels blocs del programa (zoom, per veure sencers els programes llargs); es recorda al dispositiu
 const TZ_ST = [.6, .7, .8, .9, 1, 1.15];
 let TZ_V = (() => { try { const v = +localStorage.getItem('numi-tz'); return TZ_ST.includes(v) ? v : 1; } catch (e) { return 1; } })();
@@ -947,7 +1000,7 @@ function tUndoBtn(ed, S) {
   if (!b) { h.insertAdjacentHTML('afterbegin', `<button class="tclr tundo" onclick="tUndo('${ed}')" aria-label="${L('Desfés', 'Deshacer')}" title="${L('Desfés (Ctrl+Z)', 'Deshacer (Ctrl+Z)')}"><svg viewBox="0 0 24 24"><path d="M9 7H4V2M4 7a9 9 0 1 1-1 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button class="tclr tredo" onclick="tRedo('${ed}')" aria-label="${L('Refés', 'Rehacer')}" title="${L('Refés (Ctrl+Y)', 'Rehacer (Ctrl+Y)')}" hidden><svg viewBox="0 0 24 24"><path d="M15 7h5V2M20 7a9 9 0 1 0 1 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>`); b = h.querySelector('.tundo'); }
   b.disabled = !(S._uh && S._uh.length);
   // a l'ordinador la paleta va a l'esquerra (tech-scratch.css): fa l'amplada del seu bloc més llarg
-  const pal = document.querySelector('.tsbody>.tstage>.tcode>.tpal'); if (pal) pal.parentElement.style.setProperty('--palw', pal.offsetWidth + 'px');
+  const pal = document.querySelector('.tsbody>.tstage>.tcode>.tpal'), cats = pal && pal.parentElement.querySelector(':scope>.tbcats'); if (pal) { pal.parentElement.style.setProperty('--palw', pal.offsetWidth + 'px'); pal.parentElement.style.setProperty('--catw', (cats ? cats.offsetWidth + 6 : 0) + 'px'); }
   // programes llargs: − / + per fer els blocs del programa més petits o més grans (surt a partir de 6 blocs)
   const nb = document.querySelectorAll('#tprog .tb, #rprog .tb, #sprog .tb').length;
   if ((nb >= 6 || TZ_V !== 1) && !h.querySelector('.tzoom')) h.insertAdjacentHTML('afterbegin', `<span class="tzoom" role="group" aria-label="${L('Mida dels blocs', 'Tamaño de los bloques')}"><button onclick="tZoom(-1)" ${TZ_V <= TZ_ST[0] ? 'disabled' : ''} aria-label="${L('Blocs més petits', 'Bloques más pequeños')}" title="${L('Blocs més petits', 'Bloques más pequeños')}">−</button><button onclick="tZoom(1)" ${TZ_V >= TZ_ST[TZ_ST.length - 1] ? 'disabled' : ''} aria-label="${L('Blocs més grans', 'Bloques más grandes')}" title="${L('Blocs més grans', 'Bloques más grandes')}">+</button></span>`);
@@ -964,9 +1017,9 @@ addEventListener('load', () => {
       const S = U.S(); let r, ch = false;
       if (S && S.mode === 'edit') { const now = tuSer(U.get(S)); if (S._last !== undefined && now !== S._last && !S._undoing) { (S._uh = S._uh || []).push(S._last); if (S._uh.length > 60) S._uh.shift(); S._rh = []; ch = true; } S._last = now; }
       // la tira de la paleta no torna al principi cada vegada que es pinta el programa
-      const pl = document.querySelector('.tsbody>.tstage .tcode .tpal'), px = pl ? pl.scrollLeft : 0;
+      const pl = document.querySelector('.tsbody>.tstage .tcode .tpal'), px = pl ? pl.scrollLeft : 0, py = pl ? pl.scrollTop : 0;
       r = f.apply(this, arguments);
-      const pl2 = document.querySelector('.tsbody>.tstage .tcode .tpal'); if (pl2 && px) pl2.scrollLeft = px;
+      const pl2 = document.querySelector('.tsbody>.tstage .tcode .tpal'); if (pl2 && px) pl2.scrollLeft = px; if (pl2 && py) pl2.scrollTop = py;
       if (S) { tUndoBtn(ed, S); tEdPost(ed, S, ch); } return r;
     };
   }
@@ -1018,7 +1071,7 @@ function tEdPost(ed, S, changed) {
 // la paleta del mòbil és una tira que es desplaça: s'esvaeix a la vora on n'hi ha més
 function tPalCue(st) {
   const p = st.querySelector('.tcode .tpal'); if (!p) return;
-  const f = () => { const ov = p.scrollWidth > p.clientWidth + 4; p.classList.toggle('tpl', ov && p.scrollLeft > 4); p.classList.toggle('tpr', ov && p.scrollLeft < p.scrollWidth - p.clientWidth - 4); };
+  const f = () => { const ov = p.scrollWidth > p.clientWidth + 4; p.classList.toggle('tpl', ov && p.scrollLeft > 4); p.classList.toggle('tpr', ov && p.scrollLeft < p.scrollWidth - p.clientWidth - 4); tPalCat(p); };
   f(); if (!p._cue) { p._cue = 1; p.addEventListener('scroll', f, { passive: true }); }
 }
 

@@ -256,3 +256,13 @@ cursos de Tech i crear un curs de disseny 3D en dos nivells. Sense desplegar a p
   camps en òvals blancs i el programa sobre un taulell de punts. A l'ordinador, com a Scratch: paleta a l'esquerra (de l'amplada
   del bloc més llarg, `--palw`), programa al mig i el món a la dreta; les peces no es parteixen i el taulell es desplaça. Al mòbil,
   el món una mica més petit mentre s'edita. A Robòtica i Creadors, sense icones; a Robot (6-9) la icona es queda, sense caixa.
+- 30-10-2026 (petició del Moisés: «que les funcionalitats es vagin descobrint a mesura que avancen, però tan semblant a Scratch com
+  es pugui»): la paleta va per categories de Scratch (Moviment, Aparença, So, Esdeveniments, Control, Sensors, Variables, Els meus
+  blocs; a Robot també Accions), amb la columna de cercles de colors a l'esquerra a l'ordinador i una fila de xips al mòbil (`tech.js`:
+  `TCATS`, `TCAT_OF`, `tPalHTML`, `tPalGo`, `tPalCat`). A Robòtica i Creadors la paleta **creix amb el temari** (`tPalLearned`): a cada
+  repte hi ha els blocs del repte i tots els de les sessions anteriors del curs, en l'ordre en què s'han après; les categories que
+  encara no han arribat surten grises amb un cadenat (p. ex. Variables fins a g6-1 / k6-1) i els blocs que s'estrenen en aquesta
+  sessió porten «NOU». Els blocs «meta» (si no, i, no) també s'hereten, així que el «si… si no» queda disponible un cop après. Als
+  continguts, `st.pal` vol dir ara «els blocs que s'estrenen o calen en aquest repte»; els d'abans ja hi són. Robot (6-9) es queda
+  amb els blocs de cada repte, també per categories. Els barrets d'esdeveniment del personatge surten a Esdeveniments (tocar-ne un
+  afegeix un guió). No s'aplica a la revisió de teoria, a les demos ni als laboratoris.

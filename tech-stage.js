@@ -380,6 +380,8 @@ const sgCount = l => (l || []).reduce((n, b) => n + 1 + sgCount(b.b) + sgCount(b
 
 /* ---------- Estat (SG) ---------- */
 let SG = null, SG_ID = 0, SG_RAF = null;
+// la paleta creix amb el temari (tech.js, tPalLearned): els blocs del repte i els de les sessions anteriors
+function sgPalOf(st, o) { const own = st.pal || ['move', 'turn', 'wait'], LP = (o.mode || 'edit') === 'edit' ? tPalLearned(own, k => k in SG_CAT || SG_NOPAL.includes(k)) : { pal: own, nou: new Set(), later: [] }; return { pal: LP.pal, palNou: LP.nou, palLater: LP.later }; }
 function sgMake(st, o = {}) {
   const spec = st.w, alts = stgAlts(spec), W = stgWorld(alts[0]);
   const edit = st.edit || spec.edit || [W.sprites[0].id];
@@ -388,7 +390,7 @@ function sgMake(st, o = {}) {
   const hats = st.hats || ['flag'];
   const hatsOf = id => (st.hatsBy && st.hatsBy[id]) || hats;   // capçaleres per personatge (opcional: hatsBy)
   for (const id of edit) { for (const h of hatsOf(id)) progs[id][h] = progs[id][h] && progs[id][h].length ? progs[id][h] : [[]]; }
-  SG = { st, spec, alts, altI: 0, altOk: new Set(), W, progs, edit, hats, hatsOf, sel: null, cur: null, who: edit[0] || (W.sprites.find(d => progs[d.id] && Object.keys(progs[d.id]).length) || W.sprites[0] || {}).id, pal: st.pal || ['move', 'turn', 'wait'], mode: o.mode || 'edit', run: false, solved: false, tries: 0, max: st.max || 0, lists: [], ids: {},
+  SG = { st, spec, alts, altI: 0, altOk: new Set(), W, progs, edit, hats, hatsOf, sel: null, cur: null, who: edit[0] || (W.sprites.find(d => progs[d.id] && Object.keys(progs[d.id]).length) || W.sprites[0] || {}).id, ...sgPalOf(st, o), mode: o.mode || 'edit', run: false, solved: false, tries: 0, max: st.max || 0, lists: [], ids: {},
     ax: sgAxCfg(st.axes ?? spec.axes) || { on: false }, ptr: null, lite: !!(st.palLite && st.palLite.length), base: st.base || null };
   SG.M = stgMachine(W, progs);
   { const P = progs[SG.who] || {}, sc = P[hats[0]] || Object.values(P)[0]; SG.cur = sc && sc[0] ? { l: sc[0], i: sc[0].length } : null; }
@@ -420,7 +422,9 @@ function sgPalette() {
   // paleta graduada (palLite): primer els blocs bàsics de la peça; un botó obre (o torna a tancar) tots els blocs
   const nL = SG.st.palLite ? all.filter(k => SG.st.palLite.includes(k)).length : 0;
   const tog = SG.st.palLite ? `<button class="spaltog${lite ? '' : ' on'}" onclick="sgLite()" aria-pressed="${lite ? 'false' : 'true'}">${lite ? `<b>+</b>${L(`Tots els blocs (${all.length})`, `Todos los bloques (${all.length})`)}` : `<b>−</b>${L(`Només els bàsics (${nL})`, `Solo los básicos (${nL})`)}`}</button>` : '';
-  return `<div class="tpal rpal spal">${tog}${show.map(k => `<button class="tb rb sb c-${SG_CAT[k]} k-${k} tpb" onclick="sgIns('${k}')" ${full ? 'disabled' : ''}><span class="tbi">${sgIco(k)}</span><span class="tbl">${sgLabel(sgNew(k, SG.st, SG.W), undefined, SG.st)}</span></button>`).join('')}</div>`;
+  // els barrets d'esdeveniment (com a Scratch): un toc afegeix un guió nou amb aquest barret (fins a 4)
+  const P = SG.progs[SG.who] || {}, hats = SG.edit.includes(SG.who) ? SG.hatsOf(SG.who).filter(h => P[h] && P[h].length < 4).map(h => `<button type="button" class="tph" onclick="sgAddScr('${h}')" title="${L('Afegeix un guió', 'Añade un guion')}">${SG_HAT(h)}</button>`) : [];
+  return tPalHTML('sg', show.map(k => ({ k, html: `<button class="tb rb sb c-${SG_CAT[k]} k-${k} tpb" onclick="sgIns('${k}')" ${full ? 'disabled' : ''}><span class="tbi">${sgIco(k)}</span><span class="tbl">${sgLabel(sgNew(k, SG.st, SG.W), undefined, SG.st)}</span>${tNou(SG, k)}</button>` })), { cls: 'tpal rpal spal', pre: tog, later: lite ? [] : SG.palLater, hats });
 }
 function sgLite() { if (!SG) return; SG.lite = !SG.lite; SFX.tap && SFX.tap(); sgDraw(); }
 // «Posa una base»: un esquelet del programa (st.base) per als guions que encara són buits; mai no esborra el que ja hi ha
