@@ -2,7 +2,7 @@
    solució, entrevistes amb preguntes obertes, cal IA?, les cinc eines del curs i criteris d'èxit (i8-1); el prototip petit,
    l'especificació, dades variades i sense noms, dues eines en un sistema i les versions (i8-2); proves amb usuaris, biaix,
    riscos, la model card i de la v1 a la v2 (i8-3); i el pitch, la demo, la transparència, les preguntes del jurat i el
-   viatge de tot el curs (i8-4). */
+   viatge de tot el curs (i8-4). Taller i8-5: els tres camins amb una eina real, el pla de 10 proves i les normes del taller. */
 {
   const F = (sz, c = '#14204A', w = 800) => `style="font:${w} ${sz}px Lexend,system-ui,sans-serif;fill:${c}"`;
   const box = (x, y, w, h, fill, stroke, r = 14) => `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${r}" fill="${fill}"${stroke ? ` stroke="${stroke}" stroke-width="2"` : ''}/>`;
@@ -160,6 +160,30 @@
       return tSvg(214, `<g ${tA(.1, 'ta-fade')}><path d="M30 46 H288 Q312 46 312 89 Q312 132 288 132 H30" stroke="#D8CCFF" stroke-width="4" fill="none" stroke-dasharray="8 6"/></g>
         ${U.map(([e, u], i) => { const [x, y] = i < 4 ? pts[i] : [288 - (i - 4) * 86, 132]; return `<g ${tA(.3 + i * .25, 'ta-pop')}><circle cx="${x}" cy="${y}" r="20" fill="#fff" stroke="#A23BEA" stroke-width="2.5"/>${E(x, y + 6, e, 16)}${CT(x, y + 34, u, 9.5, '#6D28D9', 900)}</g>`; }).join('')}
         <g ${tA(2.5, 'ta-pop')}>${box(100, 178, 120, 30, '#A23BEA', '', 14)}${CT(160, 198, L('🎓 Diploma!', '🎓 ¡Diploma!'), 12, '#fff', 900)}</g>`);
+    },
+    /* ---------- i8-5 · Taller: prototip amb IA real ---------- */
+    // tres camins per fer el prototip amb una eina real: A classificador, B assistent, C app
+    i85paths() {
+      const C = [['A', '🧠', L('Classificador', 'Clasificador'), ['Teachable', 'Machine'], L('sense compte', 'sin cuenta'), '#D97706', '#FFF7E6'],
+        ['B', '💬', L('Assistent', 'Asistente'), [L('el xat amb', 'el chat con'), L('instruccions', 'instrucciones')], L('compte del centre', 'cuenta del centro'), '#2563EB', '#EEF3FF'],
+        ['C', '📱', 'App', [L('feta amb el', 'hecha con el'), L('xat + Numi', 'chat + Numi')], L('compte del centre', 'cuenta del centro'), '#16A34A', '#EEFBF3']];
+      return tSvg(214, `${C.map(([k, e, n, t, a, c, bg], i) => { const x = 6 + i * 104, m = x + 49; return `<g ${tA(.2 + i * .5, 'ta-pop')}>${box(x, 6, 98, 154, bg, c + '66', 14)}<circle cx="${m}" cy="28" r="13" fill="${c}"/>${CT(m, 33, k, 13, '#fff', 900)}${E(m, 76, e, 26)}${CT(m, 104, n, 11.5, c, 900)}${CT(m, 122, t[0], 9.5, '#14204A', 700)}${CT(m, 135, t[1], 9.5, '#14204A', 700)}${CT(m, 152, a, 8.5, '#56628A', 800)}</g>`; }).join('')}
+        <g ${tA(2, 'ta-pop')}>${box(6, 168, 308, 40, '#14204A', '', 12)}${CT(160, 184, L('El mateix projecte, una eina de veritat', 'El mismo proyecto, una herramienta de verdad'), 10.5, '#fff', 800)}${CT(160, 200, L('+ 10 proves + la fitxa amb resultats reals', '+ 10 pruebas + la ficha con resultados reales'), 10, '#FDE68A', 800)}</g>`);
+    },
+    // el pla de 10 proves, escrit abans: 6 normals, 2 de límit i 2 trampes; el resultat real va a la fitxa
+    i85plan() {
+      const K = [...Array(6).fill(0), 1, 1, 2, 2], R = [1, 1, 1, 0, 1, 1, 0, 1, 1, 1], C = [['#EEF2FF', '#A5B4FC', '#4338CA'], ['#FFF7E6', '#FCD38D', '#B45309'], ['#FFF0F7', '#F9A8D4', '#BE185D']];
+      return tSvg(214, `<g ${tA(.1, 'ta-fade')}>${TX(10, 20, L('📋 PLA DE 10 PROVES (abans de provar)', '📋 PLAN DE 10 PRUEBAS (antes de probar)'), 10.5, '#56628A', 900)}</g>
+        <g ${tA(.3, 'ta-in')}>${[[L('✅ 6 normals', '✅ 6 normales'), 0], [L('🧗 2 de límit', '🧗 2 de límite'), 1], [L('🕳️ 2 trampes', '🕳️ 2 trampas'), 2]].map(([t, c], i) => `${box(10 + i * 102, 28, 96, 22, C[c][0], C[c][1], 11)}${CT(58 + i * 102, 43, t, 9.5, C[c][2], 900)}`).join('')}</g>
+        ${K.map((c, i) => { const x = 10 + (i % 5) * 61, y = 58 + Math.floor(i / 5) * 56; return `<g ${tA(.6 + i * .12, 'ta-pop')}>${box(x, y, 54, 50, C[c][0], C[c][1], 10)}${CT(x + 27, y + 18, i + 1, 11, C[c][2], 900)}</g><g ${tA(1.9 + i * .1, 'ta-pop')}>${R[i] ? ok(x + 27, y + 34, 9) : ko(x + 27, y + 34, 9)}</g>`; }).join('')}
+        <g ${tA(3.1, 'ta-pop')}>${box(6, 176, 308, 32, '#16A34A', '', 12)}${CT(160, 197, L('Resultat real: 8 de 10 → a la fitxa', 'Resultado real: 8 de 10 → a la ficha'), 12, '#fff', 900)}</g>`);
+    },
+    // les normes del taller amb eines reals
+    i85safe() {
+      const N = [['🏫', L('Compte del centre', 'Cuenta del centro'), L('o el docent a la pissarra; mai comptes personals', 'o el docente en la pizarra; nunca cuentas personales')], ['🙅', L('Cap dada personal', 'Ningún dato personal'), L('ni noms: ni als exemples ni a les proves', 'ni nombres: ni en los ejemplos ni en las pruebas')],
+        ['📦', L('Objectes, no cares', 'Objetos, no caras'), L('a Teachable Machine: objectes i sons de l\'aula', 'en Teachable Machine: objetos y sonidos del aula')], ['🔒', L('No publiquem res', 'No publicamos nada'), L('ni el model, ni l\'app, ni les converses', 'ni el modelo, ni la app, ni las conversaciones')]];
+      return tSvg(214, `${N.map(([e, t, d], i) => `<g ${tA(.2 + i * .45, 'ta-in')}>${box(6, 6 + i * 42, 308, 36, '#F8FAFF', '#DCE4FA', 10)}${E(26, 31 + i * 42, e, 17)}${TX(46, 21 + i * 42, t, 11, '#14204A', 900)}${TX(46, 35 + i * 42, d, 9, '#56628A', 700)}</g>`).join('')}
+        <g ${tA(2.3, 'ta-pop')}>${box(6, 176, 308, 32, '#14204A', '', 12)}${CT(160, 196, L('Una resposta et fa sentir malament? Avisa el docent', '¿Una respuesta te hace sentir mal? Avisa al docente'), 9.5, '#FDE68A', 800)}</g>`);
     }
   });
 }

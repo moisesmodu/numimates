@@ -4,12 +4,15 @@
    proves d'acceptació, i llegir codi que no has escrit (i5-2); depurar i iterar: reproduir, aïllar, arreglar, versions i
    regressions (i5-3); i el projecte d'una app per a una necessitat real del centre, amb proves i una fitxa honesta de què ha
    fet la IA i què ha fet l'alumne/a (i5-4). La IA és simulada (iavibe: plantilles pròpies amb un error típic que destapen les
-   proves «run»); la IA en directe només surt si el docent l'ha activada. Persones, equips i apps: inventats. */
+   proves «run»); la IA en directe només surt si el docent l'ha activada. Taller i5-5: un xat d'IA de veritat (el del centre)
+   escriu l'app a partir de l'especificació, l'alumnat l'enganxa a l'editor de Tech Web (wcreate), la prova i li fa arreglar un
+   error (passos iaext). Persones, equips i apps: inventats. */
 Object.assign(TBADGE, {
   i_vibe: { id: 'i_vibe', ico: '🪄', n: 'Vibe coder amb cap|Vibe coder con cabeza', d: "Has creat apps descrivint-les a una IA i n'has llegit, provat i arreglat el codi abans de donar-les per bones.|Has creado apps describiéndolas a una IA y has leído, probado y arreglado su código antes de darlas por buenas." },
   i_spec: { id: 'i_spec', ico: '📐', n: 'Especificador/a|Especificador/a', d: "Has escrit especificacions amb exemples i proves d'acceptació, i has après a llegir codi que no has escrit tu.|Has escrito especificaciones con ejemplos y pruebas de aceptación, y has aprendido a leer código que no has escrito tú." },
   i_debug: { id: 'i_debug', ico: '🐞', n: 'Caçador/a de bugs|Cazador/a de bugs', d: "Has reproduït, aïllat i arreglat errors, has demanat canvis petits i has tornat a passar totes les proves.|Has reproducido, aislado y arreglado errores, has pedido cambios pequeños y has vuelto a pasar todas las pruebas." },
-  i_maker: { id: 'i_maker', ico: '🚀', n: 'Creador/a d\'apps útils|Creador/a de apps útiles', d: "Has fet una app per a una necessitat real, amb proves, i has explicat amb honestedat què ha fet la IA i què has fet tu.|Has hecho una app para una necesidad real, con pruebas, y has explicado con honestidad qué ha hecho la IA y qué has hecho tú." }
+  i_maker: { id: 'i_maker', ico: '🚀', n: 'Creador/a d\'apps útils|Creador/a de apps útiles', d: "Has fet una app per a una necessitat real, amb proves, i has explicat amb honestedat què ha fet la IA i què has fet tu.|Has hecho una app para una necesidad real, con pruebas, y has explicado con honestidad qué ha hecho la IA y qué has hecho tú." },
+  i_xatcode: { id: 'i_xatcode', ico: '💻', n: 'Vibe coder de veritat|Vibe coder de verdad', d: "Has fet una app amb un xat d'IA de veritat a partir d'una especificació, l'has provada a l'editor de Numi i n'has fet arreglar un error amb un bon informe.|Has hecho una app con un chat de IA de verdad a partir de una especificación, la has probado en el editor de Numi y has hecho arreglar un error con un buen informe." }
 });
 
 // un tros de codi JavaScript per llegir (finestra d'editor, només per mirar) a les preguntes
@@ -28,6 +31,51 @@ const I5CB = {
   hello: [{ k: 'run', act: [{ type: ['#name', 'Laia'] }, { click: '#greet' }], see: { sel: '#hello', text: '/Laia/' }, txt: 'Prova: si escric «Laia», la saluda pel nom|Prueba: si escribo «Laia», la saluda por su nombre' }]
 };
 const I5_LISTEN = { k: 'js', v: '/addEventListener|onclick/', txt: 'El codi escolta els clics|El código escucha los clics' };
+// taller i5-5: l'app d'exemple, com la que sol escriure un xat (un sol fitxer HTML amb el CSS i el JavaScript a dins): un marcador
+// de punts. La v1 té l'error típic d'un cas límit (el −1 baixa de 0); la v2 l'arregla i ho diu en un comentari «// v2: …».
+const I55APP = (lg, v2) => { const W = lg === 'es'
+  ? { t: 'Marcador del equipo', p: 'puntos', m: 'mas', n: 'menos', f: 'muestra', c1: 'v1: código generado por el chat a partir de nuestra especificación', c2: 'v2: el −1 ya no baja de 0 (arreglado por el chat con nuestro informe de error)' }
+  : { t: "Marcador de l'equip", p: 'punts', m: 'mes', n: 'menys', f: 'mostra', c1: 'v1: codi generat pel xat a partir de la nostra especificació', c2: "v2: el −1 ja no baixa de 0 (arreglat pel xat amb el nostre informe d'error)" };
+  return `<!DOCTYPE html>
+<html lang="${lg}">
+<head>
+<meta charset="UTF-8">
+<title>${W.t}</title>
+<style>
+  body { font-family: system-ui, sans-serif; text-align: center; background: #EEF3FF; }
+  #${W.p} { font-size: 72px; font-weight: 800; color: #2563EB; margin: 12px 0; }
+  button { font-size: 22px; padding: 10px 18px; margin: 4px; border: none; border-radius: 12px; background: #7C3AED; color: #fff; }
+  #reset { background: #64748B; }
+</style>
+</head>
+<body>
+  <h1>${W.t}</h1>
+  <p id="${W.p}">0</p>
+  <button id="${W.m}">+1</button>
+  <button id="${W.n}">−1</button>
+  <button id="reset">Reinicia</button>
+  <script>
+    // ${W.c1}${v2 ? `\n    // ${W.c2}` : ''}
+    let ${W.p} = 0;
+    const pantalla = document.getElementById('${W.p}');
+    function ${W.f}() {
+      pantalla.textContent = ${W.p};
+    }
+    document.getElementById('${W.m}').addEventListener('click', () => {
+      ${W.p} = ${W.p} + 1;
+      ${W.f}();
+    });
+    document.getElementById('${W.n}').addEventListener('click', () => {
+      ${v2 ? `if (${W.p} > 0) ` : ''}${W.p} = ${W.p} - 1;
+      ${W.f}();
+    });
+    document.getElementById('reset').addEventListener('click', () => {
+      ${W.p} = 0;
+      ${W.f}();
+    });
+  </script>
+</body>
+</html>`; };
 
 COURSE_UNITS[5] = { t: 'Crea amb IA: vibe coding|Crea con IA: vibe coding', d: 'Descriure, llegir, provar i arreglar|Describir, leer, probar y arreglar', color: '#A23BEA', s: [
 
@@ -398,6 +446,130 @@ COURSE_UNITS[5] = { t: 'Crea amb IA: vibe coding|Crea con IA: vibe coding', d: '
       { k: 'quiz', ph: 'tanca', q: 'Per què serveix la fitxa de transparència?|¿Para qué sirve la ficha de transparencia?',
         opts: ["Per explicar qui ha fet què i com s'ha provat l'app|Para explicar quién ha hecho qué y cómo se ha probado la app", "Per amagar que s'ha fet servir IA|Para esconder que se ha usado IA", "Per fer l'app més llarga|Para hacer la app más larga"], a: 0,
         ex: "La transparència és part de crear amb IA de manera responsable.|La transparencia es parte de crear con IA de forma responsable." },
+      { k: 'feel', ph: 'tanca' }
+    ] },
+
+  /* ---------- Sessió 5 · Taller: vibe coding amb un xat de veritat (el xat del centre + l'editor de Tech Web) ---------- */
+  { id: 'i5-5', t: 'Taller: vibe coding amb un xat de veritat|Taller: vibe coding con un chat de verdad', min: 60, taller: true, badge: 'i_xatcode',
+    learn: ["Amb una especificació clara i unes normes (un sol fitxer, sense enllaços d'internet i amb id), un xat d'IA de veritat escriu una app petita en pocs segons.|Con una especificación clara y unas normas (un solo archivo, sin enlaces de internet y con id), un chat de IA de verdad escribe una app pequeña en pocos segundos.",
+      "El codi del xat no es dona per bo: s'enganxa a l'editor, es llegeix i es passen totes les proves d'acceptació, també els casos límit.|El código del chat no se da por bueno: se pega en el editor, se lee y se pasan todas las pruebas de aceptación, también los casos límite.",
+      "Per fer arreglar un error, dius al xat què has fet, què ha passat i què esperaves; després tornes a provar-ho tot i en deses la versió nova.|Para hacer arreglar un error, le dices al chat qué has hecho, qué ha pasado y qué esperabas; después vuelves a probarlo todo y guardas la versión nueva."],
+    steps: [
+      { k: 'quiz', ph: 'recorda', q: 'Quines tres coses ha de dir una bona especificació?|¿Qué tres cosas tiene que decir una buena especificación?',
+        opts: ['Què es veu, què passa quan… i quins detalls hi ha|Qué se ve, qué pasa cuando… y qué detalles hay', 'El nom, el preu i la data|El nombre, el precio y la fecha', "Només el nom de l'app|Solo el nombre de la app"], a: 0,
+        ex: "I les proves d'acceptació. Fins ara la IA de Numi era simulada; avui l'especificació la llegirà un xat de veritat.|Y las pruebas de aceptación. Hasta ahora la IA de Numi era simulada; hoy la especificación la leerá un chat de verdad." },
+      { k: 'story', ph: 'missio', who: 'both', scene: 'estudi', title: 'Tres apps per a la tutoria|Tres apps para la tutoría',
+        t: "La tutoria de 2n (inventada) prepara una jornada de repàs i necessita tres apps petites: un <b>marcador de punts</b> per als equips, un <b>dau</b> per decidir qui comença i una <b>pregunta ràpida</b>. Fins ara, la IA de Numi era simulada i feia servir plantilles. Avui l'app te l'escriurà un <b>xat de veritat</b>, el del centre: tu hi poses l'especificació, l'enganxes a l'editor de Numi, la proves i, si cal, li fas arreglar un error.|La tutoría de 2.º (inventada) prepara una jornada de repaso y necesita tres apps pequeñas: un <b>marcador de puntos</b> para los equipos, un <b>dado</b> para decidir quién empieza y una <b>pregunta rápida</b>. Hasta ahora, la IA de Numi era simulada y usaba plantillas. Hoy la app te la escribirá un <b>chat de verdad</b>, el del centro: tú pones la especificación, la pegas en el editor de Numi, la pruebas y, si hace falta, le haces arreglar un error." },
+      { k: 'learn', ph: 'descobreix', cards: [
+        { k: 'Especificació|Especificación', t: "De l'especificació al prompt|De la especificación al prompt", anim: 'i55spec',
+          x: "Al xat li passes dues coses: unes <b>normes</b> (un sol fitxer HTML, amb el CSS dins de <code>&lt;style&gt;</code> i el JavaScript dins de <code>&lt;script&gt;</code>, sense enllaços d'internet i amb un <code>id</code> a cada element important) i la teva <b>especificació</b> (què es veu, què passa quan… i les proves). Com més clara sigui, més s'hi acostarà.|Al chat le pasas dos cosas: unas <b>normas</b> (un solo archivo HTML, con el CSS dentro de <code>&lt;style&gt;</code> y el JavaScript dentro de <code>&lt;script&gt;</code>, sin enlaces de internet y con un <code>id</code> en cada elemento importante) y tu <b>especificación</b> (qué se ve, qué pasa cuando… y las pruebas). Cuanto más clara sea, más se acercará." },
+        { k: 'Enganxa i prova|Pega y prueba', t: "Del xat a l'editor de Numi|Del chat al editor de Numi", anim: 'i55paste',
+          x: "Copia el codi sencer i enganxa'l a l'<code>index.html</code> de l'editor de Numi: la vista prèvia l'executa en un espai aïllat, sense internet. Llegeix-lo (els <code>id</code> i els <code>addEventListener</code>) i fes una per una les teves <b>proves d'acceptació</b>, també els casos límit.|Copia el código entero y pégalo en el <code>index.html</code> del editor de Numi: la vista previa lo ejecuta en un espacio aislado, sin internet. Léelo (los <code>id</code> y los <code>addEventListener</code>) y haz una a una tus <b>pruebas de aceptación</b>, también los casos límite." },
+        { k: "Informe d'error|Informe de error", t: 'Demana un arreglo concret|Pide un arreglo concreto', anim: 'i55bug',
+          x: "Si una prova falla, escriu al xat <b>què has fet</b>, <b>què ha passat</b> i <b>què esperaves</b>, i demana-li que canviï només això. Després enganxa la versió nova, torna a passar <b>totes</b> les proves (per si hi ha una regressió) i desa-la com a v2.|Si una prueba falla, escribe al chat <b>qué has hecho</b>, <b>qué ha pasado</b> y <b>qué esperabas</b>, y pídele que cambie solo eso. Después pega la versión nueva, vuelve a pasar <b>todas</b> las pruebas (por si hay una regresión) y guárdala como v2." }
+      ] },
+      { k: 'quiz', ph: 'prova', q: "Per què li demanem al xat «un sol fitxer, sense enllaços ni biblioteques d'internet»?|¿Por qué le pedimos al chat «un solo archivo, sin enlaces ni bibliotecas de internet»?",
+        opts: ["Perquè la vista prèvia de Numi és un espai aïllat sense internet, i així sabem tot el que fa l'app|Porque la vista previa de Numi es un espacio aislado sin internet, y así sabemos todo lo que hace la app", 'Perquè així el codi és més llarg|Porque así el código es más largo', 'Perquè internet va lent a la tarda|Porque internet va lento por la tarde'], a: 0,
+        ex: "Un codi que carrega coses d'internet no funcionaria a la vista prèvia… i no podries llegir tot el que fa.|Un código que carga cosas de internet no funcionaría en la vista previa… y no podrías leer todo lo que hace.",
+        pro: { q: "La resposta del xat comença amb <code>&lt;script src=https://…/super-marcador.js&gt;</code>, un paquet que no coneixes. Què fas?|La respuesta del chat empieza con <code>&lt;script src=https://…/super-marcador.js&gt;</code>, un paquete que no conoces. ¿Qué haces?",
+          opts: ["Li demano l'app sense biblioteques externes: no carrego codi que no he pogut comprovar|Le pido la app sin bibliotecas externas: no cargo código que no he podido comprobar", "L'enganxo igualment: si el xat el posa, és segur|Lo pego igualmente: si el chat lo pone, es seguro", "Canvio «https» per «http»|Cambio «https» por «http»"], a: 0,
+          ex: "Recorda els paquets inventats (i5-1): abans de fer servir codi d'internet, cal saber si existeix de veritat i qui el manté.|Recuerda los paquetes inventados (i5-1): antes de usar código de internet, hay que saber si existe de verdad y quién lo mantiene." } },
+      { k: 'unplug', ph: 'mans', ico: '🧑‍💻', title: 'Pilot i copilot|Piloto y copiloto', t: "En parelles, abans d'obrir el xat.|En parejas, antes de abrir el chat.",
+        steps: ["Trieu una de les tres apps de la tutoria: el marcador de punts, el dau o la pregunta ràpida.|Elegid una de las tres apps de la tutoría: el marcador de puntos, el dado o la pregunta rápida.",
+          "El pilot escriu al xat i a l'editor; el copilot llegeix l'especificació i fa les proves. A la meitat, canvieu.|El piloto escribe en el chat y en el editor; el copiloto lee la especificación y hace las pruebas. A la mitad, cambiad.",
+          "Penseu tres proves d'acceptació: una ha de ser un cas límit (per exemple, «a 0, el −1 no baixa»).|Pensad tres pruebas de aceptación: una tiene que ser un caso límite (por ejemplo, «en 0, el −1 no baja»).",
+          "Repasseu les normes: compte del centre, cap nom ni dada personal a l'especificació i avisar si surt res estrany.|Repasad las normas: cuenta del centro, ningún nombre ni dato personal en la especificación y avisar si sale algo raro."],
+        tip: "Qui fa les proves no hauria de ser qui ha escrit el prompt: dos parells d'ulls troben més errors.|Quien hace las pruebas no debería ser quien ha escrito el prompt: dos pares de ojos encuentran más errores." },
+      { k: 'iacard', ph: 'repte', kind: 'spec', title: 'Especificació per al xat|Especificación para el chat', name: "Especificació de l'app del taller|Especificación de la app del taller",
+        q: "<b>Escriu l'especificació</b> de la vostra app. La copiaràs al xat: que sigui clara i sense dades personals.|<b>Escribe la especificación</b> de vuestra app. La copiarás al chat: que sea clara y sin datos personales.",
+        fields: [{ k: 'nom', label: "Nom de l'app|Nombre de la app", hint: "p. ex. Marcador de l'equip|p. ej. Marcador del equipo", min: 3, rows: 1 },
+          { k: 'veu', label: 'Què es veu|Qué se ve', hint: 'botons, números, textos…|botones, números, textos…', min: 20, rows: 2 },
+          { k: 'passa', label: 'Què passa quan…|Qué pasa cuando…', hint: 'quan toco…, quan arriba a…|cuando toco…, cuando llega a…', min: 25, rows: 2 },
+          { k: 'proves', label: "Proves d'acceptació: l'app està bé si…|Pruebas de aceptación: la app está bien si…", hint: '1) … 2) … 3) un cas límit|1) … 2) … 3) un caso límite', min: 40, rows: 3 },
+          { k: 'tipus', label: 'Quina app és?|¿Qué app es?', choices: ['🔢 Marcador de punts|🔢 Marcador de puntos', '🎲 Dau|🎲 Dado', '❓ Pregunta ràpida|❓ Pregunta rápida', '✨ Una altra de petita|✨ Otra pequeña'] }],
+        sol: { nom: "Marcador de l'equip|Marcador del equipo", veu: 'Un número gran i tres botons: +1, −1 i Reinicia.|Un número grande y tres botones: +1, −1 y Reinicia.',
+          passa: 'Quan toco +1, el número suma 1; amb −1, resta 1; Reinicia el torna a 0.|Cuando toco +1, el número suma 1; con −1, resta 1; Reinicia lo vuelve a 0.',
+          proves: '1) Amb 3 tocs a +1, diu 3. 2) Reinicia el torna a 0. 3) A 0, en tocar −1 continua a 0. 4) Amb 10 tocs ràpids a +1, diu 10.|1) Con 3 toques en +1, dice 3. 2) Reinicia lo vuelve a 0. 3) En 0, al tocar −1 sigue en 0. 4) Con 10 toques rápidos en +1, dice 10.',
+          tipus: 0, mai: "Demanar noms o carregar coses d'internet.|Pedir nombres o cargar cosas de internet." },
+        pro: { q: "<b>Especificació PRO:</b> amb almenys 4 proves d'acceptació (dues de casos límit) i el que l'app no farà mai.|<b>Especificación PRO:</b> con al menos 4 pruebas de aceptación (dos de casos límite) y lo que la app no hará nunca.",
+          fields: [{ k: 'nom', label: "Nom de l'app|Nombre de la app", hint: "p. ex. Marcador de l'equip|p. ej. Marcador del equipo", min: 3, rows: 1 },
+            { k: 'veu', label: 'Què es veu|Qué se ve', hint: 'botons, números, textos…|botones, números, textos…', min: 20, rows: 2 },
+            { k: 'passa', label: 'Què passa quan…|Qué pasa cuando…', hint: 'quan toco…, quan arriba a…|cuando toco…, cuando llega a…', min: 25, rows: 2 },
+            { k: 'proves', label: "Proves d'acceptació (4, dues de casos límit)|Pruebas de aceptación (4, dos de casos límite)", hint: '1) … 2) … 3) … 4) …|1) … 2) … 3) … 4) …', min: 70, rows: 4 },
+            { k: 'mai', label: 'Què no farà mai|Qué no hará nunca', hint: "p. ex. demanar noms o carregar coses d'internet|p. ej. pedir nombres o cargar cosas de internet", min: 10, rows: 1 },
+            { k: 'tipus', label: 'Quina app és?|¿Qué app es?', choices: ['🔢 Marcador de punts|🔢 Marcador de puntos', '🎲 Dau|🎲 Dado', '❓ Pregunta ràpida|❓ Pregunta rápida', '✨ Una altra de petita|✨ Otra pequeña'] }] } },
+      { k: 'iaext', ph: 'repte', tool: 'xat', q: "<b>Missió 1.</b> Demana al xat del centre el codi de la teva app a partir de l'especificació.|<b>Misión 1.</b> Pide al chat del centro el código de tu app a partir de la especificación.",
+        goal: "Un sol fitxer HTML, amb el CSS i el JavaScript a dins, que faci el que diu la teva especificació.|Un solo archivo HTML, con el CSS y el JavaScript dentro, que haga lo que dice tu especificación.",
+        steps: [{ t: "Obre el xat amb el compte de l'escola i comença una conversa nova.|Abre el chat con la cuenta de la escuela y empieza una conversación nueva." },
+          { t: "Copia aquestes normes i, just després, enganxa-hi la teva especificació (què es veu, què passa quan… i les proves):|Copia estas normas y, justo después, pega tu especificación (qué se ve, qué pasa cuando… y las pruebas):", copy: "Fes-me una app web petita en un sol fitxer HTML, amb el CSS dins de <style> i el JavaScript dins de <script>. Sense enllaços ni biblioteques d'internet. Posa un id als botons i als textos que canvien, i fes-los servir amb getElementById. Textos en català. Dona'm només el codi. L'app:|Hazme una app web pequeña en un solo archivo HTML, con el CSS dentro de <style> y el JavaScript dentro de <script>. Sin enlaces ni bibliotecas de internet. Pon un id a los botones y a los textos que cambian, y úsalos con getElementById. Textos en castellano. Dame solo el código. La app:" },
+          { t: "Si et dona diversos fitxers o moltes explicacions, demana-li:|Si te da varios archivos o muchas explicaciones, pídele:", copy: "Posa-ho tot en un sol fitxer HTML i dona'm només el codi.|Ponlo todo en un solo archivo HTML y dame solo el código." },
+          { t: "Copia el codi sencer (amb el botó de copiar del bloc de codi) i mira-hi els <code>id</code>, el <code>&lt;style&gt;</code> i el <code>&lt;script&gt;</code>.|Copia el código entero (con el botón de copiar del bloque de código) y mira los <code>id</code>, el <code>&lt;style&gt;</code> y el <code>&lt;script&gt;</code>." }],
+        tip: "Cada vegada que ho demanis, el codi sortirà una mica diferent: és normal. No cal que sigui perfecte: el provaràs a Numi.|Cada vez que lo pidas, el código saldrá un poco distinto: es normal. No hace falta que sea perfecto: lo probarás en Numi.",
+        alt: "Feu-ho junts: el docent enganxa al xat les normes i l'especificació que li dicteu, a la pissarra, i us passa el codi pel canal de la classe (Classroom o Teams) perquè l'enganxeu a Numi.|Hacedlo juntos: el docente pega en el chat las normas y la especificación que le dictéis, en la pizarra, y os pasa el código por el canal de la clase (Classroom o Teams) para que lo peguéis en Numi.",
+        expect: "El xat sol respondre en pocs segons amb un bloc de codi d'unes quantes desenes de línies: l'HTML amb &lt;style&gt; i &lt;script&gt;, els id que li has demanat i, sovint, comentaris. De vegades hi afegeix explicacions, ho separa en tres fitxers o posa els textos en anglès: llavors, demana-li el que falta. Cada vegada surt una mica diferent.|El chat suele responder en pocos segundos con un bloque de código de unas cuantas decenas de líneas: el HTML con &lt;style&gt; y &lt;script&gt;, los id que le has pedido y, a menudo, comentarios. A veces añade explicaciones, lo separa en tres archivos o pone los textos en inglés: entonces, pídele lo que falta. Cada vez sale un poco distinto.",
+        title: "Diari del laboratori: el codi del xat|Diario del laboratorio: el código del chat",
+        fields: [{ k: 'parts', label: 'Què hi ha al codi del xat?|¿Qué hay en el código del chat?', choices: ['El CSS, dins del fitxer|El CSS, dentro del archivo', 'El JavaScript, dins del fitxer|El JavaScript, dentro del archivo', 'Un id als elements importants|Un id en los elementos importantes', 'Comentaris que expliquen el codi|Comentarios que explican el código', "Enllaços o biblioteques d'internet|Enlaces o bibliotecas de internet"], multi: true, min: 2 },
+          { k: 'ids', label: 'Els id que hi ha posat|Los id que ha puesto', hint: 'p. ex. punts, mes, menys, reset|p. ej. puntos, mas, menos, reset', min: 3, rows: 1 },
+          { k: 'linia', label: 'Una línia que entens i què fa|Una línea que entiendes y qué hace', hint: 'p. ex. punts = punts + 1 suma un punt|p. ej. puntos = puntos + 1 suma un punto', min: 15, rows: 2 }],
+        sol: { parts: [0, 1, 2, 3], ids: 'punts, mes, menys, reset|puntos, mas, menos, reset', linia: 'punts = punts + 1 suma un punt cada vegada que toco +1.|puntos = puntos + 1 suma un punto cada vez que toco +1.' } },
+      { k: 'wcreate', ph: 'repte', name: 'La meva app amb el xat (v1)|Mi app con el chat (v1)', url: 'taller.numi/app.html', tabs: ['html'], html: '', js: '', hintNow: true,
+        q: "<b>Enganxa el codi del xat</b> a <code>index.html</code>, sencer (de <code>&lt;!DOCTYPE html&gt;</code> a <code>&lt;/html&gt;</code>). Quan les comprovacions passin, fes a la vista prèvia les teves proves d'acceptació i compta quantes passen.|<b>Pega el código del chat</b> en <code>index.html</code>, entero (de <code>&lt;!DOCTYPE html&gt;</code> a <code>&lt;/html&gt;</code>). Cuando las comprobaciones pasen, haz en la vista previa tus pruebas de aceptación y cuenta cuántas pasan.",
+        crit: ['Tot el codi en un sol fitxer|Todo el código en un solo archivo', "Les comprovacions de l'editor, en verd|Las comprobaciones del editor, en verde", "Les teves proves d'acceptació, fetes a la vista prèvia|Tus pruebas de aceptación, hechas en la vista previa"],
+        checks: [{ k: 'tag', t: 'button', txt: 'Hi ha almenys un botó|Hay al menos un botón' },
+          { k: 'rules', min: 2, txt: 'El CSS és dins del fitxer|El CSS está dentro del archivo' },
+          { k: 'js', v: '/addEventListener|onclick|function|=>/', txt: 'El JavaScript és dins del fitxer i respon al que fas|El JavaScript está dentro del archivo y responde a lo que haces' },
+          { k: 'jsid', txt: "Tots els id que fa servir el JavaScript existeixen a l'HTML|Todos los id que usa el JavaScript existen en el HTML" }],
+        done: "Les comprovacions passen! Ara fes a la vista prèvia les teves proves d'acceptació, una per una.|¡Las comprobaciones pasan! Ahora haz en la vista previa tus pruebas de aceptación, una a una.",
+        hint: "Si una comprovació no passa, demana-ho al xat (per exemple: «Posa un id a cada botó i fes-los servir amb getElementById») i torna a enganxar el codi. Si no tens el codi del xat, la solució és una app d'exemple de Numi.|Si una comprobación no pasa, pídeselo al chat (por ejemplo: «Pon un id en cada botón y úsalos con getElementById») y vuelve a pegar el código. Si no tienes el código del chat, la solución es una app de ejemplo de Numi.",
+        sol: { html: { ca: I55APP('ca'), es: I55APP('es') } } },
+      { k: 'quiz', ph: 'investiga', art: I5C("let punts = 0;\nmenys.addEventListener('click', () => {\n  punts = punts - 1;\n  pantalla.textContent = punts;\n});"),
+        q: "Aquest tros és del codi que ha escrit el xat. Llegeix-lo: el marcador és a 0 i toques <b>−1</b>. Què hi haurà?|Este trozo es del código que ha escrito el chat. Léelo: el marcador está en 0 y tocas <b>−1</b>. ¿Qué habrá?",
+        opts: ['-1|-1', '0|0', 'Res: surt un error|Nada: sale un error'], a: 0,
+        ex: "Cap línia diu «si és 0, no baixis». Si la teva especificació ho demanava, has trobat un error llegint… i ja tens la prova que falla per a la missió 2.|Ninguna línea dice «si es 0, no bajes». Si tu especificación lo pedía, has encontrado un error leyendo… y ya tienes la prueba que falla para la misión 2." },
+      { k: 'move', ph: 'pausa', title: "Pausa activa: el xat que s'equivoca|Pausa activa: el chat que se equivoca", secs: 50,
+        t: "Dempeus! El docent fa de «xat»: fa una seqüència de quatre moviments amb un error (aixeca el braç dret en lloc de l'esquerre). La classe li dona l'informe en veu alta: «quan has fet…, ha passat…, però havies de…». El «xat» arregla només això… i comproveu que la resta de la seqüència continua igual!|¡De pie! El docente hace de «chat»: hace una secuencia de cuatro movimientos con un error (levanta el brazo derecho en lugar del izquierdo). La clase le da el informe en voz alta: «cuando has hecho…, ha pasado…, pero tenías que…». El «chat» arregla solo eso… ¡y comprobad que el resto de la secuencia sigue igual!" },
+      { k: 'iaext', ph: 'repte', tool: 'xat', q: "<b>Missió 2.</b> Has provat la v1. Demana al xat que n'arregli un error (o, si tot passa, que hi afegeixi una millora petita).|<b>Misión 2.</b> Has probado la v1. Pide al chat que arregle un error (o, si todo pasa, que añada una mejora pequeña).",
+        goal: "Una versió 2 que passi totes les proves, demanada amb un informe d'error clar.|Una versión 2 que pase todas las pruebas, pedida con un informe de error claro.",
+        steps: [{ t: "Apunta als resultats quantes proves d'acceptació passava la v1.|Apunta en los resultados cuántas pruebas de aceptación pasaba la v1." },
+          { t: "Si alguna fallava, escriu-ho al xat, a la mateixa conversa, omplint els buits:|Si alguna fallaba, escríbelo al chat, en la misma conversación, rellenando los huecos:", copy: "He provat l'app. Quan [què he fet], passa que [què passa], però hauria de [què esperava]. Arregla només això, no canviïs res més i torna'm el fitxer sencer.|He probado la app. Cuando [qué he hecho], pasa que [qué pasa], pero debería [qué esperaba]. Arregla solo esto, no cambies nada más y devuélveme el archivo entero." },
+          { t: "Si totes passaven, demana-li una millora petita i pensa'n la prova nova:|Si todas pasaban, pídele una mejora pequeña y piensa su prueba nueva:", copy: "Afegeix només aquesta millora: [la millora]. No canviïs res més i torna'm el fitxer sencer.|Añade solo esta mejora: [la mejora]. No cambies nada más y devuélveme el archivo entero." },
+          { t: "Copia la versió nova sencera: al pas següent l'enganxaràs a Numi i hi tornaràs a passar totes les proves.|Copia la versión nueva entera: en el paso siguiente la pegarás en Numi y volverás a pasar todas las pruebas." }],
+        tip: "Un bon informe és concret: «quan toco −1 a 0, surt −1» ajuda molt més que «no funciona».|Un buen informe es concreto: «cuando toco −1 en 0, sale −1» ayuda mucho más que «no funciona».",
+        alt: "Feu-ho junts: dicteu al docent el vostre informe d'error; ell l'envia al xat a la pissarra i us passa la versió nova pel canal de la classe.|Hacedlo juntos: dictad al docente vuestro informe de error; él lo envía al chat en la pizarra y os pasa la versión nueva por el canal de la clase.",
+        expect: "Amb una especificació clara, el xat sol passar la majoria de proves a la primera; falla més en els casos límit (baixar de 0, la caixa buida, tocar molt de pressa). Amb un informe concret (què he fet, què ha passat, què esperava), normalment ho arregla a la primera, però de vegades canvia més coses de les demanades: per això cal tornar a passar totes les proves. Si ja passava tot, la millora petita serveix per veure si el xat respecta el que ja funcionava.|Con una especificación clara, el chat suele pasar la mayoría de pruebas a la primera; falla más en los casos límite (bajar de 0, la caja vacía, tocar muy deprisa). Con un informe concreto (qué he hecho, qué ha pasado, qué esperaba), normalmente lo arregla a la primera, pero a veces cambia más cosas de las pedidas: por eso hay que volver a pasar todas las pruebas. Si ya pasaba todo, la mejora pequeña sirve para ver si el chat respeta lo que ya funcionaba.",
+        title: "Diari del laboratori: l'informe d'error|Diario del laboratorio: el informe de error",
+        fields: [{ k: 'passen', label: 'Proves que passava la v1|Pruebas que pasaba la v1', num: true, lo: 0, hi: 20, unit: 'proves|pruebas' },
+          { k: 'total', label: 'De quantes proves en total?|¿De cuántas pruebas en total?', num: true, lo: 1, hi: 20, unit: 'proves|pruebas' },
+          { k: 'falla', label: 'La prova que fallava (o la millora que demanes)|La prueba que fallaba (o la mejora que pides)', hint: 'p. ex. a 0, en tocar −1 surt −1|p. ej. en 0, al tocar −1 sale −1', min: 15, rows: 2 },
+          { k: 'informe', label: 'El missatge que has enviat al xat|El mensaje que has enviado al chat', min: 40, rows: 3 }],
+        sol: { passen: '3', total: '4', falla: "A 0, en tocar −1 surt −1: s'hauria de quedar a 0.|En 0, al tocar −1 sale −1: se tendría que quedar en 0.",
+          informe: "He provat l'app. Quan el marcador és a 0 i toco −1, passa que surt −1, però hauria de quedar-se a 0. Arregla només això, no canviïs res més i torna'm el fitxer sencer.|He probado la app. Cuando el marcador está en 0 y toco −1, pasa que sale −1, pero debería quedarse en 0. Arregla solo esto, no cambies nada más y devuélveme el archivo entero." } },
+      { k: 'quiz', ph: 'repte', q: "Has enganxat la v2: el −1 ja no baixa de 0, però ara <b>Reinicia</b> no fa res. Què ha passat i què fas?|Has pegado la v2: el −1 ya no baja de 0, pero ahora <b>Reinicia</b> no hace nada. ¿Qué ha pasado y qué haces?",
+        opts: ["Una regressió: ho dic al xat amb un informe nou i, si cal, torno a la v1|Una regresión: se lo digo al chat con un informe nuevo y, si hace falta, vuelvo a la v1", 'Res: la prova que fallava ja passa|Nada: la prueba que fallaba ya pasa', "Demano al xat que ho torni a fer tot de zero, amb més coses|Pido al chat que lo vuelva a hacer todo desde cero, con más cosas"], a: 0,
+        ex: "Per això es tornen a passar totes les proves després de cada canvi. I la v1 és al teu portafoli: no la perds.|Por eso se vuelven a pasar todas las pruebas después de cada cambio. Y la v1 está en tu portafolio: no la pierdes." },
+      { k: 'wcreate', ph: 'crea', name: 'La meva app amb el xat (v2)|Mi app con el chat (v2)', url: 'taller.numi/app-v2.html', tabs: ['html'], html: '', js: '', hintNow: true,
+        q: "<b>Enganxa la versió nova</b> i, dins del <code>&lt;script&gt;</code>, afegeix un comentari que digui què ha canviat, com <code>// v2: ja no baixa de 0</code>. Després torna a passar <b>totes</b> les proves d'acceptació.|<b>Pega la versión nueva</b> y, dentro del <code>&lt;script&gt;</code>, añade un comentario que diga qué ha cambiado, como <code>// v2: ya no baja de 0</code>. Después vuelve a pasar <b>todas</b> las pruebas de aceptación.",
+        crit: ['La v2 sencera, en un sol fitxer|La v2 entera, en un solo archivo', 'Un comentari «// v2: …» que explica el canvi|Un comentario «// v2: …» que explica el cambio', "Totes les proves d'acceptació, una altra vegada|Todas las pruebas de aceptación, otra vez"],
+        checks: [{ k: 'tag', t: 'button', txt: 'Hi ha almenys un botó|Hay al menos un botón' },
+          { k: 'rules', min: 2, txt: 'El CSS és dins del fitxer|El CSS está dentro del archivo' },
+          { k: 'js', v: '/addEventListener|onclick|function|=>/', txt: 'El JavaScript és dins del fitxer i respon al que fas|El JavaScript está dentro del archivo y responde a lo que haces' },
+          { k: 'jsid', txt: "Tots els id que fa servir el JavaScript existeixen a l'HTML|Todos los id que usa el JavaScript existen en el HTML" },
+          { k: 'js', v: '/\\/\\/[^\\n]*v2/i', txt: 'Un comentari «// v2: …» diu què ha canviat|Un comentario «// v2: …» dice qué ha cambiado' }],
+        done: "Molt bé! Ara torna a fer totes les proves d'acceptació: també les que abans ja passaven.|¡Muy bien! Ahora vuelve a hacer todas las pruebas de aceptación: también las que antes ya pasaban.",
+        hint: "El comentari va dins del &lt;script&gt;: una línia que comenci per // i digui «v2» i què ha canviat.|El comentario va dentro del &lt;script&gt;: una línea que empiece por // y diga «v2» y qué ha cambiado.",
+        sol: { html: { ca: I55APP('ca', true), es: I55APP('es', true) } } },
+      { k: 'iacard', ph: 'crea', kind: 'transp', title: 'Què ha fet el xat i què hem fet nosaltres|Qué ha hecho el chat y qué hemos hecho nosotros', name: "Fitxa de transparència de l'app del taller|Ficha de transparencia de la app del taller",
+        q: "<b>La fitxa de transparència</b> de la vostra app, amb el que ha passat de veritat.|<b>La ficha de transparencia</b> de vuestra app, con lo que ha pasado de verdad.",
+        fields: [{ k: 'app', label: "Nom de l'app i xat que heu fet servir|Nombre de la app y chat que habéis usado", hint: "p. ex. Marcador de l'equip, amb el xat del centre|p. ej. Marcador del equipo, con el chat del centro", min: 8, rows: 1 },
+          { k: 'xat', label: 'Què ha fet el xat|Qué ha hecho el chat', min: 25, rows: 2 },
+          { k: 'nos', label: 'Què hem fet nosaltres|Qué hemos hecho nosotros', hint: "l'especificació, les proves, l'informe d'error, el comentari v2…|la especificación, las pruebas, el informe de error, el comentario v2…", min: 25, rows: 2 },
+          { k: 'v2', label: "Després de l'arreglo (v2)…|Después del arreglo (v2)…", choices: ['Passen totes les proves|Pasan todas las pruebas', "S'ha arreglat, però s'ha espatllat una altra cosa|Se ha arreglado, pero se ha estropeado otra cosa", 'Encara falla alguna prova|Todavía falla alguna prueba'] },
+          { k: 'millora', label: 'Què demanaríeu a la v3|Qué pediríais en la v3', min: 10, rows: 1 }],
+        sol: { app: "Marcador de l'equip, amb el xat del centre|Marcador del equipo, con el chat del centro", xat: "Ha escrit tot el codi de la v1 a partir de l'especificació i ha arreglat el −1 a la v2.|Ha escrito todo el código de la v1 a partir de la especificación y ha arreglado el −1 en la v2.",
+          nos: "L'especificació i les proves, trobar l'error, escriure l'informe, el comentari v2 i tornar a provar-ho tot.|La especificación y las pruebas, encontrar el error, escribir el informe, el comentario v2 y volver a probarlo todo.", v2: 0, millora: 'Un missatge quan arribi a 10.|Un mensaje cuando llegue a 10.' } },
+      { k: 'quiz', ph: 'tanca', q: "Quin d'aquests missatges al xat és un bon informe d'error?|¿Cuál de estos mensajes al chat es un buen informe de error?",
+        opts: ["«Quan toco −1 a 0, surt −1, però s'hauria de quedar a 0. Arregla només això.»|«Cuando toco −1 en 0, sale −1, pero se tendría que quedar en 0. Arregla solo esto.»", '«No funciona, arregla-ho.»|«No funciona, arréglalo.»', '«Fes-ho tot de nou i millor.»|«Hazlo todo de nuevo y mejor.»'], a: 0,
+        ex: "Què has fet, què ha passat i què esperaves: amb això, el xat (i qualsevol persona) sap què ha d'arreglar.|Qué has hecho, qué ha pasado y qué esperabas: con eso, el chat (y cualquier persona) sabe qué tiene que arreglar." },
       { k: 'feel', ph: 'tanca' }
     ] }
 ] };

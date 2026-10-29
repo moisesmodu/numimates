@@ -2,7 +2,8 @@
    vol dir substituït, feines que canvien i que neixen, habilitats que compten i titulars sense bombo (i7-1); el viatge d'una
    pregunta fins al centre de dades, entrenar i fer servir, l'aigua de refrigeració, les dades de l'AIE i la IA que ajuda el
    planeta (i7-2); dades i perfils, l'empremta d'una cara, verificar o identificar, la piràmide de riscos de la llei europea
-   d'IA i els drets (i7-3); i l'assemblea: la moció, l'argument, les trampes, els rols i el posicionament (i7-4). */
+   d'IA i els drets (i7-3); i l'assemblea: la moció, l'argument, les trampes, els rols i el posicionament (i7-4).
+   Taller i7-5: la lectura lateral, quines fonts serveixen per verificar i els estereotips quan un xat inventa persones. */
 {
   const F = (sz, c = '#14204A', w = 800) => `style="font:${w} ${sz}px Lexend,system-ui,sans-serif;fill:${c}"`;
   const box = (x, y, w, h, fill, stroke, r = 14) => `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${r}" fill="${fill}"${stroke ? ` stroke="${stroke}" stroke-width="2"` : ''}/>`;
@@ -164,6 +165,31 @@
       return tSvg(214, `<g ${tA(.1, 'ta-in')}><path d="M60 8 H240 L262 30 V206 H60 Z" fill="#fff" stroke="#DCE4FA" stroke-width="2"/><path d="M240 8 V30 H262" fill="#F1F5F9" stroke="#DCE4FA" stroke-width="2"/>${CT(160, 32, L('📜 POSICIONAMENT', '📜 POSICIONAMIENTO'), 11, '#6D28D9', 900)}</g>
         ${Q.map(([e, t], i) => `<g ${tA(.6 + i * .45, 'ta-in')}>${E(84, 66 + i * 36, e, 15)}${TX(102, 65 + i * 36, t, 11, '#14204A', 800)}<path d="M102 ${73 + i * 36} H244" stroke="#E2E8F0" stroke-width="2" stroke-dasharray="3 4"/></g>`).join('')}
         <g ${tA(2.6, 'ta-pop')}><circle cx="276" cy="186" r="22" fill="#A23BEA"/>${E(276, 193, '🏛️', 18)}</g>`);
+    },
+    /* ---------- i7-5 · Taller: investiga amb IA i verifica (xat real) ---------- */
+    // lectura lateral: l'afirmació del xat es comprova obrint pestanyes noves (web oficial, universitat, diari)
+    i75lateral() {
+      const T = [['🏛️', L('Web oficial', 'Web oficial'), L('la xifra hi és', 'la cifra está'), 0], ['🎓', L('Universitat', 'Universidad'), L("és d'un altre any", 'es de otro año'), 1], ['📰', L('Diari', 'Periódico'), L("cita l'informe", 'cita el informe'), 0]];
+      const mk = (v, x, y) => v === 0 ? ok(x, y, 9) : `<circle cx="${x}" cy="${y}" r="9" fill="#F59E0B"/>${CT(x, y + 4, '≈', 12, '#fff', 900)}`;
+      return tSvg(214, `<g ${tA(.1, 'ta-fade')}>${TX(10, 20, L('🔎 LECTURA LATERAL', '🔎 LECTURA LATERAL'), 11, '#0E7490', 900)}</g>
+        <g ${tA(.3, 'ta-pop')}>${box(6, 32, 130, 74, '#FFFBEB', '#FDE68A', 12)}${TX(16, 52, L('🤖 El xat diu:', '🤖 El chat dice:'), 10, '#92400E', 900)}${TX(16, 72, L('«Segons un', '«Según un'), 11, '#14204A', 800)}${TX(16, 90, L('informe de…»', 'informe de…»'), 11, '#14204A', 800)}</g>
+        <g ${tA(.7, 'ta-in')}>${box(6, 114, 130, 94, '#F3F0FF', '#D8CCFF', 12)}${TX(16, 134, L('Qui ho diu?', '¿Quién lo dice?'), 10.5, '#6D28D9', 900)}${TX(16, 154, L('Quan?', '¿Cuándo?'), 10.5, '#6D28D9', 900)}${TX(16, 174, L('Amb quines dades?', '¿Con qué datos?'), 10.5, '#6D28D9', 900)}${TX(16, 194, L('Mesura el mateix?', '¿Mide lo mismo?'), 10.5, '#6D28D9', 900)}</g>
+        ${T.map(([e, n, r, v], i) => { const y = 8 + i * 68; return `<g ${tA(1.1 + i * .5, 'ta-fade')}>${arrow(140, 69, 160, y + 30, '#7DD3E8')}</g><g ${tA(1.3 + i * .5, 'ta-pop')}>${box(164, y, 150, 60, '#fff', '#B6E3EE', 10)}${E(186, y + 38, e, 20)}${TX(206, y + 26, n, 10.5, '#0E7490', 900)}${TX(206, y + 44, r, 9.5, '#14204A', 700)}${mk(v, 300, y + 14)}</g>`; }).join('')}`);
+    },
+    // fonts per verificar: bones, amb compte i les que no són fonts (un xat d'IA tampoc)
+    i75src() {
+      const B = [[4, 64, '#EEFBF3', '#86D9A9', '#15803D', L('🟢 BONES FONTS PER VERIFICAR', '🟢 BUENAS FUENTES PARA VERIFICAR'), L('🏛️ organismes oficials · 🎓 universitats', '🏛️ organismos oficiales · 🎓 universidades'), L('📰 mitjans de comunicació amb autor i data', '📰 medios de comunicación con autor y fecha')],
+        [74, 64, '#FFF7E6', '#FCD38D', '#B45309', L('🟠 AMB COMPTE: COMPROVA-HO', '🟠 CON CUIDADO: COMPRUÉBALO'), L('🏢 webs que venen el que expliquen', '🏢 webs que venden lo que explican'), L('✍️ blogs i opinions sense dades', '✍️ blogs y opiniones sin datos')],
+        [144, 64, '#FFF4F4', '#F8B4B4', '#B91C1C', L('🔴 NO SÓN FONTS', '🔴 NO SON FUENTES'), L('📱 vídeos i xarxes sense autor', '📱 vídeos y redes sin autor'), L("🤖 un xat d'IA: és on comences a buscar", '🤖 un chat de IA: es donde empiezas a buscar')]];
+      return tSvg(214, B.map(([y, h, bg, bd, c, t, a, b], i) => `<g ${tA(.3 + i * .7, 'ta-in')}>${box(6, y, 308, h, bg, bd, 12)}${TX(18, y + 20, t, 10.5, c, 900)}${TX(18, y + 40, a, 10, '#14204A', 700)}${TX(18, y + 57, b, 10, '#14204A', 700)}</g>`).join(''));
+    },
+    // estereotips: el xat inventa 3 vegades una persona d'infermeria i una d'enginyeria
+    i75stereo() {
+      const A = [['👩', L('«dolça»', '«dulce»')], ['👩', L('«pacient»', '«paciente»')], ['👩', L('«cuidadora»', '«cuidadora»')]], B = [['👨', L('«lògic»', '«lógico»')], ['👨', L('«seriós»', '«serio»')], ['👩', L('«brillant»', '«brillante»')]];
+      const col = (x, t, c, bg, bd, R, n, t0) => `<g ${tA(t0, 'ta-in')}>${box(x, 46, 150, 116, bg, bd, 12)}${CT(x + 75, 64, t, 10.5, c, 900)}</g>${R.map(([e, a], i) => `<g ${tA(t0 + .4 + i * .35, 'ta-pop')}>${E(x + 24, 88 + i * 22, e, 15)}${TX(x + 42, 87 + i * 22, a, 10.5, '#14204A', 800)}</g>`).join('')}<g ${tA(t0 + 1.6, 'ta-fade')}>${CT(x + 75, 154, n, 9.5, c, 900)}</g>`;
+      return tSvg(214, `<g ${tA(.1, 'ta-pop')}>${box(6, 6, 308, 32, '#14204A', '', 12)}${CT(160, 27, L("«Una persona d'infermeria i una d'enginyeria» × 3", '«Una persona de enfermería y una de ingeniería» × 3'), 9.5, '#fff', 800)}</g>
+        ${col(6, L('INFERMERIA', 'ENFERMERÍA'), '#BE185D', '#FFF0F7', '#F9A8D4', A, L('3 de 3: una dona', '3 de 3: una mujer'), .4)}${col(164, L('ENGINYERIA', 'INGENIERÍA'), '#1D4ED8', '#EEF3FF', '#BFDBFE', B, L('2 de 3: un home', '2 de 3: un hombre'), .9)}
+        <g ${tA(3, 'ta-pop')}>${box(6, 170, 308, 38, '#EEFBF3', '#B9EBD2', 12)}${CT(160, 186, L('No són opinions: són patrons de les dades', 'No son opiniones: son patrones de los datos'), 10.5, '#15803D', 900)}${CT(160, 201, L('Demana descripcions variades i sense tòpics', 'Pide descripciones variadas y sin tópicos'), 10, '#14204A', 700)}</g>`);
     }
   });
 }

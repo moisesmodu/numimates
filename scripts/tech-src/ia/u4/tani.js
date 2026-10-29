@@ -227,7 +227,7 @@
         <g ${tA(.6, 'ta-pop')}>${CT(78, 30, L('SETMANA DE', 'SEMANA DE'), 12, '#7C2D12', 900)}${CT(78, 46, L('LA LECTURA', 'LA LECTURA'), 12, '#7C2D12', 900)}</g>
         <g ${tA(1.1, 'ta-wob')}>${box(12, 176, 132, 24, '#FDE68A', '#F59E0B', 12)}${CT(78, 192, L('✦ Imatge generada amb IA', '✦ Imagen generada con IA'), 9.5, '#92400E', 900)}</g>
         <g ${tA(1.5, 'ta-in')}>${box(160, 6, 154, 202, '#fff', '#DCE4FA', 14)}<rect x="160" y="6" width="154" height="30" rx="14" fill="#7C3AED"/><rect x="160" y="22" width="154" height="14" fill="#7C3AED"/>${CT(237, 26, L('AUTORIA DECLARADA', 'AUTORÍA DECLARADA'), 10.5, '#fff', 900)}</g>
-        ${R.map(([g, t], i) => `<g ${tA(1.8 + i * .3, 'ta-in')}>${g ? ok(178, 56 + i * 27, 8) : ko(178, 56 + i * 27, 8)}<text x="192" y="${60 + i * 27}" ${F(10.5, g ? '#14204A' : '#B91C1C', 800)}>${t}</text></g>`).join('')}`);
+        ${R.map(([g, t], i) => `<g ${tA(1.8 + i * .3, 'ta-in')}>${g ? ok(178, 56 + i * 27, 8) : ko(178, 56 + i * 27, 8)}<text x="191" y="${60 + i * 27}" ${F(10, g ? '#14204A' : '#B91C1C', 800)}>${t}</text></g>`).join('')}`);
     }
   });
 }

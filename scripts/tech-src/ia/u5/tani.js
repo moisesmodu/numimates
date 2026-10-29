@@ -165,4 +165,50 @@
         <g ${tA(3, 'ta-pop')}>${box(6, 174, 308, 34, '#14204A', '', 12)}${CT(160, 196, L('Declarar-ho és explicar com s\'ha fet', 'Declararlo es explicar cómo se ha hecho'), 12, '#fff')}</g>`);
     }
   });
+
+  /* ---------- Taller i5-5 · vibe coding amb un xat de veritat ---------- */
+  // una «pastilla» de text dins d'una targeta
+  const pill = (x, y, w, t, c, bg, t0) => `<g ${tA(t0, 'ta-pop')}>${box(x, y, w, 22, bg, c + '55', 11)}${CT(x + w / 2, y + 15, t, 9, c, 800)}</g>`;
+  Object.assign(TANI, {
+    // de l'especificació (i les normes) al prompt, i del xat a un sol fitxer HTML
+    i55spec() {
+      const S = [['👀', L('què es veu', 'qué se ve')], ['👆', L('què passa', 'qué pasa')], ['✅', L('les proves', 'las pruebas')]];
+      const N = [L('1 fitxer HTML', '1 archivo HTML'), L('CSS i JS a dins', 'CSS y JS dentro'), L('sense internet', 'sin internet'), L('amb id', 'con id')];
+      const C = [['<!DOCTYPE html>', '#93C5FD'], ['<style>…</style>', '#FDBA74'], [`<button id="${L('mes', 'mas')}">`, '#93C5FD'], ['<script>', '#C8F7DC'], ['  addEventListener', '#C8F7DC'], ['</html>', '#93C5FD']];
+      return tSvg(214, `<g ${tA(.2, 'ta-in')}>${box(4, 6, 100, 150, '#EEF3FF', '#C7D2FE', 14)}${CT(54, 26, L('ESPECIFICACIÓ', 'ESPECIFICACIÓN'), 9.5, '#2563EB', 900)}</g>
+        ${S.map(([e, t], i) => `<g ${tA(.4 + i * .3, 'ta-pop')}>${box(10, 38 + i * 38, 88, 30, '#fff', '#C7D2FE', 10)}<text x="23" y="${58 + i * 38}" text-anchor="middle" font-size="13">${e}</text>${TX(34, 57 + i * 38, t, 9.5, '#14204A', 800)}</g>`).join('')}
+        <g ${tA(1.3, 'ta-fade')}>${arrow(106, 80, 112, 80, '#B4BEE8')}</g>
+        <g ${tA(1.4, 'ta-in')}>${box(114, 6, 96, 150, '#F3F0FF', '#D8CCFF', 14)}${CT(162, 26, L('NORMES', 'NORMAS'), 9.5, '#6D28D9', 900)}</g>
+        ${N.map((t, i) => pill(120, 38 + i * 29, 84, t, '#6D28D9', '#fff', 1.6 + i * .25)).join('')}
+        <g ${tA(2.6, 'ta-fade')}>${arrow(212, 80, 218, 80, '#B4BEE8')}</g>
+        <g ${tA(2.7, 'ta-in')}>${box(220, 6, 96, 150, '#0E1332', '', 14)}<text x="232" y="27" font-size="12" fill="#C4B5FD">✦</text>${TX(246, 26, L('el xat', 'el chat'), 10, '#C4B5FD', 900)}</g>
+        ${C.map(([t, c], i) => `<g ${tA(2.9 + i * .18, 'ta-fade')}><text x="228" y="${50 + i * 17}" ${M(8.5, c)}>${t.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</text></g>`).join('')}
+        <g ${tA(3.9, 'ta-pop')}>${box(4, 166, 312, 42, '#14204A', '', 14)}${CT(160, 184, L('especificació + normes', 'especificación + normas'), 11.5, '#fff')}${CT(160, 200, L('→ un sol fitxer que pots llegir i provar', '→ un solo archivo que puedes leer y probar'), 10.5, '#FDE68A', 700)}</g>`);
+    },
+    // copiar del xat, enganxar a l'index.html de Numi, mirar la vista prèvia i fer les proves d'acceptació
+    i55paste() {
+      const T = [[L('3 tocs a +1 → diu 3', '3 toques en +1 → dice 3'), 1], [L('Reinicia → torna a 0', 'Reinicia → vuelve a 0'), 1], [L('a 0, toco −1 → surt −1 (havia de ser 0)', 'en 0, toco −1 → sale −1 (tenía que ser 0)'), 0]];
+      return tSvg(214, `<g ${tA(.2, 'ta-in')}>${box(4, 6, 96, 100, '#0E1332', '', 12)}<text x="14" y="24" font-size="11" fill="#C4B5FD">✦</text>${TX(28, 23, L('el xat', 'el chat'), 9.5, '#C4B5FD', 900)}
+          ${['<!DOCTYPE html>', '<style>…', '<script>…', '</html>'].map((t, i) => `<text x="12" y="${42 + i * 13}" ${M(8, '#C8F7DC')}>${t.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</text>`).join('')}</g>
+        <g ${tA(.7, 'ta-wob')}>${box(26, 84, 58, 16, '#7C3AED', '', 8)}${CT(55, 96, L('📋 Copia', '📋 Copia'), 8.5, '#fff')}</g>
+        <g ${tA(1, 'ta-fade')}>${arrow(102, 56, 110, 56, '#B4BEE8')}</g>
+        <g ${tA(1.1, 'ta-in')}>${box(112, 6, 100, 100, '#fff', '#DCE4FA', 12)}<rect x="112" y="6" width="100" height="18" rx="12" fill="#F1F5FB"/>${TX(122, 19, 'index.html', 9, '#C2410C', 900)}</g>
+        ${[0, 1, 2, 3, 4, 5].map(i => `<g ${tA(1.3 + i * .1, 'ta-fade')}><text x="118" y="${38 + i * 11}" ${M(7.5, '#94A3B8')}>${i + 1}</text><rect x="128" y="${32 + i * 11}" width="${[60, 44, 70, 52, 66, 30][i]}" height="5" rx="2.5" fill="${['#93C5FD', '#FDBA74', '#93C5FD', '#86EFAC', '#86EFAC', '#93C5FD'][i]}"/></g>`).join('')}
+        <g ${tA(2, 'ta-fade')}>${arrow(214, 56, 222, 56, '#B4BEE8')}</g>
+        <g ${tA(2.1, 'ta-pop')}>${box(224, 6, 92, 100, '#EEF3FF', '#C7D2FE', 12)}${CT(270, 22, L('vista prèvia', 'vista previa'), 8.5, '#56628A', 800)}<text x="270" y="60" text-anchor="middle" ${F(30, '#2563EB', 900)}>3</text>
+          ${['+1', '−1', '↺'].map((t, i) => `${box(234 + i * 25, 72, 22, 20, i === 2 ? '#64748B' : '#7C3AED', '', 7)}${CT(245 + i * 25, 86, t, 10, '#fff')}`).join('')}</g>
+        <g ${tA(2.6, 'ta-in')}>${box(4, 116, 312, 92, '#fff', '#DCE4FA', 14)}${TX(16, 134, L("PROVES D'ACCEPTACIÓ", 'PRUEBAS DE ACEPTACIÓN'), 9.5, '#2563EB', 900)}</g>
+        ${T.map(([t, g], i) => `<g ${tA(2.9 + i * .4, 'ta-in')}>${g ? ok(26, 153 + i * 20, 8) : ko(26, 153 + i * 20, 8)}${TX(40, 157 + i * 20, t, 10.5, g ? '#14204A' : '#B91C1C', 700)}</g>`).join('')}`);
+    },
+    // l'informe d'error al xat (què he fet, què passa, què esperava) → v2 → totes les proves una altra vegada
+    i55bug() {
+      const R = [[L('QUÈ HE FET', 'QUÉ HE HECHO'), L('toco −1 amb el marcador a 0', 'toco −1 con el marcador en 0'), '#2563EB'], [L('QUÈ PASSA', 'QUÉ PASA'), L('surt −1', 'sale −1'), '#DB2777'], [L('QUÈ ESPERAVA', 'QUÉ ESPERABA'), L('que es quedi a 0', 'que se quede en 0'), '#15803D']];
+      return tSvg(214, `<g ${tA(.2, 'ta-in')}>${box(34, 4, 282, 100, '#F3F0FF', '#D8CCFF', 14)}<circle cx="18" cy="24" r="13" fill="#7C3AED"/>${CT(18, 29, L('tu', 'tú'), 10, '#fff', 900)}</g>
+        ${R.map(([k, t, c], i) => `<g ${tA(.5 + i * .45, 'ta-in')}>${box(44, 14 + i * 29, 92, 22, c, '', 11)}${CT(90, 29 + i * 29, k, 8.5, '#fff', 900)}${TX(144, 29 + i * 29, t, 10.5, '#14204A', 700)}</g>`).join('')}
+        <g ${tA(1.9, 'ta-pop')}>${box(4, 112, 220, 42, '#0E1332', '', 14)}<text x="16" y="138" font-size="13" fill="#C4B5FD">✦</text><text x="32" y="130" ${F(10, '#C4B5FD', 900)}>${L('el xat', 'el chat')}</text><text x="32" y="146" ${M(8.5, '#C8F7DC')}>${L('if (punts &gt; 0) punts = punts - 1;', 'if (puntos &gt; 0) puntos = puntos - 1;')}</text></g>
+        <g ${tA(2.4, 'ta-pop')}><circle cx="252" cy="133" r="20" fill="#7C3AED"/>${CT(252, 138, 'v2', 13, '#fff', 900)}${ok(270, 117, 8)}</g>
+        <g ${tA(2.8, 'ta-in')}>${box(4, 162, 312, 46, '#14204A', '', 14)}${CT(116, 181, L('i després: TOTES les proves', 'y después: TODAS las pruebas'), 11.5, '#fff')}${CT(116, 198, L('(per si hi ha una regressió)', '(por si hay una regresión)'), 10, '#B9C1F2', 700)}</g>
+        ${[0, 1, 2].map(i => `<g ${tA(3.2 + i * .25, 'ta-pop')}>${ok(250 + i * 22, 185, 9)}</g>`).join('')}`);
+    }
+  });
 }

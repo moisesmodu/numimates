@@ -178,12 +178,12 @@
       const S = [['M49 106 a34 34 0 1 0 68 0 a34 34 0 1 0 -68 0', .3], ['M56 86 L58 60 L76 74', .8], ['M90 74 L108 60 L110 86', 1], ['M71 98 v6 M95 98 v6', 1.3], ['M78 114 l5 5 l5 -5', 1.5], ['M62 114 l-26 -5 M62 121 l-26 4 M104 114 l26 -5 M104 121 l26 4', 1.8]];
       const G = [[L('Veig… un cercle?', 'Veo… ¿un círculo?'), .6], [L('una pilota?', '¿una pelota?'), 1.1], [L('una cara?', '¿una cara?'), 1.6]];
       return tSvg(214, `<g ${tA(.1, 'ta-in')}>${box(6, 6, 158, 174, '#fff', '#DCE4FA', 14)}<path d="M7 34 V20 a13 13 0 0 1 13 -13 H150 a13 13 0 0 1 13 13 V34 Z" fill="#FFF4CC"/>
-          <text x="16" y="26" ${F(12)}>✏️ ${L('Dibuixa: gat', 'Dibuja: gato')}</text><text x="154" y="26" text-anchor="end" ${F(11, '#B45309', 800)}>⏱ 20 s</text></g>
+          <text x="16" y="26" ${F(12)}>✏️ ${L('Dibuixa: gat', 'Dibuja: gato')}</text><text x="154" y="170" text-anchor="end" ${F(11, '#B45309', 800)}>⏱ 20 s</text></g>
         ${S.map(([d, t]) => `<path d="${d}" fill="none" stroke="#14204A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" pathLength="1" ${tA(t, 'ta-draw')}/>`).join('')}
         <text x="85" y="202" text-anchor="middle" ${F(11, '#56628A', 700)} ${tA(.4, 'ta-fade')}>${L('traç a traç, en 20 segons', 'trazo a trazo, en 20 segundos')}</text>
         <g ${tA(.2, 'ta-in')}>${box(174, 6, 140, 28, '#0E1332', '', 14)}<text x="186" y="25" ${F(12, '#fff')}>🧠 ${L('La IA diu…', 'La IA dice…')}</text></g>
         ${G.map(([t, s], i) => `<g ${tA(s, 'ta-in')}>${box(174, 42 + i * 30, 140, 24, '#F3F0FF', '#D8CCFF', 12)}<text x="186" y="${58 + i * 30}" ${F(11.5, '#6D28D9', 800)}>${t}</text></g>`).join('')}
-        <g ${tA(2.4, 'ta-pop')}>${box(174, 134, 140, 30, '#DFF7E8', '#86D9A9', 15)}${ok(192, 149)}<text x="208" y="154" ${F(12.5, '#15803D', 900)}>${L('És un gat!', '¡Es un gato!')}</text></g>
+        <g ${tA(2.4, 'ta-pop')}>${box(174, 134, 140, 30, '#DFF7E8', '#86D9A9', 15)}${ok(192, 149)}<text x="208" y="154" ${F(12, '#15803D', 900)}>${L('És un gat!', '¡Es un gato!')}</text></g>
         <g ${tA(3, 'ta-fade')}><text x="244" y="186" text-anchor="middle" ${F(10, '#56628A', 700)}>${L('sense fotos: ha après', 'sin fotos: ha aprendido')}</text><text x="244" y="201" text-anchor="middle" ${F(10, '#56628A', 700)}>${L('de milions de dibuixos', 'de millones de dibujos')}</text></g>`);
     },
     // taller i1-5: les dades de Quick, Draw!: «gat» dibuixat per moltes persones (sobretot la cara); la xarxa n'aprèn el que tenen en comú

@@ -1,7 +1,8 @@
 /* Tech IA · unitat 3 · animacions de teoria (TANI). Dibuixos propis de Numi: del mini model al xatbot, l'ajust com a
    assistent, la finestra de context, les eines, les fitxes; per què al·lucina, fonts inventades, lectura lateral i
    senyals d'alerta; les peces d'un bon prompt, vague o precís, exemples, iterar i què no s'hi posa; i la IA com a
-   tutora (copiadora o tutora, recordar per aprendre, la rutina, les normes, l'edat i la privadesa). */
+   tutora (copiadora o tutora, recordar per aprendre, la rutina, les normes, l'edat i la privadesa); i el taller i3-5 amb el xat
+   de veritat (prompt pobre o bo, la pregunta trampa i el xat com a tutor). */
 {
   const F = (sz, c = '#14204A', w = 800) => `style="font:${w} ${sz}px Lexend,system-ui,sans-serif;fill:${c}"`;
   const M = (sz, c = '#14204A') => `style="font:700 ${sz}px ui-monospace,Menlo,monospace;fill:${c}"`;
@@ -198,6 +199,43 @@
       const T = [['🎂', L('Edat', 'Edad'), L('mínima', 'mínima'), '#8B5CF6', '#F3F0FF'], ['👪', L('Permís', 'Permiso'), L('de la família', 'de la familia'), '#14A3B8', '#E9FAFD'], ['🔒', L('Cap dada', 'Ningún dato'), L('personal', 'personal'), '#3CC47C', '#EEFBF3'], ['🏫', L('Normes', 'Normas'), L('del centre', 'del centro'), '#F08A24', '#FFF4E8']];
       return tSvg(214, T.map(([e, a, b, c, bg], i) => { const x = 6 + (i % 2) * 156, y = 6 + Math.floor(i / 2) * 104; return `<g ${tA(.3 + i * .6, 'ta-pop')}>${box(x, y, 152, 98, bg, c + '55', 16)}<text x="${x + 28}" y="${y + 58}" text-anchor="middle" font-size="26">${e}</text>
           <text x="${x + 52}" y="${y + 46}" ${F(12.5)}>${a}</text><text x="${x + 52}" y="${y + 66}" ${F(12, c, 900)}>${b}</text>${ok(x + 136, y + 16, 9, c)}</g>`; }).join(''));
+    },
+
+    // taller i3-5: el mateix encàrrec amb un prompt pobre i amb un de bo (les sis peces de la rúbrica) al xat de veritat
+    i35pair() {
+      const C = ['#8B5CF6', '#14A3B8', '#F08A24', '#3CC47C', '#E5489A', '#3B82F6'];
+      const dots = (cx, on, t0) => C.map((c, i) => `<circle cx="${cx - 47.5 + i * 19}" cy="92" r="6.5" fill="${on ? c : '#E3E8F7'}" ${tA(t0 + i * .12, 'ta-pop')}/>`).join('');
+      const grey = [112, 96, 120, 88, 116, 104].map((w, i) => `<rect x="16" y="${122 + i * 9}" width="${w}" height="5" rx="2.5" fill="#E3B4B4"/>`).join('');
+      const pts = [96, 110, 86, 102].map((w, i) => `<circle cx="180" cy="${126 + i * 12}" r="4" fill="${C[i]}"/><rect x="190" y="${123 + i * 12}" width="${w}" height="6" rx="3" fill="#9ED9B8"/>`).join('');
+      return tSvg(214, `<g ${tA(.1, 'ta-in')}>${box(4, 4, 152, 206, '#FFF4F4', '#F8C9C9')}${CT(80, 22, L('PROMPT POBRE', 'PROMPT POBRE'), 11, '#B91C1C', 900)}${box(14, 30, 132, 46, '#fff', '#DCE4FA', 12)}${CT(80, 58, L('«volcans»', '«volcanes»'), 13, '#14204A', 800)}</g>
+        ${dots(80, false, .4)}<text x="80" y="113" text-anchor="middle" ${F(10.5, '#B91C1C', 800)} ${tA(.9, 'ta-fade')}>${L('peces: 0 de 6', 'piezas: 0 de 6')}</text>
+        <g ${tA(1.1, 'ta-fade')}>${grey}</g>
+        <g ${tA(1.4, 'ta-pop')}>${ko(26, 191, 9)}<text x="42" y="188" ${F(11, '#B91C1C', 900)}>${L('llarg i genèric', 'largo y genérico')}</text><text x="42" y="203" ${F(10.5, '#56628A', 800)}>⭐ 3/10</text></g>
+        <g ${tA(1.7, 'ta-in')}>${box(164, 4, 152, 206, '#EEFBF3', '#B9EBD2')}${CT(240, 22, L('PROMPT BO', 'PROMPT BUENO'), 11, '#15803D', 900)}${box(170, 30, 140, 46, '#fff', '#DCE4FA', 12)}
+          <text x="178" y="45" ${M(9)}>${L("2n d'ESO. Explica'm", '2.º ESO. Explícame')}</text><text x="178" y="58" ${M(9)}>${L('com es forma un volcà,', 'cómo se forma un volcán,')}</text><text x="178" y="71" ${M(9)}>${L('4 punts, 1 exemple…', '4 puntos, 1 ejemplo…')}</text></g>
+        ${dots(240, true, 2)}<text x="240" y="113" text-anchor="middle" ${F(10.5, '#15803D', 800)} ${tA(2.7, 'ta-fade')}>${L('peces: 6 de 6', 'piezas: 6 de 6')}</text>
+        <g ${tA(2.9, 'ta-fade')}>${pts}</g>
+        <g ${tA(3.2, 'ta-pop')}>${ok(186, 191, 9)}<text x="202" y="188" ${F(11, '#15803D', 900)}>${L('curt i clar', 'corto y claro')}</text><text x="202" y="203" ${F(10.5, '#56628A', 800)}>⭐ 8/10</text></g>`);
+    },
+    // taller i3-5: la pregunta trampa: una festa que no existeix → o diu que no ho sap (bé) o s'inventa detalls (al·lucinació)
+    i35trap() {
+      return tSvg(214, `<g ${tA(.1, 'ta-in')}>${box(4, 4, 312, 50, '#0E1332', '', 14)}<text x="16" y="22" ${F(10, '#9AA6CC', 700)}>🧪 ${L('pregunta sobre una cosa que NO existeix:', 'pregunta sobre algo que NO existe:')}</text>
+          <text x="16" y="42" ${M(10.5, '#fff')}>${L('«Festa del Paraigua Volador de Vilanúvol»', '«Fiesta del Paraguas Volador de Villanube»')}</text></g>
+        <g ${tA(.7, 'ta-fade')}>${arrow(120, 58, 86, 76, '#86D3A5')}${arrow(200, 58, 234, 76, '#EF9A9A')}</g>
+        <g ${tA(1, 'ta-in')}>${box(4, 80, 152, 94, '#EEFBF3', '#B9EBD2')}${ok(22, 98, 9)}<text x="38" y="102" ${F(11, '#15803D', 900)}>${L('Diu «no ho sé»', 'Dice «no lo sé»')}</text>
+          <text x="14" y="126" ${M(10)}>${L('«No he trobat cap', '«No he encontrado')}</text><text x="14" y="141" ${M(10)}>${L('informació sobre', 'información sobre')}</text><text x="14" y="156" ${M(10)}>${L('aquesta festa.»', 'esta fiesta.»')}</text></g>
+        <g ${tA(1.8, 'ta-in')}>${box(164, 80, 152, 94, '#FFF1F1', '#F8B4B4')}<text x="174" y="103" font-size="13">🚩</text><text x="192" y="102" ${F(11, '#B91C1C', 900)}>${L("S'inventa dades", 'Se inventa datos')}</text>
+          <text x="174" y="126" ${M(10)}>${L('«Va començar el 1887', '«Empezó en 1887')}</text><text x="174" y="141" ${M(10)}>${L('i cada maig…»', 'y cada mayo…»')}</text></g>
+        <g ${tA(2.5, 'ta-wob')}><rect x="202" y="148" width="76" height="20" rx="5" fill="#fff" stroke="#EF4444" stroke-width="2.5" transform="rotate(-6 240 158)"/><text x="240" y="163" text-anchor="middle" ${F(11, '#EF4444', 900)} transform="rotate(-6 240 158)">${L('INVENTAT', 'INVENTADO')}</text></g>
+        <g ${tA(3.1, 'ta-pop')}>${box(20, 182, 280, 28, '#7C3AED', '', 14)}${CT(160, 201, L('Si no existeix, cada detall és inventat', 'Si no existe, cada detalle es inventado'), 11, '#fff')}</g>`);
+    },
+    // taller i3-5: el xat com a tutor: pregunta i pista; l'alumne/a resol i ho comprova
+    i35tutor() {
+      const B = [['me', L('Fes de tutor: no em donis la solució', 'Haz de tutor: no me des la solución')], ['ai', L('Si en Pau en té x, quants en té la Laia?', 'Si Pau tiene x, ¿cuántos tiene Laia?')], ['me', '3x'],
+        ['ai', L('Molt bé! I entre tots dos, quants?', '¡Muy bien! ¿Y entre los dos, cuántos?')], ['me', 'x + 3x = 48 → x = 12'], ['ok', L('Comprova-ho: 12 + 36 = 48 ✓', 'Compruébalo: 12 + 36 = 48 ✓')]];
+      return tSvg(214, B.map(([w, t], i) => { const y = 4 + i * 30, me = w === 'me', wd = Math.min(282, Math.round(t.length * 6 + 26)), x = me ? 316 - wd : 30;
+        return `<g ${tA(.2 + i * .5, 'ta-in')}>${me ? '' : `<text x="15" y="${y + 18}" text-anchor="middle" font-size="15">${w === 'ok' ? '✅' : '🧑‍🏫'}</text>`}${box(x, y, wd, 24, me ? '#7C3AED' : w === 'ok' ? '#DFF7E8' : '#fff', me ? '' : w === 'ok' ? '#86D9A9' : '#DCE4FA', 12)}<text x="${x + 13}" y="${y + 16}" ${F(10.5, me ? '#fff' : w === 'ok' ? '#15803D' : '#14204A', 800)}>${t}</text></g>`; }).join('') +
+        `<g ${tA(3.4, 'ta-pop')}>${CT(160, 206, L('Pistes i preguntes: qui pensa ets tu', 'Pistas y preguntas: quien piensa eres tú'), 11, '#7C3AED', 900)}</g>`);
     }
   });
 }
