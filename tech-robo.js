@@ -471,7 +471,7 @@ const rbLid = l => RB.lists.indexOf(l);
 function rbBlock(b, ro) {
   const cont = ['rep', 'while', 'until', 'if'].includes(b.k), sel = RB.sel === b;
   const f = ro ? undefined : (p, t) => `<button class="rf" onclick="event.stopPropagation();rbField(${b._id},'${p}')">${t}</button>`;
-  return `<div class="tb rb c-${RB_CAT[b.k]}${sel ? ' sel' : ''}${cont ? ' cont' : ''}" id="rb${b._id}"><div class="tbh" ${ro ? '' : `onclick="rbSel(${b._id})"`}><span class="tbi">${RB_ICO[b.k] || ''}</span><span class="tbl">${rbLabel(b, f, RB.st)}</span></div>
+  return `<div class="tb rb c-${RB_CAT[b.k]} k-${b.k}${sel ? ' sel' : ''}${cont ? ' cont' : ''}" id="rb${b._id}"><div class="tbh" ${ro ? '' : `onclick="rbSel(${b._id})"`}><span class="tbi">${RB_ICO[b.k] || ''}</span><span class="tbl">${rbLabel(b, f, RB.st)}</span></div>
     ${cont ? `<div class="tbin">${rbList(b.b, ro)}</div>${b.k === 'if' && b.e ? `<div class="tbelse">${L('si no', 'si no')}</div><div class="tbin">${rbList(b.e, ro)}</div>` : ''}<div class="tbend"></div>` : ''}</div>${sel && !ro ? rbTools(b) : ''}`;
 }
 function rbSlot(l, i) { const on = RB.cur && RB.cur.l === l && RB.cur.i === i, empty = on && !l.length && RB.scripts.some(s => RB.prog[s] === l) && !rbCountAll(RB.prog); return `<button class="tslot${on ? ' on' : ''}${empty ? ' empty' : ''}" onclick="rbCur(${rbLid(l)},${i})" aria-label="${L('Posa els blocs aquí', 'Pon los bloques aquí')}">${on ? `<span>${empty ? L('Arrossega aquí un bloc de la paleta (o toca\'l)', 'Arrastra aquí un bloque de la paleta (o tócalo)') : L('els blocs nous van aquí', 'los bloques nuevos van aquí')}</span>` : ''}</button>`; }
@@ -486,7 +486,7 @@ function rbTools(b) {
 }
 function rbPalette() {
   const full = RB.max && rbCountAll(RB.prog) >= RB.max;
-  return `<div class="tpal rpal">${RB.pal.filter(k => !['else', 'and'].includes(k)).map(k => { const b = rbNew(k, RB.st); return `<button class="tb rb c-${RB_CAT[k]} tpb" onclick="rbIns('${k}')" ${full ? 'disabled' : ''}><span class="tbi">${RB_ICO[k]}</span><span class="tbl">${rbLabel(b, undefined, RB.st)}</span></button>`; }).join('')}</div>`;
+  return `<div class="tpal rpal">${RB.pal.filter(k => !['else', 'and'].includes(k)).map(k => { const b = rbNew(k, RB.st); return `<button class="tb rb c-${RB_CAT[k]} k-${k} tpb" onclick="rbIns('${k}')" ${full ? 'disabled' : ''}><span class="tbi">${RB_ICO[k]}</span><span class="tbl">${rbLabel(b, undefined, RB.st)}</span></button>`; }).join('')}</div>`;
 }
 function rbCode() {
   rbIndex();

@@ -473,7 +473,7 @@ function tbBlock(b, ro) {
   const click = TB.mode === 'spot' ? `tbSpot(${b._id})` : TB.mode === 'parsons' ? `tbPar(${b._id})` : ro ? '' : `tbSel(${b._id})`;
   // a l'editor, el bloc és un <div> (s'hi poden tocar els camps); tech-a11y.js el fa focusable
   const fld = !ro && TB.mode === 'edit' && tbFieldK(b);
-  return `<div class="tb c-${BIT_CAT[b.k]}${sel ? ' sel' : ''}${cont ? ' cont' : ''}" id="tb${b._id}">
+  return `<div class="tb c-${BIT_CAT[b.k]} k-${b.k}${sel ? ' sel' : ''}${cont ? ' cont' : ''}" id="tb${b._id}">
     ${fld ? `<div class="tbh" onclick="${click}"><span class="tbi">${BIT_ICO[b.k] || ''}</span><span class="tbl">${tbLabelF(b)}</span></div>` : `<button class="tbh" ${click ? `onclick="${click}"` : 'tabindex="-1"'}><span class="tbi">${BIT_ICO[b.k] || ''}</span><span class="tbl">${bitLabel(b)}</span></button>`}
     ${cont ? `<div class="tbin">${tbList(b.b, ro)}</div>${b.k === 'if' && b.e ? `<div class="tbelse">${L('Si no', 'Si no')}</div><div class="tbin">${tbList(b.e, ro)}</div>` : ''}<div class="tbend"></div>` : ''}
   </div>${sel && !ro ? tbTools(b) : ''}`;
@@ -505,7 +505,7 @@ function tbPalette() {
   const ks = TB.pal.filter(k => k !== 'else').flatMap(k => k === 'call' ? Object.keys(TB.fns || { A: 1 }).map(f => 'call:' + f) : [k]);
   return `<div class="tpal">${ks.map(k => { const b = k.startsWith('call:') ? { k: 'call', f: k.slice(5) } : bitNew(k), kk = b.k;
     if ((kk === 'if' || kk === 'until') && TB.conds && TB.conds.length) b.c = TB.conds[0];
-    return `<button class="tb c-${BIT_CAT[kk]} tpb" onclick="tbIns('${k}')" ${full ? 'disabled' : ''}><span class="tbi">${BIT_ICO[kk] || ''}</span><span class="tbl">${bitLabel(b).replace(/<b class="tnum">\d+<\/b>/, kk === 'rep' ? 'N' : kk === 'setv' ? '$&' : '<b class="tnum">1</b>')}</span></button>`; }).join('')}</div>`;
+    return `<button class="tb c-${BIT_CAT[kk]} k-${kk} tpb" onclick="tbIns('${k}')" ${full ? 'disabled' : ''}><span class="tbi">${BIT_ICO[kk] || ''}</span><span class="tbl">${bitLabel(b).replace(/<b class="tnum">\d+<\/b>/, kk === 'rep' ? 'N' : kk === 'setv' ? '$&' : '<b class="tnum">1</b>')}</span></button>`; }).join('')}</div>`;
 }
 // les altres llistes de blocs: funcions (es poden editar si el repte ho diu) i esdeveniments (quan premo A…)
 function tbExtraLists() {

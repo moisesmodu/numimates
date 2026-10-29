@@ -400,7 +400,7 @@ const sgLid = l => SG.lists.indexOf(l);
 function sgBlock(b, ro) {
   const cont = ['rep', 'forever', 'until', 'if'].includes(b.k), sel = SG.sel === b;
   const f = ro ? undefined : (p, t) => `<button class="rf" onclick="event.stopPropagation();sgField(${b._id},'${p}')">${t}</button>`;
-  return `<div class="tb rb sb c-${SG_CAT[b.k]}${sel ? ' sel' : ''}${cont ? ' cont' : ''}" id="sg${b._id}"><div class="tbh" ${ro ? '' : `onclick="sgSel(${b._id})"`}><span class="tbi">${sgIco(b.k)}</span><span class="tbl">${sgLabel(b, f, SG.st)}</span></div>
+  return `<div class="tb rb sb c-${SG_CAT[b.k]} k-${b.k}${sel ? ' sel' : ''}${cont ? ' cont' : ''}" id="sg${b._id}"><div class="tbh" ${ro ? '' : `onclick="sgSel(${b._id})"`}><span class="tbi">${sgIco(b.k)}</span><span class="tbl">${sgLabel(b, f, SG.st)}</span></div>
     ${cont ? `<div class="tbin">${sgList(b.b, ro)}</div>${b.k === 'if' && b.e ? `<div class="tbelse">${L('si no', 'si no')}</div><div class="tbin">${sgList(b.e, ro)}</div>` : ''}<div class="tbend"></div>` : ''}</div>${sel && !ro ? sgTools(b) : ''}`;
 }
 function sgSlot(l, i) { const on = SG.cur && SG.cur.l === l && SG.cur.i === i, empty = on && !l.length && Object.values(SG.progs[SG.who] || {}).some(scr => scr.includes(l)); return `<button class="tslot${on ? ' on' : ''}${empty ? ' empty' : ''}" onclick="sgCurAt(${sgLid(l)},${i})" aria-label="${L('Posa els blocs aquí', 'Pon los bloques aquí')}">${on ? `<span>${empty ? L('Arrossega aquí un bloc de la paleta (o toca\'l)', 'Arrastra aquí un bloque de la paleta (o tócalo)') : L('els blocs nous van aquí', 'los bloques nuevos van aquí')}</span>` : ''}</button>`; }
@@ -420,7 +420,7 @@ function sgPalette() {
   // paleta graduada (palLite): primer els blocs bàsics de la peça; un botó obre (o torna a tancar) tots els blocs
   const nL = SG.st.palLite ? all.filter(k => SG.st.palLite.includes(k)).length : 0;
   const tog = SG.st.palLite ? `<button class="spaltog${lite ? '' : ' on'}" onclick="sgLite()" aria-pressed="${lite ? 'false' : 'true'}">${lite ? `<b>+</b>${L(`Tots els blocs (${all.length})`, `Todos los bloques (${all.length})`)}` : `<b>−</b>${L(`Només els bàsics (${nL})`, `Solo los básicos (${nL})`)}`}</button>` : '';
-  return `<div class="tpal rpal spal">${tog}${show.map(k => `<button class="tb rb sb c-${SG_CAT[k]} tpb" onclick="sgIns('${k}')" ${full ? 'disabled' : ''}><span class="tbi">${sgIco(k)}</span><span class="tbl">${sgLabel(sgNew(k, SG.st, SG.W), undefined, SG.st)}</span></button>`).join('')}</div>`;
+  return `<div class="tpal rpal spal">${tog}${show.map(k => `<button class="tb rb sb c-${SG_CAT[k]} k-${k} tpb" onclick="sgIns('${k}')" ${full ? 'disabled' : ''}><span class="tbi">${sgIco(k)}</span><span class="tbl">${sgLabel(sgNew(k, SG.st, SG.W), undefined, SG.st)}</span></button>`).join('')}</div>`;
 }
 function sgLite() { if (!SG) return; SG.lite = !SG.lite; SFX.tap && SFX.tap(); sgDraw(); }
 // «Posa una base»: un esquelet del programa (st.base) per als guions que encara són buits; mai no esborra el que ja hi ha

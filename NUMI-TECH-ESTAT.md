@@ -250,3 +250,9 @@ cursos de Tech i crear un curs de disseny 3D en dos nivells. Sense desplegar a p
   res) o el bucle penjat; a Creadors, l'últim bloc de moviment quan toca el que no ha de tocar, o el bucle penjat.
   Zoom dels blocs del programa (− / +, surt a partir de 6 blocs, es recorda al dispositiu: `TZ_V`, `--tz`) als tres
   editors; arrossegar funciona igual amb zoom.
+- 30-10-2026 (petició del Moisés: «els blocs s'han d'assemblar molt més a Scratch»): `tech-scratch.css` (es carrega l'últim, a
+  `variant.js`) vesteix els tres editors com Scratch 3: peces amb osca i pestanya ajustades al text, blocs en C, «per sempre»
+  acabat pla, barrets d'esdeveniment amb gorra, colors de categoria de Scratch (classe `k-<bloc>` a cada peça per afinar-los),
+  camps en òvals blancs i el programa sobre un taulell de punts. A l'ordinador, com a Scratch: paleta a l'esquerra (de l'amplada
+  del bloc més llarg, `--palw`), programa al mig i el món a la dreta; les peces no es parteixen i el taulell es desplaça. Al mòbil,
+  el món una mica més petit mentre s'edita. A Robòtica i Creadors, sense icones; a Robot (6-9) la icona es queda, sense caixa.

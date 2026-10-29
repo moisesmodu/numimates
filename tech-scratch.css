@@ -1,0 +1,128 @@
+/* =====================================================================================================================
+   Numi Tech · editors de blocs amb l'aspecte de Scratch 3 (Robot, Robòtica i Creadors)
+   Es carrega l'últim (variant.js). Només canvia com es veuen les peces i on van: el programa, el que fa cada bloc,
+   arrossegar, el teclat i el lector de pantalla són els de sempre (tech.js, tech-bot.js, tech-robo.js, tech-stage.js).
+   · Peces que encaixen: osca a dalt i pestanya a baix (clip-path), ajustades al text, sense la caixa de la icona.
+   · Blocs en C (repeteix, per sempre, si…) amb el braç a l'esquerra; «per sempre» acaba pla, com a Scratch.
+   · Barrets d'esdeveniment (en començar, quan premo…) amb la gorra rodona.
+   · Colors de categoria de Scratch: moviment, aparença, so, esdeveniments, control, sensors, variables, els meus blocs.
+   · Camps dins dels blocs: òvals blancs. Àrea del programa: graella de punts. A l'ordinador, com a Scratch:
+     paleta a l'esquerra, programa al mig i escenari (o el món) a la dreta.
+   ===================================================================================================================== */
+.tstage .tcode{
+  --s-mov:#4C97FF;--s-look:#9966FF;--s-snd:#CF63CF;--s-ev:#FFBF00;--s-ctl:#FFAB19;--s-sen:#5CB1D6;--s-op:#59C059;--s-var:#FF8C1A;--s-my:#FF6680;--s-ext:#0FBD8C;
+  --b-mov:var(--s-mov);--b-act:var(--s-ext);--b-loop:var(--s-ctl);--b-cond:var(--s-ctl);--b-art:var(--s-look);--b-snd:var(--s-snd);--b-fn:var(--s-my);--b-var:var(--s-var);
+  /* la peça: osca a dalt (de 12 a 36 px) i pestanya a baix; 5 px de pestanya */
+  --puz:polygon(0 4px,4px 0,12px 0,17px 5px,31px 5px,36px 0,calc(100% - 4px) 0,100% 4px,100% calc(100% - 9px),calc(100% - 4px) calc(100% - 5px),36px calc(100% - 5px),31px 100%,17px 100%,12px calc(100% - 5px),4px calc(100% - 5px),0 calc(100% - 9px));
+  --puztop:polygon(0 4px,4px 0,12px 0,17px 5px,31px 5px,36px 0,calc(100% - 4px) 0,100% 4px,100% 100%,0 100%);
+  --puzbot:polygon(0 0,100% 0,100% calc(100% - 9px),calc(100% - 4px) calc(100% - 5px),36px calc(100% - 5px),31px 100%,17px 100%,12px calc(100% - 5px),4px calc(100% - 5px),0 calc(100% - 9px));
+  --puzcap:polygon(0 0,100% 0,100% calc(100% - 4px),calc(100% - 4px) 100%,4px 100%,0 calc(100% - 4px));
+  --s-font:600 14.5px/1.25 Lexend,system-ui,-apple-system,sans-serif;
+}
+/* categories per tipus de bloc (com a Scratch): esdeveniments en groc, sensors en blau cel, els meus blocs en rosa */
+.tstage .tcode :is(.tb,.tpb).sb.k-send{--bc:var(--s-ev)}
+.tstage .tcode :is(.tb,.tpb).k-call{--bc:var(--s-my)}
+.tstage .tcode :is(.tb,.tpb).rb:not(.sb):is(.k-under,.k-car){--bc:var(--s-ext)}
+
+/* ---------- les peces ---------- */
+.tstage .tcode .tb{width:max-content;max-width:100%;min-width:0;margin:0}
+.tstage .tcode .tb>.tbh{width:auto;max-width:100%;display:flex;align-items:center;flex-wrap:wrap;gap:6px;min-height:44px;
+  padding:8px 12px 12px 10px;border-radius:0;background:var(--bc);color:#fff;font:var(--s-font);letter-spacing:0;text-align:left;box-shadow:none;clip-path:var(--puz)}
+.tstage .tcode .tb.c-cond>.tbh,.tstage .tcode .tb.c-cond .tbelse{color:#fff}
+.tstage .tcode .tbl{display:flex;align-items:center;flex-wrap:wrap;gap:5px;white-space:normal}
+/* la vora fosca de cada peça (Scratch la té d'1 px) */
+.tstage .tcode .tb:not(.cont){filter:drop-shadow(0 1px 0 color-mix(in srgb,var(--bc) 70%,#000)) drop-shadow(0 -0.5px 0 color-mix(in srgb,var(--bc) 75%,#000))}
+.tstage .tcode .tb.cont{filter:drop-shadow(0 1px 0 color-mix(in srgb,var(--bc) 70%,#000))}
+/* sense la caixa de la icona: a Robòtica i Creadors, cap icona (com a Scratch); a Robot (6-9 anys) la icona es queda, sense caixa */
+.tstage .tcode .tb.rb .tbi{display:none}
+.tstage .tcode .tb:not(.rb) .tbi{width:22px;height:22px;background:none;border-radius:0}
+.tstage .tcode .tb:not(.rb) .tbi svg{width:20px;height:20px}
+/* camps: òvals blancs amb el text gris, com els números de Scratch */
+.tstage .tcode .tbh .rf,.tstage .tcode .tbh .tbf,.tstage .tcode .tbl b,.tstage .tcode .tbl .tnum{display:inline-flex;align-items:center;justify-content:center;min-width:28px;height:26px;padding:0 9px;
+  border-radius:999px;background:#fff;color:#575E75;font:600 13.5px/1 Lexend,system-ui,sans-serif;border:1px solid rgba(0,0,0,.14);box-shadow:none;white-space:nowrap}
+.tstage .tcode .tbh .rf:hover,.tstage .tcode .tbh .tbf:hover{border-color:rgba(0,0,0,.35)}
+.tstage .tcode .tbl b b{border:0;padding:0;min-width:0;height:auto}
+/* els blocs en C: barra de dalt, braç a l'esquerra i barra de baix; dins, les peces van al costat del braç */
+.tstage .tcode .tb.cont{display:flex;flex-direction:column;min-width:156px;background:none;border:0;border-radius:0;padding:0;overflow:visible}
+.tstage .tcode .tb.cont>.tbh{width:100%;clip-path:var(--puztop);padding-bottom:9px;min-height:40px}
+.tstage .tcode .tb.cont>.tbin{border-left:16px solid var(--bc);margin:0;padding:0 0 0 0;min-height:26px;background:none}
+.tstage .tcode .tb.cont>.tbin:empty::before{content:"";display:block;height:24px}
+.tstage .tcode .tb.cont>.tbelse{width:100%;padding:6px 12px 7px;background:var(--bc);font:var(--s-font);border-radius:0}
+.tstage .tcode .tb.cont>.tbend{width:100%;height:23px;background:var(--bc);border-radius:0;clip-path:var(--puzbot)}
+.tstage .tcode .tb.k-forever>.tbend{height:20px;clip-path:var(--puzcap)}
+/* entre peces no hi ha espai: la pestanya de la de dalt entra a l'osca de la de sota */
+.tstage .tcode .tslot:not(.on):not(.drop){height:6px;margin:-5px 0 -1px;width:100%;background:transparent}
+.tstage .tcode .tslot:not(.on):not(.drop):hover{background:rgba(76,151,255,.35)}
+.tstage .tcode .tslot.on{width:max-content;min-width:150px;min-height:40px;margin:3px 0;border:2px dashed #B5BCCB;background:rgba(87,94,117,.08);color:#575E75;border-radius:6px;font:600 13px/1.2 Lexend,system-ui,sans-serif;padding:6px 10px}
+.tstage .tcode .tslot.on.empty{width:100%}
+/* arrossegant: on caurà, una ombra grisa amb la forma de la peça (com a Scratch) */
+.tstage.dnd .tcode .tslot.drop{width:160px;min-height:40px;height:40px;margin:2px 0;border:0;border-radius:0;background:rgba(87,94,117,.28);clip-path:var(--puz)}
+.tstage.dnd .tcode .tslot.drop::after{content:none}
+.tdghost.tb,.tdghost .tbh{font:var(--s-font)}
+.tdghost.tb>.tbh,.tdghost>.tbh{clip-path:var(--puz);border-radius:0;padding:8px 12px 12px 10px}
+.tdghost{filter:drop-shadow(0 6px 8px rgba(0,0,0,.25))}
+/* marques (seleccionat, ara, error, bé): el contorn segueix la forma de la peça */
+.tstage .tcode .tb.sel{filter:drop-shadow(2.5px 0 0 #3A3F50) drop-shadow(-2.5px 0 0 #3A3F50) drop-shadow(0 2.5px 0 #3A3F50) drop-shadow(0 -2.5px 0 #3A3F50)}
+.tstage .tcode .tb.now{filter:brightness(1.08) drop-shadow(3px 0 0 #FFD500) drop-shadow(-3px 0 0 #FFD500) drop-shadow(0 3px 0 #FFD500) drop-shadow(0 -3px 0 #FFD500)}
+
+/* ---------- els guions i els barrets (en començar, per sempre, quan premo A…) ---------- */
+.tstage .tcode .rscripts{gap:22px;max-height:none;padding:0}
+.tstage .tcode .rscript{--hc:var(--s-ev);position:relative;background:none;border:0;border-radius:0;overflow:visible;padding-top:16px;width:max-content;max-width:100%;min-width:170px}
+.tstage .tcode .rscript.h-forever,.tstage .tcode .rscript.sh-clone{--hc:var(--s-ctl)}
+.tstage .tcode .rscript::before{content:"";position:absolute;left:0;top:2px;width:92px;height:30px;background:var(--hc);border-radius:50% 50% 0 0/100% 100% 0 0;filter:drop-shadow(0 -0.5px 0 color-mix(in srgb,var(--hc) 75%,#000))}
+.tstage .tcode .rscript>.rhat{position:relative;display:flex;align-items:center;gap:7px;width:max-content;max-width:100%;min-width:170px;min-height:42px;padding:6px 12px 12px;background:var(--hc);color:#fff;font:var(--s-font);
+  border-radius:0 6px 0 0;clip-path:polygon(0 0,100% 0,100% calc(100% - 9px),calc(100% - 4px) calc(100% - 5px),36px calc(100% - 5px),31px 100%,17px 100%,12px calc(100% - 5px),0 calc(100% - 5px))}
+.tstage .tcode .rscript>.rhat b{font-weight:600}
+.tstage .tcode .rscript>.rhat span{width:22px;height:22px}.tstage .tcode .rscript>.rhat svg{width:19px;height:19px}
+.tstage .tcode .rscript.sh-flag>.rhat span{color:#4CBF56}.tstage .tcode .rscript.sh-flag>.rhat span svg{filter:drop-shadow(0 0 1px rgba(0,0,0,.35))}
+.tstage .tcode .rscript>.rhat .rbtn{background:#fff;color:#A87C00;border-color:rgba(0,0,0,.15)}
+.tstage .tcode .rscript>.rhat .rhadd{background:rgba(0,0,0,.14)}
+/* el cos del guió: les peces just a sota del barret, sense marc */
+.tstage .tcode .rscript>.tprog,.tstage .tcode .rscript>.rprog{display:flex;flex-direction:column;align-items:flex-start;background:none!important;border:0;box-shadow:none!important;padding:0;margin:0;min-height:0;max-height:none;overflow:visible}
+.tstage .tcode .rscript .tempty{margin:6px 0 0;font-size:13px;color:#8A90A2}
+
+/* ---------- l'àrea del programa: un taulell amb punts, com el de Scratch ---------- */
+.tstage .tcode :is(#tprog,#rprog,#sprog){background-color:#F9F9FB!important;background-image:radial-gradient(#D9DCE6 1.1px,transparent 1.4px)!important;background-size:20px 20px!important;background-position:0 0!important;
+  border:1px solid #DDE0EA;border-radius:10px;padding:14px 14px 18px;box-shadow:none!important}
+.tstage .tcode #tprog{display:flex;flex-direction:column;align-items:flex-start}
+.tstage .tcode .tprog2{background:#F9F9FB;border:1px solid #DDE0EA;border-radius:10px}
+.tstage .tcode .tprog2 .tprog{display:flex;flex-direction:column;align-items:flex-start;background:none!important;box-shadow:none!important}
+.tstage .tcode .tprog2 .tp2h{font:var(--s-font)}
+/* la capçalera (PROGRAMA / GUIONS) */
+.tstage .tcode .tphead>b{font:800 12px/1 Lexend,system-ui,sans-serif;letter-spacing:.08em;color:#575E75}
+
+/* ---------- la paleta: peces iguals que les del programa ---------- */
+.tstage .tcode .tpal{align-items:flex-start;gap:8px}
+.tstage .tcode .tpal button.tb.tpb{display:flex;align-items:center;gap:6px;width:max-content;max-width:100%;min-height:44px;flex:0 0 auto;
+  padding:8px 12px 12px 10px;border:0;border-radius:0;background:var(--bc);color:#fff;font:var(--s-font);box-shadow:none;clip-path:var(--puz);
+  filter:drop-shadow(0 1px 0 color-mix(in srgb,var(--bc) 70%,#000))}
+.tstage .tcode .tpal button.tb.tpb .tbl{white-space:nowrap}
+.tstage .tcode .tpal button.tb.tpb:disabled{filter:grayscale(.6);opacity:.4}
+.tstage .tcode .tpal button.tb.tpb:hover:not(:disabled){filter:brightness(1.06) drop-shadow(0 1px 0 color-mix(in srgb,var(--bc) 70%,#000))}
+
+/* ---------- mòbil: el món a dalt; el programa i la paleta (tira lliscant) a sota ---------- */
+@media (max-width:899px){
+  /* mentre s'edita, el món una mica més petit perquè el programa tingui més lloc */
+  .tsbody>.tstage:has(>.tcode>.tpal) .tworld{--wh:26vh}
+  .tsbody>.tstage>.tcode .tpal{padding:4px 2px 8px;gap:8px;background:#fff;border-top:1px solid #E6E8F0}
+  .tsbody>.tstage>.tcode .tpal .tpb{max-width:none}
+}
+/* ---------- ordinador: paleta a l'esquerra, programa al mig i el món a la dreta (com a Scratch) ---------- */
+@media (min-width:900px){
+  .tsbody>.tstage:not(.m3stage):not(.wstage):not(.iast):has(>.tcode>.tpal){grid-template-columns:minmax(0,2fr) minmax(300px,1fr)}
+  /* com a Scratch, les peces no es parteixen: si un programa és ample, el taulell es desplaça */
+  .tsbody>.tstage:not(.m3stage):not(.wstage):not(.iast)>.tcode:has(>.tpal) :is(#tprog,#rprog,#sprog) .tbl{flex-wrap:nowrap;white-space:nowrap}
+  .tsbody>.tstage:not(.m3stage):not(.wstage):not(.iast)>.tcode:has(>.tpal) :is(#tprog,#rprog,#sprog) .tb,.tsbody>.tstage:not(.m3stage):not(.wstage):not(.iast)>.tcode:has(>.tpal) :is(#tprog,#rprog,#sprog) .tb>.tbh,.tsbody>.tstage:not(.m3stage):not(.wstage):not(.iast)>.tcode:has(>.tpal) .rscript{max-width:none}
+  .tsbody>.tstage:not(.m3stage):not(.wstage):not(.iast)>.tcode:has(>.tpal) :is(#tprog,#rprog,#sprog){overflow:auto}
+  .tsbody>.tstage:not(.m3stage):not(.wstage):not(.iast)>.tcode:has(>.tpal){order:-1;position:relative;padding-left:calc(var(--palw,286px) + 12px)}
+  .tsbody>.tstage:not(.m3stage):not(.wstage):not(.iast)>.tcode:has(>.tpal)>.tpal{position:absolute;left:0;top:0;bottom:0;width:max-content;min-width:190px;max-width:400px;flex-direction:column;flex-wrap:nowrap;
+    overflow-y:auto;overflow-x:hidden;padding:12px 10px 16px;margin:0;background:#fff;border:1px solid #DDE0EA;border-radius:10px;gap:9px;scroll-snap-type:none}
+  .tsbody>.tstage:not(.m3stage):not(.wstage):not(.iast)>.tcode:has(>.tpal)>.tpal .tpb{flex:0 0 auto;max-width:100%}
+  .tsbody>.tstage:not(.m3stage):not(.wstage):not(.iast)>.tcode:has(>.tpal)>.tpal{overflow-x:auto}
+  .tsbody>.tstage:not(.m3stage):not(.wstage):not(.iast)>.tcode:has(>.tpal)>.tpal button.tb.tpb .tbl{white-space:nowrap;flex-wrap:nowrap}
+  .tsbody>.tstage:not(.m3stage):not(.wstage):not(.iast)>.tcode:has(>.tpal)>.tpal button.tb.tpb{max-width:none}
+  /* l'editor fa servir tota l'amplada de la pantalla, com Scratch */
+  .tsbody.wide:has(>.tstage>.tcode>.tpal)>*{max-width:1560px}
+  .tsbody>.tstage:not(.m3stage):not(.wstage):not(.iast)>.tcode:has(>.tpal)>.tpal .spaltog{align-self:stretch}
+}
+@media (prefers-reduced-motion:reduce){.tstage .tcode .tb{transition:none}}
