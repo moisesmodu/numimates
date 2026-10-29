@@ -1,6 +1,8 @@
 /* Tech IA · unitat 1 · guies del professor (mateix esquema que tech-guide-c1.js).
-   Diapositives «media» amb TMEDIA.ia (tech-ia.js): la demo del model que compta parelles. Tot el que fa l'alumnat és
-   dins de l'app i amb models simulats: no cal cap compte ni cap servei d'IA extern. */
+   Diapositives «media» amb TMEDIA.ia (tech-ia.js): la demo del model que compta parelles. A i1-1…i1-4, tot el que fa
+   l'alumnat és dins de l'app i amb models simulats: no cal cap compte ni cap servei d'IA extern. El taller i1-5 fa servir
+   Quick, Draw! (sense compte) i el xat d'IA de la classe (compte del centre o el docent a la pissarra). Fet citat: el conjunt
+   públic de Quick, Draw! té més de 50 milions de dibuixos de 345 categories (Google Creative Lab, «The Quick, Draw! Dataset»). */
 Object.assign(TGUIDE, {
 
   /* ---------- Sessió 1 · Endevina la paraula següent ---------- */

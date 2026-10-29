@@ -48,7 +48,8 @@
 }
 
 /* i1-2 … i1-4: regles o exemples, probabilitats i context, temperatura, com s'entrena un model gran, fluid ≠ cert,
-   i el projecte (corpus, memoritzar o generalitzar, avaluar, autoria). Tot dibuixat per Numi. */
+   i el projecte (corpus, memoritzar o generalitzar, avaluar, autoria); el taller i1-5: Quick, Draw! endevina un dibuix, les
+   seves dades i l'atzar d'un xat de veritat. Tot dibuixat per Numi. */
 {
   const F = (sz, c = '#14204A', w = 800) => `style="font:${w} ${sz}px Lexend,system-ui,sans-serif;fill:${c}"`;
   const M = (sz, c = '#14204A') => `style="font:700 ${sz}px ui-monospace,Menlo,monospace;fill:${c}"`;
@@ -170,6 +171,47 @@
         <g ${tA(2.4, 'ta-pop')}><text x="296" y="132" text-anchor="middle" font-size="24">✍️</text></g>
         <text x="242" y="160" text-anchor="middle" ${F(11.5, '#15803D', 700)} ${tA(2.6, 'ta-fade')}>${L('escrita per nosaltres', 'escrita por nosotros')}</text>
         <g ${tA(3.1, 'ta-pop')}>${box(70, 176, 180, 30, '#7C3AED', '', 15)}<text x="160" y="196" text-anchor="middle" ${F(12, '#fff')}>${L("Digues d'on surten", 'Di de dónde salen')}</text></g>`);
+    },
+
+    // taller i1-5: Quick, Draw! endevina mentre dibuixes: el gat es dibuixa traç a traç i la IA diu el que veu
+    i15qd() {
+      const S = [['M49 106 a34 34 0 1 0 68 0 a34 34 0 1 0 -68 0', .3], ['M56 86 L58 60 L76 74', .8], ['M90 74 L108 60 L110 86', 1], ['M71 98 v6 M95 98 v6', 1.3], ['M78 114 l5 5 l5 -5', 1.5], ['M62 114 l-26 -5 M62 121 l-26 4 M104 114 l26 -5 M104 121 l26 4', 1.8]];
+      const G = [[L('Veig… un cercle?', 'Veo… ¿un círculo?'), .6], [L('una pilota?', '¿una pelota?'), 1.1], [L('una cara?', '¿una cara?'), 1.6]];
+      return tSvg(214, `<g ${tA(.1, 'ta-in')}>${box(6, 6, 158, 174, '#fff', '#DCE4FA', 14)}<path d="M7 34 V20 a13 13 0 0 1 13 -13 H150 a13 13 0 0 1 13 13 V34 Z" fill="#FFF4CC"/>
+          <text x="16" y="26" ${F(12)}>✏️ ${L('Dibuixa: gat', 'Dibuja: gato')}</text><text x="154" y="26" text-anchor="end" ${F(11, '#B45309', 800)}>⏱ 20 s</text></g>
+        ${S.map(([d, t]) => `<path d="${d}" fill="none" stroke="#14204A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" pathLength="1" ${tA(t, 'ta-draw')}/>`).join('')}
+        <text x="85" y="202" text-anchor="middle" ${F(11, '#56628A', 700)} ${tA(.4, 'ta-fade')}>${L('traç a traç, en 20 segons', 'trazo a trazo, en 20 segundos')}</text>
+        <g ${tA(.2, 'ta-in')}>${box(174, 6, 140, 28, '#0E1332', '', 14)}<text x="186" y="25" ${F(12, '#fff')}>🧠 ${L('La IA diu…', 'La IA dice…')}</text></g>
+        ${G.map(([t, s], i) => `<g ${tA(s, 'ta-in')}>${box(174, 42 + i * 30, 140, 24, '#F3F0FF', '#D8CCFF', 12)}<text x="186" y="${58 + i * 30}" ${F(11.5, '#6D28D9', 800)}>${t}</text></g>`).join('')}
+        <g ${tA(2.4, 'ta-pop')}>${box(174, 134, 140, 30, '#DFF7E8', '#86D9A9', 15)}${ok(192, 149)}<text x="208" y="154" ${F(12.5, '#15803D', 900)}>${L('És un gat!', '¡Es un gato!')}</text></g>
+        <g ${tA(3, 'ta-fade')}><text x="244" y="186" text-anchor="middle" ${F(10, '#56628A', 700)}>${L('sense fotos: ha après', 'sin fotos: ha aprendido')}</text><text x="244" y="201" text-anchor="middle" ${F(10, '#56628A', 700)}>${L('de milions de dibuixos', 'de millones de dibujos')}</text></g>`);
+    },
+    // taller i1-5: les dades de Quick, Draw!: «gat» dibuixat per moltes persones (sobretot la cara); la xarxa n'aprèn el que tenen en comú
+    i15data() {
+      const D = { face: '<circle cx="0" cy="3" r="13"/><path d="M-10 -4 L-9 -17 L-2 -10 M2 -10 L9 -17 L10 -4 M-5 0 v3 M5 0 v3 M-13 6 l-8 -2 M-13 10 l-8 2 M13 6 l8 -2 M13 10 l8 2"/>',
+        face2: '<ellipse cx="0" cy="3" rx="14" ry="11"/><path d="M-11 -2 L-12 -15 L-4 -8 M4 -8 L12 -15 L11 -2 M-6 1 h3 M3 1 h3 M-3 7 q3 3 6 0"/>',
+        body: '<ellipse cx="3" cy="6" rx="13" ry="7"/><circle cx="-12" cy="-4" r="6"/><path d="M-16 -8 l0 -6 l4 3 M-10 -10 l2 -5 l2 5 M16 4 q7 -3 5 -13 M-5 12 v6 M9 12 v6"/>',
+        sit: '<path d="M-9 17 Q-13 1 -5 -4 Q0 -7 5 -4 Q13 1 9 17 Z"/><circle cx="0" cy="-11" r="6"/><path d="M-5 -15 l0 -6 l4 3 M2 -18 l3 -3 l1 6 M9 15 q9 0 7 -9"/>' };
+      const tiles = ['face', 'body', 'face2', 'face', 'sit', 'face', 'face2', 'face'].map((k, i) => { const x = 8 + (i % 4) * 50, y = 28 + Math.floor(i / 4) * 50;
+        return `<g ${tA(.2 + i * .18, 'ta-pop')}>${box(x, y, 44, 44, '#FFFDF5', '#EADFC0', 10)}<g transform="translate(${x + 22} ${y + 23})" fill="none" stroke="#14204A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${D[k]}</g></g>`; }).join('');
+      return tSvg(214, `<text x="8" y="18" ${F(11.5, '#56628A', 800)}>${L('«gat», dibuixat per moltes persones', '«gato», dibujado por muchas personas')}</text>${tiles}
+        <g ${tA(1.8, 'ta-in')}>${box(212, 28, 100, 94, '#F3F0FF', '#D8CCFF', 14)}<text x="262" y="56" text-anchor="middle" ${F(19, '#7C3AED', 900)}>50 M+</text><text x="262" y="72" text-anchor="middle" ${F(10.5, '#56628A', 700)}>${L('dibuixos', 'dibujos')}</text>
+          <text x="262" y="99" text-anchor="middle" ${F(17, '#7C3AED', 900)}>345</text><text x="262" y="114" text-anchor="middle" ${F(10.5, '#56628A', 700)}>${L('paraules', 'palabras')}</text></g>
+        <g ${tA(2.4, 'ta-fade')}>${arrow(160, 126, 160, 140, '#7C3AED')}</g>
+        <g ${tA(2.6, 'ta-in')}>${box(8, 144, 304, 32, '#0E1332', '', 14)}<text x="160" y="165" text-anchor="middle" ${F(12, '#fff')}>🧠 ${L('la xarxa aprèn què tenen en comú', 'la red aprende qué tienen en común')}</text></g>
+        <g ${tA(3.2, 'ta-pop')}><text x="160" y="200" text-anchor="middle" ${F(11.5, '#B45309', 800)}>⚠️ ${L('si surt poc a les dades, li costa més', 'si sale poco en los datos, le cuesta más')}</text></g>`);
+    },
+    // taller i1-5: la mateixa petició en tres converses noves: el xat sorteja la paraula següent segons les probabilitats
+    i15roll() {
+      const W = [[L('va', 'encontró'), .5, '#8B5CF6'], [L('es', 'se'), .3, '#0891B2'], [L('hi', 'vio'), .2, '#DB2777']];
+      const R = [[0, L('trobar un pastís de xocolata.', 'un pastel de chocolate.')], [1, L('va quedar glaçat de sorpresa.', 'quedó helado de sorpresa.')], [0, L('trobar un pastís de xocolata.', 'un pastel de chocolate.')]];
+      return tSvg(214, `<g ${tA(.1, 'ta-in')}>${box(4, 4, 312, 44, '#0E1332', '', 14)}<text x="16" y="21" ${F(10, '#9AA6CC', 700)}>${L('la mateixa petició, en 3 converses noves:', 'la misma petición, en 3 conversaciones nuevas:')}</text>
+          <text x="16" y="39" ${M(11.5, '#fff')}>${L('«Quan el robot va obrir la nevera,»', '«Cuando el robot abrió la nevera,»')}</text></g>
+        <text x="12" y="68" ${F(11, '#56628A', 800)} ${tA(.4, 'ta-fade')}>${L('paraula següent:', 'palabra siguiente:')}</text>
+        ${W.map(([t, p, c], i) => hbar(L(40, 76), 76 + i * 18, L(74, 50), p, c, t, Math.round(p * 100) + ' %', .6 + i * .2, 12)).join('')}
+        <g ${tA(1.4, 'ta-wob')}>${box(176, 56, 138, 68, '#FFF7E0', '#F6D28B', 14)}<text x="200" y="101" text-anchor="middle" font-size="28">🎲</text><text x="222" y="81" ${F(12.5, '#92400E', 900)}>${L('sorteja', 'sortea')}</text>
+          <text x="222" y="98" ${F(10, '#92400E', 700)}>${L('segons les', 'según las')}</text><text x="222" y="113" ${F(10, '#92400E', 700)}>${L('probabilitats', 'probabilidades')}</text></g>
+        ${R.map(([w, t], i) => `<g ${tA(2 + i * .5, 'ta-in')}>${box(4, 132 + i * 27, 312, 23, '#F6F2FF', '#E2D8FF', 11)}<text x="14" y="${148 + i * 27}" ${F(10.5, '#6D28D9', 900)}>💬 ${i + 1}</text><text x="50" y="${148 + i * 27}" ${M(10.5)}><tspan fill="${W[w][2]}">${W[w][0]}</tspan> ${t}</text></g>`).join('')}`);
     }
   });
 }
