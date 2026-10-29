@@ -1025,6 +1025,126 @@ Object.assign(TGUIDE, {
           { q: 'Un límit que has trobat i que la fitxa no deia:|Un límite que has encontrado y que la ficha no decía:', big: true, sol: "Per exemple: falla si l'objecte és lluny de la càmera.|Por ejemplo: falla si el objeto está lejos de la cámara." }
         ] }
     ]
+  },
+  /* ---------- Sessió 5 · Taller: entrena una IA de veritat (Teachable Machine) ---------- */
+  'i2-5': {
+    intro: "Taller pràctic amb una IA de veritat: Teachable Machine, l'eina gratuïta de Google que entrena una xarxa neuronal al navegador sense compte. L'alumnat entrena un model d'imatge amb tres objectes de l'aula, el prova de manera honesta amb exemples nous, provoca a propòsit la drecera del fons (com a i2-3) i l'arregla amb dades variades, i n'omple la model card amb els resultats reals. Numi guia cada missió i en recull els resultats al portafoli.|Taller práctico con una IA de verdad: Teachable Machine, la herramienta gratuita de Google que entrena una red neuronal en el navegador sin cuenta. El alumnado entrena un modelo de imagen con tres objetos del aula, lo prueba de forma honesta con ejemplos nuevos, provoca a propósito el atajo del fondo (como en i2-3) y lo arregla con datos variados, y rellena su model card con los resultados reales. Numi guía cada misión y recoge los resultados en el portafolio.",
+    claus: [
+      "Una IA real funciona amb les mateixes idees que el k-NN de Numi: dades, etiquetes, entrenament i prova.|Una IA real funciona con las mismas ideas que el k-NN de Numi: datos, etiquetas, entrenamiento y prueba.",
+      "Aprenentatge per transferència: es reaprofita un model entrenat amb milions d'imatges i només se n'ajusta l'última part.|Aprendizaje por transferencia: se reaprovecha un modelo entrenado con millones de imágenes y solo se ajusta la última parte.",
+      "Les dreceres (el fons, la llum) també enganyen les IA potents: cal provar amb dades noves i variades.|Los atajos (el fondo, la luz) también engañan a las IA potentes: hay que probar con datos nuevos y variados.",
+      "Objectes, no persones: sense cares ni veus de companys, i sense desar res fora de l'ordinador.|Objetos, no personas: sin caras ni voces de compañeros, y sin guardar nada fuera del ordenador."
+    ],
+    prev: ["Sessions i2-1 a i2-3: entrenar, mesurar errors i biaix. Sessió i2-4 (projecte), si s'ha fet.|Sesiones i2-1 a i2-3: entrenar, medir errores y sesgo. Sesión i2-4 (proyecto), si se ha hecho."],
+    obj: [
+      "L'alumne/a entrena un model d'imatge real amb exemples variats.|El alumno/a entrena un modelo de imagen real con ejemplos variados.",
+      "L'alumne/a avalua el model amb una prova honesta i n'apunta els errors.|El alumno/a evalúa el modelo con una prueba honesta y apunta sus errores.",
+      "L'alumne/a reconeix una drecera a les dades i la corregeix.|El alumno/a reconoce un atajo en los datos y lo corrige.",
+      "L'alumne/a documenta el model amb una model card amb dades reals.|El alumno/a documenta el modelo con una model card con datos reales."
+    ],
+    comp: [
+      "Competència digital (CD2 i CD5): crear contingut digital i entendre com funciona la IA|Competencia digital (CD2 y CD5): crear contenido digital y entender cómo funciona la IA",
+      "Competència matemàtica i en ciència i tecnologia (STEM2): experimentar, mesurar i treure conclusions|Competencia matemática y en ciencia y tecnología (STEM2): experimentar, medir y sacar conclusiones",
+      "Competència ciutadana (CC3): ús ètic i responsable de les dades|Competencia ciudadana (CC3): uso ético y responsable de los datos"
+    ],
+    vocab: [
+      ["Xarxa neuronal|Red neuronal", "Model fet de moltes capes de càlculs que aprenen a partir d'exemples.|Modelo hecho de muchas capas de cálculos que aprenden a partir de ejemplos."],
+      ["Aprenentatge per transferència|Aprendizaje por transferencia", "Reaprofitar un model ja entrenat i ajustar-lo a una tasca nova amb pocs exemples.|Reaprovechar un modelo ya entrenado y ajustarlo a una tarea nueva con pocos ejemplos."],
+      ["Drecera|Atajo", "Pista falsa de les dades que la IA aprèn en lloc de la de veritat (el fons, la llum…).|Pista falsa de los datos que la IA aprende en lugar de la verdadera (el fondo, la luz…)."],
+      ["Prova honesta|Prueba honesta", "Prova amb exemples nous que el model no ha vist, fets per una altra persona.|Prueba con ejemplos nuevos que el modelo no ha visto, hechos por otra persona."]
+    ],
+    mat: {
+      aula: ["Un ordinador amb càmera per parella, amb Numi Tech obert a la sessió del taller i Teachable Machine en una altra pestanya|Un ordenador con cámara por pareja, con Numi Tech abierto en la sesión del taller y Teachable Machine en otra pestaña", "Objectes de l'aula (llapis, gomes, tisores, ampolles…) i un full blanc per parella|Objetos del aula (lápices, gomas, tijeras, botellas…) y un folio blanco por pareja", "Projector per mostrar la primera missió|Proyector para mostrar la primera misión"],
+      imprimir: ["Diari del taller (imprimible 1): un per parella (opcional: les respostes també queden a l'app)|Diario del taller (imprimible 1): uno por pareja (opcional: las respuestas también quedan en la app)"],
+      prep: ["Obrir teachablemachine.withgoogle.com des d'un ordinador de l'aula per comprovar que la xarxa del centre no la bloqueja i que el navegador deixa fer servir la càmera.|Abrir teachablemachine.withgoogle.com desde un ordenador del aula para comprobar que la red del centro no la bloquea y que el navegador deja usar la cámara.", "No cal cap compte: no deseu els projectes a Drive. En tancar la pestanya, s'esborra tot.|No hace falta ninguna cuenta: no guardéis los proyectos en Drive. Al cerrar la pestaña, se borra todo.", "Fer una prova d'uns 5 minuts amb dos objectes per saber quant triga a entrenar als ordinadors del centre.|Hacer una prueba de unos 5 minutos con dos objetos para saber cuánto tarda en entrenar en los ordenadores del centro."]
+    },
+    plan: [
+      { min: 5, t: 'De Numi a una IA de veritat|De Numi a una IA de verdad', fase: 'inici',
+        fa: "Recorda la drecera de les pilotes i les tasses (i2-3) i presenta el repte: farem el mateix amb una xarxa neuronal de veritat. També caurà en dreceres?|Recuerda el atajo de las pelotas y las tazas (i2-3) y presenta el reto: haremos lo mismo con una red neuronal de verdad. ¿También caerá en atajos?",
+        diu: ["Creieu que una IA de veritat, molt més potent, també mirarà el fons?|¿Creéis que una IA de verdad, mucho más potente, también mirará el fondo?"],
+        slides: ['s1', 's2'], app: "Els dos primers passos: la pregunta i la història.|Los dos primeros pasos: la pregunta y la historia.", org: "Tot el grup|Todo el grupo" },
+      { min: 7, t: 'Com aprèn i quines normes seguim|Cómo aprende y qué normas seguimos', fase: 'teoria',
+        fa: "Amb les animacions: l'aprenentatge per transferència, els quatre passos de Teachable Machine i les normes (objectes i no persones, cap compte, no desem res).|Con las animaciones: el aprendizaje por transferencia, los cuatro pasos de Teachable Machine y las normas (objetos y no personas, ninguna cuenta, no guardamos nada).",
+        diu: ["Per què n'hi ha prou amb 50 fotos si una IA normal en necessita milions?|¿Por qué bastan 50 fotos si una IA normal necesita millones?"],
+        slides: ['s3', 's4', 's5', 's6'], app: "Les targetes de teoria i la pregunta de les 50 fotos.|Las tarjetas de teoría y la pregunta de las 50 fotos.", org: "Tot el grup|Todo el grupo" },
+      { min: 5, t: 'Prepareu el material|Preparad el material', fase: 'desconnectat',
+        fa: "Cada parella tria tres objectes, prepara dos fons i decideix qui entrena i qui fa la prova.|Cada pareja elige tres objetos, prepara dos fondos y decide quién entrena y quién hace la prueba.",
+        diu: ["Per què no ha de fer la prova qui ha entrenat?|¿Por qué no debe hacer la prueba quien ha entrenado?"],
+        slides: ['s7'], app: "El pas «Prepareu el material».|El paso «Preparad el material».", org: "Parelles|Parejas" },
+      { min: 18, t: 'Missió 1: entrenar i provar|Misión 1: entrenar y probar', fase: 'ordinador',
+        fa: "Mostra el primer pas a la pissarra (Projecte d'imatge → Model estàndard). Les parelles entrenen tres classes amb 40-60 fotos variades, fan 10 proves noves i apunten els resultats a l'app.|Muestra el primer paso en la pizarra (Proyecto de imagen → Modelo estándar). Las parejas entrenan tres clases con 40-60 fotos variadas, hacen 10 pruebas nuevas y apuntan los resultados en la app.",
+        diu: ["Quan s'equivoca? Proveu-ho lluny, a prop, girat i amb poca llum.|¿Cuándo se equivoca? Probadlo lejos, cerca, girado y con poca luz.", "Què passa si li ensenyeu un objecte que no és de cap classe?|¿Qué pasa si le enseñáis un objeto que no es de ninguna clase?"],
+        slides: ['s8', 's9'], app: "Missió 1, la pregunta de l'objecte que no és de cap classe i la de la prova honesta.|Misión 1, la pregunta del objeto que no es de ninguna clase y la de la prueba honesta.", org: "Parelles|Parejas" },
+      { min: 13, t: 'Missió 2: la drecera del fons|Misión 2: el atajo del fondo', fase: 'ordinador',
+        fa: "Les parelles entrenen el llapis només sobre el full blanc i la goma només sobre la taula, proven el llapis sobre la taula i després ho arreglen amb fotos variades. Qui acabi abans fa la missió extra de so.|Las parejas entrenan el lápiz solo sobre el folio blanco y la goma solo sobre la mesa, prueban el lápiz sobre la mesa y después lo arreglan con fotos variadas. Quien termine antes hace la misión extra de sonido.",
+        diu: ["Què ha après realment la IA?|¿Qué ha aprendido realmente la IA?"],
+        slides: ['s10', 's11'], app: "Missió 2, la pregunta de l'app de la pell i, qui acabi, la missió extra de so.|Misión 2, la pregunta de la app de la piel y, quien termine, la misión extra de sonido.", org: "Parelles|Parejas" },
+      { min: 12, t: 'Model card i tancament|Model card y cierre', fase: 'tancament',
+        fa: "Cada parella omple la model card amb els resultats reals. Posada en comú: quins objectes han funcionat millor i quines dreceres s'han trobat. Tiquet de sortida.|Cada pareja rellena la model card con los resultados reales. Puesta en común: qué objetos han funcionado mejor y qué atajos se han encontrado. Tique de salida.",
+        diu: ["Quin límit del vostre model ha de saber qui el faci servir?|¿Qué límite de vuestro modelo tiene que saber quien lo use?"],
+        slides: ['s12', 's13', 's14'], app: "La model card, la pregunta final i com m'he sentit.|La model card, la pregunta final y cómo me he sentido.", org: "Parelles i tot el grup|Parejas y todo el grupo" }
+    ],
+    errors: [
+      ["Grava totes les fotos de la mateixa manera (mateixa distància i posició).|Graba todas las fotos de la misma manera (misma distancia y posición).", "Gira, apropa i allunya l'objecte mentre grava; com més variat, millor.|Gira, acerca y aleja el objeto mientras graba; cuanto más variado, mejor."],
+      ["Fa la prova amb les mateixes posicions de l'entrenament.|Hace la prueba con las mismas posiciones del entrenamiento.", "La prova la fa la parella, amb posicions noves i en un altre lloc de la taula.|La prueba la hace la pareja, con posiciones nuevas y en otro sitio de la mesa."],
+      ["Surt de la pestanya mentre entrena i s'atura.|Sale de la pestaña mientras entrena y se para.", "Esperar a la pestanya de Teachable Machine fins que acabi d'entrenar.|Esperar en la pestaña de Teachable Machine hasta que termine de entrenar."],
+      ["Vol entrenar amb la cara o amb companys.|Quiere entrenar con la cara o con compañeros.", "Recorda la norma: objectes, no persones. Proposa objectes o dibuixos.|Recuerda la norma: objetos, no personas. Propón objetos o dibujos."]
+    ],
+    diff: {
+      mes: "Nivell PRO: afegir una quarta classe «res» (la taula buida o altres objectes) i comparar els encerts amb i sense aquesta classe; i la missió extra de so.|Nivel PRO: añadir una cuarta clase «nada» (la mesa vacía u otros objetos) y comparar los aciertos con y sin esa clase; y la misión extra de sonido.",
+      menys: "Treballar amb dues classes molt diferents (una ampolla i un llapis) i fer només la missió 1; la model card amb frases per completar.|Trabajar con dos clases muy diferentes (una botella y un lápiz) y hacer solo la misión 1; la model card con frases para completar."
+    },
+    aval: {
+      ticket: ["Què vol dir que una IA reaprofita un model entrenat?|¿Qué significa que una IA reaprovecha un modelo entrenado?", "Quina drecera vau provocar i com la vau arreglar?|¿Qué atajo provocasteis y cómo lo arreglasteis?"],
+      rubric: [
+        ["Dades|Datos", "Fotos variades i suficients de cada classe.|Fotos variadas y suficientes de cada clase.", "Poques fotos o totes iguals.|Pocas fotos o todas iguales."],
+        ["Prova|Prueba", "10 proves noves fetes per la parella, amb els errors apuntats.|10 pruebas nuevas hechas por la pareja, con los errores apuntados.", "Proves amb les mateixes posicions o sense apuntar errors.|Pruebas con las mismas posiciones o sin apuntar errores."],
+        ["Drecera|Atajo", "Explica què havia après la IA i com s'ha corregit.|Explica qué había aprendido la IA y cómo se ha corregido.", "No relaciona l'error amb el fons.|No relaciona el error con el fondo."],
+        ["Model card|Model card", "Ús, dades, resultat i límits concrets.|Uso, datos, resultado y límites concretos.", "Incompleta o sense límits.|Incompleta o sin límites."]
+      ]
+    },
+    casa: "A casa, i només si la família vol: obriu Teachable Machine junts, entreneu un model amb dos objectes de casa i proveu-lo. Expliqueu-los què és una drecera i ensenyeu-los la model card del portafoli.|En casa, y solo si la familia quiere: abrid Teachable Machine juntos, entrenad un modelo con dos objetos de casa y probadlo. Explicadles qué es un atajo y enseñadles la model card del portafolio.",
+    faq: [
+      ["Cal compte de Google per fer servir Teachable Machine?|¿Hace falta cuenta de Google para usar Teachable Machine?", "No. Només cal per desar el projecte a Drive o publicar-lo, i avui no ho fem.|No. Solo hace falta para guardar el proyecto en Drive o publicarlo, y hoy no lo hacemos."],
+      ["Les imatges de la càmera s'envien a Google?|¿Las imágenes de la cámara se envían a Google?", "Mentre s'entrena i es prova, el model treballa dins del navegador. Les imatges només surten si es desa el projecte o es puja el model.|Mientras se entrena y se prueba, el modelo trabaja dentro del navegador. Las imágenes solo salen si se guarda el proyecto o se sube el modelo."],
+      ["Per què hi ha prou amb unes quantes fotos?|¿Por qué bastan unas pocas fotos?", "Perquè fa aprenentatge per transferència: reaprofita un model que ja ha après a veure formes amb milions d'imatges.|Porque hace aprendizaje por transferencia: reaprovecha un modelo que ya ha aprendido a ver formas con millones de imágenes."]
+    ],
+    tec: [
+      ["La xarxa del centre bloqueja la web o el navegador no deixa fer servir la càmera.|La red del centro bloquea la web o el navegador no deja usar la cámara.", "Comproveu-ho el dia abans. Sense càmera, es poden pujar fotos (Fitxers); si la web no obre, feu la missió 1 a la pissarra amb l'ordinador del docent.|Comprobadlo el día antes. Sin cámara, se pueden subir fotos (Archivos); si la web no abre, haced la misión 1 en la pizarra con el ordenador del docente."],
+      ["Entrena molt a poc a poc.|Entrena muy despacio.", "Menys fotos (30 per classe) i tancar les altres pestanyes; als ordinadors lents, una parella entrena i l'altra prova.|Menos fotos (30 por clase) y cerrar las otras pestañas; en los ordenadores lentos, una pareja entrena y la otra prueba."]
+    ],
+    seg: ["Cap cara ni veu de companys: només objectes. No es desa res a Drive ni es publica cap model.|Ninguna cara ni voz de compañeros: solo objetos. No se guarda nada en Drive ni se publica ningún modelo.", "A la vista prèvia, ningú no posa davant de la càmera res que no sigui el material del taller.|En la vista previa, nadie pone delante de la cámara nada que no sea el material del taller."],
+    extra: [
+      "Ciències: classificar fulles, roques o insectes de paper amb Teachable Machine i comparar-ho amb una clau dicotòmica.|Ciencias: clasificar hojas, rocas o insectos de papel con Teachable Machine y compararlo con una clave dicotómica.",
+      "Música: un projecte d'àudio que reconegui tres instruments de l'aula.|Música: un proyecto de audio que reconozca tres instrumentos del aula."
+    ],
+    trans: ["Unitat 3: parlar amb models de llenguatge reals (al seu taller, amb el xat del centre). Unitat 8: el prototip del centre també pot ser un model de Teachable Machine.|Unidad 3: hablar con modelos de lenguaje reales (en su taller, con el chat del centro). Unidad 8: el prototipo del centro también puede ser un modelo de Teachable Machine."],
+    slides: [
+      { id: 's1', k: 'portada', t: 'Taller: entrena una IA de veritat|Taller: entrena una IA de verdad', x: 'Teachable Machine, sense compte|Teachable Machine, sin cuenta', nota: "Taller pràctic de la unitat 2.|Taller práctico de la unidad 2." },
+      { id: 's2', k: 'pregunta', t: 'També caurà en dreceres?|¿También caerá en atajos?', x: 'Una IA de veritat, molt més potent que la de Numi.|Una IA de verdad, mucho más potente que la de Numi.', nota: "Recordeu les pilotes i les tasses d'i2-3.|Recordad las pelotas y las tazas de i2-3." },
+      { id: 's3', k: 'anim', t: 'Aprenentatge per transferència|Aprendizaje por transferencia', anim: 'i25tl', x: "Un model gran ja entrenat; només n'ajustem l'última part.|Un modelo grande ya entrenado; solo ajustamos su última parte.", nota: "Per això en tenim prou amb 40-60 fotos.|Por eso nos bastan 40-60 fotos." },
+      { id: 's4', k: 'anim', t: 'Quatre passos|Cuatro pasos', anim: 'i25tm', x: 'Classes, grava, entrena i prova.|Clases, graba, entrena y prueba.', nota: "El percentatge diu com n'està de segura, no si encerta.|El porcentaje dice lo segura que está, no si acierta." },
+      { id: 's5', k: 'anim', t: 'Objectes, al navegador|Objetos, en el navegador', anim: 'i25priv', x: 'Cap compte, res desat i cap persona.|Ninguna cuenta, nada guardado y ninguna persona.', nota: "La llei europea d'IA prohibeix endevinar emocions a l'escola.|La ley europea de IA prohíbe adivinar emociones en la escuela." },
+      { id: 's6', k: 'pregunta', t: 'Per què hi ha prou amb 50 fotos?|¿Por qué bastan 50 fotos?', x: "Pista: el model no comença de zero.|Pista: el modelo no empieza de cero.", nota: "Resposta: aprenentatge per transferència.|Respuesta: aprendizaje por transferencia." },
+      { id: 's7', k: 'activitat', t: 'Prepareu el material|Preparad el material', timer: 5, punts: ['3 objectes que es distingeixin.|3 objetos que se distingan.', 'Dos fons: la taula i un full blanc.|Dos fondos: la mesa y un folio blanco.', 'Qui entrena i qui prova.|Quién entrena y quién prueba.'], nota: "Qui prova no és qui entrena.|Quien prueba no es quien entrena." },
+      { id: 's8', k: 'activitat', t: 'Missió 1: entrena i prova|Misión 1: entrena y prueba', timer: 18, punts: ["Projecte d'imatge → Model estàndard.|Proyecto de imagen → Modelo estándar.", '40-60 fotos variades per classe.|40-60 fotos variadas por clase.', '10 proves noves i els encerts a l\'app.|10 pruebas nuevas y los aciertos en la app.'], nota: "Mostreu el primer pas a la pissarra.|Mostrad el primer paso en la pizarra." },
+      { id: 's9', k: 'pregunta', t: 'I si no és de cap classe?|¿Y si no es de ninguna clase?', x: 'Ensenyeu-li una poma o una clau.|Enseñadle una manzana o una llave.', nota: "Sempre en tria una: per això existeix la classe «res».|Siempre elige una: por eso existe la clase «nada»." },
+      { id: 's10', k: 'repte', t: 'Missió 2: la drecera del fons|Misión 2: el atajo del fondo', punts: ['Llapis només sobre el full blanc.|Lápiz solo sobre el folio blanco.', 'Goma només sobre la taula.|Goma solo sobre la mesa.', 'Prova el llapis sobre la taula… i arregla-ho.|Prueba el lápiz sobre la mesa… y arréglalo.'], nota: "Ha après «taula = goma».|Ha aprendido «mesa = goma»." },
+      { id: 's11', k: 'repte', t: 'Missió extra: sons|Misión extra: sonidos', punts: ["Projecte d'àudio: primer, el soroll de fons.|Proyecto de audio: primero, el ruido de fondo.", 'Dos sons que no siguin veus.|Dos sonidos que no sean voces.', 'Per torns, perquè no es barregin.|Por turnos, para que no se mezclen.'], nota: "Només per a qui acabi abans.|Solo para quien termine antes." },
+      { id: 's12', k: 'concepte', t: 'La model card, amb dades reals|La model card, con datos reales', punts: ['Per a què serveix i per a què no.|Para qué sirve y para qué no.', 'Dades: quantes fotos, quins fons, quina llum.|Datos: cuántas fotos, qué fondos, qué luz.', 'Resultat de la prova i límits.|Resultado de la prueba y límites.'], nota: "Honestedat: els límits també compten.|Honestidad: los límites también cuentan." },
+      { id: 's13', k: 'resum', t: 'Una IA de veritat, les mateixes idees|Una IA de verdad, las mismas ideas', punts: ['Dades, etiquetes, entrenament i prova.|Datos, etiquetas, entrenamiento y prueba.', 'Transferència: poques fotos, model gran.|Transferencia: pocas fotos, modelo grande.', 'Les dreceres també hi són.|Los atajos también están.'], nota: "Connecteu-ho amb el projecte de la unitat 8.|Conectadlo con el proyecto de la unidad 8." },
+      { id: 's14', k: 'tiquet', t: 'Tiquet de sortida|Tique de salida', punts: ['Què vol dir reaprofitar un model entrenat?|¿Qué significa reaprovechar un modelo entrenado?', 'Quina drecera vau provocar i com la vau arreglar?|¿Qué atajo provocasteis y cómo lo arreglasteis?'], nota: "Respostes orals o a la llibreta.|Respuestas orales o en la libreta." }
+    ],
+    print: [
+      { id: 'p1', t: 'Diari del taller: Teachable Machine|Diario del taller: Teachable Machine', k: 'fitxa',
+        intro: "Una per parella (opcional: les respostes també queden a l'app).|Una por pareja (opcional: las respuestas también quedan en la app).",
+        items: [
+          { q: 'Les tres classes i quantes fotos de cada:|Las tres clases y cuántas fotos de cada una:', sol: "Per exemple: llapis, goma i tisores; 50 fotos de cada.|Por ejemplo: lápiz, goma y tijeras; 50 fotos de cada." },
+          { q: 'Encerts a les 10 proves noves i quan s\'equivoca:|Aciertos en las 10 pruebas nuevas y cuándo se equivoca:', big: true, sol: "Per exemple: 9 de 10; falla quan la goma és lluny.|Por ejemplo: 9 de 10; falla cuando la goma está lejos." },
+          { q: 'La drecera del fons: què deia abans i després d\'arreglar-ho?|El atajo del fondo: ¿qué decía antes y después de arreglarlo?', big: true, sol: "Abans: el llapis sobre la taula sortia com a goma. Després d'afegir fotos variades: llapis.|Antes: el lápiz sobre la mesa salía como goma. Después de añadir fotos variadas: lápiz." },
+          { q: 'Un límit del vostre model que hauria de saber qui el faci servir:|Un límite de vuestro modelo que debería saber quien lo use:', sol: "Per exemple: tria una classe encara que l'objecte no en sigui cap.|Por ejemplo: elige una clase aunque el objeto no sea ninguna." }
+        ] }
+    ]
   }
 });
 

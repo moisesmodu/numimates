@@ -9,7 +9,9 @@
      través de /api/chat (mode «ia»), amb un màxim de preguntes per sessió. Sense això, tot es fa amb la IA simulada.
    · Nivell «pro» (3r-4t d'ESO): qualsevol pas pot portar pro: { …camps }, que substitueixen els del pas quan l'alumne/a
      té el nivell pro activat (botó PRO de la barra de dalt; TS_().iapro). Els reptes opcionals continuen sent extra: true.
-   Tipus de pas: iatrain · iangram · iachat · iaprompt · iaagent · iavibe · iacard (el contracte és a scripts/TECH-IA.md).
+   · IA real (tallers iN-5, pas iaext): l'alumnat fa servir eines d'IA reals i gratuïtes fora de Numi, sense compte o amb el
+     compte que dona el centre (mai comptes personals); Numi guia la missió i en recull els resultats al portafoli.
+   Tipus de pas: iatrain · iangram · iachat · iaprompt · iaagent · iavibe · iacard · iaext (el contracte és a scripts/TECH-IA.md).
    Les funcions de càlcul (iaNgram, iaKnn, iaImgFeat, iaDrawFeat, iaSndFeat, iaRubric, iaAgentRun, iaVibeGen…) són
    JavaScript pur: el validador les fa servir a Node per comprovar que cada repte té solució. */
 
@@ -391,9 +393,12 @@ function iaSplitHTML(code) {
 /* ---------- Fitxes per omplir (iacard): model card, fitxa de riscos, de transparència, d'agent, especificació… ---------- */
 // tipus: [icona, color, nom del tipus]
 const IA_CARDK = { model: ['🪪', '#7C5CFF', 'Model card|Model card'], risk: ['⚠️', '#E5489A', 'Fitxa de riscos|Ficha de riesgos'], transp: ['🏷️', '#14A3B8', 'Fitxa de transparència|Ficha de transparencia'],
-  agent: ['🤖', '#F08A24', "Fitxa d'agent|Ficha de agente"], perm: ['🔑', '#D97706', 'Taula de permisos|Tabla de permisos'], spec: ['📐', '#3D7BF4', 'Especificació|Especificación'], app: ['📱', '#16A34A', "Fitxa de l'app|Ficha de la app"] };
+  agent: ['🤖', '#F08A24', "Fitxa d'agent|Ficha de agente"], perm: ['🔑', '#D97706', 'Taula de permisos|Tabla de permisos'], spec: ['📐', '#3D7BF4', 'Especificació|Especificación'], app: ['📱', '#16A34A', "Fitxa de l'app|Ficha de la app"],
+  lab: ['🧪', '#0E9F8E', 'Diari del laboratori|Diario del laboratorio'] };
 // un camp és fet: un text d'almenys «min» caràcters (per defecte 1) · una opció triada · (multi) almenys «min» opcions; min: 0 = opcional
-const iaCardOk = (f, v) => f.choices ? (f.multi ? (Array.isArray(v) ? v.length : 0) >= (f.min ?? 1) : f.min === 0 || (typeof v === 'number' && v >= 0 && v < f.choices.length)) : String(v ?? '').trim().length >= (f.min ?? 1);
+//   · num: true, un número entre lo i hi (si hi són)
+const iaNumOk = (f, v) => String(v ?? '').trim() !== '' && isFinite(+String(v).replace(',', '.')) && (f.lo == null || +String(v).replace(',', '.') >= f.lo) && (f.hi == null || +String(v).replace(',', '.') <= f.hi);
+const iaCardOk = (f, v) => f.num ? (f.min === 0 && String(v ?? '').trim() === '') || iaNumOk(f, v) : f.choices ? (f.multi ? (Array.isArray(v) ? v.length : 0) >= (f.min ?? 1) : f.min === 0 || (typeof v === 'number' && v >= 0 && v < f.choices.length)) : String(v ?? '').trim().length >= (f.min ?? 1);
 const iaCardVal = (f, v, lang = typeof LANG !== 'undefined' ? LANG : 'ca') => f.choices ? (f.multi ? (Array.isArray(v) ? v : []).map(i => iaPick(f.choices[i], lang)).join(' · ') : typeof v === 'number' && f.choices[v] != null ? iaPick(f.choices[v], lang) : '') : String(v ?? '');
 
 /* =====================================================================================================================
@@ -525,6 +530,17 @@ TVALID.iacard = st => {
     else if ((f.min ?? 1) > (f.max || (f.rows > 1 ? 600 : 80))) out.push(`${w}: min és més gran que max`); });
   if (fs.length && fs.every(f => f.min === 0)) out.push('cap camp és obligatori: «Continua» sortiria activat');
   if (st.sol) for (const lang of ['ca', 'es']) for (const f of fs) { const v = st.sol[f.k]; if (!iaCardOk(f, typeof v === 'string' ? iaPick(v, lang) : v)) out.push(`(${lang}) l'exemple (sol) no omple bé el camp «${f.k}»`); }
+  return out;
+};
+// iaext: la fitxa de resultats es comprova com una iacard; a més, l'eina, els passos de la missió i què sol passar (per al solucionari)
+TVALID.iaext = st => {
+  const out = TVALID.iacard({ ...st, kind: undefined }), T = st.tool;
+  if (!T) out.push("falta l'eina (tool)"); else if (T !== 'xat' && !IA_TOOLS[T]) out.push(`eina desconeguda «${T}» (xat, ${Object.keys(IA_TOOLS).join(', ')})`);
+  if (!(st.steps || []).length) out.push('falten els passos de la missió (steps)');
+  (st.steps || []).forEach((x, i) => { if (!x.t) out.push(`pas ${i + 1} de la missió: falta el text (t)`); iaBil(x.t, `pas ${i + 1} de la missió`, out); iaBil(x.copy, `text per copiar del pas ${i + 1}`, out); });
+  for (const k of ['goal', 'alt', 'tip', 'expect', 'safe']) iaBil(st[k], k, out);
+  if (!st.expect) out.push('falta expect: què sol passar a la missió (surt al solucionari)');
+  (st.fields || []).forEach((f, i) => { if (f.num && f.choices) out.push(`camp ${i + 1}: num i choices alhora`); if (f.num && f.lo != null && f.hi != null && f.lo > f.hi) out.push(`camp ${i + 1}: lo és més gran que hi`); });
   return out;
 };
 TVALID['media:ia'] = m => ['ngram', 'knn', 'chat'].includes(m.demo) ? [] : ['demo IA desconeguda (ngram, knn o chat)'];
@@ -918,43 +934,98 @@ function iaCardHTML(o) {
     <dl>${o.rows.map(([l, v, e, k]) => `<div class="${e ? 'e' : ''}"${k ? ` data-k="${iaE(k)}"` : ''}><dt>${iaE(l)}</dt><dd>${v}</dd></div>`).join('')}</dl>
     <footer><span>${L('Autor/a', 'Autor/a')}: <b>${iaE(o.who || '—')}</b></span><span>${iaE(o.d || '')}</span></footer></article>`;
 }
-if (typeof TSTEP !== 'undefined') TSTEP.iacard = function (st) {
-  const fs = st.fields || [], K = IA_CARDK[st.kind] || IA_CARDK.model, key = iaQKey(), lab = !!(TSS && TSS.lab);
+/* ---------- 9.8 iaext: una missió amb una eina d'IA real i gratuïta (fora de Numi) ---------- */
+// Només eines gratuïtes que es poden fer servir a l'escola: sense compte (Teachable Machine, Quick, Draw!) o amb el compte que dona
+// el centre (Gemini de Google Workspace for Education, Copilot Chat de Microsoft 365 Education, NotebookLM, Canva per a l'Educació).
+// Mai comptes personals. «xat» és el xat d'IA de la classe: el tria el docent al panell (opts.tech.iaxat: gemini · copilot · docent)
+// o, si no, l'alumne/a. «docent»: el docent fa servir l'eina a la pissarra i l'alumnat proposa els prompts i n'apunta els resultats.
+const IA_TOOLS = {
+  gemini: { n: 'Gemini', ico: '✦', col: '#3D7BF4', url: 'https://gemini.google.com/', acc: 'edu-g' },
+  copilot: { n: 'Copilot', ico: '◆', col: '#0F6CBD', url: 'https://m365.cloud.microsoft/chat', acc: 'edu-m' },
+  tm: { n: 'Teachable Machine', ico: '🧠', col: '#E8A100', url: 'https://teachablemachine.withgoogle.com/train', acc: 'cap' },
+  quickdraw: { n: 'Quick, Draw!', ico: '✏️', col: '#F2B400', url: 'https://quickdraw.withgoogle.com/', acc: 'cap' },
+  notebooklm: { n: 'NotebookLM', ico: '📓', col: '#1A73E8', url: 'https://notebooklm.google.com/', acc: 'edu-g' },
+  canva: { n: 'Canva', ico: '🎨', col: '#00A3AD', url: 'https://www.canva.com/', acc: 'edu-c' }
+};
+const IA_ACC = { cap: 'Sense compte|Sin cuenta', 'edu-g': 'Amb el compte Google del centre|Con la cuenta Google del centro', 'edu-m': 'Amb el compte Microsoft del centre|Con la cuenta Microsoft del centro', 'edu-c': 'Amb el compte de Canva del centre|Con la cuenta de Canva del centro', docent: 'Ho fem junts a la pissarra|Lo hacemos juntos en la pizarra' };
+// el xat de la classe: el del grup (panell) o el que ha triat l'alumne/a; null = encara no se sap
+const iaXat = () => { try { const o = P && P.classe && P.classe.opts && P.classe.opts.tech; if (o && IA_XATS.includes(o.iaxat)) return o.iaxat; const t = TS_(); return IA_XATS.includes(t.iaxat) ? t.iaxat : null; } catch (e) { return null; } };
+const IA_XATS = ['gemini', 'copilot', 'docent'];
+const iaXatGrup = () => { try { const o = P && P.classe && P.classe.opts && P.classe.opts.tech; return !!(o && IA_XATS.includes(o.iaxat)); } catch (e) { return false; } };
+// l'eina d'un pas: { k, n, ico, col, url, acc } (k: 'docent' si el xat el fa el docent; null si cal triar-lo)
+function iaToolOf(st) {
+  if (st.tool !== 'xat') { const T = IA_TOOLS[st.tool]; return T ? { k: st.tool, ...T } : null; }
+  const x = iaXat(); if (!x) return null;
+  return x === 'docent' ? { k: 'docent', n: L('El xat del docent', 'El chat del docente'), ico: '👩‍🏫', col: '#7C5CFF', url: null, acc: 'docent' } : { k: x, ...IA_TOOLS[x] };
+}
+function iaXatPick(x) { const t = TS_(); t.iaxat = x; save(); iaFx('tap'); tStep(); }
+async function iaCopy(i) {
+  const st = IA.cr && IA.cr.st, c = st && st.steps && st.steps[i] && st.steps[i].copy; if (!c) return; const txt = iaT(c);
+  try { await navigator.clipboard.writeText(txt); } catch (e) { const ta = document.createElement('textarea'); ta.value = txt; document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); } catch (e2) { } ta.remove(); }
+  iaFx('tap'); toast(L('Copiat! Enganxa-ho a l\'eina.', '¡Copiado! Pégalo en la herramienta.'));
+}
+// la fitxa de la missió (columna esquerra; pestanya «Missió» al mòbil)
+function iaExtHTML(st) {
+  const T = iaToolOf(st);
+  if (!T) return `<section class="iap iaxm"><header class="iaph"><b>🧪 ${L('La missió', 'La misión')}</b></header>
+    <p class="iaxg">${L('Quin xat d\'IA fa servir el teu centre? Fes servir sempre el compte de l\'escola.', '¿Qué chat de IA usa tu centro? Usa siempre la cuenta de la escuela.')}</p>
+    <div class="iaxpick">${IA_XATS.map(x => { const t = x === 'docent' ? { n: L('Ho fa el docent a la pissarra', 'Lo hace el docente en la pizarra'), ico: '👩‍🏫', col: '#7C5CFF' } : IA_TOOLS[x]; return `<button type="button" style="--tc:${t.col}" onclick="iaXatPick('${x}')"><span>${t.ico}</span><b>${t.n}</b>${x === 'docent' ? '' : `<small>${iaT(IA_ACC[t.acc])}</small>`}</button>`; }).join('')}</div>
+    <p class="iamut sm">${L('El teu docent ho pot deixar triat per a tota la classe des del panell.', 'Tu docente lo puede dejar elegido para toda la clase desde el panel.')}</p></section>`;
+  const open = T.url ? `<a class="iaxgo" href="${T.url}" target="_blank" rel="noopener noreferrer" onclick="IA.cr && (IA.cr.opened = 1)">${L('Obre', 'Abre')} ${iaE(T.n)} ↗</a>` : '';
+  const chg = st.tool === 'xat' && !iaXatGrup() ? `<button type="button" class="iaxchg" onclick="iaXatPick(null)">${L('Canvia', 'Cambia')}</button>` : '';
+  const safe = st.safe ? iaT(st.safe) : T.acc === 'cap' ? L("No cal cap compte. No hi posis dades personals ni fotos de persones; fes servir objectes.", 'No hace falta ninguna cuenta. No pongas datos personales ni fotos de personas; usa objetos.')
+    : T.k === 'docent' ? L("El docent fa servir el compte del centre. Tu proposes els prompts i apuntes el que respon.", 'El docente usa la cuenta del centro. Tú propones los prompts y apuntas lo que responde.')
+    : L("Fes servir només el compte de l'escola. No hi escriguis dades personals (teves ni d'altres) ni pugis fotos de persones. Si alguna resposta et sembla estranya o et fa sentir malament, avisa el docent.", 'Usa solo la cuenta de la escuela. No escribas datos personales (tuyos ni de otros) ni subas fotos de personas. Si alguna respuesta te parece rara o te hace sentir mal, avisa al docente.');
+  const alt = st.alt ? iaT(st.alt) : L("Feu-ho junts: el docent ho projecta a la pissarra, vosaltres proposeu què provar i apunteu els resultats.", 'Hacedlo juntos: el docente lo proyecta en la pizarra, vosotros proponéis qué probar y apuntáis los resultados.');
+  return `<section class="iap iaxm" style="--tc:${T.col}">
+    <header class="iaxh"><span class="iaxi" aria-hidden="true">${T.ico}</span><div><b>${iaE(T.n)}</b><small>${iaT(IA_ACC[T.acc] || '')}${chg ? ' · ' + chg : ''}</small></div>${open}</header>
+    ${st.goal ? `<p class="iaxg">🎯 ${iaT(st.goal)}</p>` : ''}
+    <ol class="iaxs">${(st.steps || []).map((x, i) => `<li><span>${iaT(x.t)}</span>${x.copy ? `<div class="iaxc"><code>${iaE(iaT(x.copy))}</code><button type="button" onclick="iaCopy(${i})" aria-label="${L('Copia el text', 'Copia el texto')}">📋 ${L('Copia', 'Copia')}</button></div>` : ''}</li>`).join('')}</ol>
+    ${st.tip ? `<p class="iamut sm">💡 ${iaT(st.tip)}</p>` : ''}
+    ${T.k === 'docent' ? '' : `<details class="iaxalt"><summary>${L('No podeu fer servir', 'No podéis usar')} ${iaE(T.n)}?</summary><p>${alt}</p></details>`}
+    <p class="iapriv">🔒 ${safe}</p></section>`;
+}
+if (typeof TSTEP !== 'undefined') TSTEP.iaext = TSTEP.iacard = function (st) {
+  const ext = st.k === 'iaext', fs = st.fields || [], K = ext ? IA_CARDK.lab : IA_CARDK[st.kind] || IA_CARDK.model, key = iaQKey(), lab = !!(TSS && TSS.lab);
   const prev = (TS_().port || []).filter(p => p.ia === 'card' && p.sid === TSS.id && p.si === TSS.i).pop();   // si ja l'havia desada, es pot millorar
-  const S = IA.cr = { v: IA.cd[key] || (prev && prev.v ? JSON.parse(JSON.stringify(prev.v)) : {}), tab: 'form', won: false, fa: null };
+  const S = IA.cr = { st, v: IA.cd[key] || (prev && prev.v ? JSON.parse(JSON.stringify(prev.v)) : {}), tab: ext ? (IA.xt === key ? 'form' : 'mis') : 'form', won: false, fa: null };
   IA.cd[key] = S.v;
   const ok = f => iaCardOk(f, S.v[f.k]), all = () => fs.every(ok), n = () => fs.filter(ok).length;
-  const em = f => ok(f) ? '✓' : f.choices ? (f.multi && (f.min ?? 1) > 1 ? L(`tria'n ${f.min}`, `elige ${f.min}`) : L('tria', 'elige')) : `${String(S.v[f.k] ?? '').trim().length}/${f.min ?? 1}`;
+  const em = f => ok(f) ? '✓' : f.num ? '#' : f.choices ? (f.multi && (f.min ?? 1) > 1 ? L(`tria'n ${f.min}`, `elige ${f.min}`) : L('tria', 'elige')) : `${String(S.v[f.k] ?? '').trim().length}/${f.min ?? 1}`;
   const val = f => { const v = iaCardVal(f, S.v[f.k]); return [v.trim() ? iaCardTxt(v) : `<i>${L('per omplir…', 'por rellenar…')}</i>`, !v.trim()]; };
   const card = () => iaCardHTML({ ico: st.ico || K[0], col: st.col || K[1], kind: iaT(st.kindT || K[2]), title: iaT(st.title || st.name || TSS.s.t), rows: fs.map(f => { const [v, e] = val(f); return [iaT(f.label), v, e, f.k]; }), who: typeof P !== 'undefined' && P && P.name, d: iaDate() });
   const field = (f, i) => { const v = S.v[f.k], id = `iacf${i}`, ph = iaE(iaT(f.hint || ''));
     const inp = f.choices ? `<div class="iacho" role="group" aria-label="${iaE(iaT(f.label))}">${f.choices.map((c, j) => { const on = f.multi ? (Array.isArray(v) && v.includes(j)) : v === j; return `<button type="button" class="${on ? 'on' : ''}" aria-pressed="${on}" data-j="${j}">${iaT(c)}</button>`; }).join('')}</div>${f.hint ? `<small>${iaT(f.hint)}</small>` : ''}`
+      : f.num ? `<input id="${id}" inputmode="decimal" class="ianum" maxlength="12" autocomplete="off" placeholder="${ph}" value="${iaE(v ?? '')}">${f.unit ? `<small>${iaT(f.unit)}</small>` : ''}`
       : (f.rows || 2) > 1 ? `<textarea id="${id}" rows="${f.rows || 2}" maxlength="${f.max || 600}" placeholder="${ph}" spellcheck="true">${iaE(v ?? '')}</textarea>` : `<input id="${id}" maxlength="${f.max || 80}" autocomplete="off" placeholder="${ph}" value="${iaE(v ?? '')}">`;
     return `<div class="iacf ${ok(f) ? 'ok' : ''}" data-f="${iaE(f.k)}"><label${f.choices ? '' : ` for="${id}"`}><b>${iaT(f.label)}</b><em>${em(f)}</em></label>${inp}</div>`; };
-  const foot = () => { const a = all(); TSS.ready = a; if (a && !S.won) { S.won = true; TSS.ok = (TSS.ok || 0) + 1; iaFx('win'); iaSay(L('Fitxa completa!', '¡Ficha completa!')); if (!iaRM() && typeof confetti === 'function') confetti(50); }
+  const foot = () => { const a = all(); TSS.ready = a; if (a && !S.won) { S.won = true; TSS.ok = (TSS.ok || 0) + 1; iaFx('win'); iaSay(ext ? L('Resultats apuntats!', '¡Resultados apuntados!') : L('Fitxa completa!', '¡Ficha completa!')); if (!iaRM() && typeof confetti === 'function') confetti(50); }
     if (S.fa === a) return; S.fa = a; const x = lab ? `<button class="btn ghost" onclick="tNext()">${L('Eina següent', 'Herramienta siguiente')} ›</button>` : '';
-    if (st.save === false) tFoot(L('Continua', 'Continúa'), () => { if (all()) tNext(); }, a, x); else tFoot(L('Desa la fitxa i continua', 'Guarda la ficha y continúa'), () => { if (!all()) return; S.save(); tNext(); }, a, x); };
+    if (st.save === false) tFoot(L('Continua', 'Continúa'), () => { if (all()) tNext(); }, a, x); else tFoot(ext ? L('Desa els resultats i continua', 'Guarda los resultados y continúa') : L('Desa la fitxa i continua', 'Guarda la ficha y continúa'), () => { if (!all()) return; S.save(); tNext(); }, a, x); };
   const upd = k => { const f = fs.find(x => x.k === k), el = document.querySelector(`.iacf[data-f="${k}"]`); if (el) { el.classList.toggle('ok', ok(f)); el.querySelector('em').textContent = em(f); }
     const row = document.querySelector(`.iacv [data-k="${k}"]`); if (row) { const [v, e] = val(f); row.classList.toggle('e', e); row.querySelector('dd').innerHTML = v; }
     const c = document.getElementById('iacn'); if (c) c.textContent = `${n()}/${fs.length}`; foot(); };
-  const draw = () => {
-    $('#tsb').innerHTML = iaHead(st) + iaStage('iacd', S.tab, `${iaTabs([['form', '✏️ ' + L('Omple', 'Rellena')], ['card', (st.ico || K[0]) + ' ' + L('Fitxa', 'Ficha')]], S.tab, 'IA.cr.go')}
-      <section class="iap iacform"><header class="iaph"><b>✏️ ${L('Omple la fitxa', 'Rellena la ficha')}</b><span class="iastat" id="iacn">${n()}/${fs.length}</span></header>
+  const form = () => `<section class="iap iacform"><header class="iaph"><b>${ext ? '📋 ' + L('Què has descobert?', '¿Qué has descubierto?') : '✏️ ' + L('Omple la fitxa', 'Rellena la ficha')}</b><span class="iastat" id="iacn">${n()}/${fs.length}</span></header>
         ${st.intro ? `<p class="iamut sm">${iaT(st.intro)}</p>` : ''}${fs.map(field).join('')}
-        <p class="iapriv">🔒 ${L("No hi escriguis dades personals (teves ni d'altres): la fitxa es desa al teu portafoli.", 'No escribas datos personales (tuyos ni de otros): la ficha se guarda en tu portafolio.')}</p></section>
-      <section class="iap iacside"><div class="iacvw">${card()}</div><div class="iarow"><span class="iamut sm">${L('Així quedarà al teu portafoli.', 'Así quedará en tu portafolio.')}</span><button class="iasm" type="button" onclick="window.print()">🖨️ ${L('Imprimeix', 'Imprime')}</button></div></section>`);
+        ${ext ? '' : `<p class="iapriv">🔒 ${L("No hi escriguis dades personals (teves ni d'altres): la fitxa es desa al teu portafoli.", 'No escribas datos personales (tuyos ni de otros): la ficha se guarda en tu portafolio.')}</p>`}</section>`;
+  const draw = () => {
+    $('#tsb').innerHTML = iaHead(st) + (ext
+      ? iaStage('iacd iaxd', S.tab, `${iaTabs([['mis', '🧪 ' + L('Missió', 'Misión')], ['form', '📋 ' + L('Resultats', 'Resultados')]], S.tab, 'IA.cr.go')}${iaExtHTML(st)}${form()}`)
+      : iaStage('iacd', S.tab, `${iaTabs([['form', '✏️ ' + L('Omple', 'Rellena')], ['card', (st.ico || K[0]) + ' ' + L('Fitxa', 'Ficha')]], S.tab, 'IA.cr.go')}${form()}
+      <section class="iap iacside"><div class="iacvw">${card()}</div><div class="iarow"><span class="iamut sm">${L('Així quedarà al teu portafoli.', 'Así quedará en tu portafolio.')}</span><button class="iasm" type="button" onclick="window.print()">🖨️ ${L('Imprimeix', 'Imprime')}</button></div></section>`));
     fs.forEach((f, i) => { if (f.choices) document.querySelectorAll(`.iacf[data-f="${f.k}"] .iacho button`).forEach(b => b.onclick = () => S.pick(f.k, +b.dataset.j));
       else { const e = document.getElementById(`iacf${i}`); if (e) e.oninput = () => { S.v[f.k] = e.value; upd(f.k); }; } });
     S.fa = null; foot();
   };
   S.pick = (k, j) => { const f = fs.find(x => x.k === k); if (f.multi) { const a = Array.isArray(S.v[k]) ? S.v[k] : (S.v[k] = []), i = a.indexOf(j); if (i >= 0) a.splice(i, 1); else a.push(j); a.sort((x, y) => x - y); } else S.v[k] = j; iaFx('tap');
     document.querySelectorAll(`.iacf[data-f="${k}"] .iacho button`).forEach(b => { const on = f.multi ? S.v[k].includes(+b.dataset.j) : S.v[k] === +b.dataset.j; b.classList.toggle('on', on); b.setAttribute('aria-pressed', on); }); upd(k); };
-  S.go = k => { S.tab = k; const e = document.querySelector('.iacd'); if (e) e.dataset.tab = k; document.querySelectorAll('.iacd .iatabs button').forEach(b => { const on = b.getAttribute('onclick').includes(`'${k}'`); b.classList.toggle('on', on); b.setAttribute('aria-selected', on); }); };
+  // (a la missió, en passar a «Resultats» es recorda: si el pas es redibuixa, s'hi torna)
+  S.go = k => { S.tab = k; if (ext) IA.xt = k === 'form' ? key : null; const e = document.querySelector('.iacd'); if (e) e.dataset.tab = k; document.querySelectorAll('.iacd .iatabs button').forEach(b => { const on = b.getAttribute('onclick').includes(`'${k}'`); b.classList.toggle('on', on); b.setAttribute('aria-selected', on); }); };
   S.save = () => { const t = TS_(); t.port = t.port.filter(p => !(p.ia === 'card' && p.sid === TSS.id && p.si === TSS.i));
-    const first = fs.find(f => !f.choices && String(S.v[f.k] ?? '').trim());
-    iaPortSave({ ia: 'card', t: st.name || st.title || TSS.s.t, sum: first ? String(S.v[first.k]).trim().slice(0, 80) : '', si: TSS.i, ck: st.kind || 'model', ico: st.ico || K[0], col: st.col || K[1], title: st.title || st.name || TSS.s.t, kt: st.kindT || K[2],
-      v: JSON.parse(JSON.stringify(S.v)), f: fs.map(f => f.choices ? { l: f.label, c: (f.multi ? (S.v[f.k] || []) : [S.v[f.k]]).filter(j => f.choices[j] != null).map(j => f.choices[j]) } : { l: f.label, t: String(S.v[f.k] ?? '').trim() }) });
-    delete IA.cd[key]; };
+    const first = fs.find(f => !f.choices && !f.num && String(S.v[f.k] ?? '').trim()), T = ext && iaToolOf(st);
+    iaPortSave({ ia: 'card', t: st.name || st.title || TSS.s.t, sum: first ? String(S.v[first.k]).trim().slice(0, 80) : '', si: TSS.i, ck: ext ? 'lab' : st.kind || 'model', ico: st.ico || K[0], col: st.col || K[1], title: st.title || st.name || TSS.s.t, kt: st.kindT || K[2],
+      v: JSON.parse(JSON.stringify(S.v)), f: [...(T ? [{ l: 'Eina|Herramienta', t: T.k === 'docent' ? L('El xat del docent, a la pissarra', 'El chat del docente, en la pizarra') : T.n }] : []), ...fs.map(f => f.choices ? { l: f.label, c: (f.multi ? (S.v[f.k] || []) : [S.v[f.k]]).filter(j => f.choices[j] != null).map(j => f.choices[j]) } : { l: f.label, t: String(S.v[f.k] ?? '').trim() + (f.num && f.unit && String(S.v[f.k] ?? '').trim() ? ' ' + iaT(f.unit) : '') })] });
+    delete IA.cd[key]; if (IA.xt === key) IA.xt = null; };
   draw();
 };
 
@@ -994,7 +1065,7 @@ if (typeof TPORT !== 'undefined') TPORT.ia = {
   open: p => p.ia === 'card' ? `<div class="tsbody"><div class="iaport card">${iaCardOf(p)}<div class="iarow"><span class="iamut sm">${L('Desada el', 'Guardada el')} ${iaE(iaDate(p.d))}</span><button class="iasm" type="button" onclick="window.print()">🖨️ ${L('Imprimeix', 'Imprime')}</button></div></div></div>` : `<div class="tsbody"><div class="iaport"><span class="iapico">${IA_PICO[p.ia] || '🧠'}</span><h2>${iaE(iaT(p.t))}</h2><p>${iaE(p.sum || '')}</p>${p.text ? `<pre class="iacode light">${iaE(p.text)}</pre>` : ''}${p.plan ? `<ol>${p.plan.map(x => `<li>${iaE(x)}</li>`).join('')}</ol>` : ''}${p.acc != null ? `<p>${L('Encerts a la prova', 'Aciertos en la prueba')}: <b>${iaPc(p.acc)}</b></p>` : ''}<p class="iamut sm">🔒 ${L('Del model entrenat només es desen els noms de les classes i quants exemples tenia: cap imatge ni cap so.', 'Del modelo entrenado solo se guardan los nombres de las clases y cuántos ejemplos tenía: ninguna imagen ni ningún sonido.')}</p></div></div>`
 };
 // el solucionari del professor: files per als passos de Tech IA (o = { idSessió: [{ n, k, q, a }] })
-const IA_SOLK = { iatrain: ['Entrena la IA', 'Entrena la IA'], iangram: ['Model de llenguatge', 'Modelo de lenguaje'], iachat: ['Xat amb la IA', 'Chat con la IA'], iaprompt: ['Prompt', 'Prompt'], iaagent: ['Agent', 'Agente'], iavibe: ['Vibe coding', 'Vibe coding'], iacard: ['Fitxa', 'Ficha'] };
+const IA_SOLK = { iatrain: ['Entrena la IA', 'Entrena la IA'], iangram: ['Model de llenguatge', 'Modelo de lenguaje'], iachat: ['Xat amb la IA', 'Chat con la IA'], iaprompt: ['Prompt', 'Prompt'], iaagent: ['Agent', 'Agente'], iavibe: ['Vibe coding', 'Vibe coding'], iacard: ['Fitxa', 'Ficha'], iaext: ['Missió amb IA real', 'Misión con IA real'] };
 function iaSolHTML(st) {
   switch (st.k) {
     case 'iangram': return `<p class="soop">${(st.checks || []).map(c => c.txt ? iaT(c.txt) : iaNgTxt(c)).join(' · ')}</p>${st.sol ? `<p class="soa">${L('Per exemple, afegir', 'Por ejemplo, añadir')}: <i>${iaE(iaT(st.sol))}</i></p>` : (st.add || []).length ? `<p class="soa">${L('Afegir les frases proposades.', 'Añadir las frases propuestas.')}</p>` : ''}`;
@@ -1002,6 +1073,8 @@ function iaSolHTML(st) {
     case 'iachat': { const b = []; (st.nodes || []).forEach(n => (n.msg || []).forEach(m => { if (m && m.bad) b.push(`«${iaT(m.t).replace(/<[^>]+>/g, '').slice(0, 90)}» → ${iaT(m.bad)}`); })); return b.length ? `<ul>${b.map(x => `<li>${x}</li>`).join('')}</ul>` : null; }
     case 'iaprompt': return st.sol ? `<p class="soa"><i>${iaE(iaT(st.sol))}</i></p>` : null;
     case 'iaagent': { if (!st.sol) return null; const D = iaAgentDef(st, st.sol); return `<ol>${D.plan.map(id => `<li>${iaT((st.acts.find(a => a.id === id) || {}).t)}</li>`).join('')}</ol><p class="soop">${st.tools.map(t => `${iaT(t.n)}: ${t.perms.map(p => `${iaPermN(p)} ${['✕', '✓', '🙋'][D.perms[t.id][p]]}`).join(', ')}`).join(' · ')}</p>`; }
+    case 'iaext': { const T = st.tool === 'xat' ? L('el xat del centre (Gemini o Copilot) o el del docent a la pissarra', 'el chat del centro (Gemini o Copilot) o el del docente en la pizarra') : (IA_TOOLS[st.tool] || {}).n || st.tool;
+      return `<p class="soop">${L('Eina', 'Herramienta')}: <b>${iaE(T)}</b>${st.goal ? ` · ${iaT(st.goal)}` : ''}</p>${st.expect ? `<p class="soa">${iaT(st.expect)}</p>` : ''}${iaSolHTML({ ...st, k: 'iacard' })}`; }
     case 'iacard': return `<p class="soop">${L('Fitxa oberta: es pot continuar quan cada camp té el mínim. Valoreu que les respostes siguin concretes i honestes.', 'Ficha abierta: se puede continuar cuando cada campo tiene el mínimo. Valorad que las respuestas sean concretas y honestas.')}</p><ul>${(st.fields || []).map(f => { const v = st.sol && st.sol[f.k]; return `<li><b>${iaT(f.label)}</b>: ${f.choices ? (v != null ? `<i>${iaE(iaCardVal(f, v, typeof LANG !== 'undefined' ? LANG : 'ca'))}</i>` : f.choices.map(c => iaE(iaT(c))).join(' · ')) : v ? `<i>${iaE(iaT(v))}</i>` : L(`resposta oberta (${f.min ?? 1}+ caràcters)`, `respuesta abierta (${f.min ?? 1}+ caracteres)`)}</li>`; }).join('')}</ul>`;
     case 'iavibe': return st.sol ? `<pre class="socode">${iaE(iaCode(st.sol.js) || '')}</pre>` : st.kind ? `<p class="soop">${L("Plantilla", 'Plantilla')} «${st.kind}»: ${iaE(iaVibeGen('', { kind: st.kind, bug: true }).bug || '')}</p>` : st.checksBy ? `<p class="soop">${L("App lliure. Si surt una d'aquestes plantilles, té proves pròpies i l'error típic que cal arreglar", "App libre. Si sale una de estas plantillas, tiene pruebas propias y el error típico que hay que arreglar")}:</p><ul>${Object.keys(st.checksBy).map(k => `<li><b>${k}</b>: ${iaE(iaVibeGen('', { kind: k, bug: true }).bug || '')}</li>`).join('')}</ul>` : null;
   }
@@ -1061,7 +1134,17 @@ const IA_SAMPLES = [
       { k: 'dades', label: 'Amb quines dades ha après|Con qué datos ha aprendido', hint: 'Quants exemples, de quines classes, amb quins fons…|Cuántos ejemplos, de qué clases, con qué fondos…', min: 20, rows: 2 },
       { k: 'limits', label: 'Quan falla (límits i biaixos)|Cuándo falla (límites y sesgos)', hint: "p. ex. si el fons és diferent del de l'entrenament|p. ej. si el fondo es distinto del del entrenamiento", min: 20, rows: 2 },
       { k: 'risc', label: "Què passa si s'equivoca?|¿Qué pasa si se equivoca?", choices: ['Poca cosa|Poca cosa', 'Una molèstia|Una molestia', 'Un mal greu|Un daño grave'] }],
-    sol: { nom: 'FruitaVista|FrutaVista', us: "Distingeix pomes de plàtans en fotos. No serveix per a altres fruites.|Distingue manzanas de plátanos en fotos. No sirve para otras frutas.", dades: "20 exemples de cada classe, amb fons de fusta i blanc.|20 ejemplos de cada clase, con fondos de madera y blanco.", limits: "Falla amb fons que no ha vist i amb fruites tallades.|Falla con fondos que no ha visto y con frutas cortadas.", risc: 0 } }
+    sol: { nom: 'FruitaVista|FrutaVista', us: "Distingeix pomes de plàtans en fotos. No serveix per a altres fruites.|Distingue manzanas de plátanos en fotos. No sirve para otras frutas.", dades: "20 exemples de cada classe, amb fons de fusta i blanc.|20 ejemplos de cada clase, con fondos de madera y blanco.", limits: "Falla amb fons que no ha vist i amb fruites tallades.|Falla con fondos que no ha visto y con frutas cortadas.", risc: 0 } },
+  { k: 'iaext', ph: 'investiga', tool: 'xat', q: "<b>Missió amb IA real.</b> Pregunta el mateix tres vegades al xat d'IA del centre i compara les respostes.|<b>Misión con IA real.</b> Pregunta lo mismo tres veces al chat de IA del centro y compara las respuestas.",
+    goal: "Descobrir si un xat d'IA respon sempre igual.|Descubrir si un chat de IA responde siempre igual.",
+    steps: [{ t: "Obre el xat amb el compte de l'escola i comença una conversa nova.|Abre el chat con la cuenta de la escuela y empieza una conversación nueva." },
+      { t: 'Enganxa aquesta petició:|Pega esta petición:', copy: "Inventa un nom per a un gat espacial. Només el nom.|Inventa un nombre para un gato espacial. Solo el nombre." },
+      { t: 'Torna-ho a demanar dues vegades més (conversa nova cada vegada) i apunta els tres noms.|Vuelve a pedirlo dos veces más (conversación nueva cada vez) y apunta los tres nombres.' }],
+    expect: "Normalment surten tres noms diferents: el model tria cada paraula amb probabilitats, i hi ha una mica d'atzar (la temperatura).|Normalmente salen tres nombres diferentes: el modelo elige cada palabra con probabilidades, y hay un poco de azar (la temperatura).",
+    fields: [{ k: 'noms', label: 'Els tres noms|Los tres nombres', hint: 'Nom 1, nom 2, nom 3|Nombre 1, nombre 2, nombre 3', min: 6, rows: 1 },
+      { k: 'iguals', label: 'Quants eren iguals?|¿Cuántos eran iguales?', num: true, lo: 0, hi: 3 },
+      { k: 'per', label: 'Per què creus que canvien?|¿Por qué crees que cambian?', min: 15, rows: 2 }],
+    sol: { noms: 'Lunagat, Cometa, Miau-7|Lunagato, Cometa, Miau-7', iguals: '0', per: "Perquè el model tria paraules amb probabilitats i una mica d'atzar.|Porque el modelo elige palabras con probabilidades y un poco de azar." } }
 ];
 // el laboratori de Tech IA (tech-lab.js): els mateixos tipus en mode lliure, sense correcció
 function iaLabSteps() {

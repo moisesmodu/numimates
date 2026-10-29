@@ -44,7 +44,64 @@ Solucionari: `PLAYWRIGHT=… node scripts/tech-sol.mjs` (ja inclou els passos IA
   només surt si el docent ha activat l'assistent al grup (`opts.xat === true`) o l'alumne/a té pla amb assistent, i el
   servidor (`/api/chat`, mode `ctx.ia`) torna a comprovar el permís de la família, l'assistent del grup i els límits. Màxim
   8 preguntes en directe per sessió (`IA.cap`), dins del límit diari de sempre.
-- Mai no envieu l'alumnat a serveis d'IA externs. Exemples, persones, apps i marques: inventats.
+- Fora dels tallers (`iN-5`), no envieu l'alumnat a serveis d'IA externs. Exemples, persones, apps i marques: inventats.
+
+## Tallers amb IA real (`iN-5`, des del 29-10-2026)
+Petició del Moisés: un curs més pràctic, amb models d'IA reals i les seves versions gratuïtes. Cada unitat té una 5a sessió,
+**«Taller: …»** (`taller: true`, sense `proj`; icona de la clau anglesa), on l'alumnat fa servir una eina real i Numi guia la missió
+i recull els resultats (pas `iaext`). La resta del curs no canvia.
+
+**Eines permeses** (gratuïtes; mai comptes personals de l'alumnat):
+| clau | eina | compte |
+|---|---|---|
+| `xat` | el xat d'IA de la classe: **Gemini** (Google Workspace for Education) o **Copilot Chat** (Microsoft 365 Education), o el del docent a la pissarra | el del centre |
+| `tm` | Teachable Machine (entrenar models d'imatge, so o postura al navegador) | cap |
+| `quickdraw` | Quick, Draw! (una xarxa neuronal endevina dibuixos; mostra les dades d'entrenament) | cap |
+| `notebooklm` | NotebookLM (xat que respon només a partir de les fonts que hi poses, amb cites) | el del centre (Google) |
+| `canva` | Canva per a l'Educació (generar imatges amb IA) | el del centre |
+- El xat de la classe el tria el docent al panell (fitxa del grup → Tech IA → «Xat d'IA real dels tallers»: Gemini · Copilot ·
+  «El projecto jo»), a `opts.tech.iaxat`. Si no l'ha triat, l'alumne/a tria entre Gemini, Copilot o «Ho fa el docent».
+- Edats i comptes (octubre 2026): Google ofereix Gemini als usuaris de Workspace for Education de totes les edats, amb
+  protecció per a menors i control de l'administrador; Copilot Chat és per a estudiants de 13 anys o més amb el compte del
+  centre. ChatGPT demana 13 anys i permís dels pares; Claude, 18. A Espanya, per sota dels 14 anys cal el consentiment de la
+  família per tractar dades. Per això: **només comptes del centre** i, si l'alumnat no en té (o és 1r d'ESO sense consentiment),
+  el docent fa la missió a la pissarra (`docent`) i l'alumnat proposa els prompts i apunta els resultats. Teachable Machine i
+  Quick, Draw! no necessiten compte.
+- Cada missió diu sempre: compte del centre, cap dada personal ni foto de persones, avisar el docent si una resposta fa sentir
+  malament. Amb Teachable Machine, objectes (no cares). La guia de cada taller té «Preparació» amb els comptes i una prova prèvia.
+- Els prompts que es copien han de ser segurs i curts, en «ca|es». No demaneu mai a l'eina dades de persones reals.
+
+### `iaext` — missió amb una eina d'IA real (fora de Numi)
+```js
+{ k: 'iaext', ph: 'investiga'|'repte'|'crea', q, tool: 'xat'|'tm'|'quickdraw'|'notebooklm'|'canva', goal: 'ca|es' (una frase),
+  steps: [{ t: 'ca|es', copy?: 'prompt per copiar ca|es' }],   // 3-6 passos curts; «Copia» copia el text
+  fields: [...com iacard..., { k, label, num: true, lo?, hi?, unit?: 'ca|es' }],   // el que porten de tornada (també números)
+  expect: 'ca|es' (què sol passar: surt al solucionari), sol: { … } (exemple que omple els camps), tip?, alt? (si no es pot fer
+  servir l'eina; per defecte: el docent ho projecta), safe? (nota de seguretat pròpia), title?/name? (el «Diari del laboratori») }
+```
+A l'ordinador: la missió a l'esquerra (l'eina amb «Obre … ↗», els passos, «No podeu fer servir…?» i la nota 🔒) i «Què has
+descobert?» a la dreta; al mòbil, pestanyes «Missió / Resultats». «Desa els resultats i continua» quan tots els camps tenen el
+mínim; es desa al portafoli com a «Diari del laboratori» (amb l'eina). El validador comprova l'eina, els passos, `expect` i els camps
+(com `iacard`). Un taller sol tenir: `quiz` (recorda) · `story` (missió) · `learn` curt · 1-2 `iaext` · `quiz` de reflexió · `iacard`
+o una pregunta oberta · `feel`. 45-55 min. Guia completa com les altres sessions (amb `mat.prep`: comptes i prova prèvia).
+
+### Els vuit tallers
+1. **i1-5 · Una IA de veritat, per dins**: Quick, Draw! (encerta dibuixos; mirar-ne les dades) i el xat (continuar una frase tres
+   vegades: probabilitats i atzar; comparar amb el nostre n-grama).
+2. **i2-5 · Entrena una IA de veritat** (referència): Teachable Machine amb objectes de l'aula; prova amb exemples nous; biaix del
+   fons provocat i arreglat; resultats a la fitxa.
+3. **i3-5 · Prompts de veritat**: el mateix encàrrec amb un prompt pobre i un de bo; caçar una al·lucinació (preguntar per una cosa
+   inventada); demanar fonts i comprovar-ne una; el xat com a tutor que no dona la solució.
+4. **i4-5 · Imatges amb IA i autoria**: generar una imatge (Canva o el xat) amb un prompt de 4 parts i tres versions; etiqueta
+   «Generada amb IA»; què diuen les condicions sobre l'ús i l'autoria.
+5. **i5-5 · Vibe coding amb un xat de veritat**: especificació → el xat escriu un HTML petit → enganxar-lo a l'editor de Numi
+   (pas `wcreate` de Tech Web) → provar els criteris d'acceptació → demanar-li que arregli un error.
+6. **i6-5 · Un assistent amb instruccions (i com enganyar-lo)**: instruccions d'un tutor del centre al xat; 5 preguntes de prova;
+   intents d'injecció de prompts; millorar les instruccions. Opcional: NotebookLM amb uns apunts (respostes amb cites).
+7. **i7-5 · Investiga amb IA i verifica**: preguntar sobre l'energia i l'aigua de la IA, demanar fonts i verificar-ne dues; buscar
+   estereotips («descriu una infermera i un enginyer»).
+8. **i8-5 · Prototip amb IA real**: el projecte del centre amb una eina real (Teachable Machine, un assistent amb instruccions o una
+   app feta amb el xat), 10 proves i la fitxa del model amb dades reals.
 
 ## Tipus de pas (prefix `ia`, `tech-ia.js`)
 Tots porten `q` («ca|es», amb `<b>`) i `ph`. Opcionals comuns: `save: true` + `name` (desa al portafoli), `pro`, `extra`, `mood`.

@@ -1161,8 +1161,17 @@ function techField(g) {
     <label class="switch" style="margin:2px 0 10px"><input type="checkbox" ${techNomes(g) ? 'checked' : ''} onchange="grupTech(${g.id},'nomes',null,this.checked)"><span><b style="font-weight:600">${L('Només les sessions que obre el professor', 'Solo las sesiones que abre el profesor')}</b> <small class="t3">${techNomes(g) ? L("Els alumnes només entren a les sessions que obris (una, unes quantes o unitats senceres), ni a les que ja han fet.", 'Los alumnos solo entran en las sesiones que abras (una, unas cuantas o unidades enteras), ni en las que ya han hecho.') : L('Desactivat: poden fer tot el que és obert i repetir les sessions fetes.', 'Desactivado: pueden hacer todo lo abierto y repetir las sesiones hechas.')}</small></span></label>
     ${Object.entries(T.courses).map(([c, x]) => `<div class="tcourse"><label class="switch"><input type="checkbox" ${cs.includes(c) ? 'checked' : ''} onchange="grupTech(${g.id},'course',${js(c)},this.checked)"><span><b style="font-weight:600">${esc(tx(x.n))}</b> <small class="t3">${esc(tx(x.age))} · ${x.ready ? L(`${x.ready} de ${x.total} sessions fetes`, `${x.ready} de ${x.total} sesiones hechas`) : L('en preparació', 'en preparación')}</small></span></label>
       ${cs.includes(c) ? `<div style="margin:6px 0 0 44px">${techLocks(g, c)}</div>
-      <div style="margin:6px 0 0 44px"><a class="btn sm" href="#/material/${encodeURIComponent(c)}">${ico('graduation-cap')}${L('Material del professor', 'Material del profesor')}</a></div>` : ''}</div>`).join('')}
+      ${c === 'ia' ? techIaOpts(g) : ''}<div style="margin:6px 0 0 44px"><a class="btn sm" href="#/material/${encodeURIComponent(c)}">${ico('graduation-cap')}${L('Material del professor', 'Material del profesor')}</a></div>` : ''}</div>`).join('')}
     <small class="t3">${L('Enllaç per als alumnes', 'Enlace para los alumnos')}: <span class="mono">${esc(JOIN(g.codi, { opts: { app: 'tech' } }).replace('https://', ''))}</span> <button class="ib sm" onclick="copyTxt(${js(JOIN(g.codi, { opts: { app: 'tech' } }))},L('Enllaç copiat','Enlace copiado'))">${ico('copy')}</button></small></div>`;
+}
+// Tech IA: amb quin xat d'IA real es fan els tallers (el del centre o el del docent a la pissarra) i el nivell PRO per defecte
+function techIaOpts(g) {
+  const t = (g.opts || {}).tech || {}, x = t.iaxat || '';
+  const opt = (v, n) => `<button class="${x === v ? 'on' : ''}" onclick="grupTech(${g.id},'iaxat',null,${js(v)})">${n}</button>`;
+  return `<div class="tfield" style="margin:8px 0 0 44px;padding:10px 12px"><span class="flbl">${L("Xat d'IA real dels tallers", 'Chat de IA real de los talleres')}</span>
+    <span class="seg" style="margin:6px 0">${opt('', L("Que triï l'alumne", 'Que elija el alumno'))}${opt('gemini', 'Gemini')}${opt('copilot', 'Copilot')}${opt('docent', L('El projecto jo', 'Lo proyecto yo'))}</span>
+    <small class="t3" style="display:block">${L("Gemini (Google Workspace for Education) o Copilot Chat (Microsoft 365 Education), sempre amb els comptes del centre i amb l'IA activada per l'administrador. Si l'alumnat no en pot fer servir, tria «El projecto jo»: ho feu junts a la pissarra.", 'Gemini (Google Workspace for Education) o Copilot Chat (Microsoft 365 Education), siempre con las cuentas del centro y con la IA activada por el administrador. Si el alumnado no puede usarlos, elige «Lo proyecto yo»: lo hacéis juntos en la pizarra.')}</small>
+    <label class="switch" style="margin:8px 0 0"><input type="checkbox" ${t.iapro ? 'checked' : ''} onchange="grupTech(${g.id},'iapro',null,this.checked)"><span><b style="font-weight:600">${L('Nivell PRO per defecte (3r-4t d\'ESO)', 'Nivel PRO por defecto (3.º-4.º de ESO)')}</b></span></label></div>`;
 }
 // obre tots els cursos i totes les sessions de Numi Tech al grup (per provar-ho o si el grup va per lliure)
 async function grupTechAll(id) {
@@ -1193,6 +1202,8 @@ async function grupTech(id, what, c, v) {
   if (what === 'obert') t.obert = { ...(t.obert || {}), [c]: v };
   if (what === 'nomes') t.nomes = !!v;
   if (what === 'ultima') t.ultima = { ...(t.ultima || {}), [c]: v };
+  if (what === 'iaxat') { if (v) t.iaxat = v; else delete t.iaxat; }
+  if (what === 'iapro') { if (v) t.iapro = true; else delete t.iapro; }
   o.app = o.app === 'both' ? 'both' : 'tech'; o.tech = t;
   const j = await act('grup_opts', { id, opts: o });
   if (!j.ok) return toast(L("No s'ha pogut desar.", 'No se ha podido guardar.'));

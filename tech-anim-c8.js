@@ -348,6 +348,32 @@
         <g ${tA(1, 'ta-in')}><text x="246" y="52" text-anchor="middle" font-size="34">☁️</text>${ko(268, 30, 11)}<text x="246" y="80" text-anchor="middle" ${F(10.5, '#B91C1C', 800)}>${L('no surt enlloc', 'no sale a ningún sitio')}</text>${arrow(166, 50, 210, 46, '#EF9A9A')}</g>
         <g ${tA(1.8, 'ta-in')}><text x="208" y="122" font-size="22">📁</text><text x="236" y="114" ${F(10.5, '#15803D', 800)}>${L('al portafoli:', 'al portafolio:')}</text><text x="236" y="129" ${F(10, '#14204A', 700)}>${L('classes, nombre', 'clases, número')}</text><text x="236" y="142" ${F(10, '#14204A', 700)}>${L("d'exemples, encert", 'de ejemplos, acierto')}</text>${arrow(166, 112, 202, 116, '#86D3A5')}</g>
         <g ${tA(2.7, 'ta-pop')}>${box(10, 158, 300, 44, '#FFE1E1', '#F8B4B4', 14)}<text x="160" y="178" text-anchor="middle" ${F(11.5, '#B91C1C', 900)}>🚫 ${L("Endevinar emocions a l'escola", 'Adivinar emociones en la escuela')}</text><text x="160" y="195" text-anchor="middle" ${F(10, '#B91C1C', 700)}>${L("prohibit per la llei europea d'IA (2025)", 'prohibido por la ley europea de IA (2025)')}</text></g>`);
+    },
+    // taller i2-5: aprenentatge per transferència: un model gran ja entrenat (bloquejat) i només l'última part és teva
+    i25tl() {
+      const lay = ['vores|bordes', 'formes|formas', 'textures|texturas', 'parts|partes'];
+      return tSvg(214, `<text x="92" y="16" text-anchor="middle" ${F(11.5, '#56628A', 800)}>${L("ja entrenat amb milions d'imatges", 'ya entrenado con millones de imágenes')}</text>
+        ${lay.map((t, i) => `<g ${tA(.2 + i * .3, 'ta-in')}>${box(14, 26 + i * 40, 156, 32, '#E8EEFF', '#C9D3F2', 10)}<text x="92" y="${47 + i * 40}" text-anchor="middle" ${F(12.5, '#3A4573', 800)}>${tx(t)}</text></g>`).join('')}
+        <g ${tA(1.5, 'ta-pop')}><text x="178" y="102" font-size="22">🔒</text></g>
+        <g ${tA(1.8, 'ta-fade')}>${arrow(200, 108, 222, 108, '#7C3AED')}</g>
+        <g ${tA(2.1, 'ta-pop')}>${box(226, 30, 88, 156, '#F3F0FF', '#8B5CF6', 14)}<text x="270" y="50" text-anchor="middle" ${F(11, '#6D28D9', 900)}>${L('la teva part', 'tu parte')}</text>
+          ${tile(244, 60, 52, '#FDE68A', '✏️', 2.4)}${tile(244, 116, 52, '#BFDBFE', '🧽', 2.6)}</g>
+        <text x="160" y="206" text-anchor="middle" ${F(11, '#56628A', 700)} ${tA(2.9, 'ta-fade')}>${L('amb 40-60 fotos per classe n\'hi ha prou', 'con 40-60 fotos por clase basta')}</text>`);
+    },
+    // taller i2-5: els quatre passos de Teachable Machine
+    i25tm() {
+      const st = [['1', '🏷️', 'Classes|Clases'], ['2', '📷', 'Grava|Graba'], ['3', '⚙️', 'Entrena|Entrena'], ['4', '🔍', 'Prova|Prueba']];
+      return tSvg(214, `${st.map(([n, e, t], i) => `<g ${tA(.2 + i * .5, 'ta-pop')}>${box(8 + i * 78, 20, 70, 84, i === 3 ? '#DFF7E8' : '#F3F0FF', i === 3 ? '#86D9A9' : '#C4B5FD', 14)}<text x="${43 + i * 78}" y="40" text-anchor="middle" ${F(12, '#6D28D9', 900)}>${n}</text><text x="${43 + i * 78}" y="74" text-anchor="middle" font-size="26">${e}</text><text x="${43 + i * 78}" y="96" text-anchor="middle" ${F(11.5, '#3A4573', 800)}>${tx(t)}</text></g>${i < 3 ? `<g ${tA(.4 + i * .5, 'ta-fade')}>${arrow(79 + i * 78, 62, 85 + i * 78, 62, '#8B5CF6')}</g>` : ''}`).join('')}
+        ${hbar(110, 128, 150, .92, '#3CC47C', L('llapis', 'lápiz'), '92 %', 2.4)}${hbar(110, 150, 150, .06, '#C9D3F2', L('goma', 'goma'), '6 %', 2.6)}${hbar(110, 172, 150, .02, '#C9D3F2', L('tisores', 'tijeras'), '2 %', 2.8)}
+        <text x="160" y="206" text-anchor="middle" ${F(10.5, '#56628A', 700)} ${tA(3, 'ta-fade')}>${L('la vista prèvia: el que creu i com n\'està de segura', 'la vista previa: lo que cree y lo segura que está')}</text>`);
+    },
+    // taller i2-5: privadesa i normes: les fotos es queden al navegador; objectes sí, persones no
+    i25priv() {
+      return tSvg(214, `<g ${tA(.2, 'ta-in')}>${box(8, 10, 178, 112, '#F8FAFF', '#C9D3F2', 14)}<rect x="8" y="10" width="178" height="22" rx="11" fill="#E8EEFF"/><text x="22" y="26" ${F(10.5, '#56628A', 800)}>${L('el navegador', 'el navegador')}</text>
+          ${['✏️', '🧽', '✂️'].map((e, i) => tile(24 + i * 54, 46, 44, '#FFF7E0', e, .5 + i * .2)).join('')}<text x="97" y="112" text-anchor="middle" ${F(10.5, '#15803D', 800)}>${L('les fotos es queden aquí', 'las fotos se quedan aquí')}</text></g>
+        <g ${tA(1.4, 'ta-in')}><text x="252" y="56" text-anchor="middle" font-size="36">☁️</text>${ko(276, 30, 11)}<text x="252" y="86" text-anchor="middle" ${F(10.5, '#B91C1C', 800)}>${L('no desem res', 'no guardamos nada')}</text></g>
+        <g ${tA(2.1, 'ta-pop')}>${box(8, 134, 150, 70, '#DFF7E8', '#86D9A9', 14)}<text x="83" y="160" text-anchor="middle" ${F(12, '#15803D', 900)}>${L('objectes', 'objetos')}</text><text x="83" y="190" text-anchor="middle" font-size="22">📏🧴🖍️</text>${ok(146, 140, 10)}</g>
+        <g ${tA(2.6, 'ta-pop')}>${box(164, 134, 150, 70, '#FFE1E1', '#F8B4B4', 14)}<text x="239" y="160" text-anchor="middle" ${F(12, '#B91C1C', 900)}>${L('cares i companys', 'caras y compañeros')}</text>${person(219, 188, '#EF9A9A', 1)}${person(259, 188, '#EF9A9A', 1)}${ko(302, 140, 10)}</g>`);
     }
   });
 }

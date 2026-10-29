@@ -328,7 +328,9 @@ export default async function handler(req, res) {
         const obert = {}; for (const [c, ids] of Object.entries(t.obert && typeof t.obert === 'object' ? t.obert : {})) if (courses.includes(c) && Array.isArray(ids)) obert[c] = [...new Set(ids.filter(id => TECH_T.s[id] && TECH_T.s[id].c === c))];
         // nomes: els alumnes només poden entrar a les sessions que obre el professor (per defecte); ultima = l'última que ha obert (per a «la següent»)
         const ultima = {}; for (const [c, id] of Object.entries(t.ultima && typeof t.ultima === 'object' ? t.ultima : {})) if (courses.includes(c) && TECH_T.s[id] && TECH_T.s[id].c === c) ultima[c] = id;
-        Object.assign(opts, { app: o.app, tech: { courses, fins, obert, casa: t.casa !== false, nomes: t.nomes !== false, ultima } });
+        // Tech IA: el xat d'IA real dels tallers (el del centre: gemini · copilot; o el fa el docent a la pissarra) i el nivell PRO per defecte
+        const ia = { ...(['gemini', 'copilot', 'docent'].includes(t.iaxat) ? { iaxat: t.iaxat } : {}), ...(t.iapro === true ? { iapro: true } : {}) };
+        Object.assign(opts, { app: o.app, tech: { courses, fins, obert, casa: t.casa !== false, nomes: t.nomes !== false, ultima, ...ia } });
       }
       await sql`UPDATE mates.grups SET opts = ${JSON.stringify(opts)}::jsonb WHERE id = ${+b.id}`;
       return ok(res, { ok: true, opts });
