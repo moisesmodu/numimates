@@ -236,6 +236,16 @@ cursos de Tech i crear un curs de disseny 3D en dos nivells. Sense desplegar a p
 - Altres canvis: `tech.js` (el temporitzador de la pausa ja no reactiva «Continua» en un altre pas), `imprimeix.html`
   (capçalera de la graella), `vercel.json` (guia c8 al servidor), `variant.js`/`middleware.js` (full d'estil `tech-ia`).
 - Numi Tech: 256 sessions, solucionari 2.942 respostes, 0 errors.
+- 30-10-2026 (petició del Moisés: «més pràctic, amb models de IA reals i les versions gratis»): **8 tallers amb IA real**, un per
+  unitat (`iN-5`, `taller: true`, clau anglesa al mapa), amb el pas `iaext` (missió guiada amb una eina de veritat i el «Diari del
+  laboratori» al portafoli): i1-5 Quick, Draw! i el xat que continua frases · i2-5 Teachable Machine · i3-5 el xat de veritat
+  (prompts, pregunta trampa, fonts, tutor) · i4-5 imatges amb Canva i autoria · i5-5 vibe coding: el xat fa una app i l'alumnat
+  l'enganxa al `wcreate` (`hintNow`: pista i app de recanvi des del principi) · i6-5 assistent amb instruccions, red team i
+  NotebookLM · i7-5 verificar fonts (lectura lateral) i estereotips · i8-5 prototip real: l'equip tria el camí A (Teachable
+  Machine), B (assistent) o C (app) i la sessió només mostra els passos d'aquest camí (`steps` dinàmic a u8, `I85_STEPS`).
+  El xat del centre (Gemini, Copilot o «ho fa el docent») el tria el professor al panell (`opts.tech.iaxat`); sempre amb comptes
+  del centre, i cada missió té l'alternativa «mireu el del docent a la pissarra». Detall a `scripts/TECH-IA.md`.
+- Numi Tech: 264 sessions (Tech IA, 40), solucionari 3.031 respostes, validador 0 errors i 0 avisos.
 
 ## Editors de blocs més «Scratch» (28-10-2026) — Robot, Robòtica i Creadors
 - En arrossegar: vista prèvia translúcida al lloc on anirà el bloc, el bucle o el «si» que el rebrà s'il·lumina i la paleta

@@ -85,7 +85,7 @@ mínim; es desa al portafoli com a «Diari del laboratori» (amb l'eina). El val
 (com `iacard`). Un taller sol tenir: `quiz` (recorda) · `story` (missió) · `learn` curt · 1-2 `iaext` · `quiz` de reflexió · `iacard`
 o una pregunta oberta · `feel`. 45-55 min. Guia completa com les altres sessions (amb `mat.prep`: comptes i prova prèvia).
 
-### Els vuit tallers
+### Els vuit tallers (fets el 30-10-2026: `scripts/tech-src/ia/uN/`, 0 errors i 0 avisos)
 1. **i1-5 · Una IA de veritat, per dins**: Quick, Draw! (encerta dibuixos; mirar-ne les dades) i el xat (continuar una frase tres
    vegades: probabilitats i atzar; comparar amb el nostre n-grama).
 2. **i2-5 · Entrena una IA de veritat** (referència): Teachable Machine amb objectes de l'aula; prova amb exemples nous; biaix del
