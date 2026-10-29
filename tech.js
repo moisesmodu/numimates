@@ -930,12 +930,25 @@ document.addEventListener('keydown', e => {
   const ed = tEdOf(st), U = TUNDO[ed], S = U && U.S(); if (!S || S.mode !== 'edit') return;
   e.preventDefault(); if (k === 'y' || e.shiftKey) tRedo(ed); else tUndo(ed);
 });
+// mida dels blocs del programa (zoom, per veure sencers els programes llargs); es recorda al dispositiu
+const TZ_ST = [.6, .7, .8, .9, 1, 1.15];
+let TZ_V = (() => { try { const v = +localStorage.getItem('numi-tz'); return TZ_ST.includes(v) ? v : 1; } catch (e) { return 1; } })();
+document.documentElement.style.setProperty('--tz', TZ_V);
+function tZoom(d) {
+  const i = Math.max(0, Math.min(TZ_ST.length - 1, TZ_ST.indexOf(TZ_V) + d)); TZ_V = TZ_ST[i];
+  try { localStorage.setItem('numi-tz', TZ_V); } catch (e) { }
+  document.documentElement.style.setProperty('--tz', TZ_V);
+  document.querySelectorAll('.tzoom button').forEach((b, k) => { b.disabled = k % 2 ? TZ_V >= TZ_ST[TZ_ST.length - 1] : TZ_V <= TZ_ST[0]; });
+}
 const tEdOf = st => st.classList.contains('sstagew') ? 'sg' : st.classList.contains('rstage') ? 'rb' : 'tb';
 function tUndoBtn(ed, S) {
   const h = document.querySelector('.tsbody>.tstage .tphead .tphr'); if (!h || S.mode !== 'edit') return;
   let b = h.querySelector('.tundo');
   if (!b) { h.insertAdjacentHTML('afterbegin', `<button class="tclr tundo" onclick="tUndo('${ed}')" aria-label="${L('Desfés', 'Deshacer')}" title="${L('Desfés (Ctrl+Z)', 'Deshacer (Ctrl+Z)')}"><svg viewBox="0 0 24 24"><path d="M9 7H4V2M4 7a9 9 0 1 1-1 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button class="tclr tredo" onclick="tRedo('${ed}')" aria-label="${L('Refés', 'Rehacer')}" title="${L('Refés (Ctrl+Y)', 'Rehacer (Ctrl+Y)')}" hidden><svg viewBox="0 0 24 24"><path d="M15 7h5V2M20 7a9 9 0 1 0 1 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>`); b = h.querySelector('.tundo'); }
   b.disabled = !(S._uh && S._uh.length);
+  // programes llargs: − / + per fer els blocs del programa més petits o més grans (surt a partir de 6 blocs)
+  const nb = document.querySelectorAll('#tprog .tb, #rprog .tb, #sprog .tb').length;
+  if ((nb >= 6 || TZ_V !== 1) && !h.querySelector('.tzoom')) h.insertAdjacentHTML('afterbegin', `<span class="tzoom" role="group" aria-label="${L('Mida dels blocs', 'Tamaño de los bloques')}"><button onclick="tZoom(-1)" ${TZ_V <= TZ_ST[0] ? 'disabled' : ''} aria-label="${L('Blocs més petits', 'Bloques más pequeños')}" title="${L('Blocs més petits', 'Bloques más pequeños')}">−</button><button onclick="tZoom(1)" ${TZ_V >= TZ_ST[TZ_ST.length - 1] ? 'disabled' : ''} aria-label="${L('Blocs més grans', 'Bloques más grandes')}" title="${L('Blocs més grans', 'Bloques más grandes')}">+</button></span>`);
   // refer només surt quan hi ha alguna cosa per refer (així la capçalera no s'omple)
   const rd = h.querySelector('.tredo'); if (rd) rd.hidden = !(S._rh && S._rh.length);
   // pressupost de blocs: un punt per bloc (ple = fet servir), com els forats de Lightbot

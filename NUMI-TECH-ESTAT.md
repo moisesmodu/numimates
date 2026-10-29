@@ -43,11 +43,12 @@ Petició del Moisés: cada exercici ha de cabre a la pantalla sense baixar (mòb
 - Següent (de l'estudi de la competència): desfer sempre visible, pressupost de blocs com a forats buits, pistes que reaccionen al programa, tres estrelles (resolt · sense pistes · pocs blocs), «Pas a pas» i velocitats a tots els editors, error que assenyala el bloc i el món s'alenteix quan falla.
 
 ## Pendent
-1. **Revisar** Robot, Robòtica, Creadors i Digital (Moisés).
-2. **Web**: acabar i revisar els esborranys de `scripts/tech-src/web/` quan es reprengui.
-3. Retrats d'en Bit (`img/tech/bit-*.webp`) amb el plàstic brillant de les capçaleres.
-4. Política de privacitat (Tech, consentiment a la inscripció, IA del panell). Domini tech.numimates.com: aprovat el 04/10; l'app ja el reconeix (`variant.js`), falta afegir-lo al projecte de Vercel i al DNS.
-5. Canviar la contrasenya feble de l'usuari admin `mmora`.
+(revisat el 29-10-2026: Web, Tech 3D N2 U4/U8, els retrats d'en Bit i les millores dels editors de blocs ja estan fets)
+1. **Revisar** els cursos (Moisés): Robot, Robòtica, Creadors i Digital; també Web, Tech 3D i Tech IA.
+2. Política de privacitat (Tech, consentiment a la inscripció, IA del panell).
+3. Domini tech.numimates.com: l'app ja el reconeix (`variant.js`); falta afegir-lo al projecte de Vercel i al DNS (Moisés).
+4. Canviar la contrasenya feble de l'usuari admin `mmora` (Moisés).
+5. Editors de blocs, si es vol anar més enllà: velocitats a Creadors, pistes que reaccionen al programa.
 
 ## Desplegament
 Des del 14-10-2026 el projecte de Vercel (mates-numi) està connectat a GitHub: cada push a `main` es publica sol.
@@ -243,4 +244,9 @@ cursos de Tech i crear un curs de disseny 3D en dos nivells. Sense desplegar a p
   manté la posició, el programa del mòbil no s'escapa en arrossegar i mostra el bloc nou.
 - Robot: números, colors, notes, condicions i funcions es toquen dins del bloc (selector petit); els botons d'abans hi
   continuen. Robòtica: «Pas a pas». Arreglats: classe `tdin` duplicada i text seleccionat en arrossegar amb el ratolí.
-- Pendent: «Pas a pas» a Creadors, assenyalar el bloc de l'error a Robòtica i Creadors, zoom per a programes llargs.
+- Fet el 29-10-2026: «Pas a pas» a Creadors (`sgStep` i `M.stepBlock` a tech-stage.js: avança fins que comença el bloc
+  següent del personatge que s'edita, el temps passa durant les esperes i, en acabar, es judica com «Comprova»).
+  El bloc de l'error en vermell: a Robòtica, el bloc de motors que anava quan ha xocat (si el repte demana no tocar
+  res) o el bucle penjat; a Creadors, l'últim bloc de moviment quan toca el que no ha de tocar, o el bucle penjat.
+  Zoom dels blocs del programa (− / +, surt a partir de 6 blocs, es recorda al dispositiu: `TZ_V`, `--tz`) als tres
+  editors; arrossegar funciona igual amb zoom.

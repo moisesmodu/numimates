@@ -221,7 +221,7 @@ function roboMachine(W, prog) {
     for (const f of M.fibers) {
       if (f.done || f.until > now + 1e-9) continue;
       let guard = 0;
-      for (;;) { const r = f.gen.next(); if (r.done) { f.done = true; M.cur[f.id] = null; break; } if (r.value.b) M.cur[f.id] = r.value.b; if (r.value.wait !== undefined) { f.until = now + r.value.wait / 1000; if (r.value.wait > 0 || ++guard > 50) break; } if (++guard > 4000) { S.crash = 'busy'; f.done = true; break; } }
+      for (;;) { const r = f.gen.next(); if (r.done) { f.done = true; M.cur[f.id] = null; break; } if (r.value.b) { M.cur[f.id] = r.value.b; if (r.value.b.k === 'run' || r.value.b.k === 'patrol') (M.mv = M.mv || {})[f.id] = r.value.b; } if (r.value.wait !== undefined) { f.until = now + r.value.wait / 1000; if (r.value.wait > 0 || ++guard > 50) break; } if (++guard > 4000) { S.crash = 'busy'; S.crashB = M.cur[f.id]; f.done = true; break; } }
       if (S.crash) break;
     }
     if (M.foreverPending && M.startF.done) { M.foreverPending = false; M.fibers.push({ id: 'forever', gen: roboForever(W, S, prog.forever), until: now, done: false }); }
@@ -230,6 +230,8 @@ function roboMachine(W, prog) {
     for (const p of M.pq) if (!p.done && S.t >= p.t) { p.done = true; M.press(p.b); }
     if (S.btn.A && S.t - S.btnT > .15) S.btn.A = 0; if (S.btn.B && S.t - S.btnT > .15) S.btn.B = 0;
     roboPhys(W, S, ROBO.DT); S.t += ROBO.DT;
+    // el bloc que l'ha posat en marxa quan ha xocat per primer cop (per assenyalar-lo si el repte demana no tocar res)
+    if (S.hits && S.hitB === undefined) S.hitB = Object.values(M.mv || {}).find(b => b && b._id) || Object.values(M.cur).find(b => b && b._id) || null;
   };
   M.idle = () => M.fibers.every(f => f.done) && !M.foreverPending && !S.patrol && Math.abs(S.tl) < .01 && Math.abs(S.tr) < .01 && Math.abs(S.vl) < .2 && Math.abs(S.vr) < .2;
   return M;
@@ -722,7 +724,9 @@ function rbStep() {
   };
   RB_RAF = requestAnimationFrame(step);
 }
-function rbStop() { if (!RB) return; RB.run = false; cancelAnimationFrame(RB_RAF); const b = document.getElementById('rbgo'); if (b) b.innerHTML = `${TIC.play}${L('Executa', 'Ejecuta')}`; document.querySelectorAll('.rb.now').forEach(e => e.classList.remove('now')); }
+function rbStop() { if (!RB) return; RB.run = false; cancelAnimationFrame(RB_RAF); const b = document.getElementById('rbgo'); if (b) b.innerHTML = `${TIC.play}${L('Executa', 'Ejecuta')}`; document.querySelectorAll('.rb.now,.rb.err').forEach(e => e.classList.remove('now', 'err')); }
+// el bloc on ha fallat, en vermell (com a en Bit); s'esborra en tornar a executar
+function rbErrMark(b) { const e = b && b._id && document.getElementById('rb' + b._id); if (e) { e.classList.remove('now'); e.classList.add('err'); (e.firstElementChild || e).scrollIntoView({ block: 'nearest' }); } }
 function rbReset() { if (!RB) return; rbStop(); RB.W = roboWorld(RB.alts[RB.altI]); RB.M = roboMachine(RB.W, RB.prog); if (RB.b3) RB.b3.reset(RB.W, RB.M.S); rbRender(); rbDash(); rbSay(''); }
 function rbSpeed() { RB.speed = RB.speed === 1 ? 2 : RB.speed === 2 ? 4 : 1; const b = document.getElementById('rbsp'); if (b) b.textContent = '×' + RB.speed; }
 function rbPress(k) { if (!RB) return; const b = document.querySelector(`.rmb .rbtn:nth-of-type(${k === 'A' ? 1 : 2})`); if (b) { b.classList.remove('hit'); void b.offsetWidth; b.classList.add('hit'); } if (!RB.run) { if (!RB.prog[k] || !RB.prog[k].length) return rbSay(L(`El botó <b>${k}</b> no té cap programa.`, `El botón <b>${k}</b> no tiene ningún programa.`)); rbGo(); } RB.M.press(k); }
@@ -769,7 +773,7 @@ function rbEnd(why) {
     RB.solved = true; SFX.win && SFX.win(); typeof confetti === 'function' && confetti(90);
     rbSay(RB.alts.length > 1 ? L(`Missió complerta a les ${RB.alts.length} pistes!`, `¡Misión cumplida en las ${RB.alts.length} pistas!`) : L('Missió complerta!', '¡Misión cumplida!'), 'ok'); if (RB.onDone) RB.onDone(); return;
   }
-  SFX.ko && SFX.ko();
+  SFX.ko && SFX.ko(); rbErrMark(bad[0].k === 'crash' ? S.crashB : bad[0].k === 'nohit' ? S.hitB : null);
   rbSay((RB.alts.length > 1 ? L(`A la pista ${RB.altI + 1}: `, `En la pista ${RB.altI + 1}: `) : '') + (bad[0].k === 'crash' ? L('El programa es queda penjat: dins dels bucles cal algun «espera» o algun moviment.', 'El programa se queda colgado: dentro de los bucles hace falta algún «espera» o algún movimiento.') : rbWhy(bad[0], W, S)) + ' ' + L('Canvia el programa i torna-ho a provar.', 'Cambia el programa y vuelve a probar.'), 'bad');
   if (RB.onFail) RB.onFail(bad);
 }

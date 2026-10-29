@@ -132,28 +132,53 @@ function stgClone(S, W, s) {
   const P = S.progs[s.id] || {}; for (const [i, scr] of (P.clone || []).entries()) S.threads.push({ key: c.uid + ':clone:' + i, s: c, gen: stgRun(S, W, c, scr), done: false });
 }
 // la màquina: comença amb la bandera; cada fotograma avança tots els fils fins que esperen
+// blocs que mouen el personatge: si toca on no ha de tocar, s'assenyala l'últim d'aquests
+const STG_MV = new Set(['move', 'goto', 'gotorand', 'glide', 'setx', 'sety', 'chx', 'chy', 'bounce']);
 function stgMachine(W, progs) {
   const S = stgSim(W, progs); S.rng = W.seed ?? 12345; S.uidN = 0; S.sprites.forEach((s, i) => s.uid = 's' + i);
   const M = { W, S };
   M.flag = () => { stgEvent(S, W, 'flag'); };
   M.key = (k, down = true) => { if (down) { if (!S.keys[k]) { S.keys[k] = true; S.keyT = S.keyT || {}; S.keyT[k] = S.t; stgEvent(S, W, 'key:' + k); stgEvent(S, W, 'key:any'); } } else S.keys[k] = false; };
   M.click = id => { const s = S.sprites.filter(o => (o.id === id || o.uid === id) && !o.hidden && !o.dead).sort((a, b) => b.z - a.z)[0]; if (s) { S.log.push({ t: S.t, k: 'click', id: s.id }); stgEvent(S, W, 'click', s); } };
-  M.tick = () => {
+  // un fotograma: entrades i tecles (start), cada fil corre fins que espera el fotograma següent, i el final (end)
+  M.start = () => {
     // entrades programades (proves): tecles mantingudes i tocs
     for (const i of W.input) { if (i.key) { const on = S.t >= i.t - 1e-9 && S.t < i.t + (i.dur || .1) - 1e-9; if (on && !S.keys[i.key]) M.key(i.key, true); else if (!on && S.keys[i.key] && S.t >= i.t + (i.dur || .1) - 1e-9 && !i.off) { i.off = true; M.key(i.key, false); } }
       if (i.click && !i.done && S.t >= i.t - 1e-9) { i.done = true; M.click(i.click); } if (i.mouse && S.t >= i.t - 1e-9) { S.mx = i.mouse[0]; S.my = i.mouse[1]; } }
     // tecles mantingudes: l'esdeveniment es repeteix (com al teclat de l'ordinador)
     for (const [k, on] of Object.entries(S.keys)) if (on && S.t - S.keyT[k] > .45 && Math.round((S.t - S.keyT[k]) * STG.FPS) % 3 === 0) { stgEvent(S, W, 'key:' + k); }
-    for (const th of S.threads.slice()) {
-      if (th.done || S.stopped) continue;
-      let guard = 0;
-      for (;;) { const r = th.gen.next(); if (r.done) { th.done = true; break; } if (r.value.b) th.cur = r.value.b; if (r.value.frame) break; if (++guard > 5000) { S.crash = 'busy'; th.done = true; break; } }
-    }
+  };
+  M.end = () => {
     S.threads = S.threads.filter(t => !t.done);
     for (const s of S.sprites) { s.path += Math.hypot(s.x - s.lastX, s.y - s.lastY); s.lastX = s.x; s.lastY = s.y; }
     // xocs entre personatges (per a les comprovacions «touched»)
-    for (const a of S.sprites) for (const b of S.sprites) if (a !== b && a.id !== b.id && !a.hidden && !b.hidden && !a.dead && !b.dead && Math.hypot(a.x - b.x, a.y - b.y) < (stgR(a) + stgR(b)) * .78) S.touched.add(a.id + '>' + b.id);
+    for (const a of S.sprites) for (const b of S.sprites) if (a !== b && a.id !== b.id && !a.hidden && !b.hidden && !a.dead && !b.dead && Math.hypot(a.x - b.x, a.y - b.y) < (stgR(a) + stgR(b)) * .78) {
+      // el bloc que feia el personatge quan s'han tocat per primer cop (per assenyalar-lo si el repte diu que no es poden tocar)
+      const k = a.id + '>' + b.id; if (!S.touched.has(k)) { S.touchB = S.touchB || {}; const th = S.threads.find(x => x.s === a && x.cur); S.touchB[k] = th ? th.mv || th.cur : null; } S.touched.add(k); }
     S.t += 1 / STG.FPS; S.f++;
+  };
+  M.tick = () => {
+    M.start();
+    for (const th of S.threads.slice()) {
+      if (th.done || S.stopped) continue;
+      let guard = 0;
+      for (;;) { const r = th.gen.next(); if (r.done) { th.done = true; break; } if (r.value.b) { th.cur = r.value.b; if (STG_MV.has(th.cur.k)) th.mv = th.cur; } if (r.value.frame) break; if (++guard > 5000) { S.crash = 'busy'; S.crashB = th.cur; th.done = true; break; } }
+    }
+    M.end();
+  };
+  // «Pas a pas»: cada fil avança fins que comença un bloc nou (sense passar el temps); quan tots esperen el fotograma
+  // següent, el fotograma s'acaba. Torna true quan ha començat un bloc d'algun personatge de «who» (el que s'edita).
+  M.stepBlock = who => {
+    if (!M.mid) { M.start(); M.mid = true; S.threads.forEach(th => { th.waitF = false; th.nb = 0; }); }
+    let hit = false;
+    for (const th of S.threads.slice()) {
+      if (th.done || th.waitF || S.stopped) continue;
+      const r = th.gen.next();
+      if (r.done) th.done = true; else if (r.value.frame) th.waitF = true;
+      else if (r.value.b) { th.cur = r.value.b; if (STG_MV.has(th.cur.k)) th.mv = th.cur; if (!who || th.s.id === who) hit = true; if (++th.nb > 5000) { S.crash = 'busy'; S.crashB = th.cur; th.done = true; } }
+    }
+    if (S.stopped || S.threads.every(th => th.done || th.waitF)) { M.end(); M.mid = false; }
+    return hit;
   };
   M.idle = () => !S.threads.length;
   return M;
@@ -458,7 +483,7 @@ function sgStageHTML() {
       <div class="sctl"><button class="sax${SG.ax.on ? ' on' : ''}" onclick="sgAxes()" aria-pressed="${SG.ax.on}" aria-label="${L('Eixos de coordenades (x, y)', 'Ejes de coordenadas (x, y)')}" title="${L('Eixos de coordenades (x, y)', 'Ejes de coordenadas (x, y)')}">${SG_ICO.axes}</button><button class="sgo" onclick="sgGo()" aria-label="${L('Bandera verda: comença', 'Bandera verde: empieza')}">${SG_ICO.flag}</button><button class="sst" onclick="sgStop()" aria-label="${L('Atura', 'Para')}"><i></i></button></div></div>
     ${keys.length ? `<div class="skeys">${keys.map(k => `<button data-k="${k}" onpointerdown="sgKey('${k}',true)" onpointerup="sgKey('${k}',false)" onpointerleave="sgKey('${k}',false)">${{ left: '←', right: '→', up: '↑', down: '↓', space: L('espai', 'espacio') }[k] || k.toUpperCase()}</button>`).join('')}</div>` : ''}
     <p class="tsay" id="tsay" aria-live="polite"></p>
-    <div class="trun"><button class="btn big trgo" id="sggo" onclick="sgGo()">${SG_ICO.flag}${L('Comença', 'Empieza')}</button>${SG.alts.some(a => a.input && a.input.length) && SG.mode === 'edit' ? `<button class="btn ghost" onclick="sgGo(true)">${L('Comprova', 'Comprueba')}</button>` : ''}<button class="btn ghost ico" onclick="sgReset()" aria-label="${L('Torna a començar', 'Vuelve a empezar')}"><svg viewBox="0 0 24 24"><path d="M12 5V2L7 6l5 4V7a6 6 0 1 1-6 6H4a8 8 0 1 0 8-8z" fill="currentColor"/></svg></button></div></div>`;
+    <div class="trun"><button class="btn big trgo" id="sggo" onclick="sgGo()">${SG_ICO.flag}${L('Comença', 'Empieza')}</button>${SG.alts.some(a => a.input && a.input.length) && SG.mode === 'edit' ? `<button class="btn ghost" onclick="sgGo(true)">${L('Comprova', 'Comprueba')}</button>` : ''}${SG.mode === 'edit' ? `<button class="btn ghost" onclick="sgStep()" title="${L('Fes un sol bloc i atura\'t', 'Haz un solo bloque y para')}">${L('Pas a pas', 'Paso a paso')}</button>` : ''}<button class="btn ghost ico" onclick="sgReset()" aria-label="${L('Torna a començar', 'Vuelve a empezar')}"><svg viewBox="0 0 24 24"><path d="M12 5V2L7 6l5 4V7a6 6 0 1 1-6 6H4a8 8 0 1 0 8-8z" fill="currentColor"/></svg></button></div></div>`;
 }
 function sgHTML(extra = '') { return `<div class="tstage rstage sstagew m-${SG.mode}">${sgStageHTML()}<div class="tcode">${extra}${sgCode()}</div></div>`; }
 function sgDraw() { const c = document.querySelector('.sstagew .tcode'); if (!c) return; const sc = document.getElementById('sprog'), top = sc ? sc.scrollTop : 0; c.innerHTML = (SG.extra || '') + sgCode(); const s2 = document.getElementById('sprog'); if (s2) s2.scrollTop = top; }
@@ -598,7 +623,31 @@ function sgGo(auto) {
   SG_RAF = requestAnimationFrame(step);
   const b = document.getElementById('sggo'); if (b) b.innerHTML = `${SG_ICO.flag}${L('Torna a començar', 'Vuelve a empezar')}`;
 }
-function sgStop() { if (!SG) return; SG.run = false; cancelAnimationFrame(SG_RAF); document.querySelectorAll('.sb.now').forEach(e => e.classList.remove('now')); const b = document.getElementById('sggo'); if (b) b.innerHTML = `${SG_ICO.flag}${L('Comença', 'Empieza')}`; }
+function sgStop() { if (!SG) return; SG.run = false; cancelAnimationFrame(SG_RAF); document.querySelectorAll('.sb.now,.sb.err').forEach(e => e.classList.remove('now', 'err')); const b = document.getElementById('sggo'); if (b) b.innerHTML = `${SG_ICO.flag}${L('Comença', 'Empieza')}`; }
+// «Pas a pas» (com a Robot i Robòtica): cada toc fa córrer el programa fins que comença el bloc següent del personatge que
+// edites; aquest bloc queda marcat. La primera vegada (o després de qualsevol canvi) comença de nou amb la bandera verda.
+// Fa servir el repte tal com es comprova (amb les tecles i els tocs de la prova), i en acabar el judica com «Comprova».
+function sgStep() {
+  if (!SG) return; if (SG.run) sgStop();
+  if (!sgUsed()) return sgSay(L('Primer posa algun bloc al programa.', 'Primero pon algún bloque en el programa.'));
+  if (!SG.stepM || SG.stepM !== SG.M) { SG.W = stgWorld(SG.alts[SG.altI]); SG.M = stgMachine(SG.W, SG.progs); SG.stepM = SG.M; SG.stepT0 = 0; SG.judge = true; SG.auto = true; SG.sel = null; sgSay(''); SG.M.flag(); }
+  document.querySelectorAll('.sb.now,.sb.err').forEach(e => e.classList.remove('now', 'err'));
+  const M = SG.M, S = M.S, W = SG.W, mine = () => S.threads.some(th => !th.done && th.s.id === SG.who);
+  let why = null, hit = false;
+  // (fins a 20 s de temps de programa per toc: si el personatge espera, el temps passa fins que torna a fer alguna cosa)
+  for (let g = 0; g < 20000 && !why && !hit; g++) {
+    const f0 = S.f; hit = M.stepBlock(SG.who); if (S.f !== f0) stgTrack(W, S);
+    if (S.crash) why = 'crash'; else if (S.stopped) why = 'stop'; else if (W.goal.length && S.t >= W.time - 1e-9) why = 'time';
+    else if (!S.threads.length && !(W.input || []).some(i => (i.key || i.click) && S.t < i.t)) why = 'stop';
+    else if (S.t - (SG.stepT0 ?? S.t) > 20) break;
+  }
+  SG.stepT0 = S.t;
+  if (S.sound && S.sound !== SG.stepSnd) { SG.stepSnd = S.sound; sgSound(S.sound.n); }
+  sgRender();
+  if (why) { SG.stepM = null; SG.stepT0 = null; return sgEnd(why); }
+  for (const th of S.threads) if (!th.done && th.s.id === SG.who && th.cur && th.cur._id) { const e = document.getElementById('sg' + th.cur._id); if (e) { e.classList.add('now'); (e.firstElementChild || e).scrollIntoView({ block: 'nearest' }); } }
+  if (!mine()) sgSay(L('Aquest personatge ja ha acabat; els altres continuen. Toca «Pas a pas» per seguir.', 'Este personaje ya ha terminado; los demás siguen. Toca «Paso a paso» para seguir.'));
+}
 function sgReset() { if (!SG) return; sgStop(); SG.W = stgWorld(SG.alts[SG.altI]); SG.M = stgMachine(SG.W, SG.progs); sgRender(); sgSay(''); }
 function sgKey(k, down) { if (!SG) return; const b = document.querySelector(`.skeys [data-k="${k}"]`); if (b) b.classList.toggle('on', down); if (!SG.run && down) sgGo(); if (SG.run) SG.M.key(k, down); }
 function sgAlt(i) { if (!SG || i < 0 || i >= SG.alts.length) return; sgStop(); SG.altI = i; SG.W = stgWorld(SG.alts[i]); SG.M = stgMachine(SG.W, SG.progs); document.getElementById('ssp').innerHTML = ''; sgRender(); const t = document.querySelector('#sworld .talts'); if (t) t.outerHTML = sgStageHTML().match(/<div class="talts">[\s\S]*?<\/div>/)[0]; }
@@ -639,7 +688,9 @@ function sgEnd(why) {
       if (nx >= 0) { SFX.ok && SFX.ok(); const au = SG.auto; sgSay(L(`La prova ${SG.altI + 1} funciona! Ara la prova ${nx + 1}…`, `¡La prueba ${SG.altI + 1} funciona! Ahora la prueba ${nx + 1}…`), 'ok'); setTimeout(() => { if (!SG || SG.run) return; sgAlt(nx); sgGo(au); }, 1300); return; } }
     SG.solved = true; SFX.win && SFX.win(); typeof confetti === 'function' && confetti(90); { const st = document.getElementById('sstage'); if (st) { st.classList.remove('sgwin'); void st.offsetWidth; st.classList.add('sgwin'); setTimeout(() => st.classList.remove('sgwin'), 1700); } } sgSay(L('Molt bé! Funciona!', '¡Muy bien! ¡Funciona!'), 'ok'); if (SG.onDone) SG.onDone(); return;
   }
-  SFX.ko && SFX.ko(); sgSay((SG.alts.length > 1 ? L(`Prova ${SG.altI + 1}: `, `Prueba ${SG.altI + 1}: `) : '') + SG_WHY(bad[0]) + ' ' + L('Canvia els blocs i torna-ho a provar.', 'Cambia los bloques y vuelve a probar.'), 'bad');
+  SFX.ko && SFX.ko(); { const nt = bad.find(g => g.k === 'notouch'), eb = why === 'crash' ? S.crashB : nt && S.touchB ? S.touchB[nt.a + '>' + nt.b] || S.touchB[nt.b + '>' + nt.a] : null;
+    const e = eb && eb._id && document.getElementById('sg' + eb._id); if (e) { e.classList.add('err'); (e.firstElementChild || e).scrollIntoView({ block: 'nearest' }); } }
+  sgSay((SG.alts.length > 1 ? L(`Prova ${SG.altI + 1}: `, `Prueba ${SG.altI + 1}: `) : '') + SG_WHY(bad[0]) + ' ' + L('Canvia els blocs i torna-ho a provar.', 'Cambia los bloques y vuelve a probar.'), 'bad');
   if (SG.onFail) SG.onFail(bad);
 }
 /* ---------- Editor ---------- */
