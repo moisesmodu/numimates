@@ -179,4 +179,55 @@
         <g ${tA(3.2, 'ta-wob')}>${box(214, 184, 84, 24, '#3CC47C', '', 12)}${CT(256, 200, L('honest ✓', 'honesto ✓'), 11, '#fff')}</g>`);
     }
   });
+
+  /* ---------- Taller i4-5 · imatges amb una IA de veritat i autoria ---------- */
+  // la guineu lectora del cartell (inventada): o = { gl: ulleres, bk: llibre obert, c: color del pelatge }
+  const fox = (x, y, s = 1, o = {}) => { const c = o.c || '#F08A24';
+    return `<g transform="translate(${x} ${y}) scale(${s})"><path d="M12 40 Q30 40 32 22 Q38 34 30 44 Q22 50 10 46 Z" fill="${c}"/><path d="M32 22 Q37 27 34 33 Q31 31 30 28 Z" fill="#FFF7ED"/>
+      <path d="M-15 46 Q-17 20 0 18 Q17 20 15 46 Z" fill="${c}"/><path d="M-7 46 Q-7 28 0 26 Q7 28 7 46 Z" fill="#FFF7ED"/>
+      <path d="M-18 -2 L-15 -24 L-4 -12 L4 -12 L15 -24 L18 -2 Q16 14 0 18 Q-16 14 -18 -2 Z" fill="${c}"/><path d="M-14 -20 L-12 -12 L-7 -14 Z M14 -20 L12 -12 L7 -14 Z" fill="#7C2D12"/>
+      <path d="M-18 -2 Q-9 2 -4 10 Q0 13 4 10 Q9 2 18 -2 Q16 14 0 18 Q-16 14 -18 -2 Z" fill="#FFF7ED"/><circle cx="0" cy="11" r="2.6" fill="#14204A"/><circle cx="-6" cy="0" r="1.8" fill="#14204A"/><circle cx="6" cy="0" r="1.8" fill="#14204A"/>
+      ${o.gl ? '<g fill="none" stroke="#14204A" stroke-width="1.6"><circle cx="-6" cy="0" r="5"/><circle cx="6" cy="0" r="5"/><path d="M-1 0 H1"/></g>' : ''}
+      ${o.bk ? '<path d="M-21 28 L0 33 L21 28 L21 44 L0 49 L-21 44 Z" fill="#2563EB"/><path d="M-19 27 L0 31.5 L0 46 L-19 41.5 Z" fill="#fff"/><path d="M19 27 L0 31.5 L0 46 L19 41.5 Z" fill="#F1F5F9"/><path d="M-15 32 L-4 34.5 M-15 36 L-4 38.5 M15 32 L4 34.5 M15 36 L4 38.5" stroke="#CBD5E1" stroke-width="1.2"/>' : ''}</g>`; };
+  // fons d'aquarel·la (taques suaus) dins d'un marc
+  const wash = (x, y, w, h) => `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="#FFF7ED"/><ellipse cx="${x + w * .2}" cy="${y + h * .3}" rx="${w * .42}" ry="${h * .2}" fill="#FBCFE8" opacity=".55"/><ellipse cx="${x + w * .85}" cy="${y + h * .72}" rx="${w * .45}" ry="${h * .22}" fill="#BAE6FD" opacity=".55"/><ellipse cx="${x + w * .3}" cy="${y + h * .92}" rx="${w * .4}" ry="${h * .14}" fill="#BBF7D0" opacity=".6"/>`;
+  Object.assign(TANI, {
+    // les quatre parts del prompt (subjecte, estil, composició i llum) i com cada una canvia la imatge
+    i45parts() {
+      const P = [[L('SUBJECTE', 'SUJETO'), L('una guineu que llegeix', 'un zorro que lee'), '#8B5CF6', '#F3F0FF'], [L('ESTIL', 'ESTILO'), L('aquarel·la, colors suaus', 'acuarela, colores suaves'), '#F08A24', '#FFF4E8'],
+        [L('COMPOSICIÓ', 'COMPOSICIÓN'), L('vertical, al centre', 'vertical, en el centro'), '#14A3B8', '#E9FAFD'], [L('LLUM', 'LUZ'), L('càlida, de posta de sol', 'cálida, de puesta de sol'), '#E5489A', '#FDEEF6']];
+      return tSvg(214, `<defs><clipPath id="i45pc"><rect x="196" y="8" width="116" height="166" rx="10"/></clipPath><radialGradient id="i45pg" cx=".8" cy=".2" r=".9"><stop offset="0" stop-color="#FDBA74" stop-opacity=".9"/><stop offset="1" stop-color="#FDBA74" stop-opacity="0"/></radialGradient></defs>
+        ${P.map(([k, x, c, bg], i) => `<g ${tA(.2 + i * .7, 'ta-in')}>${box(6, 6 + i * 45, 182, 40, bg, c + '66', 12)}<circle cx="24" cy="${26 + i * 45}" r="10" fill="${c}"/>${CT(24, 30 + i * 45, i + 1, 11, '#fff', 900)}<text x="42" y="${22 + i * 45}" ${F(10, c, 900)}>${k}</text><text x="42" y="${38 + i * 45}" ${F(10.5, '#14204A', 700)}>${x}</text></g>`).join('')}
+        <g ${tA(.1, 'ta-fade')}>${box(194, 6, 120, 170, '#fff', '', 12)}</g>
+        <g clip-path="url(#i45pc)"><g ${tA(.9, 'ta-fade')}>${wash(196, 8, 116, 166)}</g><g ${tA(2.3, 'ta-fade')}><rect x="196" y="8" width="116" height="166" fill="url(#i45pg)"/><circle cx="292" cy="30" r="11" fill="#FDE68A"/></g></g>
+        <g ${tA(1.6, 'ta-fade')}><rect x="212" y="16" width="84" height="24" rx="6" fill="none" stroke="#14A3B8" stroke-width="2" stroke-dasharray="5 4"/>${CT(254, 32, L('títol', 'título'), 10, '#0E7490', 800)}</g>
+        <g ${tA(.4, 'ta-pop')}>${fox(254, 96, 1.05, { gl: 1, bk: 1 })}</g>
+        <g clip-path="url(#i45pc)"><g ${tA(2.3, 'ta-fade')}><rect x="196" y="8" width="116" height="166" fill="#F97316" opacity=".13"/></g></g>
+        <rect x="194" y="6" width="120" height="170" rx="12" fill="none" stroke="#14204A" stroke-width="2"/>
+        <g ${tA(3.1, 'ta-pop')}>${box(36, 186, 248, 24, '#14204A', '', 12)}${CT(160, 202, L('4 parts + «sense text ni persones»', '4 partes + «sin texto ni personas»'), 10.5, '#fff')}</g>`);
+    },
+    // tres versions del prompt: v1 genèrica → v2 amb estil i composició → v3 amb llum
+    i45iter() {
+      const W = 92, H = 120, Y = 26;
+      const fr = (x, i) => { const bg = i ? wash(x, Y, W, H) : `<rect x="${x}" y="${Y}" width="${W}" height="${H}" fill="#E5E7EB"/><rect x="${x}" y="${Y + 88}" width="${W}" height="${H - 88}" fill="#CBD5E1"/>`;
+        const glow = i === 2 ? `<rect x="${x}" y="${Y}" width="${W}" height="${H}" fill="url(#i45ig)"/><circle cx="${x + 76}" cy="${Y + 16}" r="8" fill="#FDE68A"/>` : '';
+        const tit = i ? `<rect x="${x + 14}" y="${Y + 7}" width="${W - 28}" height="16" rx="5" fill="none" stroke="#14A3B8" stroke-width="1.6" stroke-dasharray="4 3"/>` : '';
+        const f = i ? fox(x + W / 2, Y + 64, .76, { gl: 1, bk: 1 }) : fox(x + 30, Y + 80, .58, { c: '#C2410C' });
+        return `<defs><clipPath id="i45i${i}"><rect x="${x}" y="${Y}" width="${W}" height="${H}" rx="8"/></clipPath></defs><g clip-path="url(#i45i${i})">${bg}${glow}${tit}${f}${i === 2 ? `<rect x="${x}" y="${Y}" width="${W}" height="${H}" fill="#F97316" opacity=".13"/>` : ''}</g><rect x="${x}" y="${Y}" width="${W}" height="${H}" rx="8" fill="none" stroke="#14204A" stroke-width="2"/>`; };
+      const lab = [['v1', L('«una guineu', '«un zorro'), L('que llegeix»', 'que lee»')], ['v2', L('+ estil i', '+ estilo y'), L('composició', 'composición')], ['v3', L('+ llum i', '+ luz y'), L('límits', 'límites')]], C = ['#94A3B8', '#8B5CF6', '#F08A24'];
+      return tSvg(214, `<defs><radialGradient id="i45ig" cx=".85" cy=".1" r=".95"><stop offset="0" stop-color="#FDBA74" stop-opacity=".9"/><stop offset="1" stop-color="#FDBA74" stop-opacity="0"/></radialGradient></defs>
+        ${lab.map(([v, a, b], i) => { const x = 8 + i * 106; return `<g ${tA(.2 + i * .9, 'ta-pop')}><circle cx="${x + W / 2}" cy="13" r="11" fill="${C[i]}"/>${CT(x + W / 2, 17, v, 10.5, '#fff', 900)}${fr(x, i)}${CT(x + W / 2, 162, a, 10.5, '#14204A', 700)}${CT(x + W / 2, 177, b, 10.5, ['#56628A', '#6D28D9', '#C2410C'][i], 900)}</g>${i < 2 ? `<g ${tA(.6 + i * .9, 'ta-fade')}>${arrow(x + W + 2, 86, x + W + 12, 86, '#B4BEE8')}</g>` : ''}`; }).join('')}
+        <g ${tA(3.1, 'ta-in')}>${box(30, 186, 260, 24, '#F3F0FF', '#D8CCFF', 12)}${CT(160, 202, L('poques peces cada vegada, i compara', 'pocas piezas cada vez, y compara'), 11, '#6D28D9')}</g>`);
+    },
+    // l'autoria declarada: el cartell amb l'etiqueta visible i la llista del que es declara (i mai persones reals)
+    i45label() {
+      const R = [[1, L('Etiqueta visible', 'Etiqueta visible')], [1, L('Eina: Canva', 'Herramienta: Canva')], [1, L('Prompt: el nostre', 'Prompt: el nuestro')], [1, L("Títol: de l'equip", 'Título: del equipo')], [1, L('Condicions mirades', 'Condiciones miradas')], [0, L('Persones reals', 'Personas reales')]];
+      return tSvg(214, `<defs><clipPath id="i45lc"><rect x="8" y="6" width="140" height="202" rx="10"/></clipPath></defs>
+        <g ${tA(.1, 'ta-in')}><g clip-path="url(#i45lc)">${wash(8, 6, 140, 202)}${fox(78, 104, 1.1, { gl: 1, bk: 1 })}</g><rect x="8" y="6" width="140" height="202" rx="10" fill="none" stroke="#14204A" stroke-width="2"/></g>
+        <g ${tA(.6, 'ta-pop')}>${CT(78, 30, L('SETMANA DE', 'SEMANA DE'), 12, '#7C2D12', 900)}${CT(78, 46, L('LA LECTURA', 'LA LECTURA'), 12, '#7C2D12', 900)}</g>
+        <g ${tA(1.1, 'ta-wob')}>${box(12, 176, 132, 24, '#FDE68A', '#F59E0B', 12)}${CT(78, 192, L('✦ Imatge generada amb IA', '✦ Imagen generada con IA'), 9.5, '#92400E', 900)}</g>
+        <g ${tA(1.5, 'ta-in')}>${box(160, 6, 154, 202, '#fff', '#DCE4FA', 14)}<rect x="160" y="6" width="154" height="30" rx="14" fill="#7C3AED"/><rect x="160" y="22" width="154" height="14" fill="#7C3AED"/>${CT(237, 26, L('AUTORIA DECLARADA', 'AUTORÍA DECLARADA'), 10.5, '#fff', 900)}</g>
+        ${R.map(([g, t], i) => `<g ${tA(1.8 + i * .3, 'ta-in')}>${g ? ok(178, 56 + i * 27, 8) : ko(178, 56 + i * 27, 8)}<text x="192" y="${60 + i * 27}" ${F(10.5, g ? '#14204A' : '#B91C1C', 800)}>${t}</text></g>`).join('')}`);
+    }
+  });
 }
