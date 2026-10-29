@@ -9,7 +9,7 @@ fixa el que comparteixen el motor (`tech-ia.js` + `tech-ia.css`) i el contingut 
 |---|---|
 | id · fitxers | `ia` · c8 (`tech-c8.js`, `tech-anim-c8.js`, `tech-guide-c8.js`) |
 | Nom · edat | «Tech IA\|Tech IA» · «12-16 anys\|12-16 años» (1r-4t d'ESO) · color `#A23BEA` · icona `TCI.ia` · 🧠 |
-| Sessions | `i1-1 … i8-4` (la 4a de cada unitat, `proj: true`). Tallers opcionals: `iN-5` amb `proj: true, taller: true` |
+| Sessions | `i1-1 … i8-4` (la 4a de cada unitat, `proj: true`). Tallers amb IA real: `iN-5` amb `taller: true` (sense `proj`) |
 | Món 3D | illes `ciutat` (temes a `render-scenes.mjs`, `THEMES.ia`), capçalera `estudi` (`img/tech/scenes/hero-ia.webp`) |
 | Escenes de les històries | les que ja existeixen (`estudi`, `lab`, `taller`…); el validador les comprova |
 
@@ -95,7 +95,8 @@ o una pregunta oberta · `feel`. 45-55 min. Guia completa com les altres session
 4. **i4-5 · Imatges amb IA i autoria**: generar una imatge (Canva o el xat) amb un prompt de 4 parts i tres versions; etiqueta
    «Generada amb IA»; què diuen les condicions sobre l'ús i l'autoria.
 5. **i5-5 · Vibe coding amb un xat de veritat**: especificació → el xat escriu un HTML petit → enganxar-lo a l'editor de Numi
-   (pas `wcreate` de Tech Web) → provar els criteris d'acceptació → demanar-li que arregli un error.
+   (pas `wcreate` de Tech Web, amb `hintNow: true` perquè la pista i l'app de recanvi surtin des del principi) → provar els
+   criteris d'acceptació → demanar-li que arregli un error.
 6. **i6-5 · Un assistent amb instruccions (i com enganyar-lo)**: instruccions d'un tutor del centre al xat; 5 preguntes de prova;
    intents d'injecció de prompts; millorar les instruccions. Opcional: NotebookLM amb uns apunts (respostes amb cites).
 7. **i7-5 · Investiga amb IA i verifica**: preguntar sobre l'energia i l'aigua de la IA, demanar fonts i verificar-ne dues; buscar

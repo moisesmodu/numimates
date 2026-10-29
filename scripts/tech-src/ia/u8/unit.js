@@ -121,6 +121,9 @@ const I8_STEP = (pick, role) => { const d = () => I8_DEF(pick(), role);
   return new Proxy({}, { get: (_, k) => d()[k], has: (_, k) => k in d(), ownKeys: () => Reflect.ownKeys(d()), set: (_, k, v) => { d()[k] = v; return true; },
     getOwnPropertyDescriptor: (_, k) => k in d() ? { value: d()[k], enumerable: true, configurable: true, writable: true } : undefined }); };
 
+// els nivells de risc de la llei europea d'IA: els de la unitat 7 (I7_RISK, al mateix fitxer construït); si la unitat 8 es carrega
+// sola (el validador amb --cfrag), una còpia igual
+const I8_RISK = typeof I7_RISK !== 'undefined' ? I7_RISK : ['⛔ Prohibit|⛔ Prohibido', '⚠️ Alt risc|⚠️ Alto riesgo', '🏷️ Transparència|🏷️ Transparencia', '🟢 Mínim|🟢 Mínimo'];
 // defenses de la fitxa de riscos del projecte
 const I8_DEFS = ['⚖️ Provat amb usuaris i exemples variats|⚖️ Probado con usuarios y ejemplos variados', '🔒 Sense dades personals (o el mínim, amb permís)|🔒 Sin datos personales (o el mínimo, con permiso)', '🧑‍⚖️ Una persona revisa les decisions importants|🧑‍⚖️ Una persona revisa las decisiones importantes', '🏷️ Diu clarament que és una IA i que es pot equivocar|🏷️ Dice claramente que es una IA y que se puede equivocar', "🔑 Permisos mínims i confirmació abans d'actuar|🔑 Permisos mínimos y confirmación antes de actuar", "🚩 Un canal per avisar d'errors|🚩 Un canal para avisar de errores", '📜 Registre del que fa|📜 Registro de lo que hace'];
 
@@ -453,7 +456,7 @@ COURSE_UNITS[8] = { t: 'Projecte: una IA per al nostre centre|Proyecto: una IA p
         fields: [{ k: 'riscos', label: 'Què pot sortir malament (biaix, privadesa, seguretat, errors)|Qué puede salir mal (sesgo, privacidad, seguridad, errores)', min: 40, rows: 3 },
           { k: 'defenses', label: "Defenses (tria'n almenys 3)|Defensas (elige al menos 3)", choices: I8_DEFS, multi: true, min: 3 },
           { k: 'persona', label: 'Què decideix sempre una persona|Qué decide siempre una persona', min: 15, rows: 1 },
-          { k: 'nivell', label: "Nivell de risc segons la llei europea d'IA|Nivel de riesgo según la ley europea de IA", choices: I7_RISK }],
+          { k: 'nivell', label: "Nivell de risc segons la llei europea d'IA|Nivel de riesgo según la ley europea de IA", choices: I8_RISK }],
         sol: { riscos: "Pot demanar dades personals, inventar-se horaris i funcionar pitjor amb preguntes amb faltes.|Puede pedir datos personales, inventarse horarios y funcionar peor con preguntas con faltas.", defenses: [0, 1, 3], persona: 'La bibliotecària decideix els préstecs.|La bibliotecaria decide los préstamos.', nivell: 2 } },
       { k: 'quiz', ph: 'repte', extra: true, q: "⭐ Un equip escriu a la model card: «El nostre prototip no falla mai». Què li diríeu?|⭐ Un equipo escribe en la model card: «Nuestro prototipo no falla nunca». ¿Qué le diríais?",
         opts: ["Que totes les IA fallen: cal dir quan i com, i com ho controlen|Que todas las IA fallan: hay que decir cuándo y cómo, y cómo lo controlan", 'Que molt bé, així convenceran el jurat|Que muy bien, así convencerán al jurado', 'Que no cal fer model card|Que no hace falta hacer model card'], a: 0,
@@ -702,7 +705,7 @@ COURSE_UNITS[8] = { t: 'Projecte: una IA per al nostre centre|Proyecto: una IA p
             { k: 'res', label: 'Proves superades|Pruebas superadas', num: true, lo: 0, hi: 10, unit: 'de 10|de 10' },
             { k: 'falla', label: 'Quan falla (límits, trampes i prova creuada)|Cuándo falla (límites, trampas y prueba cruzada)', min: 20, rows: 2 },
             { k: 'persona', label: 'Què decideix sempre una persona|Qué decide siempre una persona', min: 15, rows: 2 },
-            { k: 'nivell', label: "Nivell de risc segons la llei europea d'IA|Nivel de riesgo según la ley europea de IA", choices: I7_RISK }],
+            { k: 'nivell', label: "Nivell de risc segons la llei europea d'IA|Nivel de riesgo según la ley europea de IA", choices: I8_RISK }],
           sol: { eina: 1, us: "Recomana llibres de la biblioteca segons els gustos. No serveix per saber si un llibre hi és ni per a res que no siguin lectures.|Recomienda libros de la biblioteca según los gustos. No sirve para saber si un libro está ni para nada que no sean lecturas.", dades: "Unes instruccions de 5 frases al xat de la classe, sense cap dada de l'alumnat.|Unas instrucciones de 5 frases en el chat de la clase, sin ningún dato del alumnado.", res: '7', falla: "S'inventa títols que no hi ha a la biblioteca i, si s'hi insisteix, obeeix a mitges les trampes.|Se inventa títulos que no están en la biblioteca y, si se insiste, obedece a medias las trampas.", persona: "El bibliotecari comprova els llibres abans de recomanar-los i decideix els préstecs.|El bibliotecario comprueba los libros antes de recomendarlos y decide los préstamos.", nivell: 2 } },
         { k: 'quiz', ph: 'tanca', q: "Per què el pla de proves s'escriu abans de provar?|¿Por qué el plan de pruebas se escribe antes de probar?",
           opts: ['Perquè no provem només el que ja sabem que funciona|Para no probar solo lo que ya sabemos que funciona', 'Perquè queda més ordenat al portafoli|Porque queda más ordenado en el portafolio', 'No cal: millor improvisar|No hace falta: mejor improvisar'], a: 0,
