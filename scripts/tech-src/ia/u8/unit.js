@@ -12,8 +12,8 @@
    amb prompt de l'exemple «BiblioGuia». Els enunciats i les introduccions són funcions que hi posen el nom del projecte.
    Taller i8-5 (iaext, IA real; extra pràctic després de la fira i el diploma d'i8-4): el prototip amb una eina real per un de
    tres camins (A: Teachable Machine, sense compte; B: assistent amb instruccions al xat de la classe; C: app feta amb el xat i
-   provada a l'editor web de Numi), un pla de 10 proves i la model card amb resultats reals. La sessió té «steps» com a getter:
-   en desar «El pla del prototip real», només hi queden els passos del camí triat (I85_STEPS); sense pla, hi són tots. */
+   provada a l'editor web de Numi), un pla de 10 proves i la model card amb resultats reals. Els passos de la sessió són un
+   array dinàmic: en desar «El pla del prototip real», només hi queden els del camí triat (I85_STEPS); sense pla, hi són tots. */
 Object.assign(TBADGE, {
   i_idea: { id: 'i_idea', ico: '💡', n: 'Caçador/a de problemes|Cazador/a de problemas', d: "Has escoltat persones del centre, has trobat un problema de veritat i has decidit si la IA era l'eina justa.|Has escuchado a personas del centro, has encontrado un problema de verdad y has decidido si la IA era la herramienta justa." },
   i_proto: { id: 'i_proto', ico: '🛠️', n: 'Constructor/a de prototips|Constructor/a de prototipos', d: "Has escrit l'especificació i has construït la primera versió del vostre prototip amb una eina d'IA del curs.|Has escrito la especificación y has construido la primera versión de vuestro prototipo con una herramienta de IA del curso." },
@@ -132,13 +132,17 @@ const I8_DEFS = ['⚖️ Provat amb usuaris i exemples variats|⚖️ Probado co
 const I85_CAMINS = ['🧠 A · Classificador amb Teachable Machine|🧠 A · Clasificador con Teachable Machine', '💬 B · Assistent amb instruccions al xat|💬 B · Asistente con instrucciones en el chat', '📱 C · App feta amb el xat|📱 C · App hecha con el chat'];
 // el camí de la fitxa del pla d'i8-5 desada més recent (0 A · 1 B · 2 C); null si encara no s'ha desat o no hi ha perfil (validador, solucionari)
 const I85_CAMI = () => { const t = I8_TS(); if (!t || !Array.isArray(t.port)) return null; for (let i = t.port.length - 1; i >= 0; i--) { const p = t.port[i]; if (p && p.ia === 'card' && p.sid === 'i8-5' && p.v && [0, 1, 2].includes(p.v.cami)) return p.v.cami; } return null; };
-// els passos de la sessió (getter «steps»): amb el pla desat, els d'abans + els del camí triat + els de després; si no, els tres camins
-// (així el validador i el solucionari els veuen tots). Els passos d'abans del camí no canvien d'índex. Sense «pro» en aquesta sessió:
-// el nivell PRO de tech-ia.js reassigna «steps» per fusionar-lo i aquí no es pot.
-const I85_ST = {};
-const I85_STEPS = s => { const c = I85_CAMI(), k = c == null ? 'tots' : 'ABC'[c], m = s.camins;
-  return I85_ST[k] || (I85_ST[k] = [...m.abans, ...(k === 'tots' ? [...m.A, ...m.B, ...m.C] : m[k]), ...m.despres]); };
-// camí C: el punt de partida de l'editor i l'app d'exemple (pla B si el xat no dona un codi que funcioni: «Una pista» de l'editor la mostra)
+// els passos de la sessió: amb el pla desat, els d'abans + els del camí triat + els de després; si no, els tres camins (així el
+// validador i el solucionari els veuen tots). Els passos d'abans del camí no canvien d'índex. Com que tSessions() copia la sessió
+// ({ ...s }) en obrir-la, «steps» és un array dinàmic (un Proxy sobre l'array de tots els passos) que en cada lectura (llargada,
+// índexs, forEach, some…) respon amb la llista del camí que hi ha desat en aquell moment.
+const I85_ST = {}, I85_P = {};
+const I85_ARR = (m, k) => I85_ST[k] || (I85_ST[k] = [...m.abans, ...(k === 'tots' ? [...m.A, ...m.B, ...m.C] : m[k]), ...m.despres]);
+const I85_STEPS = s => I85_P.p || (I85_P.p = (() => { const m = s.camins, cur = () => { const c = I85_CAMI(); return I85_ARR(m, c == null ? 'tots' : 'ABC'[c]); };
+  return new Proxy(I85_ARR(m, 'tots'), { get: (_, k) => { const a = cur(), v = a[k]; return typeof v === 'function' ? v.bind(a) : v; }, has: (_, k) => k in cur(),
+    ownKeys: () => Reflect.ownKeys(cur()), getOwnPropertyDescriptor: (_, k) => Reflect.getOwnPropertyDescriptor(cur(), k), set: (_, k, v) => { cur()[k] = v; return true; } }); })());
+// camí C: el punt de partida de l'editor i l'app d'exemple (pla B si el xat no dona un codi que funcioni: amb hintNow, «Una pista» de
+// l'editor surt des del principi i acaba oferint aquesta app)
 const I85_START = { ca: '<!-- Enganxa aquí tot el codi del xat (de <!DOCTYPE html> a </html>) -->', es: '<!-- Pega aquí todo el código del chat (de <!DOCTYPE html> a </html>) -->' };
 const I85_APP = {
   ca: `<!DOCTYPE html>
@@ -577,7 +581,7 @@ COURSE_UNITS[8] = { t: 'Projecte: una IA per al nostre centre|Proyecto: una IA p
     ] },
 
   /* ---------- Sessió 5 · Taller: prototip amb IA real (un extra pràctic després de la fira i el diploma) ---------- */
-  // Els passos («steps», un getter) depenen del camí que l'equip tria a «El pla del prototip real» (pas 6): A, B o C (vegeu I85_STEPS).
+  // Els passos («steps») depenen del camí que l'equip tria a «El pla del prototip real» (pas 6): A, B o C (vegeu I85_STEPS).
   { id: 'i8-5', t: 'Taller: prototip amb IA real|Taller: prototipo con IA real', min: 60, taller: true, badge: 'i_realproto',
     learn: ["Una eina d'IA real (Teachable Machine o el xat de la classe) no es comporta sempre igual que el simulador: pot respondre diferent cada vegada i fallar on no esperaves.|Una herramienta de IA real (Teachable Machine o el chat de la clase) no se comporta siempre igual que el simulador: puede responder distinto cada vez y fallar donde no esperabas.",
       "Un pla de 10 proves, escrit abans de provar, barreja casos normals, casos límit i trampes inofensives; així no proves només el que ja saps que funciona.|Un plan de 10 pruebas, escrito antes de probar, mezcla casos normales, casos límite y trampas inofensivas; así no pruebas solo lo que ya sabes que funciona.",
@@ -674,7 +678,7 @@ COURSE_UNITS[8] = { t: 'Projecte: una IA per al nostre centre|Proyecto: una IA p
             { k: 'canvis', label: 'Quantes vegades li heu demanat canvis|Cuántas veces le habéis pedido cambios', num: true, lo: 0, hi: 30, unit: 'vegades|veces' },
             { k: 'revisio', label: 'En llegir el codi…|Al leer el código…', choices: ['Tot bé: cap enllaç de fora ni cap dada personal|Todo bien: ningún enlace de fuera ni ningún dato personal', 'Hi havia alguna cosa i li hem demanat que la tregués|Había algo y le hemos pedido que lo quitara'] }],
           sol: { app: "Una llista d'objectes perduts: escrius l'objecte, toques Afegeix i surt a la llista.|Una lista de objetos perdidos: escribes el objeto, tocas Añade y sale en la lista.", canvis: '1', revisio: 0 } },
-        { k: 'wcreate', ph: 'crea', name: "Prototip real: l'app|Prototipo real: la app", url: 'prototip-real.numi',
+        { k: 'wcreate', ph: 'crea', name: "Prototip real: l'app|Prototipo real: la app", url: 'prototip-real.numi', hintNow: true,
           q: "<b>Camí C · Prova l'app.</b> Substitueix tot el que hi ha a <code>index.html</code> pel codi del xat, mira la vista prèvia i fes-hi les <b>10 proves del pla</b> (apunta-les per a la fitxa).|<b>Camino C · Prueba la app.</b> Sustituye todo lo que hay en <code>index.html</code> por el código del chat, mira la vista previa y haz en ella las <b>10 pruebas del plan</b> (apúntalas para la ficha).",
           get html() { return L(I85_START.ca, I85_START.es); },
           checks: [{ k: 'tag', t: 'button', txt: "L'app té un botó|La app tiene un botón" }, { k: 'tag', t: 'script', txt: "L'app té el seu JavaScript (<code>&lt;script&gt;</code>)|La app tiene su JavaScript (<code>&lt;script&gt;</code>)" }],
