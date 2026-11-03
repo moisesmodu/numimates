@@ -412,7 +412,7 @@ details.more[open] summary .i{transform:rotate(90deg)}
 .msess>span:nth-child(2){flex:1;display:flex;flex-direction:column}.msess small{color:var(--t3,#857C90)}
 .mhead{display:flex;justify-content:space-between;gap:16px;align-items:center;flex-wrap:wrap;margin-bottom:12px}.mhead h2{margin:4px 0 0}
 .macts{display:flex;gap:8px;flex-wrap:wrap}
-.mgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}@media (max-width:900px){.mgrid{grid-template-columns:1fr}}
+.msec .mini-t td,.msec .mini-t th{white-space:normal;height:auto;padding-top:6px;padding-bottom:6px;vertical-align:top}.mgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}@media (max-width:900px){.mgrid{grid-template-columns:minmax(0,1fr)}}
 .msec{margin-bottom:12px}.msec h3{margin:0 0 10px}
 .mbar{display:flex;height:12px;border-radius:6px;overflow:hidden;gap:2px;margin-bottom:14px}
 .mblk{display:grid;grid-template-columns:90px 1fr;gap:14px;padding:12px 0;border-top:1px solid var(--line)}
