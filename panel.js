@@ -26,7 +26,7 @@ async function load() {
   D = await r.json(); ADMIN = !!D.admin; ME = D.me || null; GRUPS = D.grups || [];
   // el material de Numi Tech (guies i solucionari) només arriba amb sessió; la presentació i les fitxes s'obren en una altra pestanya
   try { localStorage.setItem('numi-dt', dtok()); } catch (e) { }
-  if (typeof TGUIDE === 'undefined' && typeof TGUARD !== 'undefined') { if (await TGUARD.load(['c1', 'c2', 'c3', 'c4', 'c5', 'c6', 'c7'])) await TGUARD.load(['c8']); }   // c8 (Tech IA) és opcional: si encara no hi és, la resta funciona
+  if (typeof TGUIDE === 'undefined' && typeof TGUARD !== 'undefined') { if (await TGUARD.load(['c1', 'c2', 'c3', 'c4', 'c5', 'c6', 'c7'])) await TGUARD.load(['c8', 'c9']); }   // c8 (Tech IA) és opcional: si encara no hi és, la resta funciona
   if (G && G !== 'online' && !GRUPS.some(g => String(g.id) === G)) G = '';
   if (G === 'online' && !D.admin) G = '';
   ROWS = (D.rows || []).map(enrich);

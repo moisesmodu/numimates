@@ -46,6 +46,8 @@
 <script src="tech-anim-c7.js"></script>
 <script src="tech-c8.js"></script>
 <script src="tech-anim-c8.js"></script>
+<script src="tech-c9.js"></script>
+<script src="tech-anim-c9.js"></script>
 <script src="tech-guard.js"></script>
 <script>
 /* la presentació es projecta, no es descarrega: sense imprimir, desar, copiar ni arrossegar imatges */
@@ -54,7 +56,7 @@ addEventListener('contextmenu', e => e.preventDefault());
 addEventListener('dragstart', e => e.preventDefault());
 addEventListener('copy', e => e.preventDefault());
 </script>
-<script>TGUARD.load(['c1', 'c2', 'c3', 'c4', 'c5', 'c6', 'c7']).then(ok => ok ? TGUARD.load(['c8']).then(() => TGUARD.after('present.js?v=3')) : TGUARD.deny(document.getElementById('deck')));</script>
+<script>TGUARD.load(['c1', 'c2', 'c3', 'c4', 'c5', 'c6', 'c7']).then(ok => ok ? TGUARD.load(['c8', 'c9']).then(() => TGUARD.after('present.js?v=3')) : TGUARD.deny(document.getElementById('deck')));</script>
 <script src="icons.js"></script>
 </body>
 </html>

@@ -102,8 +102,8 @@ function tStop() { if (typeof TB !== 'undefined' && TB) { clearTimeout(TB.t); TB
 const tVis = c => c.units.some(u => (u.s || []).some(tReady));
 // nivell escolar de cada curs (un curs per cicle): Robot → Creadors i Digital → Robòtica
 // què és cada curs, dit a l'alumne: sense edats ni cursos escolars (això és per a les famílies i els docents: panell i dossier)
-const TLVL = { robot: "Curs d'entrada|Curso de entrada", creadors: 'Animacions i videojocs|Animaciones y videojuegos', digital: 'Ciutadania digital|Ciudadanía digital', robotica: 'Amb el robot Maqueen|Con el robot Maqueen', web: 'Pàgines web amb HTML i CSS|Páginas web con HTML y CSS', model: 'Disseny i impressió 3D|Diseño e impresión 3D', modelpro: 'Disseny 3D amb codi|Diseño 3D con código', ia: 'Intel·ligència artificial|Inteligencia artificial' };
-const TCI3 = { robot: '🤖', robotica: '🚗', creadors: '🎭', digital: '🛡️', web: '🌐', model: '🧊', modelpro: '⚙️', ia: '🧠' };
+const TLVL = { spike: 'Taller amb el kit SPIKE Essential|Taller con el kit SPIKE Essential', robot: "Curs d'entrada|Curso de entrada", creadors: 'Animacions i videojocs|Animaciones y videojuegos', digital: 'Ciutadania digital|Ciudadanía digital', robotica: 'Amb el robot Maqueen|Con el robot Maqueen', web: 'Pàgines web amb HTML i CSS|Páginas web con HTML y CSS', model: 'Disseny i impressió 3D|Diseño e impresión 3D', modelpro: 'Disseny 3D amb codi|Diseño 3D con código', ia: 'Intel·ligència artificial|Inteligencia artificial' };
+const TCI3 = { spike: '🧩', robot: '🤖', robotica: '🚗', creadors: '🎭', digital: '🛡️', web: '🌐', model: '🧊', modelpro: '⚙️', ia: '🧠' };
 // estrelles dels reptes (la millor de cada repte) i el total
 function tStarSave(n) { if (!TSS || !TSS.id || TSS.demo) return; const t = TS_(); t.st = t.st || {}; const k = TSS.id + ':' + TSS.i; if ((t.st[k] || 0) < n) { t.st[k] = n; save(); } }
 const tStarTotal = () => Object.values(TS_().st || {}).reduce((a, n) => a + n, 0);
