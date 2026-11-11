@@ -36,11 +36,22 @@ export async function who(req) {
   delete r.pass_hash;
   return r.rol === 'admin' ? { admin: true, docent: r } : { docent: r };
 }
-// grups que pot veure un docent: els seus, o tots els del centre si és admin de centre
+// un grup té un docent titular (docent_id) i pot tenir-ne d'altres que el porten igual (codocents: un substitut, una
+// parella pedagògica…). La columna es crea la primera vegada; primer es mira si ja hi és, per no bloquejar la taula.
+let coCol = null;
+export const ensureCo = () => coCol || (coCol = (async () => {
+  const has = await sql`SELECT 1 FROM information_schema.columns WHERE table_schema = 'mates' AND table_name = 'grups' AND column_name = 'codocents'`;
+  if (!has.length) await sql`ALTER TABLE mates.grups ADD COLUMN IF NOT EXISTS codocents int[] NOT NULL DEFAULT '{}'`;
+})().catch(e => { coCol = null; throw e; }));
+// grups que pot veure un docent: els seus (com a titular o com a docent del grup), o tots els del centre si és admin de centre
 export async function groupsOf(me) {
-  if (me.admin) return sql`SELECT g.*, c.nom AS centre, d.nom AS docent FROM mates.grups g JOIN mates.centres c ON c.id = g.centre_id LEFT JOIN mates.docents d ON d.id = g.docent_id WHERE g.actiu ORDER BY c.nom, g.nom`;
+  await ensureCo();
+  if (me.admin) return sql`SELECT g.*, c.nom AS centre, d.nom AS docent, (SELECT array_agg(x.nom ORDER BY x.nom) FROM mates.docents x WHERE x.id = ANY(g.codocents)) AS codocents_nom
+    FROM mates.grups g JOIN mates.centres c ON c.id = g.centre_id LEFT JOIN mates.docents d ON d.id = g.docent_id WHERE g.actiu ORDER BY c.nom, g.nom`;
   const d = me.docent;
   return d.rol === 'admin_centre'
-    ? sql`SELECT g.*, c.nom AS centre, dd.nom AS docent FROM mates.grups g JOIN mates.centres c ON c.id = g.centre_id LEFT JOIN mates.docents dd ON dd.id = g.docent_id WHERE g.actiu AND g.centre_id = ${d.centre_id} ORDER BY g.nom`
-    : sql`SELECT g.*, c.nom AS centre, ${d.nom} AS docent FROM mates.grups g JOIN mates.centres c ON c.id = g.centre_id WHERE g.actiu AND g.docent_id = ${d.id} ORDER BY g.nom`;
+    ? sql`SELECT g.*, c.nom AS centre, dd.nom AS docent, (SELECT array_agg(x.nom ORDER BY x.nom) FROM mates.docents x WHERE x.id = ANY(g.codocents)) AS codocents_nom
+      FROM mates.grups g JOIN mates.centres c ON c.id = g.centre_id LEFT JOIN mates.docents dd ON dd.id = g.docent_id WHERE g.actiu AND g.centre_id = ${d.centre_id} ORDER BY g.nom`
+    : sql`SELECT g.*, c.nom AS centre, dd.nom AS docent, (SELECT array_agg(x.nom ORDER BY x.nom) FROM mates.docents x WHERE x.id = ANY(g.codocents)) AS codocents_nom
+      FROM mates.grups g JOIN mates.centres c ON c.id = g.centre_id LEFT JOIN mates.docents dd ON dd.id = g.docent_id WHERE g.actiu AND (g.docent_id = ${d.id} OR ${d.id} = ANY(g.codocents)) ORDER BY g.nom`;
 }

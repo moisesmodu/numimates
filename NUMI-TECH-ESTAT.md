@@ -42,6 +42,15 @@ Petició del Moisés: cada exercici ha de cabre a la pantalla sense baixar (mòb
 - Eines de comprovació (scratchpad de la sessió): `fitscan.mjs <curs> <amplada> <alçada>` diu quins passos no hi caben; `dndtest.mjs` prova arrossegar als tres editors.
 - Següent (de l'estudi de la competència): desfer sempre visible, pressupost de blocs com a forats buits, pistes que reaccionen al programa, tres estrelles (resolt · sense pistes · pocs blocs), «Pas a pas» i velocitats a tots els editors, error que assenyala el bloc i el món s'alenteix quan falla.
 
+## Diversos docents per grup (11-11-2026)
+- Petició del Moisés (un substitut al Mater): un grup té el **docent titular** (`grups.docent_id`) i pot tenir **altres docents**
+  (`grups.codocents int[]`, la columna es crea sola: `ensureCo` a `api/_auth.js`). Els altres docents veuen i porten el grup igual
+  que el titular (`groupsOf`): sessions, alumnes, material, tasques. Els tria l'administrador o la coordinació (només docents del
+  seu centre) a «Edita el grup» → «Altres docents del grup». Un docent normal que edita el grup no en canvia els docents.
+- Arreglat: l'administrador no podia desar un grup que ja existia («Tria el centre del grup»): en editar, el centre ja no s'envia
+  i es manté el del grup. Als grups de Tech, el formulari ja no mostra «Nivell (Numi Mates)».
+- L'informe setmanal per correu continua anant només al titular. «Classe en directe» és només per als grups de Mates.
+
 ## Pendent
 (revisat el 29-10-2026: Web, Tech 3D N2 U4/U8, els retrats d'en Bit i les millores dels editors de blocs ja estan fets)
 1. **Revisar** els cursos (Moisés): Robot, Robòtica, Creadors i Digital; també Web, Tech 3D i Tech IA.

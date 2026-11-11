@@ -292,18 +292,30 @@ export default async function handler(req, res) {
     if (b.action === 'grup_save') {
       const nom = String(b.nom || '').trim().slice(0, 60), curs = int(b.curs);
       if (!nom) return ok(res, { error: 'nom' }, 400);
-      let centre = int(b.centre_id), docent = int(b.docent_id);
-      if (!me.admin) { centre = me.docent.centre_id; if (me.docent.rol !== 'admin_centre') docent = me.docent.id; }
+      // en editar, el grup es queda al seu centre (el formulari no el torna a enviar) i el docent que no és de coordinació no
+      // en canvia els docents: si és un dels docents del grup, en continua sent-ho i el titular no canvia
+      const prev = b.id ? (await sql`SELECT centre_id, docent_id, codocents FROM mates.grups WHERE id = ${+b.id} AND actiu`)[0] : null;
+      if (b.id && (!prev || !gids.includes(+b.id))) return ok(res, { error: 'permís' }, 403);
+      const coord = me.admin || me.docent.rol === 'admin_centre';
+      let centre = prev ? prev.centre_id : int(b.centre_id), docent = int(b.docent_id);
+      if (!me.admin && !prev) centre = me.docent.centre_id;
+      if (!coord) docent = prev ? prev.docent_id : me.docent.id;
       if (!centre) return ok(res, { error: 'centre' }, 400);
-      // la coordinació només pot donar el grup a un docent del seu centre (si no, un docent d'un altre centre en veuria els alumnes)
-      if (!me.admin && docent && docent !== me.docent.id && !(await sql`SELECT 1 FROM mates.docents WHERE id = ${docent} AND centre_id = ${centre}`).length) return ok(res, { error: 'permís' }, 403);
+      // altres docents del grup (només els tria la coordinació o l'administrador); sense el titular i sense repetits
+      let co = prev ? prev.codocents || [] : [];
+      if (coord && Array.isArray(b.codocents)) co = [...new Set(b.codocents.map(int).filter(Boolean))].slice(0, 10);
+      co = co.filter(x => x !== docent);
+      // la coordinació només pot posar docents del seu centre (si no, un docent d'un altre centre en veuria els alumnes)
+      if (!me.admin && me.docent.rol === 'admin_centre') {
+        const nous = [docent, ...co].filter(x => x && x !== me.docent.id && !(prev && (x === prev.docent_id || (prev.codocents || []).includes(x))));
+        if (nous.length && (await sql`SELECT count(*)::int AS n FROM mates.docents WHERE id = ANY(${nous}) AND centre_id = ${centre}`)[0].n !== nous.length) return ok(res, { error: 'permís' }, 403);
+      }
       if (b.id) {
-        if (!gids.includes(+b.id)) return ok(res, { error: 'permís' }, 403);
-        await sql`UPDATE mates.grups SET nom = ${nom}, curs = ${curs}, docent_id = ${docent} WHERE id = ${+b.id}`;
+        await sql`UPDATE mates.grups SET nom = ${nom}, curs = ${curs}, docent_id = ${docent}, codocents = ${co}::int[] WHERE id = ${+b.id}`;
         return ok(res, { ok: true });
       }
       for (let t = 0; t < 8; t++) {
-        const r = await sql`INSERT INTO mates.grups (centre_id, docent_id, nom, curs, codi) VALUES (${centre}, ${docent}, ${nom}, ${curs}, ${newCode()}) ON CONFLICT (codi) DO NOTHING RETURNING id, codi`;
+        const r = await sql`INSERT INTO mates.grups (centre_id, docent_id, codocents, nom, curs, codi) VALUES (${centre}, ${docent}, ${co}::int[], ${nom}, ${curs}, ${newCode()}) ON CONFLICT (codi) DO NOTHING RETURNING id, codi`;
         if (r.length) return ok(res, { ok: true, grup: r[0] });
       }
       return ok(res, { error: 'codi' }, 500);
@@ -449,7 +461,9 @@ export default async function handler(req, res) {
     WHERE grup_id = ANY(${gids}) AND fins >= CURRENT_DATE - 120 ORDER BY fins DESC, id DESC LIMIT 300`; } catch (e) { console.error('tasques', e.message); }
   let informe = null;
   try { await infDocTables(); const d = me.docent ? (await sql`SELECT informe FROM mates.docents WHERE id = ${me.docent.id}`)[0] : null; informe = { me: d ? d.informe !== false : null, on: !!((await ajust('informe_docents')) || {}).on }; } catch (e) { }
-  if (!me.admin) return ok(res, { me: me.docent, rows, grups: groups, tasques, informe });
+  // la coordinació de centre tria els docents dels grups: rep els del seu centre (sense correus ni contrasenyes)
+  const docentsCentre = !me.admin && me.docent.rol === 'admin_centre' ? await sql`SELECT id, nom, usuari, rol, centre_id, actiu FROM mates.docents WHERE centre_id = ${me.docent.centre_id} AND actiu ORDER BY nom` : undefined;
+  if (!me.admin) return ok(res, { me: me.docent, rows, grups: groups, tasques, informe, docents: docentsCentre });
   const battles = await sql`SELECT b.code, b.kind, b.course, b.status, b.created_at, b.start_at,
     COALESCE(json_agg(json_build_object('name', j.name, 'correct', j.correct, 'ms', j.ms, 'done', j.done, 'finished', j.finished, 'card', j.card) ORDER BY j.correct DESC, j.ms) FILTER (WHERE j.sid IS NOT NULL), '[]') AS players
     FROM mates.batalles b LEFT JOIN mates.batalla_jug j USING (code) WHERE b.created_at > now() - interval '30 days' GROUP BY b.code ORDER BY b.created_at DESC LIMIT 60`;
