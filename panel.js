@@ -26,7 +26,7 @@ async function load() {
   D = await r.json(); ADMIN = !!D.admin; ME = D.me || null; GRUPS = D.grups || [];
   // el material de Numi Tech (guies i solucionari) només arriba amb sessió; la presentació i les fitxes s'obren en una altra pestanya
   try { localStorage.setItem('numi-dt', dtok()); } catch (e) { }
-  if (typeof TGUIDE === 'undefined' && typeof TGUARD !== 'undefined') { if (await TGUARD.load(['c1', 'c2', 'c3', 'c4', 'c5', 'c6', 'c7'])) await TGUARD.load(['c8']); }   // c8 (Tech IA) és opcional: si encara no hi és, la resta funciona
+  if (typeof TGUIDE === 'undefined' && typeof TGUARD !== 'undefined') { if (await TGUARD.load(['c1', 'c2', 'c3', 'c4', 'c5', 'c6', 'c7'])) await TGUARD.load(['c8', 'c9']); }   // c8 (Tech IA) és opcional: si encara no hi és, la resta funciona
   if (G && G !== 'online' && !GRUPS.some(g => String(g.id) === G)) G = '';
   if (G === 'online' && !D.admin) G = '';
   ROWS = (D.rows || []).map(enrich);
@@ -415,6 +415,7 @@ function matSession(c, sid, tabs) {
     ${G.intro ? sec(L('La sessió en breu', 'La sesión en breve'), `<p>${tx(G.intro)}</p>${G.claus ? `<b>${L('Idees clau que han d\'entendre', 'Ideas clave que deben entender')}</b>${list(G.claus)}` : ''}${G.prev ? `<b>${L('Què han de saber abans', 'Qué deben saber antes')}</b>${list(G.prev)}` : ''}`) : ''}
     <div class="mgrid">${sec(L('Objectius', 'Objetivos'), list(G.obj))}${sec(L('Competències i currículum', 'Competencias y currículo'), list(G.comp))}</div>
     ${sec(L('Pla de la classe (60 minuts)', 'Plan de la clase (60 minutos)'), `<div class="mbar">${G.plan.map(p => `<i style="flex:${p.min};background:${(MFASE[p.fase] || MFASE.inici)[2]}" title="${esc(tx(p.t))} · ${p.min} min"></i>`).join('')}</div>${plan}`)}
+    ${G.panellHTML ? G.panellHTML() : ''}
     <div class="mgrid">${sec(L('Materials', 'Materiales'), `<b>${L('A l\'aula', 'En el aula')}</b>${list(G.mat.aula)}<b>${L('Per imprimir', 'Para imprimir')}</b>${list(G.mat.imprimir)}<b>${L('Abans de la classe', 'Antes de la clase')}</b>${list(G.mat.prep)}`)}
       ${sec(L('Vocabulari', 'Vocabulario'), `<dl class="dl">${G.vocab.map(([a, b]) => `<dt>${esc(tx(a))}</dt><dd>${tx(b)}</dd>`).join('')}</dl>`)}</div>
     ${sec(L('Errors típics i com ajudar', 'Errores típicos y cómo ayudar'), `<table class="mini-t"><thead><tr><th>${L('Error', 'Error')}</th><th>${L('Com ajudar (sense donar la resposta)', 'Cómo ayudar (sin dar la respuesta)')}</th></tr></thead><tbody>${G.errors.map(([a, b]) => `<tr><td>${tx(a)}</td><td>${tx(b)}</td></tr>`).join('')}</tbody></table>`)}
@@ -429,6 +430,7 @@ function matSession(c, sid, tabs) {
       ${TSOL[sid].map(r => `<div class="sorow"><div class="son"><b>${r.n}</b><small>${esc(r.k[LANG === 'es' ? 1 : 0])}</small></div><div><p class="soq">${esc(r.q[LANG === 'es' ? 1 : 0])}</p>${r.a[LANG === 'es' ? 1 : 0]}</div></div>`).join('')}</details>`
       : typeof TSOL === 'undefined' ? `<section class="card pad msec"><h3>${L('Solucionari', 'Solucionario')}</h3><p class="t3">${L('Carregant…', 'Cargando…')}</p></section>` : ''}`;
   shell('material', tx(x.t), body, { switcher: false });
+  if (G.panellStart) G.panellStart();
   if (typeof TSOL === 'undefined' && !matSession.loading && typeof TGUARD !== 'undefined') { matSession.loading = true; TGUARD.load(['sol']).then(ok => { if (ok && location.hash.includes(sid)) matSession(c, sid, tabs); }); }
 }
 
